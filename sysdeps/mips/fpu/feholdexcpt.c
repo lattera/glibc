@@ -1,7 +1,7 @@
-/* Install given floating-point environment.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Store current floating-point environment and clear exceptions.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@suse.de>, 1998.
+   Contributed by Andreas Jaeger <aj@suse.de>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -20,27 +20,19 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
-#include <shlib-compat.h>
 
 int
-__fesetenv (const fenv_t *envp)
+feholdexcept (fenv_t *envp)
 {
   fpu_control_t cw;
 
-  /* Read first current state to flush fpu pipeline.  */
+  /* Save the current state.  */
   _FPU_GETCW (cw);
+  envp->__fp_control_register = cw;
 
-  if (envp == FE_DFL_ENV)
-    _FPU_SETCW (_FPU_DEFAULT);
-  else
-    _FPU_SETCW (envp->__fp_control_register);
+  /* Clear all exception enable bits and flags.  */
+  cw &= ~(_FPU_MASK_V|_FPU_MASK_Z|_FPU_MASK_O|_FPU_MASK_U|_FPU_MASK_I|FE_ALL_EXCEPT);
+  _FPU_SETCW (cw);
 
-  /* Success.  */
   return 0;
 }
-
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__fesetenv, __old_fesetenv)
-compat_symbol (libm, __old_fesetenv, fesetenv, GLIBC_2_1);
-#endif
-versioned_symbol (libm, __fesetenv, fesetenv, GLIBC_2_2);
