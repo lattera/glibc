@@ -614,6 +614,10 @@ Filters not supported with LD_TRACE_PRELINKING"));
 			     (k - j) * sizeof (struct link_map *));
 		    map->l_initfini[j] = here;
 
+		    /* Don't insert further matches before the last
+		       entry moved to the front.  */
+		    ++j;
+
 		    break;
 		  }
 	    }

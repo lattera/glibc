@@ -1,5 +1,9 @@
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-deps.c (_dl_map_object_deps): The sorting of the
+	dependencies must be stable to work correctly.
+	Reported by martin.lubich@datacon.at.
+
 	* libio/bug-ungetwc1.c: New file.
 	* libio/Makefile (tests): Add bug-ungetwc1.
 
