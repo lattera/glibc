@@ -20,7 +20,7 @@
 
 #include <sgidefs.h>
 
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 
 #define SIGCONTEXT unsigned long _code, struct sigcontext *
 #define SIGCONTEXT_EXTRA_ARGS _code,

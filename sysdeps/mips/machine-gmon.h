@@ -26,7 +26,7 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 /* Call __mcount with the return PC for our caller,
    and the return PC our caller will return to.  */
 
-#if _MIPS_SIM == _MIPS_SIM_ABI32
+#if _MIPS_SIM == _ABIO32
 
 #ifdef __PIC__
 # define CPLOAD ".cpload $25;"
@@ -83,10 +83,10 @@ static void __attribute_used__ __mcount (u_long frompc, u_long selfpc)
 # define CPRETURN
 #endif
 
-#if _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
 # define PTR_ADDU_STRING "add" /* no u */
 # define PTR_SUBU_STRING "sub" /* no u */
-#elif _MIPS_SIM == _MIPS_SIM_ABI64
+#elif _MIPS_SIM == _ABI64
 # define PTR_ADDU_STRING "daddu"
 # define PTR_SUBU_STRING "dsubu"
 #else

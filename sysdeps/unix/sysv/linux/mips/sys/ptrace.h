@@ -124,7 +124,7 @@ enum __ptrace_request
    appear (those that are used for the particular request) as:
      pid_t PID, void *ADDR, int DATA, void *ADDR2
    after REQUEST.  */
-#if _MIPS_SIM == _MIPS_SIM_NABI32
+#if _MIPS_SIM == _ABIN32
 __extension__ extern long long int ptrace
   (enum __ptrace_request __request, ...) __THROW;
 #else

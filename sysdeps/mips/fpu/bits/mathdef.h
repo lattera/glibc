@@ -39,7 +39,7 @@ typedef double double_t;	/* `double' expressions are evaluated as
 
 #endif	/* ISO C99 */
 
-#if ! defined __NO_LONG_DOUBLE_MATH && _MIPS_SIM == _MIPS_SIM_ABI32
+#if ! defined __NO_LONG_DOUBLE_MATH && _MIPS_SIM == _ABIO32
 /* Signal that we do not really have a `long double'.  This disables the
    declaration of all the `long double' function variants.  */
 # define __NO_LONG_DOUBLE_MATH	1
