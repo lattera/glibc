@@ -181,6 +181,20 @@ _dl_start_user:
 0:	| Push the searchlist of the main object as argument in
 	| the _dl_init_next call below.
 	move.l ([_dl_main_searchlist@GOT.w, %a5]), %d2
+	| First dun the pre-initializers.
+0:	move.l %d2, -(%sp)
+	| Call _dl_preinit_next to return the address of an pre-initializer
+	| function to run.
+	bsr.l _dl_preinit_next@PLTPC
+	add.l #4, %sp | Pop argument.
+	| Check for zero return, when out of pre-initializers.
+	tst.l %d0
+	jeq 0f
+	| Call the shared object pre-initializer function.
+	move.l %d0, %a0
+	jsr (%a0)
+	| Loop to call _dl_preinit_next for the next pre-initializer.
+	jra 0b
 0:	move.l %d2, -(%sp)
 	| Call _dl_init_next to return the address of an initializer
 	| function to run.
