@@ -438,8 +438,8 @@ thread_func (void *arg)
       else
 	pthread_cond_wait (&self->cond, &__timer_mutex);
     }
-  /* These statements will never be executed since the while loop
-     loops forever - but we have to add them for proper nesting.  */
+  /* This macro will never be executed since the while loop loops
+     forever - but we have to add it for proper nesting.  */
   pthread_cleanup_pop (1);
 
 }

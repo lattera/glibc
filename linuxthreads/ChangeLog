@@ -3,6 +3,7 @@
 	* sysdeps/pthread/timer_routines.c (thread_func): Add noreturn
 	attribute, remove statements that will never be executed.
 	(thread_func): Remove mutex_unlock call since it's never executed.
+	(thread_func): Fix comment as suggested by Jakub Jelinek.
 
 	* manager.c (__pthread_manager): Add noreturn
 	attribute.
