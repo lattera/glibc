@@ -19,7 +19,7 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 # The format of this file is pretty simple: Each line contains a test
-# for strfmon.  Fields are separated by TABs.  Lines that start with a
+# for strfmon.  Fields are seperated by TABs.  Lines that start with a
 # '#' are comments and are ignored.
 #
 # Field Description
@@ -36,8 +36,11 @@ C			%n	0		0.00
 C			%%	0		%
 C			*%n*	1.23		*1.23*
 C			%9n	1.23		     1.23
-C			%#9n	1.23		        1.23
-C			%=*#9n	1.23		********1.23
+C			%9n	-1.23		    -1.23
+C			%#9n	1.23		         1.23
+C			%#9n	-1.23		-        1.23
+C			%=*#9n	1.23		 ********1.23
+C			%=*#9n	-1.23		-********1.23
 #
 # check both the german locale and strfmon with that data
 #
@@ -80,12 +83,12 @@ de_DE.ISO-8859-1	%^#5.0n	3456.781	 DM 3457
 de_DE.ISO-8859-1	%^#5.4n	123.45		 DM  123,4500
 de_DE.ISO-8859-1	%^#5.4n	-123.45		-DM  123,4500
 de_DE.ISO-8859-1	%^#5.4n	3456.781	 DM 3456,7810
-de_DE.ISO-8859-1	%(#5n	123.45		DM   123,45
+de_DE.ISO-8859-1	%(#5n	123.45		 DM   123,45
 de_DE.ISO-8859-1	%(#5n	-123.45		(DM   123,45)
-de_DE.ISO-8859-1	%(#5n	3456.781	DM 3.456,78
-de_DE.ISO-8859-1	%!(#5n	123.45		   123,45
+de_DE.ISO-8859-1	%(#5n	3456.781	 DM 3.456,78
+de_DE.ISO-8859-1	%!(#5n	123.45		    123,45
 de_DE.ISO-8859-1	%!(#5n	-123.45		(   123,45)
-de_DE.ISO-8859-1	%!(#5n	3456.781	 3.456,78
+de_DE.ISO-8859-1	%!(#5n	3456.781	  3.456,78
 #
 # check both the en_US locale and strfmon with that data
 # a lot of this checks are created from a strfmon(3) man-page.
@@ -114,12 +117,12 @@ en_US.ISO-8859-1	%^#5.0n	3456.781	 $ 3457
 en_US.ISO-8859-1	%^#5.4n	123.45		 $  123.4500
 en_US.ISO-8859-1	%^#5.4n	-123.45		-$  123.4500
 en_US.ISO-8859-1	%^#5.4n	3456.781	 $ 3456.7810
-en_US.ISO-8859-1	%(#5n	123.45		$   123.45
+en_US.ISO-8859-1	%(#5n	123.45		 $   123.45
 en_US.ISO-8859-1	%(#5n	-123.45		($   123.45)
-en_US.ISO-8859-1	%(#5n	3456.781	$ 3,456.78
-en_US.ISO-8859-1	%!(#5n	123.45		   123.45
+en_US.ISO-8859-1	%(#5n	3456.781	 $ 3,456.78
+en_US.ISO-8859-1	%!(#5n	123.45		    123.45
 en_US.ISO-8859-1	%!(#5n	-123.45		(   123.45)
-en_US.ISO-8859-1	%!(#5n	3456.781	 3,456.78
+en_US.ISO-8859-1	%!(#5n	3456.781	  3,456.78
 en_US.ISO-8859-1	%#5n	123.45		 $   123.45
 en_US.ISO-8859-1	%#5n	-123.45		-$   123.45
 en_US.ISO-8859-1	%#5n	3456.781	 $ 3,456.78

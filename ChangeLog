@@ -1,3 +1,14 @@
+2000-03-29  Geoff Clare  <gwc@unisoft.com>
+
+	* stdlib/strfmon.c: Corrected problems with the code that
+	sets default values for [np]_sep_by_space and
+	[np]_sign_posn; also the new positive/negative alignment
+	code from the previous patch was not quite right for
+	[np]_sign_posn = 0.
+
+	* localedata/tst-fmon.data: Changes corresponding to the
+	two sets of fixes made to stdlib/strfmon.c.
+
 2000-03-29  Jes Sorensen  <jes@pcatls01.cern.ch>
 
 	* malloc/malloc.c: Declare bit flags UL so that they will not

@@ -193,14 +193,8 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 		  va_end (ap);
 		  return -1;
 		}
-	      if (*_NL_CURRENT (LC_MONETARY, P_SIGN_POSN) == '\0')
-		p_sign_posn = 1;
-	      else
-		p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
-	      if (*_NL_CURRENT (LC_MONETARY, N_SIGN_POSN) == '\0')
-		n_sign_posn = 1;
-	      else
-		n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
+	      p_sign_posn = *_NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
+	      n_sign_posn = *_NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
 	      continue;
 	    case '(':			/* Use ( ) for negative sign.  */
 	      if (n_sign_posn != -1)
@@ -385,10 +379,14 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	cs_precedes = 1;
       if (other_cs_precedes != 0)
 	other_cs_precedes = 1;
-      if (sep_by_space == 127)
+      if (sep_by_space == CHAR_MAX)
 	sep_by_space = 0;
-      if (other_sep_by_space == 127)
+      if (other_sep_by_space == CHAR_MAX)
 	other_sep_by_space = 0;
+      if (sign_posn == CHAR_MAX)
+	sign_posn = 1;
+      if (other_sign_posn == CHAR_MAX)
+	other_sign_posn = 1;
 
       /* Set the left precision and padding needed for alignment */
       if (left_prec == -1)
@@ -404,7 +402,10 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	  int sign_precedes = 0;
 	  int other_sign_precedes = 0;
 
-	  left_pad = 0;
+	  if (sign_posn == 0 && !is_negative)
+	    left_pad = 1;
+	  else
+	    left_pad = 0;
 
 	  if (!cs_precedes && other_cs_precedes)
 	    {
