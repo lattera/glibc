@@ -41,6 +41,9 @@ Cambridge, MA 02139, USA.  */
   C_LABEL(name)								      \
   CALL_MCOUNT
 
+#undef END
+#define END(name) .size name, . - name
+
 /* If compiled for profiling, call `_mcount' at the start of each function.  */
 #ifdef	PROF
 /* The mcount code relies on a normal frame pointer being on the stack
@@ -76,7 +79,6 @@ Cambridge, MA 02139, USA.  */
    error values.  */
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
-  SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
     DO_CALL (&SYS_ify (syscall_name), args);				      \
     moveq.l &-128, %d1;							      \
@@ -84,13 +86,14 @@ Cambridge, MA 02139, USA.  */
     jcc syscall_error
 
 #undef PSEUDO_END
-#define PSEUDO_END(name) .size name, . - name
+#define PSEUDO_END(name)						      \
+  SYSCALL_ERROR_HANDLER;						      \
+  END (name)
 
 #ifdef PIC
 /* Store (- %d0) into errno through the GOT.  */
 #ifdef _LIBC_REENTRANT
 #define SYSCALL_ERROR_HANDLER						      \
-    .type syscall_error, @function;					      \
 syscall_error:								      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \
@@ -105,7 +108,6 @@ syscall_error:								      \
     rts;
 #else
 #define SYSCALL_ERROR_HANDLER						      \
-    .type syscall_error, @function;					      \
 syscall_error:								      \
     move.l (errno@GOTPC, %pc), %a0;					      \
     neg.l %d0;								      \

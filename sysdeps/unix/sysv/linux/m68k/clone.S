@@ -27,7 +27,6 @@ Cambridge, MA 02139, USA.  */
 
         .text
 ENTRY (__clone)
-	CALL_MCOUNT
 
 	/* Sanity check arguments.  */
 	movel	#-EINVAL, %d0
@@ -63,17 +62,12 @@ ENTRY (__clone)
 
 	rts
 
-	SYSCALL_ERROR_HANDLER
-
 thread_start:
 	subl	%fp, %fp	/* terminate the stack frame */
 	jsr	(%a0)
 	movel	%d0, -(%sp)
-#ifdef PIC
-	bsrl	_exit@PLTPC
-#else
-	jbsr	_exit
-#endif
+	jbsr	JUMPTARGET (_exit)
+
 PSEUDO_END (__clone)
 
 weak_alias (__clone, clone)

@@ -19,10 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 	.text
-	SYSCALL_ERROR_HANDLER
-
 ENTRY (__mmap)
-	CALL_MCOUNT
 
 	move.l #SYS_ify (mmap), %d0	/* System call number in %d0.  */
 
