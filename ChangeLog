@@ -1,6 +1,15 @@
+2000-12-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/ioctl.c (__ioctl): Don't clobber ARG as we copy in
+	argument data, since it will be used to copy out too (for INOUT).
+	Reported by Marcus Brinkmann <marcus@gnu.org>.
+
+	* sysdeps/mach/hurd/ioctl.c: Include <stdint.h>.
+	(__ioctl): Use uintptr_t instead of unsigned long int.
+
 2000-12-06  Jim Wilson  <wilson@redhat.com>
 
-	* stdlib/l64a.c (l64a): Truncate m to 32-bit value.
+	* stdlib/l64a.c (l64a): Truncate M to 32-bit value.
 
 2000-12-06  Ulrich Drepper  <drepper@redhat.com>
 
