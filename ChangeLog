@@ -1,5 +1,12 @@
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/system.c (do_system): Add support for installation
+	of cancellation handlers.
+	* sysdeps/unix/sysv/linux/i386/system.c: New file.
+
+	* stdlib/Makefile (tests): Add tst-system.
+	* stdlib/tst-system.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/socket.S [NEED_CANCELLATION &&
 	CENABLE]: Don't lose content of %ebx.
 

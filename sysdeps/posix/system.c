@@ -112,7 +112,15 @@ do_system (const char *line)
 	}
     }
 
+#ifdef CLEANUP_HANDLER
+  CLEANUP_HANDLER;
+#endif
+
+#ifdef FORK
+  pid = FORK ();
+#else
   pid = __fork ();
+#endif
   if (pid == (pid_t) 0)
     {
       /* Child side.  */
@@ -157,6 +165,10 @@ do_system (const char *line)
 	status = -1;
 #endif
     }
+
+#ifdef CLEANUP_HANDLER
+  CLEANUP_RESET;
+#endif
 
   save = errno;
   DO_LOCK ();

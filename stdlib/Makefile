@@ -55,13 +55,14 @@ routines	:=							      \
 # linked against when the shared library will be used.
 static-only-routines = atexit
 
-distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh  \
+distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh   \
 		   allocalim.h
 test-srcs	:= tst-fmtmsg
-tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv  \
-		   test-canon test-canon2 tst-strtoll tst-environ	   \
-		   tst-xpg-basename tst-random tst-bsearch tst-limits	   \
-		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort
+tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
+		   test-canon test-canon2 tst-strtoll tst-environ	    \
+		   tst-xpg-basename tst-random tst-bsearch tst-limits	    \
+		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort \
+		   tst-system
 
 
 # Several mpn functions from GNU MP are used by the strtod function.
