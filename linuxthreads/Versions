@@ -22,6 +22,13 @@ libc {
   }
 }
 
+ld.so {
+  GLIBC_2.0 {
+    # Internal libc interface to libpthread
+    __libc_internal_tsd_get; __libc_internal_tsd_set;
+  }
+}
+
 libpthread {
   GLIBC_2.0 {
     # Hidden entry point (through macros).

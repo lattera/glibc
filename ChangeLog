@@ -1,5 +1,9 @@
 1999-08-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (tests): Add resolvfail.  Add rules to build the
+	program.
+	* elf/resolvfail.c: New file.
+
 	* elf/dl-sym.c (_dl_sym): Always determine module of the caller to
 	pass it to _dl_lookup_symbol.
 

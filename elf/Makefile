@@ -71,7 +71,7 @@ install-rootsbin += ldconfig
 endif
 
 ifeq (yes,$(build-shared))
-tests = loadtest restest1 preloadtest loadfail multiload origtest
+tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj
@@ -237,3 +237,9 @@ $(objpfx)multiload.out: $(objpfx)testobj1.so
 
 $(objpfx)origtest: $(libdl)
 $(objpfx)origtest.out: $(objpfx)testobj1.so
+
+ifeq ($(have-thread-library),yes)
+$(objpfx)resolvfail: $(libdl) $(shared-thread-library)
+else
+$(objpfx)resolvfail: $(libdl)
+endif

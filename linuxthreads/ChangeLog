@@ -1,3 +1,8 @@
+1999-08-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Versions [ld.so] (GLIBC_2.0): Export __libc_internal_tsd_get and
+	__libc_internal_tsd_set.
+
 1999-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manager.c: Remove inclusion of <linux/tasks.h> since it's not
