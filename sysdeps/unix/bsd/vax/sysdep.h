@@ -19,13 +19,23 @@ Cambridge, MA 02139, USA.  */
 #include <sysdeps/unix/sysdep.h>
 
 #ifdef	__STDC__
+#define	ENTRY(name)							      \
+  .globl _##name;							      \
+  .even;								      \
+  _##name##:
+#else
+#define	ENTRY(name)							      \
+  .globl _/**/name;							      \
+  .even;								      \
+  _/**/name/**/:
+#endif
+
+#ifdef	__STDC__
 #define	PSEUDO(name, syscall_name)					      \
   .even;								      \
   .globl syscall_error							      \
   error: jmp syscall_error;						      \
-  .globl _##name;							      \
-  .even;								      \
-  _##name##:;								      \
+  ENTRY (name)								      \
   chmk $SYS_##syscall_name						      \
   bcs error
 #else
@@ -33,9 +43,7 @@ Cambridge, MA 02139, USA.  */
   .even;								      \
   .globl syscall_error							      \
   error: jmp syscall_error;						      \
-  .globl _/**/name;							      \
-  .even;								      \
-  _/**/name/**/:;							      \
+  ENTRY (name)								      \
   chmk $SYS_/**/syscall_name						      \
   bcs error
 #endif
