@@ -7,9 +7,11 @@ echo "$as_me: error: compiler support for __thread is required" >&2;}
 fi
 
 if test "x$libc_cv_asm_cfi_directives" != xyes; then
-  { { echo "$as_me:$LINENO: error: CFI directive support in assembler is required" >&5
+    if test "x$base_machine" = xi386 || test "x$base_machine" = "xx86_86"; then
+    { { echo "$as_me:$LINENO: error: CFI directive support in assembler is required" >&5
 echo "$as_me: error: CFI directive support in assembler is required" >&2;}
    { (exit 1); exit 1; }; }
+  fi
 fi
 
 
@@ -20,7 +22,11 @@ if test "${libc_cv_forced_unwind+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <unwind.h>
 int
 main ()
@@ -48,7 +54,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   libc_cv_forced_unwind=yes
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_forced_unwind=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
@@ -69,7 +76,11 @@ if test "${libc_cv_c_cleanup+set}" = set; then
 else
     cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 
 #include <stdio.h>
 void cl (void *a) { }
@@ -99,7 +110,8 @@ if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
   libc_cv_c_cleanup=yes
 else
   echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
 libc_cv_c_cleanup=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
