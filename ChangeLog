@@ -1,5 +1,8 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/ja.po: New file.
+	* po/el.po: Update from translation team.
+
 	* wcsmbs/Depend: New file.
 	* wcsmbs/Makefile (tests): Add tst-btowc.
 	(tst-btowc-ENV): Define.
