@@ -40,31 +40,27 @@
 static clockid_t cl;
 static int use_clock;
 #endif
+static iconv_t cd;
+static char *mem;
+static char *umem;
+static size_t memlen;
 
-static int run_test (const char *expr, const char *mem, size_t memlen);
+static int test_expr (const char *expr, int expected);
+static int run_test (const char *expr, const char *mem, size_t memlen,
+		     int expected);
 
 
 int
 main (void)
 {
   const char *file;
-  char *mem;
-  char *umem;
-  size_t memlen;
   int fd;
   struct stat st;
-#ifdef _POSIX_CPUTIME
-  unsigned int sum = 0;
-#endif
-  size_t offset;
   int result;
   char *inmem;
   char *outmem;
   size_t inlen;
   size_t outlen;
-  iconv_t cd;
-  char *expr;
-  char *uexpr;
 
   mtrace ();
 
@@ -88,36 +84,8 @@ main (void)
 
   close (fd);
 
-#ifdef _POSIX_CPUTIME
-  /* If possible we will time the regex calls.  */
-  use_clock = clock_getcpuclockid (0, &cl) == 0;
-
-  /* Now make sure the file is actually loaded.  */
-  if (use_clock)
-    {
-      for (offset = 0; offset < memlen; ++offset)
-	sum += mem[offset];
-      /* We print it so that the compiler cannnot optimize the loop away.  */
-      printf ("sum = %u\n", sum);
-    }
-#endif
-
-  /* First test: search with an ISO-8859-1 locale.  */
-  if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
-    error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
-
-  /* This is the expression we'll use.  */
-  expr = "[äáàâéèêíìîñöóòôüúùû]";
-
-  puts ("\nTest with 8-bit locale");
-  result = run_test (expr, mem, memlen);
-
-  /* Second test: search with an UTF-8 locale.  */
-  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
-    error (EXIT_FAILURE, 0, "cannot set locale de_DE.UTF-8");
-
-  /* For the second test we have to convert the file to UTF-8.  */
-  umem = (char *) malloc (2 * memlen);
+  /* For the second test we have to convert the file content to UTF-8.  */
+  umem = (char *) calloc (2, memlen);
   if (umem == NULL)
     error (EXIT_FAILURE, errno, "while allocating buffer");
 
@@ -133,21 +101,22 @@ main (void)
   if (inlen != 0)
     error (EXIT_FAILURE, errno, "cannot convert buffer");
 
-  inmem = expr;
-  inlen = strlen (expr);
-  outlen = inlen * MB_CUR_MAX;
-  outmem = uexpr = alloca (outlen + 1);
-  iconv (cd, &inmem, &inlen, &outmem, &outlen);
-  if (inlen != 0)
-    error (EXIT_FAILURE, errno, "cannot convert expression");
+#ifdef _POSIX_CPUTIME
+  /* See whether we can use the CPU clock.  */
+  use_clock = clock_getcpuclockid (0, &cl) == 0;
+#endif
 
-  iconv_close (cd);
-
-  /* Run the tests.  */
-  puts ("\nTest with multi-byte locale");
-  result |= run_test (uexpr, umem, 2 * memlen - outlen);
+  /* Run the actual tests.  All tests are run in a single-byte and a
+     multi-byte locale.  */
+  result = test_expr ("[äáàâéèêíìîñöóòôüúùû]", 2);
+  result |= test_expr ("G.ran", 2);
+  result |= test_expr ("G.\\{1\\}ran", 2);
+#ifdef DOES_NOT_WORK
+  result |= test_expr ("G.*ran", 2);
+#endif
 
   /* Free the resources.  */
+  iconv_close (cd);
   free (mem);
 
   return result;
@@ -155,7 +124,45 @@ main (void)
 
 
 static int
-run_test (const char *expr, const char *mem, size_t memlen)
+test_expr (const char *expr, int expected)
+{
+  int result;
+  char *inmem;
+  char *outmem;
+  size_t inlen;
+  size_t outlen;
+  char *uexpr;
+
+  /* First test: search with an ISO-8859-1 locale.  */
+  if (setlocale (LC_ALL, "de_DE.ISO-8859-1") == NULL)
+    error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
+
+  printf ("\nTest \"%s\" with 8-bit locale\n", expr);
+  result = run_test (expr, mem, memlen, expected);
+
+  /* Second test: search with an UTF-8 locale.  */
+  if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
+    error (EXIT_FAILURE, 0, "cannot set locale de_DE.UTF-8");
+
+  inmem = (char *) expr;
+  inlen = strlen (expr);
+  outlen = inlen * MB_CUR_MAX;
+  outmem = uexpr = alloca (outlen + 1);
+  memset (outmem, '\0', outlen + 1);
+  iconv (cd, &inmem, &inlen, &outmem, &outlen);
+  if (inlen != 0)
+    error (EXIT_FAILURE, errno, "cannot convert expression");
+
+  /* Run the tests.  */
+  printf ("\nTest \"%s\" with multi-byte locale\n", expr);
+  result |= run_test (uexpr, umem, 2 * memlen - outlen, expected);
+
+  return result;
+}
+
+
+static int
+run_test (const char *expr, const char *mem, size_t memlen, int expected)
 {
 #ifdef _POSIX_CPUTIME
   struct timespec start;
@@ -201,7 +208,7 @@ run_test (const char *expr, const char *mem, size_t memlen)
 
       assert (ma[0].rm_so >= 0);
       sp = mem + offset + ma[0].rm_so;
-      while (sp > expr && sp[-1] != '\n')
+      while (sp > mem && sp[-1] != '\n')
 	--sp;
 
       ep = mem + offset + ma[0].rm_so;
@@ -240,5 +247,5 @@ run_test (const char *expr, const char *mem, size_t memlen)
 
   /* Return an error if the number of matches found is not match we
      expect.  */
-  return cnt != 2;
+  return cnt != expected;
 }
