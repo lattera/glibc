@@ -1,3 +1,8 @@
+Fri Sep  8 16:25:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* conf/portability.h (NEED_INETADDR, NEED_INETATON): Define to 1,
+	not empty.
+
 Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
         * sysdeps/unix/sysv/linux/Implies,
@@ -44,8 +49,7 @@ Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	sysdeps/unix/sysv/linux/wait.c, sysdeps/unix/sysv/linux/wait4.S,
 	sysdeps/unix/sysv/linux/waitpid.c, sysdeps/unix/sysv/linux/writev.c:
 	New Linux/ELF specific, architecture independent files.
-
-	sysdeps/unix/sysv/linux/i386/Dist,
+	* sysdeps/unix/sysv/linux/i386/Dist,
 	sysdeps/unix/sysv/linux/i386/Makefile,
 	sysdeps/unix/sysv/linux/i386/brk.S,
 	sysdeps/unix/sysv/linux/i386/fcntlbits.h,
@@ -71,8 +75,7 @@ Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	sysdeps/unix/sysv/linux/i386/xmknod.S,
 	sysdeps/unix/sysv/linux/i386/xstat.S:
 	New Linux i386/ELF specific files.
-
-	sysdeps/unix/sysv/linux/sys/ipc_buf.h,
+	* sysdeps/unix/sysv/linux/sys/ipc_buf.h,
 	sysdeps/unix/sysv/linux/sys/mman.h,
 	sysdeps/unix/sysv/linux/sys/msq_buf.h,
 	sysdeps/unix/sysv/linux/sys/sem_buf.h,
@@ -80,6 +83,12 @@ Fri Sep  8 16:32:12 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 	sysdeps/unix/sysv/linux/sys/socketcall.h,
 	sysdeps/unix/sysv/linux/sys/timex.h:
 	New Linux/ELF specific, architecture independent header files.
+	* sysdeps/unix/sysv/sysv4/linux: Tree removed.
+	
+Thu Sep  7 17:05:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdlib/msort.c (msort_with_tmp): Fixed alignment test.  B1 and
+	 B2 are always congruent; just test that B1 is aligned.
 
 Wed Sep  6 19:41:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
