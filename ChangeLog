@@ -1,3 +1,9 @@
+1998-03-01 18:52  H.J. Lu  (hjl@gnu.org)
+
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (osf_settimeofday,
+	osf_getitimer, osf_setitimer, osf_utimes, osf_getrusage,
+	osf_wait4): Removed __xxxx symbol for GLIBC_2.0.
+
 1998-03-01 09:11  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/ioctls.h: Don't include
