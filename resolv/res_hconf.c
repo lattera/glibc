@@ -263,7 +263,8 @@ parse_line (const char *fname, int line_num, const char *str)
 
   str = skip_ws (str);
 
-  if (*str == '#') return;		/* skip line comment */
+  /* skip line comment and empty lines: */
+  if (*str == '\0' || *str == '#') return;
 
   start = str;
   str = skip_string (str);

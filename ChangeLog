@@ -1,5 +1,10 @@
 1999-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* resolv/res_hconf.c (parse_line): Skip empty lines.  Bug reported
+	by Marcus Harnisch <marcus@harnisch.isdn.cs.tu-berlin.de>.
+
+1999-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* sysdeps/i386/sys/ucontext.h (ucontext): Rename field uc_links to
 	uc_link which is the right name according to Unix98.
 	Reported by Craig Metz [PR libc/1001].
