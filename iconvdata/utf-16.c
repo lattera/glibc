@@ -27,6 +27,8 @@
 
 /* This is the Byte Order Mark character (BOM).  */
 #define BOM	0xfeff
+/* And in the other byte order.  */
+#define BOM_OE	0xfffe
 
 
 /* Definitions used in the body of the `gconv' function.  */
@@ -41,8 +43,27 @@
 #define PREPARE_LOOP \
   enum direction dir = ((struct utf16_data *) step->__data)->dir;	      \
   enum variant var = ((struct utf16_data *) step->__data)->var;		      \
-  if (!FROM_DIRECTION && var == UTF_16 && !data->__internal_use		      \
-      && data->__invocation_counter == 0)				      \
+  int swap = ((struct utf16_data *) step->__data)->swap;		      \
+  if (FROM_DIRECTION || var == UTF_16)					      \
+    {									      \
+      if (data->__invocation_counter == 0)				      \
+	{								      \
+	  /* We have to find out which byte order the file is encoded in.  */ \
+	  if (inptr + 2 > inbufend)					      \
+	    return __GCONV_EMPTY_INPUT;					      \
+									      \
+	  if (*(uint16_t *) inptr == BOM)				      \
+	    /* Simply ignore the BOM character.  */			      \
+	    inptr += 2;							      \
+	  else if (*(uint16_t *) inptr == BOM_OE)			      \
+	    {								      \
+	      ((struct utf16_data *) step->__data)->swap = 1;		      \
+	      inptr += 2;						      \
+	    }								      \
+	}								      \
+    }									      \
+  else if (!FROM_DIRECTION && var == UTF_16 && !data->__internal_use	      \
+	   && data->__invocation_counter == 0)				      \
     {									      \
       /* Emit the Byte Order Mark.  */					      \
       if (outbuf + 2 > outend)						      \
@@ -51,7 +72,7 @@
       *(uint16_t *) outbuf = BOM;					      \
       outbuf += 2;							      \
     }
-#define EXTRA_LOOP_ARGS		, var, data
+#define EXTRA_LOOP_ARGS		, var, data, swap
 
 
 /* Direction of the transformation.  */
@@ -74,6 +95,7 @@ struct utf16_data
 {
   enum direction dir;
   enum variant var;
+  int swap;
 };
 
 
@@ -127,6 +149,9 @@ gconv_init (struct __gconv_step *step)
 	{
 	  new_data->dir = dir;
 	  new_data->var = var;
+	  new_data->swap = ((var == UTF_16LE && BYTE_ORDER == BIG_ENDIAN)
+			    || (var == UTF_16BE
+				&& BYTE_ORDER == LITTLE_ENDIAN));
 	  step->__data = new_data;
 
 	  if (dir == from_utf16)
@@ -170,8 +195,7 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint32_t c = *((uint32_t *) inptr);					      \
 									      \
-    if ((__BYTE_ORDER == __LITTLE_ENDIAN && var == UTF_16BE)		      \
-        || (__BYTE_ORDER == __BIG_ENDIAN && var == UTF_16LE))		      \
+    if (swap)								      \
       {									      \
 	if (c >= 0x10000)						      \
 	  {								      \
@@ -225,7 +249,7 @@ gconv_end (struct __gconv_step *data)
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS \
-	, enum variant var, struct __gconv_step_data *step_data
+	, enum variant var, struct __gconv_step_data *step_data, int swap
 #include <iconv/loop.c>
 
 
@@ -238,8 +262,7 @@ gconv_end (struct __gconv_step *data)
   {									      \
     uint16_t u1 = *(uint16_t *) inptr;					      \
 									      \
-    if ((__BYTE_ORDER == __LITTLE_ENDIAN && var == UTF_16BE) 		      \
-        || (__BYTE_ORDER == __BIG_ENDIAN && var == UTF_16LE))		      \
+    if (swap)								      \
       {									      \
 	u1 = bswap_16 (u1);						      \
 									      \
@@ -277,16 +300,6 @@ gconv_end (struct __gconv_step *data)
       }									      \
     else								      \
       {									      \
-	if (u1 == BOM && var == UTF_16 && !step_data->__internal_use	      \
-	    && step_data->__invocation_counter == 0 && inptr == *inptrp)      \
-	  {								      \
-	    /* This is the first word in the file and it is the BOM and	      \
-	       we are converting a file without specified byte order.	      \
-	       Simply sack the BOM.  */					      \
-	    inptr += 2;							      \
-	    continue;							      \
-	  }								      \
-									      \
 	if (u1 < 0xd800 || u1 > 0xdfff)					      \
 	  {								      \
 	    /* No surrogate.  */					      \
@@ -322,7 +335,7 @@ gconv_end (struct __gconv_step *data)
     outptr += 4;							      \
   }
 #define EXTRA_LOOP_DECLS \
-	, enum variant var, struct __gconv_step_data *step_data
+	, enum variant var, struct __gconv_step_data *step_data, int swap
 #include <iconv/loop.c>
 
 

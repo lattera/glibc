@@ -1,5 +1,23 @@
 2000-03-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_builtin.c: Include <endian.h>.
+	* iconv/gconv_builtin.h: Add UCS-BE aliases.
+	Add UCS-4LE transformation.  Define UNICODEBIG and UNICODELITTLE
+	according to current platform.
+	* iconv/gconv_int.h: Declare __gconv_transform_ucs2reverse_internal,
+	__gconv_transform_internal_ucs2reverse, and
+	__gconv_transform_internal_ucs4le.
+	* iconv/gconv_simple.c: Implement __gconv_transform_internal_ucs4le,
+	__gconv_transform_ucs2reverse_internal and
+	__gconv_transform_internal_ucs2reverse.
+	* iconvdata/Makefile (modules): Add UNICODE.
+	(distribute): Add unicode.c.
+	* iconvdata/gconv-modules: Add definitions for UNICODE module.
+	* iconvdata/unicode.c: New file.
+
+	* iconvdata/utf-16.c: Rewrite code to emit BOM.  Correct code to
+	determine byte order of input and convert accordingly.
+
 	* iconvdata/utf-16.c (gconv_init): Fix typo.
 
 2000-03-20  Ulrich Drepper  <drepper@redhat.com>

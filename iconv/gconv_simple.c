@@ -105,6 +105,61 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #include <iconv/skeleton.c>
 
 
+/* Similarly for the other byte order.  */
+#define DEFINE_INIT		0
+#define DEFINE_FINI		0
+#define MIN_NEEDED_FROM		4
+#define MIN_NEEDED_TO		4
+#define FROM_DIRECTION		1
+#define FROM_LOOP		internal_ucs4le_loop
+#define TO_LOOP			internal_ucs4le_loop /* This is not used.  */
+#define FUNCTION_NAME		__gconv_transform_internal_ucs4le
+
+
+static inline int
+internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
+		      unsigned char **outptrp, unsigned char *outend,
+		      mbstate_t *state, void *data, size_t *converted)
+{
+  const unsigned char *inptr = *inptrp;
+  unsigned char *outptr = *outptrp;
+  size_t n_convert = MIN (inend - inptr, outend - outptr) / 4;
+  int result;
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  /* Sigh, we have to do some real work.  */
+  size_t cnt;
+
+  for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
+    *((uint32_t *) outptr)++ = bswap_32 (*(uint32_t *) inptr);
+
+  *inptrp = inptr;
+  *outptrp = outptr;
+#elif __BYTE_ORDER == __LITTLE_ENDIAN
+  /* Simply copy the data.  */
+  *inptrp = inptr + n_convert * 4;
+  *outptrp = __mempcpy (outptr, inptr, n_convert * 4);
+#else
+# error "This endianess is not supported."
+#endif
+
+  /* Determine the status.  */
+  if (*outptrp == outend)
+    result = __GCONV_FULL_OUTPUT;
+  else if (*inptrp == inend)
+    result = __GCONV_EMPTY_INPUT;
+  else
+    result = __GCONV_INCOMPLETE_INPUT;
+
+  if (converted != NULL)
+    converted += n_convert;
+
+  return result;
+}
+
+#include <iconv/skeleton.c>
+
+
 /* Convert from ISO 646-IRV to the internal (UCS4-like) format.  */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
@@ -408,7 +463,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define FROM_DIRECTION		1
 #define FROM_LOOP		ucs2little_internal_loop
 #define TO_LOOP			ucs2little_internal_loop /* This is not used.*/
-#define FUNCTION_NAME		__gconv_transform_ucs2little_internal
+#define FUNCTION_NAME		__gconv_transform_ucs2reverse_internal
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -433,7 +488,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define FROM_DIRECTION		1
 #define FROM_LOOP		internal_ucs2little_loop
 #define TO_LOOP			internal_ucs2little_loop /* This is not used.*/
-#define FUNCTION_NAME		__gconv_transform_internal_ucs2little
+#define FUNCTION_NAME		__gconv_transform_internal_ucs2reverse
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
