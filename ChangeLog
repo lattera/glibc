@@ -1,5 +1,9 @@
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/testdata/CP1258: New file.
+	* iconvdata/testdata/CP1258..UTF8: New file.
+	* iconvdata/TESTS: Add CP1258 entry.
+
 	* iconvdata/cp874.h (to_ucs4): Add Euro sign.
 
 	* timezone/africa: Update from tzdata1999d.

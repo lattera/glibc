@@ -1,5 +1,5 @@
 # Available tests for iconv(1) (and therefore iconv(3)) in GNU libc.
-# Copyright (C) 1998 Free Software Foundation, Inc.
+# Copyright (C) 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 #
@@ -73,5 +73,6 @@ CP1254			CP1254			Y	UTF8
 CP1255			CP1255			Y	UTF8
 CP1256			CP1256			Y	UTF8
 CP1257			CP1257			Y	UTF8
+CP1258			CP1258			Y	UTF8
 ISO-2022-KR		ISO-2022-KR		N	UTF8
 EUC-KR			EUC-KR			Y	UTF8
