@@ -23,6 +23,8 @@
 #include <time.h>
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
+#include <atomic.h>
+
 
 #define __NR_futex		221
 #define FUTEX_WAIT		0
@@ -84,32 +86,7 @@
      __val;								      \
   })
 
-#define lll_mutex_trylock(lock)	__lll_trylock(&(lock))
-
-/* Add inc to *futex atomically and return the old value. */
-#define __lll_add(futex, inc) \
-  ({ int __val, __tmp;							      \
-     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
-		       "	addi	%1,%0,%4\n"			      \
-		       "	stwcx.	%1,0,%3\n"			      \
-		       "	bne-	1b"				      \
-		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	      \
-		       : "r" (futex), "I" (inc), "2" (*futex)		      \
-		       : "cr0");					      \
-     __val;								      \
-  })
-
-/* Atomically store newval and return the old value.  */
-#define __lll_test_and_set(futex, newval)				      \
-  ({ int __val;								      \
-      __asm __volatile (__lll_rel_instr "\n"				      \
-			"1:	lwarx	%0,0,%2\n"			      \
-			"	stwcx.	%3,0,%2\n"			      \
-			"	bne-	1b"				      \
-			: "=&r" (__val), "=m" (*futex)			      \
-			: "r" (futex), "r" (newval), "1" (*futex)	      \
-			: "cr0", "memory");				      \
-      __val; })
+#define lll_mutex_trylock(lock)	__lll_trylock (&(lock))
 
 
 extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
@@ -117,7 +94,7 @@ extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
 #define lll_mutex_lock(lock) \
   (void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = __lll_add (__futex, 1);					      \
+    int __val = atomic_exchange_and_add (__futex, 1);			      \
     __asm __volatile (__lll_acq_instr ::: "memory");			      \
     if (__builtin_expect (__val != 0, 0))				      \
       __lll_lock_wait (__futex, __val);					      \
@@ -128,7 +105,7 @@ extern int __lll_timedlock_wait
 
 #define lll_mutex_timedlock(lock, abstime) \
   ({ int *__futex = &(lock);						      \
-     int __val = __lll_add (__futex, 1);				      \
+     int __val = atomic_exchange_and_add (__futex, 1);			      \
      __asm __volatile (__lll_acq_instr ::: "memory");			      \
      if (__builtin_expect (__val != 0, 0))				      \
        __val = __lll_timedlock_wait (__futex, __val, (abstime));	      \
@@ -138,7 +115,7 @@ extern int __lll_timedlock_wait
 #define lll_mutex_unlock(lock) \
   ((void) ({								      \
     int *__futex = &(lock);						      \
-    int __val = __lll_test_and_set (__futex, 0);			      \
+    int __val = atomic_exchange (__futex, 0);				      \
     if (__builtin_expect (__val > 1, 0))				      \
       lll_futex_wake (__futex, 1);					      \
   }))
@@ -189,23 +166,6 @@ extern int __lll_timedwait_tid (int *, const struct timespec *)
     if ((tid) != 0)							      \
       __res = __lll_timedwait_tid (&(tid), (abstime));			      \
     __res;								      \
-  })
-
-
-/* Decrement *futex if it is > 0, and return the old value */
-#define __lll_dec_if_positive(futex) \
-  ({ int __val, __tmp;							      \
-     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
-		       "	cmpwi	0,%0,0\n"			      \
-		       "	addi	%1,%0,-1\n"			      \
-		       "	ble	2f\n"				      \
-		       "	stwcx.	%1,0,%3\n"			      \
-		       "	bne-	1b\n"				      \
-		       "2:	" __lll_acq_instr			      \
-		       : "=&b" (__val), "=&r" (__tmp), "=m" (*futex)	      \
-		       : "r" (futex), "2" (*futex)			      \
-		       : "cr0");					      \
-     __val;								      \
   })
 
 

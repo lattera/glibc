@@ -1,3 +1,23 @@
+2003-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h: Include <atomic.h>.
+	Remove __lll_add, __lll_dev_if_positive, and __lll_test_and_set
+	definitions.  Replace uses with calls to atomic_* functions.
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/lowlevellock.c: Replace __lll_add and
+	__lll_test_and_set calls with atomic_exchange_and_add and
+	atomic_exchange calls respectively.
+	* sysdeps/unix/sysv/linux/sem_post.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_trywait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sem_wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/pthread_once.c: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/sem_port.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/pthread_once.c: Likewise.
+
+	* allocatestack.c (allocate_stack): Assume atomic_exchange_and_add
+	returns the old value.
+
 2003-03-20  Martin Schwidefsky  <sky@mschwid3.boeblingen.de.ibm.com>
 
 	* sysdeps/s390/pthread_spin_lock.c (pthread_spin_lock): Use type

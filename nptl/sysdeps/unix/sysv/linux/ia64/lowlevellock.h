@@ -24,6 +24,7 @@
 #include <sys/param.h>
 #include <bits/pthreadtypes.h>
 #include <ia64intrin.h>
+#include <atomic.h>
 
 #define SYS_futex		1230
 #define FUTEX_WAIT		0
@@ -89,45 +90,6 @@
 #define __lll_compare_and_swap(futex, oldval, newval) \
   __sync_val_compare_and_swap_si ((futex), (oldval), (newval))
 
-/* Add inc to *futex atomically and return the old value.  */
-#define __lll_add(futex, inc) \
-  ({									      \
-    int __val, __oldval;						      \
-    int *__futex = (futex);						      \
-    int __inc = inc;							      \
-									      \
-    __val = *__futex;							      \
-    do									      \
-      {									      \
-        __oldval = __val;						      \
-	__val = __lll_compare_and_swap (__futex, __oldval, __oldval + __inc); \
-      }									      \
-    while (__builtin_expect (__val != __oldval, 0));			      \
-    __val;								      \
-  })
-
-/* Decrement *futex if it is > 0, and return the old value.  */
-#define __lll_dec_if_positive(futex)					      \
-  ({									      \
-    int __val, __oldval;						      \
-    int *__futex = (futex);						      \
-									      \
-    __val = *__futex;							      \
-    do									      \
-      {									      \
-	if (__builtin_expect (__val <= 0, 0))				      \
-	  break;							      \
-	__oldval = __val;						      \
-	__val = __lll_compare_and_swap (__futex, __oldval, __oldval - 1);     \
-      }									      \
-    while (__builtin_expect (__val != __oldval, 0));			      \
-    __val;								      \
-  })    
-
-/* Atomically store newval and return the old value.  */
-#define __lll_test_and_set(futex, newval) \
-  __sync_lock_test_and_set_si ((futex), (newval)) 
-
 static inline int
 __attribute__ ((always_inline))
 __lll_mutex_trylock (int *futex)
@@ -176,7 +138,7 @@ static inline void
 __attribute__ ((always_inline))
 __lll_mutex_unlock (int *futex)
 {
-  int val = __lll_test_and_set (futex, 0);
+  int val = atomic_exchange (futex, 0);
 
   if (__builtin_expect (val > 1, 0))
     lll_futex_wake (futex, 1);
