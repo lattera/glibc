@@ -1,3 +1,8 @@
+2003-04-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-96/e_gammal_r.c (__ieee754_gammal_r):
+	Always initialize *signgamp before returning an error.
+
 2003-04-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/setcontext.S: Rewrite to avoid writing
