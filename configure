@@ -1842,7 +1842,11 @@ echo "$ac_t""$stdio" 1>&6
 echo $ac_n "checking malloc selection""... $ac_c" 1>&6
 echo "configure:1844: checking malloc selection" >&5
 
-test $malloc = default && malloc=malloc
+case $malloc in
+new-malloc) USE_NEW_MALLOC=-DUSE_NEW_MALLOC ;;
+default) malloc=malloc ;;
+esac
+
 echo "$ac_t""$malloc" 1>&6
 
 
@@ -2053,6 +2057,7 @@ s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
 s%@stdio@%$stdio%g
 s%@malloc@%$malloc%g
+s%@USE_NEW_MALLOC@%$USE_NEW_MALLOC%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@gnu_ld@%$gnu_ld%g

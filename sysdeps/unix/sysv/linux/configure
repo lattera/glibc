@@ -20,7 +20,7 @@ else
 #include "confdefs.h"
 #include <linux/version.h>
 int main() {
-#if LINUX_VERSION_CODE <  ( *65536+ 0 *256+ 10) /* .0.10 */
+#if LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
 eat flaming death
 #endif
 ; return 0; }

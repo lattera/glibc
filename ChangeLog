@@ -1,3 +1,38 @@
+Mon Dec  9 03:39:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.make.in (defines): Add @USE_NEW_MALLOC@.
+	* Makefile.in: Define USE_NEW_MALLOC to -DUSE_NEW_MALLOC if
+	we use the new malloc.
+
+	* malloc.h: Use either <malloc/malloc.h> or <new-malloc/malloc.h>
+	depending on USE_NEW_MALLOC.
+
+	Fix some more POSIX.1 problems.
+	* libio/fileops.c (_IO_file_underflow): Set errno to EBADF if used
+	on a write-only stream.
+	(_IO_file_overflow): Set errno to EBADF if used on a read-only
+	stream.
+	(_IO_file_seekoff): POSIX.1 requires that fseek() after an fflush()
+	call really positions the file offset to the correct position
+	and no read-ahead happens.
+
+	* locale/C-monetary.c: Set mon_grouping file to "" and "\377"
+	to pass POSIX test suite.
+	* stdio-common/vfprintf.c: Handle empty string as grouping command
+	correctly.
+	* stdlib/grouping.h: Likewise.
+
+	* misc/syslog.c: Case first argument of __libc_cleanup_region_start.
+
+	* signal/sigsetops.h: Update copyright.  Don't include ansidecl.h.
+
+	* stdio-common/printf_fp.c: Update copyright.
+
+Sun Dec  8 16:39:28 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* time/Makefile: Compile ap.c with NO_MCHECK flag if new-malloc
+	used (not otherwise).
+
 Sun Dec  8 06:56:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* io/getwd.c: Use PATH_MAX not LOCAL_PATH_MAX.  Fix typo in
@@ -96,6 +131,9 @@ Sun Dec  8 06:56:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* time/tzset.c: De-ANSI-declfy.
 	(__tzset): Don't increment pointer tz when no DST information is
 	given.
+
+	* misc/syslog.c (vsyslog): Cast argument to __libc_cleanup_region
+	to get Hurd macros right.
 
 Sat Dec  7 23:47:54 1996  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -178,7 +178,8 @@ vsyslog(pri, fmt, ap)
 
 	/* Prepare for multiple users.  We have to take care: open and
 	   write are cancelation points.  */
-	__libc_cleanup_region_start (cancel_handler, &oldaction_ptr);
+	__libc_cleanup_region_start ((void (*) (void *)) cancel_handler,
+				     &oldaction_ptr);
 	__libc_lock_lock (syslog_lock);
 
 	/* Prepare for a broken connection.  */

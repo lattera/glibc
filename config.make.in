@@ -15,7 +15,7 @@ config-vendor = @host_vendor@
 config-os = @host_os@
 config-sysdirs = @sysnames@
 
-defines = @DEFINES@
+defines = @DEFINES@ @USE_NEW_MALLOC@
 
 elf = @elf@
 have-initfini = @libc_cv_have_initfini@

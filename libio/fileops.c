@@ -269,7 +269,10 @@ DEFUN(_IO_file_underflow, (fp),
 #endif
 
   if (fp->_flags & _IO_NO_READS)
-    return EOF;
+    {
+      __set_errno (EBADF);
+      return EOF;
+    }
   if (fp->_IO_read_ptr < fp->_IO_read_end)
     return *(unsigned char*)fp->_IO_read_ptr;
 
@@ -308,7 +311,10 @@ DEFUN(_IO_file_overflow, (f, ch),
       register _IO_FILE* f AND int ch)
 {
   if (f->_flags & _IO_NO_WRITES) /* SET ERROR */
-    return EOF;
+    {
+      __set_errno (EBADF);
+      return EOF;
+    }
   /* If currently reading or no buffer allocated. */
   if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0)
     {
@@ -387,6 +393,10 @@ DEFUN(_IO_file_seekoff, (fp, offset, dir, mode),
   _IO_pos_t result;
   _IO_off_t delta, new_offset;
   long count;
+  /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
+     offset of the underlying file must be exact.  */
+  int must_be_exact = (fp->_IO_read_base == fp->_IO_read_end
+		       && fp->_IO_write_base == fp->_IO_write_ptr);
 
   if (mode == 0)
     dir = _IO_seek_cur, offset = 0; /* Don't move any pointers. */
@@ -503,7 +513,8 @@ DEFUN(_IO_file_seekoff, (fp, offset, dir, mode),
   else
     {
       count = _IO_SYSREAD (fp, fp->_IO_buf_base,
-			   fp->_IO_buf_end - fp->_IO_buf_base);
+			   (must_be_exact
+			    ? delta : fp->_IO_buf_end - fp->_IO_buf_base));
       if (count < delta)
 	{
 	  /* We weren't allowed to read, but try to seek the remainder. */

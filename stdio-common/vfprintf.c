@@ -1417,7 +1417,7 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
 
   /* We treat all negative values like CHAR_MAX.  */
 
-  if (*grouping == CHAR_MAX || *grouping < 0)
+  if (*grouping == CHAR_MAX || *grouping <= 0)
     /* No grouping should be done.  */
     return w;
 

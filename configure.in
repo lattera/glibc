@@ -689,7 +689,11 @@ AC_MSG_RESULT($stdio)
 
 AC_MSG_CHECKING(malloc selection)
 AC_SUBST(malloc)
-test $malloc = default && malloc=malloc
+case $malloc in
+new-malloc) USE_NEW_MALLOC=-DUSE_NEW_MALLOC ;;
+default) malloc=malloc ;;
+esac
+AC_SUBST(USE_NEW_MALLOC)
 AC_MSG_RESULT($malloc)
 
 

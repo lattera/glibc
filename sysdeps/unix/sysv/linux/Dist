@@ -1,4 +1,5 @@
 init-first.h
+llseek.c
 siglist.h
 sysctl.c
 termio.h
