@@ -81,3 +81,19 @@
 #ifdef __USE_GNU
 # define MREMAP_MAYMOVE	1
 #endif
+
+/* Advice to `madvise'.  */
+#ifdef __USE_BSD
+# define MADV_NORMAL     0	/* No further special treatment.  */
+# define MADV_RANDOM     1	/* Expect random page references.  */
+# define MADV_SEQUENTIAL 2	/* Expect sequential page references.  */
+# define MADV_WILLNEED   3	/* Will need these pages.  */
+# define MADV_DONTNEED   6	/* Don't need these pages.  */
+#endif
+
+/* Not used by Linux, but here to make sure we don't clash with
+   OSF/1 defines.  */
+#if 0 && defined(__USE_BSD)
+# define MADV_DONTNEED_COMPAT 4	/* Old version?  */
+# define MADV_SPACEAVAIL 5	/* Ensure resources are available.  */
+#endif

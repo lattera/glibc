@@ -1,5 +1,7 @@
 2000-03-20  Richard Henderson  <rth@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Add MADV constants.
+
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines):
 	Kill sethae.
 	* sysdeps/unix/sysv/linux/alpha/Versions: Add pciconfig_iobase.
