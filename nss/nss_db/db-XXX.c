@@ -1,5 +1,5 @@
 /* Common code for DB-based databases in nss_db module.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -176,10 +176,19 @@ lookup (const DBT *key, struct STRUCTURE *result,
       H_ERRNO_SET (HOST_NOT_FOUND);
       status = NSS_STATUS_NOTFOUND;
     }
+  else if (buflen < value.size)
+    {
+      /* No room to copy the data to.  */
+      *errnop = ERANGE;
+      H_ERRNO_SET (NETDB_INTERNAL);
+      status = NSS_STATUS_TRYAGAIN;
+    }
   else
     {
+      /* Copy the result to a safe place.  */
+      p = (char *) memcpy (buffer, value.data, value.size);
+
       /* Skip leading blanks.  */
-      p = (char *) value.data;
       while (isspace (*p))
 	++p;
 

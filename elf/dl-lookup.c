@@ -402,7 +402,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  char buf[sizeof undefined_msg + len];
 	  __mempcpy (__mempcpy (buf, undefined_msg, sizeof undefined_msg - 1),
 		     undef_name, len + 1);
-	  _dl_signal_error (0, (reference_namee && reference_name[0]
+	  _dl_signal_error (0, (reference_name && reference_name[0]
 				? reference_name
 				: (_dl_argv[0] ?: "<main program>")), buf);
 	}

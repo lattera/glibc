@@ -1,3 +1,8 @@
+1998-03-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_db/db-XXX.c (lookup): Copy data to safe place before
+	parsing it.
+
 1998-03-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use
