@@ -1,4 +1,6 @@
-2002-08-04  Roland McGrath  <roland@frob.com>
+2002-08-04  Roland McGrath  <roland@redhat.com>
+
+	* stdlib/isomac.c (fmt): Add -DNOT_IN_libc to the compiler command.
 
 	* elf/Makefile (test-srcs): Add $(modules-names) to it.
 	(CFLAGS-vismod2.c, CFLAGS-failobj.c, CFLAGS-constload2.c,
