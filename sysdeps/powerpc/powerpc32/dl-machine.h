@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,160 +100,6 @@ elf_machine_load_address (void)
 /* The PLT uses Elf32_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
 
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  It is called
-   from code built in the PLT by elf_machine_runtime_setup.  */
-#if !defined PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.section \".text\"	\n\
-	.align 2	\n\
-	.globl _dl_runtime_resolve	\n\
-	.type _dl_runtime_resolve,@function	\n\
-_dl_runtime_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-	stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 0	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 0,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-	lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve	\n\
-	\n\
-	.align 2	\n\
-	.globl _dl_prof_resolve	\n\
-	.type _dl_prof_resolve,@function	\n\
-_dl_prof_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-        stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 5	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 5,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl profile_fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-        lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_prof_resolve,.-_dl_prof_resolve	\n\
- # Undo '.section text'.\n\
-	.previous	\n\
-");
-#else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
-	.section \".text\"	\n\
-	.align 2	\n\
-	.globl _dl_runtime_resolve	\n\
-	.globl _dl_prof_resolve	\n\
-	.type _dl_runtime_resolve,@function	\n\
-	.type _dl_prof_resolve,@function	\n\
-_dl_runtime_resolve:	\n\
-_dl_prof_resolve:	\n\
- # We need to save the registers used to pass parameters, and register 0,\n\
- # which is used by _mcount; the registers are saved in a stack frame.\n\
-	stwu 1,-64(1)	\n\
-	stw 0,12(1)	\n\
-	stw 3,16(1)	\n\
-	stw 4,20(1)	\n\
- # The code that calls this has put parameters for `fixup' in r12 and r11.\n\
-	mr 3,12	\n\
-	stw 5,24(1)	\n\
-	mr 4,11	\n\
-	stw 6,28(1)	\n\
-	mflr 0	\n\
- # We also need to save some of the condition register fields.\n\
-	stw 7,32(1)	\n\
-	stw 0,48(1)	\n\
-	stw 8,36(1)	\n\
-	mfcr 0	\n\
-	stw 9,40(1)	\n\
-	stw 10,44(1)	\n\
-	stw 0,8(1)	\n\
-	bl fixup@local	\n\
- # 'fixup' returns the address we want to branch to.\n\
-	mtctr 3	\n\
- # Put the registers back...\n\
-	lwz 0,48(1)	\n\
-	lwz 10,44(1)	\n\
-	lwz 9,40(1)	\n\
-	mtlr 0	\n\
-	lwz 8,36(1)	\n\
-	lwz 0,8(1)	\n\
-	lwz 7,32(1)	\n\
-	lwz 6,28(1)	\n\
-	mtcrf 0xFF,0	\n\
-	lwz 5,24(1)	\n\
-	lwz 4,20(1)	\n\
-	lwz 3,16(1)	\n\
-	lwz 0,12(1)	\n\
- # ...unwind the stack frame, and jump to the PLT entry we updated.\n\
-	addi 1,1,64	\n\
-	bctr	\n\
-	.size	 _dl_runtime_resolve,.-_dl_runtime_resolve	\n\
-");
-#endif
-
 /* Mask identifying addresses reserved for the user program,
    where the dynamic linker should not map anything.  */
 #define ELF_MACHINE_USER_ADDRESS_MASK	0xf0000000UL
@@ -328,9 +174,14 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rela *reloc,
   return value + reloc->r_addend;
 }
 
+
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER ppc32_gnu_pltenter
+#define ARCH_LA_PLTEXIT ppc32_gnu_pltexit
+
 #endif /* dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Do the actual processing of a reloc, once its target address
    has been determined.  */
@@ -381,16 +232,8 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     value = map->l_addr;
   else
     {
-# if defined USE_TLS && !defined RTLD_BOOTSTRAP
       sym_map = RESOLVE_MAP (&sym, version, r_type);
       value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-# else
-      value = RESOLVE (&sym, version, r_type);
-#  ifndef RTLD_BOOTSTRAP
-      if (sym != NULL)
-#  endif
-	value += sym->st_value;
-# endif
     }
   value += reloc->r_addend;
 #else
@@ -474,4 +317,4 @@ elf_machine_lazy_rel (struct link_map *map,
    DT_RELA table.  */
 #define ELF_MACHINE_PLTREL_OVERLAP 1
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

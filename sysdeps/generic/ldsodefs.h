@@ -179,6 +179,8 @@ struct La_i86_regs;
 struct La_i86_retval;
 struct La_x86_64_regs;
 struct La_x86_64_retval;
+struct La_ppc32_regs;
+struct La_ppc32_retval;
 struct La_ppc64_regs;
 struct La_ppc64_retval;
 
@@ -198,20 +200,22 @@ struct audit_ifaces
   };
   union
   {
-    uintptr_t (*i86_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
-				   uintptr_t *, const struct La_i86_regs *,
-				   unsigned int *, const char *name,
-				   long int *framesizep);
-    uintptr_t (*x86_64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-				      uintptr_t *,
-				      const struct La_x86_64_regs *,
+    Elf32_Addr (*i86_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
+				    uintptr_t *, struct La_i86_regs *,
+				    unsigned int *, const char *name,
+				    long int *framesizep);
+    Elf64_Addr (*x86_64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
+				       uintptr_t *, struct La_x86_64_regs *,
+				       unsigned int *, const char *name,
+				       long int *framesizep);
+    Elf32_Addr (*ppc32_gnu_pltenter) (Elf32_Sym *, unsigned int, uintptr_t *,
+				      uintptr_t *, struct La_ppc32_regs *,
 				      unsigned int *, const char *name,
 				      long int *framesizep);
-    uintptr_t (*ppc64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
-				     uintptr_t *,
-				     const struct La_ppc64_regs *,
-				     unsigned int *, const char *name,
-				     long int *framesizep);
+    Elf64_Addr (*ppc64_gnu_pltenter) (Elf64_Sym *, unsigned int, uintptr_t *,
+				      uintptr_t *, struct La_ppc64_regs *,
+				      unsigned int *, const char *name,
+				      long int *framesizep);
   };
   union
   {
@@ -223,11 +227,14 @@ struct audit_ifaces
 					const struct La_x86_64_regs *,
 					struct La_x86_64_retval *,
 					const char *);
+    unsigned int (*ppc32_gnu_pltexit) (Elf32_Sym *, unsigned int, uintptr_t *,
+				       uintptr_t *,
+				       const struct La_ppc32_regs *,
+				       struct La_ppc32_retval *, const char *);
     unsigned int (*ppc64_gnu_pltexit) (Elf64_Sym *, unsigned int, uintptr_t *,
 				       uintptr_t *,
 				       const struct La_ppc64_regs *,
-				       struct La_ppc64_retval *,
-				       const char *);
+				       struct La_ppc64_retval *, const char *);
   };
   unsigned int (*objclose) (uintptr_t *);
 
