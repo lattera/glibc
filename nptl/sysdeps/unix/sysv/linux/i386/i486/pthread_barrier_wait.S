@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -84,16 +84,32 @@ pthread_barrier_wait:
 #endif
 	je,pn	8b
 
+	/* Increment LEFT.  If this brings the count back to the
+	   initial count unlock the object.  */
+	movl	$1, %edx
+	movl	INIT_COUNT(%ebx), %ecx
+	LOCK
+	xaddl	%edx, LEFT(%ebx)
+	subl	$1, %ecx
+	cmpl	%ecx, %edx
+	jne,pt	10f
+
+	/* Release the mutex.  We cannot release the lock before
+	   waking the waiting threads since otherwise a new thread might
+	   arrive and gets waken up, too.  */
+	LOCK
+	subl	$1, MUTEX(%ebx)
+	jne	9f
+
 	/* Note: %esi is still zero.  */
-	movl	%esi, %eax		/* != PTHREAD_BARRIER_SERIAL_THREAD */
+10:	movl	%esi, %eax		/* != PTHREAD_BARRIER_SERIAL_THREAD */
 
 	popl	%esi
 	popl	%ebx
 	ret
 
 	/* The necessary number of threads arrived.  */
-3:	movl	INIT_COUNT(%ebx), %eax
-	movl	%eax, LEFT(%ebx)
+3:
 #if CURR_EVENT == 0
 	addl	$1, (%ebx)
 #else
@@ -106,6 +122,16 @@ pthread_barrier_wait:
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
+
+	/* Increment LEFT.  If this brings the count back to the
+	   initial count unlock the object.  */
+	movl	$1, %edx
+	movl	INIT_COUNT(%ebx), %ecx
+	LOCK
+	xaddl	%edx, LEFT(%ebx)
+	subl	$1, %ecx
+	cmpl	%ecx, %edx
+	jne,pt	5f
 
 	/* Release the mutex.  We cannot release the lock before
 	   waking the waiting threads since otherwise a new thread might
@@ -130,4 +156,8 @@ pthread_barrier_wait:
 6:	leal	MUTEX(%ebx), %eax
 	call	__lll_mutex_unlock_wake
 	jmp	7b
+
+9:	leal	MUTEX(%ebx), %eax
+	call	__lll_mutex_unlock_wake
+	jmp	10b
 	.size	pthread_barrier_wait,.-pthread_barrier_wait

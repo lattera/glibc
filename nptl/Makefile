@@ -201,7 +201,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-key1 tst-key2 tst-key3 tst-key4 \
 	tst-sem1 tst-sem2 tst-sem3 tst-sem4 tst-sem5 tst-sem6 tst-sem7 \
 	tst-sem8 tst-sem9 \
-	tst-barrier1 tst-barrier2 tst-barrier3 \
+	tst-barrier1 tst-barrier2 tst-barrier3 tst-barrier4 \
 	tst-align \
 	tst-basic1 tst-basic2 tst-basic3 tst-basic4 tst-basic5 tst-basic6 \
 	tst-kill1 tst-kill2 tst-kill3 tst-kill4 tst-kill5 tst-kill6 \

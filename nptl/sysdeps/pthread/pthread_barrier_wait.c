@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>, 2003.
 
@@ -29,6 +29,7 @@ pthread_barrier_wait (barrier)
      pthread_barrier_t *barrier;
 {
   struct pthread_barrier *ibarrier = (struct pthread_barrier *) barrier;
+  int result = 0;
 
   /* Make sure we are alone.  */
   lll_lock (ibarrier->lock);
@@ -39,41 +40,42 @@ pthread_barrier_wait (barrier)
   /* Are these all?  */
   if (ibarrier->left == 0)
     {
-      /* Yes.  Restore the barrier to be empty.  */
-      ibarrier->left = ibarrier->init_count;
-
-      /* Increment the event counter to avoid invalid wake-ups and
+      /* Yes. Increment the event counter to avoid invalid wake-ups and
 	 tell the current waiters that it is their turn.  */
       ++ibarrier->curr_event;
 
       /* Wake up everybody.  */
       lll_futex_wake (&ibarrier->curr_event, INT_MAX);
 
-      /* The barrier is open for business again.  */
-      lll_unlock (ibarrier->lock);
-
       /* This is the thread which finished the serialization.  */
-      return PTHREAD_BARRIER_SERIAL_THREAD;
+      result = PTHREAD_BARRIER_SERIAL_THREAD;
     }
-
-  /* The number of the event we are waiting for.  The barrier's event
-     number must be bumped before we continue.  */
-  unsigned int event = ibarrier->curr_event;
-  do
+  else
     {
-      /* Before suspending, make the barrier available to others.  */
-      lll_unlock (ibarrier->lock);
+      /* The number of the event we are waiting for.  The barrier's event
+	 number must be bumped before we continue.  */
+      unsigned int event = ibarrier->curr_event;
+      do
+	{
+	  /* Before suspending, make the barrier available to others.  */
+	  lll_unlock (ibarrier->lock);
 
-      /* Wait for the event counter of the barrier to change.  */
-      lll_futex_wait (&ibarrier->curr_event, event);
+	  /* Wait for the event counter of the barrier to change.  */
+	  lll_futex_wait (&ibarrier->curr_event, event);
 
-      /* We are going to access shared data.  */
-      lll_lock (ibarrier->lock);
+	  /* We are going to access shared data.  */
+	  lll_lock (ibarrier->lock);
+	}
+      while (event == ibarrier->curr_event);
     }
-  while (event == ibarrier->curr_event);
 
-  /* We are done, let others use the barrier.  */
-  lll_unlock (ibarrier->lock);
+  /* Make sure the init_count is stored locally or in a register.  */
+  unsigned int init_count = ibarrier->init_count;
 
-  return 0;
+  /* If this was the last woken thread, unlock.  */
+  if (atomic_exchange_and_add (ibarrier->left, 1) == init_count - 1)
+    /* We are done.  */
+    lll_unlock (ibarrier->lock);
+
+  return result;
 }
