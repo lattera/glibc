@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002, 2003
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -38,6 +38,7 @@ static struct dl_action_result *static_buf;
 
 /* This is the key for the thread specific memory.  */
 static __libc_key_t key;
+__libc_once_define (static, once);
 
 /* Destructor for the thread-specific data.  */
 static void init (void);
@@ -49,6 +50,9 @@ dlerror (void)
 {
   char *buf = NULL;
   struct dl_action_result *result;
+
+  /* If we have not yet initialized the buffer do it now.  */
+  __libc_once (once, init);
 
   /* Get error string.  */
   result = (struct dl_action_result *) __libc_getspecific (key);
@@ -100,7 +104,6 @@ int
 internal_function
 _dlerror_run (void (*operate) (void *), void *args)
 {
-  __libc_once_define (static, once);
   struct dl_action_result *result;
 
   /* If we have not yet initialized the buffer do it now.  */

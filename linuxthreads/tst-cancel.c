@@ -12,6 +12,7 @@ int fd;
 pthread_barrier_t bar;
 
 
+#ifdef NOT_YET
 static void
 cleanup (void *arg)
 {
@@ -52,7 +53,7 @@ t2 (void *arg)
   return NULL;
   pthread_cleanup_pop (0);
 }
-
+#endif
 
 /* This does not work yet.  */
 volatile int cleanupokcnt;
@@ -63,7 +64,7 @@ cleanupok (void *arg)
   ++cleanupokcnt;
 }
 
-
+#ifdef NOT_YET
 static void *
 t3 (void *arg)
 {
@@ -72,7 +73,7 @@ t3 (void *arg)
   pthread_exit (NULL);
   pthread_cleanup_pop (0);
 }
-
+#endif
 
 static void
 innerok (int a)
@@ -170,7 +171,7 @@ main (int argc, char *argv[])
   err = pthread_create (&td, NULL, t4, (void *) 7);
   if (err != 0)
     {
-      printf ("cannot create thread t3: %s\n", strerror (err));
+      printf ("cannot create thread t4: %s\n", strerror (err));
       exit (1);
     }
 

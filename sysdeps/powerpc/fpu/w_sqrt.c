@@ -23,8 +23,8 @@
 #include <inttypes.h>
 
 static const double almost_half = 0.5000000000000001;  /* 0.5 + 2^-53 */
-static const uint32_t a_nan = 0x7fc00000;
-static const uint32_t a_inf = 0x7f800000;
+static const ieee_float_shape_type a_nan = { .word = 0x7fc00000 };
+static const ieee_float_shape_type a_inf = { .word = 0x7f800000 };
 static const float two108 = 3.245185536584267269e+32;
 static const float twom54 = 5.551115123125782702e-17;
 extern const float __t_sqrt[1024];
@@ -45,7 +45,7 @@ extern const float __t_sqrt[1024];
 double
 __sqrt(double x)
 {
-  const float inf = *(const float *)&a_inf;
+  const float inf = a_inf.value;
   /* x = f_wash(x); *//* This ensures only one exception for SNaN. */
   if (x > 0)
     {
@@ -130,7 +130,7 @@ __sqrt(double x)
 	x = __kernel_standard(x,x,26);
       else
 #endif
-      x = *(const float*)&a_nan;
+      x = a_nan.value;
     }
   return f_wash(x);
 }

@@ -62,8 +62,8 @@ main (void)
   TEST (PAGE_SIZE, "d", getpagesize ());
 #endif
 
-  TEST (WORD_BIT, "zd", sizeof (int) * CHAR_BIT);
-  TEST (LONG_BIT, "zd", sizeof (long int) * CHAR_BIT);
+  TEST (WORD_BIT, "d", (int) sizeof (int) * CHAR_BIT);
+  TEST (LONG_BIT, "d", (int) sizeof (long int) * CHAR_BIT);
 
   return result;
 }

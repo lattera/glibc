@@ -1307,13 +1307,15 @@ cannot allocate TLS data structures for initial thread");
 			  : rtld_progname ?: "<main program>",
 			  l->l_name[0] ? l->l_name
 			  : rtld_progname ?: "<main program>",
-			  (int) sizeof l->l_map_start * 2, l->l_map_start,
-			  (int) sizeof l->l_addr * 2, l->l_addr);
+			  (int) sizeof l->l_map_start * 2,
+			  (size_t) l->l_map_start,
+			  (int) sizeof l->l_addr * 2,
+			  (size_t) l->l_addr);
 #ifdef USE_TLS
 	      if (l->l_tls_modid)
 		_dl_printf (" TLS(0x%Zx, 0x%0*Zx)\n", l->l_tls_modid,
 			    (int) sizeof l->l_tls_offset * 2,
-			    l->l_tls_offset);
+			    (size_t) l->l_tls_offset);
 	      else
 #endif
 		_dl_printf ("\n");
@@ -1330,7 +1332,7 @@ cannot allocate TLS data structures for initial thread");
 	    else
 	      _dl_printf ("\t%s => %s (0x%0*Zx)\n", l->l_libname->name,
 			  l->l_name, (int) sizeof l->l_map_start * 2,
-			  l->l_map_start);
+			  (size_t) l->l_map_start);
 	}
 
       if (__builtin_expect (mode, trace) != trace)
@@ -1349,8 +1351,9 @@ cannot allocate TLS data structures for initial thread");
 
 	    _dl_printf ("%s found at 0x%0*Zd in object at 0x%0*Zd\n",
 			INTUSE(_dl_argv)[i],
-			(int) sizeof ref->st_value * 2, ref->st_value,
-			(int) sizeof loadbase * 2, loadbase);
+			(int) sizeof ref->st_value * 2,
+			(size_t) ref->st_value,
+			(int) sizeof loadbase * 2, (size_t) loadbase);
 	  }
       else
 	{

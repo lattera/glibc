@@ -27,7 +27,7 @@
 #include <string.h>
 #include <unistd.h>
 
-static void *funcall (char **stringp);
+static void *funcall (char **stringp) __attribute_noinline__;
 static void *eval (char **stringp);
 
 

@@ -1,5 +1,5 @@
 /* Single-precision floating point square root.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,8 +23,8 @@
 #include <inttypes.h>
 
 static const float almost_half = 0.50000006;  /* 0.5 + 2^-24 */
-static const uint32_t a_nan = 0x7fc00000;
-static const uint32_t a_inf = 0x7f800000;
+static const ieee_float_shape_type a_nan = { .word = 0x7fc00000 };
+static const ieee_float_shape_type a_inf = { .word = 0x7f800000 };
 static const float two48 = 281474976710656.0;
 static const float twom24 = 5.9604644775390625e-8;
 extern const float __t_sqrt[1024];
@@ -45,7 +45,7 @@ extern const float __t_sqrt[1024];
 float
 __sqrtf(float x)
 {
-  const float inf = *(const float *)&a_inf;
+  const float inf = a_inf.value;
   /* x = f_washf(x); *//* This ensures only one exception for SNaN. */
   if (x > 0)
     {
@@ -125,7 +125,7 @@ __sqrtf(float x)
 	x = __kernel_standard(x,x,126);
       else
 #endif
-      x = *(const float*)&a_nan;
+      x = a_nan.value;
     }
   return f_washf(x);
 }

@@ -50,7 +50,9 @@ struct sigcontext
   struct ia64_fpreg sc_fr[128];	/* floating-point registers */
   unsigned long int sc_rbs_base;/* NULL or new base of sighandler's rbs */
   unsigned long int sc_loadrs;	/* see description above */
-  unsigned long int sc_rsvd[14];/* reserved for future use */
+  unsigned long int sc_ar25;	/* cmp8xchg16 uses this */
+  unsigned long int sc_ar26;	/* rsvd for scratch use */
+  unsigned long int sc_rsvd[12];/* reserved for future use */
 
   /* sc_mask is actually an sigset_t but we don't want to
    * include the kernel headers here. */

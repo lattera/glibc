@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -74,7 +74,8 @@ int
 __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 {
 #if __ASSUME_IPC64 > 0
-  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, CHECK_1 (buf));
+  return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
+			 CHECK_1 (buf));
 #else
   switch (cmd) {
     case SHM_STAT:
@@ -85,63 +86,69 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
 #endif
       break;
     default:
-      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, CHECK_1 (buf));
+      return INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0,
+			     CHECK_1 (buf));
   }
 
   {
     int save_errno = errno, result;
-    struct __old_shmid_ds old;
+    union
+      {
+	struct __old_shmid_ds ds;
+	struct __old_shminfo info;
+      } old;
 
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new shmctl.  */
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0, CHECK_1 (buf));
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd | __IPC_64, 0,
+			     CHECK_1 (buf));
     if (result != -1 || errno != EINVAL)
       return result;
 
     __set_errno(save_errno);
     if (cmd == IPC_SET)
       {
-	old.shm_perm.uid = buf->shm_perm.uid;
-	old.shm_perm.gid = buf->shm_perm.gid;
-	old.shm_perm.mode = buf->shm_perm.mode;
-	if (old.shm_perm.uid != buf->shm_perm.uid ||
-	    old.shm_perm.gid != buf->shm_perm.gid)
+	old.ds.shm_perm.uid = buf->shm_perm.uid;
+	old.ds.shm_perm.gid = buf->shm_perm.gid;
+	old.ds.shm_perm.mode = buf->shm_perm.mode;
+	if (old.ds.shm_perm.uid != buf->shm_perm.uid ||
+	    old.ds.shm_perm.gid != buf->shm_perm.gid)
 	  {
 	    __set_errno (EINVAL);
 	    return -1;
 	  }
       }
-    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0, __ptrvalue (&old));
+    result = INLINE_SYSCALL (ipc, 5, IPCOP_shmctl, shmid, cmd, 0,
+			     __ptrvalue (&old.ds));
     if (result != -1 && (cmd == SHM_STAT || cmd == IPC_STAT))
       {
 	memset(buf, 0, sizeof(*buf));
-	buf->shm_perm.__key = old.shm_perm.__key;
-	buf->shm_perm.uid = old.shm_perm.uid;
-	buf->shm_perm.gid = old.shm_perm.gid;
-	buf->shm_perm.cuid = old.shm_perm.cuid;
-	buf->shm_perm.cgid = old.shm_perm.cgid;
-	buf->shm_perm.mode = old.shm_perm.mode;
-	buf->shm_perm.__seq = old.shm_perm.__seq;
-	buf->shm_atime = old.shm_atime;
-	buf->shm_dtime = old.shm_dtime;
-	buf->shm_ctime = old.shm_ctime;
-	buf->shm_segsz = old.shm_segsz;
-	buf->shm_nattch = old.shm_nattch;
-	buf->shm_cpid = old.shm_cpid;
-	buf->shm_lpid = old.shm_lpid;
+	buf->shm_perm.__key = old.ds.shm_perm.__key;
+	buf->shm_perm.uid = old.ds.shm_perm.uid;
+	buf->shm_perm.gid = old.ds.shm_perm.gid;
+	buf->shm_perm.cuid = old.ds.shm_perm.cuid;
+	buf->shm_perm.cgid = old.ds.shm_perm.cgid;
+	buf->shm_perm.mode = old.ds.shm_perm.mode;
+	buf->shm_perm.__seq = old.ds.shm_perm.__seq;
+	buf->shm_atime = old.ds.shm_atime;
+	buf->shm_dtime = old.ds.shm_dtime;
+	buf->shm_ctime = old.ds.shm_ctime;
+	buf->shm_segsz = old.ds.shm_segsz;
+	buf->shm_nattch = old.ds.shm_nattch;
+	buf->shm_cpid = old.ds.shm_cpid;
+	buf->shm_lpid = old.ds.shm_lpid;
       }
 #if __WORDSIZE != 32
     else if (result != -1 && cmd == IPC_INFO)
       {
-	struct __old_shminfo *oldi = (struct __old_shminfo *)&old;
 	struct shminfo *i = (struct shminfo *)buf;
 
 	memset(i, 0, sizeof(*i));
-	i->shmmax = oldi->shmmax;
-	i->shmmin = oldi->shmmin;
-	i->shmmni = oldi->shmmni;
-	i->shmseg = oldi->shmseg;
-	i->shmall = oldi->shmall;
+	i->shmmax = old.info.shmmax;
+	i->shmmin = old.info.shmmin;
+	i->shmmni = old.info.shmmni;
+	i->shmseg = old.info.shmseg;
+	i->shmall = old.info.shmall;
       }
 #endif
     return result;

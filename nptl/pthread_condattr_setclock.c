@@ -44,8 +44,9 @@ pthread_condattr_setclock (attr, clock_id)
 	  struct timespec ts;
 
 	  INTERNAL_SYSCALL_DECL (err);
-	  int val = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC,
-				      &ts);
+	  int val;
+	  val = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC,
+				  &ts);
 	  avail = INTERNAL_SYSCALL_ERROR_P (val, err) ? -1 : 1;
 	}
 

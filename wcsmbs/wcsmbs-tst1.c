@@ -32,10 +32,10 @@ main (void)
   buf[idx] = 0;
   printf ("orig string %s\n", str);
   printf ("string by wctomb %s\n", buf);
-  printf ("string by %%C %C", tmp[0]);
+  printf ("string by %%C %C", (wint_t) tmp[0]);
   if (tmp[0] != L'H')
     result = 1;
-  printf ("%C\n", tmp[1]);
+  printf ("%C\n", (wint_t) tmp[1]);
   if (tmp[1] != L'e')
     result = 1;
   printf ("string by %%S %S\n", tmp);
@@ -43,7 +43,7 @@ main (void)
     result = 1;
   puts ("---- test 2 ------");
   printf ("wchar string %S\n", tmp1);
-  printf ("wchar %C\n", tmp1[0]);
+  printf ("wchar %C\n", (wint_t) tmp1[0]);
   test = wcstombs (buf, tmp1, (wcslen (tmp1) + 1) * sizeof (wchar_t));
   printf ("size of string by wcstombs %d\n", test);
   if (test != wcslen (tmp1))

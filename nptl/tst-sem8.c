@@ -36,8 +36,6 @@ int
 main (void)
 {
   sem_t *s;
-  sem_t *s2;
-  sem_t *s3;
   int i;
 
   on_exit (remove_sem, (void *) "/glibc-tst-sem8");

@@ -16,7 +16,7 @@ main (void)
 
   printf ("with %%S: %S\n", tmp);
 
-  printf ("with %%C: %C\n", tmp[0]);
+  printf ("with %%C: %C\n", (wint_t) tmp[0]);
 
   return 0;
 }

@@ -84,7 +84,7 @@ typedef struct
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 #  define TLS_INIT_TP(tcbp, secondcall) \
-  (__thread_self = (tcbp), NULL)
+  (__thread_self = (__typeof (__thread_self)) (tcbp), NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \

@@ -1,4 +1,4 @@
-/* futimes -- change access and modification times of open file.  Stub version.
+/* futimes -- change access and modification times of open file.  Linux version.
    Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -58,8 +58,8 @@ __futimes (int fd, const struct timeval tvp[2])
   if (tvp != NULL)
     {
       times = &buf;
-      buf.actime = tvp[0].tv_sec + tvp[0].tv_usec >= 500000;
-      buf.modtime = tvp[1].tv_sec + tvp[1].tv_usec >= 500000;
+      buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
+      buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
     }
   else
     times = NULL;

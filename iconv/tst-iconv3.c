@@ -42,7 +42,7 @@ main (int argc, char *argv[])
 
       printf ("inptr change: %td\n", inptr - inbuf);
       printf ("inlen change: %zd\n", BUFSIZE - inbytes_left);
-      printf ("outptr change: %zd\n", outptr - (char *) outbuf);
+      printf ("outptr change: %td\n", outptr - (char *) outbuf);
       printf ("outlen change: %zd\n", BUFSIZE * 4 - outbytes_left);
       result = 1;
     }

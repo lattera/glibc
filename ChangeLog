@@ -1,3 +1,56 @@
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* dlfcn/dlerror.c (once): New.
+	(dlerror): Call __libc_once.
+	(_dlerror_run): Remove once.
+
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
+	Sync with 2.5.7 and 2.5.73 kernel changes.
+
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* dlfcn/eval.c (funcall): Add noinline attribute to shut up warnings.
+	* elf/rtld.c (dl_main): Cast ElfW(Addr) arguments with %Zx/%Zd
+	formats to size_t.
+	* elf/dl-lookup.c (_dl_debug_bindings): Likewise.
+	* elf/tst-tls6.c (do_test): Use %zd format for l_tls_modid.
+	* elf/tst-tls8.c (do_test): Use %zd format for modid1 and modid2.
+	* gmon/tst-sprofil.c (main): Add parens to shut up warning.
+	* iconv/tst-iconv3.c (main): Use %td instead of %zd for pointer
+	difference argument.
+	* stdio-common/tst-wc-printf.c (main): Cast arguments with %C
+	format to wint_t.
+	* stdlib/tst-limits.c (main): For WORD_BIT and LONG_BIT, use
+	%d format and cast expected value to int.
+	* sysdeps/generic/libc-start.c (STATIC): Add
+	__attribute__((always_inline) if LIBC_START_MAIN is already defined.
+	* sysdeps/powerpc/fpu/w_sqrt.c (a_nan, a_inf): Change from uint32_t
+	to ieee_float_shape_type.
+	(__sqrt): Avoid type punning.
+	* sysdeps/powerpc/fpu/w_sqrtf.c (a_nan, a_inf): Change from uint32_t
+	to ieee_float_shape_type.
+	(__sqrtf): Avoid type punning.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_rela): Don't define
+	refsym if in dl-conflict.c.
+	* sysdeps/s390/s390-64/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/unix/sysv/linux/i386/semctl.c (union semun): Add __old_buf.
+	(__new_semctl): Shut up warning.
+	* sysdeps/unix/sysv/linux/semctl.c (union semun): Add __old_buf.
+	(__new_semctl): Shut up warning.
+	* sysdeps/unix/sysv/linux/shmctl.c (__new_shmctl): Wrap long lines.
+	Change old into union of __old_shmid_ds and __old_shminfo structs.
+	Adjust all users.
+	* wcsmbs/wcsmbs-tst1.c (main): Cast arguments with %C format to wint_t.
+
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/utimes.c (__utimes): Fix actime and
+	modtime computation.
+	* sysdeps/unix/sysv/linux/futimes.c (__futimes): Likewise.
+	* sysdeps/posix/utimes.c (__utimes): Likewise.
+
 2003-07-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-reloc.c (_dl_allocate_static_tls): Don't return any value,

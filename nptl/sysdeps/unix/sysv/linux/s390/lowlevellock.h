@@ -162,7 +162,7 @@ extern int ___lll_mutex_timedlock (int *, const struct timespec *, int)
 
 static inline int
 __attribute__ ((always_inline))
-__lll_mutex_timedlock (int *futex, struct timespec *abstime)
+__lll_mutex_timedlock (int *futex, const struct timespec *abstime)
 {
   int oldval;
   int newval;

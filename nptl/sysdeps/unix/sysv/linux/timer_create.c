@@ -133,7 +133,8 @@ timer_create (clock_id, evp, timerid)
 	    {
 	      INTERNAL_SYSCALL_DECL (err);
 	      struct timespec ts;
-	      int res = INTERNAL_SYSCALL (clock_getres, err, 1, &ts);
+	      int res;
+	      res = INTERNAL_SYSCALL (clock_getres, err, 1, &ts);
 	      __no_posix_timers = (INTERNAL_SYSCALL_ERROR_P (res, err)
 				   ? -1 : 1);
 	    }
@@ -193,8 +194,9 @@ timer_create (clock_id, evp, timerid)
 
 	      /* Create the timer.  */
 	      INTERNAL_SYSCALL_DECL (err);
-	      int res = INTERNAL_SYSCALL (timer_create, err, 3, clock_id, &sev,
-					  &newp->ktimerid);
+	      int res;
+	      res = INTERNAL_SYSCALL (timer_create, err, 3, clock_id, &sev,
+				      &newp->ktimerid);
 	      if (! INTERNAL_SYSCALL_ERROR_P (res, err))
 		{
 		  *timerid = (timer_t) newp;

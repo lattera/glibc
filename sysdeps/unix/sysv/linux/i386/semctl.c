@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -48,6 +48,7 @@ union semun
   struct semid_ds *buf;		/* buffer for IPC_STAT & IPC_SET */
   unsigned short int *array;	/* array for GETALL & SETALL */
   struct seminfo *__buf;	/* buffer for IPC_INFO */
+  struct __old_semid_ds *__old_buf;
 };
 
 #include <bp-checks.h>
@@ -145,7 +146,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 #endif
 
     buf = arg.buf;
-    arg.buf = (struct semid_ds *)&old;
+    arg.__old_buf = &old;
     if (cmd == IPC_SET)
       {
 	old.sem_perm.uid = buf->sem_perm.uid;

@@ -196,7 +196,7 @@ static inline long atomic_decrement(struct pthread_atomic *pa)
 }
 
 
-static inline void
+static inline __attribute__((always_inline)) void
 __pthread_set_own_extricate_if (pthread_descr self, pthread_extricate_if *peif)
 {
   /* Only store a non-null peif if the thread has cancellation enabled.

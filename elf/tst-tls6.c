@@ -36,7 +36,7 @@ do_test (void)
 	modid = ((struct link_map *) h)->l_tls_modid;
       else if (((struct link_map *) h)->l_tls_modid != modid)
 	{
-	  printf ("round %d: modid now %d, initially %d\n",
+	  printf ("round %d: modid now %zd, initially %d\n",
 		  i, ((struct link_map *) h)->l_tls_modid, modid);
 	  result = 1;
 	}

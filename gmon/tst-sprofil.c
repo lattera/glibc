@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -165,7 +165,7 @@ main (int argc, char **argv)
       if (buf[i][j] != 0)
 	printf ("%0*Zx\t%u\t(buffer %d)\n",
 		(int) (sizeof (size_t) * 2),
-		(taddr[i] + (char *) &buf[i][j] - (char *) &buf[i][0]),
+		(taddr[i] + ((char *) &buf[i][j] - (char *) &buf[i][0])),
 		buf[i][j], i);
 
   return 0;

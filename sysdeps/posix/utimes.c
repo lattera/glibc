@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,8 +31,8 @@ __utimes (const char *file, const struct timeval tvp[2])
   if (tvp)
     {
       times = &buf;
-      times->actime = tvp[0].tv_sec + tvp[0].tv_usec / 1000000;
-      times->modtime = tvp[1].tv_sec + tvp[1].tv_usec / 1000000;
+      buf.actime = tvp[0].tv_sec + (tvp[0].tv_usec + 500000) / 1000000;
+      buf.modtime = tvp[1].tv_sec + (tvp[1].tv_usec + 500000) / 1000000;
     }
   else
     times = NULL;

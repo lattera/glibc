@@ -100,8 +100,9 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       {
 #ifdef __NR_clock_gettime
 	INTERNAL_SYSCALL_DECL (err);
-	int val = INTERNAL_SYSCALL (clock_gettime, err, 2,
-				    cond->__data.__clock, &rt);
+	int val;
+	val = INTERNAL_SYSCALL (clock_gettime, err, 2,
+				cond->__data.__clock, &rt);
 # ifndef __ASSUME_POSIX_TIMERS
 	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (val, err), 0))
 	  {

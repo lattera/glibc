@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    ARM version.
-   Copyright (C) 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -23,7 +23,7 @@
 #define _PT_MACHINE_H   1
 
 #ifndef PT_EI
-# define PT_EI extern inline
+# define PT_EI extern inline __attribute__ ((always_inline))
 #endif
 
 extern long int testandset (int *spinlock);

@@ -1,3 +1,19 @@
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Shut up warnings if INTERNAL_SYSCALL_ERROR_P does not use its first
+	argument.
+	* sysdeps/unix/sysv/linux/timer_create.c (timer_create): Likewise.
+	* pthread_condattr_setclock.c (pthread_condattr_setclock): Likewise.
+	* sysdeps/unix/sysv/linux/s390/jmp-unwind.c: Include pthreaddef.h.
+	(__pthread_cleanup_upto): Fix prototype.
+	(_longjmp_unwind): Adjust caller.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (__lll_mutex_timedlock):
+	Change second argument to const struct pointer.
+	* tst-sem8.c (main): Remove unused s2 and s3 variables.
+	* tst-sem9.c (main): Likewise.
+	* unwind.c: Include string.h for strlen prototype.
+
 2003-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S

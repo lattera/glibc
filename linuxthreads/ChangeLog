@@ -1,3 +1,30 @@
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/pt-machine.h (PT_EI): Add
+	__attribute__((always_inline)).
+	* sysdeps/arm/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/cris/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/hppa/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/i386/i686/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/i386/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/ia64/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/m68k/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/mips/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/powerpc/powerpc32/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/powerpc/powerpc64/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/s390/s390-32/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/s390/s390-64/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/sh/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/sparc/sparc32/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h (PT_EI): Likewise.
+	* sysdeps/x86_64/pt-machine.h (PT_EI): Likewise.
+	* spinlock.h (__pthread_set_own_extricate_if): Likewise.
+	* sysdeps/ia64/tls.h (TLS_INIT_TP): Cast tcbp to __typeof
+	(__thread_self).
+	* Examples/ex13.c (main): Change res type to void * to avoid
+	warnings.
+	* tst-cancel.c (cleanup, inner, tf1, tf2, tf3): Comment out.
+
 2003-07-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (init_one_static_tls, __pthread_init_static_tls): New

@@ -1,5 +1,5 @@
 /* Test for Pthreads/mutexes.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kurt Garloff <garloff@suse.de>, 2000.
 
@@ -80,7 +80,7 @@ main (void)
   struct thr_ctrl threadctrl;
   pthread_t thread;
   int err;
-  int *res = &threadctrl.retval;
+  void *res = &threadctrl.retval;
   pthread_mutexattr_t mutattr;
   pthread_mutexattr_init (&mutattr);
   pthread_mutex_init (&threadctrl.mutex, &mutattr);
@@ -106,7 +106,7 @@ main (void)
       abort ();
     };
   dump_mut (&threadctrl.mutex);
-  pthread_join (thread, (void **) &res);
+  pthread_join (thread, &res);
   printf ("OK\n");
   return 0;
 }

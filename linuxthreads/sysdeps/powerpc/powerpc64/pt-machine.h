@@ -25,7 +25,7 @@
 #define _PT_MACHINE_H   1
 
 #ifndef PT_EI
-# define PT_EI extern inline
+# define PT_EI extern inline __attribute__ ((always_inline))
 #endif
 
 extern long int testandset (int *spinlock);
