@@ -24,3 +24,37 @@ case "$machine" in
     fi
     ;;
 esac
+
+
+
+# See if mig groks `retcode'.
+echo $ac_n "checking whether $MIG supports the retcode keyword""... $ac_c" 1>&6
+echo "configure:33: checking whether $MIG supports the retcode keyword" >&5
+if eval "test \"`echo '$''{'hurd_cv_mig_retcode'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.defs <<\EOF
+#include <mach/std_types.defs>
+#include <mach/mach_types.defs>
+subsystem foobar 1000;
+type reply_port_t = polymorphic | MACH_MSG_TYPE_PORT_SEND_ONCE
+	ctype: mach_port_t;
+simpleroutine foobar_reply (
+	reply_port: reply_port_t;
+	err: kern_return_t, RetCode);
+EOF
+if { ac_try='CC="${CC}" ${MIG-false} -n conftest.defs 1>&5'; { (eval echo configure:47: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+  hurd_cv_mig_retcode=yes
+else
+  hurd_cv_mig_retcode=no
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$hurd_cv_mig_retcode" 1>&6
+if test $hurd_cv_mig_retcode = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_MIG_RETCODE 1
+EOF
+
+fi

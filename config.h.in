@@ -119,6 +119,9 @@
    disabling the support as well.  */
 #undef USE_NONOPTION_FLAGS
 
+/* Mach/Hurd specific: define if mig supports the `retcode' keyword.  */
+#undef	HAVE_MIG_RETCODE
+
 /*
  */
 
