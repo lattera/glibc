@@ -1,3 +1,14 @@
+2003-08-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/fpu/bits/mathinline.h: Define __signbitf,
+	__signbit, and __signbitl inline functions.
+
+	* sysdeps/unix/sysv/linux/x86_64/__start_context.S: Use
+	HIDDEN_JUMPTARGET instead of JUMPTARGET to call exit().
+
+	* sysdeps/x86_64/bsd-_setjmp.S [PIC]: Jump to __GI___sigsetjmp.
+	* sysdeps/x86_64/setjmp.S: Add libc_hidden_def for __sigsetjmp.
+
 2003-08-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/inet_mkadr.c (inet_makeaddr): Optimize.

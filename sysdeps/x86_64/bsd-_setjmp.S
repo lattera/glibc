@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  x86-64 version.
-   Copyright (C) 1994-1997,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1994-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ ENTRY (BP_SYM (_setjmp))
 	/* Set up arguments, we only need to set the second arg.  */
 	xorq %rsi, %rsi
 #ifdef	PIC
-	jmp C_SYMBOL_NAME (BP_SYM (__sigsetjmp))@PLT
+	jmp __GI___sigsetjmp
 #else
 	jmp BP_SYM (__sigsetjmp)
 #endif

@@ -1,5 +1,5 @@
 /* Inline math functions for x86-64.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 2002.
 
@@ -31,10 +31,31 @@
 
 #if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
 /* GCC has builtins that can be used.  */
-#  define isgreater(x, y) __builtin_isgreater (x, y)
-#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
-#  define isless(x, y) __builtin_isless (x, y)
-#  define islessequal(x, y) __builtin_islessequal (x, y)
-#  define islessgreater(x, y) __builtin_islessgreater (x, y)
-#  define isunordered(x, y) __builtin_isunordered (x, y)
+# define isgreater(x, y) __builtin_isgreater (x, y)
+# define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
+# define isless(x, y) __builtin_isless (x, y)
+# define islessequal(x, y) __builtin_islessequal (x, y)
+# define islessgreater(x, y) __builtin_islessgreater (x, y)
+# define isunordered(x, y) __builtin_isunordered (x, y)
+
+
+/* Test for negative number.  Used in the signbit() macro.  */
+__MATH_INLINE int
+__signbitf (float __x) __THROW
+{
+  __extension__ union { float __f; int __i; } __u = { __f: __x };
+  return __u.__i < 0;
+}
+__MATH_INLINE int
+__signbit (double __x) __THROW
+{
+  __extension__ union { double __d; int __i[2]; } __u = { __d: __x };
+  return __u.__i[1] < 0;
+}
+__MATH_INLINE int
+__signbitl (long double __x) __THROW
+{
+  __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
+  return (__u.__i[2] & 0x8000) != 0;
+}
 #endif

@@ -1,5 +1,5 @@
 /* setjmp for x86-64.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,3 +43,4 @@ ENTRY (__sigsetjmp)
 	jmp BP_SYM (__sigjmp_save)
 #endif
 END (BP_SYM (__sigsetjmp))
+hidden_def (__sigsetjmp)
