@@ -1,3 +1,8 @@
+2003-03-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc32/dl-machine.h (elf_machine_rela): Restore
+	special handling of relocations against local symbols.
+
 2003-03-27  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/bits/atomic.h
