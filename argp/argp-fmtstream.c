@@ -253,25 +253,27 @@ __argp_fmtstream_update (argp_fmtstream_t fs)
 	  if (nextline == buf + len + 1
 	      ? fs->end - nl < fs->wmargin + 1
 	      : nextline - (nl + 1) < fs->wmargin)
-	    /* The margin needs more blanks than we removed.  */
-	    if (fs->end - fs->p > fs->wmargin + 1)
-	      /* Make some space for them.  */
-	      {
-		size_t mv = fs->p - nextline;
-		memmove (nl + 1 + fs->wmargin, nextline, mv);
-		nextline = nl + 1 + fs->wmargin;
-		len = nextline + mv - buf;
-		*nl++ = '\n';
-	      }
-	    else
-	      /* Output the first line so we can use the space.  */
-	      {
-		if (nl > fs->buf)
-		  fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
-		putc_unlocked ('\n', fs->stream);
-		len += buf - fs->buf;
-		nl = buf = fs->buf;
-	      }
+	    {
+	      /* The margin needs more blanks than we removed.  */
+	      if (fs->end - fs->p > fs->wmargin + 1)
+		/* Make some space for them.  */
+		{
+		  size_t mv = fs->p - nextline;
+		  memmove (nl + 1 + fs->wmargin, nextline, mv);
+		  nextline = nl + 1 + fs->wmargin;
+		  len = nextline + mv - buf;
+		  *nl++ = '\n';
+		}
+	      else
+		/* Output the first line so we can use the space.  */
+		{
+		  if (nl > fs->buf)
+		    fwrite_unlocked (fs->buf, 1, nl - fs->buf, fs->stream);
+		  putc_unlocked ('\n', fs->stream);
+		  len += buf - fs->buf;
+		  nl = buf = fs->buf;
+		}
+	    }
 	  else
 	    /* We can fit the newline and blanks in before
 	       the next word.  */

@@ -217,8 +217,9 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 		     == (u_int32_t) IGNORE_CHAR))
 	    {
 	      ++ignore;
-	      if ((forward && ++idx >= run->data[pass].number)
-		  || (!forward && --idx < 0))
+	      if (forward
+		  ? ++idx >= run->data[pass].number
+		  : --idx < 0)
 		{
 		  weight_t *nextp = forward ? run->next : run->prev;
 		  if (nextp == NULL)

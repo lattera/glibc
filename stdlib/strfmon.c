@@ -296,18 +296,22 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	case 'i':		/* Use international currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, INT_CURR_SYMBOL);
 	  if (right_prec == -1)
-	    if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == CHAR_MAX)
-	      right_prec = 2;
-	    else
-	      right_prec = *_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS);
+	    {
+	      if (*_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS) == CHAR_MAX)
+		right_prec = 2;
+	      else
+		right_prec = *_NL_CURRENT (LC_MONETARY, INT_FRAC_DIGITS);
+	    }
 	  break;
 	case 'n':		/* Use national currency symbol.  */
 	  currency_symbol = _NL_CURRENT (LC_MONETARY, CURRENCY_SYMBOL);
 	  if (right_prec == -1)
-	    if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == CHAR_MAX)
-	      right_prec = 2;
-	    else
-	      right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
+	    {
+	      if (*_NL_CURRENT (LC_MONETARY, FRAC_DIGITS) == CHAR_MAX)
+		right_prec = 2;
+	      else
+		right_prec = *_NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
+	    }
 	  break;
 	default:		/* Any unrecognized format is an error.  */
 	  __set_errno (EINVAL);
@@ -493,24 +497,26 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 
       /* Now test whether the output width is filled.  */
       if (dest - startp < width)
-	if (left)
-	  /* We simply have to fill using spaces.  */
-	  do
-	    out_char (' ');
-	  while (dest - startp < width);
-	else
-	  {
-	    int dist = width - (dest - startp);
-	    char *cp;
-	    for (cp = dest - 1; cp >= startp; --cp)
-	      cp[dist] = cp[0];
-
-	    dest += dist;
-
+	{
+	  if (left)
+	    /* We simply have to fill using spaces.  */
 	    do
-	      startp[--dist] = ' ';
-	    while (dist > 0);
-	  }
+	      out_char (' ');
+	    while (dest - startp < width);
+	  else
+	    {
+	      int dist = width - (dest - startp);
+	      char *cp;
+	      for (cp = dest - 1; cp >= startp; --cp)
+		cp[dist] = cp[0];
+
+	      dest += dist;
+
+	      do
+		startp[--dist] = ' ';
+	      while (dist > 0);
+	    }
+	}
     }
 
   /* Terminate the string.  */

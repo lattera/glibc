@@ -78,11 +78,8 @@ translate_string (char *str, struct charset_t *charset)
 
       tp = &str[1];
       while (tp[0] != '\0' && tp[0] != '>')
-	if (tp[0] == '\\')
-	  if (tp[1] != '\0')
-	    tp += 2;
-	  else
-	    ++tp;
+	if (tp[0] == '\\' && tp[1] != '\0')
+	  tp += 2;
 	else
 	  ++tp;
 

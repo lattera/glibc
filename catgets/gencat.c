@@ -838,16 +838,18 @@ write_out (struct catalog *catalog, const char *output_name,
 		 #define out.  But we have to take care for the set
 		 not having a symbolic name.  */
 	      if (message_run->symbol != NULL)
-		if (set_run->symbol == NULL)
-		  fprintf (fp, "#define AutomaticSet%d%s %#x\t/* %s:%Zu */\n",
-			   set_run->number, message_run->symbol,
-			   message_run->number, message_run->fname,
-			   message_run->line);
-		else
-		  fprintf (fp, "#define %s%s %#x\t/* %s:%Zu */\n",
-			   set_run->symbol, message_run->symbol,
-			   message_run->number, message_run->fname,
-			   message_run->line);
+		{
+		  if (set_run->symbol == NULL)
+		    fprintf (fp, "#define AutomaticSet%d%s %#x\t/* %s:%Zu */\n",
+			     set_run->number, message_run->symbol,
+			     message_run->number, message_run->fname,
+			     message_run->line);
+		  else
+		    fprintf (fp, "#define %s%s %#x\t/* %s:%Zu */\n",
+			     set_run->symbol, message_run->symbol,
+			     message_run->number, message_run->fname,
+			     message_run->line);
+		}
 
 	      message_run = message_run->next;
 	    }
@@ -995,11 +997,13 @@ read_old (struct catalog *catalog, const char *file_name)
   __open_catalog (&old_cat_obj);
 
   if (old_cat_obj.status != mmapped && old_cat_obj.status != malloced)
-    if (errno == ENOENT)
-      /* No problem, the catalog simply does not exist.  */
-      return;
-    else
-      error (EXIT_FAILURE, errno, gettext ("while opening old catalog file"));
+    {
+      if (errno == ENOENT)
+	/* No problem, the catalog simply does not exist.  */
+	return;
+      else
+	error (EXIT_FAILURE, errno, gettext ("while opening old catalog file"));
+    }
 
   /* OK, we have the catalog loaded.  Now read all messages and merge
      them.  When set and message number clash for any message the new

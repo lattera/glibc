@@ -79,16 +79,18 @@ getpass (prompt)
   /* Read the password.  */
   nread = __getline (&buf, &bufsize, in);
   if (buf != NULL)
-    if (nread < 0)
-      buf[0] = '\0';
-    else if (buf[nread - 1] == '\n')
-      {
-	/* Remove the newline.  */
-	buf[nread - 1] = '\0';
-	if (tty_changed)
-	  /* Write the newline that was not echoed.  */
-	  putc_unlocked ('\n', out);
-      }
+    {
+      if (nread < 0)
+	buf[0] = '\0';
+      else if (buf[nread - 1] == '\n')
+	{
+	  /* Remove the newline.  */
+	  buf[nread - 1] = '\0';
+	  if (tty_changed)
+	    /* Write the newline that was not echoed.  */
+	    putc_unlocked ('\n', out);
+	}
+    }
 
   /* Restore the original setting.  */
   if (tty_changed)

@@ -291,11 +291,13 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
 
       if (__tfind (new_module, modules, module_compare) == NULL)
-	if (__tsearch (new_module, modules, module_compare) == NULL)
-	  /* Something went wrong while inserting the new module.  */
-	  free (new_module);
-	else
-	  ++*nmodules;
+	{
+	  if (__tsearch (new_module, modules, module_compare) == NULL)
+	    /* Something went wrong while inserting the new module.  */
+	    free (new_module);
+	  else
+	    ++*nmodules;
+	}
     }
 }
 

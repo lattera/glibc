@@ -139,11 +139,13 @@ main (int argc, char *argv[])
   /* Let's see whether we have these coded character sets.  */
   cd = iconv_open (to_code, from_code);
   if (cd == (iconv_t) -1)
-    if (errno == EINVAL)
-      error (EXIT_FAILURE, 0, _("conversion from `%s' to `%s' not supported"),
-	     from_code, to_code);
-    else
-      error (EXIT_FAILURE, errno, _("failed to start conversion processing"));
+    {
+      if (errno == EINVAL)
+	error (EXIT_FAILURE, 0, _("conversion from `%s' to `%s' not supported"),
+	       from_code, to_code);
+      else
+	error (EXIT_FAILURE, errno, _("failed to start conversion processing"));
+    }
 
   /* Determine output file.  */
   if (output_file != NULL)

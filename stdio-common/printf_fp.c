@@ -574,19 +574,21 @@ __printf_fp (FILE *fp,
 		 for overflow.	This is done by comparing with 10 shifted
 		 to the right position.	 */
 	      if (incr == exponent + 3)
-		if (cnt_h <= BITS_PER_MP_LIMB - 4)
-		  {
-		    topval[0] = 0;
-		    topval[1]
-		      = ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4 - cnt_h);
-		  }
-		else
-		  {
-		    topval[0] = ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4);
-		    topval[1] = 0;
-		    (void) __mpn_lshift (topval, topval, 2,
-					 BITS_PER_MP_LIMB - cnt_h);
-		  }
+		{
+		  if (cnt_h <= BITS_PER_MP_LIMB - 4)
+		    {
+		      topval[0] = 0;
+		      topval[1]
+			= ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4 - cnt_h);
+		    }
+		  else
+		    {
+		      topval[0] = ((mp_limb_t) 10) << (BITS_PER_MP_LIMB - 4);
+		      topval[1] = 0;
+		      (void) __mpn_lshift (topval, topval, 2,
+					   BITS_PER_MP_LIMB - cnt_h);
+		    }
+		}
 
 	      /* We have to be careful when multiplying the last factor.
 		 If the result is greater than 1.0 be have to test it
@@ -816,23 +818,25 @@ __printf_fp (FILE *fp,
 	char *tp = cp;
 
 	if (digit == '5' && (*(cp - 1) & 1) == 0)
-	  /* This is the critical case.	 */
-	  if (fracsize == 1 && frac[0] == 0)
-	    /* Rest of the number is zero -> round to even.
-	       (IEEE 754-1985 4.1 says this is the default rounding.)  */
-	    goto do_expo;
-	  else if (scalesize == 0)
-	    {
-	      /* Here we have to see whether all limbs are zero since no
-		 normalization happened.  */
-	      size_t lcnt = fracsize;
-	      while (lcnt >= 1 && frac[lcnt - 1] == 0)
-		--lcnt;
-	      if (lcnt == 0)
-		/* Rest of the number is zero -> round to even.
-		   (IEEE 754-1985 4.1 says this is the default rounding.)  */
-		goto do_expo;
-	    }
+	  {
+	    /* This is the critical case.	 */
+	    if (fracsize == 1 && frac[0] == 0)
+	      /* Rest of the number is zero -> round to even.
+		 (IEEE 754-1985 4.1 says this is the default rounding.)  */
+	      goto do_expo;
+	    else if (scalesize == 0)
+	      {
+		/* Here we have to see whether all limbs are zero since no
+		   normalization happened.  */
+		size_t lcnt = fracsize;
+		while (lcnt >= 1 && frac[lcnt - 1] == 0)
+		  --lcnt;
+		if (lcnt == 0)
+		  /* Rest of the number is zero -> round to even.
+		     (IEEE 754-1985 4.1 says this is the default rounding.)  */
+		  goto do_expo;
+	      }
+	  }
 
 	if (fracdig_no > 0)
 	  {

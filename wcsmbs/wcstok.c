@@ -32,13 +32,15 @@ wcstok (wcs, delim, save_ptr)
   wchar_t *result;
 
   if (wcs == NULL)
-    if (*save_ptr == NULL)
-      {
-	__set_errno (EINVAL);
-	return NULL;
-      }
-    else
-      wcs = *save_ptr;
+    {
+      if (*save_ptr == NULL)
+	{
+	  __set_errno (EINVAL);
+	  return NULL;
+	}
+      else
+	wcs = *save_ptr;
+    }
 
   /* Scan leading delimiters.  */
   wcs += wcsspn (wcs, delim);

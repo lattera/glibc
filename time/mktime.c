@@ -26,8 +26,8 @@
 #endif
 
 /* Some systems need this in order to declare localtime_r properly.  */
-#ifndef _REENTRANT
-# define _REENTRANT 1
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ 1
 #endif
 
 #ifdef _LIBC

@@ -426,6 +426,7 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
 
       /* Sort out quoting */
       if (words[*offset] == '\'')
+	{
 	  if (quoted == 0)
 	    {
 	      quoted = 1;
@@ -436,17 +437,20 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
 	      quoted = 0;
 	      continue;
 	    }
+	}
       else if (words[*offset] == '"')
-	if (quoted == 0)
-	  {
-	    quoted = 2;
-	    continue;
-	  }
-	else if (quoted == 2)
-	  {
-	    quoted = 0;
-	    continue;
-	  }
+	{
+	  if (quoted == 0)
+	    {
+	      quoted = 2;
+	      continue;
+	    }
+	  else if (quoted == 2)
+	    {
+	      quoted = 0;
+	      continue;
+	    }
+	}
 
       /* Sort out other special characters */
       if (quoted != 1 && words[*offset] == '$')

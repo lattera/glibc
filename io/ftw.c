@@ -547,46 +547,48 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
 
   /* Get stat info for start directory.  */
   if (result == 0)
-    if (((flags & FTW_PHYS)
-	 ? LXSTAT (_STAT_VER, data.dirbuf, &st)
-	 : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
-      {
-	if (errno == EACCES)
-	  result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
-	else if (!(flags & FTW_PHYS)
-		 && errno == ENOENT
-		 && LXSTAT (_STAT_VER, dir, &st) == 0
-		 && S_ISLNK (st.st_mode))
-	  result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
-				 &data.ftw);
-	else
-	  /* No need to call the callback since we cannot say anything
-	     about the object.  */
-	  result = -1;
-      }
-    else
-      {
-	if (S_ISDIR (st.st_mode))
-	  {
-	    /* Remember the device of the initial directory in case
-	       FTW_MOUNT is given.  */
-	    data.dev = st.st_dev;
-
-	    /* We know this directory now.  */
-	    if (!(flags & FTW_PHYS))
-	      result = add_object (&data, &st);
-
-	    if (result == 0)
-	      result = ftw_dir (&data, &st);
-	  }
-	else
-	  {
-	    int flag = S_ISLNK (st.st_mode) ? FTW_SL : FTW_F;
-
-	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[flag],
+    {
+      if (((flags & FTW_PHYS)
+	   ? LXSTAT (_STAT_VER, data.dirbuf, &st)
+	   : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
+	{
+	  if (errno == EACCES)
+	    result = (*data.func) (data.dirbuf, &st, FTW_NS, &data.ftw);
+	  else if (!(flags & FTW_PHYS)
+		   && errno == ENOENT
+		   && LXSTAT (_STAT_VER, dir, &st) == 0
+		   && S_ISLNK (st.st_mode))
+	    result = (*data.func) (data.dirbuf, &st, data.cvt_arr[FTW_SLN],
 				   &data.ftw);
-	  }
-      }
+	  else
+	    /* No need to call the callback since we cannot say anything
+	       about the object.  */
+	    result = -1;
+	}
+      else
+	{
+	  if (S_ISDIR (st.st_mode))
+	    {
+	      /* Remember the device of the initial directory in case
+		 FTW_MOUNT is given.  */
+	      data.dev = st.st_dev;
+
+	      /* We know this directory now.  */
+	      if (!(flags & FTW_PHYS))
+		result = add_object (&data, &st);
+
+	      if (result == 0)
+		result = ftw_dir (&data, &st);
+	    }
+	  else
+	    {
+	      int flag = S_ISLNK (st.st_mode) ? FTW_SL : FTW_F;
+
+	      result = (*data.func) (data.dirbuf, &st, data.cvt_arr[flag],
+				     &data.ftw);
+	    }
+	}
+    }
 
   /* Return to the start directory (if necessary).  */
   if (cwd != NULL)

@@ -1,13 +1,64 @@
-Wed Sep  9 10:34:06 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-09-09 09:32  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela): Make function
+	inline.
+
+1998-09-07  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (__EXTENSIONS__): Define if not defined.
+	(_REENTRANT): Remove.  It has undesirable consequences in
+	Solaris 2.6 (e.g. it turns off the putc macro).  Defining
+	__EXTENSIONS__ makes localtime_r and gmtime_r visible, which
+	is what we want.
+	* time/strftime.c: Likewise.
+
+1998-09-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-error.c: Fix spelling.
+
+1998-09-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/strfmon.c: Quiet -Wparentheses warnings.
+	* stdio-common/_itoa.c: Likewise.
+	* stdio-common/printf_fp.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* wcsmbs/wcstok.c: Likewise.
+	* sysdeps/generic/glob.c: Likewise.
+	* posix/getopt.c: Likewise.
+	* sysdeps/posix/getaddrinfo.c: Likewise.
+	* posix/wordexp.c: Likewise.
+	* io/ftw.c: Likewise.
+	* io/fts.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* argp/argp-fmtstream.c: Likewise.
+	* argp/argp-help.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* locale/programs/stringtrans.c: Likewise.
+	* catgets/gencat.c: Likewise.
+	* posix/getconf.c: Likewise.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+
+	* string/strcoll.c: Optimize a few expressions.
+	* string/strxfrm.c: Likewise.
+
+1998-09-08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-open.c (dl_open_worker): Move decl of new_global up one
+	level to avoid uninit variable warning.
+
+1998-09-09 10:34  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h(RTLD_START): Push _dl_main_searchlist
-	instead of _dl_default_scope[2] as argument to _dl_init_next. 
+	instead of _dl_default_scope[2] as argument to _dl_init_next.
 
 	* sysdeps/m68k/fpu/bits/mathinline.h (isinf): Avoid conflict with
 	C9x macro.
 
 1998-09-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	Fix compatibility problems introduced in last change.
 	* csu/initfini.c: Don't define __gmon_start__ if WEAK_GMON_START is
 	defined.
 	* sysdeps/unix/sysv/linux/i386/Makefile [subdir==csu]: Add

@@ -183,14 +183,16 @@ fill_in_uparams (const struct argp_state *state)
 	      }
 
 	    if (unspec)
-	      if (var[0] == 'n' && var[1] == 'o' && var[2] == '-')
-		{
-		  val = 0;
-		  var += 3;
-		  var_len -= 3;
-		}
-	      else
-		val = 1;
+	      {
+		if (var[0] == 'n' && var[1] == 'o' && var[2] == '-')
+		  {
+		    val = 0;
+		    var += 3;
+		    var_len -= 3;
+		  }
+		else
+		  val = 1;
+	      }
 	    else if (isdigit (*arg))
 	      {
 		val = atoi (arg);
@@ -709,20 +711,22 @@ hol_entry_cmp (const struct hol_entry *entry1,
   int group1 = entry1->group, group2 = entry2->group;
 
   if (entry1->cluster != entry2->cluster)
-    /* The entries are not within the same cluster, so we can't compare them
-       directly, we have to use the appropiate clustering level too.  */
-    if (! entry1->cluster)
-      /* ENTRY1 is at the `base level', not in a cluster, so we have to
-	 compare it's group number with that of the base cluster in which
-	 ENTRY2 resides.  Note that if they're in the same group, the
-	 clustered option always comes laster.  */
-      return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
-    else if (! entry2->cluster)
-      /* Likewise, but ENTRY2's not in a cluster.  */
-      return group_cmp (hol_cluster_base (entry1->cluster)->group, group2, 1);
-    else
-      /* Both entries are in clusters, we can just compare the clusters.  */
-      return hol_cluster_cmp (entry1->cluster, entry2->cluster);
+    {
+      /* The entries are not within the same cluster, so we can't compare them
+	 directly, we have to use the appropiate clustering level too.  */
+      if (! entry1->cluster)
+	/* ENTRY1 is at the `base level', not in a cluster, so we have to
+	   compare it's group number with that of the base cluster in which
+	   ENTRY2 resides.  Note that if they're in the same group, the
+	   clustered option always comes laster.  */
+	return group_cmp (group1, hol_cluster_base (entry2->cluster)->group, -1);
+      else if (! entry2->cluster)
+	/* Likewise, but ENTRY2's not in a cluster.  */
+	return group_cmp (hol_cluster_base (entry1->cluster)->group, group2, 1);
+      else
+	/* Both entries are in clusters, we can just compare the clusters.  */
+	return hol_cluster_cmp (entry1->cluster, entry2->cluster);
+    }
   else if (group1 == group2)
     /* The entries are both in the same cluster and group, so compare them
        alphabetically.  */
@@ -1115,13 +1119,15 @@ hol_entry_help (struct hol_entry *entry, const struct argp_state *state,
   __argp_fmtstream_set_lmargin (stream, 0);
 
   if (pest.first)
-    /* Didn't print any switches, what's up?  */
-    if (!oshort (real) && !real->name)
-      /* This is a group header, print it nicely.  */
-      print_header (real->doc, entry->argp, &pest);
-    else
-      /* Just a totally shadowed option or null header; print nothing.  */
-      goto cleanup;		/* Just return, after cleaning up.  */
+    {
+      /* Didn't print any switches, what's up?  */
+      if (!oshort (real) && !real->name)
+	/* This is a group header, print it nicely.  */
+	print_header (real->doc, entry->argp, &pest);
+      else
+	/* Just a totally shadowed option or null header; print nothing.  */
+	goto cleanup;		/* Just return, after cleaning up.  */
+    }
   else
     {
       const char *tstr = real->doc ? dgettext (state->root_argp->argp_domain,

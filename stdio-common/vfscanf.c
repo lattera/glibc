@@ -602,11 +602,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 #define NEXT_WIDE_CHAR(First)						      \
 		c = inchar ();						      \
 		if (c == EOF)						      \
-		  /* EOF is only an error for the first character.  */	      \
-		  if (First)						      \
-		    input_error ();					      \
-		  else							      \
-		    break;						      \
+		  {							      \
+		    /* EOF is only an error for the first character.  */      \
+		    if (First)						      \
+		      input_error ();					      \
+		    else						      \
+		      break;						      \
+		  }							      \
 		val = c;						      \
 		if (val >= 0x80)					      \
 		  {							      \

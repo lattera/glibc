@@ -659,10 +659,12 @@ glob (pattern, flags, errfunc, pglob)
 		}
 	    }
 	  if (home_dir == NULL || home_dir[0] == '\0')
-	    if (flags & GLOB_TILDE_CHECK)
-	      return GLOB_NOMATCH;
-	    else
-	      home_dir = "~"; /* No luck.  */
+	    {
+	      if (flags & GLOB_TILDE_CHECK)
+		return GLOB_NOMATCH;
+	      else
+		home_dir = "~"; /* No luck.  */
+	    }
 #  endif /* WINDOWS32 */
 # endif
 	  /* Now construct the full directory.  */
@@ -882,78 +884,80 @@ glob (pattern, flags, errfunc, pglob)
 	 flag was set we must return the list consisting of the disrectory
 	 names followed by the filename.  */
       if (pglob->gl_pathc == oldcount)
-	/* No matches.  */
-	if (flags & GLOB_NOCHECK)
-	  {
-	    size_t filename_len = strlen (filename) + 1;
-	    char **new_pathv;
-	    struct stat st;
+	{
+	  /* No matches.  */
+	  if (flags & GLOB_NOCHECK)
+	    {
+	      size_t filename_len = strlen (filename) + 1;
+	      char **new_pathv;
+	      struct stat st;
 
-	    /* This is an pessimistic guess about the size.  */
-	    pglob->gl_pathv
-	      = (char **) realloc (pglob->gl_pathv,
-				   (pglob->gl_pathc +
-				    ((flags & GLOB_DOOFFS) ?
-				     pglob->gl_offs : 0) +
-				    dirs.gl_pathc + 1) *
-				   sizeof (char *));
-	    if (pglob->gl_pathv == NULL)
-	      {
-		globfree (&dirs);
-		return GLOB_NOSPACE;
-	      }
+	      /* This is an pessimistic guess about the size.  */
+	      pglob->gl_pathv
+		= (char **) realloc (pglob->gl_pathv,
+				     (pglob->gl_pathc +
+				      ((flags & GLOB_DOOFFS) ?
+				       pglob->gl_offs : 0) +
+				      dirs.gl_pathc + 1) *
+				     sizeof (char *));
+	      if (pglob->gl_pathv == NULL)
+		{
+		  globfree (&dirs);
+		  return GLOB_NOSPACE;
+		}
 
-	    if (flags & GLOB_DOOFFS)
-	      while (pglob->gl_pathc < pglob->gl_offs)
-		pglob->gl_pathv[pglob->gl_pathc++] = NULL;
+	      if (flags & GLOB_DOOFFS)
+		while (pglob->gl_pathc < pglob->gl_offs)
+		  pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
-	    for (i = 0; i < dirs.gl_pathc; ++i)
-	      {
-		const char *dir = dirs.gl_pathv[i];
-		size_t dir_len = strlen (dir);
+	      for (i = 0; i < dirs.gl_pathc; ++i)
+		{
+		  const char *dir = dirs.gl_pathv[i];
+		  size_t dir_len = strlen (dir);
 
-		/* First check whether this really is a directory.  */
-		if (((flags & GLOB_ALTDIRFUNC)
-		     ? (*pglob->gl_stat) (dir, &st) : __stat (dir, &st)) != 0
-		    || !S_ISDIR (st.st_mode))
-		  /* No directory, ignore this entry.  */
-		  continue;
+		  /* First check whether this really is a directory.  */
+		  if (((flags & GLOB_ALTDIRFUNC)
+		       ? (*pglob->gl_stat) (dir, &st) : __stat (dir, &st)) != 0
+		      || !S_ISDIR (st.st_mode))
+		    /* No directory, ignore this entry.  */
+		    continue;
 
-		pglob->gl_pathv[pglob->gl_pathc] = malloc (dir_len + 1
-							   + filename_len);
-		if (pglob->gl_pathv[pglob->gl_pathc] == NULL)
-		  {
-		    globfree (&dirs);
-		    globfree (pglob);
-		    return GLOB_NOSPACE;
-		  }
+		  pglob->gl_pathv[pglob->gl_pathc] = malloc (dir_len + 1
+							     + filename_len);
+		  if (pglob->gl_pathv[pglob->gl_pathc] == NULL)
+		    {
+		      globfree (&dirs);
+		      globfree (pglob);
+		      return GLOB_NOSPACE;
+		    }
 
 #ifdef HAVE_MEMPCPY
-		mempcpy (mempcpy (mempcpy (pglob->gl_pathv[pglob->gl_pathc],
-					   dir, dir_len),
-				  "/", 1),
-			 filename, filename_len);
+		  mempcpy (mempcpy (mempcpy (pglob->gl_pathv[pglob->gl_pathc],
+					     dir, dir_len),
+				    "/", 1),
+			   filename, filename_len);
 #else
-		memcpy (pglob->gl_pathv[pglob->gl_pathc], dir, dir_len);
-		pglob->gl_pathv[pglob->gl_pathc][dir_len] = '/';
-		memcpy (&pglob->gl_pathv[pglob->gl_pathc][dir_len + 1],
-			filename, filename_len);
+		  memcpy (pglob->gl_pathv[pglob->gl_pathc], dir, dir_len);
+		  pglob->gl_pathv[pglob->gl_pathc][dir_len] = '/';
+		  memcpy (&pglob->gl_pathv[pglob->gl_pathc][dir_len + 1],
+			  filename, filename_len);
 #endif
-		++pglob->gl_pathc;
-	      }
+		  ++pglob->gl_pathc;
+		}
 
-	    pglob->gl_pathv[pglob->gl_pathc] = NULL;
-	    pglob->gl_flags = flags;
+	      pglob->gl_pathv[pglob->gl_pathc] = NULL;
+	      pglob->gl_flags = flags;
 
-	    /* Now we know how large the gl_pathv vector must be.  */
-	    new_pathv = (char **) realloc (pglob->gl_pathv,
-					   ((pglob->gl_pathc + 1)
-					    * sizeof (char *)));
-	    if (new_pathv != NULL)
-	      pglob->gl_pathv = new_pathv;
-	  }
-	else
-	  return GLOB_NOMATCH;
+	      /* Now we know how large the gl_pathv vector must be.  */
+	      new_pathv = (char **) realloc (pglob->gl_pathv,
+					     ((pglob->gl_pathc + 1)
+					      * sizeof (char *)));
+	      if (new_pathv != NULL)
+		pglob->gl_pathv = new_pathv;
+	    }
+	  else
+	    return GLOB_NOMATCH;
+	}
 
       globfree (&dirs);
     }
@@ -1352,10 +1356,12 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
   save = errno;
   if (stream != NULL)
-    if (flags & GLOB_ALTDIRFUNC)
-      (*pglob->gl_closedir) (stream);
-    else
-      closedir ((DIR *) stream);
+    {
+      if (flags & GLOB_ALTDIRFUNC)
+	(*pglob->gl_closedir) (stream);
+      else
+	closedir ((DIR *) stream);
+    }
   __set_errno (save);
 
   return nfound == 0 ? GLOB_NOMATCH : 0;

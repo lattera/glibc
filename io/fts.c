@@ -313,12 +313,13 @@ fts_read(sp)
 	if (instr == FTS_FOLLOW &&
 	    (p->fts_info == FTS_SL || p->fts_info == FTS_SLNONE)) {
 		p->fts_info = fts_stat(sp, NULL, p, 1);
-		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
+		if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
 			if ((p->fts_symfd = __open(".", O_RDONLY, 0)) < 0) {
 				p->fts_errno = errno;
 				p->fts_info = FTS_ERR;
 			} else
 				p->fts_flags |= FTS_SYMFOLLOW;
+		}
 		return (p);
 	}
 
@@ -401,13 +402,14 @@ next:	tmp = p;
 			goto next;
 		if (p->fts_instr == FTS_FOLLOW) {
 			p->fts_info = fts_stat(sp, NULL, p, 1);
-			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR))
+			if (p->fts_info == FTS_D && !ISSET(FTS_NOCHDIR)) {
 				if ((p->fts_symfd =
 				    __open(".", O_RDONLY, 0)) < 0) {
 					p->fts_errno = errno;
 					p->fts_info = FTS_ERR;
 				} else
 					p->fts_flags |= FTS_SYMFOLLOW;
+			}
 			p->fts_instr = FTS_NOINSTR;
 		}
 
@@ -641,7 +643,7 @@ fts_build(sp, type)
 	 * checking FTS_NS on the returned nodes.
 	 */
 	cderrno = 0;
-	if (nlinks || type == BREAD)
+	if (nlinks || type == BREAD) {
 		if (FCHDIR(sp, dirfd(dirp))) {
 			if (nlinks && type == BREAD)
 				cur->fts_errno = errno;
@@ -650,7 +652,7 @@ fts_build(sp, type)
 			cderrno = errno;
 		} else
 			descend = 1;
-	else
+	} else
 		descend = 0;
 
 	/*

@@ -21,8 +21,8 @@
 #endif
 
 /* Some hosts need this in order to declare localtime_r properly.  */
-#ifndef _REENTRANT
-# define _REENTRANT 1
+#ifndef __EXTENSIONS__
+# define __EXTENSIONS__ 1
 #endif
 
 #ifdef _LIBC
@@ -547,7 +547,7 @@ my_strftime (s, maxsize, format, tp)
 		    len += strlen (f + len);
 		    break;
 		  }
-		
+
 		if (bytes == (size_t) -1)
 		  {
 		    len++;

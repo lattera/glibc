@@ -662,11 +662,13 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 	      usage ();
 	    value = sysconf (c->call_name);
 	    if (value == -1l)
-	      if (c->call_name == _SC_UINT_MAX
-		  || c->call_name == _SC_ULONG_MAX)
-		printf ("%lu\n", value);
-	      else
-		puts (_("undefined"));
+	      {
+		if (c->call_name == _SC_UINT_MAX
+		    || c->call_name == _SC_ULONG_MAX)
+		  printf ("%lu\n", value);
+		else
+		  puts (_("undefined"));
+	      }
 	    else
 	      printf ("%ld\n", value);
 	    exit (0);

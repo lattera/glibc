@@ -278,7 +278,7 @@ extern void __process_machine_rela (struct link_map *map,
    LOADADDR is the load address of the object; INFO is an array indexed
    by DT_* of the .dynamic section info.  */
 
-extern void
+inline void
 elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		  const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)

@@ -33,15 +33,15 @@ struct catch
   };
 
 /* Multiple threads at once can use the `_dl_catch_error' function.  The
-   calls can come from the `_dl_map_object_deps', `_dlerror_run', or from
+   calls can come from `_dl_map_object_deps', `_dlerror_run', or from
    any of the libc functionality which loads dynamic objects (NSS, iconv).
-   Therefore we have to be prepared to safe the state in thread-local
+   Therefore we have to be prepared to save the state in thread-local
    memory.  `catch' will only be used for the non-threaded case.
 
    Please note the horrible kludge we have to use to check for the
    thread functions to be defined.  The problem is that while running
-   ld.so standalone (i.e., before the relocation with the libc symbols
-   available) we do not have a real handling of undefined weak symbols.
+   ld.so standalone (i.e., before the relocation with the available
+   libc symbols) we do not have a real handling of undefined weak symbols.
    All symbols are relocated, regardless of the availability.  They are
    relocated relative to the load address of the dynamic linker.  Adding
    this start address to zero (the value in the GOT for undefined symbols)

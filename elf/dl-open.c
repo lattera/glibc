@@ -127,6 +127,8 @@ dl_open_worker (void *a)
   new->l_global = (mode & RTLD_GLOBAL) ? 1 : 0;
   if (new->l_global)
     {
+      struct link_map **new_global;
+
       /* The symbols of the new object and its dependencies are to be
 	 introduced into the global scope that will be used to resolve
 	 references from other dynamically-loaded objects.
@@ -143,8 +145,6 @@ dl_open_worker (void *a)
       if (_dl_global_scope_alloc == 0)
 	{
 	  /* This is the first dynamic object given global scope.  */
-	  struct link_map **new_global;
-
 	  _dl_global_scope_alloc = _dl_main_searchlist->r_nlist + 8;
 	  new_global = (struct link_map **)
 	    malloc (_dl_global_scope_alloc * sizeof (struct link_map *));
@@ -166,8 +166,6 @@ dl_open_worker (void *a)
 	{
 	  /* We have to extend the existing array of link maps in the
 	     main map.  */
-	  struct link_map **new_global;
-
 	  new_global = (struct link_map **)
 	    malloc ((_dl_global_scope_alloc + 8) * sizeof (struct link_map *));
 	  if (new_global == NULL)

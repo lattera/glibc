@@ -1100,23 +1100,25 @@ open_path (const char *name, size_t namelen, int preloaded,
 
 	  fd = __open (buf, O_RDONLY);
 	  if (this_dir->status[cnt] == unknown)
-	    if (fd != -1)
-	      this_dir->status[cnt] = existing;
-	    else
-	      {
-		/* We failed to open machine dependent library.  Let's
-		   test whether there is any directory at all.  */
-		struct stat st;
+	    {
+	      if (fd != -1)
+		this_dir->status[cnt] = existing;
+	      else
+		{
+		  /* We failed to open machine dependent library.  Let's
+		     test whether there is any directory at all.  */
+		  struct stat st;
 
-		buf[buflen - namelen - 1] = '\0';
+		  buf[buflen - namelen - 1] = '\0';
 
-		if (__xstat (_STAT_VER, buf, &st) != 0
-		    || ! S_ISDIR (st.st_mode))
-		  /* The directory does not exist or it is no directory.  */
-		  this_dir->status[cnt] = nonexisting;
-		else
-		  this_dir->status[cnt] = existing;
-	      }
+		  if (__xstat (_STAT_VER, buf, &st) != 0
+		      || ! S_ISDIR (st.st_mode))
+		    /* The directory does not exist or it is no directory.  */
+		    this_dir->status[cnt] = nonexisting;
+		  else
+		    this_dir->status[cnt] = existing;
+		}
+	    }
 
 	  if (fd != -1 && preloaded && __libc_enable_secure)
 	    {

@@ -117,8 +117,9 @@ STRCOLL (s1, s2, l)
 		     == (uint32_t) IGNORE_CHAR))
 	    {
 	      ++s1ignore;
-	      if ((forward && ++s1idx >= s1run->data[pass].number)
-		  || (!forward && --s1idx < 0))
+	      if (forward
+		  ? ++s1idx >= s1run->data[pass].number
+		  : --s1idx < 0)
 		{
 		  weight_t *nextp = forward ? s1run->next : s1run->prev;
 		  if (nextp == NULL)
@@ -139,8 +140,9 @@ STRCOLL (s1, s2, l)
 		     == (uint32_t) IGNORE_CHAR))
 	    {
 	      ++s2ignore;
-	      if ((forward && ++s2idx >= s2run->data[pass].number)
-		  || (!forward && --s2idx < 0))
+	      if (forward
+		  ? ++s2idx >= s2run->data[pass].number
+		  : --s2idx < 0)
 		{
 		  weight_t *nextp = forward ? s2run->next : s2run->prev;
 		  if (nextp == NULL)

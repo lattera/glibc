@@ -283,10 +283,12 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	     ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
 	     ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
       if (tp->name == NULL)
-	if (req->ai_socktype)
-	  return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
-	else
-	  return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	{
+	  if (req->ai_socktype)
+	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	  else
+	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	}
     }
 
   if (service != NULL)
