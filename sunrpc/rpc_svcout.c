@@ -758,11 +758,11 @@ static void
 print_err_message (const char *space)
 {
   if (logflag)
-    f_print (fout, "%ssyslog (LOG_ERR, \"%s\");\n", space, _errbuf);
+    f_print (fout, "%ssyslog (LOG_ERR, \"%%s\", \"%s\");\n", space, _errbuf);
   else if (inetdflag || pmflag)
     f_print (fout, "%s_msgout (\"%s\");\n", space, _errbuf);
   else
-    f_print (fout, "%sfprintf (stderr, \"%s\");\n", space, _errbuf);
+    f_print (fout, "%sfprintf (stderr, \"%%s\", \"%s\");\n", space, _errbuf);
 }
 
 /*
@@ -799,11 +799,11 @@ write_msg_out (void)
   f_print (fout, "#ifdef RPC_SVC_FG\n");
   if (inetdflag || pmflag)
     f_print (fout, "\tif (_rpcpmstart)\n");
-  f_print (fout, "\t\tsyslog (LOG_ERR, msg);\n");
+  f_print (fout, "\t\tsyslog (LOG_ERR, \"%%s\", msg);\n");
   f_print (fout, "\telse\n");
   f_print (fout, "\t\tfprintf (stderr, \"%%s\\n\", msg);\n");
   f_print (fout, "#else\n");
-  f_print (fout, "\tsyslog (LOG_ERR, msg);\n");
+  f_print (fout, "\tsyslog (LOG_ERR, \"%%s\", msg);\n");
   f_print (fout, "#endif\n");
   f_print (fout, "}\n");
 }
