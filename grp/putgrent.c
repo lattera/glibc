@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 96, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,7 +36,7 @@ putgrent (gr, stream)
 {
   int retval;
 
-  if (gr == NULL || stream == NULL)
+  if (__builtin_expect (gr == NULL, 0) || __builtin_expect (stream == NULL, 0))
     {
       __set_errno (EINVAL);
       return -1;
@@ -46,8 +46,11 @@ putgrent (gr, stream)
 
   retval = fprintf (stream, "%s:%s:%u:",
 		    gr->gr_name, _S (gr->gr_passwd), gr->gr_gid);
-  if (retval < 0)
-    return -1;
+  if (__builtin_expect (retval, 0) < 0)
+    {
+      funlockfile (stream);
+      return -1;
+    }
 
   if (gr->gr_mem != NULL)
     {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,14 +70,14 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
     {
       buffer[buflen - 1] = '\xff';
       p = fgets_unlocked (buffer, buflen, stream);
-      if (p == NULL && feof_unlocked (stream))
+      if (__builtin_expect (p == NULL, 0) && feof_unlocked (stream))
 	{
 	  funlockfile (stream);
 	  *result = NULL;
 	  __set_errno (ENOENT);
 	  return errno;
 	}
-      if (p == NULL || buffer[buflen - 1] != '\xff')
+      if (__builtin_expect (p == NULL, 0) || buffer[buflen - 1] != '\xff')
 	{
 	  funlockfile (stream);
 	  *result = NULL;
@@ -97,7 +97,7 @@ __fgetgrent_r (FILE *stream, struct group *resbuf, char *buffer, size_t buflen,
 
   funlockfile (stream);
 
-  if (parse_result == -1)
+  if (__builtin_expect (parse_result, 0) == -1)
     {
       /* The parser ran out of space.  */
       *result = NULL;

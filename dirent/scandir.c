@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992-1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@ int
 scandir (dir, namelist, select, cmp)
      const char *dir;
      struct dirent ***namelist;
-     int (*select) __P ((const struct dirent *));
-     int (*cmp) __P ((const void *, const void *));
+     int (*select) (const struct dirent *);
+     int (*cmp) (const void *, const void *);
 {
   DIR *dp = __opendir (dir);
   struct dirent **v = NULL;
@@ -50,7 +50,7 @@ scandir (dir, namelist, select, cmp)
 	/* Ignore errors from select or readdir */
 	__set_errno (0);
 
-	if (i == vsize)
+	if (__builtin_expect (i == vsize, 0))
 	  {
 	    struct dirent **new;
 	    if (vsize == 0)
@@ -71,7 +71,7 @@ scandir (dir, namelist, select, cmp)
 	v[i++] = (struct dirent *) memcpy (vnew, d, dsize);
       }
 
-  if (errno != 0)
+  if (__builtin_expect (errno, 0) != 0)
     {
       save = errno;
       (void) __closedir (dp);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 91, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1989, 91, 93, 1996-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -163,7 +163,10 @@ initgroups (user, group)
     size = 16;
 #endif
 
-  groups = malloc (size * sizeof (gid_t *));
+  groups = (gid_t *) malloc (size * sizeof (gid_t));
+  if (__builtin_expect (groups == NULL, 0))
+    /* No more memory.  */
+    return -1;
 
   groups[0] = group;
 

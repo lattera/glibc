@@ -1,5 +1,5 @@
 /* Release any resource associated with given conversion descriptor.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,7 +27,7 @@
 int
 iconv_close (iconv_t cd)
 {
-  if (cd == (iconv_t *) -1L)
+  if (__builtin_expect (cd == (iconv_t *) -1L, 0))
     {
       __set_errno (EBADF);
       return -1;

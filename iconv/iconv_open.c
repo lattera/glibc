@@ -1,5 +1,5 @@
 /* Get descriptor for character set conversion.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -87,7 +87,7 @@ iconv_open (const char *tocode, const char *fromcode)
 
   res = __gconv_open (tocode, fromcode, &cd, 0);
 
-  if (res != __GCONV_OK)
+  if (__builtin_expect (res, __GCONV_OK) != __GCONV_OK)
     {
       /* We must set the error number according to the specs.  */
       if (res == __GCONV_NOCONV || res == __GCONV_NODB)
