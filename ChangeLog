@@ -1,3 +1,7 @@
+2003-12-31  Joseph S. Myers  <jsm@polyomino.org.uk>
+
+	* CONFORMANCE: Update.
+
 2003-12-30  Paul Eggert  <eggert@twinsun.com>
 
 	* time/mktime.c (check_result): Use less-confusing report format.
