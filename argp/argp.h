@@ -1,5 +1,5 @@
 /* Hierarchial argument parsing, layered over getopt.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -38,12 +38,15 @@ typedef int error_t;
 #endif
 
 #ifndef __P
-# if (defined __STDC__ && __STDC__) || defined __cplusplus
-#  if defined __GNUC__ && defined __cplusplus && __GNUC_MINOR__ >= 8
+# ifdef __cplusplus
+#  if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7)
 #   define __P(args)	args throw ()
 #  else
 #   define __P(args)	args
 #  endif
+#  define __PMT(args)	args
+# elif defined __STDC__ && __STDC__ > 0
+#  define __P(args)	args
 #  define __PMT(args)	args
 # else
 #  define __P(args)	()

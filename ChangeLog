@@ -1,3 +1,9 @@
+1999-05-04  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* argp/argp.h, assert/assert.h, misc/sys/cdefs.h,
+	posix/sys/types.h: Handle the case of __GNUC__=3,
+	__GNUC_MINOR__=(anything).
+
 1999-05-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/i386/i486/bits/string.h (rawmemchr): Remove unneccessary
