@@ -39,12 +39,14 @@ libSegFault-inhibit-o = $(filter-out .os,$(object-suffixes))
 libpcprofile-routines = pcprofile
 libpcprofile-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+install-bin = pcprofiledump xtrace
+
 include ../Makeconfig
 
 distribute += catchsegv.sh
 ifeq ($(elf),yes)
 ifeq ($(build-shared),yes)
-install-bin = catchsegv
+install-bin += catchsegv
 endif
 endif
 generated = catchsegv
@@ -56,6 +58,15 @@ $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 	sed -e 's|@VERSION@|$(version)|' -e 's|@SLIB@|$(slibdir)|' $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
+
+$(objpfx)pcprofiledump: $(objpfx)pcprofiledump.o
+	$(LINK.o) -o $@ $^
+
+$(objpfx)xtrace: xtrace.sh
+	rm -f $@.new
+	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
+	    -e 's|@LIBDIR@|$(libdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
+	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

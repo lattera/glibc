@@ -18,7 +18,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -39,10 +41,25 @@ install (void)
 
   if (outfile != NULL && *outfile != '\0')
     {
-      fd = open (outfile, O_RDWR);
+      fd = open (outfile, O_RDWR | O_CREAT, 0666);
 
       if (fd != -1)
-	active = 1;
+	{
+	  uint32_t word;
+
+	  active = 1;
+
+	  /* Write a magic word which tells the reader about the byte
+	     order and the size of the following entries.  */
+	  word = 0xdeb00000 | sizeof (void *);
+	  if (TEMP_FAILURE_RETRY (write (fd, &word, 4)) != 4)
+	    {
+	      /* If even this fails we shouldn't try further.  */
+	      close (fd);
+	      fd = -1;
+	      active = 0;
+	    }
+	}
     }
 }
 

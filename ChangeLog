@@ -1,3 +1,12 @@
+1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/Makefile (install-bin): Add pcprofiledump and xtrace.
+	Add rules for both programs.
+	* debug/pcprofiledump.c: New file.
+	* debug/xtrace.sh: New file.
+	* debug/pcprofile.c: Allow creating output file.  Add magic signature
+	to let reader recognize file format.
+
 1999-10-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/ld-ctype.c (ctype_read): Fix typos in last patch.
