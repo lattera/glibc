@@ -697,7 +697,8 @@ heap size such that excessive amounts of system calls can be avoided.
 All chunks larger than this value are allocated outside the normal
 heap, using the @code{mmap} system call.  This way it is guaranteed
 that the memory for these chunks can be returned to the system on
-@code{free}.
+@code{free}.  Note that requests smaller than this threshold might still
+be allocated via @code{mmap}.
 @item M_MMAP_MAX
 The maximum number of chunks to allocate with @code{mmap}.  Setting this
 to zero disables all use of @code{mmap}.
