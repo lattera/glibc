@@ -1,5 +1,11 @@
 2001-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/ldbl-96/e_jnl.c: New file.
+	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update for jnl and ynl introduction.
+	* sysdeps/ia64/fpu/libm-test-ulps: Likewise.
+
 	* posix/wordexp-test.c (testit): Remove warnings.
 
 	* dlfcn/Makefile (distribute): Add modatexit.c and modcxaatexit.c.

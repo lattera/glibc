@@ -676,6 +676,8 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 2
+ildouble: 2
 Test "jn (0, 2.0) == 0.22389077914123566805":
 float: 1
 ifloat: 1
@@ -684,46 +686,66 @@ idouble: 1
 Test "jn (0, 8.0) == 0.17165080713755390609":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "jn (1, 10.0) == 0.043472746168861436670":
 float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 2
+ildouble: 2
 Test "jn (1, 2.0) == 0.57672480775687338720":
 double: 1
 idouble: 1
 Test "jn (1, 8.0) == 0.23463634685391462438":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "jn (10, -1.0) == 0.26306151236874532070e-9":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "jn (10, 0.1) == 0.26905328954342155795e-19":
 double: 4
 float: 2
 idouble: 4
 ifloat: 2
+ldouble: 1
+ildouble: 1
 Test "jn (10, 0.7) == 0.75175911502153953928e-11":
 double: 4
 float: 1
 idouble: 4
 ifloat: 1
+ldouble: 2
+ildouble: 2
 Test "jn (10, 1.0) == 0.26306151236874532070e-9":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "jn (10, 2.0) == 0.25153862827167367096e-6":
 float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 1
+ildouble: 1
 Test "jn (10, 10.0) == 0.20748610663335885770":
 float: 2
 ifloat: 2
 double: 4
 idouble: 4
+ldouble: 2
+ildouble: 2
 Test "jn (3, 0.1) == 0.000020820315754756261429":
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 Test "jn (3, 0.7) == 0.0069296548267508408077":
 double: 2
 idouble: 2
@@ -737,6 +759,14 @@ float: 1
 ifloat: 1
 double: 3
 idouble: 3
+ldouble: 1
+ildouble: 1
+Test "jn (3, -1.0) == -0.019563353982668405919":
+ldouble: 1
+ildouble: 1
+Test "jn (3, 1.0) == 0.019563353982668405919":
+ldouble: 1
+ildouble: 1
 
 # lgamma
 Test "lgamma (-0.5) == log(2*sqrt(pi))":
@@ -972,6 +1002,8 @@ float: 1
 ifloat: 1
 double: 3
 idouble: 3
+ldouble: 2
+ildouble: 2
 Test "yn (0, 1.0) == 0.088256964215676957983":
 double: 2
 float: 1
@@ -990,16 +1022,22 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 1
+ildouble: 1
 Test "yn (0, 8.0) == 0.22352148938756622053":
 float: 1
 ifloat: 1
 double: 1
 idouble: 1
+ldouble: 1
+ildouble: 1
 Test "yn (1, 0.1) == -6.4589510947020269877":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "yn (1, 0.7) == -1.1032498719076333697":
 double: 1
 idouble: 1
@@ -1019,19 +1057,27 @@ double: 1
 float: 2
 idouble: 1
 ifloat: 2
+ldouble: 1
+ildouble: 1
 Test "yn (1, 8.0) == -0.15806046173124749426":
 float: 2
 ifloat: 2
+ldouble: 2
+ildouble: 2
 Test "yn (10, 0.1) == -0.11831335132045197885e19":
 double: 2
 float: 1
 idouble: 2
 ifloat: 1
+ldouble: 2
+ildouble: 2
 Test "yn (10, 0.7) == -0.42447194260703866924e10":
 double: 6
 float: 3
 idouble: 6
 ifloat: 3
+ldouble: 7
+ildouble: 7
 Test "yn (10, 1.0) == -0.12161801427868918929e9":
 double: 1
 float: 1
@@ -1047,14 +1093,20 @@ float: 1
 ifloat: 1
 double: 2
 idouble: 2
+ldouble: 1
+ildouble: 1
 Test "yn (3, 0.1) == -5099.3323786129048894":
 double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ldouble: 2
+ildouble: 2
 Test "yn (3, 0.7) == -15.819479052819633505":
 double: 2
 idouble: 2
+ldouble: 2
+ildouble: 2
 Test "yn (3, 2.0) == -1.1277837768404277861":
 float: 1
 ifloat: 1
@@ -1413,6 +1465,8 @@ double: 4
 float: 2
 idouble: 4
 ifloat: 2
+ldouble: 2
+ildouble: 2
 
 Function: "lgamma":
 double: 1
@@ -1515,5 +1569,7 @@ double: 6
 float: 3
 idouble: 6
 ifloat: 3
+ldouble: 7
+ildouble: 7
 
 # end of automatic generation

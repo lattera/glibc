@@ -88,13 +88,6 @@ static int main_thread_exiting;
 
 static pthread_t pthread_threads_counter;
 
-#ifdef NEED_SEPARATE_REGISTER_STACK
-/* Signal masks for the manager.  These have to be global only when clone2
-   is used since it's currently borken wrt signals in the child.  */
-static sigset_t manager_mask;		/* Manager normal signal mask	*/
-static sigset_t manager_mask_all;	/* All bits set.	*/
-#endif
-
 /* Forward declarations */
 
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
@@ -113,9 +106,7 @@ int __pthread_manager(void *arg)
 {
   int reqfd = (int) (long int) arg;
   struct pollfd ufd;
-#ifndef NEED_SEPARATE_REGISTER_STACK
   sigset_t manager_mask;
-#endif
   int n;
   struct pthread_request request;
 
@@ -133,9 +124,6 @@ int __pthread_manager(void *arg)
   if (__pthread_threads_debug && __pthread_sig_debug > 0)
     sigdelset(&manager_mask, __pthread_sig_debug);
   sigprocmask(SIG_SETMASK, &manager_mask, NULL);
-#ifdef NEED_SEPARATE_REGISTER_STACK
-  sigfillset(&manager_mask_all);
-#endif
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
   /* Synchronize debugging of the thread manager */
@@ -583,17 +571,12 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	   And there is some argument for changing the __clone2
 	   interface to pass sp and bsp instead, making it more IA64
 	   specific, but allowing stacks to grow outward from each
-	   other, to get less paging and fewer mmaps.  Clone2
-	   currently can't take signals in the child right after
-	   process creation.  Mask them in the child.  It resets the
-	   mask once it starts up.  */
-	  sigprocmask(SIG_SETMASK, &manager_mask_all, NULL);
+	   other, to get less paging and fewer mmaps.  */
 	  pid = __clone2(pthread_start_thread_event,
   		 (void **)new_thread_bottom,
 			 (char *)new_thread - new_thread_bottom,
 			 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 			 __pthread_sig_cancel, new_thread);
-	  sigprocmask(SIG_SETMASK, &manager_mask, NULL);
 #else
 	  pid = __clone(pthread_start_thread_event, (void **) new_thread,
 			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
@@ -625,13 +608,11 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   if (pid == 0)
     {
 #ifdef NEED_SEPARATE_REGISTER_STACK
-      sigprocmask(SIG_SETMASK, &manager_mask_all, NULL);
       pid = __clone2(pthread_start_thread,
 		     (void **)new_thread_bottom,
                      (char *)new_thread - new_thread_bottom,
 		     CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
 		     __pthread_sig_cancel, new_thread);
-      sigprocmask(SIG_SETMASK, &manager_mask, NULL);
 #else
       pid = __clone(pthread_start_thread, (void **) new_thread,
 		    CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
