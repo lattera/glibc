@@ -1,5 +1,7 @@
 2000-10-23  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/s390/fpu/libm-test-ulps: New ulps.
+
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add fcntl64.
 	Patch by Ralf Baechle <ralf@gnu.org>.
 
