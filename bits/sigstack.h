@@ -1,5 +1,5 @@
 /* sigstack, sigaltstack definitions.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,10 +44,10 @@ enum
 {
   SS_ONSTACK = 0x0001,
 #define SS_ONSTACK	SS_ONSTACK
-  SS_DISABLE = 0x0004,
+  SS_DISABLE = 0x0004
 #define SS_DISABLE	SS_DISABLE
 };
-    
+
 /* Minumum stack size for a signal handler.  */
 #define MINSIGSTKSZ	8192
 
