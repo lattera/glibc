@@ -1,3 +1,8 @@
+2003-11-12  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/dl-machine.h: Force inlining of
+	elf_machine_runtime_setup().
+
 2003-11-13  Andreas Jaeger  <aj@suse.de>
 
 	* math/Makefile (CFLAGS-test-float.c): Add -fno-builtin.
