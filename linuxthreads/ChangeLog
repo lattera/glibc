@@ -1,3 +1,7 @@
+2002-12-22  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (omit-deps): Add $(unix-syscalls:%=ptw-%).
+
 2002-12-21  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (init_rtsigs): Remove incomplete __builtin_expect.

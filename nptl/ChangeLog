@@ -1,3 +1,7 @@
+2002-12-22  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (omit-deps): Add $(unix-syscalls:%=ptw-%).
+
 2002-12-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h (_IO_lock_inexpensive): Define.
