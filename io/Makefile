@@ -57,7 +57,7 @@ static-only-routines = stat fstat lstat mknod stat64 fstat64 lstat64
 others		:= pwd
 test-srcs	:= ftwtest
 tests		:= test-utime test-stat test-stat2 test-lfs tst-getcwd \
-		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3
+		   tst-fcntl bug-ftw1 bug-ftw2 bug-ftw3 tst-statvfs
 
 distribute	:= ftwtest-sh
 
@@ -91,6 +91,8 @@ CFLAGS-lstat64.c = -DHAVE_DOT_HIDDEN
 endif
 
 test-stat2-ARGS = Makefile . $(objpfx)test-stat2
+
+tst-statvfs-ARGS = $(objpfx)tst-statvfs tst-statvfs.c /tmp
 
 ifeq ($(cross-compiling),no)
 tests: $(objpfx)ftwtest.out

@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <mntent.h>
 #include <paths.h>
@@ -167,14 +168,17 @@ __internal_statvfs (const char *name, struct statvfs *buf,
 	     statvfs call got a name which was not the mount point.
 	     Check again, this time without checking for name matches
 	     first.  */
-	  if (! success)
+	  if (! success && (name != NULL || fsname != NULL))
 	    {
 	      if (name != NULL)
 		/* Try without a mount point name.  */
 		name = NULL;
-	      else if (fsname != NULL)
-		/* Try without a filesystem name.  */
-		fsname = fsname2 = NULL;
+	      else
+		{
+		  /* Try without a filesystem name.  */
+		  assert (fsname != NULL);
+		  fsname = fsname2 = NULL;
+		}
 
 	      /* It is not strictly allowed to use rewind here.  But
 		 this code is part of the implementation so it is

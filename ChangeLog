@@ -1,5 +1,10 @@
 2003-10-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/internal_statvfs.c (__internal_statvfs):
+	Avoid infinite loops in case the mounts file is hosed.
+	* io/Makefile: Add rules to build and run tst-statvfs.
+	* io/tst-statvfs.c: New file.
+
 	* include/dlfcn.h (__RTLD_OPENEXEC): Define.
 	* elf/dl-load.c (_dl_map_object_from_fd): Don't allow loading
 	executables unless __RTLD_OPENEXEC flag is present.
