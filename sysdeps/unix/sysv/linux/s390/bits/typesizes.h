@@ -1,5 +1,5 @@
-/* bits/typesizes.h -- underlying types for *_t.  Linux/Alpha version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* bits/typesizes.h -- underlying types for *_t.  Linux/s390 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,37 +27,37 @@
 /* See <bits/types.h> for the meaning of these macros.  This file exists so
    that <bits/types.h> need not vary across different GNU platforms.  */
 
-#define __DEV_T_TYPE		__U64_TYPE
+#define __DEV_T_TYPE		__UQUAD_TYPE
 #define __UID_T_TYPE		__U32_TYPE
 #define __GID_T_TYPE		__U32_TYPE
-#define __INO_T_TYPE		__U32_TYPE
-#define __INO64_T_TYPE		__U64_TYPE
+#define __INO_T_TYPE		__ULONGWORD_TYPE
+#define __INO64_T_TYPE		__UQUAD_TYPE
 #define __MODE_T_TYPE		__U32_TYPE
-#define __NLINK_T_TYPE		__U32_TYPE
+#define __NLINK_T_TYPE		__UWORD_TYPE
 #define __OFF_T_TYPE		__SLONGWORD_TYPE
-#define __OFF64_T_TYPE		__S64_TYPE
+#define __OFF64_T_TYPE		__SQUAD_TYPE
 #define __PID_T_TYPE		__S32_TYPE
 #define __RLIM_T_TYPE		__ULONGWORD_TYPE
-#define __RLIM64_T_TYPE		__U64_TYPE
-#define	__BLKCNT_T_TYPE		__U32_TYPE
-#define	__BLKCNT64_T_TYPE	__U64_TYPE
-#define	__FSBLKCNT_T_TYPE	__S32_TYPE
-#define	__FSBLKCNT64_T_TYPE	__S64_TYPE
-#define	__FSFILCNT_T_TYPE	__U32_TYPE
-#define	__FSFILCNT64_T_TYPE	__U64_TYPE
+#define __RLIM64_T_TYPE		__UQUAD_TYPE
+#define	__BLKCNT_T_TYPE		__SLONGWORD_TYPE
+#define	__BLKCNT64_T_TYPE	__SQUAD_TYPE
+#define	__FSBLKCNT_T_TYPE	__ULONGWORD_TYPE
+#define	__FSBLKCNT64_T_TYPE	__UQUAD_TYPE
+#define	__FSFILCNT_T_TYPE	__ULONGWORD_TYPE
+#define	__FSFILCNT64_T_TYPE	__UQUAD_TYPE
 #define	__ID_T_TYPE		__U32_TYPE
 #define __CLOCK_T_TYPE		__SLONGWORD_TYPE
 #define __TIME_T_TYPE		__SLONGWORD_TYPE
 #define __USECONDS_T_TYPE	__U32_TYPE
-#define __SUSECONDS_T_TYPE	__S64_TYPE
+#define __SUSECONDS_T_TYPE	__SLONGWORD_TYPE
 #define __DADDR_T_TYPE		__S32_TYPE
 #define __SWBLK_T_TYPE		__SLONGWORD_TYPE
 #define __KEY_T_TYPE		__S32_TYPE
 #define __CLOCKID_T_TYPE	__S32_TYPE
 #define __TIMER_T_TYPE		void *
-#define __BLKSIZE_T_TYPE	__U32_TYPE
+#define __BLKSIZE_T_TYPE	__SLONGWORD_TYPE
 #define __FSID_T_TYPE		struct { int __val[2]; }
-#define __SSIZE_T_TYPE		__SWORD_TYPE
+#define __SSIZE_T_TYPE		__SLONGWORD_TYPE
 
 /* Number of descriptors that can fit in an `fd_set'.  */
 #define	__FD_SETSIZE		1024

@@ -1,5 +1,11 @@
 2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/pthread.h (pthread_attr_setstackaddr,
+	pthread_attr_setstacksize): Change PTHREAD_STACK_SIZE to
+	PTHREAD_STACK_MIN in comments.
+
+2003-07-31  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
 	Shut up warnings if INTERNAL_SYSCALL_ERROR_P does not use its first
 	argument.

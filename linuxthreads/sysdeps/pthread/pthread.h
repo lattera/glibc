@@ -256,7 +256,7 @@ extern int pthread_attr_getguardsize (__const pthread_attr_t *__restrict
 /* Set the starting address of the stack of the thread to be created.
    Depending on whether the stack grows up or down the value must either
    be higher or lower than all the address in the memory block.  The
-   minimal size of the block must be PTHREAD_STACK_SIZE.  */
+   minimal size of the block must be PTHREAD_STACK_MIN.  */
 extern int pthread_attr_setstackaddr (pthread_attr_t *__attr,
 				      void *__stackaddr) __THROW;
 
@@ -279,7 +279,7 @@ extern int pthread_attr_getstack (__const pthread_attr_t *__restrict __attr,
 #endif
 
 /* Add information about the minimum stack size needed for the thread
-   to be started.  This size must never be less than PTHREAD_STACK_SIZE
+   to be started.  This size must never be less than PTHREAD_STACK_MIN
    and must also not exceed the system limits.  */
 extern int pthread_attr_setstacksize (pthread_attr_t *__attr,
 				      size_t __stacksize) __THROW;

@@ -1,15 +1,23 @@
 2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/generic/bits/types.h (__ssize_t): Use __SSIZE_T_TYPE
+	instead of __SWORD_TYPE.
+	* sysdeps/generic/bits/typesizes.h (__SSIZE_T_TYPE): Define.
+	* sysdeps/mach/hurd/bits/typesizes.h (__SSIZE_T_TYPE): Define.
+	* sysdeps/unix/bsd/bsd4.4/freebsd/bits/typesizes.h (__SSIZE_T_TYPE):
+	Define.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__SSIZE_T_TYPE):
+	Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h (__SSIZE_T_TYPE):
+	Define.
+	* sysdeps/unix/sysv/linux/s390/bits/typesizes.h: New file.
+
 	* dlfcn/dlerror.c (once): New.
 	(dlerror): Call __libc_once.
 	(_dlerror_run): Remove once.
 
-2003-07-31  Jakub Jelinek  <jakub@redhat.com>
-
 	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h (struct sigcontext):
 	Sync with 2.5.7 and 2.5.73 kernel changes.
-
-2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* dlfcn/eval.c (funcall): Add noinline attribute to shut up warnings.
 	* elf/rtld.c (dl_main): Cast ElfW(Addr) arguments with %Zx/%Zd
@@ -43,8 +51,6 @@
 	Change old into union of __old_shmid_ds and __old_shminfo structs.
 	Adjust all users.
 	* wcsmbs/wcsmbs-tst1.c (main): Cast arguments with %C format to wint_t.
-
-2003-07-31  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/utimes.c (__utimes): Fix actime and
 	modtime computation.

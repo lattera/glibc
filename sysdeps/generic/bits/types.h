@@ -1,5 +1,5 @@
 /* bits/types.h -- definitions of __*_t types underlying *_t types.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -178,10 +178,10 @@ __STD_TYPE __FSBLKCNT64_T_TYPE __fsblkcnt64_t;
 __STD_TYPE __FSFILCNT_T_TYPE __fsfilcnt_t;
 __STD_TYPE __FSFILCNT64_T_TYPE __fsfilcnt64_t;
 
+__STD_TYPE __SSIZE_T_TYPE __ssize_t; /* Type of a byte count, or error.  */
 
 /* These few don't really vary by system, they always correspond
    to one of the other defined types.  */
-__STD_TYPE __SWORD_TYPE __ssize_t; /* Type of a byte count, or error.  */
 typedef __off64_t __loff_t;	/* Type of file sizes and offsets (LFS).  */
 typedef __quad_t *__qaddr_t;
 typedef char *__caddr_t;
