@@ -4,6 +4,8 @@
 
   + use UID/GID in access(2), chmod(2), chown(2), link(2)
 
+- pgrp & session are process properties
+
 - nice level is process property
 
 - process file creation mask (mkdir, mkfifo, open, creat) after umask call
