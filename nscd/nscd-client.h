@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -24,7 +24,7 @@
 #define _NSCD_CLIENT_H	1
 
 /* Version number of the daemon interface */
-#define NSCD_VERSION 2
+#define NSCD_VERSION 3
 
 /* Path of the file where the PID of the running system is stored.  */
 #define _PATH_NSCDPID	 "/var/run/nscd.pid"
@@ -60,7 +60,7 @@ typedef struct
 {
   int version;		/* Version number of the daemon interface.  */
   request_type type;	/* Service requested.  */
-  ssize_t key_len;	/* Key length.  */
+  int32_t key_len;	/* Key length.  */
 } request_header;
 
 
@@ -68,15 +68,15 @@ typedef struct
    sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
-  int version;
-  int found;
-  ssize_t pw_name_len;
-  ssize_t pw_passwd_len;
+  int32_t version;
+  int32_t found;
+  int32_t pw_name_len;
+  int32_t pw_passwd_len;
   uid_t pw_uid;
   gid_t pw_gid;
-  ssize_t pw_gecos_len;
-  ssize_t pw_dir_len;
-  ssize_t pw_shell_len;
+  int32_t pw_gecos_len;
+  int32_t pw_dir_len;
+  int32_t pw_shell_len;
 } pw_response_header;
 
 
@@ -84,12 +84,12 @@ typedef struct
    sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
-  int version;
-  int found;
-  ssize_t gr_name_len;
-  ssize_t gr_passwd_len;
+  int32_t version;
+  int32_t found;
+  int32_t gr_name_len;
+  int32_t gr_passwd_len;
   gid_t gr_gid;
-  ssize_t gr_mem_cnt;
+  int32_t gr_mem_cnt;
 } gr_response_header;
 
 
@@ -97,14 +97,14 @@ typedef struct
    sent also if the service is disabled or there is no record found.  */
 typedef struct
 {
-  int version;
-  int found;
-  ssize_t h_name_len;
-  ssize_t h_aliases_cnt;
-  int h_addrtype;
-  int h_length;
-  ssize_t h_addr_list_cnt;
-  int error;
+  int32_t version;
+  int32_t found;
+  int32_t h_name_len;
+  int32_t h_aliases_cnt;
+  int32_t h_addrtype;
+  int32_t h_length;
+  int32_t h_addr_list_cnt;
+  int32_t error;
 } hst_response_header;
 
 

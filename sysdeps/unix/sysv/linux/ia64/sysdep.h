@@ -34,6 +34,23 @@
 
 #ifdef __ASSEMBLER__
 
+#undef CALL_MCOUNT
+#ifdef PROF
+# define CALL_MCOUNT				\
+	.data;					\
+1:	data8 0;				\
+	.previous;				\
+	alloc out0 = ar.pfs, 8, 0, 4, 0;	\
+	mov out1 = gp;				\
+	mov out2 = rp;				\
+	;;					\
+	addl out3 = @ltoff(1b), gp;		\
+	br.call.sptk.many rp = _mcount		\
+	;;
+#else
+# define CALL_MCOUNT	/* Do nothing. */
+#endif
+
 /* Linux uses a negative return value to indicate syscall errors, unlike
    most Unices, which use the condition codes' carry flag.
 
@@ -47,13 +64,6 @@
 /* We don't want the label for the error handler to be visible in the symbol
    table when we define it here.  */
 #define SYSCALL_ERROR_LABEL __syscall_error
-
-#ifdef PROF
-#error "define CALL_MCOUNT"
-#else
-#define CALL_MCOUNT
-#endif
-
 
 #undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)	\

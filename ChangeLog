@@ -1,3 +1,30 @@
+2000-09-29  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.S (__ia64_syscall): Cleanup.
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h (CALL_MCOUNT): Implement.
+
+2000-06-10  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Fix it so it actually
+	works: call to __sigjmp_save must be done unconditionally to
+	ensure jmp_buf is initialized properly.
+
+2000-09-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Synch with Linux
+	2.4.0-test9-pre7.
+
+2000-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd-client.h (NSCD_VERSION): Bump to 3.
+	Use int32_t where appropriate.
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use uint32_t instead of size_t
+	where appropriate.
+	* nscd/nscd_getgr_r.c (nscd_getgr_r): Likewise.
+	* nscd/hstcache.c (cache_addhst): Likewise.
+	* nscd/grpcache.c (cache_addgr): Likewise.
+
 2000-09-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/getnameinfo.c (nrl_domainname): Use symbolic constant

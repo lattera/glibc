@@ -165,7 +165,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   if (hst_resp.found == 1)
     {
       struct iovec vec[4];
-      size_t *aliases_len;
+      uint32_t *aliases_len;
       char *cp = buffer;
       uintptr_t align1;
       uintptr_t align2;
@@ -206,12 +206,12 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
       vec[0].iov_base = resultbuf->h_name;
       vec[0].iov_len = hst_resp.h_name_len;
 
-      aliases_len = alloca (hst_resp.h_aliases_cnt * sizeof (size_t));
+      aliases_len = alloca (hst_resp.h_aliases_cnt * sizeof (uint32_t));
       vec[1].iov_base = aliases_len;
-      vec[1].iov_len = hst_resp.h_aliases_cnt * sizeof (size_t);
+      vec[1].iov_len = hst_resp.h_aliases_cnt * sizeof (uint32_t);
 
       total_len = (hst_resp.h_name_len
-		   + hst_resp.h_aliases_cnt * sizeof (size_t));
+		   + hst_resp.h_aliases_cnt * sizeof (uint32_t));
 
       n = 2;
       if (type == GETHOSTBYADDR || type == GETHOSTBYNAME)

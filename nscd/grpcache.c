@@ -23,6 +23,7 @@
 #include <grp.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -117,7 +118,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       size_t gr_name_len = strlen (grp->gr_name) + 1;
       size_t gr_passwd_len = strlen (grp->gr_passwd) + 1;
       size_t gr_mem_cnt = 0;
-      size_t *gr_mem_len;
+      uint32_t *gr_mem_len;
       size_t gr_mem_len_total = 0;
       char *gr_name;
       char *cp;
@@ -131,7 +132,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       /* Determine the length of all members.  */
       while (grp->gr_mem[gr_mem_cnt])
 	++gr_mem_cnt;
-      gr_mem_len = (size_t *) alloca (gr_mem_cnt * sizeof (size_t));
+      gr_mem_len = (uint32_t *) alloca (gr_mem_cnt * sizeof (uint32_t));
       for (gr_mem_cnt = 0; grp->gr_mem[gr_mem_cnt]; ++gr_mem_cnt)
 	{
 	  gr_mem_len[gr_mem_cnt] = strlen (grp->gr_mem[gr_mem_cnt]) + 1;
@@ -141,7 +142,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       /* We allocate all data in one memory block: the iov vector,
 	 the response header and the dataset itself.  */
       total = (sizeof (struct groupdata)
-	       + gr_mem_cnt * sizeof (size_t)
+	       + gr_mem_cnt * sizeof (uint32_t)
 	       + gr_name_len + gr_passwd_len + gr_mem_len_total);
       data = (struct groupdata *) malloc (total + n);
       if (data == NULL)
@@ -157,7 +158,7 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
       cp = data->strdata;
 
       /* This is the member string length array.  */
-      cp = mempcpy (cp, gr_mem_len, gr_mem_cnt * sizeof (size_t));
+      cp = mempcpy (cp, gr_mem_len, gr_mem_cnt * sizeof (uint32_t));
       gr_name = cp;
       cp = mempcpy (cp, grp->gr_name, gr_name_len);
       cp = mempcpy (cp, grp->gr_passwd, gr_passwd_len);

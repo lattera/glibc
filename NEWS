@@ -75,6 +75,11 @@ Version 2.2
   compatibility for kernel versions before X.Y.Z.  This is currently only
   implemented for Linux.
 
+* the sockaddr_in6 structure changed.  The IPv6 working group added a new
+  field sin6_scope_id.  This means that all programs using IPv6 should be
+  recompiled.  Don't expect binary compatibility with previous glibc
+  versions.
+
 * IA-64 port by Jes Sorensen and HJ Lu.
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

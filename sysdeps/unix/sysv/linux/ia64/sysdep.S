@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Hewlett-Packard Co.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -74,11 +74,10 @@ __syscall_error:
 	.endp __syscall_error
 
 
-        .global __ia64_syscall
-        .proc __ia64_syscall
-__ia64_syscall:
-        break __BREAK_SYSCALL
-        cmp.eq p6,p0=-1,r10
-(p6)    br.cond.spnt.few __syscall_error
-        ret
-        .endp __ia64_syscall
+ENTRY(__ia64_syscall)
+	mov r15=r37		/* syscall number */
+	break __BREAK_SYSCALL
+	cmp.eq p6,p0=-1,r10	/* r10 = -1 on error */
+(p6)	br.cond.spnt.few __syscall_error
+	ret
+PSEUDO_END(__ia64_syscall)

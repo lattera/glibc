@@ -152,15 +152,14 @@ __sigsetjmp:
 
 	st8.spill.nta [r2]=r6,16	// r6
 	st8.spill.nta [r3]=r7,16	// r7
-	cmp.ne p8,p0=0,in1
 	;;
 	mov r23=ar.bsp
 	mov r25=ar.unat
 	mov out0=in0
-	mov out1=in1
 
 	st8.nta [r2]=loc1,16		// b0
 	st8.nta [r3]=r17,16		// b1
+	mov out1=in1
 	;;
 	st8.nta [r2]=r18,16		// b2
 	st8.nta [r3]=r19,16		// b3
@@ -176,7 +175,7 @@ __sigsetjmp:
 	;;
 	st8.nta [r2]=r25		// ar.unat
 	st8.nta [r3]=in0		// &__jmp_buf
-(p8)	br.call.dpnt.few rp=__sigjmp_save
+	br.call.dpnt.few rp=__sigjmp_save
 .ret0:					// force a new bundle ::q
 	mov r8=0
 	mov rp=loc1

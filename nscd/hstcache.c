@@ -125,7 +125,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       struct hostdata *data;
       size_t h_name_len = strlen (hst->h_name) + 1;
       size_t h_aliases_cnt;
-      size_t *h_aliases_len;
+      uint32_t *h_aliases_len;
       size_t h_addr_list_cnt;
       int addr_list_type;
       char *addresses;
@@ -139,7 +139,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       for (cnt = 0; hst->h_aliases[cnt] != NULL; ++cnt)
 	++h_aliases_cnt;
       /* Determine the length of all aliases.  */
-      h_aliases_len = alloca (h_aliases_cnt * sizeof (size_t));
+      h_aliases_len = (uint32_t *) alloca (h_aliases_cnt * sizeof (uint32_t));
       total = 0;
       for (cnt = 0; cnt < h_aliases_cnt; ++cnt)
 	{
@@ -156,7 +156,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
 	 the response header and the dataset itself.  */
       total += (sizeof (struct hostdata)
 		+ h_name_len
-		+ h_aliases_cnt * sizeof (size_t)
+		+ h_aliases_cnt * sizeof (uint32_t)
 		+ h_addr_list_cnt * hst->h_length);
 
       data = (struct hostdata *) malloc (total + req->key_len);
@@ -175,7 +175,7 @@ cache_addhst (struct database *db, int fd, request_header *req, void *key,
       cp = data->strdata;
 
       cp = mempcpy (cp, hst->h_name, h_name_len);
-      cp = mempcpy (cp, h_aliases_len, h_aliases_cnt * sizeof (size_t));
+      cp = mempcpy (cp, h_aliases_len, h_aliases_cnt * sizeof (uint32_t));
 
       /* The normal addresses first.  */
       addresses = cp;

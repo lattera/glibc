@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -137,7 +137,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
   if (gr_resp.found == 1)
     {
-      size_t *len;
+      uint32_t *len;
       char *p = buffer;
       size_t total_len;
       uintptr_t align;
@@ -172,9 +172,9 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
       resultbuf->gr_gid = gr_resp.gr_gid;
 
       /* Allocate array to store lengths.  */
-      len = alloca (gr_resp.gr_mem_cnt * sizeof (size_t));
+      len = (uint32_t *) alloca (gr_resp.gr_mem_cnt * sizeof (uint32_t));
 
-      total_len = gr_resp.gr_mem_cnt * sizeof (size_t);
+      total_len = gr_resp.gr_mem_cnt * sizeof (uint32_t);
       vec[0].iov_base = len;
       vec[0].iov_len = total_len;
       vec[1].iov_base = resultbuf->gr_name;
