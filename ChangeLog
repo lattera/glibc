@@ -1,5 +1,7 @@
 2002-10-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/de.po: Update from translation team.
+
 	* MakeTAGS: Add -E flag to xgettext runs.
 
 2002-10-12  Ulrich Drepper  <drepper@redhat.com>
