@@ -84,8 +84,8 @@ static inline int __attribute__ ((unused))
 elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   Elf64_Addr *got;
-  extern void _dl_runtime_resolve (Elf64_Word);
-  extern void _dl_runtime_profile (Elf64_Word);
+  extern void _dl_runtime_resolve (Elf64_Word) attribute_hidden;
+  extern void _dl_runtime_profile (Elf64_Word) attribute_hidden;
 
   if (l->l_info[DT_JMPREL] && lazy)
     {
@@ -367,7 +367,10 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
       const Elf64_Sym *const refsym = sym;
 #endif
       Elf64_Addr value = RESOLVE (&sym, version, r_type);
-      if (sym)
+
+# ifndef RTLD_BOOTSTRAP
+      if (sym != NULL)
+# endif
 	value += sym->st_value;
 
 #ifdef RTLD_BOOTSTRAP
