@@ -1,3 +1,118 @@
+2002-09-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/math.h (__finite_internal, __finitef_internal,
+	__finitel_internal, __isinf_internal, __isnan_internal): Remove.
+	(isfinite): Remove.
+	(__finite, __isinf, __isnan, __finitef, __isinff, __isnanf, __finitel,
+	__isinfl, __isnanl): Add hidden_proto.
+	(__fpclassify, __fpclassifyf, __fpclassifyl, __expm1l): Add
+	libm_hidden_proto.
+	* math/Makefile (libm-calls): Add s_isinf and s_isnan.
+	* stdio-common/printf_fp.c (__printf_fp): Remove INTUSE from
+	__is{inf,nan} calls.
+	* stdio-common/printf_size.c (printf_size): Likewise.
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Likewise.
+	* sysdeps/generic/s_ldexp.c (__ldexp): Likewise.
+	* sysdeps/generic/s_ldexpf.c (__ldexpf): Likewise.
+	* sysdeps/generic/s_ldexpl.c (__ldexpl): Likewise.
+	* sysdeps/generic/s_expm1l.c (__expm1l): Add libm_hidden_def.
+	* sysdeps/i386/fpu/s_finite.S (__finite_internal): Remove alias.
+	(__finite): Add hidden_def.
+	* sysdeps/i386/fpu/s_finitef.S (__finitef_internal): Remove alias.
+	(__finitef): Add hidden_def.
+	* sysdeps/i386/fpu/s_finitel.S (__finitel_internal): Remove alias.
+	(__finitel): Add hidden_def.
+	* sysdeps/i386/fpu/s_isinfl.c (__isinfl): Remove INTDEF.  Add
+	hidden_def.
+	* sysdeps/i386/fpu/s_isnanl.c (__isnanl): Likewise.
+	* sysdeps/i386/fpu/s_fpclassifyl.c (__fpclassifyl): Add
+	libm_hidden_def.
+	* sysdeps/i386/fpu/s_expm1l.S (__expm1l): Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c (__finite): Remove INTDEF.  Add
+	hidden_def.
+	* sysdeps/ieee754/dbl-64/s_isinf.c (__isinf): Likewise.
+	(__isinfl): Remove INTDEF.
+	* sysdeps/ieee754/dbl-64/s_isnan.c (__isnan): Remove INTDEF.  Add
+	hidden_def.
+	(__isnanl): Remove INTDEF.
+	* sysdeps/ieee754/dbl-64/s_fpclassify.c (__fpclassify): Add
+	libm_hidden_def.
+	* sysdeps/ieee754/dbl-64/e_lgamma_r.c (sin_pi): Use __sin and __cos
+	instead of sin and cos.
+	* sysdeps/ieee754/flt-32/s_finitef.c (__finitef): Remove INTDEF.
+	Add hidden_def.
+	* sysdeps/ieee754/flt-32/s_isinff.c (__isinff): Likewise.
+	* sysdeps/ieee754/flt-32/s_isnanf.c (__isnanf): Likewise.
+	* sysdeps/ieee754/flt-32/s_fpclassifyf.c (__fpclassifyf): Add
+	libm_hidden_def.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c (__finitel): Remove INTDEF.
+	Add hidden_def.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c (__isinfl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c (__isnanl): Likewise.
+	* sysdeps/ieee754/ldbl-128/s_fpclassifyl.c (__fpclassifyl): Add
+	libm_hidden_def.
+	* sysdeps/ieee754/ldbl-128/s_expm1l.c (__expm1l): Add
+	libm_hidden_def.
+	* sysdeps/ieee754/ldbl-96/s_finitel.c (__finitel): Remove INTDEF.
+	Add hidden_def.
+	* sysdeps/ieee754/ldbl-96/s_isinfl.c (__isinfl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isnanl.c (__isnanl): Likewise.
+	* sysdeps/ieee754/ldbl-96/s_fpclassifyl.c (__fpclassifyl): Add
+	libm_hidden_def.
+	* sysdeps/ia64/fpu/s_finite.S (__finite_internal, __finitef_internal,
+	__finitel_internal): Remove aliases.
+	(__finite, __finitef, __finitel): Add hidden_def.
+	* sysdeps/ia64/fpu/s_isnan.S (__isnan_internal, __isnanf_internal,
+	__isnanl_internal): Remove aliases.
+	(__isnan, __isnanf, __isnanl): Add hidden_def.
+	* sysdeps/ia64/fpu/s_isinf.S (__isinf_internal, __isinff_internal,
+	__isinfl_internal): Remove aliases.
+	(__isinf, __isinff, __isinfl): Add hidden_def.
+	* sysdeps/ia64/fpu/s_fpclassify.S (__fpclassify, __fpclassifyf,
+	__fpclassifyl): Add libm_hidden_def.
+	* sysdeps/ia64/fpu/s_expm1l.S (__expm1l): Likewise.
+	* sysdeps/m68k/s_isinfl.c (__isinfl): Remove INTDEF.  Add hidden_def.
+	* sysdeps/m68k/fpu/s_isinf.c (INTDEFX): Remove.
+	(hidden_defx): Define and use.
+	* sysdeps/m68k/fpu/s_fpclassifyl.c (__fpclassifyl): Add
+	libm_hidden_def.
+	* sysdeps/m68k/fpu/s_expm1l.c (__expm1l): Likewise.
+	* sysdeps/m68k/s_isnanl.c (__isnanl): Add hidden_def.
+	* sysdeps/powerpc/fpu/s_isnan.c (__isnan, __isnanf, __isnanl):
+	Remove INTDEF.
+	(__isnan, __isnanf): Add hidden_def.
+	* sysdeps/x86_64/fpu/s_finitel.S (__finitel_internal): Remove alias.
+	(__finitel): Add libm_hidden_def.
+	* sysdeps/x86_64/fpu/s_expm1l.S (__expm1l): Likewise.
+
+	* include/fenv.h (feraiseexcept, fesetenv): Add libm_hidden_proto.
+	* sysdeps/alpha/fpu/fesetenv.c (fesetenv): Add libm_hidden_ver.
+	* sysdeps/alpha/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/arm/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/arm/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/generic/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/generic/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/i386/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/i386/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/m68k/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/m68k/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/mips/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/mips/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/sparc/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/sparc/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/hppa/fpu/fesetenv.c (fesetenv): Add libm_hidden_def.
+	* sysdeps/hppa/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/ia64/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/ia64/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/sh/sh4/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/sh/sh4/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/s390/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/s390/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+	* sysdeps/x86_64/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/x86_64/fpu/fraiseexcpt.c (feraiseexcept): Likewise.
+
 2002-09-09  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* elf/elf.h: Add powerpc64 specific elf relocation and dynamic types.

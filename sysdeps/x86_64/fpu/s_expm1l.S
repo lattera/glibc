@@ -1,5 +1,5 @@
 /* ix87 specific implementation of exp(x)-1.
-   Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
    Based on code by John C. Bowman <bowman@ipp-garching.mpg.de>.
@@ -80,4 +80,5 @@ ENTRY(__expm1l)
 	fldl	MO(minus1)	// Set result to -1.0.
 3:	ret
 END(__expm1l)
+libm_hidden_def (__expm1l)
 weak_alias (__expm1l, expm1l)

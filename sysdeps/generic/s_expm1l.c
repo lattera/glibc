@@ -9,6 +9,7 @@ __expm1l (long double x)
   __set_errno (ENOSYS);
   return 0.0;
 }
+libm_hidden_def (__expm1l)
 weak_alias (__expm1l, expm1l)
 
 stub_warning (expm1l)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,12 +33,13 @@ ENTRY (__finite)
 }	
 END (__finite)
 
-strong_alias (__finite, __finite_internal)
 strong_alias (__finite, __finitef)
-strong_alias (__finitef, __finitef_internal)
 strong_alias (__finite, __finitel)
-strong_alias (__finitel, __finitel_internal)
 
 weak_alias (__finite, finite)
 weak_alias (__finitef, finitef)
 weak_alias (__finitel, finitel)
+
+hidden_def (__finite)
+hidden_def (__finitef)
+hidden_def (__finitel)

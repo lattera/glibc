@@ -39,12 +39,13 @@ ENTRY (__isnan)
 }
 END (__isnan)
 
-strong_alias (__isnan, __isnan_internal)
 strong_alias (__isnan, __isnanf)
-strong_alias (__isnanf, __isnanf_internal)
 strong_alias (__isnan, __isnanl)
-strong_alias (__isnanl, __isnanl_internal)
 
 weak_alias (__isnan, isnan)
 weak_alias (__isnanf, isnanf)
 weak_alias (__isnanl, isnanl)
+
+hidden_def (__isnan)
+hidden_def (__isnanf)
+hidden_def (__isnanl)

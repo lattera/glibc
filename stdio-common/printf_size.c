@@ -136,13 +136,13 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
       fpnum.ldbl.d = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (INTUSE(__isnanl) (fpnum.ldbl.d))
+      if (__isnanl (fpnum.ldbl.d))
 	{
 	  special = "nan";
 	  wspecial = L"nan";
 	  negative = 0;
 	}
-      else if (INTUSE(__isinfl) (fpnum.ldbl.d))
+      else if (__isinfl (fpnum.ldbl.d))
 	{
 	  special = "inf";
 	  wspecial = L"inf";
@@ -162,13 +162,13 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
       fpnum.dbl.d = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (INTUSE(__isnan) (fpnum.dbl.d))
+      if (__isnan (fpnum.dbl.d))
 	{
 	  special = "nan";
 	  wspecial = L"nan";
 	  negative = 0;
 	}
-      else if (INTUSE(__isinf) (fpnum.dbl.d))
+      else if (__isinf (fpnum.dbl.d))
 	{
 	  special = "inf";
 	  wspecial = L"inf";

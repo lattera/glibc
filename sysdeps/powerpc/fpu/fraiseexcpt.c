@@ -1,5 +1,5 @@
 /* Raise given exceptions.
-   Copyright (C) 1997,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1997,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,4 +62,5 @@ strong_alias (__feraiseexcept, __old_feraiseexcept)
 compat_symbol (libm, BP_SYM (__old_feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2_1);
 #endif
 
+libm_hidden_ver (__feraiseexcept, feraiseexcept)
 versioned_symbol (libm, BP_SYM (__feraiseexcept), BP_SYM (feraiseexcept), GLIBC_2_2);

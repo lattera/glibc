@@ -44,5 +44,5 @@ static char rcsid[] = "$NetBSD: $";
 	se = 0xfffe - se;
 	return (int)((u_int32_t)(se))>>16;
 }
-INTDEF(__isnanl)
+hidden_def (__isnanl)
 weak_alias (__isnanl, isnanl)

@@ -175,7 +175,7 @@ static double zero=  0.00000000000000000000e+00;
 	GET_HIGH_WORD(ix,x);
 	ix &= 0x7fffffff;
 
-	if(ix<0x3fd00000) return sin(pi*x);
+	if(ix<0x3fd00000) return __sin(pi*x);
 	y = -x;		/* x is assume negative */
 
     /*
@@ -199,14 +199,14 @@ static double zero=  0.00000000000000000000e+00;
             }
         }
 	switch (n) {
-	    case 0:   y =  sin(pi*y); break;
+	    case 0:   y =  __sin(pi*y); break;
 	    case 1:
-	    case 2:   y =  cos(pi*(0.5-y)); break;
+	    case 2:   y =  __cos(pi*(0.5-y)); break;
 	    case 3:
-	    case 4:   y =  sin(pi*(one-y)); break;
+	    case 4:   y =  __sin(pi*(one-y)); break;
 	    case 5:
-	    case 6:   y = -cos(pi*(y-1.5)); break;
-	    default:  y =  sin(pi*(y-2.0)); break;
+	    case 6:   y = -__cos(pi*(y-1.5)); break;
+	    default:  y =  __sin(pi*(y-2.0)); break;
 	    }
 	return -y;
 }

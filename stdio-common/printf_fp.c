@@ -318,7 +318,7 @@ __printf_fp (FILE *fp,
       fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (INTUSE(__isnanl) (fpnum.ldbl))
+      if (__isnanl (fpnum.ldbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -332,7 +332,7 @@ __printf_fp (FILE *fp,
 	      }
 	  is_neg = 0;
 	}
-      else if (INTUSE(__isinfl) (fpnum.ldbl))
+      else if (__isinfl (fpnum.ldbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -362,7 +362,7 @@ __printf_fp (FILE *fp,
       fpnum.dbl = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (INTUSE(__isnan) (fpnum.dbl))
+      if (__isnan (fpnum.dbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -376,7 +376,7 @@ __printf_fp (FILE *fp,
 	    }
 	  is_neg = 0;
 	}
-      else if (INTUSE(__isinf) (fpnum.dbl))
+      else if (__isinf (fpnum.dbl))
 	{
 	  if (isupper (info->spec))
 	    {

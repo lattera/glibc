@@ -1,5 +1,5 @@
 /* Return classification value corresponding to argument.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,3 +40,4 @@ __fpclassifyf (float x)
 
   return retval;
 }
+libm_hidden_def (__fpclassifyf)

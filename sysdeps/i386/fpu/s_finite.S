@@ -12,5 +12,6 @@ ENTRY(__finite)
 	shrl	$31, %eax
 	ret
 END (__finite)
-strong_alias(__finite, __finite_internal)
 weak_alias (__finite, finite)
+hidden_def (__finite)
+

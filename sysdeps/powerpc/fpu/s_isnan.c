@@ -36,19 +36,16 @@ __isnan (x)
   fesetenv_register (savedstate);
   return result;
 }
-INTDEF(__isnan)
+hidden_def (__isnan)
 weak_alias (__isnan, isnan)
 
 /* It turns out that the 'double' version will also always work for
    single-precision.  */
-#undef __isnanf
-#undef isnanf
 strong_alias (__isnan, __isnanf)
-INTDEF(__isnanf)
+hidden_def (__isnanf)
 weak_alias (__isnanf, isnanf)
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isnan, __isnanl)
-INTDEF(__isnanl)
 weak_alias (__isnan, isnanl)
 #endif

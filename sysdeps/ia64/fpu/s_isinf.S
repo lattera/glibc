@@ -46,12 +46,13 @@ ENTRY (__isinf)
 }
 END (__isinf)
 
-strong_alias (__isinf, __isinf_internal)
 strong_alias (__isinf, __isinff)
-strong_alias (__isinff, __isinff_internal)
 strong_alias (__isinf, __isinfl)
-strong_alias (__isinfl, __isinfl_internal)
 
 weak_alias (__isinf, isinf)
 weak_alias (__isinff, isinff)
 weak_alias (__isinfl, isinfl)
+
+hidden_def (__isinf)
+hidden_def (__isinff)
+hidden_def (__isinfl)

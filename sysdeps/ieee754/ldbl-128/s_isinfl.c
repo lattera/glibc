@@ -25,5 +25,5 @@ __isinfl (long double x)
 	lx |= -lx;
 	return ~(lx >> 63) & (hx >> 62);
 }
-INTDEF(__isinfl)
+hidden_def (__isinfl)
 weak_alias (__isinfl, isinfl)

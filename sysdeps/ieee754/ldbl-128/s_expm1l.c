@@ -157,5 +157,5 @@ __expm1l (long double x)
   x = px * qx + (px - 1.0);
   return x;
 }
-
+libm_hidden_def (__expm1l)
 weak_alias (__expm1l, expm1l)

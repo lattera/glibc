@@ -565,6 +565,10 @@ alloc r32 = ar.pfs,0,30,4,0
 .endp expm1l
 ASM_SIZE_DIRECTIVE(expm1l)
 
+#ifdef _LIBC
+libm_hidden_def (__expm1l)
+#endif
+
 .section .text
 .proc expl#
 .global expl#
