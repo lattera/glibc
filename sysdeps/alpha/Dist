@@ -3,3 +3,5 @@ DEFS.h
 divrem.h
 divl.S divlu.S divq.S divqu.S reml.S remlu.S remq.S remqu.S
 _mcount.S
+stxcpy.S
+stxncpy.S

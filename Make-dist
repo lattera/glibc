@@ -29,6 +29,7 @@ endif
 include $(..)Makeconfig
 
 foo:=$(shell echo 'distribute=$(distribute)'>&2)
+foo:=$(shell echo 'dont_distribute=$(dont_distribute)'>&2)
 foo:=$(shell echo 'foobar=$(filter %.c %.S %.s %.h,$(distribute))'>&2)
 
 ifndef sysdep_dirs
@@ -111,8 +112,8 @@ sources := $(filter-out $(addsuffix .c,$(basename $(.S.s))),$(sources)) $(.S.s)
 
 +out := $(patsubst %.S,%.c,$(+sysdep-names:.s=.c)) \
 	$(addsuffix .c,$(sysdep_routines)) \
-	$(+subdir-nodist)
-#foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
+	$(+subdir-nodist) $(dont_distribute)
+foo:=$(shell echo '+out=$(+out)' >&2; echo foofoo >&2)
 +tsrcs	:= $(filter-out $(+out), $(sources) $(all-headers) $(distribute)) \
 	   $(+sysdeps)
 foo:=$(shell echo 'made +tsrcs=$(+tsrcs)'>&2)

@@ -65,7 +65,7 @@ $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
 CPPFLAGS := -DLOCALE_PATH='"$(localedir)"' \
-	    -DCHARMAP_PATH='"$(i18ndir)/charmap"' \
+	    -DCHARMAP_PATH='"$(i18ndir)/charmaps"' \
 	    -DLOCSRCDIR='"$(i18ndir)/locales"' -DHAVE_CONFIG_H \
 	    -Iprograms $(CPPFLAGS)
 

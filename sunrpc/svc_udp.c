@@ -46,7 +46,9 @@ static char sccsid[] = "@(#)svc_udp.c 1.24 87/08/11 Copyr 1984 Sun Micro";
 
 
 #define rpc_buffer(xprt) ((xprt)->xp_p1)
-#define MAX(a, b)     ((a > b) ? a : b)
+#ifndef MAX
+# define MAX(a, b)     ((a > b) ? a : b)
+#endif
 
 static bool_t		svcudp_recv();
 static bool_t		svcudp_reply();

@@ -147,7 +147,7 @@ I am ready for my first lesson today.";
 
 #ifndef	BSD
   printf("bad format:\t\"%z\"\n");
-  printf("nil pointer (padded):\t\"%10p\"\n", (PTR) NULL);
+  printf("nil pointer (padded):\t\"%10p\"\n", (void *) NULL);
 #endif
 
   printf("decimal negative:\t\"%d\"\n", -2345);
@@ -272,7 +272,6 @@ rfg1 (void)
   sprintf (buf, "%.G", 33.3);
   if (strcmp (buf, "3E+01") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, "3E+01");
-  return 0;
 }
 
 void
@@ -309,5 +308,4 @@ rfg2 (void)
   sprintf (buf, "%04.*X", prec, 33);
   if (strcmp (buf, " 021") != 0)
     printf ("got: '%s', expected: '%s'\n", buf, " 021");
-  return 0;
 }

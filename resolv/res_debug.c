@@ -671,7 +671,7 @@ __p_rr(cp, msg, file)
 		fprintf(file, "\t%s", inet_ntop(AF_INET6, cp, t, sizeof t));
 		cp += dlen;
 		break;
-	}
+	    }
 
 	case T_LOC: {
 		char t[255];
@@ -679,7 +679,30 @@ __p_rr(cp, msg, file)
 		(void) fprintf(file, "\t%s", loc_ntoa(cp, t));
 		cp += dlen;
 		break;
-	}
+	    }
+
+	case T_NAPTR: {
+		u_int order, preference;
+
+		order = _getshort(cp);  cp += INT16SZ;
+		preference   = _getshort(cp);  cp += INT16SZ;
+		fprintf(file, "\t%u %u ",order, preference);
+		/* Flags */
+		n = *cp++;
+		fprintf(file,"\"%.*s\" ", (int)n, cp);
+		cp += n;
+		/* Service */
+		n = *cp++;
+		fprintf(file,"\"%.*s\" ", (int)n, cp);
+		cp += n;
+		/* Regexp */
+		n = *cp++;
+		fprintf(file,"\"%.*s\" ", (int)n, cp);
+		cp += n;
+		if ((cp = p_fqname(cp, msg, file)) == NULL)
+			return (NULL);
+		break;
+	    }
 
 	case T_SRV: {
 		u_int priority, weight, port;
@@ -691,7 +714,7 @@ __p_rr(cp, msg, file)
 		if ((cp = p_fqname(cp, msg, file)) == NULL)
 			return (NULL);
 		break;
-	}
+	    }
 
 	case T_MINFO:
 	case T_RP:
@@ -908,6 +931,7 @@ const struct res_sym __p_type_syms[] = {
 	{T_UINFO,	"UINFO",	"user information (nonstandard)"},
 	{T_UID,		"UID",		"user ID (nonstandard)"},
 	{T_GID,		"GID",		"group ID (nonstandard)"},
+	{T_NAPTR,	"NAPTR",	"URN Naming Authority"},
 #ifdef ALLOW_T_UNSPEC
 	{T_UNSPEC,	"UNSPEC",	"unspecified data (nonstandard)"},
 #endif /* ALLOW_T_UNSPEC */

@@ -394,8 +394,12 @@ int
 res_ownok(dn)
 	const char *dn;
 {
-	if (asterchar(dn[0]) && periodchar(dn[1]))
-		dn += 2;
+	if (asterchar(dn[0])) {
+		if (periodchar(dn[1]))
+			return (res_hnok(dn+2));
+		if (dn[1] == '\0')
+			return (1);
+	}
 	return (res_hnok(dn));
 }
 

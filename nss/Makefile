@@ -55,7 +55,8 @@ libnss_dns-routines	:= dns-host dns-network
 
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network,\
 							$(databases)))
-generated		+= $(addsuffix .c,$(libnss_db-routines))
+generated		+= $(filter-out db-netgrp.c, \
+					$(addsuffix .c,$(libnss_db-routines)))
 distribute		+= db-XXX.c
 
 libnss_files-inhibit-o	= $(filter-out .so,$(object-suffixes))

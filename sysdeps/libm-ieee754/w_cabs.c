@@ -14,7 +14,13 @@ __cabs(z)
 	return __hypot(z.x, z.y);
 }
 weak_alias (__cabs, cabs)
+
 #ifdef NO_LONG_DOUBLE
-strong_alias (__cabs, __cabsl)
-weak_alias (__cabs, cabsl)
+double
+__cabsl(z)
+	struct __cabs_complexl z;
+{
+	return __hypotl(z.x, z.y);
+}
+weak_alias (__cabsl, cabsl)
 #endif

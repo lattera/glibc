@@ -341,12 +341,11 @@ getanswer(answer, anslen, qname, qtype)
 				cp += n;
 				continue;	/* XXX - had_error++ ? */
 			}
-			if (haveanswer) {
-				if (n != host.h_length) {
-					cp += n;
-					continue;
-				}
-			} else {
+			if (n != host.h_length) {
+				cp += n;
+				continue;
+			}
+			if (!haveanswer) {
 				register int nn;
 
 				host.h_name = bp;

@@ -188,6 +188,11 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
   const char *host, *user, *domain;
   char *cp = *cursor;
 
+  /* Some sanity checks.  */
+  if (cp == NULL)
+    /* User bug.  setnetgrent() wasn't called before.  */
+    abort ();
+
   /* First skip leading spaces.  */
   while (isspace (*cp))
     ++cp;

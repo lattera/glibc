@@ -28,6 +28,7 @@ Boston, MA 02111-1307, USA.  */
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#include <asm/user.h>
 #include <asm/elf.h>
 
 struct elf_siginfo

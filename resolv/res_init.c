@@ -645,7 +645,7 @@ netinfo_res_init(haveenv, havesearch)
 }
 #endif	/* NeXT */
 
-u_int16_t
+u_int
 res_randomid()
 {
 	struct timeval now;

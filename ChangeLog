@@ -1,3 +1,103 @@
+Fri Oct 11 19:13:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/Makefile (CPPFLAGS): Set CHARMAP_PATH to
+ 	"$(i18ndir)/charmaps".
+
+Fri Oct 11 22:12:41 1996  NIIBE Yutaka  <gniibe@mri.co.jp>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Include <asm/user.h>
+	to get definition of FPU description struct.
+
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=socket] (subdir_headers):
+	Add net/if.h, net/if_ppp.h, net/ppp-comp.h, net/ppp_defs.h,
+ 	net/if_arp.h, and net/route.h.
+	* sysdeps/unix/sysv/linux/net/if_arp.h: New file.
+	* sysdeps/unix/sysv/linux/net/route.h: New file.
+
+Fri Oct 11 14:49:13 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/readdir_r.c: New file.  We need a stub version.
+	* sysdeps/stub/e_acosl.c: Likewise.
+	* sysdeps/stub/e_asinl.c: Likewise.
+	* sysdeps/stub/e_atan2l.c: Likewise.
+	* sysdeps/stub/e_expl.c: Likewise.
+	* sysdeps/stub/e_fmodl.c: Likewise.
+	* sysdeps/stub/e_log10l.c: Likewise.
+	* sysdeps/stub/e_logl.c: Likewise.
+	* sysdeps/stub/e_sqrtl.c: Likewise.
+	* sysdeps/stub/s_atanl.c: Likewise.
+	* sysdeps/stub/s_log1pl.c: Likewise.
+
+	* Makefile (distribute): Add nsswitch.h and netgroup.h.
+
+	* nss/Makefile (generated): db-netgrp.c is not generated.
+
+	* sysdeps/alpha/Dist: Add stxcpy.S and stxncpy.S.
+
+	* Make-dist (+out): Add $(dont_distribute).
+
+Fri Oct 11 00:27:18 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/Makefile (routines): Add tmpnam_r.
+
+Fri Oct 11 05:32:51 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h: Bump version to 1.96.
+
+Fri Oct 11 18:13:47 1996  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* stdio-common/tst-printf.c: Some more cleanups.
+
+Fri Oct 11 02:48:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/arpa/nameser.h: Update from bind-4.9.5-T6B.
+	* resolv/resolv.h: Likewise.
+	* resolv/gethnamaddr.c: Likewise.
+	* resolv/res_comp.c: Likewise.
+	* resolv/res_debug.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_send.c: Likewise.
+	* resolv/Banner: Update version number.
+
+	* nss/nss_dns/dns-host.c: Update according to change in
+	resolv/gethnamaddr.c.
+
+Fri Oct 10 20:52:28 1996  Ralph Loader  <loader@maths.ox.ac.uk>
+
+	* crypt/md5.c (md5_stream): When reading the block in several
+	pieces append to instead of replace previously read data.
+
+Thu Oct 10 15:53:17 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/stxcpy.S ($unaligned): In single word copy, correct
+	last-byte-written bit for source word misalignment.
+	* sysdeps/alpha/strchr.c: Removed.  There is now an assembler
+ 	version.
+
+Thu Oct 10 17:17:23 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile (rpcsvc): Remove yp.x.  The corrected version
+	comes with glibc-nis.
+	* sunrpc/rpcsvc/yp.x: Removed.
+
+	* nss/nss_files/files-netgr.c (_nss_netgroup_parseline): Test
+	for *CURSOR to be NULL and dump a core if yes.
+
+Thu Oct  9 20:09:53 1996  Matthew Jacob  <mjacob@feral.com>
+
+	* sysdeps/unix/sysv/linux/alpha/brk.S: Define _ERRNO_H before
+	including <errnos.h> to get error numbers.
+
+Thu Oct 10 14:00:01 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigcontext.h: Moved file...
+	* sysdeps/unix/sysv/linux/sigcontext.h: ...to here.  So the
+	Alpha people find a correct file.
+	* sysdeps/libm-ieee754/w_cabs.c: We cannot make __cabsl simply
+	an alias of __cabs since the structures have different names.
+	* sysdeps/libm-ieee754/w_log10.c: Fix typo in weak_alias.
+	Reported by Matthew Jacob <mjacob@feral.com>.
+
 Wed Oct  9 00:24:52 1996  Jim Meyering  <meyering@asic.sc.ti.com>
 
 	* time/strftime.c: Allow old K&R compilers compile this file.
@@ -11,7 +111,7 @@ Wed Oct  9 12:03:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 Wed Oct  9 04:34:50 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sys/procfs.h: Rewrite.  We cannot use
-	simply a wrapper around the <linux.elfcore.h> file since the
+	simply a wrapper around the <linux/elfcore.h> file since the
 	kernel header is not clean enough.  We provide the definitions
 	in this file instead.
 

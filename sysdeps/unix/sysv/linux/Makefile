@@ -31,7 +31,8 @@ sysdep_headers += sys/timex.h
 endif
 
 ifeq ($(subdir), socket)
-sysdep_headers += sys/socketcall.h net/if.h
+sysdep_headers += sys/socketcall.h net/if.h net/if_ppp.h net/ppp-comp.h \
+		  net/ppp_defs.h net/if_arp.h net/route.h
 endif
 
 ifeq ($(subdir), sunrpc)

@@ -110,7 +110,7 @@ struct __res_state {
 	struct sockaddr_in
 		nsaddr_list[MAXNS];	/* address of name server */
 #define	nsaddr	nsaddr_list[0]		/* for backward compatibility */
-	u_short	id;			/* current packet id */
+	u_short	id;			/* current message id */
 	char	*dnsrch[MAXDNSRCH+1];	/* components of domain to search */
 	char	defdname[256];		/* default domain (deprecated) */
 	u_long	pfcode;			/* RES_PRF_ flags - see below. */
@@ -235,6 +235,7 @@ extern const struct res_sym __p_type_syms[];
 #define	res_isourserver	__res_isourserver
 #define	res_nameinquery	__res_nameinquery
 #define	res_queriesmatch __res_queriesmatch
+#define	res_close	__res_close
 __BEGIN_DECLS
 int		res_hnok __P((const char *));
 int		res_ownok __P((const char *));
@@ -272,7 +273,7 @@ int		dn_comp __P((const char *, u_char *, int,
 int		dn_expand __P((const u_char *, const u_char *, const u_char *,
 			       char *, int));
 int		res_init __P((void));
-u_int16_t	res_randomid __P((void));
+u_int		res_randomid __P((void));
 int		res_query __P((const char *, int, int, u_char *, int));
 int		res_search __P((const char *, int, int, u_char *, int));
 int		res_querydomain __P((const char *, const char *, int, int,
@@ -285,6 +286,7 @@ int		res_nameinquery __P((const char *, int, int,
 				     const u_char *, const u_char *));
 int		res_queriesmatch __P((const u_char *, const u_char *,
 				      const u_char *, const u_char *));
+void		res_close __P((void));
 __END_DECLS
 
 #endif /* !_RESOLV_H_ */

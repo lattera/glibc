@@ -47,5 +47,5 @@ static char rcsid[] = "$NetBSD: w_log10.c,v 1.6 1995/05/10 20:49:35 jtc Exp $";
 weak_alias (__log10, log10)
 #ifdef NO_LONG_DOUBLE
 strong_alias (__log10, __log10l)
-weak_alias (__log10, log10)
+weak_alias (__log10, log10l)
 #endif

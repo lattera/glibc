@@ -92,10 +92,8 @@
 #include <sys/cdefs.h>
 
 #ifdef _AUX_SOURCE
-#include <sys/types.h>			/* ech for A/UX */
-#define res_send ucb_res_send		/* already def'd in libc */
-#define _res_close _ucb_res_close    /* removing res_send.o from the library */
-#endif				     /* gives an undefined symbol... */
+# include <sys/types.h>
+#endif
 
 /*
  * revision information.  this is the release date in YYYYMMDD format.
@@ -182,6 +180,7 @@
 #define T_NIMLOC	32		/* Nimrod locator */
 #define T_SRV		33		/* Server selection */
 #define T_ATMA		34		/* ATM Address */
+#define T_NAPTR		35		/* Naming Authority PoinTeR */
 	/* non standard */
 #define T_UINFO		100		/* user (finger) information */
 #define T_UID		101		/* user ID */

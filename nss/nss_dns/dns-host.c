@@ -589,15 +589,12 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
 	    }
-	  if (haveanswer)
+	  if (n != result->h_length)
 	    {
-	      if (n != result->h_length)
-		{
-		  cp += n;
-		  continue;
-		}
+	      cp += n;
+	      continue;
 	    }
-	  else
+	  if (!haveanswer)
 	    {
 	      register int nn;
 
