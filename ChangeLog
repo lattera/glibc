@@ -1,3 +1,11 @@
+2000-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/soinit.c (__libc_global_ctors): Call __pthread_initialize_minimal
+	if this function is available.
+
+	* sysdeps/i386/i486/atomicity.h (exchange_and_add): Use uint32_t for
+	all values.
+
 2000-04-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/getXXbyYY_r.c: Fix a typo in __old_getxxbyyy_r versioning.
@@ -44,7 +52,7 @@
 2000-04-27  Andreas Jaeger  <aj@suse.de>
 
 	* intl/libintl.h: Fix typo, reported by Bruno Haible
-	<clisp.cons.org>.
+	<haible@clisp.cons.org>.
 
 2000-04-25  Ulrich Drepper  <drepper@redhat.com>
 

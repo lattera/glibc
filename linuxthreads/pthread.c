@@ -310,6 +310,23 @@ static void pthread_initialize(void) __attribute__((constructor));
 
 extern void *__dso_handle __attribute__ ((weak));
 
+
+/* Do some minimal initialization which has to be done during the
+   startup of the C library.  */
+void
+__pthread_initialize_minimal(void)
+{
+  /* The errno/h_errno variable of the main thread are the global ones.  */
+  __pthread_initial_thread.p_errnop = &_errno;
+  __pthread_initial_thread.p_h_errnop = &_h_errno;
+  /* If we have special thread_self processing, initialize that for the
+     main thread now.  */
+#ifdef INIT_THREAD_SELF
+  INIT_THREAD_SELF(&__pthread_initial_thread, 0);
+#endif
+}
+
+
 static void pthread_initialize(void)
 {
   struct sigaction sa;
@@ -330,14 +347,6 @@ static void pthread_initialize(void)
     (char *)(((long)CURRENT_STACK_FRAME - 2 * STACK_SIZE) & ~(STACK_SIZE - 1));
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
-  /* If we have special thread_self processing, initialize that for the
-     main thread now.  */
-#ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(&__pthread_initial_thread, 0);
-#endif
-  /* The errno/h_errno variable of the main thread are the global ones.  */
-  __pthread_initial_thread.p_errnop = &_errno;
-  __pthread_initial_thread.p_h_errnop = &_h_errno;
   /* Play with the stack size limit to make sure that no stack ever grows
      beyond STACK_SIZE minus one page (to act as a guard page). */
   getrlimit(RLIMIT_STACK, &limit);

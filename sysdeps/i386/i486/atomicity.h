@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations.  ix86 version, x >= 4.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,11 +23,11 @@
 #include <inttypes.h>
 
 
-static inline int
+static inline uint32_t
 __attribute__ ((unused))
-exchange_and_add (volatile uint32_t *mem, int val)
+exchange_and_add (volatile uint32_t *mem, uint32_t val)
 {
-  register int result;
+  register uint32_t result;
   __asm__ __volatile__ ("lock; xaddl %0,%2"
 			: "=r" (result) : "0" (val), "m" (*mem) : "memory");
   return result;

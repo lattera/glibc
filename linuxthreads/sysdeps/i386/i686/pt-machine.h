@@ -63,5 +63,4 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 }
 
 
-/* Use the LDT implementation only if the kernel is fixed.  */
-//#include "../useldt.h"
+#include "../useldt.h"

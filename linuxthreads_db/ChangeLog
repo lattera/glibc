@@ -1,3 +1,10 @@
+2000-04-24  Mark Kettenis  <kettenis@gnu.org>
+
+	* td_thr_get_info.c (td_thr_get_info): Set ti_state to
+	TD_THR_ACTIVE instead of TD_THR_RUN.  If the thread is no longer
+	running but is still joinable, set it to TD_THR_ZOMBIE.  Otherwise
+	set it to TD_THR_UNKNOWN.
+
 2000-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* td_ta_thr_iter.c: Include <alloca.h> for prototype declaration.

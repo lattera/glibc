@@ -1,3 +1,12 @@
+2000-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions [libpthread] (GLIBC_2.2): Add __pthread_initialize_minimal.
+	* pthread.c (__pthread_initialize_minimal): New function.  Perform
+	minimal initialization.
+	(pthread_initialize): Remove this code here.
+	* sysdeps/i386/i686/pt-machine.h: Include "../useldt.h" again.  We
+	are working around the problem in glibc.
+
 2000-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/pt-machine.h: Do not use "../useldt.h" for
