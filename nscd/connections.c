@@ -62,7 +62,7 @@ close_sockets (void)
     if (sock[i] != 0)
       {
 	if (close (sock[i]))
-	  dbg_log (_("socket [%d|%d] close: %s"), strerror (errno));
+	  dbg_log (_("socket [%d|%d] close: %s"), i, sock[i], strerror (errno));
 
 	sock[i] = 0;
 	read_polls[i].fd = -1;
@@ -122,7 +122,7 @@ handle_new_connection (void)
   else
     {
       int black_widow_sock;
-      dbg_log (_("Supported number of simultainious connections exceeded"));
+      dbg_log (_("Supported number of simultaneous connections exceeded"));
       dbg_log (_("Ignoring client connect request"));
       /* There has to be a better way to ignore a connection request,..
 	 when I get my hands on a sockets wiz I'll modify this.  */
@@ -137,15 +137,32 @@ static int
 handle_new_request (int **connp, request_header **reqp, char **key)
 {
   ssize_t nbytes;
-  int i;
+  int i, found = 0;
 
   if (debug_flag)
     dbg_log ("handle_new_request");
 
   /* Find the descriptor.  */
-  for (i = 1; i < MAX_NUM_CONNECTIONS; ++i)
-    if (read_polls[i].revents & (POLLRDNORM|POLLERR))
-      break;
+  for (i = 1; i < MAX_NUM_CONNECTIONS; ++i) {
+    if (read_polls[i].fd >= 0
+	&& read_polls[i].revents & (POLLRDNORM|POLLERR|POLLNVAL))
+      {
+	found = i;
+	break;
+      }
+    if (read_polls[i].fd >= 0 && (read_polls[i].revents & POLLHUP))
+      {
+	/* Don't close the socket, we still need to send data.  Just
+	   stop polling for more data now.  */
+	read_polls[i].fd = -1;
+      }
+  }
+  
+  if (found == 0)
+    {
+      dbg_log (_("No sockets with data found !"));
+      return -1;
+    }
 
   if (debug_flag > 2)
     dbg_log (_("handle_new_request uses socket %d"), i);
@@ -244,7 +261,7 @@ get_request (int *conn, request_header *req, char **key)
 	  perror (_("Poll new reads"));
 	  exit (1);
 	}
-      if (read_polls[0].revents & (POLLRDNORM|POLLERR))
+      if (read_polls[0].revents & (POLLRDNORM|POLLERR|POLLHUP|POLLNVAL))
 	/* Handle the case of a new connection request on the named socket.  */
 	handle_new_connection ();
       else
