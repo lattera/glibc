@@ -60,7 +60,15 @@
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
-#define CALL_MCOUNT	/* NOTYET */
+#define CALL_MCOUNT					\
+	mov.l	1f,r1;					\
+	sts.l	pr,@-r15;				\
+	mova	2f,r0;					\
+	jmp	@r1;					\
+	 lds	r0,pr;					\
+	.align	2;					\
+1:	.long	mcount;					\
+2:	lds.l	@r15+,pr
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif

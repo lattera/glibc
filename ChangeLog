@@ -1,3 +1,10 @@
+2001-12-12  NIIBE Yutaka  <gniibe@m17n.org>
+
+	* sysdeps/sh/Makefile: New file.
+	* sysdeps/sh/_mcount.S: New file.
+	* sysdeps/sh/sysdep.h (CALL_MCOUNT): Implemented.
+	* sysdeps/sh/machine-gmon.h: Remove "NOTYET" comment, as we are ready.
+
 2001-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/nss_dns/dns-host.c (getanswer_r): Remove MAX_NR_ADDRS

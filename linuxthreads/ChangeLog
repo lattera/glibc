@@ -1,3 +1,8 @@
+2001-12-12  NIIBE Yutaka  <gniibe@.m17n.org>
+
+	* sysdeps/sh/pt-machine.h (INIT_THREAD_SELF): Added __volatile__
+	qualifier to be safe.
+
 2001-11-30  Andreas Schwab  <schwab@suse.de>
 
 	* pthread.c (pthread_handle_sigcancel) [THREAD_SELF]: Double check
