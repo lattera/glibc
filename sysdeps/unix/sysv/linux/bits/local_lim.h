@@ -1,5 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  Linux version.
-   Copyright (C) 1993, 94, 95, 96, 97, 98, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993-1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,3 +54,9 @@
 /* Maximum amount by which a process can descrease its asynchronous I/O
    priority level.  */
 #define AIO_PRIO_DELTA_MAX	20
+
+/* Maximum tty name length.  */
+#define TTY_NAME_MAX		32
+
+/* Maximum login name length.  This is arbitrary.  */
+#define LOGIN_NAME_MAX		256
