@@ -155,6 +155,8 @@ charmap_read (const char *filename)
 			char junk[BUFSIZ];
 
 			if (fscanf (fp, " <code_set_name> %as", &name) == 1
+			    || (fscanf (fp, " <code_set_name> \"%as\"", &name)
+				== 1)
 			    || fscanf (fp, "%% alias %as", &name) == 1)
 			  {
 			    if (strcasecmp (name, filename) == 0)
@@ -317,7 +319,7 @@ parse_charmap (struct linereader *cmfile)
 	    {
 	    case tok_code_set_name:
 	    case tok_repertoiremap:
-	      if (arg->tok != tok_ident)
+	      if (arg->tok != tok_ident && arg->tok != tok_string)
 		{
 		badarg:
 		  lr_error (cmfile, _("syntax error in prolog: %s"),

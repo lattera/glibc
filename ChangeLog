@@ -1,3 +1,8 @@
+2000-06-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c: Allow string arguments for
+	code_set_name and repertoiremap.
+
 2000-06-07  Andreas Jaeger  <aj@suse.de>
 
 	* elf/Makefile: Build ldconfig only when building shared libraries.
