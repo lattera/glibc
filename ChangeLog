@@ -1,3 +1,8 @@
+2002-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/ypclnt.c (yp_all): Remove the hack introduced on 1998-09-29.
+	Correctly close the UDP connection right away [PR libc/3120].
+
 2002-03-20  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/user.h (struct
