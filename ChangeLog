@@ -1,3 +1,22 @@
+2000-03-30  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/Versions (libc: GLIBC_2.0)
+	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)]: Conditionalize
+	__vm_allocate on this.
+	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)]: Conditionalize
+	mutex- and spinlock-related symbols on this.
+	[!SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)] (libc: HURD_CTHREADS_0.3):
+	New version set.  Lock-related symbols go here instead in this case.
+	* sysdeps/mach/hurd/Versions (libc: GLIBC_2.0): Remove
+	_cthread_exit_routine, _cthread_init_routine, cthread_keycreate,
+	cthread_getspecific, cthread_setspecific, __libc_getspecific.
+	* hurd/Versions
+	[SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)] (libc: GLIBC_2.0):
+	Put them here instead.
+	[!SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)] (libc: HURD_CTHREADS_0.3):
+	New version set.  Those cthreads symbols go here instead in this case.
+	* Versions.def (libc) [USE_IN_LIBIO]: Add HURD_CTHREADS_0.3 version.
+
 2000-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-init.c (_dl_init): We don't need to call constructors
