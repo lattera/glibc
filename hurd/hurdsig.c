@@ -516,8 +516,9 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 		       (vm_address_t) threads,
 		       nthreads * sizeof *threads);
       _hurd_stopped = 0;
-      /* The thread that will run the handler is already suspended.  */
-      ss_suspended = 1;
+      if (act == handle)
+	/* The thread that will run the handler is already suspended.  */
+	ss_suspended = 1;
     }
 
   if (signo == 0)
@@ -673,19 +674,11 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
     }
 
   /* Handle receipt of a blocked signal, or any signal while stopped.  */
-  if (__sigismember (&ss->blocked, signo) ||
+  if (act != ignore &&		/* Signals ignored now are forgotten now.  */
+      __sigismember (&ss->blocked, signo) ||
       (signo != SIGKILL && _hurd_stopped))
     {
       mark_pending ();
-      /* If there was a call to resume above in SIGCONT processing
-	 and we've left a thread suspended, now's the time to
-	 set it going. */
-      if (ss_suspended)
-	{
-	  err = __thread_resume (ss->thread);
-	  assert_perror (err);
-	  ss_suspended = 0;
-	}
       act = ignore;
     }
 
@@ -708,7 +701,15 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
       break;
 
     case ignore:
-      /* Nobody cares about this signal.  */
+      /* Nobody cares about this signal.  If there was a call to resume
+	 above in SIGCONT processing and we've left a thread suspended,
+	 now's the time to set it going. */
+      if (ss_suspended)
+	{
+	  err = __thread_resume (ss->thread);
+	  assert_perror (err);
+	  ss_suspended = 0;
+	}
       break;
 
     sigbomb:
@@ -904,10 +905,10 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 
     if (signals_pending ())
       {
-      pending:
 	for (signo = 1; signo < NSIG; ++signo)
 	  if (__sigismember (&pending, signo))
 	    {
+	    deliver:
 	      __sigdelset (&ss->pending, signo);
 	      *detail = ss->pending_data[signo];
 	      __spin_unlock (&ss->lock);
@@ -925,8 +926,15 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	for (ss = _hurd_sigstates; ss != NULL; ss = ss->next)
 	  {
 	    __spin_lock (&ss->lock);
-	    if (signals_pending ())
-	      goto pending;
+	    for (signo = 1; signo < NSIG; ++signo)
+	      if (__sigismember (&ss->pending, signo) &&
+		  !__sigismember (&ss->blocked, signo) ||
+		  /* We "deliver" immediately pending blocked signals whose
+                     action might be to ignore, so that if ignored they are
+                     dropped right away.  */
+		  ss->actions[signo].sa_handler == SIG_IGN ||
+		  ss->actions[signo].sa_handler == SIG_DFL)
+		goto deliver_pending;
 	    __spin_unlock (&ss->lock);
 	  }
 	__mutex_unlock (&_hurd_siglock);

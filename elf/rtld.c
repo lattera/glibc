@@ -263,7 +263,8 @@ of this helper program; chances are you did not intend to run this program.\n",
       /* No DT_NEEDED entry referred to the interpreter object itself,
 	 so remove it from the list of visible objects.  */
       _dl_rtld_map.l_prev->l_next = _dl_rtld_map.l_next;
-      _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
+      if (_dl_rtld_map.l_next)
+	_dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
     }
 
   if (list_only)

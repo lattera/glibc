@@ -67,6 +67,14 @@ DEFUN(__sigaction, (sig, act, oact),
       __spin_lock (&ss->lock);
       pending = ss->pending & ~ss->blocked;
     }
+  else if (a.sa_handler == SIG_IGN || a.sa_handler == SIG_DFL)
+    /* We are changing to an action that might be to ignore SIG signals.
+       If SIG is blocked and pending and the new action is to ignore it, we
+       must remove it from the pending set now; if the action is changed
+       back and then SIG is unblocked, the signal pending now should not
+       arrive.  So wake up the signal thread to check the new state and do
+       the right thing.  */
+    pending = ss->pending & __sigmask (sig);
   else
     pending = 0;
 

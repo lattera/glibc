@@ -1,4 +1,20 @@
+Thu Jun  6 16:12:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): For SIGNO==0 pending
+	check, deliver a pending blocked signal if its action might be to
+	ignore.
+	* sysdeps/mach/hurd/sigaction.c: If new action is SIG_IGN or SIG_DFL
+	and SIG is pending, wake up signal thread to check us.
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Don't mark a signal
+	pending while blocked or stopped when the action is to ignore it.
+
 Thu Jun  6 12:56:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal: resume): Only set
+	SS_SUSPENDED when the thread is really suspended.
+
+	* elf/rtld.c (dl_main): Don't dereference _dl_rtld_map.l_next if null.
 
 	* Makerules (headers): Move append of $(sysdep_headers) after include
 	of sysdep makefiles.
