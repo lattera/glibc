@@ -1,3 +1,8 @@
+1999-03-08  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdexec.c (_hurd_exec): Handle ARGV or ENVP parameters being
+	null, in which case send an empty string.
+
 1999-03-02  Mark Kettenis  <kettenis@gnu.org>
 
 	* Makerules (LD_FLAGS-c.so): Add -u __register_frame to force the
