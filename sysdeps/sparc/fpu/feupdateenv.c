@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,4 +41,4 @@ __feupdateenv (const fenv_t *envp)
 }
 strong_alias (__feupdateenv, __old_feupdateenv)
 symbol_version (__old_feupdateenv, feupdateenv, GLIBC_2.1);
-default_symbol_version (__feupdateenv, feupdateenv, GLIBC_2.1.3);
+default_symbol_version (__feupdateenv, feupdateenv, GLIBC_2.2);

@@ -392,6 +392,16 @@ Perl 5
 Perl is not required, but it is used if present to test the
 installation.  We may decide to use it elsewhere in the future.
 
+@item
+GNU @code{sed} 3.02 or newer
+
+Sed is used in several places to generate files.  Most scripts work with
+any version of @code{sed}.  The known exception is the script
+@code{po2test.sed} in the @code{intl} subdirectory which is used to
+generate @code{msgs.h} for the testsuite.  This script works correctly
+only with GNU @code{sed} 3.02.  If you like to run the testsuite, you
+should definitly upgrade @code{sed}.
+
 @end itemize
 
 @noindent

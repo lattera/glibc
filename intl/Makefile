@@ -86,6 +86,3 @@ endif
 
 endif
 
-CFLAGS-bindtextdom.c = -Wno-unused
-CFLAGS-finddomain.c = -Wno-unused
-CFLAGS-localealias.c = -Wno-unused

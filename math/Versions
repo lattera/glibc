@@ -153,12 +153,11 @@ libm {
     __fpclassify; __fpclassifyf; __fpclassifyl;
     __signbit; __signbitf; __signbitl;
   }
-  GLIBC_2.1.3 {
+  GLIBC_2.2 {
     # fp environment functions changes from ISO C99 TR1
     feclearexcept; fegetenv; fegetexceptflag; feraiseexcept;
     fesetenv; fesetexceptflag; feupdateenv;
-  }
-  GLIBC_2.2 {
+
     # fp environment function
     feenableexcept; fedisableexcept; fegetexcept;
   }

@@ -1,3 +1,83 @@
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* math/Versions: Move fe* function to GLIBC_2.2.  The patches have
+	not been added to glibc 2.1.3.
+	* Versions.def: Remove 2.1.3 entry for math.
+	* sysdeps/alpha/fpu/fclrexcpt.c: Change default version to GLIBC_2.2.
+	* sysdeps/alpha/fpu/fegetenv.c: Likewise.
+	* sysdeps/alpha/fpu/fesetenv.c: Likewise.
+	* sysdeps/alpha/fpu/feupdateenv.c: Likewise.
+	* sysdeps/alpha/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/alpha/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/alpha/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/arm/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fegetenv.c: Likewise.
+	* sysdeps/arm/fpu/fesetenv.c: Likewise.
+	* sysdeps/arm/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/generic/fclrexcpt.c: Likewise.
+	* sysdeps/generic/fegetenv.c: Likewise.
+	* sysdeps/generic/fesetenv.c: Likewise.
+	* sysdeps/generic/feupdateenv.c: Likewise.
+	* sysdeps/generic/fgetexcptflg.c: Likewise.
+	* sysdeps/generic/fraiseexcpt.c: Likewise.
+	* sysdeps/generic/fsetexcptflg.c: Likewise.
+	* sysdeps/i386/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fegetenv.c: Likewise.
+	* sysdeps/i386/fpu/fesetenv.c: Likewise.
+	* sysdeps/i386/fpu/feupdateenv.c: Likewise.
+	* sysdeps/i386/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/i386/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/m68k/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fegetenv.c: Likewise.
+	* sysdeps/m68k/fpu/fesetenv.c: Likewise.
+	* sysdeps/m68k/fpu/feupdateenv.c: Likewise.
+	* sysdeps/m68k/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/m68k/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/mips/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/mips/fpu/fegetenv.c: Likewise.
+	* sysdeps/mips/fpu/fesetenv.c: Likewise.
+	* sysdeps/mips/fpu/feupdateenv.c: Likewise.
+	* sysdeps/mips/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/powerpc/fclrexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fegetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fesetenv.c: Likewise.
+	* sysdeps/powerpc/fpu/feupdateenv.c: Likewise.
+	* sysdeps/powerpc/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/powerpc/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fsetexcptflg.c: Likewise.
+	* sysdeps/sparc/fpu/fclrexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fegetenv.c: Likewise.
+	* sysdeps/sparc/fpu/fesetenv.c: Likewise.
+	* sysdeps/sparc/fpu/feupdateenv.c: Likewise.
+	* sysdeps/sparc/fpu/fgetexcptflg.c: Likewise.
+	* sysdeps/sparc/fpu/fraiseexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fsetexcptflg.c: Likewise.
+
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/alpha/fpu/fraiseexcpt.c (__feraiseexcept): Correct
+	declaration to return value.
+
+	* sysdeps/ieee754/Makefile (CFLAGS-k_standard.c): Added.
+
+	* math/Makefile: Remove -Wno-write-strings since it's only needed
+	by one file.
+
+	* intl/Makefile (CFLAGS-bindtextdom.c): The code has been fixed,
+	we don't need to disable the warnings anymore, remove them.
+	(CFLAGS-finddomain.c): Likewise.
+	(CFLAGS-localealias.c): Likewise.
+
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Allow sed 3.02 or newer versions.
+
+	* manual/install.texi (Tools for Compilation): Document sed
+	requirement.
+
 2000-02-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/bzero.S: Moved to...
