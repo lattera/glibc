@@ -1,5 +1,9 @@
 2001-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
+	Handle kernels which report only three digits after the decimal point.
+	Reported by Van Okamura <van.okamura@oracle.com>.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: Adjust error values for atan2f.
 
 2001-04-17  David S. Miller  <davem@redhat.com>

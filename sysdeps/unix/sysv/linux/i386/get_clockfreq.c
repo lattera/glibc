@@ -1,5 +1,5 @@
 /* Get frequency of the system processor.  i386/Linux version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,6 +30,8 @@ __get_clockfreq (void)
   /* We read the information from the /proc filesystem.  It contains at
      least one line like
 	cpu MHz         : 497.840237
+     or also
+	cpu MHz         : 497.841
      We search for this line and convert the number in an integer.  */
   static unsigned long long int result;
   int fd;
@@ -54,6 +56,8 @@ __get_clockfreq (void)
 	  if (__builtin_expect (mhz != NULL, 1))
 	    {
 	      char *endp = buf + n;
+	      int seen_decpoint = 0;
+	      int ndigits = 0;
 
 	      /* Search for the beginning of the string.  */
 	      while (mhz < endp && (*mhz < '0' || *mhz > '9') && *mhz != '\n')
@@ -65,10 +69,18 @@ __get_clockfreq (void)
 		    {
 		      result *= 10;
 		      result += *mhz - '0';
+		      if (seen_decpoint)
+			++ndigits;
 		    }
+		  else if (*mhz == '.')
+		    seen_decpoint = 1;
 
 		  ++mhz;
 		}
+
+	      /* Compensate for missing digits at the end.  */
+	      while (ndigits++ < 6)
+		result *= 10;
 	    }
 	}
 
