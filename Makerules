@@ -166,7 +166,7 @@ $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(common-before-compile)
 	rm -f $@T $@.dT
 	(echo '# Generated from $*.make.c by Makerules.'; \
 	 $(CC) $(CFLAGS) $(CPPFLAGS) -E $< \
-	       -MD -MT '$$(common-objpfx)$*.make' -MF $@.dT \
+	       -MD -MP -MT '$$(common-objpfx)$*.make' -MF $@.dT \
 	 | sed -n '/@@@/{s/@@@[	 ]*\(.*\)@@@/\1/;s/[	 ]*$$//p;}'; \
 	 echo 'common-generated += $(@F)'; \
 	 sed $(sed-remove-objpfx) $(sed-remove-dotdot) $@.dT; \
@@ -175,9 +175,11 @@ $(common-objpfx)%.make: $(..)%.make.c $(..)Makerules $(common-before-compile)
 endif
 
 ifdef subdir
-sed-remove-dotdot := -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g'
+sed-remove-dotdot := -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g' \
+		     -e 's@^\.\.\/\([^ 	\]*\)@$$(..)\1@g'
 else
-sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g'
+sed-remove-dotdot := -e 's@  *\([^ 	\/$$][^ 	\]*\)@ $$(..)\1@g' \
+		     -e 's@^\([^ 	\/$$][^ 	\]*\)@$$(..)\1@g'
 endif
 
 
@@ -188,7 +190,7 @@ $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 					   %.sym $(common-before-compile)
 	$(AWK) -f $< $(filter %.sym,$^) \
 	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
-		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
+		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
 	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
 	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
 	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
@@ -1232,7 +1234,6 @@ endif
 endif
 
 # There's no good place to put this - here will do.
-# The dependencies are wrong if it's run from the top level.
 ifeq ($(filter %posix, $(sysdirs)),)
 L_tmpnam  = 1
 TMP_MAX   = 0
@@ -1250,24 +1251,20 @@ $(stdio_lim:lim.h=%.h) $(stdio_lim:lim.h=%.d): $(stdio_lim:lim.h=%.st); @:
 $(stdio_lim:h=st): $(..)stdio-common/stdio_lim.h.in $(..)Rules \
 		   $(common-objpfx)config.make
 	$(make-target-directory)
-	echo '#include "$(..)posix/bits/posix1_lim.h"' |		\
-	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
-	$(CC) $(+includes) -E -dM -xc - -o $(@:st=hT)
-	echo '#include "$(..)misc/sys/uio.h"' |				\
-	SUNPRO_DEPENDENCIES='$(@:st=dT) $@'				\
-	$(CC) -D_LIBC=1 $(+includes) -E -dM -xc - | cat - >> $(@:st=hT)
-ifdef sed-remove-objpfx
-	sed $(sed-remove-objpfx) $(@:st=dT) > $(@:st=dt)
-	cat $(@:st=dt) >> $(@:st=d)
-else
-	cat $(@:st=dT) >> $(@:st=d)
-endif
+	{ echo '#include "$(..)posix/bits/posix1_lim.h"';		\
+	  echo '#define _LIBC 1';					\
+	  echo '#include "$(..)misc/sys/uio.h"'; } |			\
+	$(CC) -E -dM -MD -MP -MF $(@:st=dT) -MT '$(@:st=h) $(@:st=d)' 	\
+	      $(+includes) -xc - -o $(@:st=hT)
+	sed $(sed-remove-objpfx) $(sed-remove-dotdot)			\
+	    $(@:st=dT) > $(@:st=dt)
+	mv -f $(@:st=dt) $(@:st=d)
 	fopen_max=`sed -n 's/^#define OPEN_MAX //1p' $(@:st=hT)`; 	\
 	filename_max=`sed -n 's/^#define PATH_MAX //1p' $(@:st=hT)`;	\
 	iov_max=`sed -n 's/^#define UIO_MAXIOV //p' $(@:st=hT)`;	\
 	fopen_max=$${fopen_max:-16};					\
 	filename_max=$${filename_max:-1024};				\
-	if [ -z $$iov_max ]; then					\
+	if [ -z "$$iov_max" ]; then					\
 	  define_iov_max="# undef IOV_MAX";				\
 	else								\
 	  define_iov_max="# define IOV_MAX $$iov_max";			\

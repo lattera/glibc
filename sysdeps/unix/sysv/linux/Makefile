@@ -30,7 +30,6 @@ install-others += $(inst_includedir)/bits/syscall.h
 # we generate a file that uses <bits/wordsize.h>.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	$(make-target-directory)
-	rm -f $(@:.h=.d)-t
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\
 	 echo ''; \
@@ -38,14 +37,14 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 echo '# error "Never use <bits/syscall.h> directly; include <sys/syscall.h> instead."'; \
 	 echo '#endif'; \
 	 echo ''; \
-	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
-	   $(addprefix -D,$(32bit-predefine)) -D_LIBC -dM | \
+	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t1 -MT '$(@:.d=.h) $(@:.h=.d)' \
+	       -x c $(sysincludes) $< $(addprefix -U,$(64bit-predefine)) \
+	       $(addprefix -D,$(32bit-predefine)) -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new32; \
-	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c $(sysincludes) $< $(addprefix -U,$(32bit-predefine)) \
-	   $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
+	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t2 -MT '$(@:.d=.h) $(@:.h=.d)' \
+	       -x c $(sysincludes) $< $(addprefix -U,$(32bit-predefine)) \
+	       $(addprefix -D,$(64bit-predefine)) -D_LIBC -dM | \
 	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' | \
 	 LC_ALL=C sort > $(@:.d=.h).new64; \
 	 if cmp -s $(@:.d=.h).new32 $(@:.d=.h).new64; then \
@@ -63,12 +62,13 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	 rm -f $(@:.d=.h).new32 $(@:.d=.h).new64; \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
-	sed < $(@:.h=.d)-t > $(@:.h=.d)-t2 \
-	    -e 's,$(subst .,\.,$@),$(patsubst $(objpfx)%,$$(objpfx)%,\
-					      $(@:.d=.h) $(@:.h=.d)),'
-	rm -f $(@:.h=.d)-t
-	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
-
+ifneq (,$(objpfx))
+	sed $(sed-remove-objpfx) $(@:.h=.d)-t1 $(@:.h=.d)-t2 > $(@:.h=.d)-t3
+else
+	cat $(@:.h=.d)-t1 $(@:.h=.d)-t2 > $(@:.h=.d)-t3
+endif
+	rm -f $(@:.h=.d)-t1 $(@:.h=.d)-t2
+	mv -f $(@:.h=.d)-t3 $(@:.h=.d)
 
 $(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h $(+force)
 	$(make-target-directory)

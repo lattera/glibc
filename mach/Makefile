@@ -79,12 +79,17 @@ $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 	$(make-target-directory)
 # We must use $(CFLAGS) to get -O flags that affect #if's in header files.
 	echo '#include <mach/syscall_sw.h>' | \
-	DEPENDENCIES_OUTPUT='$@-dep $@' \
-	$(CC) $(CFLAGS) $(CPPFLAGS) -E -x c-header - \
+	$(CC) $(CFLAGS) $(CPPFLAGS) -E -MD -MP -MF $@-dep -MT $@ \
+	      -x c-header - \
 	      -D_MACH_`echo $(mach-machine) | tr a-z A-Z`_SYSCALL_SW_H_=1 | \
 	sed -n -e 's/^kernel_trap(\(.*\),\([-0-9]*\),\([0-9]*\))$$/\1 \2 \3/p'\
 	| $(AWK) -f $< > $@-new
-	cat $@-dep >> $@-new; rm -f $@-dep
+ifneq (,$(objpfx))
+	sed $(sed-remove-objpfx) $@-dep >> $@-new
+else
+	cat $@-dep >> $@-new
+endif
+	rm -f $@-dep
 	mv -f $@-new $@
 generated += mach-syscalls.mk
 

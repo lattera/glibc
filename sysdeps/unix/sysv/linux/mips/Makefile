@@ -15,7 +15,6 @@ no_syscall_list_h = 1
 # We generate not only SYS_<syscall>, pointing at SYS_<abi>_<syscall> if
 # it exists, but also define SYS_<abi>_<syscall> for all ABIs.
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/syscall.h
-	rm -f $(@:.h=.d)-t
 	{ \
 	 echo '/* Generated at libc build time from kernel syscall list.  */';\
 	 echo ''; \
@@ -24,9 +23,10 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/s
 	 echo '#endif'; \
 	 echo ''; \
 	 rm -f $(@:.d=.h).newt; \
-	 SUNPRO_DEPENDENCIES='$(@:.h=.d)-t $@' \
-	 $(CC) -E -x c -I $(common-objdir) $(sysincludes) $< -D_LIBC -dM | \
-	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' > $(@:.d=.h).newt; \
+	 $(CC) -E -MD -MP -MF $(@:.h=.d)-t -MT '$(@:.d=.h) $(@:.h=.d)' \
+	       -x c -I $(common-objdir) $(sysincludes) $< -D_LIBC -dM | \
+	 sed -n 's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p' \
+	     > $(@:.d=.h).newt; \
 	 if grep SYS_O32_ $(@:.d=.h).newt > /dev/null; then \
 	   echo '#if defined _ABI64 && _MIPS_SIM == _ABI64'; \
 	   sed -n 's/^\(#define SYS_\)N64_/\1/p' < $(@:.d=.h).newt; \
@@ -42,9 +42,10 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/mips/sys/s
 	 rm $(@:.d=.h).newt; \
 	} > $(@:.d=.h).new
 	mv -f $(@:.d=.h).new $(@:.d=.h)
-	sed < $(@:.h=.d)-t > $(@:.h=.d)-t2 \
-	    -e 's,$(subst .,\.,$@),$(patsubst $(objpfx)%,$$(objpfx)%,\
-					      $(@:.d=.h) $(@:.h=.d)),'
+ifneq (,$(objpfx))
+	sed $(sed-remove-objpfx) $(@:.h=.d)-t > $(@:.h=.d)-t2
 	rm -f $(@:.h=.d)-t
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
+else
+	mv -f $(@:.h=.d)-t $(@:.h=.d)
 endif
