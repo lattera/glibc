@@ -1,3 +1,8 @@
+2005-02-21  Alan Modra <amodra@bigpond.net.au>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h (elf_vrreg_t): Don't
+	use __uint128_t.
+
 2005-03-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bits/unistd.h (read, pread, pread64): Use __bos0 instead
