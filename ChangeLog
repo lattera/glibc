@@ -8,7 +8,7 @@
 	* sysdeps/unix/sysv/linux/mips/sys/syscall.h: Removed.
 
 	* sysdeps/unix/mips/sysdep.h: Use SYS_ify.
-	Patches by "Maciej W. Rozycki" <macro@ds2.pg.gda.pl>.
+	Patches by Maciej W. Rozycki <macro@ds2.pg.gda.pl>.
 
 	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Mark as
 	internal_function.
