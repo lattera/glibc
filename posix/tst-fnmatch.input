@@ -713,5 +713,9 @@ C		"["			"!([!]a[])"	       0       EXTMATCH
 C		"]"			"!([!]a[])"	       0       EXTMATCH
 C		")"			"*([)])"	       0       EXTMATCH
 C		"*"			"*([*(])"	       0       EXTMATCH
-C		"abcd"			"*!(|a)cd"	       NOMATCH EXTMATCH
+C		"abcd"			"*!(|a)cd"	       0       EXTMATCH
 C		"ab/.a"			"+([abc])/*"	       NOMATCH EXTMATCH|PATHNAME|PERIOD
+C		""			""		       0
+C		""			""		       0       EXTMATCH
+C		""			"*([abc])"	       0       EXTMATCH
+C		""			"?([abc])"	       0       EXTMATCH

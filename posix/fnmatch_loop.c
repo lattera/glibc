@@ -164,8 +164,8 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 
 	      if (c == L('[')
 		  || (__builtin_expect (flags & FNM_EXTMATCH, 0) != 0
-		      /* XXX Do we have to add '!'?  */
-		      && (c == L('@') || c == L('+')) && *p == L('(')))
+		      && (c == L('@') || c == L('+') || c == L('!'))
+		      && *p == L('(')))
 		{
 		  int flags2 = ((flags & FNM_FILE_NAME)
 				? flags : (flags & ~FNM_PERIOD));

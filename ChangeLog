@@ -1,5 +1,9 @@
 2001-03-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c (FCT): Handle !() after * special like @()
+	and +().
+	* posix/tst-fnmatch.input: Add test cases for matching empty strings.
+
 	* sysdeps/ieee754/dbl-64/endian.h: Removed.  Move definitions...
 	* include/endian.h: ...to here.
 
