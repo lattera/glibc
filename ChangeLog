@@ -1,3 +1,8 @@
+2001-08-11  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_j0l.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert.c (set_progname): Removed.
