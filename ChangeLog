@@ -1,5 +1,8 @@
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): Type typo, must be == not = in
+	search for removed searchlist.  Reported by Roland McGrath.
+
 	* io/ftwtest-sh: Add test for case of symlink to nonexisting file
 	given as start file.
 

@@ -303,7 +303,7 @@ _dl_close (void *_map)
 	  imap->l_searchlist.r_nlist = cnt;
 
 	  for (cnt = 0; imap->l_scope[cnt] != NULL; ++cnt)
-	    if (imap->l_scope[cnt] = &map->l_searchlist)
+	    if (imap->l_scope[cnt] == &map->l_searchlist)
 	      {
 		imap->l_scope[cnt] = &imap->l_searchlist;
 		break;
