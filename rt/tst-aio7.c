@@ -34,6 +34,14 @@ static int
 do_test (void)
 {
   int result = 0;
+  int piped[2];
+
+  /* Make a pipe that we will never write to, so we can block reading it.  */
+  if (pipe (piped) < 0)
+    {
+      perror ("pipe");
+      return 1;
+    }
 
   /* Test for aio_cancel() detecting invalid file descriptor.  */
   {
@@ -146,9 +154,8 @@ do_test (void)
     printf ("\n");
 
     /* At this point, the first read is completed, so start another one on
-     * stdin, which will not complete unless the user inputs something.
-     */
-    cb1.aio_fildes = 0;
+       the read half of a pipe on which nothing will be written.  */
+    cb1.aio_fildes = piped[0];
     cb1.aio_offset = 0;
     cb1.aio_buf = buff;
     cb1.aio_nbytes = BYTES;
