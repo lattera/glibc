@@ -152,7 +152,7 @@ collating-symbol <yeh_barree>
 #
 # <HEBREU>
 #
-collating-symbol <halef>
+collating-symbol <alef_heb>
 collating-symbol <bet>
 collating-symbol <gimel>
 collating-symbol <dalet>
@@ -163,7 +163,7 @@ collating-symbol <het>
 collating-symbol <tet>
 collating-symbol <yod>
 collating-symbol <kaf_fin>
-collating-symbol <hkaf>
+collating-symbol <kaf_heb>
 collating-symbol <lamed>
 collating-symbol <mem_fin>
 collating-symbol <mem>
@@ -173,7 +173,7 @@ collating-symbol <samekh>
 collating-symbol <ayin>
 collating-symbol <pe_fin>
 collating-symbol <pe>
-collating-symbol <tsad_fin>
+collating-symbol <tsadi_fin>
 collating-symbol <tsadi>
 collating-symbol <qof>
 collating-symbol <resh>
@@ -408,7 +408,7 @@ collating-symbol <CYR-YA>
 #
 # <HEBREU>
 #
-<halef>
+<alef_heb>
 <bet>
 <gimel>
 <dalet>
@@ -419,7 +419,7 @@ collating-symbol <CYR-YA>
 <tet>
 <yod>
 <kaf_fin>
-<hkaf>
+<kaf_heb>
 <lamed>
 <mem_fin>
 <mem>
@@ -429,7 +429,7 @@ collating-symbol <CYR-YA>
 <ayin>
 <pe_fin>
 <pe>
-<tsad_fin>
+<tsadi_fin>
 <tsadi>
 <qof>
 <resh>
@@ -757,7 +757,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0129> <i>;<TIL>;<MIN>;IGNORE # 245 <i?>
 <U012F> <i>;<OGO>;<MIN>;IGNORE # 246 <i;>
 <U012B> <i>;<MAC>;<MIN>;IGNORE # 247 <i->
-<U0133> <i><j>;<LIG><LIG>;<MIN><MIN>;IGNORE # 248 <ij>
+<U0133> "<i><j>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 248 <ij>
 <U006A> <j>;<BAS>;<MIN>;IGNORE # 249 j
 <U0135> <j>;<CIR>;<MIN>;IGNORE # 250 <j/>>
 <U006B> <k>;<BAS>;<MIN>;IGNORE # 251 k
@@ -776,7 +776,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0144> <n>;<ACA>;<MIN>;IGNORE # 264 <n'>
 <U0148> <n>;<CAR>;<MIN>;IGNORE # 265 <n<>
 <U0146> <n>;<CDI>;<MIN>;IGNORE # 266 <n,>
-<U014B> <n><g>;<LIG><LIG>;<MIN><MIN>;IGNORE # 267 <ng>
+<U014B> "<n><g>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 267 <ng>
 <U006F> <o>;<BAS>;<MIN>;IGNORE # 268 o
 <U00BA> <o>;<PCL>;<EMI>;IGNORE # 269 º
 <U00F3> <o>;<ACA>;<MIN>;IGNORE # 270 ó
@@ -787,7 +787,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U00F8> <o>;<OBL>;<MIN>;IGNORE # 275 ø
 <U0151> <o>;<DAC>;<MIN>;IGNORE # 276 <o">
 <U014D> <o>;<MAC>;<MIN>;IGNORE # 277 <o->
-<U0153> <o><e>;<LIG><LIG>;<MIN><MIN>;IGNORE # 278 <oe>
+<U0153> "<o><e>";"<LIG><LIG>";"<MIN><MIN>";IGNORE # 278 <oe>
 <U0070> <p>;<BAS>;<MIN>;IGNORE # 279 p
 <U0071> <q>;<BAS>;<MIN>;IGNORE # 280 q
 <U0072> <r>;<BAS>;<MIN>;IGNORE # 281 r
@@ -877,7 +877,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0128> <i>;<TIL>;<CAP>;IGNORE # 365 <I?>
 <U012E> <i>;<OGO>;<CAP>;IGNORE # 366 <I;>
 <U012A> <i>;<MAC>;<CAP>;IGNORE # 367 <I->
-<U0132> <i><j>;<LIG><LIG>;<CAP><CAP>;IGNORE # 368 <IJ>
+<U0132> "<i><j>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 368 <IJ>
 <U004A> <j>;<BAS>;<CAP>;IGNORE # 369 J
 <U0134> <j>;<CIR>;<CAP>;IGNORE # 370 <J/>>
 <U004B> <k>;<BAS>;<CAP>;IGNORE # 371 K
@@ -894,7 +894,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U0143> <n>;<ACA>;<CAP>;IGNORE # 382 <N'>
 <U0147> <n>;<CAR>;<CAP>;IGNORE # 383 <N<>
 <U0145> <n>;<CDI>;<CAP>;IGNORE # 384 <N,>
-<U014A> <n><g>;<LIG><LIG>;<CAP><CAP>;IGNORE # 385 <NG>
+<U014A> "<n><g>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 385 <NG>
 <U004F> <o>;<BAS>;<CAP>;IGNORE # 386 O
 <U00D3> <o>;<ACA>;<CAP>;IGNORE # 387 Ó
 <U00D2> <o>;<GRA>;<CAP>;IGNORE # 388 Ò
@@ -904,7 +904,7 @@ order_start <LATIN>;forward;backward;forward;forward,position
 <U00D8> <o>;<OBL>;<CAP>;IGNORE # 392 Ø
 <U0150> <o>;<DAC>;<CAP>;IGNORE # 393 <O">
 <U014C> <o>;<MAC>;<CAP>;IGNORE # 394 <O->
-<U0152> <o><e>;<LIG><LIG>;<CAP><CAP>;IGNORE # 395 <OE>
+<U0152> "<o><e>";"<LIG><LIG>";"<CAP><CAP>";IGNORE # 395 <OE>
 <U0050> <p>;<BAS>;<CAP>;IGNORE # 396 P
 <U0051> <q>;<BAS>;<CAP>;IGNORE # 397 Q
 <U0052> <r>;<BAS>;<CAP>;IGNORE # 398 R
@@ -1003,14 +1003,14 @@ order_start <ARABINT>;forward;forward;forward;forward,position
 <U06AF> <gaf>;<BAS>;<MIN>;IGNORE
 <U0644> <lam>;<BAS>;<MIN>;IGNORE
 <U0645> <meem>;<BAS>;<MIN>;IGNORE
-<U0646> <noon>>;<BAS>;<MIN>;IGNORE
+<U0646> <noon>;<BAS>;<MIN>;IGNORE
 <U06BA> <noon_ghunna>;<BAS>;<MIN>;IGNORE
 <U0647> <heh>;<BAS>;<MIN>;IGNORE
 <U06C0> <heh_yeh>;<BAS>;<MIN>;IGNORE
 <U0624> <waw>;<AHW>;<MIN>;IGNORE
 <U0648> <waw>;<BAS>;<MIN>;IGNORE
 <U0649> <alef_maksura>;<BAS>;<MIN>;IGNORE
-<U0626> <alef_maksura><hamza>;<BAS><BAS>;<MIN><MIN>;IGNORE
+<U0626> "<alef_maksura><hamza>";"<BAS><BAS>";"<MIN><MIN>";IGNORE
 <U064A> <alef_maksura>;<AYE>;<MIN>;IGNORE
 <U06D3> <yeh_barree>;<YBA>;<MIN>;IGNORE
 <U06D2> <yeh_barree>;<BAS>;<MIN>;IGNORE
@@ -1143,17 +1143,22 @@ order_start <ARABFOR>;backward;backward;backward;forward,position
 <UFEE8> <noon>;<BAS>;<AME>;IGNORE
 <UFB9E> <noon_ghunna>;<BAS>;<AIS>;IGNORE
 <UFB9F> <noon_ghunna>;<BAS>;<AFI>;IGNORE
-<UFEE9> <heh>;<BAS>;<AIS>;IGNORE <UFEEA> <heh>;<BAS>;<AFI>;IGNORE
-<UFEEB> <heh>;<BAS>;<AII>;IGNORE <UFEEC> <heh>;<BAS>;<AME>;IGNORE
-<UFBA4> <heh_yeh>;<BAS>;<AIS>;IGNORE <UFBA5> <heh_yeh>;<BAS>;<AFI>;IGNORE
-<UFE85> <waw>;<AHW>;<AIS>;IGNORE <UFE86> <waw>;<AHW>;<AFI>;IGNORE
-<UFEED> <waw>;<BAS>;<AIS>;IGNORE <UFEEE> <waw>;<BAS>;<AFI>;IGNORE
+<UFEE9> <heh>;<BAS>;<AIS>;IGNORE
+<UFEEA> <heh>;<BAS>;<AFI>;IGNORE
+<UFEEB> <heh>;<BAS>;<AII>;IGNORE
+<UFEEC> <heh>;<BAS>;<AME>;IGNORE
+<UFBA4> <heh_yeh>;<BAS>;<AIS>;IGNORE
+<UFBA5> <heh_yeh>;<BAS>;<AFI>;IGNORE
+<UFE85> <waw>;<AHW>;<AIS>;IGNORE
+<UFE86> <waw>;<AHW>;<AFI>;IGNORE
+<UFEED> <waw>;<BAS>;<AIS>;IGNORE
+<UFEEE> <waw>;<BAS>;<AFI>;IGNORE
 <UFEEF> <alef_maksura>;<BAS>;<AIS>;IGNORE
 <UFEF0> <alef_maksura>;<BAS>;<AFI>;IGNORE
-<UFE89> <alef_maksura><hamza>;<BAS><BAS>;<AIS><AIS>;IGNORE
-<UFE8A> <alef_maksura><hamza>;<BAS><BAS>;<AFI><AIS>;IGNORE
-<UFE8B> <alef_maksura><hamza>;<BAS><BAS>;<AII><AIS>;IGNORE
-<UFE8C> <alef_maksura><hamza>;<BAS><BAS>;<AME><AIS>;IGNORE
+<UFE89> "<alef_maksura><hamza>";"<BAS><BAS>";"<AIS><AIS>";IGNORE
+<UFE8A> "<alef_maksura><hamza>";"<BAS><BAS>";"<AFI><AIS>";IGNORE
+<UFE8B> "<alef_maksura><hamza>";"<BAS><BAS>";"<AII><AIS>";IGNORE
+<UFE8C> "<alef_maksura><hamza>";"<BAS><BAS>";"<AME><AIS>";IGNORE
 <UFEF1> <alef_maksura>;<AYE>;<AIS>;IGNORE
 <UFEF2> <alef_maksura>;<AYE>;<AFI>;IGNORE
 <UFEF3> <alef_maksura>;<AYE>;<AII>;IGNORE
@@ -1162,17 +1167,17 @@ order_start <ARABFOR>;backward;backward;backward;forward,position
 <UFBB1> <yeh_barree>;<YBA>;<AFI>;IGNORE
 <UFBAE> <yeh_barree>;<BAS>;<AIS>;IGNORE
 <UFBAF> <yeh_barree>;<BAS>;<AFI>;IGNORE
-<UFEF5> <lam><alef>;<BAS><AMA>;<AIS><AFI>;IGNORE
-<UFEF6> <lam><alef>;<BAS><AMA>;<AFI>;<AFI>;IGNORE
-<UFEF7> <lam><alef>;<BAS><AHA>;<AIS>;<AFI>;IGNORE
-<UFEF8> <lam><alef>;<BAS><AHA>;<AFI>;<AFI>;IGNORE
-<UFEF9> <lam><alef>;<BAS><AHS>;<AIS>;<AFI>;IGNORE
-<UFEFA> <lam><alef>;<BAS><AHS>;<AFI><AFI>;IGNORE
-<UFEFB> <lam><alef>;<BAS><BAS>;<AIS><AFI>;IGNORE
-<UFEFC> <lam><alef>;<BAS><BAS>;<AFI><AFI>;IGNORE
+<UFEF5> "<lam><alef>";"<BAS><AMA>";"<AIS><AFI>";IGNORE
+<UFEF6> "<lam><alef>";"<BAS><AMA>";"<AFI><AFI>";IGNORE
+<UFEF7> "<lam><alef>";"<BAS><AHA>";"<AIS><AFI>";IGNORE
+<UFEF8> "<lam><alef>";"<BAS><AHA>";"<AFI><AFI>";IGNORE
+<UFEF9> "<lam><alef>";"<BAS><AHS>";"<AIS><AFI>";IGNORE
+<UFEFA> "<lam><alef>";"<BAS><AHS>";"<AFI><AFI>";IGNORE
+<UFEFB> "<lam><alef>";"<BAS><BAS>";"<AIS><AFI>";IGNORE
+<UFEFC> "<lam><alef>";"<BAS><BAS>";"<AFI><AFI>";IGNORE
 
 order_start <HEBREU>;forward;forward;forward;forward,position
-<U05D0> <halef>;<BAS>;IGNORE;IGNORE
+<U05D0> <alef_heb>;<BAS>;IGNORE;IGNORE
 <U05D1> <bet>;<BAS>;IGNORE;IGNORE
 <U05D2> <gimel>;<BAS>;IGNORE;IGNORE
 <U05D3> <dalet>;<BAS>;IGNORE;IGNORE
@@ -1183,7 +1188,7 @@ order_start <HEBREU>;forward;forward;forward;forward,position
 <U05D8> <tet>;<BAS>;IGNORE;IGNORE
 <U05D9> <yod>;<BAS>;IGNORE;IGNORE
 <U05DA> <kaf_fin>;<BAS>;IGNORE;IGNORE
-<U05DB> <hkaf>;<BAS>;IGNORE;IGNORE
+<U05DB> <kaf_heb>;<BAS>;IGNORE;IGNORE
 <U05DC> <lamed>;<BAS>;IGNORE;IGNORE
 <U05DD> <mem_fin>;<BAS>;IGNORE;IGNORE
 <U05DE> <mem>;<BAS>;IGNORE;IGNORE
@@ -1288,9 +1293,9 @@ order_start <GREC>;forward;backward;forward;forward,position
 <U03D5> <PHI>;<PCL>;<AMI>;IGNORE
 <U03E4> <PHI>;<LIG>;<CAP>;IGNORE # FEI COPTE
 <U03E5> <PHI>;<LIG>;<AMI>;IGNORE # fei copte
-<U03A7> <KHI>;<BAS>;<CAP>;IGNORE
-<U03C7> <KHI>;<BAS>;<AMI>;IGNORE
-<U03E0> <KHI>;<PCL>;<CAP>;IGNORE # sampi copte
+<U03A7> <CHI>;<BAS>;<CAP>;IGNORE
+<U03C7> <CHI>;<BAS>;<AMI>;IGNORE
+<U03E0> <CHI>;<PCL>;<CAP>;IGNORE # sampi copte
 <U03A8> <PSI>;<BAS>;<CAP>;IGNORE
 <U03C8> <PSI>;<BAS>;<AMI>;IGNORE
 <U03E2> <PSI>;<PCL>;<CAP>;IGNORE # SHEI COPTE

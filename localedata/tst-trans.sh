@@ -24,7 +24,7 @@ common_objpfx=$1
 I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
 ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${common_objpfx}locale/localedef --quiet \
--i tests/trans.def -f charmaps/ISO-8859-1 -u repertoiremaps/mnemonic.ds \
+-i tests/trans.def -f charmaps/ISO-8859-1 \
 ${common_objpfx}localedata/tt_TT ||
 exit 1
 

@@ -1,5 +1,3 @@
-repertoiremap mnemonic.ds
-
 # One of a set of test locales for strfmon()
 
 # The six characters after the "_" in the locale name indicate
@@ -10,13 +8,13 @@ copy "POSIX"
 END LC_CTYPE
 
 LC_MONETARY
-int_curr_symbol         "<U><S><D><SP>"
-currency_symbol         "<DO>"
-mon_decimal_point       "<.>"
-mon_thousands_sep       "<,>"
+int_curr_symbol         "<U0055><U0053><U0043><U0020>"
+currency_symbol         "<U0024>"
+mon_decimal_point       "<U002E>"
+mon_thousands_sep       "<U002C>"
 mon_grouping            3;3
 positive_sign           ""
-negative_sign           "<O></><D>"
+negative_sign           "<U004F><U002F><U0044>"
 int_frac_digits         2
 frac_digits             2
 p_cs_precedes           1

@@ -1,5 +1,35 @@
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (test-input): Remove everything but de_DE.ISO-8859-1
+	for now.
+
+	* de_DE.in: Update for new sorting.
+
+	* tst-locale.sh: Don't use mnemonic.ds.
+	* tst-mbswcs.sh: Likewise.
+	* tst-trans.sh: Likewise.
+
+	* locales/de_DE: Update for new format.
+	* locales/en_US: Likewise.
+	* tests/trans.def: Likewise.
+	* tst-fmon-locales/tstfmon_n01y12: Likewise.
+	* tst-fmon-locales/tstfmon_n02n40: Likewise.
+	* tst-fmon-locales/tstfmon_n10y31: Likewise.
+	* tst-fmon-locales/tstfmon_n11y41: Likewise.
+	* tst-fmon-locales/tstfmon_n12y11: Likewise.
+	* tst-fmon-locales/tstfmon_n20n32: Likewise.
+	* tst-fmon-locales/tstfmon_n30y20: Likewise.
+	* tst-fmon-locales/tstfmon_n41n00: Likewise.
+	* tst-fmon-locales/tstfmon_y01y10: Likewise.
+	* tst-fmon-locales/tstfmon_y02n22: Likewise.
+	* tst-fmon-locales/tstfmon_y22n42: Likewise.
+	* tst-fmon-locales/tstfmon_y30y21: Likewise.
+	* tst-fmon-locales/tstfmon_y32n31: Likewise.
+	* tst-fmon-locales/tstfmon_y40y00: Likewise.
+	* tst-fmon-locales/tstfmon_y42n21: Likewise.
+
+	* tst-rpmatch.c: Avoid warning with borken compiler.
+
 	* locales/i18n: Take CJK ideographs and Hangul out of `alpha' table.
 
 	* sort-test.sh: Add more GCONV_PATH usages.

@@ -27,10 +27,13 @@ test_locale ()
     input=$2
     out=$3
     rep=$4
+    if test $rep; then
+      rep="--repertoire-map $rep"
+    fi
     I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
     ${common_objpfx}elf/ld.so --library-path $common_objpfx \
     ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
-      --repertoire-map $rep ${common_objpfx}localedata/$out
+      ${rep} ${common_objpfx}localedata/$out
 
     if [ $? -ne 0 ]; then
 	echo "Charmap: \"${charmap}\" Inputfile: \"${input}\"" \
@@ -39,11 +42,11 @@ test_locale ()
     fi
 }
 
-test_locale IBM437 de_DE de_DE.437 mnemonic.ds
-test_locale tests/test1.cm tests/test1.def test1 mnemonic.ds
-test_locale tests/test2.cm tests/test2.def test2 mnemonic.ds
-test_locale tests/test3.cm tests/test3.def test3 mnemonic.ds
-test_locale tests/test4.cm tests/test4.def test4 mnemonic.ds
+test_locale IBM437 de_DE de_DE.437
+test_locale tests/test1.cm tests/test1.def test1
+test_locale tests/test2.cm tests/test2.def test2
+test_locale tests/test3.cm tests/test3.def test3
+test_locale tests/test4.cm tests/test4.def test4
 test_locale tests/test5.cm tests/test5.def test5 tests/test5.ds
 
 exit 0

@@ -1,3 +1,8 @@
+2000-06-25  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/i386/i586/memcpy.S: Redefine memcpy as mempcpy,
+	not as bcopy.
+
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gen-8bit-gap-1.sh: Update for new charmap format.

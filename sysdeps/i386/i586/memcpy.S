@@ -22,16 +22,14 @@
 #include "asm-syntax.h"
 #include "bp-asm.h"
 
-/* BEWARE: `#ifdef memset' means that memset is redefined as `bzero' */
-#define BCOPY_P (defined memcpy)
+/* BEWARE: `#ifdef memcpy' means that memcpy is redefined as `mempcpy',
+   and the return value is the byte after the last one copied in
+   the destination. */
+#define MEMPCPY_P (defined memcpy)
 
 #define PARMS	LINKAGE+8	/* space for 2 saved regs */
-#if BCOPY_P
-# define DEST	PARMS
-#else
-# define RTN	PARMS
-# define DEST	RTN+RTN_SIZE
-#endif
+#define RTN	PARMS
+#define DEST	RTN+RTN_SIZE
 #define SRC	DEST+PTR_SIZE
 #define LEN	SRC+PTR_SIZE
 
@@ -99,13 +97,13 @@ L(3):	movl	28(%edi), %edx
 
 	/* Correct extra loop counter modification.  */
 L(2):	addl	$32, %ecx
-#if !BCOPY_P
+#if !MEMPCPY_P
 	movl	DEST(%esp), %eax
 #endif
 
 L(1):	rep; movsb
 
-#if BCOPY_P
+#if MEMPCPY_P
 	movl	%edi, %eax
 #endif
 
@@ -113,9 +111,5 @@ L(1):	rep; movsb
 	popl	%edi
 
 	LEAVE
-#if BCOPY_P
-	ret
-#else
 	RET_PTR
-#endif
 END (memcpy)
