@@ -94,7 +94,7 @@ _IO_switch_to_main_get_area (fp)
   tmp = fp->_IO_read_base;
   fp->_IO_read_base = fp->_IO_save_base;
   fp->_IO_save_base = tmp;
-  /* Swap _IO_read_base and _IO_save_ptr. */
+  /* Swap _IO_read_ptr and _IO_save_ptr. */
   tmp = fp->_IO_read_ptr;
   fp->_IO_read_ptr = fp->_IO_save_ptr;
   fp->_IO_save_ptr = tmp;
@@ -817,7 +817,10 @@ _IO_seekmark (fp, mark, delta)
   else
     {
       if (!_IO_in_backup (fp))
-	_IO_switch_to_backup_area (fp);
+	{
+	  fp->_IO_read_ptr = fp->_IO_read_base;
+	  _IO_switch_to_backup_area (fp);
+	}
       fp->_IO_read_ptr = fp->_IO_read_end + mark->_pos;
     }
   return 0;
