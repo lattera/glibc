@@ -1,3 +1,10 @@
+2002-01-05  Roland McGrath  <roland@frob.com>
+
+	* config.h.in (HAVE_MIG_RETCODE): New #undef.
+	* sysdeps/mach/hurd/configure.in (hurd_MIG_RETCODE: New macro
+	swiped from hurd package's aclocal.m4; use it to set HAVE_MIG_RETCODE.
+	* sysdeps/mach/hurd/configure: Regenerated.
+
 2002-01-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add more TLS definitions.
