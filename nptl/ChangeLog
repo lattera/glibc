@@ -1,3 +1,7 @@
+2004-12-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-context1.c (stacks): Use bigger stack size.
+
 2004-12-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/clone.S: New file.

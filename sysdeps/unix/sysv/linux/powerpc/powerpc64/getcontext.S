@@ -275,17 +275,17 @@ ENTRY(__getcontext)
   ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 # else
   ld    r5,0(r5) /* Load extern _dl_hwcap.  */
-# endif  
+# endif
   la    r10,(SIGCONTEXT_V_RESERVE+8)(r3)
   la    r9,(SIGCONTEXT_V_RESERVE+24)(r3)
-  
+
   andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
-  
+
   clrrdi  r10,r10,4
   beq   L(has_no_vec)
   clrrdi  r9,r9,4
   mr    r5,r10	/* Capture *v_regs value in r5.  */
-  
+
   stvx  v0,0,r10
   stvx  v1,0,r9
   addi  r10,r10,32

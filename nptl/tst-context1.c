@@ -37,7 +37,7 @@ typedef struct {
        unsigned long	guard[3];
    } tst_context_t;
 
-static char stacks[N][PTHREAD_STACK_MIN];
+static char stacks[N][2 * PTHREAD_STACK_MIN];
 static tst_context_t ctx[N][2];
 static volatile int failures;
 
@@ -110,7 +110,7 @@ tf (void *arg)
   printf ("%d: %s: before makecontext\n", n, __FUNCTION__);
 
   ctx[n][1].uctx.uc_stack.ss_sp = stacks[n];
-  ctx[n][1].uctx.uc_stack.ss_size = PTHREAD_STACK_MIN;
+  ctx[n][1].uctx.uc_stack.ss_size = sizeof (stacks[n]);
   ctx[n][1].uctx.uc_link = &ctx[n][0].uctx;
   makecontext (&ctx[n][1].uctx, (void (*) (void)) fct, 1, (long int) n);
 
