@@ -108,5 +108,9 @@ extern int __vfwprintf (__FILE *__restrict __s,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
 
+
+/* Internal functions.  */
+extern size_t __mbsrtowcs_l (wchar_t *dst, const char **src, size_t len,
+			     mbstate_t *ps, __locale_t l) attribute_hidden;
 # endif
 #endif

@@ -283,14 +283,25 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #define cpy(n, s) \
     add ((n),								      \
 	 if (to_lowcase)						      \
-	   memcpy_lowcase (p, (s), _n);					      \
+	   memcpy_lowcase (p, (s), _n LOCALE_ARG);			      \
 	 else if (to_uppcase)						      \
-	   memcpy_uppcase (p, (s), _n);					      \
+	   memcpy_uppcase (p, (s), _n LOCALE_ARG);			      \
 	 else								      \
 	   MEMCPY ((PTR) p, (const PTR) (s), _n))
 
 #ifdef COMPILE_WIDE
-# define widen(os, ws, l) \
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define widen(os, ws, l) \
+  {									      \
+    mbstate_t __st;							      \
+    const char *__s = os;						      \
+    memset (&__st, '\0', sizeof (__st));				      \
+    l = __mbsrtowcs_l (NULL, &__s, 0, &__st, loc);			      \
+    ws = alloca ((l + 1) * sizeof (wchar_t));				      \
+    (void) __mbsrtowcs_l (ws, &__s, l, &__st, loc);			      \
+  }
+# else
+#  define widen(os, ws, l) \
   {									      \
     mbstate_t __st;							      \
     const char *__s = os;						      \
@@ -299,6 +310,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
     ws = alloca ((l + 1) * sizeof (wchar_t));				      \
     (void) __mbsrtowcs (ws, &__s, l, &__st);				      \
   }
+# endif
 #endif
 
 
@@ -314,10 +326,12 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
   (current->values[_NL_ITEM_INDEX (item)].string)
 # define LOCALE_PARAM , loc
 # define LOCALE_ARG , loc
-# define LOCALE_PARAM_DECL __locale_t loc;
-# define HELPER_LOCALE_ARG , current
+# define LOCALE_PARAM_DECL  __locale_t loc;
+# define LOCALE_PARAM_PROTO , __locale_t loc
+# define HELPER_LOCALE_ARG  , current
 #else
 # define LOCALE_PARAM
+# define LOCALE_PARAM_PROTO
 # define LOCALE_ARG
 # define LOCALE_PARAM_DECL
 # ifdef _LIBC
@@ -328,15 +342,25 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #endif
 
 #ifdef COMPILE_WIDE
-# define TOUPPER(Ch) towupper (Ch)
-# define TOLOWER(Ch) towlower (Ch)
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define TOUPPER(Ch, L) __towupper_l (Ch, L)
+#  define TOLOWER(Ch, L) __towlower_l (Ch, L)
+# else
+#  define TOUPPER(Ch, L) towupper (Ch)
+#  define TOLOWER(Ch, L) towlower (Ch)
+# endif
 #else
 # ifdef _LIBC
-#  define TOUPPER(Ch) toupper (Ch)
-#  define TOLOWER(Ch) tolower (Ch)
+#  ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#   define TOUPPER(Ch, L) __toupper_l (Ch, L)
+#   define TOLOWER(Ch, L) __tolower_l (Ch, L)
+#  else
+#   define TOUPPER(Ch, L) toupper (Ch)
+#   define TOLOWER(Ch, L) tolower (Ch)
+#  endif
 # else
-#  define TOUPPER(Ch) (islower (Ch) ? toupper (Ch) : (Ch))
-#  define TOLOWER(Ch) (isupper (Ch) ? tolower (Ch) : (Ch))
+#  define TOUPPER(Ch, L) (islower (Ch) ? toupper (Ch) : (Ch))
+#  define TOLOWER(Ch, L) (isupper (Ch) ? tolower (Ch) : (Ch))
 # endif
 #endif
 /* We don't use `isdigit' here since the locale dependent
@@ -346,30 +370,32 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
 #define ISDIGIT(Ch) ((unsigned int) (Ch) - L_('0') <= 9)
 
 static CHAR_T *memcpy_lowcase __P ((CHAR_T *dest, const CHAR_T *src,
-				    size_t len));
+				    size_t len LOCALE_PARAM_PROTO));
 
 static CHAR_T *
-memcpy_lowcase (dest, src, len)
+memcpy_lowcase (dest, src, len LOCALE_PARAM)
      CHAR_T *dest;
      const CHAR_T *src;
      size_t len;
+     LOCALE_PARAM_DECL
 {
   while (len-- > 0)
-    dest[len] = TOLOWER ((UCHAR_T) src[len]);
+    dest[len] = TOLOWER ((UCHAR_T) src[len], loc);
   return dest;
 }
 
 static CHAR_T *memcpy_uppcase __P ((CHAR_T *dest, const CHAR_T *src,
-				    size_t len));
+				    size_t len LOCALE_PARAM_PROTO));
 
 static CHAR_T *
-memcpy_uppcase (dest, src, len)
+memcpy_uppcase (dest, src, len LOCALE_PARAM)
      CHAR_T *dest;
      const CHAR_T *src;
      size_t len;
+     LOCALE_PARAM_DECL
 {
   while (len-- > 0)
-    dest[len] = TOUPPER ((UCHAR_T) src[len]);
+    dest[len] = TOUPPER ((UCHAR_T) src[len], loc);
   return dest;
 }
 
@@ -844,7 +870,7 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	    if (to_uppcase)
 	      while (old_start < p)
 		{
-		  *old_start = TOUPPER ((UCHAR_T) *old_start);
+		  *old_start = TOUPPER ((UCHAR_T) *old_start, loc);
 		  ++old_start;
 		}
 	  }

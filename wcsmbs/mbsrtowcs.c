@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -32,6 +32,16 @@
 #endif
 
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+size_t
+attribute_hidden
+__mbsrtowcs_l (dst, src, len, ps, l)
+     wchar_t *dst;
+     const char **src;
+     size_t len;
+     mbstate_t *ps;
+     __locale_t l;
+#else
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
@@ -41,6 +51,7 @@ __mbsrtowcs (dst, src, len, ps)
      const char **src;
      size_t len;
      mbstate_t *ps;
+#endif
 {
   struct __gconv_step_data data;
   size_t result;
@@ -52,14 +63,23 @@ __mbsrtowcs (dst, src, len, ps)
   data.__invocation_counter = 0;
   data.__internal_use = 1;
   data.__flags = __GCONV_IS_LAST;
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  data.__statep = ps;
+#else
   data.__statep = ps ?: &state;
+#endif
   data.__trans = NULL;
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  /* Get the conversion function matching the locale.  */
+  towc = wcsmbs_get_towc_func (l);
+#else
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
 
   /* Get the structure with the function pointers.  */
   towc = __wcsmbs_gconv_fcts.towc;
+#endif
 
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
@@ -140,6 +160,13 @@ __mbsrtowcs (dst, src, len, ps)
       __set_errno (EILSEQ);
     }
 
+#ifdef USE_IN_EXTENDED_LOCALE_MODEL
+  /* Free the conversion function data structures.  */
+  wcsmbs_free_funcs (towc);
+#endif
+
   return result;
 }
+#ifndef USE_IN_EXTENDED_LOCALE_MODEL
 weak_alias (__mbsrtowcs, mbsrtowcs)
+#endif

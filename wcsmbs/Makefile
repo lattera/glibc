@@ -1,4 +1,4 @@
-# Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+# Copyright (C) 1995-2000, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcwidth wcswidth \
 	    wcscoll_l wcsxfrm_l \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
-	    wcsmbsload
+	    wcsmbsload mbsrtowcs_l
 
 tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc tst-mbrtowc \
 	 tst-wcrtomb

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -26,7 +26,6 @@
 #include <locale/localeinfo.h>
 #include <wcsmbsload.h>
 #include <bits/libc-lock.h>
-#include <iconv/gconv_int.h>
 
 
 /* Last loaded locale for LC_CTYPE.  We initialize for the C locale
@@ -36,7 +35,7 @@ const struct locale_data *__wcsmbs_last_locale = &_nl_C_LC_CTYPE;
 
 
 /* These are the descriptions for the default conversion functions.  */
-static struct __gconv_step to_wc =
+struct __gconv_step __wcsmbs_to_wc attribute_hidden =
 {
   .__shlib_handle = NULL,
   .__modname = NULL,
@@ -76,15 +75,16 @@ static struct __gconv_step to_mb =
 /* For the default locale we only have to handle ANSI_X3.4-1968.  */
 struct gconv_fcts __wcsmbs_gconv_fcts =
 {
-  .towc = &to_wc,
+  .towc = &__wcsmbs_to_wc,
   .towc_nsteps = 1,
   .tomb = &to_mb,
   .tomb_nsteps = 1
 };
 
 
-static inline struct __gconv_step *
-getfct (const char *to, const char *from, size_t *nstepsp)
+struct __gconv_step *
+attribute_hidden
+__wcsmbs_getfct (const char *to, const char *from, size_t *nstepsp)
 {
   size_t nsteps;
   struct __gconv_step *result;
@@ -167,7 +167,7 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
       if (new_category->name == _nl_C_name)	/* Yes, pointer comparison.  */
 	{
 	failed:
-	  __wcsmbs_gconv_fcts.towc = &to_wc;
+	  __wcsmbs_gconv_fcts.towc = &__wcsmbs_to_wc;
 	  __wcsmbs_gconv_fcts.tomb = &to_mb;
 	}
       else
@@ -185,7 +185,7 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  if (__wcsmbs_gconv_fcts.tomb != &to_mb)
 	    __gconv_close_transform (__wcsmbs_gconv_fcts.tomb,
 				     __wcsmbs_gconv_fcts.tomb_nsteps);
-	  if (__wcsmbs_gconv_fcts.towc != &to_wc)
+	  if (__wcsmbs_gconv_fcts.towc != &__wcsmbs_to_wc)
 	    __gconv_close_transform (__wcsmbs_gconv_fcts.towc,
 				     __wcsmbs_gconv_fcts.towc_nsteps);
 
@@ -203,9 +203,11 @@ __wcsmbs_load_conv (const struct locale_data *new_category)
 	  /* It is not necessary to use transliteration in this direction
 	     since the internal character set is supposed to be able to
 	     represent all others.  */
-	  new_towc = getfct ("INTERNAL", complete_name, &new_towc_nsteps);
+	  new_towc = __wcsmbs_getfct ("INTERNAL", complete_name,
+				      &new_towc_nsteps);
 	  new_tomb = (new_towc != NULL
-		      ? getfct (complete_name, "INTERNAL", &new_tomb_nsteps)
+		      ? __wcsmbs_getfct (complete_name, "INTERNAL",
+					 &new_tomb_nsteps)
 		      : NULL);
 
 	  /* If any of the conversion functions is not available we don't
@@ -262,10 +264,10 @@ int
 internal_function
 __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
 {
-  copy->towc = getfct ("INTERNAL", name, &copy->towc_nsteps);
+  copy->towc = __wcsmbs_getfct ("INTERNAL", name, &copy->towc_nsteps);
   if (copy->towc != NULL)
     {
-      copy->tomb = getfct (name, "INTERNAL", &copy->tomb_nsteps);
+      copy->tomb = __wcsmbs_getfct (name, "INTERNAL", &copy->tomb_nsteps);
       if (copy->tomb == NULL)
 	__gconv_close_transform (copy->towc, copy->towc_nsteps);
     }
@@ -287,11 +289,11 @@ free_mem (void)
       __gconv_release_cache (old, nold);
     }
 
-  if (__wcsmbs_gconv_fcts.towc != &to_wc)
+  if (__wcsmbs_gconv_fcts.towc != &__wcsmbs_to_wc)
     {
       struct __gconv_step *old = __wcsmbs_gconv_fcts.towc;
       size_t nold = __wcsmbs_gconv_fcts.towc_nsteps;
-      __wcsmbs_gconv_fcts.towc = &to_wc;
+      __wcsmbs_gconv_fcts.towc = &__wcsmbs_to_wc;
       __wcsmbs_gconv_fcts.towc_nsteps = 1;
       __gconv_release_cache (old, nold);
     }

@@ -17,6 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _WCSMBSLOAD_H
+#define _WCSMBSLOAD_H	1
+
 #include <locale.h>
 #include <wchar.h>
 #include <locale/localeinfo.h>
@@ -52,6 +55,19 @@ extern int __wcsmbs_named_conv (struct gconv_fcts *copy, const char *name)
      internal_function;
 
 
+#include <iconv/gconv_int.h>
+
+
+/* Variable for conversion from ASCII to wchar_t.  */
+extern struct __gconv_step __wcsmbs_to_wc attribute_hidden;
+
+
+/* Load the function implementation if necessary.  */
+extern struct __gconv_step *__wcsmbs_getfct (const char *to, const char *from,
+					     size_t *nstepsp)
+     attribute_hidden;
+
+
 /* Check whether the LC_CTYPE locale changed since the last call.
    Update the pointers appropriately.  */
 static inline void
@@ -60,3 +76,5 @@ update_conversion_ptrs (void)
   if (__wcsmbs_last_locale != _NL_CURRENT_DATA (LC_CTYPE))
     __wcsmbs_load_conv (_NL_CURRENT_DATA (LC_CTYPE));
 }
+
+#endif	/* wcsmbsload.h */

@@ -1,3 +1,20 @@
+2002-08-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/wchar.h: Declare __mbsrtowcs_l.
+	* wcsmbs/Makefile (routines): Add mbsrtowcs_l.
+	* wcsmbs/mbsrtowcs.c: Add support for compilation with
+	USE_IN_EXTENDED_LOCALE_MODEL.
+	* wcsmbs/mbsrtowcs_l: New file.
+	* wcsmbs/wcsmbsload.c (__wcsmbs_to_wc): Renamed from to_wc.  Don't
+	define as static.  Change all uses.
+	(__wcsmbs_getfct): Renamed from getfct.  Don't define as static.
+	Change all callers.
+	* wcsmbs/wcsmbsload.h: Declare __wcsmbs_to_wc and __wcsmbs_getfct.
+	* time/strftime.c: When translating for the extended locale model
+	use the _l functions.
+	* time/Makefile (tests): Add tst-ftime_l.
+	* time/tst-ftime_l.c: New file.
+
 2002-08-28  Roland McGrath  <roland@redhat.com>
 
 	* locale/findlocale.c [NL_CURRENT_INDIRECT] (_nl_C): New variable.
