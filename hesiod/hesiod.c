@@ -41,7 +41,9 @@
  * it uses res_send() and accesses _res.
  */
 
+#if defined(LIBC_SCCS) && !defined(lint)
 static const char rcsid[] = "$Id$";
+#endif
 
 #include <sys/types.h>
 #include <netinet/in.h>

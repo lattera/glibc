@@ -12,6 +12,8 @@
 
 	* rt/aio_fsync.c: Test OP parameter for correct values.
 
+	* hesiod/hesiod.c: Avoid emitting rcsid in object file.
+
 1999-08-04  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/getsysstats.c (GET_NPROCS_PARSER):
