@@ -49,7 +49,7 @@ and some common pitfalls.  If you are already familiar with this
 material, you can skip this section.
 
 @cindex string
-@cindex null character
+@cindex multibyte character string
 A @dfn{string} is an array of @code{char} objects.  But string-valued
 variables are usually declared to be pointers of type @code{char *}.
 Such variables do not include space for the text of a string; that has
@@ -60,21 +60,34 @@ variable.  Alternatively you can store a @dfn{null pointer} in the
 pointer variable.  The null pointer does not point anywhere, so
 attempting to reference the string it points to gets an error.
 
+@cindex wide character string
+``string'' normally refers to multibyte character strings as opposed to
+wide character strings.  Wide character strings are arrays of type
+@code{wchar_t} and as for multibyte character strings usually pointers
+of type @code{wchar_t *} are used.
+
+@cindex null character
+@cindex null wide character
 By convention, a @dfn{null character}, @code{'\0'}, marks the end of a
-string.  For example, in testing to see whether the @code{char *}
-variable @var{p} points to a null character marking the end of a string,
-you can write @code{!*@var{p}} or @code{*@var{p} == '\0'}.
+multibyte character string and the @dfn{null wide character},
+@code{L'\0'}, marks the end of a wide character string.  For example, in
+testing to see whether the @code{char *} variable @var{p} points to a
+null character marking the end of a string, you can write
+@code{!*@var{p}} or @code{*@var{p} == '\0'}.
 
 A null character is quite different conceptually from a null pointer,
 although both are represented by the integer @code{0}.
 
 @cindex string literal
 @dfn{String literals} appear in C program source as strings of
-characters between double-quote characters (@samp{"}).  In @w{ISO C},
-string literals can also be formed by @dfn{string concatenation}:
-@code{"a" "b"} is the same as @code{"ab"}.  Modification of string
-literals is not allowed by the GNU C compiler, because literals
-are placed in read-only storage.
+characters between double-quote characters (@samp{"}) where the initial
+double-quote character is immediately preceded by a capital @samp{L}
+(ell) character (as in @code{L"foo"}).  In @w{ISO C}, string literals
+can also be formed by @dfn{string concatenation}: @code{"a" "b"} is the
+same as @code{"ab"}.  For wide character strings one can either use
+@code{L"a" L"b"} or @code{L"a" "b"}.  Modification of string literals is
+not allowed by the GNU C compiler, because literals are placed in
+read-only storage.
 
 Character arrays that are declared @code{const} cannot be modified
 either.  It's generally good style to declare non-modifiable string
@@ -104,38 +117,97 @@ checks for overflowing the array.  Many of the library functions
 an extra byte to hold the null character that marks the end of the
 string.
 
+@cindex single-byte string
+@cindex multibyte string
+Originally strings were sequences of bytes where each byte represents a
+single character.  This is still true today if the strings are encoded
+using a single-byte character encoding.  Things are different if the
+strings are encoded using a multibyte encoding (for more information on
+encodings see @ref{Extended Char Intro}).  There is no difference in
+the programming interface for these two kind of strings; the programmer
+has to be aware of this and interpret the byte sequences accordingly.
+
+But since there is no separate interface taking care of these
+differences the byte-based string functions are sometimes hard to use.
+Since the count parameters of these functions specify bytes a call to
+@code{strncpy} could cut a multibyte character in the middle and put an
+incomplete (and therefore unusable) byte sequence in the target buffer.
+
+@cindex wide character string
+To avoid these problems later versions of the @w{ISO C} standard
+introduce a second set of functions which are operating on @dfn{wide
+characters} (@pxref{Extended Char Intro}).  These functions don't have
+the problems the single-byte versions have since every wide character is
+a legal, interpretable value.  This does not mean that cutting wide
+character strings at arbitrary points is without problems.  It normally
+is for alphabet-based languages (except for non-normalized text) but
+languages based on syllables still have the problem that more than one
+wide character is necessary to complete a logical unit.  This is a
+higher level problem which the @w{C library} functions are not designed
+to solve.  But it is at least good that no invalid byte sequences can be
+created.  Also, the higher level functions can also much easier operate
+on wide character than on multibyte characters so that a general advise
+is to use wide characters internally whenever text is more than simply
+copied.
+
+The remaining of this chapter will discuss the functions for handling
+wide character strings in parallel with the discussion of the multibyte
+character strings since there is almost always an exact equivalent
+available.
+
 @node String/Array Conventions
 @section String and Array Conventions
 
 This chapter describes both functions that work on arbitrary arrays or
 blocks of memory, and functions that are specific to null-terminated
-arrays of characters.
+arrays of characters and wide characters.
 
 Functions that operate on arbitrary blocks of memory have names
-beginning with @samp{mem} (such as @code{memcpy}) and invariably take an
-argument which specifies the size (in bytes) of the block of memory to
+beginning with @samp{mem} and @samp{wmem} (such as @code{memcpy} and
+@code{wmemcpy}) and invariably take an argument which specifies the size
+(in bytes and wide characters respectively) of the block of memory to
 operate on.  The array arguments and return values for these functions
-have type @code{void *}, and as a matter of style, the elements of these
-arrays are referred to as ``bytes''.  You can pass any kind of pointer
-to these functions, and the @code{sizeof} operator is useful in
-computing the value for the size argument.
+have type @code{void *} or @code{wchar_t}.  As a matter of style, the
+elements of the arrays used with the @samp{mem} functions are referred
+to as ``bytes''.  You can pass any kind of pointer to these functions,
+and the @code{sizeof} operator is useful in computing the value for the
+size argument.  Parameters to the @samp{wmem} functions must be of type
+@code{wchar_t *}.  These functions are not really usable with anything
+but arrays of this type.
 
-In contrast, functions that operate specifically on strings have names
-beginning with @samp{str} (such as @code{strcpy}) and look for a null
-character to terminate the string instead of requiring an explicit size
-argument to be passed.  (Some of these functions accept a specified
+In contrast, functions that operate specifically on strings and wide
+character strings have names beginning with @samp{str} and @samp{wcs}
+respectively (such as @code{strcpy} and @code{wcscpy}) and look for a
+null character to terminate the string instead of requiring an explicit
+size argument to be passed.  (Some of these functions accept a specified
 maximum length, but they also check for premature termination with a
 null character.)  The array arguments and return values for these
-functions have type @code{char *}, and the array elements are referred
-to as ``characters''.
+functions have type @code{char *} and @code{wchar_t *} respectively, and
+the array elements are referred to as ``characters'' and ``wide
+characters''.
 
-In many cases, there are both @samp{mem} and @samp{str} versions of a
-function.  The one that is more appropriate to use depends on the exact
-situation.  When your program is manipulating arbitrary arrays or blocks of
-storage, then you should always use the @samp{mem} functions.  On the
-other hand, when you are manipulating null-terminated strings it is
-usually more convenient to use the @samp{str} functions, unless you
-already know the length of the string in advance.
+In many cases, there are both @samp{mem} and @samp{str}/@samp{wcs}
+versions of a function.  The one that is more appropriate to use depends
+on the exact situation.  When your program is manipulating arbitrary
+arrays or blocks of storage, then you should always use the @samp{mem}
+functions.  On the other hand, when you are manipulating null-terminated
+strings it is usually more convenient to use the @samp{str}/@samp{wcs}
+functions, unless you already know the length of the string in advance.
+The @samp{wmem} functions should be used for wide character arrays with
+known size.
+
+@cindex wint_t
+@cindex parameter promotion
+Some of the memory and string functions take single characters as
+arguments.  Since a value of type @code{char} is automatically promoted
+into an value of type @code{int} when used as a parameter, the functions
+are declared with @code{int} as the type of the parameter in question.
+In case of the wide character function the situation is similarly: the
+parameter type for a single wide character is @code{wint_t} and not
+@code{wchar_t}.  This would for many implementations not be necessary
+since the @code{wchar_t} is large enough to not be automatically
+promoted, but since the @w{ISO C} standard does not require such a
+choice of types the @code{wint_t} type is used.
 
 @node String Length
 @section String Length
@@ -148,8 +220,8 @@ This function is declared in the header file @file{string.h}.
 @comment ISO
 @deftypefun size_t strlen (const char *@var{s})
 The @code{strlen} function returns the length of the null-terminated
-string @var{s}.  (In other words, it returns the offset of the terminating
-null character within the array.)
+string @var{s} in bytes.  (In other words, it returns the offset of the
+terminating null character within the array.)
 
 For example,
 @smallexample
@@ -185,16 +257,55 @@ sizeof (ptr)
 This is an easy mistake to make when you are working with functions that
 take string arguments; those arguments are always pointers, not arrays.
 
+It must also be noted that for multibyte encoded strings the return
+value does not have to correspond to the number of characters in the
+string.  To get this value the string can be converted to wide
+characters and @code{wcslen} can be used or something like the following
+code can be used:
+
+@smallexample
+/* @r{The input is in @code{string}.}
+   @r{The length is expected in @code{n}.}  */
+@{
+  mbstate_t t;
+  char *scopy = string;
+  /* In initial state.  */
+  memset (&t, '\0', sizeof (t));
+  /* Determine number of characters.  */
+  n = mbsrtowcs (NULL, &scopy, strlen (scopy), &t);
+@}
+@end smallexample
+
+This is cumbersome to do so if the number of characters (as opposed to
+bytes) is needed often it is better to work with wide characters.
+@end deftypefun
+
+The wide character equivalent is declared in @file{wchar.h}.
+
+@comment wchar.h
+@comment ISO
+@deftypefun size_t wcslen (const wchar_t *@var{ws})
+The @code{wcslen} function is the wide character equivalent to
+@code{strlen}.  The return value is the number of wide characters in the
+wide character string pointed to by @var{ws} (this is also the offset of
+the terminating null wide character of @var{ws}).
+
+Since there are no multi wide character sequences making up one
+character the return value is not only the offset in the array, it is
+also the number of wide characters.
+
+This function was introduced in @w{Amendment 1} to @w{ISO C90}.
 @end deftypefun
 
 @comment string.h
 @comment GNU
 @deftypefun size_t strnlen (const char *@var{s}, size_t @var{maxlen})
-The @code{strnlen} function returns the length of the null-terminated
-string @var{s} is this length is smaller than @var{maxlen}.  Otherwise
-it returns @var{maxlen}.  Therefore this function is equivalent to
+The @code{strnlen} function returns the length of the string @var{s} in
+bytes if this length is smaller than @var{maxlen} bytes.  Otherwise it
+returns @var{maxlen}.  Therefore this function is equivalent to
 @code{(strlen (@var{s}) < n ? strlen (@var{s}) : @var{maxlen})} but it
-is more efficient.
+is more efficient and works even if the string @var{s} is not
+null-terminated.
 
 @smallexample
 char string[32] = "hello, world";
@@ -204,7 +315,16 @@ strnlen (string, 5)
     @result{} 5
 @end smallexample
 
-This function is a GNU extension.
+This function is a GNU extension and is declared in @file{string.h}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun size_t wcsnlen (const wchar_t *@var{ws}, size_t @var{maxlen})
+@code{wcsnlen} is the wide character equivalent to @code{strnlen}.  The
+@var{maxlen} parameter specifies the maximum number of wide characters.
+
+This function is a GNU extension and is declared in @file{wchar.h}.
 @end deftypefun
 
 @node Copying and Concatenation
@@ -212,9 +332,11 @@ This function is a GNU extension.
 
 You can use the functions described in this section to copy the contents
 of strings and arrays, or to append the contents of one string to
-another.  These functions are declared in the header file
-@file{string.h}.
+another.  The @samp{str} and @samp{mem} functions are declared in the
+header file @file{string.h} while the @samp{wstr} and @samp{wmem}
+functions are declared in the file @file{wchar.h}.
 @pindex string.h
+@pindex wchar.h
 @cindex copying strings and arrays
 @cindex string copy functions
 @cindex array copy functions
@@ -243,7 +365,7 @@ Functions}).
 
 @comment string.h
 @comment ISO
-@deftypefun {void *} memcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
+@deftypefun {void *} memcpy (void *restrict @var{to}, const void *restrict @var{from}, size_t @var{size})
 The @code{memcpy} function copies @var{size} bytes from the object
 beginning at @var{from} into the object beginning at @var{to}.  The
 behavior of this function is undefined if the two arrays @var{to} and
@@ -262,9 +384,34 @@ memcpy (new, old, arraysize * sizeof (struct foo));
 @end smallexample
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wmemcpy (wchar_t *restrict @var{wto}, const wchar_t *restruct @var{wfrom}, size_t @var{size})
+The @code{wmemcpy} function copies @var{size} wide characters from the object
+beginning at @var{wfrom} into the object beginning at @var{wto}.  The
+behavior of this function is undefined if the two arrays @var{wto} and
+@var{wfrom} overlap; use @code{wmemmove} instead if overlapping is possible.
+
+The following is a possible implementation of @code{wmemcpy} but there
+are more optimizations possible.
+
+@smallexample
+wchar_t *
+wmemcpy (wchar_t *restrict wto, const wchar_t *restrict wfrom,
+         size_t size)
+@{
+  return (wchar_t *) memcpy (wto, wfrom, size * sizeof (wchar_t));
+@}
+@end smallexample
+
+The value returned by @code{wmemcpy} is the value of @var{wto}.
+
+This function was introduced in @w{Amendment 1} to @w{ISO C90}.
+@end deftypefun
+
 @comment string.h
 @comment GNU
-@deftypefun {void *} mempcpy (void *@var{to}, const void *@var{from}, size_t @var{size})
+@deftypefun {void *} mempcpy (void *restrict @var{to}, const void *restrict @var{from}, size_t @var{size})
 The @code{mempcpy} function is nearly identical to the @code{memcpy}
 function.  It copies @var{size} bytes from the object beginning at
 @code{from} into the object pointed to by @var{to}.  But instead of
@@ -289,6 +436,34 @@ combine (void *o1, size_t s1, void *o2, size_t s2)
 This function is a GNU extension.
 @end deftypefun
 
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wmempcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+The @code{wmempcpy} function is nearly identical to the @code{wmemcpy}
+function.  It copies @var{size} wide characters from the object
+beginning at @code{wfrom} into the object pointed to by @var{wto}.  But
+instead of returning the value of @var{wto} it returns a pointer to the
+wide character following the last written wide character in the object
+beginning at @var{wto}.  I.e., the value is @code{@var{wto} + @var{size}}.
+
+This function is useful in situations where a number of objects shall be
+copied to consecutive memory positions.
+
+The following is a possible implementation of @code{wmemcpy} but there
+are more optimizations possible.
+
+@smallexample
+wchar_t *
+wmempcpy (wchar_t *restrict wto, const wchar_t *restrict wfrom,
+          size_t size)
+@{
+  return (wchar_t *) mempcpy (wto, wfrom, size * sizeof (wchar_t));
+@}
+@end smallexample
+
+This function is a GNU extension.
+@end deftypefun
+
 @comment string.h
 @comment ISO
 @deftypefun {void *} memmove (void *@var{to}, const void *@var{from}, size_t @var{size})
@@ -297,11 +472,40 @@ This function is a GNU extension.
 overlap.  In the case of overlap, @code{memmove} is careful to copy the
 original values of the bytes in the block at @var{from}, including those
 bytes which also belong to the block at @var{to}.
+
+The value returned by @code{memmove} is the value of @var{to}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wmemmove (wchar *@var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
+@code{wmemmove} copies the @var{size} wide characters at @var{wfrom}
+into the @var{size} wide characters at @var{wto}, even if those two
+blocks of space overlap.  In the case of overlap, @code{memmove} is
+careful to copy the original values of the wide characters in the block
+at @var{wfrom}, including those wide characters which also belong to the
+block at @var{wto}.
+
+The following is a possible implementation of @code{wmemcpy} but there
+are more optimizations possible.
+
+@smallexample
+wchar_t *
+wmempcpy (wchar_t *restrict wto, const wchar_t *restrict wfrom,
+          size_t size)
+@{
+  return (wchar_t *) mempcpy (wto, wfrom, size * sizeof (wchar_t));
+@}
+@end smallexample
+
+The value returned by @code{wmemmove} is the value of @var{wto}.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment string.h
 @comment SVID
-@deftypefun {void *} memccpy (void *@var{to}, const void *@var{from}, int @var{c}, size_t @var{size})
+@deftypefun {void *} memccpy (void *restrict @var{to}, const void *restrict @var{from}, int @var{c}, size_t @var{size})
 This function copies no more than @var{size} bytes from @var{from} to
 @var{to}, stopping if a byte matching @var{c} is found.  The return
 value is a pointer into @var{to} one byte past where @var{c} was copied,
@@ -317,18 +521,35 @@ This function copies the value of @var{c} (converted to an
 object beginning at @var{block}.  It returns the value of @var{block}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wmemset (wchar_t *@var{block}, wchar_t @var{wc}, size_t @var{size})
+This function copies the value of @var{wc} into each of the first
+@var{size} wide characters of the object beginning at @var{block}.  It
+returns the value of @var{block}.
+@end deftypefun
+
 @comment string.h
 @comment ISO
-@deftypefun {char *} strcpy (char *@var{to}, const char *@var{from})
+@deftypefun {char *} strcpy (char *restrict @var{to}, const char *restrict @var{from})
 This copies characters from the string @var{from} (up to and including
 the terminating null character) into the string @var{to}.  Like
 @code{memcpy}, this function has undefined results if the strings
 overlap.  The return value is the value of @var{to}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcscpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+This copies wide characters from the string @var{wfrom} (up to and
+including the terminating null wide character) into the string
+@var{wto}.  Like @code{wmemcpy}, this function has undefined results if
+the strings overlap.  The return value is the value of @var{wto}.
+@end deftypefun
+
 @comment string.h
 @comment ISO
-@deftypefun {char *} strncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
+@deftypefun {char *} strncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
 This function is similar to @code{strcpy} but always copies exactly
 @var{size} characters into @var{to}.
 
@@ -351,6 +572,32 @@ In this case, @var{size} may be large, and when it is, @code{strncpy} will
 waste a considerable amount of time copying null characters.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcsncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+This function is similar to @code{wcscpy} but always copies exactly
+@var{size} wide characters into @var{wto}.
+
+If the length of @var{wfrom} is more than @var{size}, then
+@code{wcsncpy} copies just the first @var{size} wide characters.  Note
+that in this case there is no null terminator written into @var{wto}.
+
+If the length of @var{wfrom} is less than @var{size}, then
+@code{wcsncpy} copies all of @var{wfrom}, followed by enough null wide
+characters to add up to @var{size} wide characters in all.  This
+behavior is rarely useful, but it is specified by the @w{ISO C}
+standard.
+
+The behavior of @code{wcsncpy} is undefined if the strings overlap.
+
+Using @code{wcsncpy} as opposed to @code{wcscpy} is a way to avoid bugs
+relating to writing past the end of the allocated space for @var{wto}.
+However, it can also make your program much slower in one common case:
+copying a string which is probably small into a potentially large buffer.
+In this case, @var{size} may be large, and when it is, @code{wcsncpy} will
+waste a considerable amount of time copying null wide characters.
+@end deftypefun
+
 @comment string.h
 @comment SVID
 @deftypefun {char *} strdup (const char *@var{s})
@@ -359,6 +606,19 @@ allocated string.  The string is allocated using @code{malloc}; see
 @ref{Unconstrained Allocation}.  If @code{malloc} cannot allocate space
 for the new string, @code{strdup} returns a null pointer.  Otherwise it
 returns a pointer to the new string.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wcsdup (const wchar_t *@var{ws})
+This function copies the null-terminated wide character string @var{ws}
+into a newly allocated string.  The string is allocated using
+@code{malloc}; see @ref{Unconstrained Allocation}.  If @code{malloc}
+cannot allocate space for the new string, @code{wcsdup} returns a null
+pointer.  Otherwise it returns a pointer to the new wide character
+string.
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment string.h
@@ -380,10 +640,10 @@ terminates the destination string.
 
 @comment string.h
 @comment Unknown origin
-@deftypefun {char *} stpcpy (char *@var{to}, const char *@var{from})
+@deftypefun {char *} stpcpy (char *restrict @var{to}, const char *restrict @var{from})
 This function is like @code{strcpy}, except that it returns a pointer to
 the end of the string @var{to} (that is, the address of the terminating
-null character) rather than the beginning.
+null character @code{to + strlen (from)}) rather than the beginning.
 
 For example, this program uses @code{stpcpy} to concatenate @samp{foo}
 and @samp{bar} to produce @samp{foobar}, which it then prints.
@@ -396,12 +656,28 @@ This function is not part of the ISO or POSIX standards, and is not
 customary on Unix systems, but we did not invent it either.  Perhaps it
 comes from MS-DOG.
 
-Its behavior is undefined if the strings overlap.
+Its behavior is undefined if the strings overlap.  The function is
+declared in @file{string.h}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wcpcpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+This function is like @code{wcscpy}, except that it returns a pointer to
+the end of the string @var{wto} (that is, the address of the terminating
+null character @code{wto + strlen (wfrom)}) rather than the beginning.
+
+This function is not part of ISO or POSIX but was found useful while
+developing the GNU C Library itself.
+
+The behavior of @code{wcpcpy} is undefined if the strings overlap.
+
+@code{wcpcpy} is a GNU extension and is declared in @file{wchar.h}.
 @end deftypefun
 
 @comment string.h
 @comment GNU
-@deftypefun {char *} stpncpy (char *@var{to}, const char *@var{from}, size_t @var{size})
+@deftypefun {char *} stpncpy (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
 This function is similar to @code{stpcpy} but copies always exactly
 @var{size} characters into @var{to}.
 
@@ -420,7 +696,35 @@ is implemented to be useful in contexts where this behaviour of the
 This function is not part of ISO or POSIX but was found useful while
 developing the GNU C Library itself.
 
+Its behaviour is undefined if the strings overlap.  The function is
+declared in @file{string.h}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wcpncpy (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+This function is similar to @code{wcpcpy} but copies always exactly
+@var{wsize} characters into @var{wto}.
+
+If the length of @var{wfrom} is more then @var{size}, then
+@code{wcpncpy} copies just the first @var{size} wide characters and
+returns a pointer to the wide character directly following the one which
+was copied last.  Note that in this case there is no null terminator
+written into @var{wto}.
+
+If the length of @var{wfrom} is less than @var{size}, then @code{wcpncpy}
+copies all of @var{wfrom}, followed by enough null characters to add up
+to @var{size} characters in all.  This behaviour is rarely useful, but it
+is implemented to be useful in contexts where this behaviour of the
+@code{wcsncpy} is used.  @code{wcpncpy} returns a pointer to the
+@emph{first} written null character.
+
+This function is not part of ISO or POSIX but was found useful while
+developing the GNU C Library itself.
+
 Its behaviour is undefined if the strings overlap.
+
+@code{wcpncpy} is a GNU extension and is declared in @file{wchar.h}.
 @end deftypefun
 
 @comment string.h
@@ -441,7 +745,10 @@ using @code{malloc} would be a lot more expensive.
 @end smallexample
 
 Please note that calling @code{strtok} using @var{path} directly is
-invalid.
+invalid.  It is also not allowed to call @code{strdupa} in the argument
+list of @code{strtok} since @code{strdupa} uses @code{alloca}
+(@pxref{Variable Size Automatic}) can interfere with the parameter
+passing.
 
 This function is only available if GNU CC is used.
 @end deftypefn
@@ -455,13 +762,15 @@ allocates the new string using @code{alloca}
 of @code{strdupa} are valid for @code{strndupa}, too.
 
 This function is implemented only as a macro, just like @code{strdupa}.
+Just as @code{strdupa} this macro also must not be used inside the
+parameter list in a function call.
 
 @code{strndupa} is only available if GNU CC is used.
 @end deftypefn
 
 @comment string.h
 @comment ISO
-@deftypefun {char *} strcat (char *@var{to}, const char *@var{from})
+@deftypefun {char *} strcat (char *restrict @var{to}, const char *restrict @var{from})
 The @code{strcat} function is similar to @code{strcpy}, except that the
 characters from @var{from} are concatenated or appended to the end of
 @var{to}, instead of overwriting it.  That is, the first character from
@@ -471,7 +780,7 @@ An equivalent definition for @code{strcat} would be:
 
 @smallexample
 char *
-strcat (char *to, const char *from)
+strcat (char *restrict to, const char *restrict from)
 @{
   strcpy (to + strlen (to), from);
   return to;
@@ -481,14 +790,38 @@ strcat (char *to, const char *from)
 This function has undefined results if the strings overlap.
 @end deftypefun
 
-Programmers using the @code{strcat} function (or the following
-@code{strncat} function for that matter) can easily be recognized as
-lazy.  In almost all situations the lengths of the participating strings
-are known.  Or at least, one could know them if one keeps track of the
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcscat (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom})
+The @code{wcscat} function is similar to @code{wcscpy}, except that the
+characters from @var{wfrom} are concatenated or appended to the end of
+@var{wto}, instead of overwriting it.  That is, the first character from
+@var{wfrom} overwrites the null character marking the end of @var{wto}.
+
+An equivalent definition for @code{wcscat} would be:
+
+@smallexample
+wchar_t *
+wcscat (wchar_t *wto, const wchar_t *wfrom)
+@{
+  wcscpy (wto + wcslen (wto), wfrom);
+  return wto;
+@}
+@end smallexample
+
+This function has undefined results if the strings overlap.
+@end deftypefun
+
+Programmers using the @code{strcat} or @code{wcscat} function (or the
+following @code{strncat} or @code{wcsncar} functions for that matter)
+can easily be recognized as lazy and reckless.  In almost all situations
+the lengths of the participating strings are known (it better should be
+since how can one otherwise ensure the allocated size of the buffer is
+sufficient?)  Or at least, one could know them if one keeps track of the
 results of the various function calls.  But then it is very inefficient
-to use @code{strcat}.  A lot of time is wasted finding the end of the
-destination string so that the actual copying can start.  This is a
-common example:
+to use @code{strcat}/@code{wcscat}.  A lot of time is wasted finding the
+end of the destination string so that the actual copying can start.
+This is a common example:
 
 @cindex __va_copy
 @cindex va_copy
@@ -496,7 +829,7 @@ common example:
 /* @r{This function concatenates arbitrarily many strings.  The last}
    @r{parameter must be @code{NULL}.}  */
 char *
-concat (const char *str, ...)
+concat (const char *str, @dots{})
 @{
   va_list ap, ap2;
   size_t total = 1;
@@ -542,7 +875,7 @@ efficient:
 
 @smallexample
 char *
-concat (const char *str, ...)
+concat (const char *str, @dots{})
 @{
   va_list ap;
   size_t allocated = 100;
@@ -600,7 +933,7 @@ end of the string and use @code{mempcpy}.  Please note that we also
 don't use @code{stpcpy} which might seem more natural since we handle
 with strings.  But this is not necessary since we already know the
 length of the string and therefore can use the faster memory copying
-function.
+function.  The example would work for wide characters the same way.
 
 Whenever a programmer feels the need to use @code{strcat} she or he
 should think twice and look through the program whether the code cannot
@@ -609,7 +942,7 @@ is almost always unnecessary to use @code{strcat}.
 
 @comment string.h
 @comment ISO
-@deftypefun {char *} strncat (char *@var{to}, const char *@var{from}, size_t @var{size})
+@deftypefun {char *} strncat (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
 This function is like @code{strcat} except that not more than @var{size}
 characters from @var{from} are appended to the end of @var{to}.  A
 single null character is also always appended to @var{to}, so the total
@@ -623,6 +956,7 @@ The @code{strncat} function could be implemented like this:
 char *
 strncat (char *to, const char *from, size_t size)
 @{
+  to[strlen (to) + size] = '\0';
   strncpy (to + strlen (to), from, size);
   return to;
 @}
@@ -632,9 +966,37 @@ strncat (char *to, const char *from, size_t size)
 The behavior of @code{strncat} is undefined if the strings overlap.
 @end deftypefun
 
-Here is an example showing the use of @code{strncpy} and @code{strncat}.
-Notice how, in the call to @code{strncat}, the @var{size} parameter
-is computed to avoid overflowing the character array @code{buffer}.
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcsncat (wchar_t *restrict @var{wto}, const wchar_t *restrict @var{wfrom}, size_t @var{size})
+This function is like @code{wcscat} except that not more than @var{size}
+characters from @var{from} are appended to the end of @var{to}.  A
+single null character is also always appended to @var{to}, so the total
+allocated size of @var{to} must be at least @code{@var{size} + 1} bytes
+longer than its initial length.
+
+The @code{wcsncat} function could be implemented like this:
+
+@smallexample
+@group
+wchar_t *
+wcsncat (wchar_t *restrict wto, const wchar_t *restrict wfrom,
+         size_t size)
+@{
+  wto[wcslen (to) + size] = L'\0';
+  wcsncpy (wto + wcslen (wto), wfrom, size);
+  return wto;
+@}
+@end group
+@end smallexample
+
+The behavior of @code{wcsncat} is undefined if the strings overlap.
+@end deftypefun
+
+Here is an example showing the use of @code{strncpy} and @code{strncat}
+(the wide character version is equivalent).  Notice how, in the call to
+@code{strncat}, the @var{size} parameter is computed to avoid
+overflowing the character array @code{buffer}.
 
 @smallexample
 @include strncat.c.texi
@@ -704,12 +1066,29 @@ If the contents of the two blocks are equal, @code{memcmp} returns
 @code{0}.
 @end deftypefun
 
+@comment wcjar.h
+@comment ISO
+@deftypefun int wmemcmp (const wchar_t *@var{a1}, const wchar_t *@var{a2}, size_t @var{size})
+The function @code{wmemcmp} compares the @var{size} wide characters
+beginning at @var{a1} against the @var{size} wide characters beginning
+at @var{a2}.  The value returned is smaller than or larger than zero
+depending on whether the first differing wide character is @var{a1} is
+smaller or larger than the corresponding character in @var{a2}.
+
+If the contents of the two blocks are equal, @code{wmemcmp} returns
+@code{0}.
+@end deftypefun
+
 On arbitrary arrays, the @code{memcmp} function is mostly useful for
 testing equality.  It usually isn't meaningful to do byte-wise ordering
 comparisons on arrays of things other than bytes.  For example, a
 byte-wise comparison on the bytes that make up floating-point numbers
 isn't likely to tell you anything about the relationship between the
 values of the floating-point numbers.
+
+@code{wmemcmp} is really only useful to compare arrays of type
+@code{wchar_t} since the function looks at @code{sizeof (wchar_t)} bytes
+at a time and this number of bytes is system dependent.
 
 You should also be careful about using @code{memcmp} to compare objects
 that can contain ``holes'', such as the padding inserted into structure
@@ -752,6 +1131,30 @@ If the two strings are equal, @code{strcmp} returns @code{0}.
 A consequence of the ordering used by @code{strcmp} is that if @var{s1}
 is an initial substring of @var{s2}, then @var{s1} is considered to be
 ``less than'' @var{s2}.
+
+@code{strcmp} does not take sorting conventions of the language the
+strings are written in into account.  To get that one has to use
+@code{strcoll}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int wcscmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
+
+The @code{wcscmp} function compares the wide character string @var{ws1}
+against @var{ws2}.  The value returned is smaller than or larger than zero
+depending on whether the first differing wide character is @var{ws1} is
+smaller or larger than the corresponding character in @var{ws2}.
+
+If the two strings are equal, @code{wcscmp} returns @code{0}.
+
+A consequence of the ordering used by @code{wcscmp} is that if @var{ws1}
+is an initial substring of @var{ws2}, then @var{ws1} is considered to be
+``less than'' @var{ws2}.
+
+@code{wcscmp} does not take sorting conventions of the language the
+strings are written in into account.  To get that one has to use
+@code{wcscoll}.
 @end deftypefun
 
 @comment string.h
@@ -767,6 +1170,37 @@ regards these characters as parts of the alphabet they do match.
 @code{strcasecmp} is derived from BSD.
 @end deftypefun
 
+@comment wchar.h
+@comment GNU
+@deftypefun int wcscasecmp (const wchar_t *@var{ws1}, const wchar_T *@var{ws2})
+This function is like @code{wcscmp}, except that differences in case are
+ignored.  How uppercase and lowercase characters are related is
+determined by the currently selected locale.  In the standard @code{"C"}
+locale the characters @"A and @"a do not match but in a locale which
+regards these characters as parts of the alphabet they do match.
+
+@noindent
+@code{wcscasecmp} is a GNU extension.
+@end deftypefun
+
+@comment string.h
+@comment ISO
+@deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
+This function is the similar to @code{strcmp}, except that no more than
+@var{size} wide characters are compared.  In other words, if the two
+strings are the same in their first @var{size} wide characters, the
+return value is zero.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int wcsncmp (const wchar_t *@var{ws1}, const wchar_t *@var{ws2}, size_t @var{size})
+This function is the similar to @code{wcscmp}, except that no more than
+@var{size} wide characters are compared.  In other words, if the two
+strings are the same in their first @var{size} wide characters, the
+return value is zero.
+@end deftypefun
+
 @comment string.h
 @comment BSD
 @deftypefun int strncasecmp (const char *@var{s1}, const char *@var{s2}, size_t @var{n})
@@ -778,19 +1212,23 @@ uppercase and lowercase characters are related.
 @code{strncasecmp} is a GNU extension.
 @end deftypefun
 
-@comment string.h
-@comment ISO
-@deftypefun int strncmp (const char *@var{s1}, const char *@var{s2}, size_t @var{size})
-This function is the similar to @code{strcmp}, except that no more than
-@var{size} characters are compared.  In other words, if the two strings are
-the same in their first @var{size} characters, the return value is zero.
+@comment wchar.h
+@comment GNU
+@deftypefun int wcsncasecmp (const wchar_t *@var{ws1}, const wchar_t *@var{s2}, size_t @var{n})
+This function is like @code{wcsncmp}, except that differences in case
+are ignored.  Like @code{wcscasecmp}, it is locale dependent how
+uppercase and lowercase characters are related.
+
+@noindent
+@code{wcsncasecmp} is a GNU extension.
 @end deftypefun
 
-Here are some examples showing the use of @code{strcmp} and @code{strncmp}.
-These examples assume the use of the ASCII character set.  (If some
-other character set---say, EBCDIC---is used instead, then the glyphs
-are associated with different numeric codes, and the return values
-and ordering may differ.)
+Here are some examples showing the use of @code{strcmp} and
+@code{strncmp} (equivalent examples can be constructed for the wide
+character functions).  These examples assume the use of the ASCII
+character set.  (If some other character set---say, EBCDIC---is used
+instead, then the glyphs are associated with different numeric codes,
+and the return values and ordering may differ.)
 
 @smallexample
 strcmp ("hello", "hello")
@@ -877,14 +1315,17 @@ two-character sequence @samp{ll} is treated as a single letter that is
 collated immediately after @samp{l}.
 
 You can use the functions @code{strcoll} and @code{strxfrm} (declared in
-the header file @file{string.h}) to compare strings using a collation
-ordering appropriate for the current locale.  The locale used by these
-functions in particular can be specified by setting the locale for the
-@code{LC_COLLATE} category; see @ref{Locales}.
+the headers file @file{string.h}) and @code{wcscoll} and @code{wcsxfrm}
+(declared in the headers file @file{wchar}) to compare strings using a
+collation ordering appropriate for the current locale.  The locale used
+by these functions in particular can be specified by setting the locale
+for the @code{LC_COLLATE} category; see @ref{Locales}.
 @pindex string.h
+@pindex wchar.h
 
 In the standard C locale, the collation sequence for @code{strcoll} is
-the same as that for @code{strcmp}.
+the same as that for @code{strcmp}.  Similarly, @code{wcscoll} and
+@code{wcscmp} are the same in this situation.
 
 Effectively, the way these functions work is by applying a mapping to
 transform the characters in a string to a byte sequence that represents
@@ -892,17 +1333,26 @@ the string's position in the collating sequence of the current locale.
 Comparing two such byte sequences in a simple fashion is equivalent to
 comparing the strings with the locale's collating sequence.
 
-The function @code{strcoll} performs this translation implicitly, in
-order to do one comparison.  By contrast, @code{strxfrm} performs the
-mapping explicitly.  If you are making multiple comparisons using the
-same string or set of strings, it is likely to be more efficient to use
-@code{strxfrm} to transform all the strings just once, and subsequently
-compare the transformed strings with @code{strcmp}.
+The functions @code{strcoll} and @code{wcscoll} perform this translation
+implicitly, in order to do one comparison.  By contrast, @code{strxfrm}
+and @code{wcsxfrm} perform the mapping explicitly.  If you are making
+multiple comparisons using the same string or set of strings, it is
+likely to be more efficient to use @code{strxfrm} or @code{wcsxfrm} to
+transform all the strings just once, and subsequently compare the
+transformed strings with @code{strcmp} or @code{wcscmp}.
 
 @comment string.h
 @comment ISO
 @deftypefun int strcoll (const char *@var{s1}, const char *@var{s2})
 The @code{strcoll} function is similar to @code{strcmp} but uses the
+collating sequence of the current locale for collation (the
+@code{LC_COLLATE} locale).
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun int wcscoll (const wchar_t *@var{ws1}, const wchar_t *@var{ws2})
+The @code{wcscoll} function is similar to @code{wcscmp} but uses the
 collating sequence of the current locale for collation (the
 @code{LC_COLLATE} locale).
 @end deftypefun
@@ -938,9 +1388,9 @@ sort_strings (char **array, int nstrings)
 @cindex converting string to collation order
 @comment string.h
 @comment ISO
-@deftypefun size_t strxfrm (char *@var{to}, const char *@var{from}, size_t @var{size})
-The function @code{strxfrm} transforms @var{string} using the collation
-transformation determined by the locale currently selected for
+@deftypefun size_t strxfrm (char *restrict @var{to}, const char *restrict @var{from}, size_t @var{size})
+The function @code{strxfrm} transforms the string @var{from} using the
+collation transformation determined by the locale currently selected for
 collation, and stores the transformed string in the array @var{to}.  Up
 to @var{size} characters (including a terminating null character) are
 stored.
@@ -961,8 +1411,39 @@ may also be shorter.
 If @var{size} is zero, no characters are stored in @var{to}.  In this
 case, @code{strxfrm} simply returns the number of characters that would
 be the length of the transformed string.  This is useful for determining
-what size string to allocate.  It does not matter what @var{to} is if
-@var{size} is zero; @var{to} may even be a null pointer.
+what size the allocated array should be.  It does not matter what
+@var{to} is if @var{size} is zero; @var{to} may even be a null pointer.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun size_t wcsxfrm (wchar_t *restrict @var{wto}, const wchar_t *@var{wfrom}, size_t @var{size})
+The function @code{wcsxfrm} transforms wide character string @var{wfrom}
+using the collation transformation determined by the locale currently
+selected for collation, and stores the transformed string in the array
+@var{wto}.  Up to @var{size} wide characters (including a terminating null
+character) are stored.
+
+The behavior is undefined if the strings @var{wto} and @var{wfrom}
+overlap; see @ref{Copying and Concatenation}.
+
+The return value is the length of the entire transformed wide character
+string.  This value is not affected by the value of @var{size}, but if
+it is greater or equal than @var{size}, it means that the transformed
+wide character string did not entirely fit in the array @var{wto}.  In
+this case, only as much of the wide character string as actually fits
+was stored.  To get the whole transformed wide character string, call
+@code{wcsxfrm} again with a bigger output array.
+
+The transformed wide character string may be longer than the original
+wide character string, and it may also be shorter.
+
+If @var{size} is zero, no characters are stored in @var{to}.  In this
+case, @code{wcsxfrm} simply returns the number of wide characters that
+would be the length of the transformed wide character string.  This is
+useful for determining what size the allocated array should be (remember
+to multiply with @code{sizeof (wchar_t)}).  It does not matter what
+@var{wto} is if @var{size} is zero; @var{wto} may even be a null pointer.
 @end deftypefun
 
 Here is an example of how you can use @code{strxfrm} when
@@ -1042,8 +1523,43 @@ sort_strings_fast (char **array, int nstrings)
 @}
 @end smallexample
 
-@strong{Compatibility Note:}  The string collation functions are a new
+The interesting part of this code for the wide character version would
+look like this:
+
+@smallexample
+void
+sort_strings_fast (wchar_t **array, int nstrings)
+@{
+  @dots{}
+      /* @r{Transform @code{array[i]}.}  */
+      transformed_length = wcsxfrm (transformed, array[i], length);
+
+      /* @r{If the buffer was not large enough, resize it}
+         @r{and try again.}  */
+      if (transformed_length >= length)
+        @{
+          /* @r{Allocate the needed space. +1 for terminating}
+             @r{@code{NUL} character.}  */
+          transformed = (wchar_t *) xrealloc (transformed,
+                                              (transformed_length + 1)
+                                              * sizeof (wchar_t));
+
+          /* @r{The return value is not interesting because we know}
+             @r{how long the transformed string is.}  */
+          (void) wcsxfrm (transformed, array[i],
+                          transformed_length + 1);
+        @}
+  @dots{}
+@end smallexample
+
+@noindent
+Note the additional multiplication with @code{sizeof (wchar_t)} in the
+@code{realloc} call.
+
+@strong{Compatibility Note:} The string collation functions are a new
 feature of @w{ISO C90}.  Older C dialects have no equivalent feature.
+The wide character versions were introduced in @w{Amendment 1} to @w{ISO
+C90}.
 
 @node Search Functions
 @section Search Functions
@@ -1062,6 +1578,15 @@ This function finds the first occurrence of the byte @var{c} (converted
 to an @code{unsigned char}) in the initial @var{size} bytes of the
 object beginning at @var{block}.  The return value is a pointer to the
 located byte, or a null pointer if no match was found.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wmemchr (const wchar_t *@var{block}, wchar_t @var{wc}, size_t @var{size})
+This function finds the first occurrence of the wide character @var{wc}
+in the initial @var{size} wide characters of the object beginning at
+@var{block}.  The return value is a pointer to the located wide
+character, or a null pointer if no match was found.
 @end deftypefun
 
 @comment string.h
@@ -1088,6 +1613,7 @@ string.  Since all strings are terminated by a null byte a call like
    rawmemchr (str, '\0')
 @end smallexample
 
+@noindent
 will never go beyond the end of the string.
 
 This function is a GNU extension.
@@ -1119,7 +1645,24 @@ strchr ("hello, world", '?')
 
 The terminating null character is considered to be part of the string,
 so you can use this function get a pointer to the end of a string by
-specifying a null character as the value of the @var{c} argument.
+specifying a null character as the value of the @var{c} argument.  It
+would be better (but less portable) to use @code{strchrnul} in this
+case, though.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcschr (const wchar_t *@var{wstring}, int @var{wc})
+The @code{wcschr} function finds the first occurrence of the wide
+character @var{wc} in the null-terminated wide character string
+beginning at @var{wstring}.  The return value is a pointer to the
+located wide character, or a null pointer if no match was found.
+
+The terminating null character is considered to be part of the wide
+character string, so you can use this function get a pointer to the end
+of a wide character string by specifying a null wude character as the
+value of the @var{wc} argument.  It would be better (but less portable)
+to use @code{wcschrnul} in this case, though.
 @end deftypefun
 
 @comment string.h
@@ -1128,6 +1671,18 @@ specifying a null character as the value of the @var{c} argument.
 @code{strchrnul} is the same as @code{strchr} except that if it does
 not find the character, it returns a pointer to string's terminating
 null character rather than a null pointer.
+
+This function is a GNU extension.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {wchar_t *} wcschrnul (const wchar_t *@var{wstring}, wchar_t @var{wc})
+@code{wcschrnul} is the same as @code{wcschr} except that if it does not
+find the wide character, it returns a pointer to wide character string's
+terminating null wide character rather than a null pointer.
+
+This function is a GNU extension.
 @end deftypefun
 
 One useful, but unusual, use of the @code{strchr}
@@ -1169,6 +1724,14 @@ strrchr ("hello, world", 'l')
 @end smallexample
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcsrchr (const wchar_t *@var{wstring}, wchar_t @var{c})
+The function @code{wcsrchr} is like @code{wcschr}, except that it searches
+backwards from the end of the string @var{wstring} (instead of forwards
+from the front).
+@end deftypefun
+
 @comment string.h
 @comment ISO
 @deftypefun {char *} strstr (const char *@var{haystack}, const char *@var{needle})
@@ -1187,9 +1750,27 @@ strstr ("hello, world", "wo")
 @end smallexample
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcsstr (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
+This is like @code{wcschr}, except that it searches @var{haystack} for a
+substring @var{needle} rather than just a single wide character.  It
+returns a pointer into the string @var{haystack} that is the first wide
+character of the substring, or a null pointer if no match was found.  If
+@var{needle} is an empty string, the function returns @var{haystack}.
+@end deftypefun
+
+@comment wchar.h
+@comment XPG
+@deftypefun {wchar_t *} wcswcs (const wchar_t *@var{haystack}, const wchar_t *@var{needle})
+@code{wcsstr} is an depricated alias for @code{wcsstr}.  This is the
+name originally used in the X/Open Portability Guide before the
+@w{Amendment 1} to @w{ISO C90} was published.
+@end deftypefun
+
 
 @comment string.h
-@comment ???
+@comment GNU
 @deftypefun {char *} strcasestr (const char *@var{haystack}, const char *@var{needle})
 This is like @code{strstr}, except that it ignores case in searching for
 the substring.   Like @code{strcasecmp}, it is locale dependent how
@@ -1230,6 +1811,21 @@ For example,
 strspn ("hello, world", "abcdefghijklmnopqrstuvwxyz")
     @result{} 5
 @end smallexample
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun size_t wcsspn (const wchar_t *@var{wstring}, const wchar_t *@var{skipset})
+The @code{wcsspn} (``wide character string span'') function returns the
+length of the initial substring of @var{wstring} that consists entirely
+of wide characters that are members of the set specified by the string
+@var{skipset}.  The order of the wide characters in @var{skipset} is not
+important.
 @end deftypefun
 
 @comment string.h
@@ -1246,6 +1842,22 @@ For example,
 strcspn ("hello, world", " \t\n,.;!?")
     @result{} 5
 @end smallexample
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun size_t wcscspn (const wchar_t *@var{wstring}, const wchar_t *@var{stopset})
+The @code{wcscspn} (``wide character string complement span'') function
+returns the length of the initial substring of @var{wstring} that
+consists entirely of wide characters that are @emph{not} members of the
+set specified by the string @var{stopset}.  (In other words, it returns
+the offset of the first character in @var{string} that is a member of
+the set @var{stopset}.)
 @end deftypefun
 
 @comment string.h
@@ -1265,6 +1877,21 @@ strpbrk ("hello, world", " \t\n,.;!?")
     @result{} ", world"
 @end smallexample
 @c @end group
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcspbrk (const wchar_t *@var{wstring}, const wchar_t *@var{stopset})
+The @code{wcspbrk} (``wide character string pointer break'') function is
+related to @code{wcscspn}, except that it returns a pointer to the first
+wide character in @var{wstring} that is a member of the set
+@var{stopset} instead of the length of the initial substring.  It
+returns a null pointer if no such character from @var{stopset} is found.
 @end deftypefun
 
 
@@ -1302,7 +1929,7 @@ in the header file @file{string.h}.
 
 @comment string.h
 @comment ISO
-@deftypefun {char *} strtok (char *@var{newstring}, const char *@var{delimiters})
+@deftypefun {char *} strtok (char *restrict @var{newstring}, const char *restrict @var{delimiters})
 A string can be split into tokens by making a series of calls to the
 function @code{strtok}.
 
@@ -1332,29 +1959,84 @@ same on every call in a series of calls to @code{strtok}.
 If the end of the string @var{newstring} is reached, or if the remainder of
 string consists only of delimiter characters, @code{strtok} returns
 a null pointer.
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
 @end deftypefun
 
-@strong{Warning:} Since @code{strtok} alters the string it is parsing,
-you should always copy the string to a temporary buffer before parsing
-it with @code{strtok}.  If you allow @code{strtok} to modify a string
-that came from another part of your program, you are asking for trouble;
-that string might be used for other purposes after @code{strtok} has
-modified it, and it would not have the expected value.
+@comment wchar.h
+@comment ISO
+@deftypefun {wchar_t *} wcstok (wchar_t *@var{newstring}, const char *@var{delimiters})
+A string can be split into tokens by making a series of calls to the
+function @code{wcstok}.
+
+The string to be split up is passed as the @var{newstring} argument on
+the first call only.  The @code{wcstok} function uses this to set up
+some internal state information.  Subsequent calls to get additional
+tokens from the same wide character string are indicated by passing a
+null pointer as the @var{newstring} argument.  Calling @code{wcstok}
+with another non-null @var{newstring} argument reinitializes the state
+information.  It is guaranteed that no other library function ever calls
+@code{wcstok} behind your back (which would mess up this internal state
+information).
+
+The @var{delimiters} argument is a wide character string that specifies
+a set of delimiters that may surround the token being extracted.  All
+the initial wide characters that are members of this set are discarded.
+The first wide character that is @emph{not} a member of this set of
+delimiters marks the beginning of the next token.  The end of the token
+is found by looking for the next wide character that is a member of the
+delimiter set.  This wide character in the original wide character
+string @var{newstring} is overwritten by a null wide character, and the
+pointer to the beginning of the token in @var{newstring} is returned.
+
+On the next call to @code{wcstok}, the searching begins at the next
+wide character beyond the one that marked the end of the previous token.
+Note that the set of delimiters @var{delimiters} do not have to be the
+same on every call in a series of calls to @code{wcstok}.
+
+If the end of the wide character string @var{newstring} is reached, or
+if the remainder of string consists only of delimiter wide characters,
+@code{wcstok} returns a null pointer.
+
+Note that ``character'' is here used in the sense of byte.  In a string
+using a multibyte character encoding (abstract) character consisting of
+more than one byte are not treated as an entity.  Each byte is treated
+separately.  The function is not locale-dependent.
+@end deftypefun
+
+@strong{Warning:} Since @code{strtok} and @code{wcstok} alter the string
+they is parsing, you should always copy the string to a temporary buffer
+before parsing it with @code{strtok}/@code{wcstok} (@pxref{Copying and
+Concatenation}).  If you allow @code{strtok} or @code{wcstok} to modify
+a string that came from another part of your program, you are asking for
+trouble; that string might be used for other purposes after
+@code{strtok} or @code{wcstok} has modified it, and it would not have
+the expected value.
 
 The string that you are operating on might even be a constant.  Then
-when @code{strtok} tries to modify it, your program will get a fatal
-signal for writing in read-only memory.  @xref{Program Error Signals}.
-Even if the operation of @code{strtok} would not require a modification
-of the string (e.g., if there is exactly one token) the string can (and
-in the GNU libc case will) be modified.
+when @code{strtok} or @code{wcstok} tries to modify it, your program
+will get a fatal signal for writing in read-only memory.  @xref{Program
+Error Signals}.  Even if the operation of @code{strtok} or @code{wcstok}
+would not require a modification of the string (e.g., if there is
+exactly one token) the string can (and in the GNU libc case will) be
+modified.
 
 This is a special case of a general principle: if a part of a program
 does not have as its purpose the modification of a certain data
 structure, then it is error-prone to modify the data structure
 temporarily.
 
-The function @code{strtok} is not reentrant.  @xref{Nonreentrancy}, for
-a discussion of where and why reentrancy is important.
+The functions @code{strtok} and @code{wcstok} are not reentrant.
+@xref{Nonreentrancy}, for a discussion of where and why reentrancy is
+important.
 
 Here is a simple example showing the use of @code{strtok}.
 
@@ -1382,7 +2064,8 @@ token = strtok (NULL, delimiters);    /* token => NULL */
 @end smallexample
 
 The GNU C library contains two more functions for tokenizing a string
-which overcome the limitation of non-reentrancy.
+which overcome the limitation of non-reentrancy.  They are only
+available for multibyte character strings.
 
 @comment string.h
 @comment POSIX
