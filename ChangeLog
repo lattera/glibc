@@ -1,3 +1,7 @@
+2001-04-20  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/libm-test-ulps: Update.
+
 2001-04-19  Alan Modra  <amodra@one.net.au>
 
 	* Makerules (libc_pic.os): Add $(LDFLAGS-c_pic.os).
