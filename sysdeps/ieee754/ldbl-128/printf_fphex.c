@@ -39,7 +39,7 @@ do {									      \
 	{								      \
 	  numstr = _itoa_word (num1, numbuf + sizeof numbuf, 16,	      \
 			       info->spec == 'A');			      \
-	  wnumstr = _itowa_word (num1,
+	  wnumstr = _itowa_word (num1,					      \
 				 wnumbuf + sizeof (wnumbuf) / sizeof (wchar_t),\
 				 16, info->spec == 'A');		      \
 	}								      \
