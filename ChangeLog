@@ -1,4 +1,16 @@
+2003-06-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/netinet/ip6.h (IP6OPT_PAD1, IP6OPT_PADn): Define.
+	* inet/netinet/in.h: Add prototypes for inet6_option_* functions.
+	* inet/Makefile (routines): Add inet6_option.
+	* inet/inet6_option.c: New file.
+	* inet/Versions [GLIBC_2.3.3] (libc): Add inet6_option_space,
+	inet6_option_init, inet6_option_append, inet6_option_alloc,
+	inet6_option_next, and inet6_option_find.
+
 2003-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/netinet/ip6.h (struct ip6_ext): Define.
 
 	* sysdeps/unix/sysv/linux/sys/param.h (howmany): Optimize for gcc.
 

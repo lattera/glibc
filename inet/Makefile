@@ -45,7 +45,7 @@ routines := htonl htons		\
 	    rcmd rexec ruserpass \
 	    getnetgrent_r getnetgrent \
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
-	    in6_addr getnameinfo if_index ifaddrs
+	    in6_addr getnameinfo if_index ifaddrs inet6_option
 
 aux := check_pf ifreq
 

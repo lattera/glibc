@@ -21,6 +21,7 @@
 
 #include <features.h>
 #include <stdint.h>
+#include <sys/socket.h>
 #include <bits/types.h>
 
 
@@ -365,6 +366,23 @@ struct in6_pktinfo
     struct in6_addr	ipi6_addr;    /* src/dst IPv6 address */
     unsigned int	ipi6_ifindex; /* send/recv interface index */
   };
+
+
+#ifdef __USE_GNU
+/* Hop-by-Hop and Destination Options Processing.  */
+extern int inet6_option_space (int __nbytes);
+extern int inet6_option_init (void *__bp, struct cmsghdr **__cmsgp,
+			      int __type);
+extern int inet6_option_append (struct cmsghdr *__cmsg,
+				__const uint8_t *__typep, int __multx,
+				int __plusy);
+extern uint8_t *inet6_option_alloc (struct cmsghdr *__cmsg, int __datalen,
+				    int __multx, int __plusy);
+extern int inet6_option_next (__const struct cmsghdr *__cmsg,
+			      uint8_t **__tptrp);
+extern int inet6_option_find (__const struct cmsghdr *__cmsg,
+			      uint8_t **__tptrp, int __type);
+#endif	/* use GNU */
 
 __END_DECLS
 
