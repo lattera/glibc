@@ -1,3 +1,11 @@
+2004-02-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_mutex_lock_wait): Optimize a bit more.  Just one copy of
+	the atomic instruction needed.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S
+	(__lll_mutex_lock_wait): Likewise.
+
 2004-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-cond14 and tst-cond15.
