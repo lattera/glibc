@@ -29,8 +29,8 @@ division.  The C compiler expects the functions
 
 These are not normal C functions: instead of the normal calling
 sequence, these expect their arguments in registers t10 and t11, and
-return the result in t12 (aka pv). Registers AT and v0 may be
-clobbered (assembly temporary), anything else must be saved.  */
+return the result in t12 (aka pv). Register AT may be clobbered
+(assembly temporary), anything else must be saved.  */
 
 #include <sysdep.h>
 
