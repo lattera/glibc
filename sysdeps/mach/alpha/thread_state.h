@@ -32,6 +32,7 @@ struct machine_thread_all_state
   {
     int set;			/* Mask of bits (1 << FLAVOR).  */
     struct alpha_thread_state basic;
+    struct alpha_exc_state exc;
     struct alpha_float_state fpu;
   };
 
