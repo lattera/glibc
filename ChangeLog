@@ -1,3 +1,9 @@
+2001-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/charset.texi: Extensive editing work.
+	* manual/nss.texi: Likewise.
+	Changes by Dennis Grace <dgrace@us.ibm.com>.
+
 2001-11-04  Roland McGrath  <roland@frob.com>
 
 	* hurd/set-host.c (_hurd_set_host_config): Use O_WRONLY in flags
