@@ -41,6 +41,10 @@
 /* Name of the locale archive file.  */
 static const char archfname[] = LOCALEDIR "/locale-archive";
 
+/* Size of initial mapping window, optimal if large enough to
+   cover the header plus the initial locale.  */
+#define ARCHIVE_MAPPING_WINDOW	(2 * 1024 * 1024)
+
 
 /* Record of contiguous pages already mapped from the locale archive.  */
 struct archmapped
@@ -174,6 +178,9 @@ _nl_load_locale_from_archive (int category, const char **namep)
   /* Make sure the archive is loaded.  */
   if (archmapped == NULL)
     {
+      void *result;
+      size_t headsize, mapsize;
+
       /* We do this early as a sign that we have tried to open the archive.
 	 If headmap.ptr remains null, that's an indication that we tried
 	 and failed, so we won't try again.  */
@@ -193,49 +200,48 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  return NULL;
 	}
 
-      if (sizeof (void *) > 4)
+
+      /* Map an initial window probably large enough to cover the header
+	 and the first locale's data.  With a large address space, we can
+	 just map the whole file and be sure everything is covered.  */
+
+      mapsize = (sizeof (void *) > 4 ? archive_stat.st_size
+		 : MAX (archive_stat.st_size, ARCHIVE_MAPPING_WINDOW));
+
+      result = __mmap64 (NULL, mapsize, PROT_READ, MAP_SHARED, fd, 0);
+      if (result == MAP_FAILED)
+	goto close_and_out;
+
+      /* Check whether the file is large enough for the sizes given in
+	 the header.  Theoretically an archive could be so large that
+	 just the header fails to fit in our initial mapping window.  */
+      headsize = calculate_head_size ((const struct locarhead *) result);
+      if (headsize > mapsize)
 	{
-	  /* We will just map the whole file, what the hell.  */
-	  void *result = __mmap64 (NULL, archive_stat.st_size,
-				   PROT_READ, MAP_SHARED, fd, 0);
+	  (void) __munmap (result, mapsize);
+	  if (sizeof (void *) > 4 || headsize > archive_stat.st_size)
+	    /* The file is not big enough for the header.  Bogus.  */
+	    goto close_and_out;
+
+	  /* Freakishly long header.  */
+	  /* XXX could use mremap when available */
+	  mapsize = (headsize + ps - 1) & ~(ps - 1);
+	  result = __mmap64 (NULL, mapsize, PROT_READ, MAP_SHARED, fd, 0);
 	  if (result == MAP_FAILED)
 	    goto close_and_out;
-	  /* Check whether the file is large enough for the sizes given in the
-	     header.  */
-	  if (calculate_head_size ((const struct locarhead *) result)
-	      > archive_stat.st_size)
-	    {
-	      (void) __munmap (result, archive_stat.st_size);
-	      goto close_and_out;
-	    }
+	}
+
+      if (sizeof (void *) > 4 || mapsize >= archive_stat.st_size)
+	{
+	  /* We've mapped the whole file already, so we can be
+	     sure we won't need this file descriptor later.  */
 	  __close (fd);
 	  fd = -1;
-
-	  headmap.ptr = result;
-	  /* headmap.from already initialized to zero.  */
-	  headmap.len = archive_stat.st_size;
 	}
-      else
-	{
-	  struct locarhead head;
-	  off_t head_size;
-	  void *result;
 
-	  if (TEMP_FAILURE_RETRY (__read (fd, &head, sizeof (head)))
-	      != sizeof (head))
-	    goto close_and_out;
-	  head_size = calculate_head_size (&head);
-	  if (head_size > archive_stat.st_size)
-	    goto close_and_out;
-	  result = __mmap64 (NULL, head_size, PROT_READ, MAP_SHARED, fd, 0);
-	  if (result == MAP_FAILED)
-	    goto close_and_out;
-
-	  /* Record that we have mapped the initial pages of the file.  */
-	  headmap.ptr = result;
-	  headmap.len = MIN ((head_size + ps - 1) & ~(ps - 1),
-			     archive_stat.st_size);
-	}
+      headmap.ptr = result;
+      /* headmap.from already initialized to zero.  */
+      headmap.len = mapsize;
     }
 
   /* If there is no archive or it cannot be loaded for some reason fail.  */
