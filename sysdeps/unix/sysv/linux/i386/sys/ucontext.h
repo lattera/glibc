@@ -26,10 +26,6 @@
    included in <signal.h>.  */
 #include <bits/sigcontext.h>
 
-/* We also need the definition of the userlevel data representation
-   for the register contexts.  */
-#include <sys/user.h>
-
 
 /* Type for general register.  */
 typedef int greg_t;

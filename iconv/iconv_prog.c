@@ -1,5 +1,5 @@
 /* Convert text in given files from the specified from-set to the to-set.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -47,7 +47,7 @@ static void print_version (FILE *stream, struct argp_state *state);
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = print_version;
 
 #define OPT_VERBOSE	1000
-#define OPT_LIST	1001
+#define OPT_LIST	'l'
 
 /* Definitions of arguments for argp functions.  */
 static const struct argp_option options[] =
@@ -56,9 +56,11 @@ static const struct argp_option options[] =
   { "from-code", 'f', "NAME", 0, N_("encoding of original text") },
   { "to-code", 't', "NAME", 0, N_("encoding for output") },
   { NULL, 0, NULL, 0, N_("Information:") },
-  { "list", OPT_LIST, NULL, 0, N_("list all known coded character sets") },
+  { "list", 'l', NULL, 0, N_("list all known coded character sets") },
   { NULL, 0, NULL, 0, N_("Output control:") },
+  { NULL, 'c', NULL, 0, N_("omit invalid characters from output") },
   { "output", 'o', "FILE", 0, N_("output file") },
+  { "silent", 's', NULL, 0, N_("supress warnings") },
   { "verbose", OPT_VERBOSE, NULL, 0, N_("print progress information") },
   { NULL, 0, NULL, 0, NULL }
 };
@@ -71,10 +73,10 @@ Convert encoding of given files from one encoding to another.");
 static const char args_doc[] = N_("[FILE...]");
 
 /* Prototype for option handler.  */
-static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 /* Function to print some extra text in the help message.  */
-static char *more_help __P ((int key, const char *text, void *input));
+static char *more_help (int key, const char *text, void *input);
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
@@ -171,17 +173,24 @@ main (int argc, char *argv[])
       {
 	struct stat st;
 	const char *addr;
-	int fd = open (argv[remaining], O_RDONLY);
+	int fd;
+
 
 	if (verbose)
 	  printf ("%s:\n", argv[remaining]);
-
-	if (fd == -1)
+	if (strcmp (argv[remaining], "-") == 0)
+	  fd = 0;
+	else
 	  {
-	    error (0, errno, _("cannot open input file `%s'"),
-		   argv[remaining]);
-	    status = EXIT_FAILURE;
-	    continue;
+	    fd = open (argv[remaining], O_RDONLY);
+
+	    if (fd == -1)
+	      {
+		error (0, errno, _("cannot open input file `%s'"),
+		       argv[remaining]);
+		status = EXIT_FAILURE;
+		continue;
+	      }
 	  }
 
 #ifdef _POSIX_MAPPED_FILES
@@ -261,6 +270,15 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'o':
       output_file = arg;
       break;
+    case 's':
+      /* Nothing, for now at least.  We are not giving out any information
+	 about missing character or so.  */
+      break;
+    case 'c':
+      /* Omit invalid characters from output.
+	 XXX This option will become a meaning once we have different
+	 modes of operation for the conversion functions.  */
+      break;
     case OPT_VERBOSE:
       verbose = 1;
       break;
@@ -299,7 +317,7 @@ print_version (FILE *stream, struct argp_state *state)
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
-"), "1999");
+"), "2000");
   fprintf (stream, gettext ("Written by %s.\n"), "Ulrich Drepper");
 }
 

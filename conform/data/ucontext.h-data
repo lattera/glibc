@@ -16,5 +16,5 @@ function void makecontext (ucontext_t*, void(*)(void), int, ...)
 function int swapcontext (ucontext_t*, const ucontext_t*)
 
 allow uc_*
-allow SS_*
+allow ss_*
 allow *_t

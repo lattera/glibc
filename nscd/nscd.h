@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -95,6 +95,9 @@ extern int nthreads;
 /* Tables for which we cache data with uid */
 extern int secure[lastdb];
 extern int secure_in_use; /* Is one of the above 1 ? */
+
+/* User name to run server processes as */
+extern const char *server_user;
 
 /* Prototypes for global functions.  */
 

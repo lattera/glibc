@@ -1,5 +1,34 @@
 2000-04-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconv_prog.c (main): Handle input file name "-" correctly.
+	Recognize option -s, -c, and -l.
+
+2000-04-20  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/nscd.c: Start new session for nscd, drop privilegs
+	to configured user if requested and no -S parameter are used.
+	* nscd/nscd.conf: Add new option "server-user".
+	* nscd/nscd_conf.c: Add support for new "server-user" option.
+	* nscd/nscd.h: Add declaration for server_user variable.
+	Based on patch by Chris Wing <wingc@engin.umich.edu>
+
+2000-04-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Add comment explaining
+	that changing the __restore and __restore_rt signal return code
+	will break GDB.
+
+2000-04-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Do not include
+	<sys/user.h>.
+
+2000-04-29  Mark Kettenis  <kettenis@gnu.org>
+
+	* conform/data/ucontext.h-data: Allow ss_* instead of SS_*.
+
+2000-04-29  Ulrich Drepper  <drepper@redhat.com>
+
 	* conform/conformtest.pl (@headers): Add sys/utsname.h, sys/un.h,
 	sys/socket.h, spawn.h, netinet/tcp.h, netinet/in.h, net/if.h, and
 	arpa/inet.h.

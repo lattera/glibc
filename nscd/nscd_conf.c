@@ -1,6 +1,6 @@
-/* Copyright (c) 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -176,6 +176,13 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 	  if (nthreads == -1)
 	    nthreads = MAX (atol (arg1), lastdb);
 	}
+      else if (strcmp (entry, "server-user") == 0)
+        {
+          if (!arg1)
+            dbg_log (_("Must specify user name for server-user option"), arg1);
+          else
+            server_user = strdup (arg1);
+        }
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);
     }

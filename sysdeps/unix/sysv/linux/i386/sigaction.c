@@ -148,12 +148,20 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 
 weak_alias (__sigaction, sigaction)
 
+/* NOTE: Please think twice before making any changes to the bits of
+   code below.  GDB needs some intimate knowledge about it to
+   recognize them as signal trampolines, and make backtraces through
+   signal handlers work right.  Important are both the names
+   (__restore and __restore_rt) and the exact instruction sequence.
+   If you ever feel the need to make any changes, please notify the
+   appropriate GDB maintainer.  */
+
 #define RESTORE(name, syscall) RESTORE2 (name, syscall)
 #define RESTORE2(name, syscall) \
 asm						\
   (						\
    ".align 16\n"				\
-   "__" #name ":\n"					\
+   "__" #name ":\n"				\
    "	movl $" #syscall ", %eax\n"		\
    "	int  $0x80"				\
    );
@@ -168,8 +176,8 @@ RESTORE (restore_rt, __NR_rt_sigreturn)
 # define RESTORE2(name, syscall) \
 asm						\
   (						\
-   ".align 8\n"				\
-   "__" #name ":\n"					\
+   ".align 8\n"					\
+   "__" #name ":\n"				\
    "	popl %eax\n"				\
    "	movl $" #syscall ", %eax\n"		\
    "	int  $0x80"				\
