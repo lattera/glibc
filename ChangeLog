@@ -1,3 +1,11 @@
+Tue May 14 14:07:10 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* libc-symbols.h (lint): Macro removed.  The sunrpc code does some
+	really stupid things #ifdef lint.
+
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h (profil_counter): Fix
+	struct member name: sc_eip -> eip.
+
 Mon May 13 19:52:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (stub-$(subdir)): Put cmds including cd inside (...) with

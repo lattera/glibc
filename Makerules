@@ -647,7 +647,7 @@ $(addprefix $(libdir)/$(libprefix),$(install-lib-non.a)): \
 endif
 ifdef install-lib.a
 $(install-lib.a:lib%.a=$(libdir)/lib$(libprefix)%.a): \
-  $(libdir)/lib$(libprefix)%.a: $(common-objpfx)lib%.a
+  $(libdir)/lib$(libprefix)%.a: $(objpfx)lib%.a
 	$(do-install)
 	$(patsubst %,$(RANLIB) $@,$(filter-out $(non-lib.a),$(<F)))
 endif

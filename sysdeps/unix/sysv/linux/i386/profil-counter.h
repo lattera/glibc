@@ -22,5 +22,5 @@ Cambridge, MA 02139, USA.  */
 void
 profil_counter (int signo, struct sigcontext_struct sc)
 {
-  profil_count ((void *) sc.sc_eip);
+  profil_count ((void *) sc.eip);
 }

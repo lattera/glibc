@@ -21,10 +21,10 @@ extra-objs := $(extra-objs)
 install-lib += $(foreach o,$(object-suffixes-$(lib)),$(lib:lib%=$(libtype$o)))
 extra-objs += $(foreach o,$(object-suffixes-$(lib)),$($(lib)-routines:=$o))
 alltypes-$(lib) := $(foreach o,$(object-suffixes-$(lib)),\
-			     $(common-objpfx)$(patsubst %,$(libtype$o),\
+			     $(objpfx)$(patsubst %,$(libtype$o),\
 			     $(lib:lib%=%)))
 ifneq (,$(filter .so,$(object-suffixes-$(lib))))
-alltypes-$(lib) += $(common-objpfx)$(lib).so
+alltypes-$(lib) += $(objpfx)$(lib).so
 endif
 
 ifeq (,$($(lib)-no-lib-dep))
@@ -35,7 +35,7 @@ endif
 
 # Use o-iterator.mk to generate a rule for each flavor of library.
 define o-iterator-doit
-$(common-objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
+$(objpfx)$(patsubst %,$(libtype$o),$(lib:lib%=%)): \
   $($(lib)-routines:%=$(objpfx)%$o); $$(build-extra-lib)
 endef
 object-suffixes-left = $(object-suffixes-$(lib))
