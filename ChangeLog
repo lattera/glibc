@@ -4,6 +4,11 @@
 
 	* configure.in: Remove warning message.
 
+	* nscd/Makefile (distribute): Add nscd-types.h.
+	* elf/Makefile (distribute): Add gccframe.h.
+	* sysdeps/sparc/sparc32/Dist: Add ieee754.h.
+	* sysdeps/ia64/Dist: Add ieee754.h.
+
 2000-10-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/elf.h: Add a few section-related symbols.

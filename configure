@@ -3404,9 +3404,6 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 
 
 
-echo '*** Do NOT install this release on any production system!'
-echo '*** We are in early testing stages.'
-
 trap '' 1 2 15
 cat > confcache <<\EOF
 # This file is a shell script that caches the results of configure
