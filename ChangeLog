@@ -1,3 +1,7 @@
+1999-03-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup): Comment fix.
+
 1999-03-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcsmbsload.c (add_slashes): Rename to norm_add_slashes
