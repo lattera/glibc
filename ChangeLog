@@ -1,3 +1,8 @@
+Tue Sep 17 10:51:58 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* malloc/memalign.c (memalign): Only acquire __libc_malloc_lock
+	for actual modifications to global state.  
+
 Fri Sep 13 01:21:36 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/Makefile (includes): Add -I$(common-objpfx)mach/.
