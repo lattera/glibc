@@ -73,6 +73,8 @@ CPPFLAGS += -Dgethostbyname=res_gethostbyname \
 	    -Dgetnetbyname=res_getnetbyname \
 	    -Dgetnetbyaddr=res_getnetbyaddr
 
+CFLAGS-res_hconf.c = -fexceptions
+
 # The BIND code elicits some harmless warnings.
 +cflags += -Wno-strict-prototypes -Wno-write-strings
 

@@ -56,9 +56,9 @@ include ../Rules
 
 ifeq ($(have-thread-library),yes)
 
-CFLAGS-gethstbyad_r.c = -DUSE_NSCD=1
-CFLAGS-gethstbynm_r.c = -DUSE_NSCD=1
-CFLAGS-gethstbynm2_r.c = -DUSE_NSCD=1
+CFLAGS-gethstbyad_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-gethstbynm_r.c = -DUSE_NSCD=1 -fexceptions
+CFLAGS-gethstbynm2_r.c = -DUSE_NSCD=1 -fexceptions
 
 endif
 

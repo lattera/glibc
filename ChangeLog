@@ -1,5 +1,10 @@
 2003-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/Makefile (CFLAGS-gethstbyad_r.c): Add -fexceptions.
+	(CFLAGS-gethstbynm_r.c): Likewise.
+	(CFLAGS-gethstbynm2_r.c): Likewise.
+	* resolv/Makefile (CFLAGS-res_hconf.c): Add -fexceptions.
+
 	* argp/Makefile (CFLAGS-argp-help.c): Add -fexceptions.
 	(CFLAGS-argp-fmtstream.c): Likewise.
 	* argp/argp.h: Remove a number of __THROW.
