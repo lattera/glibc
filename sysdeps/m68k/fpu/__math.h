@@ -53,10 +53,10 @@ __inline_mathop2(log, logn)
 __inline_mathop2(floor, intrz)
 __inline_mathop(sqrt)
 
-__inline_mathop2(__rint, intr)
+__inline_mathop2(__rint, int)
 
 #ifdef	__USE_MISC
-__inline_mathop2(rint, intr)
+__inline_mathop2(rint, int)
 __inline_mathop2(expm1, etoxm1)
 __inline_mathop2(log1p, lognp1)
 __inline_mathop(atanh)
