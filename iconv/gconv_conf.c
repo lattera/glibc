@@ -20,6 +20,7 @@
 
 #include <ctype.h>
 #include <errno.h>
+#include <limits.h>
 #include <search.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +55,8 @@ static struct gconv_module builtin_modules[] =
     from_constpfx_len: ConstLen,					      \
     from_regex: NULL,							      \
     to_string: To,							      \
-    cost: Cost,								      \
+    cost_hi: Cost,							      \
+    cost_lo: INT_MAX,							      \
     module_name: Name							      \
   },
 #define BUILTIN_ALIAS(From, To)
@@ -151,7 +153,7 @@ add_alias (char *rp)
 /* Add new module.  */
 static inline void
 add_module (char *rp, const char *directory, size_t dir_len, void **modules,
-	    size_t *nmodules)
+	    size_t *nmodules, int modcounter)
 {
   /* We expect now
      1. `from' name
@@ -164,7 +166,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
   size_t const_len;
   int from_is_regex;
   int need_ext;
-  int cost;
+  int cost_hi;
 
   while (isspace (*rp))
     ++rp;
@@ -198,7 +200,7 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     {
       /* There is no cost, use one by default.  */
       *wp++ = '\0';
-      cost = 1;
+      cost_hi = 1;
     }
   else
     {
@@ -206,10 +208,10 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
       char *endp;
 
       *wp++ = '\0';
-      cost = strtol (rp, &endp, 10);
+      cost_hi = strtol (rp, &endp, 10);
       if (rp == endp)
 	/* No useful information.  */
-	cost = 1;
+	cost_hi = 1;
     }
 
   if (module[0] == '\0')
@@ -264,7 +266,8 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
       new_module->to_string = memcpy ((char *) new_module->from_constpfx
 				      + (to - from), to, module - to);
 
-      new_module->cost = cost;
+      new_module->cost_hi = cost_hi;
+      new_module->cost_lo = modcounter;
 
       new_module->module_name = (char *) new_module->to_string + (module - to);
 
@@ -314,6 +317,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
   FILE *fp = fopen (filename, "r");
   char *line = NULL;
   size_t line_len = 0;
+  int modcounter = 0;
 
   /* Don't complain if a file is not present or readable, simply silently
      ignore it.  */
@@ -356,7 +360,7 @@ read_conf_file (const char *filename, const char *directory, size_t dir_len,
 	add_alias (rp);
       else if (rp - word == sizeof ("module") - 1
 	       && memcmp (word, "module", sizeof ("module") - 1) == 0)
-	add_module (rp, directory, dir_len, modules, nmodules);
+	add_module (rp, directory, dir_len, modules, nmodules, modcounter++);
       /* else */
 	/* Otherwise ignore the line.  */
     }

@@ -70,7 +70,8 @@ struct gconv_module
 
   const char *to_string;
 
-  int cost;
+  int cost_hi;
+  int cost_lo;
 
   const char *module_name;
 };

@@ -4250,7 +4250,6 @@ static int
 #if __STD_C
 top_check(void)
 #else
-static int
 top_check()
 #endif
 {

@@ -1,3 +1,26 @@
+1998-05-08 12:26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_int.h (struct gconv_module): Remove cost field and add
+	cost_hi and cost_lo.
+	* iconv/gconv_conf.c (builtin_modules): Initialize cost_hi from
+	Cost parameter and set cost_lo to INT_MAX.
+	(add_module): Take new parameter and use it to initialize cost_lo.
+	(read_conf_file): Count modules being loaded and use counter for
+	new parameter to add_module.
+	* iconv/gconv_db.c (find_derivation): When look for cost examine
+	cost_hi and cost_lo.
+
+1998-05-08 10:52  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Don't use unsigned char * unless really
+	necessary since this disturbs C++.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	Patch by Bernd Schmidt <crux@Pool.Informatik.RWTH-Aachen.DE>.
+
+1998-05-08 13:53  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/malloc.c (top_check): Fix last change.
+
 1998-05-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/bits/setjmp.h (_JMPBUF_UNWINDS): Define.

@@ -386,7 +386,9 @@ __strlen_g (__const char *__str)
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
 		     ? __strcpy_small (dest, src, strlen (src) + 1)	      \
-		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
+		     : (char *) memcpy ((char *) dest,			      \
+					(__const char *) src,		      \
+					strlen (src) + 1))		      \
 		  : __strcpy_g (dest, src)))
 
 #define __strcpy_small(dest, src, srclen) \
@@ -620,7 +622,8 @@ __stpcpy_g (char *__dest, __const char *__src)
 #define strncpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? ((strlen (src) + 1 >= ((size_t) (n))		      \
-		      ? (char *) memcpy (dest, src, n)			      \
+		      ? (char *) memcpy ((char *) dest,			      \
+					 (__const char *) src, n)	      \
 		      : __strncpy_cg (dest, src, strlen (src) + 1, n)))	      \
 		  : __strncpy_gg (dest, src, n)))
 #define __strncpy_cg(dest, src, srclen, n) \
@@ -793,7 +796,8 @@ __strcat_g (char *__dest, __const char *__src)
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
 		    ? (strlen (src) < ((size_t) (n))			      \
 		       ? strcat (__dest, src)				      \
-		       : (memcpy (strchr (__dest, '\0'), src, n), __dest))    \
+		       : (memcpy (strchr (__dest, '\0'),		      \
+				  (__const char *) src, n), __dest))	      \
 		    : __strncat_g (__dest, src, n); }))
 
 __STRING_INLINE char *
@@ -851,8 +855,9 @@ __strncat_g (char *__dest, __const char __src[], size_t __n)
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
 		  && (sizeof ((s1)[0]) != 1 || strlen (s1) >= 4)	      \
 		  && (sizeof ((s2)[0]) != 1 || strlen (s2) >= 4)	      \
-		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
-				     ? strlen (s1) : strlen (s2)) + 1)	      \
+		  ? memcmp ((__const char *) s1, (__const char *) s2,	      \
+			    (strlen (s1) < strlen (s2)			      \
+			     ? strlen (s1) : strlen (s2)) + 1)		      \
 		  : (__builtin_constant_p (s1) && sizeof ((s1)[0]) == 1	      \
 		     && sizeof ((s2)[0]) == 1 && strlen (s1) < 4	      \
 		     ? (__builtin_constant_p (s2) && sizeof ((s2)[0]) == 1    \

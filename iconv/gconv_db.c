@@ -261,7 +261,8 @@ find_derivation (const char *toset, const char *toset_expand,
 {
   __libc_lock_define_initialized (static, lock)
   struct derivation_step *first, *current, **lastp, *best = NULL;
-  int best_cost = 0;
+  int best_cost_hi = 0;
+  int best_cost_lo = 0;
   int result;
 
   result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
@@ -429,18 +430,22 @@ find_derivation (const char *toset, const char *toset_expand,
 		  /* Determine the costs.  If they are lower than the
 		     previous solution (or this is the first solution)
 		     remember this solution.  */
-		  int cost = __gconv_modules_db[cnt]->cost;
+		  int cost_hi = __gconv_modules_db[cnt]->cost_hi;
+		  int cost_lo = __gconv_modules_db[cnt]->cost_lo;
 		  struct derivation_step *runp = current;
 		  while (runp->code != NULL)
 		    {
-		      cost += runp->code->cost;
+		      cost_hi += runp->code->cost_hi;
+		      cost_lo += runp->code->cost_lo;
 		      runp = runp->last;
 		    }
-		  if (best == NULL || cost < best_cost)
+		  if (best == NULL || cost_hi < best_cost_hi
+		      || (cost_hi == best_cost_hi && cost_lo < best_cost_lo))
 		    {
 		      best = NEW_STEP (result_set, __gconv_modules_db[cnt],
 				       current);
-		      best_cost = cost;
+		      best_cost_hi = cost_hi;
+		      best_cost_lo = cost_lo;
 		    }
 		}
 	      else

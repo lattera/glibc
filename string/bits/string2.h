@@ -52,28 +52,28 @@
 
 # if __BYTE_ORDER == __LITTLE_ENDIAN
 #  define __STRING2_SMALL_GET16(src, idx) \
-     (((__const unsigned char *) (src))[idx + 1] << 8			      \
-      | ((__const unsigned char *) (src))[idx])
+     (((__const unsigned char *) (__const char *) (src))[idx + 1] << 8	      \
+      | ((__const unsigned char *) (__const char *) (src))[idx])
 #  define __STRING2_SMALL_GET32(src, idx) \
-     (((((__const unsigned char *) (src))[idx + 3] << 8			      \
-	| ((__const char *) (src))[idx + 2]) << 8			      \
-       | ((__const unsigned char *) (src))[idx + 1]) << 8		      \
-      | ((__const unsigned char *) (src))[idx])
+     (((((__const unsigned char *) (__const char *) (src))[idx + 3] << 8      \
+	| ((__const unsigned char *) (__const char *) (src))[idx + 2]) << 8   \
+       | ((__const unsigned char *) (__const char *) (src))[idx + 1]) << 8    \
+      | ((__const unsigned char *) (__const char *) (src))[idx])
 # else
 #  define __STRING2_SMALL_GET16(src, idx) \
-     (((__const unsigned char *) (src))[idx] << 8			      \
-      | ((__const unsigned char *) (src))[idx + 1])
+     (((__const unsigned char *) (__const char *) (src))[idx] << 8	      \
+      | ((__const unsigned char *) (__const char *) (src))[idx + 1])
 #  define __STRING2_SMALL_GET32(src, idx) \
-     (((((__const unsigned char *) (src))[idx] << 8			      \
-	| ((__const unsigned char *) (src))[idx + 1]) << 8		      \
-       | ((__const unsigned char *) (src))[idx + 2]) << 8		      \
-      | ((__const unsigned char *) (src))[idx + 3])
+     (((((__const unsigned char *) (__const char *) (src))[idx] << 8	      \
+	| ((__const unsigned char *) (__const char *) (src))[idx + 1]) << 8   \
+       | ((__const unsigned char *) (__const char *) (src))[idx + 2]) << 8    \
+      | ((__const unsigned char *) (__const char *) (src))[idx + 3])
 # endif
 #else
 /* These are a few types we need for the optimizations if we cannot
    use unaligned memory accesses.  */
 # define __STRING2_COPY_TYPE(N) \
-  typedef struct { char __arr[N]; }					      \
+  typedef struct { unsigned char __arr[N]; }				      \
     __STRING2_COPY_ARR##N __attribute__ ((packed))
 __STRING2_COPY_TYPE (2);
 __STRING2_COPY_TYPE (3);
@@ -111,7 +111,7 @@ __STRING2_COPY_TYPE (8);
 
 # if _STRING_ARCH_unaligned
 #  define __strcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
@@ -155,10 +155,10 @@ __STRING2_COPY_TYPE (8);
 			  __STRING2_SMALL_GET32 (src, 4);		      \
 			break;						      \
 		      }							      \
-		    (char *) __dest; }))
+		    __dest; }))
 # else
 #  define __strcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
@@ -167,68 +167,68 @@ __STRING2_COPY_TYPE (8);
 		      case 2:						      \
 			*((__STRING2_COPY_ARR2 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR2)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
+			   { { ((__const char *) (src))[0],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 3:						      \
 			*((__STRING2_COPY_ARR3 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR3)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 4:						      \
 			*((__STRING2_COPY_ARR4 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR4)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 5:						      \
 			*((__STRING2_COPY_ARR5 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR5)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 6:						      \
 			*((__STRING2_COPY_ARR6 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR6)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 7:						      \
 			*((__STRING2_COPY_ARR7 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR7)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
-			       ((__const unsigned char *) (src))[5],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 8:						      \
 			*((__STRING2_COPY_ARR8 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR8)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
-			       ((__const unsigned char *) (src))[5],	      \
-			       ((__const unsigned char *) (src))[6],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
+			       ((__const char *) (src))[6],		      \
 			       '\0' } });				      \
 			break;						      \
 		    }							      \
-		  (char *) __dest; }))
+		  __dest; }))
 # endif
 #endif
 
@@ -248,7 +248,7 @@ __STRING2_COPY_TYPE (8);
 
 #  if _STRING_ARCH_unaligned
 #   define __stpcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
@@ -299,10 +299,10 @@ __STRING2_COPY_TYPE (8);
 			__dest += 7;					      \
 			break;						      \
 		      }							      \
-		    (char *) __dest; }))
+		    __dest; }))
 #  else
 #   define __stpcpy_small(dest, src, srclen) \
-  (__extension__ ({ unsigned char *__dest = (unsigned char *) (dest);	      \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
 		    switch (srclen)					      \
 		      {							      \
 		      case 1:						      \
@@ -311,68 +311,68 @@ __STRING2_COPY_TYPE (8);
 		      case 2:						      \
 			*((__STRING2_COPY_ARR2 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR2)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
+			   { { ((__const char *) (src))[0],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 3:						      \
 			*((__STRING2_COPY_ARR3 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR3)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 4:						      \
 			*((__STRING2_COPY_ARR4 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR4)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 5:						      \
 			*((__STRING2_COPY_ARR5 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR5)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 6:						      \
 			*((__STRING2_COPY_ARR6 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR6)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 7:						      \
 			*((__STRING2_COPY_ARR7 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR7)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
-			       ((__const unsigned char *) (src))[5],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
 			       '\0' } });				      \
 			break;						      \
 		      case 8:						      \
 			*((__STRING2_COPY_ARR8 *) __dest) =		      \
 			  ((__STRING2_COPY_ARR8)			      \
-			   { { ((__const unsigned char *) (src))[0],	      \
-			       ((__const unsigned char *) (src))[1],	      \
-			       ((__const unsigned char *) (src))[2],	      \
-			       ((__const unsigned char *) (src))[3],	      \
-			       ((__const unsigned char *) (src))[4],	      \
-			       ((__const unsigned char *) (src))[5],	      \
-			       ((__const unsigned char *) (src))[6],	      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
+			       ((__const char *) (src))[6],		      \
 			       '\0' } });				      \
 			break;						      \
 		    }							      \
-		  (char *) (__dest + ((srclen) - 1)); }))
+		  __dest + ((srclen) - 1); }))
 #  endif
 # endif
 #endif
@@ -428,8 +428,9 @@ __STRING2_COPY_TYPE (8);
   (__extension__ (__builtin_constant_p (s1) && __builtin_constant_p (s2)      \
 		  && (!__string2_1bptr_p (s1) || strlen (s1) >= 4)	      \
 		  && (!__string2_1bptr_p (s2) || strlen (s2) >= 4)	      \
-		  ? memcmp (s1, s2, (strlen (s1) < strlen (s2)		      \
-				     ? strlen (s1) : strlen (s2)) + 1)	      \
+		  ? memcmp ((__const char *) s1, (__const char *) s2,	      \
+			    (strlen (s1) < strlen (s2)			      \
+			     ? strlen (s1) : strlen (s2)) + 1)		      \
 		  : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)      \
 		     && strlen (s1) < 4					      \
 		     ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)   \
@@ -444,40 +445,48 @@ __STRING2_COPY_TYPE (8);
 
 # define __strcmp_cc(s1, s2, l) \
   (__extension__ ({ register int __result =				      \
-		      (((__const unsigned char *) (s1))[0]		      \
-		       - ((__const unsigned char *) (s2))[0]);		      \
+		      (((__const unsigned char *) (__const char *) (s1))[0]   \
+		       - ((__const unsigned char *) (__const char *)(s2))[0]);\
 		    if (l > 0 && __result == 0)				      \
 		      {							      \
-			__result = (((__const unsigned char *) (s1))[1]	      \
-				    - ((__const unsigned char *) (s2))[1]);   \
+			__result = (((__const unsigned char *)		      \
+				     (__const char *) (s1))[1]		      \
+				    - ((__const unsigned char *)	      \
+				       (__const char *) (s2))[1]);	      \
 			if (l > 1 && __result == 0)			      \
 			  {						      \
 			    __result =					      \
-			      (((__const unsigned char *) (s1))[2]	      \
-			       - ((__const unsigned char *) (s2))[2]);	      \
+			      (((__const unsigned char *)		      \
+				(__const char *) (s1))[2]		      \
+			       - ((__const unsigned char *)		      \
+				  (__const char *) (s2))[2]);		      \
 			    if (l > 2 && __result == 0)			      \
 			      __result =				      \
-				(((__const unsigned char *) (s1))[3]	      \
-				 - ((__const unsigned char *) (s2))[3]);      \
+				(((__const unsigned char *)		      \
+				  (__const char *) (s1))[3]		      \
+				 - ((__const unsigned char *)		      \
+				    (__const char *) (s2))[3]);		      \
 			  }						      \
 		      }							      \
 		    __result; }))
 
 # define __strcmp_cg(s1, s2, l1) \
   (__extension__ ({ __const unsigned char *__s2 =			      \
-		      (__const unsigned char *) (s2);			      \
+		      (__const unsigned char *) (__const char *) (s2);	      \
 		    register int __result =				      \
-		      (((__const unsigned char *) (s1))[0] - __s2[0]);	      \
+		      (((__const unsigned char *) (__const char *) (s1))[0]   \
+		       - __s2[0]);					      \
 		    if (l1 > 0 && __result == 0)			      \
 		      {							      \
-			__result = (((__const unsigned char *) (s1))[1]	      \
-				    - __s2[1]);				      \
+			__result = (((__const unsigned char *)		      \
+				     (__const char *) (s1))[1] - __s2[1]);    \
 			if (l1 > 1 && __result == 0)			      \
 			  {						      \
-			    __result = (((__const unsigned char *) (s1))[2]   \
-					- __s2[2]);			      \
+			    __result = (((__const unsigned char *)	      \
+					 (__const char *) (s1))[2] - __s2[2]);\
 			    if (l1 > 2 && __result == 0)		      \
-			      __result = (((__const unsigned char *) (s1))[3] \
+			      __result = (((__const unsigned char *)	      \
+					  (__const char *)  (s1))[3]	      \
 					  - __s2[3]);			      \
 			  }						      \
 		      }							      \
@@ -485,21 +494,25 @@ __STRING2_COPY_TYPE (8);
 
 # define __strcmp_gc(s1, s2, l2) \
   (__extension__ ({ __const unsigned char *__s1 =			      \
-		      (__const unsigned char *) (s1);			      \
+		      (__const unsigned char *) (__const char *) (s1);	      \
 		    register int __result =				      \
-		      __s1[0] - ((__const unsigned char *) (s2))[0];	      \
+		      __s1[0] - ((__const unsigned char *)		      \
+				 (__const char *) (s2))[0];		      \
 		    if (l2 > 0 && __result == 0)			      \
 		      {							      \
 			__result = (__s1[1]				      \
-				    - ((__const unsigned char *) (s2))[1]);   \
+				    - ((__const unsigned char *)	      \
+				       (__const char *) (s2))[1]);	      \
 			if (l2 > 1 && __result == 0)			      \
 			  {						      \
 			    __result =					      \
-			      (__s1[2] - ((__const unsigned char *) (s2))[2]);\
+			      (__s1[2] - ((__const unsigned char *)	      \
+					  (__const char *) (s2))[2]);	      \
 			    if (l2 > 2 && __result == 0)		      \
 			      __result =				      \
 				(__s1[3]				      \
-				 - ((__const unsigned char *)(s2))[3]);	      \
+				 - ((__const unsigned char *)		      \
+				    (__const char *) (s2))[3]);		      \
 			  }						      \
 		      }							      \
 		    __result; }))
@@ -522,14 +535,14 @@ __STRING2_COPY_TYPE (8);
 #ifndef _HAVE_STRING_ARCH_strcspn
 # define strcspn(s, reject) \
   (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
-		  ? (((__const unsigned char *) (reject))[0] == '\0'	      \
+		  ? (((__const char *) (reject))[0] == '\0'		      \
 		     ? strlen (s)					      \
-		     : (((__const unsigned char *) (reject))[1] == '\0'	      \
+		     : (((__const char *) (reject))[1] == '\0'		      \
 			? __strcspn_c1 (s, ((__const char *) (reject))[0])    \
-			: (((__const unsigned char *) (reject))[2] == '\0'    \
+			: (((__const char *) (reject))[2] == '\0'	      \
 			   ? __strcspn_c2 (s, ((__const char *) (reject))[0], \
 					   ((__const char *) (reject))[1])    \
-			   : (((__const unsigned char *) (reject))[3] == '\0' \
+			   : (((__const char *) (reject))[3] == '\0'	      \
 			      ? __strcspn_c3 (s,			      \
 					      ((__const char *) (reject))[0], \
 					      ((__const char *) (reject))[1], \
@@ -579,14 +592,14 @@ __strcspn_c3 (__const char *__s, char __reject1, char __reject2,
 #ifndef _HAVE_STRING_ARCH_strspn
 # define strspn(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && __string2_1bptr_p (accept) \
-		  ? (((__const unsigned char *) (accept))[0] == '\0'	      \
+		  ? (((__const char *) (accept))[0] == '\0'		      \
 		     ? 0						      \
-		     : (((__const unsigned char *) (accept))[1] == '\0'	      \
+		     : (((__const char *) (accept))[1] == '\0'		      \
 			? __strspn_c1 (s, ((__const char *) (accept))[0])     \
-			: (((__const unsigned char *) (accept))[2] == '\0'    \
+			: (((__const char *) (accept))[2] == '\0'	      \
 			   ? __strspn_c2 (s, ((__const char *) (accept))[0],  \
 					  ((__const char *) (accept))[1])     \
-			   : (((__const unsigned char *) (accept))[3] == '\0' \
+			   : (((__const char *) (accept))[3] == '\0'	      \
 			      ? __strspn_c3 (s,				      \
 					     ((__const char *) (accept))[0],  \
 					     ((__const char *) (accept))[1],  \
@@ -636,14 +649,14 @@ __strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
 #ifndef _HAVE_STRING_ARCH_strpbrk
 # define strpbrk(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && __string2_1bptr_p (accept) \
-		  ? (((__const unsigned char  *) (accept))[0] == '\0'	      \
+		  ? (((__const char  *) (accept))[0] == '\0'		      \
 		     ? NULL						      \
-		     : (((__const unsigned char *) (accept))[1] == '\0'	      \
-			? strchr (s, ((__const unsigned char *) (accept))[0]) \
-			: (((__const unsigned char *) (accept))[2] == '\0'    \
+		     : (((__const char *) (accept))[1] == '\0'		      \
+			? strchr (s, ((__const char *) (accept))[0])	      \
+			: (((__const char *) (accept))[2] == '\0'	      \
 			   ? __strpbrk_c2 (s, ((__const char *) (accept))[0], \
 					   ((__const char *) (accept))[1])    \
-			   : (((__const unsigned char *) (accept))[3] == '\0' \
+			   : (((__const char *) (accept))[3] == '\0'	      \
 			      ? __strpbrk_c3 (s,			      \
 					      ((__const char *) (accept))[0], \
 					      ((__const char *) (accept))[1], \
@@ -681,11 +694,11 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
 #ifndef _HAVE_STRING_ARCH_strstr
 # define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
-		  ? (((__const unsigned char *) (needle))[0] == '\0'	      \
+		  ? (((__const char *) (needle))[0] == '\0'		      \
 		     ? (char *) (haystack)				      \
-		     : (((__const unsigned char *) (needle))[1] == '\0'	      \
+		     : (((__const char *) (needle))[1] == '\0'		      \
 			? strchr (haystack,				      \
-				  ((__const unsigned char *) (needle))[0])    \
+				  ((__const char *) (needle))[0]) 	      \
 			: strstr (haystack, needle)))			      \
 		  : strstr (haystack, needle)))
 #endif
@@ -707,8 +720,8 @@ strnlen (__const char *__string, size_t __maxlen)
 #ifndef _HAVE_STRING_ARCH_strtok_r
 # define __strtok_r(s, sep, nextp) \
   (__extension__ (__builtin_constant_p (sep) && __string2_1bptr_p (sep)	      \
-		  ? (((__const unsigned char *) (sep))[0] != '\0'	      \
-		     && ((__const unsigned char *) (sep))[1] == '\0'	      \
+		  ? (((__const char *) (sep))[0] != '\0'		      \
+		     && ((__const char *) (sep))[1] == '\0'		      \
 		     ? __strtok_r_1c (s, ((__const char *) (sep))[0], nextp)  \
 		     : __strtok_r (s, sep, nextp))			      \
 		  : __strtok_r (s, sep, nextp)))
@@ -749,14 +762,14 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
 
 # define __strsep(s, reject) \
   (__extension__ (__builtin_constant_p (reject) && __string2_1bptr_p (reject) \
-		  && ((__const unsigned char *) (reject))[0] != '\0'	      \
-		  ? (((__const unsigned char *) (reject))[1] == '\0'	      \
+		  && ((__const char *) (reject))[0] != '\0'		      \
+		  ? (((__const char *) (reject))[1] == '\0'		      \
 		     ? __strsep_1c (s,					      \
 				    ((__const char *) (reject))[0])	      \
-		     : (((__const unsigned char *) (reject))[2] == '\0'	      \
+		     : (((__const char *) (reject))[2] == '\0'		      \
 			? __strsep_2c (s, ((__const char *) (reject))[0],     \
 				       ((__const char *) (reject))[1])	      \
-			: (((__const unsigned char *) (reject))[3] == '\0'    \
+			: (((__const char *) (reject))[3] == '\0'	      \
 			   ? __strsep_3c (s, ((__const char *) (reject))[0],  \
 					  ((__const char *) (reject))[1],     \
 					  ((__const char *) (reject))[2])     \
@@ -858,7 +871,7 @@ __strsep_g (char **__s, __const char *__reject)
 
 # define __strdup(s) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
-		  ? (((__const unsigned char *) (s))[0] == '\0'		      \
+		  ? (((__const char *) (s))[0] == '\0'			      \
 		     ? (char *) calloc (1, 1)				      \
 		     : ({ size_t __len = strlen (s) + 1;		      \
 			  char *__retval = (char *) malloc (__len);	      \
@@ -881,7 +894,7 @@ __strsep_g (char **__s, __const char *__reject)
 
 # define __strndup(s, n) \
   (__extension__ (__builtin_constant_p (s) && __string2_1bptr_p (s)	      \
-		  ? (((__const unsigned char *) (s))[0] == '\0'		      \
+		  ? (((__const char *) (s))[0] == '\0'			      \
 		     ? (char *) calloc (1, 1)				      \
 		     : ({ size_t __len = strlen (s) + 1;		      \
 			  size_t __n = (n);				      \
