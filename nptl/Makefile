@@ -131,6 +131,7 @@ CFLAGS-pthread_join.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_timedjoin.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-pthread_cond_timedwait.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-pthread_cancel.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-cancellation.c = -fasynchronous-unwind-tables
 CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
 
