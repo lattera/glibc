@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000, 2003 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -54,6 +54,9 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
   fp = fopen (fname, "r");
   if (fp == NULL)
     return -1;
+
+  /* The stream is not used by more than one thread.  */
+  (void) __fsetlocking (fp, FSETLOCKING_BYCALLER);
 
   line = NULL;
   len = 0;
@@ -166,10 +169,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
 	    dbg_log ("server %s is not supported\n", arg1);
 	}
       else if (strcmp (entry, "logfile") == 0)
-	{
-	  if (!set_logfile (arg1))
-	    dbg_log (_("Could not create log file \"%s\""), arg1);
-	}
+	set_logfile (arg1);
       else if (strcmp (entry, "debug-level") == 0)
 	{
 	  int level = atoi (arg1);
@@ -204,7 +204,7 @@ nscd_parse_file (const char *fname, struct database dbs[lastdb])
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);
     }
-  while (!feof (fp));
+  while (!feof_unlocked (fp));
 
   /* Free the buffer.  */
   free (line);

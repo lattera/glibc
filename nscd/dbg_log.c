@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
 
@@ -19,6 +19,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
+#include <string.h>
 #include <syslog.h>
 #include <unistd.h>
 #include "dbg_log.h"
@@ -28,14 +29,25 @@
    if in debug mode and no debug file, we write the messages to stderr,
    else to syslog.  */
 
+static char *logfilename;
 FILE *dbgout;
 int debug_level;
 
-int
+void
 set_logfile (const char *logfile)
 {
-  dbgout = fopen (logfile, "a");
-  return dbgout == NULL ? 0 : 1;
+  logfilename = strdup (logfile);
+}
+
+int
+init_logfile (void)
+{
+  if (logfilename)
+    {
+      dbgout = fopen (logfilename, "a");
+      return dbgout == NULL ? 0 : 1;
+    }
+  return 1;
 }
 
 void

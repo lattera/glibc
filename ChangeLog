@@ -1,7 +1,20 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_conf.c (nscd_parse_file): Little optimization.
+
+2004-02-14  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/dbg_log.c (set_logfile): Only save name of logfile,
+	don't open it.
+	(init_logfile): New function, open logfile if requested.
+	* nscd/dbg_log.h: Adjust protoype for set_logfile, add init_logfile.
+	* nscd/nscd.c (main): Call init_logfile after forking in background.
+	* nscd/nscd_conf.c (nscd_parse_file): Adjust for new set_logfile.
+
+2004-02-16  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/rtld.c (dl_main): Don't fail execution if file named in
-	ld.so.preload is not present.
+	ld.so.preload is not present [BZ #18].
 
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Undo unintended
 	changes in last patch.

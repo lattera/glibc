@@ -223,6 +223,9 @@ main (int argc, char **argv)
       if (write_pid (_PATH_NSCDPID) < 0)
         dbg_log ("%s: %s", _PATH_NSCDPID, strerror (errno));
 
+      if (!init_logfile ())
+	dbg_log (_("Could not create log file"));
+
       /* Ignore job control signals.  */
       signal (SIGTTOU, SIG_IGN);
       signal (SIGTTIN, SIG_IGN);
