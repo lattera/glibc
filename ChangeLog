@@ -1,3 +1,8 @@
+2001-08-04  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/getrusage.c: Use TASK_EVENTS_INFO if implemented
+	by the microkernel (which it's not).
+
 2001-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/fileops.c (_IO_new_file_underflow): Don't call
