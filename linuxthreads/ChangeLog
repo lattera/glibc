@@ -1,3 +1,10 @@
+2001-01-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread.c (pthread_onexit_process): Clear
+	__pthread_manager_thread_bos after freeing it.
+	* Makefile (tests): Add ex16.
+	* Examples/ex16.c: New file.
+
 2001-01-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (CFLAGS-pthread.c): Pass -DHAVE_Z_NODELETE if ld supports

@@ -55,11 +55,13 @@
 # define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
 # define MAP_DENYWRITE	0x0800		/* ETXTBSY */
 # define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
+# define MAP_LOCKED	0x0080		/* Lock the mapping.  */
+# define MAP_NORESERVE	0x0040		/* Don't check for reservations.  */
 #endif
 
 /* Flags to `msync'.  */
 #define MS_ASYNC	1		/* Sync memory asynchronously.  */
-#define MS_SYNC		0		/* Synchronous memory sync.  */
+#define MS_SYNC		4		/* Synchronous memory sync.  */
 #define MS_INVALIDATE	2		/* Invalidate the caches.  */
 
 /* Flags for `mlockall'.  */

@@ -1,3 +1,15 @@
+2001-01-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/ether_ntoh.c (lookup_function): Change arguments to match
+	_nss_*_getntohost_r prototype.
+	(ether_ntohost): Pass errno pointer to NSS function.
+
+2001-01-12  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (MS_SYNC): Fix value.
+	(MAP_LOCKED): New definition.
+	(MAP_NORESERVE): New definition.
+
 2001-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert.h: Use static_cast instead of C-style cast for C++.

@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <netinet/ether.h>
 #include <netinet/if_ether.h>
 #include <string.h>
@@ -26,7 +27,7 @@
 
 /* Type of the lookup function we need here.  */
 typedef int (*lookup_function) (const struct ether_addr *, struct etherent *,
-				char *, int);
+				char *, size_t, int *);
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_ethers_lookup (service_user **nip, const char *name,
@@ -65,7 +66,7 @@ ether_ntohost (char *hostname, const struct ether_addr *addr)
     {
       char buffer[1024];
 
-      status = (*fct) (addr, &etherent, buffer, sizeof buffer);
+      status = (*fct) (addr, &etherent, buffer, sizeof buffer, &errno);
 
       no_more = __nss_next (&nip, "getntohost_r", (void **) &fct, status, 0);
     }

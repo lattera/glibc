@@ -753,6 +753,7 @@ static void pthread_onexit_process(int retcode, void *arg)
       {
 	waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
 	free (__pthread_manager_thread_bos);
+	__pthread_manager_thread_bos = __pthread_manager_thread_tos = NULL;
       }
   }
 }
