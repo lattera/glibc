@@ -479,13 +479,13 @@ extern int inet6_option_find (__const struct cmsghdr *__cmsg,
 /* Multicast source filter support.  */
 
 /* Get IPv4 source filter.  */
-extern int getipv4sourcefilter (int __s, struct in_addr __interface,
+extern int getipv4sourcefilter (int __s, struct in_addr __interface_addr,
 				struct in_addr __group, uint32_t *__fmode,
 				uint32_t *__numsrc, struct in_addr *__slist)
      __THROW;
 
 /* Set IPv4 source filter.  */
-extern int setipv4sourcefilter (int __s, struct in_addr __interface,
+extern int setipv4sourcefilter (int __s, struct in_addr __interface_addr,
 				struct in_addr __group, uint32_t __fmode,
 				uint32_t __numsrc,
 				__const struct in_addr *__slist)
@@ -493,14 +493,14 @@ extern int setipv4sourcefilter (int __s, struct in_addr __interface,
 
 
 /* Get source filter.  */
-extern int getsourcefilter (int __s, uint32_t __interface,
+extern int getsourcefilter (int __s, uint32_t __interface_addr,
 			    __const struct sockaddr *__group,
 			    socklen_t __grouplen, uint32_t *__fmode,
 			    uint32_t *__numsrc,
 			    struct sockaddr_storage *__slist) __THROW;
 
 /* Set source filter.  */
-extern int setsourcefilter (int __s, uint32_t __interface,
+extern int setsourcefilter (int __s, uint32_t __interface_addr,
 			    __const struct sockaddr *__group,
 			    socklen_t __grouplen, uint32_t __fmode,
 			    uint32_t __numsrc,
