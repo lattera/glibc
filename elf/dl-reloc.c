@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -124,8 +124,9 @@ _dl_nothread_init_static_tls (struct link_map *map)
 # endif
 
   /* Fill in the DTV slot so that a later LD/GD access will find it.  */
-  THREAD_DTV ()[map->l_tls_modid].pointer.val = dest;
-  THREAD_DTV ()[map->l_tls_modid].pointer.is_static = true;
+  dtv_t *dtv = THREAD_DTV ();
+  dtv[map->l_tls_modid].pointer.val = dest;
+  dtv[map->l_tls_modid].pointer.is_static = true;
 
   /* Initialize the memory.  */
   memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),

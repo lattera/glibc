@@ -1,3 +1,9 @@
+2005-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c (_dl_nothread_init_static_tls): Avoid using
+	THREAD_DTV multiple times, this minimally reduces code size on
+	some archs.
+
 2005-02-12  Simon Josefsson  <jas@extundo.com >
 
 	* iconvme.h: New file, extracted from toutf8.c but improved.
