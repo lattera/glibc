@@ -53,6 +53,10 @@ case "$machine" in
   hppa*)
     arch_minimum_kernel=2.3.99
     ;;
+  m68k*)
+    arch_minimum_kernel=2.0.10
+    libc_cv_gcc_unwind_find_fde=yes
+    ;;
   mips*)
     arch_minimum_kernel=2.2.15
     libc_cv_gcc_unwind_find_fde=yes
