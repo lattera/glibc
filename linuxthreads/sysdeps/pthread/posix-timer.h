@@ -1,5 +1,5 @@
 /* Definitions for POSIX timer implementation on top of LinuxThreads.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -65,6 +65,7 @@ struct timer_node
   struct thread_node *thread;
   pid_t creator_pid;
   int refcount;
+  int overrun_count;
 };
 
 

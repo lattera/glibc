@@ -1,8 +1,18 @@
+2002-04-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/timer_getoverr.c: Return real overrun.
+	* sysdeps/pthread/posix-timer.h (struct timer_node): Add overrun_count.
+	* sysdeps/pthread/timer_routines.c (thread_func): Schedule next timeout
+	based on previous one and not on current time.  Count overruns.
+	Patch by Eric F. Sorton <eric@cctcorp.com>.
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add DELAYTIMER_MAX.
+
 2002-04-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/pt-machine.h: Define _PT_MACHINE_H
 	if it isn't defined yet.
-	(FLOATING_STACKS, EARCH_STACK_MAX_SIZE): Defined.
+	(FLOATING_STACKS, ARCH_STACK_MAX_SIZE): Defined.
 	(THREAD_GETMEM, THREAD_GETMEM_NC, THREAD_SETMEM, THREAD_SETMEM_NC):
 	Likewise.
 	* sysdeps/sh/tls.h: New file.

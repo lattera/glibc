@@ -1,5 +1,5 @@
 /* Helper code for POSIX timer implementation on LinuxThreads.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -413,8 +413,16 @@ thread_func (void *arg)
 	      if (__builtin_expect (timer->value.it_interval.tv_sec, 0) != 0
 		  || timer->value.it_interval.tv_nsec != 0)
 		{
-		  timespec_add (&timer->expirytime, &now,
+		  timer->overrun_count = 0;
+		  timespec_add (&timer->expirytime, &timer->expirytime,
 				&timer->value.it_interval);
+		  while (timespec_compare(&timer->expirytime, &now) < 0)
+		    {
+		      timespec_add (&timer->expirytime, &timer->expirytime,
+				    &timer->value.it_interval);
+		      if (timer->overrun_count < DELAYTIMER_MAX)
+			++timer->overrun_count;
+		    }
 		  __timer_thread_queue_timer (self, timer);
 		}
 

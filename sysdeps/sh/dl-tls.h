@@ -26,5 +26,4 @@ typedef struct
 } tls_index;
 
 
-extern void *__tls_get_addr (tls_index *ti)
-     __attribute__ ((__regparm__ (1)));
+extern void *__tls_get_addr (tls_index *ti);
