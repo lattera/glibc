@@ -31,6 +31,8 @@
 	available in source file as read.
 	(write_all_categories): Fix typo.
 
+	* locale/programs/locales.h: Removed.
+
 1999-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h (SHF_MASKOS): Added.
