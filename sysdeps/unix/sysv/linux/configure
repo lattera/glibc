@@ -49,13 +49,39 @@ configure option --with-headers." 1>&2; exit 1; }
 fi
 
 # If the user gave a minimal version number test whether the available
-# kernel headers are young enough.
+# kernel headers are young enough.  Additionally we have minimal
+# kernel versions for some architectures.
+if test -n "$minimum_kernel"; then
+  case "$machine" in
+    sh*)
+      arch_minimum_kernel=2.3.99
+      ;;
+    *)
+      ;;
+  esac
+
+  user_version=$((`echo $minimum_kernel.0.0.0 | sed 's/\(0-9*\)\.\(0-9*\)\.\(0-9*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
+  arch_version=$((`echo $arch_minimum_kernel.0.0.0 | sed 's/\(0-9*\)\.\(0-9*\)\.\(0-9*\).*/\1 \* 65536 + \2 \* 256 + \3/'`))
+  if test $user_version -lt $arch_minimum_kernel; then
+    echo "configure: warning: minimum kernel version reset to $arch_minimum_kernel" 1>&2
+    minimum_kernel=$arch_minimum_kernel
+  fi
+else
+  case "$machine" in
+    sh*)
+      minimum_kernel = 2.3.99
+      ;;
+    *)
+      ;;
+  esac
+fi
+
 if test -n "$minimum_kernel"; then
   echo $ac_n "checking for kernel header at least $minimum_kernel""... $ac_c" 1>&6
-echo "configure:56: checking for kernel header at least $minimum_kernel" >&5
+echo "configure:82: checking for kernel header at least $minimum_kernel" >&5
   decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
   cat > conftest.$ac_ext <<EOF
-#line 59 "configure"
+#line 85 "configure"
 #include "confdefs.h"
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
@@ -109,7 +135,7 @@ fi
 
 # Under Linux the LinuxThreads add-on should be available.
 case $add_ons in
-  # Both are available.  Good.
+  # It is available.  Good.
   *linuxthreads*)
     message=
     ;;
@@ -162,7 +188,7 @@ if test $host = $build; then
     ac_prefix=$ac_default_prefix
   fi
   echo $ac_n "checking for symlinks in ${ac_prefix}/include""... $ac_c" 1>&6
-echo "configure:166: checking for symlinks in ${ac_prefix}/include" >&5
+echo "configure:192: checking for symlinks in ${ac_prefix}/include" >&5
   ac_message=
   if test -L ${ac_prefix}/include/net; then
     ac_message="$ac_message
