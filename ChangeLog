@@ -1,3 +1,8 @@
+2002-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/fpu/s_finite.S: Define _internal aliases.
+	* sysdeps/unix/sysv/linux/ia64/fork.S: Likewise.
+
 2002-04-26  Isamu Hasegawa  <isamu@yamato.ibm.com>
 
 	* posix/regcomp.c (re_compile_fastmap_iter): Fix fastmap in case of

@@ -33,8 +33,11 @@ ENTRY (__finite)
 }	
 END (__finite)
 
+strong_alias (__finite, __finite_internal)
 strong_alias (__finite, __finitef)
+strong_alias (__finitef, __finitef_internal)
 strong_alias (__finite, __finitel)
+strong_alias (__finitel, __finitel_internal)
 
 weak_alias (__finite, finite)
 weak_alias (__finitef, finitef)
