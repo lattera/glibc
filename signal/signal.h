@@ -152,8 +152,7 @@ extern int __sigpause (int __sig_or_mask, int __is_sig);
 #ifdef __FAVOR_BSD
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
-extern int sigpause (int __mask) __THROW;
-# define sigpause(mask) __sigpause ((mask), 0)
+extern int sigpause (int __mask) __THROW __attribute_deprecated__;
 #else
 # ifdef __USE_XOPEN
 #  ifdef __GNUC__
@@ -176,13 +175,13 @@ extern int sigpause (int __sig) __asm__ ("__xpg_sigpause");
 # define sigmask(sig)	__sigmask(sig)
 
 /* Block signals in MASK, returning the old mask.  */
-extern int sigblock (int __mask) __THROW;
+extern int sigblock (int __mask) __THROW __attribute_deprecated__;
 
 /* Set the mask of blocked signals to MASK, returning the old mask.  */
-extern int sigsetmask (int __mask) __THROW;
+extern int sigsetmask (int __mask) __THROW __attribute_deprecated__;
 
 /* Return currently selected signal mask.  */
-extern int siggetmask (void) __THROW;
+extern int siggetmask (void) __THROW __attribute_deprecated__;
 #endif /* Use BSD.  */
 
 
@@ -349,7 +348,8 @@ extern int siginterrupt (int __sig, int __interrupt) __THROW;
 /* Run signals handlers on the stack specified by SS (if not NULL).
    If OSS is not NULL, it is filled in with the old signal stack status.
    This interface is obsolete and on many platform not implemented.  */
-extern int sigstack (struct sigstack *__ss, struct sigstack *__oss) __THROW;
+extern int sigstack (struct sigstack *__ss, struct sigstack *__oss)
+     __THROW __attribute_deprecated__;
 
 /* Alternate signal handler stack interface.
    This interface should always be preferred over `sigstack'.  */
