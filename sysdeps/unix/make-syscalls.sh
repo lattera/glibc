@@ -67,10 +67,7 @@ EOF
   *@*)
     # The versioned symbols are only in the shared library.
     echo "\
-\$(foreach o,\$(filter-out .os,\$(object-suffixes)),\$(objpfx)$file\$o): \\
-\$(objpfx)$file%: \$(common-objpfx)empty%
-	rm -f \$@
-	ln \$< \$@
+shared-only-routines += $file
 \$(objpfx)${file}.os: \\"
     ;;
   *)

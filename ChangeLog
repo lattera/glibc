@@ -1,5 +1,12 @@
 1999-01-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
+	* sysdeps/unix/make-syscalls.sh: Set shared-only-routines for
+	versioned syscalls.
+
+	* Rules: Remove rules for empty.* again.
+
+1999-01-13  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
 	* sysdeps/unix/sysv/linux/m68k/vfork.S: New file.
 
 1999-01-13  Ulrich Drepper  <drepper@cygnus.com>
