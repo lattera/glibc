@@ -1,3 +1,9 @@
+2002-04-30  Bruno Haible  <bruno@clisp.org>
+
+	* intl/loadmsgcat.c (_nl_init_domain_conv): Don't append //TRANSLIT to
+	the encoding if it already has slashes.
+	Reported by Perry Rapp <prapp@erols.com>.
+
 2002-12-11  Roland McGrath  <roland@redhat.com>
 
 	* csu/Makefile ($(objpfx)elf-init.oS): Remove target, braino.

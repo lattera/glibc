@@ -829,20 +829,23 @@ _nl_init_domain_conv (domain_file, domain, domainbinding)
 	     we want to use transliteration.  */
 #   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
        || _LIBICONV_VERSION >= 0x0105
-	  len = strlen (outcharset);
-	  if (len < 10 || strcmp (outcharset + len - 9, "/TRANSLIT") != 0)
+	  if (strchr (outcharset, '/') == NULL)
 	    {
-	      char *tmp = (char *) alloca (len + 10 + 1);
+	      char *tmp;
+
+	      len = strlen (outcharset);
+	      tmp = (char *) alloca (len + 10 + 1);
 	      memcpy (tmp, outcharset, len);
 	      memcpy (tmp + len, "//TRANSLIT", 10 + 1);
 	      outcharset = tmp;
+
+	      domain->conv = iconv_open (outcharset, charset);
+
+	      freea (outcharset);
 	    }
+	  else
 #   endif
-	  domain->conv = iconv_open (outcharset, charset);
-#   if (__GLIBC__ == 2 && __GLIBC_MINOR__ >= 2) || __GLIBC__ > 2 \
-       || _LIBICONV_VERSION >= 0x0105
-	  freea (outcharset);
-#   endif
+	    domain->conv = iconv_open (outcharset, charset);
 #  endif
 # endif
 
