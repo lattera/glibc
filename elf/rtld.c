@@ -520,7 +520,8 @@ static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->main_map = INTUSE(_dl_map_object) (NULL, args->str, 0, lt_library, 0, 0);
+  args->main_map = INTUSE(_dl_map_object) (NULL, args->str, 0, lt_library, 0,
+					   __RTLD_OPENEXEC);
 }
 
 static void
