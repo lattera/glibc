@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,98,99,2000,2001,2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>.
    Based on the single byte version by Per Bothner <bothner@cygnus.com>.
@@ -854,7 +854,7 @@ _IO_wfile_xsputn (f, data, n)
 INTDEF(_IO_wfile_xsputn)
 
 
-struct _IO_jump_t _IO_wfile_jumps =
+const struct _IO_jump_t _IO_wfile_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
@@ -880,7 +880,7 @@ struct _IO_jump_t _IO_wfile_jumps =
 libc_hidden_data_def (_IO_wfile_jumps)
 
 
-struct _IO_jump_t _IO_wfile_jumps_mmap =
+const struct _IO_jump_t _IO_wfile_jumps_mmap =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),
@@ -904,7 +904,7 @@ struct _IO_jump_t _IO_wfile_jumps_mmap =
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
-struct _IO_jump_t _IO_wfile_jumps_maybe_mmap =
+const struct _IO_jump_t _IO_wfile_jumps_maybe_mmap =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_new_file_finish),

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -28,9 +28,6 @@
 
 /* We have to use the lock in getutent_r.c.  */
 __libc_lock_define (extern, __libc_utmp_lock attribute_hidden)
-
-/* The jump table is also in getutent_r.c.  */
-extern struct utfuncs *__libc_utmp_jump_table;
 
 
 int

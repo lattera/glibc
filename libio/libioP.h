@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -462,19 +462,19 @@ extern int _IO_default_sync __P ((_IO_FILE *));
 extern int _IO_default_showmanyc __P ((_IO_FILE *));
 extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
-extern struct _IO_jump_t _IO_file_jumps;
+extern const struct _IO_jump_t _IO_file_jumps;
 libc_hidden_proto (_IO_file_jumps)
-extern struct _IO_jump_t _IO_file_jumps_mmap attribute_hidden;
-extern struct _IO_jump_t _IO_file_jumps_maybe_mmap attribute_hidden;
-extern struct _IO_jump_t _IO_wfile_jumps;
+extern const struct _IO_jump_t _IO_file_jumps_mmap attribute_hidden;
+extern const struct _IO_jump_t _IO_file_jumps_maybe_mmap attribute_hidden;
+extern const struct _IO_jump_t _IO_wfile_jumps;
 libc_hidden_proto (_IO_wfile_jumps)
-extern struct _IO_jump_t _IO_wfile_jumps_mmap attribute_hidden;
-extern struct _IO_jump_t _IO_wfile_jumps_maybe_mmap attribute_hidden;
-extern struct _IO_jump_t _IO_old_file_jumps attribute_hidden;
-extern struct _IO_jump_t _IO_streambuf_jumps;
-extern struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
-extern struct _IO_jump_t _IO_str_jumps attribute_hidden;
-extern struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_wfile_jumps_mmap attribute_hidden;
+extern const struct _IO_jump_t _IO_wfile_jumps_maybe_mmap attribute_hidden;
+extern const struct _IO_jump_t _IO_old_file_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_streambuf_jumps;
+extern const struct _IO_jump_t _IO_old_proc_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_str_jumps attribute_hidden;
+extern const struct _IO_jump_t _IO_wstr_jumps attribute_hidden;
 extern struct _IO_codecvt __libio_codecvt attribute_hidden;
 extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
@@ -572,7 +572,7 @@ extern void _IO_new_file_finish __P ((_IO_FILE *, int));
 extern _IO_FILE* _IO_new_file_fopen __P ((_IO_FILE *, const char *, const char *,
 					  int));
 extern void _IO_no_init __P ((_IO_FILE *, int, int, struct _IO_wide_data *,
-			      struct _IO_jump_t *));
+			      const struct _IO_jump_t *));
 extern void _IO_new_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_new_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
 extern _IO_FILE* _IO_file_setbuf_mmap __P ((_IO_FILE *, char *, _IO_ssize_t));

@@ -1,3 +1,26 @@
+2004-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/libio.h: Add const to function tables types.
+	* libio/libioP.h: Likewise.
+	* /login/utmp-private.h: Likewise.
+	* libio/fileops.c: Add const to jump table variable definition.
+	* libio/genops.c: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/memstream.c: Likewise.
+	* libio/obprintf.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/oldiopopen.c: Likewise.
+	* libio/strops.c: Likewise.
+	* libio/vsnprintf.c: Likewise.
+	* libio/vswprintf.c: Likewise.
+	* libio/wfileops.c: Likewise.
+	* libio/wstrops.c: Likewise.
+	* login/getutent_r.c: Likewise.
+	* login/getutid_r.c Likewise.
+	* login/getutline_r.c: Likewise.
+	* sysdeps/generic/utmp_file.c: Likewise.
+
 2004-01-09  Bruno Haible  <bruno@clisp.org>
 
 	* intl/gmo.h (MO_REVISION_NUMBER_WITH_SYSDEP_I): New definition.

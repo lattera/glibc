@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -305,7 +305,7 @@ _IO_str_finish (fp, dummy)
   INTUSE(_IO_default_finish) (fp, 0);
 }
 
-struct _IO_jump_t _IO_str_jumps =
+const struct _IO_jump_t _IO_str_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_str_finish),

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -1579,7 +1579,7 @@ versioned_symbol (libc, _IO_new_file_write, _IO_file_write, GLIBC_2_1);
 versioned_symbol (libc, _IO_new_file_xsputn, _IO_file_xsputn, GLIBC_2_1);
 #endif
 
-struct _IO_jump_t _IO_file_jumps =
+const struct _IO_jump_t _IO_file_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),
@@ -1604,7 +1604,7 @@ struct _IO_jump_t _IO_file_jumps =
 };
 libc_hidden_data_def (_IO_file_jumps)
 
-struct _IO_jump_t _IO_file_jumps_mmap =
+const struct _IO_jump_t _IO_file_jumps_mmap =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),
@@ -1628,7 +1628,7 @@ struct _IO_jump_t _IO_file_jumps_mmap =
   JUMP_INIT(imbue, _IO_default_imbue)
 };
 
-struct _IO_jump_t _IO_file_jumps_maybe_mmap =
+const struct _IO_jump_t _IO_file_jumps_maybe_mmap =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),

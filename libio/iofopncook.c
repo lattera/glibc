@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,99,2000,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,97,99,2000,2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -94,7 +94,7 @@ _IO_cookie_close (fp)
 }
 
 
-static struct _IO_jump_t _IO_cookie_jumps = {
+static const struct _IO_jump_t _IO_cookie_jumps = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),
   JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
@@ -213,7 +213,7 @@ _IO_old_cookie_seek (fp, offset, dir)
   return (ret == -1) ? _IO_pos_BAD : ret;
 }
 
-static struct _IO_jump_t _IO_old_cookie_jumps = {
+static const struct _IO_jump_t _IO_old_cookie_jumps = {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, INTUSE(_IO_file_finish)),
   JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),

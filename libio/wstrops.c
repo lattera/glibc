@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1997-1999,2001-2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997-1999,2001-2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,7 +71,7 @@ _IO_wstr_init_static (fp, ptr, size, pstart)
      wchar_t *pstart;
 {
   wchar_t *end;
-  
+
   if (size == 0)
     end = ptr + __wcslen (ptr);
   else if ((_IO_size_t) ptr + size * sizeof (wchar_t) > (_IO_size_t) ptr)
@@ -290,7 +290,7 @@ _IO_wstr_finish (fp, dummy)
   INTUSE(_IO_wdefault_finish) (fp, 0);
 }
 
-struct _IO_jump_t _IO_wstr_jumps =
+const struct _IO_jump_t _IO_wstr_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_wstr_finish),

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,97,98,99,2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -764,7 +764,7 @@ _IO_old_file_xsputn (f, data, n)
 }
 
 
-struct _IO_jump_t _IO_old_file_jumps =
+const struct _IO_jump_t _IO_old_file_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_old_file_finish),

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -114,7 +114,7 @@ static void endutent_file (void);
 static int updwtmp_file (const char *file, const struct utmp *utmp);
 
 /* Jump table for file functions.  */
-struct utfuncs __libc_utmp_file_functions =
+const struct utfuncs __libc_utmp_file_functions =
 {
   setutent_file,
   getutent_r_file,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1994,1997,1999-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -75,7 +75,7 @@ _IO_wstrn_overflow (fp, c)
 }
 
 
-static struct _IO_jump_t _IO_wstrn_jumps =
+static const struct _IO_jump_t _IO_wstrn_jumps =
 {
   JUMP_INIT_DUMMY,
   JUMP_INIT(finish, _IO_wstr_finish),

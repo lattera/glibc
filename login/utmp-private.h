@@ -1,5 +1,5 @@
 /* Internal definitions and declarations for UTMP functions.
-   Copyright (C) 1996, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>
    and Paul Janzen <pcj@primenet.com>, 1996.
@@ -38,11 +38,11 @@ struct utfuncs
 };
 
 /* The tables from the services.  */
-extern struct utfuncs __libc_utmp_file_functions attribute_hidden;
-extern struct utfuncs __libc_utmp_unknown_functions attribute_hidden;
+extern const struct utfuncs __libc_utmp_file_functions attribute_hidden;
+extern const struct utfuncs __libc_utmp_unknown_functions attribute_hidden;
 
 /* Currently selected backend.  */
-extern struct utfuncs *__libc_utmp_jump_table attribute_hidden;
+extern const struct utfuncs *__libc_utmp_jump_table attribute_hidden;
 
 /* Current file name.  */
 extern const char *__libc_utmp_file_name attribute_hidden;
