@@ -24,6 +24,9 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
+
 /* int clone(int (*fn)(void *arg), void *child_stack, int flags,
 	     void *arg, pid_t *ptid, void *tls, pid_t *ctid);
 
@@ -51,9 +54,12 @@ ENTRY(__clone)
 	beq	a1,$error		/* no NULL stack pointers */
 
 	/* Save the fn ptr and arg on the new stack.  */
-	subq	a1,16,a1
+	subq	a1,32,a1
 	stq	a0,0(a1)
 	stq	a3,8(a1)
+#ifdef RESET_PID
+	stq	a2,16(a1)
+#endif
 
 	/* The syscall is of the form clone(flags, usp, ptid, ctid, tls).
 	   Shift the flags, ptid, ctid, tls arguments into place; the
@@ -93,10 +99,19 @@ thread_start:
 	mov	0, fp
 	.prologue 0
 
+#ifdef RESET_PID
+	/* Check and see if we need to reset the PID.  */
+	ldq	t0,16(sp)
+	lda	t1,CLONE_THREAD
+	and	t0,t1,t2
+	beq	t2,2f
+1:
+#endif
+
 	/* Load up the arguments.  */
 	ldq	pv,0(sp)
 	ldq	a0,8(sp)
-	addq	sp,16,sp
+	addq	sp,32,sp
 
 	/* Call the user's function.  */
 	jsr	ra,(pv)
@@ -112,6 +127,22 @@ thread_start:
 
 	/* Die horribly.  */
 	halt
+
+#ifdef RESET_PID
+2:
+	rduniq
+	lda	t1, CLONE_VM
+	mov	v0, s0
+	lda	v0, -1
+	and	t0, t1, t2
+	bne	t2, 3f
+	lda	v0, __NR_getxpid
+	callsys
+3:
+	stl	v0, PID_OFFSET(s0)
+	stl	v0, TID_OFFSET(s0)
+	br	1b
+#endif
 
 	.end thread_start
 
