@@ -140,7 +140,10 @@ int sigaction(int sig, const struct sigaction * act,
   if (sig == __pthread_sig_restart ||
       sig == __pthread_sig_cancel ||
       (sig == __pthread_sig_debug && __pthread_sig_debug > 0))
-    return EINVAL;
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
   if (act)
     {
       newact = *act;
