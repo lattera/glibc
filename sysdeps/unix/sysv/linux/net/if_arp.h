@@ -1,5 +1,5 @@
 /* Definitions for Address Resolution Protocol.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -95,9 +95,11 @@ struct arphdr
 #define ARPHRD_X25	271		/* CCITT X.25.  */
 #define ARPHDR_HWX25	272		/* Boards with X.25 in firmware.  */
 #define ARPHRD_PPP	512
-#define ARPHRD_HDLC	513		/* (Cisco) HDLC.  */
+#define ARPHRD_CISCO	513		/* Cisco HDLC.  */
+#define ARPHRD_HDLC	ARPHRD_CISCO
 #define ARPHRD_LAPB	516		/* LAPB.  */
 #define ARPHRD_DDCMP	517		/* Digital's DDCMP.  */
+#define	ARPHRD_RAWHDLC	518		/* Raw HDLC.  */
 
 #define ARPHRD_TUNNEL	768		/* IPIP tunnel.  */
 #define ARPHRD_TUNNEL6	769		/* IPIP6 tunnel.  */
