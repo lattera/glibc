@@ -1,0 +1,180 @@
+/* Copyright (C) 1999 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
+		  Jakub Jelinek <jakub@redhat.com>, 1999.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* This code is a heavily simplified version of the readelf program
+   that's part of the current binutils development version.  For architectures
+   which need to handle both 32bit and 64bit ELF libraries,  this file is
+   included twice for each arch size.  */
+
+/* Returns 0 if everything is ok, != 0 in case of error.  */
+int
+process_elf_file (const char *file_name, const char *lib, int *flag, char **soname,
+		  void *file_contents)
+{
+  int i;
+  unsigned int j;
+  int loadaddr;
+  unsigned int dynamic_addr;
+  size_t dynamic_size;
+  char *program_interpreter;
+  
+  ElfW(Ehdr) *elf_header;
+  ElfW(Phdr) *elf_pheader, *segment;
+  ElfW(Dyn) *dynamic_segment, *dyn_entry;
+  char *dynamic_strings;  
+
+  elf_header = (ElfW(Ehdr) *) file_contents;
+
+  if (elf_header->e_ident [EI_CLASS] != ElfW (CLASS))
+    {
+      if (opt_verbose)
+	{
+	  if (ElfW (CLASS) == ELFCLASS32)
+	    error (0, 0, _("%s is a 32 bit ELF file.\n"), file_name);
+	  else if (ElfW (CLASS) == ELFCLASS64)
+	    error (0, 0, _("%s is a 64 bit ELF file.\n"), file_name);
+	  else
+	    error (0, 0, _("Unknown ELFCLASS in file %s.\n"), file_name);
+	}
+      return 1;
+    }
+
+  if (elf_header->e_type != ET_DYN)
+    {
+      error (0, 0, _("%s is not a shared object file (Type: %d).\n"), file_name,
+	     elf_header->e_type);
+      return 1;
+    }
+  
+  /* Get information from elf program header.  */
+  elf_pheader = (ElfW(Phdr) *) (elf_header->e_phoff + file_contents);
+
+  /* The library is an elf library, now search for soname and
+     libc5/libc6.  */
+  *flag = FLAG_ELF;
+  
+  loadaddr = -1;
+  dynamic_addr = 0;
+  dynamic_size = 0;
+  program_interpreter = NULL;
+  for (i = 0, segment = elf_pheader;
+       i < elf_header->e_phnum; i++, segment++)
+    {
+      switch (segment->p_type)
+	{
+	case PT_LOAD:
+	  if (loadaddr == -1)
+	    loadaddr = (segment->p_vaddr & 0xfffff000)
+	      - (segment->p_offset & 0xfffff000);
+	  break;
+
+	case PT_DYNAMIC:
+	  if (dynamic_addr)
+	    error (0, 0, _("more than one dynamic segment\n"));
+
+	  dynamic_addr = segment->p_offset;
+	  dynamic_size = segment->p_filesz;
+	  break;
+	case PT_INTERP:
+	  program_interpreter = (char *) (file_contents + segment->p_offset);
+
+	  /* Check if this is enough to classify the binary.  */
+	  for (j = 0; j < sizeof (interpreters) / sizeof (interpreters [0]);
+	       ++j)
+	    if (strcmp (program_interpreter, interpreters[j].soname) == 0)
+	      {
+		*flag = interpreters[j].flag;
+		break;
+	      }
+	  break;
+	default:
+	  break;
+	}
+      
+    }
+  if (loadaddr == -1)
+    {
+      /* Very strange. */
+      loadaddr = 0;
+    }
+
+  /* Now we can read the dynamic sections.  */
+  if (dynamic_size == 0)
+    return 1;
+  
+  dynamic_segment = (ElfW(Dyn) *) (file_contents + dynamic_addr);
+
+  /* Find the string table.  */
+  dynamic_strings = NULL;
+  for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
+       ++dyn_entry)
+    {
+      if (dyn_entry->d_tag == DT_STRTAB)
+	{
+	  dynamic_strings = (char *) (file_contents + dyn_entry->d_un.d_val - loadaddr);
+	  break;
+	}
+    }
+
+  if (dynamic_strings == NULL)
+    return 1;
+
+  /* Now read the DT_NEEDED and DT_SONAME entries.  */
+  for (dyn_entry = dynamic_segment; dyn_entry->d_tag != DT_NULL;
+       ++dyn_entry)
+    {
+      if (dyn_entry->d_tag == DT_NEEDED || dyn_entry->d_tag == DT_SONAME)
+	{
+	  char *name = dynamic_strings + dyn_entry->d_un.d_val;
+
+	  if (dyn_entry->d_tag == DT_NEEDED)
+	    {
+	      
+	      if (*flag == FLAG_ELF)
+		{
+		  /* Check if this is enough to classify the binary.  */
+		  for (j = 0;
+		       j < sizeof (known_libs) / sizeof (known_libs [0]);
+		       ++j)
+		    if (strcmp (name, known_libs [j].soname) == 0)
+		      {
+			*flag = known_libs [j].flag;
+			break;
+		      }
+		}
+	    }
+
+	  else if (dyn_entry->d_tag == DT_SONAME)
+	    *soname = xstrdup (name);
+	  
+	  /* Do we have everything we need?  */
+	  if (*soname && *flag != FLAG_ELF)
+	    return 0;
+	}
+    }
+
+  /* We reach this point only if the file doesn't contain a DT_SONAME
+     or if we can't classify the library.  If it doesn't have a
+     soname, return the name of the library.  */
+  if (*soname == NULL)
+    *soname = xstrdup (lib);
+
+  return 0;
+}

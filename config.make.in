@@ -15,9 +15,8 @@ sysconfdir = @libc_cv_sysconfdir@
 libexecdir = @libexecdir@
 rootsbindir = @libc_cv_rootsbindir@
 
-# If ldconfig exists.  This will go away as soon as `ldconfig' is available
-# in GNU libc.
-has-ldconfig = @has_ldconfig@
+# Should we use and build ldconfig?
+use-ldconfig = @use_ldconfig@
 
 # Maybe the `ldd' script must be rewritten.
 ldd-rewrite-script = @ldd_rewrite_script@

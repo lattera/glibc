@@ -1,0 +1,647 @@
+/* Copyright (C) 1999 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1999.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <argp.h>
+#include <dirent.h>
+#include <error.h>
+#include <errno.h>
+#include <libintl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/fcntl.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include "ldconfig.h"
+
+#ifndef LD_SO_CACHE
+# define LD_SO_CACHE "/etc/ld.so.cache"
+#endif
+
+#ifndef LD_SO_CONF
+# define LD_SO_CONF "/etc/ld.so.conf"
+#endif
+
+/* Get libc version number.  */
+#include <version.h>
+
+#define PACKAGE _libc_intl_domainname
+
+struct lib_entry
+  {
+    int flags;
+    char *lib;
+    char *path;
+  };
+
+static const struct
+{
+  const char *name;
+  int flag;
+} lib_types [] =
+{
+  {"libc4", FLAG_LIBC4},
+  {"libc5", FLAG_ELF_LIBC5},
+  {"libc6", FLAG_ELF_LIBC6},
+  {"glibc2", FLAG_ELF_LIBC6}
+};  
+
+
+/* List of directories to handle.  */
+struct dir_entry
+{
+  char *path;
+  int flag;
+  struct dir_entry *next;
+};
+
+/* The list is unsorted, contains no duplicates.  Entries are added at
+   the end.  */
+static struct dir_entry *dir_entries;
+
+/* Flags for different options.  */
+/* Print Cache.  */
+static int opt_print_cache = 0;
+
+/* Be verbose.  */
+int opt_verbose = 0;
+
+/* Build cache.  */
+static int opt_build_cache = 1;
+
+/* Generate links.  */
+static int opt_link = 1;
+
+/* Only process directories specified on the command line.  */
+static int opt_only_cline = 0;
+
+/* Path to root for chroot.  */
+static char *opt_chroot;
+
+/* Cache file to use.  */
+static const char *cache_file;
+
+/* Configuration file.  */
+static const char *config_file;
+
+/* Name and version of program.  */
+static void print_version (FILE *stream, struct argp_state *state);
+void (*argp_program_version_hook) (FILE *, struct argp_state *)
+     = print_version;
+
+/* Definitions of arguments for argp functions.  */
+static const struct argp_option options[] =
+{
+  { "print-cache", 'p', NULL, 0, N_("Print cache"), 0},
+  { "verbose", 'v', NULL, 0, N_("Generate verbose messages"), 0},
+  { NULL, 'N', NULL, 0, N_("Don't build cache"), 0},
+  { NULL, 'X', NULL, 0, N_("Don't generate links"), 0},
+  { NULL, 'r', "ROOT", 0, N_("Change to and use ROOT as root directory"), 0},
+  { NULL, 'C', "CACHE", 0, N_("Use CACHE as cache file"), 0},
+  { NULL, 'f', "CONF", 0, N_("Use CONF as configuration file"), 0},
+  { NULL, 'n', NULL, 0, N_("Only process directories specified on the command line.  Don't build cache."), 0},
+  { NULL, 0, NULL, 0, NULL, 0 }
+};
+
+/* Short description of program.  */
+static const char doc[] = N_("Configure Dynamic Linker Run Time Bindings.");
+
+/* Prototype for option handler.  */
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
+
+/* Data structure to communicate with argp functions.  */
+static struct argp argp =
+{
+  options, parse_opt, NULL, doc, NULL, NULL, NULL
+};
+
+
+
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  switch (key)
+    {
+    case 'C':
+      cache_file = arg;
+      break;
+    case 'f':
+      config_file = arg;
+      break;
+    case 'N':
+      opt_build_cache = 0;
+      break;
+    case 'n':
+      opt_build_cache = 0;
+      opt_only_cline = 1;
+      break;
+    case 'p':
+      opt_print_cache = 1;
+      break;
+    case 'r':
+      opt_chroot = arg;
+      break;
+    case 'v':
+      opt_verbose = 1;
+      break;
+    case 'X':
+      opt_link = 0;
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+
+  return 0;
+}
+
+/* Print the version information.  */
+static void
+print_version (FILE *stream, struct argp_state *state)
+{
+  fprintf (stream, "ldconfig (GNU %s) %s\n", PACKAGE, VERSION);
+  fprintf (stream, gettext ("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1999");
+  fprintf (stream, gettext ("Written by %s.\n"),
+	   "Andreas Jaeger");
+}
+
+/* Add one directory to the list of directories to process.  */
+static void
+add_dir (const char *line)
+{
+  char *equal_sign;
+  struct dir_entry *entry, *ptr, *prev;
+  unsigned int i;
+  
+  entry = xmalloc (sizeof (struct dir_entry));
+  entry->next = NULL;
+  
+  /* Search for an '=' sign.  */
+  entry->path = xstrdup (line);
+  equal_sign = strchr (entry->path, '=');
+  if (equal_sign)
+    {
+      *equal_sign = '\0';
+      ++equal_sign;
+      entry->flag = FLAG_ANY;
+      for (i = 0; i < sizeof (lib_types) / sizeof (lib_types [0]); ++i)
+	if (strcmp (equal_sign, lib_types[i].name) == 0)
+	  {
+	    entry->flag = lib_types[i].flag;
+	    break;
+	  }
+      if (entry->flag == FLAG_ANY)
+	error (0, 0, _("%s is not a known library type"), equal_sign);
+    }
+  else
+    {
+      entry->flag = FLAG_ANY;
+    }
+
+  /* Canonify path: for now only remove trailing slashes.  */
+  i = strlen (entry->path) - 1;
+  while (entry->path[i] == '/' && i > 0)
+    {
+      entry->path [i] = '\0';
+      --i;
+    }
+  
+  ptr = dir_entries;
+  prev = ptr;
+  while (ptr != NULL)
+    {
+      /* Check for duplicates.  */
+      if (strcmp (ptr->path, entry->path) == 0)
+	{
+	  if (opt_verbose)
+	    error (0, 0, _("Path `%s' given more than once"), entry->path);
+	  /* Use the newer information.  */
+	  ptr->flag = entry->flag;
+	  free (entry);
+	  break;
+	}
+      prev = ptr;
+      ptr = ptr->next;
+    }
+  /* Is this the first entry?  */
+  if (ptr == NULL && dir_entries == NULL)
+    dir_entries = entry;
+  else if (ptr == NULL)
+    prev->next = entry;
+}
+
+
+/* Create a symbolic link from soname to libname in directory path.  */
+static void
+create_links (const char *path, const char *libname, const char *soname)
+{
+  char full_libname [PATH_MAX], full_soname [PATH_MAX];
+  struct stat stat_lib, stat_so, lstat_so;
+  int do_link = 1;
+  int do_remove = 1;
+  /* XXX: The logics in this function should be simplified.  */
+  
+  /* Get complete path.  */
+  snprintf (full_libname, sizeof full_libname, "%s/%s", path, libname);
+  snprintf (full_soname, sizeof full_soname, "%s/%s", path, soname);
+
+  /* Does soname already exist and point to the right library?  */
+  if (stat (full_soname, &stat_so) == 0)
+    {
+      if (stat (full_libname, &stat_lib))
+	{
+	  error (0, 0, _("Can't stat %s\n"), full_libname);
+	  return;
+	}
+      if (stat_lib.st_dev == stat_so.st_dev
+	  && stat_lib.st_ino == stat_so.st_ino)
+	/* Link is already correct.  */
+	do_link = 0;
+      else if (lstat (full_soname, &lstat_so) == 0
+	       && !S_ISLNK (lstat_so.st_mode))
+	{
+	  error (0, 0, _("%s is not a symbolic link\n"), full_soname);
+	  do_link = 0;
+	  do_remove = 0;
+	}
+    }
+  else if (lstat (full_soname, &lstat_so) != 0
+	   || !S_ISLNK (lstat_so.st_mode))
+    /* Unless it is a stale symlink, there is no need to remove.  */
+    do_remove = 0;
+
+  if (opt_verbose)
+    printf ("\t%s -> %s", soname, libname);
+
+  if (do_link && opt_link)
+    {
+      /* Remove old link.  */
+      if (do_remove)
+	if (unlink (full_soname))
+	  {
+	    error (0, 0, _("Can't unlink %s"), full_soname);
+	    do_link = 0;
+	  }
+      /* Create symbolic link.  */
+      if (do_link && symlink (libname, full_soname))
+	{
+	  error (0, 0, _("Can't link %s to %s"), full_soname, libname);
+	  do_link = 0;
+	}
+      if (opt_verbose)
+	{
+	  if (do_link)
+	    fputs (_(" (changed)\n"), stdout);
+	  else
+	    fputs (_(" (SKIPPED)\n"), stdout);
+	}
+    }
+  else if (opt_verbose)
+    fputs ("\n", stdout);
+}
+
+/* Read a whole directory and search for libraries.
+   The purpose is two-fold:
+   - search for libraries which will be added to the cache
+   - create symbolic links to the soname for each library
+
+   This has to be done separatly for each directory.
+   
+   To keep track of which libraries to add to the cache and which
+   links to create, we save a list of all libraries.
+
+   The algorithm is basically:
+   for all libraries in the directory do
+     get soname of library
+     if soname is already in list
+       if new library is newer, replace entry
+       otherwise ignore this library
+     otherwise add library to list
+   
+   For example, if the two libraries libxy.so.1.1 and libxy.so.1.2
+   exist and both have the same soname, e.g. libxy.so, a symbolic link
+   is created from libxy.so.1.2 (the newer one) to libxy.so.
+   libxy.so.1.2 and libxy.so are added to the cache - but not
+   libxy.so.1.1.  */
+
+/* Information for one library.  */
+struct dlib_entry 
+{
+  char *name;
+  char *soname;
+  int flag;
+  int is_link;
+  struct dlib_entry *next;
+};
+
+
+static void
+search_dir (const struct dir_entry *entry)
+{
+  DIR *dir;
+  struct dirent *direntry;
+  char buf [PATH_MAX];
+  char *soname;
+  struct dlib_entry *dlibs;
+  struct dlib_entry *dlib_ptr;
+  int nchars;
+  struct stat stat_buf;
+  int is_link;
+  
+  dlibs = NULL;
+
+  if (opt_verbose)
+    printf ("%s:\n", entry->path);
+  
+  dir = opendir (entry->path);
+  if (dir == NULL)
+    {
+      if (opt_verbose)
+	error (0, errno, _("Can't open directory %s"), entry->path);
+      return;
+    }
+  
+
+  while ((direntry = readdir (dir)) != NULL)
+    {
+      int flag;
+#ifdef _DIRENT_HAVE_D_TYPE
+      /* We only look at links and regular files.  */
+      if (direntry->d_type != DT_UNKNOWN
+	  && direntry->d_type != DT_LNK
+	  && direntry->d_type != DT_REG)
+	continue;
+#endif /* _DIRENT_HAVE_D_TYPE  */
+
+      /* Does this file look like a shared library?  The dynamic
+	 linker is also considered as shared library.  */
+      if ((strncmp (direntry->d_name, "lib", 3) != 0
+	   && strncmp (direntry->d_name, "ld-", 3) != 0)
+	  || strstr (direntry->d_name, ".so") == NULL)
+	continue;
+      nchars = snprintf (buf, sizeof (buf), "%s/%s", entry->path,
+			 direntry->d_name);
+      /* Check for overflow.  */
+      if (nchars >= (int) sizeof (buf))
+	{
+	  error (0, 0, _("buffer for snprintf too small for %s/%s--file is ignored\n"),
+		 entry->path, direntry->d_name);
+	  continue;
+	}
+      if (lstat (buf, &stat_buf))
+	{
+	  error (0, errno, _("Can't lstat %s"), buf);
+	  continue;
+	}
+      else if (!S_ISREG (stat_buf.st_mode) && !S_ISLNK (stat_buf.st_mode))
+	continue;
+
+      is_link = S_ISLNK (stat_buf.st_mode);
+
+      if (process_file (buf, direntry->d_name, &flag, &soname, is_link))
+	continue;
+
+      /* Links will just point to itself.  */
+      if (is_link)
+	{
+	  free (soname);
+	  soname = xstrdup (direntry->d_name);
+	}
+      
+      if (flag == FLAG_ELF
+	  && (entry->flag == FLAG_ELF_LIBC5
+	      || entry->flag == FLAG_ELF_LIBC6))
+	flag = entry->flag;
+      /* Some sanity checks to print warnings.  */
+      if (opt_verbose)
+	{
+	  if (flag == FLAG_ELF_LIBC5 && entry->flag != FLAG_ELF_LIBC5
+	      && entry->flag != FLAG_ANY)
+	    error (0, 0, _("libc5 library %s in wrong directory"), buf);
+	  if (flag == FLAG_ELF_LIBC6 && entry->flag != FLAG_ELF_LIBC6
+	      && entry->flag != FLAG_ANY)
+	    error (0, 0, _("libc6 library %s in wrong directory"), buf);
+	  if (flag == FLAG_LIBC4 && entry->flag != FLAG_LIBC4
+	      && entry->flag != FLAG_ANY)
+	    error (0, 0, _("libc4 library %s in wrong directory"), buf);
+	}
+      
+      /* Add library to list.  */
+      for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
+	{
+	  /* Is soname already in list?  */
+	  if (strcmp (dlib_ptr->soname, soname) == 0)
+	    {
+	      /* Prefer a file to a link, otherwise check which one
+		 is newer.  */
+	      if ((!is_link && dlib_ptr->is_link)
+		  || (is_link == dlib_ptr->is_link
+		      && cache_libcmp (dlib_ptr->name, direntry->d_name) < 0))
+		{
+		  /* It's newer - add it.  */
+		  /* Flag should be the same - sanity check.  */
+		  if (dlib_ptr->flag != flag)
+		    {
+		      if (dlib_ptr->flag == FLAG_ELF
+			  && (flag == FLAG_ELF_LIBC5 || flag == FLAG_ELF_LIBC6))
+			dlib_ptr->flag = flag;
+		      else if ((dlib_ptr->flag == FLAG_ELF_LIBC5
+				|| dlib_ptr->flag == FLAG_ELF_LIBC6)
+			       && flag == FLAG_ELF)
+			dlib_ptr->flag = flag;
+		      else
+			error (0, 0, _("libraries %s and %s in directory %s have same soname but different type."),
+			       dlib_ptr->name, direntry->d_name, entry->path);
+		    }
+		  free (dlib_ptr->name);
+		  dlib_ptr->name = xstrdup (direntry->d_name);
+		  dlib_ptr->is_link = is_link;
+		}
+	      /* Don't add this library, abort loop.  */
+	      /* Also free soname, since it's dynamically allocated.  */
+	      free (soname);
+	      break;
+	    }
+	}
+      /* Add the library if it's not already in.  */
+      if (dlib_ptr == NULL)
+	{
+	  dlib_ptr = (struct dlib_entry *)xmalloc (sizeof (struct dlib_entry));
+	  dlib_ptr->name = xstrdup (direntry->d_name);
+	  dlib_ptr->flag = flag;
+	  dlib_ptr->soname = soname;
+	  dlib_ptr->is_link = is_link;
+	  /* Add at head of list.  */
+	  dlib_ptr->next = dlibs;
+	  dlibs = dlib_ptr;
+	}
+    }
+
+  closedir (dir);
+
+  /* Now dlibs contains a list of all libs - add those to the cache
+     and created all symbolic links.  */
+  for (dlib_ptr = dlibs; dlib_ptr != NULL; dlib_ptr = dlib_ptr->next)
+    {
+      /* Don't create links to links.  */
+      if (dlib_ptr->is_link == 0)
+	create_links (entry->path, dlib_ptr->name, dlib_ptr->soname);
+      if (opt_build_cache)
+	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag);
+    }
+
+  /* Free all resources.  */
+  while (dlibs) 
+    {
+      dlib_ptr = dlibs;
+      free (dlib_ptr->soname);
+      free (dlib_ptr->name);
+      dlibs = dlibs->next;
+      free (dlib_ptr);
+    }
+}
+
+/* Search through all libraries.  */
+static void
+search_dirs (void)
+{
+  struct dir_entry *entry;
+
+  for (entry = dir_entries; entry != NULL; entry = entry->next)
+    search_dir (entry);
+
+  /* Free all allocated memory.  */
+  while (dir_entries)
+    {
+      entry = dir_entries;
+      dir_entries = dir_entries->next;
+      free (entry->path);
+      free (entry);
+    }
+}
+
+
+/* Parse configuration file.  */
+static void
+parse_conf (const char *filename)
+{
+  FILE *file;
+  char *line = NULL;
+  size_t len = 0;
+  
+  file = fopen (filename, "r");
+
+  if (file == NULL)
+    {
+      error (0, errno, _("Can't open configuration file %s"), filename);
+      return;
+    }
+
+  do
+    {
+      ssize_t n = getline (&line, &len, file);
+      if (n < 0)
+	break;
+
+      if (line[n - 1] == '\n')
+	line[n - 1] = '\0';
+
+      /* Because the file format does not know any form of quoting we
+	 can search forward for the next '#' character and if found
+	 make it terminating the line.  */
+      *strchrnul (line, '#') = '\0';
+
+      /* If the line is blank it is ignored.  */
+      if (line[0] == '\0')
+	continue;
+
+      add_dir (line);
+    } while (!feof (file));
+
+  /* Free buffer and close file.  */
+  free (line);
+  fclose (file);
+}
+
+
+int
+main (int argc, char **argv)
+{
+  int remaining;
+  
+  /* Parse and process arguments.  */
+  argp_parse (&argp, argc, argv, 0, &remaining, NULL);
+
+  /* Remaining arguments are additional libraries.  */
+  if (remaining != argc)
+    {
+      int i;
+      for (i = remaining; i < argc; ++i)
+	add_dir (argv [i]);
+    }
+
+  if (cache_file == NULL)
+    cache_file = LD_SO_CACHE;
+
+  if (config_file == NULL)
+    config_file = LD_SO_CONF;
+  
+  /* Chroot first.  */
+  if (opt_chroot)
+    {
+      if (chroot (opt_chroot))
+	/* Report failure and exit program.  */
+	error (EXIT_FAILURE, errno, _("Can't chroot to %s"), opt_chroot);
+      /* chroot doesn't change the working directory, let's play safe.  */
+      if (chdir ("/"))
+	error (EXIT_FAILURE, errno, _("Can't chdir to /"));
+    }
+
+  if (opt_print_cache)
+    {
+      print_cache (cache_file);
+      exit (0);
+    }
+
+  if (opt_build_cache)
+    init_cache ();
+
+  if (!opt_only_cline)
+    {
+      /* Always add the standard search paths.  */
+      add_dir ("/lib");
+      add_dir ("/usr/lib");
+
+      parse_conf (config_file);
+    }
+  
+  search_dirs ();
+
+  if (opt_build_cache)
+    save_cache (cache_file);
+
+  return 0;
+}

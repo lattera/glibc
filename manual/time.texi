@@ -2237,7 +2237,7 @@ the requested time in the @var{requested_time} parameter is rounded up
 to the next integer multiple of the actual resolution of the system.
 
 If the function returns because the time has elapsed the return value is
-zero.  If the function return @math{-1} the global variable @var{errno}
+zero.  If the function returns @math{-1} the global variable @var{errno}
 is set to the following values:
 
 @table @code

@@ -1168,6 +1168,7 @@ libc_link_dests=
 libc_link_sources=
 
 # They also can set these variables.
+use_ldconfig=no
 ldd_rewrite_script=no
 
 # Iterate over all the sysdep directories we will use, running their
@@ -1282,7 +1283,7 @@ AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)
 
-AC_SUBST(has_ldconfig)
+AC_SUBST(use_ldconfig)
 AC_SUBST(ldd_rewrite_script)
 
 AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)

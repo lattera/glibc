@@ -20,6 +20,8 @@ Version 2.2
 * Functions feenableexcept and fedisableexcept to control the
   behaviour of individual exceptions have been added by Andreas Jaeger.
 
+* ldconfig program added by Andreas Jaeger and Jakub Jelinek.
+
 
 Version 2.1.2
 

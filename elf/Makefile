@@ -41,7 +41,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   dl-librecon.h interp.c sln.c dl-dst.h hp-timing.h \
 		   do-lookup.h sprof.c gen-trusted-dirs.awk \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
-		   testobj6.c testobj1_1.c failobj.c
+		   testobj6.c testobj1_1.c failobj.c \
+		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c
 
 include ../Makeconfig
 
@@ -64,10 +65,17 @@ install-bin	+= sprof
 others-static   = sln
 install-rootsbin = sln
 
-ifeq (yes,$(has-ldconfig))
+ifeq (yes,$(use-ldconfig))
 others-static	+= ldconfig
 others		+= ldconfig
 install-rootsbin += ldconfig
+
+ldconfig-modules := cache readlib xmalloc xstrdup
+extra-objs	+= $(ldconfig-modules:=.o)
+
+# To find xmalloc.c and xstrdup.c
+vpath %.c ../locale/programs
+
 endif
 
 ifeq (yes,$(build-shared))
@@ -190,6 +198,8 @@ $(objpfx)ldd: ldd.bash.in $(common-objpfx)soversions.mk \
 	mv -f $@.new $@
 
 $(objpfx)sprof: $(libdl)
+
+$(objpfx)ldconfig: $(ldconfig-modules:%=$(objpfx)%.o)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 generated += $(addsuffix .so,$(modules-names))

@@ -1,3 +1,30 @@
+1999-11-30  Andreas Jaeger  <aj@suse.de>
+
+	Add ldconfig:
+	* elf/Makefile (extra-objs): Added ldconfig-modules.
+	(ldconfig-modules): New.
+	Added vpath for xstrdup and xmalloc.
+	Check for use-ldconfig instead of has-ldconfig.
+	($(objpfx)ldconfig): New rule with dependencies.
+	(distribute): Add new files.
+
+	* sysdeps/unix/sysv/linux/sparc/readelflib.c: New file,
+	developed together with Jakub Jelinek <jakub@redhat.com>.
+	* sysdeps/generic/readelflib.c: Likewise.
+
+	* elf/cache.c: New file.
+	* elf/ldconfig.c: New file.
+	* elf/ldconfig.h: New file.
+	* elf/readlib.c: New file.
+
+	* Makefile (install): Remove flag -d in ldconfig call.
+
+	* configure.in: Rename has_ldconfig to use_ldconfig, set it to no
+	by default.
+
+	* config.make.in (has-ldconfig): Renamed to use-ldconfig, changed
+	comment.
+
 1999-12-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/bits/stropts.h: Update with LiS types and
