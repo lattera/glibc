@@ -285,7 +285,7 @@ __setstate_r (arg_state, buf)
     old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
 
   type = new_state[0] % MAX_TYPES;
-  if (type < TYPE_0 || type >= TYPE_4)
+  if (type < TYPE_0 || type > TYPE_4)
     goto fail;
 
   buf->rand_deg = degree = random_poly_info.degrees[type];

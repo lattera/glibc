@@ -117,6 +117,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       fpnum;
       int print_curr_symbol;
       int left_prec;
+      int left_pad;
       int right_prec;
       int group;
       char pad;
@@ -124,11 +125,15 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       int p_sign_posn;
       int n_sign_posn;
       int sign_posn;
+      int other_sign_posn;
       int left;
       int is_negative;
       int sep_by_space;
+      int other_sep_by_space;
       int cs_precedes;
-      char sign_char;
+      int other_cs_precedes;
+      const char *sign_string;
+      const char *other_sign_string;
       int done;
       const char *currency_symbol;
       int width;
@@ -346,35 +351,102 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       /* We now know the sign of the value and can determine the format.  */
       if (is_negative)
 	{
-	  sign_char = *_NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
+	  sign_string = _NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
 	  /* If the locale does not specify a character for the
 	     negative sign we use a '-'.  */
-	  if (sign_char == '\0')
-	    sign_char = '-';
+	  if (*sign_string == '\0')
+	    sign_string = (const char *) "-";
 	  cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
 	  sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
 	  sign_posn = n_sign_posn;
+
+	  other_sign_string = _NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
+	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
+	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
+	  other_sign_posn = p_sign_posn;
 	}
       else
 	{
-	  sign_char = *_NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
-	  /* If the locale does not specify a character for the
-	     positive sign we use a <SP>.  */
-	  if (sign_char == '\0')
-	    sign_char = ' ';
+	  sign_string = _NL_CURRENT (LC_MONETARY, POSITIVE_SIGN);
 	  cs_precedes = *_NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
 	  sep_by_space = *_NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
 	  sign_posn = p_sign_posn;
+
+	  other_sign_string = _NL_CURRENT (LC_MONETARY, NEGATIVE_SIGN);
+	  if (*other_sign_string == '\0')
+	    other_sign_string = (const char *) "-";
+	  other_cs_precedes = *_NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
+	  other_sep_by_space = *_NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
+	  other_sign_posn = n_sign_posn;
 	}
 
       /* Set default values for unspecified information.  */
       if (cs_precedes != 0)
 	cs_precedes = 1;
+      if (other_cs_precedes != 0)
+	other_cs_precedes = 1;
       if (sep_by_space == 127)
 	sep_by_space = 0;
-      if (left_prec == -1)
-	left_prec = 0;
+      if (other_sep_by_space == 127)
+	other_sep_by_space = 0;
 
+      /* Set the left precision and padding needed for alignment */
+      if (left_prec == -1)
+	{
+	  left_prec = 0;
+	  left_pad = 0;
+	}
+      else
+	{
+	  /* Set left_pad to number of spaces needed to align positive
+	     and negative formats */
+
+	  int sign_precedes = 0;
+	  int other_sign_precedes = 0;
+
+	  left_pad = 0;
+
+	  if (!cs_precedes && other_cs_precedes)
+	    {
+	      /* The other format has currency symbol preceding value,
+		 but this format doesn't, so pad by the relevant amount */
+	      left_pad += strlen (currency_symbol);
+	      if (other_sep_by_space != 0)
+		++left_pad;
+	    }
+
+	  /* Work out for each format whether a sign (or left parenthesis)
+	     precedes the value */
+	  if (sign_posn == 0 || sign_posn == 1)
+	    sign_precedes = 1;
+	  if (other_sign_posn == 0 || other_sign_posn == 1)
+	    other_sign_precedes = 1;
+	  if (cs_precedes && (sign_posn == 3 || sign_posn == 4))
+	    sign_precedes = 1;
+	  if (other_cs_precedes
+	      && (other_sign_posn == 3 || other_sign_posn == 4))
+	    other_sign_precedes = 1;
+
+	  if (!sign_precedes && other_sign_precedes)
+	    {
+	      /* The other format has a sign (or left parenthesis) preceding
+		 the value, but this format doesn't */
+	      if (other_sign_posn == 0)
+	        ++left_pad;
+	      else
+	        left_pad += strlen (other_sign_string);
+	    }
+	  else if (sign_precedes && other_sign_precedes)
+	    {
+	      /* Both formats have a sign (or left parenthesis) preceding
+		 the value, so compare their lengths */
+	      int len_diff =
+		((other_sign_posn == 0 ? 1 : (int) strlen (other_sign_string))
+		 - (sign_posn == 0 ? 1 : (int) strlen (sign_string)));
+	      if (len_diff > 0)
+	        left_pad += len_diff;
+	    }
+	}
 
       /* Perhaps we'll someday make these things configurable so
 	 better start using symbolic names now.  */
@@ -383,15 +455,18 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 
       startp = dest;		/* Remember start so we can compute length.  */
 
-      if (sign_posn == 0)
-	out_char (is_negative ? left_paren : ' ');
+      while (left_pad-- > 0)
+	out_char (' ');
+
+      if (sign_posn == 0 && is_negative)
+	out_char (left_paren);
 
       if (cs_precedes)
 	{
 	  if (sign_posn != 0 && sign_posn != 2 && sign_posn != 4
 	      && sign_posn != 5)
 	    {
-	      out_char (sign_char);
+	      out_string (sign_string);
 	      if (sep_by_space == 2)
 		out_char (' ');
 	    }
@@ -404,7 +479,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 		{
 		  if (sep_by_space == 2)
 		    out_char (' ');
-		  out_char (sign_char);
+		  out_string (sign_string);
 		}
 	      else
 		if (sep_by_space == 1)
@@ -414,7 +489,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       else
 	if (sign_posn != 0 && sign_posn != 2 && sign_posn != 3
 	    && sign_posn != 4 && sign_posn != 5)
-	  out_char (sign_char);
+	  out_string (sign_string);
 
       /* Print the number.  */
 #ifdef USE_IN_LIBIO
@@ -422,7 +497,7 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
       _IO_JUMPS ((_IO_FILE *) &f) = &_IO_str_jumps;
       _IO_str_init_static ((_IO_FILE *) &f, dest, (s + maxsize) - dest, dest);
 #else
-      memset((void *) &f, 0, sizeof(f));
+      memset ((void *) &f, 0, sizeof (f));
       f.__magic = _IOMAGIC;
       f.__mode.__write = 1;
       /* The buffer size is one less than MAXLEN
@@ -478,26 +553,34 @@ __strfmon_l (char *s, size_t maxsize, __locale_t loc, const char *format, ...)
 	    {
 	      if (sep_by_space == 1)
 		out_char (' ');
-	      out_char (sign_char);
+	      out_string (sign_string);
 	    }
 
 	  if (print_curr_symbol)
 	    {
-	      if (sign_posn == 3 && sep_by_space == 2)
+	      if ((sign_posn == 3 && sep_by_space == 2)
+		  || (sign_posn == 2 && sep_by_space == 1)
+		  || (sign_posn == 0 && sep_by_space == 1))
 		out_char (' ');
 	      out_string (currency_symbol);
+	      if (sign_posn == 4)
+		{
+		  if (sep_by_space == 2)
+		    out_char (' ');
+		  out_string (sign_string);
+		}
 	    }
 	}
-      else
-	if (sign_posn == 2)
-	  {
-	    if (sep_by_space == 2)
-	      out_char (' ');
-	    out_char (sign_char);
-	  }
 
-      if (sign_posn == 0)
-	out_char (is_negative ? right_paren : ' ');
+      if (sign_posn == 2)
+	{
+	  if (sep_by_space == 2)
+	    out_char (' ');
+	  out_string (sign_string);
+	}
+
+      if (sign_posn == 0 && is_negative)
+	out_char (right_paren);
 
       /* Now test whether the output width is filled.  */
       if (dest - startp < width)

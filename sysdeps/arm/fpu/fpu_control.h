@@ -1,5 +1,5 @@
 /* FPU control word definitions.  ARM version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,12 +23,12 @@
 /* We have a slight terminology confusion here.  On the ARM, the register
  * we're interested in is actually the FPU status word - the FPU control
  * word is something different (which is implementation-defined and only
- * accessible from supervisor mode.)  
+ * accessible from supervisor mode.)
  *
  * The FPSR looks like this:
  *
  *     31-24        23-16          15-8              7-0
- * | system ID | trap enable | system control | exception flags | 
+ * | system ID | trap enable | system control | exception flags |
  *
  * We ignore the system ID bits; for interest's sake they are:
  *
@@ -40,7 +40,7 @@
  * The trap enable and exception flags are both structured like this:
  *
  *     7 - 5     4     3     2     1     0
- * | reserved | INX | UFL | OFL | DVZ | IVO | 
+ * | reserved | INX | UFL | OFL | DVZ | IVO |
  *
  * where a `1' bit in the enable byte means that the trap can occur, and
  * a `1' bit in the flags byte means the exception has occurred.
@@ -57,7 +57,7 @@
  *
  *     7-5      4    3    2    1    0
  * | reserved | AC | EP | SO | NE | ND |
- * 
+ *
  * where the bits mean
  *
  *  ND - no denormalised numbers (force them all to zero)
@@ -67,11 +67,27 @@
  *  AC - use alternate definition for C flag on compare operations
  */
 
-#define _FPU_RESERVED 0xfff0e0f0  /* These bits are reserved.  */
+/* masking of interrupts */
+#define _FPU_MASK_IM	0x00010000	/* invalid operation */
+#define _FPU_MASK_ZM	0x00020000	/* divide by zero */
+#define _FPU_MASK_OM	0x00040000	/* overflow */
+#define _FPU_MASK_UM	0x00080000	/* underflow */
+#define _FPU_MASK_PM	0x00100000	/* inexact */
+#define _FPU_MASK_DM	0x00000000	/* denormalized operation */
 
-/* The fdlibm code requires no interrupts for exceptions.  Don't
-   change the rounding mode, it would break long double I/O!  */
-#define _FPU_DEFAULT  0x00001000 /* Default value.  */
+/* The system id bytes cannot be changed.
+   Only the bottom 5 bits in the trap enable byte can be changed.
+   Only the bottom 5 bits in the system control byte can be changed.
+   Only the bottom 5 bits in the exception flags are used.
+   The exception flags are set by the fpu, but can be zeroed by the user. */
+#define _FPU_RESERVED	0xffe0e0e0	/* These bits are reserved.  */
+
+/* The fdlibm code requires strict IEEE double precision arithmetic,
+   no interrupts for exceptions, rounding to nearest.  Changing the
+   rounding mode will break long double I/O.  Turn on the AC bit,
+   the compiler generates code that assumes it is on.  */
+#define _FPU_DEFAULT	0x00001000	/* Default value.  */
+#define _FPU_IEEE	0x001f1000	/* Default + exceptions enabled. */
 
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t;

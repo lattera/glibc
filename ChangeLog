@@ -1,3 +1,39 @@
+2000-03-24  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (postclean): Added soversions.i.
+
+2000-03-24  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/arm/fpu/fpu_control.h: Define _FPU_MASK_IM, _FPU_MASK_ZM,
+	_FPU_MASK_OM, _FPU_MASK_UM, _FPU_MASK_PM, _FPU_MASK_DM, _FPU_DEFAULT,
+	and _FPU_IEEE.  Change _FPU_RESERVED.
+
+2000-03-24  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: New file.
+
+2000-03-24  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/posix/getaddrinfo.c: Include <net/if.h> for if_nametoindex.
+	(gaih_inet): Remove unused duplicate variable.
+
+	* inet/getnameinfo.c (getnameinfo): Use IFNAMSIZ, not MAXHOSTNAMELEN.
+	Don't use __libc_sa_len, which only exists for Linux.  Just handle
+	AF_INET and AF_INET6 directly as well as AF_LOCAL, since those are the
+	only flavors supported by this function anyway.
+
+2000-03-24  Geoff Clare  <gwc@unisoft.com>
+
+	* stdlib/strfmon.c: corrected problems with missing signs and
+	missing or extra spaces; allow for sign strings longer than
+	one character; add padding to ensure positive and negative
+	formats are aligned when a left precision is used.
+
+2000-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/random_r.c (__setstate_r): Allow RNGs of type 4.
+	Patch by John Mizel <John.Mizel@msdw.com>.
+
 2000-03-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/install.texi: Remove references to crypt add-on.

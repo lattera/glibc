@@ -55,6 +55,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <sys/types.h>
 #include <sys/un.h>
 #include <sys/utsname.h>
+#include <net/if.h>
 
 #define GAIH_OKIFUNSPEC 0x0100
 #define GAIH_EAI        ~(GAIH_OKIFUNSPEC)
@@ -392,8 +393,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
 	  if (inet_pton (AF_INET6, namebuf, at->addr) > 0)
 	    {
-	      int try_numericscope = 0;
-
 	      if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 		at->family = AF_INET6;
 	      else

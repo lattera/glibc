@@ -173,7 +173,6 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   int herrno;
   char *tmpbuf = alloca (tmpbuflen);
   struct hostent th;
-  socklen_t min_addrlen = 0;
   int ok = 0;
 
   if (sa == NULL || addrlen < sizeof (sa_family_t))
@@ -182,16 +181,23 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   switch (sa->sa_family)
     {
     case AF_LOCAL:
-      min_addrlen = (socklen_t) (((struct sockaddr_un *) NULL)->sun_path);
+      if (addrlen < (socklen_t) (((struct sockaddr_un *) NULL)->sun_path))
+	return -1;
+      break;
+    case AF_INET:
+      if (addrlen < sizeof (struct sockaddr_in))
+	return -1;
+      break;
+    case AF_INET6:
+      if (addrlen < sizeof (struct sockaddr_in6))
+	return -1;
       break;
     default:
-      min_addrlen = __libc_sa_len (sa->sa_family);
+      return -1;
     }
-  if (addrlen < min_addrlen)
-    return -1;
 
   if (host != NULL && hostlen > 0)
-    switch(sa->sa_family)
+    switch (sa->sa_family)
       {
       case AF_INET:
       case AF_INET6:
@@ -293,7 +299,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 			&& (scopeid = sin6p->sin6_scope_id))
 		      {
 			/* Buffer is >= IFNAMSIZ+1.  */
-			char scopebuf[MAXHOSTNAMELEN + 1];
+			char scopebuf[IFNAMSIZ + 1];
 			int ni_numericscope = 0;
 
 			if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
@@ -365,7 +371,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
     }
 
   if (serv && (servlen > 0))
-    switch(sa->sa_family)
+    switch (sa->sa_family)
       {
       case AF_INET:
       case AF_INET6:
