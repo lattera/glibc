@@ -156,10 +156,6 @@ _start:
 	move.l %sp, -(%sp)
 	jbsr _dl_start
 	addq.l #4, %sp
-
-	.globl _dl_start_user
-	.type _dl_start_user,@function
-_dl_start_user:
 	| Save the user entry point address in %a4.
 	move.l %d0, %a4
 	| Point %a5 at the GOT.
@@ -169,7 +165,6 @@ _dl_start_user:
 	| See if we were run as a command with the executable file
 	| name as an extra leading argument.
 	move.l ([_dl_skip_args@GOT.w, %a5]), %d0
-	jeq 0f
 	| Pop the original argument count
 	move.l (%sp)+, %d1
 	| Subtract _dl_skip_args from it.
@@ -178,51 +173,21 @@ _dl_start_user:
 	lea (%sp, %d0*4), %sp
 	| Push back the modified argument count.
 	move.l %d1, -(%sp)
-0:	| Push the searchlist of the main object as argument in
-	| the _dl_init_next call below.
-	move.l ([_dl_main_searchlist@GOT.w, %a5]), %d2
-	| First dun the pre-initializers.
-0:	move.l %d2, -(%sp)
-	| Call _dl_preinit_next to return the address of an pre-initializer
-	| function to run.
-	bsr.l _dl_preinit_next@PLTPC
-	add.l #4, %sp | Pop argument.
-	| Check for zero return, when out of pre-initializers.
-	tst.l %d0
-	jeq 0f
-	| Call the shared object pre-initializer function.
-	move.l %d0, %a0
-	jsr (%a0)
-	| Loop to call _dl_preinit_next for the next pre-initializer.
-	jra 0b
-0:	move.l %d2, -(%sp)
-	| Call _dl_init_next to return the address of an initializer
-	| function to run.
-	bsr.l _dl_init_next@PLTPC
-	add.l #4, %sp | Pop argument.
-	| Check for zero return, when out of initializers.
-	tst.l %d0
-	jeq 1f
-	| Call the shared object initializer function.
-	| NOTE: We depend only on the registers (%d2, %a4 and %a5)
-	| and the return address pushed by this call;
-	| the initializer is called with the stack just
-	| as it appears on entry, and it is free to move
-	| the stack around, as long as it winds up jumping to
-	| the return address on the top of the stack.
-	move.l %d0, %a0
-	jsr (%a0)
-	| Loop to call _dl_init_next for the next initializer.
-	jra 0b
-1:	| Clear the startup flag.
-	clr.l ([_dl_starting_up@GOT.w, %a5])
+	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
+	pea 8(%sp, %d1*4)
+	pea 4(%sp)
+	move.l %d1, -(%sp)
+	move.l _dl_loaded@GOT.w(%a5), -(%sp)
+	jbsr _dl_init@PLTPC
+	addq.l #8, %sp
+	addq.l #8, %sp
 	| Pass our finalizer function to the user in %a1.
 	move.l _dl_fini@GOT.w(%a5), %a1
 	| Initialize %fp with the stack pointer.
 	move.l %sp, %fp
 	| Jump to the user's entry point.
 	jmp (%a4)
-	.size _dl_start_user, . - _dl_start_user
+	.size _start, . - _start
 	.previous");
 
 /* Nonzero iff TYPE describes a relocation that should
