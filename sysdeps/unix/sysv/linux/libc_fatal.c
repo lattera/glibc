@@ -20,16 +20,13 @@
 #include <fcntl.h>
 #include <paths.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sysdep.h>
 #include <unistd.h>
 #include <sys/syslog.h>
-#ifndef ABORT_INSTRUCTION
-/* No such instruction is available.  */
-# define ABORT_INSTRUCTION
-#endif
 
 /* Abort with an error message.  */
 #include <not-cancel.h>
@@ -153,6 +150,8 @@ void
 __libc_fatal (message)
      const char *message;
 {
-  __libc_message (1, "%s", message);
+  /* The loop is added only to keep gcc happy.  */
+  while (1)
+    __libc_message (1, "%s", message);
 }
 libc_hidden_def (__libc_fatal)

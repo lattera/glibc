@@ -1,5 +1,6 @@
 #include <regex.h>
 #include <stdio.h>
+#include <string.h>
 
 #define str "civic"
 

@@ -41,27 +41,26 @@ nis_clone_object (const nis_object *src, nis_object *dest)
   if (dest == NULL)
     {
       if ((res = calloc (1, sizeof (nis_object))) == NULL)
-	goto out2;
+	goto out;
     }
   else
     res = dest;
 
   xdrmem_create (&xdrs, addr, size, XDR_ENCODE);
-  if (!_xdr_nis_object (&xdrs, (nis_object *)src))
-    goto out3;
+  if (!_xdr_nis_object (&xdrs, (nis_object *) src))
+    goto out2;
   xdr_destroy (&xdrs);
   xdrmem_create (&xdrs, addr, size, XDR_DECODE);
   if (!_xdr_nis_object (&xdrs, res))
     {
-    out3:
+    out2:
       if (dest == NULL)
 	free (res);
       res = NULL;
     }
 
- out:
   xdr_destroy (&xdrs);
- out2:
+ out:
   free (addr);
 
   return res;

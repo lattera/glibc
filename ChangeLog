@@ -1,3 +1,18 @@
+2004-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bug-regex24.c: Include string.h.
+
+	* nis/nis_clone_obj.c (nis_clone_object): Rename out3 label to out2
+	and out2 to out.  Remove out label.  Formatting.
+
+2004-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/stdio.h: Do not mark __libc_message as noreturn.
+	* sysdeps/unix/sysv/linux/libc_fatal.c (__libc_fatal): Add loop to
+	fool gcc.  Include <stdbool.h>.
+	* sysdeps/posix/libc_fatal.c (__libc_fatal): Add loop to fool gcc.
+	(__libc_message): Fix typo.
+
 2004-11-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/malloc.c (malloc_state): stat_lock_* elements need only

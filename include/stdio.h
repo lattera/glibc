@@ -62,8 +62,7 @@ extern int __gen_tempname (char *__tmpl, int __kind);
 /* Print out MESSAGE on the error output and abort.  */
 extern void __libc_fatal (__const char *__message)
      __attribute__ ((__noreturn__));
-extern void __libc_message (int do_abort, __const char *__fnt, ...)
-     __attribute__ ((__noreturn__));
+extern void __libc_message (int do_abort, __const char *__fnt, ...);
 
 /* Acquire ownership of STREAM.  */
 extern void __flockfile (FILE *__stream);

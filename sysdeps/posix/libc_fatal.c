@@ -131,9 +131,9 @@ __libc_message (int do_abort, const char *fmt, ...)
 
   va_end (ap_copy);
 
-  if (do_abort()
-      /* Kill the application.  */
-      abort ();
+  if (do_abort)
+    /* Kill the application.  */
+    abort ();
 }
 
 
@@ -141,6 +141,8 @@ void
 __libc_fatal (message)
      const char *message;
 {
-  __libc_message (1, "%s", message);
+  /* The loop is added only to keep gcc happy.  */
+  while (1)
+    __libc_message (1, "%s", message);
 }
 libc_hidden_def (__libc_fatal)
