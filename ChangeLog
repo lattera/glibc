@@ -1,3 +1,7 @@
+2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add dependency for bug-iconv2.out.
+
 2001-02-06  Andreas Jaeger  <aj@suse.de>
 
 	* elf/firstobj.c: Add prototype.
