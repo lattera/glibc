@@ -20,7 +20,6 @@
 #define _LINUX_POWERPC_SYSDEP_H 1
 
 #include <sysdeps/unix/powerpc/sysdep.h>
-#include <sysdeps/powerpc/elf/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
