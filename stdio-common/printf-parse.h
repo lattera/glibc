@@ -148,6 +148,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   spec->info.left = 0;
   spec->info.showsign = 0;
   spec->info.group = 0;
+  spec->info.i18n = 0;
   spec->info.pad = ' ';
   spec->info.wide = sizeof (UCHAR_T) > 1;
 
