@@ -364,23 +364,25 @@ the old entry is replaced by the new one.
 
 Please note that you cannot remove an entry completely using this function.
 
-This function is part of the BSD library.  The GNU C Library provides
-this function for compatibility but it may not be available on other
-systems.
+This function was originally part of the BSD library but is now part of
+the Unix standard.
 @end deftypefun
 
 @comment stdlib.h
 @comment BSD
-@deftypefun void unsetenv (const char *@var{name})
+@deftypefun int unsetenv (const char *@var{name})
 Using this function one can remove an entry completely from the
 environment.  If the environment contains an entry with the key
 @var{name} this whole entry is removed.  A call to this function is
 equivalent to a call to @code{putenv} when the @var{value} part of the
 string is empty.
 
-This function is part of the BSD library.  The GNU C Library provides
-this function for compatibility but it may not be available on other
-systems.
+The function return @code{-1} if @var{name} is a null pointer, points to
+an empty string, or points to a string containing a @code{=} character.
+It returns @code{0} if the call succeeded.
+
+This function was originall part of the BSD library but is now part of
+the Unix standard.  The BSD version had no return value, though.
 @end deftypefun
 
 There is one more function to modify the whole environment.  This

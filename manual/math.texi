@@ -1360,14 +1360,15 @@ The prototypes for these functions are in @file{stdlib.h}.
 
 @comment stdlib.h
 @comment BSD
-@deftypefun {int32_t} random (void)
+@deftypefun {long int} random (void)
 This function returns the next pseudo-random number in the sequence.
 The value returned ranges from @code{0} to @code{RAND_MAX}.
 
-@strong{Note:} Historically this function returned a @code{long int}
-value.  On 64-bit systems @code{long int} would have been larger than
-programs expected, so @code{random} is now defined to return exactly 32
-bits.
+@strong{Note:} Temporarily this function was defined to return a
+@code{int32_t} value to indicate that the return value always contains
+32 bits even if @code{long int} is wider.  The standard demands it
+differently.  Users must always be aware of the 32-bit limitation,
+though.
 @end deftypefun
 
 @comment stdlib.h
