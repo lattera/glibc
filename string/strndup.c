@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 char *
 strndup (const char *s, size_t n)
 {
-  size_t len = strnlen (s);
+  size_t len = strnlen (s, n);
   char *new = malloc (len + 1);
 
   if (new == NULL)
