@@ -68,6 +68,21 @@ if ($#ARGV == 0) {
 } elsif ($#ARGV == 1) {
     $binary=$ARGV[0];
     $data=$ARGV[1];
+
+    if ($binary =~ /^.*[\/].*$/) {
+	$prog = $binary;
+    } else {
+	$prog = "./$binary";
+    }
+    if (open (LOCS, "env LD_TRACE_LOADED_OBJECTS=1 $prog |")) {
+	while (<LOCS>) {
+	    chop;
+	    if (/^.*=> (.*) .(0x[0123456789abcdef]*).$/) {
+		$locs{$1} = $2;
+	    }
+	}
+	close (LOCS);
+    }
 } else {
     die "Wrong number of arguments, run $progname --help for help.";
 }
@@ -89,10 +104,18 @@ sub location {
 	    }
 	}
 	$cache{$addr} = $str = "$fct @ $addr";
-    } elsif ($str =~ /^.*[[](0x[^]]*)]$/) {
-	my $addr = $1;
+    } elsif ($str =~ /^(.*):.*[[](0x[^]]*)]$/) {
+	my $prog = $1;
+	my $addr = $2;
+	my $searchaddr;
 	return $cache{$addr} if (exists $cache{$addr});
-	if ($binary ne "" && open (ADDR, "addr2line -e $binary $addr|")) {
+	if ($locs{$prog} ne "") {
+	    $searchaddr = sprintf "%#x", $addr - $locs{$prog};
+	} else {
+	    $searchaddr = $addr;
+	    $prog = $binary;
+	}
+	if ($binary ne "" && open (ADDR, "addr2line -e $prog $searchaddr|")) {
 	    my $line = <ADDR>;
 	    chomp $line;
 	    close (ADDR);

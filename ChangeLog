@@ -1,3 +1,15 @@
+2001-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/mtrace.pl: Extract addresses from DSOs.
+
+2001-07-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/mcheck.c (checkhdr): Disable mcheck before reporting an
+	error.  Don't run any tests if mcheck is disabled.
+
+	* elf/dl-support.c (_dl_important_hwcaps): Avoid using malloc
+	early in the program.
+
 2001-07-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/ucontext_i.h (SC_GPRS): Fix
@@ -17,6 +29,7 @@
 	* sysdeps/generic/tcsetattr.c (bad_speed): Accept those values.
 	* termios/cfsetspeed.c (speeds): Likewise.
 
+>>>>>>> 1.5525
 2001-07-26  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Don't use
