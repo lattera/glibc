@@ -1,3 +1,54 @@
+Mon Aug 26 22:22:17 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* io/fcntl.h: Add definition for BSD F* macros.
+
+	* misc/init-misc.c (__init_misc): Make static.
+	* misc/Makefile: Pass -fkeep-inline-functions flag for init-misc.c.
+
+	* configure.in: Add test for -fno-exception option of gcc.
+	* config.make.in: Add definition of have-no-exceptions.
+	* Makerules: Define no-exceptions based on have-no-exceptions.
+	* csu/Makefile: When translating initfini.c pass $(no-exceptions).
+	This is necessary for gcc >= ss-960816.
+
+Mon Aug 26 17:16:48 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h: Clear startup flag.
+
+Fri Aug 16 21:17:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (o-iterator-doit): Simplify reference to autolock
+	script.
+
+Fri Aug 16 21:17:50 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (o-iterator-doit): Simplify reference to autolock
+	script.
+
+Sat Aug 24 15:27:41 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): After resizing the
+	buffer move the current contents to the end.  Correctly relocate
+	file name pointer to upper half of the buffer.
+
+Mon Aug 26 15:49:59 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rtld.c (dl_main): Remove code to call ld.so initializer.  This
+	was introduced for compatibility with Linux ld.so and would not
+	be used anymore.  Now we don't have any good values to use as the
+	parameters to the initializer so simply remove it.
+
+Sun Aug 25 18:25:52 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* gmon/gmon.c (ERR): Don't write the terminating NUL.
+
+	* sysdeps/posix/profil.c (profil): Disable the profiling timer at
+	first.
+	(profil_count): Use 64 bit arithmethic to avoid overflow.
+
+	* sysdeps/generic/machine-gmon.h (MCOUNT): Fix argument order.
+
 Mon Aug 26 02:01:37 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-open.c (_dl_open): Call library initializer with
@@ -37,7 +88,7 @@ Sat Aug 24 03:16:47 1996  Ulrich Drepper  <drepper@cygnus.com>
  	this changes the global state for `localtime' and `gmtime'.  Use
  	`__localtime_r'/`__gmtime_r' instead.
 	* resolv/res_debug.c (__p_secstodate): Likewise.
-	* sysdeps/generoc/ftime.c: Likewise.
+	* sysdeps/generic/ftime.c: Likewise.
 	* sysdeps/posix/gettimeofday.c: Likewise.
 	Reported by Paul Eggert.
 

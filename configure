@@ -1862,7 +1862,7 @@ s%@AR@%$AR%g
 s%@RANLIB@%$RANLIB%g
 s%@libc_cv_have_initfini@%$libc_cv_have_initfini%g
 s%@libc_cv_ld_no_whole_archive@%$libc_cv_ld_no_whole_archive%g
-s%@libc_cv_gcc_exceptions@%$libc_cv_gcc_exceptions%g
+s%@libc_cv_gcc_no_exceptions@%$libc_cv_gcc_no_exceptions%g
 s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
