@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-int 
+int
 make_named_socket (const char *filename)
 {
   struct sockaddr_un name;
@@ -21,7 +21,7 @@ make_named_socket (const char *filename)
     }
 
   /* Bind a name to the socket.  */
-  name.sun_family = AF_FILE;
+  name.sun_family = AF_LOCAL;
   strncpy (name.sun_path, filename, sizeof (name.sun_path));
 
   /* The size of the address is
