@@ -18,19 +18,6 @@ vfork		-	vfork		0	__vfork		vfork
 
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
 getpriority	-	getpriority	i:ii	__getpriority	getpriority
-mmap		-	mmap		b:aniiii __mmap		mmap __mmap64 mmap64
-llseek		EXTRA	lseek		C:3	__libc_lseek	__lseek lseek __libc_lseek64 __llseek llseek __lseek64 lseek64
-lseek		llseek	-
-pread		-	pread64		C:4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite64		C:4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
-fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs __fstatfs64 fstatfs64
-statfs		-	statfs		i:sp	__statfs	statfs statfs64
-getrlimit	-	getrlimit	2	__getrlimit	getrlimit getrlimit64
-setrlimit	-	setrlimit	2	__setrlimit	setrlimit64 setrlimit
-ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
-truncate	-	truncate	2	truncate	truncate64
-readahead	-	readahead	3	__readahead	readahead
-sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 open		-	open		Ci:siv	__libc_open	__open open !__libc_open64 __open64 open64
 open64		open	-
 
