@@ -62,7 +62,7 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
     __close (fd);
 
 #ifdef _HAVE_SA_LEN
-  struct ifreq *ifr = ifreqs;
+  struct ifreq *ifr = *ifreqs;
   nifs = 0;
   while ((char *) ifr < ifc.ifc_buf + ifc.ifc_len)
     {
