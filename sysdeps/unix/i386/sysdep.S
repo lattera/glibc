@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 2000, 2002
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +42,9 @@ syscall_error:
 notb:
 #endif
 #ifndef	PIC
-# ifndef _LIBC_REENTRANT
+# if USE_TLS && HAVE___THREAD
+	movl %eax, %gs:C_SYMBOL_NAME(errno@NTPOFF)
+# elif !defined _LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)
 # else
 	pushl %eax
@@ -54,7 +57,13 @@ notb:
 #else
 	/* The caller has pushed %ebx and then set it up to
 	   point to the GOT before calling us through the PLT.  */
-# ifndef _LIBC_REENTRANT
+# if USE_TLS && HAVE___THREAD
+	movl C_SYMBOL_NAME(errno@GOTNTPOFF)(%ebx), %ecx
+
+	/* Pop %ebx value saved before jumping here.  */
+	popl %ebx
+	movl %eax, %gs:0(%ecx)
+# elif !defined _LIBC_REENTRANT
 	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
 
 	/* Pop %ebx value saved before jumping here.  */

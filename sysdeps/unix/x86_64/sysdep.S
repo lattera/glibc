@@ -42,8 +42,12 @@ syscall_error:
 notb:
 #endif
 #if USE_TLS && HAVE___THREAD
-	movq C_SYMBOL_NAME(errno)@GOTTPOFF(%rip), %rcx
+# ifdef PIC
+	movq C_SYMBOL_NAME(errno@GOTTPOFF)(%rip), %rcx
 	movl %eax, %fs:0(%rcx)
+# else
+	movl %eax, %fs:C_SYMBOL_NAME(errno@TPOFF)
+# endif
 #elif !defined PIC
 # ifndef _LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)

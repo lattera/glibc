@@ -20,8 +20,11 @@ baz:	leal	bar@TLSLDM(%ebx), %eax
 	leal	bar@DTPOFF(%eax), %edx
 	subl	foo@GOTTPOFF(%edx), %eax
 	subl	$bar@TPOFF, %eax
+	movl	foo@GOTNTPOFF(%edx), %ecx
+	movl	%gs:(%ecx), %eax
+	movl	%gs:bar@NTPOFF, %eax
 EOF
-if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:25: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:28: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
   libc_cv_386_tls=yes
 else
   libc_cv_386_tls=no

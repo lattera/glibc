@@ -1,5 +1,23 @@
 2002-09-30  Roland McGrath  <roland@redhat.com>
 
+	* elf/tls-macros.h (TLS_LD, TLS_GD): Use call insn, not callq.
+
+	* sysdeps/unix/x86_64/sysdep.S [USE_TLS && HAVE___THREAD] [! PIC]:
+	Use direct-%fs form of TLS access for errno.
+
+	* sysdeps/unix/sysv/linux/i386/i686/sysdep.h: File removed, since
+	the i386 version has all the same asm now.
+
+	* sysdeps/i386/elf/configure.in: Add @GOTNTPOFF and @NTPOFF uses to
+	the TLS support check.
+	* sysdeps/i386/elf/configure: Regenerated.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h [USE_TLS && HAVE___THREAD]
+	(SYSCALL_ERROR_HANDLER): Use direct-%gs form of TLS access for errno.
+
+	* sysdeps/unix/i386/sysdep.S (syscall_error)
+	[USE_TLS && HAVE___THREAD]: Use TLS access for errno.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep.h
 	[USE_TLS && HAVE___THREAD] (SYSCALL_ERROR_HANDLER): Use TLS access.
 

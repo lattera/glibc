@@ -18,6 +18,9 @@ baz:	leal	bar@TLSLDM(%ebx), %eax
 	leal	bar@DTPOFF(%eax), %edx
 	subl	foo@GOTTPOFF(%edx), %eax
 	subl	$bar@TPOFF, %eax
+	movl	foo@GOTNTPOFF(%edx), %ecx
+	movl	%gs:(%ecx), %eax
+	movl	%gs:bar@NTPOFF, %eax
 EOF
 dnl
 if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then

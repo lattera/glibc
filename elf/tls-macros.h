@@ -114,7 +114,7 @@
 # define TLS_LD(x) \
   ({ int *__l, __c, __d;						      \
      asm ("leaq " #x "@tlsld(%%rip),%%rdi\n\t"				      \
-	  "callq __tls_get_addr@plt\n\t"				      \
+	  "call __tls_get_addr@plt\n\t"					      \
 	  "leaq " #x "@dtpoff(%%rax), %%rax"				      \
 	  : "=a" (__l), "=&c" (__c), "=&d" (__d)			      \
 	  : : "rdi", "rsi", "r8", "r9", "r10", "r11"); 			      \
@@ -124,7 +124,7 @@
   ({ int *__l, __c, __d;						      \
      asm (".long 0x66666666\n\t"					      \
 	  "leaq " #x "@tlsgd(%%rip),%%rdi\n\t"				      \
-	  "callq __tls_get_addr@plt"					      \
+	  "call __tls_get_addr@plt"					      \
 	  : "=a" (__l), "=&c" (__c), "=&d" (__d)			      \
 	  : : "rdi", "rsi", "r8", "r9", "r10", "r11"); 			      \
      __l; })
