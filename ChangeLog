@@ -1,3 +1,7 @@
+2000-07-06  Andreas Jaeger  <aj@suse.de>
+
+	* math/test-fpucw.c: Include <stdio.h> for printf.
+
 2000-07-05  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/generic/bp-checks.h: New file.
