@@ -28,8 +28,6 @@ Cambridge, MA 02139, USA.  */
 void
 _dl_relocate_object (struct link_map *l, int lazy)
 {
-  const size_t pagesize = getpagesize ();
-
   if (l->l_relocated)
     return;
 
@@ -37,17 +35,17 @@ _dl_relocate_object (struct link_map *l, int lazy)
     {
       /* Bletch.  We must make read-only segments writable
 	 long enough to relocate them.  */
-      const Elf32_Phdr *ph;
+      const ElfW(Phdr) *ph;
       for (ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
 	if (ph->p_type == PT_LOAD && (ph->p_flags & PF_W) == 0)
 	  {
 	    caddr_t mapstart = ((caddr_t) l->l_addr +
-				(ph->p_vaddr & ~(pagesize - 1)));
+				(ph->p_vaddr & ~(_dl_pagesize - 1)));
 	    caddr_t mapend = ((caddr_t) l->l_addr +
-			      ((ph->p_vaddr + ph->p_memsz + pagesize - 1)
-			       & ~(pagesize - 1)));
-	    if (mprotect (mapstart, mapend - mapstart,
-			  PROT_READ|PROT_WRITE) < 0)
+			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
+			       & ~(_dl_pagesize - 1)));
+	    if (__mprotect (mapstart, mapend - mapstart,
+			    PROT_READ|PROT_WRITE) < 0)
 	      _dl_signal_error (errno, l->l_name,
 				"cannot make segment writable for relocation");
 	  }
@@ -59,8 +57,8 @@ _dl_relocate_object (struct link_map *l, int lazy)
     const char *strtab
       = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 
-    Elf32_Addr resolve (const Elf32_Sym **ref,
-			Elf32_Addr reloc_addr, int noplt)
+    ElfW(Addr) resolve (const ElfW(Sym) **ref,
+			ElfW(Addr) reloc_addr, int noplt)
       {
 	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,
 				  l->l_name, reloc_addr, noplt);
@@ -97,21 +95,21 @@ _dl_relocate_object (struct link_map *l, int lazy)
   if (l->l_info[DT_TEXTREL])
     {
       /* Undo the protection change we made before relocating.  */
-      const Elf32_Phdr *ph;
+      const ElfW(Phdr) *ph;
       for (ph = l->l_phdr; ph < &l->l_phdr[l->l_phnum]; ++ph)
 	if (ph->p_type == PT_LOAD && (ph->p_flags & PF_W) == 0)
 	  {
 	    caddr_t mapstart = ((caddr_t) l->l_addr +
-				(ph->p_vaddr & ~(pagesize - 1)));
+				(ph->p_vaddr & ~(_dl_pagesize - 1)));
 	    caddr_t mapend = ((caddr_t) l->l_addr +
-			      ((ph->p_vaddr + ph->p_memsz + pagesize - 1)
-			       & ~(pagesize - 1)));
+			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
+			       & ~(_dl_pagesize - 1)));
 	    int prot = 0;
 	    if (ph->p_flags & PF_R)
 	      prot |= PROT_READ;
 	    if (ph->p_flags & PF_X)
 	      prot |= PROT_EXEC;
-	    if (mprotect (mapstart, mapend - mapstart, prot) < 0)
+	    if (__mprotect (mapstart, mapend - mapstart, prot) < 0)
 	      _dl_signal_error (errno, l->l_name,
 				"can't restore segment prot after reloc");
 	  }

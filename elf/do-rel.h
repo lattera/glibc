@@ -21,9 +21,9 @@ Cambridge, MA 02139, USA.  */
    `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.  */
 
 #ifdef DO_RELA
-#define elf_dynamic_do_rel		elf_dynamic_do_rela
-#define	Elf32_Rel			Elf32_Rela
-#define elf_machine_rel			elf_machine_rela
+#define elf_dynamic_do_rel	elf_dynamic_do_rela
+#define	Rel			Rela
+#define elf_machine_rel		elf_machine_rela
 #endif
 
 
@@ -37,15 +37,15 @@ Cambridge, MA 02139, USA.  */
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag,
-		    Elf32_Addr (*resolve) (const Elf32_Sym **symbol,
-					   Elf32_Addr reloc_addr, int noplt),
+		    ElfW(Addr) (*resolve) (const ElfW(Sym) **symbol,
+					   ElfW(Addr) reloc_addr, int noplt),
 		    int lazy)
 {
-  const Elf32_Sym *const symtab
-    = (const Elf32_Sym *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-  const Elf32_Rel *r
-    = (const Elf32_Rel *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
-  const Elf32_Rel *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
+  const ElfW(Sym) *const symtab
+    = (const ElfW(Sym) *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+  const ElfW(Rel) *r
+    = (const ElfW(Rel) *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
+  const ElfW(Rel) *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
 
   if (lazy)
     /* Doing lazy PLT relocations; they need very little info.  */
@@ -53,9 +53,9 @@ elf_dynamic_do_rel (struct link_map *map,
       elf_machine_lazy_rel (map, r);
   else
     for (; r < end; ++r)
-      elf_machine_rel (map, r, &symtab[ELF32_R_SYM (r->r_info)], resolve);
+      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], resolve);
 }
 
 #undef elf_dynamic_do_rel
-#undef Elf32_Rel
+#undef Rel
 #undef elf_machine_rel

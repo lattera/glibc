@@ -18,27 +18,48 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <stddef.h>
-#include <libelf.h>
 #include <link.h>
 #include <assert.h>
+
+
+/* This is the hashing function specified by the ELF ABI.  */
+static inline unsigned
+_dl_elf_hash (const char *name)
+{
+  unsigned long int hash = 0;
+  while (*name != '\0')
+    {
+      unsigned long int hi;
+      hash = (hash << 4) + *name++;
+      hi = hash & 0xf0000000;
+      if (hi != 0)
+	{
+	  hash ^= hi >> 24;
+	  /* The ELF ABI says `hash &= ~hi', but this is equivalent
+	     in this case and on some machines one insn instead of two.  */
+	  hash ^= hi;
+	}
+    }
+  return hash;
+}
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  The chosen value can't be RELOC_ADDR.  If NOPLT is nonzero,
    then a PLT entry cannot satisfy the reference; some different binding
    must be found.  */
 
-Elf32_Addr
-_dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
+ElfW(Addr)
+_dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 		   struct link_map *symbol_scope[2],
 		   const char *reference_name,
-		   Elf32_Addr reloc_addr,
+		   ElfW(Addr) reloc_addr,
 		   int noplt)
 {
-  unsigned long int hash = elf_hash (undef_name);
+  const unsigned long int hash = _dl_elf_hash (undef_name);
   struct
     {
-      Elf32_Addr a;
-      const Elf32_Sym *s;
+      ElfW(Addr) a;
+      const ElfW(Sym) *s;
     } weak_value = { 0, NULL };
   size_t i;
   struct link_map **scope, *map;
@@ -48,9 +69,9 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
     if (*scope)
       for (i = 0; i < (*scope)->l_nsearchlist; ++i)
 	{
-	  const Elf32_Sym *symtab;
+	  const ElfW(Sym) *symtab;
 	  const char *strtab;
-	  Elf32_Word symidx;
+	  ElfW(Word) symidx;
 
 	  map = (*scope)->l_searchlist[i];
 
@@ -63,7 +84,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	       symidx != STN_UNDEF;
 	       symidx = map->l_chain[symidx])
 	    {
-	      const Elf32_Sym *sym = &symtab[symidx];
+	      const ElfW(Sym) *sym = &symtab[symidx];
 
 	      if (sym->st_value == 0 || /* No value.  */
 		  /* Cannot resolve to the location being filled in.  */
@@ -71,7 +92,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 		  (noplt && sym->st_shndx == SHN_UNDEF)) /* Reject PLT.  */
 		continue;
 
-	      switch (ELF32_ST_TYPE (sym->st_info))
+	      switch (ELFW(ST_TYPE) (sym->st_info))
 		{
 		case STT_NOTYPE:
 		case STT_FUNC:
@@ -86,7 +107,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 		/* Not the symbol we are looking for.  */
 		continue;
 
-	      switch (ELF32_ST_BIND (sym->st_info))
+	      switch (ELFW(ST_BIND) (sym->st_info))
 		{
 		case STB_GLOBAL:
 		  /* Global definition.  Just what we need.  */
@@ -108,41 +129,15 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	    }
 	}
 
-  if (weak_value.s == NULL && ELF32_ST_BIND ((*ref)->st_info) != STB_WEAK)
+  if (weak_value.s == NULL && ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
     {
-      /* The symbol was not defined by any object in scope.  To allow
-	 access to dynamic linker functionality without using -ldl and
-	 thereby brining the dynamic linker's symbols into scope, we
-	 recognize a few magical symbol names and resolve them to the
-	 addresses of functions inside the dynamic linker.  */
-
-      struct magic
-	{
-	  unsigned long int hash;
-	  const char *name;
-	  Elf32_Addr value;
-	};
-      static struct magic magic[] =
-	{
-	  { 0xd6a2a5e, "_GNU_libc_dl_open", (Elf32_Addr) &_dl_open },
-/*	  { 0x69ef845, "_GNU_libc_dl_close", (Elf32_Addr) &_dl_close },*/
-	  { 0xae4d63c, "_GNU_libc_dl_symbol", (Elf32_Addr) &_dl_symbol_value },
-	  { 0, NULL, 0 }
-	};
-      struct magic *m;
-
-      for (m = magic; m->hash; ++m)
-	if (hash == m->hash && !strcmp (undef_name, m->name))
-	  return m->value;
-
-      {
-	const char msg[] = "undefined symbol: ";
-	char buf[sizeof msg + strlen (undef_name)];
-	memcpy (buf, msg, sizeof msg - 1);
-	memcpy (&buf[sizeof msg - 1], undef_name,
-		sizeof buf - sizeof msg + 1);
-	_dl_signal_error (0, reference_name, buf);
-      }
+      /* We could find no value for a strong reference.  */
+      const char msg[] = "undefined symbol: ";
+      char buf[sizeof msg + strlen (undef_name)];
+      memcpy (buf, msg, sizeof msg - 1);
+      memcpy (&buf[sizeof msg - 1], undef_name,
+	      sizeof buf - sizeof msg + 1);
+      _dl_signal_error (0, reference_name, buf);
     }
 
   *ref = weak_value.s;
@@ -155,23 +150,11 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 void
 _dl_setup_hash (struct link_map *map)
 {
-  Elf32_Word *hash = (void *) map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr;
-  Elf32_Word nchain;
+  ElfW(Word) *hash = (void *) map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr;
+  ElfW(Word) nchain;
   map->l_nbuckets = *hash++;
   nchain = *hash++;
   map->l_buckets = hash;
   hash += map->l_nbuckets;
   map->l_chain = hash;
-}
-
-/* Look up symbol NAME in MAP's scope and return its run-time address.  */
-
-Elf32_Addr
-_dl_symbol_value (struct link_map *map, const char *name)
-{
-  Elf32_Addr loadbase;
-  const Elf32_Sym *ref = NULL;
-  struct link_map *scope[2] = { map, NULL };
-  loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
-  return loadbase + ref->st_value;
 }

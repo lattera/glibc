@@ -20,18 +20,25 @@
 
 subdir		:= elf
 
-headers		:= elf.h libelf.h link.h dlfcn.h
-routines	:= init-first
+headers		= elf.h link.h dlfcn.h
+routines	= init-first $(dl-routines) dl-open dl-symbol dl-support
 
-extra-libs	= libelf libdl
-libelf-routines	:= elf_hash
-libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
-libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
+# The core dynamic linking functions are in libc for the static and
+# profiled libraries.
+dl-routines	= $(addprefix dl-,load lookup object reloc deps \
+			          runtime error init fini)
+# But they are absent from the shared libc, because that code is in ld.so.
+elide-routines.so = $(dl-routines) dl-support
 
-rtld-routines	:= rtld $(addprefix dl-,minimal load lookup object reloc \
-				        deps runtime sysdep error init fini)
+# ld.so uses those routines, plus some special stuff for being the program
+# interpreter and operating independent of libc.
+rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  soinit.c sofini.c ldd.sh.in linux-compat.c
+
+extra-libs	= libdl
+libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
+
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -43,7 +50,7 @@ generated	= librtld.so dl-allobjs.so
 install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 
-# Make sure these things is built in the `make lib' pass so it can be used
+# Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.
 lib-noranlib: $(objpfx)ld.so $(addprefix $(objpfx),$(extra-objs))
 
@@ -81,16 +88,17 @@ $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
 	  -Wl,-rpath=$(default-rpath) $^
 endef
 
+# The dl code in the static libc needs a default library path.
+CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
+
 # The Linux-compatible dynamic linker shared object is just the same
 # with one object file of compatibility initialization code added.
 $(objpfx)ld-linux.so.1: $(objpfx)linux-compat.so
 
 
+# Specify the dependencies of libdl.so; its commands come from the generic
+# rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
-	$(patsubst %/,cd %;,$(objpfx)) \
-	$(LINK.o) -shared -o $(@:$(objpfx)%=%) \
-		  $(LDFLAGS.so) $(LDFLAGS-dl.so) \
-		  -Wl,--whole-archive $(^:$(objpfx)%=%) $(no-whole-archive)
 
 $(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
 $(slibdir)/ld-linux.so.1: $(objpfx)ld-linux.so.1; $(do-install-program)

@@ -20,7 +20,19 @@ Cambridge, MA 02139, USA.  */
 #ifndef	_LINK_H
 #define	_LINK_H	1
 
+#define __need_size_t
+#include <stddef.h>
+
 #include <elf.h>
+
+#define __ELF_WORDSIZE 32	/* XXX */
+
+/* We use this macro to refer to ELF types independent of the native wordsize.
+   `ElfW(TYPE)' is used in place of `Elf32_TYPE' or `Elf64_TYPE'.  */
+#define ElfW(type)	_ElfW (Elf, __ELF_WORDSIZE, type)
+#define ELFW(type)	_ElfW (ELF, __ELF_WORDSIZE, type)
+#define _ElfW(e,w,t)	_ElfW_1 (e, w, _##t)
+#define _ElfW_1(e,w,t)	e##w##t
 
 
 /* Rendezvous structure used by the run-time dynamic linker to communicate
@@ -39,7 +51,7 @@ struct r_debug
        library or unmap it, and again when the mapping change is complete.
        The debugger can set a breakpoint at this address if it wants to
        notice shared object mapping changes.  */
-    Elf32_Addr r_brk;
+    ElfW(Addr) r_brk;
     enum
       {
 	/* This state value describes the mapping change taking place when
@@ -49,7 +61,7 @@ struct r_debug
 	RT_DELETE,		/* Beginning to remove an object mapping.  */
       } r_state;
 
-    Elf32_Addr r_ldbase;	/* Base address the linker is loaded at.  */
+    ElfW(Addr) r_ldbase;	/* Base address the linker is loaded at.  */
   };
 
 /* This symbol refers to the "dynamic structure" in the `.dynamic' section
@@ -59,7 +71,7 @@ struct r_debug
        if (dyn->d_tag == DT_DEBUG) r_debug = (struct r_debug) dyn->d_un.d_ptr;
    */
 
-extern Elf32_Dyn _DYNAMIC[];
+extern ElfW(Dyn) _DYNAMIC[];
 
 
 /* Structure describing a loaded shared object.  The `l_next' and `l_prev'
@@ -73,9 +85,9 @@ struct link_map
     /* These first few members are part of the protocol with the debugger.
        This is the same format used in SVR4.  */
 
-    Elf32_Addr l_addr;		/* Base address shared object is loaded at.  */
+    ElfW(Addr) l_addr;		/* Base address shared object is loaded at.  */
     char *l_name;		/* Absolute file name object was found in.  */
-    Elf32_Dyn *l_ld;		/* Dynamic section of the shared object.  */
+    ElfW(Dyn) *l_ld;		/* Dynamic section of the shared object.  */
     struct link_map *l_next, *l_prev; /* Chain of loaded objects.  */
 
     /* All following members are internal to the dynamic linker.
@@ -85,10 +97,10 @@ struct link_map
     /* Indexed pointers to dynamic section.
        [0,DT_NUM) are indexed by the processor-independent tags.
        [DT_NUM,DT_NUM+DT_PROCNUM] are indexed by the tag minus DT_LOPROC.  */
-    Elf32_Dyn *l_info[DT_NUM + DT_PROCNUM];
-    const Elf32_Phdr *l_phdr;	/* Pointer to program header table in core.  */
-    Elf32_Word l_phnum;		/* Number of program header entries.  */
-    Elf32_Addr l_entry;		/* Entry point location.  */
+    ElfW(Dyn) *l_info[DT_NUM + DT_PROCNUM];
+    const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
+    ElfW(Addr) l_entry;		/* Entry point location.  */
+    ElfW(Half) l_phnum;		/* Number of program header entries.  */
 
     /* Array of DT_NEEDED dependencies and their dependencies, in
        dependency order for symbol lookup.  This is null before the
@@ -97,8 +109,8 @@ struct link_map
     unsigned int l_nsearchlist;
 
     /* Symbol hash table.  */
-    Elf32_Word l_nbuckets;
-    const Elf32_Word *l_buckets, *l_chain;
+    ElfW(Word) l_nbuckets;
+    const ElfW(Word) *l_buckets, *l_chain;
 
     unsigned int l_opencount;	/* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */
@@ -122,6 +134,9 @@ struct link_map
    The `-ldl' library functions in <dlfcn.h> provide a simple
    user interface to run-time dynamic linking.  */
 
+
+/* Cached value of `getpagesize ()'.  */
+extern size_t _dl_pagesize;
 
 /* File descriptor referring to the zero-fill device.  */
 extern int _dl_zerofd;
@@ -209,15 +224,15 @@ extern struct link_map *_dl_open (struct link_map *loader,
    being fixed up and the chosen symbol cannot be one with this value.  If
    NOPLT is nonzero, then the reference must not be resolved to a PLT
    entry.  */
-extern Elf32_Addr _dl_lookup_symbol (const char *undef,
-				     const Elf32_Sym **sym,
+extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
+				     const ElfW(Sym) **sym,
 				     struct link_map *symbol_scope[2],
 				     const char *reference_name,
-				     Elf32_Addr reloc_addr,
+				     ElfW(Addr) reloc_addr,
 				     int noplt);
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
-extern Elf32_Addr _dl_symbol_value (struct link_map *map, const char *name);
+extern ElfW(Addr) _dl_symbol_value (struct link_map *map, const char *name);
 
 
 /* Structure describing the dynamic linker itself.  */
@@ -242,7 +257,7 @@ extern void _dl_relocate_object (struct link_map *map, int lazy);
    its dependencies that has not yet been run.  When there are no more
    initializers to be run, this returns zero.  The functions are returned
    in the order they should be called.  */
-extern Elf32_Addr _dl_init_next (struct link_map *map);
+extern ElfW(Addr) _dl_init_next (struct link_map *map);
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */

@@ -1,3 +1,111 @@
+Mon Jun 10 06:14:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (__open): Define this instead of open.
+	(__close, __mmap): Likewise define with __ names now.
+
+Mon Jun 10 05:13:18 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-support.c: New file.
+	* elf/Makefile (CFLAGS-dl-support.c): New variable.
+	(routines, elide-routines.so): Add dl-support.
+
+	* elf/dl-minimal.c (_dl_pagesize): Remove common defn.
+	* elf/dl-load.c (_dl_pagesize): Define it here.
+	(_dl_map_object_from_fd): Initialize it if zero.
+	* elf/link.h (_dl_pagesize): Remove const.
+
+Sun Jun  9 04:04:26 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/Makefile (routines): Add dl-symbol.
+	* elf/dl-lookup.c (_dl_symbol_value): Moved to ...
+	* elf/dl-symbol.c: New file.
+
+	* elf/elf.h (Elf32_Xword, Elf32_Sxword): New types.
+	(Elf32_Section, Elf64_Section): New types, 16 bits.
+	(Elf32_Sym, Elf64_Sym): Use it.
+
+	* elf/dl-deps.c (_dl_open): Moved to ...
+	* elf/dl-open.c: New file.
+	* Makefile (routines): Add dl-open.
+
+	* elf/Makefile (dl-routines): New variable.
+	(routines): Add $(dl-routines).
+	(elide-routines.so): New variable, set to $(dl-routines).
+	(libdl-inhibit-o): Variable removed; build all flavors of -ldl.
+	(rtld-routines): All but rtld, dl-sysdep, and dl-minimal moved to
+ 	$(dl-routines).
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Remove magic symbol grokage.
+
+	* elf/dladdr.c: Use ELFW(ST_BIND) in place of ELF32_ST_BIND.
+
+	* elf/dl-load.c (open_path): Use __ names for open and close.  Avoid
+	using strdup.
+	(_dl_map_object): Likewise.
+	(_dl_map_object_from_fd): Use __ names for mmap, munmap, and mprotect.
+	* elf/dl-minimal.c (malloc): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+
+	* elf/dl-minimal.c (_dl_pagesize): New variable.
+	(malloc): Use that instead of a static variable.
+	* elf/dl-reloc.c (_dl_relocate_object): Use _dl_pagesize instead of
+	calling getpagesize.
+	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
+	* elf/link.h: Declare _dl_pagesize.
+
+	* elf/rtld.c (dl_r_debug): Renamed to _dl_r_debug.
+
+	* elf/link.h (struct link_map): Use Half for l_phnum instead of Word.
+  	* elf/rtld.c (dl_main): Use Half for phdr count arg.
+	(_dl_sysdep_start): Update prototype of DL_MAIN function ptr arg.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Use explicit Elf32_Word to
+ 	extract 4-byte magic number, not ElfW(Word).  Match EI_CLASS against
+ 	native wordsize, either 32 or 64.
+
+	* elf/elf.h (Elf64_Byte, Elf64_Section): Typedefs removed.  In C a
+ 	char is always a byte, no need for a typedef.  Section indices are
+	16-bit quantities in elf64, which already have a typedef Elf64_Half.
+
+	Remove partial -lelf implementation.  There is now a
+	separately-distributed `libelf' package that implements it.
+	* elf/dl-lookup.c: Don't #include <libelf.h> any more.
+	(_dl_elf_hash): New function, moved from
+	libelf.h:elf_hash.
+	(_dl_lookup_symbol): Use it instead of elf_hash.
+	* elf/libelf.h: File removed.
+	* elf/elf_hash.c: File removed.
+	* elf/Makefile (headers): Remove libelf.h.
+	(extra-libs): Remove libelf.
+	(libelf-routines): Variable removed.
+
+	* elf/Makefile (libdl.so): Remove commands from this target.  The
+ 	implicit rule commands are correct, this explicit rule just serves to
+ 	add some dependencies.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Use ELFW(ST_TYPE) in place of
+ 	ELF32_ST_TYPE.  Likewise ST_BIND.
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise R_SYM.
+
+	* elf/link.h (ElfW): New macro for wordsize-independent ElfXX_* type
+	naming.
+	(ELFW): New macro, likewise for ELFXX_* macro naming.
+	(_ElfW, _ElfW_1): New macros, subroutines of ElfW and ELF.
+
+Sat Jun  8 20:52:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/link.h, elf/do-rel.h, elf/dynamic-link.h, elf/dl-deps.c,
+ 	elf/dl-init.c, elf/dl-load.c, elf/dl-lookup.c, elf/dl-reloc.c,
+ 	elf/dl-runtime.c, elf/dladdr.c, elf/dlclose.c, elf/dlsym.c,
+ 	elf/linux-compat.c, elf/rtld.c: Change all uses of `Elf32_XXX' to
+ 	`ElfW(XXX)' for wordsize-independence.
+
+Sat Jun  8 20:50:42 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/elf.h: Move Elf64_* types in parity with Elf32 counterparts.
+	(Elf64_auxv_t): New type.
+	(EM_ALPHA, R_ALPHA_*): New macros for elf64-alpha format.
+
 Mon Jun 10 02:22:24 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/configure.in: New file, start with configure.

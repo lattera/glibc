@@ -24,9 +24,9 @@ Cambridge, MA 02139, USA.  */
 #define elf_machine_rel 1
 #define elf_machine_rela 2
 #if elf_machine_relplt == elf_machine_rel
-#define PLTREL Elf32_Rel
+#define PLTREL ElfW(Rel)
 #elif elf_machine_relplt == elf_machine_rela
-#define PLTREL Elf32_Rela
+#define PLTREL ElfW(Rela)
 #else
 #error "dl-machine.h bug: elf_machine_relplt not rel or rela"
 #endif
@@ -37,11 +37,11 @@ Cambridge, MA 02139, USA.  */
    in the trampoline code will be a local PC-relative call.  Tell the
    compiler not to worry that the function appears not to be called.  */
 
-static Elf32_Addr fixup (
+static ElfW(Addr) fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
 			 ELF_MACHINE_RUNTIME_FIXUP_ARGS,
 #endif
-			 struct link_map *l, Elf32_Word reloc_offset)
+			 struct link_map *l, ElfW(Word) reloc_offset)
      __attribute__ ((unused));
 
 /* This function is called through a special trampoline from the PLT the
@@ -51,15 +51,15 @@ static Elf32_Addr fixup (
    to that address.  Future calls will bounce directly from the PLT to the
    function.  */
 
-static Elf32_Addr
+static ElfW(Addr)
 fixup (
 #ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
        ELF_MACHINE_RUNTIME_FIXUP_ARGS,
 #endif
-       struct link_map *l, Elf32_Word reloc_offset)
+       struct link_map *l, ElfW(Word) reloc_offset)
 {
-  const Elf32_Sym *const symtab
-    = (const Elf32_Sym *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
+  const ElfW(Sym) *const symtab
+    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
   const char *strtab =
     (const char *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 
@@ -67,8 +67,8 @@ fixup (
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
 
-  Elf32_Addr resolve (const Elf32_Sym **ref,
-		      Elf32_Addr reloc_addr, int noplt)
+  ElfW(Addr) resolve (const ElfW(Sym) **ref,
+		      ElfW(Addr) reloc_addr, int noplt)
     {
       struct link_map *scope[2] = { _dl_loaded, NULL };
       return _dl_lookup_symbol (strtab + (*ref)->st_name, ref,
@@ -76,9 +76,9 @@ fixup (
     }
 
   /* Perform the specified relocation.  */
-  elf_machine_relplt (l, reloc, &symtab[ELF32_R_SYM (reloc->r_info)], resolve);
+  elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)], resolve);
 
-  return *(Elf32_Addr *) (l->l_addr + reloc->r_offset);
+  return *(ElfW(Addr) *) (l->l_addr + reloc->r_offset);
 }
 
 

@@ -32,9 +32,9 @@ Cambridge, MA 02139, USA.  */
 void
 _init (void)
 {
-  const Elf32_Sym *ref = NULL;
+  const ElfW(Sym) *ref = NULL;
   struct link_map *scope[2] = { _dl_loaded, NULL };
-  Elf32_Addr loadbase = _dl_lookup_symbol ("atexit", &ref, scope,
+  ElfW(Addr) loadbase = _dl_lookup_symbol ("atexit", &ref, scope,
 					   "<ld-linux.so.1 initialization>",
 					   0, 1);
   (*(__typeof (atexit) *) (loadbase + ref->st_value)) (&_dl_fini);

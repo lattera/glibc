@@ -60,6 +60,7 @@ Cambridge, MA 02139, USA.  */
 #define STRING(x) #x
 
 int _dl_zerofd = -1;
+size_t _dl_pagesize;
 
 
 /* Try to open NAME in one of the directories in DIRPATH.
@@ -82,31 +83,48 @@ open_path (const char *name, size_t namelen,
       return -1;
     }
 
-  buf = alloca (strlen (dirpath) + 1 + namelen);
+  buf = __alloca (strlen (dirpath) + 1 + namelen);
   do
     {
+      size_t buflen;
+
       dirpath = p;
       p = strpbrk (dirpath, ":;");
       if (p == NULL)
 	p = strchr (dirpath, '\0');
 
       if (p == dirpath)
-	/* Two adjacent colons, or a colon at the beginning or the end of
-	   the path means to search the current directory.  */
-	(void) memcpy (buf, name, namelen);
+	{
+	  /* Two adjacent colons, or a colon at the beginning or the end of
+	     the path means to search the current directory.  */
+	  (void) memcpy (buf, name, namelen);
+	  buflen = namelen;
+	}
       else
 	{
 	  /* Construct the pathname to try.  */
 	  (void) memcpy (buf, dirpath, p - dirpath);
 	  buf[p - dirpath] = '/';
 	  (void) memcpy (&buf[(p - dirpath) + 1], name, namelen);
+	  buflen = p - dirpath + 1 + namelen;
 	}
 
-      fd = open (buf, O_RDONLY);
+      fd = __open (buf, O_RDONLY);
       if (fd != -1)
 	{
-	  *realname = strdup (buf);
-	  return fd;
+	  *realname = malloc (buflen);
+	  if (*realname)
+	    {
+	      memcpy (*realname, buf, buflen);
+	      return fd;
+	    }
+	  else
+	    {
+	      /* No memory for the name, we certainly won't be able
+		 to load and link it.  */
+	      __close (fd);
+	      return -1;
+	    }
 	}
       if (errno != ENOENT && errno != EACCES)
 	/* The file exists and is readable, but something went wrong.  */
@@ -116,7 +134,6 @@ open_path (const char *name, size_t namelen,
 
   return -1;
 }
-
 
 /* Map in the shared object file NAME.  */
 
@@ -163,9 +180,19 @@ _dl_map_object (struct link_map *loader, const char *name)
     }
   else
     {
-      fd = open (name, O_RDONLY);
+      fd = __open (name, O_RDONLY);
       if (fd != -1)
-	realname = strdup (name);
+	{
+	  size_t len = strlen (name) + 1;
+	  realname = malloc (len);
+	  if (realname)
+	    memcpy (realname, name, len);
+	  else
+	    {
+	      __close (fd);
+	      fd = -1;
+	    }
+	}
     }
 
   if (fd == -1)
@@ -182,25 +209,24 @@ struct link_map *
 _dl_map_object_from_fd (const char *name, int fd, char *realname)
 {
   struct link_map *l = NULL;
-  const size_t pagesize = getpagesize ();
   void *file_mapping = NULL;
   size_t mapping_size = 0;
 
 #define LOSE(s) lose (0, (s))
   void lose (int code, const char *msg)
     {
-      (void) close (fd);
+      (void) __close (fd);
       if (file_mapping)
-	munmap (file_mapping, mapping_size);
+	__munmap (file_mapping, mapping_size);
       _dl_signal_error (code, l ? l->l_name : name, msg);
     }
 
-  inline caddr_t map_segment (Elf32_Addr mapstart, size_t len,
+  inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
 			      int prot, int fixed, off_t offset)
     {
-      caddr_t mapat = mmap ((caddr_t) mapstart, len, prot,
-			    fixed|MAP_COPY|MAP_FILE,
-			    fd, offset);
+      caddr_t mapat = __mmap ((caddr_t) mapstart, len, prot,
+			      fixed|MAP_COPY|MAP_FILE,
+			      fd, offset);
       if (mapat == (caddr_t) -1)
 	lose (errno, "failed to map segment from shared object");
       return mapat;
@@ -213,11 +239,11 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	{
 	  void *result;
 	  if (file_mapping)
-	    munmap (file_mapping, mapping_size);
-	  mapping_size = (location + size + 1 + pagesize - 1);
-	  mapping_size &= ~(pagesize - 1);
-	  result = mmap (file_mapping, mapping_size, PROT_READ,
-			 MAP_COPY|MAP_FILE, fd, 0);
+	    __munmap (file_mapping, mapping_size);
+	  mapping_size = (location + size + 1 + _dl_pagesize - 1);
+	  mapping_size &= ~(_dl_pagesize - 1);
+	  result = __mmap (file_mapping, mapping_size, PROT_READ,
+			   MAP_COPY|MAP_FILE, fd, 0);
 	  if (result == (void *) -1)
 	    lose (errno, "cannot map file data");
 	  file_mapping = result;
@@ -225,9 +251,9 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
       return file_mapping + location;
     }
 
-  const Elf32_Ehdr *header;
-  const Elf32_Phdr *phdr;
-  const Elf32_Phdr *ph;
+  const ElfW(Ehdr) *header;
+  const ElfW(Phdr) *phdr;
+  const ElfW(Phdr) *ph;
   int type;
 
   /* Look again to see if the real name matched another already loaded.  */
@@ -236,11 +262,14 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
       {
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
-	close (fd);
+	__close (fd);
 	free (realname);
 	++l->l_opencount;
 	return l;
       }
+
+  if (_dl_pagesize == 0)
+    _dl_pagesize = __getpagesize ();
 
   /* Map in the first page to read the header.  */
   header = map (0, sizeof *header);
@@ -260,8 +289,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 #endif
       )
     LOSE ("invalid ELF header");
-  if (header->e_ident[EI_CLASS] != ELFCLASS32)
-    LOSE ("ELF file class not 32-bit");
+#define ELF32_CLASS ELFCLASS32
+#define ELF64_CLASS ELFCLASS64
+  if (header->e_ident[EI_CLASS] != ELFW(CLASS))
+    LOSE ("ELF file class not " STRING(__ELF_WORDSIZE) "-bit");
   if (header->e_ident[EI_DATA] != byteorder)
     LOSE ("ELF file data encoding not " byteorder_name);
   if (header->e_ident[EI_VERSION] != EV_CURRENT)
@@ -270,7 +301,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
     LOSE ("ELF file version not " STRING(EV_CURRENT));
   if (! elf_machine_matches_host (header->e_machine))
     LOSE ("ELF file machine architecture not " ELF_MACHINE_NAME);
-  if (header->e_phentsize != sizeof (Elf32_Phdr))
+  if (header->e_phentsize != sizeof (ElfW(Phdr)))
     LOSE ("ELF file's phentsize not the expected size");
 
   /* Enter the new object in the list of loaded objects.  */
@@ -289,13 +320,13 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
   l->l_entry = header->e_entry;
   type = header->e_type;
   l->l_phnum = header->e_phnum;
-  phdr = map (header->e_phoff, l->l_phnum * sizeof (Elf32_Phdr));
+  phdr = map (header->e_phoff, l->l_phnum * sizeof (ElfW(Phdr)));
 
   {
     /* Scan the program header table, collecting its load commands.  */
     struct loadcmd
       {
-	Elf32_Addr mapstart, mapend, dataend, allocend;
+	ElfW(Addr) mapstart, mapend, dataend, allocend;
 	off_t mapoff;
 	int prot;
       } loadcmds[l->l_phnum], *c;
@@ -320,15 +351,15 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	case PT_LOAD:
 	  /* A load command tells us to map in part of the file.
 	     We record the load commands and process them all later.  */
-	  if (ph->p_align % pagesize != 0)
+	  if (ph->p_align % _dl_pagesize != 0)
 	    LOSE ("ELF load command alignment not page-aligned");
 	  if ((ph->p_vaddr - ph->p_offset) % ph->p_align)
 	    LOSE ("ELF load command address/offset not properly aligned");
 	  {
 	    struct loadcmd *c = &loadcmds[nloadcmds++];
 	    c->mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-	    c->mapend = ((ph->p_vaddr + ph->p_filesz + pagesize - 1)
-			 & ~(pagesize - 1));
+	    c->mapend = ((ph->p_vaddr + ph->p_filesz + _dl_pagesize - 1)
+			 & ~(_dl_pagesize - 1));
 	    c->dataend = ph->p_vaddr + ph->p_filesz;
 	    c->allocend = ph->p_vaddr + ph->p_memsz;
 	    c->mapoff = ph->p_offset & ~(ph->p_align - 1);
@@ -344,7 +375,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	}
 
     /* We are done reading the file's headers now.  Unmap them.  */
-    munmap (file_mapping, mapping_size);
+    __munmap (file_mapping, mapping_size);
 
     /* Now process the load commands and map segments into memory.  */
     c = loadcmds;
@@ -362,16 +393,16 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	mapat = map_segment (c->mapstart,
 			     loadcmds[nloadcmds - 1].allocend - c->mapstart,
 			     c->prot, 0, c->mapoff);
-	l->l_addr = (Elf32_Addr) mapat - c->mapstart;
+	l->l_addr = (ElfW(Addr)) mapat - c->mapstart;
 
 	/* Change protection on the excess portion to disallow all access;
 	   the portions we do not remap later will be inaccessible as if
 	   unallocated.  Then jump into the normal segment-mapping loop to
 	   handle the portion of the segment past the end of the file
 	   mapping.  */
-	mprotect (mapat + c->mapend,
-		  loadcmds[nloadcmds - 1].allocend - c->mapend,
-		  0);
+	__mprotect (mapat + c->mapend,
+		    loadcmds[nloadcmds - 1].allocend - c->mapend,
+		    0);
 	goto postmap;
       }
 
@@ -387,11 +418,11 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	  {
 	    /* Extra zero pages should appear at the end of this segment,
 	       after the data mapped from the file.   */
-	    Elf32_Addr zero, zeroend, zeropage;
+	    ElfW(Addr) zero, zeroend, zeropage;
 
 	    zero = l->l_addr + c->dataend;
 	    zeroend = l->l_addr + c->allocend;
-	    zeropage = (zero + pagesize - 1) & ~(pagesize - 1);
+	    zeropage = (zero + _dl_pagesize - 1) & ~(_dl_pagesize - 1);
 
 	    if (zeroend < zeropage)
 	      /* All the extra data is in the last page of the segment.
@@ -404,23 +435,23 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 		if ((c->prot & PROT_WRITE) == 0)
 		  {
 		    /* Dag nab it.  */
-		    if (mprotect ((caddr_t) (zero & ~(pagesize - 1)),
-				  pagesize, c->prot|PROT_WRITE) < 0)
+		    if (__mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
+				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
 		      lose (errno, "cannot change memory protections");
 		  }
 		memset ((void *) zero, 0, zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
-		  mprotect ((caddr_t) (zero & ~(pagesize - 1)),
-			    pagesize, c->prot);
+		  __mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
+			      _dl_pagesize, c->prot);
 	      }
 
 	    if (zeroend > zeropage)
 	      {
 		/* Map the remaining zero pages in from the zero fill FD.  */
 		caddr_t mapat;
-		mapat = mmap ((caddr_t) zeropage, zeroend - zeropage, c->prot,
-			      MAP_ANON|MAP_PRIVATE|MAP_FIXED,
-			      _dl_zerofd, 0);
+		mapat = __mmap ((caddr_t) zeropage, zeroend - zeropage,
+				c->prot, MAP_ANON|MAP_PRIVATE|MAP_FIXED,
+				_dl_zerofd, 0);
 		if (mapat == (caddr_t) -1)
 		  lose (errno, "cannot map zero-fill pages");
 	      }
@@ -441,11 +472,11 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 	LOSE ("object file has no dynamic section");
     }
   else
-    (Elf32_Addr) l->l_ld += l->l_addr;
+    (ElfW(Addr)) l->l_ld += l->l_addr;
 
   if (l->l_phdr == 0)
-    l->l_phdr = (void *) ((const Elf32_Ehdr *) l->l_addr)->e_phoff;
-  (Elf32_Addr) l->l_phdr += l->l_addr;
+    l->l_phdr = (void *) ((const ElfW(Ehdr) *) l->l_addr)->e_phoff;
+  (ElfW(Addr)) l->l_phdr += l->l_addr;
 
   elf_get_dynamic_info (l->l_ld, l->l_info);
   if (l->l_info[DT_HASH])

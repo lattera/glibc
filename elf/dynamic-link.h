@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
 
 static inline void
-elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM + DT_PROCNUM])
+elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
 {
   unsigned int i;
 
@@ -48,9 +48,9 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM + DT_PROCNUM])
     }
 
   if (info[DT_RELA])
-    assert (info[DT_RELAENT]->d_un.d_val == sizeof (Elf32_Rela));
+    assert (info[DT_RELAENT]->d_un.d_val == sizeof (ElfW(Rela)));
   if (info[DT_REL])
-    assert (info[DT_RELENT]->d_un.d_val == sizeof (Elf32_Rel));
+    assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
   if (info[DT_PLTREL])
     assert (info[DT_PLTREL]->d_un.d_val == DT_REL ||
 	    info[DT_PLTREL]->d_un.d_val == DT_RELA);

@@ -1,5 +1,5 @@
-/* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Load a shared object at runtime, relocate it, and run its initializer.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -17,23 +17,29 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <stddef.h>
 #include <link.h>
 #include <dlfcn.h>
-#include <setjmp.h>
 
-
-void *
-dlsym (void *handle, const char *name)
+struct link_map *
+_dl_open (struct link_map *parent, const char *file, int mode)
 {
-  struct link_map *map = handle;
-  ElfW(Addr) loadbase;
-  const ElfW(Sym) *ref = NULL;
-  void doit (void)
-    {
-      struct link_map *scope[2] = { map, NULL };
-      loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
-    }
+  struct link_map *new, *l;
+  ElfW(Addr) init;
 
-  return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);
+  /* Load the named object.  */
+  new = _dl_map_object (parent, file);
+
+  /* Load that object's dependencies.  */
+  _dl_map_object_deps (new);
+
+  /* Relocate the objects loaded.  */
+  for (l = new; l; l = l->l_next)
+    if (! l->l_relocated)
+      _dl_relocate_object (l, (mode & RTLD_BINDING_MASK) == RTLD_LAZY);
+
+  /* Run the initializer functions of new objects.  */
+  while (init = _dl_init_next (new))
+    (*(void (*) (void)) init) ();
+
+  return new;
 }

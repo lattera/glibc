@@ -56,7 +56,7 @@ _dl_map_object_deps (struct link_map *map)
 	{
 	  const char *strtab
 	    = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-	  const Elf32_Dyn *d;
+	  const ElfW(Dyn) *d;
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 	    if (d->d_tag == DT_NEEDED)
 	      {
@@ -96,29 +96,4 @@ _dl_map_object_deps (struct link_map *map)
 	 to avoid duplicates, so the next call starts fresh.  */
       scanp->map->l_reserved = 0;
     }
-}
-
-
-struct link_map *
-_dl_open (struct link_map *parent, const char *file, int mode)
-{
-  struct link_map *new, *l;
-  Elf32_Addr init;
-
-  /* Load the named object.  */
-  new = _dl_map_object (parent, file);
-
-  /* Load that object's dependencies.  */
-  _dl_map_object_deps (new);
-
-  /* Relocate the objects loaded.  */
-  for (l = new; l; l = l->l_next)
-    if (! l->l_relocated)
-      _dl_relocate_object (l, (mode & RTLD_BINDING_MASK) == RTLD_LAZY);
-
-  /* Run the initializer functions of new objects.  */
-  while (init = _dl_init_next (new))
-    (*(void (*) (void)) init) ();
-
-  return new;
 }

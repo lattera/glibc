@@ -25,9 +25,9 @@ Cambridge, MA 02139, USA.  */
 int
 dladdr (void *address, Dl_info *info)
 {
-  const Elf32_Addr addr = (Elf32_Addr) address;
+  const ElfW(Addr) addr = (ElfW(Addr)) address;
   struct link_map *l, *match;
-  const Elf32_Sym *symtab, *matchsym;
+  const ElfW(Sym) *symtab, *matchsym;
   const char *strtab;
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
@@ -64,8 +64,8 @@ dladdr (void *address, Dl_info *info)
   for (matchsym = NULL; (void *) symtab < (void *) strtab; ++symtab)
     if (addr >= match->l_addr + symtab->st_value && !matchsym ||
 	matchsym->st_value < symtab->st_value &&
-	ELF32_ST_BIND (symtab->st_info) == STB_GLOBAL ||
-	ELF32_ST_BIND (symtab->st_info) == STB_WEAK)
+	ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL ||
+	ELFW(ST_BIND) (symtab->st_info) == STB_WEAK)
       matchsym = symtab;
 
   if (matchsym)

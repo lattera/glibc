@@ -35,10 +35,10 @@ RTLD_START
    After this, file access calls and getenv must work.  This is responsible
    for setting _dl_secure if we need to be secure (e.g. setuid),
    and for setting _dl_argc and _dl_argv, and then calling _dl_main.  */
-extern Elf32_Addr _dl_sysdep_start (void **start_argptr,
-				    void (*dl_main) (const Elf32_Phdr *phdr,
-						     Elf32_Word phent,
-						     Elf32_Addr *user_entry));
+extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
+				    void (*dl_main) (const ElfW(Phdr) *phdr,
+						     ElfW(Half) phent,
+						     ElfW(Addr) *user_entry));
 extern void _dl_sysdep_start_cleanup (void);
 
 int _dl_secure;
@@ -46,15 +46,15 @@ int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
 
-struct r_debug dl_r_debug;
+struct r_debug _dl_r_debug;
 
-static void dl_main (const Elf32_Phdr *phdr,
-		     Elf32_Word phent,
-		     Elf32_Addr *user_entry);
+static void dl_main (const ElfW(Phdr) *phdr,
+		     ElfW(Half) phent,
+		     ElfW(Addr) *user_entry);
 
 struct link_map _dl_rtld_map;
 
-Elf32_Addr
+ElfW(Addr)
 _dl_start (void *arg)
 {
   struct link_map bootstrap_map;
@@ -120,17 +120,17 @@ void _start (void);
 unsigned int _dl_skip_args;	/* Nonzero if we were run directly.  */
 
 static void
-dl_main (const Elf32_Phdr *phdr,
-	 Elf32_Word phent,
-	 Elf32_Addr *user_entry)
+dl_main (const ElfW(Phdr) *phdr,
+	 ElfW(Half) phent,
+	 ElfW(Addr) *user_entry)
 {
-  const Elf32_Phdr *ph;
+  const ElfW(Phdr) *ph;
   struct link_map *l;
   const char *interpreter_name;
   int lazy;
   int list_only = 0;
 
-  if (*user_entry == (Elf32_Addr) &_start)
+  if (*user_entry == (ElfW(Addr)) &_start)
     {
       /* Ho ho.  We are not the program interpreter!  We are the program
 	 itself!  This means someone ran ld.so as a command.  Well, that
@@ -240,7 +240,7 @@ of this helper program; chances are you did not intend to run this program.\n",
     /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
        with the run-time address of the r_debug structure, which we
        will set up later to communicate with the debugger.  */
-    l->l_info[DT_DEBUG]->d_un.d_ptr = (Elf32_Addr) &dl_r_debug;
+    l->l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) &_dl_r_debug;
 
   /* Put the link_map for ourselves on the chain so it can be found by
      name.  */
@@ -292,9 +292,9 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       for (i = 1; i < _dl_argc; ++i)
 	{
-	  const Elf32_Sym *ref = NULL;
+	  const ElfW(Sym) *ref = NULL;
 	  struct link_map *scope[2] ={ _dl_loaded, NULL };
-	  Elf32_Addr loadbase
+	  ElfW(Addr) loadbase
 	    = _dl_lookup_symbol (_dl_argv[i], &ref, scope, "argument", 0, 0);
 	  char buf[20], *bp;
 	  buf[sizeof buf - 1] = '\0';
@@ -345,10 +345,10 @@ of this helper program; chances are you did not intend to run this program.\n",
     _dl_relocate_object (&_dl_rtld_map, lazy);
 
   /* Tell the debugger where to find the map of loaded objects.  */
-  dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
-  dl_r_debug.r_ldbase = _dl_rtld_map.l_addr; /* Record our load address.  */
-  dl_r_debug.r_map = _dl_loaded;
-  dl_r_debug.r_brk = (Elf32_Addr) &_dl_r_debug_state;
+  _dl_r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
+  _dl_r_debug.r_ldbase = _dl_rtld_map.l_addr; /* Record our load address.  */
+  _dl_r_debug.r_map = _dl_loaded;
+  _dl_r_debug.r_brk = (ElfW(Addr)) &_dl_r_debug_state;
 
   if (_dl_rtld_map.l_info[DT_INIT])
     {

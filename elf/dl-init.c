@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* Run initializers for MAP and its dependencies, in inverse dependency
    order (that is, leaf nodes first).  */
 
-Elf32_Addr
+ElfW(Addr)
 _dl_init_next (struct link_map *map)
 {
   unsigned int i;

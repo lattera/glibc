@@ -34,10 +34,9 @@ void *
 malloc (size_t n)
 {
   extern int _dl_zerofd;
-  static size_t pagesize;
 
-  if (pagesize == 0)
-    pagesize = __getpagesize ();
+  if (_dl_pagesize == 0)
+    _dl_pagesize = __getpagesize ();
 
   if (_dl_zerofd == -1)
     _dl_zerofd = _dl_sysdep_open_zero_fill ();
@@ -47,8 +46,8 @@ malloc (size_t n)
       /* Consume any unused space in the last page of our data segment.  */
       extern int _end;
       alloc_ptr = &_end;
-      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0) + pagesize - 1)
-				& ~(pagesize - 1));
+      alloc_end = (void *) 0 + (((alloc_ptr - (void *) 0) + _dl_pagesize - 1)
+				& ~(_dl_pagesize - 1));
     }
 
   /* Make sure the allocation pointer is ideally aligned.  */
@@ -59,13 +58,13 @@ malloc (size_t n)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
-      assert (n <= pagesize);
-      page = mmap (0, pagesize, PROT_READ|PROT_WRITE,
-		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
+      assert (n <= _dl_pagesize);
+      page = __mmap (0, _dl_pagesize, PROT_READ|PROT_WRITE,
+		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
       assert (page != (caddr_t) -1);
       if (page != alloc_end)
 	alloc_ptr = page;
-      alloc_end = page + pagesize;
+      alloc_end = page + _dl_pagesize;
     }
 
   alloc_last_block = (void *) alloc_ptr;

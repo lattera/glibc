@@ -23,16 +23,37 @@ Cambridge, MA 02139, USA.  */
 #define	_ELF_H 1
 
 
-/* Standard ELF types.
+/* Standard ELF types.  Using __attribute__ mode ensures that GCC
+   will choose the right number of bits for these types.  */
 
-   Using __attribute__ mode ensures that gcc will choose the right for
-   these types.  */
-
-typedef unsigned int Elf32_Addr    __attribute__ ((mode (SI)));
+/* Type for a 16-bit quantity.  */
 typedef unsigned int Elf32_Half    __attribute__ ((mode (HI)));
-typedef unsigned int Elf32_Off     __attribute__ ((mode (SI)));
-typedef		 int Elf32_Sword   __attribute__ ((mode (SI)));
+typedef unsigned int Elf64_Half    __attribute__ ((mode (HI)));
+
+/* Types for signed and unsigned 32-bit quantities.  */
 typedef unsigned int Elf32_Word    __attribute__ ((mode (SI)));
+typedef		 int Elf32_Sword   __attribute__ ((mode (SI)));
+typedef unsigned int Elf64_Word    __attribute__ ((mode (SI)));
+typedef		 int Elf64_Sword   __attribute__ ((mode (SI)));
+
+/* Types for signed and unsigned 64-bit quantities.  */
+typedef unsigned int Elf32_Xword   __attribute__ ((mode (DI)));
+typedef		 int Elf32_Sxword  __attribute__ ((mode (DI)));
+typedef unsigned int Elf64_Xword   __attribute__ ((mode (DI)));
+typedef		 int Elf64_Sxword  __attribute__ ((mode (DI)));
+
+/* Type of addresses.  */
+typedef unsigned int Elf32_Addr    __attribute__ ((mode (SI)));
+typedef unsigned int Elf64_Addr    __attribute__ ((mode (DI)));
+
+/* Type of file offsets.  */
+typedef unsigned int Elf32_Off     __attribute__ ((mode (SI)));
+typedef unsigned int Elf64_Off     __attribute__ ((mode (DI)));
+
+/* Type for section indices, which are 16-bit quantities.  */
+typedef unsigned int Elf32_Section __attribute__ ((mode (HI)));
+typedef unsigned int Elf64_Section __attribute__ ((mode (HI)));
+
 
 /* The ELF file header.  This appears at the start of every ELF file.  */
 
@@ -55,6 +76,24 @@ typedef struct
   Elf32_Half	e_shnum;		/* Section header table entry count */
   Elf32_Half	e_shstrndx;		/* Section header string table index */
 } Elf32_Ehdr;
+
+typedef struct
+{
+  unsigned char	e_ident[EI_NIDENT];	/* Magic number and other info */
+  Elf64_Half	e_type;			/* Object file type */
+  Elf64_Half	e_machine;		/* Architecture */
+  Elf64_Word	e_version;		/* Object file version */
+  Elf64_Addr	e_entry;		/* Entry point virtual address */
+  Elf64_Off	e_phoff;		/* Program header table file offset */
+  Elf64_Off	e_shoff;		/* Section header table file offset */
+  Elf64_Word	e_flags;		/* Processor-specific flags */
+  Elf64_Half	e_ehsize;		/* ELF header size in bytes */
+  Elf64_Half	e_phentsize;		/* Program header table entry size */
+  Elf64_Half	e_phnum;		/* Program header table entry count */
+  Elf64_Half	e_shentsize;		/* Section header table entry size */
+  Elf64_Half	e_shnum;		/* Section header table entry count */
+  Elf64_Half	e_shstrndx;		/* Section header string table index */
+} Elf64_Ehdr;
 
 /* Fields in the e_ident array.  The EI_* macros are indices into the
    array.  The macros under each EI_* macro are the values the byte
@@ -125,6 +164,8 @@ typedef struct
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
    chances of collision with official or non-GNU unofficial values.  */
 
+#define EM_ALPHA	0x9026
+
 /* Legal values for e_version (version).  */
 
 #define EV_NONE		0		/* Invalid ELF version */
@@ -145,6 +186,20 @@ typedef struct
   Elf32_Word	sh_addralign;		/* Section alignment */
   Elf32_Word	sh_entsize;		/* Entry size if section holds table */
 } Elf32_Shdr;
+
+typedef struct
+{
+  Elf64_Word	sh_name;		/* Section name (string tbl index) */
+  Elf64_Word	sh_type;		/* Section type */
+  Elf64_Xword	sh_flags;		/* Section flags */
+  Elf64_Addr	sh_addr;		/* Section virtual addr at execution */
+  Elf64_Off	sh_offset;		/* Section file offset */
+  Elf64_Xword	sh_size;		/* Section size in bytes */
+  Elf64_Word	sh_link;		/* Link to another section */
+  Elf64_Word	sh_info;		/* Additional section information */
+  Elf64_Xword	sh_addralign;		/* Section alignment */
+  Elf64_Xword	sh_entsize;		/* Entry size if section holds table */
+} Elf64_Shdr;
 
 /* Special section indices.  */
 
@@ -192,8 +247,18 @@ typedef struct
   Elf32_Word	st_size;		/* Symbol size */
   unsigned char	st_info;		/* Symbol type and binding */
   unsigned char	st_other;		/* No defined meaning, 0 */
-  Elf32_Half	st_shndx;		/* Section index */
+  Elf32_Section	st_shndx;		/* Section index */
 } Elf32_Sym;
+
+typedef struct
+{
+  Elf64_Word	st_name;		/* Symbol name (string tbl index) */
+  unsigned char	st_info;		/* Symbol type and binding */
+  unsigned char st_other;		/* No defined meaning, 0 */
+  Elf64_Section	st_shndx;		/* Section index */
+  Elf64_Addr	st_value;		/* Symbol value */
+  Elf64_Xword	st_size;		/* Symbol size */
+} Elf64_Sym;
 
 /* Special section index.  */
 
@@ -204,6 +269,11 @@ typedef struct
 #define ELF32_ST_BIND(val)		(((unsigned char) (val)) >> 4)
 #define ELF32_ST_TYPE(val)		((val) & 0xf)
 #define ELF32_ST_INFO(bind, type)	(((bind) << 4) + ((type) & 0xf))
+
+/* Both Elf32_Sym and Elf64_Sym use the same one-byte st_info field.  */
+#define ELF64_ST_BIND(val)		ELF32_ST_BIND (val)
+#define ELF64_ST_TYPE(val)		ELF32_ST_TYPE (val)
+#define ELF64_ST_INFO(bind, type)	ELF32_ST_INFO ((bind), (type))
 
 /* Legal values for ST_BIND subfield of st_info (symbol binding).  */
 
@@ -241,6 +311,17 @@ typedef struct
   Elf32_Word	r_info;			/* Relocation type and symbol index */
 } Elf32_Rel;
 
+/* I have seen two different definitions of the Elf64_Rel and
+   Elf64_Rela structures, so we'll leave them out until Novell (or
+   whoever) gets their act together.  */
+/* The following, at least, is used on Sparc v9, MIPS, and Alpha.  */
+
+typedef struct
+{
+  Elf64_Addr	r_offset;		/* Address */
+  Elf64_Xword	r_info;			/* Relocation type and symbol index */
+} Elf64_Rel;
+
 /* Relocation table entry with addend (in section of type SHT_RELA).  */
 
 typedef struct
@@ -249,6 +330,13 @@ typedef struct
   Elf32_Word	r_info;			/* Relocation type and symbol index */
   Elf32_Sword	r_addend;		/* Addend */
 } Elf32_Rela;
+
+typedef struct
+{
+  Elf64_Addr	r_offset;		/* Address */
+  Elf64_Xword	r_info;			/* Relocation type and symbol index */
+  Elf64_Sxword	r_addend;		/* Addend */
+} Elf64_Rela;
 
 /* How to extract and insert information held in the r_info field.  */
 
@@ -262,7 +350,8 @@ typedef struct
 
 /* Program segment header.  */
 
-typedef struct {
+typedef struct
+{
   Elf32_Word	p_type;			/* Segment type */
   Elf32_Off	p_offset;		/* Segment file offset */
   Elf32_Addr	p_vaddr;		/* Segment virtual address */
@@ -272,6 +361,18 @@ typedef struct {
   Elf32_Word	p_flags;		/* Segment flags */
   Elf32_Word	p_align;		/* Segment alignment */
 } Elf32_Phdr;
+
+typedef struct
+{
+  Elf64_Word	p_type;			/* Segment type */
+  Elf64_Word	p_flags;		/* Segment flags */
+  Elf64_Off	p_offset;		/* Segment file offset */
+  Elf64_Addr	p_vaddr;		/* Segment virtual address */
+  Elf64_Addr	p_paddr;		/* Segment physical address */
+  Elf64_Xword	p_filesz;		/* Segment size in file */
+  Elf64_Xword	p_memsz;		/* Segment size in memory */
+  Elf64_Xword	p_align;		/* Segment alignment */
+} Elf64_Phdr;
 
 /* Legal values for p_type (segment type).  */
 
@@ -316,6 +417,16 @@ typedef struct
     } d_un;
 } Elf32_Dyn;
 
+typedef struct
+{
+  Elf64_Sxword	d_tag;			/* Dynamic entry type */
+  union
+    {
+      Elf64_Xword d_val;		/* Integer value */
+      Elf64_Addr d_ptr;			/* Address value */
+    } d_un;
+} Elf64_Dyn;
+
 /* Legal values for d_tag (dynamic entry type).  */
 
 #define DT_NULL		0		/* Marks end of dynamic section */
@@ -347,76 +458,6 @@ typedef struct
 #define DT_HIPROC	0x7fffffff	/* End of processor-specific */
 #define	DT_PROCNUM	DT_MIPS_NUM	/* Most used by any processor */
 
-/* Standard 64 bit ELF types.  */
-
-typedef unsigned int Elf64_Addr    __attribute__ ((mode (DI)));
-typedef unsigned int Elf64_Half    __attribute__ ((mode (HI)));
-typedef unsigned int Elf64_Off     __attribute__ ((mode (DI)));
-typedef		 int Elf64_Sword   __attribute__ ((mode (SI)));
-typedef		 int Elf64_Sxword  __attribute__ ((mode (DI)));
-typedef unsigned int Elf64_Word    __attribute__ ((mode (SI)));
-typedef unsigned int Elf64_Xword   __attribute__ ((mode (DI)));
-typedef unsigned int Elf64_Byte    __attribute__ ((mode (QI)));
-typedef unsigned int Elf64_Section __attribute__ ((mode (HI)));
-
-/* 64 bit ELF file header.  */
-
-typedef struct
-{
-  unsigned char	e_ident[EI_NIDENT];	/* Magic number and other info */
-  Elf64_Half	e_type;			/* Object file type */
-  Elf64_Half	e_machine;		/* Architecture */
-  Elf64_Word	e_version;		/* Object file version */
-  Elf64_Addr	e_entry;		/* Entry point virtual address */
-  Elf64_Off	e_phoff;		/* Program header table file offset */
-  Elf64_Off	e_shoff;		/* Section header table file offset */
-  Elf64_Word	e_flags;		/* Processor-specific flags */
-  Elf64_Half	e_ehsize;		/* ELF header size in bytes */
-  Elf64_Half	e_phentsize;		/* Program header table entry size */
-  Elf64_Half	e_phnum;		/* Program header table entry count */
-  Elf64_Half	e_shentsize;		/* Section header table entry size */
-  Elf64_Half	e_shnum;		/* Section header table entry count */
-  Elf64_Half	e_shstrndx;		/* Section header string table index */
-} Elf64_Ehdr;
-
-/* 64 bit section header.  */
-
-typedef struct
-{
-  Elf64_Word	sh_name;		/* Section name (string tbl index) */
-  Elf64_Word	sh_type;		/* Section type */
-  Elf64_Xword	sh_flags;		/* Section flags */
-  Elf64_Addr	sh_addr;		/* Section virtual addr at execution */
-  Elf64_Off	sh_offset;		/* Section file offset */
-  Elf64_Xword	sh_size;		/* Section size in bytes */
-  Elf64_Word	sh_link;		/* Link to another section */
-  Elf64_Word	sh_info;		/* Additional section information */
-  Elf64_Xword	sh_addralign;		/* Section alignment */
-  Elf64_Xword	sh_entsize;		/* Entry size if section holds table */
-} Elf64_Shdr;
-
-/* 64 bit symbol table entry.  */
-
-typedef struct
-{
-  Elf64_Word	st_name;		/* Symbol name (string tbl index) */
-  Elf64_Byte	st_info;		/* Symbol type and binding */
-  Elf64_Byte	st_other;		/* No defined meaning, 0 */
-  Elf64_Section	st_shndx;		/* Section index */
-  Elf64_Addr	st_value;		/* Symbol value */
-  Elf64_Xword	st_size;		/* Symbol size */
-} Elf64_Sym;
-
-/* The 64 bit st_info field is the same as the 32 bit one.  */
-
-#define ELF64_ST_BIND(val)		(((unsigned char) (val)) >> 4)
-#define ELF64_ST_TYPE(val)		((val) & 0xf)
-#define ELF64_ST_INFO(bind, type)	(((bind) << 4) + ((type) & 0xf))
-
-/* I have seen two different definitions of the Elf64_Rel and
-   Elf64_Rela structures, so we'll leave them out until Novell (or
-   whoever) gets their act together.  */
-
 /* Auxiliary vector.  */
 
 /* This vector is normally only used by the program interpreter.  The
@@ -436,6 +477,17 @@ typedef struct
       void (*a_fcn) (void);	/* Function pointer value */
     } a_un;
 } Elf32_auxv_t;
+
+typedef struct
+{
+  long int a_type;		/* Entry type */
+  union
+    {
+      long int a_val;		/* Integer value */
+      void *a_ptr;		/* Pointer value */
+      void (*a_fcn) (void);	/* Function pointer value */
+    } a_un;
+} Elf64_auxv_t;
 
 /* Legal values for a_type (entry type).  */
 
@@ -682,6 +734,40 @@ typedef Elf32_Addr Elf32_Conflict;
 /* Legal values for ST_TYPE subfield of st_info (symbol type).  */
 
 #define STT_PARISC_MILLICODE	13	/* Millicode function entry point.  */
+
+
+/* Alpha specific declarations.  */
+
+/* Alpha relocs.  */
+
+#define R_ALPHA_NONE		0	/* No reloc */
+#define R_ALPHA_REFLONG		1	/* Direct 32 bit */
+#define R_ALPHA_REFQUAD		2	/* Direct 64 bit */
+#define R_ALPHA_GPREL32		3	/* GP relative 32 bit */
+#define R_ALPHA_LITERAL		4	/* GP relative 16 bit w/optimization */
+#define R_ALPHA_LITUSE		5	/* Optimization hint for LITERAL */
+#define R_ALPHA_GPDISP		6	/* Add displacement to GP */
+#define R_ALPHA_BRADDR		7	/* PC+4 relative 23 bit shifted */
+#define R_ALPHA_HINT		8	/* PC+4 relative 16 bit shifted */
+#define R_ALPHA_SREL16		9	/* PC relative 16 bit */
+#define R_ALPHA_SREL32		10	/* PC relative 32 bit */
+#define R_ALPHA_SREL64		11	/* PC relative 64 bit */
+#define R_ALPHA_OP_PUSH		12	/* OP stack push */
+#define R_ALPHA_OP_STORE	13	/* OP stack pop and store */
+#define R_ALPHA_OP_PSUB		14	/* OP stack subtract */
+#define R_ALPHA_OP_PRSHIFT	15	/* OP stack right shift */
+#define R_ALPHA_GPVALUE		16
+#define R_ALPHA_GPRELHIGH	17
+#define R_ALPHA_GPRELLOW	18
+#define R_ALPHA_IMMED_GP_16	19
+#define R_ALPHA_IMMED_GP_HI32	20
+#define R_ALPHA_IMMED_SCN_HI32	21
+#define R_ALPHA_IMMED_BR_HI32	22
+#define R_ALPHA_IMMED_LO32	23
+#define R_ALPHA_COPY		24	/* Copy symbol at runtime */
+#define R_ALPHA_GLOB_DAT	25	/* Create GOT entry */
+#define R_ALPHA_JMP_SLOT	26	/* Create PLT entry */
+#define R_ALPHA_RELATIVE	27	/* Adjust by program base */
 
 
 #endif	/* elf.h */

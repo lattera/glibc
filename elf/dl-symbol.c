@@ -1,4 +1,4 @@
-/* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
+/* Look up a symbol's run-time value in the scope of a loaded object.
 Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -19,21 +19,15 @@ Cambridge, MA 02139, USA.  */
 
 #include <stddef.h>
 #include <link.h>
-#include <dlfcn.h>
-#include <setjmp.h>
 
+/* Look up symbol NAME in MAP's scope and return its run-time address.  */
 
-void *
-dlsym (void *handle, const char *name)
+ElfW(Addr)
+_dl_symbol_value (struct link_map *map, const char *name)
 {
-  struct link_map *map = handle;
   ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
-  void doit (void)
-    {
-      struct link_map *scope[2] = { map, NULL };
-      loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
-    }
-
-  return _dlerror_run (doit) ? NULL : (void *) (loadbase + ref->st_value);
+  struct link_map *scope[2] = { map, NULL };
+  loadbase = _dl_lookup_symbol (name, &ref, scope, map->l_name, 0, 0);
+  return loadbase + ref->st_value;
 }

@@ -65,7 +65,7 @@ dlclose (void *handle)
 	    {
 	      /* That was the last reference, and this was a dlopen-loaded
 		 object.  We can unmap it.  */
-	      const Elf32_Phdr *ph;
+	      const ElfW(Phdr) *ph;
 
 	      if (map->l_info[DT_FINI])
 		/* Call its termination function.  */
@@ -76,8 +76,8 @@ dlclose (void *handle)
 	      for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
 		if (ph->p_type == PT_LOAD)
 		  {
-		    Elf32_Addr mapstart = ph->p_vaddr & ~(ph->p_align - 1);
-		    Elf32_Addr mapend = ((ph->p_vaddr + ph->p_memsz
+		    ElfW(Addr) mapstart = ph->p_vaddr & ~(ph->p_align - 1);
+		    ElfW(Addr) mapend = ((ph->p_vaddr + ph->p_memsz
 					  + ph->p_align - 1)
 					 & ~(ph->p_align - 1));
 		    munmap ((caddr_t) mapstart, mapend - mapstart);

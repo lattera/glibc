@@ -270,7 +270,7 @@ _dl_sysdep_message (const char *msg, ...)
    it will get the user's definition (i.e. usually libc's).  */
 
 int
-open (const char *file_name, int mode, ...)
+__open (const char *file_name, int mode, ...)
 {
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
@@ -495,7 +495,7 @@ open (const char *file_name, int mode, ...)
 }
 
 int
-close (int fd)
+__close (int fd)
 {
   if (fd != (int) MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), (mach_port_t) fd);
@@ -503,7 +503,7 @@ close (int fd)
 }
 
 caddr_t
-mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
+__mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
   error_t err;
   vm_prot_t vmprot;
@@ -554,9 +554,9 @@ _exit (int status)
 }
 
 weak_symbol (_exit)
-weak_symbol (open)
-weak_symbol (close)
-weak_symbol (mmap)
+weak_symbol (__open)
+weak_symbol (__close)
+weak_symbol (__mmap)
 
 
 /* This function is called by interruptible RPC stubs.  For initial
