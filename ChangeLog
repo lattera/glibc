@@ -1,3 +1,8 @@
+Tue May 14 03:36:21 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Makefile [$subdir == misc] (headers):
+	Add sys/acct.h and sys/sysctl.h.
+
 Tue May 14 19:42:04 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/generic/strrchr.c: Deansideclized.

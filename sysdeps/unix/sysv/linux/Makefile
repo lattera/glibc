@@ -17,7 +17,7 @@ endif
 ifeq ($(subdir), misc)
 sysdep_routines += mount umount xmknod s_ptrace s_sysctl sysctl llseek \
 setfsgid setfsuid sysinfo uselib
-headers += sys/mount.h sys/sysinfo.h
+headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h
 endif
 
 ifeq ($(subdir), time)
