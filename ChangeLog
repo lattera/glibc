@@ -1,3 +1,8 @@
+2001-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_builtin.h: ISO-106464/UTF-8/ transformation must
+	really be an alias.
+
 2001-07-23  Andreas Jaeger  <aj@suse.de>
 
 	* iconv/iconvconfig.c: Include <sys/cdefs.h> and use
