@@ -1,4 +1,23 @@
+2004-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getopt.h: Add some non-gcc support.  Patch by Aharon Robbins.
+
+2004-02-12  Mark Brown  <bmark@us.ibm.com>
+
+	* sysdeps/ia64/fpu/e_fmodf.S: Added text of Intel license.
+
 2004-02-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/fpu/s_lrint.c: Move to...
+	* sysdeps/powerpc/powerpc32/fpu/s_lrint.c: ... here.
+	* sysdeps/powerpc/fpu/s_llrint.c: Move to...
+	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: ... here.
+	* sysdeps/powerpc/fpu/s_llrintf.c: Move to...
+	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c: ... here.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.c: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.S: New file.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c: New file.
 
 	* math/libm-test.inc (lrint_test): Add new test.
 	(llrint_test, lround_test, llround_test): Likewise.

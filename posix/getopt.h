@@ -1,5 +1,6 @@
 /* Declarations for getopt.
-   Copyright (C) 1989-1994, 1996-1999,2001,2003 Free Software Foundation, Inc.
+   Copyright (C) 1989-1994,1996-1999,2001,2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +36,9 @@
 #endif
 
 #ifndef __THROW
+# ifndef __GNUC__
+#  define __GNUC_PREREQ(maj, min) (0)
+# endif
 # if defined __cplusplus && __GNUC_PREREQ (2,8)
 #  define __THROW	throw ()
 # else
