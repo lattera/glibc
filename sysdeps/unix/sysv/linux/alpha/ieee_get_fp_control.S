@@ -57,4 +57,5 @@ $error:
 
 	END(__ieee_get_fp_control)
 
+libc_hidden_def(__ieee_get_fp_control)
 weak_alias (__ieee_get_fp_control, ieee_get_fp_control)
