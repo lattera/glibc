@@ -1,3 +1,8 @@
+2000-12-15  Ben Collins  <bcollins@debian.org>
+
+	* misc/sys/cdefs.h: Fix thinko in checks for flexarr macros.
+	Patch by Akim Demaille <akim@epita.fr> in Debian bug report.
+
 2000-12-14  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ieee754/flt-32/s_sincosf.c (__sincosf): The exponent

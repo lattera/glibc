@@ -101,7 +101,7 @@
 # ifdef __GNUC__
 #  define __flexarr	[0]
 # else
-#  ifdef __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
+#  if defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
 #   define __flexarr	[]
 #  else
 /* Some other non-C99 compiler.  Approximate with [1].  */
