@@ -55,8 +55,8 @@ double __ieee754_remainder(double x, double y)
   kx=u.i[HIGH_HALF]&0x7fffffff; /* no sign  for x*/
   t.i[HIGH_HALF]&=0x7fffffff;   /*no sign for y */
   ky=t.i[HIGH_HALF];
-  /*------ |x| < 2^1024  and   2^-970 < |y| < 2^1024 ------------------*/
-  if (kx<0x7ff00000 && ky<0x7ff00000 && ky>=0x03500000) {
+  /*------ |x| < 2^1023  and   2^-970 < |y| < 2^1024 ------------------*/
+  if (kx<0x7fe00000 && ky<0x7ff00000 && ky>=0x03500000) {
     if (kx+0x00100000<ky) return x;
     if ((kx-0x01500000)<ky) {
       z=x/t.x;
@@ -100,13 +100,21 @@ double __ieee754_remainder(double x, double y)
         {z=u.x/t.x; d=(z+big.x)-big.x; return ((u.x-d*w.x)-d*ww.x);}
     }
 
-  }   /*   (kx<0x7ff00000&&ky<0x7ff00000&&ky>=0x03500000)     */
+  }   /*   (kx<0x7fe00000&&ky<0x7ff00000&&ky>=0x03500000)     */
   else {
-    if (kx<0x7ff00000&&ky<0x7ff00000&&(ky>0||t.i[LOW_HALF]!=0)) {
+    if (kx<0x7fe00000&&ky<0x7ff00000&&(ky>0||t.i[LOW_HALF]!=0)) {
       y=ABS(y)*t128.x;
       z=__ieee754_remainder(x,y)*t128.x;
       z=__ieee754_remainder(z,y)*tm128.x;
       return z;
+    }
+  else {
+    if ((kx&0x7ff00000)==0x7fe00000&&ky<0x7ff00000&&(ky>0||t.i[LOW_HALF]!=0)) {
+      y=ABS(y);
+      z=2.0*__ieee754_remainder(0.5*x,y);
+      d = ABS(z);
+      if (d <= ABS(d-y)) return z;
+      else return (z>0)?z-y:z+y;
     }
     else { /* if x is too big */
       if (kx == 0x7ff00000 && u.i[LOW_HALF] == 0 && y == 1.0)
@@ -116,5 +124,6 @@ double __ieee754_remainder(double x, double y)
 	return (u.i[HIGH_HALF]&0x80000000)?nNAN.x:NAN.x;
       else return x;
     }
+   }
   }
 }

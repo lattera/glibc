@@ -112,6 +112,13 @@
 #  define gettext_noop(String) String
 # endif
 
+/* Support for bounded pointers.  */
+# if !defined _LIBC && !defined __BOUNDED_POINTERS__
+#  define __bounded	/* nothing */
+#  define __unbounded	/* nothing */
+#  define __ptrvalue	/* nothing */
+# endif
+
 /* The `emacs' switch turns on certain matching commands
    that make sense only in Emacs. */
 # ifdef emacs

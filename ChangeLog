@@ -1,5 +1,23 @@
 2001-12-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/ibm1129.h: Remove duplicate mappings.
+	* iconvdata/ibm937.c: Handle overflow errors.  Handle new tables.
+	* iconvdata/ibm937.h: Reorganize table to safe a lot of space.
+	Patch by Masahide Washizawa <WASHI@jp.ibm.com>.
+
+	* timezone/zic.c: Fix handling of turnaround times.
+	Patch by Arthur David Olson <olsona@dc37a.nci.nih.gov>.
+
+2001-12-02  Moshe Olshansky  <OLSHANSK@il.ibm.com>
+
+	* sysdeps/ieee754/dbl-64/e_remainder.c (__ieee754_remainder): Fix
+	overflow problem.
+
+2001-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: For use outside glibc defined bounded pointer
+	macros here.  Patch by Jim Meyering <jim@meyering.net>.
+
 	* iconvdata/Makefile (modules): Add TCVN5712-1.
 	* iconvdata/TESTS: Add TCVN5712-1.
 	* iconvdata/gconv-modules: Likewise.

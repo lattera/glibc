@@ -1,4 +1,4 @@
-/* Conversion to and from IBM937.
+/* Conversion from and to IBM937.
    Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@yamato.ibm.co.jp>, 2000.
@@ -95,6 +95,7 @@ enum
 #define BODY \
   {									      \
     uint32_t ch = *inptr;						      \
+    uint32_t res;							      \
 									      \
     if (__builtin_expect (ch, 0) == SO)					      \
       {									      \
@@ -123,9 +124,9 @@ enum
 									      \
     if (curcs == sb)							      \
       {									      \
-	/* Use the UCS4 table for single byte.  */			      \
-	ch = __ibm937sb_to_ucs4[ch];					      \
-	if (__builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0')	      \
+	/* Use the IBM937 table for single byte.  */			      \
+	res = __ibm937sb_to_ucs4[ch];					      \
+	if (__builtin_expect (res, L'\1') == L'\0' && ch != '\0')	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -137,19 +138,34 @@ enum
 	  }								      \
 	else								      \
 	  {								      \
-	    put32 (outptr, ch);						      \
+	    put32 (outptr, res);					      \
 	    outptr += 4;						      \
 	  }								      \
 	++inptr;							      \
       }									      \
     else								      \
       {									      \
-	/* Use the IBM937 table for double byte.  */			      \
+	const struct gap *rp2 = __ibm937db_to_ucs4_idx;			      \
 									      \
 	assert (curcs == db);						      \
 									      \
-	ch = ibm937db_to_ucs4(inptr[0], inptr[1]);			      \
-	if (__builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0')	      \
+	/* Use the IBM937 table for double byte.  */			      \
+	if (__builtin_expect (inptr + 1 >= inend, 0))			      \
+	  {								      \
+	    /* The second character is not available.			      \
+	       Store the intermediate result. */			      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
+	    break;							      \
+	  }								      \
+									      \
+	ch = (ch * 0x100) + inptr[1];					      \
+	while (ch > rp2->end)						      \
+	  ++rp2;							      \
+									      \
+	if (__builtin_expect (rp2 == NULL, 0)				      \
+	    || __builtin_expect (ch < rp2->start, 0)			      \
+	    || (res = __ibm937db_to_ucs4[ch + rp2->idx],		      \
+		__builtin_expect (res, L'\1') == L'\0' && ch != '\0'))	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -161,7 +177,7 @@ enum
 	  }								      \
 	else								      \
 	  {								      \
-	    put32 (outptr, ch);						      \
+	    put32 (outptr, res);					      \
 	    outptr += 4;						      \
 	  }								      \
 	inptr += 2;							      \
@@ -181,22 +197,40 @@ enum
 #define BODY \
   {									      \
     uint32_t ch = get32 (inptr);					      \
+    const struct gap *rp1 = __ucs4_to_ibm937sb_idx;			      \
+    const struct gap *rp2 = __ucs4_to_ibm937db_idx;			      \
     const char *cp;							      \
 									      \
-    /* Use the UCS4 table for single byte.  */				      \
-    if (__builtin_expect (ch >= (sizeof (__ucs4_to_ibm937sb)		      \
-				 / sizeof (__ucs4_to_ibm937sb[0])), 0)	      \
-	|| (cp = __ucs4_to_ibm937sb[ch],				      \
-	    __builtin_expect (cp[0], '\1') == '\0' && ch != 0))		      \
+    if (__builtin_expect (ch >= 0xffff, 0))				      \
       {									      \
-	/* Use the UCS4 table for double byte.  */			      \
-	cp = __ucs4_to_ibm937db[ch];					      \
-	if (__builtin_expect (ch >= (sizeof (__ucs4_to_ibm937db)	      \
-				     / sizeof (__ucs4_to_ibm937db[0])), 0)    \
-	    || __builtin_expect (cp[0], '\1') == '\0')			      \
-	  {								      \
-	    UNICODE_TAG_HANDLER (ch, 4);				      \
+	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
+	if (! ignore_errors_p ())					      \
+	  {								      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	++*irreversible;						      \
+	inptr += 4;							      \
+	continue;							      \
+      }									      \
+									      \
+    while (ch > rp1->end)						      \
+      ++rp1;								      \
+									      \
+    /* Use the UCS4 table for single byte.  */				      \
+    if (__builtin_expect (ch < rp1->start, 0)				      \
+	|| (cp = __ucs4_to_ibm937sb[ch + rp1->idx],			      \
+	    __builtin_expect (cp[0], L'\1') == L'\0' && ch != '\0'))	      \
+      {									      \
+	/* Use the UCS4 table for double byte. */			      \
+	while (ch > rp2->end)						      \
+	  ++rp2;							      \
+									      \
+	if (__builtin_expect (ch < rp2->start, 0)			      \
+	    || (cp = __ucs4_to_ibm937db[ch + rp2->idx],			      \
+		__builtin_expect (cp[0], L'\1')==L'\0' && ch != '\0'))	      \
+	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
@@ -209,10 +243,16 @@ enum
 	  {								      \
 	    if (curcs == sb)						      \
 	      {								      \
+		if (__builtin_expect (outptr + 1 > outend, 0))		      \
+		  {							      \
+		    result = __GCONV_FULL_OUTPUT;			      \
+		    break;						      \
+		  }							      \
 		*outptr++ = SO;						      \
 		curcs = db;						      \
 	      }								      \
-	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
+									      \
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -225,15 +265,21 @@ enum
       {									      \
 	if (curcs == db)						      \
 	  {								      \
-	    *outptr++ = SI;						      \
-	    curcs = sb;							      \
-	    if (__builtin_expect (outptr == outend, 0))			      \
+	    if (__builtin_expect (outptr + 1 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
+	    *outptr++ = SI;						      \
+	  }								      \
+									      \
+	if (__builtin_expect (outptr + 1 > outend, 0))			      \
+	  {								      \
+	    result = __GCONV_FULL_OUTPUT;				      \
+	    break;							      \
 	  }								      \
 	*outptr++ = cp[0];						      \
+	curcs = sb;							      \
       }									      \
 									      \
     /* Now that we wrote the output increment the input pointer.  */	      \

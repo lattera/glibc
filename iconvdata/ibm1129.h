@@ -1,5 +1,5 @@
 /* Conversion from and to IBM1129.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -83,7 +83,7 @@ static const uint32_t to_ucs4[256] =
   [0xf0] = 0x0111, [0xf1] = 0x00f1, [0xf2] = 0x0323, [0xf3] = 0x00f3,
   [0xf4] = 0x00f4, [0xf5] = 0x01a1, [0xf6] = 0x00f6, [0xf7] = 0x00f7,
   [0xf8] = 0x00f8, [0xf9] = 0x00f9, [0xfa] = 0x00fa, [0xfb] = 0x00fb,
-  [0xfc] = 0x00fc, [0xfd] = 0x01b0, [0xfe] = 0x20ab, [0xff] = 0x00ff,
+  [0xfc] = 0x00fc, [0xfd] = 0x01b0, [0xfe] = 0x20ab, [0xff] = 0x00ff
 };
 
 static const struct gap from_idx[] =
@@ -97,7 +97,6 @@ static const struct gap from_idx[] =
   { start: 0x0300, end: 0x0309, idx:  -499 },
   { start: 0x0323, end: 0x0323, idx:  -524 },
   { start: 0x20ab, end: 0x20ab, idx: -8083 },
-  { start: 0xff01, end: 0xff5e, idx: -65000 },
   { start: 0xffff, end: 0xffff, idx:     0 }
 };
 
@@ -138,16 +137,5 @@ static const char from_ucs4[] =
   '\x00', '\x00', '\xc3', '\xe3', '\xd0', '\xf0', '\xb8', '\xa8',
   '\xb4', '\xd5', '\xf5', '\xdd', '\xfd', '\xcc', '\xec', '\x00',
   '\xde', '\x00', '\x00', '\x00', '\x00', '\x00', '\xd2', '\xf2',
-  '\xfe', '\x21', '\x22', '\x23', '\x24', '\x25', '\x26', '\x27',
-  '\x28', '\x29', '\x2a', '\x2b', '\x2c', '\x2d', '\x2e', '\x2f',
-  '\x30', '\x31', '\x32', '\x33', '\x34', '\x35', '\x36', '\x37',
-  '\x38', '\x39', '\x3a', '\x3b', '\x3c', '\x3d', '\x3e', '\x3f',
-  '\x40', '\x41', '\x42', '\x43', '\x44', '\x45', '\x46', '\x47',
-  '\x48', '\x49', '\x4a', '\x4b', '\x4c', '\x4d', '\x4e', '\x4f',
-  '\x50', '\x51', '\x52', '\x53', '\x54', '\x55', '\x56', '\x57',
-  '\x58', '\x59', '\x5a', '\x5b', '\x5c', '\x5d', '\x5e', '\x5f',
-  '\x60', '\x61', '\x62', '\x63', '\x64', '\x65', '\x66', '\x67',
-  '\x68', '\x69', '\x6a', '\x6b', '\x6c', '\x6d', '\x6e', '\x6f',
-  '\x70', '\x71', '\x72', '\x73', '\x74', '\x75', '\x76', '\x77',
-  '\x78', '\x79', '\x7a', '\x7b', '\x7c', '\x7d', '\x7e',
+  '\xfe'
 };
