@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For Mips/Hurd.
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,9 @@
 
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
+#ifdef USE_NONOPTION_FLAGS
 extern void __getopt_clean_environment (char **);
+#endif
 extern void __libc_global_ctors (void);
 
 unsigned int __hurd_threadvar_max;
@@ -106,8 +108,10 @@ init1 (int argc, char *arg0, ...)
 
   __libc_init (argc, argv, __environ);
 
+#ifdef USE_NONOPTION_FLAGS
   /* This is a hack to make the special getopt in GNU libc working.  */
   __getopt_clean_environment (envp);
+#endif
 
 #ifdef SHARED
   __libc_global_ctors ();
