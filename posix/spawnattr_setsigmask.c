@@ -25,7 +25,7 @@ posix_spawnattr_setsigmask (posix_spawnattr_t *attr,
 			    const sigset_t *sigmask)
 {
   /* Copy the sigset_t data to the user buffer.  */
-  memcpy (&attr->__ss, sigdefault, sizeof (sigset_t));
+  memcpy (&attr->__ss, sigmask, sizeof (sigset_t));
 
   return 0;
 }

@@ -22,10 +22,10 @@
 /* Store scheduling parameters in the attribute structure.  */
 int
 posix_spawnattr_setschedparam (posix_spawnattr_t *attr,
-			       const struct shed_param *schedparam)
+			       const struct sched_param *schedparam)
 {
-  /* Store the flag word.  */
-  attr->__flags = flags;
+  /* Store the scheduling parameters.  */
+  attr->__sp = *schedparam;
 
   return 0;
 }

@@ -1,5 +1,65 @@
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* crypt/Makefile (distribute): Add ufc-crypt.h, crypt-private.h,
+	ufc.c, speeds.c, README.ufc-crypt, and Banner.
+
+	* sysdeps/sparc/Subdirs: New file.
+
+	* locale/Makefile (distribute): Add weightwc.h and
+	programs/localedef.h.
+
+	* time/Makefile (distribute): Add datemsk.
+
+	* sysdeps/ia64/Dist: Add softpipe.h.
+
+	* sysdeps/unix/sysv/aix/Dist: New file.
+
+	* posix/setpgrp.c: Moved to...
+	* sysdeps/generic/setpgrp.c: ...here.  New file.
+	* io/mknod.c: Moved to...
+	* sysdeps/generic/mknod.c: ...here.  New file.
+
+	* sysdeps/unix/sysv/linux/ia64/Dist: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add sys/procfs.h.
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Add oldgetrlimit64.c.
+
+	* sysdeps/powerpc/Dist: Add fprrest.S, fprsave.S, gprsave1.S,
+	gprsave0.S, gprrest1.S, and gprrest0.S.
+
+	* sysdeps/generic/Dist: Add bp-thunks.h, bp-sym.h, and bp-start.h.
+
+	* posix/Makefile (routines): Add spawnattr_getsigmask,
+	spawnattr_getschedpolicy, spawnattr_getschedparam,
+	spawnattr_setsigmask, spawnattr_setschedpolicy, and
+	spawnattr_setschedparam.
+	* posix/Versions: Add posix_spawnattr_getschedpolicy,
+	posix_spawnattr_setschedpolicy, posix_spawnattr_getschedparam, and
+	posix_spawnattr_setschedparam.
+
+	* posix/spawnattr_setschedparam.c: Fix typo.
+
+	* posix/spawnattr_setsigmask.c (posix_spawnattr_setsigmask):
+	Correct typo.
+
+	* login/programs/utmpd.c: Removed.
+	* login/programs/utmpd.h: Removed.
+	* login/programs/utmpd-private.h: Removed.
+
+	* Makefile (distribute): Add include/db_185.h and include/db.h.
+
+	* iconvdata/Makefile (distribute): Add iso-ir-165.c and
+	iso-ir-165.h.
+
+	* elf/Makefile (distribute): Add missing files.
+
+	* dlfcn/Makefile: Add back rules to include eval in libdl.so.
+	* elf/eval.c: Moved to...
+	* dlfcn/eval.c: ...here.  New file.
+
+	* Makefile (distribute): Also distribute ChangeLog.1?.
+
 	* Make-dist (+tsrcs): Remove .args handling here as well.
 
 	* rt/Makefile (tests): Add tst-timer.

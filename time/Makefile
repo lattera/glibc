@@ -30,6 +30,8 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    stime dysize timegm ftime			 \
 	    strptime getdate wcsftime
 
+distribute := datemsk
+
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
 	   tst-getdate
 

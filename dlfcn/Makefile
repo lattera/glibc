@@ -19,8 +19,8 @@
 subdir		:= dlfcn
 headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
-libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
-distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c
+libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
+distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c
 
 extra-libs-others := libdl
 
@@ -30,14 +30,17 @@ ifeq ($(versioning),yes)
 libdl-routines	+= dlopenold
 libdl-shared-only-routines := dlopenold
 endif
+libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
 tests = glrefmain failtest
 endif
 modules-names = glreflib1 glreflib2 failtestmod
-extra-objs += $(modules-names:=.os)
+extra-objs += $(modules-names:=.os) eval.os
 
 include ../Rules
+
+LDFLAGS-dl.so = -Wl,-dynamic-linker,$(slibdir)/$(rtld-installed-name)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(modules-names)))
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os

@@ -15,3 +15,6 @@ updwtmpx.c
 utmpxname.c
 bits/libc-tsd.h
 siglist.h
+bp-thunks.h
+bp-sym.h
+bp-start.h

@@ -1,2 +1,3 @@
 dl-symaddr.c
 dl-fptr.c
+softpipe.h

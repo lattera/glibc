@@ -253,13 +253,14 @@ parent_echo-distinfo:
 
 distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		PROJECTS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
-		Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-		extra-lib.mk o-iterator.mk configure configure.in	\
-		aclocal.m4 config.h.in config.make.in config-name.in	\
-		Makefile.in sysdep.h set-hooks.h libc-symbols.h		\
-		version.h shlib-versions rpm/Makefile rpm/template	\
-		rpm/rpmrc glibcbug.in abi-tags stub-tag.h		\
-		test-skeleton.c include/des.h Versions.def		\
+		ChangeLog.1[0-9] Makefile Makeconfig Makerules Rules	\
+		Make-dist MakeTAGS extra-lib.mk o-iterator.mk configure	\
+		configure.in aclocal.m4 config.h.in config.make.in	\
+		config-name.in Makefile.in sysdep.h set-hooks.h		\
+		libc-symbols.h version.h shlib-versions rpm/Makefile	\
+		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
+		test-skeleton.c include/des.h include/db_185.h		\
+		include/db.h Versions.def				\
 		INTERFACE CONFORMANCE NAMESPACE				\
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\

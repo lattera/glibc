@@ -58,7 +58,9 @@ routines :=								      \
 	spawnattr_init spawnattr_destroy				      \
 	spawnattr_getdefault spawnattr_setdefault			      \
 	spawnattr_getflags spawnattr_setflags				      \
-	spawnattr_getpgroup spawnattr_setpgroup spawn spawnp spawni
+	spawnattr_getpgroup spawnattr_setpgroup spawn spawnp spawni	      \
+	spawnattr_getsigmask spawnattr_getschedpolicy spawnattr_getschedparam \
+	spawnattr_setsigmask spawnattr_setschedpolicy spawnattr_setschedparam
 
 include ../Makeconfig
 

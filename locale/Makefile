@@ -23,7 +23,7 @@ subdir	:= locale
 
 headers		= locale.h langinfo.h xlocale.h
 distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
-		  iso-4217.def weight.h strlen-hash.h elem-hash.h \
+		  iso-4217.def weight.h weightwc.h strlen-hash.h elem-hash.h \
 		  indigits.h indigitswc.h outdigits.h outdigitswc.h \
 		  $(addprefix programs/, \
 			      locale.c localedef.c \
@@ -31,7 +31,7 @@ distribute	= localeinfo.h categories.def iso-639.def iso-3166.def \
 			      $(lib-modules:=.c) config.h simple-hash.h \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \
 			      locfile-kw.gperf locfile-kw.h linereader.h \
-			      locfile.h charmap.h repertoire.h)
+			      locfile.h charmap.h repertoire.h localedef.h)
 routines	= setlocale findlocale loadlocale localeconv nl_langinfo \
 		  mb_cur_max codeset_name \
 		  newlocale duplocale freelocale
