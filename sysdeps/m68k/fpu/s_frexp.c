@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,11 +28,28 @@
 #define __CONCATX(a,b) __CONCAT(a,b)
 
 float_type
-__CONCATX(__,FUNC) (value, expptr)
-     float_type value;
-     int *expptr;
+__CONCATX(__,FUNC) (float_type value, int *expptr)
 {
-  return __m81_u(__CONCATX(__,FUNC))(value, expptr);
+  float_type mantissa, exponent;
+  int iexponent;
+  unsigned long fpsr;
+
+  __asm ("ftst%.x %1\n"
+	 "fmove%.l %/fpsr, %0"
+	 : "=dm" (fpsr) : "f" (value));
+  if (fpsr & (7 << 24))
+    {
+      /* Not finite or zero.  */
+      *expptr = 0;
+      return value;
+    }
+  __asm ("fgetexp%.x %1, %0" : "=f" (exponent) : "f" (value));
+  iexponent = (int) exponent + 1;
+  *expptr = iexponent;
+  __asm ("fscale%.l %2, %0"
+	 : "=f" (mantissa)
+	 : "0" (value), "dmi" (-iexponent));
+  return mantissa;
 }
 
 #define weak_aliasx(a,b) weak_alias(a,b)
