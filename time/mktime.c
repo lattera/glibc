@@ -246,10 +246,6 @@ __mktime_internal (struct tm *tp,
   int mon_years = mon / 12 - negative_mon_remainder;
   int year = year_requested + mon_years;
 
-  /* Only years after 1970 are defined.  */
-  if (year < 70)
-    return -1;
-
    /* The other values need not be in range:
      the remaining code handles minor overflows correctly,
      assuming int and time_t arithmetic wraps around.
@@ -262,6 +258,11 @@ __mktime_internal (struct tm *tp,
 	      + mday - 1);
 
   int sec_requested = sec;
+
+  /* Only years after 1970 are defined.  */
+  if (year < 70)
+    return -1;
+
 #if LEAP_SECONDS_POSSIBLE
   /* Handle out-of-range seconds specially,
      since ydhms_tm_diff assumes every minute has 60 seconds.  */

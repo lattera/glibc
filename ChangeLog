@@ -1,3 +1,12 @@
+2002-04-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/mktime.c (__mktime_internal): Move check for year < 70 below
+	all variable declarations.
+
+2002-04-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/pipe.S: Don't overwrite r8 on error.
+
 2002-04-04  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu/e_sqrt.c: New file.
@@ -12,12 +21,11 @@
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.c: Removed.
-	* sysdeps/unix/sysv/linux/x86_64/time.S: Removed.
+	* sysdeps/unix/sysv/linux/x86_64/time.c: Removed.
 
 	* configure.in: Handle all mips entries the same.
 
-	* sysdeps/mips/dec/bits/endian.h: Removed since arch is not
-	supported.
+	* sysdeps/mips/dec/bits/endian.h: Removed since arch is not supported.
 	* sysdeps/mips/mips3/*: Likewise.
 	* sysdeps/mips/p40/bits/endian.h: Likewise.
 
