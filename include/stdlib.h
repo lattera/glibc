@@ -10,9 +10,9 @@
 #ifndef __Need_M_And_C
 extern int32_t __random (void);
 extern void __srandom (unsigned int __seed);
-extern void *__initstate (unsigned int __seed, void *__statebuf,
+extern char *__initstate (unsigned int __seed, char *__statebuf,
 			  size_t __statelen);
-extern void *__setstate (void *__statebuf);
+extern char *__setstate (char *__statebuf);
 extern int __random_r (struct random_data *__buf, int32_t *__result);
 extern int __srandom_r (unsigned int __seed, struct random_data *__buf);
 extern int __initstate_r (unsigned int __seed, void *__statebuf,
