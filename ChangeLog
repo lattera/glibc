@@ -1,3 +1,13 @@
+2004-02-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c (__lrintf, lrintf):
+	Define.
+	(__lrintl, lrintl): Remove.
+	* sysdeps/powerpc/powerpc64/fpu/s_llrint.c (__lrint): Fix a typo in
+	strong_alias spelling.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.S: Remove.
+	* sysdeps/powerpc/powerpc64/fpu/s_lrint.S: New file.
+
 2004-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt.h: Add some non-gcc support.  Patch by Aharon Robbins.
@@ -14,7 +24,6 @@
 	* sysdeps/powerpc/powerpc32/fpu/s_llrint.c: ... here.
 	* sysdeps/powerpc/fpu/s_llrintf.c: Move to...
 	* sysdeps/powerpc/powerpc32/fpu/s_llrintf.c: ... here.
-	* sysdeps/powerpc/powerpc64/fpu/s_lrint.c: New file.
 	* sysdeps/powerpc/powerpc64/fpu/s_llrint.c: New file.
 	* sysdeps/powerpc/powerpc64/fpu/s_lrintf.S: New file.
 	* sysdeps/powerpc/powerpc64/fpu/s_llrintf.c: New file.

@@ -35,7 +35,7 @@ __llrint (double x)
 {
   return (long long int) __rint (x);
 }
-string_alias (__llrint, __lrint)
+strong_alias (__llrint, __lrint)
 weak_alias (__llrint, llrint)
 weak_alias (__lrint, lrint)
 #ifdef NO_LONG_DOUBLE

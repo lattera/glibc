@@ -18,8 +18,8 @@
    02111-1307 USA.  */
 
 /* Kludge to avoid decls that will confuse strong_alias below.  */
-#define __lrintl XXX__lrintf
-#define lrintl XXXlrintf
+#define __lrintf XXX__lrintf
+#define lrintf XXXlrintf
 
 #include "math.h"
 
