@@ -1,5 +1,7 @@
 2002-09-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/signal.h: Add libc_hidden_proto for __libc_sigaction.
+
 	* sysdeps/unix/sysv/linux/sigaction.c: If SIGCANCEL is defined
 	define sigaction and __sigaction as wrappers around
 	__libc_sigaction which rejects changing SIGCANCEL.

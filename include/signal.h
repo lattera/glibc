@@ -34,6 +34,7 @@ extern int __sigaltstack (__const struct sigaltstack *__ss,
 			  struct sigaltstack *__oss);
 extern int __libc_sigaction (int sig, const struct sigaction *act,
 			     struct sigaction *oact);
+libc_hidden_proto (__libc_sigaction)
 
 extern int __sigpause (int sig_or_mask, int is_sig);
 extern int __default_sigpause (int mask);
