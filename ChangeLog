@@ -1,3 +1,7 @@
+2003-03-14  Roland McGrath  <roland@redhat.com>
+
+	* dlfcn/dlerror.c (dlerror): If objname is "", don't put ": " after it.
+
 2003-03-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/Makefile (syscall-%.h): Fix a typo.
