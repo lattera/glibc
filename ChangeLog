@@ -1,3 +1,8 @@
+1998-06-25    Andi Kleen <ak@muc.de>
+
+	* inet/rcmd.c (rcmd): Change to use __poll instead of select.
+	* resolv/res_send.c (res_send): Likewise.
+
 1998-06-27 12:58  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/bsd/poll.c: Define __poll, make poll weak alias.

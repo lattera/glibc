@@ -36,6 +36,7 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 
@@ -68,7 +69,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	size_t hstbuflen;
 	char *tmphstbuf;
 	struct sockaddr_in sin, from;
-	fd_set reads;
+	struct pollfd pfd[2];
 	int32_t oldmask;
 	pid_t pid;
 	int s, lport, timo;
@@ -93,6 +94,9 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	      hstbuflen *= 2;
 	      tmphstbuf = __alloca (hstbuflen);
 	    }
+
+	pfd[0].events = POLLIN;
+	pfd[1].events = POLLIN;
 
 	*ahost = hp->h_name;
 	oldmask = sigblock(sigmask(SIGURG));
@@ -161,18 +165,16 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			(void)close(s2);
 			goto bad;
 		}
-		FD_ZERO(&reads);
-		FD_SET(s, &reads);
-		FD_SET(s2, &reads);
+		pfd[0].fd = s;
+		pfd[1].fd = s2;
 		__set_errno (0);
-		if (select(1 + (s > s2 ? s : s2), &reads, 0, 0, 0) < 1 ||
-		    !FD_ISSET(s2, &reads)) {
+		if (__poll (pfd, 2, -1) < 1 || (pfd[1].revents & POLLIN) == 0){
 			if (errno != 0)
 				(void)fprintf(stderr,
-				  _("rcmd: select (setting up stderr): %m\n"));
+				  _("rcmd: poll (setting up stderr): %m\n"));
 			else
 				(void)fprintf(stderr,
-			     _("select: protocol failure in circuit setup\n"));
+			     _("poll: protocol failure in circuit setup\n"));
 			(void)close(s2);
 			goto bad;
 		}

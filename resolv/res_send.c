@@ -71,6 +71,7 @@ static char rcsid[] = "$Id$";
 
 #include <sys/types.h>
 #include <sys/param.h>
+#include <sys/poll.h>
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <sys/uio.h>
@@ -97,16 +98,6 @@ static char rcsid[] = "$Id$";
 static int s = -1;	/* socket used for communications */
 static int connected = 0;	/* is the socket connected */
 static int vc = 0;	/* is the socket a virtual circuit? */
-
-#ifndef FD_SET
-/* XXX - should be in portability.h */
-#define	NFDBITS		32
-#define	FD_SETSIZE	32
-#define	FD_SET(n, p)	((p)->fds_bits[(n)/NFDBITS] |= (1 << ((n) % NFDBITS)))
-#define	FD_CLR(n, p)	((p)->fds_bits[(n)/NFDBITS] &= ~(1 << ((n) % NFDBITS)))
-#define	FD_ISSET(n, p)	((p)->fds_bits[(n)/NFDBITS] & (1 << ((n) % NFDBITS)))
-#define FD_ZERO(p)	bzero((char *)(p), sizeof(*(p)))
-#endif
 
 /* XXX - this should be done in portability.h */
 #if (defined(BSD) && (BSD >= 199103)) || defined(linux)
@@ -519,7 +510,7 @@ read_len:
 			/*
 			 * Use datagrams.
 			 */
-			struct timeval timeout;
+			int timeout;
 			fd_set dsmask;
 			struct sockaddr_in from;
 			socklen_t fromlen;
@@ -619,26 +610,24 @@ read_len:
 			/*
 			 * Wait for reply
 			 */
-			timeout.tv_sec = (_res.retrans << try);
+			timeout = (_res.retrans << try) * 1000;
 			if (try > 0)
-				timeout.tv_sec /= _res.nscount;
-			if ((long) timeout.tv_sec <= 0)
-				timeout.tv_sec = 1;
-			timeout.tv_usec = 0;
+				timeout /= _res.nscount;
+			if (timeout <= 0)
+				timeout = 1000;
     wait:
 			if (s < 0 || s >= FD_SETSIZE) {
 				Perror(stderr, "s out-of-bounds", EMFILE);
 				res_close();
 				goto next_ns;
 			}
-			FD_ZERO(&dsmask);
-			FD_SET(s, &dsmask);
-			n = select(s+1, &dsmask, (fd_set *)NULL,
-				   (fd_set *)NULL, &timeout);
+			pfd[0].fd = s;
+			pfd[0].events = POLLIN;
+			n = __poll(pfd, 1, timeout);
 			if (n < 0) {
 				if (errno == EINTR)
 					goto wait;
-				Perror(stderr, "select", errno);
+				Perror(stderr, "poll", errno);
 				res_close();
 				goto next_ns;
 			}
