@@ -22,6 +22,11 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 extern void *__curbrk;
 extern int __brk (void *addr);
 
+#ifdef PIC
+extern int __libc_is_static;
+weak_extern (__libc_is_static)
+#endif
+
 /* Extend the process's data space by INCREMENT.
    If INCREMENT is negative, shrink data space by - INCREMENT.
    Return start of new space allocated, or -1 for errors.  */
@@ -30,12 +35,16 @@ __sbrk (ptrdiff_t increment)
 {
   void *oldbrk;
 
-  /* Always update __curbrk from the kernel's brk value.  That way two
-     separate instances of __brk and __sbrk can share the heap, returning
-     interleaved pieces of it.  This happens when libc.so is loaded by
-     dlopen in a statically-linked program that already uses __brk.  */
-  if (__brk (0) < 0)
-    return (void *) -1;
+  /* If this is not part of the dynamic library or the library is used
+     via dynamic loading in a statically linked program update
+     __curbrk from the kernel's brk value.  That way two separate
+     instances of __brk and __sbrk can share the heap, returning
+     interleaved pieces of it.  */
+#ifdef PIC
+  if (__curbrk == NULL || &__libc_is_static == NULL)
+#endif
+    if (__brk (0) < 0)
+      return (void *) -1;
 
   if (increment == 0)
     return __curbrk;

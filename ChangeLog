@@ -1,3 +1,8 @@
+Mon Aug 12 04:33:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_database_lookup): Always release locks
+ 	before returning.  Reported by Miles Bader.
+
 Mon Aug 12 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nsswitch.c (__nss_configure_lookup):  New function.
@@ -11,7 +16,7 @@ Mon Aug 12 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* nss.h: New file.  Wrapper around nss/nss.h.
 
 	* nss/Makefile (headers): Add nss.h.
-	(distributes): Add databases.h.
+	(distributes): Add databases.def.
 
 Sun Aug 11 16:19:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -26,9 +31,6 @@ Sun Aug 11 16:19:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 	script and mark it to substitute.
 
 	* string/Makefile: Add -fno-builtin for tst-strlen.c, too.
-
-	* elf/dl-lookup.c (_dl_lookup_symbol): Allow self-referencing.
-	Patch by David Mosberger-Tang.
 
 Sun Aug 11 01:12:38 1996  Richard Henderson  <rth@tamu.edu>
 

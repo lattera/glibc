@@ -45,3 +45,5 @@ distribute	:= memcopy.h pagecopy.h
 include ../Rules
 
 tester-ENV = LANGUAGE=C
+CFLAGS-tester.c = -fno-builtin
+CFLAGS-tst-strlen.c = -fno-builtin

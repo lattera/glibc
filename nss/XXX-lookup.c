@@ -35,25 +35,26 @@ Boston, MA 02111-1307, USA.  */
 #define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
 #define CONCAT3_2(Pre, Name, Post) Pre##Name##Post
 
+#define DATABASE_NAME_SYMBOL CONCAT3_1 (__nss_, DATABASE_NAME, _database)
 #define DATABASE_NAME_STRING STRINGIFY1 (DATABASE_NAME)
 #define STRINGIFY1(Name) STRINGIFY2 (Name)
 #define STRINGIFY2(Name) #Name
 
 #ifndef DEFAULT_CONFIG
-#define DEFAULT_CONFIG 0
+#define DEFAULT_CONFIG NULL
 #endif
 
-static service_user *database = NULL;
+service_user *DATABASE_NAME_SYMBOL = NULL;
 
 int
 DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp)
 {
-  if (database == NULL
+  if (DATABASE_NAME_SYMBOL == NULL
       && __nss_database_lookup (DATABASE_NAME_STRING, DEFAULT_CONFIG,
-				&database) < 0)
+				&DATABASE_NAME_SYMBOL) < 0)
     return -1;
 
-  *ni = database;
+  *ni = DATABASE_NAME_SYMBOL;
 
   return __nss_lookup (ni, fct_name, fctp);
 }

@@ -455,8 +455,8 @@ object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
 define do-ar
 $(patsubst %,cd %;,$(objdir)) \
-$(AR) cru$(verbose) ${O%-lib} \
-      $(patsubst $(objpfx)%,%,$^)
+$(AUTOLOCK) ${O%-lib}.lck $(AR) cru$(verbose) ${O%-lib} \
+				$(patsubst $(objpfx)%,%,$^)
 rm -f $@
 touch $@
 endef

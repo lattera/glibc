@@ -23,22 +23,9 @@ Boston, MA 02111-1307, USA.  */
 
 #include <arpa/nameser.h>
 #include <netinet/in.h>
+#include <nss.h>
 #include <resolv.h>
 #include <search.h>
-
-
-/* Revision number of NSS interface (must be a string).  */
-#define NSS_SHLIB_REVISION ".1"
-
-
-/* Possible results of lookup using a nss_* function.  */
-enum nss_status
-{
-  NSS_STATUS_TRYAGAIN = -2,
-  NSS_STATUS_UNAVAIL,
-  NSS_STATUS_NOTFOUND,
-  NSS_STATUS_SUCCESS,
-};
 
 
 /* Actions performed after lookup finished.  */

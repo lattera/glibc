@@ -135,8 +135,8 @@ _dl_runtime_resolve:
 	stq	$29, 160($sp)
 	.mask	0x27ff01ff, -168
 	/* Set up our $gp */
-	br	$gp, .+4
-	ldgp	$gp, 0($gp)
+	br	$gp, 0f
+0:	ldgp	$gp, 0($gp)
 	.prologue 1
 	/* Set up the arguments for _dl_runtime_resolve. */
 	/* $16 = link_map out of plt0 */
@@ -145,7 +145,7 @@ _dl_runtime_resolve:
 	mov	$28, $17
 	/* Do the fixup */
 	bsr	$26, fixup..ng
-	/* Move the destination address to a safe place.  */
+	/* Move the destination address into position.  */
 	mov	$0, $27
 	/* Restore program registers.  */
 	ldq	$26, 0($sp)
@@ -169,18 +169,15 @@ _dl_runtime_resolve:
 	ldq	$24, 144($sp)
 	ldq	$25, 152($sp)
 	ldq	$29, 160($sp)
+	/* Flush the Icache after having modified the .plt code.  */
+	imb
 	/* Clean up and turn control to the destination */
 	lda	$sp, 168($sp)
 	jmp	$31, ($27)
 	.end _dl_runtime_resolve");
 
-/* The PLT uses Elf_Rel relocs.  */
+/* The PLT uses Elf64_Rela relocs.  */
 #define elf_machine_relplt elf_machine_rela
-
-/* Mask identifying addresses reserved for the user program,
-   where the dynamic linker should not map anything.  */
-/* FIXME */
-#define ELF_MACHINE_USER_ADDRESS_MASK	(~0x1FFFFFFFFUL)
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -191,8 +188,8 @@ _dl_runtime_resolve:
 	.globl _start
 	.globl _dl_start_user
 _start:
-	br	$gp,.+4
-	ldgp	$gp, 0($gp)
+	br	$gp,0f
+0:	ldgp	$gp, 0($gp)
 	/* Pass pointer to argument block to _dl_start.  */
 	mov	$sp, $16
 	bsr	$26, _dl_start..ng
@@ -226,7 +223,7 @@ _dl_start_user:
 	mov	$9, $27
 	jmp	($9)");
 
-/* Nonzero iff TYPE describes relocation of a PLT entry, so 
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
 #define elf_machine_pltrel_p(type)  ((type) == R_ALPHA_JMP_SLOT)
 
@@ -302,9 +299,10 @@ elf_alpha_fix_plt(struct link_map *l,
       plte[2] = 0x6bfb0000;
     }
 
-  /* Flush the instruction cache now that we've diddled.   Tag it as
-     modifying memory to checkpoint memory writes during optimization.  */
-  asm volatile("call_pal 0x86" : : : "memory");
+  /* At this point, if we've been doing runtime resolution, Icache is dirty.
+     This will be taken care of in _dl_runtime_resolve.  If instead we are
+     doing this as part of non-lazy startup relocation, that bit of code
+     hasn't made it into Icache yet, so there's nothing to clean up.  */
 }
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).

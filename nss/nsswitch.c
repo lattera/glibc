@@ -19,6 +19,7 @@ Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
 #include <dlfcn.h>
+#include <errno.h>
 #include <netdb.h>
 #include <libc-lock.h>
 #include <search.h>
@@ -30,13 +31,33 @@ Boston, MA 02111-1307, USA.  */
 #include "../elf/link.h"	/* We need some help from ld.so.  */
 
 /* Prototypes for the local functions.  */
-static void nss_init (void);
 static void *nss_lookup_function (service_user *ni, const char *fct_name);
 static name_database *nss_parse_file (const char *fname);
 static name_database_entry *nss_getline (char *line);
 static service_user *nss_parse_service_list (const char *line);
 static service_library *nss_new_service (name_database *database,
 					 const char *name);
+
+
+/* Declare external database variables.  */
+#define DEFINE_DATABASE(name)						      \
+  extern service_user *__nss_##name##_database;				      \
+  weak_extern (__nss_##name##_database)
+#include "databases.def"
+#undef DEFINE_DATABASE
+
+/* Structure to map database name to variable.  */
+static struct
+{
+  const char *name;
+  service_user **dbp;
+} databases[] =
+{
+#define DEFINE_DATABASE(name)						      \
+  { #name, &__nss_##name##_database },
+#include "databases.def"
+#undef DEFINE_DATABASE
+};
 
 
 __libc_lock_define_initialized (static, lock)
@@ -50,35 +71,29 @@ static int nss_initialized;
 static name_database *service_table;
 
 
-static void
-nss_init (void)
-{
-  /* Prevent multiple threads to change the service table.  */
-  __libc_lock_lock (lock);
-
-  if (service_table == NULL)
-    service_table = nss_parse_file (_PATH_NSSWITCH_CONF);
-
-  __libc_lock_unlock (lock);
-}
-
-
 /* -1 == database not found
     0 == database entry pointer stored */
 int
 __nss_database_lookup (const char *database, const char *defconfig,
 		       service_user **ni)
 {
-  name_database_entry *entry;
+  /* Prevent multiple threads to change the service table.  */
+  __libc_lock_lock (lock);
 
-  if (nss_initialized == 0)
-    nss_init ();
+  /* Reconsider database variable in case some other thread called
+     `__nss_configure_lookup' while we waited for the lock.  */
+  if (*ni != NULL)
+    return 0;
+
+  if (nss_initialized == 0 && service_table == NULL)
+    /* Read config file.  */
+    service_table = nss_parse_file (_PATH_NSSWITCH_CONF);
 
   /* Test whether configuration data is available.  */
-  if (service_table)
+  if (service_table != NULL)
     {
-      /* Return first `service_user' entry for DATABASE.
-	 XXX Will use perfect hashing function for known databases.  */
+      /* Return first `service_user' entry for DATABASE.  */
+      name_database_entry *entry;
 
       /* XXX Could use some faster mechanism here.  But each database is
 	 only requested once and so this might not be critical.  */
@@ -91,17 +106,14 @@ __nss_database_lookup (const char *database, const char *defconfig,
     }
 
   /* No configuration data is available, either because nsswitch.conf
-     doesn't exist or because it doesn't have a line for this database.  */
-  entry = malloc (sizeof *entry);
-  if (entry == NULL)
-    return -1;
-  entry->name = database;
-  /* DEFCONFIG specifies the default service list for this database,
-     or null to use the most common default.  */
-  entry->service = nss_parse_service_list (defconfig ?:
-					   "compat [NOTFOUND=return] files");
+     doesn't exist or because it doesn't has a line for this database.
 
-  *ni = entry->service;
+     DEFCONFIG specifies the default service list for this database,
+     or null to use the most common default.  */
+  *ni = nss_parse_service_list (defconfig ?: "compat [NOTFOUND=return] files");
+
+  __libc_lock_unlock (lock);
+
   return 0;
 }
 
@@ -165,6 +177,48 @@ __nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
 	 && (*ni)->next != NULL);
 
   return *fctp != NULL ? 0 : -1;
+}
+
+
+int
+__nss_configure_lookup (const char *dbname, const char *service_line)
+{
+  service_user *new_db;
+  size_t cnt;
+
+  for (cnt = 0; cnt < sizeof databases; ++cnt)
+    if (strcmp (dbname, databases[cnt].name) == 0)
+      break;
+
+  if (cnt == sizeof databases)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  /* Test whether it is really used.  */
+  if (databases[cnt].dbp == NULL)
+    /* Nothing to do, but we could do.  */
+    return 0;
+
+  /* Try to generate new data.  */
+  new_db = nss_parse_service_list (service_line);
+  if (new_db == NULL)
+    {
+      /* Illegal service specification.  */
+      errno = EINVAL;
+      return -1;
+    }
+
+  /* Prevent multiple threads to change the service table.  */
+  __libc_lock_lock (lock);
+
+  /* Install new rules.  */
+  *databases[cnt].dbp = new_db;
+
+  __libc_lock_unlock (lock);
+
+  return 0;
 }
 
 
@@ -385,7 +439,9 @@ nss_parse_file (const char *fname)
 }
 
 
-/* Read the source names: `<source> ( "[" <status> "=" <action> "]" )*'.  */
+/* Read the source names:
+	`( <source> ( "[" "!"? (<status> "=" <action> )+ "]" )? )*'
+   */
 static service_user *
 nss_parse_service_list (const char *line)
 {
