@@ -54,16 +54,18 @@ do_prepare (int argc, char *argv[])
 {
    char name_len;
 
-     name_len = strlen (test_dir);
-     name = malloc (name_len + sizeof ("/preadwriteXXXXXX"));
-     mempcpy (mempcpy (name, test_dir, name_len),
-	      "/preadwriteXXXXXX", sizeof ("/preadwriteXXXXXX"));
-     add_temp_file (name);
+#define FNAME FNAME2(TRUNCATE)
+#define FNAME2(s) "/" STRINGIFY(s) "XXXXXX"
 
-     /* Open our test file.   */
-     fd = mkstemp (name);
-     if (fd == -1)
-       error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
+   name_len = strlen (test_dir);
+   name = malloc (name_len + sizeof (FNAME));
+   mempcpy (mempcpy (name, test_dir, name_len), FNAME, sizeof (FNAME));
+   add_temp_file (name);
+
+   /* Open our test file.   */
+   fd = mkstemp (name);
+   if (fd == -1)
+     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
 }
 
 

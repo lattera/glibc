@@ -55,16 +55,18 @@ do_prepare (int argc, char *argv[])
 {
    char name_len;
 
-     name_len = strlen (test_dir);
-     name = malloc (name_len + sizeof ("/truncateXXXXXX"));
-     mempcpy (mempcpy (name, test_dir, name_len),
-	      "/truncateXXXXXX", sizeof ("/truncateXXXXXX"));
-     add_temp_file (name);
+#define FNAME FNAME2(TRUNCATE)
+#define FNAME2(s) "/" STRINGIFY(s) "XXXXXX"
 
-     /* Open our test file.   */
-     fd = mkstemp (name);
-     if (fd == -1)
-       error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
+   name_len = strlen (test_dir);
+   name = malloc (name_len + sizeof (FNAME));
+   mempcpy (mempcpy (name, test_dir, name_len), FNAME, sizeof (FNAME));
+   add_temp_file (name);
+
+   /* Open our test file.   */
+   fd = mkstemp (name);
+   if (fd == -1)
+     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
 }
 
 
@@ -73,7 +75,6 @@ do_test (int argc, char *argv[])
 {
   struct stat st;
   char buf[1000];
-  int i;
 
   memset (buf, '\0', sizeof (buf));
 
@@ -85,35 +86,43 @@ do_test (int argc, char *argv[])
 
 
   if (FTRUNCATE (fd, 800) < 0)
-    error (EXIT_FAILURE, errno, "size reduction with ftruncate failed");
+    error (EXIT_FAILURE, errno, "size reduction with %s failed",
+	   STRINGIFY (FTRUNCATE));
 
   if (fstat (fd, &st) < 0 || st.st_size != 800)
-    error (EXIT_FAILURE, 0, "size after reduction with ftruncate incorrect");
+    error (EXIT_FAILURE, 0, "size after reduction with %s incorrect",
+	   STRINGIFY (FTRUNCATE));
 
   /* The following test covers more than POSIX.  POSIX does not require
      that ftruncate() can increase the file size.  But we are testing
      Unix systems.  */
   if (FTRUNCATE (fd, 1200) < 0)
-    error (EXIT_FAILURE, errno, "size increase with ftruncate failed");
+    error (EXIT_FAILURE, errno, "size increase with %s failed",
+	   STRINGIFY (FTRUNCATE));
 
   if (fstat (fd, &st) < 0 || st.st_size != 1200)
-    error (EXIT_FAILURE, 0, "size after increase with ftruncate incorrect");
+    error (EXIT_FAILURE, 0, "size after increase with %s incorrect",
+	   STRINGIFY (FTRUNCATE));
 
 
   if (TRUNCATE (name, 800) < 0)
-    error (EXIT_FAILURE, errno, "size reduction with truncate failed");
+    error (EXIT_FAILURE, errno, "size reduction with %s failed",
+	   STRINGIFY (TRUNCATE));
 
   if (fstat (fd, &st) < 0 || st.st_size != 800)
-    error (EXIT_FAILURE, 0, "size after reduction with truncate incorrect");
+    error (EXIT_FAILURE, 0, "size after reduction with %s incorrect",
+	   STRINGIFY (TRUNCATE));
 
   /* The following test covers more than POSIX.  POSIX does not require
      that truncate() can increase the file size.  But we are testing
      Unix systems.  */
   if (TRUNCATE (name, 1200) < 0)
-    error (EXIT_FAILURE, errno, "size increase with truncate failed");
+    error (EXIT_FAILURE, errno, "size increase with %s failed",
+	   STRINGIFY (TRUNCATE));
 
   if (fstat (fd, &st) < 0 || st.st_size != 1200)
-    error (EXIT_FAILURE, 0, "size after increase with truncate incorrect");
+    error (EXIT_FAILURE, 0, "size after increase with %s incorrect",
+	   STRINGIFY (TRUNCATE));
 
 
   close (fd);

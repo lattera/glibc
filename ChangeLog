@@ -1,5 +1,8 @@
 2000-05-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/tst-preadwrite.c: Allow parallel execution of
+	tst-preadwrite and tst-preadwrite64.
+
 	* posix/Makefile (tests): Add tst-truncate and tst-truncate64.
 	* posix/tst-truncate.c: New file.
 	* posix/tst-truncate64.c: New file.
