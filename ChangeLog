@@ -1,14 +1,126 @@
-Mon Sep 23 15:31:04 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+Sat Sep 28 03:02:49 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* hurd/Makefile ($(includedir)/rpc/netdb.h): There is no make
-	variable `top_srcdir' in libc; use $(..) instead.
+	* dirent/Makefile (routines): Add readdir_r.
+	* dirent/readdir_r.c: New file.  Wrapper around readdir.c.
+	* dirent/dirent.h: Add prototype for readdir_r.
 
-	* sysdeps/mach/hurd/Makefile (rtld-installed-name): Delete special
-	definition.  It was a *Mistake*.  (With a capital M.)
+	* misc/hsearch_r.c (ENTRY): Make field `used' of type `unsigned int'
+	to prevent warnings.
 
-	* sysdeps/mach/getsysstats.c (__get_nprocs): Renamed from
-	__get_nproc.
-	(__get_nprocs_conf): Renamed from __get_nproc_conf.
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path):
+ 	Initialize `result'.
+
+Sat Sep 28 01:16:42 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/strsep.c: Rename to __strsep and make strsep
+	weak alias.
+	* string/string.h: Add prototype for __strsep.
+	* misc/mntent_r.c: Use __strsep instead of strsep to keep
+	namespace clean.
+
+	* sysdeps/stub/nanosleep.c: Rename to __libc_nanosleep and make
+	__nanosleep and nanosleep weak aliases.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __nanosleep as weak
+	alias.
+	* sysdeps/unix/sysv/linux/sleep.c: Call __nanosleep instead of
+	nanosleep to keep namespace clean.
+
+	* sysdeps/posix/ttyname.c (ttyname): Add cast to prevent warning.
+	* sysdeps/posix/ttyname_r.c (ttyname_r): Likewise.
+	* sysdeps/posix/getcwd.c (__getcwd): Likewise.
+
+	* sysdeps/unix/nlist.c: Use ISO C definition since we don't always
+	have prototype.
+
+	* login/Makefile (headers): Add pty.h.
+	* login/pty.h: New file.
+	* sysdeps/generic/pty.h: Include <pty.h>.
+	* login/pututline_r.c: Add cast to prevent warning.
+
+	* gmon/gmon.c: Add prototype for __profile_frequency.
+	(monstartup): Add cast to prevent warning.
+	* sysdeps/generic/prof-freq.c: Change to use ISO C style definition.
+
+	* locale/programs/ld-time.c (time_output): Write `era' information
+	in correct order.
+
+Sat Sep 28 00:11:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add weak alias
+	`adjtimex'.
+	Set caller for mlock, mlockall, mremap, munlock, and munlockall
+	to EXTRA.
+	Reported by Matthias Urlichs <smurf@smurf.noris.de>.
+
+1996-09-27  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (strftime): Output incomplete formats like %E
+	at end of string.
+
+1996-09-27  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (strftime): Add support for %EC and %Ey.
+	Fix support for %EY.  This uses the new _nl_get_era_entry function.
+
+Fri Sep 27 14:12:27 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Security related patch by Elliot Lee <sopwith@redhat.com> and
+	David Holland <dholland@eecs.harvard.edu>.
+
+	* inet/rexec.c (rexec): Increase size of `num' array from 8 to 32.
+	* inet/ruserpass.c (ruserpass): Don't allow $HOME envvar to not exist.
+
+	* sysdeps/generic/getenv.c (__secure_getenv): New function.  Return
+	NULL when programs runs with SUID or SGID enabled.
+	* sysdeps/stub/getenv.c: Make __secure_getenv an alias of getenv.
+	* stdlib/stdlib.h: Add prototype for __secure_getenv.
+
+	* locale/setlocale.c: Use __secure_getenv.
+	* resolv/res_init.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* sysdeps/posix/tempname.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* catgets/catgets.c: Likewise.
+
+	Make temporary file handling functions reentrant.
+
+	* stdio-common/tmpnam.c: Rewrite to have own buffer to write
+	result to.  The called __stdio_gen_tempname function must be
+	thread safe.
+	* stdio-common/tmpnam_r.c: New file.
+	* stdio/stdio.h: Add prototype for `tmpnam_r'.
+	Change prototype for __stdio_gen_tempname.
+	* stdio/libio.h: Likewise.
+	* sysdeps/posix/tempname.c: Add new parameters and use them instead
+	of static buffer.
+	Don't reset `indeces' when PID changed between calls.
+	Don't fail for long running programs when index counter once
+	reached the limit.
+	* sysdeps/stub/tempname.c: Likewise.
+	* stdio-common/tempnam.c: Provide local buffer as extra argument
+	to __stdio_gen_tempname.  This makes this function reentrant.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/temptest.c: Provide extra argument to
+	__stdio_gen_tempname.
+	* manual/filesys.texi: Describe tmpnam_r and add comments about
+	reentrancy of the functions.
+
+	* inet/rcmd.c: Fixed address length handling.
+
+	* sysdeps/posix/mk-stdiolim.c: Count final \0 byte in L_tmpnam value.
+
+	* time/strftime.c: Remove unused variables alt_digits and
+ 	end_alt_digits.
+
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Correct prototype names
+	for get_nprocs and get_nprocs_conf.
+	* sysdeps/generic/sys/sysinfo.h: Likewise.
+
+	* stdlib/test-canon.c: Finally do the right fix.
+
+	* misc/Makefile: Only compile force-wrapper when compiling
+	reentrant libc.
 
 Fri Sep 27 03:49:56 1996  Ulrich Drepper  <drepper@cygnus.com>
 

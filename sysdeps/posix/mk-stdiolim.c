@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@ main()
 {
   /* These values correspond to the code in sysdeps/posix/tempname.c.
      Change the values here if you change that code.  */
-  printf("#define L_tmpnam %u\n", sizeof("/usr/tmp/") + 8);
+  printf("#define L_tmpnam %u\n", sizeof("/usr/tmp/") + 9);
   printf("#define TMP_MAX %u\n", 62 * 62 * 62);
 
   puts  ("#ifdef __USE_POSIX");
@@ -36,7 +36,7 @@ main()
      is the case in the Hurd).  ANSI still requires that FOPEN_MAX and
      FILENAME_MAX be defined, however.  */
 
-  printf("#define FOPEN_MAX %u\n", 
+  printf("#define FOPEN_MAX %u\n",
 #ifdef	OPEN_MAX
 
 	 OPEN_MAX
@@ -51,7 +51,7 @@ main()
 
 	 );
 
-  printf("#define FILENAME_MAX %u\n", 
+  printf("#define FILENAME_MAX %u\n",
 #ifdef	PATH_MAX
 	 PATH_MAX
 #else

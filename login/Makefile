@@ -22,7 +22,7 @@
 
 subdir	:= login
 
-headers	:= utmp.h utmpbits.h lastlog.h
+headers	:= utmp.h utmpbits.h lastlog.h pty.h
 
 routines := setutent endutent getutent getutid getutline pututline	\
 	    setutent_r endutent_r getutent_r getutid_r getutline_r	\

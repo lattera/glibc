@@ -501,7 +501,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      continue;
 	    }
-	  strcpy (bp, tbuf);
+	  strcpy (bp, tbuf);		/* Cannot overflow.  */
 	  result->h_name = bp;
 	  bp += n;
 	  linebuflen -= n;
@@ -524,7 +524,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      continue;
 	    }
-	  strcpy (bp, tbuf);
+	  strcpy (bp, tbuf);		/* Cannot overflow.  */
 	  tname = bp;
 	  bp += n;
 	  linebuflen -= n;
@@ -650,7 +650,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  n = strlen (qname) + 1;	/* For the \0.  */
 	  if (n > linebuflen)
 	    goto try_again;
-	  strcpy (bp, qname);
+	  strcpy (bp, qname);		/* Cannot overflow.  */
 	  result->h_name = bp;
 	  bp += n;
 	  linebuflen -= n;

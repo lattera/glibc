@@ -22,12 +22,12 @@ Boston, MA 02111-1307, USA.  */
 #include <features.h>
 
 /* Return number of configured processors.  */
-extern int __get_nproc_conf __P ((void));
-extern int get_nproc_conf __P ((void));
+extern int __get_nprocs_conf __P ((void));
+extern int get_nprocs_conf __P ((void));
 
 /* Return number of available processors.  */
-extern int __get_nproc __P ((void));
-extern int get_nproc __P ((void));
+extern int __get_nprocs __P ((void));
+extern int get_nprocs __P ((void));
 
 
 /* Return number of physical pages of memory in the system.  */

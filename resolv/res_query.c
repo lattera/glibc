@@ -363,7 +363,7 @@ hostalias(name)
 
 	if (_res.options & RES_NOALIASES)
 		return (NULL);
-	file = getenv("HOSTALIASES");
+	file = __secure_getenv("HOSTALIASES");
 	if (file == NULL || (fp = fopen(file, "r")) == NULL)
 		return (NULL);
 	setbuf(fp, NULL);

@@ -216,7 +216,7 @@ res_init()
 	_res.pfcode = 0;
 
 	/* Allow user to override the local domain definition */
-	if ((cp = getenv("LOCALDOMAIN")) != NULL) {
+	if ((cp = __secure_getenv("LOCALDOMAIN")) != NULL) {
 		(void)strncpy(_res.defdname, cp, sizeof(_res.defdname) - 1);
 		haveenv++;
 
@@ -421,7 +421,7 @@ res_init()
 #endif /* !RFC1535 */
 	}
 
-	if ((cp = getenv("RES_OPTIONS")) != NULL)
+	if ((cp = __secure_getenv("RES_OPTIONS")) != NULL)
 		res_setoptions(cp, "env");
 	_res.options |= RES_INIT;
 	return (0);

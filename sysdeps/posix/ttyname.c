@@ -57,7 +57,7 @@ ttyname (fd)
     return NULL;
 
   while ((d = readdir (dirstream)) != NULL)
-    if (d->d_fileno == myino)
+    if ((ino_t) d->d_fileno == myino)
       {
 	size_t dlen = _D_ALLOC_NAMLEN (d);
 	if (sizeof (dev) + dlen > namelen)

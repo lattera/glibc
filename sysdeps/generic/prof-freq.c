@@ -37,7 +37,7 @@
 #include <sys/time.h>
 
 int
-__profile_frequency ()
+__profile_frequency (void)
 {
   /*
    * Discover the tick frequency of the machine if something goes wrong,

@@ -26,7 +26,9 @@ Cambridge, MA 02139, USA.  */
    Return the generated filename or NULL if one could not
    be generated, putting the length of the string in *LENPTR.  */
 char *
-__stdio_gen_tempname (dir, pfx, dir_search, lenptr)
+__stdio_gen_tempname (buf, bufsize, dir, pfx, dir_search, lenptr)
+     char *buf;
+     size_t bufsize;
      const char *dir;
      const char *pfx;
      int dir_search;

@@ -22,9 +22,13 @@ Boston, MA 02111-1307, USA.  */
 
 /* Pause execution for a number of nanoseconds.  */
 int
-nanosleep (const struct timespec *requested_time, struct timespec *remaining)
+__libc_nanosleep (const struct timespec *requested_time,
+		  struct timespec *remaining)
 {
   __set_errno (ENOSYS);
   return -1;
 }
 stub_warning (nanosleep)
+
+weak_alias (__libc_nanosleep, __nanosleep)
+weak_alias (__libc_nanosleep, nanosleep)

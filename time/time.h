@@ -265,6 +265,8 @@ extern int dysize __P ((int __year));
 
 #ifdef __USE_POSIX
 /* Pause execution for a number of nanoseconds.  */
+extern int __nanosleep __P ((__const struct timespec *__requested_time,
+			     struct timespec *__remaining));
 extern int nanosleep __P ((__const struct timespec *__requested_time,
 			   struct timespec *__remaining));
 #endif

@@ -96,7 +96,7 @@ __pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
   if (result >= 0)
     /* Position file correctly.  */
     if (utmp_data->loc_utmp < (off_t) sizeof (struct utmp)
-	|| utmp_data->loc_utmp - sizeof (struct utmp) > st.st_size)
+	|| (off_t) (utmp_data->loc_utmp - sizeof (struct utmp)) > st.st_size)
       /* Not located at any valid entry.  Add at the end.  */
       {
 	result = lseek (utmp_data->ut_fd, 0L, SEEK_END);

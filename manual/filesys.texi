@@ -261,7 +261,7 @@ are declared in the header file @file{dirent.h}.
 @comment dirent.h
 @comment POSIX.1
 @deftp {Data Type} DIR
-The @code{DIR} data type represents a directory stream.  
+The @code{DIR} data type represents a directory stream.
 @end deftp
 
 You shouldn't ever allocate objects of the @code{struct dirent} or
@@ -333,7 +333,7 @@ The @var{dirstream} argument is not valid.
 @comment POSIX.1
 @deftypefun int closedir (DIR *@var{dirstream})
 This function closes the directory stream @var{dirstream}.  It returns
-@code{0} on success and @code{-1} on failure.  
+@code{0} on success and @code{-1} on failure.
 
 The following @code{errno} error conditions are defined for this
 function:
@@ -443,7 +443,7 @@ following @code{errno} error conditions are defined for this function:
 @item EACCES
 You are not allowed to write the directory in which the new link is to
 be written.
-@ignore 
+@ignore
 Some implementations also require that the existing file be accessible
 by the caller, and use this error to report failure for that reason.
 @end ignore
@@ -627,7 +627,7 @@ The function @code{unlink} is declared in the header file @file{unistd.h}.
 
 This function returns @code{0} on successful completion, and @code{-1}
 on error.  In addition to the usual file name errors
-(@pxref{File Name Errors}), the following @code{errno} error conditions are 
+(@pxref{File Name Errors}), the following @code{errno} error conditions are
 defined for this function:
 
 @table @code
@@ -672,7 +672,7 @@ are two additional @code{errno} error conditions defined for
 @table @code
 @item ENOTEMPTY
 @itemx EEXIST
-The directory to be deleted is not empty.  
+The directory to be deleted is not empty.
 @end table
 
 These two error codes are synonymous; some systems use one, and some use
@@ -851,20 +851,20 @@ This section contains information about how you can inquire about and
 modify these attributes of files.
 
 @menu
-* Attribute Meanings::          The names of the file attributes, 
+* Attribute Meanings::          The names of the file attributes,
                                  and what their values mean.
 * Reading Attributes::          How to read the attributes of a file.
 * Testing File Type::           Distinguishing ordinary files,
-                                 directories, links... 
+                                 directories, links...
 * File Owner::                  How ownership for new files is determined,
 			         and how to change it.
 * Permission Bits::             How information about a file's access
-                                 mode is stored. 
+                                 mode is stored.
 * Access Permission::           How the system decides who can access a file.
 * Setting Permissions::         How permissions for new files are assigned,
 			         and how to change them.
 * Testing File Access::         How to find out if your process can
-                                 access a file. 
+                                 access a file.
 * File Times::                  About the time attributes of a file.
 @end menu
 
@@ -1079,7 +1079,7 @@ a socket, and so on.  For information about the access permission,
 @ref{Permission Bits}.
 
 There are two predefined ways you can access the file type portion of
-the file mode.  First of all, for each type of file, there is a 
+the file mode.  First of all, for each type of file, there is a
 @dfn{predicate macro} which examines a file mode value and returns
 true or false---is the file of that type, or not.  Secondly, you can
 mask out the rest of the file mode to get just a file type code.
@@ -1260,7 +1260,7 @@ bits may not be appropriate for the new owner.)  The other file
 permission bits are not changed.
 
 The return value is @code{0} on success and @code{-1} on failure.
-In addition to the usual file name errors (@pxref{File Name Errors}), 
+In addition to the usual file name errors (@pxref{File Name Errors}),
 the following @code{errno} error conditions are defined for this function:
 
 @table @code
@@ -1421,7 +1421,7 @@ This is equivalent to @samp{(S_IROTH | S_IWOTH | S_IXOTH)}.
 @comment POSIX
 @item S_ISUID
 @vindex S_ISUID
-This is the set-user-ID on execute bit, usually 04000. 
+This is the set-user-ID on execute bit, usually 04000.
 @xref{How Change Persona}.
 
 @comment sys/stat.h
@@ -1462,7 +1462,7 @@ arose since the last run.
 
 On some modern systems where the sticky bit has no useful meaning for an
 executable file, you cannot set the bit at all for a non-directory.
-If you try, @code{chmod} fails with @code{EFTYPE}; 
+If you try, @code{chmod} fails with @code{EFTYPE};
 @pxref{Setting Permissions}.
 
 Some systems (particularly SunOS) have yet another use for the sticky
@@ -1527,7 +1527,7 @@ The bits that are set in the file creation mask identify permissions
 that are always to be disabled for newly created files.  For example, if
 you set all the ``other'' access bits in the mask, then newly created
 files are not accessible at all to processes in the ``other''
-category, even if the @var{mode} argument specified to the creation 
+category, even if the @var{mode} argument specified to the creation
 function would permit such access.  In other words, the file creation
 mask is the complement of the ordinary access permissions you want to
 grant.
@@ -1671,7 +1671,7 @@ files off-limits to ordinary users---for example, to modify
 @file{/etc/passwd}.  Programs designed to be run by ordinary users but
 access such files use the setuid bit feature so that they always run
 with @code{root} as the effective user ID.
- 
+
 Such a program may also access files specified by the user, files which
 conceptually are being accessed explicitly by the user.  Since the
 program runs as @code{root}, it has permission to access whatever file
@@ -1776,7 +1776,7 @@ Argument that means, test for existence of the file.
 Each file has three timestamps associated with it:  its access time,
 its modification time, and its attribute modification time.  These
 correspond to the @code{st_atime}, @code{st_mtime}, and @code{st_ctime}
-members of the @code{stat} structure; see @ref{File Attributes}.  
+members of the @code{stat} structure; see @ref{File Attributes}.
 
 All of these times are represented in calendar time format, as
 @code{time_t} objects.  This data type is defined in @file{time.h}.
@@ -1832,7 +1832,7 @@ named @var{filename}.
 If @var{times} is a null pointer, then the access and modification times
 of the file are set to the current time.  Otherwise, they are set to the
 values from the @code{actime} and @code{modtime} members (respectively)
-of the @code{utimbuf} structure pointed at by @var{times}.  
+of the @code{utimbuf} structure pointed at by @var{times}.
 
 The attribute modification time for the file is set to the current time
 in either case (since changing the timestamps is itself a modification
@@ -1938,12 +1938,14 @@ this file, you must remove the old file explicitly first.
 
 If you need to use a temporary file in your program, you can use the
 @code{tmpfile} function to open it.  Or you can use the @code{tmpnam}
-function make a name for a temporary file and then open it in the usual
-way with @code{fopen}.
+(better: @code{tmpnam_r}) function make a name for a temporary file and
+then open it in the usual way with @code{fopen}.
 
 The @code{tempnam} function is like @code{tmpnam} but lets you choose
 what directory temporary files will go in, and something about what
-their file names will look like.
+their file names will look like.  Important for multi threaded programs
+is that @code{tempnam} is reentrant while @code{tmpnam} is not since it
+returns a pointer to a static buffer.
 
 These facilities are declared in the header file @file{stdio.h}.
 @pindex stdio.h
@@ -1956,6 +1958,8 @@ calling @code{fopen} with mode @code{"wb+"}.  The file is deleted
 automatically when it is closed or when the program terminates.  (On
 some other ANSI C systems the file may fail to be deleted if the program
 terminates abnormally).
+
+This function is reentrant.
 @end deftypefun
 
 @comment stdio.h
@@ -1964,14 +1968,26 @@ terminates abnormally).
 This function constructs and returns a file name that is a valid file
 name and that does not name any existing file.  If the @var{result}
 argument is a null pointer, the return value is a pointer to an internal
-static string, which might be modified by subsequent calls.  Otherwise,
-the @var{result} argument should be a pointer to an array of at least
-@code{L_tmpnam} characters, and the result is written into that array.
+static string, which might be modified by subsequent calls and therefore
+makes this function non-reentrant.  Otherwise, the @var{result} argument
+should be a pointer to an array of at least @code{L_tmpnam} characters,
+and the result is written into that array.
 
-It is possible for @code{tmpnam} to fail if you call it too many times.
-This is because the fixed length of a temporary file name gives room for
-only a finite number of different names.  If @code{tmpnam} fails, it
-returns a null pointer.
+It is possible for @code{tmpnam} to fail if you call it too many times
+without removing previously created files.  This is because the fixed
+length of a temporary file name gives room for only a finite number of
+different names.  If @code{tmpnam} fails, it returns a null pointer.
+@end deftypefun
+
+@comment stdio.h
+@comment GNU
+@deftypefun {char *} tmpnam_r (char *@var{result})
+This function is nearly identical to the @code{tmpnam} function.  But it
+does not allow @var{result} to be a null pointer.  In the later case a
+null pointer is returned.
+
+This function is reentrant because the non-reentrant situation of
+@code{tmpnam} cannot happen here.
 @end deftypefun
 
 @comment stdio.h
@@ -2006,13 +2022,16 @@ prefix for the file name.  The return value is a string newly allocated
 with @code{malloc}; you should release its storage with @code{free} when
 it is no longer needed.
 
+Because the string is dynamically allocated this function is reentrant.
+
 The directory prefix for the temporary file name is determined by testing
 each of the following, in sequence.  The directory must exist and be
 writable.
 
 @itemize @bullet
 @item
-The environment variable @code{TMPDIR}, if it is defined.
+The environment variable @code{TMPDIR}, if it is defined.  For security
+reasons this only happens if the program is not SUID or SGID enabled.
 
 @item
 The @var{dir} argument, if it is not a null pointer.

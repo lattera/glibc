@@ -107,7 +107,7 @@ check_path (const char * result, const char * expected)
 }
 
 
-void
+int
 main (int argc, char ** argv)
 {
   char * result;
@@ -117,12 +117,12 @@ main (int argc, char ** argv)
   getcwd (cwd, sizeof(buf));
   cwd_len = strlen (cwd);
 
-  for (i = 0; i < sizeof (symlinks) / sizeof (symlinks[0]); ++i)
+  for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
     symlink (symlinks[i].value, symlinks[i].name);
 
   fd = open("doesExist", O_CREAT | O_EXCL, 0777);
 
-  for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
+  for (i = 0; i < (int) (sizeof (tests) / sizeof (tests[0])); ++i)
     {
       buf[0] = '\0';
       result = realpath (tests[i].in, buf);
@@ -148,7 +148,7 @@ main (int argc, char ** argv)
       if (!tests[i].out && errno != tests[i].error)
 	{
 	  printf ("%s: flunked test %d (expected errno %d, got %d)\n",
-		  argv[0], i, tests[i].errno, errno);
+		  argv[0], i, tests[i].error, errno);
 	  ++errors;
 	  continue;
 	}
@@ -165,17 +165,15 @@ main (int argc, char ** argv)
   if (fd >= 0)
     unlink("doesExist");
 
-  for (i = 0; i < sizeof (symlinks) / sizeof (symlinks[0]); ++i)
+  for (i = 0; i < (int) (sizeof (symlinks) / sizeof (symlinks[0])); ++i)
     unlink (symlinks[i].name);
 
-  if (errors == 0)
-    {
-      puts ("No errors.");
-      exit (EXIT_SUCCESS);
-    }
-  else
+  if (errors != 0)
     {
       printf ("%d errors.\n", errors);
       exit (EXIT_FAILURE);
     }
+
+  puts ("No errors.");
+  return EXIT_SUCCESS;
 }

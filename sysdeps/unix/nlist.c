@@ -26,9 +26,7 @@ the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
    which is terminated by an element with a NULL `n_un.n_name' member,
    and fill in the elements of NL.  */
 int
-nlist (file, nl)
-     const char *file;
-     struct nlist *nl;
+nlist (const char *file, struct nlist *nl)
 {
   FILE *f;
   struct exec header;

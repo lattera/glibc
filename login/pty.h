@@ -1,4 +1,5 @@
-/* Copyright (C) 1992, 1993, 1996 Free Software Foundation, Inc.
+/* pty.h - Functions for pseudo TTY handlung.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +17,27 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#ifndef _PTY_H
 
-char *
-__strsep (char **stringp, const char *delim)
-{
-  char *begin, *end;
+#define _PTY_H	1
+#include <features.h>
 
-  begin = *stringp;
-  if (! begin || *begin == '\0')
-    return NULL;
+#include <termios.h>
 
-  /* Find the end of the token.  */
-  end = strpbrk (begin, delim);
-  if (end)
-    {
-      /* Terminate the token and set *STRINGP past NUL character.  */
-      *end++ = '\0';
-      *stringp = end;
-    }
-  else
-    /* No more delimiters; this is the last token.  */
-    *stringp = NULL;
 
-  return begin;
-}
-weak_alias (__strsep, strsep)
+__BEGIN_DECLS
+
+/* Create pseudo tty master slave pair with NAME and set terminal
+   attributes according to TERMP and WINP and return handles for both
+   ends in AMASTER and ASLAVE.  */
+extern int openpty __P ((int *__amaster, int *__aslave, char *__name,
+			 struct termios *__termp, struct winsize *__winp));
+
+/* Create child process and establish the slave pseudo terminal as the
+   child's controlling terminal.  */
+extern int forkpty __P ((int *__amaster, char *__name,
+			 struct termios *__termp, struct winsize *__winp));
+
+__END_DECLS
+
+#endif	/* pty.h */

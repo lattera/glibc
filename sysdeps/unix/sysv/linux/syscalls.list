@@ -1,6 +1,6 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-adjtimex	adjtime	adjtimex	1	__adjtimex
+adjtimex	adjtime	adjtimex	1	__adjtimex	adjtimex
 bdflush		EXTRA	bdflush		2	bdflush
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
@@ -20,13 +20,13 @@ iopl		-	iopl		1	iopl
 ipc		msgget	ipc		5	__ipc
 klogctl		EXTRA	syslog		3	klogctl
 llseek		EXTRA	_llseek		5	llseek
-mlock		-	mlock		2	__mlock	mlock
-mlockall	-	mlockall	1	__mlockall	mlockall
+mlock		EXTRA	mlock		2	__mlock	mlock
+mlockall	EXTRA	mlockall	1	__mlockall	mlockall
 mount		EXTRA	mount		5	__mount	mount
-mremap		-	mremap		4	__mremap	mremap
-munlock		-	munlock		2	__munlock	munlock
-munlockall	-	munlockall	0	__munlockall	munlockall
-nanosleep	-	nanosleep	2	__libc_nanosleep	nanosleep
+mremap		EXTRA	mremap		4	__mremap	mremap
+munlock		EXTRA	munlock		2	__munlock	munlock
+munlockall	EXTRA	munlockall	0	__munlockall	munlockall
+nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe

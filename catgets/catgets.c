@@ -79,7 +79,7 @@ catopen (const char *cat_name, int flag)
 	  return (nl_catd) -1;
 	}
 
-      if (getenv ("NLSPATH") != NULL)
+      if (__secure_getenv ("NLSPATH") != NULL)
 	result->nlspath = __strdup (getenv ("NLSPATH"));
       else
 	result->nlspath = __strdup (NLSPATH);

@@ -1046,7 +1046,7 @@ const char *
 p_time(value)
 	u_int32_t value;
 {
-	static char nbuf[40];
+	static char nbuf[60];
 	int secs, mins, hours, days;
 	register char *p;
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,34 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
 
-/* Generate a unique filename in P_tmpdir.  */
+/* Generate a unique filename in P_tmpdir.
+
+   This function is *not* thread safe!  */
 char *
-DEFUN(tmpnam, (s), register char *s)
+tmpnam (char *s)
 {
-  register char *t = __stdio_gen_tempname((CONST char *) NULL,
-					  (CONST char *) NULL, 0,
-					  (size_t *) NULL, (FILE **) NULL);
+  /* By using two buffers we manage to be thread safe in the case
+     where S != NULL.  */
+  static char buf[L_tmpnam];
+  char *tmpbuf[L_tmpnam];
+  char *result;
 
-  if (t == NULL)
-    return NULL;
+  /* In the following call we use the buffer pointed to by S if
+     non-NULL although we don't know the size.  But we limit the size
+     to FILENAME_MAX characters in any case.  */
+  result = __stdio_gen_tempname (s ?: tmpbuf, L_tmpnam, (const char *) NULL,
+				 (const char *) NULL, 0,
+				 (size_t *) NULL, (FILE **) NULL);
 
-  if (s != NULL)
-    (void) strcpy(s, t);
-  else
-    s = t;
+  if (result != NULL && s == NULL)
+    {
+      memcpy (buf, result, L_tmpnam);
+      result = buf;
+    }
 
-  return s;
+  return result;
 }

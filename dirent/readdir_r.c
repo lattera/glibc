@@ -1,5 +1,7 @@
-/* Copyright (C) 1992, 1993, 1996 Free Software Foundation, Inc.
+/* readdir_r - Reentrant version of readdir.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,29 +18,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <string.h>
+#include <dirent.h>
 
-char *
-__strsep (char **stringp, const char *delim)
+/* Some systems have reentrancy problems with their `readdir'
+   implementation so they have an additional `readdir_r' version.  The
+   GNU version does not have these problems but for compatibility
+   reasons we provide this function.  It is simply a wrapper around
+   the normal function.
+
+   The actual definition of this functions varies very strong from
+   system to system.  We chose to follow the POSIX version.  */
+int
+readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
-  char *begin, *end;
+  *result = readdir (dirp);
 
-  begin = *stringp;
-  if (! begin || *begin == '\0')
-    return NULL;
-
-  /* Find the end of the token.  */
-  end = strpbrk (begin, delim);
-  if (end)
-    {
-      /* Terminate the token and set *STRINGP past NUL character.  */
-      *end++ = '\0';
-      *stringp = end;
-    }
-  else
-    /* No more delimiters; this is the last token.  */
-    *stringp = NULL;
-
-  return begin;
+  return *result != NULL ? 0 : -1;
 }
-weak_alias (__strsep, strsep)

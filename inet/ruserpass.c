@@ -87,9 +87,14 @@ ruserpass(host, aname, apass)
 	int t, i, c, usedefault = 0;
 	struct stat stb;
 
-	hdir = getenv("HOME");
-	if (hdir == NULL)
-		hdir = ".";
+	hdir = __secure_getenv("HOME");
+	if (hdir == NULL) {
+		/* If we can't get HOME, fail instead of trying ".",
+		   which is no improvement. This really should call
+		   getpwuid(getuid()).  */
+		/*hdir = ".";*/
+	  	return -1;
+	}
 
 	buf = alloca (strlen (hdir) + 8);
 

@@ -52,6 +52,9 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <ctype.h>
 #include <string.h>
 
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+
+
 int	__ivaliduser __P((FILE *, u_int32_t, const char *, const char *));
 static int __icheckhost __P((u_int32_t, char *));
 
@@ -92,7 +95,8 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 		}
 		fcntl(s, F_SETOWN, pid);
 		sin.sin_family = hp->h_addrtype;
-		bcopy(hp->h_addr_list[0], &sin.sin_addr, hp->h_length);
+		bcopy(hp->h_addr_list[0], &sin.sin_addr,
+		      MIN (sizeof (sin.sin_addr), hp->h_length));
 		sin.sin_port = rport;
 		if (connect(s, (struct sockaddr *)&sin, sizeof(sin)) >= 0)
 			break;
@@ -114,7 +118,8 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 			__set_errno (oerrno);
 			perror(0);
 			hp->h_addr_list++;
-			bcopy(hp->h_addr_list[0], &sin.sin_addr, hp->h_length);
+			bcopy(hp->h_addr_list[0], &sin.sin_addr,
+			      MIN (sizeof (sin.sin_addr), hp->h_length));
 			(void)fprintf(stderr, _("Trying %s...\n"),
 			    inet_ntoa(sin.sin_addr));
 			continue;

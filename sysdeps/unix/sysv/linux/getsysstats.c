@@ -33,14 +33,11 @@ get_proc_path (char *buffer, size_t bufsize)
   FILE *fp;
   struct mntent mount_point;
   struct mntent *entry;
-  char *result;
+  char *result = NULL;
 
   /* First find the mount point of the proc filesystem.  */
   fp = __setmntent (_PATH_MNTTAB, "r");
-  if (fp == NULL)
-    /* Cannot find mount table file.  */
-    result = NULL;
-  else
+  if (fp != NULL)
     {
       while ((entry = __getmntent_r (fp, &mount_point, buffer, bufsize))
 	     != NULL)
@@ -108,7 +105,7 @@ weak_alias (__get_nprocs, get_nprocs)
 
 /* As far as I know Linux has no separate numbers for configured and
    available processors.  So make the `get_nprocs_conf' function an
-   prototype.  */
+   alias.  */
 strong_alias (__get_nprocs, __get_nprocs_conf)
 weak_alias (__get_nprocs, get_nprocs_conf)
 

@@ -298,7 +298,7 @@ __getcwd (buf, size)
 	      (d->d_name[1] == '\0' ||
 	       (d->d_name[1] == '.' && d->d_name[2] == '\0')))
 	    continue;
-	  if (mount_point || d->d_ino == thisino)
+	  if (mount_point || (ino_t) d->d_ino == thisino)
 	    {
 	      char name[dotlist + dotsize - dotp + 1 + _D_ALLOC_NAMLEN (d)];
 	      memcpy (name, dotp, dotlist + dotsize - dotp);
@@ -326,7 +326,7 @@ __getcwd (buf, size)
 	{
 	  size_t namlen = _D_EXACT_NAMLEN (d);
 
-	  if (pathp - path < namlen)
+	  if ((size_t) (pathp - path) < namlen)
 	    {
 	      if (buf != NULL)
 		{

@@ -361,6 +361,10 @@ extern void exit __P ((int __status)) __attribute__ ((__noreturn__));
 /* Return the value of envariable NAME, or NULL if it doesn't exist.  */
 extern char *getenv __P ((__const char *__name));
 
+/* This function is similar to the above but returns NULL if the
+   programs is running with SUID or SGID enabled.  */
+extern char *__secure_getenv __P ((__const char *__name));
+
 #ifdef	__USE_SVID
 /* The SVID says this is in <stdio.h>, but this seems a better place.	*/
 /* Put STRING, which is of the form "NAME=VALUE", in the environment.

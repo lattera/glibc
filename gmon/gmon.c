@@ -45,6 +45,8 @@
 #include <string.h>
 #include <unistd.h>
 
+extern int __profile_frequency (void);
+
 struct __bb *__bb_head;	/*  Head of basic-block list or NULL. */
 
 struct gmonparam _gmonparam = { GMON_PROF_OFF };
@@ -128,7 +130,7 @@ DEFUN(monstartup, (lowpc, highpc), u_long lowpc AND u_long highpc)
   p->tos[0].link = 0;
 
   o = p->highpc - p->lowpc;
-  if (p->kcountsize < o)
+  if (p->kcountsize < (u_long) o)
     {
 #ifndef hp300
       s_scale = ((float)p->kcountsize / o ) * SCALE_1_TO_1;

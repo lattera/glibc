@@ -26,7 +26,7 @@ sleep (unsigned int seconds)
   struct timespec ts = { tv_sec: (long int) seconds, tv_nsec: 0 };
   unsigned int result;
 
-  if (nanosleep (&ts, &ts) == 0)
+  if (__nanosleep (&ts, &ts) == 0)
     result = 0;
   else
     /* Round remaining time.  */

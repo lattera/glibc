@@ -209,6 +209,7 @@ extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
 
 /* Return the next DELIM-delimited token from *STRINGP,
    terminating it with a '\0', and update *STRINGP to point past it.  */
+extern char *__strsep __P ((char **__stringp, __const char *__delim));
 extern char *strsep __P ((char **__stringp, __const char *__delim));
 #endif
 

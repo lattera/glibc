@@ -91,9 +91,9 @@ retry:
 		(void) write(s, "", 1);
 		port = 0;
 	} else {
-		char num[8];
+		char num[32];
 		int s2, sin2len;
-		
+
 		s2 = socket(AF_INET, SOCK_STREAM, 0);
 		if (s2 < 0) {
 			(void) close(s);

@@ -548,11 +548,11 @@ time_output (struct localedef_t *locale, const char *output_path)
   ++last_idx;
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-# define ERA_B1 time->era_entries
-# define ERA_B2 time->era_entries_ob
-#else
 # define ERA_B1 time->era_entries_ob
 # define ERA_B2 time->era_entries
+#else
+# define ERA_B1 time->era_entries
+# define ERA_B2 time->era_entries_ob
 #endif
   idx[1 + last_idx] = idx[last_idx];
   for (num = 0; num < time->cur_num_era; ++num)

@@ -24,6 +24,7 @@ Cambridge, MA 02139, USA.  */
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
 # define HAVE_MBRLEN 1
+# define HAVE_STRUCT_ERA_ENTRY 1
 # define HAVE_TM_GMTOFF 1
 # define HAVE_TM_ZONE 1
 # define MULTIBYTE_IS_FORMAT_SAFE 1
@@ -260,12 +261,9 @@ strftime (s, maxsize, format, tp)
   const char *const f_month = _NL_CURRENT (LC_TIME, MON_1 + tp->tm_mon);
   const char *const ampm = _NL_CURRENT (LC_TIME,
 					hour12 > 11 ? PM_STR : AM_STR);
-  size_t aw_len = strlen(a_wkday);
-  size_t am_len = strlen(a_month);
+  size_t aw_len = strlen (a_wkday);
+  size_t am_len = strlen (a_month);
   size_t ap_len = strlen (ampm);
-
-  const char *alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS);
-  const char *end_alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS + 1);
 #else
   const char *const f_wkday = weekday_name[tp->tm_wday];
   const char *const f_month = month_name[tp->tm_mon];
@@ -423,9 +421,6 @@ strftime (s, maxsize, format, tp)
 #define DO_NUMBER_SPACEPAD(d, v) \
 	  digits = d; number_value = v; goto do_number_spacepad
 
-	case '\0':		/* GNU extension: % at end of format.  */
-	    --f;
-	    /* Fall through.  */
 	case '%':
 	  if (modifier != 0)
 	    goto bad_format;
@@ -480,8 +475,17 @@ strftime (s, maxsize, format, tp)
 	case 'C':		/* POSIX.2 extension.  */
 	  if (modifier == 'O')
 	    goto bad_format;
-#ifdef _NL_CURRENT
-	  /* XXX %EC is not implemented yet.  */
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  size_t len = strlen (era->name_fmt);
+		  cpy (len, era->name_fmt);
+		  break;
+		}
+	    }
 #endif
 	  {
 	    int year = tp->tm_year + TM_YEAR_BASE;
@@ -769,10 +773,16 @@ strftime (s, maxsize, format, tp)
 	  DO_NUMBER (1, tp->tm_wday);
 
 	case 'Y':
-#ifdef _NL_CURRENT
-	  if (modifier == 'E'
-	      && *(subfmt = _NL_CURRENT (LC_TIME, ERA_YEAR)) != '\0')
-	    goto subformat;
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  subfmt = strchr (era->name_fmt, '\0') + 1;
+		  goto subformat;
+		}
+	    }
 #endif
 	  if (modifier == 'O')
 	    goto bad_format;
@@ -780,8 +790,17 @@ strftime (s, maxsize, format, tp)
 	    DO_NUMBER (1, tp->tm_year + TM_YEAR_BASE);
 
 	case 'y':
-#ifdef _NL_CURRENT
-	  /* XXX %Ey is not implemented yet.  */
+#if HAVE_STRUCT_ERA_ENTRY
+	  if (modifier == 'E')
+	    {
+	      struct era_entry *era = _nl_get_era_entry (tp);
+	      if (era)
+		{
+		  int delta = tp->tm_year - era->start_date[0];
+		  DO_NUMBER (1, (era->offset
+				 + (era->direction == '-' ? -delta : delta)));
+		}
+	    }
 #endif
 	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
@@ -837,6 +856,9 @@ strftime (s, maxsize, format, tp)
 	    DO_NUMBER (4, (diff / 60) * 100 + diff % 60);
 	  }
 
+	case '\0':		/* GNU extension: % at end of format.  */
+	    --f;
+	    /* Fall through.  */
 	default:
 	  /* Unknown format; output the format, including the '%',
 	     since this is most likely the right thing to do if a
@@ -844,7 +866,7 @@ strftime (s, maxsize, format, tp)
 	bad_format:
 	  {
 	    int flen;
-	    for (flen = 2; f[1 - flen] != '%'; flen++)
+	    for (flen = 1; f[1 - flen] != '%'; flen++)
 	      continue;
 	    cpy (flen, &f[1 - flen]);
 	  }

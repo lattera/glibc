@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,17 +27,29 @@ Cambridge, MA 02139, USA.  */
 
 /* Return the value of the environment variable NAME.  */
 char *
-DEFUN(getenv, (name), register CONST char *name)
+getenv (name)
+     const char *name;
 {
-  register CONST size_t len = strlen(name);
-  register char **ep;
+  const size_t len = strlen (name);
+  char **ep;
 
   if (__environ == NULL)
     return NULL;
 
   for (ep = __environ; *ep != NULL; ++ep)
-    if (!strncmp(*ep, name, len) && (*ep)[len] == '=')
+    if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       return &(*ep)[len + 1];
 
   return NULL;
+}
+
+
+/* Some programs and especially the libc itself have to be careful
+   what values to accept from the environment.  This special version
+   checks for SUID or SGID first before doing any work.  */
+char *
+__secure_getenv (name)
+     const char *name;
+{
+  return __libc_enable_secure ? NULL : getenv (name);
 }

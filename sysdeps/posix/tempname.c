@@ -81,21 +81,24 @@ static const char letters[] =
    existing file will be returned.  When the cycle reaches its end
    (12345ZZZ), NULL is returned.  */
 char *
-__stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
-		      size_t *lenptr, FILE **streamptr)
+__stdio_gen_tempname (char *buf, size_t bufsize, const char *dir,
+		      const char *pfx, int dir_search, size_t *lenptr,
+		      FILE **streamptr)
 {
   int saverrno = errno;
   static const char tmpdir[] = P_tmpdir;
   static size_t indices[2];
   size_t *idx;
-  static char buf[FILENAME_MAX];
+#if 0
   static pid_t oldpid = (pid_t) 0;
+#endif
   pid_t pid = __getpid();
   register size_t len, plen, dlen;
+  int wrapped;
 
   if (dir_search)
     {
-      register const char *d = getenv ("TMPDIR");
+      register const char *d = __secure_getenv ("TMPDIR");
       if (d != NULL && !diraccess (d))
 	d = NULL;
       if (d == NULL && dir != NULL && diraccess (dir))
@@ -133,34 +136,51 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
     dir = tmpdir;
   idx = &indices[(plen == 0 && dir == tmpdir) ? 1 : 0];
 
+#if 0
+  /* XXX Is this ever useful???  At least when using a thread package
+     which uses different PIDs for the threads it is not helpful.  */
   if (pid != oldpid)
     {
       oldpid = pid;
       indices[0] = indices[1] = 0;
     }
+#endif
 
+  wrapped = 0; /* We have not yet wrapped around the index counter.  */
   len = dlen + 1 + plen + 5 + 3;
-  while (*idx < ((sizeof (letters) - 1) * (sizeof (letters) - 1) *
-		 (sizeof (letters) - 1)))
+  while (1)
     {
-      const size_t i = (*idx)++;
+      const size_t i;
+
+      if (*idx >= ((sizeof (letters) - 1) * (sizeof (letters) - 1) *
+		   (sizeof (letters) - 1)))
+	{
+	  if (wrapped)
+	    /* We really wrapped around this call.  Can't believe it
+	       but nevertheless stop the endless loop.  */
+	    break;
+
+	  indices[0] = indices[1] = 0;
+	  wrapped = 1;
+	}
+
+      i = (*idx)++;
 
       /* Construct a file name and see if it already exists.
 
 	 We use a single counter in *IDX to cycle each of three
 	 character positions through each of 62 possible letters.  */
 
-      if (sizeof (buf) < len ||
-	  sprintf (buf, "%.*s/%.*s%.5d%c%c%c",
-		   (int) dlen, dir, (int) plen,
-		   pfx, pid % 100000,
-		   letters[i % (sizeof (letters) - 1)],
-		   letters[(i / (sizeof (letters) - 1))
-			   % (sizeof (letters) - 1)],
-		   letters[(i / ((sizeof (letters) - 1) *
-				 (sizeof (letters) - 1)))
-			   % (sizeof (letters) - 1)]
-		   ) != (int) len)
+      if (__snprintf (buf, bufsize, "%.*s/%.*s%.5d%c%c%c",
+		      (int) dlen, dir, (int) plen,
+		      pfx, pid % 100000,
+		      letters[i % (sizeof (letters) - 1)],
+		      letters[(i / (sizeof (letters) - 1))
+			     % (sizeof (letters) - 1)],
+		      letters[(i / ((sizeof (letters) - 1) *
+				    (sizeof (letters) - 1)))
+			     % (sizeof (letters) - 1)]
+		    ) != (int) len)
 	return NULL;
 
       if (streamptr != NULL)
@@ -176,7 +196,7 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 	      struct _IO_FILE_plus *fp;
 
 	      fp = (struct _IO_FILE_plus *)
-		malloc(sizeof (struct _IO_FILE_plus));
+		malloc (sizeof (struct _IO_FILE_plus));
 	      if (fp == NULL)
 		{
 		  /* We lost trying to create a stream (out of memory?).

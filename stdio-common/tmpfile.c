@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 
 
@@ -25,12 +24,13 @@ Cambridge, MA 02139, USA.  */
    If we couldn't generate a unique filename or the file couldn't
    be opened, NULL is returned.  */
 FILE *
-DEFUN_VOID(tmpfile)
+tmpfile ()
 {
+  char buf[FILENAME_MAX];
   char *filename;
   FILE *f;
 
-  filename = __stdio_gen_tempname ((char *) NULL, "tmpf", 0,
+  filename = __stdio_gen_tempname (buf, sizeof (buf), (char *) NULL, "tmpf", 0,
 				   (size_t *) NULL, &f);
   if (filename == NULL)
     return NULL;

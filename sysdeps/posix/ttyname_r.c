@@ -72,7 +72,7 @@ __ttyname_r (fd, buf, buflen)
   buflen -= sizeof (dev);
 
   while ((d = readdir (dirstream)) != NULL)
-    if (d->d_fileno == myino)
+    if ((ino_t) d->d_fileno == myino)
       {
 	char *cp;
 

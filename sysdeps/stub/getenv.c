@@ -27,6 +27,7 @@ getenv (name)
   __set_errno (ENOSYS);
   return NULL;
 }
+strong_alias (getenv, __secure_getenv)
 
 
 stub_warning (getenv)

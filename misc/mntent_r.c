@@ -74,16 +74,16 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
       /* skip empty lines and comment lines:  */
     } while (head[0] == '\0' || head[0] == '#');
 
-  mp->mnt_fsname = strsep (&head, " \t") ?: (char *) "";
+  mp->mnt_fsname = __strsep (&head, " \t") ?: (char *) "";
   if (head)
     head += strspn (head, " \t");
-  mp->mnt_dir = strsep (&head, " \t") ?: (char *) "";
+  mp->mnt_dir = __strsep (&head, " \t") ?: (char *) "";
   if (head)
     head += strspn (head, " \t");
-  mp->mnt_type = strsep (&head, " \t") ?: (char *) "";
+  mp->mnt_type = __strsep (&head, " \t") ?: (char *) "";
   if (head)
     head += strspn (head, " \t");
-  mp->mnt_opts = strsep (&head, " \t") ?: (char *) "";
+  mp->mnt_opts = __strsep (&head, " \t") ?: (char *) "";
   switch (head ? sscanf (head, " %d %d ", &mp->mnt_freq, &mp->mnt_passno) : 0)
     {
     case 0:

@@ -32,7 +32,7 @@ Boston, MA 02111-1307, USA.  */
    which describes the current status.  */
 typedef struct _ENTRY
 {
-  int   used;
+  unsigned int used;
   ENTRY entry;
 }
 _ENTRY;

@@ -156,7 +156,8 @@ extern int __stdio_open __P ((__const char *__file, __io_mode __m,
 /* Put out an error message for when stdio needs to die.  */
 extern void __stdio_errmsg __P ((__const char *__msg, size_t __len));
 /* Generate a unique file name (and possibly open it with mode "w+b").  */
-extern char *__stdio_gen_tempname __P ((__const char *__dir,
+extern char *__stdio_gen_tempname __P ((char *__buf, size_t __bufsize,
+					__const char *__dir,
 					__const char *__pfx,
 					int __dir_search,
 					size_t *__lenptr,
@@ -293,6 +294,12 @@ extern int rename __P ((__const char *__old, __const char *__new));
 extern FILE *tmpfile __P ((void));
 /* Generate a temporary filename.  */
 extern char *tmpnam __P ((char *__s));
+
+#ifdef __USE_REENTRANT
+/* This is the reentrant variant of `tmpnam'.  The only difference is
+   that it does not allow S to be NULL.  */
+extern char *tmpnam_r __P ((char *__s));
+#endif
 
 
 #ifdef	__USE_SVID
