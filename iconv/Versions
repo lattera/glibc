@@ -6,4 +6,8 @@ libc {
     # i*
     iconv_open; iconv; iconv_close;
   }
+  GLIBC_2.2.5 {
+    # variable shared with iconv program
+    __gconv_cache;
+  }
 }

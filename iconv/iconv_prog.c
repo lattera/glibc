@@ -39,12 +39,16 @@
 #include <charmap.h>
 #include <gconv_int.h>
 #include "iconv_prog.h"
+#include "iconvconfig.h"
 
 /* Get libc version number.  */
 #include "../version.h"
 
 #define PACKAGE _libc_intl_domainname
 
+
+/* Defined in gconv_cache.c.  */
+extern void *__gconv_cache;
 
 /* Name and version of program.  */
 static void print_version (FILE *stream, struct argp_state *state);
@@ -653,13 +657,38 @@ add_known_names (struct gconv_module *node)
       if (strcmp (node->from_string, "INTERNAL"))
 	tsearch (node->from_string, &printlist,
 		 (__compar_fn_t) strverscmp);
-      if (strcmp (node->to_string, "INTERNAL"))
+      if (strcmp (node->to_string, "INTERNAL") != 0)
 	tsearch (node->to_string, &printlist, (__compar_fn_t) strverscmp);
 
       node = node->same;
     }
   while (node != NULL);
 }
+
+
+static void
+insert_cache (void)
+{
+  const struct gconvcache_header *header;
+  const char *strtab;
+  const struct hash_entry *hashtab;
+  size_t cnt;
+
+  header = (const struct gconvcache_header *) __gconv_cache;
+  strtab = (char *) __gconv_cache + header->string_offset;
+  hashtab = (struct hash_entry *) ((char *) __gconv_cache
+				   + header->hash_offset);
+
+  for (cnt = 0; cnt < header->hash_size; ++cnt)
+    if (hashtab[cnt].string_offset != 0)
+      {
+	const char *str = strtab + hashtab[cnt].string_offset;
+
+	if (strcmp (str, "INTERNAL") != 0)
+	  tsearch (str, &printlist, (__compar_fn_t) strverscmp);
+      }
+}
+
 
 static void
 internal_function
@@ -671,11 +700,20 @@ print_known_names (void)
   h = iconv_open ("L1", "L1");
   iconv_close (h);
 
-  /* First add the aliases.  */
-  twalk (__gconv_alias_db, insert_print_list);
+  /* See whether we have a cache.  */
+  if (__gconv_cache != NULL)
+    /* Yep, use only this information.  */
+    insert_cache ();
+  else
+    {
+      /* No, then use the information read from the gconv-modules file.
+	 First add the aliases.  */
+      twalk (__gconv_alias_db, insert_print_list);
 
-  /* Add the from- and to-names from the known modules.  */
-  add_known_names (__gconv_modules_db);
+      /* Add the from- and to-names from the known modules.  */
+      if (__gconv_modules_db != NULL)
+	add_known_names (__gconv_modules_db);
+    }
 
   fputs (_("\
 The following list contain all the coded character sets known.  This does\n\
