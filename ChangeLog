@@ -1,3 +1,7 @@
+2004-03-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/ns_ttl.c: Don't add ns_parse_ttl for libresolv.so.
+
 2004-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/errno.c: Include <dl-sysdep.h>.  Use

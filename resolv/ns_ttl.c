@@ -89,6 +89,9 @@ ns_format_ttl(u_long src, char *dst, size_t dstlen) {
 	return (dst - odst);
 }
 
+#ifndef SHARED
+// Seems not to be needed.  It's not exported from the DSO.  Some libresolv.a
+// might depend on it so we let it in.
 int
 ns_parse_ttl(const char *src, u_long *dst) {
 	u_long ttl, tmp;
@@ -137,6 +140,7 @@ ns_parse_ttl(const char *src, u_long *dst) {
 	__set_errno (EINVAL);
 	return (-1);
 }
+#endif
 
 /* Private. */
 
