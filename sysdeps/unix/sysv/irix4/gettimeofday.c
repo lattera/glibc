@@ -1,3 +1,1 @@
-#include <sysdeps/posix/__gettod.c>
-
-weak_alias (__gettimeofday, gettimeofday)
+#include <sysdeps/posix/gettimeofday.c>
