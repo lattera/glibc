@@ -25,3 +25,5 @@ libc.proj .snprj
 TODO.html
 
 autom4te*.cache
+
+rtkaio
