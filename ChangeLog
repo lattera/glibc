@@ -1,5 +1,8 @@
 1999-12-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/bits/utsname.h: Test for _SYS_UTSNAME_H, not
+	_UTSNAME_H.
+
 	* malloc/set-freeres.c: Really use already_called variable.
 
 	* libio/iosetbuffer.c: Use _IO_WSETBUF instead of constructing
