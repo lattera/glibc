@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -40,13 +40,16 @@ l64a (n)
   static char result[7];
   int cnt;
 
-  if (m == 0l)
+  /* The standard says that only 32 bits are used.  */
+  m &= 0xffffffff;
+
+  if (m == 0ul)
     /* The value for N == 0 is defined to be the empty string. */
     return (char *) "";
 
   result[6] = '\0';
 
-  for (cnt = 5; m > 0; --cnt)
+  for (cnt = 5; m > 0ul; --cnt)
     {
       result[cnt] = conv_table[m & 0x3f];
       m >>= 6;
