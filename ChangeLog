@@ -1,5 +1,7 @@
 1999-11-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Add AIX 4.3 support.
+
 	* iconvdata/gconv-modules: Correct alias for ISO-8859-10.  This
 	standard was issued in 1992.
 	Reported by Bruno Haible <haible@ilog.fr>.
