@@ -46,12 +46,13 @@
 # endif  /* GCC.  */
 #endif  /* Not __P.  */
 
-#if ! HAVE_LOCALTIME_R && ! defined (localtime_r)
-#ifdef _LIBC
-#define localtime_r __localtime_r
-#else
+
+#if ! HAVE_LOCALTIME_R && ! defined localtime_r
+# ifdef _LIBC
+#  define localtime_r __localtime_r
+# else
 /* Approximate localtime_r as best we can in its absence.  */
-#define localtime_r my_localtime_r
+#  define localtime_r my_localtime_r
 static struct tm *localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
 localtime_r (t, tp)
@@ -64,7 +65,7 @@ localtime_r (t, tp)
   *tp = *l;
   return tp;
 }
-#endif /* ! _LIBC */
+# endif /* ! _LIBC */
 #endif /* ! HAVE_LOCALTIME_R && ! defined (localtime_r) */
 
 
@@ -135,6 +136,7 @@ localtime_r (t, tp)
 #ifdef _LIBC
 /* This is defined in locale/C-time.c in the GNU libc.  */
 extern const struct locale_data _nl_C_LC_TIME;
+extern const unsigned short int __mon_yday[2][13];
 
 # define weekday_name (&_nl_C_LC_TIME.values[_NL_ITEM_INDEX (DAY_1)].string)
 # define ab_weekday_name \
@@ -176,10 +178,50 @@ static char const ab_month_name[][4] =
 # define HERE_PM_STR "PM"
 # define HERE_T_FMT_AMPM "%I:%M:%S %p"
 # define HERE_T_FMT "%H:%M:%S"
+
+const unsigned short int __mon_yday[1][13] =
+  {
+    /* Normal years.  */
+    { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 },
+    /* Leap years.  */
+    { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
+  };
 #endif
 
 /* Status of lookup: do we use the locale data or the raw data?  */
 enum locale_status { not, loc, raw };
+
+
+#ifndef __isleap
+/* Nonzero if YEAR is a leap year (every 4 years,
+   except every 100th isn't, and every 400th is).  */
+# define __isleap(year)	\
+  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+#endif
+
+/* Compute the day of the week.  */
+static void
+day_of_the_week (struct tm *tm)
+{
+  /* We know that January 1st 1970 was a Thursday (= 4).  Compute the
+     the difference between this data in the one on TM and so determine
+     the weekday.  */
+  int corr_year = tm->tm_mon >= 2 ? tm->tm_year : tm->tm_year - 1;
+  int wday = (-473
+	      + (365 * (tm->tm_year - 1970))
+	      + (corr_year / 4)
+	      - ((corr_year / 4) / 25) + ((corr_year / 4) % 25 < 0)
+	      + (((corr_year / 4) / 25) / 4)
+	      + __mon_yday[0][tm->tm_mon]
+	      + tm->tm_mday);
+  tm->tm_wday = wday;
+}
+
+static void
+day_of_the_year (struct tm *tm)
+{
+  tm->tm_yday = __mon_yday[__isleap (tm->tm_year)][tm->tm_mon] + tm->tm_mday;
+}
 
 static char *
 #ifdef _LIBC
@@ -204,12 +246,15 @@ strptime_internal (buf, format, tm, decided)
   size_t val;
   int have_I, is_pm;
   int century, want_century;
+  int have_wday, want_xday;
+  int have_yday;
 
   rp = buf;
   fmt = format;
   have_I = is_pm = 0;
   century = -1;
   want_century = 0;
+  have_wday = want_xday = have_yday = 0;
 
   while (*fmt != '\0')
     {
@@ -280,6 +325,7 @@ strptime_internal (buf, format, tm, decided)
 	    /* Does not match a weekday name.  */
 	    return NULL;
 	  tm->tm_wday = cnt;
+	  have_wday = 1;
 	  break;
 	case 'b':
 	case 'B':
@@ -319,6 +365,7 @@ strptime_internal (buf, format, tm, decided)
 	    /* Does not match a month name.  */
 	    return NULL;
 	  tm->tm_mon = cnt;
+	  want_xday = 1;
 	  break;
 	case 'c':
 	  /* Match locale's date and time format.  */
@@ -335,6 +382,7 @@ strptime_internal (buf, format, tm, decided)
 		  if (*decided == not &&
 		      strcmp (_NL_CURRENT (LC_TIME, D_T_FMT), HERE_D_T_FMT))
 		    *decided = loc;
+		  want_xday = 1;
 		  break;
 		}
 	      *decided = raw;
@@ -342,11 +390,13 @@ strptime_internal (buf, format, tm, decided)
 #endif
 	  if (!recursive (HERE_D_T_FMT))
 	    return NULL;
+	  want_xday = 1;
 	  break;
 	case 'C':
 	  /* Match century number.  */
 	  get_number (0, 99);
 	  century = val;
+	  want_xday = 1;
 	  break;
 	case 'd':
 	case 'e':
@@ -368,6 +418,7 @@ strptime_internal (buf, format, tm, decided)
 		  if (decided == not
 		      && strcmp (_NL_CURRENT (LC_TIME, D_FMT), HERE_D_FMT))
 		    *decided = loc;
+		  want_xday = 1;
 		  break;
 		}
 	      *decided = raw;
@@ -378,6 +429,7 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match standard day format.  */
 	  if (!recursive (HERE_D_FMT))
 	    return NULL;
+	  want_xday = 1;
 	  break;
 	case 'H':
 	  /* Match hour in 24-hour clock.  */
@@ -395,11 +447,13 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match day number of year.  */
 	  get_number (1, 366);
 	  tm->tm_yday = val - 1;
+	  have_yday = 1;
 	  break;
 	case 'm':
 	  /* Match number of month.  */
 	  get_number (1, 12);
 	  tm->tm_mon = val - 1;
+	  want_xday = 1;
 	  break;
 	case 'M':
 	  /* Match minute.  */
@@ -519,6 +573,7 @@ strptime_internal (buf, format, tm, decided)
 	case 'u':
 	  get_number (1, 7);
 	  tm->tm_wday = val % 7;
+	  have_wday = 1;
 	  break;
 	case 'g':
 	  get_number (0, 99);
@@ -544,6 +599,7 @@ strptime_internal (buf, format, tm, decided)
 	  /* Match number of weekday.  */
 	  get_number (0, 6);
 	  tm->tm_wday = val;
+	  have_wday = 1;
 	  break;
 	case 'y':
 	  /* Match year within century.  */
@@ -553,12 +609,14 @@ strptime_internal (buf, format, tm, decided)
 	  tm->tm_year = val >= 69 ? val : val + 100;
 	  /* Indicate that we want to use the century, if specified.  */
 	  want_century = 1;
+	  want_xday = 1;
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */
 	  get_number (0, 9999);
 	  tm->tm_year = val - 1900;
 	  want_century = 0;
+	  want_xday = 1;
 	  break;
 	case 'Z':
 	  /* XXX How to handle this?  */
@@ -585,6 +643,7 @@ strptime_internal (buf, format, tm, decided)
 		    {
 		      if (strcmp (fmt, HERE_D_T_FMT))
 			*decided = loc;
+		      want_xday = 1;
 		      break;
 		    }
 		  *decided = raw;
@@ -593,6 +652,7 @@ strptime_internal (buf, format, tm, decided)
 		 normal representation.  */
 	      if (!recursive (HERE_D_T_FMT))
 		return NULL;
+	      want_xday = 1;
 	      break;
 	    case 'C':
 	    case 'y':
@@ -672,6 +732,7 @@ strptime_internal (buf, format, tm, decided)
 	      /* Match day of month using alternate numeric symbols.  */
 	      get_alt_number (1, 31);
 	      tm->tm_mday = val;
+	      want_xday = 1;
 	      break;
 	    case 'H':
 	      /* Match hour in 24-hour clock using alternate numeric
@@ -691,6 +752,7 @@ strptime_internal (buf, format, tm, decided)
 	      /* Match month using alternate numeric symbols.  */
 	      get_alt_number (1, 12);
 	      tm->tm_mon = val - 1;
+	      want_xday = 1;
 	      break;
 	    case 'M':
 	      /* Match minutes using alternate numeric symbols.  */
@@ -713,11 +775,13 @@ strptime_internal (buf, format, tm, decided)
 	      /* Match number of weekday using alternate numeric symbols.  */
 	      get_alt_number (0, 6);
 	      tm->tm_wday = val;
+	      have_wday = 1;
 	      break;
 	    case 'y':
 	      /* Match year within century using alternate numeric symbols.  */
 	      get_alt_number (0, 99);
 	      tm->tm_year = val >= 69 ? val : val + 100;
+	      want_xday = 1;
 	      break;
 	    default:
 	      return NULL;
@@ -733,6 +797,11 @@ strptime_internal (buf, format, tm, decided)
 
   if (want_century && century != -1)
     tm->tm_year = tm->tm_year % 100 + (century - 19) * 100;
+
+  if (want_xday && !have_wday)
+    day_of_the_week (tm);
+  if (want_xday && !have_yday)
+    day_of_the_year (tm);
 
   return (char *) rp;
 }

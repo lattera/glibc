@@ -1,5 +1,9 @@
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/strptime.c (strptime_internal): Set tm_wday and tm_yday in
+	any of tm_year, tm_mon, or tm_mday was changed and the value
+	itself wasn't specified.
+
 	* include/stdio.h: Add new parameter to __path_search.
 	* libio/oldtmpfile.c: Add 0 as new parameter to __path_search.
 	* stdio-common/tmpfile.c: Likewise.
