@@ -41,7 +41,7 @@ exit (int status)
     {
       struct exit_function_list *old;
 
-      do
+      while (__exit_funcs->idx > 0)
 	{
 	  const struct exit_function *const f =
 	    &__exit_funcs->fns[--__exit_funcs->idx];
@@ -58,7 +58,6 @@ exit (int status)
 	      break;
 	    }
 	}
-      while (__exit_funcs->idx > 0);
 
       old = __exit_funcs;
       __exit_funcs = __exit_funcs->next;

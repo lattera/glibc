@@ -1,3 +1,33 @@
+1999-11-25  H.J. Lu  <hjl@gnu.org>
+
+	* stdlib/exit.c (exit): Run funtions only if
+	__exit_funcs->idx > 0.
+
+1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/charset.texi (iconv Examples): Add iconv call to flush
+	state.  Reported by Andrew Clausen <clausen@alphalink.com.au>.
+
+1999-11-25  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Running make install): Better describe
+	update from libc5.
+	Patch by Michael Deutschmann <michael@talamasca.wkpowerlink.com>.
+
+1999-11-25  Andreas Jaeger  <aj@suse.de>
+
+	* include/sys/mman.h: Remove K&R compatibility.
+
+1999-11-15  Andreas Jaeger  <aj@suse.de>
+
+	* misc/sys/mman.h: Use __REDIRECT for mmap, correct prototype to
+	use __off64_t.
+
+1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/iconv_prog.c (process_block): For stateful charsets write
+	out byte sequence to get to initial state at the end of the file.
+
 1999-11-25  Andreas Schwab  <schwab@suse.de>
 
 	* Makeconfig: Include sys-dirs and sys-sorted earlier.
@@ -21,8 +51,7 @@
 	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_IEEE802_TR): Added.
 
 	* string/stratcliff.c: Add one more strchr test for something
-	which was reported to not work
-	(which proofed to be wrong).
+	which was reported to not work (which proofed to be wrong).
 
 	* iconv/skeleton.c: It's __is_last, not is_last.
 

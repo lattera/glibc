@@ -1,3 +1,7 @@
+1999-11-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile: Don't run tests for now.
+
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/ko_KR: New file.

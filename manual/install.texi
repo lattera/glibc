@@ -232,18 +232,29 @@ shut the system down to single-user mode first, and reboot afterward.
 This minimizes the risk of breaking things when the library changes out
 from underneath.
 
+If you're upgrading from Linux libc5 or some other C library, you need to
+replace the @file{/usr/include} with a fresh directory before installing it.
+The new @file{/usr/include} should contain the Linux headers, but nothing else.  
+
+You must first build the library (@samp{make}), optionally check it
+(@samp{make check}), switch the include directories and then install
+(@samp{make install}).  The steps must be done in this order.  Not moving
+the directory before install will result in an unusable mixture of header
+files from both libraries, but configuring, building, and checking the
+library requires the ability to compile and run programs against the old
+library. 
+
 If you are upgrading from a previous installation of glibc 2.0 or 2.1,
-@samp{make install} will do the entire job.  If you're upgrading from
-Linux libc5 or some other C library, you need to rename the old
-@file{/usr/include} directory before running @samp{make install},
-or you will end up with a mixture of header files from both
-libraries, and you won't be able to compile anything.  You may also need
-to reconfigure GCC to work with the new library.  The easiest way to do
-that is to figure out the compiler switches to make it work again
-(@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on Linux
-systems) and use them to recompile gcc.  You can also edit the specs
-file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but
-that is a bit of a black art.
+@samp{make install} will do the entire job.  You do not need to remove 
+the old includes -- if you want to do so anyway you must then follow the 
+order given above.
+
+You may also need to reconfigure GCC to work with the new library.  The
+easiest way to do that is to figure out the compiler switches to make it
+work again (@samp{-Wl,--dynamic-linker=/lib/ld-linux.so.2} should work on
+Linux systems) and use them to recompile gcc.  You can also edit the specs
+file (@file{/usr/lib/gcc-lib/@var{TARGET}/@var{VERSION}/specs}), but that
+is a bit of a black art. 
 
 You can install glibc somewhere other than where you configured it to go
 by setting the @code{install_root} variable on the command line for

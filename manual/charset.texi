@@ -1837,6 +1837,11 @@ file2wcs (int fd, const char *charset, wchar_t *outbuf, size_t avail)
              @r{characters in the @code{inbuf}.  Put them back.}  */
           if (lseek (fd, -insize, SEEK_CUR) == -1)
             result = -1;
+
+          /* @r{Now write out the byte sequence to get into the}
+             @r{initial state if this is necessary.}  */
+          iconv (cd, NULL, NULL, &wrptr, &avail);
+
           break;
         @}
       insize += nread;
@@ -1867,7 +1872,8 @@ file2wcs (int fd, const char *charset, wchar_t *outbuf, size_t avail)
     @}
 
   /* @r{Terminate the output string.}  */
-  *((wchar_t *) wrptr) = L'\0';
+  if (avail >= sizeof (wchar_t))
+    *((wchar_t *) wrptr) = L'\0';
 
   if (iconv_close (cd) != 0)
     perror ("iconv_close");

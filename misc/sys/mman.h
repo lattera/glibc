@@ -44,9 +44,14 @@ __BEGIN_DECLS
 extern void *mmap (void *__addr, size_t __len, int __prot,
 		   int __flags, int __fd, __off_t __offset) __THROW;
 #else
-extern void *mmap (void *__addr, size_t __len, int __prot,
-		   int __flags, int __fd, __off_t __offset) __THROW
-     __asm__ ("mmap64");
+# ifdef __REDIRECT
+extern void * __REDIRECT (mmap,
+			  (void *__addr, size_t __len, int __prot,
+			   int __flags, int __fd, __off64_t __offset) __THROW,
+			  mmap64);
+# else
+#  define mmap mmap64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern void *mmap64 (void *__addr, size_t __len, int __prot,

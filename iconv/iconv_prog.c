@@ -338,8 +338,32 @@ conversion stopped due to problem in writing the output"));
 	}
 
       if (n != (size_t) -1)
-	/* Everything is processed.  */
-	break;
+	{
+	  /* All the input test is processed.  For state-dependent
+             character sets we have to flush the state now.  */
+	  outptr = outbuf;
+	  outlen = OUTBUF_SIZE;
+	  n = iconv (cd, NULL, NULL, &outptr, &outlen);
+
+	  if (outptr != outbuf)
+	    {
+	      /* We have something to write out.  */
+	      int errno_save = errno;
+
+	      if (fwrite (outbuf, 1, outptr - outbuf, output) < outptr - outbuf
+		  || ferror (output))
+		{
+		  /* Error occurred while printing the result.  */
+		  error (0, 0, _("\
+conversion stopped due to problem in writing the output"));
+		  return -1;
+		}
+
+	      errno = errno_save;
+	    }
+
+	  break;
+	}
 
       if (errno != E2BIG)
 	{
