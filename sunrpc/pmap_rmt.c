@@ -237,7 +237,7 @@ clnt_broadcast (prog, vers, proc, xargs, argsp, xresults, resultsp, eachresult)
   XDR xdr_stream;
   XDR *xdrs = &xdr_stream;
   int outlen, inlen, nets;
-  size_t fromlen;
+  socklen_t fromlen;
   int sock;
   int on = 1;
 #ifdef FD_SETSIZE

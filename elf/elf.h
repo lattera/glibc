@@ -726,6 +726,16 @@ typedef struct
 
 /* SUN SPARC specific definitions.  */
 
+/* Values for Elf64_Ehdr.e_flags.  */
+
+#define EF_SPARCV9_MM		3
+#define EF_SPARCV9_TSO		0
+#define EF_SPARCV9_PSO		1
+#define EF_SPARCV9_RMO		2
+#define EF_SPARC_EXT_MASK	0xFFFF00
+#define EF_SPARC_SUN_US1	0x000200
+#define EF_SPARC_HAL_R1		0x000400
+
 /* SPARC relocs.  */
 
 #define R_SPARC_NONE	0		/* No reloc */
@@ -773,14 +783,23 @@ typedef struct
 #define R_SPARC_PC_LM22	39		/* Low miggle 22 bits of ... */
 #define R_SPARC_WDISP16	40		/* PC relative 16 bit shifted */
 #define R_SPARC_WDISP19	41		/* PC relative 19 bit shifted */
-#define R_SPARC_GLOB_JMP 42		/* ?? */
 #define R_SPARC_7	43		/* Direct 7 bit */
 #define R_SPARC_5	44		/* Direct 5 bit */
 #define R_SPARC_6	45		/* Direct 6 bit */
+#define R_SPARC_DISP64	46		/* PC relative 64 bit */
+#define R_SPARC_PLT64	47		/* Direct 64 bit ref to PLT entry */
+#define R_SPARC_HIX22	48		/* High 22 bit complemented */
+#define R_SPARC_LOX10	49		/* Truncated 11 bit complemented */
+#define R_SPARC_H44	50		/* Direct high 12 of 44 bit */
+#define R_SPARC_M44	51		/* Direct mid 22 of 44 bit */
+#define R_SPARC_L44	52		/* Direct low 10 of 44 bit */
+#define R_SPARC_REGISTER 53		/* Global register usage */
+#define R_SPARC_UA64	54		/* Direct 64 bit unaligned */
+#define R_SPARC_UA16	55		/* Direct 16 bit unaligned */
 
 /* For Sparc64, legal values for d_tag of Elf64_Dyn.  */
 
-#define DT_SPARC_PLTFMT	0x70000001	/* .plt format version/type */
+#define DT_SPARC_REGISTER 0x70000001
 #define DT_SPARC_NUM	2
 
 /* Bits present in AT_HWCAP, primarily for Sparc32.  */
@@ -950,7 +969,22 @@ typedef Elf32_Addr Elf32_Conflict;
 #define STT_PARISC_MILLICODE	13	/* Millicode function entry point.  */
 
 
-/* Alpha specific declarations.  */
+/* Alpha specific definitions.  */
+
+/* Legal values for e_flags field of Elf64_Ehdr.  */
+
+#define EF_ALPHA_32BIT		1	/* All addresses must be < 2GB.  */
+#define EF_ALPHA_CANRELAX	2	/* Relocations for relaxing exist.  */
+
+/* Legal values for sh_type field of Elf64_Shdr.  */
+
+/* These two are primerily concerned with ECOFF debugging info.  */
+#define SHT_ALPHA_DEBUG		0x70000001
+#define SHT_ALPHA_REGINFO	0x70000002
+
+/* Legal values for sh_flags field of Elf64_Shdr.  */
+
+#define SHF_ALPHA_GPREL		0x10000000
 
 /* Alpha relocs.  */
 

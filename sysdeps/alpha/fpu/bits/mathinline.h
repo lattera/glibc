@@ -18,29 +18,148 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifdef __GNUC__
-#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
+#ifndef _MATH_H
+# error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+#endif
 
-extern __inline double
-__copysign (double __x, double __y)
+#ifdef __cplusplus
+# define __MATH_INLINE __inline
+#else
+# define __MATH_INLINE extern __inline
+#endif
+
+#ifdef __USE_ISOC9X
+# define isunordered(x, y)				\
+  (__extension__					\
+   ({ double __r;					\
+      __asm ("cmptun/su %1,%2,%0\n\ttrapb"		\
+	     : "=&f" (__r) : "f" (x), "f"(y));		\
+      __r != 0; }))
+
+# define isgreater(x, y)				\
+  (__extension__					\
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
+      !isunordered(__x, __y) && __x > __y; }))
+# define isgreaterequal(x, y)				\
+  (__extension__					\
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
+      !isunordered(__x, __y) && __x >= __y; }))
+# define isless(x, y)					\
+  (__extension__					\
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
+      !isunordered(__x, __y) && __x < __y; }))
+# define islessequal(x, y)				\
+  (__extension__					\
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
+      !isunordered(__x, __y) && __x <= __y; }))
+# define islessgreater(x, y)				\
+  (__extension__					\
+   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);	\
+      !isunordered(__x, __y) && __x != __y; }))
+#endif /* ISOC9X */
+
+#define __inline_copysign(NAME, TYPE)					\
+__MATH_INLINE TYPE							\
+NAME (TYPE __x, TYPE __y)						\
+{									\
+  TYPE __z;								\
+  __asm ("cpys %1, %2, %0" : "=f" (__z) : "f" (__y), "f" (__x));	\
+  return __z;								\
+}
+
+__inline_copysign(__copysignf, float)
+__inline_copysign(copysignf, float)
+__inline_copysign(__copysign, double)
+__inline_copysign(copysign, double)
+
+#undef __MATH_INLINE_copysign
+
+
+#if defined __GNUC__ && (__GNUC__ > 2 || __GNUC__ == 2 && __GNUC_MINOR__ >= 8)
+__MATH_INLINE float __fabsf (float __x) { return __builtin_fabsf (__x); }
+__MATH_INLINE float fabsf (float __x) { return __builtin_fabsf (__x); }
+__MATH_INLINE double __fabs (double __x) { return __builtin_fabs (__x); }
+__MATH_INLINE double fabs (double __x) { return __builtin_fabs (__x); }
+#else
+#define __inline_fabs(NAME, TYPE)			\
+__MATH_INLINE TYPE					\
+NAME (TYPE __x)						\
+{							\
+  TYPE __z;						\
+  __asm ("cpys $f31, %1, %0" : "=f" (__z) : "f" (__x));	\
+  return __z;						\
+}
+
+__inline_fabs(__fabsf, float)
+__inline_fabs(fabsf, float)
+__inline_fabs(__fabs, double)
+__inline_fabs(fabs, double)
+
+#undef __inline_fabs
+#endif
+
+
+/* Use the -inf rounding mode conversion instructions to implement
+   floor.  We note when the exponent is large enough that the value
+   must be integral, as this avoids unpleasant integer overflows.  */
+
+__MATH_INLINE float
+__floorf (float __x)
 {
-  __asm ("cpys %1, %2, %0" : "=f" (__x) : "f" (__y), "f" (__x));
+  if (fabsf (__x) < 16777216.0f)  /* 1 << FLT_MANT_DIG */
+    {
+      /* Note that Alpha S_Floating is stored in registers in a
+	 restricted T_Floating format, so we don't even need to
+	 convert back to S_Floating in the end.  The initial
+	 conversion to T_Floating is needed to handle denormals.  */
+
+      float __tmp1, __tmp2;
+
+      __asm ("cvtst/s %3,%2\n\t"
+	     "cvttq/svim %2,%1\n\t"
+	     "cvtqt/suim %1,%0\n\t"
+	     "trapb"
+	     : "=&f"(__x), "=&f"(__tmp1), "=&f"(__tmp2)
+	     : "f"(__x));
+    }
   return __x;
 }
 
-extern __inline double
-fabs (double __x)
+__MATH_INLINE double
+__floor (double __x)
 {
-  __asm ("cpys $f31, %1, %0" : "=f" (__x) : "f" (__x));
+  if (fabs (__x) < 9007199254740992.0)  /* 1 << DBL_MANT_DIG */
+    {
+      double __tmp1;
+      __asm ("cvttq/svim %2,%1\n\t"
+	     "cvtqt/suim %1,%0\n\t"
+	     "trapb"
+	     : "=&f"(__x), "=&f"(__tmp1)
+	     : "f"(__x));
+    }
   return __x;
 }
 
-extern __inline double
-atan (double __x)
+__MATH_INLINE float floorf (float __x) { return __floorf(__x); }
+__MATH_INLINE double floor (double __x) { return __floor(__x); }
+
+
+__MATH_INLINE float __fdimf (float __x, float __y)
 {
-  extern double __atan2 (double, double);
-  return __atan2 (__x, 1.0);
+  return __x < __y ? 0.0f : __x - __y;
 }
 
-#endif
-#endif
+__MATH_INLINE float fdimf (float __x, float __y)
+{
+  return __x < __y ? 0.0f : __x - __y;
+}
+
+__MATH_INLINE double __fdim (double __x, double __y)
+{
+  return __x < __y ? 0.0 : __x - __y;
+}
+
+__MATH_INLINE double fdim (double __x, double __y)
+{
+  return __x < __y ? 0.0 : __x - __y;
+}

@@ -24,11 +24,11 @@ static const char __libc_version[] = VERSION;
 
 static const char banner[] =
 "GNU C Library "RELEASE" release version "VERSION", by Roland McGrath et al.\n\
-Compiled by GNU CC version "__VERSION__".\n\
 Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
-PARTICULAR PURPOSE.\n"
+PARTICULAR PURPOSE.\n\
+Compiled by GNU CC version "__VERSION__".\n"
 #include "version-info.h"
 "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
 

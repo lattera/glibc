@@ -59,11 +59,7 @@ struct kernel_dirent
    correct number of bytes to read.  If we should be wrong, we can reset
    the file descriptor.  */
 ssize_t
-__getdirentries (fd, buf, nbytes, basep)
-     int fd;
-     char *buf;
-     size_t nbytes;
-     off_t *basep;
+__getdirentries (int fd, char *buf, size_t nbytes, off_t *basep)
 {
   off_t base = __lseek (fd, (off_t) 0, SEEK_CUR);
   off_t last_offset = base;

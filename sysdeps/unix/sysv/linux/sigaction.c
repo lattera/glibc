@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <string.h>
 
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must

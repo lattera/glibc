@@ -20,10 +20,7 @@
 #include <unistd.h>
 
 int
-__getresgid (egid, rgid, sgid)
-    gid_t egid;
-    gid_t rgid;
-    gid_t sgid;
+__getresgid (gid_t egid, gid_t rgid, gid_t sgid)
 {
   __set_errno (ENOSYS);
   return -1;

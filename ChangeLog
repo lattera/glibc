@@ -1,3 +1,30 @@
+1998-03-01  Richard Henderson  <rth@cygnus.com>
+
+	* shlib-versions: Match alpha*.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add adjtimex.
+	* sysdeps/unix/sysv/linux/alpha/adjtimex.S: Remove.
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (isunordered et al): New.
+	Implement copysign* with and without __ prefix.
+	Likewise for fabs; use builtin for gcc 2.8.
+	(floor*): New.
+	(fdim*): New.
+
+	* elf/elf.h (EF_SPARC*, EF_ALPHA*, SHT_ALPHA*, SHF_ALPHA*): New.
+	(R_SPARC*): Match current v9 ABI.
+
+	* sysdeps/wordsize-64/stdint.h (intptr_t): Is a long.
+
+	* sunrpc/clnt_udp.c (clntudp_call): Use socklen_t.
+	* sunrpc/pmap_rmt.c (clnt_broadcast): Likewise.
+	* sunrpc/svc_tcp.c (svctcp_create, rendezvous_request): Likewise.
+	* sysdeps/generic/getresgid.c: Use prototype form because of warning.
+	* sysdeps/unix/sysv/linux/getdents.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c: Likewise.
+	* sysdeps/unix/grantpt.c (argv): Fix consts.
+	* sysdeps/unix/sysv/linux/getpt.c: Include <string.h>
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/syslog.c: Change to allow user the interpretation of the

@@ -78,7 +78,7 @@ typedef unsigned long int uint_fast64_t;
 
 
 /* Types for `void *' pointers.  */
-typedef int                intptr_t;
+typedef long int           intptr_t;
 typedef unsigned long int uintptr_t;
 
 

@@ -233,7 +233,7 @@ clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
   XDR *xdrs;
   int outlen = 0;
   int inlen;
-  size_t fromlen;
+  socklen_t fromlen;
 #ifdef FD_SETSIZE
   fd_set readfds;
   fd_set mask;

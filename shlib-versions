@@ -13,13 +13,13 @@ i.86-.*-.*		libm=6
 m68k-.*-.*		libm=6
 sparc-.*-.*		libm=6
 sparc64-.*-.*		libm=6
-alpha-.*-linux.*	libm=6.1
-alpha-.*-.*		libm=6
+alpha.*-.*-linux.*	libm=6.1
+alpha.*-.*-.*		libm=6
 powerpc-.*-.*		libm=6
 mips-.*-.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
-alpha-.*-linux.*	libc=6.1
+alpha.*-.*-linux.*	libc=6.1
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -35,22 +35,22 @@ alpha-.*-linux.*	libc=6.1
 i.86-.*-linux.*		ld=ld-linux.so.2
 sparc-.*-linux.*	ld=ld-linux.so.2
 sparc64-.*-linux.*	ld=ld-linux64.so.2
-alpha-.*-linux.*	ld=ld-linux.so.2
+alpha.*-.*-linux.*	ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1
 
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
-alpha-.*-linux.*	libdl=2.1
+alpha.*-.*-linux.*	libdl=2.1
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
-alpha-.*-linux.*	libutil=1.1
+alpha.*-.*-linux.*	libutil=1.1
 .*-.*-.*		libutil=1
 
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
 # interface.
-alpha-.*-linux.*	libresolv=2.1
+alpha.*-.*-linux.*	libresolv=2.1
 .*-.*-.*		libresolv=2
 
 # Interface revision of nss_* modules.  This must match NSS_SHLIB_REVISION
@@ -66,18 +66,18 @@ alpha-.*-linux.*	libresolv=2.1
 .*-.*-.*		libnss_hesiod=2
 
 # Version for libnsl with YP and NIS+ functions.
-alpha-.*-linux.*	libnsl=1.1
+alpha.*-.*-linux.*	libnsl=1.1
 .*-.*-.*		libnsl=1
 
 # We use libdb.so.3 for the interface in version 2.x of the Berkeley DB code.
 .*-.*-.*		libdb=3
 
 # This defines the shared library version numbers we will install.
-alpha-.*-linux.*	libcrypt=1.1
+alpha.*-.*-linux.*	libcrypt=1.1
 .*-.*-.*		libcrypt=1
 
 # The gross patch for programs assuming broken locale implementations.
-alpha-.*-linux.*	libBrokenLocale=1.1
+alpha.*-.*-linux.*	libBrokenLocale=1.1
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.
