@@ -1,5 +1,5 @@
 /* _hurd_socket_server - Find the server for a socket domain.
-   Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@
 static struct mutex lock;
 
 static file_t *servers;
-static int max_domain;
+static int max_domain = -1;
 
 /* Return a port to the socket server for DOMAIN.
    Socket servers translate nodes in the directory _SERVERS_SOCKET
@@ -57,7 +57,7 @@ _hurd_socket_server (int domain, int dead)
       if (new != NULL)
 	{
 	  while (max_domain <= domain)
-	    new[max_domain++] = MACH_PORT_NULL;
+	    new[++max_domain] = MACH_PORT_NULL;
 	  servers = new;
 	}
       else
