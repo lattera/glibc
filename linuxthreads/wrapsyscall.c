@@ -105,6 +105,7 @@ CANCELABLE_SYSCALL (int, msync, (__ptr_t addr, size_t length, int flags),
 CANCELABLE_SYSCALL (int, nanosleep, (const struct timespec *requested_time,
 				     struct timespec *remaining),
 		    (requested_time, remaining))
+strong_alias (nanosleep, __nanosleep)
 
 
 /* open(2).  */

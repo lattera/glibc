@@ -1,3 +1,8 @@
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* wrapsyscall.c: Add __nanosleep alias.
+	* Versions (GLIBC_2.2.6): Add __nanosleep.
+
 2002-06-19  Steven Munroe  <sjmunroe@vnet.ibm.com>
 
 	* Examples/ex9.c (main):  Use list of children and join them.
