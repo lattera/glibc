@@ -15,6 +15,7 @@ test (const char *locale)
   size_t r;
   size_t l;
   char *buf;
+  __locale_t loc;
   int result = 0;
 
   if (setlocale (LC_COLLATE, locale) == NULL)
@@ -37,6 +38,20 @@ test (const char *locale)
 	       locale, r, l);
        result = 1;
     }
+
+  loc = __newlocale (1 << LC_ALL, locale, NULL);
+
+  r = __strxfrm_l (buf, string, bufsize, loc);
+  l = strlen (buf);
+  if (r != l)
+    {
+       printf ("locale \"%s\": strxfrm_l returned %zu, strlen returned %zu\n",
+	       locale, r, l);
+       result = 1;
+    }
+
+  __freelocale (loc);
+
   free (buf);
 
   return result;

@@ -381,6 +381,14 @@ C		"a"			"a/"                   NOMATCH PATHNAME
 C		"a/"			"a"		       NOMATCH PATHNAME
 C		"//a"			"/a"		       NOMATCH PATHNAME
 C		"/a"			"//a"		       NOMATCH PATHNAME
+C		"az"			"[a-]z"		       0
+C		"bz"			"[ab-]z"	       0
+C		"cz"			"[ab-]z"	       NOMATCH
+C		"-z"			"[ab-]z"	       0
+C		"az"			"[-a]z"		       0
+C		"bz"			"[-ab]z"	       0
+C		"cz"			"[-ab]z"	       NOMATCH
+C		"-z"			"[-ab]z"	       0
 
 # Following are tests outside the scope of IEEE 2003.2 since they are using
 # locales other than the C locale.  The main focus of the tests is on the

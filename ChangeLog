@@ -2,9 +2,12 @@
 
 	* posix/fnmatch_loop.c: Recognize - at end of bracket expression
 	correctly.
+	* posix/tst-fnmatch.input: Add tests for - at beginning and end of
+	bracket expression.
 
 	* string/strxfrm.c [USE_IN_EXTENDED_LOCALE_MODEL]: Correctly get
 	nrules value.
+	* string/tst-strxfrm.c (test): Also test __strxfrm_l.
 
 2001-10-24  H.J. Lu  <hjl@gnu.org>
 
