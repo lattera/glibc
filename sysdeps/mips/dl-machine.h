@@ -541,7 +541,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
   got += n;
   /* Keep track of the symbol index.  */
   symidx = map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
-  sym = (void *) D_PTR (map, l_info[DT_SYMTAB]) + symidx;
+  sym = (ElfW(Sym) *) D_PTR (map, l_info[DT_SYMTAB]) + symidx;
   i = (map->l_info[DT_MIPS (SYMTABNO)]->d_un.d_val
        - map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val);
   

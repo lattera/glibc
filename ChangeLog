@@ -9,6 +9,7 @@
 
 	* sysdeps/mips/dl-machine.h (elf_machine_got_rel): Initialize
 	symidx correctly.
+	(elf_machine_got_rel): Cast sym correctly.
 
 	* sysdeps/mips/add_n.S: Use __PIC__, add end directive.
 	* sysdeps/mips/addmul_1.S: Likewise.
