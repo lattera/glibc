@@ -127,7 +127,7 @@ main (int argc, char *argv[])
   textdomain (_libc_intl_domainname);
 
   while ((optchar = getopt_long (argc, argv, "cf:hi:u:vV", long_options, NULL))
-         != EOF)
+         != -1)
     switch (optchar)
       {
       case '\0':		/* Long option.  */

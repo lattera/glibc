@@ -616,13 +616,27 @@ mv -f $@.new $@
 endef
 endif
 
+# XXX The following will have to be changed when `ldconfig' is available.
+ifneq (yes,$(cross-compiling))
+ifeq (yes,$(has-ldconfig))
+define make-shlib-link
+@:
+endef
+endif
+endif
+ifndef make-shlib-link
+define make-shlib-link
+$(make-link)
+endef
+endif
+
 ifdef libc.so-version
 # For a library specified to be version N, install three files:
 # libc.so	->	libc.so.N	(e.g. libc.so.6)
 # libc.so.6	->	libc-VERSION.so	(e.g. libc-1.10.so)
 
 $(slibdir)/libc.so$(libc.so-version): $(slibdir)/libc-$(version).so
-	$(make-link)
+	$(make-shlib-link)
 $(slibdir)/libc-$(version).so: $(common-objpfx)libc.so; $(do-install-program)
 install: $(slibdir)/libc.so$(libc.so-version)
 
@@ -672,7 +686,8 @@ include $(o-iterator)
 
 ifeq (,$($(subdir)-version))
 define o-iterator-doit
-$(slibdir)/$o$($o-version): $(slibdir)/$(o:.so=)-$(version).so; $$(make-link)
+$(slibdir)/$o$($o-version): $(slibdir)/$(o:.so=)-$(version).so;
+	$$(make-shlib-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
@@ -685,7 +700,7 @@ include $(o-iterator)
 else
 define o-iterator-doit
 $(slibdir)/$o$($o-version): $(slibdir)/$(o:.so=)-$($(subdir)-version).so;
-	$$(make-link)
+	$$(make-shlib-link)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
@@ -718,6 +733,10 @@ ifdef install-bin
 $(addprefix $(bindir)/,$(install-bin)): $(bindir)/%: $(objpfx)%
 	$(do-install-program)
 endif
+ifdef install-rootsbin
+$(addprefix $(rootsbindir)/,$(install-rootsbin)): $(rootsbindir)/%: $(objpfx)%
+	$(do-install-program)
+endif
 ifdef install-sbin
 $(addprefix $(sbindir)/,$(install-sbin)): $(sbindir)/%: $(objpfx)%
 	$(do-install-program)
@@ -746,9 +765,10 @@ $(addprefix $(includedir)/,$(headers)): \
 	$(includedir)/%: %;$(do-install)
 endif	# headers
 
-.PHONY: install-bin-nosubdir install-sbin-nosubdir install-lib-nosubdir \
-	install-data-nosubdir install-headers-nosubdir
+.PHONY: install-bin-nosubdir install-rootsbin-nosubdir install-sbin-nosubdir \
+	install-lib-nosubdir install-data-nosubdir install-headers-nosubdir
 install-bin-nosubdir: $(addprefix $(bindir)/,$(install-bin))
+install-rootsbin-nosubdir: $(addprefix $(rootsbindir)/,$(install-rootsbin))
 install-sbin-nosubdir: $(addprefix $(sbindir)/,$(install-sbin))
 install-lib-nosubdir: $(addprefix $(libdir)/,\
 		       $(patsubst lib%.a,lib$(libprefix)%.a,$(install-lib.a)) \
@@ -766,7 +786,8 @@ install-%:: install-%-nosubdir ;
 .PHONY: install install-no-libc.a-nosubdir
 install-no-libc.a-nosubdir: install-headers-nosubdir install-data-nosubdir\
 			    install-bin-nosubdir install-lib-nosubdir	\
-			    install-others-nosubdir install-sbin-nosubdir
+			    install-others-nosubdir install-rootsbin-nosubdir \
+			    install-sbin-nosubdir
 install: install-no-libc.a-nosubdir
 
 # Command to compile $< in $(objdir) using the native libraries.

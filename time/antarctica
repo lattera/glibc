@@ -1,10 +1,11 @@
-# @(#)antarctica	7.5
+# @(#)antarctica	7.6
 
-# From Paul Eggert (1996-09-03):
+# From Paul Eggert (1997-01-20):
 # To keep things manageable, we list only locations occupied year-round;
 # see <URL:http://earth.agu.org/amen/nations.html> (1996-05-24).
 # Unless otherwise specified, we have no time zone information.
 #
+# Except for the French entries,
 # I made up all time zone abbreviations mentioned here; corrections welcome!
 # FORMAT is `___' and GMTOFF is 0 for locations while uninhabited.
 
@@ -56,16 +57,41 @@ Zone Antarctica/Mawson	0	-	___	1954 Feb 13
 # Finland - year-round base
 # Aboa, Queen Maud Land, since 1988
 
-# France
+# France - year-round bases
+#
+# From Antoine Leca <Antoine.Leca@Renault.FR> (1997-01-20):
+# Time data are from Nicole Pailleau at the IFRTP
+# (French Institute for Polar Research and Technology).
+# She confirms that French Southern Territories and Terre Adelie bases
+# don't observe daylight saving time, even if Terre Adelie supplies came
+# from Tasmania.
 #
 # French Southern Territories with year-round inhabitants
-# Amsterdam Island
-# Crozet Islands
-# Kerguelen Islands
-# St Paul Island
 #
-# year-round base
-# Dumont d'Urville, Adelie Land, since IGY
+# Martin-de-Vivies Base, Amsterdam Island, -374105+0773155, since 1950
+# Alfred-Faure Base, Crozet Islands, -462551+0515152, since 1964
+# Port-aux-Francais, Kerguelen Islands, -492110+0701303, since 1951
+#
+# St Paul Island - near Amsterdam, uninhabited since 1927
+#
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone Indian/Kerguelen	0	-	___	1950	# Port-aux-Francais
+			5:00	-	TFT	# ISO code TF Time
+#
+# year-round base in the main continent
+# Dumont-d'Urville, Terre Adelie (Adelie Land), -6040+14001, since 1956-11
+#
+# Another base at Port-Martin, 50km east, began operation in 1947.
+# It was destroyed by fire on 1952-01-14.
+#
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone Antarctica/DumontDUrville 0 -	___	1947
+			10:00	-	PMT	1952 Jan 14 # Port-Martin Time
+			0	-	___	1956 Nov
+			10:00	-	DDUT	# Dumont-d'Urville Time
+# Reference:
+# <URL:http://www.icair.iac.org.nz/science/reports/fr/IFRTP.html> (1996-09-10)
+
 
 # Germany - year-round base
 # Georg von Neumayer

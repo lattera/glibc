@@ -20,7 +20,7 @@ else
 #include "confdefs.h"
 #include <linux/version.h>
 int main() {
-#if LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
+#if LINUX_VERSION_CODE <  ( *65536+ 0 *256+ 10) /* .0.10 */
 eat flaming death
 #endif
 ; return 0; }
@@ -55,6 +55,7 @@ fi
 if test "$prefix" = "/usr"; then
   libc_cv_slibdir="/lib"
   libc_cv_sysconfdir="/etc"
+  libc_cv_rootsbindir="/sbin"
 fi
 
 # Under Linux the LinuxThreads and crypt add-on should be available.
@@ -93,4 +94,10 @@ if test "$message"; then
   else
     echo "$message"
   fi
+fi
+
+# Check whether `ldconfig' sources are available.  This will go away as soon
+# as ldconfig is available in GNU libc.
+if test -f $srcdir/elf/ldconfig.c; then
+  has_ldconfig=yes
 fi

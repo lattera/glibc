@@ -29,7 +29,7 @@ main (int argc, char *argv[])
   char *subopts, *value;
   int opt;
 
-  while ((opt = getopt (argc, argv, "at:o:")) != EOF)
+  while ((opt = getopt (argc, argv, "at:o:")) != -1)
     switch (opt)
       {
       case 'a':

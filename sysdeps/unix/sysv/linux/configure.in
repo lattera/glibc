@@ -40,6 +40,7 @@ fi
 if test "$prefix" = "/usr"; then
   libc_cv_slibdir="/lib"
   libc_cv_sysconfdir="/etc"
+  libc_cv_rootsbindir="/sbin"
 fi
 
 # Under Linux the LinuxThreads and crypt add-on should be available.
@@ -78,4 +79,10 @@ if test "$message"; then
   else
     echo "$message"
   fi
+fi
+
+# Check whether `ldconfig' sources are available.  This will go away as soon
+# as ldconfig is available in GNU libc.
+if test -f $srcdir/elf/ldconfig.c; then
+  has_ldconfig=yes
 fi

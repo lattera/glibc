@@ -1,3 +1,89 @@
+1997-01-21  Paul Eggert  <eggert@twinsun.com>
+
+	* posix/getopt.c (_getopt_internal): Return -1, not EOF, when args
+	are exhausted; this is required by POSIX.2.
+	* catgets/gencat.c, db/makedb.c, locale/programs/locale.c,
+	locale/programs/localedef.c, manual/examples/subopt.c,
+	posix/getopt.c, posix/getopt1.c, stdio-common/bug4.c,
+	sunrpc/rpcinfo.c (main): Check getopt return value against -1, not EOF.
+
+Tue Jan 21 23:10:40 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 1.102.
+
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add kernel_sigaction.h.
+
+	* elf/Makefile: Don't use CFLAGS-dl-load.c, but instead
+	CPPFLAGS-dl-load.c so that dependencies can be determined correctly.
+	* elf/dl-load.c: Fix comment.
+
+	* time/Banner: New file.
+	* time/Makefile (distribute): Add Banner.
+
+	Update from ADO tzcode1997a and tzdata1997a.
+	* time/antarctica: Update.
+	* time/australia: Update.
+	* time/zdump.c: Update.
+	* time/zic.c: Update.
+	* time/zone.tab: Update.
+
+Mon Jan 20 08:38:32 1997  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* config.make.in (has-ldconfig): New variable.
+
+	* configure, configure.in (has_ldconfig): New substitute.
+
+	* sysdeps/unix/sysv/linux/configure.in (has_ldconfig): New,
+	check if $srcdir/elf/ldconfig.c exists.
+
+	* Makeconfig (rootsbindir): New, default as
+	$(exec_prefix)/sbin.
+	(rtld-version-installed-name): New, default as
+	ld-$(version).so.
+
+	* Makefile (install): Call `$(common-objpfx)elf/ldconfig -d'
+	only if $(cross-compiling) is no and $(build-shared) is yes.
+
+	* Makerules (make-shlib-link): New macro.
+	($(slibdir)/libfoo.so.$(libfoo.so-version)): Use
+	$(make-shlib-link) for symlink.
+	(install-rootsbin, install-rootsbin-nosubdir): New.
+	(install-no-libc.a-nosubdir): Add
+	install-rootsbin-nosubdir.
+
+	* Rules (others): Add $(install-rootsbin).
+
+	* config.make.in (rootsbindir): New.
+
+	* configure, configure.in (libc_cv_rootsbindir): New
+	substitute.
+
+	* elf/Makefile (others, install-rootsbin): New, set to
+	ldconfig.
+	(+link): New for static linking.
+	($(slibdir)/$(rtld-version-installed-name)): New.
+	($(slibdir)/$(rtld-installed-name)): Depend on
+	$(slibdir)/$(rtld-version-installed-name) and use
+	$(make-shlib-link) for symlink.
+
+	* sunrpc/xdr.c (xdr_string): Return FALSE if sp == NULL
+	while XDR_ENCODE.
+
+	* sysdeps/unix/sysv/linux/a.out.h: Use #include_next for
+	glibc internals.
+
+	* sysdeps/unix/sysv/linux/configure.in (libc_cv_rootsbindir):
+	New, set to "/sbin" if "$prefix" == "/usr".
+
+Tue Jan 21 13:38:39 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (distribute): Add glibcbug.in.
+	Reported by Philip Blundell <pjb27@cam.ac.uk>.
+
+	* elf/Makefile ($(objpfx)trusted-dirs.h): Create elf/ subdir in
+	build directory if necessary.
+	Reported by marcus@shannon.sysc.pdx.edu (Marcus G. Daniels).
+
 Tue Jan 21 04:05:20 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 1.101.

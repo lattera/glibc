@@ -194,6 +194,10 @@ bindir = $(exec_prefix)/bin
 endif
 
 # Where to install administrative programs.
+ifndef rootsbindir
+rootsbindir = $(exec_prefix)/sbin
+endif
+
 ifndef sbindir
 sbindir = $(exec_prefix)/sbin
 endif
@@ -559,6 +563,10 @@ rtld-installed-name = $(ld.so-version)
 else
 rtld-installed-name = ld.so.1
 endif
+endif
+
+ifndef rtld-version-installed-name
+rtld-version-installed-name = ld-$(version).so
 endif
 
 endif # build-shared

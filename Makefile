@@ -111,6 +111,12 @@ include Makerules
 
 # Install from subdirectories too.
 install: subdir_install
+ifeq (no,$(cross-compiling))
+ifeq (yes,$(build-shared))
+	test ! -x $(common-objpfx)elf/ldconfig || \
+	  $(common-objpfx)elf/ldconfig -d
+endif
+endif
 
 # Build subdirectory lib objects.
 lib-noranlib: subdir_lib
@@ -296,7 +302,7 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc nsswitch.h netgroup.h \
-	       mcheck.h
+	       mcheck.h glibcbug.in
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

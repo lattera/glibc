@@ -1,5 +1,5 @@
 /* Declarations for getopt.
-   Copyright (C) 1989, 90, 91, 92, 93, 94, 96 Free Software Foundation, Inc.
+   Copyright (C) 1989,90,91,92,93,94,96,97 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -40,7 +40,7 @@ extern char *optarg;
 
    On entry to `getopt', zero means this is the first call; initialize.
 
-   When `getopt' returns EOF, this is the index of the first of the
+   When `getopt' returns -1, this is the index of the first of the
    non-option elements that the caller should itself scan.
 
    Otherwise, `optind' communicates from one call to the next

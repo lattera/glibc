@@ -55,10 +55,22 @@ install-others	= $(slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 endif
 
+ifeq (yes,$(has-ldconfig))
+others		= ldconfig
+install-rootsbin = ldconfig
+
+$(objpfx)ldconfig: ldconfig.o
+	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
+	      $(addprefix $(csu-objpfx),start.o) $(+preinit)		      \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit)     \
+		$(link-extra-libs) $(common-objpfx)libc% $(+postinit),$^)     \
+	      $(link-extra-libs) $(common-objpfx)libc.a $(gnulib) $(+postinit)
+endif
+
 include ../Rules
 
 
-ifeq (yes, $(build-shared))
+ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.
 lib-noranlib: $(objpfx)$(rtld-installed-name) \
@@ -86,7 +98,7 @@ endef
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
 
-ifneq (ld.so, $(rtld-installed-name))
+ifneq (ld.so,$(rtld-installed-name))
 # Make sure ld.so.1 exists in the build directory so we can link
 # against it.
 $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
@@ -99,18 +111,23 @@ endif
 # add directories to the list by defining $(user-defined-trusted-dirs)
 # before starting make.
 $(objpfx)trusted-dirs.h: Makefile
+	$(make-target-directory)
 	(for dir in `echo "$(default-rpath) $(user-defined-trusted-dirs)" |   \
 		     sed 's/:/ /g'`; do					      \
 	   echo "  \"$$dir\",";						      \
 	 done;) > $@T
 	mv -f $@T $@
-CFLAGS-dl-load.c = -I$(objdir)/$(subdir)
+CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
 
 # Specify the dependencies of libdl.so; its commands come from the generic
 # rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
-$(slibdir)/$(rtld-installed-name): $(objpfx)ld.so; $(do-install-program)
+$(slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so
+	$(do-install-program)
+
+$(slibdir)/$(rtld-installed-name): $(slibdir)/$(rtld-version-installed-name)
+	$(make-shlib-link)
 
 ifneq ($(have-bash2),yes)
 $(objpfx)ldd: ldd.sh.in $(common-objpfx)version.mk \

@@ -745,9 +745,11 @@ esac
 AC_SUBST(USE_NEW_MALLOC)
 AC_MSG_RESULT($malloc)
 
-
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)
+AC_SUBST(libc_cv_rootsbindir)
+
+AC_SUBST(has_ldconfig)
 
 AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)
 if test $gnu_ld = yes; then

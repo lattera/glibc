@@ -575,6 +575,8 @@ xdr_string(xdrs, cpp, maxsize)
 		}
 		/* fall through... */
 	      case XDR_ENCODE:
+		if (sp == NULL)
+		  	return FALSE;
 		size = strlen(sp);
 		break;
 	}

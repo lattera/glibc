@@ -16,7 +16,7 @@ DEFUN(main, (argc, argv),
   char buffer[31];
   const char filename[] = "/tmp/bugtest";
 
-  while ((i = getopt (argc, argv, "rw")) != EOF)
+  while ((i = getopt (argc, argv, "rw")) != -1)
     switch (i)
       {
       case 'r':

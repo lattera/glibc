@@ -1950,6 +1950,8 @@ echo "$ac_t""$malloc" 1>&6
 
 
 
+
+
   
 if test $gnu_ld = yes; then
   cat >> confdefs.h <<\EOF
@@ -2162,6 +2164,8 @@ s%@malloc@%$malloc%g
 s%@USE_NEW_MALLOC@%$USE_NEW_MALLOC%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
+s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
+s%@has_ldconfig@%$has_ldconfig%g
 s%@gnu_ld@%$gnu_ld%g
 s%@gnu_as@%$gnu_as%g
 s%@elf@%$elf%g

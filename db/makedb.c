@@ -86,7 +86,7 @@ main (argc, argv)
   be_quiet = 0;
   output_name = NULL;
 
-  while ((opt = getopt_long (argc, argv, "fho:uV", long_options, NULL)) != EOF)
+  while ((opt = getopt_long (argc, argv, "fho:uV", long_options, NULL)) != -1)
     switch (opt)
       {
       case '\0':        /* Long option.  */

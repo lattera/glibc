@@ -1,4 +1,4 @@
-# @(#)australasia	7.31
+# @(#)australasia	7.32
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -22,6 +22,7 @@ Rule	Aus	1943	only	-	Oct	 3	2:00	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 # Northern Territory
 Zone Australia/Darwin	 8:43:20 -	LMT	1895 Feb
+			 9:00	-	CST	1899 May
 			 9:30	-	CST	1917 Jan 1 0:01
 			 9:30	Aus	CST
 # Western Australia

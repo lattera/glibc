@@ -1,6 +1,5 @@
 /* getopt_long and getopt_long_only entry points for GNU getopt.
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 1996
-	Free Software Foundation, Inc.
+   Copyright (C) 1987,88,89,90,91,92,93,94,96,97 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -124,7 +123,7 @@ main (argc, argv)
 
       c = getopt_long (argc, argv, "abc:d:0123456789",
 		       long_options, &option_index);
-      if (c == EOF)
+      if (c == -1)
 	break;
 
       switch (c)

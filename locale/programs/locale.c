@@ -153,7 +153,7 @@ main (int argc, char *argv[])
   textdomain (PACKAGE);
 
   while ((optchar = getopt_long (argc, argv, "achkmV", long_options, NULL))
-         != EOF)
+         != -1)
     switch (optchar)
       {
       case '\0':		/* Long option.  */

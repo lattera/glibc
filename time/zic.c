@@ -1,6 +1,6 @@
 #ifndef lint
 #ifndef NOID
-static char	elsieid[] = "@(#)zic.c	7.80";
+static char	elsieid[] = "@(#)zic.c	7.81";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -476,7 +476,7 @@ char *	argv[];
 	(void) textdomain(TZ_DOMAIN);
 #endif /* HAVE_GETTEXT - 0 */
 	progname = argv[0];
-	while ((c = getopt(argc, argv, "d:l:p:L:vsy:")) != EOF)
+	while ((c = getopt(argc, argv, "d:l:p:L:vsy:")) != EOF && c != -1)
 		switch (c) {
 			default:
 				usage();

@@ -39,7 +39,8 @@ export subdir := $(subdir)
 all: objs lib others
 
 others: $(addprefix $(objpfx),$(extra-objs) \
-			      $(install-lib) $(install-bin) $(install-sbin))
+			      $(install-lib) $(install-bin) \
+			      $(install-rootsbin) $(install-sbin))
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=

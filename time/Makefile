@@ -23,7 +23,8 @@ subdir	:= time
 
 headers	:= time.h sys/time.h sys/timeb.h timebits.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype	\
-	      iso3166.tab zone.tab tzselect.ksh checktab.awk
+	      iso3166.tab zone.tab tzselect.ksh checktab.awk	\
+	      Banner
 extra-objs = scheck.o ialloc.o $(tzfiles:%=z.%)
 
 routines	:= offtime asctime clock ctime ctime_r difftime	\
@@ -45,7 +46,7 @@ tzfiles := africa antarctica asia australasia europe northamerica \
 	   solar87 solar88 solar89
 # pacificnew doesn't compile; if it is to be used, it should be included in
 # northamerica.
-distribute := $(distribute) $(tzfiles) leapseconds pacificnew simplebackw
+distribute += $(tzfiles) leapseconds pacificnew simplebackw
 
 install-sbin := zic zdump
 

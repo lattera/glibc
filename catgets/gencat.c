@@ -141,7 +141,7 @@ main (int argc, char *argv[])
   header_name = NULL;
   result = NULL;
 
-  while ((opt = getopt_long (argc, argv, "hH:o:V", long_options, NULL)) != EOF)
+  while ((opt = getopt_long (argc, argv, "hH:o:V", long_options, NULL)) != -1)
     switch (opt)
       {
       case '\0':	/* Long option.  */

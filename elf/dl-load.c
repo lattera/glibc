@@ -627,7 +627,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 	  /* We haven't found an appropriate library.  But since we
 	     are only interested in the list of libraries this isn't
 	     so severe.  Fake an entry with all the information we
-	     have (in fact only the name).  */
+	     have.  */
 	  static const ElfW(Symndx) dummy_bucket = STN_UNDEF;
 
 	  /* Enter the new object in the list of loaded objects.  */

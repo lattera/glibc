@@ -94,7 +94,7 @@ main(argc, argv)
 	function = NONE;
 	portnum = 0;
 	errflg = 0;
-	while ((c = getopt(argc, argv, "ptubdn:")) != EOF) {
+	while ((c = getopt(argc, argv, "ptubdn:")) != -1) {
 		switch (c) {
 
 		case 'p':
