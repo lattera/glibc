@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,6 @@
 #include <hurd.h>
 #include <hurd/port.h>
 #include <hurd/fd.h>
-#include <fcntl.h>
 
 /* Change the current directory to FD.  */
 
@@ -29,18 +28,7 @@ int
 __fchdir (fd)
      int fd;
 {
-  error_t err;
-  file_t dir;
-
-  err = HURD_DPORT_USE (fd,
-			({
-			  dir = __file_name_lookup_under (port, "", O_EXEC, 0);
-			  dir == MACH_PORT_NULL ? errno : 0;
-			}));
-
-  if (! err)
-    _hurd_port_set (&_hurd_ports[INIT_PORT_CWDIR], dir);
-
-  return err ? __hurd_fail (err) : 0;
+  return _hurd_change_directory_port_from_fd (&_hurd_ports[INIT_PORT_CWDIR],
+					      fd);
 }
 weak_alias (__fchdir, fchdir)

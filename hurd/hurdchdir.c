@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
+/* Change a port cell to a directory by looking up a name.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +17,40 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
-#include <fcntl.h>
 #include <hurd/port.h>
+#include <hurd/fd.h>
+#include <fcntl.h>
 
-/* Change the current directory to FILE_NAME.  */
 int
-__chdir (file_name)
-     const char *file_name;
+_hurd_change_directory_port_from_name (struct hurd_port *portcell,
+				       const char *name)
 {
-  return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CWDIR],
-						file_name);
-}
+  size_t len;
+  const char *lookup;
+  file_t dir;
 
-weak_alias (__chdir, chdir)
+  /* Append trailing "/." to directory name to force ENOTDIR if it's not a
+     directory and EACCES if we don't have search permission.  */
+  len = strlen (name);
+  if (name[len - 2] == '/' && name[len - 1] == '.')
+    lookup = name;
+  else
+    {
+      char *n = alloca (len + 2);
+      memcpy (n, name, len);
+      n[len] = '/';
+      n[len + 1] = '.';
+      n[len + 2] = '\0';
+      lookup = n;
+    }
+
+  dir = __file_name_lookup (lookup, 0, 0);
+  if (dir == MACH_PORT_NULL)
+    return -1;
+
+  _hurd_port_set (portcell, dir);
+  return 0;
+}

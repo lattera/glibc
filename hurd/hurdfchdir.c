@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
+/* Change a port cell to a directory in an open file descriptor.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,18 +17,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
 #include <hurd.h>
-#include <fcntl.h>
 #include <hurd/port.h>
+#include <hurd/fd.h>
+#include <fcntl.h>
 
-/* Change the current directory to FILE_NAME.  */
 int
-__chdir (file_name)
-     const char *file_name;
+_hurd_change_directory_port_from_fd (struct hurd_port *portcell, int fd)
 {
-  return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CWDIR],
-						file_name);
-}
+  error_t err;
+  file_t dir;
 
-weak_alias (__chdir, chdir)
+  err = HURD_DPORT_USE (fd,
+			({
+			  dir = __file_name_lookup_under (port, ".", 0, 0);
+			  dir == MACH_PORT_NULL ? errno : 0;
+			}));
+
+  if (! err)
+    _hurd_port_set (portcell, dir);
+
+  return err ? __hurd_fail (err) : 0;
+}

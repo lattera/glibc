@@ -1,3 +1,19 @@
+1999-02-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/getsysstats.c (__get_nprocs_conf, __get_nprocs,
+	__get_phys_pages): Cast &HBI to silence warning.
+
+	* hurd/Makefile (routines): Add hurdchdir and hurdfchdir.
+	* hurd/hurdchdir.c: New file.
+	* hurd/hurdfchdir.c: New file.
+	* sysdeps/mach/hurd/chroot.c: Call
+	_hurd_change_directory_port_from_name to do the work.
+	* sysdeps/mach/hurd/chdir.c: Likewise.
+	* sysdeps/mach/hurd/fchdir.c: Call
+	_hurd_change_directory_port_from_fd to do the work.
+	* hurd/fchroot.c: Likewise.
+	* hurd/hurd.h: Declare them.
+
 1999-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (lose): Add more comments to explain the `why'.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,23 +30,6 @@ int
 chroot (file_name)
      const char *file_name;
 {
-  error_t err;
-  file_t file, dir, root;
-
-  file = __file_name_lookup (file_name, O_EXEC, 0);
-  if (file == MACH_PORT_NULL)
-    return -1;
-  dir = __file_name_lookup_under (file, "", O_EXEC, 0);
-  __mach_port_deallocate (__mach_task_self (), file);
-  if (dir == MACH_PORT_NULL)
-    return -1;
-
-  /* Prevent going through DIR's .. */
-  err = __file_reparent (dir, MACH_PORT_NULL, &root);
-  __mach_port_deallocate (__mach_task_self (), dir);
-  if (err)
-    return __hurd_fail (err);
-
-  _hurd_port_set (&_hurd_ports[INIT_PORT_CRDIR], root);
-  return 0;
+  return _hurd_change_directory_port_from_name (&_hurd_ports[INIT_PORT_CRDIR],
+						file_name);
 }

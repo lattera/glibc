@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -153,6 +153,17 @@ extern int setcttyid (mach_port_t);
 
 /* Does reauth with the proc server and fd io servers.  */
 extern int __setauth (auth_t), setauth (auth_t);
+
+
+/* Modify a port cell by looking up a directory name.
+   This verifies that it is a directory and that we have search permission.  */
+extern int _hurd_change_directory_port_from_name (struct hurd_port *portcell,
+						  const char *name);
+/* Same thing, but using an open file descriptor.
+   Also verifies that it is a directory and that we have search permission.  */
+extern int _hurd_change_directory_port_from_fd (struct hurd_port *portcell,
+						int fd);
+
 
 
 /* Get and set the effective UID set.  */
