@@ -1,3 +1,20 @@
+2002-04-24  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/alpha/syscall.S: Don't use .frame, ENTRY will have it;
+	use END macro instead of our own .end directive.
+	Use `callsys' insn mnemonic instead of `call_pal'.
+
+	* sysdeps/mach/alpha/sysdep.h (ENTRY): New macro.
+
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_USER_ADDRESS_MASK): New
+	macro; we need this for Hurd.
+
+	Log entry was missing for 2002/03/24 commit of rev 1.8,
+	goes with 2002-03-17 changes.
+	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = misc]
+	(sysdep_routines): Append ioperm here.
+	(sysdep_headers): Append sys/io.h here.
+
 2002-04-23  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/send.c: int -> size_t for WROTE.
