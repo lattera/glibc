@@ -51,6 +51,15 @@
 	* sysdeps/sparc/sparc64/memchr.S: Likewise.
 	* sysdeps/vax/memchr.s: Likewise.
 
+	* iconv/gconv_trans.c: Add #include <stdlib.h> to get malloc decl.
+
+	* elf/dl-runtime.c (fixup): Trampoline passes unbounded pointer.
+	(profile_fixup): Don't define for __BOUNDED_POINTERS__.
+	* sysdeps/i386/dl-machine.h: Don't use regparm attribute for
+	__BOUNDED_POINTERS__.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Use non-regparm version
+	for __BOUNDED_POINTERS__.
+
 2000-07-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconv/gconv_open.c (__gconv_open): Initialize the __data

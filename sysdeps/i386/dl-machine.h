@@ -60,14 +60,16 @@ elf_machine_load_address (void)
   return addr;
 }
 
-#ifndef PROF
+#if !defined PROF && !__BOUNDED_POINTERS__
 /* We add a declaration of this function here so that in dl-runtime.c
    the ELF_MACHINE_RUNTIME_TRAMPOLINE macro really can pass the parameters
    in registers.
 
    We cannot use this scheme for profiling because the _mcount call
    destroys the passed register information.  */
-static ElfW(Addr) fixup (struct link_map *l, ElfW(Word) reloc_offset)
+/* GKM FIXME: Fix trampoline to pass bounds so we can do
+   without the `__unbounded' qualifier.  */
+static ElfW(Addr) fixup (struct link_map *__unbounded l, ElfW(Word) reloc_offset)
      __attribute__ ((regparm (2), unused));
 static ElfW(Addr) profile_fixup (struct link_map *l, ElfW(Word) reloc_offset,
 				 ElfW(Addr) retaddr)
@@ -119,7 +121,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
 /* This code is used in dl-runtime.c to call the `fixup' function
    and then redirect to the address it returns.  */
-#ifndef PROF
+#if !defined PROF && !__BOUNDED_POINTERS__
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
 	.text
 	.globl _dl_runtime_resolve
