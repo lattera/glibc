@@ -78,7 +78,7 @@ install-others += $(inst_includedir)/gnu/lib-names.h
 endif
 
 ifeq ($(versioning),yes)
-lib-noranlib: $(common-objpfx)sysd-versions
+lib-noranlib: lib-mapfiles
 endif
 
 include Makerules
@@ -318,10 +318,22 @@ remove-old-headers:
 
 # Generate version maps.
 ifeq ($(versioning),yes)
-$(common-objpfx)sysd-versions: versions.awk \
-			       $(wildcard $(all-subdirs:%=%/Versions)) \
-			       $(wildcard $(+sysdep_dirs:%=%/Versions))
+ifndef avoid-generated
+$(common-objpfx)sysd-versions: Versions.def
+	(echo define vers-libs; \
+	sed -n 's/\(lib[a-zA-Z0-9_][a-zA-Z0-9_]*\) {/$$(common-objpfx)\1%map/p' $<; \
+	echo endef) > $@T
+	mv -f $@T $@
+-include $(common-objpfx)sysd-versions
+vers-libs := $(subst $(\n), ,$(vers-libs))
+
+$(vers-libs): versions.awk \
+	       $(wildcard $(subdirs:%=%/Versions)) \
+	       $(wildcard $(+sysdep_dirs:%=%/Versions))
 	$(AWK) -v 'buildroot=$(common-objpfx)' -f $^
-	rm -f $@
-	echo > $@
+
+lib-mapfiles: $(common-objpfx)sysd-versions $(subst %,.,$(vers-libs))
+else
+lib-mapfiles:
+endif
 endif
