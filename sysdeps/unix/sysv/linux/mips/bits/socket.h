@@ -82,6 +82,7 @@ enum __socket_type
 #define	PF_ECONET	19	/* Acorn Econet.  */
 #define	PF_ATMSVC	20	/* ATM SVCs.  */
 #define	PF_SNA		22	/* Linux SNA Project */
+#define 	PF_IRDA		23	/* IRDA sockets.  */
 #define	PF_MAX		32	/* For now..  */
 
 /* Address families.  */
@@ -102,7 +103,7 @@ enum __socket_type
 #define	AF_DECnet	PF_DECnet
 #define	AF_NETBEUI	PF_NETBEUI
 #define	AF_SECURITY	PF_SECURITY
-#define	pseudo_AF_KEY	PF_KEY
+#define	AF_KEY		PF_KEY
 #define	AF_NETLINK	PF_NETLINK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
@@ -110,6 +111,7 @@ enum __socket_type
 #define	AF_ECONET	PF_ECONET
 #define	AF_ATMSVC	PF_ATMSVC
 #define	AF_SNA		PF_SNA
+#define 	AF_IRDA		PF_IRDA
 #define	AF_MAX		PF_MAX
 
 /* Socket level values.  Others are defined in the appropriate headers.
@@ -119,6 +121,10 @@ enum __socket_type
 #define SOL_RAW		255
 #define SOL_DECNET      261
 #define SOL_X25         262
+#define SOL_PACKET	263
+#define SOL_ATM		264	/* ATM layer (cell level).  */
+#define SOL_AAL		265	/* ATM Adaption Layer (packet level).  */
+#define SOL_IRDA	266
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
@@ -137,17 +143,17 @@ struct sockaddr
 /* Structure large enough to hold any socket address (with the historical
    exception of AF_UNIX).  We reserve 128 bytes.  */
 #if ULONG_MAX > 0xffffffff
-# define __ss_align	__uint64_t
+# define __ss_aligntype	__uint64_t
 #else
-# define __ss_align	__uint32_t
+# define __ss_aligntype	__uint32_t
 #endif
 #define _SS_SIZE	128
-#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof(__ss_align)))
+#define _SS_PADSIZE	(_SS_SIZE - (2 * sizeof (__ss_aligntype)))
 
 struct sockaddr_storage
   {
     __SOCKADDR_COMMON (__ss_);	/* Address family, etc.  */
-    __ss_align __ss_align;	/* Force desired alignment.  */
+    __ss_aligntype __ss_align;	/* Force desired alignment.  */
     char __ss_padding[_SS_PADSIZE];
   };
 
@@ -161,10 +167,35 @@ enum
 #define MSG_PEEK	MSG_PEEK
     MSG_DONTROUTE	= 0x04,	/* Don't use local routing.  */
 #define MSG_DONTROUTE	MSG_DONTROUTE
+#ifdef __USE_GNU
+    /* DECnet uses a different name.  */
+    MSG_TRYHARD		= MSG_DONTROUTE,
+# define MSG_TRYHARD	MSG_DONTROUTE
+#endif
     MSG_CTRUNC		= 0x08,	/* Control data lost before delivery.  */
 #define MSG_CTRUNC	MSG_CTRUNC
-    MSG_PROXY		= 0x10	/* Supply or ask second address.  */
+    MSG_PROXY		= 0x10,	/* Supply or ask second address.  */
 #define MSG_PROXY	MSG_PROXY
+    MSG_TRUNC		= 0x20,
+#define	MSG_TRUNC	MSG_TRUNC
+    MSG_DONTWAIT	= 0x40, /* Nonblocking IO.  */
+#define	MSG_DONTWAIT	MSG_DONTWAIT
+    MSG_EOR		= 0x80, /* End of record.  */
+#define	MSG_EOR		MSG_EOR
+    MSG_WAITALL		= 0x100, /* Wait for a full request.  */
+#define	MSG_WAITALL	MSG_WAITALL
+    MSG_FIN		= 0x200,
+#define	MSG_FIN		MSG_FIN
+    MSG_SYN		= 0x400,
+#define	MSG_SYN		MSG_SYN
+    MSG_URG		= 0x800,
+#define	MSG_URG		MSG_URG
+    MSG_RST		= 0x1000,
+#define	MSG_RST		MSG_RST
+    MSG_ERRQUEUE	= 0x2000, /* Fetch message from error queue.  */
+#define	MSG_ERRQUEUE	MSG_ERRQUEUE
+    MSG_NOSIGNAL	= 0x4000  /* Do not generate SIGPIPE.  */
+#define	MSG_NOSIGNAL	MSG_NOSIGNAL
   };
 
 
@@ -224,7 +255,7 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
 {
   if ((size_t) __cmsg->cmsg_len < sizeof (struct cmsghdr))
     /* The kernel header does this so there may be a reason.  */
-    return NULL;
+    return 0;
 
   __cmsg = (struct cmsghdr *) ((unsigned char *) __cmsg
 			       + CMSG_ALIGN (__cmsg->cmsg_len));
@@ -233,7 +264,7 @@ __cmsg_nxthdr (struct msghdr *__mhdr, struct cmsghdr *__cmsg) __THROW
       || ((unsigned char *) __cmsg + CMSG_ALIGN (__cmsg->cmsg_len)
 	  >= ((unsigned char *) __mhdr->msg_control + __mhdr->msg_controllen)))
     /* No more entries.  */
-    return NULL;
+    return 0;
   return __cmsg;
 }
 #endif	/* Use `extern inline'.  */
