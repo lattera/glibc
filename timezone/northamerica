@@ -1,14 +1,13 @@
-# @(#)northamerica	7.42
+# @(#)northamerica	7.43
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (1994-08-17):
+# From Paul Eggert <eggert@twinsun.com> (1999-03-22):
 # A reliable and entertaining source about time zones is
-# Derek Howse, Greenwich time and the discovery of the longitude,
-# Oxford University Press (1980).
+# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
 
 ###############################################################################
 
@@ -401,7 +400,7 @@ Zone America/Louisville	-5:43:02 -	LMT	1883 Nov 18 12:00
 #
 # From Paul Eggert (1995-12-19):
 # Shanks writes that Michigan started using standard time on 1885 Sep 18,
-# but Howse (p 126) writes that Detroit kept
+# but Howse writes that Detroit kept
 #
 #	local time until 1900 when the City Council decreed that clocks should
 #	be put back twenty-eight minutes to Central Standard Time.  Half the
@@ -859,7 +858,7 @@ Zone America/Dawson_Creek -8:00:56 -	LMT	1884
 			-7:00	-	MST
 
 
-# Northwest Territories, Yukon
+# Northwest Territories, Nunavut, Yukon
 
 # From Paul Eggert (1996-10-07):
 # Dawson switched to PST in 1973.  Inuvik switched to MST in 1979.

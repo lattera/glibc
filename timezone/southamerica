@@ -1,4 +1,4 @@
-# @(#)southamerica	7.26
+# @(#)southamerica	7.27
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -434,15 +434,21 @@ Zone America/Porto_Acre	-4:31:12 -	LMT	1914
 # DST earlier (saturday 9/26 at 24:00). This is a one-time change only ...
 # (unless there's another dry season next year, I guess).
 
+# From Julio I. Pacheco Troncoso (1999-03-18):
+# Because of the same drought, the government decided to end DST later,
+# on April 3, (one-time change).
+
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Chile	1918	only	-	Sep	1	0:00	1:00	S
-Rule	Chile	1919	only	-	Jul	2	0:00	0	-
-Rule	Chile	1927	1931	-	Sep	1	0:00	1:00	S
-Rule	Chile	1928	1932	-	Apr	1	0:00	0	-
+Rule	Chile	1918	only	-	Sep	 1	0:00	1:00	S
+Rule	Chile	1919	only	-	Jul	 2	0:00	0	-
+Rule	Chile	1927	1931	-	Sep	 1	0:00	1:00	S
+Rule	Chile	1928	1932	-	Apr	 1	0:00	0	-
 Rule	Chile	1969	1997	-	Oct	Sun>=9	0:00	1:00	S
-Rule	Chile	1970	max	-	Mar	Sun>=9	0:00	0	-
+Rule	Chile	1970	1998	-	Mar	Sun>=9	0:00	0	-
 Rule	Chile	1998	only	-	Sep	27	0:00	1:00	S
+Rule	Chile	1999	only	-	Apr	 4	0:00	0	-
 Rule	Chile	1999	max	-	Oct	Sun>=9	0:00	1:00	S
+Rule	Chile	2000	max	-	Mar	Sun>=9	0:00	0	-
 # IATA SSIM anomalies: (1990-09) says 1990-09-16; (1992-02) says 1992-03-14;
 # (1996-09) says 1998-03-08.  Ignore these for now.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
@@ -584,7 +590,7 @@ Zone Atlantic/South_Georgia -2:26:08 -	LMT	1890		# Grytviken
 			-2:00	-	GST	# South Georgia Time
 
 # South Sandwich Is
-# uninhabited
+# uninhabited; scientific personnel have wintered
 
 # Suriname
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

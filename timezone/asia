@@ -1,10 +1,10 @@
-# @(#)asia	7.41
+# @(#)asia	7.42
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (1996-11-22):
+# From Paul Eggert <eggert@twinsun.com> (1999-03-22):
 #
 # A good source for time zone historical data outside the U.S. is
 # Thomas G. Shanks, The International Atlas (4th edition),
@@ -25,8 +25,7 @@
 # I found in the UCLA library.
 #
 # A reliable and entertaining source about time zones is
-# Derek Howse, Greenwich time and the discovery of the longitude,
-# Oxford University Press (1980).
+# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
 #
 # I invented the abbreviations marked `*' in the following table;
 # the rest are from earlier versions of this file, or from other sources.
@@ -562,13 +561,12 @@ Rule	Zion	1995	only	-	Sep	 3	0:00	0	S
 #   ftp://ftp.huji.ac.il/pub/tz/announcements/1996-1998.ramon.ps.gz
 #
 # The dates for 1997-1998 were altered by his successor, Rabbi Eli Suissa.
-# The official announcement for the year 1997 can be viewed at:
 #
-#   ftp://ftp.huji.ac.il/pub/tz/announcements/1997.ps.gz
+# The official announcements for the years 1997-1999 can be viewed at:
 #
-# The official announcement for the year 1998 can be viewed at:
+#   ftp://ftp.huji.ac.il/pub/tz/announcements/YYYY.ps.gz
 #
-#   ftp://ftp.huji.ac.il/pub/tz/announcements/1998.ps.gz
+#       where YYYY is the relevant year.
 
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Zion	1996	only	-	Mar	15	0:00	1:00	D
@@ -950,7 +948,7 @@ Zone	Asia/Gaza	2:17:52	-	LMT	1900 Oct
 # no information
 
 # Philippines
-# Howse writes (p 162) that until 1844 the Philippines kept American date.
+# Howse writes that until 1844 the Philippines kept American date.
 # The rest of this data is from Shanks.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Phil	1936	only	-	Nov	1	0:00	1:00	S
