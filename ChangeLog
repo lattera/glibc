@@ -1,3 +1,8 @@
+2004-03-11  Jeroen Dekkers  <jeroen@dekkers.cx>
+
+	* cppflags-iterator.mk: Change libof-$(cpp-src) to
+	libof-$(notdir $(cpp-src)).
+
 2004-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/netdb.h (EAI_OVERFLOW): Define.
