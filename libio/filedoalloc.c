@@ -49,9 +49,12 @@ the executable file might be covered by the GNU General Public License. */
 #include <sys/stat.h>
 #ifdef __STDC__
 #include <stdlib.h>
+#include <unistd.h>
 #endif
+
 #ifdef _LIBC
-# include <unistd.h>
+# undef isatty
+# define isatty(Fd) __isatty (Fd)
 #endif
 
 /*
@@ -100,7 +103,7 @@ DEFUN(_IO_file_doallocate, (fp),
     }
   ALLOC_BUF(p, size, EOF);
   _IO_setb(fp, p, p+size, 1);
-  if (couldbetty && __isatty (fp->_fileno))
+  if (couldbetty && isatty(fp->_fileno))
     fp->_flags |= _IO_LINE_BUF;
   return 1;
 }

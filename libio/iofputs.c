@@ -33,13 +33,13 @@ _IO_fputs (str, fp)
   _IO_size_t len = strlen (str);
   int result;
   CHECK_FILE (fp, EOF);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (_IO_sputn (fp, str, len) != len)
     result = EOF;
   else
     result = 1;
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 

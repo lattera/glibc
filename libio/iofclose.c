@@ -33,21 +33,31 @@ _IO_fclose (fp)
 {
   int status;
 
-  CHECK_FILE(fp, EOF);
-
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-  if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    status = _IO_file_close_it (fp);
-  else
-    status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
-  _IO_FINISH (fp);
-  __libc_cleanup_region_end (1);
-  if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
+  if (fp == NULL)
     {
-      fp->_IO_file_flags = 0;
-      free(fp);
+      /* Close all streams.  */
+      _IO_cleanup ();
+      status = 0;
     }
+  else
+    {
+      CHECK_FILE(fp, EOF);
+
+      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+      _IO_flockfile (fp);
+      if (fp->_IO_file_flags & _IO_IS_FILEBUF)
+	status = _IO_file_close_it (fp);
+      else
+	status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
+      _IO_FINISH (fp);
+      _IO_cleanup_region_end (1);
+      if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
+	{
+	  fp->_IO_file_flags = 0;
+	  free(fp);
+	}
+    }
+
   return status;
 }
 

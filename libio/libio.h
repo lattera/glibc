@@ -288,6 +288,8 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 # define _IO_flockfile(_fp) /**/
 # define _IO_funlockfile(_fp) /**/
 # define _IO_ftrylockfile(_fp) /**/
+# define _IO_cleanup_region_start(_fct, _fp) /**/
+# define _IO_cleanup_region_end(_Doit) /**/
 #endif /* !_IO_MTSAFE_IO */
 
 #ifdef __USE_REENTRANT

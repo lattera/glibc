@@ -74,8 +74,8 @@ static name_database *service_table;
 /* -1 == database not found
     0 == database entry pointer stored */
 int
-__nss_database_lookup (const char *database, const char *defconfig,
-		       service_user **ni)
+__nss_database_lookup (const char *database, const char *alternate_name,
+		       const char *defconfig, service_user **ni)
 {
   /* Prevent multiple threads to change the service table.  */
   __libc_lock_lock (lock);
@@ -103,6 +103,13 @@ __nss_database_lookup (const char *database, const char *defconfig,
       for (entry = service_table->entry; entry != NULL; entry = entry->next)
 	if (strcmp (database, entry->name) == 0)
 	  *ni = entry->service;
+
+      if (*ni == NULL && alternate_name != NULL)
+	/* We haven't found a an entry so far.  Try to find it with
+	   the alternative name.  */
+	for (entry = service_table->entry; entry != NULL; entry = entry->next)
+	  if (strcmp (alternate_name, entry->name) == 0)
+	    *ni = entry->service;
     }
 
   /* No configuration data is available, either because nsswitch.conf

@@ -36,7 +36,7 @@ _IO_fgets (buf, n, fp)
   CHECK_FILE (fp, NULL);
   if (n <= 0)
     return NULL;
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
@@ -46,7 +46,7 @@ _IO_fgets (buf, n, fp)
       buf[count] = '\0';
       result = buf;
     }
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 

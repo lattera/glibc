@@ -36,7 +36,7 @@ databases		= proto service hosts network grp pwd rpc ethers \
 			  spwd netgrp key alias
 
 # Specify rules for the nss_* modules.  We have some services.
-services		:= files dns db
+services		:= files db
 
 extra-libs		= $(services:%=libnss_%)
 # These libraries will be built in the `others' pass rather than
@@ -51,8 +51,6 @@ vpath %.c $(subdir-dirs)
 libnss_files-routines	:= $(addprefix files-,$(filter-out key, $(databases)))
 distribute		+= files-XXX.c files-parse.c
 
-libnss_dns-routines	:= dns-host dns-network
-
 libnss_db-routines	:= $(addprefix db-,$(filter-out hosts network key,\
 							$(databases)))
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
@@ -60,14 +58,11 @@ generated		+= $(filter-out db-alias.c db-netgrp.c, \
 distribute		+= db-XXX.c
 
 libnss_files-inhibit-o	= $(filter-out .so,$(object-suffixes))
-libnss_dns-inhibit-o	= $(filter-out .so,$(object-suffixes))
 libnss_db-inhibit-o	= $(filter-out .so,$(object-suffixes))
 
 
 include ../Rules
 
-
-$(objpfx)libnss_dns.so: $(common-objpfx)resolv/libresolv.so
 
 $(objpfx)libnss_db.so: $(common-objpfx)db/libdb.so $(objpfx)libnss_files.so
 

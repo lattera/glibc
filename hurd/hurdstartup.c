@@ -75,6 +75,14 @@ _hurd_startup (void **argptr, void (*main) (int *data))
   char **argv, **envp;
   int argc, envc;
   int *argcptr;
+  vm_address_t addr;
+
+  /* Attempt to map page zero redzoned before we receive any RPC
+     data that might get allocated there.  We can ignore errors.  */
+  addr = 0;
+  __vm_map (__mach_task_self (),
+	    &addr, __vm_page_size, 0, 0, MACH_PORT_NULL, 0, 1,
+	    VM_PROT_NONE, VM_PROT_NONE, VM_INHERIT_COPY);
 
   if (err = __task_get_special_port (__mach_task_self (), TASK_BOOTSTRAP_PORT,
 				     &in_bootstrap))

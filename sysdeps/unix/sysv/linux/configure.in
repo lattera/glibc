@@ -45,7 +45,7 @@ fi
 # Under Linux the LinuxThreads and crypt add-on should be available.
 case $add_ons in
   # Both are available.  Good.
-  *linuxthreads*des-crypt* | *des-crypt*linuxthreads*)
+  *linuxthreads*crypt* | *crypt*linuxthreads*)
     message=
     ;;
   *linuxthreads*)
@@ -53,14 +53,14 @@ case $add_ons in
 *** WARNING:
 *** Are you sure you do not want to use the \`crypt' add-on?"
     ;;
-  *des-crypt*)
+  *crypt*)
     message="\
 *** WARNING:
-*** Are you sure you do not want to use the \`LinuxThread' add-on?"
+*** Are you sure you do not want to use the \`linuxthread' add-on?"
     ;;
   *)
     message="\
-*** WARNING: Are you sure you do not want to use the \`LinuxThreads'
+*** WARNING: Are you sure you do not want to use the \`linuxthreads'
 *** and \`crypt' add-ons?"
     ;;
 esac
@@ -68,7 +68,7 @@ esac
 if test "$message"; then
   if test $enable_sanity = yes; then
     echo "\
-*** You should not compile the GNU libc without the \`LinuxThreads' and
+*** You should not compile the GNU libc without the \`linuxthreads' and
 *** \`crypt' add-on.  Not using them risks to be incompatible with the
 *** libraries of other systems.  Consider getting the add-ons and restart
 *** the configuration.

@@ -1,5 +1,8 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Close all streams but make sure this isn't done more than once.
+   This function is called in abort().
+   Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,30 +19,26 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
+#include <libc-lock.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-/* Flush STREAM's buffer.
-   If STREAM is NULL, flush the buffers of all streams that are writing.  */
-int
-fflush (stream)
-     register FILE *stream;
+static int already_called;
+
+__libc_lock_define_initialized (static, lock);
+
+void
+__close_all_streams (void)
 {
-  if (stream == NULL)
+  /* We must be prepared for multi-threading on multiple calls.  */
+  if (! __libc_lock_trylock (lock) && already_called)
     {
-      int lossage = 0;
-      for (stream = __stdio_head; stream != NULL; stream = stream->__next)
-	if (__validfp (stream) && stream->__mode.__write)
-	  lossage |= fflush (stream) == EOF;
-      return lossage ? EOF : 0;
-    }
+      /* Signal that we already did this.  */
+      already_called = 1;
 
-  if (!__validfp (stream) || !stream->__mode.__write)
-    {
-      __set_errno (EINVAL);
-      return EOF;
-    }
+      /* Do the real work.  */
+      fclose (NULL);
 
-  return __flshfp (stream, EOF);
+      /* We don't release the lock so that the `trylock' immediately
+	 fails.  */
+    }
 }

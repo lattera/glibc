@@ -37,7 +37,7 @@ _IO_setvbuf (fp, buf, mode, size)
 {
   int result;
   CHECK_FILE (fp, EOF);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   switch (mode)
     {
@@ -90,7 +90,7 @@ _IO_setvbuf (fp, buf, mode, size)
     }
   result = _IO_SETBUF (fp, buf, size) == NULL ? EOF : 0;
 unlock_return:
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 

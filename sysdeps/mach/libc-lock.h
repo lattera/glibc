@@ -53,6 +53,9 @@ typedef struct __libc_lock_opaque__ __libc_lock_t;
 /* Lock the named lock variable.  */
 #define __libc_lock_lock(NAME) __mutex_lock (&(NAME))
 
+/* Lock the named lock variable.  */
+#define __libc_lock_trylock(NAME) __mutex_trylock (&(NAME))
+
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME) __mutex_unlock (&(NAME))
 

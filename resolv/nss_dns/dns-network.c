@@ -118,7 +118,7 @@ _nss_dns_getnetbyname_r (const char *name, struct netent *result,
     /* Nothing found.  */
     return (errno == ECONNREFUSED
 	    || errno == EPFNOSUPPORT
-	    || errno == EAFNOSUPPORT) 
+	    || errno == EAFNOSUPPORT)
       ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
 
   return getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYNAME);
@@ -173,7 +173,7 @@ _nss_dns_getnetbyaddr_r (long net, int type, struct netent *result,
     /* Nothing found.  */
     return (errno == ECONNREFUSED
 	    || errno == EPFNOSUPPORT
-	    || errno == EAFNOSUPPORT) 
+	    || errno == EAFNOSUPPORT)
       ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
 
   status = getanswer_r (&net_buffer, anslen, result, buffer, buflen, BYADDR);

@@ -33,7 +33,7 @@ routines	:=							      \
 	tmpfile tmpnam tmpnam_r tempnam tempname			      \
 	getline getw putw						      \
 	remove rename							      \
-	lockfile
+	lockfile fcloseall
 
 aux	:= errlist siglist
 distribute := _itoa.h printf-parse.h

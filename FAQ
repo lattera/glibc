@@ -71,6 +71,9 @@ please let me know.
 
 [Q19]	``My XXX kernel emulates a floating-point coprocessor for me.
 	  Should I enable --with-fp?''
+
+[Q20]	``How can I compile gcc 2.7.2.1 from the gcc source code using
+	  glibc 2.x?
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -422,7 +425,7 @@ the package and tell the configuration script about these additional
 subdirectories using the --enable-add-ons option.  When you add the
 crypt add-on you just have to use
 
-	configure --enable-add-ons=des-crypt,XXX ...
+	configure --enable-add-ons=crypt,XXX ...
 
 where XXX are possible other add-ons and ... means the rest of the
 normal option list.
@@ -473,7 +476,7 @@ use it instead of the old libc.  In this case the needed startup files
 and libraries are not found in the regular places.  So the specs file
 must tell the compiler and linker exactly what to use.  Here is for
 example the gcc-2.7.2 specs file when GNU libc is installed at
-/home/gnu:
+/usr:
 
 -----------------------------------------------------------------------
 *asm:
@@ -483,28 +486,28 @@ example the gcc-2.7.2 specs file when GNU libc is installed at
 %{pipe:-}
 
 *cpp:
-%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE} -I/home/gnu/include
+%{fPIC:-D__PIC__ -D__pic__} %{fpic:-D__PIC__ -D__pic__} %{!m386:-D__i486__} %{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}
 
 *cc1:
-
+%{profile:-p}
 
 *cc1plus:
 
 
 *endfile:
-%{!shared:crtend.o%s} %{shared:crtendS.o%s} /home/gnu/lib/crtn.o%s
+%{!shared:crtend.o%s} %{shared:crtendS.o%s} crtn.o%s
 
 *link:
--m elf_i386 -rpath=/home/gnu/lib -L/home/gnu/lib %{shared:-shared}   %{!shared:     %{!ibcs:       %{!static: 	%{rdynamic:-export-dynamic} 	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}} 	%{static:-static}}}
+-m elf_i386 %{shared:-shared}   %{!shared:     %{!ibcs:       %{!static: 	%{rdynamic:-export-dynamic} 	%{!dynamic-linker:-dynamic-linker /lib/ld-linux.so.2}} 	%{static:-static}}}
 
 *lib:
-%{!shared: %{mieee-fp:-lieee} %{p:-lc_p} %{!p:%{pg:-lc_p} %{!pg:-lc}}}
+%{!shared: %{pthread:-lpthread} 	%{profile:-lc_p} %{!profile: -lc}}
 
 *libgcc:
-%{!shared:-lgcc}
+-lgcc
 
 *startfile:
-%{!shared: %{pg:/home/gnu/lib/gcrt1.o%s} %{!pg:%{p:/home/gnu/lib/gcrt1.o} %{!p:/home/gnu/lib/crt1.o%s}}} /home/gnu/lib/crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}
+%{!shared:      %{pg:gcrt1.o%s} %{!pg:%{p:gcrt1.o%s} 		       %{!p:%{profile:gcrt1.o%s} 			 %{!profile:crt1.o%s}}}}    crti.o%s %{!shared:crtbegin.o%s} %{shared:crtbeginS.o%s}
 
 *switches_need_spaces:
 
@@ -523,15 +526,15 @@ example the gcc-2.7.2 specs file when GNU libc is installed at
 
 -----------------------------------------------------------------------
 
-The above is currently correct for all systems but ix86/Linux.
-Because of compatibility issues on this platform the dynamic linker
-must have a different name: ld-linux.so.2.  So you have to replace
+The above is currently correct for ix86/Linux.  Because of
+compatibility issues on this platform the dynamic linker must have
+a different name: ld-linux.so.2.  So you have to replace
 
-	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}
-by
 	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld-linux.so.2}
+by
+	%{!dynamic-linker:-dynamic-linker=/home/gnu/lib/ld.so.1}
 
-in the above example specs file.
+in the above example specs file ti make it work for other systems.
 
 Future versions of GCC will automatically provide the correct specs.
 
@@ -583,11 +586,26 @@ invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q20]	``How can I compile gcc 2.7.2.1 from the gcc source code using
+	  glibc 2.x?
+
+[A20] {HJL} There is no support in gcc for glibc 2.0 before gcc 2.8. It
+is very tricky to compile gcc 2.7.2.1 using glibc 2.x. You have to
+build it manually or with one pass only. You also have to use the
+specs file in this FAQ while compiling gcc.
+
+A pre-compiled binary version of gcc 2.7.2.1 linked with glibc 2.x for
+Linux/x86 is available in the same directory at the glibc 2.x source
+code ftp sites.
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
 Answers were given by:
 {UD} Ulrich Drepper, <drepper@cygnus.com>
 {DMT} David Mosberger-Tang, <davidm@AZStarNet.com>
 {RM} Roland McGrath, <roland@gnu.ai.mit.edu>
+{HJL} H.J. Lu, <hjl@gnu.ai.mit.edu>
 
 Local Variables:
  mode:text

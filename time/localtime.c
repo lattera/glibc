@@ -41,7 +41,7 @@ __localtime_r (timer, tp)
      and in tzfile.c; the internal functions do no locking themselves.
      This lock is only taken here and in `tzset'.  */
   __libc_lock_define (extern, __tzset_lock)
-  extern int __tzset_run, __use_tzfile;
+  extern int __use_tzfile;
   extern int __tz_compute __P ((time_t timer, struct tm *tp));
   extern int __tzfile_compute __P ((time_t timer,
 				    long int *leap_correct, int *leap_hit));
@@ -57,8 +57,7 @@ __localtime_r (timer, tp)
   __libc_lock_lock (__tzset_lock);
 
   /* Make sure the database is initialized.  */
-  if (! __tzset_run)
-    __tzset ();
+  __tzset ();
 
   if (__use_tzfile)
     {

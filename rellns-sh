@@ -18,7 +18,13 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 if test $# -ne 2; then
-  echo "Usage: rellns SOURCE DEST"
+  echo "Usage: rellns SOURCE DEST" >&2
+  exit 1
+fi
+
+# We only handle the case where SOURCE is the name of an existing file
+if test ! -f $1; then
+  echo "rellns: $1 must name an existing file" >&2
   exit 1
 fi
 
@@ -38,26 +44,31 @@ case $1 in
   ?*) from=`cd $from && pwd | sed 's%^/%%'` ;;
   *) from=`pwd | sed 's%^/%%'` ;;
   esac
-
-  while test -n "$to" && test -n "$from"; do
-    preto=`echo $to | sed 's%^\([^/]*\)/.*%\1%'`
-    prefrom=`echo $from | sed 's%^\([^/]*\)/.*%\1%'`
-
-    test "$preto" != "$prefrom" && break
-
-    to=`echo $to | sed 's%^[^/]*/*\(.*\)$%\1%'`
-    from=`echo $from | sed 's%^[^/]*/*\(.*\)$%\1%'`
-  done
-
-  while test -n "$from"; do
-    rfrom="../$rfrom"
-    from=`echo $from | sed 's%^[^/]*/*%%'`
-  done
-
-  ln -s $rfrom$to $2
   ;;
 *)
-  # Nothing to do, the path is already relative.
-  ln -s $1 $2
+  to=$1
+
+  if test -d $2; then
+    from=`echo $2 | sed 's%/*$%%'`
+  else
+    from=`echo $2 | sed 's%/*[^/]*$%%'`
+  fi
   ;;
 esac
+
+while test -n "$to" && test -n "$from"; do
+  preto=`echo $to | sed 's%^\([^/]*\)/.*%\1%'`
+  prefrom=`echo $from | sed 's%^\([^/]*\)/.*%\1%'`
+
+  test "$preto" != "$prefrom" && break
+
+  to=`echo $to | sed 's%^[^/]*/*\(.*\)$%\1%'`
+  from=`echo $from | sed 's%^[^/]*/*\(.*\)$%\1%'`
+done
+
+while test -n "$from"; do
+  rfrom="../$rfrom"
+  from=`echo $from | sed 's%^[^/]*/*%%'`
+done
+
+ln -s $rfrom$to $2

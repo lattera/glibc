@@ -49,7 +49,7 @@
 #define __libc_lock_lock(NAME)
 
 /* Try tp lock the named lock variable.  */
-#define __libc_lock_trylock(NAME)
+#define __libc_lock_trylock(NAME) 0
 
 /* Unlock the named lock variable.  */
 #define __libc_lock_unlock(NAME)

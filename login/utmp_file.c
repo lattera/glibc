@@ -92,6 +92,8 @@ setutent_file (int reset)
     }
   else if (reset)
     {
+      lseek (file_fd, 0, SEEK_SET);
+
       /* Remember we are at beginning of file.  */
       file_offset = 0;
 
@@ -117,6 +119,7 @@ static int
 getutent_r_file (struct utmp *buffer, struct utmp **result)
 {
   int nbytes;
+  struct flock fl;			/* Information struct for locking.  */
 
   /* Open utmp file if not already done.  */
   if (file_fd == INT_MIN)
@@ -129,10 +132,22 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
       return -1;
     }
 
+  /* XXX The following is not perfect.  Instead of locking the file itself
+     Marek Michalkiewicz <marekm@i17linuxb.ists.pwr.wroc.pl> suggests to
+     use an extra locking file.  */
+
+  /* Try to get the lock.  */
+  memset (&fl, '\0', sizeof (struct flock));
+  fl.l_type = F_WRLCK;
+  fl.l_whence = SEEK_SET;
+  result = fcntl (file_fd, F_SETLKW, &fl);
+
   /* Read the next entry.  */
-  flock (file_fd, LOCK_SH);
   nbytes = read (file_fd, &last_entry, sizeof (struct utmp));
-  flock (file_fd, LOCK_UN);
+
+  /* And unlock the file.  */
+  fl.l_type = F_UNLCK;
+  result = fcntl (file_fd, F_SETLKW, &fl);
 
   if (nbytes != sizeof (struct utmp))
     {

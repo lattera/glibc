@@ -13,8 +13,8 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with GNU CC; see the file COPYING.  If not, write to
-the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.
+along with this library; see the file COPYING.  If not, write to the Free
+Software Foundation, 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 As a special exception, if you link this library with files
 compiled with a GNU compiler to produce an executable, this does not cause
@@ -29,6 +29,7 @@ int
 DEFUN(_IO_vsscanf, (string, format, args),
       const char *string AND const char *format AND _IO_va_list args)
 {
+  int ret;
   _IO_strfile sf;
 #ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
@@ -37,7 +38,11 @@ DEFUN(_IO_vsscanf, (string, format, args),
   _IO_init((_IO_FILE*)&sf, 0);
   _IO_JUMPS((_IO_FILE*)&sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE*)&sf, (char*)string, 0, NULL);
-  return _IO_vfscanf((_IO_FILE*)&sf, format, args, NULL);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
+  _IO_flockfile (&sf);
+  ret = _IO_vfscanf((_IO_FILE*)&sf, format, args, NULL);
+  _IO_cleanup_region_end (1);
+  return ret;
 }
 weak_alias (_IO_vsscanf, __vsscanf)
 weak_alias (_IO_vsscanf, vsscanf)

@@ -32,10 +32,10 @@ fputc (c, fp)
 {
   int result;
   CHECK_FILE (fp, EOF);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_putc_unlocked (c, fp);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 

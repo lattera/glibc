@@ -1,3 +1,141 @@
+Sun Dec 15 01:53:20 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (subdirs): Change crypt to md5-crypt.
+	* crypt/Makefile, crypt/md5-crypt.c, crypt/md5.c, crypt/md5.h,
+	crypt/md5c-test.c, crypt/md5test.c: Move to new directory
+	md5-crypt.
+	* sysdeps/unix/sysv/linux/configure.in: Refer to linuxthreads and
+	crypt instead of LinuxThreads and des-crypt.
+
+	* Makefile (subdirs): Add nss back.
+	* sysdeps/unix/inet/Subdirs: Move nis to end of file to fulfill
+	dependencies.
+
+	* libio/iofclose.c: Implement fclose(NULL) as closing all streams.
+	* stdio-common/Makefile (routines): Add fcloseall.
+	* stdio-common/fcloseall.c: New file.
+	* sysdeps/generic/abort.c: Make implementation POSIX.1 compatible.
+
+	* sysdeps/mach/libc-lock.h: Add definition of __libc_lock_trylock.
+	* sysdeps/stub/libc-lock.h: Define __libc_lock_trylock to always
+	return 0.
+
+	* stdio-common/printf.h: Define MIN and MAX only if not already
+	defined.
+
+	* stdio-common/vfprintf.c: Set errno to EBADF if stream does not
+	allow writing.  Required by POSIX.1.
+
+	* libio/libioP.h (CHECK_FILE): Use MAYBE_SET_EINVAL instead of
+	assignment.
+
+	* interp.c: Update copyright.
+	* libio/clearerr.c: Likewise.
+	* libio/ioseekoff.c: Likewise.
+	* libio/ioseekpos.c: Likewise.
+	* stdio/fclose.c: Likewise.
+	* stdio/fflus.c: Likewise.
+
+	* libio/libio.h [!_IO_MTSAFE_IO]: Define _IO_cleanup_region_start
+	and _IO_cleanup_region_end as empty.
+	* libio/fgetc.c: Use _IO_cleanup_region_start and
+	_IO_cleanup_region_end instead of __libc_cleanup_region_start and
+	__libc_cleanup_region_end.
+	* libio/fputc.c: Likewise.
+	* libio/freopen.c: Likewise.
+	* libio/fseek.c: Likewise.
+	* libio/getc.c: Likewise.
+	* libio/getchar.c: Likewise.
+	* libio/iofclose.c: Likewise.
+	* libio/iofflush.c: Likewise.
+	* libio/iofgetpos.c: Likewise.
+	* libio/iofgets.c: Likewise.
+	* libio/iofputs.c: Likewise.
+	* libio/iofread.c: Likewise.
+	* libio/iofsetpos.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iogetdelim.c: Likewise.
+	* libio/iogets.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/iosetbuffer.c: Likewise.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/ioungetc.c: Likewise.
+
+	* libio/iovspintf.c: Use cleanup handler to make sure no dangling
+	locks can stay over.
+	* libio/iovsscanf.c: Likewise.
+
+	* libio/genops.c: Use _IO_lock_init_recursive and _IO_lock_fini
+	instead of __libc_lock_init_recursive and __libc_lock_fini.
+
+	* libio/filedoalloc.c: Only use __isatty when compiling GNU libc.
+	Otherwise use isatty.
+	* libio/fileops.c: Likewise for __open and open.
+
+	* login/utmp_file.c (getutent_r_file): Use fcntl instead of
+	flock.
+
+	* nis/ypclnt.h: Add more casts to prevent warnings.
+
+	* nss/Makefile (services): Remove dns.
+	(libnss_dns, libnss_dns-inhibit-o): Remove definition.
+	($(objpfx)libnss_dns.so): Removed.
+	* nss/nss_dns/dns-host.c, nss/nss_dns/dns-network.c: Moved to...
+	* resolv/nss_dns: ...here.
+	* resolv/Makefile (extra-libs): Add libnss_dns.
+	(libnss_dns-routines, libnss_dns-inhibit-o): Define as in
+	nss/Makefile.
+
+	* nss/XXX-lookup.c: Call __nss_database_lookup with new argument
+	specifying alternate name for entry in /etc/nsswitch.conf
+	* nss/nsswitch.c: If no entry with primary name is found in
+	/etc/nsswitch.conf try alternate name if given.
+	* nss/nsswitch.h: Add new parameter in prototype for
+	__nss_database_lookup.
+	* nss/spwd-lookup.c: Provide alternative entry name to look for.
+	This makes our NSS compatible with Solaris' nsswitch.conf files.
+
+	* string/tst-strlen.c: Change all counting variables to type size_t
+	to prevent warnings.
+
+	* sysdeps/posix/fpathconf.c: Update copyright.
+	* sysdeps/posix/pathconf.c: Don't call fpathconf to do the work.
+	Opening the file at this path may fail if it is a FIFO or pipe.
+
+	These changes make the time implementation POSIX.1 compliant.
+	* time/localtime.c (__localtime_r): Always call __tzset not only
+	if __tzset_run is zero.
+	* time/strftime.c: Add definition of memset_space to help to
+	reduce for systems which have memset.
+	(strftime): Don't use tm_zone member of argument for zone name.
+	Instead always use tzname[].
+	Call tzset() as required by POSIX.1 before any action.
+	* time/tzset.c (tzset): Set tzname[] as required by POSIX.1.
+	Remove global variable __tzset_run.  __tzset is now called always
+	when a dependent function is used.
+	(__tzset): Caching happens based on the contents of the
+	environment variable TZ.
+
+Fri Dec 13 01:06:52 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/paths.h: Add _PATH_KLOG.
+
+Thu Dec 12 09:16:35 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* rellns-sh: Correctly handle a relative source file name.
+
+Wed Dec 11 19:18:40 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* login/utmp_file.c (setutent_file): Seek back to beginning of the
+	file if resetting.
+
+Thu Dec 12 16:39:12 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdinit.c (map0): Delete function.  Don't do this on
+	_hurd_preinit_hook.
+	* hurd/hurdstartup.c (_hurd_startup): Map page zero redzone here.
+
 Thu Dec 12 03:32:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/_G_config.h: Add definition of _G_int16_t, _G_int32_t,

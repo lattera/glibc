@@ -4,13 +4,14 @@
 int
 main(int argc, char *argv[])
 {
-  static const lens[16] = { 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4 };
+  static const size_t lens[] = { 0, 1, 0, 2, 0, 1, 0, 3,
+				 0, 1, 0, 2, 0, 1, 0, 4 };
   char buf[24];
-  int words;
+  size_t words;
 
   for (words = 0; words < 4; ++words)
     {
-      int last;
+      size_t last;
       memset (buf, 'a', words * 4);
 
       for (last = 0; last < 16; ++last)

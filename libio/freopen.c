@@ -35,9 +35,9 @@ freopen (filename, mode, fp)
   CHECK_FILE (fp, NULL);
   if (!(fp->_flags & _IO_IS_FILEBUF))
     return NULL;
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   result = _IO_freopen (filename, mode, fp);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }

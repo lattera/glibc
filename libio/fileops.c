@@ -37,6 +37,11 @@ the executable file might be covered by the GNU General Public License. */
 extern int errno;
 #endif
 
+
+#ifdef _LIBC
+# define open(Name, Flags, Prot) __open ((Name), (Flags), (Prot))
+#endif
+
 /* An fstream can be in at most one of put mode, get mode, or putback mode.
    Putback mode is a variant of get mode.
 
@@ -177,7 +182,7 @@ DEFUN(_IO_file_fopen, (fp, filename, mode),
     omode = O_RDWR;
     read_write &= _IO_IS_APPENDING;
   }
-  fdesc = __open (filename, omode|oflags, oprot);
+  fdesc = open(filename, omode|oflags, oprot);
   if (fdesc < 0)
     return NULL;
   fp->_fileno = fdesc;
@@ -223,7 +228,7 @@ DEFUN(_IO_file_setbuf, (fp, p, len),
 }
 
 /* Write TO_DO bytes from DATA to FP.
-   Then mark FP has having empty buffers. */
+   Then mark FP as having empty buffers. */
 
 int
 DEFUN(_IO_do_write, (fp, data, to_do),
@@ -548,6 +553,10 @@ DEFUN(_IO_file_read, (fp, buf, size),
     {
       _IO_ssize_t count = _IO_read(fp->_fileno, buf, size);
 #if 0 && defined EINTR
+      /* We must not do this optimization since POSIX.1 explicitly
+	 requests that the stream operations must return with the
+	 error EINTR if this happens.  There must be the possibility
+	 that stream operations time out.  --drepper  */
       if (count == -1 && errno == EINTR)
 	continue;
 #endif
@@ -587,6 +596,10 @@ DEFUN(_IO_file_write, (f, data, n),
       if (count == EOF)
 	{
 #if 0 && defined EINTR
+	  /* We must not do this optimization since POSIX.1 explicitly
+	     requests that the stream operations must return with the
+	     error EINTR if this happens.  There must be the
+	     possibility that stream operations time out.  --drepper  */
 	  if (errno == EINTR)
 	    continue;
 	  else

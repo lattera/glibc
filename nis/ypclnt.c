@@ -349,9 +349,9 @@ yp_match (const char *indomain, const char *inmap, const char *inkey,
       inkey == NULL || inkey[0] == '\0' || inkeylen <= 0)
     return YPERR_BADARGS;
 
-  req.domain = indomain;
-  req.map = inmap;
-  req.key.keydat_val = inkey;
+  req.domain = (char *) indomain;
+  req.map = (char *) inmap;
+  req.key.keydat_val = (char *) inkey;
   req.key.keydat_len = inkeylen;
 
   *outval = NULL;
@@ -389,8 +389,8 @@ yp_first (const char *indomain, const char *inmap, char **outkey,
       inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
-  req.domain = indomain;
-  req.map = inmap;
+  req.domain = (char *) indomain;
+  req.map = (char *) inmap;
 
   *outkey = *outval = NULL;
   *outkeylen = *outvallen = 0;
@@ -433,9 +433,9 @@ yp_next (const char *indomain, const char *inmap, const char *inkey,
       inkeylen <= 0 || inkey == NULL || inkey[0] == '\0')
     return YPERR_BADARGS;
 
-  req.domain = indomain;
-  req.map = inmap;
-  req.key.keydat_val = inkey;
+  req.domain = (char *) indomain;
+  req.map = (char *) inmap;
+  req.key.keydat_val = (char *) inkey;
   req.key.keydat_len = inkeylen;
 
   *outkey = *outval = NULL;
@@ -476,8 +476,8 @@ yp_master (const char *indomain, const char *inmap, char **outname)
       inmap == NULL || inmap[0] == '\0')
     return YPERR_BADARGS;
 
-  req.domain = indomain;
-  req.map = inmap;
+  req.domain = (char *) indomain;
+  req.map = (char *) inmap;
 
   memset (&resp, '\0', sizeof (ypresp_master));
 
@@ -506,8 +506,8 @@ yp_order (const char *indomain, const char *inmap, unsigned int *outorder)
       inmap == NULL || inmap == '\0')
     return YPERR_BADARGS;
 
-  req.domain = indomain;
-  req.map = inmap;
+  req.domain = (char *) indomain;
+  req.map = (char *) inmap;
 
   memset (&resp, '\0', sizeof (resp));
 
@@ -622,8 +622,8 @@ yp_all (const char *indomain, const char *inmap,
 	  __libc_lock_unlock (ypbindlist_lock);
 	  return YPERR_PMAP;
 	}
-      req.domain = indomain;
-      req.map = inmap;
+      req.domain = (char *) indomain;
+      req.map = (char *) inmap;
 
       ypall_foreach = incallback->foreach;
       ypall_data = (void *) incallback->data;

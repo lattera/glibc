@@ -98,7 +98,12 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     {									      \
       /* Check file argument for consistence.  */			      \
       CHECK_FILE (S, -1);						      \
-      if (S->_flags & _IO_NO_WRITES || Format == NULL)			      \
+      if (S->_flags & _IO_NO_WRITES)					      \
+	{								      \
+	  __set_errno (EBADF);						      \
+	  return -1;							      \
+	}								      \
+      if (Format == NULL)						      \
 	{								      \
 	  MAYBE_SET_EINVAL;						      \
 	  return -1;							      \
@@ -113,7 +118,12 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
-      if (!__validfp(S) || !S->__mode.__write || Format == NULL)	      \
+      if (!__validfp (S) || !S->__mode.__write)				      \
+	{								      \
+	  __set_errno (EBADF);						      \
+	  return -1;							      \
+	}								      \
+      if (Format == NULL)						      \
 	{								      \
 	  __set_errno (EINVAL);						      \
 	  return -1;							      \

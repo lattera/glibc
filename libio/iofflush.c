@@ -35,11 +35,10 @@ _IO_fflush (fp)
     {
       int result;
       CHECK_FILE (fp, EOF);
-      __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-				   fp);
+      _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
       _IO_flockfile (fp);
       result = _IO_SYNC (fp) ? EOF : 0;
-      __libc_cleanup_region_end (1);
+      _IO_cleanup_region_end (1);
       return result;
     }
 }

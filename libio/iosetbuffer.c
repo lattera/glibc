@@ -31,13 +31,13 @@ _IO_setbuffer (fp, buf, size)
      _IO_size_t size;
 {
   CHECK_FILE (fp, );
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   fp->_flags &= ~_IO_LINE_BUF;
   if (!buf)
     size = 0;
   (void) _IO_SETBUF (fp, buf, size);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
 }
 
 weak_alias (_IO_setbuffer, setbuffer)

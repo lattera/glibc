@@ -557,7 +557,7 @@ extern struct _IO_fake_stdiobuf _IO_stdin_buf, _IO_stdout_buf, _IO_stderr_buf;
 	if ((FILE) == NULL) { MAYBE_SET_EINVAL; return RET; } \
 	else { COERCE_FILE(FILE); \
 	       if (((FILE)->_IO_file_flags & _IO_MAGIC_MASK) != _IO_MAGIC) \
-	  { errno = EINVAL; return RET; }}
+	  { MAYBE_SET_EINVAL; return RET; }}
 #else
 #define CHECK_FILE(FILE,RET) \
 	COERCE_FILE(FILE)

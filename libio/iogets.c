@@ -33,8 +33,8 @@ _IO_gets (buf)
   int ch;
   char *retval;
 
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
-			       _IO_stdin);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+			    _IO_stdin);
   _IO_flockfile (_IO_stdin);
   ch = _IO_getc_unlocked (_IO_stdin);
   if (ch == EOF)
@@ -57,10 +57,12 @@ _IO_gets (buf)
   buf[count] = 0;
   retval = buf;
 unlock_return:
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return retval;
 }
 
 weak_alias (_IO_gets, gets)
 
+#ifdef _LIBC
 link_warning (gets, "the `gets' function is dangerous and should not be used.")
+#endif

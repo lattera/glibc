@@ -22,20 +22,54 @@
 #include <unistd.h>
 #include <signal.h>
 
+
+/* Function to close all streams and also make sure we don't loop by
+   calling abort while closing the streams.  */
+extern void __close_all_streams (void);
+
+
 /* Cause an abnormal program termination with core-dump.  */
 void
 abort (void)
 {
+  struct sigaction act;
   sigset_t sigs;
 
   if (__sigemptyset (&sigs) == 0 &&
       __sigaddset (&sigs, SIGABRT) == 0)
     __sigprocmask (SIG_UNBLOCK, &sigs, (sigset_t *) NULL);
 
+  /* If there is a user handler installed use it.  We don't close or
+     flush streams.  */
+  if (__sigaction (SIGABRT, NULL, &act) >= 0
+      && act.sa_handler != SIG_DFL)
+    {
+      /* Send signal to call user handler.  */
+      raise (SIGABRT);
+
+      /* It returns, so we are responsible for closing the streams.  */
+      __close_all_streams ();
+
+      /* There was a handler installed.  Now remove it.  */
+      memset (&act, '\0', sizeof (struct sigaction));
+      act.sa_handler = SIG_DFL;
+      __sigfillset (&act.sa_mask);
+      act.sa_flags = 0;
+      __sigaction (SIGABRT, &act, NULL);
+    }
+  else
+    /* No handler installed so the next `raise' will hopefully
+       terminate the process.  Therefore we must close the streams.  */
+    __close_all_streams ();
+
+  /* Try again.  */
+  raise (SIGABRT);
+
+  /* If we can't signal ourselves, exit.  */
+  _exit (127);
+
+  /* If even this fails make sure we never return.  */
   while (1)
-    if (raise (SIGABRT))
-      /* If we can't signal ourselves, exit.  */
-      _exit (127);
-  /* If we signal ourselves and are still alive,
-     or can't exit, loop forever.  */
+    /* For ever and ever.  */
+    ;
 }

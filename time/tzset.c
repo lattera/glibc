@@ -74,7 +74,7 @@ static tz_rule tz_rules[2];
 
 static int compute_change __P ((tz_rule *rule, int year));
 
-int __tzset_run = 0;
+static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
 void
@@ -84,6 +84,20 @@ __tzset ()
   register size_t l;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
+
+  /* Examine the TZ environment variable.  */
+  tz = getenv ("TZ");
+
+  /* A leading colon means "implementation defined syntax".
+     We ignore the colon and always use the same algorithm:
+     try a data file, and if none exists parse the 1003.1 syntax.  */
+  if (tz && *tz == ':')
+    ++tz;
+
+  /* Check whether the value changes since the last run.  */
+  if (old_tz != NULL && tz != NULL && strcmp (tz, old_tz) == 0)
+    /* No change, simply return.  */
+    return;
 
   /* Free old storage.  */
   if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
@@ -98,22 +112,15 @@ __tzset ()
       tz_rules[1].name = NULL;
     }
 
-  /* Examine the TZ environment variable.  */
-  tz = getenv ("TZ");
-
-  /* A leading colon means "implementation defined syntax".
-     We ignore the colon and always use the same algorithm:
-     try a data file, and if none exists parse the 1003.1 syntax.  */
-  if (tz && *tz == ':')
-    ++tz;
+  /* Save the value of `tz'.  */
+  if (old_tz != NULL)
+    free (old_tz);
+  old_tz = tz ? __strdup (tz) : NULL;
 
   /* Try to read a data file.  */
   __tzfile_read (tz);
   if (__use_tzfile)
-    {
-      __tzset_run = 1;
-      return;
-    }
+    return;
 
   /* No data file found.  Default to UTC if nothing specified.  */
 
@@ -121,10 +128,10 @@ __tzset ()
     {
       static const char UTC[] = "UTC";
       size_t len = sizeof UTC;
-      tz_rules[0].name = (char *) malloc(len);
+      tz_rules[0].name = (char *) malloc (len);
       if (tz_rules[0].name == NULL)
 	return;
-      tz_rules[1].name = (char *) malloc(len);
+      tz_rules[1].name = (char *) malloc (len);
       if (tz_rules[1].name == NULL)
 	return;
       memcpy ((void *) tz_rules[0].name, UTC, len);
@@ -136,7 +143,6 @@ __tzset ()
       tz_rules[0].offset = tz_rules[1].offset = 0L;
       tz_rules[0].change = tz_rules[1].change = (time_t) -1;
       tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
-      __tzset_run = 1;
       return;
     }
 
@@ -147,8 +153,12 @@ __tzset ()
   /* Get the standard timezone name.  */
   tz_rules[0].name = (char *) malloc (strlen (tz) + 1);
   if (tz_rules[0].name == NULL)
-    /* Don't set __tzset_run so we will try again.  */
-    return;
+    {
+      /* Clear the old tz name so we will try again.  */
+      free (old_tz);
+      old_tz = NULL;
+      return;
+    }
 
   if (sscanf(tz, "%[^0-9,+-]", tz_rules[0].name) != 1 ||
       (l = strlen(tz_rules[0].name)) < 3)
@@ -257,7 +267,8 @@ __tzset ()
 			tz_rules[0].offset, tz_rules[1].offset);
       if (__use_tzfile)
 	{
-	  __tzset_run = 1;
+	  free (old_tz);
+	  old_tz = NULL;
 	  return;
 	}
     }
@@ -353,8 +364,6 @@ __tzset ()
 
       tzr->computed_for = -1;
     }
-
-  __tzset_run = 1;
 }
 
 /* Maximum length of a timezone name.  __tz_compute keeps this up to date
@@ -365,8 +374,7 @@ size_t __tzname_cur_max;
 long int
 __tzname_max ()
 {
-  if (! __tzset_run)
-    __tzset ();
+  __tzset ();
 
   return __tzname_cur_max;
 }
@@ -450,7 +458,7 @@ compute_change (rule, year)
   /* T is now the Epoch-relative time of 0:00:00 GMT on the day we want.
      Just add the time of day and local offset from GMT, and we're done.  */
 
-  rule->change = t + rule->offset + rule->secs;
+  rule->change = t - rule->offset + rule->secs;
   rule->computed_for = year;
   return 1;
 }
@@ -464,8 +472,7 @@ __tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  if (! __tzset_run)
-    __tzset ();
+  __tzset ();
 
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
@@ -504,6 +511,12 @@ weak_function
 tzset (void)
 {
   __libc_lock_lock (__tzset_lock);
+
   __tzset ();
+
+  /* Set `tzname'.  */
+  __tzname[0] = (char *) tz_rules[0].name;
+  __tzname[1] = (char *) tz_rules[1].name;
+
   __libc_lock_unlock (__tzset_lock);
 }

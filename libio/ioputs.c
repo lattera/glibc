@@ -30,7 +30,7 @@ _IO_puts (str)
 {
   int result;
   _IO_size_t len = strlen (str);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
 			       _IO_stdout);
   _IO_flockfile (_IO_stdout);
   if (_IO_sputn (_IO_stdout, str, len) == len
@@ -38,7 +38,7 @@ _IO_puts (str)
     result = len + 1;
   else
     result = EOF;
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 weak_alias (_IO_puts, puts)

@@ -36,10 +36,10 @@ _IO_fread (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (bytes_requested == 0)
     return 0;
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   bytes_read = _IO_sgetn (fp, (char *) buf, bytes_requested);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return bytes_requested == bytes_read ? count : bytes_read / size;
 }
 weak_alias (_IO_fread, fread)

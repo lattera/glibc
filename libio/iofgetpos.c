@@ -33,10 +33,10 @@ _IO_fgetpos (fp, posp)
 {
   _IO_fpos_t pos;
   CHECK_FILE (fp, EOF);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   if (pos == _IO_pos_BAD)
     {
 #ifdef EIO

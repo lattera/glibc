@@ -36,10 +36,10 @@ _IO_fwrite (buf, size, count, fp)
   CHECK_FILE (fp, 0);
   if (request == 0)
     return 0;
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   written = _IO_sputn (fp, (const char *) buf, request);
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   /* Many traditional implementations return 0 if size==0 && count > 0,
      but ANSI seems to require us to return count in this case. */
   if (written == request)

@@ -27,6 +27,8 @@
 # define HAVE_STRUCT_ERA_ENTRY 1
 # define HAVE_TM_GMTOFF 1
 # define HAVE_TM_ZONE 1
+# define HAVE_TZNAME 1
+# define HAVE_TZSET 1
 # define MULTIBYTE_IS_FORMAT_SAFE 1
 # define STDC_HEADERS 1
 # include <ansidecl.h>
@@ -79,7 +81,7 @@ extern char *tzname[];
 # include <stdlib.h>
 # include <string.h>
 #else
-# define memcpy(d, s, n) bcopy (s, d, n)
+# define memcpy(d, s, n) bcopy ((s), (d), (n))
 #endif
 
 #ifndef __P
@@ -125,6 +127,7 @@ extern char *tzname[];
 #ifdef _LIBC
 # define gmtime_r __gmtime_r
 # define localtime_r __localtime_r
+extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 #else
 # if ! HAVE_LOCALTIME_R
 #  if ! HAVE_TM_GMTOFF
@@ -162,7 +165,28 @@ localtime_r (t, tp)
 #endif /* ! defined (_LIBC) */
 
 
+#if !defined (memset) && !defined (HAVE_MEMSET) && !defined (_LIBC)
+/* Some systems lack the `memset' function and we don't want to
+   introduce additional dependencies.  */
 static const char spaces[16] = "                ";
+
+# define memset_space(P, Len) \
+  do {									      \
+    int _len = (Len);							      \
+    									      \
+    do									      \
+      {									      \
+	int _this = _len > 16 ? 16 : _len;				      \
+	memcpy ((P), spaces, _this);					      \
+	(P) += _this;							      \
+	_len -= _this;							      \
+      }									      \
+    while (_len > 0);							      \
+  } while (0)
+#else
+# define memset_space(P, Len) memset ((P), ' ', (Len))
+#endif
+
 #define	add(n, f) \
   do									      \
     {									      \
@@ -174,13 +198,8 @@ static const char spaces[16] = "                ";
       else								      \
 	if (p)								      \
 	  {								      \
-	    while (_delta > 0)						      \
-	      {								      \
-		int _this = _delta > 16 ? 16 : _delta;			      \
-		memcpy (p, spaces, _this);				      \
-		p += _this;						      \
-		_delta -= _this;					      \
-	      }								      \
+	    if (_delta > 0)						      \
+	      memset_space (p, _delta);					      \
 	    f;								      \
 	    p += _n;							      \
 	  }								      \
@@ -325,11 +344,26 @@ strftime (s, maxsize, format, tp)
   char *p = s;
   const char *f;
 
-  zone = 0;
-#if HAVE_TM_ZONE
+  zone = NULL;
+#if !defined _LIBC && HAVE_TM_ZONE
+  /* XXX We have some problems here.  First, the string pointed to by
+     tm_zone is dynamically allocated while loading the zone data.  But
+     when another zone is loaded since the information in TP were
+     computed this would be a stale pointer.
+     The second problem is the POSIX test suite which assumes setting
+     the environment variable TZ to a new value before calling strftime()
+     will influence the result (the %Z format) even if the information in
+     TP is computed with a totally different time zone.  --drepper@gnu  */
   zone = (const char *) tp->tm_zone;
 #endif
 #if HAVE_TZNAME
+  /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
+     time zone names contained in the external variable `tzname' shall
+     be set as if the tzset() function had been called.  */
+# if HAVE_TZSET
+  tzset ();
+# endif
+
   if (!(zone && *zone) && tp->tm_isdst >= 0)
     zone = tzname[tp->tm_isdst];
 #endif

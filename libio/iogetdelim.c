@@ -52,7 +52,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       return -1;
     }
   CHECK_FILE (fp, -1);
-  __libc_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
+  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   if (_IO_ferror_unlocked (fp))
     {
@@ -114,7 +114,7 @@ _IO_getdelim (lineptr, n, delimiter, fp)
   result = cur_len;
 
 unlock_return:
-  __libc_cleanup_region_end (1);
+  _IO_cleanup_region_end (1);
   return result;
 }
 
