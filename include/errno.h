@@ -2,7 +2,7 @@
 
 #include <stdlib/errno.h>
 
-#ifdef _ERRNO_H
+#if defined _ERRNO_H && !defined _ISOMAC
 
 # include <tls.h>		/* Defines USE_TLS.  */
 
