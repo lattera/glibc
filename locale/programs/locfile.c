@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -337,7 +337,7 @@ write_locale_data (const char *output_path, const char *category,
      But for LC_MESSAGES we have to take care for the translation
      data.  This means we need to have a directory LC_MESSAGES in
      which we place the file under the name SYS_LC_MESSAGES.  */
-  sprintf (fname, "%s/%s", output_path, category);
+  sprintf (fname, "%s%s", output_path, category);
   if (strcmp (category, "LC_MESSAGES") == 0)
     {
       struct stat st;
