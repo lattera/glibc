@@ -35,4 +35,4 @@ Cambridge, MA 02139, USA.  */
   cmpb $ERESTART, %al;							      \
   je C_SYMBOL_NAME (name);						      \
   jmp syscall_error;							      \
-  noerror: ret
+  noerror:
