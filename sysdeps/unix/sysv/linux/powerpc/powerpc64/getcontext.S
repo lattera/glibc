@@ -268,21 +268,22 @@ ENTRY(__getcontext)
   stfd  fp0,(SIGCONTEXT_FP_REGS+(32*8))(r3)
 
   ld    r5,.LC__dl_hwcap@toc(r2)
-  li    r10,0
 # ifdef SHARED
 /* Load _rtld-global._dl_hwcap.  */
   ld    r5,RTLD_GLOBAL_RO_DL_HWCAP_OFFSET(r5)
 # else
   ld    r5,0(r5) /* Load extern _dl_hwcap.  */
-# endif
-  andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
-  beq   L(has_no_vec)
-
+# endif  
   la    r10,(SIGCONTEXT_V_RESERVE+8)(r3)
   la    r9,(SIGCONTEXT_V_RESERVE+24)(r3)
+  
+  andis.  r5,r5,(PPC_FEATURE_HAS_ALTIVEC >> 16)
+  
   clrrdi  r10,r10,4
+  beq   L(has_no_vec)
   clrrdi  r9,r9,4
-
+  mr    r5,r10	/* Capture *v_regs value in r5.  */
+  
   stvx  v0,0,r10
   stvx  v1,0,r9
   addi  r10,r10,32
@@ -329,8 +330,8 @@ ENTRY(__getcontext)
   addi  r9,r9,32
 
   stvx  v18,0,r10
-  stvx  v11,0,r9
-  addi  r19,r10,32
+  stvx  v19,0,r9
+  addi  r10,r10,32
   addi  r9,r9,32
 
   stvx  v20,0,r10
@@ -363,11 +364,6 @@ ENTRY(__getcontext)
   addi  r10,r10,32
   addi  r9,r9,32
 
-  stvx  v10,0,r10
-  stvx  v11,0,r9
-  addi  r10,r10,32
-  addi  r9,r9,32
-
   mfvscr  v0
   mfspr r0,VRSAVE
   stvx  v0,0,r10
@@ -378,7 +374,7 @@ L(has_no_vec):
    Store either a NULL or a quadword aligned pointer to the Vector register
    array into *v_regs.
 */
-  std   r10,(SIGCONTEXT_V_REGS_PTR)(r3)
+  std   r5,(SIGCONTEXT_V_REGS_PTR)(r3)
 
   addi  r5,r3,UCONTEXT_SIGMASK
   li  r4,0

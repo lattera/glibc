@@ -187,8 +187,8 @@ ENTRY(__getcontext)
 	addi  r9,r9,32
 
 	stvx  v18,0,r10
-	stvx  v11,0,r9
-	addi  r19,r10,32
+	stvx  v19,0,r9
+	addi  r10,r10,32
 	addi  r9,r9,32
 
 	stvx  v20,0,r10
@@ -218,11 +218,6 @@ ENTRY(__getcontext)
 
 	stvx  v30,0,r10
 	stvx  v31,0,r9
-	addi  r10,r10,32
-	addi  r9,r9,32
-
-	stvx  v10,0,r10
-	stvx  v11,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
 

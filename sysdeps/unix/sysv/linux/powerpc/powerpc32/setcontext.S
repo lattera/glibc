@@ -133,8 +133,8 @@ ENTRY(__setcontext)
 	addi  r9,r9,32
 
 	lvx   v18,0,r10
-	lvx   v11,0,r9
-	addi  r19,r10,32
+	lvx   v19,0,r9
+	addi  r10,r10,32
 	addi  r9,r9,32
 
 	lvx   v20,0,r10

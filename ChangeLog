@@ -1,3 +1,20 @@
+2004-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S: Fix pasto
+	that clobbers r19.  Fix pasto that overflowed sigcontext.v_reserve.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S: Fix pasto
+	that clobbers r19.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S: Fix pasto
+	that clobbers r19.  Fix pasto that overflowed sigcontext.v_reserve.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S:
+	Fix setting of sigcontext.v_regs.  Fix pasto that clobbers r19.
+	Fix pasto that overflowed sigcontext.v_reserve.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S:
+	Fix pasto that clobbers r19.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Fix setting
+	of sigcontext.v_regs.  Fix pasto that clobbers r19.  Fix pasto that
+	overflowed sigcontext.v_reserve.
+
 2004-05-04  H.J. Lu  <hongjiu.lu@intel.com>
 
 	[BZ #150]
