@@ -1,3 +1,11 @@
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile (headers): Add rpc/rpc_des.h.
+	(distribute): Remove des.h.
+	* include/des.h: New file.
+	* sunrpc/des.h: Moved to ...
+	* sunrpc/rpc/rpc_des.h: ...here.
+
 1998-03-22  NIIBE Yutaka  <gniibe@mri.co.jp>
 
 	* inet/netinet/in.h (IN6_IS_ADDR_UNSPECIFIED, IN6_IS_ADDR_LOOPBACK):

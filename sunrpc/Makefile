@@ -51,7 +51,7 @@ rpcsvc = bootparam.x nlm_prot.x rstat.x \
 headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 			   pmap_prot.h pmap_rmt.h rpc.h rpc_msg.h svc.h \
 			   svc_auth.h types.h xdr.h auth_des.h \
-			   des_crypt.h key_prot.h) \
+			   des_crypt.h key_prot.h rpc_des.h) \
 	  $(rpcsvc:%=rpcsvc/%)
 install-others = $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c) \
@@ -76,7 +76,7 @@ rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \
 	      rpc_scan.o rpc_util.o rpc_svcout.o rpc_clntout.o \
 	      rpc_tblout.o rpc_sample.o
 # These headers are part of rpcgen.
-distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h des.h \
+distribute := proto.h rpc_util.h rpc_parse.h rpc_scan.h \
 	      $(rpcgen-objs:.o=.c) etc.rpc
 extra-objs = $(rpcgen-objs)
 
