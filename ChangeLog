@@ -1,3 +1,9 @@
+2003-08-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/dl-fptr.h (ELF_MACHINE_LOAD_ADDRESS): Support
+	loading big binaries where @gprel(sym) cannot be handled in 'add'
+	but instead has to be used with 'movl'.
+
 2003-08-17  Juergen Kreileder <jk@blackdown.de>
 	    Andreas Jaeger  <aj@suse.de>
 
