@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999  Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -341,7 +341,7 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host, char *buffer,
 }
 
 enum nss_status
-_nss_nis_gethostbyaddr_r (char *addr, int addrlen, int type,
+_nss_nis_gethostbyaddr_r (char *addr, size_t addrlen, int type,
 			  struct hostent *host, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {

@@ -1219,7 +1219,7 @@ allows the caller to specify the desired address family (e.g.@:
 
 @comment netdb.h
 @comment BSD
-@deftypefun {struct hostent *} gethostbyaddr (const char *@var{addr}, int @var{length}, int @var{format})
+@deftypefun {struct hostent *} gethostbyaddr (const char *@var{addr}, size_t @var{length}, int @var{format})
 The @code{gethostbyaddr} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6
@@ -1332,7 +1332,7 @@ allows the caller to specify the desired address family (e.g.@:
 
 @comment netdb.h
 @comment GNU
-@deftypefun int gethostbyaddr_r (const char *@var{addr}, int @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
+@deftypefun int gethostbyaddr_r (const char *@var{addr}, size_t @var{length}, int @var{format}, struct hostent *restrict @var{result_buf}, char *restrict @var{buf}, size_t @var{buflen}, struct hostent **restrict @var{result}, int *restrict @var{h_errnop})
 The @code{gethostbyaddr_r} function returns information about the host
 with Internet address @var{addr}.  The parameter @var{addr} is not
 really a pointer to char - it can be a pointer to an IPv4 or an IPv6

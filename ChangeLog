@@ -1,3 +1,18 @@
+1999-07-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nscd/nscd_proto.h (__nscd_gethostbyaddr_r): Follow change from
+	1999-07-17 and adjust len parameter.
+	* nscd/nscd_gethst_r.c (__nscd_gethostbyaddr_r): Likewise.
+	* nscd/gethstbyad_r.c (ADD_PARAMS): Likewise.
+	* manual/socket.texi (Host Names): Likewise.
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyaddr_r): Likewise.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_gethostbyaddr_r):
+	Likewise.
+	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Likewise.
+	* resolv/gethnamaddr.c (gethostbyaddr): Likewise.
+	(ht_gethostbyaddr): Likewise.
+	(_gethtbyaddr): Likewise.
+
 1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/netdb.h: Adjust parameters of gethostbyaddr and

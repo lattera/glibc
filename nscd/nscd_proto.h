@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@uni-paderborn.de>, 1998.
 
@@ -45,7 +45,7 @@ extern int __nscd_gethostbyname2_r __P ((const char *name, int af,
 					 struct hostent *resultbuf,
 					 char *buffer, size_t buflen,
 					 int *h_errnop));
-extern int __nscd_gethostbyaddr_r __P ((const char *addr, int len, int type,
+extern int __nscd_gethostbyaddr_r __P ((const char *addr, size_t len, int type,
 					struct hostent *resultbuf,
 					char *buffer, size_t buflen,
 					int *h_errnop));

@@ -191,7 +191,7 @@ _nss_dns_gethostbyname_r (const char *name, struct hostent *result,
 
 
 enum nss_status
-_nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
+_nss_dns_gethostbyaddr_r (const char *addr, size_t len, int af,
 			  struct hostent *result, char *buffer, size_t buflen,
 			  int *errnop, int *h_errnop)
 {
@@ -207,7 +207,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   } *host_data = (struct host_data *) buffer;
   querybuf host_buffer;
   char qbuf[MAXDNAME+1], *qp;
-  int size, n, status;
+  size_t size;
+  int n, status;
 
   if (af == AF_INET6 && len == IN6ADDRSZ &&
       (memcmp (uaddr, mapped, sizeof mapped) == 0

@@ -67,7 +67,7 @@ __nscd_gethostbyname2_r (const char *name, int af, struct hostent *resultbuf,
 
 
 int
-__nscd_gethostbyaddr_r (const char *addr, int len, int type,
+__nscd_gethostbyaddr_r (const char *addr, size_t len, int type,
 			struct hostent *resultbuf, char *buffer, size_t buflen,
 			int *h_errnop)
 {
