@@ -1,3 +1,9 @@
+2000-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gb18030.c: Don't map to and from positions in ISO
+	10646 which are not yet assigned.
+	Patch by wang shouhua <shouhuawang@redflag-linux.com>.
+
 2000-07-31  Andreas Jaeger  <aj@suse.de>
 
 	* inet/Versions: Remove getipnodebyaddr and friends from
