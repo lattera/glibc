@@ -17,6 +17,13 @@ static const char sccsid[] = "@(#)db_byteorder.c	10.3 (Sleepycat) 6/21/97";
 #include <errno.h>
 #endif
 
+#ifdef HAVE_ENDIAN_H
+# include <endian.h>
+# if BYTE_ORDER == BIG_ENDIAN
+#  define WORDS_BIGENDIAN 1
+# endif
+#endif
+
 #include "db_int.h"
 #include "common_ext.h"
 

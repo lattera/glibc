@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.27 (Sleepycat) 8/23/97";
+static const char sccsid[] = "@(#)db_appinit.c	10.33 (Sleepycat) 8/28/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -43,7 +43,7 @@ static int __db_tmp_open __P((DB_ENV *, char *, int *));
  * db_version --
  *	Return verision information.
  */
-const char *
+char *
 db_version(majverp, minverp, patchp)
 	int *majverp, *minverp, *patchp;
 {
@@ -53,7 +53,7 @@ db_version(majverp, minverp, patchp)
 		*minverp = DB_VERSION_MINOR;
 	if (patchp != NULL)
 		*patchp = DB_VERSION_PATCH;
-	return (DB_VERSION_STRING);
+	return ((char *)DB_VERSION_STRING);
 }
 
 /*
@@ -68,7 +68,7 @@ db_appinit(db_home, db_config, dbenv, flags)
 	int flags;
 {
 	FILE *fp;
-	int i_lock, i_log, i_mpool, i_txn, ret;
+	int ret;
 	char *lp, **p, buf[MAXPATHLEN * 2];
 
 	/* Validate arguments. */
@@ -94,7 +94,6 @@ db_appinit(db_home, db_config, dbenv, flags)
 		return (__db_ferr(dbenv, "db_appinit", 1));
 
 	fp = NULL;
-	i_lock = i_log = i_mpool = i_txn = 0;
 
 	/* Set the database home. */
 	if ((ret = __db_home(dbenv, db_home, flags)) != 0)
@@ -117,6 +116,7 @@ db_appinit(db_home, db_config, dbenv, flags)
 					goto err;
 			}
 			(void)fclose(fp);
+			fp = NULL;
 		}
 	}
 
@@ -152,34 +152,22 @@ db_appinit(db_home, db_config, dbenv, flags)
 #define	DB_DEFPERM	(S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP)
 
 	/* Initialize the subsystems. */
-	if (LF_ISSET(DB_INIT_LOCK)) {
-		if ((ret = lock_open(NULL,
-		    LF_ISSET(DB_CREATE | DB_THREAD),
-		    DB_DEFPERM, dbenv, &dbenv->lk_info)) != 0)
-			goto err;
-		i_lock = 1;
-	}
-	if (LF_ISSET(DB_INIT_LOG)) {
-		if ((ret = log_open(NULL,
-		    LF_ISSET(DB_CREATE | DB_THREAD),
-		    DB_DEFPERM, dbenv, &dbenv->lg_info)) != 0)
-			goto err;
-		i_log = 1;
-	}
-	if (LF_ISSET(DB_INIT_MPOOL)) {
-		if ((ret = memp_open(NULL,
+	if (LF_ISSET(DB_INIT_LOCK) && (ret = lock_open(NULL,
+	    LF_ISSET(DB_CREATE | DB_THREAD),
+	    DB_DEFPERM, dbenv, &dbenv->lk_info)) != 0)
+		goto err;
+	if (LF_ISSET(DB_INIT_LOG) && (ret = log_open(NULL,
+	    LF_ISSET(DB_CREATE | DB_THREAD),
+	    DB_DEFPERM, dbenv, &dbenv->lg_info)) != 0)
+		goto err;
+	if (LF_ISSET(DB_INIT_MPOOL) && (ret = memp_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_MPOOL_PRIVATE | DB_NOMMAP | DB_THREAD),
-		    DB_DEFPERM, dbenv, &dbenv->mp_info)) != 0)
-			goto err;
-		i_mpool = 1;
-	}
-	if (LF_ISSET(DB_INIT_TXN)) {
-		if ((ret = txn_open(NULL,
-		    LF_ISSET(DB_CREATE | DB_THREAD | DB_TXN_NOSYNC),
-		    DB_DEFPERM, dbenv, &dbenv->tx_info)) != 0)
-			goto err;
-		i_txn = 1;
-	}
+	    DB_DEFPERM, dbenv, &dbenv->mp_info)) != 0)
+		goto err;
+	if (LF_ISSET(DB_INIT_TXN) && (ret = txn_open(NULL,
+	    LF_ISSET(DB_CREATE | DB_THREAD | DB_TXN_NOSYNC),
+	    DB_DEFPERM, dbenv, &dbenv->tx_info)) != 0)
+		goto err;
 
 	/* Initialize recovery. */
 	if (LF_ISSET(DB_INIT_TXN)) {
@@ -195,7 +183,7 @@ db_appinit(db_home, db_config, dbenv, flags)
 			goto err;
 	}
 
-	/* Now run recovery if necessary. */
+	/* Run recovery if necessary. */
 	if (LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL) && (ret =
 	    __db_apprec(dbenv, LF_ISSET(DB_RECOVER | DB_RECOVER_FATAL))) != 0)
 		goto err;
@@ -204,14 +192,6 @@ db_appinit(db_home, db_config, dbenv, flags)
 
 err:	if (fp != NULL)
 		(void)fclose(fp);
-	if (i_lock)
-		(void)lock_close(dbenv->lk_info);
-	if (i_log)
-		(void)log_close(dbenv->lg_info);
-	if (i_mpool)
-		(void)memp_close(dbenv->mp_info);
-	if (i_txn)
-		(void)txn_close(dbenv->tx_info);
 
 	(void)db_appexit(dbenv);
 	return (ret);

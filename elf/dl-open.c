@@ -21,6 +21,7 @@
 #include <dlfcn.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <libc-lock.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
@@ -38,6 +39,17 @@ extern char **__environ;
 
 size_t _dl_global_scope_alloc;
 
+
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `_dl_open' and `_dl_close' in dl-close.c.
+
+   This must be a recursive lock since the initializer function of
+   the loaded object might as well require a call to this function.
+   At this time it is not anymore a problem to modify the tables.  */
+__libc_lock_define_initialized_recursive (, _dl_load_lock)
+
+
 struct link_map *
 _dl_open (const char *file, int mode)
 {
@@ -45,11 +57,17 @@ _dl_open (const char *file, int mode)
   ElfW(Addr) init;
   struct r_debug *r;
 
+  /* Make sure we are alone.  */
+  __libc_lock_lock (_dl_load_lock);
+
   /* Load the named object.  */
   new = _dl_map_object (NULL, file, lt_loaded, 0);
   if (new->l_searchlist)
-    /* It was already open.  */
-    return new;
+    {
+      /* It was already open.  */
+      __libc_lock_unlock (_dl_load_lock);
+      return new;
+    }
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0);
@@ -151,6 +169,9 @@ _dl_open (const char *file, int mode)
     /* We must be the static _dl_open in libc.a.  A static program that
        has loaded a dynamic object now has competition.  */
     __libc_multiple_libcs = 1;
+
+  /* Release the lock.  */
+  __libc_lock_unlock (_dl_load_lock);
 
   return new;
 }

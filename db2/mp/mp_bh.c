@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.12 (Sleepycat) 8/20/97";
+static const char sccsid[] = "@(#)mp_bh.c	10.15 (Sleepycat) 8/29/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -23,6 +23,8 @@ static const char sccsid[] = "@(#)mp_bh.c	10.12 (Sleepycat) 8/20/97";
 #include "db_shash.h"
 #include "mp.h"
 #include "common_ext.h"
+
+static int __memp_upgrade __P((DB_MPOOL *, DB_MPOOLFILE *, MPOOLFILE *));
 
 /*
  * __memp_bhwrite --
@@ -48,14 +50,20 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 		*wrotep = 0;
 
 	/*
-	 * Walk the process' DB_MPOOLFILE list and try and find a file
-	 * descriptor for this file.
+	 * Walk the process' DB_MPOOLFILE list and find a file descriptor for
+	 * the file.  We also check that the descriptor is open for writing.
+	 * If we find a descriptor on the file that's not open for writing, we
+	 * try and upgrade it to make it writeable.
 	 */
 	LOCKHANDLE(dbmp, &dbmp->mutex);
 	for (dbmfp = TAILQ_FIRST(&dbmp->dbmfq);
 	    dbmfp != NULL; dbmfp = TAILQ_NEXT(dbmfp, q))
-		if (dbmfp->mfp == mfp)
+		if (dbmfp->mfp == mfp) {
+			if (F_ISSET(dbmfp, MP_READONLY) &&
+			    __memp_upgrade(dbmp, dbmfp, mfp))
+				return (0);
 			break;
+		}
 	UNLOCKHANDLE(dbmp, &dbmp->mutex);
 	if (dbmfp != NULL)
 		goto found;
@@ -80,6 +88,10 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	/*
 	 * Try and open the file; ignore any error, assume it's a permissions
 	 * problem.
+	 *
+	 * XXX
+	 * There's no negative cache here, so we may repeatedly try and open
+	 * files that we have previously tried (and failed) to open.
 	 */
 	dbt.size = mfp->pgcookie_len;
 	dbt.data = ADDR(dbmp, mfp->pgcookie_off);
@@ -434,4 +446,43 @@ __memp_bhfree(dbmp, mfp, bhp, free_mem)
 	 */
 	if (free_mem)
 		__db_shalloc_free(dbmp->addr, bhp);
+}
+
+/*
+ * __memp_upgrade --
+ *	Upgrade a file descriptor from readonly to readwrite.
+ */
+static int
+__memp_upgrade(dbmp, dbmfp, mfp)
+	DB_MPOOL *dbmp;
+	DB_MPOOLFILE *dbmfp;
+	MPOOLFILE *mfp;
+{
+	int fd;
+
+	/*
+	 * !!!
+	 * We expect the handle to already be locked.
+	 */
+
+	/* Check to see if we've already upgraded. */
+	if (F_ISSET(dbmfp, MP_UPGRADE))
+		return (0);
+
+	/* Check to see if we've already failed. */
+	if (F_ISSET(dbmfp, MP_UPGRADE_FAIL))
+		return (1);
+
+	/* Try the open. */
+	if (__db_fdopen(ADDR(dbmp, mfp->path_off), 0, 0, 0, &fd) != 0) {
+		F_SET(dbmfp, MP_UPGRADE_FAIL);
+		return (1);
+	}
+
+	/* Swap the descriptors and set the upgrade flag. */
+	(void)close(dbmfp->fd);
+	dbmfp->fd = fd;
+	F_SET(dbmfp, MP_UPGRADE);
+
+	return (0);
 }

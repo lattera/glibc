@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_recno.c	10.12 (Sleepycat) 8/25/97";
+static const char sccsid[] = "@(#)bt_recno.c	10.15 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -246,7 +246,7 @@ __ram_get(argdbp, txn, key, data, flags)
 	indx = t->bt_csp->indx;
 
 	/* If the record has already been deleted, we couldn't have found it. */
-	if (GET_BKEYDATA(h, indx)->deleted) {
+	if (B_DISSET(GET_BKEYDATA(h, indx)->type)) {
 		ret = DB_KEYEMPTY;
 		goto done;
 	}
@@ -981,7 +981,7 @@ __ram_writeback(dbp)
 				if ((ret =
 				    __db_write(fd, pad, rp->re_len, &nw)) != 0)
 					goto err;
-				if (nw != (ssize_t) rp->re_len) {
+				if (nw != (ssize_t)rp->re_len) {
 					ret = EIO;
 					goto err;
 				}

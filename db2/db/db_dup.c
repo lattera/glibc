@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dup.c	10.8 (Sleepycat) 7/20/97";
+static const char sccsid[] = "@(#)db_dup.c	10.9 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -65,8 +65,7 @@ __db_dput(dbp, dbt, pp, indxp, newfunc)
 	if (dbt->size > 0.25 * dbp->pgsize) {
 		if ((ret = __db_poff(dbp, dbt, &pgno, newfunc)) != 0)
 			return (ret);
-		bo.deleted = 0;
-		bo.type = B_OVERFLOW;
+		B_TSET(bo.type, B_OVERFLOW, 0);
 		bo.tlen = dbt->size;
 		bo.pgno = pgno;
 		hdr_dbt.data = &bo;
@@ -125,7 +124,7 @@ __db_drem(dbp, pp, indx, freefunc)
 	pagep = *pp;
 
 	/* Check if we are freeing a big item. */
-	if (GET_BKEYDATA(pagep, indx)->type == B_OVERFLOW) {
+	if (B_TYPE(GET_BKEYDATA(pagep, indx)->type) == B_OVERFLOW) {
 		if ((ret = __db_doff(dbp,
 		    GET_BOVERFLOW(pagep, indx)->pgno, freefunc)) != 0)
 			return (ret);
@@ -255,7 +254,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 			lastsum = sum;
 			did_indx = 1;
 		}
-		if (GET_BKEYDATA(h, i)->type == B_KEYDATA)
+		if (B_TYPE(GET_BKEYDATA(h, i)->type) == B_KEYDATA)
 			sum += BKEYDATA_SIZE(GET_BKEYDATA(h, i)->len);
 		else
 			sum += BOVERFLOW_SIZE;
@@ -300,7 +299,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 
 	for (nindex = 0, oindex = i + 1; oindex < NUM_ENT(h); oindex++) {
 		bk = GET_BKEYDATA(h, oindex);
-		if (bk->type == B_KEYDATA)
+		if (B_TYPE(bk->type) == B_KEYDATA)
 			s = BKEYDATA_SIZE(bk->len);
 		else
 			s = BOVERFLOW_SIZE;
@@ -316,7 +315,7 @@ __db_dsplit(dbp, hp, indxp, size, newfunc)
 	 */
 	for (nindex = 0, oindex = 0; oindex <= i; oindex++) {
 		bk = GET_BKEYDATA(h, oindex);
-		if (bk->type == B_KEYDATA)
+		if (B_TYPE(bk->type) == B_KEYDATA)
 			s = BKEYDATA_SIZE(bk->len);
 		else
 			s = BOVERFLOW_SIZE;
@@ -474,8 +473,7 @@ __db_pitem(dbp, pagep, indx, nbytes, hdr, data)
 			return (ret);
 
 	if (hdr == NULL) {
-		bk.deleted = 0;
-		bk.type = B_KEYDATA;
+		B_TSET(bk.type, B_KEYDATA, 0);
 		bk.len = data == NULL ? 0 : data->size;
 
 		thdr.data = &bk;

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.24 (Sleepycat) 8/20/97";
+static const char sccsid[] = "@(#)mp_fopen.c	10.25 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -110,7 +110,7 @@ __memp_fopen(dbmp, path,
 			ret = EINVAL;
 			goto err;
 		}
-		dbmfp->path = (char *) TEMPORARY;
+		dbmfp->path = (char *)TEMPORARY;
 		F_SET(dbmfp, MP_PATH_TEMP);
 	} else {
 		/* Calculate the real name for this file. */

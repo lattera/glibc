@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_findckp.c	10.10 (Sleepycat) 7/30/97";
+static const char sccsid[] = "@(#)log_findckp.c	10.11 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -119,7 +119,7 @@ __log_findckp(lp, lsnp)
 			return (ret);
 		if (F_ISSET(lp, DB_AM_THREAD))
 			free(data.data);
-	} 
+	}
 	*lsnp = last_ckp;
 
 	if (verbose)

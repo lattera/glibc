@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_sync.c	10.8 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)mp_sync.c	10.9 (Sleepycat) 8/29/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -167,8 +167,12 @@ memp_fsync(dbmfp)
 	size_t mf_offset;
 	int pincnt, restart, ret, wrote;
 
-	/* We don't sync temporary files -- what's the use? */
-	if (F_ISSET(dbmfp, MP_PATH_TEMP))
+	/*
+	 * If this handle doesn't have a file descriptor that's open for
+	 * writing, or if the file is a temporary, there's no reason to
+	 * proceed further.
+	 */
+	if (F_ISSET(dbmfp, MP_READONLY | MP_PATH_TEMP))
 		return (0);
 
 	dbmp = dbmfp->dbmp;
@@ -199,7 +203,7 @@ retry:	pincnt = 0;
 				goto retry;
 		}
 
-	UNLOCKREGION(dbmp);
+err:	UNLOCKREGION(dbmp);
 
-err:	return (ret == 0 ? (pincnt ? DB_INCOMPLETE : 0) : ret);
+	return (ret == 0 ? (pincnt ? DB_INCOMPLETE : 0) : ret);
 }

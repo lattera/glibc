@@ -388,7 +388,7 @@ rpath-link = $(common-objdir):$(mathobjdir):$(elfobjdir):$(nssobjdir):$(dbobjdir
 mathobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)math)
 elfobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)elf)
 nssobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)nss)
-dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db)
+dbobjdir := $(patsubst ../$(subdir),.,$(common-objpfx)db2)
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif
@@ -537,8 +537,10 @@ ifeq (yes,$(build-shared))
 # The PIC object files are named foo.os.
 object-suffixes += .os
 CPPFLAGS-.os = -DPIC
-CFLAGS-.os = -fPIC -fno-common
+CFLAGS-.os = $(pic-ccflag) -fno-common
 libtype.os := lib%_pic.a
+# This can be changed by a sysdep makefile
+pic-ccflag = -fPIC
 endif
 ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.

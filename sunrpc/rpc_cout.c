@@ -175,7 +175,7 @@ print_prog_header(const proc_list *plist)
 static void
 print_trailer(void)
 {
-	f_print(fout, "\treturn (TRUE);\n");
+	f_print(fout, "\treturn TRUE;\n");
 	f_print(fout, "}\n");
 }
 
@@ -213,7 +213,7 @@ print_ifclose(int indent)
 {
 	f_print(fout, ")) {\n");
 	tabify(fout, indent);
-	f_print(fout, "\t return (FALSE);\n");
+	f_print(fout, "\t return FALSE;\n");
 	tabify(fout, indent);
 	f_print(fout, " }\n");
 }
@@ -377,7 +377,7 @@ emit_union(const definition *def)
 #endif
   } else {
     f_print(fout, "\tdefault:\n");
-    f_print(fout, "\t\treturn (FALSE);\n");
+    f_print(fout, "\t\treturn FALSE;\n");
   }
 
   f_print(fout, "\t}\n");
@@ -444,7 +444,7 @@ emit_struct(definition *def)
 			if(flag == PUT)
 				f_print(fout,"\n\t if (xdrs->x_op == XDR_ENCODE) {\n");
 			else
-				f_print(fout,"\n \t return (TRUE);\n\t} else if (xdrs->x_op == XDR_DECODE) {\n");
+				f_print(fout,"\n \t return TRUE;\n\t} else if (xdrs->x_op == XDR_DECODE) {\n");
 
 
 			i=0;
@@ -583,7 +583,7 @@ emit_struct(definition *def)
 				}
 			flag=GET;
 		}
-		f_print(fout,"\t return(TRUE);\n\t}\n\n");
+		f_print(fout,"\t return TRUE;\n\t}\n\n");
 
 		/* now take care of XDR_FREE case */
 

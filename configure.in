@@ -798,6 +798,17 @@ default) stdio=stdio ;;
 esac
 AC_MSG_RESULT($stdio)
 
+AC_MSG_CHECKING(ldap selection)
+AC_SUBST(LDAP)
+case $add_ons in
+*ldap*)
+   ldap=yes
+   LDAP=ldap ;;
+*) ldap=no
+   LDAP= ;;
+esac
+AC_MSG_RESULT($ldap)
+
 AC_SUBST(libc_cv_slibdir)
 AC_SUBST(libc_cv_sysconfdir)
 AC_SUBST(libc_cv_rootsbindir)

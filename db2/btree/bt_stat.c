@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_stat.c	10.11 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)bt_stat.c	10.12 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -140,6 +140,11 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 	(void)memp_fput(dbp->mpf, meta, 0);
 	(void)__BT_TLPUT(dbp, lock);
 
+	/* Determine the last page of the database. */
+	if ((ret = memp_fget(dbp->mpf, &lastpgno, DB_MPOOL_LAST, &h)) != 0)
+		goto err;
+	(void)memp_fput(dbp->mpf, h, 0);
+
 	/* Get the root page. */
 	pgno = PGNO_ROOT;
 	if ((ret = __bam_lget(dbp, 0, PGNO_ROOT, DB_LOCK_READ, &lock)) != 0)
@@ -152,13 +157,7 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 	/* Get the levels from the root page. */
 	sp->bt_levels = h->level;
 
-	/*
-	 * Determine the last page of the database, then walk it, counting
-	 * things.
-	 */
-	if ((ret = memp_fget(dbp->mpf, &lastpgno, DB_MPOOL_LAST, &h)) != 0)
-		goto err;
-	(void)memp_fput(dbp->mpf, h, 0);
+	/* Walk the page list, counting things. */
 	for (;;) {
 		switch (TYPE(h)) {
 		case P_INVALID:

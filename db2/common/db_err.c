@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_err.c	10.16 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)db_err.c	10.18 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -221,7 +221,7 @@ __db_panic(dbp)
  * __db_fchk --
  *	General flags checking routine.
  *
- * PUBLIC: int __db_fchk __P((DB_ENV *, char *, int, int));
+ * PUBLIC: int __db_fchk __P((DB_ENV *, const char *, int, int));
  */
 int
 __db_fchk(dbenv, name, flags, ok_flags)
@@ -237,7 +237,7 @@ __db_fchk(dbenv, name, flags, ok_flags)
  * __db_fcchk --
  *	General combination flags checking routine.
  *
- * PUBLIC: int __db_fcchk __P((DB_ENV *, char *, int, int, int));
+ * PUBLIC: int __db_fcchk __P((DB_ENV *, const char *, int, int, int));
  */
 int
 __db_fcchk(dbenv, name, flags, flag1, flag2)
@@ -521,7 +521,7 @@ __db_syncchk(dbp, flags)
  * __db_ferr --
  *	Common flag errors.
  *
- * PUBLIC: int __db_ferr __P((const DB_ENV *, char *, int));
+ * PUBLIC: int __db_ferr __P((const DB_ENV *, const char *, int));
  */
 int
 __db_ferr(dbenv, name, combo)

@@ -76,12 +76,13 @@ Use this option if your computer lacks hardware floating-point support.
 @item --prefix=@var{directory}
 Install machine-independent data files in subdirectories of
 @file{@var{directory}}.  (You can also set this in @file{configparms};
-see below.)
+see below.)  The default is to install in `/usr/local'.
 
 @item --exec-prefix=@var{directory}
 Install the library and other machine-dependent files in subdirectories
 of @file{@var{directory}}.  (You can also set this in
-@file{configparms}; see below.)
+@file{configparms}; see below.)  The default is to use <prefix>/bin
+and <prefix>/sbin.
 
 @item --enable-shared
 @itemx --disable-shared
@@ -751,10 +752,12 @@ level of the @file{sysdeps} hierarchy.  This directory contains
 subdirectories (and subdirectory trees) for various Unix variants.
 
 The functions which are system calls in most Unix systems are
-implemented in assembly code in files in @file{sysdeps/unix}.  These
-files are named with a suffix of @samp{.S}; for example,
-@file{__open.S}.  Files ending in @samp{.S} are run through the C
-preprocessor before being fed to the assembler.
+implemented in assembly code, which is generated automatically from
+specifications in the file @file{sysdeps/unix/syscalls.list}.  Some
+special system calls are implemented in files that are named with a
+suffix of @samp{.S}; for example, @file{_exit.S}.  Files ending in
+@samp{.S} are run through the C preprocessor before being fed to the
+assembler.
 
 These files all use a set of macros that should be defined in
 @file{sysdep.h}.  The @file{sysdep.h} file in @file{sysdeps/unix}
@@ -810,16 +813,9 @@ by Douglas C. Schmidt.
 The memory allocation functions @code{malloc}, @code{realloc} and
 @code{free} and related code were written by Michael J. Haertel.
 
-@comment tege's name has an umlaut.
-@tex
-\xdef\SETtege{Torbj\"orn Granlund}
-@end tex
-@ifinfo
-@set tege Torbjorn Granlund
-@end ifinfo
 @item
 Fast implementations of many of the string functions (@code{memcpy},
-@code{strlen}, etc.) were written by @value{tege}.
+@code{strlen}, etc.) were written by Torbj@"orn Granlund.
 
 @item
 The @file{tar.h} header file was written by David J. MacKenzie.
@@ -868,7 +864,7 @@ The floating-point printing function used by @code{printf} and friends
 and the floating-point reading function used by @code{scanf},
 @code{strtod} and friends were written by Ulrich Drepper.  The
 multi-precision integer functions used in those functions are taken from
-GNU MP, which was contributed by @value{tege}.
+GNU MP, which was contributed by Torbj@"orn Granlund.
 
 @item
 The internationalization support in the library, and the support

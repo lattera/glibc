@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_stat.c	8.17 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)db_stat.c	8.20 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -36,16 +36,17 @@ typedef enum { T_NOTSET, T_DB, T_MPOOL, T_TXN } test_t;
 void	bstat __P((DB *));
 DB_ENV *db_init __P((char *, test_t));
 void	hstat __P((DB *));
+int	main __P((int, char *[]));
 void	mstat __P((DB_ENV *));
-void	prflags __P((u_int32_t, const FN *));
 void	onint __P((int));
+void	prflags __P((u_int32_t, const FN *));
 void	tstat __P((DB_ENV *));
 int	txn_compare __P((const void *, const void *));
 void	usage __P((void));
-int	main __P((int, char *[]));
 
 int	 interrupted;
-const char *progname = "db_stat";			/* Program name. */
+const char
+	*progname = "db_stat";				/* Program name. */
 
 int
 main(argc, argv)
@@ -297,7 +298,7 @@ tstat(dbenv)
 	DB_ENV *dbenv;
 {
 	DB_TXN_STAT *tstat;
-	unsigned int i;
+	u_int32_t i;
 	const char *p;
 
 	if (txn_stat(dbenv->tx_info, &tstat, NULL))

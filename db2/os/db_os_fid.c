@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_fid.c	10.7 (Sleepycat) 8/21/97";
+static const char sccsid[] = "@(#)db_os_fid.c	10.8 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -39,9 +39,9 @@ __db_fileid(dbenv, fname, timestamp, fidp)
 	int timestamp;
 	u_int8_t *fidp;
 {
+	size_t i;
 	time_t now;
 	u_int8_t *p;
-	unsigned int i;
 
 #ifdef _WIN32
 	/*

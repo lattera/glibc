@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.37 (Sleepycat) 8/23/97";
+static const char sccsid[] = "@(#)db.c	10.38 (Sleepycat) 9/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -248,9 +248,6 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 		 * that fail, we simply retry without the O_CREAT flag, which
 		 * will require that the meta-data page exist.
 		 */
-#undef	OKFLAGS
-#define	OKFLAGS \
-    DB_CREATE | DB_NOMMAP | DB_RDONLY | DB_THREAD | DB_TRUNCATE
 		retry_cnt = 0;
 open_retry:	if (LF_ISSET(DB_CREATE)) {
 			if ((ret = __db_fdopen(real_name, flags | DB_EXCL,
@@ -308,13 +305,20 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 			}
 			/*
 			 * The only way we can reach here with the DB_CREATE
-			 * flag set is if we created the file.  If we didn't
-			 * create the file, there's a chance that someone else
-			 * is busily doing so.  Sleep and give them a chance,
-			 * because we need the metadata page their going to
-			 * write.
+			 * flag set is if we created the file.  If that's not
+			 * the case, then a) someone else created the file
+			 * but has not yet written out the meta-data page, or
+			 * b) we truncated the file (DB_TRUNCATE) leaving it
+			 * zero-length.  In the case of a), we want to sleep
+			 * and give the file creator some time to write the
+			 * metadata page.  In the case of b), charge forward.
+			 * Note, there is a race in the case of two processes
+			 * opening the file with the DB_TRUNCATE flag set at
+			 * roughly the same time, and they could theoretically
+			 * hurt each other, although it's pretty unlikely.
 			 */
-			if (!LF_ISSET(DB_CREATE) && retry_cnt++ < 3) {
+			if (retry_cnt++ < 3 &&
+			    !LF_ISSET(DB_CREATE | DB_TRUNCATE)) {
 				__db_sleep(1, 0);
 				goto open_retry;
 			}

@@ -1,12 +1,12 @@
 /*
- * @(#)x86.gcc	10.2 (Sleepycat) 6/21/97
+ * @(#)x86.gcc	10.3 (Sleepycat) 8/27/97
  *
  * For gcc/x86, 0 is clear, 1 is set.
  */
 #define	TSL_SET(tsl) ({							\
 	register tsl_t *__l = (tsl);					\
 	int __r;							\
-	asm volatile("movl $1,%%eax; xchgb %1,%%al; xorl $1,%%eax"	\
+	asm volatile("movl $1,%%eax; lock; xchgb %1,%%al; xorl $1,%%eax"\
 	    : "=&a" (__r), "=m" (*__l)					\
 	    : "1" (*__l)						\
 	    );								\

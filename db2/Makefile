@@ -19,7 +19,7 @@
 #
 #	Sub-makefile for libdb.
 #
-#	The code is lifted straight from the db 2.3.4 distribution
+#	The code is lifted straight from the db 2.3.6 distribution
 #	with minimal changes.
 #
 
@@ -90,6 +90,7 @@ $(objpfx)db_checkpoint: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_deadlock: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_dump: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_load: $(objpfx)libdb.so$(libdb.so-version)
+$(objpfx)db_printlog: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_recover: $(objpfx)libdb.so$(libdb.so-version)
 $(objpfx)db_stat: $(objpfx)libdb.so$(libdb.so-version)
 else
@@ -100,6 +101,7 @@ $(objpfx)db_checkpoint: $(objpfx)libdb.a
 $(objpfx)db_deadlock: $(objpfx)libdb.a
 $(objpfx)db_dump: $(objpfx)libdb.a
 $(objpfx)db_load: $(objpfx)libdb.a
+$(objpfx)db_printlog: $(objpfx)libdb.a
 $(objpfx)db_recover: $(objpfx)libdb.a
 $(objpfx)db_stat: $(objpfx)libdb.a
 endif

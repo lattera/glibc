@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_put.c	10.23 (Sleepycat) 8/22/97";
+static const char sccsid[] = "@(#)bt_put.c	10.24 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -120,7 +120,7 @@ retry:	/*
 	 */
 	replace = 0;
 	if (exact && flags == DB_NOOVERWRITE) {
-		if (!GET_BKEYDATA(h, indx + O_INDX)->deleted) {
+		if (!B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type)) {
 			ret = DB_KEYEXIST;
 			goto err;
 		}
@@ -436,16 +436,14 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 	 */
 	bigkey = bigdata = 0;
 	if (LF_ISSET(BI_NEWKEY) && key->size > t->bt_ovflsize) {
-		kbo.deleted = 0;
-		kbo.type = B_OVERFLOW;
+		B_TSET(kbo.type, B_OVERFLOW, 0);
 		kbo.tlen = key->size;
 		if ((ret = __db_poff(dbp, key, &kbo.pgno, __bam_new)) != 0)
 			goto err;
 		bigkey = 1;
 	}
 	if (data->size > t->bt_ovflsize) {
-		dbo.deleted = 0;
-		dbo.type = B_OVERFLOW;
+		B_TSET(dbo.type, B_OVERFLOW, 0);
 		dbo.tlen = data->size;
 		if ((ret = __db_poff(dbp, data, &dbo.pgno, __bam_new)) != 0)
 			goto err;
@@ -472,7 +470,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 		if (op == DB_CURRENT) {
 			bk = GET_BKEYDATA(h,
 			    indx + (TYPE(h) == P_LBTREE ? O_INDX : 0));
-			if (bk->type == B_OVERFLOW)
+			if (B_TYPE(bk->type) == B_OVERFLOW)
 				have_bytes = BOVERFLOW_PSIZE;
 			else
 				have_bytes = BKEYDATA_PSIZE(bk->len);
@@ -492,7 +490,7 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 		 * alignment) and do a delete/insert otherwise.
 		 */
 		if (op == DB_CURRENT && !bigdata &&
-		    bk->type == B_KEYDATA && have_bytes == need_bytes)
+		    B_TYPE(bk->type) == B_KEYDATA && have_bytes == need_bytes)
 			dcopy = 1;
 		if (have_bytes < need_bytes)
 			needed += need_bytes - have_bytes;
@@ -622,9 +620,8 @@ __bam_iitem(dbp, hp, indxp, key, data, op, flags)
 		__data.size = data->size;
 
 		if (LF_ISSET(BI_DELETED)) {
+			B_TSET(__bk.type, B_KEYDATA, 1);
 			__bk.len = __data.size;
-			__bk.deleted = 1;
-			__bk.type = B_KEYDATA;
 			__hdr.data = &__bk;
 			__hdr.size = SSZA(BKEYDATA, data);
 			ret = __db_pitem(dbp, h, indx,
@@ -687,10 +684,10 @@ __bam_ndup(dbp, h, indx)
 		if (indx >= NUM_ENT(h) || h->inp[first] != h->inp[indx])
 			break;
 		bk = GET_BKEYDATA(h, indx);
-		sz += bk->type == B_KEYDATA ?
+		sz += B_TYPE(bk->type) == B_KEYDATA ?
 		    BKEYDATA_PSIZE(bk->len) : BOVERFLOW_PSIZE;
 		bk = GET_BKEYDATA(h, indx + O_INDX);
-		sz += bk->type == B_KEYDATA ?
+		sz += B_TYPE(bk->type) == B_KEYDATA ?
 		    BKEYDATA_PSIZE(bk->len) : BOVERFLOW_PSIZE;
 	}
 
@@ -716,7 +713,7 @@ __bam_ndup(dbp, h, indx)
 		/* Copy the entry to the new page. */
 		bk = GET_BKEYDATA(h, indx);
 		hdr.data = bk;
-		hdr.size = bk->type == B_KEYDATA ?
+		hdr.size = B_TYPE(bk->type) == B_KEYDATA ?
 		    BKEYDATA_SIZE(bk->len) : BOVERFLOW_SIZE;
 		if ((ret =
 		    __db_pitem(dbp, cp, cpindx, hdr.size, &hdr, NULL)) != 0)
@@ -743,8 +740,7 @@ __bam_ndup(dbp, h, indx)
 	}
 
 	/* Put in a new data item that points to the duplicates page. */
-	bo.deleted = 0;
-	bo.type = B_DUPLICATE;
+	B_TSET(bo.type, B_DUPLICATE, 0);
 	bo.pgno = cp->pgno;
 	bo.tlen = 0;
 
@@ -828,14 +824,14 @@ __bam_partial(dbp, dbt, h, indx)
 	 */
 	if (indx < NUM_ENT(h)) {
 		bk = GET_BKEYDATA(h, indx + (TYPE(h) == P_LBTREE ? O_INDX : 0));
-		if (bk->type == B_OVERFLOW) {
+		if (B_TYPE(bk->type) == B_OVERFLOW) {
 			bo = (BOVERFLOW *)bk;
 			nbytes = bo->tlen;
 		} else
 			nbytes = bk->len;
 	} else {
 		bk = &tbk;
-		bk->type = B_KEYDATA;
+		B_TSET(bk->type, B_KEYDATA, 0);
 		nbytes = bk->len = 0;
 	}
 	nbytes += dbt->doff + dbt->size + dbt->dlen;
@@ -856,7 +852,7 @@ __bam_partial(dbp, dbt, h, indx)
 	memset(t->bt_rdata.data, 0, nbytes);
 
 	tlen = 0;
-	if (bk->type == B_OVERFLOW) {
+	if (B_TYPE(bk->type) == B_OVERFLOW) {
 		/* Take up to doff bytes from the record. */
 		memset(&copy, 0, sizeof(copy));
 		if ((ret = __db_goff(dbp, &copy, bo->tlen,

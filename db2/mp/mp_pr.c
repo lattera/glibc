@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_pr.c	10.12 (Sleepycat) 7/29/97";
+static const char sccsid[] = "@(#)mp_pr.c	10.13 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES

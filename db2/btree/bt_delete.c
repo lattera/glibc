@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_delete.c	10.18 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)bt_delete.c	10.21 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -107,7 +107,7 @@ __bam_delete(argdbp, txn, key, flags)
 			break;
 	for (; cnt > 0; --cnt, ++t->lstat.bt_deleted)
 		if (__bam_ca_delete(dbp, h->pgno, indx, NULL) != 0) {
-			GET_BKEYDATA(h, indx + O_INDX)->deleted = 1;
+			B_DSET(GET_BKEYDATA(h, indx + O_INDX)->type);
 			indx += P_INDX;
 		} else if ((ret = __bam_ditem(dbp, h, indx)) != 0 ||
 		    (ret = __bam_ditem(dbp, h, indx)) != 0)
@@ -180,7 +180,7 @@ __ram_delete(argdbp, txn, key, flags)
 	stack = 1;
 
 	/* If the record has already been deleted, we couldn't have found it. */
-	if (GET_BKEYDATA(h, indx)->deleted) {
+	if (B_DISSET(GET_BKEYDATA(h, indx)->type)) {
 		ret = DB_KEYEMPTY;
 		goto done;
 	}
@@ -193,14 +193,13 @@ __ram_delete(argdbp, txn, key, flags)
 		if ((ret = __bam_ditem(dbp, h, indx)) != 0)
 			goto err;
 
-		bk.deleted = 1;
-		bk.type = B_KEYDATA;
+		B_TSET(bk.type, B_KEYDATA, 1);
 		bk.len = 0;
 		memset(&hdr, 0, sizeof(hdr));
 		hdr.data = &bk;
 		hdr.size = SSZA(BKEYDATA, data);
 		memset(&data, 0, sizeof(data));
-		data.data = (char *) "";
+		data.data = (char *)"";
 		data.size = 0;
 		if ((ret = __db_pitem(dbp,
 		    h, indx, BKEYDATA_SIZE(0), &hdr, &data)) != 0)
@@ -263,7 +262,7 @@ __bam_ditem(dbp, h, indx)
 	switch (TYPE(h)) {
 	case P_IBTREE:
 		bi = GET_BINTERNAL(h, indx);
-		switch (bi->type) {
+		switch (B_TYPE(bi->type)) {
 		case B_DUPLICATE:
 		case B_OVERFLOW:
 			nbytes = BINTERNAL_SIZE(bi->len);
@@ -298,14 +297,14 @@ __bam_ditem(dbp, h, indx)
 		/* FALLTHROUGH */
 	case P_LRECNO:
 		bk = GET_BKEYDATA(h, indx);
-		switch (bk->type) {
+		switch (B_TYPE(bk->type)) {
 		case B_DUPLICATE:
 		case B_OVERFLOW:
 			nbytes = BOVERFLOW_SIZE;
 
 offpage:		/* Delete duplicate/offpage chains. */
 			bo = GET_BOVERFLOW(h, indx);
-			if (bo->type == B_DUPLICATE) {
+			if (B_TYPE(bo->type) == B_DUPLICATE) {
 				if ((ret =
 				    __db_ddup(dbp, bo->pgno, __bam_free)) != 0)
 					return (ret);

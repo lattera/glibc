@@ -698,6 +698,11 @@ the processor understands.  But on machines missing these functions, the
 macros above might be rather slow.  So it is best to use the builtin
 operators unless it is necessary to use unordered comparisons.
 
+@strong{Note:} There are no macros @code{isequal} or @code{isunequal}.
+These macros are not necessary since the @w{IEEE 754} standard requires
+that the comparison for equality and unequality do @emph{not} throw an
+exception if one of the arguments is an unordered value.
+
 
 @node Trig Functions
 @section Trigonometric Functions

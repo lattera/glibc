@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.16 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)log_get.c	10.17 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -115,8 +115,8 @@ __log_get(dblp, alsn, dbt, flags, silent)
 	size_t len;
 	ssize_t nr;
 	int cnt, ret;
-	const char *fail;
 	char *np, *tbuf;
+	const char *fail;
 	void *p, *shortp;
 
 	lp = dblp->lp;

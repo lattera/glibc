@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn.c	10.20 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)txn.c	10.24 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 
@@ -80,12 +80,11 @@ static const char sccsid[] = "@(#)txn.c	10.20 (Sleepycat) 8/24/97";
 #include "common_ext.h"
 
 static int __txn_check_running __P((const DB_TXN *));
-
-static int	__txn_create __P((DB_ENV *, const char *, u_int));
-static int	__txn_grow_region __P((DB_TXNMGR *));
-static int	__txn_validate_region __P((DB_TXNMGR *));
-static int      __txn_end __P((DB_TXN *, int));
-static int      __txn_undo __P((DB_TXN *));
+static int __txn_create __P((DB_ENV *, const char *, u_int));
+static int __txn_end __P((DB_TXN *, int));
+static int __txn_grow_region __P((DB_TXNMGR *));
+static int __txn_undo __P((DB_TXN *));
+static int __txn_validate_region __P((DB_TXNMGR *));
 
 /*
  * Create and initialize a transaction region in shared memory.
@@ -622,6 +621,7 @@ txn_checkpoint(mgr, kbytes, minutes)
 	if (minutes != 0 || kbytes != 0)
 		return (0);
 
+do_ckp:
 	if (IS_ZERO_LSN(ckp_lsn)) {
 		dblp = mgr->dbenv->lg_info;
 		LOCK_LOGREGION(dblp);
@@ -633,7 +633,6 @@ txn_checkpoint(mgr, kbytes, minutes)
 	 * We have to find an LSN such that all transactions begun
 	 * before that LSN are complete.
 	 */
-do_ckp:
 	LOCK_TXNREGION(mgr);
 
 	if (!IS_ZERO_LSN(mgr->region->pending_ckp))
@@ -755,8 +754,7 @@ txn_stat(mgr, statp, db_malloc)
 {
 	DB_TXN_STAT *stats;
 	size_t nbytes;
-	u_int32_t nactive;
-	unsigned int i, ndx;
+	u_int32_t i, nactive, ndx;
 
 	LOCK_TXNREGION(mgr);
 	nactive = mgr->region->nbegins -

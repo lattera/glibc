@@ -28,10 +28,12 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
 #endif
 {
         float y;
+#ifndef _IEEE_LIBM
 	if (_LIB_VERSION == _SVID_)
 	  y = __ieee754_lgammaf_r(x,&signgam);
 	else
 	  {
+#endif
 	    int local_signgam;
 	    y = __ieee754_gammaf_r(x,&local_signgam);
 	    if (local_signgam < 0) y = -y;

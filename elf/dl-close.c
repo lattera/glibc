@@ -1,5 +1,5 @@
-/* _dl_close -- Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+/* Close a shared object opened by `_dl_open'.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,13 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <libc-lock.h>
 
+
+/* During the program run we must not modify the global data of
+   loaded shared object simultanously in two threads.  Therefore we
+   protect `dlopen' and `dlclose' in dlclose.c.  */
+__libc_lock_define (extern, _dl_load_lock)
 
 #define LOSE(s) _dl_signal_error (0, map->l_name, s)
 
@@ -36,10 +42,16 @@ _dl_close (struct link_map *map)
   if (map->l_opencount == 0)
     LOSE ("shared object not open");
 
+  /* Acquire the lock.  */
+  __libc_lock_lock (_dl_load_lock);
+
   /* Decrement the reference count.  */
   if (--map->l_opencount > 0 || map->l_type != lt_loaded)
-    /* There are still references to this object.  Do nothing more.  */
-    return;
+    {
+      /* There are still references to this object.  Do nothing more.  */
+      __libc_lock_unlock (_dl_load_lock);
+      return;
+    }
 
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
@@ -114,4 +126,7 @@ _dl_close (struct link_map *map)
   /* Notify the debugger those objects are finalized and gone.  */
   _r_debug.r_state = RT_CONSISTENT;
   _dl_debug_state ();
+
+  /* Release the lock.  */
+  __libc_lock_unlock (_dl_load_lock);
 }

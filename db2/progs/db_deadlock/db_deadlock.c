@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_deadlock.c	10.13 (Sleepycat) 7/20/97";
+static const char sccsid[] = "@(#)db_deadlock.c	10.14 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -33,14 +33,15 @@ static const char sccsid[] = "@(#)db_deadlock.c	10.13 (Sleepycat) 7/20/97";
 #define	BAD_KILLID	0xffffffff
 
 DB_ENV	*db_init __P((char *, int));
+int	 logpid __P((char *, int));
+int	 main __P((int, char *[]));
 void	 onint __P((int));
 void	 siginit __P((void));
 void	 usage __P((void));
-int	 logpid __P((char *, int));
-int	 main __P((int, char *[]));
 
 int	 interrupted;
-const char *progname = "db_deadlock";			/* Program name. */
+const char
+	*progname = "db_deadlock";			/* Program name. */
 
 int
 main(argc, argv)

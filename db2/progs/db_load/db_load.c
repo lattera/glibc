@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_load.c	10.9 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)db_load.c	10.12 (Sleepycat) 8/28/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,11 +19,11 @@ static const char sccsid[] = "@(#)db_load.c	10.9 (Sleepycat) 8/19/97";
 #include <sys/stat.h>
 
 #include <errno.h>
-#include <getopt.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #endif
 
 #include "db_int.h"
@@ -35,11 +35,12 @@ DB_ENV *db_init __P((char *));
 int	dbt_rdump __P((DBT *));
 int	dbt_rprint __P((DBT *));
 int	digitize __P((int));
+int	main __P((int, char *[]));
 void	rheader __P((DBTYPE *, int *, DB_INFO *));
 void	usage __P((void));
-int	main __P((int, char *[]));
 
-const char *progname = "db_load";		/* Program name. */
+const char
+	*progname = "db_load";				/* Program name. */
 
 int
 main(argc, argv)
@@ -273,7 +274,7 @@ rheader(dbtypep, pflagp, dbinfop)
 
 	for (lineno = 1;; ++lineno) {
 		if (fscanf(stdin, "%[^=]=%s\n", name, value) != 2)
-			errx(1, "line %lu: unexpected line", lineno);
+			errx(1, "line %lu: unexpected format", lineno);
 		if (strcmp(name, "HEADER") == 0)
 			break;
 

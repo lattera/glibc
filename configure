@@ -2161,6 +2161,18 @@ default) stdio=stdio ;;
 esac
 echo "$ac_t""$stdio" 1>&6
 
+echo $ac_n "checking ldap selection""... $ac_c" 1>&6
+echo "configure:2166: checking ldap selection" >&5
+
+case $add_ons in
+*ldap*)
+   ldap=yes
+   LDAP=ldap ;;
+*) ldap=no
+   LDAP= ;;
+esac
+echo "$ac_t""$ldap" 1>&6
+
 
 
 
@@ -2381,6 +2393,7 @@ s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
 s%@stdio@%$stdio%g
+s%@LDAP@%$LDAP%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g

@@ -1,4 +1,4 @@
-# @(#)europe	7.45
+# @(#)europe	7.46
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -630,18 +630,18 @@
 # came into force on 16 November.  It restates the dates from the EC
 # seventh Summer Time Directive....
 #
-# From Peter Ilieve <peter@aldie.co.uk> (1997-03-28):
-# The [European] Transport Council discussed the proposed Eighth Directive
-# on 11 March and agreed [to] it, so it moves forward to the next stage,
-# from a Commission proposal to a Common Position....  What this means is:
-#
-# - The eighth directive proposal rules have been accepted.
-#   These are the same as the current rules (last Sunday in March and last
-#   Sunday in October).  The rules will run until 2001.
-#
-# - The French have had their request to abandon summer time turned down.
-#   They have been promised some sort of review in 1999 which might change
-#   the rules for 2000 and 2001.
+# From Peter Ilieve <peter@aldie.co.uk> (1997-08-06):
+# I now have a copy of the ... Eighth Directive 97/44/EC of the European
+# Parliament and of the Council of 22 July 1997 on summer-time arrangements.
+# It runs for 4 years, 1998--2001, and confirms the current rules of
+# last Sunday in March to last Sunday in October....
+# The directive does not apply in overseas territories of the Member States.
+# It says the Commission should produce a proposal for 2002 and beyond
+# by 1 Jan 2000 and this should be adopted by 1 Jan 2001.  I doubt that
+# this will happen though....
+# There is no mention of the French desire to abandon the whole idea.
+# France has had a change of government recently so maybe it will
+# be quietly dropped.
 
 # From Peter Ilieve <peter@memex.co.uk> (1994-03-28):
 # The [GB-Eire] end date of 22 October [1995] conflicts with your current rule
@@ -667,12 +667,12 @@
 # Also, for lack of other data, we'll follow Shanks for Eire in 1940-1948.
 #
 # Given Peter Ilieve's comments, the following claims by Shanks are incorrect:
-#     * Wales did not switch from GMT to daylight savings time until
+#     * Wales did not switch from GMT to daylight saving time until
 #	1921 Apr 3, when they began to conform with the rest of Great Britain.
 # Actually, Wales was identical after 1880.
 #     * Eire had two transitions on 1916 Oct 1.
 # It actually just had one transition.
-#     * Northern Ireland used single daylight savings time throughout WW II.
+#     * Northern Ireland used single daylight saving time throughout WW II.
 # Actually, it conformed to Britain.
 #     * GB-Eire changed standard time to 1 hour ahead of GMT on 1968-02-18.
 # Actually, that date saw the usual switch to summer time.
@@ -681,7 +681,7 @@
 # The following claims by Shanks are possible though doubtful;
 # we'll ignore them for now.
 #     * Jersey, Guernsey, and the Isle of Man did not switch from GMT
-#	to daylight savings time until 1921 Apr 3, when they began to
+#	to daylight saving time until 1921 Apr 3, when they began to
 #	conform with Great Britain.
 #     * Dublin's 1971-10-31 switch was at 02:00, even though London's was 03:00.
 #
@@ -1047,7 +1047,7 @@ Zone	Europe/Sarajevo	1:13:40	-	LMT	1884
 			1:00	-	CET	1941 Apr 18 23:00
 			1:00	C-Eur	CE%sT	1945 May  8  2:00s
 			1:00	1:00	CEST	1945 Sep 16  2:00s
-			1:00	-	CET	1982 Oct 11
+			1:00	-	CET	1982 Nov 27
 			1:00	EU	CE%sT
 
 # Bulgaria
@@ -1073,7 +1073,7 @@ Zone	Europe/Zagreb	1:03:52	-	LMT	1884
 			1:00	-	CET	1941 Apr 18 23:00
 			1:00	C-Eur	CE%sT	1945 May  8  2:00s
 			1:00	1:00	CEST	1945 Sep 16  2:00s
-			1:00	-	CET	1982 Oct 11
+			1:00	-	CET	1982 Nov 27
 			1:00	EU	CE%sT
 
 # Czech Republic
@@ -1572,7 +1572,7 @@ Zone	Europe/Skopje	1:25:44	-	LMT	1884
 			1:00	-	CET	1941 Apr 18 23:00
 			1:00	C-Eur	CE%sT	1945 May  8  2:00s
 			1:00	1:00	CEST	1945 Sep 16  2:00s
-			1:00	-	CET	1982 Oct 11
+			1:00	-	CET	1982 Nov 27
 			1:00	EU	CE%sT
 
 # Malta
@@ -1968,7 +1968,7 @@ Zone Europe/Ljubljana	0:58:04	-	LMT	1884
 			1:00	-	CET	1941 Apr 18 23:00
 			1:00	C-Eur	CE%sT	1945 May  8  2:00s
 			1:00	1:00	CEST	1945 Sep 16  2:00s
-			1:00	-	CET	1982 Oct 11
+			1:00	-	CET	1982 Nov 27
 			1:00	EU	CE%sT
 
 # Spain
@@ -2209,9 +2209,9 @@ Zone	Europe/Belgrade	1:22:00	-	LMT	1884
 			1:00	C-Eur	CE%sT	1945 May  8  2:00s
 			1:00	1:00	CEST	1945 Sep 16  2:00s
 # Metod Kozelj <metod.kozelj@rzs-hm.si> reports that the legal date of
-# transition to EU rules was 1982-10-11, for all of Yugoslavia at the time.
+# transition to EU rules was 1982-11-27, for all of Yugoslavia at the time.
 # Shanks doesn't give as much detail, so go with Kozelj.
-			1:00	-	CET	1982 Oct 11
+			1:00	-	CET	1982 Nov 27
 			1:00	EU	CE%sT
 
 ###############################################################################

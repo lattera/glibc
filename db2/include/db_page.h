@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_page.h	10.10 (Sleepycat) 8/18/97
+ *	@(#)db_page.h	10.11 (Sleepycat) 9/3/97
  */
 
 #ifndef _DB_PAGE_H_
@@ -400,6 +400,24 @@ typedef struct _hoffdup {
 #define	B_OVERFLOW	3	/* Overflow key/data item. */
 
 /*
+ * We have to store a deleted entry flag in the page.   The reason is complex,
+ * but the simple version is that we can't delete on-page items referenced by
+ * a cursor -- the return order of subsequent insertions might be wrong.  The
+ * delete flag is an overload of the top bit of the type byte.
+ */
+#define	B_DELETE	(0x80)
+#define	B_DCLR(t)	(t) &= ~B_DELETE
+#define	B_DSET(t)	(t) |= B_DELETE
+#define	B_DISSET(t)	((t) & B_DELETE)
+
+#define	B_TYPE(t)	((t) & ~B_DELETE)
+#define	B_TSET(t, type, deleted) {					\
+	(t) = (type);							\
+	if (deleted)							\
+		B_DSET(t);						\
+}
+
+/*
  * The first type is B_KEYDATA, represented by the BKEYDATA structure:
  *
  *	+-----------------------------------+
@@ -408,8 +426,7 @@ typedef struct _hoffdup {
  */
 typedef struct _bkeydata {
 	db_indx_t len;		/* 00-01: Key/data item length. */
-	u_int	  deleted :1;	/*    02: Page type and delete flag. */
-	u_int	  type	  :7;
+	u_int8_t  type;		/*    02: Page type AND DELETE FLAG. */
 	u_int8_t  data[1];	/* Variable length key/data item. */
 } BKEYDATA;
 
@@ -438,8 +455,7 @@ typedef struct _bkeydata {
  */
 typedef struct _boverflow {
 	db_indx_t unused1;	/* 00-01: Padding, unused. */
-	u_int     deleted :1;	/*    02: Page type and delete flag. */
-	u_int     type	  :7;
+	u_int8_t  type;		/*    02: Page type AND DELETE FLAG. */
 	u_int8_t  unused2;	/*    03: Padding, unused. */
 	db_pgno_t pgno;		/* 04-07: Next page number. */
 	u_int32_t tlen;		/* 08-11: Total length of item. */
@@ -479,9 +495,8 @@ typedef struct _boverflow {
  *	+-----------------------------------+
  */
 typedef struct _binternal {
-	db_indx_t len;		/* 00-01: Key/data item length. */
-	u_int      deleted :1;	/*    02: Page type and delete flag. */
-	u_int      type	  :7;
+	db_indx_t  len;		/* 00-01: Key/data item length. */
+	u_int8_t   type;	/*    02: Page type AND DELETE FLAG. */
 	u_int8_t   unused;	/*    03: Padding, unused. */
 	db_pgno_t  pgno;	/* 04-07: Page number of referenced page. */
 	db_recno_t nrecs;	/* 08-11: Subtree record count. */

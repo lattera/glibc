@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.14 (Sleepycat) 8/18/97
+ *	@(#)mp.h	10.15 (Sleepycat) 8/29/97
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -161,9 +161,12 @@ struct __db_mpoolfile {
 	void	  *addr;		/* Address of mmap'd region. */
 	size_t	   len;			/* Length of mmap'd region. */
 
-#define	MP_PATH_ALLOC	0x01		/* Path is allocated memory. */
-#define	MP_PATH_TEMP	0x02		/* Backing file is a temporary. */
-#define	MP_READONLY	0x04		/* File is readonly. */
+/* These fields need to be protected for multi-threaded support. */
+#define	MP_PATH_ALLOC	0x001		/* Path is allocated memory. */
+#define	MP_PATH_TEMP	0x002		/* Backing file is a temporary. */
+#define	MP_READONLY	0x004		/* File is readonly. */
+#define	MP_UPGRADE	0x008		/* File descriptor is readwrite. */
+#define	MP_UPGRADE_FAIL	0x010		/* Upgrade wasn't possible. */
 	u_int32_t  flags;
 };
 

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.14 (Sleepycat) 8/17/97";
+static const char sccsid[] = "@(#)db_pr.c	10.16 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -461,12 +461,12 @@ __db_prpage(h, all)
 		case P_LBTREE:
 			bk = GET_BKEYDATA(h, i);
 			deleted = i % 2 == 0 &&
-			    GET_BKEYDATA(h, i + O_INDX)->deleted;
+			    B_DISSET(GET_BKEYDATA(h, i + O_INDX)->type);
 			break;
 		case P_LRECNO:
 		case P_DUPLICATE:
 			bk = GET_BKEYDATA(h, i);
-			deleted = GET_BKEYDATA(h, i)->deleted;
+			deleted = B_DISSET(GET_BKEYDATA(h, i)->type);
 			break;
 		default:
 			fprintf(fp,
@@ -525,7 +525,7 @@ __db_prpage(h, all)
 		case P_IBTREE:
 			fprintf(fp, "count: %4lu pgno: %4lu ",
 			    (u_long)bi->nrecs, (u_long)bi->pgno);
-			switch (bi->type) {
+			switch (B_TYPE(bi->type)) {
 			case B_KEYDATA:
 				__db_pr(bi->data, bi->len);
 				break;
@@ -535,7 +535,7 @@ __db_prpage(h, all)
 				break;
 			default:
 				fprintf(fp, "ILLEGAL BINTERNAL TYPE: %lu\n",
-				    (u_long)bi->type);
+				    (u_long)B_TYPE(bi->type));
 				ret = EINVAL;
 				break;
 			}
@@ -547,7 +547,7 @@ __db_prpage(h, all)
 		case P_LBTREE:
 		case P_LRECNO:
 		case P_DUPLICATE:
-			switch (bk->type) {
+			switch (B_TYPE(bk->type)) {
 			case B_KEYDATA:
 				__db_pr(bk->data, bk->len);
 				break;
@@ -558,7 +558,7 @@ __db_prpage(h, all)
 			default:
 				fprintf(fp,
 			    "ILLEGAL DUPLICATE/LBTREE/LRECNO TYPE: %lu\n",
-				    (u_long)bk->type);
+				    (u_long)B_TYPE(bk->type));
 				ret = EINVAL;
 				break;
 			}
@@ -630,11 +630,11 @@ __db_isbad(h, die)
 			break;
 		case P_IBTREE:
 			bi = GET_BINTERNAL(h, i);
-			if (bi->type != B_KEYDATA &&
-			    bi->type != B_DUPLICATE &&
-			    bi->type != B_OVERFLOW) {
+			if (B_TYPE(bi->type) != B_KEYDATA &&
+			    B_TYPE(bi->type) != B_DUPLICATE &&
+			    B_TYPE(bi->type) != B_OVERFLOW) {
 				fprintf(fp, "ILLEGAL BINTERNAL TYPE: %lu\n",
-				    (u_long)bi->type);
+				    (u_long)B_TYPE(bi->type));
 				goto bad;
 			}
 			break;
@@ -644,12 +644,12 @@ __db_isbad(h, die)
 			break;
 		case P_DUPLICATE:
 			bk = GET_BKEYDATA(h, i);
-			if (bk->type != B_KEYDATA &&
-			    bk->type != B_DUPLICATE &&
-			    bk->type != B_OVERFLOW) {
+			if (B_TYPE(bk->type) != B_KEYDATA &&
+			    B_TYPE(bk->type) != B_DUPLICATE &&
+			    B_TYPE(bk->type) != B_OVERFLOW) {
 				fprintf(fp,
 			    "ILLEGAL DUPLICATE/LBTREE/LRECNO TYPE: %lu\n",
-				    (u_long)bk->type);
+				    (u_long)B_TYPE(bk->type));
 				goto bad;
 			}
 			break;
@@ -713,18 +713,18 @@ __db_proff(vp)
 	void *vp;
 {
 	FILE *fp;
-	BOVERFLOW *p;
+	BOVERFLOW *bo;
 
 	fp = __db_prinit(NULL);
 
-	p = vp;
-	switch (p->type) {
+	bo = vp;
+	switch (B_TYPE(bo->type)) {
 	case B_OVERFLOW:
 		fprintf(fp, "overflow: total len: %4lu page: %4lu\n",
-		    (u_long)p->tlen, (u_long)p->pgno);
+		    (u_long)bo->tlen, (u_long)bo->pgno);
 		break;
 	case B_DUPLICATE:
-		fprintf(fp, "duplicate: page: %4lu\n", (u_long)p->pgno);
+		fprintf(fp, "duplicate: page: %4lu\n", (u_long)bo->pgno);
 		break;
 	}
 }

@@ -42,7 +42,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_dup.c	10.5 (Sleepycat) 7/27/97";
+static const char sccsid[] = "@(#)hash_dup.c	10.6 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 /*
@@ -277,8 +277,7 @@ __ham_dup_convert(hashp, hcp)
 		dndx = 0;
 		memcpy(&ho,
 		    P_ENTRY(hcp->pagep, H_DATAINDEX(hcp->bndx)), HOFFPAGE_SIZE);
-		bo.deleted = 0;
-		bo.type = ho.type;
+		B_TSET(bo.type, ho.type, 0);
 		bo.pgno = ho.pgno;
 		bo.tlen = ho.tlen;
 		dbt.size = BOVERFLOW_SIZE;

@@ -2,7 +2,6 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
 
 /* ...but edited by hand to be used in GNU libc.  */
-#include <endian.h>
 #include <sys/stat.h>		/* To get _STATBUF_ST_BLKSIZE.  */
 
 /* Define to empty if the keyword does not work.  */
@@ -28,11 +27,8 @@
 /* Define if you have the ANSI C header files.  */
 #define STDC_HEADERS 1
 
-/* Define if your processor stores words with the most significant
-   byte first (like Motorola and SPARC, unlike Intel and VAX).  */
-#if __BYTE_ORDER == BIG_ENDIAN
-# define WORDS_BIGENDIAN 1
-#endif
+/* Say we have endian.h.  */
+#define HAVE_ENDIAN_H	1
 
 /* Define to `int' if <sys/types.h> doesn't define.  */
 /* #undef ssize_t */

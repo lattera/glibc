@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_split.c	10.12 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)bt_split.c	10.14 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -394,8 +394,7 @@ __bam_broot(dbp, rootp, lp, rp)
 	 * level of the tree is never used, so it doesn't need to be filled in.
 	 */
 	bi.len = 0;
-	bi.deleted = 0;
-	bi.type = B_KEYDATA;
+	B_TSET(bi.type, B_KEYDATA, 0);
 	bi.pgno = lp->pgno;
 	if (F_ISSET(dbp, DB_BT_RECNUM)) {
 		bi.nrecs = __bam_total(lp);
@@ -405,7 +404,7 @@ __bam_broot(dbp, rootp, lp, rp)
 	hdr.data = &bi;
 	hdr.size = SSZA(BINTERNAL, data);
 	memset(&data, 0, sizeof(data));
-	data.data = (char *) "";
+	data.data = (char *)"";
 	data.size = 0;
 	if ((ret =
 	    __db_pitem(dbp, rootp, 0, BINTERNAL_SIZE(0), &hdr, &data)) != 0)
@@ -417,8 +416,7 @@ __bam_broot(dbp, rootp, lp, rp)
 		child_bi = GET_BINTERNAL(rp, 0);
 
 		bi.len = child_bi->len;
-		bi.deleted = 0;
-		bi.type = child_bi->type;
+		B_TSET(bi.type, child_bi->type, 0);
 		bi.pgno = rp->pgno;
 		if (F_ISSET(dbp, DB_BT_RECNUM)) {
 			bi.nrecs = __bam_total(rp);
@@ -433,18 +431,17 @@ __bam_broot(dbp, rootp, lp, rp)
 			return (ret);
 
 		/* Increment the overflow ref count. */
-		if (child_bi->type == B_OVERFLOW && (ret =
+		if (B_TYPE(child_bi->type) == B_OVERFLOW && (ret =
 		    __db_ioff(dbp, ((BOVERFLOW *)(child_bi->data))->pgno)) != 0)
 			return (ret);
 		break;
 	case P_LBTREE:
 		/* Copy the first key of the child page onto the root page. */
 		child_bk = GET_BKEYDATA(rp, 0);
-		switch (child_bk->type) {
+		switch (B_TYPE(child_bk->type)) {
 		case B_KEYDATA:
 			bi.len = child_bk->len;
-			bi.deleted = 0;
-			bi.type = child_bk->type;
+			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rp->pgno;
 			if (F_ISSET(dbp, DB_BT_RECNUM)) {
 				bi.nrecs = __bam_total(rp);
@@ -461,8 +458,7 @@ __bam_broot(dbp, rootp, lp, rp)
 		case B_DUPLICATE:
 		case B_OVERFLOW:
 			bi.len = BOVERFLOW_SIZE;
-			bi.deleted = 0;
-			bi.type = child_bk->type;
+			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rp->pgno;
 			if (F_ISSET(dbp, DB_BT_RECNUM)) {
 				bi.nrecs = __bam_total(rp);
@@ -477,7 +473,7 @@ __bam_broot(dbp, rootp, lp, rp)
 				return (ret);
 
 			/* Increment the overflow ref count. */
-			if (child_bk->type == B_OVERFLOW && (ret =
+			if (B_TYPE(child_bk->type) == B_OVERFLOW && (ret =
 			    __db_ioff(dbp, ((BOVERFLOW *)child_bk)->pgno)) != 0)
 				return (ret);
 			break;
@@ -594,8 +590,7 @@ __bam_pinsert(dbp, parent, lchild, rchild)
 
 		/* Add a new record for the right page. */
 		bi.len = child_bi->len;
-		bi.deleted = 0;
-		bi.type = child_bi->type;
+		B_TSET(bi.type, child_bi->type, 0);
 		bi.pgno = rchild->pgno;
 		bi.nrecs = nrecs;
 		memset(&hdr, 0, sizeof(hdr));
@@ -609,13 +604,13 @@ __bam_pinsert(dbp, parent, lchild, rchild)
 			return (ret);
 
 		/* Increment the overflow ref count. */
-		if (child_bi->type == B_OVERFLOW && (ret =
+		if (B_TYPE(child_bi->type) == B_OVERFLOW && (ret =
 		    __db_ioff(dbp, ((BOVERFLOW *)(child_bi->data))->pgno)) != 0)
 			return (ret);
 		break;
 	case P_LBTREE:
 		child_bk = GET_BKEYDATA(rchild, 0);
-		switch (child_bk->type) {
+		switch (B_TYPE(child_bk->type)) {
 		case B_KEYDATA:
 			nbytes = BINTERNAL_PSIZE(child_bk->len);
 			nksize = child_bk->len;
@@ -624,7 +619,7 @@ __bam_pinsert(dbp, parent, lchild, rchild)
 			if (ppage->prev_pgno == PGNO_INVALID && off <= 1)
 				goto noprefix;
 			tmp_bk = GET_BKEYDATA(lchild, NUM_ENT(lchild) - P_INDX);
-			if (tmp_bk->type != B_KEYDATA)
+			if (B_TYPE(tmp_bk->type) != B_KEYDATA)
 				goto noprefix;
 			memset(&a, 0, sizeof(a));
 			a.size = tmp_bk->len;
@@ -643,8 +638,7 @@ noprefix:			nksize = child_bk->len;
 				return (DB_NEEDSPLIT);
 
 			bi.len = nksize;
-			bi.deleted = 0;
-			bi.type = child_bk->type;
+			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rchild->pgno;
 			bi.nrecs = nrecs;
 			memset(&hdr, 0, sizeof(hdr));
@@ -665,8 +659,7 @@ noprefix:			nksize = child_bk->len;
 				return (DB_NEEDSPLIT);
 
 			bi.len = BOVERFLOW_SIZE;
-			bi.deleted = 0;
-			bi.type = child_bk->type;
+			B_TSET(bi.type, child_bk->type, 0);
 			bi.pgno = rchild->pgno;
 			bi.nrecs = nrecs;
 			memset(&hdr, 0, sizeof(hdr));
@@ -680,7 +673,7 @@ noprefix:			nksize = child_bk->len;
 				return (ret);
 
 			/* Increment the overflow ref count. */
-			if (child_bk->type == B_OVERFLOW && (ret =
+			if (B_TYPE(child_bk->type) == B_OVERFLOW && (ret =
 			    __db_ioff(dbp, ((BOVERFLOW *)child_bk)->pgno)) != 0)
 				return (ret);
 			break;
@@ -796,21 +789,21 @@ __bam_psplit(dbp, cp, lp, rp, cleft)
 	for (nbytes = 0, off = 0; off < top && nbytes < half; ++off)
 		switch (TYPE(pp)) {
 		case P_IBTREE:
-			if (GET_BINTERNAL(pp, off)->type == B_KEYDATA)
+			if (B_TYPE(GET_BINTERNAL(pp, off)->type) == B_KEYDATA)
 				nbytes +=
 				   BINTERNAL_SIZE(GET_BINTERNAL(pp, off)->len);
 			else
 				nbytes += BINTERNAL_SIZE(BOVERFLOW_SIZE);
 			break;
 		case P_LBTREE:
-			if (GET_BKEYDATA(pp, off)->type == B_KEYDATA)
+			if (B_TYPE(GET_BKEYDATA(pp, off)->type) == B_KEYDATA)
 				nbytes +=
 				    BKEYDATA_SIZE(GET_BKEYDATA(pp, off)->len);
 			else
 				nbytes += BOVERFLOW_SIZE;
 
 			++off;
-			if (GET_BKEYDATA(pp, off)->type == B_KEYDATA)
+			if (B_TYPE(GET_BKEYDATA(pp, off)->type) == B_KEYDATA)
 				nbytes +=
 				    BKEYDATA_SIZE(GET_BKEYDATA(pp, off)->len);
 			else
@@ -832,9 +825,9 @@ sort:	splitp = off;
 	 * it's a big key, try and find something close by that's not.
 	 */
 	if (TYPE(pp) == P_IBTREE)
-		isbigkey = GET_BINTERNAL(pp, off)->type != B_KEYDATA;
+		isbigkey = B_TYPE(GET_BINTERNAL(pp, off)->type) != B_KEYDATA;
 	else if (TYPE(pp) == P_LBTREE)
-		isbigkey = GET_BKEYDATA(pp, off)->type != B_KEYDATA;
+		isbigkey = B_TYPE(GET_BKEYDATA(pp, off)->type) != B_KEYDATA;
 	else
 		isbigkey = 0;
 	if (isbigkey)
@@ -842,8 +835,8 @@ sort:	splitp = off;
 			off = splitp + cnt * adjust;
 			if (off < (db_indx_t)NUM_ENT(pp) &&
 			    ((TYPE(pp) == P_IBTREE &&
-			    GET_BINTERNAL(pp, off)->type == B_KEYDATA) ||
-			    GET_BKEYDATA(pp, off)->type == B_KEYDATA)) {
+			    B_TYPE(GET_BINTERNAL(pp,off)->type) == B_KEYDATA) ||
+			    B_TYPE(GET_BKEYDATA(pp, off)->type) == B_KEYDATA)) {
 				splitp = off;
 				break;
 			}
@@ -851,8 +844,8 @@ sort:	splitp = off;
 				continue;
 			off = splitp - cnt * adjust;
 			if (TYPE(pp) == P_IBTREE ?
-			    GET_BINTERNAL(pp, off)->type == B_KEYDATA :
-			    GET_BKEYDATA(pp, off)->type == B_KEYDATA) {
+			    B_TYPE(GET_BINTERNAL(pp, off)->type) == B_KEYDATA :
+			    B_TYPE(GET_BKEYDATA(pp, off)->type) == B_KEYDATA) {
 				splitp = off;
 				break;
 			}
@@ -915,7 +908,7 @@ __bam_copy(dbp, pp, cp, nxt, stop)
 	for (dup = off = 0; nxt < stop; ++nxt, ++NUM_ENT(cp), ++off) {
 		switch (TYPE(pp)) {
 		case P_IBTREE:
-			if (GET_BINTERNAL(pp, nxt)->type == B_KEYDATA)
+			if (B_TYPE(GET_BINTERNAL(pp, nxt)->type) == B_KEYDATA)
 				nbytes =
 				    BINTERNAL_SIZE(GET_BINTERNAL(pp, nxt)->len);
 			else
@@ -933,7 +926,7 @@ __bam_copy(dbp, pp, cp, nxt, stop)
 			}
 			/* FALLTHROUGH */
 		case P_LRECNO:
-			if (GET_BKEYDATA(pp, nxt)->type == B_KEYDATA)
+			if (B_TYPE(GET_BKEYDATA(pp, nxt)->type) == B_KEYDATA)
 				nbytes =
 				    BKEYDATA_SIZE(GET_BKEYDATA(pp, nxt)->len);
 			else

@@ -1039,6 +1039,12 @@ The @code{bindtextdomain} function can be used several times and if the
 @var{domainname} argument is different the previously boundd domains
 will not be overwritten.
 
+If the program which wish to use @code{bindtextdomain} at some point of
+time use the @code{chdir} function to change the current working
+directory it is important that the @var{dirname} strings ought to be an
+absolute pathname.  Otherwise the addressed directory might vary with
+the time.
+
 If the @var{dirname} parameter is the null pointer @code{bindtextdomain}
 returns the currently selected directory for the domain with the name
 @var{domainname}.

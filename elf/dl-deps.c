@@ -84,7 +84,7 @@ _dl_map_object_deps (struct link_map *map,
 		     int trace_mode)
 {
   struct list known[1 + npreloads + 1];
-  struct list *runp, *head, *utail, *dtail;
+  struct list *runp, *utail, *dtail;
   unsigned int nlist, nduplist, i;
 
   inline void preload (struct link_map *map)
@@ -115,9 +115,6 @@ _dl_map_object_deps (struct link_map *map,
   /* Terminate the lists.  */
   known[nlist - 1].unique = NULL;
   known[nlist - 1].dup = NULL;
-
-  /* Pointer to the first member of the unique and duplicate list.  */
-  head = known;
 
   /* Pointer to last unique object.  */
   utail = &known[nlist - 1];
@@ -300,7 +297,7 @@ _dl_map_object_deps (struct link_map *map,
 			   situation is really not that frequent.  So
 			   we don't use a double-linked list but
 			   instead search for the preceding element.  */
-			late = head;
+			late = known;
 			while (late->unique != orig)
 			  late = late->unique;
 			late->unique = newp;
@@ -361,7 +358,7 @@ _dl_map_object_deps (struct link_map *map,
 		      "cannot allocate symbol search list");
   map->l_nsearchlist = nlist;
 
-  for (nlist = 0, runp = head; runp; runp = runp->unique)
+  for (nlist = 0, runp = known; runp; runp = runp->unique)
     {
       map->l_searchlist[nlist++] = runp->map;
 
@@ -380,7 +377,7 @@ _dl_map_object_deps (struct link_map *map,
 	_dl_signal_error (ENOMEM, map->l_name,
 			  "cannot allocate symbol search list");
 
-      for (nlist = 0, runp = head; runp; runp = runp->dup)
+      for (nlist = 0, runp = known; runp; runp = runp->dup)
 	map->l_dupsearchlist[nlist++] = runp->map;
     }
 }

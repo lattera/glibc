@@ -7,6 +7,9 @@
 # 2.  The usual English name for the country,
 #	chosen so that alphabetic sorting of subsets produces helpful lists.
 #
+# For France in Europe, we follow common practice and use FR,
+# even though FX might be more technically correct.
+#
 # Columns are separated by a single tab.
 # The table is sorted by country code.
 #
@@ -86,6 +89,7 @@ FK	Falkland Islands
 FM	Micronesia
 FO	Faeroe Islands
 FR	France
+FX	France, Metropolitan
 GA	Gabon
 GB	Britain (UK)
 GD	Grenada

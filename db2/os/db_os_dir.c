@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_os_dir.c	10.7 (Sleepycat) 8/23/97";
+static const char sccsid[] = "@(#)db_os_dir.c	10.8 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -45,7 +45,7 @@ static const char sccsid[] = "@(#)db_os_dir.c	10.7 (Sleepycat) 8/23/97";
  * __db_dir --
  *	Return a list of the files in a directory.
  *
- * PUBLIC: int __db_dir __P((DB_ENV *, char *, char ***, int *));
+ * PUBLIC: int __db_dir __P((DB_ENV *, const char *, char ***, int *));
  */
 int
 __db_dir(dbenv, dir, namesp, cntp)
@@ -61,7 +61,7 @@ __db_dir(dbenv, dir, namesp, cntp)
 	long dirhandle;
 	int finished;
 
-	if ((dirhandle = _findfirst(dir,&fdata)) == -1) {
+	if ((dirhandle = _findfirst(dir, &fdata)) == -1) {
 		__db_err(dbenv, "%s: %s", dir, strerror(errno));
 		return (errno);
 	}

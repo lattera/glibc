@@ -46,6 +46,8 @@ stdio = @stdio@
 add-ons = @subdirs@
 cross-compiling = @cross_compiling@
 
+LDAP = @LDAP@
+
 # Build tools.
 CC = @CC@
 BUILD_CC = @BUILD_CC@

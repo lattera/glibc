@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump.c	10.13 (Sleepycat) 8/19/97";
+static const char sccsid[] = "@(#)db_dump.c	10.16 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,10 +19,10 @@ static const char sccsid[] = "@(#)db_dump.c	10.13 (Sleepycat) 8/19/97";
 
 #include <ctype.h>
 #include <errno.h>
-#include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #endif
 
 #include "db_int.h"
@@ -35,11 +35,12 @@ void	configure __P((char *));
 DB_ENV *db_init __P((char *));
 void	dbt_dump __P((DBT *));
 void	dbt_print __P((DBT *));
+int	main __P((int, char *[]));
 void	pheader __P((DB *, int));
 void	usage __P((void));
-int	main __P((int, char *[]));
 
-const char *progname = "db_dump";		/* Program name. */
+const char
+	*progname = "db_dump";				/* Program name. */
 
 int
 main(argc, argv)

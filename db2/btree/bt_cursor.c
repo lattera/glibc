@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_cursor.c	10.26 (Sleepycat) 8/24/97";
+static const char sccsid[] = "@(#)bt_cursor.c	10.27 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -201,9 +201,9 @@ __bam_c_del(dbc, flags)
 
 	/* Set the intent-to-delete flag on the page and in all cursors. */
 	if (cp->dpgno == PGNO_INVALID)
-		GET_BKEYDATA(h, indx + O_INDX)->deleted = 1;
+		B_DSET(GET_BKEYDATA(h, indx + O_INDX)->type);
 	else
-		GET_BKEYDATA(h, indx)->deleted = 1;
+		B_DSET(GET_BKEYDATA(h, indx)->type);
 	(void)__bam_ca_delete(dbp, pgno, indx, NULL);
 
 	ret = memp_fput(dbp->mpf, h, DB_MPOOL_DIRTY);
@@ -643,7 +643,7 @@ __bam_c_first(dbp, cp)
 
 	/* If it's an empty page or a deleted record, go to the next one. */
 	if (NUM_ENT(cp->page) == 0 ||
-	    GET_BKEYDATA(cp->page, cp->indx + O_INDX)->deleted)
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->indx + O_INDX)->type))
 		if ((ret = __bam_c_next(dbp, cp, 0)) != 0)
 			return (ret);
 
@@ -653,7 +653,7 @@ __bam_c_first(dbp, cp)
 
 	/* If it's a deleted record, go to the next one. */
 	if (cp->dpgno != PGNO_INVALID &&
-	    GET_BKEYDATA(cp->page, cp->dindx)->deleted)
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->dindx)->type))
 		if ((ret = __bam_c_next(dbp, cp, 0)) != 0)
 			return (ret);
 	return (0);
@@ -694,7 +694,7 @@ __bam_c_last(dbp, cp)
 
 	/* If it's an empty page or a deleted record, go to the previous one. */
 	if (NUM_ENT(cp->page) == 0 ||
-	    GET_BKEYDATA(cp->page, cp->indx + O_INDX)->deleted)
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->indx + O_INDX)->type))
 		if ((ret = __bam_c_prev(dbp, cp)) != 0)
 			return (ret);
 
@@ -704,7 +704,7 @@ __bam_c_last(dbp, cp)
 
 	/* If it's a deleted record, go to the previous one. */
 	if (cp->dpgno != PGNO_INVALID &&
-	    GET_BKEYDATA(cp->page, cp->dindx)->deleted)
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->dindx)->type))
 		if ((ret = __bam_c_prev(dbp, cp)) != 0)
 			return (ret);
 	return (0);
@@ -793,9 +793,9 @@ __bam_c_next(dbp, cp, initial_move)
 		/* Ignore deleted records. */
 		if (dbp->type == DB_BTREE &&
 		    ((cp->dpgno == PGNO_INVALID &&
-		    GET_BKEYDATA(cp->page, indx + O_INDX)->deleted) ||
+		    B_DISSET(GET_BKEYDATA(cp->page, indx + O_INDX)->type)) ||
 		    (cp->dpgno != PGNO_INVALID &&
-		    GET_BKEYDATA(cp->page, indx)->deleted))) {
+		    B_DISSET(GET_BKEYDATA(cp->page, indx)->type)))) {
 			indx += adjust;
 			continue;
 		}
@@ -908,9 +908,9 @@ __bam_c_prev(dbp, cp)
 		indx -= adjust;
 		if (dbp->type == DB_BTREE &&
 		    ((cp->dpgno == PGNO_INVALID &&
-		    GET_BKEYDATA(cp->page, indx + O_INDX)->deleted) ||
+		    B_DISSET(GET_BKEYDATA(cp->page, indx + O_INDX)->type)) ||
 		    (cp->dpgno != PGNO_INVALID &&
-		    GET_BKEYDATA(cp->page, indx)->deleted)))
+		    B_DISSET(GET_BKEYDATA(cp->page, indx)->type))))
 			continue;
 
 		/*
@@ -997,7 +997,7 @@ __bam_c_search(dbp, cp, key, flags, isrecno, exactp)
 
 	/* If it's a deleted record, go to the next or previous one. */
 	if (cp->dpgno != PGNO_INVALID &&
-	    GET_BKEYDATA(cp->page, cp->dindx)->deleted)
+	    B_DISSET(GET_BKEYDATA(cp->page, cp->dindx)->type))
 		if (flags == S_KEYLAST) {
 			if ((ret = __bam_c_prev(dbp, cp)) != 0)
 				return (ret);
@@ -1027,7 +1027,7 @@ __bam_ovfl_chk(dbp, cp, indx, to_end)
 
 	/* Check for an overflow entry. */
 	bo = GET_BOVERFLOW(cp->page, indx);
-	if (bo->type != B_DUPLICATE)
+	if (B_TYPE(bo->type) != B_DUPLICATE)
 		return (0);
 
 	/*

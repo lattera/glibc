@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_archive.c	10.12 (Sleepycat) 7/25/97";
+static const char sccsid[] = "@(#)db_archive.c	10.15 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -34,12 +34,13 @@ static const char sccsid[] = "@(#)db_archive.c	10.12 (Sleepycat) 7/25/97";
 
 DB_ENV	*db_init __P((char *, int));
 void	 onint __P((int));
+int	 main __P((int, char *[]));
 void	 siginit __P((void));
 void	 usage __P((void));
-int	 main __P((int, char *[]));
 
 int	 interrupted;
-const char *progname = "db_archive";			/* Program name. */
+const char
+	*progname = "db_archive";			/* Program name. */
 
 int
 main(argc, argv)

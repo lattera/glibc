@@ -40,7 +40,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn_rec.c	10.4 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)txn_rec.c	10.5 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -127,5 +127,5 @@ __txn_ckp_recover(logp, dbtp, lsnp, redo, info)
 
 	*lsnp = argp->last_ckp;
 	free(argp);
-	return (1);
+	return (DB_TXN_CKP);
 }

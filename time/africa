@@ -1,4 +1,4 @@
-# @(#)africa	7.18
+# @(#)africa	7.19
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -26,85 +26,6 @@
 # A reliable and entertaining source about time zones is
 # Derek Howse, Greenwich time and the discovery of the longitude,
 # Oxford University Press (1980).
-#
-# I added so many Zone names that the old, mostly flat name space was unwieldy.
-# So I renamed the Zones to have the form AREA/LOCATION, where
-# AREA is the name of a continent or ocean, and
-# LOCATION is the name of a specific location within that region.
-# For example, the old zone name `Egypt' is now `Africa/Cairo'.
-#
-# Here are the general rules I used for choosing location names,
-# in decreasing order of importance:
-#
-#	Use only valid Posix file names.  Use only Ascii letters, digits, `.',
-#		`-' and `_'.  Do not exceed 14 characters or start with `-'.
-#		E.g. prefer `Brunei' to `Bandar_Seri_Begawan'.
-#	Include at least one location per time zone rule set per country.
-#		One such location is enough.
-#	If all the clocks in a country's region have agreed since 1970,
-#		don't bother to include more than one location
-#		even if subregions' clocks disagreed before 1970.
-#		Otherwise these tables would become annoyingly large.
-#	If a name is ambiguous, use a less ambiguous alternative;
-#		e.g. many cities are named San Jose and Georgetown, so
-#		prefer `Costa_Rica' to `San_Jose' and `Guyana' to `Georgetown'.
-#	Keep locations compact.  Use cities or small islands, not countries
-#		or regions, so that any future time zone changes do not split
-#		locations into different time zones.  E.g. prefer `Paris'
-#		to `France', since France has had multiple time zones.
-#	Use traditional English spelling, e.g. prefer `Rome' to `Roma', and
-#		prefer `Athens' to the true name (which uses Greek letters).
-#		The Posix file name restrictions encourage this rule.
-#	Use the most populous among locations in a country's time zone,
-#		e.g. prefer `Shanghai' to `Beijing'.  Among locations with
-#		similar populations, pick the best-known location,
-#		e.g. prefer `Rome' to `Milan'.
-#	Use the singular form, e.g. prefer `Canary' to `Canaries'.
-#	Omit common suffixes like `_Islands' and `_City', unless that
-#		would lead to ambiguity.  E.g. prefer `Cayman' to
-#		`Cayman_Islands' and `Guatemala' to `Guatemala_City',
-#		but prefer `Mexico_City' to `Mexico' because the country
-#		of Mexico has several time zones.
-#	Use `_' to represent a space.
-#	Omit `.' from abbreviations in names, e.g. prefer `St_Helena'
-#		to `St._Helena'.
-#
-# For time zone abbreviations like `EST' I used the following rules,
-# in decreasing order of importance:
-#
-#	Use abbreviations that consist of 3 or more upper-case Ascii letters,
-#		except use "___" for locations while uninhabited.
-#		Posix.1 requires at least 3 characters, and the restriction to
-#		upper-case Ascii letters follows most traditions.
-#		Previous editions of this database also used characters like
-#		' ' and '?', but these characters have a special meaning to
-#		the shell and cause commands like
-#			set `date`
-#		to have unexpected effects.  In theory, the character set could
-#		be !%./@A-Z^_a-z{}, but these tables use only upper-case
-#		Ascii letters (and "___").
-#	Use abbreviations that are in common use among English-speakers,
-#		e.g. `EST' for Eastern Standard Time in North America.
-#		We assume that applications translate them to other languages
-#		as part of the normal localization process; for example,
-#		a French application might translate `EST' to `HNE'.
-#	For zones whose times are taken from a city's longitude, use the
-#		traditional xMT notation, e.g. `PMT' for Paris Mean Time.
-#		The only name like this in current use is `GMT'.
-#	If there is no common English abbreviation, abbreviate the English
-#		translation of the usual phrase used by native speakers.
-#		If this is not available or is a phrase mentioning the country
-#		(e.g. ``Cape Verde Time''), then:
-#
-#		When a country has a single or principal time zone region,
-#			append `T' to the country's ISO	code, e.g. `CVT' for
-#			Cape Verde Time.  For summer time append `ST';
-#			for double summer time append `DST'; etc.
-#		When a country has multiple time zones, take the first three
-#			letters of an English place name identifying each zone
-#			and then append `T', `ST', etc. as before;
-#			e.g. `MOSST' for MOScow Summer Time.
-#
 #
 # For Africa I invented the following time zone abbreviations.
 #		LMT	Local Mean Time

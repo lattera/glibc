@@ -107,6 +107,7 @@ CFLAGS-xrusers.c = -Wno-unused
 CFLAGS-xspray.c = -Wno-unused
 CFLAGS-xnfs_prot.c = -Wno-unused
 CFLAGS-xrquota.c = -Wno-unused
+CFLAGS-xkey_prot.c = -Wno-unused
 
 include ../Rules
 

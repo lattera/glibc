@@ -49,3 +49,10 @@ DEF_STDFILE(_IO_stderr_, 2, &_IO_stdout_.file,
             _IO_NO_READS+_IO_UNBUFFERED);
 
 _IO_FILE *_IO_list_all = &_IO_stderr_.file;
+
+#ifdef _G_USING_THUNKS
+#if defined(__GNUC__) && __GNUC__ >= 2
+const
+#endif
+int _libio_using_thunks = 1;
+#endif

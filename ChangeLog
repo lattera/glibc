@@ -1,3 +1,158 @@
+1997-09-05 03:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (subdirs): Reorganize order so that nss follows add-ons.
+	* config.make.in (LDAP): Add.
+	* configure.in: Prepare for ldap add-on.
+	* shlib-versions: Add version numbers for ldap NSS module.
+	* nss/Makefile: Add rules to build ldap NSS module.
+
+	* db/btree/bt_page.c (__bt_free): Update meta data information.
+
+	Update db from db-2.3.6.
+	* db2/db.h: Updated.
+	* db2/btree/bt_close.c: Updated.
+	* db2/btree/bt_compare.c: Updated.
+	* db2/btree/bt_conv.c: Updated.
+	* db2/btree/bt_cursor.c: Updated.
+	* db2/btree/bt_delete.c: Updated.
+	* db2/btree/bt_put.c: Updated.
+	* db2/btree/bt_rec.c: Updated.
+	* db2/btree/bt_recno.c: Updated.
+	* db2/btree/bt_search.c: Updated.
+	* db2/btree/bt_split.c: Updated.
+	* db2/btree/bt_stat.c: Updated.
+	* db2/common/db_appinit.c: Updated.
+	* db2/common/db_apprec.c: Updated.
+	* db2/common/db_byteorder.c: Updated.
+	* db2/common/db_err.c: Updated.
+	* db2/common/db_region.c: Updated.
+	* db2/db/db.c: Updated.
+	* db2/db/db_conv.c: Updated.
+	* db2/db/db_dup.c: Updated.
+	* db2/db/db_pr.c: Updated.
+	* db2/db/db_ret.c: Updated.
+	* db2/db185/db185.c: Updated.
+	* db2/dbm/dbm.c: Updated.
+	* db2/hash/hash_dup.c: Updated.
+	* db2/include/db_am.h: Updated.
+	* db2/include/db_page.h: Updated.
+	* db2/include/mp.h: Updated.
+	* db2/include/queue.h: Updated.
+	* db2/log/log.c: Updated.
+	* db2/log/log_findckp.c: Updated.
+	* db2/log/log_get.c: Updated.
+	* db2/log/log_rec.c: Updated.
+	* db2/mp/mp_bh.c: Updated.
+	* db2/mp/mp_fopen.c: Updated.
+	* db2/mp/mp_pr.c: Updated.
+	* db2/mp/mp_sync.c: Updated.
+	* db2/mutex/x86.gcc: Updated.
+	* db2/os/db_os_dir.c: Updated.
+	* db2/os/db_os_fid.c: Updated.
+	* db2/progs/db_archive/db_archive.c: Updated.
+	* db2/progs/db_checkpoint/db_checkpoint.c: Updated.
+	* db2/progs/db_deadlock/db_deadlock.c: Updated.
+	* db2/progs/db_dump/db_dump.c: Updated.
+	* db2/progs/db_dump185/db_dump185.c: Updated.
+	* db2/progs/db_load/db_load.c: Updated.
+	* db2/progs/db_printlog/db_printlog.c: Updated.
+	* db2/progs/db_recover/db_recover.c: Updated.
+	* db2/progs/db_stat/db_stat.c: Updated.
+	* db2/txn/txn.c: Updated.
+	* db2/txn/txn_rec.c: Updated.
+
+	* db2/Makefile: Add rule to build db_printlog.
+	* db2/config.h: Don't include endian.h and don't define
+	WORDS_BIGENDIAN.  Only define HAVE_ENDIAN_H.
+
+	* elf/dl-open.c (_dl_open): Make thread-safe.
+	* elf/dl-close.c (_dl_close): Likewise.
+	* elf/dlclose.c: Pretty print.
+	* elf/dl-version.c (make_string): Use __strdup not strdup.
+	(find_needed): Don't use l_searchlist of _dl_loaded, use the
+	l_next list.
+	* elf/dl-deps.c (_dl_map_object_deps): Remove variable head.
+
+	* manual/math.texi: Add note about == and != for FP values.
+	* manual/message.texi: Mention problems with relative paths and
+	binstextdomain.
+	* manual/string.texi: Mark strdupa and strndupa correctly as macros.
+
+	* sunrpc/Makefile (CFLAGS-xkey_prot.c): Define to prevent warnings.
+	* sunrpc/rpc_cout.c: Avoid needless races around return value.
+
+	* sysdeps/generic/stpcpy.c: Include <config.h> if wanted.
+
+	Update from tzdata-1997h.
+	* time/africa: Updated.
+	* time/europe: Updated.
+	* time/iso3166.tab: Updated.
+	* time/northamerica: Updated.
+	* time/southamerica: Updated.
+	* time/zone.tab: Updated.
+
+1997-09-04 13:19  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/w_sqrt.S: Removed.
+	* sysdeps/alpha/fpu/e_sqrt.c: New.  Obey -mieee and -mieee-with-inexact
+	and build a version that is as fast as possible given the constraint.
+
+1997-08-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/maint.texi: Document some defaults for configuration
+	parameters.
+
+1997-09-04 15:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* termios/cfsetspeed.c (cfsetspeed): Change return value to int.
+	* termios/termios.h: Change prototype accordingly.
+	Reported by Andreas Jaeger <aj@arthur.rhein-neckar.de>.
+
+1997-07-26 14:42  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/stdfiles.c (_libio_using_thunks): Define if
+	_G_USING_THUNKS is defined.
+
+	* libio/_G_config.h: Moved to ...
+	* sysdeps/generic/_G_config.h: ...here.
+
+	* sysdeps/unix/sysv/linux/_G_config.h: New,
+	Add vtable thunks support.
+
+1997-09-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/Makefile (pic-ccflag): Override it for more
+	efficient code (together with a change in gcc).
+
+	* Makeconfig (pic-ccflag): New variable.
+	(CFLAGS-.os): Use it instead of hardcoding -fPIC.
+
+1997-09-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_load_address): Use
+	_dl_start instead of a local label, to avoid getting an unreadable
+	label name.
+
+1997-09-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/Makefile ($(objpfx)libnss_db.so): Use $(dbobjdir) to find
+	libdb.so.
+
+	* Makeconfig (dbobjdir): Use db2.
+
+1997-08-31  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/maint.texi (Porting to Unix): Update description of the
+	implementation of Unix system calls.
+	(Contributors): Use real umlaut in tege's name.
+
+1997-08-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/w_gamma.c: Make compilable with
+	_IEEE_LIBM.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+
 1997-08-29 21:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/auth_des.c: New file.  Copied from former secure_rpc add-on.

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_printlog.c	10.8 (Sleepycat) 7/15/97";
+static const char sccsid[] = "@(#)db_printlog.c	10.10 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,11 +35,13 @@ static const char sccsid[] = "@(#)db_printlog.c	10.8 (Sleepycat) 7/15/97";
 #include "clib_ext.h"
 
 DB_ENV *db_init __P((char *));
+int	main __P((int, char *[]));
 void	onint __P((int));
 void	usage __P((void));
 
 int	 interrupted;
-char	*progname = "db_printlog";			/* Program name. */
+const char
+	*progname = "db_printlog";			/* Program name. */
 
 int
 main(argc, argv)
@@ -114,7 +116,7 @@ main(argc, argv)
 		(void)raise(SIGINT);
 		/* NOTREACHED */
 	}
-	exit (eval);
+	return (eval);
 }
 
 /*

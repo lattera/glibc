@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_search.c	10.6 (Sleepycat) 8/22/97";
+static const char sccsid[] = "@(#)bt_search.c	10.7 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -258,17 +258,17 @@ match:	*exactp = 1;
 	 */
 	if (LF_ISSET(S_DELNO)) {
 		if (LF_ISSET(S_DUPLAST))
-			while (GET_BKEYDATA(h, indx + O_INDX)->deleted &&
+			while (B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type) &&
 			    indx > 0 &&
 			    h->inp[indx] == h->inp[indx - P_INDX])
 				indx -= P_INDX;
 		else
-			while (GET_BKEYDATA(h, indx + O_INDX)->deleted &&
+			while (B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type) &&
 			    indx < (db_indx_t)(NUM_ENT(h) - P_INDX) &&
 			    h->inp[indx] == h->inp[indx + P_INDX])
 				indx += P_INDX;
 
-		if (GET_BKEYDATA(h, indx + O_INDX)->deleted)
+		if (B_DISSET(GET_BKEYDATA(h, indx + O_INDX)->type))
 			goto notfound;
 	}
 

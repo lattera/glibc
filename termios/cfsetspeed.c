@@ -102,7 +102,7 @@ static struct speed_struct
 
 
 /* Set both the input and output baud rates stored in *TERMIOS_P to SPEED.  */
-void
+int
 cfsetspeed (struct termios *termios_p, speed_t speed)
 {
   size_t cnt;
@@ -112,14 +112,16 @@ cfsetspeed (struct termios *termios_p, speed_t speed)
       {
 	cfsetispeed (termios_p, speed);
 	cfsetospeed (termios_p, speed);
-	return;
+	return 0;
       }
     else if (speed == speeds[cnt].value)
       {
 	cfsetispeed (termios_p, speeds[cnt].internal);
 	cfsetospeed (termios_p, speeds[cnt].internal);
-	return;
+	return 0;
       }
 
   __set_errno (EINVAL);
+
+  return -1;
 }

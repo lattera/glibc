@@ -40,7 +40,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_rec.c	10.11 (Sleepycat) 8/20/97";
+static const char sccsid[] = "@(#)log_rec.c	10.13 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -59,7 +59,7 @@ static const char sccsid[] = "@(#)log_rec.c	10.11 (Sleepycat) 8/20/97";
 #include "db_dispatch.h"
 #include "common_ext.h"
 
-static int __log_open_file __P((DB_LOG *, 
+static int __log_open_file __P((DB_LOG *,
     u_int8_t *, char *, DBTYPE, u_int32_t));
 
 /*
@@ -132,10 +132,16 @@ __log_unregister_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = __log_unregister_read(dbtp->data, &argp)) != 0)
 		goto out;
 
+	/*
+	 * If the file is deleted, then we can just ignore this close.
+	 * Otherwise, we'd better have a valid dbp that we should either
+	 * close or whose reference count should be decremented.
+	 */
 	LOCK_LOGTHREAD(logp);
-	if (logp->dbentry[argp->id].dbp == NULL)
-		ret = EINVAL;
-	else if (--logp->dbentry[argp->id].refcount == 0) {
+	if (logp->dbentry[argp->id].dbp == NULL) {
+		if (!logp->dbentry[argp->id].deleted)
+			ret = EINVAL;
+	} else if (--logp->dbentry[argp->id].refcount == 0) {
 		ret = logp->dbentry[argp->id].dbp->close(
 		    logp->dbentry[argp->id].dbp, 0);
 		logp->dbentry[argp->id].dbp = NULL;

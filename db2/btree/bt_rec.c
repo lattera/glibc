@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_rec.c	10.11 (Sleepycat) 8/22/97";
+static const char sccsid[] = "@(#)bt_rec.c	10.13 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -60,7 +60,7 @@ __bam_pg_alloc_recover(logp, dbtp, lsnp, redo, info)
 	 * Fix up the allocated page.  If we're redoing the operation, we have
 	 * to get the page (creating it if it doesn't exist), and update its
 	 * LSN.  If we're undoing the operation, we have to reset the page's
-	 * LSN and put it on the free list.  
+	 * LSN and put it on the free list.
 	 *
 	 * Fix up the metadata page.  If we're redoing the operation, we have
 	 * to get the metadata page and update its LSN and its free pointer.
@@ -749,13 +749,13 @@ __bam_cdel_recover(logp, dbtp, lsnp, redo, info)
 	cmp_p = log_compare(&LSN(pagep), &argp->lsn);
 	if (cmp_p == 0 && redo) {
 		/* Need to redo update described. */
-		GET_BKEYDATA(pagep, argp->indx + O_INDX)->deleted = 1;
+		B_DSET(GET_BKEYDATA(pagep, argp->indx + O_INDX)->type);
 
 		LSN(pagep) = *lsnp;
 		modified = 1;
 	} else if (cmp_n == 0 && !redo) {
 		/* Need to undo update described. */
-		GET_BKEYDATA(pagep, argp->indx + O_INDX)->deleted = 0;
+		B_DCLR(GET_BKEYDATA(pagep, argp->indx + O_INDX)->type);
 
 		LSN(pagep) = argp->lsn;
 		modified = 1;

@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_conv.c	10.4 (Sleepycat) 8/15/97";
+static const char sccsid[] = "@(#)db_conv.c	10.5 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -145,7 +145,7 @@ __db_convert(pg, pp, pgin)
 				M_16_SWAP(h->inp[i]);
 
 			bk = GET_BKEYDATA(h, i);
-			switch (bk->type) {
+			switch (B_TYPE(bk->type)) {
 			case B_KEYDATA:
 				M_16_SWAP(bk->len);
 				break;
@@ -167,7 +167,7 @@ __db_convert(pg, pp, pgin)
 				M_16_SWAP(h->inp[i]);
 
 			bi = GET_BINTERNAL(h, i);
-			switch (bi->type) {
+			switch (B_TYPE(bi->type)) {
 			case B_KEYDATA:
 				M_16_SWAP(bi->len);
 				M_32_SWAP(bi->pgno);

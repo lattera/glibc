@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_region.c	10.12 (Sleepycat) 7/26/97";
+static const char sccsid[] = "@(#)db_region.c	10.13 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -229,7 +229,7 @@ __db_ropen(dbenv, appname, path, file, flags, fdp, retp)
 		goto err2;
 
 	/* Check to make sure the first block has been written. */
-	if ((size_t) size1 < sizeof(RLAYOUT)) {
+	if ((size_t)size1 < sizeof(RLAYOUT)) {
 		ret = EAGAIN;
 		goto err2;
 	}

@@ -1,4 +1,4 @@
-# @(#)northamerica	7.31
+# @(#)northamerica	7.32
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -1249,8 +1249,11 @@ Zone America/Martinique	-4:04:20 -      LMT	1890		# Fort-de-France
 			-4:00	-	AST
 
 # Montserrat
+# From Paul Eggert (1997-08-31):
+# Recent volcanic eruptions have forced evacuation of Plymouth, the capital.
+# Luckily, Olveston, the current de facto capital, has the same longitude.
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone America/Montserrat	-4:08:52 -	LMT	1911 Jul 1 0:01   # Plymouth
+Zone America/Montserrat	-4:08:52 -	LMT	1911 Jul 1 0:01   # Olveston
 			-4:00	-	AST
 
 # Nicaragua

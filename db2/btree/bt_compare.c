@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_compare.c	10.3 (Sleepycat) 7/19/97";
+static const char sccsid[] = "@(#)bt_compare.c	10.4 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -103,7 +103,7 @@ __bam_cmp(dbp, k1, e)
 	bo = NULL;
 	if (TYPE(h) == P_LBTREE) {
 		bk = GET_BKEYDATA(h, e->indx);
-		if (bk->type == B_OVERFLOW)
+		if (B_TYPE(bk->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)bk;
 		else {
 			memset(&k2, 0, sizeof(k2));
@@ -112,7 +112,7 @@ __bam_cmp(dbp, k1, e)
 		}
 	} else {
 		bi = GET_BINTERNAL(h, e->indx);
-		if (bi->type == B_OVERFLOW)
+		if (B_TYPE(bi->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)(bi->data);
 		else {
 			memset(&k2, 0, sizeof(k2));

@@ -46,7 +46,7 @@ extern char **_dl_argv;
 									      \
     cp = result = alloca (len);						      \
     for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      cp = stpcpy (cp, all[cnt]);					      \
+      cp = __stpcpy (cp, all[cnt]);					      \
 									      \
     result;								      \
   })
@@ -55,11 +55,12 @@ extern char **_dl_argv;
 static inline struct link_map *
 find_needed (const char *name, struct link_map *map)
 {
+  struct link_map *tmap;
   unsigned int n;
 
-  for (n = 0; n < _dl_loaded->l_nsearchlist; ++n)
-    if (_dl_name_match_p (name, _dl_loaded->l_searchlist[n]))
-      return _dl_loaded->l_searchlist[n];
+  for (tmap = _dl_loaded; tmap != NULL; tmap = tmap->l_next)
+    if (_dl_name_match_p (name, tmap))
+      return tmap;
 
   /* The required object is not in the global scope, look to see if it is
      a dependency of the current object.  */

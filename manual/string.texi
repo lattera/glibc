@@ -357,7 +357,7 @@ Its behaviour is undefined if the strings overlap.
 
 @comment string.h
 @comment GNU
-@deftypefun {char *} strdupa (const char *@var{s})
+@deftypefn {Macro} {char *} strdupa (const char *@var{s})
 This function is similar to @code{strdup} but allocates the new string
 using @code{alloca} instead of @code{malloc}
 @pxref{Variable Size Automatic}.  This means of course the returned
@@ -377,11 +377,11 @@ Please note that calling @code{strtok} using @var{path} directly is
 invalid.
 
 This function is only available if GNU CC is used.
-@end deftypefun
+@end deftypefn
 
 @comment string.h
 @comment GNU
-@deftypefun {char *} strndupa (const char *@var{s}, size_t @var{size})
+@deftypefn {Macro} {char *} strndupa (const char *@var{s}, size_t @var{size})
 This function is similar to @code{strndup} but like @code{strdupa} it
 allocates the new string using @code{alloca}
 @pxref{Variable Size Automatic}.  The same advantages and limitations
@@ -391,7 +391,7 @@ This function is implemented only as a macro which means one cannot
 get the address of it.
 
 @code{strndupa} is only available if GNU CC is used.
-@end deftypefun
+@end deftypefn
 
 @comment string.h
 @comment ISO

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)dbm.c	10.5 (Sleepycat) 7/19/97";
+static const char sccsid[] = "@(#)dbm.c	10.6 (Sleepycat) 8/27/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -65,6 +65,12 @@ static const char sccsid[] = "@(#)dbm.c	10.5 (Sleepycat) 7/19/97";
 #include "db_page.h"
 #include "hash.h"
 
+/* Provide prototypes here since there are none in db.h. */
+int dbm_clearerr __P((DBM *));
+int dbm_dirfno __P((DBM *));
+int dbm_error __P((DBM *));
+int dbm_pagfno __P((DBM *));
+
 /*
  *
  * This package provides dbm and ndbm compatible interfaces to DB.
@@ -74,12 +80,6 @@ static const char sccsid[] = "@(#)dbm.c	10.5 (Sleepycat) 7/19/97";
 static DBM *__cur_db;
 
 static void __db_no_open __P((void));
-
-/* Provide prototypes here since there are none in db.h.  */
-int	 dbm_error __P((DBM *));
-int	 dbm_clearerr __P((DBM *));
-int	 dbm_dirfno __P((DBM *));
-int	 dbm_pagfno __P((DBM *));
 
 int
 dbminit(file)

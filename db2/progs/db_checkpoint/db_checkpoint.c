@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_checkpoint.c	10.9 (Sleepycat) 7/4/97";
+static const char sccsid[] = "@(#)db_checkpoint.c	10.11 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -39,14 +39,15 @@ char	*check __P((DB_ENV *, long, long));
 int	 checkpoint __P((DB_ENV *, char *, int));
 DB_ENV	*db_init __P((char *));
 int	 logpid __P((char *, int));
+int	 main __P((int, char *[]));
 void	 onint __P((int));
 void	 siginit __P((void));
 void	 usage __P((void));
-int	 main __P((int, char *[]));
 
 int	 interrupted;
 time_t	 now;					/* Checkpoint time. */
-const char *progname = "db_checkpoint";		/* Program name. */
+const char
+	*progname = "db_checkpoint";		/* Program name. */
 
 int
 main(argc, argv)

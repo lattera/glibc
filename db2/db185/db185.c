@@ -38,7 +38,7 @@ static int db185_seq __P((const DB185 *, DBT185 *, DBT185 *, u_int));
 static int db185_sync __P((const DB185 *, u_int));
 
 DB185 *
-__dbopen(file, oflags, mode, type, openinfo)
+dbopen(file, oflags, mode, type, openinfo)
 	const char *file;
 	int oflags, mode;
 	DBTYPE type;
@@ -203,7 +203,6 @@ einval:	free(db185p);
 	errno = EINVAL;
 	return (NULL);
 }
-weak_alias (__dbopen, dbopen)
 
 static int
 db185_close(db185p)

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_ret.c	10.5 (Sleepycat) 7/12/97";
+static const char sccsid[] = "@(#)db_ret.c	10.6 (Sleepycat) 9/3/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -63,7 +63,7 @@ __db_ret(dbp, h, indx, dbt, memp, memsize)
 	case P_LBTREE:
 	case P_LRECNO:
 		bk = GET_BKEYDATA(h, indx);
-		if (bk->type == B_OVERFLOW) {
+		if (B_TYPE(bk->type) == B_OVERFLOW) {
 			bo = (BOVERFLOW *)bk;
 			return (__db_goff(dbp, dbt,
 			    bo->tlen, bo->pgno, memp, memsize));

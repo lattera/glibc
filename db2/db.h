@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.h.src	10.67 (Sleepycat) 8/25/97
+ *	@(#)db.h.src	10.71 (Sleepycat) 9/4/97
  */
 
 #ifndef _DB_H_
@@ -67,8 +67,8 @@
 
 #define	DB_VERSION_MAJOR	2
 #define	DB_VERSION_MINOR	3
-#define	DB_VERSION_PATCH	4
-#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.4: (8/20/97)"
+#define	DB_VERSION_PATCH	6
+#define	DB_VERSION_STRING	"Sleepycat Software: DB 2.3.6: (9/4/97)"
 
 typedef	u_int32_t	db_pgno_t;	/* Page number type. */
 typedef	u_int16_t	db_indx_t;	/* Page offset type. */
@@ -329,6 +329,7 @@ struct __db_info {
 #define	DB_NEEDSPLIT		( -9)	/* Page needs to be split. */
 #define	DB_REGISTERED		(-10)	/* Entry was previously registered. */
 #define	DB_SWAPBYTES		(-11)	/* Database needs byte swapping. */
+#define DB_TXN_CKP		(-12)	/* Encountered ckp record in log. */
 
 struct __db_ilock {			/* Internal DB access method lock. */
 	db_pgno_t	pgno;		/* Page being locked. */
@@ -479,7 +480,7 @@ extern "C" {
 int   db_appinit __P((const char *, char * const *, DB_ENV *, int));
 int   db_appexit __P((DB_ENV *));
 int   db_open __P((const char *, DBTYPE, int, int, DB_ENV *, DB_INFO *, DB **));
-const char *db_version __P((int *, int *, int *));
+char *db_version __P((int *, int *, int *));
 #if defined(__cplusplus)
 };
 #endif

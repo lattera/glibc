@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_am.h	10.5 (Sleepycat) 8/22/97
+ *	@(#)db_am.h	10.6 (Sleepycat) 8/27/97
  */
 #ifndef _DB_AM_H
 #define _DB_AM_H
@@ -30,7 +30,7 @@
 	file_dbp = mdbp = NULL;						\
 	if ((ret = func(dbtp->data, &argp)) != 0)			\
 		goto out;						\
-	if (__db_fileid_to_db(logp, &mdbp, argp->fileid)) {		\
+	if ((ret = __db_fileid_to_db(logp, &mdbp, argp->fileid)) != 0) {\
 		if (ret	== DB_DELETED)					\
 			ret = 0;					\
 		goto out;						\

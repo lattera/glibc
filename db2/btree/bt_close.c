@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_close.c	10.22 (Sleepycat) 8/23/97";
+static const char sccsid[] = "@(#)bt_close.c	10.23 (Sleepycat) 9/2/97";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -157,14 +157,12 @@ __bam_upstat(dbp)
 	if (F_ISSET(dbp, DB_AM_INMEM | DB_AM_RDONLY))
 		return;
 
-	/* Lock the page. */
-	if (__bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &mlock) != 0)
-		return;
-
 	flags = 0;
 	pgno = PGNO_METADATA;
 
-	/* Get the page. */
+	/* Lock and retrieve the page. */
+	if (__bam_lget(dbp, 0, pgno, DB_LOCK_WRITE, &mlock) != 0)
+		return;
 	if (__bam_pget(dbp, (PAGE **)&meta, &pgno, 0) == 0) {
 		/* Log the change. */
 		if (DB_LOGGING(dbp) &&

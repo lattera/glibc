@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ extern int cfsetispeed __P ((struct termios *__termios_p, speed_t __speed));
 
 #ifdef	__USE_BSD
 /* Set both the input and output baud rates in *TERMIOS_OP to SPEED.  */
-extern void cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
+extern int cfsetspeed __P ((struct termios *__termios_p, speed_t __speed));
 #endif
 
 

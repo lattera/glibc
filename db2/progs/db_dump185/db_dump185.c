@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1997\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump185.c	10.5 (Sleepycat) 7/2/97";
+static const char sccsid[] = "@(#)db_dump185.c	10.7 (Sleepycat) 8/27/97";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -20,10 +20,10 @@ static const char sccsid[] = "@(#)db_dump185.c	10.5 (Sleepycat) 7/2/97";
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 #endif
 
 #include "db_185.h"
@@ -149,14 +149,15 @@ typedef struct _btree {
 	u_int32_t flags;
 } BTREE;
 
-void db_185_btree __P((DB *, int));
-void db_185_hash __P((DB *, int));
-void dbt_dump __P((DBT *));
-void dbt_print __P((DBT *));
-void usage __P((void));
-int main __P((int, char *[]));
+void	db_185_btree __P((DB *, int));
+void	db_185_hash __P((DB *, int));
+void	dbt_dump __P((DBT *));
+void	dbt_print __P((DBT *));
+int	main __P((int, char *[]));
+void	usage __P((void));
 
-const char *progname = "db_dump185";		/* Program name. */
+const char
+	*progname = "db_dump185";			/* Program name. */
 
 int
 main(argc, argv)
