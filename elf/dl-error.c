@@ -76,10 +76,21 @@ _dl_signal_error (int errcode, const char *objname, const char *errstring)
       /* We are inside _dl_catch_error.  Return to it.  We have to
 	 duplicate the error string since it might be allocated on the
 	 stack.  The object name is always a string constant.  */
-      lcatch->objname = objname;
-      lcatch->errstring = strdup (errstring);
-      if (lcatch->errstring == NULL)
-	lcatch->errstring = _dl_out_of_memory;
+      size_t len_objname = strlen (objname) + 1;
+      size_t len_errstring = strlen (errstring) + 1;
+
+      lcatch->errstring = (char *) malloc (len_objname + len_errstring);
+      if (lcatch->errstring != NULL)
+	/* Make a copy of the object file name and the error string.  */
+	lcatch->objname = memcpy (__mempcpy ((char *) lcatch->errstring,
+					     errstring, len_errstring),
+				  objname, len_objname);
+      else
+	{
+	  /* This is better than nothing.  */
+	  lcatch->objname = objname;
+	  lcatch->errstring = _dl_out_of_memory;
+	}
       longjmp (lcatch->env, errcode ?: -1);
     }
   else

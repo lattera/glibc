@@ -1,3 +1,8 @@
+2000-10-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-error.c (_dl_signal_error): Allocate memory for objname
+	as well.  Reported by Alexander V. Lukyanov <lav@yars.free.net>.
+
 2000-10-13  Andreas Schwab  <schwab@suse.de>
 
 	* elf/elf.h (R_IA64_PCREL60B): Add relocation.
