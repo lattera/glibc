@@ -1,3 +1,10 @@
+2003-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/createthread.c: Define
+	PREPARE_CREATE and TLS_VALUE with x86-specific bits.  All the rest
+	of the code is moved to ...
+	* sysdeps/pthread/createthread.c: ...here.  New file.
+
 2003-01-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelsem.S

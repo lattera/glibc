@@ -1,6 +1,6 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Thread-local storage handling in the ELF dynamic linker.  IA-64 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Martin Schwidefsky <schwidefsky@de.ibm.com>
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -17,31 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep-cancel.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
+#include <sysdeps/generic/libc-tls.c>
 
-/* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
+#if USE_TLS
 
-ENTRY (__vfork)
-	SINGLE_THREAD_P
-	jgne	HIDDEN_JUMPTARGET(__fork)
+/* On s390, the literal pool entry that refers to __tls_get_offset
+   is not removed, even if all branches that use the literal pool
+   entry gets removed by TLS optimizations. To get binaries
+   statically linked __tls_get_offset is defined here but
+   aborts if it is used.  */
 
-	/* Do vfork system call.  */
-	svc	SYS_ify (vfork)
+void *
+__tls_get_offset (size_t m, size_t offset)
+{
+  abort ();
+}
 
-	/* Check for error.  */
-	lghi	%r4,-4095
-	clgr	%r2,%r4
-	jgnl	SYSCALL_ERROR_LABEL
+#endif
 
-	/* Normal return.  */
-	br	%r14
-PSEUDO_END(__vfork)
-
-libc_hidden_def (__vfork)
-
-weak_alias (__vfork, vfork)

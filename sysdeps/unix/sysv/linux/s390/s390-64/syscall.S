@@ -45,7 +45,7 @@ ENTRY (syscall)
 
 	lghi   %r0,-4095
 	clgr   %r2,%r0		   /* Check R2 for error.  */
-	jnl    SYSCALL_ERROR_LABEL
+	jgnl   SYSCALL_ERROR_LABEL
 	br     %r14		   /* Return to caller.	 */
 .L1:	.word  0x0A00		   /* Opcode for SVC 0.	 */
 PSEUDO_END (syscall)

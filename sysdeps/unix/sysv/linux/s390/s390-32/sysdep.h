@@ -45,8 +45,6 @@
    number.  Linus said he will make sure the no syscall returns a value
    in -1 .. -4095 as a valid result so we can savely test with -4095.  */
 
-#define SYSCALL_ERROR_LABEL 0f
-
 #undef PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;                                                                      \
@@ -54,42 +52,70 @@
     DO_CALL (syscall_name, args);                                             \
     lhi  %r4,-4095 ;                                                          \
     clr  %r2,%r4 ;		                                              \
-    jnl  SYSCALL_ERROR_LABEL ;                                                \
-  L(pseudo_end):
+    jnl  SYSCALL_ERROR_LABEL
 
 #undef PSEUDO_END
 #define PSEUDO_END(name)						      \
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
-#ifndef _LIBC_REENTRANT
 #ifndef PIC
-#define SYSCALL_ERROR_HANDLER                                                 \
-0:  lcr     %r2,%r2 ;                                                         \
-    basr    %r1,0 ;                                                           \
-1:  l       %r1,2f-1b(%r1)                                                    \
-    st      %r2,0(%r1)                                                        \
-    lhi     %r2,-1                                                            \
-    br      %r14                                                              \
-2:  .long   errno
+# define SYSCALL_ERROR_LABEL 0f
+# define SYSCALL_ERROR_HANDLER \
+0:  basr  %r1,0;							      \
+1:  l     %r1,2f-1b(%r1);						      \
+    br    %r1;								      \
+2:  .long syscall_error
 #else
-#define SYSCALL_ERROR_HANDLER						      \
-0:  basr    %r1,0 ;                                                           \
-1:  al      %r1,2f-1b(%r1) ;                                                  \
-    l       %r1,errno@GOT12(%r1) ;                                            \
-    lcr     %r2,%r2 ;							      \
-    st      %r2,0(%r1) ;						      \
-    lhi     %r2,-1 ;                                                          \
-    br      %r14 ;                                                            \
-2:  .long   _GLOBAL_OFFSET_TABLE_-1b
+# if RTLD_PRIVATE_ERRNO
+#  define SYSCALL_ERROR_LABEL 0f
+#  define SYSCALL_ERROR_HANDLER \
+0:  basr  %r1,0;							      \
+1:  al    %r1,2f-1b(%r1);						      \
+    lcr   %r2,%r2;							      \
+    st    %r2,0(%r1);							      \
+    lhi   %r2,-1;							      \
+    br    %r14;								      \
+2:  .long errno-1b
+# elif defined _LIBC_REENTRANT
+#  if USE___THREAD
+#   ifndef NOT_IN_libc
+#    define SYSCALL_ERROR_ERRNO __libc_errno
+#   else
+#    define SYSCALL_ERROR_ERRNO errno
+#   endif
+#   define SYSCALL_ERROR_LABEL 0f
+#   define SYSCALL_ERROR_HANDLER \
+0:  lcr   %r0,%r2;							      \
+    basr  %r1,0;							      \
+1:  al    %r1,2f-1b(%r1);						      \
+    l     %r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1)			      \
+    ear   %r2,%a0							      \
+    st    %r0,0(%r1,%r2);						      \
+    lhi   %r2,-1;							      \
+    br    %r14;								      \
+2:  .long _GLOBAL_OFFSET_TABLE_-1b
+#  else
+#   define SYSCALL_ERROR_LABEL 0f
+#   define SYSCALL_ERROR_HANDLER \
+0:  basr  %r1,0;							      \
+1:  al    %r1,2f-1b(%r1);						      \
+    br    %r1;								      \
+2:  .long syscall_error@plt-1b
+#  endif
+# else
+#  define SYSCALL_ERROR_LABEL 0f
+#  define SYSCALL_ERROR_HANDLER \
+0:  basr  %r1,0;							      \
+1:  al    %r1,2f-1b(%r1);						      \
+    l     %r1,errno@GOT(%r1);						      \
+    lcr   %r2,%r2;							      \
+    st    %r2,0(%r1);							      \
+    lhi   %r2,-1;							      \
+    br    %r14;								      \
+2:  .long _GLOBAL_OFFSET_TABLE_-1b
+# endif /* _LIBC_REENTRANT */
 #endif /* PIC */
-#else
-#define SYSCALL_ERROR_HANDLER                                                 \
-0:  basr    %r1,0 ;                                                           \
-1:  al      %r1,2f-1b(%r1) ;                                                  \
-    br      %r1 ;                                                             \
-2:  .long   __syscall_error@PLT-1b
-#endif /* _LIBC_REENTRANT */
 
 /* Linux takes system call arguments in registers:
 

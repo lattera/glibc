@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  S390 Version.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Carl Pederson & Martin Schwidefsky.
    This file is part of the GNU C Library.
 
@@ -312,13 +312,22 @@ _dl_start_user:\n\
 #define RTLD_START_SPECIAL_INIT /* nothing */
 #endif
 
-/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.
+/* ELF_RTYPE_CLASS_PLT iff TYPE describes relocation of a PLT entry or
+   TLS variable, so undefined references should not be allowed to
+   define the value.
    ELF_RTYPE_CLASS_NOCOPY iff TYPE should not be allowed to resolve to one
    of the main executable's symbols, as for a COPY reloc.  */
-#define elf_machine_type_class(type) \
+#ifdef USE_TLS
+# define elf_machine_type_class(type) \
+  ((((type) == R_390_JMP_SLOT || (type) == R_390_TLS_DTPMOD		      \
+     || (type) == R_390_TLS_DTPOFF || (type) == R_390_TLS_TPOFF)	      \
+    * ELF_RTYPE_CLASS_PLT)						      \
+   | (((type) == R_390_COPY) * ELF_RTYPE_CLASS_COPY))
+#else
+# define elf_machine_type_class(type) \
   ((((type) == R_390_JMP_SLOT) * ELF_RTYPE_CLASS_PLT)	\
    | (((type) == R_390_COPY) * ELF_RTYPE_CLASS_COPY))
+#endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT    R_390_JMP_SLOT
@@ -372,25 +381,90 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 {
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_390_RELATIVE, 0))
-    *reloc_addr = map->l_addr + reloc->r_addend;
-#ifndef RTLD_BOOTSTRAP
-  else if (__builtin_expect (r_type == R_390_NONE, 0))
-    return;
+    {
+# if !defined RTLD_BOOTSTRAP && !defined HAVE_Z_COMBRELOC
+      /* This is defined in rtld.c, but nowhere in the static libc.a;
+	 make the reference weak so static programs can still link.
+	 This declaration cannot be done when compiling rtld.c
+	 (i.e. #ifdef RTLD_BOOTSTRAP) because rtld.c contains the
+	 common defn for _dl_rtld_map, which is incompatible with a
+	 weak decl in the same file.  */
+#  ifndef SHARED
+      weak_extern (GL(dl_rtld_map));
+#  endif
+      if (map != &GL(dl_rtld_map)) /* Already done in rtld itself.  */
+# endif
+	*reloc_addr = map->l_addr + reloc->r_addend;
+    }
+  else
 #endif
+  if (__builtin_expect (r_type == R_390_NONE, 0))
+    return;
   else
     {
       const Elf32_Sym *const refsym = sym;
+#if defined USE_TLS && !defined RTLD_BOOTSTRAP
+      struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
+      Elf32_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
+#else
       Elf32_Addr value = RESOLVE (&sym, version, r_type);
+
+# ifndef RTLD_BOOTSTRAP
       if (sym)
+# endif
 	value += sym->st_value;
+#endif /* use TLS and !RTLD_BOOTSTRAP */
 
       switch (r_type)
 	{
 	case R_390_GLOB_DAT:
 	case R_390_JMP_SLOT:
-	  *reloc_addr = value;
+	  *reloc_addr = value + reloc->r_addend;
 	  break;
+
+#if defined USE_TLS && (!defined RTLD_BOOTSTRAP || USE___THREAD)
+	case R_390_TLS_DTPMOD:
+# ifdef RTLD_BOOTSTRAP
+	  /* During startup the dynamic linker is always the module
+	     with index 1.
+	     XXX If this relocation is necessary move before RESOLVE
+	     call.  */
+	  *reloc_addr = 1;
+# else
+	  /* Get the information from the link map returned by the
+	     resolv function.  */
+	  if (sym_map != NULL)
+	    *reloc_addr = sym_map->l_tls_modid;
+# endif
+	  break;
+	case R_390_TLS_DTPOFF:
+# ifndef RTLD_BOOTSTRAP
+	  /* During relocation all TLS symbols are defined and used.
+	     Therefore the offset is already correct.  */
+	  if (sym != NULL)
+	    *reloc_addr = sym->st_value + reloc->r_addend;
+# endif
+	  break;
+	case R_390_TLS_TPOFF:
+	  /* The offset is negative, forward from the thread pointer.  */
+# ifdef RTLD_BOOTSTRAP
+	  *reloc_addr = sym->st_value + reloc->r_addend - map->l_tls_offset;
+# else
+	  /* We know the offset of the object the symbol is contained in.
+	     It is a negative value which will be added to the
+	     thread pointer.  */
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr = (sym->st_value + reloc->r_addend
+			     - sym_map->l_tls_offset);
+	    }
+#endif
+	  break;
+#endif  /* use TLS */
+
 #ifndef RTLD_BOOTSTRAP
 	case R_390_COPY:
 	  if (sym == NULL)

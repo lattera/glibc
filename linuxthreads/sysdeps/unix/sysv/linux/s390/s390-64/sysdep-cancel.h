@@ -51,7 +51,7 @@ ENTRY(name)								      \
 L(pseudo_check):							      \
 	lghi	%r4,-4095;						      \
 	clgr	%r2,%r4;						      \
-	jnl	SYSCALL_ERROR_LABEL;					      \
+	jgnl	SYSCALL_ERROR_LABEL;					      \
 L(pseudo_end):
 
 # ifdef IS_IN_libpthread

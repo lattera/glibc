@@ -24,20 +24,24 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/*int __clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg);*/
-/* sys_clone(void *child_stack, unsigned long flags) */
+/* int __clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+               void *tls, pid_t *parent_tid, pid_t *child_tid);  */
+/* sys_clone  (void *child_stack, unsigned long flags,
+               pid_t *parent_tid, pid_t *child_tid, void *tls);  */
 
 	.text
 ENTRY(__clone)
 	/* Sanity check arguments & move registers */
+	lr	%r0,%r5			/* move *arg out of the way */
 	ltr     %r1,%r2			/* no NULL function pointers */
 	lhi     %r2,-EINVAL
 	jz      SYSCALL_ERROR_LABEL
 	ltr     %r3,%r3			/* no NULL stack pointers */
 	jz      SYSCALL_ERROR_LABEL
-	/* move child_stack and flags, then call SVC */
+	/* set up registers, then call SVC */
 	lr      %r2,%r3
 	lr      %r3,%r4
+	lm	%r4,%r5,96(%r15)
 	svc     SYS_ify(clone)
 	ltr     %r2,%r2			/* check return code */
 	jm      SYSCALL_ERROR_LABEL
@@ -45,10 +49,10 @@ ENTRY(__clone)
 	br      %r14
 
 thread_start:
-	/* fn is in gpr 1, arg in gpr 5 */
-	lr      %r2,%r5         /* set first parameter to void *arg */
-	sr      %r11,%r11	/* terminate the stack frame */
+	/* fn is in gpr 1, arg in gpr 0 */
+	lr      %r2,%r0         /* set first parameter to void *arg */
 	ahi     %r15,-96        /* make room on the stack for the save area */
+	xc	0(4,%r15),0(%r15)
 	basr    %r14,%r1        /* jump to fn */
 #ifdef PIC
 	basr    %r12,0

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -29,47 +29,84 @@
 #undef CALL_MCOUNT
 #define CALL_MCOUNT
 
-        .text
+.text
 ENTRY(__syscall_error)
 #ifndef PIC
-#ifndef _LIBC_REENTRANT
-	lcr     %r2,%r2
-	larl    %r1,errno
-	st      %r2,0(%r1)
-	lghi    %r2,-1
-	br      %r14
-#else
-        stmg    %r13,%r15,104(%r15)
-        lgr     %r0,%r15
-        aghi    %r15,-160
-        lcr     %r13,%r2
-        stg     %r0,0(%r15)
-	brasl   %r14,__errno_location
-	st      %r13,0(%r2)
-	lmg     %r13,%r15,264(%r15)
-	lghi    %r2,-1
-	br      %r14
+# if USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+	basr	%r1,0
+0:	lg	%r1,1f-0b(%r1)
+	ear	%r3,%a0
+	sllg	%r3,%r3,32
+	ear	%r3,%a1
+	lcr	%r2,%r2
+	st	%r2,0(%r1,%r3)
+	lghi	%r2,-1
+	br	%r14
+1:	.quad	SYSCALL_ERROR_ERRNO@ntpoff
+# elif !defined _LIBC_REENTRANT
+	larl	%r1,errno
+	lcr	%r2,%r2
+	st	%r2,0(%r1)
+	lghi	%r2,-1
+	br	%r14
+# else
+	stmg	%r13,%r15,104(%r15)
+	lgr	%r0,%r15
+	aghi	%r15,-160
+	lcr	%r13,%r2
+	stg	%r0,0(%r15)
+	brasl	%r14,__errno_location
+	st	%r13,0(%r2)
+	lmg	%r13,%r15,264(%r15)
+	lghi	%r2,-1
+	br	%r14
 #endif
 #else
-#ifndef _LIBC_REENTRANT
-	larl    %r1,_GLOBAL_OFFSET_TABLE_
-	lg      %r1,errno@GOT(%r1)
-	lcr     %r2,%r2
-	st      %r2,0(%r1)
-	lghi    %r2,-1
-	br      %r14
-#else
-        stmg    %r13,%r15,104(%r15)
-        lgr     %r0,%r15
-        aghi    %r15,-160
-        lcr     %r13,%r2
-        stg     %r0,0(%r15)
-	brasl   %r14,__errno_location@PLT
-	st      %r13,0(%r2)
-	lmg     %r13,%r15,264(%r15)
-	lghi    %r2,-1
-	br      %r14
-#endif
+# if RTLD_PRIVATE_ERRNO
+	larl	%r1,errno
+	lcr	%r2,%r2
+	st	%r2,0(%r1)
+	lghi	%r2,-1
+	br	%r14
+# elif USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+	larl	%r1,_GLOBAL_OFFSET_TABLE_
+	lg	%r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1)
+	ear	%r3,%a0
+	sllg	%r3,%r3,32
+	ear	%r3,%a1
+	lcr	%r2,%r2
+	st	%r2,0(%r1,%r3)
+	lghi	%r2,-1
+	br	%r14
+# elif !defined _LIBC_REENTRANT
+	larl	%r1,_GLOBAL_OFFSET_TABLE_
+	lg	%r1,errno@GOT(%r1)
+	lcr	%r2,%r2
+	st	%r2,0(%r1)
+	lghi	%r2,-1
+	br	%r14	
+# else
+	stmg	%r13,%r15,104(%r15)
+	lgr	%r0,%r15
+	aghi	%r15,-160
+	lcr	%r13,%r2
+	stg	%r0,0(%r15)
+	brasl	%r14,__errno_location@PLT
+	st	%r13,0(%r2)
+	lmg	%r13,%r15,264(%r15)
+	lghi	%r2,-1
+	br	%r14
+# endif
 #endif
 
 END (__syscall_error)

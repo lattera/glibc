@@ -1,0 +1,6 @@
+ld {
+  GLIBC_2.3 {
+    # runtime interface to TLS
+    __tls_get_offset;
+  }
+}

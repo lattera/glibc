@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -31,59 +31,94 @@
 	.text
 ENTRY(__syscall_error)
 #ifndef PIC
-#ifndef _LIBC_REENTRANT
-	lcr     %r2,%r2
-	basr    %r1,0
-.L0:    l       %r1,.L1-.L0(%r1)
-	st      %r2,0(0,%r1)
-	lhi     %r2,-1
-	br      %r14
-.L1:    .long  errno
-#else
-	stm     %r11,%r15,44(%r15)
-	lr      %r0,%r15
-	ahi     %r15,-96
-	st      %r0,0(%r15)
-	lcr     %r11,%r2
-	basr    %r13,0
-.L0:	l       %r1,.L1-.L0(%r13)
-	basr    %r14,%r1
-	st      %r11,0(%r2)
-	lhi     %r2,-1
-	l       %r15,0(%r15)
-	lm      %r11,%r15,44(%r15)
-	br      %r14
-.L1:	.long  __errno_location
+# if USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+	basr	%r1,0
+0:	l	%r1,1f-0b(%r1)
+	ear	%r3,%a0
+	lcr	%r2,%r2
+	st	%r2,0(%r1,%r3)
+	lhi	%r2,-1
+	br	%r14
+1:	.long	SYSCALL_ERROR_ERRNO@ntpoff
+# elif !defined _LIBC_REENTRANT
+	basr	%r1,0
+0:	l	%r1,1f-0b(%r1)
+	lcr	%r2,%r2
+	st	%r2,0(%r1)
+	lhi	%r2,-1
+	br	%r14
+1:	.long  errno
+# else
+	stm	%r13,%r15,52(%r15)
+	lr	%r0,%r15
+	ahi	%r15,-96
+	lcr	%r13,%r2
+	st	%r0,0(%r15)
+	basr	%r1,0
+0:	l	%r1,1f-0b(%r1)
+	basr	%r14,%r1
+	st	%r13,0(%r2)
+	lm	%r13,%r15,148(%r15)
+	lhi	%r2,-1
+	br	%r14
+1:	.long  __errno_location
 #endif
 #else
-#ifndef _LIBC_REENTRANT
-	basr    %r1,0
-.L0:    al      %r1,.L1-.L0(%r1)
-	l       %r1,errno@GOT12(%r1)
-	lcr     %r2,%r2
-	st      %r2,0(0,%r1)
-	lhi     %r2,-1
-	br      %r14
-.L1:    .long   _GLOBAL_OFFSET_TABLE_-0b
-#else
-	stm     %r11,%r15,44(%r15)
-	lr      %r0,%r15
-	ahi     %r15,-96
-	st      %r0,0(%r15)
-	lcr     %r11,%r2
-	basr    %r13,0
-.L0:	l       %r12,.L1-.L0(%r13)
-	ar      %r12,%r13
-	l       %r14,.L2-.L0(%r13)
-	bas     %r14,0(%r14,%r13)
-	st      %r11,0(0,%r2)
-	lhi     %r2,-1
-	l       %r15,0(%r15)
-	lm      %r11,%r15,44(%r15)
-	br      %r14
-.L1:	.long _GLOBAL_OFFSET_TABLE_ - .L0
-.L2:    .long __errno_location@PLT - .L0
-#endif
+# if RTLD_PRIVATE_ERRNO
+	basr	%r1,0
+0:	al	%r1,1f-0b(%r1)
+	lcr	%r2,%r2
+	st	%r2,0(%r1)
+	lhi	%r2,-1
+	br	%r14
+1:	.long	errno - 0b
+# elif USE___THREAD
+#  ifndef NOT_IN_libc
+#   define SYSCALL_ERROR_ERRNO __libc_errno
+#  else
+#   define SYSCALL_ERROR_ERRNO errno
+#  endif
+	basr	%r1,0
+0:	al	%r1,1f-0b(%r1)
+	ear	%r3,%a0
+	l	%r1,SYSCALL_ERROR_ERRNO@gotntpoff(%r1)
+	lcr	%r2,%r2
+	st	%r2,0(%r1,%r3)
+	lhi	%r2,-1
+	br	%r14
+1:	.long	_GLOBAL_OFFSET_TABLE_-0b
+# elif !defined _LIBC_REENTRANT
+	basr	%r1,0
+0:	al	%r1,1f-0b(%r1)
+	l	%r1,errno@GOT(%r1)
+	lcr	%r2,%r2
+	st	%r2,0(0,%r1)
+	lhi	%r2,-1
+	br	%r14
+1:	.long	_GLOBAL_OFFSET_TABLE_-0b
+# else
+	stm	%r11,%r15,44(%r15)
+	lr	%r0,%r15
+	ahi	%r15,-96
+	lcr	%r11,%r2
+	st	%r0,0(%r15)
+	basr	%r13,0
+0:	l	%r12,1f-0b(%r13)
+	l	%r1,2f-0b(%r13)
+	la	%r12,0(%r12,%r13)
+	bas	%r14,0(%r1,%r13)
+	st	%r11,0(%r2)
+	lm	%r11,%r15,140(%r15)
+	lhi	%r2,-1
+	br	%r14
+1:	.long _GLOBAL_OFFSET_TABLE_-0b
+2:	.long __errno_location@PLT-0b
+# endif
 #endif
 
 END (__syscall_error)

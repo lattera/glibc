@@ -1,3 +1,17 @@
+2003-01-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/pt-machine.h (THREAD_SELF, INIT_THREAD_SELF):
+	Define TLS versions.
+	* sysdeps/s390/s390-64/pt-machine.h (THREAD_SELF, INIT_THREAD_SELF):
+	Likewise.
+	* sysdeps/s390/tls.h [HAVE_TLS_SUPPORT]	(USE_TLS, TLS_INIT_TCB_SIZE,
+	TLS_INIT_TCB_ALIGN, TLS_TCB_SIZE, TLS_TCB_ALIGN, TLS_TCB_AT_TP,
+	INSTALL_DTV, INSTALL_NEW_DTV, GET_DTV, TLS_INIT_TP, THREAD_DTV):
+	Define.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO): Use
+	branch with 32 bit offset.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S: Likewise.
+
 2003-01-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/pt-machine.h (__thread_self): Change to %g7,

@@ -1,0 +1,37 @@
+GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
+# Local configure fragment for sysdeps/s390/elf.
+
+if test "$usetls" != no; then
+# Check for support of thread-local storage handling in assembler and
+# linker.
+AC_CACHE_CHECK(for s390 TLS support, libc_cv_390_tls, [dnl
+cat > conftest.S <<\EOF
+	.section ".tdata", "awT", @progbits
+foo:	.long	25
+	.text
+	.long	foo@TLSGD
+	.long	foo@TLSLDM
+	.long	foo@DTPOFF
+	.long	foo@NTPOFF
+	.long	foo@GOTNTPOFF
+	.long	foo@INDNTPOFF
+	l	%r1,foo@GOTNTPOFF(%r12)
+	l	%r1,0(%r1):tls_load:foo
+	bas	%r14,0(%r1,%r13):tls_gdcall:foo
+	bas	%r14,0(%r1,%r13):tls_ldcall:foo
+EOF
+dnl
+if AC_TRY_COMMAND(${CC-cc} -S $CFLAGS conftest.S 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_390_tls=yes
+else
+  libc_cv_390_tls=no
+fi
+rm -f conftest*])
+if test $libc_cv_390_tls = yes; then
+  AC_DEFINE(HAVE_TLS_SUPPORT)
+fi
+fi
+
+dnl It is always possible to access static and hidden symbols in an
+dnl position independent way.
+AC_DEFINE(PI_STATIC_AND_HIDDEN)

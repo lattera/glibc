@@ -1,3 +1,37 @@
+2003-01-27  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* elf/elf.h: Add new s390 relocs.
+	* elf/tls-macros.h: Add s390 versions.
+	* sysdeps/s390/Versions [GLIBC_2.3] (ld): Export __tls_get_offset.
+	* sysdeps/s390/dl-tls.h: New file.
+	* sysdeps/s390/libc-tls.c: New file.
+	* sysdeps/s390/s390-32/dl-machine.h (elf_machine_type_class): Add TLS
+	relocs for class PLT.
+	(elf_machine_rela): Handle TLS relocs.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/elf/configure.in: Add TLS check.
+	* sysdeps/s390/s390-64/elf/configure.in: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/clone.S: Add support for
+	CLONE_CHILD_*TID flags.
+	* sysdeps/unix/sysv/linux/s390/s390-64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/mmap.S: Use branch with 32
+	bit offset.
+	* sysdeps/unix/sysv/linux/s390/s390-64/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.S (__syscall_error):
+	Support USE___THREAD. Define RTLD_PRIVATE_ERRNO variant.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.S (__syscall_error):
+	Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h:
+	(SYSCALL_ERROR_LABEL): Move define next to SYSCALL_ERROR_HANDLER.
+	(SYSCALL_ERROR_HANDLER): Add USE___THREAD and RTLD_PRIVATE_ERRNO
+	variants.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h:
+	(SYSCALL_ERROR_LABEL): Move define next to SYSCALL_ERROR_HANDLER. Use
+	direct branch to syscall_error for !PIC and PIC && !_LIBC_REENTRANT.
+	(SYSCALL_ERROR_HANDLER): Add USE___THREAD and RTLD_PRIVATE_ERRNO
+	variants.
+
 2003-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/common/pause.c (do_pause): New function.  Split

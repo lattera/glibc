@@ -58,6 +58,13 @@ testandset (int *spinlock)
 #define CURRENT_STACK_FRAME  stack_pointer
 register char * stack_pointer __asm__ ("15");
 
+#ifdef USE_TLS
+/* Return the thread descriptor for the current thread.  */
+# define THREAD_SELF ((pthread_descr) __builtin_thread_pointer ())
+
+/* Initialize the thread-unique value.  */
+#define INIT_THREAD_SELF(descr, nr) __builtin_set_thread_pointer (descr)
+#else
 /* Return the thread descriptor for the current thread.
    S/390 registers uses access register 0 as "thread register".  */
 #define THREAD_SELF  ({                                                       \
@@ -70,6 +77,7 @@ register char * stack_pointer __asm__ ("15");
 #define INIT_THREAD_SELF(descr, nr)  ({                                       \
   __asm__ ("sar %%a0,%0" : : "d" (descr) );                                   \
 })
+#endif
 
 /* Access to data in the thread descriptor is easy.  */
 #define THREAD_GETMEM(descr, member) THREAD_SELF->member

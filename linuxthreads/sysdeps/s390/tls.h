@@ -45,19 +45,96 @@ typedef struct
 # include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
-#undef USE_TLS
+/* TLS is always supported if the tools support it.  There are no
+   kernel dependencies.  To avoid bothering with the TLS support code
+   at all, use configure --without-tls.
 
-#if USE_TLS
+   We need USE_TLS to be consistently defined, for ldsodefs.h
+   conditionals.  */
 
-#else
+#ifdef HAVE_TLS_SUPPORT
 
-#define NONTLS_INIT_TP \
+/* Signal that TLS support is available.  */
+# define USE_TLS	1
+
+# ifndef __ASSEMBLER__
+/* Get system call information.  */
+#  include <sysdep.h>
+
+
+/* Get the thread descriptor definition.  */
+#  include <linuxthreads/descr.h>
+
+/* This is the size of the initial TCB.  */
+#  define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
+
+/* Alignment requirements for the initial TCB.  */
+#  define TLS_INIT_TCB_ALIGN __alignof__ (tcbhead_t)
+
+/* This is the size of the TCB.  */
+#  define TLS_TCB_SIZE sizeof (struct _pthread_descr_struct)
+
+/* Alignment requirements for the TCB.  */
+#  define TLS_TCB_ALIGN __alignof__ (struct _pthread_descr_struct)
+
+/* The TCB can have any size and the memory following the address the
+   thread pointer points to is unspecified.  Allocate the TCB there.  */
+#  define TLS_TCB_AT_TP	1
+
+
+/* Install the dtv pointer.  The pointer passed is to the element with
+   index -1 which contain the length.  */
+#  define INSTALL_DTV(descr, dtvp) \
+  ((tcbhead_t *) (descr))->dtv = (dtvp) + 1
+
+/* Install new dtv for current thread.  */
+#  define INSTALL_NEW_DTV(dtv) \
+  (((tcbhead_t *) __builtin_thread_pointer ())->dtv = (dtv))
+
+/* Return dtv of given thread descriptor.  */
+#  define GET_DTV(descr) \
+  (((tcbhead_t *) (descr))->dtv)
+
+/* Code to initially initialize the thread pointer.  This might need
+   special attention since 'errno' is not yet available and if the
+   operation can cause a failure 'errno' must not be touched.
+
+   The value of this macro is null if successful, or an error string.  */
+#  define TLS_INIT_TP(descr, secondcall)				      \
+  ({									      \
+    void *_descr = (descr);						      \
+    tcbhead_t *head = _descr;						      \
+									      \
+    head->tcb = _descr;							      \
+    /* For now the thread descriptor is at the same address.  */	      \
+    head->self = _descr;						      \
+									      \
+    __builtin_set_thread_pointer (_descr);				      \
+    0;									      \
+  })
+
+/* Return the address of the dtv for the current thread.  */
+#  define THREAD_DTV() \
+  (((tcbhead_t *) __builtin_thread_pointer ())->dtv)
+
+# endif /* __ASSEMBLER__ */
+
+#else	/* HAVE_TLS_SUPPORT && (FLOATING_STACKS || !IS_IN_libpthread) */
+
+# ifndef __ASSEMBLER__
+
+/* Get the thread descriptor definition.  */
+#  include <linuxthreads/descr.h>
+
+#  define NONTLS_INIT_TP \
   do { 								\
     static const tcbhead_t nontls_init_tp			\
       = { .multiple_threads = 0 };				\
     INIT_THREAD_SELF (&nontls_init_tp, 0);			\
   } while (0)
 
-#endif /* USE_TLS */
+# endif /* __ASSEMBLER__ */
+
+#endif	/* HAVE_TLS_SUPPORT && (FLOATING_STACKS || !IS_IN_libpthread) */
 
 #endif	/* tls.h */

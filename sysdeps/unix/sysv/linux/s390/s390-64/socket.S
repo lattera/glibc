@@ -93,7 +93,7 @@ ENTRY(__socket)
 	/* gpr2 is < 0 if there was an error.  */
         lghi    %r0,-125 
         clgr    %r2,%r0
-        jnl     SYSCALL_ERROR_LABEL
+        jgnl    SYSCALL_ERROR_LABEL
  
 	/* Successful; return the syscall's value.  */
 	br      %r14
