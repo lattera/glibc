@@ -1,3 +1,10 @@
+2001-08-05  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h (struct dirent): Rename member
+	d_fileno to d_ino.
+	(struct dirent64): Likewise.
+	(d_fileno): Define as macro.
+
 2001-08-04  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/getrusage.c: Use TASK_EVENTS_INFO if implemented
