@@ -1,3 +1,10 @@
+1998-09-14 23:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nscd/pwdcache.c (save_pwd): Rewrite to use only one malloc call.
+	(free_pwd): Adjust for this change.
+	* nscd/grpcache.c (save_grp): Rewrite to use only one malloc call.
+	(free_grp): Adjust for this change.
+
 1998-09-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/pwdcache.c (cache_pwdinit): Allocate uidtbl of correct size.

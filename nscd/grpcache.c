@@ -133,24 +133,38 @@ save_grp (struct group *src)
 {
   struct group *dest;
   unsigned long int l;
-
-  dest = calloc (1, sizeof (struct group));
-  dest->gr_name = strdup (src->gr_name);
-  dest->gr_passwd = strdup (src->gr_passwd);
-  dest->gr_gid = src->gr_gid;
+  size_t tlen;
+  size_t name_len = strlen (src->gr_name) + 1;
+  size_t passwd_len = strlen (src->gr_passwd) + 1;
+  char *cp;
 
   /* How many members does this group have?  */
-  l = 0;
-  while (src->gr_mem[l])
-    ++l;
+  l = tlen = 0;
+  while (src->gr_mem[l] != NULL)
+    tlen += strlen (src->gr_mem[l++]) + 1;
 
-  dest->gr_mem = calloc (1, sizeof (char *) * (l+1));
+  dest = malloc (sizeof (struct group) + (l + 1) * sizeof (char *)
+		 + name_len + passwd_len + tlen);
+  if (dest == NULL)
+    return NULL;
+
+  dest->gr_mem = (char **) (dest + 1);
+  cp = (char *) (dest->gr_mem + l + 1);
+
+  dest->gr_name = cp;
+  cp = mempcpy (cp, src->gr_name, name_len);
+  dest->gr_passwd = cp;
+  cp = mempcpy (cp, src->gr_passwd, passwd_len);
+  dest->gr_gid = src->gr_gid;
+
   l = 0;
-  while (src->gr_mem[l])
+  while (src->gr_mem[l] != NULL)
     {
-      dest->gr_mem[l] = strdup (src->gr_mem[l]);
+      dest->gr_mem[l] = cp;
+      cp = stpcpy (cp, src->gr_mem[l]);
       ++l;
     }
+  dest->gr_mem[l] = NULL;
 
   return dest;
 }
@@ -158,18 +172,6 @@ save_grp (struct group *src)
 static void
 free_grp (struct group *src)
 {
-  unsigned long int l;
-
-  free (src->gr_name);
-  free (src->gr_passwd);
-
-  l = 0;
-  while (src->gr_mem[l])
-    {
-      free (src->gr_mem[l]);
-      ++l;
-    }
-  free (src->gr_mem);
   free (src);
 }
 

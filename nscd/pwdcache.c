@@ -132,15 +132,31 @@ static struct passwd *
 save_pwd (struct passwd *src)
 {
   struct passwd *dest;
+  size_t name_len = strlen (src->pw_name) + 1;
+  size_t passwd_len = strlen (src->pw_gecos) + 1;
+  size_t gecos_len = strlen (src->pw_dir) + 1;
+  size_t dir_len = strlen (src->pw_dir) + 1;
+  size_t shell_len = strlen (src->pw_shell) + 1;
+  char *cp;
 
-  dest = calloc (1, sizeof (struct passwd));
-  dest->pw_name = strdup (src->pw_name);
-  dest->pw_passwd = strdup (src->pw_passwd);
+  dest = malloc (sizeof (struct passwd)
+		 + name_len + passwd_len + gecos_len + dir_len + shell_len);
+  if (dest == NULL)
+    return NULL;
+
+  cp = (char *) (dest + 1);
+  dest->pw_name = cp;
+  cp = mempcpy (cp, src->pw_name, name_len);
+  dest->pw_passwd = cp;
+  cp = mempcpy (cp, src->pw_passwd, passwd_len);
   dest->pw_uid = src->pw_uid;
   dest->pw_gid = src->pw_gid;
-  dest->pw_gecos = strdup (src->pw_gecos);
-  dest->pw_dir = strdup (src->pw_dir);
-  dest->pw_shell = strdup (src->pw_shell);
+  dest->pw_gecos = cp;
+  cp = mempcpy (cp, src->pw_gecos, gecos_len);
+  dest->pw_dir = cp;
+  cp = mempcpy (cp, src->pw_dir, dir_len);
+  dest->pw_shell = cp;
+  mempcpy (cp, src->pw_shell, shell_len);
 
   return dest;
 }
@@ -148,11 +164,6 @@ save_pwd (struct passwd *src)
 static void
 free_pwd (struct passwd *src)
 {
-  free (src->pw_name);
-  free (src->pw_passwd);
-  free (src->pw_gecos);
-  free (src->pw_dir);
-  free (src->pw_shell);
   free (src);
 }
 
