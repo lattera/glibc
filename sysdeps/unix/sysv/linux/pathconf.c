@@ -1,5 +1,5 @@
-/* Linux specific extensions to pathconf.
-   Copyright (C) 1991,95,96,98,99,2000,2001 Free Software Foundation, Inc.
+/* Get file-specific information about a file.  Linux version.
+   Copyright (C) 1991,95,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,78 +17,24 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <unistd.h>
-#include <limits.h>
-#include <sys/statfs.h>
+#include "pathconf.h"
 
-#include "linux_fsinfo.h"
+static long int posix_pathconf (const char *file, int name);
 
-
-/* The Linux kernel header mentioned this as a kind of generic value.  */
-#define LINUX_LINK_MAX	127
-
-static long int posix_pathconf (const char *path, int name);
+/* Define this first, so it can be inlined.  */
+#define __pathconf static posix_pathconf
+#include <sysdeps/posix/pathconf.c>
 
 
-/* Get file-specific information about descriptor FD.  */
+/* Get file-specific information about FILE.  */
 long int
-__pathconf (path, name)
-     const char *path;
-     int name;
+__pathconf (const char *file, int name)
 {
   if (name == _PC_LINK_MAX)
     {
       struct statfs fsbuf;
-
-      /* Determine the filesystem type.  */
-      if (__statfs (path, &fsbuf) < 0)
-	{
-	  if (errno == ENOSYS)
-	    /* not possible, return the default value.  */
-	    return LINUX_LINK_MAX;
-
-	  /* Some error occured.  */
-          return -1;
-	}
-
-      switch (fsbuf.f_type)
-	{
-	case EXT2_SUPER_MAGIC:
-	  return EXT2_LINK_MAX;
-
-	case MINIX_SUPER_MAGIC:
-	case MINIX_SUPER_MAGIC2:
-	  return MINIX_LINK_MAX;
-
-	case MINIX2_SUPER_MAGIC:
-	case MINIX2_SUPER_MAGIC2:
-	  return MINIX2_LINK_MAX;
-
-	case XENIX_SUPER_MAGIC:
-	  return XENIX_LINK_MAX;
-
-	case SYSV4_SUPER_MAGIC:
-	case SYSV2_SUPER_MAGIC:
-	  return SYSV_LINK_MAX;
-
-	case COH_SUPER_MAGIC:
-	  return COH_LINK_MAX;
-
-	case UFS_MAGIC:
-	case UFS_CIGAM:
-	  return UFS_LINK_MAX;
-
-	case REISERFS_SUPER_MAGIC:
-	  return REISERFS_LINK_MAX;
-
-	default:
-	  return LINUX_LINK_MAX;
-	}
+      return statfs_link_max (__statfs (file, &fsbuf), &fsbuf);
     }
 
-  return posix_pathconf (path, name);
+  return posix_pathconf (file, name);
 }
-
-#define __pathconf static posix_pathconf
-#include <sysdeps/posix/pathconf.c>

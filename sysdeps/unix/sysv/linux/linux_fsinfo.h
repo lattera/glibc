@@ -115,4 +115,8 @@
 #define XENIX_LINK_MAX		126     /* ?? */
 #define XFS_LINK_MAX		2147483647
 
+/* The Linux kernel header mentioned this as a kind of generic value.  */
+#define LINUX_LINK_MAX	127
+
+
 #endif	/* linux_fsinfo.h */

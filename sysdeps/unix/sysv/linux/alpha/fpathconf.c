@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1998,2000,2002 Free Software Foundation, Inc.
+/* Get file-specific information about a descriptor.  Linux/Alpha version.
+   Copyright (C) 1991,95,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,36 +17,25 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
-#include <stddef.h>
 #include <unistd.h>
-#include <limits.h>
 #include <sys/statfs.h>
 
-#include <linux_fsinfo.h>
+
+static long int linux_fpathconf (int fd, int name);
+
+/* Define this first, so it can be inlined.  */
+#define __fpathconf static linux_fpathconf
+#include <sysdeps/unix/sysv/linux/fpathconf.c>
 
 
-/* The Linux kernel header mentioned this as a kind of generic value.  */
-#define LINUX_LINK_MAX	127
-
-static long int default_fpathconf (int fd, int name);
-
-/* Get file-specific information about descriptor FD.  */
+/* Get file-specific information about FD.  */
 long int
-__fpathconf (fd, name)
-     int fd;
-     int name;
+__pathconf (int fd, int name)
 {
-  if (fd < 0)
-    {
-      __set_errno (EBADF);
-      return -1;
-    }
-
   if (name == _PC_FILESIZEBITS)
     {
-      /* Test whether this is on a ext2 filesystem which supports large
-	 files.  */
+      /* Test whether this is on a ext2 or UFS filesystem which
+	 support large files.  */
       struct statfs fs;
 
       if (__fstatfs (fd, &fs) < 0
@@ -57,56 +47,6 @@ __fpathconf (fd, name)
       /* This filesystem supported files >2GB.  */
       return 64;
     }
-  if (name == _PC_LINK_MAX)
-    {
-      struct statfs fsbuf;
 
-      /* Determine the filesystem type.  */
-      if (__fstatfs (fd, &fsbuf) < 0)
-	/* not possible, return the default value.  */
-	return LINUX_LINK_MAX;
-
-      switch (fsbuf.f_type)
-	{
-	case EXT2_SUPER_MAGIC:
-	  return EXT2_LINK_MAX;
-
-	case MINIX_SUPER_MAGIC:
-	case MINIX_SUPER_MAGIC2:
-	  return MINIX_LINK_MAX;
-
-	case MINIX2_SUPER_MAGIC:
-	case MINIX2_SUPER_MAGIC2:
-	  return MINIX2_LINK_MAX;
-
-	case XENIX_SUPER_MAGIC:
-	  return XENIX_LINK_MAX;
-
-	case SYSV4_SUPER_MAGIC:
-	case SYSV2_SUPER_MAGIC:
-	  return SYSV_LINK_MAX;
-
-	case COH_SUPER_MAGIC:
-	  return COH_LINK_MAX;
-
-	case UFS_MAGIC:
-	case UFS_CIGAM:
-	  return UFS_LINK_MAX;
-
-	case REISERFS_SUPER_MAGIC:
-	  return REISERFS_LINK_MAX;
-
-	case XFS_SUPER_MAGIC:
-	  return XFS_LINK_MAX;
-
-	default:
-	  return LINUX_LINK_MAX;
-	}
-    }
-
-  /* Fallback to the generic version.  */
-  return default_fpathconf (fd, name);
+  return linux_fpathconf (fd, name);
 }
-
-#define __fpathconf static default_fpathconf
-#include <sysdeps/posix/fpathconf.c>
