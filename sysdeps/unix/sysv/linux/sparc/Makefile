@@ -42,11 +42,3 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	mv -f $(@:.h=.d)-t2 $(@:.h=.d)
 
 endif
-
-ifeq ($(subdir),elf)
-ifeq (yes,$(build-shared))
-# This is needed to support g++ v2 and v3.
-sysdep_routines += framestate
-shared-only-routines += framestate
-endif
-endif

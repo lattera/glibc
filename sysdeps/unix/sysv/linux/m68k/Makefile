@@ -10,12 +10,6 @@ endif
 ifeq ($(subdir),elf)
 sysdep-others += lddlibc4
 install-bin += lddlibc4
-
-ifeq (yes,$(build-shared))
-# This is needed to support g++ v2 and v3.
-sysdep_routines += framestate
-shared-only-routines += framestate
-endif
 endif
 
 ifeq ($(subdir),resource)
