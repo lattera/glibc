@@ -400,15 +400,10 @@ _dl_start_user:\n\
 	# Call the function to run the initializers.\n\
 	jal _dl_init
 	addiu $29, 16\n\
-	# Pass our finalizer function to the user in ra.\n\
-	la $31, _dl_fini\n\
+	# Pass our finalizer function to the user in $2 as per ELF ABI.\n\
+	la $2, _dl_fini\n\
 	# Jump to the user entry point.\n\
-	move $25, $17\n\
-	lw $4, 0($29)\n\
-	lw $5, 4($29)\n\
-	lw $6, 8($29)\n\
-	lw $7, 12($29)\n\
-	jr $25\n"\
+	jr $17\n"\
 _RTLD_EPILOGUE(ENTRY_POINT)\
 	"\n.previous"\
 );
