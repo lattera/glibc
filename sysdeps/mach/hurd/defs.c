@@ -1,5 +1,5 @@
 /* Definitions of global stdio data structures.
-   Copyright (C) 1991, 92, 93, 94, 95, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,7 +66,10 @@ init_stdio (void)
 
   (void) &init_stdio;		/* Avoid "defined but not used" warning.  */
 }
-text_set_element (_hurd_fd_subinit, init_stdio);
+/* This initializer will be run along with other vanilla libc initializers
+   in a normal Posixoid environment.  The earlier Hurd-speciifc initializer
+   phases cannot use normal facilities like malloc (which stdio uses).  */
+text_set_element (__libc_subinit, init_stdio);
 
 /* This function MUST be in this file!
    This is because we want _cleanup to go into the __libc_atexit set
