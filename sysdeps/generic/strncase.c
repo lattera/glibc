@@ -1,6 +1,6 @@
 /* Compare at most N characters of two strings without taking care for
    the case.
-   Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 1997, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,20 +58,16 @@ __strncasecmp (s1, s2, n LOCALE_PARAM)
 {
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;
-  unsigned char c1, c2;
+  int result;
 
   if (p1 == p2 || n == 0)
     return 0;
 
-  do
-    {
-      c1 = TOLOWER (*p1++);
-      c2 = TOLOWER (*p2++);
-      if (c1 == '\0' || c1 != c2)
-	return c1 - c2;
-    } while (--n > 0);
+  while ((result = TOLOWER (*p1) - TOLOWER (*p2++)) == 0)
+    if (*p1++ == '\0' || --n == 0)
+      break;
 
-  return c1 - c2;
+  return result;
 }
 #ifndef __strncasecmp
 weak_alias (__strncasecmp, strncasecmp)
