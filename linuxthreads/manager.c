@@ -353,7 +353,53 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       void *map_addr;
 
       /* Allocate space for stack and thread descriptor at default address */
-#ifdef NEED_SEPARATE_REGISTER_STACK
+#if FLOATING_STACKS
+      if (attr != NULL)
+	{
+	  guardsize = page_roundup (attr->__guardsize, granularity);
+	  stacksize = __pthread_max_stacksize - guardsize;
+	  stacksize = MIN (stacksize,
+			   page_roundup (attr->__stacksize, granularity));
+	}
+      else
+	{
+	  guardsize = granularity;
+	  stacksize = __pthread_max_stacksize - guardsize;
+	}
+
+      map_addr = mmap(NULL, stacksize + guardsize,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      if (map_addr == MAP_FAILED)
+        /* No more memory available.  */
+        return -1;
+
+# ifdef NEED_SEPARATE_REGISTER_STACK
+      guardaddr = map_addr + stacksize / 2;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+
+      new_thread_bottom = (char *) map_addr;
+      new_thread = ((pthread_descr) (new_thread_bottom + stacksize
+				     + guardsize)) - 1;
+# elif _STACK_GROWS_DOWN
+      guardaddr = map_addr;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+
+      new_thread_bottom = (char *) map_addr + guardsize;
+      new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
+# elif _STACK_GROWS_UP
+      guardaddr = map_addr + stacksize;
+      if (guardsize > 0)
+	mprotect (guardaddr, guardsize, PROT_NONE);
+
+      new_thread = (pthread_descr) map_addr;
+      new_thread_bottom = (char *) (new_thread + 1);
+# else
+#  error You must define a stack direction
+# endif /* Stack direction */
+#else /* !FLOATING_STACKS */
       void *res_addr;
 
       if (attr != NULL)
@@ -369,6 +415,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	  stacksize = STACK_SIZE - granularity;
 	}
 
+# ifdef NEED_SEPARATE_REGISTER_STACK
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize - guardsize;
       /* Includes guard area, unlike the normal case.  Use the bottom
@@ -378,8 +425,6 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
        avoids the risk of intermittent failures due to other mappings
        in the same region.  The cost is that we might be able to map
        slightly fewer stacks.  */
-
-      /* XXX Fix for floating stacks with variable sizes.  */
 
       /* First the main stack: */
       map_addr = (caddr_t)((char *)(new_thread + 1) - stacksize / 2);
@@ -409,61 +454,7 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
       guardaddr = new_thread_bottom + stacksize/2;
       /* We leave the guard area in the middle unmapped.	*/
-#else  /* !NEED_SEPARATE_REGISTER_STACK */
-# if FLOATING_STACKS
-      if (attr != NULL)
-	{
-	  guardsize = page_roundup (attr->__guardsize, granularity);
-	  stacksize = __pthread_max_stacksize - guardsize;
-	  stacksize = MIN (stacksize,
-			   page_roundup (attr->__stacksize, granularity));
-	}
-      else
-	{
-	  guardsize = granularity;
-	  stacksize = __pthread_max_stacksize - guardsize;
-	}
-
-      map_addr = mmap(NULL, stacksize + guardsize,
-		      PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-      if (map_addr == MAP_FAILED)
-        /* No more memory available.  */
-        return -1;
-
-#  ifdef _STACK_GROWS_DOWN
-      guardaddr = map_addr;
-      if (guardsize > 0)
-	mprotect (guardaddr, guardsize, PROT_NONE);
-
-      new_thread_bottom = (char *) map_addr + guardsize;
-      new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
-#  elif _STACK_GROWS_UP
-      guardaddr = map_addr + stacksize;
-      if (guardsize > 0)
-	mprotect (guardaddr, guardsize, PROT_NONE);
-
-      new_thread = (pthread_descr) map_addr;
-      new_thread_bottom = (char *) (new_thread + 1);
-#  else
-#    error You must define a stack direction
-#  endif /* Stack direction */
-# else /* !FLOATING_STACKS */
-      void *res_addr;
-
-      if (attr != NULL)
-	{
-	  guardsize = page_roundup (attr->__guardsize, granularity);
-	  stacksize = STACK_SIZE - guardsize;
-	  stacksize = MIN (stacksize,
-			   page_roundup (attr->__stacksize, granularity));
-	}
-      else
-	{
-	  guardsize = granularity;
-	  stacksize = STACK_SIZE - granularity;
-	}
-
+# else  /* !NEED_SEPARATE_REGISTER_STACK */
 #  ifdef _STACK_GROWS_DOWN
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
@@ -501,8 +492,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 	  mprotect (guardaddr, guardsize, PROT_NONE);
 
 #  endif /* stack direction */
-# endif
-#endif /* !NEED_SEPARATE_REGISTER_STACK */
+# endif  /* !NEED_SEPARATE_REGISTER_STACK */
+#endif   /* !FLOATING_STACKS */
     }
   *out_new_thread = new_thread;
   *out_new_thread_bottom = new_thread_bottom;

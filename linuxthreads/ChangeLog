@@ -1,3 +1,12 @@
+2001-07-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/useldt.h: Fix typo in ARCH_STACK_MAX_SIZE comment.
+
+	* sysdeps/ia64/pt-machine.h (FLOATING_STACKS): Define.
+	(ARCH_STACK_MAX_SIZE): Define.
+	* manager.c (pthread_allocate_stack): Handle FLOATING_STACKS with
+	NEED_SEPARATE_REGISTER_STACK.
+
 2001-07-16  Andreas Schwab  <schwab@suse.de>
 
 	* Makefile (before-compile): Don't add $(objpfx)crti.o.

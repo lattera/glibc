@@ -31,6 +31,12 @@
 
 #define NEED_SEPARATE_REGISTER_STACK
 
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     32*1024*1024
+
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.
    r12 (sp) is the stack pointer. */
