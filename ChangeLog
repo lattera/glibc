@@ -1,3 +1,16 @@
+2001-09-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (struct cmsghdr): Don't
+	declare __cmsg_data field if its size would be bigger than 0.
+	(CMSG_DATA): Adjust accordingly.
+	* sysdeps/unix/sysv/aix/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h: Likewise.
+
 2001-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/TESTS: Add entries for IBM1160 and IBM1161.
@@ -764,7 +777,7 @@
 	* elf/dl-reloc.c (RESOLVE_MAP, RESOLVE): Use elf_machine_type_class
 	instead of elf_machine_lookup_noexec_p and elf_machine_lookup_noplt_p.
 	Pass type_class to _dl_lookup_*.
-	* elf/dl-lookup.c (_dl_lookup_symbol): Take type_clas parameter now.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Take type_class parameter now.
 	Pass around just type_class instead of noexec, noplt pair.
 	(_dl_lookup_versioned_symbol): Likewise.
 	(_dl_lookup_symbol_skip): Pass around just type_class instead of
