@@ -1,3 +1,9 @@
+2003-03-13  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/clone.S: introduce and use local
+	label .Lthread_start since current binutils don't allow branches
+	to globally visible symbols.
+
 2003-03-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (BREAK_INSN_1, BREAK_INSN,
