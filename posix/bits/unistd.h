@@ -58,7 +58,7 @@ pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 }
 # else
 extern __always_inline __wur ssize_t
-pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
+pread (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
       && (!__builtin_constant_p (__nbytes) || __nbytes > __bos0 (__buf)))

@@ -54,7 +54,7 @@ CFLAGS-recv_chk.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-recvfrom_chk.c = -fexceptions -fasynchronous-unwind-tables
 
 tests = backtrace-tst tst-chk1 tst-chk2 tst-chk3 \
-	test-strcpy_chk test-stpcpy_chk
+	tst-lfschk1 tst-lfschk2 tst-lfschk3 test-strcpy_chk test-stpcpy_chk
 
 extra-libs = libSegFault libpcprofile
 extra-libs-others = $(extra-libs)

@@ -1,3 +1,21 @@
+2005-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/unistd.h (pread) [__USE_FILE_OFFSET64]: Use __off64_t
+	instead of __off_t for last argument.
+	* debug/Makefile (tests): Add tst-lfschk{1,2,3}.
+	* debug/tst-lfschk1.c: New test.
+	* debug/tst-lfschk2.c: New test.
+	* debug/tst-lfschk3.c: New test.
+
+2005-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/termios.h (CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Add __USE_MISC
+	and __USE_XOPEN guards to match linux/bits/termios.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Likewise.
+	(CMSPAR): Define.
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h: Likewise.
+
 2005-02-10  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* sysdeps/ia64/elf/initfini.c: Add local _init and _fini labels.

@@ -1,5 +1,6 @@
 /* termios type and macro definitions.  Linux/SPARC version.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1995, 1996, 1997, 2000, 2005
+       Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,34 +85,41 @@ struct termios
 #define ONLRET	0x00000020
 #define OFILL	0x00000040
 #define OFDEL	0x00000080
-#define NLDLY	0x00000100
-#define   NL0	0x00000000
-#define   NL1	0x00000100
-#define CRDLY	0x00000600
-#define   CR0	0x00000000
-#define   CR1	0x00000200
-#define   CR2	0x00000400
-#define   CR3	0x00000600
-#define TABDLY	0x00001800
-#define   TAB0	0x00000000
-#define   TAB1	0x00000800
-#define   TAB2	0x00001000
-#define   TAB3	0x00001800
-#define   XTABS	0x00001800
-#define BSDLY	0x00002000
-#define   BS0	0x00000000
-#define   BS1	0x00002000
-#define VTDLY	0x00004000
-#define   VT0	0x00000000
-#define   VT1	0x00004000
+#if defined __USE_MISC || defined __USE_XOPEN
+# define NLDLY	0x00000100
+# define   NL0	0x00000000
+# define   NL1	0x00000100
+# define CRDLY	0x00000600
+# define   CR0	0x00000000
+# define   CR1	0x00000200
+# define   CR2	0x00000400
+# define   CR3	0x00000600
+# define TABDLY	0x00001800
+# define   TAB0	0x00000000
+# define   TAB1	0x00000800
+# define   TAB2	0x00001000
+# define   TAB3	0x00001800
+# define BSDLY	0x00002000
+# define   BS0	0x00000000
+# define   BS1	0x00002000
 #define FFDLY	0x00008000
 #define   FF0	0x00000000
 #define   FF1	0x00008000
+#endif
+#define VTDLY	0x00004000
+#define   VT0	0x00000000
+#define   VT1	0x00004000
 #define PAGEOUT 0x00010000	/* SUNOS specific */
 #define WRAP    0x00020000	/* SUNOS specific */
 
+#ifdef __USE_MISC
+# define   XTABS	0x00001800
+#endif
+
 /* c_cflag bit meaning */
-#define CBAUD	0x0000100f
+#ifdef __USE_MISC
+# define CBAUD	0x0000100f
+#endif
 #define  B0	0x00000000	/* hang up */
 #define  B50	0x00000001
 #define  B75	0x00000002
@@ -128,8 +136,10 @@ struct termios
 #define  B9600	0x0000000d
 #define  B19200	0x0000000e
 #define  B38400	0x0000000f
-#define EXTA    B19200
-#define EXTB    B38400
+#ifdef __USE_MISC
+# define EXTA    B19200
+# define EXTB    B38400
+#endif
 #define  CSIZE  0x00000030
 #define   CS5	0x00000000
 #define   CS6	0x00000010
@@ -141,7 +151,9 @@ struct termios
 #define PARODD	0x00000200
 #define HUPCL	0x00000400
 #define CLOCAL	0x00000800
-#define CBAUDEX 0x00001000
+#ifdef __USE_MISC
+# define CBAUDEX 0x00001000
+#endif
 #define  B57600  0x00001001
 #define  B115200 0x00001002
 #define  B230400 0x00001003
@@ -159,26 +171,32 @@ struct termios
 #define B2000000 0x0000100f
 #define __MAX_BAUD B2000000
 
-#define CIBAUD	0x100f0000	/* input baud rate (not used) */
-#define CMSPAR	0x40000000	/* mark or space (stick) parity */
-#define CRTSCTS	0x80000000	/* flow control */
+#ifdef __USE_MISC
+# define CIBAUD	 0x100f0000	/* input baud rate (not used) */
+# define CMSPAR	 0x40000000	/* mark or space (stick) parity */
+# define CRTSCTS 0x80000000	/* flow control */
+#endif
 
 /* c_lflag bits */
 #define ISIG	0x00000001
 #define ICANON	0x00000002
-#define XCASE	0x00000004
+#if defined __USE_MISC || defined __USE_XOPEN
+# define XCASE	0x00000004
+#endif
 #define ECHO	0x00000008
 #define ECHOE	0x00000010
 #define ECHOK	0x00000020
 #define ECHONL	0x00000040
 #define NOFLSH	0x00000080
 #define TOSTOP	0x00000100
-#define ECHOCTL	0x00000200
-#define ECHOPRT	0x00000400
-#define ECHOKE	0x00000800
-#define DEFECHO 0x00001000	/* SUNOS thing, what is it? */
-#define FLUSHO	0x00002000
-#define PENDIN	0x00004000
+#ifdef __USE_MISC
+# define ECHOCTL	0x00000200
+# define ECHOPRT	0x00000400
+# define ECHOKE		0x00000800
+# define DEFECHO 	0x00001000	/* SUNOS thing, what is it? */
+# define FLUSHO		0x00002000
+# define PENDIN		0x00004000
+#endif
 #define IEXTEN	0x00008000
 
 /* modem lines */
