@@ -30,15 +30,10 @@ routines := getutent getutent_r getutid getutline getutid_r getutline_r \
 
 CFLAGS-grantpt.c = -DLIBEXECDIR='"$(libexecdir)"'
 
-others = utmpd utmpdump pt_chown
-install-sbin = utmpd
+others = utmpdump pt_chown
 install-others = $(inst_libexecdir)/pt_chown
-utmpd-routines := connection database error request xtmp
-extra-objs := $(utmpd-routines:=.o)
 
-distribute := utmp-private.h programs/xtmp.h programs/utmpd.h README.utmpd \
-	      programs/utmpd-private.h $(utmpd-routines:%=programs/%.c) \
-	      pty-private.h
+distribute := utmp-private.h programs/xtmp.h pty-private.h
 
 subdir-dirs = programs
 vpath %.c programs
