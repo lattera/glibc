@@ -91,7 +91,8 @@ enum
   ASCII_set = 0,
   JISX0208_1978_set,
   JISX0208_1983_set,
-  JISX0201_set,
+  JISX0201_Roman_set,
+  JISX0201_Kana_set,
   GB2312_set,
   KSC5601_set,
   JISX0212_set,
@@ -224,13 +225,6 @@ gconv_end (struct gconv_step *data)
   {									      \
     uint32_t ch = *inptr;						      \
 									      \
-    /* This is a 7bit character set, disallow all 8bit characters.  */	      \
-    if (ch > 0x7f)							      \
-      {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-									      \
     /* Recognize escape sequences.  */					      \
     if (ch == ESC)							      \
       {									      \
@@ -260,7 +254,14 @@ gconv_end (struct gconv_step *data)
 	    else if (inptr[2] == 'J')					      \
 	      {								      \
 		/* JIS X 0201 selected.  */				      \
-		set = JISX0201_set;					      \
+		set = JISX0201_Roman_set;				      \
+		inptr += 3;						      \
+		continue;						      \
+	      }								      \
+	    else if (var == iso2022jp2 && inptr[2] == 'I')		      \
+	      {								      \
+		/* JIS X 0201 selected.  */				      \
+		set = JISX0201_Kana_set;				      \
 		inptr += 3;						      \
 		continue;						      \
 	      }								      \
@@ -333,7 +334,18 @@ gconv_end (struct gconv_step *data)
 	|| (var >= ISO88591_set && ch < 0x20))				      \
       /* Almost done, just advance the input pointer.  */		      \
       ++inptr;								      \
-    else if (set == JISX0201_set)					      \
+    else if (set == JISX0201_Roman_set)					      \
+      {									      \
+	/* Use the JIS X 0201 table.  */				      \
+	ch = jisx0201_to_ucs4 (ch);					      \
+	if (ch == UNKNOWN_10646_CHAR)					      \
+	  {								      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
+	  }								      \
+	++inptr;							      \
+      }									      \
+    else if (set == JISX0201_Kana_set)					      \
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
@@ -348,13 +360,13 @@ gconv_end (struct gconv_step *data)
       {									      \
 	/* This is quite easy.  All characters are defined and the	      \
 	   ISO 10646 value is computed by adding 0x80.  */		      \
-	ch += 0x80;							      \
+	ch |= 0x80;							      \
 	++inptr;							      \
       }									      \
     else if (set == ISO88597_set)					      \
       {									      \
 	/* We use the table from the ISO 8859-7 module.  */		      \
-	ch = iso88597_to_ucs4[ch - 0x20];				      \
+	ch = iso88597_to_ucs4[(ch & 0x7f) - 0x20];			      \
 	if (ch == 0)							      \
 	  {								      \
 	    result = GCONV_ILLEGAL_INPUT;				      \
@@ -415,16 +427,14 @@ gconv_end (struct gconv_step *data)
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    unsigned char ch;							      \
+    uint32_t ch;							      \
     size_t written = 0;							      \
 									      \
     ch = *((uint32_t *) inptr);						      \
 									      \
     /* First see whether we can write the character using the currently	      \
        selected character set.  */					      \
-    if (set == ASCII_set						      \
-	|| (ch >= 0x01 && ((set < ISO88591_set && (ch < 0x21 || ch == 0x7f))  \
-			   || (set >= ISO88591_set && ch < 0x20))))	      \
+    if (set == ASCII_set)						      \
       {									      \
 	/* Please note that the NUL byte is *not* matched if we are not	      \
 	   currently using the ASCII charset.  This is because we must	      \
@@ -435,13 +445,35 @@ gconv_end (struct gconv_step *data)
 	    written = 1;						      \
 	  }								      \
       }									      \
-    else if (set == JISX0201_set)					      \
-      written = ucs4_to_jisx0201 (ch, outptr);				      \
+    else if (set == JISX0201_Roman_set)					      \
+      {									      \
+	unsigned char buf[2];						      \
+	written = ucs4_to_jisx0201 (ch, buf);				      \
+	if (written != UNKNOWN_10646_CHAR && buf[0] > 0x20 && buf[0] < 0x80)  \
+	  {								      \
+	    *outptr++ = buf[0];						      \
+	    written = 1;						      \
+	  }								      \
+	else								      \
+	  written = UNKNOWN_10646_CHAR;					      \
+      }									      \
+    else if (set == JISX0201_Kana_set)					      \
+      {									      \
+	unsigned char buf[2];						      \
+	written = ucs4_to_jisx0201 (ch, buf);				      \
+	if (written != UNKNOWN_10646_CHAR && buf[0] > 0xa0 && buf[0] < 0xe0)  \
+	  {								      \
+	    *outptr++ = buf[0] - 0x80;					      \
+	    written = 1;						      \
+	  }								      \
+	else								      \
+	  written = UNKNOWN_10646_CHAR;					      \
+      }									      \
     else if (set == ISO88591_set)					      \
       {									      \
-	if (ch >= 0xa0 && ch <= 0xff)					      \
+	if (ch >= 0x80 && ch <= 0xff)					      \
 	  {								      \
-	    *outptr++ = ch - 0x80;					      \
+	    *outptr++ = ch;						      \
 	    written = 1;						      \
 	  }								      \
       }									      \
@@ -456,7 +488,7 @@ gconv_end (struct gconv_step *data)
 	    unsigned char res = iso88597_from_ucs4[ch + rp->idx];	      \
 	    if (res != '\0')						      \
 	      {								      \
-		*outptr++ = res;					      \
+		*outptr++ = res | 0x80;					      \
 		written = 1;						      \
 	      }								      \
 	  }								      \
@@ -488,9 +520,11 @@ gconv_end (struct gconv_step *data)
 	    result = GCONV_FULL_OUTPUT;					      \
 	    break;							      \
 	  }								      \
+	else if (written != UNKNOWN_10646_CHAR)				      \
+	  outptr += written;						      \
       }									      \
 									      \
-    if (written == UNKNOWN_10646_CHAR)					      \
+    if (written == UNKNOWN_10646_CHAR || written == 0)			      \
       {									      \
 	/* Either this is an unknown character or we have to switch	      \
 	   the currently selected character set.  The character sets	      \
@@ -529,29 +563,6 @@ gconv_end (struct gconv_step *data)
 									      \
 	    *outptr++ = ch;						      \
 	  }								      \
-	else if (ch >= 0xa0 && ch <= 0xff)				      \
-	  {								      \
-	    /* This character set is not available in ISO-2022-JP.  */	      \
-	    if (var == iso2022jp)					      \
-	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    /* We must use the ISO 8859-1 upper half.   */		      \
-	    *outptr++ = ESC;						      \
-	    *outptr++ = '.';						      \
-	    *outptr++ = 'A';						      \
-	    set = ISO88591_set;						      \
-									      \
-	    if (NEED_LENGTH_TEST && outptr == outend)			      \
-	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    *outptr++ = ch - 0x80;					      \
-	  }								      \
 	else								      \
 	  {								      \
 	    /* Now it becomes difficult.  We must search the other	      \
@@ -562,13 +573,13 @@ gconv_end (struct gconv_step *data)
 	    unsigned char buf[2];					      \
 									      \
 	    written = ucs4_to_jisx0201 (ch, buf);			      \
-	    if (written != UNKNOWN_10646_CHAR)				      \
+	    if (written != UNKNOWN_10646_CHAR && buf[0] < 0x80)		      \
 	      {								      \
 		/* We use JIS X 0201.  */				      \
 		*outptr++ = ESC;					      \
-		*outptr++ = '$';					      \
-		*outptr++ = '@';					      \
-		set = JISX0201_set;					      \
+		*outptr++ = '(';					      \
+		*outptr++ = 'J';					      \
+		set = JISX0201_Roman_set;				      \
 									      \
 		if (NEED_LENGTH_TEST && outptr == outend)		      \
 		  {							      \
@@ -606,11 +617,11 @@ gconv_end (struct gconv_step *data)
 		  }							      \
 		else							      \
 		  {							      \
-		    written = ucs4_to_jisx0208 (ch, buf, 2);		      \
+		    written = ucs4_to_jisx0212 (ch, buf, 2);		      \
 		    if (written != UNKNOWN_10646_CHAR)			      \
 		      {							      \
 			/* We use JIS X 0212.  */			      \
-			if (outptr + 4 > outend)			      \
+			if (NEED_LENGTH_TEST && outptr + 4 > outend)	      \
 			  {						      \
 			    result = GCONV_FULL_OUTPUT;			      \
 			    break;					      \
@@ -632,43 +643,51 @@ gconv_end (struct gconv_step *data)
 		      }							      \
 		    else						      \
 		      {							      \
-			written = ucs4_to_gb2312 (ch, buf, 2);		      \
-			if (written != UNKNOWN_10646_CHAR)		      \
+			written = ucs4_to_jisx0201 (ch, buf);		      \
+			if (written != UNKNOWN_10646_CHAR && buf[0] >= 0x80)  \
 			  {						      \
-			    /* We use GB 2312.  */			      \
+			    /* We use JIS X 0201.  */			      \
 			    *outptr++ = ESC;				      \
-			    *outptr++ = '$';				      \
-			    *outptr++ = 'A';				      \
-			    set = GB2312_set;				      \
+			    *outptr++ = '(';				      \
+			    *outptr++ = 'I';				      \
+			    set = JISX0201_Kana_set;			      \
 									      \
-			    if (NEED_LENGTH_TEST && outptr + 2 > outend)      \
+			    if (NEED_LENGTH_TEST && outptr == outend)	      \
+			      {						      \
+			        result = GCONV_FULL_OUTPUT;		      \
+			        break;					      \
+			      }						      \
+									      \
+			    *outptr++ = buf[0] - 0x80;			      \
+			  }						      \
+			else if (ch != 0xa5 && ch >= 0x80 && ch <= 0xff)      \
+			  {						      \
+			    /* ISO 8859-1 upper half.   */		      \
+			    *outptr++ = ESC;				      \
+			    *outptr++ = '.';				      \
+			    *outptr++ = 'A';				      \
+			    set = ISO88591_set;				      \
+									      \
+			    if (NEED_LENGTH_TEST && outptr == outend)	      \
 			      {						      \
 				result = GCONV_FULL_OUTPUT;		      \
 				break;					      \
 			      }						      \
 									      \
-			    *outptr++ = buf[0];				      \
-			    *outptr++ = buf[1];				      \
+			    *outptr++ = ch;				      \
 			  }						      \
 			else						      \
 			  {						      \
-			    written = ucs4_to_ksc5601 (ch, buf, 2);	      \
+			    written = ucs4_to_gb2312 (ch, buf, 2);	      \
 			    if (written != UNKNOWN_10646_CHAR)		      \
 			      {						      \
-				/* We use KSC 5601.  */			      \
-				if (outptr + 4 > outend)		      \
-				  {					      \
-				    result = GCONV_FULL_OUTPUT;		      \
-				    break;				      \
-				  }					      \
+				/* We use GB 2312.  */			      \
 				*outptr++ = ESC;			      \
 				*outptr++ = '$';			      \
-				*outptr++ = '(';			      \
-				*outptr++ = 'C';			      \
-				set = KSC5601_set;			      \
+				*outptr++ = 'A';			      \
+				set = GB2312_set;			      \
 									      \
-				if (NEED_LENGTH_TEST			      \
-				    && outptr + 2 > outend)		      \
+				if (NEED_LENGTH_TEST && outptr + 2 > outend)  \
 				  {					      \
 				    result = GCONV_FULL_OUTPUT;		      \
 				    break;				      \
@@ -679,8 +698,37 @@ gconv_end (struct gconv_step *data)
 			      }						      \
 			    else					      \
 			      {						      \
-				result = GCONV_ILLEGAL_INPUT;		      \
-				break;					      \
+				written = ucs4_to_ksc5601 (ch, buf, 2);       \
+				if (written != UNKNOWN_10646_CHAR)	      \
+				  {					      \
+				    /* We use KSC 5601.  */		      \
+				    if (NEED_LENGTH_TEST 		      \
+					&& outptr + 4 > outend)		      \
+				      {					      \
+					result = GCONV_FULL_OUTPUT;	      \
+					break;				      \
+				      }					      \
+				    *outptr++ = ESC;			      \
+				    *outptr++ = '$';			      \
+				    *outptr++ = '(';			      \
+				    *outptr++ = 'C';			      \
+				    set = KSC5601_set;			      \
+									      \
+				    if (NEED_LENGTH_TEST		      \
+					&& outptr + 2 > outend)		      \
+				      {					      \
+					result = GCONV_FULL_OUTPUT;	      \
+					break;				      \
+				      }					      \
+									      \
+				    *outptr++ = buf[0];			      \
+				    *outptr++ = buf[1];			      \
+				  }					      \
+				else					      \
+				  {					      \
+				    result = GCONV_ILLEGAL_INPUT;	      \
+				    break;				      \
+				  }					      \
 			      }						      \
 			  }						      \
 		      }							      \

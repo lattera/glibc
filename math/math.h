@@ -269,10 +269,8 @@ struct exception
   };
 
 # ifdef __cplusplus
-extern int __matherr __P ((struct __exception *__exc));
 extern int matherr __P ((struct __exception *__exc));
 # else
-extern int __matherr __P ((struct exception *__exc));
 extern int matherr __P ((struct exception *__exc));
 # endif
 

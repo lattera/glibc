@@ -54,8 +54,6 @@ struct timezone
    Returns 0 on success, -1 on errors.
    NOTE: This form of timezone information is obsolete.
    Use the functions and variables declared in <time.h> instead.  */
-extern int __gettimeofday __P ((struct timeval *__tv,
-				struct timezone *__tz));
 extern int gettimeofday __P ((struct timeval *__tv,
 			      struct timezone *__tz));
 

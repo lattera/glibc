@@ -402,7 +402,6 @@ extern int lchown __P ((__const char *__file, __uid_t __owner,
 #endif /* Use BSD || X/Open Unix.  */
 
 /* Change the process's working directory to PATH.  */
-extern int __chdir __P ((__const char *__path));
 extern int chdir __P ((__const char *__path));
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED

@@ -17,6 +17,7 @@ extern int __fchown __P ((int __fd,
 			  __uid_t __owner, __gid_t __group));
 extern int __lchown __P ((__const char *__file, __uid_t __owner,
 			  __gid_t __group));
+extern int __chdir __P ((__const char *__path));
 extern int __fchdir __P ((int __fd));
 extern char *__getcwd __P ((char *__buf, size_t __size));
 

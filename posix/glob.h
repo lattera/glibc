@@ -183,7 +183,6 @@ extern void globfree64 __P ((glob64_t *__pglob));
 
    This function is not part of the interface specified by POSIX.2
    but several programs want to use it.  */
-extern int __glob_pattern_p __P ((__const char *__pattern, int __quote));
 extern int glob_pattern_p __P ((__const char *__pattern, int __quote));
 #endif
 

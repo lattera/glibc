@@ -22,13 +22,13 @@
 #define _JIS0201_H	1
 
 /* Conversion table.  */
-extern const uint32_t __jis0201_to_ucs4[];
+extern const uint32_t __jisx0201_to_ucs4[];
 
 
 static inline uint32_t
 jisx0201_to_ucs4 (char ch)
 {
-  uint32_t val = __jis0201_to_ucs4[(unsigned char) ch];
+  uint32_t val = __jisx0201_to_ucs4[(unsigned char) ch];
 
   if (val == 0 && ch != '\0')
     val = UNKNOWN_10646_CHAR;

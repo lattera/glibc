@@ -81,7 +81,7 @@ ucs4_to_jisx0208 (uint32_t wch, char *s, size_t avail)
   if (ch < 0x100)
     cp = __jisx0208_from_ucs4_lat1[ch];
   else if (ch >= 0x391 && ch <= 0x451)
-    cp = __jisx0208_from_ucs4_greek[ch];
+    cp = __jisx0208_from_ucs4_greek[ch - 0x391];
   else
     {
       const struct jisx0208_ucs_idx *rp = __jisx0208_from_ucs_idx;

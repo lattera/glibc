@@ -1,3 +1,43 @@
+1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* posix/regex.c: Get regex.h from system path, not from local
+	directory.
+
+	* posix/regex.h: Move internal interfaces to ...
+	* include/regex.h: ...here.
+
+	* posix/unistd.h: Move internal interfaces to ...
+	* include/unistd.h: ...here.
+
+	* math/math.h: Move internal interfaces to ...
+	* include/math.h: ...here.
+
+	* posix/glob.h: Move internal interfaces to ...
+	* include/glob.h: ...here.
+
+	* string/string.h: Move internal interfaces to ...
+	* include/string.h: ...here.
+
+	* time/sys/time.h: Move internal interfaces to ...
+	* include/sys/time.h: ...here.
+
+	* resolv/netdb.h: Move internal interfaces to ...
+	* include/netdb.h: ...here.
+
+1998-12-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/eucjp.c: Handle Yen in overscore conversion from ISO 10646
+	correctly.
+	* iconvdata/iso-2022-jp.c: Handle Kana in 2022-JP2 correctly
+	Fix various bugs in conversion routine.
+	* iconvdata/jis0201.h: Correct variable name.
+	* iconvdata/jis0208.c: Correct script to generate tables and regenerate
+	them.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.c: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	Patch by HANATAKA Shinya <hanataka@abyss.rim.or.jp>.
+
 1998-12-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/speed.c (IBAUD0): New definition.  Bit

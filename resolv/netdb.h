@@ -130,21 +130,11 @@ extern struct hostent *gethostbyname2 __P ((__const char *__name, int __af));
    argument is a pointer to a variable which gets the value which
    would be stored in the global variable `herrno' by the
    non-reentrant functions.  */
-extern int __gethostent_r __P ((struct hostent *__restrict __result_buf,
-				char *__restrict __buf, size_t __buflen,
-				struct hostent **__restrict __result,
-				int *__restrict __h_errnop));
 extern int gethostent_r __P ((struct hostent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
 			      struct hostent **__restrict __result,
 			      int *__restrict __h_errnop));
 
-extern int __gethostbyaddr_r __P ((__const char *__restrict __addr,
-				   int __len, int __type,
-				   struct hostent *__restrict __result_buf,
-				   char *__restrict __buf, size_t __buflen,
-				   struct hostent **__restrict __result,
-				   int *__restrict __h_errnop));
 extern int gethostbyaddr_r __P ((__const char *__restrict __addr, int __len,
 				 int __type,
 				 struct hostent *__restrict __result_buf,
@@ -152,22 +142,12 @@ extern int gethostbyaddr_r __P ((__const char *__restrict __addr, int __len,
 				 struct hostent **__restrict __result,
 				 int *__restrict __h_errnop));
 
-extern int __gethostbyname_r __P ((__const char *__restrict __name,
-				   struct hostent *__restrict __result_buf,
-				   char *__restrict __buf, size_t __buflen,
-				   struct hostent **__restrict __result,
-				   int *__restrict __h_errnop));
 extern int gethostbyname_r __P ((__const char *__restrict __name,
 				 struct hostent *__restrict __result_buf,
 				 char *__restrict __buf, size_t __buflen,
 				 struct hostent **__restrict __result,
 				 int *__restrict __h_errnop));
 
-extern int __gethostbyname2_r __P ((__const char *__restrict __name, int __af,
-				    struct hostent *__restrict __result_buf,
-				    char *__restrict __buf, size_t __buflen,
-				    struct hostent **__restrict __result,
-				    int *__restrict __h_errnop));
 extern int gethostbyname2_r __P ((__const char *__restrict __name, int __af,
 				  struct hostent *__restrict __result_buf,
 				  char *__restrict __buf, size_t __buflen,
@@ -225,31 +205,17 @@ extern struct netent *getnetbyname __P ((__const char *__name));
    argument is a pointer to a variable which gets the value which
    would be stored in the global variable `herrno' by the
    non-reentrant functions.  */
-extern int __getnetent_r __P ((struct netent *__restrict __result_buf,
-			       char *__restrict __buf, size_t __buflen,
-			       struct netent **__restrict __result,
-			       int *__restrict __h_errnop));
 extern int getnetent_r __P ((struct netent *__restrict __result_buf,
 			     char *__restrict __buf, size_t __buflen,
 			     struct netent **__restrict __result,
 			     int *__restrict __h_errnop));
 
-extern int __getnetbyaddr_r __P ((unsigned long int __net, int __type,
-				  struct netent *__restrict __result_buf,
-				  char *__restrict __buf, size_t __buflen,
-				  struct netent **__restrict __result,
-				  int *__restrict __h_errnop));
 extern int getnetbyaddr_r __P ((unsigned long int __net, int __type,
 				struct netent *__restrict __result_buf,
 				char *__restrict __buf, size_t __buflen,
 				struct netent **__restrict __result,
 				int *__restrict __h_errnop));
 
-extern int __getnetbyname_r __P ((__const char *__restrict __name,
-				  struct netent *__restrict __result_buf,
-				  char *__restrict __buf, size_t __buflen,
-				  struct netent **__restrict __result,
-				  int *__restrict __h_errnop));
 extern int getnetbyname_r __P ((__const char *__restrict __name,
 				struct netent *__restrict __result_buf,
 				char *__restrict __buf, size_t __buflen,
@@ -291,29 +257,16 @@ extern struct servent *getservbyport __P ((int __port, __const char *__proto));
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
-extern int __getservent_r __P ((struct servent *__restrict __result_buf,
-				char *__restrict __buf, size_t __buflen,
-				struct servent **__restrict __result));
 extern int getservent_r __P ((struct servent *__restrict __result_buf,
 			      char *__restrict __buf, size_t __buflen,
 			      struct servent **__restrict __result));
 
-extern int __getservbyname_r __P ((__const char *__restrict __name,
-				   __const char *__restrict __proto,
-				   struct servent *__restrict __result_buf,
-				   char *__restrict __buf, size_t __buflen,
-				   struct servent **__restrict __result));
 extern int getservbyname_r __P ((__const char *__restrict __name,
 				 __const char *__restrict __proto,
 				 struct servent *__restrict __result_buf,
 				 char *__restrict __buf, size_t __buflen,
 				 struct servent **__restrict __result));
 
-extern int __getservbyport_r __P ((int __port,
-				   __const char *__restrict __proto,
-				   struct servent *__restrict __result_buf,
-				   char *__restrict __buf, size_t __buflen,
-				   struct servent **__restrict __result));
 extern int getservbyport_r __P ((int __port, __const char *__restrict __proto,
 				 struct servent *__restrict __result_buf,
 				 char *__restrict __buf, size_t __buflen,
@@ -350,26 +303,15 @@ extern struct protoent *getprotobynumber __P ((int __proto));
 #ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  */
-extern int __getprotoent_r __P ((struct protoent *__restrict __result_buf,
-				 char *__restrict __buf, size_t __buflen,
-				 struct protoent **__restrict __result));
 extern int getprotoent_r __P ((struct protoent *__restrict __result_buf,
 			       char *__restrict __buf, size_t __buflen,
 			       struct protoent **__restrict __result));
 
-extern int __getprotobyname_r __P ((__const char *__restrict __name,
-				    struct protoent *__restrict __result_buf,
-				    char *__restrict __buf, size_t __buflen,
-				    struct protoent **__restrict __result));
 extern int getprotobyname_r __P ((__const char *__restrict __name,
 				  struct protoent *__restrict __result_buf,
 				  char *__restrict __buf, size_t __buflen,
 				  struct protoent **__restrict __result));
 
-extern int __getprotobynumber_r __P ((int __proto,
-				      struct protoent *__restrict __res_buf,
-				      char *__restrict __buf, size_t __buflen,
-				      struct protoent **__restrict __result));
 extern int getprotobynumber_r __P ((int __proto,
 				    struct protoent *__restrict __result_buf,
 				    char *__restrict __buf, size_t __buflen,
@@ -395,10 +337,6 @@ extern int innetgr __P ((__const char *__netgroup, __const char *__host,
 
 #ifdef	__USE_MISC
 /* Reentrant version of `getnetgrent' where result is placed in BUFFER.  */
-extern int __getnetgrent_r __P ((char **__restrict __hostp,
-				 char **__restrict __userp,
-				 char **__restrict __domainp,
-				 char *__restrict __buffer, size_t __buflen));
 extern int getnetgrent_r __P ((char **__restrict __hostp,
 			       char **__restrict __userp,
 			       char **__restrict __domainp,

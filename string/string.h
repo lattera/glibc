@@ -109,7 +109,6 @@ extern char *strdup __P ((__const char *__s));
 /* Return a malloc'd copy of at most N bytes of STRING.  The
    resultant string is terminated even if no null terminator
    appears before STRING[N].  */
-extern char *__strndup __P ((__const char *__string, size_t __n));
 #if defined __USE_GNU
 extern char *strndup __P ((__const char *__string, size_t __n));
 #endif
@@ -251,8 +250,6 @@ extern int __strcasecmp __P ((__const char *__s1, __const char *__s2));
 extern int strcasecmp __P ((__const char *__s1, __const char *__s2));
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
-extern int __strncasecmp __P ((__const char *__s1, __const char *__s2,
-			       size_t __n));
 extern int strncasecmp __P ((__const char *__s1, __const char *__s2,
 			     size_t __n));
 #endif /* Use BSD or X/Open Unix.  */

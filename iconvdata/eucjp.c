@@ -138,6 +138,12 @@
     if (ch <= 0x7f)							      \
       /* It's plain ASCII.  */						      \
       *outptr++ = ch;							      \
+    else if (ch == 0xa5)						      \
+      /* YEN sign => backslash  */					      \
+      *outptr++ = 0x5c;							      \
+    else if (ch == 0x203e)						      \
+      /* overscore => asciitilde */					      \
+      *outptr++ = 0x7e;							      \
     else								      \
       {									      \
 	/* Try the JIS character sets.  */				      \
