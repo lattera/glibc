@@ -1,6 +1,6 @@
 1999-02-11  Ulrich Drepper  <drepper@cygnus.com>
 
-	* localedata/locale/in_ID: New file.
+	* locales/in_ID: New file.
 	* SUPPORTED: Add in_ID.
 
 1998-12-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
