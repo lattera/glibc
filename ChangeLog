@@ -1,3 +1,8 @@
+2000-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/Makefile (libnss_db-dbs): Remove stry backslash.
+	Patch by Zack Weinberg <zack@wolery.cumb.org>.
+
 2000-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/examples/subopt.c (mount_opts): Add missing terminating

@@ -65,7 +65,7 @@ libnss_files-routines	:= $(addprefix files-,$(databases))
 distribute		+= files-XXX.c files-parse.c
 
 libnss_db-dbs		:= $(addprefix db-,$(filter-out hosts network key,\
-							$(databases))) \
+							$(databases)))
 libnss_db-routines	:= $(libnss_db-dbs) db-open
 generated		+= $(filter-out db-alias.c db-netgrp.c, \
 					$(addsuffix .c,$(libnss_db-dbs)))
