@@ -1,9 +1,12 @@
+2000-07-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/mtrace.c (tr_freehook): Return immediately if ptr is NULL.
+
 2000-07-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/getcwd.c (__getcwd): Correctly handle
 	getcwd (NULL, size) with size > 0.
-	Fixes PR libc/1788, reported by John Buddery
-	<jvb@cyberscience.com>.
+	Fixes PR libc/1788, reported by John Buddery <jvb@cyberscience.com>.
 
 2000-07-13  Andreas Jaeger  <aj@suse.de>
 
@@ -31,8 +34,7 @@
 	* iconv/gconv_open.c (__gconv_open): Reapply
 	2000-07-12 Bruno Haible <haible@clisp.cons.org>
 
-		* iconv/gconv_open.c (__gconv_open): Merge duplicated
-		code.
+		* iconv/gconv_open.c (__gconv_open): Merge duplicated code.
 
 	* iconv/gconv_open.c: Undo last two changes for now.  They break
 	everything.
