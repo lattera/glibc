@@ -1,5 +1,7 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/ca.po: Update from translation team.
+
 	* elf/rtld.c (dl_main): Read PT_TLS entry of the executable.
 	* elf/dl-load.c (_dl_map_object_from_fd): Handle PT_TLS program
 	header entry.
