@@ -1981,13 +1981,9 @@ else
     AC_MSG_RESULT($have_selinux)
   fi
 
-  if test x$with_selinux = xauto ; then
+  if test x$with_selinux = xyes ; then
     if test x$have_selinux = xno ; then
-      AC_MSG_WARN([Sufficiently new SELinux library not found])
-    fi
-  else
-    if test x$have_selinux = xno ; then
-      AC_MSG_ERROR([SELinux explicitly required, and SELinux library not found])
+      AC_MSG_ERROR([SELinux explicitly required, but sufficiently recent SELinux library not found])
     fi
   fi
 fi
