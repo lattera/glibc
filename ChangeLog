@@ -1,3 +1,16 @@
+2001-06-07  Mark Kettenis  <kettenis@gnu.org>
+
+	* grp/initgroups.c (initgroups): Factor out re-usable code into...
+	(internal_getgrouplist): ... new function.
+	(getgrouplist): New function.
+	* grp/grp.h (getgrouplist): New prototype.
+	* grp/Versions [2.2.4]: Add getgrouplist.
+
+2001-06-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/netinet/ip6.h: Fix comments in ip6_hdr.
+	Patch by Pekka Savola <pekkas@netcore.fi>.
+
 2001-06-15  Roland McGrath  <roland@frob.com>
 
 	* rt/Makefile (aio-routines, clock-routines, timer-routines): New

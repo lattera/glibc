@@ -24,4 +24,8 @@ libc {
     # g*
     getgrent_r; getgrgid_r; getgrnam_r;
   }
+  GLIBC_2.2.4 {
+    # g*
+    getgrouplist;
+  }
 }

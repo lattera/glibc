@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2001-4-20
+GNU C Library NEWS -- history of user-visible changes.  2001-6-16
 Copyright (C) 1992-2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -10,6 +10,9 @@ Version 2.2.4
 
 * Stephen Moshier implemented cosh, expm1, log1p, acos, sinh for the
   128-bit long double format.
+
+* Bruno Haible updated all the code handling Unicode in some form to
+  support Unicode 3.1.
 
 Version 2.2.3
 

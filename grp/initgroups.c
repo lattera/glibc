@@ -136,13 +136,96 @@ compat_call (service_user *nip, const char *user, gid_t group, long int *start,
   return NSS_STATUS_SUCCESS;
 }
 
+static int
+internal_getgrouplist (const char *user, gid_t group, long int *size,
+		       gid_t **groupsp, long int limit)
+{
+  service_user *nip = NULL;
+  initgroups_dyn_function fct;
+  enum nss_status status = NSS_STATUS_UNAVAIL;
+  int no_more;
+  /* Start is one, because we have the first group as parameter.  */
+  long int start = 1;
+
+  *groupsp[0] = group;
+
+  if (__nss_group_database != NULL)
+    {
+      no_more = 0;
+      nip = __nss_group_database;
+    }
+  else
+    no_more = __nss_database_lookup ("group", NULL,
+				     "compat [NOTFOUND=return] files", &nip);
+
+  while (! no_more)
+    {
+      fct = __nss_lookup_function (nip, "initgroups_dyn");
+
+      if (fct == NULL)
+	{
+	  status = compat_call (nip, user, group, &start, size, groupsp,
+				limit, &errno);
+
+	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
+	    break;
+	}
+      else
+	status = DL_CALL_FCT (fct, (user, group, &start, size, groupsp,
+				    limit, &errno));
+
+      /* This is really only for debugging.  */
+      if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
+	__libc_fatal ("illegal status in " __FUNCTION__);
+
+      if (status != NSS_STATUS_SUCCESS
+	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
+	 break;
+
+      if (nip->next == NULL)
+	no_more = -1;
+      else
+	nip = nip->next;
+    }
+
+  return start;
+}
+
+/* Store at most *NGROUPS members of the group set for USER into
+   *GROUPS.  Also include GROUP.  The actual number of groups found is
+   returned in *NGROUPS.  Return -1 if the if *NGROUPS is too small.  */
+int
+getgrouplist (const char *user, gid_t group, gid_t *groups, int *ngroups)
+{
+  gid_t *newgroups;
+  long int size = *ngroups;
+  int result;
+
+  newgroups = (gid_t *) malloc (size * sizeof (gid_t));
+  if (__builtin_expect (newgroups == NULL, 0))
+    /* No more memory.  */
+    return -1;
+
+  result = internal_getgrouplist (user, group, &size, &newgroups, -1);
+  if (result > *ngroups)
+    {
+      *ngroups = result;
+      result = -1;
+    }
+  else
+    *ngroups = result;
+      
+  memcpy (groups, newgroups, *ngroups * sizeof (gid_t));
+
+  free (newgroups);
+  return result;
+}
+
 /* Initialize the group set for the current user
    by reading the group database and using all groups
    of which USER is a member.  Also include GROUP.  */
 int
-initgroups (user, group)
-     const char *user;
-     gid_t group;
+initgroups (const char *user, gid_t group)
 {
 #if defined NGROUPS_MAX && NGROUPS_MAX == 0
 
@@ -151,17 +234,12 @@ initgroups (user, group)
 
 #else
 
-  service_user *nip = NULL;
-  initgroups_dyn_function fct;
-  enum nss_status status = NSS_STATUS_UNAVAIL;
-  int no_more;
-  /* Start is one, because we have the first group as parameter.  */
-  long int start = 1;
   long int size;
   gid_t *groups;
+  int ngroups;
   int result;
 
-  /* We always use sysconf even if NGROUPS_MAX is defined.  That way, the
+ /* We always use sysconf even if NGROUPS_MAX is defined.  That way, the
      limit can be raised in the kernel configuration without having to
      recompile libc.  */
   long int limit = __sysconf (_SC_NGROUPS_MAX);
@@ -179,51 +257,12 @@ initgroups (user, group)
     /* No more memory.  */
     return -1;
 
-  groups[0] = group;
-
-  if (__nss_group_database != NULL)
-    {
-      no_more = 0;
-      nip = __nss_group_database;
-    }
-  else
-    no_more = __nss_database_lookup ("group", NULL,
-				     "compat [NOTFOUND=return] files", &nip);
-
-  while (! no_more)
-    {
-      fct = __nss_lookup_function (nip, "initgroups_dyn");
-
-      if (fct == NULL)
-	{
-	  status = compat_call (nip, user, group, &start, &size, &groups,
-				limit, &errno);
-
-	  if (nss_next_action (nip, NSS_STATUS_UNAVAIL) != NSS_ACTION_CONTINUE)
-	    break;
-	}
-      else
-	status = DL_CALL_FCT (fct, (user, group, &start, &size, &groups,
-				    limit, &errno));
-
-      /* This is really only for debugging.  */
-      if (NSS_STATUS_TRYAGAIN > status || status > NSS_STATUS_RETURN)
-	__libc_fatal ("illegal status in " __FUNCTION__);
-
-      if (status != NSS_STATUS_SUCCESS
-	  && nss_next_action (nip, status) == NSS_ACTION_RETURN)
-	 break;
-
-      if (nip->next == NULL)
-	no_more = -1;
-      else
-	nip = nip->next;
-    }
+  ngroups = internal_getgrouplist (user, group, &size, &groups, limit);
 
   /* Try to set the maximum number of groups the kernel can handle.  */
   do
-    result = setgroups (start, groups);
-  while (result == -1 && errno == EINVAL && --start > 0);
+    result = setgroups (ngroups, groups);
+  while (result == -1 && errno == EINVAL && --ngroups > 0);
 
   free (groups);
 

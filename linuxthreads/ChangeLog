@@ -1,3 +1,10 @@
+2001-03-23  Matthew Wilcox  <willy@ldl.fc.hp.com>
+
+	* attr.c: Make _STACK_GROWS_UP work.
+	* internals.h: Likewise.
+	* manager.c: Likewise.
+	* pthread.c: Likewise.
+
 2001-06-15  H.J. Lu  <hjl@gnu.org>
 
 	* pthread.c (__pthread_reset_main_thread): Fix a typo.
