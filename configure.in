@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.11)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.13)dnl		dnl Minimum Autoconf version required.
 AC_INIT(include/features.h)
 AC_CONFIG_HEADER(config.h)
 AC_CONFIG_AUX_DIR(scripts)
@@ -561,9 +561,8 @@ AC_SUBST(libc_cv_have_ksh)
 AC_PROG_AWK
 AC_PATH_PROG(PERL, perl, no)
 AC_SUBST(PERL)
-dnl This works around a bug in autoconf.
-install_info_path=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
-AC_PATH_PROG(INSTALL_INFO, install-info, no, $install_info_path)
+AC_PATH_PROG(INSTALL_INFO, install-info, no,
+	     $PATH:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
 AC_SUBST(INSTALL_INFO)
 if test "$INSTALL_INFO" != "no"; then
 AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,

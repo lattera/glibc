@@ -1,3 +1,9 @@
+Mon Mar 22 15:48:06 1999  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* configure.in: Also look in $PATH when searching for
+ 	install-info.  Remove autoconf bug workaround and require autoconf
+ 	2.13.
+
 1999-03-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* db/Makefile: Don't try to install shared library link if not
