@@ -1,3 +1,8 @@
+2002-10-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/_exit.c (__syscall_exit,
+	__syscall_exit_group): New prototypes.
+
 2002-10-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* glibc 2.3 released.

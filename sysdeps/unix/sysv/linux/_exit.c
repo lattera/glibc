@@ -22,6 +22,9 @@
 #include <sysdep.h>
 #include <abort-instr.h>
 
+extern void __syscall_exit_group (int status);
+extern void __syscall_exit (int status);
+
 
 void
 _exit (status)
