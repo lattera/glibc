@@ -21,23 +21,24 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "spawn_int.h"
+
 
 /* Function used to increase the size of the allocated array.  This
    function is called from the `add'-functions.  */
 int
 __posix_spawn_file_actions_realloc (posix_spawn_file_actions_t *file_actions)
 {
+  int newalloc = file_actions->__allocated + 8;
   void *newmem = realloc (file_actions->__actions,
-			  file_actions->__allocated += 8);
+			  newalloc * sizeof (struct __spawn_action));
 
   if (newmem == NULL)
-    {
-      /* Not enough memory.  */
-      file_actions->__allocated -= 8;
-      return ENOMEM;
-    }
+    /* Not enough memory.  */
+    return ENOMEM;
 
   file_actions->__actions = (struct __spawn_action *) newmem;
+  file_actions->__allocated = newalloc;
 
   return 0;
 }

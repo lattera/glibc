@@ -35,10 +35,10 @@ posix_spawn_file_actions_adddup2 (posix_spawn_file_actions_t *file_actions,
   if (fd < 0 || newfd < 0 || fd >= maxfd || newfd >= maxfd)
     return EBADF;
 
-  /* Allocate more memory of needed.  */
+  /* Allocate more memory if needed.  */
   if (file_actions->__used == file_actions->__allocated
       && __posix_spawn_file_actions_realloc (file_actions) != 0)
-    /* THis can only mean we ran out of memory.  */
+    /* This can only mean we ran out of memory.  */
     return ENOMEM;
 
   /* Add the new value.  */

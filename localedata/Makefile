@@ -31,10 +31,6 @@ charmaps := $(filter-out $(addprefix charmaps/, CVS RCS SCCS %~), \
 locales := $(filter-out $(addprefix locales/, CVS RCS SCCS %~), \
 				    $(wildcard locales/*))
 
-# List of repertoire maps.
-repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
-					   $(wildcard repertoiremaps/*))
-
 
 subdir-dirs = tests-mbwc
 vpath %.c tests-mbwc
@@ -64,7 +60,7 @@ generated-dirs := $(ld-test-names) tt_TT de_DE.437			\
 		  $(addprefix tstfmon_,$(fmon-tests))			\
 
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
-	      $(charmaps) $(locales) $(repertoiremaps)			\
+	      $(charmaps) $(locales)					\
 	      tst-rpmatch.sh tst-locale.sh tst-fmon.sh sort-test.sh	\
 	      tst-fmon.data $(test-input-data) $(ld-test-srcs)		\
 	      th_TH.in cs_CZ.in tst-mbswcs.sh tst-trans.sh tst-ctype.sh \
@@ -98,15 +94,21 @@ tests = $(locale_test_suite) tst-digits
 endif
 
 # Files to install.
-install-others := $(addprefix $(inst_i18ndir)/, $(charmaps) $(locales) \
-						$(repertoiremaps))
+install-others := $(addprefix $(inst_i18ndir)/, \
+			      $(addsuffix .gz, $(charmaps)) \
+			      $(locales))
 
 include ../Rules
 
-# Install the source files in the appropriate directories.
-$(inst_i18ndir)/charmaps/%: charmaps/% $(+force); $(do-install)
+# Install the charmap files in gzipped format.
+$(inst_i18ndir)/charmaps/%.gz: charmaps/% $(+force)
+	$(make-target-directory)
+	rm -f $(@:.gz=) $@
+	$(INSTALL_DATA) $< $(@:.gz=)
+	gzip -9 $(@:.gz=)
+
+# Install the locale source files in the appropriate directory.
 $(inst_i18ndir)/locales/%: locales/% $(+force); $(do-install)
-$(inst_i18ndir)/repertoiremaps/%: repertoiremaps/% $(+force); $(do-install)
 
 # gcc does not know all the format specifiers we are using here.
 CFLAGS-tst-mbswcs1.c = -Wno-format

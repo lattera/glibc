@@ -1,5 +1,12 @@
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
 
+	* Makefile (repertoiremaps): Remove variable.
+	(distribute): Remove repertoiremaps.
+	(install-others): Likewise. Add .gz to charmaps.
+	($(inst_i18ndir)/charmaps/%): Install in gzipped format.
+
+2000-09-30  Bruno Haible  <haible@clisp.cons.org>
+
 	* charmaps/ISO-IR-197: Remove alias "none".
 
 2000-09-30  Bruno Haible  <haible@clisp.cons.org>
