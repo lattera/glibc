@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,4 +26,5 @@ __libc_waitpid (__pid_t pid, int *stat_loc, int options)
   return __wait4 (pid, stat_loc, options, NULL);
 }
 weak_alias (__libc_waitpid, __waitpid)
+libc_hidden_weak (__waitpid)
 weak_alias (__libc_waitpid, waitpid)

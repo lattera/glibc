@@ -1,3 +1,25 @@
+2002-08-12  Roland McGrath  <roland@redhat.com>
+
+	* include/sys/wait.h (__waitpid): Add libc_hidden_proto.
+	* sysdeps/unix/sysv/sco3.2.4/waitpid.S: Add libc_hidden_def.
+	* sysdeps/unix/sysv/sysv4/waitpid.c: Add libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/waitpid.c: Likewise.
+	* sysdeps/unix/sysv/aix/waitpid.c: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/waitpid.c: Likewise.
+	* sysdeps/generic/waitpid.c: Likewise.
+
+	* include/net/if.h: New file.  Use libc_hidden_proto
+	for if_nametoindex and if_indextoname.
+	* sysdeps/generic/if_index.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/if_index.c: Likewise.
+	* sysdeps/unix/sysv/linux/if_index.c: Likewise.
+
+	* include/grp.h (setgroups): Add libc_hidden_proto.
+	* sysdeps/generic/setgroups.c: Add libc_hidden_def.
+	* sysdeps/mach/hurd/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/irix4/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+
 2002-08-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/unistd.h (seteuid, setegid): Add libc_hidden_proto.

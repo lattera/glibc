@@ -1,6 +1,8 @@
 #ifndef _GRP_H
 #include <grp/grp.h>
 
+libc_hidden_proto (setgroups)
+
 /* Now define the internal interfaces.  */
 extern int __getgrent_r (struct group *__resultbuf, char *buffer,
 			 size_t __buflen, struct group **__result)

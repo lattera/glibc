@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,98,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997,98,99,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@ if_nametoindex (const char *ifname)
   __set_errno (ENOSYS);
   return 0;
 }
+libc_hidden_def (if_nametoindex)
 stub_warning (if_nametoindex)
 
 char *
@@ -34,6 +35,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
   __set_errno (ENOSYS);
   return NULL;
 }
+libc_hidden_def (if_indextoname)
 stub_warning (if_indextoname)
 
 void

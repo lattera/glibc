@@ -50,6 +50,7 @@ if_nametoindex (const char *ifname)
   __close (fd);
   return ifr.ifr_ifindex;
 }
+libc_hidden_def (if_nametoindex)
 
 /* Free the structure IFN returned by if_nameindex.  */
 void
@@ -176,6 +177,7 @@ if_indextoname (unsigned int ifindex, char *ifname)
   __close (fd);
   return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 }
+libc_hidden_def (if_indextoname)
 
 #if 0
 void

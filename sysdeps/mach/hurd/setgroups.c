@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,6 @@
 #include <hurd/id.h>
 
 /* Set the group set for the current user to GROUPS (N of them).  */
-/* XXX should be __setgroups ? */
 int
 setgroups (n, groups)
      size_t n;
@@ -63,3 +62,4 @@ setgroups (n, groups)
   __mach_port_deallocate (__mach_task_self (), newauth);
   return err;
 }
+libc_hidden_def (setgroups)
