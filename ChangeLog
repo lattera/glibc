@@ -1,3 +1,17 @@
+2000-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* sunrpc/rpc_hout.c (print_funcdef): Add break statement to shut
+	up GCC's warning about "deprecated use of label at end of compound
+	statement."
+	* sunrpc/rpc_cout.c (emit_inline): Likewise.
+
+	* include/argp.h (_argp_unlock_xxx): Add declaration.
+
+	* gmon/bb_exit_func.c: Include <sys/gmon.h> for internal
+	prototypes.
+	Remove struct bb and __bb_head since those are declared by
+	sys/gmon.h.
+
 2000-12-22  Ben Collins  <bcollins@debian.org>
 
 	* manual/charset.texi: Fix typo in description of WCHAR_MAX.
