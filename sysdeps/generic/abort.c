@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 93, 95, 96, 97, 98, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@
 
 #ifdef USE_IN_LIBIO
 # include <libio/iolibio.h>
-# define fflush(s) _IO_fflush (s)
+# define fflush(s) _IO_flush_all_lockp (0)
 #endif
 
 /* We must avoid to run in circles.  Therefore we remember how far we

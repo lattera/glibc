@@ -1,3 +1,12 @@
+2001-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/genops.c (_IO_flush_all_lockp): New function.  The same code
+	as the old _IO_flush_all but lock only if parameter is nonzero.
+	(_IO_flush_all): Call _IO_flush_all_lockp with 1 as parameter.
+	* libio/libioP.h: Add prototype for _IO_flush_all_lockp.
+	* sysdeps/generic/abort.c (fflush): Define to _IO_flush_all_lockp(0)
+	if libio is used.
+
 2001-11-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/fpu/bits/mathinline.h (__signbitf, __signbit,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -426,6 +426,7 @@ extern int _IO_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_old_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
 extern int _IO_wdo_write __P ((_IO_FILE *, const wchar_t *, _IO_size_t));
+extern int _IO_flush_all_lockp __P ((int));
 extern int _IO_flush_all __P ((void));
 extern int _IO_cleanup __P ((void));
 extern void _IO_flush_all_linebuffered __P ((void));

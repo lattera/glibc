@@ -784,7 +784,7 @@ _IO_get_column (fp)
 
 
 int
-_IO_flush_all ()
+_IO_flush_all_lockp (int do_lock)
 {
   int result = 0;
   struct _IO_FILE *fp;
@@ -792,7 +792,8 @@ _IO_flush_all ()
 
 #ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (flush_cleanup);
-  _IO_lock_lock (list_all_lock);
+  if (do_lock)
+    _IO_lock_lock (list_all_lock);
 #endif
 
   last_stamp = _IO_list_all_stamp;
@@ -800,7 +801,8 @@ _IO_flush_all ()
   while (fp != NULL)
     {
       run_fp = fp;
-      _IO_flockfile (fp);
+      if (do_lock)
+	_IO_flockfile (fp);
 
       if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
@@ -812,7 +814,8 @@ _IO_flush_all ()
 	  && _IO_OVERFLOW (fp, EOF) == EOF)
 	result = EOF;
 
-      _IO_funlockfile (fp);
+      if (do_lock)
+	_IO_funlockfile (fp);
       run_fp = NULL;
 
       if (last_stamp != _IO_list_all_stamp)
@@ -826,11 +829,20 @@ _IO_flush_all ()
     }
 
 #ifdef _IO_MTSAFE_IO
-  _IO_lock_unlock (list_all_lock);
+  if (do_lock)
+    _IO_lock_unlock (list_all_lock);
   _IO_cleanup_region_end (0);
 #endif
 
   return result;
+}
+
+
+int
+_IO_flush_all ()
+{
+  /* We want locking.  */
+  return _IO_flush_all_lockp (1);
 }
 
 void
