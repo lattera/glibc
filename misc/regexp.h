@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -93,12 +93,13 @@ extern char *locs;
 #ifndef __DO_NOT_DEFINE_COMPILE
 /* Get and compile the user supplied pattern up to end of line or
    string or until EOF is seen, whatever happens first.  The result is
-   placed in the buffer starting at EXPBUG and delimited by ENDBUF.
+   placed in the buffer starting at EXPBUF and delimited by ENDBUF.
 
    This function cannot be defined in the libc itself since it depends
    on the macros.  */
 char *
-compile (char *instring, char *expbuf, __const char *endbuf, int eof)
+compile (char *__restrict instring, char *__restrict expbuf,
+	 __const char *__restrict endbuf, int eof)
 {
   char *__input_buffer = NULL;
   size_t __input_size = 0;
@@ -132,7 +133,7 @@ compile (char *instring, char *expbuf, __const char *endbuf, int eof)
 
   while ((__ch = (GETC ())) != eof)
     {
-      if (__ch == '\0' || __ch == 'n')
+      if (__ch == '\0' || __ch == '\n')
 	{
 	  UNGETC (__ch);
 	  break;
@@ -205,12 +206,14 @@ compile (char *instring, char *expbuf, __const char *endbuf, int eof)
    found in the buffer starting at EXPBUF.  `loc1' will return the
    first character matched and `loc2' points to the next unmatched
    character.  */
-extern int step __P ((__const char *__string, __const char *__expbuf));
+extern int step __P ((__const char *__restrict __string,
+		      __const char *__restrict __expbuf));
 
 /* Match the beginning of STRING with the compiled regular expression
    in EXPBUF.  If the match is successful `loc2' will contain the
    position of the first unmatched character.  */
-extern int advance __P ((__const char *__string, __const char *__expbuf));
+extern int advance __P ((__const char *__restrict __string,
+			 __const char *__restrict __expbuf));
 
 
 __END_DECLS

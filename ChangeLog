@@ -1,5 +1,14 @@
 1999-01-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* misc/regexp.h: Add restrict to function declarations.
+
+1999-01-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* misc/regexp.h (compile): Correct end-of-line check, fix typo in
+	docu.  Reported by Kalle Olavi Niemitalo <kalle@Niemitalo.fi>.
+
+1999-01-14  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Add vfork.
 	Patch by Richard Henderson <rth@twiddle.net>.
 
