@@ -5,3 +5,8 @@ ld {
     _dl_function_address;
   }
 }
+libc {
+  GLIBC_2.2 {
+    __clz_tab;
+  }
+}
