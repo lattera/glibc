@@ -166,7 +166,7 @@ _dl_close (struct link_map *map)
 	    free (imap->l_searchlist.r_list);
 
 	  if (imap->l_phdr_allocated)
-	    free (imap->l_phdr);
+	    free ((void *) imap->l_phdr);
 
 	  free (imap);
 	}
