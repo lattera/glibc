@@ -1,3 +1,14 @@
+2001-12-05  Geoff Keating  <geoffk@redhat.com>
+
+	* sysdeps/powerpc/__longjmp.S: Don't restore FP registers.
+	* sysdeps/powerpc/fpu/__longjmp.S: Do restore FP registers.
+	* sysdeps/powerpc/setjmp.S: Don't save FP registers.
+	* sysdeps/powerpc/fpu/setjmp.S: Do save FP registers.
+	* sysdeps/powerpc/fclrexcpt.c: Move to...
+	* sysdeps/powerpc/fpu/fclrexcpt.c: ... here.
+	* sysdeps/powerpc/fpu_control.h: Move to...
+	* sysdeps/powerpc/fpu/fpu_control.h: ... here.
+
 2001-12-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/ibm1129.h: Remove duplicate mappings.
