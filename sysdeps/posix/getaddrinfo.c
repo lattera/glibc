@@ -362,6 +362,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
   int rc;
   bool got_ipv6 = false;
   const char *canon = NULL;
+  const char *orig_name = name;
 
   if (req->ai_protocol || req->ai_socktype)
     {
@@ -778,10 +779,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  canon = h->h_name;
 		else
 		  {
-		    assert (name != NULL);
+		    assert (orig_name != NULL);
 		    /* If the canonical name cannot be determined, use
 		       the passed in string.  */
-		    canon = name;
+		    canon = orig_name;
 		  }
 	      }
 

@@ -1,3 +1,10 @@
+2004-08-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Store NAME parameter
+	pointer in new variable ORIG_NAME and se this pointer when
+	determination of canonical name failed, not the possibly IDN
+	translated value of NAME.
+
 2004-08-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/resolv.h (RES_DEFAULT): Add RES_NOIP6DOTINT.
