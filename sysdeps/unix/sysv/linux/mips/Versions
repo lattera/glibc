@@ -17,4 +17,21 @@ libc {
     # _*
     _test_and_set;
   }
+  #GLIBC_2.3 {
+  #  # f*
+  #  fgetxattr; flistxattr; fremovexattr; fsetxattr;
+  #
+  #  # g*
+  #  getxattr;
+  #
+  #  # l*
+  #  listxattr;
+  #  lgetxattr; llistxattr; lremovexattr; lsetxattr;
+  #
+  #  # r*
+  #  removexattr;
+  #
+  #  # s*
+  #  setxattr;
+  #}
 }
