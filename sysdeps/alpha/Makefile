@@ -17,7 +17,7 @@
 # Cambridge, MA 02139, USA.
 
 ifeq ($(subdir),gmon)
-sysdep_routines := bb_init_func _mcount
+sysdep_routines += _mcount
 endif
 
 ifeq ($(subdir),setjmp)
