@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <limits.h>
 #include <string.h>
 
 #include <gconv_int.h>
@@ -63,5 +64,6 @@ __gconv_get_builtin_trans (const char *name, struct gconv_step *step)
   step->fct = map[cnt].fct;
   step->init_fct = map[cnt].init;
   step->end_fct = map[cnt].end;
+  step->counter = INT_MAX;
   step->shlib_handle = NULL;
 }

@@ -97,7 +97,6 @@ struct get_sym_args
 };
 
 static void
-internal_function
 get_sym (void *a)
 {
   struct get_sym_args *args = (struct get_sym_args *) a;

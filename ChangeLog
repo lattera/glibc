@@ -1,3 +1,16 @@
+1998-04-14 18:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Initialize
+	counter element of step.
+
+	* iconv/gconv_dl.c: Don't mark get_sym as internal function.
+
+	* iconv/gconv_simple.c (__gconv_transform_ucs4_ascii): Correct loop
+	termination test.
+	(__gconv_transform_ucs4_utf8): Likewise.  Remove unnecessary variable
+	ACTUALLY.
+	(__gconv_transform_utf8_ucs4): Correct test for empty input.
+
 1998-04-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Include makeconfig before defining rule to regenerate

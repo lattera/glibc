@@ -239,7 +239,7 @@ __gconv_transform_ucs4_ascii (struct gconv_step *step,
 	  size_t cnt = 0;
 
 	  while (data->outbufavail < data->outbufsize
-		 && cnt + sizeof (wchar_t) <= *inlen)
+		 && cnt + sizeof (wchar_t) + 3 < *inlen)
 	    {
 	      if (*newinbuf < L'\0' || *newinbuf > L'\x7f')
 		{
@@ -348,11 +348,10 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
       do
 	{
 	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
-	  size_t actually = 0;
 	  size_t cnt = 0;
 
 	  while (data->outbufavail < data->outbufsize
-		 && cnt * sizeof (wchar_t) <= *inlen)
+		 && cnt * sizeof (wchar_t) + 3 < *inlen)
 	    {
 	      wchar_t wc = newinbuf[cnt];
 
@@ -364,11 +363,8 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 		}
 
 	      if (wc < 0x80)
-		{
-		  /* It's an one byte sequence.  */
-		  data->outbuf[data->outbufavail++] = (char) wc;
-		  ++actually;
-		}
+		/* It's an one byte sequence.  */
+		data->outbuf[data->outbufavail++] = (char) wc;
 	      else
 		{
 		  size_t step;
@@ -384,7 +380,6 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 
 		  start = data->outbufavail;
 		  data->outbufavail += step;
-		  actually += step;
 		  data->outbuf[start] = encoding_byte[step - 2];
 		  --step;
 		  do
@@ -400,10 +395,8 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
 	    }
 
 	  /* Remember how much we converted.  */
-	  do_write += cnt * sizeof (wchar_t);
+	  do_write += cnt;
 	  *inlen -= cnt * sizeof (wchar_t);
-
-	  data->outbufavail += actually;
 
 	  /* Check whether an illegal character appeared.  */
 	  if (result != GCONV_OK)
@@ -444,7 +437,7 @@ __gconv_transform_ucs4_utf8 (struct gconv_step *step,
     }
 
   if (written != NULL && data->is_last)
-    *written = do_write / sizeof (wchar_t);
+    *written = do_write;
 
   return result;
 }
@@ -484,6 +477,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
   else
     {
       int save_errno = errno;
+      int extra = 0;
       do_write = 0;
 
       result = GCONV_OK;
@@ -546,8 +540,16 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 		  break;
 		}
 
+	      if (cnt + count > *inlen)
+		{
+		  /* We don't have enough input.  */
+		  --cnt;
+		  extra = count;
+		  break;
+		}
+
 	      /* Read the possible remaining bytes.  */
-	      while (cnt < *inbuf && count > 0)
+	      while (count > 0)
 		{
 		  byte = inbuf[cnt++];
 		  --count;
@@ -586,7 +588,7 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 	      break;
 	    }
 
-	  if (*inlen == 0 && !__mbsinit (data->statep))
+	  if (*inlen < extra)
 	    {
 	      /* We have an incomplete character at the end.  */
 	      result = GCONV_INCOMPLETE_INPUT;
