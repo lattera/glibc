@@ -87,6 +87,7 @@ int _dl_debug_reloc;
 int _dl_debug_files;
 const char *_dl_inhibit_rpath;		/* RPATH values which should be
 					   ignored.  */
+const char *_dl_origin_path;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -1162,6 +1163,12 @@ process_envvars (enum mode *modep, int *lazyp)
 	  /* Mask for the important hardware capabilities.  */
 	  if (memcmp (&envline[3], "HWCAP_MASK", 10) == 0)
 	    _dl_hwcap_mask = strtoul (&envline[14], NULL, 0);
+	  break;
+
+	case 11:
+	  /* Path where the binary is found.  */
+	  if (memcmp (&envline[3], "ORIGIN_PATH", 11) == 0)
+	    _dl_hwcap_mask = strtoul (&envline[15], NULL, 0);
 	  break;
 
 	case 12:

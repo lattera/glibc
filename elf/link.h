@@ -161,6 +161,9 @@ struct link_map
 
     /* Pointer to the version information if available.  */
     ElfW(Half) *l_versyms;
+
+    /* String specifying the path where this object was found.  */
+    const char *l_origin;
   };
 
 #endif /* link.h */

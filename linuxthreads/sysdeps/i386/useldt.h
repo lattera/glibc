@@ -82,7 +82,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   __typeof__ (descr->member) __value;					      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %%gs:%c1,%b0"				      \
+    __asm__ __volatile__ ("movb %%gs:%P1,%b0"				      \
 			  : "=r" (__value)				      \
 			  : "0" (0),					      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
@@ -93,7 +93,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	/* There should not be any value with a size other than 1 or 4.  */   \
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %%gs:%c1,%0"				      \
+      __asm__ __volatile__ ("movl %%gs:%P1,%0"				      \
 			    : "=r" (__value)				      \
 			    : "i" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \
@@ -106,7 +106,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   __typeof__ (descr->member) __value = (value);				      \
   if (sizeof (__value) == 1)						      \
-    __asm__ __volatile__ ("movb %0,%%gs:%c1" :				      \
+    __asm__ __volatile__ ("movb %0,%%gs:%P1" :				      \
 			  : "r" (__value),				      \
 			    "i" (offsetof (struct _pthread_descr_struct,      \
 					   member)));			      \
@@ -116,7 +116,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 	/* There should not be any value with a size other than 1 or 4.  */   \
 	abort ();							      \
 									      \
-      __asm__ __volatile__ ("movl %0,%%gs:%c1" :			      \
+      __asm__ __volatile__ ("movl %0,%%gs:%P1" :			      \
 			    : "r" (__value),				      \
 			      "i" (offsetof (struct _pthread_descr_struct,    \
 					     member)));			      \

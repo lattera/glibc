@@ -88,6 +88,11 @@ _dl_close (struct link_map *map)
   for (i = 0; i < nsearchlist; ++i)
     --list[i]->l_opencount;
 
+  if (map->l_origin != NULL)
+    free ((char *) map->l_origin);
+  /* The name always is allocated.  */
+  free (map->l_name);
+
   /* Check each element of the search list to see if all references to
      it are gone.  */
   for (i = 0; i < nsearchlist; ++i)

@@ -1,3 +1,33 @@
+1998-08-27 19:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (distribute): Add dl-origin.h.
+	* sysdeps/generic/dl-origin.h: New file.
+	* sysdeps/unix/sysv/linux/dl-origin.h: New file.
+	* elf/link.h (struct link_map): Add l_origin field.
+	* elf/dl-load.c (expand_dynamic_string_token): New function.
+	(decompose_path): Remove WHERE argument, take link map pointer instead.
+	Call expand_dynamic_string_token instead of local_strdup to make copy
+	of rpath.
+	(_dl_init_paths): Call decompose_path with correct argument.
+	(_dl_map_object_from_fd): Define static is EXTERNAL_MAP_FROM_FD is
+	not defined.
+	Check EI_OSABI and EI_ABIVERSION fields in header.
+	(_dl_map_object): Call decompose_path with correct argument.
+	Call expand_dynamic_string_token instead of local_strdup to also
+	expand DST.
+	* elf/dl-object.c (_dl_new_object): Determine l_origin for all maps
+	but the main one.
+	* elf/dl-support.c: Define _dl_origin_path.
+	* elf/rtld.c: Likewise.  Set _dl_origin_path based on LD_ORIGIN_PATH.
+
+	* elf/dl-close (_dl_close): Free l_name and l_origin.
+
+	* sysdeps/i386/useldt.h (THREAD_GETMEM, THREAD_SETMEM): Use P
+	modifier in asm, not c.
+
+	* sysdeps/mach/hurd/Makefile [subdirs==elf]: Define CFLAGS-dl-load.c
+	to -DEXTERNAL_MAP_FROM_FD to make _dl_map_object_from_fd extern.
+
 1998-08-26 17:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-close.c (_dl_close): Move map->l_nsearchlist value into local

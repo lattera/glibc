@@ -31,6 +31,8 @@
 #include "dynamic-link.h"
 #include <stdio-common/_itoa.h>
 
+#include <dl-origin.h>
+
 
 /* On some systems, no flag bits are given to specify file mapping.  */
 #ifndef MAP_FILE
@@ -122,6 +124,116 @@ local_strdup (const char *s)
     return NULL;
 
   return (char *) memcpy (new, s, len);
+}
+
+/* Return copy of argument with all recognized dynamic string tokens
+   ($ORIGIN and $PLATFORM for now) replaced.  On some platforms it
+   might not be possible to determine the path from which the object
+   belonging to the map is loaded.  In this case the path element
+   containing $ORIGIN is left out.  */
+static char *
+expand_dynamic_string_token (struct link_map *l, const char *s)
+{
+  /* We make two runs over the string.  First we determine how large the
+     resulting string is and then we copy it over.  Since this is now
+     frequently executed operation we are looking here not for performance
+     but rather for code size.  */
+  const char *st, *sf;
+  size_t cnt = 0;
+  size_t origin_len;
+  size_t total;
+  char *result, *last_elem, *wp;
+
+  st = s;
+  sf = strchr (s, '$');
+  while (sf != NULL)
+    {
+      size_t len = 1;
+
+      if (((strncmp (&sf[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+	   || (strncmp (&sf[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	  && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+	++cnt;
+
+      st = sf + len;
+      sf = strchr (st, '$');
+    }
+
+  /* If we do not have to replace anything simply copy the string.  */
+  if (cnt == 0)
+    return local_strdup (s);
+
+  /* Now we make a guess how many extra characters on top of the length
+     of S we need to represent the result.  We know that we have CNT
+     replacements.  Each at most can use
+	MAX (strlen (ORIGIN), strlen (_dl_platform))
+     minus 7 (which is the length of "$ORIGIN").
+
+     First get the origin string if it is not available yet.  This can
+     only happen for the map of the executable.  */
+  if (l->l_origin == NULL)
+    {
+      assert (l->l_name[0] == '\0');
+      l->l_origin = get_origin ();
+      origin_len = l->l_origin ? strlen (l->l_origin) : 0;
+    }
+  else
+    origin_len = l->l_origin == (char *) -1 ? 0 : strlen (l->l_origin);
+
+  total = strlen (s) + cnt * (MAX (origin_len, _dl_platformlen) - 7);
+  result = (char *) malloc (total + 1);
+  if (result == NULL)
+    return NULL;
+
+  /* Now fill the result path.  While copying over the string we keep
+     track of the start of the last path element.  When we come accross
+     a DST we copy over the value or (if the value is not available)
+     leave the entire path element out.  */
+  last_elem = wp = result;
+  do
+    {
+      if (*s == '$')
+	{
+	  const char *repl;
+	  size_t len;
+
+	  if (((strncmp (&s[1], "ORIGIN", 6) == 0 && (len = 7) != 0)
+	       || (strncmp (&s[1], "PLATFORM", 8) == 0 && (len = 9) != 0))
+	      && (s[len] == '\0' || s[len] == '/' || s[len] == ':'))
+	    {
+	      if ((repl = len == 7 ? l->l_origin : _dl_platform) != NULL
+		  && repl != (const char *) -1)
+		{
+		  wp = __stpcpy (wp, repl);
+		  s += len;
+		}
+	      else
+		{
+		  /* We cannot use this path element, the value of the
+		     replacement is unknown.  */
+		  wp = last_elem;
+		  s += len;
+		  while (*s != '\0' && *s != ':')
+		    ++s;
+		}
+	    }
+	  else
+	    /* No SDK we recognize.  */
+	    *wp++ = *s++;
+	}
+      else if (*s == ':')
+	{
+	  *wp++ = *s++;
+	  last_elem = wp;
+	}
+      else
+	*wp++ = *s++;
+    }
+  while (*s != '\0');
+
+  *wp = '\0';
+
+  return result;
 }
 
 /* Add `name' to the list of names for a particular shared object.
@@ -286,9 +398,10 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 static struct r_search_path_elem **
 internal_function
-decompose_rpath (const char *rpath, size_t additional_room, const char *where)
+decompose_rpath (const char *rpath, size_t additional_room, struct link_map *l)
 {
   /* Make a copy we can work with.  */
+  const char *where = l->l_name;
   char *copy;
   char *cp;
   struct r_search_path_elem **result;
@@ -318,8 +431,13 @@ decompose_rpath (const char *rpath, size_t additional_room, const char *where)
 	}
     }
 
+  /* Make a writable copy.  At the same time expand possible dynamic
+     string tokens.  */
+  copy = expand_dynamic_string_token (l, rpath);
+  if (copy == NULL)
+    _dl_signal_error (ENOMEM, NULL, "cannot create RPATH copy");
+
   /* Count the number of necessary elements in the result array.  */
-  copy = local_strdup (rpath);
   nelems = 0;
   for (cp = copy; *cp != '\0'; ++cp)
     if (*cp == ':')
@@ -429,7 +547,7 @@ _dl_init_paths (const char *llp)
 	    decompose_rpath ((const char *)
 			     (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr
 			      + l->l_info[DT_RPATH]->d_un.d_val),
-			     nllp, l->l_name);
+			     nllp, l);
 	}
       else
 	{
@@ -497,6 +615,9 @@ _dl_init_paths (const char *llp)
 /* Map in the shared object NAME, actually located in REALNAME, and already
    opened on FD.  */
 
+#ifndef EXTERNAL_MAP_FROM_FD
+static
+#endif
 struct link_map *
 _dl_map_object_from_fd (char *name, int fd, char *realname,
 			struct link_map *loader, int l_type)
@@ -591,6 +712,12 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
     LOSE ("ELF file data encoding not " byteorder_name);
   if (header->e_ident[EI_VERSION] != EV_CURRENT)
     LOSE ("ELF file version ident not " STRING(EV_CURRENT));
+  /* XXX We should be able so set system specific versions which are
+     allowed here.  */
+  if (header->e_ident[EI_OSABI] != ELFOSABI_SYSV)
+    LOSE ("ELF file OS ABI not " STRING(ELFOSABI_SYSV));
+  if (header->e_ident[EI_ABIVERSION] != 0)
+    LOSE ("ELF file ABI version not 0");
   if (header->e_version != EV_CURRENT)
     LOSE ("ELF file version not " STRING(EV_CURRENT));
   if (! elf_machine_matches_host (header->e_machine))
@@ -1076,7 +1203,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 				 + l->l_info[DT_STRTAB]->d_un.d_ptr
 				 + l->l_info[DT_RPATH]->d_un.d_val);
 		l->l_rpath_dirs =
-		  decompose_rpath ((const char *) ptrval, 0, l->l_name);
+		  decompose_rpath ((const char *) ptrval, 0, l);
 	      }
 
 	    if (l->l_rpath_dirs != (struct r_search_path_elem **) -1l)
@@ -1127,15 +1254,17 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
     }
   else
     {
-      fd = __open (name, O_RDONLY);
-      if (fd != -1)
+      /* The path may contain dynamic string tokens.  */
+      realname = (loader
+		  ? expand_dynamic_string_token (loader, name)
+		  : local_strdup (name));
+      if (realname == NULL)
+	fd = -1;
+      else
 	{
-	  realname = local_strdup (name);
-	  if (realname == NULL)
-	    {
-	      __close (fd);
-	      fd = -1;
-	    }
+	  fd = __open (realname, O_RDONLY);
+	  if (fd == -1)
+	    free (realname);
 	}
     }
 

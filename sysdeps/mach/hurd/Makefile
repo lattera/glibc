@@ -124,6 +124,8 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 # objects directly into the shared object.
 ifeq (elf,$(subdir))
 $(objpfx)librtld.os: $(rpcuserlibs:.so=_pic.a)
+
+CFLAGS-dl-load.c = -DEXTERNAL_MAP_FROM_FD
 endif
 
 # We need these libs to link static programs in the libc source tree, too.

@@ -63,6 +63,9 @@ struct link_map *_dl_profile_map;
 /* This is the address of the last stack address ever used.  */
 void *__libc_stack_end;
 
+/* Path where the binary is found.  */
+const char *_dl_origin_path;
+
 
 static void non_dynamic_init (void) __attribute__ ((unused));
 
