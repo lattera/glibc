@@ -152,9 +152,9 @@ LC_MESSAGES
 % These are generated based on XML base Locale difintion file
 % for IBM Class for Unicode/Java
 %
-yesexpr     "<U0646><U0639><U0645>"
+yesexpr     "<U005E><U005B><U0646><U0639><U0645><U005D>"
 %
-noexpr      "<U0644><U0627>"
+noexpr      "<U005E><U005B><U0644><U0627><U005D>"
 %
 END LC_MESSAGES
 
