@@ -201,8 +201,7 @@ V[]  =  {1.27304834834123699328e-02, /* 0x3F8A1270, 0x91C9C71A */
          *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
          * to compute the worse one.
          */
-                s = __sin(x);
-                c = __cos(x);
+		__sincos (x, &s, &c);
                 ss = s-c;
                 cc = s+c;
 	/*

@@ -235,8 +235,7 @@ __ieee754_y0l (x)
        *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
        * to compute the worse one.
        */
-      s = __sinl (x);
-      c = __cosl (x);
+      __sincosl (x, &s, &c);
       ss = s - c;
       cc = s + c;
       /*

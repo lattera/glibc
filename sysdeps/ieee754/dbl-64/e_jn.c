@@ -103,11 +103,14 @@ static double zero  =  0.00000000000000000000e+00;
      *		   2	-s+c		-c-s
      *		   3	 s+c		 c-s
      */
+		double s;
+		double c;
+		__sincos (x, &s, &c);
 		switch(n&3) {
-		    case 0: temp =  __cos(x)+__sin(x); break;
-		    case 1: temp = -__cos(x)+__sin(x); break;
-		    case 2: temp = -__cos(x)-__sin(x); break;
-		    case 3: temp =  __cos(x)-__sin(x); break;
+		    case 0: temp =  c + s; break;
+		    case 1: temp = -c + s; break;
+		    case 2: temp = -c - s; break;
+		    case 3: temp =  c - s; break;
 		}
 		b = invsqrtpi*temp/__ieee754_sqrt(x);
 	    } else {
@@ -257,11 +260,14 @@ static double zero  =  0.00000000000000000000e+00;
      *		   2	-s+c		-c-s
      *		   3	 s+c		 c-s
      */
+		double c;
+		double s;
+		__sincos (x, &s, &c);
 		switch(n&3) {
-		    case 0: temp =  __sin(x)-__cos(x); break;
-		    case 1: temp = -__sin(x)-__cos(x); break;
-		    case 2: temp = -__sin(x)+__cos(x); break;
-		    case 3: temp =  __sin(x)+__cos(x); break;
+		    case 0: temp =  s - c; break;
+		    case 1: temp = -s - c; break;
+		    case 2: temp = -s + c; break;
+		    case 3: temp =  s + c; break;
 		}
 		b = invsqrtpi*temp/__ieee754_sqrt(x);
 	} else {

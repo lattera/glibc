@@ -112,8 +112,7 @@ static double zero    = 0.0;
 	if(ix>=0x7ff00000) return one/x;
 	y = fabs(x);
 	if(ix >= 0x40000000) {	/* |x| >= 2.0 */
-		s = __sin(y);
-		c = __cos(y);
+		__sincos (y, &s, &c);
 		ss = -s-c;
 		cc = s-c;
 		if(ix<0x7fe00000) {  /* make sure y+y not overflow */
@@ -194,8 +193,7 @@ static double V0[5] = {
         if((ix|lx)==0) return -one/zero;
         if(hx<0) return zero/zero;
         if(ix >= 0x40000000) {  /* |x| >= 2.0 */
-                s = __sin(x);
-                c = __cos(x);
+		__sincos (x, &s, &c);
                 ss = -s-c;
                 cc = s-c;
                 if(ix<0x7fe00000) {  /* make sure x+x not overflow */

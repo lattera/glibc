@@ -147,8 +147,7 @@ v04  =  4.4111031494e-10; /* 0x2ff280c2 */
          *              sin(x) +- cos(x) = -cos(2x)/(sin(x) -+ cos(x))
          * to compute the worse one.
          */
-                s = __sinf(x);
-                c = __cosf(x);
+		__sincosf (x, &s, &c);
                 ss = s-c;
                 cc = s+c;
 	/*
