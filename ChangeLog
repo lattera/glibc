@@ -1,3 +1,13 @@
+2002-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/asia: Update from tzdata2002b.
+	* timezone/australasia: Likewise.
+	* timezone/backward: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/zone.tab: Likewise.
+
 2002-01-23  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/Makefile (pic-ccflag): New variable.

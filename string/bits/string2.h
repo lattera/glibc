@@ -581,7 +581,7 @@ __strcpy_small (char *__dest,
 #   define stpcpy(dest, src) __stpcpy (dest, src)
 #  endif
 
-#  if !__GNUC_PREREQ (3, 0) || _FORCE_INLINES
+#  if !__GNUC_PREREQ (3, 0) || defined _FORCE_INLINES
 #   if _STRING_ARCH_unaligned
 #    ifndef _FORCE_INLINES
 #     define __stpcpy_args(src) \

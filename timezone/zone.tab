@@ -1,4 +1,4 @@
-# @(#)zone.tab	1.24
+# @(#)zone.tab	1.25
 #
 # TZ zone descriptions
 #
@@ -123,11 +123,11 @@ CK	-2114-15946	Pacific/Rarotonga
 CL	-3327-07040	America/Santiago	most locations
 CL	-2710-10927	Pacific/Easter	Easter Island & Sala y Gomez
 CM	+0403+00942	Africa/Douala
-CN	+3114+12128	Asia/Shanghai	most eastern locations
+CN	+3114+12128	Asia/Shanghai	east China - Beijing, Guangdong, Shanghai, etc.
 CN	+4545+12641	Asia/Harbin	Heilongjiang
-CN	+2934+10635	Asia/Chongqing	central China
-CN	+4348+08735	Asia/Urumqi	Tibet & most of Xinjiang
-CN	+3929+07559	Asia/Kashgar	Eastern Turkestan
+CN	+2934+10635	Asia/Chongqing	central China - Gansu, Guizhou, Sichuan, Yunnan, etc.
+CN	+4348+08735	Asia/Urumqi	Tibet & most of Xinjiang Uyghur
+CN	+3929+07559	Asia/Kashgar	southwest Xinjiang Uyghur
 CO	+0436-07405	America/Bogota
 CR	+0956-08405	America/Costa_Rica
 CU	+2308-08222	America/Havana
@@ -169,9 +169,9 @@ GF	+0456-05220	America/Cayenne
 GH	+0533-00013	Africa/Accra
 GI	+3608-00521	Europe/Gibraltar
 GL	+6411-05144	America/Godthab	most locations
-GL	+7646-01840	America/Danmarkshavn	Danmarkshavn
+GL	+7646-01840	America/Danmarkshavn	east coast, north of Scoresbysund
 GL	+7030-02215	America/Scoresbysund	Scoresbysund / Ittoqqortoormiit
-GL	+7634-06847	America/Thule	Thule / Pituffik and environs
+GL	+7634-06847	America/Thule	Thule / Pituffik
 GM	+1328-01639	Africa/Banjul
 GN	+0931-01343	Africa/Conakry
 GP	+1614-06132	America/Guadeloupe
@@ -214,9 +214,11 @@ KP	+3901+12545	Asia/Pyongyang
 KR	+3733+12658	Asia/Seoul
 KW	+2920+04759	Asia/Kuwait
 KY	+1918-08123	America/Cayman
-KZ	+4315+07657	Asia/Almaty	east Kazakhstan
-KZ	+5017+05710	Asia/Aqtobe	central Kazakhstan
-KZ	+4431+05016	Asia/Aqtau	west Kazakhstan
+KZ	+4315+07657	Asia/Almaty	most locations
+KZ	+4448+06528	Asia/Qyzylorda	Qyzylorda (Kyzylorda, Kzyl-Orda)
+KZ	+5017+05710	Asia/Aqtobe	Aqtobe (Aktobe)
+KZ	+4431+05016	Asia/Aqtau	Atyrau (Atirau, Gur'yev), Mangghystau (Mankistau)
+KZ	+5113+05121	Asia/Oral	West Kazakhstan
 LA	+1758+10236	Asia/Vientiane
 LB	+3353+03530	Asia/Beirut
 LC	+1401-06100	America/St_Lucia
@@ -241,7 +243,7 @@ MM	+1647+09610	Asia/Rangoon
 MN	+4755+10653	Asia/Ulaanbaatar	most locations
 MN	+4801+09139	Asia/Hovd	Bayan-Olgiy, Govi-Altai, Hovd, Uvs, Zavkhan
 MN	+4804+11430	Asia/Choibalsan	Dornod, Sukhbaatar
-MO	+2214+11335	Asia/Macao
+MO	+2214+11335	Asia/Macau
 MP	+1512+14545	Pacific/Saipan
 MQ	+1436-06105	America/Martinique
 MR	+1806-01557	Africa/Nouakchott
