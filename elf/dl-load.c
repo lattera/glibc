@@ -721,7 +721,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
-  if (memcmp (header->e_ident, expected, EI_PAD) != 0)
+  if (__builtin_expect (memcmp (header->e_ident, expected, EI_PAD), 0) != 0)
     {
       /* Something is wrong.  */
       if (*(Elf32_Word *) &header->e_ident !=
@@ -753,11 +753,12 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       LOSE (0, "internal error");
     }
 
-  if (header->e_version != EV_CURRENT)
+  if (__builtin_expect (header->e_version, EV_CURRENT) != EV_CURRENT)
     LOSE (0, "ELF file version not " STRING(EV_CURRENT));
-  if (! elf_machine_matches_host (header->e_machine))
+  if (! __builtin_expect (elf_machine_matches_host (header->e_machine), 1))
     LOSE (0, "ELF file machine architecture not " ELF_MACHINE_NAME);
-  if (header->e_phentsize != sizeof (ElfW(Phdr)))
+  if (__builtin_expect (header->e_phentsize, sizeof (ElfW(Phdr)))
+      != sizeof (ElfW(Phdr)))
     LOSE (0, "ELF file's phentsize not the expected size");
 
 #ifndef MAP_ANON
@@ -775,7 +776,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
   /* Enter the new object in the list of loaded objects.  */
   l = _dl_new_object (realname, name, l_type, loader);
-  if (! l)
+  if (__builtin_expect (! l, 0))
     LOSE (ENOMEM, "cannot create shared object descriptor");
   l->l_opencount = 1;
 

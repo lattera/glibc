@@ -1,5 +1,7 @@
 1999-07-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-load.c: Use a few more __builtin_expect.
+
 	* sysdeps/posix/getcwd.c: When resizing buffer make sure new size
 	is large enough.
 
