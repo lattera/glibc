@@ -229,4 +229,13 @@ libc_internal_tsd_get(enum __libc_tsd_key_t key)
 void * (*__libc_internal_tsd_get)(enum __libc_tsd_key_t key)
      = libc_internal_tsd_get;
 
+static void ** __attribute__ ((__const__))
+libc_internal_tsd_address (enum __libc_tsd_key_t key)
+{
+  pthread_descr self = thread_self();
+  return &self->p_libc_specific[key];
+}
+void **(*const __libc_internal_tsd_address) (enum __libc_tsd_key_t key)
+     __THROW __attribute__ ((__const__)) = libc_internal_tsd_address;
+
 #endif
