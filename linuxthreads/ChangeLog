@@ -1,3 +1,7 @@
+2004-10-05  Dwayne Grant McConnell  <dgm69@us.ibm.com>
+
+	* pthread.c: Mask restart signal during cancel signal handler.
+
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h (_POSIX_CPUTIME,

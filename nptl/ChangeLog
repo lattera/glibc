@@ -1,3 +1,9 @@
+2004-10-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c (tf_msgrcv): Check for failure in msgget.  If the
+	test fails, remove message queue.
+	(tf_msgsnd): Likewise.
+
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-clock1.c: Change #ifdef to #if defined.

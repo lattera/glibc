@@ -1884,6 +1884,11 @@ static void *
 tf_msgrcv (void *arg)
 {
   tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
+  if (tempmsg == -1)
+    {
+      printf ("%s: msgget failed: %s\n", __FUNCTION__, strerror (errno));
+      exit (1);
+    }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
@@ -1927,6 +1932,8 @@ tf_msgrcv (void *arg)
 
   printf ("%s: msgrcv returned %zd with errno = %m\n", __FUNCTION__, s);
 
+  msgctl (tempmsg, IPC_RMID, NULL);
+
   exit (1);
 }
 
@@ -1940,6 +1947,11 @@ tf_msgsnd (void *arg)
     abort ();
 
   tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
+  if (tempmsg == -1)
+    {
+      printf ("%s: msgget failed: %s\n", __FUNCTION__, strerror (errno));
+      exit (1);
+    }
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
@@ -1971,6 +1983,8 @@ tf_msgsnd (void *arg)
   pthread_cleanup_pop (0);
 
   printf ("%s: msgsnd returned\n", __FUNCTION__);
+
+  msgctl (tempmsg, IPC_RMID, NULL);
 
   exit (1);
 }
