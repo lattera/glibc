@@ -1,5 +1,8 @@
 2002-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Avoid
+	locking when using mount tab file.
+
 	* elf/dl-init.c (_dl_init): Fix test of the size of the
 	preinit_array section.
 	(call_init): Optimize access to DT_INIT_ARRAY entry a bit.

@@ -57,6 +57,9 @@ get_proc_path (char *buffer, size_t bufsize)
     fp = __setmntent (_PATH_MNTTAB, "r");
   if (fp != NULL)
     {
+      /* We don't need locking.  */
+      (void) __fsetlocking (fp, FSETLOCKING_BYCALLER);
+
       while ((entry = __getmntent_r (fp, &mount_point, buffer, bufsize))
 	     != NULL)
 	if (strcmp (mount_point.mnt_type, "proc") == 0)
