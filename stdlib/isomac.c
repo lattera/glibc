@@ -303,14 +303,18 @@ get_null_defines (void)
       start = &line[8];
       for (end = start + 1; !isspace (*end) && *end != '\0'; ++end)
 	;
-      result[result_len++] = xstrndup (start, end - start);
+      result[result_len] = xstrndup (start, end - start);
 
-      if (first)
+      if (strcmp (result[result_len], "NOT_IN_libc") != 0)
 	{
-	  fputs ("The following identifiers will be ignored since the compiler defines them\nby default:\n", stdout);
-	  first = 0;
+	  if (first)
+	    {
+	      fputs ("The following identifiers will be ignored since the compiler defines them\nby default:\n", stdout);
+	      first = 0;
+	    }
+	  puts (result[result_len]);
 	}
-      puts (result[result_len - 1]);
+      ++result_len;
     }
   if (result_len == result_max)
     {

@@ -72,11 +72,13 @@ libc_hidden_proto (__strndup)
 libc_hidden_proto (__strerror_r)
 libc_hidden_proto (__strverscmp)
 
-# ifndef index
-#  define index(s, c)	(strchr ((s), (c)))
-# endif
-# ifndef rindex
-#  define rindex(s, c)	(strrchr ((s), (c)))
+# ifndef _ISOMAC
+#  ifndef index
+#   define index(s, c)	(strchr ((s), (c)))
+#  endif
+#  ifndef rindex
+#   define rindex(s, c)	(strrchr ((s), (c)))
+#  endif
 # endif
 
 #endif
