@@ -1219,6 +1219,7 @@ module	INTERNAL		CP1258//		CP1258		1
 #	from			to			module		cost
 alias	874//			IBM874//
 alias	CP874//			IBM874//
+alias	WINDOWS-874//		IBM874//
 module	IBM874//		INTERNAL		IBM874		1
 module	INTERNAL		IBM874//		IBM874		1
 

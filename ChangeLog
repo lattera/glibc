@@ -1,3 +1,7 @@
+2004-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gconv-modules: Add alias for IBM874 [BZ #244].
+
 2004-07-19  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #258]
