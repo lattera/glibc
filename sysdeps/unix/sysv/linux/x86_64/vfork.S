@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,8 +27,9 @@
 
 ENTRY (__vfork)
 
-	/* Pop the return PC value into RBX.  */
-	popq	%rbx
+	/* Pop the return PC value into RDI.  We need a register that
+	   is preserved by the syscall and that we're allowed to destroy. */
+	popq %rdi
 
 	/* Stuff the syscall number in RAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
@@ -37,11 +38,11 @@ ENTRY (__vfork)
 	jae	.Lerror		/* Branch forward if it failed.  */
 
 	/* Jump to the return PC.  */
-	jmp	*%rbx
+	jmp	*%rdi
 
 .Lerror:
 	/* Push back the return PC.  */
-	pushq	%rbx
+	pushq	%rdi
 	jmp	SYSCALL_ERROR_LABEL
 
 .Lpseudo_end:
