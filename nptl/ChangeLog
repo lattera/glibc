@@ -1,3 +1,8 @@
+2003-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-attr2.c (do_test): Add cast to avoid warning.
+	* tst-mutex4.c (do_test): Likewise.
+
 2003-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.c (__libc_fork): Reset CPU clocks
