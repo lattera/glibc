@@ -28,17 +28,13 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Perform the relocations in MAP on the running program image as specified
-   by RELTAG, SZTAG.  *RESOLVE is called to resolve symbol values; it
-   modifies its argument pointer to point to the defining symbol, and
-   returns the base load address of the defining object.  If LAZY is
-   nonzero, this is the first pass on PLT relocations; they should be set
-   up to call _dl_runtime_resolve, rather than fully resolved now.  */
+   by RELTAG, SZTAG.  If LAZY is nonzero, this is the first pass on PLT
+   relocations; they should be set up to call _dl_runtime_resolve, rather
+   than fully resolved now.  */
 
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag,
-		    ElfW(Addr) (*resolve) (const ElfW(Sym) **symbol,
-					   ElfW(Addr) reloc_addr, int noplt),
 		    int lazy)
 {
   const ElfW(Sym) *const symtab
@@ -53,7 +49,7 @@ elf_dynamic_do_rel (struct link_map *map,
       elf_machine_lazy_rel (map, r);
   else
     for (; r < end; ++r)
-      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)], resolve);
+      elf_machine_rel (map, r, &symtab[ELFW(R_SYM) (r->r_info)]);
 }
 
 #undef elf_dynamic_do_rel

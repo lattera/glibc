@@ -24,7 +24,6 @@ Cambridge, MA 02139, USA.  */
 #include <errno.h>
 #include "dynamic-link.h"
 
-
 void
 _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 {
@@ -56,15 +55,14 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 
     const char *strtab		/* String table object symbols.  */
       = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-    ElfW(Addr) resolve (const ElfW(Sym) **ref,
-			ElfW(Addr) reloc_addr, int noplt)
-      {
-	/* Look up the referenced symbol in the specified scope.  */
-	return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope,
-				  l->l_name, reloc_addr, noplt);
-      }
 
-    ELF_DYNAMIC_RELOCATE (l, lazy, resolve);
+    /* This macro is used as a callback from the ELF_DYNAMIC_RELOCATE code.  */
+#define RESOLVE(ref, reloc_addr, noplt) \
+    (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
+			l->l_name, reloc_addr, noplt))
+
+#include "dynamic-link.h"
+    ELF_DYNAMIC_RELOCATE (l, lazy);
   }
 
   /* Set up the PLT so its unrelocated entries will jump to

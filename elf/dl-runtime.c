@@ -18,7 +18,6 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <link.h>
-#include "dynamic-link.h"
 
 
 /* The global scope we will use for symbol lookups.
@@ -68,6 +67,8 @@ _dl_object_relocation_scope (struct link_map *l)
     }
 }
 
+#include "dynamic-link.h"
+
 /* Figure out the right type, Rel or Rela.  */
 #define elf_machine_rel 1
 #define elf_machine_rela 2
@@ -118,14 +119,16 @@ fixup (
   /* Set up the scope to find symbols referenced by this object.  */
   struct link_map **scope = _dl_object_relocation_scope (l);
 
-  /* Perform the specified relocation.  */
-  ElfW(Addr) resolve (const ElfW(Sym) **ref,
-		      ElfW(Addr) reloc_addr, int noplt)
-    {
-      return _dl_lookup_symbol (strtab + (*ref)->st_name, ref,
-				scope, l->l_name, reloc_addr, noplt);
-    }
-  elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)], resolve);
+  {
+    /* This macro is used as a callback from the elf_machine_relplt code.  */
+#define RESOLVE(ref, reloc_addr, noplt) \
+  (_dl_lookup_symbol (strtab + (*ref)->st_name, ref, scope, \
+		      l->l_name, reloc_addr, noplt))
+#include "dynamic-link.h"
+
+    /* Perform the specified relocation.  */
+    elf_machine_relplt (l, reloc, &symtab[ELFW(R_SYM) (reloc->r_info)]);
+  }
 
   *_dl_global_scope_end = NULL;
 

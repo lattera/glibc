@@ -56,6 +56,8 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
 	    info[DT_PLTREL]->d_un.d_val == DT_RELA);
 }
 
+#ifdef RESOLVE
+
 /* Get the definitions of `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.
    These functions are almost identical, so we use cpp magic to avoid
    duplicating their code.  It cannot be done in a more general function
@@ -63,31 +65,33 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn, ElfW(Dyn) *info[DT_NUM + DT_PROCNUM])
 
 #if ! ELF_MACHINE_NO_REL
 #include "do-rel.h"
-#define ELF_DYNAMIC_DO_REL(map, lazy, resolve)				      \
+#define ELF_DYNAMIC_DO_REL(map, lazy)					      \
   if ((map)->l_info[DT_REL])						      \
-    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, (resolve), 0);		      \
+    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, 0);			      \
   if ((map)->l_info[DT_PLTREL] &&					      \
       (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
-    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
+    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (lazy));
 #else
-#define ELF_DYNAMIC_DO_REL(map, lazy, resolve) /* Nothing to do.  */
+#define ELF_DYNAMIC_DO_REL(map, lazy) /* Nothing to do.  */
 #endif
 
 #if ! ELF_MACHINE_NO_RELA
 #define DO_RELA
 #include "do-rel.h"
-#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve)				      \
+#define ELF_DYNAMIC_DO_RELA(map, lazy)					      \
   if ((map)->l_info[DT_RELA])						      \
-    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, (resolve), 0);	      \
+    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, 0);			      \
   if ((map)->l_info[DT_PLTREL] &&					      \
       (map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)			      \
-    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
+    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (lazy));
 #else
-#define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
+#define ELF_DYNAMIC_DO_RELA(map, lazy) /* Nothing to do.  */
 #endif
 
 /* This can't just be an inline function because GCC is too dumb
    to inline functions containing inlines themselves.  */
-#define ELF_DYNAMIC_RELOCATE(map, lazy, resolve) \
-  do { ELF_DYNAMIC_DO_REL ((map), (lazy), (resolve)); \
-       ELF_DYNAMIC_DO_RELA ((map), (lazy), (resolve)); } while (0)
+#define ELF_DYNAMIC_RELOCATE(map, lazy) \
+  do { ELF_DYNAMIC_DO_REL ((map), (lazy)); \
+       ELF_DYNAMIC_DO_RELA ((map), (lazy)); } while (0)
+
+#endif

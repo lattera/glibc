@@ -1,5 +1,21 @@
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-reloc.c: Include "dynamic-link.h" at file scope.
+
+	* elf/rtld.c: Include <string.h>.
+
+	* elf/dynamic-link.h (ELF_DYNAMIC_DO_REL, ELF_DYNAMIC_DO_RELA,
+	ELF_DYNAMIC_RELOCATE): No longer take RESOLVE argument.
+	Conditionalize defns on [RESOLVE].
+	* elf/do-rel.h (elf_dynamic_do_rel): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
+	Instead use RESOLVE macro with same args.
+	(elf_machine_rel): Conditionalize defn on [RESOLVE].
+	* elf/dl-reloc.c (RESOLVE): New macro, define before including
+	"dynamic-link.h".  It replaces `resolve' local function.
+	* elf/dl-runtime.c: Likewise.
+	* elf/rtld.c: Likewise.
+
 	* elf/dl-deps.c (_dl_map_object_deps): Start TAILP at last preload.
 
 	* elf/dl-open.c (_dl_open): Force an indirect call for

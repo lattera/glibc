@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <link.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
 #include "../stdio-common/_itoa.h"
@@ -28,6 +29,7 @@ Cambridge, MA 02139, USA.  */
 /* This #define produces dynamic linking inline functions for
    bootstrap relocation instead of general-purpose relocation.  */
 #define RTLD_BOOTSTRAP
+#define RESOLVE(sym, reloc_addr, noplt) 0
 #include "dynamic-link.h"
 
 
@@ -79,7 +81,7 @@ _dl_start (void *arg)
   /* Relocate ourselves so we can do normal function calls and
      data access using the global offset table.  */
 
-  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, NULL);
+  ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0);
 
 
   /* Now life is sane; we can call functions and access global data.
