@@ -22,6 +22,14 @@
 #include "fork.h"
 
 
+/* Defined in libc_pthread_init.c.  */
+extern struct fork_handler __pthread_child_handler attribute_hidden;
+/* Three static memory blocks used when registering malloc.  */
+static struct fork_handler malloc_prepare;
+static struct fork_handler malloc_parent;
+static struct fork_handler malloc_child;
+
+
 void
 __unregister_atfork (dso_handle)
      void *dso_handle;
@@ -37,7 +45,9 @@ __unregister_atfork (dso_handle)
       {
 	list_del (runp);
 
-	free (list_entry (runp, struct fork_handler, list));
+	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+	if (p != &malloc_prepare)
+	  free (p);
       }
 
   list_for_each_prev_safe (runp, prevp, &__fork_parent_list)
@@ -45,7 +55,9 @@ __unregister_atfork (dso_handle)
       {
 	list_del (runp);
 
-	free (list_entry (runp, struct fork_handler, list));
+	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+	if (p != &malloc_parent)
+	  free (p);
       }
 
   list_for_each_prev_safe (runp, prevp, &__fork_child_list)
@@ -53,7 +65,9 @@ __unregister_atfork (dso_handle)
       {
 	list_del (runp);
 
-	free (list_entry (runp, struct fork_handler, list));
+	struct fork_handler *p = list_entry (runp, struct fork_handler, list);
+	if (p != &__pthread_child_handler && p != &malloc_child)
+	  free (p);
       }
 
   /* Release the lock.  */

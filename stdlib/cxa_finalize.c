@@ -23,7 +23,8 @@
 #include <fork.h>
 
 /* If D is non-NULL, call all functions registered with `__cxa_atexit'
-   with the same dso handle.  Otherwise, if D is NULL, do nothing.  */
+   with the same dso handle.  Otherwise, if D is NULL, call all of the
+   registered handlers.  */
 void
 __cxa_finalize (void *d)
 {
@@ -41,8 +42,10 @@ __cxa_finalize (void *d)
 	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
     }
 
-  /* Remove the registered fork handlers.  */
+  /* Remove the registered fork handlers.  We do not have to
+     unregister anything if the program is going to terminate anyway.  */
 #ifdef UNREGISTER_ATFORK
-  UNREGISTER_ATFORK (d);
+  if (d != NULL)
+    UNREGISTER_ATFORK (d);
 #endif
 }

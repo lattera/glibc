@@ -1,5 +1,8 @@
 2003-04-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/cxa_finalize.c (__cxa_finalize): Don't call
+	UNREGISTER_ATFORK if d == NULL.
+
 	* catgets/nl_types.h: Remove __THROW marker from cancellation points.
 	* dirent/dirent.h: Likewise.
 	* dlfcn/dlfcn.h: Likewise.
