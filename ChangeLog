@@ -1,3 +1,8 @@
+2000-03-03  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Remove trace of personality
+	call.
+
 2000-03-03  Geoff Keating  <geoffk@cygnus.com>
 
 	* Makeconfig (rpath-dirs): Add crypt.
