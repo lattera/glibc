@@ -25,6 +25,7 @@
 
 #ifdef _LIBC
 # include <obstack.h>
+# include <shlib-compat.h>
 #else
 # include "obstack.h"
 #endif
@@ -96,10 +97,13 @@ int obstack_exit_failure = EXIT_FAILURE;
 # endif
 
 # ifdef _LIBC
+#  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 /* A looong time ago (before 1994, anyway; we're not sure) this global variable
    was used by non-GNU-C macros to avoid multiple evaluation.  The GNU C
    library still exports it because somebody might use it.  */
-struct obstack *_obstack;
+struct obstack *_obstack_compat;
+compat_symbol (libc, _obstack_compat, _obstack, GLIBC_2_0);
+#  endif
 # endif
 
 /* Define a macro that either calls functions with the traditional malloc/free
