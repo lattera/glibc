@@ -1,3 +1,17 @@
+2003-05-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/sysdep.h (cfi_offset, cfi_startproc,
+	cfi_endproc, cfi_def_cfa, cfi_def_ccfa_register,
+	cfi_def_cfa_offset, cfi_adjust_cfa_offset, cfi_offset): Define.
+
+	* sysdeps/x86_64/sysdep.h (CALL_MCOUNT): Add cfi directives.
+	(ENTRY): Likewise.
+	(END): Likewise.
+
+	* configure.in: Test for asm cfi directives.
+
+	* config.h.in: Add HAVE_ASM_CFI_DIRECTIVES.
+
 2003-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/syscall.S: Revert last patch.

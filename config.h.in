@@ -31,6 +31,9 @@
 /* Define if weak symbols are available via the `.weakext' directive.  */
 #undef	HAVE_ASM_WEAKEXT_DIRECTIVE
 
+/* Define if CFI directives are available.  */
+#undef	HAVE_ASM_CFI_DIRECTIVES
+
 /* Define to the assembler line separator character for multiple
    assembler instructions per line.  Default is `;'  */
 #undef ASM_LINE_SEP

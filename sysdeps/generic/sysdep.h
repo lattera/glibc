@@ -46,4 +46,25 @@
 #ifndef JUMPTARGET
 #define JUMPTARGET(sym)		sym
 #endif
+
+/* Makros to generate eh_frame unwind information.  */
+# ifdef HAVE_ASM_CFI_DIRECTIVES
+#  define cfi_startproc	.cfi_startproc
+#  define cfi_endproc	.cfi_endproc
+#  define cfi_def_cfa(reg, off)	.cfi_def_cfa reg, off
+#  define cfi_def_cfa_register(reg)	.cfi_def_cfa_register reg
+#  define cfi_def_cfa_offset(off)	.cfi_def_cfa_offset off
+#  define cfi_adjust_cfa_offset(off)	.cfi_adjust_cfa_offset off
+#  define cfi_offset(reg, off)	.cfi_offset reg, off
+# else
+#  define cfi_startproc
+#  define cfi_endproc
+#  define cfi_def_cfa(reg, off)
+#  define cfi_def_cfa_register(reg)
+#  define cfi_def_cfa_offset(off)
+#  define cfi_adjust_cfa_offset(off)
+#  define cfi_offset(reg, off)
+# endif
+
+
 #endif /* __ASSEMBLER__ */

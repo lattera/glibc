@@ -1502,6 +1502,24 @@ EOF
   ;;
 esac
 
+AC_CACHE_CHECK(whether CFI directives are supported, libc_cv_asm_cfi_directives, [dnl
+cat > conftest.s <<EOF
+        .text
+        .type   func,@function
+func:
+        .cfi_startproc
+        .cfi_endproc
+EOF
+if AC_TRY_COMMAND(${CC-cc} $ASFLAGS -c conftest.s 1>&AS_MESSAGE_LOG_FD); then
+  libc_cv_asm_cfi_directives=yes
+else
+  libc_cv_asm_cfi_directives=no
+fi
+rm -f conftest*])
+if test $libc_cv_asm_cfi_directives = yes; then
+  AC_DEFINE(HAVE_ASM_CFI_DIRECTIVES)
+fi  
+
 AC_CACHE_CHECK(if -g produces usable source locations for assembler-with-cpp,
 	       libc_cv_cpp_asm_debuginfo, [dnl
 cat > conftest.S <<EOF
