@@ -1576,6 +1576,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case L_('e'):	/* Floating-point numbers.  */
 	case L_('E'):
 	case L_('f'):
+	case L_('F'):
 	case L_('g'):
 	case L_('G'):
 	case L_('a'):
