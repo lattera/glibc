@@ -3,6 +3,17 @@
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_requeue):
 	Find break parameter in correct asm argument.
 
+2003-05-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (lll_futex_clobbers):
+	Remove out4.
+	(lll_futex_requeue): Fix __o3 constraint, return negative errno if
+	error occured.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h (pthread_cond_t):
+	Add __mutex.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (FUTEX_REQUEUE,
+	lll_futex_requeue, lll_mutex_unlock_force): Define.
+
 2003-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h

@@ -27,6 +27,7 @@
 #define SYS_futex		238
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
+#define FUTEX_REQUEUE		3
 
 /* Initializer for compatibility lock.	*/
 #define LLL_MUTEX_LOCK_INITIALIZER (0)
@@ -75,6 +76,24 @@
     __asm __volatile ("svc %b1"						      \
 		      : "=d" (__result)					      \
 		      : "i" (SYS_futex), "0" (__r2), "d" (__r3), "d" (__r4)   \
+		      : "cc", "memory" );				      \
+    __result;								      \
+  })
+
+
+#define lll_futex_requeue(futex, nr_wake, nr_move, mutex) \
+  ({									      \
+     register unsigned long int __r2 asm ("2") = (unsigned long int) (futex); \
+     register unsigned long int __r3 asm ("3") = FUTEX_REQUEUE;		      \
+     register unsigned long int __r4 asm ("4") = (long int) (nr_wake);	      \
+     register unsigned long int __r5 asm ("5") = (long int) (nr_move);	      \
+     register unsigned long int __r6 asm ("6") = (unsigned long int) (mutex); \
+     register unsigned long __result asm ("2");				      \
+									      \
+    __asm __volatile ("svc %b1"						      \
+		      : "=d" (__result)					      \
+		      : "i" (SYS_futex), "0" (__r2), "d" (__r3),	      \
+			"d" (__r4), "d" (__r5), "d" (__r6)		      \
 		      : "cc", "memory" );				      \
     __result;								      \
   })
@@ -157,7 +176,11 @@ __lll_mutex_unlock (int *futex)
   if (oldval > 1)
     lll_futex_wake (futex, 1);
 }
-#define lll_mutex_unlock(futex) __lll_mutex_unlock(&(futex))
+#define lll_mutex_unlock(futex) \
+  __lll_mutex_unlock(&(futex))
+
+#define lll_mutex_unlock_force(futex) \
+  lll_futex_wake (&(futex), 1)
 
 #define lll_mutex_islocked(futex) \
   (futex != 0)
