@@ -1,3 +1,7 @@
+1998-03-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Irix6 is an ELF platform.
+
 1998-03-14 11:47  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-close.c (_dl_close): Stop unmapping the segments after

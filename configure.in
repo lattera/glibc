@@ -174,7 +174,7 @@ case "$host_os" in
 # i586-linuxaout is mangled into i586-pc-linux-gnuaout
 linux*ecoff* | linux*aout* | gnu*aout* | gnu*ecoff*)
   ;;
-gnu* | linux* | sysv4* | solaris2*)
+gnu* | linux* | sysv4* | solaris2* | irix6*)
   # These systems (almost) always use the ELF format.
   elf=yes
   ;;
