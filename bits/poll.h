@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@
 
 /* Some aliases.  */
 #define POLLWRNORM	POLLOUT
+#define POLLRDNORM	POLLIN
+#define POLLRDBAND	POLLPRI
 
 /* Event types always implicitly polled for.  These bits need not be set in
    `events', but they will appear in `revents' to indicate the status of

@@ -109,7 +109,7 @@ __BEGIN_DECLS
 # ifdef __S_IFLNK
 #  define S_IFLNK	__S_IFLNK
 # endif
-# if (defined __USE_BSD || defined __USE_MISC) && !defined __S_IFSOCK
+# if (defined __USE_BSD || defined __USE_MISC) && defined __S_IFSOCK
 #  define S_IFSOCK	__S_IFSOCK
 # endif
 #endif

@@ -1,3 +1,10 @@
+2000-03-09  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* io/sys/stat.h: Fix inverted sense of `defined __S_IFSOCK' test,
+	broken by 2000-02-27 change.
+
+	* sysdeps/generic/bits/poll.h (POLLRDNORM, POLLRDBAND): New macros.
+
 2000-02-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/mach/hurd/sigstack.c (sigstack): Remove `const' from
