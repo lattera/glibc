@@ -1,5 +1,16 @@
 2000-03-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/Makefile (routines): Add mincore.
+
+2000-03-20  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/mincore.c: New stub file.
+
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h (MADV_*): Add flags
+	from latest Linux kernel.
+
+2000-03-20  Ulrich Drepper  <drepper@redhat.com>
+
 	* grp/initgroups.c (compat_call): Use _SC_GETGR_R_SIZE_MAX instead of
 	_SC_GETPW_R_SIZE_MAX.
 
