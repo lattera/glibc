@@ -1,5 +1,7 @@
 1998-11-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.101.
+
 	* Makerules (Versions.all): Generate this file from all Versions.def
 	files.
 	(sysd-versions): Use Versions.all instead of Versions.def.
