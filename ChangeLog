@@ -1,5 +1,7 @@
 2003-03-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (struct filebuf): Reduce buf array to 512 bytes.
+
 	* sysdeps/generic/bits/time.h: Define CLOCK_MONOTONIC.
 	* sysdeps/posix/clock_getres.c: Define code for CLOCK_REALTIME only
 	if not already defined.  Use SYSDEP_GETRES to allow other files to
