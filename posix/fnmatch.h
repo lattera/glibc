@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,9 +72,9 @@ extern "C" {
 # define FNM_NOSYS	(-1)
 #endif
 
-/* Match STRING against the filename pattern PATTERN,
+/* Match NAME against the filename pattern PATTERN,
    returning zero if it matches, FNM_NOMATCH if not.  */
-extern int fnmatch __P ((__const char *__pattern, __const char *__string,
+extern int fnmatch __P ((__const char *__pattern, __const char *__name,
 			 int __flags));
 
 #ifdef	__cplusplus
