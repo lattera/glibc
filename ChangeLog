@@ -1,6 +1,6 @@
 1999-10-29  Andreas Jaeger  <aj@suse.de>
 
-	* math/libm-err-test.pl: New file to generate a table of
+	* math/libm-err-tab.pl: New file to generate a table of
 	libm-test-ulps values.
 
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
