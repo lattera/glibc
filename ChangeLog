@@ -1,3 +1,7 @@
+Sun Nov 26 12:44:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* libc-symbols.h (N_): New macro.
+
 Sat Nov 25 02:48:47 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
 	* assert/assert-perr.c, assert/assert.c, inet/rcmd.c,
