@@ -94,7 +94,7 @@ void
 print_cache (const char *cache_name)
 {
   size_t cache_size;
-  struct stat st;
+  struct stat64 st;
   int fd;
   unsigned int i;
   struct cache_file *cache;
@@ -106,7 +106,7 @@ print_cache (const char *cache_name)
   if (fd < 0)
     error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"), cache_name);
 
-  if (fstat (fd, &st) < 0
+  if (fstat64 (fd, &st) < 0
       /* No need to map the file if it is empty.  */
       || st.st_size == 0)
     {

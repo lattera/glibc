@@ -110,7 +110,7 @@ static char *opt_chroot;
 static int opt_manual_link = 0;
 
 /* Cache file to use.  */
-static const char *cache_file;
+static char *cache_file;
 
 /* Configuration file.  */
 static const char *config_file;
@@ -334,12 +334,36 @@ add_dir (const char *line)
 }
 
 
+static int
+chroot_stat (const char *real_path, const char *path, struct stat64 *st)
+{
+  int ret;
+  char *canon_path;
+
+  if (!opt_chroot)
+    return stat64 (real_path, st);
+
+  ret = lstat64 (real_path, st);
+  if (ret || !S_ISLNK (st->st_mode))
+    return ret;
+
+  canon_path = chroot_canon (opt_chroot, path);
+  if (canon_path == NULL)
+    return -1;
+
+  ret = stat64 (canon_path, st);
+  free (canon_path);
+  return ret;
+}
+
 /* Create a symbolic link from soname to libname in directory path.  */
 static void
-create_links (const char *path, const char *libname, const char *soname)
+create_links (const char *real_path, const char *path, const char *libname,
+	      const char *soname)
 {
   char *full_libname, *full_soname;
-  struct stat stat_lib, stat_so, lstat_so;
+  char *real_full_libname, *real_full_soname;
+  struct stat64 stat_lib, stat_so, lstat_so;
   int do_link = 1;
   int do_remove = 1;
   /* XXX: The logics in this function should be simplified.  */
@@ -349,11 +373,23 @@ create_links (const char *path, const char *libname, const char *soname)
   full_soname = alloca (strlen (path) + strlen (libname) + 2);
   sprintf (full_libname, "%s/%s", path, libname);
   sprintf (full_soname, "%s/%s", path, soname);
+  if (opt_chroot)
+    {
+      real_full_libname = alloca (strlen (real_path) + strlen (libname) + 2);
+      real_full_soname = alloca (strlen (real_path) + strlen (libname) + 2);
+      sprintf (real_full_libname, "%s/%s", real_path, libname);
+      sprintf (real_full_soname, "%s/%s", real_path, soname);
+    }
+  else
+    {
+      real_full_libname = full_libname;
+      real_full_soname = full_soname;
+    }
 
   /* Does soname already exist and point to the right library?  */
-  if (stat (full_soname, &stat_so) == 0)
+  if (chroot_stat (real_full_soname, full_soname, &stat_so) == 0)
     {
-      if (stat (full_libname, &stat_lib))
+      if (chroot_stat (real_full_libname, full_libname, &stat_lib))
 	{
 	  error (0, 0, _("Can't stat %s\n"), full_libname);
 	  return;
@@ -362,7 +398,7 @@ create_links (const char *path, const char *libname, const char *soname)
 	  && stat_lib.st_ino == stat_so.st_ino)
 	/* Link is already correct.  */
 	do_link = 0;
-      else if (lstat (full_soname, &lstat_so) == 0
+      else if (lstat64 (full_soname, &lstat_so) == 0
 	       && !S_ISLNK (lstat_so.st_mode))
 	{
 	  error (0, 0, _("%s is not a symbolic link\n"), full_soname);
@@ -370,7 +406,7 @@ create_links (const char *path, const char *libname, const char *soname)
 	  do_remove = 0;
 	}
     }
-  else if (lstat (full_soname, &lstat_so) != 0
+  else if (lstat64 (real_full_soname, &lstat_so) != 0
 	   || !S_ISLNK (lstat_so.st_mode))
     /* Unless it is a stale symlink, there is no need to remove.  */
     do_remove = 0;
@@ -382,13 +418,13 @@ create_links (const char *path, const char *libname, const char *soname)
     {
       /* Remove old link.  */
       if (do_remove)
-	if (unlink (full_soname))
+	if (unlink (real_full_soname))
 	  {
 	    error (0, 0, _("Can't unlink %s"), full_soname);
 	    do_link = 0;
 	  }
       /* Create symbolic link.  */
-      if (do_link && symlink (libname, full_soname))
+      if (do_link && symlink (libname, real_full_soname))
 	{
 	  error (0, 0, _("Can't link %s to %s"), full_soname, libname);
 	  do_link = 0;
@@ -410,9 +446,11 @@ static void
 manual_link (char *library)
 {
   char *path;
+  char *real_path;
+  char *real_library;
   char *libname;
   char *soname;
-  struct stat stat_buf;
+  struct stat64 stat_buf;
   int flag;
 
   /* Prepare arguments for create_links call.  Split library name in
@@ -445,8 +483,26 @@ manual_link (char *library)
       strcpy (path, ".");
     }
 
+  if (opt_chroot)
+    {
+      real_path = chroot_canon (opt_chroot, path);
+      if (real_path == NULL)
+	{
+	  error (0, errno, _("Can't find %s"), path);
+	  free (path);
+	  return;
+	}
+      real_library = alloca (strlen (real_path) + strlen (libname) + 2);
+      sprintf (real_library, "%s/%s", real_path, libname);
+    }
+  else
+    {
+      real_path = path;
+      real_library = library;
+    }
+
   /* Do some sanity checks first.  */
-  if (lstat (library, &stat_buf))
+  if (lstat64 (real_library, &stat_buf))
     {
       error (0, errno, _("Can't lstat %s"), library);
       free (path);
@@ -460,15 +516,14 @@ manual_link (char *library)
       free (path);
       return;
     }
-  libname = basename (library);
-  if (process_file (library, libname, &flag, &soname, 0))
+  if (process_file (real_library, library, libname, &flag, &soname, 0))
     {
       error (0, 0, _("No link created since soname could not be found for %s"),
 	     library);
       free (path);
       return;
     }
-  create_links (path, libname, soname);
+  create_links (real_path, path, libname, soname);
   free (soname);
   free (path);
 }
@@ -514,12 +569,12 @@ search_dir (const struct dir_entry *entry)
 {
   DIR *dir;
   struct dirent *direntry;
-  char *file_name;
-  int file_name_len, len;
+  char *file_name, *dir_name, *real_file_name, *real_name;
+  int file_name_len, real_file_name_len, len;
   char *soname;
   struct dlib_entry *dlibs;
   struct dlib_entry *dlib_ptr;
-  struct stat stat_buf;
+  struct stat64 stat_buf;
   int is_link;
   unsigned long int hwcap = path_hwcap (entry->path);
 
@@ -536,14 +591,27 @@ search_dir (const struct dir_entry *entry)
 	printf ("%s:\n", entry->path);
     }
 
-  dir = opendir (entry->path);
-  if (dir == NULL)
+  if (opt_chroot)
+    {
+      dir_name = chroot_canon (opt_chroot, entry->path);
+      real_file_name_len = PATH_MAX;
+      real_file_name = alloca (real_file_name_len);
+    }
+  else
+    {
+      dir_name = entry->path;
+      real_file_name_len = 0;
+      real_file_name = file_name;
+    }
+
+  if (dir_name == NULL || (dir = opendir (dir_name)) == NULL)
     {
       if (opt_verbose)
 	error (0, errno, _("Can't open directory %s"), entry->path);
+      if (opt_chroot && dir_name)
+	free (dir_name);
       return;
     }
-
 
   while ((direntry = readdir (dir)) != NULL)
     {
@@ -569,14 +637,26 @@ search_dir (const struct dir_entry *entry)
 	{
 	  file_name_len = len + 1;
 	  file_name = alloca (file_name_len);
+	  if (!opt_chroot)
+	    real_file_name = file_name;
 	}
-      sprintf (file_name , "%s/%s", entry->path, direntry->d_name);
+      sprintf (file_name, "%s/%s", entry->path, direntry->d_name);
+      if (opt_chroot)
+	{
+	  len = strlen (dir_name) + strlen (direntry->d_name);
+	  if (len > real_file_name_len)
+	    {
+	      real_file_name_len = len + 1;
+	      real_file_name = alloca (real_file_name_len);
+	    }
+	  sprintf (real_file_name, "%s/%s", dir_name, direntry->d_name);
+	}
 #ifdef _DIRENT_HAVE_D_TYPE
       if (direntry->d_type != DT_UNKNOWN)
 	stat_buf.st_mode = DTTOIF (direntry->d_type);
       else
 #endif
-	if (lstat (file_name, &stat_buf))
+	if (lstat64 (real_file_name, &stat_buf))
 	  {
 	    error (0, errno, _("Can't lstat %s"), file_name);
 	    continue;
@@ -598,9 +678,29 @@ search_dir (const struct dir_entry *entry)
 	continue;
 
       is_link = S_ISLNK (stat_buf.st_mode);
+      if (opt_chroot && is_link)
+	{
+	  real_name = chroot_canon (opt_chroot, file_name);
+	  if (real_name == NULL)
+	    {
+	      if (strstr (file_name, ".so") == NULL)
+		error (0, 0, _("Input file %s not found.\n"), file_name);
+	      continue;
+	    }
+	}
+      else
+	real_name = real_file_name;
 
-      if (process_file (file_name, direntry->d_name, &flag, &soname, is_link))
-	continue;
+      if (process_file (real_name, file_name, direntry->d_name, &flag,
+			&soname, is_link))
+	{
+	  if (real_name != real_file_name)
+	    free (real_name);
+	  continue;
+	}
+
+      if (real_name != real_file_name)
+	free (real_name);
 
       /* Links will just point to itself.  */
       if (is_link)
@@ -686,7 +786,8 @@ search_dir (const struct dir_entry *entry)
     {
       /* Don't create links to links.  */
       if (dlib_ptr->is_link == 0)
-	create_links (entry->path, dlib_ptr->name, dlib_ptr->soname);
+	create_links (dir_name, entry->path, dlib_ptr->name,
+		      dlib_ptr->soname);
       if (opt_build_cache)
 	add_to_cache (entry->path, dlib_ptr->soname, dlib_ptr->flag, hwcap);
     }
@@ -700,6 +801,9 @@ search_dir (const struct dir_entry *entry)
       dlibs = dlibs->next;
       free (dlib_ptr);
     }
+
+  if (opt_chroot && dir_name)
+    free (dir_name);
 }
 
 /* Search through all libraries.  */
@@ -726,18 +830,35 @@ search_dirs (void)
 static void
 parse_conf (const char *filename)
 {
-  FILE *file;
+  FILE *file = NULL;
   char *line = NULL;
+  const char *canon;
   size_t len = 0;
 
-  file = fopen (filename, "r");
+  if (opt_chroot)
+    {
+      canon = chroot_canon (opt_chroot, filename);
+      if (canon)
+	file = fopen (canon, "r");
+      else
+	canon = filename;
+    }
+  else
+    {
+      canon = filename;
+      file = fopen (filename, "r");
+    }
 
   if (file == NULL)
     {
-      error (0, errno, _("Can't open configuration file %s%s%s"),
-	     opt_chroot ?: "", opt_chroot ? "/" : "", filename);
+      error (0, errno, _("Can't open configuration file %s"), canon);
+      if (canon != filename)
+	free ((char *) canon);
       return;
     }
+
+  if (canon != filename)
+    free ((char *) canon);
 
   do
     {
@@ -783,33 +904,76 @@ main (int argc, char **argv)
 	add_dir (argv [i]);
     }
 
-  if (cache_file == NULL)
-    cache_file = LD_SO_CACHE;
-
-  if (config_file == NULL)
-    config_file = LD_SO_CONF;
-
-  /* Chroot first.  */
   if (opt_chroot)
     {
       /* Normalize the path a bit, we might need it for printing later.  */
       char *endp = strchr (opt_chroot, '\0');
-      while (endp > opt_chroot + 1 && endp[-1] == '/')
+      while (endp > opt_chroot && endp[-1] == '/')
 	--endp;
       *endp = '\0';
+      if (endp == opt_chroot)
+	opt_chroot = NULL;
 
-      if (chroot (opt_chroot))
-	/* Report failure and exit program.  */
-	error (EXIT_FAILURE, errno, _("Can't chroot to %s"), opt_chroot);
-      /* chroot doesn't change the working directory, let's play safe.  */
-      if (chdir ("/"))
-	error (EXIT_FAILURE, errno, _("Can't chdir to /"));
+      if (opt_chroot)
+	{
+	  /* It is faster to use chroot if we can.  */
+	  if (!chroot (opt_chroot))
+	    {
+	      if (chdir ("/"))
+		error (EXIT_FAILURE, errno, _("Can't chdir to /"));
+	      opt_chroot = NULL;
+	    }
+	}
     }
+
+  if (cache_file == NULL)
+    {
+      cache_file = alloca (strlen (LD_SO_CACHE) + 1);
+      strcpy (cache_file, LD_SO_CACHE);
+    }
+
+  if (config_file == NULL)
+    config_file = LD_SO_CONF;
 
   if (opt_print_cache)
     {
+      if (opt_chroot)
+	{
+	  char *p = chroot_canon (opt_chroot, cache_file);
+	  if (p == NULL)
+	    error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"),
+		   cache_file);
+	  cache_file = p;
+	}
       print_cache (cache_file);
+      if (opt_chroot)
+	free (cache_file);
       exit (0);
+    }
+
+  if (opt_chroot)
+    {
+      /* Canonicalize the directory name of cache_file, not cache_file,
+         because we'll rename a temporary cache file to it.  */
+      char *p = strrchr (cache_file, '/');
+      char *canon = chroot_canon (opt_chroot,
+				  p ? (*p = '\0', cache_file) : "/");
+
+      if (canon == NULL)
+	{
+	  error (EXIT_FAILURE, errno,
+		 _("Can't open cache file directory %s\n"),
+		 p ? cache_file : "/");
+	}
+
+      if (p)
+	++p;
+      else
+	p = cache_file;
+
+      cache_file = alloca (strlen (canon) + strlen (p) + 2);
+      sprintf (cache_file, "%s/%s", canon, p);
+      free (canon);
     }
 
   if (opt_manual_link)

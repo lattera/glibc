@@ -41,14 +41,17 @@ extern void add_to_cache (const char *path, const char *lib, int flags,
 			  unsigned long int hwcap);
 
 /* Declared in readlib.c.  */
-extern int process_file (const char *file_name, const char *lib, int *flag,
-			 char **soname, int is_link);
+extern int process_file (const char *real_file_name, const char *file_name,
+			 const char *lib, int *flag, char **soname,
+			 int is_link);
 
 /* Declared in readelflib.c.  */
 extern int process_elf_file (const char *file_name, const char *lib, int *flag,
 			     char **soname, void *file_contents,
 			     size_t file_length);
 
+/* Declared in chroot_canon.c.  */
+extern char *chroot_canon (const char *chroot, const char *name);
 
 /* Declared in ldconfig.c.  */
 extern int opt_verbose;

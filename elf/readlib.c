@@ -68,11 +68,11 @@ static struct known_names known_libs [] =
 
 /* Returns 0 if everything is ok, != 0 in case of error.  */
 int
-process_file (const char *file_name, const char *lib, int *flag,
-	      char **soname, int is_link)
+process_file (const char *real_file_name, const char *file_name,
+	      const char *lib, int *flag, char **soname, int is_link)
 {
   FILE *file;
-  struct stat statbuf;
+  struct stat64 statbuf;
   void *file_contents;
   int ret;
 
@@ -83,7 +83,7 @@ process_file (const char *file_name, const char *lib, int *flag,
   *flag = FLAG_ANY;
   *soname = NULL;
 
-  file = fopen (file_name, "rb");
+  file = fopen (real_file_name, "rb");
   if (file == NULL)
     {
       /* No error for stale symlink.  */
@@ -93,7 +93,7 @@ process_file (const char *file_name, const char *lib, int *flag,
       return 1;
     }
 
-  if (fstat (fileno (file), &statbuf) < 0)
+  if (fstat64 (fileno (file), &statbuf) < 0)
     {
       error (0, 0, _("Cannot fstat file %s.\n"), file_name);
       fclose (file);

@@ -1,3 +1,45 @@
+2000-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/chroot_canon.c: Don't report a failure if the last path
+	component is not available.
+	* elf/ldconfig.c (parse_conf): Use canonicalized name when reporting
+	error.
+
+	* elf/cache.c (print_cache): Use stat64 instead of stat.
+	* elf/ldconfig.c (chroot_stat): Likewise.
+	(create_links): Likewise.
+	(manual_link): Likewise.
+	(search_dir): Likewise.
+	* elf/readlib.c (process_file): Likewise.
+
+	* Makefile (install): Set LC_ALL and LANGUAGE to C before running
+	ldconfig.
+
+2000-09-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/chroot_canon.c: New file.
+	* elf/Makefile: Build and distribute it.
+	* elf/ldconfig.h (process_file): Add real_file_name argument.
+	(chroot_canon): Add prototype.
+	* elf/ldconfig.c (cache_file): Remove const.
+	(chroot_stat): New.
+	(create_links): Add real_path argument.
+	If opt_chroot, maintain both real and given filenames.
+	(manual_link): Likewise.
+	(search_dir): Likewise.
+	(parse_conf): If opt_chroot, use chroot_canon to find the real
+	config file.
+	(main): For -r, try to use chroot, if it fails, leave opt_chroot set
+	and use chroot_canon where appropriate to do the same as if chroot
+	succeeded.
+	* elf/readlib.c (process_file): Add real_file_name argument, pass it
+	to fopen.
+
+2000-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/complex.h (_Complex): We can be more specific when _Complex
+	is defined by the compiler.
+
 2000-09-29  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/unix/sysv/linux/ia64/dl-cache.h: New.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __BEGIN_DECLS
 /* We might need to add support for more compilers here.  But since ISO
    C99 is out hopefully all maintained compilers will soon provide the data
    types `float complex' and `double complex'.  */
-#if __GNUC_PREREQ (2, 7) && !__GNUC_PREREQ (3, 0)
+#if __GNUC_PREREQ (2, 7) && !__GNUC_PREREQ (2, 97)
 # define _Complex __complex__
 #endif
 
