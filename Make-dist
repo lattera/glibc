@@ -18,6 +18,8 @@
 
 dist:
 
+# Make the value empty so ifdef fails if it's $(-subdir).
+subdir := $(subdir)
 ifdef subdir
 .. := ../
 else
