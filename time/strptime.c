@@ -71,11 +71,19 @@ localtime_r (t, tp)
 
 #define match_char(ch1, ch2) if (ch1 != ch2) return NULL
 #if defined __GNUC__ && __GNUC__ >= 2
-# define match_string(cs1, s2) \
+# ifdef USE_IN_EXTENDED_LOCALE_MODEL
+#  define match_string(cs1, s2) \
+  ({ size_t len = strlen (cs1);						      \
+     int result = __strncasecmp_l ((cs1), (s2), len, locale) == 0;	      \
+     if (result) (s2) += len;						      \
+     result; })
+# else
+#  define match_string(cs1, s2) \
   ({ size_t len = strlen (cs1);						      \
      int result = strncasecmp ((cs1), (s2), len) == 0;			      \
      if (result) (s2) += len;						      \
      result; })
+# endif
 #else
 /* Oh come on.  Get a reasonable compiler.  */
 # define match_string(cs1, s2) \
@@ -203,6 +211,7 @@ const unsigned short int __mon_yday[2][13] =
 # define LOCALE_PARAM_PROTO , __locale_t locale
 # define LOCALE_PARAM_DECL __locale_t locale;
 # define HELPER_LOCALE_ARG , current
+# define ISSPACE(Ch) __isspace_l (Ch, locale)
 #else
 # define LOCALE_PARAM
 # define LOCALE_ARG
@@ -213,6 +222,7 @@ const unsigned short int __mon_yday[2][13] =
 # else
 #  define HELPER_LOCALE_ARG
 # endif
+# define ISSPACE(Ch) isspace (Ch)
 #endif
 
 
@@ -306,9 +316,9 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
     {
       /* A white space in the format string matches 0 more or white
 	 space in the input string.  */
-      if (isspace (*fmt))
+      if (ISSPACE (*fmt))
 	{
-	  while (isspace (*rp))
+	  while (ISSPACE (*rp))
 	    ++rp;
 	  ++fmt;
 	  continue;
@@ -529,7 +539,7 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 	case 'n':
 	case 't':
 	  /* Match any white space.  */
-	  while (isspace (*rp))
+	  while (ISSPACE (*rp))
 	    ++rp;
 	  break;
 	case 'p':

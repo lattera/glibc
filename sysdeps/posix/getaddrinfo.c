@@ -564,8 +564,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
     /*
       buffer is the size of an unformatted IPv6 address in printable format.
      */
-    char buffer[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"];
-
     while (at2 != NULL)
       {
 	if (req->ai_flags & AI_CANONNAME)
@@ -581,9 +579,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      {
 		tmpbuflen *= 2;
 		tmpbuf = __alloca (tmpbuflen);
-
-		if (tmpbuf == NULL)
-		  return -EAI_MEMORY;
 
 		rc = __gethostbyaddr_r (at2->addr,
 					((at2->family == AF_INET6)
@@ -601,10 +596,42 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		return -EAI_SYSTEM;
 	      }
 
-	    if (h == NULL)
-	      c = inet_ntop (at2->family, at2->addr, buffer, sizeof(buffer));
-	    else
+	    if (h != NULL)
 	      c = h->h_name;
+	    else
+	      {
+		/* We have to try to get the canonical in some other
+		   way.  If we are looking for either AF_INET or
+		   AF_INET6 try the other line.  */
+		if (req->ai_family == AF_UNSPEC)
+		  {
+		    struct addrinfo *p = NULL;
+		    struct addrinfo **end = &p;
+		    struct addrinfo localreq = *req;
+		    struct addrinfo *runp;
+
+		    localreq.ai_family = AF_INET + AF_INET6 - at2->family;
+		    (void) gaih_inet (name, service, &localreq, end);
+
+		    runp = p;
+		    while (runp != NULL)
+		      {
+			if (p->ai_canonname != name)
+			  {
+			    c = strdupa (p->ai_canonname);
+			    break;
+			  }
+			runp = runp->ai_next;
+		      }
+
+		    freeaddrinfo (p);
+		  }
+
+		/* If this code is used the missing canonical name is
+		   substituted with the name passed in by the user.  */
+		if (c == NULL)
+		  c = name;
+	      }
 
 	    if (c == NULL)
 	      return GAIH_OKIFUNSPEC | -EAI_NONAME;
@@ -758,10 +785,12 @@ getaddrinfo (const char *name, const char *service,
 		    last_i = i;
 
 		  if (hints->ai_family == AF_UNSPEC && (i & GAIH_OKIFUNSPEC))
-		    continue;
+		    {
+		      ++g;
+		      continue;
+		    }
 
-		  if (p)
-		    freeaddrinfo (p);
+		  freeaddrinfo (p);
 
 		  return -(i & GAIH_EAI);
 		}
@@ -784,8 +813,7 @@ getaddrinfo (const char *name, const char *service,
   if (pai == NULL && last_i == 0)
     return 0;
 
-  if (p)
-    freeaddrinfo (p);
+  freeaddrinfo (p);
 
   return last_i ? -(last_i & GAIH_EAI) : EAI_NONAME;
 }
