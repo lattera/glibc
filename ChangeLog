@@ -1,3 +1,22 @@
+2004-02-29  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (transit_state): Don't handle state == NULL.
+	Move state log and backreference management...
+	(merge_state_with_log): ... to this function.
+	(find_recover_state): New function.
+	(check_matching): Use find_recover_state to get a non-NULL
+	state when an invalid state is reached.  Compute the amount
+	of initial characters to be skipped less conservatively when
+	multi-byte character sets are in use.  Do not check
+	dfa->nbackref if the state log is NULL.  Initialize err.
+	(acquire_init_state_context): Expect err to be initialized.
+	Fix spacing.
+
+2004-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/elf/start.S: Handle PIEs.
+	* sysdeps/sparc/sparc64/elf/start.S: Likewise.
+
 2004-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* iconv/iconv_prog.c (process_block): Handle omit_invalid.

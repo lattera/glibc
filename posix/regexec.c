@@ -123,9 +123,14 @@ static reg_errcode_t clean_state_log_if_needed (re_match_context_t *mctx,
 					        int next_state_log_idx) internal_function;
 static reg_errcode_t merge_state_array (re_dfa_t *dfa, re_dfastate_t **dst,
 					re_dfastate_t **src, int num) internal_function;
+static re_dfastate_t *find_recover_state (reg_errcode_t *err,
+					 re_match_context_t *mctx) internal_function;
 static re_dfastate_t *transit_state (reg_errcode_t *err,
 				     re_match_context_t *mctx,
 				     re_dfastate_t *state) internal_function;
+static re_dfastate_t *merge_state_with_log (reg_errcode_t *err,
+					    re_match_context_t *mctx,
+					    re_dfastate_t *next_state) internal_function;
 static reg_errcode_t check_subexp_matching_top (re_match_context_t *mctx,
 						re_node_set *cur_nodes,
 						int str_idx) internal_function;
@@ -936,7 +941,6 @@ acquire_init_state_context (err, mctx, idx)
      int idx;
 {
   re_dfa_t *const dfa = mctx->dfa;
-  *err = REG_NOERROR;
   if (dfa->init_state->has_constraint)
     {
       unsigned int context;
@@ -952,9 +956,9 @@ acquire_init_state_context (err, mctx, idx)
       else if (IS_BEGBUF_CONTEXT (context))
 	{
 	  /* It is relatively rare case, then calculate on demand.  */
-	  return  re_acquire_state_context (err, dfa,
-					    dfa->init_state->entrance_nodes,
-					    context);
+	  return re_acquire_state_context (err, dfa,
+					   dfa->init_state->entrance_nodes,
+					   context);
 	}
       else
 	/* Must not happen?  */
@@ -985,29 +989,37 @@ check_matching (mctx, fl_longest_match, p_match_first)
   int match_last = -1;
   int cur_str_idx = re_string_cur_idx (&mctx->input);
   re_dfastate_t *cur_state;
-  int at_init_state = p_match_first != NULL, skipped = 0;
+  int at_init_state = p_match_first != NULL;
+  int next_start_idx = cur_str_idx;
 
+  err = REG_NOERROR;
   cur_state = acquire_init_state_context (&err, mctx, cur_str_idx);
-  /* An initial state must not be NULL(invalid state).  */
+  /* An initial state must not be NULL (invalid).  */
   if (BE (cur_state == NULL, 0))
-    return -2;
-  if (mctx->state_log != NULL)
-    mctx->state_log[cur_str_idx] = cur_state;
-
-  /* Check OP_OPEN_SUBEXP in the initial state in case that we use them
-     later.  E.g. Processing back references.  */
-  if (BE (dfa->nbackref, 0))
     {
-      at_init_state = 0;
-      err = check_subexp_matching_top (mctx, &cur_state->nodes, 0);
-      if (BE (err != REG_NOERROR, 0))
-	return err;
+      assert (err == REG_ESPACE);
+      return -2;
+    }
 
-      if (cur_state->has_backref)
+  if (mctx->state_log != NULL)
+    {
+      mctx->state_log[cur_str_idx] = cur_state;
+
+      /* Check OP_OPEN_SUBEXP in the initial state in case that we use them
+	 later.  E.g. Processing back references.  */
+      if (BE (dfa->nbackref, 0))
 	{
-	  err = transit_state_bkref (mctx, &cur_state->nodes);
+	  at_init_state = 0;
+	  err = check_subexp_matching_top (mctx, &cur_state->nodes, 0);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
+
+	  if (cur_state->has_backref)
+	    {
+	      err = transit_state_bkref (mctx, &cur_state->nodes);
+	      if (BE (err != REG_NOERROR, 0))
+	        return err;
+	    }
 	}
     }
 
@@ -1031,40 +1043,34 @@ check_matching (mctx, fl_longest_match, p_match_first)
     {
       re_dfastate_t *old_state = cur_state;
       cur_state = transit_state (&err, mctx, cur_state);
+      if (mctx->state_log != NULL)
+	cur_state = merge_state_with_log (&err, mctx, cur_state);
+
+      if (cur_state == NULL)
+	{
+	  /* Reached the invalid state or an error.  Try to recover a valid
+	     state using the state log, if available and if we have not
+	     already found a valid (even if not the longest) match.  */
+	  if (BE (err != REG_NOERROR, 0))
+	    return -2;
+
+	  if (mctx->state_log == NULL
+	      || (match && !fl_longest_match)
+	      || (cur_state = find_recover_state (&err, mctx)) == NULL)
+	    break;
+	}
+
       if (at_init_state)
 	{
 	  if (old_state == cur_state)
-	    skipped++;
+	    next_start_idx = re_string_cur_idx (&mctx->input);
 	  else
 	    at_init_state = 0;
 	}
 
-      if (cur_state == NULL) /* Reached at the invalid state or an error.  */
+      if (cur_state->halt)
 	{
-	  cur_str_idx = re_string_cur_idx (&mctx->input);
-	  if (BE (err != REG_NOERROR, 0))
-	    return -2;
-	  if (!fl_longest_match && match)
-	    break;
-	  else
-	    {
-	      if (mctx->state_log == NULL)
-		break;
-	      else
-		{
-		  int max = mctx->state_log_top;
-		  for (; cur_str_idx <= max; ++cur_str_idx)
-		    if (mctx->state_log[cur_str_idx] != NULL)
-		      break;
-		  if (cur_str_idx > max)
-		    break;
-		}
-	    }
-	}
-
-      if (cur_state != NULL && cur_state->halt)
-	{
-	  /* Reached at a halt state.
+	  /* Reached a halt state.
 	     Check the halt state can satisfy the current context.  */
 	  if (!cur_state->has_constraint
 	      || check_halt_state_context (mctx, cur_state,
@@ -1079,8 +1085,8 @@ check_matching (mctx, fl_longest_match, p_match_first)
 	}
    }
 
-  if (match_last == -1 && skipped)
-    *p_match_first += skipped;
+  if (match_last == -1 && p_match_first)
+    *p_match_first += next_start_idx;
 
   return match_last;
 }
@@ -2134,7 +2140,6 @@ transit_state (err, mctx, state)
   re_dfa_t *const dfa = mctx->dfa;
   re_dfastate_t **trtable, *next_state;
   unsigned char ch;
-  int cur_idx;
 
   if (re_string_cur_idx (&mctx->input) + 1 >= mctx->input.bufs_len
       || (re_string_cur_idx (&mctx->input) + 1 >= mctx->input.valid_len
@@ -2145,14 +2150,6 @@ transit_state (err, mctx, state)
 	return NULL;
     }
 
-  *err = REG_NOERROR;
-  if (state == NULL)
-    {
-      next_state = state;
-      re_string_skip_bytes (&mctx->input, 1);
-    }
-  else
-    {
 #ifdef RE_ENABLE_I18N
       /* If the current state can accept multibyte.  */
       if (state->accept_mb)
@@ -2163,95 +2160,96 @@ transit_state (err, mctx, state)
 	}
 #endif /* RE_ENABLE_I18N */
 
-      /* Then decide the next state with the single byte.  */
-      if (1)
-	{
-	  /* Use transition table  */
-	  ch = re_string_fetch_byte (&mctx->input);
-	  trtable = state->trtable;
-	  if (trtable == NULL)
-	    {
-	      trtable = build_trtable (dfa, state);
-	      if (trtable == NULL)
-		{
-		  *err = REG_ESPACE;
-		  return NULL;
-		}
-	    }
-	  if (BE (state->word_trtable, 0))
-	    {
-	      unsigned int context;
-	      context
-		= re_string_context_at (&mctx->input,
-					re_string_cur_idx (&mctx->input) - 1,
-					mctx->eflags);
-	      if (IS_WORD_CONTEXT (context))
-		next_state = trtable[ch + SBC_MAX];
-	      else
-		next_state = trtable[ch];
-	    }
-	  else
-	    next_state = trtable[ch];
-	}
-#if 0
-      else
-	{
-	  /* don't use transition table  */
-	  next_state = transit_state_sb (err, mctx, state);
-	  if (BE (next_state == NULL && *err != REG_NOERROR, 0))
-	    return NULL;
-	}
-#endif
-    }
-
-  cur_idx = re_string_cur_idx (&mctx->input);
-  /* Update the state_log if we need.  */
-  if (mctx->state_log != NULL)
+  /* Then decide the next state with the single byte.  */
+  if (1)
     {
-      if (cur_idx > mctx->state_log_top)
-	{
-	  mctx->state_log[cur_idx] = next_state;
-	  mctx->state_log_top = cur_idx;
+      /* Use transition table  */
+      ch = re_string_fetch_byte (&mctx->input);
+      trtable = state->trtable;
+      if (trtable == NULL)
+        {
+          trtable = build_trtable (dfa, state);
+          if (trtable == NULL)
+	    {
+	      *err = REG_ESPACE;
+	      return NULL;
+	    }
 	}
-      else if (mctx->state_log[cur_idx] == 0)
-	{
-	  mctx->state_log[cur_idx] = next_state;
+      if (BE (state->word_trtable, 0))
+        {
+	  unsigned int context;
+	  context
+	    = re_string_context_at (&mctx->input,
+				    re_string_cur_idx (&mctx->input) - 1,
+				    mctx->eflags);
+	  if (IS_WORD_CONTEXT (context))
+	    return trtable[ch + SBC_MAX];
+	  else
+	    return trtable[ch];
 	}
       else
-	{
-	  re_dfastate_t *pstate;
-	  unsigned int context;
-	  re_node_set next_nodes, *log_nodes, *table_nodes = NULL;
-	  /* If (state_log[cur_idx] != 0), it implies that cur_idx is
-	     the destination of a multibyte char/collating element/
-	     back reference.  Then the next state is the union set of
-	     these destinations and the results of the transition table.  */
-	  pstate = mctx->state_log[cur_idx];
-	  log_nodes = pstate->entrance_nodes;
-	  if (next_state != NULL)
-	    {
-	      table_nodes = next_state->entrance_nodes;
-	      *err = re_node_set_init_union (&next_nodes, table_nodes,
+	return trtable[ch];
+    }
+#if 0
+  else
+    /* don't use transition table  */
+    return transit_state_sb (err, mctx, state);
+#endif
+}
+
+/* Update the state_log if we need */
+re_dfastate_t *                                                                                              
+merge_state_with_log (err, mctx, next_state)                                                                 
+     reg_errcode_t *err;                                                                                     
+     re_match_context_t *mctx;                                                                               
+     re_dfastate_t *next_state;                                                                              
+{                                                                                                            
+  re_dfa_t *const dfa = mctx->dfa;                                                                           
+  int cur_idx = re_string_cur_idx (&mctx->input);
+
+  if (cur_idx > mctx->state_log_top)
+    {
+      mctx->state_log[cur_idx] = next_state;
+      mctx->state_log_top = cur_idx;
+    }
+  else if (mctx->state_log[cur_idx] == 0)
+    {
+      mctx->state_log[cur_idx] = next_state;
+    }
+  else
+    {
+      re_dfastate_t *pstate;
+      unsigned int context;
+      re_node_set next_nodes, *log_nodes, *table_nodes = NULL;
+      /* If (state_log[cur_idx] != 0), it implies that cur_idx is
+         the destination of a multibyte char/collating element/
+         back reference.  Then the next state is the union set of
+         these destinations and the results of the transition table.  */
+      pstate = mctx->state_log[cur_idx];
+      log_nodes = pstate->entrance_nodes;
+      if (next_state != NULL)
+        {
+          table_nodes = next_state->entrance_nodes;
+          *err = re_node_set_init_union (&next_nodes, table_nodes,
 					     log_nodes);
-	      if (BE (*err != REG_NOERROR, 0))
-		return NULL;
-	    }
-	  else
-	    next_nodes = *log_nodes;
-	  /* Note: We already add the nodes of the initial state,
-		   then we don't need to add them here.  */
+          if (BE (*err != REG_NOERROR, 0))
+	    return NULL;
+        }
+      else
+        next_nodes = *log_nodes;
+      /* Note: We already add the nodes of the initial state,
+	 then we don't need to add them here.  */
 
-	  context = re_string_context_at (&mctx->input,
-					  re_string_cur_idx (&mctx->input) - 1,
-					  mctx->eflags);
-	  next_state = mctx->state_log[cur_idx]
-	    = re_acquire_state_context (err, dfa, &next_nodes, context);
-	  /* We don't need to check errors here, since the return value of
-	     this function is next_state and ERR is already set.  */
+      context = re_string_context_at (&mctx->input,
+				      re_string_cur_idx (&mctx->input) - 1,
+				      mctx->eflags);
+      next_state = mctx->state_log[cur_idx]
+        = re_acquire_state_context (err, dfa, &next_nodes, context);
+      /* We don't need to check errors here, since the return value of
+         this function is next_state and ERR is already set.  */
 
-	  if (table_nodes != NULL)
-	    re_node_set_free (&next_nodes);
-	}
+      if (table_nodes != NULL)
+        re_node_set_free (&next_nodes);
     }
 
   if (BE (dfa->nbackref, 0) && next_state != NULL)
@@ -2273,7 +2271,36 @@ transit_state (err, mctx, state)
 	  next_state = mctx->state_log[cur_idx];
 	}
     }
+
   return next_state;
+}
+
+/* Skip bytes in the input that correspond to part of a
+   multi-byte match, then look in the log for a state
+   from which to restart matching.  */
+re_dfastate_t *
+find_recover_state (err, mctx)
+     reg_errcode_t *err;
+     re_match_context_t *mctx;
+{
+  re_dfastate_t *cur_state = NULL;
+  do
+    {
+      int max = mctx->state_log_top;
+      int cur_str_idx = re_string_cur_idx (&mctx->input);
+
+      do
+	{
+          if (++cur_str_idx > max)
+            return NULL;
+          re_string_skip_bytes (&mctx->input, 1);
+	}
+      while (mctx->state_log[cur_str_idx] == NULL);
+
+      cur_state = merge_state_with_log (err, mctx, NULL);
+    }
+  while (err == REG_NOERROR && cur_state == NULL);
+  return cur_state;
 }
 
 /* Helper functions for transit_state.  */

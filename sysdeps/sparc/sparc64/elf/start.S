@@ -1,5 +1,5 @@
 /* Startup code for elf64-sparc
-   Copyright (C) 1997, 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -23,9 +23,20 @@
 
 	.section ".text"
 	.align 4
+#ifdef SHARED
+.LLGETPC0:
+	retl
+	 add	%o7, %l7, %l7
+#endif
 	.global _start
 	.type _start,#function
 _start:
+
+#ifdef SHARED
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7
+	call	.LLGETPC0
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7
+#endif
 
   /* Terminate the stack frame, and reserve space for functions to
      drop their arguments.  */
@@ -45,6 +56,11 @@ _start:
         or      %o0, %lo(main), %o0
         or      %o3, %lo(__libc_csu_init), %o3
         or      %o4, %lo(__libc_csu_fini), %o4
+#ifdef SHARED
+	ldx	[%l7 + %o0], %o0
+	ldx	[%l7 + %o3], %o3
+	ldx	[%l7 + %o4], %o4
+#endif
 
   /* When starting a binary via the dynamic linker, %g1 contains the
      address of the shared library termination function, which will be
