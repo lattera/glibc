@@ -1,3 +1,26 @@
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/Makefile (CFLAGS-_itoa.c): The code has been
+	fixed, we don't need to disable the warnings anymore, remove them.
+	* elf/Makefile (CFLAGS-dl-load.c): Likewise.
+
+	* posix/Makefile (CFLAGS-regex.c): Remove not needed warning
+	flag.
+
+	* posix/regex.c (regex_compile): Remove unused variables.
+
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/msq.h (struct msqid_ds): Use
+	__pid_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/msq.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/msq.h: Likewise.
+
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Add missing
+	variable declaration.
+
 2000-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/conformtest.pl (@headers): Add "sys/msg.h", "sys/mman.h",

@@ -91,7 +91,7 @@ do-wordexp-test: $(objpfx)wordexp-test
 endif
 endif
 
-CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes -DDEBUG
+CFLAGS-regex.c = -Wno-strict-prototypes -DDEBUG
 CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)

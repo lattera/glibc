@@ -153,7 +153,6 @@ $(objpfx)trusted-dirs.st: Makefile $(..)Makeconfig
 	$(move-if-change) ${@:st=T} ${@:st=h}
 	touch $@
 CPPFLAGS-dl-load.c = -I$(objpfx).
-CFLAGS-dl-load.c += -Wno-uninitialized
 
 ifeq (yes,$(build-shared))
 $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)

@@ -2448,7 +2448,6 @@ regex_compile (pattern, size, syntax, bufp)
 			    const int32_t *indirect;
 			    int32_t idx;
 			    const unsigned char *cp = str;
-			    int32_t weight;
 			    int ch;
 
 			    /* This #include defines a local function!  */
@@ -2584,11 +2583,8 @@ regex_compile (pattern, size, syntax, bufp)
 			    const unsigned char *extra;
 			    int32_t idx;
 			    int32_t elem;
-			    const unsigned char *cp = str;
-			    int32_t weight;
 			    int32_t second;
 			    int32_t hash;
-			    int ch;
 
 			    table_size =
 			      _NL_CURRENT_WORD (LC_COLLATE,

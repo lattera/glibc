@@ -3050,7 +3050,8 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 		 struct repertoire_t *repertoire)
 {
   size_t idx;
-
+  size_t width_table_size;
+  
   /* First we have to decide how we organize the arrays.  It is easy
      for a one-byte character set.  But multi-byte character set
      cannot be stored flat because the chars might be sparsely used.

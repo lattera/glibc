@@ -44,8 +44,8 @@ struct msqid_ds
   unsigned long int __msg_cbytes; /* current number of bytes on queue */
   msgqnum_t msg_qnum;		/* number of messages currently on queue */
   msglen_t msg_qbytes;		/* max number of bytes allowed on queue */
-  pid_t msg_lspid;		/* pid of last msgsnd() */
-  pid_t msg_lrpid;		/* pid of last msgrcv() */
+  __pid_t msg_lspid;		/* pid of last msgsnd() */
+  __pid_t msg_lrpid;		/* pid of last msgrcv() */
   unsigned long int __unused1;
   unsigned long int __unused2;
 };
