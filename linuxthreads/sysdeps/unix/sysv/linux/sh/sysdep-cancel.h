@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -101,25 +101,57 @@
 #  define __local_disable_asynccancel	__librt_disable_asynccancel
 # endif
 
-# define CENABLE \
+# if defined IS_IN_librt && defined PIC
+#  define CENABLE \
+	mov.l r12,@-r15; \
+	mov.l 1f,r12; \
+	mova 1f,r0; \
+	add r0,r12; \
+	mov.l 2f,r0; \
+	bsrf r0; \
+	 nop; \
+     0: bra 3f; \
+	 mov r0,r2; \
+	.align 2; \
+     1: .long _GLOBAL_OFFSET_TABLE_; \
+     2: .long __local_enable_asynccancel@PLT - (0b+2-.); \
+     3: mov.l @r15+,r12
+
+#  define CDISABLE \
+	mov.l r12,@-r15; \
+	mov.l 1f,r12; \
+	mova 1f,r0; \
+	add r0,r12; \
+	mov.l 2f,r0; \
+	bsrf r0; \
+	 mov r2,r4; \
+     0: bra 3f; \
+	 nop; \
+	.align 2; \
+     1: .long _GLOBAL_OFFSET_TABLE_; \
+     2: .long __local_disable_asynccancel@PLT - (0b+2-.); \
+     3: mov.l @r15+,r12
+# else
+#  define CENABLE \
 	mov.l 1f,r0; \
 	bsrf r0; \
 	 nop; \
      0: bra 2f; \
-	 nop; \
+	 mov r0,r2; \
 	.align 2; \
      1: .long __local_enable_asynccancel - 0b; \
      2:
 
-# define CDISABLE \
+#  define CDISABLE \
 	mov.l 1f,r0; \
 	bsrf r0; \
-	 nop; \
+	 mov r2,r4; \
      0: bra 2f; \
 	 nop; \
 	.align 2; \
      1: .long __local_disable_asynccancel - 0b; \
      2:
+# endif
 
 # ifndef __ASSEMBLER__
 #  if defined FLOATING_STACKS && USE___THREAD && defined PIC

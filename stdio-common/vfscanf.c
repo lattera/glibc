@@ -396,8 +396,8 @@ _IO_vfscanf (s, format, argptr, errp)
 	  if (skip_space)
 	    {
 	      while (ISSPACE (c))
-		if (inchar () == EOF && errno == EINTR)
-		  conv_error ();
+		if (inchar () == EOF)
+		  input_error ();
 	      skip_space = 0;
 	    }
 
@@ -543,7 +543,8 @@ _IO_vfscanf (s, format, argptr, errp)
       /* Find the conversion specifier.  */
       fc = *f++;
       if (skip_space || (fc != L_('[') && fc != L_('c')
-			 && fc != L_('C') && fc != L_('n')))
+			 && fc != L_('C') && fc != L_('n')
+			 && fc != L_('%')))
 	{
 	  /* Eat whitespace.  */
 	  int save_errno = errno;

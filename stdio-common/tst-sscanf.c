@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2000.
 
@@ -59,6 +59,39 @@ const long int val_long[] =
   -12345678, 987654321, 123456789, 987654321, 123456789, 987654321
 };
 
+struct int_test
+{
+  const char *str;
+  const char *fmt;
+  int retval;
+} int_tests[] = 
+{
+  { "foo\n", "foo\nbar", -1 },
+  { "foo\n", "foo bar", -1 },
+  { "foo\n", "foo %d", -1 },
+  { "foo\n", "foo\n%d", -1 },
+  { "foon", "foonbar", -1 },
+  { "foon", "foon%d", -1 },
+  { "foo ", "foo bar", -1 },
+  { "foo ", "foo %d", -1 },
+  { "foo\t", "foo\tbar", -1 },
+  { "foo\t", "foo bar", -1 },
+  { "foo\t", "foo %d", -1 },
+  { "foo\t", "foo\t%d", -1 },
+  { "foo \t %bar1", "foo%%bar%d", 0 },
+  { "foo", "foo", 0 },
+  { "foon", "foo bar", 0 },
+  { "foon", "foo %d", 0 },
+  { "foo ", "fooxbar", 0 },
+  { "foo ", "foox%d", 0 },
+  { "foo bar", "foon", 0 },
+  { "foo bar", "foo bar", 0 },
+  { "foo bar", "foo %d", 0 },
+  { "foo bar", "foon%d", 0 },
+  { "foo ", "foo %n", 0 },
+  { "foo%bar1", "foo%%bar%d", 1 }
+};
+
 int
 main (void)
 {
@@ -117,6 +150,19 @@ main (void)
 
       if (! tst_locale)
 	break;
+    }
+
+  for (i = 0; i < sizeof (int_tests) / sizeof (int_tests[0]); ++i)
+    {
+      int dummy, ret;
+
+      if ((ret = sscanf (int_tests[i].str, int_tests[i].fmt,
+			 &dummy)) != int_tests[i].retval)
+	{
+	  printf ("int_tests[%d] returned %d != %d\n",
+		  i, ret, int_tests[i].retval);
+	  result = 1;
+	}
     }
 
   return result;

@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@
 	.globl	sem_timedwait
 	.type	sem_timedwait,@function
 	.align	5
+	cfi_startproc
 sem_timedwait:
 	/* First check for cancellation.  */
 	stc	gbr, r0
@@ -59,11 +60,22 @@ sem_timedwait:
 1:
 	/* Check whether the timeout value is valid.  */
 	mov.l	r8, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r8, 0)
 	mov.l	r9, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r9, 0)
 	mov.l	r10, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r10, 0)
 	mov.l	r12, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (r12, 0)
 	sts.l	pr, @-r15
+	cfi_adjust_cfa_offset(4)
+	cfi_rel_offset (pr, 0)
 	add	#-8, r15
+	cfi_adjust_cfa_offset(8)
 	mov	r4, r8
 	mov	r5, r9
 
@@ -193,8 +205,10 @@ sem_timedwait:
 	stc	gbr, r0
 	mov.w	.Lclbuf, r1
 	mov.l	.Lunwind, r2
-	jmp	@r2
+	braf	r2
 	 mov.l	@(r0,r1), r4
+.Lunwindb:
+	cfi_endproc
 
 .L1k:
 	.word	1000
@@ -221,5 +235,5 @@ sem_timedwait:
 .Ldisable0:
 	.long	__pthread_disable_asynccancel-.Ldisable0b
 .Lunwind:
-	.long	__pthread_unwind
+	.long	HIDDEN_JUMPTARGET (__pthread_unwind)-.Lunwindb
 	.size	sem_timedwait,.-sem_timedwait

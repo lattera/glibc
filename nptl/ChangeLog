@@ -1,3 +1,10 @@
+2004-04-19  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S: Add frame info.
+	Use HIDDEN_JUMPTARGET to jump to __pthread_unwind.
+	* sysdeps/unix/sysv/linux/sh/sem_wait.S: Remove unneeded frame
+	info.  Use HIDDEN_JUMPTARGET to jump to __pthread_unwind.
+
 2004-04-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/timer_routines.c: Make sure helper

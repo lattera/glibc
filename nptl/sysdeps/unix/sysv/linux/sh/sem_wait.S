@@ -121,18 +121,10 @@ __new_sem_wait:
 	mov	#-1, r0
 9:
 	lds.l	@r15+, pr
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (pr)
 	mov.l	@r15+, r12
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (r12)
 	mov.l	@r15+, r10
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (r10)
 	rts
 	 mov.l	@r15+, r8
-	cfi_adjust_cfa_offset (-4)
-	cfi_restore (r8)
 5:
 	/* Canceled.  */
 	stc	gbr, r0
@@ -144,8 +136,9 @@ __new_sem_wait:
 	stc	gbr, r0
 	mov.w	.Lclbuf, r1
 	mov.l	.Lunwind, r2
-	jmp	@r2
+	braf	r2
 	 mov.l	@(r0,r1), r4
+.Lunwindb:
 	cfi_endproc
 
 .Lchand:
@@ -169,6 +162,6 @@ __new_sem_wait:
 .Ldisable0:
 	.long	__pthread_disable_asynccancel-.Ldisable0b
 .Lunwind:
-	.long	__pthread_unwind
+	.long	HIDDEN_JUMPTARGET (__pthread_unwind)-.Lunwindb
 	.size	__new_sem_wait,.-__new_sem_wait
 	versioned_symbol(libpthread, __new_sem_wait, sem_wait, GLIBC_2_1)
