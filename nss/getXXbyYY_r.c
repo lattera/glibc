@@ -243,7 +243,7 @@ done:
   POSTPROCESS;
 #endif
   return (status == NSS_STATUS_SUCCESS
-	  ? 0 : (status == NSS_STATUS_TRYAGAIN ? EAGAIN : ENOENT));
+	  ? 0 : (status == NSS_STATUS_TRYAGAIN ? errno : ENOENT));
 }
 
 
