@@ -22,8 +22,6 @@
 	statement."
 	* sunrpc/rpc_cout.c (emit_inline): Likewise.
 
-	* include/argp.h (_argp_unlock_xxx): Add declaration.
-
 	* gmon/bb_exit_func.c: Include <sys/gmon.h> for internal
 	prototypes.
 	Remove struct bb and __bb_head since those are declared by
