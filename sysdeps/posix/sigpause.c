@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,94-98,2000,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94-98,2000,2002,2003,2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +17,12 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define sigpause __rename_sigpause
 #include <errno.h>
 #include <signal.h>
 #include <stddef.h>		/* For NULL.  */
 #include <sysdep-cancel.h>
+#undef sigpause
 
 #include <sigset-cvt-mask.h>
 

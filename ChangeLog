@@ -1,3 +1,9 @@
+2004-05-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/sigpause.c: Prevent sigpause prototype.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* signal/signal.h: Don't define sigpause macro unless needed.
+
 2004-05-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* configure.in (libc_cv_libgcc_s_suffix): New check.
