@@ -989,7 +989,18 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       /* Adjust for read-ahead (bytes is buffer). */
       offset -= fp->_IO_read_end - fp->_IO_read_ptr;
       if (fp->_offset == _IO_pos_BAD)
-	goto dumb;
+        {
+          if (mode != 0)
+            goto dumb;
+          else
+            {
+              result = _IO_SYSSEEK (fp, 0, dir);
+              if (result == EOF)
+                return result;
+
+              fp->_offset = result;
+            }
+        }
       /* Make offset absolute, assuming current pointer is file_ptr(). */
       offset += fp->_offset;
       if (offset < 0)
