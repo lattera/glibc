@@ -1,5 +1,15 @@
 1999-07-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/generic/setenv.c: Move setenv code in new function
+	__add_to_environ.  Add new parameter specifying already
+	constructed string for the environment.
+	(setenv): Call __add_to_environ with new parameter set to NULL.
+	(unsetenv): Really test all elements for duplicated name.  Missed those
+	cases where the two are following each other.
+	* sysdeps/generic/putenv.c: Use __add_to_environ instead of setenv.
+	* include/stdlib.h: Add prototype of __add_to_environ.
+	* stdlib/tst-environ.c: New file.
+
 	* sysdeps/i386/bits/string.h (__memset_cc): Fix typo in last patch.
 
 	* nis/nss_nis/nis-initgroups.c (_nss_nis_initgroups): Correct size

@@ -16,23 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* Issues:
-
-   1. putenv must not use setenv since the string provided by the user
-      must be used, not a copy
-
-   2. a common function should determine the place where to insert the
-      new entry and if necessary take care of extending the array
-
-   3. It must be kept track of whether an entry was inserted via putenv
-      or setenv.  In the former case the entry must not be put into
-      the search tree since removing it could mean it will not be
-      available anymore (e.g., when allocated on the stack)
-
-      To handle this an array parallel to the __environ array must specify
-      whether the entry was added via putenv or not
-*/
-
 #if HAVE_CONFIG_H
 # include <config.h>
 #endif
@@ -117,16 +100,23 @@ static void *known_values;
 static char **last_environ;
 
 
+/* This function is used by `setenv' and `putenv'.  The difference between
+   the two functions is that for the former must create a new string which
+   is then placed in the environment, while the argument of `putenv'
+   must be used directly.  This is all complicated by the fact that we try
+   to reuse values once generated for a `setenv' call since we can never
+   free the strings.  */
 int
-setenv (name, value, replace)
+__add_to_environ (name, value, combined, replace)
      const char *name;
      const char *value;
+     const char *combined;
      int replace;
 {
   register char **ep;
   register size_t size;
   const size_t namelen = strlen (name);
-  const size_t vallen = strlen (value) + 1;
+  const size_t vallen = value != NULL ? strlen (value) + 1 : 0;
 
   LOCK;
 
@@ -156,37 +146,49 @@ setenv (name, value, replace)
 	  return -1;
 	}
 
-      /* See whether the value is already known.  */
+      /* If the whole entry is given add it.  */
+      if (combined != NULL)
+	/* We must not add the string to the search tree since it belongs
+	   to the user.  */
+	new_environ[size] = (char *) combined;
+      else
+	{
+	  /* See whether the value is already known.  */
 #ifdef USE_TSEARCH
-      new_value = alloca (namelen + 1 + vallen);
+	  new_value = (char *) alloca (namelen + 1 + vallen);
 # ifdef _LIBC
-      __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
-		 value, vallen);
+	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
+		     value, vallen);
 # else
-      memcpy (new_value, name, namelen);
-      new_value[namelen] = '=';
-      memcpy (&new_value[namelen + 1], value, vallen);
+	  memcpy (new_value, name, namelen);
+	  new_value[namelen] = '=';
+	  memcpy (&new_value[namelen + 1], value, vallen);
 # endif
 
-      new_environ[size] = KNOWN_VALUE (new_value);
-      if (new_environ[size] == NULL)
-#endif
-	{
-	  new_environ[size] = malloc (namelen + 1 + vallen);
+	  new_environ[size] = KNOWN_VALUE (new_value);
 	  if (new_environ[size] == NULL)
+#endif
 	    {
-	      __set_errno (ENOMEM);
-	      UNLOCK;
-	      return -1;
-	    }
+	      new_environ[size] = (char *) malloc (namelen + 1 + vallen);
+	      if (new_environ[size] == NULL)
+		{
+		  __set_errno (ENOMEM);
+		  UNLOCK;
+		  return -1;
+		}
 
 #ifdef USE_TSEARCH
-	  memcpy (new_environ[size], new_value, namelen + 1 + vallen);
+	      memcpy (new_environ[size], new_value, namelen + 1 + vallen);
 #else
-	  memcpy (new_environ[size], name, namelen);
-	  new_environ[size][namelen] = '=';
-	  memcpy (&new_environ[size][namelen + 1], value, vallen);
+	      memcpy (new_environ[size], name, namelen);
+	      new_environ[size][namelen] = '=';
+	      memcpy (&new_environ[size][namelen + 1], value, vallen);
 #endif
+	      /* And save the value now.  We cannot do this when we remove
+		 the string since then we cannot decide whether it is a
+		 user string or not.  */
+	      STORE_VALUE (new_environ[size]);
+	    }
 	}
 
       if (__environ != last_environ)
@@ -199,49 +201,62 @@ setenv (name, value, replace)
     }
   else if (replace)
     {
-      char *new_value;
       char *np;
 
-      /* The existing string is too short; malloc a new one.  */
+      /* Use the user string if given.  */
+      if (combined != NULL)
+	np = (char *) combined;
+      else
+	{
 #ifdef USE_TSEARCH
-      new_value = alloca (namelen + 1 + vallen);
+	  char *new_value = alloca (namelen + 1 + vallen);
 # ifdef _LIBC
-      __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
-		 value, vallen);
+	  __mempcpy (__mempcpy (__mempcpy (new_value, name, namelen), "=", 1),
+		     value, vallen);
 # else
-      memcpy (new_value, name, namelen);
-      new_value[namelen] = '=';
-      memcpy (&new_value[namelen + 1], value, vallen);
+	  memcpy (new_value, name, namelen);
+	  new_value[namelen] = '=';
+	  memcpy (&new_value[namelen + 1], value, vallen);
 # endif
 
-      np = KNOWN_VALUE (new_value);
-      if (np == NULL)
-#endif
-	{
-	  np = malloc (namelen + 1 + vallen);
+	  np = KNOWN_VALUE (new_value);
 	  if (np == NULL)
+#endif
 	    {
-	      UNLOCK;
-	      return -1;
-	    }
+	      np = malloc (namelen + 1 + vallen);
+	      if (np == NULL)
+		{
+		  UNLOCK;
+		  return -1;
+		}
 
 #ifdef USE_TSEARCH
-	  memcpy (np, new_value, namelen + 1 + vallen);
+	      memcpy (np, new_value, namelen + 1 + vallen);
 #else
-	  memcpy (np, name, namelen);
-	  np[namelen] = '=';
-	  memcpy (&np[namelen + 1], value, vallen);
+	      memcpy (np, name, namelen);
+	      np[namelen] = '=';
+	      memcpy (&np[namelen + 1], value, vallen);
 #endif
+	      /* And remember the value.  */
+	      STORE_VALUE (np);
+	    }
 	}
 
-      /* Keep the old value around.  */
-      STORE_VALUE (*ep);
       *ep = np;
     }
 
   UNLOCK;
 
   return 0;
+}
+
+int
+setenv (name, value, replace)
+     const char *name;
+     const char *value;
+     int replace;
+{
+  return __add_to_environ (name, value, NULL, replace);
 }
 
 void
@@ -253,20 +268,20 @@ unsetenv (name)
 
   LOCK;
 
-  for (ep = __environ; *ep != NULL; ++ep)
+  ep = __environ;
+  while (*ep != NULL)
     if (!strncmp (*ep, name, len) && (*ep)[len] == '=')
       {
 	/* Found it.  Remove this pointer by moving later ones back.  */
 	char **dp = ep;
-
-	/* Store the value so that we can reuse it later.  */
-	STORE_VALUE (*ep);
 
 	do
 	  dp[0] = dp[1];
 	while (*dp++);
 	/* Continue the loop in case NAME appears again.  */
       }
+    else
+      ++ep;
 
   UNLOCK;
 }
@@ -281,12 +296,7 @@ clearenv ()
 
   if (__environ == last_environ && __environ != NULL)
     {
-      /* We allocated this environment so we can free it.  Store all the
-         strings.  */
-      char **ep = __environ;
-      while (*ep != NULL)
-	STORE_VALUE (*ep++);
-
+      /* We allocated this environment so we can free it.  */
       free (__environ);
       last_environ = NULL;
     }

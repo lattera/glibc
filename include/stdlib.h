@@ -46,6 +46,9 @@ extern char *__canonicalize_file_name __P ((__const char *__name));
 extern char *__realpath __P ((__const char *__name, char *__resolved));
 extern int __ptsname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int __getpt __P ((void));
+
+extern int __add_to_environ (const char *name, const char *value,
+			     const char *combines, int replace);
 #endif
 #undef __Need_M_And_C
 
