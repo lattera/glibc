@@ -20,22 +20,25 @@ esac
 ])
 
 dnl Arguments to specify presence of other packages/features.
+AC_ARG_WITH(fp, dnl
+  --with-fp		  if using floating-point hardware,
+	    with_fp=$withval, with_fp=yes)
 AC_ARG_WITH(gnu-binutils, dnl
   --with-gnu-binutils	  if using GNU binutils (as and ld),
-	    gnu_binutils=yes, gnu_binutils=no)
+	    gnu_binutils=$withval, gnu_binutils=no)
 AC_ARG_WITH(gnu-ld, dnl
   --with-gnu-ld		  if using GNU ld (in the binutils package),
-	    gnu_ld=yes, gnu_ld=no)
+	    gnu_ld=$withval, gnu_ld=no)
 AC_ARG_WITH(gnu-as, dnl
   --with-gnu-as		  if using GNU as (in the binutils package),
-	    gnu_as=yes, gnu_as=no)
+	    gnu_as=$withval, gnu_as=no)
 test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
-	    elf=yes, elf=no)
+	    elf=$withval, elf=no)
 AC_ARG_WITH(weak-symbols, dnl
   --with-weak-symbols	  if weak symbols are available in as and ld,
-	    weak=yes, weak=no)
+	    weak=$withval, weak=no)
 
 dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
@@ -166,11 +169,24 @@ fi
 
 # We have now validated the configuration.
 
+# Some configurations imply other options.
+case "$host_os" in
+gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
+  # These systems always use GNU tools.
+  gnu_ld=yes gnu_as=yes
+esac
+case "$host_os" in
+gnu*elf* | linux* | sysv4* | solaris2*)
+  # These systems always use the ELF format.
+  elf=yes
+esac
+
+
 # Remove the leading slashes.
 sysnames="`echo $sysnames | sed -e 's@^/@@' -e 's@ /@ @g'`"
 
 # Prepend the machine's FPU directory unless --without-fp.
-if test "$with_fp" = no; then
+if test "$with_fp" = yes; then
   fpu_dirs=
   for m in $mach; do
     if test -d $sysdep_dir$m/fpu; then
@@ -179,6 +195,19 @@ if test "$with_fp" = no; then
   done
   sysnames="`echo $fpu_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
 fi
+
+# If using ELF, prepend the machine-specific ELF ABI directory.
+if test "$elf" = yes; then
+  elf_dirs=
+  for m in $mach; do
+    if test -d $sysdep_dir$m/elf; then
+      elf_dirs="elf_dirs $m/elf"
+    fi
+  done
+  sysnames="`echo elf_dirs | sed -e 's,^/,,' -e 's, /,,g'` $sysnames"
+fi
+
+
 
 # Expand the list of system names into a full list of directories
 # from each element's parent name and Implies file (if present).
@@ -240,15 +269,6 @@ done
 libc_cv_sysdirs="$sysnames"])
 AC_SUBST(sysnames) sysnames="$libc_cv_sysdirs"
 AC_MSG_RESULT(${sysnames})
-
-case "$host_os" in
-gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
-  gnu_ld=yes gnu_as=yes
-esac
-case "$host_os" in
-gnu*elf* | linux* | sysv4* | solaris2*)
-  elf=yes
-esac
 
 AC_PROG_INSTALL
 if test "$INSTALL" = "${srcdir}/install-sh"; then

@@ -166,4 +166,5 @@ double x;
 	    return( finite(x) ?  scalb(one,5000) : x);
 }
 
+#undef expm1
 weak_alias (__expm1, expm1)

@@ -1,5 +1,14 @@
 Thu Apr 13 09:45:01 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/generic/expm1.c: #undef expm1 before weak_alias.
+
+	* libc-symbols.h [! HAVE_ASM_SET_DIRECTIVE] (strong_alias,
+ 	strong_alias_asm): Use `foo = bar' syntax instead.
+	* configure.in: Fix AC_ARG_WITH uses; check for --with-fp.  Move
+ 	$host_os checks to set gnu_ld/as and elf before sysdirs
+ 	generation.  Fix $with_fp test.
+	[$elf=yes]: Prepend MACHINE/elf directory.
+
 	* elf/libelf.h (elf_hash): Use XOR instead of ANDN when the bits
  	being cleared are already known to be set.  Thanks Ulrich.
 
