@@ -995,6 +995,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_string):						      \
       {									      \
 	size_t len;							      \
+	int string_malloced;						      \
 									      \
 	/* The string argument could in fact be `char *' or `wchar_t *'.      \
 	   But this should not make a difference here.  */		      \
@@ -1006,6 +1007,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	/* Entry point for printing other strings.  */			      \
       LABEL (print_string):						      \
 									      \
+	string_malloced = 0;						      \
 	if (string == NULL)						      \
 	  {								      \
 	    /* Write "(null)" if there's space.  */			      \
@@ -1028,14 +1030,19 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    const char *mbs = (const char *) string;			      \
 	    mbstate_t mbstate;						      \
 									      \
-	    len = prec != -1 ? strnlen (mbs, prec) : strlen (mbs);	      \
+	    len = prec != -1 ? prec : strlen (mbs);			      \
 									      \
 	    /* Allocate dynamically an array which definitely is long	      \
 	       enough for the wide character version.  */		      \
-	    string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
+	    if (len < 8192						      \
+		|| ((string = (CHAR_T *) malloc (len * sizeof (wchar_t)))     \
+		    == NULL))						      \
+	      string = (CHAR_T *) alloca (len * sizeof (wchar_t));	      \
+	    else							      \
+	      string_malloced = 1;					      \
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
-	    len = __mbsnrtowcs (string, &mbs, len, len, &mbstate);	      \
+	    len = __mbsrtowcs (string, &mbs, len, &mbstate);		      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
 		/* Illegal multibyte character.  */			      \
@@ -1064,6 +1071,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outstring (string, len);					      \
 	if (left)							      \
 	  PAD (L' ');							      \
+	if (string_malloced)						      \
+	  free (string);						      \
       }									      \
       break;
 #else
@@ -1112,6 +1121,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (form_string):						      \
       {									      \
 	size_t len;							      \
+	int string_malloced;						      \
 									      \
 	/* The string argument could in fact be `char *' or `wchar_t *'.      \
 	   But this should not make a difference here.  */		      \
@@ -1123,6 +1133,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	/* Entry point for printing other strings.  */			      \
       LABEL (print_string):						      \
 									      \
+	string_malloced = 0;						      \
 	if (string == NULL)						      \
 	  {								      \
 	    /* Write "(null)" if there's space.  */			      \
@@ -1181,7 +1192,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec > 0)						      \
 	      {								      \
 		/* The string `s2' might not be NUL terminated.  */	      \
-		string = (char *) alloca (prec);			      \
+		if (prec < 32768					      \
+		    || (string = (char *) malloc (prec)) == NULL)	      \
+		  string = (char *) alloca (prec);			      \
+		else							      \
+		  string_malloced = 1;					      \
 		len = __wcsrtombs (string, &s2, prec, &mbstate);	      \
 	      }								      \
 	    else							      \
@@ -1191,7 +1206,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		  {							      \
 		    assert (__mbsinit (&mbstate));			      \
 		    s2 = (const wchar_t *) string;			      \
-		    string = (char *) alloca (len + 1);			      \
+		    if (len + 1 < 32768					      \
+			|| (string = (char *) malloc (len + 1)) == NULL)      \
+		      string = (char *) alloca (len + 1);		      \
+		    else						      \
+		      string_malloced = 1;				      \
 		    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);      \
 		  }							      \
 	      }								      \
@@ -1215,6 +1234,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	outstring (string, len);					      \
 	if (left)							      \
 	  PAD (' ');							      \
+	if (string_malloced)						      \
+	  free (string);						      \
       }									      \
       break;
 #endif

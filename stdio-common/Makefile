@@ -54,7 +54,7 @@ tests := tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 bug12 bug13 \
 	 tfformat tiformat tllformat tstdiomisc tst-printfsz tst-wc-printf \
 	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf7 scanf8 scanf9 scanf10 \
-	 scanf12 tst-tmpnam tst-cookie tst-obprintf tst-sscanf
+	 scanf12 tst-tmpnam tst-cookie tst-obprintf tst-sscanf tst-swprintf
 
 test-srcs = tst-unbputc tst-printf
 
@@ -81,6 +81,7 @@ CFLAGS-scanf7.c = -Wno-format
 CFLAGS-tst-printfsz.c = -Wno-format
 
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
+tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata
 
 $(inst_includedir)/bits/stdio_lim.h: $(common-objpfx)bits/stdio_lim.h
 	$(do-install)

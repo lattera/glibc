@@ -1,3 +1,13 @@
+2000-09-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfprintf.c (process_string_arg): Handle precision
+	in wide char case correctly.  Don't allocate too long temporary
+	strings with alloca.
+
+	* stdio-common/Makefile (tests): Add tst-swprintf.
+	(tst-swprintf-ENV): New variable.
+	* stdio-common/tst-swprintf.c: New file.
+
 2000-09-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Use st_pad5.
@@ -35,8 +45,8 @@
 	* soft-fp/sysdeps/sparc/sparc64/Makefile: Move from here...
 	* sysdeps/sparc/sparc64/soft-fp/Makefile: ... to here.
 
-        * soft-fp/sysdeps/sparc/sparc64/qp_neg.S: Move from here...
-        * sysdeps/sparc/sparc64/soft-fp/qp_neg.S: ... to here.
+	* soft-fp/sysdeps/sparc/sparc64/qp_neg.S: Move from here...
+	* sysdeps/sparc/sparc64/soft-fp/qp_neg.S: ... to here.
 
 	* soft-fp/sysdeps/powerpc/q_add.c: Move from here...
 	* sysdeps/powerpc/soft-fp/q_add.c: ... to here.
