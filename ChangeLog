@@ -1,3 +1,7 @@
+2000-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/unicode.c (gconv_init): Correct test for direction.
+
 2000-08-24  Andreas Jaeger  <aj@suse.de>
 
 	* malloc/Makefile (extra-objs): Fix last patch, build memusagestat
