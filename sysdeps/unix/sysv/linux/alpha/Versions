@@ -37,7 +37,7 @@ libc {
     getrusage;
 
     # time type change
-    gettimeofday;
+    gettimeofday; getitimer;
 
     # i*
     ieee_get_fp_control; ieee_set_fp_control;
@@ -50,9 +50,6 @@ libc {
 
     # w*
     wait4;
-  }
-  GLIBC_2.1.1 {
-    getitimer;
   }
   GLIBC_2.1.4 {
     pciconfig_iobase;

@@ -44,7 +44,7 @@ libc {
     getdate_err;
 
     # g*
-    getdate; getdate_r; getitimer;
+    getdate; getdate_r;
   }
   GLIBC_2.2 {
     # w*
