@@ -1,3 +1,12 @@
+2004-11-30  Andreas Schwab  <schwab@suse.de>
+
+	* nis/ypclnt.c (ypprot_err): Remove unused entries.
+
+2004-11-30  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regexec.c (check_dst_limits_calc_pos_1): Check for
+	bkref_idx == -1, and don't recurse in that case.
+
 2004-11-30  GOTO Masanori  <gotom@debian.or.jp>
 
 	* posix/confstr.c: Enclose #error message with double quote

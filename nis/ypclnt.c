@@ -829,11 +829,6 @@ yperr_string (const int error)
 static const int8_t yp_2_yperr[] =
   {
 #define YP2YPERR(yp, yperr)  [YP_##yp - YP_VERS] = YPERR_##yperr
-    YP2YPERR (TRUE, SUCCESS),
-    YP2YPERR (NOMORE, NOMORE),
-    YP2YPERR (FALSE, YPERR),
-    YP2YPERR (NOMAP, MAP),
-    YP2YPERR (NODOM, DOMAIN),
     YP2YPERR (NOKEY, KEY),
     YP2YPERR (BADOP, YPERR),
     YP2YPERR (BADDB, BADDB),
