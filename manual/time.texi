@@ -1836,7 +1836,7 @@ The time is 01:02 PM.
 
 @cindex time, high precision
 @pindex sys/timex.h
-The @code{net_gettime} and @code{ntp_adjtime} functions provide an
+The @code{ntp_gettime} and @code{ntp_adjtime} functions provide an
 interface to monitor and manipulate high precision time.  These
 functions are declared in @file{sys/timex.h}.
 
