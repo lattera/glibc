@@ -1,3 +1,22 @@
+2001-07-20  Roland McGrath  <roland@frob.com>
+
+	* libio/stdio_ext.h: Moved to ...
+	* stdio-common/stdio_ext.h: ... here.
+	* libio/Makefile (headers): Move stdio_ext.h from here ...
+	* stdio-common/Makefile (headers): ... to here.
+	* include/stdio_ext.h: New file.
+	* stdio/Makefile (routines): Add the stdio_ext.h functions here.
+	* stdio/Versions (GLIBC_2.2.4): Export the stdio_ext.h functions.
+	* stdio/__flbf.c: New file.
+	* stdio/__fbufsize.c: New file.
+	* stdio/__fpending.c: New file.
+	* stdio/__fpurge.c: New file.
+	* stdio/__freadable.c: New file.
+	* stdio/__freading.c: New file.
+	* stdio/__fsetlocking.c: New file.
+	* stdio/__fwritable.c: New file.
+	* stdio/__fwriting.c: New file.
+
 2001-07-20  Ulrich Drepper  <drepper@redhat.com>
 	    Andreas Jaeger  <aj@suse.de>
 
