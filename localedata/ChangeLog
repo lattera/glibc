@@ -1,3 +1,7 @@
+2000-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-langinfo.c: Add copyright text.
+
 2000-07-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-wctype.input: Add more input text.

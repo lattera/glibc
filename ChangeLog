@@ -35,7 +35,7 @@
 
 	* libio/iogetwline.c (_IO_getwline_info): Pretty print.
 
-	* libio/wfileops.c (_IO_wfile_underflow): Correct not entirely
+	* libio/wfileops.c (_IO_wfile_underflow): Handle not entirely
 	empty external buffer correctly.
 
 2000-07-25  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
