@@ -2742,7 +2742,7 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 	      break;
 	    }
 
-	  if (state != 0)
+	  if (state != 0 && state != 2)
 	    goto err_label;
 
 	  arg = lr_token (ldfile, charmap, repertoire, verbose);
@@ -3533,7 +3533,9 @@ error while adding equivalent collating symbol"));
 		goto move_entry;
 
 	      if (find_entry (&collate->elem_table, symstr, symlen,
-			      (void **) &seqp) == 0)
+			      (void **) &seqp) == 0
+		  && (seqp->last != NULL || seqp->next != NULL
+		      || (collate->start != NULL && seqp == collate->start)))
 		{
 		move_entry:
 		  /* Remove the entry from the old position.  */
