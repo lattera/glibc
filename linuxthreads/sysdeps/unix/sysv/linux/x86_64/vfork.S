@@ -47,7 +47,7 @@ ENTRY (__vfork)
 
 	/* Push back the return PC.  */
 	pushq	%rdi
-	cfi_adjust_cfa_offset(-7)
+	cfi_adjust_cfa_offset(8)
 
 	cmpl	$-4095, %eax
 	jae SYSCALL_ERROR_LABEL		/* Branch forward if it failed.  */
