@@ -1,5 +1,8 @@
 2001-01-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_query.c: Use simply getenv() for HOSTALIASES.
+	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add HOSTALIASES.
+
 	* sysdeps/generic/unsecvars.h (UNSECURE_ENVVARS): Add missing comma.
 
 	* malloc/memusage.c (me): Use access() to determine whether we

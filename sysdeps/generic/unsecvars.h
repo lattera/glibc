@@ -1,6 +1,7 @@
 /* Environment variable to be removed for SUID programs.  */
 #define UNSECURE_ENVVARS \
   "GCONV_PATH",								      \
+  "HOSTALIASES",							      \
   "LOCALDOMAIN",							      \
   "LOCPATH",								      \
   "MALLOC_TRACE",							      \
