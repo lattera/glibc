@@ -1,5 +1,5 @@
 /* Low-level statistical profiling support function.  Mostly POSIX.1 version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,8 +62,10 @@ profil_count (void *pc)
 int
 __profil (u_short *sample_buffer, size_t size, size_t offset, u_int scale)
 {
-  static struct sigaction act, oact;
-  static struct itimerval timer, otimer;
+  static struct sigaction oact;
+  static struct itimerval otimer;
+  struct sigaction act;
+  struct itimerval timer;
 
   if (sample_buffer == NULL)
     {
