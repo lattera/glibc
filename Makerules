@@ -972,7 +972,7 @@ $(inst_libdir)/libc.so: $(common-objpfx)format.lds \
 	 cat $<; \
 	 echo 'GROUP ( $(slibdir)/libc.so$(libc.so-version)' \
 	      '$(libdir)/$(patsubst %,$(libtype.oS),$(libprefix)$(libc-name))'\
-	      ')' \
+	      'AS_NEEDED (' $(inst_slibdir)/$(rtld-installed-name) ') )' \
 	) > $@.new
 	mv -f $@.new $@
 
