@@ -37,6 +37,8 @@
 #define O_NONBLOCK	0x4000
 #define O_NDELAY	(0x0004 | O_NONBLOCK)
 #define O_NOCTTY	0x8000	/* not fcntl */
+#define O_DIRECTORY	0x10000 /* must be a directory */
+#define O_NOFOLLOW	0x20000 /* don't follow links */
 
 /* XXX missing */
 #define O_LARGEFILE	0
