@@ -1,3 +1,7 @@
+2001-04-30  Alan Modra  <amodra@one.net.au>
+
+	* sysdeps/unix/sysv/linux/hppa/pt-initfini.c: New.
+
 2001-05-25  Bruce Mitchener  <bruce@cubik.org>
 
 	* linuxthreads.texi: Spelling corrections.
