@@ -27,7 +27,7 @@ typedef pthread_mutex_t _IO_lock_t;
 
 #define _IO_cleanup_region_start(_fct, _fp) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    int _avail = (((_fp)->_mode & _IO_USER_LOCK) == 0			      \
+    int _avail = (((_fp)->_flags & _IO_USER_LOCK) == 0			      \
 		  && _pthread_cleanup_push_defer != NULL);		      \
     if (_avail) {							      \
       _pthread_cleanup_push_defer (&_buffer, (_fct), (_fp));		      \

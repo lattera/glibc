@@ -1,5 +1,8 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/libio.h (_IO_flockfile, _IO_funlockfile): Fix typo in last
+	patch (_mode -> _flags).
+
 	* libio/Makefile (headers): Add stdio_ext.h.
 	(routines): Add __fbufsize, __freading, __fwriting, __freadable,
 	__fwritable, __flbf, __fpurge, __fpending, and __fsetlocking.

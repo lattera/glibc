@@ -443,9 +443,9 @@ extern int _IO_ftrylockfile (_IO_FILE *) __THROW;
 #ifdef _IO_MTSAFE_IO
 # define _IO_peekc(_fp) _IO_peekc_locked (_fp)
 # define _IO_flockfile(_fp) \
-  if (((_fp)->_mode & _IO_USER_LOCK) == 0) _IO_flockfile (_fp)
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_flockfile (_fp)
 # define _IO_funlockfile(_fp) \
-  if (((_fp)->_mode & _IO_USER_LOCK) == 0) _IO_funlockfile (_fp)
+  if (((_fp)->_flags & _IO_USER_LOCK) == 0) _IO_funlockfile (_fp)
 #else
 # define _IO_peekc(_fp) _IO_peekc_unlocked (_fp)
 # define _IO_flockfile(_fp) /**/

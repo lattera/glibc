@@ -1,6 +1,9 @@
 2000-09-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/stdio-lock.h (_IO_cleanup_region_start):
+	Fix typo in last patch (_mode -> _flags).
+
+	* sysdeps/pthread/bits/stdio-lock.h (_IO_cleanup_region_start):
 	Provide definition which respects _IO_USER_LOCK flag.
 
 2000-08-30  Ulrich Drepper  <drepper@redhat.com>

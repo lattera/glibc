@@ -24,6 +24,7 @@
    General Public License.  */
 
 #include <stdio_ext.h>
+#include "libioP.h"
 
 void
 __fpurge (FILE *fp)
@@ -31,7 +32,7 @@ __fpurge (FILE *fp)
   if (fp->_mode > 0)
     {
       /* Wide-char stream.  */
-      if (_IO_in_wbackup (fp))
+      if (_IO_in_backup (fp))
 	_IO_free_wbackup_area (fp);
 
       fp->_wide_data->_IO_read_end = fp->_wide_data->_IO_read_ptr;

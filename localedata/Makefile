@@ -45,7 +45,7 @@ test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
 	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5 \
 	     tst-ctype tst-wctype tst-langinfo
 test-input := de_DE.ISO-8859-1 en_US.ISO-8859-1 da_DK.ISO-8859-1 \
-	      hr_HR.ISO-8859-2
+	      hr_HR.ISO-8859-2 sv_SE.ISO-8859-1
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
@@ -120,7 +120,7 @@ ifeq (no,$(cross-compiling))
 # We have to generate locales
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP da_DK.ISO-8859-1 \
-	   hr_HR.ISO-8859-2
+	   hr_HR.ISO-8859-2 sv_SE.ISO-8859-1
 LOCALE_SRCS := $(shell echo "$(LOCALES)"|sed 's/\([^ .]*\)[^ ]*/\1/g')
 CHARMAPS := $(shell echo "$(LOCALES)"|sed 's/[^ .]*[.]\([^ ]*\)/\1/g')
 CTYPE_FILES = $(addsuffix /LC_CTYPE,$(LOCALES))
