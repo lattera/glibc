@@ -1,3 +1,14 @@
+2001-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/Makefile (tests): Add tst-strxfrm.
+	* string/tst-strxfrm.c: New file.  Based on a test case by Paul Eggert.
+	* string/Depend: New file.
+
+2001-03-19  Paul Eggert  <eggert@twinsun.com>
+
+	* string/strxfrm.c (strxfrm): strxfrm should return 0, not 1,
+	when given the empty string in nontrivial locales.
+
 2001-03-17  H.J. Lu  <hjl@gnu.org>
 
 	* manual/Makefile (install): Use $(INSTALL_DATA) instead of

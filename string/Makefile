@@ -48,7 +48,7 @@ o-objects.ob	:= memcpy.o memset.o memchr.o
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
-		   tst-strtok
+		   tst-strtok tst-strxfrm
 distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 

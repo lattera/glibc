@@ -162,7 +162,7 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
     {
       if (n != 0)
         *dest = L('\0');
-      return 1;
+      return 0;
     }
 
   /* We need the elements of the string as unsigned values since they
