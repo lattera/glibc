@@ -100,4 +100,5 @@ include ../Rules
 tests: $(objpfx)test-freopen.out
 
 $(objpfx)test-freopen.out: test-freopen.sh $(objpfx)test-freopen
-	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)libio/
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' 	\
+	$(common-objpfx)libio/

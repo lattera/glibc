@@ -1244,11 +1244,11 @@ nice (int increment)
 
 The amount of memory available in the system and the way it is organized
 determines oftentimes the way programs can and have to work.  For
-functions like @code{mman} it is necessary to know about the size of
+functions like @code{mmap} it is necessary to know about the size of
 individual memory pages and knowing how much memory is available enables
 a program to select appropriate sizes for, say, caches.  Before we get
 into these details a few words about memory subsystems in traditional
-Unix systems.
+Unix systems will be given.
 
 @menu
 * Memory Subsystem::           Overview about traditional Unix memory handling.
