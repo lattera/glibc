@@ -94,28 +94,9 @@ vpath %.x $(subst $(empty) ,:,$(strip $(common-objpfx) $(objpfx) \
 # being included individually by a subdir makefile (hurd/Makefile needs this).
 in-Makerules := yes
 
--include $(+sysdir_pfx)sysd-Makefile
-ifndef avoid-generated
-ifneq ($(sysd-Makefile-sysdirs),$(config-sysdirs))
-sysd-Makefile-force = FORCE
-FORCE:
-endif
-$(+sysdir_pfx)sysd-Makefile: $(+sysdir_pfx)config.make $(..)Makerules \
-			     $(sysd-Makefile-force)
-	-@rm -f $@T
-	(echo 'sysd-Makefile-sysdirs := $(config-sysdirs)';		      \
-	 for file in $(config-sysdirs:=/Makefile); do  			      \
-	   if [ -f $(..)$$file ]; then					      \
-	     echo include "\$$(..)$$file";				      \
-	   else true; fi;						      \
-	 done;								      \
-	 echo 'sysd-Makefile-done=t') > $@T
-	mv -f $@T $@
-endif
-
-ifndef sysd-Makefile-done
-# Don't do deps until this exists, because it might change the sources list.
-no_deps=t
+sysdep-makefiles := $(wildcard $(full_config_sysdirs:=/Makefile))
+ifneq (,$(sysdep-makefiles))
+include $(sysdep-makefiles)
 endif
 
 
@@ -230,17 +211,12 @@ endef
 close-check-inhibit-asm = ;; esac ;
 endif
 
-# Don't include sysd-rules until sysd-Makefile is already there and has been
-# included.  It might define inhibit-sysdep-asm, which would affect the
-# contents of sysd-rules.
-ifdef sysd-Makefile-done
 -include $(+sysdir_pfx)sysd-rules
 ifneq ($(sysd-rules-sysdirs),$(config-sysdirs))
 # The value of $(+sysdep_dirs) the sysd-rules was computed for
 # differs from the one we are using now.  So force a rebuild of sysd-rules.
 sysd-rules-force = FORCE
 FORCE:
-endif
 endif
 $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 			  $(wildcard $(foreach dir,$(sysdirs),\

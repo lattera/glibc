@@ -879,4 +879,11 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 	mv -f $@-tmp $@
 endif
 
+# Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
+sysdep-makeconfigs := $(wildcard $(full_config_sysdirs:=/Makeconfig))
+ifneq (,$(sysdep-makeconfigs))
+include $(sysdep-makeconfigs)
+endif
+
+
 endif # Makeconfig not yet included

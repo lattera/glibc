@@ -1,3 +1,28 @@
+2001-05-14  Roland McGrath  <roland@frob.com>
+
+	* csu/Makefile ($(objpfx)g$(start-installed-name)): Turn this into a
+	static pattern rule also that also covers
+	$(objpx)g$(static-start-installed-name).
+	[$(start-installed-name) != $(static-start-installed-name)]
+	(extra-objs, omit-deps, install-lib): Add
+	$(static-start-installed-name) and g$(static-start-installed-name).
+	* sysdeps/mach/hurd/i386/Makefile: Don't add crt0.o to those here;
+	just setting static-start-installed-name is now sufficient.
+	(extra-objs): Add static-start.o here.
+	(CFLAGS-initfini.s): Remove obsolete variable.
+	* sysdeps/mach/hurd/i386/Makeconfig: New file.
+	Define static-start-installed-name here.
+
+	* Makeconfig: Include existing $(full_config_sysdirs:=/Makeconfig).
+	* Make-dist (+sysdep-tsrcs): Look for Makeconfig files.
+
+	* Makerules ($(+sysdir_pfx)sysd-Makefile): Remove this target and
+	associated hair.  Instead, just use $(wildcard ...) in the include.
+
+	* configure.in (critic_missing, aux_missing): Collect in these vars
+	the names of the missing programs, and include them in the error msgs.
+	* configure: Regenerated.
+
 2001-05-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust for new tests.

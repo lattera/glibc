@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,01 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -184,9 +184,9 @@ foo:=$(shell echo +sysdep-distfiles='$(+sysdep-distfiles)'>&2)
 		$(sysdep-Subdir-files)
 foo:=$(shell echo '+sysdep-dist=$(+sysdep-dist)' >&2)
 
-+sysdep-tsrcs := $(wildcard $(foreach file,Makefile Implies syscalls.list\
++sysdep-tsrcs := $(wildcard $(foreach file,Makefile Makeconfig Implies \
 				           configure configure.in Versions\
-					   libm-test-ulps,\
+					   syscalls.list libm-test-ulps,\
 				      $(addsuffix /$(file),$(sysdep_dirs)))) \
 		 $(+sysdep-dist)
 
