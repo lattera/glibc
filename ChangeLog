@@ -1,5 +1,11 @@
 2001-04-22  Philip Blundell  <philb@gnu.org>
 
+	* sysdeps/arm/fpu/feenablxcpt.c: New file.
+	* sysdeps/arm/fpu/fedisablxcpt.c: New file.
+	* sysdeps/arm/fpu/fegetexcpt.c: New file.
+
+2001-04-22  Philip Blundell  <philb@gnu.org>
+
 	* sysdeps/unix/sysv/linux/arm/sys/user.h (struct user_fpregs):
 	Renamed from struct user_fp.
 	(struct user_regs): New.
