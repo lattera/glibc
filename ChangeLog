@@ -23,6 +23,9 @@
 	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c: Copy to/from
 	the kernel's structure.
 
+	* sysdeps/unix/sysv/linux/sparc/sys/kernel_termios.h: New file.
+	Sparc needs a custom value of __KERNEL_NCCS.
+
 1998-04-06  Richard Henderson  <rth@cygnus.com>
 
 	* sysdeps/generic/libc-start.c: Allow init and fini to be null.
