@@ -968,7 +968,7 @@
 	include i486 version.
 	* sysdeps/i386/i486/pthread_spin_trylock.S: New file.
 	* sysdeps/i386/i586/pthread_spin_trylock.S: New file.
-	Patch by Marjin Ros <marjin@mad.scientist.com>.
+	Patch by Marijn Ros <marijn@mad.scientist.com>.
 
 	* allocatestack.c (get_cached_stack): Don't crash if we first
 	found a stack with a larger size then needed.
