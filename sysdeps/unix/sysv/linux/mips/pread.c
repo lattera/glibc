@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,17 +23,21 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_pread
+#include <kernel-features.h>
 
+#if defined __NR_pread || __ASSUME_PREAD_SYSCALL > 0
+
+# if __ASSUME_PREAD_SYSCALL == 0
+static ssize_t __emulate_pread (int fd, void *buf, size_t count,
+				off_t offset) internal_function;
+# endif
 extern ssize_t __syscall_pread (int fd, void *buf, size_t count, int dummy,
 				off_t offset_hi, off_t offset_lo);
 
-static ssize_t __emulate_pread (int fd, void *buf, size_t count,
-				off_t offset) internal_function;
 
 
 ssize_t
-__pread (fd, buf, count, offset)
+__libc_pread (fd, buf, count, offset)
      int fd;
      void *buf;
      size_t count;
@@ -42,21 +46,26 @@ __pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-#if defined(__MIPSEB__)
+# if defined(__MIPSEB__)
   result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, 0, offset);
-#elif defined(__MIPSEL__)
+# elif defined(__MIPSEL__)
   result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0, offset, 0);
-#endif
+# endif
+# if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread (fd, buf, count, offset);
-
+# endif
   return result;
 }
 
-weak_alias (__pread, pread)
+strong_alias (__libc_pread, __pread)
+weak_alias (__libc_pread, pread)
 
-#define __pread(fd, buf, count, offset) \
+# define __libc_pread(fd, buf, count, offset) \
      static internal_function __emulate_pread (fd, buf, count, offset)
 #endif
-#include <sysdeps/posix/pread.c>
+
+#if __ASSUME_PREAD_SYSCALL == 0
+# include <sysdeps/posix/pread.c>
+#endif
