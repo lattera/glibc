@@ -655,7 +655,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
       size_t cnt = *nsteps;
       struct gconv_step *steps = *handle;
 
-      do
+      while (cnt > 0)
 	if (steps[--cnt].counter++ == 0)
 	  {
 	    steps[cnt].shlib_handle =
@@ -670,7 +670,6 @@ __gconv_find_transform (const char *toset, const char *fromset,
 		break;
 	      }
 	  }
-      while (cnt > 0);
     }
 #endif
 

@@ -1,5 +1,9 @@
 1999-04-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_db.c (__gconv_find_transform): If conversion is
+	known to not exist don't try to load shared objects.
+	Patch by Petr Vandrovec Ing. VTEI <VANDROVE@vc.cvut.cz>.
+
 	* nscd/cache.c (prune_cache): The table might not be unused.  In
 	this case do nothing.
 
