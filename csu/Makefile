@@ -27,7 +27,7 @@
 
 subdir := csu
 
-routines = init-first libc-start
+routines = init-first libc-start $(libc-init) sysdep version
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) \
@@ -36,15 +36,33 @@ omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 		             $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) \
 	      $(csu-dummies)
-distribute = initfini.c gmon-start.c start.c defs.awk abi-note.S init.c
+distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
+	     abi-note.S init.c
+generated = version-info.h
+before-compile = $(objpfx)version-info.h
 
 all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
 
-ifeq ($(elf),yes)
-before-compile = $(objpfx)abi-tag.h
+ifeq (yes,$(elf))
+before-compile += $(objpfx)abi-tag.h
 generated += abi-tag.h
+endif
+
+ifeq (yes,$(gnu-ld))
+libc-init = set-init
+else
+libc-init = munch-init
+$(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
+	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
+	mv -f $@-t $@
+generated += munch-init.c
+
+# All initialization source files.
++subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
+# All subdirectories containing initialization source files.
++init_subdirs	:= $(patsubst %/,%,$(dir $(+subdir_inits)))
 endif
 
 ifeq ($(have-initfini),yes)
@@ -130,11 +148,12 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 	$(COMPILE.c) $(@:.o=.c) $(OUTPUT_OPTION)
 	rm -f $(@:.o=.c)
 
+# These headers are used by the startup code.
 / := $$/# bite me.
 $(objpfx)abi-tag.h: $(..)abi-tags
 	$(make-target-directory)
 	rm -f $@.new
-	sed 's/#.*$//;/^[ 	]*$$/d' $< | while read conf tag; do \
+	sed 's/#.*$//;/^[ 	]*$/d' $< | while read conf tag; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		     : "$$conf"` != 0 || continue; \
 	  echo "$$tag" | sed > $@.new \
@@ -142,3 +161,31 @@ $(objpfx)abi-tag.h: $(..)abi-tags
 	done
 	if test -r $@.new; then mv -f $@.new $@; \
 	else echo >&2 'This configuration not matched in $<'; exit 1; fi
+
+all-Banner-files = $(wildcard $(addsuffix /Banner, \
+					$(addprefix $(..), $(subdirs))))
+$(objpfx)version-info.h: $(common-objpfx)config.make $(all-Banner-files)
+	$(make-target-directory)
+	(case $(config-os) in \
+	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
+			     | $(CC) -E -P - | \
+			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
+		   if [ -z "$$version" ]; then \
+		     if [ -r /proc/version ]; then \
+		       version=`sed 's/.*version \([^ ]*\) .*/>>\1<</' \
+				< /proc/version`; \
+		     else \
+		       version=`uname -r`; \
+		     fi; \
+		   fi; \
+		   echo -n "\"Compiled on a Linux $$version system "; \
+		   echo "on `date +%Y-%m-%d`.\\n\"" ;; \
+	   *) ;; \
+	 esac; \
+	 files="$(all-Banner-files)";				\
+	 if test -n "$$files"; then				\
+	   echo "\"Available extensions:";			\
+	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
+	   echo "\"";						\
+	 fi) > $@T
+	mv -f $@T $@

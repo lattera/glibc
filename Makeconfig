@@ -795,3 +795,7 @@ $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 	mv -f $@-tmp $@
 
 endif # Makeconfig not yet included
+
+# Local Variables:
+# mode: makefile
+# End:

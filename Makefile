@@ -50,12 +50,6 @@ endif
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
-# All initialization source files.
-+subdir_inits	:= $(wildcard $(foreach dir,$(subdirs),$(dir)/init-$(dir).c))
-# All subdirectories containing initialization source files.
-+init_subdirs	:= $(patsubst %/,%,$(dir $(+subdir_inits)))
-
-
 # These are the targets that are made by making them in each subdirectory.
 +subdir_targets	:= subdir_lib objects objs others subdir_mostlyclean	\
 		   subdir_clean subdir_distclean subdir_realclean	\
@@ -68,8 +62,6 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 headers := errno.h sys/errno.h bits/errno.h limits.h values.h	\
 	   features.h gnu-versions.h bits/libc-lock.h bits/xopen_lim.h	\
 	   gnu/libc-version.h
-aux	 = sysdep $(libc-init) version
-before-compile += $(objpfx)version-info.h
 
 echo-headers: subdir_echo-headers
 
@@ -84,17 +76,6 @@ install-bin = glibcbug
 ifeq (yes,$(build-shared))
 install-others += $(inst_includedir)/gnu/lib-names.h
 endif
-
-ifeq (yes,$(gnu-ld))
-libc-init = set-init
-else
-libc-init = munch-init
-$(objpfx)munch-init.c: munch.awk munch-tmpl.c $(+subdir_inits)
-	$(AWK) -f $< subdirs='$(+init_subdirs)' $(word 2,$^) > $@-t
-	mv -f $@-t $@
-generated := $(generated) munch-init.c
-endif
-
 
 include Makerules
 
@@ -132,35 +113,6 @@ ifeq (yes,$(build-shared))
 # Build the shared object from the PIC object library.
 lib: $(common-objpfx)libc.so
 endif
-
-all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
-$(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
-	(case $(config-os) in \
-	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
-			     | $(CC) -E -P - | \
-			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
-		   if [ -z "$$version" ]; then \
-		     if [ -r /proc/version ]; then \
-		       version=`sed 's/.*version \([^ ]*\) .*/>>\1<</' \
-				< /proc/version`; \
-		     else \
-		       version=`uname -r`; \
-		     fi; \
-		   fi; \
-		   echo -n "\"Compiled on a Linux $$version system "; \
-		   echo "on `date +%Y-%m-%d`.\\n\"" ;; \
-	   *) ;; \
-	 esac; \
-	 files="$(all-Banner-files)";				\
-	 if test -n "$$files"; then				\
-	   echo "\"Available extensions:";			\
-	   sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$files;	\
-	   echo "\"";						\
-	 fi) > $@T
-	mv -f $@T $@
-
-version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
-$(version.c-objects): $(objpfx)version-info.h
 
 # Makerules creates a file `stubs' in each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function defined in that
@@ -285,18 +237,17 @@ parent_echo-distinfo:
 distribute  := README README.libm INSTALL FAQ NOTES NEWS PROJECTS BUGS	\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-	       extra-lib.mk o-iterator.mk				\
+	       extra-lib.mk o-iterator.mk autolock.sh rellns-sh		\
 	       libc.map mkinstalldirs move-if-change install-sh		\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
-	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc glibcbug.in abi-tags	\
 	       stub-tag.h test-installation.pl test-skeleton.c		\
 	       include/des.h
 
 distribute := $(strip $(distribute))
-generated := $(generated) stubs.h version-info.h
+generated := $(generated) stubs.h
 
 README: README.template version.h ; # Make-dist should update README.
 

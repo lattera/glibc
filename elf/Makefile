@@ -39,7 +39,7 @@ ld-map		= $(libc-map)
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
-		  dl-librecon.h
+		  dl-librecon.h interp.c
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
@@ -54,7 +54,7 @@ all: # Make this the default target; it will be defined in Rules.
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os
+extra-objs	= $(rtld-routines:=.os) soinit.os sofini.os eval.os interp.os
 generated	= librtld.os dl-allobjs.os ld.so trusted-dirs.h rtldtbl.h
 install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
@@ -123,6 +123,9 @@ endef
 
 # The dl code in the static libc needs a default library path.
 CFLAGS-dl-support.c = -D'DEFAULT_RPATH="$(default-rpath)"'
+
+# interp.c exists just to get this string into the libraries.
+CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'
 
 ifneq (ld.so,$(rtld-installed-name))
 # Make sure ld.so.1 exists in the build directory so we can link

@@ -31,6 +31,7 @@ include ../Makeconfig
 ifndef	subdir
 Each subdirectory makefile must define the `subdir' variable.
 endif
+# This ` unconfuses emacs.
 # This is benign and useless in GNU make before 3.63.
 export subdir := $(subdir)
 
@@ -188,3 +189,7 @@ $(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
 endef
 object-suffixes-left := $(object-suffixes)
 include $(o-iterator)
+
+# Local Variables:
+# mode: makefile
+# End:

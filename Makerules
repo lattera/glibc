@@ -344,14 +344,11 @@ else
 no-whole-archive =
 endif
 
-interp-obj = $(common-objpfx)interp.os
-$(interp-obj): $(common-objpfx)%.os: $(..)%.c
-	$(compile-command.c)
-common-generated += interp.os
-CFLAGS-interp.c = -D'RUNTIME_LINKER="$(slibdir)/$(rtld-installed-name)"'
-
+ifeq ($(elf),yes)
+interp-obj = $(common-objpfx)elf/interp.os
 $(common-objpfx)libc.so: $(interp-obj)
 $(patsubst %,$(objpfx)%.so,$(extra-libs)): $(interp-obj)
+endif
 
 define build-shlib
 $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
@@ -977,3 +974,7 @@ ifeq ($(with-cvs),yes)
 endif
 endif
 endif
+
+# Local Variables:
+# mode: makefile
+# End:

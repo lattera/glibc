@@ -1,5 +1,38 @@
 1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/locale.alias: Change italian to it_IT.ISO-8859-1.
+	Reported by Ottavio G. Rizzo <otto@mast.queensu.ca>.
+
+1998-05-08 19:24  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makefile (+subdir-inits): Delete variable.
+	(+init_subdirs): Likewise.
+	(aux): Likewise.
+	(before-compile): Likewise.
+	(libc-init): Delete stanza.
+	(version-info.h): Delete rule and associated variable.
+	(distribute): Don't distribute moved files.
+	* Makerules (interp-obj): It lives in elf now.  Only use it
+	if $(elf) is set.  Delete rule to build it.
+	* csu/Makefile: Build set-init.o and/or munch-init.o.  Build
+	version.o and version-info.h.  Minor cleanups.
+	(routines): Add libc-init, sysdep, version.
+	(generated): Add version-info.h.
+	* elf/Makefile: Build interp.os.
+
+	* interp.c: Moved to elf.
+	* set-init.c: Moved to csu.
+	* munch-init.c: Likewise.
+	* munch.awk: Likewise.
+	* version.c: Likewise.
+
+	* Makeconfig: Add emacs mode marker.
+	* Makerules: Likewise.
+	* Rules: Likewise, and also unconfuse syntax highlighting with
+	a fake comment.
+
+1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add capset and capget
 	syscalls.
 
