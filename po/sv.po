@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998 Free Software Foundation, Inc.
 # Jan Djärv <Jan.Djarv@mbox200.swipnet.se>, 1996, 1998.
-# $Revision$
+# Revision: 1.26
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.1\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1999-01-24 18:00 +01:00\n"
+"PO-Revision-Date: 2001-01-21 15:52+0100\n"
 "Last-Translator: Jan Djärv <Jan.Djarv@mbox200.swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -2683,7 +2683,7 @@ msgstr "Skriv namn på tillgängliga teckenuppsättningar"
 
 #: locale/programs/locale.c:65
 msgid "Write names of available locales"
-msgstr "Skriv namn på tilgängliga lokaler"
+msgstr "Skriv namn på tillgängliga lokaler"
 
 #: locale/programs/locale.c:69
 msgid "Write names of selected categories"
