@@ -1,3 +1,8 @@
+2000-04-11  Geoff Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/dl-start.S (_dl_start): Add _dl_start_user
+	symbol.  Call _dl_init rather than the old way.
+
 2000-05-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Use l_map_start and l_map_end to
@@ -1176,6 +1181,7 @@
 	* sysdeps/mips/dl-machine.h: Update some comments.
 	(ELF_MACHINE_ALIGN_MASK): Removed, it's not needed.
 
+>>>>>>> 1.3514
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add

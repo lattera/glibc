@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,6 +38,8 @@ ENTRY(_start)
 	stw	r4,0(r1)
 	bl	_dl_start@local
 
+	/* FALLTHRU */
+ENTRY(_dl_start_user)
 /* Now, we do our main work of calling initialisation procedures.
    The ELF ABI doesn't say anything about parameters for these,
    so we just pass argc, argv, and the environment.
@@ -49,28 +51,20 @@ ENTRY(_start)
 	mflr	r31
 /*  the address of _start in r30, */
 	mr	r30,r3
-/*  &_dl_argc in 29, &_dl_argv in 27, and _dl_main_searchlist in 28.  */
-	lwz	r28,_dl_main_searchlist@got(r31)
+/*  &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */
+	lwz	r28,_dl_loaded@got(r31)
 	lwz	r29,_dl_argc@got(r31)
 	lwz	r27,_dl_argv@got(r31)
-0:
-/*  Set initfunc = _dl_init_next(_dl_main_searchlist) */
+
+/* Call _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1)
 	lwz	r3,0(r28)
-	bl	_dl_init_next@plt
-/* If initfunc is NULL, we exit the loop; otherwise, */
-	cmpwi	r3,0
-	beq	1f
-/* call initfunc(_dl_argc, _dl_argv, _dl_argv+_dl_argc+1) */
-	mtlr	r3
-	lwz	r3,0(r29)
-	lwz	r4,0(r27)
-	slwi	r5,r3,2
-	add	r5,r4,r5
-	addi	r5,r5,4
-	blrl
-/* and loop.  */
-	b	0b
-1:
+	lwz	r4,0(r29)
+	lwz	r5,0(r27)
+	slwi	r6,r4,2
+	add	r6,r5,r6
+	addi	r6,r6,4
+	bl	_dl_init@local
+	
 /* Now, to conform to the ELF ABI, we have to: */
 /* Pass argc (actually _dl_argc) in r3; */
 	lwz	r3,0(r29)
