@@ -1,5 +1,7 @@
 2000-08-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* signal/signal.h (sigpause): Move __THROW before __asm__.
+
 	* inet/rcmd.c (__checkhost_sa): If getnameinfo succeeds but the
 	names don't match don't return.
 	Patch by Olaf Kirch <okir@flash.lst.de>.

@@ -147,7 +147,7 @@ extern int sigpause (int __mask) __THROW;
 #else
 # ifdef __USE_XOPEN
 #  ifdef __GNUC__
-extern int sigpause (int __sig) __asm__ ("__xpg_sigpause") __THROW;
+extern int sigpause (int __sig) __THROW __asm__ ("__xpg_sigpause");
 #  endif
 /* Remove a signal from the signal mask and suspend the process.  */
 #  define sigpause(sig) __sigpause ((sig), 1)
