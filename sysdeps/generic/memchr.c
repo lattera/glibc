@@ -64,8 +64,9 @@ memchr (s, c, n)
 
   /* Handle the first few characters by reading one character at a time.
      Do this until CHAR_PTR is aligned on a longword boundary.  */
-  for (char_ptr = s; n > 0 && ((unsigned long int) char_ptr
-			       & (sizeof (longword) - 1)) != 0;
+  for (char_ptr = (const unsigned char *) s;
+       n > 0 && ((unsigned long int) char_ptr
+		 & (sizeof (longword) - 1)) != 0;
        --n, ++char_ptr)
     if (*char_ptr == c)
       return (__ptr_t) char_ptr;
