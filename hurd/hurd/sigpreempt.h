@@ -83,8 +83,20 @@ error_t hurd_catch_signal (sigset_t sigset,
 
 /* Convenience functions using `hurd_catch_signal'.  */
 
-error_t hurd_safe_memmove (void *dest, const void *src, size_t nbytes);
+
+/* Like `memset', but catch faults in DEST.  */
 error_t hurd_safe_memset (void *dest, int byte, size_t nbytes);
+
+/* Like `memcpy', but catch faults in SRC.  */
+error_t hurd_safe_copyin (void *dest, const void *src, size_t nbytes);
+
+/* Like `memcpy', but catch faults in DEST.  */
+error_t hurd_safe_copyout (void *dest, const void *src, size_t nbytes);
+
+/* Like `memmove', but catch faults in SRC or DEST.
+   If only one region is expected to fault, it is more efficient
+   to use `hurd_safe_copyin' or `hurd_safe_copyout' as appropriate.  */
+error_t hurd_safe_memmove (void *dest, const void *src, size_t nbytes);
 
 
 #endif	/* hurd/sigpreempt.h */

@@ -85,3 +85,82 @@ hurd_safe_memset (void *dest, int byte, size_t nbytes)
 			    (vm_address_t) dest, (vm_address_t) dest + nbytes,
 			    &operate, SIG_ERR);
 }
+
+
+error_t
+hurd_safe_copyout (void *dest, const void *src, size_t nbytes)
+{
+  error_t operate (struct hurd_signal_preempter *preempter)
+    {
+      memcpy (dest, src, nbytes);
+      return 0;
+    }
+  return hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+			    (vm_address_t) dest, (vm_address_t) dest + nbytes,
+			    &operate, SIG_ERR);
+}
+
+error_t
+hurd_safe_copyin (void *dest, const void *src, size_t nbytes)
+{
+  error_t operate (struct hurd_signal_preempter *preempter)
+    {
+      memcpy (dest, src, nbytes);
+      return 0;
+    }
+  return hurd_catch_signal (sigmask (SIGBUS) | sigmask (SIGSEGV),
+			    (vm_address_t) src, (vm_address_t) src + nbytes,
+			    &operate, SIG_ERR);
+}
+
+error_t
+hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
+{
+  jmp_buf buf;
+  void throw (int signo, long int sigcode, struct sigcontext *scp)
+    { longjmp (buf, scp->sc_error ?: EGRATUITOUS); }
+
+  struct hurd_signal_preempter src_preempter =
+    {
+      sigmask (SIGBUS) | sigmask (SIGSEGV),
+      (vm_address_t) src, (vm_address_t) src + nbytes,
+      NULL, (sighandler_t) &throw,
+    };
+  struct hurd_signal_preempter dest_preempter =
+    {
+      sigmask (SIGBUS) | sigmask (SIGSEGV),
+      (vm_address_t) dest, (vm_address_t) dest + nbytes,
+      NULL, (sighandler_t) &throw,
+      &src_preempter
+    };
+
+  struct hurd_sigstate *const ss = _hurd_self_sigstate ();
+  error_t error;
+
+  /* This returns again with nonzero value when we preempt a signal.  */
+  error = setjmp (buf);
+
+  if (error == 0)
+    {
+      /* Install a signal preempter for the thread.  */
+      __spin_lock (&ss->lock);
+      src_preempter.next = ss->preempters;
+      ss->preempters = &dest_preempter;
+      __spin_unlock (&ss->lock);
+
+      /* Do the copy; it might fault.  */
+      memmove (dest, src, nbytes);
+    }
+
+  /* Either memmove completed happily and ERROR is still zero, or it hit
+     an expected signal and `throw' made setjmp return the signal error
+     code in ERROR.  Now we can remove the preempter and return.  */
+
+  __spin_lock (&ss->lock);
+  assert (ss->preempters == &dest_preempter);
+  ss->preempters = src_preempter.next;
+  __spin_unlock (&ss->lock);
+
+  return error;
+}
+
