@@ -207,7 +207,15 @@ dl_open_worker (void *a)
 
     found_caller:
       if (args->nsid == __LM_ID_CALLER)
-	args->nsid = call_map->l_ns;
+	{
+#ifndef SHARED
+	  /* In statically linked apps there might be no loaded object.  */
+	  if (call_map == NULL)
+	    args->nsid = LM_ID_BASE;
+	  else
+#endif
+	    args->nsid = call_map->l_ns;
+	}
     }
 
   /* Maybe we have to expand a DST.  */
