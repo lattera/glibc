@@ -1,6 +1,14 @@
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Correct
+	test for cmsg struct size.
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Likewise.
+
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: Remove unnecessary
+	initializations.
+
 	* libio/iopopen.c: Add lock for proc_file_chain access.
+	* libio/oldiopopen.c: Add lock for old_proc_file_chain access.
 	Reported by Padraig Brady <Padraig@linux.ie>.
 
 2001-07-31  Andreas Jaeger  <aj@suse.de>

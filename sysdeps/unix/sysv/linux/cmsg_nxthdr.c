@@ -29,8 +29,8 @@ __cmsg_nxthdr (struct msghdr *mhdr, struct cmsghdr *cmsg)
 
   cmsg = (struct cmsghdr *) ((unsigned char *) cmsg
 			     + CMSG_ALIGN (cmsg->cmsg_len));
-  if ((unsigned char *) (cmsg + 1) >= ((unsigned char *) mhdr->msg_control
-				       + mhdr->msg_controllen)
+  if ((unsigned char *) (cmsg + 1) > ((unsigned char *) mhdr->msg_control
+				      + mhdr->msg_controllen)
       || ((unsigned char *) cmsg + CMSG_ALIGN (cmsg->cmsg_len)
 	  > ((unsigned char *) mhdr->msg_control + mhdr->msg_controllen)))
     /* No more entries.  */

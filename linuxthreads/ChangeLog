@@ -1,3 +1,7 @@
+2001-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* Examples/ex17.c: Make sure test thread is around long enough.
+
 2001-07-26  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/pt-machine.h (THREAD_SELF, INIT_THREAD_SELF): Defined.

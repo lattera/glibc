@@ -6,9 +6,12 @@
 #include <limits.h>
 #include <sys/mman.h>
 
+static pthread_mutex_t synch = PTHREAD_MUTEX_INITIALIZER;
+
 static void *
 test_thread (void *v_param)
 {
+  pthread_mutex_lock (&synch);
   return NULL;
 }
 
@@ -56,6 +59,13 @@ main (void)
       return 2;
     }
 
+  status = pthread_mutex_lock (&synch);
+  if (status != 0)
+    {
+      printf ("cannot get lock: %s\n", strerror (status));
+      return 1;
+    }
+
   status = pthread_create (&thread, &attr, test_thread, NULL);
   if (status != 0)
     {
@@ -83,6 +93,13 @@ main (void)
 	      "than was set by setstack (%p,%x)\n",
 	      stack2, stacksize, stack, STACKSIZE);
       return 3;
+    }
+
+  status = pthread_mutex_unlock (&synch);
+  if (status != 0)
+    {
+      printf ("cannot release lock: %s\n", strerror (status));
+      return 1;
     }
 
   /* pthread_detach (thread); */

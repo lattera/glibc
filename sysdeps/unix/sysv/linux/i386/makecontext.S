@@ -40,22 +40,6 @@ ENTRY(__makecontext)
 	movl	oLINK(%eax), %ecx
 	movl	%ecx, -4(%edx)
 
-	/* Copy the FS and GS segment register.  */
-	xorl	%ecx, %ecx
-	movw	%gs, %cx
-	movl	%ecx, oGS(%eax)
-	xorl	%ecx, %ecx
-	movw	%fs, %cx
-	movl	%ecx, oFS(%eax)
-
-	/* We have separate floating-point register content memory on the
-	   stack.  We use the __fpregs_mem block in the context.  Set the
-	   links up correctly.  */
-	leal	oFPREGSMEM(%eax), %ecx
-	movl	%ecx, oFPREGS(%eax)
-	/* Save the floating-point context.  */
-	fnstenv	(%ecx)
-
 	/* Remember the number of parameters for the exit handler since
 	   it has to remove them.  We store the number in the EBX register
 	   which the function we will call must preserve.  */

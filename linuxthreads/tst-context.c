@@ -28,6 +28,12 @@ threadfct (void *arg)
 {
   int n = (int) (long int) arg;
 
+  if (getcontext (&ctx[n][1]) != 0)
+    {
+      printf ("%d: cannot get context: %m\n", n);
+      exit (1);
+    }
+
   printf ("%d: %s: before makecontext\n", n, __FUNCTION__);
 
   ctx[n][1].uc_stack.ss_sp = stacks[n];

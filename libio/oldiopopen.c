@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,99,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -109,6 +109,16 @@ typedef struct _IO_proc_file _IO_proc_file;
 
 static struct _IO_proc_file *old_proc_file_chain;
 
+#ifdef _IO_MTSAFE_IO
+static _IO_lock_t proc_file_chain_lock = _IO_lock_initializer;
+
+static void
+unlock (void *not_used)
+{
+  _IO_lock_unlock (proc_file_chain_lock);
+}
+#endif
+
 _IO_FILE *
 _IO_old_proc_open (fp, command, mode)
      _IO_FILE *fp;
@@ -173,8 +183,16 @@ _IO_old_proc_open (fp, command, mode)
   _IO_fileno (fp) = parent_end;
 
   /* Link into old_proc_file_chain. */
+#ifdef _IO_MTSFE_IO
+  _IO_cleanup_region_start_noarg (unlock);
+  _IO_lock_lock (proc_file_chain_lock);
+#endif
   ((_IO_proc_file *) fp)->next = old_proc_file_chain;
   old_proc_file_chain = (_IO_proc_file *) fp;
+#ifdef _IO_MTSFE_IO
+  _IO_lock_unlock (proc_file_chain_lock);
+  _IO_cleanup_region_end (0);
+#endif
 
   _IO_mask_flags (fp, read_or_write, _IO_NO_READS|_IO_NO_WRITES);
   return fp;
@@ -229,6 +247,10 @@ _IO_old_proc_close (fp)
   int status = -1;
 
   /* Unlink from old_proc_file_chain. */
+#ifdef _IO_MTSFE_IO
+  _IO_cleanup_region_start_noarg (unlock);
+  _IO_lock_lock (proc_file_chain_lock);
+#endif
   for ( ; *ptr != NULL; ptr = &(*ptr)->next)
     {
       if (*ptr == (_IO_proc_file *) fp)
@@ -238,6 +260,10 @@ _IO_old_proc_close (fp)
 	  break;
 	}
     }
+#ifdef _IO_MTSFE_IO
+  _IO_lock_unlock (proc_file_chain_lock);
+  _IO_cleanup_region_end (0);
+#endif
 
   if (status < 0 || _IO_close (_IO_fileno(fp)) < 0)
     return -1;
