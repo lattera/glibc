@@ -1,5 +1,8 @@
 2001-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main): Don't call
+	_dl_aux_init for shared libraries.
+
 	* sysdeps/unix/sysv/linux/glob64.c: Moved to ...
 	* sysdeps/gnu/glob64.c: ...here.  New file.
 

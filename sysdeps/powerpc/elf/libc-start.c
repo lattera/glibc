@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -76,7 +76,9 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
       while (*(char *__unbounded *__unbounded) auxvec != NULL)
 	++auxvec;
       ++auxvec;
+#ifndef SHARED
       _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+#endif
       rtld_fini = NULL;
     }
 
