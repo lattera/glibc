@@ -2,6 +2,11 @@
 
 	* stdlib/stdlib.h (realpath): Remove nonnull attribute.
 
+	* posix/fnmatch_loop.c (internal_fnmatch): Clear is_seqval after
+	normal_bracket label.
+
+	* time/tst-mktime2.c (bigtime_test): Initialize tm.tm_isdst to -1.
+
 2004-12-01  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/gnu/Makefile ($(objpfx)errlist-compat.c):

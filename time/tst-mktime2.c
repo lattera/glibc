@@ -78,6 +78,7 @@ bigtime_test (int j)
   struct tm tm;
   time_t now;
   tm.tm_year = tm.tm_mon = tm.tm_mday = tm.tm_hour = tm.tm_min = tm.tm_sec = j;
+  tm.tm_isdst = -1;
   now = mktime (&tm);
   if (now != (time_t) -1)
     {

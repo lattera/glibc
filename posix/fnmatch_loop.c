@@ -600,6 +600,9 @@ FCT (pattern, string, string_end, no_leading_period, flags)
 			if (!is_range && c == fn)
 			  goto matched;
 
+			/* This is needed if we goto normal_bracket; from
+			   outside of is_seqval's scope.  */
+			is_seqval = 0;
 			cold = c;
 			c = *p++;
 		      }
