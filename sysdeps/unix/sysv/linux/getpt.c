@@ -24,11 +24,7 @@
 #include <paths.h>
 #include <sys/statfs.h>
 
-/* Constant that identifies the `devpts' filesystem.  */
-#define DEVPTS_SUPER_MAGIC	0x1cd1
-
-/* Constant that identifies the `devfs' filesystem.  */
-#define DEVFS_SUPER_MAGIC	0x1373
+#include "linux_fsinfo.h"
 
 /* Path to the master pseudo terminal cloning device.  */
 #define _PATH_DEVPTMX _PATH_DEV "ptmx"

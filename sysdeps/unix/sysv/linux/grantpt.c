@@ -20,11 +20,7 @@
 #include <stdlib.h>
 #include <sys/statfs.h>
 
-/* Constant that identifies the `devpts' filesystem.  */
-#define DEVPTS_SUPER_MAGIC	0x1cd1
-
-/* Constant that identifies the `devfs' filesystem.  */
-#define DEVFS_SUPER_MAGIC	0x1373
+#include "linux_fsinfo.h"
 
 /* Prototype for function that changes ownership and access permission
    for slave pseudo terminals that do not live on a `devpts'
