@@ -340,7 +340,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
 	  iov[0].iov_base = &req;
 	  iov[0].iov_len = sizeof (req);
-	  iov[1].iov_base = (void *) key;
+	  iov[1].iov_base = arg;
 	  iov[1].iov_len = req.key_len;
 
 	  nbytes = TEMP_FAILURE_RETRY (writev (sock, iov, 2));

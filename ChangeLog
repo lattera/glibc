@@ -1,3 +1,8 @@
+2004-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd.c (parse_opt): Write arg string instead of (void *)
+	key to the socket.
+
 2004-09-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/sys/cdefs.h: Define __nonnull using nonnull function attribute
