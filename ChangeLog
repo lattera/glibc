@@ -1,3 +1,8 @@
+1999-12-11  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/generic/libc-start.c (check_one_fd): Use __libc_fcntl
+	instead of __fcntl.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/isiri-3342.c: New file.

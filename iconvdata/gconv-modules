@@ -1150,3 +1150,7 @@ module	INTERNAL		TIS-620//		TIS-620		1
 #	from			to			module		cost
 module	KOI8-U//		INTERNAL		KOI8-U		1
 module	INTERNAL		KOI8-U//		KOI8-U		1
+
+#	from			to			module		cost
+module	ISIRI-3342//		INTERNAL		ISIRI-3342	1
+module	INTERNAL		ISIRI-3342//		ISIRI-3342	1

@@ -25,6 +25,7 @@
 #include <elf/ldsodefs.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
+extern int __libc_fcntl (int fd, int cmd, ...);
 
 extern int _dl_starting_up;
 weak_extern (_dl_starting_up)
@@ -96,7 +97,7 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
 static void
 check_one_fd (int fd, int mode)
 {
-  if (__fcntl (fd, F_GETFD) == -1 && errno == EBADF)
+  if (__libc_fcntl (fd, F_GETFD) == -1 && errno == EBADF)
     {
       /* Something is wrong with this descriptor, it's probably not
 	 opened.  Open /dev/null so that the SUID program we are
