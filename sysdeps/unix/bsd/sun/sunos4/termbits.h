@@ -1,5 +1,5 @@
 /* termios type and macro definitions.  SunOS 4 version.
-Copyright (C) 1993 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -195,9 +195,6 @@ struct termios
 #define	TCSANOW		0	/* Change immediately.  */
 #define	TCSADRAIN	1	/* Change when pending output is written.  */
 #define	TCSAFLUSH	2	/* Flush pending input before changing.  */
-#ifdef	__USE_BSD
-#define	TCSASOFT	0x10	/* Flag: Don't alter hardware state.  */
-#endif
 
 /* Values for the QUEUE_SELECTOR argument to `tcflush'.  */
 #define	TCIFLUSH	0	/* Discard data received but not yet read.  */
