@@ -59,7 +59,7 @@ typedef __pid_t pid_t;
    the actual function definitions.  */
 
 #  if !defined __GNUC__ || __GNUC__ < 2 || defined __cplusplus
-#   define __WAIT_STATUS		void *
+#   define __WAIT_STATUS	void *
 #   define __WAIT_STATUS_DEFN	void *
 #  else
 /* This works in GCC 2.6.1 and later.  */

@@ -76,7 +76,7 @@ typedef union
 # else /* Don't use BSD.  */
 
 #  define __WAIT_INT(status)	(status)
-#  define __WAIT_STATUS	int *
+#  define __WAIT_STATUS		int *
 #  define __WAIT_STATUS_DEFN	int *
 
 # endif /* Use BSD.  */

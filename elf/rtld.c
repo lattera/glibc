@@ -283,6 +283,7 @@ struct map_args
 struct version_check_args
 {
   int doexit;
+  int dotrace;
 };
 
 static void
@@ -305,7 +306,7 @@ static void
 version_check_doit (void *a)
 {
   struct version_check_args *args = (struct version_check_args *) a;
-  if (_dl_check_all_versions (_dl_loaded, 1) && args->doexit)
+  if (_dl_check_all_versions (_dl_loaded, 1, args->dotrace) && args->doexit)
     /* We cannot start the application.  Abort now.  */
     _exit (1);
 }
@@ -842,6 +843,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   {
     struct version_check_args args;
     args.doexit = mode == normal;
+    args.dotrace = mode == trace;
     _dl_receive_error (print_missing_version, version_check_doit, &args);
   }
 

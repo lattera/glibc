@@ -346,12 +346,14 @@ extern void _dl_reloc_bad_type (struct link_map *map,
 
 /* Check the version dependencies of all objects available through
    MAP.  If VERBOSE print some more diagnostics.  */
-extern int _dl_check_all_versions (struct link_map *map, int verbose)
+extern int _dl_check_all_versions (struct link_map *map, int verbose,
+				   int trace_mode)
      internal_function;
 
 /* Check the version dependencies for MAP.  If VERBOSE print some more
    diagnostics.  */
-extern int _dl_check_map_versions (struct link_map *map, int verbose)
+extern int _dl_check_map_versions (struct link_map *map, int verbose,
+				   int trace_mode)
      internal_function;
 
 /* Initialize the object in SCOPE by calling the constructors with

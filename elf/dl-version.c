@@ -160,7 +160,7 @@ no version information available (required by ",
 
 int
 internal_function
-_dl_check_map_versions (struct link_map *map, int verbose)
+_dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 {
   int result = 0;
   const char *strtab;
@@ -209,29 +209,34 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 	     and no stub entry was created.  This should never happen.  */
 	  assert (needed != NULL);
 
-	  /* NEEDED is the map for the file we need.  Now look for the
-	     dependency symbols.  */
-	  aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
-	  while (1)
+	  /* Make sure this is no stub we created because of a missing
+	     dependency.  */
+	  if (! trace_mode || needed->l_opencount != 0)
 	    {
-	      /* Match the symbol.  */
-	      result |= match_symbol ((*map->l_name
-				       ? map->l_name : _dl_argv[0]),
-				      aux->vna_hash,
-				      strtab + aux->vna_name,
-				      needed, verbose,
-				      aux->vna_flags & VER_FLG_WEAK);
+	      /* NEEDED is the map for the file we need.  Now look for the
+		 dependency symbols.  */
+	      aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
+	      while (1)
+		{
+		  /* Match the symbol.  */
+		  result |= match_symbol ((*map->l_name
+					   ? map->l_name : _dl_argv[0]),
+					  aux->vna_hash,
+					  strtab + aux->vna_name,
+					  needed, verbose,
+					  aux->vna_flags & VER_FLG_WEAK);
 
-	      /* Compare the version index.  */
-	      if ((unsigned int) (aux->vna_other & 0x7fff) > ndx_high)
-		ndx_high = aux->vna_other & 0x7fff;
+		  /* Compare the version index.  */
+		  if ((unsigned int) (aux->vna_other & 0x7fff) > ndx_high)
+		    ndx_high = aux->vna_other & 0x7fff;
 
-	      if (aux->vna_next == 0)
-		/* No more symbols.  */
-		break;
+		  if (aux->vna_next == 0)
+		    /* No more symbols.  */
+		    break;
 
-	      /* Next symbol.  */
-	      aux = (ElfW(Vernaux) *) ((char *) aux + aux->vna_next);
+		  /* Next symbol.  */
+		  aux = (ElfW(Vernaux) *) ((char *) aux + aux->vna_next);
+		}
 	    }
 
 	  if (ent->vn_next == 0)
@@ -356,13 +361,14 @@ _dl_check_map_versions (struct link_map *map, int verbose)
 
 int
 internal_function
-_dl_check_all_versions (struct link_map *map, int verbose)
+_dl_check_all_versions (struct link_map *map, int verbose, int trace_mode)
 {
   struct link_map *l;
   int result = 0;
 
   for (l = map; l != NULL; l = l->l_next)
-    result |= l->l_opencount != 0 && _dl_check_map_versions (l, verbose);
+    result |= (l->l_opencount != 0
+	       && _dl_check_map_versions (l, verbose, trace_mode));
 
   return result;
 }

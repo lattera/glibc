@@ -1,5 +1,8 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread.c (pthread_initialize): Avoid a bit more code if
+	realtime signals are known to exist.
+
 	* pthread.c: Is __ASSUME_REALTIME_SIGNALS then avoid generating code
 	to dynamically detect RT signals and avoid generating compatibility
 	functions with old kernel.

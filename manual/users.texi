@@ -1322,10 +1322,39 @@ for @code{getutline}.
 @comment utmpx.h
 @comment XPG4.2
 @deftypefun {struct utmpx *} pututxline (const struct utmpx *@var{utmp})
-The @code{pututxline} function provides functionality identical to
+The @code{pututxline} function is functionally identical to
 @code{pututline}, but uses @code{struct utmpx} instead of @code{struct
-utmp}.  On the GNU system @code{pututxline} is simply an alias for
+utmp}.  On the GNU system, @code{pututxline} is simply an alias for
 @code{pututline}.
+@end deftypefun
+
+@comment utmpx.h
+@comment XPG4.2
+@deftypefun int utmpxname (const char *@var{file})
+The @code{utmpxname} function is functionally identical to
+@code{utmpname}.  On the GNU system, @code{utmpxname} is simply an
+alias for @code{utmpname}.
+@end deftypefun
+
+You can translate between a traditional @code{struct utmp} and an XPG
+@code{struct utmpx} with the following functions.  On the GNU system,
+these functions are merely copies, since the two structures are
+identical.
+
+@comment utmpx.h
+@comment utmp.h
+@comment GNU
+@deftypefun int getutmp (const struct utmpx *utmpx, struct utmp *utmp)
+@code{getutmp} copies the information, insofar as the structures are
+compatible, from @var{utmpx} to @var{utmp}.
+@end deftypefun
+
+@comment utmpx.h
+@comment utmp.h
+@comment GNU
+@deftypefun int getutmpx (const struct utmp *utmp, struct utmpx *utmpx)
+@code{getutmpx} copies the information, insofar as the structures are
+compatible, from @var{utmp} to @var{utmpx}.
 @end deftypefun
 
 

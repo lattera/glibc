@@ -56,7 +56,7 @@ void internal_function __pthread_lock(pthread_spinlock_t * lock,
       THREAD_SETMEM(self, p_nextlock, (pthread_descr) oldstatus);
       /* Make sure the store in p_nextlock completes before performing
          the compare-and-swap */
-      WRITE_MEMORY_BARRIER();
+      MEMORY_BARRIER();
     }
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
@@ -144,7 +144,7 @@ again:
   }
   /* Prevent reordering of store to *maxptr above and store to thr->p_nextlock
      below */
-  MEMORY_BARRIER();
+  WRITE_MEMORY_BARRIER();
   /* Wake up the selected waiting thread */
   thr->p_nextlock = NULL;
   restart(thr);

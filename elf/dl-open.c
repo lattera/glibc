@@ -147,7 +147,7 @@ dl_open_worker (void *a)
   _dl_map_object_deps (new, NULL, 0, 0);
 
   /* So far, so good.  Now check the versions.  */
-  (void) _dl_check_all_versions (new, 0);
+  (void) _dl_check_all_versions (new, 0, 0);
 
 #ifdef SCOPE_DEBUG
   show_scope (new);

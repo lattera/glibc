@@ -1,5 +1,23 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-version.c (_dl_check_map_versions): New argument trace_mode.
+	Before testing versions check that we actually loaded the object
+	and whether we are in trace mode.  If not loaded during tracing don't
+	test versions in this object.
+	(_dl_check_all_versions): Take new parameter and pass to
+	_dl_check_map_versions.
+	* sysdeps/generic/ldsodefs.h: Update prototypes for
+	_dl_check_all_versions and _dl_check_map_versions.
+	* elf/rtld.c (struct version_check_args): Add dotrace.
+	(version_check_doit): Pass args->dotrace to _dl_check_all_versions.
+	(dl_main): Pass info about trace mode to version_check_doit.
+	* elf/dl-open.c (dl_open_worker): Pass zero as new argument to
+	_dl_check_all_versions.
+
+	* manual/users.texi (XPG Functions): Document utmpxname, getutmp,
+	and getutmpx.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
+
 	* manual/argp.texi: Document index parameter of argp_parse.
 	Fix typo.
 	Reported by Andrew Schulman <SCHULMAN.ANDREW@epamail.epa.gov>.
