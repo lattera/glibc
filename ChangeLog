@@ -1,5 +1,9 @@
 Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makefile (subdirs): Add elf first.
+	* elf/Makefile: New file.
+	* elf/elf.h: New file.
+
 	* sysdeps/unix/start.c (errno): Only define if it's not #define'd
  	as a macro.
 	[! NO_UNDERSCORES]: Define `start' as a weak alias, not a symbol
