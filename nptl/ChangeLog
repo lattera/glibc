@@ -1,5 +1,9 @@
 2003-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/Makefile: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_attr_setstack.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_attr_setstackaddr.c: New file.
+
 	* pthread_attr_setstack.c: Moved to...
 	* sysdeps/pthread/pthread_attr_setstack.c: ...here.  New file.
 	* pthread_attr_setstackaddr.c: Moved to...

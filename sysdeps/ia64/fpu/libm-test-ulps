@@ -1,10 +1,5 @@
 # Begin of automatic generation
 
-# acos
-Test "acos (0.0625) == 1.50825556499840522843072005474337068":
-ildouble: 622
-ldouble: 622
-
 # cacos
 Test "Imaginary part of: cacos (0.75 + 1.25 i) == 1.11752014915610270578240049553777969 - 1.13239363160530819522266333696834467 i":
 float: 1
@@ -122,8 +117,6 @@ ifloat: 1
 Test "Real part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 float: 1
 ifloat: 1
-ildouble: 202
-ldouble: 202
 Test "Imaginary part of: cexp (0.75 + 1.25 i) == 0.667537446429131586942201977015932112 + 2.00900045494094876258347228145863909 i":
 ildouble: 1
 ldouble: 1
@@ -223,6 +216,9 @@ idouble: 1
 ifloat: 1
 
 # cos
+Test "cos (0.80190127184058835) == 0.69534156199418473":
+double: 1
+idouble: 1
 Test "cos (M_PI_6l * 2.0) == 0.5":
 double: 1
 float: 1
@@ -247,8 +243,6 @@ ldouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
-ildouble: 587
-ldouble: 587
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
@@ -259,8 +253,8 @@ double: 1
 float: 4
 idouble: 1
 ifloat: 4
-ildouble: 768
-ldouble: 768
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i) == 0.117506293914473555420279832210420483 + 0.346552747708338676483025352060418001 i":
 ildouble: 1
 ldouble: 1
@@ -272,8 +266,8 @@ double: 2
 float: 3
 idouble: 2
 ifloat: 3
-ildouble: 370
-ldouble: 370
+ildouble: 3
+ldouble: 3
 Test "Real part of: cpow (2 + 0 i, 10 + 0 i) == 1024.0 + 0.0 i":
 ildouble: 1
 ldouble: 1
@@ -610,6 +604,9 @@ ildouble: 1
 ldouble: 1
 
 # sincos
+Test "sincos (0.80190127184058835, &sin_res, &cos_res) puts 0.69534156199418473 in cos_res":
+double: 1
+idouble: 1
 Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.5 in cos_res":
 double: 1
 float: 1
@@ -794,10 +791,6 @@ double: 1
 idouble: 1
 
 # Maximal error of functions:
-Function: "acos":
-ildouble: 622
-ldouble: 622
-
 Function: Imaginary part of "cacos":
 float: 1
 ifloat: 1
@@ -889,8 +882,6 @@ ldouble: 1
 Function: Real part of "cexp":
 float: 1
 ifloat: 1
-ildouble: 202
-ldouble: 202
 
 Function: Imaginary part of "cexp":
 float: 1
@@ -933,8 +924,8 @@ double: 2
 float: 5
 idouble: 2
 ifloat: 5
-ildouble: 768
-ldouble: 768
+ildouble: 3
+ldouble: 3
 
 Function: Imaginary part of "cpow":
 double: 2
