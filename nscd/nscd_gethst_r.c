@@ -27,7 +27,6 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/nameser.h>
-#include <sys/mman.h>
 #include <not-cancel.h>
 
 #include "nscd-client.h"
@@ -121,7 +120,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
   struct mapped_database *mapped = __nscd_get_map_ref (GETFDHST, "hosts",
 						       &map_handle, &gc_cycle);
  retry:
-  if (mapped != MAP_FAILED)
+  if (mapped != NO_MAPPING)
     {
       const struct datahead *found = __nscd_cache_search (type, key, keylen,
 							  mapped);

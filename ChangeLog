@@ -1,3 +1,8 @@
+2004-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_gethst_r.c (nscd_gethst_r): Use correct constant for
+	testing result of __nscd_get_map_ref.
+
 2004-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/fpu/s_fdim.S (__fdim): Handle +inf/+inf.
