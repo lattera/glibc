@@ -1,3 +1,8 @@
+2001-03-21  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c: Include libintl.h
+	for internationalized printfs to work.
+
 2001-03-09  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/dcigettext.c (transmem_block_t): Change to unsigned char, to

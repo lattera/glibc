@@ -495,7 +495,7 @@ int __pthread_initialize_manager(void)
   struct pthread_request request;
 
 #ifndef HAVE_Z_NODELETE
-  if (__builtin_expect (&amp;__dso_handle != NULL, 1))
+  if (__builtin_expect (&__dso_handle != NULL, 1))
     __cxa_atexit ((void (*) (void *)) pthread_atexit_retcode, NULL,
 		  __dso_handle);
 #endif
