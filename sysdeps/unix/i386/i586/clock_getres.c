@@ -47,7 +47,6 @@ static long int nsec;
 #define EXTRA_CLOCK_CASES \
   case CLOCK_PROCESS_CPUTIME_ID:					      \
   case CLOCK_THREAD_CPUTIME_ID:						      \
-  case CLOCK_MONOTONIC:							      \
     {									      \
       if (__builtin_expect (nsec == 0, 0))				      \
 	{								      \

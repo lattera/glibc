@@ -1,5 +1,10 @@
 2000-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/i386/i586/clock_nanosleep.c (CLOCK_P): Remove
+	CLOCK_MONOTONIC.
+	* sysdeps/unix/i386/i586/clock_gettime.c (EXTRA_CLOCK_CASES): Likewise.
+	* sysdeps/unix/i386/i586/clock_getres.c (EXTRA_CLOCK_CASES): Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/bits/time.h: Remove CLOCK_MONOTONIC.
 
 2000-09-26  Jakub Jelinek  <jakub@redhat.com>

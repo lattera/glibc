@@ -46,7 +46,6 @@ static unsigned long long int freq;
 #define EXTRA_CLOCK_CASES \
   case CLOCK_PROCESS_CPUTIME_ID:					      \
   case CLOCK_THREAD_CPUTIME_ID:						      \
-  case CLOCK_MONOTONIC:							      \
     {									      \
       unsigned long long int tsc;					      \
 									      \

@@ -298,15 +298,15 @@ adequately are a thing of the past.
 
 One final comment about the choice of the wide character representation
 is necessary at this point.  We have said above that the natural choice
-is using Unicode or @w{ISO 10646}.  This is not specified in any
-standard, though.  The @w{ISO C} standard does not specify anything
-specific about the @code{wchar_t} type.  There might be systems where
-the developers decided differently.  Therefore one should as much as
-possible avoid making assumption about the wide character representation
-although GNU systems will always work as described above.  If the
-programmer uses only the functions provided by the C library to handle
-wide character strings there should not be any compatibility problems
-with other systems.
+is using Unicode or @w{ISO 10646}.  This is not required, but at least
+encouraged, by the @w{ISO C} standard.  The standard defines at least a
+macro @code{__STDC_ISO_10646__} that is only defined on systems where
+the @code{wchar_t} type encodes @w{ISO 10646} characters.  If this
+symbol is not defined one should as much as possible avoid making
+assumption about the wide character representation.  If the programmer
+uses only the functions provided by the C library to handle wide
+character strings there should not be any compatibility problems with
+other systems.
 
 @node Charset Function Overview
 @section Overview about Character Handling Functions

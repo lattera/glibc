@@ -20,7 +20,6 @@
 /* Additional definitions for the x86 version.  */
 #define CLOCK_P(clock) \
   (clock) != CLOCK_PROCESS_CPUTIME_ID					      \
-  && (clock) != CLOCK_THREAD_CPUTIME_ID					      \
-  &&  (clock) != CLOCK_MONOTONIC
+  && (clock) != CLOCK_THREAD_CPUTIME_ID
 
 #include <sysdeps/unix/clock_nanosleep.c>
