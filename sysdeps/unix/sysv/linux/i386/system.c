@@ -54,9 +54,11 @@ static void cancel_handler (void *arg);
 static void
 cancel_handler (void *arg)
 {
-  __kill (SIGKILL, *(pid_t *) arg);
+  pid_t child = *(pid_t *) arg;
 
-  TEMP_FAILURE_RETRY (__waitpid (*(pid_t *) arg, NULL, 0));
+  INTERNAL_SYSCALL (kill, 2, child, SIGKILL);
+
+  TEMP_FAILURE_RETRY (__waitpid (child, NULL, 0));
 
   DO_LOCK ();
 
