@@ -605,14 +605,16 @@ set_input_fragment (RECSTREAM *rstrm)
   header = ntohl (header);
   rstrm->last_frag = ((header & LAST_FRAG) == 0) ? FALSE : TRUE;
   /*
-   * Sanity check. Try not to accept wildly incorrect
-   * record sizes. Unfortunately, the only record size
-   * we can positively identify as being 'wildly incorrect'
-   * is zero.  Ridiculously large record sizes may look wrong,
-   * but we don't have any way to be certain that they aren't
-   * what the client actually intended to send us.
+   * Sanity check. Try not to accept wildly incorrect fragment
+   * sizes. Unfortunately, only a size of zero can be identified as
+   * 'wildely incorrect', and this only, if it is not the last
+   * fragment of a message. Ridiculously large fragment sizes may look
+   * wrong, but we don't have any way to be certain that they aren't
+   * what the client actually intended to send us. Many existing RPC
+   * implementations may sent a fragment of size zero as the last
+   * fragment of a message.
    */
-  if ((header & (~LAST_FRAG)) == 0)
+  if (header == 0)
     return FALSE;
   rstrm->fbtbc = header & ~LAST_FRAG;
   return TRUE;
