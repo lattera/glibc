@@ -213,7 +213,8 @@ _dl_start_user:\n\
 0:	popl %ebx\n\
 	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx\n\
 	# Store the highest stack address\n\
-	movl %esp,__libc_stack_end@GOT(%ebx)\n\
+	movl __libc_stack_end@GOT(%ebx), %eax\n\
+	movl %esp, (%eax)\n\
 	# See if we were run as a command with the executable file\n\
 	# name as an extra leading argument.\n\
 	movl _dl_skip_args@GOT(%ebx), %eax\n\
