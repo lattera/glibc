@@ -1,5 +1,5 @@
 /* Cache handling for group lookup.
-   Copyright (C) 1998-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -65,13 +65,6 @@ static const gr_response_header notfound =
   .gr_mem_cnt = 0,
 };
 
-/* This is the struct describing how to write this record.  */
-static const struct iovec iov_notfound =
-{
-  .iov_base = (void *) &notfound,
-  .iov_len = sizeof (notfound)
-};
-
 
 struct groupdata
 {
@@ -92,27 +85,27 @@ cache_addgr (struct database *db, int fd, request_header *req, void *key,
     {
       /* We have no data.  This means we send the standard reply for this
 	 case.  */
-      void *copy;
-
       total = sizeof (notfound);
 
-      written = TEMP_FAILURE_RETRY (writev (fd, &iov_notfound, 1));
+      written = TEMP_FAILURE_RETRY (write (fd, &notfound, total));
 
-      copy = malloc (req->key_len);
-      if (copy == NULL)
-	error (EXIT_FAILURE, errno, _("while allocating key copy"));
-      memcpy (copy, key, req->key_len);
+      void *copy = malloc (req->key_len);
+      /* If we cannot allocate memory simply do not cache the information.  */
+      if (copy != NULL)
+	{
+	  memcpy (copy, key, req->key_len);
 
-      /* Compute the timeout time.  */
-      t += db->negtimeout;
+	  /* Compute the timeout time.  */
+	  t += db->negtimeout;
 
-      /* Now get the lock to safely insert the records.  */
-      pthread_rwlock_rdlock (&db->lock);
+	  /* Now get the lock to safely insert the records.  */
+	  pthread_rwlock_rdlock (&db->lock);
 
-      cache_add (req->type, copy, req->key_len, &notfound,
-		 sizeof (notfound), (void *) -1, 0, t, db, owner);
+	  cache_add (req->type, copy, req->key_len, &notfound,
+		     sizeof (notfound), (void *) -1, 0, t, db, owner);
 
-      pthread_rwlock_unlock (&db->lock);
+	  pthread_rwlock_unlock (&db->lock);
+	}
     }
   else
     {
