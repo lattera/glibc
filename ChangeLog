@@ -1,5 +1,7 @@
 2000-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makeconfig (soversion.i): Pass -undef to $(CC) -E.
+
 	* Makerules (Versions.all, sysd-versions): Test $(sysd-sorted-done)
 	rather than $(sysd-dirs-done) to protect these rules.
 
