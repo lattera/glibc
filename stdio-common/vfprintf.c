@@ -1115,7 +1115,8 @@ do_positional:
 	  }
 
 	/* Parse the format specifier.  */
-	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg, NULL);
+	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg,
+				 &mbstate);
       }
 
     /* Determine the number of arguments the format string consumes.  */

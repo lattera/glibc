@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <elf.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/mman.h>
 #include <fcntl.h>
 #include <link.h>
 #include <unistd.h>
@@ -126,7 +127,7 @@ _dl_sysdep_open_zero_fill (void)
 void *
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
-  void *contents;
+  void *result;
   struct stat st;
   int fd = __open (file, O_RDONLY);
   if (fd < 0)

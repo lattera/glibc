@@ -414,6 +414,16 @@ of this helper program; chances are you did not intend to run this program.\n",
     struct r_debug *r = _dl_debug_initialize (_dl_rtld_map.l_addr);
 
     l = _dl_loaded;
+
+#ifdef ELF_MACHINE_DEBUG_SETUP
+
+    /* Some machines (e.g. MIPS) don't use DT_DEBUG in this way.  */
+
+    ELF_MACHINE_DEBUG_SETUP (l, r);
+    ELF_MACHINE_DEBUG_SETUP (&_dl_rtld_map, r);
+
+#else
+
     if (l->l_info[DT_DEBUG])
       /* There is a DT_DEBUG entry in the dynamic section.  Fill it in
 	 with the run-time address of the r_debug structure  */
@@ -423,6 +433,8 @@ of this helper program; chances are you did not intend to run this program.\n",
        case you run gdb on the dynamic linker directly.  */
     if (_dl_rtld_map.l_info[DT_DEBUG])
       _dl_rtld_map.l_info[DT_DEBUG]->d_un.d_ptr = (ElfW(Addr)) r;
+
+#endif
 
     /* Notify the debugger that all objects are now mapped in.  */
     r->r_state = RT_ADD;

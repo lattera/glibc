@@ -18,14 +18,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* This was written in the absense of an ABI -- don't expect
+/* This was written in the absence of an ABI -- don't expect
    it to remain unchanged.  */
+
+#ifndef dl_machine_h
+#define dl_machine_h 1
 
 #define ELF_MACHINE_NAME "alpha"
 
 #include <assert.h>
 #include <string.h>
-#include <link.h>
 
 
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
@@ -35,7 +37,6 @@ elf_machine_matches_host (Elf64_Word e_machine)
   return e_machine == EM_ALPHA;
 }
 
-
 /* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
    Must be inlined in a function which uses global data.  */
 static inline Elf64_Addr *
@@ -44,7 +45,6 @@ elf_machine_got (void)
   register Elf64_Addr gp __asm__("$29");
   return (Elf64_Addr *)(gp - 0x8000);
 }
-
 
 /* Return the run-time load address of the shared object.  */
 static inline Elf64_Addr
@@ -77,180 +77,6 @@ elf_machine_load_address (void)
 
   return dot + 4 + zero_disp;
 }
-
-
-/* Fix up the instructions of a PLT entry to invoke the function
-   rather than the dynamic linker.  */
-static inline void
-elf_alpha_fix_plt(struct link_map *l,
-		  const Elf64_Rela *reloc,
-		  Elf64_Addr got_addr,
-		  Elf64_Addr value)
-{
-  const Elf64_Rela *rela_plt;
-  Elf64_Word *plte;
-  long edisp;
-
-  /* Recover the PLT entry address by calculating reloc's index into the
-     .rela.plt, and finding that entry in the .plt.  */
-
-  rela_plt = (void *)(l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr);
-
-  plte = (void *)(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
-  plte += 3 * (reloc - rela_plt);
-
-  /* Find the displacement from the plt entry to the function.  */
-
-  edisp = (long)(value - (Elf64_Addr)&plte[3]) / 4;
-
-  if (edisp >= -0x100000 && edisp < 0x100000)
-    {
-      /* If we are in range, use br to perfect branch prediction and
-	 elide the dependency on the address load.  This case happens,
-	 e.g., when a shared library call is resolved to the same library.  */
-
-      int hi, lo;
-      hi = value - (Elf64_Addr)&plte[0];
-      lo = (short)hi;
-      hi = (hi - lo) >> 16;
-
-      /* Emit "ldah $27,H($27)" */
-      plte[0] = 0x277b0000 | (hi & 0xffff);
-
-      /* Emit "lda $27,L($27)" */
-      plte[1] = 0x237b0000 | (lo & 0xffff);
-
-      /* Emit "br $31,function" */
-      plte[2] = 0xc3e00000 | (edisp & 0x1fffff);
-    }
-  else
-    {
-      /* Don't bother with the hint since we already know the hint is
-	 wrong.  Eliding it prevents the wrong page from getting pulled
-	 into the cache.  */
-
-      int hi, lo;
-      hi = got_addr - (Elf64_Addr)&plte[0];
-      lo = (short)hi;
-      hi = (hi - lo) >> 16;
-
-      /* Emit "ldah $27,H($27)" */
-      plte[0] = 0x277b0000 | (hi & 0xffff);
-
-      /* Emit "ldq $27,L($27)" */
-      plte[1] = 0xa77b0000 | (lo & 0xffff);
-
-      /* Emit "jmp $31,($27)" */
-      plte[2] = 0x6bfb0000;
-    }
-
-  /* Flush the instruction cache now that we've diddled.   Tag it as
-     modifying memory to checkpoint memory writes during optimization.  */
-  asm volatile("call_pal 0x86" : : : "memory");
-}
-
-/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
-   MAP is the object containing the reloc.  */
-static inline void
-elf_machine_rela (struct link_map *map,
-		  const Elf64_Rela *reloc,
-		  const Elf64_Sym *sym,
-		  Elf64_Addr (*resolve) (const Elf64_Sym **ref,
-					 Elf64_Addr reloc_addr,
-					 int noplt))
-{
-  Elf64_Addr *const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
-  unsigned long r_info = ELF64_R_TYPE (reloc->r_info);
-#ifndef RTLD_BOOTSTRAP
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
-#endif
-
-  /* We cannot use a switch here because we cannot locate the switch
-     jump table until we've self-relocated.  */
-
-  if (r_info == R_ALPHA_RELATIVE)
-    {
-      /* Already done in dynamic linker.  */
-#ifndef RTLD_BOOTSTRAP
-      if (map != &_dl_rtld_map)
-#endif
-	*reloc_addr += map->l_addr;
-    }
-  else if (r_info == R_ALPHA_NONE)
-    return;
-  else
-    {
-      Elf64_Addr loadbase, sym_value;
-
-#ifndef RTLD_BOOTSTRAP
-      loadbase = (*resolve)(&sym, (Elf64_Addr)reloc_addr,
-			    r_info == R_ALPHA_JMP_SLOT);
-#else
-      loadbase = map->l_addr;
-#endif
-      sym_value = sym ? loadbase + sym->st_value : 0;
-
-      if (r_info == R_ALPHA_GLOB_DAT)
-	*reloc_addr = sym_value;
-      else if (r_info == R_ALPHA_JMP_SLOT)
-	{
-	  *reloc_addr = sym_value;
-	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
-	}
-      else if (r_info == R_ALPHA_REFQUAD)
-	{
-	  sym_value += *reloc_addr;
-#ifndef RTLD_BOOTSTRAP
-	  if (map == &_dl_rtld_map)
-	    {
-	      /* Undo the relocation done here during bootstrapping.
-		 Now we will relocate anew, possibly using a binding
-		 found in the user program or a loaded library rather
-		 than the dynamic linker's built-in definitions used
-		 while loading those libraries.  */
-	      const Elf64_Sym *const dlsymtab
-		= (void *)(map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
-	      sym_value -= map->l_addr;
-	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
-	    }
-	  else
-#endif
-	    sym_value += reloc->r_addend;
-	  *reloc_addr = sym_value;
-	}
-      else if (r_info == R_ALPHA_COPY)
-	memcpy (reloc_addr, (void *) sym_value, sym->st_size);
-      else
-	assert (! "unexpected dynamic reloc type");
-    }
-}
-
-static inline void
-elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
-{
-  Elf64_Addr *const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
-  unsigned long r_info = ELF64_R_TYPE (reloc->r_info);
-
-  if (r_info == R_ALPHA_JMP_SLOT)
-    {
-      /* Perform a RELATIVE reloc on the .got entry that transfers
-	 to the .plt.  */
-      *reloc_addr += map->l_addr;
-    }
-  else if (r_info == R_ALPHA_NONE)
-    ;
-  else
-    assert (! "unexpected PLT reloc type");
-}
-
-/* The alpha never uses Elf_Rel relocations.  */
-#define ELF_MACHINE_NO_REL 1
-
 
 /* Set up the loaded object described by L so its unrelocated PLT
    entries will jump to the on-demand fixup code in dl-runtime.c.  */
@@ -399,3 +225,179 @@ _dl_start_user:
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
 	jmp	($9)");
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so 
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_pltrel_p(type)  ((type) == R_ALPHA_JMP_SLOT)
+
+/* The alpha never uses Elf64_Rel relocations.  */
+#define ELF_MACHINE_NO_REL 1
+
+#endif /* !dl_machine_h */
+
+#ifdef RESOLVE
+
+/* Fix up the instructions of a PLT entry to invoke the function
+   rather than the dynamic linker.  */
+static inline void
+elf_alpha_fix_plt(struct link_map *l,
+		  const Elf64_Rela *reloc,
+		  Elf64_Addr got_addr,
+		  Elf64_Addr value)
+{
+  const Elf64_Rela *rela_plt;
+  Elf64_Word *plte;
+  long edisp;
+
+  /* Recover the PLT entry address by calculating reloc's index into the
+     .rela.plt, and finding that entry in the .plt.  */
+
+  rela_plt = (void *)(l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr);
+
+  plte = (void *)(l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr + 32);
+  plte += 3 * (reloc - rela_plt);
+
+  /* Find the displacement from the plt entry to the function.  */
+
+  edisp = (long)(value - (Elf64_Addr)&plte[3]) / 4;
+
+  if (edisp >= -0x100000 && edisp < 0x100000)
+    {
+      /* If we are in range, use br to perfect branch prediction and
+	 elide the dependency on the address load.  This case happens,
+	 e.g., when a shared library call is resolved to the same library.  */
+
+      int hi, lo;
+      hi = value - (Elf64_Addr)&plte[0];
+      lo = (short)hi;
+      hi = (hi - lo) >> 16;
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
+
+      /* Emit "lda $27,L($27)" */
+      plte[1] = 0x237b0000 | (lo & 0xffff);
+
+      /* Emit "br $31,function" */
+      plte[2] = 0xc3e00000 | (edisp & 0x1fffff);
+    }
+  else
+    {
+      /* Don't bother with the hint since we already know the hint is
+	 wrong.  Eliding it prevents the wrong page from getting pulled
+	 into the cache.  */
+
+      int hi, lo;
+      hi = got_addr - (Elf64_Addr)&plte[0];
+      lo = (short)hi;
+      hi = (hi - lo) >> 16;
+
+      /* Emit "ldah $27,H($27)" */
+      plte[0] = 0x277b0000 | (hi & 0xffff);
+
+      /* Emit "ldq $27,L($27)" */
+      plte[1] = 0xa77b0000 | (lo & 0xffff);
+
+      /* Emit "jmp $31,($27)" */
+      plte[2] = 0x6bfb0000;
+    }
+
+  /* Flush the instruction cache now that we've diddled.   Tag it as
+     modifying memory to checkpoint memory writes during optimization.  */
+  asm volatile("call_pal 0x86" : : : "memory");
+}
+
+/* Perform the relocation specified by RELOC and SYM (which is fully resolved).
+   MAP is the object containing the reloc.  */
+static inline void
+elf_machine_rela (struct link_map *map,
+		  const Elf64_Rela *reloc,
+		  const Elf64_Sym *sym)
+{
+  Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
+  unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);
+
+#ifndef RTLD_BOOTSTRAP
+  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
+     reference weak so static programs can still link.  This declaration
+     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
+     because rtld.c contains the common defn for _dl_rtld_map, which is
+     incompatible with a weak decl in the same file.  */
+  weak_extern (_dl_rtld_map);
+#endif
+
+  /* We cannot use a switch here because we cannot locate the switch
+     jump table until we've self-relocated.  */
+
+  if (r_info == R_ALPHA_RELATIVE)
+    {
+#ifndef RTLD_BOOTSTRAP
+      /* Already done in dynamic linker.  */
+      if (map != &_dl_rtld_map)
+#endif
+	*reloc_addr += map->l_addr;
+    }
+  else if (r_info == R_ALPHA_NONE)
+    return;
+  else
+    {
+      Elf64_Addr loadbase, sym_value;
+
+      loadbase = RESOLVE (&sym, (Elf64_Addr)reloc_addr,
+			  r_info == R_ALPHA_JMP_SLOT);
+      sym_value = sym ? loadbase + sym->st_value : 0;
+
+      if (r_info == R_ALPHA_GLOB_DAT)
+	*reloc_addr = sym_value;
+      else if (r_info == R_ALPHA_JMP_SLOT)
+	{
+	  *reloc_addr = sym_value;
+	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
+	}
+      else if (r_info == R_ALPHA_REFQUAD)
+	{
+	  sym_value += *reloc_addr;
+#ifndef RTLD_BOOTSTRAP
+	  if (map == &_dl_rtld_map)
+	    {
+	      /* Undo the relocation done here during bootstrapping.
+		 Now we will relocate anew, possibly using a binding
+		 found in the user program or a loaded library rather
+		 than the dynamic linker's built-in definitions used
+		 while loading those libraries.  */
+	      const Elf64_Sym *const dlsymtab
+		= (void *)(map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+	      sym_value -= map->l_addr;
+	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
+	    }
+	  else
+#endif
+	    sym_value += reloc->r_addend;
+	  *reloc_addr = sym_value;
+	}
+      else if (r_info == R_ALPHA_COPY)
+	memcpy (reloc_addr, (void *) sym_value, sym->st_size);
+      else
+	assert (! "unexpected dynamic reloc type");
+    }
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
+{
+  Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
+  unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);
+
+  if (r_info == R_ALPHA_JMP_SLOT)
+    {
+      /* Perform a RELATIVE reloc on the .got entry that transfers
+	 to the .plt.  */
+      *reloc_addr += map->l_addr;
+    }
+  else if (r_info == R_ALPHA_NONE)
+    return;
+  else
+    assert (! "unexpected PLT reloc type");
+}
+
+#endif /* RESOLVE */

@@ -1,10 +1,5 @@
-ifeq ($(subdir), io)
-sysdep_routines += fxstat lxstat xstat
-endif
-
 ifeq ($(subdir), misc)
-sysdep_routines += mount umount xmknod s_ptrace s_sysctl sysctl llseek \
-setfsgid setfsuid sysinfo uselib s_reboot
+sysdep_routines += sysctl
 
 sysdep_headers += sys/mount.h sys/sysinfo.h sys/acct.h sys/sysctl.h \
 		  sys/module.h sys/io.h sys/klog.h sys/kdaemon.h \
@@ -27,7 +22,6 @@ generated += syscall-list.h syscall-list.d
 endif
 
 ifeq ($(subdir), time)
-sysdep_routines += adjtimex
 sysdep_headers += sys/timex.h
 endif
 

@@ -46,6 +46,9 @@ please let me know.
 
 [Q12]	``The `gencat' utility cannot process the input which are
 	  successfully used on my Linux libc based system.  Why?''
+
+[Q13]	``How do I configure GNU libc so that the essential libraries
+	  like libc.so go into /lib and the other into /usr/lib?''
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 [Q1]	``What systems does the GNU C Library run on?''
@@ -287,7 +290,6 @@ means to support the new techniques later.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
 [Q11]	``Where are the DST_* constants found in <sys/time.h> on many
 	  systems?''
 
@@ -300,7 +302,6 @@ code for POSIX TZ environment variable handling.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
 [Q12]	``The `gencat' utility cannot process the input which are
 	  successfully used on my Linux libc based system.  Why?''
 
@@ -335,6 +336,36 @@ catalog files to the XPG4 form:
   s/\(.*\)\n\(.*\)/\2 \1/
 }
 -----------------------------------------------------------------------
+
+
+~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+[Q13]	``How do I configure GNU libc so that the essential libraries
+	  like libc.so go into /lib and the other into /usr/lib?''
+
+[A13] {UD} Like all other GNU packages GNU libc is configured to use a
+base directory and install all files relative to this.  If you intend
+to really use GNU libc on your system this base directory is /usr.  I.e.,
+you run
+	configure --prefix=/usr <other_options>
+
+Some systems like Linux have a filesystem standard which makes a
+difference between essential libraries and others.  Essential
+libraries are placed in /lib because this directory is required to be
+located on the same disk partition as /.  The /usr subtree might be
+found on another partition/disk.
+
+To install the essential libraries which come with GNU libc in /lib
+one must explicitly tell this.  Autoconf has no option for this so you
+have to use the file where all user supplied additional information
+should go in: `configparms' (see the `INSTALL' file).  For Linux the
+`configparms' file should contain:
+
+slibdir=/lib
+sysconfdir=/etc
+
+The first line specifies the directory for the essential libraries,
+the second line the directory for file which are by tradition placed
+in a directory named /etc.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

@@ -1,9 +1,45 @@
+Tue Jul 16 00:31:31 1996  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/alpha/dl-machine.h: Mirror Roland's changes to
+	i386/dl-machine.h of 960713.
+
+	* sysdeps/generic/dl-sysdep.c:  Include <sys/mman.h>.
+	(_dl_sysdep_read_whole_file): Fix result variable declaration.
+
+Tue Jul 16 00:53:57 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/uname.c: Call __gethostname to fill in the
+	`nodename' member.
+
+Mon Jul 15 17:23:53 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (vfprintf): Call parse_one_spec
+	with pointer to local variable instead of NULL.
+
+1996-07-15  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime): Don't pass empty macro argument to `add'.
+
+Sat Jul 13 09:53:39 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Remove names
+	that are already added by other means.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add more EXTRA's in the
+	caller column to get those syscalls added automagically.
+
 Mon Jul 15 12:24:54 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/logout.c (logout): Initialize DATA to a state that will
 	make setutent_r happy.
 
 Sun Jul 14 01:51:39 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main) [ELF_MACHINE_DEBUG_SETUP]: Use this macro
+	instead of setting the DT_DEBUG pointer.
+
+	* csu/initfini.c (_init, _fini): Generate .end directives after
+	standalone prologues and filter them out from epilogues.
 
 	* Makeconfig (rtld-installed-name): Set to ld.so.1.
 	* sysdeps/unix/sysv/linux/Makefile (rtld-installed-name): Variable
