@@ -212,12 +212,12 @@ typedef bool_t (*xdrproc_t) __PMT ((XDR *, void *,...));
 #define	XDR_DESTROY(xdrs)					\
 	do {							\
 		if ((xdrs)->x_ops->x_destroy)			\
-			(*(xdrs)->x_ops->x_destroy)(xdrs)	\
+			(*(xdrs)->x_ops->x_destroy)(xdrs);	\
 	} while (0)
 #define	xdr_destroy(xdrs)					\
 	do {							\
 		if ((xdrs)->x_ops->x_destroy)			\
-			(*(xdrs)->x_ops->x_destroy)(xdrs)	\
+			(*(xdrs)->x_ops->x_destroy)(xdrs);	\
 	} while (0)
 
 /*

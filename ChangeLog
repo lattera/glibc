@@ -1,3 +1,8 @@
+Thu Dec 17 08:53:40 1998  H.J. Lu  <hjl@gnu.org>
+
+	* sunrpc/rpc/xdr.h (XDR_DESTROY): Add ';'.
+	(xdr_destroy): Likewise.
+
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* login/login.c: Determine pts/3 and terminal name if path is
