@@ -6177,7 +6177,7 @@ if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
   (eval $ac_try) 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; } &&
+  (exit $ac_status); }; } && {
    ac_pattern='conftest\.S'
    { ac_try='readelf --debug-dump=line conftest.o |
 		   grep $ac_pattern 1>&5'
@@ -6185,7 +6185,8 @@ if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
   (eval $ac_try) 2>&5
   ac_status=$?
   echo "$as_me:$LINENO: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
+  (exit $ac_status); }; }
+  }; then
   libc_cv_cpp_asm_debuginfo=yes
 else
   libc_cv_cpp_asm_debuginfo=no
