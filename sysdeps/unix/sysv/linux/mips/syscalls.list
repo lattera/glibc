@@ -37,7 +37,7 @@ socketpair	-	socketpair	4	__socketpair	socketpair
 #
 # There are defined locally because the caller is also defined in this dir.
 #
-s_llseek	llseek	_llseek		5	__sys_llseek
+s_llseek	llseek	_llseek		5	__syscall_llseek
 s_sigaction	sigaction sigaction	3	__syscall_sigaction
 s_ustat		ustat	ustat		2	__syscall_ustat
 sys_mknod	xmknod	mknod		3	__syscall_mknod
@@ -57,10 +57,11 @@ s_getdents	getdents getdents	3	__syscall_getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
+s_ipc		msgget	ipc		5	__syscall_ipc
 s_poll		poll	poll		3	__syscall_poll
-s_pread		pread	pread		6	__syscall_pread
+s_pread64	pread64	pread		6	__syscall_pread
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
-s_pwrite	pwrite	pwrite		6	__syscall_pwrite
+s_pwrite64	pwrite64 pwrite		6	__syscall_pwrite
 s_reboot	reboot	reboot		3	__syscall_reboot
 s_sigpending	sigpending sigpending	1	__syscall_sigpending
 s_sigprocmask	sigprocmask sigprocmask	3	__syscall_sigprocmask
