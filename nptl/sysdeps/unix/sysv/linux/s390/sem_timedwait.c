@@ -23,6 +23,7 @@
 #include <internaltypes.h>
 #include <semaphore.h>
 
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
 
@@ -31,12 +32,18 @@ sem_timedwait (sem, abstime)
      sem_t *sem;
      const struct timespec *abstime;
 {
-  int oldval, newval;
+  /* First check for cancellation.  */
+  CANCELLATION_P (THREAD_SELF);
 
-  while (1)
+  int *futex = (int *) sem;
+  int oldval;
+  int newval;
+  int err;
+
+  do
     {
       /* Atomically decrement semaphore counter if it is > 0.  */
-      lll_compare_and_swap ((int *) sem, oldval, newval,
+      lll_compare_and_swap (futex, oldval, newval,
 			    "ltr %2,%1; jnp 1f; ahi %2,-1");
       /* oldval != newval if the semaphore count has been decremented.	*/
       if (oldval != newval)
@@ -69,8 +76,14 @@ sem_timedwait (sem, abstime)
 	  return -1;
 	}
 
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
+
       /* Do wait.  */
-      int err = lll_futex_timed_wait ((int *) sem, 0, &rt);
+      err = lll_futex_timed_wait (futex, 0, &rt);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
 
       /* Returned after timing out?  */
       if (err == -ETIMEDOUT)
@@ -78,12 +91,9 @@ sem_timedwait (sem, abstime)
 	  __set_errno (ETIMEDOUT);
 	  return -1;
 	}
-
-      /* Handle EINTR.  */
-      if (err != 0 && err != -EWOULDBLOCK)
-	{
-	  __set_errno (-err);
-	  return -1;
-	}
     }
+  while (err == 0 || err == -EWOULDBLOCK)
+
+    __set_errno (-err);
+  return -1;
 }

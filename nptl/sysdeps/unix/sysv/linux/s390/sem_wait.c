@@ -23,35 +23,45 @@
 #include <internaltypes.h>
 #include <semaphore.h>
 
+#include <pthreadP.h>
 #include <shlib-compat.h>
 
 
 int
 __new_sem_wait (sem_t *sem)
 {
-  while (1)
+  /* First check for cancellation.  */
+  CANCELLATION_P (THREAD_SELF);
+
+  int *futex = (int *) sem;
+  int err;
+
+  do
     {
       int oldval;
       int newval;
 
       /* Atomically decrement semaphore counter if it is > 0.  */
-      lll_compare_and_swap ((int *) sem, oldval, newval,
+      lll_compare_and_swap (futex, oldval, newval,
 			    "ltr %2,%1; jnp 1f; ahi %2,-1");
 
       /* oldval != newval if the semaphore count has been decremented.	*/
       if (oldval != newval)
 	return 0;
 
-      /* Do wait.  */
-      int err = lll_futex_wait ((int *) sem, 0);
+      /* Enable asynchronous cancellation.  Required by the standard.  */
+      int oldtype = __pthread_enable_asynccancel ();
 
-      /* Handle EINTR.  */
-      if (err != 0 && err != -EWOULDBLOCK)
-	{
-	  __set_errno (-err);
-	  return -1;
-	}
+      /* Do wait.  */
+      err = lll_futex_wait (futex, 0);
+
+      /* Disable asynchronous cancellation.  */
+      __pthread_disable_asynccancel (oldtype);
     }
+  while (err == 0 || err == -EWOULDBLOCK);
+
+  __set_errno (-err);
+  return -1;
 }
 
 versioned_symbol (libpthread, __new_sem_wait, sem_wait, GLIBC_2_1);

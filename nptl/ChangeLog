@@ -1,5 +1,10 @@
 2003-06-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/sem_wait.c (__new_sem_wait): Make
+	cancelable.
+	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c (__sem_timedwait):
+	Likewise.
+
 	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Remove
 	hand-written CFI generation code.  Since ENTRY/END also initiated
 	CFI frames this caused two CFI sets to be generated.
