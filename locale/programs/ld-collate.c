@@ -721,20 +721,22 @@ collate_startup (struct linereader *ldfile, struct localedef_t *locale,
       struct locale_collate_t *collate;
 
       if (copy_locale == NULL)
-	collate = locale->categories[LC_COLLATE].collate =
-	  (struct locale_collate_t *) xcalloc (1,
-					       sizeof (struct locale_collate_t));
+	{
+	  collate = locale->categories[LC_COLLATE].collate =
+	    (struct locale_collate_t *)
+	    xcalloc (1, sizeof (struct locale_collate_t));
+
+	  /* Init the various data structures.  */
+	  init_hash (&collate->elem_table, 100);
+	  init_hash (&collate->sym_table, 100);
+	  init_hash (&collate->seq_table, 500);
+	  obstack_init (&collate->mempool);
+
+	  collate->col_weight_max = -1;
+	}
       else
 	collate = locale->categories[LC_COLLATE].collate =
 	  copy_locale->categories[LC_COLLATE].collate;
-
-      /* Init the various data structures.  */
-      init_hash (&collate->elem_table, 100);
-      init_hash (&collate->sym_table, 100);
-      init_hash (&collate->seq_table, 500);
-      obstack_init (&collate->mempool);
-
-      collate->col_weight_max = -1;
     }
 
   ldfile->translate_strings = 0;
@@ -1302,6 +1304,81 @@ error while adding equivalent collating symbol"));
 	  lr_ignore_rest (ldfile, 1);
 	  break;
 
+	case tok_reorder_sections_after:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    {
+	      lr_ignore_rest (ldfile, 0);
+	      break;
+	    }
+
+	  if (state != 2 && state != 4)
+	    goto err_label;
+	  state = 5;
+
+	  /* Get the name of the sections we are adding after.  */
+	  arg = lr_token (ldfile, charmap, repertoire);
+	  if (arg->tok == tok_bsymbol)
+	    {
+	      /* Now find a section with this name.  */
+	      struct section_list *runp = collate->sections;
+
+	      while (runp != NULL)
+		{
+		  if (runp->name != NULL
+		      && strlen (runp->name) == arg->val.str.lenmb
+		      && memcmp (runp->name, arg->val.str.startmb,
+				 arg->val.str.lenmb) == 0)
+		    break;
+
+		  runp = runp->next;
+		}
+
+	      if (runp != NULL)
+		collate->current_section = runp;
+	      else
+		{
+		  /* This is bad.  The section after which we have to
+                     reorder does not exist.  Therefore we cannot
+                     process the whole rest of this reorder
+                     specification.  */
+		  lr_error (ldfile, _("%s: section `%.*s' not known"),
+			    "LC_COLLATE", arg->val.str.lenmb,
+			    arg->val.str.startmb);
+
+		  do
+		    {
+		      lr_ignore_rest (ldfile, 0);
+
+		      now = lr_token (ldfile, charmap, NULL);
+		    }
+		  while (now->tok == tok_reorder_sections_after
+			 || now->tok == tok_reorder_sections_end
+			 || now->tok == tok_end);
+
+		  /* Process the token we just saw.  */
+		  nowtok = now->tok;
+		  continue;
+		}
+	    }
+	  else
+	    /* This must not happen.  */
+	    goto err_label;
+	  break;
+
+	case tok_reorder_sections_end:
+	  /* Ignore the rest of the line if we don't need the input of
+	     this line.  */
+	  if (ignore_content)
+	    break;
+
+	  if (state != 5)
+	    goto err_label;
+	  state = 6;
+	  lr_ignore_rest (ldfile, 1);
+	  break;
+
 	case tok_bsymbol:
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
@@ -1368,6 +1445,52 @@ error while adding equivalent collating symbol"));
 
 	      /* Otherwise we just add a new entry.  */
 	    }
+	  else if (state == 5)
+	    {
+	      /* We are reordering sections.  Find the named section.  */
+	      struct section_list *runp = collate->sections;
+	      struct section_list *prevp = NULL;
+
+	      while (runp != NULL)
+		{
+		  if (runp->name != NULL
+		      && strlen (runp->name) == arg->val.str.lenmb
+		      && memcmp (runp->name, arg->val.str.startmb,
+				 arg->val.str.lenmb) == 0)
+		    break;
+
+		  prevp = runp;
+		  runp = runp->next;
+		}
+
+	      if (runp == NULL)
+		{
+		  lr_error (ldfile, _("%s: section `%.*s' not known"),
+			    "LC_COLLATE", arg->val.str.lenmb,
+			    arg->val.str.startmb);
+		  lr_ignore_rest (ldfile, 0);
+		}
+	      else
+		{
+		  if (runp != collate->current_section)
+		    {
+		      /* Remove the named section from the old place and
+			 insert it in the new one.  */
+		      prevp->next = runp->next;
+
+		      runp->next = collate->current_section->next;
+		      collate->current_section->next = runp;
+		      collate->current_section = runp;
+		    }
+
+		  /* Process the rest of the line which might change
+                     the collation rules.  */
+		  arg = lr_token (ldfile, charmap, repertoire);
+		  if (arg->tok != tok_eof && arg->tok != tok_eol)
+		    read_directions (ldfile, arg, charmap, repertoire,
+				     collate);
+		}
+	    }
 
 	  /* Now insert in the new place.  */
 	  insert_value (ldfile, arg, charmap, repertoire, collate);
@@ -1433,6 +1556,9 @@ error while adding equivalent collating symbol"));
 			  "LC_COLLATE");
 	      else if (state == 3)
 		error (0, 0, _("%s: missing `reorder-end' keyword"),
+		       "LC_COLLATE");
+	      else if (state == 5)
+		error (0, 0, _("%s: missing `reorder-sections-end' keyword"),
 		       "LC_COLLATE");
 	    }
 	  arg = lr_token (ldfile, charmap, NULL);
