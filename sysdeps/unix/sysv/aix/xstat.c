@@ -19,9 +19,8 @@
 #include <assert.h>
 #include <sys/stat.h>
 
-/* this is #define'd in <sys/stat.h> why #define it here?
 #define STX_NORMAL      0x00
- */
+
 
 extern int statx (const char *pathname, struct stat *st, int len, int cmd);
 
