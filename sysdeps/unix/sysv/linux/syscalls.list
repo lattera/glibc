@@ -67,6 +67,7 @@ sched_setp	-	sched_setparam	2	__sched_setparam	sched_setparam
 sched_sets	-	sched_setscheduler	3	__sched_setscheduler	sched_setscheduler
 sched_yield	-	sched_yield	0	__sched_yield	sched_yield
 select		-	_newselect	5	__select	select
+sendfile	EXTRA	sendfile	4	sendfile
 setfsgid	EXTRA	setfsgid	1	setfsgid
 setfsuid	EXTRA	setfsuid	1	setfsuid
 setpgid		-	setpgid		2	__setpgid	setpgid

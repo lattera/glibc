@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,30 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
-#include <stdio.h>
-#include <pwd.h>
+#ifndef _SYS_SENDFILE_H
+#define _SYS_SENDFILE_H	1
 
-#define _S(x)	x ? x : ""
+#include <features.h>
+#include <sys/types.h>
 
-/* Write an entry to the given stream.
-   This must know the format of the password file.  */
-int
-putpwent (p, stream)
-     const struct passwd *p;
-     FILE *stream;
-{
-  if (p == NULL || stream == NULL)
-    {
-      __set_errno (EINVAL);
-      return -1;
-    }
+__BEGIN_DECLS
 
-  if (fprintf (stream, "%s:%s:%lu:%lu:%s:%s:%s\n",
-	       p->pw_name, _S (p->pw_passwd),
-	       (unsigned long int) p->pw_uid, (unsigned long int) p->pw_gid,
-	       _S (p->pw_gecos), _S (p->pw_dir), _S (p->pw_shell)) < 0)
-    return -1;
+/* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
+   descriptor OUT_FD.  */
+extern ssize_t sendfile __P ((int __out_fd, int __in_fd, off_t *offset,
+			      size_t __count));
 
-  return 0;
-}
+__END_DECLS
+
+#endif	/* sys/sendfile.h */

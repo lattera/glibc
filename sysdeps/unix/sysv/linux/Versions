@@ -75,5 +75,11 @@ libc {
 
     # c*
     capget; capset;
+
+    # s*
+    sendfile;
+
+    # u*
+    umount2;
   }
 }

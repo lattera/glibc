@@ -1,3 +1,20 @@
+1998-08-20 20:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pwd/getpw.c (__getpw): Use %lu for uid and gid parameter and
+	cast them to unsigned long int.
+	* pwd/putpwent.c (putpwent): Likewise.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
+1998-08-20 17:14  H.J. Lu  <hjl@gnu.org>
+
+	* libio/libioP.h (FILEBUF_LITERAL): Set the _offset field to
+	_IO_pos_BAD.
+
+1998-02-20 17:54  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (_IO_file_seekoff): Don't adjust pointers if
+	_IO_SYSSEEK fails.
+
 1998-08-20 19:14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (sysdeps_routines):
@@ -7,6 +24,16 @@
 	* sysdeps/unix/sysv/linux/umount2.S: New file.
 	* sysdeps/unix/sysv/linux/sys/mount.h: Declare umount2.
 	Define MNT_FORCE.
+
+	* sysdeps/unix/sysv/linux/Makefile [subdirs=misc] (sysdep_headers):
+	Add sys/sendfile.h.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add sendfile.
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: New file.
+
+	* sysdeps/unix/sysv/linux/sys/acct.h: Pretty print.
+
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.1]: Add umount2 and
+	sendfile.
 
 1998-08-20 16:01  Ulrich Drepper  <drepper@cygnus.com>
 
