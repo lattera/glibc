@@ -89,6 +89,11 @@
 	timer info for what the kernel provides these days.
 	(struct sigevent): Add _tid field.
 	Define SIGEV_THREAD_ID.
+	Remove struct __pthread_attr_s forward declaration.
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
 
 	* Versions.def (librt): Add GLIBC_2.3.3.
 

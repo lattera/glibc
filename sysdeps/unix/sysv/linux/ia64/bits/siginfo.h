@@ -1,5 +1,5 @@
 /* siginfo_t, sigevent and constants.  Linux/ia64 version.
-   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -65,8 +65,10 @@ typedef struct siginfo
 	/* POSIX.1b timers.  */
 	struct
 	  {
-	    unsigned int _timer1;
-	    unsigned int _timer2;
+	    int si_tid;		/* Timer ID.  */
+	    int si_overrun;	/* Overrun count.  */
+	    char _pad[sizeof (__uid_t) - sizeof (int)];
+	    sigval_t si_sigval;	/* Signal value.  */
 	  } _timer;
 
 	/* POSIX.1b signals.  */
@@ -109,6 +111,8 @@ typedef struct siginfo
 /* X/Open requires some more fields with fixed names.  */
 # define si_pid		_sifields._kill.si_pid
 # define si_uid		_sifields._kill.si_uid
+# define si_timerid	_sifields._timer.si_tid
+# define si_overrun	_sifields._timer.si_overrun
 # define si_status	_sifields._sigchld.si_status
 # define si_utime	_sifields._sigchld.si_utime
 # define si_stime	_sifields._sigchld.si_stime
@@ -294,10 +298,7 @@ enum
 # define __SIGEV_MAX_SIZE	64
 # define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 4)
 
-/* Forward declaration of the `pthread_attr_t' type.  */
-struct __pthread_attr_s;
-
-typedef struct sigevent
+ struct sigevent
   {
     sigval_t sigev_value;
     int sigev_signo;
@@ -326,8 +327,11 @@ enum
 # define SIGEV_SIGNAL	SIGEV_SIGNAL
   SIGEV_NONE,			/* Other notification: meaningless.  */
 # define SIGEV_NONE	SIGEV_NONE
-  SIGEV_THREAD			/* Deliver via thread creation.  */
+  SIGEV_THREAD,			/* Deliver via thread creation.  */
 # define SIGEV_THREAD	SIGEV_THREAD
+
+  SIGEV_THREAD_ID = 4		/* Send signal to specific thread.  */
+#define SIGEV_THREAD_ID	SIGEV_THREAD_ID
 };
 
 #endif	/* have _SIGNAL_H.  */
