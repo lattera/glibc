@@ -181,7 +181,7 @@ init_module (void)
   for (i = 0; i < TIMER_MAX; ++i)
     {
       list_append (&timer_free_list, &__timer_array[i].links);
-      __timer_array[i].inuse = 0;
+      __timer_array[i].inuse = TIMER_FREE;
     }
 
   for (i = 0; i < THREAD_MAXNODES; ++i)
@@ -309,7 +309,7 @@ thread_cleanup (void *val)
 static void
 thread_expire_timer (struct thread_node *self, struct timer_node *timer)
 {
-  self->current_timer = timer;
+  self->current_timer = timer; /* Lets timer_delete know timer is running. */
 
   pthread_mutex_unlock (&__timer_mutex);
 
@@ -443,7 +443,7 @@ thread_func (void *arg)
 }
 
 
-/* Enqueue a timer in wakeup order in the thread's timer queue. 
+/* Enqueue a timer in wakeup order in the thread's timer queue.
    Returns 1 if the timer was inserted at the head of the queue,
    causing the queue's next wakeup time to change. */
 
@@ -551,7 +551,8 @@ __timer_alloc (void)
     {
       struct timer_node *timer = timer_links2ptr (node);
       list_unlink_ip (node);
-      timer->inuse = 1;
+      timer->inuse = TIMER_INUSE;
+      timer->refcount = 1;
       return timer;
     }
 
@@ -564,8 +565,9 @@ __timer_alloc (void)
 void
 __timer_dealloc (struct timer_node *timer)
 {
+  assert (timer->refcount == 0);
   timer->thread = NULL;	/* Break association between timer and thread.  */
-  timer->inuse = 0;
+  timer->inuse = TIMER_FREE;
   list_append (&timer_free_list, &timer->links);
 }
 

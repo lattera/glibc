@@ -595,23 +595,15 @@ add_known_names (struct gconv_module *node)
     add_known_names (node->left);
   if (node->right != NULL)
     add_known_names (node->right);
-  if (node->same != NULL)
-    add_known_names (node->same);
   do
     {
-      if (node->from_pattern == NULL)
-	{
-	  if (strcmp (node->from_constpfx, "INTERNAL"))
-	    tsearch (node->from_constpfx, &printlist,
-		     (__compar_fn_t) strverscmp);
-	  if (strcmp (node->to_string, "INTERNAL"))
-	    tsearch (node->to_string, &printlist, (__compar_fn_t) strverscmp);
-	}
-      else
-	if (strcmp (node->from_pattern, "INTERNAL"))
-	  tsearch (node->from_pattern, &printlist, (__compar_fn_t) strverscmp);
+      if (strcmp (node->from_string, "INTERNAL"))
+	tsearch (node->from_string, &printlist,
+		 (__compar_fn_t) strverscmp);
+      if (strcmp (node->to_string, "INTERNAL"))
+	tsearch (node->to_string, &printlist, (__compar_fn_t) strverscmp);
 
-      node = node->matching;
+      node = node->same;
     }
   while (node != NULL);
 }
@@ -636,10 +628,7 @@ print_known_names (void)
 The following list contain all the coded character sets known.  This does\n\
 not necessarily mean that all combinations of these names can be used for\n\
 the FROM and TO command line parameters.  One coded character set can be\n\
-listed with several different names (aliases).\n\
-  Some of the names are no plain strings but instead regular expressions and\n\
-they match a variety of names which can be given as parameters to the\n\
-program.\n\n  "), stdout);
+listed with several different names (aliases).\n\n  "), stdout);
 
   /* Now print the collected names.  */
   column = 2;

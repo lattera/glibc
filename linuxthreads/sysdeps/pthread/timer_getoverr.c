@@ -34,8 +34,8 @@ timer_getoverrun (timerid)
 
   pthread_mutex_lock (&__timer_mutex);
 
-  if ((timer = timer_id2ptr (timerid)) == NULL || !timer->inuse)
-    errno = EINVAL;
+  if (! timer_valid (timer = timer_id2ptr (timerid)))
+    __set_errno (EINVAL);
   else
     retval = 0; /* TODO: overrun counting not supported */
 

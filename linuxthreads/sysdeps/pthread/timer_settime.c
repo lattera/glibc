@@ -41,7 +41,7 @@ timer_settime (timerid, flags, value, ovalue)
   timer = timer_id2ptr (timerid);
   if (timer == NULL)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       goto bail;
     }
 
@@ -50,7 +50,7 @@ timer_settime (timerid, flags, value, ovalue)
       || value->it_value.tv_nsec < 0
       || value->it_value.tv_nsec >= 1000000000)
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       goto bail;
     }
 
@@ -64,13 +64,14 @@ timer_settime (timerid, flags, value, ovalue)
     }
 
   pthread_mutex_lock (&__timer_mutex);
+  timer_addref (timer);
 
   /* One final check of timer validity; this one is possible only
-     until we have the mutex, which guards the inuse flag. */
+     until we have the mutex, because it accesses the inuse flag. */
 
-  if (!timer->inuse)
+  if (! timer_valid(timer))
     {
-      errno = EINVAL;
+      __set_errno (EINVAL);
       goto unlock_bail;
     }
 
@@ -86,6 +87,7 @@ timer_settime (timerid, flags, value, ovalue)
 	      clock_gettime (timer->clock, &now);
 	      have_now = 1;
 	      pthread_mutex_lock (&__timer_mutex);
+	      timer_addref (timer);
 	    }
 
 	  timespec_sub (&ovalue->it_value, &timer->expirytime, &now);
@@ -123,6 +125,7 @@ timer_settime (timerid, flags, value, ovalue)
   retval = 0;
 
 unlock_bail:
+  timer_delref (timer);
   pthread_mutex_unlock (&__timer_mutex);
 
 bail:

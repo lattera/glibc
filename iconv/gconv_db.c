@@ -375,221 +375,111 @@ find_derivation (const char *toset, const char *toset_expand,
 
       while (node != NULL)
 	{
-	  int cmpres = strncmp (current->result_set, node->from_constpfx,
-				MIN (current->result_set_len,
-				     node->from_constpfx_len));
-
+	  int cmpres = strcmp (current->result_set, node->from_string);
 	  if (cmpres == 0)
 	    {
 	      /* Walk through the list of modules with this prefix and
 		 try to match the name.  */
 	      struct gconv_module *runp;
 
-	      if (current->result_set_len < node->from_constpfx_len)
-		/* Cannot possibly match.  */
-		break;
-
 	      /* Check all the modules with this prefix.  */
 	      runp = node;
 	      do
 		{
-		  const char *result_set = NULL;
+		  const char *result_set = (strcmp (runp->to_string, "-") == 0
+					    ? (toset_expand ?: toset)
+					    : runp->to_string);
+		  int cost_hi = runp->cost_hi + current->cost_hi;
+		  int cost_lo = runp->cost_lo + current->cost_lo;
+		  struct derivation_step *step;
 
-		  if (runp->from_pattern == NULL)
+		  /* We managed to find a derivation.  First see whether
+		     this is what we are looking for.  */
+		  if (strcmp (result_set, toset) == 0
+		      || (toset_expand != NULL
+			  && strcmp (result_set, toset_expand) == 0))
 		    {
-		      /* This is a simple entry and therefore we have a
-			 found an matching entry if the strings are really
-			 equal.  */
-		      if (current->result_set_len == runp->from_constpfx_len)
+		      if (solution == NULL || cost_hi < best_cost_hi
+			  || (cost_hi == best_cost_hi
+			      && cost_lo < best_cost_lo))
 			{
-			  if (strcmp (runp->to_string, "-") == 0)
-			    result_set = toset_expand ?: toset;
-			  else
-			    result_set = runp->to_string;
+			  best_cost_hi = cost_hi;
+			  best_cost_lo = cost_lo;
+			}
+
+		      /* Append this solution to list.  */
+		      if (solution == NULL)
+			solution = NEW_STEP (result_set, 0, 0, runp, current);
+		      else
+			{
+			  while (solution->next != NULL)
+			    solution = solution->next;
+
+			  solution->next = NEW_STEP (result_set, 0, 0,
+						     runp, current);
 			}
 		    }
-		  else
+		  else if (cost_hi < best_cost_hi
+			   || (cost_hi == best_cost_hi
+			       && cost_lo < best_cost_lo))
 		    {
-		      /* Compile the regular expression if necessary.  */
-		      if (runp->from_regex == NULL)
+		      /* Append at the end if there is no entry with
+			 this name.  */
+		      for (step = first; step != NULL; step = step->next)
+			if (strcmp (result_set, step->result_set) == 0)
+			  break;
+
+		      if (step == NULL)
 			{
-			  if (__regcomp (&runp->from_regex_mem,
-					 runp->from_pattern,
-					 REG_EXTENDED | REG_ICASE) != 0)
-			    /* Something is wrong.  Remember this.  */
-			    runp->from_regex = (regex_t *) -1L;
-			  else
-			    runp->from_regex = &runp->from_regex_mem;
+			  *lastp = NEW_STEP (result_set,
+					     cost_hi, cost_lo,
+					     runp, current);
+			  lastp = &(*lastp)->next;
 			}
-
-		      if (runp->from_regex != (regex_t *) -1L)
+		      else if (step->cost_hi > cost_hi
+			       || (step->cost_hi == cost_hi
+				   && step->cost_lo > cost_lo))
 			{
-			  regmatch_t match[4];
+			  step->code = runp;
+			  step->last = current;
 
-			  /* Try to match the regular expression.  */
-			  if (__regexec (runp->from_regex, current->result_set,
-					 4, match, 0) == 0
-			      && match[0].rm_so == 0
-			      && current->result_set[match[0].rm_eo] == '\0')
+			  /* Update the cost for all steps.  */
+			  for (step = first; step != NULL;
+			       step = step->next)
 			    {
-			      /* At least the whole <from> string is matched.
-				 We must now match sed-like possible
-				 subexpressions from the match to the
-				 toset expression.  */
-#define ENSURE_LEN(LEN) \
-  if (wp + (LEN) >= constr + len - 1)					      \
-    {									      \
-      char *newp = alloca (len += 128);					      \
-      wp = __mempcpy (newp, constr, wp - constr);			      \
-      constr = newp;							      \
-    }
-			      size_t len = 128;
-			      char *constr = alloca (len);
-			      char *wp = constr;
-			      const char *cp = runp->to_string;
+			      struct derivation_step *back;
 
-			      while (*cp != '\0')
-				{
-				  if (*cp != '\\')
-				    {
-				      ENSURE_LEN (1);
-				      *wp++ = *cp++;
-				    }
-				  else if (cp[1] == '\0')
-				    /* Backslash at end of string.  */
-				    break;
-				  else
-				    {
-				      ++cp;
-				      if (*cp == '\\')
-					{
-					  *wp++ = *cp++;
-					  ENSURE_LEN (1);
-					}
-				      else if (*cp < '1' || *cp > '3')
-					break;
-				      else
-					{
-					  int idx = *cp - '0';
-					  if (match[idx].rm_so == -1)
-					    /* No match.  */
-					    break;
+			      if (step->code == NULL)
+				/* This is one of the entries we started
+				   from.  */
+				continue;
 
-					  ENSURE_LEN (match[idx].rm_eo
-						      - match[idx].rm_so);
-					  wp = __mempcpy (wp,
-							  &current->result_set[match[idx].rm_so],
-							  match[idx].rm_eo
-							  - match[idx].rm_so);
-					  ++cp;
-					}
-				    }
-				}
-			      if (*cp == '\0' && wp != constr)
+			      step->cost_hi = step->code->cost_hi;
+			      step->cost_lo = step->code->cost_lo;
+
+			      for (back = step->last; back->code != NULL;
+				   back = back->last)
 				{
-				  /* Terminate the constructed string.  */
-				  *wp = '\0';
-				  result_set = constr;
+				  step->cost_hi += back->code->cost_hi;
+				  step->cost_lo += back->code->cost_lo;
 				}
 			    }
-			}
-		    }
 
-		  if (result_set != NULL)
-		    {
-		      int cost_hi = runp->cost_hi + current->cost_hi;
-		      int cost_lo = runp->cost_lo + current->cost_lo;
-		      struct derivation_step *step;
-
-		      /* We managed to find a derivation.  First see whether
-			 this is what we are looking for.  */
-		      if (strcmp (result_set, toset) == 0
-			  || (toset_expand != NULL
-			      && strcmp (result_set, toset_expand) == 0))
-			{
-			  if (solution == NULL || cost_hi < best_cost_hi
-			      || (cost_hi == best_cost_hi
-				  && cost_lo < best_cost_lo))
+			  for (step = solution; step != NULL;
+			       step = step->next)
 			    {
-			      best_cost_hi = cost_hi;
-			      best_cost_lo = cost_lo;
-			    }
+			      step->cost_hi = (step->code->cost_hi
+					       + step->last->cost_hi);
+			      step->cost_lo = (step->code->cost_lo
+					       + step->last->cost_lo);
 
-			  /* Append this solution to list.  */
-			  if (solution == NULL)
-			    solution = NEW_STEP (result_set, 0, 0, runp,
-						 current);
-			  else
-			    {
-			      while (solution->next != NULL)
-				solution = solution->next;
-
-			      solution->next = NEW_STEP (result_set, 0, 0,
-							 runp, current);
-			    }
-			}
-		      else if (cost_hi < best_cost_hi
-			       || (cost_hi == best_cost_hi
-				   && cost_lo < best_cost_lo))
-			{
-			  /* Append at the end if there is no entry with
-			     this name.  */
-			  for (step = first; step != NULL; step = step->next)
-			    if (strcmp (result_set, step->result_set) == 0)
-			      break;
-
-			  if (step == NULL)
-			    {
-			      *lastp = NEW_STEP (result_set,
-						 cost_hi, cost_lo,
-						 runp, current);
-			      lastp = &(*lastp)->next;
-			    }
-			  else if (step->cost_hi > cost_hi
-				   || (step->cost_hi == cost_hi
-				       && step->cost_lo > cost_lo))
-			    {
-			      step->code = runp;
-			      step->last = current;
-
-			      /* Update the cost for all steps.  */
-			      for (step = first; step != NULL;
-				   step = step->next)
+			      if (step->cost_hi < best_cost_hi
+				  || (step->cost_hi == best_cost_hi
+				      && step->cost_lo < best_cost_lo))
 				{
-				  struct derivation_step *back;
-
-				  if (step->code == NULL)
-				    /* This is one of the entries we started
-				       from.  */
-				    continue;
-
-				  step->cost_hi = step->code->cost_hi;
-				  step->cost_lo = step->code->cost_lo;
-
-				  for (back = step->last; back->code != NULL;
-				       back = back->last)
-				    {
-				      step->cost_hi += back->code->cost_hi;
-				      step->cost_lo += back->code->cost_lo;
-				    }
-				}
-
-			      for (step = solution; step != NULL;
-				   step = step->next)
-				{
-				  step->cost_hi = (step->code->cost_hi
-						   + step->last->cost_hi);
-				  step->cost_lo = (step->code->cost_lo
-						   + step->last->cost_lo);
-
-				  if (step->cost_hi < best_cost_hi
-				      || (step->cost_hi == best_cost_hi
-					  && step->cost_lo < best_cost_lo))
-				    {
-				      solution = step;
-				      best_cost_hi = step->cost_hi;
-				      best_cost_lo = step->cost_lo;
-				    }
+				  solution = step;
+				  best_cost_hi = step->cost_hi;
+				  best_cost_lo = step->cost_lo;
 				}
 			    }
 			}
@@ -599,10 +489,7 @@ find_derivation (const char *toset, const char *toset_expand,
 		}
 	      while (runp != NULL);
 
-	      if (current->result_set_len == node->from_constpfx_len)
-		break;
-
-	      node = node->matching;
+	      break;
 	    }
 	  else if (cmpres < 0)
 	    node = node->left;
@@ -738,12 +625,10 @@ free_modules_db (struct gconv_module *node)
     free_modules_db (node->left);
   if (node->right != NULL)
     free_modules_db (node->right);
-  if (node->same != NULL)
-    free_modules_db (node->same);
   do
     {
       struct gconv_module *act = node;
-      node = node->matching;
+      node = node->same;
       if (act->module_name[0] == '/')
 	free (act);
     }

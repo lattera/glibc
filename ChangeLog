@@ -1,5 +1,13 @@
 2000-06-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_int.h (strict gconv_module): Remove all members
+	associated with regular expressions.  Use a simple string as the
+	from name.
+	* iconv/gconv_db.c: Remove code handling regular expressions.
+	* iconv/gconv_conf.c: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* iconv/gconv_builtin.h: Adjust for change in gconv_conf.c.
+
 	* iconv/gconv.h (__gconv_trans_fct): Add new parameter.
 	General namespace cleanup.
 	(struct __gconv_trans_data): Add next field.

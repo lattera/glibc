@@ -59,9 +59,12 @@ struct timer_node
   pthread_attr_t attr;
   unsigned int abstime;
   unsigned int armed;
-  unsigned int inuse;
+  enum {
+    TIMER_FREE, TIMER_INUSE, TIMER_DELETED
+  } inuse;
   struct thread_node *thread;
   pid_t creator_pid;
+  int refcount;
 };
 
 
@@ -106,6 +109,28 @@ timer_ptr2id (struct timer_node *timer)
   return timer - __timer_array;
 }
 
+/* Check whether timer is valid; global mutex must be held. */
+static inline int
+timer_valid (struct timer_node *timer)
+{
+  return timer && timer->inuse == TIMER_INUSE;
+}
+
+/* Timer refcount functions; need global mutex. */
+extern void __timer_dealloc (struct timer_node *timer);
+
+static inline void
+timer_addref (struct timer_node *timer)
+{
+  timer->refcount++;
+}
+
+static inline void
+timer_delref (struct timer_node *timer)
+{
+  if (--timer->refcount == 0)
+    __timer_dealloc (timer);
+}
 
 /* Timespec helper routines.  */
 static inline int
@@ -178,7 +203,6 @@ extern struct timer_node *__timer_alloc (void);
 extern int __timer_thread_start (struct thread_node *thread);
 extern struct thread_node *__timer_thread_find_matching (const pthread_attr_t *desired_attr, clockid_t);
 extern struct thread_node *__timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t);
-extern void __timer_dealloc (struct timer_node *timer);
 extern void __timer_thread_dealloc (struct thread_node *thread);
 extern int __timer_thread_queue_timer (struct thread_node *thread,
 				       struct timer_node *insert);

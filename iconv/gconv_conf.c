@@ -56,13 +56,10 @@ static const char gconv_module_ext[] = MODULE_EXT;
 /* We have a few builtin transformations.  */
 static struct gconv_module builtin_modules[] =
 {
-#define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End, MinF, MaxF, MinT, MaxT) \
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
+			       MaxF, MinT, MaxT) \
   {									      \
-    from_pattern: From,							      \
-    from_constpfx: ConstPfx,						      \
-    from_constpfx_len: ConstLen,					      \
-    from_regex: NULL,							      \
+    from_string: From,							      \
     to_string: To,							      \
     cost_hi: Cost,							      \
     cost_lo: INT_MAX,							      \
@@ -78,8 +75,8 @@ static struct gconv_module builtin_modules[] =
 
 static const char *builtin_aliases[] =
 {
-#define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
-			       Fct, Init, End, MinF, MaxF, MinT, MaxT)
+#define BUILTIN_TRANSFORMATION(From, To, Cost, Name, Fct, Init, End, MinF, \
+			       MaxF, MinT, MaxT)
 #define BUILTIN_ALIAS(From, To) From " " To,
 
 #include "gconv_builtin.h"
@@ -94,74 +91,17 @@ static const char *builtin_aliases[] =
 /* Test whether there is already a matching module known.  */
 static int
 internal_function
-detect_conflict (const char *alias, size_t alias_len)
+detect_conflict (const char *alias)
 {
   struct gconv_module *node = __gconv_modules_db;
 
   while (node != NULL)
     {
-      int cmpres = strncmp (alias, node->from_constpfx,
-			    MIN (alias_len, node->from_constpfx_len));
+      int cmpres = strcmp (alias, node->from_string);
 
       if (cmpres == 0)
-	{
-	  struct gconv_module *runp;
-
-	  if (alias_len < node->from_constpfx_len)
-	    /* Cannot possibly match.  */
-	    return 0;
-
-	  /* This means the prefix and the alias are identical.  If
-	     there is now a simple extry or a regular expression
-	     matching this name we have found a conflict.  If there is
-	     no conflict with the elements in the `same' list there
-	     cannot be a conflict.  */
-	  runp = node;
-	  do
-	    {
-	      if (runp->from_pattern == NULL)
-		{
-		  /* This is a simple entry and therefore we have a
-		     conflict if the strings are really the same.  */
-		  if (alias_len == node->from_constpfx_len)
-		    return 1;
-		}
-	      else
-		{
-		  /* Compile the regular expression if necessary.  */
-		  if (runp->from_regex == NULL)
-		    {
-		      if (__regcomp (&runp->from_regex_mem,
-				     runp->from_pattern,
-				     REG_EXTENDED | REG_ICASE) != 0)
-			/* Something is wrong.  Remember this.  */
-			runp->from_regex = (regex_t *) -1L;
-		      else
-			runp->from_regex = &runp->from_regex_mem;
-		    }
-
-		  if (runp->from_regex != (regex_t *) -1L)
-		    {
-		      regmatch_t match[1];
-
-		      /* Try to match the regular expression.  */
-		      if (__regexec (runp->from_regex, alias, 1, match, 0) == 0
-			  && match[0].rm_so == 0
-			  && alias[match[0].rm_eo] == '\0')
-			/* They match, therefore it is a conflict.  */
-			return 1;
-		    }
-		}
-
-	      runp = runp->same;
-	    }
-	  while (runp != NULL);
-
-	  if (alias_len == node->from_constpfx_len)
-	      return 0;
-
-	  node = node->matching;
-	}
+	/* We have a conflict.  */
+	return 1;
       else if (cmpres < 0)
 	node = node->left;
       else
@@ -201,7 +141,7 @@ add_alias (char *rp, void *modules)
   *wp++ = '\0';
 
   /* Test whether this alias conflicts with any available module.  */
-  if (detect_conflict (from, to - from - 1))
+  if (detect_conflict (from))
     /* It does conflict, don't add the alias.  */
     return;
 
@@ -235,49 +175,27 @@ insert_module (struct gconv_module *newp)
   while (*rootp != NULL)
     {
       struct gconv_module *root = *rootp;
-      size_t minlen = MIN (newp->from_constpfx_len, root->from_constpfx_len);
       int cmpres;
 
-      cmpres = strncmp (newp->from_constpfx, root->from_constpfx, minlen);
+      cmpres = strcmp (newp->from_string, root->from_string);
       if (cmpres == 0)
 	{
-	  /* This can mean two things: the prefix is entirely the same or
-	     it matches only for the minimum length of both strings.  */
-	  if (newp->from_constpfx_len == root->from_constpfx_len)
+	  /* Both strings are identical.  Insert the string at the
+	     end of the `same' list if it is not already there.  */
+	  while (strcmp (newp->from_string, root->from_string) != 0
+		 || strcmp (newp->to_string, root->to_string) != 0)
 	    {
-	      /* Both prefixes are identical.  Insert the string at the
-		 end of the `same' list if it is not already there.  */
-	      const char *from_pattern = (newp->from_pattern
-					  ?: newp->from_constpfx);
-
-	      while (strcmp (from_pattern,
-			     root->from_pattern ?: root->from_constpfx) != 0
-		     || strcmp (newp->to_string, root->to_string) != 0)
-		{
-		  rootp = &root->same;
-		  root = *rootp;
-		  if (root == NULL)
-		    break;
-		}
-
-	      if (root != NULL)
-		/* This is a no new conversion.  */
-		return;
-
-	      break;
+	      rootp = &root->same;
+	      root = *rootp;
+	      if (root == NULL)
+		break;
 	    }
 
-	  /* The new element either has a prefix which is itself a
-	     prefix for the prefix of the current node or vice verse.
-	     In the first case we insert the node right here.  Otherwise
-	     we have to descent further.  */
-	  if (newp->from_constpfx_len < root->from_constpfx_len)
-	    {
-	      newp->matching = root;
-	      break;
-	    }
+	  if (root != NULL)
+	    /* This is a no new conversion.  */
+	    return;
 
-	  rootp = &root->matching;
+	  break;
 	}
       else if (cmpres < 0)
 	rootp = &root->left;
@@ -291,7 +209,7 @@ insert_module (struct gconv_module *newp)
 
 
 /* Add new module.  */
-static inline void
+static void
 internal_function
 add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 	    size_t *nmodules, int modcounter)
@@ -302,22 +220,17 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
      3. filename of the module
      4. an optional cost value
   */
+  struct gconv_alias fake_alias;
   struct gconv_module *new_module;
   char *from, *to, *module, *wp;
-  size_t const_len;
-  int from_is_regex;
   int need_ext;
   int cost_hi;
 
   while (isspace (*rp))
     ++rp;
   from = rp;
-  from_is_regex = 0;
   while (*rp != '\0' && !isspace (*rp))
     {
-      if (!isalnum (*rp) && *rp != '-' && *rp != '/' && *rp != '.'
-	  && *rp != '_' && *rp != '(' && *rp != ')')
-	from_is_regex = 1;
       *rp = toupper (*rp);
       ++rp;
     }
@@ -373,18 +286,12 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     /* We must add the module extension.  */
     need_ext = sizeof (gconv_module_ext) - 1;
 
-  /* We've collected all the information, now create an entry.  */
+  /* See whether we have already an alias with this name defined.  */
+  fake_alias.fromname = strndupa (from, to - from);
 
-  if (from_is_regex)
-    {
-      const_len = 0;
-      while (isalnum (from[const_len]) || from[const_len] == '-'
-	     || from[const_len] == '/' || from[const_len] == '.'
-	     || from[const_len] == '_')
-	++const_len;
-    }
-  else
-    const_len = to - from - 1;
+  if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare) != NULL)
+    /* This module duplicates an alias.  */
+    return;
 
   new_module = (struct gconv_module *) calloc (1,
 					       sizeof (struct gconv_module)
@@ -394,15 +301,11 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
     {
       char *tmp;
 
-      new_module->from_constpfx = memcpy ((char *) new_module
-					  + sizeof (struct gconv_module),
-					  from, to - from);
-      if (from_is_regex)
-	new_module->from_pattern = new_module->from_constpfx;
+      new_module->from_string = memcpy ((char *) new_module
+					+ sizeof (struct gconv_module),
+					from, to - from);
 
-      new_module->from_constpfx_len = const_len;
-
-      new_module->to_string = memcpy ((char *) new_module->from_constpfx
+      new_module->to_string = memcpy ((char *) new_module->from_string
 				      + (to - from), to, module - to);
 
       new_module->cost_hi = cost_hi;
@@ -423,25 +326,6 @@ add_module (char *rp, const char *directory, size_t dir_len, void **modules,
 
       if (need_ext)
 	memcpy (tmp - 1, gconv_module_ext, sizeof (gconv_module_ext));
-
-      /* See whether we have already an alias with this name defined.
-	 We do allow regular expressions matching this any alias since
-	 this expression can also match other names and we test for aliases
-	 before testing for modules.  */
-      if (! from_is_regex)
-	{
-	  struct gconv_alias fake_alias;
-
-	  fake_alias.fromname = new_module->from_constpfx;
-
-	  if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
-	      != NULL)
-	    {
-	      /* This module duplicates an alias.  */
-	      free (new_module);
-	      return;
-	    }
-	}
 
       /* Now insert the new module data structure in our search tree.  */
       insert_module (new_module);
@@ -643,17 +527,14 @@ __gconv_read_conf (void)
   for (cnt = 0; cnt < sizeof (builtin_modules) / sizeof (builtin_modules[0]);
        ++cnt)
     {
-      if (builtin_modules[cnt].from_pattern == NULL)
-	{
-	  struct gconv_alias fake_alias;
+      struct gconv_alias fake_alias;
 
-	  fake_alias.fromname = builtin_modules[cnt].from_constpfx;
+      fake_alias.fromname = builtin_modules[cnt].from_string;
 
-	  if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
-	      != NULL)
-	    /* It'll conflict so don't add it.  */
-	    continue;
-	}
+      if (__tfind (&fake_alias, &__gconv_alias_db, __gconv_alias_compare)
+	  != NULL)
+	/* It'll conflict so don't add it.  */
+	continue;
 
       insert_module (&builtin_modules[cnt]);
     }

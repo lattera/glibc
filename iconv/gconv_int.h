@@ -21,7 +21,6 @@
 #define _GCONV_INT_H	1
 
 #include "gconv.h"
-#include <regex.h>
 
 __BEGIN_DECLS
 
@@ -76,12 +75,7 @@ struct __gconv_loaded_object
 /* Description for an available conversion module.  */
 struct gconv_module
 {
-  const char *from_pattern;
-  const char *from_constpfx;
-  size_t from_constpfx_len;
-  const regex_t *from_regex;
-  regex_t from_regex_mem;
-
+  const char *from_string;
   const char *to_string;
 
   int cost_hi;
@@ -91,7 +85,6 @@ struct gconv_module
 
   struct gconv_module *left;	/* Prefix smaller.  */
   struct gconv_module *same;	/* List of entries with identical prefix.  */
-  struct gconv_module *matching;/* Next node with more specific prefix.  */
   struct gconv_module *right;	/* Prefix larger.  */
 };
 

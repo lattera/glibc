@@ -31,25 +31,30 @@ timer_gettime (timerid, value)
      struct itimerspec *value;
 {
   struct timer_node *timer;
-  struct timespec now;
-  int retval = -1;
+  struct timespec now, expiry;
+  int retval = -1, armed = 0, valid;
+  clock_t clock = 0;
 
   pthread_mutex_lock (&__timer_mutex);
 
   timer = timer_id2ptr (timerid);
-  if (timer == NULL && !timer->inuse)
-    /* Invalid timer ID or the timer is not in use.  */
-    errno = EINVAL;
-  else
-    {
-      value->it_interval = timer->value.it_interval;
+  valid = timer_valid (timer);
 
-      if (timer->armed)
+  if (valid) {
+    armed = timer->armed;
+    expiry = timer->expirytime;
+    clock = timer->clock;
+    value->it_interval = timer->value.it_interval;
+  }
+
+  pthread_mutex_unlock (&__timer_mutex);
+
+  if (valid)
+    {
+      if (armed)
 	{
-	  pthread_mutex_unlock (&__timer_mutex);
-	  clock_gettime (timer->clock, &now);
-	  pthread_mutex_lock (&__timer_mutex);
-	  timespec_sub (&value->it_value, &timer->expirytime, &now);
+	  clock_gettime (clock, &now);
+	  timespec_sub (&value->it_value, &expiry, &now);
 	}
       else
 	{
@@ -59,8 +64,8 @@ timer_gettime (timerid, value)
 
       retval = 0;
     }
-
-  pthread_mutex_lock (&__timer_mutex);
+  else
+    __set_errno (EINVAL);
 
   return retval;
 }

@@ -1,3 +1,36 @@
+2000-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/timer_create.c: Use _set_errno instead of assigning
+	to errno directly.
+	* sysdeps/pthread/timer_delete.c: Likewise.
+	* sysdeps/pthread/timer_getoverr.c: Likewise.
+	* sysdeps/pthread/timer_gettime.c: Likewise.
+	* sysdeps/pthread/timer_settime.c: Likewise.
+
+2000-06-13  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Timer nodes are now reference counted, and can be marked
+	as deleted. This allows for the safe release of the global mutex
+	in the middle without losing the timer being operated on.
+
+	* sysdeps/pthread/posix-timer.h (struct timer_node):  The inuse
+	member is now an enum with three values, so that an intermediate
+	state can be represented (deleted but not free for reuse yet).
+	New refcount member added.
+	* sysdeps/pthread/timer_routines.c: Likewise.
+
+	* sysdeps/pthread/posix-timer.h (timer_addref, timer_delref,
+	timer_valid): New inline functions added.
+
+	* sysdeps/pthread/timer_gettime.c (timer_gettime): Function
+	restructured, recursive deadlock bug fixed.
+
+	* sysdeps/pthread/timer_gettime.c (timer_gettime): Uses new
+	timer_addref to ensure that timer won't be deleted while mutex is not
+	held. Also uses timer_invalid to perform validation of timer handle.
+	* sysdeps/pthread/timer_settime.c (timer_settime): Likewise.
+	* sysdeps/pthread/timer_getoverr.c (timer_getoverrun): Likewise.
+
 2000-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* shlib-versions: Add entry for SH.
