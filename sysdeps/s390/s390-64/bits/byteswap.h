@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  64 bit S/390 version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -22,6 +22,9 @@
 # error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
 #endif
 
+#ifndef _BITS_BYTESWAP_H
+#define _BITS_BYTESWAP_H 1
+
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
 
@@ -29,7 +32,7 @@
 #if defined __GNUC__ && __GNUC__ >= 2
 # define __bswap_16(x) \
      (__extension__							      \
-      ({ unsigned short int __v; 		                              \
+      ({ unsigned short int __v;		                              \
 	 if (__builtin_constant_p (x))					      \
 	   __v = __bswap_constant_16 (x);				      \
 	 else {								      \
@@ -90,4 +93,4 @@
 # define __bswap_64(x) __bswap_constant_64 (x)
 #endif
 
-
+#endif /* _BITS_BYTESWAP_H */

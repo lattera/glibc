@@ -1,5 +1,5 @@
 /* Macros to swap the order of bytes in integer values.  s390 version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -21,6 +21,9 @@
 #if !defined _BYTESWAP_H && !defined _NETINET_IN_H
 # error "Never use <bits/byteswap.h> directly; include <byteswap.h> instead."
 #endif
+
+#ifndef _BITS_BYTESWAP_H
+#define _BITS_BYTESWAP_H 1
 
 #define __bswap_constant_16(x) \
      ((((x) >> 8) & 0xff) | (((x) & 0xff) << 8))
@@ -84,3 +87,5 @@
      __r.__l[1] = __bswap_32 (__w.__l[0]);		\
      __r.__ll; })
 #endif
+
+#endif /* _BITS_BYTESWAP_H */
