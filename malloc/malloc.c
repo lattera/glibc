@@ -2359,6 +2359,14 @@ void weak_variable (*__after_morecore_hook) (void) = NULL;
 static int check_action = DEFAULT_CHECK_ACTION;
 
 
+/* ------------------ Testing support ----------------------------------*/
+
+static int perturb_byte;
+
+#define alloc_perturb(p, n) memset (p, (perturb_byte ^ 0xff) & 0xff, n)
+#define free_perturb(p, n) memset (p, perturb_byte & 0xff, n)
+
+
 /* ------------------- Support for multiple arenas -------------------- */
 #include "arena.c"
 
@@ -3859,7 +3867,10 @@ _int_malloc(mstate av, size_t bytes)
 			 chunk2mem (victim));
       *fb = victim->fd;
       check_remalloced_chunk(av, victim, nb);
-      return chunk2mem(victim);
+      void *p = chunk2mem(victim);
+      if (__builtin_expect (perturb_byte, 0))
+	alloc_perturb (p, bytes);
+      return p;
     }
   }
 
@@ -3887,7 +3898,10 @@ _int_malloc(mstate av, size_t bytes)
         if (av != &main_arena)
 	  victim->size |= NON_MAIN_ARENA;
         check_malloced_chunk(av, victim, nb);
-        return chunk2mem(victim);
+	void *p = chunk2mem(victim);
+	if (__builtin_expect (perturb_byte, 0))
+	  alloc_perturb (p, bytes);
+	return p;
       }
     }
   }
@@ -3958,7 +3972,10 @@ _int_malloc(mstate av, size_t bytes)
         set_foot(remainder, remainder_size);
 
         check_malloced_chunk(av, victim, nb);
-        return chunk2mem(victim);
+	void *p = chunk2mem(victim);
+	if (__builtin_expect (perturb_byte, 0))
+	  alloc_perturb (p, bytes);
+	return p;
       }
 
       /* remove from unsorted list */
@@ -3972,7 +3989,10 @@ _int_malloc(mstate av, size_t bytes)
 	if (av != &main_arena)
 	  victim->size |= NON_MAIN_ARENA;
         check_malloced_chunk(av, victim, nb);
-        return chunk2mem(victim);
+	void *p = chunk2mem(victim);
+	if (__builtin_expect (perturb_byte, 0))
+	  alloc_perturb (p, bytes);
+	return p;
       }
 
       /* place chunk in bin */
@@ -4041,8 +4061,6 @@ _int_malloc(mstate av, size_t bytes)
           set_inuse_bit_at_offset(victim, size);
 	  if (av != &main_arena)
 	    victim->size |= NON_MAIN_ARENA;
-          check_malloced_chunk(av, victim, nb);
-          return chunk2mem(victim);
         }
         /* Split */
         else {
@@ -4053,9 +4071,12 @@ _int_malloc(mstate av, size_t bytes)
 		   (av != &main_arena ? NON_MAIN_ARENA : 0));
           set_head(remainder, remainder_size | PREV_INUSE);
           set_foot(remainder, remainder_size);
-          check_malloced_chunk(av, victim, nb);
-          return chunk2mem(victim);
         }
+	check_malloced_chunk(av, victim, nb);
+	void *p = chunk2mem(victim);
+	if (__builtin_expect (perturb_byte, 0))
+	  alloc_perturb (p, bytes);
+	return p;
       }
     }
 
@@ -4124,8 +4145,6 @@ _int_malloc(mstate av, size_t bytes)
           set_inuse_bit_at_offset(victim, size);
 	  if (av != &main_arena)
 	    victim->size |= NON_MAIN_ARENA;
-          check_malloced_chunk(av, victim, nb);
-          return chunk2mem(victim);
         }
 
         /* Split */
@@ -4142,9 +4161,12 @@ _int_malloc(mstate av, size_t bytes)
 		   (av != &main_arena ? NON_MAIN_ARENA : 0));
           set_head(remainder, remainder_size | PREV_INUSE);
           set_foot(remainder, remainder_size);
-          check_malloced_chunk(av, victim, nb);
-          return chunk2mem(victim);
         }
+	check_malloced_chunk(av, victim, nb);
+	void *p = chunk2mem(victim);
+	if (__builtin_expect (perturb_byte, 0))
+	  alloc_perturb (p, bytes);
+	return p;
       }
     }
 
@@ -4176,7 +4198,10 @@ _int_malloc(mstate av, size_t bytes)
       set_head(remainder, remainder_size | PREV_INUSE);
 
       check_malloced_chunk(av, victim, nb);
-      return chunk2mem(victim);
+      void *p = chunk2mem(victim);
+      if (__builtin_expect (perturb_byte, 0))
+	alloc_perturb (p, bytes);
+      return p;
     }
 
     /*
@@ -4194,8 +4219,12 @@ _int_malloc(mstate av, size_t bytes)
     /*
        Otherwise, relay to handle system-dependent cases
     */
-    else
-      return sYSMALLOc(nb, av);
+    else {
+      void *p = sYSMALLOc(nb, av);
+      if (__builtin_expect (perturb_byte, 0))
+	alloc_perturb (p, bytes);
+      return p;
+    }
   }
 }
 
@@ -4269,6 +4298,10 @@ _int_free(mstate av, Void_t* mem)
 	errstr = "double free or corruption (fasttop)";
 	goto errout;
       }
+
+    if (__builtin_expect (perturb_byte, 0))
+      free_perturb (mem, size - SIZE_SZ);
+
     p->fd = *fb;
     *fb = p;
   }
@@ -4309,6 +4342,9 @@ _int_free(mstate av, Void_t* mem)
 	errstr = "free(): invalid next size (normal)";
 	goto errout;
       }
+
+    if (__builtin_expect (perturb_byte, 0))
+      free_perturb (mem, size - SIZE_SZ);
 
     /* consolidate backward */
     if (!prev_inuse(p)) {
@@ -5360,6 +5396,10 @@ int mALLOPt(param_number, value) int param_number; int value;
 
   case M_CHECK_ACTION:
     check_action = value;
+    break;
+
+  case M_PERTURB:
+    perturb_byte = value;
     break;
   }
   (void)mutex_unlock(&av->mutex);

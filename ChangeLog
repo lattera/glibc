@@ -1,5 +1,16 @@
 2005-03-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/arena.c (ptmalloc_init): Recognize MALLOC_PERTURB_ and call
+	mallopt appropriately.
+	* malloc/malloc.h: Define M_PERTURB.
+	* malloc/malloc.c (perturb_byte): New variable.
+	(alloc_perturb, free_perturb): New macros.
+	(_int_malloc): Before returning, overwrite the memory if this is
+	requested.
+	(_int_free): Overwrite freed memory if requested.
+	(mALLOPt): Handle M_PERTURB.
+	* test-skeleton.c: Add call to mallopt with M_PERTURB command.
+
 	* elf/dl-close.c (_dl_close): Decrement l_opencount before
 	printing debug message.
 	* elf/dl-open.c (dl_open_worker): Always print the new opencount

@@ -1,5 +1,5 @@
 /* Skeleton for test programs.
-   Copyright (C) 1998,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <getopt.h>
+#include <malloc.h>
 #include <search.h>
 #include <signal.h>
 #include <stdio.h>
@@ -195,6 +196,9 @@ main (int argc, char *argv[])
   int opt;
   unsigned int timeoutfactor = 1;
   pid_t termpid;
+
+  /* Make uses of freed and uninitialized memory known.  */
+  mallopt (M_PERTURB, 42);
 
 #ifdef STDOUT_UNBUFFERED
   setbuf (stdout, NULL);

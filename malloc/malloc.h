@@ -122,6 +122,7 @@ extern struct mallinfo mallinfo __MALLOC_P ((void));
 #define M_MMAP_THRESHOLD    -3
 #define M_MMAP_MAX          -4
 #define M_CHECK_ACTION      -5
+#define M_PERTURB	    -6
 
 /* General SVID/XPG interface to tunable parameters. */
 extern int mallopt __MALLOC_P ((int __param, int __val));
