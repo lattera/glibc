@@ -597,7 +597,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		string = group_number (string, workend, grouping,	      \
 				       thousands_sep);			      \
 	    }								      \
-	  /* Simply further test for num != 0.  */			      \
+	  /* Simplify further test for num != 0.  */			      \
 	  number.word = number.longlong != 0;				      \
 	}								      \
       else								      \

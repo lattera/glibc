@@ -1,3 +1,9 @@
+1999-05-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/tst-printf.c: Add test case for last _itoa problem.
+
+	* stdio-common/vfprintf.c: Fix typo.
+
 1999-05-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/link.h (struct link_map): New field l_phdr_allocated.
