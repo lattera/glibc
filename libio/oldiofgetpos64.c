@@ -43,7 +43,7 @@ _IO_old_fgetpos64 (fp, posp)
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
-  if (_IO_in_backup (fp))
+  if (_IO_in_backup (fp) && pos != _IO_pos_BAD)
     pos -= fp->_IO_save_end - fp->_IO_save_base;
   _IO_release_lock (fp);
   if (pos == _IO_pos_BAD)
