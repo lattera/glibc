@@ -636,6 +636,12 @@ _dl_init_paths (const char *llp)
 
       (void) fillin_rpath (local_strdup (llp), env_path_list, ":;",
 			   __libc_enable_secure, "LD_LIBRARY_PATH", NULL);
+
+      if (env_path_list[0] == NULL)
+	{
+	  free (env_path_list);
+	  env_path_list = (void *) -1;
+	}
     }
   else
     env_path_list = (void *) -1;
