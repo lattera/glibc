@@ -1,3 +1,14 @@
+1998-08-21  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* elf/ldd.bash.in (TEXTDOMAIN, TEXTDOMAINDIR): Surround setting these
+	with magic comments ###BASH-ONLY and ###END-BASH-ONLY.
+	* elf/Makefile ($(objpfx)ldd): Generate always from ldd.bash.in.
+	(common-ldd-rewrite): New variable, old contents of $(sh-ldd-rewrite).
+	(sh-ldd-rewrite): Use that, add cmds to remove code surrounded by
+	those magic comments, and to use /bin/sh for @BASH@.
+	(bash-ldd-rewrite): Use $(common-ldd-rewrite).
+	* elf/ldd.sh.in: File removed.
+
 1998-08-20 20:07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pwd/getpw.c (__getpw): Use %lu for uid and gid parameter and
