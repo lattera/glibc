@@ -26,6 +26,7 @@
 
 #include "aio_misc.h"
 
+#ifdef __NR_rt_sigqueueinfo
 extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
 
@@ -47,3 +48,6 @@ __aio_sigqueue (sig, val)
 
   return INLINE_SYSCALL (rt_sigqueueinfo, 3, info.si_pid, sig, &info);
 }
+#else
+# include <sysdeps/generic/aio_sigqueue.c>
+#endif

@@ -38,6 +38,7 @@ int
 __sigsuspend (set)
      const sigset_t *set;
 {
+#ifdef __NR_rt_sigsuspend
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -52,6 +53,7 @@ __sigsuspend (set)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   return INLINE_SYSCALL (sigsuspend, 3, 0, 0, set->__val[0]);
 }

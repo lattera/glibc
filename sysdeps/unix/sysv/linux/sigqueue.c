@@ -25,7 +25,7 @@
 
 extern int __syscall_rt_sigqueueinfo (int, int, siginfo_t *);
 
-
+#ifdef __NR_rt_sigqueueinfo
 /* Return any pending signal or wait for one for the given time.  */
 int
 __sigqueue (pid, sig, val)
@@ -46,3 +46,6 @@ __sigqueue (pid, sig, val)
   return INLINE_SYSCALL (rt_sigqueueinfo, 3, pid, sig, &info);
 }
 weak_alias (__sigqueue, sigqueue)
+#else
+# include <sysdeps/generic/sigqueue.c>
+#endif

@@ -41,6 +41,7 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
   struct old_kernel_sigaction k_sigact, k_osigact;
   int ret;
 
+#ifdef __NR_rt_sigaction
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -81,6 +82,7 @@ __sigaction (int sig, __const struct sigaction *act, struct sigaction *oact)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   /* Magic to tell the kernel we are using "new-style" signals, in that
      the signal table is not kept in userspace.  Not the same as the

@@ -24,6 +24,7 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#ifdef __NR_rt_sigtimedwait
 extern int __syscall_rt_sigtimedwait (const sigset_t *, siginfo_t *,
 				      const struct timespec *, size_t);
 
@@ -39,3 +40,6 @@ __sigwaitinfo (set, info)
   return INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, NULL, _NSIG / 8);
 }
 weak_alias (__sigwaitinfo, sigwaitinfo)
+#else
+# include <sysdeps/generic/sigwaitinfo.c>
+#endif

@@ -28,7 +28,7 @@
     unsigned int __i;							      \
     __fd_set *__arr = (s);						      \
     for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
-      __FDS_BITS (__arr)[__i] = '\0';					      \
+      __FDS_BITS (__arr)[__i] = 0;					      \
   } while (0)
 #define __FD_SET(d, s)     (__FDS_BITS (s)[__FDELT(d)] |= __FDMASK(d))
 #define __FD_CLR(d, s)     (__FDS_BITS (s)[__FDELT(d)] &= ~__FDMASK(d))

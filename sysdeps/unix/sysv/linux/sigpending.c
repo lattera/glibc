@@ -38,6 +38,7 @@ int
 sigpending (set)
      sigset_t *set;
 {
+#ifdef __NR_rt_pending
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -52,6 +53,7 @@ sigpending (set)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   return INLINE_SYSCALL (sigpending, 1, set);
 }

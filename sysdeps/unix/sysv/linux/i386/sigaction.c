@@ -47,6 +47,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   struct old_kernel_sigaction k_newact, k_oldact;
   int result;
 
+#ifdef __NR_rt_sigaction
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -83,6 +84,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   if (act)
     {

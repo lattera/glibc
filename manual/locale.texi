@@ -1052,7 +1052,7 @@ strfmon (buf, 100, "@@%n@@%n@@%n@@", 123.45, -567.89, 12345.678);
 @noindent
 The output produced is
 @smallexample
-"@@$123.45@@-$123.45@@$12,345.68@@"
+"@@$123.45@@-$567.89@@$12,345.68@@"
 @end smallexample
 
 We can notice several things here.  First, the width for all formats is
@@ -1073,7 +1073,7 @@ strfmon (buf, 100, "@@%=*11n@@%=*11n@@%=*11n@@", 123.45, -567.89, 12345.678);
 The output this time is:
 
 @smallexample
-"@@    $123.45@@   -$123.45@@ $12,345.68@@"
+"@@    $123.45@@   -$567.89@@ $12,345.68@@"
 @end smallexample
 
 Two things stand out.  First, all fields have the same width (eleven
@@ -1119,7 +1119,7 @@ This rather complex format string produces the following output:
 
 The most noticeable change is the use of the alternative style to
 represent negative numbers.  In financial circles it is often done using
-braces and this is what the @samp{(} flag selected.  The fill character
+parentheses and this is what the @samp{(} flag selected.  The fill character
 is now @samp{0}.  Please note that this @samp{0} character is not
 regarded as a numeric zero and therefore the first and second number are
 not printed using a thousands separator.  Since we use in the format the

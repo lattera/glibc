@@ -39,6 +39,7 @@ __sigprocmask (how, set, oset)
      const sigset_t *set;
      sigset_t *oset;
 {
+#ifdef __NR_rt_sigprocmask
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -54,6 +55,7 @@ __sigprocmask (how, set, oset)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
+#endif
 
   return INLINE_SYSCALL (sigprocmask, 3, how, set, oset);
 }

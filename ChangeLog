@@ -1,8 +1,39 @@
+1998-10-29  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* manual/locale.texi (Formatting Numbers): Fix strfmon examples. 
+ 
+1998-10-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* sysdeps/generic/bits/select.h (__FD_ZERO): Change '\0' to plain 
+	0, __fd_mask is usually not a char. 
+ 
+1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/unix/sysv/linux/sigpending.c (sigpending): Allow 
+	compilation on systems without rt_* syscalls (e.g. on Linux 2.0). 
+	* sysdeps/unix/sysv/linux/sigprocmask.c (__sigprocmask): Likewise. 
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise. 
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise. 
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Likewise 
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise. 
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise. 
+ 
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Allow 
+	compiling on systems without rt_sigaction syscall. 
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (__sigaction): 
+	Likewise. 
+ 
+1998-10-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* time/strptime.c (HERE_D_FMT): Fix typo.   
+	Reported by Claus Heine <heine@math1.rwth-aachen.de>, PR libc/842. 
+ 
 1998-10-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* catgets/Makefile (tests): Add rules to run gencat on test1.msg.
 	(generate): Add test1.cat and test1.h.
 	(distribute): Add test1.msg.
+	* catgets/test1.msg: New file.
 
 	* catgets/gencat.c: Do a better job in initializing dynamic
 	memory [PR libc/844].
