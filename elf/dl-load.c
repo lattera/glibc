@@ -1469,7 +1469,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    {
 	      /* If the loader has the DF_1_NODEFLIB flag set we must not
 		 use a cache entry from any of these directories.  */
-	      if (__builtin_expect (loader->l_flags_1 & DF_1_NODEFLIB, 0))
+	      if (
+#ifndef SHARED
+		  loader != NULL &&
+#endif
+		  __builtin_expect ((loader ?: _dl_loaded)->l_flags_1
+				    & DF_1_NODEFLIB, 0))
 		{
 		  const char *dirp = system_dirs;
 		  int cnt = 0;
@@ -1508,7 +1513,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 
       /* Finally, try the default path.  */
       if (fd == -1
-	  && __builtin_expect (!(loader->l_flags_1 & DF_1_NODEFLIB), 1))
+	  && (
+#ifndef SHARED
+	      loader == NULL ||
+#endif
+	      __builtin_expect (!((loader ?: _dl_loaded)->l_flags_1
+				  & DF_1_NODEFLIB), 1)))
 	fd = open_path (name, namelen, preloaded, &rtld_search_dirs,
 			&realname);
 
