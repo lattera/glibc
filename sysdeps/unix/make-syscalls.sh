@@ -46,7 +46,8 @@ echo "$calls" | while read file srcfile caller syscall args strong weak; do
 callnum=-
 eval `{ echo "#include <sysdep.h>";
 	echo "callnum=SYS_ify ($syscall)"; } |
-	  $asm_CPP - |grep "^callnum=" |grep -v $syscall`
+	  $asm_CPP - |sed -n -e "/^callnum=.*$syscall/d" \
+			     -e "/^\(callnum=\)[ 	]*\(.*\)/s//\1'\2'/p"`
 
   # Derive the number of arguments from the argument signature
   case $args in
@@ -63,7 +64,7 @@ eval `{ echo "#include <sysdep.h>";
   # Make sure only the first syscall rule is used, if multiple dirs
   # define the same syscall.
  echo "#### CALL=$file NUMBER=$callnum ARGS=$args SOURCE=$srcfile"
- case x$srcfile$callnum in
+ case x$srcfile"$callnum" in
  x*-) ;; ### Do nothing for undefined callnum
  x-*)
   echo "ifeq (,\$(filter $file,\$(unix-syscalls)))"
@@ -151,8 +152,9 @@ shared-only-routines += $file
  ;;
  esac
 
-  case x$callnum,$srcfile,$args in
-  x[0-9]*,-,*[sp]* | x*,*.[sS],*[sp]*)
+  case x"$callnum",$srcfile,$args in
+  x-,-,*) ;;
+  x*,-,*[sp]* | x*,*.[sS],*[sp]*)
     echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
     echo "bp-thunks += $file";
     echo "\

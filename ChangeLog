@@ -1,3 +1,9 @@
+2000-06-15  Greg McGary  <greg@mcgary.org>
+
+	* sysdeps/unix/make-syscalls.sh: Strip leading whitespace from lhs
+	of callnum assignment.  Tolerate callnum expressions containing
+	parens.
+
 2000-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* login/Makefile (utmpd): Remove rule to build utmpd.
