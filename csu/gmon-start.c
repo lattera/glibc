@@ -71,11 +71,7 @@ __gmon_start__ (void)
 #endif
 
   /* Start keeping profiling records.  */
-#ifdef ENTRY_POINT_DECL
-  __monstartup ((u_long) ENTRY_POINT, (u_long) &etext);
-#else
   __monstartup ((u_long) TEXT_START, (u_long) &etext);
-#endif
 
   /* Call _mcleanup before exiting; it will write out gmon.out from the
      collected data.  */

@@ -1,9 +1,12 @@
-2002-11-21  Roland McGrath  <roland@frob.com>
+2002-11-20  Steven Munroe  <sjmunroe@us.ibm.com>
 
-	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Set
-	__libc_multiple_libcs here.  Call __setfpucw.
+	* csu/gmon-start.c (__gmon_start__): Always use TEXT_START macro to
+	obtain lowest address for profiling in __monstartup call.
 
 2002-11-21  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ia64/fpu/Makefile (libm-sysdep_routines): Remove redunant
+	$(calls) $(calls:=f) $(long-c-$(long-double-fcts)).
 
 	* locale/localeinfo.h (struct locale_data): Revert last change.
 
@@ -14,6 +17,11 @@
 	__NR_pread64 if not defined.
 	(__NR_pwrite): Define to __NR_pwrite64 if not defined.
 	From Ian Wienand <ianw@gelato.unsw.edu.au>.
+
+2002-11-21  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (posixland_init): Set
+	__libc_multiple_libcs here.  Call __setfpucw.
 
 2002-11-21  Ulrich Drepper  <drepper@redhat.com>
 
