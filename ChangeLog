@@ -1,5 +1,17 @@
 Mon Mar 20 03:19:23 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* Makerules (lib): Depend on lib-noranlib.
+	(lib-noranlib): Depend on $(install-lib) in objdir.
+	(common-mostlyclean): Remove $(install-lib) and stub-$(subdir)
+	from objdir.  Don't remove TAGS; it comes in the distribution.
+
+	* malloc/malloc.c (morecore): Save errno around call to
+ 	_realloc_internal.  Don't account for the additional new blocks of
+ 	the info table itself when choosing the new table size for the
+ 	first crack; if it succeeds, the new blocks will have been found
+ 	in existing free space already described by the existing info
+ 	table.
+
 	* stdio/vfscanf.c (%n): Use READ_IN - 1, so as not to count the
  	read-ahead character.
 
@@ -204,6 +216,7 @@ Sun Mar 12 18:21:10 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* malloc/malloc.c (_malloc_internal): Renamed from malloc;
 	don't use __malloc_hook.
 	(malloc): New function; call __malloc_hook ?: _malloc_internal.
+	Changes from Germano Caronni <caronni@tik.ethz.ch>:
 	(initialize): Set up _heaplimit to cover the _heapinfo table.
 	(morecore_recursing): New static variable.
 	(morecore): If that is set, return null immediately.
@@ -417,6 +430,7 @@ Mon Feb 27 07:00:57 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 Sun Feb 26 15:51:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	Changes from Germano Caronni <caronni@tik.ethz.ch>:
 	* malloc/malloc.c (morecore): Account in NEWSIZE for the
  	malloc_info structures for each new block.
 

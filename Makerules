@@ -331,7 +331,7 @@ ARFLAGS := r$(verbose)
 # This makes all the object files in the parent library archive.
 
 .PHONY: lib libobjs lib-noranlib
-lib: $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
+lib: lib-noranlib $(foreach l,$(libtypes),$(patsubst %,$(common-objpfx)$l,c))
 
 # Pattern rule for libraries: depend on the __.SYMDEF member updated by ranlib.
 lib%.a: lib%.a(__.SYMDEF) ;
@@ -347,7 +347,7 @@ endif
 libobjs: $(foreach o,$(object-suffixes),\
 		   $(common-objpfx)$(patsubst %,$(libtype$o),c)(\
 		   $(notdir $(objects:.o=$o))))
-lib-noranlib: libobjs
+lib-noranlib: libobjs $(addprefix $(objpfx),$(install-lib))
 
 ifdef objects
 
@@ -561,8 +561,8 @@ common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(others) \
 				     $(addsuffix .o,$(tests) $(others)) \
 				     $(addsuffix .out,$(tests)))
-	-rm -f $(addprefix $(objpfx),$(extra-objs))
-	-rm -f core TAGS
+	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib))
+	-rm -f core $(objpfx)stub-$(subdir)
 	$(rmobjs)
 define rmobjs
 $(foreach o,$(object-suffixes),
