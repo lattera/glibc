@@ -1,3 +1,10 @@
+Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* rpm/template (Source): New field.
+	(%prep, %build, %install): New sections.
+	(%files): Add %doc FAQ NEWS NOTES README.
+	* rpm/rpmrc (builddir): Removed.
+
 Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Fix mapping and l_phdr

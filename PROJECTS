@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: May 1996
+Status: June 1996
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -63,6 +63,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      The libm is in fact fdlibm (not the same as in Linux libc).
 
+**** Partly done.
+
 
 [ 7] If you enjoy assembler programming (as I do --drepper :-) you might
      be interested in writing optimized versions for some functions.
@@ -80,6 +82,8 @@ contact <bug-glibc@prep.ai.mit.edu>
 [ 8] Write nftw() function.  Perhaps it might be good to reimplement the
      ftw() function as well to share most of the code.
 
+**** Almost done!
+
 
 [ 9] Write AVL-tree based tsearch() et.al. functions.  Currently only
      a very simple algorithm is used.
@@ -96,3 +100,14 @@ contact <bug-glibc@prep.ai.mit.edu>
      b) is without mmap support at least as fast as the current
 	implementation
      c) will be extended with the current hooks and additional functions
+
+
+[12] Implement shadow password handling.  There exist some but I don't
+     know of any falling under LGPL and where the author is willing to
+     contribute it to the FSF.
+
+
+[13] Write access function for group, ether, shadow, rpc, netmasks,
+     bootparams, netgroup, publickey, automount, aliases databases.
+     The functions should be embedded in the nss scheme.  This is not
+     hard and not all services must be supported at once.

@@ -4,5 +4,21 @@ Group: Development/Libraries/Libc
 Version: @VERSION@
 Release: 1
 Copyright: LGPL, GPL
+Source: glibc-@VERSION@.tar.gz
+
+%prep
+%setup
+
+%build
+configure --prefix=/usr
+cat >configparms <<EOF
+slibdir=/lib
+sysconfdir=/etc
+EOF
+make
+
+%install
+make install
 
 %files
+%doc FAQ NEWS NOTES README
