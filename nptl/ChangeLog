@@ -1,3 +1,14 @@
+2004-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Add rules to build tst-rwlock14.
+	* tst-rwlock14.c: New file.
+
+2004-06-24  Boris Hu  <boris.hu@intel.com>
+
+	* sysdeps/pthread/pthread_rwlock_timedrdlock.c: Add timeout validation
+	check.
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.c: Likewise.
+
 2004-06-19  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Fix

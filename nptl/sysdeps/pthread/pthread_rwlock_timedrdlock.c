@@ -70,7 +70,8 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 	 performed if we would not block at all simply moving the test
 	 to the front is no option.  Replicating all the code is
 	 costly while this test is not.  */
-      if (__builtin_expect (abstime->tv_nsec >= 1000000000, 0))
+      if (__builtin_expect (abstime->tv_nsec >= 1000000000
+                            || abstime->tv_sec < 0, 0))
 	{
 	  result = EINVAL;
 	  break;
