@@ -203,6 +203,13 @@ if test "x$hidden" = xno; then
   AC_DEFINE(NO_HIDDEN)
 fi
 
+AC_ARG_ENABLE([bind-now],
+	      AC_HELP_STRING([--enable-bind-now],
+			     [disable lazy relocations in DSOs]),
+	      [bindnow=$enableval],
+	      [bindnow=no])
+AC_SUBST(bindnow)
+
 AC_CONFIG_SUBDIRS([ ])dnl Bonehead new Autoconf whines if we do it cleanly.
 add_ons_pfx=
 if test x"$add_ons" != x; then

@@ -1,5 +1,12 @@
 2004-03-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: Recognize --enable-bind-now.
+	* elf/dynamic-link.h (elf_get_dynamic_info): Allow bind-now flags
+	in ld.so.
+	* Makerules (LDFLAGS-c.so): Add -z now if so configured.
+	* elf/Makefile ($(objpfx)ld.so): Likewise.
+	* config.make.in (bind-now): New definition.
+
 	* elf/dl-fini.c (_dl_fini): Combine _dl_debug_printf calls.
 	* elf/rtld.c (print_statistics): Likewise.
 

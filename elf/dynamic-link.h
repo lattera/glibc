@@ -159,10 +159,12 @@ elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
     assert (info[DT_RELENT]->d_un.d_val == sizeof (ElfW(Rel)));
 #endif
 #ifdef RTLD_BOOTSTRAP
+  /* Only the bind now flags are allowed.  */
+  assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL
+	  || info[VERSYMIDX (DT_FLAGS_1)]->d_un.d_val == DF_1_NOW);
+  assert (info[DT_FLAGS] == NULL
+	  || info[DT_FLAGS]->d_un.d_val == DF_BIND_NOW);
   /* Flags must not be set for ld.so.  */
-  assert (info[DT_FLAGS] == NULL);
-  assert (info[VERSYMIDX (DT_FLAGS_1)] == NULL);
-  /* The dynamic linker should have none of these set.  */
   assert (info[DT_RUNPATH] == NULL);
   assert (info[DT_RPATH] == NULL);
 #else

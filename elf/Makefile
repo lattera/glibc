@@ -1,4 +1,4 @@
-# Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+# Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -256,16 +256,18 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(objpfx)rtld-libc.a
 
 generated += librtld.map librtld.mk rtld-libc.a librtld.os.map
 
+z-now-yes = -Wl,-z,now
+
 $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	@rm -f $@.lds
-	$(LINK.o) -nostdlib -nostartfiles -shared			\
+	$(LINK.o) -nostdlib -nostartfiles -shared $(z-now-$(bind-now))	\
 		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
 		  LC_ALL=C \
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
 		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
 		  > $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared -o $@			\
-		  $(LDFLAGS-rtld) -Wl,-z,defs				\
+		  $(LDFLAGS-rtld) -Wl,-z,defs $(z-now-$(bind-now))	\
 		  $(filter-out $(map-file),$^) $(load-map-file)		\
 		  -Wl,-soname=$(rtld-installed-name) -T $@.lds
 	rm -f $@.lds
