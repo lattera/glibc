@@ -1,3 +1,8 @@
+2004-06-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Update for GCC 3.4.
+	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
+
 2004-06-11  Dwayne Grant McConnell  <dgm69@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/s_lround.c: Removed.

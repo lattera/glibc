@@ -287,6 +287,9 @@ double: 1
 idouble: 1
 
 # erfc
+Test "erfc (0.75) == 0.288844366346484868401062165408589223":
+float: 1
+ifloat: 1
 Test "erfc (2.0) == 0.00467773498104726583793074363274707139":
 double: 1
 idouble: 1
@@ -534,8 +537,13 @@ float: 1
 idouble: 2
 ifloat: 1
 Test "y0 (10.0) == 0.0556711672835993914244598774101900481":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+Test "y0 (2.0) == 0.510375672649745119596606592727157873":
+double: 1
+idouble: 1
 Test "y0 (8.0) == 0.223521489387566220527323400498620359":
 double: 1
 float: 1
@@ -547,7 +555,9 @@ Test "y1 (0.125) == -5.19993611253477499595928744876579921":
 double: 1
 idouble: 1
 Test "y1 (1.5) == -0.412308626973911295952829820633445323":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "y1 (10.0) == 0.249015424206953883923283474663222803":
 double: 3
@@ -577,8 +587,13 @@ float: 1
 idouble: 2
 ifloat: 1
 Test "yn (0, 10.0) == 0.0556711672835993914244598774101900481":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
+Test "yn (0, 2.0) == 0.510375672649745119596606592727157873":
+double: 1
+idouble: 1
 Test "yn (0, 8.0) == 0.223521489387566220527323400498620359":
 double: 1
 float: 1
@@ -588,7 +603,9 @@ Test "yn (1, 0.125) == -5.19993611253477499595928744876579921":
 double: 1
 idouble: 1
 Test "yn (1, 1.5) == -0.412308626973911295952829820633445323":
+double: 1
 float: 1
+idouble: 1
 ifloat: 1
 Test "yn (1, 10.0) == 0.249015424206953883923283474663222803":
 double: 3
@@ -610,20 +627,24 @@ double: 1
 idouble: 1
 Test "yn (10, 0.75) == -2133501638.90573424452445412893839236":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 Test "yn (10, 1.0) == -121618014.278689189288130426667971145":
 double: 1
+float: 2
 idouble: 1
+ifloat: 2
 Test "yn (10, 10.0) == -0.359814152183402722051986577343560609":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 Test "yn (10, 2.0) == -129184.542208039282635913145923304214":
-double: 2
-idouble: 2
+double: 3
+float: 1
+idouble: 3
+ifloat: 1
 Test "yn (3, 0.125) == -2612.69757350066712600220955744091741":
 double: 1
 idouble: 1
@@ -804,7 +825,9 @@ idouble: 1
 
 Function: "erfc":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 
 Function: "exp10":
 double: 6

@@ -609,9 +609,9 @@ ildouble: 1
 ldouble: 1
 Test "jn (3, 10.0) == 0.0583793793051868123429354784103409563":
 double: 1
-float: 1
+float: 2
 idouble: 1
-ifloat: 1
+ifloat: 2
 ildouble: 1
 ldouble: 1
 Test "jn (3, 2.0) == 0.128943249474402051098793332969239835":
