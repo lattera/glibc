@@ -1,5 +1,14 @@
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* configure.in (--with-fp): Note in help string that it's the default.
+
+	* locale/programs/ld-ctype.c (struct locale_ctype_t): Use u_int32_t
+	instead of unsigned int for map_collection_max and map_collection_act.
+
+	* stdio-common/vfprintf.c [USE_IN_LIBIO] (flockfile, funlockfile):
+	Macros removed; they are in <stdio.h>.
+	* stdio-common/vfscanf.c: Likewise.
+
 	* posix/glob.c [_AMIGA]: Don't include <pwd.h>.
 	(glob): Remove bogus & in call to globfree.
 	[_AMIGA]: Use AmigaDOS file name conventions.
@@ -7,7 +16,7 @@ Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 	* time/Makefile (zonenames): Target removed.
 	(extra-objs): Remove it from here.
 	Include the z.* files directly instead of including zonenames; use
-	`-include' to not complain befre they exist.
+	`-include' to not complain before they exist.
 
 	* sysdeps/unix/Makefile: Find sysd-syscalls and s-proto.d with
 	$(common-objpfx) instead of $(objpfx).

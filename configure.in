@@ -34,7 +34,7 @@ esac
 
 dnl Arguments to specify presence of other packages/features.
 AC_ARG_WITH(fp, dnl
-  --with-fp		  if using floating-point hardware,
+  --with-fp		  if using floating-point hardware [default=yes],
 	    with_fp=$withval, with_fp=yes)
 AC_ARG_WITH(gnu-binutils, dnl
   --with-gnu-binutils	  if using GNU binutils (as and ld),

@@ -102,8 +102,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
-# define flockfile(S) _IO_flockfile (S)
-# define funlockfile(S) _IO_funlockfile (S)
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>

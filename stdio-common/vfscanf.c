@@ -81,8 +81,6 @@ Cambridge, MA 02139, USA.  */
          return EOF;							      \
        }								      \
     } while (0)
-# define flockfile(S) _IO_flockfile (S)
-# define funlockfile(S) _IO_funlockfile (S)
 #else
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
 # define conv_error()	do {						      \

@@ -89,17 +89,17 @@ envz_remove (char **envz, size_t *envz_len, const char *name)
    because when merging with another envz, the null entry can override an
    entry in the other one.  Null entries can be removed with envz_strip ().  */
 error_t
-envz_add (char **envz, unsigned *envz_len, const char *name, const char *value)
+envz_add (char **envz, size_t *envz_len, const char *name, const char *value)
 {
   envz_remove (envz, envz_len, name);
 
   if (value)
     /* Add the new value, if there is one.  */
     {
-      unsigned name_len = strlen (name);
-      unsigned value_len = strlen (value);
-      unsigned old_envz_len = *envz_len;
-      unsigned new_envz_len = old_envz_len + name_len + 1 + value_len + 1;
+      size_t name_len = strlen (name);
+      size_t value_len = strlen (value);
+      size_t old_envz_len = *envz_len;
+      size_t new_envz_len = old_envz_len + name_len + 1 + value_len + 1;
       char *new_envz = realloc (*envz, new_envz_len);
 
       if (new_envz)
@@ -126,7 +126,7 @@ envz_add (char **envz, unsigned *envz_len, const char *name, const char *value)
    OVERRIDE is true, then values in ENVZ2 will supercede those with the same
    name in ENV, otherwise not.  */
 error_t
-envz_merge (char **envz, unsigned *envz_len, const char *envz2,
+envz_merge (char **envz, size_t *envz_len, const char *envz2,
 	    size_t envz2_len, int override)
 {
   error_t err = 0;
@@ -153,13 +153,13 @@ envz_merge (char **envz, unsigned *envz_len, const char *envz2,
 
 /* Remove null entries.  */
 void
-envz_strip (char **envz, unsigned *envz_len)
+envz_strip (char **envz, size_t *envz_len)
 {
   char *entry = *envz;
-  unsigned left = *envz_len;
+  size_t left = *envz_len;
   while (left)
     {
-      unsigned entry_len = strlen (entry) + 1;
+      size_t entry_len = strlen (entry) + 1;
       left -= entry_len;
       if (! index (entry, SEP))
 	/* Null entry. */
