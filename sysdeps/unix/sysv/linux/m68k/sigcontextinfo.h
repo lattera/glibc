@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>, 1998.
 
@@ -22,3 +22,5 @@
 #define GET_PC(ctx)	((void *) (ctx)->sc_pc)
 #define GET_FRAME(ctx)	((void *) __builtin_frame_address (1))
 #define GET_STACK(ctx)	((void *) (ctx)->sc_usp)
+#define CALL_SIGHANDLER(handler, signo, ctx) \
+  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))

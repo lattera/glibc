@@ -31,3 +31,5 @@
 			 ctx.v20.reg.ARM_sp : ctx.v21.arm_sp))
 #define ADVANCE_STACK_FRAME(frm)	\
 			((struct layout *)frm - 1)
+#define CALL_SIGHANDLER(handler, signo, ctx) \
+  (handler)((signo), SIGCONTEXT_EXTRA_ARGS (ctx))
