@@ -504,12 +504,24 @@ include/linux/version.h}.  Finally, configure glibc with the option
 kernel you can get your hands on.
 
 An alternate tactic is to unpack the 2.2 kernel and run @samp{make
-config} as above; then, rename or delete @file{/usr/include}, create
-a new @file{/usr/include}, and make the usual symbolic links of
-@file{/usr/include/linux} and @file{/usr/include/asm} into the 2.2
-kernel sources.  You can then configure glibc with no special options.
-This tactic is recommended if you are upgrading from libc5, since you
-need to get rid of the old header files anyway.
+config} as above; then, rename or delete @file{/usr/include}, create a
+new @file{/usr/include}, and make symbolic links of
+@file{/usr/include/linux} and @file{/usr/include/asm} into the kernel
+sources.  You can then configure glibc with no special options.  This
+tactic is recommended if you are upgrading from libc5, since you need to
+get rid of the old header files anyway.
+
+After installing GNU libc, you may need to remove or rename
+@file{/usr/include/linux} and @file{/usr/include/asm}, and replace them
+with copies of @file{include/linux} and
+@file{include/asm-$@var{ARCHITECTURE}} taken from the Linux source
+package which supplied kernel headers for building the library.
+@var{ARCHITECTURE} will be the machine architecture for which the
+library was built, such as @samp{i386} or @samp{alpha}.  You do not need
+to do this if you did not specify an alternate kernel header source
+using @samp{--with-headers}.  The intent here is that these directories
+should be copies of, @strong{not} symlinks to, the kernel headers used to
+build the library.
 
 Note that @file{/usr/include/net} and @file{/usr/include/scsi} should
 @strong{not} be symlinks into the kernel sources.  GNU libc provides its

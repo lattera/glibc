@@ -1,5 +1,9 @@
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sem_open.c (sem_open): Return SEM_FAILED if existing semaphore
+	must be used and mapping failed.
+	Reported by Luke Elliott <luke.elliott@activfinancial.com>.
+
 	* Makefile (CFLAGS-pthread_self.os): Define this, not
 	CFLAGS-pthread_self.c.
 

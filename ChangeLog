@@ -1,3 +1,8 @@
+2003-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/install.texi: Correct description of header preparation for
+	Linux build.  Patch by mhwood@Ameritech.Net [PR libc/4941].
+
 2003-01-14  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/sysdep.h (INTERNAL_SYSCALL,
