@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,9 @@
 
 	.text
 ENTRY(__socket)
+	cfi_startproc
 	stwu r1,-48(r1)
+	cfi_adjust_cfa_offset(48)
 #if NARGS >= 1
 	stw  r3,stackblock(r1)
 #endif
@@ -91,6 +93,7 @@ ENTRY(__socket)
 .Lsocket_cancel:
 	mflr	r9
 	stw	r9,52(r1)
+	cfi_offset (lr, 4)
 	CENABLE
 	stw	r3,16(r1)
 	li	r3,P(SOCKOP_,socket)
@@ -109,6 +112,7 @@ ENTRY(__socket)
 	addi	r1,r1,48
 	PSEUDO_RET
 #endif
+	cfi_endproc
 
 PSEUDO_END (__socket)
 

@@ -47,12 +47,24 @@
 
 .globl __socket
 ENTRY(__socket)
+	cfi_startproc
 
 	/* Save registers and setup stack.  */
 	stm     %r6,%r15,24(%r15)       /* save registers */
+	cfi_offset (%r15, -36)
+	cfi_offset (%r14, -40)
+	cfi_offset (%r13, -44)
+	cfi_offset (%r12, -48)
+	cfi_offset (%r11, -52)
+	cfi_offset (%r10, -56)
+	cfi_offset (%r9, -60)
+	cfi_offset (%r8, -64)
+	cfi_offset (%r7, -68)
+	cfi_offset (%r6, -72)
 	lr      %r1,%r15
 	l       %r0,4(0,%r15)           /* load eos */
 	ahi     %r15,-120               /* buy stack space */
+	cfi_adjust_cfa_offset (120)
 	st      %r1,0(0,%r15)           /* store back chain */
 	st      %r0,4(0,%r15)           /* store eos */
 
@@ -124,6 +136,7 @@ L(socket_cancel):
 2:	.long	CENABLE-1b
 3:	.long	CDISABLE-1b
 #endif
+	cfi_endproc
 
 	SYSCALL_ERROR_HANDLER
 END (__socket)
