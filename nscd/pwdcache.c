@@ -112,7 +112,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       /* Now get the lock to safely insert the records.  */
       pthread_rwlock_rdlock (&db->lock);
 
-      cache_add (req->type, copy, req->key_len, &iov_notfound,
+      cache_add (req->type, copy, req->key_len, &notfound,
 		 sizeof (notfound), (void *) -1, 0, t, db, owner);
 
       pthread_rwlock_unlock (&db->lock);

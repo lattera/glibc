@@ -1,3 +1,9 @@
+1999-06-24  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nscd/grpcache.c: Add "notfound" data to cache, not iov pointer.
+	* nscd/pwdcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+
 1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/fpu_control.c: Include math.h for __P definition.
