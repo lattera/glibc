@@ -77,12 +77,13 @@ main (void)
   int errors = 0;
   int i;
   struct tm *tm;
-  
+
   setenv ("TZ", "Universal", 1);
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
       tm = getdate (tests[i].str);
+
       if (getdate_err != tests[i].err)
 	{
 	  printf ("Failure for getdate (\"%s\"):\n", tests[i].str);
@@ -108,9 +109,8 @@ main (void)
 		  tests[i].tm.tm_hour, tests[i].tm.tm_min, tests[i].tm.tm_sec);
 	  ++errors;
 	}
-      
-	       
     }
+
   if (!errors)
     printf ("No errors found.\n");
   return errors != 0;
