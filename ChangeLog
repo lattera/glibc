@@ -1,5 +1,8 @@
 2000-03-29  Andreas Jaeger  <aj@suse.de>
 
+	* manual/creature.texi (Feature Test Macros): Fix typo, reported
+	by Michael Deutschmann <michael@talamasca.ocis.net>.
+
 	* sysdeps/mips/fpu/fclrexcpt.c: Use shlib-compat macros.
 	* sysdeps/mips/fpu/fegetenv.c: Likewise.
 	* sysdeps/mips/fpu/fesetenv.c: Likewise.

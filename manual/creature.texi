@@ -162,7 +162,7 @@ vs. @code{off64_t} and @code{fseeko} vs. @code{fseeko64}.
 
 This macro was introduced as part of the Large File Support extension
 (LFS).  It is a transition interface for the time @w{64 bit} offsets are
-not generally used (see @code{_FILE_OFFSET_BITS}.
+not generally used (see @code{_FILE_OFFSET_BITS}).
 @end defvr
 
 @comment (NONE)
