@@ -1,5 +1,5 @@
 /* Find network interface names and index numbers.  Hurd version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,143 +17,165 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <error.h>
 #include <net/if.h>
-#include <hurd.h>
-#include <hurd/fsys.h>
 #include <string.h>
-#include <sys/mman.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
-static int
-map_interfaces (int domain,
-		unsigned int *idxp,
-		int (*counted_initializer) (unsigned int count,
-					    size_t nameslen),
-		int (*iterator) (const char *))
-{
-  static const char ifopt[] = "--interface=";
-  file_t server;
-  char optsbuf[512], *opts = optsbuf, *p;
-  size_t optslen = sizeof optsbuf;
-  error_t err;
+#include <hurd.h>
+#include <hurd/ioctl.h>
+#include <hurd/pfinet.h>
 
-  /* Find the socket server for DOMAIN.  */
-  server = _hurd_socket_server (domain, 0);
-  if (server == MACH_PORT_NULL)
-    return 0;
-
-  err = __file_get_fs_options (server, &opts, &optslen);
-  if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
-    {
-      /* On the first use of the socket server during the operation,
-	 allow for the old server port dying.  */
-      server = _hurd_socket_server (domain, 1);
-      if (server == MACH_PORT_NULL)
-	return -1;
-      err = __file_get_fs_options (server, &opts, &optslen);
-    }
-  if (err)
-    return __hurd_fail (err), 0;
-
-  if (counted_initializer)
-    {
-      unsigned int count = 0;
-      size_t nameslen = 0;
-      p = memchr (opts, '\0', optslen);
-      while (p != 0)
-	{
-	  char *end = memchr (p + 1, '\0', optslen - (p - opts));
-	  if (end == 0)
-	    break;
-	  if (optslen - (p - opts) >= sizeof ifopt
-	      && !memcmp (p + 1, ifopt, sizeof ifopt - 1))
-	    {
-	      size_t len = end + 1 - (p + sizeof ifopt);
-	      nameslen += len > IFNAMSIZ+1 ? IFNAMSIZ+1 : len;
-	      ++count;
-	    }
-	  p = end;
-	}
-
-      if ((*counted_initializer) (count, nameslen))
-	return 0;
-    }
-
-  *idxp = 0;
-  for (p = memchr (opts, '\0', optslen); p != 0;
-       p = memchr (p + 1, '\0', optslen - (p - opts)))
-    {
-      ++*idxp;
-      if (optslen - (p - opts) >= sizeof ifopt
-	  && !memcmp (p + 1, ifopt, sizeof ifopt - 1)
-	  && (*iterator) (p + sizeof ifopt))
-	break;
-    }
-
-  if (opts != optsbuf)
-    __munmap (opts, optslen);
-
-  return 1;
-}
-
+/* Return the interface index corresponding to interface IFNAME.
+   On error, return 0.  */
 unsigned int
 if_nametoindex (const char *ifname)
 {
-  unsigned int idx;
-  int find_name (const char *name)
-    {
-      return !strcmp (name, ifname);
-    }
-  return map_interfaces (PF_INET, &idx, 0, &find_name) ? idx : 0;
-}
+  struct ifreq ifr;
+  int fd = __opensock ();
 
-char *
-if_indextoname (unsigned int ifindex, char *ifname)
-{
-  unsigned int idx;
-  int find_idx (const char *name)
+  if (fd < 0)
+    return 0;
+
+  strncpy (ifr.ifr_name, ifname, IFNAMSIZ);
+  if (__ioctl (fd, SIOCGIFINDEX, &ifr) < 0)
     {
-      if (idx == ifindex)
-	{
-	  strncpy (ifname, name, IFNAMSIZ);
-	  return 1;
-	}
+      int saved_errno = errno;
+      __close (fd);
+      if (saved_errno == EINVAL || saved_errno == ENOTTY)
+        __set_errno (ENOSYS);
       return 0;
     }
-  return map_interfaces (PF_INET, &idx, 0, &find_idx) ? ifname : NULL;
+  __close (fd);
+  return ifr.ifr_ifindex;
 }
 
-
-struct if_nameindex *
-if_nameindex (void)
-{
-  unsigned int idx;
-  struct if_nameindex *buf;
-  char *namep;
-  int alloc (unsigned int count, size_t nameslen)
-    {
-      buf = malloc ((sizeof buf[0] * (count + 1)) + nameslen);
-      if (buf == 0)
-	return 1;
-      buf[count].if_index = 0;
-      buf[count].if_name = NULL;
-      namep = (char *) &buf[count + 1];
-      return 0;
-    }
-  int fill (const char *name)
-    {
-      buf[idx - 1].if_index = idx;
-      buf[idx - 1].if_name = namep;
-      namep = __memccpy (namep, name, '\0', IFNAMSIZ+1) ?: &namep[IFNAMSIZ+1];
-      return 0;
-    }
-
-  return map_interfaces (PF_INET, &idx, &alloc, &fill) ? buf : NULL;
-}
-
+/* Free the structure IFN returned by if_nameindex.  */
 void
 if_freenameindex (struct if_nameindex *ifn)
 {
+  struct if_nameindex *ptr = ifn;
+  while (ptr->if_name || ptr->if_index)
+    {
+      if (ptr->if_name)
+        free (ptr->if_name);
+      ++ptr;
+    }
   free (ifn);
+}
+
+/* Return an array of if_nameindex structures, one for each network
+   interface present, plus one indicating the end of the array.  On
+   error, return NULL.  */
+struct if_nameindex *
+if_nameindex (void)
+{
+  error_t err = 0;
+  char data[2048];
+  file_t server;
+  int fd = __opensock ();
+  struct ifconf ifc;
+  unsigned int nifs, i;
+  struct if_nameindex *idx = NULL;
+
+  ifc.ifc_buf = data;
+  ifc.ifc_len = sizeof (data);
+
+  if (fd < 0)
+    return NULL;
+
+  server = _hurd_socket_server (PF_INET, 0);
+  if (server == MACH_PORT_NULL)
+    nifs = 0;
+  else
+    {
+      err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf,
+				  &ifc.ifc_len);
+      if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
+	{
+	  /* On the first use of the socket server during the operation,
+	     allow for the old server port dying.  */
+	  server = _hurd_socket_server (PF_INET, 1);
+	  if (server == MACH_PORT_NULL)
+	    goto out;
+	  err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf,
+				      &ifc.ifc_len);
+	}
+      if (err)
+	goto out;
+
+      nifs = ifc.ifc_len / sizeof (struct ifreq);
+    }
+
+  idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));
+  if (idx == NULL)
+    {
+      err = ENOBUFS;
+      goto out;
+    }
+
+  for (i = 0; i < nifs; ++i)
+    {
+      struct ifreq *ifr = &ifc.ifc_req[i];
+      idx[i].if_name = __strdup (ifr->ifr_name);
+      if (idx[i].if_name == NULL
+          || __ioctl (fd, SIOCGIFINDEX, ifr) < 0)
+        {
+          unsigned int j;
+          err = errno;
+
+          for (j =  0; j < i; ++j)
+            free (idx[j].if_name);
+          free (idx);
+	  idx = NULL;
+
+          if (err == EINVAL)
+            err = ENOSYS;
+          else if (err == ENOMEM)
+            err = ENOBUFS;
+          goto out;
+        }
+      idx[i].if_index = ifr->ifr_ifindex;
+    }
+
+  idx[i].if_index = 0;
+  idx[i].if_name = NULL;
+
+ out:
+  __close (fd);
+  if (data != ifc.ifc_buf)
+    __vm_deallocate (__mach_task_self (), (vm_address_t) ifc.ifc_buf,
+		     ifc.ifc_len);
+  __set_errno (err);
+  return idx;
+}
+
+/* Store the name of the interface corresponding to index IFINDEX in
+   IFNAME (which has space for at least IFNAMSIZ characters).  Return
+   IFNAME, or NULL on error.  */
+char *
+if_indextoname (unsigned int ifindex, char *ifname)
+{
+  struct ifreq ifr;
+  int fd = __opensock ();
+
+  if (fd < 0)
+    return NULL;
+
+  ifr.ifr_ifindex = ifindex;
+  if (__ioctl (fd, SIOCGIFNAME, &ifr) < 0)
+    {
+      int saved_errno = errno;
+      __close (fd);
+      if (saved_errno == EINVAL || saved_errno == ENOTTY)
+        __set_errno (ENOSYS);
+      else if (saved_errno == ENODEV)
+	__set_errno (ENXIO);
+      return NULL;
+    }
+  __close (fd);
+  return strncpy (ifname, ifr.ifr_name, IFNAMSIZ);
 }
 
 #if 0

@@ -1,3 +1,19 @@
+2001-07-01  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/if_index.c: Redone to use new interfaces in
+	the Hurd pfinet server, using equivalent code from the Linux
+	version in sysdeps/unix/sysv/linux/if_index.c. In detail:
+	Include <unistd.h>, <error.h>, <sys/ioctl.h>, <hurd/ioctl.h> and
+	<hurd/pfinet.h>.  Don't include <sys/mman.h> and <hurd/fsys.h>
+	anymore.
+	(if_nametoindex): New implementation using SIOCGIFINDEX.
+	(if_freenameindex): Straight copy of the Linux version.
+	(if_nameindex): New implementation based on pfinet_siocgifconf and
+	SIOCGIFINDEX.
+	(if_indextoname): New implementation using SIOCGIFNAME.
+	(map_interfaces): Function removed.
+	From Marcus Brinkmann <marcus@gnu.org>.
+
 2001-06-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/dl-machine.c (__elf_preferred_address): Prefer
