@@ -1,5 +1,10 @@
 2000-09-23  Bruno Haible  <haible@clisp.cons.org>
 
+	* charmaps/GBK: Add commented mappings for GBK characters not yet in
+	Unicode.
+
+2000-09-23  Bruno Haible  <haible@clisp.cons.org>
+
 	* charmaps/GBK: Remove /x80 entry.
 
 2000-09-25  Ulrich Drepper  <drepper@redhat.com>

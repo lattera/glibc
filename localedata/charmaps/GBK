@@ -6898,8 +6898,10 @@ CHARMAP
 <U00FC>     /xa8/xb9     LATIN SMALL LETTER U WITH DIAERESIS
 <U00EA>     /xa8/xba     LATIN SMALL LETTER E WITH CIRCUMFLEX
 <U0251>     /xa8/xbb     LATIN SMALL LETTER ALPHA
+% <UE7C7>     /xa8/xbc
 <U0144>     /xa8/xbd     LATIN SMALL LETTER N WITH ACUTE
 <U0148>     /xa8/xbe     LATIN SMALL LETTER N WITH CARON
+% <UE7C8>     /xa8/xbf
 <U0261>     /xa8/xc0     LATIN SMALL LETTER SCRIPT G
 <U3105>     /xa8/xc5     BOPOMOFO LETTER B
 <U3106>     /xa8/xc6     BOPOMOFO LETTER P
@@ -7005,6 +7007,19 @@ CHARMAP
 <UFE69>     /xa9/x86     SMALL DOLLAR SIGN
 <UFE6A>     /xa9/x87     SMALL PERCENT SIGN
 <UFE6B>     /xa9/x88     SMALL COMMERCIAL AT
+% <UE7E7>     /xa9/x89
+% <UE7E8>     /xa9/x8a
+% <UE7E9>     /xa9/x8b
+% <UE7EA>     /xa9/x8c
+% <UE7EB>     /xa9/x8d
+% <UE7EC>     /xa9/x8e
+% <UE7ED>     /xa9/x8f
+% <UE7EE>     /xa9/x90
+% <UE7EF>     /xa9/x91
+% <UE7F0>     /xa9/x92
+% <UE7F1>     /xa9/x93
+% <UE7F2>     /xa9/x94
+% <UE7F3>     /xa9/x95
 <U3007>     /xa9/x96     IDEOGRAPHIC NUMBER ZERO
 <U2500>     /xa9/xa4     BOX DRAWINGS LIGHT HORIZONTAL
 <U2501>     /xa9/xa5     BOX DRAWINGS HEAVY HORIZONTAL
@@ -21925,6 +21940,86 @@ CHARMAP
 <UFA27>     /xfe/x4d     <CJK>
 <UFA28>     /xfe/x4e     <CJK>
 <UFA29>     /xfe/x4f     <CJK>
+% <UE815>     /xfe/x50
+% <UE816>     /xfe/x51
+% <UE817>     /xfe/x52
+% <UE818>     /xfe/x53
+% <UE819>     /xfe/x54
+% <UE81A>     /xfe/x55
+% <UE81B>     /xfe/x56
+% <UE81C>     /xfe/x57
+% <UE81D>     /xfe/x58
+% <UE81E>     /xfe/x59
+% <UE81F>     /xfe/x5a
+% <UE820>     /xfe/x5b
+% <UE821>     /xfe/x5c
+% <UE822>     /xfe/x5d
+% <UE823>     /xfe/x5e
+% <UE824>     /xfe/x5f
+% <UE825>     /xfe/x60
+% <UE826>     /xfe/x61
+% <UE827>     /xfe/x62
+% <UE828>     /xfe/x63
+% <UE829>     /xfe/x64
+% <UE82A>     /xfe/x65
+% <UE82B>     /xfe/x66
+% <UE82C>     /xfe/x67
+% <UE82D>     /xfe/x68
+% <UE82E>     /xfe/x69
+% <UE82F>     /xfe/x6a
+% <UE830>     /xfe/x6b
+% <UE831>     /xfe/x6c
+% <UE832>     /xfe/x6d
+% <UE833>     /xfe/x6e
+% <UE834>     /xfe/x6f
+% <UE835>     /xfe/x70
+% <UE836>     /xfe/x71
+% <UE837>     /xfe/x72
+% <UE838>     /xfe/x73
+% <UE839>     /xfe/x74
+% <UE83A>     /xfe/x75
+% <UE83B>     /xfe/x76
+% <UE83C>     /xfe/x77
+% <UE83D>     /xfe/x78
+% <UE83E>     /xfe/x79
+% <UE83F>     /xfe/x7a
+% <UE840>     /xfe/x7b
+% <UE841>     /xfe/x7c
+% <UE842>     /xfe/x7d
+% <UE843>     /xfe/x7e
+% <UE844>     /xfe/x80
+% <UE845>     /xfe/x81
+% <UE846>     /xfe/x82
+% <UE847>     /xfe/x83
+% <UE848>     /xfe/x84
+% <UE849>     /xfe/x85
+% <UE84A>     /xfe/x86
+% <UE84B>     /xfe/x87
+% <UE84C>     /xfe/x88
+% <UE84D>     /xfe/x89
+% <UE84E>     /xfe/x8a
+% <UE84F>     /xfe/x8b
+% <UE850>     /xfe/x8c
+% <UE851>     /xfe/x8d
+% <UE852>     /xfe/x8e
+% <UE853>     /xfe/x8f
+% <UE854>     /xfe/x90
+% <UE855>     /xfe/x91
+% <UE856>     /xfe/x92
+% <UE857>     /xfe/x93
+% <UE858>     /xfe/x94
+% <UE859>     /xfe/x95
+% <UE85A>     /xfe/x96
+% <UE85B>     /xfe/x97
+% <UE85C>     /xfe/x98
+% <UE85D>     /xfe/x99
+% <UE85E>     /xfe/x9a
+% <UE85F>     /xfe/x9b
+% <UE860>     /xfe/x9c
+% <UE861>     /xfe/x9d
+% <UE862>     /xfe/x9e
+% <UE863>     /xfe/x9f
+% <UE864>     /xfe/xa0
 END CHARMAP
 
 WIDTH

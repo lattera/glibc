@@ -65,9 +65,11 @@
 	   All these characters are not defined in GB2312.  Besides this      \
 	   there is an incomatibility in the mapping.  The Unicode tables     \
 	   say that 0xA1A4 maps in GB2312 to U30FB while in GBK it maps to    \
-	   U00B7.  Since we are free to do whatever we want if a mapping      \
-	   is not available we will not flag this as an error but instead     \
-	   map the two positions.  But this means that the mapping	      \
+	   U00B7.  Similarly, 0xA1AA maps in GB2312 to U2015 while in GBK     \
+	   it maps to U2014.  Since we are free to do whatever we want if     \
+	   a mapping is not available we will not flag this as an error	      \
+	   but instead map the two positions.  But this means that the	      \
+	   mapping							      \
 									      \
 		UCS4 -> GB2312 -> GBK -> UCS4				      \
 									      \
@@ -88,6 +90,10 @@
 	  }								      \
 									      \
 	ch = (ch << 8) | inptr[1];					      \
+									      \
+	/* Map 0xA844 (U2015 in GBK) to 0xA1AA (U2015 in GB2312).  */	      \
+	if (__builtin_expect (ch == 0xa844, 0))				      \
+	  ch = 0xa1aa;							      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
 	if (__builtin_expect (ch, 0xa1a1) < 0xa1a1			      \
@@ -123,8 +129,8 @@
 #define BODY \
   {									      \
     /* We don't have to care about characters we cannot map.  The only	      \
-       problem is the mapping of 0xA1A4 but as explained above we do not      \
-       do anything special here.  */					      \
+       problem are the mapping of 0xA1A4 and 0xA1AA but as explained above    \
+       we do not do anything special here.  */				      \
     unsigned char ch = *inptr++;					      \
 									      \
     if (ch > 0x7f)							      \
