@@ -1,5 +1,10 @@
 Wed Jun 26 13:19:35 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
+	* hurd/get-host.c <fcntl.h>: New include.
+	* hurd/set-host.c <fcntl.h>: New include.
+	(_hurd_set_host_config): Include NEW in args to dir_link.
+	Return NWROTE, not NREAD.
+
 	* sysdeps/mach/hurd/getcwd.c
 	(_hurd_canonicalize_directory_name_internal): Don't deallocate
 	DOTID & DOTDEVID until we're finished with them (we need to keep

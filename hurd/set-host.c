@@ -17,6 +17,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <fcntl.h>
 #include <hurd.h>
 #include "hurdhost.h"
 
@@ -39,10 +40,10 @@ _hurd_set_host_config (const char *item, const char *value, size_t valuelen)
       err = __io_write (new, value, valuelen, 0, &nwrote);
       if (! err)
 	/* Atomically link the new node onto the name.  */
-	err = __dir_link (dir, item, 0);
+	err = __dir_link (dir, new, item, 0);
       __mach_port_deallocate (__mach_task_self (), new);
     }
   __mach_port_deallocate (__mach_task_self (), dir);
 
-  return nread;
+  return nwrote;
 }
