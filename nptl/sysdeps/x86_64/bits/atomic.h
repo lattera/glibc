@@ -76,46 +76,12 @@ typedef uintmax_t uatomic_max_t;
 		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
 
-/* XXX We do not really need 64-bit compare-and-exchange.  At least
-   not in the moment.  Using it would mean causing portability
-   problems since not many other 32-bit architectures have support for
-   such an operation.  So don't define any code for now.  If it is
-   really going to be used the code below can be used.  */
-#if 1
-# define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
-  (abort (), 0)
-#else
-# ifdef __PIC__
-#  define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
+#define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
   ({ unsigned char ret;							      \
-     int ignore;							      \
-     __asm __volatile ("xchgl %3, %%ebx\n\t"				      \
-		       LOCK "cmpxchg8b %2, %1\n\t"			      \
-		       "setne %0\n\t"					      \
-		       "xchgl %3, %%ebx"				      \
-		       : "=a" (ret), "=m" (*mem), "=d" (ignore)		      \
-		       : "DS" (((unsigned long long int) (newval))	      \
-			       & 0xffffffff),				      \
-			 "c" (((unsigned long long int) (newval)) >> 32),     \
-			 "1" (*mem), "0" (((unsigned long long int) (oldval)) \
-					  & 0xffffffff),		      \
-			 "2" (((unsigned long long int) (oldval)) >> 32));    \
+     __asm __volatile (LOCK "cmpxchgq %q2, %1; setne %0"		      \
+		       : "=a" (ret), "=m" (*mem)			      \
+		       : "r" (newval), "1" (*mem), "0" (oldval));	      \
      ret; })
-# else
-#  define __arch_compare_and_exchange_64_acq(mem, newval, oldval) \
-  ({ unsigned char ret;							      \
-     int ignore;							      \
-     __asm __volatile (LOCK "cmpxchg8b %2, %1; setne %0"		      \
-		       : "=a" (ret), "=m" (*mem), "=d" (ignore)		      \
-		       : "b" (((unsigned long long int) (newval))	      \
-			      & 0xffffffff),				      \
-			  "c" (((unsigned long long int) (newval)) >> 32),    \
-			 "1" (*mem), "0" (((unsigned long long int) (oldval)) \
-					  & 0xffffffff),		      \
-			 "2" (((unsigned long long int) (oldval)) >> 32));    \
-     ret; })
-# endif
-#endif
 
 
 #define atomic_exchange_and_add(mem, value) \
@@ -133,14 +99,9 @@ typedef uintmax_t uatomic_max_t;
 			 : "=r" (result), "=m" (*mem)			      \
 			 : "0" (value), "1" (*mem));			      \
      else								      \
-       {								      \
-	 __typeof (value) addval = (value);				      \
-	 __typeof (*mem) oldval;					      \
-	 __typeof (mem) memp = (mem);					      \
-	 do								      \
-	   result = (oldval = *memp) + addval;				      \
-	 while (! __arch_compare_and_exchange_64_acq (memp, result, oldval)); \
-       }								      \
+       __asm __volatile (LOCK "xaddq %q0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (value), "1" (*mem));			      \
      result; })
 
 
@@ -162,16 +123,9 @@ typedef uintmax_t uatomic_max_t;
 				: "=m" (*mem)				      \
 				: "ir" (value), "0" (*mem));		      \
 	    else							      \
-	      {								      \
-		__typeof (value) addval = (value);			      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
-		do							      \
-		  oldval = *memp;					      \
-		while (! __arch_compare_and_exchange_64_acq (memp,	      \
-							     oldval + addval, \
-							     oldval));	      \
-	      }								      \
+	      __asm __volatile (LOCK "addq %q1, %0"			      \
+				: "=m" (*mem)				      \
+				: "ir" (value), "0" (*mem));		      \
 	    })
 
 
@@ -180,7 +134,7 @@ typedef uintmax_t uatomic_max_t;
      if (sizeof (*mem) == 1)						      \
        __asm __volatile (LOCK "addb %b2, %0; sets %1"			      \
 			 : "=m" (*mem), "=qm" (__result)		      \
-			 : "iq" (value), "0" (*mem));			      \
+			 : "ir" (value), "0" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
        __asm __volatile (LOCK "addw %w2, %0; sets %1"			      \
 			 : "=m" (*mem), "=qm" (__result)		      \
@@ -190,7 +144,9 @@ typedef uintmax_t uatomic_max_t;
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "ir" (value), "0" (*mem));			      \
      else								      \
-       abort ();							      \
+       __asm __volatile (LOCK "addq %q2, %0; sets %1"			      \
+			 : "=m" (*mem), "=qm" (__result)		      \
+			 : "ir" (value), "0" (*mem));			      \
      __result; })
 
 
@@ -209,7 +165,9 @@ typedef uintmax_t uatomic_max_t;
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "ir" (value), "0" (*mem));			      \
      else								      \
-       abort ();							      \
+       __asm __volatile (LOCK "addq %q2, %0; setz %1"			      \
+			 : "=m" (*mem), "=qm" (__result)		      \
+			 : "ir" (value), "0" (*mem));			      \
      __result; })
 
 
@@ -227,26 +185,20 @@ typedef uintmax_t uatomic_max_t;
 				: "=m" (*mem)				      \
 				: "0" (*mem));				      \
 	    else							      \
-	      {								      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
-		do							      \
-		  oldval = *memp;					      \
-		while (! __arch_compare_and_exchange_64_acq (memp,	      \
-							     oldval + 1,      \
-							     oldval));	      \
-	      }								      \
+	      __asm __volatile (LOCK "incq %q0"				      \
+				: "=m" (*mem)				      \
+				: "0" (*mem));				      \
 	    })
 
 
 #define atomic_increment_and_test(mem) \
   ({ unsigned char __result;						      \
      if (sizeof (*mem) == 1)						      \
-       __asm __volatile (LOCK "incb %0; sete %b1"			      \
+       __asm __volatile (LOCK "incb %b0; sete %1"			      \
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "0" (*mem));					      \
      else if (sizeof (*mem) == 2)					      \
-       __asm __volatile (LOCK "incw %0; sete %w1"			      \
+       __asm __volatile (LOCK "incw %w0; sete %1"			      \
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "0" (*mem));					      \
      else if (sizeof (*mem) == 4)					      \
@@ -254,7 +206,9 @@ typedef uintmax_t uatomic_max_t;
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "0" (*mem));					      \
      else								      \
-       abort ();							      \
+       __asm __volatile (LOCK "incq %q0; sete %1"			      \
+			 : "=m" (*mem), "=qm" (__result)		      \
+			 : "0" (*mem));					      \
      __result; })
 
 
@@ -272,15 +226,9 @@ typedef uintmax_t uatomic_max_t;
 				: "=m" (*mem)				      \
 				: "0" (*mem));				      \
 	    else							      \
-	      {								      \
-		__typeof (*mem) oldval;					      \
-		__typeof (mem) memp = (mem);				      \
-		do							      \
-		  oldval = *memp;					      \
-		while (! __arch_compare_and_exchange_64_acq (memp,	      \
-							     oldval - 1,      \
-							     oldval));	      \
-	      }								      \
+	      __asm __volatile (LOCK "decq %q0"				      \
+				: "=m" (*mem)				      \
+				: "0" (*mem));				      \
 	    })
 
 
@@ -299,7 +247,9 @@ typedef uintmax_t uatomic_max_t;
 			 : "=m" (*mem), "=qm" (__result)		      \
 			 : "0" (*mem));					      \
      else								      \
-       abort ();							      \
+       __asm __volatile (LOCK "decq %q0; sete %1"			      \
+			 : "=m" (*mem), "=qm" (__result)		      \
+			 : "0" (*mem));					      \
      __result; })
 
 
@@ -317,7 +267,9 @@ typedef uintmax_t uatomic_max_t;
 				: "=m" (*mem)				      \
 				: "0" (*mem), "i" (1 << (bit)));	      \
 	    else							      \
-	      abort ();							      \
+	      __asm __volatile (LOCK "orq %q2, %0"			      \
+				: "=m" (*mem)				      \
+				: "0" (*mem), "i" (1 << (bit)));	      \
 	    })
 
 
@@ -336,5 +288,7 @@ typedef uintmax_t uatomic_max_t;
 			 : "=q" (__result), "=m" (*mem)			      \
 			 : "1" (*mem), "i" (bit));			      \
      else							      	      \
-       abort ();							      \
+       __asm __volatile (LOCK "btsq %3, %1; setc %0"			      \
+			 : "=q" (__result), "=m" (*mem)			      \
+			 : "1" (*mem), "i" (bit));			      \
      __result; })
