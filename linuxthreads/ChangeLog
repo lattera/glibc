@@ -1,3 +1,10 @@
+2004-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (tests): Add tst-align.
+	* tst-align.c: New test.
+	* sysdeps/i386/Makefile (CFLAGS-tst-align.c): Add
+	-mpreferred-stack-boundary=4.
+
 2004-12-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* internals.h: Include <stdbool.h> to match includes used in nptl.

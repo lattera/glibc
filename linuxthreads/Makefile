@@ -111,7 +111,7 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 $(librt-tests) ex12 ex13 joinrace \
 	ex17 ex18 tst-cancel tst-context bug-sleep \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-popen tst-popen2 tst-attr1 \
-	tst-stack1
+	tst-stack1 tst-align
 test-srcs = tst-signal
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5

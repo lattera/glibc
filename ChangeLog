@@ -1,3 +1,15 @@
+2004-12-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/clone.S (__clone): Make sure %esp when
+	calling fn is 16 byte aligned.
+	* sysdeps/i386/tst-stack-align.h: New file.
+
+	* misc/efgcvt_r.c (FLOAT_MIN_10_EXP, FLOAT_MIN_10_NORM): Define.
+	(ecvt_r): Special case denormals.
+	* misc/qefgcvt_r.c (FLOAT_MIN_10_EXP, FLOAT_MIN_10_NORM): Define.
+	* misc/tst-efgcvt.c: Include float.h.
+	(ecvt_tests): Add 2 new tests.
+
 2004-12-20  Roland McGrath  <roland@frob.com>
 
 	* version.h (RELEASE, VERSION): development, 2.3.90
