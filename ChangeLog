@@ -1,5 +1,8 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine OPEN_MAX
+	unless user defined it.
+
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Also undefine LINK_MAX
 	if not defined by the user.
 

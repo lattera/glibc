@@ -18,13 +18,18 @@
    Boston, MA 02111-1307, USA.  */
 
 /* The kernel header pollutes the namespace with the NR_OPEN symbol
-   and defines LINK_MAX although filesystems have different maxima.
-   Remove this after including the header if necessary.  */
+   and defines LINK_MAX although filesystems have different maxima.  A
+   similar thing is true for OPEN_MAX: the limit can be changed at
+   runtime and therefore the macro must not be defined.  Remove this
+   after including the header if necessary.  */
 #ifndef NR_OPEN
 # define __undef_NR_OPEN
 #endif
 #ifndef LINK_MAX
 # define __undef_LINK_MAX
+#endif
+#ifndef OPEN_MAX
+# define __undef_OPEN_MAX
 #endif
 
 /* The kernel sources contain a file with all the needed information.  */
@@ -39,6 +44,11 @@
 #ifdef __undef_LINK_MAX
 # undef LINK_MAX
 # undef __undef_LINK_MAX
+#endif
+/* Have to remove OPEN_MAX?  */
+#ifdef __undef_OPEN_MAX
+# undef OPEN_MAX
+# undef __undef_OPEN_MAX
 #endif
 
 /* Maximum amount by which a process can descrease its asynchronous I/O
