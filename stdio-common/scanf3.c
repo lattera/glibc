@@ -26,5 +26,4 @@ int main(int arc, char *argv)
     abort ();
 
   return 0;
-  return 0;
 }

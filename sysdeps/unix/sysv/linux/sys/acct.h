@@ -21,6 +21,9 @@ Boston, MA 02111-1307, USA.  */
 #define _SYS_ACCT_H	1
 #include <features.h>
 
+#define	__need_time_t
+#include <time.h>
+
 /* Get needed constants.  */
 #include <linux/acct.h>
 

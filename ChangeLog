@@ -1,3 +1,44 @@
+Sat Aug 10 13:17:27 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* shadow.h: New file.
+
+	* sysdeps/unix/sysv/linux/netinet/in.h: Move
+ 	__BEGIN_DECLS/__END_DECLS up so ntohl() et al are bracketed as
+ 	well.
+
+	* socket/sys/socket.h [__cplusplus]: Use old-style __SOCKADDR_ARG.
+	g++ 2.7.2 (and earlier) has no transparent unions support.
+
+Fri Aug  9 18:50:06 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (_bus_base_sparse): New
+	function to determine the base address of sparse bus memory.
+	(APECS_*): Rename to CIA_*.
+	(APECS_SPARSE_MEM, CIA_SPARSE_MEM): New macros.
+	(platform): Add sparse_bus_memory_base member and initialize.
+	(sparse_bus_memory_base): New variable.
+
+Tue Aug  6 10:23:18 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/posix/ttyname_r.c (ttyname_r),
+	sysdeps/posix/ttyname.c (ttyname): Return -1/NULL if
+	!__isatty(fd) (POSIX.1 says so.)
+
+	* sysdeps/unix/getlogin.c (getlogin): Fix to check fd 0 only.
+  	This is not a gross hack, after all---for compatibility,
+ 	getlogin() really should check fd 0 only and not try to base its
+ 	operation on the controlling tty.
+
+Wed Jul 17 10:54:20 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/getlogin.c (getlogin): Add static variable NAME,
+ 	change utmp_data from static to auto.
+
+Sun Aug 11 02:56:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/unistd.h [__USE_MISC]: Add prototype for `nice'.
+	Reported by David Mosberger-Tang.
+
 Sat Aug 10 02:05:28 1996  Richard Henderson  <richard@twiddle.tamu.edu>
 
 	* sysdeps/libm-ieee754/s_isnan.c [NO_LONG_DOUBLE]: Add strong

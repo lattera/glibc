@@ -1,5 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,20 +14,17 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
-#ifndef _DIRENTRY_H
-#define _DIRENTRY_H	1
+#include <shadow.h>
 
-/* Get `struct dirent' from the Linux kernel header file.  */
-#include <asm/posix_types.h>
-#include <linux/dirent.h>
 
-#define d_fileno	d_ino	/* backwards compatibility */
+#define LOOKUP_TYPE	struct spwd
+#define FUNCTION_NAME	getspnam
+#define DATABASE_NAME	shadow
+#define ADD_PARAMS	const char *name
+#define ADD_VARIABLES	name
+#define BUFLEN		1024
 
-#undef  _DIRENT_HAVE_D_NAMLEN
-#define _DIRENT_HAVE_D_RECLEN
-#define _DIRENT_HAVE_D_OFF
-
-#endif /* _DIRENTRY_H */
+#include "../nss/getXXbyYY.c"

@@ -16,9 +16,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _SYS_IO_H
-#define _SYS_IO_H
+#ifndef	_SYS_IO_H
 
+#define	_SYS_IO_H	1
+#include <features.h>
+
+/* Get constants from kernel header files. */
 #include <asm/io.h>
 
 /* If TURN_ON is TRUE, request for permission to do direct i/o on the
@@ -28,12 +31,12 @@ Cambridge, MA 02139, USA.  */
    Portability note: not all Linux platforms support this call.  Most
    platforms based on the PC I/O architecture probably will, however.
    E.g., Linux/Alpha for Alpha PCs supports this.  */
-extern int ioperm __P((unsigned long __from, unsigned long __num,
-		       int __turn_on));
+extern int ioperm __P ((unsigned long int __from, unsigned long int __num,
+			int __turn_on));
 
 /* Set the I/O privilege level to LEVEL.  If LEVEL>3, permission to
    access any I/O port is granted.  This call requires root
    privileges. */
-extern int iopl __P((int __level));
+extern int iopl __P ((int __level));
 
 #endif /* _SYS_IO_H */

@@ -16,17 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _DIRENTRY_H
-#define _DIRENTRY_H	1
+#include <shadow.h>
+#include <stdio.h>
 
-/* Get `struct dirent' from the Linux kernel header file.  */
-#include <asm/posix_types.h>
-#include <linux/dirent.h>
 
-#define d_fileno	d_ino	/* backwards compatibility */
+/* Read one shadow entry from the given stream.  */
+struct spwd *
+fgetspent (FILE *stream)
+{
+  static char buffer[BUFSIZ];
+  static struct spwd result;
 
-#undef  _DIRENT_HAVE_D_NAMLEN
-#define _DIRENT_HAVE_D_RECLEN
-#define _DIRENT_HAVE_D_OFF
-
-#endif /* _DIRENTRY_H */
+  return __fgetspent_r (stream, &result, buffer, sizeof buffer);
+}

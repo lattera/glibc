@@ -37,6 +37,7 @@
 #define	_FTS_H_
 
 #include <sys/cdefs.h>
+#include <sys/types.h>
 
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */

@@ -38,5 +38,6 @@ static char rcsid[] = "$NetBSD: s_isnan.c,v 1.8 1995/05/10 20:47:36 jtc Exp $";
 }
 weak_alias (__isnan, isnan)
 #ifdef NO_LONG_DOUBLE
+strong_alias (__isnan, __isnanl)
 weak_alias (__isnan, isnanl)
 #endif

@@ -16,17 +16,31 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _DIRENTRY_H
-#define _DIRENTRY_H	1
+#include <shadow.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-/* Get `struct dirent' from the Linux kernel header file.  */
-#include <asm/posix_types.h>
-#include <linux/dirent.h>
 
-#define d_fileno	d_ino	/* backwards compatibility */
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
 
-#undef  _DIRENT_HAVE_D_NAMLEN
-#define _DIRENT_HAVE_D_RECLEN
-#define _DIRENT_HAVE_D_OFF
+/* Read one shadow entry from the given stream.  */
+struct spwd *
+sgetspent (const char *string)
+{
+  static struct spwd result;
+  static int max_size = 0;
+  static char *buffer = NULL;
+  int len;
 
-#endif /* _DIRENTRY_H */
+  len = strlen (string) + 1;
+  if (len > max_size)
+    {
+      max_size = MAX (128, len + 32);
+      buffer = realloc (buffer, max_size);
+      if (buffer == NULL)
+	return NULL;
+    }
+
+  return __sgetspent_r (string, &result, buffer, max_size);
+}

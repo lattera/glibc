@@ -33,10 +33,12 @@
  *	@(#)gmon.h	8.2 (Berkeley) 1/4/94
  */
 
-#ifndef _SYS_GMON_H_
-#define _SYS_GMON_H_
+#ifndef	_SYS_GMON_H_
 
-#include <sys/cdefs.h>
+#define	_SYS_GMON_H_	1
+#include <features.h>
+
+#include <sys/types.h>
 
 /*
  * See gmon_out.h for gmon.out format.

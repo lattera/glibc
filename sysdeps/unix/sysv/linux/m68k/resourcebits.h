@@ -54,6 +54,9 @@ enum __rlimit_resource
     /* Locked-in-memory address space.  */
     RLIMIT_MEMLOCK,
 #define	RLIMIT_MEMLOCK	RLIMIT_MEMLOCK
+    /* Address space limit.  */
+    RLIMIT_AS,
+#define	RLIMIT_AS	RLIMIT_AS
 
     RLIMIT_NLIMITS,		/* Number of limit flavors.  */
     RLIM_NLIMITS = RLIMIT_NLIMITS /* Traditional name for same.  */

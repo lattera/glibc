@@ -1,4 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* User file parser in nss_files module.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,17 +17,21 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef _DIRENTRY_H
-#define _DIRENTRY_H	1
+#include <shadow.h>
 
-/* Get `struct dirent' from the Linux kernel header file.  */
-#include <asm/posix_types.h>
-#include <linux/dirent.h>
+#define STRUCTURE	spwd
+#define ENTNAME		spent
+#define DATABASE	"shadow"
+struct spent_data {};
 
-#define d_fileno	d_ino	/* backwards compatibility */
+/* Our parser function is already defined in sgetspent_r.c, so use that
+   to parse lines from the database file.  */
+#define EXTERN_PARSER
+#include "files-parse.c"
+#include GENERIC
 
-#undef  _DIRENT_HAVE_D_NAMLEN
-#define _DIRENT_HAVE_D_RECLEN
-#define _DIRENT_HAVE_D_OFF
-
-#endif /* _DIRENTRY_H */
+DB_LOOKUP (spnam, 1 + strlen (name), (".%s", name),
+	   {
+	     if (! strcmp (name, result->sp_namp))
+	       break;
+	   }, const char *name)

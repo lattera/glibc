@@ -202,7 +202,6 @@ __stdio_gen_tempname (const char *dir, const char *pfx, int dir_search,
 		  goto lose;
 		}
 	      fp->file._flags &= ~_IO_DELETE_DONT_CLOSE;
-	      fp->file._IO_file_flags = 0;
 
 	      *streamptr = (FILE *) fp;
 #else

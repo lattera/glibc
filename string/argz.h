@@ -27,12 +27,14 @@
 
 __BEGIN_DECLS
 
+#ifdef __USE_GNU
+
 /* Make a '\0' separated arg vector from a unix argv vector, returning it in
    ARGZ, and the total length in LEN.  If a memory allocation error occurs,
    ENOMEM is returned, otherwise 0.  The result can be destroyed using free. */
-extern error_t __argz_create __P ((char *const __argv[], char **__argz,
+extern error_t __argz_create __P ((char *__const __argv[], char **__argz,
 				   size_t *__len));
-extern error_t argz_create __P ((char *const __argv[], char **__argz,
+extern error_t argz_create __P ((char *__const __argv[], char **__argz,
 				 size_t *__len));
 
 /* Make a '\0' separated arg vector from a SEP separated list in
@@ -129,5 +131,7 @@ argz_next (char *__argz, size_t __argz_len, const char *__entry)
   return __argz_next (__argz, __argz_len, __entry);
 }
 #endif /* optimizing GCC2 */
+
+#endif /* use GNU */
 
 #endif /* __ARGZ_H__ */
