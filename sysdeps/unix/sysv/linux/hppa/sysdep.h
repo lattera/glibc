@@ -192,21 +192,21 @@
 
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...)	({		\
-	unsigned long __sys_res;				\
+	long __sys_res;						\
 	{							\
 		register unsigned long __res asm("r28");	\
 		LOAD_ARGS_##nr(args)				\
 		asm volatile(					\
-			"ble  0x100(%%sr2, %%r0)\n\t"	\
+			"ble  0x100(%%sr2, %%r0)\n\t"		\
 			" ldi %1, %%r20"			\
 			: "=r" (__res)				\
 			: "i" (SYS_ify(name)) ASM_ARGS_##nr	\
 			 );					\
 		__sys_res = __res;				\
 	}							\
-	if (__sys_res >= (unsigned long)-4095) {		\
+	if ((unsigned long)__sys_res >= (unsigned long)-4095) {	\
 		__set_errno(-__sys_res);			\
-		__sys_res = (unsigned long)-1;			\
+		__sys_res = -1;					\
 	}							\
 	__sys_res;						\
 })
