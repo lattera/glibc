@@ -1,0 +1,122 @@
+/* Definitions for thread-local data handling.  Hurd/i386 version.
+   Copyright (C) 2003 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#ifndef _I386_TLS_H
+#define _I386_TLS_H
+
+#if defined HAVE_TLS_SUPPORT
+
+/* Some things really need not be machine-dependent.  */
+# include <sysdeps/mach/hurd/tls.h>
+
+/* Indiciate that TLS support is available.  */
+# define USE_TLS	1
+
+/* Use i386-specific RPCs to arrange that %gs segment register prefix
+   addresses the TCB in each thread.  */
+# include <mach/i386/mach_i386.h>
+
+#ifndef HAVE_I386_SET_GDT
+# define __i386_set_gdt(thr, sel, desc) ((thr), (sel), (desc), MIG_BAD_ID)
+#endif
+
+static inline int _hurd_tls_init (tcbhead_t *, int secondcall)
+     __attribute__ ((unused));
+
+static inline const char *
+_hurd_tls_init (tcbhead_t *tcb, int secondcall)
+{
+  const unsigned int base = (unsigned int) tcb;
+  const struct descriptor desc =
+    {				/* low word: */
+      0xffff			/* limit 0..15 */
+      | (base << 16)		/* base 0..15 */
+      ,				/* high word: */
+      ((base >> 16) & 0xff)	/* base 16..23 */
+      | ((0x12 | 0x60 | 0x80) << 8) /* access = ACC_DATA_W|ACC_PL_U|ACC_P */
+      | (0xf << 16)		/* limit 16..19 */
+      | ((4 | 8) << 20)		/* granularity = SZ_32|SZ_G */
+      | (base & 0xff000000)	/* base 24..31 */
+    };
+
+  if (!secondcall)
+    {
+      /* Cache our thread port.  */
+      tcb->self = __mach_thread_self ();
+
+      /* Get the first available selector.  */
+      int sel = -1;
+      error_t err = __i386_set_gdt (tcb->self, &sel, &desc);
+      if (err == MIG_BAD_ID)
+	{
+	  /* Old kernel, use a per-thread LDT.  */
+	  sel = 0x27;
+	  err = __i386_set_ldt (tcb->self, sel, &desc, 1);
+	  assert_perror (err);
+	  return "i386_set_ldt failed";
+	}
+      else
+	{
+	  assert_perror (err); /* Separate from above with different line #. */
+	  return "i386_set_gdt failed";
+	}
+
+      /* Now install the new selector.  */
+      asm volatile ("mov %w0, %%gs" :: "q" (sel));
+    }
+  else
+    {
+      /* Fetch the selector set by the first call.  */
+      int sel;
+      asm ("mov %%gs, %w0" : "=q" (sel));
+      if (__builtin_expect (sel, 0x50) & 4) /* LDT selector */
+	{
+	  error_t err = __i386_set_ldt (tcb->self, sel, &desc, 1);
+	  assert_perror (err);
+	  return "i386_set_ldt failed";
+	}
+      else
+	{
+	  error_t err = __i386_set_gdt (tcb->self, &sel, &desc);
+	  assert_perror (err);
+	  return "i386_set_gdt failed";
+	}
+    }
+
+  return 0;
+}
+
+/* Code to initially initialize the thread pointer.  This might need
+   special attention since 'errno' is not yet available and if the
+   operation can cause a failure 'errno' must not be touched.  */
+# define TLS_INIT_TP(descr, secondcall) \
+    _hurd_tls_init ((tcbhead_t *) (descr), (secondcall))
+
+/* Install new dtv for current thread.  */
+# define INSTALL_NEW_DTV(dtv) \
+  ({ __asm__ ("movl %0, %%gs:0" : : "r" (dtv)); })
+
+/* Return the address of the dtv for the current thread.  */
+# define THREAD_DTV() \
+  ({ void *_dtv; __asm__ ("movl %%gs:0, %0" : "=r" (_dtv)); _dtv; })
+
+
+#endif /* HAVE_TLS_SUPPORT */
+
+#endif	/* i386/tls.h */
