@@ -90,7 +90,7 @@
 /* Operations for bsd flock(), also used by the kernel implementation */
 # define LOCK_SH	1	/* shared lock */
 # define LOCK_EX	2	/* exclusive lock */
-# define LOCK_NB	4	/* or'd with one of the above to prevent		XXXXXXXXXXXXXXXXXX
+# define LOCK_NB	4	/* or'd with one of the above to prevent
 				   blocking */
 # define LOCK_UN	8	/* remove lock */
 #endif
