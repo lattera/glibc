@@ -23,6 +23,7 @@
 #include <errno.h>
 #include <error.h>
 #include <fcntl.h>
+#include <getopt.h>
 #include <iconv.h>
 #include <locale.h>
 #include <mcheck.h>
@@ -45,6 +46,7 @@ static char *mem;
 static char *umem;
 static size_t memlen;
 static size_t umemlen;
+static int timing;
 
 static int test_expr (const char *expr, int expected, int expectedicase);
 static int run_test (const char *expr, const char *mem, size_t memlen,
@@ -54,7 +56,7 @@ static int run_test_backwards (const char *expr, const char *mem,
 
 
 int
-main (void)
+main (int argc, char *argv[])
 {
   const char *file;
   int fd;
@@ -64,8 +66,15 @@ main (void)
   char *outmem;
   size_t inlen;
   size_t outlen;
+  static const struct option options[] =
+    {
+      {"timing",no_argument,	&timing,	1 },
+      {NULL,	0,		NULL,		0 }
+    };
 
   mtrace ();
+
+  while (getopt_long (argc, argv, "", options, NULL) >= 0);
 
   /* Make the content of the file available in memory.  */
   file = "../ChangeLog.8";
@@ -125,6 +134,8 @@ main (void)
   result |= test_expr ("G.\\{1\\}ran", 2, 3);
   result |= test_expr ("G.*ran", 3, 44);
   result |= test_expr ("[הבאג]", 0, 0);
+  result |= test_expr ("Uddeborg", 2, 2);
+  result |= test_expr (".Uddeborg", 2, 2);
 
   /* Free the resources.  */
   free (umem);
@@ -201,7 +212,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
   int cnt;
 
 #ifdef _POSIX_CPUTIME
-  if (use_clock)
+  if (use_clock && !timing)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
 
@@ -250,7 +261,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
   regfree (&re);
 
 #ifdef _POSIX_CPUTIME
-  if (use_clock)
+  if (use_clock && !timing)
     {
       use_clock = clock_gettime (cl, &finish) == 0;
       if (use_clock)
@@ -269,6 +280,58 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
 	  printf ("elapsed time: %ld.%09ld sec\n",
 		  finish.tv_sec, finish.tv_nsec);
 	}
+    }
+
+  if (use_clock && timing)
+    {
+      struct timespec mintime = { .tv_sec = 24 * 60 * 60 };
+
+      for (int i = 0; i < 10; ++i)
+	{
+	  offset = 0;
+	  use_clock = clock_gettime (cl, &start) == 0;
+
+	  if (!use_clock)
+	    continue;
+
+	  err = regcomp (&re, expr, REG_NEWLINE | (icase ? REG_ICASE : 0));
+	  if (err != REG_NOERROR)
+	    continue;
+
+	  while (offset < memlen)
+	    {
+	      regmatch_t ma[1];
+
+	      err = regexec (&re, mem + offset, 1, ma, 0);
+	      if (err != REG_NOERROR)
+		break;
+
+	      offset += ma[0].rm_eo;
+	    }
+
+	  regfree (&re);
+
+	  use_clock = clock_gettime (cl, &finish) == 0;
+	  if (use_clock)
+	    {
+	      if (finish.tv_nsec < start.tv_nsec)
+		{
+		  finish.tv_nsec -= start.tv_nsec - 1000000000;
+		  finish.tv_sec -= 1 + start.tv_sec;
+		}
+	      else
+		{
+		  finish.tv_nsec -= start.tv_nsec;
+		  finish.tv_sec -= start.tv_sec;
+		}
+	      if (finish.tv_sec < mintime.tv_sec
+		  || (finish.tv_sec == mintime.tv_sec
+		      && finish.tv_nsec < mintime.tv_nsec))
+		mintime = finish;
+	    }
+	}
+      printf ("elapsed time: %ld.%09ld sec\n",
+	      mintime.tv_sec, mintime.tv_nsec);
     }
 #endif
 
@@ -292,7 +355,7 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
   int cnt;
 
 #ifdef _POSIX_CPUTIME
-  if (use_clock)
+  if (use_clock && !timing)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
 
@@ -344,7 +407,7 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
   regfree (&re);
 
 #ifdef _POSIX_CPUTIME
-  if (use_clock)
+  if (use_clock && !timing)
     {
       use_clock = clock_gettime (cl, &finish) == 0;
       if (use_clock)
@@ -363,6 +426,74 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
 	  printf ("elapsed time: %ld.%09ld sec\n",
 		  finish.tv_sec, finish.tv_nsec);
 	}
+    }
+
+  if (use_clock && timing)
+    {
+      struct timespec mintime = { .tv_sec = 24 * 60 * 60 };
+
+      for (int i = 0; i < 10; ++i)
+	{
+	  offset = memlen;
+	  use_clock = clock_gettime (cl, &start) == 0;
+
+	  if (!use_clock)
+	    continue;
+
+	  memset (&re, 0, sizeof (re));
+	  re.fastmap = malloc (256);
+	  if (re.fastmap == NULL)
+	    continue;
+
+	  err = re_compile_pattern (expr, strlen (expr), &re);
+	  if (err != NULL)
+	    continue;
+
+	  if (re_compile_fastmap (&re))
+	    {
+	      regfree (&re);
+	      continue;
+	    }
+
+	  while (offset <= memlen)
+	    {
+	      int start;
+	      const char *sp;
+
+	      start = re_search (&re, mem, memlen, offset, -offset, NULL);
+	      if (start < -1)
+		break;
+
+	      sp = mem + start;
+	      while (sp > mem && sp[-1] != '\n')
+		--sp;
+
+	      offset = sp - 1 - mem;
+	    }
+
+	  regfree (&re);
+
+	  use_clock = clock_gettime (cl, &finish) == 0;
+	  if (use_clock)
+	    {
+	      if (finish.tv_nsec < start.tv_nsec)
+		{
+		  finish.tv_nsec -= start.tv_nsec - 1000000000;
+		  finish.tv_sec -= 1 + start.tv_sec;
+		}
+	      else
+		{
+		  finish.tv_nsec -= start.tv_nsec;
+		  finish.tv_sec -= start.tv_sec;
+		}
+	      if (finish.tv_sec < mintime.tv_sec
+		  || (finish.tv_sec == mintime.tv_sec
+		      && finish.tv_nsec < mintime.tv_nsec))
+		mintime = finish;
+	    }
+	}
+      printf ("elapsed time: %ld.%09ld sec\n",
+	      mintime.tv_sec, mintime.tv_nsec);
     }
 #endif
 

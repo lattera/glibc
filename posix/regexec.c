@@ -50,10 +50,9 @@ static int re_search_stub (struct re_pattern_buffer *bufp,
 			   int ret_len);
 static unsigned re_copy_regs (struct re_registers *regs, regmatch_t *pmatch,
 			      int nregs, int regs_allocated);
-static re_dfastate_t *acquire_init_state_context (reg_errcode_t *err,
-						  const regex_t *preg,
-						  const re_match_context_t *mctx,
-						  int idx);
+static inline re_dfastate_t *acquire_init_state_context
+  (reg_errcode_t *err, const regex_t *preg, const re_match_context_t *mctx,
+   int idx) __attribute ((always_inline));
 static reg_errcode_t prune_impossible_nodes (const regex_t *preg,
 					     re_match_context_t *mctx);
 static int check_matching (const regex_t *preg, re_match_context_t *mctx,
@@ -609,6 +608,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   if (BE (err != REG_NOERROR, 0))
     goto free_return;
   input.stop = stop;
+  input.raw_stop = stop;
 
   err = match_ctx_init (&mctx, eflags, &input, dfa->nbackref * 2);
   if (BE (err != REG_NOERROR, 0))
@@ -703,7 +703,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
 		     instead.  */
 		  /* If MATCH_FIRST is out of the valid range, reconstruct the
 		     buffers.  */
-		  if (input.raw_mbs_idx + input.valid_len <= match_first
+		  if (input.raw_mbs_idx + input.valid_raw_len <= match_first
 		      || match_first < input.raw_mbs_idx)
 		    {
 		      err = re_string_reconstruct (&input, match_first, eflags,
@@ -807,6 +807,17 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
       for (reg_idx = 0; reg_idx < nmatch; ++reg_idx)
 	if (pmatch[reg_idx].rm_so != -1)
 	  {
+	    if (BE (input.offsets_needed != 0, 0))
+	      {
+		if (pmatch[reg_idx].rm_so == input.valid_len)
+		  pmatch[reg_idx].rm_so += input.valid_raw_len - input.valid_len;
+		else
+		  pmatch[reg_idx].rm_so = input.offsets[pmatch[reg_idx].rm_so];
+		if (pmatch[reg_idx].rm_eo == input.valid_len)
+		  pmatch[reg_idx].rm_eo += input.valid_raw_len - input.valid_len;
+		else
+		  pmatch[reg_idx].rm_eo = input.offsets[pmatch[reg_idx].rm_eo];
+	      }
 	    pmatch[reg_idx].rm_so += match_first;
 	    pmatch[reg_idx].rm_eo += match_first;
 	  }
@@ -909,7 +920,7 @@ prune_impossible_nodes (preg, mctx)
    We must select appropriate initial state depending on the context,
    since initial states may have constraints like "\<", "^", etc..  */
 
-static re_dfastate_t *
+static inline re_dfastate_t *
 acquire_init_state_context (err, preg, mctx, idx)
      reg_errcode_t *err;
      const regex_t *preg;
@@ -976,22 +987,22 @@ check_matching (preg, mctx, fl_longest_match)
 
   /* Check OP_OPEN_SUBEXP in the initial state in case that we use them
      later.  E.g. Processing back references.  */
-  if (dfa->nbackref)
+  if (BE (dfa->nbackref, 0))
     {
       err = check_subexp_matching_top (dfa, mctx, &cur_state->nodes, 0);
       if (BE (err != REG_NOERROR, 0))
 	return err;
-    }
 
-  if (cur_state->has_backref)
-    {
-      err = transit_state_bkref (preg, &cur_state->nodes, mctx);
-      if (BE (err != REG_NOERROR, 0))
-	return err;
+      if (cur_state->has_backref)
+	{
+	  err = transit_state_bkref (preg, &cur_state->nodes, mctx);
+	  if (BE (err != REG_NOERROR, 0))
+	    return err;
+	}
     }
 
   /* If the RE accepts NULL string.  */
-  if (cur_state->halt)
+  if (BE (cur_state->halt, 0))
     {
       if (!cur_state->has_constraint
 	  || check_halt_state_context (preg, cur_state, mctx, cur_str_idx))
@@ -1372,11 +1383,11 @@ update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
 	i. If 'b' isn't in the STATE_LOG[STR_IDX+strlen('s')], we throw
 	   away the node `a'.
 	ii. If 'b' is in the STATE_LOG[STR_IDX+strlen('s')] but 'b' is
-	    throwed away, we throw away the node `a'.
+	    thrown away, we throw away the node `a'.
      3. When 0 <= STR_IDX < MATCH_LAST and 'a' epsilon transit to 'b':
 	i. If 'b' isn't in the STATE_LOG[STR_IDX], we throw away the
 	   node `a'.
-	ii. If 'b' is in the STATE_LOG[STR_IDX] but 'b' is throwed away,
+	ii. If 'b' is in the STATE_LOG[STR_IDX] but 'b' is thrown away,
 	    we throw away the node `a'.  */
 
 #define STATE_NODE_CONTAINS(state,node) \
@@ -2041,7 +2052,7 @@ sift_states_iter_mb (preg, mctx, sctx, node_idx, str_idx, max_str_idx)
       !STATE_NODE_CONTAINS (sctx->sifted_states[str_idx + naccepted],
 			    dfa->nexts[node_idx]))
     /* The node can't accept the `multi byte', or the
-       destination was already throwed away, then the node
+       destination was already thrown away, then the node
        could't accept the current input `multi byte'.   */
     naccepted = 0;
   /* Otherwise, it is sure that the node could accept
@@ -2188,24 +2199,24 @@ transit_state (err, preg, mctx, state)
 	}
     }
 
-  /* Check OP_OPEN_SUBEXP in the current state in case that we use them
-     later.  We must check them here, since the back references in the
-     next state might use them.  */
-  if (dfa->nbackref && next_state/* && fl_process_bkref */)
+  if (BE (dfa->nbackref, 0) && next_state != NULL)
     {
+      /* Check OP_OPEN_SUBEXP in the current state in case that we use them
+	 later.  We must check them here, since the back references in the
+	 next state might use them.  */
       *err = check_subexp_matching_top (dfa, mctx, &next_state->nodes,
 					cur_idx);
       if (BE (*err != REG_NOERROR, 0))
 	return NULL;
-    }
 
-  /* If the next state has back references.  */
-  if (next_state != NULL && next_state->has_backref)
-    {
-      *err = transit_state_bkref (preg, &next_state->nodes, mctx);
-      if (BE (*err != REG_NOERROR, 0))
-	return NULL;
-      next_state = mctx->state_log[cur_idx];
+      /* If the next state has back references.  */
+      if (next_state->has_backref)
+	{
+	  *err = transit_state_bkref (preg, &next_state->nodes, mctx);
+	  if (BE (*err != REG_NOERROR, 0))
+	    return NULL;
+	  next_state = mctx->state_log[cur_idx];
+	}
     }
   return next_state;
 }
@@ -3858,7 +3869,11 @@ extend_buffers (mctx)
     {
 #ifdef RE_ENABLE_I18N
       if (pstr->mb_cur_max > 1)
-	build_wcs_upper_buffer (pstr);
+	{
+	  ret = build_wcs_upper_buffer (pstr);
+	  if (BE (ret != REG_NOERROR, 0))
+	    return ret;
+	}
       else
 #endif /* RE_ENABLE_I18N  */
 	build_upper_buffer (pstr);

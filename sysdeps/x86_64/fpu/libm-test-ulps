@@ -1,5 +1,10 @@
 # Begin of automatic generation
 
+# acos
+Test "acos (0.75) == 0.722734247813415611178377352641333362":
+ildouble: 1
+ldouble: 1
+
 # asin
 Test "asin (-0.5) == -pi/6":
 ildouble: 1
@@ -27,6 +32,9 @@ ifloat: 3
 Test "atan2 (1.390625, 0.9296875) == 0.981498387184244311516296577615519772":
 float: 1
 ifloat: 1
+Test "atan2 (-0.00756827042671106339, -.001792735857538728036) == -1.80338464113663849327153994380":
+float: 6
+ifloat: 6
 
 # atanh
 Test "atanh (0.75) == 0.972955074527656652552676371721589865":
@@ -98,6 +106,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 
 # catan
 Test "Real part of: catan (-2 - 3 i) == -1.4099210495965755225306193844604208 - 0.22907268296853876629588180294200276 i":
@@ -318,6 +328,8 @@ ldouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
+ldouble: 1
+ildouble: 1
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
@@ -916,13 +928,17 @@ double: 1
 idouble: 1
 
 # Maximal error of functions:
+Function: "acos":
+ildouble: 1
+ldouble: 1
+
 Function: "asin":
 ildouble: 1
 ldouble: 1
 
 Function: "atan2":
-float: 3
-ifloat: 3
+float: 6
+ifloat: 6
 
 Function: "atanh":
 float: 1

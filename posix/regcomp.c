@@ -838,7 +838,7 @@ init_dfa (dfa, pat_len)
 
   dfa->mb_cur_max = MB_CUR_MAX;
 #ifdef _LIBC
-  if (dfa->mb_cur_max > 1
+  if (dfa->mb_cur_max == 6
       && strcmp (_NL_CURRENT (LC_CTYPE, _NL_CTYPE_CODESET_NAME), "UTF-8") == 0)
     dfa->is_utf8 = 1;
   dfa->map_notascii = (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MAP_TO_NONASCII)
@@ -1711,28 +1711,28 @@ peek_token (token, input, syntax)
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = WORD_FIRST;
+	      token->opr.ctx_type = WORD_FIRST;
 	    }
 	  break;
 	case '>':
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = WORD_LAST;
+	      token->opr.ctx_type = WORD_LAST;
 	    }
 	  break;
 	case 'b':
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = WORD_DELIM;
+	      token->opr.ctx_type = WORD_DELIM;
 	    }
 	  break;
 	case 'B':
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = INSIDE_WORD;
+	      token->opr.ctx_type = INSIDE_WORD;
 	    }
 	  break;
 	case 'w':
@@ -1755,14 +1755,14 @@ peek_token (token, input, syntax)
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = BUF_FIRST;
+	      token->opr.ctx_type = BUF_FIRST;
 	    }
 	  break;
 	case '\'':
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.idx = BUF_LAST;
+	      token->opr.ctx_type = BUF_LAST;
 	    }
 	  break;
 	case '(':
@@ -1858,7 +1858,7 @@ peek_token (token, input, syntax)
 	    break;
 	}
       token->type = ANCHOR;
-      token->opr.idx = LINE_FIRST;
+      token->opr.ctx_type = LINE_FIRST;
       break;
     case '$':
       if (!(syntax & RE_CONTEXT_INDEP_ANCHORS) &&
@@ -1872,7 +1872,7 @@ peek_token (token, input, syntax)
 	    break;
 	}
       token->type = ANCHOR;
-      token->opr.idx = LINE_LAST;
+      token->opr.ctx_type = LINE_LAST;
       break;
     default:
       break;
@@ -2217,7 +2217,9 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	}
       break;
     case ANCHOR:
-      if (dfa->word_char == NULL)
+      if ((token->opr.ctx_type
+	   & (WORD_DELIM | INSIDE_WORD | WORD_FIRST | WORD_LAST))
+	  && dfa->word_char == NULL)
 	{
 	  *err = init_word_char (dfa);
 	  if (BE (*err != REG_NOERROR, 0))

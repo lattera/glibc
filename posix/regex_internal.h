@@ -302,13 +302,10 @@ struct re_string_t
      REG_ICASE, upper cases of the string are stored, otherwise MBS points
      the same address that RAW_MBS points.  */
   unsigned char *mbs;
-  /* Store the case sensitive multibyte string.  In case of
-     "case insensitive mode", the original string are stored,
-     otherwise MBS_CASE points the same address that MBS points.  */
-  unsigned char *mbs_case;
 #ifdef RE_ENABLE_I18N
   /* Store the wide character string which is corresponding to MBS.  */
   wint_t *wcs;
+  int *offsets;
   mbstate_t cur_state;
 #endif
   /* Index in RAW_MBS.  Each character mbs[i] corresponds to
@@ -316,15 +313,21 @@ struct re_string_t
   int raw_mbs_idx;
   /* The length of the valid characters in the buffers.  */
   int valid_len;
-  /* The length of the buffers MBS, MBS_CASE, and WCS.  */
+  /* The corresponding number of bytes in raw_mbs array.  */
+  int valid_raw_len;
+  /* The length of the buffers MBS and WCS.  */
   int bufs_len;
   /* The index in MBS, which is updated by re_string_fetch_byte.  */
   int cur_idx;
-  /* This is length_of_RAW_MBS - RAW_MBS_IDX.  */
+  /* length of RAW_MBS array.  */
+  int raw_len;
+  /* This is RAW_LEN - RAW_MBS_IDX + VALID_LEN - VALID_RAW_LEN.  */
   int len;
   /* End of the buffer may be shorter than its length in the cases such
      as re_match_2, re_search_2.  Then, we use STOP for end of the buffer
      instead of LEN.  */
+  int raw_stop;
+  /* This is RAW_STOP - RAW_MBS_IDX adjusted through OFFSETS.  */
   int stop;
 
   /* The context of mbs[0].  We store the context independently, since
@@ -334,17 +337,14 @@ struct re_string_t
   /* The translation passed as a part of an argument of re_compile_pattern.  */
   RE_TRANSLATE_TYPE trans;
   /* 1 if REG_ICASE.  */
-  unsigned int icase : 1;
-  unsigned int is_utf8 : 1;
-  unsigned int map_notascii : 1;
+  unsigned char icase;
+  unsigned char is_utf8;
+  unsigned char map_notascii;
+  unsigned char mbs_allocated;
+  unsigned char offsets_needed;
   int mb_cur_max;
 };
 typedef struct re_string_t re_string_t;
-/* In case of REG_ICASE, we allocate the buffer dynamically for mbs.  */
-#define MBS_ALLOCATED(pstr) (pstr->icase)
-/* In case that we need translation, we allocate the buffer dynamically
-   for mbs_case.  Note that mbs == mbs_case if not REG_ICASE.  */
-#define MBS_CASE_ALLOCATED(pstr) (pstr->trans != NULL)
 
 
 struct re_dfa_t;
@@ -363,7 +363,7 @@ static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
 						int new_buf_len);
 # ifdef RE_ENABLE_I18N
 static void build_wcs_buffer (re_string_t *pstr);
-static void build_wcs_upper_buffer (re_string_t *pstr);
+static int build_wcs_upper_buffer (re_string_t *pstr);
 # endif /* RE_ENABLE_I18N */
 static void build_upper_buffer (re_string_t *pstr);
 static void re_string_translate_buffer (re_string_t *pstr);
@@ -375,15 +375,14 @@ static inline wint_t re_string_wchar_at (const re_string_t *pstr, int idx);
 # endif /* RE_ENABLE_I18N */
 static unsigned int re_string_context_at (const re_string_t *input, int idx,
 					  int eflags, int newline_anchor);
+static unsigned char re_string_peek_byte_case (const re_string_t *pstr,
+					       int idx);
+static unsigned char re_string_fetch_byte_case (re_string_t *pstr);
 #endif
 #define re_string_peek_byte(pstr, offset) \
   ((pstr)->mbs[(pstr)->cur_idx + offset])
-#define re_string_peek_byte_case(pstr, offset) \
-  ((pstr)->mbs_case[(pstr)->cur_idx + offset])
 #define re_string_fetch_byte(pstr) \
   ((pstr)->mbs[(pstr)->cur_idx++])
-#define re_string_fetch_byte_case(pstr) \
-  ((pstr)->mbs_case[(pstr)->cur_idx++])
 #define re_string_first_byte(pstr, idx) \
   ((idx) == (pstr)->valid_len || (pstr)->wcs[idx] != WEOF)
 #define re_string_is_single_byte_char(pstr, idx) \

@@ -83,9 +83,9 @@ void __mpsqrt(mp_no *x, mp_no *y, int p) {
 /* with the relative error bounded by 2**-51.              */
 /***********************************************************/
 double fastiroot(double x) {
-  union {long i[2]; double d;} p,q;
+  union {int i[2]; double d;} p,q;
   double y,z, t;
-  long n;
+  int n;
   static const double c0 = 0.99674, c1 = -0.53380, c2 = 0.45472, c3 = -0.21553;
 
   p.d = x;

@@ -1,3 +1,103 @@
+2003-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Add some more minor changes
+	to compensate other setup.
+
+2003-11-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/fpu/libm-test-ulps: Add ulps for new atan2 test.
+
+	* math/libm-test.inc (atan2_test): Add test that run infinitly.
+	Reported by "Willus" <etc231etc231@willus.com>.
+
+2003-11-27  Michael Matz  <matz@suse.de>
+
+	* sysdeps/ieee754/dbl-64/mpsqrt.c (fastiroot): Fix 64-bit problem
+	with wrong types.
+
+2003-11-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regexec.c (acquire_init_state_context): Make inline.
+	Add always_inline attribute.
+	(check_matching): Add BE macro.  Move if (cur_state->has_backref)
+	into if (dfa->nbackref).
+	(sift_states_backward): Fix comment.
+	(transit_state): Add BE macro.  Move if (next_state->has_backref)
+	into if (dfa->nbackref && next_state).  Don't check for next_state
+	!= NULL twice.
+	* posix/regcomp.c (peek_token): Use opr.ctx_type instead of opr.idx
+	for ANCHOR.
+	(parse_expression): Only call init_word_char if word context will be
+	needed.
+
+	* posix/bug-regex11.c (tests): Add new tests.
+
+	* posix/tst-regex.c: Include getopt.h.
+	(timing): New variable.
+	(main): Set timing to 1 if --timing argument is present.
+	Add 2 new tests.
+	(run_test, run_test_backwards): Handle timing.
+
+2003-11-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (re_string_t): Remove mbs_case field.
+	Add offsets, valid_raw_len, raw_len, raw_stop, mbs_allocated and
+	offsets_needed fields.  Change icase, is_utf8 and map_notascii
+	type from int bitfield to unsigned char.
+	(MBS_ALLOCATED, MBS_CASE_ALLOCATED): Remove.
+	(build_wcs_upper_buffer): Change prototype to return int.
+	(re_string_peek_byte_case, re_string_fetch_byte_case): Remove
+	defines, add prototypes.
+	* posix/regex_internal.c (re_string_allocate): Don't initialize
+	stop here.  Don't initialize mbs_case.  Set valid_raw_len.
+	Use mbs_allocated instead of MBS_* macros.
+	(re_string_construct): Don't initialize stop and valid_len here.
+	Don't initialize mbs_case.  Use mbs_allocated instead of MBS_*
+	macros.  Reallocate buffers if build_wcs_upper_buffer converted
+	too few bytes.  Set valid_len to bufs_len only for single byte
+	no translation and set in that case valid_raw_len as well.
+	(re_string_realloc_buffers): Reallocate offsets if not NULL.
+	Use mbs_allocated instead of MBS_ALLOCATED.  Don't reallocate
+	mbs_case.
+	(re_string_construct_common): Initialize raw_len, mbs_allocated,
+	stop and raw_stop.
+	(build_wcs_buffer): Apply pstr->trans before mbrtowc instead of
+	after it.  Set valid_raw_len.  Don't set mbs_case.
+	(build_wcs_upper_buffer): Return REG_NOERROR or REG_ESPACE.
+	Only use the fast path if !pstr->offsets_needed.  Apply pstr->trans
+	before mbrtowc instead of after it.  If upper case character
+	uses different number of bytes than lower case, goto to the
+	slow path.  Don't call towupper unnecessarily twice.  Set
+	valid_raw_len as well.  Handle in the slow path the case if
+	lower and upper case use different number of characters.
+	Don't set mbs_case.
+	(re_string_skip_chars): Use valid_raw_len instead of valid_len.
+	(build_upper_buffer): Don't set mbs_case.  Add BE macro.  Set
+	valid_raw_len.
+	(re_string_translate_buffer): Set mbs instead of mbs_case.  Set
+	valid_raw_len.
+	(re_string_reconstruct): Use raw_len/raw_stop to initialize
+	len/stop.  Clear valid_raw_len and offsets_needed when clearing
+	valid_len.  Use mbs_allocated instead of MBS_* macros.
+	Check original offset against valid_raw_len instead of valid_len.
+	Remove mbs_case handling.  Adjust valid_raw_len together with
+	valid_len.  If is_utf8 and looking for tip context, apply
+	pstr->trans first.  If buffers start with partial multi-byte
+	character, initialize mbs array as well if mbs_allocated.
+	Check return value of build_wcs_upper_buffer.
+	(re_string_peek_byte_case): New function.
+	(re_string_fetch_byte_case): New function.
+	(re_string_destruct): Use mbs_allocated instead of MBS_ALLOCATED.
+	Don't free mbs_case.  Free offsets.
+	* posix/regcomp.c (init_dfa): Only check if charset name is UTF-8
+	if mb_cur_max == 6.
+	* posix/regexec.c (re_search_internal): Initialize input.raw_stop
+	as well.  Use valid_raw_len instead of valid_len when looking
+	through fastmap.  Adjust registers through input.offsets.
+	(extend_buffers): Allow build_wcs_upper_buffer to fail.
+	* posix/bug-regex18.c (tests): Enable #ifdefed out tests.  Add new
+	tests.
+
 2003-11-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (check_subexp_limits): Only check close
