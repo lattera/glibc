@@ -1,3 +1,8 @@
+2001-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/sv.po: Update from translation team.
+	* po/fr.po: Likewise.
+
 2001-08-28  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
 
 	* Makerules: Fix a typo: MD% -> MD5.
