@@ -548,8 +548,8 @@ elf_machine_rela (struct link_map *map,
 }
 
 static inline void
-elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
-			  Elf64_Addr *const reloc_addr)
+elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
+			   Elf64_Addr *const reloc_addr)
 {
   /* XXX Make some timings.  Maybe it's preverable to test for
      unaligned access and only do it the complex way if necessary.  */

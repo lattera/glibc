@@ -21,12 +21,13 @@
    `elf_dynamic_do_rel' and `elf_dynamic_do_rela'.  */
 
 #ifdef DO_RELA
-# define elf_dynamic_do_rel	elf_dynamic_do_rela
-# define RELCOUNT_IDX		VERSYMIDX (DT_RELACOUNT)
-# define Rel			Rela
-# define elf_machine_rel	elf_machine_rela
+# define elf_dynamic_do_rel		elf_dynamic_do_rela
+# define RELCOUNT_IDX			VERSYMIDX (DT_RELACOUNT)
+# define Rel				Rela
+# define elf_machine_rel		elf_machine_rela
+# define elf_machine_rel_relative	elf_machine_rela_relative
 #else
-# define RELCOUNT_IDX		VERSYMIDX (DT_RELCOUNT)
+# define RELCOUNT_IDX			VERSYMIDX (DT_RELCOUNT)
 #endif
 
 #ifndef VERSYMIDX
@@ -98,3 +99,5 @@ elf_dynamic_do_rel (struct link_map *map,
 #undef elf_dynamic_do_rel
 #undef Rel
 #undef elf_machine_rel
+#undef elf_machine_rel_relative
+#undef RELCOUNT_IDX

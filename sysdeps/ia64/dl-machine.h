@@ -580,8 +580,8 @@ elf_machine_rela (struct link_map *map,
 }
 
 static inline void
-elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
-			  Elf64_Addr *const reloc_addr)
+elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
+			   Elf64_Addr *const reloc_addr)
 {
   /* ??? Ignore MSB and Instruction format for now.  */
   assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);

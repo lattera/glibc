@@ -1,3 +1,27 @@
+2001-08-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/do-rel.h (elf_machine_rel_relative): Define for rela if
+	necessary.  Undefine newly defined macros at the end.
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela_relative):
+	Rename from elf_machine_rel_relative.
+	* sysdeps/cris/dl-machine.h (elf_machine_rela_relative): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela_relative): Likewise.
+	* sysdeps/powerpc/dl-machine.h (elf_machine_rela_relative): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_rela_relative): Likewise.
+	Fix argument types.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela_relative): Likewise.
+	Fix argument types.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela_relative):
+	Likewise.  Fix argument types.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela_relative):
+	Likewise.  Fix argument types.
+	* sysdeps/sh/dl-machine.h (elf_machine_rela_relative): Likewise.
+	Fix argument types.
+	* sysdeps/mips/dl-machine.h (elf_machine_rel_relative): Use
+	ElfW(Rel) in argument.
+	* sysdeps/mips/mips64/dl-machine.h (elf_machine_rel_relative): New
+	function.
+
 2001-08-24  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/sh/dl-machine.h (elf_machine_rela): Fix typo.

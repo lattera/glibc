@@ -536,8 +536,8 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 }
 
 static inline void
-elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
-			  Elf32_Addr *const reloc_addr)
+elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
+			  ElfW(Addr) *const reloc_addr)
 {
   /* XXX Nothing to do.  There is no relative relocation, right?  */
 }
