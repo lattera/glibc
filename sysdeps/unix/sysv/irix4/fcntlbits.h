@@ -1,21 +1,21 @@
 /* O_*, F_*, FD_* bit values for SGI Irix 4.
-Copyright (C) 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef	_FCNTLBITS_H
 
@@ -34,6 +34,7 @@ Cambridge, MA 02139, USA.  */
 #define	O_TRUNC		01000	/* Truncate file to zero length.  */
 #ifdef __USE_MISC
 #define	O_SYNC		00020	/* Synchronous writes.  */
+#define	O_FSYNC		O_SYNC
 #define	O_ASYNC		00100	/* Send SIGIO to owner when data is ready.  */
 #endif
 
@@ -93,6 +94,17 @@ struct flock
 #define	F_RDLCK	1	/* Read lock.  */
 #define	F_WRLCK	2	/* Write lock.  */
 #define	F_UNLCK	3	/* Remove lock.  */
+
+
+/* Define some more compatibility macros to be backward compatible with
+   BSD systems which did not managed to hide these kernel macros.  */
+#ifdef	__USE_BSD
+#define	FAPPEND		O_APPEND
+#define	FFSYNC		O_FSYNC
+#define	FASYNC		O_ASYNC
+#define	FNONBLOCK	O_NONBLOCK
+#define	FNDELAY		O_NDELAY
+#endif /* Use BSD.  */
 
 
 #endif	/* fcntlbits.h */
