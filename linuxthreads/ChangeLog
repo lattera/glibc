@@ -1,3 +1,13 @@
+1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h: Add prototype for __pthread_manager_event.
+	* manager.c (__pthread_manager_event): New function.
+	(pthread_start_thread_event): Correct computation of self.
+	Use INIT_THREAD_SELF.
+	* pthread.c (__pthread_manager_thread): Initialize p_lock.
+	(__pthread_initialize_manager): Respect event flags also for creation
+	of the manager thread.
+
 1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_initialize_manager): Initialize

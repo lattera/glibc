@@ -9,7 +9,12 @@
 
 
 /* Comment out the following for less verbose output.  */
-#define LOG(c) __libc_write (2, c "\n", strlen (c "\n"))
+#ifndef NDEBUG
+# define LOG(c) if (__td_debug) __libc_write (2, c "\n", strlen (c "\n"))
+extern int __td_debug;
+#else
+# define LOG(c)
+#endif
 
 
 /* Handle for a process.  This type is opaque.  */

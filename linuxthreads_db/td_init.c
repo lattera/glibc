@@ -20,6 +20,8 @@
 
 #include "thread_dbP.h"
 
+int __td_debug;
+
 
 td_err_e
 td_init (void)

@@ -1,3 +1,8 @@
+1999-11-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* thread_dbP.h (LOG): Only print message if __td_debug is nonzero.
+	* td_init.c: Add __td_debug.
+
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_ta_thr_iter.c: Start copying list of descriptors from right

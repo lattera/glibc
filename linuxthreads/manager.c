@@ -182,6 +182,21 @@ int __pthread_manager(void *arg)
   }
 }
 
+int __pthread_manager_event(void *arg)
+{
+  /* If we have special thread_self processing, initialize it.  */
+#ifdef INIT_THREAD_SELF
+  INIT_THREAD_SELF(&__pthread_manager_thread, 1);
+#endif
+
+  /* Get the lock the manager will free once all is correctly set up.  */
+  __pthread_lock (THREAD_GETMEM((&__pthread_manager_thread), p_lock), NULL);
+  /* Free it immediately.  */
+  __pthread_unlock (THREAD_GETMEM((&__pthread_manager_thread), p_lock));
+
+  return __pthread_manager(arg);
+}
+
 /* Process creation */
 
 static int pthread_start_thread(void *arg)
@@ -232,8 +247,11 @@ static int pthread_start_thread(void *arg)
 
 static int pthread_start_thread_event(void *arg)
 {
-  pthread_descr self = thread_self ();
+  pthread_descr self = (pthread_descr) arg;
 
+#ifdef INIT_THREAD_SELF
+  INIT_THREAD_SELF(self, self->p_nr);
+#endif
   /* Get the lock the manager will free once all is correctly set up.  */
   __pthread_lock (THREAD_GETMEM(self, p_lock), NULL);
   /* Free it immediately.  */

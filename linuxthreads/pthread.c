@@ -84,7 +84,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_tid */
   0,                          /* int p_pid */
   0,                          /* int p_priority */
-  NULL,                       /* struct _pthread_fastlock * p_lock */
+  &__pthread_handles[1].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
@@ -387,9 +387,49 @@ int __pthread_initialize_manager(void)
     return -1;
   }
   /* Start the thread manager */
-  pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-                CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND
-		, (void *)(long)manager_pipe[0]);
+  pid = 0;
+  if (__pthread_initial_thread.p_report_events)
+    {
+      /* It's a bit more complicated.  We have to report the creation of
+	 the manager thread.  */
+      int idx = __td_eventword (TD_CREATE);
+      uint32_t mask = __td_eventmask (TD_CREATE);
+
+      if ((mask & (__pthread_threads_events.event_bits[idx]
+		   | __pthread_initial_thread.p_eventbuf.eventmask.event_bits[idx]))
+	  != 0)
+	{
+	  pid = __clone(__pthread_manager_event,
+			(void **) __pthread_manager_thread_tos,
+			CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+			(void *)(long)manager_pipe[0]);
+
+	  if (pid != -1)
+	    {
+	      /* Now fill in the information about the new thread in
+	         the newly created thread's data structure.  We cannot let
+	         the new thread do this since we don't know whether it was
+	         already scheduled when we send the event.  */
+	      __pthread_manager_thread.p_eventbuf.eventdata =
+		&__pthread_manager_thread;
+	      __pthread_manager_thread.p_eventbuf.eventnum = TD_CREATE;
+	      __pthread_last_event = &__pthread_manager_thread;
+	      __pthread_manager_thread.p_tid = 2* PTHREAD_THREADS_MAX + 1;
+	      __pthread_manager_thread.p_pid = pid;
+
+	      /* Now call the function which signals the event.  */
+	      __linuxthreads_create_event ();
+
+	      /* Now restart the thread.  */
+	      __pthread_unlock(__pthread_manager_thread.p_lock);
+	    }
+	}
+    }
+
+  if (pid == 0)
+    pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
+		  CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
+		  (void *)(long)manager_pipe[0]);
   if (pid == -1) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
