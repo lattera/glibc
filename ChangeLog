@@ -1,3 +1,8 @@
+2003-03-07  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/s390/s390-32/sysdep.h (L): Use .Lfoo instead of foo.
+	* sysdeps/s390/s390-64/sysdep.h (L): Likewise.
+
 2003-03-04  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove unneeded
