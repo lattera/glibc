@@ -1,5 +1,8 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/execve.c: New file.  This version terminates
+	all threads [PR libc/1223].
+
 	* elf/rtld.c (_dl_start): Initialize bootstrap_map.l_info to zero.
 	[PR libc/1165].
 
