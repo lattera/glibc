@@ -1,5 +1,29 @@
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/unistd.h (socklen_t): Define if it has not yet happened.
+	(gethostname): Change type of second parameter to socklen_t.
+	* include/unistd.h (__gethostname): Change type of second
+	parameter to socklen_t.
+	* sysdeps/generic/gethostname.c (__gethostname): Likewise.
+	* sysdeps/mach/hurd/gethostname.c (__gethostname): Likewise.
+	* sysdeps/unix/sysv/gethostname.c (__gethostname): Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/gethostname.c (__gethostname):
+	Likewise.
+	* sysdeps/unix/sysv/linux/gethostname.c: Removed.
+	* sysdeps/generic/bits/socket.h: Use __socklen_t to define socklen_t.
+	Allow definition elsewhere.
+	* sysdeps/unix/sysv/aix/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/generic/bits/types.h: Define __socklen_t.
+	* sysdeps/unix/sysv/aix/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/hpux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+
 	* inet/arpa/inet.h (inet_addr): Change return type to in_addr_t.
 	(inet_lnaof): Likewise.
 	(inet_netof): Likewise.

@@ -242,6 +242,13 @@ typedef __intptr_t intptr_t;
 # endif
 #endif
 
+#if defined __USE_BSD || defined __USE_XOPEN
+# ifndef __socklen_t_defined
+typedef __socklen_t socklen_t;
+#  define __socklen_t_defined
+# endif
+#endif
+
 /* Values for the second argument to access.
    These may be OR'd together.  */
 #define	R_OK	4		/* Test for read permission.  */
@@ -735,7 +742,7 @@ extern int setlogin (__const char *__name) __THROW;
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
    name and the terminator.  */
-extern int gethostname (char *__name, size_t __len) __THROW;
+extern int gethostname (char *__name, socklen_t __len) __THROW;
 
 /* Set the name of the current host to NAME, which is LEN bytes long.
    This call is restricted to the super-user.  */

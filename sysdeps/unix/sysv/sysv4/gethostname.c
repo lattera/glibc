@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -22,12 +22,12 @@
 #include <sys/types.h>
 #include <sys/systeminfo.h>
 
-extern int __sysinfo __P ((int command, char *buf, long count));
+extern int __sysinfo (int command, char *buf, long int count);
 
 int
 __gethostname (name, namelen)
      char *name;
-     size_t namelen;
+     socklen_t namelen;
 {
   return __sysinfo (SI_HOSTNAME, name, namelen);
 }

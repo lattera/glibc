@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -172,6 +172,9 @@ typedef long int __intptr_t;
 #else
 typedef int      __intptr_t;
 #endif
+
+/* Duplicate info from sys/socket.h.  */
+typedef unsigned int __socklen_t;
 
 
 /* Now add the thread types.  */

@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1994-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,10 @@
 #include <sys/types.h>
 
 /* Type for length arguments in socket calls.  */
-typedef unsigned int socklen_t;
+#ifndef __socklen_t_defined
+typedef __socklen_t socklen_t;
+# define __socklen_t_defined
+#endif
 
 /* Types of sockets.  */
 enum __socket_type

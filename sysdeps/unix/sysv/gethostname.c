@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/utsname.h>
 
@@ -26,12 +27,22 @@
 int
 __gethostname (name, len)
      char *name;
-     size_t len;
+     socklen_t len;
 {
   struct utsname buf;
+  size_t node_len;
+
   if (uname (&buf))
     return -1;
-  strncpy (name, buf.nodename, len);
+
+  node_len = strlen (buf.nodename) + 1;
+  if (node_len > len)
+    {
+      __set_errno (ENAMETOOLONG);
+      return -1;
+    }
+
+  memcpy (name, buf.nodename, node_len);
   return 0;
 }
 
