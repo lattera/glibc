@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,97,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,11 +62,13 @@ writeio (void *cookie, const char *buf, size_t n)
    The current file position is stored in *POS.
    Returns zero if successful, nonzero if not.  */
 static int
-seekio (void *cookie, fpos_t *pos, int whence)
+seekio (void *cookie, off_t *pos, int whence)
 {
-  error_t error = __io_seek ((file_t) cookie, *pos, whence, pos);
+  off_t res;
+  error_t error = __io_seek ((file_t) cookie, *pos, whence, &res);
   if (error)
     return __hurd_fail (error);
+  *pos = res;
   return 0;
 }
 
@@ -82,25 +84,40 @@ closeio (void *cookie)
   return 0;
 }
 
-static const __io_functions funcsio = { readio, writeio, seekio, closeio };
+#ifndef USE_IN_LIBIO
+#define cookie_io_functions_t __io_functions
+#endif
+static const cookie_io_functions_t funcsio =
+{ readio, writeio, seekio, closeio };
 
-
-/* Defined in fopen.c.  */
-extern int __getmode (const char *mode, __io_mode *mptr);
-
 
 /* Open a stream on PORT.  MODE is as for fopen.  */
 
 FILE *
-__fopenport (mach_port_t port, const char *mode)
+fopenport (mach_port_t port, const char *mode)
 {
-  register FILE *stream;
-  __io_mode m;
   int pflags;
+  int needflags;
   error_t err;
 
-  if (!__getmode (mode, &m))
-    return NULL;
+  const char *m = mode;
+
+  switch (*m++)
+    {
+    case 'r':
+      needflags = O_READ;
+      break;
+    case 'w':
+      needflags = O_WRITE;
+      break;
+    case 'a':
+      needflags = O_WRITE|O_APPEND;
+      break;
+    default:
+      return NULL;
+  }
+  if (m[0] == '+' || (m[0] == 'b' && m[1] == '+'))
+    needflags |= O_RDWR;
 
   /* Verify the PORT is valid allows the access MODE specifies.  */
 
@@ -108,23 +125,11 @@ __fopenport (mach_port_t port, const char *mode)
     return __hurd_fail (err), NULL;
 
   /* Check the access mode.  */
-  if ((m.__read && !(pflags & O_READ)) || (m.__write && !(pflags & O_WRITE)))
+  if ((pflags & needflags) != needflags)
     {
       errno = EBADF;
       return NULL;
     }
 
-  stream = __newstream ();
-  if (stream == NULL)
-    return NULL;
-
-  stream->__cookie = (void *) port;
-  stream->__mode = m;
-  stream->__io_funcs = funcsio;
-  stream->__room_funcs = __default_room_functions;
-  stream->__seen = 1;
-
-  return stream;
+  return fopencookie ((void *) port, mode, funcsio);
 }
-
-weak_alias (__fopenport, fopenport)
