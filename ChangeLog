@@ -1,3 +1,14 @@
+2002-03-09  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdsig.c (write_corefile): Fix swapped arguments to __dir_link.
+	Reported by Jon Arney <jarney1@cox.net>.
+
+2002-02-23  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurd/threadvar.h (__hurd_threadvar_location): Add __THROW to
+	declaration.
+	(__hurd_errno_location): Function removed.
+
 2002-03-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/reg.h: Add compatibility for

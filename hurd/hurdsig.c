@@ -198,7 +198,7 @@ write_corefile (int signo, const struct hurd_signal_detail *detail)
   if (! err && file != MACH_PORT_NULL)
     /* The core dump into FILE succeeded, so now link it into the
        directory.  */
-    err = __dir_link (file, coredir, name, 1);
+    err = __dir_link (coredir, file, name, 1);
   __mach_port_deallocate (__mach_task_self (), file);
   __mach_port_deallocate (__mach_task_self (), coredir);
   return !err && file != MACH_PORT_NULL;
