@@ -11,7 +11,7 @@ setrlimit	-	setrlimit	2	__setrlimit	setrlimit64 setrlimit
 ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 mmap		-	mmap		6	__mmap		mmap __mmap64 mmap64
-readahead	EXTRA	readahead	3	__readahead	readahead
+readahead	-	readahead	3	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
 
 # Override select.S in parent directory:
