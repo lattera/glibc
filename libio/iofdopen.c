@@ -124,8 +124,19 @@ _IO_new_fdopen (fd, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &INTUSE(_IO_wfile_jumps));
-  _IO_JUMPS (&new_f->fp) = &INTUSE(_IO_file_jumps);
+  /* Set up initially to use the `maybe_mmap' jump tables rather than using
+     __fopen_maybe_mmap to do it, because we need them in place before we
+     call _IO_file_attach or else it will allocate a buffer immediately.  */
+  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd,
+#ifdef _G_HAVE_MMAP
+	       (read_write & _IO_NO_WRITES) ? &_IO_wfile_jumps_maybe_mmap :
+#endif
+	       &INTUSE(_IO_wfile_jumps));
+  _IO_JUMPS (&new_f->fp) =
+#ifdef _G_HAVE_MMAP
+    (read_write & _IO_NO_WRITES) ? &_IO_file_jumps_maybe_mmap :
+#endif
+      &INTUSE(_IO_file_jumps);
   INTUSE(_IO_file_init) (&new_f->fp);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
@@ -143,7 +154,7 @@ _IO_new_fdopen (fd, mode)
     _IO_mask_flags (&new_f->fp.file, read_write,
 		    _IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
 
-  return __fopen_maybe_mmap (&new_f->fp.file);
+  return &new_f->fp.file;
 }
 INTDEF2(_IO_new_fdopen, _IO_fdopen)
 

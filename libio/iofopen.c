@@ -43,50 +43,16 @@ __fopen_maybe_mmap (fp)
 #ifdef _G_HAVE_MMAP
   if (fp->_flags & _IO_NO_WRITES)
     {
-      /* We use the file in read-only mode.  This could mean we can
-	 mmap the file and use it without any copying.  But not all
-	 file descriptors are for mmap-able objects and on 32-bit
-	 machines we don't want to map files which are too large since
-	 this would require too much virtual memory.  */
-      struct _G_stat64 st;
+      /* Since this is read-only, we might be able to mmap the contents
+	 directly.  We delay the decision until the first read attempt by
+	 giving it a jump table containing functions that choose mmap or
+	 vanilla file operations and reset the jump table accordingly.  */
 
-      if (_IO_SYSSTAT (fp, &st) == 0
-	  && S_ISREG (st.st_mode) && st.st_size != 0
-	  /* Limit the file size to 1MB for 32-bit machines.  */
-	  && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024)
-	  /* Sanity check.  */
-	  && (fp->_offset == _IO_pos_BAD || fp->_offset <= st.st_size))
-	{
-	  /* Try to map the file.  */
-	  void *p;
-
-# ifdef _G_MMAP64
-	  p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
-			 fp->_fileno, 0);
-# else
-	  p = __mmap (NULL, st.st_size, PROT_READ, MAP_PRIVATE,
-		      fp->_fileno, 0);
-# endif
-	  if (p != MAP_FAILED)
-	    {
-	      /* OK, we managed to map the file.  Set the buffer up
-		 and use a special jump table with simplified
-		 underflow functions which never tries to read
-		 anything from the file.  */
-	      INTUSE(_IO_setb) (fp, p, (char *) p + st.st_size, 0);
-
-	      if (fp->_offset == _IO_pos_BAD)
-		fp->_offset = 0;
-
-	      _IO_setg (fp,  p, p + fp->_offset, p + fp->_offset);
-
-	      if (fp->_mode <= 0)
-		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
-	      else
-		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_mmap;
-	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
-	    }
-	}
+      if (fp->_mode <= 0)
+	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_maybe_mmap;
+      else
+	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_maybe_mmap;
+      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_maybe_mmap;
     }
 #endif
   return fp;

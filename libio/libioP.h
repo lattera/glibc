@@ -425,8 +425,10 @@ extern void _IO_default_imbue __P ((_IO_FILE *, void *));
 
 extern struct _IO_jump_t _IO_file_jumps;
 extern struct _IO_jump_t _IO_file_jumps_mmap attribute_hidden;
+extern struct _IO_jump_t _IO_file_jumps_maybe_mmap attribute_hidden;
 extern struct _IO_jump_t _IO_wfile_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_wfile_jumps_mmap attribute_hidden;
+extern struct _IO_jump_t _IO_wfile_jumps_maybe_mmap attribute_hidden;
 extern struct _IO_jump_t _IO_old_file_jumps attribute_hidden;
 extern struct _IO_jump_t _IO_streambuf_jumps;
 extern struct _IO_jump_t _IO_proc_jumps attribute_hidden;
@@ -498,6 +500,8 @@ extern _IO_FILE* _IO_file_setbuf __P ((_IO_FILE *, char *, _IO_ssize_t));
 extern _IO_off64_t _IO_file_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
 extern _IO_off64_t _IO_file_seekoff_mmap __P ((_IO_FILE *, _IO_off64_t, int,
 					       int));
+extern _IO_off64_t _IO_file_seekoff_maybe_mmap __P ((_IO_FILE *, _IO_off64_t,
+						     int, int));
 extern _IO_size_t _IO_file_xsputn __P ((_IO_FILE *, const void *, _IO_size_t));
 extern _IO_size_t _IO_file_xsgetn __P ((_IO_FILE *, void *, _IO_size_t));
 extern int _IO_file_stat __P ((_IO_FILE *, void *));
@@ -505,6 +509,7 @@ extern int _IO_file_close __P ((_IO_FILE *));
 extern int _IO_file_close_mmap __P ((_IO_FILE *));
 extern int _IO_file_underflow __P ((_IO_FILE *));
 extern int _IO_file_underflow_mmap __P ((_IO_FILE *));
+extern int _IO_file_underflow_maybe_mmap __P ((_IO_FILE *));
 extern int _IO_file_overflow __P ((_IO_FILE *, int));
 #define _IO_file_is_open(__fp) ((__fp)->_fileno != -1)
 extern void _IO_file_init __P ((struct _IO_FILE_plus *));
