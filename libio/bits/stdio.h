@@ -29,13 +29,6 @@
 
 
 #ifdef __USE_EXTERN_INLINES
-/* Since version 2.97 GCC knows about `fprintf' and can optimize certain
-   cases.  Help gcc to optimize more code by mapping `printf' to the known
-   `fprintf' function.  Unfortunately we have to use a macro.  */
-# if __GNUC_PREREQ (2,97)
-#  define printf(fmt, args...) fprintf (stdout, fmt, ##args)
-# endif
-
 /* Write formatted output to stdout from argument list ARG.  */
 __STDIO_INLINE int
 vprintf (__const char *__restrict __fmt, _G_va_list __arg) __THROW

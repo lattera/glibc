@@ -1,3 +1,8 @@
+2001-08-02  Andreas Jaeger  <aj@suse.de>
+
+        * libio/bits/stdio.h (printf): Remove printf optimization since
+        GCC 3.0 can optimize printf.
+
 2001-08-02  Ulrich Weigand  <uweigand@de.ibm.com>
 
 	* sysdeps/s390/s390-32/memcpy.S: Fixed incorrect use of
