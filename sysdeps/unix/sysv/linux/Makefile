@@ -27,4 +27,4 @@ ifeq ($(subdir), sunrpc)
 headers += nfs/nfs.h
 endif
 
-config-LDFLAGS = -Wl,-dynamic-linker=/lib/ld-gnu.so.1
+rtld-installed-name = ld-gnu.so.1
