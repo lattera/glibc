@@ -21,20 +21,7 @@
 #include <signal.h>
 #include <libintl.h>
 #include <shlib-compat.h>
-
 #include <bits/wordsize.h>
-#if	__WORDSIZE == 32
-#define PTR_SIZE_STR "4"
-#elif	__WORDSIZE == 64
-#define PTR_SIZE_STR "8"
-#else
-#error	unexpected wordsize __WORDSIZE
-#endif
-
-
-#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".data\n\t.globl __old_sys_siglist\n__old_sys_siglist:");
-#endif
 
 const char *const __new_sys_siglist[NSIG] =
 {
@@ -45,10 +32,8 @@ const char *const __new_sys_siglist[NSIG] =
 strong_alias (__new_sys_siglist, _sys_siglist_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".type __old_sys_siglist,@object\n\t.size __old_sys_siglist,"
-        OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
-
-asm (".data\n\t.globl __old_sys_sigabbrev\n__old_sys_sigabbrev:");
+strong_alias (_sys_siglist_internal, __old_sys_siglist)
+declare_symbol (__old_sys_siglist, object, OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 #endif
 
 const char *const __new_sys_sigabbrev[NSIG] =
@@ -57,13 +42,11 @@ const char *const __new_sys_sigabbrev[NSIG] =
 #include <siglist.h>
 #undef init_sig
 };
+strong_alias (__new_sys_sigabbrev, _sys_sigabbrev_internal)
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-asm (".type __old_sys_sigabbrev,@object\n\t.size __old_sys_sigabbrev,"
-        OLD_SIGLIST_SIZE_STR "*" PTR_SIZE_STR);
-
-extern const char *const *__old_sys_siglist;
-extern const char *const *__old_sys_sigabbrev;
+strong_alias (_sys_sigabbrev_internal, __old_sys_sigabbrev)
+declare_symbol (__old_sys_sigabbrev, object, OLD_SIGLIST_SIZE * __WORDSIZE / 8)
 
 strong_alias (__old_sys_siglist, _old_sys_siglist)
 compat_symbol (libc, __old_sys_siglist, _sys_siglist, GLIBC_2_0);

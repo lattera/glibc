@@ -1,3 +1,14 @@
+2002-10-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/gnu/siglist.c (PTR_SIZE_STR): Remove.
+	(__old_sys_siglist, __old_sys_sigabbrev): Use strong_alias and
+	declare_symbol.
+	* sysdeps/mach/hurd/siglist.h (OLD_SIGLIST_SIZE_STR): Remove.
+	(OLD_SIGLIST_SIZE): Define.
+	* sysdeps/unix/sysv/linux/siglist.h (OLD_SIGLIST_SIZE_STR): Remove.
+	(OLD_SIGLIST_SIZE): Define.
+	* sysdeps/unix/sysv/linux/arm/siglist.c: Remove.
+
 2002-11-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/strncpy.S: Fix recovery code.
