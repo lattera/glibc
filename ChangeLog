@@ -1,3 +1,9 @@
+Thu Jun  6 02:00:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (distinfo-vars): Don't write constant line to frob sources.
+	* Make-dist (sources): Append $(elided-routines) and $(extra-libs)
+	routines.
+
 Tue Jun  4 22:03:02 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/__math.h: Define long double versions of

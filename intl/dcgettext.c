@@ -97,6 +97,9 @@ char *getwd ();
 # else
 char *getcwd ();
 # endif
+# ifndef HAVE_STPCPY
+static char *stpcpy PARAMS ((char *dest, const char *src));
+# endif
 #endif
 
 /* Amount to increase buffer size by in each try.  */
@@ -293,12 +296,7 @@ DCGETTEXT (domainname, msgid, category)
 	 we avoid the non-standard function stpcpy.  In GNU C Library
 	 this function is available, though.  Also allow the symbol
 	 HAVE_STPCPY to be defined.  */
-#if defined _LIBC || defined HAVE_STPCPY
       stpcpy (stpcpy (strchr (dirname, '\0'), "/"), binding->dirname);
-#else
-      strcat (dirname, "/");
-      strcat (dirname, binding->dirname);
-#endif
     }
 
   /* Now determine the symbolic name of CATEGORY and its value.  */
@@ -312,16 +310,9 @@ DCGETTEXT (domainname, msgid, category)
      avoid the non-standard function stpcpy.  In GNU C Library this
      function is available, though.  Also allow the symbol HAVE_STPCPY
      to be defined.  */
-#if defined _LIBC || defined HAVE_STPCPY
   stpcpy (stpcpy (stpcpy (stpcpy (xdomainname, categoryname), "/"),
 		  domainname),
 	  ".mo");
-#else
-  strcpy (xdomainname, categoryname);
-  strcat (xdomainname, "/");
-  strcat (xdomainname, domainname);
-  strcat (xdomainname, ".mo");
-#endif
 
   /* Creating working area.  */
   single_locale = (char *) alloca (strlen (categoryvalue) + 1);
@@ -586,3 +577,21 @@ static const char *guess_category_value (category, categoryname)
   return "C";
 #endif
 }
+
+/* @@ begin of epilog @@ */
+
+/* We don't want libintl.a to depend on any other library.  So we
+   avoid the non-standard function stpcpy.  In GNU C Library this
+   function is available, though.  Also allow the symbol HAVE_STPCPY
+   to be defined.  */
+#if !_LIBC && !HAVE_STPCPY
+static char *
+stpcpy (dest, src)
+     char *dest;
+     const char *src;
+{
+  while ((*dest++ = *src++) != '\0')
+    /* Do nothing. */ ;
+  return dest - 1;
+}
+#endif

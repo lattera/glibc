@@ -62,6 +62,9 @@ all-headers := $(sort $(headers) $(wildcard $(all-headers)))
 endif
 foo:=$(shell echo 'IS THIS WORKING??? all-headers=$(all-headers)' >&2)
 
+sources += $(addsuffix .c,$(elided-routines) \
+		          $(foreach l,$(extra-libs),$($l-routines)))
+
 # Find all sysdep sources and headers.
 +maybe-sysdeps := $(sources) $(sources:.c=.s) $(sources:.c=.S) $(all-headers) \
 		  $(filter %.c %.S %.s %.h %.sub,$(distribute))

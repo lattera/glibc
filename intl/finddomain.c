@@ -1,6 +1,9 @@
 /* finddomain.c -- handle list of needed message catalogs
-Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+
+This file is part of the GNU C Library.  Its master source is NOT part of
+the C library, however.  The master source lives in /gd/gnu/lib.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -14,8 +17,8 @@ Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
 License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
 
 #ifdef HAVE_CONFIG_H
 # include <config.h>
@@ -66,16 +69,14 @@ void free ();
    because some ANSI C functions will require linking with this object
    file and the name space must not be polluted.  */
 # define stpcpy(dest, src) __stpcpy(dest, src)
+#else
+# ifndef HAVE_STPCPY
+static char *stpcpy PARAMS ((char *dest, const char *src));
+# endif
 #endif
 
 /* List of already loaded domains.  */
 static struct loaded_l10nfile *_nl_loaded_domains;
-
-/* Substitution for systems lacking this function in their C library.  */
-#if !_LIBC && !HAVE_STPCPY
-static char *stpcpy__ PARAMS ((char *dest, const char *src));
-# define stpcpy(dest, src) stpcpy__ (dest, src)
-#endif
 
 
 /* Return a data structure describing the message catalog described by
@@ -208,7 +209,7 @@ _nl_find_domain (dirname, locale, domainname)
    to be defined.  */
 #if !_LIBC && !HAVE_STPCPY
 static char *
-stpcpy__ (dest, src)
+stpcpy (dest, src)
      char *dest;
      const char *src;
 {

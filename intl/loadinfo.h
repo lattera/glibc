@@ -1,3 +1,11 @@
+#ifndef PARAMS
+# if __STDC__
+#  define PARAMS(args) args
+# else
+#  define PARAMS(args) ()
+# endif
+#endif
+
 /* Encoding of locale name parts.  */
 #define CEN_REVISION		1
 #define CEN_SPONSOR		2
@@ -24,25 +32,27 @@ struct loaded_l10nfile
 };
 
 
-extern const char *_nl_normalize_codeset __P ((const char *codeset,
-					       size_t name_len));
+extern const char *_nl_normalize_codeset PARAMS ((const char *codeset,
+						  size_t name_len));
 
 extern struct loaded_l10nfile *
-_nl_make_l10nflist __P ((struct loaded_l10nfile **l10nfile_list,
-			 const char *dirlist, size_t dirlist_len, int mask,
-			 const char *language, const char *territory,
-			 const char *codeset, const char *normalized_codeset,
-			 const char *modifier, const char *special,
-			 const char *sponsor, const char *revision,
-			 const char *filename, int do_allocate));
+_nl_make_l10nflist PARAMS ((struct loaded_l10nfile **l10nfile_list,
+			    const char *dirlist, size_t dirlist_len, int mask,
+			    const char *language, const char *territory,
+			    const char *codeset,
+			    const char *normalized_codeset,
+			    const char *modifier, const char *special,
+			    const char *sponsor, const char *revision,
+			    const char *filename, int do_allocate));
 
 
-extern const char *_nl_expand_alias __P ((const char *name));
+extern const char *_nl_expand_alias PARAMS ((const char *name));
 
-extern int _nl_explode_name __P ((char *name, const char **language,
-				  const char **modifier,
-				  const char **territory,
-				  const char **codeset,
-				  const char **normalized_codeset,
-				  const char **special, const char **sponsor,
-				  const char **revision));
+extern int _nl_explode_name PARAMS ((char *name, const char **language,
+				     const char **modifier,
+				     const char **territory,
+				     const char **codeset,
+				     const char **normalized_codeset,
+				     const char **special,
+				     const char **sponsor,
+				     const char **revision));
