@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@
 #define	_POSIX_NAME_MAX		14
 
 /* Number of bytes in a pathname.  */
-#define	_POSIX_PATH_MAX		255
+#define	_POSIX_PATH_MAX		256
 
 /* Number of bytes than can be written atomically to a pipe.  */
 #define	_POSIX_PIPE_BUF		512

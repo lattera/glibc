@@ -1,3 +1,8 @@
+2000-04-30  Andreas Jaeger  <aj@suse.de>
+
+	* posix/bits/posix1_lim.h (_POSIX_PATH_MAX): Increase to 256 in
+	accordance with Austin Draft.
+
 2000-04-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* catgets/gencat.c (read_input_file): Use isblank and not isspace
