@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -297,7 +297,7 @@ extern __ssize_t getdirentries (int __fd, char *__restrict __buf,
 extern __ssize_t __REDIRECT (getdirentries,
 			     (int __fd, char *__restrict __buf,
 			      size_t __nbytes,
-			      __off_t *__restrict __basep) __THROW,
+			      __off64_t *__restrict __basep) __THROW,
 			     getdirentries64);
 #  else
 #   define getdirentries getdirentries64

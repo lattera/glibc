@@ -1,3 +1,7 @@
+2000-01-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* dirent/dirent.h (getdentries): Correct prototype to use __off64_t.
+
 2000-01-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* timezone/antarctica: Update from tzdata2000a.
