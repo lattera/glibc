@@ -3,7 +3,7 @@
 	* sysdeps/unix/sysv/linux/i386/clone.S: Add support for NPTL where
 	the PID is stored at userlevel and needs to be reset when CLONE_THREAD
 	is not used.
-	* sysdeps/unix/sysv/linux/86_64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/clone.S: Likewise.
 
 2004-11-18  Daniel Jacobowitz  <dan@codesourcery.com>
 
@@ -14,8 +14,10 @@
 	__THUMB_INTERWORK__.
 	(_dl_start_user): Use BX.
 	* sysdeps/arm/strlen.S: Use DO_RET.
-	* sysdeps/unix/arm/brk.S, sysdeps/unix/arm/fork.S,
-	sysdeps/unix/arm/sysdep.S, sysdeps/unix/arm/sysdep.h: Likewise.
+	* sysdeps/unix/arm/brk.S: Likewise.
+	* sysdeps/unix/arm/fork.S: Likewise.
+	* sysdeps/unix/arm/sysdep.S: Likewise.
+	* sysdeps/unix/arm/sysdep.h: Likewise.
 	* sysdeps/unix/sysv/linux/arm/clone.S: Update uses of RETINSTR.
 	* sysdeps/unix/sysv/linux/arm/mmap.S: Likewise.
 	* sysdeps/unix/sysv/linux/arm/mmap64.S: Likewise.
