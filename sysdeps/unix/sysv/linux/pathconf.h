@@ -1,5 +1,5 @@
 /* Common parts of Linux implementation of pathconf and fpathconf.
-   Copyright (C) 1991,95,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1991,1995,1996,1998-2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@
 #include <sys/statfs.h>
 #include "linux_fsinfo.h"
 
-/* Used like: return statfs_link_max (__statfs (name, &buf), &buf); */
 
+/* Used like: return statfs_link_max (__statfs (name, &buf), &buf); */
 static inline long int
 statfs_link_max (int result, const struct statfs *fsbuf)
 {
@@ -75,8 +75,8 @@ statfs_link_max (int result, const struct statfs *fsbuf)
     }
 }
 
-/* Used like: return statfs_filesize_max (__statfs (name, &buf), &buf); */
 
+/* Used like: return statfs_filesize_max (__statfs (name, &buf), &buf); */
 static inline long int
 statfs_filesize_max (int result, const struct statfs *fsbuf)
 {
@@ -112,5 +112,40 @@ statfs_filesize_max (int result, const struct statfs *fsbuf)
 
     default:
       return 32;
+    }
+}
+
+
+/* Used like: return statfs_link_max (__statfs (name, &buf), &buf); */
+static inline long int
+statfs_symlinks (int result, const struct statfs *fsbuf)
+{
+  if (result < 0)
+    {
+      if (errno == ENOSYS)
+	/* Not possible, return the default value.  */
+	return 1;
+
+      /* Some error occured.  */
+      return -1;
+    }
+
+  switch (fsbuf->f_type)
+    {
+    case ADFS_SUPER_MAGIC:
+    case BFS_MAGIC:
+    case CRAMFS_MAGIC:
+    case DEVPTS_SUPER_MAGIC:
+    case EFS_SUPER_MAGIC:
+    case EFS_MAGIC:
+    case MSDOS_SUPER_MAGIC:
+    case NTFS_SUPER_MAGIC:
+    case QNX4_SUPER_MAGIC:
+    case ROMFS_SUPER_MAGIC:
+      /* No symlink support.  */
+      return 0;
+
+    default:
+      return 1;
     }
 }

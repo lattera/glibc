@@ -865,6 +865,9 @@ static const struct conf vars[] =
 #ifdef _CS_GNU_LIBPTHREAD_VERSION
     { "GNU_LIBPTHREAD_VERSION", _CS_GNU_LIBPTHREAD_VERSION, CONFSTR },
 #endif
+#ifdef _PC_2_SYMLINKS
+    { "POSIX2_SYMLINKS", _PC_2_SYMLINKS, PATHCONF },
+#endif
 
     { NULL, 0, SYSCONF }
   };

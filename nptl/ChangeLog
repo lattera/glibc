@@ -1,3 +1,11 @@
+2003-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* allocatestack.c (allocate_stack): If MULTI_PAGE_ALIASING is defined
+	and the size of the stack which must be allocated is a multiple,
+	allocate one more page.
+	* sysdeps/i386/i686/Makefile: Don't define COLORING_INCREMENT, but
+	MULTI_PAGE_ALIASING.
+
 2003-03-13  Roland McGrath  <roland@redhat.com>
 
 	* pthread_create.c (start_thread): Set EXITING_BIT after the

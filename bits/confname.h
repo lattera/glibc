@@ -62,8 +62,10 @@ enum
 #define _PC_REC_XFER_ALIGN		_PC_REC_XFER_ALIGN
     _PC_ALLOC_SIZE_MIN,
 #define _PC_ALLOC_SIZE_MIN		_PC_ALLOC_SIZE_MIN
-    _PC_SYMLINK_MAX
+    _PC_SYMLINK_MAX,
 #define _PC_SYMLINK_MAX			_PC_SYMLINK_MAX
+    _PC_2_SYMLINKS
+#define _PC_2_SYMLINKS			_PC_2_SYMLINKS
   };
 
 /* Values for the argument to `sysconf'.  */

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1996,1998,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1998,2000,2001,2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -225,6 +226,10 @@ __pathconf (const char *path, int name)
       /* In general there are no limits.  If a system has one it should
 	 overwrite this case.  */
       return -1;
+
+    case _PC_2_SYMLINKS:
+      /* Unix systems generally have symlinks.  */
+      return 1;
     }
 }
 

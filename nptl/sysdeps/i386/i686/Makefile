@@ -18,6 +18,15 @@
 # 02111-1307 USA.
 
 ifeq ($(subdir),nptl)
-# For P4 processors we color the stack in 128 bit steps.
-CFLAGS-pthread_create.c += -DCOLORING_INCREMENT=128
+# It turns out that stack coloring is in general not good on P4s.  Some
+# applications will benefit.  We will probably have a configuration option
+# at some point.  Enabling coloring can be done with
+#
+#   -DCOLORING_INCREMENT=128
+#
+# What is useful is to avoid the 64k aliasing problem which reliably
+# happens if all stacks use sizes which are a multiple of 64k.  Tell
+# the stack allocator to disturb this by allocation one more page if
+# necessary.
+CFLAGS-pthread_create.c += -DMULTI_PAGE_ALIASING=65536
 endif

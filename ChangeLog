@@ -1,3 +1,16 @@
+2003-03-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c: Recognize POSIX2_SYMLINKS.
+	* sysdeps/generic/bits/confname.h: Define _PC_2_SYMLINKS.
+	* sysdeps/posix/fpathconf.c: Handle _PC_2_SYMLINKS.
+	* sysdeps/posix/pathconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/fpathconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/pathconf.c: Likewise.
+	* sysdeps/unix/sysv/linux/pathconf.h: Define statfs_symlinks.
+
+	* sysdeps/unix/sysv/linux/linux_fsinfo.h: Define some more magic
+	words.
+
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
 	* include/gmp.h: Include/gmp-mparam.h.

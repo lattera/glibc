@@ -1,5 +1,5 @@
 /* Constants from kernel header for various FSes.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,9 @@
 /* Constants that identify the `coherent' filesystem.  */
 #define COH_SUPER_MAGIC		0x012ff7b7
 
+/* Constant that identifies the `ramfs' filesystem.  */
+#define CRAMFS_MAGIC		0x28cd3d45
+
 /* Constant that identifies the `devfs' filesystem.  */
 #define DEVFS_SUPER_MAGIC	0x1373
 
@@ -48,6 +51,7 @@
 
 /* Constant that identifies the `efs' filesystem.  */
 #define EFS_SUPER_MAGIC		0x414A53
+#define EFS_MAGIC		0x072959
 
 /* Constant that identifies the `ext2' and `ext3' filesystems.  */
 #define EXT2_SUPER_MAGIC	0xef53
