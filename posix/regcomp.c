@@ -602,15 +602,7 @@ free_dfa_content (re_dfa_t *dfa)
       for (j = 0; j < entry->num; ++j)
 	{
 	  re_dfastate_t *state = entry->array[j];
-	  if (state->entrance_nodes != &state->nodes)
-	    {
-	      re_node_set_free (state->entrance_nodes);
-	      re_free (state->entrance_nodes);
-	    }
-	  re_node_set_free (&state->nodes);
-	  re_free (state->trtable);
-	  re_free (state->trtable_search);
-	  re_free (state);
+	  free_state (state);
 	}
       re_free (entry->array);
     }
