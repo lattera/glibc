@@ -3,12 +3,12 @@
 @c %MENU% Functions to help debugging applications.
 @chapter Debugging support
 
-Applications often get debugged using dedicated debugger programs.  But
-sometimes this is not possible and it is in any case useful to provide
-the developer at the time the problems are experienced with as much
-information as possible.  For this reason there exist a few functions
-which a program can use to help the developer more easily locate the
-problem.
+Applications are usually debugged using dedicated debugger programs.
+But sometimes this is not possible and, in any case, it is useful to
+provide the developer with as much information as possible at the time 
+the problems are experienced.  For this reason a few functions are
+provided which a program can use to help the developer more easily
+locate the problem.
 
 
 @menu
@@ -39,9 +39,9 @@ and manipulate backtraces of the current thread.
 The @code{backtrace} function obtains a backtrace for the current
 thread, as a list of pointers, and places the information into
 @var{buffer}.  The argument @var{size} should be the number of
-@w{@code{void *}} elements fitting into @var{buffer}.  The return value
-is the actual number of entries of @var{buffer} that are obtained, and
-is at most @var{size}.
+@w{@code{void *}} elements that will fit into @var{buffer}.  The return
+value is the actual number of entries of @var{buffer} that are obtained,
+and is at most @var{size}.
 
 The pointers placed in @var{buffer} are actually return addresses
 obtained by inspecting the stack, one return address per stack frame.
@@ -67,19 +67,19 @@ The return value is a pointer to an array of strings, which has
 contains a printable representation of the corresponding element of
 @var{buffer}.  It includes the function name (if this can be
 determined), an offset into the function, and the actual return address
-(in hexidecimal).
+(in hexadecimal).
 
-Currently, the function name and offset can currently only be obtained
-on systems that use the ELF binary format for programs and libraries.
-On other systems, only the hexidecimal return address will be present.
-Also, you may need to pass additional flags to the linker
-(@code{-rdynamic} on systems using GNU ld) to make the function names
-available to the program.
+Currently, the function name and offset only be obtained on systems that
+use the ELF binary format for programs and libraries.  On other systems,
+only the hexadecimal return address will be present.  Also, you may need
+to pass additional flags to the linker to make the function names
+available to the program.  (For example, on systems using GNU ld, you
+must pass (@code{-rdynamic}.)
 
 The return value of @code{backtrace_symbols} is a pointer obtained via
 the @code{malloc} function, and it is the responsibility of the caller
 to @code{free} that pointer.  Note that only the return value need be
-freed, but not the individual strings.
+freed, not the individual strings.
 
 The return value is @code{NULL} if sufficient memory for the strings
 cannot be obtained.
