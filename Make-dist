@@ -76,7 +76,7 @@ foo:=$(shell echo 'stub/generic +sysdeps=$(+sysdeps)'>&2)
 foo:=$(shell echo '+sysdep-names=$(+sysdep-names)' >&2)
 
 ifdef subdir-dirs
-vpath %.c $(addprefix $(subdir)/,$(subdir-dirs))
+vpath % $(addprefix $(subdir)/,$(subdir-dirs))
 endif
 
 # Now find all the sysdep versions of those files.

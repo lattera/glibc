@@ -37,6 +37,7 @@ install-bin	= localedef locale
 extra-objs	= $(localedef-modules:=.o) $(locale-modules:=.o) \
 		  $(lib-modules:=.o)
 
+subdir-dirs	= programs
 vpath %.c programs
 vpath %.h programs
 
