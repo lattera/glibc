@@ -1,5 +1,8 @@
 2001-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/Makefile: Make sure gcc uses a frame pointer for
+	all the files which use CURRENT_STACK_FRAME.
+
 	* sysdeps/i386/pt-machine.h (CURRENT_STACK_FRAME): Define using
 	__builtin_frame_address.
 	* sysdeps/i386/i686/pt-machine.h: Likewise.

@@ -49,19 +49,37 @@ elf_machine_dynamic (void)
 static inline Elf64_Addr
 elf_machine_load_address (void)
 {
-  register Elf64_Addr elf_pic_register __asm__("%l7");
-  Elf64_Addr pc, la;
+  register Elf64_Addr *elf_pic_register __asm__("%l7");
 
-  /* Utilize the fact that a local .got entry will be partially
-     initialized at startup awaiting its RELATIVE fixup.  */
+  /* We used to utilize the fact that a local .got entry will
+     be partially initialized at startup awaiting its RELATIVE
+     fixup:
 
-  __asm("sethi %%hi(.Load_address), %1\n"
-	".Load_address:\n\t"
-	"rd %%pc, %0\n\t"
-	"or %1, %%lo(.Load_address), %1\n\t"
-	: "=r"(pc), "=r"(la));
+     Elf64_Addr pc, la;
 
-  return pc - *(Elf64_Addr *)(elf_pic_register + la);
+     __asm("sethi %%hi(.Load_address), %1\n"
+	   ".Load_address:\n\t"
+	   "rd %%pc, %0\n\t"
+	   "or %1, %%lo(.Load_address), %1\n\t"
+	   : "=r"(pc), "=r"(la));
+
+     return pc - *(Elf64_Addr *)(elf_pic_register + la);
+     
+     Unfortunately as binutils tries to work around Solaris
+     dynamic linker bug which resolves R_SPARC_RELATIVE as X += B + A
+     instead of X = B + A this does not work any longer, since ld
+     clears it.
+     
+     The following method relies on the fact that sparcv9 ABI maximal
+     page length is 1MB and all ELF segments on sparc64 are aligned
+     to 1MB.  Also, it relies on _DYNAMIC coming after _GLOBAL_OFFSET_TABLE_
+     and assumes that they both fit into the first 1MB of the RW segment.
+     This should be true for some time unless ld.so grows too much, at the
+     moment the whole stripped ld.so is 128KB and only smaller part of that
+     is in the RW segment.  */
+
+  return ((Elf64_Addr)elf_pic_register - *elf_pic_register + 0xfffff)
+	 & ~0xfffffUL;
 }
 
 /* We have 4 cases to handle.  And we code different code sequences
