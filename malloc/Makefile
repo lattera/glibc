@@ -27,7 +27,7 @@ dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc
 
-distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h
+distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memprof.h
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore

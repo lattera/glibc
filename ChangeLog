@@ -1,3 +1,16 @@
+2000-02-02  Andreas Schwab  <schwab@suse.de>
+
+	* malloc/Makefile (distribute): Add memprof.h.
+	* malloc/memprof.c: Move definition of GETSP and GETTIME to new
+	header memprof.h.
+	* sysdeps/generic/memprof.h: New file.
+	* sysdeps/alpha/memprof.h: New file.
+	* sysdeps/i386/memprof.h: New file.
+	* sysdeps/m68k/memprof.h: New file.
+	* sysdeps/mips/memprof.h: New file.
+	* sysdeps/powerpc/memprof.h: New file.
+	* sysdeps/sparc/memprof.h: New file.
+
 2000-02-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/getresgid.c: Move...

@@ -28,6 +28,8 @@
 #include <unistd.h>
 #include <sys/time.h>
 
+#include <memprof.h>
+
 /* Pointer to the real functions.  These are determined used `dlsym'
    when really needed.  */
 static void *(*mallocp) (size_t);
@@ -73,34 +75,6 @@ static uintptr_t start_sp;
 #define peak_heap	peak_use[0]
 #define peak_stack	peak_use[1]
 #define peak_total	peak_use[2]
-
-#ifdef __i386__
-# define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
-#endif
-#ifdef __alpha__
-# define GETSP() ({ register uintptr_t stack_ptr asm ("$30"); stack_ptr; })
-#endif
-#ifdef __sparc__
-# define GETSP() ({ register uintptr_t stack_ptr asm ("%sp"); stack_ptr; })
-#endif
-#ifdef __powerpc__
-# define GETSP() ({ register uintptr_t stack_ptr asm ("%r1"); stack_ptr; })
-#endif
-
-#ifdef __i386__
-# define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
-#endif
-#ifndef GETTIME
-# define GETTIME(low,high) \
-  {									      \
-    struct timeval tval;						      \
-    uint64_t usecs;							      \
-    gettimeofday (&tval, NULL);						      \
-    usecs = (uint64_t) tval.tv_usec + (uint64_t) tval.tv_usec * 1000000;      \
-    low = usecs & 0xffffffff;						      \
-    high = usecs >> 32;							      \
-  }
-#endif
 
 #define DEFAULT_BUFFER_SIZE	1024
 static size_t buffer_size;
