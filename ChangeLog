@@ -12,6 +12,9 @@
 
 2003-04-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/fileops.c (_IO_new_file_fopen): Don't free step data right
+	after getting them.
+
 	* malloc/thread-m.h [PTHREAD_MUTEX_INITIALIZER]: If
 	HAVE_register_atfork_malloc is defined use __register_atfork_malloc
 	instead of __register_atfork.
