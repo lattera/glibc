@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,8 @@ Cambridge, MA 02139, USA.  */
 
 #define	_DIRSTREAM_H	1
 
-#include <sys/types.h>
+#define __need_size_t
+#include <stddef.h>
 
 /* Directory stream type.
 
@@ -36,7 +37,7 @@ struct __dirstream
     size_t __offset;		/* Current offset into the block.  */
     size_t __size;		/* Total valid data in the block.  */
 
-    off_t pos;			/* Position of next entry to read.  */
+    struct dirent __entry;	/* Returned by `readdir'.  */
   };
 
 #define _DIR_dirfd(dirp)	((dirp)->__fd)

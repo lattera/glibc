@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 xbug errnobug \
 	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 \
 	 tfformat tiformat tstdiomisc \
-	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf6 scanf7 scanf8 scanf9
+	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf7 scanf8 scanf9
 
 
 include ../Rules

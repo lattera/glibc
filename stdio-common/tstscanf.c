@@ -31,6 +31,10 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 {
   char buf[BUFSIZ];
   FILE *in = stdin, *out = stdout;
+  int x;
+
+  if (sscanf ("0", "%d", &x) != 1)
+    exit (EXIT_FAILURE);
 
   if (argc == 2 && !strcmp (argv[1], "-opipe"))
     {

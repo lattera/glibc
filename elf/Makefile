@@ -33,6 +33,8 @@ rtld-routines	:= rtld $(addprefix dl-,minimal load lookup object reloc \
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h \
 		  soinit.c sofini.c ldd.sh.in linux-compat.c
 
+all: # Make this the default target; it will be defined in Rules.
+
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))

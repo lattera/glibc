@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -77,8 +77,6 @@ DEFUN(readdir, (dirp), DIR *dirp)
 	  p = memchr ((PTR) dp->d_name, '\0', D_NAMLEN (dp) + 1);
 	  d->d_namlen = (p != NULL) ? p - dp->d_name : D_NAMLEN (dp);
 	  memcpy (d->d_name, dp->d_name, d->d_namlen + 1);
-	  d->d_type = DT_UNKNOWN;
-	  d->d_reclen = &d->d_name[d->d_namlen + 1] - (char *) d;
 	  return d;
 	}
     }

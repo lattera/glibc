@@ -1,6 +1,6 @@
 # Make the TAGS files.
 
-# Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -98,7 +98,7 @@ ifdef subdir
 ifdef tags_sources
 	$(ETAGS) -o $@ $^
 else
-# No sources.  Create a dummy file.
+# No sources.  Create a dummy file. 
 	touch $@
 endif # tags_sources
 else # parent
@@ -114,37 +114,3 @@ $(subdirs:%=%/TAGS):
 	$(MAKE) -C $(@D) no_deps=t $(@F)
 
 endif # subdir
-
-XGETTEXT = xgettext
-MSGJOIN = msgjoin
-
-P = $(..)po
-
-ifdef subdir
-domain = $(subdir)
-else
-domain = libc-top
-endif
-
-define extract
-@rm -f $@.new
-$(XGETTEXT) --keyword=_ --keyword=N_ --sort-output -d - \
-	    > $@.new /dev/null $^
-mv -f $@.new $@
-endef
-
-$P/$(domain).pot: $(tags_sources); $(extract)
-
-$P/siglist.pot: $(..)sysdeps/generic/signame.c; $(extract)
-$P/errlist.pot: $(..)sysdeps/mach/hurd/errlist.c; $(extract)
-
-ifndef subdir
-$P/SYS_libc.pot: $P/libc-top.pot $(subdirs:%=$P/%.pot)
-	@rm -f $@.new
-	$(MSGJOIN) $^ > $@.new
-	mv -f $@.new $@
-
-$(subdirs:%=$P/%.pot): $P/%.pot: FORCE
-	$(MAKE) -C $* no_deps=t ../$@
-FORCE:
-endif

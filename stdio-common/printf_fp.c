@@ -382,8 +382,9 @@ __printf_fp (FILE *fp,
 	      else
 		{
 		  cy = __mpn_mul (tmp, scale, scalesize,
-				  tens->array + 2, tens->arraysize - 2);
-		  tmpsize = scalesize + tens->arraysize - 2;
+				  &tens->array[_FPIO_CONST_OFFSET],
+				  tens->arraysize - _FPIO_CONST_OFFSET);
+		  tmpsize = scalesize + tens->arraysize - _FPIO_CONST_OFFSET;
 		  if (cy == 0)
 		    --tmpsize;
 		}
@@ -513,13 +514,15 @@ __printf_fp (FILE *fp,
 
 	      /* The __mpn_mul function expects the first argument to be
 		 bigger than the second.  */
-	      if (fracsize < tens->arraysize - 2)
-		cy = __mpn_mul (tmp, &tens->array[2], tens->arraysize - 2,
+	      if (fracsize < tens->arraysize - _FPIO_CONST_OFFSET)
+		cy = __mpn_mul (tmp, &tens->array[_FPIO_CONST_OFFSET],
+				tens->arraysize - _FPIO_CONST_OFFSET,
 				frac, fracsize);
 	      else
 		cy = __mpn_mul (tmp, frac, fracsize,
-				&tens->array[2], tens->arraysize - 2);
-	      tmpsize = fracsize + tens->arraysize - 2;
+				&tens->array[_FPIO_CONST_OFFSET],
+				tens->arraysize - _FPIO_CONST_OFFSET);
+	      tmpsize = fracsize + tens->arraysize - _FPIO_CONST_OFFSET;
 	      if (cy == 0)
 		--tmpsize;
 
@@ -536,11 +539,12 @@ __printf_fp (FILE *fp,
 		if (cnt_h <= BITS_PER_MP_LIMB - 4)
 		  {
 		    topval[0] = 0;
-		    topval[1] = 10 << (BITS_PER_MP_LIMB - 4 - cnt_h);
+		    topval[1]
+		      = ((mp_limb) 10) << (BITS_PER_MP_LIMB - 4 - cnt_h);
 		  }
 		else
 		  {
-		    topval[0] = 10 << (BITS_PER_MP_LIMB - 4);
+		    topval[0] = ((mp_limb) 10) << (BITS_PER_MP_LIMB - 4);
 		    topval[1] = 0;
 		    (void) __mpn_lshift (topval, topval, 2,
 					 BITS_PER_MP_LIMB - cnt_h);

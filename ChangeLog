@@ -1,3 +1,50 @@
+Sun Feb 18 15:08:10 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/posix/utimes.c (__utimes): There are 1000000 usecs in a
+	sec.
+
+Sun Feb 18 13:56:00 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/Makefile, time/Makefile: Make `all' the default target.
+
+Mon Feb 19 18:09:04 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* misc/sys/ptrace.h: Moved to ...
+	* sysdeps/generic/sys/ptrace.h: ... here.
+	* sys/ptrace.h: File removed.
+
+Sun Feb 18 12:13:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/Makefile (headers): Add fpu_control.h.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (errno): Put it into .bss
+ 	so that the symbol alias works.
+
+	* sysdeps/unix/sysv/linux/m68k/fpu_control.h (_FPU_SETCW): Corrected.
+
+	* sysdeps/unix/sysv/linux/resourcebits.h: New file.
+
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: New file.
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add getegid, geteuid,
+	getppid and reboot.
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Special version that does not
+	use getdtablesize.
+
+Sat Feb 17 10:30:21 1996  David Mosberger-Tang  <davidm@AZStarNet.com>
+
+	* stdio-common/printf_fp.c, stdlib/strtod.c, sysdeps/ieee754/dbl2mpn.c,
+	sysdeps/ieee754/ldbl2mpn.c, sysdeps/ieee754/mpn2dbl.c,
+	sysdeps/ieee754/mpn2ldbl.c: Cast left operands of shift instructions
+	to `long' where necessary.
+
+Thu Feb 15 20:04:50 1996  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* stdlib/fpioconst.h: Introduce new constant _FPIO_CONST_OFFSET.
+	* stdio-common/printf_fp.c, stdlib/strtod.c: Use _FPIO_CONST_OFFSET
+	to correctly access MPN array depending on architecture.
+
 Mon Feb 19 15:30:26 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* stdio-common/tstscanf.c (main): Add check for "0" as %d.

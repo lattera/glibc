@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Generic Unix version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
 extern void _start (void);
+extern int _dl_secure;
 
 Elf32_Addr
 _dl_sysdep_start (void **start_argptr,

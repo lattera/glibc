@@ -95,7 +95,7 @@ typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__SI__)));
 
 /* Macros for accessing the hardware control word.  */
 #define _FPU_GETCW(cw) __asm__ ("fmove%.l %!, %0" : "=dm" (cw))
-#define _FPU_SETCW(cw) __asm__ ("fmove%.l %0, %!" : "dm" (cw))
+#define _FPU_SETCW(cw) __asm__ volatile ("fmove%.l %0, %!" : : "dm" (cw))
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

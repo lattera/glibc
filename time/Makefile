@@ -42,6 +42,8 @@ distribute := $(distribute) $(tzfiles) leapseconds pacificnew
 
 install-sbin := zic zdump
 
+all: # Make this the default target; it will be defined in Rules.
+
 include ../Makeconfig	# Get objpfx defined so we can use it below.
 
 # zonenames uses this variable.

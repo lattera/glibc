@@ -2,8 +2,11 @@
 
 adjtimex	adjtime	adjtimex	1	__adjtimex
 fork		-	fork		0	__fork		fork
+getegid		-	getegid		0	__getegid	getegid
+geteuid		-	geteuid		0	__geteuid	geteuid
 getpgid		-	getpgid		1	getpgid
 getpgrp		-	getpgrp		0	getpgrp
+getppid		-	getppid		0	__getppid	getppid
 getsid		-	getsid		1	getsid
 gtty		-	gtty		2	gtty
 ipc		msgget	ipc		5	__ipc
@@ -13,6 +16,7 @@ mount		-	mount		5	__mount	mount
 munlock		-	munlock		2	__munlock	munlock
 munlockall	-	munlockall	0	__munlockall	munlockall
 pipe		-	pipe		1	__pipe	pipe
+reboot		-	reboot		3	reboot
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 setpgid		-	setpgid		2	setpgid
 sigpending	-	sigpending	1	sigpending

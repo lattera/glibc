@@ -22,7 +22,7 @@
 subdir	:= gmon
 
 headers	:= sys/gmon.h
-
+distribute := machine-gmon.h
 routines := gmon mcount profil
 
 include ../Rules

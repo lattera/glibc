@@ -65,10 +65,10 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 /* Definitions according to limb size used.  */
 #if	BITS_PER_MP_LIMB == 32
 #  define MAX_DIG_PER_LIMB	9
-#  define MAX_FAC_PER_LIMB	1000000000L
+#  define MAX_FAC_PER_LIMB	1000000000UL
 #elif	BITS_PER_MP_LIMB == 64
 #  define MAX_DIG_PER_LIMB	19
-#  define MAX_FAC_PER_LIMB	10000000000000000000L
+#  define MAX_FAC_PER_LIMB	10000000000000000000UL
 #else
 #  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
@@ -84,7 +84,7 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 	       ,	  10000000000,          100000000000,
      1000000000000,       10000000000000,       100000000000000,
      1000000000000000,    10000000000000000,    100000000000000000,
-     1000000000000000000, 10000000000000000000
+     1000000000000000000, 10000000000000000000U
 #endif
 #if BITS_PER_MP_LIMB > 64
   #error "Need to expand tens_in_limb table to" MAX_DIG_PER_LIMB
@@ -128,7 +128,7 @@ round_and_return (mp_limb *retval, int exponent, int negative,
 	  return 0.0;
 	}
 
-      more_bits |= (round_limb & ((1 << round_bit) - 1)) != 0;
+      more_bits |= (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0;
       if (shift == MANT_DIG)
 	/* This is a special case to handle the very seldom case where
 	   the mantissa will be empty after the shift.  */
@@ -166,25 +166,26 @@ round_and_return (mp_limb *retval, int exponent, int negative,
       exponent = MIN_EXP - 2;
     }
 
-  if ((round_limb & (1 << round_bit)) != 0
+  if ((round_limb & (((mp_limb) 1) << round_bit)) != 0
       && (more_bits || (retval[0] & 1) != 0
-          || (round_limb & ((1 << round_bit) - 1)) != 0))
+          || (round_limb & ((((mp_limb) 1) << round_bit) - 1)) != 0))
     {
       mp_limb cy = __mpn_add_1 (retval, retval, RETURN_LIMB_SIZE, 1);
 
       if (((MANT_DIG % BITS_PER_MP_LIMB) == 0 && cy) ||
           ((MANT_DIG % BITS_PER_MP_LIMB) != 0 &&
            (retval[RETURN_LIMB_SIZE - 1]
-            & (1 << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
+            & (((mp_limb) 1) << (MANT_DIG % BITS_PER_MP_LIMB))) != 0))
 	{
 	  ++exponent;
 	  (void) __mpn_rshift (retval, retval, RETURN_LIMB_SIZE, 1);
-	  retval[RETURN_LIMB_SIZE - 1] |= 1 << ((MANT_DIG - 1)
-						% BITS_PER_MP_LIMB);
+	  retval[RETURN_LIMB_SIZE - 1]
+	    |= ((mp_limb) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB);
 	}
       else if (exponent == MIN_EXP - 2
 	       && (retval[RETURN_LIMB_SIZE - 1]
-		   & (1 << ((MANT_DIG - 1) % BITS_PER_MP_LIMB))) != 0)
+		   & (((mp_limb) 1) << ((MANT_DIG - 1) % BITS_PER_MP_LIMB)))
+	       != 0)
 	  /* The number was denormalized but now normalized.  */
 	exponent = MIN_EXP - 1;
     }
@@ -628,14 +629,15 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 		  /* FIXME: not the whole multiplication has to be done.
 		     If we have the needed number of bits we only need the
 		     information whether more non-zero bits follow.  */
-		  if (numsize >= ttab->arraysize - 2)
+		  if (numsize >= ttab->arraysize - _FPIO_CONST_OFFSET)
 		    cy = __mpn_mul (pdest, psrc, numsize,
-				    &ttab->array[2], ttab->arraysize - 2);
+				    &ttab->array[_FPIO_CONST_OFFSET],
+				    ttab->arraysize - _FPIO_CONST_OFFSET);
 		  else
-		    cy = __mpn_mul (pdest, &ttab->array[2],
-				    ttab->arraysize - 2,
+		    cy = __mpn_mul (pdest, &ttab->array[_FPIO_CONST_OFFSET],
+				    ttab->arraysize - _FPIO_CONST_OFFSET,
 				    psrc, numsize);
-		  numsize += ttab->arraysize - 2;
+		  numsize += ttab->arraysize - _FPIO_CONST_OFFSET;
 		  if (cy == 0)
 		    --numsize;
 		  SWAP (psrc, pdest);
@@ -788,13 +790,17 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    neg_exp ^= expbit;
 
 	    if (densize == 0)
-	      memcpy (psrc, &ttab->array[2],
-		      (densize = ttab->arraysize - 2) * sizeof (mp_limb));
+	      {
+		densize = ttab->arraysize - _FPIO_CONST_OFFSET;
+		memcpy (psrc, &ttab->array[_FPIO_CONST_OFFSET],
+			densize * sizeof (mp_limb));
+	      }
 	    else
 	      {
-		cy = __mpn_mul (pdest, &ttab->array[2], ttab->arraysize - 2,
+		cy = __mpn_mul (pdest, &ttab->array[_FPIO_CONST_OFFSET],
+				ttab->arraysize - _FPIO_CONST_OFFSET,
 				psrc, densize);
-		densize += ttab->arraysize - 2;
+		densize += ttab->arraysize - _FPIO_CONST_OFFSET;
 		if (cy == 0)
 		  --densize;
 		SWAP (psrc, pdest);

@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    unpredictable before this is done.  */
 
 int
-msync (caddr_t addr, size_t len, int flags)
+msync (caddr_t addr, size_t len)
 {
   errno = ENOSYS;
   return -1;

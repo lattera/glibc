@@ -23,8 +23,15 @@ Cambridge, MA 02139, USA.  */
    it somewhere else.
 
    ...and this place is here.  */
-.comm errno,4,4
+	.bss
+	.globl errno
+	.type errno,@object
+	.size errno,4
+errno:	.space 4
+	.globl _errno
+	.type _errno,@object
 _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
+	.text
 
 /* The following code is not used at all in the shared library.
    The PIC system call stubs set errno themselves.  */

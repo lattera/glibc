@@ -1,5 +1,5 @@
 /* Header file for constants used in floating point <-> decimal conversions.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,13 @@ struct mp_power
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */
   };
 extern const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1];
+
+/* The constants in the array `_fpioconst_pow10' have an offset.  */
+#if BITS_PER_MP_LIMB == 32
+# define _FPIO_CONST_OFFSET	2
+#else
+# define _FPIO_CONST_OFFSET	1
+#endif
 
 
 #endif	/* fpioconst.h */

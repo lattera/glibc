@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* `ptrace' debugger support interface.  Linux version.
+Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the, 1992 Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#ifndef	_PTRACE_H
+#ifndef _SYS_PTRACE_H
+#define _SYS_PTRACE_H
 
-#define	_PTRACE_H	1
 #include <features.h>
 
 __BEGIN_DECLS
-
 
 /* Type of the REQUEST argument to `ptrace.'  */
 enum __ptrace_request
@@ -53,7 +53,7 @@ enum __ptrace_request
   PTRACE_POKEDATA,
 #define PT_WRITE_D PTRACE_POKEDATA
 
-  /* Write the word DATA into the process's user space at offset ADDR.  */
+  /* Write the word DATA into the process's user area at offset ADDR.  */
   PTRACE_POKEUSER,
 #define PT_WRITE_U PTRACE_POKEUSER
 
@@ -71,54 +71,15 @@ enum __ptrace_request
 #define PT_STEP PTRACE_SINGLESTEP
 
   /* Attach to a process that is already running. */
-  PTRACE_ATTACH,
+  PTRACE_ATTACH = 0x10,
 #define PT_ATTACH PTRACE_ATTACH
 
   /* Detach from a process attached to with PTRACE_ATTACH.  */
   PTRACE_DETACH,
 #define PT_DETACH PTRACE_DETACH
 
-  /* Get the process's registers (not including floating-point registers)
-     and put them in the `struct regs' (see <machine/regs.h>) at ADDR.  */
-  PTRACE_GETREGS = 12,
-
-  /* Set the process's registers (not including floating-point registers)
-     to the contents of the `struct regs' (see <machine/regs.h>) at ADDR.  */
-  PTRACE_SETREGS,
-
-  /* Get the process's floating point registers and put them
-     in the `struct fp_status' (see <machine/regs.h>) at ADDR.  */
-  PTRACE_GETFPREGS = 14,
-
-  /* Set the process's floating point registers to the contents
-     of the `struct fp_status' (see <machine/regs.h>) at ADDR.  */
-  PTRACE_SETFPREGS,
-
-  /* Read DATA bytes from the process's data space at address ADDR.
-     Put the result starting at address ADDR2 in the caller's
-     address space.  */
-  PTRACE_READDATA = 16,
-
-  /* Write DATA bytes from ADDR2 in the caller's address space into
-     the process's data space at address ADDR.  */
-  PTRACE_WRITEDATA,
-
-  /* Read DATA bytes from the process's text space at address ADDR.
-     Put the result starting at address ADDR2 in the caller's
-     address space.  */
-  PTRACE_READTEXT = 18,
-
-  /* Write DATA bytes from ADDR2 in the caller's address space into
-     the process's text space at address ADDR.  */
-  PTRACE_WRITETEXT,
-
-  /* Read the floating-point accelerator unit registers and
-     put them into the `struct fpa_regs' (see <machine/regs.h>) at ADDR.  */
-  PTRACE_GETFPAREGS = 20,
-
-  /* Write the floating-point accelerator unit registers from
-     the contents of the `struct fpa_regs' at ADDR.  */
-  PTRACE_SETFPAREGS,
+  /* Continue and stop at the next (return from) syscall.  */
+  PTRACE_SYSCALL = 24,
 };
 
 /* Perform process tracing functions.  REQUEST is one of the values
@@ -134,4 +95,4 @@ extern int ptrace __P ((enum __ptrace_request __request __DOTS));
 
 __END_DECLS
 
-#endif /* ptrace.h */
+#endif /* sys/ptrace.h */

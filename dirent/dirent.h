@@ -29,8 +29,25 @@ __BEGIN_DECLS
 
 #include <gnu/types.h>
 
-/* This file defines `struct dirent'.  */
-#include <direntry.h>
+
+/* Directory entry structure.
+
+   This structure is laid out identically to the `struct direct' that
+   represents directory entries in the GNU Hurd and in BSD 4.4 (and
+   incidentally, on disk in the Berkeley fast file system).  The `readdir'
+   implementations for GNU and BSD know this; you must change them if you
+   change this structure.  */
+
+struct dirent
+  {
+    __ino_t d_fileno;		/* File serial number.  */
+    unsigned short int d_reclen; /* Length of the whole `struct dirent'.  */
+    unsigned char d_type;	/* File type, possibly unknown.  */
+    unsigned char d_namlen;	/* Length of the file name.  */
+
+    /* Only this member is in the POSIX standard.  */
+    char d_name[1];		/* File name (actually longer).  */
+  };
 
 #if defined(__USE_BSD) || defined(__USE_MISC)
 #define	d_ino		d_fileno /* Backward compatibility.  */
