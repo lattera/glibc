@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For AMD x86-64.
-   Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Based on i686 version contributed by Ulrich Drepper
    <drepper@cygnus.com>, 1998.
@@ -68,6 +68,7 @@ ENTRY (BP_SYM (FUNCTION))
 	   table.  */
 	movq %rdi, %r8			/* Save value.  */
 	subq $256, %rsp			/* Make space for 256 bytes.  */
+	cfi_adjust_cfa_offset(256)
 	movq $32,  %rcx			/* 32*8 bytes = 256 bytes.  */
 	movq %rsp, %rdi
 	xorq %rax, %rax			/* We store 0s.  */
@@ -199,6 +200,7 @@ L(8):	cmpq %rax, %rdx
 L(epilogue):
 	/* Remove the stopset table.  */
 	addq $256, %rsp
+	cfi_adjust_cfa_offset(-256)
 	retq
 
 L(returnNULL):

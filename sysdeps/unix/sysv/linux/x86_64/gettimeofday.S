@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 ENTRY (__gettimeofday)
 	/* Align stack.  */
 	sub	$0x8, %rsp
+	cfi_adjust_cfa_offset(8)
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	callq	*%rax
 	/* Check error return.  */
@@ -35,6 +36,7 @@ ENTRY (__gettimeofday)
 
 L(pseudo_end):
 	add	$0x8, %rsp
+	cfi_adjust_cfa_offset(-8)
 	ret
 PSEUDO_END(__gettimeofday)
 

@@ -1,3 +1,10 @@
+2003-05-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/gettimeofday.S: Add CFI
+	directives.
+	* sysdeps/unix/sysv/linux/x86_64/time.S: Likewise.
+	* sysdeps/x86_64/strtok.S: Likewise.
+
 2003-05-20  Guido Guenther  <agx@sigxcpu.org>
 
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Change SI_ASYNCNL
