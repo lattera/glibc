@@ -1,3 +1,8 @@
+1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/ru_SU: New file.
+	* SUPPORTED: Add ru_SU with KOI8-R.
+
 1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: Install repertoire maps.

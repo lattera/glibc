@@ -1,5 +1,50 @@
 1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
 
+	* intl/locale.alias: Update russian entry.
+
+1998-05-01 21:54  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* Makerules (static-only-routines): Reimplement in terms of
+	elide-routines.os.
+	(shared-only-routines): Reimplement in terms of
+	elide-routines.X [where X is all object-suffixes except .os].
+
+	(stubs): Create stubs file inside the subdir.
+	(common-mostlyclean): Remove stubs file from inside the subdir.
+	* Makefile (subdir-stubs): Look for stubs files inside the
+	subdirs.
+	* manual/Makefile (stubs): Create dummy stubs file inside the
+	subdir.
+
+1998-05-01 21:01  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	Build speed improvement: make ar less of a bottleneck.
+
+	* Makerules (stamp$o): Just record the object list for later
+	use.
+	(libc_foo.a): New rule, depends on subdir stamp files; builds
+	and ranlibs the library from the lists saved in those files.
+
+	(subdirs-stamps): Define also if subdir == elf (FIXME: kludge).
+	(subdirs-stamp-o): Likewise.
+
+	(ar-symtab-name): Delete variable.
+	(lib%.a): Delete target.
+	(libc_foo.a(bar.%)): Delete target.
+	(libc_foo.a($(ar-symtab-name))): Delete target.
+
+	(objects objs): Just depend on libobjs and extra-objs.
+	(libobjs): Depend on the stamp files, not the objects.
+	(extra-objs): New target, just depends on the extra-objs list.
+
+	(CREATE_ARFLAGS): Kill the `ar S' hack.
+
+	* config.make.in (have-ar-S): Deleted.
+	* configure.in: Delete test for `ar S'.  Add test to determine
+	whether ranlib does anything useful.
+
+1998-05-01  Ulrich Drepper  <drepper@cygnus.com>
+
 	* inet/tst-ether_aton.c: Include <stdio.h>.
 
 1998-04-30 16:45  Ulrich Drepper  <drepper@cygnus.com>

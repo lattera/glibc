@@ -1,0 +1,45 @@
+comment_char %
+escape_char  /
+%
+% Russian Language Locale for Russia
+% Source: RAP
+% Address: Sankt Jo//rgens Alle 8
+%    DK-1615 Ko//benhavn V, Danmark
+% Contact: Keld Simonsen
+% Email: Keld.Simonsen@dkuug.dk
+% Tel: +45 - 31226543
+% Fax: +45 - 33256543
+% Language: ru
+% Territory: RU
+% Revision: 4.3
+% Date: 1996-10-15
+% Application: general
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: KOI8-R
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "ru_RU"
+END LC_CTYPE
+
+LC_COLLATE
+copy "ru_RU"
+END LC_COLLATE
+
+LC_MESSAGES
+copy "ru_RU"
+END LC_MESSAGES
+
+LC_MONETARY
+copy "ru_RU"
+END LC_MONETARY
+
+LC_NUMERIC
+copy "ru_RU"
+END LC_NUMERIC
+
+LC_TIME
+copy "ru_RU"
+END LC_TIME
