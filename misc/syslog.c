@@ -131,7 +131,7 @@ vsyslog(pri, fmt, ap)
 				      __localtime_r (&now, &now_tm));
 #else
 	f->__bufp += strftime (f->__bufp, f->__put_limit - f->__bufp,
-			       "%h %e %T ", __localtime_r (&now, &mow_tm));
+			       "%h %e %T ", __localtime_r (&now, &now_tm));
 #endif
 	msgoff = ftell (f);
 	if (LogTag == NULL)

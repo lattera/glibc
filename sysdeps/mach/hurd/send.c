@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
 DEFUN(__send, (fd, buf, n, flags),
-      int fd AND PTR buf AND size_t n AND int flags)
+      int fd AND const PTR buf AND size_t n AND int flags)
 {
   error_t err;
   int wrote;

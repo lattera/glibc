@@ -157,7 +157,7 @@ __ulckpwdf ()
   else
     {
       /* Prevent problems caused by multiple threads.  */
-      __libc_lock_lock (&lock);
+      __libc_lock_lock (lock);
 
       result = close (lock_fd);
 

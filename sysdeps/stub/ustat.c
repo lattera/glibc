@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <unistd.h>
 #include <errno.h>
+#include <sys/ustat.h>
 
 int
 ustat (dev, ust)

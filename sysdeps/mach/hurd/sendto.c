@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 int
 DEFUN(sendto, (fd, buf, n, flags, addr, addr_len),
-      int fd AND PTR buf AND size_t n AND int flags AND
+      int fd AND const PTR buf AND size_t n AND int flags AND
       const struct sockaddr_un *addr AND size_t addr_len)
 {
   addr_port_t aport;

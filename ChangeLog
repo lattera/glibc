@@ -1,3 +1,15 @@
+Tue Sep  3 11:16:07 1996  Thomas Bushnell/ n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* shadow/lckpwdf.c (__ulckpwdf): Don't take address of LOCK in
+ 	call to __libc_lock_lock.
+
+	* sysdeps/mach/hurd/send.c (__send): Declare BUF const.
+	* sysdeps/mach/hurd/sendto.c (sendto): Likewise.
+
+	* sysdeps/stub/ustat.c: Include <sys/ustat.h>.
+
+	* misc/syslog.c (vsyslog): Fix typo (`mow_tm' -> `now_tm').
+
 Fri Aug 30 19:55:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/genops.c: Make _cleanup an alias of _IO_cleanup.
