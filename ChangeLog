@@ -1,3 +1,8 @@
+1999-05-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/gnu/utmpx.h: Add needed type definitions according to
+	Unix98.  Add forward declaration of struct utmp.
+
 1999-05-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nis/nis_getservlist.c (nis_getservlist): Use malloc instead of

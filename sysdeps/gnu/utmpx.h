@@ -1,6 +1,5 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,8 +20,13 @@
 #define	_UTMPX_H	1
 
 #include <features.h>
+#include <sys/time.h>
 
-__BEGIN_DECLS
+/* Required according to Unix98.  */
+#ifndef pid_t
+typedef __pid_t pid_t;
+# define pid_t pid_t
+#endif
 
 /* Get system dependent values and data structures.  */
 #include <bits/utmpx.h>
@@ -35,6 +39,14 @@ __BEGIN_DECLS
 # define WTMPX_FILENAME	_PATH_WTMPX
 #endif
 
+/* For the getutmp{,x} functions we need the `struct utmp'.  */
+#ifdef __USE_GNU
+struct utmp;
+#endif
+
+
+__BEGIN_DECLS
+
 /* Open user accounting database.  */
 extern void setutxent __P ((void));
 
@@ -45,13 +57,14 @@ extern void endutxent __P ((void));
 extern struct utmpx *getutxent __P ((void));
 
 /* Get the user accounting database entry corresponding to ID.  */
-extern struct utmpx *getutxid __P ((const struct utmpx *__id));
+extern struct utmpx *getutxid __P ((__const struct utmpx *__id));
 
 /* Get the user accounting database entry corresponding to LINE.  */
-extern struct utmpx *getutxline __P ((const struct utmpx *__line));
+extern struct utmpx *getutxline __P ((__const struct utmpx *__line));
 
 /* Write the entry UTMPX into the user accounting database.  */
-extern struct utmpx *pututxline __P ((const struct utmpx *__utmpx));
+extern struct utmpx *pututxline __P ((__const struct utmpx *__utmpx));
+
 
 #ifdef __USE_GNU
 /* Change name of the utmpx file to be examined.  */
@@ -60,6 +73,7 @@ extern int utmpxname __P ((__const char *__file));
 /* Append entry UTMP to the wtmpx-like file WTMPX_FILE.  */
 extern void updwtmpx __P ((__const char *__wtmpx_file,
 			   __const struct utmpx *__utmpx));
+
 
 /* Copy the information in UTMPX to UTMP. */
 extern void getutmp __P ((__const struct utmpx *__utmpx,
