@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -42,7 +42,7 @@ __pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
   int retval;
   sigset_t savemask;
 
-  /* Change nanosecond number to microseconds.  This may loose
+  /* Change nanosecond number to microseconds.  This might mean losing
      precision and therefore the `pselect` should be available.  But
      for now it is hardly found.  */
   if (timeout != NULL)
@@ -51,10 +51,14 @@ __pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
   /* The setting and restoring of the signal mask and the select call
      should be an atomic operation.  This can't be done without kernel
      help.  */
-  __sigprocmask (SIG_SETMASK, sigmask, &savemask);
+  if (sigmask != NULL)
+    __sigprocmask (SIG_SETMASK, sigmask, &savemask);
+
   retval = __select (nfds, readfds, writefds, exceptfds,
 		     timeout != NULL ? &tval : NULL);
-  __sigprocmask (SIG_SETMASK, &savemask, NULL);
+
+  if (sigmask != NULL)
+    __sigprocmask (SIG_SETMASK, &savemask, NULL);
 
   return retval;
 }
