@@ -1,6 +1,30 @@
+1999-02-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* malloc/malloc.c (mALLOC_SET_STATe): Handle the case where a
+	non-checked heap is restored when malloc checking was requested by
+	the user.
+	(struct malloc_state): Add using_malloc_checking.
+	(MALLOC_STATE_VERSION): Increment minor.
+	(using_malloc_checking, disallow_malloc_check): New variables.
+	(__malloc_check_init): Use them.
+	(mALLOC_GET_STATe): Use mALLOc to allocate the malloc_state, so
+	that it can the chunk is properly instrumented when malloc
+	checking is enabled.  Set the new using_malloc_checking field.
+	(malloc_hook_ini): Correct signature when _LIBC is not defined.
+
+1999-02-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/i386/dl-librecon.h
+	(DISTINGUISH_LIB_VERSIONS): Don't relocate DT_STRTAB a second
+	time.
+
+	* elf/rtld.c (dl_main): Rename paths_initialized to rtld_is_main.
+	Don't call elf_get_dynamic_info and _dl_setup_hash a second time
+	if ld.so is the main program.
+
 1999-02-23  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio-common/vfprintf.c (vfprintf): If precision or width if too
+	* stdio-common/vfprintf.c (vfprintf): If precision or width is too
 	large for work_buffer, allocate new buffer.
 	(printf_unknown): Likewise.  [PR libc/988]
 

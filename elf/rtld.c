@@ -340,7 +340,7 @@ dl_main (const ElfW(Phdr) *phdr,
   char *file;
   int has_interp = 0;
   unsigned int i;
-  int paths_initialized = 0;
+  int rtld_is_main = 0;
   hp_timing_t start;
   hp_timing_t stop;
   hp_timing_t diff;
@@ -368,6 +368,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	 pay attention to its PT_INTERP command (we are the interpreter
 	 ourselves).  This is an easy way to test a new ld.so before
 	 installing it.  */
+      rtld_is_main = 1;
 
       /* Note the place where the dynamic linker actually came from.  */
       _dl_rtld_map.l_name = _dl_argv[0];
@@ -441,7 +442,6 @@ of this helper program; chances are you did not intend to run this program.\n\
       /* Initialize the data structures for the search paths for shared
 	 objects.  */
       _dl_init_paths (library_path);
-      paths_initialized = 1;
 
       if (__builtin_expect (mode, normal) == verify)
 	{
@@ -574,12 +574,15 @@ of this helper program; chances are you did not intend to run this program.\n\
   else
     assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
 
-  /* Extract the contents of the dynamic section for easy access.  */
-  elf_get_dynamic_info (_dl_loaded->l_ld, _dl_loaded->l_addr,
-			_dl_loaded->l_info);
-  if (_dl_loaded->l_info[DT_HASH])
-    /* Set up our cache of pointers into the hash table.  */
-    _dl_setup_hash (_dl_loaded);
+  if (! rtld_is_main)
+    {
+      /* Extract the contents of the dynamic section for easy access.  */
+      elf_get_dynamic_info (_dl_loaded->l_ld, _dl_loaded->l_addr,
+			    _dl_loaded->l_info);
+      if (_dl_loaded->l_info[DT_HASH])
+	/* Set up our cache of pointers into the hash table.  */
+	_dl_setup_hash (_dl_loaded);
+    }
 
   if (__builtin_expect (mode, normal) == verify)
     {
@@ -597,7 +600,7 @@ of this helper program; chances are you did not intend to run this program.\n\
       _exit (has_interp ? 0 : 2);
     }
 
-  if (! paths_initialized)
+  if (! rtld_is_main)
     /* Initialize the data structures for the search paths for shared
        objects.  */
     _dl_init_paths (library_path);

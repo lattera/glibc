@@ -1691,14 +1691,11 @@ thread_atfork_static(ptmalloc_lock_all, ptmalloc_unlock_all, \
    initialization routine, then do the normal work. */
 
 static Void_t*
-#ifdef _LIBC
+#if __STD_C
 malloc_hook_ini(size_t sz, const __malloc_ptr_t caller)
 #else
-#if __STD_C
-malloc_hook_ini(size_t sz)
-#else
-malloc_hook_ini(sz) size_t sz;
-#endif
+malloc_hook_ini(sz, caller)
+     size_t sz; const __malloc_ptr_t caller;
 #endif
 {
   __malloc_hook = NULL;
@@ -1746,10 +1743,33 @@ __malloc_ptr_t weak_variable (*__memalign_hook)
      = memalign_hook_ini;
 void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
 
+/* Whether we are using malloc checking.  */
+static int using_malloc_checking;
+
+/* A flag that is set by malloc_set_state, to signal that malloc checking
+   must not be enabled on the request from the user (via the MALLOC_CHECK_
+   environment variable).  It is reset by __malloc_check_init to tell
+   malloc_set_state that the user has requested malloc checking.
+
+   The purpose of this flag is to make sure that malloc checking is not
+   enabled when the heap to be restored was constructed without malloc
+   checking, and thus does not contain the required magic bytes.
+   Otherwise the heap would be corrupted by calls to free and realloc.  If
+   it turns out that the heap was created with malloc checking and the
+   user has requested it malloc_set_state just calls __malloc_check_init
+   again to enable it.  On the other hand, reusing such a heap without
+   further malloc checking is safe.  */
+static int disallow_malloc_check;
+
 /* Activate a standard set of debugging hooks. */
 void
 __malloc_check_init()
 {
+  if (disallow_malloc_check) {
+    disallow_malloc_check = 0;
+    return;
+  }
+  using_malloc_checking = 1;
   __malloc_hook = malloc_check;
   __free_hook = free_check;
   __realloc_hook = realloc_check;
@@ -4041,7 +4061,7 @@ int mALLOPt(param_number, value) int param_number; int value;
    functions. */
 
 #define MALLOC_STATE_MAGIC   0x444c4541l
-#define MALLOC_STATE_VERSION (0*0x100l + 0l) /* major*0x100 + minor */
+#define MALLOC_STATE_VERSION (0*0x100l + 1l) /* major*0x100 + minor */
 
 struct malloc_state {
   long          magic;
@@ -4060,24 +4080,20 @@ struct malloc_state {
   unsigned int  max_n_mmaps;
   unsigned long mmapped_mem;
   unsigned long max_mmapped_mem;
+  int		using_malloc_checking;
 };
 
 Void_t*
 mALLOC_GET_STATe()
 {
-  mchunkptr victim;
   struct malloc_state* ms;
   int i;
   mbinptr b;
 
-  ptmalloc_init();
-  (void)mutex_lock(&main_arena.mutex);
-  victim = chunk_alloc(&main_arena, request2size(sizeof(*ms)));
-  if(!victim) {
-    (void)mutex_unlock(&main_arena.mutex);
+  ms = (struct malloc_state*)mALLOc(sizeof(*ms));
+  if (!ms)
     return 0;
-  }
-  ms = (struct malloc_state*)chunk2mem(victim);
+  (void)mutex_lock(&main_arena.mutex);
   ms->magic = MALLOC_STATE_MAGIC;
   ms->version = MALLOC_STATE_VERSION;
   ms->av[0] = main_arena.av[0];
@@ -4108,6 +4124,11 @@ mALLOC_GET_STATe()
   ms->max_n_mmaps = max_n_mmaps;
   ms->mmapped_mem = mmapped_mem;
   ms->max_mmapped_mem = max_mmapped_mem;
+#if defined _LIBC || defined MALLOC_HOOKS
+  ms->using_malloc_checking = using_malloc_checking;
+#else
+  ms->using_malloc_checking = 0;
+#endif
   (void)mutex_unlock(&main_arena.mutex);
   return (Void_t*)ms;
 }
@@ -4123,6 +4144,9 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
   int i;
   mbinptr b;
 
+#if defined _LIBC || defined MALLOC_HOOKS
+  disallow_malloc_check = 1;
+#endif
   ptmalloc_init();
   if(ms->magic != MALLOC_STATE_MAGIC) return -1;
   /* Must fail if the major version is too high. */
@@ -4160,6 +4184,15 @@ mALLOC_SET_STATe(msptr) Void_t* msptr;
   mmapped_mem = ms->mmapped_mem;
   max_mmapped_mem = ms->max_mmapped_mem;
   /* add version-dependent code here */
+  if (ms->version >= 1) {
+#if defined _LIBC || defined MALLOC_HOOKS
+    /* Check whether it is safe to enable malloc checking.  */
+    if (ms->using_malloc_checking && !using_malloc_checking &&
+	!disallow_malloc_check)
+      __malloc_check_init ();
+#endif
+  }
+
   (void)mutex_unlock(&main_arena.mutex);
   return 0;
 }

@@ -33,8 +33,7 @@
 	  const ElfW(Dyn) *d;						      \
 	  const char *strtab;						      \
 									      \
-	  strtab = ((void *) _dl_loaded->l_addr				      \
-		    + _dl_loaded->l_info[DT_STRTAB]->d_un.d_ptr);	      \
+	  strtab = (const char *) _dl_loaded->l_info[DT_STRTAB]->d_un.d_ptr;  \
 									      \
 	  for (d = _dl_loaded->l_ld; d->d_tag != DT_NULL; ++d)		      \
 	    if (d->d_tag == DT_NEEDED					      \
