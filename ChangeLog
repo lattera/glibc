@@ -1,3 +1,7 @@
+2003-10-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/Makefile (CFLAGS-malloc.c): Variable removed.
+
 2003-10-09  Roland McGrath  <roland@redhat.com>
 
 	* elf/rtld.c (dl_main): Don't set l_name for sysinfo DSO, since there
