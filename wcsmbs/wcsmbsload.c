@@ -96,15 +96,15 @@ getfct (const char *to, const char *from)
     const char *cp = str;						      \
     char *result = NULL;						      \
 									      \
-    while (strchr ("@._+,", *cp) == NULL)				      \
+    while (strchr ("@.+,", *cp) == NULL)				      \
       ++cp;								      \
     if (*cp == '.')							      \
       {									      \
-	const char *endp = cp;						      \
+	const char *endp = ++cp;					      \
 	while (*endp != '\0' && *endp != '@')				      \
 	  ++endp;							      \
 	if (endp != cp)							      \
-	  result = strndupa (str, endp - cp);				      \
+	  result = strndupa (cp, endp - cp);				      \
       }									      \
     result;								      \
   })
