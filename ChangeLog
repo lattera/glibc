@@ -1,3 +1,10 @@
+2003-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/Makefile: Add rules to build IBM866NAV.
+	* iconvdata/ibm866nav.c: New file.
+	* iconvdata/tst-tables.sh: Add IBM866NAV.
+	* iconvdata/gconv-modules: Add entries for IBM866NAV.
+
 2003-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/tester.c (test_strcpy): Use the previously #if 0'ed code

@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   GB18030 ISO-2022-CN-EXT VISCII GBBIG5 CP10007 KOI8-T		 \
 	   GEORGIAN-PS GEORGIAN-ACADEMY ISO-IR-209 MAC-SAMI ARMSCII-8	 \
 	   TCVN5712-1 libJISX0213 EUC-JISX0213 SHIFT_JISX0213		 \
-	   ISO-2022-JP-3 TSCII
+	   ISO-2022-JP-3 TSCII IBM866NAV
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -167,7 +167,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk gconv.map    \
 	      mac-sami.c ibm1160.c ibm1160.h ibm1161.c ibm1161.h	    \
 	      ibm1163.c ibm1163.h ibm1164.c ibm1164.h jisx0213.c jisx0213.h \
 	      euc-jisx0213.c shift_jisx0213.c iso-2022-jp-3.c		    \
-	      tcvn5712-1.c armscii-8.c tscii.c
+	      tcvn5712-1.c armscii-8.c tscii.c ibm866nav.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -208,7 +208,7 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
 			georgian-ps georgian-academy iso-ir-209 mac-sami   \
-			iso8859-11
+			iso8859-11 ibm866nav
 
 gen-special-modules := iso8859-7jp
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -127,6 +127,7 @@ cat <<EOF |
   IBM864
   IBM865
   IBM866
+  IBM866NAV
   IBM868
   IBM869
   IBM870
