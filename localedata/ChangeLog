@@ -1,3 +1,9 @@
+2000-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/zh_TW: Updated.
+	* charmaps/BIG5: Updated.
+	Patches by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
 2000-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/tst_types.h: Don't use `char' for types of any field,

@@ -250,7 +250,7 @@ static void
 init_rtsigs (void)
 {
 #if !__ASSUME_REALTIME_SIGNALS
-  if (!kernel_has_rtsig ())
+  if (__builtin_expect (!kernel_has_rtsig (), 0))
     {
       current_rtmin = -1;
       current_rtmax = -1;
@@ -286,7 +286,7 @@ int
 __libc_current_sigrtmin (void)
 {
 #ifdef __SIGRTMIN
-  if (!rtsigs_initialized)
+  if (__builtin_expect (!rtsigs_initialized, 0))
     init_rtsigs ();
 #endif
   return current_rtmin;
@@ -297,7 +297,7 @@ int
 __libc_current_sigrtmax (void)
 {
 #ifdef __SIGRTMIN
-  if (!rtsigs_initialized)
+  if (__builtin_expect (!rtsigs_initialized, 0))
     init_rtsigs ();
 #endif
   return current_rtmax;
@@ -312,9 +312,10 @@ __libc_allocate_rtsig (int high)
 #ifndef __SIGRTMIN
   return -1;
 #else
-  if (!rtsigs_initialized)
+  if (__builtin_expect (!rtsigs_initialized, 0))
     init_rtsigs ();
-  if (current_rtmin == -1 || current_rtmin > current_rtmax)
+  if (__builtin_expect (current_rtmin == -1, 0)
+      || __builtin_expect (current_rtmin > current_rtmax, 0))
     /* We don't have anymore signal available.  */
     return -1;
 
@@ -343,7 +344,7 @@ is_smp_system (void)
     {
       /*This was not successful.  Now try reading the /proc filesystem.  */
       int fd = __open ("/proc/sys/kernel/version", O_RDONLY);
-      if (fd == -1
+      if (__builtin_expect (fd, 0) == -1
 	  || (reslen = __read (fd, buf, sizeof (buf))) <= 0)
 	/* This also didn't work.  We give up and say it's a UP machine.  */
 	buf[0] = '\0';
@@ -430,7 +431,7 @@ static void pthread_initialize(void)
   /* Register an exit function to kill all other threads. */
   /* Do it early so that user-registered atexit functions are called
      before pthread_exit_process. */
-  if (&__dso_handle != NULL)
+  if (__builtin_expect (&__dso_handle != NULL, 1))
     /* The cast is a bit unclean.  The function expects two arguments but
        we can only pass one.  Fortunately this is not a problem since the
        second argument of `pthread_exit_process' is simply ignored.  */
@@ -483,7 +484,7 @@ int __pthread_initialize_manager(void)
   }
   /* Start the thread manager */
   pid = 0;
-  if (__pthread_initial_thread.p_report_events)
+  if (__builtin_expect (__pthread_initial_thread.p_report_events, 0))
     {
       /* It's a bit more complicated.  We have to report the creation of
 	 the manager thread.  */
@@ -531,7 +532,7 @@ int __pthread_initialize_manager(void)
 	}
     }
 
-  if (pid == 0)
+  if (__builtin_expect (pid, 0) == 0)
     {
 #ifdef NEED_SEPARATE_REGISTER_STACK
       pid = __clone2(__pthread_manager, (void **) __pthread_manager_thread_bos,
@@ -544,7 +545,7 @@ int __pthread_initialize_manager(void)
 		    (void *)(long)manager_pipe[0]);
 #endif
     }
-  if (pid == -1) {
+  if (__builtin_expect (pid, 0) == -1) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
     __libc_close(manager_pipe[1]);
@@ -555,7 +556,7 @@ int __pthread_initialize_manager(void)
   __pthread_manager_thread.p_tid = 2* PTHREAD_THREADS_MAX + 1;
   __pthread_manager_thread.p_pid = pid;
   /* Make gdb aware of new thread manager */
-  if (__pthread_threads_debug && __pthread_sig_debug > 0)
+  if (__builtin_expect (__pthread_threads_debug, 0) && __pthread_sig_debug > 0)
     {
       raise(__pthread_sig_debug);
       /* We suspend ourself and gdb will wake us up when it is
@@ -576,7 +577,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   pthread_descr self = thread_self();
   struct pthread_request request;
   int retval;
-  if (__pthread_manager_request < 0) {
+  if (__builtin_expect (__pthread_manager_request, 0) < 0) {
     if (__pthread_initialize_manager() < 0) return EAGAIN;
   }
   request.req_thread = self;
@@ -589,7 +590,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
   suspend(self);
   retval = THREAD_GETMEM(self, p_retcode);
-  if (retval == 0)
+  if (__builtin_expect (retval, 0) == 0)
     *thread = (pthread_t) THREAD_GETMEM(self, p_retval);
   return retval;
 }
@@ -663,12 +664,13 @@ int pthread_setschedparam(pthread_t thread, int policy,
   pthread_descr th;
 
   __pthread_lock(&handle->h_lock, NULL);
-  if (invalid_handle(handle, thread)) {
+  if (__builtin_expect (invalid_handle(handle, thread), 0)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
-  if (__sched_setscheduler(th->p_pid, policy, param) == -1) {
+  if (__builtin_expect (__sched_setscheduler(th->p_pid, policy, param) == -1,
+			0)) {
     __pthread_unlock(&handle->h_lock);
     return errno;
   }
@@ -686,14 +688,14 @@ int pthread_getschedparam(pthread_t thread, int *policy,
   int pid, pol;
 
   __pthread_lock(&handle->h_lock, NULL);
-  if (invalid_handle(handle, thread)) {
+  if (__builtin_expect (invalid_handle(handle, thread), 0)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   pid = handle->h_descr->p_pid;
   __pthread_unlock(&handle->h_lock);
   pol = __sched_getscheduler(pid);
-  if (pol == -1) return errno;
+  if (__builtin_expect (pol, 0) == -1) return errno;
   if (__sched_getparam(pid, param) == -1) return errno;
   *policy = pol;
   return 0;
@@ -713,7 +715,7 @@ static void pthread_exit_process(int retcode, void *arg)
   struct pthread_request request;
   pthread_descr self = thread_self();
 
-  if (__pthread_manager_request >= 0) {
+  if (__builtin_expect (__pthread_manager_request, 0) >= 0) {
     request.req_thread = self;
     request.req_kind = REQ_PROCESS_EXIT;
     request.req_args.exit.code = retcode;
@@ -754,14 +756,14 @@ static void pthread_handle_sigcancel(int sig)
       __pthread_manager_sighandler(sig);
       return;
     }
-  if (__pthread_exit_requested) {
+  if (__builtin_expect (__pthread_exit_requested, 0)) {
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
     if (self == __pthread_main_thread)
       waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
     _exit(__pthread_exit_code);
   }
-  if (THREAD_GETMEM(self, p_canceled)
+  if (__builtin_expect (THREAD_GETMEM(self, p_canceled), 0)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     if (THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
       pthread_exit(PTHREAD_CANCELED);
@@ -867,13 +869,6 @@ int __pthread_getconcurrency(void)
   return current_level;
 }
 weak_alias (__pthread_getconcurrency, pthread_getconcurrency)
-
-void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif)
-{
-  __pthread_lock(THREAD_GETMEM(self, p_lock), self);
-  THREAD_SETMEM(self, p_extricate, peif);
-  __pthread_unlock(THREAD_GETMEM (self, p_lock));
-}
 
 /* Primitives for controlling thread execution */
 

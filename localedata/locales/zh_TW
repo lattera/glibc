@@ -12,7 +12,7 @@ escape_char /
 %    Yuan-Chung Cheng
 %	platin@ms31.hinet.net
 %    Tung-Han Hsieh
-%	thhsieh@twcpro.phys.ntu.edu.tw
+%	thhsieh@linux.org.tw
 %
 % Reference:	http://wwwold.dkuug.dk/JTC1/SC22/WG20/docs/n690.pdf
 
@@ -26,8 +26,8 @@ tel        ""
 fax        ""
 language   "zh"
 territory  "TW"
-revision   "0.1"
-date       "2000-07-27"
+revision   "0.2"
+date       "2000-08-02"
 %
 category  "zh_TW:2000";LC_IDENTIFICATION
 category  "zh_TW:2000";LC_CTYPE
@@ -82,7 +82,8 @@ END LC_NUMERIC
 
 LC_TIME
 % day: Sun, Mon, Tue, Wed, Thr, Fri, Sat
-abday	"<U65E5>";"<U4E00>";"<U4E8C>";"<U4E09>";"<U56DB>";"<U4E94>";"<U516D>"
+abday	"<U9031><U65E5>";"<U9031><U4E00>";"<U9031><U4E8C>";"<U9031><U4E09>";/
+	"<U9031><U56DB>";"<U9031><U4E94>";"<U9031><U516D>"
 
 day	"<U661F><U671F><U65E5>";/
 	"<U661F><U671F><U4E00>";/
@@ -105,25 +106,23 @@ mon	"<U4E00><U6708>";"<U4E8C><U6708>";"<U4E09><U6708>";/
 	"<U4E03><U6708>";"<U516B><U6708>";"<U4E5D><U6708>";/
 	"<U5341><U6708>";"<U5341><U4E00><U6708>";"<U5341><U4E8C><U6708>"
 
-% d_t_fmt: "%Y<y> %m<m> %d<d> %H<hr> %M<m> %S<s>"
-d_t_fmt "<U0025><U0059><U5E74>/
-<U0020><U0025><U006D><U6708>/
-<U0020><U0025><U0064><U65E5>/
+% d_t_fmt: "%Y<y>%m<m>%d<d> (%A) %H<hr>%M<m>%S<s>"
+d_t_fmt "<U897F><U5143><U0025><U0059><U5E74>/
+<U0025><U006D><U6708><U0025><U0064><U65E5>/
+<U0020><U0028><U0025><U0041><U0029>/
 <U0020><U0025><U0048><U6642>/
-<U0020><U0025><U004D><U5206>/
-<U0020><U0025><U0053><U79D2>"
+<U0025><U004D><U5206><U0025><U0053><U79D2>"
 
-d_fmt	"<U0025><U0059><U5E74><U0020><U0025><U006D><U6708>/
-<U0020><U0025><U0064><U65E5>"
+d_fmt	"<U897F><U5143><U0025><U0059><U5E74>/
+<U0025><U006D><U6708><U0025><U0064><U65E5>"
 
-t_fmt	"<U0025><U0048><U6642><U0020><U0025><U004D><U5206>/
-<U0020><U0025><U0053><U79D2>"
+t_fmt	"<U0025><U0048><U6642><U0025><U004D><U5206><U0025><U0053><U79D2>"
 
 am_pm	"<U4E0A><U5348>";"<U4E0B><U5348>"
 
-% t_fmt_ampm: "%p %I<h> %M<m> %S<s>"
+% t_fmt_ampm: "%p %I<h>%M<m>%S<s>"
 t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U6642>/
-<U0020><U0025><U004D><U5206><U0020><U0025><U0053><U79D2>"
+<U0025><U004D><U5206><U0025><U0053><U79D2>"
 END LC_TIME
 
 LC_MESSAGES
@@ -148,8 +147,8 @@ LC_TELEPHONE
 tel_int_fmt	"<U002B><U0025><U0063><U002D><U0025><U0061>/
 <U002D><U0025><U006C>"
 
-% tel_dom_fmt:  "0%a %l"
-tel_dom_fmt	"<U0030><U0025><U0061><U0020><U0025><U006C>"
+% tel_dom_fmt:  "%A-%l"
+tel_dom_fmt	"<U0025><U0041><U002D><U0025><U006C>"
 
 % int_select:   "00"
 int_select	"<U0030><U0030>"

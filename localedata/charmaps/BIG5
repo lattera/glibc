@@ -6,14 +6,18 @@
 %
 % Chinese charmap for BIG5 (CP950)
 % version: 0.9
-% Contact: Tung-Han Hsieh
-% Email: thhsieh@linux.org.tw
+% Contact: Tung-Han Hsieh   <thhsieh@linux.org.tw>
+%	   Yuan-Chung Cheng <platin@ms31.hinet.net>
 % Distribution and use is free, even for comercial purpose.
 %
 % This charmap is converted from:
 %     ftp://ftp.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP950.TXT
-% and also merged several characters (/xc6/xa1 - /xc7fc) from:
-%     ftp://ftp.unicode.org/Public/MAPPINGS/EASTASIA/OTHER/BIG5.TXT
+% and also merged several characters (/xc6/xa1-/xc7fc) from:
+%     Aprhic Tech. CO., LTD. Big5 <==> Unicode mapping table.
+%
+% Unmapped Big5 characters:
+%     /xa2/xcc, /xa2/xce, /xf9/xe9, /xf9/xea, /xf9/xeb, 
+%     /xf9/xf9, /xf9/xfa, /xf9/xfb, /xf9/xfc, /xf9/xfd
 %
 % alias BIG5-CP950
 
@@ -147,45 +151,6 @@ CHARMAP
 <U007E>		/x7e	TILDE
 <U007F>		/x7f	DELETE (DEL)
 <U0080>		/x80	PADDING CHARACTER (PAD)
-<U0081>		/x81	HIGH OCTET PRESET (HOP)
-<U0082>		/x82	BREAK PERMITTED HERE (BPH)
-<U0083>		/x83	NO BREAK HERE (NBH)
-<U0084>		/x84	INDEX (IND)
-<U0085>		/x85	NEXT LINE (NEL)
-<U0086>		/x86	START OF SELECTED AREA (SSA)
-<U0087>		/x87	END OF SELECTED AREA (ESA)
-<U0088>		/x88	CHARACTER TABULATION SET (HTS)
-<U0089>		/x89	CHARACTER TABULATION WITH JUSTIFICATION (HTJ)
-<U008A>		/x8a	LINE TABULATION SET (VTS)
-<U008B>		/x8b	PARTIAL LINE FORWARD (PLD)
-<U008C>		/x8c	PARTIAL LINE BACKWARD (PLU)
-<U008D>		/x8d	REVERSE LINE FEED (RI)
-<U008E>		/x8e	SINGLE-SHIFT TWO (SS2)
-<U008F>		/x8f	SINGLE-SHIFT THREE (SS3)
-<U0090>		/x90	DEVICE CONTROL STRING (DCS)
-<U0091>		/x91	PRIVATE USE ONE (PU1)
-<U0092>		/x92	PRIVATE USE TWO (PU2)
-<U0093>		/x93	SET TRANSMIT STATE (STS)
-<U0094>		/x94	CANCEL CHARACTER (CCH)
-<U0095>		/x95	MESSAGE WAITING (MW)
-<U0096>		/x96	START OF GUARDED AREA (SPA)
-<U0097>		/x97	END OF GUARDED AREA (EPA)
-<U0098>		/x98	START OF STRING (SOS)
-<U0099>		/x99	SINGLE GRAPHIC CHARACTER INTRODUCER (SGCI)
-<U009A>		/x9a	SINGLE CHARACTER INTRODUCER (SCI)
-<U009B>		/x9b	CONTROL SEQUENCE INTRODUCER (CSI)
-<U009C>		/x9c	STRING TERMINATOR (ST)
-<U009D>		/x9d	OPERATING SYSTEM COMMAND (OSC)
-<U009E>		/x9e	PRIVACY MESSAGE (PM)
-<U009F>		/x9f	APPLICATION PROGRAM COMMAND (APC)
-<U00A0>		/xa0	NO-BREAK SPACE
-<U00C8>		/xc8	LATIN CAPITAL LETTER E WITH GRAVE
-<U00FA>		/xfa	LATIN SMALL LETTER U WITH ACUTE
-<U00FB>		/xfb	LATIN SMALL LETTER U WITH CIRCUMFLEX
-<U00FC>		/xfc	LATIN SMALL LETTER U WITH DIAERESIS
-<U00FD>		/xfd	LATIN SMALL LETTER Y WITH ACUTE
-<U00FE>		/xfe	LATIN SMALL LETTER THORN (Icelandic)
-<U00FF>		/xff	LATIN SMALL LETTER Y WITH DIAERESIS
 %
 % Now begin the Big5 (CP950) encoding specific.
 %
@@ -452,9 +417,9 @@ CHARMAP
 <U3027>		/xa2/xc9	HANGZHOU NUMERAL SEVEN
 <U3028>		/xa2/xca	HANGZHOU NUMERAL EIGHT
 <U3029>		/xa2/xcb	HANGZHOU NUMERAL NINE
-<U5341>		/xa2/xcc	<CJK>
+% <U5341>		/xa2/xcc	<CJK>
 <U5344>		/xa2/xcd	<CJK>
-<U5345>		/xa2/xce	<CJK>
+% <U5345>		/xa2/xce	<CJK>
 <UFF21>		/xa2/xcf	FULLWIDTH LATIN CAPITAL LETTER A
 <UFF22>		/xa2/xd0	FULLWIDTH LATIN CAPITAL LETTER B
 <UFF23>		/xa2/xd1	FULLWIDTH LATIN CAPITAL LETTER C
@@ -5999,255 +5964,421 @@ CHARMAP
 <U9E1B>		/xc6/x7c	<CJK>
 <U9E1E>		/xc6/x7d	<CJK>
 <U7C72>		/xc6/x7e	<CJK>
-<U30FE>		/xc6/xa1	KATAKANA VOICED ITERATION MARK
-<U309D>		/xc6/xa2	HIRAGANA ITERATION MARK
-<U309E>		/xc6/xa3	HIRAGANA VOICED ITERATION MARK
-<U3005>		/xc6/xa4	IDEOGRAPHIC ITERATION MARK
-<U3041>		/xc6/xa5	HIRAGANA LETTER SMALL A
-<U3042>		/xc6/xa6	HIRAGANA LETTER A
-<U3043>		/xc6/xa7	HIRAGANA LETTER SMALL I
-<U3044>		/xc6/xa8	HIRAGANA LETTER I
-<U3045>		/xc6/xa9	HIRAGANA LETTER SMALL U
-<U3046>		/xc6/xaa	HIRAGANA LETTER U
-<U3047>		/xc6/xab	HIRAGANA LETTER SMALL E
-<U3048>		/xc6/xac	HIRAGANA LETTER E
-<U3049>		/xc6/xad	HIRAGANA LETTER SMALL O
-<U304A>		/xc6/xae	HIRAGANA LETTER O
-<U304B>		/xc6/xaf	HIRAGANA LETTER KA
-<U304C>		/xc6/xb0	HIRAGANA LETTER GA
-<U304D>		/xc6/xb1	HIRAGANA LETTER KI
-<U304E>		/xc6/xb2	HIRAGANA LETTER GI
-<U304F>		/xc6/xb3	HIRAGANA LETTER KU
-<U3050>		/xc6/xb4	HIRAGANA LETTER GU
-<U3051>		/xc6/xb5	HIRAGANA LETTER KE
-<U3052>		/xc6/xb6	HIRAGANA LETTER GE
-<U3053>		/xc6/xb7	HIRAGANA LETTER KO
-<U3054>		/xc6/xb8	HIRAGANA LETTER GO
-<U3055>		/xc6/xb9	HIRAGANA LETTER SA
-<U3056>		/xc6/xba	HIRAGANA LETTER ZA
-<U3057>		/xc6/xbb	HIRAGANA LETTER SI
-<U3058>		/xc6/xbc	HIRAGANA LETTER ZI
-<U3059>		/xc6/xbd	HIRAGANA LETTER SU
-<U305A>		/xc6/xbe	HIRAGANA LETTER ZU
-<U305B>		/xc6/xbf	HIRAGANA LETTER SE
-<U305C>		/xc6/xc0	HIRAGANA LETTER ZE
-<U305D>		/xc6/xc1	HIRAGANA LETTER SO
-<U305E>		/xc6/xc2	HIRAGANA LETTER ZO
-<U305F>		/xc6/xc3	HIRAGANA LETTER TA
-<U3060>		/xc6/xc4	HIRAGANA LETTER DA
-<U3061>		/xc6/xc5	HIRAGANA LETTER TI
-<U3062>		/xc6/xc6	HIRAGANA LETTER DI
-<U3063>		/xc6/xc7	HIRAGANA LETTER SMALL TU
-<U3064>		/xc6/xc8	HIRAGANA LETTER TU
-<U3065>		/xc6/xc9	HIRAGANA LETTER DU
-<U3066>		/xc6/xca	HIRAGANA LETTER TE
-<U3067>		/xc6/xcb	HIRAGANA LETTER DE
-<U3068>		/xc6/xcc	HIRAGANA LETTER TO
-<U3069>		/xc6/xcd	HIRAGANA LETTER DO
-<U306A>		/xc6/xce	HIRAGANA LETTER NA
-<U306B>		/xc6/xcf	HIRAGANA LETTER NI
-<U306C>		/xc6/xd0	HIRAGANA LETTER NU
-<U306D>		/xc6/xd1	HIRAGANA LETTER NE
-<U306E>		/xc6/xd2	HIRAGANA LETTER NO
-<U306F>		/xc6/xd3	HIRAGANA LETTER HA
-<U3070>		/xc6/xd4	HIRAGANA LETTER BA
-<U3071>		/xc6/xd5	HIRAGANA LETTER PA
-<U3072>		/xc6/xd6	HIRAGANA LETTER HI
-<U3073>		/xc6/xd7	HIRAGANA LETTER BI
-<U3074>		/xc6/xd8	HIRAGANA LETTER PI
-<U3075>		/xc6/xd9	HIRAGANA LETTER HU
-<U3076>		/xc6/xda	HIRAGANA LETTER BU
-<U3077>		/xc6/xdb	HIRAGANA LETTER PU
-<U3078>		/xc6/xdc	HIRAGANA LETTER HE
-<U3079>		/xc6/xdd	HIRAGANA LETTER BE
-<U307A>		/xc6/xde	HIRAGANA LETTER PE
-<U307B>		/xc6/xdf	HIRAGANA LETTER HO
-<U307C>		/xc6/xe0	HIRAGANA LETTER BO
-<U307D>		/xc6/xe1	HIRAGANA LETTER PO
-<U307E>		/xc6/xe2	HIRAGANA LETTER MA
-<U307F>		/xc6/xe3	HIRAGANA LETTER MI
-<U3080>		/xc6/xe4	HIRAGANA LETTER MU
-<U3081>		/xc6/xe5	HIRAGANA LETTER ME
-<U3082>		/xc6/xe6	HIRAGANA LETTER MO
-<U3083>		/xc6/xe7	HIRAGANA LETTER SMALL YA
-<U3084>		/xc6/xe8	HIRAGANA LETTER YA
-<U3085>		/xc6/xe9	HIRAGANA LETTER SMALL YU
-<U3086>		/xc6/xea	HIRAGANA LETTER YU
-<U3087>		/xc6/xeb	HIRAGANA LETTER SMALL YO
-<U3088>		/xc6/xec	HIRAGANA LETTER YO
-<U3089>		/xc6/xed	HIRAGANA LETTER RA
-<U308A>		/xc6/xee	HIRAGANA LETTER RI
-<U308B>		/xc6/xef	HIRAGANA LETTER RU
-<U308C>		/xc6/xf0	HIRAGANA LETTER RE
-<U308D>		/xc6/xf1	HIRAGANA LETTER RO
-<U308E>		/xc6/xf2	HIRAGANA LETTER SMALL WA
-<U308F>		/xc6/xf3	HIRAGANA LETTER WA
-<U3090>		/xc6/xf4	HIRAGANA LETTER WI
-<U3091>		/xc6/xf5	HIRAGANA LETTER WE
-<U3092>		/xc6/xf6	HIRAGANA LETTER WO
-<U3093>		/xc6/xf7	HIRAGANA LETTER N
-<U30A1>		/xc6/xf8	KATAKANA LETTER SMALL A
-<U30A2>		/xc6/xf9	KATAKANA LETTER A
-<U30A3>		/xc6/xfa	KATAKANA LETTER SMALL I
-<U30A4>		/xc6/xfb	KATAKANA LETTER I
-<U30A5>		/xc6/xfc	KATAKANA LETTER SMALL U
-<U30A6>		/xc6/xfd	KATAKANA LETTER U
-<U30A7>		/xc6/xfe	KATAKANA LETTER SMALL E
-<U30A8>		/xc7/x40	KATAKANA LETTER E
-<U30A9>		/xc7/x41	KATAKANA LETTER SMALL O
-<U30AA>		/xc7/x42	KATAKANA LETTER O
-<U30AB>		/xc7/x43	KATAKANA LETTER KA
-<U30AC>		/xc7/x44	KATAKANA LETTER GA
-<U30AD>		/xc7/x45	KATAKANA LETTER KI
-<U30AE>		/xc7/x46	KATAKANA LETTER GI
-<U30AF>		/xc7/x47	KATAKANA LETTER KU
-<U30B0>		/xc7/x48	KATAKANA LETTER GU
-<U30B1>		/xc7/x49	KATAKANA LETTER KE
-<U30B2>		/xc7/x4a	KATAKANA LETTER GE
-<U30B3>		/xc7/x4b	KATAKANA LETTER KO
-<U30B4>		/xc7/x4c	KATAKANA LETTER GO
-<U30B5>		/xc7/x4d	KATAKANA LETTER SA
-<U30B6>		/xc7/x4e	KATAKANA LETTER ZA
-<U30B7>		/xc7/x4f	KATAKANA LETTER SI
-<U30B8>		/xc7/x50	KATAKANA LETTER ZI
-<U30B9>		/xc7/x51	KATAKANA LETTER SU
-<U30BA>		/xc7/x52	KATAKANA LETTER ZU
-<U30BB>		/xc7/x53	KATAKANA LETTER SE
-<U30BC>		/xc7/x54	KATAKANA LETTER ZE
-<U30BD>		/xc7/x55	KATAKANA LETTER SO
-<U30BE>		/xc7/x56	KATAKANA LETTER ZO
-<U30BF>		/xc7/x57	KATAKANA LETTER TA
-<U30C0>		/xc7/x58	KATAKANA LETTER DA
-<U30C1>		/xc7/x59	KATAKANA LETTER TI
-<U30C2>		/xc7/x5a	KATAKANA LETTER DI
-<U30C3>		/xc7/x5b	KATAKANA LETTER SMALL TU
-<U30C4>		/xc7/x5c	KATAKANA LETTER TU
-<U30C5>		/xc7/x5d	KATAKANA LETTER DU
-<U30C6>		/xc7/x5e	KATAKANA LETTER TE
-<U30C7>		/xc7/x5f	KATAKANA LETTER DE
-<U30C8>		/xc7/x60	KATAKANA LETTER TO
-<U30C9>		/xc7/x61	KATAKANA LETTER DO
-<U30CA>		/xc7/x62	KATAKANA LETTER NA
-<U30CB>		/xc7/x63	KATAKANA LETTER NI
-<U30CC>		/xc7/x64	KATAKANA LETTER NU
-<U30CD>		/xc7/x65	KATAKANA LETTER NE
-<U30CE>		/xc7/x66	KATAKANA LETTER NO
-<U30CF>		/xc7/x67	KATAKANA LETTER HA
-<U30D0>		/xc7/x68	KATAKANA LETTER BA
-<U30D1>		/xc7/x69	KATAKANA LETTER PA
-<U30D2>		/xc7/x6a	KATAKANA LETTER HI
-<U30D3>		/xc7/x6b	KATAKANA LETTER BI
-<U30D4>		/xc7/x6c	KATAKANA LETTER PI
-<U30D5>		/xc7/x6d	KATAKANA LETTER HU
-<U30D6>		/xc7/x6e	KATAKANA LETTER BU
-<U30D7>		/xc7/x6f	KATAKANA LETTER PU
-<U30D8>		/xc7/x70	KATAKANA LETTER HE
-<U30D9>		/xc7/x71	KATAKANA LETTER BE
-<U30DA>		/xc7/x72	KATAKANA LETTER PE
-<U30DB>		/xc7/x73	KATAKANA LETTER HO
-<U30DC>		/xc7/x74	KATAKANA LETTER BO
-<U30DD>		/xc7/x75	KATAKANA LETTER PO
-<U30DE>		/xc7/x76	KATAKANA LETTER MA
-<U30DF>		/xc7/x77	KATAKANA LETTER MI
-<U30E0>		/xc7/x78	KATAKANA LETTER MU
-<U30E1>		/xc7/x79	KATAKANA LETTER ME
-<U30E2>		/xc7/x7a	KATAKANA LETTER MO
-<U30E3>		/xc7/x7b	KATAKANA LETTER SMALL YA
-<U30E4>		/xc7/x7c	KATAKANA LETTER YA
-<U30E5>		/xc7/x7d	KATAKANA LETTER SMALL YU
-<U30E6>		/xc7/x7e	KATAKANA LETTER YU
-<U30E7>		/xc7/xa1	KATAKANA LETTER SMALL YO
-<U30E8>		/xc7/xa2	KATAKANA LETTER YO
-<U30E9>		/xc7/xa3	KATAKANA LETTER RA
-<U30EA>		/xc7/xa4	KATAKANA LETTER RI
-<U30EB>		/xc7/xa5	KATAKANA LETTER RU
-<U30EC>		/xc7/xa6	KATAKANA LETTER RE
-<U30ED>		/xc7/xa7	KATAKANA LETTER RO
-<U30EE>		/xc7/xa8	KATAKANA LETTER SMALL WA
-<U30EF>		/xc7/xa9	KATAKANA LETTER WA
-<U30F0>		/xc7/xaa	KATAKANA LETTER WI
-<U30F1>		/xc7/xab	KATAKANA LETTER WE
-<U30F2>		/xc7/xac	KATAKANA LETTER WO
-<U30F3>		/xc7/xad	KATAKANA LETTER N
-<U30F4>		/xc7/xae	KATAKANA LETTER VU
-<U30F5>		/xc7/xaf	KATAKANA LETTER SMALL KA
-<U30F6>		/xc7/xb0	KATAKANA LETTER SMALL KE
-<U0414>		/xc7/xb1	CYRILLIC CAPITAL LETTER DE
-<U0415>		/xc7/xb2	CYRILLIC CAPITAL LETTER IE
-<U0401>		/xc7/xb3	CYRILLIC CAPITAL LETTER IO
-<U0416>		/xc7/xb4	CYRILLIC CAPITAL LETTER ZHE
-<U0417>		/xc7/xb5	CYRILLIC CAPITAL LETTER ZE
-<U0418>		/xc7/xb6	CYRILLIC CAPITAL LETTER I
-<U0419>		/xc7/xb7	CYRILLIC CAPITAL LETTER SHORT I
-<U041A>		/xc7/xb8	CYRILLIC CAPITAL LETTER KA
-<U041B>		/xc7/xb9	CYRILLIC CAPITAL LETTER EL
-<U041C>		/xc7/xba	CYRILLIC CAPITAL LETTER EM
-<U0423>		/xc7/xbb	CYRILLIC CAPITAL LETTER U
-<U0424>		/xc7/xbc	CYRILLIC CAPITAL LETTER EF
-<U0425>		/xc7/xbd	CYRILLIC CAPITAL LETTER HA
-<U0426>		/xc7/xbe	CYRILLIC CAPITAL LETTER TSE
-<U0427>		/xc7/xbf	CYRILLIC CAPITAL LETTER CHE
-<U0428>		/xc7/xc0	CYRILLIC CAPITAL LETTER SHA
-<U0429>		/xc7/xc1	CYRILLIC CAPITAL LETTER SHCHA
-<U042A>		/xc7/xc2	CYRILLIC CAPITAL LETTER HARD SIGN
-<U042B>		/xc7/xc3	CYRILLIC CAPITAL LETTER YERU
-<U042C>		/xc7/xc4	CYRILLIC CAPITAL LETTER SOFT SIGN
-<U042D>		/xc7/xc5	CYRILLIC CAPITAL LETTER E
-<U042E>		/xc7/xc6	CYRILLIC CAPITAL LETTER YU
-<U042F>		/xc7/xc7	CYRILLIC CAPITAL LETTER YA
-<U0430>		/xc7/xc8	CYRILLIC SMALL LETTER A
-<U0431>		/xc7/xc9	CYRILLIC SMALL LETTER BE
-<U0432>		/xc7/xca	CYRILLIC SMALL LETTER VE
-<U0433>		/xc7/xcb	CYRILLIC SMALL LETTER GHE
-<U0434>		/xc7/xcc	CYRILLIC SMALL LETTER DE
-<U0435>		/xc7/xcd	CYRILLIC SMALL LETTER IE
-<U0451>		/xc7/xce	CYRILLIC SMALL LETTER IO
-<U0436>		/xc7/xcf	CYRILLIC SMALL LETTER ZHE
-<U0437>		/xc7/xd0	CYRILLIC SMALL LETTER ZE
-<U0438>		/xc7/xd1	CYRILLIC SMALL LETTER I
-<U0439>		/xc7/xd2	CYRILLIC SMALL LETTER SHORT I
-<U043A>		/xc7/xd3	CYRILLIC SMALL LETTER KA
-<U043B>		/xc7/xd4	CYRILLIC SMALL LETTER EL
-<U043C>		/xc7/xd5	CYRILLIC SMALL LETTER EM
-<U043D>		/xc7/xd6	CYRILLIC SMALL LETTER EN
-<U043E>		/xc7/xd7	CYRILLIC SMALL LETTER O
-<U043F>		/xc7/xd8	CYRILLIC SMALL LETTER PE
-<U0440>		/xc7/xd9	CYRILLIC SMALL LETTER ER
-<U0441>		/xc7/xda	CYRILLIC SMALL LETTER ES
-<U0442>		/xc7/xdb	CYRILLIC SMALL LETTER TE
-<U0443>		/xc7/xdc	CYRILLIC SMALL LETTER U
-<U0444>		/xc7/xdd	CYRILLIC SMALL LETTER EF
-<U0445>		/xc7/xde	CYRILLIC SMALL LETTER HA
-<U0446>		/xc7/xdf	CYRILLIC SMALL LETTER TSE
-<U0447>		/xc7/xe0	CYRILLIC SMALL LETTER CHE
-<U0448>		/xc7/xe1	CYRILLIC SMALL LETTER SHA
-<U0449>		/xc7/xe2	CYRILLIC SMALL LETTER SHCHA
-<U044A>		/xc7/xe3	CYRILLIC SMALL LETTER HARD SIGN
-<U044B>		/xc7/xe4	CYRILLIC SMALL LETTER YERU
-<U044C>		/xc7/xe5	CYRILLIC SMALL LETTER SOFT SIGN
-<U044D>		/xc7/xe6	CYRILLIC SMALL LETTER E
-<U044E>		/xc7/xe7	CYRILLIC SMALL LETTER YU
-<U044F>		/xc7/xe8	CYRILLIC SMALL LETTER YA
-<U2460>		/xc7/xe9	CIRCLED DIGIT ONE
-<U2461>		/xc7/xea	CIRCLED DIGIT TWO
-<U2462>		/xc7/xeb	CIRCLED DIGIT THREE
-<U2463>		/xc7/xec	CIRCLED DIGIT FOUR
-<U2464>		/xc7/xed	CIRCLED DIGIT FIVE
-<U2465>		/xc7/xee	CIRCLED DIGIT SIX
-<U2466>		/xc7/xef	CIRCLED DIGIT SEVEN
-<U2467>		/xc7/xf0	CIRCLED DIGIT EIGHT
-<U2468>		/xc7/xf1	CIRCLED DIGIT NINE
-<U2469>		/xc7/xf2	CIRCLED NUMBER TEN
-<U2474>		/xc7/xf3	PARENTHESIZED DIGIT ONE
-<U2475>		/xc7/xf4	PARENTHESIZED DIGIT TWO
-<U2476>		/xc7/xf5	PARENTHESIZED DIGIT THREE
-<U2477>		/xc7/xf6	PARENTHESIZED DIGIT FOUR
-<U2478>		/xc7/xf7	PARENTHESIZED DIGIT FIVE
-<U2479>		/xc7/xf8	PARENTHESIZED DIGIT SIX
-<U247A>		/xc7/xf9	PARENTHESIZED DIGIT SEVEN
-<U247B>		/xc7/xfa	PARENTHESIZED DIGIT EIGHT
-<U247C>		/xc7/xfb	PARENTHESIZED DIGIT NINE
-<U247D>		/xc7/xfc	PARENTHESIZED NUMBER TEN
+%
+% Begin of Eten extended charset. Mapping to "Private Use" segment.
+% (Thanks to Aprhic Tech. CO., LTD.)
+%
+<UF6B1>		/xc6/xa1	<Private Use>
+<UF6B2>		/xc6/xa2	<Private Use>
+<UF6B3>		/xc6/xa3	<Private Use>
+<UF6B4>		/xc6/xa4	<Private Use>
+<UF6B5>		/xc6/xa5	<Private Use>
+<UF6B6>		/xc6/xa6	<Private Use>
+<UF6B7>		/xc6/xa7	<Private Use>
+<UF6B8>		/xc6/xa8	<Private Use>
+<UF6B9>		/xc6/xa9	<Private Use>
+<UF6BA>		/xc6/xaa	<Private Use>
+<UF6BB>		/xc6/xab	<Private Use>
+<UF6BC>		/xc6/xac	<Private Use>
+<UF6BD>		/xc6/xad	<Private Use>
+<UF6BE>		/xc6/xae	<Private Use>
+<UF6BF>		/xc6/xaf	<Private Use>
+<UF6C0>		/xc6/xb0	<Private Use>
+<UF6C1>		/xc6/xb1	<Private Use>
+<UF6C2>		/xc6/xb2	<Private Use>
+<UF6C3>		/xc6/xb3	<Private Use>
+<UF6C4>		/xc6/xb4	<Private Use>
+<UF6C5>		/xc6/xb5	<Private Use>
+<UF6C6>		/xc6/xb6	<Private Use>
+<UF6C7>		/xc6/xb7	<Private Use>
+<UF6C8>		/xc6/xb8	<Private Use>
+<UF6C9>		/xc6/xb9	<Private Use>
+<UF6CA>		/xc6/xba	<Private Use>
+<UF6CB>		/xc6/xbb	<Private Use>
+<UF6CC>		/xc6/xbc	<Private Use>
+<UF6CD>		/xc6/xbd	<Private Use>
+<UF6CE>		/xc6/xbe	<Private Use>
+<UF6CF>		/xc6/xbf	<Private Use>
+<UF6D0>		/xc6/xc0	<Private Use>
+<UF6D1>		/xc6/xc1	<Private Use>
+<UF6D2>		/xc6/xc2	<Private Use>
+<UF6D3>		/xc6/xc3	<Private Use>
+<UF6D4>		/xc6/xc4	<Private Use>
+<UF6D5>		/xc6/xc5	<Private Use>
+<UF6D6>		/xc6/xc6	<Private Use>
+<UF6D7>		/xc6/xc7	<Private Use>
+<UF6D8>		/xc6/xc8	<Private Use>
+<UF6D9>		/xc6/xc9	<Private Use>
+<UF6DA>		/xc6/xca	<Private Use>
+<UF6DB>		/xc6/xcb	<Private Use>
+<UF6DC>		/xc6/xcc	<Private Use>
+<UF6DD>		/xc6/xcd	<Private Use>
+<UF6DE>		/xc6/xce	<Private Use>
+<UF6DF>		/xc6/xcf	<Private Use>
+<UF6E0>		/xc6/xd0	<Private Use>
+<UF6E1>		/xc6/xd1	<Private Use>
+<UF6E2>		/xc6/xd2	<Private Use>
+<UF6E3>		/xc6/xd3	<Private Use>
+<UF6E4>		/xc6/xd4	<Private Use>
+<UF6E5>		/xc6/xd5	<Private Use>
+<UF6E6>		/xc6/xd6	<Private Use>
+<UF6E7>		/xc6/xd7	<Private Use>
+<UF6E8>		/xc6/xd8	<Private Use>
+<UF6E9>		/xc6/xd9	<Private Use>
+<UF6EA>		/xc6/xda	<Private Use>
+<UF6EB>		/xc6/xdb	<Private Use>
+<UF6EC>		/xc6/xdc	<Private Use>
+<UF6ED>		/xc6/xdd	<Private Use>
+<UF6EE>		/xc6/xde	<Private Use>
+<UF6EF>		/xc6/xdf	<Private Use>
+<UF6F0>		/xc6/xe0	<Private Use>
+<UF6F1>		/xc6/xe1	<Private Use>
+<UF6F2>		/xc6/xe2	<Private Use>
+<UF6F3>		/xc6/xe3	<Private Use>
+<UF6F4>		/xc6/xe4	<Private Use>
+<UF6F5>		/xc6/xe5	<Private Use>
+<UF6F6>		/xc6/xe6	<Private Use>
+<UF6F7>		/xc6/xe7	<Private Use>
+<UF6F8>		/xc6/xe8	<Private Use>
+<UF6F9>		/xc6/xe9	<Private Use>
+<UF6FA>		/xc6/xea	<Private Use>
+<UF6FB>		/xc6/xeb	<Private Use>
+<UF6FC>		/xc6/xec	<Private Use>
+<UF6FD>		/xc6/xed	<Private Use>
+<UF6FE>		/xc6/xee	<Private Use>
+<UF6FF>		/xc6/xef	<Private Use>
+<UF700>		/xc6/xf0	<Private Use>
+<UF701>		/xc6/xf1	<Private Use>
+<UF702>		/xc6/xf2	<Private Use>
+<UF703>		/xc6/xf3	<Private Use>
+<UF704>		/xc6/xf4	<Private Use>
+<UF705>		/xc6/xf5	<Private Use>
+<UF706>		/xc6/xf6	<Private Use>
+<UF707>		/xc6/xf7	<Private Use>
+<UF708>		/xc6/xf8	<Private Use>
+<UF709>		/xc6/xf9	<Private Use>
+<UF70A>		/xc6/xfa	<Private Use>
+<UF70B>		/xc6/xfb	<Private Use>
+<UF70C>		/xc6/xfc	<Private Use>
+<UF70D>		/xc6/xfd	<Private Use>
+<UF70E>		/xc6/xfe	<Private Use>
+<UF70F>		/xc7/x40	<Private Use>
+<UF710>		/xc7/x41	<Private Use>
+<UF711>		/xc7/x42	<Private Use>
+<UF712>		/xc7/x43	<Private Use>
+<UF713>		/xc7/x44	<Private Use>
+<UF714>		/xc7/x45	<Private Use>
+<UF715>		/xc7/x46	<Private Use>
+<UF716>		/xc7/x47	<Private Use>
+<UF717>		/xc7/x48	<Private Use>
+<UF718>		/xc7/x49	<Private Use>
+<UF719>		/xc7/x4a	<Private Use>
+<UF71A>		/xc7/x4b	<Private Use>
+<UF71B>		/xc7/x4c	<Private Use>
+<UF71C>		/xc7/x4d	<Private Use>
+<UF71D>		/xc7/x4e	<Private Use>
+<UF71E>		/xc7/x4f	<Private Use>
+<UF71F>		/xc7/x50	<Private Use>
+<UF720>		/xc7/x51	<Private Use>
+<UF721>		/xc7/x52	<Private Use>
+<UF722>		/xc7/x53	<Private Use>
+<UF723>		/xc7/x54	<Private Use>
+<UF724>		/xc7/x55	<Private Use>
+<UF725>		/xc7/x56	<Private Use>
+<UF726>		/xc7/x57	<Private Use>
+<UF727>		/xc7/x58	<Private Use>
+<UF728>		/xc7/x59	<Private Use>
+<UF729>		/xc7/x5a	<Private Use>
+<UF72A>		/xc7/x5b	<Private Use>
+<UF72B>		/xc7/x5c	<Private Use>
+<UF72C>		/xc7/x5d	<Private Use>
+<UF72D>		/xc7/x5e	<Private Use>
+<UF72E>		/xc7/x5f	<Private Use>
+<UF72F>		/xc7/x60	<Private Use>
+<UF730>		/xc7/x61	<Private Use>
+<UF731>		/xc7/x62	<Private Use>
+<UF732>		/xc7/x63	<Private Use>
+<UF733>		/xc7/x64	<Private Use>
+<UF734>		/xc7/x65	<Private Use>
+<UF735>		/xc7/x66	<Private Use>
+<UF736>		/xc7/x67	<Private Use>
+<UF737>		/xc7/x68	<Private Use>
+<UF738>		/xc7/x69	<Private Use>
+<UF739>		/xc7/x6a	<Private Use>
+<UF73A>		/xc7/x6b	<Private Use>
+<UF73B>		/xc7/x6c	<Private Use>
+<UF73C>		/xc7/x6d	<Private Use>
+<UF73D>		/xc7/x6e	<Private Use>
+<UF73E>		/xc7/x6f	<Private Use>
+<UF73F>		/xc7/x70	<Private Use>
+<UF740>		/xc7/x71	<Private Use>
+<UF741>		/xc7/x72	<Private Use>
+<UF742>		/xc7/x73	<Private Use>
+<UF743>		/xc7/x74	<Private Use>
+<UF744>		/xc7/x75	<Private Use>
+<UF745>		/xc7/x76	<Private Use>
+<UF746>		/xc7/x77	<Private Use>
+<UF747>		/xc7/x78	<Private Use>
+<UF748>		/xc7/x79	<Private Use>
+<UF749>		/xc7/x7a	<Private Use>
+<UF74A>		/xc7/x7b	<Private Use>
+<UF74B>		/xc7/x7c	<Private Use>
+<UF74C>		/xc7/x7d	<Private Use>
+<UF74D>		/xc7/x7e	<Private Use>
+<UF74E>		/xc7/xa1	<Private Use>
+<UF74F>		/xc7/xa2	<Private Use>
+<UF750>		/xc7/xa3	<Private Use>
+<UF751>		/xc7/xa4	<Private Use>
+<UF752>		/xc7/xa5	<Private Use>
+<UF753>		/xc7/xa6	<Private Use>
+<UF754>		/xc7/xa7	<Private Use>
+<UF755>		/xc7/xa8	<Private Use>
+<UF756>		/xc7/xa9	<Private Use>
+<UF757>		/xc7/xaa	<Private Use>
+<UF758>		/xc7/xab	<Private Use>
+<UF759>		/xc7/xac	<Private Use>
+<UF75A>		/xc7/xad	<Private Use>
+<UF75B>		/xc7/xae	<Private Use>
+<UF75C>		/xc7/xaf	<Private Use>
+<UF75D>		/xc7/xb0	<Private Use>
+<UF75E>		/xc7/xb1	<Private Use>
+<UF75F>		/xc7/xb2	<Private Use>
+<UF760>		/xc7/xb3	<Private Use>
+<UF761>		/xc7/xb4	<Private Use>
+<UF762>		/xc7/xb5	<Private Use>
+<UF763>		/xc7/xb6	<Private Use>
+<UF764>		/xc7/xb7	<Private Use>
+<UF765>		/xc7/xb8	<Private Use>
+<UF766>		/xc7/xb9	<Private Use>
+<UF767>		/xc7/xba	<Private Use>
+<UF768>		/xc7/xbb	<Private Use>
+<UF769>		/xc7/xbc	<Private Use>
+<UF76A>		/xc7/xbd	<Private Use>
+<UF76B>		/xc7/xbe	<Private Use>
+<UF76C>		/xc7/xbf	<Private Use>
+<UF76D>		/xc7/xc0	<Private Use>
+<UF76E>		/xc7/xc1	<Private Use>
+<UF76F>		/xc7/xc2	<Private Use>
+<UF770>		/xc7/xc3	<Private Use>
+<UF771>		/xc7/xc4	<Private Use>
+<UF772>		/xc7/xc5	<Private Use>
+<UF773>		/xc7/xc6	<Private Use>
+<UF774>		/xc7/xc7	<Private Use>
+<UF775>		/xc7/xc8	<Private Use>
+<UF776>		/xc7/xc9	<Private Use>
+<UF777>		/xc7/xca	<Private Use>
+<UF778>		/xc7/xcb	<Private Use>
+<UF779>		/xc7/xcc	<Private Use>
+<UF77A>		/xc7/xcd	<Private Use>
+<UF77B>		/xc7/xce	<Private Use>
+<UF77C>		/xc7/xcf	<Private Use>
+<UF77D>		/xc7/xd0	<Private Use>
+<UF77E>		/xc7/xd1	<Private Use>
+<UF77F>		/xc7/xd2	<Private Use>
+<UF780>		/xc7/xd3	<Private Use>
+<UF781>		/xc7/xd4	<Private Use>
+<UF782>		/xc7/xd5	<Private Use>
+<UF783>		/xc7/xd6	<Private Use>
+<UF784>		/xc7/xd7	<Private Use>
+<UF785>		/xc7/xd8	<Private Use>
+<UF786>		/xc7/xd9	<Private Use>
+<UF787>		/xc7/xda	<Private Use>
+<UF788>		/xc7/xdb	<Private Use>
+<UF789>		/xc7/xdc	<Private Use>
+<UF78A>		/xc7/xdd	<Private Use>
+<UF78B>		/xc7/xde	<Private Use>
+<UF78C>		/xc7/xdf	<Private Use>
+<UF78D>		/xc7/xe0	<Private Use>
+<UF78E>		/xc7/xe1	<Private Use>
+<UF78F>		/xc7/xe2	<Private Use>
+<UF790>		/xc7/xe3	<Private Use>
+<UF791>		/xc7/xe4	<Private Use>
+<UF792>		/xc7/xe5	<Private Use>
+<UF793>		/xc7/xe6	<Private Use>
+<UF794>		/xc7/xe7	<Private Use>
+<UF795>		/xc7/xe8	<Private Use>
+<UF796>		/xc7/xe9	<Private Use>
+<UF797>		/xc7/xea	<Private Use>
+<UF798>		/xc7/xeb	<Private Use>
+<UF799>		/xc7/xec	<Private Use>
+<UF79A>		/xc7/xed	<Private Use>
+<UF79B>		/xc7/xee	<Private Use>
+<UF79C>		/xc7/xef	<Private Use>
+<UF79D>		/xc7/xf0	<Private Use>
+<UF79E>		/xc7/xf1	<Private Use>
+<UF79F>		/xc7/xf2	<Private Use>
+<UF7A0>		/xc7/xf3	<Private Use>
+<UF7A1>		/xc7/xf4	<Private Use>
+<UF7A2>		/xc7/xf5	<Private Use>
+<UF7A3>		/xc7/xf6	<Private Use>
+<UF7A4>		/xc7/xf7	<Private Use>
+<UF7A5>		/xc7/xf8	<Private Use>
+<UF7A6>		/xc7/xf9	<Private Use>
+<UF7A7>		/xc7/xfa	<Private Use>
+<UF7A8>		/xc7/xfb	<Private Use>
+<UF7A9>		/xc7/xfc	<Private Use>
+<UF7AA>		/xc7/xfd	<Private Use>
+<UF7AB>		/xc7/xfe	<Private Use>
+<UF7AC>		/xc8/x40	<Private Use>
+<UF7AD>		/xc8/x41	<Private Use>
+<UF7AE>		/xc8/x42	<Private Use>
+<UF7AF>		/xc8/x43	<Private Use>
+<UF7B0>		/xc8/x44	<Private Use>
+<UF7B1>		/xc8/x45	<Private Use>
+<UF7B2>		/xc8/x46	<Private Use>
+<UF7B3>		/xc8/x47	<Private Use>
+<UF7B4>		/xc8/x48	<Private Use>
+<UF7B5>		/xc8/x49	<Private Use>
+<UF7B6>		/xc8/x4a	<Private Use>
+<UF7B7>		/xc8/x4b	<Private Use>
+<UF7B8>		/xc8/x4c	<Private Use>
+<UF7B9>		/xc8/x4d	<Private Use>
+<UF7BA>		/xc8/x4e	<Private Use>
+<UF7BB>		/xc8/x4f	<Private Use>
+<UF7BC>		/xc8/x50	<Private Use>
+<UF7BD>		/xc8/x51	<Private Use>
+<UF7BE>		/xc8/x52	<Private Use>
+<UF7BF>		/xc8/x53	<Private Use>
+<UF7C0>		/xc8/x54	<Private Use>
+<UF7C1>		/xc8/x55	<Private Use>
+<UF7C2>		/xc8/x56	<Private Use>
+<UF7C3>		/xc8/x57	<Private Use>
+<UF7C4>		/xc8/x58	<Private Use>
+<UF7C5>		/xc8/x59	<Private Use>
+<UF7C6>		/xc8/x5a	<Private Use>
+<UF7C7>		/xc8/x5b	<Private Use>
+<UF7C8>		/xc8/x5c	<Private Use>
+<UF7C9>		/xc8/x5d	<Private Use>
+<UF7CA>		/xc8/x5e	<Private Use>
+<UF7CB>		/xc8/x5f	<Private Use>
+<UF7CC>		/xc8/x60	<Private Use>
+<UF7CD>		/xc8/x61	<Private Use>
+<UF7CE>		/xc8/x62	<Private Use>
+<UF7CF>		/xc8/x63	<Private Use>
+<UF7D0>		/xc8/x64	<Private Use>
+<UF7D1>		/xc8/x65	<Private Use>
+<UF7D2>		/xc8/x66	<Private Use>
+<UF7D3>		/xc8/x67	<Private Use>
+<UF7D4>		/xc8/x68	<Private Use>
+<UF7D5>		/xc8/x69	<Private Use>
+<UF7D6>		/xc8/x6a	<Private Use>
+<UF7D7>		/xc8/x6b	<Private Use>
+<UF7D8>		/xc8/x6c	<Private Use>
+<UF7D9>		/xc8/x6d	<Private Use>
+<UF7DA>		/xc8/x6e	<Private Use>
+<UF7DB>		/xc8/x6f	<Private Use>
+<UF7DC>		/xc8/x70	<Private Use>
+<UF7DD>		/xc8/x71	<Private Use>
+<UF7DE>		/xc8/x72	<Private Use>
+<UF7DF>		/xc8/x73	<Private Use>
+<UF7E0>		/xc8/x74	<Private Use>
+<UF7E1>		/xc8/x75	<Private Use>
+<UF7E2>		/xc8/x76	<Private Use>
+<UF7E3>		/xc8/x77	<Private Use>
+<UF7E4>		/xc8/x78	<Private Use>
+<UF7E5>		/xc8/x79	<Private Use>
+<UF7E6>		/xc8/x7a	<Private Use>
+<UF7E7>		/xc8/x7b	<Private Use>
+<UF7E8>		/xc8/x7c	<Private Use>
+<UF7E9>		/xc8/x7d	<Private Use>
+<UF7EA>		/xc8/x7e	<Private Use>
+<UF7EB>		/xc8/xa1	<Private Use>
+<UF7EC>		/xc8/xa2	<Private Use>
+<UF7ED>		/xc8/xa3	<Private Use>
+<UF7EE>		/xc8/xa4	<Private Use>
+<UF7EF>		/xc8/xa5	<Private Use>
+<UF7F0>		/xc8/xa6	<Private Use>
+<UF7F1>		/xc8/xa7	<Private Use>
+<UF7F2>		/xc8/xa8	<Private Use>
+<UF7F3>		/xc8/xa9	<Private Use>
+<UF7F4>		/xc8/xaa	<Private Use>
+<UF7F5>		/xc8/xab	<Private Use>
+<UF7F6>		/xc8/xac	<Private Use>
+<UF7F7>		/xc8/xad	<Private Use>
+<UF7F8>		/xc8/xae	<Private Use>
+<UF7F9>		/xc8/xaf	<Private Use>
+<UF7FA>		/xc8/xb0	<Private Use>
+<UF7FB>		/xc8/xb1	<Private Use>
+<UF7FC>		/xc8/xb2	<Private Use>
+<UF7FD>		/xc8/xb3	<Private Use>
+<UF7FE>		/xc8/xb4	<Private Use>
+<UF7FF>		/xc8/xb5	<Private Use>
+<UF800>		/xc8/xb6	<Private Use>
+<UF801>		/xc8/xb7	<Private Use>
+<UF802>		/xc8/xb8	<Private Use>
+<UF803>		/xc8/xb9	<Private Use>
+<UF804>		/xc8/xba	<Private Use>
+<UF805>		/xc8/xbb	<Private Use>
+<UF806>		/xc8/xbc	<Private Use>
+<UF807>		/xc8/xbd	<Private Use>
+<UF808>		/xc8/xbe	<Private Use>
+<UF809>		/xc8/xbf	<Private Use>
+<UF80A>		/xc8/xc0	<Private Use>
+<UF80B>		/xc8/xc1	<Private Use>
+<UF80C>		/xc8/xc2	<Private Use>
+<UF80D>		/xc8/xc3	<Private Use>
+<UF80E>		/xc8/xc4	<Private Use>
+<UF80F>		/xc8/xc5	<Private Use>
+<UF810>		/xc8/xc6	<Private Use>
+<UF811>		/xc8/xc7	<Private Use>
+<UF812>		/xc8/xc8	<Private Use>
+<UF813>		/xc8/xc9	<Private Use>
+<UF814>		/xc8/xca	<Private Use>
+<UF815>		/xc8/xcb	<Private Use>
+<UF816>		/xc8/xcc	<Private Use>
+<UF817>		/xc8/xcd	<Private Use>
+<UF818>		/xc8/xce	<Private Use>
+<UF819>		/xc8/xcf	<Private Use>
+<UF81A>		/xc8/xd0	<Private Use>
+<UF81B>		/xc8/xd1	<Private Use>
+<UF81C>		/xc8/xd2	<Private Use>
+<UF81D>		/xc8/xd3	<Private Use>
+<UF81E>		/xc8/xd4	<Private Use>
+<UF81F>		/xc8/xd5	<Private Use>
+<UF820>		/xc8/xd6	<Private Use>
+<UF821>		/xc8/xd7	<Private Use>
+<UF822>		/xc8/xd8	<Private Use>
+<UF823>		/xc8/xd9	<Private Use>
+<UF824>		/xc8/xda	<Private Use>
+<UF825>		/xc8/xdb	<Private Use>
+<UF826>		/xc8/xdc	<Private Use>
+<UF827>		/xc8/xdd	<Private Use>
+<UF828>		/xc8/xde	<Private Use>
+<UF829>		/xc8/xdf	<Private Use>
+<UF82A>		/xc8/xe0	<Private Use>
+<UF82B>		/xc8/xe1	<Private Use>
+<UF82C>		/xc8/xe2	<Private Use>
+<UF82D>		/xc8/xe3	<Private Use>
+<UF82E>		/xc8/xe4	<Private Use>
+<UF82F>		/xc8/xe5	<Private Use>
+<UF830>		/xc8/xe6	<Private Use>
+<UF831>		/xc8/xe7	<Private Use>
+<UF832>		/xc8/xe8	<Private Use>
+<UF833>		/xc8/xe9	<Private Use>
+<UF834>		/xc8/xea	<Private Use>
+<UF835>		/xc8/xeb	<Private Use>
+<UF836>		/xc8/xec	<Private Use>
+<UF837>		/xc8/xed	<Private Use>
+<UF838>		/xc8/xee	<Private Use>
+<UF839>		/xc8/xef	<Private Use>
+<UF83A>		/xc8/xf0	<Private Use>
+<UF83B>		/xc8/xf1	<Private Use>
+<UF83C>		/xc8/xf2	<Private Use>
+<UF83D>		/xc8/xf3	<Private Use>
+<UF83E>		/xc8/xf4	<Private Use>
+<UF83F>		/xc8/xf5	<Private Use>
+<UF840>		/xc8/xf6	<Private Use>
+<UF841>		/xc8/xf7	<Private Use>
+<UF842>		/xc8/xf8	<Private Use>
+<UF843>		/xc8/xf9	<Private Use>
+<UF844>		/xc8/xfa	<Private Use>
+<UF845>		/xc8/xfb	<Private Use>
+<UF846>		/xc8/xfc	<Private Use>
+<UF847>		/xc8/xfd	<Private Use>
+<UF848>		/xc8/xfe	<Private Use>
+%
+% End of Eten extended charset.
+%
 <U4E42>		/xc9/x40	<CJK>
 <U4E5C>		/xc9/x41	<CJK>
 <U51F5>		/xc9/x42	<CJK>
@@ -13919,9 +14050,9 @@ CHARMAP
 <U2552>		/xf9/xe6	BOX DRAWINGS DOWN SINGLE AND RIGHT DOUBLE
 <U2564>		/xf9/xe7	BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE
 <U2555>		/xf9/xe8	BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE
-<U255E>		/xf9/xe9	BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
-<U256A>		/xf9/xea	BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
-<U2561>		/xf9/xeb	BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
+% <U255E>		/xf9/xe9	BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE
+% <U256A>		/xf9/xea	BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE
+% <U2561>		/xf9/xeb	BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE
 <U2558>		/xf9/xec	BOX DRAWINGS UP SINGLE AND RIGHT DOUBLE
 <U2567>		/xf9/xed	BOX DRAWINGS UP SINGLE AND HORIZONTAL DOUBLE
 <U255B>		/xf9/xee	BOX DRAWINGS UP SINGLE AND LEFT DOUBLE
@@ -13935,10 +14066,10 @@ CHARMAP
 <U2568>		/xf9/xf6	BOX DRAWINGS UP DOUBLE AND HORIZONTAL SINGLE
 <U255C>		/xf9/xf7	BOX DRAWINGS UP DOUBLE AND LEFT SINGLE
 <U2551>		/xf9/xf8	BOX DRAWINGS DOUBLE VERTICAL
-<U2550>		/xf9/xf9	BOX DRAWINGS DOUBLE HORIZONTAL
-<U256D>		/xf9/xfa	BOX DRAWINGS LIGHT ARC DOWN AND RIGHT
-<U256E>		/xf9/xfb	BOX DRAWINGS LIGHT ARC DOWN AND LEFT
-<U2570>		/xf9/xfc	BOX DRAWINGS LIGHT ARC UP AND RIGHT
-<U256F>		/xf9/xfd	BOX DRAWINGS LIGHT ARC UP AND LEFT
+% <U2550>		/xf9/xf9	BOX DRAWINGS DOUBLE HORIZONTAL
+% <U256D>		/xf9/xfa	BOX DRAWINGS LIGHT ARC DOWN AND RIGHT
+% <U256E>		/xf9/xfb	BOX DRAWINGS LIGHT ARC DOWN AND LEFT
+% <U2570>		/xf9/xfc	BOX DRAWINGS LIGHT ARC UP AND RIGHT
+% <U256F>		/xf9/xfd	BOX DRAWINGS LIGHT ARC UP AND LEFT
 <U2593>		/xf9/xfe	DARK SHADE
 END CHARMAP

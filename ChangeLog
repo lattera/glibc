@@ -1,3 +1,8 @@
+2000-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/big5.c: Updated.
+	Patch by Tung-Han Hsieh <thhsieh@twcpro.phys.ntu.edu.tw>.
+
 2000-08-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig (all-subdirs): Add conform.

@@ -118,7 +118,8 @@ int __pthread_mutex_timedlock (pthread_mutex_t *mutex,
   pthread_descr self;
   int res;
 
-  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
+  if (__builtin_expect (abstime->tv_nsec, 0) < 0
+      || __builtin_expect (abstime->tv_nsec, 0) >= 1000000000)
     return EINVAL;
 
   switch(mutex->__m_kind) {

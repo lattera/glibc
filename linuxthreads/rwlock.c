@@ -32,11 +32,10 @@
 
 static int rwlock_rd_extricate_func(void *obj, pthread_descr th)
 {
-  volatile pthread_descr self = thread_self();
   pthread_rwlock_t *rwlock = obj;
   int did_remove = 0;
 
-  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, self);
+  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, NULL);
   did_remove = remove_from_queue(&rwlock->__rw_read_waiting, th);
   __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
 
@@ -45,11 +44,10 @@ static int rwlock_rd_extricate_func(void *obj, pthread_descr th)
 
 static int rwlock_wr_extricate_func(void *obj, pthread_descr th)
 {
-  volatile pthread_descr self = thread_self();
   pthread_rwlock_t *rwlock = obj;
   int did_remove = 0;
 
-  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, self);
+  __pthread_lock((struct _pthread_fastlock *) &rwlock->__rw_lock, NULL);
   did_remove = remove_from_queue(&rwlock->__rw_write_waiting, th);
   __pthread_unlock((struct _pthread_fastlock *) &rwlock->__rw_lock);
 
@@ -67,7 +65,8 @@ rwlock_is_in_list(pthread_descr self, pthread_rwlock_t *rwlock)
 {
   pthread_readlock_info *info;
 
-  for (info = self->p_readlock_list; info != NULL; info = info->pr_next)
+  for (info = THREAD_GETMEM (self, p_readlock_list); info != NULL;
+       info = info->pr_next)
     {
       if (info->pr_lock == rwlock)
 	return info;
@@ -87,10 +86,10 @@ rwlock_is_in_list(pthread_descr self, pthread_rwlock_t *rwlock)
 static pthread_readlock_info *
 rwlock_add_to_list(pthread_descr self, pthread_rwlock_t *rwlock)
 {
-  pthread_readlock_info *info = self->p_readlock_free;
+  pthread_readlock_info *info = THREAD_GETMEM (self, p_readlock_free);
 
   if (info != NULL)
-    self->p_readlock_free = info->pr_next;
+    THREAD_SETMEM (self, p_readlock_free, info->pr_next);
   else
     info = malloc(sizeof *info);
 
@@ -99,8 +98,8 @@ rwlock_add_to_list(pthread_descr self, pthread_rwlock_t *rwlock)
 
   info->pr_lock_count = 1;
   info->pr_lock = rwlock;
-  info->pr_next = self->p_readlock_list;
-  self->p_readlock_list = info;
+  info->pr_next = THREAD_GETMEM (self, p_readlock_list);
+  THREAD_SETMEM (self, p_readlock_list, info);
 
   return info;
 }
@@ -190,11 +189,12 @@ rwlock_have_already(pthread_descr *pself, pthread_rwlock_t *rwlock,
   if (rwlock->__rw_kind == PTHREAD_RWLOCK_PREFER_WRITER_NP)
     {
       if (!self)
-	self = thread_self();
+	*pself = self = thread_self();
 
       existing = rwlock_is_in_list(self, rwlock);
 
-      if (existing != NULL || self->p_untracked_readlock_count > 0)
+      if (existing != NULL
+	  || THREAD_GETMEM (self, p_untracked_readlock_count) > 0)
 	have_lock_already = 1;
       else
 	{
@@ -206,7 +206,6 @@ rwlock_have_already(pthread_descr *pself, pthread_rwlock_t *rwlock,
 
   *pout_of_mem = out_of_mem;
   *pexisting = existing;
-  *pself = self;
 
   return have_lock_already;
 }
@@ -286,9 +285,9 @@ __pthread_rwlock_rdlock (pthread_rwlock_t *rwlock)
   if (have_lock_already || out_of_mem)
     {
       if (existing != NULL)
-	existing->pr_lock_count++;
+	++existing->pr_lock_count;
       else
-	self->p_untracked_readlock_count++;
+	++self->p_untracked_readlock_count;
     }
 
   return 0;
@@ -357,9 +356,9 @@ __pthread_rwlock_timedrdlock (pthread_rwlock_t *rwlock,
   if (have_lock_already || out_of_mem)
     {
       if (existing != NULL)
-	existing->pr_lock_count++;
+	++existing->pr_lock_count;
       else
-	self->p_untracked_readlock_count++;
+	++self->p_untracked_readlock_count;
     }
 
   return 0;
@@ -398,9 +397,9 @@ __pthread_rwlock_tryrdlock (pthread_rwlock_t *rwlock)
       if (have_lock_already || out_of_mem)
 	{
 	  if (existing != NULL)
-	    existing->pr_lock_count++;
+	    ++existing->pr_lock_count;
 	  else
-	    self->p_untracked_readlock_count++;
+	    ++self->p_untracked_readlock_count;
 	}
     }
 
@@ -574,14 +573,15 @@ __pthread_rwlock_unlock (pthread_rwlock_t *rwlock)
 	    {
 	      if (victim->pr_lock_count == 0)
 		{
-		  victim->pr_next = self->p_readlock_free;
-		  self->p_readlock_free = victim;
+		  victim->pr_next = THREAD_GETMEM (self, p_readlock_free);
+		  THREAD_SETMEM (self, p_readlock_free, victim);
 		}
 	    }
 	  else
 	    {
-	      if (self->p_untracked_readlock_count > 0)
-		self->p_untracked_readlock_count--;
+	      int val = THREAD_GETMEM (self, p_untracked_readlock_count);
+	      if (val > 0)
+		THREAD_SETMEM (self, p_untracked_readlock_count, val - 1);
 	    }
 	}
     }

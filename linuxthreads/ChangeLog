@@ -1,3 +1,18 @@
+2000-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c: Move definition of __pthread_set_own_extricate_if...
+	* spinlock.h: ...here.  Remove locking.
+	* internals.h: Remove __pthread_set_own_extricate_if prototype.
+
+	* rwlock.c: Use THREAD_GETMEM And THREAD_SETMEM.
+	(rwlock_rd_extricate_func): Don't determine self, let
+	__pthread_lock do it.
+	(rwlock_wr_extricate_func): Likewise.
+	(rwlock_have_already): Optimize *pself handling a bit.
+
+	* mutex.c: Use __builtin_expect.
+	* pthread.c: Likewise.
+
 2000-08-02  Andreas Jaeger  <aj@suse.de>
 
 	* linuxthreads/sysdeps/s390/pspinlock.c: New file.
