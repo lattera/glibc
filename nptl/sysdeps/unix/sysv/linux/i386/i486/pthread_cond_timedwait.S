@@ -95,8 +95,8 @@ __pthread_cond_timedwait:
 	movl	%edi, 20(%esp)
 	movl	%edx, 24(%esp)
 	/* Prepare structure passed to cancellation handler.  */
+	movl	%ecx, (%esp)
 	movl	%ebx, 4(%esp)
-	movl	%ecx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -107,7 +107,7 @@ __pthread_cond_timedwait:
 #endif
 	jne	3f
 
-4:	movl	%esp, %eax
+4:	leal	8(%esp), %eax
 	call	__pthread_enable_asynccancel_2
 
 	/* Get the current time.  */
@@ -168,7 +168,7 @@ __pthread_cond_timedwait:
 	subl	$wakeup_seq, %ebx
 	movl	%eax, %esi
 
-	movl	(%esp), %eax
+	movl	8(%esp), %eax
 	call	__pthread_disable_asynccancel
 
 	/* Lock.  */
@@ -224,10 +224,9 @@ __pthread_cond_timedwait:
 11:	movl	20+CLEANUP_PREV(%esp), %edx
 	movl	%edx, %gs:CLEANUP
 
-	/* Trick ahead:	 8(%esp) contains the address of the mutex.  */
-	addl	$8, %esp
+	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
 	call	__pthread_mutex_lock_internal
-	addl	$36, %esp
+	addl	$44, %esp
 
 	/* We return the result of the mutex_lock operation if it failed.  */
 	testl	%eax, %eax

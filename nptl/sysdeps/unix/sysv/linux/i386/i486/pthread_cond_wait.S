@@ -84,10 +84,10 @@ __condvar_cleanup:
 	ENTER_KERNEL
 
 	/* Lock the mutex unless asynchronous cancellation is in effect.  */
-	testl	$2, (%esi)
+	testl	$2, 8(%esi)
 	jne	3f
 
-	pushl	8(%esi)
+	pushl	(%esi)
 	call	__pthread_mutex_lock_internal
 	popl	%eax
 
@@ -153,8 +153,8 @@ __pthread_cond_wait:
 	movl	%edi, 12(%esp)
 	movl	%edx, 16(%esp)
 	/* Prepare structure passed to cancellation handler.  */
+	movl	%ecx, (%esp)
 	movl	%ebx, 4(%esp)
-	movl	%ecx, 8(%esp)
 
 	/* Unlock.  */
 8:	LOCK
@@ -165,7 +165,7 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
-4:	movl	%esp, %eax
+4:	leal	8(%esp), %eax
 	call	__pthread_enable_asynccancel_2
 
 	movl	%esi, %ecx	/* movl $FUTEX_WAIT, %ecx */
@@ -175,7 +175,7 @@ __pthread_cond_wait:
 	ENTER_KERNEL
 	subl	$wakeup_seq, %ebx
 
-	movl	(%esp), %eax
+	movl	8(%esp), %eax
 	call	__pthread_disable_asynccancel
 
 	/* Lock.  */
@@ -222,10 +222,9 @@ __pthread_cond_wait:
 11:	movl	20+CLEANUP_PREV(%esp), %edx
 	movl	%edx, %gs:CLEANUP
 
-	/* Trick ahead:	 8(%esp) contains the address of the mutex.  */
-	addl	$8, %esp
+	/* Trick ahead:	 (%esp) contains the address of the mutex.  */
 	call	__pthread_mutex_lock_internal
-	addl	$28, %esp
+	addl	$36, %esp
 
 14:	popl	%ebx
 	popl	%esi
