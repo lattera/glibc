@@ -105,9 +105,9 @@ argp_program_version		NEW: argp
 argp_program_version_hook	NEW: argp
 argp_state_help			NEW: argp
 argp_usage			NEW: argp
-authdes_create			NEW: NIS+
-authdes_getucred		NEW: NIS+
-authdes_pk_create		NEW: NIS+
+authdes_create			NEW: Secure RPC
+authdes_getucred		NEW: Secure RPC
+authdes_pk_create		NEW: Secure RPC
 backtrace			NEW: GNU ext.
 backtrace_symbols		NEW: GNU ext.
 backtrace_symbols_fd		NEW: GNU ext.
@@ -134,7 +134,7 @@ catanh				NEW: ISO C 9x
 catanhf				NEW: ISO C 9x
 catanhl				NEW: ISO C 9x
 catanl				NEW: ISO C 9x
-cbc_crypt			NEW: NIS+
+cbc_crypt			NEW: Secure RPC
 ccos				NEW: ISO C 9x
 ccosf				NEW: ISO C 9x
 ccosh				NEW: ISO C 9x
@@ -183,8 +183,8 @@ ctanh				NEW: ISO C 9x
 ctanhf				NEW: ISO C 9x
 ctanhl				NEW: ISO C 9x
 ctanl				NEW: ISO C 9x
-des_setparity			NEW: NIS+
-ecb_crypt			NEW: NIS+
+des_setparity			NEW: Secure RPC
+ecb_crypt			NEW: Secure RPC
 endutxent			NEW: utmpx
 exp10				NEW: ISO C 9x
 exp10f				NEW: ISO C 9x
@@ -251,7 +251,7 @@ getdate_err			NEW: Unix98
 getdate_r			NEW: GNU ext.
 getmsg				NEW: STREAMS
 getnameinfo			NEW: IPv6
-getnetname			NEW: IPv6
+getnetname			NEW: Secure RPC
 getpmsg				NEW: STREAMS
 getpt				NEW: Unix98 PTY
 getrlimit64			NEW: LFS
@@ -263,7 +263,7 @@ globfree64			NEW: GNU ext.
 gnu_get_libc_release		NEW: GNU ext.
 gnu_get_libc_version		NEW: GNU ext.
 grantpt				NEW: Unix98 PTY
-host2netname			NEW: IPv6
+host2netname			NEW: Secure RPC
 iconv				NEW: iconv
 iconv_close			NEW: iconv
 iconv_open			NEW: iconv
@@ -276,15 +276,15 @@ in6addr_loopback		NEW: IPv6
 inet6_isipv4mapped		NEW: IPv6
 isastream			NEW: STREAMS
 iswblank			NEW: GNU ext.
-key_decryptsession		NEW: NIS+
-key_decryptsession_pk		NEW: NIS+
-key_encryptsession		NEW: NIS+
-key_encryptsession_pk		NEW: NIS+
-key_gendes			NEW: NIS+
-key_get_conv			NEW: NIS+
-key_secretkey_is_set		NEW: NIS+
-key_setnet			NEW: NIS+
-key_setsecret			NEW: NIS+
+key_decryptsession		NEW: Secure RPC
+key_decryptsession_pk		NEW: Secure RPC
+key_encryptsession		NEW: Secure RPC
+key_encryptsession_pk		NEW: Secure RPC
+key_gendes			NEW: Secure RPC
+key_get_conv			NEW: Secure RPC
+key_secretkey_is_set		NEW: Secure RPC
+key_setnet			NEW: Secure RPC
+key_setsecret			NEW: Secure RPC
 llrint				NEW: ISO C 9x
 llrintf				NEW: ISO C 9x
 llrintl				NEW: ISO C 9x
@@ -312,14 +312,14 @@ nanl				NEW: ISO C 9x
 nearbyint			NEW: ISO C 9x
 nearbyintf			NEW: ISO C 9x
 nearbyintl			NEW: ISO C 9x
-netname2host			NEW: IPv6
-netname2user			NEW: IPv6
+netname2host			NEW: Secure RPC
+netname2user			NEW: Secure RPC
 nextafterx			NEW: ISO C 9x
 nextafterxf			NEW: ISO C 9x
 nftw				NEW: Unix98
 nftw64				NEW: LFS
 open64				NEW: LFS
-passwd2des			NEW: NIS+
+passwd2des			NEW: Secure RPC
 pow10				NEW: GNU ext.
 pow10f				NEW: GNU ext.
 pow10l				NEW: GNU ext.
@@ -375,7 +375,7 @@ strfxtime			NEW: ISO C 9x
 strtoimax			NEW: ISO C 9x
 strtoumax			NEW: ISO C 9x
 strverscmp			NEW: GNU ext.
-svcauthdes_stats		NEW: NIS+
+svcauthdes_stats		NEW: Secure RPC
 svcunix_create			NEW: sunrpc etx
 svcunixfd_create		NEW: sunrpc ext
 swapcontext			NEW: Unix98
@@ -392,7 +392,7 @@ truncl				NEW: ISO C 9x
 umount2				NEW: kernel
 unlockpt			NEW: Unix98 PTY
 updwtmpx			NEW: utmpx
-user2netname			NEW: IPv6
+user2netname			NEW: Secure RPC
 utmpxname			NEW: utmpx
 versionsort			NEW: GNU ext.
 versionsort64			NEW: LFS
@@ -408,21 +408,21 @@ wcswcs				NEW: Unix98
 wordexp				NEW: POSIX.2
 wordfree			NEW: POSIX.2
 write_profiling			REMOVED
-xdecrypt			NEW: NIS+
-xdr_authdes_cred		NEW: NIS+
-xdr_authdes_verf		NEW: NIS+
-xdr_cryptkeyarg			NEW: NIS+
-xdr_cryptkeyarg2		NEW: NIS+
-xdr_cryptkeyres			NEW: NIS+
-xdr_getcredres			NEW: NIS+
-xdr_key_netstarg		NEW: NIS+
-xdr_key_netstres		NEW: NIS+
-xdr_keybuf			NEW: NIS+
-xdr_keystatus			NEW: NIS+
-xdr_netnamestr			NEW: NIS+
-xdr_sizeof			NEW: NIS+
+xdecrypt			NEW: Secure RPC
+xdr_authdes_cred		NEW: Secure RPC
+xdr_authdes_verf		NEW: Secure RPC
+xdr_cryptkeyarg			NEW: Secure RPC
+xdr_cryptkeyarg2		NEW: Secure RPC
+xdr_cryptkeyres			NEW: Secure RPC
+xdr_getcredres			NEW: Secure RPC
+xdr_key_netstarg		NEW: Secure RPC
+xdr_key_netstres		NEW: Secure RPC
+xdr_keybuf			NEW: Secure RPC
+xdr_keystatus			NEW: Secure RPC
+xdr_netnamestr			NEW: Secure RPC
+xdr_sizeof			NEW: Secure RPC
 xdr_unixcred			NEW: sunrpc ext
-xencrypt			NEW: NIS+
+xencrypt			NEW: Secure RPC
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Version 2.0.5

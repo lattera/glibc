@@ -843,8 +843,8 @@ nanosleep			nanosleep
 			      >	nearbyint			NEW: ISO C 9x
 			      >	nearbyintf			NEW: ISO C 9x
 			      >	nearbyintl			NEW: ISO C 9x
-			      >	netname2host			NEW: IPv6
-			      >	netname2user			NEW: IPv6
+			      >	netname2host			NEW: Secure RPC
+			      >	netname2user			NEW: Secure RPC
 nextafter			nextafter
 nextafterf			nextafterf
 nextafterl			nextafterl
