@@ -1,3 +1,8 @@
+2001-01-15  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/tstscanf.c (main): Add two testcases for '*'
+	modifier.
+
 2001-01-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* nss/getent.c (print_aliases, aliases_keys, ethers_keys,
