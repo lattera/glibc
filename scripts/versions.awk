@@ -1,6 +1,6 @@
 # Combine version map fragments into version files for the generated
 # shared object.
-# (C) Copyright 1998 Free Software Foundation, Inc.
+# (C) Copyright 1998, 1999 Free Software Foundation, Inc.
 # Written by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
 # This script expects the following variables to be defined:
@@ -12,7 +12,7 @@
 BEGIN {
   nlibs=0;
   while (getline < defsfile) {
-    if (/^[a-zA-Z0-9_]+ {/) {
+    if (/^[a-zA-Z0-9_]+ \{/) {
       libs[$1] = 1;
       curlib = $1;
       while (getline < defsfile && ! /^}/) {
