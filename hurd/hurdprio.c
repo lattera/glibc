@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <hurd/resource.h>
 #include <hurd.h>
+#include <hurd/resource.h>
+#include <sys/mman.h>
 #include <unistd.h>
 
 error_t
@@ -35,64 +36,54 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 
   switch (which)
     {
+    default:
+      return EINVAL;
+
     case PRIO_PROCESS:
-      npids = 1;
-      pids[0] = who ?: getpid (); /* XXX function could special-case self? */
-      err = 0;
+      err = (*function) (who ?: getpid (), 0); /* XXX special-case self? */
       break;
 
     case PRIO_PGRP:
       err = __USEPORT (PROC, __proc_getpgrppids (port, who, &pids, &npids));
+      for (i = 0; !err && i < npids; ++i)
+	err = (*function) (pids[i], 0);
       break;
 
     case PRIO_USER:
       if (who == 0)
 	who = geteuid ();
       err = __USEPORT (PROC, __proc_getallpids (port, &pids, &npids));
-      break;
-
-    default:
-      return EINVAL;
-    }
-
-  for (i = 0; !err && i < npids; ++i)
-    {
-      if (which == PRIO_USER)
+      for (i = 0; !err && i < npids; ++i)
 	{
 	  /* Get procinfo to check the owner.  */
 	  int *oldpi = pi;
 	  mach_msg_type_number_t oldpisize = pisize;
 	  char *tw = 0;
 	  size_t twsz = 0;
-	  if (err = __USEPORT (PROC, __proc_getprocinfo (port, pids[i],
-							 &pi_flags,
-							 &pi, &pisize,
-							 &tw, &twsz)))
-	    continue;
-	  if (twsz)
-	    /* Gratuitous.  */
-	    __vm_deallocate (__mach_task_self (), (vm_address_t) tw, twsz);
-	  if (pi != oldpi && oldpi != pibuf)
-	    /* Old buffer from last call was not reused; free it.  */
-	    __vm_deallocate (__mach_task_self (),
-			     (vm_address_t) oldpi, oldpisize * sizeof pi[0]);
+	  err = __USEPORT (PROC, __proc_getprocinfo (port, pids[i],
+						     &pi_flags,
+						     &pi, &pisize,
+						     &tw, &twsz));
+	  if (!err)
+	    {
+	      if (twsz)		/* Gratuitous.  */
+		__munmap (tw, twsz);
+	      if (pi != oldpi && oldpi != pibuf)
+		/* Old buffer from last call was not reused; free it.  */
+		__munmap (oldpi, oldpisize * sizeof pi[0]);
 
-	  pip = (struct procinfo *) pi;
-	  if (pip->owner != (uid_t) who)
-	    continue;
+	      pip = (struct procinfo *) pi;
+	      if (pip->owner == (uid_t) who)
+		err = (*function) (pids[i], pip);
+	    }
 	}
-      else
-	pip = NULL;
-
-      err = (*function) (pids[i], pip);
+      break;
     }
 
   if (pids != pidbuf)
-    __vm_deallocate (__mach_task_self (),
-		     (vm_address_t) pids, npids * sizeof pids[0]);
+    __munmap (pids, npids * sizeof pids[0]);
   if (pi != pibuf)
-    __vm_deallocate (__mach_task_self (),
-		     (vm_address_t) pi, pisize * sizeof pi[0]);
+    __munmap (pi, pisize * sizeof pi[0]);
 
   return err;
 }
