@@ -262,7 +262,7 @@ extern struct locale_data *_nl_load_locale_from_archive (int category,
      internal_function attribute_hidden;
 
 /* Subroutine of setlocale's __libc_subfreeres hook.  */
-extern void _nl_archive_subfrees (void) attribute_hidden;
+extern void _nl_archive_subfreeres (void) attribute_hidden;
 
 /* Validate the contents of a locale file and set up the in-core
    data structure to point into the data.  This leaves the `alloc'

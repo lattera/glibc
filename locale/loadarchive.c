@@ -37,8 +37,6 @@
 #include "hashval.h"
 #undef compute_hashval
 
-#undef LOCALEDIR
-#define LOCALEDIR "/spare/roland/tmp/usr/lib/locale/"
 
 /* Name of the locale archive file.  */
 static const char archfname[] = LOCALEDIR "locale-archive";
