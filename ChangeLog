@@ -1,3 +1,7 @@
+2002-01-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Update x86 relocations.
+
 2002-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/charmap.c (new_width): Check whether byte

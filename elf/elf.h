@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1071,28 +1071,33 @@ typedef struct
 #define R_386_RELATIVE	   8		/* Adjust by program base */
 #define R_386_GOTOFF	   9		/* 32 bit offset to GOT */
 #define R_386_GOTPC	   10		/* 32 bit PC relative offset to GOT */
-#define R_386_TLS_GD_32	   12		/* Direct 32 bit for general dynamic
+#define R_386_32PLT	   11
+#define R_386_16	   20
+#define R_386_PC16	   21
+#define R_386_8		   22
+#define R_386_PC8	   23
+#define R_386_TLS_GD_32	   24		/* Direct 32 bit for general dynamic
 					   thread local data */
-#define R_386_TLS_GD_PUSH  13		/* Tag for pushl in GD TLS code */
-#define R_386_TLS_GD_CALL  14		/* Relocation for call to
+#define R_386_TLS_GD_PUSH  25		/* Tag for pushl in GD TLS code */
+#define R_386_TLS_GD_CALL  26		/* Relocation for call to
 					   __tls_get_addr() */
-#define R_386_TLS_GD_POP   15		/* Tag for popl in GD TLS code */
-#define R_386_TLS_LDM_32   16		/* Direct 32 bit for local dynamic
+#define R_386_TLS_GD_POP   27		/* Tag for popl in GD TLS code */
+#define R_386_TLS_LDM_32   28		/* Direct 32 bit for local dynamic
 					   thread local data in GD code */
-#define R_386_TLS_LDM_PUSH 17		/* Tag for pushl in LDM TLS code */
-#define R_386_TLS_LDM_CALL 18		/* Relocation for call to
+#define R_386_TLS_LDM_PUSH 29		/* Tag for pushl in LDM TLS code */
+#define R_386_TLS_LDM_CALL 30		/* Relocation for call to
 					   __tls_get_addr() in LDM code */
-#define R_386_TLS_LDM_POP  19		/* Tag for popl in LDM TLS code */
-#define R_386_TLS_LDO_32   20		/* Offset relative to TLS block */
-#define R_386_TLS_IE_32	   21		/* GOT entry for static TLS block
+#define R_386_TLS_LDM_POP  31		/* Tag for popl in LDM TLS code */
+#define R_386_TLS_LDO_32   32		/* Offset relative to TLS block */
+#define R_386_TLS_IE_32	   33		/* GOT entry for static TLS block
 					   offset */
-#define R_386_TLS_LE_32	   22		/* Offset relative to static TLS
+#define R_386_TLS_LE_32	   34		/* Offset relative to static TLS
 					   block */
-#define R_386_TLS_DTPMOD32 23		/* ID of module containing symbol */
-#define R_386_TLS_DTPOFF32 24		/* Offset in TLS block */
-#define R_386_TLS_TPOFF32  25		/* Offset in static TLS block */
+#define R_386_TLS_DTPMOD32 35		/* ID of module containing symbol */
+#define R_386_TLS_DTPOFF32 36		/* Offset in TLS block */
+#define R_386_TLS_TPOFF32  37		/* Offset in static TLS block */
 /* Keep this the last entry.  */
-#define R_386_NUM	26
+#define R_386_NUM	   38
 
 /* SUN SPARC specific definitions.  */
 

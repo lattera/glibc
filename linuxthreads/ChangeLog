@@ -1,3 +1,8 @@
+2002-01-11  Andreas Schwab  <schwab@suse.de>
+
+	* signals.c (sighandler): Initialize all elements to SIG_ERR.
+	(__sigaction): Don't use value from sighandler if it is SIG_ERR.
+
 2002-01-06  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/alpha/elf/pt-initfini.c: New file.
