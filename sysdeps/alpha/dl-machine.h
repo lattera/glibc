@@ -289,36 +289,63 @@ _dl_start_user:
 	/* Store the highest stack address.  */
 	stq	$30, __libc_stack_end
 	/* See if we were run as a command with the executable file
-	   name as an extra leading argument.  If so, adjust the stack
-	   pointer to skip _dl_skip_args words.  */
+	   name as an extra leading argument.  */
 	ldl	$1, _dl_skip_args
-	beq	$1, 0f
-	ldq	$2, 0($sp)
-	subq	$2, $1, $2
-	s8addq	$1, $sp, $sp
-	stq	$2, 0($sp)
-	/* Load _dl_main_searchlist into s1 to pass to _dl_init_next.  */
-0:	ldq	$10, _dl_main_searchlist
-	/* Call _dl_init_next to return the address of an initializer
-	   function to run.  */
-1:	mov	$10, $16
-	jsr	$26, _dl_init_next
-	ldgp	$gp, 0($26)
-	beq	$0, 2f
-	mov	$0, $27
-	jsr	$26, ($0)
-	ldgp	$gp, 0($26)
-	br	1b
-2:	/* Clear the startup flag.  */
-	stl	$31, _dl_starting_up
+	beq	$1, $fixup_stack
+$fixup_stack_ret:
+	/* The special initializer gets called with the stack just
+	   as the application's entry point will see it; it can
+	   switch stacks if it moves these contents over.  */
+" RTLD_START_SPECIAL_INIT "
+	/* Call _dl_init(_dl_loaded, argc, argv, envp) to run initializers.  */
+	ldq	$16, _dl_loaded
+	ldq	$17, 0($sp)
+	lda	$18, 8($sp)
+	s8addq	$17, 8, $19
+	addq	$19, $18, $19
+	jsr	$26, _dl_init
 	/* Pass our finalizer function to the user in $0. */
 	lda	$0, _dl_fini
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
 	jmp	($9)
+$fixup_stack:
+	/* Adjust the stack pointer to skip _dl_skip_args words.  This
+	   involves copying everything down, since the stack pointer must
+	   always be 16-byte aligned.  */
+	ldq	$2, 0($sp)
+	subq	$2, $1, $2
+	mov	$sp, $4
+	s8addq	$2, $sp, $3
+	stq	$2, 0($sp)
+	/* Copy down argv.  */
+0:	ldq	$5, 8($3)
+	addq	$4, 8, $4
+	addq	$3, 8, $3
+	stq	$5, 0($4)
+	bne	$5, 0b
+	/* Copy down envp.  */
+1:	ldq	$5, 8($3)
+	addq	$4, 8, $4
+	addq	$3, 8, $3
+	stq	$5, 0($4)
+	bne	$5, 1b
+	/* Copy down auxiliary table.  */
+2:	ldq	$5, 8($3)
+	ldq	$6, 16($3)
+	addq	$4, 16, $4
+	addq	$3, 16, $3
+	stq	$5, -8($4)
+	stq	$6, 0($4)
+	bne	$5, 2b
+	br	$fixup_stack_ret
 	.end _dl_start_user
 	.set noat
 .previous");
+
+#ifndef RTLD_START_SPECIAL_INIT
+#define RTLD_START_SPECIAL_INIT /* nothing */
+#endif
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
@@ -350,7 +377,7 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
   /* Recover the PLT entry address by calculating reloc's index into the
      .rela.plt, and finding that entry in the .plt.  */
   rela_plt = (void *) D_PTR (l, l_info[DT_JMPREL]);
-  plte = (void *) (D_PTR (l, [DT_PLTGOT]) + 32);
+  plte = (void *) (D_PTR (l, l_info[DT_PLTGOT]) + 32);
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
