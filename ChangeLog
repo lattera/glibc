@@ -1,3 +1,7 @@
+2002-04-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/stat.h: Fix typo.  Patch by HJ Lu.
+
 2002-04-14  Bruno Haible  <bruno@clisp.org>
 
 	* locale/programs/charmap.c (charmap_read): Don't access result if

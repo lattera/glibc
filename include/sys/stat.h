@@ -15,7 +15,7 @@ extern int __fxstat_internal (int __ver, int __fildes,
 			      struct stat *__stat_buf) attribute_hidden;
 extern int __fxstat64_internal (int __ver, int __fildes,
 				struct stat64 *__stat_buf) attribute_hidden;
-extern int __lxstat_internal (int __ver, __const char __file,
+extern int __lxstat_internal (int __ver, __const char *__file,
 			      struct stat *__stat_buf) attribute_hidden;
 extern int __lxstat64_internal (int __ver, __const char *__file,
 				struct stat64 *__stat_buf) attribute_hidden;
