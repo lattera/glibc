@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
 
@@ -23,12 +23,12 @@
 #include <sgidefs.h>
 
 #ifndef CAT
-#ifdef __STDC__
-#define __CAT(str1,str2) str1##str2
-#else
-#define __CAT(str1,str2) str1/**/str2
-#endif
-#define CAT(str1,str2) __CAT(str1,str2)
+# ifdef __STDC__
+#  define __CAT(str1,str2) str1##str2
+# else
+#  define __CAT(str1,str2) str1/**/str2
+# endif
+# define CAT(str1,str2) __CAT(str1,str2)
 #endif
 
 /*
@@ -37,25 +37,112 @@
  * 64 bit address space isn't used yet, so we may use the R3000 32 bit
  * defines for now.
  */
-#define PTR	.word
-#define PTRSIZE	4
-#define PTRLOG	2
+#if (_MIPS_SIM == _MIPS_SIM_ABI32) || (_MIPS_SIM == _MIPS_SIM_NABI32)
+# define PTR .word
+# define PTRSIZE 4
+# define PTRLOG 2
+#elif (_MIPS_SIM == _MIPS_SIM_ABI64)
+# define PTR .dword
+# define PTRSIZE 8
+# define PTRLOG 3
+#endif
 
 /*
  * PIC specific declarations
  */
-#ifdef __PIC__
-#define CPRESTORE(register)                             \
+#if (_MIPS_SIM == _MIPS_SIM_ABI32)
+# ifdef __PIC__
+#  define CPRESTORE(register) \
 		.cprestore register
-#define CPADD(register)                                 \
+#  define CPLOAD(register) \
+		.cpload register
+# else
+#  define CPRESTORE(register)
+#  define CPLOAD(register)
+# endif
+
+# define CPADD(register) \
 		.cpadd	register
-#define CPLOAD(register)                                \
-		.cpload	register
-#else
-#define CPRESTORE(register)
-#define CPADD(register)
-#define CPLOAD(register)
+
+/*
+ * Set gp when at 1st instruction
+ */
+# define SETUP_GP					\
+		.set noreorder;				\
+		.cpload $25;				\
+		.set reorder
+/* Set gp when not at 1st instruction */
+# define SETUP_GPX(r)					\
+		.set noreorder;				\
+		move r, $31;	 /* Save old ra.  */	\
+		bal 10f; /* Find addr of cpload.  */	\
+		nop;					\
+10:							\
+		.cpload $31;				\
+		move $31, r;				\
+		.set reorder
+# define SETUP_GPX_L(r, l)				\
+		.set noreorder;				\
+		move r, $31;	 /* Save old ra.  */	\
+		bal l;   /* Find addr of cpload.  */	\
+		nop;					\
+l:							\
+		.cpload $31;				\
+		move $31, r;				\
+		.set reorder
+# define SAVE_GP(x) \
+		.cprestore x /* Save gp trigger t9/jalr conversion.	 */
+# define SETUP_GP64(a, b)
+# define SETUP_GPX64(a, b)
+# define SETUP_GPX64_L(cp_reg, ra_save, l)
+# define RESTORE_GP64
+# define USE_ALT_CP(a)
+#else /* (_MIPS_SIM == _MIPS_SIM_ABI64) || (_MIPS_SIM == _MIPS_SIM_NABI32) */
+/*
+ * For callee-saved gp calling convention:
+ */
+# define SETUP_GP
+# define SETUP_GPX(r)
+# define SETUP_GPX_L(r, l)
+# define SAVE_GP(x)
+
+# define SETUP_GP64(gpoffset, proc) \
+		.cpsetup $25, gpoffset, proc
+# define SETUP_GPX64(cp_reg, ra_save)			\
+		move ra_save, $31; /* Save old ra.  */	\
+		.set noreorder;				\
+		bal 10f; /* Find addr of .cpsetup.  */	\
+		nop;					\
+10:							\
+		.set reorder;				\
+		.cpsetup $31, cp_reg, 10b;		\
+		move $31, ra_save
+# define SETUP_GPX64_L(cp_reg, ra_save, l)  \
+		move ra_save, $31; /* Save old ra.  */	\
+		.set noreorder;				\
+		bal l;   /* Find addr of .cpsetup.  */	\
+		nop;					\
+l:							\
+		.set reorder;				\
+		.cpsetup $31, cp_reg, l;		\
+		move $31, ra_save
+# define RESTORE_GP64 \
+		.cpreturn
+/* Use alternate register for context pointer.  */
+# define USE_ALT_CP(reg)	\
+		.cplocal reg
+#endif /* _MIPS_SIM != _MIPS_SIM_ABI32 */
+
+/*
+ * Stack Frame Definitions
+ */
+#if (_MIPS_SIM == _MIPS_SIM_ABI32)
+# define NARGSAVE 4 /* Space for 4 argument registers must be allocated.  */
 #endif
+#if (_MIPS_SIM == _MIPS_SIM_ABI64 || _MIPS_SIM == _MIPS_SIM_NABI32)
+# define NARGSAVE 0 /* No caller responsibilities.  */
+#endif
+
 
 /*
  * LEAF - declare leaf routine
@@ -80,9 +167,11 @@ symbol:		.frame	sp, framesize, rpc
 /*
  * END - mark end of function
  */
-#define	END(function)                                   \
+#ifndef END
+# define END(function)                                   \
 		.end	function;		        \
 		.size	function,.-function
+#endif
 
 /*
  * EXPORT - export definition of symbol
@@ -142,54 +231,54 @@ symbol		=	value
  * is one of them.  So we should have an option not to use this instruction.
  */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5)
-#define PREF(hint,addr)                                 \
+# define PREF(hint,addr)                                 \
 		pref	hint,addr
-#define PREFX(hint,addr)                                \
+# define PREFX(hint,addr)                                \
 		prefx	hint,addr
 #else
-#define PREF
-#define PREFX
+# define PREF
+# define PREFX
 #endif
 
 /*
  * MIPS ISA IV/V movn/movz instructions and equivalents for older CPUs.
  */
 #if _MIPS_ISA == _MIPS_ISA_MIPS1
-#define MOVN(rd,rs,rt)                                  \
+# define MOVN(rd,rs,rt)					\
 		.set	push;				\
 		.set	reorder;			\
-		beqz	rt,9f;                          \
-		move	rd,rs;                          \
+		beqz	rt,9f;				\
+		move	rd,rs;				\
 		.set	pop;				\
 9:
-#define MOVZ(rd,rs,rt)                                  \
+# define MOVZ(rd,rs,rt)					\
 		.set	push;				\
 		.set	reorder;			\
-		bnez	rt,9f;                          \
-		move	rd,rt;                          \
+		bnez	rt,9f;				\
+		move	rd,rt;				\
 		.set	pop;				\
 9:
 #endif /* _MIPS_ISA == _MIPS_ISA_MIPS1 */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS2) || (_MIPS_ISA == _MIPS_ISA_MIPS3)
-#define MOVN(rd,rs,rt)                                  \
+# define MOVN(rd,rs,rt)					\
 		.set	push;				\
 		.set	noreorder;			\
-		bnezl	rt,9f;                          \
-		move	rd,rs;                          \
+		bnezl	rt,9f;				\
+		move	rd,rs;				\
 		.set	pop;				\
 9:
-#define MOVZ(rd,rs,rt)                                  \
+# define MOVZ(rd,rs,rt)					\
 		.set	push;				\
 		.set	noreorder;			\
-		beqzl	rt,9f;                          \
-		movz	rd,rs;                          \
+		beqzl	rt,9f;				\
+		movz	rd,rs;				\
 		.set	pop;				\
 9:
 #endif /* (_MIPS_ISA == _MIPS_ISA_MIPS2) || (_MIPS_ISA == _MIPS_ISA_MIPS3) */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5)
-#define MOVN(rd,rs,rt)                                  \
+# define MOVN(rd,rs,rt)					\
 		movn	rd,rs,rt
-#define MOVZ(rd,rs,rt)                                  \
+# define MOVZ(rd,rs,rt)					\
 		movz	rd,rs,rt
 #endif /* (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) */
 
@@ -197,181 +286,187 @@ symbol		=	value
  * Stack alignment
  */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
-#define ALSZ	7
-#define ALMASK	~7
+# define ALSZ	7
+# define ALMASK	~7
 #endif
 #if (_MIPS_ISA == _MIPS_ISA_MIPS3) || (_MIPS_ISA == _MIPS_ISA_MIPS4) || \
     (_MIPS_ISA == _MIPS_ISA_MIPS5)
-#define ALSZ	15
-#define ALMASK	~15
+# define ALSZ	15
+# define ALMASK	~15
 #endif
 
 /*
  * Size of a register
  */
 #ifdef __mips64
-#define SZREG	8
+# define SZREG	8
 #else
-#define SZREG	4
+# define SZREG	4
 #endif
 
 /*
  * Use the following macros in assemblercode to load/store registers,
  * pointers etc.
  */
-#if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
-#define REG_S sw
-#define REG_L lw
-#define PTR_SUBU subu
-#define PTR_ADDU addu
-#endif
-#if (_MIPS_ISA == _MIPS_ISA_MIPS3) || (_MIPS_ISA == _MIPS_ISA_MIPS4) || \
-    (_MIPS_ISA == _MIPS_ISA_MIPS5)
-#define REG_S sd
-#define REG_L ld
-/* We still live in a 32 bit address space ...  */
-#define PTR_SUBU subu
-#define PTR_ADDU addu
+#if (_MIPS_SIM == _MIPS_SIM_ABI32)
+# define REG_S sw
+# define REG_L lw
+#else
+# define REG_S sd
+# define REG_L ld
 #endif
 
 /*
  * How to add/sub/load/store/shift C int variables.
  */
 #if (_MIPS_SZINT == 32)
-#define INT_ADD	add
-#define INT_ADDI	addi
-#define INT_ADDU	addu
-#define INT_ADDIU	addiu
-#define INT_SUB	add
-#define INT_SUBI	subi
-#define INT_SUBU	subu
-#define INT_SUBIU	subu
-#define INT_L		lw
-#define INT_S		sw
-#define LONG_SLL	sll
-#define LONG_SLLV	sllv
-#define LONG_SRL	srl
-#define LONG_SRLV	srlv
-#define LONG_SRA	sra
-#define LONG_SRAV	srav
+# define INT_ADD	add
+# define INT_ADDI	addi
+# define INT_ADDU	addu
+# define INT_ADDIU	addiu
+# define INT_SUB	add
+# define INT_SUBI	subi
+# define INT_SUBU	subu
+# define INT_SUBIU	subu
+# define INT_L		lw
+# define INT_S		sw
 #endif
 
 #if (_MIPS_SZINT == 64)
-#define INT_ADD	dadd
-#define INT_ADDI	daddi
-#define INT_ADDU	daddu
-#define INT_ADDIU	daddiu
-#define INT_SUB	dadd
-#define INT_SUBI	dsubi
-#define INT_SUBU	dsubu
-#define INT_SUBIU	dsubu
-#define INT_L		ld
-#define INT_S		sd
-#define LONG_SLL	dsll
-#define LONG_SLLV	dsllv
-#define LONG_SRL	dsrl
-#define LONG_SRLV	dsrlv
-#define LONG_SRA	dsra
-#define LONG_SRAV	dsrav
+# define INT_ADD	dadd
+# define INT_ADDI	daddi
+# define INT_ADDU	daddu
+# define INT_ADDIU	daddiu
+# define INT_SUB	dadd
+# define INT_SUBI	dsubi
+# define INT_SUBU	dsubu
+# define INT_SUBIU	dsubu
+# define INT_L		ld
+# define INT_S		sd
 #endif
 
 /*
  * How to add/sub/load/store/shift C long variables.
  */
 #if (_MIPS_SZLONG == 32)
-#define LONG_ADD	add
-#define LONG_ADDI	addi
-#define LONG_ADDU	addu
-#define LONG_ADDIU	addiu
-#define LONG_SUB	add
-#define LONG_SUBI	subi
-#define LONG_SUBU	subu
-#define LONG_SUBIU	subu
-#define LONG_L		lw
-#define LONG_S		sw
-#define LONG_SLL	sll
-#define LONG_SLLV	sllv
-#define LONG_SRL	srl
-#define LONG_SRLV	srlv
-#define LONG_SRA	sra
-#define LONG_SRAV	srav
+# define LONG_ADD	add
+# define LONG_ADDI	addi
+# define LONG_ADDU	addu
+# define LONG_ADDIU	addiu
+# define LONG_SUB	add
+# define LONG_SUBI	subi
+# define LONG_SUBU	subu
+# define LONG_SUBIU	subu
+# define LONG_L		lw
+# define LONG_S		sw
+# define LONG_SLL	sll
+# define LONG_SLLV	sllv
+# define LONG_SRL	srl
+# define LONG_SRLV	srlv
+# define LONG_SRA	sra
+# define LONG_SRAV	srav
 #endif
 
 #if (_MIPS_SZLONG == 64)
-#define LONG_ADD	dadd
-#define LONG_ADDI	daddi
-#define LONG_ADDU	daddu
-#define LONG_ADDIU	daddiu
-#define LONG_SUB	dadd
-#define LONG_SUBI	dsubi
-#define LONG_SUBU	dsubu
-#define LONG_SUBIU	dsubu
-#define LONG_L		ld
-#define LONG_S		sd
-#define LONG_SLL	dsll
-#define LONG_SLLV	dsllv
-#define LONG_SRL	dsrl
-#define LONG_SRLV	dsrlv
-#define LONG_SRA	dsra
-#define LONG_SRAV	dsrav
+# define LONG_ADD	dadd
+# define LONG_ADDI	daddi
+# define LONG_ADDU	daddu
+# define LONG_ADDIU	daddiu
+# define LONG_SUB	dadd
+# define LONG_SUBI	dsubi
+# define LONG_SUBU	dsubu
+# define LONG_SUBIU	dsubu
+# define LONG_L		ld
+# define LONG_S		sd
+# define LONG_SLL	dsll
+# define LONG_SLLV	dsllv
+# define LONG_SRL	dsrl
+# define LONG_SRLV	dsrlv
+# define LONG_SRA	dsra
+# define LONG_SRAV	dsrav
 #endif
 
 /*
  * How to add/sub/load/store/shift pointers.
  */
-#if (_MIPS_SZLONG == 32)
-#define PTR_ADD	add
-#define PTR_ADDI	addi
-#define PTR_ADDU	addu
-#define PTR_ADDIU	addiu
-#define PTR_SUB		add
-#define PTR_SUBI	subi
-#define PTR_SUBU	subu
-#define PTR_SUBIU	subu
-#define PTR_L		lw
-#define PTR_S		sw
-#define PTR_SLL		sll
-#define PTR_SLLV	sllv
-#define PTR_SRL		srl
-#define PTR_SRLV	srlv
-#define PTR_SRA		sra
-#define PTR_SRAV	srav
+#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZLONG == 32)
+# define PTR_ADD	add
+# define PTR_ADDI	addi
+# define PTR_ADDU	addu
+# define PTR_ADDIU	addiu
+# define PTR_SUB	add
+# define PTR_SUBI	subi
+# define PTR_SUBU	subu
+# define PTR_SUBIU	subu
+# define PTR_L		lw
+# define PTR_LA		la
+# define PTR_S		sw
+# define PTR_SLL	sll
+# define PTR_SLLV	sllv
+# define PTR_SRL	srl
+# define PTR_SRLV	srlv
+# define PTR_SRA	sra
+# define PTR_SRAV	srav
 
-#define PTR_SCALESHIFT	2
+# define PTR_SCALESHIFT	2
 #endif
 
-#if (_MIPS_SZLONG == 64)
-#define PTR_ADD	dadd
-#define PTR_ADDI	daddi
-#define PTR_ADDU	daddu
-#define PTR_ADDIU	daddiu
-#define PTR_SUB		dadd
-#define PTR_SUBI	dsubi
-#define PTR_SUBU	dsubu
-#define PTR_SUBIU	dsubu
-#define PTR_L		ld
-#define PTR_S		sd
-#define PTR_SLL		dsll
-#define PTR_SLLV	dsllv
-#define PTR_SRL		dsrl
-#define PTR_SRLV	dsrlv
-#define PTR_SRA		dsra
-#define PTR_SRAV	dsrav
+#if _MIPS_SIM == _MIPS_SIM_NABI32
+# define PTR_ADD	add
+# define PTR_ADDI	addi
+# define PTR_ADDU	add /* no u */
+# define PTR_ADDIU	addi /* no u */
+# define PTR_SUB	add
+# define PTR_SUBI	subi
+# define PTR_SUBU	sub /* no u */
+# define PTR_SUBIU	sub /* no u */
+# define PTR_L		lw
+# define PTR_LA		la
+# define PTR_S		sw
+# define PTR_SLL	sll
+# define PTR_SLLV	sllv
+# define PTR_SRL	srl
+# define PTR_SRLV	srlv
+# define PTR_SRA	sra
+# define PTR_SRAV	srav
 
-#define PTR_SCALESHIFT	3
+# define PTR_SCALESHIFT	2
+#endif
+
+#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZLONG == 64) \
+    || _MIPS_SIM == _MIPS_SIM_ABI64
+# define PTR_ADD	dadd
+# define PTR_ADDI	daddi
+# define PTR_ADDU	daddu
+# define PTR_ADDIU	daddiu
+# define PTR_SUB	dadd
+# define PTR_SUBI	dsubi
+# define PTR_SUBU	dsubu
+# define PTR_SUBIU	dsubu
+# define PTR_L		ld
+# define PTR_LA		dla
+# define PTR_S		sd
+# define PTR_SLL	dsll
+# define PTR_SLLV	dsllv
+# define PTR_SRL	dsrl
+# define PTR_SRLV	dsrlv
+# define PTR_SRA	dsra
+# define PTR_SRAV	dsrav
+
+# define PTR_SCALESHIFT	3
 #endif
 
 /*
  * Some cp0 registers were extended to 64bit for MIPS III.
  */
 #if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
-#define MFC0	mfc0
-#define MTC0	mtc0
+# define MFC0	mfc0
+# define MTC0	mtc0
 #endif
 #if (_MIPS_ISA == _MIPS_ISA_MIPS3) || (_MIPS_ISA == _MIPS_ISA_MIPS4) || \
     (_MIPS_ISA == _MIPS_ISA_MIPS5)
-#define MFC0	dmfc0
-#define MTC0	dmtc0
+# define MFC0	dmfc0
+# define MTC0	dmtc0
 #endif
 
 #endif /* sys/asm.h */
