@@ -71,6 +71,7 @@ static const struct ltest tests[] =
     { "-Inf", -HUGE_VAL, '\0', 0 },
     { "+InFiNiTy", HUGE_VAL, '\0', 0 },
 #endif
+    { "0x80000Ap-23", 0x80000Ap-23, '\0', 0 },
     { NULL, 0, '\0', 0 }
   };
 

@@ -6,6 +6,10 @@
 
 2003-03-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdlib/strtod.c (INTERNAL): While eating trailing zeros handling
+	hexdigits correctly.  Reported by Fred Tydeman <tydeman@tybor.com>.
+	* stdlib/tst-strtod.c: Add test for the bug.
+
 	* posix/tst-nice.c (do_test): Remove invalid of return value.
 	Don't run test if initial level != 0.
 
