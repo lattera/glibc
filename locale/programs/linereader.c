@@ -376,7 +376,8 @@ get_toplvl_escape (struct linereader *lr)
 
       bytes[nbytes++] = byte;
     }
-  while (ch == lr->escape_char && nbytes < 4);
+  while (ch == lr->escape_char
+	 && nbytes < sizeof (lr->token.val.charcode.bytes));
 
   if (!isspace (ch))
     lr_error (lr, _("garbage at end of character code specification"));
