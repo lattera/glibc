@@ -1,5 +1,5 @@
 /* Functions to read locale data files.
-   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -30,6 +30,7 @@
 #endif
 #include <sys/stat.h>
 
+#include <not-cancel.h>
 #include "localeinfo.h"
 
 
@@ -142,7 +143,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   file->decided = 1;
   file->data = NULL;
 
-  fd = __open (file->filename, O_RDONLY);
+  fd = open_not_cancel_2 (file->filename, O_RDONLY);
   if (__builtin_expect (fd, 0) < 0)
     /* Cannot open the file.  */
     return;
@@ -150,7 +151,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   if (__builtin_expect (__fxstat64 (_STAT_VER, fd, &st), 0) < 0)
     {
     puntfd:
-      __close (fd);
+      close_not_cancel_no_status (fd);
       return;
     }
   if (__builtin_expect (S_ISDIR (st.st_mode), 0))
@@ -160,7 +161,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
       char *newp;
       size_t filenamelen;
 
-      __close (fd);
+      close_not_cancel_no_status (fd);
 
       filenamelen = strlen (file->filename);
       newp = (char *) alloca (filenamelen
@@ -170,7 +171,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 		 _nl_category_names[category],
 		 _nl_category_name_sizes[category] + 1);
 
-      fd = __open (newp, O_RDONLY);
+      fd = open_not_cancel_2 (newp, O_RDONLY);
       if (__builtin_expect (fd, 0) < 0)
 	return;
 
@@ -206,7 +207,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	      char *p = (char *) filedata;
 	      while (to_read > 0)
 		{
-		  nread = __read (fd, p, to_read);
+		  nread = read_not_cancel (fd, p, to_read);
 		  if (__builtin_expect (nread, 1) <= 0)
 		    {
 		      free (filedata);
@@ -225,7 +226,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 #endif	/* _POSIX_MAPPED_FILES */
 
   /* We have mapped the data, so we no longer need the descriptor.  */
-  __close (fd);
+  close_not_cancel_no_status (fd);
 
   if (__builtin_expect (filedata == NULL, 0))
     /* We failed to map or read the data.  */

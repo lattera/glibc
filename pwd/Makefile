@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1991,1996,1997,1998,1999,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,6 +34,8 @@ ifeq ($(have-thread-library),yes)
 
 CFLAGS-getpwuid_r.c = -DUSE_NSCD=1
 CFLAGS-getpwnam_r.c = -DUSE_NSCD=1
+CFLAGS-getpwent_r.c = -fexceptions
+CFLAGS-getpwent.c = -fexceptions
 
 endif
 

@@ -1,3 +1,18 @@
+2003-09-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/Makefile (CFLAGS-getgrent_r.c): Add -fexceptions.
+	(CFLAGS-getgrent.c): Likewise.
+	* pwd/Makefile (CFLAGS-getpwent_r.c): Add -fexceptions.
+	(CFLAGS-getpwent.c): Likewise.
+	* shadow/Makefile (CFLAGS-getspent_r.c): Add -fexceptions.
+	(CFLAGS-getspent.c): Likewise.
+
+	* inet/Makefile: Add -fexceptions to CFLAGS for the various
+	getXXent and getXXbyYY functions.
+
+	* locale/loadlocale.c: Use not-cancelable variants of open, close,
+	and read.
+
 2003-09-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_routines): Remove

@@ -1,4 +1,4 @@
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,5 +26,7 @@ routines	= getspent getspnam sgetspent fgetspent putspent \
 		  getspent_r getspnam_r sgetspent_r fgetspent_r \
 		  lckpwdf
 
+CFLAGS-getspent_r.c = -fexceptions
+CFLAGS-getspent.c = -fexceptions
 
 include ../Rules

@@ -3181,7 +3181,8 @@ file name.  Usually the template string is something like
 template string, you @emph{must not} pass string constants to them.
 String constants are normally in read-only storage, so your program
 would crash when @code{mktemp} or @code{mkstemp} tried to modify the
-string.
+string.  These functions are declared in the header file @file{stdlib.h}.
+@pindex stdlib.h
 
 @comment stdlib.h
 @comment Unix
