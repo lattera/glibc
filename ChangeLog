@@ -1,3 +1,9 @@
+2002-12-05  Roland McGrath  <roland@redhat.com>
+
+	* stdlib/cxa_finalize.c (__cxa_finalize): When given a null argument,
+	call all functions rather than none.
+	Reported by Mark P. Mitchell <mark@codesourcery.com>.
+
 2002-12-04  Roland McGrath  <roland@redhat.com>
 
 	* locale/localeinfo.h [NL_CURRENT_INDIRECT]: Use attribute_tls_model_ie

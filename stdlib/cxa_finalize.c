@@ -29,15 +29,12 @@ __cxa_finalize (void *d)
 {
   struct exit_function_list *funcs;
 
-  if (!d)
-    return;
-
   for (funcs = __exit_funcs; funcs; funcs = funcs->next)
     {
       struct exit_function *f;
 
       for (f = &funcs->fns[funcs->idx - 1]; f >= &funcs->fns[0]; --f)
-	if (d == f->func.cxa.dso_handle
+	if ((d == NULL || d == f->func.cxa.dso_handle)
 	    /* We don't want to run this cleanup more than once.  */
 	    && compare_and_swap (&f->flavor, ef_cxa, ef_free))
 	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
