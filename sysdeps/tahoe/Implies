@@ -1,2 +1,2 @@
-../math/bsd/tahoe
+$(bsdmath)tahoe
 vax
