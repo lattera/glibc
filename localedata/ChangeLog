@@ -1,3 +1,10 @@
+2002-04-21  Bruno Haible  <bruno@clisp.org>
+
+	* charmaps/GB18030: Add Unicode planes 1 (scripts, symbols), 2 (CJK),
+	14 (tags), 15 and 16 (private use), accidentally removed by the
+	2002-01-16 patch.  Replace width table by one which is based on
+	Unicode but is biased for CJK.
+
 2002-04-19  Bruno Haible  <bruno@clisp.org>
 
 	* charmaps/ISO-IR-209: Fix the Unicode values for LETTER H WITH CARON.

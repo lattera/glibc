@@ -38,6 +38,13 @@ set -e
 ${SHELL} tst-table-charmap.sh ${charmap:-$charset} \
   < ../localedata/charmaps/${charmap:-$charset} \
   > ${objpfx}tst-${charset}.charmap.table
+# When the charset is GB18030, truncate this table because for this encoding,
+# the tst-table-from and tst-table-to programs scan the Unicode BMP only.
+if test ${charset} = GB18030; then
+  grep '0x....$' < ${objpfx}tst-${charset}.charmap.table \
+    > ${objpfx}tst-${charset}.truncated.table
+  mv ${objpfx}tst-${charset}.truncated.table ${objpfx}tst-${charset}.charmap.table
+fi
 
 # Precomputed expexted differences between the charmap and iconv forward.
 precomposed=${charset}.precomposed
@@ -68,21 +75,14 @@ diff ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.inverse.table
 
 # Check 1: charmap and iconv forward should be identical, except for
 # precomposed characters.
-if test ${charset} = GB18030; then
-  grep '0x....$' < ${objpfx}tst-${charset}.charmap.table \
-    > ${objpfx}tst-${charset}.truncated.table
-  cmp -s ${objpfx}tst-${charset}.truncated.table ${objpfx}tst-${charset}.table ||
+if test -f ${precomposed}; then
+  cat ${objpfx}tst-${charset}.table ${precomposed} | sort | uniq -u \
+    > ${objpfx}tst-${charset}.tmp.table
+  cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.tmp.table ||
   exit 1
 else
-  if test -f ${precomposed}; then
-    cat ${objpfx}tst-${charset}.table ${precomposed} | sort | uniq -u \
-      > ${objpfx}tst-${charset}.tmp.table
-    cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.tmp.table ||
-    exit 1
-  else
-    cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
-    exit 1
-  fi
+  cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
+  exit 1
 fi
 
 # Check 2: the difference between the charmap and iconv backward.
