@@ -7,6 +7,10 @@
 	(_dl_init_first): Likewise.
 	(_hurd_stack_setup): Likewise.
 	(init1): Add a cast.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start: go): Fix arg type.
+
+	* sysdeps/mach/hurd/if_index.c (if_nameindex): Use size_t for AMOUNT
+	argument to pfinet_siocgifconf RPC.
 
 2002-06-13  Andreas Schwab  <schwab@suse.de>
 

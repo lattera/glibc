@@ -1,5 +1,5 @@
 /* Find network interface names and index numbers.  Hurd version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,7 +80,6 @@ if_nameindex (void)
   struct if_nameindex *idx = NULL;
 
   ifc.ifc_buf = data;
-  ifc.ifc_len = sizeof (data);
 
   if (fd < 0)
     return NULL;
@@ -90,8 +89,8 @@ if_nameindex (void)
     nifs = 0;
   else
     {
-      err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf,
-				  &ifc.ifc_len);
+      size_t len = sizeof data;
+      err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf, &len);
       if (err == MACH_SEND_INVALID_DEST || err == MIG_SERVER_DIED)
 	{
 	  /* On the first use of the socket server during the operation,
@@ -99,13 +98,13 @@ if_nameindex (void)
 	  server = _hurd_socket_server (PF_INET, 1);
 	  if (server == MACH_PORT_NULL)
 	    goto out;
-	  err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf,
-				      &ifc.ifc_len);
+	  err = __pfinet_siocgifconf (server, -1, &ifc.ifc_buf, &len);
 	}
       if (err)
 	goto out;
 
-      nifs = ifc.ifc_len / sizeof (struct ifreq);
+      ifc.ifc_len = len;
+      nifs = len / sizeof (struct ifreq);
     }
 
   idx = malloc ((nifs + 1) * sizeof (struct if_nameindex));

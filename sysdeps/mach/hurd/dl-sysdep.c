@@ -113,7 +113,7 @@ _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phent,
 				   ElfW(Addr) *user_entry))
 {
-  void go (int *argdata)
+  void go (intptr_t *argdata)
     {
       extern unsigned int _dl_skip_args; /* rtld.c */
       char **p;
