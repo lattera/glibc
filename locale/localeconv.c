@@ -43,7 +43,7 @@ localeconv (void)
   result.frac_digits = *(char *) _NL_CURRENT (LC_MONETARY, FRAC_DIGITS);
   result.p_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
   result.p_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, P_SEP_BY_SPACE);
-  result.n_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, P_CS_PRECEDES);
+  result.n_cs_precedes = *(char *) _NL_CURRENT (LC_MONETARY, N_CS_PRECEDES);
   result.n_sep_by_space = *(char *) _NL_CURRENT (LC_MONETARY, N_SEP_BY_SPACE);
   result.p_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, P_SIGN_POSN);
   result.n_sign_posn = *(char *) _NL_CURRENT (LC_MONETARY, N_SIGN_POSN);
