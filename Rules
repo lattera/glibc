@@ -36,7 +36,7 @@ export subdir := $(subdir)
 
 # This is the default target; it makes the library and auxiliary programs.
 .PHONY: all
-all: lib others
+all: objs lib others
 
 ifneq	"$(findstring env,$(origin headers))" ""
 headers :=
@@ -55,7 +55,7 @@ endif
 include ../Makerules
 
 .PHONY: subdir_lib
-subdir_lib: lib-noranlib
+subdir_lib: objs lib-noranlib
 
 # Some subdirs need to install a dummy library.
 # They can use "$(objpfx)libfnord.a: $(dep-dummy-lib); $(make-dummy-lib)".

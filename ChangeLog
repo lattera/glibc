@@ -1,5 +1,12 @@
 Mon Feb 20 04:04:57 1995  Roland McGrath  <roland@duality.gnu.ai.mit.edu>
 
+	* Makeconfig [elf=yes] (+preinit, +postinit): New variables, set
+ 	to crt[in].o.
+	(csu-objpfx): New variable.
+	(+link): Use it to find start.o and $(+preinit), $(+postinit).
+
+	* Rules (subdir_lib, all): Depend on objs.
+
 	* config.h.in [HAVE_ELF || HAVE_GNU_LD]: Define HAVE_WEAK_SYMBOLS.
 
 	* stdlib/strtod.c (PASTE, PASTE1): New helper macros; use these in
