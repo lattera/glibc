@@ -107,6 +107,9 @@ user-interfaces := $(filter-out mach/mach_interface \
 				$(user-interfaces))
 endif
 
+# For some reason, the calls in this file are `protected' by an ifdef.
+MIGFLAGS-mach/mach4=-DMACH_PCSAMPLE
+
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
 migdefines += $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
 mach/mach_interface.uh mach/mach_host.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk

@@ -149,14 +149,14 @@ $(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
 $(include-%.defs) | \
-$(MIG) - /dev/null $(MIGFLAGS) \
+$(MIG) - /dev/null $(MIGFLAGS) $(user-MIGFLAGS) $(MIGFLAGS-$*) \
        -header $@ -server /dev/null -user /dev/null
 endef
 $(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
 $(include-%.defs) | \
-$(MIG) - /dev/null $(MIGFLAGS) -prefix __ \
+$(MIG) - /dev/null $(MIGFLAGS) $(user-MIGFLAGS) $(MIGFLAGS-$*) -prefix __ \
        -header $@ -server /dev/null -user /dev/null
 endef
 
