@@ -1,4 +1,4 @@
-@node Users and Groups, System Information, Name Service Switch, Top
+@node Users and Groups, System Management, Name Service Switch, Top
 @c %MENU% How users are identified and classified
 @chapter Users and Groups
 

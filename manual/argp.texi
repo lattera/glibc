@@ -74,10 +74,10 @@ in @var{flags}, calling @code{argp_parse} may result in the program
 exiting---for instance when an unknown option is encountered.
 @xref{Program Termination}.
 
-If @var{arg_index} is non-NULL, the index of the first unparsed option
+If @var{arg_index} is non-null, the index of the first unparsed option
 in @var{argv} is returned in it.
 
-The return value is zero for successful parsing, or a unix error code
+The return value is zero for successful parsing, or an error code
 (@pxref{Error Codes}) if an error was detected.  Different argp parsers
 may return arbitrary error codes, but standard ones are @code{ENOMEM} if
 a memory allocation error occurred, or @code{EINVAL} if an unknown option
@@ -556,10 +556,13 @@ combined).
 Some non-option argument was unrecognized.
 
 This occurs when every parser function returns @code{ARGP_KEY_UNKNOWN}
-for an argument, in which case parsing stops at that argument.  If a
-non-NULL value for @var{arg_index} was passed to @code{argp_parse}, the
-index of this argument is returned in it, otherwise an error occurs.
+for an argument, in which case parsing stops at that argument.  If
+@var{arg_index} is a null pointer otherwise an error occurs.
 @end table
+
+In all cases, if a non-null value for @var{arg_index} was passed to
+@code{argp_parse}, the index of the first unparsed command-line argument
+is passed back in it.
 
 If an error occurs (either detected by argp, or because a parser
 function returned an error value), then each parser is called with

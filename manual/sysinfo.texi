@@ -1,19 +1,25 @@
-@node System Information, System Configuration, Users and Groups, Top
-@c %MENU% Getting information about the hardware and operating system
-@chapter System Information
+@node System Management, System Configuration, Users and Groups, Top
+@c %MENU% Controlling the system and getting information about it
+@chapter System Management
 
-This chapter describes functions that return information about the
-particular machine that is in use---the type of hardware, the type of
-software, and the individual machine's name.
+This chapter describes facilities for controlling the system that
+underlies a process (including the operating system and hardware) and
+for getting information about it.  Anyone can generally use the
+informational facilities, but usually only a properly privileged process
+can make changes.
+
 
 @menu
 * Host Identification::         Determining the name of the machine.
 * Hardware/Software Type ID::   Determining the hardware type of the
                                  machine and what operating system it is
                                  running.
-* Filesystem handling::         Which is mounted and/or available?
+* Filesystem Handling::         Controlling/querying mounts
 @end menu
 
+To get information on parameters of the system that are built into the
+system, such as the maximum length of a filename, @ref{System
+Configuration}.
 
 @node Host Identification
 @section Host Identification
@@ -182,15 +188,45 @@ possibility.
 @end deftypefun
 
 
-@node Filesystem handling
-@section Which filesystems are mounted and/or available?
+@node Filesystem Handling
+@section Controlling/querying mounts
 
-The Unix concept of @emph{Everything is a file} is based on the
-ability to @dfn{mount} filesystems or other things into the
-filesystem.  For some programs it is desirable and necessary to access
-information about whether a certain filesystem is mounted and, if it is, 
-where, or simply to get lists of all the available filesystems.  The
-GNU libc provides some functions to retrieve this information portably.
+All files are in filesystems, and before you can access any file, its
+filesystem must be mounted.  Because of Unix's concept of
+@emph{Everything is a file}, mounting of filesystems is central to doing
+almost anything.  This section explains how to find out what filesystems
+are currently mounted and what filesystems are available for mounting,
+and how to change what is mounted.
+
+The classic filesystem is the contents of a disk drive.  The concept is
+considerably more abstract, though, and lots of things other than disk
+drives can be mounted.  
+
+Some block devices don't correspond to traditional devices like disk
+drives.  For example, a loop device is a block device whose driver uses
+a regular file in another filesystem as its medium.  So if that regular
+file contains appropriate data for a filesystem, you can by mounting the
+loop device essentially mount a regular file.
+
+Some filesystems aren't based on a device of any kind.  The ``proc''
+filesystem, for example, contains files whose data is made up by the
+filesystem driver on the fly whenever you ask for it.  And when you
+write to it, the data you write causes changes in the system.  No data
+gets stored.
+
+@c It would be good to mention NFS mounts here.
+
+@menu
+* Mount Information::           What is or could be mounted?
+* Mount/Unmount/Remount::       Controlling what is mounted and how
+@end menu
+
+@node Mount Information, Mount/Unmount/Remount, , Filesystem Handling
+
+For some programs it is desirable and necessary to access information
+about whether a certain filesystem is mounted and, if it is, where, or
+simply to get lists of all the available filesystems.  The GNU libc
+provides some functions to retrieve this information portably.
 
 Traditionally Unix systems have a file named @file{/etc/fstab} which
 describes all possibly mounted filesystems.  The @code{mount} program
@@ -203,6 +239,13 @@ functions described in this section can do this and they also provide
 the functionality to convert the external textual representation to the
 internal representation.
 
+Note that the @file{fstab} and @file{mtab} files are maintained on a
+system by @emph{convention}.  It is possible for the files not to exist
+or not to be consistent with what is really mounted or available to
+mount, if the system's administration policy allows it.  But programs
+that mount and unmount filesystems typically maintain and use these
+files as described herein.
+
 @vindex _PATH_FSTAB
 @vindex _PATH_MNTTAB
 @vindex FSTAB
@@ -214,6 +257,15 @@ defined in @file{fstab.h} and @code{_PATH_MNTTAB}, defined in
 @code{FSTAB} and @code{_PATH_MOUNTED} defined but both names are
 deprecated and kept only for backward compatibility.  The two former
 names should always be used.
+
+@menu
+* fstab::                       The @file{fstab} file
+* mtab::                        The @file{mtab} file
+* Other Mount Information::     Other (non-libc) sources of mount information
+@end menu
+
+@node fstab
+@subsection The @file{fstab} file
 
 The internal representation for entries of the file is @w{@code{struct
 fstab}}, defined in @file{fstab.h}.
@@ -363,11 +415,12 @@ function is not thread-safe.  If an error occurred @code{getfsent}
 returns a @code{NULL} pointer.
 @end deftypefun
 
-To access the @file{mtab} file there is a different set of functions and
-also a different structure to describe the results.
 
+@node mtab
+@subsection The @file{mtab} file
+The following functions and data structure access the @file{mtab} file.
 
-@comment fstab.h
+@comment mntent.h
 @comment BSD
 @deftp {Data Type} {struct mntent}
 This structure is used with the @code{getmntent}, @code{getmntent_t},
@@ -571,4 +624,301 @@ exists the function returns @code{NULL}.
 This function is useful to test whether a specific option is present but
 when all options have to be processed one is better off with using the
 @code{getsubopt} function to iterate over all options in the string.
+@end deftypefun
+
+@node Other Mount Information
+@subsection Other (Non-libc) Sources of Mount Information
+
+On a system with a Linux kernel and the @code{proc} filesystem, you can
+get information on currently mounted filesystems from the file
+@file{mounts} in the @code{proc} filesystem.  Its format is similar to
+that of the @file{mtab} file, but represents what is truly mounted
+without relying on facilities outside the kernel to keep @file{mtab} up
+to date.
+
+
+@node Mount/Unmount/Remount, , Mount Information, Filesystem Handling
+
+This section describes the functions for mounting, unmounting, and
+remounting filesystems.
+
+Only the superuser can mount, unmount, or remount a filesystem.
+
+These functions do not access the @file{fstab} and @file{mtab} files.  You
+should maintain and use these separately.  @xref{Mount Information}.
+
+The symbols in this section are declared in @file{sys/mount.h}.
+
+@comment sys/mount.h
+@deftypefun {int} mount (const char *@var{special_file}, const char *@var{dir}, const char *@var{fstype}, unsigned long int @var{options}, const void *@var{data})
+
+@code{mount} mounts or remounts a filesystem.  The two operations are 
+quite different and are merged rather unnnaturally into this one function.
+The @code{MS_REMOUNT} option, explained below, determines whether 
+@code{mount} mounts or remounts.
+
+For a mount, the filesystem on the block device represented by the
+device special file named @var{special_file} gets mounted over the mount
+point @var{dir}.  This means that the directory @var{dir} (along with any
+files in it) is no longer visible; in its place (and still with the name
+@var{dir}) is the root directory of the filesystem on the device.
+
+As an exception, if the filesystem type (see below) is one which is not
+based on a device (e.g. ``proc''), @code{mount} instantiates a
+filesystem and mounts it over @var{dir} and ignores @var{special_file}.
+
+For a remount, @var{dir} specifies the mount point where the filesystem
+to be remounted is (and remains) mounted and @var{special_file} is
+ignored.  Remounting a filesystem means changing the options that control
+operations on the filesystem while it is mounted.  It does not mean
+unmounting and mounting again.
+
+For a mount, you must identify the type of the filesystem as
+@var{fstype}.  This type tells the kernel how to access the filesystem
+and can be thought of as the name of a filesystem driver.  The
+acceptable values are system dependent.  On a system with a Linux kernel
+and the @code{proc} filesystem, the list of possible values is in the
+file @file{filesystems} in the @code{proc} filesystem (e.g. type
+@kbd{cat /proc/filesystems} to see the list).  With a Linux kernel, the
+types of filesystems that @code{mount} can mount, and their type names,
+depends on what filesystem drivers are configured into the kernel or
+loaded as loadable kernel modules.  An example of a common value for
+@var{fstype} is @code{ext2}.
+
+For a remount, @code{mount} ignores @var{fstype}.
+
+@c This is traditionally called "rwflag" for historical reasons.
+@c No point in confusing people today, though.
+@var{options} specifies a variety of options that apply until the
+filesystem in unmounted or remounted.  The precise meaning of an option
+depends on the filesystem and with some filesystems, an option may have
+no effect at all.  Furthermore, for some filesystems, some of these
+options (but never @code{MS_RDONLY}) can be overridden for individual
+file accesses via @code{ioctl}.
+
+@var{options} is a bit string with bit fields defined using the
+following mask and masked value macros:
+
+@table @code
+@item MS_MGC_MASK
+This multibit field contains a magic number.  If it does not have the value
+@code{MS_MGC_VAL}, @code{mount} assumes all the following bits are zero and
+the @var{data} argument is a null string, regardless of their actual values.
+
+@item MS_REMOUNT
+This bit on means to remount the filesystem.  Off means to mount it.
+@c There is a mask MS_RMT_MASK in mount.h that says only two of the options
+@c can be reset by remount.  But the Linux kernel has it's own version of
+@c MS_RMT_MASK that says they all can be reset.  As far as I can tell,
+@c libc just passes the arguments straight through to the kernel.
+
+@item MS_RDONLY
+This bit on specifies that no writing to the filesystem shall be allowed
+while it is mounted.  This cannot be overridden by @code{ioctl}.  This 
+option is available on nearly all filesystems.
+
+@item S_IMMUTABLE
+This bit on specifies that no writing to the files in the filesystem
+shall be allowed while it is mounted.  This can be overridden for a
+particular file access by a properly privileged call to @code{ioctl}.
+This option is a relatively new invention and is not available on many
+filesystems.
+
+@item S_APPEND
+This bit on specifies that the only file writing that shall be allowed
+while the filesystem is mounted is appending.  Some filesystems allow
+this to be overridden for a particular process by a properly privileged
+call to @code{ioctl}.  This is a relatively new invention and is not
+available on many filesystems.
+
+@item MS_NOSUID
+This bit on specifies that Setuid and Setgid permissions on files in the
+filesystem shall be ignored while it is mounted.
+
+@item MS_NOEXEC
+This bit on specifies that no files in the filesystem shall be executed
+while the filesystem is mounted.
+
+@item MS_NODEV
+This bit on specifies that no device special files in the filesystem 
+shall be accessible while the filesystem is mounted.
+
+@item MS_SYNCHRONOUS
+This bit on specifies that all writes to the filesystem while it is 
+mounted shall be synchronous; i.e. data shall be synced before each 
+write completes rather than held in the buffer cache.
+
+@item MS_MANDLOCK
+This bit on specifies that mandatory locks on files shall be permitted while
+the filesystem is mounted.
+
+@item MS_NOATIME
+This bit on specifies that access times of files shall not be updated when
+the files are accessed while the filesystem is mounted.
+
+@item MS_NODIRATIME
+This bit on specifies that access times of directories shall not be updated
+when the directories are accessed while the filesystem in mounted.
+
+@c there is also S_QUOTA Linux fs.h (mount.h still uses its former name
+@c S_WRITE), but I can't see what it does.  Turns on quotas, I guess.
+
+@end table
+
+Any bits not covered by the above masks should be set off; otherwise,
+results are undefined.
+
+The meaning of @var{data} depends on the filesystem type and is controlled
+entirely by the filesystem driver in the kernel.
+
+Example:
+
+@smallexample
+@group
+#include <sys/mount.h>
+
+mount("/dev/hdb", "/cdrom", MS_MGC_VAL | MS_RDONLY | MS_NOSUID, "");
+
+mount("/dev/hda2", "/mnt", MS_MGC_VAL | MS_REMOUNT, "");
+
+@end group
+@end smallexample
+
+Appropriate arguments for @code{mount} are conventionally recorded in
+the @file{fstab} table.  @xref{Mount Information}.
+
+The return value is zero if the mount or remount is successful.  Otherwise,
+it is @code{-1} and @code{errno} is set appropriately.  The values of 
+@code{errno} are filesystem dependent, but here is a general list:
+
+@table @code
+@item EPERM
+The process is not superuser.
+@item ENODEV
+The file system type @var{fstype} is not known to the kernel.
+@item ENOTBLK
+The file @var{dev} is not a block device special file.
+@item EBUSY
+
+@itemize
+
+@item 
+The device is already mounted.
+
+@item
+The mount point is busy.  (E.g. it is some process' working directory or
+has a filesystem mounted on it already).
+
+@item
+The request is to remount read-only, but there are files open for write.
+@end itemize
+
+@item EINVAL
+@itemize
+
+@item
+A remount was attempted, but there is no filesystem mounted over the
+specified mount point.
+
+@item 
+The supposed filesystem has an invalid superblock.
+
+@end itemize
+
+@item EACCESS
+@itemize
+
+@item
+The filesystem is inherently read-only (possibly due to a switch on the 
+device) and the process attempted to mount it read/write (by setting the
+@code{MS_RDONLY} bit off).
+
+@item
+@var{special_file} or @var{dir} is not accessible due to file permissions.
+
+@item
+@var{special_file} is not accessible because it is in a filesystem that is
+mounted with the @code{MS_NODEV} option.
+
+@end itemize
+
+@item EM_FILE
+The table of dummy devices is full.  @code{mount} needs to create a
+dummy device (aka ``unnamed'' device) if the filesystem being mounted is
+not one that uses a device.
+
+@end table
+
+@end deftypefun
+
+
+@comment sys/mount.h
+@deftypefun {int} umount2 (const char *@var{file}, int @var{flags})
+
+@code{umount2} unmounts a filesystem.
+
+You can identify the filesystem to unmount either by the device special
+file that contains the filesystem or by the mount point.  The effect is
+the same.  Specify either as the string @var{file}.
+
+@var{flags} contains the one-bit field identified by the following 
+mask macro:
+
+@table @code
+
+@item MNT_FORCE
+This bit on means to force the unmounting even if the filesystem is
+busy, by making it unbusy first.  If the bit is off and the filesystem is
+busy, @code{umount2} fails with @code{errno} = @code{EBUSY}.  Depending
+on the filesystem, this may override all, some, or no busy conditions.
+
+@end table
+
+All other bits in @var{flags} should be set to zero; otherwise, the result
+is undefined.
+
+Example:
+
+@smallexample
+@group
+#include <sys/mount.h>
+
+umount2("/mnt", MNT_FORCE);
+
+umount2("/dev/hdd1", 0);
+
+@end group
+@end smallexample
+
+After the filesystem is unmounted, the directory that was the mount point
+is visible, as are any files in it.
+
+As part of unmounting, @code{umount2} syncs the filesystem.
+
+If the unmounting is successful, the return value is zero.  Otherwise, it
+is @code{-1} and @code{errno} is set accordingly:
+
+@table @code
+@item EPERM
+The process is not superuser.
+@item EBUSY
+The filesystem cannot be unmounted because it is busy.  E.g. it contains
+a directory that is some process's working directory or a file that some
+process has open.  With some filesystems in some cases, you can avoid
+this failure with the @code{MNT_FORCE} option.
+
+@item EINVAL
+@var{file} validly refers to a file, but that file is neither a mount 
+point nor a device special file of a currently mounted filesystem.
+
+@end table
+@end deftypefun
+
+@comment sys/mount.h
+@deftypefun {int} umount (const char *@var{file})
+
+@code{umount} does the same thing as @code{umount2} with @var{flags}
+set to zeroes.  It exists for compatibility.
+
+
 @end deftypefun

@@ -1,4 +1,4 @@
-@node System Configuration, Cryptographic Functions, System Information, Top
+@node System Configuration, Cryptographic Functions, System Management, Top
 @c %MENU% Parameters describing operating system limits
 @chapter System Configuration Parameters
 

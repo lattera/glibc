@@ -1,9 +1,39 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/intro.texi: Change reference from System Information to
+	System Management.
+	* manual/users.texi: Likewise.
+	* manual/conf.texi: Likewise.
+	* manual/sysinfo.texi: Document mount, umount, and umount2.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
+
+2000-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/printf_fphex.c (PRINT_FPHEX_LONG_DOUBLE):
+	Create wnumstr as well as numstr to support wide character output
+	correctly.
+
+2000-04-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/Makefile: Remove sysdep-CFLAGS
+	modification and move it...
+	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: ...here.
+	Add -melf64_sparc switch to $(LD) on sparc64-linux.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: Add -melf32_sparc
+	switch to $(LD) on sparc-linux.
+
+2000-04-17  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/Makefile: Remove setresgid
+	and setresuid frm sysdep_routines.
+
+2000-04-17  Ulrich Drepper  <drepper@redhat.com>
+
 	* manual/Makefile (chapters): Add resource.
 
 	* manual/time.texi: Move section on resources to...
-	* manual/resource.texi: ...here.  New file.
+	* manual/resource.texi: ...here.  New file.  Document ulimit, vlimit,
+	and vtimes.
 	* manual/setjmp.texi: Adjust back reference.
 	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
 

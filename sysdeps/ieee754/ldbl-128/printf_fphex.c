@@ -1,6 +1,6 @@
 /* Print floating point number in hexadecimal notation according to
    ISO C99.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,23 +36,43 @@ do {									      \
       zero_mantissa = (num0|num1) == 0;					      \
 									      \
       if (sizeof (unsigned long int) > 6)				      \
-	numstr = _itoa_word (num1, numbuf + sizeof numbuf, 16,		      \
-			     info->spec == 'A');			      \
+	{								      \
+	  numstr = _itoa_word (num1, numbuf + sizeof numbuf, 16,	      \
+			       info->spec == 'A');			      \
+	  wnumstr = _itowa_word (num1, wnumbuf + sizeof wnumbuf, 16,	      \
+				 info->spec == 'A');			      \
+	}								      \
       else								      \
-	numstr = _itoa (num1, numbuf + sizeof numbuf, 16,		      \
-			info->spec == 'A');				      \
+	{								      \
+	  numstr = _itoa (num1, numbuf + sizeof numbuf, 16,		      \
+			  info->spec == 'A');				      \
+	  wnumstr = _itowa (num1, wnumbuf + sizeof wnumbuf, 16,		      \
+			    info->spec == 'A');				      \
+	}								      \
 									      \
       while (numstr > numbuf + (sizeof numbuf - 64 / 4))		      \
-	*--numstr = '0';						      \
+	{								      \
+	  *--numstr = '0';						      \
+	  *--wnumstr = L'0';						      \
+	}								      \
 									      \
       if (sizeof (unsigned long int) > 6)				      \
-	numstr = _itoa_word (num0, numstr, 16, info->spec == 'A');	      \
+	{								      \
+	  numstr = _itoa_word (num0, numstr, 16, info->spec == 'A');	      \
+	  wnumstr = _itowa_word (num0, wnumstr, 16, info->spec == 'A');	      \
+	}								      \
       else								      \
-	numstr = _itoa (num0, numstr, 16, info->spec == 'A');		      \
+	{								      \
+	  numstr = _itoa (num0, numstr, 16, info->spec == 'A');		      \
+	  wnumstr = _itowa (num0, wnumstr, 16, info->spec == 'A');	      \
+	}								      \
 									      \
       /* Fill with zeroes.  */						      \
       while (numstr > numbuf + (sizeof numbuf - 112 / 4))		      \
-	*--numstr = '0';						      \
+	{								      \
+	  *--numstr = '0';						      \
+	  *--wnumstr = L'0';						      \
+	}								      \
 									      \
       leading = fpnum.ldbl.ieee.exponent == 0 ? '0' : '1';		      \
 									      \

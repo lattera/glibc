@@ -698,9 +698,9 @@ implemented so that contributors can design their own services.
 the system user and group databases.
 
 @item
-@ref{System Information}, describes functions for getting information
-about the hardware and software configuration your program is executing
-under.
+@ref{System Management}, describes functions for controlling and getting
+information about the hardware and software configuration your program
+is executing under.
 
 @item
 @ref{System Configuration}, tells you how you can get information about
