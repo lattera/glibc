@@ -1,3 +1,8 @@
+2001-05-09  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/readdir.c: Make sure we don't modify errno when we
+	reached EOF.
+
 2001-05-07  H.J. Lu  <hjl@gnu.org>
 
 	* elf/ldconfig.c (dir_entry): Add ino and dev.
