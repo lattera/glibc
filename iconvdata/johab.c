@@ -179,8 +179,10 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
        0xd831-0xd87e and 0xd891-0xd8fe are user-defined area */		      \
     else								      \
       {									      \
-	if (ch > 0xf9 || ch == 0xdf || (ch > 0x7e && ch < 0x84)		      \
-	    || (ch > 0xd3 && ch < 0xd9))				      \
+	if (__builtin_expect (ch, 0) > 0xf9				      \
+	    || __builtin_expect (ch, 0) == 0xdf				      \
+	    || (__builtin_expect (ch, 0) > 0x7e && ch < 0x84)		      \
+	    || (__builtin_expect (ch, 0) > 0xd3 && ch < 0xd9))		      \
 	  {								      \
 	    /* These are illegal.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -201,7 +203,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    uint32_t ch2;						      \
 	    uint_fast32_t idx;						      \
 									      \
-	    if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0)) \
 	      {								      \
 		/* The second character is not available.  Store the	      \
 		   intermediate result.  */				      \
@@ -211,7 +213,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    ch2 = inptr[1];						      \
 	    idx = ch * 256 + ch2;					      \
-	    if (ch <= 0xd3)						      \
+	    if (__builtin_expect (ch, 0) <= 0xd3)			      \
 	      {								      \
 		/* Hangul */						      \
 		uint_fast32_t i, m, f;					      \
@@ -220,7 +222,9 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		m = mid[(idx & 0x03e0) >> 5];				      \
 		f = final[idx & 0x001f];				      \
 									      \
-		if (i == -1 || m == -1 || f == -1)			      \
+		if (__builtin_expect (i, 0) == -1			      \
+		    || __builtin_expect (m, 0) == -1			      \
+		    || __builtin_expect (f, 0) == -1)			      \
 		  {							      \
 		    /* This is illegal.  */				      \
 		    if (! ignore_errors_p ())				      \
@@ -240,7 +244,8 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		  ch = init_to_ucs[i - 1];				      \
 		else if (i == 0 && m > 0 && f == 0)			      \
 		  ch = 0x314e + m;	/* 0x314f + m - 1 */		      \
-		else if (i == 0 && m == 0 && f > 0)			      \
+		else if (__builtin_expect (i | m, 0) == 0		      \
+			 && __builtin_expect (f, 1) > 0)		      \
 		  ch = final_to_ucs[f - 1];	/* round trip?? */	      \
 		else							      \
 		  {							      \
@@ -259,24 +264,13 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	    else							      \
 	      {								      \
-		if (ch2 < 0x31 || (ch2 > 0x7e && ch2 < 0x91) || ch2 == 0xff)  \
+		if (__builtin_expect (ch2, 0x31) < 0x31			      \
+		    || (__builtin_expect (ch2, 0x7e) > 0x7e && ch2 < 0x91)    \
+		    || __builtin_expect (ch2, 0) == 0xff		      \
+		    || (__builtin_expect (ch, 0) == 0xda		      \
+			&& ch2 > 0xa0 && ch2 < 0xd4))			      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    if (! ignore_errors_p ())				      \
-		      {							      \
-		        /* This is an illegal character.  */		      \
-		        result = __GCONV_ILLEGAL_INPUT;			      \
-		        break;						      \
-		      }							      \
-									      \
-		    ++inptr;						      \
-		    ++*converted;					      \
-		    continue;						      \
-		  }							      \
-		else if (ch == 0xda && ch2 > 0xa0 && ch2 < 0xd4)	      \
-		  {							      \
-		    /* This is illegal.  Modern Hangul Jaso is defined	      \
-		       elsewhere in Johab */				      \
 		    if (! ignore_errors_p ())				      \
 		      {							      \
 		        /* This is an illegal character.  */		      \
@@ -304,7 +298,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	  }								      \
 									      \
-	if (ch == 0)							      \
+	if (__builtin_expect (ch, 1) == 0)				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -356,7 +350,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
       {									      \
 	if (ch >= 0xac00 && ch <= 0xd7a3)				      \
 	  {								      \
-	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -377,7 +371,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	  {								      \
 	    ch = jamo_from_ucs_table[ch - 0x3131];			      \
 									      \
-	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -395,12 +389,12 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    written = ucs4_to_ksc5601_hanja (ch, outptr,		      \
 					     (NEED_LENGTH_TEST		      \
 					      ? outend - outptr : 2));	      \
-	    if (NEED_LENGTH_TEST && written == 0)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (written == __UNKNOWN_10646_CHAR)			      \
+	    if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		if (! ignore_errors_p ())				      \
 		  {							      \
@@ -432,12 +426,12 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    written = ucs4_to_ksc5601_sym (ch, outptr,			      \
 					   (NEED_LENGTH_TEST		      \
 					    ? outend - outptr : 2));	      \
-	    if (NEED_LENGTH_TEST && written == 0)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (written, 1) == 0)	      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (written == __UNKNOWN_10646_CHAR)			      \
+	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		if (! ignore_errors_p ())				      \
 		  {							      \

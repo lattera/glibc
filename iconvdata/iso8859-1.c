@@ -45,7 +45,7 @@
 #define BODY \
   {									      \
     uint32_t ch = *((uint32_t *) inptr);				      \
-    if (ch > 0xff)							      \
+    if (__builtin_expect (ch, 0) > 0xff)				      \
       {									      \
 	/* We have an illegal character.  */				      \
 	if (! ignore_errors_p ())					      \

@@ -145,7 +145,7 @@ gconv_init (struct __gconv_step *step)
       }
 
   result = __GCONV_NOCONV;
-  if (dir != illegal_dir)
+  if (__builtin_expect (dir, from_iso646) != illegal_dir)
     {
       new_data = (struct iso646_data *) malloc (sizeof (struct iso646_data));
 
@@ -404,7 +404,7 @@ gconv_end (struct __gconv_step *data)
 									      \
     /* Hopefully gcc can recognize that the following `if' is only true	      \
        when we reach the default case in the `switch' statement.  */	      \
-    if (failure == __GCONV_ILLEGAL_INPUT)				      \
+    if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -881,7 +881,7 @@ gconv_end (struct __gconv_step *data)
 	break;								      \
       }									      \
 									      \
-    if (failure == __GCONV_ILLEGAL_INPUT)				      \
+    if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
