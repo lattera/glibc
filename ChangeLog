@@ -1,5 +1,9 @@
 2004-10-22  Roland McGrath  <roland@frob.com>
 
+	* Makefile (dist, dist-ports): New target.
+	(dist-port-%): New pattern rule.
+	* Makeconfig [!subdir] (ports/%): New pattern rule.
+
 	* configure.in: Cope if there are no sysdeps/*/preconfigure files.
 	* configure: Regenerated.
 
