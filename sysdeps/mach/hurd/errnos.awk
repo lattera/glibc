@@ -160,7 +160,6 @@ END \
 extern int *__errno_location (void) __THROW __attribute__ ((__const__));\n\
 \n\
 #define errno			(*__errno_location ())\n\
-#define __set_errno(val)	(errno = (val))\n\
 ";
     print "#endif /* <errno.h> included.  */";
     print "";
