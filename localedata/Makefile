@@ -89,7 +89,8 @@ LOCALEDEF=$(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx
 install-locales:
 	while read locale charset; do \
 	   case $$locale in \#*) continue;; esac; \
-	   $(LOCALEDEF) -c -i locales/$$locale -f charmaps/$$charset \
+	   $(LOCALEDEF) -i locales/`echo $$locale | sed 's/\([^.]*\).*/\1/'` \
+			-c -f charmaps/$$charset \
 			-u repertoiremaps/mnemonic.ds \
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
