@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <stddef.h>		/* For NULL.  */
 #include <sys/time.h>
+#include <time.h>
 
 /* Set the system clock to *WHEN.  */
 
