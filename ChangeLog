@@ -3,6 +3,9 @@
 	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): The type
 	of the proc system is "proc".
 
+	* sysdeps/generic/libc-start.c (__libc_start_main): Initialize
+	thread library for static program.s
+
 2000-07-06  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/unix/sysv/linux/sys/ptrace.h (PT_SYSCALL): Fix LHS.
