@@ -1,4 +1,18 @@
-Wed Mar  4 11:32:01 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-03-04 09:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/link.h (struct link_map): Add new field l_reloc_result.
+	* elf/dl-reloc.c (_dl_relocate_object): Allocate array for results
+	of relocation for the object to be profiled.
+	* elf/dl-object.c (_dl_new_object): Initialize l_reloc_result field
+	to NULL.
+	* elf/rtld.c (_dl_start): Add comment that we must not allocate an
+	array here.
+	* elf/dl-runtime.c (profile_fixup): If l_reloc_result array already
+	contains a result from a previous run use this instead of computing
+	the value again.
+	* elf/dl-minimal.c (malloc): Remove limit for size of allocation.
+
+1998-03-04 11:32  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h: (elf_machine_load_address): Use word
 	offsets into the GOT.

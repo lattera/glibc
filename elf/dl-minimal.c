@@ -1,5 +1,5 @@
 /* Minimal replacements for basic facilities used in the dynamic linker.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #include <errno.h>
 
 /* Minimal `malloc' allocator for use while loading shared libraries.
-   Only small blocks are allocated, and none are ever freed.  */
+   No block is ever freed.  */
 
 static void *alloc_ptr, *alloc_end, *alloc_last_block;
 
@@ -61,13 +61,13 @@ malloc (size_t n)
     {
       /* Insufficient space left; allocate another page.  */
       caddr_t page;
-      assert (n <= _dl_pagesize);
-      page = __mmap (0, _dl_pagesize, PROT_READ|PROT_WRITE,
+      size_t nup = (n + _dl_pagesize - 1) & ~(_dl_pagesize - 1);
+      page = __mmap (0, nup, PROT_READ|PROT_WRITE,
 		     MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
       assert (page != MAP_FAILED);
       if (page != alloc_end)
 	alloc_ptr = page;
-      alloc_end = page + _dl_pagesize;
+      alloc_end = page + nup;
     }
 
   alloc_last_block = (void *) alloc_ptr;

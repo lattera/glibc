@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
-#include <sys/types.h>
-#include <sys/mman.h>
-#include <unistd.h>
 #include <errno.h>
+#include <link.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
 #include "dynamic-link.h"
 
 
@@ -67,6 +68,18 @@ _dl_relocate_object (struct link_map *l, struct link_map *scope[], int lazy)
 
 #include "dynamic-link.h"
     ELF_DYNAMIC_RELOCATE (l, lazy, 1);
+
+    if (_dl_profile_map == l)
+      {
+	/* Allocate the array which will contain the already found
+	   relocations.  */
+	l->l_reloc_result =
+	  (ElfW(Addr) *) calloc (sizeof (ElfW(Addr)),
+				 l->l_info[DT_PLTRELSZ]->d_un.d_val);
+	if (l->l_reloc_result == NULL)
+	  _dl_sysdep_fatal (_dl_argv[0] ?: "<program name unknown>",
+			    "cannot allocate memory for profiling", NULL);
+      }
   }
 
   /* Mark the object so we know this work has been done.  */

@@ -1,5 +1,5 @@
 /* On-demand PLT fixup for shared objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -162,55 +162,70 @@ profile_fixup (
        struct link_map *l, ElfW(Word) reloc_offset, ElfW(Addr) retaddr)
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
-
-  const ElfW(Sym) *const symtab
-    = (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
-  const char *strtab =
-    (const char *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
-
-  const PLTREL *const reloc
-    = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
-		      reloc_offset);
-  const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+  ElfW(Addr) *resultp;
   ElfW(Addr) value;
 
-  /* Set up the scope to find symbols referenced by this object.  */
-  struct link_map **scope = _dl_object_relocation_scope (l);
+  /* This is the address in the array where we store the result of previous
+     relocations.  */
+  resultp = &l->l_reloc_result[reloc_offset / sizeof (PLTREL)];
 
-  /* Sanity check that we're really looking at a PLT relocation.  */
-  assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
-
-  /* Look up the target symbol.  */
-  switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+  value = *resultp;
+  if (value == 0)
     {
-    default:
-      {
-	const ElfW(Half) *vernum = (const ElfW(Half) *)
-	  (l->l_addr + l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
-	ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
-	const struct r_found_version *version = &l->l_versions[ndx];
+      /* This is the first time we have to relocate this object.  */
+      const ElfW(Sym) *const symtab
+	= (const ElfW(Sym) *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
+      const char *strtab =
+	(const char *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 
-	if (version->hash != 0)
+      const PLTREL *const reloc
+	= (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
+			  reloc_offset);
+      const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
+
+      /* Set up the scope to find symbols referenced by this object.  */
+      struct link_map **scope = _dl_object_relocation_scope (l);
+
+      /* Sanity check that we're really looking at a PLT relocation.  */
+      assert (ELFW(R_TYPE)(reloc->r_info) == ELF_MACHINE_JMP_SLOT);
+
+      /* Look up the target symbol.  */
+      switch (l->l_info[VERSYMIDX (DT_VERSYM)] != NULL)
+	{
+	default:
 	  {
-	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-						&sym, scope, l->l_name,
-						version, ELF_MACHINE_JMP_SLOT);
-	    break;
+	    const ElfW(Half) *vernum = (const ElfW(Half) *)
+	      (l->l_addr + l->l_info[VERSYMIDX (DT_VERSYM)]->d_un.d_ptr);
+	    ElfW(Half) ndx = vernum[ELFW(R_SYM) (reloc->r_info)];
+	    const struct r_found_version *version = &l->l_versions[ndx];
+
+	    if (version->hash != 0)
+	      {
+		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
+						    &sym, scope, l->l_name,
+						    version,
+						    ELF_MACHINE_JMP_SLOT);
+		break;
+	      }
 	  }
-      }
-    case 0:
-      value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
-				 l->l_name, ELF_MACHINE_JMP_SLOT);
+	case 0:
+	  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
+				     l->l_name, ELF_MACHINE_JMP_SLOT);
+	}
+
+      /* Currently value contains the base load address of the object
+	 that defines sym.  Now add in the symbol offset.  */
+      value = (sym ? value + sym->st_value : 0);
+
+      /* And now perhaps the relocation addend.  */
+      value = elf_machine_plt_value (l, reloc, value);
+
+      *_dl_global_scope_end = NULL;
+
+      /* Store the result for later runs.  */
+      *resultp = value;
     }
 
-  /* Currently value contains the base load address of the object
-     that defines sym.  Now add in the symbol offset.  */
-  value = (sym ? value + sym->st_value : 0);
-
-  /* And now perhaps the relocation addend.  */
-  value = elf_machine_plt_value (l, reloc, value);
-
-  *_dl_global_scope_end = NULL;
   (*mcount_fct) (retaddr, value);
 
   return value;

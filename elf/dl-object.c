@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,6 +45,7 @@ _dl_new_object (char *realname, const char *libname, int type)
   new->l_libname = newname;
   new->l_type = type;
   new->l_rpath_dirs = NULL;
+  new->l_reloc_result = NULL;
 
   if (_dl_loaded == NULL)
     {

@@ -114,6 +114,9 @@ _dl_start (void *arg)
      data access using the global offset table.  */
 
   ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
+  /* Please note that we don't allow profiling of this object and
+     therefore need not test whether we have to allocate the array
+     for the relocation results (as done in dl-reloc.c).  */
 
   /* Now life is sane; we can call functions and access global data.
      Set up to use the operating system facilities, and find out from
