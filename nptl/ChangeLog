@@ -1,5 +1,8 @@
 2003-04-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/pthread.h: Remove duplicate
+	pthread_cleanup_{push,pop} definitions.
+
 	* tst-barrier2.c: Eliminate warnings.
 	* tst-cancel4.c: Likewise.
 	* tst-cond4.c: Likewise.

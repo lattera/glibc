@@ -691,51 +691,6 @@ extern int pthread_setspecific (pthread_key_t __key,
 				__const void *__pointer) __THROW;
 
 
-/* Install a cleanup handler: ROUTINE will be called with arguments ARG
-   when the thread is cancelled or calls pthread_exit.  ROUTINE will also
-   be called with arguments ARG when the matching pthread_cleanup_pop
-   is executed with non-zero EXECUTE argument.
-   pthread_cleanup_push and pthread_cleanup_pop are macros and must always
-   be used in matching pairs at the same nesting level of braces. */
-#define pthread_cleanup_push(routine,arg) \
-  { struct _pthread_cleanup_buffer _buffer;				      \
-    _pthread_cleanup_push (&_buffer, (routine), (arg));
-
-extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *__buffer,
-				   void (*__routine) (void *),
-				   void *__arg) __THROW;
-
-/* Remove a cleanup handler installed by the matching pthread_cleanup_push.
-   If EXECUTE is non-zero, the handler function is called. */
-#define pthread_cleanup_pop(execute) \
-    _pthread_cleanup_pop (&_buffer, (execute)); }
-
-extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *__buffer,
-				  int __execute) __THROW;
-
-
-#ifdef __USE_GNU
-/* Install a cleanup handler as pthread_cleanup_push does, but also
-   saves the current cancellation type and set it to deferred cancellation.  */
-# define pthread_cleanup_push_defer_np(routine,arg) \
-  { struct _pthread_cleanup_buffer _buffer;				      \
-    _pthread_cleanup_push_defer (&_buffer, (routine), (arg));
-
-extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *__buffer,
-					 void (*__routine) (void *),
-					 void *__arg) __THROW;
-
-/* Remove a cleanup handler as pthread_cleanup_pop does, but also
-   restores the cancellation type that was in effect when the matching
-   pthread_cleanup_push_defer was called.  */
-# define pthread_cleanup_pop_restore_np(execute) \
-  _pthread_cleanup_pop_restore (&_buffer, (execute)); }
-
-extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buffer,
-					  int __execute) __THROW;
-#endif
-
-
 #ifdef __USE_XOPEN2K
 /* Get ID of CPU-time clock for thread THREAD_ID.  */
 extern int pthread_getcpuclockid (pthread_t __thread_id,
