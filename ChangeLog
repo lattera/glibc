@@ -1,5 +1,8 @@
 2001-07-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/libc-symbols.h: Provide more dummy definitions for the
+	case if GNU ld isn't used.
+
 	* libio/freopen.c: Include <stdlib.h> for free declaration.
 	* libio/freopen64.c: Likewise.
 

@@ -297,6 +297,16 @@
 #  define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
 
 # endif	/* ELF.  */
+#else
+/* We cannot do anything in generial.  */
+# define text_set_element(set, symbol) asm ("")
+# define data_set_element(set, symbol) asm ("")
+# define bss_set_element(set, symbol) asm ("")
+# define symbol_set_define(set)		void *const (set)[1];
+# define symbol_set_declare(set)	extern void *const (set)[1];
+
+# define symbol_set_first_element(set)	&(set)[1]
+# define symbol_set_end_p(set, ptr)	(*(ptr) == 0)
 #endif	/* Have GNU ld.  */
 
 #if DO_VERSIONING
