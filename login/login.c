@@ -86,7 +86,7 @@ login (const struct utmp *ut)
   char *tty = _tty;
   int found_tty;
   const char *ttyp;
-  struct utmp_data data;
+  struct utmp_data data = { -1 };
 
   /* Seek tty.  */
   found_tty = tty_name (STDIN_FILENO, &tty, sizeof (_tty));
