@@ -1,3 +1,13 @@
+2004-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/netdb.h: Define AI_IDN_ALLOW_UNASSIGNED,
+	AI_IDN_USE_STD3_ASCII_RULES, NI_IDN_ALLOW_UNASSIGNED, and
+	NI_IDN_USE_STD3_ASCII_RULES.
+	* inet/getnameinfo.c (getnameinfo): Implement handling of
+	NI_IDN_ALLOW_UNASSIGNED and NI_IDN_USE_STD3_ASCII_RULES.
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Implement handling of
+	AI_IDN_ALLOW_UNASSIGNED and AI_IDN_USE_STD3_ASCII_RULES.
+
 2004-03-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/hp-timing.h (HP_TIMING_NOW): Make asm volatile.

@@ -578,6 +578,10 @@ struct gaicb
 				   in the current locale's character set)
 				   before looking it up. */
 #  define AI_CANONIDN	0x0080	/* Translate canonical name from IDN format. */
+#  define AI_IDN_ALLOW_UNASSIGNED 0x0100 /* Don't reject unassigned Unicode
+					    code points.  */
+#  define AI_IDN_USE_STD3_ASCII_RULES 0x0200 /* Validate strings according to
+						STD3 rules.  */
 # endif
 
 /* Error values for `getaddrinfo' function.  */
@@ -612,6 +616,10 @@ struct gaicb
 # define NI_DGRAM	16	/* Look up UDP service rather than TCP.  */
 # ifdef __USE_GNU
 #  define NI_IDN	32	/* Convert name from IDN format.  */
+#  define NI_IDN_ALLOW_UNASSIGNED 64 /* Don't reject unassigned Unicode
+					code points.  */
+#  define NI_IDN_USE_STD3_ASCII_RULES 128 /* Validate strings according to
+					     STD3 rules.  */
 # endif
 
 /* Translate name of a service location and/or a service name to set of

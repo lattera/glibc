@@ -169,7 +169,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 
   if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM
 #ifdef HAVE_LIBIDN
-		|NI_IDN
+		|NI_IDN|NI_IDN_ALLOW_UNASSIGNED|NI_IDN_USE_STD3_ASCII_RULES
 #endif
 		))
     return EAI_BADFLAGS;
@@ -262,8 +262,15 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		/* If requested, convert from the IDN format.  */
 		if (flags & NI_IDN)
 		  {
+		    int idn_flags = 0;
+		    if  (flags & NI_IDN_ALLOW_UNASSIGNED)
+		      idn_flags |= IDNA_ALLOW_UNASSIGNED;
+		    if (flags & NI_IDN_USE_STD3_ASCII_RULES)
+		      idn_flags |= IDNA_USE_STD3_ASCII_RULES;
+
 		    char *out;
-		    int rc = __idna_to_unicode_lzlz (h->h_name, &out, 0);
+		    int rc = __idna_to_unicode_lzlz (h->h_name, &out,
+						     idn_flags);
 		    if (rc != IDNA_SUCCESS)
 		      {
 			if (rc == IDNA_MALLOC_ERROR)

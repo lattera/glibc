@@ -549,8 +549,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #ifdef HAVE_LIBIDN
       if (req->ai_flags & AI_IDN)
 	{
+	  int idn_flags = 0;
+	  if (req->ai_flags & AI_IDN_ALLOW_UNASSIGNED)
+	    idn_flags |= IDNA_ALLOW_UNASSIGNED;
+	  if (req->ai_flags & AI_IDN_USE_STD3_ASCII_RULES)
+	    idn_flags |= IDNA_USE_STD3_ASCII_RULES;
+
 	  char *p = NULL;
-	  rc = __idna_to_ascii_lz (name, &p, 0);
+	  rc = __idna_to_ascii_lz (name, &p, idn_flags);
 	  if (rc != IDNA_SUCCESS)
 	    {
 	      if (rc == IDNA_MALLOC_ERROR)
@@ -838,8 +844,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #ifdef HAVE_LIBIDN
 	    if (req->ai_flags & AI_CANONIDN)
 	      {
+		int idn_flags = 0;
+		if (req->ai_flags & AI_IDN_ALLOW_UNASSIGNED)
+		  idn_flags |= IDNA_ALLOW_UNASSIGNED;
+		if (req->ai_flags & AI_IDN_USE_STD3_ASCII_RULES)
+		  idn_flags |= IDNA_USE_STD3_ASCII_RULES;
+
 		char *out;
-		int rc = __idna_to_unicode_lzlz (c, &out, 0);
+		int rc = __idna_to_unicode_lzlz (c, &out, idn_flags);
 		if (rc != IDNA_SUCCESS)
 		  {
 		    if (rc == IDNA_MALLOC_ERROR)
@@ -1306,7 +1318,8 @@ getaddrinfo (const char *name, const char *service,
   if (hints->ai_flags
       & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
 #ifdef HAVE_LIBIDN
-	  |AI_IDN|AI_CANONIDN
+	  |AI_IDN|AI_CANONIDN|AI_IDN_ALLOW_UNASSIGNED
+	  |AI_IDN_USE_STD3_ASCII_RULES
 #endif
 	  |AI_ALL))
     return EAI_BADFLAGS;
