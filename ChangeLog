@@ -1,3 +1,7 @@
+2001-10-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Add more ELFOSABI_* constants.
+
 2001-10-04  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/generic/inttypes.h: Fix typo (define, not defined) in
@@ -44,7 +48,7 @@
 
 	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_fixup_plt): Call
 	sparc64_fixup_plt.
-	(sparc64_fixup_plt): Moved from elf_machine_fixup_plt. Optimize
+	(sparc64_fixup_plt): Moved from elf_machine_fixup_plt.  Optimize
 	near jumps and 0xfffff800XXXXXXXX target addresses, no thread safety
 	for non-lazy binding. Fix .plt[32768+] handling.
 	(elf_machine_plt_value): Don't add addend.
