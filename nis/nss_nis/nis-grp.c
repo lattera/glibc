@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -18,7 +18,11 @@
    02111-1307 USA.  */
 
 #include <nss.h>
+/* The following is an ugly trick to avoid a prototype declaration for
+   _nss_nis_endgrent.  */
+#define _nss_nis_endgrent _nss_nis_endgrent_XXX
 #include <grp.h>
+#undef _nss_nis_endgrent
 #include <ctype.h>
 #include <errno.h>
 #include <string.h>
@@ -58,24 +62,10 @@ _nss_nis_setgrent (int stayopen)
 
   return NSS_STATUS_SUCCESS;
 }
-
-enum nss_status
-_nss_nis_endgrent (void)
-{
-  __libc_lock_lock (lock);
-
-  new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
-
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
-}
+/* Make _nss_nis_endgrent an alias of _nss_nis_setgrent.  We do this
+   even though the prototypes don't match.  The argument of setgrent
+   is used so this makes no difference.  */
+strong_alias (_nss_nis_setgrent, _nss_nis_endgrent)
 
 static enum nss_status
 internal_nis_getgrent_r (struct group *grp, char *buffer, size_t buflen,

@@ -1,5 +1,18 @@
 2003-01-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* nis/nss_nis/nis-hosts.c: Make _nss_nis_endhostent an alias of
+	_nss_nis_sethostent.  Work around the different prototypes.
+	* nis/nss_nis/nis-grp.c: Make _nss_nis_endgrent an alias of
+	_nss_nis_setgrent.  Work around the different prototypes.
+	* nis/nss_nis/nis-ethers.c (internal_nis_endetherent): New
+	function.  Split out from _nss_nis_endetherent.
+	(internal_nis_setetherent): Use internal_nis_endetherent instead of
+	duplicating the code.
+	* nis/nss_nis/nis-alias.c: Make _nss_nss_nis_endaliasent an alias
+	of _nss_nis_setaliasent.
+	* nis/nss_nis/nis-service.c (internal_nis_setservent): Reuse
+	internal_nis_endservent code, don't duplicate it.
+
 	* inet/rexec.c (rexec_af): Protect socket operations with
 	TEMP_FAILURE_RETRY.  Use writev instead of multiple write.
 	* inet/rcmd.c (rcmd_af): Likewise.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -88,47 +88,6 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
 }
 
 static enum nss_status
-internal_nis_setservent (intern_t *intern)
-{
-  char *domainname;
-  struct ypall_callback ypcb;
-  enum nss_status status;
-
-  if (yp_get_default_domain (&domainname))
-    return NSS_STATUS_UNAVAIL;
-
-  while (intern->start != NULL)
-    {
-      if (intern->start->val != NULL)
-        free (intern->start->val);
-      intern->next = intern->start;
-      intern->start = intern->start->next;
-      free (intern->next);
-    }
-  intern->start = NULL;
-
-  ypcb.foreach = saveit;
-  ypcb.data = (char *) intern;
-  status = yperr2nss (yp_all (domainname, "services.byname", &ypcb));
-  intern->next = intern->start;
-
-  return status;
-}
-enum nss_status
-_nss_nis_setservent (int stayopen)
-{
-  enum nss_status status;
-
-  __libc_lock_lock (lock);
-
-  status = internal_nis_setservent (&intern);
-
-  __libc_lock_unlock (lock);
-
-  return status;
-}
-
-static enum nss_status
 internal_nis_endservent (intern_t * intern)
 {
   while (intern->start != NULL)
@@ -152,6 +111,39 @@ _nss_nis_endservent (void)
   __libc_lock_lock (lock);
 
   status = internal_nis_endservent (&intern);
+
+  __libc_lock_unlock (lock);
+
+  return status;
+}
+
+static enum nss_status
+internal_nis_setservent (intern_t *intern)
+{
+  char *domainname;
+  struct ypall_callback ypcb;
+  enum nss_status status;
+
+  if (yp_get_default_domain (&domainname))
+    return NSS_STATUS_UNAVAIL;
+
+  (void) internal_nis_endservent (intern);
+
+  ypcb.foreach = saveit;
+  ypcb.data = (char *) intern;
+  status = yperr2nss (yp_all (domainname, "services.byname", &ypcb));
+  intern->next = intern->start;
+
+  return status;
+}
+enum nss_status
+_nss_nis_setservent (int stayopen)
+{
+  enum nss_status status;
+
+  __libc_lock_lock (lock);
+
+  status = internal_nis_setservent (&intern);
 
   __libc_lock_unlock (lock);
 

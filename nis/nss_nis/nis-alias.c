@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -117,24 +117,8 @@ _nss_nis_setaliasent (void)
 
   return NSS_STATUS_SUCCESS;
 }
-
-enum nss_status
-_nss_nis_endaliasent (void)
-{
-  __libc_lock_lock (lock);
-
-  new_start = 1;
-  if (oldkey != NULL)
-    {
-      free (oldkey);
-      oldkey = NULL;
-      oldkeylen = 0;
-    }
-
-  __libc_lock_unlock (lock);
-
-  return NSS_STATUS_SUCCESS;
-}
+/* The 'endaliasent' function is identical.  */
+strong_alias (_nss_nis_setaliasent, _nss_nis_endaliasent)
 
 static enum nss_status
 internal_nis_getaliasent_r (struct aliasent *alias, char *buffer,
