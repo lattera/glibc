@@ -1,4 +1,17 @@
+Wed Jul 17 20:41:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c: Major change.  Now read character
+	from stream only if needed.  Before it was read after the
+	previous character was used.
+	Bug reported by Martin Goik <goma0002@FH-Karlsruhe.DE>
+
+	* stdio-common/tstscanf.c: Change test program so that return
+	value is != 0 if one test failed.
+
 Wed Jul 17 17:08:48 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/m68k/Makefile (crypt): Variable removed.
+	* sysdeps/sparc/Makefile: Likewise.
 
 	* version.h (VERSION): Update to 1.93.
 

@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -49,11 +49,3 @@ $(divrem:%=$(sysdep_dir)/sparc/%.S): $(sysdep_dir)/sparc/divrem.m4
 	test ! -d CVS || cvs commit -m'Regenerated from $<' $@
 
 sysdep-realclean := $(sysdep-realclean) $(divrem:%=sysdeps/sparc/%.S)
-
-ifeq ($(subdir),crypt)
-
-ifeq ($(crypt),crypt)
-crypt := crypt.sparc # Use crypt/crypt.sparc.S.
-endif
-
-endif # crypt

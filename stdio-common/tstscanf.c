@@ -39,7 +39,7 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   sscanf ("conversion] Zero flag Ze]ro#\n", "%*[^]] %[^#]\n", buf);
   if (strcmp (buf, "] Zero flag Ze]ro") != 0)
     {
-      fputs ("test failed!", stderr);
+      fputs ("test failed!\n", stderr);
       return 1;
     }
 
@@ -64,6 +64,8 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
 	     "sscanf (\"thompson\", \"%%s\", name) == %d, name == \"%s\"\n",
 	     sscanf ("thompson", "%s", name),
 	     name);
+    if (strcmp (name, "thompson") != 0)
+      return 1;
   }
 
   fputs ("Testing scanf (vfscanf)\n", out);
@@ -76,8 +78,12 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     n = fscanf (in, "%d%f%s", &i, &x, name);
     fprintf (out, "n = %d, i = %d, x = %f, name = \"%.50s\"\n",
 	     n, i, x, name);
+    if (n != 3 || i != 25 || x != 5.432F || strcmp (name, "thompson"))
+      return 1;
   }
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
+  if (strcmp (buf, "\n"))
+    return 1;
   fputs ("Test 2:\n", out);
   {
     int i;
@@ -85,24 +91,52 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
     char name[50];
     (void) fscanf (in, "%2d%f%*d %[0123456789]", &i, &x, name);
     fprintf (out, "i = %d, x = %f, name = \"%.50s\"\n", i, x, name);
+    if (i != 56 || x != 789.0F || strcmp(name, "56"))
+      return 1;
   }
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
+  if (strcmp (buf, "a72\n"))
+    return 1;
   fputs ("Test 3:\n", out);
   {
+    static struct {
+      int count;
+      float quant;
+      const char *units;
+      const char *item;
+    } ok[] = {
+      { 3, 2.0F, "quarts", "oil" },
+      { 2, -12.8F, "degrees", "" },
+      { 0, 0.0F, "", "" },
+      { 3, 10.0F, "LBS", "fertilizer" },
+      { 3, 100.0F, "rgs", "energy" },
+      { -1, 0.0F, "", "" }};
+    int rounds = 0;
     float quant;
     char units[21], item[21];
     while (!feof (in) && !ferror (in))
       {
 	int count;
+
+	if (rounds++ >= sizeof (ok) / sizeof (ok[0]))
+	  return 1;
+
 	quant = 0.0;
 	units[0] = item[0] = '\0';
 	count = fscanf (in, "%f%20s of %20s", &quant, units, item);
 	(void) fscanf (in, "%*[^\n]");
 	fprintf (out, "count = %d, quant = %f, item = %.21s, units = %.21s\n",
 		 count, quant, item, units);
+	if (count != ok[rounds-1].count || quant != ok[rounds-1].quant
+	    || strcmp (item, ok[rounds-1].item)
+	    || strcmp (units, ok[rounds-1].units))
+	  return 1;
       }
   }
+  buf[0] = '\0';
   fprintf (out, "Residual: \"%s\"\n", fgets (buf, sizeof (buf), in));
+  if (strcmp (buf, ""))
+    return 1;
 
   if (out != stdout)
     pclose (out);

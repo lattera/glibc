@@ -16,15 +16,6 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-# This uses MIT assembler syntax.  We have no convenient
-# way to choose a sysdep file based on MIT vs Motorola syntax.
-# No existing m68k ports use Motorola syntax.
-
-# Don't use crypt/crypt.sun3.S.  It's not pic-clean.
-ifneq (yes,$(build-shared))
-crypt := crypt.sun3
-endif
-
 # The mpn functions need this.  All existing 68k ports use MIT syntax.  If
 # a new port wants to use Motorola or Sony syntax, it can redefine this
 # variable.

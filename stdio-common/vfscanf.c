@@ -51,11 +51,10 @@ Cambridge, MA 02139, USA.  */
 # include <libio.h>
 
 # define va_list	_IO_va_list
-# define ungetc(c, s)	_IO_ungetc (c, s)
+# define ungetc(c, s)	(--read_in, _IO_ungetc (c, s))
 # define inchar()	((c = _IO_getc_unlocked (s)), (void) ++read_in, c)
 # define conv_error()	do {						      \
 			  if (errp != NULL) *errp |= 2;			      \
-			  if (c != EOF) _IO_ungetc (c, s);		      \
 			  _IO_funlockfile (s);				      \
 			  return done;					      \
 			} while (0)
@@ -81,10 +80,10 @@ Cambridge, MA 02139, USA.  */
        }								      \
     } while (0)
 #else
+# define ungetc(c, s)	(--read_in, ungetc (c, s))
 # define inchar()	((c = getc (s)), (void) ++read_in, c)
 # define conv_error()	do {						      \
 			  funlockfile (s);				      \
-			  ungetc (c, s);				      \
 			  return done;					      \
 			} while (0)
 # define input_error()	do {						      \
@@ -197,8 +196,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   /* Lock the stream.  */
   flockfile (s);
 
-  c = inchar ();
-
   /* Run through the format string.  */
   while (*f != '\0')
     {
@@ -231,13 +228,18 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  int len = mblen (f, strlen (f));
 	  if (len > 0)
 	    {
-	      while (len-- > 0)
-		if (c == EOF)
-		  input_error ();
-		else if (c == *f++)
-		  (void) inchar ();
-		else
-		  conv_error ();
+	      do
+		{
+		  c = inchar ();
+		  if (c == EOF)
+		    input_error ();
+		  else if (c != *f++)
+		    {
+		      ungetc (c, s);
+		      conv_error ();
+		    }
+		}
+	      while (--len > 0);
 	      continue;
 	    }
 	}
@@ -252,6 +254,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      continue;
 	    }
 
+	  /* Read a character.  */
+	  c = inchar ();
+
 	  /* Characters other than format specs must just match.  */
 	  if (c == EOF)
 	    input_error ();
@@ -265,10 +270,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      skip_space = 0;
 	    }
 
-	  if (c == fc)
-	    (void) inchar ();
-	  else
-	    conv_error ();
+	  if (c != fc)
+	    {
+	      ungetc (c, s);
+	      conv_error ();
+	    }
 
 	  continue;
 	}
@@ -378,17 +384,22 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (skip_space || (fc != '[' && fc != 'c' && fc != 'n'))
 	{
 	  /* Eat whitespace.  */
-	  while (isspace (c))
+	  do
 	    (void) inchar ();
+	  while (isspace (c));
+	  ungetc (c, s);
 	  skip_space = 0;
 	}
 
       switch (fc)
 	{
 	case '%':	/* Must match a literal '%'.  */
+	  c = inchar ();
 	  if (c != fc)
-	    conv_error ();
-	  inchar ();
+	    {
+	      ungetc (c, s);
+	      conv_error ();
+	    }
 	  break;
 
 	case 'n':	/* Answer number of assignments done.  */
@@ -397,13 +408,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (!(flags & SUPPRESS))
 	    /* Don't count the read-ahead.  */
 	    if (flags & LONGDBL)
-	      *ARG (long long int *) = read_in - 1;
+	      *ARG (long long int *) = read_in;
 	    else if (flags & LONG)
-	      *ARG (long int *) = read_in - 1;
+	      *ARG (long int *) = read_in;
 	    else if (flags & SHORT)
-	      *ARG (short int *) = read_in - 1;
+	      *ARG (short int *) = read_in;
 	    else
-	      *ARG (int *) = read_in - 1;
+	      *ARG (int *) = read_in;
 	  break;
 
 	case 'c':	/* Match characters.  */
@@ -414,6 +425,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		conv_error ();
 	    }
 
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -424,10 +436,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      do
 		*str++ = c;
-	      while (inchar () != EOF && --width > 0);
+	      while (--width > 0 && inchar () != EOF);
 	    }
 	  else
-	    while (inchar () != EOF && --width > 0);
+	    while (--width > 0 && inchar () != EOF);
 
 	  if (!(flags & SUPPRESS))
 	    ++done;
@@ -455,13 +467,17 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  STRING_ARG;
 
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
 	  do
 	    {
 	      if (isspace (c))
-		break;
+		{
+		  ungetc (c, s);
+		  break;
+		}
 #define	STRING_ADD_CHAR(c)						      \
 	      if (!(flags & SUPPRESS))					      \
 		{							      \
@@ -499,7 +515,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    }							      \
 		}
 	      STRING_ADD_CHAR (c);
-	    } while (inchar () != EOF && (width <= 0 || --width > 0));
+	    } while ((width <= 0 || --width > 0) && inchar () != EOF);
 
 	  if (!(flags & SUPPRESS))
 	    {
@@ -534,6 +550,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  number_signed = 1;
 
 	number:
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -543,7 +560,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      ADDW (c);
 	      if (width > 0)
 		--width;
-	      (void) inchar ();
+	      c = inchar ();
 	    }
 
 	  /* Look for a leading indication of base.  */
@@ -553,7 +570,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		--width;
 
 	      ADDW (c);
-	      (void) inchar ();
+	      c = inchar ();
 
 	      if (width != 0 && tolower (c) == 'x')
 		{
@@ -563,7 +580,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    {
 		      if (width > 0)
 			--width;
-		      (void) inchar ();
+		      c = inchar ();
 		    }
 		}
 	      else if (base == 0)
@@ -584,8 +601,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width > 0)
 		--width;
 
-	      (void) inchar ();
+	      c = inchar ();
 	    }
+
+	  /* The just read character is not part of the number anymore.  */
+	  ungetc (c, s);
 
 	  if (wpsize == 0 ||
 	      (wpsize == 1 && (wp[0] == '+' || wp[0] == '-')))
@@ -645,6 +665,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'f':
 	case 'g':
 	case 'G':
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -688,6 +709,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  while (inchar () != EOF && width != 0);
 
+	  /* The last read character is not part of the number anymore.  */
+	  ungetc (c, s);
+
 	  if (wpsize == 0)
 	    conv_error ();
 
@@ -722,8 +746,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case '[':	/* Character class.  */
 	  STRING_ARG;
 
+	  c = inchar ();
 	  if (c == EOF)
-	    input_error();
+	    input_error ();
 
 	  if (*f == '^')
 	    {
@@ -767,18 +792,25 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		wp[fc] = 1;
 	    }
 	  if (fc == '\0')
-	    conv_error();
+	    {
+	      ungetc (c, s);
+	      conv_error();
+	    }
 
-	  num.ul = read_in;
+	  num.ul = read_in - 1;	/* -1 because we already read one char.  */
 	  do
 	    {
 	      if (wp[c] == not_in)
-		break;
+		{
+		  ungetc (c, s);
+		  break;
+		}
 	      STRING_ADD_CHAR (c);
 	      if (width > 0)
 		--width;
 	    }
-	  while (inchar () != EOF && width != 0);
+	  while (width != 0 && inchar () != EOF);
+
 	  if (read_in == num.ul)
 	    conv_error ();
 
@@ -802,13 +834,17 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   /* The last thing we saw int the format string was a white space.
      Consume the last white spaces.  */
   if (skip_space)
-    while (isspace (c))
-      (void) inchar ();
+    {
+      do
+	c = inchar ();
+      while (isspace (c));
+      ungetc (c, s);
+    }
 
   /* Unlock stream.  */
   funlockfile (s);
 
-  return ((void) (c == EOF || ungetc (c, s)), done);
+  return done;
 }
 
 #ifdef USE_IN_LIBIO
