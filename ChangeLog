@@ -1,5 +1,8 @@
 2001-02-05  Andreas Jaeger  <aj@suse.de>
 
+	* signal/signal.h: Move __sigaction from here to...
+	* include/signal.h: ...here.
+
 	* io/fcntl.h: Move __fcntl and __open to...
 	* include/fcntl.h: ...here.
 

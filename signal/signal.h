@@ -240,8 +240,6 @@ extern int sigprocmask (int __how, __const sigset_t *__restrict __set,
 extern int sigsuspend (__const sigset_t *__set) __THROW;
 
 /* Get and/or set the action for signal SIG.  */
-extern int __sigaction (int __sig, __const struct sigaction *__restrict __act,
-			struct sigaction *__restrict __oact) __THROW;
 extern int sigaction (int __sig, __const struct sigaction *__restrict __act,
 		      struct sigaction *__restrict __oact) __THROW;
 

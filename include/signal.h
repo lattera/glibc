@@ -7,6 +7,8 @@
 /* Now define the internal interfaces.  */
 extern __sighandler_t __bsd_signal (int __sig, __sighandler_t __handler);
 extern int __kill (__pid_t __pid, int __sig);
+extern int __sigaction (int __sig, __const struct sigaction *__restrict __act,
+			struct sigaction *__restrict __oact);
 extern int __sigblock (int __mask);
 extern int __sigsetmask (int __mask);
 extern int __sigprocmask (int __how,
