@@ -169,6 +169,9 @@ _dl_fini (void)
 	  if (l->l_info[DT_FINI] != NULL)
 	    ((fini_t) DL_DT_FINI_ADDRESS (l, l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
+
+      /* Correct the previous increment.  */
+      --l->l_opencount;
     }
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))

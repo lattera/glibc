@@ -11,8 +11,9 @@
 
 2002-11-05  Ulrich Drepper  <drepper@redhat.com>
 
-	* iconv/gconv_dl.c (do_release_all): Call __libc_dlclose as many
-	times as we opened the module.
+	* elf/dl-fini.c (_dl_fini): Correct the increment of l_opencount
+	which happens at the beginning so that we can unload modules in
+	__libc_freeres.
 
 2002-11-06  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
