@@ -1,3 +1,13 @@
+2000-08-01  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/Makefile (distribute): Remove removed files, add
+	new files.
+
+	* Makefile (distribute): Remove include/db_185.h and db.h.
+
+	* include/db_185.h: Remove, it's not needed anymore.
+	* include/db.h: Likewise.
+
 2000-07-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/Makefile (tests): Remove tst-ipnode.
