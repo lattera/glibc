@@ -1169,7 +1169,38 @@ static int any_debug;
 static void
 process_dl_debug (const char *dl_debug)
 {
+  /* When adding new entries make sure that the maximal length of a name
+     is correctly handled in the LD_DEBUG_HELP code below.  */
+  static const struct
+  {
+    const char name[11];
+    const char helptext[41];
+    unsigned short int mask;
+  } debopts[] =
+    {
+      { "libs", "display library search paths",
+	DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS },
+      { "reloc", "display relocation processing",
+	DL_DEBUG_RELOC | DL_DEBUG_IMPCALLS },
+      { "files", "display progress for input file",
+	DL_DEBUG_FILES | DL_DEBUG_IMPCALLS },
+      { "symbols", "display symbol table processing",
+	DL_DEBUG_SYMBOLS | DL_DEBUG_IMPCALLS },
+      { "bindings", "display information about symbol binding",
+	DL_DEBUG_BINDINGS | DL_DEBUG_IMPCALLS },
+      { "versions", "display version dependencies",
+	DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
+      { "all", "all previous options combined",
+	DL_DEBUG_LIBS | DL_DEBUG_RELOC | DL_DEBUG_FILES | DL_DEBUG_SYMBOLS
+	| DL_DEBUG_BINDINGS | DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS },
+      { "statistics", "display relocation statistics",
+	DL_DEBUG_STATISTICS },
+      { "help", "display this help message and exit",
+	DL_DEBUG_HELP },
+    };
+#define ndebopts (sizeof (debopts) / sizeof (debopts[0]))
   size_t len;
+
 #define separators " ,:"
   do
     {
@@ -1178,115 +1209,48 @@ process_dl_debug (const char *dl_debug)
       dl_debug += strspn (dl_debug, separators);
       if (*dl_debug != '\0')
 	{
+	  size_t cnt;
+
 	  len = strcspn (dl_debug, separators);
 
-	  switch (len)
+	  for (cnt = 0; cnt < ndebopts; ++cnt)
+	    if (strncmp (dl_debug, debopts[cnt].name, len) == 0
+		&& debopts[cnt].name[len] == '\0')
+	      {
+		_dl_debug_mask |= debopts[cnt].mask;
+		break;
+	      }
+
+	  if (cnt == ndebopts)
 	    {
-	    case 3:
-	      /* This option is not documented since it is not generally
-		 useful.  */
-	      if (memcmp (dl_debug, "all", 3) == 0)
-		{
-		  _dl_debug_mask = (DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS
-				    | DL_DEBUG_RELOC | DL_DEBUG_FILES
-				    | DL_DEBUG_SYMBOLS | DL_DEBUG_BINDINGS
-				    | DL_DEBUG_VERSIONS);
-		  any_debug = 1;
-		  continue;
-		}
+	      /* Display a warning and skip everything until next
+		 separator.  */
+	      char *copy = strndupa (dl_debug, len);
+	      _dl_error_printf ("\
+warning: debug option `%s' unknown; try LD_DEBUG=help\n", copy);
 	      break;
-
-	    case 4:
-	      if (memcmp (dl_debug, "help", 4) == 0)
-		{
-		  _dl_printf ("\
-Valid options for the LD_DEBUG environment variable are:\n\
-\n\
-  bindings   display information about symbol binding\n\
-  files      display processing of files and libraries\n\
-  help       display this help message and exit\n\
-  libs       display library search paths\n\
-  reloc      display relocation processing\n\
-  statistics display relocation statistics\n\
-  symbols    display symbol table processing\n\
-  versions   display version dependencies\n\
-\n\
-To direct the debugging output into a file instead of standard output\n\
-a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
-		  _exit (0);
-		}
-
-	      if (memcmp (dl_debug, "libs", 4) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_LIBS | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-	      break;
-
-	    case 5:
-	      if (memcmp (dl_debug, "reloc", 5) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_RELOC | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-
-	      if (memcmp (dl_debug, "files", 5) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_FILES | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-	      break;
-
-	    case 7:
-	      if (memcmp (dl_debug, "symbols", 7) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_SYMBOLS | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-	      break;
-
-	    case 8:
-	      if (memcmp (dl_debug, "bindings", 8) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_BINDINGS | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-
-	      if (memcmp (dl_debug, "versions", 8) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_VERSIONS | DL_DEBUG_IMPCALLS;
-		  any_debug = 1;
-		  continue;
-		}
-	      break;
-
-	    case 10:
-	      if (memcmp (dl_debug, "statistics", 10) == 0)
-		{
-		  _dl_debug_mask |= DL_DEBUG_STATISTICS;
-		  continue;
-		}
-	      break;
-
-	    default:
-	      break;
-	    }
-
-	  {
-	    /* Display a warning and skip everything until next separator.  */
-	    char *startp = strndupa (dl_debug, len);
-	    _dl_error_printf ("\
-warning: debug option `%s' unknown; try LD_DEBUG=help\n", startp);
-	    break;
 	  }
 	}
     }
   while (*(dl_debug += len) != '\0');
+
+  if (_dl_debug_mask & DL_DEBUG_HELP)
+    {
+      size_t cnt;
+
+      _dl_printf ("\
+Valid options for the LD_DEBUG environment variable are:\n\n");
+
+      for (cnt = 0; cnt < ndebopts; ++cnt)
+	_dl_printf ("  %s%s %s\n", debopts[cnt].name,
+		    "       " + strlen (debopts[cnt].name) - 3,
+		    debopts[cnt].helptext);
+
+      _dl_printf ("\n\
+To direct the debugging output into a file instead of standard output\n\
+a filename can be specified using the LD_DEBUG_OUTPUT environment variable.\n");
+      _exit (0);
+    }
 }
 
 /* Process all environments variables the dynamic linker must recognize.
@@ -1303,7 +1267,7 @@ process_envvars (enum mode *modep)
   char *debug_output = NULL;
 
   /* This is the default place for profiling data file.  */
-  _dl_profile_output = __libc_enable_secure ? "/var/profile" : "/var/tmp";
+  _dl_profile_output = &"/var/tmp\0/var/profile"[__libc_enable_secure ? 9 : 0];
 
   while ((envline = _dl_next_ld_env_entry (&runp)) != NULL)
     {
@@ -1402,12 +1366,9 @@ process_envvars (enum mode *modep)
 	case 14:
 	  /* Where to place the profiling data file.  */
 	  if (!__libc_enable_secure
-	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0)
-	    {
-	      _dl_profile_output = &envline[15];
-	      if (*_dl_profile_output == '\0')
-		_dl_profile_output = "/var/tmp";
-	    }
+	      && memcmp (envline, "PROFILE_OUTPUT", 14) == 0
+	      && envline[15] != '\0')
+	    _dl_profile_output = &envline[15];
 	  break;
 
 	case 20:
@@ -1425,6 +1386,9 @@ process_envvars (enum mode *modep)
 #endif
 	}
     }
+
+  /* The caller wants this information.  */
+  *modep = mode;
 
   /* Extra security for SUID binaries.  Remove all dangerous environment
      variables.  */
@@ -1448,14 +1412,10 @@ process_envvars (enum mode *modep)
       if (__access ("/etc/suid-debug", F_OK) != 0)
 	unsetenv ("MALLOC_CHECK_");
     }
-
-  /* The caller wants this information.  */
-  *modep = mode;
-
   /* If we have to run the dynamic linker in debugging mode and the
      LD_DEBUG_OUTPUT environment variable is given, we write the debug
      messages to this file.  */
-  if (any_debug && debug_output != NULL && !__libc_enable_secure)
+  else if (any_debug && debug_output != NULL)
     {
 #ifdef O_NOFOLLOW
       const int flags = O_WRONLY | O_APPEND | O_CREAT | O_NOFOLLOW;
