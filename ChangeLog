@@ -1,3 +1,25 @@
+2000-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* rt/tst-aio.c: Add tests for aio_fsync and aio_cancel.
+	(do_wait): Test requests with aio_return.
+	(do_test): Change callers of do_wait.
+
+2000-07-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/aio_misc.c (__aio_remove_request): New function.  Handle removing
+	from request list.  Don't do the list handling here, call
+	__aio_remove_request.
+	* rt/aio_misc.h: Add prototype for __aio_remove_request.
+	* rt/aio_cancel.c: Don't assume __aio_find_req_fd succeeds since the
+	request might already be processed.  Don't do the list handling
+	here, call __aio_remove_request.
+
+	* rt/aio_misc.c: Don't depend on aio_reqprio field for LIO_SYNC and
+	LIO_DSYNC.
+
+	* rt/aio_misc.c: Add comment explaining why writer memory barriers
+	are missing.
+
 2000-07-27  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/generic/bp-checks.h (BOUNDED_N): Make it work for void*.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -103,6 +103,11 @@ extern struct requestlist *__aio_find_req (aiocb_union *elem)
 
 /* Find request entry for given file descriptor.  */
 extern struct requestlist *__aio_find_req_fd (int fildes) internal_function;
+
+/* Remove request from the list.  */
+extern void __aio_remove_request (struct requestlist *last,
+				  struct requestlist *req, int all)
+     internal_function;
 
 /* Release the entry for the request.  */
 extern void __aio_free_request (struct requestlist *req) internal_function;

@@ -100,23 +100,38 @@ test_file (const void *buf, size_t size, int fd, const char *msg)
 }
 
 
-void
-do_wait (struct aiocb **cbp, size_t nent)
+int
+do_wait (struct aiocb **cbp, size_t nent, int allowed_err)
 {
   int go_on;
+  size_t cnt;
+  int result = 0;
+
   do
     {
-      size_t cnt;
-
       aio_suspend ((const struct aiocb *const *) cbp, nent, NULL);
       go_on = 0;
       for (cnt = 0; cnt < nent; ++cnt)
-	if (cbp[cnt] != NULL && aio_error (cbp[cnt]) == EINPROGRESS)
-	  go_on = 1;
-	else
-	  cbp[cnt] = NULL;
+	if (cbp[cnt] != NULL)
+	  {
+	    if (aio_error (cbp[cnt]) == EINPROGRESS)
+	      go_on = 1;
+	    else
+	      {
+		if (aio_return (cbp[cnt]) == -1
+		    && (allowed_err == 0
+			|| aio_error (cbp[cnt]) != allowed_err))
+		  {
+		    error (0, aio_error (cbp[cnt]), "Operation failed\n");
+		    result = 1;
+		  }
+		cbp[cnt] = NULL;
+	      }
+	  }
     }
   while (go_on);
+
+  return result;
 }
 
 
@@ -124,7 +139,9 @@ int
 do_test (int argc, char *argv[])
 {
   struct aiocb cbs[10];
+  struct aiocb cbs_fsync;
   struct aiocb *cbp[10];
+  struct aiocb *cbp_fsync[1];
   char buf[1000];
   size_t cnt;
   int result = 0;
@@ -146,7 +163,7 @@ do_test (int argc, char *argv[])
   for (cnt = 10; cnt > 0; )
     aio_write (cbp[--cnt]);
   /* Wait 'til the results are there.  */
-  do_wait (cbp, 10);
+  result |= do_wait (cbp, 10, 0);
   /* Test this.  */
   result |= test_file (buf, sizeof (buf), fd, "aio_write");
 
@@ -160,7 +177,7 @@ do_test (int argc, char *argv[])
       aio_read (cbp[cnt]);
     }
   /* Wait 'til the results are there.  */
-  do_wait (cbp, 10);
+  result |= do_wait (cbp, 10, 0);
   /* Test this.  */
   for (cnt = 0; cnt < 1000; ++cnt)
     if (buf[cnt] != '0' + (cnt / 100))
@@ -190,6 +207,78 @@ do_test (int argc, char *argv[])
   lio_listio (LIO_WAIT, cbp, 10, NULL);
   /* ...and immediately test it since we started it in wait mode.  */
   result |= test_file (buf, sizeof (buf), fd, "lio_listio (write)");
+
+  /* Test aio_fsync.  */
+  cbs_fsync.aio_fildes = fd;
+  cbs_fsync.aio_sigevent.sigev_notify = SIGEV_NONE;
+  cbp_fsync[0] = &cbs_fsync;
+
+  /* Remove the test file contents first.  */
+  if (ftruncate (fd, 0) < 0)
+    {
+      error (0, errno, "ftruncate failed\n");
+      result = 1;
+    }
+
+  /* Write again.  */
+  for (cnt = 10; cnt > 0; )
+    aio_write (cbp[--cnt]);
+
+  if (aio_fsync (O_SYNC, &cbs_fsync) < 0)
+    {
+      error (0, errno, "aio_fsync failed\n");
+      result = 1;
+    }
+  result |= do_wait (cbp_fsync, 1, 0);
+
+  /* ...and test since all data should be on disk now.  */
+  result |= test_file (buf, sizeof (buf), fd, "aio_fsync (aio_write)");
+
+  /* Test aio_cancel.  */
+  /* Remove the test file contents first.  */
+  if (ftruncate (fd, 0) < 0)
+    {
+      error (0, errno, "ftruncate failed\n");
+      result = 1;
+    }
+
+  /* Write again.  */
+  for (cnt = 10; cnt > 0; )
+    aio_write (cbp[--cnt]);
+
+  /* Cancel all requests.  */
+  if (aio_cancel (fd, NULL) == -1)
+    printf ("aio_cancel (fd, NULL) cannot cancel anything\n");
+
+  result |= do_wait (cbp, 10, ECANCELED);
+
+  /* Another test for aio_cancel.  */
+  /* Remove the test file contents first.  */
+  if (ftruncate (fd, 0) < 0)
+    {
+      error (0, errno, "ftruncate failed\n");
+      result = 1;
+    }
+
+  /* Write again.  */
+  for (cnt = 10; cnt > 0; )
+    {
+      --cnt;
+      cbp[cnt] = &cbs[cnt];
+      aio_write (cbp[cnt]);
+    }
+  puts ("finished3");
+
+  /* Cancel all requests.  */
+  for (cnt = 10; cnt > 0; )
+    if (aio_cancel (fd, cbp[--cnt]) == -1)
+      /* This is not an error.  The request can simply be finished.  */
+      printf ("aio_cancel (fd, cbp[%Zd]) cannot be canceled\n", cnt);
+  puts ("finished2");
+
+  result |= do_wait (cbp, 10, ECANCELED);
+
+  puts ("finished");
 
   return result;
 }

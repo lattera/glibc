@@ -205,6 +205,64 @@ __aio_find_req_fd (int fildes)
 }
 
 
+void
+internal_function
+__aio_remove_request (struct requestlist *last, struct requestlist *req,
+		      int all)
+{
+  if (last != NULL)
+    last->next_prio = req->next_prio;
+  else
+    {
+      if (all || req->next_prio == NULL)
+	{
+	  if (req->last_fd != NULL)
+	    req->last_fd->next_fd = req->next_fd;
+	  else
+	    requests = req->next_fd;
+	  if (req->next_fd != NULL)
+	    req->next_fd->last_fd = req->last_fd;
+	}
+      else
+	{
+	  if (req->last_fd != NULL)
+	    req->last_fd->next_fd = req->next_prio;
+	  else
+	    requests = req->next_prio;
+
+	  if (req->next_fd != NULL)
+	    req->next_fd->last_fd = req->next_prio;
+
+	  req->next_prio->last_fd = req->last_fd;
+	  req->next_prio->next_fd = req->next_fd;
+
+	  /* Mark this entry as runnable.  */
+	  req->next_prio->running = yes;
+	}
+
+      if (req->running == yes)
+	{
+	  struct requestlist *runp = runlist;
+
+	  last = NULL;
+	  while (runp != NULL)
+	    {
+	      if (runp == req)
+		{
+		  if (last == NULL)
+		    runlist = runp->next_run;
+		  else
+		    last->next_run = runp->next_run;
+		  break;
+		}
+	      last = runp;
+	      runp = runp->next_run;
+	    }
+	}
+    }
+}
+
+
 /* The thread handler.  */
 static void *handle_fildes_io (void *arg);
 
@@ -246,8 +304,10 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
   struct requestlist *last, *runp, *newp;
   int running = no;
 
-  if (aiocbp->aiocb.aio_reqprio < 0
-      || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX)
+  if (operation == LIO_SYNC || operation == LIO_DSYNC)
+    aiocbp->aiocb.aio_reqprio = 0;
+  else if (aiocbp->aiocb.aio_reqprio < 0
+	   || aiocbp->aiocb.aio_reqprio > AIO_PRIO_DELTA_MAX)
     {
       /* Invalid priority value.  */
       __set_errno (EINVAL);
@@ -507,6 +567,14 @@ handle_fildes_io (void *arg)
 	  /* Get the mutex.  */
 	  pthread_mutex_lock (&__aio_requests_mutex);
 
+	  /* In theory we would need here a write memory barrier since the
+	     callers test using aio_error() whether the request finished
+	     and once this value != EINPROGRESS the field __return_value
+	     must be committed to memory.
+
+	     But since the pthread_mutex_lock call involves write memory
+	     barriers as well it is not necessary.  */
+
 	  if (aiocbp->aiocb.__return_value == -1)
 	    aiocbp->aiocb.__error_code = errno;
 	  else
@@ -517,30 +585,9 @@ handle_fildes_io (void *arg)
 	  __aio_notify (runp);
 
 	  /* Now dequeue the current request.  */
-	  if (runp->next_prio == NULL)
-	    {
-	      /* No outstanding request for this descriptor.  Remove this
-		 descriptor from the list.  */
-	      if (runp->next_fd != NULL)
-		runp->next_fd->last_fd = runp->last_fd;
-	      if (runp->last_fd != NULL)
-		runp->last_fd->next_fd = runp->next_fd;
-	      else
-		requests = runp->next_fd;
-	    }
-	  else
-	    {
-	      runp->next_prio->last_fd = runp->last_fd;
-	      runp->next_prio->next_fd = runp->next_fd;
-	      runp->next_prio->running = yes;
-	      if (runp->next_fd != NULL)
-		runp->next_fd->last_fd = runp->next_prio;
-	      if (runp->last_fd != NULL)
-		runp->last_fd->next_fd = runp->next_prio;
-	      else
-		requests = runp->next_prio;
-	      add_request_to_runlist (runp->next_prio);
-	    }
+	  __aio_remove_request (NULL, runp, 0);
+	  if (runp->next_prio != NULL)
+	    add_request_to_runlist (runp->next_prio);
 
 	  /* Free the old element.  */
 	  __aio_free_request (runp);
