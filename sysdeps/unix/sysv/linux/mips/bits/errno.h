@@ -51,6 +51,6 @@ extern int *__errno_location __P ((void)) __attribute__ ((__const__));
    define only the values EDOM and ERANGE in case __need_Emath is
    defined.  The value is the same for all Linux ports.  */
 # define EDOM	33	/* Math argument out of domain of function.  */
-# define EILSEQ	84	/* Illegal byte sequence.  */
+# define EILSEQ	88	/* Illegal byte sequence.  */
 # define ERANGE	34	/* Math result not representable.  */
 #endif /* !_ERRNO_H && __need_Emath */
