@@ -43,10 +43,10 @@ ENTRY (__vfork)
 0:
 	basr	%r1,0
 1:
-	l	%r1,2f-1b(%r1)
+	al	%r1,2f-1b(%r1)
 	br	%r1
 2:
-	.long	HIDDEN_JUMPTARGET(__fork)
+	.long	HIDDEN_JUMPTARGET(__fork)-1b
 PSEUDO_END(__vfork)
 
 libc_hidden_def (__vfork)
