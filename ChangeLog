@@ -1,3 +1,8 @@
+2003-01-20  Segher Boessenkool  <segher@koffie.nl>
+
+	* sysdeps/ieee754/dbl-64/sincos32.c (__mpcos): Really
+	compute the cosine, not the sine, even if x > 0.8.
+
 2003-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nis/nis-spwd.c: Make _nss_nis_endspent an alias of
