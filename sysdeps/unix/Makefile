@@ -297,22 +297,24 @@ $(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
 	mv -f $@T $@
 endif
 
-# This syscall objects depend on s-proto.d, which is generated to
-# specify dependencies generated syscalls with have on headers.
+# The syscall objects depend on s-proto.d or s-proto-cancel.d, which
+# are generated to specify dependencies generated syscalls have on
+# headers.
 ifdef subdir
 ifndef no_deps
 # These deps use file names relative to a subdir, so don't
 # include them in the parent directory.
 -include $(common-objpfx)s-proto.d
+-include $(common-objpfx)s-proto-cancel.d
 endif
 endif
 
-$(common-objpfx)s-proto.d: $(common-objpfx)%.d: $(..)sysdeps/unix/%.S \
-			   $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
+$(common-objpfx)s-%.d: $(..)sysdeps/unix/s-%.S \
+		       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 # Don't try to use compat.h in the db2 subdir
 	$(subst -include ./compat.h,,$(+make-deps))
 
-common-generated += s-proto.d
+common-generated += s-proto.d s-proto-cancel.d
 postclean-generated += sysd-syscalls
 
 endif

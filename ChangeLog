@@ -1,3 +1,13 @@
+2002-12-28  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/Makefile: Include $(common-objpfx)s-proto-cancel.d.
+	($(common-objpfx)s-%.d): Generalized from
+	$(common-objpfx)s-proto.d rule.
+	(common-generated): Add s-proto-cancel.d.
+	* sysdeps/unix/make-syscalls.sh: Use s-proto-cancel.d for
+	cancellable syscalls.
+	* sysdeps/unix/s-proto-cancel.S: New file.
+
 2002-12-29  Roland McGrath  <roland@redhat.com>
 
 	* resolv/res_libc.c: Move _res defn magic after res_init defn

@@ -139,7 +139,7 @@ shared-only-routines += $file
     ;;
   esac
 
-  echo '		$(common-objpfx)s-proto.d'
+  echo "		\$(common-objpfx)s-proto$cancellable.d"
   case x"$callnum" in
   x_)
   echo "\
@@ -248,7 +248,7 @@ shared-only-routines += $file
     # generate makefile envelope & rule head
     echo "ifeq (,\$(filter $file,\$(bp-thunks)))"
     echo "bp-thunks += $file"
-    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto.d"
+    echo "\$(objpfx)\$(bppfx)$file.ob: \$(common-objpfx)s-proto$cancellable.d"
 
     # generate macro head
     echo "	(echo '#define $callname(`echo $arglist | \
