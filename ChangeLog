@@ -4,6 +4,9 @@
 
 2002-11-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/pthreadtypes.h: Moved to ...
+	* sysdeps/generic/bits/pthreadtypes.h: ... here.
+
 	* config.make.in (includedir): New variable, substituted by configure.
 	Reported missing by Jocelyn Fournier <joc@presence-pc.com>.
 	* Makeconfig (includedir): Use $(prefix), not $(exec_prefix).
