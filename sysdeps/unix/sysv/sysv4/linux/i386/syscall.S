@@ -25,5 +25,5 @@ ENTRY (syscall)
 	pushl %ecx		/* Push back return address.  */
 	DO_CALL (5)		/* Frob the args and do the system call.  */
 	testl %eax, %eax	/* Check %eax for error.  */
-	jl syscall_error	/* Jump to error handler if negative.  */
+	jl JUMPTARGET(syscall_error) /* Jump to error handler if negative.  */
 	ret			/* Return to caller.  */
