@@ -345,3 +345,9 @@
 #if __LINUX_KERNEL_VERSION >= 132427 && defined __i386__
 # define __ASSUME_TGKILL	1
 #endif
+
+/* The utimes syscall has been available for some architectures forever.  */
+#if defined __alpha__ || defined __ia64__ || defined __hppa_ \
+    || defined __sparc__
+# define __ASSUME_UTIMES	1
+#endif
