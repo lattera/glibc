@@ -15,8 +15,6 @@
 	* sysdeps/unix/sysv/linux/ia64/dl-brk.S: New file.
 	* sysdeps/unix/sysv/linux/powerpc/dl-brk.S: New file.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-brk.S: New file.
-	* sysdeps/unix/sysv/linux/i386/dl-brk.c: Remove.
-	* sysdeps/unix/sysv/linux/i386/dl-sbrk.c: Remove.
 
 2002-04-03  Andreas Schwab  <schwab@suse.de>
 
