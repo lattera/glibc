@@ -1164,6 +1164,25 @@ __sysconf (name)
 #else
       return -1;
 #endif
+
+    case _SC_LEVEL1_ICACHE_SIZE:
+    case _SC_LEVEL1_ICACHE_ASSOC:
+    case _SC_LEVEL1_ICACHE_LINESIZE:
+    case _SC_LEVEL1_DCACHE_SIZE:
+    case _SC_LEVEL1_DCACHE_ASSOC:
+    case _SC_LEVEL1_DCACHE_LINESIZE:
+    case _SC_LEVEL2_CACHE_SIZE:
+    case _SC_LEVEL2_CACHE_ASSOC:
+    case _SC_LEVEL2_CACHE_LINESIZE:
+    case _SC_LEVEL3_CACHE_SIZE:
+    case _SC_LEVEL3_CACHE_ASSOC:
+    case _SC_LEVEL3_CACHE_LINESIZE:
+    case _SC_LEVEL4_CACHE_SIZE:
+    case _SC_LEVEL4_CACHE_ASSOC:
+      /* In general we cannot determine these values.  Therefore we
+	 return zero which indicates that no information is
+	 available.  */
+      return 0;
     }
 }
 

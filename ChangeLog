@@ -1,3 +1,13 @@
+2004-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getconf.c (vars): Add _SC_ values for cache information.
+	* sysdeps/generic/bits/confname.h: Add _SC_* values for cache
+	information.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf): Reorganize to
+	allow yet another sysconf function to include the one in this file.
+	* sysdeps/unix/sysv/linux/i386/sysconf.c: New file.
+	* sysdeps/generic/sysconf.c: Add default handling for cache line info.
+
 2004-03-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/sysconf.c (__sysconf): Add missing support for

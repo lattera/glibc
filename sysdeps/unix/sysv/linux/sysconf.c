@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
 #include <sysdep.h>
@@ -25,10 +26,6 @@
 #include <not-cancel.h>
 
 static long int posix_sysconf (int name);
-
-/* Define this first, so it can be inlined.  */
-#define __sysconf static posix_sysconf
-#include <sysdeps/posix/sysconf.c>
 
 
 /* Get the value of the system variable NAME.  */
@@ -83,3 +80,8 @@ __sysconf (int name)
     }
   return posix_sysconf (name);
 }
+
+/* Now the POSIX version.  */
+#undef __sysconf
+#define __sysconf static posix_sysconf
+#include <sysdeps/posix/sysconf.c>
