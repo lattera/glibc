@@ -15,7 +15,6 @@
 	* sysdeps/i386/Implies: Imply ieee754/flt-32, ieee754/dbl-64, and
 	ieee754/ldbl-96 instead of ieee754.
 	* sysdeps/i386/i686/Implies: Remove implication for libm-i387/i686.
-	* sysdeps/generic/strtold.c: Remove.
 	* sysdeps/generic/e_atanhl.c: New file.
 	* sysdeps/generic/e_coshl.c: New file.
 	* sysdeps/generic/e_sinhl.c: New file.
@@ -25,6 +24,8 @@
 	* sysdeps/generic/s_asinhl.c: New file.
 	* sysdeps/generic/s_tanhl.c: New file.
 	* sysdeps/generic/w_expl.c: New file.
+	* sysdeps/i960/Implies: Imply ieee754/flt-32 and ieee754/dbl-64
+	instead of ieee754.
 	* sysdeps/m68k/Implies: Imply ieee754/flt-32, ieee754/dbl-64, and
 	ieee754/ldbl-96 instead of ieee754.
 	* sysdeps/m68k/strtold.c: Include ldbl-96 version of strtold.
@@ -752,7 +753,7 @@
 	* sysdeps/libm-ieee754/s_nearbyint.c: Moved to ...
 	* sysdeps/ieee754/dbl-64/s_nearbyint.c: ...here.
 	* sysdeps/libm-ieee754/s_nextafter.c: Moved to ...
-	* sysdeps/ieee754/dbl-64/s_nextafter.c: ...here.
+	* sysdeps/generic/s_nextafter.c: ...here.
 	Add __nexttoward and nexttoward aliases if NO_LONG_DOUBLE.
 	* sysdeps/libm-ieee754/s_remquo.c: Moved to ...
 	* sysdeps/ieee754/dbl-64/s_remquo.c: ...here.
@@ -1029,7 +1030,7 @@
 	* sysdeps/ieee754/ldbl-96/s_scalblnl.c: ...here.
 	Fix exponent for subnormal result.
 	* sysdeps/libm-ieee754/s_nexttowardl.c: Moved to ...
-	* math/s_nexttowardl.c: ...here.
+	* sysdeps/generic/s_nexttowardl.c: ...here.
 	* sysdeps/libm-i387/i686/s_fmaxf.S: Moved to ...
 	* sysdeps/i386/i686/fpu/s_fmaxf.S: ...here.
 	* sysdeps/libm-i387/s_isnanl.c: Moved to ...
