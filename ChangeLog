@@ -4,6 +4,7 @@
 	reallocation case.
 
 	* signal/sigsetops.c: Make sure __USE_EXTERN_INLINES is defined.
+	* argp/argp-xinl.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platform): Add missing
 	Ruffian entry back.
