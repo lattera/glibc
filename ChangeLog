@@ -1,5 +1,7 @@
 1998-05-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* io/ftwtest-sh: Prevent tests from being run by root.
+
 	* wcsmbs/wcsmbsload.c (extract_charset_name): Fix silly bugs in
 	last addition.  Patch by wkpark@chem.skku.ac.kr.
 

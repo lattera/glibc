@@ -11,6 +11,10 @@ objpfx=$1
 #   --depth	use the FTW_DEPTH flag
 testprogram=$2
 
+# We cannot test this as root.
+if test `id | sed "s/uid=\([0-9]*\).*/\1/"` = 0; then
+  exit 0
+fi
 
 # First create our scenario:
 tmp=`echo ${TMPDIR:-/tmp} | sed 's|\(.\)/*$|\1|'`
