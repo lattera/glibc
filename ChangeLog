@@ -6,6 +6,14 @@ Wed Jun 10 10:32:11 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	* sysdeps/m68k/elf/start.S: Pass new argument to
 	__libc_start_user. 
 
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h (SYSCALL_ERROR_LABEL): New
+	definition.
+	(PSEUDO, SYSCALL_ERROR_HANDLER): Use it instead of syscall_error.
+	* sysdeps/unix/sysv/linux/m68k/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/socket.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/syscall.S: Likewise.
+
 1998-06-09 18:16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/Makefile (libm-calls): Add w_exp10 and e_exp10.

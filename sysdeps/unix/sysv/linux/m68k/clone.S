@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    Contributed by Andreas Schwab (schwab@issan.informatik.uni-dortmund.de)
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,10 +32,10 @@ ENTRY (__clone)
 	movel	#-EINVAL, %d0
 	movel	4(%sp), %a0		/* no NULL function pointers */
 	tstl	%a0
-	jeq	syscall_error
+	jeq	SYSCALL_ERROR_LABEL
 	movel	8(%sp), %a1		/* no NULL stack pointers */
 	tstl	%a1
-	jeq	syscall_error
+	jeq	SYSCALL_ERROR_LABEL
 
 	/* Allocate space and copy the argument onto the new stack.  */
 	movel	16(%sp), -(%a1)
@@ -48,7 +48,7 @@ ENTRY (__clone)
 	exg	%d2, %a1		/* restore %d2 */
 
 	tstl	%d0
-	jmi	syscall_error
+	jmi	SYSCALL_ERROR_LABEL
 	jeq	thread_start
 
 	rts
