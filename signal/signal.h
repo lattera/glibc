@@ -111,6 +111,11 @@ extern int sigpause __P ((int __mask));
 typedef __sighandler_t sighandler_t;
 #endif
 
+/* 4.4 BSD uses the name `sig_t' for this.  */
+#ifdef	__USE_BSD
+typedef __sighandler_t sig_t;
+#endif
+
 #endif /* <signal.h> included.  */
 
 
