@@ -17,30 +17,20 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdeps/unix/sysdep.h>
+#include <sysdeps/unix/i386/sysdep.h>
 
 /* Get the symbols for system call interrupts.  */
 #include <machine/trap.h>
-
-#ifdef	__STDC__
-#define	ENTRY(name)							      \
-  .globl _##name;							      \
-  .align 4;								      \
-  _##name##:
-#else
-#define	ENTRY(name)							      \
-  .globl _/**/name;							      \
-  .align 4;								      \
-  _/**/name/**/:
-#endif
   
 /* Use the BSD versions of system calls, by setting the high 16 bits
    of the syscall number (see /usr/include/syscall.h).  */
-#define SYS_HANDLER SYS_bsd##0000
+#define SYS_HANDLER (SYS_bsd << 16)
 
 /* Dynix uses an interrupt interface to system calls.
    "int $T_SVCn" are syscall interfaces for 0-6 arg functions.
    (see /usr/include/machine/trap.h).  */
+
+#undef	DO_CALL
 
 #ifdef	__STDC__
 #define DO_CALL(syscall_name, args) 					      \
@@ -52,6 +42,7 @@ Cambridge, MA 02139, USA.  */
   int $T_SVC/**/args;
 #endif
 
+#undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   .globl syscall_error;							      \
@@ -81,7 +72,7 @@ Cambridge, MA 02139, USA.  */
   
 /* Dynix reverses %ecx and %edx relative to most i386 Unices. */
 
-#define	r0		%eax	/* Normal return-value register.  */
+#undef	r1
 #define	r1		%ecx	/* Secondary return-value register.  */
+#undef	scratch
 #define scratch 	%edx	/* Call-clobbered register for random use.  */
-#define MOVE(x,y)	movl x, y
