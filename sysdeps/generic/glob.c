@@ -896,7 +896,6 @@ glob (pattern, flags, errfunc, pglob)
 	    if (interrupt_state)
 	      {
 		globfree (&dirs);
-		globfree (&files);
 		return GLOB_ABORTED;
 	      }
 	  }
@@ -1007,7 +1006,10 @@ glob (pattern, flags, errfunc, pglob)
 		pglob->gl_pathv = new_pathv;
 	    }
 	  else
-	    return GLOB_NOMATCH;
+	    {
+	      globfree (&dirs);
+	      return GLOB_NOMATCH;
+	    }
 	}
 
       globfree (&dirs);

@@ -1,3 +1,9 @@
+2000-07-13  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/glob.c (glob): Fix memory leak.
+	[SHELL]: Remove reference to undefined variable `files'.
+	Fixes PR libc/1782.
+
 2000-07-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/Versions: Add libgcc frame handling
