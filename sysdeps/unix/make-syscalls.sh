@@ -202,6 +202,11 @@ shared-only-routines += $file
 	fi
 	echo "	 echo 'symbol_version($source, $base, $ver)'; \\"
 	;;
+      !*)
+	name=`echo $name | sed 's/.//'`
+	echo "	 echo 'strong_alias ($strong, $name)'; \\"
+	echo "	 echo 'libc_hidden_def ($name)'; \\"
+	;;
       *)
 	echo "	 echo 'weak_alias ($strong, $name)'; \\"
 	echo "	 echo 'libc_hidden_weak ($name)'; \\"

@@ -1,5 +1,10 @@
 2003-06-20  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/unix/make-syscalls.sh: Implement ! prefix for strong aliases.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (open, open64): New.
+
+2003-06-20  Richard Henderson  <rth@redhat.com>
+
 	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL1): Use __builtin_expect.
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_ST_INO_64_BIT)
 	Unset for alpha.

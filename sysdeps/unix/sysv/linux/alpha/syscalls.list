@@ -32,6 +32,8 @@ ftruncate	-	ftruncate	2	__ftruncate	ftruncate __ftruncate64 ftruncate64
 truncate	-	truncate	2	truncate	truncate64
 readahead	-	readahead	3	__readahead	readahead
 sendfile	-	sendfile	i:iipi	sendfile	sendfile64
+open		-	open		Ci:siv	__libc_open	__open open !__libc_open64 __open64 open64
+open64		open	-
 
 # proper socket implementations:
 accept		-	accept		Ci:iBN	__libc_accept	__accept accept
