@@ -1,13 +1,30 @@
+1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* debug/catchsegv.sh: Also produce output if cloned process died.
+
 1998-09-24  Paul Eggert  <eggert@twinsun.com>
 
-	* strftime.c (underlying_strftime):
+	* strftime.c (f_wkday): Remove duplicate definition.
+	(f_wkday, f_month, a_wkday, a_month, ampm): Define as macros when
+	!defined _NL_CURRENT && !HAVE_STRFTIME; this propagates the
+	1998-09-11 fix to this case.
+	(wkday_len, month_len): Remove these macros; they're no longer needed.
+
+1998-09-24  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (my_strftime): Don't store past the end of a
+	zero-sized buffer.
+
+1998-09-24  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (underlying_strftime):
 	Set the buffer to a nonzero value before calling
 	strftime, and check to see whether strftime has set the buffer to zero.
 	This lets us distinguish between an empty buffer and an error.
 
 1998-09-24  Paul Eggert  <eggert@shade.twinsun.com>
 
-	* strftime.c (INT_STRLEN_BOUND): Fix typo by changing 100 to 1000.
+	* time/strftime.c (INT_STRLEN_BOUND): Fix typo by changing 100 to 1000.
 	This fix is propagated from tzcode1998g.tar.gz.
 
 1998-09-24  Mark Kettenis  <kettenis@phys.uva.nl>

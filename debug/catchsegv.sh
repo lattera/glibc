@@ -51,6 +51,8 @@ Written by Ulrich Drepper.'
 fi
 
 segv_output=`basename "$prog"`.segv.$$
+# Make sure this output file does not exist.
+rm -f "$segv_output"
 
 # Redirect stderr to avoid termination message from shell.
 (exec 3>&2 2>/dev/null
@@ -60,8 +62,10 @@ SEGFAULT_OUTPUT_NAME=$segv_output \
 "$prog" ${1+"$@"} 2>&3 3>&-)
 exval=$?
 
-# Check for signal termination.
-if test $exval -gt 128 && test -f "$segv_output"; then
+# Check for output.  Even if the program terminated correctly it might
+# be that a inor process (clone) failed.  Therefore we do not check the
+# exit code.
+if test -f "$segv_output"; then
   # The program caught a signal.  The output is in the file with the
   # name we have in SEGFAULT_OUTPUT_NAME.  In the output the names of
   # functions in shared objects are available, but names in the static
