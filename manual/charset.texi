@@ -1015,7 +1015,7 @@ this is not a strict guarantee.  Therefore simply NUL terminating a
 piece of a running text is not always an adequate solution and therefore
 never should be used in generally used code.
 
-The generic conversion interface (@xref{Generic Charset Conversion})
+The generic conversion interface (@pxref{Generic Charset Conversion})
 does not have this limitation (it simply works on buffers, not
 strings), and the GNU C library contains a set of functions which take
 additional parameters specifying the maximal number of bytes which are
