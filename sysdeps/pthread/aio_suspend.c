@@ -199,6 +199,8 @@ aio_suspend (list, nent, timeout)
 	 form expected from `aio_suspend'.  */
       if (result == ETIMEDOUT)
 	__set_errno (EAGAIN);
+      else if (result == EINTR)
+	__set_errno (EINTR);
 
       result = -1;
     }

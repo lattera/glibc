@@ -1,3 +1,8 @@
+2003-06-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Set errno to EINTR
+	if this is what pthread_cond_wait returned.
+
 2003-06-20  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/make-syscalls.sh: Implement ! prefix for strong aliases.
