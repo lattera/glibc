@@ -31,7 +31,6 @@ extern char *_strerror_internal __P ((int, char *, size_t));
 struct catch
   {
     char *errstring;		/* Error detail filled in here.  */
-    const char *objname;
     jmp_buf env;		/* longjmp here on error.  */
   };
 
@@ -59,11 +58,18 @@ _dl_signal_error (int errcode,
       /* We are inside _dl_catch_error.  Return to it.  We have to
 	 duplicate the error string since it might be allocated on the
 	 stack.  */
-      size_t len = strlen (errstring) + 1;
-      catch->errstring = malloc (len);
+      size_t objname_len = objname ? strlen (objname) + 2 : 0;
+      size_t errstring_len = strlen (errstring) + 1;
+      catch->errstring = malloc (objname_len + errstring_len);
       if (catch->errstring != NULL)
-	memcpy (catch->errstring, errstring, len);
-      catch->objname = objname;
+	{
+	  if (objname_len > 0)
+	    {
+	      memcpy (catch->errstring, objname, objname_len - 2);
+	      memcpy (catch->errstring + objname_len - 2, ": ", 2);
+	    }
+	  memcpy (catch->errstring + objname_len, errstring, errstring_len);
+	}
       longjmp (catch->env, errcode ?: -1);
     }
   else if (receiver)
@@ -89,7 +95,6 @@ _dl_signal_error (int errcode,
 
 int
 _dl_catch_error (char **errstring,
-		 const char **objname,
 		 void (*operate) (void *),
 		 void *args)
 {
@@ -101,7 +106,6 @@ _dl_catch_error (char **errstring,
   /* Some systems (e.g., SPARC) handle constructors to local variables
      inefficient.  So we initialize `c' by hand.  */
   c.errstring = NULL;
-  c.objname   = NULL;
 
   old = catch;
   errcode = setjmp (c.env);
@@ -111,14 +115,12 @@ _dl_catch_error (char **errstring,
       (*operate) (args);
       catch = old;
       *errstring = NULL;
-      *objname = NULL;
       return 0;
     }
 
   /* We get here only if we longjmp'd out of OPERATE.  */
   catch = old;
   *errstring = c.errstring;
-  *objname = c.objname;
   return errcode == -1 ? 0 : errcode;
 }
 

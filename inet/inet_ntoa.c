@@ -1,5 +1,5 @@
 /* Convert Inet number to ASCII representation.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -88,7 +88,7 @@ init (void)
 }
 
 
-/* free the thread specific data, this is done if a thread terminates.  */
+/* Free the thread specific data, this is done if a thread terminates.  */
 static void
 free_key_mem (void *mem)
 {

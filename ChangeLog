@@ -1,3 +1,45 @@
+1998-03-12 13:11  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: More tests.
+	(main): Set up arena for pathname expansion tests (in a temporary
+	directory).
+	(testit): Don't check word count or word vector if return value is
+	non-zero.
+
+	* posix/wordexp.c (exec_comm): Always chop off terminating
+	linefeed (just like bash does).
+	(parse_param): Change lots of occurrences of "if (!*env)" to "if
+	(!env || !*env)".
+	(parse_param): For assignment inside parameter expansion, use all
+	expanded words in assignment rather than just the first.
+	(parse_param): Corrected return value for parameter expansion of
+	an unset variable when WRDE_UNDEF is in effect.
+	(parse_dollars): Don't field-split if quoted.
+	(wordexp): Opening brace character isn't allowed unquoted.
+
+1998-03-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlerror.c: Fix concurrency problems with error string and
+	number.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Print debug info when
+	filter/auxiliary are being loaded.
+
+1998-03-12 14:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dlerror.c (last_object_name): Removed.
+	(dlerror): Don't use last_object_name.
+	(_dl_error_run): Omit second argument to _dl_catch_error.
+	* elf/dl-error.c (struct catch): Remove objname member.
+	(_dl_signal_error): Construct string including objname when given.
+	(_dl_catch_error): Remove objname handling.
+	* elf/link.h (_dl_catch_error): Fix prototype and comment.
+	* elf/rtld.c (dl_main): Call _dl_catch_error correctly.
+	* elf/dl-deps.c (_dl_map_objet_deps): Likewise.
+	* nss/nsswitch.c (nss_dlerror_run): Likewise.
+	* iconv/gconv_dl.c (dlerror_run): Likewise.
+	[Corrects PR libc/501].
+
 1998-03-12  Matthias Urlichs <smurf@noris.de>
 
 	* nscd/nscd.c: Ignore SIGPIPE.

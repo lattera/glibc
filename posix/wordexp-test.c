@@ -16,6 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,10 +37,12 @@ struct test_case_struct
   const char *wordv[10];
 } test_case[] =
   {
-    /* Simple word-splitting */
+    /* Simple field-splitting */
     { 0, NULL, "one", 0, 1, { "one", } },
     { 0, NULL, "one two", 0, 2, { "one", "two", } },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", } },
+    { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", } },
+    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", } },
 
     /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", } },
@@ -50,15 +56,14 @@ struct test_case_struct
     /* Simple command substitution */
     { 0, NULL, "$(echo hello)", 0, 1, { "hello", } },
     { 0, NULL, "$( (echo hello) )", 0, 1, { "hello", } },
+    { 0, NULL, "$((echo hello);(echo there))", 0, 2, { "hello", "there", } },
+    { 0, NULL, "`echo one two`", 0, 2, { "one", "two", } },
 
     /* Simple arithmetic expansion */
     { 0, NULL, "$((1 + 1))", 0, 1, { "2", } },
     { 0, NULL, "$((2-3))", 0, 1, { "-1", } },
     { 0, NULL, "$((-1))", 0, 1, { "-1", } },
-
-    /* Field splitting */
-    { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", } },
-    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", } },
+    { 0, NULL, "$[50+20]", 0, 1, { "70", } },
 
     /* Advanced parameter expansion */
     { 0, NULL, "${var:-bar}", 0, 1, { "bar", } },
@@ -84,6 +89,50 @@ struct test_case_struct
     { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", } },
     { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", } },
 
+    /* Pathname expansion */
+    { 0, NULL, "???", 0, 2, { "one", "two", } },
+    { 0, NULL, "[ot]??", 0, 2, { "one", "two", } },
+    { 0, NULL, "t*", 0, 2, { "three", "two", } },
+    { 0, NULL, "\"t\"*", 0, 2, { "three", "two", } },
+
+    /* Nested constructs */
+    { 0, "one two", "$var", 0, 2, { "one", "two", } },
+    { 0, "one two three", "$var", 0, 3, { "one", "two", "three", } },
+    { 0, " \tfoo\t\tbar ", "$var", 0, 2, { "foo", "bar", } },
+    { 0, "  red  , white blue", "$var", 0, 3, { "red", "white", "blue", } },
+    { 0, "  red  , white blue", "\"$var\"", 0, 1, { "  red  , white blue", } },
+    { 0, NULL, "\"$(echo hello there)\"", 0, 1, { "hello there", } },
+    { 0, NULL, "\"$(echo \"hello there\")\"", 0, 1, { "hello there", } },
+    { 0, NULL, "${var=one two} \"$var\"", 0, 3, { "one", "two", "one two", } },
+    { 0, "1", "$(( $(echo 3)+$var ))", 0, 1, { "4", } },
+    { 0, NULL, "\"$(echo \"*\")\"", 0, 1, { "*", } },
+
+    /* Other things that should succeed */
+    { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", } },
+    { 0, "???", "$var", 0, 1, { "???", } },
+    { 0, NULL, "$var", 0, 0, { NULL, } },
+    { 0, NULL, "\"\\n\"", 0, 1, { "\\n", } },
+    { 0, NULL, "", 0, 0, { NULL, } },
+
+    /* Things that should fail */
+    { WRDE_BADCHAR, NULL, "new\nline", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "pipe|symbol", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "&ampersand", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "semi;colon", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "<greater", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "less>", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "(open-paren", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "close-paren)", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "{open-brace", 0, 0, { NULL, } },
+    { WRDE_BADCHAR, NULL, "close-brace}", 0, 0, { NULL, } },
+    { WRDE_CMDSUB, NULL, "$(ls)", WRDE_NOCMD, 0, { NULL, } },
+    { WRDE_BADVAL, NULL, "$var", WRDE_UNDEF, 0, { NULL, } },
+    { WRDE_SYNTAX, NULL, "$[50+20))", 0, 0, { NULL, } },
+    { WRDE_SYNTAX, NULL, "${%%noparam}", 0, 0, { NULL, } },
+    { WRDE_SYNTAX, NULL, "${missing-brace", 0, 0, { NULL, } },
+    { WRDE_SYNTAX, NULL, "$((2+))", 0, 0, { NULL, } },
+    { WRDE_SYNTAX, NULL, "`", 0, 0, { NULL, } },
+
     { -1, NULL, NULL, 0, 0, { NULL, } },
   };
 
@@ -103,9 +152,11 @@ command_line_test (const char *words)
 int
 main (int argc, char *argv[])
 {
+  char tmpdir[32];
   struct passwd *pw;
   int test;
   int fail = 0;
+  int fd;
 
   if (argc > 1)
     {
@@ -114,6 +165,16 @@ main (int argc, char *argv[])
     }
 
   setenv ("IFS", IFS, 1);
+
+  /* Set up arena for pathname expansion */
+  tmpnam (tmpdir);
+  if (mkdir (tmpdir, S_IRWXU) ||
+      chdir (tmpdir) ||
+      (fd = creat ("one", S_IRWXU)) == -1 || close (fd) ||
+      (fd = creat ("two", S_IRWXU)) == -1 || close (fd) ||
+      (fd = creat ("three", S_IRWXU)) == -1 || close (fd))
+    return -1;
+
   for (test = 0; test_case[test].retval != -1; test++)
     if (testit (&test_case[test]))
       ++fail;
@@ -155,7 +216,7 @@ testit (struct test_case_struct *tc)
   printf ("Test %d: ", ++test);
   retval = wordexp (tc->words, &we, tc->flags);
 
-  if (retval != tc->retval || we.we_wordc != tc->wordc)
+  if (retval != tc->retval || (retval != 0 && we.we_wordc != tc->wordc))
     bzzzt = 1;
   else
     for (i = 0; i < we.we_wordc; ++i)

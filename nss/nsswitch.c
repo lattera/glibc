@@ -252,10 +252,9 @@ static int
 nss_dlerror_run (void (*operate) (void *), void *args)
 {
   char *last_errstring = NULL;
-  const char *last_object_name = NULL;
   int result;
 
-  (void) _dl_catch_error (&last_errstring, &last_object_name, operate, args);
+  (void) _dl_catch_error (&last_errstring, operate, args);
 
   result = last_errstring != NULL;
   if (result)

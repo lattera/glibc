@@ -194,7 +194,6 @@ _dl_map_object_deps (struct link_map *map,
 	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
 		char *errstring;
-		const char *objname;
 		struct list *newp;
 
 		if (d->d_tag == DT_AUXILIARY)
@@ -202,9 +201,18 @@ _dl_map_object_deps (struct link_map *map,
 		    /* Store the tag in the argument structure.  */
 		    args.d = d;
 
+		    /* Say that we are about to load an auxiliary library.  */
+		    if (_dl_debug_libs)
+		      _dl_debug_message ("load auxiliary object=",
+					 strtab + d->d_un.d_val,
+					 " requested by file=",
+					 l->l_name[0]
+					 ? l->l_name : _dl_argv[0],
+					 "\n", NULL);
+
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    if (_dl_catch_error (&errstring, &objname, openaux, &args))
+		    if (_dl_catch_error (&errstring, openaux, &args))
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
@@ -215,11 +223,22 @@ _dl_map_object_deps (struct link_map *map,
 		      }
 		  }
 		else
-		  /* For filter objects the dependency must be available.  */
-		  args.aux = _dl_map_object (l, strtab + d->d_un.d_val, 0,
-					     (l->l_type == lt_executable
-					      ? lt_library : l->l_type),
-					     trace_mode);
+		  {
+		    /* Say that we are about to load an auxiliary library.  */
+		    if (_dl_debug_libs)
+		      _dl_debug_message ("load filtered object=",
+					 strtab + d->d_un.d_val,
+					 " requested by file=",
+					 l->l_name[0]
+					 ? l->l_name : _dl_argv[0],
+					 "\n", NULL);
+
+		    /* For filter objects the dependency must be available.  */
+		    args.aux = _dl_map_object (l, strtab + d->d_un.d_val, 0,
+					       (l->l_type == lt_executable
+						? lt_library : l->l_type),
+					       trace_mode);
+		  }
 
 		/* The auxiliary object is actually available.
 		   Incorporate the map in all the lists.  */

@@ -380,11 +380,10 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (mode == verify)
 	{
 	  char *err_str = NULL;
-	  const char *obj_name __attribute__ ((unused));
 	  struct map_args args;
 
 	  args.str = _dl_argv[0];
-	  (void) _dl_catch_error (&err_str, &obj_name, map_doit, &args);
+	  (void) _dl_catch_error (&err_str, map_doit, &args);
 	  main_map = args.main_map;
 	  if (err_str != NULL)
 	    {

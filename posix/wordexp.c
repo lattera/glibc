@@ -831,6 +831,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	}
 
       close (fildes[0]);
+
+      /* bash chops off a terminating linefeed, which seems sensible */
+      if ((*word)[*word_length - 1] == '\n')
+	(*word)[--*word_length] = '\0';
+
       return 0;
     }
   else
@@ -1100,7 +1105,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  break;
 
 	case '%':
-	  if (!*env)
+	  if (!env || !*env)
 	    goto syntax;
 
 	  /* Separating variable name from suffix pattern? */
@@ -1124,7 +1129,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  break;
 
 	case ':':
-	  if (!*env)
+	  if (!env || !*env)
 	    goto syntax;
 
 	  if (action != '\0' || remove != RP_NONE)
@@ -1150,7 +1155,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	case '=':
 	case '?':
 	case '+':
-	  if (!*env)
+	  if (!env || !*env)
 	    goto syntax;
 
 	  if (substitute_length)
@@ -1252,14 +1257,16 @@ envsubst:
       if (!quoted || *env == '*')
 	{
 	  /* Build up value parameter by parameter (copy them) */
-	  for (p = 1; __libc_argv[p]; p++)
+	  for (p = 1; __libc_argv[p]; ++p)
 	    {
-	      char * old_pointer = value;
+	      char *old_pointer = value;
+	      size_t argv_len = strlen (__libc_argv[p]);
+	      size_t old_plist_len = plist_len;
 
 	      if (value)
 		value[plist_len - 1] = 0;
 
-	      plist_len += 1 + strlen (__libc_argv[p]);
+	      plist_len += 1 + argv_len;
 
 	      /* First realloc will act as malloc because value is
 	       * initialised to NULL. */
@@ -1270,7 +1277,7 @@ envsubst:
 		  return WRDE_NOSPACE;
 		}
 
-	      strcat (value, __libc_argv[p]);
+	      memcpy (&value[old_plist_len - 1], __libc_argv[p], argv_len + 1);
 	      if (__libc_argv[p + 1])
 		{
 		  value[plist_len - 1] = '\0';
@@ -1497,16 +1504,38 @@ envsubst:
 		  == WRDE_NOSPACE)
 		break;
 
+	    if (i < we.we_wordc)
+	      {
+		/* Ran out of space */
+		wordfree (&we);
+		goto no_space;
+	      }
+
 	    if (action == '=')
-	      /* Also assign */
-	      setenv (env, we.we_wordv[0], 1); /* need to strdup? */
+	      {
+		char *words;
+		char *cp;
+		size_t words_size = 0;
+
+		for (i = 0; i < we.we_wordc; i++)
+		  words_size += strlen (we.we_wordv[i]) + 1; /* for <space> */
+		words_size++;
+
+		cp = words = __alloca (words_size);
+		*words = 0;
+		for (i = 0; i < we.we_wordc - 1; i++)
+		  {
+		    cp = __stpcpy (cp, we.we_wordv[i]);
+		    *cp++ = ' ';
+		  }
+
+		__stpcpy (cp, we.we_wordv[i]);
+
+		/* Also assign */
+		setenv (env, words, 1);
+	      }
 
 	    wordfree (&we);
-
-	    if (i < we.we_wordc)
-	      /* Ran out of space */
-	      goto no_space;
-
 	    return 0;
 	  }
 
@@ -1550,7 +1579,7 @@ envsubst:
     {
       /* Variable not defined */
       if (flags & WRDE_UNDEF)
-	return WRDE_SYNTAX;
+	return WRDE_BADVAL;
 
       return 0;
     }
@@ -1694,7 +1723,7 @@ parse_dollars (char **word, size_t *word_length, size_t *max_length,
 
       (*offset) += 2;
       return parse_comm (word, word_length, max_length, words, offset, flags,
-			 pwordexp, ifs, ifs_white);
+			 quoted? NULL : pwordexp, ifs, ifs_white);
 
     case '[':
       (*offset) += 2;
@@ -1946,6 +1975,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
       case '>':
       case '(':
       case ')':
+	case '{':
       case '}':
 	/* Fail */
 	wordfree (pwordexp);
