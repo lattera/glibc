@@ -320,8 +320,8 @@ void
 internal_function
 _dl_setup_hash (struct link_map *map)
 {
-  ElfW(Symndx) *hash;
-  ElfW(Symndx) nchain;
+  Elf_Symndx *hash;
+  Elf_Symndx nchain;
 
   if (!map->l_info[DT_HASH])
     return;

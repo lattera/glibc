@@ -56,10 +56,6 @@ typedef uint64_t Elf64_Off;
 typedef uint16_t Elf32_Section;
 typedef uint16_t Elf64_Section;
 
-/* Type of symbol indices.  */
-typedef uint32_t Elf32_Symndx;
-typedef uint64_t Elf64_Symndx;
-
 
 /* The ELF file header.  This appears at the start of every ELF file.  */
 

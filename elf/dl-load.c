@@ -1416,7 +1416,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	     are only interested in the list of libraries this isn't
 	     so severe.  Fake an entry with all the information we
 	     have.  */
-	  static const ElfW(Symndx) dummy_bucket = STN_UNDEF;
+	  static const Elf_Symndx dummy_bucket = STN_UNDEF;
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL

@@ -10,5 +10,5 @@
 
 #define __ELF_NATIVE_CLASS __WORDSIZE
 
-/* The entries in the .hash table always have a size of 32 bits.  */
-typedef uint32_t Elf_Symndx;
+/* Linux/Alpha is exceptional as it has .hash section with 64 bit entries.  */
+typedef uint64_t Elf_Symndx;

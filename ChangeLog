@@ -1,3 +1,14 @@
+1999-07-25  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* elf/link.h (struct link_map): Use Elf_Symndx instead of ElfXX_Symndx.
+	* elf/dl-lookup.c (_dl_setup_hash): Likewise.
+	* elf/dl-load.c (_dl_map_object): Likewise.
+	* elf/do-lookup.h (do_lookup*): Likewise.
+	* sysdeps/generic/bits/elfclass.h: Define Elf_Symndx as uint32_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/elfclass.h: Define Elf_symndx
+	as uint64_t.
+	* elf/elf.h: Remove Elf32_Symndx and Elf64_Symndx.
+
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sysv4/setsid.c: Correct types.

@@ -43,7 +43,7 @@ FCT (const char *undef_name, struct link_map *undef_map,
       const ElfW(Sym) *symtab;
       const char *strtab;
       const ElfW(Half) *verstab;
-      ElfW(Symndx) symidx;
+      Elf_Symndx symidx;
       const ElfW(Sym) *sym;
 #if ! VERSIONED
       int num_versions = 0;
