@@ -1,3 +1,12 @@
+2000-01-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* localedata/Makefile (install-locales): Create locale directory
+	if it does not exist.
+
+	* locale/programs/charmap.c (charmap_read): Call lr_open here and
+	not in parse_charmap.  Try also the directories on the I18NPATH.
+	(parse_charmap): Change accordingly.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Distribute oldgetrlimit64.c

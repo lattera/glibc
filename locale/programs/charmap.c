@@ -47,7 +47,7 @@
 extern void *xmalloc (size_t __n);
 
 /* Prototypes for local functions.  */
-static struct charmap_t *parse_charmap (const char *filename);
+static struct charmap_t *parse_charmap (struct linereader *cmfile);
 static void new_width (struct linereader *cmfile, struct charmap_t *result,
 		       const char *from, const char *to,
 		       unsigned long int width);
@@ -59,26 +59,52 @@ static void charmap_new_char (struct linereader *lr, struct charmap_t *cm,
 struct charmap_t *
 charmap_read (const char *filename)
 {
-  const char *pathnfile;
   struct charmap_t *result = NULL;
 
   if (filename != NULL)
     {
-      if (euidaccess (filename, R_OK) >= 0)
-	pathnfile = filename;
-      else if (filename[0] != '/')
-	{
-	  char *cp = xmalloc (strlen (filename) + sizeof CHARMAP_PATH + 1);
-	  stpcpy (stpcpy (stpcpy (cp, CHARMAP_PATH), "/"), filename);
+      struct linereader *cmfile;
 
-	  pathnfile = (const char *) cp;
+      /* First try the name as found in the parameter.  */
+      cmfile = lr_open (filename, charmap_hash);
+      if (cmfile == NULL)
+	{
+	  /* No successful.  So start looking through the directories
+	     in the I18NPATH if this is a simple name.  */
+	  if (strchr (filename, '/') == NULL)
+	    {
+	      char *i18npath = getenv ("I18NPATH");
+	      if (i18npath != NULL && *i18npath != '\0')
+		{
+		  char path[strlen (filename) + 1 + strlen (i18npath)
+			   + sizeof ("/charmaps/") - 1];
+		  char *next;
+		  i18npath = strdupa (i18npath);
+
+
+		  while (cmfile == NULL
+			 && (next = strsep (&i18npath, ":")) != NULL)
+		    {
+		      stpcpy (stpcpy (stpcpy (path, next), "/charmaps/"),
+			      filename);
+
+		      cmfile = lr_open (path, charmap_hash);
+
+		      if (cmfile == NULL)
+			{
+			  /* Try without the "/charmaps" part.  */
+			  stpcpy (stpcpy (path, next), filename);
+
+			  cmfile = lr_open (path, charmap_hash);
+			}
+		    }
+		}
+	    }
 	}
-      else
-	pathnfile = NULL;
 
-      if (pathnfile != NULL)
+      if (cmfile != NULL)
 	{
-	  result = parse_charmap (pathnfile);
+	  result = parse_charmap (cmfile);
 
 	  if (result == NULL && !be_quiet)
 	    error (0, errno, _("character map file `%s' not found"), filename);
@@ -145,7 +171,11 @@ charmap_read (const char *filename)
 
 		    if (name != NULL)
 		      {
-			result = parse_charmap (buf);
+			struct linereader *cmfile;
+
+			cmfile = lr_open (buf, charmap_hash);
+			result = (cmfile == NULL
+				  ? NULL : parse_charmap (cmfile));
 
 			free (buf);
 
@@ -163,9 +193,11 @@ charmap_read (const char *filename)
 
   if (result == NULL)
     {
-      pathnfile = CHARMAP_PATH "/" DEFAULT_CHARMAP;
+      struct linereader *cmfile;
 
-      result = parse_charmap (pathnfile);
+      cmfile = lr_open (CHARMAP_PATH "/" DEFAULT_CHARMAP, charmap_hash);
+
+      result = cmfile == NULL ? NULL : parse_charmap (cmfile);
 
       if (result == NULL)
 	error (4, errno, _("default character map file `%s' not found"),
@@ -177,9 +209,8 @@ charmap_read (const char *filename)
 
 
 static struct charmap_t *
-parse_charmap (const char *filename)
+parse_charmap (struct linereader *cmfile)
 {
-  struct linereader *cmfile;
   struct charmap_t *result;
   int state;
   enum token_t expected_tok = tok_error;
@@ -187,26 +218,6 @@ parse_charmap (const char *filename)
   char *from_name = NULL;
   char *to_name = NULL;
   enum token_t ellipsis = 0;
-
-  /* Determine path.  */
-  cmfile = lr_open (filename, charmap_hash);
-  if (cmfile == NULL)
-    {
-      if (strchr (filename, '/') == NULL)
-	{
-	  /* Look in the systems charmap directory.  */
-	  char *buf = xmalloc (strlen (filename) + 1 + sizeof (CHARMAP_PATH));
-
-	  stpcpy (stpcpy (stpcpy (buf, CHARMAP_PATH), "/"), filename);
-	  cmfile = lr_open (buf, charmap_hash);
-
-	  if (cmfile == NULL)
-	    free (buf);
-	}
-
-      if (cmfile == NULL)
-	return NULL;
-    }
 
   /* We don't want symbolic names in string to be translated.  */
   cmfile->translate_strings = 0;

@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -90,6 +90,7 @@ endif
 # Sometimes the whole collection of locale files should be installed.
 LOCALEDEF=I18NPATH=. $(common-objpfx)elf/ld.so --library-path $(rpath-link) $(common-objpfx)locale/localedef
 install-locales:
+	$(..)./scripts/mkinstalldirs $(inst_localedir)
 	while read locale charset; do \
 	   case $$locale in \#*) continue;; esac; \
 	   $(LOCALEDEF) -i locales/`echo $$locale | sed 's/\([^.]*\).*/\1/'` \
