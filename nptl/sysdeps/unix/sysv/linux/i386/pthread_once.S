@@ -109,6 +109,7 @@ __pthread_once:
 	movl	$0, 4(%esp)
 	movl	%eax, (%esp)
 	call	__sigsetjmp@PLT
+	testl	%eax, %eax
 	jne	7f
 
 	leal	8(%esp), %eax
