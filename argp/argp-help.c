@@ -73,6 +73,10 @@ char *alloca ();
 #include "argp.h"
 #include "argp-fmtstream.h"
 #include "argp-namefrob.h"
+
+#ifndef SIZE_MAX
+# define SIZE_MAX ((size_t) -1)
+#endif 
 
 /* User-selectable (using an environment variable) formatting parameters.
 
@@ -441,7 +445,8 @@ make_hol (const struct argp *argp, struct hol_cluster *cluster)
       hol->entries = malloc (sizeof (struct hol_entry) * hol->num_entries);
       hol->short_options = malloc (num_short_options + 1);
 
-      assert (hol->entries && hol->short_options);
+      assert (hol->entries && hol->short_options
+	      && hol->num_entries <= SIZE_MAX / sizeof (struct hol_entry));
 
       /* Fill in the entries.  */
       so = hol->short_options;
@@ -833,6 +838,9 @@ hol_append (struct hol *hol, struct hol *more)
 	  unsigned hol_so_len = strlen (hol->short_options);
 	  char *short_options =
 	    malloc (hol_so_len + strlen (more->short_options) + 1);
+
+	  assert (entries && short_options
+		  && num_entries <= SIZE_MAX / sizeof (struct hol_entry));
 
 	  __mempcpy (__mempcpy (entries, hol->entries,
 				hol->num_entries * sizeof (struct hol_entry)),
