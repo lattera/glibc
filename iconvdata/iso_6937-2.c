@@ -1,5 +1,5 @@
 /* Generic conversion to and from ISO 6937-2.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -420,33 +420,15 @@ static const char from_ucs4[][2] =
 	    || __builtin_expect (ch2 >= 0x80, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	ch = to_ucs4_comb[ch - 0xc1][ch2 - 0x20];			      \
 									      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
 									      \
 	inptr += 2;							      \
@@ -455,19 +437,10 @@ static const char from_ucs4[][2] =
       {									      \
 	ch = to_ucs4[ch];						      \
 									      \
-	if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
+	if (__builtin_expect (ch == 0, 0) && *inptr != '\0')		      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	++inptr;							      \
       }									      \
@@ -570,13 +543,13 @@ static const char from_ucs4[][2] =
 	  }								      \
 	if (cp == NULL)							      \
 	  {								      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
-    else if (__builtin_expect (from_ucs4[ch][0], '\1') == '\0' && ch != 0)    \
+    else if (__builtin_expect (from_ucs4[ch][0] == '\0', 0) && ch != 0)	      \
       {									      \
 	/* Illegal characters.  */					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else								      \
       cp = from_ucs4[ch];						      \

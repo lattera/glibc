@@ -16836,23 +16836,14 @@ static struct
 		(ch = big5hkscs_to_ucs[idx]) == 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	inptr += 2;							      \
       }									      \
     else if (__builtin_expect (ch == 0xff, 0))				      \
       {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       ++inptr;								      \
@@ -16899,7 +16890,7 @@ static struct
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 	    /* Illegal character.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 	else								      \
 	  {								      \

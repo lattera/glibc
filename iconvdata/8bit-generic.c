@@ -1,5 +1,5 @@
 /* Generic conversion to and from 8bit charsets.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -36,16 +36,10 @@
   {									      \
     uint32_t ch = to_ucs4[*inptr];					      \
 									      \
-    if (HAS_HOLES && __builtin_expect (ch, L'\1') == L'\0' && *inptr != '\0') \
+    if (HAS_HOLES && __builtin_expect (ch == L'\0', 0) && *inptr != '\0')     \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++*irreversible;						      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -70,7 +64,7 @@
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
 	/* This is an illegal character.  */				      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     *outptr++ = from_ucs4[ch];						      \

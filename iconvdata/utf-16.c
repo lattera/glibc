@@ -1,5 +1,5 @@
 /* Conversion module for UTF-16.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -205,11 +205,9 @@ gconv_end (struct __gconv_step *data)
 	   We must catch this.  If we let surrogates pass through,	      \
 	   attackers could make a security hole exploit by		      \
 	   synthesizing any desired plane 1-16 character.  */		      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	  break;							      \
 	inptr += 4;							      \
 	++*irreversible;						      \
 	continue;							      \
@@ -221,7 +219,7 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c >= 0x110000, 0))			      \
 	      {								      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
@@ -245,7 +243,7 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    if (__builtin_expect (c >= 0x110000, 0))			      \
 	      {								      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 									      \
 	    /* Generate a surrogate character.  */			      \
@@ -311,15 +309,8 @@ gconv_end (struct __gconv_step *data)
 		|| __builtin_expect (u2 == 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    inptr -= 2;						      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++*irreversible;					      \
-		continue;						      \
+		inptr -= 2;						      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 	      }								      \
 									      \
 	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \
@@ -354,15 +345,8 @@ gconv_end (struct __gconv_step *data)
 		|| __builtin_expect (u2 >= 0xdfff, 0))			      \
 	      {								      \
 		/* This is no valid second word for a surrogate.  */	      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    inptr -= 2;						      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++*irreversible;					      \
-		continue;						      \
+		inptr -= 2;						      \
+		STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 	      }								      \
 									      \
 	    put32 (outptr, ((u1 - 0xd7c0) << 10) + (u2 - 0xdc00));	      \

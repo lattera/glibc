@@ -1,5 +1,5 @@
 /* Conversion module for UTF-7.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -193,14 +193,7 @@ base64 (unsigned int i)
 	else								      \
 	  {								      \
 	    /* The input is invalid.  */				      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
     else								      \
@@ -228,16 +221,7 @@ base64 (unsigned int i)
 	    if (__builtin_expect (statep->__value.__wch != 0, 0)	      \
 		|| __builtin_expect ((statep->__count >> 3) <= 26, 0))	      \
 	      {								      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		statep->__count = 0;					      \
-		continue;						      \
+		STANDARD_FROM_LOOP_ERR_HANDLER ((statep->__count = 0, 1));    \
 	      }								      \
 									      \
 	    if (ch == '-')						      \
@@ -279,16 +263,7 @@ base64 (unsigned int i)
 									      \
 		if (! __builtin_expect (wc2 >= 0xdc00 && wc2 < 0xe000, 1))    \
 		  {							      \
-		    if (! ignore_errors_p ())				      \
-		      {							      \
-			result = __GCONV_ILLEGAL_INPUT;			      \
-			break;						      \
-		      }							      \
-									      \
-		    ++inptr;						      \
-		    ++*irreversible;					      \
-		    statep->__count = 0;				      \
-		    continue;						      \
+		    STANDARD_FROM_LOOP_ERR_HANDLER ((statep->__count = 0, 1));\
 		  }							      \
 	      }								      \
 									      \
@@ -364,7 +339,7 @@ base64 (unsigned int i)
 	    else if (ch < 0x110000)					      \
 	      count = 6;						      \
 	    else							      \
-	      STANDARD_ERR_HANDLER (4);					      \
+	      STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 									      \
 	    if (__builtin_expect (outptr + count > outend, 0))		      \
 	      {								      \
@@ -429,7 +404,7 @@ base64 (unsigned int i)
 	    else if (ch < 0x110000)					      \
 	      count = ((statep->__count & 0x18) >= 0x18 ? 6 : 5);	      \
 	    else							      \
-	      STANDARD_ERR_HANDLER (4);					      \
+	      STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 									      \
 	    if (__builtin_expect (outptr + count > outend, 0))		      \
 	      {								      \

@@ -1,5 +1,5 @@
 /* Mapping tables for Big5 handling.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -8420,33 +8420,17 @@ static const char from_ucs4_tab15[][2] =
 	else								      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	/* Get the value from the table.  */				      \
 	ch = big5_to_ucs[idx];						      \
 									      \
 	/* Is this character defined?  */				      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
 									      \
 	inptr += 2;							      \
@@ -8456,15 +8440,7 @@ static const char from_ucs4_tab15[][2] =
     else								      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -8575,7 +8551,7 @@ static const char from_ucs4_tab15[][2] =
     if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else								      \
       {									      \

@@ -1,5 +1,5 @@
 /* Conversion module for Unicode
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -155,7 +155,7 @@ gconv_end (struct __gconv_step *data)
     if (__builtin_expect (c >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (c, 4);					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
       {									      \
@@ -165,11 +165,9 @@ gconv_end (struct __gconv_step *data)
 	   surrogates pass through, attackers could make a security	      \
 	   hole exploit by synthesizing any desired plane 1-16		      \
 	   character.  */						      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	  break;							      \
 	inptr += 4;							      \
 	++*irreversible;						      \
 	continue;							      \
@@ -203,14 +201,7 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
 	   them.  (Catching this here is not security relevant.)  */	      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	inptr += 2;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
       }									      \
 									      \
     put32 (outptr, u1);							      \

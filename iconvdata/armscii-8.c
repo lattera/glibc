@@ -65,13 +65,7 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
     else								      \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++*irreversible;						      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
 									      \
     ++inptr;								      \
@@ -132,7 +126,7 @@ static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] =
 									      \
 	/* We have an illegal character.  */				      \
       err:								      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     ++outptr;								      \
     inptr += 4;								      \

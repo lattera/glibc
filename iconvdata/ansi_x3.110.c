@@ -1,5 +1,5 @@
 /* Generic conversion to and from ANSI_X3.110-1983.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -421,14 +421,7 @@ static const char from_ucs4[][2] =
 	    || __builtin_expect (ch2 >= 0x80, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++*irreversible;						      \
-	    incr = 1;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -442,14 +435,10 @@ static const char from_ucs4[][2] =
 	incr = 1;							      \
       }									      \
 									      \
-    if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
+    if (__builtin_expect (ch == 0, 0) && *inptr != '\0')		      \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (incr);				      \
       }									      \
     else								      \
       {									      \
@@ -496,7 +485,7 @@ static const char from_ucs4[][2] =
 	    if (tmp[0] == '\0')						      \
 	      {								      \
 		/* Illegal characters.  */				      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 	    tmp[1] = '\0';						      \
 	    cp = tmp;							      \
@@ -510,7 +499,7 @@ static const char from_ucs4[][2] =
 	    if (tmp[0] == '\0')						      \
 	      {								      \
 		/* Illegal characters.  */				      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 	    tmp[1] = '\0';						      \
 	    cp = tmp;							      \
@@ -552,7 +541,7 @@ static const char from_ucs4[][2] =
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 	    /* Illegal characters.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
     else								      \
@@ -562,7 +551,7 @@ static const char from_ucs4[][2] =
 	if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
 	  {								      \
 	    /* Illegal characters.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
 									      \

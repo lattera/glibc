@@ -1,8 +1,90 @@
-2002-06-26  Ulrich Drepper  <drepper@redhat.com>
+2002-05-26  Bruno Haible  <bruno@clisp.org>
 
-	* sysdeps/powerpc/Versions: Export libgcc functions for GLIBC_2.0.
-	* sysdeps/powerpc/libgcc-compat.c: Fix function names.
-	Patch by Franz Sirl <Franz.Sirl-kernel@lauterbach.com>.
+	* iconv/loop.c (STANDARD_FROM_LOOP_ERR_HANDLER): New macro.
+	(STANDARD_TO_LOOP_ERR_HANDLER): Renamed from STANDARD_ERR_HANDLER.
+	All callers changed.
+	* iconv/gconv_simple.c (ascii_internal_loop): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(utf8_internal_loop): Likewise.
+	(ucs2_internal_loop): Likewise.
+	(internal_ucs2_loop): Perform error handling like in
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	* iconvdata/unicode.c (BODY for TO_LOOP): Perform error handling like
+	in STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for FROM_LOOP): Use STANDARD_FROM_LOOP_ERR_HANDLER for error
+	handling.
+	* iconvdata/utf-16.c (BODY for TO_LOOP): Perform error handling like
+	in STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for FROM_LOOP): Use STANDARD_FROM_LOOP_ERR_HANDLER for error
+	handling.
+	* iconvdata/utf-32.c (BODY for TO_LOOP): Perform error handling like
+	in STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for FROM_LOOP): Use STANDARD_FROM_LOOP_ERR_HANDLER for error
+	handling.
+	* iconvdata/big5.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	* iconvdata/iso-2022-jp.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/8bit-gap.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/8bit-generic.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/ansi_x3.110.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/armscii-8.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/cp1255.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/cp1258.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/euc-cn.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/euc-jisx0213.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/euc-jp.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/euc-kr.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/euc-tw.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/big5hkscs.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/gb18030.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/gbk.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso-2022-cn-ext.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso-2022-cn.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso-2022-jp-3.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso-2022-kr.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso646.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso_6937-2.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/iso_6937.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/johab.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/shift_jisx0213.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/sjis.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/t.61.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/uhc.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/utf-7.c (BODY for FROM_LOOP): Likewise.
+	* iconvdata/gbbig5.c (BODY for FROM_LOOP): Likewise.  When ignoring
+	an error, still set result = __GCONV_ILLEGAL_INPUT.
+	(BODY for TO_LOOP): Likewise.
+	* iconvdata/ibm930.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm932.c: Include <dlfcn.h> and <stdint.h>.
+	(BODY for FROM_LOOP): Use STANDARD_FROM_LOOP_ERR_HANDLER for error
+	handling.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm933.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm935.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm937.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm939.c (BODY for FROM_LOOP): For error handling use
+	STANDARD_FROM_LOOP_ERR_HANDLER.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/ibm943.c: Include <dlfcn.h> and <stdint.h>.
+	(BODY for FROM_LOOP): Use STANDARD_FROM_LOOP_ERR_HANDLER for error
+	handling.
+	(BODY for TO_LOOP): Here use STANDARD_TO_LOOP_ERR_HANDLER.
+	* iconvdata/gbgbk.c (BODY for FROM_LOOP): Update.
+	* iconvdata/iso8859-1.c (BODY for TO_LOOP): Update.
+	* iconvdata/tcvn5712-1.c (BODY for TO_LOOP): Update.
+
+2002-06-28  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/dl-machine.h (elf_machine_load_address): Use local
+	labels in assembler instructions.
 
 2002-06-25  Ulrich Drepper  <drepper@redhat.com>
 

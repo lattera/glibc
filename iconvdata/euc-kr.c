@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -86,41 +86,22 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	     || __builtin_expect (ch == 0xc9, 0))			      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       {									      \
 	/* Two-byte character.  First test whether the next character	      \
 	   is also available.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0x80);		      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
-	    /* The second character is not available.  */		      \
+	    /* The second byte is not available.  */			      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	  /* This is an illegal character.  */				      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -149,7 +130,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
 	/* Illegal character.  */					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     *outptr++ = cp[0];							      \

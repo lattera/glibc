@@ -135,12 +135,7 @@ enum
 	if (__builtin_expect (res, L'\1') == L'\0' && ch != '\0')	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    ++*irreversible;						      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -173,12 +168,7 @@ enum
 		__builtin_expect (res, L'\1') == L'\0' && ch != '\0'))	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    ++*irreversible;						      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -211,14 +201,7 @@ enum
       {									      \
 	UNICODE_TAG_HANDLER (ch, 4);					      \
 									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	++*irreversible;						      \
-	inptr += 4;							      \
-	continue;							      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     while (ch > rp1->end)						      \
@@ -238,12 +221,7 @@ enum
 		__builtin_expect (cp[0], L'\1')== L'\0' && ch != '\0'))	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    ++*irreversible;						      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 	else								      \
 	  {								      \

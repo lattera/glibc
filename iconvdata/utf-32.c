@@ -1,5 +1,5 @@
 /* Conversion module for UTF-32.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -198,7 +198,7 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (c >= 0x110000, 0))				      \
       {									      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else if (__builtin_expect (c >= 0xd800 && c < 0xe000, 0))		      \
       {									      \
@@ -206,11 +206,9 @@ gconv_end (struct __gconv_step *data)
 	   We must catch this.  If we let surrogates pass through,	      \
 	   attackers could make a security hole exploit by		      \
 	   generating "irregular UTF-32" sequences.  */			      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	  break;							      \
 	inptr += 4;							      \
 	++*irreversible;						      \
 	continue;							      \
@@ -244,16 +242,7 @@ gconv_end (struct __gconv_step *data)
     if (__builtin_expect (u1 >= 0x110000, 0))				      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	inptr += 4;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     put32 (outptr, u1);							      \

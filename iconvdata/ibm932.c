@@ -1,5 +1,5 @@
 /* Conversion from and to IBM932.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Masahide Washizawa <washi@jp.ibm.com>, 2000.
 
@@ -18,6 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <dlfcn.h>
+#include <stdint.h>
 #include "ibm932.h"
 
 #ifndef TRUE
@@ -65,11 +67,7 @@
 	     || __builtin_expect (ch, 0) == 0xff)			      \
       {									      \
 	/* This is an illegal character.  */				      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       {									      \
@@ -103,14 +101,7 @@
 	    __builtin_expect (res, '\1') == 0 && ch !=0))		      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	      ++*irreversible;						      \
-	      inptr += 2;						      \
-	      continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -204,12 +195,7 @@
 	else								      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    ++*irreversible;						      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
     else								      \

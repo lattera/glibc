@@ -383,56 +383,20 @@ gconv_end (struct __gconv_step *data)
 	  {								      \
 	    /* We use the table from the ISO 8859-7 module.  */		      \
 	    if (inptr[2] < 0x20 || inptr[2] >= 0x80)			      \
-	      {								      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 	    ch = iso88597_to_ucs4[inptr[2] - 0x20];			      \
 	    if (ch == 0)						      \
-	      {								      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		inptr += 3;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (3);			      \
 	    inptr += 3;							      \
 	  }								      \
 	else								      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
     else if (ch >= 0x80)						      \
       {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else if (set == ASCII_set || (ch < 0x21 || ch == 0x7f))		      \
       /* Almost done, just advance the input pointer.  */		      \
@@ -441,36 +405,16 @@ gconv_end (struct __gconv_step *data)
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch);					      \
-	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
-	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	++inptr;							      \
       }									      \
     else if (set == JISX0201_Kana_set)					      \
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
-	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
-	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	++inptr;							      \
       }									      \
     else								      \
@@ -495,22 +439,14 @@ gconv_end (struct __gconv_step *data)
 	    ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);		      \
 	  }								      \
 									      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
+	else if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
 									      \
@@ -1068,7 +1004,7 @@ static const cvlist_t conversion_lists[4] =
 									      \
 	    if (result == __GCONV_ILLEGAL_INPUT)			      \
 	      {								      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 	  }								      \
       }									      \

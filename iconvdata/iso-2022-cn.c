@@ -123,17 +123,7 @@ enum
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (__builtin_expect (ch >= 0x7f, 0))				      \
-      {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
-      }									      \
+      STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
     /* Recognize escape sequences.  */					      \
     if (__builtin_expect (ch, 0) == ESC)				      \
@@ -197,16 +187,8 @@ enum
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-	        inptr -= 2;						      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    inptr -= 2;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
       }									      \
     else if (set == ASCII_set)						      \
@@ -232,16 +214,7 @@ enum
 	  }								      \
 	else if (__builtin_expect (ch, 1) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
 									      \
@@ -329,7 +302,7 @@ enum
 		    UNICODE_TAG_HANDLER (ch, 4);			      \
 									      \
 		    /* Even this does not work.  Error.  */		      \
-		    STANDARD_ERR_HANDLER (4);				      \
+		    STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 		  }							      \
 	      }								      \
 	  }								      \

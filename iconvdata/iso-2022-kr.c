@@ -120,17 +120,7 @@ enum
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (__builtin_expect (ch > 0x7f, 0))				      \
-      {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
-      }									      \
+      STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
     /* Recognize escape sequences.  */					      \
     if (__builtin_expect (ch, 0) == ESC)				      \
@@ -182,23 +172,14 @@ enum
 	/* Use the KSC 5601 table.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr, inend - inptr, 0);		      \
 									      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
+	else if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++*irreversible;						      \
-	    ++inptr;							      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
 									      \
@@ -252,7 +233,7 @@ enum
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 	    /* Illegal character.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 	else								      \
 	  {								      \

@@ -53,16 +53,16 @@ static inline Elf32_Addr __attribute__ ((unused))
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm ("mov.l .L1,r0\n\
-	mov.l .L3,r2\n\
+  asm ("mov.l 1f,r0\n\
+	mov.l 3f,r2\n\
 	add r12,r2\n\
 	mov.l @(r0,r12),r0\n\
-	bra .L2\n\
+	bra 2f\n\
 	 sub r0,r2\n\
 	.align 2\n\
-	.L1: .long _dl_start@GOT\n\
-	.L3: .long _dl_start@GOTOFF\n\
-	.L2: mov r2,%0"
+	1: .long _dl_start@GOT\n\
+	3: .long _dl_start@GOTOFF\n\
+	2: mov r2,%0"
        : "=r" (addr) : : "r0", "r1", "r2");
   return addr;
 }

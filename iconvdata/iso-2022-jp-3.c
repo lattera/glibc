@@ -232,15 +232,7 @@ enum
 									      \
     if (ch >= 0x80)							      \
       {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else if (set == ASCII_set || (ch < 0x21 || ch == 0x7f))		      \
       /* Almost done, just advance the input pointer.  */		      \
@@ -251,15 +243,7 @@ enum
 	ch = jisx0201_to_ucs4 (ch);					      \
 	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	++inptr;							      \
       }									      \
@@ -269,15 +253,7 @@ enum
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
 	if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	++inptr;							      \
       }									      \
@@ -296,15 +272,7 @@ enum
 	  }								      \
 	else if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
     else /* (set == JISX0213_1_set || set == JISX0213_2_set) */		      \
@@ -318,17 +286,7 @@ enum
 	ch = jisx0213_to_ucs4 (((set - JISX0213_1_set + (1 << 3)) << 5) + ch, \
 			       inptr[1]);				      \
 	if (ch == 0)							      \
-	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
 	if (ch < 0x80)							      \
 	  {								      \
@@ -771,7 +729,7 @@ static const struct
 			UNICODE_TAG_HANDLER (ch, 4);			      \
 									      \
 			/* Illegal character.  */			      \
-			STANDARD_ERR_HANDLER (4);			      \
+			STANDARD_TO_LOOP_ERR_HANDLER (4);		      \
 		      }							      \
 		  }							      \
 	      }								      \

@@ -139,15 +139,7 @@
 	if (__builtin_expect (ch2 < 0x40 || ch2 == 0x7f || ch2 > 0xfc, 0))    \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    break;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	/* Convert to row and column.  */				      \
@@ -180,15 +172,7 @@
 	if (ch == 0)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	     }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    break;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	if (ch < 0x80)							      \
@@ -219,15 +203,7 @@
     else								      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -366,7 +342,7 @@ static const struct
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 	    /* Illegal character.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 									      \
 	/* Convert it to shifted representation.  */			      \

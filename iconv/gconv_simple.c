@@ -770,15 +770,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	   this is not an error because of the lack of possibilities to	      \
 	   represent the result.  This is a genuine bug in the input since    \
 	   ASCII does not allow such values.  */			      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* This is no correct ANSI_X3.4-1968 character.  */		      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++*irreversible;						      \
-	++inptr;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
@@ -808,7 +800,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     if (__builtin_expect (*((const uint32_t *) inptr) > 0x7f, 0))	      \
       {									      \
 	UNICODE_TAG_HANDLER (*((const uint32_t *) inptr), 4);		      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else								      \
       /* It's an one byte sequence.  */					      \
@@ -872,7 +864,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       {									      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     inptr += 4;								      \
@@ -951,24 +943,16 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  {								      \
 	    int skipped;						      \
 									      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		/* This is an illegal encoding.  */			      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
 	    /* Search the end of this ill-formed UTF-8 character.  This	      \
 	       is the next byte with (x & 0xc0) != 0x80.  */		      \
-	     skipped = 0;						      \
-	     do								      \
-	       {							      \
-		 ++inptr;						      \
-		 ++skipped;						      \
-	       }							      \
-	     while (inptr < inend && (*inptr & 0xc0) == 0x80 && skipped < 5); \
+	    skipped = 0;						      \
+	    do								      \
+	      ++skipped;						      \
+	    while (inptr + skipped < inend				      \
+		   && (*(inptr + skipped) & 0xc0) == 0x80		      \
+		   && skipped < 5);					      \
 									      \
-	     continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (skipped);			      \
 	  }								      \
 									      \
 	if (__builtin_expect (inptr + cnt > inend, 0))			      \
@@ -985,16 +969,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 		break;							      \
 	      }								      \
 									      \
-	    if (ignore_errors_p ())					      \
-	      {								      \
-		/* Ignore it.  */					      \
-		inptr += i;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
-									      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
 	  }								      \
 									      \
 	/* Read the possible remaining bytes.  */			      \
@@ -1016,15 +991,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))		      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
-	    if (ignore_errors_p ())					      \
-	      {								      \
-		inptr += i;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
-									      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
 	  }								      \
 									      \
 	inptr += cnt;							      \
@@ -1164,14 +1131,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       {									      \
 	/* Surrogate characters in UCS-2 input are not valid.  Reject	      \
 	   them.  (Catching this here is not security relevant.)  */	      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	inptr += 2;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
       }									      \
 									      \
     *((uint32_t *) outptr)++ = u1;					      \
@@ -1203,7 +1163,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     if (__builtin_expect (val >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
       {									      \
@@ -1213,11 +1173,9 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	   surrogates pass through, attackers could make a security	      \
 	   hole exploit by synthesizing any desired plane 1-16		      \
 	   character.  */						      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
+	  break;							      \
 	inptr += 4;							      \
 	++*irreversible;						      \
 	continue;							      \
@@ -1293,7 +1251,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
     if (__builtin_expect (val >= 0x10000, 0))				      \
       {									      \
 	UNICODE_TAG_HANDLER (val, 4);					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else if (__builtin_expect (val >= 0xd800 && val < 0xe000, 0))	      \
       {									      \

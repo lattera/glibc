@@ -178,10 +178,29 @@
   (irreversible != NULL && (flags & __GCONV_IGNORE_ERRORS))
 
 
-/* Error handling with transliteration/transcription function use and
-   ignoring of errors.  Note that we cannot use the do while (0) trick
-   since `break' and `continue' must reach certain points.  */
-#define STANDARD_ERR_HANDLER(Incr) \
+/* Error handling for the FROM_LOOP direction, with ignoring of errors.
+   Note that we cannot use the do while (0) trick since `break' and
+   `continue' must reach certain points.  */
+#define STANDARD_FROM_LOOP_ERR_HANDLER(Incr) \
+  {									      \
+    result = __GCONV_ILLEGAL_INPUT;					      \
+									      \
+    if (! ignore_errors_p ())						      \
+      break;								      \
+									      \
+    /* We ignore the invalid input byte sequence.  */			      \
+    inptr += (Incr);							      \
+    ++*irreversible;							      \
+    /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
+       that "iconv -c" must give the same exitcode as "iconv".  */	      \
+    continue;								      \
+  }
+
+/* Error handling for the TO_LOOP direction, with use of transliteration/
+   transcription functions and ignoring of errors.  Note that we cannot use
+   the do while (0) trick since `break' and `continue' must reach certain
+   points.  */
+#define STANDARD_TO_LOOP_ERR_HANDLER(Incr) \
   {									      \
     struct __gconv_trans_data *trans;					      \
 									      \
@@ -212,14 +231,16 @@
     /* When we come here it means we ignore the character.  */		      \
     ++*irreversible;							      \
     inptr += Incr;							      \
+    /* But we keep result == __GCONV_ILLEGAL_INPUT, because of the constraint \
+       that "iconv -c" must give the same exitcode as "iconv".  */	      \
     continue;								      \
   }
 
 
 /* Handling of Unicode 3.1 TAG characters.  Unicode recommends
    "If language codes are not relevant to the particular processing
-    operation, then they should be ignored."
-   This macro is usually called right before STANDARD_ERR_HANDLER (Incr).  */
+    operation, then they should be ignored."  This macro is usually
+   called right before  STANDARD_TO_LOOP_ERR_HANDLER (Incr).  */
 #define UNICODE_TAG_HANDLER(Character, Incr) \
   {									      \
     /* TAG characters are those in the range U+E0000..U+E007F.  */	      \

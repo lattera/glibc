@@ -25671,15 +25671,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
       if (ch < 0x81 || ch > 0xfe)					      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  if (! ignore_errors_p ())					      \
-	    {								      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
-	    }								      \
-									      \
-	  ++inptr;							      \
-	  ++*irreversible;						      \
-	  continue;							      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	}								      \
       else								      \
 	{								      \
@@ -25700,18 +25692,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 									      \
 	  /* All second bytes of a multibyte character must be >= 0x30. */    \
 	  if (ch2 < 0x30)						      \
-	    {								      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      inptr += 2;						      \
-	      ++*irreversible;						      \
-	      continue;							      \
-	    }								      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 									      \
 	  if (ch2 >= 0x30 && ch2 <= 0x39)				      \
 	    {								      \
@@ -25732,16 +25713,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	      if (ch3 < 0x81 || ch3 > 0xfe)				      \
 		{							      \
 		  /* This is an illegal character.  */			      \
-		  if (! ignore_errors_p ())				      \
-		    {							      \
-		      /* This is an illegal character.  */		      \
-		      result = __GCONV_ILLEGAL_INPUT;			      \
-		      break;						      \
-		    }							      \
-									      \
-		  inptr += 3;						      \
-		  ++*irreversible;					      \
-		  continue;						      \
+		  STANDARD_FROM_LOOP_ERR_HANDLER (3);			      \
 		}							      \
 									      \
 	      ch4 = inptr[3];						      \
@@ -25749,16 +25721,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	      if (ch4 < 0x30 || ch4 > 0x39)				      \
 		{							      \
 		  /* This is an illegal character.  */			      \
-		  if (! ignore_errors_p ())				      \
-		    {							      \
-		      /* This is an illegal character.  */		      \
-		      result = __GCONV_ILLEGAL_INPUT;			      \
-		      break;						      \
-		    }							      \
-									      \
-		  inptr += 4;						      \
-		  ++*irreversible;					      \
-		  continue;						      \
+		  STANDARD_FROM_LOOP_ERR_HANDLER (4);			      \
 		}							      \
 	      idx = (((ch - 0x81) * 10 + (ch2 - 0x30)) * 126		      \
 		      + ch3 - 0x81) * 10 + ch4 - 0x30;			      \
@@ -25779,16 +25742,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	      if (ch == 0 && *inptr != '\0')				      \
 		{							      \
 		  /* This is an illegal character.  */			      \
-		  if (! ignore_errors_p ())				      \
-		    {							      \
-		      /* This is an illegal character.  */		      \
-		      result = __GCONV_ILLEGAL_INPUT;			      \
-		      break;						      \
-		    }							      \
-									      \
-		  inptr += 4;						      \
-		  ++*irreversible;					      \
-		  continue;						      \
+		  STANDARD_FROM_LOOP_ERR_HANDLER (4);			      \
 		}							      \
 									      \
 	      inptr += 4;						      \
@@ -25803,16 +25757,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 		      ch == 0 && *inptr != '\0'))			      \
 		{							      \
 		  /* This is an illegal character.  */			      \
-		 if (! ignore_errors_p ())				      \
-		    {							      \
-		      /* This is an illegal character.  */		      \
-		      result = __GCONV_ILLEGAL_INPUT;			      \
-		      break;						      \
-		    }							      \
-									      \
-		  inptr += 2;						      \
-		  ++*irreversible;					      \
-		  continue;						      \
+		  STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 		}							      \
 									      \
 	      inptr += 2;						      \
@@ -25820,16 +25765,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	  else								      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      inptr += 2;						      \
-	      ++*irreversible;						      \
-	      continue;							      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 	    }							      	      \
 	}								      \
 									      \
@@ -25895,7 +25831,7 @@ static const unsigned char __ucs_to_gb18030_tab2[8192][2] =
 	    || (len == 2 && __builtin_expect (cp[0], '\1') == '\0'))          \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 									      \
 	if (len == 2)							      \

@@ -698,7 +698,7 @@ static const struct
 									      \
 	  failed:							      \
 	    /* This is an illegal character.  */			      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
   }

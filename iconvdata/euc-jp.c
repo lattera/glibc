@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-JP handling.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -50,15 +50,7 @@
     else if (ch == 0xff)						      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       {									      \
@@ -78,37 +70,14 @@
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
 	if (__builtin_expect (ch2 < 0xa1, 0))				      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
 	if (ch == 0x8e)							      \
 	  {								      \
 	    /* This is code set 2: half-width katakana.  */		      \
 	    ch = jisx0201_to_ucs4 (ch2);				      \
 	    if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
-	      {								      \
-		/* Illegal character.  */				      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 									      \
 	    inptr += 2;							      \
 	  }								      \
@@ -137,20 +106,10 @@
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
-	      {								      \
-		/* Illegal character.  */				      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    /* This is an illegal character.  */		      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
+	    if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))	      \
+	      /* Illegal character.  */					      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		continue;						      \
-	      }								      \
 	    inptr = endp;						      \
 	  }								      \
       }									      \
@@ -234,7 +193,7 @@
 		    UNICODE_TAG_HANDLER (ch, 4);			      \
 									      \
 		    /* Illegal character.  */				      \
-		    STANDARD_ERR_HANDLER (4);				      \
+		    STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 		  }							      \
 	      }								      \
 	  }								      \

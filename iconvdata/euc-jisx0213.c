@@ -127,33 +127,14 @@
 	if (__builtin_expect (ch2 < 0xa1 || ch2 > 0xfe, 0))		      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    break;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	if (ch == 0x8e)							      \
 	  {								      \
 	    /* Half-width katakana.  */					      \
 	    if (__builtin_expect (ch2 > 0xdf, 0))			      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		break;							      \
-	      }								      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 									      \
 	    ch = ch2 + 0xfec0;						      \
 	    inptr += 2;							      \
@@ -188,18 +169,8 @@
 	      }								      \
 									      \
 	    if (ch == 0)						      \
-	      {								      \
-		/* This is an illegal character.  */			      \
-		if (! ignore_errors_p ())				      \
-		  {							      \
-		    result = __GCONV_ILLEGAL_INPUT;			      \
-		    break;						      \
-		  }							      \
-									      \
-		++inptr;						      \
-		++*irreversible;					      \
-		break;							      \
-	      }								      \
+	      /* This is an illegal character.  */			      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 									      \
 	    if (ch < 0x80)						      \
 	      {								      \
@@ -230,15 +201,7 @@
     else								      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
 									      \
     put32 (outptr, ch);							      \
@@ -380,7 +343,7 @@ static const struct
 	    UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 	    /* Illegal character.  */					      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 									      \
 	if (jch & 0x0080)						      \

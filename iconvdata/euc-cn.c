@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-CN handling.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -49,15 +49,7 @@
 	  || __builtin_expect (ch > 0xfe, 0))				      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  if (! ignore_errors_p ())					      \
-	    {								      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
-	    }								      \
-									      \
-	  ++inptr;							      \
-	  ++*irreversible;						      \
-	  continue;							      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	}								      \
       else								      \
 	{								      \
@@ -77,36 +69,16 @@
 									      \
 	  /* All second bytes of a multibyte character must be >= 0xa1. */    \
 	  if (__builtin_expect (ch < 0xa1, 0))				      \
-	    {								      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      ++inptr;							      \
-	      ++*irreversible;						      \
-	      continue;							      \
-	    }								      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
 	  /* This is code set 1: GB 2312-80.  */			      \
 	  endp = inptr;							      \
 									      \
 	  ch = gb2312_to_ucs4 (&endp, 2, 0x80);				      \
-	  if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
+	  if (__builtin_expect (ch == __UNKNOWN_10646_CHAR, 0))		      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      inptr += 2;						      \
-	      ++*irreversible;						      \
-	      continue;							      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 	    }								      \
 									      \
 	  inptr += 2;							      \
@@ -143,7 +115,7 @@
 		UNICODE_TAG_HANDLER (ch, 4);				      \
 									      \
 		/* Illegal character.  */				      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 									      \
 	    /* It's a GB 2312 character, adjust it for EUC-CN.  */	      \

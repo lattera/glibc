@@ -4353,16 +4353,7 @@ static const char from_ucs4_extra[0x100][2] =
 	     || __builtin_expect (ch <= 0x80, 0))			      \
       {									      \
 	/* These are illegal.  */					      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* This is an illegal character.  */			      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       {									      \
@@ -4382,22 +4373,13 @@ static const char from_ucs4_extra[0x100][2] =
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
 	if (__builtin_expect (ch2 < 0x40, 0)				      \
-	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x889f)      \
-	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)      \
-	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)      \
+	    || (__builtin_expect (idx > 0x84be, 0) && idx < 0x889f)	      \
+	    || (__builtin_expect (idx > 0x88fc, 0) && idx < 0x8940)	      \
+	    || (__builtin_expect (idx > 0x9ffc, 0) && idx < 0xe040)	      \
 	    || __builtin_expect (idx > 0xeaa4, 0))			      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -4416,19 +4398,10 @@ static const char from_ucs4_extra[0x100][2] =
 	    inptr += 2;							      \
 	  }								      \
 									      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
       }									      \
 									      \
@@ -4468,10 +4441,10 @@ static const char from_ucs4_extra[0x100][2] =
     else								      \
       cp = from_ucs4_lat1[ch];						      \
 									      \
-    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
+    if (__builtin_expect (cp[0] == '\0', 0) && ch != 0)			      \
       {									      \
 	/* Illegal character.  */					      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
     else								      \
       {									      \

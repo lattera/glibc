@@ -1,5 +1,5 @@
 /* Mapping tables for GBK handling.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Sean Chen <sean.chen@turbolinux.com>, 1999.
 
@@ -13149,15 +13149,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  || __builtin_expect (ch > 0xfe, 0))				      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  if (! ignore_errors_p ())					      \
-	    {								      \
-	      result = __GCONV_ILLEGAL_INPUT;				      \
-	      break;							      \
-	    }								      \
-									      \
-	  ++inptr;							      \
-	  ++*irreversible;						      \
-	  continue;							      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	}								      \
       else								      \
 	{								      \
@@ -13182,16 +13174,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	      || (__builtin_expect (ch, 0x81) == 0xfe && ch2 > 0xa0))	      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      ++inptr;							      \
-	      ++*irreversible;						      \
-	      continue;							      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 	    }								      \
 									      \
 	  /* This is code set 1: GBK.  */				      \
@@ -13202,16 +13185,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      if (! ignore_errors_p ())					      \
-		{							      \
-		  /* This is an illegal character.  */			      \
-		  result = __GCONV_ILLEGAL_INPUT;			      \
-		  break;						      \
-		}							      \
-									      \
-	      inptr += 2;						      \
-	      ++*irreversible;						      \
-	      continue;							      \
+	      STANDARD_FROM_LOOP_ERR_HANDLER (2);			      \
 	    }								      \
 									      \
 	  inptr += 2;							      \
@@ -13478,7 +13452,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
       if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
 	{								      \
 	  /* Illegal character.  */					      \
-	  STANDARD_ERR_HANDLER (4);					      \
+	  STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	}								      \
       /* See whether there is enough room for the second byte we write.  */   \
       else if (cp[1] != '\0' && __builtin_expect (outptr + 1 >= outend, 0))   \

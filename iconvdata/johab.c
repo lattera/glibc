@@ -1,5 +1,5 @@
 /* Mapping tables for JOHAB handling.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -184,16 +184,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    || (__builtin_expect (ch > 0xd3, 0) && ch < 0xd9))		      \
 	  {								      \
 	    /* These are illegal.  */					      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	else								      \
 	  {								      \
@@ -226,16 +217,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		    || __builtin_expect (f == -1, 0))			      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    if (! ignore_errors_p ())				      \
-		      {							      \
-		        /* This is an illegal character.  */		      \
-		        result = __GCONV_ILLEGAL_INPUT;			      \
-		        break;						      \
-		      }							      \
-									      \
-		    ++inptr;						      \
-		    ++*irreversible;					      \
-		    continue;						      \
+		    STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 		  }							      \
 		else if (i > 0 && m > 0)				      \
 		  ch = ((i - 1) * 21 + (m - 1)) * 28 + f + 0xac00;	      \
@@ -249,16 +231,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		else							      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    if (! ignore_errors_p ())				      \
-		      {							      \
-		        /* This is an illegal character.  */		      \
-		        result = __GCONV_ILLEGAL_INPUT;			      \
-		        break;						      \
-		      }							      \
-									      \
-		    ++inptr;						      \
-		    ++*irreversible;					      \
-		    continue;						      \
+		    STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 		  }							      \
 	      }								      \
 	    else							      \
@@ -272,16 +245,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		    || (__builtin_expect (ch, 0) == 0xde && ch2 > 0xf1))      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    if (! ignore_errors_p ())				      \
-		      {							      \
-		        /* This is an illegal character.  */		      \
-		        result = __GCONV_ILLEGAL_INPUT;			      \
-		        break;						      \
-		      }							      \
-									      \
-		    ++inptr;						      \
-		    ++*irreversible;					      \
-		    continue;						      \
+		    STANDARD_FROM_LOOP_ERR_HANDLER (1);			      \
 		  }							      \
 		else							      \
 		  {							      \
@@ -299,19 +263,10 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      }								      \
 	  }								      \
 									      \
-	if (__builtin_expect (ch, 1) == 0)				      \
+	if (__builtin_expect (ch == 0, 0))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-	        /* This is an illegal character.  */			      \
-	        result = __GCONV_ILLEGAL_INPUT;				      \
-	        break;							      \
-	      }								      \
-									      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
 									      \
 	inptr += 2;							      \
@@ -394,9 +349,9 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
+	    if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0))	      \
 	      {								      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 									      \
 	    outptr[0] -= 0x4a;						      \
@@ -423,11 +378,11 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (__builtin_expect (written, 1) == __UNKNOWN_10646_CHAR	      \
+	    if (__builtin_expect (written == __UNKNOWN_10646_CHAR, 0)	      \
 		|| (outptr[0] == 0x22 && outptr[1] > 0x65))		      \
 	      {								      \
 		UNICODE_TAG_HANDLER (ch, 4);				      \
-		STANDARD_ERR_HANDLER (4);				      \
+		STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 	      }								      \
 									      \
 	    temp = (outptr[0] < 0x4a ? outptr[0] + 0x191 : outptr[0] + 0x176);\

@@ -1,5 +1,5 @@
 /* Conversion to and from the various ISO 646 CCS.
-   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -407,14 +407,7 @@ gconv_end (struct __gconv_step *data)
        when we reach the default case in the `switch' statement.  */	      \
     if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    /* Exit the loop with an error.  */				      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++*irreversible;						      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
     else								      \
       {									      \
@@ -888,7 +881,7 @@ gconv_end (struct __gconv_step *data)
 									      \
     if (__builtin_expect (failure, __GCONV_OK) == __GCONV_ILLEGAL_INPUT)      \
       {									      \
-	STANDARD_ERR_HANDLER (4);					      \
+	STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
       }									      \
 									      \
     *outptr++ = (unsigned char) ch;					      \

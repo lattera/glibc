@@ -1,5 +1,5 @@
 /* Mapping tables from GB2312 to BIG5 and vice versa.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -4821,30 +4821,20 @@ const char __from_big5_to_gb2312 [13973][2] =
 	if (__builtin_expect (ch < 0xa1, 0))			  	      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	idx += ch - 0xa1;						      \
 									      \
 	/* Get the value from the table.  */				      \
 	cp = __from_gb2312_to_big5[idx];				      \
-	if (__builtin_expect (cp[0], '\1') == '\0')			      \
+	if (__builtin_expect (cp[0] == '\0', 0))			      \
 	  {								      \
 	    /* We do not have a mapping for this character.		      \
 	       If ignore errors, map it to 0xa1bc - big5 box character */     \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
+	      break;							      \
 									      \
 	    /* See if there is enough room to write the second byte. */	      \
 	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
@@ -4880,15 +4870,7 @@ const char __from_big5_to_gb2312 [13973][2] =
     else								      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
   }
 #define LOOP_NEED_FLAGS
@@ -4932,28 +4914,18 @@ const char __from_big5_to_gb2312 [13973][2] =
 	else								      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 									      \
 	/* Get the value from the table.  */				      \
 	cp = __from_big5_to_gb2312 [idx];				      \
-	if (__builtin_expect (cp[0], '\1') == '\0')			      \
+	if (__builtin_expect (cp[0] == '\0', 0))			      \
 	  {								      \
 	    /* We do not have a mapping for this character.		      \
 	       If ignore errors, map it to 0xa1f5 - gb box character */       \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
+	      break;							      \
 									      \
 	    /* See if there is enough room to write the second byte. */	      \
 	    if (__builtin_expect (outptr + 1 >= outend, 0))		      \
@@ -4989,15 +4961,7 @@ const char __from_big5_to_gb2312 [13973][2] =
     else								      \
       {									      \
 	/* This is illegal.  */						      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-									      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
+	STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
       }									      \
   }
 #define LOOP_NEED_FLAGS

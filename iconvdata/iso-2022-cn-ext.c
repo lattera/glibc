@@ -174,16 +174,7 @@ enum
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (ch > 0x7f)							      \
-      {									      \
-	if (! ignore_errors_p ())					      \
-	  {								      \
-	    result = __GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	++inptr;							      \
-	++*irreversible;						      \
-	continue;							      \
-      }									      \
+      STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 									      \
     /* Recognize escape sequences.  */					      \
     if (ch == ESC)							      \
@@ -283,13 +274,7 @@ enum
 	    }								      \
 	else								      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
 	continue;							      \
       }									      \
@@ -310,17 +295,7 @@ enum
 	inptr += 2;							      \
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
-	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		inptr -= 2;						      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
-	  }								      \
+	  STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
       }									      \
     /* Note that we can assume here that at least 4 bytes are available if    \
        the first byte is ESC since otherwise the first if would have been     \
@@ -363,14 +338,7 @@ enum
 	  }								      \
 	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    inptr += 4;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
 	assert (tmp == buf + 3);					      \
 	inptr += 4;							      \
@@ -405,14 +373,7 @@ enum
 	  }								      \
 	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-	    inptr += 2;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (2);				      \
 	  }								      \
       }									      \
 									      \
@@ -568,7 +529,7 @@ enum
 		if (used == ASCII_set)					      \
 		  {							      \
 		    UNICODE_TAG_HANDLER (ch, 4);			      \
-		    STANDARD_ERR_HANDLER (4);				      \
+		    STANDARD_TO_LOOP_ERR_HANDLER (4);			      \
 		  }							      \
 	      }								      \
 	  }								      \

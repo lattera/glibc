@@ -379,15 +379,7 @@ static const struct
 	if (__builtin_expect (ch == L'\0', 0))				      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    if (! ignore_errors_p ())					      \
-	      {								      \
-		result = __GCONV_ILLEGAL_INPUT;				      \
-		break;							      \
-	      }								      \
-									      \
-	    ++inptr;							      \
-	    ++*irreversible;						      \
-	    continue;							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (1);				      \
 	  }								      \
       }									      \
 									      \
@@ -853,7 +845,7 @@ static const struct
 									      \
 	  failed:							      \
 	    /* This is an illegal character.  */			      \
-	    STANDARD_ERR_HANDLER (4);					      \
+	    STANDARD_TO_LOOP_ERR_HANDLER (4);				      \
 	  }								      \
       }									      \
   }
