@@ -1,3 +1,8 @@
+2004-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* stringprep.h: Don't include idn-int.h in glibc.
+	* idn-int.h: Removed.
+
 2004-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* idn-stub.c: Include <gnu/lib-names.h>.  Use LIBCIDN_SO for dlopen.
