@@ -1104,7 +1104,7 @@ AC_MSG_RESULT($stdio)
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 AC_MSG_CHECKING(for old glibc 2.0.x headers)
-if eval test -e "${includedir}/elfclass.h" -a -e "${includedir}/fcntlbits.h"
+if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
 else

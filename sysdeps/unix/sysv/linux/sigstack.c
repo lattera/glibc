@@ -1,4 +1,4 @@
-/* Emulate sigstack function using sigalstack.
+/* Emulate sigstack function using sigaltstack.
    Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.

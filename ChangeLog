@@ -1,5 +1,17 @@
 1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Use test -f instead of test -e.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sys/trap.h: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/sys/syscall.h: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/sigstack.h: New file.
+	* sysdeps/unix/sysv/linux/sigstack.c: Fix typo.
+	* sysdeps/unix/sysv/sysv4/solaris2/sigwaitinfo.c: Fix typo.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/sys/param.h: New file.
+	Patches by John Tobey <jtobey@banta-im.com>.
+
 	* time/strftime.c (my_strftime): Delay use of *tp values until
 	latest possible point to allow partly initialized structures
 	(e.g., from strptime).
