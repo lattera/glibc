@@ -777,7 +777,9 @@ all-Subdirs-files = $(wildcard $(addsuffix /Subdirs, $(config-sysdirs)))
 $(common-objpfx)sysd-dirs: $(common-objpfx)config.make $(all-Subdirs-files)
 	(echo define sysdep-subdirs;				\
 	 sed 's/#.*$$//' $(all-Subdirs-files) /dev/null;	\
-	 echo endef) > $@-tmp
+	 echo endef;						\
+	 echo 'sysd-dirs-done = t';				\
+	) > $@-tmp
 	mv -f $@-tmp $@
 
 endif # Makeconfig not yet included

@@ -3,6 +3,7 @@
 
 @node Memory Allocation, Character Handling, Error Reporting, Top
 @chapter Memory Allocation
+@c %MENU% Allocating memory dynamically and manipulating it via pointers
 @cindex memory allocation
 @cindex storage allocation
 

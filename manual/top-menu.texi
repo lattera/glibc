@@ -1,0 +1,499 @@
+@menu
+* Introduction::                 Purpose of the GNU C Library.
+* Error Reporting::              How library functions report errors.
+* Memory Allocation::            Allocating memory dynamically and
+                                   manipulating it via pointers.
+* Character Handling::           Character testing and conversion functions.
+* String and Array Utilities::   Utilities for copying and comparing strings
+                                   and arrays.
+* Extended Characters::          Support for extended character sets.
+* Locales::                      The country and language can affect the
+                                   behavior of library functions.
+* Message Translation::          How to make the program speak the user's
+                                   language.
+* Searching and Sorting::        General searching and sorting functions.
+* Pattern Matching::             Matching shell ``globs'' and regular
+                                   expressions.
+* I/O Overview::                 Introduction to the I/O facilities.
+* I/O on Streams::               Hign-level, portable I/O facilities.
+* Low-Level I/O::                Low-level, less portable I/O.
+* File System Interface::        Functions for manipulating files.
+* Pipes and FIFOs::              A simple interprocess communication
+                                   mechanism.
+* Sockets::                      A more complicated IPC mechanism, with
+                                   networking support.
+* Low-Level Terminal Interface:: How to change the characteristics of a
+                                   terminal device.
+* Mathematics::                  Math functions, useful constants, random
+                                   numbers.
+* Arithmetic::                   Low level arithmetic functions.
+* Date and Time::                Functions for getting the date and time and
+                                   formatting them nicely.
+* Non-Local Exits::              Jumping out of nested function calls.
+* Signal Handling::              How to send, block, and handle signals.
+* Process Startup::              Writing the beginning and end of your
+                                   program.
+* Processes::                    How to create processes and run other
+                                   programs.
+* Job Control::                  All about process groups and sessions.
+* Name Service Switch::          Accessing system databases.
+* Users and Groups::             How users are identified and classified.
+* System Information::           Getting information about the hardware and
+                                   operating system.
+* System Configuration::         Parameters describing operating system
+                                   limits.
+
+Add-ons
+
+* POSIX Threads::                The standard threads library.
+
+Appendices
+
+* Language Features::            C language features provided by the library.
+* Library Summary::              A summary showing the syntax, header file,
+                                   and derivation of each library feature.
+* Installation::                 How to install the GNU C library.
+* Maintenance::                  How to enhance and port the GNU C Library.
+* Contributors::                 Who wrote what parts of the GNU C library.
+* Copying::                      The GNU Library General Public License says
+                                  how you can copy and share the GNU C Library.
+
+Indices
+
+* Concept Index::                Index of concepts and names.
+* Type Index::                   Index of types and type qualifiers.
+* Function Index::               Index of functions and function-like macros.
+* Variable Index::               Index of variables and variable-like macros.
+* File Index::                   Index of programs and files.
+
+ --- The Detailed Node Listing ---
+
+Introduction
+
+* Getting Started::             What this manual is for and how to use it.
+* Standards and Portability::   Standards and sources upon which the GNU
+                                 C library is based.
+* Using the Library::           Some practical uses for the library.
+* Roadmap to the Manual::       Overview of the remaining chapters in
+                                 this manual.
+
+Error Reporting
+
+* Checking for Errors::         How errors are reported by library functions.
+* Error Codes::                 Error code macros; all of these expand
+                                 into integer constant values.
+* Error Messages::              Mapping error codes onto error messages.
+
+Memory Allocation
+
+* Memory Concepts::             An introduction to concepts and terminology.
+* Dynamic Allocation and C::    How to get different kinds of allocation in C.
+* Unconstrained Allocation::    The @code{malloc} facility allows fully general
+		 		 dynamic allocation.
+* Allocation Debugging::        Finding memory leaks and not freed memory.
+* Obstacks::                    Obstacks are less general than malloc
+				 but more efficient and convenient.
+* Variable Size Automatic::     Allocation of variable-sized blocks
+				 of automatic storage that are freed when the
+				 calling function returns.
+* Relocating Allocator::        Waste less memory, if you can tolerate
+				 automatic relocation of the blocks you get.
+
+Character Handling
+
+* Classification of Characters::   Testing whether characters are
+			            letters, digits, punctuation, etc.
+
+* Case Conversion::                Case mapping, and the like.
+
+String and Array Utilities
+
+* Representation of Strings::   Introduction to basic concepts.
+* String/Array Conventions::    Whether to use a string function or an
+				 arbitrary array function.
+* String Length::               Determining the length of a string.
+* Copying and Concatenation::   Functions to copy the contents of strings
+				 and arrays.
+* String/Array Comparison::     Functions for byte-wise and character-wise
+				 comparison.
+* Collation Functions::         Functions for collating strings.
+* Search Functions::            Searching for a specific element or substring.
+* Finding Tokens in a String::  Splitting a string into tokens by looking
+				 for delimiters.
+* Encode Binary Data::          Encoding and Decoding of Binary Data.
+* Argz and Envz Vectors::       Null-separated string vectors.
+
+Extended Characters
+
+* Extended Char Intro::         Multibyte codes versus wide characters.
+* Locales and Extended Chars::  The locale selects the character codes.
+* Multibyte Char Intro::        How multibyte codes are represented.
+* Wide Char Intro::             How wide characters are represented.
+* Wide String Conversion::      Converting wide strings to multibyte code
+                                 and vice versa.
+* Length of Char::              how many bytes make up one multibyte char.
+* Converting One Char::         Converting a string character by character.
+* Example of Conversion::       Example showing why converting
+				 one character at a time may be useful.
+* Shift State::                 Multibyte codes with "shift characters".
+
+Locales
+
+* Effects of Locale::           Actions affected by the choice of
+                                 locale.
+* Choosing Locale::             How the user specifies a locale.
+* Locale Categories::           Different purposes for which you can
+                                 select a locale.
+* Setting the Locale::          How a program specifies the locale
+                                 with library functions.
+* Standard Locales::            Locale names available on all systems.
+* Numeric Formatting::          How to format numbers according to the
+                                 chosen locale.
+
+Message Translation
+
+* Message catalogs a la X/Open::  The @code{catgets} family of functions.
+* The Uniforum approach::         The @code{gettext} family of functions.
+
+Searching and Sorting
+
+* Comparison Functions::        Defining how to compare two objects.
+				 Since the sort and search facilities
+                                 are general, you have to specify the
+                                 ordering.
+* Array Search Function::       The @code{bsearch} function.
+* Array Sort Function::         The @code{qsort} function.
+* Search/Sort Example::         An example program.
+* Hash Search Function::        The @code{hsearch} function.
+* Tree Search Function::        The @code{tsearch} function.
+
+Pattern Matching
+
+* Wildcard Matching::    Matching a wildcard pattern against a single string.
+* Globbing::             Finding the files that match a wildcard pattern.
+* Regular Expressions::  Matching regular expressions against strings.
+* Word Expansion::       Expanding shell variables, nested commands,
+			    arithmetic, and wildcards.
+			    This is what the shell does with shell commands.
+
+I/O Overview
+
+* I/O Concepts::       Some basic information and terminology.
+* File Names::         How to refer to a file.
+
+I/O on Streams
+
+* Streams::                     About the data type representing a stream.
+* Standard Streams::            Streams to the standard input and output
+                                 devices are created for you.
+* Opening Streams::             How to create a stream to talk to a file.
+* Closing Streams::             Close a stream when you are finished with it.
+* Simple Output::               Unformatted output by characters and lines.
+* Character Input::             Unformatted input by characters and words.
+* Line Input::                  Reading a line or a record from a stream.
+* Unreading::                   Peeking ahead/pushing back input just read.
+* Block Input/Output::          Input and output operations on blocks of data.
+* Formatted Output::            @code{printf} and related functions.
+* Customizing Printf::          You can define new conversion specifiers for
+                                 @code{printf} and friends.
+* Formatted Input::             @code{scanf} and related functions.
+* EOF and Errors::              How you can tell if an I/O error happens.
+* Binary Streams::              Some systems distinguish between text files
+                                 and binary files.
+* File Positioning::            About random-access streams.
+* Portable Positioning::        Random access on peculiar ISO C systems.
+* Stream Buffering::            How to control buffering of streams.
+* Other Kinds of Streams::      Streams that do not necessarily correspond
+                                 to an open file.
+* Formatted Messages::          Print strictly formatted messages.
+
+Low-Level I/O
+
+* Opening and Closing Files::           How to open and close file
+                                         descriptors.
+* Truncating Files::                    Change the size of a file.
+* I/O Primitives::                      Reading and writing data.
+* File Position Primitive::             Setting a descriptor's file
+                                         position.
+* Descriptors and Streams::             Converting descriptor to stream
+                                         or vice-versa.
+* Stream/Descriptor Precautions::       Precautions needed if you use both
+                                         descriptors and streams.
+* Waiting for I/O::                     How to check for input or output
+					 on multiple file descriptors.
+* Synchronizing I/O::                   Making sure all I/O actions completed.
+* Asynchronous I/O::                    Perform I/O in parallel.
+* Control Operations::                  Various other operations on file
+					 descriptors.
+* Duplicating Descriptors::             Fcntl commands for duplicating
+                                         file descriptors.
+* Descriptor Flags::                    Fcntl commands for manipulating
+                                         flags associated with file
+                                         descriptors.
+* File Status Flags::                   Fcntl commands for manipulating
+                                         flags associated with open files.
+* File Locks::                          Fcntl commands for implementing
+                                         file locking.
+* Interrupt Input::                     Getting an asynchronous signal when
+                                         input arrives.
+
+File System Interface
+
+* Working Directory::           This is used to resolve relative
+				 file names.
+* Accessing Directories::       Finding out what files a directory
+				 contains.
+* Working on Directory Trees::  Apply actions to all files or a selectable
+                                 subset of a directory hierarchy.
+* Hard Links::                  Adding alternate names to a file.
+* Symbolic Links::              A file that ``points to'' a file name.
+* Deleting Files::              How to delete a file, and what that means.
+* Renaming Files::              Changing a file's name.
+* Creating Directories::        A system call just for creating a directory.
+* File Attributes::             Attributes of individual files.
+* Making Special Files::        How to create special files.
+* Temporary Files::             Naming and creating temporary files.
+
+Pipes and FIFOs
+
+* Creating a Pipe::             Making a pipe with the @code{pipe} function.
+* Pipe to a Subprocess::        Using a pipe to communicate with a
+				 child process.
+* FIFO Special Files::          Making a FIFO special file.
+* Pipe Atomicity::		When pipe (or FIFO) I/O is atomic.
+
+Sockets
+
+* Socket Concepts::	Basic concepts you need to know about.
+* Communication Styles::Stream communication, datagrams, and other styles.
+* Socket Addresses::	How socket names (``addresses'') work.
+* Interface Naming::	Identifying specific network interfaces.
+* Local Namespace::	Details about the local namespace.
+* Internet Namespace::	Details about the Internet namespace.
+* Misc Namespaces::	Other namespaces not documented fully here.
+* Open/Close Sockets::  Creating sockets and destroying them.
+* Connections::		Operations on sockets with connection state.
+* Datagrams::		Operations on datagram sockets.
+* Inetd::		Inetd is a daemon that starts servers on request.
+			   The most convenient way to write a server
+			   is to make it work with Inetd.
+* Socket Options::	Miscellaneous low-level socket options.
+* Networks Database::   Accessing the database of network names.
+
+Low-Level Terminal Interface
+
+* Is It a Terminal::            How to determine if a file is a terminal
+			         device, and what its name is.
+* I/O Queues::                  About flow control and typeahead.
+* Canonical or Not::            Two basic styles of input processing.
+* Terminal Modes::              How to examine and modify flags controlling
+			         details of terminal I/O: echoing,
+                                 signals, editing.
+* Line Control::                Sending break sequences, clearing
+                                 terminal buffers @dots{}
+* Noncanon Example::            How to read single characters without echo.
+* Pseudo-Terminals::            How to open a pseudo-terminal.
+
+Mathematics
+
+* Mathematical Constants::      Precise numeric values for often-used
+                                 constants.
+* Trig Functions::              Sine, cosine, tangent, and friends.
+* Inverse Trig Functions::      Arcsine, arccosine, etc.
+* Exponents and Logarithms::    Also pow and sqrt.
+* Hyperbolic Functions::        sinh, cosh, tanh, etc.
+* Special Functions::           Bessel, gamma, erf.
+* Pseudo-Random Numbers::       Functions for generating pseudo-random
+				 numbers.
+* FP Function Optimizations::   Fast code or small code.
+
+Arithmetic
+
+* Floating Point Numbers::      Basic concepts.  IEEE 754.
+* Floating Point Classes::      The five kinds of floating-point number.
+* Floating Point Errors::       When something goes wrong in a calculation.
+* Rounding::                    Controlling how results are rounded.
+* Control Functions::           Saving and restoring the FPU's state.
+* Arithmetic Functions::        Fundamental operations provided by the library.
+* Complex Numbers::             The types.  Writing complex constants.
+* Operations on Complex::       Projection, conjugation, decomposition.
+* Integer Division::            Integer division with guaranteed rounding.
+* Parsing of Numbers::          Converting strings to numbers.
+* System V Number Conversion::  An archaic way to convert numbers to strings.
+
+Date and Time
+
+* Processor Time::              Measures processor time used by a program.
+* Calendar Time::               Manipulation of ``real'' dates and times.
+* Setting an Alarm::            Sending a signal after a specified time.
+* Sleeping::                    Waiting for a period of time.
+* Resource Usage::		Measuring various resources used.
+* Limits on Resources::		Specifying limits on resource usage.
+* Priority::			Reading or setting process run priority.
+
+Non-Local Exits
+
+* Intro: Non-Local Intro.        When and how to use these facilities.
+* Details: Non-Local Details.   Functions for nonlocal exits.
+* Non-Local Exits and Signals::  Portability issues.
+
+Signal Handling
+
+* Concepts of Signals::         Introduction to the signal facilities.
+* Standard Signals::            Particular kinds of signals with
+                                 standard names and meanings.
+* Signal Actions::              Specifying what happens when a
+                                 particular signal is delivered.
+* Defining Handlers::           How to write a signal handler function.
+* Interrupted Primitives::	Signal handlers affect use of @code{open},
+				 @code{read}, @code{write} and other functions.
+* Generating Signals::          How to send a signal to a process.
+* Blocking Signals::            Making the system hold signals temporarily.
+* Waiting for a Signal::        Suspending your program until a signal
+                                 arrives.
+* Signal Stack::                Using a Separate Signal Stack.
+* BSD Signal Handling::         Additional functions for backward
+			         compatibility with BSD.
+
+Process Startup
+
+* Program Arguments::           Parsing your program's command-line arguments.
+* Environment Variables::       How to access parameters inherited from
+				 a parent process.
+* Program Termination::         How to cause a process to terminate and
+				 return status information to its parent.
+
+Processes
+
+* Running a Command::           The easy way to run another program.
+* Process Creation Concepts::   An overview of the hard way to do it.
+* Process Identification::      How to get the process ID of a process.
+* Creating a Process::          How to fork a child process.
+* Executing a File::            How to make a process execute another program.
+* Process Completion::          How to tell when a child process has completed.
+* Process Completion Status::   How to interpret the status value
+                                 returned from a child process.
+* BSD Wait Functions::  	More functions, for backward compatibility.
+* Process Creation Example::    A complete example program.
+
+Job Control
+
+* Concepts of Job Control::     Jobs can be controlled by a shell.
+* Job Control is Optional::     Not all POSIX systems support job control.
+* Controlling Terminal::        How a process gets its controlling terminal.
+* Access to the Terminal::      How processes share the controlling terminal.
+* Orphaned Process Groups::     Jobs left after the user logs out.
+* Implementing a Shell::        What a shell must do to implement job control.
+* Functions for Job Control::   Functions to control process groups.
+
+Name Service Switch
+
+* NSS Basics::                  What is this NSS good for.
+* NSS Configuration File::      Configuring NSS.
+* NSS Module Internals::        How does it work internally.
+* Extending NSS::               What to do to add services or databases.
+
+Users and Groups
+
+* User and Group IDs::          Each user has a unique numeric ID;
+				 likewise for groups.
+* Process Persona::             The user IDs and group IDs of a process.
+* Why Change Persona::          Why a program might need to change
+				 its user and/or group IDs.
+* How Change Persona::          Changing the user and group IDs.
+* Reading Persona::             How to examine the user and group IDs.
+
+* Setting User ID::             Functions for setting the user ID.
+* Setting Groups::              Functions for setting the group IDs.
+
+* Enable/Disable Setuid::       Turning setuid access on and off.
+* Setuid Program Example::      The pertinent parts of one sample program.
+* Tips for Setuid::             How to avoid granting unlimited access.
+
+* Who Logged In::               Getting the name of the user who logged in,
+				 or of the real user ID of the current process.
+
+* User Accounting Database::    Keeping information about users and various
+                                 actions in databases.
+
+* User Database::               Functions and data structures for
+                        	 accessing the user database.
+* Group Database::              Functions and data structures for
+                        	 accessing the group database.
+* Database Example::            Example program showing the use of database
+				 inquiry functions.
+* Netgroup Database::           Functions for accessing the netgroup database.
+
+System Information
+
+* Host Identification::         Determining the name of the machine.
+* Hardware/Software Type ID::   Determining the hardware type of the
+                                 machine and what operating system it is
+                                 running.
+* Filesystem handling::         Which is mounted and/or available?
+
+System Configuration
+
+* General Limits::           Constants and functions that describe
+				various process-related limits that have
+				one uniform value for any given machine.
+* System Options::           Optional POSIX features.
+* Version Supported::        Version numbers of POSIX.1 and POSIX.2.
+* Sysconf::                  Getting specific configuration values
+                                of general limits and system options.
+* Minimums::                 Minimum values for general limits.
+
+* Limits for Files::         Size limitations that pertain to individual files.
+                                These can vary between file systems
+                                or even from file to file.
+* Options for Files::        Optional features that some files may support.
+* File Minimums::            Minimum values for file limits.
+* Pathconf::                 Getting the limit values for a particular file.
+
+* Utility Limits::           Capacity limits of some POSIX.2 utility programs.
+* Utility Minimums::         Minimum allowable values of those limits.
+
+* String Parameters::        Getting the default search path.
+
+POSIX Threads
+
+* Basic Thread Operations::     Creating, terminating, and waiting for threads.
+* Thread Attributes::           Tuning thread scheduling.
+* Cancellation::                Stopping a thread before it's done.
+* Cleanup Handlers::            Deallocating resources when a thread is
+                                  cancelled.
+* Mutexes::                     One way to synchronize threads.
+* Condition Variables::         Another way.
+* POSIX Semaphores::            And a third way.
+* Thread-Specific Data::        Variables with different values in
+                                  different threads.
+* Threads and Signal Handling:: Why you should avoid mixing the two, and
+                                  how to do it if you must.
+* Miscellaneous Thread Functions:: A grab bag of utility routines.
+
+Language Features
+
+* Consistency Checking::        Using @code{assert} to abort if
+				 something ``impossible'' happens.
+* Variadic Functions::          Defining functions with varying numbers
+                                 of args.
+* Null Pointer Constant::       The macro @code{NULL}.
+* Important Data Types::        Data types for object sizes.
+* Data Type Measurements::      Parameters of data type representations.
+
+Installation
+
+* Tools for Installation::      We recommend using these tools to build.
+* Supported Configurations::    What systems the GNU C library runs on.
+* Tips for Installation::       Useful hints for the installation.
+* Reporting Bugs::              How to report bugs (if you want to
+                                get them fixed) and other troubles
+                                you may have with the GNU C library.
+
+Maintenance
+
+* Source Layout::         How to add new functions or header files
+                             to the GNU C library.
+* Porting::               How to port the GNU C library to
+                             a new machine or operating system.
+@end menu

@@ -1,4 +1,5 @@
 @node Library Summary, Installation, Language Features, Top
+@c %MENU% A summary showing the syntax, header file, and derivation of each library feature
 @appendix Summary of Library Facilities
 
 This appendix is a complete list of the facilities declared within the

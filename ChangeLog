@@ -1,4 +1,116 @@
-Mon Jul 13 10:28:28 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-07-10 18:14 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* manual/Makefile: Overhauled.  Generate libc.texinfo from the
+	chapter files.  Exorcise the chapters, chapters-incl mess.
+	Support inserting doc chapters from add-on modules.
+	(chapters): New variable.
+	(add-chapters): New variable.
+	(appendices): New variable.
+	(libc.texinfo): New target.
+	(clean): Fix bugs.
+	(realclean): Fix bugs.
+
+	* manual/texis.awk: New file.
+	* manual/libc-texinfo.sh: New file.
+	* manual/libc-texinfo.in: New file.
+
+	* manual/conf.texi (top @node): Remove next pointer.
+	* manual/lang.texi (top @node): Remove prev pointer.
+
+	* manual/job.texi (top @node): Add explicit pointers.
+	* manual/message.texi (top @node): Add explicit pointers.
+	* manual/nss.texi (top @node): Add explicit pointers.
+	* manual/process.texi (top @node): Add explicit pointers.
+	* manual/startup.texi (top @node): Add explicit pointers.
+	* manual/terminal.texi (top @node): Add explicit pointers.
+	* manual/users.texi (top @node): Add explicit pointers.
+
+	* manual/arith.texi: Add %MENU% tag.
+	* manual/conf.texi: Add %MENU% tag.
+	* manual/contrib.texi: Add %MENU% tag.
+	* manual/ctype.texi: Add %MENU% tag.
+	* manual/errno.texi: Add %MENU% tag.
+	* manual/filesys.texi: Add %MENU% tag.
+	* manual/header.texi: Add %MENU% tag.
+	* manual/install.texi: Add %MENU% tag.
+	* manual/intro.texi: Add %MENU% tag.
+	* manual/io.texi: Add %MENU% tag.
+	* manual/job.texi: Add %MENU% tag.
+	* manual/lang.texi: Add %MENU% tag.
+	* manual/llio.texi: Add %MENU% tag.
+	* manual/locale.texi: Add %MENU% tag.
+	* manual/maint.texi: Add %MENU% tag.
+	* manual/math.texi: Add %MENU% tag.
+	* manual/mbyte.texi: Add %MENU% tag.
+	* manual/memory.texi: Add %MENU% tag.
+	* manual/message.texi: Add %MENU% tag.
+	* manual/nss.texi: Add %MENU% tag.
+	* manual/pattern.texi: Add %MENU% tag.
+	* manual/pipe.texi: Add %MENU% tag.
+	* manual/process.texi: Add %MENU% tag.
+	* manual/search.texi: Add %MENU% tag.
+	* manual/setjmp.texi: Add %MENU% tag.
+	* manual/signal.texi: Add %MENU% tag.
+	* manual/socket.texi: Add %MENU% tag.
+	* manual/startup.texi: Add %MENU% tag.
+	* manual/stdio.texi: Add %MENU% tag.
+	* manual/string.texi: Add %MENU% tag.
+	* manual/sysinfo.texi: Add %MENU% tag.
+	* manual/terminal.texi: Add %MENU% tag.
+	* manual/time.texi: Add %MENU% tag.
+	* manual/users.texi: Add %MENU% tag.
+
+1998-07-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.h (x86_cap_flags):
+	Update.
+
+1998-07-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/recvmsg.c (__libc_recvmsg): Use ANSI
+	style declaration to avoid warning.
+	* sysdeps/unix/sysv/linux/sendmsg.c (__libc_sendmsg): Likewise.
+
+1998-07-04  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* elf/rtld.c (process_dl_debug): Add missing continue.
+
+1998-07-12  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* elf/rtld.c (_dl_skip_args): Make global because the Hurd startup
+	code needs it.
+
+1998-07-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig ($(common-objpfx)sysd-dirs): Write out definition of
+	sysd-dirs-done.
+	* Makerules: Don't generate version maps too early.
+	($(common-objpfx)sysd-versions): Force regeneration if the list of
+	subdirs has changed.
+
+1998-07-10  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dlfcn.h (DL_CALL_FCT): Use portable comma expression.
+
+1998-07-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconv/gconv_db.c (gen_steps): Always set *handle and *nsteps.
+	* iconv/gconv_dl.c (__gconv_find_shlib): Correct use of tfind
+	return value.
+
+1998-07-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-open.c (dl_open_worker): New function.
+	(_dl_open): Call it to do the actual work while catching errors.
+	* elf/dl-close.c (_dl_close): Only call termination function if
+	the initialisation function was called.
+
+1998-07-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/libioP.h (_IO_cleanup_registration_needed): Use __PMT.
+	Reported by Felix von Leitner <leitner@amdiv.de>.
+
+1998-07-13 10:28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/dl-envvars.h: New file.
 
@@ -854,6 +966,10 @@ Mon Jul 13 10:28:28 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 1998-06-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* grp/initgroups.c: Use _CALL_DL_FCT.
+
+1998-06-23  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* elf/rtld.c (process_dl_debug): Add missing continue.
 
 1998-06-23  Mark Kettenis  <kettenis@phys.uva.nl>
 

@@ -1,4 +1,5 @@
 @node System Information, System Configuration, Users and Groups, Top
+@c %MENU% Getting information about the hardware and operating system
 @chapter System Information
 
 This chapter describes functions that return information about the

@@ -1,4 +1,5 @@
 @node I/O on Streams, Low-Level I/O, I/O Overview, Top
+@c %MENU% Hign-level, portable I/O facilities
 @chapter Input/Output on Streams
 @c fix an overfull:
 @tex

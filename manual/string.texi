@@ -1,4 +1,5 @@
 @node String and Array Utilities, Extended Characters, Character Handling, Top
+@c %MENU% Utilities for copying and comparing strings and arrays
 @chapter String and Array Utilities
 
 Operations on strings (or arrays of characters) are an important part of

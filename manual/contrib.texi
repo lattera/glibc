@@ -1,4 +1,5 @@
 @node Contributors, Copying, Maintenance, Top
+@c %MENU% Who wrote what parts of the GNU C library
 @appendix Contributors to the GNU C Library
 
 The GNU C library was written originally by Roland McGrath, and is

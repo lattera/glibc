@@ -20,6 +20,7 @@
 #include <dlfcn.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <string.h>
 #include <bits/libc-lock.h>
 #include <elf/ldsodefs.h>
 
@@ -50,25 +51,31 @@ static size_t _dl_global_scope_alloc;
 __libc_lock_define_initialized_recursive (, _dl_load_lock)
 
 
-struct link_map *
-internal_function
-_dl_open (const char *file, int mode)
+/* We must be carefull not to leave us in an inconsistent state.  Thus we
+   catch any error and re-raise it after cleaning up.  */
+
+struct dl_open_args
 {
+  const char *file;
+  int mode;
+  struct link_map *map;
+};
+
+static void
+dl_open_worker (void *a)
+{
+  struct dl_open_args *args = a;
+  const char *file = args->file;
+  int mode = args->mode;
   struct link_map *new, *l;
   ElfW(Addr) init;
   struct r_debug *r;
 
-  /* Make sure we are alone.  */
-  __libc_lock_lock (_dl_load_lock);
-
   /* Load the named object.  */
-  new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
+  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0);
   if (new->l_searchlist)
-    {
-      /* It was already open.  */
-      __libc_lock_unlock (_dl_load_lock);
-      return new;
-    }
+    /* It was already open.  */
+    return;
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0);
@@ -147,7 +154,7 @@ _dl_open (const char *file, int mode)
 	    {
 	      _dl_global_scope = _dl_default_scope;
 	    nomem:
-	      _dl_close (new);
+	      new->l_global = 0;
 	      _dl_signal_error (ENOMEM, file, "cannot extend global scope");
 	    }
 	  _dl_global_scope[2] = _dl_default_scope[2];
@@ -158,8 +165,8 @@ _dl_open (const char *file, int mode)
 	}
       else
 	{
-	  if (_dl_global_scope_alloc <
-	      (size_t) (_dl_global_scope_end - _dl_global_scope + 2))
+	  if (_dl_global_scope_end + 2
+	      == _dl_global_scope + _dl_global_scope_alloc)
 	    {
 	      /* Must extend the list.  */
 	      struct link_map **new = realloc (_dl_global_scope,
@@ -167,9 +174,8 @@ _dl_open (const char *file, int mode)
 					       * sizeof (struct link_map *));
 	      if (! new)
 		goto nomem;
-	      _dl_global_scope_end = new + (_dl_global_scope_end -
-					    _dl_global_scope);
 	      _dl_global_scope = new;
+	      _dl_global_scope_end = new + _dl_global_scope_alloc - 2;
 	      _dl_global_scope_alloc *= 2;
 	    }
 
@@ -199,9 +205,49 @@ _dl_open (const char *file, int mode)
     /* We must be the static _dl_open in libc.a.  A static program that
        has loaded a dynamic object now has competition.  */
     __libc_multiple_libcs = 1;
+}
+
+
+struct link_map *
+internal_function
+_dl_open (const char *file, int mode)
+{
+  struct dl_open_args args;
+  char *errstring;
+  int errcode;
+
+  /* Make sure we are alone.  */
+  __libc_lock_lock (_dl_load_lock);
+
+  args.file = file;
+  args.mode = mode;
+  args.map = NULL;
+  errcode = _dl_catch_error (&errstring, dl_open_worker, &args);
 
   /* Release the lock.  */
   __libc_lock_unlock (_dl_load_lock);
 
-  return new;
+  if (errstring)
+    {
+      /* Some error occured during loading.  */
+      char *local_errstring;
+
+      /* Reset the global scope.  */
+      *_dl_global_scope_end = NULL;
+
+      /* Remove the object from memory.  It may be in an inconsistent
+	 state if relocation failed, for example.  */
+      if (args.map)
+	_dl_close (args.map);
+
+      /* Make a local copy of the error string so that we can release the
+	 memory allocated for it.  */
+      local_errstring = strdupa (errstring);
+      free (errstring);
+
+      /* Reraise the error.  */
+      _dl_signal_error (errcode, NULL, local_errstring);
+    }
+
+  return args.map;
 }

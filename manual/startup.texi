@@ -1,4 +1,5 @@
-@node Process Startup
+@node Process Startup, Processes, Signal Handling, Top
+@c %MENU% Writing the beginning and end of your program
 @chapter Process Startup and Termination
 
 @cindex process

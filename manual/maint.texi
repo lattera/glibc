@@ -1,4 +1,5 @@
 @node Maintenance, Contributors, Installation, Top
+@c %MENU% How to enhance and port the GNU C Library
 @appendix Library Maintenance
 
 @menu

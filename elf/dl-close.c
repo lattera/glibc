@@ -62,7 +62,9 @@ _dl_close (struct link_map *map)
     {
       struct link_map *imap = list[i];
       if (imap->l_opencount == 1 && imap->l_type == lt_loaded
-	  && imap->l_info[DT_FINI])
+	  && imap->l_info[DT_FINI]
+	  /* Skip any half-cooked objects that were never initialized.  */
+	  && imap->l_init_called)
 	{
 	  /* When debugging print a message first.  */
 	  if (_dl_debug_impcalls)

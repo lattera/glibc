@@ -1,4 +1,5 @@
 @node Extended Characters, Locales, String and Array Utilities, Top
+@c %MENU% Support for extended character sets
 @chapter Extended Characters
 
 A number of languages use character sets that are larger than the range

@@ -1,5 +1,6 @@
 @node Introduction, Error Reporting, Top, Top
 @chapter Introduction
+@c %MENU% Purpose of the GNU C Library
 
 The C language provides no built-in facilities for performing such
 common operations as input/output, memory management, string

@@ -1,4 +1,5 @@
 @node Signal Handling, Process Startup, Non-Local Exits, Top
+@c %MENU% How to send, block, and handle signals
 @chapter Signal Handling
 
 @cindex signal

@@ -1,4 +1,5 @@
 @node Pipes and FIFOs, Sockets, File System Interface, Top
+@c %MENU% A simple interprocess communication mechanism
 @chapter Pipes and FIFOs
 
 @cindex pipe

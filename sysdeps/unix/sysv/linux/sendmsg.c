@@ -37,10 +37,7 @@ extern int __syscall_sendmsg (int, const struct msghdr *, int);
 /* Send a message described by MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
 int
-__libc_sendmsg (fd, message, flags)
-     int fd;
-     const struct msghdr *message;
-     int flags;
+__libc_sendmsg (int fd, const struct msghdr *message, int flags)
 {
   struct cmsghdr *cm;
   struct cmsgcred *cc;

@@ -81,14 +81,8 @@ extern int dladdr __P ((const void *__address, Dl_info *__info));
    into
         foo = DL_CALL_FCT (fctp, (arg1, arg2));
 */
-# if __GNUC__ >= 2
-#  define DL_CALL_FCT(fctp, args) \
-  (__extension__ ({ _dl_mcount_wrapper_check (fctp);			      \
-		    (*fctp) args; }))
-# else
-/* This feature is not available without GCC.  */
-#  define DL_CALL_FCT(fctp, args) (*fctp) args
-# endif
+# define DL_CALL_FCT(fctp, args) \
+  (_dl_mcount_wrapper_check (fctp), (*(fctp)) args)
 
 /* This function calls the profiling functions.  */
 extern void _dl_mcount_wrapper_check __P ((void *__selfpc));

@@ -1,4 +1,5 @@
 @node Searching and Sorting, Pattern Matching, Message Translation, Top
+@c %MENU% General searching and sorting functions
 @chapter Searching and Sorting
 
 This chapter describes functions for searching and sorting arrays of

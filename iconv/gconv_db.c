@@ -239,6 +239,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 	    }
 	  free (result);
 	  *nsteps = 0;
+	  *handle = NULL;
 	  status = GCONV_NOCONV;
 	}
       else
@@ -246,6 +247,11 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  *handle = result;
 	  status = GCONV_OK;
 	}
+    }
+  else
+    {
+      *nsteps = 0;
+      *handle = NULL;
     }
 
   return status;

@@ -1,4 +1,5 @@
 @node File System Interface, Pipes and FIFOs, Low-Level I/O, Top
+@c %MENU% Functions for manipulating files
 @chapter File System Interface
 
 This chapter describes the GNU C library's functions for manipulating

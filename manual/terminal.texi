@@ -1,4 +1,5 @@
-@node Low-Level Terminal Interface
+@node Low-Level Terminal Interface, Mathematics, Sockets, Top
+@c %MENU% How to change the characteristics of a terminal device
 @chapter Low-Level Terminal Interface
 
 This chapter describes functions that are specific to terminal devices.

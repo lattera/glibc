@@ -1,4 +1,5 @@
 @node Date and Time, Non-Local Exits, Arithmetic, Top
+@c %MENU% Functions for getting the date and time and formatting them nicely
 @chapter Date and Time
 
 This chapter describes functions for manipulating dates and times,

@@ -1,4 +1,5 @@
 @node Pattern Matching, I/O Overview, Searching and Sorting, Top
+@c %MENU% Matching shell ``globs'' and regular expressions
 @chapter Pattern Matching
 
 The GNU C Library provides pattern matching facilities for two kinds of

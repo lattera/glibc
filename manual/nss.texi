@@ -1,11 +1,10 @@
-@c each section should have index entries corresponding to the section title
-
-@node Name Service Switch
+@node Name Service Switch, Users and Groups, Job Control, Top
 @chapter System Databases and Name Service Switch
-
+@c %MENU% Accessing system databases
 @cindex Name Service Switch
 @cindex NSS
 @cindex databases
+
 Various functions in the C Library need to be configured to work
 correctly in the local environment.  Traditionally, this was done by
 using files (e.g., @file{/etc/passwd}), but other nameservices (like the

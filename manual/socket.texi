@@ -1,4 +1,5 @@
 @node Sockets, Low-Level Terminal Interface, Pipes and FIFOs, Top
+@c %MENU% A more complicated IPC mechanism, with networking support
 @chapter Sockets
 
 This chapter describes the GNU facilities for interprocess

@@ -1,5 +1,6 @@
 @node Error Reporting, Memory Allocation, Introduction, Top
 @chapter Error Reporting
+@c %MENU% How library functions report errors
 @cindex error reporting
 @cindex reporting errors
 @cindex error codes

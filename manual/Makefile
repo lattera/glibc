@@ -41,46 +41,36 @@ all: info
 info: libc.info dir-add.info
 endif
 
-# Set chapters and chapters-incl[12].
--include chapters
-chapters: libc.texinfo
-	$(find-includes)
-ifdef chapters
-# @includes in chapter files
--include chapters-incl1
-chapters-incl1: $(chapters)
-	$(find-includes)
-chapters-incl1 := $(filter-out summary.texi,$(chapters-incl1))
-endif
-ifdef chapters-incl1
-# @includes in files included by chapter files, if any
--include chapters-incl2
-chapters-incl2: $(chapters-incl1)
-	$(find-includes)
-endif
-
-chapters-incl := $(chapters-incl1) $(chapters-incl2)
-
-define find-includes
-(echo '$(@F) :=' \\	;\
- $(AWK) '$$1 == "@include" { print $$2 " \\" }' $^) > $@.new
-mv -f $@.new $@
-endef
-
 # scripts we use
 ifndef move-if-change
 move-if-change = ./move-if-change
 endif
 mkinstalldirs = $(..)scripts/mkinstalldirs
 
-libc.dvi libc.info: $(chapters) summary.texi $(chapters-incl)
+chapters = $(addsuffix .texi, \
+	   intro errno memory ctype string mbyte locale message search	\
+	   pattern io stdio llio filesys pipe socket terminal math	\
+	   arith time setjmp signal startup process job nss users	\
+	   sysinfo conf)
+add-chapters = $(wildcard $(patsubst %, ../%.texi, \
+		 $(join $(add-ons:=/),$(add-ons))))
+appendices = lang.texi header.texi install.texi maint.texi contrib.texi
+
+-include texis
+texis: $(chapters) $(add-chapters) $(appendices) lgpl.texinfo
+	$(AWK) -f texis.awk $^ > $@.T
+	mv -f $@.T $@
+
+nonexamples = $(filter-out %.c.texi, $(texis))
+examples = $(filter %.c.texi, $(texis))
+
+# Kludge: implicit rule so Make knows the one command does it all.
+chapters.% top-menu.%: $(texis)
+	AWK=$(AWK) $(SHELL) libc-texinfo.sh \
+	'$(chapters)' '$(add-chapters)' '$(appendices)'
+
+libc.dvi libc.info: chapters.texi top-menu.texi
 libc.dvi: texinfo.tex
-
-%.info: %.texinfo
-	$(MAKEINFO) $<
-
-%.dvi: %.texinfo
-	$(TEXI2DVI) $<
 
 # Generate the summary from the Texinfo source files for each chapter.
 summary.texi: stamp-summary ;
@@ -93,7 +83,7 @@ stamp-summary: summary.awk $(chapters) $(chapters-incl)
 # Generate a file which can be added to the `dir' content to provide direct
 # access to the documentation of the function, variables, and other
 # definitions.
-dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
+dir-add.texinfo: xtract-typefun.awk $(texis)
 	(echo "@dircategory GNU C library functions";			\
 	 echo "@direntry";						\
 	 $(AWK) -f $^;							\
@@ -109,18 +99,22 @@ dir-add.texinfo: xtract-typefun.awk $(chapters) $(chapters-incl)
 	    $< | expand > $@.new
 	mv -f $@.new $@
 
+%.info: %.texinfo
+	$(MAKEINFO) $<
 
-minimal-dist = summary.awk libc.texinfo $(chapters)			\
-	       $(patsubst %.c.texi,examples/%.c,			\
-			  $(filter-out summary.texi,$(chapters-incl)))
+%.dvi: %.texinfo
+	$(TEXI2DVI) $<
+
+# Distribution.
+minimal-dist =  summary.awk texis.awk libc-texinfo.sh libc.texinfo	\
+		$(filter-out summary.texi, $(nonexamples))		\
+	       $(patsubst %.c.texi,examples/%.c, $(examples))
+
 doc-only-dist = Makefile COPYING.LIB
-distribute = $(minimal-dist)	       					\
-	     $(patsubst examples/%.c,%.c.texi,$(filter examples/%.c,	\
-			$(minimal-dist)))				\
-	     libc.info* libc.?? libc.??s texinfo.tex summary.texi	\
-	     stamp-summary chapters chapters-incl1 chapters-incl2	\
+distribute = $(minimal-dist) $(examples) texis stdio-fp.c		\
+	     libc.info* libc.?? libc.??s texinfo.tex stamp-summary	\
 	     xtract-typefun.awk dir-add.texinfo dir-add.info dir	\
-	     stdio-fp.c
+	     chapters.texi top-menu.texi
 export distribute := $(distribute)
 
 tar-it = tar chovf $@ $^
@@ -149,15 +143,17 @@ glibc-doc-$(edition).tar: $(doc-only-dist) $(distribute)
 
 .PHONY: mostlyclean distclean realclean clean
 mostlyclean:
-	-rm -f libc.dvi libc.info* dir-add.info stubs
+	-rm -f libc.dvi libc.tmp libc.info* dir-add.info
+	-rm -f $(objpfx)stubs $(objpfx)distinfo
 	-rm -f $(foreach o,$(object-suffixes-for-libc),$(objpfx)stamp$o)
 clean: mostlyclean
 distclean: clean
 indices = cp fn pg tp vr ky
 realclean: distclean
-	-rm -f chapters chapters-incl* summary.texi stamp-summary *.c.texi
+	-rm -f texis summary.texi stamp-summary *.c.texi
 	-rm -f $(foreach index,$(indices),libc.$(index) libc.$(index)s)
-	-rm -f libc.log libc.aux libc.toc dir-add.texi
+	-rm -f libc.log libc.aux libc.toc dir-add.texinfo
+	-rm -f top-menu.texi chapters.texi
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install

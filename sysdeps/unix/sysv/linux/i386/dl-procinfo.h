@@ -27,8 +27,8 @@ static const char x86_cap_flags[][7] =
   {
     "fpu", "vme", "de", "pse", "tsc", "msr", "pae", "mce",
     "cx8", "apic", "10", "sep", "mtrr", "pge", "mca", "cmov",
-    "fcmov", "17", "18", "19", "20", "21", "22", "mmx",
-    "osfxsr", "25", "26", "27", "28", "29", "30", "amd3d"
+    "pat", "pse36", "18", "19", "20", "21", "22", "mmx",
+    "fxsr", "25", "26", "27", "28", "29", "30", "amd3d"
   };
 
 static inline int

@@ -1,4 +1,5 @@
 @node Low-Level I/O, File System Interface, I/O on Streams, Top
+@c %MENU% Low-level, less portable I/O
 @chapter Low-Level Input/Output
 
 This chapter describes functions for performing low-level input/output

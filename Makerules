@@ -276,22 +276,31 @@ ifndef sysd-rules-done
 no_deps=t
 endif
 
-# Generate version maps.
+# Generate version maps, but wait until sysdep-subdirs is known
+ifdef sysd-dirs-done
 ifeq ($(versioning),yes)
-ifndef no_deps
 -include $(common-objpfx)sysd-versions
 $(addprefix $(common-objpfx),$(version-maps)): $(common-objpfx)sysd-versions
-generated += $(version-maps)
+common-generated += $(version-maps) sysd-versions
 
+ifndef avoid-generated
+ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
+sysd-versions-force = FORCE
+FORCE:
+endif
 $(common-objpfx)sysd-versions: $(..)Versions.def $(..)scripts/versions.awk \
 			       $(wildcard $(all-subdirs:%=$(..)%/Versions)) \
-			       $(wildcard $(+sysdep_dirs:%=%/Versions))
-	$(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
-	       -v move_if_change='$(move-if-change)' \
-	       -f $(filter-out $<,$^) > $@T
+			       $(wildcard $(sysdirs:%=%/Versions)) \
+			       $(sysd-versions-force)
+	{ echo 'sysd-versions-subdirs = $(all-subdirs) $(config-sysdirs)' ; \
+	  $(AWK) -v buildroot=$(common-objpfx) -v defsfile=$< \
+		 -v move_if_change='$(move-if-change)' \
+		 -f $(filter-out $< $(sysd-versions-force),$^); \
+	} > $@T
 	mv -f $@T $@
-endif
-endif
+endif # avoid-generated
+endif # $(versioning) = yes
+endif # sysd-dirs-done
 
 ifndef compile-command.S
 compile-command.S = $(compile.S) $(OUTPUT_OPTION)

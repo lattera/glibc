@@ -1,4 +1,6 @@
-@node System Configuration, Language Features, System Information, Top
+@c This node must have no next pointer.
+@node System Configuration, , System Information, Top
+@c %MENU% Parameters describing operating system limits
 @chapter System Configuration Parameters
 
 The functions and macros listed in this chapter give information about

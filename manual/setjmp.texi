@@ -1,4 +1,5 @@
 @node Non-Local Exits, Signal Handling, Date and Time, Top
+@c %MENU% Jumping out of nested function calls
 @chapter Non-Local Exits
 @cindex non-local exits
 @cindex long jumps

@@ -1,4 +1,5 @@
 @node Character Handling, String and Array Utilities, Memory Allocation, Top
+@c %MENU% Character testing and conversion functions
 @chapter Character Handling
 
 Programs that work with characters and strings often need to classify a

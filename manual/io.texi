@@ -1,4 +1,5 @@
 @node I/O Overview, I/O on Streams, Pattern Matching, Top
+@c %MENU% Introduction to the I/O facilities
 @chapter Input/Output Overview
 
 Most programs need to do either input (reading data) or output (writing

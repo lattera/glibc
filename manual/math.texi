@@ -1,739 +1,129 @@
 @c We need some definitions here.
+@ifclear mult
 @ifhtml
-@set mult ·
+@set mult &middot;
+@set infty &infin;
+@set pie &pi;
 @end ifhtml
 @iftex
 @set mult @cdot
+@set infty @infty
 @end iftex
 @ifclear mult
-@set mult x
+@set mult *
+@set infty oo
+@set pie pi
 @end ifclear
 @macro mul
 @value{mult}
 @end macro
-@iftex
-@set infty @infty
-@end iftex
-@ifclear infty
-@set infty oo
-@end ifclear
 @macro infinity
 @value{infty}
 @end macro
+@ifnottex
+@macro pi
+@value{pie}
+@end macro
+@end ifnottex
+@end ifclear
 
 @node Mathematics, Arithmetic, Low-Level Terminal Interface, Top
+@c %MENU% Math functions, useful constants, random numbers
 @chapter Mathematics
 
 This chapter contains information about functions for performing
 mathematical computations, such as trigonometric functions.  Most of
 these functions have prototypes declared in the header file
-@file{math.h}.
+@file{math.h}.  The complex-valued functions are defined in
+@file{complex.h}.
 @pindex math.h
+@pindex complex.h
 
-For all functions which take a single floating-point argument and for
-several other functions as well there are three different functions
-available for the type @code{double}, @code{float}, and @code{long
-double}.  The @code{double} versions of the functions are mostly defined
-even in the @w{ISO C 89} standard.  The @code{float} and @code{long
-double} variants are introduced in the numeric extensions for the C
-language which are part of the @w{ISO C 9X} standard.
+All mathematical functions which take a floating-point argument
+have three variants, one each for @code{double}, @code{float}, and
+@code{long double} arguments.  The @code{double} versions are mostly
+defined in @w{ISO C 89}.  The @code{float} and @code{long double}
+versions are from the numeric extensions to C included in @w{ISO C 9X}.
 
-Which of the three versions of the function should be used depends on
-the situation.  For most functions and implementation it is true that
-speed and precision do not go together.  I.e., the @code{float} versions
-are normally faster than the @code{double} and @code{long double}
-versions.  On the other hand the @code{long double} version has the
-highest precision.  One should always think about the actual needs and
-in case of double using @code{double} is a good compromise.
-
+Which of the three versions of a function should be used depends on the
+situation.  For most calculations, the @code{float} functions are the
+fastest.  On the other hand, the @code{long double} functions have the
+highest precision.  @code{double} is somewhere in between.  It is
+usually wise to pick the narrowest type that can accomodate your data.
+Not all machines have a distinct @code{long double} type; it may be the
+same as @code{double}.
 
 @menu
-* Domain and Range Errors::      Detecting overflow conditions and the like.
-* Exceptions in Math Functions:: Signalling exception in math functions.
-* Mathematical Constants::       Precise numeric values for often used
-                                  constant.
-* FP Comparison Functions::      Special functions to compare floating-point
-                                  numbers.
-* FP Function Optimizations::    Fast code or small code.
-* Trig Functions::               Sine, cosine, and tangent.
-* Inverse Trig Functions::       Arc sine, arc cosine, and arc tangent.
-* Exponents and Logarithms::     Also includes square root.
-* Hyperbolic Functions::         Hyperbolic sine and friends.
-* Pseudo-Random Numbers::        Functions for generating pseudo-random
-				  numbers.
+* Mathematical Constants::      Precise numeric values for often-used
+                                 constants.
+* Trig Functions::              Sine, cosine, tangent, and friends.
+* Inverse Trig Functions::      Arcsine, arccosine, etc.
+* Exponents and Logarithms::    Also pow and sqrt.
+* Hyperbolic Functions::        sinh, cosh, tanh, etc.
+* Special Functions::           Bessel, gamma, erf.
+* Pseudo-Random Numbers::       Functions for generating pseudo-random
+				 numbers.
+* FP Function Optimizations::   Fast code or small code.
 @end menu
-
-@node Domain and Range Errors
-@section Domain and Range Errors
-
-@cindex domain error
-Many of the functions listed in this chapter are defined mathematically
-over a domain that is only a subset of real numbers.  For example, the
-@code{acos} function is defined over the domain between @code{@minus{}1} and
-@code{1}.  If you pass an argument to one of these functions that is
-outside the domain over which it is defined, the function sets
-@code{errno} to @code{EDOM} to indicate a @dfn{domain error}.  On
-machines that support @w{IEEE 754} floating point, functions reporting
-error @code{EDOM} also return a NaN.
-
-Some of these functions are defined mathematically to result in a
-complex value over parts of their domains.  The most familiar example of
-this is taking the square root of a negative number.  The functions in
-this chapter take only real arguments and return only real values;
-therefore, if the value ought to be nonreal, this is treated as a domain
-error.
-
-@cindex range error
-A related problem is that the mathematical result of a function may not
-be representable as a floating point number.  If magnitude of the
-correct result is too large to be represented, the function sets
-@code{errno} to @code{ERANGE} to indicate a @dfn{range error}, and
-returns a particular very large value (named by the macro
-@code{HUGE_VAL}) or its negation (@code{@minus{}HUGE_VAL}).
-
-If the magnitude of the result is too small, a value of zero is returned
-instead.  In this case, @code{errno} might or might not be
-set to @code{ERANGE}.
-
-The only completely reliable way to check for domain and range errors is
-to set @code{errno} to @code{0} before you call the mathematical function
-and test @code{errno} afterward.  As a consequence of this use of
-@code{errno}, use of the mathematical functions is not reentrant if you
-check for errors.
-
-@c ### This is no longer true.  --drepper
-@c None of the mathematical functions ever generates signals as a result of
-@c domain or range errors.  In particular, this means that you won't see
-@c @code{SIGFPE} signals generated within these functions.  (@xref{Signal
-@c Handling}, for more information about signals.)
-
-@comment math.h
-@comment ISO
-@deftypevr Macro double HUGE_VAL
-An expression representing a particular very large number.  On machines
-that use @w{IEEE 754}/@w{IEEE 854} floating point format, the value is
-``infinity''.  On other machines, it's typically the largest positive
-number that can be represented.
-
-The value of this macro is used as the return value from various
-mathematical @code{double} returning functions in overflow situations.
-@end deftypevr
-
-@comment math.h
-@comment ISO
-@deftypevr Macro float HUGE_VALF
-This macro is similar to the @code{HUGE_VAL} macro except that it is
-used by functions returning @code{float} values.
-
-This macro is introduced in @w{ISO C 9X}.
-@end deftypevr
-
-@comment math.h
-@comment ISO
-@deftypevr Macro {long double} HUGE_VALL
-This macro is similar to the @code{HUGE_VAL} macro except that it is
-used by functions returning @code{long double} values.  The value is
-only different from @code{HUGE_VAL} if the architecture really supports
-@code{long double} values.
-
-This macro is introduced in @w{ISO C 9X}.
-@end deftypevr
-
-
-A special case is the @code{ilogb} function @pxref{Exponents and
-Logarithms}.  Since the return value is an integer value, one cannot
-compare with @code{HUGE_VAL} etc.  Therefore two further values are
-defined.
-
-@comment math.h
-@comment ISO
-@deftypevr Macro int FP_ILOGB0
-This value is returned by @code{ilogb} if the argument is @code{0}.  The
-numeric value is either @code{INT_MIN} or @code{-INT_MAX}.
-
-This macro is introduced in @w{ISO C 9X}.
-@end deftypevr
-
-@comment math.h
-@comment ISO
-@deftypevr Macro int FP_ILOGBNAN
-This value is returned by @code{ilogb} if the argument is @code{NaN}.  The
-numeric value is either @code{INT_MIN} or @code{INT_MAX}.
-
-This macro is introduced in @w{ISO C 9X}.
-@end deftypevr
-
-
-For more information about floating-point representations and limits,
-see @ref{Floating Point Parameters}.  In particular, the macro
-@code{DBL_MAX} might be more appropriate than @code{HUGE_VAL} for many
-uses other than testing for an error in a mathematical function.
-
-
-@node Exceptions in Math Functions
-@section Exceptions in Math Functions
-@cindex exception
-@cindex signal
-
-Due to the restrictions in the size of the floating-point number
-representation or the limitation of the input range of certain functions
-some of the mathematical operations and functions have to signal
-exceptional situations.  The @w{IEEE 754} standard specifies which
-exceptions have to be supported and how they can be handled.
-
-@w{IEEE 754} specifies two actions for floating-point exception: taking
-a trap or continuing without doing so.  If the trap is taken a
-(possibly) user defined trap handler is called and this function can
-correct the argument or react somehow else on the call.  If the trap
-handler returns, its return value is taken as the result of the
-operation.
-
-If no trap handler is called each of the known exceptions has a default
-action.  This consists of setting a corresponding bit in the
-floating-point status word to indicate which kind of exception was
-raised and to return a default value, which depends on the exception
-(see the table below).
-
-@noindent
-The exceptions defined in @w{IEEE 754} are:
-
-@table @samp
-@item Invalid Operation
-This exception is raised if the given operands are invalid for the
-operation to be performed.  Examples are
-(see @w{IEEE 754}, @w{section 7}):
-@enumerate
-@item
-Any operation on a signalling NaN.
-@item
-Addition or subtraction; magnitude subtraction of infinities such as
-@math{(+@infinity{}) + (-@infinity{})}.
-@item
-Multiplication:
-@math{0 @mul{} @infinity{}}.
-
-@item
-Division: @math{0/0} or @math{@infinity{}/@infinity{}}.
-
-@item
-Remainder: @math{x} REM @math{y}, where @math{y} is zero or @math{x} is
-infinite.
-@item
-Square root if the operand is less then zero.
-@item
-Conversion of an internal floating-point number to an integer or to a
-decimal string when overflow, infinity, or NaN precludes a faithful
-representation in that format and this cannot otherwise be signaled.
-@item
-Conversion of an unrecognizable input string.
-@item
-Comparison via predicates involving @math{<} or @math{>}, without
-@code{?}, when the operands are @dfn{unordered}.  (@math{?>} means the
-unordered greater relation, @xref{FP Comparison Functions}).
-@end enumerate
-
-If the exception does not cause a trap handler to be called the result
-of the operation is taken as a quiet NaN.
-
-@item Division by Zero
-This exception is raised if the divisor is zero and the dividend is a
-finite nonzero number.  If no trap occurs the result is either
-@math{+@infinity{}} or @math{-@infinity{}}, depending on the
-signs of the operands.
-
-@item Overflow
-This exception is signalled whenever the result cannot be represented
-as a finite value in the precision format of the destination.  If no trap
-occurs the result depends on the sign of the intermediate result and the
-current rounding mode (@w{IEEE 754}, @w{section 7.3}):
-@enumerate
-@item
-Round to nearest carries all overflows to @math{@infinity{}}
-with the sign of the intermediate result.
-@item
-Round toward @math{0} carries all overflows to the precision's largest
-finite number with the sign of the intermediate result.
-@item
-Round toward @math{-@infinity{}} carries positive overflows to the
-precision's largest finite number and carries negative overflows to
-@math{-@infinity{}}.
-
-@item
-Round toward @math{@infinity{}} carries negative overflows to the
-precision's most negative finite number and carries positive overflows
-to @math{@infinity{}}.
-@end enumerate
-
-@item Underflow
-The underflow exception is created when an intermediate result is too
-small for the operation or if the operations result rounded to the
-destination precision causes a loss of accuracy by approximating the
-result by denormalized numbers.
-
-When no trap is installed for the underflow exception, underflow shall
-be signaled (via the underflow flag) only when both tininess and loss of
-accuracy have been detected.  If no trap handler is installed the
-operation continues with an inprecise small value or zero if the
-destination precision cannot hold the small exact result.
-
-@item Inexact
-This exception is signalled if the rounded result is not exact (such as
-computing the square root of two) or the result overflows without an
-overflow trap.
-@end table
-
-To control whether an exception causes a trap to occur all @w{IEEE 754}
-conformant floating-point implementations (either hardware or software)
-have a control word.  By setting specific bits for each exception in
-this control word the programmer can decide whether a trap is wanted or
-not.
-
-@w{ISO C 9X} introduces a set of function which can be used to control
-exceptions.  There are functions to manipulate the control word, to
-query the status word or to save and restore the whole state of the
-floating-point unit.  There are also functions to control the rounding
-mode used.
-
-@menu
-* Status bit operations::       Manipulate the FP status word.
-* FPU environment::             Controlling the status of the FPU.
-* Rounding Modes::              Controlling the rounding mode.
-@end menu
-
-@node Status bit operations
-@subsection Controlling the FPU status word
-
-To control the five types of exceptions defined in @w{IEEE 754} some
-functions are defined which abstract the interface to the FPU.  The
-actual implementation can be very different, depending on the underlying
-hardware or software.
-
-To address the single exception the @file{fenv.h} headers defines a
-number of macros:
-
-@vtable @code
-@comment fenv.h
-@comment ISO
-@item FE_INEXACT
-Represents the inexact exception iff the FPU supports this exception.
-@comment fenv.h
-@comment ISO
-@item FE_DIVBYZERO
-Represents the divide by zero exception iff the FPU supports this exception.
-@comment fenv.h
-@comment ISO
-@item FE_UNDERFLOW
-Represents the underflow exception iff the FPU supports this exception.
-@comment fenv.h
-@comment ISO
-@item FE_OVERFLOW
-Represents the overflow exception iff the FPU supports this exception.
-@comment fenv.h
-@comment ISO
-@item FE_INVALID
-Represents the invalid exception iff the FPU supports this exception.
-@end vtable
-
-The macro @code{FE_ALL_EXCEPT} is the bitwise OR of all exception macros
-which are supported by the FP implementation.
-
-Each of the supported exception flags can either be set or unset.  The
-@w{ISO C 9X} standard defines functions to set, unset and test the
-status of the flags.
-
-@comment fenv.h
-@comment ISO
-@deftypefun void feclearexcept (int @var{excepts})
-This function clears all of the supported exception flags denoted by
-@var{excepts} in the status word.
-@end deftypefun
-
-To safe the current status of the flags in the status word @file{fenv.h}
-defines the type @code{fexcept_t} which can hold all the information.
-The following function can be used to retrieve the current setting.
-
-@comment fenv.h
-@comment ISO
-@deftypefun void fegetexceptflag (fexcept_t *@var{flagp}, int @var{excepts})
-Store in the variable pointed to by @var{flagp} an
-implementation-defined value representing the current setting of the
-exception flags indicated by the parameter @var{excepts}.
-@end deftypefun
-
-@noindent
-To restore the previously saved values one can use this function:
-
-@comment fenv.h
-@comment ISO
-@deftypefun void fesetexceptflag (const fexcept_t *@var{flagp}, int @var{excepts})
-Restore from the variable pointed to by @var{flagp} the setting of the
-flags for the exceptions denoted by the value of the parameter
-@var{excepts}.
-@end deftypefun
-
-The last function allows to query the current status of the flags.  The
-flags can be set either explicitely (using @code{fesetexceptflag} or
-@code{feclearexcept}) or by a floating-point operation which happened
-before.  Since the flags are accumulative, the flags must be explicitely
-reset using @code{feclearexcept} if one wants to test for a certain
-exceptions raised by a specific piece of code.
-
-@comment fenv.h
-@comment ISO
-@deftypefun int fetestexcept (int @var{excepts})
-Test whether a subset of the flags indicated by the parameter
-@var{except} is currently set.  If yes, a nonzero value is returned
-which specifies which exceptions are set.  Otherwise the result is zero.
-@end deftypefun
-
-@noindent
-Code which uses the @code{fetestexcept} function could look like this:
-
-@smallexample
-@{
-  double f;
-  int raised;
-  feclearexcept (FE_ALL_EXCEPT);
-  f = compute ();
-  raised = fetestexcept (FE_OVERFLOW | FE_INVALID);
-  if (raised & FE_OVERFLOW) @{ /* ... */ @}
-  if (raised & FE_INVALID) @{ /* ... */ @}
-  /* ... */
-@}
-@end smallexample
-
-Please note that the return value of @code{fetestexcept} is @code{int}
-but this does not mean that the @code{fexcept_t} type is generally
-representable as an integer.  These are completely independent types.
-
-
-@node FPU environment
-@subsection Controlling the Floating-Point environment
-
-It is sometimes necessary so save the complete status of the
-floating-point unit for a certain time to perform some completely
-different actions.  Beside the status of the exception flags, the
-control word for the exceptions and the rounding mode can be saved.
-
-The file @file{fenv.h} defines the type @code{fenv_t}.  The layout of a
-variable of this type is implementation defined but the variable is able
-to contain the complete status information.  To fill a variable of this
-type one can use this function:
-
-@comment fenv.h
-@comment ISO
-@deftypefun void fegetenv (fenv_t *@var{envp})
-Store the current floating-point environment in the object pointed to by
-@var{envp}.
-@end deftypefun
-
-@noindent
-Another possibility which is useful in several situations is
-
-@comment fenv.h
-@comment ISO
-@deftypefun int feholdexcept (fenv_t *@var{envp})
-Store the current floating-point environment in the object pointed to by
-@var{envp}.  Afterwards, all exception flags are cleared and if
-available a mode is installed which continues on all exceptions and does
-not cause a trap to occur.  In this case a nonzero value is returned.
-
-If the floating-point implementation does not support such a non-stop
-mode, the return value is zero.
-@end deftypefun
-
-The functions which allow a state of the floating-point unit to be
-restored can take two kinds of arguments:
-
-@itemize @bullet
-@item
-Pointers to @code{fenv_t} objects which were initialized previously by a
-call to @code{fegetenv} or @code{feholdexcept}.
-@item
-@vindex FE_DFL_ENV
-The special macro @code{FE_DFL_ENV} which represents the floating-point
-environment as it was available at program start.
-@item
-Implementation defined macros with names starting with @code{FE_}.
-
-@vindex FE_NOMASK_ENV
-If possible, the GNU C Library defines a macro @code{FE_NOMASK_ENV}
-which represents an environment where no exceptions are masked, so every
-exception raised causes a trap to occur.  You can test for this macro
-using @code{#ifdef}.
-
-Some platforms might define other predefined environments.
-@end itemize
-
-@noindent
-To set any of the environments there are two functions defined.
-
-@deftypefun void fesetenv (const fenv_t *@var{envp})
-Establish the floating-point environment described in the object pointed
-to by @var{envp}.  Even if one or more exceptions flags in the restored
-environment are set no exception is raised.
-@end deftypefun
-
-In some situations the previous status of the exception flags must not
-simply be discarded and so this function is useful:
-
-@deftypefun void feupdateenv (const fenv_t *@var{envp})
-The current status of the floating-point unit is preserved in some
-automatic storage before the environment described by the object pointed
-to by @var{envp} is installed.  Once this is finished all exceptions set
-in the original environment which is saved in the automatic storage, is
-raised.
-@end deftypefun
-
-This function can be used to execute a part of the program with an
-environment which masks all exceptions and before switching back remove
-unwanted exception and raise the remaining exceptions.
-
-
-@node Rounding Modes
-@subsection Rounding modes of the Floating-Point Unit
-
-@w{IEEE 754} defines four different rounding modes.  If the rounding
-mode is supported by the floating-point implementation the corresponding
-of the following macros is defined:
-
-@table @code
-@comment fenv.h
-@comment ISO
-@vindex FE_TONEAREST
-@item FE_TONEAREST
-Round to nearest.  This is the default mode and should always be used
-except when a different mode is explicitely required.  Only rounding to
-nearest guarantees numeric stability of the computations.
-
-@comment fenv.h
-@comment ISO
-@vindex FE_UPWARD
-@item FE_UPWARD
-Round toward @math{+@infinity{}}.
-
-@comment fenv.h
-@comment ISO
-@vindex FE_DOWNWARD
-@item FE_DOWNWARD
-Round toward @math{-@infinity{}}.
-
-@comment fenv.h
-@comment ISO
-@vindex FE_TOWARDZERO
-@item FE_TOWARDZERO
-Round toward zero.
-@end table
-
-At any time one of the above four rounding modes is selected.  To get
-information about the currently selected mode one can use this function:
-
-@comment fenv.h
-@comment ISO
-@deftypefun int fegetround (void)
-Return the currently selected rounding mode, represented by one of the
-values of the defined rounding mode macros.
-@end deftypefun
-
-@noindent
-To set a specific rounding mode the next function can be used.
-
-@comment fenv.h
-@comment ISO
-@deftypefun int fesetround (int @var{round})
-Change the currently selected rounding mode to the mode described by the
-parameter @var{round}.  If @var{round} does not correspond to one of the
-supported rounding modes nothing is changed.
-
-The function returns a nonzero value iff the requested rounding mode can
-be established.  Otherwise zero is returned.
-@end deftypefun
-
-Changing the rounding mode might be necessary for various reasons.  But
-changing the mode only to round a given number normally is no good idea.
-The standard defines a set of functions which can be used to round an
-argument according to some rules and for all of the rounding modes there
-is a corresponding function.
-
-If a large set of number has to be rounded it might be good to change
-the rounding mode and to not use the function the library provides.  So
-the perhaps necessary switching of the rounding mode in the library
-function can be avoided.  But since not all rounding modes are
-guaranteed to exist on any platform this possible implementation cannot
-be portably used.  A default method has to be implemented as well.
-
 
 @node Mathematical Constants
 @section Predefined Mathematical Constants
 @cindex constants
 @cindex mathematical constants
 
-The header @file{math.h} defines a series of mathematical constants if
-@code{_BSD_SOURCE} or a more general feature select macro is defined
-before including this file.  All values are defined as preprocessor
-macros starting with @code{M_}.  The collection includes:
+The header @file{math.h} defines several useful mathematical constants.
+All values are defined as preprocessor macros starting with @code{M_}.
+The values provided are:
 
 @vtable @code
 @item M_E
-The value is that of the base of the natural logarithm.
+The base of natural logarithms.
 @item M_LOG2E
-The value is computed as the logarithm to base @code{2} of @code{M_E}.
+The logarithm to base @code{2} of @code{M_E}.
 @item M_LOG10E
-The value is computed as the logarithm to base @code{10} of @code{M_E}.
+The logarithm to base @code{10} of @code{M_E}.
 @item M_LN2
-The value is computed as the natural logarithm of @code{2}.
+The natural logarithm of @code{2}.
 @item M_LN10
-The value is computed as the natural logarithm of @code{10}.
+The natural logarithm of @code{10}.
 @item M_PI
-The value is those of the number pi.
+Pi, the ratio of a circle's circumrefence to its diameter.
 @item M_PI_2
-The value is those of the number pi divided by two.
+Pi divided by two.
 @item M_PI_4
-The value is those of the number pi divided by four.
+Pi divided by four.
 @item M_1_PI
-The value is the reziprocal of the value of the number pi.
+The reciprocal of pi (1/pi)
 @item M_2_PI
-The value is two times the reziprocal of the value of the number pi.
+Two times the reciprocal of pi.
 @item M_2_SQRTPI
-The value is two times the reziprocal of the square root of the number pi.
+Two times the reciprocal of the square root of pi.
 @item M_SQRT2
-The value is the square root of the value of the number pi.
+The square root of two.
 @item M_SQRT1_2
-The value is the reziprocal of the square root of the value of the number pi.
+The reciprocal of the square root of two (also the square root of 1/2).
 @end vtable
 
-All values are defined as @code{long double} values unless the compiler
-does not support this type or @code{__STDC__} is not defined (both is
-unlikely).  Historically the numbers were @code{double} values and some
-old code still relies on this so you might want to add explicit casts if
-the extra precision of the @code{long double} value is not needed.  One
-critical case are functions with a variable number of arguments, such as
-@code{printf}.
+These constants come from the Unix98 standard and were also available in
+4.4BSD; therefore, they are only defined if @code{_BSD_SOURCE} or
+@code{_XOPEN_SOURCE=500}, or a more general feature select macro, is
+defined.  The default set of features includes these constants.
+@xref{Feature Test Macros}.
+
+All values are of type @code{double}.  As an extension, the GNU C
+library also defines these constants with type @code{long double}.  The
+@code{long double} macros have a lowercase @samp{l} appended to their
+names: @code{M_El}, @code{M_PIl}, and so forth.  These are only
+available if @code{_GNU_SOURCE} is defined.
 
 @vindex PI
 @emph{Note:} Some programs use a constant named @code{PI} which has the
-same value as @code{M_PI}.  This probably derives from Stroustroup's
-book about his C++ programming language where this value is used in
-examples (and perhaps some AT&T headers contain this value).  But due to
-possible name space problems (@code{PI} is a quite frequently used name)
-this value is not added to @file{math.h}.  Every program should use
-@code{M_PI} instead or add on the compiler command line
-@code{-DPI=M_PI}.
-
-
-@node FP Comparison Functions
-@section Floating-Point Comparison Functions
-@cindex unordered comparison
-
-The @w{IEEE 754} standards defines a set of functions which allows to
-compare even those numbers which normally would cause an exception to be
-raised since they are unordered.  E.g., the expression
-
-@smallexample
-int v = a < 1.0;
-@end smallexample
-
-@noindent
-would raise an exception if @var{a} would be a NaN.  Functions to
-compare unordered numbers are part of the FORTRAN language for a long
-time and the extensions in @w{ISO C 9X} finally introduce them as well
-for the C programming language.
-
-All of the operations are implemented as macros which allow their
-arguments to be of either @code{float}, @code{double}, or @code{long
-double} type.
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int isgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether the argument @var{x} is greater than
-@var{y}.  This is equivalent to @code{(@var{x}) > (@var{y})} but no
-exception is raised if @var{x} or @var{y} are unordered.
-@end deftypefn
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int isgreaterequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether the argument @var{x} is greater than or
-equal to @var{y}.  This is equivalent to @code{(@var{x}) >= (@var{y})} but no
-exception is raised if @var{x} or @var{y} are unordered.
-@end deftypefn
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int isless (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether the argument @var{x} is less than @var{y}.
-This is equivalent @code{(@var{x}) < (@var{y})} but no exception is raised if
-@var{x} or @var{y} are unordered.
-@end deftypefn
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int islessequal (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether the argument @var{x} is less than or equal
-to @var{y}.  This is equivalent to @code{(@var{x}) <= (@var{y})} but no
-exception is raised if @var{x} or @var{y} are unordered.
-@end deftypefn
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int islessgreater (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether the argument @var{x} is less or greater
-than @var{y}.  This is equivalent to @code{(@var{x}) < (@var{y}) ||
-(@var{x}) > (@var{y})} (except that @var{x} and @var{y} are only
-evaluated once) but no exception is raised if @var{x} or @var{y} are
-unordered.
-@end deftypefn
-
-@comment math.h
-@comment ISO
-@deftypefn {Macro} int isunordered (@emph{real-floating} @var{x}, @emph{real-floating} @var{y})
-This macro determines whether its arguments are unordered.
-@end deftypefn
-
-All the macros are defined in a way to ensure that both arguments are
-evaluated exactly once and so they can be used exactly like the builtin
-operators.
-
-On several platform these macros are mapped to efficient instructions
-the processor understands.  But on machines missing these functions, the
-macros above might be rather slow.  So it is best to use the builtin
-operators unless it is necessary to use unordered comparisons.
-
-@strong{Note:} There are no macros @code{isequal} or @code{isunequal}.
-These macros are not necessary since the @w{IEEE 754} standard requires
-that the comparison for equality and unequality do @emph{not} throw an
-exception if one of the arguments is an unordered value.
-
-
-@node FP Function Optimizations
-@section Is Fast Code or Small Code preferred?
-@cindex Optimization
-
-If an application uses many floating point function it is often the case
-that the costs for the function calls itselfs are not neglectable.
-Modern processor implementation often can execute the operation itself
-very fast but the call means a disturbance of the control flow.
-
-For this reason the GNU C Library provides optimizations for many of the
-frequently used math functions.  When the GNU CC is used and the user
-activates the optimizer several new inline functions and macros get
-defined.  These new functions and macros have the same names as the
-library function and so get used instead of the later.  In case of
-inline functions the compiler will decide whether it is reasonable to
-use the inline function and this decision is usually correct.
-
-For the generated code this means that no calls to the library functions
-are necessary.  This increases the speed significantly.  But the
-drawback is that the code size increases and this increase is not always
-neglectable.
-
-In cases where the inline functions and macros are not wanted the symbol
-@code{__NO_MATH_INLINES} should be defined before any system header is
-included.  This will make sure only library functions are used.  Of
-course it can be determined for each single file in the project whether
-giving this option is preferred or not.
-
+same value as @code{M_PI}.  This constant is not standard; it may have
+appeared in some old AT&T headers, and is mentioned in Stroustrup's book
+on C++.  It infringes on the user's name space, so the GNU C library
+does not define it.  Fixing programs written to expect it is simple:
+replace @code{PI} with @code{M_PI} throughout, or put @samp{-DPI=M_PI}
+on the compiler command line.
 
 @node Trig Functions
 @section Trigonometric Functions
@@ -744,10 +134,10 @@ The arguments to all of these functions are in units of radians; recall
 that pi radians equals 180 degrees.
 
 @cindex pi (trigonometric constant)
-The math library does define a symbolic constant for pi in @file{math.h}
-(@pxref{Mathematical Constants}) when BSD compliance is required
-(@pxref{Feature Test Macros}).  In case it is not possible to use this
-predefined macro one easily can define it:
+The math library normally defines @code{M_PI} to a @code{double}
+approximation of pi.  If strict ISO and/or POSIX compliance
+are requested this constant is not defined, but you can easily define it
+yourself:
 
 @smallexample
 #define M_PI 3.14159265358979323846264338327
@@ -756,7 +146,6 @@ predefined macro one easily can define it:
 @noindent
 You can also compute the value of pi with the expression @code{acos
 (-1.0)}.
-
 
 @comment math.h
 @comment ISO
@@ -784,22 +173,15 @@ radians.  The return value is in the range @code{-1} to @code{1}.
 These functions return the tangent of @var{x}, where @var{x} is given in
 radians.
 
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item ERANGE
 Mathematically, the tangent function has singularities at odd multiples
 of pi/2.  If the argument @var{x} is too close to one of these
-singularities, @code{tan} sets @code{errno} to @code{ERANGE} and returns
-either positive or negative @code{HUGE_VAL}.
-@end table
+singularities, @code{tan} will signal overflow.
 @end deftypefun
 
-In many applications where @code{sin} and @code{cos} are used, the value
-for the same argument of both of these functions is used at the same
-time.  Since the algorithm to compute these values is very similar for
-both functions there is an additional function which computes both values
-at the same time.
+In many applications where @code{sin} and @code{cos} are used, the sine
+and cosine of the same angle are needed at the same time.  It is more
+efficient to compute them simultaneously, so the library provides a
+function to do that.
 
 @comment math.h
 @comment GNU
@@ -811,33 +193,34 @@ cosine of @var{x} in @code{*@var{cos}}, where @var{x} is given in
 radians.  Both values, @code{*@var{sinx}} and @code{*@var{cosx}}, are in
 the range of @code{-1} to @code{1}.
 
-This function is a GNU extension.  It should be used whenever both sine
-and cosine are needed but in portable applications there should be a
-fallback method for systems without this function.
+This function is a GNU extension.  Portable programs should be prepared
+to cope with its absence.
 @end deftypefun
 
 @cindex complex trigonometric functions
 
-The trigonometric functions are in mathematics not only defined on real
-numbers.  They can be extended to complex numbers and the @w{ISO C 9X}
-standard introduces these variants in the standard math library.
+@w{ISO C 9x} defines variants of the trig functions which work on
+complex numbers.  The GNU C library provides these functions, but they
+are only useful if your compiler supports the new complex types defined
+by the standard.
+@c Change this when gcc is fixed. -zw
+(As of this writing GCC supports complex numbers, but there are bugs in
+the implementation.)
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} csin (complex double @var{z})
 @deftypefunx {complex float} csinf (complex float @var{z})
 @deftypefunx {complex long double} csinl (complex long double @var{z})
-These functions return the complex sine of the complex value in @var{z}.
+These functions return the complex sine of @var{z}.
 The mathematical definition of the complex sine is
 
 @ifinfo
 @math{sin (z) = 1/(2*i) * (exp (z*i) - exp (-z*i))}.
 @end ifinfo
-@iftex
 @tex
 $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 @end tex
-@end iftex
 @end deftypefun
 
 @comment complex.h
@@ -845,17 +228,15 @@ $$\sin(z) = {1\over 2i} (e^{zi} - e^{-zi})$$
 @deftypefun {complex double} ccos (complex double @var{z})
 @deftypefunx {complex float} ccosf (complex float @var{z})
 @deftypefunx {complex long double} ccosl (complex long double @var{z})
-These functions return the complex cosine of the complex value in @var{z}.
+These functions return the complex cosine of @var{z}.
 The mathematical definition of the complex cosine is
 
 @ifinfo
 @math{cos (z) = 1/2 * (exp (z*i) + exp (-z*i))}
 @end ifinfo
-@iftex
 @tex
 $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 @end tex
-@end iftex
 @end deftypefun
 
 @comment complex.h
@@ -863,17 +244,20 @@ $$\cos(z) = {1\over 2} (e^{zi} + e^{-zi})$$
 @deftypefun {complex double} ctan (complex double @var{z})
 @deftypefunx {complex float} ctanf (complex float @var{z})
 @deftypefunx {complex long double} ctanl (complex long double @var{z})
-These functions return the complex tangent of the complex value in @var{z}.
+These functions return the complex tangent of @var{z}.
 The mathematical definition of the complex tangent is
 
 @ifinfo
-@math{tan (z) = 1/i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))}
+@math{tan (z) = -i * (exp (z*i) - exp (-z*i)) / (exp (z*i) + exp (-z*i))}
 @end ifinfo
-@iftex
 @tex
-$$\tan(z) = {1\over i} {e^{zi} - e^{-zi}\over e^{zi} + e^{-zi}}$$
+$$\tan(z) = -i \cdot {e^{zi} - e^{-zi}\over e^{zi} + e^{-zi}}$$
 @end tex
-@end iftex
+
+@noindent
+The complex tangent has poles at @math{pi/2 + 2n}, where @math{n} is an
+integer.  @code{ctan} may signal overflow if @var{z} is too close to a
+pole.
 @end deftypefun
 
 
@@ -895,9 +279,9 @@ sine is @var{x}.  The value is in units of radians.  Mathematically,
 there are infinitely many such values; the one actually returned is the
 one between @code{-pi/2} and @code{pi/2} (inclusive).
 
-@code{asin} fails, and sets @code{errno} to @code{EDOM}, if @var{x} is
-out of range.  The arc sine function is defined mathematically only
-over the domain @code{-1} to @code{1}.
+The arc sine function is defined mathematically only
+over the domain @code{-1} to @code{1}.  If @var{x} is outside the
+domain, @code{asin} signals a domain error.
 @end deftypefun
 
 @comment math.h
@@ -910,11 +294,10 @@ whose cosine is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
 returned is the one between @code{0} and @code{pi} (inclusive).
 
-@code{acos} fails, and sets @code{errno} to @code{EDOM}, if @var{x} is
-out of range.  The arc cosine function is defined mathematically only
-over the domain @code{-1} to @code{1}.
+The arc cosine function is defined mathematically only
+over the domain @code{-1} to @code{1}.  If @var{x} is outside the
+domain, @code{acos} signals a domain error.
 @end deftypefun
-
 
 @comment math.h
 @comment ISO
@@ -924,8 +307,7 @@ over the domain @code{-1} to @code{1}.
 These functions compute the arc tangent of @var{x}---that is, the value
 whose tangent is @var{x}.  The value is in units of radians.
 Mathematically, there are infinitely many such values; the one actually
-returned is the one between @code{-pi/2} and @code{pi/2}
-(inclusive).
+returned is the one between @code{-pi/2} and @code{pi/2} (inclusive).
 @end deftypefun
 
 @comment math.h
@@ -933,11 +315,10 @@ returned is the one between @code{-pi/2} and @code{pi/2}
 @deftypefun double atan2 (double @var{y}, double @var{x})
 @deftypefunx float atan2f (float @var{y}, float @var{x})
 @deftypefunx {long double} atan2l (long double @var{y}, long double @var{x})
-This is the two argument arc tangent function.  It is similar to computing
-the arc tangent of @var{y}/@var{x}, except that the signs of both arguments
-are used to determine the quadrant of the result, and @var{x} is
-permitted to be zero.  The return value is given in radians and is in
-the range @code{-pi} to @code{pi}, inclusive.
+This function computes the arc tangent of @var{y}/@var{x}, but the signs
+of both arguments are used to determine the quadrant of the result, and
+@var{x} is permitted to be zero.  The return value is given in radians
+and is in the range @code{-pi} to @code{pi}, inclusive.
 
 If @var{x} and @var{y} are coordinates of a point in the plane,
 @code{atan2} returns the signed angle between the line from the origin
@@ -946,15 +327,12 @@ converting Cartesian coordinates to polar coordinates.  (To compute the
 radial coordinate, use @code{hypot}; see @ref{Exponents and
 Logarithms}.)
 
-The function @code{atan2} sets @code{errno} to @code{EDOM} if both
-@var{x} and @var{y} are zero; the return value is not defined in this
-case.
+@c This is experimentally true.  Should it be so? -zw
+If both @var{x} and @var{y} are zero, @code{atan2} returns zero.
 @end deftypefun
 
 @cindex inverse complex trigonometric functions
-
-The inverse trigonometric functions also exist is separate versions
-which are usable with complex numbers.
+@w{ISO C 9x} defines complex versions of the inverse trig functions.
 
 @comment complex.h
 @comment ISO
@@ -962,10 +340,10 @@ which are usable with complex numbers.
 @deftypefunx {complex float} casinf (complex float @var{z})
 @deftypefunx {complex long double} casinl (complex long double @var{z})
 These functions compute the complex arc sine of @var{z}---that is, the
-value whose sine is @var{z}.  The value is in units of radians.
+value whose sine is @var{z}.  The value returned is in radians.
 
-Unlike the real version of the arc sine function @code{casin} has no
-limitation on the argument @var{z}.
+Unlike the real-valued functions, @code{casin} is defined for all
+values of @var{z}.
 @end deftypefun
 
 @comment complex.h
@@ -974,10 +352,10 @@ limitation on the argument @var{z}.
 @deftypefunx {complex float} cacosf (complex float @var{z})
 @deftypefunx {complex long double} cacosl (complex long double @var{z})
 These functions compute the complex arc cosine of @var{z}---that is, the
-value whose cosine is @var{z}.  The value is in units of radians.
+value whose cosine is @var{z}.  The value returned is in radians.
 
-Unlike the real version of the arc cosine function @code{cacos} has no
-limitation on the argument @var{z}.
+Unlike the real-valued functions, @code{cacos} is defined for all
+values of @var{z}.
 @end deftypefun
 
 
@@ -1002,11 +380,11 @@ the value whose tangent is @var{z}.  The value is in units of radians.
 @deftypefun double exp (double @var{x})
 @deftypefunx float expf (float @var{x})
 @deftypefunx {long double} expl (long double @var{x})
-These functions return the value of @code{e} (the base of natural
-logarithms) raised to power @var{x}.
+These functions compute @code{e} (the base of natural logarithms) raised
+to the power @var{x}.
 
-The function fails, and sets @code{errno} to @code{ERANGE}, if the
-magnitude of the result is too large to be representable.
+If the magnitude of the result is too large to be representable,
+@code{exp} signals overflow.
 @end deftypefun
 
 @comment math.h
@@ -1014,11 +392,8 @@ magnitude of the result is too large to be representable.
 @deftypefun double exp2 (double @var{x})
 @deftypefunx float exp2f (float @var{x})
 @deftypefunx {long double} exp2l (long double @var{x})
-These functions return the value of @code{2} raised to the power @var{x}.
+These functions compute @code{2} raised to the power @var{x}.
 Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
-
-The function fails, and sets @code{errno} to @code{ERANGE}, if the
-magnitude of the result is too large to be representable.
 @end deftypefun
 
 @comment math.h
@@ -1029,15 +404,11 @@ magnitude of the result is too large to be representable.
 @deftypefunx double pow10 (double @var{x})
 @deftypefunx float pow10f (float @var{x})
 @deftypefunx {long double} pow10l (long double @var{x})
-These functions return the value of @code{10} raised to the power @var{x}.
-Mathematically, @code{exp2 (x)} is the same as @code{exp (x * log (2))}.
+These functions compute @code{10} raised to the power @var{x}.
+Mathematically, @code{exp10 (x)} is the same as @code{exp (x * log (10))}.
 
-The function fails, and sets @code{errno} to @code{ERANGE}, if the
-magnitude of the result is too large to be representable.
-
-All these functions are GNU extensions.  The name @code{pow10} is used
-in some old code but the name @code{exp10} clearly is more in the sense
-of the ISO library designers and therefore should probably be preferred.
+These functions are GNU extensions.  The name @code{exp10} is
+preferred, since it is analogous to @code{exp} and @code{exp2}.
 @end deftypefun
 
 
@@ -1046,20 +417,13 @@ of the ISO library designers and therefore should probably be preferred.
 @deftypefun double log (double @var{x})
 @deftypefunx float logf (float @var{x})
 @deftypefunx {long double} logl (long double @var{x})
-These functions return the natural logarithm of @var{x}.  @code{exp (log
+These functions compute the natural logarithm of @var{x}.  @code{exp (log
 (@var{x}))} equals @var{x}, exactly in mathematics and approximately in
 C.
 
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item EDOM
-The argument @var{x} is negative.  The log function is defined
-mathematically to return a real result only on positive arguments.
-
-@item ERANGE
-The argument is zero.  The log of zero is not defined.
-@end table
+If @var{x} is negative, @code{log} signals a domain error.  If @var{x}
+is zero, it returns negative infinity; if @var{x} is too close to zero,
+it may signal overflow.
 @end deftypefun
 
 @comment math.h
@@ -1067,9 +431,9 @@ The argument is zero.  The log of zero is not defined.
 @deftypefun double log10 (double @var{x})
 @deftypefunx float log10f (float @var{x})
 @deftypefunx {long double} log10l (long double @var{x})
-These functions return the base-10 logarithm of @var{x}.  Except for the
-different base, it is similar to the @code{log} function.  In fact,
+These functions return the base-10 logarithm of @var{x}.
 @code{log10 (@var{x})} equals @code{log (@var{x}) / log (10)}.
+
 @end deftypefun
 
 @comment math.h
@@ -1077,8 +441,7 @@ different base, it is similar to the @code{log} function.  In fact,
 @deftypefun double log2 (double @var{x})
 @deftypefunx float log2f (float @var{x})
 @deftypefunx {long double} log2l (long double @var{x})
-These functions return the base-2 logarithm of @var{x}.  Except for the
-different base, it is similar to the @code{log} function.  In fact,
+These functions return the base-2 logarithm of @var{x}.
 @code{log2 (@var{x})} equals @code{log (@var{x}) / log (2)}.
 @end deftypefun
 
@@ -1088,12 +451,13 @@ different base, it is similar to the @code{log} function.  In fact,
 @deftypefunx float logbf (float @var{x})
 @deftypefunx {long double} logbl (long double @var{x})
 These functions extract the exponent of @var{x} and return it as a
-signed integer value.  If @var{x} is zero, a range error may occur.
+floating-point value.  If @code{FLT_RADIX} is two, @code{logb} is equal
+to @code{floor (log2 (x))}, except it's probably faster.
 
-A special case are subnormal numbers (if supported by the floating-point
-format).  The exponent returned is not the actual value from @var{x}.
-Instead the number is first normalized as if the range of the exponent
-field is large enough.
+If @var{x} is denormalized, @code{logb} returns the exponent @var{x}
+would have if it were normalized.  If @var{x} is infinity (positive or
+negative), @code{logb} returns @math{@infinity{}}.  If @var{x} is zero,
+@code{logb} returns @math{@infinity{}}.  It does not signal.
 @end deftypefun
 
 @comment math.h
@@ -1102,17 +466,34 @@ field is large enough.
 @deftypefunx int ilogbf (float @var{x})
 @deftypefunx int ilogbl (long double @var{x})
 These functions are equivalent to the corresponding @code{logb}
-functions except that the values are returned as signed integer values.
-Since integer values cannot represent infinity and NaN, there are some
-special symbols defined to help detect these situations.
+functions except that they return signed integer values.
+@end deftypefun
 
-@vindex FP_ILOGB0
-@vindex FP_ILOGBNAN
-@code{ilogb} returns @code{FP_ILOGB0} if @var{x} is @code{0} and it
-returns @code{FP_ILOGBNAN} if @var{x} is @code{NaN}.  These values are
-system specific and no fixed value is assigned.  More concrete, these
-values might even have the same value.  So a piece of code handling the
-result of @code{ilogb} could look like this:
+@noindent
+Since integers cannot represent infinity and NaN, @code{ilogb} instead
+returns an integer that can't be the exponent of a normal floating-point
+number.  @file{math.h} defines constants so you can check for this.
+
+@comment math.h
+@comment ISO
+@deftypevr Macro int FP_ILOGB0
+@code{ilogb} returns this value if its argument is @code{0}.  The
+numeric value is either @code{INT_MIN} or @code{-INT_MAX}.
+
+This macro is defined in @w{ISO C 9X}.
+@end deftypevr
+
+@comment math.h
+@comment ISO
+@deftypevr Macro int FP_ILOGBNAN
+@code{ilogb} returns this value if its argument is @code{NaN}.  The
+numeric value is either @code{INT_MIN} or @code{INT_MAX}.
+
+This macro is defined in @w{ISO C 9X}.
+@end deftypevr
+
+These values are system specific.  They might even be the same.  The
+proper way to test the result of @code{ilogb} is as follows:
 
 @smallexample
 i = ilogb (f);
@@ -1134,8 +515,6 @@ if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
   @}
 @end smallexample
 
-@end deftypefun
-
 @comment math.h
 @comment ISO
 @deftypefun double pow (double @var{base}, double @var{power})
@@ -1144,17 +523,10 @@ if (i == FP_ILOGB0 || i == FP_ILOGBNAN)
 These are general exponentiation functions, returning @var{base} raised
 to @var{power}.
 
-@need 250
-The following @code{errno} error conditions are defined for this function:
-
-@table @code
-@item EDOM
-The argument @var{base} is negative and @var{power} is not an integral
-value.  Mathematically, the result would be a complex number in this case.
-
-@item ERANGE
-An underflow or overflow condition was detected in the result.
-@end table
+Mathematically, @code{pow} would return a complex number when @var{base}
+is negative and @var{power} is not an integral value.  @code{pow} can't
+do that, so instead it signals a domain error. @code{pow} may also
+underflow or overflow the destination type.
 @end deftypefun
 
 @cindex square root function
@@ -1165,10 +537,8 @@ An underflow or overflow condition was detected in the result.
 @deftypefunx {long double} sqrtl (long double @var{x})
 These functions return the nonnegative square root of @var{x}.
 
-The @code{sqrt} function fails, and sets @code{errno} to @code{EDOM}, if
-@var{x} is negative.  Mathematically, the square root would be a complex
-number.
-@c (@pxref{csqrt})
+If @var{x} is negative, @code{sqrt} signals a domain error.
+Mathematically, it should return a complex number.
 @end deftypefun
 
 @cindex cube root function
@@ -1187,10 +557,10 @@ fail; every representable real value has a representable real cube root.
 @deftypefunx float hypotf (float @var{x}, float @var{y})
 @deftypefunx {long double} hypotl (long double @var{x}, long double @var{y})
 These functions return @code{sqrt (@var{x}*@var{x} +
-@var{y}*@var{y})}.  (This is the length of the hypotenuse of a right
+@var{y}*@var{y})}.  This is the length of the hypotenuse of a right
 triangle with sides of length @var{x} and @var{y}, or the distance
-of the point (@var{x}, @var{y}) from the origin.)  Using this function
-instead of the direct formula is highly appreciated since the error is
+of the point (@var{x}, @var{y}) from the origin.  Using this function
+instead of the direct formula is wise, since the error is
 much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @end deftypefun
 
@@ -1200,7 +570,7 @@ much smaller.  See also the function @code{cabs} in @ref{Absolute Value}.
 @deftypefunx float expm1f (float @var{x})
 @deftypefunx {long double} expm1l (long double @var{x})
 These functions return a value equivalent to @code{exp (@var{x}) - 1}.
-It is computed in a way that is accurate even if the value of @var{x} is
+They are computed in a way that is accurate even if @var{x} is
 near zero---a case where @code{exp (@var{x}) - 1} would be inaccurate due
 to subtraction of two numbers that are nearly equal.
 @end deftypefun
@@ -1210,39 +580,32 @@ to subtraction of two numbers that are nearly equal.
 @deftypefun double log1p (double @var{x})
 @deftypefunx float log1pf (float @var{x})
 @deftypefunx {long double} log1pl (long double @var{x})
-This function returns a value equivalent to @w{@code{log (1 + @var{x})}}.
-It is computed in a way that is accurate even if the value of @var{x} is
+These functions returns a value equivalent to @w{@code{log (1 + @var{x})}}.
+They are computed in a way that is accurate even if @var{x} is
 near zero.
 @end deftypefun
 
 @cindex complex exponentiation functions
 @cindex complex logarithm functions
 
-@w{ISO C 9X} defines variants of some of the exponentiation and
-logarithm functions.  As for the other functions handling complex
-numbers these functions are perhaps better optimized and provide better
-error checking than a direct use of the formulas of the mathematical
-definition.
+@w{ISO C 9X} defines complex variants of some of the exponentiation and
+logarithm functions.
 
 @comment complex.h
 @comment ISO
 @deftypefun {complex double} cexp (complex double @var{z})
 @deftypefunx {complex float} cexpf (complex float @var{z})
 @deftypefunx {complex long double} cexpl (complex long double @var{z})
-These functions return the value of @code{e} (the base of natural
-logarithms) raised to power of the complex value @var{z}.
-
-@noindent
+These functions return @code{e} (the base of natural
+logarithms) raised to the power of @var{z}.
 Mathematically this corresponds to the value
 
 @ifinfo
 @math{exp (z) = exp (creal (z)) * (cos (cimag (z)) + I * sin (cimag (z)))}
 @end ifinfo
-@iftex
 @tex
-$$\exp(z) = e^z = e^{{\rm Re} z} (\cos ({\rm Im} z) + i \sin ({\rm Im} z))$$
+$$\exp(z) = e^z = e^{{\rm Re}\,z} (\cos ({\rm Im}\,z) + i \sin ({\rm Im}\,z))$$
 @end tex
-@end iftex
 @end deftypefun
 
 @comment complex.h
@@ -1250,21 +613,20 @@ $$\exp(z) = e^z = e^{{\rm Re} z} (\cos ({\rm Im} z) + i \sin ({\rm Im} z))$$
 @deftypefun {complex double} clog (complex double @var{z})
 @deftypefunx {complex float} clogf (complex float @var{z})
 @deftypefunx {complex long double} clogl (complex long double @var{z})
-These functions return the natural logarithm of the complex value
-@var{z}.  Unlike the real value version @code{log} and its variants,
-@code{clog} has no limit for the range of its argument @var{z}.
-
-@noindent
+These functions return the natural logarithm of @var{z}.
 Mathematically this corresponds to the value
 
 @ifinfo
 @math{log (z) = log (cabs (z)) + I * carg (z)}
 @end ifinfo
-@iftex
 @tex
-$$\log(z) = \log(|z|) + i \arg(z)$$
+$$\log(z) = \log |z| + i \arg z$$
 @end tex
-@end iftex
+
+@noindent
+@code{clog} has a pole at 0, and will signal overflow if @var{z} equals
+or is very close to 0.  It is well-defined for all other values of
+@var{z}.
 @end deftypefun
 
 
@@ -1274,22 +636,16 @@ $$\log(z) = \log(|z|) + i \arg(z)$$
 @deftypefunx {complex float} clog10f (complex float @var{z})
 @deftypefunx {complex long double} clog10l (complex long double @var{z})
 These functions return the base 10 logarithm of the complex value
-@var{z}.  Unlike the real value version @code{log} and its variants,
-@code{clog} has no limit for the range of its argument @var{z}.
-
-@noindent
-Mathematically this corresponds to the value
+@var{z}. Mathematically this corresponds to the value
 
 @ifinfo
 @math{log (z) = log10 (cabs (z)) + I * carg (z)}
 @end ifinfo
-@iftex
 @tex
-$$\log_{10}(z) = \log_{10}(|z|) + i \arg(z)$$
+$$\log_{10}(z) = \log_{10}|z| + i \arg z$$
 @end tex
-@end iftex
 
-This function is a GNU extension.
+These functions are GNU extensions.
 @end deftypefun
 
 @comment complex.h
@@ -1297,9 +653,8 @@ This function is a GNU extension.
 @deftypefun {complex double} csqrt (complex double @var{z})
 @deftypefunx {complex float} csqrtf (complex float @var{z})
 @deftypefunx {complex long double} csqrtl (complex long double @var{z})
-These functions return the complex root of the argument @var{z}.  Unlike
-the @code{sqrt} function these functions do not have any restriction on
-the value of the argument.
+These functions return the complex square root of the argument @var{z}.  Unlike
+the real-valued functions, they are defined for all values of @var{z}.
 @end deftypefun
 
 @comment complex.h
@@ -1307,19 +662,9 @@ the value of the argument.
 @deftypefun {complex double} cpow (complex double @var{base}, complex double @var{power})
 @deftypefunx {complex float} cpowf (complex float @var{base}, complex float @var{power})
 @deftypefunx {complex long double} cpowl (complex long double @var{base}, complex long double @var{power})
-These functions return the complex value @var{base} raised to the power of
-@var{power}.  This is computed as
-
-@ifinfo
-@math{cpow (x, y) = cexp (y * clog (x))}
-@end ifinfo
-@iftex
-@tex
-$${\rm cpow}(x, y) = e^{y \log(x)}$$
-@end tex
-@end iftex
+These functions return @var{base} raised to the power of
+@var{power}.  This is equivalent to @w{@code{cexp (y * clog (x))}}
 @end deftypefun
-
 
 @node Hyperbolic Functions
 @section Hyperbolic Functions
@@ -1334,9 +679,8 @@ see @ref{Exponents and Logarithms}.
 @deftypefunx float sinhf (float @var{x})
 @deftypefunx {long double} sinhl (long double @var{x})
 These functions return the hyperbolic sine of @var{x}, defined
-mathematically as @w{@code{(exp (@var{x}) - exp (-@var{x})) / 2}}.  The
-function fails, and sets @code{errno} to @code{ERANGE}, if the value of
-@var{x} is too large; that is, if overflow occurs.
+mathematically as @w{@code{(exp (@var{x}) - exp (-@var{x})) / 2}}.  They
+may signal overflow if @var{x} is too large.
 @end deftypefun
 
 @comment math.h
@@ -1346,8 +690,7 @@ function fails, and sets @code{errno} to @code{ERANGE}, if the value of
 @deftypefunx {long double} coshl (long double @var{x})
 These function return the hyperbolic cosine of @var{x},
 defined mathematically as @w{@code{(exp (@var{x}) + exp (-@var{x})) / 2}}.
-The function fails, and sets @code{errno} to @code{ERANGE}, if the value
-of @var{x} is too large; that is, if overflow occurs.
+They may signal overflow if @var{x} is too large.
 @end deftypefun
 
 @comment math.h
@@ -1355,16 +698,15 @@ of @var{x} is too large; that is, if overflow occurs.
 @deftypefun double tanh (double @var{x})
 @deftypefunx float tanhf (float @var{x})
 @deftypefunx {long double} tanhl (long double @var{x})
-These functions return the hyperbolic tangent of @var{x}, whose
-mathematical definition is @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
+These functions return the hyperbolic tangent of @var{x},
+defined mathematically as @w{@code{sinh (@var{x}) / cosh (@var{x})}}.
+They may signal overflow if @var{x} is too large.
 @end deftypefun
 
 @cindex hyperbolic functions
 
-There are counterparts for these hyperbolic functions which work with
-complex valued arguments.  They should always be used instead of the
-obvious mathematical formula since the implementations in the math
-library are optimized for accuracy and speed.
+There are counterparts for the hyperbolic functions which take
+complex arguments.
 
 @comment complex.h
 @comment ISO
@@ -1372,9 +714,7 @@ library are optimized for accuracy and speed.
 @deftypefunx {complex float} csinhf (complex float @var{z})
 @deftypefunx {complex long double} csinhl (complex long double @var{z})
 These functions return the complex hyperbolic sine of @var{z}, defined
-mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.  The
-function fails, and sets @code{errno} to @code{ERANGE}, if the value of
-result is too large.
+mathematically as @w{@code{(exp (@var{z}) - exp (-@var{z})) / 2}}.
 @end deftypefun
 
 @comment complex.h
@@ -1383,9 +723,7 @@ result is too large.
 @deftypefunx {complex float} ccoshf (complex float @var{z})
 @deftypefunx {complex long double} ccoshl (complex long double @var{z})
 These functions return the complex hyperbolic cosine of @var{z}, defined
-mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.  The
-function fails, and sets @code{errno} to @code{ERANGE}, if the value of
-result is too large.
+mathematically as @w{@code{(exp (@var{z}) + exp (-@var{z})) / 2}}.
 @end deftypefun
 
 @comment complex.h
@@ -1393,8 +731,8 @@ result is too large.
 @deftypefun {complex double} ctanh (complex double @var{z})
 @deftypefunx {complex float} ctanhf (complex float @var{z})
 @deftypefunx {complex long double} ctanhl (complex long double @var{z})
-These functions return the complex hyperbolic tangent of @var{z}, whose
-mathematical definition is @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
+These functions return the complex hyperbolic tangent of @var{z},
+defined mathematically as @w{@code{csinh (@var{z}) / ccosh (@var{z})}}.
 @end deftypefun
 
 
@@ -1416,7 +754,7 @@ value whose hyperbolic sine is @var{x}.
 @deftypefunx {long double} acoshl (long double @var{x})
 These functions return the inverse hyperbolic cosine of @var{x}---the
 value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
-@code{1}, @code{acosh} returns @code{HUGE_VAL}.
+@code{1}, @code{acosh} signals a domain error.
 @end deftypefun
 
 @comment math.h
@@ -1426,8 +764,8 @@ value whose hyperbolic cosine is @var{x}.  If @var{x} is less than
 @deftypefunx {long double} atanhl (long double @var{x})
 These functions return the inverse hyperbolic tangent of @var{x}---the
 value whose hyperbolic tangent is @var{x}.  If the absolute value of
-@var{x} is greater than or equal to @code{1}, @code{atanh} returns
-@code{HUGE_VAL}.
+@var{x} is greater than @code{1}, @code{atanh} signals a domain error;
+if it is equal to 1, @code{atanh} returns infinity.
 @end deftypefun
 
 @cindex inverse complex hyperbolic functions
@@ -1448,8 +786,7 @@ These functions return the inverse complex hyperbolic sine of
 @deftypefunx {complex long double} cacoshl (complex long double @var{z})
 These functions return the inverse complex hyperbolic cosine of
 @var{z}---the value whose complex hyperbolic cosine is @var{z}.  Unlike
-the real valued function @code{acosh} there is not limit for the range
-of the argument.
+the real-valued functions, there are no restrictions on the value of @var{z}.
 @end deftypefun
 
 @comment complex.h
@@ -1459,10 +796,157 @@ of the argument.
 @deftypefunx {complex long double} catanhl (complex long double @var{z})
 These functions return the inverse complex hyperbolic tangent of
 @var{z}---the value whose complex hyperbolic tangent is @var{z}.  Unlike
-the real valued function @code{atanh} there is not limit for the range
-of the argument.
+the real-valued functions, there are no restrictions on the value of
+@var{z}.
 @end deftypefun
 
+@node Special Functions
+@section Special Functions
+@cindex special functions
+@cindex Bessel functions
+@cindex gamma function
+
+These are some more exotic mathematical functions, which are sometimes
+useful.  Currently they only have real-valued versions.
+
+@comment math.h
+@comment SVID
+@deftypefun double erf (double @var{x})
+@deftypefunx float erff (float @var{x})
+@deftypefunx {long double} erfl (long double @var{x})
+@code{erf} returns the error function of @var{x}.  The error
+function is defined as
+@tex
+$$\hbox{erf}(x) = {2\over\sqrt{\pi}}\cdot\int_0^x e^{-t^2} \hbox{d}t$$
+@end tex
+@ifnottex
+@smallexample
+erf (x) = 2/sqrt(pi) * integral from 0 to x of exp(-t^2) dt
+@end smallexample
+@end ifnottex
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double erfc (double @var{x})
+@deftypefunx float erfcf (float @var{x})
+@deftypefunx {long double} erfcl (long double @var{x})
+@code{erfc} returns @code{1.0 - erf(@var{x})}, but computed in a
+fashion that avoids round-off error when @var{x} is large.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double lgamma (double @var{x})
+@deftypefunx float lgammaf (float @var{x})
+@deftypefunx {long double} lgammal (long double @var{x})
+@code{lgamma} returns the natural logarithm of the absolute value of
+the gamma function of @var{x}.  The gamma function is defined as
+@tex
+$$\Gamma(x) = \int_0^\infty t^{x-1} e^{-t} \hbox{d}t$$
+@end tex
+@ifnottex
+@smallexample
+gamma (x) = integral from 0 to @infinity{} of t^(x-1) e^-t dt
+@end smallexample
+@end ifnottex
+
+@vindex signgam
+The sign of the gamma function is stored in the global variable
+@var{signgam}, which is declared in @file{math.h}.  It is @code{1} if
+the intermediate result was positive or zero, and, @code{-1} if it was
+negative.
+
+You can compute the actual gamma function as follows:
+@smallexample
+lgam = lgamma(x);
+gam  = signgam*exp(lgam);
+@end smallexample
+
+The gamma function has singularities at the nonpositive integers.
+@code{lgamma} will raise the zero divide exception if evaluated at a
+singularity.
+@end deftypefun
+
+@comment math.h
+@comment XPG
+@deftypefun double lgamma_r (double @var{x})
+@deftypefunx float lgammaf_r (float @var{x})
+@deftypefunx {long double} lgammal_r (long double @var{x})
+@code{lgamma_r} is just like @code{lgamma}, but it stores the sign of
+the intermediate result in the variable pointed to by @var{signp}
+instead of in the @var{signgam} global.
+@end deftypefun
+
+@ignore
+@comment math.h
+@comment SVID
+@deftypefun double gamma (double @var{x})
+@deftypefunx float gammaf (float @var{x})
+@deftypefunx {long double} gammal (long double @var{x})
+??? _not_ exp(lgamma())*signgam - historical?
+@end deftypefun
+@end ignore
+
+@comment math.h
+@comment SVID
+@deftypefun double j0 (double @var{x})
+@deftypefunx float j0f (float @var{x})
+@deftypefunx {long double} j0l (long double @var{x})
+@code{j0} returns the Bessel function of the first kind of order 0 of
+@var{x}.  It may signal underflow if @var{x} is too large.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double j1 (double @var{x})
+@deftypefunx float j1f (float @var{x})
+@deftypefunx {long double} j1l (long double @var{x})
+@code{j1} returns the Bessel function of the first kind of order 1 of
+@var{x}.  It may signal underflow if @var{x} is too large.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double jn (int n, double @var{x})
+@deftypefunx float jnf (int n, float @var{x})
+@deftypefunx {long double} jnl (int n, long double @var{x})
+@code{jn} returns the Bessel function of the first kind of order
+@var{n} of @var{x}.  It may signal underflow if @var{x} is too large.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double y0 (double @var{x})
+@deftypefunx float y0f (float @var{x})
+@deftypefunx {long double} y0l (long double @var{x})
+@code{y0} returns the Bessel function of the second kind of order 0 of
+@var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
+is negative, @code{y0} signals a domain error; if it is zero,
+@code{y0} signals overflow and returns @math{-@infinity}.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double y1 (double @var{x})
+@deftypefunx float y1f (float @var{x})
+@deftypefunx {long double} y1l (long double @var{x})
+@code{y1} returns the Bessel function of the second kind of order 1 of
+@var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
+is negative, @code{y1} signals a domain error; if it is zero,
+@code{y1} signals overflow and returns @math{-@infinity}.
+@end deftypefun
+
+@comment math.h
+@comment SVID
+@deftypefun double yn (int n, double @var{x})
+@deftypefunx float ynf (int n, float @var{x})
+@deftypefunx {long double} ynl (int n, long double @var{x})
+@code{yn} returns the Bessel function of the second kind of order @var{n} of
+@var{x}.  It may signal underflow if @var{x} is too large.  If @var{x}
+is negative, @code{yn} signals a domain error; if it is zero,
+@code{yn} signals overflow and returns @math{-@infinity}.
+@end deftypefun
 
 @node Pseudo-Random Numbers
 @section Pseudo-Random Numbers
@@ -1472,19 +956,19 @@ of the argument.
 
 This section describes the GNU facilities for generating a series of
 pseudo-random numbers.  The numbers generated are not truly random;
-typically, they form a sequence that repeats periodically, with a
-period so large that you can ignore it for ordinary purposes.  The
-random number generator works by remembering at all times a @dfn{seed}
-value which it uses to compute the next random number and also to
-compute a new seed.
+typically, they form a sequence that repeats periodically, with a period
+so large that you can ignore it for ordinary purposes.  The random
+number generator works by remembering a @dfn{seed} value which it uses
+to compute the next random number and also to compute a new seed.
 
 Although the generated numbers look unpredictable within one run of a
 program, the sequence of numbers is @emph{exactly the same} from one run
 to the next.  This is because the initial seed is always the same.  This
 is convenient when you are debugging a program, but it is unhelpful if
-you want the program to behave unpredictably.  If you want truly random
-numbers, not just pseudo-random, specify a seed based on the current
-time.
+you want the program to behave unpredictably.  If you want a different
+pseudo-random series each time your program runs, you must specify a
+different seed each time.  For ordinary purposes, basing the seed on the
+current time works well.
 
 You can get repeatable sequences of numbers on a particular machine type
 by specifying the same initial seed value for the random number
@@ -1493,19 +977,20 @@ the same seed, used in different C libraries or on different CPU types,
 will give you different random numbers.
 
 The GNU library supports the standard @w{ISO C} random number functions
-plus two other sets derived from BSD and SVID.  We recommend you use the
-standard ones, @code{rand} and @code{srand} if only a small number of
-random bits are required.  The SVID functions provide an interface which
-allows better random number generator algorithms and they return up to
-48 random bits in one calls and they also return random floating-point
-numbers if wanted.  The SVID function might not be available on some BSD
-derived systems but since they are required in the XPG they are
-available on all Unix-conformant systems.
+plus two other sets derived from BSD and SVID.  The BSD and @w{ISO C}
+functions provide identical, somewhat limited functionality.  If only a
+small number of random bits are required, we recommend you use the
+@w{ISO C} interface, @code{rand} and @code{srand}.  The SVID functions
+provide a more flexible interface, which allows better random number
+generator algorithms, provides more random bits (up to 48) per call, and
+can provide random floating-point numbers.  These functions are required
+by the XPG standard and therefore will be present in all modern Unix
+systems.
 
 @menu
-* ISO Random::       @code{rand} and friends.
-* BSD Random::       @code{random} and friends.
-* SVID Random::      @code{drand48} and friends.
+* ISO Random::                  @code{rand} and friends.
+* BSD Random::                  @code{random} and friends.
+* SVID Random::                 @code{drand48} and friends.
 @end menu
 
 @node ISO Random
@@ -1521,18 +1006,17 @@ To use these facilities, you should include the header file
 @comment stdlib.h
 @comment ISO
 @deftypevr Macro int RAND_MAX
-The value of this macro is an integer constant expression that
-represents the maximum possible value returned by the @code{rand}
-function.  In the GNU library, it is @code{037777777}, which is the
-largest signed integer representable in 32 bits.  In other libraries, it
-may be as low as @code{32767}.
+The value of this macro is an integer constant representing the largest
+value the @code{rand} function can return.  In the GNU library, it is
+@code{2147483647}, which is the largest signed integer representable in
+32 bits.  In other libraries, it may be as low as @code{32767}.
 @end deftypevr
 
 @comment stdlib.h
 @comment ISO
 @deftypefun int rand (void)
 The @code{rand} function returns the next pseudo-random number in the
-series.  The value is in the range from @code{0} to @code{RAND_MAX}.
+series.  The value ranges from @code{0} to @code{RAND_MAX}.
 @end deftypefun
 
 @comment stdlib.h
@@ -1543,31 +1027,27 @@ pseudo-random numbers.  If you call @code{rand} before a seed has been
 established with @code{srand}, it uses the value @code{1} as a default
 seed.
 
-To produce truly random numbers (not just pseudo-random), do @code{srand
-(time (0))}.
+To produce a different pseudo-random series each time your program is
+run, do @code{srand (time (0))}.
 @end deftypefun
 
-A completely broken interface was designed by the POSIX.1 committee to
-support reproducible random numbers in multi-threaded programs.
+POSIX.1 extended the C standard functions to support reproducible random
+numbers in multi-threaded programs.  However, the extension is badly
+designed and unsuitable for serious work.
 
 @comment stdlib.h
 @comment POSIX.1
 @deftypefun int rand_r (unsigned int *@var{seed})
 This function returns a random number in the range 0 to @code{RAND_MAX}
-just as @code{rand} does.  But this function does not keep an internal
-state for the RNG.  Instead the @code{unsigned int} variable pointed to
-by the argument @var{seed} is the only state.  Before the value is
-returned the state will be updated so that the next call will return a
-new number.
+just as @code{rand} does.  However, all its state is stored in the
+@var{seed} argument.  This means the RNG's state can only have as many
+bits as the type @code{unsigned int} has.  This is far too few to
+provide a good RNG.
 
-I.e., the state of the RNG can only have as much bits as the type
-@code{unsigned int} has.  This is far too few to provide a good RNG.
-This interface is broken by design.
-
-If the program requires reproducible random numbers in multi-threaded
-programs the reentrant SVID functions are probably a better choice.  But
-these functions are GNU extensions and therefore @code{rand_r}, as being
-standardized in POSIX.1, should always be kept as a default method.
+If your program requires a reentrant RNG, we recommend you use the
+reentrant GNU extensions to the SVID random number generator.  The
+POSIX.1 interface should only be used when the GNU extensions are not
+available.
 @end deftypefun
 
 
@@ -1585,24 +1065,24 @@ The prototypes for these functions are in @file{stdlib.h}.
 @comment BSD
 @deftypefun {int32_t} random (void)
 This function returns the next pseudo-random number in the sequence.
-The range of values returned is from @code{0} to @code{RAND_MAX}.
+The value returned ranges from @code{0} to @code{RAND_MAX}.
 
-@strong{Please note:} Historically this function returned a @code{long
-int} value.  But with the appearance of 64bit machines this could lead
-to severe compatibility problems and therefore the type now explicitly
-limits the return value to 32bit.
+@strong{Note:} Historically this function returned a @code{long
+int} value.  On 64bit systems @code{long int} would have been larger
+than programs expected, so @code{random} is now defined to return
+exactly 32 bits.
 @end deftypefun
 
 @comment stdlib.h
 @comment BSD
 @deftypefun void srandom (unsigned int @var{seed})
-The @code{srandom} function sets the seed for the current random number
-state based on the integer @var{seed}.  If you supply a @var{seed} value
+The @code{srandom} function sets the state of the random number
+generator based on the integer @var{seed}.  If you supply a @var{seed} value
 of @code{1}, this will cause @code{random} to reproduce the default set
 of random numbers.
 
-To produce truly random numbers (not just pseudo-random), do
-@code{srandom (time (0))}.
+To produce a different set of pseudo-random numbers each time your
+program runs, do @code{srandom (time (0))}.
 @end deftypefun
 
 @comment stdlib.h
@@ -1610,9 +1090,9 @@ To produce truly random numbers (not just pseudo-random), do
 @deftypefun {void *} initstate (unsigned int @var{seed}, void *@var{state}, size_t @var{size})
 The @code{initstate} function is used to initialize the random number
 generator state.  The argument @var{state} is an array of @var{size}
-bytes, used to hold the state information.  The size must be at least 8
-bytes, and optimal sizes are 8, 16, 32, 64, 128, and 256.  The bigger
-the @var{state} array, the better.
+bytes, used to hold the state information.  It is initialized based on
+@var{seed}.  The size must be between 8 and 256 bytes, and should be a
+power of two.  The bigger the @var{state} array, the better.
 
 The return value is the previous value of the state information array.
 You can use this value later as an argument to @code{setstate} to
@@ -1631,13 +1111,12 @@ You can use this value later as an argument to @code{setstate} to
 restore that state.
 @end deftypefun
 
-
 @node SVID Random
 @subsection SVID Random Number Function
 
 The C library on SVID systems contains yet another kind of random number
 generator functions.  They use a state of 48 bits of data.  The user can
-choose among a collection of functions which all return the random bits
+choose among a collection of functions which return the random bits
 in different forms.
 
 Generally there are two kinds of functions: those which use a state of
@@ -1973,3 +1452,37 @@ If the return value is non-negative the function call succeeded.
 This function is a GNU extension and should not be used in portable
 programs.
 @end deftypefun
+
+@node FP Function Optimizations
+@section Is Fast Code or Small Code preferred?
+@cindex Optimization
+
+If an application uses many floating point function it is often the case
+that the costs for the function calls itselfs are not neglectable.
+Modern processor implementation often can execute the operation itself
+very fast but the call means a disturbance of the control flow.
+
+For this reason the GNU C Library provides optimizations for many of the
+frequently used math functions.  When the GNU CC is used and the user
+activates the optimizer several new inline functions and macros get
+defined.  These new functions and macros have the same names as the
+library function and so get used instead of the later.  In case of
+inline functions the compiler will decide whether it is reasonable to
+use the inline function and this decision is usually correct.
+
+For the generated code this means that no calls to the library functions
+are necessary.  This increases the speed significantly.  But the
+drawback is that the code size increases and this increase is not always
+neglectable.
+
+In cases where the inline functions and macros are not wanted the symbol
+@code{__NO_MATH_INLINES} should be defined before any system header is
+included.  This will make sure only library functions are used.  Of
+course it can be determined for each single file in the project whether
+giving this option is preferred or not.
+
+Not all hardware implements the entire @w{IEEE 754} standard, or if it
+does, there may be a substantial performance penalty for using some of
+its features.  For example, enabling traps on some processors forces
+the FPU to run unpipelined, which more than doubles calculation time.
+@c ***Add explanation of -lieee, -mieee.

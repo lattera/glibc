@@ -1,4 +1,6 @@
-@node Language Features, Library Summary, System Configuration, Top
+@c This node must not have a prev pointer.
+@node Language Features, Library Summary, , Top
+@c %MENU% C language features provided by the library
 @appendix C Language Facilities in the Library
 
 Some of the facilities implemented by the C library really should be

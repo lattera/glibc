@@ -1,4 +1,5 @@
-@node Job Control
+@node Job Control, Name Service Switch, Processes, Top
+@c %MENU% All about process groups and sessions
 @chapter Job Control
 
 @cindex process groups

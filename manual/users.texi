@@ -1,4 +1,5 @@
-@node Users and Groups
+@node Users and Groups, System Information, Name Service Switch, Top
+@c %MENU% How users are identified and classified
 @chapter Users and Groups
 
 Every user who can log in on the system is identified by a unique number

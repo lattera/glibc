@@ -129,6 +129,7 @@ internal_function
 __gconv_find_shlib (const char *name)
 {
   struct gconv_loaded_object *found;
+  void *keyp;
 
   /* Search the tree of shared objects previously requested.  Data in
      the tree are `loaded_object' structures, whose first member is a
@@ -139,8 +140,8 @@ __gconv_find_shlib (const char *name)
      enough to a pointer to our structure to use as a lookup key that
      will be passed to `known_compare' (above).  */
 
-  found = __tfind (&name, &loaded, known_compare);
-  if (found == NULL)
+  keyp = __tfind (&name, &loaded, known_compare);
+  if (keyp == NULL)
     {
       /* This name was not known before.  */
       found = malloc (sizeof (struct gconv_loaded_object));
@@ -159,6 +160,8 @@ __gconv_find_shlib (const char *name)
 	    }
 	}
     }
+  else
+    found = *(struct gconv_loaded_object **) keyp;
 
   /* Try to load the shared object if the usage count is 0.  This
      implies that if the shared object is not loadable, the handle is

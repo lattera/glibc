@@ -1,4 +1,5 @@
-@node Message Translation
+@node Message Translation, Searching and Sorting, Locales, Top
+@c %MENU% How to make the program speak the user's language
 @chapter Message Translation
 
 The program's interface with the human should be designed in a way to

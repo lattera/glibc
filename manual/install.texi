@@ -3,6 +3,7 @@
 @setfilename INSTALL
 
 @node Installation, Maintenance, Library Summary, Top
+@c %MENU% How to install the GNU C library
 @appendix Installing the GNU C Library
 
 @menu

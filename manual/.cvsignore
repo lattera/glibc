@@ -5,7 +5,7 @@ TODO COPYING* AUTHORS copyr-* copying.*
 glibc-*
 
 *.dvi* *.info* *.c.texi *.ps
-*.toc *.aux *.log
+*.toc *.aux *.log *.tmp
 *.cp *.cps *.fn *.fns *.vr *.vrs *.tp *.tps *.ky *.kys *.pg *.pgs
 
 chapters chapters-incl1 chapters-incl2 summary.texi stamp-*

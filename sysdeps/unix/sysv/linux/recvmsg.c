@@ -35,10 +35,7 @@ struct __kernel_ucred
 extern int __syscall_recvmsg (int, struct msghdr *, int);
 
 int
-__libc_recvmsg (fd, message, flags)
-     int fd;
-     struct msghdr *message;
-     int flags;
+__libc_recvmsg (int fd, struct msghdr *message, int flags)
 {
   struct cmsghdr *cm;
   int ret;

@@ -1,4 +1,5 @@
-@node Processes
+@node Processes, Job Control, Process Startup, Top
+@c %MENU% How to create processes and run other programs
 @chapter Processes
 
 @cindex process
