@@ -554,10 +554,10 @@ lib%.so: lib%_pic.a; $(build-shlib)
 
 define build-shlib
 $(LINK.o) -shared -o $@ -Wl,-soname \
-	  -Wl,lib$(libprefix)$(@F:lib%=%).so$($(@F)-version) \
-	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%=%).so) \
+	  -Wl,lib$(libprefix)$(@F:lib%.so=%).so$($(@F)-version) \
+	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(firstword $(objdir) .)  -L$(common-objpfx:%/=%) \
-	  -Wl,--whole-archive $^ $(LDLIBS-$(@F:lib%=%).so)
+	  -Wl,--whole-archive $^ $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
 # Don't try to use -lc when making libc.so itself.

@@ -1,7 +1,8 @@
 Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
-	* Makerules (build-shlib): Use $(@F:lib%=%) in place of $(notdir $*),
-	so it wins for the explicit libc.so rule as well as the pattern rule.
+	* Makerules (build-shlib): Use $(@F:lib%.so=%) in place of
+	$(notdir $*), so it wins for the explicit libc.so rule as well as the
+	pattern rule. 
 
 	* sysdeps/stub/sys/sem_buf.h (union semun): New type.
 
