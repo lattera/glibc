@@ -1,5 +1,5 @@
 /* Tests for atomic.h macros.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -130,6 +130,12 @@ do_test (void)
       ret = 1;
     }
 
+  if (atomic_increment_val (&mem) != 1)
+    {
+      puts ("atomic_increment_val test failed");
+      ret = 1;
+    }
+
   mem = 0;
   if (atomic_increment_and_test (&mem)
       || mem != 1)
@@ -159,6 +165,12 @@ do_test (void)
   if (mem != 16)
     {
       puts ("atomic_decrement test failed");
+      ret = 1;
+    }
+
+  if (atomic_decrement_val (&mem) != 15)
+    {
+      puts ("atomic_decrement_val test failed");
       ret = 1;
     }
 

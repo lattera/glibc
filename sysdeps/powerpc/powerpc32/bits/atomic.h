@@ -1,5 +1,5 @@
 /* Atomic operations.  PowerPC32 version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Mackerras <paulus@au.ibm.com>, 2003.
 
@@ -56,17 +56,15 @@
   __tmp != 0;								      \
 })
 
-/* 
- * Powerpc32 processors don't implement the 64-bit (doubleword) forms of
- * load and reserve (ldarx) and store conditional (stdcx.) instructions.  
- * So for powerpc32 we stub out the 64-bit forms.
- */
+/* Powerpc32 processors don't implement the 64-bit (doubleword) forms of
+   load and reserve (ldarx) and store conditional (stdcx.) instructions.
+   So for powerpc32 we stub out the 64-bit forms.  */
 # define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 
 # define __arch_compare_and_exchange_val_64_acq(mem, newval, oldval) \
   (abort (), (__typeof (*mem)) 0)
-  
+
 # define __arch_compare_and_exchange_bool_64_rel(mem, newval, oldval) \
   (abort (), 0)
 
@@ -82,19 +80,24 @@
 # define __arch_atomic_exchange_and_add_64(mem, value) \
     ({ abort (); (*mem) = (value); })
 
+# define __arch_atomic_increment_val_64(mem) \
+    ({ abort (); (*mem)++; })
+
+# define __arch_atomic_decrement_val_64(mem) \
+    ({ abort (); (*mem)--; })
+
 # define __arch_atomic_decrement_if_positive_64(mem) \
     ({ abort (); (*mem)--; })
-    
-/* 
- * Older powerpc32 processors don't support the new "light weight" 
- * sync (lwsync).  So the only safe option is to use normal sync 
- * for all powerpc32 applications. 
+
+/*
+ * Older powerpc32 processors don't support the new "light weight"
+ * sync (lwsync).  So the only safe option is to use normal sync
+ * for all powerpc32 applications.
  */
 # define atomic_read_barrier()	__asm ("sync" ::: "memory")
 
 /*
  * Include the rest of the atomic ops macros which are common to both
- * powerpc32 and powerpc64. 
+ * powerpc32 and powerpc64.
  */
 #include_next <bits/atomic.h>
-

@@ -69,7 +69,7 @@ pthread_barrier_wait (barrier)
   unsigned int init_count = ibarrier->init_count;
 
   /* If this was the last woken thread, unlock.  */
-  if (atomic_exchange_and_add (&ibarrier->left, 1) == init_count - 1)
+  if (atomic_increment_val (&ibarrier->left) == init_count)
     /* We are done.  */
     lll_unlock (ibarrier->lock);
 

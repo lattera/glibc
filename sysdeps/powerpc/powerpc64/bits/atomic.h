@@ -168,6 +168,32 @@
       __val;								      \
     })
 
+# define __arch_atomic_increment_val_64(mem) \
+    ({									      \
+      __typeof (*(mem)) __val;						      \
+      __asm __volatile ("1:	ldarx	%0,0,%2\n"			      \
+			"	addi	%0,%0,1\n"			      \
+			"	stdcx.	%0,0,%2\n"			      \
+			"	bne-	1b"				      \
+			: "=&b" (__val), "=m" (*mem)			      \
+			: "b" (mem), "m" (*mem)				      \
+			: "cr0", "memory");				      \
+      __val;								      \
+    })
+
+# define __arch_atomic_decrement_val_64(mem) \
+    ({									      \
+      __typeof (*(mem)) __val;						      \
+      __asm __volatile ("1:	ldarx	%0,0,%2\n"			      \
+			"	subi	%0,%0,1\n"			      \
+			"	stdcx.	%0,0,%2\n"			      \
+			"	bne-	1b"				      \
+			: "=&b" (__val), "=m" (*mem)			      \
+			: "b" (mem), "m" (*mem)				      \
+			: "cr0", "memory");				      \
+      __val;								      \
+    })
+
 # define __arch_atomic_decrement_if_positive_64(mem) \
   ({ int __val, __tmp;							      \
      __asm __volatile ("1:	ldarx	%0,0,%3\n"			      \
