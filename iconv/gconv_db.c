@@ -726,7 +726,8 @@ free_modules_db (struct gconv_module *node)
     {
       struct gconv_module *act = node;
       node = node->matching;
-      free (act);
+      if (act->module_name[0] == '/')
+	free (act);
     }
   while (node != NULL);
 }

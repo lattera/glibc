@@ -1,5 +1,8 @@
 1999-01-28  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_db.c (free_modules_db): Don't free memory of
+	internal modules.
+
 	* iconv/gconv_db.c (free_mem): Don't free module tree if there is none.
 
 1999-01-27  Ulrich Drepper  <drepper@cygnus.com>
