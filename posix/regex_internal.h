@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -471,10 +471,7 @@ struct re_dfastate_t
   re_node_set nodes;
   re_node_set *entrance_nodes;
   struct re_dfastate_t **trtable;
-  /* If this state is a special state.
-     A state is a special state if the state is the halt state, or
-     a anchor.  */
-  unsigned int context : 2;
+  unsigned int context : 10;
   unsigned int halt : 1;
   /* If this state can accept `multi byte'.
      Note that we refer to multibyte characters, and multi character

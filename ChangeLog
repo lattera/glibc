@@ -1,3 +1,10 @@
+2004-01-01  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (re_dfastate_t): Fix size of the CONTEXT
+	bitfield.
+
+	* posix/regex_internal.c (re_node_set_insert):  Rewrite.
+
 2004-01-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Update copyright year.

@@ -1,5 +1,5 @@
 /* Extended regular expression matching and search library.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
 
@@ -1148,7 +1148,7 @@ re_node_set_merge (dest, src)
 }
 
 /* Insert the new element ELEM to the re_node_set* SET.
-   return 0 if SET already has ELEM,
+   SET should not already have ELEM.
    return -1 if an error is occured, return 1 otherwise.  */
 
 static int
@@ -1157,8 +1157,8 @@ re_node_set_insert (set, elem)
      int elem;
 {
   int idx, right, mid;
-  /* In case of the set is empty.  */
-  if (set->elems == NULL || set->alloc == 0)
+  /* In case the set is empty.  */
+  if (set->alloc == 0)
     {
       if (BE (re_node_set_init_1 (set, elem) == REG_NOERROR, 1))
 	return 1;
@@ -1166,43 +1166,39 @@ re_node_set_insert (set, elem)
 	return -1;
     }
 
-  /* Binary search the spot we will add the new element.  */
-  idx = 0;
-  right = set->nelem;
-  while (idx < right)
+  if (BE (set->nelem, 0) == 0)
     {
-      mid = (idx + right) / 2;
-      if (set->elems[mid] < elem)
-	idx = mid + 1;
-      else
-	right = mid;
+      /* We already guaranteed above that set->alloc != 0.  */
+      set->elems[0] = elem;
+      ++set->nelem;
+      return 1;
     }
 
   /* Realloc if we need.  */
-  if (set->alloc < set->nelem + 1)
+  if (set->alloc == set->nelem)
     {
       int *new_array;
       set->alloc = set->alloc * 2;
-      new_array = re_malloc (int, set->alloc);
+      new_array = re_realloc (set->elems, int, set->alloc);
       if (BE (new_array == NULL, 0))
 	return -1;
-      /* Copy the elements they are followed by the new element.  */
-      if (idx > 0)
-	memcpy (new_array, set->elems, sizeof (int) * (idx));
-      /* Copy the elements which follows the new element.  */
-      if (set->nelem - idx > 0)
-	memcpy (new_array + idx + 1, set->elems + idx,
-		sizeof (int) * (set->nelem - idx));
-      re_free (set->elems);
       set->elems = new_array;
+    }
+
+  /* Move the elements which follows the new element.  Test the
+     first element separately to skip a check in the inner loop.  */
+  if (elem < set->elems[0])
+    {
+      idx = 0;
+      memmove (set->elems + 1, set->elems,
+	       sizeof (int) * set->nelem);
     }
   else
     {
-      /* Move the elements which follows the new element.  */
-      if (set->nelem - idx > 0)
-	memmove (set->elems + idx + 1, set->elems + idx,
-		 sizeof (int) * (set->nelem - idx));
+      for (idx = set->nelem; set->elems[idx - 1] > elem; idx--)
+        set->elems[idx] = set->elems[idx - 1];
     }
+
   /* Insert the new element.  */
   set->elems[idx] = elem;
   ++set->nelem;
