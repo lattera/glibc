@@ -16,5 +16,6 @@ shmctl		-	shmctl		i:iip	__shmctl	shmctl
 shmdt		-	shmdt		i:s	__shmdt		shmdt
 shmget		-	shmget		i:iii	__shmget	shmget
 semop		-	semop		i:ipi	__semop		semop
+semtimedop	-	semtimedop	i:ipip	semtimedop
 semget		-	semget		i:iii	__semget	semget
 semctl		-	semctl		i:iiii	__semctl	semctl
