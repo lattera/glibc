@@ -174,6 +174,7 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
   char *p;
   void *context;
   gid_t *groups = *groupsp;
+  int save_errno;
 
   context = _nss_hesiod_init ();
   if (context == NULL)
@@ -214,6 +215,8 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
       groups[(*start)++] = group;
     }
 
+  save_errno = errno;
+
   p = *list;
   while (*p != '\0')
     {
@@ -224,17 +227,24 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
       status = NSS_STATUS_NOTFOUND;
 
       q = p;
-      while (*q != '\0' && *q != ':')
+      while (*q != '\0' && *q != ':' && *q != ',')
 	++q;
 
       if (*q != '\0')
 	*q++ = '\0';
 
+      __set_errno (0);
       val = strtol (p, &endp, 10);
-      if (sizeof (gid_t) == sizeof (long int) || (gid_t) val == val)
+      /* Test whether the number is representable in a variable of
+         type `gid_t'.  If not ignore the number.  */
+      if ((sizeof (gid_t) == sizeof (long int) || (gid_t) val == val)
+	  && errno == 0)
 	{
 	  if (*endp == '\0' && endp != p)
-	    status = NSS_STATUS_SUCCESS;
+	    {
+	      group = val;
+	      status = NSS_STATUS_SUCCESS;
+	    }
 	  else
 	    status = internal_gid_from_group (context, p, &group);
 
@@ -269,6 +279,8 @@ _nss_hesiod_initgroups_dyn (const char *user, gid_t group, long int *start,
 
       p = q;
     }
+
+  __set_errno (save_errno);
 
  done:
   hesiod_free_list (context, list);
