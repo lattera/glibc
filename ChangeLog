@@ -1,3 +1,9 @@
+2000-03-03  Geoff Keating  <geoffk@cygnus.com>
+
+	* configure.in: Compute sizeof-long-double.
+	* configure: Regenerated.
+	* config.make.in: Make sizeof-long-double available to sub-makes.
+
 2000-03-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/init-first.c: Remove trace of personality

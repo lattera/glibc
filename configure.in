@@ -1176,6 +1176,11 @@ LIBS="$old_LIBS"
 AC_MSG_RESULT($LIBGD)
 AC_SUBST(LIBGD)
 
+dnl check for the size of 'long double'.
+AC_CHECK_SIZEOF(long double, 0)
+sizeof_long_double=$ac_cv_sizeof_long_double
+AC_SUBST(sizeof_long_double)
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 

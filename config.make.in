@@ -48,6 +48,8 @@ have_doors = @linux_doors@
 have-bash2 = @libc_cv_have_bash2@
 have-ksh = @libc_cv_have_ksh@
 
+sizeof-long-double = @sizeof_long_double@
+
 # Configuration options.
 gnu-as = @gnu_as@
 gnu-ld = @gnu_ld@

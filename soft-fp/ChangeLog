@@ -1,3 +1,11 @@
+2000-03-03  Geoff Keating  <geoffk@cygnus.com>
+
+	* soft-fp.h (_FP_ROUND_ZERO): Cast 0 to void before using it
+	as a statement.
+
+	* sysdeps/powerpc/Makefile (routines): New file.
+	* sysdeps/powerpc/q_*: New files.
+
 1999-10-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile: New file.

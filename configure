@@ -2125,7 +2125,7 @@ else
 fi
 
 
-for ac_prog in mawk gawk nawk awk
+for ac_prog in gawk mawk nawk awk
 do
 # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2
@@ -3035,6 +3035,48 @@ LIBS="$old_LIBS"
 echo "$ac_t""$LIBGD" 1>&6
 
 
+echo $ac_n "checking size of long double""... $ac_c" 1>&6
+echo "configure:3040: checking size of long double" >&5
+if eval "test \"`echo '$''{'ac_cv_sizeof_long_double'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  if test "$cross_compiling" = yes; then
+  ac_cv_sizeof_long_double=0
+else
+  cat > conftest.$ac_ext <<EOF
+#line 3048 "configure"
+#include "confdefs.h"
+#include <stdio.h>
+main()
+{
+  FILE *f=fopen("conftestval", "w");
+  if (!f) exit(1);
+  fprintf(f, "%d\n", sizeof(long double));
+  exit(0);
+}
+EOF
+if { (eval echo configure:3059: \"$ac_link\") 1>&5; (eval $ac_link) 2>&5; } && test -s conftest${ac_exeext} && (./conftest; exit) 2>/dev/null
+then
+  ac_cv_sizeof_long_double=`cat conftestval`
+else
+  echo "configure: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  rm -fr conftest*
+  ac_cv_sizeof_long_double=0
+fi
+rm -fr conftest*
+fi
+
+fi
+echo "$ac_t""$ac_cv_sizeof_long_double" 1>&6
+cat >> confdefs.h <<EOF
+#define SIZEOF_LONG_DOUBLE $ac_cv_sizeof_long_double
+EOF
+
+
+sizeof_long_double=$ac_cv_sizeof_long_double
+
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 
@@ -3081,7 +3123,7 @@ if test "$uname" = "sysdeps/generic"; then
   fi
 
   echo $ac_n "checking OS release for uname""... $ac_c" 1>&6
-echo "configure:3085: checking OS release for uname" >&5
+echo "configure:3127: checking OS release for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_release'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3103,7 +3145,7 @@ echo "$ac_t""$libc_cv_uname_release" 1>&6
   uname_release="$libc_cv_uname_release"
 
   echo $ac_n "checking OS version for uname""... $ac_c" 1>&6
-echo "configure:3107: checking OS version for uname" >&5
+echo "configure:3149: checking OS version for uname" >&5
 if eval "test \"`echo '$''{'libc_cv_uname_version'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3125,7 +3167,7 @@ else
 fi
 
 echo $ac_n "checking stdio selection""... $ac_c" 1>&6
-echo "configure:3129: checking stdio selection" >&5
+echo "configure:3171: checking stdio selection" >&5
 
 case $stdio in
 libio) cat >> confdefs.h <<\EOF
@@ -3139,7 +3181,7 @@ echo "$ac_t""$stdio" 1>&6
 # Test for old glibc 2.0.x headers so that they can be removed properly
 # Search only in includedir.
 echo $ac_n "checking for old glibc 2.0.x headers""... $ac_c" 1>&6
-echo "configure:3143: checking for old glibc 2.0.x headers" >&5
+echo "configure:3185: checking for old glibc 2.0.x headers" >&5
 if eval test -f "${includedir}/elfclass.h" -a -f "${includedir}/fcntlbits.h"
 then
   old_glibc_headers=yes
@@ -3194,7 +3236,7 @@ if test $shared = default; then
 fi
 
 echo $ac_n "checking whether -fPIC is default""... $ac_c" 1>&6
-echo "configure:3198: checking whether -fPIC is default" >&5
+echo "configure:3240: checking whether -fPIC is default" >&5
 if eval "test \"`echo '$''{'pic_default'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
@@ -3421,6 +3463,7 @@ s%@libc_cv_have_initfini@%$libc_cv_have_initfini%g
 s%@no_whole_archive@%$no_whole_archive%g
 s%@exceptions@%$exceptions%g
 s%@LIBGD@%$LIBGD%g
+s%@sizeof_long_double@%$sizeof_long_double%g
 s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
