@@ -269,7 +269,7 @@ __printf_fp (fp, info, args)
 	{
 	  fracsize = __mpn_extract_long_double (fp_input,
 						(sizeof (fp_input) /
-						 sizeof (fp_input[0])), 
+						 sizeof (fp_input[0])),
 						&exponent, &is_neg,
 						fpnum.ldbl);
 	  to_shift = 1 + fracsize * BITS_PER_MP_LIMB - LDBL_MANT_DIG;
@@ -496,7 +496,7 @@ __printf_fp (fp, info, args)
 
       /* Now shift the input value to its right place.	*/
       cy = __mpn_lshift (frac, fp_input, fracsize, to_shift);
-      frac[fracsize++] = cy; 
+      frac[fracsize++] = cy;
       assert (cy == 1 || (frac[fracsize - 2] == 0 && frac[0] == 0));
 
       expsign = 1;
@@ -524,7 +524,7 @@ __printf_fp (fp, info, args)
 	      if (cy == 0)
 		--tmpsize;
 
-	      count_leading_zeros (cnt_h, tmp[tmpsize - 1]); 
+	      count_leading_zeros (cnt_h, tmp[tmpsize - 1]);
 	      incr = (tmpsize - fracsize) * BITS_PER_MP_LIMB
 		     + BITS_PER_MP_LIMB - 1 - cnt_h;
 
@@ -559,7 +559,7 @@ __printf_fp (fp, info, args)
 			   && tmp[tmpsize - 2] < topval[0]))))
 		{
 		  /* The factor is right.  Adapt binary and decimal
-		     exponents.	 */ 
+		     exponents.	 */
 		  exponent -= incr;
 		  exp10 |= 1 << explog;
 
@@ -639,7 +639,7 @@ __printf_fp (fp, info, args)
 
       /* Now shift the input value to its right place.	*/
       cy = __mpn_lshift (frac, fp_input, fracsize, (exponent + to_shift));
-      frac[fracsize++] = cy; 
+      frac[fracsize++] = cy;
       exponent = 0;
     }
 
@@ -714,7 +714,7 @@ __printf_fp (fp, info, args)
        it is possible that we need two more characters in front of all the
        other output.  */
     buffer = alloca (2 + chars_needed);
-    cp = startp = buffer + 2;	/* Let room for rounding.  */ 
+    cp = startp = buffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */
     if (expsign == 0 || type != 'f')
@@ -886,7 +886,7 @@ __printf_fp (fp, info, args)
       }
 
     /* Compute number of characters which must be filled with the padding
-       character.  */ 
+       character.  */
     if (is_neg || info->showsign || info->space)
       --width;
     width -= cp - startp;

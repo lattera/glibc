@@ -277,10 +277,6 @@ noconv:
 
 /* External user entry point.  */
 
-#ifdef weak_symbol
-weak_symbol (strtol)
-#endif
-
 INT
 strtol (nptr, endptr, base)
      const char *nptr;
@@ -289,3 +285,7 @@ strtol (nptr, endptr, base)
 {
   return INTERNAL (strtol) (nptr, endptr, base, 0);
 }
+
+#ifdef weak_symbol
+weak_symbol (strtol)
+#endif

@@ -70,7 +70,7 @@ extern FLOAT MPN2FLOAT (mp_srcptr mpn, int exponent, int negative);
 #  define MAX_DIG_PER_LIMB	19
 #  define MAX_FAC_PER_LIMB	10000000000000000000L
 #else
-#  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"	
+#  error "mp_limb size " BITS_PER_MP_LIMB "not accounted for"
 #endif
 
 
@@ -102,7 +102,7 @@ static const mp_limb _tens_in_limb[MAX_DIG_PER_LIMB + 1] =
 #define RETURN(val,end) \
     do { if (endptr != 0) *endptr = (char *) (end); return val; } while (0)
 
-/* Maximum size necessary for mpn integers to hold floating point numbers.  */ 
+/* Maximum size necessary for mpn integers to hold floating point numbers.  */
 #define	MPNSIZE		(howmany (MAX_EXP + 2 * MANT_DIG, BITS_PER_MP_LIMB) \
 			 + 2)
 /* Declare an mpn integer variable that big.  */
@@ -584,7 +584,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     {
       errno = ERANGE;
       return 0.0;
-    }	
+    }
 
   if (int_no > 0)
     {
@@ -797,7 +797,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	dig_no -= lead_zero;
       }
 
-    /* Read the fractional digits from the string.  */ 
+    /* Read the fractional digits from the string.  */
     (void) str_to_mpn (startp, dig_no - int_no, num, &numsize, &exponent);
 
 
@@ -964,7 +964,7 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 	    have_quot:
 	      got_limb;
 	    }
-	    
+
 	  return round_and_return (retval, exponent - 1, negative,
 				   quot, BITS_PER_MP_LIMB - 1 - used,
 				   more_bits || n1 != 0 || n0 != 0);
@@ -1105,9 +1105,6 @@ INTERNAL (STRTOF) (nptr, endptr, group)
 
 /* External user entry point.  */
 
-#define weak_this(x) weak_symbol(x)
-weak_this (STRTOF)
-
 FLOAT
 STRTOF (nptr, endptr)
      const char *nptr;
@@ -1115,3 +1112,6 @@ STRTOF (nptr, endptr)
 {
   return INTERNAL (STRTOF) (nptr, endptr, 0);
 }
+
+#define weak_this(x) weak_symbol(x)
+weak_this (STRTOF)

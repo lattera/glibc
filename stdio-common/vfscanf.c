@@ -34,23 +34,79 @@ Cambridge, MA 02139, USA.  */
 #define	LONGLONG	long
 #endif
 
+#ifdef USE_IN_LIBIO
+# include <libioP.h>
+# include <libio.h>
 
-#define	inchar()	((c = getc(s)) == EOF ? EOF : (++read_in, c))
-#define	conv_error()	return (ungetc(c, s), done)
-#define input_error()	return (done == 0 ? EOF : done)
-#define	memory_error()	return ((errno = ENOMEM), EOF)
+/* Those are flags in the conversion format. */
+# define LONG		0x01	/* l: long or double */
+# define LONGDBL	0x02	/* L: long long or long double */
+# define SHORT		0x04	/* h: short */
+# define SUPPRESS	0x08	/* suppress assignment */
+# define POINTER	0x10	/* weird %p pointer (`fake hex') */
+# define NOSKIP		0x20	/* do not skip blanks */
+# define WIDTH		0x40	/* width */
+
+
+# define va_list	_IO_va_list
+# define ungetc(c, s)	_IO_ungetc (c, s)
+# define inchar()	((c = _IO_getc(s)), ++read_in, c)
+# define conv_error()	return ((errp != NULL && (*errp |= 2)), \
+				(c == EOF || _IO_ungetc(c, s)), done)
+
+# define input_error()	return ((errp != NULL && (*errp |= 1)), \
+				done == 0 ? EOF : done)
+# define memory_error()	return ((errno = ENOMEM), EOF)
+# define ARGCHECK(s, format)						     \
+  do									     \
+    {									     \
+      /* Check file argument for consistence.  */			     \
+      CHECK_FILE (s, -1);						     \
+      if (s->_flags & _IO_NO_READS || format == NULL)			     \
+       {								     \
+         MAYBE_SET_EINVAL;						     \
+         return -1;							     \
+       }								     \
+    } while (0)
+#else
+# define inchar()	((c = getc(s)) == EOF ? EOF : (++read_in, c))
+# define conv_error()	return (ungetc(c, s), done)
+# define input_error()	return (done == 0 ? EOF : done)
+# define memory_error()	return ((errno = ENOMEM), EOF)
+# define ARGCHECK(s, format)						     \
+  do									     \
+    {									     \
+      /* Check file argument for consistence.  */			     \
+      if (!__validfp (s) || !s->__mode.__read || format == NULL)	     \
+	{								     \
+	  errno = EINVAL;						     \
+	  return -1;							     \
+	}								     \
+    } while (0)
+#endif
 
 
 /* Read formatted input from S according to the format string
    FORMAT, using the argument list in ARG.
    Return the number of assignments made, or -1 for an input error.  */
+#ifdef USE_IN_LIBIO
 int
-DEFUN(__vfscanf, (s, format, arg),
-      FILE *s AND CONST char *format AND va_list argptr)
+_IO_vfscanf (s, format, argptr, errp)
+     _IO_FILE *s;
+     const char *format;
+     _IO_va_list argptr;
+     int *errp;
+#else
+int
+__vfscanf (s, format, arg)
+     FILE *s;
+     const char *format;
+     va_list argptr;
+#endif
 {
   va_list arg = (va_list) argptr;
 
-  register CONST char *f = format;
+  register const char *f = format;
   register char fc;		/* Current character of the format.  */
   register size_t done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
@@ -58,14 +114,17 @@ DEFUN(__vfscanf, (s, format, arg),
   register int do_assign;	/* Whether to do an assignment.  */
   register int width;		/* Maximum field width.  */
   int group_flag;		/* %' modifier flag.  */
+#ifdef USE_IN_LIBIO
+  int flags;			/* Trace flags for current format element.  */
+#endif
 
   /* Type modifiers.  */
   int is_short, is_long, is_long_double;
 #ifdef	HAVE_LONGLONG
   /* We use the `L' modifier for `long long int'.  */
-#define	is_longlong	is_long_double
+# define is_longlong	is_long_double
 #else
-#define	is_longlong	0
+# define is_longlong	0
 #endif
   int malloc_string;		/* Args are char ** to be filled in.  */
   /* Status for reading F-P nums.  */
@@ -92,18 +151,14 @@ DEFUN(__vfscanf, (s, format, arg),
   char *w;			/* Pointer into WORK.  */
   wchar_t decimal;		/* Decimal point character.  */
 
-  if (!__validfp(s) || !s->__mode.__read || format == NULL)
-    {
-      errno = EINVAL;
-      return EOF;
-    }
+  ARGCHECK (s, format);
 
   /* Figure out the decimal point character.  */
   if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
 	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
     decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
-  c = inchar();
+  c = inchar ();
 
   /* Run through the format string.  */
   while (*f != '\0')
@@ -112,27 +167,38 @@ DEFUN(__vfscanf, (s, format, arg),
       /* Extract the next argument, which is of type TYPE.
 	 For a %N$... spec, this is the Nth argument from the beginning;
 	 otherwise it is the next argument after the state now in ARG.  */
-#define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+#if 0
+      /* XXX Possible optimization.  */
+# define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+			 ({ va_list arg = (va_list) argptr;		      \
+			    arg = (va_list) ((char *) arg		      \
+					     + (argpos - 1)		      \
+					     * __va_rounded_size (void *));   \
+			    va_arg (arg, type);				      \
+			 }))
+#else
+# define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
 			 ({ unsigned int pos = argpos;			      \
 			    va_list arg = (va_list) argptr;		      \
 			    while (--pos > 0)				      \
 			      (void) va_arg (arg, void *);		      \
 			    va_arg (arg, type);				      \
 			  }))
+#endif
 
       if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen (f, strlen(f));
+	  int len = mblen (f, strlen (f));
 	  if (len > 0)
 	    {
 	      while (len-- > 0)
 		if (c == EOF)
-		  input_error();
+		  input_error ();
 		else if (c == *f++)
-		  (void) inchar();
+		  (void) inchar ();
 		else
-		  conv_error();
+		  conv_error ();
 	      continue;
 	    }
 	}
@@ -142,8 +208,8 @@ DEFUN(__vfscanf, (s, format, arg),
 	{
 	  /* Characters other than format specs must just match.  */
 	  if (c == EOF)
-	    input_error();
-	  if (isspace(fc))
+	    input_error ();
+	  if (isspace (fc))
 	    {
 	      /* Whitespace characters match any amount of whitespace.  */
 	      while (isspace (c))
@@ -151,11 +217,16 @@ DEFUN(__vfscanf, (s, format, arg),
 	      continue;
 	    }
 	  else if (c == fc)
-	    (void) inchar();
+	    (void) inchar ();
 	  else
-	    conv_error();
+	    conv_error ();
 	  continue;
 	}
+
+#ifdef USE_IN_LIBIO
+      /* That is the start of the coversion string. */
+      flags = 0;
+#endif
 
       /* Initialize state of modifiers.  */
       argpos = 0;
@@ -185,6 +256,9 @@ DEFUN(__vfscanf, (s, format, arg),
 	switch (*f++)
 	  {
 	  case '*':
+#ifdef USE_IN_LIBIO
+	    flags = SUPPRESS;
+#endif
 	    do_assign = 0;
 	    break;
 	  case '\'':
@@ -192,9 +266,15 @@ DEFUN(__vfscanf, (s, format, arg),
 	    break;
 	  }
 
+#ifdef USE_IN_LIBIO
+      /* We have seen width. */
+      if (isdigit (*f))
+	flags |= WIDTH;
+#endif
+
       /* Find the maximum field width.  */
       width = 0;
-      while (isdigit(*f))
+      while (isdigit (*f))
 	{
 	  width *= 10;
 	  width += *f++ - '0';
@@ -209,19 +289,44 @@ DEFUN(__vfscanf, (s, format, arg),
 	  {
 	  case 'h':
 	    /* int's are short int's.  */
+#ifdef USE_IN_LIBIO
+	    if (flags & ~(SUPPRESS | WIDTH))
+	      /* Signal illegal format element.  */
+	      conv_error ();
+	    flags |= SHORT;
+#endif
 	    is_short = 1;
 	    break;
 	  case 'l':
 	    if (is_long)
-	      /* A double `l' is equivalent to an `L'.  */
-	      is_longlong = 1;
+	      {
+		/* A double `l' is equivalent to an `L'.  */
+#ifdef USE_IN_LIBIO
+		if ((flags & ~(SUPPRESS | WIDTH)) && (flags & LONGDBL))
+		  conv_error ();
+		flags &= ~LONG;
+		flags |= LONGDBL;
+#endif
+		is_longlong = 1;
+	      }
 	    else
-	      /* int's are long int's.  */
-	      is_long = 1;
+	      {
+		/* int's are long int's.  */
+#ifdef USE_IN_LIBIO
+		flags |= LONG;
+#endif
+		is_long = 1;
+	      }
 	    break;
 	  case 'q':
 	  case 'L':
 	    /* double's are long double's, and int's are long long int's.  */
+#ifdef USE_IN_LIBIO
+	    if (flags & ~(SUPPRESS | WIDTH))
+	      /* Signal illegal format element.  */
+	      conv_error ();
+	    flags |= LONGDBL;
+#endif
 	    is_long_double = 1;
 	    break;
 	  case 'a':
@@ -233,20 +338,20 @@ DEFUN(__vfscanf, (s, format, arg),
 
       /* End of the format string?  */
       if (*f == '\0')
-	conv_error();
+	conv_error ();
 
       /* Find the conversion specifier.  */
       w = work;
       fc = *f++;
       if (fc != '[' && fc != 'c' && fc != 'n')
 	/* Eat whitespace.  */
-	while (isspace(c))
-	  (void) inchar();
+	while (isspace (c))
+	  (void) inchar ();
       switch (fc)
 	{
 	case '%':	/* Must match a literal '%'.  */
 	  if (c != fc)
-	    conv_error();
+	    conv_error ();
 	  break;
 
 	case 'n':	/* Answer number of assignments done.  */
@@ -263,7 +368,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	    }
 
 	  if (c == EOF)
-	    input_error();
+	    input_error ();
 
 	  if (width == -1)
 	    width = 1;
@@ -272,10 +377,10 @@ DEFUN(__vfscanf, (s, format, arg),
 	    {
 	      do
 		*str++ = c;
-	      while (inchar() != EOF && --width > 0);
+	      while (inchar () != EOF && --width > 0);
 	    }
 	  else
-	    while (inchar() != EOF && --width > 0);
+	    while (inchar () != EOF && --width > 0);
 
 	  if (do_assign)
 	    ++done;
@@ -289,7 +394,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (malloc_string)					      \
 		{							      \
 		  /* The string is to be stored in a malloc'd buffer.  */     \
-		  strptr = ARG (char **);			      \
+		  strptr = ARG (char **);				      \
 		  if (strptr == NULL)					      \
 		    conv_error ();					      \
 		  /* Allocate an initial buffer.  */			      \
@@ -297,7 +402,7 @@ DEFUN(__vfscanf, (s, format, arg),
 		  *strptr = str = malloc (strsize);			      \
 		}							      \
 	      else							      \
-		str = ARG (char *);				      \
+		str = ARG (char *);					      \
 	      if (str == NULL)						      \
 		conv_error ();						      \
 	    }
@@ -357,7 +462,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	  break;
 
 	case 'x':	/* Hexadecimal integer.  */
-	case 'X':	/* Ditto.  */ 
+	case 'X':	/* Ditto.  */
 	  base = 16;
 	  number_signed = 0;
 	  goto number;
@@ -383,7 +488,7 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	number:
 	  if (c == EOF)
-	    input_error();
+	    input_error ();
 
 	  /* Check for a sign.  */
 	  if (c == '-' || c == '+')
@@ -391,7 +496,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      *w++ = c;
 	      if (width > 0)
 		--width;
-	      (void) inchar();
+	      (void) inchar ();
 	    }
 
 	  /* Look for a leading indication of base.  */
@@ -401,9 +506,9 @@ DEFUN(__vfscanf, (s, format, arg),
 		--width;
 	      *w++ = '0';
 
-	      (void) inchar();
+	      (void) inchar ();
 
-	      if (tolower(c) == 'x')
+	      if (tolower (c) == 'x')
 		{
 		  if (base == 0)
 		    base = 16;
@@ -411,7 +516,7 @@ DEFUN(__vfscanf, (s, format, arg),
 		    {
 		      if (width > 0)
 			--width;
-		      (void) inchar();
+		      (void) inchar ();
 		    }
 		}
 	      else if (base == 0)
@@ -422,21 +527,21 @@ DEFUN(__vfscanf, (s, format, arg),
 	    base = 10;
 
 	  /* Read the number into WORK.  */
-	  while (width != 0 && c != EOF)
+	  do
 	    {
-	      if (base == 16 ? !isxdigit(c) :
-		  (!isdigit(c) || c - '0' >= base))
+	      if (base == 16 ? !isxdigit (c) :
+		  (!isdigit (c) || c - '0' >= base))
 		break;
 	      *w++ = c;
 	      if (width > 0)
 		--width;
-	      (void) inchar ();
 	    }
+	  while (inchar () != EOF && width != 0);
 
 	  if (w == work ||
 	      (w - work == 1 && (work[0] == '+' || work[0] == '-')))
 	    /* There was no number.  */
-	    conv_error();
+	    conv_error ();
 
 	  /* Convert the number.  */
 	  *w = '\0';
@@ -492,15 +597,15 @@ DEFUN(__vfscanf, (s, format, arg),
 	case 'g':
 	case 'G':
 	  if (c == EOF)
-	    input_error();
+	    input_error ();
 
 	  /* Check for a sign.  */
 	  if (c == '-' || c == '+')
 	    {
 	      *w++ = c;
-	      if (inchar() == EOF)
+	      if (inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
-		conv_error();
+		conv_error ();
 	      if (width > 0)
 		--width;
 	    }
@@ -508,11 +613,11 @@ DEFUN(__vfscanf, (s, format, arg),
 	  got_dot = got_e = 0;
 	  do
 	    {
-	      if (isdigit(c))
+	      if (isdigit (c))
 		*w++ = c;
 	      else if (got_e && w[-1] == 'e' && (c == '-' || c == '+'))
 		*w++ = c;
-	      else if (!got_e && tolower(c) == 'e')
+	      else if (!got_e && tolower (c) == 'e')
 		{
 		  *w++ = 'e';
 		  got_e = got_dot = 1;
@@ -526,12 +631,12 @@ DEFUN(__vfscanf, (s, format, arg),
 		break;
 	      if (width > 0)
 		--width;
-	    } while (inchar() != EOF && width != 0);
+	    } while (inchar () != EOF && width != 0);
 
 	  if (w == work)
 	    conv_error();
 	  if (w[-1] == '-' || w[-1] == '+' || w[-1] == 'e')
-	    conv_error();
+	    conv_error ();
 
 	  /* Convert the number.  */
 	  *w = '\0';
@@ -614,11 +719,14 @@ DEFUN(__vfscanf, (s, format, arg),
 	  base = 16;
 	  /* A PTR must be the same size as a `long int'.  */
 	  is_long = 1;
+	  number_signed = 0;
 	  goto number;
 	}
     }
 
-  conv_error();
+  return ((c == EOF || ungetc (c, s)), done);
 }
 
+#ifndef USE_IN_LIBIO
 weak_alias (__vfscanf, vfscanf)
+#endif

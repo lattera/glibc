@@ -22,6 +22,11 @@ Cambridge, MA 02139, USA.  */
 
 #undef __getline
 
+#ifdef USE_IN_LIBIO
+# define ssize_t _IO_ssize_t
+# define __getdelim _IO_getdelim
+#endif
+
 /* Like getdelim, but always looks for a newline.  */
 ssize_t
 DEFUN(__getline, (lineptr, n, stream),

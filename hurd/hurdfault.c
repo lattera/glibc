@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include "thread_state.h"
 #include "faultexc.h"		/* mig-generated header for our exc server.  */
+#include <assert.h>
 
 jmp_buf _hurdsig_fault_env;
 
@@ -121,7 +122,7 @@ _hurdsig_fault_init (void)
 			      MACH_PORT_RIGHT_RECEIVE, &forward_sigexc);
   assert_perror (err);
 
-  err = __mach_port_insert_right (__mach_task_self (),
+  err = __mach_port_insert_right (__mach_task_self (), sigexc,
 				  sigexc, MACH_MSG_TYPE_MAKE_SEND);
   assert_perror (err);
   err = __thread_set_special_port (_hurd_msgport_thread,

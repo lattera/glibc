@@ -16,30 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <stdarg.h>
-#include <stdio.h>
+#include "libioP.h"
+#include "stdio.h"
 
-#ifdef USE_IN_LIBIO
-# include <libioP.h>
-# define __vsnprintf _IO_vsnprintf
-#endif
+#undef putchar
 
-/* Write formatted output into S, according to the format
-   string FORMAT, writing no more than MAXLEN characters.  */
-/* VARARGS3 */
 int
-__snprintf (s, maxlen, format)
-      char *s;
-      size_t maxlen;
-      const char *format;
+putchar (c)
+     int c;
 {
-  va_list arg;
-  int done;
-
-  va_start (arg, format);
-  done = __vsnprintf (s, maxlen, format, arg);
-  va_end (arg);
-
-  return done;
+  return _IO_putc (c, stdout);
 }
-weak_alias (__snprintf, snprintf)

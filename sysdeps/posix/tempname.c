@@ -27,6 +27,11 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <unistd.h>
 
+#ifdef USE_IN_LIBIO
+# include "libioP.h"
+# include <libio.h>
+#endif
+
 /* Return nonzero if DIR is an existent directory.  */
 static int
 DEFUN(diraccess, (dir), CONST char *dir)
@@ -169,6 +174,41 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 	    {
 	      /* We got a new file that did not previously exist.
 		 Create a stream for it.  */
+#ifdef USE_IN_LIBIO
+	      int save;
+	      struct _IO_FILE_plus *fp;
+
+	      fp = (struct _IO_FILE_plus *)
+		malloc(sizeof (struct _IO_FILE_plus));
+	      if (fp == NULL)
+		{
+		  /* We lost trying to create a stream (out of memory?).
+		     Nothing to do but remove the file, close the descriptor,
+		     and return failure.  */
+		  save = errno;
+		lose:
+		  (void) remove (buf);
+		  (void) __close (fd);
+		  errno = save;
+		  return NULL;
+		}
+	      _IO_init (&fp->file, 0);
+	      _IO_JUMPS (&fp->file) = &_IO_file_jumps;
+	      _IO_file_init (&fp->file);
+# if !_IO_UNIFIED_JUMPTABLES
+	      fp->vtable = NULL;
+# endif
+	      if (_IO_file_attach (&fp->file, fd) == NULL)
+		{
+		  save = errno;
+		  free (fp);
+		  goto lose;
+		}
+	      fp->file._flags &= ~_IO_DELETE_DONT_CLOSE;
+	      fp->file._IO_file_flags = 0;
+
+	      *streamptr = (FILE *) fp;
+#else
 	      *streamptr = __newstream ();
 	      if (*streamptr == NULL)
 		{
@@ -185,6 +225,7 @@ DEFUN(__stdio_gen_tempname, (dir, pfx, dir_search, lenptr, streamptr),
 	      (*streamptr)->__mode.__write = 1;
 	      (*streamptr)->__mode.__read = 1;
 	      (*streamptr)->__mode.__binary = 1;
+#endif
 	    }
 	  else
 	    continue;

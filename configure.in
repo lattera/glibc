@@ -55,7 +55,7 @@ AC_ARG_WITH(weak-symbols, dnl
 
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
- 	      stdio=libio, stdio=stdio)
+ 	      stdio=libio, stdio=default)
 
 dnl Arguments to enable or disable building the shared, profiled, and
 dnl -fomit-frame-pointer libraries.
@@ -68,13 +68,6 @@ AC_ARG_ENABLE(profile, dnl
 AC_ARG_ENABLE(omitfp, dnl
 [  --enable-omitfp       build undebuggable optimized library [default=no]],
 	    omitfp=$enableval, omitfp=no)
-
-AC_MSG_CHECKING(stdio selection)
-AC_SUBST(stdio)
-if test $stdio = libio; then
-  AC_DEFINE(USE_IN_LIBIO)
-fi
-AC_MSG_RESULT($stdio)
 
 AC_CANONICAL_HOST
 # We keep the original values in `$config_*' and never modify them, so we
@@ -485,6 +478,14 @@ else
   # For non-generic uname, we don't need to create config-name.h at all.
   config_uname=
 fi
+
+AC_MSG_CHECKING(stdio selection)
+AC_SUBST(stdio)
+case $stdio in
+libio) AC_DEFINE(USE_IN_LIBIO) ;;
+default) stdio=stdio ;;
+esac
+AC_MSG_RESULT($stdio)
 
 AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(weak)
 if test $gnu_ld = yes; then

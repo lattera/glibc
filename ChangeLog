@@ -1,3 +1,34 @@
+Sat Nov 18 16:46:01 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
+
+	* libio/Makefile, libio/cleanup.c, libio/clearerr.c, libio/feof.c,
+	libio/ferror.c, libio/fgetc.c, libio/filedoalloc.c, libio/fileno.c,
+	libio/fileops.c, libio/fputc.c, libio/freopen.c, libio/fseek.c,
+	libio/genops.c, libio/getc.c, libio/getchar.c, libio/iofclose.c,
+	libio/iofdopen.c, libio/iofflush.c, libio/iofgetpos.c, libio/iofgets.c,
+	libio/iofopen.c, libio/iofprintf.c, libio/iofputs.c, libio/iofread.c,
+	libio/iofscanf.c, libio/iofsetpos.c, libio/ioftell.c, libio/iofwrite.c,
+	libio/iogetdelim.c, libio/iogetline.c, libio/iogets.c, libio/iolibio.h,
+	libio/iopadn.c, libio/ioprims.c, libio/ioputs.c, libio/ioseekoff.c,
+	libio/ioseekpos.c, libio/iosetbuffer.c, libio/iosetvbuf.c,
+	libio/iosprintf.c, libio/ioungetc.c, libio/iovsprintf.c,
+	libio/iovsscanf.c, libio/libio.h, libio/libioP.h, libio/putc.c,
+	libio/putchar.c, libio/rewind.c, libio/setbuf.c, libio/setlinebuf.c,
+	libio/stdfiles.c, libio/stdio.c, libio/stdio.h, libio/strfile.h,
+	libio/strops.c, libio/vasprintf.c, libio/vscanf.c, libio/vsnprintf.c:
+	New files.  Slightly modified version from Linux libc.
+
+	* libio/memstream.c, libio/vdprintf.c: New files for functions not
+	(yet) part of GNU libio.
+
+	* libio/iofopncook.c: Implementation of `fopencookie', mainly written
+	by Per Bothner.
+
+	* stdio-common/getline.c: Adapted to libio.
+	* stdio-common/snprintf.c: Adapted to libio.
+	* stdio-common/vfprintf.c: Adapted to libio.
+	* stdio-common/vfscanf.c: Adapted to libio.
+	* sysdeps/posix/tempname.c: Adapted to libio.
+
 Fri Nov 17 17:57:00 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/generic/Makefile (make_siglist): Add missing backslash.

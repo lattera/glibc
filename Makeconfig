@@ -411,9 +411,12 @@ endif	# gcc
 # files (including ones given in angle brackets) in the current directory
 # and in the parent library source directory.
 # `+sysdep-includes' will be defined by Makerules.
-+includes = -I. $(filter-out -I,-I$(patsubst %/,%,$(..))) \
++includes = -I. $(filter-out -I,-I$(patsubst %/,%,$(..))) $($(stdio)-include) \
 	    $(includes) $(+sysdep-includes) $(last-includes)
 
+# Since libio has several internal header files, we use a -I instead
+# of many little headers in the top level source directory.
+libio-include = -I$(..)libio
 
 # These are the variables that the implicit compilation rules use.
 CPPFLAGS = $(+includes) $(defines) -include $(..)libc-symbols.h \

@@ -239,11 +239,11 @@ vfprintf (s, format, ap)
   /* Fill in the types of all the arguments.  */
   for (cnt = 0; cnt < nspecs; ++cnt)
     {
-      /* If the width is determined by an argument this is an int.  */ 
+      /* If the width is determined by an argument this is an int.  */
       if (specs[cnt].width_arg != -1)
 	args_type[specs[cnt].width_arg] = PA_INT;
 
-      /* If the precision is determined by an argument this is an int.  */ 
+      /* If the precision is determined by an argument this is an int.  */
       if (specs[cnt].prec_arg != -1)
 	args_type[specs[cnt].prec_arg] = PA_INT;
 
@@ -583,16 +583,16 @@ vfprintf (s, format, ap)
           case 'n':
             /* Answer the count of characters written.  */
             if (specs[cnt].info.is_longlong)
-	      *(long long int *) 
+	      *(long long int *)
 		args_value[specs[cnt].data_arg].pa_pointer = done;
             else if (specs[cnt].info.is_long)
-	      *(long int *) 
+	      *(long int *)
 		args_value[specs[cnt].data_arg].pa_pointer = done;
             else if (!specs[cnt].info.is_short)
-	      *(int *) 
+	      *(int *)
 		args_value[specs[cnt].data_arg].pa_pointer = done;
             else
-	      *(short int *) 
+	      *(short int *)
 		args_value[specs[cnt].data_arg].pa_pointer = done;
             break;
 
@@ -745,23 +745,24 @@ _IO_helper_overflow (s, c)
 
 static const struct _IO_jump_t _IO_helper_jumps =
   {
-    _IO_helper_overflow,
-    _IO_default_underflow,
-    _IO_default_xsputn,
-    _IO_default_xsgetn,
-    _IO_default_read,
-    _IO_default_write,
-    _IO_default_doallocate,
-    _IO_default_pbackfail,
-    _IO_default_setbuf,
-    _IO_default_sync,
-    _IO_default_finish,
-    _IO_default_close,
-    _IO_default_stat,
-    _IO_default_seek,
-    _IO_default_seekoff,
-    _IO_default_seekpos,
-    _IO_default_uflow
+    JUMP_INIT_DUMMY,
+    JUMP_INIT (finish, _IO_default_finish),
+    JUMP_INIT (overflow, _IO_helper_overflow),
+    JUMP_INIT (underflow, _IO_default_underflow),
+    JUMP_INIT (uflow, _IO_default_uflow),
+    JUMP_INIT (pbackfail, _IO_default_pbackfail),
+    JUMP_INIT (xsputn, _IO_default_xsputn),
+    JUMP_INIT (xsgetn, _IO_default_xsgetn),
+    JUMP_INIT (seekoff, _IO_default_seekoff),
+    JUMP_INIT (seekpos, _IO_default_seekpos),
+    JUMP_INIT (setbuf, _IO_default_setbuf),
+    JUMP_INIT (sync, _IO_default_sync),
+    JUMP_INIT (doallocate, _IO_default_doallocate),
+    JUMP_INIT (read, _IO_default_read),
+    JUMP_INIT (write, _IO_default_write),
+    JUMP_INIT (seek, _IO_default_seek),
+    JUMP_INIT (close, _IO_default_close),
+    JUMP_INIT (stat, _IO_default_stat)
   };
 
 static int
@@ -781,8 +782,8 @@ buffered_vfprintf (s, format, args)
   hp->_IO_write_ptr = buf;
   hp->_IO_write_end = buf + sizeof buf;
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
-  hp->_jumps = (struct _IO_jump_t *) &_IO_helper_jumps;
-  
+  _IO_JUMPS (hp) = (struct _IO_jump_t *) &_IO_helper_jumps;
+
   /* Now print to helper instead.  */
   result = _IO_vfprintf (hp, format, args);
 
