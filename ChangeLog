@@ -1,3 +1,12 @@
+2004-09-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Remove incorrect
+	requirement on socktype and protocol.
+	(gaih_inet): If numeric port number is given, return records for all
+	possible socket types.
+	* posix/tst-getaddrinfo2.c: New file.
+	* posix/Makefile (tests): Add tst-getaddrinfo2.  [BZ #358]
+
 2004-09-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/loadlocale.c (_nl_intern_locale_data): Recognize LC_CTYPE

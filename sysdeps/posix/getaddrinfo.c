@@ -445,12 +445,35 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
       else
 	{
-	  st = __alloca (sizeof (struct gaih_servtuple));
-	  st->next = NULL;
-	  st->socktype = tp->socktype;
-	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
-			  ? req->ai_protocol : tp->protocol);
-	  st->port = htons (service->num);
+	  if (req->ai_socktype || req->ai_protocol)
+	    {
+	      st = __alloca (sizeof (struct gaih_servtuple));
+	      st->next = NULL;
+	      st->socktype = tp->socktype;
+	      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+			      ? req->ai_protocol : tp->protocol);
+	      st->port = htons (service->num);
+	    }
+	  else
+	    {
+	      /* Neither socket type nor protocol is set.  Return all
+		 socket types we know about.  */
+	      struct gaih_servtuple **lastp = &st;
+	      for (tp = gaih_inet_typeproto + 1; tp->name[0]; ++tp)
+		if ((tp->protoflag & GAI_PROTO_NOSERVICE) == 0)
+		  {
+		    struct gaih_servtuple *newp;
+
+		    newp = __alloca (sizeof (struct gaih_servtuple));
+		    newp->next = NULL;
+		    newp->socktype = tp->socktype;
+		    newp->protocol = tp->protocol;
+		    newp->port = htons (service->num);
+
+		    *lastp = newp;
+		    lastp = &newp->next;
+		  }
+	    }
 	}
     }
   else if (req->ai_socktype || req->ai_protocol)
@@ -1493,11 +1516,7 @@ getaddrinfo (const char *name, const char *service,
 
 	  gaih_service.num = -1;
 	}
-      else
-	/* Can't specify a numerical socket unless a protocol family was
-	   given. */
-        if (hints->ai_socktype == 0 && hints->ai_protocol == 0)
-          return EAI_SERVICE;
+
       pservice = &gaih_service;
     }
   else
