@@ -2,6 +2,7 @@
 
 	* resolv/netdb.h: Adjust parameters of gethostbyaddr and
 	gethostbyaddr_r.
+	* include/netdb.h: Likewise.
 	* inet/gethstbyad.c: Correct type of len parameter.
 	* inet/gethstbyad_r.c: Likewise.
 
