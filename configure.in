@@ -148,6 +148,21 @@ AC_CONFIG_SUBDIRS($add_ons)
 add_ons_pfx=
 if test x"$add_ons" != x; then
   for f in $add_ons; do
+    # Some sanity checks
+    if test "$f" = "crypt"; then
+      AC_MSG_ERROR([
+*** It seems that you're using an old \`crypt' add-on.  crypt is now
+*** part of glibc and using the old add-on will not work with this
+*** release.  Start again with fresh sources and without the old
+*** \`crypt' add-on.])
+    fi
+    if test "$f" = "localedata"; then
+      AC_MSG_ERROR([
+*** It seems that you're using an old \`localedata' add-on.  localedata
+*** is now part of glibc and using the old add-on will not work with
+*** this release.  Start again with fresh sources and without the old
+*** \`localedata' add-on.])
+    fi
     # Test whether such a subdir really exists.
     if test -d $srcdir/$f; then
       add_ons_pfx="$add_ons_pfx $f/"
