@@ -64,7 +64,7 @@ __pthread_spin_unlock (pthread_spinlock_t *lock)
 {
   asm volatile("    xc 0(4,%0),0(%0)\n"
 	       "    bcr 15,0"
-	       : "=a" (lock) );
+	       : : "a" (lock) : "memory" );
   return 0;
 }
 weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
