@@ -75,7 +75,7 @@ if ($#ARGV == 0) {
 sub location {
     my $str = pop(@_);
     return $str if ($str eq "");
-    if ($str =~ /[[](0x[^]]*)]:(.)*/) {
+    if ($str =~ /.*[[](0x[^]]*)]:(.)*/) {
 	my $addr = $1;
 	my $fct = $2;
 	return $cache{$addr} if (exists $cache{$addr});
@@ -89,7 +89,7 @@ sub location {
 	    }
 	}
 	$cache{$addr} = $str = "$fct @ $addr";
-    } elsif ($str =~ /^[[](0x[^]]*)]$/) {
+    } elsif ($str =~ /^.*[[](0x[^]]*)]$/) {
 	my $addr = $1;
 	return $cache{$addr} if (exists $cache{$addr});
 	if ($binary ne "" && open (ADDR, "addr2line -e $binary $addr|")) {
