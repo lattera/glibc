@@ -1,5 +1,17 @@
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	Cleanups in sunrpc code from NIIBE Yutaka <gniibe@mri.co.jp>.
+	* sunrpc/clnt_tcp.c (clnttcp_create): Don't close *SOCKP if it's -1.
+	* sunrpc/clnt_simp.c (callrpc): Don't close CRP->socket if it's
+	RPC_ANYSOCK.
+	* sunrpc/pmap_clnt.c (pmap_set): Don't close SOCKET, since
+	CLNT_DESTROY already has.
+	(pmap_unset): Likewise.
+	* sunrpc/pm_getmaps.c (pmap_getmaps): Likewise.
+	* sunrpc/pm_getport.c (pmap_getport): Likewise.
+	* sunrpc/pmap_rmt.c (pmap_rmtcall): Likewise.
+	* sunrpc/portmap.c (callit): Likewise.
+
 	* Makerules (versioned): Strip whitespace.
 
 	* Rules (static-only-routines rule): Remove spurious space in dep.

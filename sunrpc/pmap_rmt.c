@@ -96,7 +96,7 @@ pmap_rmtcall(addr, prog, vers, proc, xdrargs, argsp, xdrres, resp, tout, port_pt
 	} else {
 		stat = RPC_FAILED;
 	}
-	(void)close(socket);
+	/* (void)close(socket); CLNT_DESTROY already closed it */
 	addr->sin_port = 0;
 	return (stat);
 }

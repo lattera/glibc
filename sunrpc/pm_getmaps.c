@@ -81,7 +81,7 @@ pmap_getmaps(address)
 		}
 		CLNT_DESTROY(client);
 	}
-	(void)close(socket);
+	/* (void)close(socket); CLNT_DESTROY already closed it */
 	address->sin_port = 0;
 	return (head);
 }

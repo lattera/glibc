@@ -470,7 +470,7 @@ callit(rqstp, xprt)
 		AUTH_DESTROY(client->cl_auth);
 		clnt_destroy(client);
 	}
-	(void)close(socket);
+	/* (void)close(socket); clnt_destroy already closed it */
 	exit(0);
 }
 

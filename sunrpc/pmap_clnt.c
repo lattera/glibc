@@ -80,7 +80,7 @@ pmap_set(program, version, protocol, port)
 		return (FALSE);
 	}
 	CLNT_DESTROY(client);
-	(void)close(socket);
+	/* (void)close(socket); CLNT_DESTROY closes it */
 	return (rslt);
 }
 
@@ -110,6 +110,6 @@ pmap_unset(program, version)
 	CLNT_CALL(client, PMAPPROC_UNSET, xdr_pmap, &parms, xdr_bool, &rslt,
 	    tottimeout);
 	CLNT_DESTROY(client);
-	(void)close(socket);
+	/* (void)close(socket); CLNT_DESTROY already closed it */
 	return (rslt);
 }
