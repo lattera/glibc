@@ -52,23 +52,4 @@ __libc_pthread_init (ptr, reclaim, functions)
   memcpy (&__libc_pthread_functions, functions,
 	  sizeof (__libc_pthread_functions));
 #endif
-
-  /* We have a macro which is used in asm code describing data layout.
-     Make sure it does not get out of date.  */
-  if (offsetof (struct pthread, header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
-    {
-#define str_n_len(str) str, sizeof (str) - 1
-      __libc_write (STDERR_FILENO,
-		    str_n_len ("*** MULTIPLE_THREADS_OFFSET out of date\n"));
-      _exit (1);
-    }
-#ifdef SYSINFO_OFFSET
-  if (offsetof (struct pthread, header.data.sysinfo) != SYSINFO_OFFSET)
-    {
-      __libc_write (STDERR_FILENO,
-		    str_n_len ("*** SYSINFO_OFFSET out of date\n"));
-      _exit (1);
-    }
-#endif
 }

@@ -1,4 +1,4 @@
-/* Definitions for thread-local data handling.  linuxthreads/sparc64 version.
+/* Definitions for thread-local data handling.  linuxthreads/sparc version.
    Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -41,6 +41,8 @@ typedef struct
   int multiple_threads;
 } tcbhead_t;
 
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif /* __ASSEMBLER__ */
 
 #undef USE_TLS

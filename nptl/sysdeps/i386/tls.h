@@ -46,6 +46,9 @@ typedef struct
   uintptr_t sysinfo;
   list_t list;
 } tcbhead_t;
+
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif
 
 
@@ -60,15 +63,6 @@ typedef struct
 /* Alignment requirement for the stack.  For IA-32 this is governed by
    the SSE memory functions.  */
 #define STACK_ALIGN	16
-
-/* Offset of the MULTIPLE_THREADS element in tcbhead_t.  */
-#define MULTIPLE_THREADS_OFFSET 12
-
-#ifdef NEED_DL_SYSINFO
-/* Offset of the SYSINFO element in tcbhead_t.  */
-# define SYSINFO_OFFSET 16
-#endif
-
 
 #ifndef __ASSEMBLER__
 /* Get system call information.  */

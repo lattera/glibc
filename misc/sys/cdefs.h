@@ -196,6 +196,13 @@
 # define __attribute_noinline__ /* Ignore */
 #endif
 
+/* gcc allows marking deprecated functions.  */
+#if __GNUC_PREREQ (3,2)
+# define __attribute_deprecated__ __attribute__ ((__deprecated__))
+#else
+# define __attribute_deprecated__ /* Ignore */
+#endif
+
 /* At some point during the gcc 2.8 development the `format_arg' attribute
    for functions was introduced.  We don't want to use it unconditionally
    (although this would be possible) since it generates warnings.

@@ -36,14 +36,6 @@ __libc_pthread_init (functions)
 	  sizeof (__libc_pthread_functions));
 #endif
 
-#ifdef MULTIPLE_THREADS_OFFSET
-  /* We have a macro which is used in asm code describing data layout.
-     Make sure it does not get out of date.  */
-  if (offsetof (struct _pthread_descr_struct, p_header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
-    abort ();
-#endif
-
 #if !(USE_TLS && HAVE___THREAD)
   /* Initialize thread-locale current locale to point to the global one.
      With __thread support, the variable's initializer takes care of this.  */

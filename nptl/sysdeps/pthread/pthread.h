@@ -272,14 +272,15 @@ extern int pthread_attr_setscope (pthread_attr_t *__attr, int __scope)
 /* Return the previously set address for the stack.  */
 extern int pthread_attr_getstackaddr (__const pthread_attr_t *__restrict
 				      __attr, void **__restrict __stackaddr)
-     __THROW;
+     __THROW __attribute_deprecated__;
 
 /* Set the starting address of the stack of the thread to be created.
    Depending on whether the stack grows up or down the value must either
    be higher or lower than all the address in the memory block.  The
    minimal size of the block must be PTHREAD_STACK_SIZE.  */
 extern int pthread_attr_setstackaddr (pthread_attr_t *__attr,
-				      void *__stackaddr) __THROW;
+				      void *__stackaddr)
+     __THROW __attribute_deprecated__;
 
 /* Return the currently used minimal stack size.  */
 extern int pthread_attr_getstacksize (__const pthread_attr_t *__restrict

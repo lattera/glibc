@@ -46,11 +46,9 @@ typedef struct
   uintptr_t sysinfo;
 #endif
 } tcbhead_t;
-#endif
 
-#ifdef NEED_DL_SYSINFO
-/* Offset of the SYSINFO element in tcbhead_t.  */
-# define SYSINFO_OFFSET 24
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
 #endif
 
 /* We can support TLS only if the floating-stack support is available.

@@ -23,8 +23,6 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#define MULTIPLE_THREADS_OFFSET	20
-
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
 
 # undef PSEUDO

@@ -1,3 +1,22 @@
+2002-12-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/tls.h: Include tcb-offsets.h in assembler.
+	(SYSINFO_OFFSET, MULTIPLE_THREADS_OFFSET): Remove.
+	* sysdeps/i386/Makefile: New file.
+	* sysdeps/i386/tcb-offsets.sym: New file.
+	* sysdeps/pthread/tcb-offsets.h: New file.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c (__libc_pthread_init):
+	Remove MULTIPLE_THREADS_OFFSET and SYSINFO_OFFSET checks.
+
+	* sysdeps/unix/sysv/linux/Versions [libc] (GLIBC_PRIVATE): Move
+	__register_atfork...
+	(GLIBC_2.3.2): ...here.
+
+2002-12-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Mark pthread_attr_getstackaddr and
+	pthread_attr_setstackaddr with __attribute_deprecated__.
+
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* pt-system.c (system): Remove cancellation handling.

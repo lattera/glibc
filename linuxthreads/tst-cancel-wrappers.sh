@@ -70,8 +70,8 @@ C["__xpg_sigpause"]=1
       # signals.c in linuxthreads does the cancellation checks not using
       # *_{enable,disable}_asynccancel.
       # Similarly pt-system.o* is allowed to call __libc_system directly.
-      if ((!seen_enable || !seen_disable)
-	  && !(object ~ /^signals.o/)
+      if ((!seen_enable || !seen_disable) \
+	  && !(object ~ /^signals.o/) \
 	  && !(object ~ /^pt-system.o/))
 	{
 	  printf "in '$1'(%s) %s'\''s cancellation missing\n", object, seen

@@ -24,10 +24,6 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if defined FLOATING_STACKS && USE___THREAD
-# define MULTIPLE_THREADS_OFFSET	20
-#endif
-
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
 
 # undef PSEUDO
@@ -88,7 +84,7 @@
 #endif
 
 # ifndef ASSEMBLER
-#  if defined MULTIPLE_THREADS_OFFSET && defined PIC
+#  if defined FLOATING_STACKS && USE___THREAD && defined PIC
 #   define SINGLE_THREAD_P \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
 				   p_header.data.multiple_threads) == 0, 1)
@@ -99,7 +95,7 @@ extern int __local_multiple_threads attribute_hidden;
 # else
 #  if !defined PIC
 #   define SINGLE_THREAD_P cmpl $0, __local_multiple_threads
-#  elif defined MULTIPLE_THREADS_OFFSET
+#  elif defined FLOATING_STACKS && USE___THREAD
 #   define SINGLE_THREAD_P cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
 #  else
 #   if !defined HAVE_HIDDEN || !USE___THREAD

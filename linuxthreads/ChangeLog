@@ -1,3 +1,36 @@
+2002-12-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* libc_pthread_init.c (__libc_pthread_init): Remove
+	MULTIPLE_THREADS_OFFSET check.
+	* sysdeps/i386/tls.h: Include tcb-offsets.h in assembler.
+	(SYSINFO_OFFSET): Remove.
+	* sysdeps/i386/Makefile [csu] (gen-as-const-headers): Add
+	tcb-offsets.sym.
+	* sysdeps/i386/tcb-offsets.sym: New file.
+	* sysdeps/pthread/tcb-offsets.h: New file.
+	* sysdeps/sparc/sparc32/tls.h: Removed.
+	* sysdeps/sparc/sparc64/tls.h: Move...
+	* sysdeps/sparc/tls.h: ...here.  Include tcb-offsets.h in assembler.
+	* sysdeps/sparc/Makefile: New file.
+	* sysdeps/sparc/tcb-offsets.sym: New file.
+	* sysdeps/ia64/tls.h: Include tcb-offsets.h in assembler.
+	* sysdeps/ia64/Makefile: New file.
+	* sysdeps/ia64/tcb-offsets.sym: New file.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Remove.
+	Replace defined MULTIPLE_THREADS_OFFSET
+	with defined FLOATING_STACKS && USE___THREAD.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h
+	(MULTIPLE_THREADS_OFFSET): Remove.
+	* pthread.c (__pthread_initialize_manager): Remove
+	MULTIPLE_THREADS_OFFSET cbeck.
+
+	* tst-cancel-wrappers.sh: Add line continuations.
+
 2002-12-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/bits/libc-tsd.h: Include linuxthreads/descr.h

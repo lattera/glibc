@@ -16,3 +16,7 @@ CFLAGS-ptlongjmp.c += -fno-omit-frame-pointer
 CFLAGS-semaphore.c += -fno-omit-frame-pointer
 CFLAGS-sighandler.c += -fno-omit-frame-pointer
 endif
+
+ifeq ($(subdir),csu)
+gen-as-const-headers += tcb-offsets.sym
+endif

@@ -558,11 +558,6 @@ int __pthread_initialize_manager(void)
   __pthread_multiple_threads = 1;
   __pthread_main_thread->p_header.data.multiple_threads = 1;
   * __libc_multiple_threads_ptr = 1;
-#ifdef MULTIPLE_THREADS_OFFSET
-  if (offsetof(struct _pthread_descr_struct, p_header.data.multiple_threads)
-      != MULTIPLE_THREADS_OFFSET)
-    abort ();
-#endif
 
 #ifndef HAVE_Z_NODELETE
   if (__builtin_expect (&__dso_handle != NULL, 1))
