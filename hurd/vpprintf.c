@@ -21,10 +21,12 @@
 #include <string.h>
 #include <hurd.h>
 
+#ifdef USE_IN_LIBIO
+# include <libioP.h>
+#endif
+
 static ssize_t
-pwrite (void *cookie,
-	const char *buf,
-	size_t n)
+do_write (void *cookie,	const char *buf, size_t n)
 {
   error_t error = __io_write ((io_t) cookie, buf, n, -1,
 			      (mach_msg_type_number_t *) &n);
@@ -36,9 +38,7 @@ pwrite (void *cookie,
 /* Write formatted output to PORT, a Mach port supporting the i/o protocol,
    according to the format string FORMAT, using the argument list in ARG.  */
 int
-vpprintf (io_t port,
-	  const char *format,
-	  va_list arg)
+vpprintf (io_t port, const char *format, va_list arg)
 {
   int done;
 
@@ -52,13 +52,13 @@ vpprintf (io_t port,
 #endif
   } temp_f;
 #ifdef _IO_MTSAFE_IO
-  temp_f.cfile.__file._lock = &temp_f.lock;
+  temp_f.cfile.__fp.file._lock = &temp_f.lock;
 #endif
 
   _IO_cookie_init (&temp_f.cfile, _IO_NO_READS,
-		   (void *) port, (cookie_io_functions_t) { write: pwrite });
+		   (void *) port, (cookie_io_functions_t) { write: do_write });
 
-  done = _IO_vfprintf (&temp_f.cfile.__file, format, arg);
+  done = _IO_vfprintf (&temp_f.cfile.__fp, format, arg);
 
 #else
 
@@ -70,7 +70,7 @@ vpprintf (io_t port,
   f.__mode.__write = 1;
   f.__cookie = (void *) port;
   f.__room_funcs = __default_room_functions;
-  f.__io_funcs.__write = pwrite;
+  f.__io_funcs.__write = do_write;
   f.__seen = 1;
   f.__userbuf = 1;
 

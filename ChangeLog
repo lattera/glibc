@@ -1,3 +1,10 @@
+2000-07-07  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/vpprintf.c [USE_IN_LIBIO]: Include <libioP.h>.
+	(do_write): Renamed from pwrite.
+	(vpprintf) [USE_IN_LIBIO]: Adjust for renaming and reshufling of
+	`struct _IO_cookie_file'.
+
 2000-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/mtrace.pl: Exit with exit code 1 if any leak was
