@@ -80,7 +80,7 @@ extern int errno;
 #endif /* USG */
 #endif /* POSIX or DIRENT or __GNU_LIBRARY__ */
 
-#ifdef	HAVE_UNISTD_H
+#if	defined (HAVE_UNISTD_H) || defined (__GNU_LIBRARY__)
 #include <unistd.h>
 #endif
 

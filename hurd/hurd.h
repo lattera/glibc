@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -146,7 +146,7 @@ extern error_t _hurd_ports_set (unsigned int which, mach_port_t newport);
 extern process_t getproc (void);
 extern file_t getcwdir (void), getcrdir (void);
 extern auth_t getauth (void);
-extern mach_port_t getcttyid ();
+extern mach_port_t getcttyid (void);
 extern int setproc (process_t);
 extern int setcwdir (file_t), setcrdir (file_t);
 extern int setcttyid (mach_port_t);

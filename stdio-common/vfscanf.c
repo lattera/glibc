@@ -724,13 +724,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  while ((fc = *f++) != '\0' && fc != ']')
 	    {
-	      if (*f == '-' && f[1] != '\0' && f[1] != ']' && fc <= f[1])
+	      if (fc == '-' && *f != '\0' && *f != ']' &&
+		  (unsigned char) f[-2] <= (unsigned char) *f)
 		{
 		  /* Add all characters from the one before the '-'
 		     up to (but not including) the next format char.  */
-		  f++;
-		  while (fc < *f)
-		    wp[fc++] = 1;
+		  for (fc = f[-2]; fc < *f; ++fc)
+		    wp[fc] = 1;
 		}
 	      else
 		/* Add the character to the flag map.  */

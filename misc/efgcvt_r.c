@@ -23,6 +23,7 @@ Boston, MA 02111-1307, USA.  */
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
+#include <stdlib.h>
 
 int
 fcvt_r (value, ndigit, decpt, sign, buf, len)

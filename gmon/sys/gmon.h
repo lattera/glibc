@@ -36,6 +36,7 @@
 #ifndef _SYS_GMON_H_
 #define _SYS_GMON_H_
 
+#include <sys/cdefs.h>
 #include <machine-gmon.h>
 
 /*
@@ -75,7 +76,7 @@ struct gmonhdr {
  *	calls	$0,(r0)
  *	calls	$0,(r0)
  *
- * which is separated by only three bytes, thus HASHFRACTION is 
+ * which is separated by only three bytes, thus HASHFRACTION is
  * calculated as:
  *
  *	HASHFRACTION = 3 / (2 * 2 - 1) = 1
@@ -83,9 +84,9 @@ struct gmonhdr {
  * Note that the division above rounds down, thus if MIN_SUBR_FRACTION
  * is less than three, this algorithm will not work!
  *
- * In practice, however, call instructions are rarely at a minimal 
+ * In practice, however, call instructions are rarely at a minimal
  * distance.  Hence, we will define HASHFRACTION to be 2 across all
- * architectures.  This saves a reasonable amount of space for 
+ * architectures.  This saves a reasonable amount of space for
  * profiling data structures without (in practice) sacrificing
  * any granularity.
  */
@@ -106,7 +107,7 @@ struct tostruct {
 };
 
 /*
- * a raw arc, with pointers to the calling site and 
+ * a raw arc, with pointers to the calling site and
  * the called site and a count.
  */
 struct rawarc {
@@ -156,4 +157,15 @@ extern struct gmonparam _gmonparam;
 #define	GPROF_FROMS	2	/* struct: from location hash bucket */
 #define	GPROF_TOS	3	/* struct: destination/count structure */
 #define	GPROF_GMONPARAM	4	/* struct: profiling parameters (see above) */
+
+__BEGIN_DECLS
+
+/* Set up data structures and start profiling.  */
+void monstartup __P ((u_long lowpc, u_long highpc));
+
+/* Clean up profiling and write out gmon.out.  */
+void _mcleanup __P ((void));
+
+__END_DECLS
+
 #endif /* !_SYS_GMON_H_ */

@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 #include <stdlib.h>
 
 /* Conversion table.  */
-static const char conv_tab[64] =
+static const char conv_table[64] =
 {
   '.', '/', '0', '1', '2', '3', '4', '5',
   '6', '7', '8', '9', 'A', 'B', 'C', 'D',
@@ -32,7 +32,7 @@ static const char conv_tab[64] =
   's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
 };
 
-const char *
+char *
 l64a (n)
      long n;
 {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -18,6 +18,7 @@ not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
 #include <stdlib.h>
+#include <limits.h>
 
 int
 srand48_r (seedval, buffer)
@@ -28,18 +29,15 @@ srand48_r (seedval, buffer)
   if (sizeof (long) > 4)
     seedval &= 0xffffffffl;
 
-  if (sizeof (unsigned short int) == 2)
-    {
-      buffer->X[2] = seedval >> 16;
-      buffer->X[1] = seedval & 0xffffl;
-      buffer->X[0] = 0x330e;
-    }
-  else
-    {
-      buffer->X[2] = seedval;
-      buffer->X[1] = 0x330e0000UL;
-      buffer->X[0] = 0;
-    }
+#if (USHRT_MAX == 0xffffU)
+  buffer->X[2] = seedval >> 16;
+  buffer->X[1] = seedval & 0xffffl;
+  buffer->X[0] = 0x330e;
+#else
+  buffer->X[2] = seedval;
+  buffer->X[1] = 0x330e0000UL;
+  buffer->X[0] = 0;
+#endif
 
   return 0;
 }

@@ -8,7 +8,7 @@ chown		-	chown		3	__chown		chown
 chroot		-	chroot		1	chroot
 close		-	close		1	__close		close
 dup		-	dup		2	__dup		dup
-dup2		-	dup2		2	__dup2	dup2
+dup2		-	dup2		2	__dup2		dup2
 fchdir		-	fchdir		1	fchdir
 fcntl		-	fcntl		3	__fcntl		fcntl
 fsync		-	fsync		1	fsync
@@ -24,7 +24,7 @@ ioctl		-	ioctl		3	__ioctl		ioctl
 kill		-	kill		2	__kill		kill
 link		-	link		2	__link		link
 lseek		-	lseek		3	__lseek		lseek
-mkdir		-	mkdir		2	__mkdir	mkdir
+mkdir		-	mkdir		2	__mkdir		mkdir
 open		-	open		3	__open		open
 profil		-	profil		4	profil
 ptrace		-	ptrace		4	ptrace

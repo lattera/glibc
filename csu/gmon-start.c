@@ -23,12 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 
 /* Beginning and end of our code segment.  */
-extern void _start (), etext ();
-
-/* These functions are defined in gmon/gmon.c;
-   they do all the work of setting up and cleaning up profiling.  */
-extern void monstartup (u_long, u_long);
-extern void _mcleanup (void);
+extern void _start (void), etext (void);
 
 #ifndef HAVE_INITFINI
 /* This function gets called at startup by the normal constructor

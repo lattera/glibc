@@ -1,3 +1,33 @@
+Mon Jan 22 10:40:40 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/posix/getcwd.c [__GNU_LIBRARY__]: Include unistd.h.
+
+	* io/fts.h (FTSENT): Define fts_compar member with prototype.
+
+	* hurd/hurd.h: Use prototype in getcttyid decl.
+
+	* stdlib/l64a.c: Fix typo in last change.
+
+	* stdlib/drand48-iter.c: Test limits.h macros instead of sizeof
+	for determining size of types.
+	* stdlib/srand48_r.c: Likewise.
+
+	* misc/utmp.h: Declare login, logout, logwtmp.
+	* misc/logout.c: Declare argument as pointer to const.
+	* misc/login.c: Likewise.
+	* misc/logwtmp.c: Likewise.
+	Include time.h, string.h.
+
+	* misc/efgcvt_r.c: Include stdlib.h.
+
+	* io/mknod.c: Include sys/types.h.
+
+	* gmon/sys/gmon.h: Declare monstartup, _mcleanup.
+
+	* csu/gmon-start.c (_start, etext): Declare with prototypes.
+
+	* stdio-common/vfscanf.c (%[): Fix range handling.
+
 Sun Jan 21 00:55:25 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* misc/Makefile (headers): Rename queue.h to sys/queue.h.

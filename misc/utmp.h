@@ -41,6 +41,8 @@
 #ifndef	_UTMP_H_
 #define	_UTMP_H_
 
+#include <sys/cdefs.h>
+
 #define	_PATH_UTMP	"/var/run/utmp"
 #define	_PATH_WTMP	"/var/log/wtmp"
 #define	_PATH_LASTLOG	"/var/log/lastlog"
@@ -48,6 +50,8 @@
 #define	UT_NAMESIZE	8
 #define	UT_LINESIZE	8
 #define	UT_HOSTSIZE	16
+
+__BEGIN_DECLS
 
 struct lastlog {
 	time_t	ll_time;
@@ -61,5 +65,18 @@ struct utmp {
 	char	ut_host[UT_HOSTSIZE];
 	long	ut_time;
 };
+
+
+/* Write the given entry into utmp and wtmp.  */
+extern void login __P ((const struct utmp *));
+
+/* Write the utmp entry to say the user on UT_LINE has logged out.  */
+extern int logout __P ((const char *ut_line));
+
+/* Append to wtmp an entry for the current time and the given info.  */
+extern void logwtmp __P ((const char *ut_line, const char *ut_name,
+			  const char *ut_host));
+
+__END_DECLS
 
 #endif /* !_UTMP_H_ */

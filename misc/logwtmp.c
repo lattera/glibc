@@ -37,21 +37,20 @@ static char sccsid[] = "@(#)logwtmp.c	8.1 (Berkeley) 6/4/93";
 
 #include <sys/types.h>
 #include <sys/file.h>
-#include <sys/time.h>
 #include <sys/stat.h>
+#include <time.h>
+#include <string.h>
 
 #include <unistd.h>
 #include <utmp.h>
 
 void
 logwtmp(line, name, host)
-	char *line, *name, *host;
+     const char *line, *name, *host;
 {
 	struct utmp ut;
 	struct stat buf;
 	int fd;
-	time_t time();
-	char *strncpy();
 
 	if ((fd = open(_PATH_WTMP, O_WRONLY|O_APPEND, 0)) < 0)
 		return;

@@ -36,6 +36,8 @@
 #ifndef	_FTS_H_
 #define	_FTS_H_
 
+#include <sys/cdefs.h>
+
 typedef struct {
 	struct _ftsent *fts_cur;	/* current node */
 	struct _ftsent *fts_child;	/* linked list of children */
@@ -45,7 +47,7 @@ typedef struct {
 	int fts_rfd;			/* fd for root */
 	int fts_pathlen;		/* sizeof(path) */
 	int fts_nitems;			/* elements in the sort array */
-	int (*fts_compar)();		/* compare function */
+	int (*fts_compar) __P((const void *, const void *)); /* compare fn */
 
 #define	FTS_COMFOLLOW	0x001		/* follow command line symlinks */
 #define	FTS_LOGICAL	0x002		/* logical walk */
@@ -110,8 +112,6 @@ typedef struct _ftsent {
 	struct stat *fts_statp;		/* stat(2) information */
 	char fts_name[1];		/* file name */
 } FTSENT;
-
-#include <sys/cdefs.h>
 
 __BEGIN_DECLS
 FTSENT	*fts_children __P((FTS *, int));

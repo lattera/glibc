@@ -1,4 +1,4 @@
-/* Copyright (C) 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -19,6 +19,7 @@ Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <stdlib.h>
+#include <limits.h>
 
 
 /* Global state for non-reentrent functions.  */
@@ -40,18 +41,15 @@ __drand48_iterate (xsubi, buffer)
   /* Initialize buffer, if not yet done.  */
   if (!buffer->init)
     {
-      if (sizeof (unsigned short int) == 2)
-	{
-	  buffer->a[2] = 0x5;
-	  buffer->a[1] = 0xdeec;
-	  buffer->a[0] = 0xe66d;
-	}
-      else
-	{
-	  buffer->a[2] = 0x5deecUL;
-	  buffer->a[1] = 0xe66d0000UL;
-	  buffer->a[0] = 0;
-	}
+#if (USHRT_MAX == 0xffffU)
+      buffer->a[2] = 0x5;
+      buffer->a[1] = 0xdeec;
+      buffer->a[0] = 0xe66d;
+#else
+      buffer->a[2] = 0x5deecUL;
+      buffer->a[1] = 0xe66d0000UL;
+      buffer->a[0] = 0;
+#endif
       buffer->c = 0xb;
       buffer->init = 1;
     }
