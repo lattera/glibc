@@ -105,7 +105,7 @@ inet_addr(const char *cp) {
  * This replaces inet_addr, the return value from which
  * cannot distinguish between failure and a local broadcast address.
  */
-in_addr_t
+int
 __inet_aton(const char *cp, struct in_addr *addr)
 {
 	static const in_addr_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
