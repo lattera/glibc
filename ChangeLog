@@ -1,3 +1,10 @@
+2004-12-02  Roland McGrath  <roland@redhat.com>
+
+	* extra-lib.mk (object-suffixes-$(lib)): Add .oS when
+	$(lib)-static-only-routines is nonempty.
+	(extra-objs, o-iterator.mk rule): Filter out .oS from generators.
+	Add a special rule for .oS objects -> _nonshared.a library.
+
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* time/mktime.c (__mktime_internal): If SEC_REQUESTED != SEC,

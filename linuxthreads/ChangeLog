@@ -1,3 +1,16 @@
+2004-12-02  Roland McGrath  <roland@redhat.com>
+
+	* Makefile (libpthread-nonshared): Variable removed.
+	($(objpfx)libpthread_nonshared.a): Target removed.
+	($(inst_libdir)/libpthread_nonshared.a): Likewise.
+	These are now handled by generic magic from
+	libpthread-static-only-routines being set.
+
+2004-11-04  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/getcpuclockid.c (pthread_getcpuclockid)
+	[__NR_clock_getres]: Use kernel-supplied CPU clocks if available.
+
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_PRIORITIZED_IO,

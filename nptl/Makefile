@@ -125,8 +125,6 @@ libpthread-routines = init vars events version \
 libpthread-shared-only-routines = version pt-allocrtsig unwind-forcedunwind
 libpthread-static-only-routines = pthread_atfork
 
-libpthread-nonshared = pthread_atfork
-
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
 
 # Since cancellation handling is in large parts handled using exceptions
@@ -301,12 +299,7 @@ $(test-modules): $(objpfx)%.so: $(objpfx)%.os $(common-objpfx)shlib.lds
 ifeq ($(build-shared),yes)
 # Build all the modules even when not actually running test programs.
 tests: $(test-modules)
-
-others: $(objpfx)libpthread_nonshared.a
 endif
-
-$(objpfx)libpthread_nonshared.a: $(addprefix $(objpfx),$(addsuffix .os,$(libpthread-nonshared)))
-	$(AR) $(ARFLAGS) $@ $^
 
 ifeq ($(build-shared),yes)
 
@@ -378,8 +371,6 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 	      ')' \
 	) > $@.new
 	mv -f $@.new $@
-$(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
-	$(do-install)
 endif
 
 

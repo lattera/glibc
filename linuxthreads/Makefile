@@ -63,8 +63,6 @@ omit-deps = $(unix-syscalls:%=ptw-%)
 libpthread-shared-only-routines = pt-allocrtsig
 libpthread-static-only-routines = pthread_atfork
 
-libpthread-nonshared = pthread_atfork
-
 linuxthreads-CPPFLAGS = -DIS_IN_linuxthreads=1
 
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
@@ -80,13 +78,6 @@ tst-cancel-ARGS = "$(objpfx)"
 CFLAGS-tst-cancel.c = -fno-inline -fno-inline-functions
 
 include ../Makeconfig
-
-ifeq ($(build-shared),yes)
-others: $(objpfx)libpthread_nonshared.a
-endif
-
-$(objpfx)libpthread_nonshared.a: $(addprefix $(objpfx),$(addsuffix .os,$(libpthread-nonshared)))
-	$(AR) $(ARFLAGS) $@ $^
 
 ifeq ($(build-shared),yes)
 
@@ -180,8 +171,6 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 	      ')' \
 	) > $@.new
 	mv -f $@.new $@
-$(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
-	$(do-install)
 
 
 extra-B-pthread.so = -B$(common-objpfx)linuxthreads/
