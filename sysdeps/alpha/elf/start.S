@@ -1,5 +1,5 @@
 /* Startup code for Alpha/ELF.
-   Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993,1995,1996,1997,1998,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>
 
@@ -59,3 +59,11 @@ _start:
 
 /* For ECOFF backwards compatibility. */
 weak_alias(_start, __start)
+
+/* Define a symbol for the first piece of initialized data.  */
+	.data
+	.globl __data_start
+__data_start:
+	.long 0
+	.weak data_start
+	data_start = __data_start

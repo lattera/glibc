@@ -1,3 +1,7 @@
+2000-12-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/elf/start.S (__data_start): Define.
+
 2000-12-05  H.J. Lu  <hjl@gnu.org>
 
 	* nss/getXXent_r.c (setup): Change the return type to int.
