@@ -21,6 +21,9 @@
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
+#ifndef _SIGSTACK_H
+#define _SIGSTACK_H	1
+
 /* Structure describing a signal stack (obsolete).  */
 struct sigstack
   {
@@ -52,3 +55,5 @@ typedef struct sigaltstack
     int ss_flags;
     size_t ss_size;
   } stack_t;
+
+#endif	/* bits/sigstack.h */
