@@ -1,0 +1,4 @@
+builddir: .
+rpmdir: .
+srcrpmdir: .
+specdir: .

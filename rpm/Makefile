@@ -39,21 +39,24 @@ install-lib += $(foreach lib,$(versioned),\
 			 $(lib)$($(lib)-version) $(lib))
 
 # Add libc.so itself, which is a special case in Makerules.
+ifndef libc.so-version
 install-others += $(slibdir)/libc.so
-ifdef libc.so-version
-install-others += $(slibdir)/libc-$(version).so \
+else
+install-others += $(libdir)/libc.so \
+		  $(slibdir)/libc-$(version).so \
 		  $(slibdir)/libc.so$(libc.so-version)
 endif
 
 
-glibc-$(version).$(config).rpm: $(config)
+all: glibc-$(version).$(config).rpm
 
-all: $(config)
+instvars = include lib bin sbin data others
 
+# Generate the rpm spec file for this configuration.
 $(config): template $(distinfo) Makefile
 	rm -f $@.new
 	(sed -e 's%@VERSION@%$(version)%g' $<; \
-	 ($(foreach var,include lib bin sbin data others,\
+	 ($(foreach var,$(instvars),\
 	  for f in $(install-$(var)); do \
 	    echo $(filter-out /,$($(var)dir)/)$$f; \
 	  done;\
@@ -65,3 +68,19 @@ $(config): template $(distinfo) Makefile
 
 install-include = $(headers)
 
+instfiles := $(sort $(foreach x,$(instvars),\
+			      $(addprefix $(filter-out /,$($xdir)/),\
+					  $(install-$x))))
+
+# Build the binary rpm for this configuration.
+glibc-$(version).$(config).rpm: $(config) rpmrc $(instfiles)
+# rpm is really lame.  You cannot tell it the name of the output file,
+# and you can only guess at what the name will turn out to be!
+	arch=`uname -m | sed -e 's/i.86/i386/' -e 's/alpha/axp/'`; \
+	rm -f $$arch; ln -s . $$arch; \
+	rpm --rcfile rpmrc -bb $<; \
+	rm -f $$arch; \
+	mv -f glibc-$(version)-1.$${arch}.rpm $@
+
+# Avoid time-consuming implicit rule search.
+$(instfiles) : ;

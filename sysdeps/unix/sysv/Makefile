@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,9 @@
 # not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 # Cambridge, MA 02139, USA.
 
-ifeq ($(subdir), misc)
+ifeq ($(subdir), termios)
+
+ifeq (,$(filter termio.h,$(sysdep_headers)))
 
 sysdep_headers := $(sysdep_headers) termio.h
 generated := $(generated) termio.h
@@ -33,6 +35,7 @@ $(objpfx)termio.h: $(..)sysdeps/unix/sysv/sysv_termio.h
 	    -e 's/__sysv_termio/termio/'
 	mv $@-tmp $@
 
+endif
 endif
 
 # In SYSV style archives the symbol table member has an empty name.

@@ -1,3 +1,17 @@
+Sun Jun 16 03:22:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/Makefile (sysdep_headers): Make append of termio.h
+	and rule for it conditional on termio.h not already being in
+	sysdep_headers.
+
+	* rpm/Makefile (install-others) [libc.so-version]: Get libc.so from
+	$(libdir), only the versioned named from $(slibdir).
+	(instfiles): New variable.
+	(glibc-$(version).$(config).rpm): New target.  Run rpm -bb.
+	* rpm/rpmrc: New file.  A third of the options controlling rpm can
+	only be given here (another third is on the command line, and a third
+	cannot be specified in any way shape or form).
+
 Sun Jun 16 02:44:22 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* rpm/template: New file.
