@@ -81,8 +81,11 @@ struct termios
 #define	IXON	(1 << 9)	/* Enable start/stop output control.  */
 #define	IXOFF	(1 << 10)	/* Enable start/stop input control.  */
 #ifdef	__USE_BSD
-#define	IXANY	(1 << 11)	/* Any character will restart after stop.  */
-#define	IMAXBEL	(1 << 13)	/* Ring bell when input queue is full.  */
+# define IXANY	(1 << 11)	/* Any character will restart after stop.  */
+# define IMAXBEL (1 << 13)	/* Ring bell when input queue is full.  */
+#endif
+#ifdef __USE_GNU
+# define IUCLC	(1 << 14)	/* Translate upper case input to lower case. */
 #endif
 
   /* Output modes.  */
@@ -91,7 +94,10 @@ struct termios
 #ifdef	__USE_BSD
 # define ONLCR	(1 << 1)	/* Map NL to CR-NL on output.  */
 # define OXTABS	(1 << 2)	/* Expand tabs to spaces.  */
-# define ONOEOT	(1 << 8)	/* Discard EOT (^D) on output.  */
+# define ONOEOT	(1 << 3)	/* Discard EOT (^D) on output.  */
+#endif
+#ifdef __USE_GNU
+# define OLCUC	(1 << 8)	/* Translate lower case output to upper case */
 #endif
 
   /* Control modes.  */
