@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Stub version.
-   Copyright (C) 1996,97,99,2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,99,2000-2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@
 /* Define an initialized recursive lock variable NAME with storage
    class CLASS.  */
 #define __libc_lock_define_initialized_recursive(CLASS,NAME)
+#define __rtld_lock_define_initialized_recursive(CLASS,NAME)
 
 /* Initialize the named lock variable, leaving it in a consistent, unlocked
    state.  */

@@ -1,5 +1,11 @@
 2003-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/system.c: If compiled without threads
+	don't do anything fancy.
+
+	* sysdeps/generic/bits/libc-lock.h: Define
+	__rtld_lock_define_initialized_recursive.
+
 	* nss/getXXbyYY_r.c [USE_NSCD] (REENTRANT_NAME): Only retry
 	contacting nscd if NOT_USENSCD_NAME > 0.
 	* nss/nsswitch.c (__nss_disable_nscd): New function.

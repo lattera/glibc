@@ -37,19 +37,22 @@
   INLINE_SYSCALL (clone, 3, CLONE_PARENT_SETTID | SIGCHLD, 0, &pid)
 #endif
 
+#ifdef _LIBC_REENTRANT
 static void cancel_handler (void *arg);
 
-#define CLEANUP_HANDLER \
+# define CLEANUP_HANDLER \
   __libc_cleanup_region_start (1, cancel_handler, &pid)
 
-#define CLEANUP_RESET \
+# define CLEANUP_RESET \
   __libc_cleanup_region_end (0)
+#endif
 
 
 /* Linux has waitpid(), so override the generic unix version.  */
 #include <sysdeps/posix/system.c>
 
 
+#ifdef _LIBC_REENTRANT
 /* The cancellation handler.  */
 static void
 cancel_handler (void *arg)
@@ -71,3 +74,4 @@ cancel_handler (void *arg)
 
   DO_UNLOCK ();
 }
+#endif
