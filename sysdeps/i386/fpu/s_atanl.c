@@ -5,14 +5,18 @@
  * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
  */
 
-#include <machine/asm.h>
+#include <math_private.h>
 
-RCSID("$NetBSD: $")
+long double
+__atanl (long double x)
+{
+  long double res;
 
-ENTRY(__atanl)
-	fldt	4(%esp)
-	fld1
-	fpatan
-	ret
-END (__atanl)
+  asm ("fld1\n"
+       "fpatan"
+       : "=t" (res) : "0" (x));
+
+  return res;
+}
+
 weak_alias (__atanl, atanl)
