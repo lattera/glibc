@@ -1,3 +1,10 @@
+2000-03-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/testdata/CSA_Z243.4-1985-1..UCS-2BE: Renamed from
+	CSA_Z243.4-1985-1..UCS2.
+	* iconvdata/testdata/ISO-8859-10..UCS-2BE: Renamed from
+	ISO-8859-10..UCS2.
+
 2000-03-29  Andreas Jaeger  <aj@suse.de>
 
 	* include/unistd.h: Remove duplicate entry for __rmdir.
