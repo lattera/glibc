@@ -35,7 +35,7 @@ main (void)
     perror ("getcwd");
   else
     {
-      fputs_unlocked (dir, stdout);
+      puts (dir);
       free (dir);
     }
 
