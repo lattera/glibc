@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1991, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <kernel-features.h>
+
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */
@@ -34,9 +36,11 @@
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 				   struct kernel_sigaction *, size_t);
 
+#if __ASSUME_REALTIME_SIGNALS == 0
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
 int __libc_missing_rt_sigs;
+#endif
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -44,15 +48,22 @@ int __libc_missing_rt_sigs;
 int
 __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 {
+#if __ASSUME_REALTIME_SIGNALS == 0
   struct old_kernel_sigaction k_newact, k_oldact;
+#endif
   int result;
 
 #ifdef __NR_rt_sigaction
+
   /* First try the RT signals.  */
+# if __ASSUME_REALTIME_SIGNALS == 0
   if (!__libc_missing_rt_sigs)
+# endif
     {
       struct kernel_sigaction kact, koact;
+# if __ASSUME_REALTIME_SIGNALS == 0
       int saved_errno = errno;
+# endif
 
       if (act)
 	{
@@ -69,7 +80,9 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
       result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
 			       oact ? &koact : NULL, _NSIG / 8);
 
+# if __ASSUME_REALTIME_SIGNALS == 0
       if (result >= 0 || errno != ENOSYS)
+# endif
 	{
 	  if (oact && result >= 0)
 	    {
@@ -81,11 +94,14 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
 	  return result;
 	}
 
+# if __ASSUME_REALTIME_SIGNALS == 0
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
+# endif
     }
 #endif
 
+#if __ASSUME_REALTIME_SIGNALS == 0
   if (act)
     {
       k_newact.k_sa_handler = act->sa_handler;
@@ -119,6 +135,7 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
     }
 
   return 0;
+#endif
 
  restore:
   asm (
