@@ -643,7 +643,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_header.data.self = new_thread;
 #endif
 #if TLS_MULTIPLE_THREADS_IN_TCB || !defined USE_TLS || !TLS_DTV_AT_TP
-  p_multiple_threads (new_thread) = 1;
+  new_thread->p_multiple_threads = 1;
 #endif
   new_thread->p_tid = new_thread_id;
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);

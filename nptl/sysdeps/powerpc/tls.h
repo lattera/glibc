@@ -81,7 +81,9 @@ typedef struct
 # define TLS_TCB_ALIGN		__alignof__ (struct pthread)
 
 /* This is the size we need before TCB.  */
-# define TLS_PRE_TCB_SIZE	(sizeof (struct pthread) + 32)
+# define TLS_PRE_TCB_SIZE \
+  (sizeof (struct pthread)						      \
+   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
 
 # ifndef __powerpc64__
 /* Register r2 (tp) is reserved by the ABI as "thread pointer". */

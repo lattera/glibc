@@ -1,12 +1,9 @@
 2003-04-22  Jakub Jelinek  <jakub@redhat.com>
 
-	* descr.h (p_multiple_threads): Define.
-	(struct pthread) [TLS_MULTIPLE_THREADS_IN_TCB]: Move
-	multiple_threads to last int in the structure.
 	* allocatestack.c (TLS_TPADJ): Add TLS_PRE_TCB_SIZE instead of
 	sizeof (struct pthread).
 	(allocate_stack): Subtract TLS_PRE_TCB_SIZE bytes instead of
-	1 struct pthread.  Use p_multiple_threads macro.
+	1 struct pthread.
 	* sysdeps/pthread/createthread.c (create_thread): Use
 	p_multiple_threads macro if TLS_DTV_AT_TP.
 	* sysdeps/powerpc/tls.h (TLS_INIT_TCB_SIZE, TLS_TCB_SIZE): Define
@@ -20,21 +17,8 @@
 	(TLS_INIT_TP, THREAD_SELF, INIT_THREAD_SELF): Don't add TLS_TCB_SIZE
 	unneccessarily.
 	(NO_TLS_OFFSET): Define.
-	* sysdeps/powerpc/tcb-offsets.sym (MULTIPLE_THREADS): Use
-	p_multiple_threads macro.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h
-	(SINGLE_THREAD_P): Likewise.
-	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h
-	(SINGLE_THREAD_P): Likewise.
 	* sysdeps/unix/sysv/linux/powerpc/createthread.c (TLS_VALUE): Don't
 	add TLS_TCB_SIZE unnecessarily.
-	* sysdeps/ia64/tcb-offsets.sym (MULTIPLE_THREADS): Define to
-	-sizeof(int).
-	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h (SINGLE_THREAD_P):
-	Use p_multiple_threads macro.
-	* sysdeps/sh/tcb-offsets.sym (MULTIPLE_THREADS): Likewise.
-	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (SINGLE_THREAD_P):
-	Likewise.
 
 2003-04-22  Roland McGrath  <roland@redhat.com>
 

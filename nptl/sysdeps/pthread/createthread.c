@@ -87,11 +87,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	     thread might not yet have the flag set.  No need to set
 	     the global variable again if this is what we use.  */
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
-# if TLS_DTV_AT_TP
-	  p_multiple_threads (THREAD_SELF) = 1;
-# else
 	  THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
-# endif
 #endif
 
 	  /* Now fill in the information about the new thread in
@@ -163,11 +159,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
      not yet have the flag set.  No need to set the global variable
      again if this is what we use.  */
 #ifdef TLS_MULTIPLE_THREADS_IN_TCB
-# if TLS_DTV_AT_TP
-  p_multiple_threads (THREAD_SELF) = 1;
-# else
   THREAD_SETMEM (THREAD_SELF, header.multiple_threads, 1);
-# endif
 #endif
 
   return 0;
