@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -348,9 +348,6 @@ extern __sighandler_t sigset __P ((int __sig, __sighandler_t __disp));
 extern int __libc_current_sigrtmin __P ((void));
 /* Return number of available real-time signal with lowest priority.  */
 extern int __libc_current_sigrtmax __P ((void));
-
-/* Allocate real-time signal with highest/lowest available priority.  */
-extern int __libc_allocate_rtsig __P ((int __high));
 
 #endif /* signal.h  */
 

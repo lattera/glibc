@@ -1,5 +1,8 @@
 1999-02-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* signal/signal.h: Don't declare __libc_allocate_rtsig.
+	* include/signal.h: Declare __libc_allocate_rtsig here.
+
 	* elf/dl-lookup.c: Increment _dl_num_relocations in the four entry
 	point functions, not do_lookup since the later can be called more
 	than once.
