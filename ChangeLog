@@ -1,3 +1,14 @@
+2005-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/chk_fail.c (__chk_fail): Add a while (1) loop around
+	__libc_message to kill GCC warning about noreturn function returning.
+
+	* elf/rtld.c (dlmain): If LD_TRACE_PRELINKING, clear l_relocated flag
+	before relocating ld.so again.
+
+	* elf/rtld.c (_dl_start): Set bootstrap_map.l_relocated even
+	for already prelinked ld.so.
+
 2005-02-11  Roland McGrath  <roland@redhat.com>
 
 	[BZ #715]

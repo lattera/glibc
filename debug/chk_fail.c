@@ -26,7 +26,9 @@ void
 __attribute__ ((noreturn))
 __chk_fail (void)
 {
-  __libc_message (1, "*** buffer overflow detected ***: %s terminated\n",
-		  __libc_argv[0] ?: "<unknown>");
+  /* The loop is added only to keep gcc happy.  */
+  while (1)
+    __libc_message (1, "*** buffer overflow detected ***: %s terminated\n",
+		    __libc_argv[0] ?: "<unknown>");
 }
 libc_hidden_def (__chk_fail)

@@ -1919,10 +1919,13 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && GL(dl_rtld_map).l_opencount > 1)
-		_dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
-				     0, 0);
-	    }
-
+		{
+		  /* Mark the link map as not yet relocated again.  */
+		  GL(dl_rtld_map).l_relocated = 0;
+		  _dl_relocate_object (&GL(dl_rtld_map), main_map->l_scope,
+				       0, 0);
+		}
+            }
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
 	  if (version_info)
 	    {
