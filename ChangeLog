@@ -1,3 +1,9 @@
+Wed Mar  4 11:32:01 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h: (elf_machine_load_address): Use word
+	offsets into the GOT.
+	(RTLD_START): Likewise.
+
 1998-03-03 17:55  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/sprof.c: Cleanup a bit.

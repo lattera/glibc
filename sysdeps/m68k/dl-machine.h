@@ -57,7 +57,7 @@ elf_machine_load_address (void)
 {
   Elf32_Addr addr;
   asm ("lea _dl_start(%%pc), %0\n\t"
-       "sub.l _dl_start@GOTPC(%%pc), %0"
+       "sub.l _dl_start@GOT.w(%%a5), %0"
        : "=a" (addr));
   return addr;
 }
@@ -163,7 +163,7 @@ _dl_start_user:
 	lea _GLOBAL_OFFSET_TABLE_@GOTPC(%pc), %a5
 	| See if we were run as a command with the executable file
 	| name as an extra leading argument.
-	move.l ([_dl_skip_args@GOT, %a5]), %d0
+	move.l ([_dl_skip_args@GOT.w, %a5]), %d0
 	jeq 0f
 	| Pop the original argument count
 	move.l (%sp)+, %d1
@@ -174,7 +174,7 @@ _dl_start_user:
 	| Push back the modified argument count.
 	move.l %d1, -(%sp)
 0:	| Push _dl_default_scope[2] as argument in _dl_init_next call below.
-	move.l ([_dl_default_scope@GOT, %a5], 8), %d2
+	move.l ([_dl_default_scope@GOT.w, %a5], 8), %d2
 0:	move.l %d2, -(%sp)
 	| Call _dl_init_next to return the address of an initializer
 	| function to run.
@@ -195,9 +195,9 @@ _dl_start_user:
 	| Loop to call _dl_init_next for the next initializer.
 	jra 0b
 1:	| Clear the startup flag.
-	clr.l _dl_starting_up@GOT(%a5)
+	clr.l _dl_starting_up@GOT.w(%a5)
 	| Pass our finalizer function to the user in %a1.
-	move.l _dl_fini@GOT(%a5), %a1
+	move.l _dl_fini@GOT.w(%a5), %a1
 	| Initialize %fp with the stack pointer.
 	move.l %sp, %fp
 	| Jump to the user's entry point.
