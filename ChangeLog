@@ -1,3 +1,11 @@
+2000-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Make sure the end
+	of width table is 4-byte aligned.
+	(ctype_output): Write out the entire width array.
+
+	* sysdeps/unix/sysv/linux/bits/waitflags.h: Add __WALL.
+
 2000-02-23  Andreas Jaeger  <aj@suse.de>
 
 	* dlfcn/dlopen.c: Include <stddef.h> for NULL.

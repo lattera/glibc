@@ -281,7 +281,6 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
       ctype->class_collection_act = 256;
 
       /* Fill character map information.  */
-      ctype->map_collection_nr = 0;
       ctype->last_map_idx = MAX_NR_CHARMAP;
       ctype_map_new (lr, ctype, "toupper", charmap);
       ctype_map_new (lr, ctype, "tolower", charmap);
@@ -910,7 +909,8 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  CTYPE_DATA (_NL_CTYPE_WIDTH,
-		      ctype->width, ctype->plane_size * ctype->plane_cnt);
+		      ctype->width,
+		      (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul);
 
 	  CTYPE_DATA (_NL_CTYPE_MB_CUR_MAX,
 		      &ctype->mb_cur_max, sizeof (uint32_t));
@@ -1094,9 +1094,7 @@ implementation limit: no more than %d character maps allowed"),
     ctype->map_collection_max[cnt] = max_chars;
 
   ctype->map_collection[cnt] = (uint32_t *)
-    xmalloc (sizeof (uint32_t) * ctype->map_collection_max[cnt]);
-  memset (ctype->map_collection[cnt], '\0',
-	  sizeof (uint32_t) * ctype->map_collection_max[cnt]);
+    xcalloc (sizeof (uint32_t), ctype->map_collection_max[cnt]);
   ctype->map_collection_act[cnt] = 256;
 
   ++ctype->map_collection_nr;
@@ -1125,9 +1123,9 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
       if (ctype->charnames_act == ctype->charnames_max)
 	{
 	  ctype->charnames_max *= 2;
-	  ctype->charnames = (unsigned int *)
+	  ctype->charnames = (uint32_t *)
 	    xrealloc (ctype->charnames,
-		      sizeof (unsigned int) * ctype->charnames_max);
+		      sizeof (uint32_t) * ctype->charnames_max);
 	}
       ctype->charnames[ctype->charnames_act++] = idx;
     }
@@ -1146,7 +1144,7 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
 	  while (*max <= cnt);
 
 	  *table =
-	    (uint32_t *) xrealloc (*table, *max * sizeof (unsigned long int));
+	    (uint32_t *) xrealloc (*table, *max * sizeof (uint32_t));
 	  memset (&(*table)[old_max], '\0',
 		  (*max - old_max) * sizeof (uint32_t));
 	}
@@ -1197,10 +1195,11 @@ get_character (struct token *now, struct charmap_t *charmap,
 	      /* Insert a negative entry.  */
 	      static const struct charseq negative
 		= { .ucs4 = ILLEGAL_CHAR_VALUE };
-	      uint32_t *newp = obstack_alloc (&repertoire->mem_pool, 4);
+	      uint32_t *newp = obstack_alloc (&repertoire->mem_pool,
+					      sizeof (uint32_t));
 	      *newp = now->val.ucs4;
 
-	      insert_entry (&repertoire->seq_table, newp, 4,
+	      insert_entry (&repertoire->seq_table, newp, sizeof (uint32_t),
 			    (void *) &negative);
 	    }
 	  else
@@ -1391,7 +1390,8 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
 	      {
 		const char *symbol = repertoire_find_symbol (repertoire,
 							     last_wch);
-		uint32_t *newp = obstack_alloc (&repertoire->mem_pool, 4);
+		uint32_t *newp = obstack_alloc (&repertoire->mem_pool,
+						sizeof (uint32_t));
 		*newp = last_wch;
 
 		if (symbol != NULL)
@@ -1404,7 +1404,8 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
 		else
 		  seq->ucs4 = last_wch;
 
-		insert_entry (&repertoire->seq_table, newp, 4, seq);
+		insert_entry (&repertoire->seq_table, newp, sizeof (uint32_t),
+			      seq);
 	      }
 	    else
 	      /* We have to create a fake entry.  */
@@ -1418,7 +1419,7 @@ to-value <U%0*X> of range is smaller than from-value <U%0*X>"),
 	    |= class256_bit;
 
 	/* And of course we have the UCS4 position.  */
-	if (class_bit != 0 && class_bit != 0)
+	if (class_bit != 0)
 	  *find_idx (ctype, &ctype->class_collection,
 		     &ctype->class_collection_max,
 		     &ctype->class_collection_act, last_wch) |= class_bit;
@@ -1583,7 +1584,7 @@ read_widestring (struct linereader *ldfile, struct token *now,
 
   if (now->tok == tok_default_missing)
     /* The special name "" will denote this case.  */
-    wstr = (uint32_t *) L"";
+    wstr = ((uint32_t *) { 0 });
   else if (now->tok == tok_bsymbol)
     {
       /* Get the value from the repertoire.  */
@@ -3233,11 +3234,11 @@ Computing table size for character classes might take a while..."),
   /* Array for width information.  Because the expected width are very
      small we use only one single byte.  This save space and we need
      not provide the information twice with both endianesses.  */
-  ctype->width = (unsigned char *) xmalloc (ctype->plane_size
-					    * ctype->plane_cnt);
+  width_table_size = (ctype->plane_size * ctype->plane_cnt + 3) & ~3ul;
+  ctype->width = (unsigned char *) xmalloc (width_table_size);
+
   /* Initialize with default width value.  */
-  memset (ctype->width, charmap->width_default,
-	  ctype->plane_size * ctype->plane_cnt);
+  memset (ctype->width, charmap->width_default, width_table_size);
   if (charmap->width_rules != NULL)
     {
       size_t cnt;

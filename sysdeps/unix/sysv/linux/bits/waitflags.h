@@ -1,5 +1,5 @@
 /* Definitions of flag bits for `waitpid' et al.
-   Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,4 +26,5 @@
 #define	WNOHANG		1	/* Don't block waiting.  */
 #define	WUNTRACED	2	/* Report status of stopped children.  */
 
+#define __WALL		0x40000000 /* Wait for any child.  */
 #define __WCLONE	0x80000000 /* Wait for cloned process.  */
