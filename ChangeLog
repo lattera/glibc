@@ -1,5 +1,14 @@
 2001-11-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-cache.c: Optimize SEARCH_CACHE and
+	HWCAP_CHECK macro code.
+
+	* elf/dl-misc.c (_dl_sysdep_read_whole_file): Optimize code a bit.
+	Now returns MAP_FAILED on error.
+	* elf/rtld.c: Adjust caller.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Adjust description.
+
 	* elf/dl-version.c (match_symbol): Optimize error handling for size.
 	(_dl_check_map_versions): Likewise.
 

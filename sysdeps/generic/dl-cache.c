@@ -44,98 +44,98 @@ static size_t cachesize;
    binaries.  */
 int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
-#define SEARCH_CACHE(cache)						  \
-/* We use binary search since the table is sorted in the cache file.	  \
-   The first matching entry in the table is returned.			  \
-   It is important to use the same algorithm as used while generating	  \
-   the cache file.  */							  \
-do									  \
-  {									  \
-    left = 0;								  \
-    right = cache->nlibs - 1;						  \
-    middle = (left + right) / 2;					  \
-    cmpres = 1;								  \
-									  \
-    while (left <= right)						  \
-      {									  \
-	/* Make sure string table indices are not bogus before using	  \
-	   them.  */							  \
-	if (! _dl_cache_verify_ptr (cache->libs[middle].key))		  \
-	  {								  \
-	    cmpres = 1;							  \
-	    break;							  \
-	  }								  \
-									  \
-	/* Actually compare the entry with the key.  */			  \
-	cmpres = _dl_cache_libcmp (name,				  \
-				   cache_data + cache->libs[middle].key); \
-	if (cmpres == 0)						  \
-	  /* Found it.  */						  \
-	  break;							  \
-									  \
-	if (cmpres < 0)							  \
-	  left = middle + 1;						  \
-	else								  \
-	  right = middle - 1;						  \
-									  \
-	middle = (left + right) / 2;					  \
-      }									  \
-									  \
-    if (cmpres == 0)							  \
-      {									  \
-	/* LEFT now marks the last entry for which we know the name is	  \
-	   correct.  */							  \
-	left = middle;							  \
-									  \
-	/* There might be entries with this name before the one we	  \
-	   found.  So we have to find the beginning.  */		  \
-	while (middle > 0						  \
-	       /* Make sure string table indices are not bogus before	  \
-		  using them.  */					  \
-	       && _dl_cache_verify_ptr (cache->libs[middle - 1].key)	  \
-	       /* Actually compare the entry.  */			  \
-	       && (_dl_cache_libcmp (name,				  \
-				     cache_data				  \
-				     + cache->libs[middle - 1].key)	  \
-		   == 0))						  \
-	  --middle;							  \
-									  \
-	do								  \
-	  {								  \
-	    int flags;							  \
-									  \
-	    /* Only perform the name test if necessary.  */		  \
-	    if (middle > left						  \
-		/* We haven't seen this string so far.  Test whether the  \
-		   index is ok and whether the name matches.  Otherwise	  \
-		   we are done.  */					  \
-		&& (! _dl_cache_verify_ptr (cache->libs[middle].key)	  \
-		    || (_dl_cache_libcmp (name,				  \
-					  cache_data			  \
-					  + cache->libs[middle].key)	  \
-			!= 0)))						  \
-	      break;							  \
-									  \
-	    flags = cache->libs[middle].flags;				  \
-	    if (_dl_cache_check_flags (flags)				  \
-		&& _dl_cache_verify_ptr (cache->libs[middle].value))	  \
-	      {								  \
-		if (best == NULL || flags == _dl_correct_cache_id)	  \
-		  {							  \
-		    HWCAP_CHECK;					  \
-		    best = cache_data + cache->libs[middle].value;	  \
-									  \
-		    if (flags == _dl_correct_cache_id)			  \
-		      /* We've found an exact match for the shared	  \
-			 object and no general `ELF' release.  Stop	  \
-			 searching.  */					  \
-		      break;						  \
-		  }							  \
-	      }								  \
-	  }								  \
-	while (++middle <= right);					  \
-      }									  \
-  }									  \
+#define SEARCH_CACHE(cache) \
+/* We use binary search since the table is sorted in the cache file.	      \
+   The first matching entry in the table is returned.			      \
+   It is important to use the same algorithm as used while generating	      \
+   the cache file.  */							      \
+do									      \
+  {									      \
+    left = 0;								      \
+    right = cache->nlibs - 1;						      \
+									      \
+    while (left <= right)						      \
+      {									      \
+	__typeof__ (cache->libs[0].key) key;				      \
+									      \
+	middle = (left + right) / 2;					      \
+									      \
+	key = cache->libs[middle].key;					      \
+									      \
+	/* Make sure string table indices are not bogus before using	      \
+	   them.  */							      \
+	if (! _dl_cache_verify_ptr (key))				      \
+	  {								      \
+	    cmpres = 1;							      \
+	    break;							      \
+	  }								      \
+									      \
+	/* Actually compare the entry with the key.  */			      \
+	cmpres = _dl_cache_libcmp (name, cache_data + key);		      \
+	if (__builtin_expect (cmpres == 0, 0))				      \
+	  {								      \
+	    /* Found it.  LEFT now marks the last entry for which we	      \
+	       know the name is correct.  */				      \
+	    left = middle;						      \
+									      \
+	    /* There might be entries with this name before the one we	      \
+	       found.  So we have to find the beginning.  */		      \
+	    while (middle > 0)						      \
+	      {								      \
+		__typeof__ (cache->libs[0].key) key;			      \
+									      \
+		key = cache->libs[middle - 1].key;			      \
+		/* Make sure string table indices are not bogus before	      \
+		   using them.  */					      \
+		if (! _dl_cache_verify_ptr (key)			      \
+		    /* Actually compare the entry.  */			      \
+		    || _dl_cache_libcmp (name, cache_data + key) != 0)	      \
+		  break;						      \
+		--middle;						      \
+	      }								      \
+									      \
+	    do								      \
+	      {								      \
+		int flags;						      \
+		__typeof__ (cache->libs[0]) *lib = &cache->libs[middle];      \
+									      \
+		/* Only perform the name test if necessary.  */		      \
+		if (middle > left					      \
+		    /* We haven't seen this string so far.  Test whether the  \
+		       index is ok and whether the name matches.  Otherwise   \
+		       we are done.  */					      \
+		    && (! _dl_cache_verify_ptr (lib->key)		      \
+			|| (_dl_cache_libcmp (name, cache_data + lib->key)    \
+			    != 0)))					      \
+		  break;						      \
+									      \
+		flags = lib->flags;					      \
+		if (_dl_cache_check_flags (flags)			      \
+		    && _dl_cache_verify_ptr (lib->value))		      \
+		  {							      \
+		    if (best == NULL || flags == _dl_correct_cache_id)	      \
+		      {							      \
+			HWCAP_CHECK;					      \
+			best = cache_data + lib->value;			      \
+									      \
+			if (flags == _dl_correct_cache_id)		      \
+			  /* We've found an exact match for the shared	      \
+			     object and no general `ELF' release.  Stop	      \
+			     searching.  */				      \
+			  break;					      \
+		      }							      \
+		  }							      \
+	      }								      \
+	    while (++middle <= right);					      \
+	    break;							      \
+	}								      \
+									      \
+	if (cmpres < 0)							      \
+	  left = middle + 1;						      \
+	else								      \
+	  right = middle - 1;						      \
+      }									      \
+  }									      \
 while (0)
 
 
@@ -168,7 +168,7 @@ _dl_load_cache_lookup (const char *name)
 	 - the old format with the new format in it
 	 - only the new format
 	 The following checks if the cache contains any of these formats.  */
-      if (file != NULL && cachesize > sizeof *cache
+      if (file != MAP_FAILED && cachesize > sizeof *cache
 	  && memcmp (file, CACHEMAGIC, sizeof CACHEMAGIC - 1) == 0)
 	{
 	  size_t offset;
@@ -185,7 +185,7 @@ _dl_load_cache_lookup (const char *name)
 			 sizeof CACHEMAGIC_VERSION_NEW - 1) != 0)
 	    cache_new = (void *) -1;
 	}
-      else if (file != NULL && cachesize > sizeof *cache_new
+      else if (file != MAP_FAILED && cachesize > sizeof *cache_new
 	       && memcmp (file, CACHEMAGIC_VERSION_NEW,
 			  sizeof CACHEMAGIC_VERSION_NEW - 1) == 0)
 	{
@@ -194,7 +194,7 @@ _dl_load_cache_lookup (const char *name)
 	}
       else
 	{
-	  if (file != NULL)
+	  if (file != MAP_FAILED)
 	    __munmap (file, cachesize);
 	  cache = (void *) -1;
 	}
@@ -227,16 +227,15 @@ _dl_load_cache_lookup (const char *name)
 	platform = 1ULL << platform;
 
       /* Only accept hwcap if it's for the right platform.  */
-#define HWCAP_CHECK							       \
-      if (_dl_osversion	&& cache_new->libs[middle].osversion > _dl_osversion)  \
-	continue;							       \
-      if (_DL_PLATFORMS_COUNT && platform != -1				       \
-	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != 0	       \
-	  && (cache_new->libs[middle].hwcap & _DL_HWCAP_PLATFORM) != platform) \
-	continue;							       \
-      if (hwcap								       \
-	  && ((cache_new->libs[middle].hwcap & *hwcap & ~_DL_HWCAP_PLATFORM)   \
-	      > *hwcap))						       \
+#define HWCAP_CHECK \
+      if (_dl_osversion	&& cache_new->libs[middle].osversion > _dl_osversion) \
+	continue;							      \
+      if (_DL_PLATFORMS_COUNT && platform != -1				      \
+	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != 0			      \
+	  && (lib->hwcap & _DL_HWCAP_PLATFORM) != platform)		      \
+	continue;							      \
+      if (hwcap								      \
+	  && ((lib->hwcap & *hwcap & ~_DL_HWCAP_PLATFORM) > *hwcap))	      \
 	continue
       SEARCH_CACHE (cache_new);
     }

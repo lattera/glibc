@@ -44,40 +44,38 @@ _dl_sysdep_open_zero_fill (void)
 #endif
 
 /* Read the whole contents of FILE into new mmap'd space with given
-   protections.  *SIZEP gets the size of the file.  */
+   protections.  *SIZEP gets the size of the file.  On error MAP_FAILED
+   is returned.  */
 
 void *
 internal_function
 _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 {
-  void *result;
+  void *result = MAP_FAILED;
   struct stat64 st;
   int fd = __open (file, O_RDONLY);
-  if (fd < 0)
-    return NULL;
-  if (__fxstat64 (_STAT_VER, fd, &st) < 0
-      /* No need to map the file if it is empty.  */
-      || st.st_size == 0)
-    result = NULL;
-  else
+  if (fd >= 0)
     {
-      /* Map a copy of the file contents.  */
-      result = __mmap (0, st.st_size, prot,
+      if (__fxstat64 (_STAT_VER, fd, &st) >= 0)
+	{
+	  *sizep = st.st_size;
+
+	  /* No need to map the file if it is empty.  */
+	  if (*sizep != 0)
+	    /* Map a copy of the file contents.  */
+	    result = __mmap (NULL, *sizep, prot,
 #ifdef MAP_COPY
-                       MAP_COPY
+			     MAP_COPY
 #else
-                       MAP_PRIVATE
+			     MAP_PRIVATE
 #endif
 #ifdef MAP_FILE
-                       | MAP_FILE
+			     | MAP_FILE
 #endif
-                       , fd, 0);
-      if (result == MAP_FAILED)
-        result = NULL;
-      else
-        *sizep = st.st_size;
+			     , fd, 0);
+	}
+      __close (fd);
     }
-  __close (fd);
   return result;
 }
 

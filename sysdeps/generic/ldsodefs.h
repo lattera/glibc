@@ -495,8 +495,9 @@ extern const char *_dl_load_cache_lookup (const char *name)
    once needed.  */
 extern void _dl_unload_cache (void);
 
-/* System-dependent function to read a file's whole contents
-   in the most convenient manner available.  */
+/* System-dependent function to read a file's whole contents in the
+   most convenient manner available.  *SIZEP gets the size of the
+   file.  On error MAP_FAILED is returned.  */
 extern void *_dl_sysdep_read_whole_file (const char *file, size_t *sizep,
 					 int prot)
      internal_function;

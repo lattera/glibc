@@ -710,7 +710,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   /* Read the contents of the file.  */
   file = _dl_sysdep_read_whole_file ("/etc/ld.so.preload", &file_size,
 				     PROT_READ | PROT_WRITE);
-  if (__builtin_expect (file != NULL, 0))
+  if (__builtin_expect (file != MAP_FAILED, 0))
     {
       /* Parse the file.  It contains names of libraries to be loaded,
 	 separated by white spaces or `:'.  It may also contain
