@@ -1,3 +1,7 @@
+2000-02-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/termios.h: Sync with kernel.
+
 2000-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/charmap.c (charmap_read): Find charmap also in

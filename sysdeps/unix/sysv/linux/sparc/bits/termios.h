@@ -140,11 +140,11 @@ struct termios
 #define PARODD	0x00000200
 #define HUPCL	0x00000400
 #define CLOCAL	0x00000800
-#define CBAUDEX 0x00010000
-#define  B57600  0x00010001
-#define  B115200 0x00010002
-#define  B230400 0x00010003
-#define  B460800 0x00010004
+#define CBAUDEX 0x00001000
+#define  B57600  0x00001001
+#define  B115200 0x00001002
+#define  B230400 0x00001003
+#define  B460800 0x00001004
 #define  B76800  0x00001005
 #define  B153600 0x00001006
 #define  B307200 0x00001007
@@ -156,10 +156,6 @@ struct termios
 #define B1152000 0x0000100d
 #define B1500000 0x0000100e
 #define B2000000 0x0000100f
-#define B2500000 0x00001010
-#define B3000000 0x00001011
-#define B3500000 0x00001012
-#define B4000000 0x00001013
 
 #define CIBAUD	0x100f0000	/* input baud rate (not used) */
 #define CMSPAR	0x40000000	/* mark or space (stick) parity */
