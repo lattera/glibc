@@ -1314,6 +1314,18 @@ interface.  For compilation with the old API, <db_185.h> has to be included
 (and not <db.h>) and you can link with either `-ldb1' or `-ldb' for either
 of the db formats.
 
+??	Autoconf's AC_CHECK_FUNC macro reports that a function exists, but
+	when I try to use it, it always returns -1 and sets errno to ENOSYS.
+
+{ZW} You are using a 2.0 Linux kernel, and the function you are trying to
+use is only implemented in 2.1/2.2.  Libc considers this to be a function
+which exists, because if you upgrade to a 2.2 kernel, it will work.  One
+such function is sigaltstack.
+
+Your program should check at runtime whether the function works, and
+implement a fallback.  Note that Autoconf cannot detect unimplemented
+functions in other systems' C libraries, so you need to do this anyway.
+
 
 ? Miscellaneous
 

@@ -99,6 +99,7 @@ inet_aton(cp, addr)
 	const char *cp;
 	struct in_addr *addr;
 {
+	static const u_int32_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
 	register u_int32_t val;	/* changed from u_long --david */
 #ifndef _LIBC
 	register int base;
@@ -112,6 +113,8 @@ inet_aton(cp, addr)
 	int saved_errno = errno;
 	__set_errno (0);
 #endif
+
+	memset (parts, '\0', sizeof (parts));
 
 	c = *cp;
 	for (;;) {
@@ -178,33 +181,14 @@ inet_aton(cp, addr)
 	 * the number of parts specified.
 	 */
 	n = pp - parts + 1;
-	switch (n) {
 
-	case 0:
-		goto ret_0;		/* initial nondigit */
+	if (n == 0	/* initial nondigit */
+	    || parts[0] > 0xff || parts[1] > 0xff || parts[2] > 0xff
+	    || val > max[n - 1])
+	  goto ret_0;
 
-	case 1:				/* a -- 32 bits */
-		break;
+	val |= (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8);
 
-	case 2:				/* a.b -- 8.24 bits */
-		if (parts[0] > 0xff || val > 0xffffff)
-			goto ret_0;
-		val |= parts[0] << 24;
-		break;
-
-	case 3:				/* a.b.c -- 8.8.16 bits */
-		if (parts[0] > 0xff || parts[1] > 0xff || val > 0xffff)
-			goto ret_0;
-		val |= (parts[0] << 24) | (parts[1] << 16);
-		break;
-
-	case 4:				/* a.b.c.d -- 8.8.8.8 bits */
-		if (parts[0] > 0xff || parts[1] > 0xff || parts[2] > 0xff
-		    || val > 0xff)
-			goto ret_0;
-		val |= (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8);
-		break;
-	}
 	if (addr)
 		addr->s_addr = htonl(val);
 

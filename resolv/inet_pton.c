@@ -24,6 +24,7 @@ static char rcsid[] = "$Id$";
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+#include <ctype.h>
 #include <string.h>
 #include <errno.h>
 #include <conf/portability.h>
