@@ -1,5 +1,5 @@
 /* Return list of symbols the library can request.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
@@ -27,7 +27,7 @@ static const char *symbol_list_arr[] =
 {
   [SYM_PTHREAD_THREADS_EVENTS] = "__nptl_threads_events",
   [SYM_PTHREAD_LAST_EVENT] = "__nptl_last_event",
-  [SYM_PTHREAD_NTHREADS] = "nptl_nthreads",
+  [SYM_PTHREAD_NTHREADS] = "__nptl_nthreads",
   [SYM_PTHREAD_STACK_USED] = "stack_used",
   [SYM_PTHREAD_STACK_USER] = "__stack_user",
   [SYM_PTHREAD_KEYS] = "__pthread_keys",

@@ -1,5 +1,7 @@
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-mutex5.c (do_test): Add more timedlock tests.
+
 	* tst-mutex2.c: Tests of trylock and unlock with ERROR mutexes.
 	* tst-mutex3.c (do_test): Add tests for trylock with RECURSIVE mutexes.
 

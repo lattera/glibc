@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -60,12 +60,12 @@ do_test (void)
   err = pthread_mutex_timedlock (&m, &ts);
   if (err == 0)
     {
-      puts ("timed_lock succeeded");
+      puts ("timedlock succeeded");
       return 1;
     }
   else if (err != ETIMEDOUT)
     {
-      printf ("timed_lock error != ETIMEDOUT: %d\n", err);
+      printf ("timedlock error != ETIMEDOUT: %d\n", err);
       return 1;
     }
   else
@@ -98,10 +98,48 @@ do_test (void)
 	}
     }
 
+  (void) gettimeofday (&tv, NULL);
+  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+
+  ts.tv_sec += 2;	/* Wait 2 seconds.  */
+  /* The following makes the ts value invalid.  */
+  ts.tv_nsec += 1000000000;
+
+  err = pthread_mutex_timedlock (&m, &ts);
+  if (err == 0)
+    {
+      puts ("2nd timedlock succeeded");
+      return 1;
+    }
+  else if (err != EINVAL)
+    {
+      printf ("2nd timedlock error != EINVAL: %d\n", err);
+      return 1;
+    }
+
   if (pthread_mutex_unlock (&m) != 0)
     {
       puts ("mutex_unlock failed");
       return 1;
+    }
+
+  (void) gettimeofday (&tv, NULL);
+  TIMEVAL_TO_TIMESPEC (&tv, &ts);
+
+  ts.tv_sec += 2;	/* Wait 2 seconds.  */
+  if (pthread_mutex_timedlock (&m, &ts) != 0)
+    {
+      puts ("3rd timedlock failed");
+    }
+
+  (void) gettimeofday (&tv2, NULL);
+
+  /* Check that timedlock didn't delay.  We use a limit of 0.1 secs.  */
+  timersub (&tv2, &tv, &tv2);
+  if (tv2.tv_sec > 0 || tv2.tv_usec > 100000)
+    {
+      puts ("3rd timedlock didn't return right away");
+      exit (1);
     }
 
   if (pthread_mutex_destroy (&m) != 0)
