@@ -2,6 +2,9 @@
 
 	* version.h (VERSION): Bump to 2.1.93.
 
+	* sysdeps/unix/sysv/linux/powerpc/Dist: Add fe_nomask.c.
+	* sysdeps/unix/sysv/linux/i386/Dist: Add olddirent.h.
+
 	* intl/Makefile (tests): Depend in mtrace-tst-gettext.
 	Make this a new rule depending on tst-gettext.out and run mtrace.
 	* intl/tst-gettext.c: Call mtrace.
