@@ -34,7 +34,7 @@ struct sigcontext
     unsigned int sc_intr_port;
 
     /* Error code associated with this signal (interpreted as `error_t').  */
-    int sc_err;
+    int sc_error;
 
     /* All following members are machine-dependent.  The rest of this
        structure is written to be laid out identically to:
@@ -45,7 +45,7 @@ struct sigcontext
 	}
        trampoline.c knows this, so it must be changed if this changes.  */
     int sc_gpr[31];		/* "General" registers; [0] is r1.  */
-    int sc_mdlo, sc_mdhi;	/* High and low multiplication results.  */
+    int sc_mdlo, sc_mdhi;	/* Low and high multiplication results.  */
     int sc_pc;			/* Instruction pointer.  */
 
     /* struct mips_exc_state */
