@@ -305,7 +305,7 @@ Rule	Cyprus	1981	1998	-	Mar	lastSun	0:00	1:00	S
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Nicosia	2:13:28 -	LMT	1921 Nov 14
 			2:00	Cyprus	EE%sT	1998 Sep
-			2:00	EU	EE%sT
+			2:00	EUAsia	EE%sT
 # IATA SSIM (1998-09) has Cyprus using EU rules for the first time.
 
 # Georgia

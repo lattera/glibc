@@ -1,3 +1,7 @@
+1999-03-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* timezone/asia: Fix rule in Asia/Nicosia entry.
+
 1999-03-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/getopt.texi (Using Getopt): Explain "::" in option
