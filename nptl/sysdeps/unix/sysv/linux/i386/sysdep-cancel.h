@@ -42,9 +42,7 @@
     PUSHCARGS_##args							      \
     DOCARGS_##args							      \
     movl $SYS_ify (syscall_name), %eax;					      \
-    /* Until we can handle unwinding from the sysenter page the kernel	      \
-       provides we cannot use ENTER_KERNEL here.  */			      \
-    int $0x80;								      \
+    ENTER_KERNEL;							      \
     POPCARGS_##args;							      \
     POPSTATE_##args							      \
     cmpl $-4095, %eax;							      \
@@ -75,10 +73,10 @@
     /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
     .byte 0x1b;								      \
     /* Start of the table initialization.  */				      \
-    .byte 0xc;								      \
+    .byte 0xc;			/* DW_CFA_def_cfa */			      \
     .uleb128 4;								      \
     .uleb128 4;								      \
-    .byte 0x88;								      \
+    .byte 0x88;			/* DW_CFA_offset, column 0x8 */		      \
     .uleb128 1;								      \
     .align 4;								      \
   L(ENDCIE):								      \
@@ -104,149 +102,172 @@
    simple.  The only place the stack pointer is changed is when the old
    cancellation state value is saved.  */
 # define EH_FRAME_0(name) \
-    .byte 4;								      \
-    .long L(PUSHSTATE)-L(name##START);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHSTATE)-L(name##START);	/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPSTATE)-L(PUSHSTATE);					      \
-    .byte 14;								      \
+    .byte 0x40+L(POPSTATE)-L(PUSHSTATE);	/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4
 
 /* For syscalls with one and two parameters the code is the same as for
    those which take no parameter.  */
-# define EH_FRAME_1(name) EH_FRAME_0 (name)
+# define EH_FRAME_1(name) \
+    .byte 0x40+L(SAVEBX1)-L(name##START);	/* DW_CFA_advance_loc+N */    \
+    .byte 9;					/* DW_CFA_register */	      \
+    .uleb128 3;					/* %ebx */		      \
+    .uleb128 2;					/* %edx */		      \
+    .byte 0x40+L(RESTBX1)-L(SAVEBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(PUSHSTATE)-L(RESTBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 8;								      \
+    .byte 0x40+L(SAVEBX2)-L(PUSHSTATE);		/* DW_CFA_advance_loc+N */    \
+    .byte 9;					/* DW_CFA_register */	      \
+    .uleb128 3;					/* %ebx */		      \
+    .uleb128 2;					/* %edx */		      \
+    .byte 0x40+L(RESTBX2)-L(SAVEBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSTATE)-L(RESTBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 4
+
 # define EH_FRAME_2(name) EH_FRAME_1 (name)
 
 /* For syscalls with three parameters the stack pointer is changed
    also to save the content of the %ebx register.  */
 # define EH_FRAME_3(name) \
-    .byte 4;								      \
-    .long L(PUSHBX1)-L(name##START);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHBX1)-L(name##START);	/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPBX1)-L(PUSHBX1);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
+    .uleb128 2;								      \
+    .byte 0x40+L(POPBX1)-L(PUSHBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4;								      \
-    .byte 4;								      \
-    .long L(PUSHSTATE)-L(POPBX1);					      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(PUSHSTATE)-L(POPBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(PUSHBX2)-L(PUSHSTATE);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHBX2)-L(PUSHSTATE);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(POPBX2)-L(PUSHBX2);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
+    .uleb128 3;								      \
+    .byte 0x40+L(POPBX2)-L(PUSHBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPSTATE)-L(POPBX2);					      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSTATE)-L(POPBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4
 
 /* With four parameters the syscall wrappers have to save %ebx and %esi.  */
 # define EH_FRAME_4(name) \
-    .byte 4;								      \
-    .long L(PUSHSI1)-L(name##START);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHSI1)-L(name##START);	/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(PUSHBX1)-L(PUSHSI1);					      \
-    .byte 14;								      \
+    .byte 0x86;					/* DW_CFA_offset %esi */      \
+    .uleb128 2;								      \
+    .byte 0x40+L(PUSHBX1)-L(PUSHSI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(POPBX1)-L(PUSHBX1);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
+    .uleb128 3;								      \
+    .byte 0x40+L(POPBX1)-L(PUSHBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPSI1)-L(POPBX1);						      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSI1)-L(POPBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4;								      \
-    .byte 4;								      \
-    .long L(PUSHSTATE)-L(POPSI1);					      \
-    .byte 14;								      \
+    .byte 0xc6;					/* DW_CFA_restore %esi */     \
+    .byte 0x40+L(PUSHSTATE)-L(POPSI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(PUSHSI2)-L(PUSHSTATE);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHSI2)-L(PUSHSTATE);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(PUSHBX2)-L(PUSHSI2);					      \
-    .byte 14;								      \
+    .byte 0x86;					/* DW_CFA_offset %esi */      \
+    .uleb128 3;								      \
+    .byte 0x40+L(PUSHBX2)-L(PUSHSI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 16;							      \
-    .byte 4;								      \
-    .long L(POPBX2)-L(PUSHBX2);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
+    .uleb128 4;								      \
+    .byte 0x40+L(POPBX2)-L(PUSHBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(POPSI2)-L(POPBX2);						      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSI2)-L(POPBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPSTATE)-L(POPSI2);					      \
-    .byte 14;								      \
+    .byte 0xc6;					/* DW_CFA_restore %esi */     \
+    .byte 0x40+L(POPSTATE)-L(POPSI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4
 
 /* With five parameters the syscall wrappers have to save %ebx, %esi,
    and %edi.  */
 # define EH_FRAME_5(name) \
-    .byte 4;								      \
-    .long L(PUSHDI1)-L(name##START);					      \
-    .byte 14;								      \
+    .byte 0x40+L(PUSHDI1)-L(name##START);	/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(PUSHSI1)-L(PUSHDI1);					      \
-    .byte 14;								      \
+    .byte 0x87;					/* DW_CFA_offset %edi */      \
+    .uleb128 2;								      \
+    .byte 0x40+L(PUSHSI1)-L(PUSHDI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(PUSHBX1)-L(PUSHSI1);					      \
-    .byte 14;								      \
+    .byte 0x86;					/* DW_CFA_offset %esi */      \
+    .uleb128 3;								      \
+    .byte 0x40+L(PUSHBX1)-L(PUSHSI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 16;							      \
-    .byte 4;								      \
-    .long L(POPBX1)-L(PUSHBX1);						      \
-    .byte 14;								      \
-    .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(POPSI1)-L(POPBX1);						      \
-    .byte 14;								      \
-    .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPDI1)-L(POPSI1);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
     .uleb128 4;								      \
-    .byte 4;								      \
-    .long L(PUSHSTATE)-L(POPDI1);					      \
-    .byte 14;								      \
-    .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(PUSHDI2)-L(PUSHSTATE);					      \
-    .byte 14;								      \
+    .byte 0x40+L(POPBX1)-L(PUSHBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(PUSHSI2)-L(PUSHDI2);					      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSI1)-L(POPBX1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 8;								      \
+    .byte 0xc6;					/* DW_CFA_restore %esi */     \
+    .byte 0x40+L(POPDI1)-L(POPSI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 4;								      \
+    .byte 0xc7;					/* DW_CFA_restore %edi */     \
+    .byte 0x40+L(PUSHSTATE)-L(POPDI1);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 8;								      \
+    .byte 0x40+L(PUSHDI2)-L(PUSHSTATE);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
+    .uleb128 12;							      \
+    .byte 0x87;					/* DW_CFA_offset %edi */      \
+    .uleb128 3;								      \
+    .byte 0x40+L(PUSHSI2)-L(PUSHDI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 16;							      \
-    .byte 4;								      \
-    .long L(PUSHBX2)-L(PUSHSI2);					      \
-    .byte 14;								      \
+    .byte 0x86;					/* DW_CFA_offset %esi */      \
+    .uleb128 4;								      \
+    .byte 0x40+L(PUSHBX2)-L(PUSHSI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 20;							      \
-    .byte 4;								      \
-    .long L(POPBX2)-L(PUSHBX2);						      \
-    .byte 14;								      \
+    .byte 0x83;					/* DW_CFA_offset %ebx */      \
+    .uleb128 5;								      \
+    .byte 0x40+L(POPBX2)-L(PUSHBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 16;							      \
-    .byte 4;								      \
-    .long L(POPSI2)-L(POPBX2);						      \
-    .byte 14;								      \
+    .byte 0xc3;					/* DW_CFA_restore %ebx */     \
+    .byte 0x40+L(POPSI2)-L(POPBX2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 12;							      \
-    .byte 4;								      \
-    .long L(POPDI2)-L(POPSI2);						      \
-    .byte 14;								      \
+    .byte 0xc6;					/* DW_CFA_restore %esi */     \
+    .byte 0x40+L(POPDI2)-L(POPSI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 8;								      \
-    .byte 4;								      \
-    .long L(POPSTATE)-L(POPDI2);					      \
-    .byte 14;								      \
+    .byte 0xc7;					/* DW_CFA_restore %edi */     \
+    .byte 0x40+L(POPSTATE)-L(POPDI2);		/* DW_CFA_advance_loc+N */    \
+    .byte 14;					/* DW_CFA_def_cfa_offset */   \
     .uleb128 4
 
 
@@ -266,9 +287,9 @@
 # define _PUSHCARGS_0	/* No arguments to push.  */
 # define _POPCARGS_0	/* No arguments to pop.  */
 
-# define PUSHCARGS_1	movl %ebx, %edx; PUSHCARGS_0
+# define PUSHCARGS_1	movl %ebx, %edx; L(SAVEBX2): PUSHCARGS_0
 # define DOCARGS_1	_DOARGS_1 (4)
-# define POPCARGS_1	POPCARGS_0; movl %edx, %ebx
+# define POPCARGS_1	POPCARGS_0; movl %edx, %ebx; L(RESTBX2):
 # define _PUSHCARGS_1	pushl %ebx; L(PUSHBX2): _PUSHCARGS_0
 # define _POPCARGS_1	_POPCARGS_0; popl %ebx; L(POPBX2):
 
