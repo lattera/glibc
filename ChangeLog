@@ -22,6 +22,10 @@
 
 	* sysdeps/generic/bits/typesizes.h (__TIMER_T_TYPE): Define as void*.
 	This matches the new timer implementation.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h (__TIMER_T_TYPE):
+	Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h (__TIMER_T_TYPE):
+	Likewise.
 	* sysdeps/unix/sysv/linux/bits/siginfo.h (struct siginfo): Adjust
 	timer info for what the kernel provides these days.
 	(struct sigevent): Add _tid field.

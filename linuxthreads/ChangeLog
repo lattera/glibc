@@ -1,6 +1,8 @@
 2003-03-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/bits/typesizes.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h: New file.
 
 2003-03-24  Daniel Jacobowitz  <drow@mvista.com>
 
