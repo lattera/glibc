@@ -1,5 +1,11 @@
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/Dist: Distribute oldgetrlimit64.c
+	and oldsetrlimit64.c.
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Distribute sys/elf.h and
+	sys/procfs.h.
+
 	* manual/texinfo.tex: Updated from latest official version.
 
 	* debug/Makefile (distribute): Add frame.h.

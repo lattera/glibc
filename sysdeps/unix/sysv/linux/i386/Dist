@@ -1,4 +1,6 @@
 clone.S
+oldgetrlimit64.c
+oldsetrlimit64.c
 setresuid.c
 setresgid.c
 setfsuid.c
