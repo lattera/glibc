@@ -1,3 +1,7 @@
+2001-03-20  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/stackinfo.h: New file.
+
 2001-03-21  Andreas Jaeger  <aj@suse.de>
 
 	* elf/global.c (main): Use proper prototype.
