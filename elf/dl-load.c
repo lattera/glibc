@@ -107,6 +107,18 @@ static const struct r_strlenpair *capstr;
 static size_t ncapstr;
 static size_t max_capstrlen;
 
+const unsigned char _dl_pf_to_prot[8] =
+{
+  [0] = PROT_NONE,
+  [PF_R] = PROT_READ,
+  [PF_W] = PROT_WRITE,
+  [PF_R | PF_W] = PROT_READ | PROT_WRITE,
+  [PF_X] = PROT_EXEC,
+  [PF_R | PF_X] = PROT_READ | PROT_EXEC,
+  [PF_W | PF_X] = PROT_WRITE | PROT_EXEC,
+  [PF_R | PF_W | PF_X] = PROT_READ | PROT_WRITE | PROT_EXEC
+};
+
 
 /* This function has no public prototype.  */
 extern ssize_t __libc_read (int, void *, size_t);
@@ -782,20 +794,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	    /* Optimize a common case.  */
 	    if ((PF_R | PF_W | PF_X) == 7
 		&& (PROT_READ | PROT_WRITE | PROT_EXEC) == 7)
-	      {
-		static const unsigned char pf_to_prot[8] =
-		{
-		  [0] = PROT_NONE,
-		  [PF_R] = PROT_READ,
-		  [PF_W] = PROT_WRITE,
-		  [PF_R | PF_W] = PROT_READ | PROT_WRITE,
-		  [PF_X] = PROT_EXEC,
-		  [PF_R | PF_X] = PROT_READ | PROT_EXEC,
-		  [PF_W | PF_X] = PROT_WRITE | PROT_EXEC,
-		  [PF_R | PF_W | PF_X] = PROT_READ | PROT_WRITE | PROT_EXEC
-		};
-		c->prot = pf_to_prot[ph->p_flags & (PF_R | PF_W | PF_X)];
-	      }
+	      c->prot = _dl_pf_to_prot[ph->p_flags & (PF_R | PF_W | PF_X)];
 	    else
 	      {
 		c->prot = 0;

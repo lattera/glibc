@@ -1,5 +1,9 @@
 1999-02-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Use global
+	_dl_pf_to_proot array to convert p_flags value.
+	* elf/dl-reloc.c (_dl_relocate_object): Likewise.
+
 	* elf/dynamic-link.h (elf_get_dynamic_info): Use memset instead of
 	loop to clear `info'.
 

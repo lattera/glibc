@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -108,11 +108,21 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	    caddr_t mapend = ((caddr_t) l->l_addr +
 			      ((ph->p_vaddr + ph->p_memsz + _dl_pagesize - 1)
 			       & ~(_dl_pagesize - 1)));
-	    int prot = 0;
-	    if (ph->p_flags & PF_R)
-	      prot |= PROT_READ;
-	    if (ph->p_flags & PF_X)
-	      prot |= PROT_EXEC;
+	    extern unsigned char _dl_pf_to_prot[8];
+	    int prot;
+
+	    if ((PF_R | PF_W | PF_X) == 7
+		&& (PROT_READ | PROT_WRITE | PROT_EXEC) == 7)
+	      prot = _dl_pf_to_prot[ph->p_flags & (PF_R | PF_X)];
+	    else
+	      {
+		prot = 0;
+		if (ph->p_flags & PF_R)
+		  prot |= PROT_READ;
+		if (ph->p_flags & PF_X)
+		  prot |= PROT_EXEC;
+	      }
+
 	    if (__mprotect (mapstart, mapend - mapstart, prot) < 0)
 	      _dl_signal_error (errno, l->l_name,
 				"can't restore segment prot after reloc");
