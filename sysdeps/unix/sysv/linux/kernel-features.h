@@ -400,3 +400,9 @@
 #if __LINUX_KERNEL_VERSION >= 132612
 # define __ASSUME_GETDENTS32_D_TYPE	1
 #endif
+
+/* Starting with version 2.5.3, the initial location returned by `brk'
+   after exec is always rounded up to the next page.  */
+#if __LINUX_KERNEL_VERSION >= 132355
+# define __ASSUME_BRK_PAGE_ROUNDED	1
+#endif
