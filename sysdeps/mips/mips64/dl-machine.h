@@ -77,11 +77,11 @@ do { if ((l)->l_info[DT_MIPS (RLD_MAP)]) \
        (ElfW(Addr)) (r); \
    } while (0)
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF  header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
-elf_machine_matches_host (ElfW(Half) e_machine)
+elf_machine_matches_host (const ElfW(Ehdr) *ehdr)
 {
-  switch (e_machine)
+  switch (ehdr->e_machine)
     {
     case EM_MIPS:
     case EM_MIPS_RS3_LE:

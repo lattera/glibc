@@ -43,17 +43,11 @@
 		    : "a1");						\
 }
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
-elf_machine_matches_host (Elf32_Half e_machine)
+elf_machine_matches_host (const Elf32_Ehdr *ehdr)
 {
-  switch (e_machine)
-    {
-    case EM_ARM:
-      return 1;
-    default:
-      return 0;
-    }
+  return ehdr->e_machine == EM_ARM;
 }
 
 
@@ -491,7 +485,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 
 	     newvalue = value - (Elf32_Addr)reloc_addr + (addend << 2);
 	     if (newvalue & 0xfc000003)
-	       newvalue = fix_bad_pc24(reloc_addr, value) 
+	       newvalue = fix_bad_pc24(reloc_addr, value)
 		 - (Elf32_Addr)reloc_addr + (addend << 2);
 
 	     newvalue = newvalue >> 2;

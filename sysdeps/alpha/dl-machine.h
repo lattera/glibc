@@ -29,11 +29,11 @@
 #include <string.h>
 
 
-/* Return nonzero iff E_MACHINE is compatible with the running host.  */
+/* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int
-elf_machine_matches_host (Elf64_Word e_machine)
+elf_machine_matches_host (const Elf64_Ehdr *ehdr)
 {
-  return e_machine == EM_ALPHA;
+  return ehdr->e_machine == EM_ALPHA;
 }
 
 /* Return the link-time address of _DYNAMIC.  The multiple-got-capable
