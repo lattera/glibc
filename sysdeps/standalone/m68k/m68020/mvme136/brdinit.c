@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <standalone.h>
-#include "__m68020.h"
+#include "m68020.h"
 
 /*  _Board_Initialize()
 

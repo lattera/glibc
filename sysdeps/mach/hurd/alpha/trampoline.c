@@ -41,7 +41,6 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			int rpc_wait,
 			struct machine_thread_all_state *state)
 {
-
   __label__ trampoline, rpc_wait_trampoline;
   void *sigsp;
   struct sigcontext *scp;

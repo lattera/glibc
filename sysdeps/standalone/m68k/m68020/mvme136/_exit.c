@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "__m68020.h"
+#include "m68020.h"
 
 /* Return control to 135Bug */
 

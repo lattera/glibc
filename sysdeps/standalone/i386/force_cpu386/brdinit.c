@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <standalone.h>
-#include "__i386.h"
+#include "i386.h"
 
 /*  _Board_Initialize()
 

@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <standalone.h>
-#include "__i960ca.h"
+#include "i960ca.h"
 
 /*  _Board_Initialize()
 
