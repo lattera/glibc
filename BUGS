@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1998-02-26T09:19:15-0800 drepper>
+Time-stamp: <1998-02-27T13:05:49-0800 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -60,8 +60,6 @@ Severity: [  *] to [***]
 [  *]  The libm-ieee `scalb' function gives wrong results for
        non-integral second parameters.
 
-[  *]  _IO_getline can loop forever, at least with C++
-       [PR libc/332]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Ulrich Drepper
 drepper@cygnus.com

@@ -17,7 +17,7 @@ main (int argc, char ** argv)
 {
   clock_t start, stop;
 
-  if (signal(SIGALRM, alarm_handler) -- SIG_ERR)
+  if (signal(SIGALRM, alarm_handler) == SIG_ERR)
     {
       perror ("signal");
       exit (1);

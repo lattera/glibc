@@ -313,7 +313,7 @@ parent_echo-distinfo:
 
 # Make the distribution tarfile.
 
-distribute  := README INSTALL FAQ NOTES NEWS PROJECTS BUGS		\
+distribute  := README README.libm INSTALL FAQ NOTES NEWS PROJECTS BUGS	\
 	       COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]		\
 	       Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
 	       extra-lib.mk o-iterator.mk				\

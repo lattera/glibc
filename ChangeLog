@@ -1,5 +1,22 @@
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makefile (distribute): Add README.libm.
+
+1998-02-27  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* time/clocktest.c (main): Correct typo: "--" -> "==".
+
+1998-02-25 20:53  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/alpha/fpu/bits/mathinline.h (atan): Removed the bogus
+	inline function.
+	(copysignf, __copysignf, copysign, fabsf, __fabsf, fabs): New
+	inline functions.
+
+	* math/libm.map (__atan2): Added.
+
+1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
+
 	* misc/efgcvt_r.c (APPEND): Handle printing of 0.0 correctly.
 	Reported by Göran Uddeborg <goeran@uddeborg.pp.se>.
 
