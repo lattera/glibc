@@ -657,5 +657,5 @@ main (void)
       exit (1);
     }
   printf ("\n All tests passed successfully.\n");
-  exit (0);
+  return 0;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <Geoff.Keating@anu.edu.au>, 1997.
 
@@ -45,7 +45,7 @@ static const char exp_m1[102] = "0" /* point */
 
 static const char hexdig[] = "0123456789abcdef";
 
-void
+static void
 print_mpn_fp (const mp_limb_t *x, unsigned int dp, unsigned int base)
 {
    unsigned int i;
@@ -66,7 +66,7 @@ print_mpn_fp (const mp_limb_t *x, unsigned int dp, unsigned int base)
      }
 }
 
-void
+static void
 read_mpn_hex(mp_limb_t *x, const char *str)
 {
   int i;
@@ -96,7 +96,7 @@ get_log2(void)
 }
 
 /* Compute e^x.  */
-void
+static void
 exp_mpn (mp1 ex, mp1 x)
 {
    unsigned int n;
@@ -130,7 +130,7 @@ exp_mpn (mp1 ex, mp1 x)
 }
 
 /* Calculate 2^x.  */
-void
+static void
 exp2_mpn (mp1 ex, mp1 x)
 {
   mp2 tmp;

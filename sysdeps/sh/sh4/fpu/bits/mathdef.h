@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,9 +39,6 @@ typedef float float_t;		/* `float' expressions are evaluated as
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
-/* Signal that types stay as they were declared.  */
-#   define FLT_EVAL_METHOD	0
-
 /* Define `INFINITY' as value of type `float'.  */
 #   define INFINITY	HUGE_VALF
 
@@ -53,9 +50,6 @@ typedef double float_t;		/* `float' expressions are evaluated as
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
-/* Signal that both types are `double'.  */
-#   define FLT_EVAL_METHOD	1
-
 /* Define `INFINITY' as value of type `float'.  */
 #   define INFINITY	HUGE_VALF
 
@@ -66,9 +60,6 @@ typedef double double_t;	/* `double' expressions are evaluated as
 typedef double float_t;
 typedef double double_t;
 
-/* Strange compiler, we don't know how it works.  */
-#  define FLT_EVAL_METHOD	-1
-
 /* Define `INFINITY' as value of type `float'.  */
 #  define INFINITY	HUGE_VALF
 
@@ -77,9 +68,6 @@ typedef double double_t;
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	0x80000001
 # define FP_ILOGBNAN	0x7fffffff
-
-/* Number of decimal digits for the `double' type.  */
-# define DECIMAL_DIG	15
 
 #endif	/* ISO C99 */
 

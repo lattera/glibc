@@ -30,9 +30,6 @@ typedef double float_t;		/* `float' expressions are evaluated as
 typedef double double_t;	/* `double' expressions are evaluated as
 				   `double'.  */
 
-/* Signal that both types are `double'.  */
-# define FLT_EVAL_METHOD	1
-
 /* Define `INFINITY' as value of type `float'.  */
 # define INFINITY	HUGE_VALF
 
@@ -40,9 +37,6 @@ typedef double double_t;	/* `double' expressions are evaluated as
 /* The values returned by `ilogb' for 0 and NaN respectively.  */
 # define FP_ILOGB0	(-2147483647)
 # define FP_ILOGBNAN	2147483647
-
-/* Number of decimal digits for the `double' type.  */
-# define DECIMAL_DIG	15
 
 #endif	/* ISO C99 */
 

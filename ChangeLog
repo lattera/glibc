@@ -1,4 +1,23 @@
+2000-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/fpu/bits/mathdef.h: Remove FLT_EVAL_METHOD and
+	DECIMAL_DIG definitions.
+	* sysdeps/arm/fpu/bits/mathdef.h: Likewise
+	* sysdeps/generic/bits/mathdef.h: Likewise
+	* sysdeps/i386/fpu/bits/mathdef.h: Likewise
+	* sysdeps/ia64/fpu/bits/mathdef.h: Likewise
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Likewise
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise
+	* sysdeps/sh/sh4/fpu/bits/mathdef.h: Likewise
+
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/test-fenv.c (main): Use return instead of exit to avoid warning.
+
+	* math/atest-exp.c: Mark local functions as static to avoid warnings.
+	* math/atest-exp2.c: Likewise.
+	* math/atest-sincos.c: Likewise.
 
 	* sysdeps/i386/fpu/bits/mathdef.h (DECIMAL_DIG): Correct value.
 	Reported by Fred J. Tydeman <tydeman@tybor.com>.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <Geoff.Keating@anu.edu.au>, 1997.
 
@@ -43,7 +43,7 @@ static const char cos1[101] =
 "300240b760e6fa96a94430a52d0e9e43f3450e3b8ff99bc934";
 static const char hexdig[] = "0123456789abcdef";
 
-void
+static void
 print_mpn_hex (const mp_limb_t *x, unsigned size)
 {
    char value[size + 1];
@@ -59,7 +59,7 @@ print_mpn_hex (const mp_limb_t *x, unsigned size)
    fputs (value, stdout);
 }
 
-void
+static void
 sincosx_mpn (mp1 si, mp1 co, mp1 xx, mp1 ix)
 {
    int i;
