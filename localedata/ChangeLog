@@ -1,3 +1,8 @@
+2000-06-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (install-locales): Remove the -u switch from localedef
+	command line.
+
 2000-06-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-fmon.sh: Don't generate de_DE and en_US locale data.

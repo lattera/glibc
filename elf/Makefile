@@ -263,6 +263,7 @@ CFLAGS-multiload.c = -DOBJDIR=\"$(elf-objpfx)\"
 $(objpfx)multiload.out: $(objpfx)testobj1.so
 
 $(objpfx)origtest: $(libdl)
+LDFLAGS-origtest = -rdynamic
 $(objpfx)origtest.out: $(objpfx)testobj1.so
 
 ifeq ($(have-thread-library),yes)
