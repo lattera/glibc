@@ -389,6 +389,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
       wait_node.abandoned = 0;
       wait_node.next = (struct wait_node *) lock->__status;
       wait_node.thr = self;
+      lock->__status = (long) &wait_node;
       suspend_needed = 1;
     }
 
@@ -434,7 +435,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
 int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 			    pthread_descr self, const struct timespec *abstime)
 {
-  long oldstatus;
+  long oldstatus = 0;
 #if defined HAS_COMPARE_AND_SWAP
   long newstatus;
 #endif
@@ -462,11 +463,12 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
       p_wait_node->abandoned = 0;
       p_wait_node->next = (struct wait_node *) lock->__status;
       p_wait_node->thr = self;
+      lock->__status = (long) p_wait_node;
+      oldstatus = 1; /* force suspend */
     }
 
     WRITE_MEMORY_BARRIER();
     lock->__spinlock = 0;
-    oldstatus = 1; /* force suspend */
     goto suspend;
   }
 #endif
