@@ -563,6 +563,7 @@ __stpcpy_small (char *__dest,
     unsigned int __ui;
     unsigned short int __usi;
     unsigned char __uc;
+    char __c;
   } *__u = (void *) __dest;
   switch (__srclen)
     {
@@ -607,7 +608,7 @@ __stpcpy_small (char *__dest,
       __u = __extension__ ((void *) __u + 3);
       break;
     }
-  return &__u->__uc;
+  return &__u->__c;
 }
 #  else
 #  define __stpcpy_args(src) \

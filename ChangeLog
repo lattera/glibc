@@ -1,3 +1,7 @@
+1999-10-14  Cristian Gafton  <gafton@redhat.com>
+
+	* string/bits/string2.h (__stpcpy_small): Make -pedantic shut up.
+
 1999-10-14  Andreas Jaeger  <aj@suse.de>
 
 	* resolv/inet_addr.c (inet_aton): Fix last patch.  The little
