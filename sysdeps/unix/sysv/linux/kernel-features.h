@@ -365,9 +365,12 @@
 # define __ASSUME_UTIMES	1
 #endif
 
+// XXX Disabled for now since the semantics we want is not achieved.
+#if 0
 /* The CLONE_STOPPED flag was introduced in the 2.6.0-test1 series.  */
 #if __LINUX_KERNEL_VERSION >= 132609
 # define __ASSUME_CLONE_STOPPED	1
+#endif
 #endif
 
 /* The fixed version of the posix_fadvise64 syscall appeared in

@@ -1,5 +1,15 @@
 2004-09-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/kernel-features.h: Don't define
+	__ASSUME_CLONE_STOPPED.
+
+2004-09-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__REDIRECT_NTH): Change order of __THROW and
+	__asm__ for C++.  [BZ #377]
+
+2004-09-10  Ulrich Drepper  <drepper@redhat.com>
+
 	* nscd/nscd_stat.c: Improve output by also printing .shared and
 	.persistent.
 
