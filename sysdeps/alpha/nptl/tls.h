@@ -57,93 +57,67 @@ typedef union dtv
 /* Get the thread descriptor definition.  */
 # include <nptl/descr.h>
 
-/* This layout is actually wholly private and not affected by the ABI.
-   Nor does it overlap the pthread data structure, so we need nothing
-   extra here at all.  */
 typedef struct
 {
   dtv_t *dtv;
+  void *private;
 } tcbhead_t;
 
 /* This is the size of the initial TCB.  */
-# define TLS_INIT_TCB_SIZE	0
+# define TLS_INIT_TCB_SIZE	sizeof (tcbhead_t)
 
 /* Alignment requirements for the initial TCB.  */
-# define TLS_INIT_TCB_ALIGN	__alignof__ (struct pthread)
+# define TLS_INIT_TCB_ALIGN	16
 
 /* This is the size of the TCB.  */
-# define TLS_TCB_SIZE		0
-
-/* Alignment requirements for the TCB.  */
-# define TLS_TCB_ALIGN		__alignof__ (struct pthread)
+# define TLS_TCB_SIZE		sizeof (tcbhead_t)
 
 /* This is the size we need before TCB.  */
-# define TLS_PRE_TCB_SIZE \
-  (sizeof (struct pthread)						      \
-   + ((sizeof (tcbhead_t) + TLS_TCB_ALIGN - 1) & ~(TLS_TCB_ALIGN - 1)))
+# define TLS_PRE_TCB_SIZE	sizeof (struct pthread)
 
-/* The following assumes that TP (R2 or R13) points to the end of the
-   TCB + 0x7000 (per the ABI).  This implies that TCB address is
-   TP - 0x7000.  As we define TLS_DTV_AT_TP we can
-   assume that the pthread struct is allocated immediately ahead of the
-   TCB.  This implies that the pthread_descr address is
-   TP - (TLS_PRE_TCB_SIZE + 0x7000).  */
-/* ??? PPC uses offset 0x7000; seems like a good idea for alpha too,
-   but binutils not yet changed to match.  */
-# define TLS_TCB_OFFSET	0
+/* Alignment requirements for the TCB.  */
+# define TLS_TCB_ALIGN		16
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  ((tcbhead_t *) (tcbp))[-1].dtv = dtvp + 1
+  (((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1)
 
 /* Install new dtv for current thread.  */
-# define INSTALL_NEW_DTV(dtv) (THREAD_DTV() = (dtv))
+# define INSTALL_NEW_DTV(dtv) \
+  (THREAD_DTV() = (dtv))
 
 /* Return dtv of given thread descriptor.  */
-# define GET_DTV(tcbp)	(((tcbhead_t *) (tcbp))[-1].dtv)
+# define GET_DTV(tcbp) \
+  (((tcbhead_t *) (tcbp))->dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
    operation can cause a failure 'errno' must not be touched.  */
 # define TLS_INIT_TP(tcbp, secondcall) \
-  (__builtin_set_thread_pointer ((void *) (tcbp) + TLS_TCB_OFFSET), NULL)
+  (__builtin_set_thread_pointer ((void *)(tcbp)), NULL)
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
-     (((tcbhead_t *) (__builtin_thread_pointer () - TLS_TCB_OFFSET))[-1].dtv)
+  (((tcbhead_t *) __builtin_thread_pointer ())->dtv)
 
 /* Return the thread descriptor for the current thread.  */
 # define THREAD_SELF \
-    ((struct pthread *) (__builtin_thread_pointer () \
-			 - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE))
+ ((struct pthread *)__builtin_thread_pointer () - 1)
 
 /* Magic for libthread_db to know how to do THREAD_SELF.  */
 # define DB_THREAD_SELF \
-  REGISTER (64, 64, 32 * 8, - TLS_TCB_OFFSET - TLS_PRE_TCB_SIZE)
+  REGISTER (64, 64, 32 * 8, -sizeof (struct pthread))
 
-/* Identifier for the current thread.  THREAD_SELF is usable but
-   sometimes more expensive than necessary as in this case.  */
-# define THREAD_ID (__builtin_thread_pointer ())
-
-/* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) ((void)(descr), (THREAD_SELF)->member)
-
-/* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) \
-    ((void)(descr), (THREAD_SELF)->member[idx])
-
-/* Set member of the thread descriptor directly.  */
-# define THREAD_SETMEM(descr, member, value) \
-    ((void)(descr), (THREAD_SELF)->member = (value))
-
-/* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
-# define THREAD_SETMEM_NC(descr, member, idx, value) \
-    ((void)(descr), (THREAD_SELF)->member[idx] = (value))
-
-/* l_tls_offset == 0 is perfectly valid on PPC, so we have to use some
-   different value to mean unset l_tls_offset.  */
-# define NO_TLS_OFFSET		-1
+/* Access to data in the thread descriptor is easy.  */
+#define THREAD_GETMEM(descr, member) \
+  descr->member
+#define THREAD_GETMEM_NC(descr, member, idx) \
+  descr->member[idx]
+#define THREAD_SETMEM(descr, member, value) \
+  descr->member = (value)
+#define THREAD_SETMEM_NC(descr, member, idx, value) \
+  descr->member[idx] = (value)
 
 #endif /* __ASSEMBLER__ */
 
