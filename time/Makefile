@@ -119,7 +119,8 @@ target-zone-flavor = $(filter /posix /right, \
 
 ifdef localtime
 $(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
-	$(zic-cmd) -l $(localtime)
+	if test -r $@; then echo Site timezone NOT reset to Factory.; else \
+	ln -s -f $< $@; fi
 endif
 ifdef posixrules
 $(installed-posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic

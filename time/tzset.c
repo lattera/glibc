@@ -99,45 +99,41 @@ DEFUN_VOID(__tzset)
   /* Examine the TZ environment variable.  */
   tz = getenv ("TZ");
 
-  if (tz != NULL)
-    {
-      /* A leading colon means "implementation defined syntax".
-	 We ignore the colon and always use the same algorithm:
-	 try a data file, and if none exists parse the 1003.1 syntax.  */
-      if (*tz == ':')
-	++tz;
+  /* A leading colon means "implementation defined syntax".
+     We ignore the colon and always use the same algorithm:
+     try a data file, and if none exists parse the 1003.1 syntax.  */
+  if (tz && *tz == ':')
+    ++tz;
 
-      __tzfile_read (tz);
-      if (__use_tzfile)
-	{
-	  __tzset_run = 1;
-	  return;
-	}
+  /* Try to read a data file.  */
+  __tzfile_read (tz);
+  if (__use_tzfile)
+    {
+      __tzset_run = 1;
+      return;
     }
+
+  /* No data file found.  Default to UTC if nothing specified.  */
 
   if (tz == NULL || *tz == '\0')
     {
-      __tzfile_read((char *) NULL);
-      if (!__use_tzfile)
-	{
-	  const char UTC[] = "UTC";
-	  size_t len = sizeof UTC;
-	  tz_rules[0].name = (char *) malloc(len);
-	  if (tz_rules[0].name == NULL)
-	    return;
-	  tz_rules[1].name = (char *) malloc(len);
-	  if (tz_rules[1].name == NULL)
-	    return;
-	  memcpy ((PTR) tz_rules[0].name, UTC, len);
-	  memcpy ((PTR) tz_rules[1].name, UTC, len);
-	  tz_rules[0].type = tz_rules[1].type = J0;
-	  tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
-	  tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
-	  tz_rules[0].secs = tz_rules[1].secs = 0;
-	  tz_rules[0].offset = tz_rules[1].offset = 0L;
-	  tz_rules[0].change = tz_rules[1].change = (time_t) -1;
-	  tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
-	}
+      static const char UTC[] = "UTC";
+      size_t len = sizeof UTC;
+      tz_rules[0].name = (char *) malloc(len);
+      if (tz_rules[0].name == NULL)
+	return;
+      tz_rules[1].name = (char *) malloc(len);
+      if (tz_rules[1].name == NULL)
+	return;
+      memcpy ((PTR) tz_rules[0].name, UTC, len);
+      memcpy ((PTR) tz_rules[1].name, UTC, len);
+      tz_rules[0].type = tz_rules[1].type = J0;
+      tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
+      tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
+      tz_rules[0].secs = tz_rules[1].secs = 0;
+      tz_rules[0].offset = tz_rules[1].offset = 0L;
+      tz_rules[0].change = tz_rules[1].change = (time_t) -1;
+      tz_rules[0].computed_for = tz_rules[1].computed_for = 0;
       __tzset_run = 1;
       return;
     }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -103,8 +103,12 @@ DEFUN(__tzfile_read, (file), CONST char *file)
     free((PTR) leaps);
   leaps = NULL;
 
-  if (file == NULL || *file == '\0')
+  if (file == NULL)
+    /* No user specification; use the site-wide default.  */
     file = TZDEFAULT;
+  else if (*file == '\0')
+    /* User specified the empty string; use UTC explicitly.  */
+    file = "Universal";
 
   if (*file != '/')
     {
@@ -224,7 +228,7 @@ DEFUN(__tzfile_read, (file), CONST char *file)
   (void) fclose(f);
 
   compute_tzname_max (chars);
-  
+
   __use_tzfile = 1;
   return;
 

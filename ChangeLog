@@ -1,3 +1,12 @@
+Sun Jun 16 00:40:20 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/Makefile ($(installed-localtime-file)): If target exists, do
+	nothing but print a message; if not, make it an absolute symlink.
+
+	* time/tzset.c (__tzset): After stripping leading :, call
+	__tzfile_read on TZ even if it's empty or null.
+	* time/tzfile.c (__tzfile_read): Use "Universal" if passed "".
+
 Sat Jun 15 18:13:43 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* hurd/Makefile (routines): Add get-host, set-host.
