@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -36,14 +36,15 @@ int __bsd_getpt (void);
 
 /* Open a master pseudo terminal and return its file descriptor.  */
 int
-__getpt (void)
+__posix_openpt (oflag)
+     int oflag;
 {
   static int have_no_dev_ptmx;
   int fd;
 
   if (!have_no_dev_ptmx)
     {
-      fd = __open (_PATH_DEVPTMX, O_RDWR);
+      fd = __open (_PATH_DEVPTMX, oflag);
       if (fd != -1)
 	{
 	  struct statfs fsbuf;
@@ -54,7 +55,7 @@ __getpt (void)
 	  if (devpts_mounted
 	      || (__statfs (_PATH_DEVPTS, &fsbuf) == 0
 		  && fsbuf.f_type == DEVPTS_SUPER_MAGIC)
-	      || (__statfs (_PATH_DEV, &fsbuf) == 0	
+	      || (__statfs (_PATH_DEV, &fsbuf) == 0
 		  && fsbuf.f_type == DEVFS_SUPER_MAGIC))
 	    {
 	      /* Everything is ok.  */
@@ -76,11 +77,24 @@ __getpt (void)
 	}
     }
 
-  return __bsd_getpt ();
+  return -1;
 }
+weak_alias (__posix_openpt, posix_openpt)
+
+
+int
+__getpt (void)
+{
+  int fd = __posix_openpt (O_RDWR);
+  if (fd == -1)
+    fd = __bsd_getpt ();
+  return fd;
+}
+
 
 #define PTYNAME1 "pqrstuvwxyzabcde";
 #define PTYNAME2 "0123456789abcdef";
 
 #define __getpt __bsd_getpt
+#define HAVE_POSIX_OPENPT
 #include <sysdeps/unix/bsd/getpt.c>

@@ -36,6 +36,10 @@ libc {
     # g*
     getutmpx; getutmp;
   }
+  GLIBC_2.2.1 {
+    # p*
+    posix_openpt;
+  }
 }
 
 libutil {

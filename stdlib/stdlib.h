@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -812,12 +812,19 @@ extern int getsubopt (char **__restrict __optionp,
 
 
 #ifdef __USE_XOPEN
-
 /* Setup DES tables according KEY.  */
 extern void setkey (__const char *__key) __THROW;
+#endif
+
 
 /* X/Open pseudo terminal handling.  */
 
+#ifdef __USE_XOPEN2K
+/* Return a master pseudo-terminal handle.  */
+extern int posix_openpt (int __oflag) __THROW;
+#endif
+
+#ifdef __USE_XOPEN
 /* The next four functions all take a master pseudo-tty fd and
    perform an operation on the associated slave:  */
 

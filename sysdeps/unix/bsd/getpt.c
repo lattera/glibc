@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -77,3 +77,18 @@ __getpt (void)
 
 #undef __getpt
 weak_alias (__getpt, getpt)
+
+#ifndef HAVE_POSIX_OPENPT
+/* We cannot define posix_openpt in general for BSD systems.  */
+int
+__posix_openpt (oflag)
+     int oflag;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+weak_alias (__posix_openpt, posix_openpt)
+
+stub_warning (posix_openpt)
+# include <stub-tag.h>
+#endif
