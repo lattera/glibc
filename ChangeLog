@@ -1,3 +1,9 @@
+2004-02-29  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Autoconf 2.53 is required.
+	(Supported Configurations): Add x86_64-*-linux.
+	* INSTALL: Regenerated.
+
 2004-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/memcmp.S: Move table to .rodata.  Patch by HJ Lu.

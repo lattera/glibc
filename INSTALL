@@ -319,8 +319,8 @@ build the GNU C library:
    * GNU `binutils' 2.13 or later
 
      You must use GNU `binutils' (as and ld) to build the GNU C library.
-     No other assembler and linker has the necessary functionality in
-     the moment.
+     No other assembler or linker has the necessary functionality at the
+     moment.
 
    * GNU `texinfo' 3.12f
 
@@ -353,7 +353,7 @@ build the GNU C library:
 
 If you change any of the `configure.in' files you will also need
 
-   * GNU `autoconf' 2.12 or higher
+   * GNU `autoconf' 2.53 or higher
 
 and if you change any of the message translation files you will need
 
@@ -382,6 +382,7 @@ following patterns:
      s390x-*-linux
      sparc-*-linux
      sparc64-*-linux
+     x86_64-*-linux
 
    Former releases of this library (version 2.1 and/or 2.0) used to run
 on the following configurations:
@@ -448,11 +449,22 @@ kernel you can get your hands on.
 
    An alternate tactic is to unpack the 2.2 kernel and run `make
 config' as above; then, rename or delete `/usr/include', create a new
-`/usr/include', and make the usual symbolic links of
-`/usr/include/linux' and `/usr/include/asm' into the 2.2 kernel
-sources.  You can then configure glibc with no special options.  This
-tactic is recommended if you are upgrading from libc5, since you need
-to get rid of the old header files anyway.
+`/usr/include', and make symbolic links of `/usr/include/linux' and
+`/usr/include/asm' into the kernel sources.  You can then configure
+glibc with no special options.  This tactic is recommended if you are
+upgrading from libc5, since you need to get rid of the old header files
+anyway.
+
+   After installing GNU libc, you may need to remove or rename
+`/usr/include/linux' and `/usr/include/asm', and replace them with
+copies of `include/linux' and `include/asm-$ARCHITECTURE' taken from
+the Linux source package which supplied kernel headers for building the
+library.  ARCHITECTURE will be the machine architecture for which the
+library was built, such as `i386' or `alpha'.  You do not need to do
+this if you did not specify an alternate kernel header source using
+`--with-headers'.  The intent here is that these directories should be
+copies of, *not* symlinks to, the kernel headers used to build the
+library.
 
    Note that `/usr/include/net' and `/usr/include/scsi' should *not* be
 symlinks into the kernel sources.  GNU libc provides its own versions
