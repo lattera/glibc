@@ -1,5 +1,7 @@
 2001-08-07  Andreas Jaeger  <aj@suse.de>
 
+	* stdlib/tst-strtod.c: Disable HUGE_VAL tests for older GCCs.
+
 	* iconv/gconv_charset.h (upstr): Add unused attribute to avoid
 	warning.
 

@@ -65,9 +65,12 @@ static const struct ltest tests[] =
     { "0x0.8p-1022",
       1.11253692925360069154511635866620203210960799023116591527666e-308,
       '\0', 0 },
+#if __GNUC_PREREQ(2,96)
+    /* For older GCC release HUGE_VAL is not a constant.  */
     { "Inf", HUGE_VAL, '\0', 0 },
     { "-Inf", -HUGE_VAL, '\0', 0 },
     { "+InFiNiTy", HUGE_VAL, '\0', 0 },
+#endif
     { NULL, 0, '\0', 0 }
   };
 
