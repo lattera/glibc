@@ -45,7 +45,7 @@ __mpn_add_n:
 	bdz	Lend		# If done, skip loop
 Loop:	lu	8,4(4)		# load s1 limb and update s1_ptr
 	lu	0,4(5)		# load s2 limb and update s2_ptr
-	stu	7,4(3)		# store previous limb in load latecny slot
+	stu	7,4(3)		# store previous limb in load latency slot
 	ae	7,0,8		# add new limbs with cy, set cy
 	bdn	Loop		# decrement CTR and loop back
 Lend:	st	7,4(3)		# store ultimate result limb
