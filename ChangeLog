@@ -1,3 +1,8 @@
+2000-12-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf_fp.c (__printf_fp): Handle decimal point in
+	x.5 rounding correctly.
+
 2000-12-06  Mark Kettenis  <kettenis@gnu.org>
 
 	* stdio-common/perror.c (perror): Conditionalize code dealing with

@@ -923,7 +923,9 @@ __printf_fp (FILE *fp,
       {
 	wchar_t *wtp = wcp;
 
-	if (digit == L'5' && (*(wcp - 1) & 1) == 0)
+	if (digit == L'5'
+	    && ((*(wcp - 1) != decimalwc && (*(wcp - 1) & 1) == 0)
+		|| ((*(wcp - 1) == decimalwc && (*(wcp - 2) & 1) == 0))))
 	  {
 	    /* This is the critical case.	 */
 	    if (fracsize == 1 && frac[0] == 0)
