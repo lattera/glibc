@@ -101,6 +101,9 @@ ELF_PREFERRED_ADDRESS_DATA;
 # define ELF_FIXED_ADDRESS(loader, mapstart) ((void) 0)
 #endif
 
+
+extern int __stack_prot attribute_relro attribute_hidden;
+
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
    cases the program header follows the ELF header directly.  If this
@@ -1302,6 +1305,35 @@ cannot allocate TLS data structures for initial thread");
       goto call_lose;
     }
 
+  if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
+    {
+      /* The stack is presently not executable, but this module
+	 requires that it be executable.  We must change the
+	 protection of the variable which contains the flags used in
+	 the mprotect calls.  */
+#ifdef HAVE_Z_RELRO
+      if (mode & __RTLD_DLOPEN)
+	{
+	  uintptr_t p = ((uintptr_t) &__stack_prot) & ~(GLRO(dl_pagesize) - 1);
+	  size_t s = (uintptr_t) &__stack_prot - p + sizeof (int);
+
+	  __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
+	  __stack_prot |= PROT_EXEC;
+	  __mprotect ((void *) p, s, PROT_READ);
+	}
+      else
+#endif
+	__stack_prot |= PROT_EXEC;
+
+      errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
+      if (errval)
+	{
+	  errstring = N_("\
+cannot enable executable stack as shared object requires");
+	  goto call_lose;
+	}
+    }
+
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
 
@@ -1343,19 +1375,6 @@ cannot allocate TLS data structures for initial thread");
   /* Finally the file information.  */
   l->l_dev = st.st_dev;
   l->l_ino = st.st_ino;
-
-  if (__builtin_expect ((stack_flags &~ GL(dl_stack_flags)) & PF_X, 0))
-    {
-      /* The stack is presently not executable, but this module
-	 requires that it be executable.  */
-      errval = (*GL(dl_make_stack_executable_hook)) (stack_endp);
-      if (errval)
-	{
-	  errstring = N_("\
-cannot enable executable stack as shared object requires");
-	  goto call_lose;
-	}
-    }
 
   /* When we profile the SONAME might be needed for something else but
      loading.  Add it right away.  */

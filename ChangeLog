@@ -1,5 +1,10 @@
 2004-09-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unisx/sysv/linux/dl-execstack.c: Get protection flag
+	from memory.
+	* elf/dl-load.c (_dl_map_object_from_fd): Add PROT_EXEC flag to
+	__stack_flags.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Do not use
 	gethostbyname3_r if we are not looking for the canonical name.
 

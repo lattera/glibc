@@ -28,6 +28,14 @@
 #include "kernel-features.h"
 
 
+int __stack_prot attribute_hidden attribute_relro
+#if _STACK_GROWS_DOWN
+     = PROT_READ|PROT_WRITE|PROT_GROWSDOWN;
+#elif _STACK_GROWS_UP
+     = PROT_READ|PROT_WRITE|PROT_GROWSUP;
+#endif
+
+
 int
 internal_function
 _dl_make_stack_executable (void **stack_endp)
@@ -51,8 +59,7 @@ _dl_make_stack_executable (void **stack_endp)
 #  endif
     {
       if (__builtin_expect (__mprotect ((void *) page, GLRO(dl_pagesize),
-					PROT_READ|PROT_WRITE|PROT_EXEC
-					|PROT_GROWSDOWN) == 0, 1))
+					__stack_prot) == 0, 1))
 	goto return_success;
 #  if __ASSUME_PROT_GROWSUPDOWN == 0
       if (errno == EINVAL)
@@ -76,7 +83,7 @@ _dl_make_stack_executable (void **stack_endp)
   while (1)
     {
       if (__mprotect ((void *) page, size,
-		      PROT_READ|PROT_WRITE|PROT_EXEC) == 0)
+		      __stack_prot & ~PROT_GROWSDOWN) == 0)
 	/* We got this chunk changed; loop to do another chunk below.  */
 	page -= size;
       else
