@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>
    and Doug Lea <dl@cs.oswego.edu>, 2001.
@@ -1469,11 +1469,11 @@ typedef struct malloc_chunk* mchunkptr;
 
 #if __STD_C
 
-static Void_t*  _int_malloc(mstate, size_t);
-static void     _int_free(mstate, Void_t*);
-static Void_t*  _int_realloc(mstate, Void_t*, size_t);
-static Void_t*  _int_memalign(mstate, size_t, size_t);
-static Void_t*  _int_valloc(mstate, size_t);
+Void_t*         _int_malloc(mstate, size_t);
+void            _int_free(mstate, Void_t*);
+Void_t*         _int_realloc(mstate, Void_t*, size_t);
+Void_t*         _int_memalign(mstate, size_t, size_t);
+Void_t*         _int_valloc(mstate, size_t);
 static Void_t*  _int_pvalloc(mstate, size_t);
 /*static Void_t*  cALLOc(size_t, size_t);*/
 static Void_t** _int_icalloc(mstate, size_t, size_t, Void_t**);
@@ -3725,7 +3725,7 @@ public_mALLOPt(int p, int v)
   ------------------------------ malloc ------------------------------
 */
 
-static Void_t*
+Void_t*
 _int_malloc(mstate av, size_t bytes)
 {
   INTERNAL_SIZE_T nb;               /* normalized request size */
@@ -4109,7 +4109,7 @@ _int_malloc(mstate av, size_t bytes)
   ------------------------------ free ------------------------------
 */
 
-static void
+void
 _int_free(mstate av, Void_t* mem)
 {
   mchunkptr       p;           /* chunk corresponding to mem */
@@ -4383,7 +4383,7 @@ static void malloc_consolidate(av) mstate av;
   ------------------------------ realloc ------------------------------
 */
 
-static Void_t*
+Void_t*
 _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
 {
   INTERNAL_SIZE_T  nb;              /* padded request size */
@@ -4608,7 +4608,7 @@ _int_realloc(mstate av, Void_t* oldmem, size_t bytes)
   ------------------------------ memalign ------------------------------
 */
 
-static Void_t*
+Void_t*
 _int_memalign(mstate av, size_t alignment, size_t bytes)
 {
   INTERNAL_SIZE_T nb;             /* padded  request size */
@@ -4774,7 +4774,7 @@ Void_t* cALLOc(n_elements, elem_size) size_t n_elements; size_t elem_size;
   ------------------------- independent_calloc -------------------------
 */
 
-static Void_t**
+Void_t**
 #if __STD_C
 _int_icalloc(mstate av, size_t n_elements, size_t elem_size, Void_t* chunks[])
 #else
@@ -4791,7 +4791,7 @@ mstate av; size_t n_elements; size_t elem_size; Void_t* chunks[];
   ------------------------- independent_comalloc -------------------------
 */
 
-static Void_t**
+Void_t**
 #if __STD_C
 _int_icomalloc(mstate av, size_t n_elements, size_t sizes[], Void_t* chunks[])
 #else
@@ -4939,7 +4939,7 @@ mstate av; size_t n_elements; size_t* sizes; int opts; Void_t* chunks[];
   ------------------------------ valloc ------------------------------
 */
 
-static Void_t*
+Void_t*
 #if __STD_C
 _int_valloc(mstate av, size_t bytes)
 #else
@@ -4956,7 +4956,7 @@ _int_valloc(av, bytes) mstate av; size_t bytes;
 */
 
 
-static Void_t*
+Void_t*
 #if __STD_C
 _int_pvalloc(mstate av, size_t bytes)
 #else

@@ -1,4 +1,5 @@
-# Copyright (C) 1993,94,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
+# Copyright (C) 1993,94,95,96,97,98,99,2000,2001,2002, 2003
+#	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -155,6 +156,8 @@ $(link-rpcuserlibs): %-link.so: %_pic.a
 		-nostdlib -o $@ \
 		-Wl,-soname=$(*F).so$($(*F).so-version) \
 		$(build-shlib-objlist)
+libmachuser-link.so-no-z-defs = yes
+libhurduser-link.so-no-z-defs = yes
 
 # And get them into the libc.so ldscript.
 $(inst_libdir)/libc.so: $(rpcuserlibs)
@@ -163,7 +166,7 @@ $(inst_libdir)/libc.so: $(rpcuserlibs)
 # linker, too.  It must be self-contained, so we link the needed PIC
 # objects directly into the shared object.
 ifeq (elf,$(subdir))
-$(objpfx)librtld.os: $(rpcuserlibs:.so=_pic.a)
+$(objpfx)librtld.map: $(rpcuserlibs:.so=_pic.a)
 
 CFLAGS-dl-load.c = -DEXTERNAL_MAP_FROM_FD
 endif

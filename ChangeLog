@@ -1,3 +1,15 @@
+2003-01-12  Roland McGrath  <roland@redhat.com>
+
+	* include/fcntl.h: Declare __libc_creat.
+
+	* sysdeps/mach/hurd/Makefile (libmachuser-link.so-no-z-defs,
+	libhurduser-link.so-no-z-defs): New variables.
+
+	* malloc/malloc.c: Revert last change.
+	* malloc/malloc.h (_int_*): Move these decls to ...
+	* include/malloc.h: ... here.  Add attribute_hidden.
+	(_int_valloc): Declare it too.
+
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c (_dl_close): Type typo, must be == not = in
