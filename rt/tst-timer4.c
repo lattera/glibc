@@ -66,7 +66,7 @@ thr2 (union sigval sigval)
   if (ret)
     {
       errno = ret;
-      printf ("pthread_getattr_np failed: %m\n");
+      printf ("*** pthread_getattr_np failed: %m\n");
       err = 1;
     }
   else
@@ -75,12 +75,12 @@ thr2 (union sigval sigval)
       if (ret)
         {
           errno = ret;
-          printf ("pthread_attr_getguardsize failed: %m\n");
+          printf ("*** pthread_attr_getguardsize failed: %m\n");
           err = 1;
         }
       if (pthread_attr_destroy (&nattr) != 0)
         {
-          puts ("pthread_attr_destroy failed");
+          puts ("*** pthread_attr_destroy failed");
           err = 1;
         }
     }
@@ -163,7 +163,8 @@ check_ts (const char *name, const struct timespec *start,
   if (end->tv_sec < ts.tv_sec
       || (end->tv_sec == ts.tv_sec && end->tv_nsec < ts.tv_nsec))
     {
-      printf ("timer %s invoked too soon: %ld.%09ld instead of expected %ld.%09ld\n",
+      printf ("\
+*** timer %s invoked too soon: %ld.%09ld instead of expected %ld.%09ld\n",
 	      name, (long) end->tv_sec, end->tv_nsec,
 	      (long) ts.tv_sec, ts.tv_nsec);
       return 1;
@@ -182,7 +183,7 @@ do_test (void)
   struct timespec ts;
   if (clock_gettime (CLOCK_REALTIME, &ts) != 0)
     {
-      printf ("clock_gettime failed: %m\n");
+      printf ("*** clock_gettime failed: %m\n");
       result = 1;
     }
   else
@@ -191,7 +192,7 @@ do_test (void)
 
   if (clock_getres (CLOCK_REALTIME, &ts) != 0)
     {
-      printf ("clock_getres failed: %m\n");
+      printf ("*** clock_getres failed: %m\n");
       result = 1;
     }
   else
@@ -203,7 +204,7 @@ do_test (void)
   ev.sigev_notify = SIGEV_NONE;
   if (timer_create (CLOCK_REALTIME, &ev, &timer_none) != 0)
     {
-      printf ("timer_create for timer_none failed: %m\n");
+      printf ("*** timer_create for timer_none failed: %m\n");
       result = 1;
     }
 
@@ -220,7 +221,7 @@ do_test (void)
   ev.sigev_value.sival_ptr = &ev;
   if (timer_create (CLOCK_REALTIME, &ev, &timer_sig1) != 0)
     {
-      printf ("timer_create for timer_sig1 failed: %m\n");
+      printf ("*** timer_create for timer_sig1 failed: %m\n");
       result = 1;
     }
 
@@ -230,7 +231,7 @@ do_test (void)
   ev.sigev_value.sival_int = 163;
   if (timer_create (CLOCK_REALTIME, &ev, &timer_sig2) != 0)
     {
-      printf ("timer_create for timer_sig2 failed: %m\n");
+      printf ("*** timer_create for timer_sig2 failed: %m\n");
       result = 1;
     }
 
@@ -241,7 +242,7 @@ do_test (void)
   ev.sigev_value.sival_ptr = &ev;
   if (timer_create (CLOCK_REALTIME, &ev, &timer_thr1) != 0)
     {
-      printf ("timer_create for timer_thr1 failed: %m\n");
+      printf ("*** timer_create for timer_thr1 failed: %m\n");
       result = 1;
     }
 
@@ -249,7 +250,7 @@ do_test (void)
   if (pthread_attr_init (&nattr)
       || pthread_attr_setguardsize (&nattr, 0))
     {
-      puts ("pthread_attr_t setup failed");
+      puts ("*** pthread_attr_t setup failed");
       result = 1;
     }
 
@@ -260,7 +261,7 @@ do_test (void)
   ev.sigev_value.sival_int = 111;
   if (timer_create (CLOCK_REALTIME, &ev, &timer_thr2) != 0)
     {
-      printf ("timer_create for timer_thr2 failed: %m\n");
+      printf ("*** timer_create for timer_thr2 failed: %m\n");
       result = 1;
     }
 
@@ -268,9 +269,9 @@ do_test (void)
   if (ret != 0)
     {
       if (ret == -1)
-	printf ("timer_getoverrun failed: %m\n");
+	printf ("*** timer_getoverrun failed: %m\n");
       else
-	printf ("timer_getoverrun returned %d != 0\n", ret);
+	printf ("*** timer_getoverrun returned %d != 0\n", ret);
       result = 1;
     }
 
@@ -281,12 +282,12 @@ do_test (void)
   it.it_interval.tv_nsec = 0;
   if (timer_settime (timer_sig1, 0, &it, NULL) == 0)
     {
-      puts ("timer_settime with negative tv_nsec unexpectedly succeeded");
+      puts ("*** timer_settime with negative tv_nsec unexpectedly succeeded");
       result = 1;
     }
   else if (errno != EINVAL)
     {
-      printf ("timer_settime with negative tv_nsec did not fail with "
+      printf ("*** timer_settime with negative tv_nsec did not fail with "
 	      "EINVAL: %m\n");
       result = 1;
     }
@@ -295,21 +296,24 @@ do_test (void)
   it.it_interval.tv_nsec = 1000000000;
   if (timer_settime (timer_sig2, 0, &it, NULL) == 0)
     {
-      puts ("timer_settime with tv_nsec 1000000000 unexpectedly succeeded");
+      puts ("\
+*** timer_settime with tv_nsec 1000000000 unexpectedly succeeded");
       result = 1;
     }
   else if (errno != EINVAL)
     {
-      printf ("timer_settime with tv_nsec 1000000000 did not fail with "
+      printf ("*** timer_settime with tv_nsec 1000000000 did not fail with "
 	      "EINVAL: %m\n");
       result = 1;
     }
 
+#if 0
   it.it_value.tv_nsec = 0;
   it.it_interval.tv_nsec = -26;
   if (timer_settime (timer_thr1, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime with it_value 0 it_interval invalid failed: %m\n");
+      printf ("\
+!!! timer_settime with it_value 0 it_interval invalid failed: %m\n");
       /* FIXME: is this mandated by POSIX?
       result = 1; */
     }
@@ -317,15 +321,17 @@ do_test (void)
   it.it_interval.tv_nsec = 3000000000;
   if (timer_settime (timer_thr2, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime with it_value 0 it_interval invalid failed: %m\n");
+      printf ("\
+!!! timer_settime with it_value 0 it_interval invalid failed: %m\n");
       /* FIXME: is this mandated by POSIX?
       result = 1; */
     }
+#endif
 
   struct timespec startts;
   if (clock_gettime (CLOCK_REALTIME, &startts) != 0)
     {
-      printf ("clock_gettime failed: %m\n");
+      printf ("*** clock_gettime failed: %m\n");
       result = 1;
     }
 
@@ -333,35 +339,35 @@ do_test (void)
   it.it_interval.tv_nsec = 0;
   if (timer_settime (timer_none, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_none failed: %m\n");
+      printf ("*** timer_settime timer_none failed: %m\n");
       result = 1;
     }
 
   it.it_value.tv_nsec = 200000000;
   if (timer_settime (timer_thr1, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_thr1 failed: %m\n");
+      printf ("*** timer_settime timer_thr1 failed: %m\n");
       result = 1;
     }
 
   it.it_value.tv_nsec = 300000000;
   if (timer_settime (timer_thr2, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_thr2 failed: %m\n");
+      printf ("*** timer_settime timer_thr2 failed: %m\n");
       result = 1;
     }
 
   it.it_value.tv_nsec = 400000000;
   if (timer_settime (timer_sig1, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_sig1 failed: %m\n");
+      printf ("*** timer_settime timer_sig1 failed: %m\n");
       result = 1;
     }
 
   it.it_value.tv_nsec = 500000000;
   if (TEMP_FAILURE_RETRY (timer_settime (timer_sig2, 0, &it, NULL)) != 0)
     {
-      printf ("timer_settime timer_sig2 failed: %m\n");
+      printf ("*** timer_settime timer_sig2 failed: %m\n");
       result = 1;
     }
 
@@ -381,17 +387,18 @@ do_test (void)
 
   if (thr1_cnt != 1)
     {
-      printf ("thr1 not called exactly once, but %d times\n", thr1_cnt);
+      printf ("*** thr1 not called exactly once, but %d times\n", thr1_cnt);
       result = 1;
     }
   else if (thr1_err)
     {
-      puts ("an error occurred in thr1");
+      puts ("*** an error occurred in thr1");
       result = 1;
     }
   else if (thr1_sigval.sival_ptr != &ev)
     {
-      printf ("thr1_sigval.sival_ptr %p != %p\n", thr1_sigval.sival_ptr, &ev);
+      printf ("*** thr1_sigval.sival_ptr %p != %p\n",
+	      thr1_sigval.sival_ptr, &ev);
       result = 1;
     }
   else if (check_ts ("thr1", &startts, &thr1_ts, 200000))
@@ -399,24 +406,24 @@ do_test (void)
 
   if (thr2_cnt != 1)
     {
-      printf ("thr2 not called exactly once, but %d times\n", thr2_cnt);
+      printf ("*** thr2 not called exactly once, but %d times\n", thr2_cnt);
       result = 1;
     }
   else if (thr2_err)
     {
-      puts ("an error occurred in thr2");
+      puts ("*** an error occurred in thr2");
       result = 1;
     }
   else if (thr2_sigval.sival_int != 111)
     {
-      printf ("thr2_sigval.sival_ptr %d != 111\n", thr2_sigval.sival_int);
+      printf ("*** thr2_sigval.sival_ptr %d != 111\n", thr2_sigval.sival_int);
       result = 1;
     }
   else if (check_ts ("thr2", &startts, &thr2_ts, 300000))
     result = 1;
   else if (thr2_guardsize != 0)
     {
-      printf ("thr2 guardsize %zd != 0\n", thr2_guardsize);
+      printf ("*** thr2 guardsize %zd != 0\n", thr2_guardsize);
       result = 1;
     }
 
@@ -424,17 +431,18 @@ do_test (void)
 
   if (sig1_cnt != 1)
     {
-      printf ("sig1 not called exactly once, but %d times\n", sig1_cnt);
+      printf ("*** sig1 not called exactly once, but %d times\n", sig1_cnt);
       result = 1;
     }
   else if (sig1_err)
     {
-      printf ("errors occurred in sig1 handler %x\n", sig1_err);
+      printf ("*** errors occurred in sig1 handler %x\n", sig1_err);
       result = 1;
     }
   else if (sig1_sigval.sival_ptr != &ev)
     {
-      printf ("sig1_sigval.sival_ptr %p != %p\n", sig1_sigval.sival_ptr, &ev);
+      printf ("*** sig1_sigval.sival_ptr %p != %p\n",
+	      sig1_sigval.sival_ptr, &ev);
       result = 1;
     }
   else if (check_ts ("sig1", &startts, &sig1_ts, 400000))
@@ -442,17 +450,17 @@ do_test (void)
 
   if (sig2_cnt != 1)
     {
-      printf ("sig2 not called exactly once, but %d times\n", sig2_cnt);
+      printf ("*** sig2 not called exactly once, but %d times\n", sig2_cnt);
       result = 1;
     }
   else if (sig2_err)
     {
-      printf ("errors occurred in sig2 handler %x\n", sig2_err);
+      printf ("*** errors occurred in sig2 handler %x\n", sig2_err);
       result = 1;
     }
   else if (sig2_sigval.sival_int != 163)
     {
-      printf ("sig2_sigval.sival_ptr %d != 163\n", sig2_sigval.sival_int);
+      printf ("*** sig2_sigval.sival_ptr %d != 163\n", sig2_sigval.sival_int);
       result = 1;
     }
   else if (check_ts ("sig2", &startts, &sig2_ts, 500000))
@@ -460,13 +468,14 @@ do_test (void)
 
   if (timer_gettime (timer_none, &it) != 0)
     {
-      printf ("timer_gettime timer_none failed: %m\n");
+      printf ("*** timer_gettime timer_none failed: %m\n");
       result = 1;
     }
   else if (it.it_value.tv_sec || it.it_value.tv_nsec
 	   || it.it_interval.tv_sec || it.it_interval.tv_nsec)
     {
-      printf ("timer_gettime timer_none returned { %ld.%09ld, %ld.%09ld }\n",
+      printf ("\
+*** timer_gettime timer_none returned { %ld.%09ld, %ld.%09ld }\n",
 	      (long) it.it_value.tv_sec, it.it_value.tv_nsec,
 	      (long) it.it_interval.tv_sec, it.it_interval.tv_nsec);
       result = 1;
@@ -474,7 +483,7 @@ do_test (void)
 
   if (clock_gettime (CLOCK_REALTIME, &startts) != 0)
     {
-      printf ("clock_gettime failed: %m\n");
+      printf ("*** clock_gettime failed: %m\n");
       result = 1;
     }
 
@@ -484,7 +493,7 @@ do_test (void)
   it.it_interval.tv_nsec = 100000000;
   if (timer_settime (timer_none, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_none failed: %m\n");
+      printf ("*** timer_settime timer_none failed: %m\n");
       result = 1;
     }
 
@@ -492,7 +501,7 @@ do_test (void)
   it.it_interval.tv_nsec = 200000000;
   if (timer_settime (timer_thr1, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_thr1 failed: %m\n");
+      printf ("*** timer_settime timer_thr1 failed: %m\n");
       result = 1;
     }
 
@@ -500,7 +509,7 @@ do_test (void)
   it.it_interval.tv_nsec = 300000000;
   if (timer_settime (timer_thr2, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_thr2 failed: %m\n");
+      printf ("*** timer_settime timer_thr2 failed: %m\n");
       result = 1;
     }
 
@@ -508,7 +517,7 @@ do_test (void)
   it.it_interval.tv_nsec = 400000000;
   if (timer_settime (timer_sig1, 0, &it, NULL) != 0)
     {
-      printf ("timer_settime timer_sig1 failed: %m\n");
+      printf ("*** timer_settime timer_sig1 failed: %m\n");
       result = 1;
     }
 
@@ -516,7 +525,7 @@ do_test (void)
   it.it_interval.tv_nsec = 500000000;
   if (TEMP_FAILURE_RETRY (timer_settime (timer_sig2, 0, &it, NULL)) != 0)
     {
-      printf ("timer_settime timer_sig2 failed: %m\n");
+      printf ("*** timer_settime timer_sig2 failed: %m\n");
       result = 1;
     }
 
@@ -536,7 +545,7 @@ do_test (void)
 
   if (thr1_err)
     {
-      puts ("an error occurred in thr1");
+      puts ("*** an error occurred in thr1");
       result = 1;
     }
   else if (check_ts ("thr1", &startts, &thr1_ts, 1100000 + 4 * 200000))
@@ -544,14 +553,14 @@ do_test (void)
 
   if (thr2_err)
     {
-      puts ("an error occurred in thr2");
+      puts ("*** an error occurred in thr2");
       result = 1;
     }
   else if (check_ts ("thr2", &startts, &thr2_ts, 1200000 + 4 * 300000))
     result = 1;
   else if (thr2_guardsize != 0)
     {
-      printf ("thr2 guardsize %zd != 0\n", thr2_guardsize);
+      printf ("*** thr2 guardsize %zd != 0\n", thr2_guardsize);
       result = 1;
     }
 
@@ -559,7 +568,7 @@ do_test (void)
 
   if (sig1_err)
     {
-      printf ("errors occurred in sig1 handler %x\n", sig1_err);
+      printf ("*** errors occurred in sig1 handler %x\n", sig1_err);
       result = 1;
     }
   else if (check_ts ("sig1", &startts, &sig1_ts, 1300000 + 4 * 400000))
@@ -567,7 +576,7 @@ do_test (void)
 
   if (sig2_err)
     {
-      printf ("errors occurred in sig2 handler %x\n", sig2_err);
+      printf ("*** errors occurred in sig2 handler %x\n", sig2_err);
       result = 1;
     }
   else if (check_ts ("sig2", &startts, &sig2_ts, 1400000 + 4 * 500000))
@@ -575,12 +584,13 @@ do_test (void)
 
   if (timer_gettime (timer_none, &it) != 0)
     {
-      printf ("timer_gettime timer_none failed: %m\n");
+      printf ("*** timer_gettime timer_none failed: %m\n");
       result = 1;
     }
   else if (it.it_interval.tv_sec || it.it_interval.tv_nsec != 100000000)
     {
-      printf ("second timer_gettime timer_none returned it_interval %ld.%09ld\n",
+      printf ("\
+!!! second timer_gettime timer_none returned it_interval %ld.%09ld\n",
 	      (long) it.it_interval.tv_sec, it.it_interval.tv_nsec);
       /* FIXME: For now disabled.
       result = 1; */
@@ -588,31 +598,31 @@ do_test (void)
 
   if (timer_delete (timer_none) != 0)
     {
-      printf ("timer_delete for timer_none failed: %m\n");
+      printf ("*** timer_delete for timer_none failed: %m\n");
       result = 1;
     }
 
   if (timer_delete (timer_sig1) != 0)
     {
-      printf ("timer_delete for timer_sig1 failed: %m\n");
+      printf ("*** timer_delete for timer_sig1 failed: %m\n");
       result = 1;
     }
 
   if (timer_delete (timer_sig2) != 0)
     {
-      printf ("timer_delete for timer_sig2 failed: %m\n");
+      printf ("*** timer_delete for timer_sig2 failed: %m\n");
       result = 1;
     }
 
   if (timer_delete (timer_thr1) != 0)
     {
-      printf ("timer_delete for timer_thr1 failed: %m\n");
+      printf ("*** timer_delete for timer_thr1 failed: %m\n");
       result = 1;
     }
 
   if (timer_delete (timer_thr2) != 0)
     {
-      printf ("timer_delete for timer_thr2 failed: %m\n");
+      printf ("*** timer_delete for timer_thr2 failed: %m\n");
       result = 1;
     }
   return result;

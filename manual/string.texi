@@ -1625,6 +1625,8 @@ This function is a GNU extension.
 The function @code{memrchr} is like @code{memchr}, except that it searches
 backwards from the end of the block defined by @var{block} and @var{size}
 (instead of forwards from the front).
+
+This function is a GNU extension.
 @end deftypefun
 
 @comment string.h

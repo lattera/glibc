@@ -1,3 +1,7 @@
+2004-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-timer4.c: Disable some tests, mark errors better.
+
 2004-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/tst-mqueue6.c (mqsend): Don't inline.
