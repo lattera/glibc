@@ -681,7 +681,7 @@ endif
 # Generate the header containing the names of all shared libraries.
 # We use a stamp file to avoid uncessary recompilations.
 before-compile += $(common-objpfx)gnu/lib-names.h
-$(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp
+$(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
 $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	$(make-target-directory)
 	@rm -f ${@:stmp=T} $@
