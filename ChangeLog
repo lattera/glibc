@@ -1,3 +1,14 @@
+Sat Dec  2 03:47:27 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/sbrk.S: File removed.
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start) [DL_SYSDEP_INIT]:
+	Invoke this macro before calling DL_MAIN.
+
+	* malloc/malloc.c (malloc): Do initialization here, before
+	checking the hook.
+	(_malloc_internal): Don't do it here.
+
 Wed Nov 29 12:30:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* libio/vsnprintf.c (__vsnprintf): Define as alias.
