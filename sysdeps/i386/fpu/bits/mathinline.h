@@ -1,5 +1,5 @@
 /* Inline math functions for i387.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by John C. Bowman <bowman@math.ualberta.ca>, 1995.
 
@@ -437,8 +437,10 @@ __inline_mathcodeNP2 (fmod, __x, __y, \
   return __value)
 
 
+#ifdef __FAST_MATH__
 __inline_mathopNP (sqrt, "fsqrt")
 __inline_mathopNP_ (long double, __sqrtl, "fsqrt")
+#endif
 
 #if __GNUC_PREREQ (2, 8)
 __inline_mathcodeNP_ (double, fabs, __x, return __builtin_fabs (__x))
@@ -511,7 +513,8 @@ __inline_mathcodeNP (ceil, __x, \
   __asm __volatile ("fldcw %0" : : "m" (__cw));				      \
   return __value)
 
-#define __ldexp_code \
+#ifdef __FAST_MATH__
+# define __ldexp_code \
   register long double __value;						      \
   __asm __volatile__							      \
     ("fscale"								      \
@@ -523,6 +526,7 @@ ldexp (double __x, int __y) __THROW
 {
   __ldexp_code;
 }
+#endif
 
 
 /* Optimized versions for some non-standardized functions.  */
