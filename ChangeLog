@@ -1,3 +1,7 @@
+2000-03-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/tst-obprintf.c: New file.
+
 2000-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/genops.c (_IO_default_xsputn): Little optimization.  Call
