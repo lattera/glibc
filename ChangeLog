@@ -1,5 +1,7 @@
 2000-08-23  Martin Schwidefsky	<schwidefsky@de.ibm.com>
 
+	* sysdeps/s390/__longjmp.c: Add __ to JB_GPR*.
+
 	* sysdeps/s390/bits/setjmp.h: Add __ to JB_GPR* defines.
 
 2000-08-23  Ulrich Drepper  <drepper@redhat.com>

@@ -21,24 +21,24 @@
 #ifndef __S390_SETJMP_H__
 #define __S390_SETJMP_H__
 
-#define __JB_GPR6   0
-#define __JB_GPR7   1
-#define __JB_GPR8   2
-#define __JB_GPR9   3
-#define __JB_GPR10  4
-#define __JB_GPR11  5
-#define __JB_GPR12  6
-#define __JB_GPR13  7
-#define __JB_GPR14  8
-#define __JB_GPR15  9
+#define __JB_GPR6	0
+#define __JB_GPR7	1
+#define __JB_GPR8	2
+#define __JB_GPR9	3
+#define __JB_GPR10	4
+#define __JB_GPR11	5
+#define __JB_GPR12	6
+#define __JB_GPR13	7
+#define __JB_GPR14	8
+#define __JB_GPR15	9
 
 #ifndef	_ASM
 
 typedef struct {
-    /* We save registers 6-15 */
+    /* We save registers 6-15.  */
     long int gregs[10];
 
-    /* We save fpu registers 4 and 6 */
+    /* We save fpu registers 4 and 6.  */
     long long fpregs[2];
 } __jmp_buf[1];
 
