@@ -55,7 +55,7 @@ _hurd_exec (task_t task, file_t file,
     return err;
   if (envp == NULL)
     env = NULL, envlen = 0;
-  if (err = __argz_create (envp, &env, &envlen))
+  else if (err = __argz_create (envp, &env, &envlen))
     goto outargs;
 
   /* Load up the ports to give to the new program.  */
