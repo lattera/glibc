@@ -1,3 +1,13 @@
+2000-02-12  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h (__start): Rewritten for 2.2 startup
+	conventions.
+	(elf_machine_rel): Use R_MIPS_REL32 for RESOLVE.
+	(elf_machine_runtime_setup,elf_machine_got_rel): Move at end of
+	file and make dependend on RESOLVE.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Fix arguments to _dl_lookup_symbol.
+	(RESOLVE_GOTSYM): Fix arguments to _dl_lookup_symbol.
+
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/shmctl.c: Fix handling of save_errno.
