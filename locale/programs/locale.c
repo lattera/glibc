@@ -295,6 +295,37 @@ print_names (const void *nodep, VISIT value, int level)
 }
 
 
+static int
+select_dirs (const struct dirent *dirent)
+{
+  int result = 0;
+
+  if (strcmp (dirent->d_name, ".") != 0 && strcmp (dirent->d_name, "..") != 0)
+    {
+      mode_t mode = 0;
+
+#ifdef _DIRENT_HAVE_D_TYPE
+      if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
+	mode = DTTOIF (dirent->d_type);
+      else
+#endif
+	{
+	  struct stat64 st;
+	  char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+
+	  stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+
+	  if (stat64 (buf, &st) == 0)
+	    mode = st.st_mode;
+	}
+
+      result = S_ISDIR (mode);
+    }
+
+  return result;
+}
+
+
 /* Write the names of all available locales to stdout.  We have some
    sources of the information: the contents of the locale directory
    and the locale.alias file.  To avoid duplicates and print the
@@ -305,8 +336,9 @@ write_locales (void)
 {
   char linebuf[80];
   void *all_data = NULL;
-  DIR *dir;
-  struct dirent *dirent;
+  struct dirent **dirents;
+  int ndirents;
+  int cnt;
   char *alias_path;
   size_t alias_path_len;
   char *entry;
@@ -406,163 +438,133 @@ write_locales (void)
       fclose (fp);
     }
 
-  /* This is the directory with the locale files.  */
-  dir = opendir (LOCALEDIR);
-  if (dir == NULL)
-    {
-      error (1, errno, gettext ("cannot read locale directory `%s'"),
-	     LOCALEDIR);
-      return;
-    }
-
   memset (linebuf, '-', sizeof (linebuf) - 1);
   linebuf[sizeof (linebuf) - 1] = '\0';
 
   /* Now we can look for all files in the directory.  */
-  while ((dirent = readdir (dir)) != NULL)
-    if (strcmp (dirent->d_name, ".") != 0
-	&& strcmp (dirent->d_name, "..") != 0)
-      {
-	mode_t mode;
-#ifdef _DIRENT_HAVE_D_TYPE
-	if (dirent->d_type != DT_UNKNOWN && dirent->d_type != DT_LNK)
-	  mode = DTTOIF (dirent->d_type);
-	else
-#endif
-	  {
-	    struct stat64 st;
-	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name) + 1];
+  ndirents = scandir (LOCALEDIR, &dirents, select_dirs, alphasort);
+  for (cnt = 0; cnt < ndirents; ++cnt)
+    {
+      /* Test whether at least the LC_CTYPE data is there.  Some
+	 directories only contain translations.  */
+      char buf[sizeof (LOCALEDIR) + strlen (dirents[cnt]->d_name)
+	      + sizeof "/LC_IDENTIFICATION"];
+      char *enddir;
+      struct stat64 st;
 
-	    stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"), dirent->d_name);
+      stpcpy (enddir = stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
+			       dirents[cnt]->d_name),
+	      "/LC_IDENTIFICATION");
 
-	    if (stat64 (buf, &st) < 0)
-	      continue;
-	    mode = st.st_mode;
-	  }
+      if (stat64 (buf, &st) == 0 && S_ISREG (st.st_mode))
+	{
+	  if (verbose)
+	    {
+	      /* Provide some nice output of all kinds of
+		 information.  */
+	      int fd;
 
-	if (S_ISDIR (mode))
-	  {
-	    /* Test whether at least the LC_CTYPE data is there.  Some
-               directories only contain translations.  */
-	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name)
-		    + sizeof "/LC_IDENTIFICATION"];
-	    char *enddir;
-	    struct stat64 st;
+	      if (! first_locale)
+		putchar_unlocked ('\n');
+	      first_locale = 0;
 
-	    stpcpy (enddir = stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
-				     dirent->d_name),
-		    "/LC_IDENTIFICATION");
+	      printf ("locale: %-15.15s directory: %.*s\n%s\n",
+		      dirents[cnt]->d_name, (int) (enddir - buf), buf,
+		      linebuf);
 
-	    if (stat64 (buf, &st) == 0 && S_ISREG (st.st_mode))
-	      {
-		if (verbose)
-		  {
-		    /* Provide some nice output of all kinds of
-		       information.  */
-		    int fd;
-
-		    if (! first_locale)
-		      putchar_unlocked ('\n');
-		    first_locale = 0;
-
-		    printf ("locale: %-15.15s directory: %.*s\n%s\n",
-			    dirent->d_name, (int) (enddir - buf), buf,
-			    linebuf);
-
-		    fd = open64 (buf, O_RDONLY);
-		    if (fd != -1)
+	      fd = open64 (buf, O_RDONLY);
+	      if (fd != -1)
+		{
+		  void *mapped = mmap64 (NULL, st.st_size, PROT_READ,
+					 MAP_SHARED, fd, 0);
+		  if (mapped != MAP_FAILED)
+		    {
+		      /* Read the information from the file.  */
+		      struct
 		      {
-			void *mapped = mmap64 (NULL, st.st_size, PROT_READ,
-					       MAP_SHARED, fd, 0);
-			if (mapped != MAP_FAILED)
-			  {
-			    /* Read the information from the file.  */
-			    struct
-			    {
-			      unsigned int magic;
-			      unsigned int nstrings;
-			      unsigned int strindex[0];
-			    } *filedata = mapped;
+			unsigned int magic;
+			unsigned int nstrings;
+			unsigned int strindex[0];
+		      } *filedata = mapped;
 
-			    if (filedata->magic == LIMAGIC (LC_IDENTIFICATION)
-				&& (sizeof *filedata
-				    + (filedata->nstrings
-				       * sizeof (unsigned int))
-				    <= (size_t) st.st_size))
-			      {
-				const char *str;
+		      if (filedata->magic == LIMAGIC (LC_IDENTIFICATION)
+			  && (sizeof *filedata
+			      + (filedata->nstrings
+				 * sizeof (unsigned int))
+			      <= (size_t) st.st_size))
+			{
+			  const char *str;
 
 #define HANDLE(idx, name) \
   str = ((char *) mapped						      \
 	 + filedata->strindex[_NL_ITEM_INDEX (_NL_IDENTIFICATION_##idx)]);    \
   if (*str != '\0')							      \
     printf ("%9s | %s\n", name, str)
-				HANDLE (TITLE, "title");
-				HANDLE (SOURCE, "source");
-				HANDLE (ADDRESS, "address");
-				HANDLE (CONTACT, "contact");
-				HANDLE (EMAIL, "email");
-				HANDLE (TEL, "telephone");
-				HANDLE (FAX, "fax");
-				HANDLE (LANGUAGE, "language");
-				HANDLE (TERRITORY, "territory");
-				HANDLE (AUDIENCE, "audience");
-				HANDLE (APPLICATION, "application");
-				HANDLE (ABBREVIATION, "abbreviation");
-				HANDLE (REVISION, "revision");
-				HANDLE (DATE, "date");
-			      }
+			  HANDLE (TITLE, "title");
+			  HANDLE (SOURCE, "source");
+			  HANDLE (ADDRESS, "address");
+			  HANDLE (CONTACT, "contact");
+			  HANDLE (EMAIL, "email");
+			  HANDLE (TEL, "telephone");
+			  HANDLE (FAX, "fax");
+			  HANDLE (LANGUAGE, "language");
+			  HANDLE (TERRITORY, "territory");
+			  HANDLE (AUDIENCE, "audience");
+			  HANDLE (APPLICATION, "application");
+			  HANDLE (ABBREVIATION, "abbreviation");
+			  HANDLE (REVISION, "revision");
+			  HANDLE (DATE, "date");
+			}
 
-			    munmap (mapped, st.st_size);
-			  }
+		      munmap (mapped, st.st_size);
+		    }
 
-			close (fd);
+		  close (fd);
 
-			/* Now try to get the charset information.  */
-			strcpy (enddir, "/LC_CTYPE");
-			fd = open64 (buf, O_RDONLY);
-			if (fd != -1 && fstat64 (fd, &st) >= 0
-			    && ((mapped = mmap64 (NULL, st.st_size, PROT_READ,
-						  MAP_SHARED, fd, 0))
-				!= MAP_FAILED))
-			  {
-			    struct
-			    {
-			      unsigned int magic;
-			      unsigned int nstrings;
-			      unsigned int strindex[0];
-			    } *filedata = mapped;
+		  /* Now try to get the charset information.  */
+		  strcpy (enddir, "/LC_CTYPE");
+		  fd = open64 (buf, O_RDONLY);
+		  if (fd != -1 && fstat64 (fd, &st) >= 0
+		      && ((mapped = mmap64 (NULL, st.st_size, PROT_READ,
+					    MAP_SHARED, fd, 0))
+			  != MAP_FAILED))
+		    {
+		      struct
+		      {
+			unsigned int magic;
+			unsigned int nstrings;
+			unsigned int strindex[0];
+		      } *filedata = mapped;
 
-			    if (filedata->magic == LIMAGIC (LC_CTYPE)
-				&& (sizeof *filedata
-				    + (filedata->nstrings
-				       * sizeof (unsigned int))
-				    <= (size_t) st.st_size))
-			      {
-				const char *str;
+		      if (filedata->magic == LIMAGIC (LC_CTYPE)
+			  && (sizeof *filedata
+			      + (filedata->nstrings
+				 * sizeof (unsigned int))
+			      <= (size_t) st.st_size))
+			{
+			  const char *str;
 
-				str = ((char *) mapped
-				       + filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)]);
-				if (*str != '\0')
-				  printf ("  codeset | %s\n", str);
-			      }
+			  str = ((char *) mapped
+				 + filedata->strindex[_NL_ITEM_INDEX (_NL_CTYPE_CODESET_NAME)]);
+			  if (*str != '\0')
+			    printf ("  codeset | %s\n", str);
+			}
 
-			    munmap (mapped, st.st_size);
-			  }
+		      munmap (mapped, st.st_size);
+		    }
 
-			if (fd != -1)
-			  close (fd);
-		      }
-		  }
-		else
-		  /* If the verbose format is not selected we simply
-		     collect the names.  */
-		  PUT (xstrdup (dirent->d_name));
-	      }
-	  }
-      }
-
-  closedir (dir);
+		  if (fd != -1)
+		    close (fd);
+		}
+	    }
+	  else
+	    /* If the verbose format is not selected we simply
+	       collect the names.  */
+	    PUT (xstrdup (dirents[cnt]->d_name));
+	}
+    }
+  if (ndirents > 0)
+    free (dirents);
 
   if (! verbose)
     {

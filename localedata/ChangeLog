@@ -1,3 +1,8 @@
+2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/zh_TW: Extend LC_IDENTIFICATION entries a bit.
+	* locales/zh_CN: Likewise.
+
 2001-02-04  Bruno Haible  <haible@clisp.cons.org>
 
 	* locales/translit_cjk_compat: Add missing characters in range

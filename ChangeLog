@@ -1,3 +1,8 @@
+2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locale.c (write_locales): Use scandir to read
+	directory so that the entries are sorted.
+
 2001-02-06  Andreas Jaeger  <aj@suse.de>
 
 	* include/pthread.h: New file.
