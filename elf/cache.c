@@ -101,12 +101,14 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 	[0] = "Linux",
 	[1] = "Hurd",
 	[2] = "Solaris",
-	[3] = N_("Unknown OS")
+	[3] = "FreeBSD",
+	[4] = N_("Unknown OS")
       };
+#define MAXTAG (sizeof abi_tag_os / sizeof abi_tag_os[0] - 1)
       unsigned int os = osversion >> 24;
 
       printf (_(", OS ABI: %s %d.%d.%d"),
-	      _(abi_tag_os[os > 3 ? 3 : os]),
+	      _(abi_tag_os[os > MAXTAG ? MAXTAG : os]),
 	      (osversion >> 16) & 0xff,
 	      (osversion >> 8) & 0xff,
 	      osversion & 0xff);

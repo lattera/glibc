@@ -1,3 +1,16 @@
+2002-09-17  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/generic/utmp-equal.h: New file, extracted from utmp_file.c.
+	* sysdeps/generic/utmp_file.c (setutent_file): Invalidate last_entry
+	also on platforms with !HAVE_UT_TYPE.
+	(proc_utmp_eq): Remove function.
+	(internal_getut_r, pututline_file): Call __utmp_equal instead.
+
+2002-09-20  Bruno Haible  <bruno@clisp.org>
+
+	* abi-tags: Add support for FreeBSD with ABI OS value 3.
+	* elf/cache.c (print_entry): Support the GNU/FreeBSD ABI tag.
+
 2002-09-20  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/gmp-mparam.h: Include <bits/wordsize.h>.

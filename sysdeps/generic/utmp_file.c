@@ -28,6 +28,7 @@
 #include <utmp.h>
 
 #include "utmp-private.h"
+#include "utmp-equal.h"
 
 
 /* Descriptor for the file and position.  */
@@ -148,9 +149,14 @@ setutent_file (void)
   __lseek64 (file_fd, 0, SEEK_SET);
   file_offset = 0;
 
-#if _HAVE_UT_TYPE - 0
   /* Make sure the entry won't match.  */
+#if _HAVE_UT_TYPE - 0
   last_entry.ut_type = -1;
+#else
+  last_entry.ut_line[0] = '\177';
+# if _HAVE_UT_ID - 0
+  last_entry.ut_id[0] = '\0';
+# endif
 #endif
 
   return 1;
@@ -198,33 +204,6 @@ getutent_r_file (struct utmp *buffer, struct utmp **result)
   return 0;
 }
 
-
-static int
-proc_utmp_eq (const struct utmp *entry, const struct utmp *match)
-{
-  return
-    (
-#if _HAVE_UT_TYPE - 0
-     (entry->ut_type == INIT_PROCESS
-      || entry->ut_type == LOGIN_PROCESS
-      || entry->ut_type == USER_PROCESS
-      || entry->ut_type == DEAD_PROCESS)
-     &&
-     (match->ut_type == INIT_PROCESS
-      || match->ut_type == LOGIN_PROCESS
-      || match->ut_type == USER_PROCESS
-      || match->ut_type == DEAD_PROCESS)
-     &&
-#endif
-#if _HAVE_UT_ID - 0
-     (entry->ut_id[0] && match->ut_id[0]
-      ? strncmp (entry->ut_id, match->ut_id, sizeof match->ut_id) == 0
-      : strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0)
-#else
-     strncmp (entry->ut_line, match->ut_line, sizeof match->ut_line) == 0
-#endif
-     );
-}
 
 static int
 internal_getut_r (const struct utmp *id, struct utmp *buffer)
@@ -275,7 +254,7 @@ internal_getut_r (const struct utmp *id, struct utmp *buffer)
 	    }
 	  file_offset += sizeof (struct utmp);
 
-	  if (proc_utmp_eq (buffer, id))
+	  if (__utmp_equal (buffer, id))
 	    break;
 	}
     }
@@ -390,7 +369,7 @@ pututline_file (const struct utmp *data)
 	       || last_entry.ut_type == NEW_TIME))
 	  ||
 #endif
-	  proc_utmp_eq (&last_entry, data)))
+	  __utmp_equal (&last_entry, data)))
     found = 1;
   else
     found = internal_getut_r (data, &buffer);

@@ -22,5 +22,7 @@
 
 .*-sun-solaris2.*	2	2.0.0	# just an arbitrary value
 
+.*-.*-freebsd.*-gnu.*	3	4.0.0	# earliest compatible kernel version
+
 # There is no catch-all default here because every supported OS that uses
 # ELF must have its own unique ABI tag.
