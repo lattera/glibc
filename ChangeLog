@@ -1,3 +1,8 @@
+2005-01-21  Roland McGrath  <roland@redhat.com>
+
+	* elf/dl-runtime.c (_dl_profile_fixup): Remove const from REGS.
+	* sysdeps/i386/dl-machine.h: Update decl.
+
 2005-01-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/Makefile: Add rules to build and run tst-align2.
