@@ -1886,6 +1886,10 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   /* Now print to helper instead.  */
   result = vfprintf (hp, format, args);
 
+  /* Lock stream.  */
+  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
+  _IO_flockfile (s);
+
   /* Now flush anything from the helper to the S. */
 #ifdef COMPILE_WPRINTF
   if ((to_flush = (hp->_wide_data->_IO_write_ptr
@@ -1893,15 +1897,19 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
     {
       if ((int) _IO_sputn (s, hp->_wide_data->_IO_write_base, to_flush)
 	  != to_flush)
-	return -1;
+	result = -1;
     }
 #else
   if ((to_flush = hp->_IO_write_ptr - hp->_IO_write_base) > 0)
     {
       if ((int) _IO_sputn (s, hp->_IO_write_base, to_flush) != to_flush)
-	return -1;
+	result = -1;
     }
 #endif
+
+  /* Unlock the stream.  */
+  _IO_funlockfile (s);
+  __libc_cleanup_region_end (0);
 
   return result;
 }

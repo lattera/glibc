@@ -1,3 +1,7 @@
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfprintf.c (buffered_vfprintf): Add locking.
+
 1999-07-09  H.J. Lu  <hjl@gnu.org>
 
 	* Versions.def (GLIBC_2.1.2): Added.

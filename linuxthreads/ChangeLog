@@ -1,3 +1,8 @@
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* oldsemaphore.c (sem_compare_and_swap): Fix use of compare and
+	swap function.
+
 1999-07-09  Cristian Gafton  <gafton@redhat.com>
 
 	* Makefile (libpthread-routines): Add oldsemaphore routine.

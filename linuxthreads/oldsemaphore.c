@@ -37,7 +37,7 @@ typedef struct {
 
 static inline int sem_compare_and_swap(old_sem_t *sem, long oldval, long newval)
 {
-    return __pthread_compare_and_swap(&sem->sem_status, oldval, newval, &sem->sem_spinlock);
+    return compare_and_swap(&sem->sem_status, oldval, newval, &sem->sem_spinlock);
 }
 
 /* The state of a semaphore is represented by a long int encoding
@@ -212,4 +212,3 @@ symbol_version (__old_sem_post, sem_post, GLIBC_2.0);
 symbol_version (__old_sem_getvalue, sem_getvalue, GLIBC_2.0);
 symbol_version (__old_sem_destroy, sem_destroy, GLIBC_2.0);
 #endif
-
