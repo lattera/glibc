@@ -1,7 +1,5 @@
-/* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,20 +16,21 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv_libc.h>
+#include <sysdep.h>
 
-void
-feupdateenv (const fenv_t *envp)
-{
-  fenv_union_t old, new;
+/* Because the Linux version is in fact MIPS/ELF and the start.? file
+   for this system (sysdeps/mips/elf/start.S) is also used by The Hurd
+   and therefore this files must not contain the definition of the
+   `errno' variable (I don't know why, ask Roland), we have to define
+   it somewhere else.
 
-  /* Save the currently set exceptions.  */
-  new.fenv = *envp;
-  old.fenv = fegetenv_register ();
+   ...and this place is here.  */
+	.bss
+	.globl  errno
+	.type   errno,@object
+	.size   errno,4
+errno:	.word   4
+	.text
+weak_alias(errno, _errno)
 
-  /* Copy the set exceptions from `old' to `new'.  */
-  new.l[1] = (new.l[1] & 0xE00000FF) | (old.l[1] & 0x1FFFFF00);
-
-  /* Atomically enable and raise (if appropriate) exceptions set in `new'. */
-  fesetenv_register (new.fenv);
-}
+#include <sysdeps/unix/mips/sysdep.S>

@@ -74,9 +74,9 @@ __sqrtf(float x)
 	  GET_FLOAT_WORD (xi, x);
 	  fe = fegetenv_register ();
 	  relax_fenv_state ();
-	  sxi = xi & 0x3fffffff | 0x3f000000;
+	  sxi = (xi & 0x3fffffff) | 0x3f000000;
 	  SET_FLOAT_WORD (sx, sxi);
-	  t_sqrt = __t_sqrt + (xi >> 23-8-1  & 0x3fe);
+	  t_sqrt = __t_sqrt + (xi >> (23-8-1)  & 0x3fe);
 	  sg = t_sqrt[0];
 	  sy = t_sqrt[1];
 	  
@@ -84,7 +84,7 @@ __sqrtf(float x)
 	     division and a square root and the remainder of the
 	     argument reduction, all interleaved.   */
 	  sd  = -(sg*sg - sx);
-	  fsgi = xi + 0x40000000 >> 1 & 0x7f800000;
+	  fsgi = (xi + 0x40000000) >> 1 & 0x7f800000;
 	  sy2 = sy + sy;
 	  sg  = sy*sd + sg;  /* 16-bit approximation to sqrt(sx). */
 	  e   = -(sy*sg - almost_half);

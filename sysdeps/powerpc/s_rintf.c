@@ -25,17 +25,19 @@ __rintf (float x)
   static const float TWO23 = 8388608.0;
 
   if (fabsf (x) < TWO23)
-    if (x > 0.0)
-      {
-	x += TWO23;
-	x -= TWO23;
-      }
-    else if (x < 0.0)
-      {
-	x -= TWO23;
-	x += TWO23;
-      }
-
+    {
+      if (x > 0.0)
+	{
+	  x += TWO23;
+	  x -= TWO23;
+	}
+      else if (x < 0.0)
+	{
+	  x -= TWO23;
+	  x += TWO23;
+	}
+    }
+  
   return x;
 }
 weak_alias (__rintf, rintf)

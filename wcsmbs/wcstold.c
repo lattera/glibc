@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <math.h>
+#include <wchar.h>
 
 #ifndef __NO_LONG_DOUBLE_MATH
 /* The actual implementation for all floating point sizes is in strtod.c.

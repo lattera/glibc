@@ -1168,6 +1168,7 @@ extern USItype __udiv_qrnnd ();
 	     "1" ((USItype)(n1)),					\
 	     "0" ((USItype)(n0)) : "%g1" __AND_CLOBBER_CC)
 #define UDIV_TIME (3+7*32)	/* 7 instructions/iteration. 32 iterations. */
+#else
 extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 #define UDIV_TIME 140
 #endif /* udiv_qrnnd */

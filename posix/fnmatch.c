@@ -136,7 +136,7 @@ fnmatch (pattern, string, flags)
      int flags;
 {
   register const char *p = pattern, *n = string;
-  register char c;
+  register unsigned char c;
 
 /* Note that this evaluates C many times.  */
 # ifdef _LIBC
@@ -170,7 +170,7 @@ fnmatch (pattern, string, flags)
 		return FNM_NOMATCH;
 	      c = FOLD (c);
 	    }
-	  if (FOLD (*n) != c)
+	  if (FOLD ((unsigned char) *n) != c)
 	    return FNM_NOMATCH;
 	  break;
 
@@ -202,10 +202,10 @@ fnmatch (pattern, string, flags)
 	    return 0;
 
 	  {
-	    char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
+	    unsigned char c1 = (!(flags & FNM_NOESCAPE) && c == '\\') ? *p : c;
 	    c1 = FOLD (c1);
 	    for (--p; *n != '\0'; ++n)
-	      if ((c == '[' || FOLD (*n) == c1) &&
+	      if ((c == '[' || FOLD ((unsigned char) *n) == c1) &&
 		  fnmatch (p, n, flags & ~FNM_PERIOD) == 0)
 		return 0;
 	    return FNM_NOMATCH;
@@ -239,13 +239,13 @@ fnmatch (pattern, string, flags)
 	    c = *p++;
 	    for (;;)
 	      {
-		int fn = FOLD (*n);
+		unsigned int fn = FOLD (*n);
 
 		if (!(flags & FNM_NOESCAPE) && c == '\\')
 		  {
 		    if (*p == '\0')
 		      return FNM_NOMATCH;
-		    c = FOLD (*p);
+		    c = FOLD ((unsigned char) *p);
 		    ++p;
 
 		    if (c == fn)
@@ -313,7 +313,7 @@ fnmatch (pattern, string, flags)
 		if (c == '-' && *p != ']')
 		  {
 		    /* It is a range.  */
-		    char cend = *p++;
+		    unsigned char cend = *p++;
 		    if (!(flags & FNM_NOESCAPE) && cend == '\\')
 		      cend = *p++;
 		    if (cend == '\0')
@@ -364,7 +364,7 @@ fnmatch (pattern, string, flags)
 	  break;
 
 	default:
-	  if (c != FOLD (*n))
+	  if (c != FOLD ((unsigned char) *n))
 	    return FNM_NOMATCH;
 	}
 

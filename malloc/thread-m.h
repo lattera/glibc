@@ -88,8 +88,9 @@ typedef pthread_mutex_t	mutex_t;
 
 #endif /* MUTEX_INITIALIZER && PTHREAD_MUTEX_INITIALIZER */
 
+#ifndef NO_THREADS
 
-/* thread specific data */
+/* thread specific data for glibc */
 
 #include <bits/libc-tsd.h>
 
@@ -99,6 +100,7 @@ __libc_tsd_define (, MALLOC)	/* declaration/common definition */
 #define tsd_setspecific(key, data)	__libc_tsd_set (MALLOC, (data))
 #define tsd_getspecific(key, vptr)	((vptr) = __libc_tsd_get (MALLOC))
 
+#endif
 
 #elif defined(USE_PTHREADS) /* Posix threads */
 

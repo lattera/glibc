@@ -31,6 +31,8 @@
 #endif
 #include <string.h>
 
+static _IO_lock_t list_all_lock = _IO_lock_initializer;
+
 void
 _IO_un_link (fp)
      _IO_FILE *fp;
@@ -38,6 +40,7 @@ _IO_un_link (fp)
   if (fp->_flags & _IO_LINKED)
     {
       _IO_FILE **f;
+      _IO_lock_lock (list_all_lock);
       for (f = &_IO_list_all; *f != NULL; f = &(*f)->_chain)
 	{
 	  if (*f == fp)
@@ -46,6 +49,7 @@ _IO_un_link (fp)
 	      break;
 	    }
 	}
+      _IO_lock_unlock (list_all_lock);
       fp->_flags &= ~_IO_LINKED;
     }
 }
@@ -57,8 +61,10 @@ _IO_link_in (fp)
     if ((fp->_flags & _IO_LINKED) == 0)
       {
 	fp->_flags |= _IO_LINKED;
+	_IO_lock_lock (list_all_lock);
 	fp->_chain = _IO_list_all;
 	_IO_list_all = fp;
+	_IO_lock_unlock (list_all_lock);
       }
 }
 

@@ -1,6 +1,6 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>.
+   Contributed by Ralf Baechle <ralf@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,12 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_ASM_H
-#define _SYS_ASM_H
+#ifndef _REGDEF_H
+#define _REGDEF_H
 
-/*
- * The real definitions come from the Linux kernel sources
- */
-#include <asm/asm.h>
+#include <sys/regdef.h>
+#include <sys/fpregdef.h>
 
-#endif /* sys/asm.h */
+#endif /* _REGDEF_H */
+

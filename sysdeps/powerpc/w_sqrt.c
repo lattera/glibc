@@ -74,9 +74,9 @@ __sqrt(double x)
 	  fe = fegetenv_register();
 	  EXTRACT_WORDS (xi0,xi1,x);
 	  relax_fenv_state();
-	  sxi = xi0 & 0x3fffffff | 0x3fe00000;
+	  sxi = (xi0 & 0x3fffffff) | 0x3fe00000;
 	  INSERT_WORDS (sx, sxi, xi1);
-	  t_sqrt = __t_sqrt + (xi0 >> 52-32-8-1  & 0x3fe);
+	  t_sqrt = __t_sqrt + (xi0 >> (52-32-8-1)  & 0x3fe);
 	  sg = t_sqrt[0];
 	  sy = t_sqrt[1];
 	  
@@ -84,7 +84,7 @@ __sqrt(double x)
 	     division and a square root and the remainder of the
 	     argument reduction, all interleaved.   */
 	  sd  = -(sg*sg - sx);
-	  fsgi = xi0 + 0x40000000 >> 1 & 0x7ff00000;
+	  fsgi = (xi0 + 0x40000000) >> 1 & 0x7ff00000;
 	  sy2 = sy + sy;
 	  sg  = sy*sd + sg;  /* 16-bit approximation to sqrt(sx). */
 	  INSERT_WORDS (fsg, fsgi, 0);

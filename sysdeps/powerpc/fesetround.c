@@ -32,7 +32,7 @@ fesetround (int round)
   u.fenv = fegetenv_register ();
 
   /* Set the relevant bits.  */
-  u.l[1] = u.l[1] & ~3  |  round & 3;
+  u.l[1] = (u.l[1] & ~3)  |  (round & 3);
 
   /* Put the new state in effect.  */
   fesetenv_register (u.fenv);

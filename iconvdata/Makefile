@@ -49,159 +49,28 @@ modules.so := $(addsuffix .so, $(modules))
 
 include ../Makeconfig
 
-ISO8859-1-routines := iso8859-1
-ISO8859-2-routines := iso8859-2
-ISO8859-3-routines := iso8859-3
-ISO8859-4-routines := iso8859-4
-ISO8859-5-routines := iso8859-5
-ISO8859-6-routines := iso8859-6
-ISO8859-7-routines := iso8859-7
-ISO8859-8-routines := iso8859-8
-ISO8859-9-routines := iso8859-9
-ISO8859-10-routines := iso8859-10
-ISO8859-11-routines := iso8859-11
-ISO8859-13-routines := iso8859-13
-ISO8859-14-routines := iso8859-14
-ISO8859-15-routines := iso8859-15
-ISO646-routines := iso646
-T.61-routines := t61
-ISO_6937-routines := iso6937
-SJIS-routines := sjis
-KOI-8-routines := koi-8
-KOI8-R-routines := koi8-r
-LATIN-GREEK-routines := latin-greek
-LATIN-GREEK-1-routines := latin-greek-1
-HP-ROMAN8-routines := hp-roman8
-EBCDIC-AT-DE-routines := ebcdic-at-de
-EBCDIC-AT-DE-A-routines := ebcdic-at-de-a
-EBCDIC-CA-FR-routines := ebcdic-ca-fr
-EBCDIC-DK-NO-routines := ebcdic-dk-no
-EBCDIC-DK-NO-A-routines := ebcdic-dk-no-a
-EBCDIC-ES-routines := ebcdic-es
-EBCDIC-ES-A-routines := ebcdic-es-a
-EBCDIC-ES-S-routines := ebcdic-es-s
-EBCDIC-FI-SE-routines := ebcdic-fi-se
-EBCDIC-FI-SE-A-routines := ebcdic-fi-se-a
-EBCDIC-FR-routines := ebcdic-fr
-EBCDIC-IS-FRISS-routines := ebcdic-is-friss
-EBCDIC-IT-routines := ebcdic-it
-EBCDIC-PT-routines := ebcdic-pt
-EBCDIC-UK-routines := ebcdic-uk
-EBCDIC-US-routines := ebcdic-us
-IBM037-routines := ibm037
-IBM038-routines := ibm038
-IBM256-routines := ibm256
-IBM273-routines := ibm273
-IBM274-routines := ibm274
-IBM275-routines := ibm275
-IBM277-routines := ibm277
-IBM278-routines := ibm278
-IBM280-routines := ibm280
-IBM281-routines := ibm281
-IBM284-routines := ibm284
-IBM285-routines := ibm285
-IBM290-routines := ibm290
-IBM297-routines := ibm297
-IBM420-routines := ibm420
-IBM423-routines := ibm423
-IBM424-routines := ibm424
-IBM437-routines := ibm437
-IBM500-routines := ibm500
-IBM850-routines := ibm850
-IBM851-routines := ibm851
-IBM852-routines := ibm852
-IBM855-routines := ibm855
-IBM857-routines := ibm857
-IBM860-routines := ibm860
-IBM861-routines := ibm861
-IBM862-routines := ibm862
-IBM863-routines := ibm863
-IBM864-routines := ibm864
-IBM865-routines := ibm865
-IBM866-routines := ibm866
-IBM868-routines := ibm868
-IBM869-routines := ibm869
-IBM870-routines := ibm870
-IBM871-routines := ibm871
-IBM875-routines := ibm875
-IBM880-routines := ibm880
-IBM891-routines := ibm891
-IBM903-routines := ibm903
-IBM904-routines := ibm904
-IBM905-routines := ibm905
-IBM918-routines := ibm918
-IBM1004-routines := ibm1004
-IBM1026-routines := ibm1026
-IBM1047-routines := ibm1047
-CP737-routines := cp737
-CP775-routines := cp775
-CP874-routines := cp874
-CP1250-routines := cp1250
-CP1251-routines := cp1251
-CP1252-routines := cp1252
-CP1253-routines := cp1253
-CP1254-routines := cp1254
-CP1255-routines := cp1255
-CP1256-routines := cp1256
-CP1257-routines := cp1257
-CP1258-routines := cp1258
-EUC-KR-routines := euckr
-JOHAB-routines := johab
-UHC-routines := uhc
-BIG5-routines := big5
-EUC-JP-routines := eucjp
-EUC-CN-routines := euccn
-EUC-TW-routines := euctw
-ISO-2022-JP-routines := iso-2022-jp
-ISO-2022-KR-routines := iso-2022-kr
-MACINTOSH-routines := macintosh
-IEC_P27-1-routines := iec_p27-1
-BALTIC-routines := baltic
-ASMO_449-routines := asmo_449
-ANSI_X3.110-routines := ansi_x3.110
-CSN_369103-routines := csn_369103
-CWI-routines := cwi
-DEC-MCS-routines := dec-mcs
-ECMA-CYRILLIC-routines := ecma-cyrillic
-GOST_19768-74-routines := gost_19768-74
-GREEK-CCITT-routines := greek-ccitt
-GREEK7-routines := greek7
-GREEK7-OLD-routines := greek7-old
-INIS-routines := inis
-INIS-8-routines := inis
-INIS-CYRILLIC-routines := inis
-ISO_6937-2-routines := iso6937-2
-ISO_2033-routines := iso_2033
-ISO_5427-routines := iso_5427
-ISO_5427-EXT-routines := iso_5427-ext
-ISO_5428-routines := iso_5428
-ISO_10367-BOX-routines := iso_10367-box
-MAC-IS-routines := mac-is
-MAC-UK-routines := mac-uk
-NATS-DANO-routines := nats-dano
-NATS-SEFI-routines := nats-dano
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
 libCNS-routines := cns11643l1 cns11643
 
-LDFLAGS-EUC-KR.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-EUC-KR.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)EUC-KR.so: $(objpfx)libKSC.so
-LDFLAGS-JOHAB.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-JOHAB.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)JOHAB.so: $(objpfx)libKSC.so
-LDFLAGS-UHC.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-UHC.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)UHC.so: $(objpfx)libKSC.so
-LDFLAGS-EUC-JP.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-EUC-JP.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)EUC-JP.so: $(objpfx)libJIS.so
-LDFLAGS-EUC-CN.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-EUC-CN.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)EUC-CN.so: $(objpfx)libGB.so
-LDFLAGS-EUC-TW.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-EUC-TW.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)EUC-TW.so: $(objpfx)libCNS.so
 
-LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-ISO-2022-JP.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)ISO-2022-JP.so: $(objpfx)libJIS.so $(objpfx)libGB.so \
 			 $(objpfx)libCNS.so $(objpfx)libKSC.so
-LDFLAGS-ISO-2022-KR.so = -Wl,-rpath,$(gconvdir)
+LDFLAGS-ISO-2022-KR.so = -Wl,-rpath,'$$ORIGIN'
 $(objpfx)ISO-2022-KR.so: $(objpfx)libKSC.so
 
 LDFLAGS-libJIS.so = -Wl,-soname,$(@F)
@@ -209,38 +78,39 @@ LDFLAGS-libKSC.so = -Wl,-soname,$(@F)
 LDFLAGS-libGB.so = -Wl,-soname,$(@F)
 LDFLAGS-libCNS.so = -Wl,-soname,$(@F)
 
-distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
+distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
+	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh		    \
+	      TESTS $(wildcard testdata/*) run-iconv-test.sh		    \
+	      8bit-generic.c 8bit-gap.c					    \
+	      ansi_x3.110.c asmo_449.c baltic.c big5.c cp737.c cp737.h	    \
+	      cp775.c cp775.h cp874.c cp874.h cns11643.c cns11643.h	    \
+	      cns11643l1.c cns11643l1.h cp1250.c cp1251.c cp1252.c cp1253.c \
+	      cp1254.c cp1255.c cp1256.c cp1257.c cp1258.c cp1258.h	    \
+	      csn_369103.c cwi.c dec-mcs.c ebcdic-at-de.c ebcdic-at-de-a.c  \
+	      ebcdic-ca-fr.c ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c    \
+	      ebcdic-es-a.c ebcdic-es-s.c ebcdic-fr.c ebcdic-fi-se.c	    \
+	      ebcdic-fi-se-a.c ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c    \
+	      ebcdic-uk.c ebcdic-us.c ecma-cyrillic.c euc-cn.c euc-jp.c	    \
+	      euc-kr.c euc-tw.c gb2312.c gb2312.h gost_19768-74.c	    \
+	      greek-ccitt.c greek7.c greek7-old.c hp-roman8.c ibm037.c	    \
+	      ibm038.c ibm256.c ibm273.c ibm274.c ibm275.c ibm277.c	    \
+	      ibm278.c ibm280.c ibm281.c ibm284.c ibm285.c ibm290.c	    \
+	      ibm297.c ibm420.c ibm423.c ibm424.c ibm437.c ibm500.c	    \
+	      ibm850.c ibm851.c ibm852.c ibm855.c ibm857.c ibm860.c	    \
+	      ibm861.c ibm862.c ibm863.c ibm864.c ibm865.c ibm866.c	    \
+	      ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c ibm880.c	    \
+	      ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c ibm1004.c	    \
+	      ibm1026.c ibm1047.c iec_p27-1.c inis.c inis-8.c		    \
+	      inis-cyrillic.c iso-2022-jp.c iso-2022-kr.c iso646.c	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
 	      iso8859-11.c iso8859-11.h iso8859-13.c iso8859-14.c	    \
-	      iso8859-15.c						    \
-	      t61.c iso6937.c sjis.c jis0201.h jis0208.h jis0212.h	    \
-	      koi-8.c koi8-r.c hp-roman8.c latin-greek.c latin-greek-1.c    \
-	      ebcdic-at-de.c ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c	    \
-	      jis0208.c jis0212.c extra-module.mk euckr.c johab.c uhc.c	    \
-	      ksc5601.c ksc5601.h iso646.c big5.c eucjp.c gb2312.c gb2312.h \
-	      euccn.c euctw.c cns11643l1.c cns11643l1.h cns11643.h	    \
-	      cns11643.c run-iconv-test.sh TESTS $(wildcard testdata/*)	    \
-	      ebcdic-dk-no.c ebcdic-dk-no-a.c ebcdic-es.c ebcdic-es-a.c	    \
-	      ebcdic-es-s.c ebcdic-fi-se.c ebcdic-fi-se-a.c ebcdic-fr.c	    \
-	      ebcdic-is-friss.c ebcdic-it.c ebcdic-pt.c ebcdic-uk.c	    \
-	      ebcdic-us.c ibm037.c ibm038.c ibm256.c ibm273.c ibm274.c	    \
-	      ibm275.c ibm277.c ibm278.c ibm280.c ibm281.c ibm284.c	    \
-	      ibm285.c ibm290.c ibm297.c ibm420.c ibm423.c ibm424.c	    \
-	      ibm437.c ibm500.c ibm850.c ibm851.c ibm852.c ibm855.c	    \
-	      ibm857.c ibm860.c ibm861.c ibm862.c ibm863.c ibm864.c	    \
-	      ibm865.c ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c	    \
-	      ibm880.c ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c	    \
-	      ibm1004.c ibm1026.c ibm1047.c cp1250.c cp1251.c cp1252.c	    \
-	      ibm866.c cp1258.c cp1258.h				    \
-	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
-	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c   \
-	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh macintosh.c	    \
-	      iec_p27-1.c baltic.c asmo_449.c ansi_x3.110.c csn_369103.c    \
-	      cwi.c dec-mcs.c ecma-cyrillic.c gost_19768-74.c greek-ccitt.c \
-	      greek7.c greek7-old.c inis.c inis-8.c inis-cyrillic.c	    \
-	      iso6937-2.c iso_2033.c iso_5427.c iso_5427-ext.c mac-uk.c	    \
-	      iso_5428.c iso_10367-box.c mac-is.c nats-dano.c nats-sefi.c
+	      iso8859-15.c iso_2033.c iso_5427-ext.c iso_5427.c iso_5428.c  \
+	      iso_6937.c iso_6937-2.c iso_10367-box.c jis0201.c jis0201.h   \
+	      jis0208.c jis0208.h jis0212.c jis0212.h johab.c koi-8.c	    \
+	      koi8-r.c ksc5601.c ksc5601.h latin-greek.c latin-greek-1.c    \
+	      macintosh.c mac-is.c mac-uk.c nats-dano.c nats-sefi.c sjis.c  \
+	      t.61.c uhc.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -258,6 +128,10 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 endef
 
 # Rule to generate the shared objects.
+charmaps = ../localedata/charmaps
+ifndef no_deps
+-include $(objpfx)iconv-rules
+endif
 extra-modules-left := $(modules)
 include extra-module.mk
 
@@ -269,23 +143,48 @@ install-others	= $(addprefix $(inst_gconvdir)/, $(modules.so))	\
 # If we have the localedata add-on available we can build the conversion
 # tables for numerous charsets.
 
+gen-8bit-modules := iso8859-2 iso8859-3 iso8859-4 iso8859-6 iso8859-9 koi-8 \
+		    hp-roman8 ebcdic-at-de ebcdic-at-de-a ebcdic-ca-fr	    \
+		    ebcdic-dk-no ebcdic-dk-no-a ebcdic-es ebcdic-es-a	    \
+		    ebcdic-es-s ebcdic-fi-se ebcdic-fi-se-a ebcdic-fr	    \
+		    ebcdic-is-friss ebcdic-it ebcdic-pt ebcdic-uk ebcdic-us \
+		    ibm037 ibm038 ibm274 ibm275 ibm423 ibm500 ibm870 ibm871 \
+		    ibm891 ibm903 ibm904 ibm905 ibm1047
+
+gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
+			ibm277 ibm278 ibm280 ibm281 ibm284 ibm285 ibm290   \
+			ibm297 ibm420 ibm424 ibm437 ibm850 ibm851 ibm852   \
+			ibm855 ibm857 ibm860 ibm861 ibm862 ibm863 ibm864   \
+			ibm865 ibm868 ibm869 ibm875 ibm880 ibm918 ibm1004  \
+			ibm1026 cp1250 cp1251 cp1252 cp1253 cp1254 cp1255  \
+			cp1256 cp1257 ibm866 iso8859-5 iso8859-7 iso8859-8 \
+			iso8859-10 macintosh iec_p27-1 baltic asmo_449	   \
+			csn_369103 cwi dec-mcs ecma-cyrillic gost_19768-74 \
+			greek-ccitt greek7 greek7-old inis inis-8	   \
+			inis-cyrillic iso_2033 iso_5427 iso_5427-ext	   \
+			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
+			iso8859-13 iso8859-14 iso8859-15 mac-uk
+
+gen-special-modules := iso8859-7jp
+
+generated-modules := $(gen-8bit-modules) $(gen-8bit-gap-modules) \
+		     $(gen-special-modules)
+
+generated = $(generated-modules:=.h) $(generated-modules:=.stmp) \
+	    iconv-test.out iconv-rules
+ifdef objpfx
+generated += gconv-modules
+endif
+
+# Rules to generate the headers.
+export AWK
+
 define generate-8bit-table
 $(make-target-directory)
 $(SHELL) ./gen-8bit.sh $< > $(@:stmp=T)
 $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
-
-sed-generated-headers := iso8859-2.h iso8859-3.h iso8859-4.h iso8859-6.h \
-			 iso8859-9.h koi-8.h hp-roman8.h ebcdic-at-de.h  \
-			 ebcdic-at-de-a.h ebcdic-ca-fr.h ebcdic-dk-no.h	 \
-			 ebcdic-dk-no-a.h ebcdic-es.h ebcdic-es-a.h	 \
-			 ebcdic-es-s.h ebcdic-fi-se.h ebcdic-fi-se-a.h	 \
-			 ebcdic-fr.h ebcdic-is-friss.h ebcdic-it.h	 \
-			 ebcdic-pt.h ebcdic-uk.h ebcdic-us.h ibm037.h	 \
-			 ibm038.h ibm274.h ibm275.h ibm423.h ibm500.h	 \
-			 ibm870.h ibm871.h ibm891.h ibm903.h ibm904.h	 \
-			 ibm905.h ibm1047.h
 
 define generate-8bit-gap-table
 $(make-target-directory)
@@ -294,293 +193,52 @@ $(move-if-change) $(@:stmp=T) $(@:stmp=h)
 touch $@
 endef
 
-export AWK
-
-awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
-			  ibm256.h ibm273.h ibm277.h ibm278.h ibm280.h	 \
-			  ibm281.h ibm284.h ibm285.h ibm290.h ibm297.h	 \
-			  ibm420.h ibm424.h ibm437.h ibm850.h ibm851.h	 \
-			  ibm852.h ibm855.h ibm857.h ibm860.h ibm861.h	 \
-			  ibm862.h ibm863.h ibm864.h ibm865.h ibm868.h	 \
-			  ibm869.h ibm875.h ibm880.h ibm918.h ibm1004.h	 \
-			  ibm1026.h cp1250.h cp1251.h cp1252.h cp1253.h	 \
-			  cp1254.h cp1255.h cp1256.h cp1257.h ibm866.h	 \
-			  iso8859-5.h iso8859-7.h iso8859-8.h		 \
-			  iso8859-10.h iso8859-7jp.h macintosh.h	 \
-			  iec_p27-1.h baltic.h asmo_449.h csn_369103.h	 \
-			  cwi.h dec-mcs.h ecma-cyrillic.h gost_19768-74.h\
-			  greek-ccitt.h greek7.h greek7-old.h inis.h	 \
-			  inis-8.h inis-cyrillic.h iso_2033.h iso_5427.h \
-			  iso_5427-ext.h iso_5428.h iso_10367-box.h	 \
-			  mac-is.h nats-dano.h nats-sefi.h iso8859-13.h  \
-			  iso8859-14.h iso8859-15.h mac-uk.h
-
-generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
-	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
-	    iconv-test.out
-ifdef objpfx
-generated += $(objpfx)gconv-modules
-endif
-
 # The headers must be generated before the compilation.
-before-compile = $(addprefix $(objpfx),\
-			$(sed-generated-headers) $(awk-generated-headers))
+before-compile = $(addprefix $(objpfx),$(generated-modules:=.h))
 
-# Rules to generate the headers.
-$(sed-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
-	@:
-
-$(objpfx)iso8859-2.stmp: ../localedata/charmaps/ISO-8859-2 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)iso8859-3.stmp: ../localedata/charmaps/ISO-8859-3 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)iso8859-4.stmp: ../localedata/charmaps/ISO-8859-4 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)iso8859-6.stmp: ../localedata/charmaps/ISO-8859-6 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)iso8859-9.stmp: ../localedata/charmaps/ISO-8859-9 gen-8bit.sh
-	$(generate-8bit-table)
-
-$(objpfx)koi-8.stmp: ../localedata/charmaps/KOI-8 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)hp-roman8.stmp: ../localedata/charmaps/HP-ROMAN8 gen-8bit.sh
-	$(generate-8bit-table)
-
-$(objpfx)ebcdic-at-de.stmp: ../localedata/charmaps/EBCDIC-AT-DE gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-at-de-a.stmp: ../localedata/charmaps/EBCDIC-AT-DE-A gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-ca-fr.stmp: ../localedata/charmaps/EBCDIC-CA-FR gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-dk-no.stmp: ../localedata/charmaps/EBCDIC-DK-NO gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-dk-no-a.stmp: ../localedata/charmaps/EBCDIC-DK-NO-A gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-es.stmp: ../localedata/charmaps/EBCDIC-ES gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-es-a.stmp: ../localedata/charmaps/EBCDIC-ES-A gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-es-s.stmp: ../localedata/charmaps/EBCDIC-ES-S gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-fi-se.stmp: ../localedata/charmaps/EBCDIC-FI-SE gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-fi-se-a.stmp: ../localedata/charmaps/EBCDIC-FI-SE-A gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-fr.stmp: ../localedata/charmaps/EBCDIC-FR gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-is-friss.stmp: ../localedata/charmaps/EBCDIC-IS-FRISS gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-it.stmp: ../localedata/charmaps/EBCDIC-IT gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-pt.stmp: ../localedata/charmaps/EBCDIC-PT gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-uk.stmp: ../localedata/charmaps/EBCDIC-UK gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ebcdic-us.stmp: ../localedata/charmaps/EBCDIC-US gen-8bit.sh
-	$(generate-8bit-table)
-
-$(objpfx)ibm037.stmp: ../localedata/charmaps/IBM037 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm038.stmp: ../localedata/charmaps/IBM038 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm274.stmp: ../localedata/charmaps/IBM274 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm275.stmp: ../localedata/charmaps/IBM275 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm423.stmp: ../localedata/charmaps/IBM423 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm500.stmp: ../localedata/charmaps/IBM500 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm870.stmp: ../localedata/charmaps/IBM870 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm871.stmp: ../localedata/charmaps/IBM871 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm891.stmp: ../localedata/charmaps/IBM891 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm903.stmp: ../localedata/charmaps/IBM903 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm904.stmp: ../localedata/charmaps/IBM904 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm905.stmp: ../localedata/charmaps/IBM905 gen-8bit.sh
-	$(generate-8bit-table)
-$(objpfx)ibm1047.stmp: ../localedata/charmaps/IBM1047 gen-8bit.sh
-	$(generate-8bit-table)
-
-$(awk-generated-headers:%=$(objpfx)%): $(objpfx)%.h: $(objpfx)%.stmp
-	@:
-
-$(objpfx)iso8859-5.stmp: ../localedata/charmaps/ISO-8859-5 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-7.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-7jp.stmp: ../localedata/charmaps/ISO-8859-7 gen-8bit-gap-1.sh
+$(objpfx)iconv-rules: Makefile
 	$(make-target-directory)
-	$(SHELL) ./gen-8bit-gap-1.sh $< >$(@:stmp=T)
+	{ echo $(filter-out lib%, $(modules)); \
+	  echo 8bit $(gen-8bit-modules); \
+	  echo 8bit-gap $(gen-8bit-gap-modules); } | \
+	$(AWK) 'NR == 1 { \
+		  for (i = 1; i <= NF; i++) \
+		    printf "%s-routines := %s\n", $$i, tolower($$i); \
+		}; \
+		NR > 1 { \
+		  for (i = 2; i <= NF; i++) { \
+		    printf "$$(objpfx)%s.stmp: ", $$i; \
+		    map = toupper($$i); \
+		    sub(/^ISO8859/, "ISO-8859", map); \
+		    if (map == "ISO_2033") map = map "-1983"; \
+		    printf "$$(charmaps)/%s ", map; \
+		    printf "gen-%s.sh\n", $$1; \
+		    printf "\t$$(generate-%s-table)\n", $$1; \
+		  } \
+		}' > $@.new
+	mv -f $@.new $@
+
+$(generated-modules:%=$(objpfx)%.h): $(objpfx)%.h: $(objpfx)%.stmp
+	@:
+
+$(gen-8bit-modules:%=$(objpfx)%.stmp): $(objpfx)%.stmp: $(objpfx)iconv-rules
+$(gen-8bit-gap-modules:%=$(objpfx)%.stmp): $(objpfx)%.stmp: $(objpfx)iconv-rules
+
+$(objpfx)iso8859-7jp.stmp: $(charmaps)/ISO-8859-7 gen-8bit-gap-1.sh
+	$(make-target-directory)
+	$(SHELL) ./gen-8bit-gap-1.sh $< > $(@:stmp=T)
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
-$(objpfx)iso8859-8.stmp: ../localedata/charmaps/ISO-8859-8 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-10.stmp: ../localedata/charmaps/ISO-8859-10 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-13.stmp: ../localedata/charmaps/ISO-8859-13 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-14.stmp: ../localedata/charmaps/ISO-8859-14 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso8859-15.stmp: ../localedata/charmaps/ISO-8859-15 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-
-$(objpfx)koi8-r.stmp: ../localedata/charmaps/KOI8-R gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)latin-greek.stmp: ../localedata/charmaps/LATIN-GREEK gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)latin-greek-1.stmp: ../localedata/charmaps/LATIN-GREEK-1 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-
-$(objpfx)ibm256.stmp: ../localedata/charmaps/IBM256 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm273.stmp: ../localedata/charmaps/IBM273 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm277.stmp: ../localedata/charmaps/IBM277 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm278.stmp: ../localedata/charmaps/IBM278 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm280.stmp: ../localedata/charmaps/IBM280 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm281.stmp: ../localedata/charmaps/IBM281 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm284.stmp: ../localedata/charmaps/IBM284 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm285.stmp: ../localedata/charmaps/IBM285 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm290.stmp: ../localedata/charmaps/IBM290 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm297.stmp: ../localedata/charmaps/IBM297 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm420.stmp: ../localedata/charmaps/IBM420 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm424.stmp: ../localedata/charmaps/IBM424 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm437.stmp: ../localedata/charmaps/IBM437 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm850.stmp: ../localedata/charmaps/IBM850 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm851.stmp: ../localedata/charmaps/IBM851 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm852.stmp: ../localedata/charmaps/IBM852 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm855.stmp: ../localedata/charmaps/IBM855 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm857.stmp: ../localedata/charmaps/IBM857 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm860.stmp: ../localedata/charmaps/IBM860 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm861.stmp: ../localedata/charmaps/IBM861 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm862.stmp: ../localedata/charmaps/IBM862 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm863.stmp: ../localedata/charmaps/IBM863 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm864.stmp: ../localedata/charmaps/IBM864 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm865.stmp: ../localedata/charmaps/IBM865 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm866.stmp: ../localedata/charmaps/IBM866 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm868.stmp: ../localedata/charmaps/IBM868 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm869.stmp: ../localedata/charmaps/IBM869 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm875.stmp: ../localedata/charmaps/IBM875 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm880.stmp: ../localedata/charmaps/IBM880 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm918.stmp: ../localedata/charmaps/IBM918 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm1004.stmp: ../localedata/charmaps/IBM1004 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ibm1026.stmp: ../localedata/charmaps/IBM1026 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-
-$(objpfx)cp1250.stmp: ../localedata/charmaps/CP1250 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1251.stmp: ../localedata/charmaps/CP1251 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1252.stmp: ../localedata/charmaps/CP1252 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1253.stmp: ../localedata/charmaps/CP1253 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1254.stmp: ../localedata/charmaps/CP1254 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1255.stmp: ../localedata/charmaps/CP1255 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1256.stmp: ../localedata/charmaps/CP1256 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cp1257.stmp: ../localedata/charmaps/CP1257 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-
-$(objpfx)macintosh.stmp: ../localedata/charmaps/MACINTOSH gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iec_p27-1.stmp: ../localedata/charmaps/IEC_P27-1 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)baltic.stmp: ../localedata/charmaps/BALTIC gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)asmo_449.stmp: ../localedata/charmaps/ASMO_449 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)csn_369103.stmp: ../localedata/charmaps/CSN_369103 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)cwi.stmp: ../localedata/charmaps/CWI gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)dec-mcs.stmp: ../localedata/charmaps/DEC-MCS gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)ecma-cyrillic.stmp: ../localedata/charmaps/ECMA-CYRILLIC \
-			     gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)gost_19768-74.stmp: ../localedata/charmaps/GOST_19768-74 \
-			     gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)greek-ccitt.stmp: ../localedata/charmaps/GREEK-CCITT gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)greek7.stmp: ../localedata/charmaps/GREEK7 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)greek7-old.stmp: ../localedata/charmaps/GREEK7-OLD gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)inis.stmp: ../localedata/charmaps/INIS gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)inis-8.stmp: ../localedata/charmaps/INIS-8 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)inis-cyrillic.stmp: ../localedata/charmaps/INIS-CYRILLIC \
-			     gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso_2033.stmp: ../localedata/charmaps/ISO_2033-1983 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso_5427.stmp: ../localedata/charmaps/ISO_5427 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso_5427-ext.stmp: ../localedata/charmaps/ISO_5427-EXT gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso_5428.stmp: ../localedata/charmaps/ISO_5428 gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)iso_10367-box.stmp: ../localedata/charmaps/ISO_10367-BOX \
-			     gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)mac-is.stmp: ../localedata/charmaps/MAC-IS gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)mac-uk.stmp: ../localedata/charmaps/MAC-UK gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)nats-dano.stmp: ../localedata/charmaps/NATS-DANO gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-$(objpfx)nats-sefi.stmp: ../localedata/charmaps/NATS-SEFI gen-8bit-gap.sh
-	$(generate-8bit-gap-table)
-
-headers: $(addprefix $(objpfx),\
-		$(sed-generated-headers) $(awk-generated-headers))
+headers: $(addprefix $(objpfx), $(generated-modules:=.h))
 
 $(addprefix $(inst_gconvdir)/, $(modules.so)): \
     $(inst_gconvdir)/%: $(objpfx)% $(+force)
 	$(do-install-program)
 $(inst_gconvdir)/gconv-modules: gconv-modules $(+force)
 	$(do-install)
-endif
+
+endif # build-shared = yes
 
 include ../Rules
 

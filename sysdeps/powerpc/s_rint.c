@@ -25,16 +25,18 @@ __rint (double x)
   static const float TWO52 = 4503599627370496.0;
 
   if (fabs (x) < TWO52)
-    if (x > 0.0)
-      {
-	x += TWO52;
-	x -= TWO52;
-      }
-    else if (x < 0.0)
-      {
-	x -= TWO52;
-	x += TWO52;
-      }
+    {
+      if (x > 0.0)
+	{
+	  x += TWO52;
+	  x -= TWO52;
+	}
+      else if (x < 0.0)
+	{
+	  x -= TWO52;
+	  x += TWO52;
+	}
+    }
 
   return x;
 }

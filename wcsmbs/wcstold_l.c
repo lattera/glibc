@@ -22,10 +22,11 @@
 #include <math.h>
 #include <stddef.h>
 #include <locale.h>
+#include "wchar.h"
+
+#define USE_IN_EXTENDED_LOCALE_MODEL	1
 
 #ifndef __NO_LONG_DOUBLE_MATH
-
-# define USE_IN_EXTENDED_LOCALE_MODEL	1
 
 extern long double ____wcstold_l_internal (const wchar_t *, wchar_t **, int,
 					   __locale_t);
@@ -46,6 +47,6 @@ ____wcstold_l_internal (const wchar_t *nptr, wchar_t **endptr, int group,
 long double
 __wcstold_l (const wchar_t *nptr, wchar_t **endptr, __locale_t loc)
 {
-  return __wcstod_internal (nptr, endptr, 0, loc);
+  return ____wcstod_l_internal (nptr, endptr, 0, loc);
 }
 #endif

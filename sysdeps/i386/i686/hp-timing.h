@@ -84,7 +84,7 @@
 /* We use 64bit values for the times.  */
 typedef unsigned long long int hp_timing_t;
 
-/* Internal variabled used to store the overhead of the measurement
+/* Internal variable used to store the overhead of the measurement
    opcodes.  */
 extern hp_timing_t __libc_hp_timing_overhead;
 

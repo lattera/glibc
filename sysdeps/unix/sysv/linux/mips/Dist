@@ -3,14 +3,8 @@ kernel_sigaction.h
 kernel_stat.h
 kernel_termios.h
 entry.h
-regdef.h
-fpregdef.h
-sgidefs.h
 xstatconv.c
 sys/acct.h
-sys/asm.h
 sys/cachectl.h
-sys/fpregdef.h
 sys/procfs.h
-sys/regdef.h
 sys/sysmips.h

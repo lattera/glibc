@@ -1,5 +1,5 @@
 /* Wrapper around MD5 sum replacement for crypt function.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -34,6 +34,8 @@ extern char *__md5_crypt_r (const char *key, const char *salt, char *buffer,
 			    int buflen);
 extern char *__md5_crypt (const char *key, const char *salt);
 
+extern char *__crypt_r (const char *key, const char *salt,
+			struct crypt_data *__restrict data);
 
 /* We recognize an intended call of the MD5 crypt replacement function
    by the first 3 characters of the salt string.  If they match the
@@ -42,7 +44,7 @@ char *
 __crypt_r (key, salt, data)
      const char *key;
      const char *salt;
-     struct crypt_data *data;
+     struct crypt_data *__restrict data;
 {
   if (strncmp (md5_salt_prefix, salt, sizeof (md5_salt_prefix) - 1) == 0)
     return __md5_crypt_r (key, salt, (char *) data,

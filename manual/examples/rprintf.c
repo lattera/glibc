@@ -1,32 +1,33 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <printf.h>
-#include <stdarg.h>
 
 /*@group*/
 typedef struct
-  {
-    char *name;
-  } Widget;
+{
+  char *name;
+}
+Widget;
 /*@end group*/
 
 int
 print_widget (FILE *stream,
 	      const struct printf_info *info,
-	      va_list *app)
+	      const void *const *args)
 {
-  Widget *w;
+  const Widget *w;
   char *buffer;
   int len;
 
   /* Format the output into a string. */
-  w = va_arg (*app, Widget *);
+  w = *((const Widget **) (args[0]));
   len = asprintf (&buffer, "<Widget %p: %s>", w, w->name);
   if (len == -1)
     return -1;
 
   /* Pad to the minimum field width and print to the stream. */
   len = fprintf (stream, "%*s",
-		 (info->left ? - info->width : info->width),
+		 (info->left ? -info->width : info->width),
 		 buffer);
 
   /* Clean up and return. */

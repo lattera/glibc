@@ -45,16 +45,16 @@
 #define PLT_DATA_START_WORDS(num_entries) PLT_ENTRY_START_WORDS(num_entries)
 
 #define OPCODE_ADDI(rd,ra,simm) \
-  (0x38000000 | (rd) << 21 | (ra) << 16 | (simm) & 0xffff)
+  (0x38000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
 #define OPCODE_ADDIS(rd,ra,simm) \
-  (0x3c000000 | (rd) << 21 | (ra) << 16 | (simm) & 0xffff)
+  (0x3c000000 | (rd) << 21 | (ra) << 16 | ((simm) & 0xffff))
 #define OPCODE_ADD(rd,ra,rb) \
   (0x7c000214 | (rd) << 21 | (ra) << 16 | (rb) << 11)
-#define OPCODE_B(target) (0x48000000 | (target) & 0x03fffffc)
-#define OPCODE_BA(target) (0x48000002 | (target) & 0x03fffffc)
+#define OPCODE_B(target) (0x48000000 | ((target) & 0x03fffffc))
+#define OPCODE_BA(target) (0x48000002 | ((target) & 0x03fffffc))
 #define OPCODE_BCTR() 0x4e800420
 #define OPCODE_LWZ(rd,d,ra) \
-  (0x80000000 | (rd) << 21 | (ra) << 16 | (d) & 0xffff)
+  (0x80000000 | (rd) << 21 | (ra) << 16 | ((d) & 0xffff))
 #define OPCODE_MTCTR(rd) (0x7C0903A6 | (rd) << 21)
 #define OPCODE_RLWINM(ra,rs,sh,mb,me) \
   (0x54000000 | (rs) << 21 | (ra) << 16 | (sh) << 11 | (mb) << 6 | (me) << 1)
@@ -305,7 +305,7 @@ __elf_machine_fixup_plt(struct link_map *map, const Elf32_Rela *reloc,
 	     updating a lazy PLT entry).  */
 
 	  reloc_addr[0] = OPCODE_LI (11, finaladdr);
-	  reloc_addr[1] = OPCODE_ADDIS (11, 11, finaladdr + 0x8000 >> 16);
+	  reloc_addr[1] = OPCODE_ADDIS (11, 11, (finaladdr + 0x8000) >> 16);
 	  reloc_addr[2] = OPCODE_MTCTR (11);
 	  reloc_addr[3] = OPCODE_BCTR ();
 	}
@@ -355,7 +355,7 @@ __process_machine_rela (struct link_map *map,
 	  _dl_signal_error(0, map->l_name,
 			   "R_PPC_ADDR24 relocation out of range");
 	}
-      *reloc_addr = *reloc_addr & 0xfc000003 | finaladdr & 0x3fffffc;
+      *reloc_addr = (*reloc_addr & 0xfc000003) | (finaladdr & 0x3fffffc);
       break;
 
     case R_PPC_ADDR16:
@@ -388,11 +388,11 @@ __process_machine_rela (struct link_map *map,
 	  _dl_signal_error(0, map->l_name,
 			   "R_PPC_ADDR14 relocation out of range");
 	}
-      *reloc_addr = *reloc_addr & 0xffff0003 | finaladdr & 0xfffc;
+      *reloc_addr = (*reloc_addr & 0xffff0003) | (finaladdr & 0xfffc);
       if (rinfo != R_PPC_ADDR14)
-	*reloc_addr = (*reloc_addr & 0xffdfffff
-		       | (rinfo == R_PPC_ADDR14_BRTAKEN
-			  ^ finaladdr >> 31) << 21);
+	*reloc_addr = ((*reloc_addr & 0xffdfffff)
+		       | ((rinfo == R_PPC_ADDR14_BRTAKEN)
+			  ^ (finaladdr >> 31)) << 21);
       break;
 
     case R_PPC_REL24:
@@ -403,7 +403,7 @@ __process_machine_rela (struct link_map *map,
 	    _dl_signal_error(0, map->l_name,
 			     "R_PPC_REL24 relocation out of range");
 	  }
-	*reloc_addr = *reloc_addr & 0xfc000003 | delta & 0x3fffffc;
+	*reloc_addr = (*reloc_addr & 0xfc000003) | (delta & 0x3fffffc);
       }
       break;
 

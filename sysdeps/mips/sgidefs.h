@@ -1,6 +1,6 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>.
+   Contributed by Ralf Baechle <ralf@gnu.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,13 +17,28 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _REGDEF_H
-#define _REGDEF_H	1
+#ifndef _SGIDEFS_H
+#define _SGIDEFS_H	1
 
 /*
- * The real definitions come from the Linux kernel sources
+ * Definitions for the ISA level
  */
-#include <asm/regdef.h>
-#include <asm/fpregdef.h>
+#define _MIPS_ISA_MIPS1 1
+#define _MIPS_ISA_MIPS2 2
+#define _MIPS_ISA_MIPS3 3
+#define _MIPS_ISA_MIPS4 4
+#define _MIPS_ISA_MIPS5 5
 
-#endif /* regdef.h */
+/*
+ * Subprogram calling convention
+ *
+ * At the moment only _MIPS_SIM_ABI32 is in use.  This will change rsn.
+ * Until GCC 2.8.0 is released don't rely on this definitions because the
+ * 64bit code is essentially using the 32bit interface model just with
+ * 64bit registers.
+ */
+#define _MIPS_SIM_ABI32		1
+#define _MIPS_SIM_NABI32	2
+#define _MIPS_SIM_ABI64		3
+
+#endif /* sgidefs.h */

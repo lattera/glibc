@@ -1,7 +1,7 @@
 /*
  * UFC-crypt: ultra fast crypt(3) implementation
  *
- * Copyright (C) 1991, 1992, 1993, 1996, 1997 Free Software Foundation, Inc.
+ * Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
@@ -50,10 +50,8 @@ struct crypt_data
     int direction, initialized;
   };
 
-extern char *__crypt_r __P ((__const char *__key, __const char *__salt,
-			     struct crypt_data *__data));
 extern char *crypt_r __P ((__const char *__key, __const char *__salt,
-			   struct crypt_data *__data));
+			   struct crypt_data *__restrict __data));
 #endif
 
 __END_DECLS

@@ -73,6 +73,7 @@ ENTRY (FUNCTION)
 	movl $64, %ecx
 	movl %esp, %edi
 	xorl %eax, %eax
+	cld
 	rep
 	stosl
 

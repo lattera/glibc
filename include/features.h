@@ -26,7 +26,8 @@
    _ISOC9X_SOURCE	Extensions to ISO C 89 from ISO C 9x.
    _POSIX_SOURCE	IEEE Std 1003.1.
    _POSIX_C_SOURCE	If ==1, like _POSIX_SOURCE; if >=2 add IEEE Std 1003.2;
-			if >=199309L, add IEEE Std 1003.1b-1993
+			if >=199309L, add IEEE Std 1003.1b-1993;
+			if >=199506L, add IEEE Std 1003.1c-1995
    _XOPEN_SOURCE	Includes POSIX and XPG things.  Set to 500 if
 			Single Unix conformance is wanted.
    _XOPEN_SOURCE_EXTENDED XPG things and X/Open Unix extensions.

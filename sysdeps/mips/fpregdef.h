@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,12 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_FPREGDEF_H
-#define _SYS_FPREGDEF_H
+#ifndef _FPREGDEF_H
+#define _FPREGDEF_H
 
-/*
- * The real definitions come from the Linux kernel sources
- */
-#include <asm/fpregdef.h>
+#include <sys/fpregdef.h>
 
-#endif /* sys/fpregdef.h */
+#endif /* _FPREGDEF_H */

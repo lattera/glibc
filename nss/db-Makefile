@@ -116,7 +116,7 @@ $(VAR_DB)/shadow.db: /etc/shadow
 	@if chgrp shadow $@ 2>/dev/null; then \
 	  chmod g+r $@; \
 	else \
-	  chown 0; chgrp 0; chmod 600; \
+	  chown 0 $@; chgrp 0 $@; chmod 600 $@; \
 	  echo; \
 	  echo "Warning: The shadow password database $@"; \
 	  echo "has been set to be readable only by root.  You may want"; \

@@ -34,7 +34,7 @@
     ++_tmp;							\
 								\
     _test = (size_t)_tmp;					\
-    _test = _test + 0xf & ~0xf;					\
+    _test = (_test + 0xf) & ~0xf;				\
     /* Under some circumstances, MkLinux (up to at least DR3a5)	\
        omits the padding.  To work around this, we make a	\
        basic sanity check of the argument vector.  Of		\

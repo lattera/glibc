@@ -28,8 +28,20 @@ struct sigaction
     unsigned int sa_flags;
 
     /* Signal handler.  */
+#ifdef __USE_POSIX199309
+    union
+      {
+	/* Used if SA_SIGINFO is not set.  */
+	__sighandler_t sa_handler;
+	/* Used if SA_SIGINFO is set.  */
+	void (*sa_sigaction) __PMT ((int, siginfo_t *, void *));
+      }
+    __sigaction_handler;
+# define sa_handler    __sigaction_handler.sa_handler
+# define sa_sigaction  __sigaction_handler.sa_sigaction
+#else
     __sighandler_t sa_handler;
-
+#endif
     /* Additional set of signals to be blocked.  */
     __sigset_t sa_mask;
 
@@ -43,14 +55,17 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#define	SA_NOCLDSTOP  1		 /* Don't send SIGCHLD when children stop.  */
-#ifdef __USE_MISC
+#define SA_NOCLDSTOP  0x00020000 /* Don't send SIGCHLD when children stop.  */
+#define SA_SIGINFO    0x00000008 /* Invoke signal-catching function with
+				    three arguments instead of one.  */
+#if defined __USE_UNIX98 || defined __USE_MISC
 # define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
 # define SA_RESTART   0x00000004 /* Restart syscall on signal return.  */
-# define SA_INTERRUPT 0x00000000 /* Historical no-op.  */
 # define SA_NODEFER   0x00000010 /* Don't automatically block the signal when
 				    its handler is being executed.  */
-# define SA_RESETHAND 0x00000002 /* Reset to SIG_DFL on entry to handler.  */
+#endif
+#ifdef __USE_MISC
+# define SA_INTERRUPT 0x01000000 /* Historical no-op.  */
 
 /* Some aliases for the SA_ constants.  */
 # define SA_NOMASK    SA_NODEFER
@@ -63,5 +78,7 @@ struct sigaction
 #define	SIG_BLOCK     1		/* Block signals.  */
 #define	SIG_UNBLOCK   2		/* Unblock signals.  */
 #define	SIG_SETMASK   3		/* Set the set of blocked signals.  */
-#define SIG_SETMASK32 256	/* Goodie from SGI for BSD compatibility:
+#ifdef __USE_MISC
+# define SIG_SETMASK32 256	/* Goodie from SGI for BSD compatibility:
 				   set only the low 32 bit of the sigset.  */
+#endif

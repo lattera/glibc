@@ -1,3 +1,135 @@
+1998-12-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile: Use rpath $ORIGIN for modules which use any of
+	the conversion libraries.
+
+	* include/features.h: Mention latest extensions in _POSIX_C_SOURCE
+	description.
+
+	* libio/genops.c (list_all_lock): New variable.
+	(_IO_un_link, _IO_link_in): Acquire lock before modifying _IO_list_all.
+	[PR libc/911].
+
+	* sysdeps/i386/i686/strtok.s: Add missing cld.
+
+	* sysdeps/i386/i686/mempcpy.S: New file.
+
+1998-12-30  Geoff Keating  <geoffk@ozemail.com.au>
+
+	Suppress parentheses warnings:
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(DL_FIND_ARG_COMPONENTS): here,
+	* sysdeps/powerpc/dl-machine.c: here,
+	* sysdeps/powerpc/fclrexcpt.c (feclearexcept): here,
+	* sysdeps/powerpc/fesetround.c (fesetround): here,
+	* sysdeps/powerpc/feupdateenv.c (feupdateenv): here,
+	* sysdeps/powerpc/fraiseexcpt.c (feraiseexcept): here,
+	* sysdeps/powerpc/fsetexcptflg.c (fesetexceptflag): here,
+	* sysdeps/powerpc/s_rint.c (__rint): here,
+	* sysdeps/powerpc/s_rintf.c (__rintf): here,
+	* sysdeps/powerpc/w_sqrt.c (__sqrt): here,
+	* sysdeps/powerpc/w_sqrtf.c (__sqrtf): and here.
+
+1998-12-30  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* wcsmbs/wcstold.c [__NO_LONG_DOUBLE_MATH]: Include wchar.h.
+	* wcsmbs/wcstold_l.c [__NO_LONG_DOUBLE_MATH]: Likewise.  Also define
+	appropropriate prototypes, correct procedure names.
+
+1998-12-30  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/generic/crypt-entry.c: Prototype __crypt_r, suppress
+	warning.
+	(__crypt_r): Add __restrict.
+	* sysdeps/generic/crypt.h: Remove internal routine.  Add __restrict.
+
+1998-12-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/longlong.h: Add missing #else in SPARC definitions.
+
+1998-12-30  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	Patches by Ralf Baechle <ralf@gnu.org>:
+	* sysdeps/unix/sysv/linux/mips/sgidefs.h: Removed.
+	* sysdeps/unix/sysv/linux/mips/sys/asm.h:  Removed.
+	* sysdeps/unix/sysv/linux/mips/sys/regdef.h:  Removed.
+	* sysdeps/unix/sysv/linux/mips/sys/fpregdef.h:  Removed.
+	* sysdeps/unix/sysv/linux/mips/regdef.h:  Removed.
+	* sysdeps/unix/sysv/linux/mips/fpregdef.h: Removed.
+
+	* sysdeps/unix/sysv/linux/mips/Makefile: Remove delete files.
+	* sysdeps/unix/sysv/linux/mips/Dist: Remove deleted files.
+
+	* sysdeps/mips/sys/fpregdef.h: New files, enhanced versions of deleted
+	linux specific files.
+	* sysdeps/mips/sys/asm.h: Likewise.
+	* sysdeps/mips/sgidefs.h: Likewise.
+	* sysdeps/mips/fpregdef.h: Likewise.
+	* sysdeps/mips/regdef.h: Likewise.
+
+	* sysdeps/mips/Makefile: Add new headers.
+	* sysdeps/mips/Dist: Add new files.
+
+	* sysdeps/mips/fpu_control.h (_FPU_DEFAULT): Change value.
+
+1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* iconvdata/Makefile: Remove variable assignments and rules that
+	are now auto-generated.  Include $(objpfx)iconv-rules instead.
+	Btw, that removes a few typos.
+	(charmaps): New variable.
+	($(objpfx)iconv-rules): New target.
+	(gen-8bit-modules): Renamed from sed-generated-headers, remove .h
+	suffixes.
+	(gen-8bit-gap-modules): Renamed from awk-generated-headers, remove
+	.h suffixes.
+	(gen-special-modules): New variable.
+	(generated-modules): New variable.
+	(headers): Use it.
+	(before-compile): Likewise.
+	(generated): Likewise, and add iconv-rules.
+	* iconvdata/euc-cn.c: Renamed from euccn.c.
+	* iconvdata/euc-jp.c: Renamed from eucjp.c.
+	* iconvdata/euc-kr.c: Renamed from euckr.c.
+	* iconvdata/euc-tw.c: Renamed from euctw.c.
+	* iconvdata/iso_6937.c: Renamed from iso6937.c.
+	* iconvdata/iso_6937-2.c: Renamed from iso6937-2.c.
+	* iconvdata/t.61.c: Renamed from t61.c.
+	* iconvdata/Makefile (distribute): Adjusted for those renames.
+	Remove $(objpfx) from names.
+
+1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/generic/hp-timing.h: Fix comment.
+	* sysdeps/generic/dl-hash.h: Likewise.
+	* sysdeps/i386/i686/hp-timing.h: Likewise.
+
+1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* posix/fnmatch.c (fnmatch): Always pass unsigned char values to
+	FOLD macro.
+
+1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* nss/db-Makefile ($(VAR_DB)/shadow.db): Fix last change.
+
+1998-12-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Sync with
+	current Linux 2.1.132 kernel sources.
+
+1998-12-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	Patches by Ralf Baechle <ralf@gnu.org> for Linux/MIPS:
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add ipc, change
+	pread/pwrite and llseek calls.
+
+	* sysdeps/unix/sysv/linux/mips/sysdep.S: New file.
+
+1998-12-29  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/thread-m.h [_LIBC] : Fix for NO_THREADS case.
+
 1998-12-28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.109.

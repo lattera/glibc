@@ -1,3 +1,8 @@
+1998-12-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/bits/stdio-lock.h: Define _IO_lock_lock and
+	_IO_lock_unlock.
+
 1998-12-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* semaphore.c (sem_trywait): Don't forget to unlock the semaphore

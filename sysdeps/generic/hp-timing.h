@@ -1,4 +1,4 @@
-/* High precision, low overhead timing functions.  i686 version.
+/* High precision, low overhead timing functions.  Generic version.
    Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.

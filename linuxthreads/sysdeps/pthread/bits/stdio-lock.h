@@ -1,5 +1,5 @@
 /* Thread package specific definitions of stream lock type.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,3 +33,7 @@ typedef pthread_mutex_t _IO_lock_t;
      __libc_lock_init_recursive (_name)
 #define _IO_lock_fini(_name) \
      __libc_lock_fini_recursive (_name)
+#define _IO_lock_lock(_name) \
+     __libc_lock_lock (_name)
+#define _IO_lock_unlock(_name) \
+     __libc_lock_unlock (_name)
