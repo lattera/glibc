@@ -1,3 +1,20 @@
+2003-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/syscalls.list: Add remap_file_pages entry.
+	* misc/sys/mman.h: Add prototype for remap_file_pages.
+	* sysdeps/generic/remap_file_pages.c: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/mman.h: Define MAP_POPULATE
+	and MAP_NONBLOCK.
+	* sysdeps/unix/sysv/linux/s390/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise
+	* sysdeps/unix/sysv/linux/m68k/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+
 2003-03-03  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/ia64/dl-fptr.c (__ia64_make_fptr): Revert last change.
@@ -18,8 +35,7 @@
 
 2003-03-03  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Add missing
-	brace.
+	* sysdeps/unix/clock_settime.c (HANDLE_REALTIME): Add missing brace.
 
 2003-03-02  Roland McGrath  <roland@redhat.com>
 

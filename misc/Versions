@@ -127,6 +127,9 @@ libc {
     # s*
     setxattr;
   }
+  GLIBC_2.3.3 {
+    remap_file_pages;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # cancelable.
