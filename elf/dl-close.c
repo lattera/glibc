@@ -106,7 +106,9 @@ _dl_close (void *_map)
   {
     struct link_map **rellist;
     unsigned int nrellist;
+    unsigned int nhandled;
     struct reldep_list *next;
+    bool handled[0];
   } *reldeps = NULL;
   struct link_map **list;
   struct link_map *map = _map;
@@ -153,6 +155,7 @@ _dl_close (void *_map)
     for (i = 1; list[i] != NULL; ++i)
       ;
 
+  unsigned int nopencount = i;
   new_opencount = (unsigned int *) alloca (i * sizeof (unsigned int));
 
   for (i = 0; list[i] != NULL; ++i)
@@ -164,22 +167,46 @@ _dl_close (void *_map)
   for (i = 1; list[i] != NULL; ++i)
     if ((! (list[i]->l_flags_1 & DF_1_NODELETE) || ! list[i]->l_init_called)
 	/* Decrement counter.  */
-	&& --new_opencount[i] == 0
-	/* Test whether this object was also loaded directly.  */
-	&& list[i]->l_searchlist.r_list != NULL)
+	&& --new_opencount[i] == 0)
       {
-	/* In this case we have the decrement all the dependencies of
-           this object.  They are all in MAP's dependency list.  */
-	unsigned int j;
-	struct link_map **dep_list = list[i]->l_searchlist.r_list;
+	void mark_removed (struct link_map *remmap)
+	  {
+	    /* Test whether this object was also loaded directly.  */
+	    if (remmap->l_searchlist.r_list != NULL)
+	      {
+		/* In this case we have to decrement all the dependencies of
+		   this object.  They are all in MAP's dependency list.  */
+		unsigned int j;
+		struct link_map **dep_list = remmap->l_searchlist.r_list;
 
-	for (j = 1; j < list[i]->l_searchlist.r_nlist; ++j)
-	  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE)
-	      || ! dep_list[j]->l_init_called)
-	    {
-	      assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
-	      --new_opencount[dep_list[j]->l_idx];
-	    }
+		for (j = 1; j < remmap->l_searchlist.r_nlist; ++j)
+		  if (! (dep_list[j]->l_flags_1 & DF_1_NODELETE)
+		      || ! dep_list[j]->l_init_called)
+		{
+		  assert (dep_list[j]->l_idx < map->l_searchlist.r_nlist);
+		  if (--new_opencount[dep_list[j]->l_idx] == 0)
+		    mark_removed (dep_list[j]);
+		}
+	      }
+
+	    if (remmap->l_reldeps != NULL)
+	      {
+		unsigned int j;
+		for (j = 0; j < remmap->l_reldepsact; ++j)
+		  {
+		    /* Find out whether this object is in our list.  */
+		    if (remmap->l_reldeps[j]->l_idx < nopencount
+			&& (list[remmap->l_reldeps[j]->l_idx]
+			    == remmap->l_reldeps[j]))
+		      /* Yes, it is.  */
+		      if (--new_opencount[remmap->l_reldeps[j]->l_idx] == 0)
+			/* This one is now gone, too.  */
+			mark_removed (remmap->l_reldeps[j]);
+		  }
+	      }
+	  }
+
+	mark_removed (list[i]);
       }
   assert (new_opencount[0] == 0);
 
@@ -233,8 +260,8 @@ _dl_close (void *_map)
 		  ++runp;
 		break;
 	      }
-	  else
-	    ++runp;
+	    else
+	      ++runp;
 	}
 
       /* Store the new l_opencount value.  */
@@ -339,9 +366,8 @@ _dl_close (void *_map)
 	  if (imap->l_next)
 	    imap->l_next->l_prev = imap->l_prev;
 
-	  if (imap->l_versions != NULL)
-	    free (imap->l_versions);
-	  if (imap->l_origin != NULL && imap->l_origin != (char *) -1)
+	  free (imap->l_versions);
+	  if (imap->l_origin != (char *) -1)
 	    free ((char *) imap->l_origin);
 
 	  /* If the object has relocation dependencies save this
@@ -350,10 +376,25 @@ _dl_close (void *_map)
 	    {
 	      struct reldep_list *newrel;
 
-	      newrel = (struct reldep_list *) alloca (sizeof (*reldeps));
+	      newrel = (struct reldep_list *) alloca (sizeof (*reldeps)
+						      + (imap->l_reldepsact
+							 * sizeof (bool)));
 	      newrel->rellist = imap->l_reldeps;
 	      newrel->nrellist = imap->l_reldepsact;
 	      newrel->next = reldeps;
+
+	      newrel->nhandled = imap->l_reldepsact;
+	      unsigned int j;
+	      for (j = 0; j < imap->l_reldepsact; ++j)
+		{
+		  /* Find out whether this object is in our list.  */
+		  if (imap->l_reldeps[j]->l_idx < nopencount
+		      && list[imap->l_reldeps[j]->l_idx] == imap->l_reldeps[j])
+		    /* Yes, it is.  */
+		    newrel->handled[j] = true;
+		  else
+		    newrel->handled[j] = false;
+		}
 
 	      reldeps = newrel;
 	    }
@@ -373,7 +414,7 @@ _dl_close (void *_map)
 
 	  /* Remove the searchlists.  */
 	  if (imap != map)
-	      free (imap->l_initfini);
+	    free (imap->l_initfini);
 
 	  /* Remove the scope array if we allocated it.  */
 	  if (imap->l_scope != imap->l_scope_mem)
@@ -412,7 +453,12 @@ _dl_close (void *_map)
   while (__builtin_expect (reldeps != NULL, 0))
     {
       while (reldeps->nrellist-- > 0)
-	_dl_close (reldeps->rellist[reldeps->nrellist]);
+	/* Some of the relocation dependencies might be on the
+	   dependency list of the object we are closing right now.
+	   They were already handled.  Do not close them again.  */
+	if (reldeps->nrellist < reldeps->nhandled
+	    && ! reldeps->handled[reldeps->nrellist])
+	  _dl_close (reldeps->rellist[reldeps->nrellist]);
 
       free (reldeps->rellist);
 

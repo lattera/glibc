@@ -363,7 +363,7 @@ $(objpfx)reldep6mod2.so: $(objpfx)reldep6mod1.so
 $(objpfx)reldep6mod3.so: $(objpfx)reldep6mod2.so
 $(objpfx)reldep6mod4.so: $(objpfx)reldep6mod1.so
 $(objpfx)tst-tlsmod3.so: $(objpfx)tst-tlsmod2.so
-$(objpfx)reldepmod3.so: $(objpfx)reldepmod1.so $(objpfx)reldepmod2.so
+$(objpfx)reldep8mod3.so: $(objpfx)reldep8mod1.so $(objpfx)reldep8mod2.so
 
 LDFLAGS-tst-tlsmod5.so = -nostdlib
 LDFLAGS-tst-tlsmod6.so = -nostdlib
