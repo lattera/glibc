@@ -88,10 +88,10 @@ __lll_mutex_timedlock_wait:
 
 	movl	%ecx, %ebp
 	movl	%edx, %edi
-	leal	1(%eax), %esi
+
+1:	leal	1(%eax), %esi
 
 	/* Get current time.  */
-1:
 	movl	%esp, %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
@@ -120,11 +120,12 @@ __lll_mutex_timedlock_wait:
 	movl	%ebp, %ebx
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL
+	movl	%eax, %ecx
 
-	movl	$1, %esi
+	movl	$1, %eax
 	LOCK
-	xaddl	%esi, (%ebx)
-	testl	%esi, %esi
+	xaddl	%eax, (%ebx)
+	testl	%eax, %eax
 	jne	7f
 
 	movl	$2, (%ebx)
@@ -138,7 +139,7 @@ __lll_mutex_timedlock_wait:
 	ret
 
 	/* Check whether the time expired.  */
-7:	cmpl	$-ETIMEDOUT, %eax
+7:	cmpl	$-ETIMEDOUT, %ecx
 	je	5f
 	jmp	1b
 

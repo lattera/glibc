@@ -87,10 +87,11 @@ __lll_mutex_timedlock_wait:
 
 	movq	%rdi, %r12
 	movq	%rdx, %r13
-	leaq	1(%rsi), %r14
+
+1:	leaq	1(%rax), %r14
 
 	/* Get current time.  */
-1:	movq	%rsp, %rdi
+	movq	%rsp, %rdi
 	xorq	%rsi, %rsi
 	movq	$VSYSCALL_ADDR_vgettimeofday, %rax
 	/* This is a regular function call, all calleer-save registers
@@ -121,11 +122,12 @@ __lll_mutex_timedlock_wait:
 	movq	%r12, %rdi
 	movq	$SYS_futex, %rax
 	syscall
+	movq	%rax, %rcx
 
-	movl	$1, %r14d
+	movl	$1, %eax
 	LOCK
-	xaddl	%r14d, (%rdi)
-	testl	%r14d, %r14d
+	xaddl	%eax, (%rdi)
+	testl	%eax, %eax
 	jne	7f
 
 	movl	$2, (%rdi)
@@ -138,7 +140,7 @@ __lll_mutex_timedlock_wait:
 	retq
 
 	/* Check whether the time expired.  */
-7:	cmpq	$-ETIMEDOUT, %rax
+7:	cmpq	$-ETIMEDOUT, %rcx
 	je	5f
 	jmp	1b
 

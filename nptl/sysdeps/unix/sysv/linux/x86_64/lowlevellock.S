@@ -58,7 +58,7 @@ __lll_lock_wait:
 	orl	$-1, %esi	/* Load -1.  */
 	LOCK
 	xaddl	%esi, (%rdi)
-	jne,pn	1b
+	jne	1b
 
 	movl	$-1, (%rdi)
 

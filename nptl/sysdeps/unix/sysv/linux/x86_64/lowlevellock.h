@@ -92,7 +92,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       "jmp 2f\n\t"					      \
 		       ".previous\n"					      \
 		       "2:"						      \
-		       : "=S" (result), "=&D" (ignore1), "=&a" (ignore2),     \
+		       : "=a" (result), "=&D" (ignore1), "=&S" (ignore2),     \
 			 "=&d" (ignore3), "=m" (futex)			      \
 		       : "0" (1), "4" (futex), "m" (timeout)		      \
 		       : "memory", "cx", "cc", "r10");			      \
