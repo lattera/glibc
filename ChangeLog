@@ -1,3 +1,7 @@
+2004-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/memcmp.S: New file.  Patch by HJ Lu.
+
 2003-12-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/syscalls.list: Turn vm86 into vm86old
