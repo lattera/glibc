@@ -159,8 +159,10 @@ do {						\
 #define UWtype		_FP_W_TYPE
 #define W_TYPE_SIZE	_FP_W_TYPE_SIZE
 
+typedef int QItype __attribute__((mode(QI)));
 typedef int SItype __attribute__((mode(SI)));
 typedef int DItype __attribute__((mode(DI)));
+typedef unsigned int UQItype __attribute__((mode(QI)));
 typedef unsigned int USItype __attribute__((mode(SI)));
 typedef unsigned int UDItype __attribute__((mode(DI)));
 #if _FP_W_TYPE_SIZE == 32

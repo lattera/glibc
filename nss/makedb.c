@@ -91,10 +91,10 @@ static const char args_doc[] = N_("\
 INPUT-FILE OUTPUT-FILE\n-o OUTPUT-FILE INPUT-FILE\n-u INPUT-FILE");
 
 /* Prototype for option handler.  */
-static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 /* Function to print some extra text in the help message.  */
-static char *more_help __P ((int key, const char *text, void *input));
+static char *more_help (int key, const char *text, void *input);
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
@@ -104,17 +104,14 @@ static struct argp argp =
 
 
 /* Prototypes for local functions.  */
-static int process_input __P ((FILE *input, const char *inname, NSS_DB *output,
-			       int to_lowercase, int be_quiet));
-static int print_database __P ((NSS_DB *db));
+static int process_input (FILE *input, const char *inname, NSS_DB *output,
+			  int to_lowercase, int be_quiet);
+static int print_database (NSS_DB *db);
 static NSS_DB *dbopen (const char *fname, int oper, int mode);
-int main __P ((int argc, char *argv[]));
 
 
 int
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (int argc, char *argv[])
 {
   const char *input_name;
   FILE *input_file;

@@ -118,6 +118,9 @@ internal_setent (const char *file, NSS_DB **dbp)
   enum nss_status status = NSS_STATUS_SUCCESS;
   int err;
   void *db;
+  int fd;
+  int result;
+
 
   if (*dbp == NULL)
     {
@@ -138,77 +141,71 @@ internal_setent (const char *file, NSS_DB **dbp)
       err = DL_CALL_FCT (libdb_db_open,
 			 (file, DB_BTREE, DB_RDONLY, 0, NULL, NULL, &db));
 
-      /* Construct the object we pass up.  */
-      *dbp = (NSS_DB *) malloc (sizeof (NSS_DB));
-      if (*dbp != NULL)
-	{
-	  (*dbp)->db = db;
-
-	  /* The functions are at different positions for the different
-	     versions.  Sigh.  */
-	  switch (libdb_version)
-	    {
-	    case db24:
-	      (*dbp)->close =
-		(int (*) (void *, uint32_t)) ((struct db24 *) db)->close;
-	      (*dbp)->fd =
-		(int (*) (void *, int *)) ((struct db24 *) db)->fd;
-	      (*dbp)->get =
-		(int (*) (void *, void *, void *, void *, uint32_t))
-		((struct db24 *) db)->get;
-	      break;
-	    case db27:
-	      (*dbp)->close =
-		(int (*) (void *, uint32_t)) ((struct db27 *) db)->close;
-	      (*dbp)->fd =
-		(int (*) (void *, int *)) ((struct db27 *) db)->fd;
-	      (*dbp)->get =
-		(int (*) (void *, void *, void *, void *, uint32_t))
-		((struct db27 *) db)->get;
-	      break;
-	    default:
-	      abort ();
-	    }
-	}
-
       if (err != 0)
 	{
 	  __set_errno (err);
 	  *dbp = NULL;
-	  status = err == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+	  return err == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
+	}
+      
+      /* Construct the object we pass up.  */
+      *dbp = (NSS_DB *) malloc (sizeof (NSS_DB));
+      if (*dbp == NULL)
+	return NSS_STATUS_UNAVAIL;
+	  
+      (*dbp)->db = db;
+
+      /* The functions are at different positions for the different
+	 versions.  Sigh.  */
+      switch (libdb_version)
+	{
+	case db24:
+	  (*dbp)->close =
+	    (int (*) (void *, uint32_t)) ((struct db24 *) db)->close;
+	  (*dbp)->fd =
+	    (int (*) (void *, int *)) ((struct db24 *) db)->fd;
+	  (*dbp)->get =
+	    (int (*) (void *, void *, void *, void *, uint32_t))
+	    ((struct db24 *) db)->get;
+	  break;
+	case db27:
+	  (*dbp)->close =
+	    (int (*) (void *, uint32_t)) ((struct db27 *) db)->close;
+	  (*dbp)->fd =
+	    (int (*) (void *, int *)) ((struct db27 *) db)->fd;
+	  (*dbp)->get =
+	    (int (*) (void *, void *, void *, void *, uint32_t))
+	    ((struct db27 *) db)->get;
+	  break;
+	default:
+	  abort ();
+	}
+
+      /* We have to make sure the file is `closed on exec'.  */
+      err = DL_CALL_FCT ((*dbp)->fd, (db, &fd));
+      if (err != 0)
+	{
+	  __set_errno (err);
+	  result = -1;
 	}
       else
 	{
-	  /* We have to make sure the file is `closed on exec'.  */
-	  int fd;
-	  int result;
+	  int flags = result = fcntl (fd, F_GETFD, 0);
 
-	  err = DL_CALL_FCT ((*dbp)->fd, (db, &fd));
-	  if (err != 0)
+	  if (result >= 0)
 	    {
-	      __set_errno (err);
-	      result = -1;
+	      flags |= FD_CLOEXEC;
+	      result = fcntl (fd, F_SETFD, flags);
 	    }
-	  else
-	    {
-	      int flags = result = fcntl (fd, F_GETFD, 0);
-
-	      if (result >= 0)
-		{
-		  flags |= FD_CLOEXEC;
-		  result = fcntl (fd, F_SETFD, flags);
-		}
-	    }
-	  if (result < 0)
-	    {
-	      /* Something went wrong.  Close the stream and return a
-		 failure.  */
-	      DL_CALL_FCT ((*dbp)->close, (db, 0));
-	      status = NSS_STATUS_UNAVAIL;
-	    }
-
-	  if (result < 0)
-	    *dbp = NULL;
+	}
+      if (result < 0)
+	{
+	  /* Something went wrong.  Close the stream and return a
+	     failure.  */
+	  DL_CALL_FCT ((*dbp)->close, (db, 0));
+	  status = NSS_STATUS_UNAVAIL;
+	  free (*dbp);
+	  *dbp = NULL;
 	}
     }
 

@@ -70,6 +70,7 @@ struct db24
   int (*put) (void *, void *, DBT *, DBT *, uint32_t);
   int (*stat) (void *, void *, void *(*)(size_t), uint32_t);
   int (*sync) (void *, uint32_t);
+  uint32_t flags;
 };
 
 
@@ -99,6 +100,7 @@ struct db27
   void	*mutexp;
   enum { dummy27 } type;
   int byteswapped;
+  int saved_open_fd;
   void *dbenv;
   void *mp_dbenv;
   void *internal;
@@ -114,9 +116,6 @@ struct db27
     void *tqh_first;
     void **tqh_last;
   } active_queue;
-  struct {
-    void *lh_first;
-  } handleq;
   uint8_t fileid[20];
   uint32_t log_fileid;
   size_t pgsize;
@@ -130,9 +129,11 @@ struct db27
   int (*del) (void *, void *, DBT *, uint32_t);
   int (*fd) (void *, int *);
   int (*get) (void *, void *, DBT *, DBT *, uint32_t);
+  int (*join) (void *, void **, uint32_t, void **);  
   int (*put) (void *, void *, DBT *, DBT *, uint32_t);
   int (*stat) (void *, void *, void *(*)(size_t), uint32_t);
   int (*sync) (void *, uint32_t);
+  uint32_t flags;
 };
 
 
@@ -148,7 +149,10 @@ struct dbc27
   uint32_t lid;
   uint32_t locker;
   DBT lock_dbt;
-  uint32_t lock[14];
+  struct{
+    uint32_t pgno;
+    uint8_t fileid[20];
+  } lock;
   size_t mylock;
   DBT rkey;
   DBT rdata;

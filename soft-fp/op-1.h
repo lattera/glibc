@@ -199,25 +199,25 @@
 
 #define _FP_DIV_MEAT_1_udiv_norm(fs, R, X, Y)				\
   do {									\
-    _FP_W_TYPE _nh, _nl, _q, _r;					\
+    _FP_W_TYPE _nh, _nl, _q, _r, _y;					\
 									\
     /* Normalize Y -- i.e. make the most significant bit set.  */	\
-    Y##_f <<= _FP_WFRACXBITS_##fs - 1;					\
+    _y = Y##_f << _FP_WFRACXBITS_##fs;					\
 									\
     /* Shift X op correspondingly high, that is, up one full word.  */	\
-    if (X##_f <= Y##_f)							\
+    if (X##_f < Y##_f)							\
       {									\
+	R##_e--;							\
 	_nl = 0;							\
 	_nh = X##_f;							\
       }									\
     else								\
       {									\
-	R##_e++;							\
-	_nl = X##_f << (_FP_W_TYPE_SIZE-1);				\
+	_nl = X##_f << (_FP_W_TYPE_SIZE - 1);				\
 	_nh = X##_f >> 1;						\
       }									\
     									\
-    udiv_qrnnd(_q, _r, _nh, _nl, Y##_f);				\
+    udiv_qrnnd(_q, _r, _nh, _nl, _y);					\
     R##_f = _q | (_r != 0);						\
   } while (0)
 

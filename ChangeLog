@@ -1,3 +1,38 @@
+2000-01-04  Andreas Jaeger  <aj@suse.de>
+
+	* nss/nss_db/dummy-db.h (struct db24): Add missing field flags.
+	(struct db27): Add missing fields byteswapped, join and flags;
+	remove wrong member handleq.
+	(struct dbc27): Correct lock field.
+
+	* nss/makedb.c: Remove __P.
+
+2000-01-04  Andreas Jaeger  <aj@suse.de>
+
+	* nss/nss_db/db-open.c (internal_setent): Check for db_open for
+	success, fix a memory leak and clean up function.
+
+2000-01-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (install): Pass $(install_root) to ldconfig.
+	Patch by Akira YOSHIYAMA <yosshy@tkf.att.ne.jp>.
+
+2000-01-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* soft-fp/op-1.h: Fix division for machines using not normalizing
+	version of udiv_qrnnd in longlong.h.
+	* soft-fp/sysdeps/mips/sfp-machine.h: Likewise.
+	* soft-fp/sysdeps/mips/mips64/sfp-machine.h: Likewise.
+	* soft-fp/sysdeps/sparc/sparc64/sfp-machine.h: Likewise.
+	Patch by Eddie C. Dost <ecd@skynet.be>.
+
+	* soft-fp/soft-fp.h (QItype, UQItype): New types used by longlong.h.
+
+2000-01-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/dl-sysdep.c: Initialize __libc_multiple_libcs,
+	needed for change in common symbol handing in newer binutils.
+
 2000-01-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code for running on

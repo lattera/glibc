@@ -106,7 +106,7 @@ install-symbolic-link: subdir_install
 
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \
-	  $(common-objpfx)elf/ldconfig $(inst_slibdir) $(inst_libdir)
+	  $(common-objpfx)elf/ldconfig -r $(install_root) $(inst_slibdir) $(inst_libdir)
 ifneq (no,$(PERL))
 ifeq (/usr,$(prefix))
 ifeq (,$(install_root))
