@@ -39,6 +39,6 @@ typedef struct
   int __fpc_csr;
 
   /* Callee-saved floating point registers.  */
-  int __fpregs[6];
+  double __fpregs[6];
 
 } __jmp_buf[1];
