@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994-1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -103,7 +103,7 @@ typedef struct
        from the global namespace.  */
 #ifdef __USE_XOPEN
     __fd_mask fds_bits[__FD_SETSIZE / __NFDBITS];
-# define __FDS_BITS(set) ((set)->fds_bits) 
+# define __FDS_BITS(set) ((set)->fds_bits)
 #else
     __fd_mask __fds_bits[__FD_SETSIZE / __NFDBITS];
 # define __FDS_BITS(set) ((set)->__fds_bits)
@@ -143,5 +143,8 @@ typedef unsigned int __t_uscalar_t;
 
 /* Duplicates info from stdint.h but this is used in unistd.h.  */
 typedef int __intptr_t;
+
+/* Duplicate info from sys/socket.h.  */
+typedef unsigned int __socklen_t;
 
 #endif /* bits/types.h */
