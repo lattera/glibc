@@ -39,8 +39,9 @@ syscall_error:
 notb:
 #endif
 #ifndef	PIC
+#ifndef	_LIBC_REENTRANT
 	movl %eax, C_SYMBOL_NAME(errno)
-#ifdef	_LIBC_REENTRANT
+#else
 	pushl %eax
 	call __errno_location
 	popl %ecx
@@ -49,14 +50,13 @@ notb:
 #else
 	/* The caller has pushed %ebx and then set it up to
 	   point to the GOT before calling us through the PLT.  */
+#ifndef	_LIBC_REENTRANT
 	movl C_SYMBOL_NAME(errno@GOT)(%ebx), %ecx
 
-#ifndef	_LIBC_REENTRANT
 	/* Pop %ebx value saved before jumping here.  */
 	popl %ebx
 	movl %eax, (%ecx)
 #else
-	movl %eax, (%ecx)
 	pushl %eax
 	call C_SYMBOL_NAME(__errno_location@PLT)
 	popl %ecx

@@ -74,8 +74,6 @@ syscall_error:								      \
   xorl %edx, %edx;							      \
   addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx;				      \
   subl %eax, %edx;							      \
-  movl errno@GOT(%ebx), %ecx;						      \
-  movl %edx, (%ecx);							      \
   pushl %edx;								      \
   call __errno_location@PLT;						      \
   popl %ecx;								      \

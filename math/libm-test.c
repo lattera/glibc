@@ -4302,7 +4302,7 @@ catanh_test (void)
 
   result = FUNC(catanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(catanh(0.7 + i 1.2)) == 0.26007...", __real__ result,
-	     0.2600749516525135959L, CHOOSE (2e-18, 0, 0));
+	     0.2600749516525135959L, CHOOSE (2e-18, 6e-17, 0));
   check_eps ("imag(catanh(0.7 + i 1.2)) == 0.97024...", __imag__ result,
 	     0.9702403077950989849L, CHOOSE (3e-17, 0, 0));
 

@@ -29,6 +29,8 @@
 
 #include "nscd.h"
 
+int __nss_not_use_nscd_passwd;
+
 static int __nscd_getpw_r (const char *key, request_type type,
 			   struct passwd *resultbuf, char *buffer,
 			   size_t buflen);
@@ -98,8 +100,11 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
   ssize_t nbytes;
 
   if (sock == -1)
-    /* Returning two signals that contacting the daemon failed.  */
-    return 2;
+    {
+      /* Returning two signals that contacting the daemon failed.  */
+      __nss_not_use_nscd_passwd = 1;
+      return 1;
+    }
 
   req.version = NSCD_VERSION;
   req.type = type;
@@ -127,7 +132,9 @@ __nscd_getpw_r (const char *key, request_type type, struct passwd *resultbuf,
 
   if (pw_resp.found == -1)
     {
+      /* The daemon does not cache this database.  */
       close (sock);
+      __nss_not_use_nscd_passwd = 1;
       return 1;
     }
 

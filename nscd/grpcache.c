@@ -407,7 +407,7 @@ cache_getgrgid (void *v_param)
   if (grp != NULL)
     {
       if (debug_flag)
-	dbg_log (_("Found \"%d\" in cache !\n"), gid);
+	dbg_log (_("Found \"%d\" in cache !"), gid);
 
       ++poshit;
       gr_send_answer (param->conn, grp);
@@ -422,7 +422,7 @@ cache_getgrgid (void *v_param)
       int status;
 
       if (debug_flag)
-	dbg_log (_("Doesn't found \"%d\" in cache !\n"), gid);
+	dbg_log (_("Doesn't found \"%d\" in cache !"), gid);
 
       pthread_rwlock_unlock (&grplock);
 

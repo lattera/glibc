@@ -16,9 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <wordexp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wordexp.h>
 
 struct test_case_struct
 {
@@ -33,63 +34,87 @@ struct test_case_struct
     { 0, NULL, "one", 0, 1, { "one", } },
     { 0, NULL, "one two", 0, 2, { "one", "two", } },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", } },
-    { 0, NULL, "~root", 0, 1, { "/root", } },
     { 0, "foo", "${var}", 0, 1, { "foo", } },
     { 0, "foo", "$var", 0, 1, { "foo", } },
     { 0, NULL, "\"quoted\"", 0, 1, { "quoted", } },
     { -1, NULL, NULL, 0, 0, { NULL, } },
   };
 
+static int testit (struct test_case_struct *tc);
+
 int
 main (int argc, char * argv[])
 {
-  wordexp_t we;
+  struct passwd *pw;
   int test;
   int fail = 0;
-  int retval;
-  int i;
 
   setenv ("IFS", " \t\n", 1);
   for (test = 0; test_case[test].retval != -1; test++)
+    if (testit (&test_case[test]))
+      ++fail;
+
+  pw = getpwnam ("root");
+  if (pw != NULL)
     {
-      int bzzzt = 0;
+      struct test_case_struct ts;
 
-      if (test_case[test].env)
-	setenv ("var", test_case[test].env, 1);
-      else
-	unsetenv ("var");
+      ts.retval = 0;
+      ts.env = NULL;
+      ts.words = "~root";
+      ts.flags = 0;
+      ts.wordc = 1;
+      ts.wordv[0] = pw->pw_dir;
 
-      printf ("Test %d: ", test);
-      retval = wordexp (test_case[test].words, &we, test_case[test].flags);
-
-      if (retval != test_case[test].retval ||
-	  we.we_wordc != test_case[test].wordc)
-	bzzzt = 1;
-      else
-	for (i = 0; i < we.we_wordc; i++)
-	  if (strcmp (test_case[test].wordv[i], we.we_wordv[i]) != 0)
-	    {
-	      bzzzt = 1;
-	      break;
-	    }
-
-      if (bzzzt)
-	{
-	  ++fail;
-	  printf ("FAILED\n");
-	  printf ("Test words: <%s>, need retval %d, wordc %d\n",
-		  test_case[test].words, test_case[test].retval,
-		  test_case[test].wordc);
-	  printf ("Got retval %d, wordc %d: ", retval, we.we_wordc);
-	  for (i = 0; i < we.we_wordc; i++)
-	    printf ("<%s> ", we.we_wordv[i]);
-	  printf ("\n");
-	}
-      else
-	printf ("OK\n");
-
-      wordfree (&we);
+      if (testit (&ts))
+	++fail;
     }
 
-  return fail;
+  return fail != 0;
+}
+
+
+static int
+testit (struct test_case_struct *tc)
+{
+  static int test;
+  int retval;
+  wordexp_t we;
+  int bzzzt = 0;
+  int i;
+
+  if (tc->env)
+    setenv ("var", tc->env, 1);
+  else
+    unsetenv ("var");
+
+  printf ("Test %d: ", ++test);
+  retval = wordexp (tc->words, &we, tc->flags);
+
+  if (retval != tc->retval || we.we_wordc != tc->wordc)
+    bzzzt = 1;
+  else
+    for (i = 0; i < we.we_wordc; ++i)
+      if (strcmp (tc->wordv[i], we.we_wordv[i]) != 0)
+	{
+	  bzzzt = 1;
+	  break;
+	}
+
+  if (bzzzt)
+    {
+      printf ("FAILED\n");
+      printf ("Test words: <%s>, need retval %d, wordc %d\n",
+	      tc->words, tc->retval, tc->wordc);
+      printf ("Got retval %d, wordc %d: ", retval, we.we_wordc);
+      for (i = 0; i < we.we_wordc; ++i)
+	printf ("<%s> ", we.we_wordv[i]);
+      printf ("\n");
+    }
+  else
+    printf ("OK\n");
+
+  wordfree (&we);
+
+  return bzzzt;
 }

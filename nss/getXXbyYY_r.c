@@ -56,6 +56,9 @@
 # define NSCD_NAME ADD_NSCD (REENTRANT_NAME)
 # define ADD_NSCD(name) ADD_NSCD1 (name)
 # define ADD_NSCD1(name) __nscd_##name
+# define NOT_USENSCD_NAME ADD_NOT_NSCDUSE (DATABASE_NAME)
+# define ADD_NOT_NSCDUSE(name) ADD_NOT_NSCDUSE1 (name)
+# define ADD_NOT_NSCDUSE1(name) __nss_not_use_nscd_##name
 #endif
 
 #define FUNCTION_NAME_STRING STRINGIZE (FUNCTION_NAME)
@@ -88,10 +91,6 @@ extern struct __res_state _res;
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp);
 
-/* Nonzero if the NSCD is not available.  This variable will be increased
-   whenever we try to use the NSCD but see it is not avilable.  So we
-   can recheck the presence every once in a while.  */
-extern int __nss_nscd_not_available;
 /* Interval in which we transfer retry to contact the NSCD.  */
 #define NSS_NSCD_RETRY	100
 
@@ -117,10 +116,10 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif
 
 #ifdef USE_NSCD
-  if (__nss_nscd_not_available && ++__nss_nscd_not_available > NSS_NSCD_RETRY)
-    __nss_nscd_not_available = 0;
+  if (NOT_USENSCD_NAME && ++NOT_USENSCD_NAME > NSS_NSCD_RETRY)
+    NOT_USENSCD_NAME = 0;
 
-  if (!__nss_nscd_not_available)
+  if (!NOT_USENSCD_NAME)
     {
       nscd_status = NSCD_NAME (ADD_VARIABLES, resbuf, buffer, buflen
 			       H_ERRNO_VAR);
@@ -129,9 +128,6 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 	  *result = nscd_status == 0 ? resbuf : NULL;
 	  return nscd_status;
 	}
-      if (nscd_status == 2)
-	/* This return value indicates that contacting the server failed.  */
-	__nss_nscd_not_available = 1;
     }
 #endif
 

@@ -23,6 +23,10 @@
 #include <grp.h>
 #include <pwd.h>
 
+/* Variables for communication between NSCD handler functions and NSS.  */
+extern int __nss_not_use_nscd_passwd;
+extern int __nss_not_use_nscd_group;
+
 extern int __nscd_getpwnam_r __P ((const char *name, struct passwd *resultbuf,
 				   char *buffer, size_t buflen));
 extern int __nscd_getpwuid_r __P ((uid_t uid, struct passwd *resultbuf,

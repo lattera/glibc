@@ -53,6 +53,7 @@ __libc_clone:
 	ret
 	 restore
 99:
+#ifndef _LIBC_REENTRANT
 #ifdef PIC
 	call	1f
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(99b-.)), %l7
@@ -68,7 +69,7 @@ __libc_clone:
 	set	EINVAL, %i0
 	st	%i0, [%g2+%lo(errno)]
 #endif
-#ifdef _LIBC_REENTRANT
+#else
 	call	__errno_location
 	 nop
 	st	%i0, [%o0]

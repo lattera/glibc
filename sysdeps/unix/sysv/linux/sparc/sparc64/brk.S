@@ -75,7 +75,9 @@ ENTRY(__brk)
 	
 	/* What a horrible way to die.  */
 .Lerr0:	set	ENOMEM, %o0
-.Lerr1:	sethi	%hi(errno), %g1
+.Lerr1:
+#ifndef _LIBC_REENTRANT
+	sethi	%hi(errno), %g1
 	or	%g1, %lo(errno), %g1
 #ifdef PIC
 	ldx	[%l7+%g1], %g1
@@ -83,7 +85,7 @@ ENTRY(__brk)
 #else
 	st	%o0, [%g4+%g1]
 #endif
-#ifdef _LIBC_REENTRANT
+#else
 	call	__errno_location
 	 mov	%o0,%l1
 	st	%l1, [%o0]

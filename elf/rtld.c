@@ -806,7 +806,6 @@ of this helper program; chances are you did not intend to run this program.\n",
 
       _exit (0);
     }
-_dl_sysdep_message("start reloc\n", NULL);
 
   {
     /* Now we have all the objects loaded.  Relocate them all except for
@@ -844,7 +843,7 @@ _dl_sysdep_message("start reloc\n", NULL);
 	 Re-relocate ourselves with user-controlled symbol definitions.  */
       _dl_relocate_object (&_dl_rtld_map, &_dl_default_scope[2], 0);
   }
-_dl_sysdep_message("end reloc\n", NULL);
+
   {
     /* Initialize _r_debug.  */
     struct r_debug *r = _dl_debug_initialize (_dl_rtld_map.l_addr);

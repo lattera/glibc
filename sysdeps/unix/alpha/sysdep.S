@@ -48,9 +48,6 @@ __syscall_error:
 	.mask	0x4000001, -16
 	.prologue 1
 
-	/* Store into the "real" variable.  */
-	stl	v0, errno
-
 	/* Find our per-thread errno address  */
 	jsr	ra, __errno_location
 

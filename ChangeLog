@@ -1,3 +1,30 @@
+1998-03-06 11:35  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/wordexp-test.c: Change testsuite so that it can run even
+	for ~root != /root.
+
+1998-03-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (catanh_test): Change epsilon for gcc 2.8.1.
+
+1998-03-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Don't store into global errno if we already store through
+	__errno_location.
+	* sysdeps/unix/i386/sysdep.S: Likewise.
+	* sysdeps/unix/alpha/sysdep.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/brk.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/clone.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Likewise.  Add
+	missing return to SYSCALL_ERROR_HANDLER for (!_LIBC_REENTRANT &&
+	PIC).
+
+1998-03-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/sysdep.h (L): Remove definition.
+	* sysdeps/i386/sysdep.h (L): Define it here instead.
+
 1998-03-06  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* nis/nis_call.c (do_ypcall, yp_all): Safe and reset errno.
@@ -64,15 +91,13 @@
 	* sysdeps/generic/dl-sysdep.c (_dl_next_ld_env_entry): New
 	function.  Used by patch above.
 
-1998-03-05 10:25  Ulrich Drepper  <drepper@cygnus.com>
+1998-03-05  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
-	* nss/getXXbyYY_r.c: Don't try to contact nscd every time when it
-	failed.  Only do this every NSS_NSCD_RETRY times.
-	* nss/nsswitch.c: Define __nss_nscd_not_available, used by above
-	change.
-	* nscd/nscd_getgr_r.c (__nscd_getgr_r): Return 2 if contacting the
-	daemon failed.
-	* nscd/nscd_getpw_r.c (__nscd_getpw_r): Likewise.
+	* nss/getXXbyYY_r.c: Check __nss_not_use_nscd_* variable for
+	running nscd.
+	* nscd/nscd_getgr_r.c: Set __nss_not_use_nscd_group variable.
+	* nscd/nscd_getpw_r.c: Set __nss_not_use_nscd_passwd variable.
+	* nscd/nscd_proto.h: Declare __nss_not_use_nscd_* variables.
 
 1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
 

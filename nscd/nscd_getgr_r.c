@@ -29,6 +29,8 @@
 #include "nscd.h"
 #include "nscd_proto.h"
 
+int __nss_not_use_nscd_group;
+
 static int __nscd_getgr_r (const char *key, request_type type,
 			   struct group *resultbuf, char *buffer,
 			   size_t buflen);
@@ -98,8 +100,11 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
   ssize_t nbytes;
 
   if (sock == -1)
-    /* Returning two signals that contacting the daemon failed.  */
-    return 2;
+    {
+      /* Returning two signals that contacting the daemon failed.  */
+      __nss_not_use_nscd_group = 1;
+      return 1;
+    }
 
   req.version = NSCD_VERSION;
   req.type = type;
@@ -127,7 +132,9 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 
   if (gr_resp.found == -1)
     {
+      /* The daemon does not cache this database.  */
       close (sock);
+      __nss_not_use_nscd_group = 1;
       return 1;
     }
 

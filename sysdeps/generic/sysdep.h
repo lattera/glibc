@@ -41,8 +41,3 @@
 #ifndef END
 #define END(sym)
 #endif
-
-/* Local label name for asm code. */
-#ifndef L
-#define L(name)		name
-#endif
