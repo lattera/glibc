@@ -1,5 +1,10 @@
 2000-09-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/Depend: New file.
+	* wcsmbs/Makefile (tests): Add tst-btowc.
+	(tst-btowc-ENV): Define.
+	* wcsmbs/tst-btowc.c: New file.
+
 	* sysdeps/unix/sysv/linux/_G_config.h: Moved to...
 	* sysdeps/gnu/_G_config.h: ...here to be shared with Hurd.
 

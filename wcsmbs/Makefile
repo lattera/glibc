@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1995,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcscasecmp wcsncase wcscasecmp_l wcsncase_l \
 	    wcsmbsload
 
-tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen
+tests := tst-wcstof wcsmbs-tst1 tst-wcsnlen tst-btowc
 
 include ../Rules
 
@@ -60,3 +60,5 @@ CFLAGS-wcstoull_l.c = -I../stdlib
 CFLAGS-wcstod_l.c = -I../stdlib
 CFLAGS-wcstold_l.c = -I../stdlib
 CFLAGS-wcstof_l.c = -I../stdlib
+
+tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
