@@ -1,3 +1,8 @@
+2000-02-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl (@headers): Add stdlib.h.
+	* conform/data/stdlib.h-data: New file.
+
 2000-02-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/dlfcn.h (RTLD_DEFAULT): Don't use NULL.

@@ -1,0 +1,85 @@
+macro EXIT_FAILURE
+macro EXIT_SUCCESS
+macro NULL
+macro RAND_MAX
+macro MB_CUR_MAX
+
+type div_t
+type ldiv_t
+type size_t
+type wchar_t
+
+constant WNOHANG
+constant WUNTRACED
+
+macro WEXITSTATUS
+macro WIFCONTINUED
+macro WIFEXITED
+macro WIFSIGNALED
+macro WIFSTOPPED
+macro WSTOPSIG
+macro WTERMSIG
+
+function long a64l (const char*)
+function void abort (void)
+function int abs (int)
+function int atexit (void(*)(void))
+function double atof (const char*)
+function int atoi (const char*)
+function {long int} atol (const char*)
+function {void*} bsearch (const void*, const void*, size_t, size_t, int(*)(const void*, const void*))
+function {void*} calloc (size_t, size_t)
+function div_t div (int, int)
+function double drand48 (void)
+function {char*} ecvt (double, int, int*, int*)
+function double erand48 (unsigned short int[3])
+function void exit (int)
+function {char*} fcvt (double, int, int*, int*)
+function void free (void*)
+function {char*} gcvt (double, int, char*)
+function {char*} getenv (const char*)
+function int getsubopt (char**, char *const*, char**)
+function int grantpt (int)
+function {char*} initstate (unsigned int, char*, size_t)
+function {long int} jrand48 (unsigned short int[3])
+function {char*} l64a (long)
+function {long int} labs (long int)
+function void lcong48 (unsigned short int[7])
+function ldiv_t ldiv (long int, long int)
+function {long int} lrand48 (void)
+function {void*} malloc (size_t)
+function int mblen (const char*, size_t)
+function size_t mbstowcs (wchar_t*, const char*, size_t)
+function int mbtowc (wchar_t*, const char*, size_t)
+function {char*} mktemp (char*)
+function int mkstemp (char*)
+function {long int} mrand48 (void)
+function {long int} nrand48 (unsigned short int[3])
+function {char*} ptsname (int)
+function int putenv (char*)
+function void qsort (void*, size_t, size_t, int(*)(const void*, const void*))
+function int rand (void)
+function int rand_r (unsigned int*)
+function long random (void)
+function {void*} realloc (void*, size_t)
+function {char*} realpath (const char*, char*)
+function {unsigned short int*} seed48 (unsigned short int[3])
+function void setkey (const char*)
+function {char*} setstate (const char*)
+function void srand (unsigned int)
+function void srand48 (long int)
+function void srandom (unsigned)
+function double strtod (const char*, char**)
+function {long int} strtol (const char*, char**, int)
+function {unsigned long int} strtoul (const char*, char**, int)
+function int system (const char*)
+function int ttyslot (void)
+function int unlockpt (int)
+function {void*} valloc (size_t)
+function size_t wcstombs (char*, const wchar_t*, size_t)
+function int wctomb (char*, wchar_t)
+
+allow-header stddef.h
+allow-header limits.h
+allow-header math.h
+allow-header sys/wait.h
