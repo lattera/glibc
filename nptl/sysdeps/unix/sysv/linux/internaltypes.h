@@ -75,6 +75,12 @@ struct pthread_condattr
 };
 
 
+/* The __NWAITERS field is used as a counter and to house the number
+   of bits which represent the clock.  COND_CLOCK_BITS is the number
+   of bits reserved for the clock.  */
+#define COND_CLOCK_BITS	1
+
+
 /* Read-write lock variable attribute data structure.  */
 struct pthread_rwlockattr
 {

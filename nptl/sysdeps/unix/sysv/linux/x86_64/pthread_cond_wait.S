@@ -40,6 +40,8 @@
 	.globl	__condvar_cleanup
 	.hidden	__condvar_cleanup
 __condvar_cleanup:
+	pushq	%r12
+
 	/* Get internal lock.  */
 	movq	%rdi, %r8
 	movq	8(%rdi), %rdi
@@ -66,12 +68,28 @@ __condvar_cleanup:
 	jne	3f
 
 	incq	wakeup_seq(%rdi)
-
 	incq	woken_seq(%rdi)
-
 	incl	cond_futex(%rdi)
 
-3:	LOCK
+3:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	xorq	%r12, %r12
+	cmpq	$0xffffffffffffffff, total_seq(%rdi)
+	jne	4f
+	movl	cond_nwaiters(%rdi), %eax
+	andl	$~((1 << clock_bits) - 1), %eax
+	jne	4f
+
+	addq	$cond_nwaiters, %rdi
+	movq	$SYS_futex, %rax
+	movq	$FUTEX_WAKE, %rsi
+	movl	$1, %edx
+	syscall
+	subq	$cond_nwaiters, %rdi
+	movq	$1, %r12
+
+4:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
@@ -84,14 +102,18 @@ __condvar_cleanup:
 	callq	__lll_mutex_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	addq	$cond_futex, %rdi
+2:	testq	%r12, %r12
+	jnz	5f
+	addq	$cond_futex, %rdi
 	movq	$FUTEX_WAKE, %rsi
 	movl	$0x7fffffff, %edx
 	movq	$SYS_futex, %rax
 	syscall
 
-	movq	16(%r8), %rdi
+5:	movq	16(%r8), %rdi
 	callq	__pthread_mutex_cond_lock
+
+	popq	%r12
 
 	retq
 	.size	__condvar_cleanup, .-__condvar_cleanup
@@ -157,6 +179,7 @@ __pthread_cond_wait:
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
 	incl	cond_futex(%rdi)
+	addl	$(1 << clock_bits), cond_nwaiters(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -229,7 +252,23 @@ __pthread_cond_wait:
 	incq	woken_seq(%rdi)
 
 	/* Unlock */
-16:	LOCK
+16:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	cmpq	$0xffffffffffffffff, total_seq(%rdi)
+	jne	17f
+	movl	cond_nwaiters(%rdi), %eax
+	andl	$~((1 << clock_bits) - 1), %eax
+	jne	17f
+
+	addq	$cond_nwaiters, %rdi
+	movq	$SYS_futex, %rax
+	movq	$FUTEX_WAKE, %rsi
+	movl	$1, %edx
+	syscall
+	subq	$cond_nwaiters, %rdi
+
+17:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else

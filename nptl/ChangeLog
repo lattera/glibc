@@ -1,3 +1,62 @@
+2004-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h (pthread_cond_t):
+	Rename __data.__clock to __data.__nwaiters, make it unsigned int.
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S:
+	Decrement __nwaiters.  If pthread_cond_destroy has been called and
+	this is the last waiter, signal pthread_cond_destroy caller and
+	avoid using the pthread_cond_t structure after unlock.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	Read clock type from the least significant bits of __nwaiters instead
+	of __clock.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/internaltypes.h: Define COND_CLOCK_BITS.
+
+2004-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #342]
+	* Makefile (tests): Add tst-cond20 and tst-cond21.
+	* tst-cond20.c: New test.
+	* tst-cond21.c: New test.
+	* sysdeps/unix/sysv/linux/alpha/bits/pthreadtypes.h
+	(pthread_cond_t): Rename __data.__clock to __data.__nwaiters, make
+	it unsigned int.
+	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/pthreadtypes.h
+	(pthread_cond_t): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h (pthread_cond_t):
+	Likewise.
+	* sysdeps/unix/sysv/linux/lowlevelcond.sym (cond_clock): Remove.
+	(cond_nwaiters): New.
+	(clock_bits): New.
+	* pthread_cond_destroy.c (__pthread_cond_destroy): Return EBUSY
+	if there are waiters not signalled yet.
+	Wait until all already signalled waiters wake up.
+	* sysdeps/pthread/pthread_cond_wait.c (__condvar_cleanup): Decrement
+	__nwaiters.  If pthread_cond_destroy has been called and this is the
+	last waiter, signal pthread_cond_destroy caller and avoid using
+	the pthread_cond_t structure after unlock.
+	(__pthread_cond_wait): Increment __nwaiters in the beginning,
+	decrement it when leaving.  If pthread_cond_destroy has been called
+	and this is the last waiter, signal pthread_cond_destroy caller.
+	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Likewise.  Read clock type from the least significant bits of
+	__nwaiters instead of __clock.
+	* pthread_condattr_setclock.c (pthread_condattr_setclock): Check
+	whether clock ID can be encoded in COND_CLOCK_BITS bits.
+	* pthread_condattr_getclock.c (pthread_condattr_getclock): Decode
+	clock type just from the last COND_CLOCK_BITS bits of value.
+	* pthread_cond_init.c (__pthread_cond_init): Initialize __nwaiters
+	instead of __clock, just from second bit of condattr's value.
+
 2004-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Include

@@ -42,6 +42,7 @@ __condvar_cleanup (void *arg)
 {
   struct _condvar_cleanup_buffer *cbuffer =
     (struct _condvar_cleanup_buffer *) arg;
+  unsigned int destroying;
 
   /* We are going to modify shared data.  */
   lll_mutex_lock (cbuffer->cond->__data.__lock);
@@ -55,11 +56,25 @@ __condvar_cleanup (void *arg)
       ++cbuffer->cond->__data.__futex;
     }
 
+  cbuffer->cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
+
+  /* If pthread_cond_destroy was called on this variable already,
+     notify the pthread_cond_destroy caller all waiters have left
+     and it can be successfully destroyed.  */
+  destroying = 0;
+  if (cbuffer->cond->__data.__total_seq == -1ULL
+      && cbuffer->cond->__data.__nwaiters < (1 << COND_CLOCK_BITS))
+    {
+      lll_futex_wake (&cbuffer->cond->__data.__nwaiters, 1);
+      destroying = 1;
+    }
+
   /* We are done.  */
   lll_mutex_unlock (cbuffer->cond->__data.__lock);
 
   /* Wake everybody to make sure no condvar signal gets lost.  */
-  lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX);
+  if (! destroying)
+    lll_futex_wake (&cbuffer->cond->__data.__futex, INT_MAX);
 
   /* Get the mutex before returning unless asynchronous cancellation
      is in effect.  */
@@ -90,6 +105,7 @@ __pthread_cond_wait (cond, mutex)
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
   ++cond->__data.__futex;
+  cond->__data.__nwaiters += 1 << COND_CLOCK_BITS;
 
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
@@ -145,6 +161,16 @@ __pthread_cond_wait (cond, mutex)
   ++cond->__data.__woken_seq;
 
  bc_out:
+
+  cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
+
+  /* If pthread_cond_destroy was called on this varaible already,
+     notify the pthread_cond_destroy caller all waiters have left
+     and it can be successfully destroyed.  */
+  if (cond->__data.__total_seq == -1ULL
+      && cond->__data.__nwaiters < (1 << COND_CLOCK_BITS))
+    lll_futex_wake (&cond->__data.__nwaiters, 1);
+
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);
 

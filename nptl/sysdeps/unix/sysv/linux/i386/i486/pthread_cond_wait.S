@@ -80,6 +80,7 @@ __pthread_cond_wait:
 	addl	$1, total_seq(%ebx)
 	adcl	$0, total_seq+4(%ebx)
 	addl	$1, cond_futex(%ebx)
+	addl	$(1 << clock_bits), cond_nwaiters(%ebx)
 
 #define FRAME_SIZE 16
 	subl	$FRAME_SIZE, %esp
@@ -156,7 +157,25 @@ __pthread_cond_wait:
 	adcl	$0, woken_seq+4(%ebx)
 
 	/* Unlock */
-16:	LOCK
+16:	subl	$(1 << clock_bits), cond_nwaiters(%ebx)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	movl	total_seq(%ebx), %eax
+	andl	total_seq+4(%ebx), %eax
+	cmpl	$0xffffffff, %eax
+	jne	17f
+	movl	cond_nwaiters(%ebx), %eax
+	andl	$~((1 << clock_bits) - 1), %eax
+	jne	17f
+
+	addl	$cond_nwaiters, %ebx
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %ecx
+	movl	$1, %edx
+	ENTER_KERNEL
+	subl	$cond_nwaiters, %ebx
+
+17:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
@@ -286,7 +305,27 @@ __condvar_w_cleanup:
 	addl	$1, woken_seq(%ebx)
 	adcl	$0, woken_seq+4(%ebx)
 
-3:	LOCK
+3:	subl	$(1 << clock_bits), cond_nwaiters(%ebx)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	xorl	%edi, %edi
+	movl	total_seq(%ebx), %eax
+	andl	total_seq+4(%ebx), %eax
+	cmpl	$0xffffffff, %eax
+	jne	4f
+	movl	cond_nwaiters(%ebx), %eax
+	andl	$~((1 << clock_bits) - 1), %eax
+	jne	4f
+
+	addl	$cond_nwaiters, %ebx
+	movl	$SYS_futex, %eax
+	movl	$FUTEX_WAKE, %ecx
+	movl	$1, %edx
+	ENTER_KERNEL
+	subl	$cond_nwaiters, %ebx
+	movl	$1, %edi
+
+4:	LOCK
 #if cond_lock == 0
 	subl	$1, (%ebx)
 #else
@@ -302,13 +341,15 @@ __condvar_w_cleanup:
 	call	__lll_mutex_unlock_wake
 
 	/* Wake up all waiters to make sure no signal gets lost.  */
-2:	addl	$cond_futex, %ebx
+2:	testl	%edi, %edi
+	jnz	5f
+	addl	$cond_futex, %ebx
 	movl	$FUTEX_WAKE, %ecx
 	movl	$SYS_futex, %eax
 	movl	$0x7fffffff, %edx
 	ENTER_KERNEL
 
-	movl	20+FRAME_SIZE(%esp), %eax
+5:	movl	20+FRAME_SIZE(%esp), %eax
 	call	__pthread_mutex_cond_lock
 
 	movl	%esi, (%esp)

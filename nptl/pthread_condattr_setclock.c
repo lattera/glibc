@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2003.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <time.h>
@@ -45,8 +46,7 @@ pthread_condattr_setclock (attr, clock_id)
 
 	  INTERNAL_SYSCALL_DECL (err);
 	  int val;
-	  val = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC,
-				  &ts);
+	  val = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC, &ts);
 	  avail = INTERNAL_SYSCALL_ERROR_P (val, err) ? -1 : 1;
 	}
 
@@ -57,11 +57,16 @@ pthread_condattr_setclock (attr, clock_id)
 #endif
     }
   else if (clock_id != CLOCK_REALTIME)
+    /* If more clocks are allowed some day the storing of the clock ID
+       in the pthread_cond_t structure needs to be adjusted.  */
     return EINVAL;
+
+  /* Make sure the value fits in the bits we reserved.  */
+  assert (clock_id < (1 << COND_CLOCK_BITS));
 
   int *valuep = &((struct pthread_condattr *) attr)->value;
 
-  *valuep = (*valuep & ~0xfe) | (clock_id << 1);
+  *valuep = (*valuep & ~(1 << (COND_CLOCK_BITS + 1)) & ~1) | (clock_id << 1);
 
   return 0;
 }

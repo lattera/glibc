@@ -27,22 +27,23 @@
 
 	.machine	"altivec"
 ENTRY(__swapcontext)
-	/* Save the current context */
+	stwu	r1,-16(r1)
+/* Insure that the _UC_REGS start on a quadword boundary.  */
 	stw	r3,_FRAME_PARM_SAVE1(r1)
 	addi	r3,r3,_UC_REG_SPACE+12
+	stw	r4,_FRAME_PARM_SAVE2(r1)	/* new context pointer */
 	clrrwi  r3,r3,4
+
+/* Save the general purpose registers */
 	stw	r0,_UC_GREGS+(PT_R0*4)(r3)
-	stw	r1,_UC_GREGS+(PT_R1*4)(r3)
 	mflr	r0
-	stwu	r1,-16(r1)
-	stw	r0,20(r1)
-	stw	r31,12(r1)
-	stw	r31,_UC_GREGS+(PT_R31*4)(r3)
-	mr	r31,r4			/* new context pointer */
+	stw	r2,_UC_GREGS+(PT_R2*4)(r3)
+	stw	r4,_UC_GREGS+(PT_R4*4)(r3)			
+/* Set the callers LR_SAVE, and the ucontext LR and NIP to the callers
+   return address.  */
 	stw	r0,_UC_GREGS+(PT_LNK*4)(r3)
 	stw	r0,_UC_GREGS+(PT_NIP*4)(r3)
-	stw	r2,_UC_GREGS+(PT_R2*4)(r3)
-	stw	r4,_UC_GREGS+(PT_R4*4)(r3)
+	stw	r0,_FRAME_LR_SAVE+16(r1)
 	stw	r5,_UC_GREGS+(PT_R5*4)(r3)
 	stw	r6,_UC_GREGS+(PT_R6*4)(r3)
 	stw	r7,_UC_GREGS+(PT_R7*4)(r3)
@@ -69,16 +70,23 @@ ENTRY(__swapcontext)
 	stw	r28,_UC_GREGS+(PT_R28*4)(r3)
 	stw	r29,_UC_GREGS+(PT_R29*4)(r3)
 	stw	r30,_UC_GREGS+(PT_R30*4)(r3)
-	mfctr	r0
-	stw	r0,_UC_GREGS+(PT_CTR*4)(r3)
-	mfxer	r0
-	stw	r0,_UC_GREGS+(PT_XER*4)(r3)
-	mfcr	r0
-	stw	r0,_UC_GREGS+(PT_CCR*4)(r3)
-
-	/* Set the return value of swapcontext to "success".  R3 is the only
-	   register whose value is not preserved in the saved context.  */
+	stw	r31,_UC_GREGS+(PT_R31*4)(r3)
+	
+/* Save the value of R1.  We had to push the stack before we
+   had the address of uc_reg_space.  So compute the address of
+   the callers stack pointer and save it as R1.  */
+	addi	r8,r1,16
 	li	r0,0
+/* Save the count, exception and condition registers.  */
+	mfctr	r11
+	mfxer	r10
+	mfcr	r9
+	stw	r8,_UC_GREGS+(PT_R1*4)(r3)
+	stw	r11,_UC_GREGS+(PT_CTR*4)(r3)
+	stw	r10,_UC_GREGS+(PT_XER*4)(r3)
+	stw	r9,_UC_GREGS+(PT_CCR*4)(r3)
+/* Set the return value of getcontext to "success".  R3 is the only
+   register whose value is not preserved in the saved context.  */
 	stw	r0,_UC_GREGS+(PT_R3*4)(r3)
 
 	/* Zero fill fields that can't be set in user state. */
@@ -138,20 +146,30 @@ ENTRY(__swapcontext)
 	lwz     r7,_dl_hwcap@l(r7)
 #endif
 	andis.	r7,r7,(PPC_FEATURE_HAS_ALTIVEC >> 16)
-	beq	L(no_vec)
 
 	la	r10,(_UC_VREGS)(r3)
 	la	r9,(_UC_VREGS+16)(r3)
+	
+	beq	L(no_vec)
+/* address of the combined VSCR/VSAVE quadword.  */	
+	la	r8,(_UC_VREGS+512)(r3)
 
+/* Save the vector registers */
 	stvx  v0,0,r10
 	stvx  v1,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
+/* We need to get the Vector Status and Control Register early to avoid
+   store order problems later with the VSAVE register that shares the
+   same quadword.  */
+	mfvscr	v0
 
 	stvx  v2,0,r10
 	stvx  v3,0,r9
 	addi  r10,r10,32
 	addi  r9,r9,32
+	
+	stvx	v0,0,r8
 
 	stvx  v4,0,r10
 	stvx  v5,0,r9
@@ -218,20 +236,15 @@ ENTRY(__swapcontext)
 	addi  r10,r10,32
 	addi  r9,r9,32
 
+	mfvscr	v0
 	stvx  v30,0,r10
 	stvx  v31,0,r9
-	addi  r10,r10,32
-	addi  r9,r9,32
 
-	mfvscr	v0
-	mfspr	r0,VRSAVE
-	stvx	v0,0,r10
-	sync
- 	stw	r0,0(r10)
+ 	stw	r0,0(r8)
 
 L(no_vec):
 /* Restore ucontext (parm1) from stack.  */
-	lwz	r12,_FRAME_PARM_SAVE1+16(r1)
+	lwz	r12,_FRAME_PARM_SAVE1(r1)
 	li	r4,0
 	stw	r3,_UC_REGS_PTR(r12)
 	addi	r5,r12,_UC_SIGMASK
@@ -251,8 +264,8 @@ L(no_vec):
 	 * r0, xer, ctr.  We don't restore r2 since it will be used as
 	 * the TLS pointer.
 	 */
-	mr	r4,r31
-	lwz	r31,_UC_REGS_PTR(r31)
+	lwz	r4,_FRAME_PARM_SAVE2(r1)
+	lwz	r31,_UC_REGS_PTR(r4)
 	lwz	r0,_UC_GREGS+(PT_MSR*4)(r31)
 	cmpwi	r0,0
 	bne	L(do_sigret)
@@ -451,8 +464,7 @@ L(has_no_vec):
 	bctr
 
 L(error_exit):
-	lwz	r31,12(r1)
-	lwz	r0,20(r1)
+	lwz	r0,_FRAME_LR_SAVE+16(r1)
 	addi	r1,r1,16
 	mtlr	r0
 	blr

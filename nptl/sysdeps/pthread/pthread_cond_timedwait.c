@@ -67,6 +67,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
   ++cond->__data.__futex;
+  cond->__data.__nwaiters += 1 << COND_CLOCK_BITS;
 
   /* Remember the mutex we are using here.  If there is already a
      different address store this is a bad user bug.  Do not store
@@ -98,7 +99,8 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	INTERNAL_SYSCALL_DECL (err);
 	int ret;
 	ret = INTERNAL_SYSCALL (clock_gettime, err, 2,
-				cond->__data.__clock, &rt);
+				cond->__data.__nwaiters & COND_CLOCK_BITS,
+				&rt);
 # ifndef __ASSUME_POSIX_TIMERS
 	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (ret, err), 0))
 	  {
@@ -185,6 +187,16 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   ++cond->__data.__woken_seq;
 
  bc_out:
+
+  cond->__data.__nwaiters -= 1 << COND_CLOCK_BITS;
+
+  /* If pthread_cond_destroy was called on this variable already,
+     notify the pthread_cond_destroy caller all waiters have left
+     and it can be successfully destroyed.  */
+  if (cond->__data.__total_seq == -1ULL
+      && cond->__data.__nwaiters < (1 << COND_CLOCK_BITS))
+    lll_futex_wake (&cond->__data.__nwaiters, 1);
+
   /* We are done with the condvar.  */
   lll_mutex_unlock (cond->__data.__lock);
 

@@ -1,3 +1,14 @@
+2004-09-02  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	[BZ #357]
+	* stdlib/tst-setcontext.c (test_stack): Added test for stack clobber.
+	(main): Call test_stack.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
+	(__getcontext): Push stack frame then save parms in local frame.
+	Improve instruction scheduling.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__swapcontext): Likewise.
+
 2004-09-01  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h [g++ >= 3.5]: Use

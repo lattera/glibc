@@ -72,6 +72,55 @@ f2 (void)
   was_in_f2 = 1;
 }
 
+void 
+test_stack(volatile int a, volatile int b, 
+           volatile int c, volatile int d)
+{
+  volatile int e = 5;
+  volatile int f = 6;
+  ucontext_t uc;
+
+  /* Test for cases where getcontext is clobbering the callers
+     stack, including parameters.  */
+  getcontext(&uc);
+	
+  if (a != 1)
+    {
+      printf ("%s: getcontext clobbers parm a\n", __FUNCTION__);
+      exit (1);
+    }
+	
+  if (b != 2)
+    {
+      printf ("%s: getcontext clobbers parm b\n", __FUNCTION__);
+      exit (1);
+    }
+	
+  if (c != 3)
+    {
+      printf ("%s: getcontext clobbers parm c\n", __FUNCTION__);
+      exit (1);
+    }
+	
+  if (d != 4)
+    {
+      printf ("%s: getcontext clobbers parm d\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (e != 5)
+    {
+      printf ("%s: getcontext clobbers varible e\n", __FUNCTION__);
+      exit (1);
+    }
+	
+  if (f != 6)
+    {
+      printf ("%s: getcontext clobbers variable f\n", __FUNCTION__);
+      exit (1);
+    }
+}
+
 volatile int global;
 
 int
@@ -88,6 +137,8 @@ main (void)
       printf ("%s: getcontext: %m\n", __FUNCTION__);
       exit (1);
     }
+  
+  test_stack (1, 2, 3, 4);
 
   /* Play some tricks with this context.  */
   if (++global == 1)

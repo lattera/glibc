@@ -111,6 +111,7 @@ __pthread_cond_timedwait:
 	movq	8(%rsp), %rdi
 	incq	total_seq(%rdi)
 	incl	cond_futex(%rdi)
+	addl	$(1 << clock_bits), cond_nwaiters(%rdi)
 
 	/* Install cancellation handler.  */
 #ifdef PIC
@@ -135,8 +136,9 @@ __pthread_cond_timedwait:
 	/* Get the clock number.  Note that the field in the condvar
 	   structure stores the number minus 1.  */
 	movq	8(%rsp), %rdi
-	movl	cond_clock(%rdi), %edi
-	/* Only clocks 0 and 1 are allowed.  Both are handled in the
+	movl	cond_nwaiters(%rdi), %edi
+	andl	$((1 << clock_bits) - 1), %edi
+	/* Only clocks 0 and 1 are allowed so far.  Both are handled in the
 	   kernel.  */
 	leaq	24(%rsp), %rsi
 	movq	$__NR_clock_gettime, %rax
@@ -244,7 +246,23 @@ __pthread_cond_timedwait:
 9:	xorq	%r14, %r14
 14:	incq	woken_seq(%rdi)
 
-24:	LOCK
+24:	subl	$(1 << clock_bits), cond_nwaiters(%rdi)
+
+	/* Wake up a thread which wants to destroy the condvar object.  */
+	cmpq	$0xffffffffffffffff, total_seq(%rdi)
+	jne	25f
+	movl	cond_nwaiters(%rdi), %eax
+	andl	$~((1 << clock_bits) - 1), %eax
+	jne	25f
+
+	addq	$cond_nwaiters, %rdi
+	movq	$SYS_futex, %rax
+	movq	$FUTEX_WAKE, %rsi
+	movl	$1, %edx
+	syscall
+	subq	$cond_nwaiters, %rdi
+
+25:	LOCK
 #if cond_lock == 0
 	decl	(%rdi)
 #else
