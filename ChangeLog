@@ -10,6 +10,10 @@
 	* elf/dl-load.c: Likewise.
 	* elf/dl-dst.h: Likewise.
 	* elf/dl-init.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/do-lookup.h: Likewise.
 
 	* stdio-common/_itoa.h: Undefine SPECIAL to avoid duplicate
 	definition.

@@ -126,7 +126,7 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
       (*receiver) (errcode, objname, errstring);
     }
   else
-    INT(_dl_signal_error) (errcode, objname, occation, errstring);
+    INTUSE(_dl_signal_error) (errcode, objname, occation, errstring);
 }
 
 

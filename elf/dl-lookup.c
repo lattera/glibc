@@ -168,11 +168,11 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	INT(_dl_debug_printf) ("\
+	INTUSE(_dl_debug_printf) ("\
 \nfile=%s;  needed by %s (relocation dependency)\n\n",
-			       map->l_name[0] ? map->l_name : _dl_argv[0],
-			       undef_map->l_name[0]
-			       ? undef_map->l_name : _dl_argv[0]);
+				  map->l_name[0] ? map->l_name : _dl_argv[0],
+				  undef_map->l_name[0]
+				  ? undef_map->l_name : _dl_argv[0]);
     }
   else
     /* Whoa, that was bad luck.  We have to search again.  */
@@ -240,8 +240,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	    && add_dependency (undef_map, current_value.m) < 0)
 	  /* Something went wrong.  Perhaps the object we tried to reference
 	     was just removed.  Try finding another definition.  */
-	  return INT(_dl_lookup_symbol) (undef_name, undef_map, ref,
-					 symbol_scope, type_class, 0);
+	  return INTUSE(_dl_lookup_symbol) (undef_name, undef_map, ref,
+					    symbol_scope, type_class, 0);
 
 	break;
       }
@@ -402,9 +402,9 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	      && add_dependency (undef_map, current_value.m) < 0)
 	    /* Something went wrong.  Perhaps the object we tried to reference
 	       was just removed.  Try finding another definition.  */
-	    return INT(_dl_lookup_versioned_symbol) (undef_name, undef_map,
-						     ref, symbol_scope,
-						     version, type_class, 0);
+	    return INTUSE(_dl_lookup_versioned_symbol) (undef_name, undef_map,
+							ref, symbol_scope,
+							version, type_class, 0);
 
 	  break;
 	}
@@ -600,14 +600,14 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
   if (GL(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
-      INT(_dl_debug_printf) ("binding file %s to %s: %s symbol `%s'",
-			     (reference_name[0]
-			      ? reference_name
-			      : (_dl_argv[0] ?: "<main program>")),
-			     value->m->l_name[0]
-			     ? value->m->l_name : _dl_argv[0],
-			     protected ? "protected" : "normal",
-			     undef_name);
+      INTUSE(_dl_debug_printf) ("binding file %s to %s: %s symbol `%s'",
+				(reference_name[0]
+				 ? reference_name
+				 : (_dl_argv[0] ?: "<main program>")),
+				value->m->l_name[0]
+				? value->m->l_name : _dl_argv[0],
+				protected ? "protected" : "normal",
+				undef_name);
       if (version)
 	_dl_debug_printf_c (" [%s]\n", version->name);
       else
