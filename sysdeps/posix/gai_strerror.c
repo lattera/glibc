@@ -1,4 +1,4 @@
-/* Copyright (C) 1997,2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <pjb27@cam.ac.uk>, 1997.
 
@@ -43,7 +43,8 @@ values[] =
     { EAI_CANCELED, N_("Request canceled") },
     { EAI_NOTCANCELED, N_("Request not canceled") },
     { EAI_ALLDONE, N_("All requests done") },
-    { EAI_INTR, N_("Interrupted by a signal") }
+    { EAI_INTR, N_("Interrupted by a signal") },
+    { EAI_IDN_ENCODE, N_("Parameter string not correctly encoded") }
   };
 
 const char *

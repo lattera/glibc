@@ -1,5 +1,7 @@
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/gai_strerror.c: Add error string for EAI_IDN_ENCODE.
+
 	* Makerules: Use extra-modules.mk if modules-names is defined.
 	* extra-modules.mk: New file.
 	* dlfcn/Makefile (CPPFLAGS-modcxaatexit.c): Removed.
