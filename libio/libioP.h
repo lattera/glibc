@@ -342,10 +342,18 @@ extern int _IO_vscanf __P((const char *, _IO_va_list));
 #else
 #define _IO_FJUMP &_IO_file_jumps,
 #endif
+#ifdef _IO_MTSAFE_IO
 /* check following! */
 #define FILEBUF_LITERAL(CHAIN, FLAGS, FD) \
        { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
-         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, _IO_FJUMP FD}
+         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, _IO_FJUMP FD, \
+	   0, 0, 0, 0, { 0 }, &_IO_stdfile_##FD##_lock }
+#else
+/* check following! */
+#define FILEBUF_LITERAL(CHAIN, FLAGS, FD) \
+       { _IO_MAGIC+_IO_LINKED+_IO_IS_FILEBUF+FLAGS, \
+	   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, CHAIN, _IO_FJUMP FD }
+#endif
 
 /* VTABLE_LABEL defines NAME as of the CLASS class.
    CNLENGTH is strlen(#CLASS).  */

@@ -38,12 +38,16 @@ _IO_vasprintf (result_ptr, format, args)
   const _IO_size_t init_string_size = 100;
   char *string;
   _IO_strfile sf;
+#ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
+#endif
   int ret;
   string = ALLOC_BUF(init_string_size);
   if (string == NULL)
     return -1;
+#ifdef _IO_MTSAFE_IO
   sf._f._lock = &lock;
+#endif
   _IO_init((_IO_FILE*)&sf, 0);
   _IO_JUMPS((_IO_FILE*)&sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE*)&sf, string, init_string_size, string);

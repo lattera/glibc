@@ -67,14 +67,18 @@ open_memstream (bufloc, sizeloc)
   struct locked_FILE
   {
     struct _IO_FILE_memstream fp;
+#ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
+#endif
   } *new_f;
   char *buf;
 
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)
     return NULL;
+#ifdef _IO_MTSAFE_IO
   new_f->fp._sf._f._lock = &new_f->lock;
+#endif
 
   buf = ALLOC_BUF (_IO_BUFSIZ);
   _IO_init (&new_f->fp._sf._f, 0);

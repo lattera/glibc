@@ -32,10 +32,14 @@ _IO_vdprintf (d, format, arg)
      _IO_va_list arg;
 {
   struct _IO_FILE_plus tmpfil;
+#ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
+#endif
   int done;
 
+#ifdef _IO_MTSAFE_IO
   tmpfil.file._lock = &lock;
+#endif
   _IO_init (&tmpfil.file, 0);
   _IO_JUMPS (&tmpfil.file) = &_IO_file_jumps;
   _IO_file_init (&tmpfil.file);

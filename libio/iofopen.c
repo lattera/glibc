@@ -35,12 +35,16 @@ _IO_fopen (filename, mode)
   struct locked_FILE
   {
     struct _IO_FILE_plus fp;
+#ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
+#endif
   } *new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
 
   if (new_f == NULL)
     return NULL;
+#ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
+#endif
   _IO_init (&new_f->fp.file, 0);
   _IO_JUMPS (&new_f->fp.file) = &_IO_file_jumps;
   _IO_file_init (&new_f->fp.file);

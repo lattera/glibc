@@ -34,7 +34,7 @@ catopen (const char *cat_name, int flag)
   __nl_catd result;
   const char *env_var;
 
-  result = (__nl_catd) malloc (sizeof (__nl_catd));
+  result = (__nl_catd) malloc (sizeof (*result));
   if (result == NULL)
     /* We cannot get enough memory.  */
     return (nl_catd) -1;

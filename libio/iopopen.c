@@ -152,14 +152,18 @@ DEFUN(_IO_popen, (command, mode),
   struct locked_FILE
   {
     struct _IO_proc_file fpx;
+#ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
+#endif
   } *new_f;
   _IO_FILE *fp;
 
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)
     return NULL;
+#ifdef _IO_MTSAFE_IO
   new_f->fpx.file.file._lock = &new_f->lock;
+#endif
   fp = (_IO_FILE*)&new_f->fpx;
   _IO_init(fp, 0);
   _IO_JUMPS(fp) = &_IO_proc_jumps;

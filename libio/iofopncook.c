@@ -131,7 +131,9 @@ fopencookie (cookie, mode, io_functions)
   struct locked_FILE
   {
     struct _IO_cookie_file cfile;
+#ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
+#endif
   } *new_f;
 
   switch (*mode++)
@@ -154,7 +156,9 @@ fopencookie (cookie, mode, io_functions)
   new_f = (struct locked_FILE *) malloc (sizeof (struct locked_FILE));
   if (new_f == NULL)
     return NULL;
+#ifdef _IO_MTSAFE_IO
   new_f->cfile.file._lock = &new_f->lock;
+#endif
 
   _IO_init (&new_f->cfile.file, 0);
   _IO_JUMPS (&new_f->cfile.file) = &_IO_cookie_jumps;

@@ -129,6 +129,23 @@ $(objpfx)sysd-dirs: $(+sysdir_pfx)config.make
 	 echo endef) > $@-tmp
 	 mv -f $@-tmp $@
 
+$(objpfx)version-info.h: $(..)Makefile $(+sysdir_pfx)config.make
+	(first=yes;                                                           \
+	 for dir in $(subdirs); do                                            \
+	   if [ -r $$dir/Banner ]; then                                       \
+	     if [ $$first = yes ]; then                                       \
+	       echo "\"Available extensions:";                                \
+	       first=no;                                                      \
+	     fi;                                                              \
+	     sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$dir/Banner;    \
+	   fi;                                                                \
+	 done;                                                                \
+	 [ $first = yes ] || echo "\"") > $@-tmp
+	 mv -f $@-tmp $@
+
+version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
+$(version.c-objects): $(objpfx)version-info.h
+
 # Makerules creates a file `stub-$(subdir)' for each subdirectory, which
 # contains `#define __stub_FUNCTION' for each function which is a stub.
 # Here we paste all of these together into <stubs.h>.

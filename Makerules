@@ -643,6 +643,7 @@ object-suffixes-left := $(versioned)
 include $(o-iterator)
 
 
+ifeq (,$($(subdir)-version))
 define o-iterator-doit
 $(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$(version).so; $$(make-link)
 endef
@@ -654,6 +655,21 @@ $(libdir)/$(o:.so=)-$(version).so: $(objpfx)$o; $$(do-install-program)
 endef
 object-suffixes-left := $(versioned)
 include $(o-iterator)
+else
+define o-iterator-doit
+$(libdir)/$o$($o-version): $(libdir)/$(o:.so=)-$($(subdir)-version).so;
+	$$(make-link)
+endef
+object-suffixes-left := $(versioned)
+include $(o-iterator)
+
+define o-iterator-doit
+$(libdir)/$(o:.so=)-$($(subdir)-version).so: $(objpfx)$o;
+	$$(do-install-program)
+endef
+object-suffixes-left := $(versioned)
+include $(o-iterator)
+endif
 endif
 
 define do-install-so

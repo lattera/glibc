@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <dlfcn.h>
 
 static void *funcall (char **stringp);
@@ -26,6 +27,13 @@ funcall (char **stringp)
   if (**stringp != '\0')
     /* Swallow closing paren.  */
     ++*stringp;
+
+  if (args[0] == NULL)
+    {
+      static const char unknown[] = "Unknown function\n";
+      write (1, unknown, sizeof unknown - 1);
+      return NULL;
+    }
 
   /* Do it to it.  */
   __builtin_return (__builtin_apply (args[0],
@@ -81,7 +89,7 @@ eval (char **stringp)
       value = p;
       do
 	++p;
-      while (*p != '\0' && !isspace (*p) && !ispunct (*p));
+      while (*p != '\0' && !isspace (*p) && (!ispunct (*p) || *p == '_'));
       c = *p;
       *p = '\0';
       value = dlsym (NULL, value);

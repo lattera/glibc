@@ -1,3 +1,22 @@
+Sat Sep  7 14:00:33 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* catgets/catgets.c (catopen): Allocate sizeof(*result) bytes
+	instead of sizeof(nl_catd) (which is just a pointer!).
+
+Sat Sep  7 19:39:19 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile ($(objpfx)version-info.h): Generate from Banner files.
+	* version.c (banner): Add contents of version-info.h to string.
+
+	* Makerules: If $($(subdir)-version) is available name versioned
+	shared library according to this value instead of glibc's version.
+
+	* libio/Banner: New file.
+
+	* elf/eval.c (funcall): Write error message in case function is
+	not found.
+	(eval): Recognize `_' in names.
+
 Sat Sep  7 05:15:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
  	* libio/iofdopen: Initialize _lock field only if _IO_MTSAFE_IO.
