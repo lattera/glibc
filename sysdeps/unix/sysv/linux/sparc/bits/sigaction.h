@@ -47,7 +47,7 @@ struct sigaction
     unsigned long sa_flags;
 
     /* Not used by Linux/Sparc yet.  */
-    void (*sa_restorer) __PMT ((void));
+    void (*sa_restorer) (void);
   };
 
 

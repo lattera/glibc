@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
 #include <hurd/io.h>
 
 /* Defined in fopen.c.  */
-extern int __getmode __P ((const char *mode, __io_mode *mptr));
+extern int __getmode (const char *mode, __io_mode *mptr);
 
 /* Open a new stream on a given system file descriptor.  */
 FILE *

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,18 +30,13 @@
 
 char *__ttyname;
 
-static char * getttyname __P ((const char *dev, dev_t mydev,
-			       ino_t myino, int save, int *dostat))
+static char * getttyname (const char *dev, dev_t mydev,
+			  ino_t myino, int save, int *dostat)
      internal_function;
 
 static char *
 internal_function
-getttyname (dev, mydev, myino, save, dostat)
-     const char *dev;
-     dev_t mydev;
-     ino_t myino;
-     int save;
-     int *dostat;
+getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
 {
   static char *name;
   static size_t namelen;
@@ -102,8 +97,7 @@ getttyname (dev, mydev, myino, save, dostat)
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
-ttyname (fd)
-     int fd;
+ttyname (int fd)
 {
   static char *buf;
   static size_t buflen;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
    in the given buffer.  This knows the format that the caller
    will expect, but this need not be the format of the password file.  */
 
-int __getpw __P ((__uid_t uid, char *buf));
+int __getpw (__uid_t uid, char *buf);
 
 int
 __getpw (uid, buf)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,14 +20,11 @@
 #include <stddef.h>
 #include <termios.h>
 
-static int bad_speed __P ((speed_t speed));
+static int bad_speed (speed_t speed);
 
 /* Set the state of FD to *TERMIOS_P.  */
 int
-tcsetattr (fd, optional_actions, termios_p)
-     int fd;
-     int optional_actions;
-     const struct termios *termios_p;
+tcsetattr (int fd, int optional_actions, const struct termios *termios_p)
 {
   if (fd < 0)
     {
@@ -65,8 +62,7 @@ tcsetattr (fd, optional_actions, termios_p)
 
 /* Strychnine checking.  */
 static int
-bad_speed (speed)
-     speed_t speed;
+bad_speed (speed_t speed)
 {
   switch (speed)
     {

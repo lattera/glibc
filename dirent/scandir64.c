@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,8 +25,8 @@ int
 scandir64 (dir, namelist, select, cmp)
      const char *dir;
      struct dirent64 ***namelist;
-     int (*select) __P ((const struct dirent64 *));
-     int (*cmp) __P ((const void *, const void *));
+     int (*select) (const struct dirent64 *);
+     int (*cmp) (const void *, const void *);
 {
   DIR *dp = __opendir (dir);
   struct dirent64 **v = NULL;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ __libc_init (int argc, char **argv, char **envp)
     {
       /* These functions are defined in crti.o to run the .init and .fini
 	 sections, which are used for initializers and finalizers.  */
-      extern void _init __P ((void)), _fini __P ((void));
+      extern void _init (void), _fini (void);
       atexit (&_fini);		/* Arrange for _fini to run at exit.  */
       _init ();
     }

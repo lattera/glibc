@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,19 +28,14 @@
 
 #include <stdio-common/_itoa.h>
 
-static int getttyname_r __P ((char *buf, size_t buflen,
-			      dev_t mydev, ino_t myino, int save,
-			      int *dostat)) internal_function;
+static int getttyname_r (char *buf, size_t buflen,
+			 dev_t mydev, ino_t myino, int save,
+			 int *dostat) internal_function;
 
 static int
 internal_function
-getttyname_r (buf, buflen, mydev, myino, save, dostat)
-     char *buf;
-     size_t buflen;
-     dev_t mydev;
-     ino_t myino;
-     int save;
-     int *dostat;
+getttyname_r (char *buf, size_t buflen, dev_t mydev, ino_t myino,
+	      int save, int *dostat)
 {
   struct stat st;
   DIR *dirstream;
@@ -98,10 +93,7 @@ getttyname_r (buf, buflen, mydev, myino, save, dostat)
 /* Store at most BUFLEN character of the pathname of the terminal FD is
    open on in BUF.  Return 0 on success,  otherwise an error number.  */
 int
-__ttyname_r (fd, buf, buflen)
-     int fd;
-     char *buf;
-     size_t buflen;
+__ttyname_r (int fd, char *buf, size_t buflen)
 {
   char procname[30];
   struct stat st, st1;

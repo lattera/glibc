@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -99,5 +99,5 @@ typedef unsigned long int fenv_t;
 #endif
 
 /* The system calls to talk to the kernel's FP code.  */
-extern unsigned long int __ieee_get_fp_control __P ((void));
-extern void __ieee_set_fp_control __P ((unsigned long int __value));
+extern unsigned long int __ieee_get_fp_control (void) __THROW;
+extern void __ieee_set_fp_control (unsigned long int __value) __THROW;

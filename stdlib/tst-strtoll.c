@@ -80,10 +80,11 @@ static const struct ltest tests[] =
   {NULL, 0, 0, 0, 0},
   };
 
-static void expand __P ((char *dst, int c));
+/* Prototypes for local functions.  */
+static void expand (char *dst, int c);
 
 int
-main (int argc, char ** argv)
+main (void)
 {
   register const struct ltest *lt;
   char *ep;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
    of SIZE bytes each.  The comparisons are done by (*COMPAR)().  */
 void *
 bsearch (const void *key, const void *base, size_t nmemb, size_t size,
-	 int (*compar) __P ((const void *, const void *)))
+	 int (*compar) (const void *, const void *))
 {
   size_t l, u, idx;
   const void *p;

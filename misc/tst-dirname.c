@@ -1,5 +1,5 @@
 /* Test program for dirname function a la XPG.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,12 +24,8 @@
 #include <string.h>
 
 
-extern int test __P ((const char *input, const char *result));
-
 int
-test (input, result)
-     const char *input;
-     const char *result;
+test (const char *input, const char *result)
 {
   int retval;
   char *cp;
@@ -42,11 +38,8 @@ test (input, result)
   return retval;
 }
 
-int main __P ((int argc, char *argv[]));
 int
-main (argc, argv)
-     int argc;
-     char *argv[];
+main (void)
 {
   int result = 0;
 

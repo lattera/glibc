@@ -1,5 +1,5 @@
 /* Handle locking of password file.
-   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -43,7 +43,7 @@ __libc_lock_define_initialized (static, lock)
 
 
 /* Prototypes for local functions.  */
-static void noop_handler __P ((int __sig));
+static void noop_handler (int __sig);
 
 
 /* We cannot simply return in error cases.  We have to close the file
@@ -79,7 +79,7 @@ static void noop_handler __P ((int __sig));
 
 
 int
-__lckpwdf ()
+__lckpwdf (void)
 {
   int flags;
   sigset_t saved_set;			/* Saved set of caught signals.  */
@@ -151,7 +151,7 @@ weak_alias (__lckpwdf, lckpwdf)
 
 
 int
-__ulckpwdf ()
+__ulckpwdf (void)
 {
   int result;
 
@@ -178,8 +178,7 @@ weak_alias (__ulckpwdf, ulckpwdf)
 
 
 static void
-noop_handler (sig)
-     int sig;
+noop_handler (int sig)
 {
   /* We simply return which makes the `fcntl' call return with an error.  */
 }

@@ -8,6 +8,37 @@
 	* sunrpc/rpc_main.c (parseargs): Don't accept -M and -N.
 	Closes PR libc/1731.
 
+	* csu/munch-tmpl.c (__libc_init): Remove K&R support.
+	* dirent/scandir64.c: Likewise.
+	* pwd/getpw.c: Likewise.
+	* stdlib/bsearch.c (bsearch): Likewise.
+	* stdlib/tst-strtoll.c: Likewise.
+	* localedata/collate-test.c: Likewise.
+	* localedata/xfrm-test.c: Likewise.
+	* posix/bsd-getpgrp.c: Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h: Likewise.
+	* sysdeps/generic/bits/siginfo.h: Likewise.
+	* sysdeps/generic/bits/sockaddr.h: Likewise.
+	* sysdeps/generic/sys/swap.h: Likewise.
+	* sysdeps/generic/sys/sysinfo.h: Likewise.
+	* sysdeps/generic/vfork.c: Likewise.
+	* sysdeps/m68k/fpu/switch/68881-sw.h: Likewise.
+	* sysdeps/mach/hurd/fdopen.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/acct.h: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+
+	* misc/tst-dirname.c: Remove K&R support, use ANSI C prototypes.
+	* shadow/lckpwdf.c: Likewise.
+	* stdlib/tst-strtol.c: Likewise.
+	* sysdeps/generic/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.
+	* sysdeps/unix/sysv/linux/ttyname_r.c: Likewise.
+
 2000-05-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (_dl_init_paths): If env_path_list has 0 elements,
