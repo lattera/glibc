@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,21 +16,24 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <sys/types.h>
-#include <unistd.h>
+#ifndef _IOCTLS_H
+#define _IOCTLS_H 1
 
-ssize_t
-__getdirentries (fd, buf, nbytes, basep)
-     int fd;
-     char *buf;
-     size_t nbytes;
-     off_t *basep;
-{
-  if (basep)
-    *basep = __lseek (fd, (off_t) 0, SEEK_CUR);
+/* Use the definitions from the kernel header files.  */
+#include <asm/ioctls.h>
+#include <sys/kernel_termios.h>
 
-  return (ssize_t) __read (fd, buf, nbytes);
-}
+/* Oh well, this is necessary since the kernel data structure is
+   different from the user-level version.  */
+#undef  TCGETS
+#undef  TCSETS
+#undef  TCSETSW
+#undef  TCSETSF
+#define TCGETS	_IOR ('t', 19, struct __kernel_termios)
+#define TCSETS	_IOW ('t', 20, struct __kernel_termios)
+#define TCSETSW	_IOW ('t', 21, struct __kernel_termios)
+#define TCSETSF	_IOW ('t', 22, struct __kernel_termios)
 
-weak_alias (__getdirentries, getdirentries)
+#include <linux/sockios.h>
+
+#endif /* ioctls.h  */

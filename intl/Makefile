@@ -25,7 +25,7 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   l10nflist explodename
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias
 
-install-others = $(localedir)/locale.alias
+install-others = $(inst_localedir)/locale.alias
 
 include ../Rules
 

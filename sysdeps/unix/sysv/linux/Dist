@@ -1,6 +1,5 @@
 init-first.h
 kernel_sigaction.h
-kernel_termios.h
 llseek.c
 siglist.h
 sysctl.c
@@ -18,6 +17,7 @@ sys/debugreg.h
 sys/io.h
 sys/kd.h
 sys/kdaemon.h
+sys/kernel_termios.h
 sys/klog.h
 sys/module.h
 sys/mount.h

@@ -27,7 +27,7 @@ t2 (void)
   SCAN ("12345", "%ld", N, 1, 12345);
   SCAN ("12345", "%llllld", N, 0, -1);
   SCAN ("12345", "%LLLLLd", N, 0, -1);
-  SCAN ("test ", "%*s%n",  n, 1, 4);
+  SCAN ("test ", "%*s%n",  n, 0, 4);
   SCAN ("test ",   "%2*s%n",  n, 0, -1);
   SCAN ("12 ",   "%l2d",  n, 0, -1);
   SCAN ("12 ",   "%2ld",  N, 1, 12);

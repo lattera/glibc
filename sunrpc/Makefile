@@ -53,8 +53,8 @@ headers = $(addprefix rpc/,auth.h auth_unix.h clnt.h netdb.h pmap_clnt.h \
 rpcsvc = bootparam.x nlm_prot.x rstat.x \
 	 yppasswd.x klm_prot.x rex.x sm_inter.x mount.x \
 	 rusers.x spray.x nfs_prot.x rquota.x
-install-others = $(includedir)/rpcsvc/bootparam_prot.h \
-		 $(sysconfdir)/rpc
+install-others = $(inst_includedir)/rpcsvc/bootparam_prot.h \
+		 $(inst_sysconfdir)/rpc
 generated = $(rpcsvc:%.x=rpcsvc/%.h) $(rpcsvc:%.x=x%.c)
 
 routines := auth_none auth_unix authuxprot bindrsvprt \
@@ -103,12 +103,13 @@ rpcgen-cmd = $(built-program-cmd)
 # The proper file name is longer than 14 chars, so we install it under
 # a shorter name.  But if the filesystem can handle it, we want to
 # install under the proper name as well.
-$(includedir)/rpcsvc/bootparam_prot.h: $(includedir)/rpcsvc/bootparam.h
+$(inst_includedir)/rpcsvc/bootparam_prot.h: \
+  $(inst_includedir)/rpcsvc/bootparam.h
 	@echo It is safe to ignore an error here if this file name is too long.
 	-$(do-install)
 
 # Install the rpc data base file.
-$(sysconfdir)/rpc: etc.rpc
+$(inst_sysconfdir)/rpc: etc.rpc
 	$(do-install)
 
 defines := $(defines) -D_PATH_RPC='"$(sysconfdir)/rpc"'

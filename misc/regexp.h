@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -100,7 +100,7 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
   size_t __input_size = 0;
   size_t __current_size;
   int __ch;
-  int __result;
+  int __error;
 
   /* Align the expression buffer according to the needs for an object
      of type `regex_t'.  Then check for minimum size of the buffer for
@@ -169,7 +169,7 @@ compile (char *__instring, char *__expbuf, __const char *__endbuf, int __eof)
       case REG_EESCAPE:
       case REG_BADRPT:
       case REG_EEND:
-      case REG_RPAREN:
+      case REG_ERPAREN:
       default:
 	/* There is no matching error code.  */
 	RETURN (36);

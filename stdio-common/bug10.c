@@ -14,7 +14,7 @@ main (int arc, char *argv)
   printf("Result of sscanf = %d\n", res);
   printf("Scanned format %%u = %u\n", val);
   printf("Possibly scanned format %%n = %d\n", n);
-  result |= res != 2 || val != 111 || n != 3;
+  result |= res != 1 || val != 111 || n != 3;
 
 
   result |= sscanf ("", " %n", &n) == EOF;

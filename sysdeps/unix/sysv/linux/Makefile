@@ -1,10 +1,10 @@
-ifeq ($(subdir), csu)
+ifeq ($(subdir),csu)
 CFLAGS-init-first.c = -fkeep-inline-functions
 
 sysdep_routines += errno-loc
 endif
 
-ifeq ($(subdir), misc)
+ifeq ($(subdir),misc)
 sysdep_routines += sysctl clone llseek
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
@@ -28,29 +28,29 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 generated += syscall-list.h syscall-list.d
 endif
 
-ifeq ($(subdir), time)
+ifeq ($(subdir),time)
 sysdep_headers += sys/timex.h
 endif
 
-ifeq ($(subdir), socket)
+ifeq ($(subdir),socket)
 sysdep_headers += sys/socketcall.h net/if.h net/if_ppp.h net/ppp-comp.h \
 		  net/ppp_defs.h net/if_arp.h net/route.h
 endif
 
-ifeq ($(subdir), sunrpc)
+ifeq ($(subdir),sunrpc)
 sysdep_headers += nfs/nfs.h
 endif
 
-ifeq ($(subdir), termios)
-sysdep_headers += termio.h
+ifeq ($(subdir),termios)
+sysdep_headers += termio.h sys/kernel_termios.h
 endif
 
-ifeq ($(subdir), stdio-common)
+ifeq ($(subdir),stdio-common)
 # Just disable the auto generation in sysdeps/generic
 inhibit-siglist := yes
 endif
 
-ifeq ($(subdir), inet)
+ifeq ($(subdir),inet)
 sysdep_headers += netinet/in_systm.h sys/socketvar.h
 endif
 

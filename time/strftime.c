@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -327,6 +327,31 @@ static char const month_name[][10] =
     "July", "August", "September", "October", "November", "December"
   };
 #endif
+
+
+#if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
+  /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
+     Work around this bug by copying *tp before it might be munged.  */
+  size_t _strftime_copytm __P ((char *, size_t, const char *,
+			        const struct tm *));
+  size_t
+  strftime (s, maxsize, format, tp)
+      char *s;
+      size_t maxsize;
+      const char *format;
+      const struct tm *tp;
+  {
+    struct tm tmcopy;
+    tmcopy = *tp;
+    return _strftime_copytm (s, maxsize, format, &tmcopy);
+  }
+# ifdef strftime
+#  undef strftime
+# endif
+# define strftime(S, Maxsize, Format, Tp) \
+  _strftime_copytm ((S), (Maxsize), (Format), (Tp))
+#endif
+
 
 /* Write information from TP into S according to the format
    string FORMAT, writing no more that MAXSIZE characters

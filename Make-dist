@@ -190,7 +190,6 @@ endef
 configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
-.PHONY: dist
 dist: $(tardir).tar.gz
 
 subdir_dist: dist.tar
@@ -217,7 +216,7 @@ $(dist-subdirs):
 	$(MAKE) -C $(patsubst dist-%,%,$@) dist
 
 # This is here instead of in Makefile so it can use $(release) and $(version).
-README: README.template version.c
+README: README.template version.h
 	-rm -f $@
 	sed -e 's/RELEASE/$(release)/' -e 's/VERSION/$(version)/' < $< > $@
 # Make it unwritable so I won't change it by mistake.

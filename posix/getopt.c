@@ -52,7 +52,7 @@
    program understand `configure --with-gnu-libc' and omit the object files,
    it is simpler to just do this in the source for each such file.  */
 
-#define GETOPT_INTERFACE_VERSION 1
+#define GETOPT_INTERFACE_VERSION 2
 #if !defined (_LIBC) && defined (__GLIBC__) && __GLIBC__ >= 2
 #include <gnu-versions.h>
 #if _GNU_GETOPT_INTERFACE_VERSION == GETOPT_INTERFACE_VERSION

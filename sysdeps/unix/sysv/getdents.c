@@ -21,9 +21,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-extern int __getdents __P ((int fd, char *buf, size_t nbytes));
+extern ssize_t __getdents __P ((int fd, char *buf, size_t nbytes));
 
-int
+ssize_t
 __getdirentries (fd, buf, nbytes, basep)
      int fd;
      char *buf;

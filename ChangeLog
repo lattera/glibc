@@ -1,3 +1,131 @@
+Thu Jan 23 04:06:42 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Make-dist (.PHONY: dist): Remove duplicate declaration.
+	(README): Depend on version.h not version.c.
+	* Makefile (README): Depend on version.h not version.c.
+
+	* Makeconfig (inst_libdir, inst_slibdir, inst_includedir,
+	inst_datadir, inst_zonedir, inst_localedir, inst_i18ndir, inst_bindir,
+	inst_sbindir, inst_infodir, inst_sysconfdir): New variables.  Same
+	as variable withough inst_ but prepended with $(install_root).
+	(localtime-time): Use $(inst_sysconfdir) not $(sysconfdir).
+	* Makefile (install-others): Use $(inst_includedir).
+	(gnu/stabs.h, gnu/lib-names.h): Use $(inst_includedir).
+	* Makerules (tons of install rules): Use inst_% variables.
+	* elf/Makefile: Likewise.
+	* hurd/Makefile: Likewise.
+	* intl/Makefile: Likewise.
+	* manual/Makefile: Likewise.
+	* po/Makefile: Likewise.
+	* sunrpc/Makefile: Likewise.
+	* sysdeps/mach/hurd/Makefile: Likewise.
+	* sysdeps/standalone/i386/force_cpu386/Makefile: Likewise.
+	* time/Makefile: Likewise.
+
+	* config.make.in: Revert patch from Sat Jan 18 22:15:26 1997,
+	leave install_root in place.
+
+	* gnu-versions.h (_GNU_GETOPT_INTERFACE_VERSION): Define to 2.
+	* posix/getopt.c (GETOPT_INTERFACE_VERSION): Define to 2.
+	* posix/getopt1.c (GETOPT_INTERFACE_VERSION): Define to 2.
+
+	* elf/Makefile [yes==$(has-ldconfig)]: Correct dependencies of
+	ldconfig.
+	(CFLAGS-dl-load.c): New variable, avoid gcc warning.
+
+	* sysdeps/mach/hurd/configure.in: Add _LIBC_REENTRENT to DEFINES.
+
+	* sysdeps/mach/hurd/getdents.c: Update copyright.  De-ANSI-declfy.
+	* sysdeps/stub/getdents.c: Likewise.  Correct return value.
+	* sysdeps/unix/getdents.c: Likewise.
+	* sysdeps/unix/sysv/getdents.c: Likewise.
+
+	* sysdeps/unix/readdir.c: Update copyright.
+
+	* sysdeps/unix/bsd/sony/newsos4/Makefile: Correct ifeq arguments.
+	* sysdeps/unix/bsd/sun/sunos4/Makefile: Likewise.
+	* sysdeps/unix/sysv/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/Makefile: Likewise.
+	* sysdeps/unix/sysv/linux/i386/Makefile: Likewise.
+
+	* sysdeps/unix/sysv/linux/Dist: Don't distribute kernel_termios.h,
+	but sys/kernel_termios.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==termios]
+	(sysdep_headers): Add sys/kernel_termios.h.
+	* sysdeps/unix/sysv/linux/kernel_termios.h: Moved to...
+	* sysdeps/unix/sysv/linux/sys/kernel_termios.h: ...here.
+	* sysdeps/unix/sysv/linux/sys/tcgetattr.c: Use __kernel_termios and
+	__KERNEL_NCCS instead of kernel_termios and KERNEL_NCCS resp.
+
+	* sysdeps/unix/sysv/linux/alpha/ioctls.h: New file.
+
+	* sysdeps/unix/sysv/linux/getdents.c: Correct problems with alignment.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove getdents.
+	Reported by Eirik Fuller <eirik@netcom.com>.
+
+	* time/Banner: Removed.  Wrong and unnecessary information.  It's now
+	in...
+	* time/README: New file.
+	* time/Makefile (distribute): Remove Banner, add README.
+
+Wed Jan 22 13:19:56 1997  Richard Henderson  <rth@tamu.edu>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c (platforms): Add Sable.
+	(init_iosys): Recognize /etc/alpha_systype as a four-tuple for
+	the purpose of supporting brand new systems.
+	(*): The type of iosys variables should be iosys_t.
+
+1997-01-22  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (_strftime_copytm):
+	New function, to work around Solaris 2.5 tzset bug.
+
+Wed Jan 22 23:05:14 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mach/hurd/vdprintf.c: Complete de-ANSI-declfication.
+	* sysdeps/posix/pipestream.c (writedecl): Fix typo.
+	Reported by Marcus G. Daniels <marcus@shannon.sysc.pdx.edu>.
+
+Wed Jan 22 13:58:56 1997  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* elf/Makefile (CFLAGS-dl-load.c): New Variable to keep gcc silent
+	since name_copy is initialized.
+
+Wed Jan 22 16:58:12 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/Makefile (tests): Remove scanf11.
+	* stdio-common/scanf11.c: Removed.
+	* stdio-common/vfscanf.c Revert patch of Thu Jan 16 23:39:25 1997.
+	Although the Corrigendum 1 describes the result as implemented the
+	even more recent Amendement 1 seconds the position of ISO C:1990
+	where the %n directive has no effect on the assignment count.
+	* stdio-common/bug10.c: Likewise.
+	* stdio-common/scanf1.c: Likewise.
+	* stdio-common/scanf3.c: Likewise.
+	* stdio-common/scanf10.c: Likewise.
+	* stdio-common/tstdiomisc.c: Likewise.
+
+	* new-malloc/obstack.h: Don't define malloc using bcopy if malloc
+	is not available.  This leads to problems since bcopy does not
+	return a value.  Instead define _obstack_memcpy based on memcpy or
+	bcopy.  This name isn't used outside obstack.h and so no problems
+	from using the memcpy function in a file including obstack.h can
+	result.
+	Reported by Martin Trapp <trapp@ipd.info.uni-karlsruhe.de>.
+
+Tue Jan 21 18:35:55 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* misc/regexp.h (compile): Fix typos.
+
+Tue Jan 21 01:01:59 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h (struct elf_prpsinfo): Fix
+	type of pr_{pid,ppid,pgrp,sid} fields.
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h (struct
+	elf_prpsinfo): Likewise.
+
 1997-01-21  Paul Eggert  <eggert@twinsun.com>
 
 	* posix/getopt.c (_getopt_internal): Return -1, not EOF, when args

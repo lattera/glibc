@@ -98,9 +98,9 @@ common-generated += errnos.d stamp-errnos
 libc-name = crt
 
 ifeq (,$(subdir))
-install-others += $(libdir)/libc.a $(libdir)/libc_p.a
-$(libdir)/libc.a: $(hurd)/libc-ldscript; $(do-install)
-$(libdir)/libc_p.a: $(hurd)/libc_p-ldscript; $(do-install)
+install-others += $(inst_libdir)/libc.a $(inst_libdir)/libc_p.a
+$(inst_libdir)/libc.a: $(hurd)/libc-ldscript; $(do-install)
+$(inst_libdir)/libc_p.a: $(hurd)/libc_p-ldscript; $(do-install)
 endif
 
 # Make sure these are used to build the libc.so shared object too.
@@ -110,7 +110,7 @@ $(common-objpfx)libc.so: $(rpcuserlibs)
 rpath-link := $(rpath-link):$(common-objpfx)mach:$(common-objpfx)hurd
 
 # And get them into the libc.so ldscript.
-$(libdir)/libc.so: $(rpcuserlibs)
+$(inst_libdir)/libc.so: $(rpcuserlibs)
 
 # The RPC stubs from these libraries are needed in building the dynamic
 # linker, too.  It must be self-contained, so we link the needed PIC

@@ -1,5 +1,5 @@
 /* Header with interface version macros for library pieces copied elsewhere.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,7 +47,7 @@
 #define _GNU_OBSTACK_INTERFACE_VERSION	1 /* vs malloc/obstack.c */
 #define _GNU_REGEX_INTERFACE_VERSION	1 /* vs posix/regex.c */
 #define _GNU_GLOB_INTERFACE_VERSION	1 /* vs posix/glob.c */
-#define _GNU_GETOPT_INTERFACE_VERSION	1 /* vs posix/getopt.c and
+#define _GNU_GETOPT_INTERFACE_VERSION	2 /* vs posix/getopt.c and
 					     posix/getopt1.c */
 
 #endif	/* gnu-versions.h */

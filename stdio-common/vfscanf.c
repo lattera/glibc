@@ -462,7 +462,35 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		*ARG (short int *) = read_in;
 	      else
 		*ARG (int *) = read_in;
+
+#ifdef NO_BUG_IN_ISO_C_CORRIGENDUM_1
+	      /* We have a severe problem here.  The ISO C standard
+		 contradicts itself in explaining the effect of the %n
+		 format in `scanf'.  While in ISO C:1990 and the ISO C
+		 Amendement 1:1995 the result is described as
+
+		   Execution of a %n directive does not effect the
+		   assignment count returned at the completion of
+		   execution of the f(w)scanf function.
+
+		 in ISO C Corrigendum 1:1994 the following was added:
+
+		   Subclause 7.9.6.2
+		   Add the following fourth example:
+		     In:
+		       #include <stdio.h>
+		       int d1, d2, n1, n2, i;
+		       i = sscanf("123", "%d%n%n%d", &d1, &n1, &n2, &d2);
+		     the value 123 is assigned to d1 and the value3 to n1.
+		     Because %n can never get an input failure the value
+		     of 3 is also assigned to n2.  The value of d2 is not
+		     affected.  The value 3 is assigned to i.
+
+		 We go for now with the historically correct code fro ISO C,
+		 i.e., we don't count the %n assignments.  When it ever
+		 should proof to be wrong just remove the #ifdef above.  */
 	      ++done;
+#endif
 	    }
 	  break;
 

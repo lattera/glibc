@@ -118,11 +118,11 @@ realclean: distclean
 
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
-install: $(infodir)/libc.info
+install: $(inst_infodir)/libc.info
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
 
-$(infodir)/libc.info: libc.info installdirs
+$(inst_infodir)/libc.info: libc.info installdirs
 	for file in $<*; do \
 	  name=`basename $$file`; \
 	  $(INSTALL_DATA) $$file \
@@ -130,7 +130,7 @@ $(infodir)/libc.info: libc.info installdirs
 	done
 
 installdirs: $(firstword $(wildcard mkinstalldirs ../mkinstalldirs))
-	$(dir $<)$(notdir $<) $(infodir)
+	$(dir $<)$(notdir $<) $(inst_infodir)
 
 .PHONY: dist
 dist: # glibc-doc-$(edition).tar.gz

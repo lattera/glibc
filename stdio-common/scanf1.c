@@ -9,7 +9,7 @@ main (int argc, char *argv[])
   n = i = r = -1;
   r = sscanf ("1234:567", "%d%n", &i, &n);
   printf ("%d %d %d\n", r, n, i);
-  if (r != 2 || i != 1234 || n != 4)
+  if (r != 1 || i != 1234 || n != 4)
     abort ();
   return 0;
 }

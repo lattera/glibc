@@ -1,0 +1,28 @@
+The sources files
+	`zic.c'
+	`zdump.c'
+	`tzselect.ksh'
+	`checktab.awk'
+files come from the tzcode1997a package by Arthur David Olsen et.al.
+
+The file
+	`africa'
+	`antarctica'
+	`asia'
+	`australasia'
+	`europe'
+	`northamerica'
+	`southamerica'
+	`pacificnew'
+	`etcetera'
+	`factory'
+	`backward'
+	`systemv'
+	`solar87'
+	`solar88'
+	`solar89'
+	`iso3166.tab'
+	`zone.tab'
+	`leapseconds'
+	`yearistype'
+files come from the tzdata1997a package by Arthur David Olsen et.al.

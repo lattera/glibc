@@ -11,5 +11,5 @@ main (int argc, char *argv[])
 
   printf ("retc=%d a=%d b=%d\n", retc, a, b);
 
-  return retc == 2 && a == 6 && b == 12 ? 0 : 1;
+  return retc == -1 && a == 6 && b == 12 ? 0 : 1;
 }

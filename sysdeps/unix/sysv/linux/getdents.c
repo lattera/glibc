@@ -16,10 +16,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <alloca.h>
 #include <dirent.h>
 #include <stddef.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/param.h>
 #include <sys/types.h>
 
 #include <linux/posix_types.h>
@@ -52,8 +54,7 @@ struct kernel_dirent
    in the buffer.  Taking this number allows us to specify a correct
    number of bytes to read.  If we should be wrong, we can reset the
    file descriptor.  */
-int __getdirentries __P ((int fd, char *buf, size_t nbytes, off_t *basep));
-int
+ssize_t
 __getdirentries (fd, buf, nbytes, basep)
      int fd;
      char *buf;
@@ -62,32 +63,33 @@ __getdirentries (fd, buf, nbytes, basep)
 {
   off_t base = __lseek (fd, (off_t) 0, SEEK_CUR);
   size_t red_nbytes;
-  struct kernel_dirent *kdp;
+  struct kernel_dirent *skdp, *kdp;
   struct dirent *dp;
   int retval;
 
   red_nbytes = nbytes - (nbytes / (offsetof (struct dirent, d_name) + 3));
 
   dp = (struct dirent *) buf;
-  kdp = (struct kernel_dirent *) (buf + (nbytes - red_nbytes));
+  skdp = kdp = __alloca (red_nbytes);
 
   retval = __getdents (fd, (char *) kdp, red_nbytes);
 
-  while ((char *) kdp < buf + (nbytes - red_nbytes) + retval)
+  while ((char *) kdp < (char *) skdp + retval)
     {
+      const size_t size_diff = MAX (offsetof (struct dirent, d_name)
+				    - offsetof (struct kernel_dirent, d_name),
+				    __alignof__ (struct dirent));
       dp->d_ino = kdp->d_ino;
       dp->d_off = kdp->d_off;
-      dp->d_reclen = (kdp->d_reclen
-		      + (offsetof (struct dirent, d_name)
-			 - offsetof (struct kernel_dirent, d_name)));
+      dp->d_reclen = kdp->d_reclen + size_diff;
       dp->d_type = DT_UNKNOWN;
-      memmove (dp->d_name, kdp->d_name,
-	       kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
+      memcpy (dp->d_name, kdp->d_name,
+	      kdp->d_reclen - offsetof (struct kernel_dirent, d_name));
 
       dp = (struct dirent *) (((char *) dp) + dp->d_reclen);
       kdp = (struct kernel_dirent *) (((char *) kdp) + kdp->d_reclen);
 
-      if ((char *) dp >= (char *) kdp)
+      if ((char *) dp >= buf + nbytes)
 	{
 	  /* Our heuristic failed.  We read too many entries.  Reset
 	     the stream.  */
@@ -99,7 +101,7 @@ __getdirentries (fd, buf, nbytes, basep)
   if (basep)
     *basep = base;
 
-  return (char *) dp - (char *) buf;
+  return (char *) dp - buf;
 }
 
 weak_alias (__getdirentries, getdirentries)

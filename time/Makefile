@@ -24,7 +24,7 @@ subdir	:= time
 headers	:= time.h sys/time.h sys/timeb.h timebits.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype	\
 	      iso3166.tab zone.tab tzselect.ksh checktab.awk	\
-	      Banner
+	      README
 extra-objs = scheck.o ialloc.o $(tzfiles:%=z.%)
 
 routines	:= offtime asctime clock ctime ctime_r difftime	\
@@ -65,22 +65,22 @@ endef
 
 # Make these absolute file names.
 installed-localtime-file := $(firstword $(filter /%,$(localtime-file)) \
-					$(addprefix $(zonedir)/, \
+					$(addprefix $(inst_zonedir)/, \
 						    $(localtime-file)))
 installed-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
-					 $(addprefix $(zonedir)/, \
+					 $(addprefix $(inst_zonedir)/, \
 						     $(posixrules-file)))
 
 ifeq ($(cross-compiling),no)
 # Don't try to install the zoneinfo files since we can't run zic.
-install-others = $(addprefix $(zonedir)/,$(zonenames) \
-					 $(zonenames:%=posix/%) \
-					 $(zonenames:%=right/%)) \
+install-others = $(addprefix $(inst_zonedir)/,$(zonenames) \
+					      $(zonenames:%=posix/%) \
+					      $(zonenames:%=right/%)) \
 		 $(installed-localtime-file) $(installed-posixrules-file)
 endif
 
 ifeq ($(have-ksh),yes)
-install-others += $(zonedir)/iso3166.tab $(zonedir)/zone.tab
+install-others += $(inst_zonedir)/iso3166.tab $(inst_zonedir)/zone.tab
 install-bin += tzselect
 endif
 
@@ -115,23 +115,23 @@ echo-zonenames:
 	@echo 'Known zones: $(zonenames)'
 
 
-# Although $(zonedir) gets compiled into zic, it is useful to always
-# specify it with -d on the command line so that it can be overridden on
-# the command line of `make install' (e.g., "make install prefix=/foo").
-zic-cmd = $(built-program-cmd) -d $(zonedir)
+# We have to use `-d $(inst_zonedir)' to explictly tell zic where to
+# place the output files although $(zonedir) is compiled in.  But the
+# user might have set $(install_root) on the command line of `make install'.
+zic-cmd = $(built-program-cmd) -d $(inst_zonedir)
 tzcompile = $(zic-cmd)$(target-zone-flavor) -L $(word 3,$^) \
 	    -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 
 # The source files specify the zone names relative to the -d directory,
-# so for the posix/ and right/ flavors we need to pass -d $(zonedir)/posix
+# so for the posix/ and right/ flavors we need to pass -d $(inst_zonedir)/posix
 # and the like.  This magic extracts /posix or /right if it's the first
-# component after $(zonedir) in the target name $@.
+# component after $(inst_zonedir) in the target name $@.
 target-zone-flavor = $(filter /posix /right, \
 			      /$(firstword $(subst /, , \
-					   $(patsubst $(zonedir)/%,%,$@))))
+					  $(patsubst $(inst_zonedir)/%,%,$@))))
 
 ifdef localtime
-$(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
+$(installed-localtime-file): $(inst_zonedir)/$(localtime) $(objpfx)zic
 	$(make-target-directory)
 	if test -r $@; then \
 	  echo Site timezone NOT reset to Factory.; \
@@ -142,7 +142,7 @@ $(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic
 	fi
 endif
 ifdef posixrules
-$(installed-posixrules-file): $(zonedir)/$(posixrules) $(objpfx)zic
+$(installed-posixrules-file): $(inst_zonedir)/$(posixrules) $(objpfx)zic
 	$(zic-cmd) -p $(posixrules)
 endif
 
@@ -179,4 +179,5 @@ $(objpfx)tzselect: tzselect.ksh
 	chmod 555 $@.new
 	mv -f $@.new $@
 
-$(addprefix $(zonedir)/,iso3166.tab zone.tab): $(zonedir)/%: %; $(do-install)
+$(addprefix $(inst_zonedir)/,iso3166.tab zone.tab): $(inst_zonedir)/%: %
+	$(do-install)

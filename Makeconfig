@@ -146,11 +146,13 @@ endif
 ifndef libdir
 libdir = $(exec_prefix)/lib
 endif
+inst_libdir = $(install_root)$(libdir)
 
 # Where to install the shared library and dynamic linker.
 ifndef slibdir
 slibdir = $(exec_prefix)/lib
 endif
+inst_slibdir = $(install_root)$(slibdir)
 
 # Prefix to put on files installed in $(libdir).  For libraries `libNAME.a',
 # the prefix is spliced between `lib' and the name, so the linker switch
@@ -164,54 +166,64 @@ endif
 ifndef includedir
 includedir = $(exec_prefix)/include
 endif
+inst_includedir = $(install_root)$(includedir)
 
 # Where to install machine-independent data files.
 # These are the timezone database, and the locale database.
 ifndef datadir
 datadir = $(prefix)/share
 endif
+inst_datadir = $(install_root)$(datadir)
 
 # Where to install the timezone data files (which are machine-independent).
 ifndef zonedir
 zonedir = $(datadir)/zoneinfo
 endif
+inst_zonedir = $(install_root)$(zonedir)
 
 # Where to install the locale and message catalog data files (which are
 # machine-independent).
 ifndef localedir
 localedir = $(datadir)/locale
 endif
+inst_localedir = $(install_root)$(localedir)
 
 # Where to install the locale charmap source files.
 ifndef i18ndir
 i18ndir = $(datadir)/i18n
 endif
+inst_i18ndir = $(install_root)$(i18ndir)
 
 
 # Where to install programs.
 ifndef bindir
 bindir = $(exec_prefix)/bin
 endif
+inst_bindir = $(install_root)$(bindir)
 
 # Where to install administrative programs.
 ifndef rootsbindir
 rootsbindir = $(exec_prefix)/sbin
 endif
+inst_rootsbindir = $(install_root)$(rootsbindir)
 
 ifndef sbindir
 sbindir = $(exec_prefix)/sbin
 endif
+inst_sbindir = $(install_root)$(sbindir)
 
 # Where to install the Info files.
 ifndef infodir
 infodir = $(prefix)/info
 endif
+inst_infodir = $(install_root)$(infodir)
 
 # Where to install default configuration files.  These include the local
 # timezone specification and network data base files.
 ifndef sysconfdir
 sysconfdir = $(prefix)/etc
 endif
+inst_sysconfdir = $(install_root)$(sysconfdir)
 
 # What timezone should be the installed default (e.g., US/Eastern).
 # Run `make -C time echo-zonenames' to see a list of available zone names.
@@ -226,7 +238,7 @@ endif
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
-localtime-file = $(sysconfdir)/localtime
+localtime-file = $(inst_sysconfdir)/localtime
 endif
 
 # What to use for leap second specifications in compiling the default

@@ -17,7 +17,6 @@ semctl		-	semctl		4	__semctl	semctl
 
 osf_sigprocmask	-	osf_sigprocmask	2	__osf_sigprocmask
 
-getdents	-	getdents	3	__getdirentries	getdirentries
 getpeername	-	getpeername	3	__getpeername	getpeername
 getpriority	-	getpriority	2	__getpriority	getpriority
 mmap		-	mmap		6	__mmap		mmap

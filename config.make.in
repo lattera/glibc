@@ -3,11 +3,12 @@
 # Don't edit this file.  Put configuration parameters in configparms instead.
 
 # Installation prefixes.
+install_root =
 prefix = @prefix@
 exec_prefix = @exec_prefix@
 slibdir = @libc_cv_slibdir@
 sysconfdir = @libc_cv_sysconfdir@
-rootsbindir = $(install_root)@libc_cv_rootsbindir@
+rootsbindir = @libc_cv_rootsbindir@
 
 # If ldconfig exists.  This will go away as soon as `ldconfig' is available
 # in GNU libc.

@@ -41,7 +41,7 @@ include ../Makeconfig
 -include $(common-objpfx)version.mk
 
 # Pattern for where message catalog object for language % gets installed.
-mo-installed = $(localedir)/%/LC_MESSAGES/$(domainname).mo
+mo-installed = $(inst_localedir)/%/LC_MESSAGES/$(domainname).mo
 
 # Files to install: a $(domainname).mo file for each language.
 install-others = $(LINGUAS:%=$(mo-installed))

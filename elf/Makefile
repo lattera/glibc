@@ -51,15 +51,15 @@ include ../Makeconfig
 ifeq (yes,$(build-shared))
 extra-objs	= $(rtld-routines:=.so) soinit.so sofini.so eval.so
 generated	= librtld.so dl-allobjs.so
-install-others	= $(slibdir)/$(rtld-installed-name)
+install-others	= $(inst_slibdir)/$(rtld-installed-name)
 install-bin	= ldd
 endif
 
 ifeq (yes,$(has-ldconfig))
-others		= ldconfig
+extra-objs	= ldconfig.o
 install-rootsbin = ldconfig
 
-$(objpfx)ldconfig: ldconfig.o
+$(objpfx)ldconfig: $(objpfx)ldconfig.o
 	$(CC) -nostdlib -nostartfiles -o $@ $(sysdep-LDFLAGS) -static	      \
 	      $(addprefix $(csu-objpfx),start.o) $(+preinit)		      \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o) $(+preinit)     \
@@ -118,15 +118,17 @@ $(objpfx)trusted-dirs.h: Makefile
 	 done;) > $@T
 	mv -f $@T $@
 CPPFLAGS-dl-load.c = -I$(objdir)/$(subdir)
+CFLAGS-dl-load.c = -Wno-uninitialized
 
 # Specify the dependencies of libdl.so; its commands come from the generic
 # rule to build a shared library.
 $(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
 
-$(slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so
+$(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so
 	$(do-install-program)
 
-$(slibdir)/$(rtld-installed-name): $(slibdir)/$(rtld-version-installed-name)
+$(inst_slibdir)/$(rtld-installed-name): \
+  $(inst_slibdir)/$(rtld-version-installed-name)
 	$(make-shlib-link)
 
 ifneq ($(have-bash2),yes)

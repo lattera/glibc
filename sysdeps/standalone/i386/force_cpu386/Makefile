@@ -19,7 +19,7 @@
 # Boston, MA 02111-1307, USA.
 
 ifeq (bare,$(subdir))
-install-others += $(libdir)/force_cpu386.ld
-$(libdir)/force_cpu386.ld: $(sysdep_dir)/standalone/i386/target.ld
+install-others += $(inst_libdir)/force_cpu386.ld
+$(inst_libdir)/force_cpu386.ld: $(sysdep_dir)/standalone/i386/target.ld
 	$(do-install)
 endif
