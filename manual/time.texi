@@ -2301,6 +2301,15 @@ could cause the timer to expire before your program establishes the
 handler.  In this case it would be terminated, since termination is the
 default action for the alarm signals.  @xref{Signal Handling}.
 
+To be able to use the alarm function to interrupt a system call which
+might block otherwise indefinitely it is important to @emph{not} set the
+@code{SA_RESTART} flag when registering the signal handler using
+@code{sigaction}.  When not using @code{sigaction} things get even
+uglier: the @code{signal} function has to fixed semantics with respect
+to restarts.  The BSD semantics for this function is to set the flag.
+Therefore, if @code{sigaction} for whatever reason cannot be used, it is
+necessary to use @code{sysv_signal} and not @code{signal}.
+
 The @code{setitimer} function is the primary means for setting an alarm.
 This facility is declared in the header file @file{sys/time.h}.  The
 @code{alarm} function, declared in @file{unistd.h}, provides a somewhat
