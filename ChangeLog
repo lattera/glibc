@@ -1,5 +1,9 @@
 2004-09-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/test-installation.pl: Fix ld.so recognition for new
+	LD_TRACE_LOADED_OBJECTS output format.
+	Patch by <jsberg04+computing.glibc@ftml.net>  [BZ #407].
+
 	* elf/dl-support.c (_dl_non_dynamic_init): Fix cleaning of
 	environment.  [BZ #384]
 

@@ -1,5 +1,5 @@
 #! /usr/bin/perl -w
-# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999, 2004 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -168,9 +168,8 @@ while (<LDD>) {
     }
   }
   if (/$ld_so_name/) {
-    ($version1, $version2) =
-      /$ld_so_name\.so\.([0-9\.]*)\s*=>.*\.so\.([0-9\.]*)/;
-    if ($version1 ne $version2 || $version1 ne $ld_so_version) {
+    ($version1) = /$ld_so_name\.so\.([0-9\.]*)/;
+    if ($version1 ne $ld_so_version) {
       print "The dynamic linker $ld_so_name.so is not correctly installed.\n";
       print "Please check your installation!\n";
       print "Offending line of ldd output: $_\n";
