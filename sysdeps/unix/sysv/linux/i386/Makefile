@@ -7,3 +7,7 @@ ifeq ($(subdir),elf)
 sysdep-others += lddlibc4
 install-bin += lddlibc4
 endif
+
+ifeq ($(subdir),csu)
+CFLAGS-initfini.s += -DWEAK_GMON_START
+endif

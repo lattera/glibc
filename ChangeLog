@@ -1,5 +1,10 @@
 1998-09-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* csu/initfini.c: Don't define __gmon_start__ if WEAK_GMON_START is
+	defined.
+	* sysdeps/unix/sysv/linux/i386/Makefile [subdir==csu]: Add
+	-DWEAK_GMON_START to CFLAGS-initfini.s.
+
 	* elf/dl-object.c (_dl_new_object): Store map address in
 	_dl_loaded if _dl_loaded is NULL.
 	* elf/rtld.c (dl_main): Don't update _dl_loaded here.

@@ -73,7 +73,12 @@ _init (void)
      would come first, and not be profiled.  */
   extern void __gmon_start__ (void) __attribute__ ((weak)); /*weak_extern (__gmon_start__);*/
 
+#ifndef WEAK_GMON_START
   __gmon_start__ ();
+#else
+  if (__gmon_start__)
+    __gmon_start__ ();
+#endif
 
   asm ("ALIGN");
   asm("END_INIT");
@@ -83,6 +88,7 @@ _init (void)
   SECTION(".init");
 }
 asm ("END_INIT");
+#ifndef WEAK_GMON_START
 SECTION(".text");
 
 /* This version of __gmon_start__ is used if no other is found.  By providing
@@ -94,6 +100,7 @@ __gmon_start__ (void)
 {
   /* do nothing */
 }
+#endif
 
 /* End of the _init epilog, beginning of the _fini prolog. */
 asm ("\n/*@_init_EPILOG_ENDS*/");
