@@ -20,7 +20,7 @@ Boston, MA 02111-1307, USA.  */
 
 /* We need to have the error status variable of the resolver
    accessible in the libc.  */
-int __h_errno;
+int __h_errno = 0;
 strong_alias (__h_errno, h_errno)
 
 /* When threaded, h_errno may be a per-process variable.  */

@@ -1,3 +1,22 @@
+Wed Sep 11 02:57:31 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Quote $add_ons argument in loop to generated
+	prefices.
+
+Tue Sep 10 20:43:45 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/makedb.c: Include <locale.h>.  Reported by Fila Kolodny.
+
+Tue Sep 10 13:49:08 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/herrno.c: Initialize `h_errno' so that we can provide
+	alias.
+
+	* Makefile (version-info.h): Fix typo in shell script.
+
+	* sysdeps/i386/i586/strlen.S: Optimize startup code a bit.
+	* sysdeps/i386/i586/strchr.S: Likewise.
+
 Mon Sep  9 20:31:27 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.c (banner): Report to bug-glibc@prep not @gnu.

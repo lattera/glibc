@@ -140,7 +140,7 @@ $(objpfx)version-info.h: $(..)Makefile $(+sysdir_pfx)config.make
 	     sed -e '/^#/d' -e 's/^[[:space:]]*/	/' $$dir/Banner;    \
 	   fi;                                                                \
 	 done;                                                                \
-	 [ $first = yes ] || echo "\"") > $@-tmp
+	 [ $$first = yes ] || echo "\"") > $@-tmp
 	 mv -f $@-tmp $@
 
 version.c-objects := $(addprefix $(objpfx)version,$(object-suffixes))
@@ -251,7 +251,7 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       ansidecl.h mkinstalldirs move-if-change install-sh	\
 	       configure configure.in aclocal.m4 config.sub config.guess\
 	       config.h.in config.make.in config-name.in Makefile.in	\
-	       autolock.sh munch-tmpl.c munch.awk \
+	       autolock.sh munch-tmpl.c munch.awk			\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
 	       rpm/Makefile rpm/template rpm/rpmrc
 

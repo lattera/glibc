@@ -42,32 +42,31 @@ Boston, MA 02111-1307, USA.  */
 	.text
 ENTRY(strlen)
 	movl 4(%esp), %eax	/* get string pointer */
+	movl $3, %edx		/* load mask (= 3) */
 
-	movl %eax, %ecx		/* duplicate it */
-	andl $3, %ecx		/* mask alignment bits */
+	andl %eax, %edx		/* separate last two bits of address */
 
-	jz L11			/* aligned => start loop */
+	jz L1			/* aligned => start loop */
+	jp L0			/* exactly two bits set */
 
-	cmpb %ch, (%eax)	/* is byte NUL? */
+	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */
-	cmpl $3, %ecx		/* was alignment = 3? */
+	xorl $3, %edx		/* was alignment = 3? */
 
-	je L11			/* yes => now it is aligned and start loop */
+	jz L1			/* yes => now it is aligned and start loop */
 
-	cmpb %ch, (%eax)	/* is byte NUL? */
+L0:	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */
-	cmpl $2, %ecx		/* was alignment = 2? */
 
-	je L11			/* yes => now it is aligned and start loop */
-
-	cmpb %ch, (%eax)	/* is byte NUL? */
+	cmpb %dh, (%eax)	/* is byte NUL? */
 	je L2			/* yes => return */
 
 	incl %eax		/* increment pointer */
+	xorl %edx, %edx		/* We need %edx == 0 for later */
 
       /* We exit the loop if adding MAGIC_BITS to LONGWORD fails to
 	 change any of the hole bits of LONGWORD.
@@ -88,8 +87,9 @@ ENTRY(strlen)
 	 into bit 16.  Similarly, there will be a carry into bit
 	 24.  If one of bits 24-31 is set, there will be a carry
 	 into bit 32 (=carry flag), so all of the hole bits will
-	 be changed.  */
-L11:	xorl %edx, %edx		/* We need %edx == 0 for later */
+	 be changed.
+
+	 Note: %edx == 0 in any case here.  */
 
 L1:
 	movl (%eax), %ecx	/* get word (= 4 bytes) in question */

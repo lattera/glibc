@@ -1,6 +1,6 @@
 /* strchr -- find character CH in a NUL terminated string.
 Highly optimized version for ix85, x>=5.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -68,9 +68,10 @@ ENTRY (strchr)
 	andl $3, %edi		/* mask alignment bits */
 
 	jz L11			/* alignment is 0 => start loop */
+	jp L0			/* exactly two bits set */
 
 	movb (%eax), %cl	/* load single byte */
-	cmpb %cl, %dl		/* is byte == C? */
+	cmpb (%eax), %dl	/* is byte == C? */
 
 	je L2			/* aligned => return pointer */
 
@@ -78,26 +79,21 @@ ENTRY (strchr)
 	je L3			/* yes => return NULL */
 
 	incl %eax		/* increment pointer */
-	cmp $3, %edi		/* was alignment == 3? */
+	xorl $3, %edi		/* was alignment == 3? */
 
+L0:	movb (%eax), %cl	/* load single byte */
 	je L11			/* yes => start loop */
 
-	movb (%eax), %cl	/* load single byte */
 	cmpb %cl, %dl		/* is byte == C? */
-
 	je L2			/* aligned => return pointer */
 
 	cmpb $0, %cl		/* is byte NUL? */
 	je L3			/* yes => return NULL */
 
+	movb 1(%eax), %cl	/* load single byte */
 	incl %eax		/* increment pointer */
-	cmp $2, %edi		/* was alignment == 2? */
 
-	je L11			/* yes => start loop */
-
-	movb (%eax), %cl	/* load single byte */
 	cmpb %cl, %dl		/* is byte == C? */
-
 	je L2			/* aligned => return pointer */
 
 	cmpb $0, %cl		/* is byte NUL? */
