@@ -38,6 +38,16 @@ iterate_thread_list (const td_thragent_t *ta, td_thr_iter_f *callback,
   if (ps_pdread (ta->ph, head, &list, sizeof (list_t)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
+  if (list.next == 0 && list.prev == 0 && head == ta->stack_user)
+    {
+      /* __pthread_initialize_minimal has not run.
+	 There is just the main thread to return.  */
+      td_thrhandle_t th;
+      td_err_e err = td_ta_map_lwp2thr (ta, ps_getpid (ta->ph), &th);
+      return (err != TD_OK ? err
+	      : callback (&th, cbdata_p) != 0 ? TD_DBERR : TD_OK);
+    }
+
   while (list.next != head)
     {
       psaddr_t addr = ((psaddr_t) list.next
