@@ -1,3 +1,7 @@
+2004-06-07  Roland McGrath  <roland@frob.com>
+
+	* NEWS: Update bug reporting instructions.  Fix some typos.
+
 2004-06-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/_itoa.h: Don't expand _itoa inline for libc.
