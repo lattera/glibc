@@ -1,3 +1,8 @@
+2000-05-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/lockf64.c (lockf64): Return -1 for overflow and
+	set errno.
+
 2000-05-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-lookup.c (add_dependency): Reallocate l_reldeps in

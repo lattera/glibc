@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1994,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,8 +31,11 @@ lockf64 (int fd, int cmd, off64_t len64)
   off_t len = (off_t) len64;
 
   if (len64 != (off64_t) len)
-    /* We can't represent the length.  */
-    return EOVERFLOW;
+    {
+      /* We can't represent the length.  */
+      __set_errno (EOVERFLOW);
+      return -1;
+    }
 
   memset ((char *) &fl, '\0', sizeof (fl));
 
