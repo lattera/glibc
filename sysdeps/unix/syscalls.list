@@ -43,7 +43,7 @@ setgid		-	setgid		i:i	__setgid	setgid
 setgroups	-	setgroups	i:ip	setgroups
 setitimer	-	setitimer	i:ipp	__setitimer	setitimer
 setpriority	-	setpriority	i:iii	setpriority
-setrlimit	-	setrlimit	i:ip	setrlimit
+setrlimit	-	setrlimit	i:ip	__setrlimit setrlimit
 setsid		-	setsid		i:	__setsid	setsid
 settimeofday	-	settimeofday	i:PP	__settimeofday	settimeofday
 setuid		-	setuid		i:i	__setuid	setuid
