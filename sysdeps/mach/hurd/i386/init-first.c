@@ -28,6 +28,9 @@
 #include "hurdmalloc.h"		/* XXX */
 #include "../locale/localeinfo.h"
 
+#include <ldsodefs.h>
+#include <fpu_control.h>
+
 extern void __mach_init (void);
 extern void __libc_init (int, char **, char **);
 extern void __init_misc (int, char **, char **);
