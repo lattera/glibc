@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999,2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -196,9 +196,6 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
       idxarr = (int32_t *) alloca (srclen * sizeof (int32_t));
       rulearr = (unsigned char *) alloca (srclen + 1);
     }
-  /* This element is only read, the value never used but to determine
-     another value which then is ignored.  */
-  rulearr[srclen] = '\0';
 
   idxmax = 0;
   do
@@ -210,6 +207,10 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
       ++idxmax;
     }
   while (*usrc != L('\0'));
+
+  /* This element is only read, the value never used but to determine
+     another value which then is ignored.  */
+  rulearr[idxmax] = '\0';
 
   /* Now the passes over the weights.  We now use the indeces we found
      before.  */

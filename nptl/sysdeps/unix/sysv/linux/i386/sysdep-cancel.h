@@ -59,19 +59,16 @@
     .long 0;								      \
     /* Version number.  */						      \
     .byte 1;								      \
-    /* NUL-terminated augmentation string.  Note "z" means there is an	      \
-       augmentation value later on.  */					      \
-    .string "zR";							      \
+    /* NUL-terminated augmentation string.  */				      \
+    AUGMENTATION_STRING;						      \
     /* Code alignment factor.  */					      \
     .uleb128 1;								      \
     /* Data alignment factor.  */					      \
     .sleb128 -4;							      \
     /* Return address register column.  */				      \
     .byte 8;								      \
-    /* Augmentation value length.  */					      \
-    .uleb128 1;								      \
-    /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
-    .byte 0x1b;								      \
+    /* Optional augmentation parameter.  */				      \
+    AUGMENTATION_PARAM							      \
     /* Start of the table initialization.  */				      \
     .byte 0xc;			/* DW_CFA_def_cfa */			      \
     .uleb128 4;								      \
@@ -85,18 +82,43 @@
   L(STARTFDE):								      \
     /* CIE pointer.  */							      \
     .long L(STARTFDE)-L(STARTFRAME);					      \
-    /* PC-relative start address of the code.  */			      \
-    .long L(name##START)-.;						      \
+    /* Start address of the code.  */					      \
+    START_SYMBOL_REF (name);						      \
     /* Length of the code.  */						      \
     .long L(name##END)-L(name##START);					      \
-    /* No augmentation data.  */					      \
-    .uleb128 0;								      \
+    /* Augmentation data.  */						      \
+    AUGMENTATION_PARAM_FDE						      \
     /* The rest of the code depends on the number of parameters the syscall   \
        takes.  */							      \
     EH_FRAME_##args(name);						      \
     .align 4;								      \
   L(ENDFDE):								      \
   .previous
+
+#ifdef SHARED
+/* NUL-terminated augmentation string.  Note "z" means there is an
+   augmentation value later on.  */
+# define AUGMENTATION_STRING .string "zR"
+# define AUGMENTATION_PARAM \
+    /* Augmentation value length.  */					      \
+    .uleb128 1;								      \
+    /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
+    .byte 0x1b;
+# define AUGMENTATION_PARAM_FDE \
+    /* No augmentation data.  */					      \
+    .uleb128 0;
+# define START_SYMBOL_REF(name) \
+    /* PC-relative start address of the code.  */			      \
+    .long L(name##START)-.
+#else
+/* No augmentation.  */
+# define AUGMENTATION_STRING .ascii "\0"
+# define AUGMENTATION_PARAM /* nothing */
+# define AUGMENTATION_PARAM_FDE /* nothing */
+# define START_SYMBOL_REF(name) \
+    /* Absolute start address of the code.  */				      \
+    .long L(name##START)
+#endif
 
 /* Callframe description for syscalls without parameters.  This is very
    simple.  The only place the stack pointer is changed is when the old

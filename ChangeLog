@@ -1,3 +1,8 @@
+2003-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/strxfrm.c (STRXFRM): Terminate rulearr at correct
+	position.  Reported by jreiser@BitWagon.com.
+
 2003-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/unwind-dw2-fde.c: Update from recent gcc version.

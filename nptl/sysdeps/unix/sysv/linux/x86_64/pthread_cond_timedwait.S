@@ -329,78 +329,88 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 
 	.section .eh_frame,"a",@progbits
 .LSTARTFRAME:
-	.long	L(ENDCIE)-L(STARTCIE)	# Length of the CIE.
+	.long	L(ENDCIE)-L(STARTCIE)		# Length of the CIE.
 .LSTARTCIE:
-	.long	0			# CIE ID.
-	.byte	1			# Version number.
+	.long	0				# CIE ID.
+	.byte	1				# Version number.
 #ifdef SHARED
-	.string	"zR"			# NUL-terminated augmentation string.
+	.string	"zR"				# NUL-terminated augmentation
+						# string.
 #else
-	.ascii	"\0"			# NUL-terminated augmentation string.
+	.ascii	"\0"				# NUL-terminated augmentation
+						# string.
 #endif
-	.uleb128 1			# Code alignment factor.
-	.sleb128 -8			# Data alignment factor.
-	.byte	16			# Return address register column.
+	.uleb128 1				# Code alignment factor.
+	.sleb128 -8				# Data alignment factor.
+	.byte	16				# Return address register
+						# column.
 #ifdef SHARED
-	.uleb128 1			# Augmentation value length.
-	.byte	0x1b			# Encoding: DW_EH_PE_pcrel
-					# + DW_EH_PE_sdata4.
+	.uleb128 1				# Augmentation value length.
+	.byte	0x1b				# Encoding: DW_EH_PE_pcrel
+						# + DW_EH_PE_sdata4.
 #endif
-	.byte 0x0c			# DW_CFA_def_cfa
+	.byte 0x0c				# DW_CFA_def_cfa
 	.uleb128 7
 	.uleb128 8
-	.byte	0x90			# DW_CFA_offset, column 0x8
+	.byte	0x90				# DW_CFA_offset, column 0x8
 	.uleb128 1
 	.align 8
 .LENDCIE:
 
-	.long	.LENDFDE-.LSTARTFDE	# Length of the FDE.
+	.long	.LENDFDE-.LSTARTFDE		# Length of the FDE.
 .LSTARTFDE:
-	.long	.LSTARTFDE-.LSTARTFRAME	# CIE pointer.
+	.long	.LSTARTFDE-.LSTARTFRAME		# CIE pointer.
 #ifdef SHARED
-	.long	.LSTARTCODE-.		# PC-relative start address of the code
+	.long	.LSTARTCODE-.			# PC-relative start address
+						# of the code
 #else
-	.long	.LSTARTCODE		# Start address of the code.
+	.long	.LSTARTCODE			# Start address of the code.
 #endif
-	.long	.LENDCODE-.LSTARTCODE	# Length of the code.
+	.long	.LENDCODE-.LSTARTCODE		# Length of the code.
 #ifdef SHARED
-	.uleb128 0			# No augmentation data.
+	.uleb128 0				# No augmentation data.
 #endif
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpush_r12-.LSTARTCODE
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x40+.Lpush_r12-.LSTARTCODE	# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpush_r13-.Lpush_r12
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x8c				# DW_CFA_offset %r12
+	.uleb128 2
+	.byte	0x40+.Lpush_r13-.Lpush_r12	# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpush_r14-.Lpush_r13
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x8d				# DW_CFA_offset %r13
+	.uleb128 3
+	.byte	0x40+.Lpush_r14-.Lpush_r13	# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 32
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lsubq-.Lpush_r14
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x84				# DW_CFA_offset %r14
+	.uleb128 4
+	.byte	0x40+.Lsubq-.Lpush_r14		# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 112
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Laddq-.Lsubq
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x40+.Laddq-.Lsubq		# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 32
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpop_r14-.Laddq
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0x40+.Lpop_r14-.Laddq		# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 24
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpop_r13-.Lpop_r14
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0xce				# DW_CFA_restore %r14
+	.byte	0x40+.Lpop_r13-.Lpop_r14	# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 16
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.Lpop_r12-.Lpop_r13
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0xcd				# DW_CFA_restore %r13
+	.byte	0x40+.Lpop_r12-.Lpop_r13	# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 8
-	.byte	4			# DW_CFA_advance_loc4
-	.long	.LSbl1-.Lpop_r12
-	.byte	14			# DW_CFA_def_cfa_offset
+	.byte	0xcc				# DW_CFA_restore %r12
+	.byte	0x40+.LSbl1-.Lpop_r12		# DW_CFA_advance_loc4
+	.byte	14				# DW_CFA_def_cfa_offset
 	.uleb128 112
+	.byte	0x8c				# DW_CFA_offset %r12
+	.uleb128 2
+	.byte	0x8d				# DW_CFA_offset %r13
+	.uleb128 3
+	.byte	0x84				# DW_CFA_offset %r14
+	.uleb128 4
 	.align	8
 .LENDFDE:
