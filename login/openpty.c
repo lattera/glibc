@@ -25,7 +25,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#include "pty-internal.h"
+#include "pty-private.h"
 
 int
 openpty (pmast, pslave, pname, tio, wins)

@@ -1,3 +1,8 @@
+1998-09-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* login/openpty.c: Include pty-private.h instead of
+	pty-internal.h.
+
 1998-09-09  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/arm/dl-machine.h (elf_machine_lazy_rel): Optimise a bit.
