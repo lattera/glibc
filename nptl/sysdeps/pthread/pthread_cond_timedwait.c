@@ -93,36 +93,38 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   while (1)
     {
       struct timespec rt;
+      {
 #ifdef __NR_clock_gettime
-      INTERNAL_SYSCALL_DECL (err);
-      int val = INTERNAL_SYSCALL (clock_gettime, err, 2, cond->__data.__clock,
-				  &ts);
+	INTERNAL_SYSCALL_DECL (err);
+	int val = INTERNAL_SYSCALL (clock_gettime, err, 2,
+				    cond->__data.__clock, &rt);
 # ifndef __ASSUME_POSIX_TIMERS
-      if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (val, err), 0))
-	{
-	  struct timeval tv;
-	  (void) gettimeofday (&tv, NULL);
+	if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (val, err), 0))
+	  {
+	    struct timeval tv;
+	    (void) gettimeofday (&tv, NULL);
 
-	  /* Convert the absolute timeout value to a relative timeout.  */
-	  rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-	  rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
-	}
-      else
+	    /* Convert the absolute timeout value to a relative timeout.  */
+	    rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+	    rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+	  }
+	else
 # endif
-	{
-	  /* Convert the absolute timeout value to a relative timeout.  */
-	  rt.tv_sec = abstime->tv_sec - rt.tv_sec;
-	  rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
-	}
+	  {
+	    /* Convert the absolute timeout value to a relative timeout.  */
+	    rt.tv_sec = abstime->tv_sec - rt.tv_sec;
+	    rt.tv_nsec = abstime->tv_nsec - rt.tv_nsec;
+	  }
 #else
-      /* Get the current time.  So far we support only one clock.  */
-      struct timeval tv;
-      (void) gettimeofday (&tv, NULL);
+	/* Get the current time.  So far we support only one clock.  */
+	struct timeval tv;
+	(void) gettimeofday (&tv, NULL);
 
-      /* Convert the absolute timeout value to a relative timeout.  */
-      rt.tv_sec = abstime->tv_sec - tv.tv_sec;
-      rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
+	/* Convert the absolute timeout value to a relative timeout.  */
+	rt.tv_sec = abstime->tv_sec - tv.tv_sec;
+	rt.tv_nsec = abstime->tv_nsec - tv.tv_usec * 1000;
 #endif
+      }
       if (rt.tv_nsec < 0)
 	{
 	  rt.tv_nsec += 1000000000;

@@ -1,3 +1,10 @@
+2003-03-18  Roland McGrath  <roland@redhat.com>
+
+	* Versions (libpthread: GLIBC_2.2): Remove
+	pthread_barrierattr_getpshared, never really existed.
+	(libpthread: GLIBC_2.0): Move __pthread_initialize to ...
+	(libpthread: GLIBC_PRIVATE): ... here.
+
 2003-03-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: New file.

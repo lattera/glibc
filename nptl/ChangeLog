@@ -1,3 +1,16 @@
+2003-03-18  Roland McGrath  <roland@redhat.com>
+
+	* Versions (libpthread: GLIBC_2.3.2): Move pthread_tryjoin_np and
+	pthread_timedjoin_np to ...
+	(libpthread: GLIBC_2.3.3): ... here.
+	(libpthread: GLIBC_2.2): Move pthread_barrierattr_getpshared there too.
+
+	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Avoid shadowing VAL variable.
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h (__lll_test_and_set):
+	New macro.
+
 2003-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-cond11.

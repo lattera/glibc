@@ -80,7 +80,7 @@ libpthread {
     sigwait;
 
     # Protected names for functions used in other shared objects.
-    __pthread_atfork; __pthread_initialize; __pthread_getspecific;
+    __pthread_atfork; __pthread_getspecific;
     __pthread_key_create; __pthread_mutex_destroy; __pthread_mutex_init;
     __pthread_mutex_lock; __pthread_mutex_trylock; __pthread_mutex_unlock;
     __pthread_mutexattr_destroy; __pthread_mutexattr_init;
@@ -147,7 +147,7 @@ libpthread {
     pthread_getcpuclockid;
     pthread_barrier_destroy; pthread_barrier_init; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_init;
-    pthread_barrierattr_getpshared; pthread_barrierattr_setpshared;
+    pthread_barrierattr_setpshared;
     pthread_mutex_timedlock;
     pthread_rwlock_timedrdlock; pthread_rwlock_timedwrlock;
 
@@ -170,6 +170,7 @@ libpthread {
   }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread
+    __pthread_initialize;
     __pthread_kill_other_threads_np;
   }
 }

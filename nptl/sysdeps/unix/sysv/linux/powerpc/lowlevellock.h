@@ -99,6 +99,18 @@
      __val;								      \
   })
 
+/* Atomically store newval and return the old value.  */
+#define __lll_test_and_set(futex, newval)				      \
+  ({ int __val;								      \
+      __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+			"	stwcx.	%2,0,%3\n"			      \
+			"	bne-	1b"				      \
+			: "=&r" (__val), "=m" (*futex)			      \
+			: "r" (futex), "r" (newval), "1" (*futex)	      \
+			: "cr0");					      \
+      __val; })
+
+
 extern void __lll_lock_wait (int *futex, int val) attribute_hidden;
 
 #define lll_mutex_lock(lock) \
