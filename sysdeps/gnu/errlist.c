@@ -323,7 +323,7 @@ const char *_sys_errlist[] =
 #ifdef EBADSLT
     [EBADSLT] = N_("Invalid slot"),
 #endif
-#ifdef EDEADLOCK
+#if defined (EDEADLOCK) && EDEADLOCK != EDEADLK
     [EDEADLOCK] = N_("File locking deadlock error"),
 #endif
 #ifdef EBFONT

@@ -1,5 +1,10 @@
 Sun Jul  7 18:42:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/gnu/errlist.awk (BEGIN): Initialize associative array ALIAS,
+	map EWOULDBLOCK->EAGAIN, EDEADLOCK->EDEADLK.
+	(element printer): Check for elt in ALIAS, instead of special case
+	for EWOULDBLOCK.
+
 	* io/Makefile (headers): Add sys/vfs.h.
 	* io/sys/vfs.h: New file.
 

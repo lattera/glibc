@@ -23,6 +23,9 @@
 # @comment errno 78
 
 BEGIN {
+    alias["EWOULDBLOCK"] = "EAGAIN";
+    alias["EDEADLOCK"] = "EDEADLK";
+
     print "/* This file is generated from errno.texi by errlist.awk.  */"
     print "";
     print "#include <errno.h>";
@@ -47,8 +50,8 @@ errnoh == 2 && $1 == "@deftypevr" && $2 == "Macro" && $3 == "int" \
 errnoh == 3 && $1 == "@comment" && $2 == "errno" \
   {
     errno = $3 + 0;
-    if (e == "EWOULDBLOCK")
-      print "#if defined (EWOULDBLOCK) && EWOULDBLOCK != EAGAIN";
+    if (alias[e])
+      printf "#if defined (%s) && %s != %s\n", e, e, alias[e];
     else
       printf "#ifdef %s\n", e;
     printf "    [%s] = N_(\"%s\"),\n", e, etext;
