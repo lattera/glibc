@@ -31,6 +31,7 @@
 #include <ldsodefs.h>
 
 #include <stdio.h>
+#include <string.h>
 
 #ifndef	__GNU_LIBRARY__
 extern char *getenv ();
