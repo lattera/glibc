@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1992,1995,1996,1997,2001,2002
+/* Copyright (C) 1991,1992,1995,1996,1997,2001,2002, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -24,16 +24,15 @@
 #include <ctype.h>
 #include <string.h>
 
-#ifndef weak_alias
+#ifndef _LIBC
 # define __strcasecmp strcasecmp
 # define TOLOWER(Ch) tolower (Ch)
 #else
+# include <locale/localeinfo.h>
 # ifdef USE_IN_EXTENDED_LOCALE_MODEL
 #  define __strcasecmp __strcasecmp_l
-#  define TOLOWER(Ch) __tolower_l ((Ch), loc)
-# else
-#  define TOLOWER(Ch) tolower (Ch)
 # endif
+# define TOLOWER(Ch) __tolower_l ((Ch), loc)
 #endif
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
@@ -53,6 +52,9 @@ __strcasecmp (s1, s2 LOCALE_PARAM)
      const char *s2;
      LOCALE_PARAM_DECL
 {
+#if defined _LIBC && !defined USE_IN_EXTENDED_LOCALE_MODEL
+  __locale_t loc = _NL_CURRENT_LOCALE;
+#endif
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;
   int result;

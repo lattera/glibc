@@ -1,6 +1,6 @@
 /* Compare at most N characters of two strings without taking care for
    the case.
-   Copyright (C) 1992, 1996, 1997, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1996, 1997, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,12 +29,11 @@
 # define __strncasecmp strncasecmp
 # define TOLOWER(Ch) tolower (Ch)
 #else
+# include <locale/localeinfo.h>
 # ifdef USE_IN_EXTENDED_LOCALE_MODEL
 #  define __strncasecmp __strncasecmp_l
-#  define TOLOWER(Ch) __tolower_l ((Ch), loc)
-# else
-#  define TOLOWER(Ch) tolower (Ch)
 # endif
+# define TOLOWER(Ch) __tolower_l ((Ch), loc)
 #endif
 
 #ifdef USE_IN_EXTENDED_LOCALE_MODEL
@@ -56,6 +55,9 @@ __strncasecmp (s1, s2, n LOCALE_PARAM)
      size_t n;
      LOCALE_PARAM_DECL
 {
+#if defined _LIBC && !defined USE_IN_EXTENDED_LOCALE_MODEL
+  __locale_t loc = _NL_CURRENT_LOCALE;
+#endif
   const unsigned char *p1 = (const unsigned char *) s1;
   const unsigned char *p2 = (const unsigned char *) s2;
   int result;
