@@ -45,7 +45,7 @@ $(objpfx)gencat: $(gencat-modules:%=$(objpfx)%.o)
 catgets-CPPFLAGS := -DNLSPATH='"$(msgcatdir)/%L/%N:$(msgcatdir)/%L/LC_MESSAGES/%N:$(msgcatdir)/%l/%N:$(msgcatdir)/%l/LC_MESSAGES/%N:"' \
 	    -DHAVE_CONFIG_H
 
-generated = de.msg test1.cat test1.h sample.SJIS.cat
+generated = de.msg test1.cat test1.h sample.SJIS.cat test-gencat.h
 generated-dirs = de
 
 tst-catgets-ENV = NLSPATH="$(objpfx)%l/%N.cat" LANG=de
@@ -74,5 +74,5 @@ $(objpfx)test-gencat.out: test-gencat.sh $(objpfx)test-gencat \
 
 $(objpfx)sample.SJIS.cat: sample.SJIS $(objpfx)gencat
 	GCONV_PATH=$(common-objpfx)iconvdata LC_ALL=C \
-	$(built-program-cmd) < $(word 1,$^) > $@
+	$(built-program-cmd) -H $(objpfx)test-gencat.h < $(word 1,$^) > $@
 endif

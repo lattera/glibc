@@ -1,3 +1,44 @@
+2001-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/Makefile (generated): Add test-gencat.h.
+	(sample.SJIS.cat): Also generate header.
+	* catgets/sample.SJIS: Add new set and message, both with symbolic
+	names.
+	* catgets/test-gencat.sh: Also compare generated header with what
+	we expect.
+
+2001-03-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* catgets/gencat.c (read_input_file): Preserve properly symbolic
+	names.
+
+2001-03-06  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/dl-machine.h (elf_machine_relplt): Removed, it's not
+	needed.
+	(elf_machine_pltrel_p): Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_pltrel_p): Likewise.
+
+2001-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/Dist: Add dl-procinfo.c and
+	dl-procinfo.h.
+
+2001-03-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=elf]
+	(sysdep-dl-routines, sysdep_routines, sysdep-rtld-routines): Add
+	dl-procinfo.
+
+2001-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/tstatexit.c (main): Don't perform the test if __dso_handle
+	is not available.
+	* dlfcn/tstcxaatexit.c (main): Likewise.
+
 2001-03-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/libm-test-ulps: Revert last patch.

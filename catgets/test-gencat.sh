@@ -1,6 +1,6 @@
 #! /bin/sh
 # Test escape character handling in gencat.
-# Copyright (C) 2000 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 #
 # The GNU C Library is free software; you can redistribute it and/or
@@ -36,5 +36,12 @@ sample3:予定表:
 sample4:TEST	TAB:
 sample5:機能	十種類:
 EOF
+res=$?
 
-exit $?
+cat <<EOF |
+#define AnotherSet 0x2	/* *standard input*:11 */
+#define AnotherFOO 0x1	/* *standard input*:12 */
+EOF
+cmp ${common_objpfx}catgets/test-gencat.h - || res=1
+
+exit $res
