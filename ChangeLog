@@ -1,3 +1,7 @@
+2004-01-13  Segher Boessenkool  <boessen@de.ibm.com>
+
+	* Makerules (gen-as-const): Don't silently continue on failure.
+
 2004-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/generic/dl-sysdep.c: Define __libc_stack_end with
@@ -7,7 +11,7 @@
 
 	* libio/libio.h: Add const to function tables types.
 	* libio/libioP.h: Likewise.
-	* /login/utmp-private.h: Likewise.
+	* login/utmp-private.h: Likewise.
 	* libio/fileops.c: Add const to jump table variable definition.
 	* libio/genops.c: Likewise.
 	* libio/iofopncook.c: Likewise.
