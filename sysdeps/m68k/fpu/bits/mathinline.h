@@ -138,14 +138,6 @@ __m81_defun (float_type, __CONCAT(__ieee754_fmod,s),			     \
   float_type __result;							     \
   __asm("fmod%.x %1, %0" : "=f" (__result) : "f" (__y), "0" (__x));	     \
   return __result;							     \
-}									     \
-									     \
-__m81_defun (float_type, __CONCAT(__ieee754_scalb,s),			     \
-	     (float_type __x, float_type __n))				     \
-{									     \
-  float_type __result;							     \
-  __asm ("fscale%.x %1, %0" : "=f" (__result) : "f" (__n), "0" (__x));	     \
-  return __result;							     \
 }
 
 __internal_inline_functions (double,)
@@ -268,13 +260,16 @@ __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
 __m81_defun (int, __CONCAT(__ilogb,s), (float_type __x))		  \
 {									  \
   float_type __result;							  \
-  if (__x == 0.0)							  \
-    return 0x80000001;							  \
+  if (__m81_u(__CONCAT(__isnan,s)) (__x))				  \
+    /* The stupid standard requires us to return a specific value where	  \
+       it would depend on the bitpattern of the NaN.  */		  \
+    return 0x7fffffff;							  \
   __asm("fgetexp%.x %1, %0" : "=f" (__result) : "f" (__x));		  \
   return (int) __result;						  \
 }									  \
 									  \
-__m81_defun (float_type, __CONCAT(__scalbn,s), (float_type __x, int __n)) \
+__m81_defun (float_type, __CONCAT(__scalbn,s),				  \
+	     (float_type __x, long int __n))				  \
 {									  \
   float_type __result;							  \
   __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));  \
@@ -340,7 +335,7 @@ __inline_forward_c(double,ceil, (double __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinf, (double __value), (__value))
 __inline_forward_c(int,finite, (double __value), (__value))
-__inline_forward_c(double,scalbn, (double __x, int __n), (__x, __n))
+__inline_forward_c(double,scalbn, (double __x, long int __n), (__x, __n))
 #endif
 #if defined __USE_MISC || defined __USE_XOPEN
 #ifndef __USE_ISOC9X /* Conflict with macro of same name.  */
@@ -365,7 +360,7 @@ __inline_forward_c(float,ceilf, (float __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinff, (float __value), (__value))
 __inline_forward_c(int,finitef, (float __value), (__value))
-__inline_forward_c(float,scalbnf, (float __x, int __n), (__x, __n))
+__inline_forward_c(float,scalbnf, (float __x, long int __n), (__x, __n))
 __inline_forward_c(int,isnanf, (float __value), (__value))
 __inline_forward_c(int,ilogbf, (float __value), (__value))
 #endif
@@ -384,7 +379,7 @@ __inline_forward_c(long double,ceill, (long double __x), (__x))
 #ifdef __USE_MISC
 __inline_forward_c(int,isinfl, (long double __value), (__value))
 __inline_forward_c(int,finitel, (long double __value), (__value))
-__inline_forward_c(long double,scalbnl, (long double __x, int __n),
+__inline_forward_c(long double,scalbnl, (long double __x, long int __n),
 		   (__x, __n))
 __inline_forward_c(int,isnanl, (long double __value), (__value))
 __inline_forward_c(int,ilogbl, (long double __value), (__value))
