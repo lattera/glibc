@@ -169,6 +169,8 @@ __wcsmbs_load_conv (struct locale_data *new_category)
 	{
 	failed:
 	  new_category->private.ctype = &__wcsmbs_gconv_fcts_c;
+	  __libc_lock_unlock (__libc_setlocale_lock);
+	  return;
 	}
 
       /* Get name of charset of the locale.  */

@@ -1,3 +1,8 @@
+2002-09-05  Jakub Jelinek  <jakub@redhat.com>
+
+        * wcsmbs/wcsmbsload.c (__wcsmbs_load_conv): Unlock and return in
+        case of failure.
+
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
 	* sysdeps/unix/sysv/linux/sigset-cvt-mask.h (sigset_set_old_mask,
