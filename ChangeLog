@@ -1,3 +1,12 @@
+1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/time.h (timeval): Use __suseconds_t
+	type for tv_usec element.
+	* sysdeps/unix/sysv/linux/bits/types.h: Define __suseconds_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+
 1999-07-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/bug1.c: Avoid memory leak.
