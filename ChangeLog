@@ -1,3 +1,8 @@
+2003-03-29  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/clone.S (__thread_start):
+	Re-introduce ENTRY.
+
 2003-03-28  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c: New file.
