@@ -61,9 +61,9 @@ distribute	:= exit.h grouping.h abort-instr.h isomac.c tst-fmtmsg.sh   \
 test-srcs	:= tst-fmtmsg
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv   \
 		   test-canon test-canon2 tst-strtoll tst-environ	    \
-		   tst-xpg-basename tst-random tst-bsearch tst-limits	    \
-		   tst-rand48 bug-strtod tst-setcontext test-a64l tst-qsort \
-		   tst-system testmb2
+		   tst-xpg-basename tst-random tst-random2 tst-bsearch	    \
+		   tst-limits tst-rand48 bug-strtod tst-setcontext	    \
+		   test-a64l tst-qsort tst-system testmb2
 
 include ../Makeconfig
 

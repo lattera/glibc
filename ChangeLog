@@ -1,3 +1,11 @@
+2005-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #710]
+	* stdlib/random_r.c (__initstate_r): Save old state.
+	* stdlib/Makefile (tests): Add tst-random2.
+	* stdlib/tst-random2.c: New test.
+	Reported by Peter Bergner <bergner@vnet.ibm.com>.
+
 2005-01-25  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* dlfcn/dlfcn.c (init): Put it in .init_array section.
@@ -20,6 +28,8 @@
 	(s390x-.*-.*): Likewise for s390.
 	(powerpc64-.*-.*): Likewise for powerpc.
 	(sparc64-.*-.*): Likewise for sparc.
+	(s390-.*-.*, powerpc.*-.*-.*, sparc.*-.*-.*): Add WORDSIZE64 entries
+	for these mapping back to the above.
 
 2005-02-08  Jakub Jelinek  <jakub@redhat.com>
 

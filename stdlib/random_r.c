@@ -1,5 +1,5 @@
 /* 
-   Copyright (C) 1995 Free Software Foundation
+   Copyright (C) 1995, 2005 Free Software Foundation
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -240,9 +240,18 @@ __initstate_r (seed, arg_state, n, buf)
   int degree;
   int separation;
   int32_t *state;
+  int old_type;
+  int32_t *old_state;
 
   if (buf == NULL)
     goto fail;
+
+  old_type = buf->rand_type;
+  old_state = buf->state;
+  if (old_type == TYPE_0)
+    old_state[-1] = TYPE_0;
+  else
+    old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
 
   if (n >= BREAK_3)
     type = n < BREAK_4 ? TYPE_3 : TYPE_4;
