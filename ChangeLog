@@ -1,5 +1,8 @@
 1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/random_r.c (__random_r): Rewrite last patch to fix buffer
+	overwriting bugs.
+
 	* libio/strops.c (_IO_str_underflow): Read newly available
 	character from buffer as unsigned.
 

@@ -107,15 +107,16 @@
 
 struct random_poly_info
 {
-  char seps[MAX_TYPES - 1];
-  char degrees[MAX_TYPES - 1];
+  int seps[MAX_TYPES];
+  int degrees[MAX_TYPES];
 };
 
 static const struct random_poly_info random_poly_info =
 {
-  { SEP_1, SEP_2, SEP_3, SEP_4 },
-  { DEG_1, DEG_2, DEG_3, DEG_4 },
+  { SEP_0, SEP_1, SEP_2, SEP_3, SEP_4 },
+  { DEG_0, DEG_1, DEG_2, DEG_3, DEG_4 }
 };
+
 
 
 
@@ -134,68 +135,55 @@ __srandom_r (seed, buf)
 {
   int type;
   int32_t *state;
+  long int i;
+  long int word;
+  int32_t *dst;
+  int kc;
 
   if (buf == NULL)
     goto fail;
   type = buf->rand_type;
-  if ((unsigned)type >= MAX_TYPES)
+  if ((unsigned int) type >= MAX_TYPES)
     goto fail;
 
-  /* We must make sure the seed is not 0.  Take arbitrarily 1 in this case.  */
   state = buf->state;
+  /* We must make sure the seed is not 0.  Take arbitrarily 1 in this case.  */
   if (seed == 0)
     seed = 1;
   state[0] = seed;
   if (type == TYPE_0)
     goto done;
 
+  dst = state;
+  word = seed;
+  kc = buf->rand_deg;
+  for (i = 1; i < kc; ++i)
     {
-      int degree;
-      long int word;
-      int jc;
-      int32_t *dst;
-      int kc;
-      int separation;
-
-      degree = buf->rand_deg;
-      jc = degree - 1;
-      dst = state;
-      word = seed;
-      while (--jc >= 0)
-	{
-	  long int hi;
-	  long int lo;
-
-	  /* This does:
-	       state[i] = (16807 * state[i - 1]) % 2147483647;
-	     but avoids overflowing 31 bits.  */
-	  ++dst;
-	  hi = word / 127773;
-	  lo = word % 127773;
-	  word = 16807 * lo - 2836 * hi;
-	  if (word < 0)
-	    word += 2147483647;
-	  *dst = word;
-	}
-      state = buf->state;
-      degree = buf->rand_deg;
-      separation = buf->rand_sep;
-      buf->fptr = &state[separation];
-      buf->rptr = &state[0];
-      kc = 10 * degree;
-      while (--kc >= 0)
-	{
-	  int32_t discard;
-	  (void) __random_r (buf, &discard);
-	}
+      /* This does:
+	   state[i] = (16807 * state[i - 1]) % 2147483647;
+	 but avoids overflowing 31 bits.  */
+      long int hi = word / 127773;
+      long int lo = word % 127773;
+      word = 16807 * lo - 2836 * hi;
+      if (word < 0)
+	word += 2147483647;
+      *++dst = word;
     }
-    goto done;
 
- fail:
-  return -1;
+  buf->fptr = &state[buf->rand_sep];
+  buf->rptr = &state[0];
+  kc *= 10;
+  while (--kc >= 0)
+    {
+      int32_t discard;
+      (void) __random_r (buf, &discard);
+    }
 
  done:
   return 0;
+
+ fail:
+  return -1;
 }
 
 weak_alias (__srandom_r, srandom_r)
@@ -222,8 +210,6 @@ __initstate_r (seed, arg_state, n, buf)
   int degree;
   int separation;
   int32_t *state;
-  int mess;
-  const struct random_poly_info *rpi;
 
   if (buf == NULL)
     goto fail;
@@ -233,34 +219,32 @@ __initstate_r (seed, arg_state, n, buf)
   else if (n < BREAK_1)
     {
       if (n < BREAK_0)
-	goto fail;
+	{
+	  __set_errno (EINVAL);
+	  goto fail;
+	}
       type = TYPE_0;
     }
   else
     type = n < BREAK_2 ? TYPE_1 : TYPE_2;
 
+  degree = random_poly_info.degrees[type];
+  separation = random_poly_info.seps[type];
+
+  buf->rand_type = type;
+  buf->rand_sep = separation;
+  buf->rand_deg = degree;
   state = &((int32_t *) arg_state)[1];	/* First location.  */
-  buf->state = state;
-  mess = TYPE_0;
-  if (type == TYPE_0)
-    goto skip_to_here;
-
-  rpi = &random_poly_info;
-  degree = rpi->degrees[type - 1];
-  separation = rpi->seps[type - 1];
-
   /* Must set END_PTR before srandom.  */
   buf->end_ptr = &state[degree];
 
-  buf->rand_deg = degree;
-  buf->rand_sep = separation;
-
-  mess = (buf->rptr - state) * MAX_TYPES + type;
-
- skip_to_here:
-  state[-1] = mess;
+  buf->state = state;
 
   __srandom_r (seed, buf);
+
+  state[-1] = TYPE_0;
+  if (type != TYPE_0)
+    state[-1] = (buf->rptr - state) * MAX_TYPES + type;
 
   return 0;
 
@@ -283,59 +267,41 @@ __setstate_r (arg_state, buf)
      void *arg_state;
      struct random_data *buf;
 {
-  int32_t *new_state;
-  int type;
-  int rear;
+  int32_t *new_state = (int32_t *) arg_state;
+  int type = new_state[0] % MAX_TYPES;
+  int old_type;
   int32_t *old_state;
-  int32_t *ns1;
   int degree;
   int separation;
-  int mess;
-  int old_type;
-  int new_mess;
-  int *old_rptr;
-  const struct random_poly_info *rpi;
 
-  if (buf == NULL)
-    return -1;
+  if (buf == NULL || type < TYPE_0 || type >= TYPE_4)
+    goto fail;
 
   old_type = buf->rand_type;
   old_state = buf->state;
-  old_rptr = buf->rptr;
-  mess = old_type;
-  if (old_type != TYPE_0)
-    mess += (old_rptr - old_state) * MAX_TYPES;
-  old_state[-1] = mess;
+  if (old_type == TYPE_0)
+    old_state[-1] = TYPE_0;
+  else
+    old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
 
-  new_state = (int32_t *) arg_state;
-  new_mess = new_state[0];
-  type = new_mess % MAX_TYPES;
-  rear = new_mess / MAX_TYPES;
+  buf->rand_deg = degree = random_poly_info.degrees[type];
+  buf->rand_sep = separation = random_poly_info.seps[type];
+  buf->rand_type = type;
 
-  rpi = &random_poly_info;
-  degree = rpi->degrees[type - 1];
-  separation = rpi->seps[type - 1];
-  if (rear >= degree)
-    goto fail;
-
-  ns1 = &new_state[1];
   if (type != TYPE_0)
     {
-      int t;
-
-      t = rear + separation;
-      if (t >= degree)
-	t -= degree;
-      buf->rptr = &ns1[rear];
-      buf->fptr = &ns1[t];
-      buf->rand_deg = degree;
-      buf->rand_sep = separation;
-      buf->end_ptr = &ns1[degree];
+      int rear = new_state[0] / MAX_TYPES;
+      buf->rptr = &new_state[rear];
+      buf->fptr = &new_state[(rear + separation) % degree];
     }
+  buf->state = &new_state[1];
+  /* Set end_ptr too.  */
+  buf->end_ptr = &new_state[degree];
 
   return 0;
 
  fail:
+  __set_errno (EINVAL);
   return -1;
 }
 
@@ -348,85 +314,58 @@ weak_alias (__setstate_r, setstate_r)
    the one at the front pointer.  Then both pointers are advanced to the next
    location cyclically in the table.  The value returned is the sum generated,
    reduced to 31 bits by throwing away the "least random" low bit.
-   Returns a 31-bit random number.  */
+   Note: The code takes advantage of the fact that both the front and
+   rear pointers can't wrap on the same call by not testing the rear
+   pointer if the front one has wrapped.  Returns a 31-bit random number.  */
 
 int
 __random_r (buf, result)
      struct random_data *buf;
      int32_t *result;
 {
-  int32_t *res_ptr;
-  int rand_type;
+  int32_t *state;
 
-  res_ptr = result;
-  rand_type = buf->rand_type;
-  if (buf == NULL || res_ptr == NULL)
+  if (buf == NULL || result == NULL)
     goto fail;
 
-  if (rand_type == TYPE_0)
-    goto old_style;
+  state = buf->state;
 
-  {
-    int32_t *fp0;
-    int32_t *rp0;
-    int32_t sum;
-    int32_t fval;
-    int32_t rval;
-    int32_t rez;
-    int32_t *fp1;
-    int32_t *rp1;
-    int32_t *end;
-    int32_t *begin;
+  if (buf->rand_type == TYPE_0)
+    {
+      int32_t val = state[0];
+      val = ((state[0] * 1103515245) + 12345) & 0x7fffffff;
+      state[0] = val;
+      *result = val;
+    }
+  else
+    {
+      int32_t *fptr = buf->fptr;
+      int32_t *rptr = buf->rptr;
+      int32_t *end_ptr = buf->end_ptr;
+      int32_t val;
 
-    /* 0 */
-    fp0 = buf->fptr;
-    rp0 = buf->rptr;
-
-    /* 1 */
-    fval = *fp0;
-    rval = *rp0;
-    fp1 = fp0 + 1;
-
-    /* 2 */
-    sum = fval + rval;
-    rp1 = rp0 + 1;
-
-    /* 3 */
-    rez = (sum >> 1) & 0x7FFFFFFF;
-    *fp0 = sum;
-    end = buf->end_ptr;
-
-    /* 4 */
-    *res_ptr = rez;
-    begin = buf->state;
-    if (fp1 == end)
-      fp1 = begin;
-    if (rp1 == end)
-      rp1 = begin;
-
-    /* 5 */
-    buf->fptr = fp1;
-    buf->rptr = rp1;
-  }
-  goto done;
-
- old_style:
-  {
-    int32_t *state;
-    int32_t rez;
-
-    state = buf->state;
-    rez = ((*state * 1103515245) + 12345) & 0x7FFFFFFF;
-    *res_ptr = rez;
-    *state = rez;
-  }
-  goto done;
+      val = *fptr += *rptr;
+      /* Chucking least random bit.  */
+      *result = (val >> 1) & 0x7fffffff;
+      ++fptr;
+      if (fptr >= end_ptr)
+	{
+	  fptr = state;
+	  ++rptr;
+	}
+      else
+	{
+	  ++rptr;
+	  if (rptr >= end_ptr)
+	    rptr = state;
+	}
+      buf->fptr = fptr;
+      buf->rptr = rptr;
+    }
+  return 0;
 
  fail:
   return -1;
-
- done:
-  return 0;
 }
 
 weak_alias (__random_r, random_r)
