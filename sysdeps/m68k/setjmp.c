@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,27 +16,23 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <setjmp.h>
-
-
-#ifndef	__GNUC__
-  #error This file uses GNU C extensions; you must compile with GCC.
-#endif
-
 
 /* Save the current program position in ENV and return 0.  */
 int
-DEFUN(__setjmp, (env), jmp_buf env)
+__sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save data registers D1 through D7.  */
-  asm volatile("movem%.l d1-d7, %0" : : "m" (env[0].__dregs[0]));
+  asm volatile ("movem%.l d1-d7, %0" : : "m" (env[0].__dregs[0]));
 
   /* Save return address in place of register A0.  */
   env[0].__aregs[0] = (PTR) ((PTR *) &env)[-1];
 
   /* Save address registers A1 through A5.  */
-  asm volatile("movem%.l a1-a5, %0" : : "m" (env[0].__aregs[1]));
+  asm volatile ("movem%.l a1-a5, %0" : : "m" (env[0].__aregs[1]));
+
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
 
   /* Save caller's FP, not our own.  */
   env[0].__fp = (PTR) ((PTR *) &env)[-2];

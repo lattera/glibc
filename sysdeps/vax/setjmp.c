@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
    Derived from @(#)_setjmp.s	5.7 (Berkeley) 6/27/88,
    Copyright (c) 1980 Regents of the University of California.
 
@@ -17,21 +17,19 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <setjmp.h>
-
-#ifndef	__GNUC__
-  #error This file uses GNU C extensions; you must compile with GCC.
-#endif
 
 
 /* Save the current program position in ENV and return 0.  */
 int
-DEFUN(__setjmp, (env), jmp_buf env)
+__sigsetjmp (jmp_buf env, int savemask)
 {
   /* Save our caller's FP and PC.  */
-  asm("movl 12(fp), %0" : "=g" (env[0].__fp));
-  asm("movl 16(fp), %0" : "=g" (env[0].__pc));
+  asm ("movl 12(fp), %0" : "=g" (env[0].__fp));
+  asm ("movl 16(fp), %0" : "=g" (env[0].__pc));
+
+  /* Save the signal mask if requested.  */
+  __sigjmp_save (env, savemask);
 
   return 0;
 }
