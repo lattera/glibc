@@ -839,7 +839,7 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 
 
 static int
-insert_value (struct linereader *ldfile, struct token *arg,
+insert_value (struct linereader *ldfile, const char *symstr, size_t symlen,
 	      struct charmap_t *charmap, struct repertoire_t *repertoire,
 	      struct locale_collate_t *collate)
 {
@@ -849,13 +849,12 @@ insert_value (struct linereader *ldfile, struct token *arg,
   struct element_t *elem = NULL;
 
   /* Try to find the character in the charmap.  */
-  seq = charmap_find_value (charmap, arg->val.str.startmb, arg->val.str.lenmb);
+  seq = charmap_find_value (charmap, symstr, symlen);
 
   /* Determine the wide character.  */
   if (seq == NULL || seq->ucs4 == UNINITIALIZED_CHAR_VALUE)
     {
-      wc = repertoire_find_value (repertoire, arg->val.str.startmb,
-				  arg->val.str.lenmb);
+      wc = repertoire_find_value (repertoire, symstr, symlen);
       if (seq != NULL)
 	seq->ucs4 = wc;
     }
@@ -868,8 +867,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	 symbol list.  */
       void *result;
 
-      if (find_entry (&collate->sym_table, arg->val.str.startmb,
-		      arg->val.str.lenmb, &result) == 0)
+      if (find_entry (&collate->sym_table, symstr, symlen, &result) == 0)
 	{
 	  /* It's a collation symbol.  */
 	  struct symbol_t *sym = (struct symbol_t *) result;
@@ -879,8 +877,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	    elem = sym->order = new_element (collate, NULL, 0, NULL, NULL, 0,
 					     0);
 	}
-      else if (find_entry (&collate->elem_table, arg->val.str.startmb,
-			   arg->val.str.lenmb, (void **) &elem) != 0)
+      else if (find_entry (&collate->elem_table, symstr, symlen,
+			   (void **) &elem) != 0)
 	{
 	  /* It's also no collation element.  Therefore ignore it.  */
 	  lr_ignore_rest (ldfile, 0);
@@ -890,8 +888,8 @@ insert_value (struct linereader *ldfile, struct token *arg,
   else
     {
       /* Otherwise the symbols stands for a character.  */
-      if (find_entry (&collate->seq_table, arg->val.str.startmb,
-		      arg->val.str.lenmb, (void **) &elem) != 0)
+      if (find_entry (&collate->seq_table, symstr, symlen,
+		      (void **) &elem) != 0)
 	{
 	  uint32_t wcs[2] = { wc, 0 };
 
@@ -899,11 +897,10 @@ insert_value (struct linereader *ldfile, struct token *arg,
 	  elem = new_element (collate, seq != NULL ? seq->bytes : NULL,
 			      seq != NULL ? seq->nbytes : 0,
 			      wc == ILLEGAL_CHAR_VALUE ? NULL : wcs,
-			      arg->val.str.startmb, arg->val.str.lenmb, 1);
+			      symstr, symlen, 1);
 
 	  /* And add it to the table.  */
-	  if (insert_entry (&collate->seq_table, arg->val.str.startmb,
-			    arg->val.str.lenmb, elem) != 0)
+	  if (insert_entry (&collate->seq_table, symstr, symlen, elem) != 0)
 	    /* This cannot happen.  */
 	    assert (! "Internal error");
 	}
@@ -933,8 +930,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 			     && elem->next == collate->cursor))
     {
       lr_error (ldfile, _("order for `%.*s' already defined at %s:%Zu"),
-		(int) arg->val.str.lenmb, arg->val.str.startmb,
-		elem->file, elem->line);
+		(int) symlen, symstr, elem->file, elem->line);
       lr_ignore_rest (ldfile, 0);
       return 1;
     }
@@ -946,7 +942,7 @@ insert_value (struct linereader *ldfile, struct token *arg,
 
 
 static void
-handle_ellipsis (struct linereader *ldfile, struct token *arg,
+handle_ellipsis (struct linereader *ldfile, const char *symstr, size_t symlen,
 		 enum token_t ellipsis, struct charmap_t *charmap,
 		 struct repertoire_t *repertoire,
 		 struct locale_collate_t *collate)
@@ -959,8 +955,8 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
   startp = collate->cursor;
 
   /* Process and add the end-entry.  */
-  if (arg != NULL
-      && insert_value (ldfile, arg, charmap, repertoire, collate))
+  if (symstr != NULL
+      && insert_value (ldfile, symstr, symlen, charmap, repertoire, collate))
     /* Something went wrong with inserting the to-value.  This means
        we cannot process the ellipsis.  */
     return;
@@ -973,7 +969,7 @@ handle_ellipsis (struct linereader *ldfile, struct token *arg,
      - the is the ellipsis at the beginning, in the middle, or at the end.
   */
   endp = collate->cursor->next;
-  assert (arg == NULL || endp != NULL);
+  assert (symstr == NULL || endp != NULL);
 
   /* Both, the start and the end symbol, must stand for characters.  */
   if ((startp != NULL && (startp->name == NULL || ! startp->is_character))
@@ -1232,8 +1228,8 @@ order for `%.*s' already defined at %s:%Zu"),
 	      sprintf (buf + preflen, base == 10 ? "%d" : "%x", from);
 
 	      /* Look whether this name is already defined.  */
-	      if (find_entry (&collate->seq_table, arg->val.str.startmb,
-			      arg->val.str.lenmb, (void **) &elem) == 0)
+	      if (find_entry (&collate->seq_table, symstr, symlen,
+			      (void **) &elem) == 0)
 		{
 		  if (elem->next != NULL || (collate->cursor != NULL
 					     && elem->next == collate->cursor))
@@ -2694,6 +2690,10 @@ collate_read (struct linereader *ldfile, struct localedef_t *result,
 
   while (1)
     {
+      char ucs4buf[10];
+      char *symstr;
+      size_t symlen;
+
       /* Of course we don't proceed beyond the end of file.  */
       if (nowtok == tok_eof)
 	break;
@@ -3196,8 +3196,8 @@ error while adding equivalent collating symbol"));
 	  /* Handle ellipsis at end of list.  */
 	  if (was_ellipsis != tok_none)
 	    {
-	      handle_ellipsis (ldfile, NULL, was_ellipsis, charmap, repertoire,
-			       collate);
+	      handle_ellipsis (ldfile, NULL, 0, was_ellipsis, charmap,
+			       repertoire, collate);
 	      was_ellipsis = tok_none;
 	    }
 
@@ -3223,7 +3223,8 @@ error while adding equivalent collating symbol"));
 	      /* Handle ellipsis at end of list.  */
 	      if (was_ellipsis != tok_none)
 		{
-		  handle_ellipsis (ldfile, arg, was_ellipsis, charmap,
+		  handle_ellipsis (ldfile, arg->val.str.startmb,
+				   arg->val.str.lenmb, was_ellipsis, charmap,
 				   repertoire, collate);
 		  was_ellipsis = tok_none;
 		}
@@ -3293,7 +3294,7 @@ error while adding equivalent collating symbol"));
 	      /* Handle ellipsis at end of list.  */
 	      if (was_ellipsis != tok_none)
 		{
-		  handle_ellipsis (ldfile, NULL, was_ellipsis, charmap,
+		  handle_ellipsis (ldfile, NULL, 0, was_ellipsis, charmap,
 				   repertoire, collate);
 		  was_ellipsis = tok_none;
 		}
@@ -3371,6 +3372,7 @@ error while adding equivalent collating symbol"));
 	  break;
 
 	case tok_bsymbol:
+	case tok_ucs4:
 	  /* Ignore the rest of the line if we don't need the input of
 	     this line.  */
 	  if (ignore_content)
@@ -3379,8 +3381,23 @@ error while adding equivalent collating symbol"));
 	      break;
 	    }
 
-	  if (state != 1 && state != 3)
+	  if (state != 1 && state != 3 && state != 5)
 	    goto err_label;
+
+	  if (state == 5 && nowtok == tok_ucs4)
+	    goto err_label;
+
+	  if (nowtok == tok_ucs4)
+	    {
+	      snprintf (ucs4buf, sizeof (ucs4buf), "U%08X", now->val.ucs4);
+	      symstr = ucs4buf;
+	      symlen = 9;
+	    }
+	  else
+	    {
+	      symstr = arg->val.str.startmb;
+	      symlen = arg->val.str.lenmb;
+	    }
 
 	  if (state == 3)
 	    {
@@ -3396,8 +3413,8 @@ error while adding equivalent collating symbol"));
 		  break;
 		}
 
-	      if (find_entry (&collate->seq_table, arg->val.str.startmb,
-			      arg->val.str.lenmb, (void **) &seqp) == 0)
+	      if (find_entry (&collate->seq_table, symstr, symlen,
+			      (void **) &seqp) == 0)
 		{
 		  /* Remove the entry from the old position.  */
 		  if (seqp->last == NULL)
@@ -3445,9 +3462,8 @@ error while adding equivalent collating symbol"));
 	      while (runp != NULL)
 		{
 		  if (runp->name != NULL
-		      && strlen (runp->name) == arg->val.str.lenmb
-		      && memcmp (runp->name, arg->val.str.startmb,
-				 arg->val.str.lenmb) == 0)
+		      && strlen (runp->name) == symlen
+		      && memcmp (runp->name, symstr, symlen) == 0)
 		    break;
 
 		  prevp = runp;
@@ -3457,8 +3473,7 @@ error while adding equivalent collating symbol"));
 	      if (runp == NULL)
 		{
 		  lr_error (ldfile, _("%s: section `%.*s' not known"),
-			    "LC_COLLATE", (int) arg->val.str.lenmb,
-			    arg->val.str.startmb);
+			    "LC_COLLATE", (int) symlen, symstr);
 		  lr_ignore_rest (ldfile, 0);
 		}
 	      else
@@ -3490,8 +3505,8 @@ error while adding equivalent collating symbol"));
                  the ellipsis now.  */
 	      assert (state == 1);
 
-	      handle_ellipsis (ldfile, arg, was_ellipsis, charmap, repertoire,
-			       collate);
+	      handle_ellipsis (ldfile, symstr, symlen, was_ellipsis, charmap,
+			       repertoire, collate);
 
 	      /* Remember that we processed the ellipsis.  */
 	      was_ellipsis = tok_none;
@@ -3501,7 +3516,7 @@ error while adding equivalent collating symbol"));
 	    }
 
 	  /* Now insert in the new place.  */
-	  insert_value (ldfile, arg, charmap, repertoire, collate);
+	  insert_value (ldfile, symstr, symlen, charmap, repertoire, collate);
 	  break;
 
 	case tok_undefined:
@@ -3579,7 +3594,7 @@ error while adding equivalent collating symbol"));
 		  /* Handle ellipsis at end of list.  */
 		  if (was_ellipsis != tok_none)
 		    {
-		      handle_ellipsis (ldfile, NULL, was_ellipsis, charmap,
+		      handle_ellipsis (ldfile, NULL, 0, was_ellipsis, charmap,
 				       repertoire, collate);
 		      was_ellipsis = tok_none;
 		    }
