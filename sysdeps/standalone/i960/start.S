@@ -86,7 +86,7 @@ init_frames:
          */
 
         mov     0, g0
-        callx   ___exit
+        callx   __exit
         ret
 
 
