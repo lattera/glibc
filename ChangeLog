@@ -1,3 +1,7 @@
+2001-02-17  Andreas Jaeger  <aj@suse.de>
+
+	* configure.in: Allow gcc 3.
+
 2001-02-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* math/w_acos.c: Move to ...
