@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
@@ -43,6 +43,7 @@ _exit (status)
   *  application if the user types "go".
   */
 }
+weak_alias (_exit, _Exit)
 
 
 #ifdef	 HAVE_GNU_LD
