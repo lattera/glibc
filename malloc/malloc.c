@@ -2944,7 +2944,7 @@ static Void_t* sYSMALLOc(nb, av) INTERNAL_SIZE_T nb; mstate av;
     if (brk == old_end && snd_brk == (char*)(MORECORE_FAILURE))
       set_head(old_top, (size + old_size) | PREV_INUSE);
 
-    else if (old_size && brk < old_end) {
+    else if (contiguous(av) && old_size && brk < old_end) {
       /* Oops!  Someone else killed our space..  Can't touch anything.  */
       assert(0);
     }

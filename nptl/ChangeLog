@@ -1,3 +1,8 @@
+2003-01-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
+	Fix return type of ptr___pthread_getspecific.
+
 2003-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-umask1.

@@ -77,7 +77,7 @@ struct pthread_functions
   int (*ptr___pthread_rwlock_wrlock) (pthread_rwlock_t *);
   int (*ptr___pthread_rwlock_unlock) (pthread_rwlock_t *);
   int (*ptr___pthread_key_create) (pthread_key_t *, void (*) (void *));
-  int (*ptr___pthread_getspecific) (pthread_key_t);
+  void *(*ptr___pthread_getspecific) (pthread_key_t);
   int (*ptr___pthread_setspecific) (pthread_key_t, const void *);
   void (*ptr__pthread_cleanup_push_defer) (struct _pthread_cleanup_buffer *,
 					   void (*) (void *), void *);

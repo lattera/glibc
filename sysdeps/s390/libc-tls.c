@@ -1,4 +1,4 @@
-/* Thread-local storage handling in the ELF dynamic linker.  IA-64 version.
+/* Thread-local storage handling in the ELF dynamic linker.  S390 version.
    Copyright (C) 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <stdlib.h>
 #include <sysdeps/generic/libc-tls.c>
 
 #if USE_TLS
@@ -34,4 +35,3 @@ __tls_get_offset (size_t m, size_t offset)
 }
 
 #endif
-

@@ -1185,7 +1185,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 		    if (str2 == NULL)					      \
 		      len = strlen (string);				      \
 		    else						      \
-		      len = str2 - string - (ps.__count);		      \
+		      len = str2 - string - (ps.__count & 7);		      \
 		  }							      \
 	      }								      \
 	    else							      \

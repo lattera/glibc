@@ -110,7 +110,7 @@ typedef struct
     head->self = _descr;						      \
 									      \
     __builtin_set_thread_pointer (_descr);				      \
-    0;									      \
+    NULL;								      \
   })
 
 /* Return the address of the dtv for the current thread.  */
