@@ -1,12 +1,14 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
+extern int found_in_mod1 (void);
 int
 found_in_mod1 (void)
 {
   return 1;
 }
 
+extern int found_in_mod2 (void);
 int
 found_in_mod2 (void)
 {
@@ -14,6 +16,7 @@ found_in_mod2 (void)
 }
 
 
+extern int test_in_mod2 (void *mainp);
 int
 test_in_mod2 (void *mainp)
 {

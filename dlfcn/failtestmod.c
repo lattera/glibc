@@ -2,6 +2,7 @@
 #include <stdio.h>
 
 
+extern void constr (void) __attribute__ ((__constructor__));
 void
 __attribute__ ((__constructor__))
 constr (void)

@@ -19,6 +19,7 @@
 
 extern int ref1 (void);
 
+extern int ref2 (void);
 int
 ref2 (void)
 {

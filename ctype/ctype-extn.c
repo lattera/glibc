@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,14 +19,14 @@
 #define	__NO_CTYPE
 #include <ctype.h>
 
-/* Real function versions of the non-ANSI ctype functions.  */
+/* Real function versions of the non-ANSI ctype functions.  isblank is
+   now in ISO C99 but we leave it here.  */
 
 int
-__isblank (int c)
+isblank (int c)
 {
   return __isctype (c, _ISblank);
 }
-weak_alias (__isblank, isblank)
 
 int
 _tolower (int c)

@@ -46,6 +46,7 @@ dlopen_doit (void *a)
 			args->caller);
 }
 
+extern void *__dlopen_nocheck (const char *file, int mode);
 void *
 __dlopen_nocheck (const char *file, int mode)
 {

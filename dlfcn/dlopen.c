@@ -41,6 +41,7 @@ dlopen_doit (void *a)
 }
 
 
+extern void *__dlopen_check (const char *file, int mode);
 void *
 __dlopen_check (const char *file, int mode)
 {

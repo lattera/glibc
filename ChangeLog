@@ -1,5 +1,16 @@
 2000-11-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* dlfcn/defaultmod1.c: Add prototypes to avoid warnings.
+	* dlfcn/defaultmod2.c: Likewise.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlopenold.c: Likewise.
+	* dlfcn/failtestmod.c: Likewise.
+	* dlfcn/glreflib1.c: Likewise.
+	* dlfcn/glreflib2.c: Likewise.
+	* dlfcn/eval.c: Likewise.  Add attributes.
+
+	* ctype/ctype-extn.c: Define isblank and not __isblank.
+
 	* time/strftime.c: Add const where necessary to avoid warnings.
 	* time/strptime.c (strptime_internal): Add casts to avoid warnings.
 

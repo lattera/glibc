@@ -1,6 +1,7 @@
 #include <dlfcn.h>
 #include <stdio.h>
 
+extern int found_in_mod1 (void);
 int
 found_in_mod1 (void)
 {
@@ -8,6 +9,7 @@ found_in_mod1 (void)
 }
 
 
+extern int test_in_mod1 (void *mainp);
 int
 test_in_mod1 (void *mainp)
 {
