@@ -103,6 +103,9 @@ libc {
     tdestroy; truncate64;
   }
   GLIBC_2.2 {
+    # g*
+    getloadavg;
+
     # m*
     mkdtemp;
   }

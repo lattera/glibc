@@ -1,5 +1,6 @@
 1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* misc/Versions (GLIBC_2.2): Add getloadavg.
 	* misc/Makefile (routines): Add getloadavg.
 	* sysdeps/generic/getloadavg.c: New file.
 	* sysdeps/mach/getloadavg.c: New file.
