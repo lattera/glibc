@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -300,7 +300,7 @@ get_toplvl_escape (struct linereader *lr)
       if (isdigit (ch))
 	byte = ch - '0';
       else
-	byte = tolower (ch) - 'a' + 10;
+	byte = _tolower (ch) - 'a' + 10;
 
       ch = lr_getc (lr);
       if ((base == 16 && !isxdigit (ch))
@@ -311,7 +311,7 @@ get_toplvl_escape (struct linereader *lr)
       if (isdigit (ch))
 	byte += ch - '0';
       else
-	byte += tolower (ch) - 'a' + 10;
+	byte += _tolower (ch) - 'a' + 10;
 
       ch = lr_getc (lr);
       if (base != 16 && isdigit (ch))

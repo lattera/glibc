@@ -1,5 +1,5 @@
 /* Common code for file-based databases in nss_files module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -162,14 +162,14 @@ CONCAT(_nss_files_end,ENTNAME) (void)
 
 static enum nss_status
 internal_getent (struct STRUCTURE *result,
-		 char *buffer, int buflen, int *errnop H_ERRNO_PROTO)
+		 char *buffer, size_t buflen, int *errnop H_ERRNO_PROTO)
 {
   char *p;
   struct parser_data *data = (void *) buffer;
   int linebuflen = buffer + buflen - data->linebuffer;
   int parse_result;
 
-  if (buflen < (int) sizeof *data + 1)
+  if (buflen < sizeof *data + 2)
     {
       *errnop = ERANGE;
       H_ERRNO_SET (NETDB_INTERNAL);

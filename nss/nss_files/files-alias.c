@@ -1,5 +1,5 @@
 /* Mail alias file parser in nss_files module.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -148,10 +148,15 @@ get_next_alias (const char *match, struct aliasent *result,
       size_t room_left = buflen - (buflen % __alignof__ (char *));
       char *line;
 
+      /* Check whether the buffer is large enough for even trying to
+         read something.  */
+      if (room_left < 2)
+	goto no_more_room;
+
       /* Read the first line.  It must contain the alias name and
 	 possibly some alias names.  */
       first_unused[room_left - 1] = '\xff';
-      line = fgets (first_unused, room_left, stream);
+      line = fgets_unlocked (first_unused, room_left, stream);
       if (line == NULL)
 	/* Nothing to read.  */
 	break;
@@ -245,7 +250,8 @@ get_next_alias (const char *match, struct aliasent *result,
 			  while (! feof (listfile))
 			    {
 			      first_unused[room_left - 1] = '\xff';
-			      line = fgets (first_unused, room_left, listfile);
+			      line = fgets_unlocked (first_unused, room_left,
+						     listfile);
 			      if (line == NULL)
 				break;
 			      if (first_unused[room_left - 1] != '\xff')
@@ -345,7 +351,7 @@ get_next_alias (const char *match, struct aliasent *result,
 		  /* The just read character is a white space and so
 		     can be ignored.  */
 		  first_unused[room_left - 1] = '\xff';
-		  line = fgets (first_unused, room_left, stream);
+		  line = fgets_unlocked (first_unused, room_left, stream);
 		  if (first_unused[room_left - 1] != '\xff')
 		    goto no_more_room;
 		  cp = strpbrk (line, "#\n");

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,12 +34,12 @@ ether_line (const char *line, struct ether_addr *addr, char *hostname)
       unsigned int number;
       char ch;
 
-      ch = tolower (*line++);
+      ch = _tolower (*line++);
       if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
 	return -1;
       number = isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
 
-      ch = tolower (*line);
+      ch = _tolower (*line);
       if ((cnt < 5 && ch != ':') || (cnt == 5 && ch != '\0' && !isspace (ch)))
 	{
 	  ++line;

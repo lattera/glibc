@@ -275,7 +275,7 @@ __MATHDECL (int,ilogb,, (_Mdouble_ __x));
 /* Return X times (2 to the Nth power).  */
 __MATHCALL (scalbln,, (_Mdouble_ __x, long int __n));
 
-/* Round X to integral valuein floating-point format using current
+/* Round X to integral value in floating-point format using current
    rounding direction, but do not raise inexact exception.  */
 __MATHCALL (nearbyint,, (_Mdouble_ __x));
 

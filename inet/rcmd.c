@@ -574,7 +574,7 @@ __ivaliduser2(hostf, raddr, luser, ruser, rhost)
 	}
 
 	for (;*p && !isspace(*p); ++p) {
-	    *p = tolower (*p);
+	    *p = _tolower (*p);
 	}
 
 	/* Next we want to find the permitted name for the remote user.  */

@@ -1,3 +1,34 @@
+1999-01-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nss_files/files-XXX.c (internal_getent): Make sure the buffer has
+	at least two bytes (not one).  Correct buflen parameter type.
+	* nss/nss_files/files-alias.c (get_next_alias): Make sure buffer
+	has at least two bytes.  Use fgets_unlocked instead of fgets.
+
+	* ctype/ctype.h: Don't user __tolower directly for tolower
+	implementation.  Use inline function which tests for the range
+	first.  Make _tolower equivalent to old tolower macros.
+	Likewise for toupper.
+	* ctype/ctype.c: Change tolower/toupper definition accordingly.
+
+	* argp/argp-help.c: Use _tolower instead of tolower if possible.
+	* inet/ether_aton_r.c: Likewise.
+	* inet/ether_line.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* intl/l10nflist.c: Likewise.
+	* locale/programs/ld-collate.c: Likewise.
+	* locale/programs/linereader.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* nis/nss_nis/nis-alias.c: Likewise.
+	* nis/nss_nis/nis-network.c: Likewise.
+	* posix/regex.c: Likewise.
+	* resolv/inet_net_pton.c: Likewise.
+	* stdio-common/printf_fp.c: Likewise.
+	* stdio-common/vfscanf.c: Likewise.
+	* sysdeps/generic/strcasestr.c: Likewise.
+
+	* math/bits/mathcalls.h: Fix typo.
+
 1999-01-23  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/gnu/errlist.awk: Add comment.

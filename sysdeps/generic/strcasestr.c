@@ -1,5 +1,5 @@
 /* Return the offset of one string within another.
-   Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,7 +52,7 @@ __strcasestr (phaystack, pneedle)
   haystack = (const unsigned char *) phaystack;
   needle = (const unsigned char *) pneedle;
 
-  b = tolower (*needle);
+  b = _tolower (*needle);
   if (b != '\0')
     {
       haystack--;				/* possible ANSI violation */
@@ -62,9 +62,9 @@ __strcasestr (phaystack, pneedle)
 	  if (c == '\0')
 	    goto ret0;
 	}
-      while (tolower (c) != b);
+      while (_tolower (c) != b);
 
-      c = tolower (*++needle);
+      c = _tolower (*++needle);
       if (c == '\0')
 	goto foundneedle;
       ++needle;
@@ -80,40 +80,40 @@ __strcasestr (phaystack, pneedle)
 	      a = *++haystack;
 	      if (a == '\0')
 		goto ret0;
-	      if (tolower (a) == b)
+	      if (_tolower (a) == b)
 		break;
 	      a = *++haystack;
 	      if (a == '\0')
 		goto ret0;
 shloop:	    }
-          while (tolower (a) != b);
+          while (_tolower (a) != b);
 
 jin:	  a = *++haystack;
 	  if (a == '\0')
 	    goto ret0;
 
-	  if (tolower (a) != c)
+	  if (_tolower (a) != c)
 	    goto shloop;
 
 	  rhaystack = haystack-- + 1;
 	  rneedle = needle;
-	  a = tolower (*rneedle);
+	  a = _tolower (*rneedle);
 
-	  if (tolower (*rhaystack) == a)
+	  if (_tolower (*rhaystack) == a)
 	    do
 	      {
 		if (a == '\0')
 		  goto foundneedle;
 		++rhaystack;
-		a = tolower (*++needle);
-		if (tolower (*rhaystack) != a)
+		a = _tolower (*++needle);
+		if (_tolower (*rhaystack) != a)
 		  break;
 		if (a == '\0')
 		  goto foundneedle;
 		++rhaystack;
-		a = tolower (*++needle);
+		a = _tolower (*++needle);
 	      }
-	    while (tolower (*rhaystack) == a);
+	    while (_tolower (*rhaystack) == a);
 
 	  needle = rneedle;		/* took the register-poor approach */
 

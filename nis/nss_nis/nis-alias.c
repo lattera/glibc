@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -245,7 +245,7 @@ _nss_nis_getaliasbyname_r (const char *name, struct aliasent *alias,
 
   /* Convert name to lowercase.  */
   for (i = 0; i < namlen; ++i)
-    name2[i] = tolower (name[i]);
+    name2[i] = _tolower (name[i]);
   name2[i] = '\0';
 
   retval = yperr2nss (yp_match (domain, "mail.aliases", name2, namlen,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -33,12 +33,12 @@ ether_aton_r (const char *asc, struct ether_addr *addr)
       unsigned int number;
       char ch;
 
-      ch = tolower (*asc++);
+      ch = _tolower (*asc++);
       if ((ch < '0' || ch > '9') && (ch < 'a' || ch > 'f'))
 	return NULL;
       number = isdigit (ch) ? (ch - '0') : (ch - 'a' + 10);
 
-      ch = tolower (*asc);
+      ch = _tolower (*asc);
       if ((cnt < 5 && ch != ':') || (cnt == 5 && ch != '\0' && !isspace (ch)))
 	{
 	  ++asc;

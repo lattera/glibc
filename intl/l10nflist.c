@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
@@ -384,7 +384,7 @@ _nl_normalize_codeset (codeset, name_len)
 
       for (cnt = 0; cnt < name_len; ++cnt)
 	if (isalpha (codeset[cnt]))
-	  *wp++ = tolower (codeset[cnt]);
+	  *wp++ = _tolower (codeset[cnt]);
 	else if (isdigit (codeset[cnt]))
 	  *wp++ = codeset[cnt];
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -1764,12 +1764,12 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 		    int base;
 
 		    ++runp;
-		    if (tolower (*runp) == 'x')
+		    if (_tolower (*runp) == 'x')
 		      {
 			++runp;
 			base = 16;
 		      }
-		    else if (tolower (*runp) == 'd')
+		    else if (_tolower (*runp) == 'd')
 		      {
 			++runp;
 			base = 10;
@@ -1777,7 +1777,7 @@ collate_simple_weight (struct linereader *lr, struct localedef_t *locale,
 		    else
 		      base = 8;
 
-		    dp = strchr (digits, tolower (*runp));
+		    dp = strchr (digits, _tolower (*runp));
 		    if (dp == NULL || (dp - digits) >= base)
 		      {
 		      illegal_char:
@@ -1789,7 +1789,7 @@ illegal character constant in string"));
 		    wch = dp - digits;
 		    ++runp;
 
-		    dp = strchr (digits, tolower (*runp));
+		    dp = strchr (digits, _tolower (*runp));
 		    if (dp == NULL || (dp - digits) >= base)
 		      goto illegal_char;
 		    wch *= base;
@@ -1798,7 +1798,7 @@ illegal character constant in string"));
 
 		    if (base != 16)
 		      {
-			dp = strchr (digits, tolower (*runp));
+			dp = strchr (digits, _tolower (*runp));
 			if (dp != NULL && (dp - digits < base))
 			  {
 			    wch *= base;

@@ -107,8 +107,7 @@ inet_net_pton_ipv4(src, dst, size)
 		src++;	/* skip x or X. */
 		while ((ch = *src++) != '\0' &&
 		       isascii(ch) && isxdigit(ch)) {
-			if (isupper(ch))
-				ch = tolower(ch);
+			ch = _tolower(ch);
 			n = strchr(xdigits, ch) - xdigits;
 			assert(n >= 0 && n <= 15);
 			*dst |= n;
