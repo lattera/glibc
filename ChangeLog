@@ -1,5 +1,8 @@
 2000-07-10  Mark Kettenis  <kettenis@gnu.org>
 
+	* sysdeps/mach/hurd/check_fds.c: New file.  Implements
+	file descriptor checking in SUID programs for the Hurd.
+
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyname2_r): Use
 	res_hostalias instead of __hostalias for thread-safety.
 
