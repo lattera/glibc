@@ -1,5 +1,9 @@
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-exec.
+	(tst-exec-ARGS): New variable.
+	* posix/tst-exec.c: New file.
+
 	* sysdeps/arm/atomicity.h (compare_and_swap): Return result.
 
 2000-05-04  Andreas Jaeger  <aj@suse.de>
@@ -10,6 +14,7 @@
 2000-05-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/Makefile (tests): Add tst-fork.
+	* posix/tst-fork.c: New file.
 
 	* resolv/inet_pton.c: Loose __P.
 
