@@ -32,8 +32,8 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 # define decimal NULL
 # define thousands NULL
 #else
-# define wdecimal L'\0'
-# define wthousands L'\0'
+  wint_t wdecimal = L'\0';
+  wint_t wthousands = L'\0';
   char decimal[MB_LEN_MAX];
   char thousands[MB_LEN_MAX];
 #endif
@@ -44,6 +44,10 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
   wctrans_t map = __wctrans ("to_outpunct");
   if (map != NULL)
     {
+      wdecimal = __towctrans (L'.', map);
+      wthousands = __towctrans (L',', map);
+
+#ifndef COMPILE_WPRINTF
       mbstate_t state;
       memset (&state, '\0', sizeof (state));
 
@@ -54,6 +58,7 @@ _i18n_number_rewrite (CHAR_T *w, CHAR_T *rear_ptr)
 
       if (__wcrtomb (thousands, wthousands, &state) == (size_t) -1)
 	memcpy (thousands, ",", 2);
+#endif
     }
 
   /* Copy existing string so that nothing gets overwritten.  */

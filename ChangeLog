@@ -1,3 +1,7 @@
+2004-02-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_i18n_number.h: Finish last patch.
+
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/memcmp.S: New file.  Patch by HJ Lu.
