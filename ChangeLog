@@ -1,3 +1,8 @@
+2001-11-28  Bruno Haible  <bruno@clisp.org>
+
+	* locale/programs/simple-hash.c (lookup_2): Remove function.
+	(insert_entry_2): Call lookup instead of lookup_2.
+
 2001-03-04  Bruno Haible  <bruno@clisp.org>
 
 	* intl/dcigettext.c (DCIGETTEXT): Increment path_max proportionally.

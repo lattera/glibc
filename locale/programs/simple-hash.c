@@ -72,8 +72,6 @@ static void insert_entry_2 (hash_table *htab, const void *key, size_t keylen,
 			    unsigned long hval, size_t idx, void *data);
 static size_t lookup (hash_table *htab, const void *key, size_t keylen,
 		      unsigned long int hval);
-static size_t lookup_2 (hash_table *htab, const void *key, size_t keylen,
-			unsigned long int hval);
 static unsigned long compute_hashval (const void *key, size_t keylen);
 static int is_prime (unsigned long int candidate);
 
@@ -179,8 +177,8 @@ insert_entry_2 (htab, key, keylen, hval, idx, data)
 	if (table[idx].used)
 	  insert_entry_2 (htab, table[idx].key, table[idx].keylen,
 			  table[idx].used,
-			  lookup_2 (htab, table[idx].key, table[idx].keylen,
-				    table[idx].used),
+			  lookup (htab, table[idx].key, table[idx].keylen,
+				  table[idx].used),
 			  table[idx].data);
 
       free (table);
@@ -252,55 +250,12 @@ iterate_table (htab, ptr, key, keylen, data)
 }
 
 
-static size_t
-lookup (htab, key, keylen, hval)
-     hash_table *htab;
-     const void *key;
-     size_t keylen;
-     unsigned long hval;
-{
-  unsigned long hash;
-  size_t idx;
-  hash_entry *table = (hash_entry *) htab->table;
-
-  /* First hash function: simply take the modul but prevent zero.  */
-  hash = 1 + hval % htab->size;
-
-  idx = hash;
-
-  if (table[idx].used)
-    {
-      if (table[idx].used == hval && table[idx].keylen == keylen
-	  && memcmp (key, table[idx].key, keylen) == 0)
-	return idx;
-
-      /* Second hash function as suggested in [Knuth].  */
-      hash = 1 + hval % (htab->size - 2);
-
-      do
-	{
-	  if (idx <= hash)
-	    idx = htab->size + idx - hash;
-	  else
-	    idx -= hash;
-
-	  /* If entry is found use it.  */
-	  if (table[idx].used == hval && table[idx].keylen == keylen
-	      && memcmp (key, table[idx].key, keylen) == 0)
-	    return idx;
-	}
-      while (table[idx].used);
-    }
-  return idx;
-}
-
-
 /* References:
    [Aho,Sethi,Ullman] Compilers: Principles, Techniques and Tools, 1986
    [Knuth]	      The Art of Computer Programming, part3 (6.4) */
 
 static size_t
-lookup_2 (htab, key, keylen, hval)
+lookup (htab, key, keylen, hval)
      hash_table *htab;
      const void *key;
      size_t keylen;
