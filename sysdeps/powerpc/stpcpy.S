@@ -1,5 +1,5 @@
 /* Optimized stpcpy implementation for PowerPC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,66 +34,66 @@ EALIGN(__stpcpy,4,0)
    r9:	~(word in src | 0x7f7f7f7f)
    r10:	alternate word from src.  */
 
-	or    %r0,%r4,%r3
-	clrlwi. %r0,%r0,30
-	addi  %r3,%r3,-4
+	or    r0,r4,r3
+	clrlwi. r0,r0,30
+	addi  r3,r3,-4
 	bne   L(unaligned)
 
-	lis   %r7,0xfeff
-	lis   %r8,0x7f7f
-	lwz   %r6,0(%r4)
-	addi  %r7,%r7,-0x101
-	addi  %r8,%r8,0x7f7f
+	lis   r7,0xfeff
+	lis   r8,0x7f7f
+	lwz   r6,0(r4)
+	addi  r7,r7,-0x101
+	addi  r8,r8,0x7f7f
 	b     2f
 
-0:	lwzu  %r10,4(%r4)
-	stwu  %r6,4(%r3)
-	add   %r0,%r7,%r10
-	nor   %r9,%r8,%r10
-	and.  %r0,%r0,%r9
+0:	lwzu  r10,4(r4)
+	stwu  r6,4(r3)
+	add   r0,r7,r10
+	nor   r9,r8,r10
+	and.  r0,r0,r9
 	bne-  1f
-	lwzu  %r6,4(%r4)
-	stwu  %r10,4(%r3)
-2:	add   %r0,%r7,%r6
-	nor   %r9,%r8,%r6
-	and.  %r0,%r0,%r9
+	lwzu  r6,4(r4)
+	stwu  r10,4(r3)
+2:	add   r0,r7,r6
+	nor   r9,r8,r6
+	and.  r0,r0,r9
 	beq+  0b
 
-	mr    %r10,%r6
+	mr    r10,r6
 /* We've hit the end of the string.  Do the rest byte-by-byte.  */
-1:	rlwinm. %r0,%r10,8,24,31
-	stbu  %r0,4(%r3)
+1:	rlwinm. r0,r10,8,24,31
+	stbu  r0,4(r3)
 	beqlr-
-	rlwinm. %r0,%r10,16,24,31
-	stbu  %r0,1(%r3)
+	rlwinm. r0,r10,16,24,31
+	stbu  r0,1(r3)
 	beqlr-
-	rlwinm. %r0,%r10,24,24,31
-	stbu  %r0,1(%r3)
+	rlwinm. r0,r10,24,24,31
+	stbu  r0,1(r3)
 	beqlr-
-	stbu  %r10,1(%r3)
+	stbu  r10,1(r3)
 	blr
 
 /* Oh well.  In this case, we just do a byte-by-byte copy.  */
 	.align 4
 	nop
 L(unaligned):
-	lbz   %r6,0(%r4)
-	addi  %r3,%r3,3
-	cmpwi %r6,0
+	lbz   r6,0(r4)
+	addi  r3,r3,3
+	cmpwi r6,0
 	beq-  2f
 
-0:	lbzu  %r10,1(%r4)
-	stbu  %r6,1(%r3)
-	cmpwi %r10,0
+0:	lbzu  r10,1(r4)
+	stbu  r6,1(r3)
+	cmpwi r10,0
 	beq-  1f
 	nop		/* Let 601 load start of loop.  */
-	lbzu  %r6,1(%r4)
-	stbu  %r10,1(%r3)
-	cmpwi %r6,0
+	lbzu  r6,1(r4)
+	stbu  r10,1(r3)
+	cmpwi r6,0
 	bne+  0b
-2:	stbu  %r6,1(%r3)
+2:	stbu  r6,1(r3)
 	blr
-1:	stbu  %r10,1(%r3)
+1:	stbu  r10,1(r3)
 	blr
 END(__stpcpy)
 

@@ -1,5 +1,5 @@
 /* Subtract two limb vectors of equal, non-zero length for PowerPC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,40 +29,40 @@
 
 EALIGN(__mpn_sub_n,3,1)
 /* Set up for loop below.  */
-	mtcrf 0x01,%r6
-	srwi. %r7,%r6,1
-	mtctr %r7
+	mtcrf 0x01,r6
+	srwi. r7,r6,1
+	mtctr r7
 	bt    31,2f
 
 /* Set the carry (clear the borrow).  */
-	subfc %r0,%r0,%r0
+	subfc r0,r0,r0
 /* Adjust pointers for loop.  */
-	addi  %r3,%r3,-4
-	addi  %r4,%r4,-4
-	addi  %r5,%r5,-4
+	addi  r3,r3,-4
+	addi  r4,r4,-4
+	addi  r5,r5,-4
 	b     0f
 
-2:	lwz   %r7,0(%r5)
-	lwz   %r6,0(%r4)
-	subfc %r6,%r7,%r6
-	stw   %r6,0(%r3)
+2:	lwz   r7,0(r5)
+	lwz   r6,0(r4)
+	subfc r6,r7,r6
+	stw   r6,0(r3)
         beq   1f
 
 /* Align start of loop to an odd word boundary to guarantee that the
    last two words can be fetched in one access (for 601).  This turns
    out to be important.  */
 0:
-	lwz   %r9,4(%r4)
-	lwz   %r8,4(%r5)
-	lwzu  %r6,8(%r4)
-	lwzu  %r7,8(%r5)
-	subfe %r8,%r8,%r9
-	stw   %r8,4(%r3)
-	subfe %r6,%r7,%r6
-	stwu  %r6,8(%r3)
+	lwz   r9,4(r4)
+	lwz   r8,4(r5)
+	lwzu  r6,8(r4)
+	lwzu  r7,8(r5)
+	subfe r8,r8,r9
+	stw   r8,4(r3)
+	subfe r6,r7,r6
+	stwu  r6,8(r3)
 	bdnz  0b
 /* Return the borrow. */
-1:	subfe %r3,%r3,%r3
-	neg   %r3,%r3
+1:	subfe r3,r3,r3
+	neg   r3,r3
 	blr
 END(__mpn_sub_n)

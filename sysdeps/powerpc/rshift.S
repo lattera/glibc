@@ -1,5 +1,5 @@
 /* Shift a limb right, low level routine.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,31 +26,31 @@
    cnt		r6  */
 
 ENTRY(__mpn_rshift)
-	mtctr	5		# copy size into CTR
-	addi	7,3,-4		# move adjusted res_ptr to free return reg
-	subfic	8,6,32
-	lwz	11,0(4)		# load first s1 limb
-	slw	3,11,8		# compute function return value
+	mtctr	r5		# copy size into CTR
+	addi	r7,r3,-4	# move adjusted res_ptr to free return reg
+	subfic	r8,r6,32
+	lwz	r11,0(r4)	# load first s1 limb
+	slw	r3,r11,r8	# compute function return value
 	bdz	1f
 
-0:	lwzu	10,4(4)
-	srw	9,11,6
-	slw	12,10,8
-	or	9,9,12
-	stwu	9,4(7)
+0:	lwzu	r10,4(r4)
+	srw	r9,r11,r6
+	slw	r12,r10,r8
+	or	r9,r9,r12
+	stwu	r9,4(r7)
 	bdz	2f
-	lwzu	11,4(4)
-	srw	9,10,6
-	slw	12,11,8
-	or	9,9,12
-	stwu	9,4(7)
+	lwzu	r11,4(r4)
+	srw	r9,r10,r6
+	slw	r12,r11,r8
+	or	r9,r9,r12
+	stwu	r9,4(r7)
 	bdnz	0b
 
-1:	srw	0,11,6
-	stw	0,4(7)
+1:	srw	r0,r11,r6
+	stw	r0,4(r7)
 	blr
 
-2:	srw	0,10,6
-	stw	0,4(7)
+2:	srw	r0,r10,r6
+	stw	r0,4(r7)
 	blr
 END(__mpn_rshift)

@@ -266,7 +266,8 @@ typedef struct td_thrinfo
   int ti_ro_size;			/* Unused.  */
   td_thr_state_e ti_state;		/* Thread state.  */
   unsigned char ti_db_suspended;	/* Nonzero if suspended by debugger. */
-  td_thr_type_e ti_type;		/* Unused.  */
+  td_thr_type_e ti_type;		/* Type of the thread (system vs
+					   user thread).  */
   intptr_t ti_pc;			/* Unused.  */
   intptr_t ti_sp;			/* Unused.  */
   short int ti_flags;			/* Unused.  */

@@ -1,5 +1,5 @@
 /* Add two limb vectors of equal, non-zero length for PowerPC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,40 +29,40 @@
 
 EALIGN(__mpn_add_n,3,0)
 /* Set up for loop below.  */
-	mtcrf 0x01,%r6
-	srwi. %r7,%r6,1
-	li    %r10,0
-	mtctr %r7
+	mtcrf 0x01,r6
+	srwi. r7,r6,1
+	li    r10,0
+	mtctr r7
 	bt    31,2f
 
 /* Clear the carry.  */
-	addic %r0,%r0,0
+	addic r0,r0,0
 /* Adjust pointers for loop.  */
-	addi  %r3,%r3,-4
-	addi  %r4,%r4,-4
-	addi  %r5,%r5,-4
+	addi  r3,r3,-4
+	addi  r4,r4,-4
+	addi  r5,r5,-4
 	b     0f
 
-2:	lwz  %r7,0(%r5)
-	lwz  %r6,0(%r4)
-	addc %r6,%r6,%r7
-	stw  %r6,0(%r3)
+2:	lwz  r7,0(r5)
+	lwz  r6,0(r4)
+	addc r6,r6,r7
+	stw  r6,0(r3)
         beq  1f
 
 /* The loop.  */
 
 /* Align start of loop to an odd word boundary to guarantee that the
    last two words can be fetched in one access (for 601).  */
-0:	lwz  %r9,4(%r4)
-	lwz  %r8,4(%r5)
-	lwzu %r6,8(%r4)
-	lwzu %r7,8(%r5)
-	adde %r8,%r9,%r8
-	stw  %r8,4(%r3)
-	adde %r6,%r6,%r7
-	stwu %r6,8(%r3)
+0:	lwz  r9,4(r4)
+	lwz  r8,4(r5)
+	lwzu r6,8(r4)
+	lwzu r7,8(r5)
+	adde r8,r9,r8
+	stw  r8,4(r3)
+	adde r6,r6,r7
+	stwu r6,8(r3)
 	bdnz 0b
 /* Return the carry.  */
-1:	addze %r3,%r10
+1:	addze r3,r10
 	blr
 END(__mpn_add_n)

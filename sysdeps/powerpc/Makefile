@@ -1,5 +1,5 @@
 ifeq ($(subdir),math)
-libm-support += fenv_const fe_nomask t_sqrt
+libm-support += fenv_const fe_nomask
 endif
 
 ifeq ($(subdir),gmon)

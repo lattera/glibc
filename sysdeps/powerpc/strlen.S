@@ -1,5 +1,5 @@
 /* Optimized strlen implementation for PowerPC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -77,68 +77,68 @@ ENTRY(strlen)
    start at a word boundary. r8 holds the 'current' word.
    r9-12 are temporaries. r0 is used as a temporary and for discarded
    results.  */
-	clrrwi %r4,%r3,2
-	lis   %r7,0x7f7f
-	rlwinm %r5,%r3,3,27,28
-	lwz   %r8,0(%r4)
-	li    %r9,-1
-	addi  %r7,%r7,0x7f7f
+	clrrwi r4,r3,2
+	lis   r7,0x7f7f
+	rlwinm r5,r3,3,27,28
+	lwz   r8,0(r4)
+	li    r9,-1
+	addi  r7,r7,0x7f7f
 /* That's the setup done, now do the first pair of words.
    We make an exception and use method (2) on the first two words, to reduce
    overhead.  */
-	srw   %r9,%r9,%r5
-	and   %r0,%r7,%r8
-	or    %r10,%r7,%r8
-	add   %r0,%r0,%r7
-	nor   %r0,%r10,%r0
-	and.  %r8,%r0,%r9
-	mtcrf 0x01,%r3
+	srw   r9,r9,r5
+	and   r0,r7,r8
+	or    r10,r7,r8
+	add   r0,r0,r7
+	nor   r0,r10,r0
+	and.  r8,r0,r9
+	mtcrf 0x01,r3
 	bne   L(done0)
-	lis   %r6,0xfeff
-	addi  %r6,%r6,-0x101
+	lis   r6,0xfeff
+	addi  r6,r6,-0x101
 /* Are we now aligned to a doubleword boundary?  */
 	bt    29,L(loop)
 
 /* Handle second word of pair.  */
-	lwzu  %r8,4(%r4)
-	and   %r0,%r7,%r8
-	or    %r10,%r7,%r8
-	add   %r0,%r0,%r7
-	nor.  %r8,%r10,%r0
+	lwzu  r8,4(r4)
+	and   r0,r7,r8
+	or    r10,r7,r8
+	add   r0,r0,r7
+	nor.  r8,r10,r0
 	bne   L(done0)
 
 /* The loop.  */
 
 L(loop):
-	lwz   %r8,4(%r4)
-	lwzu  %r9,8(%r4)
-	add   %r0,%r6,%r8
-	nor   %r10,%r7,%r8
-	and.  %r0,%r0,%r10
-	add   %r11,%r6,%r9
-	nor   %r12,%r7,%r9
+	lwz   r8,4(r4)
+	lwzu  r9,8(r4)
+	add   r0,r6,r8
+	nor   r10,r7,r8
+	and.  r0,r0,r10
+	add   r11,r6,r9
+	nor   r12,r7,r9
 	bne   L(done1)
-	and.  %r0,%r11,%r12
+	and.  r0,r11,r12
 	beq   L(loop)
 
-	and   %r0,%r7,%r9
-	add   %r0,%r0,%r7
-	andc  %r8,%r12,%r0
+	and   r0,r7,r9
+	add   r0,r0,r7
+	andc  r8,r12,r0
 	b     L(done0)
 
 L(done1):
-	and   %r0,%r7,%r8
-	subi  %r4,%r4,4
-	add   %r0,%r0,%r7
-	andc  %r8,%r10,%r0
+	and   r0,r7,r8
+	subi  r4,r4,4
+	add   r0,r0,r7
+	andc  r8,r10,r0
 
 /* When we get to here, r4 points to the first word in the string that
    contains a zero byte, and the most significant set bit in r8 is in that
    byte.  */
 L(done0):
-	cntlzw %r11,%r8
-	subf  %r0,%r3,%r4
-	srwi  %r11,%r11,3
-	add   %r3,%r0,%r11
+	cntlzw r11,r8
+	subf  r0,r3,r4
+	srwi  r11,r11,3
+	add   r3,r0,r11
 	blr
 END(strlen)

@@ -1,5 +1,5 @@
 /* Optimized bzero `implementation' for PowerPC.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,8 +20,8 @@
 #include <sysdep.h>
 
 ENTRY(__bzero)
-	mr	%r5,%r4
-	li	%r4,0
+	mr	r5,r4
+	li	r4,0
 	b	memset@local
 END(__bzero)
 weak_alias (__bzero, bzero)

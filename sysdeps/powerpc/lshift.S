@@ -1,5 +1,5 @@
 /* Shift a limb left, low level routine.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,68 +23,68 @@
   			 unsigned int cnt)  */
 
 EALIGN(__mpn_lshift,3,0)
-	mtctr	%r5		# copy size into CTR
-	cmplwi	%cr0,%r5,16	# is size < 16
-	slwi	%r0,%r5,2
-	add	%r7,%r3,%r0	# make r7 point at end of res
-	add	%r4,%r4,%r0	# make r4 point at end of s1
-	lwzu	%r11,-4(%r4)	# load first s1 limb
-	subfic	%r8,%r6,32
-	srw	%r3,%r11,%r8	# compute function return value
-	bge	%cr0,L(big)	# branch if size >= 16
+	mtctr	r5		# copy size into CTR
+	cmplwi	cr0,r5,16	# is size < 16
+	slwi	r0,r5,2
+	add	r7,r3,r0	# make r7 point at end of res
+	add	r4,r4,r0	# make r4 point at end of s1
+	lwzu	r11,-4(r4)	# load first s1 limb
+	subfic	r8,r6,32
+	srw	r3,r11,r8	# compute function return value
+	bge	cr0,L(big)	# branch if size >= 16
 
 	bdz	L(end1)
 
-0:	lwzu	%r10,-4(%r4)
-	slw	%r9,%r11,%r6
-	srw	%r12,%r10,%r8
-	or	%r9,%r9,%r12
-	stwu	%r9,-4(%r7)
+0:	lwzu	r10,-4(r4)
+	slw	r9,r11,r6
+	srw	r12,r10,r8
+	or	r9,r9,r12
+	stwu	r9,-4(r7)
 	bdz	L(end2)
-	lwzu	%r11,-4(%r4)
-	slw	%r9,%r10,%r6
-	srw	%r12,%r11,%r8
-	or	%r9,%r9,%r12
-	stwu	%r9,-4(%r7)
+	lwzu	r11,-4(r4)
+	slw	r9,r10,r6
+	srw	r12,r11,r8
+	or	r9,r9,r12
+	stwu	r9,-4(r7)
 	bdnz	0b
 
-L(end1):slw	%r0,%r11,%r6
-	stw	%r0,-4(%r7)
+L(end1):slw	r0,r11,r6
+	stw	r0,-4(r7)
 	blr
 
 
 /* Guaranteed not to succeed.  */
-L(boom): tweq    %r0,%r0
+L(boom): tweq    r0,r0
 
 /* We imitate a case statement, by using (yuk!) fixed-length code chunks,
    of size 4*12 bytes.  We have to do this (or something) to make this PIC.  */
-L(big):	mflr    %r9
-	bltl-   %cr0,L(boom)	# Never taken, only used to set LR.
-	slwi    %r10,%r6,4
-	mflr    %r12
-	add     %r10,%r12,%r10
-	slwi	%r8,%r6,5
-	add     %r10,%r8,%r10
-	mtctr   %r10
-	addi	%r5,%r5,-1
-	mtlr    %r9
+L(big):	mflr    r9
+	bltl-   cr0,L(boom)	# Never taken, only used to set LR.
+	slwi    r10,r6,4
+	mflr    r12
+	add     r10,r12,r10
+	slwi	r8,r6,5
+	add     r10,r8,r10
+	mtctr   r10
+	addi	r5,r5,-1
+	mtlr    r9
 	bctr
 
-L(end2):slw	%r0,%r10,%r6
-	stw	%r0,-4(%r7)
+L(end2):slw	r0,r10,r6
+	stw	r0,-4(r7)
 	blr
 
 #define DO_LSHIFT(n) \
-	mtctr	%r5;							\
-0:	lwzu	%r10,-4(%r4);						\
-	slwi	%r9,%r11,n;						\
-	inslwi	%r9,%r10,n,32-n;					\
-	stwu	%r9,-4(%r7);						\
+	mtctr	r5;							\
+0:	lwzu	r10,-4(r4);						\
+	slwi	r9,r11,n;						\
+	inslwi	r9,r10,n,32-n;					\
+	stwu	r9,-4(r7);						\
 	bdz-	L(end2);						\
-	lwzu	%r11,-4(%r4);						\
-	slwi	%r9,%r10,n;						\
-	inslwi	%r9,%r11,n,32-n;					\
-	stwu	%r9,-4(%r7);						\
+	lwzu	r11,-4(r4);						\
+	slwi	r9,r10,n;						\
+	inslwi	r9,r11,n,32-n;					\
+	stwu	r9,-4(r7);						\
 	bdnz	0b;							\
 	b	L(end1)
 

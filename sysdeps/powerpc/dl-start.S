@@ -1,5 +1,5 @@
 /* Machine-dependent ELF startup code.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,12 +30,12 @@ ENTRY(_start)
    arguments for the program loader. */
 
 /* Call _dl_start with one parameter pointing at argc */
-	mr	%r3,%r1
+	mr	r3,r1
 /* (we have to frob the stack pointer a bit to allow room for
    _dl_start to save the link register).  */
-	li	%r4,0
-	addi	%r1,%r1,-16
-	stw	%r4,0(%r1)
+	li	r4,0
+	addi	r1,r1,-16
+	stw	r4,0(r1)
 	bl	_dl_start@local
 
 /* Now, we do our main work of calling initialisation procedures.
@@ -46,50 +46,50 @@ ENTRY(_start)
 
 /*  Put our GOT pointer in r31, */
 	bl	_GLOBAL_OFFSET_TABLE_-4@local
-	mflr	%r31
+	mflr	r31
 /*  the address of _start in r30, */
-	mr	%r30,%r3
+	mr	r30,r3
 /*  &_dl_argc in 29, &_dl_argv in 27, and _dl_main_searchlist in 28.  */
-	lwz	%r28,_dl_main_searchlist@got(%r31)
-	lwz	%r29,_dl_argc@got(%r31)
-	lwz	%r27,_dl_argv@got(%r31)
+	lwz	r28,_dl_main_searchlist@got(r31)
+	lwz	r29,_dl_argc@got(r31)
+	lwz	r27,_dl_argv@got(r31)
 0:
 /*  Set initfunc = _dl_init_next(_dl_main_searchlist) */
-	lwz	%r3,0(%r28)
+	lwz	r3,0(r28)
 	bl	_dl_init_next@plt
 /* If initfunc is NULL, we exit the loop; otherwise, */
-	cmpwi	%r3,0
+	cmpwi	r3,0
 	beq	1f
 /* call initfunc(_dl_argc, _dl_argv, _dl_argv+_dl_argc+1) */
-	mtlr	%r3
-	lwz	%r3,0(%r29)
-	lwz	%r4,0(%r27)
-	slwi	%r5,%r3,2
-	add	%r5,%r4,%r5
-	addi	%r5,%r5,4
+	mtlr	r3
+	lwz	r3,0(r29)
+	lwz	r4,0(r27)
+	slwi	r5,r3,2
+	add	r5,r4,r5
+	addi	r5,r5,4
 	blrl
 /* and loop.  */
 	b	0b
 1:
 /* Now, to conform to the ELF ABI, we have to: */
 /* Pass argc (actually _dl_argc) in r3; */
-	lwz	%r3,0(%r29)
+	lwz	r3,0(r29)
 /* pass argv (actually _dl_argv) in r4; */
-	lwz	%r4,0(%r27)
+	lwz	r4,0(r27)
 /* pass envp (actually _dl_argv+_dl_argc+1) in r5; */
-	slwi	%r5,%r3,2
-	add	%r6,%r4,%r5
-	addi	%r5,%r6,4
+	slwi	r5,r3,2
+	add	r6,r4,r5
+	addi	r5,r6,4
 /* pass the auxilary vector in r6. This is passed to us just after _envp.  */
-2:	lwzu	%r0,4(%r6)
-	cmpwi	%r0,0
+2:	lwzu	r0,4(r6)
+	cmpwi	r0,0
 	bne	2b
-	addi	%r6,%r6,4
+	addi	r6,r6,4
 /* Pass a termination function pointer (in this case _dl_fini) in r7.  */
-	lwz	%r7,_dl_fini@got(%r31)
+	lwz	r7,_dl_fini@got(r31)
 /* Now, call the start function in r30... */
-	mtctr	%r30
-	lwz	%r26,_dl_starting_up@got(%r31)
+	mtctr	r30
+	lwz	r26,_dl_starting_up@got(r31)
 /* Pass the stack pointer in r1 (so far so good), pointing to a NULL value.
    (This lets our startup code distinguish between a program linked statically,
    which linux will call with argc on top of the stack which will hopefully
@@ -98,14 +98,14 @@ ENTRY(_start)
    Take the opportunity to clear LR, so anyone who accidentally returns
    from _start gets SEGV.  Also clear the next few words of the stack.  */
 
-	li	%r31,0
-	stw	%r31,0(%r1)
-	mtlr	%r31
-	stw	%r31,4(%r1)
-	stw	%r31,8(%r1)
-	stw	%r31,12(%r1)
+	li	r31,0
+	stw	r31,0(r1)
+	mtlr	r31
+	stw	r31,4(r1)
+	stw	r31,8(r1)
+	stw	r31,12(r1)
 /* Clear _dl_starting_up.  */
-	stw	%r31,0(%r26)
+	stw	r31,0(r26)
 /* Go do it!  */
 	bctr
 END(_start)

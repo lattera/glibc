@@ -1,5 +1,5 @@
 /* Startup code for programs linked with GNU libc.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,17 +43,17 @@ L(start_addresses):
 	.section ".text"
 ENTRY(_start)
  /* Save the stack pointer, in case we're statically linked under Linux.  */
-	mr	%r9,%r1
+	mr	r9,r1
  /* Set up an initial stack frame, and clear the LR.  */
-	clrrwi	%r1,%r1,4
-	li	%r0,0
-	stwu	%r1,-16(%r1)
-	mtlr	%r0
-	stw	%r0,0(%r1)
+	clrrwi	r1,r1,4
+	li	r0,0
+	stwu	r1,-16(r1)
+	mtlr	r0
+	stw	r0,0(r1)
  /* Set r13 to point at the 'small data area', and put the address of
     start_addresses in r8...  */
-	lis	%r8,L(start_addresses)@ha
-	lwzu	%r13,L(start_addresses)@l(%r8)
+	lis	r8,L(start_addresses)@ha
+	lwzu	r13,L(start_addresses)@l(r8)
  /* and continue in libc-start, in glibc.  */
 	b	JUMPTARGET(__libc_start_main)
 END(_start)

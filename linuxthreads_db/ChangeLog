@@ -1,5 +1,7 @@
 1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* thread_db.h: Fix comment for ti_type.
+
 	* td_thr_get_info.c: Initialize ti_type field.
 
 	* td_ta_thr_iter.c: Also report the manager thread.
@@ -20,7 +22,6 @@
 
 	* Makefile: New file.
 	* proc_service.h: New file.
-	* shlib-versions: New file.
 	* td_init.c: New file.
 	* td_log.c: New file.
 	* td_ta_delete.c: New file.
