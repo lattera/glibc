@@ -1,3 +1,10 @@
+1999-03-20  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* mach/Machrules (extra-libs-others): Add $(interface-library) here
+	too, so it gets built in the others pass rather than the lib pass.
+	This is necessary since the RPC libraries need to be linked against
+	libc.
+
 1999-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/generic/segfault.c: Include <stdio-common/_itoa.h> for
