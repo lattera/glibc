@@ -66,7 +66,7 @@ cat <<EOF |
   ISO-8859-8
   ISO-8859-9
   ISO-8859-10
-  #ISO-8859-11                          No corresponding table, nonstandard
+  ISO-8859-11
   ISO-8859-13
   ISO-8859-14
   ISO-8859-15

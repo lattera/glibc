@@ -1,5 +1,10 @@
 2002-07-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/iso8859-11.h: Removed.
+	* iconvdata/Makefile (gen-8bit-gap-modules): Add iso8859-11.
+	(distribute): Remove iso8859-11.h.
+	* iconvdata/tst-tables.sh: Add ISO-8859-11.
+
 	* stdio-common/vfscanf.c (inchar): Restore errno from previous
 	underflow operation if c == (W)EOF.
 

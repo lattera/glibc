@@ -148,7 +148,7 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      inis-cyrillic.c iso-2022-jp.c iso-2022-kr.c iso646.c	    \
 	      iso8859-1.c iso8859-2.c iso8859-3.c iso8859-4.c iso8859-5.c   \
 	      iso8859-6.c iso8859-7.c iso8859-8.c iso8859-9.c iso8859-10.c  \
-	      iso8859-11.c iso8859-11.h iso8859-13.c iso8859-14.c	    \
+	      iso8859-11.c iso8859-13.c iso8859-14.c			    \
 	      iso8859-15.c iso_2033.c iso_5427-ext.c iso_5427.c iso_5428.c  \
 	      iso_6937.c iso_6937-2.c iso_10367-box.c jis0201.c jis0201.h   \
 	      jis0208.c jis0208.h jis0212.c jis0212.h johab.c koi-8.c	    \
@@ -202,7 +202,8 @@ gen-8bit-gap-modules := koi8-r latin-greek latin-greek-1 ibm256 ibm273	   \
 			iso_5428 iso_10367-box mac-is nats-dano nats-sefi  \
 			iso8859-13 iso8859-14 iso8859-15 mac-uk sami-ws2   \
 			iso-ir-197 tis-620 koi8-u ibm874 cp10007 koi8-t	   \
-			georgian-ps georgian-academy iso-ir-209 mac-sami
+			georgian-ps georgian-academy iso-ir-209 mac-sami   \
+			iso8859-11
 
 gen-special-modules := iso8859-7jp
 
