@@ -1,3 +1,9 @@
+1998-12-16  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/bits/local_lim.h (SYMLOOP_MAX): Define this #ifdef
+	__USE_BSD as well as #ifdef __USE_GNU, so MAXSYMLINKS can use it.
+	Reported by UCHIYAMA Yasushi <uch@nop.or.jp>
+
 1998-12-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/ibm866.c: New file.
@@ -10,11 +16,11 @@
 	* sysdeps/gnu/bits/ipc.h: Move libc internal bits to...
 	* include/bits/ipc.h: ..here.  New file.
 
-1998-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Don't change 
-	read-only struct termios_p* but change k_termios member directly. 
- 
+1998-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Don't change
+	read-only struct termios_p* but change k_termios member directly.
+
 1998-12-15  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/posix/tempname.c (__path_search): Fix the maximum
