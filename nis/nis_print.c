@@ -299,8 +299,11 @@ nis_print_entry (const entry_obj *obj)
 	fputs (_("Encrypted data\n"), stdout);
       else if ((obj->en_cols.en_cols_val[i].ec_flags & EN_BINARY) == EN_BINARY)
 	fputs (_("Binary data\n"), stdout);
+      else if (obj->en_cols.en_cols_val[i].ec_value.ec_value_len == 0)
+	fputs ("'(nil)'\n", stdout);
       else
-	printf ("%.*s\n", (int)obj->en_cols.en_cols_val[i].ec_value.ec_value_len,
+	printf ("'%.*s'\n",
+		(int)obj->en_cols.en_cols_val[i].ec_value.ec_value_len,
 		obj->en_cols.en_cols_val[i].ec_value.ec_value_val);
     }
 }

@@ -1,3 +1,15 @@
+1998-11-26  Philip Blundell  <philb@gnu.org> 
+ 
+	Undo change of 1998-11-12: 
+	* sysdeps/unix/sysv/linux/netlink/netlink.h: Deleted. 
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Remove 
+	netlink/netlink.h. 
+	* sysdeps/unix/sysv/linux/Dist: Likewise. 
+ 
+1998-11-22  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de> 
+ 
+	* nis/nis_print.c (nis_print_entry): Changes to match Solaris output. 
+ 
 1998-11-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/mips/dl-machine.h (ELF_MACHINE_NO_PLT): New defined macro.
