@@ -356,8 +356,12 @@ send_again:
 	}
       if (inlen < 4)
 	continue;
-      /* see if reply transaction id matches sent id */
-      if (*((u_int32_t *) (cu->cu_inbuf)) != *((u_int32_t *) (cu->cu_outbuf)))
+
+      /* see if reply transaction id matches sent id.
+        Don't do this if we only wait for a replay */
+      if (xargs != NULL
+	  && (*((u_int32_t *) (cu->cu_inbuf))
+	      != *((u_int32_t *) (cu->cu_outbuf))))
 	continue;
       /* we now assume we have the proper reply */
       break;

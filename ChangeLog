@@ -1,3 +1,8 @@
+1998-04-01  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/clnt_udp.c (clntudp_call): Don't check the xid if
+	we only wait for a replay.
+
 1998-04-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/Makefile: Finally fix dependencies for JOHAB and
