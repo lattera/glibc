@@ -98,15 +98,17 @@ ELF_PREFERRED_ADDRESS_DATA;
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
    cases the program header follows the ELF header directly.  If this
-   is not the case all bets are off and we can make the header arbitrarily
-   large and still won't get it read.  This means the only question is
-   how large are the ELF and program header combined.  The ELF header
-   in 64-bit files is 56 bytes long.  Each program header entry is again
-   56 bytes long.  I.e., even with a file which has 17 program header
-   entries we only have to read 1kB.  And 17 program header entries is
-   plenty, normal files have < 10.  If this heuristic should really fail
-   for some file the code in `_dl_map_object_from_fd' knows how to
-   recover.  */
+   is not the case all bets are off and we can make the header
+   arbitrarily large and still won't get it read.  This means the only
+   question is how large are the ELF and program header combined.  The
+   ELF header 32-bit files is 52 bytes long and in 64-bit files is 64
+   bytes long.  Each program header entry is again 32 and 56 bytes
+   long respectively.  I.e., even with a file which has 7 program
+   header entries we only have to read 512B.  Add to this a bit of
+   margin for program notes and reading 512B and 640B for 32-bit and
+   64-bit files respecitvely is enough.  If this heuristic should
+   really fail for some file the code in `_dl_map_object_from_fd'
+   knows how to recover.  */
 struct filebuf
 {
   ssize_t len;
@@ -115,7 +117,7 @@ struct filebuf
 #else
 # define FILEBUF_SIZE 640
 #endif
-  char buf[512] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
+  char buf[FILEBUF_SIZE] __attribute__ ((aligned (__alignof (ElfW(Ehdr)))));
 };
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
@@ -883,6 +885,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	int prot;
       } loadcmds[l->l_phnum], *c;
     size_t nloadcmds = 0;
+    bool has_holes = false;
 
     /* The struct is initialized to zero so this is not necessary:
     l->l_ld = 0;
@@ -927,6 +930,11 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	  c->dataend = ph->p_vaddr + ph->p_filesz;
 	  c->allocend = ph->p_vaddr + ph->p_memsz;
 	  c->mapoff = ph->p_offset & ~(ph->p_align - 1);
+
+	  /* Determine whether there is a gap between the last segment
+	     and this one.  */
+	  if (nloadcmds > 1 && c[-1].mapend != c->mapstart)
+	    has_holes = true;
 
 	  /* Optimize a common case.  */
 #if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
@@ -1057,14 +1065,15 @@ cannot allocate TLS data structures for initial thread");
 	l->l_map_end = l->l_map_start + maplength;
 	l->l_addr = l->l_map_start - c->mapstart;
 
-	/* Change protection on the excess portion to disallow all access;
-	   the portions we do not remap later will be inaccessible as if
-	   unallocated.  Then jump into the normal segment-mapping loop to
-	   handle the portion of the segment past the end of the file
-	   mapping.  */
-	__mprotect ((caddr_t) (l->l_addr + c->mapend),
-		    loadcmds[nloadcmds - 1].allocend - c->mapend,
-		    PROT_NONE);
+	if (has_holes)
+	  /* Change protection on the excess portion to disallow all access;
+	     the portions we do not remap later will be inaccessible as if
+	     unallocated.  Then jump into the normal segment-mapping loop to
+	     handle the portion of the segment past the end of the file
+	     mapping.  */
+	  __mprotect ((caddr_t) (l->l_addr + c->mapend),
+		      loadcmds[nloadcmds - 1].allocend - c->mapend,
+		      PROT_NONE);
 
 	goto postmap;
       }
@@ -1124,23 +1133,18 @@ cannot allocate TLS data structures for initial thread");
 	    if (zeropage > zero)
 	      {
 		/* Zero the final part of the last page of the segment.  */
-		if ((c->prot & PROT_WRITE) == 0)
+		if (__builtin_expect ((c->prot & PROT_WRITE) == 0, 0))
 		  {
 		    /* Dag nab it.  */
-		    if (__builtin_expect (__mprotect ((caddr_t)
-						      (zero
-						       & ~(GL(dl_pagesize)
-							   - 1)),
-						      GL(dl_pagesize),
-						      c->prot|PROT_WRITE) < 0,
-					  0))
+		    if (__mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
+				    GL(dl_pagesize), c->prot|PROT_WRITE) < 0)
 		      {
 			errstring = N_("cannot change memory protections");
 			goto call_lose_errno;
 		      }
 		  }
 		memset ((void *) zero, '\0', zeropage - zero);
-		if ((c->prot & PROT_WRITE) == 0)
+		if (__builtin_expect ((c->prot & PROT_WRITE) == 0, 0))
 		  __mprotect ((caddr_t) (zero & ~(GL(dl_pagesize) - 1)),
 			      GL(dl_pagesize), c->prot);
 	      }

@@ -1,5 +1,12 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): Determine whether there
+	are holes between the segments.  Only call mprotect to set
+	proection to PROT_NONE if there are some.
+
+	* elf/dl-load.c (struct filebuf): Actually use FILEBUF_SIZE.
+	Update comment.
+
 	* include/sched.h (__clone2): Use ... instead of adding all the
 	new parameters.
 
