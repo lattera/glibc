@@ -1,5 +1,5 @@
 /* Internal support stuff for complete soft float.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    Contributed by Aldy Hernandez <aldyh@redhat.com>, 2002.
    This file is part of the GNU C Library.
 
@@ -27,7 +27,11 @@ typedef union
 } fenv_union_t;
 
 
-extern int __sim_exceptions attribute_hidden;
-extern int __sim_disabled_exceptions attribute_hidden;
-extern int __sim_round_mode attribute_hidden;
+extern int __sim_exceptions;
+libc_hidden_proto (__sim_exceptions);
+extern int __sim_disabled_exceptions;
+libc_hidden_proto (__sim_disabled_exceptions);
+extern int __sim_round_mode;
+libc_hidden_proto (__sim_round_mode);
+
 extern void __simulate_exceptions (int x) attribute_hidden;
