@@ -26,7 +26,7 @@ headers += sys/timex.h
 endif
 
 ifeq ($(subdir), socket)
-headers += sys/socketcall.h
+headers += sys/socketcall.h net/if.h
 endif
 
 ifeq ($(subdir), sunrpc)

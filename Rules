@@ -70,7 +70,11 @@ $(objpfx)dummy.o:
 	@rm -f $(@:.o=.c)
 	echo 'void __dummy__ () { }' > $(@:.o=.c)
 	$(CC) -c $(@:.o=.c) -o $@
-generated := $(generated) dummy.o dummy.c
+$(objpfx)empty.o:
+	@rm -f $(@:.o=.c)
+	echo '' > $(@:.o=.c)
+	$(CC) -c $(@:.o=.c) -o $@
+generated := $(generated) dummy.o dummy.c empty.c empty.o
 
 # This makes all the auxilliary and test programs.
 
@@ -144,8 +148,8 @@ $(common-objpfx)sor-$(subdir): Makefile
 
 ifdef static-only-routines
 # These routines are to be omitted from the shared library object,
-# so we replace the PIC objects for them with the dummy object file.
-$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx) dummy.o
+# so we replace the PIC objects for them with the empty object file.
+$(static-only-routines:%=$(objpfx)%.so): %.so: $(common-objpfx) empty.o
 	rm -f $@
 	ln $< $@
 endif

@@ -1,5 +1,16 @@
 Thu May  9 09:17:46 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/net/if.h: New file.
+	* sysdeps/unix/sysv/linux/Dist: Add it.
+	* sysdeps/unix/sysv/linux/Makefile [$(subdir)=socket] (headers): Add
+	net/if.h.
+
+	* Makeconfig (link-libc): Add libc.a after libc.so in link.
+
+	* Rules (static-only-routines rule): Use empty.o instead of dummy.o.
+	(empty.o): New target.
+	(generated): Add empty.c, empty.o.
+
 	* resolv: Code updated from BIND-4.9.3P2C3.
 
 	* Rules (static-only-routines rule): Use dummy.o, not dummy.so.
