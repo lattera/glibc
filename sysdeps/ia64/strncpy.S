@@ -1,6 +1,6 @@
 /* Optimized version of the standard strncpy() function.
    This file is part of the GNU C Library.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
    Contributed by Dan Pop <Dan.Pop@cern.ch>
 	      and Jakub Jelinek <jakub@redhat.com>.
 
@@ -210,8 +210,11 @@ ENTRY(strncpy)
 	mov	pr = saved_pr, -1	// restore the predicate registers
 	br.ret.sptk.many b0
 .recovery2:
+	add	c = 8, len
 	add	tmp = -8, asrc ;;
-	ld8	r[0] = [tmp]
+	cmp.gtu	p8, p5 = c, thresh ;;
+(p8)	ld8	r[0] = [tmp]
+(p5)	mov	r[0] = r0
 	br.cond.sptk .back2
 .recovery3:
 	add	tmp = -MEMLAT * 8, src ;;

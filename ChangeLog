@@ -1,3 +1,8 @@
+2002-09-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/strncpy.S: Only segfault in .recovery2 if some bits
+	from the next quad are needed.
+
 2002-09-30  Roland McGrath  <roland@redhat.com>
 
 	* elf/tls-macros.h (TLS_LD, TLS_GD): Use call insn, not callq.
