@@ -8,6 +8,24 @@
 #include "../linuxthreads/internals.h"
 
 
+/* Indeces for the symbol names.  */
+enum
+  {
+    PTHREAD_THREADS_EVENTS = 0,
+    PTHREAD_LAST_EVENT,
+    PTHREAD_HANDLES_NUM,
+    PTHREAD_HANDLES,
+    PTHREAD_KEYS,
+    LINUXTHREADS_PTHREAD_THREADS_MAX,
+    LINUXTHREADS_PTHREAD_KEYS_MAX,
+    LINUXTHREADS_PTHREAD_SIZEOF_DESCR,
+    LINUXTHREADS_CREATE_EVENT,
+    LINUXTHREADS_DEATH_EVENT,
+    LINUXTHREADS_REAP_EVENT,
+    NUM_MESSAGES
+  };
+
+
 /* Comment out the following for less verbose output.  */
 #ifndef NDEBUG
 # define LOG(c) if (__td_debug) __libc_write (2, c "\n", strlen (c "\n"))
@@ -79,5 +97,9 @@ ta_ok (const td_thragent_t *ta)
 
   return runp != NULL;
 }
+
+
+/* Internal wrapper around ps_pglobal_lookup.  */
+extern int td_lookup (struct ps_prochandle *ps, int idx, psaddr_t *sym_addr);
 
 #endif /* thread_dbP.h */

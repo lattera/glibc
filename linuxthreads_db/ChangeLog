@@ -1,3 +1,16 @@
+2001-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libthread_db-routines): Add td_symbol_list.
+	* Versions [libthread_db] (GLIBC_2.2.3): Add td_symbol_list.
+	* td_symbol_list.c: New file.
+	* thread_db.h: Add prototype for td_symbol_list.
+	* thread_dbP.h: Define symbol name indices.
+	Add prototype for td_lookup.
+	* td_ta_event_addr.c: Use td_lookup instead of directly using
+	ps_pglobal_lookup to find symbol address.
+	* td_ta_get_nthreads.c: Likewise.
+	* td_ta_new.c: Likewise.
+
 2001-03-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: When generating DSO link with libc_nonshared.a.

@@ -39,7 +39,7 @@ libthread_db-routines = td_init td_log td_ta_delete td_ta_get_nthreads      \
 			td_thr_event_enable td_thr_set_event 		    \
 			td_thr_clear_event td_thr_event_getmsg		    \
 			td_ta_set_event td_ta_event_getmsg		    \
-			td_ta_clear_event
+			td_ta_clear_event td_symbol_list
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 

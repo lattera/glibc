@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -288,6 +288,9 @@ extern td_err_e td_init (void);
 
 /* Historical relict.  Should not be used anymore.  */
 extern td_err_e td_log (void);
+
+/* Return list of symbols the library can request.  */
+extern const char **td_symbol_list (void);
 
 /* Generate new thread debug library handle for process PS.  */
 extern td_err_e td_ta_new (struct ps_prochandle *__ps, td_thragent_t **__ta);

@@ -12,4 +12,7 @@ libthread_db {
     td_thr_setprio; td_thr_setsigpending; td_thr_setxregs; td_thr_sigsetmask;
     td_thr_tsd; td_thr_validate;
   }
+  GLIBC_2.2.3 {
+    td_symbol_list;
+  }
 }

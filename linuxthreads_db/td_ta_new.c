@@ -1,5 +1,5 @@
 /* Attach to target process.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -20,7 +20,6 @@
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <gnu/lib-names.h>
 
 #include "thread_dbP.h"
 
@@ -41,8 +40,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* Get the global event mask.  This is one of the variables which
      are new in the thread library to enable debugging.  If it is
      not available we cannot debug.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__pthread_threads_events", &addr) != PS_OK)
+  if (td_lookup (ps, PTHREAD_THREADS_EVENTS, &addr) != PS_OK)
     return TD_NOLIBTHREAD;
 
   /* Fill in the appropriate information.  */
@@ -59,9 +57,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 
   /* Get the pointer to the variable pointing to the thread descriptor
      with the last event.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__pthread_last_event",
-			 &(*ta)->pthread_last_event) != PS_OK)
+  if (td_lookup (ps, PTHREAD_LAST_EVENT, &(*ta)->pthread_last_event) != PS_OK)
     {
     free_return:
       free (*ta);
@@ -70,21 +66,18 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
 
   /* Get the pointer to the variable containing the number of active
      threads.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__pthread_handles_num",
-			 &(*ta)->pthread_handles_num) != PS_OK)
+  if (td_lookup (ps, PTHREAD_HANDLES_NUM, &(*ta)->pthread_handles_num)
+      != PS_OK)
     goto free_return;
 
   /* See whether the library contains the necessary symbols.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_handles",
-		         &addr) != PS_OK)
+  if (td_lookup (ps, PTHREAD_HANDLES, &addr) != PS_OK)
     goto free_return;
 
   (*ta)->handles = (struct pthread_handle_struct *) addr;
 
 
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "pthread_keys",
-		         &addr) != PS_OK)
+  if (td_lookup (ps, PTHREAD_KEYS, &addr) != PS_OK)
     goto free_return;
 
   /* Cast to the right type.  */
@@ -93,8 +86,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* Find out about the maximum number of threads.  Old implementations
      don't provide this information.  In this case we assume that the
      debug  library is compiled with the same values.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__linuxthreads_pthread_threads_max", &addr) != PS_OK)
+  if (td_lookup (ps, LINUXTHREADS_PTHREAD_THREADS_MAX, &addr) != PS_OK)
     (*ta)->pthread_threads_max = PTHREAD_THREADS_MAX;
   else
     {
@@ -104,8 +96,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
     }
 
   /* Similar for the maximum number of thread local data keys.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__linuxthreads_pthread_keys_max", &addr) != PS_OK)
+  if (td_lookup (ps, LINUXTHREADS_PTHREAD_KEYS_MAX, &addr) != PS_OK)
     (*ta)->pthread_keys_max = PTHREAD_KEYS_MAX;
   else
     {
@@ -115,24 +106,11 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
     }
 
   /* And for the size of the second level arrays for the keys.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__linuxthreads_pthread_sizeof_descr", &addr)
-      != PS_OK)
+  if (td_lookup (ps, LINUXTHREADS_PTHREAD_SIZEOF_DESCR, &addr) != PS_OK)
     (*ta)->sizeof_descr = sizeof (struct _pthread_descr_struct);
   else
     {
       if (ps_pdread (ps, addr, &(*ta)->sizeof_descr, sizeof (int)) != PS_OK)
-	goto free_return;
-    }
-
-  /* Similar for the maximum number of thread local data keys.  */
-  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
-			 "__linuxthreads_pthread_keys_max", &addr) != PS_OK)
-    (*ta)->pthread_keys_max = PTHREAD_KEYS_MAX;
-  else
-    {
-      if (ps_pdread (ps, addr, &(*ta)->pthread_keys_max, sizeof (int))
-	  != PS_OK)
 	goto free_return;
     }
 

@@ -1,5 +1,6 @@
 2001-03-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile: Define -D_RPC_THREAD_SAFE_ for cancel.c.
 	* cancel.c (__pthread_perform_cleanup): Call __rpc_thread_destroy.
 	* sysdeps/pthread/bits/libc-tsd.h: Define _LIBC_TSD_KEY_VARS.
 

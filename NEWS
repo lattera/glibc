@@ -30,6 +30,10 @@ Version 2.2.3
 
 * David Mosberger <davidm@hpl.hp.com> implemented the setcontext family
   of functions for Linux/IA-64.
+
+* The RPC code is now thread safe.  Threads can now use the same service
+  of different services at the same time.  Patch by Eric Norum
+  <eric.norum@usask.ca> with some help by Ulrich Drepper.
 
 Version 2.2.2
 

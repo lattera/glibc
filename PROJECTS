@@ -199,3 +199,9 @@ contact <bug-glibc@gnu.org>.
 
 
 [26] ...done
+
+
+[27] We need a second test suite with tests which cannot run during a normal
+     `make check' run.  This test suite can require root priviledges and
+     can test things like DNS (i.e., require network access),
+     user-interaction, networking in general, and probably many other things.
