@@ -54,7 +54,7 @@ execute (const char *file, char *const argv[])
 	/* Execute the shell.  */
 	execv (new_argv[0], new_argv);
       }
-	}
+    }
 }
 
 
@@ -66,6 +66,13 @@ execvp (file, argv)
      char *const argv[];
 {
   int got_eacces = 0;
+
+  if (*file == '\0')
+    {
+      /* We check the simple case first. */
+      __set_errno (ENOENT);
+      return -1;
+    }
 
   if (strchr (file, '/') != NULL)
     /* Don't search when it contains a slash.  */

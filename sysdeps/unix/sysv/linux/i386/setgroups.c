@@ -36,18 +36,26 @@ setgroups (n, groups)
      size_t n;
      const gid_t *groups;
 {
-  size_t i;
-  __kernel_gid_t kernel_groups[n];
-
-  for (i = 0; i < n; i++)
+  if (n < 0 || n > __sysconf (_SC_NGROUPS_MAX))
     {
-      kernel_groups[i] = groups[i];
-      if (groups[i] != (gid_t) ((__kernel_gid_t) groups[i]))
-	{
-	  __set_errno (EINVAL);
-	  return -1;
-	}
+      __set_errno (EINVAL);
+      return -1;
     }
+  else if
+    {
+      size_t i;
+      __kernel_gid_t kernel_groups[n];
 
-  return INLINE_SYSCALL (setgroups, 2, n, kernel_groups);
+      for (i = 0; i < n; i++)
+	{
+	  kernel_groups[i] = groups[i];
+	  if (groups[i] != (gid_t) ((__kernel_gid_t) groups[i]))
+	    {
+	      __set_errno (EINVAL);
+	      return -1;
+	    }
+	}
+
+      return INLINE_SYSCALL (setgroups, 2, n, kernel_groups);
+    }
 }

@@ -72,9 +72,12 @@ __fpathconf (fd, name)
 	  {
 	    if (errno == ENOSYS)
 	      {
-		errno = save_errno;
+		__set_errno (save_errno);
 		return NAME_MAX;
 	      }
+	    else if (errno == ENODEV)
+	      __set_errno (EINVAL);
+
 	    return -1;
 	  }
 	else

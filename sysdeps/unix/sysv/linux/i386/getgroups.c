@@ -17,10 +17,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/types.h>
 #include <unistd.h>
+#include <sys/param.h>
+#include <sys/types.h>
 
 #include <sysdep.h>
+#include <sys/syscall.h>
+
 #include <linux/posix_types.h>
 
 extern int __syscall_getgroups __P ((int, __kernel_gid_t *));
@@ -32,14 +35,23 @@ __getgroups (n, groups)
      int n;
      gid_t *groups;
 {
-  int i, ngids;
-  __kernel_gid_t kernel_groups[n];
+  if (n < 0)
+    {
+      __set_errno (EINVAL);
+      return -1;
+    }
+  else
+    {
+      int i, ngids;
+      __kernel_gid_t kernel_groups[n = MIN (n, __sysconf (_SC_NGROUPS_MAX))];
 
-  ngids = INLINE_SYSCALL (getgroups, 2, n, kernel_groups);
-  if (n != 0 && ngids > 0)
-    for (i = 0; i < ngids; i++)
-      groups[i] = kernel_groups[i];
-  return ngids;
+      ngids = INLINE_SYSCALL (getgroups, 2, n, kernel_groups);
+      if (n != 0 && ngids > 0)
+	for (i = 0; i < ngids; i++)
+	  groups[i] = kernel_groups[i];
+
+      return ngids;
+    }
 }
 
 weak_alias (__getgroups, getgroups)

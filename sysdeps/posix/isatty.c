@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <errno.h>
 #include <unistd.h>
 #include <termios.h>
 
@@ -25,15 +24,9 @@ int
 __isatty (fd)
      int fd;
 {
-  int save;
-  int is_tty;
   struct termios term;
 
-  save = errno;
-  is_tty = __tcgetattr (fd, &term) == 0;
-  __set_errno (save);
-
-  return is_tty;
+  return __tcgetattr (fd, &term) == 0;
 }
 
 weak_alias (__isatty, isatty)

@@ -1,3 +1,17 @@
+1998-10-22  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/i386/getgroups.c (__getgroups): Add
+	sanity check for n.
+	* sysdeps/unix/sysv/linux/i386/setgroups.c (setgroups): Likewise.
+
+	* sysdeps/posix/fpathconf.c (__fpathconf): Set errno to
+	EINVAL if errno == ENODEV.  Tested by VSX-PCT.
+
+	* sysdeps/posix/isatty.c (__isatty): Don't reset errno.  Tested
+	by VSX-PCT.
+
+	* posix/execvp.c (execvp): Check "".  Tested by VSX-PCT.
+
 1998-10-22  Philip Blundell  <pb@nexus.co.uk>
 
 	* sysdeps/unix/arm/sysdep.h: Wrap assembler macros in #ifdef
