@@ -1,5 +1,5 @@
 /* Handle special requests.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -80,7 +80,7 @@ locale_special (const char *name, int show_category_name,
 		      if (ch != EOF)
 			putchar (ch);
 		      else
-			fputs ("<???>", stdout);
+			fputs ("<???\>", stdout);
 		    }
 
 		  putchar ('"');

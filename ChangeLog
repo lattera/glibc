@@ -1,5 +1,9 @@
 1999-01-27  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/locale-spec.c (locale_special): Take care of
+	possible trigraph sequence.
+	Patch by Zack Weinberg <zack@rabi.columbia.edu>.
+
 	* time/strptime.c (strptime_internal, case 's'): Initialize secs
 	to zero.  Patch by Bruce Elliott <bde@nwlink.com>.
 
