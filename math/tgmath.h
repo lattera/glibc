@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -330,7 +330,7 @@
 
 /* Return X times (2 to the Nth power).  */
 #if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
-#define scalb(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, scalb)
+# define scalb(Val1, Val2) __TGMATH_BINARY_REAL_ONLY (Val1, Val2, scalb)
 #endif
 
 /* Return X times (2 to the Nth power).  */
