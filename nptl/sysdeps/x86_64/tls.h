@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  nptl/x86_64 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,8 +120,15 @@ union user_desc_init
   (((tcbhead_t *) (descr))->dtv)
 
 
+/* Macros to load from and store into segment registers.  */
+# define TLS_GET_FS() \
+  ({ int __seg; __asm ("movl %%fs, %0" : "=q" (__seg)); __seg; })
+# define TLS_SET_FS(val) \
+  __asm ("movl %0, %%fs" :: "q" (val))
+
+
 # ifndef __NR_set_thread_area
-#  define __NR_set_thread_area 243
+#  define __NR_set_thread_area 205
 # endif
 # ifndef TLS_FLAG_WRITABLE
 #  define TLS_FLAG_WRITABLE		0x00000001
@@ -133,14 +140,6 @@ union user_desc_init
 #  error "we need set_thread_area"
 # endif
 #endif
-
-# ifdef __PIC__
-#  define TLS_EBX_ARG "r"
-#  define TLS_LOAD_EBX "xchgl %3, %%ebx\n\t"
-# else
-#  define TLS_EBX_ARG "b"
-#  define TLS_LOAD_EBX
-# endif
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the

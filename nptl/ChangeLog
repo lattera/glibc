@@ -1,5 +1,10 @@
 2003-02-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/x86_64/tls.h: Remove unnecessary macros, left over from x86.
+	(TLS_GET_FS): New #define.
+	(TLS_SET_FS): New #define.
+	Correct value of __NR_set_thread_area.
+
 	* sysdeps/x86_64/td_ta_map_lwp2thr.c: New file.
 
 2003-02-06  Ulrich Drepper  <drepper@redhat.com>
