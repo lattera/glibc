@@ -182,13 +182,13 @@ _IO_new_proc_open (fp, command, mode)
   _IO_fileno (fp) = parent_end;
 
   /* Link into proc_file_chain. */
-#ifdef _IO_MTSFE_IO
+#ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (unlock);
   _IO_lock_lock (proc_file_chain_lock);
 #endif
   ((_IO_proc_file *) fp)->next = proc_file_chain;
   proc_file_chain = (_IO_proc_file *) fp;
-#ifdef _IO_MTSFE_IO
+#ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (proc_file_chain_lock);
   _IO_cleanup_region_end (0);
 #endif
@@ -247,7 +247,7 @@ _IO_new_proc_close (fp)
   int status = -1;
 
   /* Unlink from proc_file_chain. */
-#ifdef _IO_MTSFE_IO
+#ifdef _IO_MTSAFE_IO
   _IO_cleanup_region_start_noarg (unlock);
   _IO_lock_lock (proc_file_chain_lock);
 #endif
@@ -260,7 +260,7 @@ _IO_new_proc_close (fp)
 	  break;
 	}
     }
-#ifdef _IO_MTSFE_IO
+#ifdef _IO_MTSAFE_IO
   _IO_lock_unlock (proc_file_chain_lock);
   _IO_cleanup_region_end (0);
 #endif

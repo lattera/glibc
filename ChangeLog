@@ -1,3 +1,14 @@
+2001-08-07  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/gconv_charset.h (upstr): Add unused attribute to avoid
+	warning.
+
+	* libio/iopopen.c (_IO_new_proc_open): Fix typos, it's
+	_IO_MTSAFE_IO.
+	(_IO_new_proc_close): Likewise.
+	* libio/oldiopopen.c (_IO_old_proc_open): Likewise.
+	(_IO_old_proc_close): Likewise.
+
 2001-08-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* manual/locale.texi: Add documentation of rpmatch.
