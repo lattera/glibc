@@ -1,3 +1,7 @@
+2000-12-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/shm_open.c: Remove incorrect comment.
+
 2000-11-30  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurd/ioctl.h (_HURD_HANDLE_IOCTLS_1): New macro.
@@ -6,7 +10,7 @@
 
 2000-12-01  Ulrich Drepper  <drepper@redhat.com>
 
-	* configure.in: Correct test for pserver CVS access.
+	* configure.in: Correct test for pserver CVS access.cc
 
 2000-11-28  H.J. Lu  <hjl@gnu.org>
 
