@@ -290,11 +290,11 @@ main (int argc, char *argv[])
   /* Default timeout is two seconds.  */
 # define TIMEOUT 2
 #endif
-  alarm (TIMEOUT);
   signal (SIGALRM, timeout_handler);
+  alarm (TIMEOUT);
 
   /* Wait for the regular termination.  */
-  termpid = waitpid (pid, &status, 0);
+  termpid = TEMP_FAILURE_RETRY (waitpid (pid, &status, 0));
   if (termpid == -1)
     {
       printf ("Waiting for test program failed: %m\n");
