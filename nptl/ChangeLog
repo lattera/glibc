@@ -1,3 +1,8 @@
+2003-12-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/Makefile (CFLAGS-getpid.c): Define.
+	* sysdeps/unix/sysv/linux/getpid.c: New file.
+
 2003-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* eintr.c (setup_eintr): Add new parameter.  Pass to thread function.

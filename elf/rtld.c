@@ -1310,7 +1310,7 @@ of this helper program; chances are you did not intend to run this program.\n\
      an old kernel that can't perform TLS_INIT_TP, even if no TLS is ever
      used.  Trying to do it lazily is too hairy to try when there could be
      multiple threads (from a non-TLS-using libpthread).  */
-  if (GL(dl_tls_max_dtv_idx) > 0 || !TLS_INIT_TP_EXPENSIVE)
+  if (!TLS_INIT_TP_EXPENSIVE || GL(dl_tls_max_dtv_idx) > 0)
     {
       struct link_map *l;
       size_t nelem;

@@ -29,4 +29,5 @@ endif
 
 ifeq ($(subdir),posix)
 CFLAGS-fork.c = -D_IO_MTSAFE_IO
+CFLAGS-getpid.c = -fomit-frame-pointer
 endif
