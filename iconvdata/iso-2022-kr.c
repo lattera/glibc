@@ -107,7 +107,7 @@ enum
     *setp = save_set
 
 
-/* First define the conversion function from ISO-2022-JP to UCS4.  */
+/* First define the conversion function from ISO-2022-KR to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO

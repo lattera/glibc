@@ -55,10 +55,8 @@ struct gap
   enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
   enum variant var = ((struct iso2022jp_data *) step->data)->var;	      \
   int save_set;								      \
-  int set = data->statep->count;
-#define END_LOOP \
-  data->statep->count = set;
-#define EXTRA_LOOP_ARGS		, var, set
+  int *setp = &data->statep->count;
+#define EXTRA_LOOP_ARGS		, var, setp
 
 
 /* Direction of the transformation.  */
@@ -177,14 +175,14 @@ gconv_end (struct gconv_step *data)
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->statep->count != 0)						      \
+  if (data->statep->count != ASCII_set)					      \
     {									      \
       enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
 									      \
       if (dir == from_iso2022jp)					      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  */					      \
-	data->statep->count = 0;					      \
+	data->statep->count = ASCII_set;				      \
       else								      \
 	{								      \
 	  char *outbuf = data->outbuf;					      \
@@ -201,7 +199,7 @@ gconv_end (struct gconv_step *data)
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
 	      data->outbuf = outbuf;					      \
-	      data->statep->count = 0;					      \
+	      data->statep->count = ASCII_set;				      \
 	    }								      \
 	}								      \
     }
@@ -211,9 +209,9 @@ gconv_end (struct gconv_step *data)
    and retore the state.  */
 #define SAVE_RESET_STATE(Save) \
   if (Save)								      \
-    save_set = set;							      \
+    save_set = *setp;							      \
   else									      \
-    set = save_set
+    *setp = save_set
 
 
 /* First define the conversion function from ISO-2022-JP to UCS4.  */
@@ -403,7 +401,9 @@ gconv_end (struct gconv_step *data)
 									      \
     *((uint32_t *) outptr)++ = ch;					      \
   }
-#define EXTRA_LOOP_DECLS	, enum variant var, int set
+#define EXTRA_LOOP_DECLS	, enum variant var, int *setp
+#define INIT_PARAMS		int set = *setp
+#define UPDATE_PARAMS		*setp = set
 #include <iconv/loop.c>
 
 
@@ -691,7 +691,9 @@ gconv_end (struct gconv_step *data)
     /* Now that we wrote the output increment the input pointer.  */	      \
     inptr += 4;								      \
   }
-#define EXTRA_LOOP_DECLS	, enum variant var, int set
+#define EXTRA_LOOP_DECLS	, enum variant var, int *setp
+#define INIT_PARAMS		int set = *setp
+#define UPDATE_PARAMS		*setp = set
 #include <iconv/loop.c>
 
 

@@ -1,5 +1,15 @@
 1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/Makefile (tests): Add runptests.
+	(distribute): Add PTESTS, PTESTS2C.sed, and ptestcases.h.
+	(before-compile): Add ptestcases.h.
+	(ptestscases.h): Add rule to generate from PTESTS.
+	* posix/runptests.c: New file.
+	* posix/PTESTS: New file.
+	* posix/PTESTS2C.sed: New file.
+
+1998-05-15  Ulrich Drepper  <drepper@cygnus.com>
+
 	* iconv/loop.c: Let user add code to use and set paramaters.
 
 	* iconvdata/iso-2022-kr.c: Correct to-loop.
