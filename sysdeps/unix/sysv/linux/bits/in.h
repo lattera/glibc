@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,11 +33,24 @@
 /* For BSD compatibility.  */
 #define        IP_RECVRETOPTS  IP_RETOPTS       /* bool; Receive IP options for response.  */
 #define        IP_RETOPTS      7       /* ip_opts; Set/get IP per-packet options.  */
-#define IP_MULTICAST_IF 32      /* in_addr; set/get IP multicast i/f */
-#define IP_MULTICAST_TTL 33    /* u_char; set/get IP multicast ttl */
-#define IP_MULTICAST_LOOP 34   /* i_char; set/get IP multicast loopback */
-#define IP_ADD_MEMBERSHIP 35   /* ip_mreq; add an IP group membership */
-#define IP_DROP_MEMBERSHIP 36  /* ip_mreq; drop an IP group membership */
+#define IP_MULTICAST_IF 32	/* in_addr; set/get IP multicast i/f */
+#define IP_MULTICAST_TTL 33	/* u_char; set/get IP multicast ttl */
+#define IP_MULTICAST_LOOP 34	/* i_char; set/get IP multicast loopback */
+#define IP_ADD_MEMBERSHIP 35	/* ip_mreq; add an IP group membership */
+#define IP_DROP_MEMBERSHIP 36	/* ip_mreq; drop an IP group membership */
+#define IP_UNBLOCK_SOURCE 37	/* ip_mreq_source: unblock data from source */
+#define IP_BLOCK_SOURCE 38	/* ip_mreq_source: block data from source */
+#define IP_ADD_SOURCE_MEMBERSHIP 39 /* ip_mreq_source: join source group */
+#define IP_DROP_SOURCE_MEMBERSHIP 40 /* ip_mreq_source: leave source group */
+#define IP_MSFILTER 41
+#define MCAST_JOIN_GROUP 42
+#define MCAST_BLOCK_SOURCE 43
+#define MCAST_UNBLOCK_SOURCE 44
+#define MCAST_LEAVE_GROUP 45
+#define MCAST_JOIN_SOURCE_GROUP 46
+#define MCAST_LEAVE_SOURCE_GROUP 47
+#define MCAST_MSFILTER 48
+
 
 #define IP_ROUTER_ALERT    5	/* bool */
 #define IP_PKTINFO         8	/* bool */

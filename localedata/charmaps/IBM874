@@ -4,6 +4,7 @@
 % automatically generated from the charDB
 
 % alias CP874
+% alias WINDOWS-874
 CHARMAP
 <U0000>     /x00         NULL
 <U0001>     /x01         START OF HEADING

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -239,7 +239,30 @@ struct sockaddr_in6
     uint32_t sin6_scope_id;	/* IPv6 scope-id */
   };
 
-/* IPv6 multicast request.  */
+
+/* IPv4 multicast request.  */
+struct ip_mreq
+  {
+    /* IP multicast address of group.  */
+    struct in_addr imr_multiaddr;
+
+    /* Local IP address of interface.  */
+    struct in_addr imr_interface;
+  };
+
+struct ip_mreq_source
+  {
+    /* IP multicast address of group.  */
+    struct in_addr imr_multiaddr;
+
+    /* IP address of source.  */
+    struct in_addr imr_interface;
+
+    /* IP address of interface.  */
+    struct in_addr imr_sourceaddr;
+  };
+
+/* Likewise, for IPv6.  */
 struct ipv6_mreq
   {
     /* IPv6 multicast address of group */
@@ -248,6 +271,7 @@ struct ipv6_mreq
     /* local interface */
     unsigned int ipv6mr_interface;
   };
+
 
 /* Get system-specific definitions.  */
 #include <bits/in.h>
