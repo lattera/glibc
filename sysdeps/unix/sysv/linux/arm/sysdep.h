@@ -52,8 +52,13 @@
   .type syscall_error,%function;					      \
   ENTRY (name);								      \
     DO_CALL (args, syscall_name);					      \
-    cmn r0, $4096;							      \
-    bhs PLTJMP(C_SYMBOL_NAME(__syscall_error));
+    cmn r0, $4096;
+
+#define PSEUDO_RET							      \
+    RETINSTR(movcc, pc, lr);						      \
+    b PLTJMP(__syscall_error)
+#undef ret
+#define ret PSEUDO_RET
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
