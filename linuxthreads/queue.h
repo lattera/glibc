@@ -54,3 +54,8 @@ static inline int remove_from_queue(pthread_descr * q, pthread_descr th)
   }
   return 0;
 }
+
+static inline int queue_is_empty(pthread_descr * q)
+{
+    return *q == NULL;
+}

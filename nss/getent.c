@@ -1,6 +1,6 @@
-/* Copyright (c) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1998.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -35,6 +35,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <arpa/nameser.h>
 
 /* Get libc version number.  */
 #include <version.h>
@@ -251,7 +252,9 @@ static inline void
 print_hosts (struct hostent *host)
 {
   unsigned int i;
-  char *ip = inet_ntoa(* (struct in_addr *) host->h_addr_list[0]);
+  char buf[INET6_ADDRSTRLEN];
+  const char *ip = inet_ntop (host->h_addrtype, host->h_addr_list[0],
+			      buf, sizeof (buf));
 
   fputs (ip, stdout);
   for (i = strlen (ip); i < 16; ++i)
@@ -276,18 +279,22 @@ hosts_keys (int number, char *key[])
 
   for (i = 0; i < number; ++i)
     {
-      struct hostent *host;
+      struct hostent *host = NULL;
 
-      if (isdigit (key[i][0]))
+      if (strchr (key[i], ':') != NULL)
 	{
-	  struct in_addr addr;
-	  addr.s_addr = inet_addr (key[i]);
-
-	  host = gethostbyaddr ((char *)&addr, sizeof (struct in_addr),
-				AF_INET);
+	  char addr[IN6ADDRSZ];
+	  if (inet_pton (AF_INET6, key[i], &addr))
+	    host = gethostbyaddr (addr, sizeof (addr), AF_INET6);
 	}
-      else
-	host = gethostbyname (key[i]);
+      else if (isdigit (key[i][0]))
+	{
+	  char addr[INADDRSZ];
+	  if (inet_pton (AF_INET, key[i], &addr))
+	    host = gethostbyaddr (addr, sizeof (addr), AF_INET);
+	}
+      else if ((host = gethostbyname2 (key[i], AF_INET6)) == NULL)
+	host = gethostbyname2 (key[i], AF_INET);
 
       if (host == NULL)
 	result = 2;

@@ -95,7 +95,7 @@ typedef int pthread_once_t;
 
 #ifdef __USE_UNIX98
 /* Read-write locks.  */
-typedef struct
+typedef struct _pthread_rwlock_t
 {
   struct _pthread_fastlock __rw_lock; /* Lock to guarantee mutual exclusion */
   int __rw_readers;                   /* Number of readers */

@@ -381,7 +381,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    return -EAI_ADDRFAMILY;
 	}
 
-      if (at->family == AF_UNSPEC)
+      if (at->family == AF_UNSPEC && (req->ai_flags & AI_NUMERICHOST) == 0)
 	{
 	  struct hostent *h;
 	  struct gaih_addrtuple **pat = &at;

@@ -74,7 +74,10 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
-  NULL                        /* struct pthread_extricate_if *p_extricate */
+  NULL,                       /* struct pthread_extricate_if *p_extricate */
+  NULL,	                      /* pthread_readlock_info *p_readlock_list; */
+  NULL,                       /* pthread_readlock_info *p_readlock_free; */
+  0                           /* int p_untracked_readlock_count; */
 };
 
 /* Descriptor of the manager thread; none of this is used but the error
@@ -122,7 +125,10 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
   ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
-  NULL                        /* struct pthread_extricate_if *p_extricate */
+  NULL,                       /* struct pthread_extricate_if *p_extricate */
+  NULL,	                      /* pthread_readlock_info *p_readlock_list; */
+  NULL,                       /* pthread_readlock_info *p_readlock_free; */
+  0                           /* int p_untracked_readlock_count; */
 };
 
 /* Pointer to the main thread (the father of the thread manager thread) */

@@ -107,6 +107,22 @@ struct pthread_atomic {
   int p_spinlock;
 };
 
+/* Context info for read write locks. The pthread_rwlock_info structure
+   is information about a lock that has been read-locked by the thread
+   in whose list this structure appears. The pthread_rwlock_context
+   is embedded in the thread context and contains a pointer to the
+   head of the list of lock info structures, as well as a count of
+   read locks that are untracked, because no info structure could be
+   allocated for them. */
+
+struct _pthread_rwlock_t;
+
+typedef struct _pthread_rwlock_info {
+  struct _pthread_rwlock_info *pr_next;
+  struct _pthread_rwlock_t *pr_lock;
+  int pr_lock_count;
+} pthread_readlock_info;
+
 struct _pthread_descr_struct {
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
@@ -149,6 +165,9 @@ struct _pthread_descr_struct {
 					   called on thread */
   char p_woken_by_cancel;       /* cancellation performed wakeup */
   pthread_extricate_if *p_extricate; /* See above */
+  pthread_readlock_info *p_readlock_list;  /* List of readlock info structs */
+  pthread_readlock_info *p_readlock_free;  /* Free list of structs */
+  int p_untracked_readlock_count;	/* Readlocks not tracked by list */
   struct __res_state *p_resp;	/* Pointer to resolver state */
   struct __res_state p_res;	/* per-thread resolver state */
   /* New elements must be added at the end.  */

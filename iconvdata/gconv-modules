@@ -346,6 +346,7 @@ module	ISO-8859-13//		INTERNAL		ISO8859-13	1
 module	INTERNAL		ISO-8859-13//		ISO8859-13	1
 
 #	from			to			module		cost
+alias	ISO-IR-199//		ISO-8859-14//
 alias	LATIN8//		ISO-8859-14//
 alias	L8//			ISO-8859-14//
 alias	ISO_8859-14:1998//	ISO-8859-14//
@@ -353,6 +354,7 @@ module	ISO-8859-14//		INTERNAL		ISO8859-14	1
 module	INTERNAL		ISO-8859-14//		ISO8859-14	1
 
 #	from			to			module		cost
+alias	ISO-IR-203//		ISO-8859-15//
 alias	ISO_8859-15:1998//	ISO-8859-15//
 module	ISO-8859-15//		INTERNAL		ISO8859-15	1
 module	INTERNAL		ISO-8859-15//		ISO8859-15	1

@@ -1,3 +1,45 @@
+2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/gconv-modules: Add aliases ISO-IR-199 and ISO-IR-203.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
+2000-01-11  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Adjust some epsilons.
+
+2000-01-10  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nss/getent.c: Add ipv6 support for hosts.
+
+2000-01-05  Philip Blundell  <pb@futuretv.com>
+
+	* sysdeps/unix/sysv/linux/arm/Versions: Add getrlimit, setrlimit,
+	getrlimit64, setrlimit64 for GLIBC_2.1.3.
+	* sysdeps/unix/sysv/linux/arm/syscalls.list: Add oldgetrlimit,
+	oldsetrlimit.
+	* sysdeps/unix/sysv/linux/arm/oldsetrlimit64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/oldgetrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getrlimit64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/setrlimit.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/getrlimit.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/arm/Makefile [subdir=resource]
+	(sysdep_routines): Add oldgetrlimit64, oldsetrlimit64.
+	[subdir=misc] (sysdep_headers): Add sys/elf.h.
+
+2000-01-09  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Update required
+	compiler version.
+	(Configuring and compiling): Restore old comments about
+	configparms; modify to reflect current usage.
+
+2000-01-09  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't attempt name
+	resolution if the hints included AI_NUMERICHOST.
+
 2000-01-11  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/mips/__longjmp.c (__longjmp): Change call to abort into

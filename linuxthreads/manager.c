@@ -497,6 +497,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 static void pthread_free(pthread_descr th)
 {
   pthread_handle handle;
+  pthread_readlock_info *iter, *next;
+
   ASSERT(th->p_exited);
   /* Make the handle invalid */
   handle =  thread_handle(th->p_tid);
@@ -509,6 +511,23 @@ static void pthread_free(pthread_descr th)
 #endif
   /* One fewer threads in __pthread_handles */
   __pthread_handles_num--;
+
+  /* Destroy read lock list, and list of free read lock structures. 
+     If the former is not empty, it means the thread exited while
+     holding read locks! */
+
+  for (iter = th->p_readlock_list; iter != NULL; iter = next)
+    {
+      next = iter->pr_next;
+      free(iter);
+    }
+
+  for (iter = th->p_readlock_free; iter != NULL; iter = next)
+    {
+      next = iter->pr_next;
+      free(iter);
+    }
+
   /* If initial thread, nothing to free */
   if (th == &__pthread_initial_thread) return;
   if (!th->p_userstack)

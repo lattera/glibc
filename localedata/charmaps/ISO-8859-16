@@ -281,6 +281,7 @@ CHARMAP
 <.M>                   /xB7         <U00B7> MIDDLE DOT
 <z<>                   /xB8         <U017E> LATIN SMALL LETTER Z WITH CARON
 <c<>                   /xB9         <U010D> LATIN SMALL LETTER C WITH CARON
+<s_,>                  /xBA         <U0219> LATIN SMALL LETTER S WITH COMMA BELOW
 </>/>>                 /xBB         <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
 <OE>                   /xBC         <U0152> LATIN CAPITAL LIGATURE OE
 <oe>                   /xBD         <U0153> LATIN SMALL LIGATURE OE
