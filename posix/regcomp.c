@@ -51,7 +51,8 @@ static reg_errcode_t calc_eclosure_iter (re_node_set *new_set, re_dfa_t *dfa,
 static void calc_inveclosure (re_dfa_t *dfa);
 static int fetch_number (re_string_t *input, re_token_t *token,
 			 reg_syntax_t syntax);
-static re_token_t fetch_token (re_string_t *input, reg_syntax_t syntax);
+static void fetch_token (re_token_t *result, re_string_t *input,
+			 reg_syntax_t syntax);
 static int peek_token (re_token_t *token, re_string_t *input,
 			reg_syntax_t syntax);
 static int peek_token_bracket (re_token_t *token, re_string_t *input,
@@ -1588,16 +1589,13 @@ calc_eclosure_iter (new_set, dfa, node, root)
 /* Fetch a token from INPUT.
    We must not use this function inside bracket expressions.  */
 
-static re_token_t
-fetch_token (input, syntax)
+static void
+fetch_token (result, input, syntax)
+     re_token_t *result;
      re_string_t *input;
      reg_syntax_t syntax;
 {
-  re_token_t token;
-  int consumed_byte;
-  consumed_byte = peek_token (&token, input, syntax);
-  re_string_skip_bytes (input, consumed_byte);
-  return token;
+  re_string_skip_bytes (input, peek_token (result, input, syntax));
 }
 
 /* Peek a token from INPUT, and return the length of the token.
@@ -1927,7 +1925,7 @@ parse (regexp, preg, syntax, err)
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
   bin_tree_t *tree, *eor, *root;
   re_token_t current_token;
-  current_token = fetch_token (regexp, syntax | RE_CARET_ANCHORS_HERE);
+  fetch_token (&current_token, regexp, syntax | RE_CARET_ANCHORS_HERE);
   tree = parse_reg_exp (regexp, preg, &current_token, syntax, 0, err);
   if (BE (*err != REG_NOERROR && tree == NULL, 0))
     return NULL;
@@ -1971,7 +1969,7 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
   while (token->type == OP_ALT)
     {
       re_token_t alt_token = *token;
-      *token = fetch_token (regexp, syntax | RE_CARET_ANCHORS_HERE);
+      fetch_token (token, regexp, syntax | RE_CARET_ANCHORS_HERE);
       if (token->type != OP_ALT && token->type != END_OF_RE
 	  && (nest == 0 || token->type != OP_CLOSE_SUBEXP))
 	{
@@ -2073,7 +2071,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 		 && !re_string_first_byte (regexp, re_string_cur_idx (regexp)))
 	    {
 	      bin_tree_t *mbc_remain;
-	      *token = fetch_token (regexp, syntax);
+	      fetch_token (token, regexp, syntax);
 	      mbc_remain = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
 	      tree = create_tree (dfa, tree, mbc_remain, CONCAT, 0);
 	      if (BE (mbc_remain == NULL || tree == NULL, 0))
@@ -2129,7 +2127,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	}
       else if (syntax & RE_CONTEXT_INDEP_OPS)
 	{
-	  *token = fetch_token (regexp, syntax);
+	  fetch_token (token, regexp, syntax);
 	  return parse_expression (regexp, preg, token, syntax, nest, err);
 	}
       /* else fall through  */
@@ -2188,7 +2186,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	 by repetition operators.
 	 eg. RE"^*" is invalid or "<ANCHOR(^)><CHAR(*)>",
 	     it must not be "<ANCHOR(^)><REPEAT(*)>".  */
-      *token = fetch_token (regexp, syntax);
+      fetch_token (token, regexp, syntax);
       return tree;
     case OP_PERIOD:
       tree = re_dfa_add_tree_node (dfa, NULL, NULL, *token);
@@ -2233,7 +2231,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 #endif
       return NULL;
     }
-  *token = fetch_token (regexp, syntax);
+  fetch_token (token, regexp, syntax);
 
   while (token->type == OP_DUP_ASTERISK || token->type == OP_DUP_PLUS
 	 || token->type == OP_DUP_QUESTION || token->type == OP_OPEN_DUP_NUM)
@@ -2298,7 +2296,7 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
       return NULL;
     }
   dfa->nodes[left_par->node_idx].opr.idx = cur_nsub;
-  *token = fetch_token (regexp, syntax | RE_CARET_ANCHORS_HERE);
+  fetch_token (token, regexp, syntax | RE_CARET_ANCHORS_HERE);
 
   /* The subexpression may be a null string.  */
   if (token->type == OP_CLOSE_SUBEXP)
@@ -2378,7 +2376,7 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
       if (BE (start == 0 && end == 0, 0))
 	{
 	  /* We treat "<re>{0}" and "<re>{0,0}" as null string.  */
-	  *token = fetch_token (regexp, syntax);
+	  fetch_token (token, regexp, syntax);
 	  return NULL;
 	}
 
@@ -2457,7 +2455,7 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 	  return NULL;
 	}
     }
-  *token = fetch_token (regexp, syntax);
+  fetch_token (token, regexp, syntax);
   return tree;
 
  parse_dup_op_espace:
@@ -3591,7 +3589,7 @@ fetch_number (input, token, syntax)
   unsigned char c;
   while (1)
     {
-      *token = fetch_token (input, syntax);
+      fetch_token (token, input, syntax);
       c = token->opr.c;
       if (BE (token->type == END_OF_RE, 0))
 	return -2;
@@ -3669,7 +3667,7 @@ re_dfa_add_tree_node (dfa, left, right, token)
      bin_tree_t *left;
      bin_tree_t *right;
      re_token_t token;
-{     
+{
   int new_idx = re_dfa_add_node (dfa, token, 0);
 
   if (new_idx == -1)

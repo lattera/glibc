@@ -1,3 +1,8 @@
+2003-11-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regcomp.c (fetch_token): Change interface to match
+	peek_token.  This avoid some copying and reduces code size.
+
 2003-11-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bug-regex19.c (tests): Add more tests.
@@ -6,8 +11,6 @@
 
 	* posix/tst-rxspencer.c (mb_tests): Don't run identical multi-byte
 	tests multiple times unnecessarily.
-
-2003-11-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/bug-regex19.c (BRE, ERE): Define.
 	(tests): Add many new tests, remove UTF-8 ones.
