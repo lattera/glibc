@@ -1,3 +1,25 @@
+2002-08-26  Roland McGrath  <roland@redhat.com>
+
+	* time/sys/time.h [__USE_BSD] (lutimes, futimes): Declare them.
+	* manual/filesys.texi (File Times): Document lutimes and futimes.
+	* misc/Makefile (routines): Add them.
+	* misc/Versions (libc: GLIBC_2.3): Likewise.
+	* sysdeps/generic/lutimes.c: New file.
+	* sysdeps/generic/futimes.c: New file.
+	* sysdeps/mach/hurd/lutimes.c: New file.
+	* sysdeps/mach/hurd/futimes.c: New file.
+
+	* manual/filesys.texi (File Times): Add explicit note about null
+	pointer argument to utimes.
+
+2002-08-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/ifreq.h (__if_freereq): Add missing semicolon.
+	(__ifreq): Add a cast.  Remove an unused variable.
+
+	* hurd/hurd/threadvar.h (enum __hurd_threadvar_index): Add
+	_HURD_THREADVAR_LOCALE.
+
 2002-08-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regexec.c (re_search_stub): Return correct match length

@@ -111,6 +111,7 @@ libc {
   GLIBC_2.3 {
     # f*
     fgetxattr; flistxattr; fremovexattr; fsetxattr;
+    futimes;
 
     # g*
     getxattr;
@@ -118,6 +119,7 @@ libc {
     # l*
     listxattr;
     lgetxattr; llistxattr; lremovexattr; lsetxattr;
+    lutimes;
 
     # r*
     removexattr;

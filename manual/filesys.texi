@@ -2722,10 +2722,59 @@ in the header file @file{sys/time.h}.
 This function sets the file access and modification times of the file
 @var{filename}.  The new file access time is specified by
 @code{@var{tvp}[0]}, and the new modification time by
-@code{@var{tvp}[1]}.  This function comes from BSD.
+@code{@var{tvp}[1]}.  Similar to @code{utime}, if @var{tvp} is a null
+pointer then the access and modification times of the file are set to
+the current time.  This function comes from BSD.
 
 The return values and error conditions are the same as for the @code{utime}
 function.
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int lutimes (const char *@var{filename}, struct timeval @var{tvp}@t{[2]})
+This function is like @code{utimes}, except that it does not follow
+symbolic links.  If @var{filename} is the name of a symbolic link,
+@code{lutimes} sets the file access and modification times of the
+symbolic link special file itself (as seen by @code{lstat};
+@pxref{Symbolic Links}) while @code{utimes} sets the file access and
+modification times of the file the symbolic link refers to.  This
+function comes from FreeBSD, and is not available on all platforms (if
+not available, it will fail with @code{ENOSYS}).
+
+The return values and error conditions are the same as for the @code{utime}
+function.
+@end deftypefun
+
+@comment sys/time.h
+@comment BSD
+@deftypefun int futimes (int *@var{fd}, struct timeval @var{tvp}@t{[2]})
+This function is like @code{utimes}, except that it takes an open file
+descriptor as an argument instead of a file name.  @xref{Low-Level
+I/O}.  This function comes from FreeBSD, and is not available on all
+platforms (if not available, it will fail with @code{ENOSYS}).
+
+Like @code{utimes}, @code{futimes} returns @code{0} on success and @code{-1}
+on failure.  The following @code{errno} error conditions are defined for
+@code{futimes}:
+
+@table @code
+@item EACCES
+There is a permission problem in the case where a null pointer was
+passed as the @var{times} argument.  In order to update the time stamp on
+the file, you must either be the owner of the file, have write
+permission for the file, or be a privileged user.
+
+@item EBADF
+The @var{filedes} argument is not a valid file descriptor.
+
+@item EPERM
+If the @var{times} argument is not a null pointer, you must either be
+the owner of the file or be a privileged user.
+
+@item EROFS
+The file lives on a read-only file system.
+@end table
 @end deftypefun
 
 @node File Size

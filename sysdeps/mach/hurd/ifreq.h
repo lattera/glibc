@@ -27,7 +27,6 @@
 static inline void
 __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 {
-  struct ifconf ifc;
   file_t server;
 
   server = _hurd_socket_server (PF_INET, 0);
@@ -49,7 +48,7 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 	  server = _hurd_socket_server (PF_INET, 1);
 	  if (server == MACH_PORT_NULL)
 	    goto out;
-	  err = __pfinet_siocgifconf (server, -1, ifreqs, &len);
+	  err = __pfinet_siocgifconf (server, -1, (data_t *) ifreqs, &len);
 	}
       if (err)
 	goto out;
@@ -70,5 +69,5 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 static inline void
 __if_freereq (struct ifreq *ifreqs, int num_ifs)
 {
-  munmap (ifreqs, num_ifs * sizeof (struct ifreq))
+  __munmap (ifreqs, num_ifs * sizeof (struct ifreq));
 }
