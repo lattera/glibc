@@ -225,7 +225,7 @@ case "$prefix" in
   # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib
   case $machine in
   sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 | \
-  mips/mips64/n64 | mips/mips64/n64/el )
+  mips/mips64/n64/* )
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
@@ -233,7 +233,7 @@ case "$prefix" in
       libc_cv_localedir='${exec_prefix}/lib/locale'
     fi
     ;;
-  mips/mips64/n32 | mips/mips64/n32/el )
+  mips/mips64/n32/* )
     libc_cv_slibdir="/lib32"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib32';

@@ -1,3 +1,8 @@
+2003-03-22  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/configure.in: Update mips64 patterns.
+	* sysdeps/unix/sysv/linux/configure: Rebuilt.
+
 2003-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/fpu/libm-test-ulps: Update.
