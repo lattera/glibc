@@ -1,3 +1,8 @@
+2003-03-24  Daniel Jacobowitz  <drow@mvista.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h
+	(DOARGS_5, DOARGS_6, DOARGS_7): Rewritten.
+
 2003-03-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/fork.c (__fork): Add libc_hidden_def.
