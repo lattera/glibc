@@ -1,5 +1,5 @@
 /* Test for NaN
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, October 2000.
 
@@ -36,11 +36,14 @@ ENTRY (__isnan)
 (p6)	mov ret0 = 1
 (p7)	mov ret0 = 0
 	br.ret.sptk.many rp
-}	
+}
 END (__isnan)
 
+strong_alias (__isnan, __isnan_internal)
 strong_alias (__isnan, __isnanf)
+strong_alias (__isnanf, __isnanf_internal)
 strong_alias (__isnan, __isnanl)
+strong_alias (__isnanl, __isnanl_internal)
 
 weak_alias (__isnan, isnan)
 weak_alias (__isnanf, isnanf)

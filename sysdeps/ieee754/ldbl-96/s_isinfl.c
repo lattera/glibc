@@ -26,4 +26,5 @@ __isinfl (long double x)
 	se &= 0x8000;
 	return ~(lx >> 31) & (1 - (se >> 14));
 }
+INTDEF(__isinfl)
 weak_alias (__isinfl, isinfl)

@@ -1,5 +1,5 @@
 /* Test for inf/-inf
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, October 2000.
 
@@ -43,11 +43,14 @@ ENTRY (__isinf)
 (p7)	mov ret0 = -1
 (p8)	mov ret0 = 0
 	br.ret.sptk.many rp
-}	
+}
 END (__isinf)
 
+strong_alias (__isinf)
 strong_alias (__isinf, __isinff)
+strong_alias (__isinff)
 strong_alias (__isinf, __isinfl)
+strong_alias (__isinfl)
 
 weak_alias (__isinf, isinf)
 weak_alias (__isinff, isinff)

@@ -12,9 +12,9 @@ extern int __mkdir (__const char *__path, __mode_t __mode);
 extern int __mknod (__const char *__path,
 		    __mode_t __mode, __dev_t __dev);
 extern int __fxstat_internal (int __ver, int __fildes,
-			      struct stat *__stat_buf);
+			      struct stat *__stat_buf) attribute_hidden;
 extern int __fxstat64_internal (int __ver, int __fildes,
-				struct stat64 *__stat_buf) ;
+				struct stat64 *__stat_buf) attribute_hidden;
 extern __inline__ int __stat (__const char *__path, struct stat *__statbuf)
 {
   return __xstat (_STAT_VER, __path, __statbuf);

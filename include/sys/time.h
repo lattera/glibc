@@ -5,7 +5,7 @@
 extern int __gettimeofday (struct timeval *__tv,
 			   struct timezone *__tz);
 extern int __gettimeofday_internal (struct timeval *__tv,
-				    struct timezone *__tz);
+				    struct timezone *__tz) attribute_hidden;
 extern int __settimeofday (__const struct timeval *__tv,
 			   __const struct timezone *__tz);
 extern int __adjtime (__const struct timeval *__delta,

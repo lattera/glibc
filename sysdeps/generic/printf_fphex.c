@@ -170,7 +170,7 @@ __printf_fphex (FILE *fp,
       fpnum.ldbl.d = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnanl (fpnum.ldbl.d))
+      if (INTUSE(__isnanl) (fpnum.ldbl.d))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -186,7 +186,7 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  if (__isinfl (fpnum.ldbl.d))
+	  if (INTUSE(__isinfl) (fpnum.ldbl.d))
 	    {
 	      if (isupper (info->spec))
 		{
@@ -209,7 +209,7 @@ __printf_fphex (FILE *fp,
       fpnum.dbl.d = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnan (fpnum.dbl.d))
+      if (INTUSE(__isnan) (fpnum.dbl.d))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -225,7 +225,7 @@ __printf_fphex (FILE *fp,
 	}
       else
 	{
-	  if (__isinf (fpnum.dbl.d))
+	  if (INTUSE(__isinf) (fpnum.dbl.d))
 	    {
 	      if (isupper (info->spec))
 		{

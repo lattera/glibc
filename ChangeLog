@@ -1,5 +1,26 @@
 2002-04-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/math.h: Declare __isinf_internal, __isinfl_internal,
+	__isnan_internal, and __isnanl_internal.
+	* stdio-common/printf_fp.c: Use INTUSE for calls to __isinf, __isinfl,
+	__isnan, and __isnanl.
+	* stdio-common/printf_size.c: Likewise.
+	* sysdeps/generic/printf_fphex.c: Likewise.
+	* sysdeps/i386/fpu/s_isinfl.c: Also define _internal alias.
+	* sysdeps/i386/fpu/s_isnanl.c: Likewise.
+	* sysdeps/ia64/fpu/s_isinf.S: Likewise.
+	* sysdeps/ia64/fpu/s_isnan.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isinf.c: Likewise.
+	* sysdeps/ieee754/dbl-64/s_isnan.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_isinff.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_isnanf.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isinfl.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_isnanl.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_isinfl.c: Likewise.
+	* sysdeps/m68k/s_isinfl.c: Likewise.
+	* sysdeps/m68k/fpu/s_isinf.c: Likewise.
+	* sysdeps/powerpc/fpu/s_isnan.c: Likewise.
+
 	* include/sys/time.h: Declare __gettimeofday_internal and define
 	__gettimeofday macro if not NOT_IN_libc.
 	* sysdeps/generic/gettimeofday.c: Use INTEDEF for __gettimeofday.

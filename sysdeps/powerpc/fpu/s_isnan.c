@@ -1,5 +1,5 @@
 /* Return 1 if argument is a NaN, else 0.
-   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,6 +36,7 @@ __isnan (x)
   fesetenv_register (savedstate);
   return result;
 }
+INTDEF(__isnan)
 weak_alias (__isnan, isnan)
 
 /* It turns out that the 'double' version will also always work for
@@ -43,9 +44,11 @@ weak_alias (__isnan, isnan)
 #undef __isnanf
 #undef isnanf
 strong_alias (__isnan, __isnanf)
+INTDEF(__isnanf)
 weak_alias (__isnanf, isnanf)
 
 #ifdef NO_LONG_DOUBLE
 strong_alias (__isnan, __isnanl)
+INTDEF(__isnanl)
 weak_alias (__isnan, isnanl)
 #endif

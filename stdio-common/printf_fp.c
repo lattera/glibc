@@ -120,7 +120,8 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
 #define MPN_GE(u,v) \
   (u##size > v##size || (u##size == v##size && __mpn_cmp (u, v, u##size) >= 0))
 
-extern int __isinfl (long double), __isnanl (long double);
+extern int __isinfl_internal (long double) attribute_hidden;
+extern int __isnanl_internal (long double) attribute_hidden;
 
 extern mp_size_t __mpn_extract_double (mp_ptr res_ptr, mp_size_t size,
 				       int *expt, int *is_neg,
@@ -317,7 +318,7 @@ __printf_fp (FILE *fp,
       fpnum.ldbl = *(const long double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnanl (fpnum.ldbl))
+      if (INTUSE(__isnanl) (fpnum.ldbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -331,7 +332,7 @@ __printf_fp (FILE *fp,
 	      }
 	  is_neg = 0;
 	}
-      else if (__isinfl (fpnum.ldbl))
+      else if (INTUSE(__isinfl) (fpnum.ldbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -361,7 +362,7 @@ __printf_fp (FILE *fp,
       fpnum.dbl = *(const double *) args[0];
 
       /* Check for special values: not a number or infinity.  */
-      if (__isnan (fpnum.dbl))
+      if (INTUSE(__isnan) (fpnum.dbl))
 	{
 	  if (isupper (info->spec))
 	    {
@@ -375,7 +376,7 @@ __printf_fp (FILE *fp,
 	    }
 	  is_neg = 0;
 	}
-      else if (__isinf (fpnum.dbl))
+      else if (INTUSE(__isinf) (fpnum.dbl))
 	{
 	  if (isupper (info->spec))
 	    {

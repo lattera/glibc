@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -38,4 +38,5 @@ static char rcsid[] = "$NetBSD: s_isnanf.c,v 1.4 1995/05/10 20:47:38 jtc Exp $";
 	ix = 0x7f800000 - ix;
 	return (int)(((u_int32_t)(ix))>>31);
 }
+INTDEF(__isnanf)
 weak_alias (__isnanf, isnanf)
