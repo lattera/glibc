@@ -12,8 +12,8 @@ typedef union
   long double value;
   struct
   {
-    unsigned int sign_exponent:16;
-    int empty:16;
+    int sign_exponent:16;
+    unsigned int empty:16;
     u_int32_t msw;
     u_int32_t lsw;
   } parts;
