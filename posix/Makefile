@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,8 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 	      PTESTS PTESTS2C.sed ptestcases.h \
 	      globtest.c globtest.sh wordexp-tst.sh annexc.c fnmatch_loop.c   \
-	      spawn_int.h tst-getconf.sh
+	      spawn_int.h tst-getconf.sh regcomp.c regexec.c regex_internal.c \
+	      regex_internal.h
 
 routines :=								      \
 	uname								      \
@@ -109,7 +110,7 @@ $(objpfx)wordexp-tst.out: wordexp-tst.sh $(objpfx)wordexp-test
 endif
 endif
 
-CFLAGS-regex.c = -Wno-strict-prototypes -DMBS_SUPPORT
+CFLAGS-regex.c = -Wno-strict-prototypes -DRE_ENABLE_I18N
 CFLAGS-getaddrinfo.c = -DRESOLVER
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

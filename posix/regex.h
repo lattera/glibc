@@ -1,8 +1,8 @@
 /* Definitions for data structures and routines for the regular
-   expression library, version 0.12.
-   Copyright (C) 1985,1989-93,1995-98,2000,2001 Free Software Foundation, Inc.
-   This file is part of the GNU C Library.  Its master source is NOT part of
-   the C library, however.  The master source lives in /gd/gnu/lib.
+   expression library.
+   Copyright (C) 1985,1989-93,1995-98,2000,2001,2002
+   Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -163,6 +163,10 @@ typedef unsigned long int reg_syntax_t;
    a string of ordinary characters.  For example, the ERE 'a{1' is
    treated as 'a\{1'.  */
 #define RE_INVALID_INTERVAL_ORD (RE_DEBUG << 1)
+
+/* If this bit is set, then ignore case when matching.
+   If not set, then case is significant.  */
+#define RE_ICASE (RE_INVALID_INTERVAL_ORD << 1)
 
 /* This global variable defines the particular regexp syntax to use (for
    some interfaces).  When a regexp is compiled, the syntax used is

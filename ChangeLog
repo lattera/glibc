@@ -1,5 +1,16 @@
 2002-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (distribute): Add regcomp.c, regexec.c,
+	regex_internal.c, and regex_internal.h.
+	(CFLAGS-regex.c): Replace -DMBS_SUPPORT with -DRE_ENABLE_I18N.
+	* posix/regex.c: Complete rewrite.
+	* posix/regexec.c: New file.
+	* posix/regcomp.c: New file.
+	* posix/regex_internal.c: New file.
+	* posix/regex_internal.h: New file.
+	* posix/regex.h (RE_ICASE): New macro.
+	Contributed by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
 	* stdio-common/vfscanf.c (_IO_vfwscanf): Always use ungetc, never
 	ungetwc.  It's a macro.
 	* libio/tst-swscanf.c (do_test): Adjust for now fixed wscanf
