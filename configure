@@ -313,7 +313,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi bindnow force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os subdirs add_ons base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP CXX CXXFLAGS ac_ct_CXX AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_cc_with_libunwind libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_z_relro libc_cv_Bgroup libc_cv_libgcc_s_suffix libc_cv_as_needed ASFLAGS_config libc_cv_z_combreloc libc_cv_z_execstack libc_cv_fpie fno_unit_at_a_time libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD have_selinux EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir libc_cv_forced_unwind use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -895,6 +895,7 @@ Optional Packages:
   --with-fp               if using floating-point hardware [default=yes]
   --with-binutils=PATH    specify location of binutils (as and ld)
   --with-elf              if using the ELF object format
+  --with-selinux          if building with SELinux support
   --with-xcoff            if using the XCOFF object format
   --without-cvs           if CVS should not be used
   --with-headers=PATH     location of system headers to use (for example
@@ -1483,6 +1484,14 @@ if test "${with_elf+set}" = set; then
   elf=$withval
 else
   elf=no
+fi;
+
+# Check whether --with-selinux or --without-selinux was given.
+if test "${with_selinux+set}" = set; then
+  withval="$with_selinux"
+  with_selinux=$withval
+else
+  with_selinux=auto
 fi;
 
 # Check whether --with-xcoff or --without-xcoff was given.
@@ -6694,6 +6703,161 @@ echo "$as_me:$LINENO: result: $LIBGD" >&5
 echo "${ECHO_T}$LIBGD" >&6
 
 
+# SELinux detection
+if test x$with_selinux = xno ; then
+  have_selinux=no;
+else
+  # See if we have the SELinux library
+  echo "$as_me:$LINENO: checking for is_selinux_enabled in -lselinux" >&5
+echo $ECHO_N "checking for is_selinux_enabled in -lselinux... $ECHO_C" >&6
+if test "${ac_cv_lib_selinux_is_selinux_enabled+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lselinux  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char is_selinux_enabled ();
+int
+main ()
+{
+is_selinux_enabled ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:$LINENO: \"$ac_link\"") >&5
+  (eval $ac_link) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_selinux_is_selinux_enabled=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+ac_cv_lib_selinux_is_selinux_enabled=no
+fi
+rm -f conftest.err conftest.$ac_objext \
+      conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:$LINENO: result: $ac_cv_lib_selinux_is_selinux_enabled" >&5
+echo "${ECHO_T}$ac_cv_lib_selinux_is_selinux_enabled" >&6
+if test $ac_cv_lib_selinux_is_selinux_enabled = yes; then
+  have_selinux=yes
+else
+  have_selinux=no
+fi
+
+  # See if we have the SELinux header with the NSCD permissions in it.
+  if test x$have_selinux = xyes ; then
+    echo "$as_me:$LINENO: checking for NSCD Flask permissions in selinux/av_permissions.h" >&5
+echo $ECHO_N "checking for NSCD Flask permissions in selinux/av_permissions.h... $ECHO_C" >&6
+    cat >conftest.$ac_ext <<_ACEOF
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
+#include <selinux/av_permissions.h>
+int
+main ()
+{
+#ifdef NSCD__SHMEMHOST
+		     return 0;
+		     #else
+		     #error NSCD__SHMEMHOST not defined
+		     #endif
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:$LINENO: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>conftest.er1
+  ac_status=$?
+  grep -v '^ *+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+	 { ac_try='test -z "$ac_c_werror_flag"
+			 || test ! -s conftest.err'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; } &&
+	 { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  have_selinux=yes
+else
+  echo "$as_me: failed program was:" >&5
+sed 's/^/| /' conftest.$ac_ext >&5
+
+have_selinux=no
+fi
+rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+    echo "$as_me:$LINENO: result: $have_selinux" >&5
+echo "${ECHO_T}$have_selinux" >&6
+  fi
+
+  if test x$with_selinux = xauto ; then
+    if test x$have_selinux = xno ; then
+      { echo "$as_me:$LINENO: WARNING: Sufficiently new SELinux library not found" >&5
+echo "$as_me: WARNING: Sufficiently new SELinux library not found" >&2;}
+    fi
+  else
+    if test x$have_selinux = xno ; then
+      { { echo "$as_me:$LINENO: error: SELinux explicitly required, and SELinux library not found" >&5
+echo "$as_me: error: SELinux explicitly required, and SELinux library not found" >&2;}
+   { (exit 1); exit 1; }; }
+    fi
+  fi
+fi
+# Check if we're building with SELinux support.
+if test "x$have_selinux" = xyes; then
+
+cat >>confdefs.h <<\_ACEOF
+#define HAVE_SELINUX 1
+_ACEOF
+
+fi
+
+
 
 echo "$as_me:$LINENO: checking for egrep" >&5
 echo $ECHO_N "checking for egrep... $ECHO_C" >&6
@@ -8310,6 +8474,7 @@ s,@libc_cv_cpp_asm_debuginfo@,$libc_cv_cpp_asm_debuginfo,;t t
 s,@no_whole_archive@,$no_whole_archive,;t t
 s,@exceptions@,$exceptions,;t t
 s,@LIBGD@,$LIBGD,;t t
+s,@have_selinux@,$have_selinux,;t t
 s,@EGREP@,$EGREP,;t t
 s,@sizeof_long_double@,$sizeof_long_double,;t t
 s,@libc_cv_gcc_unwind_find_fde@,$libc_cv_gcc_unwind_find_fde,;t t

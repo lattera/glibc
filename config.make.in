@@ -58,6 +58,7 @@ have-cpp-asm-debuginfo = @libc_cv_cpp_asm_debuginfo@
 enable-check-abi = @enable_check_abi@
 have-forced-unwind = @libc_cv_forced_unwind@
 have-fpie = @libc_cv_fpie@
+have-selinux = @have_selinux@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@

@@ -51,6 +51,11 @@ otherlibs += $(nssobjdir)/libnss_files.a $(resolvobjdir)/libnss_dns.a \
 	     $(resolvobjdir)/libresolv.a
 endif
 
+ifeq (yes,$(have-selinux))
+nscd-modules += selinux
+selinux-LIBS := -lselinux
+endif
+
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
 	      nscd_nischeck.c TODO nscd.conf nscd.init nscd_proto.h \
@@ -83,6 +88,7 @@ CFLAGS-xstrdup.c = -fpie
 CFLAGS-mem.c = -fpie
 CFLAGS-nscd_setup_thread.c = -fpie
 CFLAGS-aicache.c = -fpie
+CFLAGS-selinux.c = -fpie
 
 $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	$(LINK.o) -pie -Wl,-O1 \
@@ -91,7 +97,7 @@ $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $^ $(common-objpfx)libc_nonshared.a
+	  -o $@ $^ $(selinux-LIBS) $(common-objpfx)libc_nonshared.a
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.

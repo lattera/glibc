@@ -1,3 +1,41 @@
+2004-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add test for required SELinux features.
+	* config.make.in: Add have-selinux entry.
+	* config.h.in: Add HAVE_SELINUX entry.
+	* nscd/Makefile (nscd-modules): Add selinux.
+	(CFLAGS-selinux.c): Add -fpie.
+	Define selinux-LIBS and use in link line.
+	* nscd/connections.c (handle_request): Check access SELinux permissions
+	before processing request.
+	* nscd/nscd.c (main): Initialize selinux_enabled and stop avc thread.
+	* nscd/nscd_stat.c: Transmit and print AVC statistics.
+	* nscd/selinux.c: New file.
+	* nscd/selinux.h: New file.
+
+2004-09-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* nscd/nscd_helper.c (__nscd_unmap, get_mapping): Use __munmap
+	instead of munmap.
+
+	* nscd/Makefile (CFLAGS-aicache.c): Set to -fpie.
+
+2004-09-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Check
+	__nss_not_use_nscd_hosts variable if nscd should be used or not.
+
+2004-09-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/nscd_proto.h: Define NSS_NSCD_RETRY.
+	Add __nscd_getai prototype.
+	* nss/getXXbyYY_r.c: Remode definition of NSS_NSCD_RETRY.
+	* nscd/nscd-client.h: Remove __nscd_getai prototype.
+	* nscd/nscd_getai.c: Include nscd_proto.h.
+
+	* elf/ldd.bash.in: Add support for SELinux environments.
+	Patch by Stephen Smalley <sds@epoch.ncsc.mil>.
+
 2004-09-16  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (--with-headers): Let argument contain a : separated

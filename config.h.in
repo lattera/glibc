@@ -18,6 +18,9 @@
    --with-elf.  */
 #undef	HAVE_ELF
 
+/* Define if building with SELinux support.  Set by --with-selinux.  */
+#undef	HAVE_SELINUX
+
 /* Define if using XCOFF. Set by --with-xcoff.  */
 #undef	HAVE_XCOFF
 

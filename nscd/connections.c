@@ -41,6 +41,7 @@
 
 #include "nscd.h"
 #include "dbg_log.h"
+#include "selinux.h"
 
 
 /* Number of bytes of data we initially reserve for each hash table bucket.  */
@@ -591,6 +592,15 @@ cannot handle old request version %d; current version is %d"),
 		 req->version, NSCD_VERSION);
       return;
     }
+
+  /* Make the SELinux check before we go on to the standard checks.  We
+     need to verify that the request type is valid, since it has not
+     yet been checked at this point.  */
+  if (selinux_enabled
+      && __builtin_expect (req->type, GETPWBYNAME) >= GETPWBYNAME
+      && __builtin_expect (req->type, LASTREQ) < LASTREQ
+      && nscd_request_avc_has_perm (fd, req->type) != 0)
+    return;
 
   struct database_dyn *db = serv2db[req->type];
 

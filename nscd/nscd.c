@@ -44,6 +44,7 @@
 
 #include "dbg_log.h"
 #include "nscd.h"
+#include "selinux.h"
 #include "../nss/nsswitch.h"
 #include <device-nrs.h>
 
@@ -125,6 +126,9 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   /* Set the text message domain.  */
   textdomain (PACKAGE);
+
+  /* Determine if the kernel has SELinux support.  */
+  nscd_selinux_enabled (&selinux_enabled);
 
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
@@ -243,6 +247,10 @@ main (int argc, char **argv)
       signal (SIGTTIN, SIG_IGN);
       signal (SIGTSTP, SIG_IGN);
     }
+
+  /* Start the SELinux AVC.  */
+  if (selinux_enabled)
+    nscd_avc_init ();
 
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
@@ -420,6 +428,10 @@ termination_handler (int signum)
     if (dbs[cnt].persistent)
       // XXX async OK?
       msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+
+  /* Shutdown the SELinux AVC.  */
+  if (selinux_enabled)
+    nscd_avc_destroy ();
 
   _exit (EXIT_SUCCESS);
 }

@@ -29,6 +29,12 @@
 
 #include "nscd.h"
 #include "dbg_log.h"
+#include "selinux.h"
+#ifdef HAVE_SELINUX
+# include <selinux/selinux.h>
+# include <selinux/avc.h>
+#endif /* HAVE_SELINUX */
+
 
 /* We use this to make sure the receiver is the same.  */
 static const char compilation[21] = __DATE__ " " __TIME__;
@@ -71,6 +77,9 @@ struct statdata
   unsigned long int client_queued;
   int ndbs;
   struct dbstat dbs[lastdb];
+#ifdef HAVE_SELINUX
+  struct avc_cache_stats cstats;
+#endif /* HAVE_SELINUX */
 };
 
 
@@ -112,6 +121,9 @@ send_stats (int fd, struct database_dyn dbs[lastdb])
 	  data.dbs[cnt].addfailed = dbs[cnt].head->addfailed;
 	}
     }
+
+  if (selinux_enabled)
+    nscd_avc_cache_stats (&data.cstats);
 
   if (TEMP_FAILURE_RETRY (write (fd, &data, sizeof (data))) != sizeof (data))
     {
@@ -275,6 +287,9 @@ receive_print_stats (void)
 	      data.dbs[i].wrlockdelayed,
 	      data.dbs[i].addfailed, check_file, dbnames[i]);
     }
+
+  if (selinux_enabled)
+    nscd_avc_print_stats (&data.cstats);
 
   close (fd);
 
