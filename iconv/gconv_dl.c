@@ -1,5 +1,5 @@
 /* Handle loading/unloading of shared object for transformation.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -250,3 +250,28 @@ __gconv_release_shlib (struct gconv_loaded_object *handle)
 
   return GCONV_OK;
 }
+
+
+/* We run this if we debug the memory allocation.  */
+static void
+do_release_all (const void *nodep, VISIT value, int level)
+{
+  struct gconv_loaded_object *obj = *(struct gconv_loaded_object **) nodep;
+
+  if (value != preorder && value != leaf)
+    return;
+
+  /* Unload the shared object.  We don't use the trick to
+     catch errors since in the case an error is signalled
+     something is really wrong.  */
+  _dl_close (obj->handle);
+
+  free (obj);
+}
+
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  __twalk (loaded, do_release_all);
+}
+text_set_element (__libc_subfreeres, free_mem);
