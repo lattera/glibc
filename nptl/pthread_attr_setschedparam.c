@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -28,22 +28,14 @@ __pthread_attr_setschedparam (attr, param)
      pthread_attr_t *attr;
      const struct sched_param *param;
 {
-  struct pthread_attr *iattr;
-  int max_prio;
-  int min_prio;
-
   assert (sizeof (*attr) >= sizeof (struct pthread_attr));
-  iattr = (struct pthread_attr *) attr;
-
-  max_prio = __sched_get_priority_max (iattr->schedpolicy);
-  min_prio = __sched_get_priority_min (iattr->schedpolicy);
-
-  /* Catch invalid values.  */
-  if (param->sched_priority < min_prio || param->sched_priority > max_prio)
-    return EINVAL;
+  struct pthread_attr *iattr = (struct pthread_attr *) attr;
 
   /* Copy the new values.  */
   memcpy (&iattr->schedparam, param, sizeof (struct sched_param));
+
+  /* Remember we set the value.  */
+  iattr->flags |= ATTR_FLAG_SCHED_SET;
 
   return 0;
 }

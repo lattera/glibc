@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -55,6 +55,7 @@ __pthread_setschedparam (threadid, policy, param)
 	 change in the thread descriptor.  */
       pd->schedpolicy = policy;
       memcpy (&pd->schedparam, param, sizeof (struct sched_param));
+      pd->flags |= ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET;
     }
 
   lll_unlock (pd->lock);

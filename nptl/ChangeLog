@@ -1,5 +1,21 @@
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_attr_setschedparam.c: Don't test priority against limits
+	here.  Set ATTR_FLAG_SCHED_SET flag.
+	* pthread_attr_setschedpolicy.c: Set ATTR_FLAG_POLICY_SET flag.
+	* pthread_create.c (__pthread_create_2_1): Copy scheduling attributes
+	from parent thread to child.  If attribute is used and scheduling
+	parameters are not inherited, copy parameters from attribute or
+	compute them.  Check priority value.
+	* pthread_getschedparam.c: If the parameters aren't known yet get
+	them from the kernel.
+	* pthread_setschedparam.c: Set ATTR_FLAG_SCHED_SET and
+	ATTR_FLAG_POLICY_SET flag for thread.
+	* sysdeps/unix/sysv/linux/internaltypes.h: Define ATTR_FLAG_SCHED_SET
+	and ATTR_FLAG_POLICY_SET.
+
+	* sysdeps/pthread/createthread.c: Use tgkill if possible.
+
 	* pthread_attr_getstackaddr.c (__pthread_attr_getstackaddr): Don't
 	fail if stack address hasn't been set.  Just return 0.
 

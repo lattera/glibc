@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,6 +38,9 @@ __pthread_attr_setschedpolicy (attr, policy)
 
   /* Store the new values.  */
   iattr->schedpolicy = policy;
+
+  /* Remember we set the value.  */
+  iattr->flags |= ATTR_FLAG_POLICY_SET;
 
   return 0;
 }

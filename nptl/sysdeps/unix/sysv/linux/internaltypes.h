@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -48,6 +48,8 @@ struct pthread_attr
 #define ATTR_FLAG_SCOPEPROCESS		0x0004
 #define ATTR_FLAG_STACKADDR		0x0008
 #define ATTR_FLAG_OLDATTR		0x0010
+#define ATTR_FLAG_SCHED_SET		0x0020
+#define ATTR_FLAG_POLICY_SET		0x0040
 
 
 /* Mutex attribute data structure.  */

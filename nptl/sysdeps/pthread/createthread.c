@@ -93,11 +93,24 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 		 send it the cancellation signal.  */
 	      INTERNAL_SYSCALL_DECL (err2);
 	    err_out:
+#if __ASSUME_TGKILL
+	      (void) INTERNAL_SYSCALL (tgkill, err2, 3,
+				       THREAD_GETMEM (THREAD_SELF, pid),
+				       pd->tid, SIGCANCEL);
+
+# ifdef __ASSUME_CLONE_STOPPED
+	      /* Then wake it up so that the signal can be processed.  */
+	      (void) INTERNAL_SYSCALL (tgkill, err2, 3,
+				       THREAD_GETMEM (THREAD_SELF, pid),
+				       pd->tid, SIGCONT);
+# endif
+#else
 	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
 
-#ifdef __ASSUME_CLONE_STOPPED
+# ifdef __ASSUME_CLONE_STOPPED
 	      /* Then wake it up so that the signal can be processed.  */
 	      (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCONT);
+# endif
 #endif
 
 	      return INTERNAL_SYSCALL_ERRNO (res, err);
@@ -116,7 +129,12 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 
 #ifdef __ASSUME_CLONE_STOPPED
       /* Now start the thread for real.  */
+# if __ASSUME_TGKILL
+      res = INTERNAL_SYSCALL (tgkill, err, 3, THREAD_GETMEM (THREAD_SELF, pid),
+			      pd->tid, SIGCONT);
+# else
       res = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
+# endif
 
       /* If something went wrong, kill the thread.  */
       if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))

@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -386,7 +386,9 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   pd->arg = arg;
 
   /* Copy the thread attribute flags.  */
-  pd->flags = iattr->flags;
+  struct pthread *self = THREAD_SELF;
+  pd->flags = ((iattr->flags & ~(ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET))
+	       | (self->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)));
 
   /* Initialize the field for the ID of the thread which is waiting
      for us.  This is a self-reference in case the thread is created
@@ -394,25 +396,49 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   pd->joinid = iattr->flags & ATTR_FLAG_DETACHSTATE ? pd : NULL;
 
   /* The debug events are inherited from the parent.  */
-  pd->eventbuf = THREAD_SELF->eventbuf;
+  pd->eventbuf = self->eventbuf;
 
 
-  /* Determine scheduling parameters for the thread.
-     XXX How to determine whether scheduling handling is needed?  */
-  if (0 && attr != NULL)
+  /* Copy the parent's scheduling parameters.  The flags will say what
+     is valid and what is not.  */
+  pd->schedpolicy = self->schedpolicy;
+  pd->schedparam = self->schedparam;
+
+  /* Determine scheduling parameters for the thread.  */
+  if (attr != NULL
+      && __builtin_expect ((iattr->flags & ATTR_FLAG_NOTINHERITSCHED) != 0, 0)
+      && (iattr->flags & (ATTR_FLAG_SCHED_SET | ATTR_FLAG_POLICY_SET)) != 0)
     {
-      if (iattr->flags & ATTR_FLAG_NOTINHERITSCHED)
+      INTERNAL_SYSCALL_DECL (err);
+
+      /* Use the scheduling parameters the user provided.  */
+      if (iattr->flags & ATTR_FLAG_POLICY_SET)
+	pd->schedpolicy = iattr->schedpolicy;
+      else if ((pd->flags & ATTR_FLAG_POLICY_SET) == 0)
 	{
-	  /* Use the scheduling parameters the user provided.  */
-	  pd->schedpolicy = iattr->schedpolicy;
-	  memcpy (&pd->schedparam, &iattr->schedparam,
-		  sizeof (struct sched_param));
+	  pd->schedpolicy = INTERNAL_SYSCALL (sched_getscheduler, err, 1, 0);
+	  pd->flags |= ATTR_FLAG_POLICY_SET;
 	}
-      else
+
+      if (iattr->flags & ATTR_FLAG_SCHED_SET)
+	memcpy (&pd->schedparam, &iattr->schedparam,
+		sizeof (struct sched_param));
+      else if ((pd->flags & ATTR_FLAG_SCHED_SET) == 0)
 	{
-	  /* Just store the scheduling attributes of the parent.  */
-	  pd->schedpolicy = __sched_getscheduler (0);
-	  __sched_getparam (0, &pd->schedparam);
+	  INTERNAL_SYSCALL (sched_getparam, err, 2, 0, &pd->schedparam);
+	  pd->flags |= ATTR_FLAG_SCHED_SET;
+	}
+
+      /* Check for valid priorities.  */
+      int minprio = INTERNAL_SYSCALL (sched_get_priority_min, err, 1,
+				      iattr->schedpolicy);
+      int maxprio = INTERNAL_SYSCALL (sched_get_priority_max, err, 1,
+				      iattr->schedpolicy);
+      if (pd->schedparam.sched_priority < minprio
+	  || pd->schedparam.sched_priority > maxprio)
+	{
+	  err = EINVAL;
+	  goto errout;
 	}
     }
 
@@ -423,6 +449,7 @@ __pthread_create_2_1 (newthread, attr, start_routine, arg)
   err = create_thread (pd, iattr, STACK_VARIABLES_ARGS);
   if (err != 0)
     {
+    errout:
       /* Something went wrong.  Free the resources.  */
       __deallocate_stack (pd);
       return err;
