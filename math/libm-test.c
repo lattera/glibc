@@ -58,7 +58,7 @@
    ccos, ccosh, cexp, clog, cpow, csin, csinh, csqrt, ctan, ctanh.
 
    At the moment the following functions aren't tested:
-   conj, cproj, cimag, creal, drem,
+OB   conj, cproj, cimag, creal, drem,
    j0, j1, jn, y0, y1, yn,
    significand,
    nan
@@ -1206,13 +1206,13 @@ exp10_test (void)
   check_isinfp ("exp10 (+inf) == +inf", FUNC(exp10) (plus_infty));
   check ("exp10 (-inf) == 0", FUNC(exp10) (minus_infty), 0);
   check_eps ("exp10 (3) == 1000", FUNC(exp10) (3), 1000,
-	     CHOOSE(5e-16, 0, 0));
+	     CHOOSE(5e-16, 7e-13, 2e-4));
   check_eps ("exp10 (-1) == 0.1", FUNC(exp10) (-1), 0.1,
-	     CHOOSE(6e-18, 0, 0));
+	     CHOOSE(6e-18, 3e-17, 8e-09));
   check_isinfp ("exp10 (1e6) == +inf", FUNC(exp10) (1e6));
   check ("exp10 (-1e6) == 0", FUNC(exp10) (-1e6), 0);
   check_eps ("exp10 (0.7) == 5.0118723...", FUNC(exp10) (0.7),
-	     5.0118723362727228500L, CHOOSE(6e-16, 9e-16, 0));
+	     5.0118723362727228500L, CHOOSE(6e-16, 9e-16, 5e-7));
 }
 
 
@@ -5154,7 +5154,7 @@ csqrt_test (void)
   check_eps ("real(csqrt(0.7 + i 1.2)) == 1.02206...", __real__ result,
 	     1.0220676100300264507L, CHOOSE(3e-17L, 3e-16, 2e-7));
   check_eps ("imag(csqrt(0.7 + i 1.2)) == 0.58704...", __imag__ result,
-	     0.5870453129635652115L, CHOOSE(7e-18L, 0, 0));
+	     0.5870453129635652115L, CHOOSE(7e-18L, 0, 6e-8));
 
   result = FUNC(csqrt) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(csqrt(-2 - i 3)) == 0.89597...", __real__ result,

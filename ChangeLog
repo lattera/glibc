@@ -1,3 +1,9 @@
+1998-09-09  Benjamin Kosnik  <bkoz@tintin.cygnus.com>
+
+	* math/libm-test.c (exp10_test): Adapt epsilons for powerpc.
+	(csqrt_test): Likewise.
+	* sysdeps/powerpc/bits/fenv.h: Add parens. .
+
 1998-09-09 18:48  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/powerpc/dl-start.S (_start): Pass pointer to
