@@ -37,7 +37,7 @@ routines :=								      \
 	execve fexecve execv execle execl execvp execlp			      \
 	getpid getppid							      \
 	getuid geteuid getgid getegid getgroups setuid setgid group_member    \
-	getpgid setpgid getpgrp setsid					      \
+	getpgid setpgid getpgrp getsid setsid				      \
 	getlogin setlogin						      \
 	pathconf sysconf fpathconf					      \
 	glob fnmatch regex						      \
@@ -59,7 +59,7 @@ lib: $(objpfx)libposix.a
 
 glob.tar: glob/ChangeLog glob/COPYING.LIB \
 	  glob/Makefile.in glob/configure glob/configure.in glob/configure.bat\
-	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c	  
+	  glob/fnmatch.h glob/glob.h glob/fnmatch.c glob/glob.c
 	tar cho$(verbose)f $@ $^
 glob/%.c: %.c
 	rm -f $@

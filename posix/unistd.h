@@ -344,6 +344,11 @@ extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
 extern __pid_t __setsid __P ((void));
 extern __pid_t setsid __P ((void));
 
+#ifdef __USE_GNU
+/* Return the session ID of the given process.  */
+extern __pid_t getsid __P ((__pid_t));
+#endif
+
 /* Get the real user ID of the calling process.  */
 extern __uid_t __getuid __P ((void));
 extern __uid_t getuid __P ((void));
@@ -660,7 +665,7 @@ extern int syscall __P ((int __sysno, ...));
    The CMD argument is one of the following.  */
 
 #define F_ULOCK 0       /* Unlock a previously locked region.  */
-#define F_LOCK  1       /* Lock a region for exclusive use.  */ 
+#define F_LOCK  1       /* Lock a region for exclusive use.  */
 #define F_TLOCK 2       /* Test and lock a region for exclusive use.  */
 #define F_TEST  3       /* Test a region for other processes locks.  */
 
@@ -678,7 +683,7 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
        do __result = (long int) (expression);				      \
        while (__result == -1L && errno == EINTR);			      \
        __result; })
-          
+
 #endif
 
 __END_DECLS

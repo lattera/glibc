@@ -1,3 +1,11 @@
+Mon Nov 27 19:24:18 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/Makefile (routines): Add getsid.
+	* sysdeps/unix/sysv/linux/getsid.S: New file.
+	* sysdeps/mach/hurd/getsid.c: New file.
+	* sysdeps/stub/getsid.c: New file.
+	* posix/unistd.h [__USE_GNU]: Declare getsid.
+
 Sun Nov 26 12:44:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* libc-symbols.h (N_): New macro.
