@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,15 +47,29 @@ struct ipc_perm
     unsigned int cgid;			/* Creator's group ID.  */
     unsigned int mode;			/* Read/write permission.  */
     unsigned short int __seq;		/* Sequence number.  */
+    unsigned short int __pad1;
+    unsigned long int __unused1;
+    unsigned long int __unused2;
   };
 
+#ifdef __LIBC_IPC_INTERNAL
 
+struct __old_ipc_perm
+  {
+    __key_t __key;			/* Key.  */
+    unsigned int uid;			/* Owner's user ID.  */
+    unsigned int gid;			/* Owner's group ID.  */
+    unsigned int cuid;			/* Creator's user ID.  */
+    unsigned int cgid;			/* Creator's group ID.  */
+    unsigned int mode;			/* Read/write permission.  */
+    unsigned short int __seq;		/* Sequence number.  */
+  };
 
 __BEGIN_DECLS
 
 /* The actual system call: all functions are multiplexed by this.  */
-extern int __ipc __P ((int __call, int __first, int __second, int __third,
-		       void *__ptr));
+extern int __ipc (int __call, int __first, int __second, int __third,
+		  void *__ptr);
 
 __END_DECLS
 
@@ -71,3 +85,5 @@ __END_DECLS
 #define IPCOP_shmdt	22
 #define IPCOP_shmget	23
 #define IPCOP_shmctl	24
+
+#endif
