@@ -45,13 +45,12 @@ _dl_new_object (char *realname, const char *libname, int type,
   if (new == NULL)
     return NULL;
 
-  newname = (struct libname_list *) (new + 1);
+  new->l_libname = newname = (struct libname_list *) (new + 1);
   newname->name = (char *) memcpy (newname + 1, libname, libname_len);
   /* newname->next = NULL;	We use calloc therefore not necessary.  */
   newname->dont_free = 1;
 
   new->l_name = realname;
-  new->l_libname = newname;
   new->l_type = type;
   new->l_loader = loader;
   /* new->l_global = 0;	We use calloc therefore not necessary.  */
@@ -68,7 +67,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   if (_dl_loaded != NULL)
     {
       l = _dl_loaded;
-      while (l->l_next)
+      while (l->l_next != NULL)
 	l = l->l_next;
       new->l_prev = l;
       /* new->l_next = NULL;	Would be necessary but we use calloc.  */
@@ -80,82 +79,83 @@ _dl_new_object (char *realname, const char *libname, int type,
   else
     _dl_loaded = new;
   ++_dl_nloaded;
-  /* This is our local scope.  */
-  if (loader != NULL)
-    {
-      while (loader->l_loader != NULL)
-	loader = loader->l_loader;
-      if (idx == 0 || &loader->l_searchlist != new->l_scope[0])
-	new->l_scope[idx] = &loader->l_searchlist;
-    }
-  else if (idx == 0 || &new->l_searchlist != new->l_scope[0])
-    new->l_scope[idx] = &new->l_searchlist;
+
+  /* If we have no loader the new object acts as it.  */
+  if (loader == NULL)
+    loader = new;
+  else
+    /* Determine the local scope.  */
+    while (loader->l_loader != NULL)
+      loader = loader->l_loader;
+
+  /* Insert the scope if it isn't the global scope we already added.  */
+  if (idx == 0 || &loader->l_searchlist != new->l_scope[0])
+    new->l_scope[idx] = &loader->l_searchlist;
 
   new->l_local_scope[0] = &new->l_searchlist;
 
   /* Don't try to find the origin for the main map which has the name "".  */
   if (realname[0] != '\0')
     {
+      size_t realname_len = strlen (realname) + 1;
       char *origin;
+      char *cp;
 
       if (realname[0] == '/')
 	{
-	  /* It an absolute path.  Use it.  But we have to make a copy since
-	     we strip out the trailing slash.  */
-	  size_t len = strlen (realname) + 1;
-	  origin = (char *) malloc (len);
+	  /* It is an absolute path.  Use it.  But we have to make a
+	     copy since we strip out the trailing slash.  */
+	  cp = origin = (char *) malloc (realname_len);
 	  if (origin == NULL)
-	    origin = (char *) -1;
-	  else
-	    memcpy (origin, realname, len);
+	    {
+	      origin = (char *) -1;
+	      goto out;
+	    }
 	}
       else
 	{
-	  size_t realname_len = strlen (realname) + 1;
-	  size_t len = 128 + realname_len;
+	  size_t len = realname_len;
 	  char *result = NULL;
 
 	  /* Get the current directory name.  */
-	  origin = (char *) malloc (len);
-
-	  while (origin != NULL
-		 && (result = __getcwd (origin, len - realname_len)) == NULL
-		 && errno == ERANGE)
+	  origin = NULL;
+	  do
 	    {
 	      len += 128;
 	      origin = (char *) realloc (origin, len);
 	    }
+	  while (origin != NULL
+		 && (result = __getcwd (origin, len - realname_len)) == NULL
+		 && errno == ERANGE);
 
 	  if (result == NULL)
 	    {
-	      /* We were not able to determine the current directory.  */
+	      /* We were not able to determine the current directory.
+	         Note that free(origin) is OK if origin == NULL.  */
 	      free (origin);
 	      origin = (char *) -1;
+	      goto out;
 	    }
-	  else
-	    {
-	      /* Now append the filename.  */
-	      char *cp = strchr (origin, '\0');
 
-	      if (cp [-1] != '/')
-		*cp++ = '/';
-
-	      memcpy (cp, realname, realname_len);
-	    }
+	  /* Find the end of the path and see whether we have to add
+	     a slash.  */
+	  cp = __rawmemchr (origin, '\0');
+	  if (cp[-1] != '/')
+	    *cp++ = '/';
 	}
 
-      if (origin != (char *) -1)
-	{
-	  /* Now remove the filename and the slash.  Do this even if the
-	     string is something like "/foo" which leaves an empty string.  */
-	  char *last = strrchr (origin, '/');
+      /* Add the real file name.  */
+      memcpy (cp, realname, realname_len);
 
-	  if (last == origin)
-	    origin[1] = '\0';
-	  else
-	    *last = '\0';
-	}
+      /* Now remove the filename and the slash.  Leave the slash if it
+	 the name is something like "/foo".  */
+      cp = strrchr (origin, '/');
+      if (cp == origin)
+	origin[1] = '\0';
+      else
+	*cp = '\0';
 
+    out:
       new->l_origin = origin;
     }
 

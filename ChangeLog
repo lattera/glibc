@@ -1,3 +1,7 @@
+2001-11-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-object.c (_dl_new_object): Various small optimizations.
+
 2001-11-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-cache.c: Optimize SEARCH_CACHE and
