@@ -25,6 +25,8 @@
 /* If the program is compiled without optimization the following declaration
    is not visible in the header.   */
 extern unsigned int *__ctype32_b;
+extern const uint32_t *__ctype32_toupper;
+extern const uint32_t *__ctype32_tolower;
 
 /* Provide real-function versions of all the wctype macros.  */
 
@@ -76,7 +78,7 @@ wint_t
     /* Character is not known.  Default action is to simply return it.  */
     return wc;
 
-  return (wint_t) __ctype_tolower[idx];
+  return (wint_t) __ctype32_tolower[idx];
 }
 
 wint_t
@@ -90,5 +92,5 @@ wint_t
     /* Character is not known.  Default action is to simply return it.  */
     return wc;
 
-  return (wint_t) __ctype_toupper[idx];
+  return (wint_t) __ctype32_toupper[idx];
 }

@@ -11,4 +11,8 @@ libc {
     # t*
     toascii; tolower; toupper;
   }
+  GLIBC_2.2 {
+    # global variables
+    __ctype32_tolower; __ctype32_toupper;
+  }
 }

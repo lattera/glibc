@@ -146,6 +146,7 @@ struct locale_ctype_t
   char_class32_t *ctype32_b;
   uint32_t *names;
   uint32_t **map;
+  uint32_t **map32;
   uint32_t *class_name_ptr;
   uint32_t *map_name_ptr;
   unsigned char *width;
@@ -793,6 +794,15 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (uint32_t));
 
+	  CTYPE_DATA (_NL_CTYPE_TOUPPER32,
+		      ctype->map32[0],
+		      (ctype->plane_size * ctype->plane_cnt + 128)
+		      * sizeof (uint32_t));
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER32,
+		      ctype->map32[1],
+		      (ctype->plane_size * ctype->plane_cnt + 128)
+		      * sizeof (uint32_t));
+
 	  CTYPE_DATA (_NL_CTYPE_CLASS32,
 		      ctype->ctype32_b,
 		      (ctype->plane_size * ctype->plane_cnt
@@ -969,7 +979,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  /* Handle extra maps.  */
 	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) + 2;
 
-	  iov[2 + elem + offset].iov_base = ctype->map[nr];
+	  iov[2 + elem + offset].iov_base = ctype->map32[nr];
 	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
 					     * ctype->plane_cnt + 128)
 					    * sizeof (uint32_t));
@@ -3019,22 +3029,17 @@ Computing table size for character classes might take a while..."),
     ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
 
   /* Room for table of mappings.  */
-  ctype->map = (uint32_t **) xmalloc (ctype->map_collection_nr
+  ctype->map = (uint32_t **) xmalloc (2 * sizeof (uint32_t *));
+  ctype->map32 = (uint32_t **) xmalloc (ctype->map_collection_nr
 				      * sizeof (uint32_t *));
 
   /* Fill in all mappings.  */
-  for (idx = 0; idx < ctype->map_collection_nr; ++idx)
+  for (idx = 0; idx < 2; ++idx)
     {
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map[idx] = (uint32_t *) xmalloc ((ctype->plane_size
-					       * ctype->plane_cnt + 128)
-					      * sizeof (uint32_t));
-
-      /* Copy default value (identity mapping).  */
-      memcpy (&ctype->map[idx][128], ctype->names,
-	      ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
+      ctype->map[idx] = (uint32_t *) xmalloc ((256 + 128) * sizeof (uint32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
@@ -3047,12 +3052,25 @@ Computing table size for character classes might take a while..."),
 
       /* EOF must map to EOF.  */
       ctype->map[idx][127] = EOF;
+    }
 
-      /* The 32 bit map collection.  */
-      for (idx2 = 0; idx2 < ctype->map_collection_act[idx]; ++idx2)
+  for (idx = 0; idx < ctype->map_collection_nr; ++idx)
+    {
+      unsigned int idx2;
+
+      /* Allocate table.  */
+      ctype->map[idx] = (uint32_t *) xmalloc (ctype->plane_size
+					      * ctype->plane_cnt
+					      * sizeof (uint32_t));
+
+      /* Copy default value (identity mapping).  */
+      memcpy (ctype->map[idx], ctype->names,
+	      ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
+
+      /* Copy values from collection.  */
+      for (idx2 = 0; idx2 < 256; ++idx2)
 	if (ctype->map_collection[idx][idx2] != 0)
-	  ctype->map[idx][128 + ctype->charnames[idx2]]
-	    = ctype->map_collection[idx][idx2];
+	  ctype->map[idx][idx2] = ctype->map_collection[idx][idx2];
     }
 
   /* Extra array for class and map names.  */

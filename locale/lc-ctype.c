@@ -43,11 +43,15 @@ _nl_postload_ctype (void)
   extern const uint32_t *__ctype32_b;
   extern const uint32_t *__ctype_names;
   extern const unsigned char *__ctype_width;
+  extern const uint32_t *__ctype32_toupper;
+  extern const uint32_t *__ctype32_tolower;
 
   __ctype_b = current (uint16_t, CLASS, 128);
   __ctype_toupper = current (uint32_t, TOUPPER, 128);
   __ctype_tolower = current (uint32_t, TOLOWER, 128);
   __ctype32_b = current (uint32_t, CLASS32, 0);
+  __ctype32_toupper = current (uint32_t, TOUPPER32, 0);
+  __ctype32_tolower = current (uint32_t, TOLOWER32, 0);
   __ctype_names = current (uint32_t, NAMES, 0);
   __ctype_width = current (unsigned char, WIDTH, 0);
 }

@@ -1,5 +1,21 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* ctype/Versions: Add __ctype32_tolower and __ctype32_toupper.
+	* ctype/ctype-info.c: Define __ctype32_tolower and __ctype32_toupper.
+	* locale/C-ctype.c: Add _nl_C_LC_CTYPE_toupper32 and
+	_nl_C_LC_CTYPE_tolower32 tables.
+	Don't compile it names of 14652 classes and maps.
+	* locale/langinfo.h: Define _NL_CTYPE_TOUPPER32 and
+	_NL_CTYPE_TOLOWER32.
+	* locale/lc-ctype.c (_nl_postload_ctype): Initialize __ctype32_toupper
+	and __ctype32_tolower.
+	* locale/programs/ld-ctype.c (struct locale_ctype_t): Add map32.
+	(ctype_output): Write out map32 values.
+	(allocate_arrays): Compute mapping tables correctly.
+	* wctype/wcfuncs.c (towlower): Use __ctype32_tolower.
+	(towupper): Use __ctype32_toupper.
+	* wctype/wctype.h: Optimize towupper and towlower for values < 256.
+
 	* locale/programs/ld-ctype.c (set_class_defaults): Correctly
 	determine tolower mapping for 8bit table if the tolower keyword is
 	not given.
