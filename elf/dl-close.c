@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -319,6 +319,7 @@ _dl_close (void *_map)
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
   _dl_debug_state ();
+  ++GL(dl_load_subs);
 
 #ifdef USE_TLS
   size_t tls_free_start;

@@ -293,6 +293,9 @@ struct dl_phdr_info
     const char *dlpi_name;
     const ElfW(Phdr) *dlpi_phdr;
     ElfW(Half) dlpi_phnum;
+
+    unsigned long long int dlpi_adds;
+    unsigned long long int dlpi_subs;
   };
 
 extern int dl_iterate_phdr (int (*callback) (struct dl_phdr_info *info,

@@ -80,7 +80,7 @@ distribute	:= rtld-Rules \
 		   reldep9.c reldep9mod1.c reldep9mod2.c reldep9mod3.c \
 		   tst-array1.exp tst-array2.exp tst-array4.exp \
 		   tst-array2dep.c \
-		   tst-execstack-mod.c \
+		   tst-execstack-mod.c tst-dlmodcount.c \
 		   check-textrel.c dl-sysdep.h
 
 CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
@@ -151,7 +151,7 @@ tests += loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	 restest2 next dblload dblunload reldep5 reldep6 reldep7 reldep8 \
 	 circleload1 tst-tls3 tst-tls4 tst-tls5 tst-tls6 tst-tls7 tst-tls8 \
 	 tst-tls10 tst-tls11 tst-tls12 tst-tls13 tst-tls14 tst-align \
-	 $(tests-execstack-$(have-z-execstack))
+	 $(tests-execstack-$(have-z-execstack)) tst-dlmodcount
 #	 reldep9
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
@@ -713,4 +713,8 @@ $(objpfx)check-textrel.out: $(objpfx)check-textrel
 	  $(sort $(wildcard $(common-objpfx)*/lib*.so \
 			    $(common-objpfx)iconvdata/*.so)) > $@
 generated += check-textrel check-textrel.out
+
+$(objpfx)tst-dlmodcount: $(libdl)
+$(objpfx)tst-dlmodcount.out: $(test-modules)
+
 endif

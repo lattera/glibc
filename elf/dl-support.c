@@ -71,6 +71,11 @@ struct link_map *_dl_loaded;
 /* Number of object in the _dl_loaded list.  */
 unsigned int _dl_nloaded;
 
+/* Incremented whenever something may have been added to dl_loaded. */
+unsigned long long _dl_load_adds;
+/* Incremented whenever something may have been removed from dl_loaded. */
+unsigned long long _dl_load_subs;
+
 /* Fake scope.  In dynamically linked binaries this is the scope of the
    main application but here we don't have something like this.  So
    create a fake scope containing nothing.  */

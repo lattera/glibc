@@ -1,5 +1,5 @@
 /* Storage management for the chain of loaded shared objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,6 +83,7 @@ _dl_new_object (char *realname, const char *libname, int type,
   else
     GL(dl_loaded) = new;
   ++GL(dl_nloaded);
+  ++GL(dl_load_adds);
 
   /* If we have no loader the new object acts as it.  */
   if (loader == NULL)

@@ -1,3 +1,23 @@
+2004-01-23  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): Add members
+	_dl_load_adds and _dl_load_subs.
+	* elf/dl-support.c (_dl_load_adds): New variable.
+	(_dl_load_subs): Likewise.
+	* elf/dl-object.c (_dl_new_object): Increment dl_load_adds.
+	* elf/dl-close.c (_dl_close): Increment dl_load_subs.
+	* elf/link.h (struct dl_phdr_info): Add members dlpi_adds and
+	dlpi_subs.
+	* include/link.h: Likewise.
+	* elf/dl-iteratephdr.c (__dl_iterate_phdr): Initialize dlpi_adds
+	and dlpi_subs members.
+	(dl_iterate_phdr): Likewise.
+	* elf/tst-dlmodcount.c: New file.
+	* elf/Makefile (distribute): Mention tst-dlmodcount.c.
+	(tests): If build-shared, mention tst-dlmodcount.
+	($(objpfx)tst-dlmodcount): If build-shared, build and
+	run tst-dlmodcount.
+
 2004-01-22  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-reloc.c (_dl_relocate_object): Move PT_GNU_RELRO protection
