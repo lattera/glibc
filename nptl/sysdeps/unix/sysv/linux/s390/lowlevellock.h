@@ -142,6 +142,19 @@ __lll_mutex_lock (int *futex)
 }
 #define lll_mutex_lock(futex) __lll_mutex_lock (&(futex))
 
+static inline void
+__attribute__ ((always_inline))
+__lll_mutex_cond_lock (int *futex)
+{
+  int oldval;
+  int newval;
+
+  lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,2");
+  if (oldval > 0)
+    ___lll_mutex_lock (futex, newval);
+}
+#define lll_mutex_cond_lock(futex) __lll_mutex_cond_lock (&(futex))
+
 
 extern int ___lll_mutex_timedlock (int *, const struct timespec *, int)
   attribute_hidden;
