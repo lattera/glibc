@@ -1,5 +1,5 @@
 /* Tests for AIO in librt.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ test_file (const void *buf, size_t size, int fd, const char *msg)
 
   if (pread (fd, tmp, size, 0) != size)
     {
-      error (0, errno, "%s: failed stat", msg);
+      error (0, errno, "%s: failed pread", msg);
       return 1;
     }
 

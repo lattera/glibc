@@ -1,3 +1,18 @@
+2000-07-26  Andreas Jaeger  <aj@suse.de>
+
+	* rt/tst-aio4.c: New file, slighlty modified version of tst-aio2.
+	* rt/tst-aio5.c: New file, slighlty modified version of tst-aio2.
+	* rt/Makefile: Add rules to build and run tst-aio4 and tst-aio5.
+
+	* rt/tst-aio.c (test_file): Fix typo.
+	* rt/tst-aio64.c (test_file): Likewise.
+
+	* rt/tst-aio3.c: New file, slightly modified version of tst-aio2.
+	* rt/Makefile: Add rules to build and run tst-aio3.
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Removed ip_options since
+	it's not needed and confuses only.
+
 2000-07-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/res_init.c: Add support for nameserver communication with

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,29 +40,6 @@ struct timestamp
 # error	"Please fix <bits/endian.h>"
 #endif
     u_int32_t data[9];
-  };
-
-struct ip_options
-  {
-    u_int32_t faddr;		/* Saved first hop address */
-    u_int8_t optlen;
-    u_int8_t srr;
-    u_int8_t rr;
-    u_int8_t ts;
-    unsigned int is_setbyuser:1;   /* Set by setsockopt?		  */
-    unsigned int is_data:1;	   /* Options in __data, rather than skb  */
-    unsigned int is_strictroute:1; /* Strict source route		  */
-    unsigned int srr_is_hit:1;	   /* Packet destination addr was our one */
-    unsigned int is_changed:1;	   /* IP checksum more not valid	  */
-    unsigned int rr_needaddr:1;	   /* Need to record addr of outgoing dev */
-    unsigned int ts_needtime:1;	   /* Need to record timestamp		  */
-    unsigned int ts_needaddr:1;	   /* Need to record addr of outgoing dev */
-    u_int8_t router_alert;
-    u_int8_t __pad1;
-    u_int8_t __pad2;
-#ifdef __GNUC__
-    u_int8_t __data[0];
-#endif
   };
 
 struct iphdr
