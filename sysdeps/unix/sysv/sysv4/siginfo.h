@@ -1,5 +1,5 @@
 /* Definitions of the siginfo structure.
-   Copyright (C) 1993 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994 Free Software Foundation, Inc.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -24,9 +24,8 @@ Cambridge, MA 02139, USA.  */
 /* SVR4 puts a ton of other stuff in this structure.  For now, we'll just
    define the two things we really need out of it, and hope for the best.  */
 
-/* These define the different states a child can have on exit. Need these
-to build the correct status return for things like waitpid */
-
+/* These define the different states a child can have on exit.
+   We need these to build the status return for things like waitpid.  */
 #define EXITED 		1
 #define KILLED		2
 #define CORED		3
@@ -35,25 +34,25 @@ to build the correct status return for things like waitpid */
 #define CONTINUED	6
 
 typedef struct __siginfo
-{
-  int filler1;
+  {
+    int filler1;
 
-  /* Code indicating child's status */
-  int __code;
+    /* Code indicating child's status */
+    int __code;
 
-  int filler2;
+    int filler2;
 
-  /* The PID of the child.  */
-  long __pid;
+    /* The PID of the child.  */
+    long __pid;
 
-  int filler3;
+    int filler3;
 
-  /* The child's status.  */
-  int __status;
+    /* The child's status.  */
+    int __status;
 
-  int filler4[26];
+    int filler4[26];
 
-} __siginfo_t;
+  } __siginfo_t;
 
 #endif  /* __USE_SVID */
 #endif	/* siginfo.h */

@@ -24,16 +24,16 @@ Cambridge, MA 02139, USA.  */
 #include "siginfo.h"
 
 typedef enum __idtype
-{
-  /* Look for processes based upon a given PID.  */
-  P_PID,
+  {
+    /* Look for processes based upon a given PID.  */
+    P_PID,
 
-  /* Look for processes based upon a given process-group ID.  */
-  P_PGID = 2,
+    /* Look for processes based upon a given process-group ID.  */
+    P_PGID = 2,
 
-  /* Look for any process.  */
-  P_ALL = 7,
-} __idtype_t;
+    /* Look for any process.  */
+    P_ALL = 7,
+  } __idtype_t;
 
 extern __pid_t __getpgid __P ((__pid_t pid));
 extern int __waitid __P ((__idtype_t idtype, __pid_t id,
@@ -53,32 +53,32 @@ extern int __waitid __P ((__idtype_t idtype, __pid_t id,
    return status for stopped children; otherwise don't.  */
 
 __pid_t
-DEFUN(__waitpid, (__pid, __stat_loc, __options),
-      __pid_t __pid AND int *__stat_loc AND int __options)
+DEFUN(__waitpid, (pid, stat_loc, options),
+      __pid_t pid AND int *stat_loc AND int options)
 {
   __idtype_t idtype;
-  __pid_t tmp_pid = __pid;
+  __pid_t tmp_pid = pid;
   __siginfo_t infop;
 
-  if (__pid <= WAIT_MYPGRP)
+  if (pid <= WAIT_MYPGRP)
     {
-      if (__pid == WAIT_ANY)
+      if (pid == WAIT_ANY)
 	{
 	  /* Request the status for any child.  */
 	  idtype = P_ALL;
 	}
-      else if (__pid == WAIT_MYPGRP)
+      else if (pid == WAIT_MYPGRP)
 	{
 	  /* Request the status for any child process that has
 	     a pgid that's equal to that of our parent.  */
 	  tmp_pid = __getpgid (0);
 	  idtype = P_PGID;
 	}
-      else /* __pid < -1 */
+      else /* PID < -1 */
 	{
 	  /* Request the status for any child whose pgid is equal
 	     to the absolute value of PID.  */
-	  tmp_pid = __pid & ~0; /* XXX not pseudo-insn */
+	  tmp_pid = pid & ~0; /* XXX not pseudo-insn */
 	  idtype = P_PGID;
 	}
     }
@@ -88,13 +88,28 @@ DEFUN(__waitpid, (__pid, __stat_loc, __options),
       idtype = P_PID;
     }
 
-  if (__waitid (idtype, tmp_pid, &infop, __options | WEXITED | WTRAPPED) < 0)
-    {
-      *__stat_loc = infop.__status;
-      return -1;
-    }
+  if (__waitid (idtype, tmp_pid, &infop, options | WEXITED | WTRAPPED) < 0)
+    return -1;
 
-  *__stat_loc = infop.__status;
+  switch (infop.__code)
+    {
+    case EXITED:
+      *stat_loc = W_EXITCODE (infop.__status, 0);
+      break;
+    case STOPPED:
+    case TRAPPED:
+      *stat_loc = W_STOPCODE (infop.__status);
+      break;
+    case KILLED:
+      /* Don't know what to do with continue, since it isn't documented.
+	 Putting it here seemed the right place though. */
+    case CONTINUED:
+      *stat_loc = infop.__status;
+      /* FALLTHROUGH */
+    case CORED:
+      *stat_loc |= WCOREFLAG;
+      break;
+    }
 
   /* Return the PID out of the INFOP structure instead of the one we were
      called with, to account for cases of being called with -1 to signify
