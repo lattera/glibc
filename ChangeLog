@@ -1,5 +1,8 @@
 2004-11-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile (tests): Add tst-sysconf.
+	* posix/tst-sysconf.c: New file.
+
 	* posix/getconf.c (vars): Add support for _SC_IPV6 and
 	_SC_RAW_SOCKETS.
 	* sysdeps/posix/sysconf.c (__sysconf): Add support for _SC_IPV6

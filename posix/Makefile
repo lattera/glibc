@@ -83,7 +83,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-nice tst-nanosleep tst-regex2 \
 		   transbug tst-rxspencer tst-pcre tst-boost \
 		   bug-ga1 tst-vfork1 tst-vfork2 tst-waitid \
-		   tst-getaddrinfo2 bug-glob1 bug-glob2
+		   tst-getaddrinfo2 bug-glob1 bug-glob2 tst-sysconf
 xtests		:= bug-ga2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest

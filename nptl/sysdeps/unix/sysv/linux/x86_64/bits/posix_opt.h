@@ -90,6 +90,8 @@
 #define _POSIX_ASYNC_IO		1
 /* Alternative name for Unix98.  */
 #define _LFS_ASYNCHRONOUS_IO	1
+/* Support for prioritization is also available.  */
+#define _POSIX_PRIORITIZED_IO	200112L
 
 /* The LFS support in asynchronous I/O is also available.  */
 #define _LFS64_ASYNCHRONOUS_IO	1
@@ -153,6 +155,9 @@
 /* Raw socket support is available.  */
 #define _POSIX_RAW_SOCKETS	200112L
 
+/* We have at least one terminal.  */
+#define _POSIX2_CHAR_TERM	200112L
+
 /* Neither process nor thread sporadic server interfaces is available.  */
 #define _POSIX_SPORADIC_SERVER	-1
 #define _POSIX_THREAD_SPORADIC_SERVER	-1
@@ -165,5 +170,9 @@
 
 /* Typed memory objects are not available.  */
 #define _POSIX_TYPED_MEMORY_OBJECTS	-1
+
+/* No support for priority inheritance or protection so far.  */
+#define _POSIX_THREAD_PRIO_INHERIT	-1
+#define _POSIX_THREAD_PRIO_PROTECT	-1
 
 #endif /* posix_opt.h */

@@ -2,8 +2,8 @@
 				  and
 		    POSIX character set descriptions
 
-Ulrich Drepper			Time-stamp: <2000/07/20 13:08:24 aj>
-drepper@cygnus.com
+Ulrich Drepper			Time-stamp: <2004/11/27 13:06:54 drepper>
+drepper@redhat.com
 
 
 This directory contains the data needed to build the locale data files
@@ -40,22 +40,9 @@ current directory simply use
 How to use these data files is described in the GNU libc manual,
 especially in the section describing the `setlocale' function.
 
+All problems should be reported using
 
-The files contained here were originally from
-
-	ftp://dkuug.dk/i18n/WG15-collection
-
-Keld Jörn Simonsen from the Danish Unix User Group maintains this
-archive on behalf of the POSIX working groups.  When you find some wrong
-data or want to add something please contact
-
-	Keld Jörn Simonsen <keld@dkuug.dk>
-and
-	Ulrich Drepper <drepper@cygnus.com>
-
-Please make sure your corrections are relative to the originally
-distributed files.  Consult the CHECKSUMS file which contains the MD5
-sums for all data files.
+  http://sources.redhat.com/bugzilla/
 
 
 One more note: the `POSIX' locale definition is not meant to be used
