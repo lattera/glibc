@@ -1,3 +1,8 @@
+1998-07-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Move test for available port after machine
+	variable is defined.
+
 1998-07-21 16:08 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
 	* sysdeps/unix/sysv/linux/sendmsg.c: If passing a SCM_CREDS

@@ -149,30 +149,6 @@ gnu*)
   ;;
 esac
 
-###
-### I put this here to prevent those annoying emails from people who cannot
-### read and try to compile glibc on unsupported platforms.  --drepper
-###
-### By using the undocumented --enable-hacker-mode option for configure
-### one can skip this test to make the configuration not fail for unsupported
-### platforms.
-###
-if test -z "$enable_hacker_mode"; then
-  case "$machine-$host_os" in
-  *-linux* | *-gnu* | arm*-none*)
-    ;;
-  *)
-    echo "*** The GNU C library is currently not available for this platform."
-    echo "*** So far nobody cared to port it and if there is no volunteer it"
-    echo "*** might never happen.  So, if you have interest to see glibc on"
-    echo "*** this platform visit"
-    echo "***	http://www.gnu.org/software/libc/porting.html"
-    echo "*** and join the group of porters"
-    exit 1
-    ;;
-  esac
-fi
-
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -197,6 +173,30 @@ esac
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
+
+###
+### I put this here to prevent those annoying emails from people who cannot
+### read and try to compile glibc on unsupported platforms.  --drepper
+###
+### By using the undocumented --enable-hacker-mode option for configure
+### one can skip this test to make the configuration not fail for unsupported
+### platforms.
+###
+if test -z "$enable_hacker_mode"; then
+  case "$machine-$host_os" in
+  *-linux* | *-gnu* | arm*-none*)
+    ;;
+  *)
+    echo "*** The GNU C library is currently not available for this platform."
+    echo "*** So far nobody cared to port it and if there is no volunteer it"
+    echo "*** might never happen.  So, if you have interest to see glibc on"
+    echo "*** this platform visit"
+    echo "***	http://www.gnu.org/software/libc/porting.html"
+    echo "*** and join the group of porters"
+    exit 1
+    ;;
+  esac
+fi
 
 dnl We need to use [ and ] for other purposes for a while now.
 changequote(,)dnl
