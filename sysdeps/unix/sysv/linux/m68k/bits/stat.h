@@ -36,11 +36,10 @@
 struct stat
   {
     __dev_t st_dev;			/* Device.  */
-#ifndef __USE_FILE_OFFSET64
     unsigned short int __pad1;
+#ifndef __USE_FILE_OFFSET64
     __ino_t st_ino;			/* File serial number.	*/
 #else
-    unsigned int __pad1;
     __ino_t __st_ino;			/* 32bit file serial number.	*/
 #endif
     __mode_t st_mode;			/* File mode.  */
@@ -48,11 +47,10 @@ struct stat
     __uid_t st_uid;			/* User ID of the file's owner.	*/
     __gid_t st_gid;			/* Group ID of the file's group.*/
     __dev_t st_rdev;			/* Device number, if device.  */
-#ifndef __USE_FILE_OFFSET64
     unsigned short int __pad2;
+#ifndef __USE_FILE_OFFSET64
     __off_t st_size;			/* Size of file, in bytes.  */
 #else
-    unsigned int __pad2;
     __off64_t st_size;			/* Size of file, in bytes.  */
 #endif
     __blksize_t st_blksize;		/* Optimal block size for I/O.  */
@@ -80,7 +78,7 @@ struct stat
 struct stat64
   {
     __dev_t st_dev;			/* Device.  */
-    unsigned int __pad1;
+    unsigned short int __pad1;
 
     __ino_t __st_ino;			/* 32bit file serial number.	*/
     __mode_t st_mode;			/* File mode.  */
@@ -88,7 +86,7 @@ struct stat64
     __uid_t st_uid;			/* User ID of the file's owner.	*/
     __gid_t st_gid;			/* Group ID of the file's group.*/
     __dev_t st_rdev;			/* Device number, if device.  */
-    unsigned int __pad2;
+    unsigned short int __pad2;
     __off64_t st_size;			/* Size of file, in bytes.  */
     __blksize_t st_blksize;		/* Optimal block size for I/O.  */
 
