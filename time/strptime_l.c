@@ -26,6 +26,7 @@
 #include <limits.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 
 #ifdef _LIBC
 # include "../locale/localeinfo.h"
