@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,62 +17,17 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdep.h>
-#define _ERRNO_H	1
-#include <bits/errno.h>
 
-/* Clone the calling process, but without copying the whole address space.
-   The calling process is suspended until the new process exits or is
-   replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
-   and the process ID of the new process to the old process.  */
-
-ENTRY (__vfork)
-
-#ifdef __NR_vfork
-	mov.w	.L3, r3
-	trapa	#0x10
-	mov     r0, r1
-	mov	#-12, r2
-	shad	r2, r1
-	not	r1, r1			// r1=0 means r0 = -1 to -4095
-	tst	r1, r1			// i.e. error in linux
-	bf	1f
-	mov.w	.L1, r1
-	cmp/eq	r1, r0
-	bt	2f
-	mov.l	.L2, r1
-#ifdef SHARED
-	mov	r0, r4
-	mov.l	r12, @-r15
-	sts.l	pr, @-r15
-	mov.l	0f, r12
-	mova	0f, r0
-	add	r0, r12
-	mova	.L2, r0
-	add	r0, r1
-	jsr	@r1
-	 nop
-	lds.l	@r15+, pr
-	rts
-	 mov.l	@r15+, r12
-	.align	2
-0:
-	.long	_GLOBAL_OFFSET_TABLE_
-#else
-	jmp	@r1
-	 mov	r0, r4
-#endif
-.L1:
-	.word	-ENOSYS
-.L3:	.word	__NR_vfork
-1:
-	rts
-	 nop
-2:
-#endif
-
-	/* If we don't have vfork, fork is close enough.  */
-	mov	#+__NR_fork, r3
-	trapa	#0x10
+ENTRY (__syscall)
+	mov	r4, r3			// syscall number
+	mov	r5, r4			// p1
+	mov	r6, r5			// p2
+	mov	r7, r6			// p3
+	mov.l	@r15, r7		// p4
+	mov.l	@(4,r15), r0		// p5
+	mov.l	@(8,r15), r1		// p6
+	mov.l	@(12,r15), r2		// p7
+	trapa	#0x17
 	mov     r0, r1
 	mov	#-12, r2
 	shad	r2, r1
@@ -94,20 +49,20 @@ ENTRY (__vfork)
 	lds.l	@r15+, pr
 	rts
 	 mov.l	@r15+, r12
-	.align	2
+	.align 2
 0:
 	.long	_GLOBAL_OFFSET_TABLE_
 #else
 	jmp	@r1
 	 mov	r0, r4
 #endif
-	.align	2
-.L2:
-	.long	PLTJMP(C_SYMBOL_NAME(__syscall_error))
 1:
 	rts
 	 nop
-	
-PSEUDO_END (__vfork)
 
-weak_alias (__vfork, vfork)
+	.align	2
+.L2:
+	.long	PLTJMP(C_SYMBOL_NAME(__syscall_error))
+PSEUDO_END (__syscall)
+
+weak_alias (__syscall, syscall)

@@ -433,7 +433,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself.	 */
 #endif
-	*reloc_addr = map->l_addr + reloc->r_addend;
+	{
+	  if (reloc->r_addend)
+	    *reloc_addr = map->l_addr + reloc->r_addend;
+	  else
+	    *reloc_addr += map->l_addr;
+	}
     }
   else if (ELF32_R_TYPE (reloc->r_info) != R_SH_NONE)
     {

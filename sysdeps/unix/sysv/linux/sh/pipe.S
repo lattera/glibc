@@ -19,8 +19,8 @@
 #include <sysdep.h>
 
 ENTRY (__libc_pipe)
-	mov	#+__NR_pipe, r0
-	trapa	#0
+	mov	#+__NR_pipe, r3
+	trapa	#0x10
 	mov     r0, r3
 	mov	#-12, r2
 	shad	r2, r3

@@ -61,8 +61,8 @@ ENTRY(__clone)
 
 	/* do the system call */
 	mov	r6, r4
-	mov	#+SYS_ify(clone), r0
-	trapa	#0
+	mov	#+SYS_ify(clone), r3
+	trapa	#0x12
 	mov     r0, r1
 	mov	#-12, r2
 	shad	r2, r1

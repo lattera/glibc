@@ -30,10 +30,10 @@ testandset (int *spinlock)
   int ret;
 
   __asm__ __volatile__(
-       "tas.b	%1\n\t"
+       "tas.b	@%1\n\t"
        "movt	%0"
-       : "=z" (ret), "=m" (*spinlock)
-       : /* "1" (*spinlock) */
+       : "=z" (ret)
+       : "r" (spinlock)
        : "memory", "cc");
 
   return ret;

@@ -28,14 +28,12 @@ int
 __brk (void *addr)
 {
   void *newbrk;
+  register long r3 asm ("%r3") = SYS_ify (brk);
+  register long r4 asm ("%r4") = (long)addr;
 
-  asm ("mov %1, r4\n"
-       "mov %2, r0\n"
-       "trapa #0\n"	/* do the system call */
-       "mov r0, %0;"	/* keep the return value */
-       : "=r"(newbrk) 
-       : "r"(addr), "i" (SYS_ify (brk))
-       : "r0");
+  asm volatile ("trapa #0x11"
+		: "=z"(newbrk) 
+		: "r" (r3), "r" (r4));
 
   __curbrk = newbrk;
 

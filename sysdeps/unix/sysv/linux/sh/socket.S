@@ -66,8 +66,8 @@ ENTRY (__socket)
         /* Do the system call trap.  */
 	mov #+P(SOCKOP_,socket), r4
 	mov r15, r5
-	mov.l .L1,r0
-	trapa #0
+	mov.l .L1,r3
+	trapa #0x12
 
 	/* Pop args off the stack */
 	P(POPARGS_,NARGS)

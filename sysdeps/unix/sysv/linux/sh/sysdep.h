@@ -103,29 +103,105 @@
 
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
 
-#define SYSCALL_INST0	trapa #0
-#define SYSCALL_INST1	trapa #0
-#define SYSCALL_INST2	trapa #0
-#define SYSCALL_INST3	trapa #0
-#define SYSCALL_INST4	trapa #0
-#define SYSCALL_INST5	trapa #1
-#define SYSCALL_INST6	trapa #2
+#define SYSCALL_INST0	trapa #0x10
+#define SYSCALL_INST1	trapa #0x11
+#define SYSCALL_INST2	trapa #0x12
+#define SYSCALL_INST3	trapa #0x13
+#define SYSCALL_INST4	trapa #0x14
+#define SYSCALL_INST5	mov.l @(0,r15),r0; trapa #0x15
+#define SYSCALL_INST6	mov.l @(0,r15),r0; mov.l @(4,r15),r1; trapa #0x16
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name) \
-    mov.l 1f,r0; \
-    SYSCALL_INST##args;	\
-    bra 2f; \
-     nop; \
-    .align 2; \
- 1: .long SYS_ify(syscall_name); \
+#define DO_CALL(args, syscall_name)	\
+    mov.l 1f,r3;			\
+    SYSCALL_INST##args;			\
+    bra 2f;				\
+     nop;				\
+    .align 2;				\
+ 1: .long SYS_ify (syscall_name);	\
  2:
 
 #else /* not __ASSEMBLER__ */
 
+#define SYSCALL_INST_STR0	"trapa #0x10\n\t"
+#define SYSCALL_INST_STR1	"trapa #0x11\n\t"
+#define SYSCALL_INST_STR2	"trapa #0x12\n\t"
+#define SYSCALL_INST_STR3	"trapa #0x13\n\t"
+#define SYSCALL_INST_STR4	"trapa #0x14\n\t"
+#define SYSCALL_INST_STR5	"trapa #0x15\n\t"
+#define SYSCALL_INST_STR6	"trapa #0x16\n\t"
+
+#define ASMFMT_0
+#define ASMFMT_1 \
+	, "r" (r4)
+#define ASMFMT_2 \
+	, "r" (r4), "r" (r5)
+#define ASMFMT_3 \
+	, "r" (r4), "r" (r5), "r" (r6)
+#define ASMFMT_4 \
+	, "r" (r4), "r" (r5), "r" (r6), "r" (r7)
+#define ASMFMT_5 \
+	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0)
+#define ASMFMT_6 \
+	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1)
+#define ASMFMT_7 \
+	, "r" (r4), "r" (r5), "r" (r6), "r" (r7), "0" (r0), "r" (r1), "r" (r2)
+
+#define SUBSTITUTE_ARGS_0()
+#define SUBSTITUTE_ARGS_1(arg1)					\
+	register long r4 asm ("%r4") = (long)(arg1)
+#define SUBSTITUTE_ARGS_2(arg1, arg2)				\
+	register long r4 asm ("%r4") = (long)(arg1);		\
+	register long r5 asm ("%r5") = (long)(arg2)
+#define SUBSTITUTE_ARGS_3(arg1, arg2, arg3)			\
+	register long r4 asm ("%r4") = (long)(arg1);		\
+	register long r5 asm ("%r5") = (long)(arg2);		\
+	register long r6 asm ("%r6") = (long)(arg3)
+#define SUBSTITUTE_ARGS_4(arg1, arg2, arg3, arg4)		\
+	register long r4 asm ("%r4") = (long)(arg1);		\
+	register long r5 asm ("%r5") = (long)(arg2);		\
+	register long r6 asm ("%r6") = (long)(arg3);		\
+	register long r7 asm ("%r7") = (long)(arg4)
+#define SUBSTITUTE_ARGS_5(arg1, arg2, arg3, arg4, arg5) 	\
+	register long r4 asm ("%r4") = (long)(arg1);		\
+	register long r5 asm ("%r5") = (long)(arg2);		\
+	register long r6 asm ("%r6") = (long)(arg3);		\
+	register long r7 asm ("%r7") = (long)(arg4);		\
+	register long r0 asm ("%r0") = (long)(arg5)
+#define SUBSTITUTE_ARGS_6(arg1, arg2, arg3, arg4, arg5, arg6)		\
+	register long r4 asm ("%r4") = (long)(arg1);			\
+	register long r5 asm ("%r5") = (long)(arg2);			\
+	register long r6 asm ("%r6") = (long)(arg3);			\
+	register long r7 asm ("%r7") = (long)(arg4);			\
+	register long r0 asm ("%r0") = (long)(arg5);			\
+	register long r1 asm ("%r1") = (long)(arg6)
+#define SUBSTITUTE_ARGS_7(arg1, arg2, arg3, arg4, arg5, arg6, arg7)	\
+	register long r4 asm ("%r4") = (long)(arg1);			\
+	register long r5 asm ("%r5") = (long)(arg2);			\
+	register long r6 asm ("%r6") = (long)(arg3);			\
+	register long r7 asm ("%r7") = (long)(arg4);			\
+	register long r0 asm ("%r0") = (long)(arg5)			\
+	register long r1 asm ("%r1") = (long)(arg6);			\
+	register long r2 asm ("%r2") = (long)(arg7)
+
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) \
-  __syscall_##name(args)
+#define INLINE_SYSCALL(name, nr, args...) 			\
+  ({								\
+    unsigned long resultvar;					\
+    register long r3 asm ("%r3") = SYS_ify (name);		\
+    SUBSTITUTE_ARGS_##nr(args);					\
+								\
+    asm volatile (SYSCALL_INST_STR##nr				\
+		  : "=z" (resultvar)				\
+		  : "r" (r3) ASMFMT_##nr 			\
+		  : "memory");					\
+								\
+    if (resultvar >= 0xfffff001)			        \
+      {							        \
+	__set_errno (-resultvar);				\
+	resultvar = 0xffffffff;					\
+      }								\
+    (int) resultvar; })
 
 #endif	/* __ASSEMBLER__ */
 
