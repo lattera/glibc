@@ -1,3 +1,8 @@
+2001-08-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_jnl.c: New file,
+	contributed Stephen L Moshier.
+
 2001-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sunrpc/etc.rpc (sgi_fam): Add.
