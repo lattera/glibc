@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    powerpc version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,9 @@
 #endif
 
 /* For multiprocessor systems, we want to ensure all memory accesses
-   are completed before we reset a lock.  */
-#define MEMORY_BARRIER() __asm__ __volatile__ ("sync" : : : "memory")
+   are completed before we reset a lock.  On other systems, we still
+   need to make sure that the compiler has flushed everything to memory.  */
+#define MEMORY_BARRIER() __asm__ ("sync" : : : "memory")
 
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
@@ -48,17 +49,17 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   int ret;
 
-  sync();
-  __asm__ __volatile__(
-		       "0:    lwarx %0,0,%1 ;"
-		       "      xor. %0,%3,%0;"
-		       "      bne 1f;"
-		       "      stwcx. %2,0,%1;"
-		       "      bne- 0b;"
-		       "1:    "
+  MEMORY_BARRIER ();
+  __asm__ (
+	   "0:    lwarx %0,0,%1 ;"
+	   "      xor. %0,%3,%0;"
+	   "      bne 1f;"
+	   "      stwcx. %2,0,%1;"
+	   "      bne- 0b;"
+	   "1:    "
 	: "=&r"(ret)
 	: "r"(p), "r"(newval), "r"(oldval)
 	: "cr0", "memory");
-  MEMORY_BARRIER();
+  MEMORY_BARRIER ();
   return ret == 0;
 }

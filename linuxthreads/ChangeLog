@@ -1,3 +1,10 @@
+2000-04-11  Geoff Keating  <geoffk@cygnus.com>
+
+	* sysdeps/powerpc/pt-machine.h (MEMORY_BARRIER): Don't be
+	__volatile__.
+	(__compare_and_swap): Replace other 'sync' with MEMORY_BARRIER.
+	Don't have the 'asm' __volatile__.
+
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* internals.h: Define MEMORY_BARRIER as empty if not defined already.
