@@ -57,7 +57,7 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   neededobj5.c neededobj6.c firstobj.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c \
-		   testobj.h vismod.h
+		   testobj.h vismod.h globalmod1.c
 
 include ../Makeconfig
 
@@ -101,7 +101,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	constload1 order $(tests-vis-$(have-protected)) noload filter unload \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
-	neededtest3 neededtest4 unload2 lateglobal initfirst
+	neededtest3 neededtest4 unload2 lateglobal initfirst global
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -114,7 +114,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
-		neededobj5 neededobj6 firstobj \
+		neededobj5 neededobj6 firstobj globalmod1 \
 		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
@@ -271,6 +271,7 @@ $(objpfx)neededobj6.so: $(objpfx)neededobj5.so
 $(objpfx)unload2mod.so: $(objpfx)unload2dep.so
 $(objpfx)ltglobmod2.so: $(libdl)
 $(objpfx)firstobj.so: $(shared-thread-library)
+$(objpfx)globalmod1.so: $(libdl)
 
 # filtmod1.so has a special rule
 $(filter-out $(objpfx)filtmod1.so, $(test-modules)): $(objpfx)%.so: $(objpfx)%.os
@@ -394,3 +395,6 @@ $(objpfx)tst-pathopt.out: tst-pathopt.sh $(objpfx)tst-pathopt \
 
 $(objpfx)initfirst: $(libdl)
 $(objpfx)initfirst.out: $(objpfx)firstobj.so
+
+$(objpfx)global: $(objpfx)globalmod1.so
+$(objpfx)global.out: $(objpfx)reldepmod1.so

@@ -1,5 +1,9 @@
 2001-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/global.c: New file.
+	* elf/globalmod1.c: New file.
+	* elf/Makefile: Add rules to build and run global.
+
 	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Define SI_ASYNCNL.
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
 	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
