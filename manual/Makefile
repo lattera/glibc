@@ -36,7 +36,7 @@ endif
 chapters: libc.texinfo
 	$(find-includes)
 ifdef chapters
-include chapters-incl
+-include chapters-incl
 chapters-incl: $(chapters)
 	$(find-includes)
 chapters-incl := $(filter-out summary.texi,$(chapters-incl))

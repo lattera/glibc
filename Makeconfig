@@ -298,7 +298,7 @@ endif
 ifndef +link
 +link = $(CC) -nostdlib -nostartfiles -o $@ \
 	      $(sysdep-LDFLAGS) $(config-LDFLAGS) $(LDFLAGS)  \
-	      $(+preinit) \
+	      $(addprefix $(csu-objpfx),start.o) $(+preinit) \
 	      $(filter-out $(common-objpfx)libc%,$^) $(link-libc) \
 	      $(+postinit)
 endif
