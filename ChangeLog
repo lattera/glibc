@@ -1,3 +1,12 @@
+2000-03-23  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_int.h (__gconv_transform_ucs2little_internal,
+	__gconv_transform_internal_ucs2little): Remove declarations.
+	* iconv/gconv_simple.c (__gconv_transform_ucs2_internal,
+	__gconv_transform_internal_ucs2): Never	need to bswap_16.
+	(__gconv_transform_ucs2reverse_internal,
+	__gconv_transform_internal_ucs2reverse): Always need to bswap_16.
+
 2000-03-27  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* include/shlib-compat.h (SHLIB_COMPAT): Make the test handle the

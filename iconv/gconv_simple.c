@@ -396,14 +396,8 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define BODY \
-  *((uint32_t *) outptr)++ = bswap_16 (*(uint16_t *) inptr);		      \
-  inptr += 2;
-#else
-# define BODY \
+#define BODY \
   *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
-#endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -421,21 +415,7 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define BODY \
-  {									      \
-    if (*((uint32_t *) inptr) >= 0x10000)				      \
-      {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-    /* Please note that we use the `uint32_t' from-pointer as an `uint16_t'   \
-       pointer which works since we are on a little endian machine.  */	      \
-    *((uint16_t *) outptr)++ = bswap_16 (*((uint16_t *) inptr));	      \
-    inptr += 4;								      \
-  }
-#else
-# define BODY \
+#define BODY \
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
@@ -444,70 +424,53 @@ internal_ucs4le_loop (const unsigned char **inptrp, const unsigned char *inend,
       }									      \
     *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
   }
-#endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
 
-/* Convert from UCS2 in little endian to the internal (UCS4-like) format.  */
+/* Convert from UCS2 in other endianness to the internal (UCS4-like) format. */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		2
 #define MIN_NEEDED_TO		4
 #define FROM_DIRECTION		1
-#define FROM_LOOP		ucs2little_internal_loop
-#define TO_LOOP			ucs2little_internal_loop /* This is not used.*/
+#define FROM_LOOP		ucs2reverse_internal_loop
+#define TO_LOOP			ucs2reverse_internal_loop/* This is not used.*/
 #define FUNCTION_NAME		__gconv_transform_ucs2reverse_internal
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define BODY \
-  *((uint32_t *) outptr)++ = *((uint16_t *) inptr)++;
-#else
-# define BODY \
+#define BODY \
   *((uint32_t *) outptr)++ = bswap_16 (*(uint16_t *) inptr);		      \
   inptr += 2;
-#endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
 
-/* Convert from the internal (UCS4-like) format to UCS2 in little endian.  */
+/* Convert from the internal (UCS4-like) format to UCS2 in other endianness. */
 #define DEFINE_INIT		0
 #define DEFINE_FINI		0
 #define MIN_NEEDED_FROM		4
 #define MIN_NEEDED_TO		2
 #define FROM_DIRECTION		1
-#define FROM_LOOP		internal_ucs2little_loop
-#define TO_LOOP			internal_ucs2little_loop /* This is not used.*/
+#define FROM_LOOP		internal_ucs2reverse_loop
+#define TO_LOOP			internal_ucs2reverse_loop/* This is not used.*/
 #define FUNCTION_NAME		__gconv_transform_internal_ucs2reverse
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define BODY \
+#define BODY \
   {									      \
-    if (*((uint32_t *) inptr) >= 0x10000)				      \
+    uint32_t val = *((uint32_t *) inptr);				      \
+    if (val >= 0x10000)							      \
       {									      \
 	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
-    *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
-  }
-#else
-# define BODY \
-  {									      \
-    if (*((uint32_t *) inptr) >= 0x10000)				      \
-      {									      \
-	result = __GCONV_ILLEGAL_INPUT;					      \
-	break;								      \
-      }									      \
-    *((uint16_t *) outptr)++ = bswap_16 (((uint16_t *) inptr)[1]);	      \
+    *((uint16_t *) outptr)++ = bswap_16 (val);				      \
     inptr += 4;								      \
   }
-#endif
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
