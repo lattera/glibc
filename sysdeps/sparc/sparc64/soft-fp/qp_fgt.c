@@ -38,12 +38,12 @@ int _Qp_fgt(const long double *a, const long double *b)
 
   QP_HANDLE_EXCEPTIONS(
   	__asm (
-	"ldd [%0], %%f52
-	 ldd [%0+8], %%f54
-	 ldd [%1], %%f56
-	 ldd [%1+8], %%f58
-	 fcmpeq %%fcc3, %%f52, %%f56
-	" : : "r" (a), "r" (b) : QP_CLOBBER_CC);
+"	ldd [%0], %%f52\n"
+"	ldd [%0+8], %%f54\n"
+"	ldd [%1], %%f56\n"
+"	ldd [%1+8], %%f58\n"
+"	fcmpeq %%fcc3, %%f52, %%f56\n"
+"	" : : "r" (a), "r" (b) : QP_CLOBBER_CC);
 	_FPU_GETCW(_fcw);
 	r = ((_fcw >> 36) & 3) - 3);
 

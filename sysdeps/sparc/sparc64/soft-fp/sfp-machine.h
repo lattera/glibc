@@ -111,10 +111,10 @@ do {								\
       /* This is the common case, so we do it inline.		\
        * We need to clear cexc bits if any.			\
        */							\
-      __asm__ __volatile__("
-      	fzero %%f62
-      	faddd %%f62, %%f62, %%f62
-      	" : : : "f62");						\
+      __asm__ __volatile__("\n"					\
+"      	fzero %%f62\n"						\
+"      	faddd %%f62, %%f62, %%f62\n"				\
+"      	" : : : "f62");						\
     }								\
   else								\
     {								\
@@ -136,8 +136,8 @@ do {								\
 } while (0)
 
 #define QP_NO_EXCEPTIONS					\
-  __asm ("fzero %%f62
-	  faddd %%f62, %%f62, %%f62" : : : "f62")
+  __asm ("fzero %%f62\n"					\
+"	  faddd %%f62, %%f62, %%f62" : : : "f62")
                               
 #define QP_CLOBBER "memory", "f52", "f54", "f56", "f58", "f60", "f62"
 #define QP_CLOBBER_CC QP_CLOBBER , "cc"

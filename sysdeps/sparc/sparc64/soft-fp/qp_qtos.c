@@ -41,10 +41,10 @@ float _Qp_qtos(const long double *a)
   FP_PACK_S(r, R);
 
   QP_HANDLE_EXCEPTIONS(__asm (
-	"ldd [%1], %%f52
-	 ldd [%1+8], %%f54
-	 fqtos %%f52, %0
-	" : "=&f" (r) : "r" (a) : QP_CLOBBER));
+"	ldd [%1], %%f52\n"
+"	ldd [%1+8], %%f54\n"
+"	fqtos %%f52, %0\n"
+"	" : "=&f" (r) : "r" (a) : QP_CLOBBER));
 
   return r;
 }

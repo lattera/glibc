@@ -39,8 +39,8 @@ void _Qp_stoq(long double *c, const float a)
 #endif
   FP_PACK_QP(c, C);
   QP_HANDLE_EXCEPTIONS(__asm (
-	"fstoq %1, %%f60
-	 std %%f60, [%0]
-	 std %%f62, [%0+8]
-	" : : "r" (c), "f" (a) : QP_CLOBBER));
+"	fstoq %1, %%f60\n"
+"	std %%f60, [%0]\n"
+"	std %%f62, [%0+8]\n"
+"	" : : "r" (c), "f" (a) : QP_CLOBBER));
 }

@@ -1,3 +1,31 @@
+2001-04-29  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/sparc/sparc64/dl-machine.h: Fix multiline strings
+	warnings.
+	* sysdeps/sparc/sparc64/soft-fp/qp_add.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_cmp.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_cmpe.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_div.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_dtoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_feq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fge.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fgt.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fle.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_flt.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_fne.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_mul.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtod.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoi.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtos.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoui.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoux.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtox.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtox.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_sqrt.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_stoq.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/qp_sub.c: Likewise.
+	* sysdeps/sparc/sparc64/soft-fp/sfp-machine.h: Likewise.
+
 2001-04-29  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h: Fix missing backslash

@@ -39,12 +39,12 @@ void _Qp_mul(long double *c, const long double *a, const long double *b)
   QP_HANDLE_EXCEPTIONS(
   	_FPU_SETCW(_fcw);
   	__asm (
-	"ldd [%1], %%f52
-	 ldd [%1+8], %%f54
-	 ldd [%2], %%f56
-	 ldd [%2+8], %%f58
-	 fmulq %%f52, %%f56, %%f60
-	 std %%f60, [%0]
-	 std %%f62, [%0+8]
-	" : : "r" (c), "r" (a), "r" (b) : QP_CLOBBER));
+"	ldd [%1], %%f52\n"
+"	ldd [%1+8], %%f54\n"
+"	ldd [%2], %%f56\n"
+"	ldd [%2+8], %%f58\n"
+"	fmulq %%f52, %%f56, %%f60\n"
+"	std %%f60, [%0]\n"
+"	std %%f62, [%0+8]\n"
+"	" : : "r" (c), "r" (a), "r" (b) : QP_CLOBBER));
 }

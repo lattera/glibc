@@ -36,11 +36,11 @@ unsigned long _Qp_qtoux(const long double *a)
   QP_HANDLE_EXCEPTIONS(
 	unsigned long rx;
   	__asm (
-	"ldd [%1], %%f52
-	 ldd [%1+8], %%f54
-	 fqtoi %%f52, %%f60
-	 std %%f60, [%0]
-	" : : "r" (&rx), "r" (a) : QP_CLOBBER);
+"	ldd [%1], %%f52\n"
+"	ldd [%1+8], %%f54\n"
+"	fqtoi %%f52, %%f60\n"
+"	std %%f60, [%0]\n"
+"	" : : "r" (&rx), "r" (a) : QP_CLOBBER);
 	r = rx);
 
   return r;

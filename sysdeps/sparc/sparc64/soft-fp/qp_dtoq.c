@@ -39,8 +39,8 @@ void _Qp_dtoq(long double *c, const double a)
 #endif
   FP_PACK_QP(c, C);
   QP_HANDLE_EXCEPTIONS(__asm (
-	"fdtoq %1, %%f60
-	 std %%f60, [%0]
-	 std %%f62, [%0+8]
-	" : : "r" (c), "e" (a) : QP_CLOBBER));
+"	fdtoq %1, %%f60\n"
+"	std %%f60, [%0]\n"
+"	std %%f62, [%0+8]\n"
+"	" : : "r" (c), "e" (a) : QP_CLOBBER));
 }

@@ -33,10 +33,10 @@ void _Qp_sqrt(long double *c, const long double *a)
   FP_SQRT_Q(C, A);
   FP_PACK_QP(c, C);
   QP_HANDLE_EXCEPTIONS(__asm (
-	"ldd [%1], %%f52
-	 ldd [%1+8], %%f54
-	 fsqrtq %%f52, %%f60
-	 std %%f60, [%0]
-	 std %%f62, [%0+8]
-	" : : "r" (c), "r" (a) : QP_CLOBBER));
+"	ldd [%1], %%f52\n"
+"	ldd [%1+8], %%f54\n"
+"	fsqrtq %%f52, %%f60\n"
+"	std %%f60, [%0]\n"
+"	std %%f62, [%0+8]\n"
+"	" : : "r" (c), "r" (a) : QP_CLOBBER));
 }

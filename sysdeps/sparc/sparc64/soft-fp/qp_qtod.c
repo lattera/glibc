@@ -40,10 +40,10 @@ double _Qp_qtod(const long double *a)
 #endif
   FP_PACK_D(r, R);
   QP_HANDLE_EXCEPTIONS(__asm (
-	"ldd [%1], %%f52
-	 ldd [%1+8], %%f54
-	 fqtod %%f52, %0
-	" : "=&e" (r) : "r" (a) : QP_CLOBBER));
+"	ldd [%1], %%f52\n"
+"	ldd [%1+8], %%f54\n"
+"	fqtod %%f52, %0\n"
+"	" : "=&e" (r) : "r" (a) : QP_CLOBBER));
 
   return r;
 }
