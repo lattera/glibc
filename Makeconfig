@@ -291,8 +291,15 @@ endif
 endif
 ifndef link-libc
 ifeq (yes,$(build-shared))
-link-libc = -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(libdir) \
+link-libc = -Wl,-rpath-link=$(common-objdir) -Wl,-rpath=$(default-rpath) \
 	    $(common-objpfx)libc.so $(gnulib)
+# Choose the default search path for the dynamic linker based on
+# where we will install libraries.
+ifneq ($(libdir),$(slibdir))
+default-rpath = $(slibdir):$(libdir)
+else
+default-rpath = $(libdir)
+endif
 else
 link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
 endif

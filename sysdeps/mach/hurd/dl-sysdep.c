@@ -159,12 +159,6 @@ unfmh();			/* XXX */
 		  _dl_hurd_data->phdrsz / sizeof (Elf32_Phdr),
 		  &_dl_hurd_data->user_entry);
 
-      /* Deallocate the reply port and task port rights acquired by
-	 __mach_init.  We are done with them now, and the user will
-	 reacquire them for himself when he wants them.  */
-      __mig_dealloc_reply_port (MACH_PORT_NULL);
-      __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
-
       if (_dl_skip_args && _dl_argv[-_dl_skip_args] == (char *) p)
 	{
 	  /* We are ignoring the first few arguments, but we have no Hurd
@@ -197,6 +191,16 @@ fmh();				/* XXX */
 
   LOSE;
   abort ();
+}
+
+void
+_dl_sysdep_start_cleanup (void)
+{
+  /* Deallocate the reply port and task port rights acquired by
+     __mach_init.  We are done with them now, and the user will
+     reacquire them for himself when he wants them.  */
+  __mig_dealloc_reply_port (MACH_PORT_NULL);
+  __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
 }
 
 int
@@ -567,13 +571,14 @@ malloc (size_t n)
   ptr += n;
   return block;
 }
-
 weak_symbol (malloc)
 
-/* These should never be called.  */
+/* This should never be called.  */
 void *realloc (void *ptr, size_t n) { ptr += n; abort (); }
-void free (void *ptr) { ptr = ptr; abort (); }
 weak_symbol (realloc)
+
+/* This will rarely be called.  */
+void free (void *ptr) { ptr = ptr; }
 weak_symbol (free)
 
 /* Avoid signal frobnication in setjmp/longjmp.  */

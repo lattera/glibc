@@ -50,16 +50,6 @@ endif
 include ../Rules
 
 
-# Choose the default search path for the dynamic linker based on
-# where we will install libraries.
-ifneq ($(libdir),$(slibdir))
-default-rpath = $(slibdir):$(libdir)
-else
-default-rpath = $(libdir)
-endif
-CPPFLAGS += -DDEFAULT_RPATH='"$(default-rpath)"'
-
-
 # Link together the dynamic linker into a single relocatable object.
 # We use this to produce both the ABI-compliant and Linux-compatible
 # dynamic linker shared objects below.
@@ -70,7 +60,8 @@ $(objpfx)librtld.so: $(rtld-routines:%=$(objpfx)%.so) \
 		  '-Wl,-(' $^ -lgcc '-Wl,-)'
 
 $(objpfx)ld.so $(objpfx)ld-linux.so.1: $(objpfx)librtld.so
-	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ $^
+	$(LINK.o) -nostdlib -nostartfiles -shared -o $@ \
+		  -Wl,-rpath=$(default-rpath) $^
 
 # The Linux-compatible dynamic linker shared object is just the same
 # with one object file of compatibility initialization code added.

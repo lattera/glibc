@@ -139,7 +139,10 @@ _dl_map_object (struct link_map *loader, const char *name)
       if (fd == -1 && ! _dl_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
       if (fd == -1)
-	trypath (DEFAULT_RPATH);
+	{
+	  extern const char *_dl_rpath;	/* Set in rtld.c. */
+	  trypath (_dl_rpath);
+	}
     }
   else
     {

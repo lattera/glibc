@@ -1,3 +1,34 @@
+Thu Nov 16 06:07:49 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start_cleanup): New
+	function.
+	(_dl_sysdep_start): Move cleanup code there.
+
+	* Makeconfig (default-rpath): New variable.
+	(link-libc): Use it.
+	* elf/Makefile (ld.so): Pass -rpath=$(default-rpath).
+	* elf/rtld.c (_dl_rpath): New variable.
+	(_dl_start): Set it from rtld_map's DT_RPATH.
+	Call _dl_setup_hash on rtld_map.
+	(dl_main): Cache address of _exit in variable before relocating,
+	and use that in later calls.  Call _dl_sysdep_start_cleanup before
+	relocating.  Keep track of dependency order while loading; remove
+	rtld_map from chain, and reinsert in proper order if there is a
+	dependency on it.
+
+	* sysdeps/generic/Makefile (make_siglist): Pass
+	-DSIGNUM_H=... with config's signum.h location.
+	* sysdeps/generic/make_siglist.c: Include SIGNUM_H to define
+	signal numbers.
+	(HAVE_STRSIGNAL, HAVE_PSIGNAL): Define these before including signame.c
+	(main): Deansideclize output.
+
+	* elf/dl-load.c (_dl_map_object): Use _dl_rpath variable in place
+	of DEFAULT_RPATH macro.
+	* elf/Makefile: Undo last change.
+
+	* sysdeps/mach/hurd/dl-sysdep.c (free): Don't abort, just nop.
+
 Wed Nov 15 19:22:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Undefined symbol is no

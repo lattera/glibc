@@ -39,10 +39,12 @@ extern Elf32_Addr _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const Elf32_Phdr *phdr,
 						     Elf32_Word phent,
 						     Elf32_Addr *user_entry));
+extern void _dl_sysdep_start_cleanup (void);
 
 int _dl_secure;
 int _dl_argc;
 char **_dl_argv;
+const char *_dl_rpath;
 
 struct r_debug dl_r_debug;
 
@@ -93,7 +95,13 @@ _dl_start (void *arg)
   rtld_map.l_addr = bootstrap_map.l_addr;
   rtld_map.l_ld = bootstrap_map.l_ld;
   memcpy (rtld_map.l_info, bootstrap_map.l_info, sizeof rtld_map.l_info);
+  _dl_setup_hash (&rtld_map);
 
+  /* Cache the DT_RPATH stored in ld.so itself; this will be
+     the default search path.  */
+  _dl_rpath = (void *) (rtld_map.l_addr +
+			rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
+			rtld_map.l_info[DT_RPATH]->d_un.d_val);
 
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
@@ -118,10 +126,11 @@ dl_main (const Elf32_Phdr *phdr,
   void doit (void)
     {
       const Elf32_Phdr *ph;
-      struct link_map *l;
+      struct link_map *l, *last, *before_rtld;
       const char *interpreter_name;
       int lazy;
       int list_only = 0;
+      __typeof (_exit) *volatile exitfn;
 
       if (*user_entry == (Elf32_Addr) &_start)
 	{
@@ -248,6 +257,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       /* Now process all the DT_NEEDED entries and map in the objects.
 	 Each new link_map will go on the end of the chain, so we will
 	 come across it later in the loop to map in its dependencies.  */
+      before_rtld = NULL;
       for (l = _dl_loaded; l; l = l->l_next)
 	{
 	  if (l->l_info[DT_NEEDED])
@@ -255,23 +265,46 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      const char *strtab
 		= (void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr;
 	      const Elf32_Dyn *d;
+	      last = l;
 	      for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 		if (d->d_tag == DT_NEEDED)
-		  _dl_map_object (l, strtab + d->d_un.d_val);
+		  {
+		    struct link_map *new;
+		    new = _dl_map_object (l, strtab + d->d_un.d_val);
+		    if (!before_rtld && new == &rtld_map)
+		      before_rtld = last;
+		    last = new;
+		  }
 	    }
 	  l->l_deps_loaded = 1;
 	}
 
-      if (rtld_map.l_opencount == 0)
+      /* If any DT_NEEDED entry referred to the interpreter object itself,
+	 reorder the list so it appears after its dependent.  If not,
+	 remove it from the maps we will use for symbol resolution.  */
+      rtld_map.l_prev->l_next = rtld_map.l_next;
+      if (rtld_map.l_next)
+	rtld_map.l_next->l_prev = rtld_map.l_prev;
+      if (before_rtld)
 	{
-	  /* No DT_NEEDED entry referred to the interpreter object itself.
-	     Remove it from the maps we will use for symbol resolution.  */
-	  rtld_map.l_prev->l_next = rtld_map.l_next;
+	  rtld_map.l_prev = before_rtld;
+	  rtld_map.l_next = before_rtld->l_next;
+	  before_rtld->l_next = &rtld_map;
 	  if (rtld_map.l_next)
-	    rtld_map.l_next->l_prev = rtld_map.l_prev;
+	    rtld_map.l_next->l_prev = &rtld_map;
 	}
 
       lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+
+      /* Fetch this value now, before real relocation.  For --list, it will
+	 be called below, and the finally-linked version is not the right
+	 one.  */
+      exitfn = &_exit;
+
+      /* Do any necessary cleanups for the startup OS interface code.
+	 We do these now so that no calls are made after real relocation
+	 which might be resolved to different functions than we expect.  */
+      _dl_sysdep_start_cleanup ();
 
       /* Now we have all the objects loaded.  Relocate them all.
 	 We do this in reverse order so that copy relocs of earlier
@@ -297,7 +330,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    {
 	      _dl_sysdep_message (_dl_loaded->l_name, ": statically linked\n",
 				  NULL);
-	      _exit (1);
+	      (*exitfn) (1);
 	    }
 
 	  for (l = _dl_loaded->l_next; l; l = l->l_next)
@@ -311,7 +344,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 				  " (0x", bp, ")\n", NULL);
 	    }
 
-	  _exit (0);
+	  (*exitfn) (0);
 	}
 
       if (rtld_map.l_info[DT_INIT])
