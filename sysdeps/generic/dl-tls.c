@@ -198,7 +198,7 @@ _dl_determine_tlsoffset (void)
 
 void *
 internal_function
-_dl_allocate_tls (void)
+_dl_allocate_tls_storage (void)
 {
   void *result;
   dtv_t *dtv;
@@ -225,10 +225,6 @@ _dl_allocate_tls (void)
   dtv = (dtv_t *) malloc ((dtv_length + 2) * sizeof (dtv_t));
   if (result != MAP_FAILED && dtv != NULL)
     {
-      struct dtv_slotinfo_list *listp;
-      bool first_block = true;
-      size_t total = 0;
-
 # if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  */
       result = (char *) result + GL(dl_tls_static_size) - TLS_TCB_SIZE;
@@ -241,62 +237,6 @@ _dl_allocate_tls (void)
       /* Initialize all of the rest of the dtv with zero to indicate
 	 nothing there.  */
       memset (dtv + 2, '\0', dtv_length * sizeof (dtv_t));
-
-      /* We have to look prepare the dtv for all currently loaded
-	 modules using TLS.  For those which are dynamically loaded we
-	 add the values indicating deferred allocation.  */
-      listp = GL(dl_tls_dtv_slotinfo_list);
-      while (1)
-	{
-	  size_t cnt;
-
-	  for (cnt = first_block ? 1 : 0; cnt < listp->len; ++cnt)
-	    {
-	      struct link_map *map;
-	      void *dest;
-
-	      /* Check for the total number of used slots.  */
-	      if (total + cnt >= GL(dl_tls_max_dtv_idx))
-		break;
-
-	      map = listp->slotinfo[cnt].map;
-	      if (map == NULL)
-		/* Unused entry.  */
-		continue;
-
-	      if (map->l_type == lt_loaded)
-		{
-		  /* For dynamically loaded modules we simply store
-		     the value indicating deferred allocation.  */
-		  dtv[1 + map->l_tls_modid].pointer = TLS_DTV_UNALLOCATED;
-		  continue;
-		}
-
-	      assert (map->l_tls_modid == cnt);
-	      assert (map->l_tls_blocksize >= map->l_tls_initimage_size);
-# if TLS_TCB_AT_TP
-	      assert (map->l_tls_offset >= map->l_tls_blocksize);
-	      dest = (char *) result - map->l_tls_offset;
-# elif TLS_DTV_AT_TP
-	      dest = (char *) result + map->l_tls_offset;
-# else
-#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
-# endif
-
-	      /* We don't have to clear the BSS part of the TLS block
-		 since mmap is used to allocate the memory which
-		 guarantees it is initialized to zero.  */
-	      dtv[1 + cnt].pointer = memcpy (dest, map->l_tls_initimage,
-					     map->l_tls_initimage_size);
-	    }
-
-	  total += cnt;
-	  if (total >= GL(dl_tls_max_dtv_idx))
-	    break;
-
-	  listp = listp->next;
-	  assert (listp != NULL);
-	}
 
       /* Add the dtv to the thread data structures.  */
       INSTALL_DTV (result, dtv);
@@ -311,6 +251,80 @@ _dl_allocate_tls (void)
 }
 INTDEF(_dl_allocate_tls)
 
+void *
+internal_function
+_dl_allocate_tls_init (void *result)
+{
+  dtv_t *dtv = GET_DTV (result);
+  struct dtv_slotinfo_list *listp;
+  bool first_block = true;
+  size_t total = 0;
+
+  /* We have to look prepare the dtv for all currently loaded
+     modules using TLS.  For those which are dynamically loaded we
+     add the values indicating deferred allocation.  */
+  listp = GL(dl_tls_dtv_slotinfo_list);
+  while (1)
+    {
+      size_t cnt;
+
+      for (cnt = first_block ? 1 : 0; cnt < listp->len; ++cnt)
+	{
+	  struct link_map *map;
+	  void *dest;
+
+	  /* Check for the total number of used slots.  */
+	  if (total + cnt > GL(dl_tls_max_dtv_idx))
+	    break;
+
+	  map = listp->slotinfo[cnt].map;
+	  if (map == NULL)
+	    /* Unused entry.  */
+	    continue;
+
+	  if (map->l_type == lt_loaded)
+	    {
+	      /* For dynamically loaded modules we simply store
+		 the value indicating deferred allocation.  */
+	      dtv[map->l_tls_modid].pointer = TLS_DTV_UNALLOCATED;
+	      continue;
+	    }
+
+	  assert (map->l_tls_modid == cnt);
+	  assert (map->l_tls_blocksize >= map->l_tls_initimage_size);
+# if TLS_TCB_AT_TP
+	  assert (map->l_tls_offset >= map->l_tls_blocksize);
+	  dest = (char *) result - map->l_tls_offset;
+# elif TLS_DTV_AT_TP
+	  dest = (char *) result + map->l_tls_offset;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+	  /* We don't have to clear the BSS part of the TLS block
+	     since mmap is used to allocate the memory which
+	     guarantees it is initialized to zero.  */
+	  dtv[cnt].pointer = memcpy (dest, map->l_tls_initimage,
+				     map->l_tls_initimage_size);
+	}
+
+      total += cnt;
+      if (total > GL(dl_tls_max_dtv_idx))
+	break;
+
+      listp = listp->next;
+      assert (listp != NULL);
+    }
+
+  return result;
+}
+
+void *
+internal_function
+_dl_allocate_tls (void)
+{
+  return _dl_allocate_tls_init (_dl_allocate_tls_storage ());
+}
 
 void
 internal_function
