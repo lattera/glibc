@@ -27,9 +27,9 @@
 #include <nsswitch.h>
 
 /* Type of the lookup function.  */
-typedef enum nss_status (*initgroups_function) (const char *, gid_t,
-						long int *, long int *,
-						gid_t *, long int, int *);
+typedef enum nss_status (*initgroups_dyn_function) (const char *, gid_t,
+						    long int *, long int *,
+						    gid_t **, long int, int *);
 /* Prototype for the setgrent functions we use here.  */
 typedef enum nss_status (*set_function) (void);
 
@@ -152,7 +152,7 @@ initgroups (user, group)
 #else
 
   service_user *nip = NULL;
-  initgroups_function fct;
+  initgroups_dyn_function fct;
   enum nss_status status = NSS_STATUS_UNAVAIL;
   int no_more;
   /* Start is one, because we have the first group as parameter.  */
