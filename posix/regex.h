@@ -298,6 +298,10 @@ extern reg_syntax_t re_syntax_options;
 /* Like REG_NOTBOL, except for the end-of-line.  */
 #define REG_NOTEOL (1 << 1)
 
+/* Use PMATCH[0] to delimit the start and end of the search in the
+   buffer.  */
+#define REG_STARTEND (1 << 2)
+
 
 /* If any error codes are removed, changed, or added, update the
    `re_error_msg' table in regex.c.  */

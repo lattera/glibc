@@ -215,13 +215,23 @@ regexec (preg, string, nmatch, pmatch, eflags)
     int eflags;
 {
   reg_errcode_t err;
-  int length = strlen (string);
-  if (preg->no_sub)
-    err = re_search_internal (preg, string, length, 0, length, length, 0,
-			      NULL, eflags);
+  int start, length;
+  if (eflags & REG_STARTEND)
+    {
+      start = pmatch[0].rm_so;
+      length = pmatch[0].rm_eo;
+    }
   else
-    err = re_search_internal (preg, string, length, 0, length, length, nmatch,
-			      pmatch, eflags);
+    {
+      start = 0;
+      length = strlen (string);
+    }
+  if (preg->no_sub)
+    err = re_search_internal (preg, string, length, start, length - start,
+			      length, 0, NULL, eflags);
+  else
+    err = re_search_internal (preg, string, length, start, length - start,
+			      length, nmatch, pmatch, eflags);
   return err != REG_NOERROR;
 }
 #ifdef _LIBC

@@ -1,3 +1,8 @@
+2004-01-15  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex.h (REG_STARTEND): Define.
+	* posix/regexec.c (regexec): Check for REG_STARTEND.
+
 2004-02-29  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (transit_state): Don't handle state == NULL.
