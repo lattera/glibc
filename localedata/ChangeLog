@@ -1,5 +1,7 @@
 2000-09-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* charmaps/GB18030: Update once more.
+
 	* charmaps/JOHAB: New file.
 	* SUPPORTED: Add ko_KR.JOHAB.
 
