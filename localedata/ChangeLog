@@ -1,5 +1,7 @@
 2002-10-18  Bruno Haible  <bruno@clisp.org>
 
+	* charmaps/ISO_5428: Use Greek characters introduced in Unicode 3.0.
+
 	* charmaps/KOI8-T: Correct a typo.
 	* charmaps/CP1256: Use official Unicode character names.
 	* charmaps/EUC-JP: Likewise.
