@@ -1,5 +1,10 @@
 2003-02-21  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/x86_64/dl-machine.h (elf_machine_rela) <R_X86_64_PC32>:
+	Check for signed overflow, not unsigned.
+
+2003-02-21  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/sparc/sparc64/elf/configure.in: New file.
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile (sysdep-CFLAGS):
 	Use -fcall-used-g6, not -fcall-used-g7.

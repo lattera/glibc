@@ -30,7 +30,7 @@
 	.text;								      \
 ENTRY(name)								      \
 	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;			      \
-	brz,pn %g1, 1f;							      \
+	brnz,pn %g1, 1f;						      \
 	 mov SYS_ify(syscall_name), %g1;				      \
 	ta 0x6d;							      \
 	bcs,pn %xcc, __syscall_error_handler;				      \

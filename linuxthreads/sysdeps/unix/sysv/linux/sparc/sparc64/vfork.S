@@ -34,13 +34,16 @@ ENTRY(__vfork)
 	mov	%o1, %o7
 	or	%o2, %lo(__libc_pthread_functions), %o2
 	ldx	[%o0 + %o2], %o2
-	ldx	[%o2], %o2
-	cmp	%o2, 0
-	bne	HIDDEN_JUMPTARGET(__fork)
+	ldx	[%o2], %o0
 #else
 	.weak	pthread_create
 	sethi	%hi(pthread_create), %o0
 	or	%o0, %lo(pthread_create), %o0
+#endif
+#if defined SHARED && !defined BROKEN_SPARC_WDISP22
+	cmp	%o0, 0
+	bne	HIDDEN_JUMPTARGET(__fork)
+#else
 	brnz,pn	%o0, 1f
 #endif
 	 mov	__NR_vfork, %g1
@@ -50,7 +53,7 @@ ENTRY(__vfork)
 	sub	%o1, 1, %o1
 	retl
 	 and	%o0, %o1, %o0
-#ifndef SHARED
+#if !defined SHARED || defined BROKEN_SPARC_WDISP22
 1:	mov	%o7, %g1
 	call	HIDDEN_JUMPTARGET(__fork)
 	 mov	%g1, %o7

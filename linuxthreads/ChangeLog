@@ -1,3 +1,13 @@
+2003-02-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Call
+	__fork instead of branching to it if BROKEN_SPARC_WDISP22.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h (PSEUDO):
+	Fix typo.
+	* sysdeps/unix/sysv/linux/sparc/Makefile (specs): Add ./ prefix
+	to crti.o and crtn.o.
+	* sysdeps/unix/sysv/linux/x86_64/Makefile (specs): Likewise.
+
 2003-02-21  Roland McGrath  <roland@redhat.com>
 
 	* Makefile (install-lib-ldscripts): New variable.
