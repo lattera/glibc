@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -162,6 +162,41 @@ __pathconf (const char *path, int name)
       /* We let platforms with larger file sizes overwrite this value.  */
       return 32;
 #endif
+
+
+    case _PC_REC_INCR_XFER_SIZE:
+      /* XXX It is not entirely clear what the limit is supposed to do.
+	 What is incremented?  */
+      return -1;
+
+    case _PC_REC_MAX_XFER_SIZE:
+      /* XXX It is not entirely clear what the limit is supposed to do.
+	 In general there is no top limit of the number of bytes which
+	 case be transported at once.  */
+      return -1;
+
+    case _PC_REC_MIN_XFER_SIZE:
+      {
+	/* XXX It is not entirely clear what the limit is supposed to do.
+	   I assume this is the block size of the filesystem.  */
+	struct statvfs64 sv;
+
+	if (__statvfs64 (path, &sv) < 0)
+	  return -1;
+	return sv.f_bsize;
+      }
+
+    case _PC_REC_XFER_ALIGN:
+      {
+	/* XXX It is not entirely clear what the limit is supposed to do.
+	   I assume that the number should reflect the minimal block
+	   alignment.  */
+	struct statvfs64 sv;
+
+	if (__statvfs64 (path, &sv) < 0)
+	  return -1;
+	return sv.f_frsize;
+      }
     }
 }
 

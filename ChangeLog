@@ -1,5 +1,12 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/confname.h: Define _PC_REC_INCR_XFER_SIZE,
+	_PC_REC_MAX_XFER_SIZE, _PC_REC_MIN_XFER_SIZE, and
+	_PC_REC_XFER_ALIGN.
+	* sysdeps/posix/pathconf.c (__pathconf): Implement handling of
+	_PC_REC_INCR_XFER_SIZE, _PC_REC_MAX_XFER_SIZE,
+	_PC_REC_MIN_XFER_SIZE, and _PC_REC_XFER_ALIGN.
+
 	* conform/conformtest.pl: Run Unix tests for XPG6.
 	Implement handling of known namespace violations.
 	Improve printing of results.
