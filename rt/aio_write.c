@@ -1,5 +1,5 @@
 /* Asynchronous write.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -27,5 +27,6 @@ int
 aio_write (aiocbp)
      struct aiocb *aiocbp;
 {
-  return __aio_enqueue_request ((aiocb_union *) aiocbp, LIO_WRITE) != NULL;
+  return (__aio_enqueue_request ((aiocb_union *) aiocbp, LIO_WRITE) == NULL
+	  ? -1 : 0);
 }

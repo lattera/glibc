@@ -1,5 +1,5 @@
 /* Synchronize I/O in given file descriptor.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -35,8 +35,9 @@
 int
 aio_fsync (int op, struct aiocb *aiocbp)
 {
-  return __aio_enqueue_request ((aiocb_union *) aiocbp,
-				op == O_SYNC ? LIO_SYNC : LIO_DSYNC) != NULL;
+  return (__aio_enqueue_request ((aiocb_union *) aiocbp,
+				 op == O_SYNC ? LIO_SYNC : LIO_DSYNC) == NULL
+	  ? -1 : 0);
 }
 
 weak_alias (aio_fsync, aio_fsync64)

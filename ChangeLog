@@ -6,6 +6,7 @@
 
 	* rt/aio_write.c: Fix return value.
 	* rt/aio_write64.c: Likewise.
+	* rt/aio_fsync.c: Likewise.
 
 	* rt/aio_misc.c: Set errno at correct place.
 
