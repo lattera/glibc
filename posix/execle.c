@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,8 +35,8 @@ execle (const char *path, const char *arg, ...)
   argv[0] = arg;
 
   va_start(args, arg);
-  i = 1;
-  do
+  i = 0;
+  while (argv[i++] != NULL)
     {
       if (i == argv_max)
 	{
@@ -58,7 +58,6 @@ execle (const char *path, const char *arg, ...)
 
       argv[i] = va_arg (args, const char *);
     }
-  while (argv[i++] != NULL);
 
   envp = va_arg(args, const char *const *);
   va_end(args);
