@@ -36,6 +36,7 @@ __getpagesize ()
   if (_dl_pagesize != 0)
     return _dl_pagesize;
 
+#ifdef __NR_getpagesize
   result = INLINE_SYSCALL (getpagesize, 0);
   /* The only possible error is ENOSYS.  */
   if (result != -1)
