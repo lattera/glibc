@@ -70,10 +70,6 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   while (file_name[0] == '/')
     file_name++;
 
-#if 0				/* ?? XXX Linux 2.2.1 does this. */
-  if ((flags & (O_CREAT|O_EXCL)) == (O_CREAT|O_EXCL))
-    flags |= O_NOFOLLOW;
-#endif
   if (flags & O_NOFOLLOW)	/* See comments below about O_NOFOLLOW.  */
     flags |= O_NOTRANS;
 
