@@ -1870,6 +1870,7 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_FPTR32LSB	0x45	/* @fptr(sym + add), data4 LSB */
 #define R_IA64_FPTR64MSB	0x46	/* @fptr(sym + add), data8 MSB */
 #define R_IA64_FPTR64LSB	0x47	/* @fptr(sym + add), data8 LSB */
+#define R_IA64_PCREL60B		0x48	/* @pcrel(sym + add), brl */
 #define R_IA64_PCREL21B		0x49	/* @pcrel(sym + add), ptb, call */
 #define R_IA64_PCREL21M		0x4a	/* @pcrel(sym + add), chk.s */
 #define R_IA64_PCREL21F		0x4b	/* @pcrel(sym + add), fchkf */
