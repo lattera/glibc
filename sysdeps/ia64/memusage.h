@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <hp-timing.h>
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("%r12"); stack_ptr; })
+#define GETTIME(low, high) \
+  {									      \
+    hp_timing_t __now;							      \
+    HP_TIMING_NOW (__now);						      \
+    low = __now & 0xffffffff;						      \
+    high = __now >> 32;							      \
+  }
 
 #include <sysdeps/generic/memusage.h>

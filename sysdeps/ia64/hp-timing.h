@@ -92,11 +92,7 @@ extern hp_timing_t __libc_hp_timing_overhead;
    processor implementation.  */
 #define REPEAT_READ(val) __builtin_expect ((int) val == -1, 0)
 
-/* That's quite simple.  Use the `rdtsc' instruction.  Note that the value
-   might not be 100% accurate since there might be some more instructions
-   running in this moment.  This could be changed by using a barrier like
-   'cpuid' right before the `rdtsc' instruciton.  But we are not interested
-   in accurate clock cycles here so we don't do this.  */
+/* That's quite simple.  Use the `ar.itc' instruction.  */
 #define HP_TIMING_NOW(Var) \
   ({ unsigned long int __itc;						      \
      do									      \

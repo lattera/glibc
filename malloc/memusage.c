@@ -82,6 +82,7 @@ static size_t buffer_size;
 static int fd = -1;
 
 static int not_me;
+static int initialized;
 extern const char *__progname;
 
 struct entry
@@ -157,15 +158,6 @@ int_handler (int signo)
 }
 
 
-/* Record the initial stack position.  */
-static void
-__attribute__ ((constructor))
-init (void)
-{
-  start_sp = GETSP ();
-}
-
-
 /* Find out whether this is the program we are supposed to profile.
    For this the name in the variable `__progname' must match the one
    given in the environment variable MEMUSAGE_PROG_NAME.  If the variable
@@ -187,6 +179,7 @@ me (void)
 {
   const char *env = getenv ("MEMUSAGE_PROG_NAME");
   size_t prog_len = strlen (__progname);
+
   if (env != NULL)
     {
       /* Check for program name.  */
@@ -199,7 +192,19 @@ me (void)
   /* Only open the file if it's really us.  */
   if (!not_me && fd == -1)
     {
-      const char *outname = getenv ("MEMUSAGE_OUTPUT");
+      const char *outname;
+
+      if (!start_sp)
+	start_sp = GETSP ();
+
+      initialized = -1;
+      mallocp = (void *(*) (size_t)) dlsym (RTLD_NEXT, "malloc");
+      reallocp = (void *(*) (void *, size_t)) dlsym (RTLD_NEXT, "realloc");
+      callocp = (void *(*) (size_t, size_t)) dlsym (RTLD_NEXT, "calloc");
+      freep = (void (*) (void *)) dlsym (RTLD_NEXT, "free");
+      initialized = 1;
+
+      outname = getenv ("MEMUSAGE_OUTPUT");
       if (outname != NULL && outname[0] != '\0'
 	  && access (outname, R_OK | W_OK) == 0)
 	{
@@ -253,6 +258,17 @@ me (void)
 }
 
 
+/* Record the initial stack position.  */
+static void
+__attribute__ ((constructor))
+init (void)
+{
+  start_sp = GETSP ();
+  if (! initialized)
+    me ();
+}
+
+
 /* `malloc' replacement.  We keep track of the memory usage if this is the
    correct program.  */
 void *
@@ -261,10 +277,11 @@ malloc (size_t len)
   struct header *result = NULL;
 
   /* Determine real implementation if not already happened.  */
-  if (mallocp == NULL)
+  if (__builtin_expect (initialized <= 0, 0))
     {
+      if (initialized == -1)
+	return NULL;
       me ();
-      mallocp = (void *(*) (size_t)) dlsym (RTLD_NEXT, "malloc");
     }
 
   /* If this is not the correct program just use the normal function.  */
@@ -287,15 +304,17 @@ malloc (size_t len)
 
   /* Do the real work.  */
   result = (struct header *) (*mallocp) (len + sizeof (struct header));
-
   if (result == NULL)
-    ++failed[idx_malloc];
-  else
-    /* Update the allocation data and write out the records if necessary.  */
-    update_data (result, len, 0);
+    {
+      ++failed[idx_malloc];
+      return NULL;
+    }
+
+  /* Update the allocation data and write out the records if necessary.  */
+  update_data (result, len, 0);
 
   /* Return the pointer to the user buffer.  */
-  return result ? (void *) (result + 1) : NULL;
+  return (void *) (result + 1);
 }
 
 
@@ -309,10 +328,11 @@ realloc (void *old, size_t len)
   size_t old_len;
 
   /* Determine real implementation if not already happened.  */
-  if (reallocp == NULL)
+  if (__builtin_expect (initialized <= 0, 0))
     {
+      if (initialized == -1)
+	return NULL;
       me ();
-      reallocp = (void *(*) (void *, size_t)) dlsym (RTLD_NEXT, "realloc");
     }
 
   /* If this is not the correct program just use the normal function.  */
@@ -350,24 +370,24 @@ realloc (void *old, size_t len)
 
   /* Do the real work.  */
   result = (struct header *) (*reallocp) (real, len + sizeof (struct header));
-
   if (result == NULL)
-    ++failed[idx_realloc];
-  else
     {
-      /* Record whether the reduction/increase happened in place.  */
-      if (real == result)
-        ++inplace;
-      /* Was the buffer increased?  */
-      if (old_len > len)
-	++decreasing;
-
-      /* Update the allocation data and write out the records if necessary.  */
-      update_data (result, len, old_len);
+      ++failed[idx_realloc];
+      return NULL;
     }
 
+  /* Record whether the reduction/increase happened in place.  */
+  if (real == result)
+    ++inplace;
+  /* Was the buffer increased?  */
+  if (old_len > len)
+    ++decreasing;
+
+  /* Update the allocation data and write out the records if necessary.  */
+  update_data (result, len, old_len);
+
   /* Return the pointer to the user buffer.  */
-  return result ? (void *) (result + 1) : NULL;
+  return (void *) (result + 1);
 }
 
 
@@ -379,23 +399,17 @@ calloc (size_t n, size_t len)
   struct header *result;
   size_t size = n * len;
 
-  /* Determine real implementation if not already happened.  We are
-     searching for the `malloc' implementation since it is not always
-     efficiently possible to use `calloc' because we have to add a bit
-     room to the allocation to put the header in.  */
-  if (mallocp == NULL)
+  /* Determine real implementation if not already happened.  */
+  if (__builtin_expect (initialized <= 0, 0))
     {
+      if (initialized == -1)
+	return NULL;
       me ();
-      mallocp = (void *(*) (size_t)) dlsym (RTLD_NEXT, "malloc");
     }
 
   /* If this is not the correct program just use the normal function.  */
   if (not_me)
-    {
-      callocp = (void *(*) (size_t, size_t)) dlsym (RTLD_NEXT, "calloc");
-
-      return (*callocp) (n, len);
-    }
+    return (*callocp) (n, len);
 
   /* Keep track of number of calls.  */
   ++calls[idx_calloc];
@@ -413,17 +427,17 @@ calloc (size_t n, size_t len)
 
   /* Do the real work.  */
   result = (struct header *) (*mallocp) (size + sizeof (struct header));
-  if (result != NULL)
-    memset (result + 1, '\0', size);
-
   if (result == NULL)
-    ++failed[idx_calloc];
-  else
-    /* Update the allocation data and write out the records if necessary.  */
-    update_data (result, size, 0);
+    {
+      ++failed[idx_calloc];
+      return NULL;
+    }
 
-  /* Return the pointer to the user buffer.  */
-  return result ? (void *) (result + 1) : NULL;
+  /* Update the allocation data and write out the records if necessary.  */
+  update_data (result, size, 0);
+
+  /* Do what `calloc' would have done and return the buffer to the caller.  */
+  return memset (result + 1, '\0', size);
 }
 
 
@@ -434,24 +448,25 @@ free (void *ptr)
 {
   struct header *real;
 
-  /* `free (NULL)' has no effect.  */
-  if (ptr == NULL)
-    {
-      ++calls[idx_free];
-      return;
-    }
-
   /* Determine real implementation if not already happened.  */
-  if (freep == NULL)
+  if (__builtin_expect (initialized <= 0, 0))
     {
+      if (initialized == -1)
+	return;
       me ();
-      freep = (void (*) (void *)) dlsym (RTLD_NEXT, "free");
     }
 
   /* If this is not the correct program just use the normal function.  */
   if (not_me)
     {
       (*freep) (ptr);
+      return;
+    }
+
+  /* `free (NULL)' has no effect.  */
+  if (ptr == NULL)
+    {
+      ++calls[idx_free];
       return;
     }
 
