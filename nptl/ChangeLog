@@ -1,3 +1,8 @@
+2004-06-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.h (lll_futex_requeue):
+	Set __r7 to val, not mutex.
+
 2004-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build tst-rwlock14.

@@ -318,17 +318,13 @@ add_single_dir (struct dir_entry *entry, int verbose)
 static void
 add_dir (const char *line)
 {
-  char *equal_sign;
-  struct dir_entry *entry;
   unsigned int i;
-  struct stat64 stat_buf;
-
-  entry = xmalloc (sizeof (struct dir_entry));
+  struct dir_entry *entry = xmalloc (sizeof (struct dir_entry));
   entry->next = NULL;
 
   /* Search for an '=' sign.  */
   entry->path = xstrdup (line);
-  equal_sign = strchr (entry->path, '=');
+  char *equal_sign = strchr (entry->path, '=');
   if (equal_sign)
     {
       *equal_sign = '\0';
@@ -358,19 +354,28 @@ add_dir (const char *line)
   while (entry->path[i] == '/' && i > 0)
     entry->path[i--] = '\0';
 
-  if (stat64 (entry->path, &stat_buf))
+  char *path = entry->path;
+  if (opt_chroot)
+    path = chroot_canon (opt_chroot, path);
+
+  struct stat64 stat_buf;
+  if (path == NULL || stat64 (path, &stat_buf))
     {
       if (opt_verbose)
 	error (0, errno, _("Can't stat %s"), entry->path);
       free (entry->path);
       free (entry);
-      return;
+    }
+  else
+    {
+      entry->ino = stat_buf.st_ino;
+      entry->dev = stat_buf.st_dev;
+
+      add_single_dir (entry, 1);
     }
 
-  entry->ino = stat_buf.st_ino;
-  entry->dev = stat_buf.st_dev;
-
- add_single_dir (entry, 1);
+  if (opt_chroot)
+    free (path);
 }
 
 

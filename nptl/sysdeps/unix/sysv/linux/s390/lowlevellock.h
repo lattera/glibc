@@ -91,7 +91,7 @@
     register unsigned long int __r4 asm ("4") = (long int) (nr_wake);	      \
     register unsigned long int __r5 asm ("5") = (long int) (nr_move);	      \
     register unsigned long int __r6 asm ("6") = (unsigned long int) (mutex);  \
-    register unsigned long int __r7 asm ("7") = (int) (mutex);		      \
+    register unsigned long int __r7 asm ("7") = (int) (val);		      \
     register unsigned long __result asm ("2");				      \
 									      \
     __asm __volatile ("svc %b1"						      \
