@@ -1,3 +1,7 @@
+2000-07-24  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/mmap.S: Remove mmap64 alias.
+
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* string/endian.h: Explain the _*_ENDIAN constant values a bit
