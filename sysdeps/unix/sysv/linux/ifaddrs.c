@@ -252,7 +252,8 @@ netlink_open (struct netlink_handle *h)
    Since we get at first all RTM_NEWLINK entries, it can never happen
    that a RTM_NEWADDR index is not known to this map.  */
 static int
-map_newlink (int index, int *map, int max)
+internal_function
+map_newlink (int index, struct ifaddrs_storage *ifas, int *map, int max)
 {
   int i;
 
@@ -261,6 +262,8 @@ map_newlink (int index, int *map, int max)
       if (map[i] == -1)
 	{
 	  map[i] = index;
+	  if (i > 0)
+	    ifas[i - 1].ifa.ifa_next = &ifas[i].ifa;
 	  return i;
 	}
       else if (map[i] == index)
@@ -389,9 +392,6 @@ getifaddrs (struct ifaddrs **ifap)
   if ((newlink + newaddr) == 0)
     goto exit_free;
 
-  /* Table for mapping kernel index to entry in our list.  */
-  map_newlink_data = alloca (newlink * sizeof (int));
-
   /* Allocate memory for all entries we have and initialize next
      pointer.  */
   ifas = (struct ifaddrs_storage *) calloc (1,
@@ -404,11 +404,10 @@ getifaddrs (struct ifaddrs **ifap)
       goto exit_free;
     }
 
-  for (i = 0; i < newlink + newaddr - 1; i++)
-    {
-      ifas[i].ifa.ifa_next = &ifas[i + 1].ifa;
-      map_newlink_data[i] = -1;
-    }
+  /* Table for mapping kernel index to entry in our list.  */
+  map_newlink_data = alloca (newlink * sizeof (int));
+  memset (map_newlink_data, '\xff', newlink * sizeof (int));
+
   ifa_data_ptr = (char *) &ifas[newlink + newaddr];
   newaddr_idx = 0;		/* Counter for newaddr index.  */
 
@@ -447,7 +446,7 @@ getifaddrs (struct ifaddrs **ifap)
 	      /* Interfaces are stored in the first "newlink" entries
 		 of our list, starting in the order as we got from the
 		 kernel.  */
-              ifa_index = map_newlink (ifim->ifi_index - 1,
+              ifa_index = map_newlink (ifim->ifi_index - 1, ifas,
 				       map_newlink_data, newlink);
 	      ifas[ifa_index].ifa.ifa_flags = ifim->ifi_flags;
 
@@ -459,36 +458,44 @@ getifaddrs (struct ifaddrs **ifap)
 		  switch (rta->rta_type)
 		    {
 		    case IFLA_ADDRESS:
-		      ifas[ifa_index].addr.sl.sll_family = AF_PACKET;
-		      memcpy (ifas[ifa_index].addr.sl.sll_addr,
-			      (char *) rta_data, rta_payload);
-		      ifas[ifa_index].addr.sl.sll_halen = rta_payload;
-		      ifas[ifa_index].addr.sl.sll_ifindex = ifim->ifi_index;
-		      ifas[ifa_index].addr.sl.sll_hatype = ifim->ifi_type;
+		      if (rta_payload <= sizeof (ifas[ifa_index].addr))
+			{
+			  ifas[ifa_index].addr.sl.sll_family = AF_PACKET;
+			  memcpy (ifas[ifa_index].addr.sl.sll_addr,
+				  (char *) rta_data, rta_payload);
+			  ifas[ifa_index].addr.sl.sll_halen = rta_payload;
+			  ifas[ifa_index].addr.sl.sll_ifindex
+			    = ifim->ifi_index;
+			  ifas[ifa_index].addr.sl.sll_hatype = ifim->ifi_type;
 
-		      ifas[ifa_index].ifa.ifa_addr = &ifas[ifa_index].addr.sa;
+			  ifas[ifa_index].ifa.ifa_addr
+			    = &ifas[ifa_index].addr.sa;
+			}
 		      break;
 
 		    case IFLA_BROADCAST:
-		      ifas[ifa_index].broadaddr.sl.sll_family = AF_PACKET;
-		      memcpy (ifas[ifa_index].broadaddr.sl.sll_addr,
-			      (char *) rta_data, rta_payload);
-		      ifas[ifa_index].broadaddr.sl.sll_halen = rta_payload;
-		      ifas[ifa_index].broadaddr.sl.sll_ifindex
-			= ifim->ifi_index;
-		      ifas[ifa_index].broadaddr.sl.sll_hatype = ifim->ifi_type;
+		      if (rta_payload <= sizeof (ifas[ifa_index].broadaddr))
+			{
+			  ifas[ifa_index].broadaddr.sl.sll_family = AF_PACKET;
+			  memcpy (ifas[ifa_index].broadaddr.sl.sll_addr,
+				  (char *) rta_data, rta_payload);
+			  ifas[ifa_index].broadaddr.sl.sll_halen = rta_payload;
+			  ifas[ifa_index].broadaddr.sl.sll_ifindex
+			    = ifim->ifi_index;
+			  ifas[ifa_index].broadaddr.sl.sll_hatype
+			    = ifim->ifi_type;
 
-		      ifas[ifa_index].ifa.ifa_broadaddr
-			= &ifas[ifa_index].broadaddr.sa;
+			  ifas[ifa_index].ifa.ifa_broadaddr
+			    = &ifas[ifa_index].broadaddr.sa;
+			}
 		      break;
 
 		    case IFLA_IFNAME:	/* Name of Interface */
 		      if ((rta_payload + 1) <= sizeof (ifas[ifa_index].name))
 			{
 			  ifas[ifa_index].ifa.ifa_name = ifas[ifa_index].name;
-			  strncpy (ifas[ifa_index].name, rta_data,
-				   rta_payload);
-			  ifas[ifa_index].name[rta_payload] = '\0';
+			  *(char *) __mempcpy (ifas[ifa_index].name, rta_data,
+					       rta_payload) = '\0';
 			}
 		      break;
 
@@ -521,13 +528,15 @@ getifaddrs (struct ifaddrs **ifap)
 	      size_t rtasize = IFA_PAYLOAD (nlh);
 
 	      /* New Addresses are stored in the order we got them from
-		 the kernel after interfaces. Theoretically it is possible
+		 the kernel after the interfaces. Theoretically it is possible
 		 that we have holes in the interface part of the list,
 		 but we always have already the interface for this address.  */
 	      ifa_index = newlink + newaddr_idx;
 	      ifas[ifa_index].ifa.ifa_flags
-		= ifas[map_newlink (ifam->ifa_index - 1,
+		= ifas[map_newlink (ifam->ifa_index - 1, ifas,
 				    map_newlink_data, newlink)].ifa.ifa_flags;
+	      if (ifa_index > 0)
+		ifas[ifa_index - 1].ifa.ifa_next = &ifas[ifa_index].ifa;
 	      ++newaddr_idx;
 
 	      while (RTA_OK (rta, rtasize))
@@ -565,21 +574,28 @@ getifaddrs (struct ifaddrs **ifap)
 			switch (ifam->ifa_family)
 			  {
 			  case AF_INET:
-			    memcpy (&((struct sockaddr_in *) sa)->sin_addr,
-				    rta_data, rta_payload);
+			    /* Size must match that of an address for IPv4.  */
+			    if (rta_payload == 4)
+			      memcpy (&((struct sockaddr_in *) sa)->sin_addr,
+				      rta_data, rta_payload);
 			    break;
 
 			  case AF_INET6:
-			    memcpy (&((struct sockaddr_in6 *) sa)->sin6_addr,
-				    rta_data, rta_payload);
-			    if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
-				IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
-			      ((struct sockaddr_in6 *) sa)->sin6_scope_id =
-				ifam->ifa_scope;
+			    /* Size must match that of an address for IPv6.  */
+			    if (rta_payload == 16)
+			      {
+				memcpy (&((struct sockaddr_in6 *) sa)->sin6_addr,
+					rta_data, rta_payload);
+				if (IN6_IS_ADDR_LINKLOCAL (rta_data)
+				    || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
+				  ((struct sockaddr_in6 *) sa)->sin6_scope_id
+				    = ifam->ifa_scope;
+			      }
 			    break;
 
 			  default:
-			    memcpy (sa->sa_data, rta_data, rta_payload);
+			    if (rta_payload <= sizeof (ifas[ifa_index].addr))
+			      memcpy (sa->sa_data, rta_data, rta_payload);
 			    break;
 			  }
 		      }
@@ -605,22 +621,29 @@ getifaddrs (struct ifaddrs **ifap)
 		      switch (ifam->ifa_family)
 			{
 			case AF_INET:
-			  memcpy (&ifas[ifa_index].addr.s4.sin_addr,
+			  /* Size must match that of an address for IPv4.  */
+			  if (rta_payload == 4)
+			    memcpy (&ifas[ifa_index].addr.s4.sin_addr,
 				  rta_data, rta_payload);
 			  break;
 
 			case AF_INET6:
-			  memcpy (&ifas[ifa_index].addr.s6.sin6_addr,
-				  rta_data, rta_payload);
-			  if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
-			      IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
-			    ifas[ifa_index].addr.s6.sin6_scope_id =
-			      ifam->ifa_scope;
+			  /* Size must match that of an address for IPv6.  */
+			  if (rta_payload == 16)
+			    {
+			      memcpy (&ifas[ifa_index].addr.s6.sin6_addr,
+				      rta_data, rta_payload);
+			      if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
+				  IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
+				ifas[ifa_index].addr.s6.sin6_scope_id =
+				  ifam->ifa_scope;
+			    }
 			  break;
 
 			default:
-			  memcpy (ifas[ifa_index].addr.sa.sa_data,
-				  rta_data, rta_payload);
+			  if (rta_payload <= sizeof (ifas[ifa_index].addr))
+			    memcpy (ifas[ifa_index].addr.sa.sa_data,
+				    rta_data, rta_payload);
 			  break;
 			}
 		      break;
@@ -639,22 +662,29 @@ getifaddrs (struct ifaddrs **ifap)
 		      switch (ifam->ifa_family)
 			{
 			case AF_INET:
-			  memcpy (&ifas[ifa_index].broadaddr.s4.sin_addr,
-				  rta_data, rta_payload);
+			  /* Size must match that of an address for IPv4.  */
+			  if (rta_payload == 4)
+			    memcpy (&ifas[ifa_index].broadaddr.s4.sin_addr,
+				    rta_data, rta_payload);
 			  break;
 
 			case AF_INET6:
-			  memcpy (&ifas[ifa_index].broadaddr.s6.sin6_addr,
-				  rta_data, rta_payload);
-			  if (IN6_IS_ADDR_LINKLOCAL (rta_data)
-			      || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
-			    ifas[ifa_index].broadaddr.s6.sin6_scope_id
-			      = ifam->ifa_scope;
+			  /* Size must match that of an address for IPv6.  */
+			  if (rta_payload == 16)
+			    {
+			      memcpy (&ifas[ifa_index].broadaddr.s6.sin6_addr,
+				      rta_data, rta_payload);
+			      if (IN6_IS_ADDR_LINKLOCAL (rta_data)
+				  || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
+				ifas[ifa_index].broadaddr.s6.sin6_scope_id
+				  = ifam->ifa_scope;
+			    }
 			  break;
 
 			default:
-			  memcpy (&ifas[ifa_index].broadaddr.sa.sa_data,
-				  rta_data, rta_payload);
+			  if (rta_payload <= sizeof (ifas[ifa_index].addr))
+			    memcpy (&ifas[ifa_index].broadaddr.sa.sa_data,
+				    rta_data, rta_payload);
 			  break;
 			}
 		      break;
@@ -663,9 +693,8 @@ getifaddrs (struct ifaddrs **ifap)
 		      if (rta_payload + 1 <= sizeof (ifas[ifa_index].name))
 			{
 			  ifas[ifa_index].ifa.ifa_name = ifas[ifa_index].name;
-			  strncpy (ifas[ifa_index].name, rta_data,
-				   rta_payload);
-			  ifas[ifa_index].name[rta_payload] = '\0';
+			  *(char *) __mempcpy (ifas[ifa_index].name, rta_data,
+					       rta_payload) = '\0';
 			}
 		      else
 			abort ();
@@ -686,7 +715,7 @@ getifaddrs (struct ifaddrs **ifap)
 		 address, use the name from the interface entry.  */
 	      if (ifas[ifa_index].ifa.ifa_name == NULL)
 		ifas[ifa_index].ifa.ifa_name
-		  = ifas[map_newlink (ifam->ifa_index - 1,
+		  = ifas[map_newlink (ifam->ifa_index - 1, ifas,
 				      map_newlink_data, newlink)].ifa.ifa_name;
 
 	      /* Calculate the netmask.  */
@@ -736,6 +765,24 @@ getifaddrs (struct ifaddrs **ifap)
 		}
 	    }
 	}
+    }
+
+  assert (ifa_data_ptr <= (char *) &ifas[newlink + newaddr] + ifa_data_size);
+
+  if (newaddr_idx > 0)
+    {
+      for (i = 0; i < newlink; ++i)
+	if (map_newlink_data[i] == -1)
+	  {
+	    /* We have fewer links then we anticipated.  Adjust the
+	       forward pointer to the first address entry.  */
+	    ifas[i - 1].ifa.ifa_next = &ifas[newlink].ifa;
+	  }
+
+      if (i == 0 && newlink > 0)
+	/* No valid link, but we allocated memory.  We have to
+	   populate the first entry.  */
+	memmove (ifas, &ifas[newlink], sizeof (struct ifaddrs_storage));
     }
 
   if (ifap != NULL)

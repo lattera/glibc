@@ -1,5 +1,12 @@
 2003-04-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Check lengths
+	before copying.  This might leave holes in the list.  Adjust
+	pointers if necessary.
+	(netlink_receive): Allocate only one block.
+	(free_netlink_handle): Adjust appropriately.
+	(getifaddrs): Lots of cleanups.
+
 	* string/test-strncpy.c (do_one_test): Mark start and stop as
 	possibly unused.
 
