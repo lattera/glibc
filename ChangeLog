@@ -1,3 +1,13 @@
+2002-06-13  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdstartup.h (_hurd_startup): int -> intptr_t in MAIN arg type.
+	* hurd/hurdstartup.c (_hurd_startup): Likewise.
+	Use intptr_t instead of int for argc in stack layout.
+	* sysdeps/mach/hurd/alpha/init-first.c (init): Fix argument type.
+	(_dl_init_first): Likewise.
+	(_hurd_stack_setup): Likewise.
+	(init1): Add a cast.
+
 2002-06-13  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/s_isinf.c (INTDEFX): Define to get correct
