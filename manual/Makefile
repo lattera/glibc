@@ -125,20 +125,6 @@ install: $(infodir)/libc.info
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
 
-ifndef infodir
-infodir = $(prefix)/info
-endif
-ifndef prefix
-prefix = /usr/local
-endif
-
-ifndef INSTALL_DATA
-INSTALL_DATA = $(INSTALL) -m 644
-endif
-ifndef INSTALL
-INSTALL = install
-endif
-
 $(infodir)/libc.info: libc.info installdirs
 	for file in $<*; do \
 	  name=`basename $$file`; \

@@ -1,5 +1,8 @@
 Thu Sep 21 00:03:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* manual/Makefile (infodir, prefix, INSTALL, INSTALL_DATA): Variables
+ 	removed.
+
 	* time/africa, time/asia, time/europe, time/northamerica,
 	time/yearistype: New data from ADO 95h.
 
