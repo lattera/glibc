@@ -22,6 +22,7 @@
 #include <errno.h>
 #include <locale.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "localeinfo.h"
 
@@ -148,7 +149,13 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
 	result.__locales[cnt] = _nl_find_locale (locale_path, locale_path_len,
 						 cnt, &newnames[cnt]);
 	if (result.__locales[cnt] == NULL)
-	  return NULL;
+	  {
+	    while (cnt-- > 0)
+	      if (result.__locales[cnt]->usage_count != UNDELETABLE)
+		/* We can remove the data.  */
+		_nl_remove_locale (cnt, result.__locales[cnt]);
+	    return NULL;
+	  }
       }
 
   /* We successfully loaded all required data.  */
@@ -159,10 +166,55 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
       if (result_ptr == NULL)
 	return NULL;
 
+      /* Install strdup'd names in the new structure's __names array.  */
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (cnt != LC_ALL && result.__names[cnt] != _nl_C_name)
+	  {
+	    result.__names[cnt] = __strdup (((category_mask & 1 << cnt) != 0)
+					    ? newnames[cnt]
+					    : result.__names[cnt]);
+	    if (result.__names[cnt] == NULL)
+	      {
+		while (cnt-- > 0)
+		  if (result.__names[cnt] != _nl_C_name)
+		    free ((char *) result.__names[cnt]);
+		free (result_ptr);
+		return NULL;
+	      }
+	  }
     }
   else
-    /* We modify the base structure.  */
-    result_ptr = base;
+    {
+      /* We modify the base structure.
+         First strdup the names we were given for the new locale.  */
+
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (cnt != LC_ALL && ((category_mask & 1 << cnt) != 0)
+	    && result.__names[cnt] != _nl_C_name)
+	  {
+	    newnames[cnt] = __strdup (newnames[cnt]);
+	    if (newnames[cnt] == NULL)
+	      {
+		while (cnt-- > 0)
+		  if (newnames[cnt] != NULL)
+		    free ((char *) newnames[cnt]);
+		return NULL;
+	      }
+	  }
+	else
+	  newnames[cnt] = NULL;
+
+      /* Now that we can't lose, install the new names.  */
+      for (cnt = 0; cnt < __LC_LAST; ++cnt)
+	if (newnames[cnt] != NULL)
+	  {
+	    if (result.__names[cnt] != _nl_C_name)
+	      free ((char *) result.__names[cnt]);
+	    result.__names[cnt] = __strdup (newnames[cnt]);
+	  }
+
+      result_ptr = base;
+    }
 
   *result_ptr = result;
 
