@@ -1,3 +1,7 @@
+2002-10-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h: Define ELF_NOTE_OS_FREEBSD and NT_TASKSTRUCT.
+
 2002-10-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-misc.c: Include <sysdep.h>.
