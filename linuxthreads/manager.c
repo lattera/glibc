@@ -100,6 +100,7 @@ int __pthread_manager(void *arg)
     timeout.tv_sec = 2;
     timeout.tv_usec = 0;
     n = __select(FD_SETSIZE, &readfds, NULL, NULL, &timeout);
+
     /* Check for termination of the main thread */
     if (getppid() == 1) {
       pthread_kill_all_threads(SIGKILL, 0);
@@ -179,7 +180,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   int pid;
   pthread_descr new_thread;
   pthread_t new_thread_id;
-  int i;
   void *guardaddr = NULL;
 
   /* Find a free stack segment for the current stack */
@@ -201,11 +201,12 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	    {
 	      /* We manage to get a stack.  Now see whether we need a guard
 		 and allocate it if necessary.  */
-	      if (attr->guardsize != 0)
+	      if (attr == NULL || attr->guardsize != 0)
 		{
 		  guardaddr = mmap ((caddr_t)((char *)(new_thread+1)
-					      - 2*1024*1024),
-				    attr->guardsize, 0, MAP_FIXED, -1, 0);
+					      - STACK_SIZE),
+				    attr ? attr->guardsize : __getpagesize (),
+				    0, MAP_FIXED, -1, 0);
 		  if (guardaddr == MAP_FAILED)
 		    /* We don't make this an error.  */
 		    guardaddr = NULL;
@@ -245,11 +246,13 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_h_errnop = &new_thread->p_h_errno;
   new_thread->p_h_errno = 0;
   new_thread->p_guardaddr = guardaddr;
-  new_thread->p_guardsize = (attr == NULL || !attr->stackaddr_set
-			     ? attr->guardsize : 0);
+  new_thread->p_guardsize = (guardaddr == NULL
+			     ? 0
+			     : (attr == NULL
+				? __getpagesize () : attr->guardsize));
   new_thread->p_userstack = attr != NULL && attr->stackaddr_set;
-  for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++)
-    new_thread->p_specific[i] = NULL;
+  memset (new_thread->p_specific, '\0',
+	  PTHREAD_KEY_1STLEVEL_SIZE * sizeof (new_thread->p_specific[0]));
   /* Initialize the thread handle */
   __pthread_handles[sseg].h_spinlock = 0; /* should already be 0 */
   __pthread_handles[sseg].h_descr = new_thread;
@@ -285,7 +288,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
       {
 	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
 	       INITIAL_STACK_SIZE);
-	if (attr->guardsize != 0)
+	if (new_thread->p_guardsize != 0)
 	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
       }
     __pthread_handles[sseg].h_descr = NULL;

@@ -166,6 +166,7 @@ static void pthread_initialize(void)
   /* The errno/h_errno variable of the main thread are the global ones.  */
   __pthread_initial_thread.p_errnop = &_errno;
   __pthread_initial_thread.p_h_errnop = &_h_errno;
+#ifdef SIGRTMIN
   /* Allocate the signals used.  */
   __pthread_sig_restart = __libc_allocate_rtsig (1);
   __pthread_sig_cancel = __libc_allocate_rtsig (1);
@@ -176,6 +177,7 @@ static void pthread_initialize(void)
       __pthread_sig_restart = SIGUSR1;
       __pthread_sig_cancel = SIGUSR2;
     }
+#endif
   /* Setup signal handlers for the initial thread.
      Since signal handlers are shared between threads, these settings
      will be inherited by all other threads. */
