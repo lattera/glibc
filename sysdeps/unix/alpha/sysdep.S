@@ -38,7 +38,7 @@ __errno = errno
 	.globl __syscall_error
 	.ent __syscall_error
 __syscall_error:
-	ldgp	gp, 0(t12)
+	ldgp	gp, 0(pv)
 	lda	sp, -16(sp)
 	.frame	sp, 16, ra, 0
 	stq	ra, 0(sp)
@@ -53,7 +53,7 @@ __syscall_error:
 	jsr	ra, __errno_location
 
 	/* Store the error value.  */
-	ldl	t0, 8(sp)
+	ldq	t0, 8(sp)
 	stl	t0, 0(v0)
 
 	/* And kick back a -1.  */
