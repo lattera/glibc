@@ -21,7 +21,9 @@
 #
 subdir	:= resolv
 
-headers	:= resolv.h netdb.h arpa/nameser.h arpa/nameser_compat.h \
+headers	:= resolv.h \
+	   netdb.h bits/netdb.h \
+	   arpa/nameser.h arpa/nameser_compat.h \
 	   sys/bitypes.h
 distribute := ../conf/portability.h mapv4v6addr.h mapv4v6hostent.h \
 	      Banner res_hconf.h res_debug.h

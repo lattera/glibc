@@ -449,12 +449,11 @@ _dl_map_object_deps (struct link_map *map,
 	{
 	  needed[nneeded++] = NULL;
 
-	  l->l_initfini =
-	    (struct link_map **) malloc (nneeded * sizeof (struct link_map));
+	  l->l_initfini = malloc (nneeded * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
 	    _dl_signal_error (ENOMEM, map->l_name,
 			      "cannot allocate dependency list");
-	  memcpy (l->l_initfini, needed, nneeded * sizeof (struct link_map));
+	  memcpy (l->l_initfini, needed, nneeded * sizeof needed[0]);
 	}
 
       /* If we have no auxiliary objects just go on to the next map.  */

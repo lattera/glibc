@@ -1,3 +1,19 @@
+2000-04-03  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Don't set __environ
+	here, before we might move the stack.
+	(posixland_init): Set __libc_argc, __libc_argc, and __environ here.
+	(init1): And not here.
+
+	* sysdeps/i386/dl-machine.h (RTLD_START): Fix code broken by last
+	change, to restore argc value in call-clobbered register after
+	RTLD_START_SPECIAL_INIT, which will contain a call.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Fix size calculations for
+	allocating and initializing L->l_initfini.
+
+	* resolv/Makefile (headers): Add bits/netdb.h, so it gets installed.
+
 2000-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_init_paths): Use (void*) -1 to signal non-existing
