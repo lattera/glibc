@@ -359,7 +359,8 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	      memset (&state, 0, sizeof (state));
 	      if (mbrtowc (&wc, (const char *) buf, p - buf,
 			   &state) == p - buf
-		  && __wcrtomb ((char *) buf, towlower (wc), &state) > 0)
+		  && (__wcrtomb ((char *) buf, towlower (wc), &state)
+		      != (size_t) -1))
 		re_set_fastmap (fastmap, 0, buf[0]);
 	    }
 #endif
@@ -409,12 +410,13 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	      char buf[256];
 	      mbstate_t state;
 	      memset (&state, '\0', sizeof (state));
-	      __wcrtomb (buf, cset->mbchars[i], &state);
-	      re_set_fastmap (fastmap, icase, *(unsigned char *) buf);
+	      if (__wcrtomb (buf, cset->mbchars[i], &state) != (size_t) -1)
+		re_set_fastmap (fastmap, icase, *(unsigned char *) buf);
 	      if ((bufp->syntax & RE_ICASE) && dfa->mb_cur_max > 1)
 		{
-		  __wcrtomb (buf, towlower (cset->mbchars[i]), &state);
-		  re_set_fastmap (fastmap, 0, *(unsigned char *) buf);
+		  if (__wcrtomb (buf, towlower (cset->mbchars[i]), &state)
+		      != (size_t) -1)
+		    re_set_fastmap (fastmap, 0, *(unsigned char *) buf);
 		}
 	    }
 	}

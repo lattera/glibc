@@ -26,7 +26,7 @@ extern ssize_t __read_chk (int __fd, void *__buf, size_t __nbytes,
 extern ssize_t __REDIRECT (__read_alias, (int __fd, void *__buf,
 					  size_t __nbytes), read) __wur;
 
-extern __inline __wur ssize_t
+extern __always_inline __wur ssize_t
 read (int __fd, void *__buf, size_t __nbytes)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -46,8 +46,9 @@ extern ssize_t __REDIRECT (__pread_alias,
 extern ssize_t __REDIRECT (__pread64_alias,
 			   (int __fd, void *__buf, size_t __nbytes,
 			    __off64_t __offset), pread64) __wur;
+
 # ifndef __USE_FILE_OFFSET64
-extern __inline __wur ssize_t
+extern __always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -56,7 +57,7 @@ pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
   return __pread_alias (__fd, __buf, __nbytes, __offset);
 }
 # else
-extern __inline __wur ssize_t
+extern __always_inline __wur ssize_t
 pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -67,7 +68,7 @@ pread (int __fd, void *__buf, size_t __nbytes, __off_t __offset)
 # endif
 
 # ifdef __USE_LARGEFILE64
-extern __inline __wur ssize_t
+extern __always_inline __wur ssize_t
 pread64 (int __fd, void *__buf, size_t __nbytes, __off64_t __offset)
 {
   if (__bos0 (__buf) != (size_t) -1
@@ -87,7 +88,8 @@ extern int __REDIRECT_NTH (__readlink_alias,
 			   (__const char *__restrict __path,
 			    char *__restrict __buf, size_t __len), readlink)
      __nonnull ((1, 2)) __wur;
-extern __inline __nonnull ((1, 2)) __wur int
+
+extern __always_inline __nonnull ((1, 2)) __wur int
 __NTH (readlink (__const char *__restrict __path, char *__restrict __buf,
 		 size_t __len))
 {
@@ -102,7 +104,8 @@ extern char *__getcwd_chk (char *__buf, size_t __size, size_t __buflen)
      __THROW __wur;
 extern char *__REDIRECT_NTH (__getcwd_alias,
 			     (char *__buf, size_t __size), getcwd) __wur;
-extern __inline __wur char *
+
+extern __always_inline __wur char *
 __NTH (getcwd (char *__buf, size_t __size))
 {
   if (__bos (__buf) != (size_t) -1
@@ -116,7 +119,8 @@ extern char *__getwd_chk (char *__buf, size_t buflen)
      __THROW __nonnull ((1)) __wur;
 extern char *__REDIRECT_NTH (__getwd_alias, (char *__buf), getwd)
      __nonnull ((1)) __wur;
-extern __inline __nonnull ((1)) __attribute_deprecated__ __wur char *
+
+extern __always_inline __nonnull ((1)) __attribute_deprecated__ __wur char *
 __NTH (getwd (char *__buf))
 {
   if (__bos (__buf) != (size_t) -1)

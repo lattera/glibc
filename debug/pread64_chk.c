@@ -26,5 +26,5 @@ __pread64_chk (int fd, void *buf, size_t nbytes, off64_t offset, size_t buflen)
   if (nbytes > buflen)
     __chk_fail ();
 
-  return __pread64 (fd, buf, offset, nbytes);
+  return __pread64 (fd, buf, nbytes, offset);
 }

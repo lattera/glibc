@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/un.h>
 #include <unistd.h>
 
 char *temp_filename;
@@ -463,9 +465,20 @@ do_test (void)
   if (fgets (buf, sizeof (buf), stdin) != buf || memcmp (buf, "ABCDEFGHI", 10))
     FAIL ();
 
+  rewind (stdin);
+
+  if (fgets (buf, l0 + sizeof (buf), stdin) != buf
+      || memcmp (buf, "abcdefgh\n", 10))
+    FAIL ();
+
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   if (fgets (buf, sizeof (buf) + 1, stdin) != buf)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fgets (buf, l0 + sizeof (buf) + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 #endif
@@ -479,9 +492,20 @@ do_test (void)
       || memcmp (buf, "ABCDEFGHI", 10))
     FAIL ();
 
+  rewind (stdin);
+
+  if (fgets_unlocked (buf, l0 + sizeof (buf), stdin) != buf
+      || memcmp (buf, "abcdefgh\n", 10))
+    FAIL ();
+
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   if (fgets_unlocked (buf, sizeof (buf) + 1, stdin) != buf)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (fgets_unlocked (buf, l0 + sizeof (buf) + 1, stdin) != buf)
     FAIL ();
   CHK_FAIL_END
 #endif
@@ -495,6 +519,12 @@ do_test (void)
       || memcmp (buf, "ABCDEFGHI", 9))
     FAIL ();
 
+  lseek (fileno (stdin), 0, SEEK_SET);
+
+  if (read (fileno (stdin), buf, l0 + sizeof (buf) - 1) != sizeof (buf) - 1
+      || memcmp (buf, "abcdefgh\n", 9))
+    FAIL ();
+
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
   if (read (fileno (stdin), buf, sizeof (buf) + 1) != sizeof (buf) + 1)
@@ -502,12 +532,16 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
+  if (pread (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
+      != sizeof (buf) - 1
+      || memcmp (buf, "\nABCDEFGH", 9))
+    FAIL ();
   if (pread (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
-  if (pread (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 1)
+  if (pread (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
       != sizeof (buf) - 1
-      || memcmp (buf, "ABCDEFGHI", 9))
+      || memcmp (buf, "h\nABCDEFG", 9))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
@@ -518,17 +552,21 @@ do_test (void)
   CHK_FAIL_END
 #endif
 
+  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 2)
+      != sizeof (buf) - 1
+      || memcmp (buf, "\nABCDEFGH", 9))
+    FAIL ();
   if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, 0) != sizeof (buf) - 1
       || memcmp (buf, "abcdefgh\n", 9))
     FAIL ();
-  if (pread64 (fileno (stdin), buf, sizeof (buf) - 1, sizeof (buf) - 1)
+  if (pread64 (fileno (stdin), buf, l0 + sizeof (buf) - 1, sizeof (buf) - 3)
       != sizeof (buf) - 1
-      || memcmp (buf, "ABCDEFGHI", 9))
+      || memcmp (buf, "h\nABCDEFG", 9))
     FAIL ();
 
 #if __USE_FORTIFY_LEVEL >= 1
   CHK_FAIL_START
-  if (pread64 (fileno (stdin), buf, sizeof (buf) + 1, 2 * (sizeof (buf) - 1))
+  if (pread64 (fileno (stdin), buf, sizeof (buf) + 1, 2 * sizeof (buf))
       != sizeof (buf) + 1)
     FAIL ();
   CHK_FAIL_END
@@ -569,6 +607,189 @@ do_test (void)
   CHK_FAIL2_START
   snprintf (buf, sizeof (buf), "%3$d\n", 1, 2, 3, 4);
   CHK_FAIL2_END
+
+  int sp[2];
+  if (socketpair (PF_UNIX, SOCK_STREAM, 0, sp))
+    FAIL ();
+  else
+    {
+      const char *sendstr = "abcdefgh\nABCDEFGH\n0123456789\n";
+      if (send (sp[0], sendstr, strlen (sendstr), 0) != strlen (sendstr))
+	FAIL ();
+
+      char recvbuf[12];
+      if (recv (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK)
+	  != sizeof recvbuf
+	  || memcmp (recvbuf, sendstr, sizeof recvbuf) != 0)
+	FAIL ();
+
+      if (recv (sp[1], recvbuf + 6, l0 + sizeof recvbuf - 7, MSG_PEEK)
+	  != sizeof recvbuf - 7
+	  || memcmp (recvbuf + 6, sendstr, sizeof recvbuf - 7) != 0)
+	FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      if (recv (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK)
+	  != sizeof recvbuf)
+	FAIL ();
+      CHK_FAIL_END
+
+      CHK_FAIL_START
+      if (recv (sp[1], recvbuf + 4, l0 + sizeof recvbuf - 3, MSG_PEEK)
+	  != sizeof recvbuf - 3)
+	FAIL ();
+      CHK_FAIL_END
+#endif
+
+      socklen_t sl;
+      struct sockaddr_un sa_un;
+
+      sl = sizeof (sa_un);
+      if (recvfrom (sp[1], recvbuf, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
+	  != sizeof recvbuf
+	  || memcmp (recvbuf, sendstr, sizeof recvbuf) != 0)
+	FAIL ();
+
+      sl = sizeof (sa_un);
+      if (recvfrom (sp[1], recvbuf + 6, l0 + sizeof recvbuf - 7, MSG_PEEK,
+	  &sa_un, &sl) != sizeof recvbuf - 7
+	  || memcmp (recvbuf + 6, sendstr, sizeof recvbuf - 7) != 0)
+	FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+      CHK_FAIL_START
+      sl = sizeof (sa_un);
+      if (recvfrom (sp[1], recvbuf + 1, sizeof recvbuf, MSG_PEEK, &sa_un, &sl)
+	  != sizeof recvbuf)
+	FAIL ();
+      CHK_FAIL_END
+
+      CHK_FAIL_START
+      sl = sizeof (sa_un);
+      if (recvfrom (sp[1], recvbuf + 4, l0 + sizeof recvbuf - 3, MSG_PEEK,
+	  &sa_un, &sl) != sizeof recvbuf - 3)
+	FAIL ();
+      CHK_FAIL_END
+#endif
+
+      close (sp[0]);
+      close (sp[1]);
+    }
+
+  char fname[] = "/tmp/tst-chk1-dir-XXXXXX\0foo";
+  char *enddir = strchr (fname, '\0');
+  if (mkdtemp (fname) == NULL)
+    {
+      printf ("mkdtemp failed: %m\n");
+      return 1;
+    }
+  *enddir = '/';
+  if (symlink ("bar", fname) != 0)
+    FAIL ();
+
+  char readlinkbuf[4];
+  if (readlink (fname, readlinkbuf, 4) != 3
+      || memcmp (readlinkbuf, "bar", 3) != 0)
+    FAIL ();
+  if (readlink (fname, readlinkbuf + 1, l0 + 3) != 3
+      || memcmp (readlinkbuf, "bbar", 4) != 0)
+    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+  CHK_FAIL_START
+  if (readlink (fname, readlinkbuf + 2, l0 + 3) != 3)
+    FAIL ();
+  CHK_FAIL_END
+
+  CHK_FAIL_START
+  if (readlink (fname, readlinkbuf + 3, 4) != 3)
+    FAIL ();
+  CHK_FAIL_END
+#endif
+
+  char *cwd1 = getcwd (NULL, 0);
+  if (cwd1 == NULL)
+    FAIL ();
+
+  char *cwd2 = getcwd (NULL, 250);
+  if (cwd2 == NULL)
+    FAIL ();
+
+  if (cwd1 && cwd2)
+    {
+      if (strcmp (cwd1, cwd2) != 0)
+	FAIL ();
+
+      *enddir = '\0';
+      if (chdir (fname))
+	FAIL ();
+
+      char *cwd3 = getcwd (NULL, 0);
+      if (cwd3 == NULL)
+	FAIL ();
+      if (strcmp (fname, cwd3) != 0)
+	printf ("getcwd after chdir is '%s' != '%s',"
+		"get{c,}wd tests skipped\n", cwd3, fname);
+      else
+	{
+	  char getcwdbuf[sizeof fname - 3];
+
+	  char *cwd4 = getcwd (getcwdbuf, sizeof getcwdbuf);
+	  if (cwd4 != getcwdbuf
+	      || strcmp (getcwdbuf, fname) != 0)
+	    FAIL ();
+
+	  cwd4 = getcwd (getcwdbuf + 1, l0 + sizeof getcwdbuf - 1);
+	  if (cwd4 != getcwdbuf + 1
+	      || getcwdbuf[0] != fname[0]
+	      || strcmp (getcwdbuf + 1, fname) != 0)
+	    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+	  CHK_FAIL_START
+	  if (getcwd (getcwdbuf + 2, l0 + sizeof getcwdbuf)
+	      != getcwdbuf + 2)
+	    FAIL ();
+	  CHK_FAIL_END
+
+	  CHK_FAIL_START
+	  if (getcwd (getcwdbuf + 2, sizeof getcwdbuf)
+	      != getcwdbuf + 2)
+	    FAIL ();
+	  CHK_FAIL_END
+#endif
+
+	  if (getwd (getcwdbuf) != getcwdbuf
+	      || strcmp (getcwdbuf, fname) != 0)
+	    FAIL ();
+
+	  if (getwd (getcwdbuf + 1) != getcwdbuf + 1
+	      || strcmp (getcwdbuf + 1, fname) != 0)
+	    FAIL ();
+
+#if __USE_FORTIFY_LEVEL >= 1
+	  CHK_FAIL_START
+	  if (getwd (getcwdbuf + 2) != getcwdbuf + 2)
+	    FAIL ();
+	  CHK_FAIL_END
+#endif
+	}
+
+      if (chdir (cwd1) != 0)
+	FAIL ();
+      free (cwd3);
+    }
+
+  free (cwd1);
+  free (cwd2);
+  *enddir = '/';
+  if (unlink (fname) != 0)
+    FAIL ();
+
+  *enddir = '\0';
+  if (rmdir (fname) != 0)
+    FAIL ();
 
   return ret;
 }

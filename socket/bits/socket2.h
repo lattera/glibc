@@ -23,18 +23,34 @@
 
 extern ssize_t __recv_chk (int __fd, void *__buf, size_t __n, size_t __buflen,
 			   int __flags);
-#define recv(fd, buf, n, flags) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (n) || (n) > __bos0 (buf))			      \
-   ? __recv_chk (fd, buf, n, __bos0 (buf), flags)			      \
-   : recv (fd, buf, n, flags))
+extern ssize_t __REDIRECT (__recv_alias, (int __fd, void *__buf, size_t __n,
+					  int __flags), recv);
+
+extern __always_inline ssize_t
+recv (int __fd, void *__buf, size_t __n, int __flags)
+{
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__n) || __n > __bos0 (__buf)))
+    return __recv_chk (__fd, __buf, __n, __bos0 (__buf), __flags);
+  return __recv_alias (__fd, __buf, __n, __flags);
+}
 
 extern ssize_t __recvfrom_chk (int __fd, void *__restrict __buf, size_t __n,
 			       size_t __buflen, int __flags,
 			       __SOCKADDR_ARG __addr,
 			       socklen_t *__restrict __addr_len);
-#define recvfrom(fd, buf, n, flags, addr, addr_len) \
-  (__bos0 (buf) != (size_t) -1						      \
-   && (!__builtin_constant_p (n) || (n) > __bos0 (buf))			      \
-   ? __recvfrom_chk (fd, buf, n, __bos0 (buf), flags, addr, addr_len)	      \
-   : recvfrom (fd, buf, n, flags, addr, addr_len))
+extern ssize_t __REDIRECT (__recvfrom_alias,
+			   (int __fd, void *__restrict __buf, size_t __n,
+			    int __flags, __SOCKADDR_ARG __addr,
+			    socklen_t *__restrict __addr_len), recvfrom);
+
+extern __always_inline ssize_t
+recvfrom (int __fd, void *__buf, size_t __n, int __flags,
+	  __SOCKADDR_ARG __addr, socklen_t *__restrict __addr_len)
+{
+  if (__bos0 (__buf) != (size_t) -1
+      && (!__builtin_constant_p (__n) || __n > __bos0 (__buf)))
+    return __recvfrom_chk (__fd, __buf, __n, __bos0 (__buf), __flags,
+			   __addr, __addr_len);
+  return __recvfrom_alias (__fd, __buf, __n, __flags, __addr, __addr_len);
+}

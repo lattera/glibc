@@ -1,7 +1,65 @@
+2005-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Add some more tests.
+
+2005-03-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Fix check for failed
+	__wcrtomb.  Check return values of other __wcrtomb calls.
+	* posix/regex_internal.c (build_wcs_buffer, re_string_skip_chars):
+	Change mbclen type to size_t.
+	(build_wcs_upper_buffer): Change mbclen and mbcdlen type to size_t.
+	Handle mb chars whose upper case doesn't have multibyte representation
+	in locale's charset.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (_int_icalloc, _int_icomalloc, iALLOc,
+	public_iCALLOc, public_iCALLOc, public_iCOMALLOc): Protect with
+	#ifndef _LIBC.
+
+	[BZ #779]
+	* malloc/malloc.c (public_mTRIm): Initialize malloc if not yet
+	initialized.
+
+2005-03-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/sys/cdefs.h (__always_inline): Define.
+	* posix/bits/unistd.h (read, pread, pread64, readlink, getcwd, getwd):
+	Use __always_inline instead of __inline.
+	* socket/bits/socket2.h (recv, recvfrom): Likewise.
+	* libio/bits/stdio2.h (gets, fgets, fgets_unlocked): Likewise.
+	* string/bits/string3.h (__memcpy_ichk, __memmove_ichk, __mempcpy_ichk,
+	__memset_ichk, __strcpy_ichk, __stpcpy_ichk, __strncpy_ichk,
+	__strcat_ichk, __strncat_ichk): Use __always_inline instead of
+	__inline__ __attribute__ ((__always_inline__)).
+
+2005-03-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/tst-chk1.c: Include sys/socket.h and sys/un.h.
+	(do_test): Add new tests for recv, recvfrom, getcwd, getwd and
+	readlink.  Add some more tests for read, pread, pread64, fgets and
+	fgets_unlocked.
+
+	* posix/bits/unistd.h (read, pread, pread64, readlink,
+	getcwd, getwd): Change macros into extern inline functions.
+	(__read_alias, __pread_alias, __pread64_alias, __readlink_alias,
+	__getcwd_alias, __getwd_alias): New prototypes.
+	* socket/bits/socket2.h (recv, recvfrom): Change macros into
+	extern inline functions.
+	(__recv_alias, __recvfrom_alias): New prototypes.
+	* libio/bits/stdio2.h (gets, fgets, fgets_unlocked): Change macros
+	into extern inline functions.
+	(__gets_alias, __fgets_alias, __fgets_unlocked_alias): New prototypes.
+
+	* debug/pread_chk.c (__pread_chk): Fix order of arguments passed
+	to __pread.
+	* debug/pread64_chk.c (__pread64_chk): Fix order of arguments passed
+	to __pread64.
+
 2005-03-18  Daniel Jacobowitz  <dan@codesourcery.com>
 
 	* configure.in: Use %function instead of @function.
-	* configure: Regenerated.
 
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
