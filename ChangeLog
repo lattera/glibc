@@ -2,6 +2,33 @@
 
 	* NEWS: Fix a typo.  Update bug-reporting instructions.
 
+2004-06-17  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/unix/sysv/linux/sched_setaffinity.c
+	(__sched_setaffinity_new): Set errno to EINVAL and return -1 if
+	cpuset is wrongly set.
+
+2004-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/memcpy.S: Improve instruction scheduling
+	for POWER4 machines.
+
+2004-06-14  Jakub Jelinek  <jakub@redhat.com>
+
+	[BZ #218]
+	* sunrpc/pmap_prot2.c (xdr_pmaplist): When freeing, remember pml_next
+	in a local variable, point rp to that local variable afterwards.
+
+2004-06-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Handle special
+	cases properly.
+
+2004-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/if_index.c (if_indextoname): Correct
+	error value for unknown interface. [BZ #198]
+
 2004-06-13  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/bits/string.h (memcpy): Add () around arguments.
