@@ -1,5 +1,12 @@
 2004-08-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/mpa.c: Include <sys/param.h>.
+	* sysdeps/ieee754/dbl-64/mpa.h (MAX, MIN): Macros removed.
+
+	* stdio-common/tst-popen.c: Include <string.h>.
+
+	* resolv/res_send.c (__libc_res_nsend): Only define TMPBUF #if DEBUG.
+
 	* sysdeps/pthread/aio_misc.c (handle_fildes_io): Remove noreturn
 	attribute.  Return NULL instead of calling pthread_exit at the end.
 

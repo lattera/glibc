@@ -577,7 +577,9 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 		}
 
 #ifdef _LIBC
+# ifdef DEBUG
 		char tmpbuf[40];
+# endif
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntop(AF_INET6, &nsap->sin6_addr,

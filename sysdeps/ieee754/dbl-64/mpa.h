@@ -63,8 +63,6 @@ typedef union { int i[2]; double d; } number;
 #define  EY  y->e
 #define  EZ  z->e
 
-#define MAX(x,y) ((x) < (y) ?  (y) : (x))
-#define MIN(x,y) ((x) < (y) ?  (x) : (y))
 #define ABS(x)   ((x) <  0  ? -(x) : (x))
 
 int __acr(const mp_no *, const mp_no *, int);
