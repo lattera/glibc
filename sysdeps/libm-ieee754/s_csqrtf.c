@@ -84,7 +84,6 @@ __csqrtf (__complex__ float x)
 	}
       else
 	{
-#if 0
 	  float d, r, s;
 
 	  d = __ieee754_hypotf (__real__ x, __imag__ x);
@@ -98,20 +97,11 @@ __csqrtf (__complex__ float x)
 	  else
 	    {
 	      s = __ieee754_sqrtf (0.5f * d - 0.5f * __real__ x);
-	      r = (0.5f * __imag__ x) / s;
+	      r = fabsf ((0.5f * __imag__ x) / s);
 	    }
 
 	  __real__ res = r;
 	  __imag__ res = __copysignf (s, __imag__ x);
-#else
-	  float d, imag;
-
-	  d = __ieee754_hypotf (__real__ x, __imag__ x);
-	  imag = __ieee754_sqrtf (0.5 * (d - __real__ x));
-
-	  __real__ res = __ieee754_sqrtf (0.5 * (d + __real__ x));
-	  __imag__ res = __copysignf (imag, __imag__ x);
-#endif
 	}
     }
 

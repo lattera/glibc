@@ -496,6 +496,14 @@ glob (pattern, flags, errfunc, pglob)
 
   /* Find the filename.  */
   filename = strrchr (pattern, '/');
+#if defined __MSDOS__ || defined WINDOWS32
+  /* The case of "d:pattern".  Since `:' is not allowed in
+     file names, we can safely assume that wherever it
+     happens in pattern, it signals the filename part.  This
+     is so we could some day support patterns like "[a-z]:foo".  */
+  if (filename == NULL)
+    filename = strchr (pattern, ':');
+#endif /* __MSDOS__ || WINDOWS32 */
   if (filename == NULL)
     {
       /* This can mean two things: a simple name or "~name".  The later
@@ -506,7 +514,7 @@ glob (pattern, flags, errfunc, pglob)
 	  dirlen = strlen (pattern);
 
 	  /* Set FILENAME to NULL as a special flag.  This is ugly but
-	     other solutions would requiremuch more code.  We test for
+	     other solutions would require much more code.  We test for
 	     this special case below.  */
 	  filename = NULL;
 	}
@@ -532,6 +540,29 @@ glob (pattern, flags, errfunc, pglob)
     {
       char *newp;
       dirlen = filename - pattern;
+#if defined __MSDOS__ || defined WINDOWS32
+      if (*filename == ':'
+	  || (filename > pattern + 1 && filename[-1] == ':'))
+	{
+	  char *drive_spec;
+
+	  ++dirlen;
+	  drive_spec = (char *) __alloca (dirlen + 1);
+#ifdef HAVE_MEMPCPY
+	  *((char *) mempcpy (drive_spec, pattern, dirlen)) = '\0';
+#else
+	  memcpy (drive_spec, pattern, dirlen);
+	  drive_spec[dirlen] = '\0';
+#endif
+	  /* For now, disallow wildcards in the drive spec, to
+	     prevent infinite recursion in glob.  */
+	  if (__glob_pattern_p (drive_spec, !(flags & GLOB_NOESCAPE)))
+	    return GLOB_NOMATCH;
+	  /* If this is "d:pattern", we need to copy `:' to DIRNAME
+	     as well.  If it's "d:/pattern", don't remove the slash
+	     from "d:/", since "d:" and "d:/" are not the same.*/
+	}
+#endif
       newp = (char *) __alloca (dirlen + 1);
 #ifdef HAVE_MEMPCPY
       *((char *) mempcpy (newp, pattern, dirlen)) = '\0';
@@ -542,7 +573,13 @@ glob (pattern, flags, errfunc, pglob)
       dirname = newp;
       ++filename;
 
-      if (filename[0] == '\0' && dirlen > 1)
+      if (filename[0] == '\0'
+#if defined __MSDOS__ || defined WINDOWS32
+          && dirname[dirlen - 1] != ':'
+	  && (dirlen < 3 || dirname[dirlen - 2] != ':'
+	      || dirname[dirlen - 1] != '/')
+#endif
+	  && dirlen > 1)
 	/* "pattern/".  Expand "pattern", appending slashes.  */
 	{
 	  int val = glob (dirname, flags | GLOB_MARK, errfunc, pglob);
@@ -905,8 +942,9 @@ glob (pattern, flags, errfunc, pglob)
 	    pglob->gl_flags = flags;
 
 	    /* Now we know how large the gl_pathv vector must be.  */
-	    new_pathv = realloc (pglob->gl_pathv,
-				 (pglob->gl_pathc + 1) * sizeof (char *));
+	    new_pathv = (char **) realloc (pglob->gl_pathv,
+					   ((pglob->gl_pathc + 1)
+					    * sizeof (char *)));
 	    if (new_pathv != NULL)
 	      pglob->gl_pathv = new_pathv;
 	  }
@@ -1026,11 +1064,31 @@ prefix_array (dirname, array, n)
 {
   register size_t i;
   size_t dirlen = strlen (dirname);
+#if defined __MSDOS__ || defined WINDOWS32
+  int sep_char = '/';
+# define DIRSEP_CHAR sep_char
+#else
+# define DIRSEP_CHAR '/'
+#endif
 
   if (dirlen == 1 && dirname[0] == '/')
     /* DIRNAME is just "/", so normal prepending would get us "//foo".
        We want "/foo" instead, so don't prepend any chars from DIRNAME.  */
     dirlen = 0;
+#if defined __MSDOS__ || defined WINDOWS32
+  else if (dirlen > 1)
+    {
+      if (dirname[dirlen - 1] == '/')
+	/* DIRNAME is "d:/".  Don't prepend the slash from DIRNAME.  */
+	--dirlen;
+      else if (dirname[dirlen - 1] == ':')
+	{
+	  /* DIRNAME is "d:".  Use `:' instead of `/'.  */
+	  --dirlen;
+	  sep_char = ':';
+	}
+    }
+#endif
 
   for (i = 0; i < n; ++i)
     {
@@ -1046,12 +1104,12 @@ prefix_array (dirname, array, n)
 #ifdef HAVE_MEMPCPY
       {
 	char *endp = (char *) mempcpy (new, dirname, dirlen);
-	*endp++ = '/';
+	*endp++ = DIRSEP_CHAR;
 	mempcpy (endp, array[i], eltlen);
       }
 #else
       memcpy (new, dirname, dirlen);
-      new[dirlen] = '/';
+      new[dirlen] = DIRSEP_CHAR;
       memcpy (&new[dirlen + 1], array[i], eltlen);
 #endif
       free ((__ptr_t) array[i]);
@@ -1131,7 +1189,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       if (flags & (GLOB_NOCHECK|GLOB_NOMAGIC))
 	/* We need not do any tests.  The PATTERN contains no meta
 	   characters and we must not return an error therefore the
-	   result will always contain exactly the one name.  */
+	   result will always contain exactly one name.  */
 	flags |= GLOB_NOCHECK;
       else
 	{
@@ -1140,7 +1198,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	  struct stat st;
 	  size_t patlen = strlen (pattern);
 	  size_t dirlen = strlen (directory);
-	  char *fullname = __alloca (dirlen + 1 + patlen + 1);
+	  char *fullname = (char *) __alloca (dirlen + 1 + patlen + 1);
 
 # ifdef HAVE_MEMPCPY
 	  mempcpy (mempcpy (mempcpy (fullname, directory, dirlen),
@@ -1154,7 +1212,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	  if (((flags & GLOB_ALTDIRFUNC)
 	       ? (*pglob->gl_stat) (fullname, &st)
 	       : __stat (fullname, &st)) == 0)
-	    /* We found this file to be existing.  No tell the rest
+	    /* We found this file to be existing.  Now tell the rest
 	       of the function to copy this name into the result.  */
 	    flags |= GLOB_NOCHECK;
 	}

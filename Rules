@@ -91,7 +91,11 @@ endif
 ifeq ($(cross-compiling),yes)
 tests: $(addprefix $(objpfx),$(tests) $(tests-static) $(test-srcs))
 else
+ifneq (($build-static),yes)
+tests: $(tests:%=$(objpfx)%.out)
+else
 tests: $(tests:%=$(objpfx)%.out) $(tests-static:%=$(objpfx)%.sout)
+endif
 endif
 
 ifeq ($(build-programs),yes)

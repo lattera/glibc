@@ -1,5 +1,23 @@
 1998-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
+	* Rules (tests): Depend on tests-static only if build-static == yes.
+
+	* misc/Makefile (install-lib): Compile libbsd-compat.a and libg.a
+	only if build-static == yes.
+
+1998-07-29 12:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c: Winblowz compatibility stuff.
+	Patch received from Paul D. Smith <psmith@BayNetworks.COM>.
+
+1998-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sunrpc/clnt_unix.c (__msgwrite)[!SCM_CRED]: Add return
+	statement, fix typo.
+	* sunrpc/svc_unix.c (__msgwrite)[!SCM_CRED]: Likewise.
+
+1998-07-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
 	* manual/pattern.texi (More Flags for Globbing): Fix typo.
 
 	* manual/math.texi (Special Functions): Fix typo.

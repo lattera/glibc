@@ -58,7 +58,9 @@ routines := brk sbrk sstk ioctl \
 	    err error ustat \
 	    getsysstats dirname regexp
 aux := init-misc
+ifeq ($(build-static),yes)
 install-lib := libbsd-compat.a libg.a
+endif
 gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent

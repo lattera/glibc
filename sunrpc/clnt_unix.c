@@ -466,14 +466,14 @@ __msgread (int sock, void *buf, size_t cnt)
 static int
 __msgwrite (int sock, void *buf, size_t cnt)
 {
-#ifndef SCM_CRED
+#ifndef SCM_CREDS
   /* We cannot implement this reliably.  */
   __set_errno (ENOSYS);
+  return -1;
 #else
   struct iovec iov[1];
   struct msghdr msg;
   struct cmessage cm;
-  int len;
 
   iov[0].iov_base = buf;
   iov[0].iov_len = cnt;

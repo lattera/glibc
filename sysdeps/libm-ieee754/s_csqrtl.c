@@ -84,7 +84,6 @@ __csqrtl (__complex__ long double x)
 	}
       else
 	{
-#if 0
 	  long double d, r, s;
 
 	  d = __ieee754_hypotl (__real__ x, __imag__ x);
@@ -98,20 +97,11 @@ __csqrtl (__complex__ long double x)
 	  else
 	    {
 	      s = __ieee754_sqrtl (0.5L * d - 0.5L * __real__ x);
-	      r = (0.5L * __imag__ x) / s;
+	      r = fabsl ((0.5L * __imag__ x) / s);
 	    }
 
 	  __real__ res = r;
 	  __imag__ res = __copysignl (s, __imag__ x);
-#else
-	  long double d, imag;
-
-	  d = __ieee754_hypotl (__real__ x, __imag__ x);
-	  imag = __ieee754_sqrtl (0.5 * (d - __real__ x));
-
-	  __real__ res = __ieee754_sqrtl (0.5 * (d + __real__ x));
-	  __imag__ res = __copysignl (imag, __imag__ x);
-#endif
 	}
     }
 
