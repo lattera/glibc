@@ -1,5 +1,7 @@
 Tue Jun 18 17:56:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* Version 1.91 test release.
+
 	* Makerules ($(common-objpfx)distinfo-$(subdir)): Change target from
 	distinfo to this.
 	(distinfo): Make phony target depending on that.
