@@ -63,6 +63,7 @@ ENTRY(_mcount)
 	stw	r4, 44(r1)
 	stw	r5,  8(r1)
 	bl	JUMPTARGET(__mcount_internal)
+	nop
  /* Restore the registers...  */
 	lwz     r6,  8(r1)
 	lwz	r0, 44(r1)

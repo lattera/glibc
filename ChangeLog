@@ -1,3 +1,30 @@
+2001-03-29  Michael Keezer  <mkeezer@redhat.com>
+
+	* posix/tst-gnuglob.c: Added ifdef _DIRENT_HAVE_D_TYPE.
+	* login/tst-utmp.c: Handle case where ut_tv is not available but
+	ut_time is.
+	* sysdeps/unix/sysv/aix/utmpx.h: New file.
+	* sysdeps/unix/sysv/aix/bits/utmpx.h: Added
+	_HAVE_UT_TYPE/PID/ID/TV/HOST defines.
+	* sysdeps/unix/sysv/aix/libc-start.c: Removed temp code and made stub.
+	* sysdeps/unix/sysv/aix/gettimeofday.c: New file added routines
+	to access RTCU timer reg.
+	* sysdeps/unix/sysv/aix/Makefile: Remove /usr/lib/crt0.o
+	added dl-libc, dl-open,dl-sym, dl-close to misc.
+	* sysdeps/unix/sysv/aix/start.c: New file.  Start code.
+	* sysdeps/unix/sysv/aix/dlldr.h: New file.  AIX __loadx defines.
+	* sysdeps/unix/sysv/aix/dl-close.c: New file.  AIX dl-close.
+	* sysdeps/unix/sysv/aix/dl-open.c: New file.  AIX dl-open.
+	* sysdeps/unix/sysv/aix/dl-sym.c: New file.  AIX dl-sym.
+	* sysdeps/unix/sysv/aix/dl-libc.c: New file.  libc_dl-xxx support.
+	* sysdeps/generic/strtoll.c: Added SHLIB_COMPAT(libc,GLIBC_2_0,
+	GLIBC_2_2).
+	* sysdeps/generic/strtoull.c: Likewise.
+	* sysdeps/powerpc/ppc-mcount.S: Added nop after bl instruction.
+	* sysdeps/unix/sysv/aix/powerpc/memset.c: New file to include
+	sysdeps/generic/memset.c.
+	* sysdeps/unix/sysv/aix/getpeername.c: Define __getpeername.
+
 2001-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/Makefile (CFLAGS-charmap.c): Add -DNEED_NULL_POINTER.

@@ -25,7 +25,10 @@
 # ifdef SHARED
 #  include <shlib-compat.h>
 
+#  if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_2)
 compat_symbol (libc, __strtoll_internal, __strtoq_internal, GLIBC_2_0);
+#  endif
+
 # endif
 weak_alias (strtoll, strtoq)
 #endif

@@ -197,12 +197,22 @@ my_readdir (void *gdir)
     }
 
   dir->d.d_ino = dir->idx;
+
+#ifdef _DIRENT_HAVE_D_TYPE
   dir->d.d_type = filesystem[dir->idx].type;
+#endif
+
   strcpy (dir->d.d_name, filesystem[dir->idx].name);
 
+#ifdef _DIRENT_HAVE_D_TYPE
   PRINTF ("my_readdir ({ level: %d, idx: %ld }) = { d_ino: %ld, d_type: %d, d_name: \"%s\" }\n",
 	  dir->level, (long int) dir->idx, dir->d.d_ino, dir->d.d_type,
 	  dir->d.d_name);
+#else
+  PRINTF ("my_readdir ({ level: %d, idx: %ld }) = { d_ino: %ld, d_name: \"%s\" }\n",
+	  dir->level, (long int) dir->idx, dir->d.d_ino,
+	  dir->d.d_name);
+#endif
 
   ++dir->idx;
 

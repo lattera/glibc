@@ -71,20 +71,24 @@ do_prepare (int argc, char *argv[])
     error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
 }
 
-
 struct utmp entry[] =
 {
-  { ut_type: BOOT_TIME, ut_pid: 1, ut_tv: { tv_sec: 1000 } },
-  { ut_type: RUN_LVL, ut_pid: 1, ut_tv: { tv_sec: 2000 } },
-  { ut_type: INIT_PROCESS, ut_pid: 5, ut_id: "si", ut_tv: { tv_sec: 3000 } },
+#if _HAVE_UT_TV
+#define UT(a)  ut_tv:{tv_sec:(a)}
+#else
+#define UT(a)  ut_time:(a)
+#endif
+
+  { ut_type: BOOT_TIME, ut_pid: 1, UT(1000) },
+  { ut_type: RUN_LVL, ut_pid: 1, UT(2000) },
+  { ut_type: INIT_PROCESS, ut_pid: 5, ut_id: "si", UT(3000) },
   { ut_type: LOGIN_PROCESS, ut_pid: 23, ut_line: "tty1", ut_id: "1",
-    ut_user: "LOGIN", ut_session: 23, ut_tv: { tv_sec: 4000 } },
+    ut_user: "LOGIN", UT(4000) },
   { ut_type: USER_PROCESS, ut_pid: 24, ut_line: "tty2", ut_id: "2",
-    ut_user: "albert", ut_session: 24, ut_tv: { tv_sec: 8000 } },
+    ut_user: "albert", UT(8000) },
   { ut_type: USER_PROCESS, ut_pid: 196, ut_line: "ttyp0", ut_id: "p0",
-    ut_user: "niels", ut_session: 196, ut_tv: { tv_sec: 10000 } },
-  { ut_type: DEAD_PROCESS, ut_line: "ttyp1", ut_id: "p1",
-    ut_tv: { tv_sec: 16000 } },
+    ut_user: "niels", UT(10000) },
+  { ut_type: DEAD_PROCESS, ut_line: "ttyp1", ut_id: "p1", UT(16000) },
   { ut_type: EMPTY },
   { ut_type: EMPTY }
 };
@@ -161,8 +165,11 @@ simulate_login (const char *line, const char *user)
 	    entry[n].ut_pid = (entry_pid += 27);
 	  entry[n].ut_type = USER_PROCESS;
 	  strcpy (entry[n].ut_user, user);
+#if _HAVE_UT_TV - 0
 	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
-
+#else
+          entry[n].ut_time = (entry_time += 1000);
+#endif
 	  setutent ();
 
 	  if (pututline (&entry[n]) == NULL)
@@ -192,8 +199,11 @@ simulate_logout (const char *line)
 	{
 	  entry[n].ut_type = DEAD_PROCESS;
 	  entry[n].ut_user[0] = '\0';
-	  entry[n].ut_tv.tv_sec = (entry_time += 1000);
-
+#if _HAVE_UT_TV - 0
+          entry[n].ut_tv.tv_sec = (entry_time += 1000);
+#else
+          entry[n].ut_time = (entry_time += 1000);
+#endif
 	  setutent ();
 
 	  if (pututline (&entry[n]) == NULL)

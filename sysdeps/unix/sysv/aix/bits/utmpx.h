@@ -65,3 +65,10 @@ struct utmpx
 #ifdef __USE_GNU
 # define ACCOUNTING	9	/* System accounting.  */
 #endif
+
+#define _HAVE_UT_TYPE   1
+#define _HAVE_UT_PID    1
+#define _HAVE_UT_ID     1
+#define _HAVE_UT_TV     1
+#define _HAVE_UT_HOST   1
+
