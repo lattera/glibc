@@ -1,6 +1,6 @@
 /* memmove -- copy memory to memory until the specified number of bytes
    has been copied.  Overlap is handled correctly.
-   Copyright (C) 1991 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1995 Free Software Foundation, Inc.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <string.h>
 #include <memcopy.h>
+#include <pagecopy.h>
 
 /* All this is so that bcopy.c can #include
    this file after defining some things.  */
@@ -54,6 +55,11 @@ DEFUN(memmove, (a1, a2, len),
 	  /* Copy just a few bytes to make DSTP aligned.  */
 	  len -= (-dstp) % OPSIZ;
 	  BYTE_COPY_FWD (dstp, srcp, (-dstp) % OPSIZ);
+
+	  /* Copy whole pages from SRCP to DSTP by virtual address
+	     manipulation, as much as possible.  */
+
+	  PAGE_COPY_FWD_MAYBE (dstp, srcp, len, len);
 
 	  /* Copy from SRCP to DSTP taking advantage of the known
 	     alignment of DSTP.  Number of bytes remaining is put

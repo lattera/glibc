@@ -21,6 +21,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <string.h>
 #include <memcopy.h>
+#include <pagecopy.h>
 
 PTR
 DEFUN(memcpy, (dstpp, srcpp, len),
@@ -38,10 +39,14 @@ DEFUN(memcpy, (dstpp, srcpp, len),
       len -= (-dstp) % OPSIZ;
       BYTE_COPY_FWD (dstp, srcp, (-dstp) % OPSIZ);
 
-      /* Copy from SRCP to DSTP taking advantage of the known
-	 alignment of DSTP.  Number of bytes remaining is put
-	 in the third argumnet, i.e. in LEN.  This number may
-	 vary from machine to machine.  */
+      /* Copy whole pages from SRCP to DSTP by virtual address manipulation,
+	 as much as possible.  */
+
+      PAGE_COPY_FWD_MAYBE (dstp, srcp, len, len);
+
+      /* Copy from SRCP to DSTP taking advantage of the known alignment of
+	 DSTP.  Number of bytes remaining is put in the third argument,
+	 i.e. in LEN.  This number may vary from machine to machine.  */
 
       WORD_COPY_FWD (dstp, srcp, len, len);
 

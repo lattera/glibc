@@ -1,5 +1,12 @@
 Tue Feb 21 00:10:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* string/Makefile (distribute): Add pagecopy.h.
+	* sysdeps/mach/pagecopy.h: New file.
+	* sysdeps/generic/pagecopy.h: New file.
+	* sysdeps/generic/memcpy.c: Include pagecopy.h; call
+ 	PAGE_COPY_FWD_MAYBE first when word aligned.
+	* sysdeps/generic/memmove.c: Likewise.
+
 	* misc/bsd-compat.c (longjmp, setjmp): Functions removed.
 	(getpgrp): Call __getpgid instead of __getpgrp.
 

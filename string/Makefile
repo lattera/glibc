@@ -33,7 +33,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   swab strfry memfrob memmem
 
 tests		:= tester testcopy test-ffs
-distribute	:= memcopy.h
+distribute	:= memcopy.h pagecopy.h
 
 
 include ../Rules
