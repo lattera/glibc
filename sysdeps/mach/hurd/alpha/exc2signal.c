@@ -26,7 +26,7 @@ Cambridge, MA 02139, USA.  */
 
 void
 _hurd_exception2signal (int exception, int code, int subcode,
-			int *signo, int *sigcode, int *error)
+			int *signo, long int *sigcode, int *error)
 {
   *error = 0;
 
