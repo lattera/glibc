@@ -1,5 +1,8 @@
 1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/Makefile [csu]: Define CFLAGS-initfini.s to force
+	compiling for i386 to avoid i686-like GOT pointer computation.
+
 	* db2/db_int.h: Change tsl_t type to u_int32_t.
 	* db2/mutex/mutex.c: Allow Alpha mutex definitions.
 	* db2/mutex/alpha.h: New file.
