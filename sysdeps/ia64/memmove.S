@@ -56,12 +56,18 @@
 #define loopcnt		r30
 #define	value		r31
 
+#ifdef GAS_ALIGN_BREAKS_UNWIND_INFO
+# define ALIGN(n)	{ nop 0 }
+#else
+# define ALIGN(n)	.align n
+#endif
+
 #define LOOP(shift)							\
-		.align	32 ;						\
+		ALIGN(32);						\
 .loop##shift##:								\
 (p[0])		ld8	r[0] = [asrc], 8 ;	/* w1 */		\
 (p[MEMLAT+1])	st8	[dest] = value, 8 ;				\
-(p[MEMLAT])	shrp	value = r[MEMLAT], r[MEMLAT+1], shift ;	\
+(p[MEMLAT])	shrp	value = r[MEMLAT], r[MEMLAT+1], shift ;		\
 		nop.b	0 ;						\
 		nop.b	0 ;						\
 		br.ctop.sptk .loop##shift ;				\
@@ -228,6 +234,10 @@ ENTRY(memmove)
 (p[MEMLAT])	st1	[dest] = r[MEMLAT], -1
 		br.ctop.dptk .l6
 		br.cond.sptk .restore_and_exit
+END(memmove)
+
+	.rodata
+	.align 8
 .table:
 	data8	0			// dummy entry
 	data8 	.loop56 - .loop8
@@ -238,5 +248,4 @@ ENTRY(memmove)
 	data8	.loop56 - .loop48
 	data8	.loop56 - .loop56
 
-END(memmove)
 libc_hidden_builtin_def (memmove)

@@ -103,14 +103,22 @@
 #define the_z		z
 #endif
 
+#ifdef GAS_ALIGN_BREAKS_UNWIND_INFO
+/* Manually force proper loop-alignment.  Note: be sure to
+   double-check the code-layout after making any changes to
+   this routine! */
+# define ALIGN(n)	{ nop 0 }
+#else
+# define ALIGN(n)	.align n
+#endif
 
 #if defined(USE_LFETCH)
 #define LOOP(shift)						\
-		.align	32 ;					\
+		ALIGN(32);					\
 .loop##shift##:							\
 { .mmb								\
 (p[0])	ld8.nt1	r[0] = [asrc], 8 ;				\
-(p[0])	lfetch.nt1 [ptr1], 16 ;				\
+(p[0])	lfetch.nt1 [ptr1], 16 ;					\
 	nop.b 0 ;						\
 } { .mib							\
 (p[MEMLAT+1]) st8 [dest] = tmp3, 8 ;				\
@@ -118,7 +126,7 @@
  	nop.b 0 ;;						\
  } { .mmb							\
 (p[0])	ld8.nt1	s[0] = [asrc], 8 ;				\
-(p[0])	lfetch.nt1	[ptr2], 16 ;			\
+(p[0])	lfetch.nt1	[ptr2], 16 ;				\
 	nop.b 0 ;						\
 } { .mib							\
 (p[MEMLAT+1]) st8 [dest] = tmp4, 8 ;				\
@@ -130,7 +138,7 @@
 }
 #else
 #define LOOP(shift)						\
-		.align	32 ;					\
+		ALIGN(32);					\
 .loop##shift##:							\
 { .mmb								\
 (p[0])	ld8.nt1	r[0] = [asrc], 8 ;				\
@@ -254,7 +262,11 @@ ENTRY(memcpy)
 	movi0	ar.lc = loopcnt 	// set the loop counter
 ;; }
 
+#ifdef  GAS_ALIGN_BREAKS_UNWIND_INFO
+	{ nop 0 }
+#else
 	.align	32
+#endif
 #if defined(USE_FLP)
 .l1: // ------------------------------- // L1: Everything a multiple of 8
 { .mmi

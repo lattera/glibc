@@ -22,15 +22,14 @@
 #include <sysdep.h>
 
 ENTRY(__pipe)
-       st8 [sp]=r32		// save ptr across system call
+       .regstk 1,0,0,0
        DO_CALL (SYS_ify (pipe))
-       ld8 r2=[sp]
        cmp.ne p6,p0=-1,r10
        ;;
-(p6)   st4 [r2]=r8,4
+(p6)   st4 [in0]=r8,4
 (p6)   mov ret0=0
        ;;
-(p6)   st4 [r2]=r9
+(p6)   st4 [in0]=r9
 (p6)   ret
        br.cond.spnt.few __syscall_error
 PSEUDO_END(__pipe)

@@ -153,7 +153,9 @@ ENTRY(memset)
 (p_zr)	br.cond.dptk.many .l1b			// Jump to use stf.spill
 ;; }
 
+#ifndef GAS_ALIGN_BREAKS_UNWIND_INFO
 	.align 32 // -------- //  L1A: store ahead into cache lines; fill later
+#endif
 { .mmi
 	and	tmp = -(LINE_SIZE), cnt		// compute end of range
 	mov	ptr9 = ptr1			// used for prefetching
@@ -222,7 +224,11 @@ ENTRY(memset)
 	br.cond.dpnt.many  .move_bytes_from_alignment	// Branch no. 3
 ;; }
 
+#ifdef GAS_ALIGN_BREAKS_UNWIND_INFO
+	{ nop 0 }
+#else
 	.align 32
+#endif
 .l1b:	// ------------------ //  L1B: store ahead into cache lines; fill later
 { .mmi
 	and	tmp = -(LINE_SIZE), cnt		// compute end of range
@@ -283,13 +289,15 @@ ENTRY(memset)
 { .mib
 	cmp.eq	p_scr, p0 = loopcnt, r0
 	add	loopcnt = -1, loopcnt
-(p_scr)	br.cond.dpnt.many .store_words
+(p_scr)	br.cond.dpnt.many store_words
 ;; }
 { .mib
 	and	cnt = 0x1f, cnt		// compute the remaining cnt
 	movi0   ar.lc = loopcnt
 ;; }
+#ifndef GAS_ALIGN_BREAKS_UNWIND_INFO
 	.align 32
+#endif
 .l2:	// ---------------------------- //  L2A:  store 32B in 2 cycles
 { .mmb
 	store	[ptr1] = myval, 8
@@ -299,7 +307,7 @@ ENTRY(memset)
 	store	[ptr2] = myval, 24
 	br.cloop.dptk.many .l2
 ;; }
-.store_words:
+store_words:
 { .mib
 	cmp.gt	p_scr, p0 = 8, cnt		// just a few bytes left ?
 (p_scr)	br.cond.dpnt.many .move_bytes_from_alignment	// Branch

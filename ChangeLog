@@ -1,3 +1,19 @@
+2003-11-14 David Mosberger   <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h
+	(GAS_ALIGN_BREAKS_UNWIND_INFO): Define this macro to indicate
+	that all existing GAS versions have a problem with .align inside
+	a function.
+	* sysdeps/ia64/memccpy.S: Work around GAS_ALIGN_BREAKS_UNWIND_INFO bug.
+	* sysdeps/ia64/memcpy.S: Likewise.
+	* sysdeps/ia64/memset.S: Likewise.
+	* sysdeps/ia64/memmove.S: Likewise.  Also move the jump-table to
+	out of .text into .rodata, where it belongs.
+
+	* sysdeps/unix/sysv/linux/ia64/pipe.S: There is no need to
+	save/restore input-arguments, because they're necessarily
+	preserved by the kernel to support syscall-restart.
+
 2003-11-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex_internal.h (re_token_type_t): Remove unused ALT,

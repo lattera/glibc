@@ -52,6 +52,15 @@
 #define loopcnt		r30
 #define	value		r31
 
+#ifdef GAS_ALIGN_BREAKS_UNWIND_INFO
+/* Manually force proper loop-alignment.  Note: be sure to
+   double-check the code-layout after making any changes to
+   this routine! */
+# define ALIGN(n)	{ nop 0 }
+#else
+# define ALIGN(n)	.align n
+#endif
+
 ENTRY(memccpy)
 	.prologue
 	alloc 	r2 = ar.pfs, 4, 40 - 4, 0, 40
@@ -110,7 +119,7 @@ ENTRY(memccpy)
 	mov	ar.ec = MEMLAT + 6 + 1 	// six more passes needed
 	ld8	r[1] = [asrc], 8 	// r[1] = w0
 	cmp.ne	p6, p0 = r0, r0	;;	// clear p6
-	.align	32
+	ALIGN(32)
 .l2:
 (p[0])		ld8.s	r[0] = [asrc], 8		// r[0] = w1
 (p[MEMLAT])	shr.u	tmp1[0] = r[1 + MEMLAT], sh1	// tmp1 = w0 >> sh1

@@ -24,6 +24,13 @@
 #include <sysdeps/unix/sysdep.h>
 #include <sysdeps/ia64/sysdep.h>
 
+/* As of GAS v2.4.90.0.7, including a ".align" directive inside a
+   function will cause bad unwind info to be emitted (GAS doesn't know
+   how to account for the padding introduced by the .align directive).
+   Turning on this macro will work around this bug by introducing the
+   necessary padding explicitly. */
+#define GAS_ALIGN_BREAKS_UNWIND_INFO
+
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h
    of the kernel.  But these symbols do not follow the SYS_* syntax
