@@ -1,4 +1,4 @@
-# Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ CFLAGS-gconv_db.c = -DSTATIC_GCONV
 CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
-tests	= tst-iconv1
+tests	= tst-iconv1 tst-iconv2
 
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c
 

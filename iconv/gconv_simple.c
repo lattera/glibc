@@ -1,5 +1,5 @@
 /* Simple transformations functions.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -90,7 +90,7 @@ internal_ucs4_loop (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -135,7 +135,7 @@ internal_ucs4_loop_unaligned (struct __gconv_step *step,
 # endif
 
   /* Determine the status.  */
-  if (*outptrp == outend)
+  if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
@@ -260,7 +260,7 @@ ucs4_internal_loop (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -328,7 +328,7 @@ ucs4_internal_loop_unaligned (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -444,7 +444,7 @@ internal_ucs4le_loop (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -489,9 +489,9 @@ internal_ucs4le_loop_unaligned (struct __gconv_step *step,
 # endif
 
   /* Determine the status.  */
-  if (*inptrp == inend)
+  if (*inptrp + 4 > inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -609,7 +609,7 @@ ucs4le_internal_loop (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;
@@ -678,7 +678,7 @@ ucs4le_internal_loop_unaligned (struct __gconv_step *step,
   /* Determine the status.  */
   if (*inptrp == inend)
     result = __GCONV_EMPTY_INPUT;
-  else if (*outptrp == outend)
+  else if (*outptrp + 4 > outend)
     result = __GCONV_FULL_OUTPUT;
   else
     result = __GCONV_INCOMPLETE_INPUT;

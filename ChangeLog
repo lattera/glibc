@@ -1,3 +1,18 @@
+2001-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_simple.c (internal_ics4_loop): Correct test for
+	overflowing output buffer.
+	(internal_ucs4_loop_unaligned): Likewise.
+	(ucs4_internal_loop): Likewise.
+	(ucs4_internal_loop_unaligned): Likewise.
+	(internal_ucs4le_loop): Likewise.
+	(internal_ucs4le_loop_unaligned): Likewise.
+	(ucs4le_internal_loop): Likewise.
+	(ucs4le_internal_loop_unaligned): Likewise.
+	Reported by Owen Taylor <otaylor@redhat.com>.
+	* iconv/Makefile (tests): Add tst-iconv2.
+	* iconv/tst-iconv2.c: New file.
+
 2001-01-04  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-support.c (DL_FIND_AUXV): New.  Defined if not defined.
