@@ -1,5 +1,8 @@
 1999-06-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* libio/libioP.h (FILEBUF_LITERAL): Add missing parameter to macro
+	definitions.
+
 	* sysdeps/unix/sysv/linux/init-first.h: Add extra cast in argc
 	assignment to avoid warning on 64bit platforms.
 
