@@ -57,6 +57,9 @@ const char *_dl_profile;
 /* Names of shared object for which the RPATHs should be ignored.  */
 const char *_dl_inhibit_rpath;
 
+/* The map for the object we will profile.  */
+struct link_map *_dl_profile_map;
+
 /* This is the address of the last stack address ever used.  */
 void *__libc_stack_end;
 

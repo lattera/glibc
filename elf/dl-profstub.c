@@ -24,7 +24,7 @@
 
 /* This is the map for the shared object we profile.  It is defined here
    only because we test for this value being NULL or not.  */
-struct link_map *_dl_profile_map;
+extern struct link_map *_dl_profile_map;
 
 
 void

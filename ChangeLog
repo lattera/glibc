@@ -1,3 +1,9 @@
+1998-07-07 17:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-profstub.c (_dl_profile_map): Only declare variable here.
+	* elf/dl-support.c: Define it here...
+	* elf/rtld.c: ...and here.
+
 1998-07-07 16:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* grp/initgroups.c: Handle directives from nsswitch.conf file.
