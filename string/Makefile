@@ -48,7 +48,7 @@ o-objects.ob	:= memcpy.o memset.o memchr.o
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall		\
 		   bug-strncat1 bug-strspn1 bug-strpbrk1 tst-bswap	\
-		   tst-strtok tst-strxfrm
+		   tst-strtok tst-strxfrm bug-strcoll1
 distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 
@@ -58,6 +58,7 @@ tester-ENV = LANGUAGE=C
 inl-tester-ENV = LANGUAGE=C
 noinl-tester-ENV = LANGUAGE=C
 tst-strxfrm-ENV = LOCPATH=$(common-objpfx)localedata
+bug-strcoll1-ENV = LOCPATH=$(common-objpfx)localedata
 CFLAGS-noinl-tester.c = -fno-builtin
 CFLAGS-tst-strlen.c = -fno-builtin
 CFLAGS-stratcliff.c = -fno-builtin

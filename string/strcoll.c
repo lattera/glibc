@@ -154,7 +154,7 @@ STRCOLL (s1, s2, l)
   if (s1len + s2len >= 16384)
     {
       idx1arr = (int32_t *) malloc ((s1len + s2len) * (sizeof (int32_t) + 1));
-      idx2arr = &idx1arr[s2len];
+      idx2arr = &idx1arr[s1len];
       rule1arr = (unsigned char *) &idx2arr[s2len];
       rule2arr = &rule1arr[s1len];
 
@@ -173,7 +173,7 @@ STRCOLL (s1, s2, l)
     try_stack:
       idx1arr = (int32_t *) alloca (s1len * sizeof (int32_t));
       idx2arr = (int32_t *) alloca (s2len * sizeof (int32_t));
-      rule1arr = (unsigned char *) alloca (s2len);
+      rule1arr = (unsigned char *) alloca (s1len);
       rule2arr = (unsigned char *) alloca (s2len);
     }
 
@@ -422,7 +422,7 @@ STRCOLL (s1, s2, l)
 		      {
 			/* No sequence at all or just one.  */
 			if (idx1cnt == idx1max)
-			  /* Note that seq2len is still zero.  */
+			  /* Note that seq1len is still zero.  */
 			  break;
 
 			backw1_stop = ~0ul;

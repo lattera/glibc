@@ -1,5 +1,9 @@
 2001-04-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/strcoll.c: Fix two memory allocation problems.
+	* string/Makefile (tests): Add bug-strcoll1.
+	* string/bug-strcoll1.c: New file.
+
 	* malloc/mcheck.c (mcheck): Call malloc once before setting the
 	hooks to allow the internal check hooks to be set up if necessary.
 
