@@ -227,7 +227,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 {
   struct pthread *pd;
   size_t size;
-  size_t pagesize_m1 = __sysconf (_SC_PAGESIZE) - 1;
+  size_t pagesize_m1 = __getpagesize () - 1;
 
   assert (attr != NULL);
   assert (powerof2 (pagesize_m1 + 1));
