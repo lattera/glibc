@@ -98,7 +98,7 @@ Cambridge, MA 02139, USA.  */
 
 #ifdef __USE_GNU
 /* Mask of bits which are understood by io servers.  */
-#define O_HURD		0xffff	/* XXX name? want this? */
+#define O_HURD		(0xffff | O_EXLOCK | O_SHLOCK)
 #endif
 
 
