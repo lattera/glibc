@@ -1,3 +1,200 @@
+2002-08-26 Brian Youmans <3diff@gnu.org>
+
+        * COPYING.LIB: Replaced with fresh copy from
+	ftp://ftp.gnu.org/gnu/Licenses/COPYING.LIB-2.1;
+	suggested copying permission notice now says version 2.1 instead
+	of version 2.
+
+        * crypt/crypt.c: Changed copying permission notice to Lesser GPL
+        from Library GPL.
+        * crypt/crypt_util.c: Likewise.
+        * crypt/ufc.c: Likewise.
+        * elf/dl-conflict.c: Likewise.
+        * elf/dl-iteratephdr.c: Likewise.
+        * iconv/iconvconfig.h: Likewise.
+        * linuxthreads/Examples/ex10.c: Likewise.
+        * linuxthreads/Examples/ex11.c: Likewise.
+        * linuxthreads/Examples/ex13.c: Likewise.
+        * linuxthreads/Examples/ex8.c: Likewise.
+        * linuxthreads/Examples/ex9.c: Likewise.
+        * linuxthreads/barrier.c: Likewise.
+        * linuxthreads/events.c: Likewise.
+        * linuxthreads/lockfile.c: Likewise.
+        * linuxthreads/no-tsd.c: Likewise.
+        * linuxthreads/pt-machine.c: Likewise.
+        * linuxthreads/ptclock_gettime.c: Likewise.
+        * linuxthreads/ptclock_settime.c: Likewise.
+        * linuxthreads/rwlock.c: Likewise.
+        * linuxthreads/sysdeps/alpha/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/alpha/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/arm/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/arm/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/cris/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/cris/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/hppa/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/hppa/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/i386/i686/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/i386/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/i386/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/i386/useldt.h: Likewise.
+        * linuxthreads/sysdeps/ia64/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/ia64/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/m68k/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/m68k/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/mips/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/mips/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/powerpc/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/powerpc/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/pthread/bits/initspin.h: Likewise.
+        * linuxthreads/sysdeps/pthread/bits/libc-lock.h: Likewise.
+        * linuxthreads/sysdeps/pthread/bits/libc-tsd.h: Likewise.
+        * linuxthreads/sysdeps/pthread/getcpuclockid.c: Likewise.
+        * linuxthreads/sysdeps/pthread/posix-timer.h: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_create.c: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_delete.c: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_getoverr.c: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_gettime.c: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_routines.c: Likewise.
+        * linuxthreads/sysdeps/pthread/timer_settime.c: Likewise.
+        * linuxthreads/sysdeps/pthread/tst-timer.c: Likewise.
+        * linuxthreads/sysdeps/s390/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/s390/s390-32/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/s390/s390-64/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/sh/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/sh/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/sparc/sparc32/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/sparc/sparc32/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/sparc/sparc32/sparcv9/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/sparc/sparc64/pspinlock.c: Likewise.
+        * linuxthreads/sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/bits/local_lim.h: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/hppa/bits/initspin.h: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Likewise.
+        * linuxthreads/tststack.c: Likewise.
+        * linuxthreads/unload.c: Likewise.
+        * linuxthreads/weaks.c: Likewise.
+        * linuxthreads/wrapsyscall.c: Likewise.
+        * malloc/arena.c: Likewise.
+        * malloc/hooks.c: Likewise.
+        * malloc/malloc.c: Likewise.
+        * posix/glob/Makefile.ami: Likewise.
+        * posix/glob/Makefile.in: Likewise.
+        * stdlib/gmp-impl.h: Likewise.
+        * stdlib/gmp.h: Likewise.
+        * sysdeps/generic/dl-iteratephdr-static.c: Likewise.
+        * sysdeps/generic/strnlen.c: Likewise.
+        * sysdeps/mach/hurd/powerpc/bits/sigcontext.h: Likewise.
+        * sysdeps/mach/hurd/recvmsg.c: Likewise.
+        * sysdeps/mach/hurd/sendmsg.c: Likewise.
+        * sysdeps/mach/hurd/spawni.c: Likewise.
+        * sysdeps/mach/powerpc/machine-sp.h: Likewise.
+        * sysdeps/mach/powerpc/sysdep.h: Likewise.
+        * sysdeps/mach/powerpc/thread_state.h: Likewise.
+        * sysdeps/unix/bsd/bsd4.4/bits/socket.h: Likewise.
+        * sysdeps/unix/sysv/linux/ia64/dl-iteratephdr-static.c: Likewise.
+        * sysdeps/x86_64/gmp-mparam.h: Likewise.
+
+        * linuxthreads/sysdeps/pthread/pt-initfini.c: Changed copying
+        permission notice to Lesser GPL from Library GPL, including the
+        references in the special exception.
+        * linuxthreads/sysdeps/unix/sysv/linux/hppa/pt-initfini.c: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/s390/s390-32/pt-initfini.c:
+	Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c:
+	Likewise.
+        * linuxthreads/sysdeps/unix/sysv/linux/sh/pt-initfini.c: Likewise.
+
+        * sysdeps/ieee754/dbl-64/MathLib.h: Corrected version number in
+        Lesser GPL copying permission notice from 2 to 2.1.
+        * sysdeps/ieee754/dbl-64/asincos.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/atnat.h: Likewise.
+        * sysdeps/ieee754/dbl-64/atnat2.h: Likewise.
+        * sysdeps/ieee754/dbl-64/branred.c: Likewise.
+        * sysdeps/ieee754/dbl-64/branred.h: Likewise.
+        * sysdeps/ieee754/dbl-64/dla.h: Likewise.
+        * sysdeps/ieee754/dbl-64/doasin.c: Likewise.
+        * sysdeps/ieee754/dbl-64/doasin.h: Likewise.
+        * sysdeps/ieee754/dbl-64/dosincos.c: Likewise.
+        * sysdeps/ieee754/dbl-64/dosincos.h: Likewise.
+        * sysdeps/ieee754/dbl-64/e_asin.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_atan2.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_exp.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_log.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_pow.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_remainder.c: Likewise.
+        * sysdeps/ieee754/dbl-64/e_sqrt.c: Likewise.
+        * sysdeps/ieee754/dbl-64/halfulp.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpa.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpa.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mpa2.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mpatan.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpatan.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mpatan2.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpexp.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpexp.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mplog.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mplog.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mpsqrt.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mpsqrt.h: Likewise.
+        * sysdeps/ieee754/dbl-64/mptan.c: Likewise.
+        * sysdeps/ieee754/dbl-64/mydefs.h: Likewise.
+        * sysdeps/ieee754/dbl-64/powtwo.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/root.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/s_atan.c: Likewise.
+        * sysdeps/ieee754/dbl-64/s_sin.c: Likewise.
+        * sysdeps/ieee754/dbl-64/s_tan.c: Likewise.
+        * sysdeps/ieee754/dbl-64/sincos.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/sincos32.c: Likewise.
+        * sysdeps/ieee754/dbl-64/sincos32.h: Likewise.
+        * sysdeps/ieee754/dbl-64/slowexp.c: Likewise.
+        * sysdeps/ieee754/dbl-64/slowpow.c: Likewise.
+        * sysdeps/ieee754/dbl-64/uasncs.h: Likewise.
+        * sysdeps/ieee754/dbl-64/uatan.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/uexp.h: Likewise.
+        * sysdeps/ieee754/dbl-64/uexp.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/ulog.h: Likewise.
+        * sysdeps/ieee754/dbl-64/ulog.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/upow.h: Likewise.
+        * sysdeps/ieee754/dbl-64/upow.tbl: Likewise.
+        * sysdeps/ieee754/dbl-64/urem.h: Likewise.
+        * sysdeps/ieee754/dbl-64/uroot.h: Likewise.
+        * sysdeps/ieee754/dbl-64/usncs.h: Likewise.
+        * sysdeps/ieee754/dbl-64/utan.h: Likewise.
+        * sysdeps/ieee754/dbl-64/utan.tbl: Likewise.
+
+        * sysdeps/ieee754/flt-32/e_asinf.c: Added copyright notice for Stephen
+        Moshier and Lesser GPL copying permission notice, per license from
+	Moshier.
+        * sysdeps/ieee754/ldbl-128/e_acosl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_asinl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_coshl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_jnl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_powl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_sinhl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/k_tanl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/s_erfl.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/e_asinl.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/e_j0l.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/e_j1l.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/e_jnl.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/e_lgammal_r.c: Likewise.
+        * sysdeps/ieee754/ldbl-96/s_erfl.c: Likewise.
+
+        * sysdeps/ieee754/ldbl-128/e_j0l.c: Added Lesser GPL copying permission
+	notice, per license from copyright holder Stephen Moshier.
+        * sysdeps/ieee754/ldbl-128/e_j1l.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_lgammal_r.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_log10l.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_log2l.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/e_logl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/s_atanl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/s_cbrtl.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/s_expm1l.c: Likewise.
+        * sysdeps/ieee754/ldbl-128/s_log1pl.c: Likewise.
+
 2002-08-26  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
         * sysdeps/sh/Makefile (sysdeps_routines): Add divdi3 in csu dir.
