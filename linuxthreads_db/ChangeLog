@@ -1,3 +1,8 @@
+2002-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* td_thr_tsd.c (td_thr_tsd): Read correct entry from pthread_keys
+	array.
+
 2002-09-28  Andreas Jaeger  <aj@suse.de>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Fix reference to dtv.
