@@ -1,5 +1,5 @@
 /* Definitions of inline math functions implemented by the m68881/2.
-   Copyright (C) 1991,92,93,94,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,51 +21,61 @@
 
 #ifdef __USE_ISOC99
 
+# if __GNUC_PREREQ (3,1)
+/* GCC 3.1 and up have builtins that actually can be used.  */
+#  define isgreater(x, y) __builtin_isgreater (x, y)
+#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
+#  define isless(x, y) __builtin_isless (x, y)
+#  define islessequal(x, y) __builtin_islessequal (x, y)
+#  define islessgreater(x, y) __builtin_islessgreater (x, y)
+#  define isunordered(x, y) __builtin_isunordered (x, y)
+# else
 /* ISO C99 defines some macros to perform unordered comparisons.  The
    m68k FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
-# define isgreater(x, y)					\
+#  define isgreater(x, y)					\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
 
-# define isgreaterequal(x, y)				\
+#  define isgreaterequal(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
 
-# define isless(x, y)					\
+#  define isless(x, y)					\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
 
-# define islessequal(x, y)				\
+#  define islessequal(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsole %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
 
-# define islessgreater(x, y)				\
+#  define islessgreater(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
 
-# define isunordered(x, y)				\
+#  define isunordered(x, y)				\
    __extension__					\
    ({ char __result;					\
       __asm__ ("fcmp%.x %2,%1; fsun %0"			\
 	       : "=dm" (__result) : "f" (x), "f" (y));	\
       __result != 0; })
+# endif /* GCC 3.1 */
 #endif
 
 
