@@ -65,7 +65,7 @@ dl_fatal (const char *str)
 		|| (reslen = __read (fd, bufmem, sizeof (bufmem))) <= 0)      \
   	      /* This also didn't work.  We give up since we cannot	      \
 		 make sure the library can actually work.  */		      \
-	      FATAL ("FATAL: cannot determine library version\n");	      \
+	      FATAL ("FATAL: cannot determine kernel version\n");	      \
 	    __close (fd);						      \
 	    buf[MIN (reslen, (ssize_t) sizeof (bufmem) - 1)] = '\0';	      \
 	  }								      \

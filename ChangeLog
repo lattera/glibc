@@ -1,3 +1,8 @@
+2004-12-17  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Fix
+	vague message.
+
 2004-12-16  Roland McGrath  <roland@redhat.com>
 
 	* nscd/Makefile ($(objpfx)nscd): Don't depend on $(selinux-LIBS),
