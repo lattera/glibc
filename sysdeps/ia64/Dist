@@ -1,3 +1,4 @@
+_mcount.S
 dl-symaddr.c
 dl-fptr.c
 softpipe.h

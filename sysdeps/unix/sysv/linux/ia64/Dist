@@ -1,3 +1,4 @@
+clone.S
 clone2.S
 ioperm.c
 sys/procfs.h

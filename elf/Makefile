@@ -45,7 +45,9 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
 		   dep1.c dep2.c dep3.c dep4.c dl-dtprocnum.h \
 		   vismain.c vismod1.c vismod2.c vismod3.c \
-		   constload2.c constload3.c filtmod1.c filtmod2.c
+		   constload2.c constload3.c filtmod1.c filtmod2.c \
+		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
+		   nodelmod3.c nodelmod4.c nodlopen.c
 
 include ../Makeconfig
 

@@ -2,6 +2,14 @@
 
 	* version.h (VERSION): Bump to 2.1.92.
 
+	* sysdeps/ia64/Dist: Add _mcount.S.
+
+	* sysdeps/unix/sysv/linux/ia64/Dist: Add clone.S.
+
+	* sysdeps/unix/sysv/linux/mips/Dist: Add _test_and_set.c.
+
+	* elf/Makefile (distribute): Add missing modules.
+
 	* sysdeps/unix/sysv/linux/s390/Dist: Remove nonexisting files.
 
 	* posix/regex.c (compile_range): Transliate range start and end
