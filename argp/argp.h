@@ -184,7 +184,7 @@ typedef error_t (*argp_parser_t) (int key, char *arg,
    argp's, and perhaps a function to filter help output.  When actually
    parsing options, getopt is called with the union of all the argp
    structures chained together through their CHILD pointers, with conflicts
-   being resolved in favor of the first occurance in the chain.  */
+   being resolved in favor of the first occurrence in the chain.  */
 struct argp
 {
   /* An array of argp_option structures, terminated by an entry with both

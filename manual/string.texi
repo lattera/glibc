@@ -491,7 +491,7 @@ common example:
 @cindex __va_copy
 @cindex va_copy
 @smallexample
-/* @r{This function concats arbitrary many strings.  The last}
+/* @r{This function concatenates arbitrarily many strings.  The last}
    @r{parameter must be @code{NULL}.}  */
 char *
 concat (const char *str, ...)
@@ -536,7 +536,7 @@ bytes for the end of the string so that we can append the next string.
 For all strings in total the comparisons necessary to find the end of
 the intermediate results sums up to 5500!  If we combine the copying
 with the search for the allocation we can write this function more
-efficent:
+efficient:
 
 @smallexample
 char *
@@ -1575,7 +1575,7 @@ the same elements, which is returned in @var{argz} and @var{argz_len}.
 @deftypefun {error_t} argz_create_sep (const char *@var{string}, int @var{sep}, char **@var{argz}, size_t *@var{argz_len})
 The @code{argz_create_sep} function converts the null-terminated string
 @var{string} into an argz vector (returned in @var{argz} and
-@var{argz_len}) by splitting it into elements at every occurance of the
+@var{argz_len}) by splitting it into elements at every occurrence of the
 character @var{sep}.
 @end deftypefun
 
@@ -1625,7 +1625,7 @@ argz vector @code{*@var{argz}}, and updates @code{*@var{argz}} and
 @comment GNU
 @deftypefun {error_t} argz_add_sep (char **@var{argz}, size_t *@var{argz_len}, const char *@var{str}, int @var{delim})
 The @code{argz_add_sep} function is similar to @code{argz_add}, but
-@var{str} is split into separate elements in the result at occurances of
+@var{str} is split into separate elements in the result at occurrences of
 the character @var{delim}.  This is useful, for instance, for
 adding the components of a Unix search path to an argz vector, by using
 a value of @code{':'} for @var{delim}.
@@ -1700,7 +1700,7 @@ invariant is maintained for argz vectors created by the functions here.
 @comment argz.h
 @comment GNU
 @deftypefun error_t argz_replace (@w{char **@var{argz}, size_t *@var{argz_len}}, @w{const char *@var{str}, const char *@var{with}}, @w{unsigned *@var{replace_count}})
-Replace any occurances of the string @var{str} in @var{argz} with
+Replace any occurrences of the string @var{str} in @var{argz} with
 @var{with}, reallocating @var{argz} as necessary.  If
 @var{replace_count} is non-zero, @code{*@var{replace_count}} will be
 incremented by number of replacements performed.

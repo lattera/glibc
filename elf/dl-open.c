@@ -249,7 +249,7 @@ _dl_open (const char *file, int mode, const void *caller)
 
   if (errstring)
     {
-      /* Some error occured during loading.  */
+      /* Some error occurred during loading.  */
       char *local_errstring;
 
       /* Remove the object from memory.  It may be in an inconsistent

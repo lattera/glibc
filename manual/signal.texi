@@ -1772,7 +1772,7 @@ that the status cannot change in the middle of accessing it.  Once
 @code{p->have_status} is set, it means that the child process is stopped
 or terminated, and in either case, it cannot stop or terminate again
 until the program has taken notice.  @xref{Atomic Usage}, for more
-information about coping with interruptions during accessings of a
+information about coping with interruptions during accesses of a
 variable.
 
 Here is another way you can test whether the handler has run since the

@@ -19,7 +19,7 @@
    is longer, describing the behavior in more detail.  All
    documentation strings are automatically filled for output,
    although newlines may be included to force a line break at a
-   particular point.  All documenation strings are also passed to
+   particular point.  All documentation strings are also passed to
    the `gettext' function, for possible translation into the
    current locale.  */
 

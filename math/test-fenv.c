@@ -392,7 +392,7 @@ main (void)
 
   if (count_errors)
     {
-      printf ("\n%d errors occured.\n", count_errors);
+      printf ("\n%d errors occurred.\n", count_errors);
       exit (1);
     }
   printf ("\n All tests passed successfully.\n");

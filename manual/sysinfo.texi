@@ -420,7 +420,7 @@ to rely on these macros but to be consistent here is the list:
 @vtable @code
 @item MNTOPT_DEFAULTS
 Expands to @code{"defaults"}.  This option should be used alone since it
-indicates all values for the custumizable values are chosen to be the
+indicates all values for the customizable values are chosen to be the
 default.
 @item MNTOPT_RO
 Expands to @code{"ro"}.  See the @code{FSTAB_RO} value, it means the

@@ -43,7 +43,7 @@ str_append (char **to, size_t *to_len, const char *buf, const size_t buf_len)
     }
 }
 
-/* Replace any occurances of the string STR in ARGZ with WITH, reallocating
+/* Replace any occurrences of the string STR in ARGZ with WITH, reallocating
    ARGZ as necessary.  If REPLACE_COUNT is non-zero, *REPLACE_COUNT will be
    incremented by number of replacements performed.  */
 error_t

@@ -41,7 +41,7 @@
 #include "nss.h"
 
 /*
-  The following define is neccessary for glibc 2.0.6
+  The following define is necessary for glibc 2.0.6
 */
 #ifndef INET6_ADDRSTRLEN
 # define INET6_ADDRSTRLEN 46
@@ -362,9 +362,9 @@ main (void)
   test_services ();
 
   if (error_count)
-    printf ("\n %d errors occured!\n", error_count);
+    printf ("\n %d errors occurred!\n", error_count);
   else
-    printf ("No visible errors occured!\n");
+    printf ("No visible errors occurred!\n");
 
   exit (error_count);
 }

@@ -53,7 +53,7 @@ ENTRY (memcmp)
 				   or not depending on last subtraction.  */
 
 	/* At this point %eax == 0, if the byte of block #1 was bigger, and
-	   0xffffffff if the last byte of block #2 was bigger.  The later
+	   0xffffffff if the last byte of block #2 was bigger.  The latter
 	   case is already correct but the former needs a little adjustment.
 	   Note that the following operation does not change 0xffffffff.  */
 	orb $1, %al		/* Change 0 to 1.  */

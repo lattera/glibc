@@ -123,7 +123,7 @@ extern error_t argz_insert (char **__restrict __argz,
 			    char *__restrict __before,
 			    __const char *__restrict __entry) __THROW;
 
-/* Replace any occurances of the string STR in ARGZ with WITH, reallocating
+/* Replace any occurrences of the string STR in ARGZ with WITH, reallocating
    ARGZ as necessary.  If REPLACE_COUNT is non-zero, *REPLACE_COUNT will be
    incremented by number of replacements performed.  */
 extern error_t __argz_replace (char **__restrict __argz,

@@ -1482,7 +1482,7 @@ pointed to by the elements of the result structure.
 If a user with ID @var{uid} is found, the pointer returned in
 @var{result} points to the record which contains the wanted data (i.e.,
 @var{result} contains the value @var{result_buf}).  If no user is found
-or if an error occured, the pointer returned in @var{result} is a null
+or if an error occurred, the pointer returned in @var{result} is a null
 pointer.  The function returns zero or an error code.  If the buffer
 @var{buffer} is too small to contain all the needed information, the
 error code @code{ERANGE} is returned and @var{errno} is set to
@@ -1695,7 +1695,7 @@ pointed to by the elements of the result structure.
 If a group with ID @var{gid} is found, the pointer returned in
 @var{result} points to the record which contains the wanted data (i.e.,
 @var{result} contains the value @var{result_buf}).  If no group is found
-or if an error occured, the pointer returned in @var{result} is a null
+or if an error occurred, the pointer returned in @var{result} is a null
 pointer.  The function returns zero or an error code.  If the buffer
 @var{buffer} is too small to contain all the needed information, the
 error code @code{ERANGE} is returned and @var{errno} is set to

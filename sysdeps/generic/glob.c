@@ -511,7 +511,7 @@ glob (pattern, flags, errfunc, pglob)
 #endif /* __MSDOS__ || WINDOWS32 */
   if (filename == NULL)
     {
-      /* This can mean two things: a simple name or "~name".  The later
+      /* This can mean two things: a simple name or "~name".  The latter
 	 case is nothing but a notation for a directory.  */
       if ((flags & (GLOB_TILDE|GLOB_TILDE_CHECK)) && pattern[0] == '~')
 	{

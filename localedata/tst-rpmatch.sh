@@ -31,7 +31,7 @@ while read locale string result dummy; do
     fi
 done <<EOF
 #& These are the tests for rpmatch in glibc.  Each line contains one test,
-#& comments start with #& in the first column.  The fields are seperated
+#& comments start with #& in the first column.  The fields are separated
 #& by paragraph signs and contain: the locale, the string, the expected
 #& return value of rpmatch(3).  If the test fails, test-rpmatch prints
 #& all these informations

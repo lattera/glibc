@@ -357,7 +357,7 @@ struct hol_cluster
   const char *header;
 
   /* Used to order clusters within the same group with the same parent,
-     according to the order in which they occured in the parent argp's child
+     according to the order in which they occurred in the parent argp's child
      list.  */
   int index;
 
@@ -1419,7 +1419,7 @@ argp_args_usage (const struct argp *argp, const struct argp_state *state,
    following the `\v' character (nothing for strings without).  Each separate
    bit of documentation is separated a blank line, and if PRE_BLANK is true,
    then the first is as well.  If FIRST_ONLY is true, only the first
-   occurance is output.  Returns true if anything was output.  */
+   occurrence is output.  Returns true if anything was output.  */
 static int
 argp_doc (const struct argp *argp, const struct argp_state *state,
 	  int post, int pre_blank, int first_only,

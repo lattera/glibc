@@ -30,7 +30,7 @@ const char *argp_program_bug_address =
 static char doc[] =
   "Argp example #2 -- a pretty minimal program using argp";
 
-/* Our argpument parser.  The @code{options}, @code{parser}, and
+/* Our argument parser.  The @code{options}, @code{parser}, and
    @code{args_doc} fields are zero because we have neither options or
    arguments; @code{doc} and @code{argp_program_bug_address} will be
    used in the output for @samp{--help}, and the @samp{--version}

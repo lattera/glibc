@@ -2260,7 +2260,7 @@ is provided mostly for compatibility with existing code; using
 @code{strtod} is more robust.
 @end deftypefun
 
-The GNU C library also provides @samp{_l} versions of thse functions,
+The GNU C library also provides @samp{_l} versions of these functions,
 which take an additional argument, the locale to use in conversion.
 @xref{Parsing of Integers}.
 

@@ -1055,7 +1055,7 @@ typedef struct
 #define EF_MIPS_ARCH_4	    0x30000000	/* -mips4 code.  */
 #define EF_MIPS_ARCH_5	    0x40000000	/* -mips5 code.  */
 
-/* The following are non-official names and should ot be used.  */
+/* The following are non-official names and should not be used.  */
 
 #define E_MIPS_ARCH_1	  0x00000000	/* -mips1 code.  */
 #define E_MIPS_ARCH_2	  0x10000000	/* -mips2 code.  */

@@ -1,3 +1,9 @@
+2000-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/mk_MK: New file.
+	Contributed by Damjan Georgievski <gdamjan@freemail.org.mk>
+	* SUPPORTED: Add mk_MK ISO-8859-1.
+
 2000-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED: Add gl_ES.ISO-8859-1.

@@ -17,7 +17,7 @@
              a special key specifying something else; the only
              special keys we use here are ARGP_KEY_ARG, meaning
              a non-option argument, and ARGP_KEY_END, meaning
-             that all argumens have been parsed
+             that all arguments have been parsed
      ARG  -- For an option KEY, the string value of its
              argument, or NULL if it has none
      STATE-- A pointer to a struct argp_state, containing

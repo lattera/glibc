@@ -642,7 +642,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   _dl_rtld_map.l_prev = _dl_loaded;
 
   /* We have two ways to specify objects to preload: via environment
-     variable and via the file /etc/ld.so.preload.  The later can also
+     variable and via the file /etc/ld.so.preload.  The latter can also
      be used when security is enabled.  */
   preloads = NULL;
   npreloads = 0;

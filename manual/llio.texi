@@ -40,7 +40,7 @@ directly.)
                                          or vice-versa.
 * Stream/Descriptor Precautions::       Precautions needed if you use both
                                          descriptors and streams.
-* Scatter-Gather::                      Fast I/O to discontinous buffers.
+* Scatter-Gather::                      Fast I/O to discontinuous buffers.
 * Memory-mapped I/O::                   Using files like memory.
 * Waiting for I/O::                     How to check for input or output
 					 on multiple file descriptors.
@@ -1148,7 +1148,7 @@ Error Signals}).
 
 Note that most hardware designs cannot support write permission without
 read permission, and many do not distinguish read and execute permission.
-Thus, you may recieve wider permissions than you ask for, and mappings of
+Thus, you may receive wider permissions than you ask for, and mappings of
 write-only files may be denied even if you do not use @code{PROT_READ}.
 
 @var{flags} contains flags that control the nature of the map.
@@ -1192,7 +1192,7 @@ Anonymous maps are used as the basic primitive to extend the heap on some
 systems.  They are also useful to share data between multiple tasks
 without creating a file.
 
-On some systems using private anonymous mmaps is more efficent than using
+On some systems using private anonymous mmaps is more efficient than using
 @code{malloc} for large blocks.  This is not an issue with the GNU C library,
 as the included @code{malloc} automatically uses @code{mmap} where appropriate.
 
@@ -1270,8 +1270,8 @@ aligned.
 
 When using shared mappings, the kernel can write the file at any time
 before the mapping is removed.  To be certain data has actually been
-written to the file and will be accessable to non-memory-mapped I/O, it
-is neccessary to use this function.
+written to the file and will be accessible to non-memory-mapped I/O, it
+is necessary to use this function.
 
 It operates on the region @var{address} to (@var{address} + @var{length}).
 It may be used on part of a mapping or multiple mappings, however the
@@ -1579,7 +1579,7 @@ until the program ends.  To avoid this, calls to @code{fsync} should be
 protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
-The return value of the function is zero if no error occured.  Otherwise
+The return value of the function is zero if no error occurred.  Otherwise
 it is @math{-1} and the global variable @var{errno} is set to the
 following values:
 @table @code
@@ -1612,7 +1612,7 @@ required by @code{fdatasyn}.
 
 The prototype for @code{fdatasync} is in @file{unistd.h}.
 
-The return value of the function is zero if no error occured.  Otherwise
+The return value of the function is zero if no error occurred.  Otherwise
 it is @math{-1} and the global variable @var{errno} is set to the
 following values:
 @table @code
@@ -1836,7 +1836,7 @@ might also be signaled asynchronously.
 @item EINVAL
 The @code{aiocbp->aio_offset} or @code{aiocbp->aio_reqpiro} value is
 invalid.  This condition need not be recognized before enqueueing the
-request and so this error might also be signaled asynchrously.
+request and so this error might also be signaled asynchronously.
 @end table
 
 If @code{aio_read} returns zero, the current status of the request

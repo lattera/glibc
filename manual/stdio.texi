@@ -1321,7 +1321,7 @@ numbers are represented is the form
 @w{[@code{-}]@code{0x}@var{h}@code{.}@var{hhh}@code{p}[@code{+}|@code{-}]@var{dd}}.
 At the left of the decimal-point character exactly one digit is print.
 This character is only @code{0} if the number is denormalized.
-Otherwise the value is unspecified; it is implemention dependent how many
+Otherwise the value is unspecified; it is implementation dependent how many
 bits are used.  The number of hexadecimal digits on the right side of
 the decimal-point character is equal to the precision.  If the precision
 is zero it is determined to be large enough to provide an exact

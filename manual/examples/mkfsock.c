@@ -28,7 +28,7 @@ make_named_socket (const char *filename)
      the offset of the start of the filename,
      plus its length,
      plus one for the terminating null byte.
-     Alternativly you can just do:
+     Alternatively you can just do:
      size = SUN_LEN (&name);
   */
   size = (offsetof (struct sockaddr_un, sun_path)

@@ -513,7 +513,7 @@ tz_compute (tm)
       || ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
     return 0;
   /* We have to distinguish between northern and southern hemisphere.
-     For the later the daylight saving time ends in the next year.
+     For the latter the daylight saving time ends in the next year.
      It is easier to detect this after first computing the time for the
      wrong year since now we simply can compare the times to switch.  */
   if (tz_rules[0].change > tz_rules[1].change

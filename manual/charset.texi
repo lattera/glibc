@@ -524,7 +524,7 @@ The code to emit the escape sequence to get back to the initial state is
 interesting.  The @code{wcsrtombs} function can be used to determine the
 necessary output code (@pxref{Converting Strings}).  Please note that on
 GNU systems it is not necessary to perform this extra action for the
-conversion from multibyte text ot wide character text since the wide
+conversion from multibyte text to wide character text since the wide
 character encoding is not stateful.  But there is nothing mentioned in
 any standard which prohibits making @code{wchar_t} using a stateful
 encoding.
@@ -703,7 +703,7 @@ bytes in the multibyte input string.  This method yields to a
 pessimistic guess about the size of the result and if many wide
 character strings have to be constructed this way or the strings are
 long, the extra memory required allocated because the input string
-contains multibzte characters might be significant.  It would be
+contains multibyte characters might be significant.  It would be
 possible to resize the allocated memory block to the correct size before
 returning it.  A better solution might be to allocate just the right
 amount of space for the result right away.  Unfortunately there is no
@@ -1633,15 +1633,15 @@ of the conversions from @var{fromset} to @var{toset}.
 
 The GNU C library implementation of @code{iconv_open} has one
 significant extension to other implementations.  To ease the extension
-of the set of available conversions the implementation allows to store
-the necessary files with data and code in arbitrary many directories.
-How this extensions have to be written will be explained below
+of the set of available conversions the implementation allows storing
+the necessary files with data and code in arbitrarily many directories.
+How this extension has to be written will be explained below
 (@pxref{glibc iconv Implementation}).  Here it is only important to say
 that all directories mentioned in the @code{GCONV_PATH} environment
 variable are considered if they contain a file @file{gconv-modules}.
 These directories need not necessarily be created by the system
 administrator.  In fact, this extension is introduced to help users
-writing and using own, new conversions.  Of course this does not work
+writing and using their own, new conversions.  Of course this does not work
 for security reasons in SUID binaries; in this case only the system
 directory is considered and this normally is
 @file{@var{prefix}/lib/gconv}.  The @code{GCONV_PATH} environment
@@ -2048,7 +2048,7 @@ the GNU C library has none of the problems mentioned above.  What
 follows is a step-by-step analysis of the points raised above.  The
 evaluation is based on the current state of the development (as of
 January 1999).  The development of the @code{iconv} functions is not
-complete, but basic funtionality has solidified.
+complete, but basic functionality has solidified.
 
 The GNU C library's @code{iconv} implementation uses shared loadable
 modules to implement the conversions.  A very small number of
@@ -2187,7 +2187,7 @@ set.
 Explaining why the above @file{gconv-modules} files allows the
 @code{iconv} implementation to resolve the specific ISO-2022-JP to
 EUC-JP conversion module instead of the conversion coming with the
-library itself is straighforward.  Since the later conversion takes two
+library itself is straightforward.  Since the latter conversion takes two
 steps (from ISO-2022-JP to @w{ISO 10646} and then from @w{ISO 10646} to
 EUC-JP) the cost is @math{1+1 = 2}.  But the above @file{gconv-modules}
 file specifies that the new conversion modules can perform this
@@ -2230,7 +2230,7 @@ so that one can write new ones.  This section describes the interface as
 it is in use in January 1999.  The interface will change in future a bit
 but hopefully only in an upward compatible way.
 
-The definitions necessary to write new modules are publically available
+The definitions necessary to write new modules are publicly available
 in the non-standard header @file{gconv.h}.  The following text will
 therefore describe the definitions from this header file.  But first it
 is necessary to get an overview.
@@ -2411,13 +2411,13 @@ the GNU C library also use the @code{iconv} functionality which
 increases the number of uses of the same functions even more.
 
 For this reason the modules do not get loaded exclusively for one
-conversion.  Instead a module once loaded can be used by arbitrary many
+conversion.  Instead a module once loaded can be used by arbitrarily many
 @code{iconv} or @code{mbsrtowcs} calls at the same time.  The splitting
 of the information between conversion function specific information and
 conversion data makes this possible.  The last section showed the two
-data structure used to do this.
+data structures used to do this.
 
-This is of course also reflected in the interface and semantic of the
+This is of course also reflected in the interface and semantics of the
 functions the modules must provide.  There are three functions which
 must have the following names:
 

@@ -38,7 +38,7 @@ sub usage {
 sub installation_problem {
   print "The script has found some problems with your installation!\n";
   print "Please read the FAQ and the README file and check the following:\n";
-  print "- Did you change the gcc specs file (neccessary after upgrading from\n";
+  print "- Did you change the gcc specs file (necessary after upgrading from\n";
   print "  Linux libc5)?\n";
   print "- Are there any symbolic links of the form libXXX.so to old libraries?\n";
   print "  Links like libm.so -> libm.so.5 (where libm.so.5 is an old library) are wrong,\n";

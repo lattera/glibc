@@ -37,7 +37,7 @@
    to make sure we don't get redefinitions.
 
    We must use here macros instead of inline functions since the
-   trick won't work with the later.  */
+   trick won't work with the latter.  */
 
 #ifndef __STRING_INLINE
 # ifdef __cplusplus

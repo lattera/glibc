@@ -155,7 +155,7 @@ fmtmsg (long int classification, const char *label, int severity,
 		   do_action ? action : "",
 		   do_action && do_tag ? " " : "",
 		   do_tag ? tag : "") == EOF)
-	/* Oh, oh.  An error occured during the output.  */
+	/* Oh, oh.  An error occurred during the output.  */
 	result = MM_NOMSG;
     }
 

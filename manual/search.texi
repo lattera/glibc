@@ -267,7 +267,7 @@ hashing table used through the whole program.  The table is allocated
 in local memory out of control of the programmer.  As an extension the
 GNU C library provides an additional set of functions with an reentrant
 interface which provide a similar interface but which allow to keep
-arbitrary many hashing tables.
+arbitrarily many hashing tables.
 
 It is possible to use more than one hashing table in the program run if
 the former table is first destroyed by a call to @code{hdestroy}.
@@ -390,7 +390,7 @@ entry in the table is not the return value of the functions.  It is
 returned by storing it in a pointer variables pointed to by the
 @var{retval} parameter.  The return value of the function is an integer
 value indicating success if it is non-zero and failure if it is zero.
-In the later case the global variable @var{errno} signals the reason for
+In the latter case the global variable @var{errno} signals the reason for
 the failure.
 
 @table @code

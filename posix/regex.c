@@ -6008,7 +6008,7 @@ regcomp (preg, pattern, cflags)
 	 buffer.  */
       if (re_compile_fastmap (preg) == -2)
 	{
-	  /* Some error occured while computing the fastmap, just forget
+	  /* Some error occurred while computing the fastmap, just forget
 	     about it.  */
 	  free (preg->fastmap);
 	  preg->fastmap = NULL;

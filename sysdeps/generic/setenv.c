@@ -66,7 +66,7 @@ __libc_lock_define_initialized (static, envlock)
 #endif
 
 /* In the GNU C library implementation we try to be more clever and
-   allow arbitrary many changes of the environment given that the used
+   allow arbitrarily many changes of the environment given that the used
    values are from a small set.  Outside glibc this will eat up all
    memory after a while.  */
 #if defined _LIBC || (defined HAVE_SEARCH_H && defined HAVE_TSEARCH \

@@ -59,7 +59,7 @@ _dl_new_object (char *realname, const char *libname, int type,
       while (l->l_next)
 	l = l->l_next;
       new->l_prev = l;
-      /* new->l_next = NULL;	Would be necesary but we use calloc.  */
+      /* new->l_next = NULL;	Would be necessary but we use calloc.  */
       l->l_next = new;
 
       /* Add the global scope.  */

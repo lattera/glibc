@@ -38,7 +38,7 @@ struct xtmp
   time_t xt_time;		/* Time entry was made.  */
   char	xt_user[XT_NAMESIZE];	/* Username (not NUL terminated).  */
   char	xt_host[XT_HOSTSIZE];	/* Hostname for remote login.  */
-  long	xt_addr;		/* Internet adress of remote host.  */
+  long	xt_addr;		/* Internet address of remote host.  */
 };
 
 #define _HAVE_XT_TYPE	1
