@@ -255,7 +255,7 @@ gnu* | linux* | sysv4* | solaris2* | irix6*)
 aix*)
   # These systems are always xcoff
   xcoff=yes
-  elf=no    
+  elf=no
   ;;
 esac
 
@@ -1061,6 +1061,24 @@ EOF
   fi
   rm -f conftest*])
   AC_SUBST(libc_cv_Bgroup)
+
+  AC_CACHE_CHECK(for -z combreloc,
+		 libc_cv_z_combreloc, [dnl
+  cat > conftest.c <<EOF
+int foo (void) { return 0; }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,-z,combreloc 1>&AC_FD_CC])
+  then
+dnl The following test is a bit weak.  We must use a tool which can test
+dnl cross-platform since the gcc used can be a cross compiler.  Without
+dnl introducing new options this is not easily doable.  Instead use a tool
+dnl which always is cross-platform: readelf.  To detect whether -z combreloc
+dnl look for a section named .rel.dyn.
+    if readelf -S conftest.so | fgrep .rel.dyn > /dev/null; then
+      AC_DEFINE(HAVE_Z_COMBRELOC)
+    fi
+  fi
+  rm -f conftest*])
 fi
 
 if test $elf != yes; then

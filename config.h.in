@@ -86,6 +86,9 @@
    certain registers (CR0, MQ, CTR, LR) in asm statements.  */
 #undef	BROKEN_PPC_ASM_CR0
 
+/* Define if the linker supports the -z combreloc option.  */
+#undef	HAVE_Z_COMBRELOC
+
 
 /* Defined to some form of __attribute__ ((...)) if the compiler supports
    a different, more efficient calling convention.  */

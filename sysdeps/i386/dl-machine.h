@@ -305,9 +305,10 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 {
   const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
 
+#if !defined RTLD_BOOTSTRAP || !defined HAVE_Z_COMBRELOC
   if (__builtin_expect (r_type == R_386_RELATIVE, 0))
     {
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a;
 	 make the reference weak so static programs can still link.
 	 This declaration cannot be done when compiling rtld.c
@@ -316,14 +317,15 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	 weak decl in the same file.  */
       weak_extern (_dl_rtld_map);
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
-#endif
+# endif
 	*reloc_addr += map->l_addr;
     }
-#ifndef RTLD_BOOTSTRAP
+# ifndef RTLD_BOOTSTRAP
   else if (__builtin_expect (r_type == R_386_NONE, 0))
     return;
-#endif
+# endif
   else
+#endif
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
@@ -352,7 +354,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    break;
 	  if (__builtin_expect (sym->st_size > refsym->st_size, 0)
 	      || (__builtin_expect (sym->st_size < refsym->st_size, 0)
-		  && __builtin_expect (_dl_verbose, 0)))
+		  && _dl_verbose))
 	    {
 	      const char *strtab;
 
@@ -365,8 +367,6 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
-#endif
-#if !defined RTLD_BOOTSTRAP || defined _NDEBUG
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
@@ -381,6 +381,7 @@ static inline void
 elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
 			  Elf32_Addr *const reloc_addr)
 {
+  assert (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE);
   *reloc_addr += l_addr;
 }
 
