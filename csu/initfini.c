@@ -1,5 +1,5 @@
 /* Special .init and .fini section support.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -101,10 +101,13 @@ _fini (void)
 \n\
 cat > /dev/null <<\\EOF.fini.skip");
 
-  /* Let GCC know that _fini is not a leaf function by having a dummy
-     function call here.  We arrange for this call to be omitted from
-     either crt file.  */
-  i_am_not_a_leaf();
+  {
+    /* Let GCC know that _fini is not a leaf function by having a dummy
+       function call here.  We arrange for this call to be omitted from
+       either crt file.  */
+    extern void i_am_not_a_leaf (void);
+    i_am_not_a_leaf ();
+  }
 
   asm ("\nEOF.fini.skip\
 \n\

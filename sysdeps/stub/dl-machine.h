@@ -61,16 +61,19 @@ elf_machine_load_address (void)
 
 static inline void
 elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-		 const Elf32_Rel *reloc,
-		 Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
+		 const Elf32_Rel *reloc, const Elf32_Sym *sym,
+		 Elf32_Addr (*resolve) (const Elf32_Sym **ref,
+					Elf32_Addr reloc_addr,
+					int noplt))
 {
   Elf32_Addr *const reloc_addr = (Elf32_Addr *) reloc->r_offset;
-  const Elf32_Addr sym_value = sym_loadaddr + sym->st_value;
+  Elf32_Addr loadbase;
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_MACHINE_COPY:
-      memcpy (reloc_addr, (void *) sym_value, sym->st_size);
+      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     default:
       assert (! "unexpected dynamic reloc type");
@@ -81,8 +84,10 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 
 static inline void
 elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-		  const Elf32_Rela *reloc,
-		  Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
+		  const Elf32_Rel *reloc, const Elf32_Sym *sym,
+		  Elf32_Addr (*resolve) (const Elf32_Sym **ref,
+					 Elf32_Addr reloc_addr,
+					 int noplt))
 {
   _dl_signal_error (0, "Elf32_Rela relocation requested -- unused on "
 		    ELF_MACHINE_NAME);

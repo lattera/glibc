@@ -67,34 +67,15 @@ fixup (
     = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
 		      reloc_offset);
 
-  const Elf32_Sym *definer;
-  Elf32_Addr loadbase;
-  struct link_map *scope, *real_next;
-
-  /* Look up the symbol's run-time value.  */
-
-  real_next = l->l_next;
-  if (l->l_info[DT_SYMBOLIC])
+  Elf32_Addr resolve (const Elf32_Sym **ref,
+		      Elf32_Addr reloc_addr, int noplt)
     {
-      l->l_next = _dl_loaded;
-      if (l->l_prev)
-	l->l_prev->l_next = real_next;
-      scope = l;
+      return _dl_lookup_symbol (strtab + (*ref)->st_name, ref, _dl_loaded,
+				l->l_name, reloc_addr, noplt);
     }
-  else
-    scope = _dl_loaded;
 
-  definer = &symtab[ELF32_R_SYM (reloc->r_info)];
-  loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,
-				scope, l->l_name, 1);
-
-  /* Restore list frobnication done above for DT_SYMBOLIC.  */
-  l->l_next = real_next;
-  if (l->l_prev)
-    l->l_prev->l_next = l;
-
-  /* Apply the relocation with that value.  */
-  elf_machine_relplt (l, reloc, loadbase, definer);
+  /* Perform the specified relocation.  */
+  elf_machine_relplt (l, reloc, &symtab[ELF32_R_SYM (reloc->r_info)], resolve);
 
   return *(Elf32_Addr *) (l->l_addr + reloc->r_offset);
 }

@@ -38,7 +38,7 @@ static inline void
 elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag,
 		    Elf32_Addr (*resolve) (const Elf32_Sym **symbol,
-					   int noplt),
+					   Elf32_Addr reloc_addr, int noplt),
 		    int lazy)
 {
   const Elf32_Sym *const symtab
@@ -53,28 +53,7 @@ elf_dynamic_do_rel (struct link_map *map,
       elf_machine_lazy_rel (map, r);
   else
     for (; r < end; ++r)
-      {
-	const Elf32_Sym *definer = &symtab[ELF32_R_SYM (r->r_info)];
-	Elf32_Addr loadbase;
-
-	if (ELF32_R_SYM (r->r_info) == STN_UNDEF)
-	  loadbase = 0;		/* This value will not be consulted.  */
-	else if (ELF32_ST_BIND (definer->st_info) == STB_LOCAL)
-	  /* Local symbols always refer to the containing object.  */
-	  loadbase = map->l_addr;
-	else
-	  {
-	    if (resolve)
-	      loadbase = (*resolve)
-		(&definer, elf_machine_pltrel_p (ELF32_R_TYPE (r->r_info)));
-	    else
-	      {
-		assert (definer->st_shndx != SHN_UNDEF);
-		loadbase = map->l_addr;
-	      }
-	  }
-	elf_machine_rel (map, r, loadbase, definer);
-      }
+      elf_machine_rel (map, r, &symtab[ELF32_R_SYM (r->r_info)], resolve);
 }
 
 #undef elf_dynamic_do_rel

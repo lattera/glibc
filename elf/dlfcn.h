@@ -1,5 +1,5 @@
 /* dlfcn.h -- User functions for run-time dynamic loading.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,16 +21,18 @@ Cambridge, MA 02139, USA.  */
 #define	_DLFCN_H 1
 
 
-/* Type of the second argument to `dlopen'.  */
-typedef enum
-  {
-    RTLD_LAZY =       1,	/* Lazy function call binding.  */
-    RTLD_NOW =        2		/* Immediate function call binding.  */
-  } dl_open_mode;
+/* The MODE argument to `dlopen' contains one of the following: */
+#define RTLD_LAZY	0x001	/* Lazy function call binding.  */
+#define RTLD_NOW	0x002	/* Immediate function call binding.  */
+
+/* If the following bit is set in the MODE argument to `dlopen',
+   the symbols of the loaded object and its dependencies are made
+   visible as if the object were linked directly into the program.  */
+#define RTLD_GLOBAL	0x100
 
 /* Open the shared object FILE and map it in; return a handle that can be
    passed to `dlsym' to get symbol values from it.  */
-extern void *dlopen (const char *__file, dl_open_mode);
+extern void *dlopen (const char *__file, int __mode);
 
 /* Unmap and close a shared object opened by `dlopen'.
    The handle cannot be used again after calling `dlclose'.  */

@@ -23,13 +23,15 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 
 /* Search loaded objects' symbol tables for a definition of the symbol
-   UNDEF_NAME.  If NOPLT is nonzero, then a PLT entry cannot satisfy the
-   reference; some different binding must be found.  */
+   UNDEF_NAME.  The chosen value can't be RELOC_ADDR.  If NOPLT is nonzero,
+   then a PLT entry cannot satisfy the reference; some different binding
+   must be found.  */
 
 Elf32_Addr
 _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 		   struct link_map *symbol_scope,
 		   const char *reference_name,
+		   Elf32_Addr reloc_addr,
 		   int noplt)
 {
   unsigned long int hash = elf_hash (undef_name);
@@ -59,6 +61,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	  const Elf32_Sym *sym = &symtab[symidx];
 
 	  if (sym->st_value == 0 || /* No value.  */
+	      reloc_addr == map->l_addr + sym->st_value || /* Self ref.  */
 	      (noplt && sym->st_shndx == SHN_UNDEF)) /* Unwanted PLT entry.  */
 	    continue;
 

@@ -2,8 +2,8 @@
 
 # The following lines list filename patterns matching canonical configurations,
 # and the associated versions to use for various libraries.  The entire
-# list processed, with earlier entries taking precedence over later entries.
-# So loose patterns at the end of the list can give defaults.
+# list is processed, with earlier entries taking precedence over later
+# entries.  So loose patterns at the end of the list can give defaults.
 
 # Configuration		Library versions
 # -------------		------- --------

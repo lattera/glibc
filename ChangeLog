@@ -1,4 +1,33 @@
+Mon Jun  3 00:30:35 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Take new arg RELOC_ADDR and
+	don't allow a defn resolving to that address.
+	* elf/link.h: Update prototype and comment.
+	* elf/dl-runtime.c (fixup): Define local `resolve' function and pass
+	it to elf_machine_relplt.
+	* elf/dl-reloc.c (_dl_relocate_object: resolve): Take new arg
+	RELOC_ADDR and pass it through to _dl_lookup_symbol.
+	* elf/do-rel.h (elf_dynamic_do_rel): Pass RESOLVE to elf_machine_rel
+	instead of calling it ourselves and passing its results.
+	(elf_dynamic_do_rel): RESOLVE fn takes new arg RELOC_ADDR.
+	* elf/rtld.c (dl_main): Pass 0 for RELOC_ADDR to _dl_lookup_symbol.
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Remove SYM_LOADADDR
+	arg.  Add RESOLVE function ptr arg.  Call *RESOLVE as necessary.
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
+	* sysdeps/stub/dl-machine.h: Likewise.
+
 Sun Jun  2 14:56:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* csu/initfini.c (_fini): Add extern decl for i_am_not_a_leaf.
+
+	* elf/dlfcn.h (dl_open_mode): Enumerated type removed.
+	(RTLD_LAZY, RTLD_NOW): Define these as macros instead.
+	(RTLD_GLOBAL): New macro.
+	(dlopen): Take arg of type int instead of dl_open_mode.
+	* elf/dlopen.c: Likewise.
+
+	* math/math.h (_Mldbl): New macro, either produces L suffix or not.
+	(M_*): Use it for these constants.
 
 	* elf/dl-lookup.c (_dl_lookup_symbol): Arg NOSELF renamed to NOPLT.
 	Reject SHN_UNDEF defns iff NOPLT is nonzero.
