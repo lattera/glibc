@@ -266,6 +266,7 @@ c3[012])	base_machine=cx0 machine=cx0/c30 ;;
 c4[04])		base_machine=cx0 machine=cx0/c40 ;;
 hppa*)		base_machine=hppa machine=hppa/$machine ;;
 i[3456]86)	base_machine=i386 machine=i386/$machine ;;
+ia64)		base_machine=ia64 machine=ia64 ;;
 m680?0)		base_machine=m68k machine=m68k/$machine ;;
 m68k)		base_machine=m68k machine=m68k/m68020 ;;
 m88???)		base_machine=m88k machine=m88k/$machine ;;
@@ -505,8 +506,8 @@ AC_PROG_LN_S
 # These programs are version sensitive.
 AC_REQUIRE([AC_CHECK_TOOL_PREFIX])dnl
 AC_CHECK_PROG_VER(CC, ${ac_tool_prefix}gcc ${ac_tool_prefix}cc, -v,
-  [version \([egcygnustp-]*[0-9.]*\)],
-  [egcs-2.9[1-9].*|egcs-2.90.2[789]|egcs-2.90.[3-9][0-9]|*gcc-2.9[1-9].*|pgcc-2.90.2[789]|pgcc-2.90.[3-9][0-9]|*2.8.[1-9]*|*2.9|*2.9.[0-9]*|2.9[5-9]*|cygnus-2.9[1-9]*|gcc-2.9[5-9]|gcc-2.1[0-9][0-9]],
+  [version \([egcygnustpi-]*[0-9.]*\)],
+  [egcs-2.9[1-9].*|egcs-2.90.2[789]|egcs-2.90.[3-9][0-9]|*gcc-2.9[1-9].*|pgcc-2.90.2[789]|pgcc-2.90.[3-9][0-9]|*2.8.[1-9]*|*2.9|*2.9.[0-9]*|2.9[5-9]*|cygnus-2.9[1-9]*|gcc-2.9[5-9]|gcc-2.1[0-9][0-9]|sgicc-*],
   critic_missing=t)
 AC_CHECK_PROG_VER(MAKE, gnumake gmake make, --version,
   [GNU Make[^0-9]*\([0-9][0-9.]*\)],
