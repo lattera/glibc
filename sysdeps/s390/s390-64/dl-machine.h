@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.
    64 bit S/390 Version.
-   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
 
@@ -105,7 +105,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = l;
@@ -118,112 +119,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.	 */
-
-/* s390:
-   Arguments are in register.
-   r2 - r7 holds the original parameters for the function call, fixup
-   and trampoline code use r0-r5 and r14-15. For the correct function
-   call r2-r5 and r14-15 must be restored.
-   Arguments from the PLT are stored at 48(r15) and 56(r15)
-   and must be moved to r2 and r3 for the fixup call (see elf32-s390.c
-   in the binutils for the PLT code).
-   Fixup function address in r2.
-*/
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-  asm ( "\
-    .text\n\
-    .globl _dl_runtime_resolve\n\
-    .type _dl_runtime_resolve, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-    # save registers\n\
-    stmg   2,5,64(15)\n\
-    stg	   14,96(15)\n\
-    lgr	   0,15\n\
-    aghi   15,-160\n\
-    " CFI_ADJUST_CFA_OFFSET(160)"\n\
-    stg	   0,0(15)\n\
-    # load args saved by PLT\n\
-    lmg	   2,3,208(15)\n\
-    brasl  14,fixup	# call fixup\n\
-    lgr	   1,2		# function addr returned in r2\n\
-    # restore registers\n\
-    aghi   15,160\n\
-    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
-    lg	   14,96(15)\n\
-    lmg	   2,5,64(15)\n\
-    br	   1\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-\n\
-    .globl _dl_runtime_profile\n\
-    .type _dl_runtime_profile, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_profile:\n\
-    # save registers\n\
-    stmg   2,5,64(15)\n\
-    stg	   14,96(15)\n\
-    lgr	   0,15\n\
-    aghi   15,-160\n\
-    " CFI_ADJUST_CFA_OFFSET(160)"\n\
-    stg	   0,0(15)\n\
-    # load args saved by PLT\n\
-    lmg	   2,3,208(15)\n\
-    # load return address as third parameter\n\
-    lgr	   4,14\n\
-    brasl  14,profile_fixup  # call fixup\n\
-    lgr	   1,2		# function addr returned in r2\n\
-    # restore registers\n\
-    aghi   15,160\n\
-    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
-    lg	   14,96(15)\n\
-    lmg	   2,5,64(15)\n\
-    br	   1\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_profile, .-_dl_runtime_profile\n\
-");
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE \
-  asm ( "\
-    .text\n\
-    .globl _dl_runtime_resolve\n\
-    .globl _dl_runtime_profile\n\
-    .type _dl_runtime_resolve, @function\n\
-    .type _dl_runtime_profile, @function\n\
-    .align 16\n\
-    " CFI_STARTPROC "\n\
-_dl_runtime_resolve:\n\
-_dl_runtime_profile:\n\
-    # save registers\n\
-    stmg   2,5,64(15)\n\
-    stg	   14,96(15)\n\
-    lgr	   0,15\n\
-    aghi   15,-160\n\
-    " CFI_ADJUST_CFA_OFFSET(160)"\n\
-    stg	   0,0(15)\n\
-    # load args saved by PLT\n\
-    lmg	   2,3,208(15)\n\
-    # load return address as third parameter\n\
-    lgr	   4,14\n\
-    brasl  14,profile_fixup	 # call fixup\n\
-    lgr	   1,2		# function addr returned in r2\n\
-    # restore registers\n\
-    aghi   15,160\n\
-    " CFI_ADJUST_CFA_OFFSET(-160)" \n\
-    lg	   14,96(15)\n\
-    lmg	   2,5,64(15)\n\
-    br	   1\n\
-    " CFI_ENDPROC "\n\
-    .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
-    .size _dl_runtime_profile, .-_dl_runtime_profile\n\
-");
-#endif
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -343,14 +238,19 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value;
 }
 
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER s390_64_gnu_pltenter
+#define ARCH_LA_PLTEXIT s390_64_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym, const struct r_found_version *version,
 		  void *const reloc_addr_arg)
@@ -384,17 +284,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #ifndef RESOLVE_CONFLICT_FIND_MAP
       const Elf64_Sym *const refsym = sym;
 #endif
-#if defined USE_TLS && !defined RTLD_BOOTSTRAP
       struct link_map *sym_map = RESOLVE_MAP (&sym, version, r_type);
       Elf64_Addr value = sym == NULL ? 0 : sym_map->l_addr + sym->st_value;
-#else
-      Elf64_Addr value = RESOLVE (&sym, version, r_type);
-
-# ifndef RTLD_BOOTSTRAP
-      if (sym)
-# endif
-	value += sym->st_value;
-#endif /* use TLS and !RTLD_BOOTSTRAP */
 
       switch (r_type)
 	{
@@ -518,7 +409,8 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
     }
 }
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -526,7 +418,8 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
   *reloc_addr = l_addr + reloc->r_addend;
 }
 
-static inline void
+auto inline void
+__attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
@@ -546,4 +439,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */

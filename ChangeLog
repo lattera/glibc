@@ -1,5 +1,19 @@
 2005-01-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
+	* sysdeps/s390/bits/link.h: New file.
+	* sysdeps/s390/s390-32/dl-trampoline.S: New file.
+	* sysdeps/s390/s390-64/dl-trampoline.S: New file.
+	* sysdeps/s390/s390-32/dl-machine.h: Move PLT trampolines to
+	dl-trampoline.S. Use RESOLVE_MAP instead of RESOLVE to protect
+	relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	(elf_machine_rela): Remove code using RESOLVE.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): New.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/generic/ldsodefs.h (La_s390_32_regs, La_s390_32_retval,
+	La_s390_64_regs, La_s390_64_retval): New.
+	* elf/tst-auditmod1.c: Add s390 entries.
+
 	* sysdeps/s390/bits/string.h (strlen, strncpy, strcat, strncat,
 	strncat, memchr, strcmp): Add missing memory clobber.
 
