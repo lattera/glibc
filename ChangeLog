@@ -1,5 +1,12 @@
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/iofclose.c (_IO_new_fclose): Unlink descriptor first to
+	avoid deadlock.
+	* libio/oldiofclose.c (_IO_old_fclose): Likewise.
+	* libio/genops.c (_IO_un_link): Get stream lock since it's not
+	always done in the caller.
+	(_IO_link_in): Likewise.
+
 	* libio/genops.c (_IO_list_all_stamp): New variable.
 	(_IO_un_link): Bump _IO_list_all_stamp after removing from list.
 	(_IO_link): Likewise for insertion.

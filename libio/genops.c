@@ -40,6 +40,17 @@ static _IO_lock_t list_all_lock = _IO_lock_initializer;
 /* Used to signal modifications to the list of FILE decriptors.  */
 static int _IO_list_all_stamp;
 
+
+static _IO_FILE *run_fp;
+
+static void
+flush_cleanup (void *not_used)
+{
+  if (run_fp != NULL)
+    _IO_funlockfile (run_fp);
+  _IO_lock_unlock (list_all_lock);
+}
+
 void
 _IO_un_link (fp)
      struct _IO_FILE_plus *fp;
@@ -48,7 +59,10 @@ _IO_un_link (fp)
     {
       struct _IO_FILE_plus **f;
 #ifdef _IO_MTSAFE_IO
+      _IO_cleanup_region_start_noarg (flush_cleanup);
       _IO_lock_lock (list_all_lock);
+      run_fp = (_IO_FILE *) fp;
+      _IO_flockfile ((_IO_FILE *) fp);
 #endif
       for (f = &_IO_list_all; *f; f = (struct _IO_FILE_plus **) &(*f)->file._chain)
 	{
@@ -59,10 +73,13 @@ _IO_un_link (fp)
 	      break;
 	    }
 	}
-#ifdef _IO_MTSAFE_IO
-      _IO_lock_unlock (list_all_lock);
-#endif
       fp->file._flags &= ~_IO_LINKED;
+#ifdef _IO_MTSAFE_IO
+      _IO_funlockfile ((_IO_FILE *) fp);
+      run_fp = NULL;
+      _IO_lock_unlock (list_all_lock);
+      _IO_cleanup_region_end (0);
+#endif
     }
 }
 
@@ -70,19 +87,25 @@ void
 _IO_link_in (fp)
      struct _IO_FILE_plus *fp;
 {
-    if ((fp->file._flags & _IO_LINKED) == 0)
-      {
-	fp->file._flags |= _IO_LINKED;
+  if ((fp->file._flags & _IO_LINKED) == 0)
+    {
+      fp->file._flags |= _IO_LINKED;
 #ifdef _IO_MTSAFE_IO
-	_IO_lock_lock (list_all_lock);
+      _IO_cleanup_region_start_noarg (flush_cleanup);
+      _IO_lock_lock (list_all_lock);
+      run_fp = (_IO_FILE *) fp;
+      _IO_flockfile ((_IO_FILE *) fp);
 #endif
-	fp->file._chain = (_IO_FILE *) _IO_list_all;
-	_IO_list_all = fp;
-	++_IO_list_all_stamp;
+      fp->file._chain = (_IO_FILE *) _IO_list_all;
+      _IO_list_all = fp;
+      ++_IO_list_all_stamp;
 #ifdef _IO_MTSAFE_IO
-	_IO_lock_unlock (list_all_lock);
+      _IO_funlockfile ((_IO_FILE *) fp);
+      run_fp = NULL;
+      _IO_lock_unlock (list_all_lock);
+      _IO_cleanup_region_end (0);
 #endif
-      }
+    }
 }
 
 /* Return minimum _pos markers
@@ -754,17 +777,6 @@ _IO_get_column (fp)
   return -1;
 }
 #endif
-
-
-static _IO_FILE *run_fp;
-
-static void
-flush_cleanup (void *not_used)
-{
-  if (run_fp != NULL)
-    _IO_funlockfile (run_fp);
-  _IO_lock_unlock (list_all_lock);
-}
 
 
 int
