@@ -1,5 +1,12 @@
 2003-03-17  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/unix/sysv/linux/configure.in (libc_cv_slibdir): Use
+	lib64 for mips64/n64 and lib32 for mips64/n32.
+	(ldd_rewrite_script): Needed for all mips64 configurations.
+	* sysdeps/unix/sysv/linux/configure: Rebuilt.
+	* sysdeps/unix/sysv/linux/mips/mips64/ldd-rewrite.sed: New file.
+	* sysdeps/unix/sysv/linux/mips/mips64/Dist: New file.
+
 	* sysdeps/mips/machine-gmon.h (MCOUNT): Define for N32 and N64 as
 	well.
 

@@ -44,7 +44,11 @@ if test "${libc_cv_linux2010+set}" = set; then
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <linux/version.h>
 #if !defined LINUX_VERSION_CODE || LINUX_VERSION_CODE <  (2 *65536+ 0 *256+ 10) /* 2.0.10 */
 eat flaming death
@@ -165,7 +169,11 @@ echo $ECHO_N "checking for kernel header at least $minimum_kernel... $ECHO_C" >&
   abinum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\([0-9]*\).*/\1,\2,\3/'`;
   cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
-#include "confdefs.h"
+/* confdefs.h.  */
+_ACEOF
+cat confdefs.h >>conftest.$ac_ext
+cat >>conftest.$ac_ext <<_ACEOF
+/* end confdefs.h.  */
 #include <linux/version.h>
 #if LINUX_VERSION_CODE < $decnum
 eat flaming death
@@ -216,10 +224,19 @@ case "$prefix" in
 /usr | /usr/)
   # 64-bit libraries on bi-arch platforms go in /lib64 instead of /lib
   case $machine in
-  sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 )
+  sparc/sparc64 | x86_64 | powerpc/powerpc64 | s390/s390-64 | \
+  mips/mips64/n64 | mips/mips64/n64/el )
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
+      # Locale data can be shared between 32bit and 64bit libraries
+      libc_cv_localedir='${exec_prefix}/lib/locale'
+    fi
+    ;;
+  mips/mips64/n32 | mips/mips64/n32/el )
+    libc_cv_slibdir="/lib32"
+    if test "$libdir" = '${exec_prefix}/lib'; then
+      libdir='${exec_prefix}/lib32';
       # Locale data can be shared between 32bit and 64bit libraries
       libc_cv_localedir='${exec_prefix}/lib/locale'
     fi
@@ -302,6 +319,9 @@ case "$machine" in
     ;;
   ia64*)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/ia64/ldd-rewrite.sed
+    ;;
+  mips/*64*)
+    ldd_rewrite_script=../sysdeps/unix/sysv/linux/mips/mips64/ldd-rewrite.sed
     ;;
   s390*)
     ldd_rewrite_script=../sysdeps/unix/sysv/linux/s390/ldd-rewrite.sed
