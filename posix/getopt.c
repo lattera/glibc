@@ -3,7 +3,7 @@
    "Keep this file name-space clean" means, talk to roland@gnu.ai.mit.edu
    before changing it!
 
-   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95
+   Copyright (C) 1987, 88, 89, 90, 91, 92, 93, 94, 95, 1996
    	Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.  Its master source is NOT part of
@@ -434,6 +434,13 @@ _getopt_internal (argc, argv, optstring, longopts, longind, long_only)
   if (nextchar == NULL || *nextchar == '\0')
     {
       /* Advance to the next ARGV-element.  */
+
+      /* Give FIRST_NONOPT & LAST_NONOPT rational values if OPTIND has been
+	 moved back by the user (who may also have changed the arguments).  */
+      if (last_nonopt > optind)
+	last_nonopt = optind;
+      if (first_nonopt > optind)
+	first_nonopt = optind;
 
       if (ordering == PERMUTE)
 	{
