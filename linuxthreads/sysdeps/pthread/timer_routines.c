@@ -416,7 +416,7 @@ __timer_thread_queue_timer (struct thread_node *thread,
 			    struct timer_node *insert)
 {
   struct list_links *iter;
-  struct timer_node *matching = NULL;
+  struct list_links *matching = NULL;
   struct timer_node *timer = NULL;
 
   for (iter = list_first (&thread->timer_queue);
@@ -427,7 +427,7 @@ __timer_thread_queue_timer (struct thread_node *thread,
 
       if (insert->clock == timer->clock)
 	{
-	  matching = timer;
+	  matching = iter;
 	  if (timespec_compare (&insert->expirytime, &timer->expirytime) < 0)
 	    break;
 	}
@@ -439,7 +439,7 @@ __timer_thread_queue_timer (struct thread_node *thread,
 	/* We cannot queue this timer.  */
 	return -1;
 
-      timer = matching;
+      iter = matching;
     }
 
   list_insbefore (iter, &insert->links);
