@@ -1,3 +1,8 @@
+2001-06-08  Andreas Schwab  <schwab@suse.de>
+
+	* posix/regex.c (re_match_2_internal) [case wordbeg, wordend]:
+	Don't dereference at end of string.
+
 2001-06-06  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/getsockopt.c: Fix handling of returned buffer size.

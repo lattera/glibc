@@ -7094,14 +7094,15 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
 
 	case wordbeg:
           DEBUG_PRINT1 ("EXECUTING wordbeg.\n");
-	  if (WORDCHAR_P (d) && (AT_STRINGS_BEG (d) || !WORDCHAR_P (d - 1)))
+	  if (!AT_STRINGS_END (d) && WORDCHAR_P (d)
+	      && (AT_STRINGS_BEG (d) || !WORDCHAR_P (d - 1)))
 	    break;
           goto fail;
 
 	case wordend:
           DEBUG_PRINT1 ("EXECUTING wordend.\n");
 	  if (!AT_STRINGS_BEG (d) && WORDCHAR_P (d - 1)
-              && (!WORDCHAR_P (d) || AT_STRINGS_END (d)))
+              && (AT_STRINGS_END (d) || !WORDCHAR_P (d)))
 	    break;
           goto fail;
 
