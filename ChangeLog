@@ -1,5 +1,8 @@
 1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/strchrnul.S: Fix bugs which let to wrong results in
+	25% of all cases.
+
 	* sysdeps/i386/i486/bits/string.h: Replace __uintXX_t types with
 	base types.
 

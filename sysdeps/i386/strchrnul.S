@@ -156,12 +156,12 @@ L(11):	movl (%eax), %ecx	/* get word (= 4 bytes) in question */
 	addl %ecx, %edi		/* add the magic value to the word.  We get
 				   carry bits reported for each byte which
 				   is *not* 0 */
-	jnc L(71)		/* highest byte is NUL => return NULL */
+	jnc L(7)		/* highest byte is NUL => return NULL */
 	xorl %ecx, %edi		/* (word+magic)^word */
 	orl $0xfefefeff, %edi	/* set all non-carry bits */
 	incl %edi		/* add 1: if one carry bit was *not* set
 				   the addition will not result in 0.  */
-	jnz L(71)		/* found NUL => return NULL */
+	jnz L(7)		/* found NUL => return NULL */
 
 	movl 4(%eax), %ecx	/* get word (= 4 bytes) in question */
 	xorl %edx, %ecx		/* XOR with word c|c|c|c => bytes of str == c
