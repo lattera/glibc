@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU C Library.
 
@@ -112,7 +112,11 @@ INTERNAL (strtol) (nptr, endptr, base, group)
      int base;
      int group;
 {
+#if UNSIGNED
+#define negative 0
+#else
   int negative;
+#endif
   register unsigned LONG int cutoff;
   register unsigned int cutlim;
   register unsigned LONG int i;
@@ -158,6 +162,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   if (*s == '\0')
     goto noconv;
 
+#if !UNSIGNED
   /* Check for a sign.  */
   if (*s == '-')
     {
@@ -171,6 +176,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
     }
   else
     negative = 0;
+#endif
 
   if (base == 16 && s[0] == '0' && toupper (s[1]) == 'X')
     s += 2;
