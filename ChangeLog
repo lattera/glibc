@@ -1,3 +1,8 @@
+2004-01-24  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/obstack.h: Import gnulib version.
+	* malloc/obstack.c: Likewise.
+
 2004-01-26  David Mosberger  <davidm@hpl.hp.com>
 
 	* elf/link.h (struct dl_phdr_info): Fix typo in comment.
