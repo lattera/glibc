@@ -199,21 +199,21 @@ monetary_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	}
     }
 
-#define TEST_ELEM(cat) \
+#define TEST_ELEM(cat, initval) \
   if (monetary->cat == NULL)						      \
     {									      \
       if (! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"),			      \
 	       "LC_MONETARY", #cat);					      \
-      monetary->cat = "";						      \
+      monetary->cat = initval;						      \
     }
 
-  TEST_ELEM (int_curr_symbol);
-  TEST_ELEM (currency_symbol);
-  TEST_ELEM (mon_decimal_point);
-  TEST_ELEM (mon_thousands_sep);
-  TEST_ELEM (positive_sign);
-  TEST_ELEM (negative_sign);
+  TEST_ELEM (int_curr_symbol, "");
+  TEST_ELEM (currency_symbol, "");
+  TEST_ELEM (mon_decimal_point, ".");
+  TEST_ELEM (mon_thousands_sep, "");
+  TEST_ELEM (positive_sign, "");
+  TEST_ELEM (negative_sign, "");
 
   /* The international currency symbol must come from ISO 4217.  */
   if (monetary->int_curr_symbol != NULL)
@@ -243,7 +243,7 @@ not correspond to a valid name in ISO 4217"),
       if (! be_quiet && ! nothing)
 	error (0, 0, _("%s: field `%s' not defined"),
 	       "LC_MONETARY", "mon_decimal_point");
-      monetary->mon_decimal_point = "";
+      monetary->mon_decimal_point = ".";
     }
   else if (monetary->mon_decimal_point[0] == '\0' && ! be_quiet && ! nothing)
     {
@@ -265,31 +265,28 @@ not correspond to a valid name in ISO 4217"),
     }
 
 #undef TEST_ELEM
-#define TEST_ELEM(cat, min, max) \
+#define TEST_ELEM(cat, min, max, initval) \
   if (monetary->cat == -2)						      \
     {									      \
        if (! be_quiet && ! nothing)					      \
 	 error (0, 0, _("%s: field `%s' not defined"),			      \
 	        "LC_MONETARY", #cat);					      \
+       monetary->cat = initval;						      \
     }									      \
-  else if ((monetary->cat < min || monetary->cat > max) && !be_quiet	      \
-	   && !nothing)							      \
+  else if ((monetary->cat < min || monetary->cat > max)			      \
+	   && !be_quiet && !nothing)					      \
     error (0, 0, _("							      \
 %s: value for field `%s' must be in range %d...%d"),			      \
 	   "LC_MONETARY", #cat, min, max)
 
-#if 0
-/* The following two test are not really necessary because all values
-    the variable could have are valid.  */
-  TEST_ELEM (int_frac_digits, -128, 127);	/* No range check.  */
-  TEST_ELEM (frac_digits, -128, 127);		/* No range check.  */
-#endif
-  TEST_ELEM (p_cs_precedes, -1, 1);
-  TEST_ELEM (p_sep_by_space, -1, 2);
-  TEST_ELEM (n_cs_precedes, -1, 1);
-  TEST_ELEM (n_sep_by_space, -1, 2);
-  TEST_ELEM (p_sign_posn, -1, 4);
-  TEST_ELEM (n_sign_posn, -1, 4);
+  TEST_ELEM (int_frac_digits, -128, 127, -1);
+  TEST_ELEM (frac_digits, -128, 127, -1);
+  TEST_ELEM (p_cs_precedes, -1, 1, -1);
+  TEST_ELEM (p_sep_by_space, -1, 2, -1);
+  TEST_ELEM (n_cs_precedes, -1, 1, -1);
+  TEST_ELEM (n_sep_by_space, -1, 2, -1);
+  TEST_ELEM (p_sign_posn, -1, 4, -1);
+  TEST_ELEM (n_sign_posn, -1, 4, -1);
 
   /* The non-POSIX.2 extensions are optional.  */
   if (monetary->duo_int_curr_symbol == NULL)

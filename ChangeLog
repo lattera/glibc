@@ -1,11 +1,12 @@
 2001-08-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/C-monetary.c (_nl_C_LC_MONETARY): Provide correct value
-	of CRNCYSTR.
+	for CRNCYSTR.
 
 	* locale/programs/ld-messages.c (messages_finish): Provide POSIX
 	locale compliant default values for fields without definition.
 	* locale/programs/ld-time.c (time_finish): Likewise.
+	* locale/programs/ld-monetary.c (monetary_finish): Likewise.
 
 2001-08-08  Andreas Jaeger  <aj@suse.de>
 
@@ -15,7 +16,7 @@
 2001-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/memusage.h (GETTIME): Define using hp-timing.h
-	funcationality.
+	functionality.
 
 	* sysdeps/ia64/hp-timing.h (HP_TIMING_NOW): Fix comment.
 
@@ -25,7 +26,7 @@
 	(init): If not yet initialized, call me().
 	(me): Do all dlsym calls here.
 	(malloc, realloc, calloc, free): If not yet initialized,
-	call me(). If in the middle of initializing, return NULL or
+	call me().  If in the middle of initializing, return NULL or
 	do nothing.
 
 2001-08-07  Jakub Jelinek  <jakub@redhat.com>
@@ -64,7 +65,7 @@
 
 2001-08-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* manual/locale.texi: Add documentation of rpmatch.
+	* manual/locale.texi: Add documentation for rpmatch.
 	Patch by Jochen Hein <jochen@jochen.org>.
 
 2001-08-06  Jakub Jelinek  <jakub@redhat.com>
