@@ -1,5 +1,5 @@
 /* Declarations for getopt.
-   Copyright (C) 1989,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.
+   Copyright (C) 1989,90,91,92,93,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,11 @@
 #ifndef __need_getopt
 # define _GETOPT_H 1
 #endif
+
+/* We include this here since on system susing GNU libc we need some
+   macros defined.  <stdio.h> is probably the most portable header
+   file and it does what we need.  */
+#include <stdio.h>
 
 #ifdef	__cplusplus
 extern "C" {

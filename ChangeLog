@@ -1,5 +1,7 @@
 1999-06-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/getopt.h: Include stdio.h.
+
 	* manual/arith.texi: Document restriction of ndigit parameter of
 	ecvt and friends.
 	* misc/efgcvt.c: Define NDIGIT_MAX.
