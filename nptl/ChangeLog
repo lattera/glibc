@@ -1,3 +1,16 @@
+2003-03-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: New file.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Remove declaration
+	of __libc_locking_needed.
+	(lll_trylock): Initialize %eax to zero.
+
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelcond.h: New file.
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Update
+	pthread_cond_t definition.
+
 2003-03-10  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/unix/sysv/linux/lowlevelcond.sym: New file.
@@ -34,6 +47,7 @@
 2003-03-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/fork.c: New file.
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Fix many
 	leftovers from the ia32 code.
