@@ -30,9 +30,7 @@
 	.type errno,@object
 errno:	.space 4
 	.size errno,4
-	.globl _errno
-	.type _errno,@object
-_errno = errno	/* This name is expected by hj's libc.so.5 startup code.  */
+weak_alias (errno, _errno)
 	.text
 
 /* The following code is only used in the shared library when we

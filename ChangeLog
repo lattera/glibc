@@ -1,3 +1,8 @@
+1998-06-30  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Make _errno a weak alias,
+	not a strong alias.
+
 1998-06-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/Makefile (headers): Remove bits/pthreadtypes.h.
@@ -1628,8 +1633,8 @@
 1998-05-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* Makerules (do-makelib): Don't force creating library from
-	scratch, to avoid wasting time and space and to get correct
-	behaviour if $(subdirs) is incomplete.
+ 	scratch, which is faster and gets correct behaviour if $(subdirs)
+ 	is incomplete.
 
 1998-05-19  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
