@@ -13,6 +13,11 @@
 	(ruserpass): Check results of memory allocation.
 	* include/netdb.h: Add prototype for ruserpass.
 
+2000-05-29  Andreas Jaeger  <aj@suse.de>
+
+	* elf/readlib.c (interpreters): Use LD_SO since this is supported
+	for all platforms.
+
 2000-05-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* inet/rcmd.c (rresvport_af): Use correct port number.
