@@ -22,7 +22,7 @@
 
 #include <sysdeps/unix/alpha/sysdep.h>
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 #include <machine/pal.h>		/* get PAL_callsys */
 #include <regdef.h>

@@ -57,7 +57,7 @@ _start:\n\
 
 #include <syscall.h>
 
-#if defined (ASSEMBLER)
+#if defined (__ASSEMBLER__)
 
 #define ALIGN	2
 

@@ -24,7 +24,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 /* As of gcc-2.6.0, it complains about pound signs in front of things
    that aren't arguments to the macro.  So we use this to pull it off
@@ -51,4 +51,4 @@
 #define	r1		%o1
 #define	MOVE(x,y)	mov x, y
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

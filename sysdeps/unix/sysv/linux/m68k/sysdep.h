@@ -32,7 +32,7 @@
 # define SYS_ify(syscall_name)	__NR_/**/syscall_name
 #endif
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors, unlike
    most Unices, which use the condition codes' carry flag.
@@ -149,4 +149,4 @@ syscall_error:								      \
 #define	MOVE(x,y)	movel x , y
 #endif
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

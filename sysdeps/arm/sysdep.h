@@ -19,7 +19,7 @@
 
 #include <sysdeps/generic/sysdep.h>
 
-#ifdef	ASSEMBLER
+#ifdef	__ASSEMBLER__
 
 /* Syntactic details of assembler.  */
 
@@ -89,4 +89,4 @@
 #define mcount		_mcount
 #endif
 
-#endif	/* ASSEMBLER */
+#endif	/* __ASSEMBLER__ */

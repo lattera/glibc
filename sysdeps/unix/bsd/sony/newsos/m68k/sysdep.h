@@ -18,7 +18,7 @@
 
 #include <sysdeps/unix/sysdep.h>
 
-#ifdef ASSEMBLER
+#ifdef __ASSEMBLER__
 
 #define	POUND	#
 
