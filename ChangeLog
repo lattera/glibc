@@ -1,5 +1,14 @@
 2000-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* Makeconfig (soversions.i): New target, input-reading parts of
+	soversions.mk generation moved here; result is a canonicalized
+	list "LIB VERSION [SET]" for this configuration.
+	(soversions.mk): Use that as input.  Don't emit map-firstversions.
+	* Makerules (version-renames.def): New target, generated from
+	soversions.i with contents that was in $(map-firstversions).
+	(Versions.all): Don't depend on soversions.mk, depend on
+	version-renames.def instead; just cat it into the input.
+
 	* Makerules (Versions.all): Use $(foreach ...) instead of sh for loop
 	for $(map-firstversions), which better handles it being empty.
 

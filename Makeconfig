@@ -676,36 +676,32 @@ ifeq (yes, $(build-shared))
 ifeq ($(sysd-sorted-done),t)
 -include $(common-objpfx)soversions.mk
 ifndef avoid-generated
-$(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
-			       $(wildcard $(patsubst %, $(..)%/shlib-versions,\
-							$(add-ons) \
-							$(subdirs))) \
-			       $(common-objpfx)config.make
-	(file="$(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons))) \
-	       $(wildcard $(patsubst %,$(..)%/shlib-versions,$(subdirs))) \
-	       $(..)shlib-versions"; \
-	 for f in $$file; do \
-	   sed 's/#.*$$//;s/^[ 	]*%/#/' $$f \
-	   | $(CC) -include $(common-objpfx)config.h -E -x c - \
-	   | while read conf version setname; do \
-	     test -n "$$version" && \
-	     test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
-			: "$$conf"` != 0 || continue; \
-	       lib=`echo $$version | sed 's/=.*$$//'`; \
-	     if eval "test -z \"\$$versioners_lib$$lib\""; then \
-	       eval vers_lib$${lib}=yes; \
-	       number=`echo $$version | sed "s/^.*=//"`; \
-	       case $$number in \
-		 [0-9]*) echo "$$lib.so-version=.$$number"; \
-			 echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
-		 *) echo "$$lib.so-version=$$number"; \
-		    echo "all-sonames+=\$$($$lib.so-version)";;  \
-	       esac; \
-	       test -z "$$setname" || \
-	         echo "map-firstversions+=$${lib}:$${setname}"; \
-	     fi; \
-	   done; \
-	 done;) > $@T; exit 0
+$(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
+			      $(wildcard $(patsubst %, $(..)%/shlib-versions,\
+						       $(add-ons) \
+						       $(subdirs))) \
+			      $(common-objpfx)config.make
+	sed -e 's/#.*$$//;s/^[ 	]*%/#/' \
+	    $(filter-out $(..)Makeconfig $(common-objpfx)config.make,$^) \
+	| $(CC) -include $(common-objpfx)config.h -E -x c - \
+	| while read conf version setname; do \
+	    test -n "$$version" && \
+	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
+		       : "$$conf"` != 0 || continue; \
+	    lib=`echo $$version | sed 's/=.*$$//'`; \
+	    number=`echo $$version | sed "s/^.*=//"`; \
+	    echo $$lib $$number $$setname; \
+	  done > $@T; exit 0
+	mv -f $@T $@
+$(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
+	while read lib number setname; do \
+	  case $$number in \
+	    [0-9]*) echo "$$lib.so-version=.$$number"; \
+		    echo "all-sonames+=$$lib.so\$$($$lib.so-version)";;\
+	    *)	    echo "$$lib.so-version=$$number"; \
+		    echo "all-sonames+=\$$($$lib.so-version)";;\
+	  esac; \
+	done < $< > $@T; exit 0
 	mv -f $@T $@
 endif
 endif

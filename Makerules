@@ -290,13 +290,16 @@ ifneq ($(sysd-versions-subdirs),$(all-subdirs) $(config-sysdirs))
 sysd-versions-force = FORCE
 FORCE:
 endif
+$(common-objpfx)version-renames.def: $(common-objpfx)soversions.i
+	while read lib version setname; do \
+	  test -z "$$setname" || echo "$$lib : $$setname"; \
+	done < $< > $@T; exit 0
+	mv -f $@T $@
 $(common-objpfx)Versions.all: $(..)scripts/firstversions.awk \
+			      $(common-objpfx)version-renames.def \
 	                      $(..)Versions.def \
-			      $(wildcard $(add-ons:%=$(..)%/Versions.def)) \
-			      $(common-objpfx)soversions.mk
-	{ $(foreach map,$(map-firstversions),echo '$(subst :, : ,$(map))';) \
-	  cat $(filter-out $< $(common-objpfx)soversions.mk,$^); \
-	} | LC_ALL=C $(AWK) -f $< > $@T
+			      $(wildcard $(add-ons:%=$(..)%/Versions.def))
+	cat $(filter-out $<,$^) | LC_ALL=C $(AWK) -f $< > $@T
 	mv -f $@T $@
 $(common-objpfx)sysd-versions: $(common-objpfx)Versions.all \
 			       $(..)scripts/versions.awk \
