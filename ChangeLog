@@ -22,6 +22,10 @@
 
 2000-05-26  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/ftruncate64.c (ftruncate64): Make order
+	of arguments dependend on endianness.
+	* sysdeps/unix/sysv/linux/truncate64.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/i386/pread64.c: Removed, we can use the
 	normal version now.
 	* sysdeps/unix/sysv/linux/arm/pread64.c: Likewise.
