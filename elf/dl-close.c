@@ -46,6 +46,9 @@ _dl_close (void *_map)
   struct link_map *map = _map;
   unsigned int i;
   unsigned int *new_opencount;
+#ifdef USE_TLS
+  bool any_tls = false;
+#endif
 
   /* First see whether we can remove the object at all.  */
   if (__builtin_expect (map->l_flags_1 & DF_1_NODELETE, 0)
@@ -206,6 +209,28 @@ _dl_close (void *_map)
 	      --GL(dl_main_searchlist)->r_nlist;
 	    }
 
+#ifdef USE_TLS
+	  /* Remove the object from the dtv slotinfo array if it uses
+	     TLS.  */
+	  if (__builtin_expect (imap->l_tls_blocksize > 0, 0))
+	    {
+	      /* Locate the entry in the slotinfo array.  */
+	      size_t idx = imap->l_tls_modid;
+	      struct dtv_slotinfo_list *listp = GL(dl_tls_dtv_slotinfo_list);
+
+	      while (idx >= listp->len)
+		{
+		  idx -= listp->len;
+		  listp = listp->next;
+		}
+
+	      listp->slotinfo[idx].gen = GL(dl_tls_generation) + 1;
+	      listp->slotinfo[idx].map = NULL;
+
+	      any_tls = true;
+	    }
+#endif
+
 	  /* We can unmap all the maps at once.  We determined the
 	     start address and length when we loaded the object and
 	     the `munmap' call does the rest.  */
@@ -279,6 +304,12 @@ _dl_close (void *_map)
 	}
     }
 
+#ifdef USE_TLS
+  /* If we removed any object which uses TLS bumnp the generation
+     counter.  */
+  ++GL(dl_tls_generation);
+#endif
+
   /* Notify the debugger those objects are finalized and gone.  */
   _r_debug.r_state = RT_CONSISTENT;
   _dl_debug_state ();
@@ -302,6 +333,30 @@ _dl_close (void *_map)
 }
 
 
+static bool
+free_slotinfo (struct dtv_slotinfo_list *elemp)
+{
+  size_t cnt;
+
+  if (elemp->next != NULL && !free_slotinfo (elemp->next))
+    /* We cannot free the entry.  */
+    return false;
+
+  /* The least we could do is remove next element (if there was any).  */
+  elemp->next = NULL;
+
+  for (cnt = 0; cnt < elemp->len; ++cnt)
+    if (elemp->slotinfo[cnt].map != NULL)
+      /* Still used.  */
+      return false;
+
+  /* We can remove the list element.  */
+  free (elemp);
+
+  return true;
+}
+
+
 static void
 free_mem (void)
 {
@@ -320,5 +375,15 @@ free_mem (void)
       /* Now free the old map.  */
       free (old);
     }
+
+#ifdef USE_TLS
+  /* Free the memory allocated for the dtv slotinfo array.  We can do
+     this only if all modules which used this memory are unloaded.
+     Also, the first element of the list does not have to be
+     deallocated.  It was allocated in the dynamic linker (i.e., with
+     a different malloc).  */
+  if (free_slotinfo (GL(dl_tls_dtv_slotinfo_list)->next))
+    GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+#endif
 }
 text_set_element (__libc_subfreeres, free_mem);
