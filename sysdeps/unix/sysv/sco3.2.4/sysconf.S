@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 .globl	__tzname_max
 ENTRY (__sysconf)
-	cmpl 4(%esp), $_SC_TZNAME_MAX /* Is the arg _SC_TZNAME_MAX?  */
+	cmpl $_SC_TZNAME_MAX, 4(%esp) /* Is the arg _SC_TZNAME_MAX?  */
 	je tzname
 	DO_CALL (sysconf, 1)	/* No; use the SCO system call.  */
 	ret
