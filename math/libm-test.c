@@ -1433,17 +1433,17 @@ gamma_test (void)
   _LIB_VERSION = _SVID_;
 
   check_isinfp ("gamma (+inf) == +inf", FUNC(gamma) (plus_infty));
-  check_isinfp_exc ("gamma (0) == +inf plus divide by zero exception",
-		    FUNC(gamma) (0), DIVIDE_BY_ZERO_EXCEPTION);
+  check_exc ("gamma (0) == HUGE plus divide by zero exception",
+	     FUNC(gamma) (0), HUGE, DIVIDE_BY_ZERO_EXCEPTION);
 
-  check_isinfp_exc ("gamma (x) == +inf plus divide by zero exception for integer x <= 0",
-		    FUNC(gamma) (-3), DIVIDE_BY_ZERO_EXCEPTION);
+  check_exc ("gamma (x) == HUGE plus divide by zero exception for integer x <= 0",
+	     FUNC(gamma) (-3), HUGE, DIVIDE_BY_ZERO_EXCEPTION);
   check_isnan_exc ("gamma (-inf) == NaN plus invalid exception",
                    FUNC(gamma) (minus_infty), INVALID_EXCEPTION);
 
   signgam = 0;
   check ("gamma (1) == 0", FUNC(gamma) (1), 0);
-  check_int ("gamma (0) sets signgam to 1", signgam, 1);
+  check_int ("gamma (1) sets signgam to 1", signgam, 1);
 
   signgam = 0;
   check ("gamma (3) == M_LN2", FUNC(gamma) (3), M_LN2l);
@@ -1485,6 +1485,11 @@ gamma_test (void)
   check_eps ("gamma (0.7) == 1.29805...", FUNC(gamma) (0.7),
 	     1.29805533264755778568L, CHOOSE(0, 3e-16, 2e-7));
   check ("gamma (1.2) == 0.91816...", FUNC(gamma) (1.2), 0.91816874239976061064L);
+
+  check_isnan_exc ("gamma (0.0) == NaN plus invalid exception",
+		   FUNC(gamma) (0.0), INVALID_EXCEPTION);
+  check_isnan_exc ("gamma (-1.0) == NaN plus invalid exception",
+		   FUNC(gamma) (-1.0), INVALID_EXCEPTION);
 
   _LIB_VERSION = save_lib_version;
 }

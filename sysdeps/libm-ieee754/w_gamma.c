@@ -32,7 +32,18 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
         double y;
 #ifndef _IEEE_LIBM
 	if (_LIB_VERSION == _SVID_)
-	  y = __ieee754_lgamma_r(x,&signgam);
+	  {
+	    y = __ieee754_lgamma_r(x,&signgam);
+
+	    if(!__finite(y)&&__finite(x)) {
+	      if(__floor(x)==x&&x<=(double)0.0)
+		/* lgamma pole */
+		return __kernel_standard(x,x,15);
+	      else
+		/* lgamma overflow */
+		return __kernel_standard(x,x,14);
+	    }
+	  }
 	else
 	  {
 #endif
@@ -43,14 +54,15 @@ static char rcsid[] = "$NetBSD: w_gamma.c,v 1.7 1995/11/20 22:06:43 jtc Exp $";
 	    return y;
 #else
 	    if(_LIB_VERSION == _IEEE_) return y;
-	  }
-        if(!__finite(y)&&__finite(x)) {
-            if(__floor(x)==x&&x<=0.0)
+
+	    if(!__finite(y)&&__finite(x)) {
+	      if(__floor(x)==x&&x<=0.0)
                 return __kernel_standard(x,x,41); /* gamma pole */
-            else
+	      else
                 return __kernel_standard(x,x,40); /* gamma overflow */
-        } else
-            return y;
+	    }
+	  }
+	return y;
 #endif
 }
 weak_alias (__gamma, gamma)

@@ -30,7 +30,18 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
         float y;
 #ifndef _IEEE_LIBM
 	if (_LIB_VERSION == _SVID_)
-	  y = __ieee754_lgammaf_r(x,&signgam);
+	  {
+	    y = __ieee754_lgammaf_r(x,&signgam);
+
+	    if(!__finitef(y)&&__finitef(x)) {
+	      if(__floorf(x)==x&&x<=(float)0.0)
+		/* lgammaf pole */
+		return (float)__kernel_standard((double)x,(double)x,115);
+	      else
+		/* lgammaf overflow */
+		return (float)__kernel_standard((double)x,(double)x,114);
+	    }
+	  }
 	else
 	  {
 #endif
@@ -41,16 +52,17 @@ static char rcsid[] = "$NetBSD: w_gammaf.c,v 1.4 1995/11/20 22:06:48 jtc Exp $";
 	    return y;
 #else
 	    if(_LIB_VERSION == _IEEE_) return y;
+
+	    if(!__finitef(y)&&__finitef(x)) {
+	      if(__floorf(x)==x&&x<=(float)0.0)
+		/* gammaf pole */
+		return (float)__kernel_standard((double)x,(double)x,141);
+	      else
+		/* gammaf overflow */
+		return (float)__kernel_standard((double)x,(double)x,140);
+	    }
 	  }
-        if(!__finitef(y)&&__finitef(x)) {
-            if(__floorf(x)==x&&x<=(float)0.0)
-	        /* gammaf pole */
-                return (float)__kernel_standard((double)x,(double)x,141);
-            else
-	        /* gammaf overflow */
-                return (float)__kernel_standard((double)x,(double)x,140);
-        } else
-            return y;
+	return y;
 #endif
 }
 weak_alias (__gammaf, gammaf)

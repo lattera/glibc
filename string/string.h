@@ -299,7 +299,7 @@ extern char *basename __P ((__const char *__filename));
 
 
 #if defined __GNUC__ && __GNUC__ >= 2
-# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__
+# if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ && !defined __cplusplus
 /* When using GNU CC we provide some optimized versions of selected
    functions from this header.  There are two kinds of optimizations:
 

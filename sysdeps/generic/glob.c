@@ -693,7 +693,7 @@ glob (pattern, flags, errfunc, pglob)
 	 appending the results to PGLOB.  */
       for (i = 0; i < dirs.gl_pathc; ++i)
 	{
-	  int oldcount;
+	  int old_pathc;
 
 #ifdef	SHELL
 	  {
@@ -709,7 +709,7 @@ glob (pattern, flags, errfunc, pglob)
 	  }
 #endif /* SHELL.  */
 
-	  oldcount = pglob->gl_pathc;
+	  old_pathc = pglob->gl_pathc;
 	  status = glob_in_dir (filename, dirs.gl_pathv[i],
 				((flags | GLOB_APPEND)
 				 & ~(GLOB_NOCHECK | GLOB_ERR)),
@@ -727,8 +727,8 @@ glob (pattern, flags, errfunc, pglob)
 
 	  /* Stick the directory on the front of each name.  */
 	  if (prefix_array (dirs.gl_pathv[i],
-			    &pglob->gl_pathv[oldcount],
-			    pglob->gl_pathc - oldcount))
+			    &pglob->gl_pathv[old_pathc],
+			    pglob->gl_pathc - old_pathc))
 	    {
 	      globfree (&dirs);
 	      globfree (pglob);
@@ -781,9 +781,14 @@ glob (pattern, flags, errfunc, pglob)
       if (dirlen > 0)
 	{
 	  /* Stick the directory on the front of each name.  */
+	  int ignore = oldcount;
+
+	  if ((flags & GLOB_DOOFFS) && ignore < pglob->gl_offs)
+	    ignore = pglob->gl_offs;
+
 	  if (prefix_array (dirname,
-			    &pglob->gl_pathv[oldcount],
-			    pglob->gl_pathc - oldcount))
+			    &pglob->gl_pathv[ignore],
+			    pglob->gl_pathc - ignore))
 	    {
 	      globfree (pglob);
 	      return GLOB_NOSPACE;
@@ -815,10 +820,17 @@ glob (pattern, flags, errfunc, pglob)
     }
 
   if (!(flags & GLOB_NOSORT))
-    /* Sort the vector.  */
-    qsort ((__ptr_t) &pglob->gl_pathv[oldcount],
-	   pglob->gl_pathc - oldcount,
-	   sizeof (char *), collated_compare);
+    {
+      /* Sort the vector.  */
+      int non_sort = oldcount;
+
+      if ((flags & GLOB_DOOFFS) && pglob->gl_offs > oldcount)
+	non_sort = pglob->gl_offs;
+
+      qsort ((__ptr_t) &pglob->gl_pathv[non_sort],
+	     pglob->gl_pathc - non_sort,
+	     sizeof (char *), collated_compare);
+    }
 
   return 0;
 }

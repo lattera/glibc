@@ -845,12 +845,13 @@ static double zero = 0.0;	/* used as const */
 		exc.type = SING;
 		exc.name = type < 100 ? "gamma" : (type < 200
 						   ? "gammaf" : "gammal");
-		exc.retval = HUGE_VAL;
+		exc.retval = NAN;
 		if (_LIB_VERSION == _POSIX_)
 		  __set_errno (EDOM);
 		else if (!matherr(&exc)) {
 		  if (_LIB_VERSION == _SVID_) {
 			(void) WRITE2("gamma: SING error\n", 18);
+			exc.retval = HUGE_VAL;
 		      }
 		  __set_errno (EDOM);
 		}

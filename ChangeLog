@@ -1,3 +1,23 @@
+1998-07-23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/glob.c: Fix two problems with GLOB_DOOFFS.
+	Reported by bwelling@anomaly.munge.com [PR libc/720].
+
+	* sysdeps/libm-ieee754/k_standard.c: Return NAN for libm not in
+	SVID more for gamma(x) with x interger <= 0.
+	Reported by Stephen L Moshier <moshier@mediaone.net>.
+
+	* math/libm-test.c (gamma_test): Add test for gamma(-1) and gamma(0).
+	Correct test for SVID version of gamma.
+
+	* sysdeps/libm-ieee754/w_gamma.c: Use correct matherr call in SVID
+	emulation mode.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+
+	* string/string.h: Don't use string function optimization for C++
+	as long as we use macros.
+
 1998-07-22 23:47  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/fnmatch.c: Fix completely broken range matching.
