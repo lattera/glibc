@@ -1,3 +1,11 @@
+2000-04-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/add_n.S: Add newline at EOF.
+	* sysdeps/mips/rshift.S: Likewise.
+	* sysdeps/mips/mul_1.S: Likewise.
+	* sysdeps/mips/lshift.S: Likewise.
+	* sysdeps/mips/addmul_1.S: Likewise.
+
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/fpu/s_isnan.c: Pretty printing.
