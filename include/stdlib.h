@@ -10,10 +10,18 @@
 #ifndef __Need_M_And_C
 
 libc_hidden_proto (exit)
+libc_hidden_proto (abort)
 libc_hidden_proto (getenv)
 libc_hidden_proto (bsearch)
 libc_hidden_proto (qsort)
 libc_hidden_proto (__secure_getenv)
+libc_hidden_proto (__strtof_internal)
+libc_hidden_proto (__strtod_internal)
+libc_hidden_proto (__strtold_internal)
+libc_hidden_proto (__strtol_internal)
+libc_hidden_proto (__strtoll_internal)
+libc_hidden_proto (__strtoul_internal)
+libc_hidden_proto (__strtoull_internal)
 
 extern long int __random (void);
 extern void __srandom (unsigned int __seed);
@@ -111,6 +119,14 @@ extern unsigned long long int ____strtoull_l_internal (__const char *
 						       int __base, int __group,
 						       __locale_t __loc)
      __THROW;
+
+libc_hidden_proto (____strtof_l_internal)
+libc_hidden_proto (____strtod_l_internal)
+libc_hidden_proto (____strtold_l_internal)
+libc_hidden_proto (____strtol_l_internal)
+libc_hidden_proto (____strtoll_l_internal)
+libc_hidden_proto (____strtoul_l_internal)
+libc_hidden_proto (____strtoull_l_internal)
 
 extern __inline double
 __strtod_l (__const char *__restrict __nptr, char **__restrict __endptr,

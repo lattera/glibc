@@ -1,6 +1,6 @@
 /* Read decimal floating point numbers.
    This file is part of the GNU C Library.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1560,6 +1560,10 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 
   /* NOTREACHED */
 }
+#if defined _LIBC \
+    && !(defined USE_IN_EXTENDED_LOCALE_MODEL && defined USE_WIDE_CHAR)
+libc_hidden_def (INTERNAL (STRTOF))
+#endif
 
 /* External user entry point.  */
 

@@ -224,3 +224,4 @@ hsearch_r (item, action, retval, htab)
   *retval = NULL;
   return 0;
 }
+libc_hidden_def (hsearch_r)

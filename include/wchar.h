@@ -2,6 +2,19 @@
 #include <wcsmbs/wchar.h>
 
 # ifdef _WCHAR_H
+
+libc_hidden_proto (__wcstof_internal)
+libc_hidden_proto (__wcstod_internal)
+libc_hidden_proto (__wcstold_internal)
+libc_hidden_proto (__wcstol_internal)
+libc_hidden_proto (__wcstoll_internal)
+libc_hidden_proto (__wcstoul_internal)
+libc_hidden_proto (__wcstoull_internal)
+
+libc_hidden_proto (__wcscasecmp_l)
+libc_hidden_proto (__wcsncasecmp_l)
+
+
 /* Now define the internal interfaces.  */
 extern int __wcscasecmp (__const wchar_t *__s1, __const wchar_t *__s2)
      __attribute_pure__;

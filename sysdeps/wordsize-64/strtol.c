@@ -9,5 +9,6 @@
 #undef strtoll
 #undef strtoq
 strong_alias (__strtol_internal, __strtoll_internal)
+libc_hidden_def (__strtoll_internal)
 weak_alias (strtol, strtoll)
 weak_alias (strtol, strtoq)

@@ -9,5 +9,8 @@
 #undef wcstoll
 #undef wcstoq
 strong_alias (__wcstol_internal, __wcstoll_internal)
+libc_hidden_def (__wcstoll_internal)
 weak_alias (wcstol, wcstoll)
+libc_hidden_weak (wcstoll)
 weak_alias (wcstol, wcstoq)
+libc_hidden_weak (wcstoq)

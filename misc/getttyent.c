@@ -133,6 +133,7 @@ getttyent()
 		*p = '\0';
 	return (&tty);
 }
+libc_hidden_def (getttyent)
 
 #define	QUOTED	1
 
@@ -198,6 +199,7 @@ setttyent()
 	}
 	return (0);
 }
+libc_hidden_def (setttyent)
 
 int
 endttyent()
@@ -211,3 +213,4 @@ endttyent()
 	}
 	return (1);
 }
+libc_hidden_def (endttyent)

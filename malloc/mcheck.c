@@ -1,5 +1,5 @@
 /* Standard debugging hooks for `malloc'.
-   Copyright (C) 1990-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1990-1997,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written May 1989 by Mike Haertel.
 
@@ -338,6 +338,9 @@ mcheck (func)
 
   return mcheck_used ? 0 : -1;
 }
+#ifdef _LIBC
+libc_hidden_def (mcheck)
+#endif
 
 int
 mcheck_pedantic (func)

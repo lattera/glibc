@@ -1,5 +1,52 @@
 2002-08-03  Roland McGrath  <roland@redhat.com>
 
+	* include/search.h: Use libc_hidden_proto for hsearch_r, lfind.
+	* misc/hsearch_r.c: Add libc_hidden_def.
+	* misc/lsearch.c: Likewise.
+
+	* include/ttyent.h: Use libc_hidden_proto for getttyent, setttyent,
+	endttyent.
+	* misc/getttyent.c: Add libc_hidden_def.
+
+	* include/mcheck.h: Use libc_hidden_proto for mcheck.
+	* malloc/mcheck.c: Add libc_hidden_def.
+
+	* include/envz.h: Use libc_hidden_proto for envz_entry, enz_remove.
+	* include/argz.h: Use libc_hidden_proto for argz_delete.
+	* string/argz-delete.c: Add libc_hidden_def.
+	* string/envz.c: Likewise.  Use <envz.h>, not "envz.h".
+
+	* sysdeps/unix/sysv/linux/x86_64/clone.S (thread_start): Use
+	HIDDEN_JUMPTARGET for _exit.
+	* sysdeps/unix/sysv/linux/m68k/clone.S (thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/i386/clone.S (thread_start): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/clone.S: Likewise.
+	* sysdeps/unix/_exit.S (_exit): Add libc_hidden_def.
+
+	* include/libc-symbols.h: Fix [__ASSEMBLY__] -> [__ASSEMBLER__].
+	[__ASSEMBLER__] (hidden_weak): Define using hidden_def, or to empty.
+	[__ASSEMBLER__] (HIDDEN_JUMPTARGET): New macro.
+	* sysdeps/unix/sysv/linux/i386/makecontext.S: Use it for exit.
+
+	* include/stdlib.h: Use libc_hidden_proto for abort,
+	__strtof_internal, __strtod_internal, __strtold_internal,
+	__strtol_internal, __strtoll_internal, __strtoul_internal,
+	__strtoull_internal. __strtof_l_internal, __strtod_l_internal,
+	__strtold_l_internal, __strtol_l_internal, __strtoll_l_internal,
+	__strtoul_l_internal, __strtoull_l_internal.
+	* include/wchar.h: Use libc_hidden_proto for __wcstof_internal,
+	__wcstod_internal, __wcstold_internal, __wcstol_internal,
+	__wcstoll_internal, __wcstoul_internal, ____wcstof_l_internal,
+	____wcstod_l_internal, ____wcstold_l_internal, ____wcstol_l_internal,
+	____wcstoll_l_internal, ____wcstoul_l_internal, __wcscasecmp_l,
+	__wcsncasecmp_l.
+	* sysdeps/generic/abort.c: Add libc_hidden_def.
+	* stdlib/strtod.c: Likewise.
+	* sysdeps/generic/strtol.c: Likewise.
+	* sysdeps/wordsize-64/strtol.c: Likewise.
+	* sysdeps/wordsize-64/wcstol.c: Likewise.
+	* sysdeps/wordsize-64/wcstol_l.c: Likewise.
+
 	* include/stdlib.h: Use libc_hidden_proto for qsort.
 	* stdlib/msort.c: Add libc_hidden_def.
 
