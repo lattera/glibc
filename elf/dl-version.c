@@ -95,7 +95,7 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
 	 only print a message if verbose output is requested.  */
       if (verbose)
 	/* XXX We cannot translate the messages.  */
-	_dl_signal_cerror (0, map->l_name,
+	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0],
 			   make_string ("\
 no version information available (required by ",
 					name, ")"));

@@ -1,3 +1,65 @@
+2000-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (fillin_rpath): Don't assume there is '\0' at
+	cp + len.  Compute where from dirname.
+	Reported by <jreiser@BitWagon.com>.
+
+2000-12-08  Richard Henderson  <rth@twiddle.net>
+
+	* sysdeps/alpha/_mcount.S: Fix typo.
+	* sysdeps/alpha/strncpy.S: Likewise.
+
+	* sysdeps/alpha/alphaev6/Implies: New file.
+	* sysdeps/alpha/alphaev67/Implies: New file.
+	* sysdeps/alpha/alphaev67/ffs.S: New file.
+	* sysdeps/alpha/alphaev67/ffsll.S: New file.
+	* sysdeps/alpha/alphaev67/rawmemchr.S: New file.
+	* sysdeps/alpha/alphaev67/stpcpy.S: New file.
+	* sysdeps/alpha/alphaev67/stpncpy.S: New file.
+	* sysdeps/alpha/rawmemchr.S: New file.
+	* sysdeps/alpha/strcat.S: Tail call to __stxcpy.
+	* sysdeps/alpha/strcpy.S: Likewise.
+
+	From GMP 3.1.1:
+	* sysdeps/alpha/alphaev6/addmul_1.s: New file.
+
+	From rick.gorton@alpha-processor.com:
+	* sysdeps/alpha/alphaev6/memchr.S: New file.
+	* sysdeps/alpha/alphaev6/memcpy.S: New file.
+	* sysdeps/alpha/alphaev6/memset.S: New file.
+	* sysdeps/alpha/alphaev6/stxcpy.S: New file.
+	* sysdeps/alpha/alphaev6/stxncpy.S: New file.
+	* sysdeps/alpha/alphaev67/strcat.S: New file.
+	* sysdeps/alpha/alphaev67/strchr.S: New file.
+	* sysdeps/alpha/alphaev67/strlen.S: New file.
+	* sysdeps/alpha/alphaev67/strncat.S: New file.
+	* sysdeps/alpha/htonl.S: Use a shorter sequence.
+
+2000-12-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): Fix NI_NOFQDN support.
+	Reported by <pspencer@fields.utoronto.ca>.
+
+2000-12-07  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/elf/start.S (__data_start): Add __data_start variable.
+	Pointed out by Hans Boehm.
+
+2000-12-07  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-version.c (match_symbol): Check map->l_name[0] for printing.
+
+2000-12-07  Andreas Jaeger  <aj@suse.de>
+
+	* misc/error.c: Add format attributes for __error and __error_at_line.
+
+	* nscd/dbg_log.h: Add format attribute.
+
+2000-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/syslog.h: Add format attributes to syslog and vsyslog.
+	Patch by Joseph S. Myers <jsm28@cam.ac.uk>.
+
 2000-12-07  Dan Pop  <Dan.Pop@cern.ch>
 
 	* sysdeps/ia64/strcpy.S: Fix a bug in a recovery code sequence.
@@ -948,8 +1010,7 @@
 
 2000-11-14  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/generic/dl-cache.c (HWCAP_CHECK): Fix access to
-	_dl_hwcap.
+	* sysdeps/generic/dl-cache.c (HWCAP_CHECK): Fix access to _dl_hwcap.
 
 2000-11-13  Roland McGrath  <roland@frob.com>
 
@@ -992,7 +1053,7 @@
 
 2000-11-03  Bruno Haible  <haible@clisp.cons.org>
 
-	* manual/install.texi: Recommend to set LANGUAGE=C LC_ALL-C during
+	* manual/install.texi: Recommend to set LANGUAGE=C LC_ALL=C during
 	"make install", to work around a binary incompatibility between
 	glibc 2.1 and glibc 2.2 gconv modules.
 

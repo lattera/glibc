@@ -74,10 +74,12 @@ unsigned int error_message_count;
 
 /* In GNU libc we want do not want to use the common name `error' directly.
    Instead make it a weak alias.  */
-extern void __error (int status, int errnum, const char *message, ...);
+extern void __error (int status, int errnum, const char *message, ...)
+     __attribute__ ((__format__ (__printf__, 3, 4)));
 extern void __error_at_line (int status, int errnum, const char *file_name,
 			     unsigned int line_number, const char *message,
-			     ...);
+			     ...)
+     __attribute__ ((__format__ (__printf__, 5, 6)));;
 # define error __error
 # define error_at_line __error_at_line
 

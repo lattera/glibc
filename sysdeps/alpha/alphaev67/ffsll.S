@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +16,30 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Finds the first bit set in a long.  */
+
 #include <sysdep.h>
 
-ENTRY(htonl)
+	.arch ev6
+	.set noreorder
+	.set noat
+
+ENTRY(ffsl)
 #ifdef PROF
 	ldgp	gp, 0(pv)
-	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.set at
 	.prologue 1
 #else
 	.prologue 0
 #endif
 
-	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
-	inswl	a0, 3, t1	# t1 = 000000CCDD000000
-	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
-	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
-	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
-	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
-	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
+	cttz	$16, $0
+	addq	$0, 1, $0
+	cmoveq	$16, 0, $0
 	ret
 
-	END(htonl)
+END(ffsl)
 
-weak_alias(htonl, ntohl)
+weak_extern (ffsl)
+weak_alias (ffsl, ffsll)

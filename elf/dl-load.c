@@ -419,7 +419,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 
 	  dirp->dirname = ((char *) dirp + sizeof (*dirp)
 			   + ncapstr * sizeof (enum r_dir_status));
-	  memcpy ((char *) dirp->dirname, cp, len + 1);
+	  *((char *) __mempcpy ((char *) dirp->dirname, cp, len)) = '\0';
 	  dirp->dirnamelen = len;
 
 	  if (len > max_dirnamelen)

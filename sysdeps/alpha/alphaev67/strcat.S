@@ -1,4 +1,7 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   Contributed by Richard Henderson <rth@tamu.edu>, 1996.
+   EV67 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +19,44 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Append a null-terminated string from SRC to DST.  */
+
 #include <sysdep.h>
 
-ENTRY(htonl)
-#ifdef PROF
+	.arch ev6
+	.set noreorder
+	.text
+
+ENTRY(strcat)
 	ldgp	gp, 0(pv)
+#ifdef PROF
 	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
 	.set at
-	.prologue 1
-#else
-	.prologue 0
 #endif
+	.prologue 1
 
-	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
-	inswl	a0, 3, t1	# t1 = 000000CCDD000000
-	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
-	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
-	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
-	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
-	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
-	ret
+	mov	$16, $0		# E : set up return value
+	/* Find the end of the string.  */
+	ldq_u   $1, 0($16)	# L : load first quadword (a0 may be misaligned)
+	lda     $2, -1		# E :
+	insqh   $2, $16, $2	# U :
 
-	END(htonl)
+	andnot  $16, 7, $16	# E :
+	or      $2, $1, $1	# E :
+	cmpbge  $31, $1, $2	# E : bits set iff byte == 0
+	bne     $2, $found	# U :
 
-weak_alias(htonl, ntohl)
+$loop:	ldq     $1, 8($16)	# L :
+	addq    $16, 8, $16	# E :
+	cmpbge  $31, $1, $2	# E :
+	beq     $2, $loop	# U :
+
+$found:	cttz	$2, $3		# U0 :
+	addq	$16, $3, $16	# E :
+	/* Now do the append.  */
+	mov	$26, $23	# E :
+	jmp	$31, __stxcpy	# L0 :
+
+	END(strcat)

@@ -22,7 +22,8 @@
 
 extern int debug_level;
 
-extern void dbg_log (const char *str, ...);
+extern void dbg_log (const char *str, ...)
+     __attribute__ ((__format__ (__printf__, 1, 0)));;
 
 extern int set_logfile (const char *logfile);
 

@@ -1,5 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,29 +17,36 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/*  Copy SRC to DEST returning the address of the terminating 0 in DEST.  */
+
 #include <sysdep.h>
 
-ENTRY(htonl)
-#ifdef PROF
-	ldgp	gp, 0(pv)
+	.arch ev6
+	.set noreorder
 	.set noat
+	.text
+
+ENTRY(__stpcpy)
+	ldgp	gp, 0(pv)
+#ifdef PROF
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.set at
-	.prologue 1
-#else
-	.prologue 0
 #endif
+	.prologue 1
 
-	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
-	inswl	a0, 3, t1	# t1 = 000000CCDD000000
-	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
-	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
-	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
-	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
-	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
+	.align 4
+	mov	a0, v0
+	nop
+	jsr	t9, __stxcpy
+
+        # t8  = bitmask (with one bit set) indicating the last byte written
+        # a0  = unaligned address of the last *word* written
+
+	cttz	t8, t8
+	andnot	a0, 7, a0
+        addq    a0, t8, v0
 	ret
 
-	END(htonl)
+	END(__stpcpy)
 
-weak_alias(htonl, ntohl)
+weak_alias (__stpcpy, stpcpy)

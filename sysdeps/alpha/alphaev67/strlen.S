@@ -1,4 +1,7 @@
-/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
+   Contributed by David Mosberger (davidm@cs.arizona.edu).
+   EV67 optimized by Rick Gorton <rick.gorton@alpha-processor.com>.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,29 +19,43 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* Finds length of a 0-terminated string.  */
+
 #include <sysdep.h>
 
-ENTRY(htonl)
+	.arch ev6
+	.set noreorder
+	.set noat
+
+ENTRY(strlen)
 #ifdef PROF
 	ldgp	gp, 0(pv)
-	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
-	.set at
 	.prologue 1
 #else
 	.prologue 0
 #endif
 
-	inslh	a0, 7, t0	# t0 = 0000000000AABBCC
-	inswl	a0, 3, t1	# t1 = 000000CCDD000000
-	or	t1, t0, t1	# t1 = 000000CCDDAABBCC
-	sll	t1, 16, t2	# t2 = 0000000000CCDDAA
-	zapnot	t1, 0x0A, t0	# t0 = 00000000DD00BB00
-	zapnot	t2, 0x05, t3	# t3 = 0000000000CC00AA
-	addl	t0, t3, v0	# v0 = ssssssssDDCCBBAA
-	ret
+	ldq_u	$1, 0($16)	# L : load first quadword ($16 may be misaligned)
+	lda	$2, -1($31)	# E :
+	insqh	$2, $16, $2	# U :
+	andnot	$16, 7, $0	# E :
 
-	END(htonl)
+	or	$2, $1, $1	# E :
+	cmpbge	$31, $1, $2	# E : $2  <- bitmask: bit i == 1 <==> i-th byte == 0
+	nop			# E :
+	bne	$2, $found	# U :
 
-weak_alias(htonl, ntohl)
+$loop:	ldq	$1, 8($0)	# L :
+	addq	$0, 8, $0	# E : addr += 8
+	cmpbge	$31, $1, $2	# E :
+	beq	$2, $loop	# U :
+
+$found:
+	cttz	$2, $3		# U0 :
+	addq	$0, $3, $0	# E :
+	subq	$0, $16, $0	# E :
+	ret	$31, ($26)	# L0 :
+
+	END(strlen)

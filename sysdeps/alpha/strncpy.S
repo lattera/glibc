@@ -53,7 +53,6 @@ ENTRY(strncpy)
 	ret			# .. e1 :
 
 $multiword:
-
 	subq	t8, 1, t7	# e0    : clear the final bits in the prev
 	or	t7, t8, t7	# e1    : word
 	zapnot	t0, t7, t0	# e0    :

@@ -179,12 +179,13 @@ extern void openlog (__const char *__ident, int __option, int __facility)
 extern int setlogmask (int __mask) __THROW;
 
 /* Generate a log message using FMT string and option arguments.  */
-extern void syslog (int __pri, __const char *__fmt, ...) __THROW;
+extern void syslog (int __pri, __const char *__fmt, ...) __THROW
+     __attribute__ ((__format__(__printf__, 2, 3)));
 
 #ifdef __USE_BSD
 /* Generate a log message using FMT and using arguments pointed to by AP.  */
 extern void vsyslog (int __pri, __const char *__fmt, __gnuc_va_list __ap)
-     __THROW;
+     __THROW __attribute__ ((__format__(__printf__, 2, 0)));
 #endif
 
 __END_DECLS

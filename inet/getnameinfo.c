@@ -259,7 +259,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	    if (h)
 	      {
 		char *c;
-		if ((flags & NI_NOFQDN) == 0
+		if ((flags & NI_NOFQDN)
 		    && (c = nrl_domainname ())
 		    && (c = strstr (h->h_name, c))
 		    && (c != h->h_name) && (*(--c) == '.'))

@@ -65,7 +65,7 @@ $found:	negq    t1, t2		# clear all but least set bit
 
 	/* Now do the append.  */
 
-	jsr	t9, __stxcpy
-	ret
+	mov	ra, t9
+	jmp	$31, __stxcpy
 
 	END(strcat)
