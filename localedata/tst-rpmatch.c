@@ -1,6 +1,7 @@
-/* Low-level statistical profiling support function.  Linux/i386 version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Test program for
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Jochen Hein <jochen.hein@delphi.central.de>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,10 +18,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <signal.h>
+#include <locale.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-static void
-profil_counter (int signo, struct sigcontext sc)
+int
+main (int argc, char* argv[])
 {
-  profil_count ((void *) sc.eip);
+  setlocale (LC_ALL, argv[1]);
+
+  if (rpmatch (argv[2]) != atol (argv[3]))
+    {
+      fprintf (stderr,"Failed: Locale %s, String %s, Exp: %s, got %d\n",
+	       argv[1], argv[2], argv[3], rpmatch (argv[2]));
+      exit (EXIT_FAILURE);
+    }
+  exit (EXIT_SUCCESS);
 }

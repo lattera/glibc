@@ -1,3 +1,8 @@
+1998-03-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/ru_RU: Correct inconsistencies in mon data.
+	Patch by Alexander V. Lukyanov <lav@alpha.netis.ru>.
+
 1997-10-09 04:56  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/is_IS: Update from Debian version.

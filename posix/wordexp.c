@@ -59,7 +59,7 @@ static int parse_backtick (char **word, size_t *word_length,
 			   size_t *offset, int flags, wordexp_t *pwordexp,
 			   const char *ifs, const char *ifs_white)
      internal_function;
-static int eval_expr (char *expr, int *result) internal_function;
+static int eval_expr (char *expr, long int *result) internal_function;
 
 /* The w_*() functions manipulate word lists. */
 
@@ -93,16 +93,12 @@ w_addchar (char *buffer, size_t *actlen, size_t *maxlen, char ch)
 }
 
 static char *
-w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
-     /* (lengths exclude trailing zero) */
+internal_function
+w_addmem (char *buffer, size_t *actlen, size_t *maxlen, const char *str,
+	  size_t len)
 {
   /* Add a string to the buffer, allocating room for it if needed.
    */
-  size_t len;
-
-  assert (str != NULL); /* w_addstr only called from this file */
-  len = strlen (str);
-
   if (*actlen + len > *maxlen)
     {
       char *old_buffer = buffer;
@@ -123,7 +119,24 @@ w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
   return buffer;
 }
 
+
+static char *
+internal_function
+w_addstr (char *buffer, size_t *actlen, size_t *maxlen, const char *str)
+     /* (lengths exclude trailing zero) */
+{
+  /* Add a string to the buffer, allocating room for it if needed.
+   */
+  size_t len;
+
+  assert (str != NULL); /* w_addstr only called from this file */
+  len = strlen (str);
+
+  return w_addmem (buffer, actlen, maxlen, str, len);
+}
+
 static int
+internal_function
 w_addword (wordexp_t *pwordexp, char *word)
 {
   /* Add a word to the wordlist */
@@ -229,8 +242,8 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
     {
       if (!((*word)[*word_length - 1] == '=' && wordc == 0))
 	{
-	  if (!((*word)[*word_length - 1] == ':' &&
-		strchr (*word, '=') && wordc == 0))
+	  if (!((*word)[*word_length - 1] == ':'
+		&& strchr (*word, '=') && wordc == 0))
 	    {
 	      *word = w_addchar (*word, word_length, max_length, '~');
 	      return *word ? 0 : WRDE_NOSPACE;
@@ -422,6 +435,7 @@ no_space:
 }
 
 static int
+internal_function
 parse_squote (char **word, size_t *word_length, size_t *max_length,
 	      const char *words, size_t *offset)
 {
@@ -444,7 +458,7 @@ parse_squote (char **word, size_t *word_length, size_t *max_length,
 /* Functions to evaluate an arithmetic expression */
 static int
 internal_function
-eval_expr_val (char **expr, int *result)
+eval_expr_val (char **expr, long int *result)
 {
   int sgn = +1;
   char *digit;
@@ -495,12 +509,12 @@ eval_expr_val (char **expr, int *result)
 
 static int
 internal_function
-eval_expr_multdiv (char **expr, int *result)
+eval_expr_multdiv (char **expr, long int *result)
 {
-  int arg;
+  long int arg;
 
   /* Read a Value */
-  if (eval_expr_val (expr, result))
+  if (eval_expr_val (expr, result) != 0)
     return WRDE_SYNTAX;
 
   while (**expr)
@@ -510,16 +524,16 @@ eval_expr_multdiv (char **expr, int *result)
 
       if (**expr == '*')
 	{
-	  (*expr)++;
-	  if ((eval_expr_val (expr, &arg)) != 0)
+	  ++(*expr);
+	  if (eval_expr_val (expr, &arg) != 0)
 	    return WRDE_SYNTAX;
 
 	  *result *= arg;
 	}
       else if (**expr == '/')
 	{
-	  (*expr)++;
-	  if ((eval_expr_val (expr, &arg)) != 0)
+	  ++(*expr);
+	  if (eval_expr_val (expr, &arg) != 0)
 	    return WRDE_SYNTAX;
 
 	  *result /= arg;
@@ -532,12 +546,12 @@ eval_expr_multdiv (char **expr, int *result)
 
 static int
 internal_function
-eval_expr (char *expr, int *result)
+eval_expr (char *expr, long int *result)
 {
-  int arg;
+  long int arg;
 
   /* Read a Multdiv */
-  if ((eval_expr_multdiv (&expr, result)) != 0)
+  if (eval_expr_multdiv (&expr, result) != 0)
     return WRDE_SYNTAX;
 
   while (*expr)
@@ -547,16 +561,16 @@ eval_expr (char *expr, int *result)
 
       if (*expr == '+')
 	{
-	  expr++;
-	  if ((eval_expr_multdiv (&expr, &arg)) != 0)
+	  ++expr;
+	  if (eval_expr_multdiv (&expr, &arg) != 0)
 	    return WRDE_SYNTAX;
 
 	  *result += arg;
 	}
       else if (*expr == '-')
 	{
-	  expr++;
-	  if ((eval_expr_multdiv (&expr, &arg)) != 0)
+	  ++expr;
+	  if (eval_expr_multdiv (&expr, &arg) != 0)
 	    return WRDE_SYNTAX;
 
 	  *result -= arg;
@@ -628,7 +642,8 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	  if (--paren_depth == 0)
 	    {
 	      char result[21];	/* 21 = ceil(log10(2^64)) + 1 */
-	      int numresult = 0;
+	      long int numresult = 0;
+	      long long int convertme;
 
 	      if (bracket || words[1 + *offset] != ')')
 		return WRDE_SYNTAX;
@@ -636,13 +651,25 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	      ++(*offset);
 
 	      /* Go - evaluate. */
-	      if (*expr &&
-		  eval_expr (expr, &numresult) != 0)
+	      if (*expr && eval_expr (expr, &numresult) != 0)
 		return WRDE_SYNTAX;
+
+	      if (numresult < 0)
+		{
+		  convertme = -numresult;
+		  *word = w_addchar (*word, word_length, max_length, '-');
+		  if (!*word)
+		    {
+		      free (expr);
+		      return WRDE_NOSPACE;
+		    }
+		}
+	      else
+		convertme = numresult;
 
 	      result[20] = '\0';
 	      *word = w_addstr (*word, word_length, max_length,
-				_itoa_word (numresult, &result[20], 10, 0));
+				_itoa (convertme, &result[20], 10, 0));
 	      free (expr);
 	      return *word ? 0 : WRDE_NOSPACE;
 	    }
@@ -656,7 +683,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 	  if (bracket && paren_depth == 1)
 	    {
 	      char result[21];	/* 21 = ceil(log10(2^64)) + 1 */
-	      int numresult = 0;
+	      long int numresult = 0;
 
 	      /* Go - evaluate. */
 	      if (*expr && eval_expr (expr, &numresult) != 0)
@@ -758,14 +785,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		break;
 	    }
 
-	  for (i = 0; i < buflen; ++i)
+	  *word = w_addmem (*word, word_length, max_length, buffer, buflen);
+	  if (*word == NULL)
 	    {
-	      *word = w_addchar (*word, word_length, max_length, buffer[i]);
-	      if (*word == NULL)
-		{
-		  close (fildes[0]);
-		  return WRDE_NOSPACE;
-		}
+	      close (fildes[0]);
+	      return WRDE_NOSPACE;
 	    }
 	}
 
@@ -874,6 +898,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 }
 
 static int
+internal_function
 parse_comm (char **word, size_t *word_length, size_t *max_length,
 	    const char *words, size_t *offset, int flags, wordexp_t *pwordexp,
 	    const char *ifs, const char *ifs_white)
@@ -949,6 +974,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   enum remove_pattern_enum remove = RP_NONE;
   int colon_seen = 0;
   int depth = 0;
+  int substitute_length = 0;
   int error;
 
   for (; words[*offset]; ++(*offset))
@@ -997,11 +1023,7 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	  goto envsubst;
 
 	case '#':
-	  /* At the start?  (ie. 'string length') */
-	  if (*offset == start + 1)
-	    /* FIXME: This isn't written yet! */
-	    break;
-
+	  /* '#' only has special meaning inside braces */
 	  if (words[start] != '{')
 	    {
 	      /* Evaluate */
@@ -1010,8 +1032,16 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      goto envsubst;
 	    }
 
-	  /* Separating variable name from prefix pattern? */
+	  /* At the start? (i.e. 'string length') */
+	  if (*offset == start + 1)
+	    {
+	      substitute_length = 1;
+	      break;
+	    }
+	  else if (substitute_length)
+	    goto syntax;
 
+	  /* Separating variable name from prefix pattern? */
 	  if (remove == RP_NONE)
 	    {
 	      remove = RP_SHORT_LEFT;
@@ -1069,8 +1099,8 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	      break;
 	    }
 
-	  if ((words[1 + *offset] == '-') || (words[1 + *offset] == '=') ||
-	      (words[1 + *offset] == '?') || (words[1 + *offset] == '+'))
+	  if ((words[1 + *offset] == '-') || (words[1 + *offset] == '=')
+	      || (words[1 + *offset] == '?') || (words[1 + *offset] == '+'))
 	    {
 	      colon_seen = 1;
 	      break;
@@ -1083,6 +1113,9 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
 	case '?':
 	case '+':
 	  if (!*env)
+	    goto syntax;
+
+	  if (substitute_length)
 	    goto syntax;
 
 	  if (action != '\0' || remove != RP_NONE)
@@ -1184,7 +1217,7 @@ envsubst:
 	    switch (remove)
 	      {
 	      case RP_SHORT_LEFT:
-		for (p = value; p <= end; p++)
+		for (p = value; p <= end; ++p)
 		  {
 		    c = *p;
 		    *p = '\0';
@@ -1200,7 +1233,7 @@ envsubst:
 		break;
 
 	      case RP_LONG_LEFT:
-		for (p = end; p >= value; p--)
+		for (p = end; p >= value; --p)
 		  {
 		    c = *p;
 		    *p = '\0';
@@ -1216,7 +1249,7 @@ envsubst:
 		break;
 
 	      case RP_SHORT_RIGHT:
-		for (p = end; p >= value; p--)
+		for (p = end; p >= value; --p)
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
 		      {
@@ -1228,7 +1261,7 @@ envsubst:
 		break;
 
 	      case RP_LONG_RIGHT:
-		for (p = value; p <= end; p++)
+		for (p = value; p <= end; ++p)
 		  {
 		    if (fnmatch (pattern, p, 0) != FNM_NOMATCH)
 		      {
@@ -1248,6 +1281,7 @@ envsubst:
 
 	case '?':
 	  if (value && *value)
+	    /* Substitute parameter */
 	    break;
 
 	  if (!colon_seen && value)
@@ -1292,8 +1326,94 @@ envsubst:
 	  free (pattern);
 	  return WRDE_BADVAL;
 
+	case '-':
+	  if (value && *value)
+	    /* Substitute parameter */
+	    break;
+
+	  if (!colon_seen && value)
+	    {
+	      /* Substitute NULL */
+	      free (env);
+	      free (pattern);
+	      return 0;
+	    }
+
+	subst_word:
+	  {
+	    /* Substitute word */
+	    wordexp_t we;
+	    char *expand_me = pattern;
+	    int i;
+
+	    if (pwordexp == NULL)
+	      {
+		/* No field-splitting is allowed, so imagine
+		   quotes around the word.  */
+		expand_me = alloca (strlen (pattern) + 2);
+		sprintf (expand_me, "\"%s\"", pattern);
+	      }
+
+	    error = wordexp (expand_me, &we, flags);
+	    if (error)
+	      {
+		free (env);
+		free (pattern);
+		return error;
+	      }
+
+	    /* Fingers crossed that the quotes worked.. */
+	    assert (pwordexp || we.we_wordc == 1);
+
+	    /* Substitute */
+	    for (i = 0; i < we.we_wordc; i++)
+	      if (w_addword (pwordexp, __strdup(we.we_wordv[i]))
+		  == WRDE_NOSPACE)
+		break;
+
+	    if (action == '=')
+	      /* Also assign */
+	      setenv (env, we.we_wordv[0], 1); /* need to strdup? */
+
+	    wordfree (&we);
+
+	    if (i < we.we_wordc)
+	      /* Ran out of space */
+	      goto no_space;
+
+	    return 0;
+	  }
+
+	case '+':
+	  if (value && *value)
+	    goto subst_word;
+
+	  if (!colon_seen && value)
+	    goto subst_word;
+
+	  /* Substitute NULL */
+	  free (env);
+	  free (pattern);
+	  return 0;
+
+	case '=':
+	  if (value && *value)
+	    /* Substitute parameter */
+	    break;
+
+	  if (!colon_seen && value)
+	    {
+	      /* Substitute NULL */
+	      free (env);
+	      free (pattern);
+	      return 0;
+	    }
+
+	  /* This checks for '=' so it knows to assign */
+	  goto subst_word;
+
 	default:
-	  printf ("warning: parameter substitution does not yet support \"%s%c\"\n", colon_seen?":":"", action);
+	  assert (! "Unrecognised action!");
 	}
     }
 
@@ -1309,9 +1429,22 @@ envsubst:
       return 0;
     }
 
+  if (substitute_length)
+    {
+      char param_length[21];
+      param_length[20] = '\0';
+      *word = w_addstr (*word, word_length, max_length,
+			_itoa_word (strlen (value), &param_length[20], 10, 0));
+      return *word ? 0 : WRDE_NOSPACE;
+    }
+
+
   if (pwordexp == NULL)
-    /* Quoted - no field split */
-    *word = w_addstr (*word, word_length, max_length, value);
+    {
+      /* Quoted - no field split */
+      *word = w_addstr (*word, word_length, max_length, value);
+      return *word ? 0 : WRDE_NOSPACE;
+    }
   else
     {
       /* Need to field-split */
@@ -1331,7 +1464,7 @@ envsubst:
 
 	  if (!seen_nonws_ifs && *field_begin == 0)
 	    /* Nothing but whitespace */
-	    return 0;
+	    break;
 
 	  /* Search for the end of the field */
 	  field_end = field_begin;
@@ -1358,22 +1491,23 @@ envsubst:
 	  *field_end = 0;
 	  field = __strdup (field_begin);
 	  if (field == NULL)
-	    goto no_space;
+	    return WRDE_NOSPACE;
 
 	  /* Tag the field onto the word list */
 	  if (w_addword (pwordexp, field) == WRDE_NOSPACE)
-	    return WRDE_NOSPACE;
+	    {
+	      free (field);
+	      return WRDE_NOSPACE;
+	    }
 
 	  *word = NULL;
 	  *word_length = *max_length = 0;
 
 	  field_begin = next_field;
 	} while (seen_nonws_ifs || (field_begin && *field_begin));
-
-      return 0;
     }
 
-  return *word ? 0 : WRDE_NOSPACE;
+  return 0;
 
 no_space:
   if (env)
@@ -1658,7 +1792,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 		*whch++ = *ifsch;
 	    }
 
-	  ifsch++;
+	  ++ifsch;
 	}
       *whch = '\0';
     }

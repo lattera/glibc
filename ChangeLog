@@ -1,3 +1,46 @@
+1998-03-08 14:58  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (nisobjdir): Set to path to nis directory.
+	(rpath-link): Add nisobjdir.
+	Patch by Sven Verdoolaege <skimo@kotnet.org>.
+
+	* elf/Makefile: Pretty print.
+	* elf/dl-lookup.c: Include unistd.h.
+	* elf/dl-runtime.c: Likewise.
+
+	* localedata/Makefile (test-srcs): Add tst-rpmatch.
+	(distribute): Add tst-rpmatch.sh.
+	(tests): Add tst-rpmatch to dependency list and run tst-rpmatch.sh.
+
+	New tests for rpmatch function by
+	Jochen Hein <jochen.hein@delphi.central.de>.
+	* localedata/tst-rpmatch.c: New file.
+	* localedata/tst-rpmatch.sh: New file.
+
+	* localedata/locales/de_DE: Correct yesexpr and noexpr.
+	* localedata/locales/de_AT: Likewise.
+
+	* posix/getopt.c: Update contact address.
+	* posix/getopt1.c: Pretty print.
+
+	* sysdeps/generic/libc-start.c: Do most of the initialization now
+	here instead of in start.S.
+	* sysdeps/unix/sysv/linux/libc-start.c: Likewise.
+	* sysdeps/i386/elf/start.S: Remove most of the initialization code.
+
+	* sysdeps/unix/sysv/linux/i386/profil-counter.h: No need for
+	profil_counter to be public.
+
+1998-03-08 13:06  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (parse_arith): Now works for negative numbers too.
+	(parse_param): Coded parameter length expansion (${#var}).
+	(parse_param): Handling for "=", "+", "-", and the ":" versions added.
+	(parse_param): Cleaned up (fixed) error handling.
+
+	* posix/wordexp-test.c: IFS now includes non-whitespace character
+	(comma).  Added more tests.
+
 1998-03-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/link.h: Fix typos.

@@ -30,7 +30,7 @@ charmaps := $(filter-out $(addprefix charmaps/, CVS RCS %~), \
 locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 				    $(wildcard locales/*))
 
-test-srcs := collate-test xfrm-test tst-fmon
+test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
 test-output := $(foreach s, .out .xout, \
 			 $(addsuffix $s, $(basename $(test-input))))
@@ -43,7 +43,7 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 
 distribute := CHECKSUMS tst-fmon.sh tst-fmon.data ChangeLog sort-test.sh \
 	      README mnemonic.ds fr_CA,2.13.in de_DE.in da_DK.in	 \
-	      $(charmaps) $(locales) $(ld-test-srcs)
+	      $(charmaps) $(locales) $(ld-test-srcs) tst-rpmatch.sh
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -59,8 +59,10 @@ $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon
+tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon \
+       $(objpfx)tst-rpmatch
 	$(SHELL) -e sort-test.sh $(common-objpfx) $(test-input)
 	$(SHELL) -e tst-fmon.sh $(common-objpfx) tst-fmon.data
 	$(SHELL) -e tst-locale.sh $(common-objpfx)
+	$(SHELL) -e tst-rpmatch.sh $(common-objpfx)
 endif

@@ -21,6 +21,8 @@
 #include <stdlib.h>
 #include <wordexp.h>
 
+#define IFS ", \n\t"
+
 struct test_case_struct
 {
   int retval;
@@ -31,12 +33,57 @@ struct test_case_struct
   const char *wordv[10];
 } test_case[] =
   {
+    /* Simple word-splitting */
     { 0, NULL, "one", 0, 1, { "one", } },
     { 0, NULL, "one two", 0, 2, { "one", "two", } },
     { 0, NULL, "one two three", 0, 3, { "one", "two", "three", } },
+
+    /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", } },
     { 0, "foo", "$var", 0, 1, { "foo", } },
+
+    /* Simple quote removal */
     { 0, NULL, "\"quoted\"", 0, 1, { "quoted", } },
+    { 0, "foo", "\"$var\"\"$var\"", 0, 1, { "foofoo", } },
+    { 0, NULL, "'singly-quoted'", 0, 1, { "singly-quoted", } },
+
+    /* Simple command substitution */
+    { 0, NULL, "$(echo hello)", 0, 1, { "hello", } },
+    { 0, NULL, "$( (echo hello) )", 0, 1, { "hello", } },
+
+    /* Simple arithmetic expansion */
+    { 0, NULL, "$((1 + 1))", 0, 1, { "2", } },
+    { 0, NULL, "$((2-3))", 0, 1, { "-1", } },
+    { 0, NULL, "$((-1))", 0, 1, { "-1", } },
+
+    /* Field splitting */
+    { 0, NULL, " \tfoo\t\tbar ", 0, 2, { "foo", "bar", } },
+    { 0, NULL, "  red  , white blue", 0, 3, { "red", "white", "blue", } },
+
+    /* Advanced parameter expansion */
+    { 0, NULL, "${var:-bar}", 0, 1, { "bar", } },
+    { 0, NULL, "${var-bar}", 0, 1, { "bar", } },
+    { 0, "", "${var:-bar}", 0, 1, { "bar", } },
+    { 0, "foo", "${var:-bar}", 0, 1, { "foo", } },
+    { 0, "", "${var-bar}", 0, 0, { NULL, } },
+    { 0, NULL, "${var:=bar}", 0, 1, { "bar", } },
+    { 0, NULL, "${var=bar}", 0, 1, { "bar", } },
+    { 0, "", "${var:=bar}", 0, 1, { "bar", } },
+    { 0, "foo", "${var:=bar}", 0, 1, { "foo", } },
+    { 0, "", "${var=bar}", 0, 0, { NULL, } },
+    { 0, "foo", "${var:?bar}", 0, 1, { "foo", } },
+    { 0, NULL, "${var:+bar}", 0, 0, { NULL, } },
+    { 0, NULL, "${var+bar}", 0, 0, { NULL, } },
+    { 0, "", "${var:+bar}", 0, 0, { NULL, } },
+    { 0, "foo", "${var:+bar}", 0, 1, { "bar", } },
+    { 0, "", "${var+bar}", 0, 1, { "bar", } },
+    { 0, "12345", "${#var}", 0, 1, { "5", } },
+
+    { 0, "banana", "${var%na*}", 0, 1, { "bana", } },
+    { 0, "banana", "${var%%na*}", 0, 1, { "ba", } },
+    { 0, "borabora-island", "${var#*bora}", 0, 1, { "bora-island", } },
+    { 0, "borabora-island", "${var##*bora}", 0, 1, {"-island", } },
+
     { -1, NULL, NULL, 0, 0, { NULL, } },
   };
 
@@ -49,7 +96,7 @@ main (int argc, char * argv[])
   int test;
   int fail = 0;
 
-  setenv ("IFS", " \t\n", 1);
+  setenv ("IFS", IFS, 1);
   for (test = 0; test_case[test].retval != -1; test++)
     if (testit (&test_case[test]))
       ++fail;

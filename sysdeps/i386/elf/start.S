@@ -43,57 +43,32 @@ _start:
 	   the outermost frame obviously.  */
 	xorl %ebp, %ebp
 
-	/* %edx contains the address of the shared library termination
-	   function, which we will register with `atexit' to be called by
-	   `exit'.  I suspect that on some systems, and when statically
-	   linked, this will not be set by anything to any function
-	   pointer; hopefully it will be zero so we don't try to call
-	   random pointers.  */
-	testl %edx,%edx
-	jz .Lnofini
-	pushl %edx
-	call atexit
-	popl %eax		/* Pop value to unused register to remove
-				   argument from stack.  */
-.Lnofini:
-
-	/* Do essential libc initialization.  In statically linked
-	   programs under the GNU Hurd, this is what sets up the
-	   arguments on the stack for the code below.  */
-	call __libc_init_first
-
-	/* Extract the arguments and environment as encoded on the stack
-	   and set up the arguments for `main': argc, argv, envp.  */
+	/* Extract the arguments as encoded on the stack and set up
+	   the arguments for `main': argc, argv.  envp will be determined
+	   later in __libc_start_main.  */
 	popl %esi		/* Pop the argument count.  */
-	leal 4(%esp,%esi,4), %eax /* envp = &argv[argc + 1] */
-	movl %eax, _environ	/* Store it in the global variable.  */
-	movl %esp, %edx		/* argv starts just at the current stack top.*/
+	movl %esp, %ecx		/* argv starts just at the current stack top.*/
 
 	/* Before pushing the arguments align the stack to a double word
 	   boundary to avoid penalties from misaligned accesses.  Thanks
 	   to Edward Seidl <seidl@janed.com> for pointing this out.  */
 	andl $0xfffffff8, %esp
-	pushl %eax		/* Push garbage because we allocate
-				   twelve more bytes.  */
+	pushl %edx		/* Push address of the shared library
+				   termination function.  */
 
-	pushl %eax		/* Push third argument: envp.  */
-	pushl %edx		/* Push second argument: argv.  */
+	/* Push address of our own entry points to .fini and .init.  */
+	pushl $_fini
+	pushl $_init
+
+	pushl %ecx		/* Push second argument: argv.  */
 	pushl %esi		/* Push first argument: argc.  */
 
-	/* Call `_init', which is the entry point to our own `.init'
-	   section; and register with `atexit' to have `exit' call
-	   `_fini', which is the entry point to our own `.fini' section.  */
-	call _init
-	pushl $_fini
-	call atexit
-	popl %eax
+	pushl $main
 
 	/* Call the user's main function, and exit with its value.
 	   But let the libc call main.    */
-	movl $main, %eax
-	pushl %eax
 	call __libc_start_main
-	call exit
+
 	hlt			/* Crash if somehow `exit' does return.  */
 
 /* To fulfill the System V/i386 ABI we need this symbol.  Yuck, it's so

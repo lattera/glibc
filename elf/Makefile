@@ -1,5 +1,3 @@
-# Makefile for elf subdirectory of GNU C Library.
-
 # Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -17,6 +15,8 @@
 # License along with the GNU C Library; see the file COPYING.LIB.  If not,
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
+# Makefile for elf subdirectory of GNU C Library.
 
 subdir		:= elf
 

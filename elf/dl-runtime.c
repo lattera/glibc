@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <link.h>
-#include <stddef.h>
+#include <unistd.h>
 
 
 /* The global scope we will use for symbol lookups.

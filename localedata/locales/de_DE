@@ -2138,8 +2138,8 @@ copy "en_DK"
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<<(><j><J><y><Y><)/>><.><*>"
-noexpr  "<<(><n><N><)/>><.><*>"
+yesexpr "<'/>><<(><j><J><y><Y><)/>><.><*>"
+noexpr  "<'/>><<(><n><N><)/>><.><*>"
 END LC_MESSAGES
 
 LC_MONETARY
