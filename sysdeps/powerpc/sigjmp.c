@@ -37,10 +37,4 @@ __vmx__sigjmp_save (sigjmp_buf env, int savemask)
   return 0;
 }
 
-#if defined NOT_IN_libc
-/* Build a non-versioned object for rtld-*.  */
 strong_alias (__vmx__sigjmp_save,__sigjmp_save)
-#else
-/* Build a versioned object for libc.  */
-default_symbol_version (__vmx__sigjmp_save,__sigjmp_save,GLIBC_2.3.4);
-#endif

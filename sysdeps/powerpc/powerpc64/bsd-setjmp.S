@@ -23,33 +23,21 @@
 
 #if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)
 
-/* We need 2 copies of identical code for the setjmp's as gas complains
-   erroneously about having multiple versions of setjmp.  This eliminates the
-   need for the strong alias of __setjmp to setjmp which
-   does not support versioning, i.e. another gas unimplemented feature. */
-symbol_version (__novmx__setjmp,__setjmp,GLIBC_2.3)
-symbol_version (__novmxsetjmp,setjmp,GLIBC_2.3)
 
-ENTRY (BP_SYM (__novmxsetjmp))
+ENTRY (__novmxsetjmp)
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (BP_SYM (__novmx__sigsetjmp))
-END (BP_SYM (__novmxsetjmp))
+	b JUMPTARGET (__novmx__sigsetjmp)
+END (__novmxsetjmp)
+strong_alias (__novmxsetjmp, __novmx__setjmp)
+symbol_version (__novmxsetjmp, setjmp, GLIBC_2.3)
 
-ENTRY (BP_SYM (__novmx__setjmp))
-	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (BP_SYM (__novmx__sigsetjmp))
-END (BP_SYM (__novmx__setjmp))
 #endif  /*  defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4) */
 
-default_symbol_version (__vmx__setjmp,__setjmp,GLIBC_2.3.4)
-default_symbol_version (__vmxsetjmp,setjmp,GLIBC_2.3.4)
 
-ENTRY (BP_SYM (__vmxsetjmp))
+ENTRY (__vmxsetjmp)
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (BP_SYM (__vmx__sigsetjmp))
-END (BP_SYM (__vmxsetjmp))
-
-ENTRY (BP_SYM (__vmx__setjmp))
-	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET (BP_SYM (__vmx__sigsetjmp))
-END (BP_SYM (__vmx__setjmp))
+	b JUMPTARGET (__vmx__sigsetjmp)
+END (__vmxsetjmp)
+strong_alias (__vmxsetjmp, __vmx__setjmp)
+strong_alias (__vmx__sigsetjmp, __setjmp)
+default_symbol_version (__vmxsetjmp, setjmp, GLIBC_2.3.4)

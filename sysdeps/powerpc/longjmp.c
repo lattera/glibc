@@ -55,8 +55,8 @@ weak_alias (__vmx__libc_siglongjmp, __vmxlongjmp)
 weak_alias (__vmx__libc_siglongjmp, __vmxsiglongjmp)
 
 
-default_symbol_version (__vmx__libc_longjmp, __libc_longjmp, GLIBC_2.3.4);
-default_symbol_version (__vmx__libc_siglongjmp, __libc_siglongjmp, GLIBC_2.3.4);
+default_symbol_version (__vmx__libc_longjmp, __libc_longjmp, GLIBC_PRIVATE);
+default_symbol_version (__vmx__libc_siglongjmp, __libc_siglongjmp, GLIBC_PRIVATE);
 default_symbol_version (__vmx_longjmp, _longjmp, GLIBC_2.3.4);
 default_symbol_version (__vmxlongjmp, longjmp, GLIBC_2.3.4);
 default_symbol_version (__vmxsiglongjmp, siglongjmp, GLIBC_2.3.4);

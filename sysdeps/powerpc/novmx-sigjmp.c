@@ -41,10 +41,5 @@ __novmx__sigjmp_save (__novmx__sigjmp_buf env, int savemask)
   return 0;
 }
 
-#  if __WORDSIZE == 64
-symbol_version (__novmx__sigjmp_save,__sigjmp_save,GLIBC_2.3);
-#  else
-symbol_version (__novmx__sigjmp_save,__sigjmp_save,GLIBC_2.0);
-#  endif /* __WORDSIZE == 64  */
 # endif /* SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4) */
 #endif /* !NOT_IN_libc && SHARED  */

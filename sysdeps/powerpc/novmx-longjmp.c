@@ -53,14 +53,10 @@ weak_alias (__novmx__libc_siglongjmp, __novmxlongjmp)
 weak_alias (__novmx__libc_siglongjmp, __novmxsiglongjmp)
 
 # if __WORDSIZE == 64
-symbol_version (__novmx__libc_longjmp,__libc_longjmp,GLIBC_2.3);
-symbol_version (__novmx__libc_siglongjmp,__libc_siglongjmp,GLIBC_2.3);
 symbol_version (__novmx_longjmp,_longjmp,GLIBC_2.3);
 symbol_version (__novmxlongjmp,longjmp,GLIBC_2.3);
 symbol_version (__novmxsiglongjmp,siglongjmp,GLIBC_2.3);
 # else
-symbol_version (__novmx__libc_longjmp,__libc_longjmp,GLIBC_2.0);
-symbol_version (__novmx__libc_siglongjmp,__libc_siglongjmp,GLIBC_2.0);
 symbol_version (__novmx_longjmp,_longjmp,GLIBC_2.0);
 symbol_version (__novmxlongjmp,longjmp,GLIBC_2.0);
 symbol_version (__novmxsiglongjmp,siglongjmp,GLIBC_2.0);
