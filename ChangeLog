@@ -1,3 +1,9 @@
+1999-08-04  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/getsysstats.c (GET_NPROCS_PARSER):
+	Initialize result to one.
+	(GET_NPROCS_CONF_PARSER): Likewise.
+
 1999-08-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/ether_hton.c: Pass errno pointer to NSS function.

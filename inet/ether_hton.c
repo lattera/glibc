@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <netinet/ether.h>
 #include <netinet/if_ether.h>
 #include <string.h>
@@ -34,7 +35,8 @@ struct etherent
 
 
 /* Type of the lookup function we need here.  */
-typedef int (*lookup_function) (const char *, struct etherent *, char *, int);
+typedef int (*lookup_function) (const char *, struct etherent *, char *, int,
+				int *);
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_ethers_lookup (service_user **nip, const char *name,

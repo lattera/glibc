@@ -195,7 +195,7 @@ __internal_getnetgrent_r (char **hostp, char **userp, char **domainp,
 			  struct __netgrent *datap,
 			  char *buffer, size_t buflen, int *errnop)
 {
-  enum nss_status (*fct) (struct __netgrent *, char *, size_t);
+  enum nss_status (*fct) (struct __netgrent *, char *, size_t, int *);
   int no_more;
 
   /* Initialize status to return if no more functions are found.  */

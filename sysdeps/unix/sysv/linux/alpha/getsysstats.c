@@ -20,35 +20,35 @@
 
 
 /* We need to define a special parser for /proc/cpuinfo.  */
-#define GET_NPROCS_PARSER(FP, BUFFER, RESULT)				  \
-  do									  \
-    {									  \
-      (RESULT) = 0;							  \
-      /* Find the line that contains the information about the number of  \
-	 active cpus.  We don't have to fear extremely long lines since	  \
-	 the kernel will not generate them.  8192 bytes are really	  \
-	 enough.  */							  \
-      while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	  \
-	if (sscanf (BUFFER, "CPUs probed %*d active %d", &(RESULT)) == 1) \
-	  break;							  \
-    }									  \
+#define GET_NPROCS_PARSER(FP, BUFFER, RESULT)				   \
+  do									   \
+    {									   \
+      /* Find the line that contains the information about the number of   \
+	 active cpus.  We don't have to fear extremely long lines since	   \
+	 the kernel will not generate them.  8192 bytes are really enough. \
+	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
+      (RESULT) = 1;							   \
+      while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	   \
+	if (sscanf (BUFFER, "CPUs probed %*d active %d", &(RESULT)) == 1)  \
+	  break;							   \
+    }									   \
   while (0)
 
 
 /* On the Alpha we can distinguish between the number of configured and
    active cpus.  */
-#define GET_NPROCS_CONF_PARSER(FP, BUFFER, RESULT)			 \
-  do									 \
-    {									 \
-      (RESULT) = 0;							 \
-      /* Find the line that contains the information about the number of \
-	 probed cpus.  We don't have to fear extremely long lines since	 \
-	 the kernel will not generate them.  8192 bytes are really	 \
-	 enough.  */							 \
-      while (fgets_unlocked ((BUFFER), sizeof (BUFFER), (FP)) != NULL)	 \
-	if (sscanf (buffer, "CPUs probed %d", &(RESULT)) == 1)		 \
-	  break;							 \
-    }									 \
+#define GET_NPROCS_CONF_PARSER(FP, BUFFER, RESULT)			   \
+  do									   \
+    {									   \
+      /* Find the line that contains the information about the number of   \
+	 probed cpus.  We don't have to fear extremely long lines since	   \
+	 the kernel will not generate them.  8192 bytes are really enough. \
+	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
+      (RESULT) = 1;							   \
+      while (fgets_unlocked ((BUFFER), sizeof (BUFFER), (FP)) != NULL)	   \
+	if (sscanf (buffer, "CPUs probed %d", &(RESULT)) == 1)		   \
+	  break;							   \
+    }									   \
   while (0)
 
 #include <sysdeps/unix/sysv/linux/getsysstats.c>
