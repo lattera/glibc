@@ -1,5 +1,7 @@
 2004-09-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconv_prog.c (main): Print progress information to stderr.
+
 	* nscd/nscd.c (termination_handler): Reset timestamp so that
 	clients immediately stop using the database.
 

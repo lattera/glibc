@@ -283,7 +283,7 @@ conversion from `%s' and to `%s' are not supported"),
 	    int fd, ret;
 
 	    if (verbose)
-	      printf ("%s:\n", argv[remaining]);
+	      fprintf (stderr, "%s:\n", argv[remaining]);
 	    if (strcmp (argv[remaining], "-") == 0)
 	      fd = 0;
 	    else
