@@ -290,6 +290,8 @@ extern char *re_syntax_table;
 
 static char re_syntax_table[CHAR_SET_SIZE];
 
+static void init_syntax_once PARAMS ((void));
+
 static void
 init_syntax_once ()
 {
@@ -1906,7 +1908,8 @@ static reg_errcode_t compile_range _RE_ARGS ((unsigned int range_start,
 #ifndef TRANSLATE
 # ifdef MBS_SUPPORT
 #  define TRANSLATE(d) \
-  (translate && (sizeof(d) <= 1)? (char) translate[(unsigned char) (d)] : (d))
+  ((translate && ((US_CHAR_TYPE) (d)) <= 0xff) \
+   ? (char) translate[(unsigned char) (d)] : (d))
 #else
 #  define TRANSLATE(d) \
   (translate ? (char) translate[(unsigned char) (d)] : (d))
@@ -5058,9 +5061,9 @@ re_search_2 (bufp, string1, size1, string2, size2, startpos, range, regs, stop)
 	    }
 	  else				/* Searching backwards.  */
 	    {
-	      register char c = (size1 == 0 || startpos >= size1
-                                 ? string2[startpos - size1]
-                                 : string1[startpos]);
+	      register CHAR_TYPE c = (size1 == 0 || startpos >= size1
+				      ? string2[startpos - size1]
+				      : string1[startpos]);
 
 	      if (!fastmap[(unsigned char) TRANSLATE (c)])
 		goto advance;
@@ -5309,10 +5312,14 @@ weak_alias (__re_match_2, re_match_2)
 #endif
 
 #ifdef MBS_SUPPORT
+
+static int count_mbs_length PARAMS ((int *, int));
+
 /* This check the substring (from 0, to length) of the multibyte string,
    to which offset_buffer correspond. And count how many wchar_t_characters
    the substring occupy. We use offset_buffer to optimization.
    See convert_mbs_to_wcs.  */
+
 static int
 count_mbs_length(offset_buffer, length)
      int *offset_buffer;

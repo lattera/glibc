@@ -1,3 +1,12 @@
+2001-02-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex.c (init_syntax_once): Add prototype.
+	(TRANSLATE): If MBS_SUPPORT, translate all characters up to '\xff'.
+	(re_search_2): Avoid warning.
+	(count_mbs_length): Add prototype.
+	* posix/tst-regex3.c: New file.
+	* posix/Makefile (tests): Add bug-regex3.
+
 2001-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/Makefile (tests): Add tst-gets.
