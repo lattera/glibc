@@ -1,3 +1,7 @@
+2004-09-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* resolv/res_mkquery.c (res_nmkquery): Fix typo.
+
 2004-09-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unisx/sysv/linux/dl-execstack.c: Get protection flag

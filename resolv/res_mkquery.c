@@ -138,7 +138,7 @@ res_nmkquery(res_state statp,
 #else
 	    struct timeval tv;
 	    __gettimeofday (&tv, NULL);
-	    random_time_bits = (tv.tv_sec << 8) ^ tv.tv_usec;
+	    randombits = (tv.tv_sec << 8) ^ tv.tv_usec;
 #endif
 	  }
 	while (randombits == 0);
