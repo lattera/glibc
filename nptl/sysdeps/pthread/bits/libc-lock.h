@@ -534,6 +534,7 @@ weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (BP_SYM (_pthread_cleanup_push_defer))
 weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
+weak_extern (BP_SYM (pthread_setcancelstate))
 # else
 #  pragma weak __pthread_mutex_init
 #  pragma weak __pthread_mutex_destroy
@@ -557,6 +558,7 @@ weak_extern (BP_SYM (_pthread_cleanup_pop_restore))
 #  pragma weak __pthread_atfork
 #  pragma weak _pthread_cleanup_push_defer
 #  pragma weak _pthread_cleanup_pop_restore
+#  pragma weak pthread_setcancelstate
 # endif
 #endif
 

@@ -1,3 +1,8 @@
+2003-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/bits/libc-lock.h: Mark pthread_setcancelstate as
+	weak.
+
 2003-08-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Versions: New file.

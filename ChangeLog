@@ -1,3 +1,8 @@
+2003-08-31  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/Versions: Add posix_fadvise64 and
+	posix_fallocate64 at GLIBC_2.3.3.
+
 2003-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/x86_64/bsd-_setjmp.S: Use HIDDEN_JUMPTARGET.
