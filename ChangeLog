@@ -1,3 +1,13 @@
+1998-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/localedef.c: Recognize repertoire-map option.
+
+1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/linereader.c (get_toplvl_escape): Fix typo in
+	converting non-hex numbers.
+	Patch by Won Kyu Park <bird@bird.kitel.co.kr>.
+
 1998-04-23 07:31  H.J. Lu  <hjl@gnu.org>
 
 	* resolv/inet_addr.c (inet_aton): Use __strtoul_internal to

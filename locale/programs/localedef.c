@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -101,6 +101,8 @@ static const struct argp_option options[] =
   { "inputfile", 'i', "FILE", 0, N_("Source definitions are found in FILE") },
   { "code-set-name", 'u', "NAME", OPTION_HIDDEN,
     N_("Specify code set for mapping ISO 10646 elements") },
+  { "repertoire-map", 'u', NAME, 0,
+    N_("file containing mapping from symbolic names to UCS4 values") },
 
   { NULL, 0, NULL, 0, N_("Output control:") },
   { "force", 'c', NULL, 0,
