@@ -115,9 +115,19 @@ cache_add (int type, const void *key, size_t len, struct datahead *packet,
 	   uid_t owner)
 {
   if (__builtin_expect (debug_level >= 2, 0))
-    dbg_log (_("add new entry \"%s\" of type %s for %s to cache%s"),
-	     (const char *) key, serv2str[type], dbnames[table - dbs],
-	     first ? " (first)" : "");
+    {
+      const char *str;
+      char buf[INET6_ADDRSTRLEN + 1];
+      if (type == GETHOSTBYADDR || type == GETHOSTBYADDRv6)
+	str = inet_ntop (type == GETHOSTBYADDR ? AF_INET : AF_INET6,
+			 key, buf, sizeof (buf));
+      else
+	str = key;
+
+      dbg_log (_("add new entry \"%s\" of type %s for %s to cache%s"),
+	       str, serv2str[type], dbnames[table - dbs],
+	       first ? " (first)" : "");
+    }
 
   unsigned long int hash = __nis_hash (key, len) % table->head->module;
   struct hashentry *newp;
