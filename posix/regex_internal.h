@@ -98,6 +98,7 @@
 # define __btowc btowc
 # define __mempcpy mempcpy
 # define __wcrtomb wcrtomb
+# define __regfree regfree
 # define attribute_hidden
 #endif /* not _LIBC */
 
