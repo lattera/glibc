@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -110,7 +110,7 @@ print_cache (const char *cache_name)
   unsigned int i;
   struct cache_file *cache;
   const char *cache_data;
-  
+
   fd = open (cache_name, O_RDONLY);
   if (fd < 0)
     error (EXIT_FAILURE, errno, _("Can't open cache file %s\n"), cache_name);
@@ -122,7 +122,7 @@ print_cache (const char *cache_name)
       close (fd);
       return;
     }
-  
+
   cache = mmap (0, st.st_size, PROT_READ, MAP_SHARED, fd, 0);
   if (cache == MAP_FAILED)
     error (EXIT_FAILURE, errno, _("mmap of cache file failed.\n"));
@@ -135,7 +135,7 @@ print_cache (const char *cache_name)
   cache_data = (const char *) &cache->libs[cache->nlibs];
 
   printf (_("%d libs found in cache `%s'\n"), cache->nlibs, cache_name);
-  
+
   /* Print everything.  */
   for (i = 0; i < cache->nlibs; i++)
     print_entry (cache_data + cache->libs[i].key,
@@ -199,7 +199,7 @@ static
 int compare (const struct cache_entry *e1, const struct cache_entry *e2)
 {
   int res;
-  
+
   /* We need to swap entries here to get the correct sort order.  */
   res = cache_libcmp (e2->lib, e1->lib);
   if (res == 0)
@@ -237,7 +237,7 @@ save_cache (const char *cache_name)
       total_strlen += strlen (entry->lib) + strlen (entry->path) + 2;
       ++cache_entry_count;
     }
-  
+
   /* Create the on disk cache structure.  */
   /* First an array for all strings.  */
   strings = (char *)xmalloc (total_strlen + 1);
@@ -250,7 +250,7 @@ save_cache (const char *cache_name)
   /* Fill in the header.  */
   memset (file_entries, 0, sizeof (struct cache_file));
   memcpy (file_entries->magic, CACHEMAGIC, sizeof CACHEMAGIC - 1);
-  
+
   file_entries->nlibs = cache_entry_count;
 
   str_offset = 0;
@@ -301,11 +301,16 @@ save_cache (const char *cache_name)
 
   close (fd);
 
+  /* Make sure user can always read cache file */
+  if (chmod (temp_name, 0644))
+    error (EXIT_FAILURE, errno,
+	   _("Changing access rights of %s to 0644 failed"), temp_name);
+
   /* Move temporary to its final location.  */
   if (rename (temp_name, cache_name))
     error (EXIT_FAILURE, errno, _("Renaming of %s to %s failed"), temp_name,
 	   cache_name);
-  
+
   /* Free all allocated memory.  */
   free (file_entries);
   free (strings);
@@ -334,7 +339,7 @@ add_to_cache (const char *path, const char *lib, int flags)
 
   full_path = (char *) xmalloc (len);
   snprintf (full_path, len, "%s/%s", path, lib);
-  
+
   new_entry->lib = xstrdup (lib);
   new_entry->path = full_path;
   new_entry->flags = flags;

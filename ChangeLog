@@ -1,3 +1,7 @@
+2000-04-10  Thorsten Kukuk  <kukuk@suse.de>
+
+	* elf/cache.c (save_cache): Make sure /etc/ld.so.cache is mode 644.
+
 2000-04-10  Andreas Schwab  <schwab@suse.de>
 
 	* posix/globtest.sh: Skip tests that depend on unreadable
