@@ -1,3 +1,18 @@
+2004-10-02  Petter Reinholdtsen  <pere@hungry.com>
+
+	[BZ #82]
+	* locales/bn_BD: Remove duplicate LC_MESSAGES block. Correct the
+	remaining block.  Change contact info as this locale is now
+	maintained by Jamil Ahmed.  Patch from Jamil Ahmed.
+
+	* locales/bn_BD: Change category entries to look more like
+	standard references.
+
+	[BZ #26]
+	* locales/ta_IN: Correct sorting order.  Corrected day and month
+	abbrevations.  Corrected name strings for mr., mrs. and miss.
+	Patch from Thuraiappah Vaseeharan.
+
 2004-12-17  GOTO Masanori  <gotom@debian.or.jp>
 
 	* locales/te_IN: Fix language name spelling.

@@ -1,3 +1,12 @@
+2004-12-19  Andreas Jaeger  <aj@suse.de>
+
+	[BZ #560]
+	* inet/netinet/in.h: Use __interface_addr instead of __interface.
+
+	[BZ #573]
+	* sunrpc/xcrypt.c (passwd2des_internal): Make it hidden instead of
+	internal linkage.
+
 2004-12-19  Roland McGrath  <roland@frob.com>
 
 	* version.h (VERSION): 2.3.4.

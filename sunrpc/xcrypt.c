@@ -69,13 +69,15 @@ static char hexval (char) internal_function;
 
 static void hex2bin (int, char *, char *) internal_function;
 static void bin2hex (int, unsigned char *, char *) internal_function;
-static void passwd2des_internal (char *pw, char *key);
-
+void passwd2des_internal (char *pw, char *key);
+#ifdef _LIBC
+libc_hidden_proto (passwd2des_internal)
+#endif
 
 /*
  * Turn password into DES key
  */
-static void
+void
 passwd2des_internal (char *pw, char *key)
 {
   int i;
@@ -88,6 +90,7 @@ passwd2des_internal (char *pw, char *key)
 }
 
 #ifdef _LIBC
+libc_hidden_def (passwd2des_internal)
 strong_alias (passwd2des_internal, passwd2des)
 #else
 void passwd2des (char *pw, char *key)
