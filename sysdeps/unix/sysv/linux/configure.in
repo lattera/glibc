@@ -34,6 +34,33 @@ make sure that file was built correctly when installing the kernel header
 files.  To use kernel headers not from /usr/include/linux, use the
 configure option --with-headers.])
 fi
+
+# If the user gave a minimal version number test whether the available
+# kernel headers are young enough.
+if test -n "$minimum_kernel"; then
+  AC_MSG_CHECKING(for kernel header at least $minimum_kernel)
+changequote(,)dnl
+  decnum=`echo "$minimum_kernel.0.0.0" | sed 's/\([0-9]*\)\.\([0-9]*\)\.\(\([0-9]*\)\|\).*/(\1 * 65536 + \2 * 256 + \3)/'`;
+changequote([,])dnl
+  cat > conftest.$ac_ext <<EOF
+#include <linux/version.h>
+int main() {
+#if LINUX_VERSION_CODE < $decnum
+eat flaming death
+#endif
+; return 0; }
+EOF
+  if { (eval echo configure:30: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&5; }; then
+    AC_DEFINE_UNQUOTED(__LINUX_KERNEL_VERSION, $decnum)
+    AC_MSG_RESULT(ok)
+  else
+    AC_MSG_RESULT(too old!)
+    AC_MSG_ERROR([*** The available kernel headers are not at least as old as the requested
+*** compatible kernel version])
+  fi
+  rm -f conftest*
+fi
+
 if test -n "$sysheaders"; then
   CFLAGS=$OLD_CFLAGS
 fi

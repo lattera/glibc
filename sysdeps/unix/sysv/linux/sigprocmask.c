@@ -23,6 +23,9 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include "kernel-features.h"
+
+
 extern int __syscall_sigprocmask (int, const sigset_t *, sigset_t *);
 extern int __syscall_rt_sigprocmask (int, const sigset_t *, sigset_t *,
 				     size_t);
@@ -39,7 +42,10 @@ __sigprocmask (how, set, oset)
      const sigset_t *set;
      sigset_t *oset;
 {
-#ifdef __NR_rt_sigprocmask
+#if __ASSUME_REALTIME_SIGNALS > 0
+  return INLINE_SYSCALL (rt_sigprocmask, 4, how, set, oset, _NSIG / 8);
+#else
+# ifdef __NR_rt_sigprocmask
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -55,8 +61,9 @@ __sigprocmask (how, set, oset)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
-#endif
+# endif
 
   return INLINE_SYSCALL (sigprocmask, 3, how, set, oset);
+#endif
 }
 weak_alias (__sigprocmask, sigprocmask)

@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -26,7 +27,19 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include "kernel-features.h"
 
+
+#if __ASSUME_GETCWD_SYSCALL > 0
+/* Kernel 2.1.92 introduced a third way to get the current working
+   directory: a syscall.  We've got to be careful that even when
+   compiling under 2.1.92+ the libc still runs under older kernels. */
+extern int __syscall_getcwd (char *buf, unsigned long size);
+# define no_syscall_getcwd 0
+# define have_new_dcache 1
+/* This is a trick since we don't define generic_getcwd.  */
+# define generic_getcwd getcwd
+#else
 /* The "proc" filesystem provides an easy method to retrieve the value.
    For each process, the corresponding directory contains a symbolic link
    named `cwd'.  Reading the content of this link immediate gives us the
@@ -34,16 +47,17 @@
    the proc filesystem mounted.  Use the POSIX implementation in this case.  */
 static char *generic_getcwd (char *buf, size_t size) internal_function;
 
-#ifdef __NR_getcwd
+# if __NR_getcwd
 /* Kernel 2.1.92 introduced a third way to get the current working
    directory: a syscall.  We've got to be careful that even when
    compiling under 2.1.92+ the libc still runs under older kernels. */
 extern int __syscall_getcwd (char *buf, unsigned long size);
 static int no_syscall_getcwd;
 static int have_new_dcache;
-#else
-# define no_syscall_getcwd 1
+# else
+#  define no_syscall_getcwd 1
 static int have_new_dcache = 1;
+# endif
 #endif
 
 char *
@@ -80,7 +94,7 @@ __getcwd (char *buf, size_t size)
 
   save_errno = errno;
 
-#ifdef __NR_getcwd
+#if defined __NR_getcwd || __LINUX_GETCWD_SYSCALL > 0
   if (!no_syscall_getcwd)
     {
       int retval;
@@ -98,6 +112,16 @@ __getcwd (char *buf, size_t size)
 	  return buf;
 	}
 
+# if __ASSUME_GETCWD_SYSCALL
+      /* It should never happen that the `getcwd' syscall failed because
+	 the buffer is too small if we allocated the buffer outself.  */
+      assert (errno != ERANGE || buf != NULL);
+
+      if (buf == NULL)
+	free (path);
+
+      return NULL;
+# else
       if (errno == ENOSYS)
 	{
 	   no_syscall_getcwd = 1;
@@ -111,6 +135,7 @@ __getcwd (char *buf, size_t size)
 	}
 
       __set_errno (save_errno);
+# endif
     }
 #endif
 
@@ -136,14 +161,18 @@ __getcwd (char *buf, size_t size)
 	    }
 	  return buf;
 	}
+#ifndef have_new_dcache
       else
 	have_new_dcache = 0;
+#endif
     }
 
+#if __ASSUME_GETCWD_SYSCALL == 0
   /* Set to have_new_dcache only if error indicates that proc doesn't
      exist.  */
   if (errno != EACCES && errno != ENAMETOOLONG)
     have_new_dcache = 0;
+#endif
 
   /* Something went wrong.  Restore the error number and use the generic
      version.  */
@@ -165,7 +194,9 @@ __getcwd (char *buf, size_t size)
 }
 weak_alias (__getcwd, getcwd)
 
+#if __ASSUME_GETCWD_SYSCALL == 0
 /* Get the code for the generic version.  */
-#define GETCWD_RETURN_TYPE	static char * internal_function
-#define __getcwd		generic_getcwd
-#include <sysdeps/posix/getcwd.c>
+# define GETCWD_RETURN_TYPE	static char * internal_function
+# define __getcwd		generic_getcwd
+# include <sysdeps/posix/getcwd.c>
+#endif

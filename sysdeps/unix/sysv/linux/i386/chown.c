@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include <kernel-features.h>
+
 /*
   In Linux 2.1.x the chown functions have been changed.  A new function lchown
   was introduced.  The new chown now follows symlinks - the old chown and the
@@ -34,14 +36,15 @@
 
 extern int __syscall_chown (const char *__file,
 			    uid_t __owner, gid_t __group);
-#ifdef __NR_lchown
+#if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
 /* Running under Linux > 2.1.80.  */
-static int __libc_old_chown;
 
 
 int
 __real_chown (const char *file, uid_t owner, gid_t group)
 {
+# if __ASSUME_LCHOWN_SYSCALL == 0
+  static int __libc_old_chown;
   int result;
 
   if (!__libc_old_chown)
@@ -57,11 +60,14 @@ __real_chown (const char *file, uid_t owner, gid_t group)
     }
 
   return __lchown (file, owner, group);
+# else
+  return INLINE_SYSCALL (chown, 3, file, owner, group);
+# endif
 }
 #endif
 
 
-#ifndef __NR_lchown
+#if !defined __NR_lchown && __ASSUME_LCHOWN_SYSCALL == 0
 /* Compiling under older kernels.  */
 int
 __chown_is_lchown (const char *file, uid_t owner, gid_t group)

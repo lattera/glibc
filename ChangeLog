@@ -1,3 +1,34 @@
+1999-05-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* config.h.in: Add __LINUX_KERNEL_VERSION.
+	* configure.in: Recognize --enable-kernel.
+	* sysdeps/unix/sysv/linux/configure.in: Check for correct kernel
+	headers if --enable-kernel is given and set __LINUX_KERNEL_VERSION
+	appropriately.
+	* sysdeps/unix/sysv/linux/init-first.c: If minimal kernel version is
+	given perform runtime test.
+
+	* sysdeps/unix/sysv/linux/kernel-features.h: New file.
+	* sysdeps/unix/sysv/linux/getcwd.c: Elide compatibility code if
+	minimal supported kernel is known to have the feature.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigprocmask.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/testrtsig.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pwrite64.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/sysctl.c: Add __sysctl alias.
+
 1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/posix/getcwd.c (__getcwd): Fix potential memory leaks.

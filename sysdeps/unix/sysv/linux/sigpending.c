@@ -23,6 +23,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include "kernel-features.h"
+
 extern int __syscall_sigpending (sigset_t *);
 extern int __syscall_rt_sigpending (sigset_t *, size_t);
 
@@ -38,7 +40,10 @@ int
 sigpending (set)
      sigset_t *set;
 {
-#ifdef __NR_rt_pending
+#if __ASSUME_REALTIME_SIGNALS > 0
+  return INLINE_SYSCALL (rt_sigpending, 2, set, _NSIG / 8);
+#else
+# ifdef __NR_rt_pending
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -53,7 +58,8 @@ sigpending (set)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
-#endif
+# endif
 
   return INLINE_SYSCALL (sigpending, 1, set);
+#endif
 }

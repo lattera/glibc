@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,9 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef __NR_setresuid
+#include "kernel-features.h"
+
+#if defined __NR_setresuid || __ASSUME_SETRESUID_SYSCALL > 0
 
 extern int __setresuid (uid_t ruid, uid_t euid, uid_t suid);
 
@@ -38,11 +40,13 @@ seteuid (uid_t uid)
 
   /* First try the syscall.  */
   result = __setresuid (-1, uid, -1);
+# if __ASSUME_SETRESUID_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use emulation.  This may not work
        since `setreuid' also sets the saved user ID when UID is not
        equal to the real user ID, making it impossible to switch back.  */
     result = __setreuid (-1, uid);
+# endif
 
   return result;
 }

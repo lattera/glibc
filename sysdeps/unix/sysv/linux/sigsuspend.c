@@ -23,6 +23,8 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include "kernel-features.h"
+
 extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
 extern int __syscall_rt_sigsuspend (const sigset_t *, size_t);
 
@@ -38,7 +40,10 @@ int
 __sigsuspend (set)
      const sigset_t *set;
 {
-#ifdef __NR_rt_sigsuspend
+#if __ASSUME_REALTIME_SIGNALS
+  return INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
+#else
+# ifdef __NR_rt_sigsuspend
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
@@ -53,8 +58,9 @@ __sigsuspend (set)
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
     }
-#endif
+# endif
 
   return INLINE_SYSCALL (sigsuspend, 3, 0, 0, set->__val[0]);
+#endif
 }
 weak_alias (__sigsuspend, sigsuspend)

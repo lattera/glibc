@@ -1,5 +1,5 @@
 /* Read or write system information.  Linux version.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,8 +26,8 @@
 extern int __syscall__sysctl (struct __sysctl_args *args);
 
 int
-sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
-	void *newval, size_t newlen)
+__sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
+	  void *newval, size_t newlen)
 {
   struct __sysctl_args args =
   {
@@ -41,3 +41,4 @@ sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
 
   return INLINE_SYSCALL (_sysctl, 1, &args);
 }
+weak_alias (__sysctl, sysctl)

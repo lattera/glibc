@@ -133,6 +133,13 @@ AC_ARG_ENABLE(force-install,
 	      force_install=$enableval, force_install=yes)
 AC_SUBST(force_install)
 
+dnl On some platforms we allow dropping compatibility with all kernel
+dnl versions.
+AC_ARG_ENABLE(kernel,
+[  --enable-kernel=VERSION compile for copmatibility with kernel not older
+                           than VERSION],
+              minimum_kernel=$enableval)
+
 AC_CANONICAL_HOST
 
 # The way shlib-versions is used to generate soversions.mk uses a

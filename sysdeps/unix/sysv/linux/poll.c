@@ -22,13 +22,18 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
-#ifdef __NR_poll
+
+#include "kernel-features.h"
+
+#if defined __NR_poll || __ASSUME_POLL_SYSCALL > 0
 
 extern int __syscall_poll __P ((struct pollfd *fds, unsigned int nfds,
 				int timeout));
 
+# if __ASSUME_POLL_SYSCALL == 0
 static int __emulate_poll __P ((struct pollfd *fds, unsigned long int nfds,
 				int timeout)) internal_function;
+# endif
 
 /* The real implementation.  */
 int
@@ -37,6 +42,7 @@ __poll (fds, nfds, timeout)
      unsigned long int nfds;
      int timeout;
 {
+# if __ASSUME_POLL_SYSCALL == 0
   static int must_emulate;
 
   if (!must_emulate)
@@ -52,6 +58,9 @@ __poll (fds, nfds, timeout)
     }
 
   return __emulate_poll (fds, nfds, timeout);
+# else
+  return INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
+# endif
 }
 weak_alias (__poll, poll)
 
@@ -59,4 +68,7 @@ weak_alias (__poll, poll)
 # define __poll(fds, nfds, timeout) \
   static internal_function __emulate_poll (fds, nfds, timeout)
 #endif
-#include <sysdeps/unix/bsd/poll.c>
+
+#if __ASSUME_POLL_SYSCALL == 0
+# include <sysdeps/unix/bsd/poll.c>
+#endif

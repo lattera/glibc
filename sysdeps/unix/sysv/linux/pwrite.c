@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -23,13 +23,17 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#ifdef __NR_pwrite
+#include "kernel-features.h"
+
+#if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
 extern ssize_t __syscall_pwrite (int fd, const void *buf, size_t count,
 				 off_t offset_hi, off_t offset_lo);
 
+# if __ASSUME_PWRITE_SYSCALL == 0
 static ssize_t __emulate_pwrite (int fd, const void *buf, size_t count,
 				 off_t offset) internal_function;
+# endif
 
 
 ssize_t
@@ -43,16 +47,21 @@ __pwrite (fd, buf, count, offset)
 
   /* First try the syscall.  */
   result = INLINE_SYSCALL (pwrite, 5, fd, buf, count, 0, offset);
+# if __ASSUME_PWRITE_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pwrite (fd, buf, count, offset);
+# endif
 
   return result;
 }
 
 weak_alias (__pwrite, pwrite)
 
-#define __pwrite(fd, buf, count, offset) \
+# define __pwrite(fd, buf, count, offset) \
      static internal_function __emulate_pwrite (fd, buf, count, offset)
 #endif
-#include <sysdeps/posix/pwrite.c>
+
+#if __ASSUME_PWRITE_SYSCALL == 0
+# include <sysdeps/posix/pwrite.c>
+#endif

@@ -23,19 +23,26 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
+#include "kernel-features.h"
+
 /* The difference here is that the sigaction structure used in the
    kernel is not the same as we use in the libc.  Therefore we must
    translate it here.  */
 #include <kernel_sigaction.h>
 
-extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
-				struct old_kernel_sigaction *);
-extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
-				   struct kernel_sigaction *, size_t);
-
+#if __ASSUME_REALTIME_SIGNALS == 0
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  This is the definition.  */
 int __libc_missing_rt_sigs;
+
+extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
+				struct old_kernel_sigaction *);
+# define rtsignals_guaranteed 0
+#else
+# define rtsignals_guaranteed 1
+#endif
+extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
+				   struct kernel_sigaction *, size_t);
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
@@ -49,12 +56,18 @@ __sigaction (sig, act, oact)
   struct old_kernel_sigaction k_sigact, k_osigact;
   int result;
 
-#ifdef __NR_rt_sigaction
+#if defiend __NR_rt_sigaction || __ASSUME_REALTIME_SIGNALS > 0
   /* First try the RT signals.  */
+# if __ASSUME_REALTIME_SIGNALS == 0
   if (!__libc_missing_rt_sigs)
+# endif
     {
       struct kernel_sigaction kact, koact;
+      /* Save the current error value for later.  We need not do this
+	 if we are guaranteed to have realtime signals.  */
+# if __ASSUME_REALTIME_SIGNALS == 0
       int saved_errno = errno;
+# endif
 
       if (act)
 	{
@@ -71,7 +84,9 @@ __sigaction (sig, act, oact)
       result = INLINE_SYSCALL (rt_sigaction, 4, sig, act ? &kact : NULL,
 			       oact ? &koact : NULL, _NSIG / 8);
 
+# if __ASSUME_REALTIME_SIGNALS == 0
       if (result >= 0 || errno != ENOSYS)
+# endif
 	{
 	  if (oact && result >= 0)
 	    {
@@ -85,19 +100,22 @@ __sigaction (sig, act, oact)
 	  return result;
 	}
 
+# if __ASSUME_REALTIME_SIGNALS == 0
       __set_errno (saved_errno);
       __libc_missing_rt_sigs = 1;
+# endif
     }
 #endif
 
+#if __ASSUME_REALTIME_SIGNALS == 0
   if (act)
     {
       k_sigact.k_sa_handler = act->sa_handler;
       k_sigact.sa_mask = act->sa_mask.__val[0];
       k_sigact.sa_flags = act->sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
       k_sigact.sa_restorer = act->sa_restorer;
-#endif
+# endif
     }
   result = INLINE_SYSCALL (sigaction, 3, sig, act ? &k_sigact : NULL,
 			   oact ? &k_osigact : NULL);
@@ -106,11 +124,12 @@ __sigaction (sig, act, oact)
       oact->sa_handler = k_osigact.k_sa_handler;
       oact->sa_mask.__val[0] = k_osigact.sa_mask;
       oact->sa_flags = k_osigact.sa_flags;
-#ifdef HAVE_SA_RESTORER
+# ifdef HAVE_SA_RESTORER
       oact->sa_restorer = k_osigact.sa_restorer;
-#endif
+# endif
     }
   return result;
+#endif
 }
 
 weak_alias (__sigaction, sigaction)
