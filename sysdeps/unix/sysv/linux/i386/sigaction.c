@@ -1,5 +1,5 @@
 /* POSIX.1 `sigaction' call for Linux/i386.
-   Copyright (C) 1991, 95, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1991,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,9 +47,9 @@ int __libc_missing_rt_sigs;
 #endif
 
 #ifdef __NR_rt_sigaction
-static void restore_rt (void) asm ("__restore_rt");
+void restore_rt (void) asm ("__restore_rt");
 #endif
-static void restore (void) asm ("__restore");
+void restore (void) asm ("__restore");
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
