@@ -1,3 +1,8 @@
+2003-09-04  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h (MINSIGSTKSZ):
+	Fix a typo.
+
 2003-09-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/bits/string.h (__memrchr): Do addition in assembler
