@@ -1,3 +1,11 @@
+1999-06-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* grp/fgetgrent.c (fgetgrent): Remember position of stream before
+	reading and reset in case the buffer was too small.
+
+	* grp/fgetgrent_r.c (__fgetgrent_r): Set errno to ENOENT in case
+	of EOF.
+
 1999-06-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/if_index.c: Use SIGIOCGIFINDEX and fix

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <grp.h>
 #include <bits/libc-lock.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 
@@ -32,8 +33,12 @@ fgetgrent (FILE *stream)
   static char *buffer;
   static size_t buffer_size;
   static struct group resbuf;
+  fpos_t pos;
   struct group *result;
   int save;
+
+  if (fgetpos (stream, &pos) != 0)
+    return NULL;
 
   /* Get lock.  */
   __libc_lock_lock (lock);
@@ -61,6 +66,13 @@ fgetgrent (FILE *stream)
 	  __set_errno (save);
 	}
       buffer = new_buf;
+
+      /* Reset the stream.  */
+      if (fsetpos (stream, &pos) != 0)
+	{
+	  buffer = NULL;
+	  break;
+	}
     }
 
   if (buffer == NULL)
