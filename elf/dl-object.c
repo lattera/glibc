@@ -35,14 +35,14 @@ struct link_map *
 internal_function
 _dl_new_object (char *realname, const char *libname, int type, int find_origin)
 {
-  struct link_map *new = malloc (sizeof *new);
-  struct libname_list *newname = malloc (sizeof *newname);
+  size_t libname_len = strlen (libname) + 1;
+  struct link_map *new = calloc (sizeof *new, 1);
+  struct libname_list *newname = malloc (sizeof *newname + libname_len);
   if (! new || ! newname)
     return NULL;
 
-  memset (new, 0, sizeof *new);
   new->l_name = realname;
-  newname->name = libname;
+  newname->name = memcpy (newname + 1, libname, libname_len);
   newname->next = NULL;
   new->l_libname = newname;
   new->l_type = type;

@@ -1,3 +1,16 @@
+1998-09-01 17:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (add_name_to_object): Change return type to void and
+	make NAME parameter const.  Allocate room for NAME in same memory
+	block used for l_libname entry.
+	(_dl_map_object_from_fd): Don't free NAME on failure.
+	(map_segment): Pass SONAME to add_name_to_object, not a copy.
+	(_dl_map_object): Don't create copy of NAME.  Pass NAME to
+	_dl_map_object_from_fd.
+	* elf/dl-object.c (dl_new_object): Allocate room for NAME in same
+	memory block used for l_libname entry.
+	* elf/dl-close.c: Adjust free()ing for this change.
+
 1998-09-01 15:36  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/Makefile: Include Makeconfig before testing config-sysdirs.

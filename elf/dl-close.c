@@ -148,11 +148,11 @@ _dl_close (struct link_map *map)
 	  lnp = imap->l_libname;
 	  do
 	    {
-	      free (lnp->name);
+	      struct libname_list *this = lnp;
 	      lnp = lnp->next;
+	      free (this);
 	    }
 	  while (lnp != NULL);
-	  free (imap->l_libname);
 
 	  free (imap);
 	}

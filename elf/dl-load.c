@@ -240,43 +240,33 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
    `name' is expected to have been allocated with malloc and will
    be freed if the shared object already has this name.
    Returns false if the object already had this name.  */
-static int
+static void
 internal_function
-add_name_to_object (struct link_map *l, char *name)
+add_name_to_object (struct link_map *l, const char *name)
 {
   struct libname_list *lnp, *lastp;
   struct libname_list *newname;
-
-  if (name == NULL)
-    {
-      /* No more memory.  */
-      _dl_signal_error (ENOMEM, NULL, "could not allocate name string");
-      return 0;
-    }
+  size_t name_len;
 
   lastp = NULL;
   for (lnp = l->l_libname; lnp != NULL; lastp = lnp, lnp = lnp->next)
     if (strcmp (name, lnp->name) == 0)
-      {
-	free (name);
-	return 0;
-      }
+      return;
 
-  newname = malloc (sizeof *newname);
+  name_len = strlen (name) + 1;
+  newname = malloc (sizeof *newname + name_len);
   if (newname == NULL)
     {
       /* No more memory.  */
       _dl_signal_error (ENOMEM, name, "cannot allocate name record");
-      free (name);
-      return 0;
+      return;
     }
   /* The object should have a libname set from _dl_new_object.  */
   assert (lastp != NULL);
 
-  newname->name = name;
+  newname->name = memcpy (newname + 1, name, name_len);
   newname->next = NULL;
   lastp->next = newname;
-  return 1;
 }
 
 /* All known directories in sorted order.  */
@@ -639,8 +629,6 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 	}
       free (realname);
       _dl_signal_error (code, name, msg);
-      free (name);         /* Hmmm.  Can this leak memory?  Better
-			      than a segfault, anyway.  */
     }
 
   inline caddr_t map_segment (ElfW(Addr) mapstart, size_t len,
@@ -1175,7 +1163,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	    continue;
 
 	  /* We have a match on a new name -- cache it.  */
-	  add_name_to_object (l, local_strdup (soname));
+	  add_name_to_object (l, soname);
 	}
 
       /* We have a match -- bump the reference count and return it.  */
@@ -1277,16 +1265,6 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	}
     }
 
-  if (fd != -1)
-    {
-      name_copy = local_strdup (name);
-      if (name_copy == NULL)
-	{
-	  __close (fd);
-	  fd = -1;
-	}
-    }
-
   if (fd == -1)
     {
       if (trace_mode)
@@ -1316,5 +1294,5 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	_dl_signal_error (errno, name, "cannot open shared object file");
     }
 
-  return _dl_map_object_from_fd (name_copy, fd, realname, loader, type);
+  return _dl_map_object_from_fd (name, fd, realname, loader, type);
 }
