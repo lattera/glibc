@@ -17,8 +17,8 @@ if (@headers == ()) {
 	      "sys/time.h", "sys/statvfs.h", "sys/stat.h", "sys/socket.h",
 	      "sys/shm.h", "sys/sem.h", "sys/resource.h", "sys/msg.h",
 	      "sys/mman.h", "sys/ipc.h", "syslog.h", "stropts.h", "strings.h",
-	      "string.h", "stdlib.h", "stdio.h", "stddef.h", "stdarg.h",
-	      "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
+	      "string.h", "stdlib.h", "stdio.h", "stdint.h", "stddef.h",
+	      "stdarg.h", "spawn.h", "signal.h", "setjmp.h", "semaphore.h",
 	      "search.h", "sched.h", "regex.h", "pwd.h", "pthread.h",
 	      "poll.h", "nl_types.h", "netinet/tcp.h", "netinet/in.h",
 	      "net/if.h", "netdb.h", "ndbm.h", "mqueue.h", "monetary.h",
@@ -181,6 +181,7 @@ sub runtest
 	}
       } else {
 	printf (" FAIL\n");
+	++$errors;
 	$printlog = 1;
 	unlink "$fnamebase.out";
 	rename "$fnamebase.out2", "$fnamebase.out";

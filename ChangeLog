@@ -1,4 +1,11 @@
+2001-01-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sys/param.h (MAXSYMLINKS): Bump to 20.
+
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* conform/conformtest.pl (@headers): Add stdint.h.
+	* conform/data/stdint.h-data: New file.
 
 	* conform/conformtest.pl: Recognize options --headers and
 	--dialect.  Add dialect-specific CFLAGS.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
 #ifndef	NGROUPS
 # define NGROUPS	NGROUPS_MAX
 #endif
-#define	MAXSYMLINKS	5
+#define	MAXSYMLINKS	20
 #define	CANBSIZ		MAX_CANON
 #define	NCARGS		ARG_MAX
 #define MAXPATHLEN	PATH_MAX
