@@ -46,7 +46,8 @@ ifndef sysdep_dirs
 sysdep_dirs := $(shell find $(..)sysdeps \
 			    $(wildcard \
 				$(patsubst %,$(..)%/sysdeps,$(add-ons))) \
-			    -type d ! -name RCS ! -name CVS -print)
+			    -type d ! -name RCS ! -name CVS \
+			    ! -name SCCS -print)
 endif
 
 # Find all sysdep dirs there are, but putting the ones

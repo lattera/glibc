@@ -1,3 +1,8 @@
+1999-06-15  H.J. Lu  <hjl@gnu.org>
+
+	* Make-dist (sysdep_dirs): Exclude SCCS.
+	* MakeTAGS (sysdep_dirs): Likewise.
+
 1999-06-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c (re_error_msgid): Remove extra commas.
