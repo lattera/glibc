@@ -1,5 +1,5 @@
 /* Linux/ARM version of processor capability information handling macros.
-   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>, 2001.
 
@@ -39,7 +39,7 @@ _dl_procinfo (int word)
 
   for (i = 0; i < _DL_HWCAP_COUNT; ++i)
     if (word & (1 << i))
-      _dl_printf (" %s", GL(dl_arm_cap_flags)[i]);
+      _dl_printf (" %s", GLRO(dl_arm_cap_flags)[i]);
 
   _dl_printf ("\n");
 
@@ -50,7 +50,7 @@ static inline const char *
 __attribute__ ((unused))
 _dl_hwcap_string (int idx)
 {
-  return GL(dl_arm_cap_flags)[idx];
+  return GLRO(dl_arm_cap_flags)[idx];
 };
 
 enum
@@ -75,7 +75,7 @@ _dl_string_hwcap (const char *str)
 
   for (i = 0; i < _DL_HWCAP_COUNT; i++)
     {
-      if (strcmp (str, GL(dl_arm_cap_flags)[i]) == 0)
+      if (strcmp (str, GLRO(dl_arm_cap_flags)[i]) == 0)
 	return i;
     }
   return -1;
