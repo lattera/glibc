@@ -1,3 +1,8 @@
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/generic/lowlevellock.h (__generic_mutex_unlock): Fix
+	order of arguments in invocation of atomic_add_zero.
+
 2005-01-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/sem_trywait.S (__new_sem_trywait):
@@ -96,7 +101,7 @@
 	* sysdeps/pthread/posix-timer.h (__timer_signal_thread_pclk,
 	__timer_signal_thread_tclk): Remove.
 	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: Removed.
-	* sysdeps/unix/sysv/linux/ia64/bits/posix_>opt.h: Removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Removed.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Removed.
 
 2004-12-07  Jakub Jelinek  <jakub@redhat.com>

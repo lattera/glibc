@@ -593,6 +593,14 @@ for d in $add_ons_pfx ''; do
       done
     done
   done
+  if test -n "$d"; then
+    try="${d}sysdeps/generic"
+    test -n "$enable_debug_configure" &&
+    echo "$0 DEBUG: try $try" >&2
+    if test -d $srcdir/$try; then
+      sysnames="$sysnames $try"
+    fi
+  fi
 done
 IFS="$ac_save_ifs"
 

@@ -76,7 +76,7 @@ __generic_mutex_unlock (int *mutex)
   /* Adding 0x80000000 to the counter results in 0 if and only if
      there are not other interested threads - we can return (this is
      the fastpath).  */
-  if (atomic_add_zero (0x80000000, mutex))
+  if (atomic_add_zero (mutex, 0x80000000))
     return;
 
   /* There are other threads waiting for this mutex, wake one of them
