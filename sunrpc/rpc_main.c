@@ -80,9 +80,9 @@ static const char *cmdname;
 #define SUNOS_CPP "/lib/cpp"
 
 static const char *svcclosetime = "120";
-static int cppDefined = 0;	/* explicit path for C preprocessor */
+static int cppDefined;	/* explicit path for C preprocessor */
 static const char *CPP = SUNOS_CPP;
-static char CPPFLAGS[] = "-C";
+static const char CPPFLAGS[] = "-C";
 static char *pathbuf;
 static int cpp_pid;
 static const char *allv[] =
@@ -167,17 +167,17 @@ int newstyle;			/* newstyle of passing arguments (by value) */
 #ifdef __GNU_LIBRARY__
 int Cflag = 1;			/* ANSI C syntax */
 #else
-int Cflag = 0;			/* ANSI C/C++ syntax */
+int Cflag;			/* ANSI C/C++ syntax */
 #endif
-int CCflag = 0;			/* C++ files */
+int CCflag;			/* C++ files */
 static int allfiles;		/* generate all files */
 #ifdef __GNU_LIBRARY__
-int tirpcflag = 0;		/* generating code for tirpc, by default */
+int tirpcflag;			/* generating code for tirpc, by default */
 #else
 int tirpcflag = 1;		/* generating code for tirpc, by default */
 #endif
-xdrfunc *xdrfunc_head = NULL;	/* xdr function list */
-xdrfunc *xdrfunc_tail = NULL;	/* xdr function list */
+xdrfunc *xdrfunc_head;		/* xdr function list */
+xdrfunc *xdrfunc_tail;		/* xdr function list */
 
 int
 __attribute__ ((noreturn))

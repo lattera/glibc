@@ -1,5 +1,7 @@
 2001-11-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/rpc_main.c: Optomize variable definitions a bit.
+
 	* sunrpc/Makefile (rpcgen-cmd): Use ../scripts/cpp in rpcgen calls.
 	* scripts/cpp: New file.
 
