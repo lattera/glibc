@@ -2267,19 +2267,20 @@ The file resides on a read-only file system.
 @cindex access, testing for
 @cindex setuid programs and file access
 
-When a program runs as a privileged user, this permits it to access
-files off-limits to ordinary users---for example, to modify
-@file{/etc/passwd}.  Programs designed to be run by ordinary users but
-access such files use the setuid bit feature so that they always run
-with @code{root} as the effective user ID.
+In some situations it is desirable to allow programs to access files or
+devices even if this is not possible with the permissions granted to the
+user.  One possible solution is to set the setuid-bit of the program
+file.  If such a program is started the @emph{effective} user ID of the
+process is changed to that of the owner of the program file.  So to
+allow write access to files like @file{/etc/passwd}, which normally can
+be written only by the super-user, the modifying program will have to be
+owned by @code{root} and the setuid-bit must be set.
 
-Since the program runs as @code{root}, it has permission to access
-whatever file the user specifies---but usually the desired behavior is
-to permit only those files which the user could ordinarily access.
-
-The program therefore must explicitly check whether @emph{the user}
-would have the necessary access to a file, before it reads or writes the
-file.
+But beside the files the program is intended to change the user should
+not be allowed to access any file to which s/he would not have access
+anyway.  The program therefore must explicitly check whether @emph{the
+user} would have the necessary access to a file, before it reads or
+writes the file.
 
 To do this, use the function @code{access}, which checks for access
 permission based on the process's @emph{real} user ID rather than the

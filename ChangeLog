@@ -1,5 +1,15 @@
 1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/filesys.texi (Testing File Access): Correct description of
+	SUID.
+
+1999-08025  H.J. Lu  <hjl@gnu.org>
+
+	* csu/defs.awk (.end): Only match with leading white spaces.
+	(.align): Likewise.
+
+1999-09-19  Ulrich Drepper  <drepper@cygnus.com>
+
 	* stdlib/isomac.c: Add va_copy to allowed macros.
 
 	* po/pl.po: Updated.
