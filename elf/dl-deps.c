@@ -304,7 +304,10 @@ _dl_map_object_deps (struct link_map *map,
 		/* Allocate new entry.  This always has to be done.  */
 		newp = alloca (sizeof (struct list));
 
-		/* Copy the content of the current entry over.  */
+		/* We want to insert the new map before the current one,
+		   but we have no back links.  So we copy the contents of
+		   the current entry over.  Note that ORIG and NEWP now
+		   have switched their meanings.  */
 		orig->dup = memcpy (newp, orig, sizeof (*newp));
 
 		/* Initialize new entry.  */
@@ -333,7 +336,7 @@ _dl_map_object_deps (struct link_map *map,
 		       _dl_map_object.  */
 		    --args.aux->l_opencount;
 
-		    for (late = orig; late->unique; late = late->unique)
+		    for (late = newp; late->unique; late = late->unique)
 		      if (late->unique->map == args.aux)
 			break;
 
@@ -344,10 +347,13 @@ _dl_map_object_deps (struct link_map *map,
 			   move it to this earlier position.  */
 			orig->unique = newp;
 
-			/* Now remove the later entry from the unique list.  */
+			/* Now remove the later entry from the unique list
+			   and adjust the tail pointer.  */
+			if (utail == late->unique)
+			  utail = late;
 			late->unique = late->unique->unique;
 
-			/* We must move the earlier in the chain.  */
+			/* We must move the object earlier in the chain.  */
 			if (args.aux->l_prev)
 			  args.aux->l_prev->l_next = args.aux->l_next;
 			if (args.aux->l_next)
