@@ -85,13 +85,11 @@
 	lda	v0, -1;				\
 	ret
 #elif defined(PIC)
-# define SYSCALL_ERROR_LABEL	__syscall_error
-# define SYSCALL_ERROR_HANDLER \
-	br	$31, __syscall_error !samegp
+# define SYSCALL_ERROR_LABEL	__syscall_error !samegp
+# define SYSCALL_ERROR_HANDLER  br	$31, SYSCALL_ERROR_LABEL
 #else
 # define SYSCALL_ERROR_LABEL	$syscall_error
-# define SYSCALL_ERROR_HANDLER \
-	jmp	$31, __syscall_error
+# define SYSCALL_ERROR_HANDLER	jmp	$31, __syscall_error
 #endif /* RTLD_PRIVATE_ERRNO */
 
 /* Overridden by specific syscalls.  */
