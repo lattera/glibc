@@ -54,7 +54,7 @@ static long double huge = 1.0e4930;
 			{ i0=0xbfff000000000000ULL;i1=0;}
 		}
 	    } else {
-		i = (0x7fffffffffffffffULL)>>j0;
+		i = (0x0000ffffffffffffULL)>>j0;
 		if(((i0&i)|i1)==0) return x; /* x is integral */
 		if(huge+x>0.0) {	/* raise inexact flag */
 		    if(i0<0) i0 += (0x0001000000000000LL)>>j0;

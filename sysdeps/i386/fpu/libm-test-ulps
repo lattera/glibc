@@ -11,7 +11,7 @@ ldouble: 1
 ildouble: 1
 
 # asin
-Test "asin (0.7) == 0.7753974966107530637":
+Test "asin (0.7) == 0.77539749661075306374035335271498708":
 double: 1
 ildouble: 1147
 ldouble: 1147
@@ -246,7 +246,7 @@ ldouble: 4
 Test "Imaginary part of: cexp (-2.0 - 3.0 i) == -0.1339809149295426134 - 0.0190985162611351964 i":
 ildouble: 18
 ldouble: 18
-Test "Real part of: cexp (0.7 + 1.2 i) == 0.7296989091503236012 + 1.8768962328348102821 i":
+Test "Real part of: cexp (0.7 + 1.2 i) == 0.72969890915032360123451688642930727 + 1.8768962328348102821139467908203072 i":
 float: 1
 ifloat: 1
 ildouble: 940
@@ -370,7 +370,7 @@ idouble: 1
 ifloat: 1
 
 # cos
-Test "cos (0.7) == 0.7648421872844884262":
+Test "cos (0.7) == 0.76484218728448842625585999019186495":
 double: 1
 idouble: 1
 ildouble: 529
@@ -543,7 +543,7 @@ ldouble: 412
 Test "exp10 (-1) == 0.1":
 ildouble: 818
 ldouble: 818
-Test "exp10 (0.7) == 5.0118723362727228500":
+Test "exp10 (0.7) == 5.0118723362727228500155418688494574":
 double: 1
 idouble: 1
 ildouble: 1182
@@ -795,15 +795,15 @@ ildouble: 725
 ldouble: 725
 
 # sin
-Test "sin (0.7) == 0.64421768723769105367":
+Test "sin (0.7) == 0.64421768723769105367261435139872014":
 ildouble: 627
 ldouble: 627
 
 # sincos
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367 in sin_res":
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.64421768723769105367261435139872014 in sin_res":
 ildouble: 627
 ldouble: 627
-Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842626 in cos_res":
+Test "sincos (0.7, &sin_res, &cos_res) puts 0.76484218728448842625585999019186495 in cos_res":
 double: 1
 idouble: 1
 ildouble: 528
@@ -813,7 +813,7 @@ double: 1
 float: 0.5
 idouble: 1
 ifloat: 0.5
-Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.866025403784438646764 in sin_res":
+Test "sincos (M_PI_6l*2.0, &sin_res, &cos_res) puts 0.86602540378443864676372317075293616 in sin_res":
 double: 1
 float: 1
 idouble: 1

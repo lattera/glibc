@@ -1,5 +1,30 @@
 2000-10-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Update for changes in libm-test.inc.
+
+2000-10-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/libm-test.inc (M_LOG_SQRT_PIl, M_LOG_2_SQRT_PIl): Increase
+	precision.
+	(acos_test, asin_text, cexp_test, cos_test, cproj_test, exp10_test,
+	sin_test, sincos_test, sqrt_test): Likewise.  Add L suffixes also
+	to parameters.
+	(acosh_test, asinh_test, atan2_test, atanh_test, atan_test, cabs_test,
+	cacosh_test, cacos_test, casinh_test, casin_test, catanh_test,
+	catan_test, cbrt_test, ccosh_test, ccos_test, clog10_test, cosh_test,
+	csinh_test, csin_test, csqrt_test, ctanh_test, ctan_test, erfc_test,
+	erf_test, exp2_test, expm1_test, exp_test, fmod_test, hypot_test,
+	j0_test, j1_test, jn_test, lgamma_test, llrint_test, llround_test,
+	log10_test, log1p_test, log2_test, log_test, lrint_test, lround_test,
+	nextafter_test, nexttoward_test, pow_test, round_test, scalb_test,
+	sinh_test, static void, tanh_test, tan_test, tgamma_test, y0_test,
+	y1_test, yn_test): Add L suffixes also to parameters.
+	* sysdeps/ieee754/ldbl-128/s_ceill.c (__ceill): Fix mask.
+	* sysdeps/ieee754/ldbl-128/s_floorl.c (__floorl): Likewise.
+	* soft-fp/op-2.h (_FP_FRAC_SRS_2): Fix computation of sticky bit.
+
+2000-10-16  Ulrich Drepper  <drepper@redhat.com>
+
 	* timezone/Makefile: Define HAVE_GETTEXT fir zdump.c, zic.c,
 	ialloc.c, and scheck.c.
 	* malloc/obstack.c: Always include <libintl.h> for glibc.

@@ -139,8 +139,8 @@
 #define M_E3l			20.085536923187667740928529654581719L
 #define M_2_SQRT_PIl		3.5449077018110320545963349666822903L	/* 2 sqrt (M_PIl)  */
 #define M_SQRT_PIl		1.7724538509055160272981674833411451L	/* sqrt (M_PIl)  */
-#define M_LOG_SQRT_PIl		0.572364942924700087072L	/* log(sqrt(M_PIl))  */
-#define M_LOG_2_SQRT_PIl	1.265512123484645396489L	/* log(2*sqrt(M_PIl))  */
+#define M_LOG_SQRT_PIl		0.57236494292470008707171367567652933L	/* log(sqrt(M_PIl))  */
+#define M_LOG_2_SQRT_PIl	1.265512123484645396488945797134706L	/* log(2*sqrt(M_PIl))  */
 #define M_PI_34l		(M_PIl - M_PI_4l)		/* 3*pi/4 */
 #define M_PI_34_LOG10El		(M_PIl - M_PI_4l) * M_LOG10El
 #define M_PI2_LOG10El		M_PI_2l * M_LOG10El
@@ -707,8 +707,8 @@ acos_test (void)
   TEST_f_f (acos, nan_value, nan_value);
 
   /* |x| > 1: */
-  TEST_f_f (acos, 1.1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (acos, -1.1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, 1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acos, -1.1L, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acos, 0, M_PI_2l);
   TEST_f_f (acos, minus_zero, M_PI_2l);
@@ -716,7 +716,7 @@ acos_test (void)
   TEST_f_f (acos, -1, M_PIl);
   TEST_f_f (acos, 0.5, M_PI_6l*2.0);
   TEST_f_f (acos, -0.5, M_PI_6l*4.0);
-  TEST_f_f (acos, 0.7, 0.7953988301841435554L);
+  TEST_f_f (acos, 0.7L, 0.79539883018414355549096833892476432L);
 
   END (acos);
 }
@@ -736,7 +736,7 @@ acosh_test (void)
   TEST_f_f (acosh, minus_infty, nan_value, INVALID_EXCEPTION);
 
   /* x < 1:  */
-  TEST_f_f (acosh, -1.1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (acosh, -1.1L, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (acosh, 1, 0);
   TEST_f_f (acosh, 7, 2.6339157938496334172L);
@@ -760,8 +760,8 @@ asin_test (void)
   TEST_f_f (asin, nan_value, nan_value);
 
   /* asin x == NaN plus invalid exception for |x| > 1.  */
-  TEST_f_f (asin, 1.1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (asin, -1.1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, 1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (asin, -1.1L, nan_value, INVALID_EXCEPTION);
 
   TEST_f_f (asin, 0, 0);
   TEST_f_f (asin, minus_zero, minus_zero);
@@ -769,7 +769,7 @@ asin_test (void)
   TEST_f_f (asin, -0.5, -M_PI_6l);
   TEST_f_f (asin, 1.0, M_PI_2l);
   TEST_f_f (asin, -1.0, -M_PI_2l);
-  TEST_f_f (asin, 0.7, 0.7753974966107530637L);
+  TEST_f_f (asin, 0.7L, 0.77539749661075306374035335271498708L);
 
   END (asin);
 }
@@ -778,7 +778,7 @@ static void
 asinh_test (void)
 {
   errno = 0;
-  FUNC(asinh) (0.7);
+  FUNC(asinh) (0.7L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -792,7 +792,7 @@ asinh_test (void)
   TEST_f_f (asinh, minus_infty, minus_infty);
 #endif
   TEST_f_f (asinh, nan_value, nan_value);
-  TEST_f_f (asinh, 0.7, 0.652666566082355786L);
+  TEST_f_f (asinh, 0.7L, 0.652666566082355786L);
 
   END (asinh);
 }
@@ -818,7 +818,7 @@ atan_test (void)
   TEST_f_f (atan, 1, M_PI_4l);
   TEST_f_f (atan, -1, -M_PI_4l);
 
-  TEST_f_f (atan, 0.7, 0.6107259643892086165L);
+  TEST_f_f (atan, 0.7L, 0.6107259643892086165L);
 
   END (atan);
 }
@@ -829,7 +829,7 @@ static void
 atanh_test (void)
 {
   errno = 0;
-  FUNC(atanh) (0.7);
+  FUNC(atanh) (0.7L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -845,10 +845,10 @@ atanh_test (void)
   TEST_f_f (atanh, nan_value, nan_value);
 
   /* atanh (x) == NaN plus invalid exception if |x| > 1.  */
-  TEST_f_f (atanh, 1.1, nan_value, INVALID_EXCEPTION);
-  TEST_f_f (atanh, -1.1, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, 1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_f_f (atanh, -1.1L, nan_value, INVALID_EXCEPTION);
 
-  TEST_f_f (atanh, 0.7, 0.8673005276940531944L);
+  TEST_f_f (atanh, 0.7L, 0.8673005276940531944L);
 
   END (atanh);
 }
@@ -918,8 +918,8 @@ atan2_test (void)
   TEST_ff_f (atan2, minus_infty, minus_infty, -M_PI_34l);
   TEST_ff_f (atan2, nan_value, nan_value, nan_value);
 
-  TEST_ff_f (atan2, 0.7, 1, 0.6107259643892086165L);
-  TEST_ff_f (atan2, 0.4, 0.0003, 1.5700463269355215718L);
+  TEST_ff_f (atan2, 0.7L, 1, 0.6107259643892086165L);
+  TEST_ff_f (atan2, 0.4L, 0.0003L, 1.5700463269355215718L);
 
   END (atan2);
 }
@@ -929,7 +929,7 @@ static void
 cabs_test (void)
 {
   errno = 0;
-  FUNC(cabs) (BUILD_COMPLEX (0.7, 12.4));
+  FUNC(cabs) (BUILD_COMPLEX (0.7L, 12.4L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -966,7 +966,7 @@ cabs_test (void)
   TEST_c_f (cabs, -5.7e7L, 0, 5.7e7L);
   TEST_c_f (cabs, 5.7e7L, 0, 5.7e7L);
 
-  TEST_c_f (cabs, 0.7, 1.2, 1.3892443989449804508L);
+  TEST_c_f (cabs, 0.7L, 1.2L, 1.3892443989449804508L);
 
   END (cabs);
 }
@@ -975,7 +975,7 @@ static void
 cacos_test (void)
 {
   errno = 0;
-  FUNC(cacos) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(cacos) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -998,8 +998,8 @@ cacos_test (void)
   TEST_c_c (cacos, -10.0, minus_infty, M_PI_2l, plus_infty);
   TEST_c_c (cacos, 0, plus_infty, M_PI_2l, minus_infty);
   TEST_c_c (cacos, 0, minus_infty, M_PI_2l, plus_infty);
-  TEST_c_c (cacos, 0.1, plus_infty, M_PI_2l, minus_infty);
-  TEST_c_c (cacos, 0.1, minus_infty, M_PI_2l, plus_infty);
+  TEST_c_c (cacos, 0.1L, plus_infty, M_PI_2l, minus_infty);
+  TEST_c_c (cacos, 0.1L, minus_infty, M_PI_2l, plus_infty);
 
   TEST_c_c (cacos, minus_infty, 0, M_PIl, minus_infty);
   TEST_c_c (cacos, minus_infty, minus_zero, M_PIl, plus_infty);
@@ -1028,7 +1028,7 @@ cacos_test (void)
 
   TEST_c_c (cacos, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (cacos, 0.7, 1.2, 1.1351827477151551089L, -1.0927647857577371459L);
+  TEST_c_c (cacos, 0.7L, 1.2L, 1.1351827477151551089L, -1.0927647857577371459L);
   TEST_c_c (cacos, -2, -3, 2.1414491111159960199L, 1.9833870299165354323L);
 
   END (cacos, complex);
@@ -1039,7 +1039,7 @@ static void
 cacosh_test (void)
 {
   errno = 0;
-  FUNC(cacosh) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(cacosh) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1061,8 +1061,8 @@ cacosh_test (void)
   TEST_c_c (cacosh, -10.0, minus_infty, plus_infty, -M_PI_2l);
   TEST_c_c (cacosh, 0, plus_infty, plus_infty, M_PI_2l);
   TEST_c_c (cacosh, 0, minus_infty, plus_infty, -M_PI_2l);
-  TEST_c_c (cacosh, 0.1, plus_infty, plus_infty, M_PI_2l);
-  TEST_c_c (cacosh, 0.1, minus_infty, plus_infty, -M_PI_2l);
+  TEST_c_c (cacosh, 0.1L, plus_infty, plus_infty, M_PI_2l);
+  TEST_c_c (cacosh, 0.1L, minus_infty, plus_infty, -M_PI_2l);
 
   TEST_c_c (cacosh, minus_infty, 0, plus_infty, M_PIl);
   TEST_c_c (cacosh, minus_infty, minus_zero, plus_infty, -M_PIl);
@@ -1091,7 +1091,7 @@ cacosh_test (void)
 
   TEST_c_c (cacosh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (cacosh, 0.7, 1.2, 1.0927647857577371459L, 1.1351827477151551089L);
+  TEST_c_c (cacosh, 0.7L, 1.2L, 1.0927647857577371459L, 1.1351827477151551089L);
   TEST_c_c (cacosh, -2, -3, -1.9833870299165354323L, 2.1414491111159960199L);
 
   END (cacosh, complex);
@@ -1168,7 +1168,7 @@ static void
 casin_test (void)
 {
   errno = 0;
-  FUNC(casin) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(casin) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1191,8 +1191,8 @@ casin_test (void)
   TEST_c_c (casin, 0, minus_infty, 0.0, minus_infty);
   TEST_c_c (casin, minus_zero, plus_infty, minus_zero, plus_infty);
   TEST_c_c (casin, minus_zero, minus_infty, minus_zero, minus_infty);
-  TEST_c_c (casin, 0.1, plus_infty, 0.0, plus_infty);
-  TEST_c_c (casin, 0.1, minus_infty, 0.0, minus_infty);
+  TEST_c_c (casin, 0.1L, plus_infty, 0.0, plus_infty);
+  TEST_c_c (casin, 0.1L, minus_infty, 0.0, minus_infty);
 
   TEST_c_c (casin, minus_infty, 0, -M_PI_2l, plus_infty);
   TEST_c_c (casin, minus_infty, minus_zero, -M_PI_2l, minus_infty);
@@ -1221,7 +1221,7 @@ casin_test (void)
 
   TEST_c_c (casin, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (casin, 0.7, 1.2, 0.4356135790797415103L, 1.0927647857577371459L);
+  TEST_c_c (casin, 0.7L, 1.2L, 0.4356135790797415103L, 1.0927647857577371459L);
   TEST_c_c (casin, -2, -3, -0.5706527843210994007L, -1.9833870299165354323L);
 
   END (casin, complex);
@@ -1232,7 +1232,7 @@ static void
 casinh_test (void)
 {
   errno = 0;
-  FUNC(casinh) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(casinh) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1255,8 +1255,8 @@ casinh_test (void)
   TEST_c_c (casinh, 0, minus_infty, plus_infty, -M_PI_2l);
   TEST_c_c (casinh, minus_zero, plus_infty, minus_infty, M_PI_2l);
   TEST_c_c (casinh, minus_zero, minus_infty, minus_infty, -M_PI_2l);
-  TEST_c_c (casinh, 0.1, plus_infty, plus_infty, M_PI_2l);
-  TEST_c_c (casinh, 0.1, minus_infty, plus_infty, -M_PI_2l);
+  TEST_c_c (casinh, 0.1L, plus_infty, plus_infty, M_PI_2l);
+  TEST_c_c (casinh, 0.1L, minus_infty, plus_infty, -M_PI_2l);
 
   TEST_c_c (casinh, minus_infty, 0, minus_infty, 0.0);
   TEST_c_c (casinh, minus_infty, minus_zero, minus_infty, minus_zero);
@@ -1285,7 +1285,7 @@ casinh_test (void)
 
   TEST_c_c (casinh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (casinh, 0.7, 1.2, 0.9786545955936738768L, 0.9113541895315601156L);
+  TEST_c_c (casinh, 0.7L, 1.2L, 0.9786545955936738768L, 0.9113541895315601156L);
   TEST_c_c (casinh, -2, -3, -1.9686379257930962917L, -0.9646585044076027920L);
 
   END (casinh, complex);
@@ -1296,7 +1296,7 @@ static void
 catan_test (void)
 {
   errno = 0;
-  FUNC(catan) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(catan) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1320,8 +1320,8 @@ catan_test (void)
   TEST_c_c (catan, minus_infty, minus_zero, -M_PI_2l, minus_zero);
   TEST_c_c (catan, plus_infty, 0.0, M_PI_2l, 0);
   TEST_c_c (catan, minus_infty, 0.0, -M_PI_2l, 0);
-  TEST_c_c (catan, plus_infty, 0.1, M_PI_2l, 0);
-  TEST_c_c (catan, minus_infty, 0.1, -M_PI_2l, 0);
+  TEST_c_c (catan, plus_infty, 0.1L, M_PI_2l, 0);
+  TEST_c_c (catan, minus_infty, 0.1L, -M_PI_2l, 0);
 
   TEST_c_c (catan, 0.0, minus_infty, M_PI_2l, minus_zero);
   TEST_c_c (catan, minus_zero, minus_infty, -M_PI_2l, minus_zero);
@@ -1353,7 +1353,7 @@ catan_test (void)
 
   TEST_c_c (catan, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (catan, 0.7, 1.2, 1.0785743834118921877L, 0.5770573776534306764L);
+  TEST_c_c (catan, 0.7L, 1.2L, 1.0785743834118921877L, 0.5770573776534306764L);
 
   TEST_c_c (catan, -2, -3, -1.4099210495965755225L, -0.2290726829685387662L);
 
@@ -1364,7 +1364,7 @@ static void
 catanh_test (void)
 {
   errno = 0;
-  FUNC(catanh) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(catanh) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1387,8 +1387,8 @@ catanh_test (void)
   TEST_c_c (catanh, minus_zero, minus_infty, minus_zero, -M_PI_2l);
   TEST_c_c (catanh, 0, plus_infty, 0.0, M_PI_2l);
   TEST_c_c (catanh, 0, minus_infty, 0.0, -M_PI_2l);
-  TEST_c_c (catanh, 0.1, plus_infty, 0.0, M_PI_2l);
-  TEST_c_c (catanh, 0.1, minus_infty, 0.0, -M_PI_2l);
+  TEST_c_c (catanh, 0.1L, plus_infty, 0.0, M_PI_2l);
+  TEST_c_c (catanh, 0.1L, minus_infty, 0.0, -M_PI_2l);
 
   TEST_c_c (catanh, minus_infty, 0, minus_zero, M_PI_2l);
   TEST_c_c (catanh, minus_infty, minus_zero, minus_zero, -M_PI_2l);
@@ -1420,7 +1420,7 @@ catanh_test (void)
 
   TEST_c_c (catanh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (catanh, 0.7, 1.2, 0.2600749516525135959L, 0.9702403077950989849L);
+  TEST_c_c (catanh, 0.7L, 1.2L, 0.2600749516525135959L, 0.9702403077950989849L);
   TEST_c_c (catanh, -2, -3, -0.1469466662255297520L, -1.3389725222944935611L);
 
   END (catanh, complex);
@@ -1444,11 +1444,11 @@ cbrt_test (void)
   TEST_f_f (cbrt, minus_infty, minus_infty);
   TEST_f_f (cbrt, nan_value, nan_value);
 
-  TEST_f_f (cbrt, -0.001, -0.1L);
+  TEST_f_f (cbrt, -0.001L, -0.1L);
   TEST_f_f (cbrt, 8, 2);
   TEST_f_f (cbrt, -27.0, -3.0);
-  TEST_f_f (cbrt, 0.970299, 0.99L);
-  TEST_f_f (cbrt, 0.7, 0.8879040017426007084L);
+  TEST_f_f (cbrt, 0.970299L, 0.99L);
+  TEST_f_f (cbrt, 0.7L, 0.8879040017426007084L);
 
   END (cbrt);
 }
@@ -1514,7 +1514,7 @@ ccos_test (void)
 
   TEST_c_c (ccos, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (ccos, 0.7, 1.2, 1.3848657645312111080L, -0.97242170335830028619L);
+  TEST_c_c (ccos, 0.7L, 1.2L, 1.3848657645312111080L, -0.97242170335830028619L);
 
   TEST_c_c (ccos, -2, -3, -4.1896256909688072301L, -9.1092278937553365979L);
 
@@ -1526,7 +1526,7 @@ static void
 ccosh_test (void)
 {
   errno = 0;
-  FUNC(ccosh) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(ccosh) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1583,7 +1583,7 @@ ccosh_test (void)
 
   TEST_c_c (ccosh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (ccosh, 0.7, 1.2, 0.4548202223691477654L, 0.7070296600921537682L);
+  TEST_c_c (ccosh, 0.7L, 1.2L, 0.4548202223691477654L, 0.7070296600921537682L);
 
   TEST_c_c (ccosh, -2, -3, -3.7245455049153225654L, 0.5118225699873846088L);
 
@@ -1666,7 +1666,7 @@ cexp_test (void)
   TEST_c_c (cexp, 1, nan_value, nan_value, nan_value, INVALID_EXCEPTION_OK);
   TEST_c_c (cexp, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (cexp, 0.7, 1.2, 0.7296989091503236012L, 1.8768962328348102821L);
+  TEST_c_c (cexp, 0.7L, 1.2L, 0.72969890915032360123451688642930727L, 1.8768962328348102821139467908203072L);
   TEST_c_c (cexp, -2.0, -3.0, -0.1339809149295426134L, -0.0190985162611351964L);
 
   END (cexp, complex);
@@ -1756,7 +1756,7 @@ static void
 clog10_test (void)
 {
   errno = 0;
-  FUNC(clog10) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(clog10) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1811,7 +1811,7 @@ clog10_test (void)
 
   TEST_c_c (clog10, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (clog10, 0.7, 1.2, 0.1427786545038868803L, 0.4528483579352493248L);
+  TEST_c_c (clog10, 0.7L, 1.2L, 0.1427786545038868803L, 0.4528483579352493248L);
   TEST_c_c (clog10, -2, -3, 0.5569716761534183846L, -0.9375544629863747085L);
 
   END (clog10, complex);
@@ -1883,7 +1883,7 @@ cos_test (void)
   TEST_f_f (cos, M_PI_6l * 4.0, -0.5);
   TEST_f_f (cos, M_PI_2l, 0);
 
-  TEST_f_f (cos, 0.7, 0.7648421872844884262L);
+  TEST_f_f (cos, 0.7L, 0.76484218728448842625585999019186495L);
 
   END (cos);
 }
@@ -1892,7 +1892,7 @@ static void
 cosh_test (void)
 {
   errno = 0;
-  FUNC(cosh) (0.7);
+  FUNC(cosh) (0.7L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1907,7 +1907,7 @@ cosh_test (void)
 #endif
   TEST_f_f (cosh, nan_value, nan_value);
 
-  TEST_f_f (cosh, 0.7, 1.255169005630943018L);
+  TEST_f_f (cosh, 0.7L, 1.255169005630943018L);
   END (cosh);
 }
 
@@ -1951,7 +1951,7 @@ cproj_test (void)
   TEST_c_c (cproj, minus_infty, minus_infty, plus_infty, minus_zero);
 
   TEST_c_c (cproj, 1.0, 0.0, 1.0, 0.0);
-  TEST_c_c (cproj, 2.0, 3.0, 0.28571428571428571429L, .42857142857142857143L);
+  TEST_c_c (cproj, 2.0, 3.0, 0.2857142857142857142857142857142857L, 0.42857142857142857142857142857142855L);
 
   END (cproj, complex);
 }
@@ -1975,7 +1975,7 @@ static void
 csin_test (void)
 {
   errno = 0;
-  FUNC(csin) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(csin) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -2032,7 +2032,7 @@ csin_test (void)
 
   TEST_c_c (csin, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (csin, 0.7, 1.2, 1.1664563419657581376L, 1.1544997246948547371L);
+  TEST_c_c (csin, 0.7L, 1.2L, 1.1664563419657581376L, 1.1544997246948547371L);
 
   TEST_c_c (csin, -2, -3, -9.1544991469114295734L, 4.1689069599665643507L);
 
@@ -2044,7 +2044,7 @@ static void
 csinh_test (void)
 {
   errno = 0;
-  FUNC(csinh) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(csinh) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -2101,7 +2101,7 @@ csinh_test (void)
 
   TEST_c_c (csinh, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (csinh, 0.7, 1.2, 0.27487868678117583582L, 1.1698665727426565139L);
+  TEST_c_c (csinh, 0.7L, 1.2L, 0.27487868678117583582L, 1.1698665727426565139L);
   TEST_c_c (csinh, -2, -3, 3.5905645899857799520L, -0.5309210862485198052L);
 
   END (csinh, complex);
@@ -2166,7 +2166,7 @@ csqrt_test (void)
   TEST_c_c (csqrt, -1, 0, 0.0, 1.0);
   TEST_c_c (csqrt, 0, 2, 1.0, 1.0);
   TEST_c_c (csqrt, 119, 120, 12.0, 5.0);
-  TEST_c_c (csqrt, 0.7, 1.2, 1.0220676100300264507L, 0.5870453129635652115L);
+  TEST_c_c (csqrt, 0.7L, 1.2L, 1.0220676100300264507L, 0.5870453129635652115L);
   TEST_c_c (csqrt, -2, -3, 0.8959774761298381247L, -1.6741492280355400404L);
   TEST_c_c (csqrt, -2, 3, 0.8959774761298381247L, 1.6741492280355400404L);
 
@@ -2177,7 +2177,7 @@ static void
 ctan_test (void)
 {
   errno = 0;
-  FUNC(ctan) (BUILD_COMPLEX (0.7, 1.2));
+  FUNC(ctan) (BUILD_COMPLEX (0.7L, 1.2L));
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -2224,7 +2224,7 @@ ctan_test (void)
 
   TEST_c_c (ctan, nan_value, nan_value, nan_value, nan_value);
 
-  TEST_c_c (ctan, 0.7, 1.2, 0.1720734197630349001L, 0.9544807059989405538L);
+  TEST_c_c (ctan, 0.7L, 1.2L, 0.1720734197630349001L, 0.9544807059989405538L);
   TEST_c_c (ctan, -2, -3, 0.0037640256415042482L, -1.0032386273536098014L);
 
   END (ctan, complex);
@@ -2283,7 +2283,7 @@ ctanh_test (void)
 
   TEST_c_c (ctanh, 0, M_PI_4l, 0.0, 1.0);
 
-  TEST_c_c (ctanh, 0.7, 1.2, 1.3472197399061191630L, 0.4778641038326365540L);
+  TEST_c_c (ctanh, 0.7L, 1.2L, 1.3472197399061191630L, 0.4778641038326365540L);
   TEST_c_c (ctanh, -2, -3, -0.9653858790221331242L, 0.0098843750383224937L);
 
   END (ctanh, complex);
@@ -2306,11 +2306,11 @@ erf_test (void)
   TEST_f_f (erf, minus_infty, -1);
   TEST_f_f (erf, nan_value, nan_value);
 
-  TEST_f_f (erf, 0.7, 0.67780119383741847297L);
+  TEST_f_f (erf, 0.7L, 0.67780119383741847297L);
 
-  TEST_f_f (erf, 1.2, 0.91031397822963538024L);
+  TEST_f_f (erf, 1.2L, 0.91031397822963538024L);
   TEST_f_f (erf, 2.0, 0.99532226501895273416L);
-  TEST_f_f (erf, 4.1, 0.99999999329997234592L);
+  TEST_f_f (erf, 4.1L, 0.99999999329997234592L);
   TEST_f_f (erf, 27, 1.0L);
 
   END (erf);
@@ -2334,11 +2334,11 @@ erfc_test (void)
   TEST_f_f (erfc, minus_zero, 1.0);
   TEST_f_f (erfc, nan_value, nan_value);
 
-  TEST_f_f (erfc, 0.7, 0.32219880616258152702L);
+  TEST_f_f (erfc, 0.7L, 0.32219880616258152702L);
 
-  TEST_f_f (erfc, 1.2, 0.089686021770364619762L);
+  TEST_f_f (erfc, 1.2L, 0.089686021770364619762L);
   TEST_f_f (erfc, 2.0, 0.0046777349810472658379L);
-  TEST_f_f (erfc, 4.1, 0.67000276540848983727e-8L);
+  TEST_f_f (erfc, 4.1L, 0.67000276540848983727e-8L);
   TEST_f_f (erfc, 9, 0.41370317465138102381e-36L);
 
   END (erfc);
@@ -2367,7 +2367,7 @@ exp_test (void)
 
   TEST_f_f (exp, 2, M_E2l);
   TEST_f_f (exp, 3, M_E3l);
-  TEST_f_f (exp, 0.7, 2.0137527074704765216L);
+  TEST_f_f (exp, 0.7L, 2.0137527074704765216L);
 
   END (exp);
 }
@@ -2394,7 +2394,7 @@ exp10_test (void)
   TEST_f_f (exp10, -1, 0.1L);
   TEST_f_f (exp10, 1e6, plus_infty);
   TEST_f_f (exp10, -1e6, 0);
-  TEST_f_f (exp10, 0.7, 5.0118723362727228500L);
+  TEST_f_f (exp10, 0.7L, 5.0118723362727228500155418688494574L);
 
   END (exp10);
 }
@@ -2420,7 +2420,7 @@ exp2_test (void)
   TEST_f_f (exp2, -1, 0.5);
   TEST_f_f (exp2, 1e6, plus_infty);
   TEST_f_f (exp2, -1e6, 0);
-  TEST_f_f (exp2, 0.7, 1.6245047927124710452L);
+  TEST_f_f (exp2, 0.7L, 1.6245047927124710452L);
 
   END (exp2);
 }
@@ -2446,7 +2446,7 @@ expm1_test (void)
   TEST_f_f (expm1, nan_value, nan_value);
 
   TEST_f_f (expm1, 1, M_El - 1.0);
-  TEST_f_f (expm1, 0.7, 1.0137527074704765216L);
+  TEST_f_f (expm1, 0.7L, 1.0137527074704765216L);
 
   END (expm1);
 }
@@ -2626,7 +2626,7 @@ static void
 fmod_test (void)
 {
   errno = 0;
-  FUNC(fmod) (6.5, 2.3);
+  FUNC(fmod) (6.5, 2.3L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -2655,10 +2655,10 @@ fmod_test (void)
 
   TEST_ff_f (fmod, nan_value, nan_value, nan_value);
 
-  TEST_ff_f (fmod, 6.5, 2.3, 1.9L);
-  TEST_ff_f (fmod, -6.5, 2.3, -1.9L);
-  TEST_ff_f (fmod, 6.5, -2.3, 1.9L);
-  TEST_ff_f (fmod, -6.5, -2.3, -1.9L);
+  TEST_ff_f (fmod, 6.5, 2.3L, 1.9L);
+  TEST_ff_f (fmod, -6.5, 2.3L, -1.9L);
+  TEST_ff_f (fmod, 6.5, -2.3L, 1.9L);
+  TEST_ff_f (fmod, -6.5, -2.3L, -1.9L);
 
   END (fmod);
 }
@@ -2732,7 +2732,7 @@ static void
 hypot_test (void)
 {
   errno = 0;
-  FUNC(hypot) (0.7, 12.4);
+  FUNC(hypot) (0.7L, 12.4L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -2752,19 +2752,19 @@ hypot_test (void)
   TEST_ff_f (hypot, nan_value, nan_value, nan_value);
 
   /* hypot (x,y) == hypot (+-x, +-y)  */
-  TEST_ff_f (hypot, 0.7, 12.4, 12.41974234837422060118L);
-  TEST_ff_f (hypot, -0.7, 12.4, 12.41974234837422060118L);
-  TEST_ff_f (hypot, 0.7, -12.4, 12.41974234837422060118L);
-  TEST_ff_f (hypot, -0.7, -12.4, 12.41974234837422060118L);
-  TEST_ff_f (hypot, 12.4, 0.7, 12.41974234837422060118L);
-  TEST_ff_f (hypot, -12.4, 0.7, 12.41974234837422060118L);
-  TEST_ff_f (hypot, 12.4, -0.7, 12.41974234837422060118L);
-  TEST_ff_f (hypot, -12.4, -0.7, 12.41974234837422060118L);
+  TEST_ff_f (hypot, 0.7L, 12.4L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, -0.7L, 12.4L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, 0.7L, -12.4L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, -0.7L, -12.4L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, 12.4L, 0.7L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, -12.4L, 0.7L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, 12.4L, -0.7L, 12.41974234837422060118L);
+  TEST_ff_f (hypot, -12.4L, -0.7L, 12.41974234837422060118L);
 
   /*  hypot (x,0) == fabs (x)  */
   TEST_ff_f (hypot, 0.7L, 0, 0.7L);
   TEST_ff_f (hypot, -0.7L, 0, 0.7L);
-  TEST_ff_f (hypot, -5.7e7L, 0, 5.7e7L);
+  TEST_ff_f (hypot, -5.7e7, 0, 5.7e7L);
 
   TEST_ff_f (hypot, 0.7L, 1.2L, 1.3892443989449804508L);
 
@@ -2837,8 +2837,8 @@ j0_test (void)
   TEST_f_f (j0, plus_infty, 0);
   TEST_f_f (j0, -1.0, 0.76519768655796655145);
   TEST_f_f (j0, 0.0, 1.0);
-  TEST_f_f (j0, 0.1, 0.99750156206604003228);
-  TEST_f_f (j0, 0.7, 0.88120088860740528084);
+  TEST_f_f (j0, 0.1L, 0.99750156206604003228);
+  TEST_f_f (j0, 0.7L, 0.88120088860740528084);
   TEST_f_f (j0, 1.0, 0.76519768655796655145);
   TEST_f_f (j0, 1.5, 0.51182767173591812875);
   TEST_f_f (j0, 2.0, 0.22389077914123566805);
@@ -2867,8 +2867,8 @@ j1_test (void)
 
   TEST_f_f (j1, -1.0, -0.44005058574493351596);
   TEST_f_f (j1, 0.0, 0.0);
-  TEST_f_f (j1, 0.1, 0.049937526036241997556);
-  TEST_f_f (j1, 0.7, 0.32899574154005894785);
+  TEST_f_f (j1, 0.1L, 0.049937526036241997556);
+  TEST_f_f (j1, 0.7L, 0.32899574154005894785);
   TEST_f_f (j1, 1.0, 0.44005058574493351596);
   TEST_f_f (j1, 1.5, 0.55793650791009964199);
   TEST_f_f (j1, 2.0, 0.57672480775687338720);
@@ -2895,8 +2895,8 @@ jn_test (void)
   TEST_ff_f (jn, 0, plus_infty, 0);
   TEST_ff_f (jn, 0, -1.0, 0.76519768655796655145);
   TEST_ff_f (jn, 0, 0.0, 1.0);
-  TEST_ff_f (jn, 0, 0.1, 0.99750156206604003228);
-  TEST_ff_f (jn, 0, 0.7, 0.88120088860740528084);
+  TEST_ff_f (jn, 0, 0.1L, 0.99750156206604003228);
+  TEST_ff_f (jn, 0, 0.7L, 0.88120088860740528084);
   TEST_ff_f (jn, 0, 1.0, 0.76519768655796655145);
   TEST_ff_f (jn, 0, 1.5, 0.51182767173591812875);
   TEST_ff_f (jn, 0, 2.0, 0.22389077914123566805);
@@ -2909,8 +2909,8 @@ jn_test (void)
 
   TEST_ff_f (jn, 1, -1.0, -0.44005058574493351596);
   TEST_ff_f (jn, 1, 0.0, 0.0);
-  TEST_ff_f (jn, 1, 0.1, 0.049937526036241997556);
-  TEST_ff_f (jn, 1, 0.7, 0.32899574154005894785);
+  TEST_ff_f (jn, 1, 0.1L, 0.049937526036241997556);
+  TEST_ff_f (jn, 1, 0.7L, 0.32899574154005894785);
   TEST_ff_f (jn, 1, 1.0, 0.44005058574493351596);
   TEST_ff_f (jn, 1, 1.5, 0.55793650791009964199);
   TEST_ff_f (jn, 1, 2.0, 0.57672480775687338720);
@@ -2923,8 +2923,8 @@ jn_test (void)
 
   TEST_ff_f (jn, 3, -1.0, -0.019563353982668405919);
   TEST_ff_f (jn, 3, 0.0, 0.0);
-  TEST_ff_f (jn, 3, 0.1, 0.000020820315754756261429);
-  TEST_ff_f (jn, 3, 0.7, 0.0069296548267508408077);
+  TEST_ff_f (jn, 3, 0.1L, 0.000020820315754756261429);
+  TEST_ff_f (jn, 3, 0.7L, 0.0069296548267508408077);
   TEST_ff_f (jn, 3, 1.0, 0.019563353982668405919);
   TEST_ff_f (jn, 3, 2.0, 0.12894324947440205110);
   TEST_ff_f (jn, 3, 10.0, 0.058379379305186812343);
@@ -2935,8 +2935,8 @@ jn_test (void)
 
   TEST_ff_f (jn, 10, -1.0, 0.26306151236874532070e-9);
   TEST_ff_f (jn, 10, 0.0, 0.0);
-  TEST_ff_f (jn, 10, 0.1, 0.26905328954342155795e-19);
-  TEST_ff_f (jn, 10, 0.7, 0.75175911502153953928e-11);
+  TEST_ff_f (jn, 10, 0.1L, 0.26905328954342155795e-19);
+  TEST_ff_f (jn, 10, 0.7L, 0.75175911502153953928e-11);
   TEST_ff_f (jn, 10, 1.0, 0.26306151236874532070e-9);
   TEST_ff_f (jn, 10, 2.0, 0.25153862827167367096e-6);
   TEST_ff_f (jn, 10, 10.0, 0.20748610663335885770);
@@ -2988,8 +2988,8 @@ lgamma_test (void)
 
   TEST_f_f1 (lgamma, 0.5, M_LOG_SQRT_PIl, 1);
   TEST_f_f1 (lgamma, -0.5, M_LOG_2_SQRT_PIl, -1);
-  TEST_f_f1 (lgamma, 0.7, 0.26086724653166651439L, 1);
-  TEST_f_f1 (lgamma, 1.2, -0.853740900033158497197e-1L, 1);
+  TEST_f_f1 (lgamma, 0.7L, 0.26086724653166651439L, 1);
+  TEST_f_f1 (lgamma, 1.2L, -0.853740900033158497197e-1L, 1);
 
   END (lgamma);
 }
@@ -3005,14 +3005,14 @@ lrint_test (void)
 
   TEST_f_l (lrint, 0.0, 0);
   TEST_f_l (lrint, minus_zero, 0);
-  TEST_f_l (lrint, 0.2, 0);
-  TEST_f_l (lrint, -0.2, 0);
+  TEST_f_l (lrint, 0.2L, 0);
+  TEST_f_l (lrint, -0.2L, 0);
 
-  TEST_f_l (lrint, 1.4, 1);
-  TEST_f_l (lrint, -1.4, -1);
+  TEST_f_l (lrint, 1.4L, 1);
+  TEST_f_l (lrint, -1.4L, -1);
 
-  TEST_f_l (lrint, 8388600.3, 8388600);
-  TEST_f_l (lrint, -8388600.3, -8388600);
+  TEST_f_l (lrint, 8388600.3L, 8388600);
+  TEST_f_l (lrint, -8388600.3L, -8388600);
 
   END (lrint);
 }
@@ -3028,14 +3028,14 @@ llrint_test (void)
 
   TEST_f_L (llrint, 0.0, 0);
   TEST_f_L (llrint, minus_zero, 0);
-  TEST_f_L (llrint, 0.2, 0);
-  TEST_f_L (llrint, -0.2, 0);
+  TEST_f_L (llrint, 0.2L, 0);
+  TEST_f_L (llrint, -0.2L, 0);
 
-  TEST_f_L (llrint, 1.4, 1);
-  TEST_f_L (llrint, -1.4, -1);
+  TEST_f_L (llrint, 1.4L, 1);
+  TEST_f_L (llrint, -1.4L, -1);
 
-  TEST_f_L (llrint, 8388600.3, 8388600);
-  TEST_f_L (llrint, -8388600.3, -8388600);
+  TEST_f_L (llrint, 8388600.3L, 8388600);
+  TEST_f_L (llrint, -8388600.3L, -8388600);
 
   /* Test boundary conditions.  */
   /* 0x1FFFFF */
@@ -3084,7 +3084,7 @@ log_test (void)
   TEST_f_f (log, 1.0 / M_El, -1);
   TEST_f_f (log, 2, M_LN2l);
   TEST_f_f (log, 10, M_LN10l);
-  TEST_f_f (log, 0.7, -0.35667494393873237891L);
+  TEST_f_f (log, 0.7L, -0.35667494393873237891L);
 
   END (log);
 }
@@ -3117,7 +3117,7 @@ log10_test (void)
   TEST_f_f (log10, 100.0, 2);
   TEST_f_f (log10, 10000.0, 4);
   TEST_f_f (log10, M_El, M_LOG10El);
-  TEST_f_f (log10, 0.7, -0.15490195998574316929L);
+  TEST_f_f (log10, 0.7L, -0.15490195998574316929L);
 
   END (log10);
 }
@@ -3145,7 +3145,7 @@ log1p_test (void)
 
   TEST_f_f (log1p, M_El - 1.0, 1);
 
-  TEST_f_f (log1p, -0.3, -0.35667494393873237891L);
+  TEST_f_f (log1p, -0.3L, -0.35667494393873237891L);
 
   END (log1p);
 }
@@ -3176,7 +3176,7 @@ log2_test (void)
   TEST_f_f (log2, 2.0, 1);
   TEST_f_f (log2, 16.0, 4);
   TEST_f_f (log2, 256.0, 8);
-  TEST_f_f (log2, 0.7, -0.51457317282975824043L);
+  TEST_f_f (log2, 0.7L, -0.51457317282975824043L);
 
   END (log2);
 }
@@ -3210,12 +3210,12 @@ lround_test (void)
 
   TEST_f_l (lround, 0, 0);
   TEST_f_l (lround, minus_zero, 0);
-  TEST_f_l (lround, 0.2, 0.0);
-  TEST_f_l (lround, -0.2, 0);
+  TEST_f_l (lround, 0.2L, 0.0);
+  TEST_f_l (lround, -0.2L, 0);
   TEST_f_l (lround, 0.5, 1);
   TEST_f_l (lround, -0.5, -1);
-  TEST_f_l (lround, 0.8, 1);
-  TEST_f_l (lround, -0.8, -1);
+  TEST_f_l (lround, 0.8L, 1);
+  TEST_f_l (lround, -0.8L, -1);
   TEST_f_l (lround, 1.5, 2);
   TEST_f_l (lround, -1.5, -2);
   TEST_f_l (lround, 22514.5, 22515);
@@ -3235,12 +3235,12 @@ llround_test (void)
 
   TEST_f_L (llround, 0, 0);
   TEST_f_L (llround, minus_zero, 0);
-  TEST_f_L (llround, 0.2, 0.0);
-  TEST_f_L (llround, -0.2, 0);
+  TEST_f_L (llround, 0.2L, 0.0);
+  TEST_f_L (llround, -0.2L, 0);
   TEST_f_L (llround, 0.5, 1);
   TEST_f_L (llround, -0.5, -1);
-  TEST_f_L (llround, 0.8, 1);
-  TEST_f_L (llround, -0.8, -1);
+  TEST_f_L (llround, 0.8L, 1);
+  TEST_f_L (llround, -0.8L, -1);
   TEST_f_L (llround, 1.5, 2);
   TEST_f_L (llround, -1.5, -2);
   TEST_f_L (llround, 22514.5, 22515);
@@ -3335,8 +3335,8 @@ nextafter_test (void)
   TEST_ff_f (nextafter, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (nextafter, minus_infty, minus_infty, minus_infty);
 
-  TEST_ff_f (nextafter, nan_value, 1.1, nan_value);
-  TEST_ff_f (nextafter, 1.1, nan_value, nan_value);
+  TEST_ff_f (nextafter, nan_value, 1.1L, nan_value);
+  TEST_ff_f (nextafter, 1.1L, nan_value, nan_value);
   TEST_ff_f (nextafter, nan_value, nan_value, nan_value);
 
   /* XXX We need the hexadecimal FP number representation here for further
@@ -3360,8 +3360,8 @@ nexttoward_test (void)
   TEST_ff_f (nexttoward, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (nexttoward, minus_infty, minus_infty, minus_infty);
 
-  TEST_ff_f (nexttoward, nan_value, 1.1, nan_value);
-  TEST_ff_f (nexttoward, 1.1, nan_value, nan_value);
+  TEST_ff_f (nexttoward, nan_value, 1.1L, nan_value);
+  TEST_ff_f (nexttoward, 1.1L, nan_value, nan_value);
   TEST_ff_f (nexttoward, nan_value, nan_value, nan_value);
 
   /* XXX We need the hexadecimal FP number representation here for further
@@ -3398,9 +3398,9 @@ pow_test (void)
 
 
 #ifndef TEST_INLINE
-  TEST_ff_f (pow, 1.1, plus_infty, plus_infty);
+  TEST_ff_f (pow, 1.1L, plus_infty, plus_infty);
   TEST_ff_f (pow, plus_infty, plus_infty, plus_infty);
-  TEST_ff_f (pow, -1.1, plus_infty, plus_infty);
+  TEST_ff_f (pow, -1.1L, plus_infty, plus_infty);
   TEST_ff_f (pow, minus_infty, plus_infty, plus_infty);
 
   TEST_ff_f (pow, 0.9L, plus_infty, 0);
@@ -3408,9 +3408,9 @@ pow_test (void)
   TEST_ff_f (pow, -0.9L, plus_infty, 0);
   TEST_ff_f (pow, -1e-7L, plus_infty, 0);
 
-  TEST_ff_f (pow, 1.1, minus_infty, 0);
+  TEST_ff_f (pow, 1.1L, minus_infty, 0);
   TEST_ff_f (pow, plus_infty, minus_infty, 0);
-  TEST_ff_f (pow, -1.1, minus_infty, 0);
+  TEST_ff_f (pow, -1.1L, minus_infty, 0);
   TEST_ff_f (pow, minus_infty, minus_infty, 0);
 
   TEST_ff_f (pow, 0.9L, minus_infty, plus_infty);
@@ -3433,10 +3433,10 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, 2, plus_infty);
   TEST_ff_f (pow, minus_infty, 12, plus_infty);
   TEST_ff_f (pow, minus_infty, 1002, plus_infty);
-  TEST_ff_f (pow, minus_infty, 0.1, plus_infty);
-  TEST_ff_f (pow, minus_infty, 1.1, plus_infty);
-  TEST_ff_f (pow, minus_infty, 11.1, plus_infty);
-  TEST_ff_f (pow, minus_infty, 1001.1, plus_infty);
+  TEST_ff_f (pow, minus_infty, 0.1L, plus_infty);
+  TEST_ff_f (pow, minus_infty, 1.1L, plus_infty);
+  TEST_ff_f (pow, minus_infty, 11.1L, plus_infty);
+  TEST_ff_f (pow, minus_infty, 1001.1L, plus_infty);
 
   TEST_ff_f (pow, minus_infty, -1, minus_zero);
   TEST_ff_f (pow, minus_infty, -11, minus_zero);
@@ -3445,10 +3445,10 @@ pow_test (void)
   TEST_ff_f (pow, minus_infty, -2, 0);
   TEST_ff_f (pow, minus_infty, -12, 0);
   TEST_ff_f (pow, minus_infty, -1002, 0);
-  TEST_ff_f (pow, minus_infty, -0.1, 0);
-  TEST_ff_f (pow, minus_infty, -1.1, 0);
-  TEST_ff_f (pow, minus_infty, -11.1, 0);
-  TEST_ff_f (pow, minus_infty, -1001.1, 0);
+  TEST_ff_f (pow, minus_infty, -0.1L, 0);
+  TEST_ff_f (pow, minus_infty, -1.1L, 0);
+  TEST_ff_f (pow, minus_infty, -11.1L, 0);
+  TEST_ff_f (pow, minus_infty, -1001.1L, 0);
 #endif
 
   TEST_ff_f (pow, nan_value, nan_value, nan_value);
@@ -3466,10 +3466,10 @@ pow_test (void)
   TEST_ff_f (pow, 1, minus_infty, nan_value, INVALID_EXCEPTION);
   TEST_ff_f (pow, -1, minus_infty, nan_value, INVALID_EXCEPTION);
 
-  TEST_ff_f (pow, -0.1, 1.1, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -0.1, -1.1, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -10.1, 1.1, nan_value, INVALID_EXCEPTION);
-  TEST_ff_f (pow, -10.1, -1.1, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -0.1L, 1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -0.1L, -1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -10.1L, 1.1L, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (pow, -10.1L, -1.1L, nan_value, INVALID_EXCEPTION);
 
   TEST_ff_f (pow, 0, -1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_ff_f (pow, 0, -11, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -3477,9 +3477,9 @@ pow_test (void)
   TEST_ff_f (pow, minus_zero, -11, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
 
   TEST_ff_f (pow, 0, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_ff_f (pow, 0, -11.1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_ff_f (pow, 0, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
   TEST_ff_f (pow, minus_zero, -2, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
-  TEST_ff_f (pow, minus_zero, -11.1, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
+  TEST_ff_f (pow, minus_zero, -11.1L, plus_infty, DIVIDE_BY_ZERO_EXCEPTION);
 
 
   TEST_ff_f (pow, 0, 1, 0);
@@ -3490,11 +3490,11 @@ pow_test (void)
 
 
   TEST_ff_f (pow, 0, 2, 0);
-  TEST_ff_f (pow, 0, 11.1, 0);
+  TEST_ff_f (pow, 0, 11.1L, 0);
 
 
   TEST_ff_f (pow, minus_zero, 2, 0);
-  TEST_ff_f (pow, minus_zero, 11.1, 0);
+  TEST_ff_f (pow, minus_zero, 11.1L, 0);
 
 #ifndef TEST_INLINE
   /* pow (x, +inf) == +inf for |x| > 1.  */
@@ -3539,7 +3539,7 @@ pow_test (void)
   /* pow (-0, y) == +0 for y > 0 and not an odd integer.  */
   TEST_ff_f (pow, minus_zero, 4, 0.0);
 
-  TEST_ff_f (pow, 0.7, 1.2, 0.65180494056638638188L);
+  TEST_ff_f (pow, 0.7L, 1.2L, 0.65180494056638638188L);
 
 #ifdef TEST_DOUBLE
   TEST_ff_f (pow, -7.49321e+133, -9.80818e+16, 0);
@@ -3632,12 +3632,12 @@ round_test (void)
 
   TEST_f_f (round, 0, 0);
   TEST_f_f (round, minus_zero, minus_zero);
-  TEST_f_f (round, 0.2, 0.0);
-  TEST_f_f (round, -0.2, minus_zero);
+  TEST_f_f (round, 0.2L, 0.0);
+  TEST_f_f (round, -0.2L, minus_zero);
   TEST_f_f (round, 0.5, 1.0);
   TEST_f_f (round, -0.5, -1.0);
-  TEST_f_f (round, 0.8, 1.0);
-  TEST_f_f (round, -0.8, -1.0);
+  TEST_f_f (round, 0.8L, 1.0);
+  TEST_f_f (round, -0.8L, -1.0);
   TEST_f_f (round, 1.5, 2.0);
   TEST_f_f (round, -1.5, -2.0);
   TEST_f_f (round, 2097152.5, 2097153);
@@ -3681,8 +3681,8 @@ scalb_test (void)
   TEST_ff_f (scalb, plus_infty, 2, plus_infty);
   TEST_ff_f (scalb, minus_infty, 100, minus_infty);
 
-  TEST_ff_f (scalb, 0.1, minus_infty, 0.0);
-  TEST_ff_f (scalb, -0.1, minus_infty, minus_zero);
+  TEST_ff_f (scalb, 0.1L, minus_infty, 0.0);
+  TEST_ff_f (scalb, -0.1L, minus_infty, minus_zero);
 
   TEST_ff_f (scalb, 1, plus_infty, plus_infty);
   TEST_ff_f (scalb, -1, plus_infty, minus_infty);
@@ -3789,7 +3789,7 @@ sin_test (void)
   TEST_f_f (sin, -M_PI_6l, -0.5);
   TEST_f_f (sin, M_PI_2l, 1);
   TEST_f_f (sin, -M_PI_2l, -1);
-  TEST_f_f (sin, 0.7, 0.64421768723769105367L);
+  TEST_f_f (sin, 0.7L, 0.64421768723769105367261435139872014L);
 
   END (sin);
 
@@ -3817,9 +3817,9 @@ sincos_test (void)
   TEST_extra (sincos, nan_value, nan_value, nan_value);
 
   TEST_extra (sincos, M_PI_2l, 1, 0);
-  TEST_extra (sincos, M_PI_6l, 0.5, 0.866025403784438646764L);
-  TEST_extra (sincos, M_PI_6l*2.0, 0.866025403784438646764L, 0.5);
-  TEST_extra (sincos, 0.7, 0.64421768723769105367L, 0.76484218728448842626L);
+  TEST_extra (sincos, M_PI_6l, 0.5, 0.86602540378443864676372317075293616L);
+  TEST_extra (sincos, M_PI_6l*2.0, 0.86602540378443864676372317075293616L, 0.5);
+  TEST_extra (sincos, 0.7L, 0.64421768723769105367261435139872014L, 0.76484218728448842625585999019186495L);
 
   END (sincos);
 }
@@ -3828,7 +3828,7 @@ static void
 sinh_test (void)
 {
   errno = 0;
-  FUNC(sinh) (0.7);
+  FUNC(sinh) (0.7L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -3843,7 +3843,7 @@ sinh_test (void)
 #endif
   TEST_f_f (sinh, nan_value, nan_value);
 
-  TEST_f_f (sinh, 0.7, 0.75858370183953350346L);
+  TEST_f_f (sinh, 0.7L, 0.75858370183953350346L);
 
   END (sinh);
 }
@@ -3875,8 +3875,8 @@ sqrt_test (void)
   TEST_f_f (sqrt, 2, M_SQRT2l);
   TEST_f_f (sqrt, 0.25, 0.5);
   TEST_f_f (sqrt, 6642.25, 81.5);
-  TEST_f_f (sqrt, 15239.9025, 123.45L);
-  TEST_f_f (sqrt, 0.7, 0.83666002653407554798L);
+  TEST_f_f (sqrt, 15239.9025L, 123.45L);
+  TEST_f_f (sqrt, 0.7L, 0.83666002653407554797817202578518747L);
 
   END (sqrt);
 }
@@ -3899,7 +3899,7 @@ tan_test (void)
   TEST_f_f (tan, nan_value, nan_value);
 
   TEST_f_f (tan, M_PI_4l, 1);
-  TEST_f_f (tan, 0.7, 0.84228838046307944813L);
+  TEST_f_f (tan, 0.7L, 0.84228838046307944813L);
 
   END (tan);
 }
@@ -3908,7 +3908,7 @@ static void
 tanh_test (void)
 {
   errno = 0;
-  FUNC(tanh) (0.7);
+  FUNC(tanh) (0.7L);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -3924,7 +3924,7 @@ tanh_test (void)
 #endif
   TEST_f_f (tanh, nan_value, nan_value);
 
-  TEST_f_f (tanh, 0.7, 0.60436777711716349631L);
+  TEST_f_f (tanh, 0.7L, 0.60436777711716349631L);
 
   END (tanh);
 }
@@ -3955,8 +3955,8 @@ tgamma_test (void)
   TEST_f_f (tgamma, 1, 1);
   TEST_f_f (tgamma, 4, 6);
 
-  TEST_f_f (tgamma, 0.7, 1.29805533264755778568L);
-  TEST_f_f (tgamma, 1.2, 0.91816874239976061064L);
+  TEST_f_f (tgamma, 0.7L, 1.29805533264755778568L);
+  TEST_f_f (tgamma, 1.2L, 0.91816874239976061064L);
 
   END (tgamma);
 }
@@ -4009,8 +4009,8 @@ y0_test (void)
   TEST_f_f (y0, nan_value, nan_value);
   TEST_f_f (y0, plus_infty, 0);
 
-  TEST_f_f (y0, 0.1, -1.5342386513503668441);
-  TEST_f_f (y0, 0.7, -0.19066492933739506743);
+  TEST_f_f (y0, 0.1L, -1.5342386513503668441);
+  TEST_f_f (y0, 0.7L, -0.19066492933739506743);
   TEST_f_f (y0, 1.0, 0.088256964215676957983);
   TEST_f_f (y0, 1.5, 0.38244892379775884396);
   TEST_f_f (y0, 2.0, 0.51037567264974511960);
@@ -4038,8 +4038,8 @@ y1_test (void)
   TEST_f_f (y1, plus_infty, 0);
   TEST_f_f (y1, nan_value, nan_value);
 
-  TEST_f_f (y1, 0.1, -6.4589510947020269877);
-  TEST_f_f (y1, 0.7, -1.1032498719076333697);
+  TEST_f_f (y1, 0.1L, -6.4589510947020269877);
+  TEST_f_f (y1, 0.7L, -1.1032498719076333697);
   TEST_f_f (y1, 1.0, -0.78121282130028871655);
   TEST_f_f (y1, 1.5, -0.41230862697391129595);
   TEST_f_f (y1, 2.0, -0.10703243154093754689);
@@ -4067,8 +4067,8 @@ yn_test (void)
   TEST_ff_f (yn, 0, nan_value, nan_value);
   TEST_ff_f (yn, 0, plus_infty, 0);
 
-  TEST_ff_f (yn, 0, 0.1, -1.5342386513503668441);
-  TEST_ff_f (yn, 0, 0.7, -0.19066492933739506743);
+  TEST_ff_f (yn, 0, 0.1L, -1.5342386513503668441);
+  TEST_ff_f (yn, 0, 0.7L, -0.19066492933739506743);
   TEST_ff_f (yn, 0, 1.0, 0.088256964215676957983);
   TEST_ff_f (yn, 0, 1.5, 0.38244892379775884396);
   TEST_ff_f (yn, 0, 2.0, 0.51037567264974511960);
@@ -4081,8 +4081,8 @@ yn_test (void)
   TEST_ff_f (yn, 1, plus_infty, 0);
   TEST_ff_f (yn, 1, nan_value, nan_value);
 
-  TEST_ff_f (yn, 1, 0.1, -6.4589510947020269877);
-  TEST_ff_f (yn, 1, 0.7, -1.1032498719076333697);
+  TEST_ff_f (yn, 1, 0.1L, -6.4589510947020269877);
+  TEST_ff_f (yn, 1, 0.7L, -1.1032498719076333697);
   TEST_ff_f (yn, 1, 1.0, -0.78121282130028871655);
   TEST_ff_f (yn, 1, 1.5, -0.41230862697391129595);
   TEST_ff_f (yn, 1, 2.0, -0.10703243154093754689);
@@ -4093,8 +4093,8 @@ yn_test (void)
   TEST_ff_f (yn, 3, plus_infty, 0);
   TEST_ff_f (yn, 3, nan_value, nan_value);
 
-  TEST_ff_f (yn, 3, 0.1, -5099.3323786129048894);
-  TEST_ff_f (yn, 3, 0.7, -15.819479052819633505);
+  TEST_ff_f (yn, 3, 0.1L, -5099.3323786129048894);
+  TEST_ff_f (yn, 3, 0.7L, -15.819479052819633505);
   TEST_ff_f (yn, 3, 1.0, -5.8215176059647288478);
   TEST_ff_f (yn, 3, 2.0, -1.1277837768404277861);
   TEST_ff_f (yn, 3, 10.0, -0.25136265718383732978);
@@ -4103,8 +4103,8 @@ yn_test (void)
   TEST_ff_f (yn, 10, plus_infty, 0);
   TEST_ff_f (yn, 10, nan_value, nan_value);
 
-  TEST_ff_f (yn, 10, 0.1, -0.11831335132045197885e19);
-  TEST_ff_f (yn, 10, 0.7, -0.42447194260703866924e10);
+  TEST_ff_f (yn, 10, 0.1L, -0.11831335132045197885e19);
+  TEST_ff_f (yn, 10, 0.7L, -0.42447194260703866924e10);
   TEST_ff_f (yn, 10, 1.0, -0.12161801427868918929e9);
   TEST_ff_f (yn, 10, 2.0, -129184.54220803928264);
   TEST_ff_f (yn, 10, 10.0, -0.35981415218340272205);
