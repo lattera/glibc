@@ -1,5 +1,20 @@
 2000-09-21  Andreas Jaeger  <aj@suse.de>
 
+	* math/libm-test.inc (atan_test): Test for existence of function.
+	(expm1_test): Likewise.
+	(acos_test): Likewise.
+	(asin_test): Likewise.
+	(exp_test): Likewise.
+	(log10_test): Likewise.
+	(log_test): Likewise.
+	(pow_test): Likewise.
+	(sqrt_test): Likewise.
+	(cos_test): Likewise.
+	(sin_test): Likewise.
+	(tan_test): Likewise.
+	(log1p_test): Likewise.
+	(log2_test): Likewise.
+
 	* sysdeps/i386/fpu/libm-test-ulps: Tweak some values for K6.
 
 	* libio/oldiofsetpos64.c: Fix alias names.

@@ -693,6 +693,12 @@ matherr (struct exception *x __attribute__ ((unused)))
 static void
 acos_test (void)
 {
+  errno = 0;
+  FUNC(acos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (acos);
 
   TEST_f_f (acos, plus_infty, nan_value, INVALID_EXCEPTION);
@@ -734,6 +740,11 @@ acosh_test (void)
 static void
 asin_test (void)
 {
+  errno = 0;
+  FUNC(asin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (asin);
 
@@ -776,6 +787,11 @@ asinh_test (void)
 static void
 atan_test (void)
 {
+  errno = 0;
+  FUNC(atan) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (atan);
 
@@ -1749,6 +1765,12 @@ copysign_test (void)
 static void
 cos_test (void)
 {
+  errno = 0;
+  FUNC(cos) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (cos);
 
   TEST_f_f (cos, 0, 1);
@@ -2185,6 +2207,12 @@ erfc_test (void)
 static void
 exp_test (void)
 {
+  errno = 0;
+  FUNC(exp) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (exp);
 
   TEST_f_f (exp, 0, 1);
@@ -2260,6 +2288,12 @@ exp2_test (void)
 static void
 expm1_test (void)
 {
+  errno = 0;
+  FUNC(expm1) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (expm1);
 
   TEST_f_f (expm1, 0, 0);
@@ -2451,7 +2485,6 @@ fmin_test (void)
 static void
 fmod_test (void)
 {
-
   START (fmod);
 
   /* fmod (+0, y) == +0 for y != 0.  */
@@ -2880,6 +2913,11 @@ llrint_test (void)
 static void
 log_test (void)
 {
+  errno = 0;
+  FUNC(log) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
   START (log);
 
   TEST_f_f (log, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -2903,6 +2941,12 @@ log_test (void)
 static void
 log10_test (void)
 {
+  errno = 0;
+  FUNC(log10) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (log10);
 
   TEST_f_f (log10, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -2930,6 +2974,12 @@ log10_test (void)
 static void
 log1p_test (void)
 {
+  errno = 0;
+  FUNC(log1p) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (log1p);
 
   TEST_f_f (log1p, 0, 0);
@@ -2952,6 +3002,12 @@ log1p_test (void)
 static void
 log2_test (void)
 {
+  errno = 0;
+  FUNC(log2) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (log2);
 
   TEST_f_f (log2, 0, minus_infty, DIVIDE_BY_ZERO_EXCEPTION);
@@ -3166,6 +3222,12 @@ nexttoward_test (void)
 static void
 pow_test (void)
 {
+
+  errno = 0;
+  FUNC(pow) (0, 0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
 
   START (pow);
 
@@ -3546,6 +3608,12 @@ signbit_test (void)
 static void
 sin_test (void)
 {
+  errno = 0;
+  FUNC(sin) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (sin);
 
   TEST_f_f (sin, 0, 0);
@@ -3608,6 +3676,12 @@ sinh_test (void)
 static void
 sqrt_test (void)
 {
+  errno = 0;
+  FUNC(sqrt) (1);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (sqrt);
 
   TEST_f_f (sqrt, 0, 0);
@@ -3635,6 +3709,12 @@ sqrt_test (void)
 static void
 tan_test (void)
 {
+  errno = 0;
+  FUNC(tan) (0);
+  if (errno == ENOSYS)
+    /* Function not implemented.  */
+    return;
+
   START (tan);
 
   TEST_f_f (tan, 0, 0);
