@@ -703,29 +703,18 @@ non-symbolic character value should not be used"));
 			symbol = repertoire_find_symbol (repertoire, wch);
 
 		      if (symbol == NULL)
-			{
-			  /* We cannot generate a string since we
-			     cannot map from the Unicode number to the
-			     character symbol.  */
-			  lr_error (lr, _("\
-character <U%0*X> not in repertoire map"),
-				    wch > 0xffff ? 8 : 4, wch);
-
-			  illegal_string = 1;
-			}
+			/* We cannot generate a string since we
+			   cannot map from the Unicode number to the
+			   character symbol.  */
+			illegal_string = 1;
 		      else
 			{
 			  seq = charmap_find_value (charmap, symbol,
 						    strlen (symbol));
 
 			  if (seq == NULL)
-			    {
-			      /* Not a known name.  */
-			      lr_error (lr,
-					_("symbol `%s' not in charmap"),
-					symbol);
-			      illegal_string = 1;
-			    }
+			    /* Not a known name.  */
+			    illegal_string = 1;
 			}
 		    }
 

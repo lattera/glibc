@@ -35,7 +35,7 @@
 
 2000-07-27  Jes Sorensen  <jes@linuxcare.com>
 
-	* linuxthreads/sysdeps/ia64/pspinlock.c (__pthread_spin_lock): Add
+	* sysdeps/ia64/pspinlock.c (__pthread_spin_lock): Add
 	load of spin lock to prime the cache before the atomic compare and
 	exchange operation (cmpxchg4). This avoids the spinning on the
 	cmpxchg4 instruction and reduces movement of the cache line back
@@ -43,8 +43,8 @@
 	from Intel). This basically makes the implementation operate the
 	same as the Linux kernel implementation.
 
-	* linuxthreads/shlib-versions: Use GLIBC_2_2 for Linux/ia64.
-	* linuxthreads/sysdeps/ia64/pspinlock.c: New file.
+	* shlib-versions: Use GLIBC_2_2 for Linux/ia64.
+	* sysdeps/ia64/pspinlock.c: New file.
 
 2000-08-03  Ulrich Drepper  <drepper@redhat.com>
 
@@ -63,8 +63,8 @@
 
 2000-08-02  Andreas Jaeger  <aj@suse.de>
 
-	* linuxthreads/sysdeps/s390/pspinlock.c: New file.
-	* linuxthreads/sysdeps/s390/pt-machine.h: New file.
+	* sysdeps/s390/pspinlock.c: New file.
+	* sysdeps/s390/pt-machine.h: New file.
 	Patches by Martin Schwidefsky <schwidefsky@de.ibm.com>.
 
 2000-07-12  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
@@ -117,7 +117,7 @@
 
 	* spinlock.h: If IMPLEMENT_TAS_WITH_CAS is defined use
 	__compare_and_swap to define testandset.
-	* linuxthreads/sysdeps/powerpc/pt-machine.h: Add volatile to asms.
+	* sysdeps/powerpc/pt-machine.h: Add volatile to asms.
 	Define IMPLEMENT_TAS_WITH_CAS.
 
 2000-07-20  Ulrich Drepper  <drepper@redhat.com>
@@ -1280,14 +1280,12 @@
 
 1999-10-21  Xavier Leroy  <Xavier.Leroy@inria.fr>
 
-	* linuxthreads/pthread.c: For i386, wrap pthread_handle_sigrestart
-	and pthread_handle_sigcancel with functions that restore
-	%gs from the signal context.  For each signal handling function,
-	two wrappers are required, one for a non-RT signal and one for
-	a RT signal.
-	* linuxthreads/signal.c: For i386, add code to restore %gs
-	from the signal context in pthread_sighandler and
-	pthread_sighandler_rt.
+	* pthread.c: For i386, wrap pthread_handle_sigrestart and
+	pthread_handle_sigcancel with functions that restore %gs from the
+	signal context.  For each signal handling function, two wrappers
+	are required, one for a non-RT signal and one for a RT signal.
+	* signal.c: For i386, add code to restore %gs from the signal
+	context in pthread_sighandler and pthread_sighandler_rt.
 
 1999-10-17  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -1772,8 +1770,8 @@
 
 1998-09-12 14:24 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
-	* linuxthreads/sysdeps/unix/sysv/linux/bits/sigthread.h: Add
-	multiple inclusion guard.
+	* sysdeps/unix/sysv/linux/bits/sigthread.h: Add multiple inclusion
+	guard.
 
 1998-09-02 11:08  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
@@ -2291,8 +2289,8 @@
 1997-06-29  01:04  Richard Henderson  <richard@gnu.ai.mit.edu>
 
 	Initial sparc64-linux support:
-	* linuxthreads/sysdeps/sparc64/Implies: New file.
-	* linuxthreads/sysdeps/sparc64/pt-machine.h: Likewise.
+	* sysdeps/sparc64/Implies: New file.
+	* sysdeps/sparc64/pt-machine.h: Likewise.
 
 1997-06-29 00:48  Ulrich Drepper  <drepper@cygnus.com>
 
@@ -2401,7 +2399,7 @@
 
 1997-01-22 01:22  Ulrich Drepper  <drepper@cygnus.com>
 
-	* linuxtheads/pthread.c (__pthread_initial_thread): Correct
+	* pthread.c (__pthread_initial_thread): Correct
 	initializer.
 	(__pthread_manager_thread): Likewise.
 	Reported by Andreas Jaeger.
@@ -2412,10 +2410,9 @@
 	thread's initial mask so easily.  Take this opportunity to simplify
 	the clone implementation by only accepting a single void* argument.
 
-	* linuxthreads/manager.c (__pthread_manager): Put thread vitals
-	in the thread struct instead of as arguments through clone.
+	* manager.c (__pthread_manager): Put thread vitals in the thread
+	struct instead of as arguments through clone.
 	(pthread_start_thread): Look for them there.
-	* linuxthreads/internals.h (struct _pthread): Add p_initial_fn,
+	* internals.h (struct _pthread): Add p_initial_fn,
 	p_initial_fn_arg, p_initial_mask.  Fix __pthread_manager proto.
-	* linuxthreads/pthread.c (pthread_initialize_manager): Revise
-	clone invocation.
+	* pthread.c (pthread_initialize_manager): Revise clone invocation.

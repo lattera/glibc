@@ -1,3 +1,8 @@
+2000-08-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/linereader.c (get_string): Don't print an error is a string
+	contains an unknown character.
+
 2000-08-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (struct symbol_t): Add name element.

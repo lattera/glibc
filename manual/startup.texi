@@ -340,7 +340,8 @@ given as the parameter @var{string} is put into the environment.  If the
 user should change the string after the @code{putenv} call this will
 reflect in automatically in the environment.  This also requires that
 @var{string} is no automatic variable which scope is left before the
-variable is removed from the environment.
+variable is removed from the environment.  The same applies of course to
+dynamically allocated variables which are freed later.
 
 This function is part of the extended Unix interface.  Since it was also
 available in old SVID libraries you should define either
@@ -590,7 +591,7 @@ the privilege to do, such as doing I/O.  Programmers don't normally
 need to be concerned with system calls because there are functions in
 the GNU C library to do virtually everything that system calls do.
 These functions work by making system calls themselves.  For example,
-there is a system call that changes the permissions of a file, but 
+there is a system call that changes the permissions of a file, but
 you don't need to know about it because you can just use the GNU C
 library's @code{chmod} function.
 
@@ -660,7 +661,7 @@ int rc;
 
 rc = syscall(SYS_chmod, "/etc/passwd", 0444);
 
-if (rc == -1) 
+if (rc == -1)
    fprintf(stderr, "chmod failed, errno = %d\n", errno);
 
 @end smallexample
