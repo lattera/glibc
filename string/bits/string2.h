@@ -30,7 +30,7 @@
    means the code size increases a lot.  Instead the definitions here
    optimize some functions in a way which do not dramatically
    increase the code size and which do not use assembler.  The main
-   trick is to use GNU CC's `__builtin_constant_p' function.
+   trick is to use GCC's `__builtin_constant_p' function.
 
    Every function XXX which has a defined version in
    <bits/string.h> must be accompanied by a symbol _HAVE_STRING_ARCH_XXX
@@ -94,7 +94,7 @@ __STRING2_COPY_TYPE (8);
   ((size_t)(const void *)((__x) + 1) - (size_t)(const void *)(__x) == 1)
 
 /* Set N bytes of S to C.  */
-#ifndef _HAVE_STRING_ARCH_memset
+#if !defined _HAVE_STRING_ARCH_memset && ! __GNUC_PREREQ (3, 0)
 # if _STRING_ARCH_unaligned
 #  define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
@@ -178,12 +178,10 @@ __STRING2_COPY_TYPE (8);
 									      \
      __s; })
 # else
-#  if ! __GNUC_PREREQ (3, 0)
-#   define memset(s, c, n) \
+#  define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
 		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		  : memset (s, c, n)))
-#  endif
 # endif
 
 /* GCC optimizes memset(s, 0, n) but not bzero(s, n).
@@ -200,7 +198,9 @@ __STRING2_COPY_TYPE (8);
 #ifdef __USE_GNU
 # if !defined _HAVE_STRING_ARCH_mempcpy || defined _FORCE_INLINES
 #  ifndef _HAVE_STRING_ARCH_mempcpy
-#   if __GNUC_PREREQ (3, 0)
+#   if __GNUC_PREREQ (3, 4)
+#    define __mempcpy(dest, src, n) __builtin_mempcpy (dest, src, n)
+#   elif __GNUC_PREREQ (3, 0)
 #    define __mempcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
 		  && __string2_1bptr_p (src) && n <= 8			      \
@@ -387,10 +387,18 @@ __mempcpy_small (void *__dest, char __src1,
 /* Return pointer to C in S.  */
 #ifndef _HAVE_STRING_ARCH_strchr
 extern void *__rawmemchr (const void *__s, int __c);
-# define strchr(s, c) \
+# if __GNUC_PREREQ (3, 2)
+#  define strchr(s, c) \
+  (__extension__ (__builtin_constant_p (c) && !__builtin_constant_p (s)	      \
+		  && (c) == '\0'					      \
+		  ? (char *) __rawmemchr (s, c)				      \
+		  : __builtin_strchr (s, c)))
+# else
+#  define strchr(s, c) \
   (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
 		  ? (char *) __rawmemchr (s, c)				      \
 		  : strchr (s, c)))
+# endif
 #endif
 
 
@@ -560,7 +568,9 @@ __strcpy_small (char *__dest,
 #ifdef __USE_GNU
 # if !defined _HAVE_STRING_ARCH_stpcpy || defined _FORCE_INLINES
 #  ifndef _HAVE_STRING_ARCH_stpcpy
-#   if __GNUC_PREREQ (3, 0)
+#   if __GNUC_PREREQ (3, 4)
+#    define __stpcpy(dest, src) __builtin_stpcpy (dest, src)
+#   elif __GNUC_PREREQ (3, 0)
 #    define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
 		  ? (__string2_1bptr_p (src) && strlen (src) + 1 <= 8	      \
@@ -742,16 +752,8 @@ __stpcpy_small (char *__dest,
 
 /* Copy no more than N characters of SRC to DEST.  */
 #ifndef _HAVE_STRING_ARCH_strncpy
-# if defined _USE_STRING_ARCH_memset && defined _USE_STRING_ARCH_mempcpy
-#  define strncpy(dest, src, n) \
-  (__extension__ ({ char *__dest = (dest);				      \
-		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
-		    ? (strlen (src) + 1 >= ((size_t) (n))		      \
-		       ? (char *) memcpy (__dest, src, n)		      \
-		       : (memset (__mempcpy (__dest, src, strlen (src)),      \
-				  '\0', n - strlen (src)),		      \
-			  __dest))					      \
-		    : strncpy (__dest, src, n); }))
+# if __GNUC_PREREQ (3, 2)
+#  define strncpy(dest, src, n) __builtin_strncpy (dest, src, n)
 # else
 #  define strncpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
@@ -774,6 +776,8 @@ __stpcpy_small (char *__dest,
 		       : (*((char *) __mempcpy (strchr (__dest, '\0'),	      \
 						src, n)) = '\0', __dest))     \
 		    : strncat (dest, src, n); }))
+# elif __GNUC_PREREQ (3, 2)
+#  define strncat(dest, src, n) __builtin_strncat (dest, src, n)
 # else
 #  define strncat(dest, src, n) \
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
@@ -787,7 +791,28 @@ __stpcpy_small (char *__dest,
 
 /* Compare characters of S1 and S2.  */
 #ifndef _HAVE_STRING_ARCH_strcmp
-# define strcmp(s1, s2) \
+# if __GNUC_PREREQ (3, 2)
+#  define strcmp(s1, s2) \
+  __extension__								      \
+  ({ size_t __s1_len, __s2_len;						      \
+     (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
+      && (__s1_len = strlen (s1), __s2_len = strlen (s2),		      \
+	  (!__string2_1bptr_p (s1) || __s1_len >= 4)			      \
+	  && (!__string2_1bptr_p (s2) || __s2_len >= 4))		      \
+      ? __builtin_strcmp (s1, s2)					      \
+      : (__builtin_constant_p (s1) && __string2_1bptr_p (s1)		      \
+	 && (__s1_len = strlen (s1), __s1_len < 4)			      \
+	 ? (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
+	    ? __builtin_strcmp (s1, s2)					      \
+	    : __strcmp_cg (s1, s2, __s1_len))				      \
+	 : (__builtin_constant_p (s2) && __string2_1bptr_p (s2)		      \
+	    && (__s2_len = strlen (s2), __s2_len < 4)			      \
+	    ? (__builtin_constant_p (s1) && __string2_1bptr_p (s1)	      \
+	       ? __builtin_strcmp (s1, s2)				      \
+	       : __strcmp_gc (s1, s2, __s2_len))			      \
+	    : __builtin_strcmp (s1, s2)))); })
+# else
+#  define strcmp(s1, s2) \
   __extension__								      \
   ({ size_t __s1_len, __s2_len;						      \
      (__builtin_constant_p (s1) && __builtin_constant_p (s2)		      \
@@ -807,6 +832,7 @@ __stpcpy_small (char *__dest,
 	       ? __strcmp_cc (s1, s2, __s2_len)				      \
 	       : __strcmp_gc (s1, s2, __s2_len))			      \
 	    : strcmp (s1, s2)))); })
+# endif
 
 # define __strcmp_cc(s1, s2, l) \
   (__extension__ ({ register int __result =				      \
@@ -900,7 +926,25 @@ __stpcpy_small (char *__dest,
    consists entirely of characters not in REJECT.  */
 #if !defined _HAVE_STRING_ARCH_strcspn || defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strcspn
-#  define strcspn(s, reject) \
+#  if __GNUC_PREREQ (3, 2)
+#   define strcspn(s, reject) \
+  __extension__								      \
+  ({ char __r0, __r1, __r2;						      \
+     (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
+      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
+	 ? __builtin_strcspn (s, reject)				      \
+	 : ((__r0 = ((__const char *) (reject))[0], __r0 == '\0')	      \
+	    ? strlen (s)						      \
+	    : ((__r1 = ((__const char *) (reject))[1], __r1 == '\0')	      \
+	       ? __strcspn_c1 (s, __r0)					      \
+	       : ((__r2 = ((__const char *) (reject))[2], __r2 == '\0')	      \
+		  ? __strcspn_c2 (s, __r0, __r1)			      \
+		  : (((__const char *) (reject))[3] == '\0'		      \
+		     ? __strcspn_c3 (s, __r0, __r1, __r2)		      \
+		     : __builtin_strcspn (s, reject))))))		      \
+      : __builtin_strcspn (s, reject)); })
+#  else
+#   define strcspn(s, reject) \
   __extension__								      \
   ({ char __r0, __r1, __r2;						      \
      (__builtin_constant_p (reject) && __string2_1bptr_p (reject)	      \
@@ -913,7 +957,8 @@ __stpcpy_small (char *__dest,
 	       : (((__const char *) (reject))[3] == '\0'		      \
 		  ? __strcspn_c3 (s, __r0, __r1, __r2)			      \
 		  : strcspn (s, reject)))))				      \
-		  : strcspn (s, reject)); })
+      : strcspn (s, reject)); })
+#  endif
 # endif
 
 __STRING_INLINE size_t __strcspn_c1 (__const char *__s, int __reject);
@@ -957,7 +1002,25 @@ __strcspn_c3 (__const char *__s, int __reject1, int __reject2,
    consists entirely of characters in ACCEPT.  */
 #if !defined _HAVE_STRING_ARCH_strspn || defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strspn
-#  define strspn(s, accept) \
+#  if __GNUC_PREREQ (3, 2)
+#   define strspn(s, accept) \
+  __extension__								      \
+  ({ char __a0, __a1, __a2;						      \
+     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
+      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
+	 ? __builtin_strspn (s, accept)					      \
+	 : ((__a0 = ((__const char *) (accept))[0], __a0 == '\0')	      \
+	    ? ((void) (s), 0)						      \
+	    : ((__a1 = ((__const char *) (accept))[1], __a1 == '\0')	      \
+	       ? __strspn_c1 (s, __a0)					      \
+	       : ((__a2 = ((__const char *) (accept))[2], __a2 == '\0')	      \
+		  ? __strspn_c2 (s, __a0, __a1)				      \
+		  : (((__const char *) (accept))[3] == '\0'		      \
+		     ? __strspn_c3 (s, __a0, __a1, __a2)		      \
+		     : __builtin_strspn (s, accept))))))		      \
+      : __builtin_strspn (s, accept)); })
+#  else
+#   define strspn(s, accept) \
   __extension__								      \
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
@@ -971,6 +1034,7 @@ __strcspn_c3 (__const char *__s, int __reject1, int __reject2,
 		  ? __strspn_c3 (s, __a0, __a1, __a2)			      \
 		  : strspn (s, accept)))))				      \
       : strspn (s, accept)); })
+#  endif
 # endif
 
 __STRING_INLINE size_t __strspn_c1 (__const char *__s, int __accept);
@@ -1014,7 +1078,25 @@ __strspn_c3 (__const char *__s, int __accept1, int __accept2, int __accept3)
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #if !defined _HAVE_STRING_ARCH_strpbrk || defined _FORCE_INLINES
 # ifndef _HAVE_STRING_ARCH_strpbrk
-#  define strpbrk(s, accept) \
+#  if __GNUC_PREREQ (3, 2)
+#   define strpbrk(s, accept) \
+  __extension__								      \
+  ({ char __a0, __a1, __a2;						      \
+     (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
+      ? ((__builtin_constant_p (s) && __string2_1bptr_p (s))		      \
+	 ? __builtin_strpbrk (s, accept)				      \
+	 : ((__a0 = ((__const char  *) (accept))[0], __a0 == '\0')	      \
+	    ? ((void) (s), (char *) NULL)				      \
+	    : ((__a1 = ((__const char *) (accept))[1], __a1 == '\0')	      \
+	       ? __builtin_strchr (s, __a0)				      \
+	       : ((__a2 = ((__const char *) (accept))[2], __a2 == '\0')	      \
+		  ? __strpbrk_c2 (s, __a0, __a1)			      \
+		  : (((__const char *) (accept))[3] == '\0'		      \
+		     ? __strpbrk_c3 (s, __a0, __a1, __a2)		      \
+		     : __builtin_strpbrk (s, accept))))))		      \
+      : __builtin_strpbrk (s, accept)); })
+#  else
+#   define strpbrk(s, accept) \
   __extension__								      \
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
@@ -1028,6 +1110,7 @@ __strspn_c3 (__const char *__s, int __accept1, int __accept2, int __accept3)
 		  ? __strpbrk_c3 (s, __a0, __a1, __a2)			      \
 		  : strpbrk (s, accept)))))				      \
       : strpbrk (s, accept)); })
+#  endif
 # endif
 
 __STRING_INLINE char *__strpbrk_c2 (__const char *__s, int __accept1,

@@ -1,3 +1,24 @@
+2004-05-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/string.h (mempcpy, stpcpy): Add libc_hidden_builtin_proto.
+	* string/bits/string2.h (memset): Disable macro for GCC 3.0+.
+	(__mempcpy): Use __builtin_mempcpy for GCC 3.4+.
+	(strchr): For GCC 3.2+, only use __rawmemchr if second argument is
+	constant '\0' and first argument is not constant.
+	(__stpcpy): Use __builtin_stpcpy for GCC 3.4+.
+	(strncpy): Remove #ifdef _USE_STRING_ARCH_mempcpy variant.
+	For GCC 3.2+ use __builtin_strncpy.
+	(strncat): For GCC 3.2+ use __builtin_strncat.
+	(strcmp): For GCC 3.2+ use __builtin_strcmp if both arguments are
+	constant.
+	(strcspn, strspn, strpbrk): For GCC 3.2+, use builtin function
+	if both arguments are constant.
+
+2004-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/nss_files/files-hosts.c: Fix condition for looking up IPv4
+	mapped addresses in gethostbyaddr.
+
 2004-05-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/digits_dots.c (__nss_hostname_digits_dots): Remove typep and

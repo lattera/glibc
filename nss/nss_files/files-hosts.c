@@ -1,5 +1,5 @@
 /* Hosts file parser in nss_files module.
-   Copyright (C) 1996-2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -278,6 +278,11 @@ HOST_DB_LOOKUP (hostbyname2, ,,
 		  LOOKUP_NAME_CASE (h_name, h_aliases)
 		}, const char *name, int af)
 
+#undef EXTRA_ARGS_VALUE
+/* We only need to consider IPv4 mapped addresses if the input to the
+   gethostbyaddr() function is an IPv6 address.  */
+#define EXTRA_ARGS_VALUE \
+  , af, (len == IN6ADDRSZ ? AI_V4MAPPED : 0)
 DB_LOOKUP (hostbyaddr, ,,
 	   {
 	     if (result->h_length == (int) len
