@@ -1,4 +1,4 @@
-/* Copyright (C) 1992,97,98,99,2000,01,02,03 Free Software Foundation, Inc.
+/* Copyright (C) 1992,1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,7 +58,7 @@
 # define INLINE_SYSCALL(name, nr, args...)				\
   ({									\
     INTERNAL_SYSCALL_DECL (sc_err);					\
-    long sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);		\
+    long int sc_ret = INTERNAL_SYSCALL (name, sc_err, nr, args);	\
     if (INTERNAL_SYSCALL_ERROR_P (sc_ret, sc_err))			\
       {									\
 	__set_errno (INTERNAL_SYSCALL_ERRNO (sc_ret, sc_err));		\
@@ -76,22 +76,22 @@
    an error return status).  */
 
 # undef INTERNAL_SYSCALL_DECL
-# define INTERNAL_SYSCALL_DECL(err) long err
+# define INTERNAL_SYSCALL_DECL(err) long int err
 
 # undef INTERNAL_SYSCALL
 # define INTERNAL_SYSCALL(name, err, nr, args...)			\
   ({									\
-    register long r0  __asm__ ("r0");					\
-    register long r3  __asm__ ("r3");					\
-    register long r4  __asm__ ("r4");					\
-    register long r5  __asm__ ("r5");					\
-    register long r6  __asm__ ("r6");					\
-    register long r7  __asm__ ("r7");					\
-    register long r8  __asm__ ("r8");					\
-    register long r9  __asm__ ("r9");					\
-    register long r10 __asm__ ("r10");					\
-    register long r11 __asm__ ("r11");					\
-    register long r12 __asm__ ("r12");					\
+    register long int r0  __asm__ ("r0");				\
+    register long int r3  __asm__ ("r3");				\
+    register long int r4  __asm__ ("r4");				\
+    register long int r5  __asm__ ("r5");				\
+    register long int r6  __asm__ ("r6");				\
+    register long int r7  __asm__ ("r7");				\
+    register long int r8  __asm__ ("r8");				\
+    register long int r9  __asm__ ("r9");				\
+    register long int r10 __asm__ ("r10");				\
+    register long int r11 __asm__ ("r11");				\
+    register long int r12 __asm__ ("r12");				\
     LOADARGS_##nr(name, args);						\
     __asm__ __volatile__						\
       ("sc   \n\t"							\
@@ -114,42 +114,48 @@
 
 # define LOADARGS_0(name, dummy) \
 	r0 = __NR_##name
-# define LOADARGS_1(name, arg1) \
+# define LOADARGS_1(name, __arg1) \
+	long int arg1 = (long int) (__arg1);	\
 	LOADARGS_0(name, 0); \
 	extern void __illegally_sized_syscall_##name##_arg1 (void); \
-	if (__builtin_classify_type (arg1) != 5 && sizeof (arg1) > 4) \
+	if (__builtin_classify_type (__arg1) != 5 && sizeof (__arg1) > 4) \
 	  __illegally_sized_syscall_##name##_arg1 (); \
-	r3 = (long) (arg1)
-# define LOADARGS_2(name, arg1, arg2) \
-	LOADARGS_1(name, arg1); \
+	r3 = arg1
+# define LOADARGS_2(name, __arg1, __arg2) \
+	long int arg2 = (long int) (__arg2); \
+	LOADARGS_1(name, __arg1); \
 	extern void __illegally_sized_syscall_##name##_arg2 (void); \
-	if (__builtin_classify_type (arg2) != 5 && sizeof (arg2) > 4) \
+	if (__builtin_classify_type (__arg2) != 5 && sizeof (__arg2) > 4) \
 	  __illegally_sized_syscall_##name##_arg2 (); \
-	r4 = (long) (arg2)
-# define LOADARGS_3(name, arg1, arg2, arg3) \
-	LOADARGS_2(name, arg1, arg2); \
+	r4 = arg2
+# define LOADARGS_3(name, __arg1, __arg2, __arg3) \
+	long int arg3 = (long int) (__arg3); \
+	LOADARGS_2(name, __arg1, __arg2); \
 	extern void __illegally_sized_syscall_##name##_arg3 (void); \
-	if (__builtin_classify_type (arg3) != 5 && sizeof (arg3) > 4) \
+	if (__builtin_classify_type (__arg3) != 5 && sizeof (__arg3) > 4) \
 	  __illegally_sized_syscall_##name##_arg3 (); \
-	r5 = (long) (arg3)
-# define LOADARGS_4(name, arg1, arg2, arg3, arg4) \
-	LOADARGS_3(name, arg1, arg2, arg3); \
+	r5 = arg3
+# define LOADARGS_4(name, __arg1, __arg2, __arg3, __arg4) \
+	long int arg4 = (long int) (__arg4); \
+	LOADARGS_3(name, __arg1, __arg2, __arg3); \
 	extern void __illegally_sized_syscall_##name##_arg4 (void); \
-	if (__builtin_classify_type (arg4) != 5 && sizeof (arg4) > 4) \
+	if (__builtin_classify_type (__arg4) != 5 && sizeof (__arg4) > 4) \
 	  __illegally_sized_syscall_##name##_arg4 (); \
-	r6 = (long) (arg4)
-# define LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5) \
-	LOADARGS_4(name, arg1, arg2, arg3, arg4); \
+	r6 = arg4
+# define LOADARGS_5(name, __arg1, __arg2, __arg3, __arg4, __arg5) \
+	long int arg5 = (long int) (__arg5); \
+	LOADARGS_4(name, __arg1, __arg2, __arg3, __arg4); \
 	extern void __illegally_sized_syscall_##name##_arg5 (void); \
-	if (__builtin_classify_type (arg5) != 5 && sizeof (arg5) > 4) \
+	if (__builtin_classify_type (__arg5) != 5 && sizeof (__arg5) > 4) \
 	  __illegally_sized_syscall_##name##_arg5 (); \
-	r7 = (long) (arg5)
-# define LOADARGS_6(name, arg1, arg2, arg3, arg4, arg5, arg6) \
-	LOADARGS_5(name, arg1, arg2, arg3, arg4, arg5); \
+	r7 = arg5
+# define LOADARGS_6(name, __arg1, __arg2, __arg3, __arg4, __arg5, __arg6) \
+	long int arg6 = (long int) (__arg6); \
+	LOADARGS_5(name, __arg1, __arg2, __arg3, __arg4, __arg5); \
 	extern void __illegally_sized_syscall_##name##_arg6 (void); \
-	if (__builtin_classify_type (arg6) != 5 && sizeof (arg6) > 4) \
+	if (__builtin_classify_type (__arg6) != 5 && sizeof (__arg6) > 4) \
 	  __illegally_sized_syscall_##name##_arg6 (); \
-	r8 = (long) (arg6)
+	r8 = arg6
 
 # define ASM_INPUT_0 "0" (r0)
 # define ASM_INPUT_1 ASM_INPUT_0, "1" (r3)
