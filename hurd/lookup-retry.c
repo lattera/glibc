@@ -1,5 +1,5 @@
 /* hairy bits of Hurd file name lookup
-   Copyright (C) 1992,93,94,95,96,97,99,2001 Free Software Foundation, Inc.
+   Copyright (C) 1992,93,94,95,96,97,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -136,7 +136,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		     we follow root-owned symlinks; if that is deemed
 		     undesireable, we can add a final check for that
 		     one exception to our general translator-based rule.  */
-		  struct stat st;
+		  struct stat64 st;
 		  err = __io_stat (*result, &st);
 		  if (!err
 		      && (st.st_mode & (S_IPTRANS|S_IATRANS)))

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,24 +17,22 @@
    02111-1307 USA.  */
 
 #include <sys/statfs.h>
-
-#include "statfsconv.c"
+#include <hurd.h>
 
 /* Return information about the filesystem on which FILE resides.  */
 int
 __statfs64 (const char *file, struct statfs64 *buf)
 {
-  int result;
-  struct statfs buf32;
+  error_t err;
+  file_t port;
 
-  /* XXX We simply call __statfs and convert the result to `struct
-     statfs64'.  We can probably get away with that since we don't
-     support large files on the Hurd yet.  */
-  result = __statfs (file, &buf32);
-  if (result == 0)
-    statfs64_conv (&buf32, buf);
-
-  return result;
+  port = __file_name_lookup (file, 0, 0);
+  if (port == MACH_PORT_NULL)
+    return -1;
+  err = __file_statfs (port, buf);
+  __mach_port_deallocate (__mach_task_self (), port);
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
-
 weak_alias (__statfs64, statfs64)

@@ -1,3 +1,77 @@
+2002-06-11  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/xstat64.c: Conditionalize entire contents of the
+	file on [!RTLD_STAT64].
+	* sysdeps/mach/hurd/fxstat64.c: Likewise.
+
+	* sysdeps/mach/hurd/tmpfile.c (tmpfile64): Define as alias of tmpfile.
+	(__fdopen): Use INTUSE.
+	* sysdeps/mach/hurd/tmpfile64.c: New file, empty placeholder.
+
+	* stdio-common/tmpfile64.c: File removed.
+	* sysdeps/generic/tmpfile64.c: New file.
+	* sysdeps/generic/tmpfile.c (GEN_THIS): New macro, define to __GT_FILE
+	if not already defined.
+	(tmpfile): Use it in place of __GT_FILE.
+
+	* include/unistd.h: Declare __chown_internal.
+
+	* sysdeps/mach/hurd/sendfile64.c (sendfile64): Do real work here.
+	* sysdeps/mach/hurd/sendfile.c (sendfile): Call that.
+
+2002-06-09  Roland McGrath  <roland@frob.com>
+
+	Update to new Hurd RPC interfaces supporting 64-bit file sizes.
+	* sysdeps/mach/hurd/configure.in: Check for <hurd/version.h> with
+	value of HURD_INTERFACE_VERSION >= 20020609.
+	* sysdeps/mach/hurd/configure: Regenerated.
+	* shlib-versions (.*-.*-gnu-gnu.*): Set libhurduser=0.3.
+	* sysdeps/mach/hurd/xstatconv.c (xstat64_conv): Rewritten to
+	convert a struct stat64 into a struct stat and return 0 or -1
+	with errno set to EOVERFLOW.
+	* sysdeps/mach/hurd/statfsconv.c (statfs64_conv): Likewise
+	for struct statfs64 to struct statfs.
+	* sysdeps/mach/hurd/xstat.c (__xstat): Use converter and call ...
+	* sysdeps/mach/hurd/xstat64.c (__xstat64): ... this, real work here.
+	* sysdeps/mach/hurd/fxstat.c (__fxstat): Likewise.
+	* sysdeps/mach/hurd/fxstat64.c (__fxstat64): Likewise.
+	* sysdeps/mach/hurd/lxstat.c (__lxstat): Likewise.
+	* sysdeps/mach/hurd/lxstat64.c (__lxstat64): Likewise.
+	* sysdeps/mach/hurd/statfs.c (__statfs): Likewise.
+	* sysdeps/mach/hurd/statfs64.c (__statfs64): Likewise.
+	* sysdeps/mach/hurd/fstatfs.c (__fstatfs): Likewise.
+	* sysdeps/mach/hurd/fstatfs64.c (__fstatfs64): Likewise.
+	* sysdeps/mach/hurd/pwrite64.c (__libc_pwrite64): Do real work here.
+	* sysdeps/mach/hurd/pwrite.c (__libc_pwrite): Call that.
+	* sysdeps/mach/hurd/pread64.c (__libc_pread64): Do real work here.
+	* sysdeps/mach/hurd/pread.c (__libc_pread): Call that.
+	* sysdeps/mach/hurd/lseek64.c (__libc_lseek64): Do real work here.
+	* sysdeps/mach/hurd/lseek.c (__libc_lseek): Call that.
+	* sysdeps/mach/hurd/readdir64.c (__readdir64): Do real work here.
+	* sysdeps/mach/hurd/readdir.c (__readdir): Call that.
+	* sysdeps/mach/hurd/readdir64_r.c (__readdir64_r): Do real work here.
+	* sysdeps/mach/hurd/readdir_r.c (__readdir64_r): Call that.
+	* hurd/lookup-retry.c (__hurd_file_name_lookup_retry):
+	Use struct stat64 for io_stat argument.
+	* sysdeps/mach/hurd/readlink.c (__readlink): Likewise.
+	* hurd/fopenport.c (seekio): Remove EOVERFLOW check, pass POS directly
+	to io_seek.
+	* hurd/fd-read.c (_hurd_fd_read): Use loff_t for OFFSET argument.
+	* hurd/fd-write.c (_hurd_fd_write): Likewise.
+	* hurd/hurd/fd.h: Update decls.
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): Use ino64_t
+	and struct dirent64.
+	* sysdeps/mach/hurd/dl-sysdep.c (open_file): Use struct stat64.
+	(__xstat): Renamed to __xstat64, use struct stat64 for argument.
+	(__fxstat): Renamed to __fxstat64, use struct stat64 for argument.
+	(__lseek): Renamed to __libc_lseek64, use off64_t for argument.
+
+2002-06-08  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/dirstream.h (struct __dirstream): Use size_t
+	instead of unsigned long int for __allocation and __size members.
+
 2002-06-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/dl-brk.c: Move...
@@ -68,7 +142,7 @@
 	* sysdeps/mach/hurd/alpha/init-first.c: New file, modified from
 	i386/init-first.c by Andrew M. Miklic <miklic@attglobal.net>.
 
-2002-05-21  Jakub Jelinek  <jakub@redhat.com>
+2002-05-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* resolv/resolv.h (struct __res_state): Remove unused nstimes.
 	Add nsmap.

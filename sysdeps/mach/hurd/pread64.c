@@ -1,6 +1,6 @@
 /* Read block from given position in file without changing file pointer.
    Hurd version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,21 +20,17 @@
 
 #include <errno.h>
 #include <unistd.h>
+#include <hurd/fd.h>
 
 ssize_t
-__libc_pread64 (int fd, void *buf, size_t nbyte, off64_t offset)
+__libc_pread64 (int fd, void *buf, size_t nbytes, off64_t offset)
 {
-  /* XXX We don't really support large files on the Hurd.  So if
-     OFFSET doesn't fit in an `off_t', we'll return `-1' and set
-     errno.  EOVERFLOW probably isn't the right error value, but seems
-     appropriate here.  */
-  if ((off_t) offset != offset)
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
-    }
-
-  return __libc_pread (fd, buf, nbyte, offset);
+  error_t err;
+  if (offset < 0)
+    err = EINVAL;
+  else
+    err = HURD_FD_USE (fd, _hurd_fd_read (descriptor, buf, &nbytes, offset));
+  return err ? __hurd_dfail (fd, err) : nbytes;
 }
 
 #ifndef __libc_pread64

@@ -30,6 +30,9 @@ extern int __pipe (int __pipedes[2]);
 extern unsigned int __sleep (unsigned int __seconds);
 extern int __chown (__const char *__file,
 		    __uid_t __owner, __gid_t __group);
+extern int __chown_internal (__const char *__file,
+			     __uid_t __owner, __gid_t __group)
+     attribute_hidden;
 extern int __fchown (int __fd,
 		     __uid_t __owner, __gid_t __group);
 extern int __lchown (__const char *__file, __uid_t __owner,

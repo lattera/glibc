@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 {
   error_t err;
   mach_port_t rootid, thisid, rootdevid, thisdevid;
-  ino_t rootino, thisino;
+  ino64_t rootino, thisino;
   char *file_name;
   register char *file_namep;
   file_t parent;
@@ -112,9 +112,9 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 	 THISID, THISDEV, and THISINO are its identity.
 	 Look in its parent (..) for a file with the same file number.  */
 
-      struct dirent *d;
+      struct dirent64 *d;
       mach_port_t dotid, dotdevid;
-      ino_t dotino;
+      ino64_t dotino;
       int mount_point;
       file_t newp;
       char *dirdata;
@@ -175,7 +175,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 	  offset = 0;
 	  while (offset < dirdatasize)
 	    {
-	      d = (struct dirent *) &dirdata[offset];
+	      d = (struct dirent64 *) &dirdata[offset];
 	      offset += d->d_reclen;
 
 	      /* Ignore `.' and `..'.  */
@@ -189,7 +189,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
 		  file_t try = __file_name_lookup_under (parent, d->d_name,
 							 O_NOLINK, 0);
 		  file_t id, devid;
-		  ino_t fileno;
+		  ino64_t fileno;
 		  if (try == MACH_PORT_NULL)
 		    goto lose;
 		  err = __io_identity (try, &id, &devid, &fileno);

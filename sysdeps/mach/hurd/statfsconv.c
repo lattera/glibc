@@ -1,5 +1,5 @@
 /* Convert between `struct statfs' format, and `struct statfs64' format.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,23 +17,33 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <string.h>
-#include <sys/stat.h>
+#include <sys/statfs.h>
+#include <errno.h>
 
-static inline void
-statfs64_conv (struct statfs *buf, struct statfs64 *buf64)
+static inline int
+statfs64_conv (struct statfs *buf, const struct statfs64 *buf64)
 {
-  memset (buf64, 0, sizeof (struct statfs64));
+# define DO(memb)							      \
+  buf->memb = buf64->memb;						      \
+  if (sizeof buf->memb != sizeof buf64->memb && buf->memb != buf64->memb)     \
+    {									      \
+      __set_errno (EOVERFLOW);						      \
+      return -1;							      \
+    }
 
-  buf64->f_type = buf->f_type;
-  buf64->f_bsize = buf->f_bsize;
-  buf64->f_blocks = buf->f_blocks;
-  buf64->f_bfree = buf->f_bfree;
-  buf64->f_bavail = buf->f_bavail;
-  buf64->f_files = buf->f_files;
-  buf64->f_fsid = buf->f_fsid;
-  buf64->f_namelen = buf->f_namelen;
-  buf64->f_favail = buf->f_favail;
-  buf64->f_frsize = buf->f_frsize;
-  buf64->f_flag = buf->f_flag;
+  DO (f_type);
+  DO (f_bsize);
+  DO (f_blocks);
+  DO (f_bfree);
+  DO (f_bavail);
+  DO (f_files);
+  DO (f_fsid);
+  DO (f_namelen);
+  DO (f_favail);
+  DO (f_frsize);
+  DO (f_flag);
+
+# undef DO
+
+  return 0;
 }

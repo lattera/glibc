@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 94, 95, 96, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,85 +32,34 @@
 int
 __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
-  struct dirent *dp;
-  error_t err = 0;
+  if (sizeof (struct dirent64) == sizeof (struct dirent))
+    /* We should in fact just be an alias to readdir64_r on this machine.  */
+    return __readdir64_r (dirp,
+			  (struct dirent64 *) entry,
+			  (struct dirent64 **) result);
 
-  if (dirp == NULL)
+  struct dirent64 *result64;
+  union
+  {
+    struct dirent64 d;
+    char b[offsetof (struct dirent64, d_name) + UCHAR_MAX + 1];
+  } u;
+  int err;
+
+  err = __readdir64_r (dirp, &u.d, &result64);
+  if (result64)
     {
-      errno = EINVAL;
-      return errno;
-    }
-
-  __libc_lock_lock (dirp->__lock);
-
-  do
-    {
-      if (dirp->__ptr - dirp->__data >= dirp->__size)
-	{
-	  /* We've emptied out our buffer.  Refill it.  */
-
-	  char *data = dirp->__data;
-	  int nentries;
-
-	  if (err = HURD_FD_PORT_USE (dirp->__fd,
-				      __dir_readdir (port,
-						     &data, &dirp->__size,
-						     dirp->__entry_ptr,
-						     -1, 0, &nentries)))
-	    {
-	      __hurd_fail (err);
-	      dp = NULL;
-	      break;
-	    }
-
-	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
-	  dirp->__entry_data = dirp->__entry_ptr;
-
-	  if (data != dirp->__data)
-	    {
-	      /* The data was passed out of line, so our old buffer is no
-		 longer useful.  Deallocate the old buffer and reset our
-		 information for the new buffer.  */
-	      __vm_deallocate (__mach_task_self (),
-			       (vm_address_t) dirp->__data,
-			       dirp->__allocation);
-	      dirp->__data = data;
-	      dirp->__allocation = round_page (dirp->__size);
-	    }
-
-	  /* Reset the pointer into the buffer.  */
-	  dirp->__ptr = dirp->__data;
-
-	  if (nentries == 0)
-	    {
-	      /* End of file.  */
-	      dp = NULL;
-	      break;
-	    }
-
-	  /* We trust the filesystem to return correct data and so we
-	     ignore NENTRIES.  */
-	}
-
-      dp = (struct dirent *) dirp->__ptr;
-      dirp->__ptr += dp->d_reclen;
-      ++dirp->__entry_ptr;
-
-      /* Loop to ignore deleted files.  */
-    } while (dp->d_fileno == 0);
-
-  if (dp)
-    {
-      *entry = *dp;
-      memcpy (entry->d_name, dp->d_name, dp->d_namlen + 1);
+      entry->d_fileno = result64->d_fileno;
+      entry->d_reclen = result64->d_reclen;
+      entry->d_type = result64->d_type;
+      entry->d_namlen = result64->d_namlen;
+      memcpy (entry->d_name, result64->d_name, result64->d_namlen + 1);
       *result = entry;
     }
   else
     *result = NULL;
 
-  __libc_lock_unlock (dirp->__lock);
-
-  return dp ? 0 : err ? errno : 0;
+  return err;
 }
 
 weak_alias (__readdir_r, readdir_r)

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,25 +16,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
 /* Seek to OFFSET on FD, starting from WHENCE.  */
 off64_t
 __libc_lseek64 (int fd, off64_t offset, int whence)
 {
-  /* XXX We don't really support large files on the Hurd.  So if
-     OFFSET doesn't fit in an `off_t', we'll return `-1' and set
-     errno.  EOVERFLOW probably isn't the right error value, but seems
-     appropriate here.  */
-  if ((off_t) offset != offset)
-    {
-      __set_errno (EOVERFLOW);
-      return -1;
-    }
-
-  return __libc_lseek (fd, offset, whence);
+  error_t err;
+  if (err = HURD_DPORT_USE (fd, __io_seek (port, offset, whence, &offset)))
+    return __hurd_dfail (fd, err);
+  return offset;
 }
 
 weak_alias (__libc_lseek64, __lseek64)

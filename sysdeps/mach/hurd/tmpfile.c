@@ -26,7 +26,7 @@
 
 #ifdef USE_IN_LIBIO
 # include <iolibio.h>
-# define __fdopen _IO_fdopen
+# define __fdopen INTUSE(_IO_fdopen)
 # define tmpfile __new_tmpfile
 #endif
 
@@ -73,3 +73,5 @@ tmpfile (void)
 # include <shlib-compat.h>
 versioned_symbol (libc, __new_tmpfile, tmpfile, GLIBC_2_1);
 #endif
+
+weak_alias (tmpfile, tmpfile64)

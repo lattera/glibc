@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __readlink (file_name, buf, len)
 {
   error_t err;
   file_t file;
-  struct stat st;
+  struct stat64 st;
 
   file = __file_name_lookup (file_name, O_READ | O_NOLINK, 0);
   if (file == MACH_PORT_NULL)

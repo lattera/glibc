@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,8 @@
    02111-1307 USA.  */
 
 #include <sys/statfs.h>
+#include <hurd.h>
+#include <hurd/fd.h>
 
 #include "statfsconv.c"
 
@@ -24,17 +26,11 @@
 int
 __fstatfs64 (int fd, struct statfs64 *buf)
 {
-  int result;
-  struct statfs buf32;
+  error_t err;
 
-  /* XXX We simply call __fstatfs and convert the result to `struct
-     statfs64'.  We can probably get away with that since we don't
-     support large files on the Hurd yet.  */
-  result = __fstatfs (fd, &buf32);
-  if (result == 0)
-    statfs64_conv (&buf32, buf);
+  if (err = HURD_DPORT_USE (fd, __file_statfs (port, buf)))
+    return __hurd_dfail (fd, err);
 
-  return result;
+  return 0;
 }
-
 weak_alias (__fstatfs64, fstatfs64)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,90 +17,51 @@
    02111-1307 USA.  */
 
 #include <errno.h>
-#include <limits.h>
 #include <stddef.h>
-#include <string.h>
 #include <dirent.h>
 #include <unistd.h>
-#include <sys/types.h>
-#include <hurd.h>
-#include <hurd/fd.h>
-#include "dirstream.h"
-
+#include <endian.h>
+#include <assert.h>
 
 /* Read a directory entry from DIRP.  */
 struct dirent *
 __readdir (DIR *dirp)
 {
-  struct dirent *dp;
+  struct dirent64 *entry64 = __readdir64 (dirp);
 
-  if (dirp == NULL)
+  if (sizeof (struct dirent64) == sizeof (struct dirent))
+    /* We should in fact just be an alias to readdir64 on this machine.  */
+    return (struct dirent *) entry64;
+
+  /* These are all compile-time constants.  We know that d_ino is the first
+     member and that the layout of the following members matches exactly in
+     both structures.  */
+  assert (offsetof (struct dirent, d_ino) == 0);
+  assert (offsetof (struct dirent64, d_ino) == 0);
+# define MATCH(memb)							      \
+  assert (offsetof (struct dirent64, memb) - sizeof (entry64->d_ino)	      \
+	  == offsetof (struct dirent, memb) - sizeof (ino_t))
+  MATCH (d_reclen);
+  MATCH (d_type);
+  MATCH (d_namlen);
+# undef MATCH
+
+  if (entry64 == NULL)
+    return NULL;
+
+  struct dirent *const entry = ((void *) (&entry64->d_ino + 1)
+				- sizeof entry->d_ino);
+  const ino_t d_ino = entry64->d_ino;
+  if (d_ino != entry64->d_ino)
     {
-      errno = EINVAL;
+      __set_errno (EOVERFLOW);
       return NULL;
     }
-
-  __libc_lock_lock (dirp->__lock);
-
-  do
-    {
-      if (dirp->__ptr - dirp->__data >= dirp->__size)
-	{
-	  /* We've emptied out our buffer.  Refill it.  */
-
-	  char *data = dirp->__data;
-	  int nentries;
-	  error_t err;
-
-	  if (err = HURD_FD_PORT_USE (dirp->__fd,
-				      __dir_readdir (port,
-						     &data, &dirp->__size,
-						     dirp->__entry_ptr,
-						     -1, 0, &nentries)))
-	    {
-	      __hurd_fail (err);
-	      dp = NULL;
-	      break;
-	    }
-
-	  /* DATA now corresponds to entry index DIRP->__entry_ptr.  */
-	  dirp->__entry_data = dirp->__entry_ptr;
-
-	  if (data != dirp->__data)
-	    {
-	      /* The data was passed out of line, so our old buffer is no
-		 longer useful.  Deallocate the old buffer and reset our
-		 information for the new buffer.  */
-	      __vm_deallocate (__mach_task_self (),
-			       (vm_address_t) dirp->__data,
-			       dirp->__allocation);
-	      dirp->__data = data;
-	      dirp->__allocation = round_page (dirp->__size);
-	    }
-
-	  /* Reset the pointer into the buffer.  */
-	  dirp->__ptr = dirp->__data;
-
-	  if (nentries == 0)
-	    {
-	      /* End of file.  */
-	      dp = NULL;
-	      break;
-	    }
-
-	  /* We trust the filesystem to return correct data and so we
-	     ignore NENTRIES.  */
-	}
-
-      dp = (struct dirent *) dirp->__ptr;
-      dirp->__ptr += dp->d_reclen;
-      ++dirp->__entry_ptr;
-
-      /* Loop to ignore deleted files.  */
-    } while (dp->d_fileno == 0);
-
-  __libc_lock_unlock (dirp->__lock);
-
-  return dp;
+# if BYTE_ORDER != BIG_ENDIAN	/* We just skipped over the zero high word.  */
+  entry->d_ino = d_ino;	/* ... or the nonzero low word, swap it.  */
+# endif
+  entry->d_reclen -= sizeof entry64->d_ino - sizeof entry->d_ino;
+  return entry;
 }
+
 weak_alias (__readdir, readdir)

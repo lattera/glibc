@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,11 +16,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef RTLD_STAT64		/* dl-fxstat64.c, but we don't want it.  */
+
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
-
-#include "xstatconv.c"
+#include <hurd.h>
+#include <hurd/fd.h>
 
 #undef __fxstat64
 
@@ -28,17 +30,17 @@
 int
 __fxstat64 (int vers, int fd, struct stat64 *buf)
 {
-  int result;
-  struct stat buf32;
+  error_t err;
 
-  /* XXX We simply call __fxstat and convert the result to `struct
-     stat64'.  We can probably get away with that since we don't
-     support large files on the Hurd yet.  */
-  result = __fxstat (vers, fd, &buf32);
-  if (result == 0)
-    xstat64_conv (&buf32, buf);
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
 
-  return result;
+  if (err = HURD_DPORT_USE (fd, __io_stat (port, buf)))
+    return __hurd_dfail (fd, err);
+
+  return 0;
 }
 
 INTDEF(__fxstat64)
+
+#endif

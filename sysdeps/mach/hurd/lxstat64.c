@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,8 +19,8 @@
 #include <errno.h>
 #include <stddef.h>
 #include <sys/stat.h>
-
-#include "xstatconv.c"
+#include <fcntl.h>
+#include <hurd.h>
 
 #undef __lxstat64
 
@@ -28,16 +28,19 @@
 int
 __lxstat64 (int vers, const char *file, struct stat64 *buf)
 {
-  int result;
-  struct stat buf32;
+  error_t err;
+  file_t port;
 
-  /* XXX We simply call __lxstat and convert the result to `struct
-     stat64'.  We can probably get away with that since we don't
-     support large files on the Hurd yet.  */
-  result = __lxstat (vers, file, &buf32);
-  if (result == 0)
-    xstat64_conv (&buf32, buf);
+  if (vers != _STAT_VER)
+    return __hurd_fail (EINVAL);
 
-  return result;
+  port = __file_name_lookup (file, O_NOLINK, 0);
+  if (port == MACH_PORT_NULL)
+    return -1;
+  err = __io_stat (port, buf);
+  __mach_port_deallocate (__mach_task_self (), port);
+  if (err)
+    return __hurd_fail (err);
+  return 0;
 }
 INTDEF(__lxstat64)

@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -280,7 +280,7 @@ _dl_sysdep_start_cleanup (void)
    error.  If STAT is non-zero, stat the file into that stat buffer.  */
 static error_t
 open_file (const char *file_name, int flags,
-	   mach_port_t *port, struct stat *stat)
+	   mach_port_t *port, struct stat64 *stat)
 {
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
@@ -417,8 +417,8 @@ __writev (int fd, const struct iovec *iov, int niov)
 }
 
 
-off_t weak_function
-__lseek (int fd, off_t offset, int whence)
+off64_t weak_function
+__libc_lseek64 (int fd, off64_t offset, int whence)
 {
   error_t err;
 
@@ -491,7 +491,7 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 }
 
 int weak_function
-__fxstat (int vers, int fd, struct stat *buf)
+__fxstat64 (int vers, int fd, struct stat64 *buf)
 {
   error_t err;
 
@@ -505,7 +505,7 @@ __fxstat (int vers, int fd, struct stat *buf)
 }
 
 int weak_function
-__xstat (int vers, const char *file, struct stat *buf)
+__xstat64 (int vers, const char *file, struct stat64 *buf)
 {
   error_t err;
   mach_port_t port;

@@ -1,5 +1,5 @@
 /* statfs -- Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,25 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <hurd.h>
 #include <sys/statfs.h>
-#include <stddef.h>
+
+#include "statfsconv.c"
 
 /* Return information about the filesystem on which FILE resides.  */
 int
 __statfs (const char *file, struct statfs *buf)
 {
-  error_t err;
-  file_t port;
-
-  port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __file_statfs (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  struct statfs64 buf64;
+  return __statfs64 (file, &buf64) ?: statfs64_conv (buf, &buf64);
 }
 
 weak_alias (__statfs, statfs)

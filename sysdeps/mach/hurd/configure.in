@@ -22,6 +22,19 @@ case "$machine" in
     ;;
 esac
 
+AC_CACHE_CHECK(Hurd header version, libc_cv_hurd_version, [dnl
+AC_TRY_COMPILE(dnl
+[#include <hurd/version.h>], [
+#define NEED_VERSION 20020609
+#if HURD_INTERFACE_VERSION < NEED_VERSION
+# error Hurd version too old: HURD_INTERFACE_VERSION < NEED_VERSION
+#endif],
+	       libc_cv_hurd_version=ok,
+	       libc_cv_hurd_version=bad)])
+if test "x$libc_cv_hurd_version" != xok; then
+  AC_MSG_ERROR(Hurd headers not installed or too old)
+fi
+
 dnl Swiped from hurd/aclocal.m4
 AC_DEFUN([hurd_MIG_RETCODE], [dnl
 # See if mig groks `retcode'.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,27 +18,14 @@
 
 #include <errno.h>
 #include <sys/stat.h>
-#include <stddef.h>
-#include <hurd.h>
+
+#include "xstatconv.c"
 
 /* Get file information about FILE in BUF.  */
 int
 __xstat (int vers, const char *file, struct stat *buf)
 {
-  error_t err;
-  file_t port;
-
-  if (vers != _STAT_VER)
-    return __hurd_fail (EINVAL);
-
-  port = __file_name_lookup (file, 0, 0);
-  if (port == MACH_PORT_NULL)
-    return -1;
-  err = __io_stat (port, buf);
-  __mach_port_deallocate (__mach_task_self (), port);
-  if (err)
-    return __hurd_fail (err);
-  return 0;
+  struct stat64 buf64;
+  return __xstat64 (vers, file, &buf64) ?: xstat64_conv (buf, &buf64);
 }
-
 weak_alias (__xstat, _xstat)

@@ -1,5 +1,5 @@
 /* fstatfs -- Return information about the filesystem on which FD resides.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,21 +17,16 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <hurd.h>
-#include <hurd/fd.h>
 #include <sys/statfs.h>
-#include <stddef.h>
+
+#include "statfsconv.c"
 
 /* Return information about the filesystem on which FD resides.  */
 int
 __fstatfs (int fd, struct statfs *buf)
 {
-  error_t err;
-
-  if (err = HURD_DPORT_USE (fd, __file_statfs (port, buf)))
-    return __hurd_dfail (fd, err);
-
-  return 0;
+  struct statfs64 buf64;
+  return __fstatfs64 (fd, &buf64) ?: statfs64_conv (buf, &buf64);
 }
 
 weak_alias (__fstatfs, fstatfs)

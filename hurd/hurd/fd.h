@@ -1,5 +1,6 @@
 /* File descriptors.
-   Copyright (C) 1993,94,95,96,97,98,99,2000,01 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,96,97,98,99,2000,01,02
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -214,9 +215,9 @@ extern error_t _hurd_fd_close (struct hurd_fd *fd);
    If successful, stores the amount actually read or written in *NBYTES.  */
 
 extern error_t _hurd_fd_read (struct hurd_fd *fd,
-			      void *buf, size_t *nbytes, off_t offset);
+			      void *buf, size_t *nbytes, loff_t offset);
 extern error_t _hurd_fd_write (struct hurd_fd *fd,
-			       const void *buf, size_t *nbytes, off_t offset);
+			       const void *buf, size_t *nbytes, loff_t offset);
 
 
 /* Call *RPC on PORT and/or CTTY; if a call on CTTY returns EBACKGROUND,

@@ -18,43 +18,20 @@
    02111-1307 USA.  */
 
 #include <sys/sendfile.h>
-#include <hurd.h>
-#include <hurd/fd.h>
-#include <sys/mman.h>
+#include <stddef.h>
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
 ssize_t
 sendfile (int out_fd, int in_fd, off_t *offset, size_t count)
 {
-  /* We just do a vanilla io_read followed by a vanilla io_write here.
-     In theory the IN_FD filesystem can return us out-of-line data that
-     we then send out-of-line to the OUT_FD filesystem and no copying
-     takes place until those pages need to be flushed or packaged by
-     that filesystem (e.g. packetized by a network socket).  However,
-     we momentarily consume COUNT bytes of our local address space,
-     which might blow if it's huge or address space is real tight.  */
-
-  char *data = 0;
-  size_t datalen = 0;
-  error_t err = HURD_DPORT_USE (in_fd,
-				__io_read (port, &data, &datalen,
-					   offset ? *offset : (off_t) -1,
-					   count));
-  if (err == 0)
+  if (offset == NULL || sizeof (off_t) == sizeof (off64_t))
+    return sendfile64 (out_fd, in_fd, (off64_t *) offset, count);
+  else
     {
-      size_t nwrote;
-      if (datalen == 0)
-	return 0;
-      err = HURD_DPORT_USE (out_fd, __io_write (port, data, datalen,
-						(off_t) -1, &nwrote));
-      munmap (data, datalen);
-      if (err == 0)
-	{
-	  if (offset)
-	    *offset += datalen;
-	  return nwrote;
-	}
+      off64_t ofs = *offset;
+      ssize_t ret = sendfile64 (out_fd, in_fd, &ofs, count);
+      *offset = ofs;
+      return ret;
     }
-  return __hurd_fail (err);
 }
