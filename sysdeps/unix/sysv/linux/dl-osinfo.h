@@ -18,6 +18,11 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/sysctl.h>
+#include "kernel-features.h"
+
+#ifndef MIN
+# define MIN(a,b) (((a)<(b))?(a):(b))
+#endif
 
 /* There is no prototype for __sysctl in that file.  */
 extern int __sysctl (int *name, int nlen, void *oldval,
