@@ -74,7 +74,7 @@ struct stat
     long int st_pad4;
     __blkcnt64_t st_blocks;	/* Number of 512-byte blocks allocated.  */
 #endif
-    long int st_pad4[14];
+    long int st_pad5[14];
   };
 
 #ifdef __USE_LARGEFILE64
