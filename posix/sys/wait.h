@@ -88,6 +88,7 @@ typedef union
 # define WIFEXITED(status)	__WIFEXITED(__WAIT_INT(status))
 # define WIFSIGNALED(status)	__WIFSIGNALED(__WAIT_INT(status))
 # define WIFSTOPPED(status)	__WIFSTOPPED(__WAIT_INT(status))
+#endif
 
 #ifdef	__USE_BSD
 # define WCOREFLAG		__WCOREFLAG
