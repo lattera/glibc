@@ -2279,7 +2279,7 @@ if test $VERSIONING = no; then
 *** WARNING: You should not compile GNU libc without versioning. Not using
 *** versioning will introduce incompatibilities so that old binaries
 *** will not run anymore.
-*** For versioning you need recent binutils (binutils-2.8.1.0.17 or newer)."
+*** For versioning you need recent binutils (binutils-2.8.1.0.23 or newer)."
 fi
 if test $elf = yes; then
   echo $ac_n "checking for .previous assembler directive""... $ac_c" 1>&6

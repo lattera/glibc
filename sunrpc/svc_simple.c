@@ -46,6 +46,7 @@ static char sccsid[] = "@(#)svc_simple.c 1.18 87/08/11 Copyr 1984 Sun Micro";
 #include <netdb.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define fputs(s, f) _IO_fputs (s, f)
 #endif
 

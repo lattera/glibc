@@ -24,6 +24,7 @@
    General Public License.  */
 
 #include "libioP.h"
+#include <stdio.h>
 #include <string.h>
 
 int

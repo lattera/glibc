@@ -41,6 +41,7 @@ extern char *getenv ();
 #endif
 
 #if defined _LIBC && defined USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define setvbuf(s, b, f, l) _IO_setvbuf (s, b, f, l)
 #endif
 

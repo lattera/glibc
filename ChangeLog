@@ -1,3 +1,27 @@
+1998-07-16 13:44  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp-fmtstream.c: Fix warnings introduced in last change.
+	* assert/assert-perr.c: Likewise.
+	* assert/assert.c: Likewise.
+	* gconv_conf.c: Likewise.
+	* libio/iofputs_u.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* malloc/obstack.c: Likewise.
+	* misc/error.c: Likewise.
+	* misc/syslog.c: Likewise.
+	* stdio-common/asprintf.c: Likewise.
+	* stdio-common/dprintf.c: Likewise.
+	* stdio-common/getw.c: Likewise.
+	* stdio-common/putw.c: Likewise.
+	* stdio-common/snprintf.c: Likewise.
+	* stdio-common/sprintf.c: Likewise.
+	* stdio-common/sscanf.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+	* sysdeps/generic/abort.c: Likewise.
+
+	* rt/aio_cancel.c: Don't define ECANCELED here.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define ECANCELED correctly.
+
 1998-07-16 10:23  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp-fmtstream.c: Unify names of used global functions.

@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define __vsscanf(s, f, a) _IO_vsscanf (s, f, a)
 #endif
 

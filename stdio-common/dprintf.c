@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/libioP.h>
 # define vdprintf(d, f, a) _IO_vdprintf (d, f, a)
 #endif
 

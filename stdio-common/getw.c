@@ -19,6 +19,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define fread(p, m, n, s) _IO_fread (p, m, n, s)
 #endif
 

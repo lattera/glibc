@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/libioP.h>
 # define __vsnprintf(s, l, f, a) _IO_vsnprintf (s, l, f, a)
 #endif
 

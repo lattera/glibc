@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/libioP.h>
 # define vasprintf(s, f, a) _IO_vasprintf (s, f, a)
 #endif
 

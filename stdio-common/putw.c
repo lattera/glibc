@@ -19,6 +19,7 @@
 #include <stdio.h>
 
 #ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define fwrite(p, n, m, s) _IO_fwrite (p, n, m, s)
 #endif
 

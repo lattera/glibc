@@ -78,6 +78,7 @@ builtin_aliases[] =
 };
 
 #ifdef USE_IN_LIBIO
+# include <libio/libioP.h>
 # define __getdelim(line, len, c, fp) _IO_getdelim (line, len, c, fp)
 #endif
 

@@ -59,6 +59,7 @@ static char sccsid[] = "@(#)syslog.c	8.4 (Berkeley) 3/18/94";
 #endif
 
 #ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 # define ftell(s) _IO_ftell (s)
 #endif
 

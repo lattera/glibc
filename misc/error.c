@@ -77,6 +77,7 @@ unsigned int error_message_count;
 # define error_at_line __error_at_line
 
 # ifdef USE_IN_LIBIO
+# include <libio/iolibio.h>
 #  define fflush(s) _IO_fflush (s)
 # endif
 
