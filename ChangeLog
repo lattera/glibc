@@ -1,3 +1,7 @@
+2003-01-05  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/Makefile (CFLAGS-.oS): Append -fPIC.
+
 2003-01-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/clone.S (__clone): Use

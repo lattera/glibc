@@ -1,5 +1,8 @@
 2003-01-05  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/m68k/Makefile: New file, use -fPIC for nonshared
+	objects.
+
 	* sysdeps/unix/sysv/linux/m68k/sysdep-cancel.h (SINGLE_THREAD_P):
 	Fix for PIC.
 	(CENABLE): Likewise.
