@@ -18,7 +18,7 @@ mips*64*)
   if test ! -f "$asm_unistd_h"; then
     AC_MSG_WARN([*** asm/unistd.h not found, it will not be pre-processed])
     echo '#include <asm/unistd.h>' > asm-unistd.h
-  else
+  elif grep __NR_N32_open "$asm_unistd_h" > /dev/null; then
     # The point of this preprocessing is to turn __NR_<syscall> into
     # __NR_N64_<syscall>, as well as to define __NR_<syscall> to
     # __NR_<abi>_<syscall>, if __NR_<abi>_<syscall> is defined
@@ -68,6 +68,8 @@ BEGIN { print "#include <sgidefs.h>"; }
 {
 	print;
 }'
+  else
+    echo '#include <asm/unistd.h>' > asm-unistd.h
   fi ;;
 mips*)
   rm -f asm-unistd.h
