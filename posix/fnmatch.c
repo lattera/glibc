@@ -35,7 +35,7 @@
 # include <strings.h>
 #endif
 
-#ifdef	STDC_HEADERS
+#if defined STDC_HEADERS || defined _LIBC
 # include <stdlib.h>
 #endif
 
@@ -216,6 +216,7 @@ fnmatch (pattern, string, flags)
 	    /* Nonzero if the sense of the character class is inverted.  */
 	    static int posixly_correct;
 	    register int not;
+	    char cold;
 
 	    if (posixly_correct == 0)
 	      posixly_correct = getenv ("POSIXLY_CORRECT") != NULL ? 1 : -1;
@@ -245,6 +246,9 @@ fnmatch (pattern, string, flags)
 		    if (c == fn)
 		      goto matched;
 		  }
+		else if ((flags & FNM_FILE_NAME) && c == '/')
+		  /* [/] can never match.  */
+		  return FNM_NOMATCH;
 		else if (c == '[' && *p == ':')
 		  {
 		    /* Leave room for the null.  */
@@ -301,8 +305,23 @@ fnmatch (pattern, string, flags)
 		else if (FOLD (c) == fn)
 		  goto matched;
 
+		cold = c;
 		c = *p++;
 
+		if (c == '-' && *p != ']')
+		  {
+		    /* It is a range.  */
+		    char cend = *p++;
+		    if (!(flags & FNM_NOESCAPE) && cend == '\\')
+		      cend = *p++;
+		    if (cend == '\0')
+		      return FNM_NOMATCH;
+
+		    if (cold <= fn && fn <= FOLD (cend))
+		      goto matched;
+
+		    c = *p++;
+		  }
 		if (c == ']')
 		  break;
 	      }
