@@ -53,7 +53,7 @@ BEGIN {
 /^  [A-Za-z_]/ {
   if (renamed[actlib "::" $1])
     actver = renamed[actlib "::" $1];
-  else if (!versions[actlib "::" $1]) {
+  else if (!versions[actlib "::" $1] && $1 != "GLIBC_PRIVATE") {
     printf("version %s not defined for %s\n", $1, actlib) > "/dev/stderr";
     ++lossage;
   }

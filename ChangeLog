@@ -1,5 +1,7 @@
 2005-03-22  Roland McGrath  <roland@redhat.com>
 
+	* scripts/versions.awk: No errors for GLIBC_PRIVATE.
+
 	* Versions.def (libdl, librt): Add GLIBC_2.3.4 version.
 
 	* scripts/versions.awk: Print all errors and die at the end.
