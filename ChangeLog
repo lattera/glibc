@@ -1,5 +1,10 @@
 2002-02-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-minimal.c: Define _itoa_lower_digits.
+
+	* elf/dynamic-link.h (elf_get_dynamic_info): ld.so can have
+	DT_FLAGS set.
+
 	* elf/dl-load.c (_dl_map_object_from_fd): Prevent dynamically
 	loading modules with the DF_STATIC_TLS flag set.
 	* elf/dynamic-link.h (elf_get_dynamic_info): Initialize l_flags
