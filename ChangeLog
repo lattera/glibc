@@ -1,3 +1,8 @@
+1998-10-22  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/arm/sysdep.h: Wrap assembler macros in #ifdef
+	__ASSEMBLER__.
+
 1998-10-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h: Remove EXTRAVARS_* macros
