@@ -1,3 +1,8 @@
+2002-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/gnu/Makefile: Only depend on Versions.v.i for
+	errlist-compat.c if build-shared==yes.
+
 2002-08-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_runtime_setup): Declare
