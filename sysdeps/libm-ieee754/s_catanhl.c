@@ -62,17 +62,17 @@ __catanhl (__complex__ long double x)
 
       i2 = __imag__ x * __imag__ x;
 
-      num = 1.0 - __real__ x;
+      num = 1.0 + __real__ x;
       num = i2 + num * num;
 
-      den = 1.0 + __real__ x;
+      den = 1.0 - __real__ x;
       den = i2 + den * den;
 
-      __real__ res = 0.25 * __ieee754_logl (num / den);
+      __real__ res = 0.25 * (__ieee754_logl (num) - __ieee754_logl (den));
 
       den = 1 - __real__ x * __real__ x - i2;
 
-      __imag__ res = 0.5 * __atanl ((2.0 * __imag__ x) / den);
+      __imag__ res = 0.5 * __ieee754_atan2l (2.0 * __imag__ x, den);
     }
 
   return res;

@@ -19,6 +19,7 @@
 
 #include <errno.h>
 #include <signal.h>
+#include <sys/types.h>
 
 int
 __sigqueue (pid_t pid, int sig, const union sigval val)

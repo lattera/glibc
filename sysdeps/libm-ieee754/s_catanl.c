@@ -69,7 +69,7 @@ __catanl (__complex__ long double x)
 
       den = 1 - r2 - __imag__ x * __imag__ x;
 
-      __real__ res = 0.5 * __atanl ((2.0 * __real__ x) / den);
+      __real__ res = 0.5 * __ieee754_atan2l (2.0 * __real__ x, den);
 
       num = __imag__ x + 1.0;
       num = r2 + num * num;

@@ -56,6 +56,9 @@ void *xrealloc (void *__ptr, size_t __n);
 #define SWAPU16(w) \
   ((((w)  >> 8) & 0xff) | (((w) & 0xff) << 8))
 
+#define XSWAPU32(w) \
+  ((((w) & 0xff00ff00) >> 8) | (((w) & 0xff00ff) << 8))
+
 
 /* To be compatible with former implementations we for now restrict
    the number of bits for character classes to 16.  When compatibility
@@ -63,7 +66,7 @@ void *xrealloc (void *__ptr, size_t __n);
 #define char_class_t u_int16_t
 #define CHAR_CLASS_TRANS SWAPU16
 #define char_class32_t u_int32_t
-#define CHAR_CLASS32_TRANS SWAPU32
+#define CHAR_CLASS32_TRANS XSWAPU32
 
 
 /* The real definition of the struct for the LC_CTYPE locale.  */

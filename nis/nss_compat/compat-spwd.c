@@ -177,9 +177,14 @@ internal_setspent (ent_t *ent)
 		     - pwdtable) - 1;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   if (ent->stream == NULL)
     {
@@ -265,9 +270,14 @@ internal_endspent (ent_t *ent)
       ent->result = NULL;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   give_spwd_free (&ent->pwd);
 
@@ -704,18 +714,12 @@ getspnam_plususer (const char *name, struct spwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (yp_match (domain, "shadow.byname", name, strlen (name),
-		    &outval, &outvallen)
-          != YPERR_SUCCESS)
-	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+		    &outval, &outvallen)  != YPERR_SUCCESS)
+	return NSS_STATUS_NOTFOUND;
+
       ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
 		     buflen : (size_t) outvallen);
       buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
@@ -854,7 +858,8 @@ getspent_next_file (struct spwd *result, ent_t *ent,
           if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
             break;
           else
-            if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+            if (status == NSS_STATUS_RETURN /* We couldn't parse the entry */
+		|| status == NSS_STATUS_NOTFOUND) /* entry doesn't exist */
               continue;
             else
 	      {

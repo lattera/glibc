@@ -23,6 +23,7 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
 #ifdef __STDC__
 #include <stdlib.h>

@@ -20,6 +20,9 @@
  *	ISO C Standard: 4.14/2.2.4.2 Limits of integral types	<limits.h>
  */
 
+#ifndef _LIBC_LIMITS_H_
+#define _LIBC_LIMITS_H_	1
+
 #include <features.h>
 
 #ifdef	__USE_POSIX
@@ -39,9 +42,6 @@
 #if __GNUC__ >= 2
 
  /* Get the compiler's limits.h, which defines all the ANSI constants.  */
-# ifndef _LIBC_LIMITS_H_
-#  define _LIBC_LIMITS_H_	/* This tells it not to look for another.  */
-# endif
 # ifndef _GCC_LIMITS_H_		/* This is what GCC's file defines.  */
 #  include_next <limits.h>
 # endif
@@ -90,7 +90,7 @@
 #  define USHRT_MAX	65535
 
 /* Minimum and maximum values a `signed int' can hold.  */
-#  define INT_MIN	(- INT_MAX - 1)
+#  define INT_MIN	(-INT_MAX - 1)
 #  define INT_MAX	2147483647
 
 /* Maximum value an `unsigned int' can hold.  (Minimum is 0.)  */
@@ -106,7 +106,7 @@
 #  else
 #   define LONG_MAX	2147483647L
 #  endif
-#  define LONG_MIN	(- LONG_MAX - 1L)
+#  define LONG_MIN	(-LONG_MAX - 1L)
 
 /* Maximum value an `unsigned long int' can hold.  (Minimum is 0.)  */
 #  ifdef __alpha__
@@ -121,3 +121,5 @@
 
 # endif	/* limits.h  */
 #endif	/* GCC 2.  */
+
+#endif	/* !_LIBC_LIMITS_H_ */

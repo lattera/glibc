@@ -3148,7 +3148,6 @@ The return value is @code{0} on success and @code{-1} on failure.  If
 @code{sigaltstack} fails, it sets @code{errno} to one of these values:
 
 @table @code
-@item
 @item EINVAL
 You tried to disable a stack that was in fact currently in use.
 

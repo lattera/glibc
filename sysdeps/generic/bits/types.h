@@ -69,6 +69,7 @@ typedef long int __rlim_t;	/* Type for resource measurement.  */
 typedef __quad_t __rlim64_t;	/* Type for resource measurement (LFS).  */
 typedef __quad_t __ino64_t;	/* Type for file serial numbers.  */
 typedef __loff_t __off64_t;	/* Type of file izes and offsets.  */
+typedef unsigned int __id_t;	/* General type for IDs.  */
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */
@@ -85,7 +86,7 @@ typedef long int __key_t;	/* Type of an IPC key */
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define	__NFDBITS	(sizeof (unsigned long int) * 8)
 #define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	(1 << ((d) % __NFDBITS))
+#define	__FDMASK(d)	((unsigned long int) 1 << ((d) % __NFDBITS))
 
 typedef struct
   {

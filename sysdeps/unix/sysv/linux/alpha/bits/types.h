@@ -62,6 +62,7 @@ typedef __uint32_t __fsblkcnt_t;	/* Type to count file system blocks.  */
 typedef __uint64_t __fsblkcnt64_t;	/*  "" (LFS) */
 typedef __uint64_t __fsfilcnt_t;	/* Type to count file system inodes.  */
 typedef __uint64_t __fsfilcnt64_t;	/*  "" (LFS) */
+typedef __uint32_t __id_t;		/* General type for IDs.  */
 
 typedef struct
   {
@@ -90,7 +91,7 @@ typedef unsigned long int __fd_mask;
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define __NFDBITS	(8 * sizeof (__fd_mask))
 #define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	(1 << ((d) % __NFDBITS))
+#define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
 
 /* fd_set for select and pselect.  */
 typedef struct

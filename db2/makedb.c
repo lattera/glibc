@@ -318,7 +318,7 @@ process_input (input, inname, output, to_lowercase, be_quiet)
 	      status = 0;
 	    }
 	  else
-	    error (0, errno, gettext ("while writing data base file"));
+	    error (0, errno, gettext ("while writing database file"));
 
 	  status = status ? EXIT_FAILURE : EXIT_SUCCESS;
 

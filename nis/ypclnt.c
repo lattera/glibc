@@ -74,11 +74,12 @@ __yp_bind (const char *domain, dom_binding **ypdb)
   if (ysd == NULL)
     {
       is_new = 1;
-      ysd = (dom_binding *) malloc (sizeof *ysd);
-      memset (ysd, '\0', sizeof *ysd);
+      ysd = (dom_binding *) calloc (1, sizeof *ysd);
       ysd->dom_socket = -1;
       ysd->dom_vers = -1;
     }
+  else
+    ysd->dom_client = NULL;
 
   try = 0;
 
@@ -257,11 +258,12 @@ do_ypcall (const char *domain, u_long prog, xdrproc_t xargs,
       use_ypbindlist = FALSE;
     }
   else
-    {
-      __yp_unbind (ydb);
-      free (ydb);
-      ydb = NULL;
-    }
+    if (ydb != NULL)
+      {
+	__yp_unbind (ydb);
+	free (ydb);
+	ydb = NULL;
+      }
 
   return result;
 }
@@ -728,7 +730,7 @@ yperr_string (const int error)
     case YPERR_NODOM:
       return _("Local domain name not set");
     case YPERR_BADDB:
-      return _("NIS map data base is bad");
+      return _("NIS map database is bad");
     case YPERR_VERS:
       return _("NIS client/server version mismatch - can't supply service");
     case YPERR_ACCESS:

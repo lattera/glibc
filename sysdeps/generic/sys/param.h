@@ -8,6 +8,7 @@
 #include <limits.h>
 
 #define MAXSYMLINKS  1
+#define MAXPATHLEN   256
 
 /* Macros for min/max.  */
 #define MIN(a,b) (((a)<(b))?(a):(b))

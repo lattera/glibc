@@ -1637,6 +1637,9 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   hp->_IO_write_ptr = buf;
   hp->_IO_write_end = buf + sizeof buf;
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
+#if _IO_JUMPS_OFFSET
+  hp->_vtable_offset = 0;
+#endif
 #ifdef _IO_MTSAFE_IO
   hp->_lock = &helper.lock;
   __libc_lock_init (*hp->_lock);

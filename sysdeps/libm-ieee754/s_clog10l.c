@@ -1,4 +1,4 @@
-/* Compute complex natural logarithm.
+/* Compute complex base 10 logarithm.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -44,7 +44,7 @@ __clog10l (__complex__ long double x)
       /* Neither real nor imaginary part is NaN.  */
       __real__ result = __ieee754_log10l (__ieee754_hypotl (__real__ x,
 							    __imag__ x));
-      __imag__ result = __ieee754_atan2l (__imag__ x, __real__ x);
+      __imag__ result = M_LOG10E * __ieee754_atan2l (__imag__ x, __real__ x);
     }
   else
     {

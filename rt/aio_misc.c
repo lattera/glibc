@@ -144,7 +144,7 @@ get_elem (void)
 
 
 void
-__aio_free_req (struct requestlist *elem)
+__aio_free_request (struct requestlist *elem)
 {
   elem->running = no;
   elem->next_prio = freelist;
@@ -375,7 +375,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
   else
     {
       /* Something went wrong.  */
-      __aio_free_req (newp);
+      __aio_free_request (newp);
       newp = NULL;
     }
 
@@ -486,7 +486,7 @@ handle_fildes_io (void *arg)
 	}
 
       /* Free the old element.  */
-      __aio_free_req (runp);
+      __aio_free_request (runp);
 
       runp = freelist;
       if (runp != NULL)

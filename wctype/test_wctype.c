@@ -46,14 +46,22 @@ main (int argc, char *argv[])
 
   for (ch = 0; ch < 256; ++ch)
     {
-#define TEST(test)							      \
+#define TEST(test) \
       do								      \
-	if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))	      \
-	  {								      \
-	    printf ("class `%s' test for character \\%o failed\n",	      \
-		    #test, ch);						      \
-	    result = 1;							      \
-	  }								      \
+	{								      \
+	  if ((is##test (ch) == 0) != (iswctype (ch, bit_##test) == 0))	      \
+	    {								      \
+	      printf ("`iswctype' class `%s' test "			      \
+		      "for character \\%o failed\n", #test, ch);	      \
+	      result = 1;						      \
+	    }								      \
+	  if ((is##test (ch) == 0) != (isw##test (ch) == 0))		      \
+	    {								      \
+	      printf ("`isw%s' test for character \\%o failed\n",	      \
+		      #test, ch);					      \
+	      result = 1;						      \
+	    }								      \
+	 }								      \
       while (0)
 
       TEST (alnum);

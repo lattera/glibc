@@ -56,7 +56,7 @@ extern __sighandler_t __sysv_signal __P ((int __sig,
 /* Set the handler for the signal SIG to HANDLER, returning the old
    handler, or SIG_ERR on error.
    By default `signal' has the BSD semantic.  */
-#if !defined __USE_XOPEN || defined __USE_GNU
+#ifdef __USE_BSD
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 #else
 /* Make sure the used `signal' implementation is the SVID version.
@@ -176,15 +176,8 @@ typedef __sigset_t sigset_t;
 #  define __need_timespec
 #  include <time.h>
 
-/* Type for data associated with a signal.  */
-typedef union sigval
-  {
-    int sival_int;
-    void *sival_ptr;
-  } sigval_t;
-
 /* Get the `siginfo_t' type plus the needed symbols.  */
-# include <bits/siginfo.h>
+#  include <bits/siginfo.h>
 
 /* Clear all signals from SET.  */
 extern int sigemptyset __P ((sigset_t *__set));

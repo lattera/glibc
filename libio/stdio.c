@@ -29,9 +29,9 @@
 #undef stdin
 #undef stdout
 #undef stderr
-FILE *stdin = &_IO_2_1_stdin_.plus.file;
-FILE *stdout = &_IO_2_1_stdout_.plus.file;
-FILE *stderr = &_IO_2_1_stderr_.plus.file;
+FILE *stdin = &_IO_2_1_stdin_.file;
+FILE *stdout = &_IO_2_1_stdout_.file;
+FILE *stderr = &_IO_2_1_stderr_.file;
 
 #undef _IO_stdin
 #undef _IO_stdout

@@ -81,6 +81,10 @@ typedef __pid_t pid_t;
 # define pid_t pid_t
 #endif
 
+#if defined __USE_SVID || defined __USE_XOPEN
+typedef __id_t id_t;
+#endif
+
 #ifndef ssize_t
 typedef __ssize_t ssize_t;
 # define ssize_t ssize_t

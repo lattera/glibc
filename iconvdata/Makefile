@@ -169,7 +169,7 @@ headers: $(sed-generated-headers) $(perl-generated-headers)
 
 $(addprefix $(inst_gconvdir)/, $(modules.so)): $(inst_gconvdir)/%: $(objpfx)%
 	$(do-install-program)
-$(inst_gconvdir)/gconv_modules: gconv-modules
+$(inst_gconvdir)/gconv-modules: gconv-modules
 	$(do-install)
 endif
 

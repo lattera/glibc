@@ -40,7 +40,6 @@ extern void _end;
 extern void ENTRY_POINT (void);
 
 ElfW(Addr) _dl_base_addr;
-uid_t __libc_uid;
 int __libc_enable_secure;
 int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
@@ -131,7 +130,6 @@ _dl_sysdep_start (void **start_argptr,
   SEE (EUID, euid);
   SEE (EGID, egid);
 
-  __libc_uid = uid;
   __libc_enable_secure = uid != euid || gid != egid;
 
   if (_dl_pagesize == 0)

@@ -52,6 +52,13 @@
 # define EISDIR		24
 # define EOPNOTSUPP	25	/* Operation not supported.  */
 # define ENOTTY		26
+# define EAGAIN		27
+# define EIO		28
+# define ENOSPC		29
+# define EEXIST		30
 #endif
 
 #define __set_errno(val) errno = (val)
+
+/* Function to get address of global `errno' variable.  */
+extern int *__errno_location __P ((void)) __attribute__ ((__const__));

@@ -46,8 +46,6 @@ struct r_search_path *_dl_search_paths;
 const char *_dl_profile;
 struct link_map *_dl_profile_map;
 
-extern void __libc_init_secure (void);
-
 
 static void non_dynamic_init (void) __attribute__ ((unused));
 
@@ -57,8 +55,6 @@ non_dynamic_init (void)
   _dl_verbose = *(getenv ("LD_WARN") ?: "") == '\0' ? 0 : 1;
 
   _dl_pagesize = __getpagesize ();
-
-  __libc_init_secure ();
 
   /* Initialize the data structures for the search paths for shared
      objects.  */

@@ -560,7 +560,8 @@ pmapdump (argc, argv)
 		 (xdrproc_t) xdr_pmaplist, (caddr_t) &head,
 		 minutetimeout) != RPC_SUCCESS)
     {
-      fputs (_("rpcinfo: can't contact portmapper: "), stderr);
+      fputs (_("rpcinfo: can't contact portmapper"), stderr);
+      fputs (": ", stderr);
       clnt_perror (client, "rpcinfo");
       exit (1);
     }

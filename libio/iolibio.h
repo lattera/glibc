@@ -11,6 +11,8 @@ extern int _IO_fclose __P((_IO_FILE*));
 extern int _IO_new_fclose __P((_IO_FILE*));
 extern int _IO_old_fclose __P((_IO_FILE*));
 extern _IO_FILE *_IO_fdopen __P((int, const char*));
+extern _IO_FILE *_IO_old_fdopen __P((int, const char*));
+extern _IO_FILE *_IO_new_fdopen __P((int, const char*));
 extern int _IO_fflush __P((_IO_FILE*));
 extern int _IO_fgetpos __P((_IO_FILE*, _IO_fpos_t*));
 extern int _IO_fgetpos64 __P((_IO_FILE*, _IO_fpos64_t*));

@@ -34,7 +34,7 @@ distribute := confstr.h TESTS TESTS2C.sed testcases.h \
 routines :=								      \
 	uname								      \
 	times								      \
-	wait waitpid wait3 wait4					      \
+	wait waitpid wait3 wait4 waitid					      \
 	alarm sleep pause nanosleep					      \
 	fork vfork _exit	      					      \
 	execve fexecve execv execle execl execvp execlp			      \

@@ -24,6 +24,7 @@
 #include <init-first.h>
 #include <sys/types.h>
 
+extern void __libc_init_secure (void);
 extern void __libc_init (int, char **, char **);
 extern void __libc_global_ctors (void);
 
@@ -42,8 +43,9 @@ int __libc_multiple_libcs = 1;
 int __libc_argc;
 char **__libc_argv;
 
-/* We often need the PID.  Cache this value.  */
+/* We often need the UID and PID.  Cache these values.  */
 pid_t __libc_pid = 0xf00baa;
+uid_t __libc_uid = 0xf00baa;
 
 
 static void
@@ -70,6 +72,10 @@ init (int argc, char **argv, char **envp)
   __libc_argc = argc;
   __libc_argv = argv;
   __environ = envp;
+
+#ifndef PIC
+  __libc_init_secure ();
+#endif
 
   __libc_init (argc, argv, envp);
 

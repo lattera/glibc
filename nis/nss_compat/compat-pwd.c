@@ -225,9 +225,14 @@ internal_setpwent (ent_t *ent)
 		     - pwdtable) - 1;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+      ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   if (ent->stream == NULL)
     {
@@ -313,9 +318,14 @@ internal_endpwent (ent_t *ent)
       ent->result = NULL;
     }
 
-  ent->blacklist.current = 0;
   if (ent->blacklist.data != NULL)
-    ent->blacklist.data[0] = '\0';
+    {
+      ent->blacklist.current = 1;
+      ent->blacklist.data[0] = '|';
+     ent->blacklist.data[1] = '\0';
+    }
+  else
+    ent->blacklist.current = 0;
 
   give_pwd_free (&ent->pwd);
 
@@ -521,6 +531,7 @@ getpwent_next_nisplus_netgr (const char *name, struct passwd *result,
   return NSS_STATUS_SUCCESS;
 }
 
+/* get the next user from NIS+  (+ entry) */
 static enum nss_status
 getpwent_next_nisplus (struct passwd *result, ent_t *ent, char *buffer,
 		       size_t buflen, int *errnop)
@@ -752,18 +763,12 @@ getpwnam_plususer (const char *name, struct passwd *result, char *buffer,
       int outvallen;
 
       if (yp_get_default_domain (&domain) != YPERR_SUCCESS)
-	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+	return NSS_STATUS_NOTFOUND;
 
       if (yp_match (domain, "passwd.byname", name, strlen (name),
-		    &outval, &outvallen)
-	  != YPERR_SUCCESS)
-	{
-	  *errnop = errno;
-	  return NSS_STATUS_TRYAGAIN;
-	}
+		    &outval, &outvallen) != YPERR_SUCCESS)
+	return NSS_STATUS_NOTFOUND;
+
       ptr = strncpy (buffer, outval, buflen < (size_t) outvallen ?
 		     buflen : (size_t) outvallen);
       buffer[buflen < (size_t) outvallen ? buflen : (size_t) outvallen] = '\0';
@@ -910,7 +915,8 @@ getpwent_next_file (struct passwd *result, ent_t *ent,
 	  if (status == NSS_STATUS_SUCCESS) /* We found the entry. */
 	    break;
 	  else
-	    if (status == NSS_STATUS_RETURN) /* We couldn't parse the entry */
+	    if (status == NSS_STATUS_RETURN /* We couldn't parse the entry */
+		|| status == NSS_STATUS_NOTFOUND) /* entry doesn't exist */
 	      continue;
 	    else
 	      {

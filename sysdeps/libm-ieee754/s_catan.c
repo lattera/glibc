@@ -69,7 +69,7 @@ __catan (__complex__ double x)
 
       den = 1 - r2 - __imag__ x * __imag__ x;
 
-      __real__ res = 0.5 * __atan ((2.0 * __real__ x) / den);
+      __real__ res = 0.5 * __ieee754_atan2 (2.0 * __real__ x, den);
 
       num = __imag__ x + 1.0;
       num = r2 + num * num;

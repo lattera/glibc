@@ -495,8 +495,10 @@ of this helper program; chances are you did not intend to run this program.\n",
       while ((p = strsep (&list, " ")) != NULL)
 	if (! __libc_enable_secure || strchr (p, '/') == NULL)
 	  {
-	    (void) _dl_map_object (NULL, p, lt_library, 0);
-	    ++npreloads;
+	    struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);
+	    if (new_map->l_opencount == 1)
+	      /* It is no duplicate.  */
+	      ++npreloads;
 	  }
     }
 
@@ -550,15 +552,21 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  runp = file;
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    {
-	      (void) _dl_map_object (NULL, p, lt_library, 0);
-	      ++npreloads;
+	      struct link_map *new_map = _dl_map_object (NULL, p,
+							 lt_library, 0);
+	      if (new_map->l_opencount == 1)
+		/* It is no duplicate.  */
+		++npreloads;
 	    }
 	}
 
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  (void) _dl_map_object (NULL, p, lt_library, 0);
+	  struct link_map *new_map = _dl_map_object (NULL, p, lt_library, 0);
+	  if (new_map->l_opencount == 1)
+	    /* It is no duplicate.  */
+	    ++npreloads;
 	}
 
       /* We don't need the file anymore.  */

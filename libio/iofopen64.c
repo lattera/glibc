@@ -36,7 +36,7 @@ _IO_fopen64 (filename, mode)
 #ifdef _G_OPEN64
   struct locked_FILE
   {
-    struct _IO_FILE_complete fp;
+    struct _IO_FILE_plus fp;
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
@@ -45,17 +45,17 @@ _IO_fopen64 (filename, mode)
   if (new_f == NULL)
     return NULL;
 #ifdef _IO_MTSAFE_IO
-  new_f->fp.plus.file._lock = &new_f->lock;
+  new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_init (&new_f->fp.plus.file, 0);
-  _IO_JUMPS (&new_f->fp.plus.file) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp.plus.file);
+  _IO_init (&new_f->fp.file, 0);
+  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
+  _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.plus.vtable = NULL;
 #endif
-  if (_IO_file_fopen (&new_f->fp.plus.file, filename, mode, 1) != NULL)
-        return (_IO_FILE *) &new_f->fp.plus;
-  _IO_un_link (&new_f->fp.plus.file);
+  if (_IO_file_fopen (&new_f->fp.file, filename, mode, 1) != NULL)
+    return (_IO_FILE *) &new_f->fp;
+  _IO_un_link (&new_f->fp.file);
   free (new_f);
   return NULL;
 #else

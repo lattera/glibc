@@ -48,6 +48,9 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_HAVE_PRINTF_FP 1
 #define _G_HAVE_MMAP 1
 #define _G_HAVE_LONG_DOUBLE_IO 1
+#define _G_HAVE_IO_FILE_OPEN 1
+
+#define _G_IO_IO_FILE_VERSION 0x20001
 
 /* This is defined by <bits/stat.h> if `st_blksize' exists.  */
 #define _G_HAVE_ST_BLKSIZE defined (_STATBUF_ST_BLKSIZE)
@@ -60,7 +63,7 @@ typedef unsigned int _G_uint32_t __attribute__ ((__mode__ (__SI__)));
 #define _G_VTABLE_LABEL_HAS_LENGTH 1
 
 
-#if defined (__cplusplus) || defined (__STDC__)
+#if defined __cplusplus || defined __STDC__
 # define _G_ARGS(ARGLIST) ARGLIST
 #else
 # define _G_ARGS(ARGLIST) ()

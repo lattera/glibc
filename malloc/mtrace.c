@@ -41,7 +41,7 @@ extern char *getenv ();
 #endif
 
 static FILE *mallstream;
-static char mallenv[]= "MALLOC_TRACE";
+static const char mallenv[]= "MALLOC_TRACE";
 static char mallbuf[BUFSIZ];	/* Buffer for the output.  */
 
 __libc_lock_define_initialized (static, lock);

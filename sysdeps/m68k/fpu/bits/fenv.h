@@ -64,8 +64,9 @@ typedef unsigned int fexcept_t;
    corresponds to the layout of the block written by `fmovem'.  */
 typedef struct
   {
-    fexcept_t control_register;
-    fexcept_t status_register;
+    unsigned int control_register;
+    unsigned int status_register;
+    unsigned int instruction_address;
   }
 fenv_t;
 

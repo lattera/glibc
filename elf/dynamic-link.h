@@ -56,7 +56,7 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	     + DT_VERSIONTAGNUM] = dyn;
       else
 	assert (! "bad dynamic tag");
-      dyn++;
+      ++dyn;
     }
 
   if (info[DT_RELA])
@@ -96,10 +96,10 @@ elf_get_dynamic_info (ElfW(Dyn) *dyn,
 	    if (r_addr <= p_addr && r_addr+r_size > p_addr)		      \
 	      {								      \
 		ElfW(Addr) r2_addr, r2_size;				      \
-		r2_addr = p_addr+p_size;				      \
-		if (r2_addr < r_addr+r_size)				      \
+		r2_addr = p_addr + p_size;				      \
+		if (r2_addr < r_addr + r_size)				      \
 		  {							      \
-		    r2_size = r_addr+r_size - r2_addr;			      \
+		    r2_size = r_addr + r_size - r2_addr;		      \
 		    elf_dynamic_do_##reloc ((map), r2_addr, r2_size, 0);      \
 		  }							      \
 		r_size = p_addr - r_addr;				      \

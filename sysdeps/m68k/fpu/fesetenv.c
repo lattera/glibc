@@ -29,7 +29,7 @@ fesetenv (const fenv_t *envp)
      values which we do not want to come from the saved environment.
      Therefore, we get the current environment and replace the values
      we want to use from the environment specified by the parameter.  */
-  __asm__ ("fmovem%.l %/fpcr/%/fpsr,%0" : "=m" (*&temp));
+  __asm__ ("fmovem%.l %/fpcr/%/fpsr/%/fpiar,%0" : "=m" (*&temp));
 
   temp.status_register &= ~FE_ALL_EXCEPT;
   temp.control_register &= ~((FE_ALL_EXCEPT << 6) | FE_UPWARD);
@@ -44,5 +44,5 @@ fesetenv (const fenv_t *envp)
       temp.status_register |= envp->status_register & FE_ALL_EXCEPT;
     }
 
-  __asm__ __volatile__ ("fmovem%.l %0,%/fpcr/%/fpsr" : : "m" (temp));
+  __asm__ __volatile__ ("fmovem%.l %0,%/fpcr/%/fpsr/%/fpiar" : : "m" (*&temp));
 }

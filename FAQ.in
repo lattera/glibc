@@ -27,12 +27,12 @@ The systems glibc is known to work on as of this release, and most
 probably in the future, are:
 
 	*-*-gnu			GNU Hurd
-	i[3456]86-*-linux-gnu	Linux-2.0 on Intel
-	m68k-*-linux-gnu	Linux-2.0 on Motorola 680x0
-	alpha-*-linux-gnu	Linux-2.0 on DEC Alpha
+	i[3456]86-*-linux-gnu	Linux-2.x on Intel
+	m68k-*-linux-gnu	Linux-2.x on Motorola 680x0
+	alpha-*-linux-gnu	Linux-2.x on DEC Alpha
 	powerpc-*-linux-gnu     Linux and MkLinux on PowerPC systems
-	sparc-*-linux-gnu	Linux-2.0 on SPARC
-	sparc64-*-linux-gnu	Linux-2.0 on UltraSPARC
+	sparc-*-linux-gnu	Linux-2.x on SPARC
+	sparc64-*-linux-gnu	Linux-2.x on UltraSPARC
 
 Ports to other Linux platforms are in development, and may in fact
 work already, but no one has sent us success reports for them.
@@ -102,6 +102,10 @@ has not been ported to them.
 
   You should not need these tools unless you change the source files.
 
+* Some scripts need perl5 - but at the moment those scripts are not
+  vital for building and installing GNU libc (some data files will not 
+  be created).
+
 * When compiling for Linux, the header files of the Linux kernel must
   be available to the compiler as <linux/*.h> and <asm/*.h>.
 
@@ -117,9 +121,10 @@ has not been ported to them.
   very slow.
 
   James Troup <J.J.Troup@comp.brad.ac.uk> reports a compile time of
-  45h34m for a full build (shared, static, and profiled) on
-  Atari Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and 22h48m
-  on Atari TT030 (Motorola 68030 @ 32 Mhz, 34 Mb memory)
+  45h34m for a full build (shared, static, and profiled) on Atari
+  Falcon (Motorola 68030 @ 16 Mhz, 14 Mb memory) and Jan Barte
+  <yann@plato.uni-paderborn.de> reports 22h48m on Atari TT030
+  (Motorola 68030 @ 32 Mhz, 34 Mb memory)
 
   If you have some more measurements let me know.
 
@@ -624,7 +629,7 @@ release is for.  It's better to have a cut now than having no means to
 support the new techniques later.
 
 {MK} There is however a (partial) solution for this problem.  Please
-take a look at the file `README.utmpd'.
+take a look at the file `login/README.utmpd'.
 
 ??	Where are the DST_* constants found in <sys/time.h> on many
 	systems?
@@ -668,13 +673,13 @@ results because of type conflicts.
 	still complains about redeclarations of types in the kernel
 	headers.
 
-{UD} The kernel headers before Linux 2.1.61 don't work correctly with
-glibc.  Compiling C programs is possible in most cases but C++
-programs have (due to the change of the name lookups for `struct's)
-problems.  One prominent example is `struct fd_set'.
+{UD} The kernel headers before Linux 2.1.61 and 2.0.32 don't work
+correctly with glibc.  Compiling C programs is possible in most cases
+but C++ programs have (due to the change of the name lookups for
+`struct's) problems.  One prominent example is `struct fd_set'.
 
-There might be some problems left but 2.1.61 fixes most of the known
-ones.  See the BUGS file for other known problems.
+There might be some problems left but 2.1.61/2.0.32 fix most of the
+known ones.  See the BUGS file for other known problems.
 
 ??signal	Why don't signals interrupt system calls anymore?
 
@@ -767,8 +772,8 @@ point where the headers are stable.  There are still lots of
 incompatible changes made and the libc headers have to follow.
 
 Also, make sure you have a suitably recent kernel.  As of the 970401
-snapshot, according to Philip Blundell <philb@gnu.ai.mit.edu>, the
-required kernel version is 2.1.30.
+snapshot, according to Philip Blundell <Philip.Blundell@pobox.com>, the
+required kernel version is at least 2.1.30.
 
 
 Answers were given by:

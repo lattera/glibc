@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <signal.h>
 
 /* The difference here is that the sigaction structure used in the
@@ -23,10 +24,10 @@
    translate it here.  */
 #include <kernel_sigaction.h>
 
-extern int __syscall_sigaction (int, const struct kernel_sigaction *,
-				struct kernel_sigaction *);
-extern int __syscall_rt_signal (int, const struct sigaction *,
-				struct sigaction *, size_t);
+extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
+				struct old_kernel_sigaction *);
+extern int __syscall_rt_sigaction (int, const struct sigaction *,
+				   struct sigaction *, size_t);
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  It is defined in sigsuspend.c.  */

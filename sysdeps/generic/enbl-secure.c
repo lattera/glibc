@@ -27,7 +27,7 @@
 int __libc_enable_secure = 1;
 
 /* We often need the UID.  */
-uid_t __libc_uid;
+extern uid_t __libc_uid;
 
 void
 __libc_init_secure (void)

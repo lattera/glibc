@@ -24,10 +24,10 @@ subdir	:= malloc
 all:
 
 dist-headers := malloc.h
-headers := $(dist-headers) obstack.h
+headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug
 
-distribute = thread-m.h mtrace.pl mcheck-init.c mcheck.h
+distribute = thread-m.h mtrace.pl mcheck-init.c
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore

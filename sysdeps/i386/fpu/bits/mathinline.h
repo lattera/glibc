@@ -110,8 +110,6 @@
 	__result; })
 # endif	/* __i686__ */
 
-/* XXX Argh!!!  More compiler errors.  */
-#if 0
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __signbitf (float __x)
@@ -129,7 +127,6 @@ __signbitl (long double __x)
   union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
-#endif
 #endif
 
 
@@ -534,8 +531,7 @@ __inline_mathcode (acosh, __x, \
 
 __inline_mathcode (atanh, __x, \
   register long double __y = __fabsl (__x);				      \
-  return (-0.5 * log1pl (-(__y + __y) / (1.0 + __y)) *			      \
-	  __sgn1l (__x)))
+  return -0.5 * log1pl (-(__y + __y) / (1.0 + __y)) * __sgn1l (__x))
 
 
 /* The argument range of the inline version of hypotl is slightly reduced.  */
@@ -581,7 +577,7 @@ __inline_mathcode2 (drem, __x, __y, \
 
 
 /* This function is used in the `isfinite' macro.  */
-__MATH_INLINE int __finite (double __x);
+__MATH_INLINE int __finite (double __x) __attribute__ ((__const__));
 __MATH_INLINE int
 __finite (double __x)
 {
@@ -615,12 +611,14 @@ __inline_mathcode (__acosh1p, __x, \
 
 
 /* This code is used internally in the GNU libc.  */
-#if 0
-/* XXX I hate compiler bugs.  The current version produces wrong code
-   if this optimization is used.  */
 #ifdef __LIBC_INTERNAL_MATH_INLINES
 __inline_mathop (__ieee754_sqrt, "fsqrt")
-#endif
+__inline_mathcode2 (__ieee754_atan2, __y, __x,
+		    register long double __value;
+		    __asm __volatile__ ("fpatan\n\t"
+					: "=t" (__value)
+					: "0" (__x), "u" (__y) : "st(1)");
+		    return __value;)
 #endif
 
 #endif /* __GNUC__  */

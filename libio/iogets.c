@@ -47,6 +47,11 @@ _IO_gets (buf)
     count = 0;
   else
     {
+      /* This is very tricky since a file descriptor may be in the
+	 non-blocking mode. The error flag doesn't mean much in this
+	 case. We return an error only when there is a new error. */
+      int old_error = _IO_stdin->_IO_file_flags & _IO_ERR_SEEN;
+      _IO_stdin->_IO_file_flags &= ~_IO_ERR_SEEN;
       buf[0] = (char) ch;
       count = _IO_getline (_IO_stdin, buf + 1, INT_MAX, '\n', 0) + 1;
       if (_IO_stdin->_IO_file_flags & _IO_ERR_SEEN)
@@ -54,6 +59,8 @@ _IO_gets (buf)
 	  retval = NULL;
 	  goto unlock_return;
 	}
+      else
+	_IO_stdin->_IO_file_flags |= old_error;
     }
   buf[count] = 0;
   retval = buf;

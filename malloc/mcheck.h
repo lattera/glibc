@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,22 +19,9 @@
 #ifndef _MCHECK_H
 #define _MCHECK_H	1
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
+#include <features.h>
 
-#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
-#undef  __P
-#define __P(args)       args
-#undef  __ptr_t
-#define __ptr_t         void *
-#else /* Not C++ or ANSI C.  */
-#undef  __P
-#define __P(args)       ()
-#undef  __ptr_t
-#define __ptr_t         char *
-#endif /* C++ or ANSI C.  */
-
+__BEGIN_DECLS
 
 /* Return values for `mprobe': these are the kinds of inconsistencies that
    `mcheck' enables detection of.  */
@@ -63,8 +50,6 @@ extern enum mcheck_status mprobe __P ((__ptr_t __ptr));
 extern void mtrace __P ((void));
 extern void muntrace __P ((void));
 
-#ifdef  __cplusplus
-}
-#endif
+__END_DECLS
 
 #endif /* mcheck.h */

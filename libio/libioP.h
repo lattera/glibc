@@ -64,22 +64,34 @@ extern "C" {
  * object being acted on (i.e. the 'this' parameter).
  */
 
+#if (!defined _IO_USE_OLD_IO_FILE \
+     && (!defined _G_IO_NO_BACKWARD_COMPAT || _G_IO_NO_BACKWARD_COMPAT == 0))
+# define _IO_JUMPS_OFFSET 1
+#endif
+
 #define _IO_JUMPS(THIS) ((struct _IO_FILE_plus *) (THIS))->vtable
+#if _IO_JUMPS_OFFSET
+# define _IO_JUMPS_FUNC(THIS) \
+ (*(struct _IO_jump_t **) ((void *) &((struct _IO_FILE_plus *) (THIS))->vtable\
+			   + (THIS)->_vtable_offset))
+#else
+# define _IO_JUMPS_FUNC(THIS) _IO_JUMPS(THIS)
+#endif
 #ifdef _G_USING_THUNKS
 # define JUMP_FIELD(TYPE, NAME) TYPE NAME
-# define JUMP0(FUNC, THIS) _IO_JUMPS(THIS)->FUNC (THIS)
-# define JUMP1(FUNC, THIS, X1) _IO_JUMPS(THIS)->FUNC (THIS, X1)
-# define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS(THIS)->FUNC (THIS, X1, X2)
-# define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS(THIS)->FUNC (THIS, X1,X2, X3)
+# define JUMP0(FUNC, THIS) _IO_JUMPS_FUNC(THIS)->FUNC (THIS)
+# define JUMP1(FUNC, THIS, X1) _IO_JUMPS_FUNC(THIS)->FUNC (THIS, X1)
+# define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS_FUNC(THIS)->FUNC (THIS, X1, X2)
+# define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS_FUNC(THIS)->FUNC (THIS, X1,X2, X3)
 # define JUMP_INIT(NAME, VALUE) VALUE
 # define JUMP_INIT_DUMMY JUMP_INIT(dummy, 0), JUMP_INIT (dummy2, 0)
 #else
 /* These macros will change when we re-implement vtables to use "thunks"! */
 # define JUMP_FIELD(TYPE, NAME) struct { short delta1, delta2; TYPE pfn; } NAME
-# define JUMP0(FUNC, THIS) _IO_JUMPS(THIS)->FUNC.pfn (THIS)
-# define JUMP1(FUNC, THIS, X1) _IO_JUMPS(THIS)->FUNC.pfn (THIS, X1)
-# define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS(THIS)->FUNC.pfn (THIS, X1, X2)
-# define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS(THIS)->FUNC.pfn (THIS, X1,X2,X3)
+# define JUMP0(FUNC, THIS) _IO_JUMPS_FUNC(THIS)->FUNC.pfn (THIS)
+# define JUMP1(FUNC, THIS, X1) _IO_JUMPS_FUNC(THIS)->FUNC.pfn (THIS, X1)
+# define JUMP2(FUNC, THIS, X1, X2) _IO_JUMPS_FUNC(THIS)->FUNC.pfn (THIS, X1, X2)
+# define JUMP3(FUNC, THIS, X1,X2,X3) _IO_JUMPS_FUNC(THIS)->FUNC.pfn (THIS, X1,X2,X3)
 # define JUMP_INIT(NAME, VALUE) {0, 0, VALUE}
 # define JUMP_INIT_DUMMY JUMP_INIT(dummy, 0)
 #endif
@@ -267,17 +279,6 @@ struct _IO_FILE_plus
   const struct _IO_jump_t *vtable;
 };
 
-/* We had to extend _IO_FILE but this isn't easily possible without
-   compatibility problems.  So we mimic the C++ way to do this which
-   especially takes care that the position of the vtable stays the
-   same.  */
-struct _IO_FILE_complete
-{
-  struct _IO_FILE_plus plus;
-  _IO_off64_t _offset;
-  int _unused2[16];	/* Make sure we don't get into trouble again.  */
-};
-
 /* Generic functions */
 
 extern _IO_fpos64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
@@ -374,6 +375,8 @@ extern int _IO_file_overflow __P ((_IO_FILE *, int));
 #define _IO_file_is_open(__fp) ((__fp)->_fileno >= 0)
 extern void _IO_file_init __P ((_IO_FILE *));
 extern _IO_FILE* _IO_file_attach __P ((_IO_FILE *, int));
+extern _IO_FILE* _IO_file_open __P ((_IO_FILE *, const char *, int, int,
+				     int, int));
 extern _IO_FILE* _IO_file_fopen __P ((_IO_FILE *, const char *, const char *,
 				      int));
 extern _IO_ssize_t _IO_file_write __P ((_IO_FILE *, const void *,

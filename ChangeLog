@@ -1,3 +1,92 @@
+1997-12-14 21:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 2.0.91.
+
+	* db2/makedb.c (process_input): Fix typo in message.
+	* sunrpc/rpcinfo.c (pmapdump): Unify messages.
+
+	* elf/dynamic-link.h: Pretty print.
+
+	* elf/rtld.c: Allow multiple preloading of a shared object.
+
+	* include/limits.h: Prevent multiple inclusion.
+
+	* malloc/Makefile (headers): Add mcheck.h.
+	(distribute): Remove it here.
+	* malloc/mcheck.h: Pretty print.
+	* malloc/mtrace.c (mallenv): Make `const'.
+	* malloc/mtrace.pl: Don't print table head for memory leaks if there
+	are none.
+	* manual/memory.texi: Update descriptor of malloc hooks.
+
+	* posix/Makefile (routines): Add waitid.
+	* posix/sys/types.h [__USE_SVID || __USE_POSIX]: Define id_t based
+	on __id_t.
+	* posix/sys/wait.h: Define idtype_t type.
+	Add prototype for waitid.
+	* signal/signal.h: Move definition of sigval_t to <bits/siginfo.h>.
+	* sysdeps/generic/waitid.c: Stub for waitid.
+	* sysdeps/generic/bits/siginfo.h: Define sigval_t.  Arrange to work
+	the __need_siginfo_t defined.
+	* sysdeps/unix/sysv/linux/bits/siginfo: Likewise.
+	* sysdeps/generic/bits/types.h: Define __id_t.
+	Correct definition of __FDMASK.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+
+	* sysdeps/posix/waitid.c: New file.
+	Provided by Zack Weinberg.
+
+	* rt/aio_misc.c: Rename __aio_free_req to __aio_free_request.
+
+	* sysdeps/alpha/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Add missing parameters.
+
+	* sysdeps/generic/dl-sysdep.c: Don't call __libc_init_secure.
+	* sysdeps/generic/enbl-secure.c: Don't define __libc_uid.
+	* sysdeps/unix/sysv/linux/init-first.c: Define __libc_uid.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Make sure __libc_uid is
+	initialized.
+
+	* sysdeps/i386/dl-machine.h: Little cleanup.
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Use __signbit* inline functions.
+	(__finite): Mark function as const.
+	Add inline code for __ieee754_atan2.
+
+	* sysdeps/libm-ieee754/s_cacoshf.c: Add alternate implementation
+	(but don't use it now).
+	* sysdeps/libm-ieee754/s_catan.c: Use __ieee754_atan2 instead of
+	__atan.
+	* sysdeps/libm-ieee754/s_catanf.c: Likewise.
+	* sysdeps/libm-ieee754/s_catanl.c: Likewise.
+	* sysdeps/libm-ieee754/s_catanh.c: Likewise.  Correct sign of
+	real part.
+	* sysdeps/libm-ieee754/s_catanhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_catanhl.c: Likewise.
+	* sysdeps/libm-ieee754/s_clog10.c: Use factor to correct
+	__ieee754_atan2 to base 10.
+	* sysdeps/libm-ieee754/s_clog10f.c: Likewise.
+	* sysdeps/libm-ieee754/s_clog10l.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h: Define as
+	old_kernel_sigaction.
+
+	* sysdeps/unix/sysv/linux/net/if_slip.h: Pretty print.
+
+	* wctype/Makefile (routines): Add wctype_l.
+	* wctype/wctype.h: Add declaration of __wctype_l.
+	* wctype/wctype_l.c: New file.
+
+1997-12-10 00:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-ctype.c: Correct data for isw* functions.
+	* locale/programs/ld-ctype.c: Write 32bit char classes in correct
+	byte order.
+	* wctype/test_wctype.c: Add test for isw* functions.
+	* wctype/wctype.c: Return value with expected byte order.
+
 1997-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* libc-work/nis/ypclnt.c (do_ypcall): Don't free dom_binding twice.
@@ -8,7 +97,6 @@
 
 	* sysdeps/unix/sysv/linux/Makefile (stdio-common): Add
 	oldsiglist for shared library.
-	(signal): Add rt_sigreturn and rt_sigpending.
 
 	* sysdeps/unix/sysv/linux/siglist.c (_sys_siglist, sys_siglist,
 	sys_sigabbrev): Make them as the default version GLIBC_2.1.
@@ -92,9 +180,8 @@
 	* libio/fileops.c (_IO_file_open): New.
 	(_IO_file_fopen): Call _IO_file_open ().
 
-	* sysdeps/generic/_G_config.h
-	* sysdeps/unix/sysv/linux/_G_config.h: Define
-	_G_HAVE_IO_FILE_OPEN.
+	* sysdeps/generic/_G_config.h: Define _G_HAVE_IO_FILE_OPEN.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
 
 1997-12-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

@@ -23,13 +23,13 @@
 #include <locale/localeinfo.h>
 
 wctype_t
-wctype (const char *property)
+__wctype_l (const char *property, __locale_t locale)
 {
   const char *names;
   wctype_t result;
   size_t proplen = strlen (property);
 
-  names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
+  names = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES)].string;
   for (result = 1; result != 0; result <<= 1)
     {
       size_t nameslen = strlen (names);

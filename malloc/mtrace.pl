@@ -178,15 +178,20 @@ close (DATA);
 
 # Now print all remaining entries.
 @addrs= keys %allocated;
+$anything=0;
 if ($#addrs >= 0) {
-    print "\nNot freed memory:\n-----------------\n";
-    print ' ' x (@XXX@ - 7), "Address     Size     Caller\n";
     foreach $addr (sort @addrs) {
 	if (defined $allocated{$addr}) {
+	    if ($anything == 0) {
+		print "\nMemory not freed:\n-----------------\n";
+		print ' ' x (@XXX@ - 7), "Address     Size     Caller\n";
+		$anything=1;
+	    }
 	    printf ("%#0@XXX@x %#8x  at %s\n", hex($addr), $allocated{$addr},
 		    $wherewas{$addr});
 	}
     }
 }
+print "No memory leaks.\n" if ($anything == 0);
 
 exit 0;

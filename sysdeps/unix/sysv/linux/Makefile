@@ -67,6 +67,12 @@ endif
 ifeq ($(subdir),stdio-common)
 # Just disable the auto generation in sysdeps/generic
 inhibit-siglist := yes
+
+ifeq ($(versioning),yes)
+aux += oldsiglist
+endif
+
+shared-only-routines += oldsiglist
 endif
 
 ifeq ($(subdir),inet)
@@ -111,8 +117,7 @@ endif
 
 ifeq ($(subdir),signal)
 sysdep_routines += rt_sigsuspend rt_sigprocmask rt_sigtimedwait	\
-		   rt_sigqueueinfo rt_sigaction rt_sigpending	\
-		   rt_sigreturn
+		   rt_sigqueueinfo rt_sigaction rt_sigpending
 endif
 
 common-generated += bits/stdio_lim.h bits/stdio_lim.d

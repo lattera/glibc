@@ -57,11 +57,7 @@ typedef unsigned long int wctype_t;
 #endif
 
 #ifndef _ISbit
-/* These are all the characteristics of characters.
-   If there get to be more than 16 distinct characteristics,
-   many things must be changed that use `unsigned short int's.
-
-   The characteristics are stored always in network byte order (big
+/* The characteristics are stored always in network byte order (big
    endian).  We define the bit value interpretations here dependent on the
    machine's byte order.  */
 
@@ -260,25 +256,30 @@ extern int __iswupper_l __P ((wint_t __wc, __locale_t __locale));
 extern int __iswxdigit_l __P ((wint_t __wc, __locale_t __locale));
 
 
+/* Construct value that describes a class of wide characters identified
+   by the string argument PROPERTY.  */
+extern wctype_t __wctype_l __P ((__const char *__property,
+				 __locale_t __locale));
+
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
 extern int __iswctype_l __P ((wint_t __wc, wctype_t __desc,
-			      __locale_t locale));
+			      __locale_t __locale));
 
 
 /*
- * Wide-character case-mapping functions: 7.15.3.1.
+ * Wide-character case-mapping functions.
  */
 
 /* Converts an uppercase letter to the corresponding lowercase letter.  */
-extern wint_t __towlower_l __P ((wint_t __wc, __locale_t locale));
+extern wint_t __towlower_l __P ((wint_t __wc, __locale_t __locale));
 
 /* Converts an lowercase letter to the corresponding uppercase letter.  */
-extern wint_t __towupper_l __P ((wint_t __wc, __locale_t locale));
+extern wint_t __towupper_l __P ((wint_t __wc, __locale_t __locale));
 
 /* Map the wide character WC using the mapping described by DESC.  */
 extern wint_t __towctrans_l __P ((wint_t __wc, wctrans_t __desc,
-				  __locale_t locale));
+				  __locale_t __locale));
 
 
 # ifndef __NO_WCTYPE

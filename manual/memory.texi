@@ -31,6 +31,7 @@ will be freed automatically.  @xref{Variable Size Automatic}.
 * Dynamic Allocation and C::    How to get different kinds of allocation in C.
 * Unconstrained Allocation::    The @code{malloc} facility allows fully general
 		 		 dynamic allocation.
+* Allocation Debugging::        Finding memory leaks and not freed memory.
 * Obstacks::                    Obstacks are less general than malloc
 				 but more efficient and convenient.
 * Variable Size Automatic::     Allocation of variable-sized blocks
@@ -630,8 +631,12 @@ uses whenever it is called.  You should define this function to look
 like @code{malloc}; that is, like:
 
 @smallexample
-void *@var{function} (size_t @var{size})
+void *@var{function} (size_t @var{size}, void *@var{caller})
 @end smallexample
+
+The value of @var{caller} is the return address found on the stack when
+the @code{malloc} function was called.  This value allows to trace the
+memory consumption of the program.
 @end defvar
 
 @comment malloc.h
@@ -642,8 +647,12 @@ uses whenever it is called.  You should define this function to look
 like @code{realloc}; that is, like:
 
 @smallexample
-void *@var{function} (void *@var{ptr}, size_t @var{size})
+void *@var{function} (void *@var{ptr}, size_t @var{size}, void *@var{caller})
 @end smallexample
+
+The value of @var{caller} is the return address found on the stack when
+the @code{realloc} function was called.  This value allows to trace the
+memory consumption of the program.
 @end defvar
 
 @comment malloc.h
@@ -654,8 +663,12 @@ uses whenever it is called.  You should define this function to look
 like @code{free}; that is, like:
 
 @smallexample
-void @var{function} (void *@var{ptr})
+void @var{function} (void *@var{ptr}, void *@var{caller})
 @end smallexample
+
+The value of @var{caller} is the return address found on the stack when
+the @code{free} function was called.  This value allows to trace the
+memory consumption of the program.
 @end defvar
 
 You must make sure that the function you install as a hook for one of
@@ -797,19 +810,253 @@ Tell @code{malloc} to perform occasional consistency checks on
 dynamically allocated memory, and to call @var{abortfn} when an
 inconsistency is found.  @xref{Heap Consistency Checking}.
 
-@item void *(*__malloc_hook) (size_t @var{size})
+@item void *(*__malloc_hook) (size_t @var{size}, void *@var{caller})
 A pointer to a function that @code{malloc} uses whenever it is called.
 
-@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size})
+@item void *(*__realloc_hook) (void *@var{ptr}, size_t @var{size}, void *@var{caller})
 A pointer to a function that @code{realloc} uses whenever it is called.
 
-@item void (*__free_hook) (void *@var{ptr})
+@item void (*__free_hook) (void *@var{ptr}, void *@var{caller})
 A pointer to a function that @code{free} uses whenever it is called.
 
 @item struct mallinfo mallinfo (void)
 Return information about the current dynamic memory usage.
 @xref{Statistics of Malloc}.
 @end table
+
+@node Allocation Debugging
+@section Allocation Debugging
+@cindex allocation debugging
+@cindex malloc debugger
+
+An complicated task when programming with languages which do not use
+garbage collected dynamic memory allocation is to find memory leaks.
+Long running programs must assure that dynamically allocated objects are
+freed at the end of their lifetime.  If this does not happen the system
+runs out of memory, sooner or later.
+
+The @code{malloc} implementation in the GNU C library provides some
+simple means to detect sich leaks and provide some information to find
+the location.  To do this the application must be started in a special
+mode which is enabled by an environment variable.  There are no speed
+penalties if the program is compiled in preparation of the debugging if
+the debug mode is not enabled.
+
+@menu
+* Tracing malloc::               How to install the tracing functionality.
+* Using the Memory Debugger::    Example programs excerpts.
+* Tips for the Memory Debugger:: Some more or less clever ideas.
+* Interpreting the traces::      What do all these lines mean?
+@end menu
+
+@node Tracing malloc
+@subsection How to install the tracing functionality
+
+@comment mcheck.h
+@comment GNU
+@deftypefun void mtrace (void)
+When the @code{mtrace} function is called it looks for an environment
+variable named @code{MALLOC_TRACE}.  This variable is supposed to
+contain a valid file name.  The user must have write access.  If the
+file already exists it is truncated.  If the environment variable is not
+set or it does not name a valid file which can be opened for writing
+nothing is done.  The behaviour of @code{malloc} etc. is not changed.
+For obvious reasons this also happens if the application is install SUID
+or SGID.
+
+If the named file is successfully opened @code{mtrace} installs special
+handlers for the functions @code{malloc}, @code{realloc}, and
+@code{free} (@pxref{Hooks for Malloc}).  From now on all uses of these
+functions are traced and protocolled into the file.  There is now of
+course a speed penalty for all calls to the traced functions so that the
+tracing should not be enabled during their normal use.
+
+This function is a GNU extension and generally not available on other
+systems.  The prototype can be found in @file{mcheck.h}.
+@end deftypefun
+
+@comment mcheck.h
+@comment GNU
+@deftypefun void muntrace (void)
+The @code{muntrace} function can be called after @code{mtrace} was used
+to enable tracing the @code{malloc} calls.  If no (succesful) call of
+@code{mtrace} was made @code{muntrace} does nothing.
+
+Otherwise it deinstalls the handlers for @code{malloc}, @code{realloc},
+and @code{free} and then closes the protocol file.  No calls are
+protocolled anymore and the programs runs again with the full speed.
+
+This function is a GNU extension and generally not available on other
+systems.  The prototype can be found in @file{mcheck.h}.
+@end deftypefun
+
+@node Using the Memory Debugger
+@subsection Example programs excerpts
+
+Even though the tracing functionality does not influence the runtime
+behaviour of the program it is no wise idea to call @code{mtrace} in all
+programs.  Just imagine you debug a program using @code{mtrace} and all
+other programs used in the debug sessions also trace their @code{malloc}
+calls.  The output file would be the same for all programs and so is
+unusable.  Therefore on should call @code{mtrace} only if compiled for
+debugging.  A program could therefore start like this:
+
+@example
+#include <mcheck.h>
+
+int
+main (int argc, char *argv[])
+@{
+#ifdef DEBUGGING
+  mtrace ();
+#endif
+  @dots{}
+@}
+@end example
+
+This is all what is needed if you want to trace the calls during the
+whole runtime of the program.  Alternatively you can stop the tracing at
+any time with a call to @code{muntrace}.  It is even possible to restart
+the tracing again with a new call to @code{mtrace}.  But this can course
+unreliable results since there are possibly calls of the functions which
+are not called.  Please note that not only the application uses the
+traced functions, also libraries (including the C library itself) use
+this function.
+
+This last point is also why it is no good idea to call @code{muntrace}
+before the program terminated.  The libraries are informed about the
+termination of the program only after the program returns from
+@code{main} or calls @code{exit} and so cannot free the memory they use
+before this time.
+
+So the best thing one can do is to call @code{mtrace} as the very first
+function in the program and never call @code{muntrace}.  So the program
+traces almost all uses of the @code{malloc} functions (except those
+calls which are executed by constructors of the program or used
+libraries).
+
+@node Tips for the Memory Debugger
+@subsection Some more or less clever ideas
+
+You know the situation.  The program is prepared for debugging and in
+all debugging sessions it runs well.  But once it is started without
+debugging the error shows up.  In our situation here: the memory leaks
+becomes visible only when we just turned off the debugging.  If you
+foresee such situations you can still win.  Simply use something
+equivalent to the following little program:
+
+@example
+#include <mcheck.h>
+#include <signal.h>
+
+static void
+enable (int sig)
+@{
+  mtrace ();
+  signal (SIGUSR1, enable);
+@}
+
+static void
+disable (int sig)
+@{
+  muntrace ();
+  signal (SIGUSR2, disable);
+@}
+
+int
+main (int argc, char *argv[])
+@{
+  @dots{}
+
+  signal (SIGUSR1, enable);
+  signal (SIGUSR2, disable);
+
+  @dots{}
+@}
+@end example
+
+I.e., the user can start the memory debugger any time he wants if the
+program was started with @code{MALLOC_TRACE} set in the environment.
+The output will of course not show the allocations which happened before
+the first signal but if there is a memory leak this will show up
+nevertheless.
+
+@node Interpreting the traces
+@subsection Interpreting the traces
+
+If you take a look at the output it will look similar to this:
+
+@example
+= Start
+@ [0x8048209] - 0x8064cc8
+@ [0x8048209] - 0x8064ce0
+@ [0x8048209] - 0x8064cf8
+@ [0x80481eb] + 0x8064c48 0x14
+@ [0x80481eb] + 0x8064c60 0x14
+@ [0x80481eb] + 0x8064c78 0x14
+@ [0x80481eb] + 0x8064c90 0x14
+= End
+@end example
+
+What this all means is not really important since the trace file is not
+meant to be read by a human.  Therefore no attention is payed to good
+readability.  Instead there is a program which comes with the GNU C
+library which interprets the traces and outputs a summary in on
+user-friendly way.  The program is called @code{mtrace} (it is in fact a
+Perl script) and it takes one or two arguments.  In any case the name of
+the file with the trace must be specified.  If an optional precedes the
+name of the trace file this must be the name of the program which
+generated the trace.
+
+@example
+drepper$ mtrace tst-mtrace log
+No memory leaks.
+@end example
+
+In this case the program @code{tst-mtrace} was run and it produced a
+trace file @file{log}.  The message printed by @code{mtrace} shows there
+are no problems with the code, all allocated memory was freed
+afterwards.
+
+If we call @code{mtrace} on the example trace given above we would get a
+different outout:
+
+@example
+drepper$ mtrace errlog
+- 0x08064cc8 Free 2 was never alloc'd 0x8048209
+- 0x08064ce0 Free 3 was never alloc'd 0x8048209
+- 0x08064cf8 Free 4 was never alloc'd 0x8048209
+
+Memory not freed:
+-----------------
+   Address     Size     Caller
+0x08064c48     0x14  at 0x80481eb
+0x08064c60     0x14  at 0x80481eb
+0x08064c78     0x14  at 0x80481eb
+0x08064c90     0x14  at 0x80481eb
+@end example
+
+We have called @code{mtrace} with only one argument and so the script
+has no chance to find out what is meant with the addresses given in the
+trace.  We can do better:
+
+@example
+drepper$ mtrace tst-mtrace errlog
+- 0x08064cc8 Free 2 was never alloc'd /home/drepper/tst-mtrace.c:39
+- 0x08064ce0 Free 3 was never alloc'd /home/drepper/tst-mtrace.c:39
+- 0x08064cf8 Free 4 was never alloc'd /home/drepper/tst-mtrace.c:39
+
+Memory not freed:
+-----------------
+   Address     Size     Caller
+0x08064c48     0x14  at /home/drepper/tst-mtrace.c:33
+0x08064c60     0x14  at /home/drepper/tst-mtrace.c:33
+0x08064c78     0x14  at /home/drepper/tst-mtrace.c:33
+0x08064c90     0x14  at /home/drepper/tst-mtrace.c:33
+@end example
+
+Suddenly the output makes much more sense and the user can see
+immediately where the function calls causing the trouble can be found.
 
 @node Obstacks
 @section Obstacks
@@ -1442,7 +1689,7 @@ source file that uses @code{obstack_init} (@pxref{Creating Obstacks}).
 Most often they are defined as macros like this:
 
 @smallexample
-#define obstack_chunk_alloc xmalloc
+#define obstack_chunk_alloc malloc
 #define obstack_chunk_free free
 @end smallexample
 

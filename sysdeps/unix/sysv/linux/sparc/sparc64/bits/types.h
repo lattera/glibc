@@ -54,6 +54,7 @@ typedef int __pid_t;			/* Type of process identifications.  */
 typedef long long int __ssize_t;	/* Type of a byte count, or error.  */
 typedef long int __rlim_t;		/* Type of resource counts.  */
 typedef long int __rlim64_t;		/* Type of resource counts (LFS).  */
+typedef __u_int __id_t;			/* General type for IDs.  */
 
 typedef struct
   {
@@ -82,7 +83,7 @@ typedef unsigned long int __fd_mask;
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define __NFDBITS	(8 * sizeof (__fd_mask))
 #define	__FDELT(d)	((d) / __NFDBITS)
-#define	__FDMASK(d)	(1 << ((d) % __NFDBITS))
+#define	__FDMASK(d)	((__fd_mask) 1 << ((d) % __NFDBITS))
 
 /* fd_set for select and pselect.  */
 typedef struct

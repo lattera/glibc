@@ -1,5 +1,5 @@
 /* Get public or secret key from key server.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -18,16 +18,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <rpc/netdb.h>
 
 #include "nsswitch.h"
 
 
 /* Type of the lookup function for the public key.  */
-typedef int (*public_function) (const char *, char *);
+typedef int (*public_function) (const char *, char *, int *);
 
 /* Type of the lookup function for the secret key.  */
-typedef int (*secret_function) (const char *, char *, const char *);
+typedef int (*secret_function) (const char *, char *, const char *, int *);
 
 /* The lookup function for the first entry of this service.  */
 extern int __nss_publickey_lookup (service_user **nip, const char *name,
@@ -63,7 +64,7 @@ getpublickey (const char *name, char *key)
 
   while (! no_more)
     {
-      status = (*fct) (name, key);
+      status = (*fct) (name, key, __errno_location ());
 
       no_more = __nss_next (&nip, "getpublickey", (void **) &fct, status, 0);
     }
@@ -101,7 +102,7 @@ getsecretkey (const char *name, char *key, const char *passwd)
 
   while (! no_more)
     {
-      status = (*fct) (name, key, passwd);
+      status = (*fct) (name, key, passwd, __errno_location ());
 
       no_more = __nss_next (&nip, "getsecretkey", (void **) &fct, status, 0);
     }

@@ -108,11 +108,10 @@ void
 _IO_file_init (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   /* POSIX.1 allows another file handle to be used to change the position
      of our file descriptor.  Hence we actually don't know the actual
      position before we do the first fseek (and until a following fflush). */
-  fc->_offset = _IO_pos_BAD;
+  fp->_offset = _IO_pos_BAD;
   fp->_IO_file_flags |= CLOSED_FILEBUF_FLAGS;
 
   _IO_link_in(fp);
@@ -123,7 +122,6 @@ int
 _IO_file_close_it (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   int write_status, close_status;
   if (!_IO_file_is_open (fp))
     return EOF;
@@ -142,7 +140,7 @@ _IO_file_close_it (fp)
   _IO_un_link (fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
   fp->_fileno = EOF;
-  fc->_offset = _IO_pos_BAD;
+  fp->_offset = _IO_pos_BAD;
 
   return close_status ? close_status : write_status;
 }
@@ -161,6 +159,38 @@ _IO_file_finish (fp, dummy)
   _IO_default_finish (fp, 0);
 }
 
+#if defined __GNUC__ && __GNUC__ >= 2
+__inline__
+#endif
+_IO_FILE *
+_IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
+     _IO_FILE *fp;
+     const char *filename;
+     int posix_mode;
+     int prot;
+     int read_write;
+     int is32not64;
+{
+  int fdesc;
+#ifdef _G_OPEN64
+  fdesc = (is32not64
+	   ? open (filename, posix_mode, prot)
+	   : _G_OPEN64 (filename, posix_mode, prot));
+#else
+  fdesc = open (filename, posix_mode, prot);
+#endif
+  if (fdesc < 0)
+    return NULL;
+  fp->_fileno = fdesc;
+  _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
+  if (read_write & _IO_IS_APPENDING)
+    if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
+	== _IO_pos_BAD && errno != ESPIPE)
+      return NULL;
+  _IO_link_in (fp);
+  return fp;
+}
+
 _IO_FILE *
 _IO_file_fopen (fp, filename, mode, is32not64)
      _IO_FILE *fp;
@@ -169,7 +199,7 @@ _IO_file_fopen (fp, filename, mode, is32not64)
      int is32not64;
 {
   int oflags = 0, omode;
-  int read_write, fdesc;
+  int read_write;
   int oprot = 0666;
   if (_IO_file_is_open (fp))
     return 0;
@@ -198,23 +228,8 @@ _IO_file_fopen (fp, filename, mode, is32not64)
       omode = O_RDWR;
       read_write &= _IO_IS_APPENDING;
     }
-#ifdef _G_OPEN64
-  fdesc = (is32not64
-	   ? open (filename, omode|oflags, oprot)
-	   : _G_OPEN64 (filename, omode|oflags, oprot));
-#else
-  fdesc = open (filename, omode|oflags, oprot);
-#endif
-  if (fdesc < 0)
-    return NULL;
-  fp->_fileno = fdesc;
-  _IO_mask_flags (fp, read_write,_IO_NO_READS+_IO_NO_WRITES+_IO_IS_APPENDING);
-  if (read_write & _IO_IS_APPENDING)
-    if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
-	== _IO_pos_BAD && errno != ESPIPE)
-      return NULL;
-  _IO_link_in (fp);
-  return fp;
+  return _IO_file_open (fp, filename, omode|oflags, oprot, read_write,
+			is32not64);
 }
 
 _IO_FILE *
@@ -222,7 +237,6 @@ _IO_file_attach (fp, fd)
      _IO_FILE *fp;
      int fd;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   if (_IO_file_is_open (fp))
     return NULL;
   fp->_fileno = fd;
@@ -230,7 +244,7 @@ _IO_file_attach (fp, fd)
   fp->_flags |= _IO_DELETE_DONT_CLOSE;
   /* Get the current position of the file. */
   /* We have to do that since that may be junk. */
-  fc->_offset = _IO_pos_BAD;
+  fp->_offset = _IO_pos_BAD;
   if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_cur, _IOS_INPUT|_IOS_OUTPUT)
       == _IO_pos_BAD && errno != ESPIPE)
     return NULL;
@@ -262,7 +276,6 @@ _IO_do_write (fp, data, to_do)
      const char *data;
      _IO_size_t to_do;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_size_t count;
   if (to_do == 0)
     return 0;
@@ -272,14 +285,14 @@ _IO_do_write (fp, data, to_do)
        is not needed nor desirable for Unix- or Posix-like systems.
        Instead, just indicate that offset (before and after) is
        unpredictable. */
-    fc->_offset = _IO_pos_BAD;
+    fp->_offset = _IO_pos_BAD;
   else if (fp->_IO_read_end != fp->_IO_write_base)
     {
       _IO_fpos64_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
 	return EOF;
-      fc->_offset = new_pos;
+      fp->_offset = new_pos;
     }
   count = _IO_SYSWRITE (fp, data, to_do);
   if (fp->_cur_column)
@@ -295,7 +308,6 @@ int
 _IO_file_underflow (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_ssize_t count;
 #if 0
   /* SysV does not make this test; take it out for compatibility */
@@ -342,8 +354,8 @@ _IO_file_underflow (fp)
   fp->_IO_read_end += count;
   if (count == 0)
     return EOF;
-  if (fc->_offset != _IO_pos_BAD)
-    _IO_pos_adjust (fc->_offset, count);
+  if (fp->_offset != _IO_pos_BAD)
+    _IO_pos_adjust (fp->_offset, count);
   return *(unsigned char *) fp->_IO_read_ptr;
 }
 
@@ -402,7 +414,6 @@ int
 _IO_file_sync (fp)
      _IO_FILE *fp;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_size_t delta;
   int retval = 0;
 
@@ -429,7 +440,7 @@ _IO_file_sync (fp)
 	retval = EOF;
     }
   if (retval != EOF)
-    fc->_offset = _IO_pos_BAD;
+    fp->_offset = _IO_pos_BAD;
   /* FIXME: Cleanup - can this be shared? */
   /*    setg(base(), ptr, ptr); */
   _IO_cleanup_region_end (1);
@@ -443,7 +454,6 @@ _IO_file_seekoff (fp, offset, dir, mode)
      int dir;
      int mode;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) fp;
   _IO_fpos64_t result;
   _IO_off64_t delta, new_offset;
   long count;
@@ -479,10 +489,10 @@ _IO_file_seekoff (fp, offset, dir, mode)
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
       offset -= fp->_IO_read_end - fp->_IO_read_ptr;
-      if (fc->_offset == _IO_pos_BAD)
+      if (fp->_offset == _IO_pos_BAD)
 	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
-      offset += _IO_pos_as_off (fc->_offset);
+      offset += _IO_pos_as_off (fp->_offset);
 
       dir = _IO_seek_set;
       break;
@@ -503,11 +513,11 @@ _IO_file_seekoff (fp, offset, dir, mode)
   /* At this point, dir==_IO_seek_set. */
 
   /* If destination is within current buffer, optimize: */
-  if (fc->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
+  if (fp->_offset != _IO_pos_BAD && fp->_IO_read_base != NULL
       && !_IO_in_backup (fp))
     {
       /* Offset relative to start of main get area. */
-      _IO_fpos64_t rel_offset = (offset - fc->_offset
+      _IO_fpos64_t rel_offset = (offset - fp->_offset
 				 + (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{
@@ -581,7 +591,7 @@ _IO_file_seekoff (fp, offset, dir, mode)
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + delta,
 	    fp->_IO_buf_base + count);
   _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
-  fc->_offset = result + count;
+  fp->_offset = result + count;
   _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
   return offset;
  dumb:
@@ -590,7 +600,7 @@ _IO_file_seekoff (fp, offset, dir, mode)
   result = _IO_SYSSEEK (fp, offset, dir);
   if (result != EOF)
     _IO_mask_flags (fp, 0, _IO_EOF_SEEN);
-  fc->_offset = result;
+  fp->_offset = result;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   _IO_setp (fp, fp->_IO_buf_base, fp->_IO_buf_base);
   return result;
@@ -643,7 +653,6 @@ _IO_file_write (f, data, n)
      const void *data;
      _IO_ssize_t n;
 {
-  struct _IO_FILE_complete *fc = (struct _IO_FILE_complete *) f;
   _IO_ssize_t to_do = n;
   while (to_do > 0)
     {
@@ -657,8 +666,8 @@ _IO_file_write (f, data, n)
       data = (void *) ((char *) data + count);
     }
   n -= to_do;
-  if (fc->_offset >= 0)
-    fc->_offset += n;
+  if (f->_offset >= 0)
+    f->_offset += n;
   return n;
 }
 

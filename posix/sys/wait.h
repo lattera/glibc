@@ -89,6 +89,16 @@ typedef union
 # define W_STOPCODE(sig)	__W_STOPCODE(sig)
 #endif
 
+/* The following values are used by the `waitid' function.  */
+#if defined __USE_SVID || defined __USE_XOPEN
+typedef enum
+{
+  P_ALL,		/* Wait for any child.  */
+  P_PID,		/* Wait for specified process.  */
+  P_PGID		/* Wait for members of process group.  */
+} idtype_t;
+#endif
+
 
 /* Wait for a child to die.  When one does, put its status in *STAT_LOC
    and return its process ID.  For errors, return (pid_t) -1.  */
@@ -117,6 +127,21 @@ extern __pid_t __waitpid __P ((__pid_t __pid, int *__stat_loc,
 			       int __options));
 extern __pid_t waitpid __P ((__pid_t __pid, int *__stat_loc,
 			     int __options));
+
+#if defined __USE_SVID || defined __USE_XOPEN
+# define __need_siginfo_t
+# include <bits/siginfo.h>
+/* Wait for a childing matching IDTYPE and ID to change the status and
+   place appropriate information in *INFOP.
+   If IDTYPE is P_PID, match any process whose process ID is ID.
+   If IDTYPE is P_PGID, match any process whose process group is ID.
+   If IDTYPE is P_ALL, match any process.
+   If the WNOHANG bit is set in OPTIONS, and that child
+   is not already dead, clear *INFOP and return 0.  If successful, store
+   exit code and status in *INFOP.  */
+extern int waitid __P ((idtype_t __idtype, __id_t __id, siginfo_t *__infop,
+			int __options));
+#endif
 
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* This being here makes the prototypes valid whether or not

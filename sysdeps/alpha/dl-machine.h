@@ -204,8 +204,8 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup, #nop);
 #else
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup);		\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
+  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
+  strong_alias (_dl_runtime_resolve, _dl_runtime_profile, #nop);
 #endif
 
 /* Initial entry point code for the dynamic linker.

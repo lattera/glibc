@@ -44,7 +44,7 @@ __clog10f (__complex__ float x)
       /* Neither real nor imaginary part is NaN.  */
       __real__ result = __ieee754_log10f (__ieee754_hypotf (__real__ x,
 							    __imag__ x));
-      __imag__ result = __ieee754_atan2f (__imag__ x, __real__ x);
+      __imag__ result = M_LOG10E * __ieee754_atan2f (__imag__ x, __real__ x);
     }
   else
     {

@@ -531,6 +531,9 @@ _IO_init (fp, flags)
   fp->_IO_save_end = NULL;
   fp->_markers = NULL;
   fp->_cur_column = 0;
+#if _IO_JUMPS_OFFSET
+  fp->_vtable_offset = 0;
+#endif
 #ifdef _IO_MTSAFE_IO
   _IO_lock_init (*fp->_lock);
 #endif

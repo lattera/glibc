@@ -23,6 +23,7 @@
    other reasons why the executable file might be covered by the GNU
    General Public License.  */
 
+#define _IO_USE_OLD_IO_FILE
 #ifdef __STDC__
 #include <stdlib.h>
 #endif
@@ -34,7 +35,7 @@
 #endif
 
 _IO_FILE *
-_IO_new_fdopen (fd, mode)
+_IO_old_fdopen (fd, mode)
      int fd;
      const char *mode;
 {
@@ -109,12 +110,12 @@ _IO_new_fdopen (fd, mode)
   new_f->fp.file._lock = &new_f->lock;
 #endif
   _IO_init (&new_f->fp.file, 0);
-  _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
-  _IO_file_init (&new_f->fp.file);
+  _IO_JUMPS (&new_f->fp) = &_IO_old_file_jumps;
+  _IO_old_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES
   new_f->fp.vtable = NULL;
 #endif
-  if (_IO_file_attach (&new_f->fp.file, fd) == NULL)
+  if (_IO_old_file_attach (&new_f->fp.file, fd) == NULL)
     {
       _IO_un_link (&new_f->fp.file);
       free (new_f);
@@ -129,13 +130,6 @@ _IO_new_fdopen (fd, mode)
   return (_IO_FILE *) &new_f->fp;
 }
 
-#ifdef DO_VERSIONING
-strong_alias (_IO_new_fdopen, __new_fdopen)
-default_symbol_version (_IO_new_fdopen, _IO_fdopen, GLIBC_2.1);
-default_symbol_version (__new_fdopen, fdopen, GLIBC_2.1);
-#else
-# ifdef weak_alias
-weak_alias (_IO_new_fdopen, _IO_fdopen)
-weak_alias (_IO_new_fdopen, fdopen)
-# endif
-#endif
+strong_alias (_IO_old_fdopen, __old_fdopen)
+symbol_version (_IO_old_fdopen, _IO_fdopen, GLIBC_2.0);
+symbol_version (__old_fdopen, fdopen, GLIBC_2.0);

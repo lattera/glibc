@@ -338,7 +338,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    {
 	      const char *strtab;
 
-	      strtab = ((void *) map->l_addr
+	      strtab = ((const char *) map->l_addr
 			+ map->l_info[DT_STRTAB]->d_un.d_ptr);
 	      _dl_sysdep_error (_dl_argv[0] ?: "<program name unknown>",
 				": Symbol `", strtab + refsym->st_name,

@@ -138,13 +138,20 @@ __inline_mathop(__tan, tan)
 __inline_mathop(__tanh, tanh)
 __inline_mathop(__fabs, abs)
 
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED || defined __USE_ISOC9X
 __inline_mathop(__rint, int)
 __inline_mathop(__expm1, etoxm1)
 __inline_mathop(__log1p, lognp1)
-__inline_mathop(__significand, getman)
+#endif
 
+#ifdef __USE_MISC
+__inline_mathop(__significand, getman)
+#endif
+
+#ifdef __USE_ISOC9X
 __inline_mathop(__log2, log2)
 __inline_mathop(__trunc, intrz)
+#endif
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
@@ -272,8 +279,18 @@ __m81_defun (float_type, __CONCAT(__ceil,s), (float_type __x))		  \
   __asm __volatile__ ("fmove%.l %0, %!" : /* No outputs.  */		  \
 		      : "dmi" (__ctrl_reg));				  \
   return __result;							  \
-}									  \
-									  \
+}
+
+__inline_functions(double,)
+#if defined __USE_MISC || defined __USE_ISOC9X
+__inline_functions(float,f)
+__inline_functions(long double,l)
+#endif
+#undef __inline_functions
+
+#ifdef __USE_MISC
+
+# define __inline_functions(float_type, s)				  \
 __m81_defun (int, __CONCAT(__isinf,s), (float_type __value))		  \
 {									  \
   /* There is no branch-condition for infinity,				  \
@@ -282,14 +299,6 @@ __m81_defun (int, __CONCAT(__isinf,s), (float_type __value))		  \
   __asm("ftst%.x %1\n"							  \
 	"fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
   return (__fpsr & (2 << 24)) ? (__fpsr & (8 << 24) ? -1 : 1) : 0;	  \
-}									  \
-									  \
-__m81_defun (int, __CONCAT(__isnan,s), (float_type __value))		  \
-{									  \
-  char __result;							  \
-  __asm("ftst%.x %1\n"							  \
-	"fsun %0" : "=dm" (__result) : "f" (__value));			  \
-  return __result;							  \
 }									  \
 									  \
 __m81_defun (int, __CONCAT(__finite,s), (float_type __value))		  \
@@ -302,6 +311,44 @@ __m81_defun (int, __CONCAT(__finite,s), (float_type __value))		  \
   return (__fpsr & (3 << 24)) == 0;					  \
 }									  \
 									  \
+__m81_defun (float_type, __CONCAT(__scalbn,s),				  \
+	     (float_type __x, int __n))					  \
+{									  \
+  float_type __result;							  \
+  __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));  \
+  return __result;							  \
+}
+
+__inline_functions(double,)
+__inline_functions(float,f)
+__inline_functions(long double,l)
+# undef __inline_functions
+
+#endif /* Use misc.  */
+
+#if defined __USE_MISC || defined __USE_XOPEN
+
+# define __inline_functions(float_type, s)				  \
+__m81_defun (int, __CONCAT(__isnan,s), (float_type __value))		  \
+{									  \
+  char __result;							  \
+  __asm("ftst%.x %1\n"							  \
+	"fsun %0" : "=dm" (__result) : "f" (__value));			  \
+  return __result;							  \
+}
+
+__inline_functions(double,)
+# ifdef __USE_MISC
+__inline_functions(float,f)
+__inline_functions(long double,l)
+# endif
+# undef __inline_functions
+
+#endif
+
+#ifdef __USE_ISOC9X
+
+# define __inline_functions(float_type, s)				  \
 __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
 {									  \
   /* There is no branch-condition for the sign bit, so we must extract	  \
@@ -310,14 +357,6 @@ __m81_defun (int, __CONCAT(__signbit,s), (float_type __value))		  \
   __asm ("ftst%.x %1\n"							  \
 	 "fmove%.l %/fpsr, %0" : "=dm" (__fpsr) : "f" (__value));	  \
   return (__fpsr >> 27) & 1;						  \
-}									  \
-									  \
-__m81_defun (float_type, __CONCAT(__scalbn,s),				  \
-	     (float_type __x, int __n))					  \
-{									  \
-  float_type __result;							  \
-  __asm ("fscale%.l %1, %0" : "=f" (__result) : "dmi" (__n), "0" (__x));  \
-  return __result;							  \
 }									  \
 									  \
 __m81_defun (float_type, __CONCAT(__scalbln,s),				  \
@@ -347,14 +386,6 @@ __m81_defun (long int, __CONCAT(__lrint,s), (float_type __x))		  \
   return __result;							  \
 }									  \
 									  \
-__m81_inline void							  \
-__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx,	  \
-			      float_type *__cosx)			  \
-{									  \
-  __asm ("fsincos%.x %2,%1:%0"						  \
-	 : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));			  \
-}									  \
-									  \
 __m81_inline float_type							  \
 __m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,		  \
 			   float_type __z)				  \
@@ -362,11 +393,30 @@ __m81_u(__CONCAT(__fma,s))(float_type __x, float_type __y,		  \
   return (__x * __y) + __z;						  \
 }
 
-/* This defines the three variants of the inline functions.  */
 __inline_functions (double,)
 __inline_functions (float,f)
 __inline_functions (long double,l)
-#undef __inline_functions
+# undef __inline_functions
+
+#endif /* Use ISO C9x */
+
+#ifdef __USE_GNU
+
+# define __inline_functions(float_type, s)				\
+__m81_inline void							\
+__m81_u(__CONCAT(__sincos,s))(float_type __x, float_type *__sinx,	\
+			      float_type *__cosx)			\
+{									\
+  __asm ("fsincos%.x %2,%1:%0"						\
+	 : "=f" (*__sinx), "=f" (*__cosx) : "f" (__x));			\
+}
+
+__inline_functions (double,)
+__inline_functions (float,f)
+__inline_functions (long double,l)
+# undef __inline_functions
+
+#endif
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 

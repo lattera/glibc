@@ -34,11 +34,17 @@ _IO_fgets (buf, n, fp)
 {
   _IO_size_t count;
   char *result;
+  int old_error;
   CHECK_FILE (fp, NULL);
   if (n <= 0)
     return NULL;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
+  /* This is very tricky since a file descriptor may be in the
+     non-blocking mode. The error flag doesn't mean much in this
+     case. We return an error only when there is a new error. */
+  old_error = fp->_IO_file_flags & _IO_ERR_SEEN;
+  fp->_IO_file_flags &= ~_IO_ERR_SEEN;
   count = _IO_getline (fp, buf, n - 1, '\n', 1);
   if (count == 0 || (fp->_IO_file_flags & _IO_ERR_SEEN))
     result = NULL;
@@ -47,6 +53,7 @@ _IO_fgets (buf, n, fp)
       buf[count] = '\0';
       result = buf;
     }
+  fp->_IO_file_flags |= old_error;
   _IO_cleanup_region_end (1);
   return result;
 }

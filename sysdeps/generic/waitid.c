@@ -1,6 +1,7 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Stub version of waitid.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,37 +18,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <endian.h>
-#include <string.h>
-#include <wctype.h>
-#include <locale/localeinfo.h>
+#include <errno.h>
+#include <sys/wait.h>
 
-wctype_t
-wctype (const char *property)
+int
+waitid (idtype, id, infop, options)
+     idtype_t idtype;
+     id_t id;
+     siginfo_t *infop;
+     int options;
 {
-  const char *names;
-  wctype_t result;
-  size_t proplen = strlen (property);
-
-  names = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_CLASS_NAMES);
-  for (result = 1; result != 0; result <<= 1)
-    {
-      size_t nameslen = strlen (names);
-
-      if (proplen == nameslen && memcmp (property, names, proplen) == 0)
-	break;
-
-      names += nameslen + 1;
-      if (names[0] == '\0')
-	return 0;
-    }
-
-#if __BYTE_ORDER == __BIG_ENDIAN
-  return result;
-#else
-#define XSWAPU32(w) \
-  ((((w) & 0xff00ff00) >> 8) | (((w) & 0xff00ff) << 8))
-
-  return XSWAPU32 (result);
-#endif
+  __set_errno (ENOSYS);
+  return -1;
 }
