@@ -1,5 +1,5 @@
 /* obstack.c - subroutines used implicitly by object stack macros
-   Copyright (C) 1988-1994,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1988-1994,96,97,98,99,2000 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.  The master source lives in /gd/gnu/lib.
@@ -451,7 +451,7 @@ _obstack_memory_used (h)
 
 /* Define the error handler.  */
 #ifndef _
-# ifdef HAVE_LIBINTL_H
+# if defined HAVE_LIBINTL_H || defined _LIBC
 #  include <libintl.h>
 #  ifndef _
 #   define _(Str) gettext (Str)
