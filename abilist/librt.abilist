@@ -1,7 +1,9 @@
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 s390x-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  aio_cancel F
  aio_cancel64 F
  aio_error F
@@ -19,10 +21,11 @@ GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[
  aio_write64 F
  lio_listio F
  lio_listio64 F
-GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
  GLIBC_2.2.5 A
-GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  clock_getcpuclockid F
  clock_getres F
  clock_gettime F
@@ -35,12 +38,7 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  timer_getoverrun F
  timer_gettime F
  timer_settime F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  GLIBC_2.2 A
-GLIBC_2.3.3 ia64-.*-linux.* powerpc64-.*-linux.* s390x-.*-linux.* x86_64-.*-linux.*
- GLIBC_2.3.3 A
- timer_create F
- timer_delete F
- timer_getoverrun F
- timer_gettime F
- timer_settime F
+GLIBC_2.3 powerpc64-.*-linux.*/thread
+ GLIBC_2.3 A

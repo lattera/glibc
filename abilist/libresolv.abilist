@@ -1,12 +1,14 @@
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  GLIBC_2.0 A
  dn_expand F
  res_mkquery F
  res_query F
  res_querydomain F
  res_search F
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 s390x-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  __b64_ntop F
  __b64_pton F
  __dn_comp F
@@ -57,19 +59,22 @@ GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[
  res_gethostbyname2 F
  res_send_setqhook F
  res_send_setrhook F
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  __p_class_syms D 0x54
  __p_type_syms D 0x21c
  _res_opcodes D 0x40
-GLIBC_2.0 ia64-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.0 ia64-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 s390x-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  __p_class_syms D 0xa8
  __p_type_syms D 0x438
  _res_opcodes D 0x80
-GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
  GLIBC_2.2.5 A
-GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  __dn_expand F
  __res_hostalias F
  __res_mkquery F
@@ -81,8 +86,10 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  __res_query F
  __res_querydomain F
  __res_search F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  GLIBC_2.2 A
-GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls powerpc64-.*-linux.*/thread s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls x86_64-.*-linux.*/tls
  GLIBC_2.3.2 A
  __p_rcode F
+GLIBC_2.3 powerpc64-.*-linux.*/thread
+ GLIBC_2.3 A

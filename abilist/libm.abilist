@@ -1,8 +1,9 @@
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  _LIB_VERSION D 0x4
  acos F
  acosf F
@@ -159,11 +160,12 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  yn F
  ynf F
  ynl F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  feclearexcept F
  fegetenv F
  fegetexceptflag F
@@ -171,9 +173,10 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  fesetenv F
  fesetexceptflag F
  feupdateenv F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 ia64-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  __clog10 F
  __clog10f F
  __clog10l F
@@ -319,30 +322,34 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  trunc F
  truncf F
  truncl F
-GLIBC_2.1 i.86-.*-linux.*
-| GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 ia64-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls m68.*-.*-linux.*/notls
+| GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 ia64-.*-linux.*/tls
  __fpclassifyl F
  __signbitl F
  exp2l F
-GLIBC_2.1 powerpc-.*-linux.*
+GLIBC_2.1 powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  __fe_dfl_env D 0x8
  __fe_enabled_env D 0x8
  __fe_nomask_env F
  __fe_nonieee_env D 0x8
-GLIBC_2.2.3 ia64-.*-linux.*
+GLIBC_2.2.3 ia64-.*-linux.*/tls
  GLIBC_2.2.3 A
  matherrf F
  matherrl F
-GLIBC_2.2.5 x86_64-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
  GLIBC_2.2.5 A
-GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.5 x86_64-.*-linux.*/tls
+| GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
+| GLIBC_2.3 powerpc64-.*-linux.*/thread
  fedisableexcept F
  feenableexcept F
  fegetexcept F
-GLIBC_2.2 i.86-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls
  __expl F
  __expm1l F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.*/notls i.86-.*-linux.*/thread i.86-.*-linux.*/tls ia64-.*-linux.*/tls m68.*-.*-linux.*/notls powerpc-.*-linux.*/thread powerpc-.*-linux.*/tls s390-.*-linux.*/tls s390x-.*-linux.*/tls sh[34].*-.*-linux.*/notls sh[34].*-.*-linux.*/thread sh[34].*-.*-linux.*/tls
  GLIBC_2.2 A
+GLIBC_2.3 powerpc64-.*-linux.*/thread
+ GLIBC_2.3 A
