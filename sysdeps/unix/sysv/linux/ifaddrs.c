@@ -177,15 +177,10 @@ netlink_receive (struct netlink_handle *h)
       nlm_next->size = read_len;
       nlm_next->seq = h->seq;
       if (h->nlm_list == NULL)
-	{
-	  h->nlm_list = nlm_next;
-	  h->end_ptr = nlm_next;
-	}
+	h->nlm_list = nlm_next;
       else
-	{
-	  h->end_ptr->next = nlm_next;
-	  h->end_ptr = nlm_next;
-	}
+	h->end_ptr->next = nlm_next;
+      h->end_ptr = nlm_next;
 
       for (nlmh = (struct nlmsghdr *) buf;
 	   NLMSG_OK (nlmh, (size_t) read_len);

@@ -1,5 +1,8 @@
 2003-06-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ifaddrs.c (netlink_receive): Minor
+	optimization.
+
 	* po/zh_CN.po: Update from translation team.
 
 	* posix/getconf.c (main): Also recognize names without the
