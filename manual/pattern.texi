@@ -1509,7 +1509,7 @@ variable any portion at the end that matches the pattern @var{suffix}.
 If there is more than one alternative for how to match against
 @var{suffix}, this construct uses the shortest possible alternative.
 
-Thus, @samp{$@{foo%%r*@}} substitutes @samp{tracto}, because the shortest
+Thus, @samp{$@{foo%r*@}} substitutes @samp{tracto}, because the shortest
 match for @samp{r*} at the end of @samp{tractor} is just @samp{r}.
 
 @item $@{@var{variable}##@var{prefix}@}
@@ -1519,8 +1519,8 @@ variable any portion at the beginning that matches the pattern @var{prefix}.
 If there is more than one alternative for how to match against
 @var{prefix}, this construct uses the longest possible match.
 
-Thus, @samp{$@{foo%%r*@}} substitutes @samp{t}, because the largest
-match for @samp{r*} at the end of @samp{tractor} is @samp{ractor}.
+Thus, @samp{$@{foo##*t@}} substitutes @samp{or}, because the largest
+match for @samp{*t} at the beginning of @samp{tractor} is @samp{tract}.
 
 @item $@{@var{variable}#@var{prefix}@}
 Substitute the value of @var{variable}, but first discard from that
@@ -1529,7 +1529,7 @@ variable any portion at the beginning that matches the pattern @var{prefix}.
 If there is more than one alternative for how to match against
 @var{prefix}, this construct uses the shortest possible alternative.
 
-Thus, @samp{$@{foo%%r*@}} substitutes @samp{tracto}, because the shortest
-match for @samp{r*} at the end of @samp{tractor} is just @samp{r}.
+Thus, @samp{$@{foo#*t@}} substitutes @samp{ractor}, because the shortest
+match for @samp{*t} at the beginning of @samp{tractor} is just @samp{t}.
 
 @end table
