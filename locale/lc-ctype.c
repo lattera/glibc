@@ -1,5 +1,6 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995-1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +36,10 @@ _nl_postload_ctype (void)
 #define current(type,x,offset) \
   ((const type *) _NL_CURRENT (LC_CTYPE, _NL_CTYPE_##x) + offset)
 
-/* These are defined in ctype-info.c.
+  const union locale_data_value *const ctypes
+    = _nl_global_locale.__locales[LC_CTYPE]->values;
+
+/* These thread-local variables are defined in ctype-info.c.
    The declarations here must match those in localeinfo.h.
 
    These point into arrays of 384, so they can be indexed by any `unsigned
@@ -45,13 +49,28 @@ _nl_postload_ctype (void)
    for broken old programs.  The case conversion arrays are of `int's
    rather than `unsigned char's because tolower (EOF) must be EOF, which
    doesn't fit into an `unsigned char'.  But today more important is that
-   the arrays are also used for multi-byte character sets.  */
+   the arrays are also used for multi-byte character sets.
 
+   First we update the special members of _nl_global_locale as newlocale
+   would.  This is necessary for uselocale (LC_GLOBAL_LOCALE) to find these
+   values properly.  */
+
+  _nl_global_locale.__ctype_b = (const unsigned short int *)
+    ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)].string + 128;
+  _nl_global_locale.__ctype_tolower = (const int *)
+    ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string + 128;
+  _nl_global_locale.__ctype_toupper = (const int *)
+    ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string + 128;
+
+  /* Next we must set the thread-local caches if and only if this thread is
+     in fact using the global locale.  */
   if (_NL_CURRENT_LOCALE == &_nl_global_locale)
     {
-      __libc_tsd_set (CTYPE_B, (void *) current (uint16_t, CLASS, 128));
-      __libc_tsd_set (CTYPE_TOUPPER, (void *) current (int32_t, TOUPPER, 128));
-      __libc_tsd_set (CTYPE_TOLOWER, (void *) current (int32_t, TOLOWER, 128));
+      __libc_tsd_set (CTYPE_B, (void *) _nl_global_locale.__ctype_b);
+      __libc_tsd_set (CTYPE_TOUPPER,
+		      (void *) _nl_global_locale.__ctype_toupper);
+      __libc_tsd_set (CTYPE_TOLOWER,
+		      (void *) _nl_global_locale.__ctype_tolower);
     }
 
 #include <shlib-compat.h>
