@@ -448,10 +448,10 @@ extern error_t argp_err_exit_status;
    ARGP_HELP_*.  */
 extern void argp_help (__const struct argp *__restrict __argp,
 		       FILE *__restrict __stream,
-		       unsigned __flags, char *__restrict __name) __THROW;
+		       unsigned __flags, char *__restrict __name);
 extern void __argp_help (__const struct argp *__restrict __argp,
 			 FILE *__restrict __stream, unsigned __flags,
-			 char *__name) __THROW;
+			 char *__name);
 
 /* The following routines are intended to be called from within an argp
    parsing routine (thus taking an argp_state structure as the first
@@ -465,23 +465,23 @@ extern void __argp_help (__const struct argp *__restrict __argp,
    from the set ARGP_HELP_*.  */
 extern void argp_state_help (__const struct argp_state *__restrict __state,
 			     FILE *__restrict __stream,
-			     unsigned int __flags) __THROW;
+			     unsigned int __flags);
 extern void __argp_state_help (__const struct argp_state *__restrict __state,
 			       FILE *__restrict __stream,
-			       unsigned int __flags) __THROW;
+			       unsigned int __flags);
 
 /* Possibly output the standard usage message for ARGP to stderr and exit.  */
-extern void argp_usage (__const struct argp_state *__state) __THROW;
-extern void __argp_usage (__const struct argp_state *__state) __THROW;
+extern void argp_usage (__const struct argp_state *__state);
+extern void __argp_usage (__const struct argp_state *__state);
 
 /* If appropriate, print the printf string FMT and following args, preceded
    by the program name and `:', to stderr, and followed by a `Try ... --help'
    message, then exit (1).  */
 extern void argp_error (__const struct argp_state *__restrict __state,
-			__const char *__restrict __fmt, ...) __THROW
+			__const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 extern void __argp_error (__const struct argp_state *__restrict __state,
-			  __const char *__restrict __fmt, ...) __THROW
+			  __const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 2, 3)));
 
 /* Similar to the standard gnu error-reporting function error(), but will
@@ -494,11 +494,11 @@ extern void __argp_error (__const struct argp_state *__restrict __state,
    parsing but don't reflect a (syntactic) problem with the input.  */
 extern void argp_failure (__const struct argp_state *__restrict __state,
 			  int __status, int __errnum,
-			  __const char *__restrict __fmt, ...) __THROW
+			  __const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 4, 5)));
 extern void __argp_failure (__const struct argp_state *__restrict __state,
 			    int __status, int __errnum,
-			    __const char *__restrict __fmt, ...) __THROW
+			    __const char *__restrict __fmt, ...)
      __attribute__ ((__format__ (__printf__, 4, 5)));
 
 /* Returns true if the option OPT is a valid short option.  */

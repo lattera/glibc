@@ -1,5 +1,9 @@
 2003-08-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* argp/Makefile (CFLAGS-argp-help.c): Add -fexceptions.
+	(CFLAGS-argp-fmtstream.c): Likewise.
+	* argp/argp.h: Remove a number of __THROW.
+
 	* misc/sys/syslog.h (vsyslog): Remove __THROW.
 
 	* misc/Makefile (CFLAGS-getpass.c): Add -fexceptions.
