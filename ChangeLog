@@ -1,3 +1,28 @@
+1999-01-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/wordsize-32/stdint.h (INT8_C, INT16_C, INT32_C, INT64_C,
+	UINT8_C, UINT16_C, UINT32_C, UINT64_C): Remove casts, they must be
+	integer constants.  Use ## directly instead of __CONCAT so that
+	the suffix string is not expanded as a macro.
+	* sysdeps/wordsize-64/stdint.h (INT8_C, INT16_C, INT32_C, INT64_C,
+	UINT8_C, UINT16_C, UINT32_C, UINT64_C): Likewise.
+	(INT64_MIN, INT64_MAX, UINT64_MAX, INT_LEAST64_MIN,
+	INT_LEAST64_MAX, UINT_LEAST64_MAX, INT_FAST16_MIN, INT_FAST32_MIN,
+	INT_FAST64_MIN, INT_FAST16_MAX, INT_FAST32_MAX, INT_FAST64_MAX,
+	UINT_FAST16_MAX, UINT_FAST32_MAX, UINT_FAST64_MAX, INTMAX_MIN,
+	INTMAX_MAX, UINTMAX_MAX): Define as long constants, not long long.
+
+1999-01-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/mb_cur_max.c (__ctype_get_mb_cur_max): Correct return
+	type to size_t.
+	* locale/broken_cur_max.c (__ctype_get_mb_cur_max): Likewise.
+	* stdlib/stdlib.h (__ctype_get_mb_cur_max): Likewise.
+
+1999-01-27  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/vfork.S: Deleted.
+
 1999-01-28  David S. Miller  <davem@redhat.com>
 
 	* sysdeps/sparc/sparc32/__longjmp.S: Rewrite without bogus sanity

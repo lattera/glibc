@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X: 7.4 Integer types	<stdint.h>
+ *	ISO C 9X: 7.18 Integer types <stdint.h>
  */
 
 #ifndef _STDINT_H
@@ -90,8 +90,8 @@ typedef long int           intmax_t;
 typedef unsigned long int uintmax_t;
 
 
-/* The ISO C 9X standard specifies that these macros must only be
-   defined if explicitly requested.  */
+/* The ISO C 9X standard specifies that in C++ implementations these
+   macros should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_LIMIT_MACROS
 
 /* Limits of integral types.  */
@@ -100,69 +100,69 @@ typedef unsigned long int uintmax_t;
 # define INT8_MIN		(-128)
 # define INT16_MIN		(-32767-1)
 # define INT32_MIN		(-2147483647-1)
-# define INT64_MIN		(-9223372036854775807LL-1)
+# define INT64_MIN		(-9223372036854775807L-1)
 /* Maximum of signed integral types.  */
 # define INT8_MAX		(127)
 # define INT16_MAX		(32767)
 # define INT32_MAX		(2147483647)
-# define INT64_MAX		(9223372036854775807LL)
+# define INT64_MAX		(9223372036854775807L)
 
 /* Maximum of unsigned integral types.  */
 # define UINT8_MAX		(255U)
 # define UINT16_MAX		(65535U)
 # define UINT32_MAX		(4294967295U)
-# define UINT64_MAX		(18446744073709551615uLL)
+# define UINT64_MAX		(18446744073709551615UL)
 
 
 /* Minimum of signed integral types having a minimum size.  */
 # define INT_LEAST8_MIN		(-128)
 # define INT_LEAST16_MIN	(-32767-1)
 # define INT_LEAST32_MIN	(-2147483647-1)
-# define INT_LEAST64_MIN	(-9223372036854775807LL-1)
+# define INT_LEAST64_MIN	(-9223372036854775807L-1)
 /* Maximum of signed integral types having a minimum size.  */
 # define INT_LEAST8_MAX		(127)
 # define INT_LEAST16_MAX	(32767)
 # define INT_LEAST32_MAX	(2147483647)
-# define INT_LEAST64_MAX	(9223372036854775807LL)
+# define INT_LEAST64_MAX	(9223372036854775807L)
 
 /* Maximum of unsigned integral types having a minimum size.  */
 # define UINT_LEAST8_MAX	(255U)
 # define UINT_LEAST16_MAX	(65535U)
 # define UINT_LEAST32_MAX	(4294967295U)
-# define UINT_LEAST64_MAX	(18446744073709551615uLL)
+# define UINT_LEAST64_MAX	(18446744073709551615UL)
 
 
 /* Minimum of fast signed integral types having a minimum size.  */
 # define INT_FAST8_MIN		(-128)
-# define INT_FAST16_MIN		(-9223372036854775807LL-1)
-# define INT_FAST32_MIN		(-9223372036854775807LL-1)
-# define INT_FAST64_MIN		(-9223372036854775807LL-1)
+# define INT_FAST16_MIN		(-9223372036854775807L-1)
+# define INT_FAST32_MIN		(-9223372036854775807L-1)
+# define INT_FAST64_MIN		(-9223372036854775807L-1)
 /* Maximum of fast signed integral types having a minimum size.  */
 # define INT_FAST8_MAX		(127)
-# define INT_FAST16_MAX		(9223372036854775807LL)
-# define INT_FAST32_MAX		(9223372036854775807LL)
-# define INT_FAST64_MAX		(9223372036854775807LL)
+# define INT_FAST16_MAX		(9223372036854775807L)
+# define INT_FAST32_MAX		(9223372036854775807L)
+# define INT_FAST64_MAX		(9223372036854775807L)
 
 /* Maximum of fast unsigned integral types having a minimum size.  */
 # define UINT_FAST8_MAX		(255U)
-# define UINT_FAST16_MAX	(18446744073709551615uLL)
-# define UINT_FAST32_MAX	(18446744073709551615uLL)
-# define UINT_FAST64_MAX	(18446744073709551615uLL)
+# define UINT_FAST16_MAX	(18446744073709551615UL)
+# define UINT_FAST32_MAX	(18446744073709551615UL)
+# define UINT_FAST64_MAX	(18446744073709551615UL)
 
 
 /* Values to test for integral types holding `void *' pointer.  */
 # define INTPTR_MIN		(-9223372036854775807L-1)
 # define INTPTR_MAX		(9223372036854775807L
-# define UINTPTR_MAX		(18446744073709551615uL)
+# define UINTPTR_MAX		(18446744073709551615UL)
 
 
 /* Minimum for largest signed integral type.  */
-# define INTMAX_MIN		(-9223372036854775807LL-1)
+# define INTMAX_MIN		(-9223372036854775807L-1)
 /* Maximum for largest signed integral type.  */
-# define INTMAX_MAX		(9223372036854775807LL)
+# define INTMAX_MAX		(9223372036854775807L)
 
 /* Maximum for largest unsigned integral type.  */
-# define UINTMAX_MAX		(18446744073709551615uLL)
+# define UINTMAX_MAX		(18446744073709551615UL)
 
 
 /* Limits of other integer types.  */
@@ -176,7 +176,7 @@ typedef unsigned long int uintmax_t;
 # define SIG_ATOMIC_MAX	(2147483647)
 
 /* Limit of `size_t' type.  */
-# define SIZE_MAX	(18446744073709551615uL)
+# define SIZE_MAX	(18446744073709551615UL)
 
 /* Limits of `wchar_t'.  */
 # ifndef WCHAR_MIN
@@ -192,25 +192,25 @@ typedef unsigned long int uintmax_t;
 #endif	/* C++ && limit macros */
 
 
-/* The ISO C 9X standard specifies that these macros must only be
-   defined if explicitly requested.  */
+/* The ISO C 9X standard specifies that in C++ implementations these
+   should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_CONSTANT_MACROS
 
 /* Signed.  */
-# define INT8_C(c)	((int8_t) c)
-# define INT16_C(c)	((int16_t) c)
-# define INT32_C(c)	((int32_t) c)
-# define INT64_C(c)	((int64_t) __CONCAT (c,l))
+# define INT8_C(c)	c
+# define INT16_C(c)	c
+# define INT32_C(c)	c
+# define INT64_C(c)	c ## L
 
 /* Unsigned.  */
-# define UINT8_C(c)	((uint8_t) __CONCAT (c,u))
-# define UINT16_C(c)	((uint16_t) __CONCAT (c,u))
-# define UINT32_C(c)	((uint32_t) __CONCAT (c,u))
-# define UINT64_C(c)	((uint64_t) __CONCAT (c,ul))
+# define UINT8_C(c)	c ## U
+# define UINT16_C(c)	c ## U
+# define UINT32_C(c)	c ## U
+# define UINT64_C(c)	c ## UL
 
 /* Maximal type.  */
-# define INTMAX_C(c)	((intmax_t) __CONCAT (c,l))
-# define UINTMAX_C(c)	((uintmax_t) __CONCAT (c,ul))
+# define INTMAX_C(c)	c ## L
+# define UINTMAX_C(c)	c ## UL
 
 #endif	/* C++ && constant macros */
 

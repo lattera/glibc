@@ -1,6 +1,6 @@
 /* Return number of characters in multibyte representation for current
    character set.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -25,26 +25,26 @@
 #include "localeinfo.h"
 
 
-/* This is a gross hack to get borken programs running.
+/* This is a gross hack to get broken programs running.
 
    ISO C provides no mean to find out how many bytes the wide
    character representation really uses.  But it defines MB_CUR_LEN to
    return the information for the multi-byte character representation.
    Many programmers don't know the difference between the two and
-   thing this means the same.  But assuming all characters have a size
+   think this means the same.  But assuming all characters have a size
    of MB_CUR_LEN after they have been processed by `mbrtowc' is wrong.
-   Instead the maximal number of character used for the conversion is
-   MB_CURLEN.
+   Instead the maximum number of characters used for the conversion is
+   MB_CUR_LEN.
 
    It is known that some Motif applications have this problem.  To
    cure this one has to make sure the glibc uses the function in this
    file instead of the one in locale/mb_cur_max.c.  This can either be
    done by linking with this file or by using the LD_PRELOAD feature
    of the dynamic linker.  */
-int
+size_t
 __ctype_get_mb_cur_max (void)
 {
-  int correct_value = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
+  size_t correct_value = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX);
 
-  return ((int []) { 1, 1, 1, 2, 2, 3, 4 })[correct_value];
+  return ((size_t []) { 1, 1, 1, 2, 2, 3, 4 })[correct_value];
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -73,7 +73,7 @@ __extension__ typedef struct
 
 /* Maximum length of a multibyte character in the current locale.  */
 #define	MB_CUR_MAX	(__ctype_get_mb_cur_max ())
-extern int __ctype_get_mb_cur_max __P ((void));
+extern size_t __ctype_get_mb_cur_max __P ((void));
 
 
 /* Convert a string to a floating-point number.  */

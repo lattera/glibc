@@ -860,6 +860,20 @@ possible to do development with old static libraries on a glibc 2.1
 system.  This add-on is still in development.  You can get it from <URL>
 but please keep in mind that it is experimental.
 
+??	Why is extracting files via tar so slow?
+
+{AJ} Extracting of tar archives might be quite slow since tar has to look up
+userid and groupids and doesn't cache negative results.  If you have nis or
+nisplus in your /etc/nsswitch.conf for the passwd and/or group database,
+each file extractions needs a network connection.  There are two possible
+solutions:
+
+- do you really need NIS/NIS+ (some Linux distributions add by default
+  nis/nisplus even if it's not needed)?  If not, just remove the entries.
+
+- if you need NIS/NIS+, use the Name Service Cache Daemon nscd that comes
+  with glibc 2.1.
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with

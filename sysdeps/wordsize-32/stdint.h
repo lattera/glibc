@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 /*
- *	ISO C 9X: 7.4 Integer types	<stdint.h>
+ *	ISO C 9X: 7.18 Integer types <stdint.h>
  */
 
 #ifndef _STDINT_H
@@ -96,8 +96,8 @@ __extension__ typedef long long int           intmax_t;
 __extension__ typedef unsigned long long int uintmax_t;
 
 
-/* The ISO C 9X standard specifies that these macros must only be
-   defined if explicitly requested.  */
+/* The ISO C 9X standard specifies that in C++ implementations these
+   macros should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_LIMIT_MACROS
 
 /* Limits of integral types.  */
@@ -117,7 +117,7 @@ __extension__ typedef unsigned long long int uintmax_t;
 # define UINT8_MAX		(255U)
 # define UINT16_MAX		(65535U)
 # define UINT32_MAX		(4294967295U)
-# define UINT64_MAX		(18446744073709551615uLL)
+# define UINT64_MAX		(18446744073709551615ULL)
 
 
 /* Minimum of signed integral types having a minimum size.  */
@@ -135,7 +135,7 @@ __extension__ typedef unsigned long long int uintmax_t;
 # define UINT_LEAST8_MAX	(255U)
 # define UINT_LEAST16_MAX	(65535U)
 # define UINT_LEAST32_MAX	(4294967295U)
-# define UINT_LEAST64_MAX	(18446744073709551615uLL)
+# define UINT_LEAST64_MAX	(18446744073709551615ULL)
 
 
 /* Minimum of fast signed integral types having a minimum size.  */
@@ -153,7 +153,7 @@ __extension__ typedef unsigned long long int uintmax_t;
 # define UINT_FAST8_MAX		(255U)
 # define UINT_FAST16_MAX	(4294967295U)
 # define UINT_FAST32_MAX	(4294967295U)
-# define UINT_FAST64_MAX	(18446744073709551615uLL)
+# define UINT_FAST64_MAX	(18446744073709551615ULL)
 
 
 /* Values to test for integral types holding `void *' pointer.  */
@@ -168,7 +168,7 @@ __extension__ typedef unsigned long long int uintmax_t;
 # define INTMAX_MAX		(9223372036854775807LL)
 
 /* Maximum for largest unsigned integral type.  */
-# define UINTMAX_MAX		(18446744073709551615uLL)
+# define UINTMAX_MAX		(18446744073709551615ULL)
 
 
 /* Limits of other integer types.  */
@@ -198,25 +198,25 @@ __extension__ typedef unsigned long long int uintmax_t;
 #endif	/* C++ && limit macros */
 
 
-/* The ISO C 9X standard specifies that these macros must only be
-   defined if explicitly requested.  */
+/* The ISO C 9X standard specifies that in C++ implementations these
+   should only be defined if explicitly requested.  */
 #if !defined __cplusplus || defined __STDC_CONSTANT_MACROS
 
 /* Signed.  */
-# define INT8_C(c)	((int8_t) c)
-# define INT16_C(c)	((int16_t) c)
-# define INT32_C(c)	((int32_t) c)
-# define INT64_C(c)	((int64_t) __CONCAT (c,ll))
+# define INT8_C(c)	c
+# define INT16_C(c)	c
+# define INT32_C(c)	c
+# define INT64_C(c)	c ## LL
 
 /* Unsigned.  */
-# define UINT8_C(c)	((uint8_t) __CONCAT (c,u))
-# define UINT16_C(c)	((uint16_t) __CONCAT (c,u))
-# define UINT32_C(c)	((uint32_t) __CONCAT (c,u))
-# define UINT64_C(c)	((uint64_t) __CONCAT (c,ull))
+# define UINT8_C(c)	c ## U
+# define UINT16_C(c)	c ## U
+# define UINT32_C(c)	c ## U
+# define UINT64_C(c)	c ## ULL
 
 /* Maximal type.  */
-# define INTMAX_C(c)	((intmax_t) __CONCAT (c,ll))
-# define UINTMAX_C(c)	((uintmax_t) __CONCAT (c,ull))
+# define INTMAX_C(c)	c ## LL
+# define UINTMAX_C(c)	c ## ULL
 
 #endif	/* C++ && constant macros */
 
