@@ -182,9 +182,7 @@ obstack_vprintf (obstack, format, args)
 }
 
 int
-obstack_printf (obstack, format DOTS)
-      struct obstack *obstack;
-      const char *format;
+obstack_printf (struct obstack *obstackm const char *format, ...)
 {
   int result;
   va_list ap;

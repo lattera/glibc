@@ -1,3 +1,9 @@
+1997-05-27 02:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio/obstream.c (obstack_printf): Fix bug in
+	de-ansidecl-fication.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
 1997-05-26 22:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* configure.in: Use AC_PROG_CC_LOCAL instead of AC_PROC_CC.
