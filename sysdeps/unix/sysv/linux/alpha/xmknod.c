@@ -1,4 +1,5 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* xmknod call using old-style Unix mknod system call.
+   Copyright (C) 1991, 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,33 +18,29 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <termios.h>
-#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
-/* Set the state of FD to *TERMIOS_P.  */
+extern int __syscall_mknod (const char *, unsigned int, unsigned int);
+
+/* Create a device file named PATH, with permission and special bits MODE
+   and device number DEV (which can be constructed from major and minor
+   device numbers with the `makedev' macro above).  */
 int
-tcsetattr (fd, optional_actions, termios_p)
-     int fd;
-     int optional_actions;
-     const struct termios *termios_p;
+__xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
 {
-  unsigned long cmd;
+  unsigned int k_dev;
 
-  switch (optional_actions)
+  if (vers != _MKNOD_VER)
     {
-    case TCSANOW:
-      cmd = TCSETS;
-      break;
-    case TCSADRAIN:
-      cmd = TCSETSW;
-      break;
-    case TCSAFLUSH:
-      cmd = TCSETSF;
-      break;
-    default:
       __set_errno (EINVAL);
       return -1;
     }
 
-  return __ioctl (fd, cmd, termios_p);
+  /* We must convert the value to dev_t type used by the kernel.  */
+  k_dev = ((major (*dev) & 0xff) << 8) | (minor (*dev) & 0xff);
+
+  return __syscall_mknod (path, mode, k_dev);
 }
+
+weak_alias (__xmknod, _xmknod)

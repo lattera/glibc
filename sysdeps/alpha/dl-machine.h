@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -14,9 +14,9 @@
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
-   License along with the GNU C Library; see the file COPYING.LIB.  If
-   not, write to the Free Software Foundation, Inc.,
-   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* This was written in the absence of an ABI -- don't expect
    it to remain unchanged.  */
@@ -43,7 +43,12 @@ elf_machine_matches_host (Elf64_Word e_machine)
 static inline Elf64_Addr
 elf_machine_dynamic (void)
 {
+#ifdef AXP_MULTI_GOT_LD
   return (Elf64_Addr) &_DYNAMIC;
+#else
+  register Elf64_Addr *gp __asm__ ("$29");
+  return gp[-4096];
+#endif
 }
 
 /* Return the run-time load address of the shared object.  */

@@ -1,5 +1,6 @@
-/* Copyright (C) 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,12 +17,16 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+#include <sys/ustat.h>
+#include <sys/sysmacros.h>
 
-.text
-ENTRY (__sigreturn)
-	addl $4, %esp		/* Pop the return PC.  */
-	lcall $0xf, $0		/* Do the magic sigreturn trap.  */
-	/* NOTREACHED */
+int
+ustat (dev_t dev, struct ustat *ubuf)
+{
+  unsigned int k_dev;
 
-weak_alias (__sigreturn, sigreturn)
+  /* We must convert the value to dev_t type used by the kernel.  */
+  k_dev = ((major (dev) & 0xff) << 8) | (minor (dev) & 0xff);
+
+  return __syscall_ustat (k_dev, ubuf);
+}
