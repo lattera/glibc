@@ -1,3 +1,9 @@
+1999-08-06  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/ieee754/ldbl-128/e_expl.c: New file.
+	* sysdeps/ieee754/ldbl-128/t_expl.h: New file.
+	* sysdeps/ieee754/ldbl-128/Dist: Add t_expl.h.
+
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* resolv/res_send.c (res_send): Don't test file descriptor for
