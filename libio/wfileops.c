@@ -314,11 +314,9 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
   if (fp->_IO_read_ptr >= fp->_IO_read_end
       /* No.  But maybe the read buffer is not fully set up.  */
       && _IO_file_underflow_mmap (fp) == EOF)
-    {
-      /* Nothing available.  */
-      fp->_flags |= _IO_EOF_SEEN;
-      return WEOF;
-    }
+    /* Nothing available.  _IO_file_underflow_mmap has set the EOF or error
+       flags as appropriate.  */
+    return WEOF;
 
   /* There is more in the external.  Convert it.  */
   read_stop = (const char *) fp->_IO_read_ptr;
@@ -354,6 +352,18 @@ _IO_wfile_underflow_mmap (_IO_FILE *fp)
   __set_errno (EILSEQ);
   fp->_flags |= _IO_ERR_SEEN;
   return WEOF;
+}
+
+static wint_t
+_IO_wfile_underflow_maybe_mmap (_IO_FILE *fp)
+{
+  /* This is the first read attempt.  Doing the underflow will choose mmap
+     or vanilla operations and then punt to the chosen underflow routine.
+     Then we can punt to ours.  */
+  if (_IO_file_underflow_maybe_mmap (fp) == EOF)
+    return WEOF;
+
+  return _IO_WUNDERFLOW (fp);
 }
 
 
@@ -892,6 +902,30 @@ struct _IO_jump_t _IO_wfile_jumps_mmap =
   JUMP_INIT(write, _IO_new_file_write),
   JUMP_INIT(seek, INTUSE(_IO_file_seek)),
   JUMP_INIT(close, _IO_file_close_mmap),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
+};
+
+struct _IO_jump_t _IO_wfile_jumps_maybe_mmap =
+{
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, _IO_new_file_finish),
+  JUMP_INIT(overflow, (_IO_overflow_t) INTUSE(_IO_wfile_overflow)),
+  JUMP_INIT(underflow, (_IO_underflow_t) _IO_wfile_underflow_maybe_mmap),
+  JUMP_INIT(uflow, (_IO_underflow_t) INTUSE(_IO_wdefault_uflow)),
+  JUMP_INIT(pbackfail, (_IO_pbackfail_t) INTUSE(_IO_wdefault_pbackfail)),
+  JUMP_INIT(xsputn, INTUSE(_IO_wfile_xsputn)),
+  JUMP_INIT(xsgetn, INTUSE(_IO_file_xsgetn)),
+  JUMP_INIT(seekoff, INTUSE(_IO_wfile_seekoff)),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, _IO_file_setbuf_mmap),
+  JUMP_INIT(sync, (_IO_sync_t) INTUSE(_IO_wfile_sync)),
+  JUMP_INIT(doallocate, _IO_wfile_doallocate),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
+  JUMP_INIT(write, _IO_new_file_write),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
+  JUMP_INIT(close, _IO_file_close),
   JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)

@@ -601,41 +601,206 @@ _IO_new_file_underflow (fp)
 }
 INTDEF2(_IO_new_file_underflow, _IO_file_underflow)
 
-/* Special callback replacing the underflow callbacks if we mmap the
-   file.  */
-int
-_IO_file_underflow_mmap (_IO_FILE *fp)
+/* Guts of underflow callback if we mmap the file.  This stats the file and
+   updates the stream state to match.  In the normal case we return zero.
+   If the file is no longer eligible for mmap, its jump tables are reset to
+   the vanilla ones and we return nonzero.  */
+static int
+mmap_remap_check (_IO_FILE *fp)
 {
-  if (fp->_IO_read_end < fp->_IO_buf_end)
+  struct _G_stat64 st;
+
+  if (_IO_SYSSTAT (fp, &st) == 0
+      && S_ISREG (st.st_mode) && st.st_size != 0
+      /* Limit the file size to 1MB for 32-bit machines.  */
+      && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024))
     {
-      /* A stupid requirement in POSIX says that the first read on a
-	 stream must update the atime.  Just read a single byte.  We
-	 don't have to worry about repositioning the file descriptor
-	 since the following seek defines its position anyway.  */
-      char ignore[1];
-      read (fp->_fileno, ignore, 1);
+      const size_t pagesize = __getpagesize ();
+# define ROUNDED(x)	(((x) + pagesize - 1) & ~(pagesize - 1))
+      if (ROUNDED (st.st_size) < ROUNDED (fp->_IO_buf_end
+					  - fp->_IO_buf_base))
+	{
+	  /* We can trim off some pages past the end of the file.  */
+	  (void) __munmap (fp->_IO_buf_base + ROUNDED (st.st_size),
+			   ROUNDED (fp->_IO_buf_end - fp->_IO_buf_base)
+			   - ROUNDED (st.st_size));
+	  fp->_IO_buf_end = fp->_IO_buf_base + st.st_size;
+	}
+      else if (ROUNDED (st.st_size) > ROUNDED (fp->_IO_buf_end
+					       - fp->_IO_buf_base))
+	{
+	  /* The file added some pages.  We need to remap it.  */
+	  void *p;
+#if defined __linux__		/* XXX */
+	  p = __mremap (fp->_IO_buf_base, ROUNDED (fp->_IO_buf_end
+						   - fp->_IO_buf_base),
+			ROUNDED (st.st_size), MREMAP_MAYMOVE);
+	  if (p == MAP_FAILED)
+	    {
+	      (void) __munmap (fp->_IO_buf_base,
+			       fp->_IO_buf_end - fp->_IO_buf_base);
+	      goto punt;
+	    }
+#else
+	  (void) __munmap (fp->_IO_buf_base,
+			   fp->_IO_buf_end - fp->_IO_buf_base);
+# ifdef _G_MMAP64
+	  p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_SHARED,
+			 fp->_fileno, 0);
+# else
+	  p = __mmap (NULL, st.st_size, PROT_READ, MAP_SHARED,
+		      fp->_fileno, 0);
+# endif
+	  if (p == MAP_FAILED)
+	    goto punt;
+#endif
+	  fp->_IO_buf_base = p;
+	  fp->_IO_buf_end = fp->_IO_buf_base + st.st_size;
+	}
+      else
+	{
+	  /* The number of pages didn't change.  */
+	  fp->_IO_buf_end = fp->_IO_buf_base + st.st_size;
+	}
+# undef ROUNDED
+
+      fp->_offset -= fp->_IO_read_end - fp->_IO_read_ptr;
+      _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base + fp->_offset,
+		fp->_IO_buf_end);
 
       if (
 # ifdef _G_LSEEK64
-	  _G_LSEEK64 (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base,
-		      SEEK_SET)
+	  _G_LSEEK64
 # else
-	  __lseek (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
+	  __lseek
 # endif
+	  (fp->_fileno, fp->_IO_buf_end - fp->_IO_buf_base, SEEK_SET)
 	  != fp->_IO_buf_end - fp->_IO_buf_base)
 	{
 	  fp->_flags |= _IO_ERR_SEEN;
 	  return EOF;
 	}
-
       fp->_offset = fp->_IO_buf_end - fp->_IO_buf_base;
-      fp->_IO_read_end = fp->_IO_buf_end;
-      return *(unsigned char *) fp->_IO_read_ptr;
+
+      return 0;
     }
+  else
+    {
+      /* Life is no longer good for mmap.  Punt it.  */
+      (void) __munmap (fp->_IO_buf_base,
+		       fp->_IO_buf_end - fp->_IO_buf_base);
+    punt:
+      fp->_IO_buf_base = fp->_IO_buf_end = NULL;
+      _IO_setg (fp, NULL, NULL, NULL);
+      if (fp->_mode <= 0)
+	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+      else
+	_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
+      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
+
+      return 1;
+    }
+}
+
+/* Special callback replacing the underflow callbacks if we mmap the file.  */
+int
+_IO_file_underflow_mmap (_IO_FILE *fp)
+{
+  if (fp->_IO_read_ptr < fp->_IO_read_end)
+    return *(unsigned char *) fp->_IO_read_ptr;
+
+  if (__builtin_expect (mmap_remap_check (fp), 0))
+    /* We punted to the regular file functions.  */
+    return _IO_UNDERFLOW (fp);
+
+  if (fp->_IO_read_ptr < fp->_IO_read_end)
+    return *(unsigned char *) fp->_IO_read_ptr;
 
   fp->_flags |= _IO_EOF_SEEN;
   return EOF;
 }
+
+static void
+decide_maybe_mmap (_IO_FILE *fp)
+{
+  /* We use the file in read-only mode.  This could mean we can
+     mmap the file and use it without any copying.  But not all
+     file descriptors are for mmap-able objects and on 32-bit
+     machines we don't want to map files which are too large since
+     this would require too much virtual memory.  */
+  struct _G_stat64 st;
+
+  if (_IO_SYSSTAT (fp, &st) == 0
+      && S_ISREG (st.st_mode) && st.st_size != 0
+      /* Limit the file size to 1MB for 32-bit machines.  */
+      && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024)
+      /* Sanity check.  */
+      && (fp->_offset == _IO_pos_BAD || fp->_offset <= st.st_size))
+    {
+      /* Try to map the file.  */
+      void *p;
+
+# ifdef _G_MMAP64
+      p = _G_MMAP64 (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
+# else
+      p = __mmap (NULL, st.st_size, PROT_READ, MAP_SHARED, fp->_fileno, 0);
+# endif
+      if (p != MAP_FAILED)
+	{
+	  /* OK, we managed to map the file.  Set the buffer up and use a
+	     special jump table with simplified underflow functions which
+	     never tries to read anything from the file.  */
+
+	  if (
+# ifdef _G_LSEEK64
+	      _G_LSEEK64
+# else
+	      __lseek
+# endif
+	      (fp->_fileno, st.st_size, SEEK_SET) != st.st_size)
+	    {
+	      (void) __munmap (p, st.st_size);
+	      fp->_offset = _IO_pos_BAD;
+	    }
+	  else
+	    {
+	      INTUSE(_IO_setb) (fp, p, (char *) p + st.st_size, 0);
+
+	      if (fp->_offset == _IO_pos_BAD)
+		fp->_offset = 0;
+
+	      _IO_setg (fp, p, p + fp->_offset, p + st.st_size);
+	      fp->_offset = st.st_size;
+
+	      if (fp->_mode <= 0)
+		_IO_JUMPS ((struct _IO_FILE_plus *)fp) = &_IO_file_jumps_mmap;
+	      else
+		_IO_JUMPS ((struct _IO_FILE_plus *)fp) = &_IO_wfile_jumps_mmap;
+	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
+
+	      return;
+	    }
+	}
+    }
+
+  /* We couldn't use mmap, so revert to the vanilla file operations.  */
+
+  if (fp->_mode <= 0)
+    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps;
+  else
+    _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps;
+  fp->_wide_data->_wide_vtable = &_IO_wfile_jumps;
+}
+
+int
+_IO_file_underflow_maybe_mmap (_IO_FILE *fp)
+{
+  /* This is the first read attempt.  Choose mmap or vanilla operations
+     and then punt to the chosen underflow routine.  */
+  decide_maybe_mmap (fp);
+  return _IO_UNDERFLOW (fp);
+}
+
 
 int
 _IO_new_file_overflow (f, ch)
@@ -725,6 +890,34 @@ _IO_new_file_sync (fp)
   return retval;
 }
 INTDEF2(_IO_new_file_sync, _IO_file_sync)
+
+static int
+_IO_file_sync_mmap (_IO_FILE *fp)
+{
+  if (fp->_IO_read_ptr != fp->_IO_read_end)
+    {
+#ifdef TODO
+      if (_IO_in_backup (fp))
+	delta -= eGptr () - Gbase ();
+#endif
+      if (
+# ifdef _G_LSEEK64
+	  _G_LSEEK64
+# else
+	  __lseek
+# endif
+	  (fp->_fileno, fp->_IO_read_ptr - fp->_IO_buf_base, SEEK_SET)
+	  != fp->_IO_read_ptr - fp->_IO_buf_base)
+	{
+	  fp->_flags |= _IO_ERR_SEEN;
+	  return EOF;
+	}
+    }
+  fp->_offset = fp->_IO_read_ptr - fp->_IO_buf_base;
+  fp->_IO_read_end = fp->_IO_read_ptr = fp->_IO_read_base;
+  return 0;
+}
+
 
 _IO_off64_t
 _IO_new_file_seekoff (fp, offset, dir, mode)
@@ -968,6 +1161,25 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
   return offset;
 }
 
+_IO_off64_t
+_IO_file_seekoff_maybe_mmap (fp, offset, dir, mode)
+     _IO_FILE *fp;
+     _IO_off64_t offset;
+     int dir;
+     int mode;
+{
+  /* We only get here when we haven't tried to read anything yet.
+     So there is nothing more useful for us to do here than just
+     the underlying lseek call.  */
+
+  _IO_off64_t result = _IO_SYSSEEK (fp, offset, dir);
+  if (result < 0)
+    return EOF;
+
+  fp->_offset = result;
+  return result;
+}
+
 _IO_ssize_t
 _IO_file_read (fp, buf, size)
      _IO_FILE *fp;
@@ -1009,9 +1221,8 @@ int
 _IO_file_close_mmap (fp)
      _IO_FILE *fp;
 {
-  /* In addition to closing the file descriptor we have to unmap the
-     file.  */
-  (void) munmap (fp->_IO_buf_base, fp->_IO_buf_end - fp->_IO_buf_base);
+  /* In addition to closing the file descriptor we have to unmap the file.  */
+  (void) __munmap (fp->_IO_buf_base, fp->_IO_buf_end - fp->_IO_buf_base);
   fp->_IO_buf_base = fp->_IO_buf_end = NULL;
   return close (fp->_fileno);
 }
@@ -1270,11 +1481,13 @@ _IO_file_xsgetn_mmap (fp, data, n)
 
       if (have < n)
 	{
-	  /* Maybe the read buffer is not yet fully set up.  */
-	  fp->_IO_read_ptr = fp->_IO_read_end;
-	  if (fp->_IO_read_end < fp->_IO_buf_end
-	      && _IO_file_underflow_mmap (fp) != EOF)
-	    have = fp->_IO_read_end - read_ptr;
+	  /* Check that we are mapping all of the file, in case it grew.  */
+	  if (__builtin_expect (mmap_remap_check (fp), 0))
+	    /* We punted mmap, so complete with the vanilla code.  */
+	    return s - (char *) data + _IO_XSGETN (fp, data, n);
+
+	  read_ptr = fp->_IO_read_ptr;
+	  have = fp->_IO_read_end - read_ptr;
 	}
     }
 
@@ -1294,6 +1507,21 @@ _IO_file_xsgetn_mmap (fp, data, n)
     }
 
   return s - (char *) data;
+}
+
+static _IO_size_t _IO_file_xsgetn_maybe_mmap __P ((_IO_FILE *, void *,
+						   _IO_size_t));
+static _IO_size_t
+_IO_file_xsgetn_maybe_mmap (fp, data, n)
+     _IO_FILE *fp;
+     void *data;
+     _IO_size_t n;
+{
+  /* We only get here if this is the first attempt to read something.
+     Decide which operations to use and then punt to the chosen one.  */
+
+  decide_maybe_mmap (fp);
+  return _IO_XSGETN (fp, data, n);
 }
 
 struct _IO_jump_t _IO_file_jumps =
@@ -1334,12 +1562,36 @@ struct _IO_jump_t _IO_file_jumps_mmap =
   JUMP_INIT(seekoff, _IO_file_seekoff_mmap),
   JUMP_INIT(seekpos, _IO_default_seekpos),
   JUMP_INIT(setbuf, (_IO_setbuf_t) _IO_file_setbuf_mmap),
-  JUMP_INIT(sync, _IO_new_file_sync),
+  JUMP_INIT(sync, _IO_file_sync_mmap),
   JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
   JUMP_INIT(read, INTUSE(_IO_file_read)),
   JUMP_INIT(write, _IO_new_file_write),
   JUMP_INIT(seek, INTUSE(_IO_file_seek)),
   JUMP_INIT(close, _IO_file_close_mmap),
+  JUMP_INIT(stat, INTUSE(_IO_file_stat)),
+  JUMP_INIT(showmanyc, _IO_default_showmanyc),
+  JUMP_INIT(imbue, _IO_default_imbue)
+};
+
+struct _IO_jump_t _IO_file_jumps_maybe_mmap =
+{
+  JUMP_INIT_DUMMY,
+  JUMP_INIT(finish, INTUSE(_IO_file_finish)),
+  JUMP_INIT(overflow, INTUSE(_IO_file_overflow)),
+  JUMP_INIT(underflow, _IO_file_underflow_maybe_mmap),
+  JUMP_INIT(uflow, INTUSE(_IO_default_uflow)),
+  JUMP_INIT(pbackfail, INTUSE(_IO_default_pbackfail)),
+  JUMP_INIT(xsputn, _IO_new_file_xsputn),
+  JUMP_INIT(xsgetn, _IO_file_xsgetn_maybe_mmap),
+  JUMP_INIT(seekoff, _IO_file_seekoff_maybe_mmap),
+  JUMP_INIT(seekpos, _IO_default_seekpos),
+  JUMP_INIT(setbuf, (_IO_setbuf_t) _IO_file_setbuf_mmap),
+  JUMP_INIT(sync, _IO_new_file_sync),
+  JUMP_INIT(doallocate, INTUSE(_IO_file_doallocate)),
+  JUMP_INIT(read, INTUSE(_IO_file_read)),
+  JUMP_INIT(write, _IO_new_file_write),
+  JUMP_INIT(seek, INTUSE(_IO_file_seek)),
+  JUMP_INIT(close, _IO_file_close),
   JUMP_INIT(stat, INTUSE(_IO_file_stat)),
   JUMP_INIT(showmanyc, _IO_default_showmanyc),
   JUMP_INIT(imbue, _IO_default_imbue)

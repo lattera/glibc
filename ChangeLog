@@ -1,3 +1,38 @@
+2002-08-01  Roland McGrath  <roland@frob.com>
+
+	* libio/fileops.c (_IO_file_sync_mmap): New function.
+	(_IO_file_jumps_mmap): Use it.
+	(_IO_file_underflow_mmap): Rewritten.  If after EOF or fflush,
+	repeat the stat check and resize the mapped buffer as necessary.
+
+2002-07-31  Roland McGrath  <roland@frob.com>
+
+	* libio/fileops.c (decide_maybe_mmap): New static function.
+	Code taken from libio/iofopen.c:__fopen_maybe_mmap to try to
+	mmap the file contents.  Then switch the jump tables to the mmap
+	tables if it worked, or the vanilla file tables if not.
+	(_IO_file_underflow_maybe_mmap): New function.
+	(_IO_file_seekoff_maybe_mmap): New function.
+	(_IO_file_xsgetn_maybe_mmap): New function.
+	(_IO_file_jumps_maybe_mmap): New variable, jump table using those.
+	* libio/libioP.h: Declare those.
+	* libio/wfileops.c (_IO_wfile_underflow_maybe_mmap): New function.
+	(_IO_wfile_jumps_maybe_mmap): New variable, jump table using that.
+	* libio/iofopen.c (__fopen_maybe_mmap): Don't try to mmap here.
+	If the stream is read-only, set its jump tables to those new ones.
+	* libio/iofdopen.c (_IO_new_fdopen) [_G_HAVE_MMAP]: Set the initial
+	jump tables to the maybe_mmap ones, and don't call __fopen_maybe_mmap.
+	We need the tables set before _IO_file_attach.
+
+	* libio/tst-mmap-eofsync.c: New file.
+	* libio/tst-mmap-fflushsync.c: New file.
+	* libio/bug-mmap-fflush.c: New file.
+	* libio/tst-mmap2-eofsync.c: New file.
+	* libio/Makefile (tests): Add them.
+
+	* libio/wfileops.c (_IO_wfile_underflow_mmap): Don't set EOF bit when
+	_IO_file_underflow_mmap fails, it already set the appropriate bit.
+
 2002-07-31  Jeff Bailey  <jbailey@gnu.org>
 
         * libio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
