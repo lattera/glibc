@@ -1,3 +1,7 @@
+1999-09-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/zh_CN: Some first patches to make the file usable.
+
 1999-09-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/id_ID: Fix typo.

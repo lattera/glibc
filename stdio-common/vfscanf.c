@@ -1300,7 +1300,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (c == L_('-') || c == L_('+'))
 	    {
 	      negative = c == L_('-');
-	      if (inchar () == EOF)
+	      if (width == 0 || inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
 	      if (! ISDIGIT (c) && c != decimal)
@@ -1320,11 +1320,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* Maybe "nan".  */
 	      ADDW (c);
-	      if (inchar () == EOF || TOLOWER (c) != L_('a'))
+	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('a'))
 		input_error ();
+	      if (width > 0)
+		--width;
 	      ADDW (c);
-	      if (inchar () == EOF || TOLOWER (c) != L_('n'))
+	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('n'))
 		input_error ();
+	      if (width > 0)
+		--width;
 	      ADDW (c);
 	      /* It is "nan".  */
 	      goto scan_float;
@@ -1333,30 +1337,48 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* Maybe "inf" or "infinity".  */
 	      ADDW (c);
-	      if (inchar () == EOF || TOLOWER (c) != L_('n'))
+	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('n'))
 		input_error ();
+	      if (width > 0)
+		--width;
 	      ADDW (c);
-	      if (inchar () == EOF || TOLOWER (c) != L_('f'))
+	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('f'))
 		input_error ();
+	      if (width > 0)
+		--width;
 	      ADDW (c);
 	      /* It is as least "inf".  */
-	      if (inchar () != EOF)
+	      if (width != 0 && inchar () != EOF)
 		{
 		  if (TOLOWER (c) == L_('i'))
 		    {
+		      if (width > 0)
+			--width;
 		      /* Now we have to read the rest as well.  */
 		      ADDW (c);
-		      if (inchar () == EOF || TOLOWER (c) != L_('n'))
+		      if (width == 0 || inchar () == EOF
+			  || TOLOWER (c) != L_('n'))
 			input_error ();
+		      if (width > 0)
+			--width;
 		      ADDW (c);
-		      if (inchar () == EOF || TOLOWER (c) != L_('i'))
+		      if (width == 0 || inchar () == EOF
+			  || TOLOWER (c) != L_('i'))
 			input_error ();
+		      if (width > 0)
+			--width;
 		      ADDW (c);
-		      if (inchar () == EOF || TOLOWER (c) != L_('t'))
+		      if (width == 0 || inchar () == EOF
+			  || TOLOWER (c) != L_('t'))
 			input_error ();
+		      if (width > 0)
+			--width;
 		      ADDW (c);
-		      if (inchar () == EOF || TOLOWER (c) != L_('y'))
+		      if (width == 0 || inchar () == EOF
+			  || TOLOWER (c) != L_('y'))
 			input_error ();
+		      if (width > 0)
+			--width;
 		      ADDW (c);
 		    }
 		  else
@@ -1368,11 +1390,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  is_hexa = 0;
 	  exp_char = L_('e');
-	  if (c == L_('0'))
+	  if (width != 0 && c == L_('0'))
 	    {
 	      ADDW (c);
 	      c = inchar ();
-	      if (TOLOWER (c) == L_('x'))
+	      if (width > 0)
+		--width;
+	      if (width != 0 && TOLOWER (c) == L_('x'))
 		{
 		  /* It is a number in hexadecimal format.  */
 		  ADDW (c);
@@ -1383,6 +1407,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  /* Grouping is not allowed.  */
 		  flags &= ~GROUP;
 		  c = inchar ();
+		  if (width > 0)
+		    --width;
 		}
 	    }
 

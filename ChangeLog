@@ -1,3 +1,17 @@
+1999-09-22  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/tstscanf.c (main): Add test case from PR libc/1313
+	reported by Ben Caradoc-Davies <bmcd@physics.otago.ac.nz>.
+		
+1999-09-22  Andreas Schwab  <schwab@suse.de>
+
+	* stdio-common/vfscanf.c: Fix width handling when scanning floats.
+
+1999-04-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* elf/Makefile (CFLAGS-multiload.c): Change to allow building in
+	the source directory.  Fixes PR libc/1059.
+
 1999-09-21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/repertoire.c (repertoire_find_value): Abort if

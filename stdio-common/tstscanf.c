@@ -265,5 +265,19 @@ main (int argc, char **argv)
       }
   }
 
+  fputs ("Test 9:\n", stdout);
+  {
+    /* From PR libc/1313 reported by Ben Caradoc-Davies <bmcd@physics.otago.ac.nz>.  */
+    float value;
+    int res;
+    
+    res = sscanf ("0123", "%2f", &value);
+    if (res != 1 || value != 1.0)
+      {
+	fputs ("test failed!\n", stdout);
+	result = 1;
+      }
+  }
+  
   exit (result);
 }
