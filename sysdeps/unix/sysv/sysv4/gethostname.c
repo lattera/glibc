@@ -16,7 +16,16 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <sysdep.h>
+#include <ansidecl.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/systeminfo.h>
 
-PSEUDO (__sysinfo, systeminfo, 3)
-	ret
+extern int __sysinfo __P ((int command, char *buf, long count));
+
+int
+DEFUN(__gethostname, (name, namelen), char *name AND size_t namelen)
+{
+  return __sysinfo (SI_HOSTNAME, name, namelen);
+}
