@@ -1,6 +1,9 @@
 2001-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in: Enforce optimization to be used.
+	* Makeconfig (preprocess-versions): Define ASSEMBLER.
+	* stdlib/Makefile (isomac-CFLAGS): Define to -O.
+	* posix/Makefile (annexc-CFLAGS): Define to -O.
 
 2001-09-11  Ulrich Drepper  <drepper@redhat.com>
 

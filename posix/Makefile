@@ -150,6 +150,7 @@ $(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
 			       '-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $@
 
+annexc-CFLAGS = -O
 $(objpfx)annexc: annexc.c
 	$(native-compile)
 

@@ -160,6 +160,7 @@ $(objpfx)isomac.out: $(objpfx)isomac
 	$(dir $<)$(notdir $<) '$(CC)'  \
 	'-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $<.out
 
+isomac-CFLAGS = -O
 $(objpfx)isomac: isomac.c
 	$(native-compile)
 

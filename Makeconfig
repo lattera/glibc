@@ -737,7 +737,7 @@ define preprocess-versions
 sed '/^[ 	]*#/d;s/^[ 	]*%/#/' \
 | $(CC) -E -undef -I$(common-objdir) -I$(..)include \
 		  -include $(common-objpfx)config.h \
-		  -x assembler-with-cpp - \
+		  -DASSEMBLER -x assembler-with-cpp - \
 | sed '/^[ 	]*#/d;/^[ 	]*$$/d'
 endef
 
