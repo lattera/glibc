@@ -1,3 +1,7 @@
+2003-09-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/not-cancel.h: Fix a typo.
+
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/not-cancel.h: New file.
