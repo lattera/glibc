@@ -1,6 +1,6 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,29 +17,35 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <stdio.h>
 #include <wchar.h>
 
-
-/* Copy SRC to DEST.  */
-size_t
-__wcsnlen (s, maxlen)
-     const wchar_t *s;
-     size_t maxlen;
-{
-  size_t len = 0;
-
-  while (s[len] != L'\0' && maxlen > 0)
-    {
-      if (s[++len] == L'\0' || --maxlen == 0)
-	return len;
-      if (s[++len] == L'\0' || --maxlen == 0)
-	return len;
-      if (s[++len] == L'\0' || --maxlen == 0)
-	return len;
-      ++len;
-      --maxlen;
+#define TEST(Str, Max, Exp) \
+  n = wcsnlen (L##Str, Max);						      \
+  if (n != Exp)								      \
+    {									      \
+      result = 1;							      \
+      printf ("wcsnlen (L\"%s\", %d) = %d, not %d\n", Str, Max, n, Exp);      \
     }
 
-  return len;
+int
+main (void)
+{
+  int result = 0;
+  int n;
+
+  TEST ("0123456789", 0, 0);
+  TEST ("0123456789", 1, 1);
+  TEST ("0123456789", 2, 2);
+  TEST ("0123456789", 3, 3);
+  TEST ("0123456789", 4, 4);
+  TEST ("0123456789", 5, 5);
+  TEST ("0123456789", 6, 6);
+  TEST ("0123456789", 7, 7);
+  TEST ("0123456789", 8, 8);
+  TEST ("0123456789", 9, 9);
+
+  TEST ("01234", 9, 5);
+
+  return result;
 }
-weak_alias (__wcsnlen, wcsnlen)

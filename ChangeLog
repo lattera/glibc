@@ -1,3 +1,10 @@
+1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* wcsmbs/wcsnlen.c: Correct decrement maxlen.
+
+	* wcsmbs/Makefile (tests): Add tst-wcsnlen.
+	* wcsmbs/tst-wcsnlen.c: New file.
+
 1999-08-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* libio/ioputs.c (_IO_puts): Add missing brace.
