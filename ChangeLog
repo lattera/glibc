@@ -1,3 +1,13 @@
+2002-07-31  Jeff Bailey  <jbailey@gnu.org>
+
+        * libio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
+	Declarations moved to <bits/sys_errlist.h>.  Include that file.
+        * libio/Makefile (headers): Add bits/sys_errlist.h to the list.
+        * sysdeps/generic/bits/sys_errlist.h: New file.  This does *not*
+        declare sys_errlist and sys_nerr.
+        * sysdeps/unix/sysv/linux/bits/sys_errlist.h: New file.  Does
+	provide declarations.
+
 2002-07-31  Roland McGrath  <roland@frob.com>
 
 	* elf/rtld.c (dl_main): Fix typo in error message.

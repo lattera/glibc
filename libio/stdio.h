@@ -1,6 +1,5 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-1999, 2000, 2001, 2002
-   Free Software Foundation, Inc.
+   Copyright (C) 1991,1994-1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -546,16 +545,11 @@ extern int ferror_unlocked (FILE *__stream) __THROW;
 /* Print a message describing the meaning of the value of errno.  */
 extern void perror (__const char *__s) __THROW;
 
-/* These variables normally should not be used directly.  The `strerror'
-   function provides all the needed functionality.  */
-#ifdef	__USE_BSD
-extern int sys_nerr;
-extern __const char *__const sys_errlist[];
-#endif
-#ifdef	__USE_GNU
-extern int _sys_nerr;
-extern __const char *__const _sys_errlist[];
-#endif
+/* Provide the declarations for `sys_errlist' and `sys_nerr' if they
+   are available on this system.  Even if available, these variables
+   should not be used directly.  The `strerror' function provides
+   all the necessary functionality.  */
+#include <bits/sys_errlist.h>
 
 
 #ifdef	__USE_POSIX
