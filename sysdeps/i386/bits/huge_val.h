@@ -26,7 +26,7 @@
 
 /* IEEE positive infinity (-HUGE_VAL is negative infinity).  */
 
-#if __GNUC_PREREQ(2,95)
+#if __GNUC_PREREQ(2,96)
 # define HUGE_VAL	(__extension__ 0x1.0p2047)
 #else
 # define __HUGE_VAL_bytes	{ 0, 0, 0, 0, 0, 0, 0xf0, 0x7f }
@@ -46,7 +46,7 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 #ifdef __USE_ISOC99
 
-# if __GNUC_PREREQ(2,95)
+# if __GNUC_PREREQ(2,96)
 
 #  define HUGE_VALF (__extension__ 0x1.0p255f)
 #  define HUGE_VALL (__extension__ 0x1.0p32767L)

@@ -28,7 +28,7 @@
 
 #ifdef	__GNUC__
 
-# if __GNUC_PREREQ(2,95)
+# if __GNUC_PREREQ(2,96)
 
 #  define HUGE_VAL (__extension__ 0x1.0p2047)
 
@@ -66,7 +66,7 @@ static __huge_val_t __huge_val = { __HUGE_VAL_bytes };
 
 # ifdef __GNUC__
 
-#  if __GNUC_PREREQ(2,95)
+#  if __GNUC_PREREQ(2,96)
 
 #   define HUGE_VALF (__extension__ 0x1.0p255f)
 
