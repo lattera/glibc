@@ -1,3 +1,7 @@
+2001-08-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/err.c: Handle wide oriented stderr.
+
 2001-08-14  Tom Rix  <trix@redhat.com>
 
 	* iconv/gconv_cache.c (find_module): Add #ifndef STATIC_GCONV.
