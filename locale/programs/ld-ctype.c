@@ -1192,15 +1192,18 @@ get_character (struct token *now, struct charmap_t *charmap,
 
 	  if (*seqp == NULL)
 	    {
-	      /* Insert a negative entry.  */
-	      static const struct charseq negative
-		= { .ucs4 = ILLEGAL_CHAR_VALUE };
-	      uint32_t *newp = obstack_alloc (&repertoire->mem_pool,
-					      sizeof (uint32_t));
-	      *newp = now->val.ucs4;
+	      if (repertoire != NULL)
+		{
+		  /* Insert a negative entry.  */
+		  static const struct charseq negative
+		    = { .ucs4 = ILLEGAL_CHAR_VALUE };
+		  uint32_t *newp = obstack_alloc (&repertoire->mem_pool,
+						  sizeof (uint32_t));
+		  *newp = now->val.ucs4;
 
-	      insert_entry (&repertoire->seq_table, newp, sizeof (uint32_t),
-			    (void *) &negative);
+		  insert_entry (&repertoire->seq_table, newp,
+				sizeof (uint32_t), (void *) &negative);
+		}
 	    }
 	  else
 	    (*seqp)->ucs4 = now->val.ucs4;

@@ -1,3 +1,11 @@
+2000-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/charmap.c (parse_charmap): Recognize <Uxxxx>
+	values as character names.
+
+	* locale/programs/ld-ctype.c (get_character): Handle missing
+	repertoire map correctly.
+
 2000-04-05  Cristian Gafton  <gafton@redhat.com>
 
 	* ctype/ctype.h (__isctype_l): Define even if not __OPTIMIZE__

@@ -441,7 +441,7 @@ character sets with locking states are not supported"));
 	      continue;
 	    }
 
-	  if (nowtok != tok_bsymbol)
+	  if (nowtok != tok_bsymbol && nowtok != tok_ucs4)
 	    {
 	      lr_error (cmfile, _("syntax error in %s definition: %s"),
 			"CHARMAP", _("no symbolic name given"));
@@ -455,9 +455,17 @@ character sets with locking states are not supported"));
 	  if (from_name != NULL)
 	    obstack_free (&result->mem_pool, from_name);
 
-	  from_name = (char *) obstack_copy0 (&result->mem_pool,
-					      now->val.str.startmb,
-					      now->val.str.lenmb);
+	  if (nowtok == tok_bsymbol)
+	    from_name = (char *) obstack_copy0 (&result->mem_pool,
+						now->val.str.startmb,
+						now->val.str.lenmb);
+	  else
+	    {
+	      obstack_printf (&result->mem_pool, "<%08X>",
+			      cmfile->token.val.ucs4);
+	      obstack_1grow (&result->mem_pool, '\0');
+	      from_name = (char *) obstack_finish (&result->mem_pool);
+	    }
 	  to_name = NULL;
 
 	  state = 3;
@@ -506,7 +514,7 @@ character sets with locking states are not supported"));
 	  continue;
 
 	case 4:
-	  if (nowtok != tok_bsymbol)
+	  if (nowtok != tok_bsymbol && nowtok != tok_ucs4)
 	    {
 	      lr_error (cmfile, _("syntax error in %s definition: %s"),
 			"CHARMAP",
@@ -517,9 +525,17 @@ character sets with locking states are not supported"));
 	    }
 
 	  /* Copy the to-name in a safe place.  */
-	  to_name = (char *) obstack_copy0 (&result->mem_pool,
-					    cmfile->token.val.str.startmb,
-					    cmfile->token.val.str.lenmb);
+	  if (nowtok == tok_bsymbol)
+	    to_name = (char *) obstack_copy0 (&result->mem_pool,
+					      cmfile->token.val.str.startmb,
+					      cmfile->token.val.str.lenmb);
+	  else
+	    {
+	      obstack_printf (&result->mem_pool, "<%08X>",
+			      cmfile->token.val.ucs4);
+	      obstack_1grow (&result->mem_pool, '\0');
+	      to_name = (char *) obstack_finish (&result->mem_pool);
+	    }
 
 	  state = 5;
 	  continue;
