@@ -1,3 +1,10 @@
+2000-06-30  Andreas Jaeger  <aj@suse.de>
+
+	* io/Makefile (CFLAGS-test-lfs.c): New.
+	(tests): Add test-lfs.
+
+	* io/test-lfs.c: New file.
+
 2000-06-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/bits/string.h (strcmp): Use 8bit register in 8bit
