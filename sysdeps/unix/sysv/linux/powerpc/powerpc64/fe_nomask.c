@@ -27,9 +27,15 @@
 const fenv_t *
 __fe_nomask_env (void)
 {
-#ifdef __ASSUME_NEW_PRCTL_SYSCALL
+#if defined PR_SET_FPEXC && defined PR_FP_EXC_PRECISE
+  int result;
   INTERNAL_SYSCALL_DECL (err);
-  INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+  result = INTERNAL_SYSCALL (prctl, err, 2, PR_SET_FPEXC, PR_FP_EXC_PRECISE);
+# ifndef __ASSUME_NEW_PRCTL_SYSCALL
+  if (INTERNAL_SYSCALL_ERROR_P (result, err)
+      && INTERNAL_SYSCALL_ERRNO (result, err) == EINVAL)
+    __set_errno (ENOSYS);
+# endif
 #else  
   __set_errno (ENOSYS);
 #endif

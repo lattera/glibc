@@ -1,5 +1,9 @@
 2003-04-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c
+	(__fe_nomask_env): Try prctl even if __ASSUME_NEW_PRCTL_SYSCALL
+	is not defined, but the prctl constants are.
+
 	* string/tester.c (test_strcmp): Fix a typo.
 
 2003-04-09  Ulrich Drepper  <drepper@redhat.com>
