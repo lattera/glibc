@@ -45,28 +45,64 @@
    is a real error number.  Linus said he will make sure the no syscall
    returns a value in -1 .. -4095 as a valid result so we can savely
    test with -4095.  */
+
 #undef	PSEUDO
 #define	PSEUDO(name, syscall_name, args)				      \
   .text;								      \
+  .type syscall_error,%function						      \
   ENTRY (name)								      \
     DO_CALL (args, syscall_name);					      \
     cmn r0, $4096;							      \
-    bgt syscall_error;
+    bhs PLTJMP(syscall_error);
 
 #undef	PSEUDO_END
 #define	PSEUDO_END(name)						      \
   SYSCALL_ERROR_HANDLER							      \
   END (name)
 
-#ifndef PIC
 #define SYSCALL_ERROR_HANDLER	/* Nothing here; code in sysdep.S is used.  */
-#else
-#error Aiee
-#endif	/* PIC */
+
+/* Linux takes system call args in registers:
+	syscall number	in the SWI instruction
+	arg 1		r0
+	arg 2		r1
+	arg 3		r2
+	arg 4		r3
+	arg 5		r4	(this is different from the APCS convention)
+
+   The compiler is going to form a call by coming here, through PSEUDO, with
+   arguments
+   	syscall number	in the DO_CALL macro
+   	arg 1		r0
+   	arg 2		r1
+   	arg 3		r2
+   	arg 4		r3
+   	arg 5		[sp]
+
+   We need to shuffle values between R4 and the stack so that the caller's
+   R4 is not corrupted, and the kernel sees the right argument there.
+
+*/
 
 #undef	DO_CALL
-#define DO_CALL(args, syscall_name)			      		      \
-    swi SYS_ify (syscall_name);
+#define DO_CALL(args, syscall_name)		\
+    DOARGS_##args				\
+    swi SYS_ify (syscall_name); 		\
+    UNDOARGS_##args
+
+#define DOARGS_0 /* nothing */
+#define DOARGS_1 /* nothing */
+#define DOARGS_2 /* nothing */
+#define DOARGS_3 /* nothing */
+#define DOARGS_4 /* nothing */
+#define DOARGS_5 ldr ip, [sp]; str r4, [sp]; mov r4, ip;
+
+#define UNDOARGS_0 /* nothing */
+#define UNDOARGS_1 /* nothing */
+#define UNDOARGS_2 /* nothing */
+#define UNDOARGS_3 /* nothing */
+#define UNDOARGS_4 /* nothing */
+#define UNDOARGS_5 ldr r4, [sp];
 
 #endif	/* ASSEMBLER */
 
