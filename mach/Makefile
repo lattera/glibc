@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -70,6 +70,7 @@ endif
 endif
 $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 # Go kludges!!!
+	$(make-target-directory)
 	echo '#include <mach/syscall_sw.h>' | \
 	DEPENDENCIES_OUTPUT='$@-dep $@' \
 	$(CC) $(CPPFLAGS) -E -x c-header - \

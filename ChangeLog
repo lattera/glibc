@@ -1,3 +1,10 @@
+1998-07-14  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* mach/Makefile: Create target directory before generating
+	mach-syscalls.mk.
+	* mach/Machrules: Invoke awk using AWK variable.  Create target
+	directory before generating server stubs.
+
 1998-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/wcslen.c (__wcslen): Fix comment.

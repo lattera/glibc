@@ -83,7 +83,7 @@ endif
 # intermediate in order to make %.ir and then removed before re-exec, when
 # %.uh is built all over again to build %.h.
 $(objpfx)%.ir: $(objpfx)%.uh $(objpfx)%.h
-	(awk "NF == 4 && (\$$2 == \"Routine\" || \$$2 == \"SimpleRoutine\")\
+	($(AWK) "NF == 4 && (\$$2 == \"Routine\" || \$$2 == \"SimpleRoutine\")\
 	        { printf \"$*-calls += %s\\n\", \$$3 }" $<	;\
 	 echo '$$($*-calls:%=$$(objpfx)R\%C_%.c): $$(objpfx)$*.ustamp ;';\
 	) > $@-new
@@ -136,6 +136,7 @@ vpath %_server.c $(addprefix $(objpfx),$(sort $(dir $(server-interfaces))))
 
 # Build the server stubs in $(objdir).
 $(objpfx)%_server.c $(objpfx)%_server.h:
+	$(make-target-directory)
 	$(include-%.defs) | \
 	$(MIG) - /dev/null -prefix _S_ \
 	       $(MIGFLAGS) $(server-MIGFLAGS) $(MIGFLAGS-$*) \
