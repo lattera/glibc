@@ -50,21 +50,20 @@
  */
 
 #ifndef _RESOLV_H_
+
+/* These headers are needed for types used in the `struct res_state'
+   declaration.  */
+#include <sys/types.h>
+#include <netinet/in.h>
+
 #ifndef __need_res_state
 # define _RESOLV_H_
 
 # include <sys/param.h>
-# if (!defined(BSD)) || (BSD < 199306)
-#  include <sys/bitypes.h>
-# else
-#  include <sys/types.h>
-# endif
 # include <sys/cdefs.h>
 # include <stdio.h>
 # include <arpa/nameser.h>
 #endif
-
-#include <netinet/in.h>
 
 #ifndef __res_state_defined
 # define __res_state_defined

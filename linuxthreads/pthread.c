@@ -24,12 +24,13 @@
 #include <fcntl.h>
 #include <sys/wait.h>
 #include <sys/resource.h>
-#include <sys/sysctl.h>
+#include <sys/time.h>
 #include <shlib-compat.h>
 #include "pthread.h"
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
+#include "smp.h"
 #include <ldsodefs.h>
 #include <tls.h>
 #include <locale.h>		/* for __uselocale */
@@ -358,38 +359,6 @@ __libc_allocate_rtsig (int high)
 
   return high ? current_rtmin++ : current_rtmax--;
 #endif
-}
-
-/* The function we use to get the kernel revision.  */
-extern int __sysctl (int *name, int nlen, void *oldval, size_t *oldlenp,
-		     void *newval, size_t newlen);
-
-/* Test whether the machine has more than one processor.  This is not the
-   best test but good enough.  More complicated tests would require `malloc'
-   which is not available at that time.  */
-static int
-is_smp_system (void)
-{
-  static const int sysctl_args[] = { CTL_KERN, KERN_VERSION };
-  char buf[512];
-  size_t reslen = sizeof (buf);
-
-  /* Try reading the number using `sysctl' first.  */
-  if (__sysctl ((int *) sysctl_args,
-		sizeof (sysctl_args) / sizeof (sysctl_args[0]),
-		buf, &reslen, NULL, 0) < 0)
-    {
-      /* This was not successful.  Now try reading the /proc filesystem.  */
-      int fd = __open ("/proc/sys/kernel/version", O_RDONLY);
-      if (__builtin_expect (fd, 0) == -1
-	  || (reslen = __read (fd, buf, sizeof (buf))) <= 0)
-	/* This also didn't work.  We give up and say it's a UP machine.  */
-	buf[0] = '\0';
-
-      __close (fd);
-    }
-
-  return strstr (buf, "SMP") != NULL;
 }
 
 

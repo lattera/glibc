@@ -1,5 +1,12 @@
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
+	* pthread.c: Include <sys/time.h>.
+	(is_smp_system): Move to sysdeps/unix/sysv/linux/smp.h.
+	* sysdeps/unix/sysv/linux/smp.h: New file, extracted from pthread.c.
+	* Makefile (distribute): Add smp.h to the list.
+
+2002-09-04  Bruno Haible  <bruno@clisp.org>
+
         * sysdeps/alpha/pt-machine.h: Choose different include file location
         on non-Linux platforms.
 

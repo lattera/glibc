@@ -1,3 +1,9 @@
+2002-09-08  Roland McGrath  <roland@redhat.com>
+
+	* resolv/resolv.h: Include <sys/types.h> for u_long even in
+	the [__need_res_state] case.
+	Reported by Bruno Haible <bruno@clisp.org>.
+
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
 	* sysdeps/generic/bits/ustat.h: Comment fix.

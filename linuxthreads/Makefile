@@ -25,7 +25,7 @@ linuxthreads-version := $(shell sed -n 's/^.*$(subdir)-\([0-9.]*\).*$$/\1/p' \
 				    Banner)
 
 headers := pthread.h semaphore.h
-distribute := internals.h queue.h restart.h spinlock.h tst-signal.sh
+distribute := internals.h queue.h restart.h spinlock.h smp.h tst-signal.sh
 
 routines := weaks no-tsd
 
