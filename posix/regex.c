@@ -1174,7 +1174,7 @@ printchar (c)
 
 static size_t convert_mbs_to_wcs (CHAR_TYPE *dest, const unsigned char* src,
 				  size_t len, int *offset_buffer,
-				  int *is_binary);
+				  char *is_binary);
 static size_t
 convert_mbs_to_wcs (dest, src, len, offset_buffer, is_binary)
      CHAR_TYPE *dest;
@@ -1191,7 +1191,7 @@ convert_mbs_to_wcs (dest, src, len, offset_buffer, is_binary)
 	  	        = {0, 3, 4, 6}
      */
      int *offset_buffer;
-     int *is_binary;
+     char *is_binary;
 {
   wchar_t *pdest = dest;
   const unsigned char *psrc = src;
@@ -2283,9 +2283,9 @@ regex_compile (pattern, size, syntax, bufp)
   /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
   int *mbs_offset = NULL;
   /* It hold whether each wchar_t is binary data or not.  */
-  int *is_binary = NULL;
+  char *is_binary = NULL;
   /* A flag whether exactn is handling binary data or not.  */
-  int is_exactn_bin = FALSE;
+  char is_exactn_bin = FALSE;
 #endif /* MBS_SUPPORT */
 
   /* A random temporary spot in PATTERN.  */
@@ -2345,7 +2345,7 @@ regex_compile (pattern, size, syntax, bufp)
   /* Initialize the wchar_t PATTERN and offset_buffer.  */
   p = pend = pattern = TALLOC(csize, CHAR_TYPE);
   mbs_offset = TALLOC(csize + 1, int);
-  is_binary = TALLOC(csize + 1, int);
+  is_binary = TALLOC(csize + 1, char);
   if (pattern == NULL || mbs_offset == NULL || is_binary == NULL)
     {
       if (pattern) free(pattern);
@@ -5194,8 +5194,6 @@ weak_alias (__re_search_2, re_search_2)
     FREE_VAR (string2);							\
     FREE_VAR (mbs_offset1);						\
     FREE_VAR (mbs_offset2);						\
-    FREE_VAR (is_binary1);						\
-    FREE_VAR (is_binary2);						\
   } while (0)
 # else /* not MBS_SUPPORT */
 #  define FREE_VARIABLES()						\
@@ -5213,17 +5211,16 @@ weak_alias (__re_search_2, re_search_2)
   } while (0)
 # endif /* MBS_SUPPORT */
 #else
+# define FREE_VAR(var) if (var) free (var); var = NULL
 # ifdef MBS_SUPPORT
 #  define FREE_VARIABLES()						\
   do {									\
-    if (string1) free (string1);					\
-    if (string2) free (string2);					\
-    if (mbs_offset1) free (mbs_offset1);				\
-    if (mbs_offset2) free (mbs_offset2);				\
-    if (is_binary1) free (is_binary1);					\
-    if (is_binary2) free (is_binary2);					\
+    FREE_VAR (string1);							\
+    FREE_VAR (string2);							\
+    FREE_VAR (mbs_offset1);						\
+    FREE_VAR (mbs_offset2);						\
   } while (0)
-# eles
+# else
 #  define FREE_VARIABLES() ((void)0) /* Do nothing!  But inhibit gcc warning. */
 # endif /* MBS_SUPPORT */
 #endif /* not MATCH_MAY_ALLOCATE */
@@ -5373,7 +5370,7 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
   /* offset buffer for optimizatoin. See convert_mbs_to_wc.  */
   int *mbs_offset1 = NULL, *mbs_offset2 = NULL;
   /* They hold whether each wchar_t is binary data or not.  */
-  int *is_binary1 = NULL, *is_binary2 = NULL;
+  char *is_binary = NULL;
 #endif /* MBS_SUPPORT */
 
   /* Just past the end of the corresponding string.  */
@@ -5552,38 +5549,39 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
      fill them with converted string.  */
   if (csize1 != 0)
     {
-      string1 = TALLOC (csize1 + 1, CHAR_TYPE);
-      mbs_offset1 = TALLOC (csize1 + 1, int);
-      is_binary1 = TALLOC (csize1 + 1, int);
-      if (!string1 || !mbs_offset1 || !is_binary1)
+      string1 = REGEX_TALLOC (csize1 + 1, CHAR_TYPE);
+      mbs_offset1 = REGEX_TALLOC (csize1 + 1, int);
+      is_binary = REGEX_TALLOC (csize1 + 1, char);
+      if (!string1 || !mbs_offset1 || !is_binary)
 	{
-	  if (string1) free(string1);
-	  if (mbs_offset1) free(mbs_offset1);
-	  if (is_binary1) free(is_binary1);
+	  FREE_VAR (string1);
+	  FREE_VAR (mbs_offset1);
+	  FREE_VAR (is_binary);
 	  return -2;
 	}
       size1 = convert_mbs_to_wcs(string1, cstring1, csize1,
-				 mbs_offset1, is_binary1);
+				 mbs_offset1, is_binary);
       string1[size1] = L'\0'; /* for a sentinel  */
+      FREE_VAR (is_binary);
     }
   if (csize2 != 0)
     {
       string2 = REGEX_TALLOC (csize2 + 1, CHAR_TYPE);
       mbs_offset2 = REGEX_TALLOC (csize2 + 1, int);
-      is_binary2 = TALLOC (csize2 + 1, int);
-      if (!string2 || !mbs_offset2 || !is_binary2)
+      is_binary = REGEX_TALLOC (csize2 + 1, char);
+      if (!string2 || !mbs_offset2 || !is_binary)
 	{
-	  if (string1) free(string1);
-	  if (mbs_offset1) free(mbs_offset1);
-	  if (is_binary1) free(is_binary1);
-	  if (string2) free(string2);
-	  if (mbs_offset2) free(mbs_offset2);
-	  if (is_binary2) free(is_binary2);
+	  FREE_VAR (string1);
+	  FREE_VAR (mbs_offset1);
+	  FREE_VAR (string2);
+	  FREE_VAR (mbs_offset2);
+	  FREE_VAR (is_binary);
 	  return -2;
 	}
       size2 = convert_mbs_to_wcs(string2, cstring2, csize2,
-				 mbs_offset2, is_binary2);
+				 mbs_offset2, is_binary);
       string2[size2] = L'\0'; /* for a sentinel  */
+      FREE_VAR (is_binary);
     }
 
   /* We need to cast pattern to (wchar_t*), because we casted this compiled

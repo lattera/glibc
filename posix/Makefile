@@ -69,7 +69,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-preadwrite tst-preadwrite64 test-vfork regexbug1 \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
-		   tst-chmod bug-regex1
+		   tst-chmod bug-regex1 bug-regex2
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -137,10 +137,15 @@ endif
 
 # Run a test on the header files we use.
 # XXX Please note that for now we ignore the result of this test.
-tests: $(objpfx)annexc.out
+tests: $(objpfx)annexc.out $(objpfx)bug-regex2-mem
 $(objpfx)annexc.out: $(objpfx)annexc
 	-$(dir $<)$(notdir $<) '$(CC)' \
 			       '-I../include -I.. $(+sysdep-includes) $(sysincludes)' > $@
 
 $(objpfx)annexc: annexc.c
 	$(native-compile)
+
+bug-regex2-ENV = MALLOC_TRACE=$(objpfx)bug-regex2.mtrace
+
+$(objpfx)bug-regex2-mem: $(objpfx)bug-regex2.out
+	$(common-objpfx)malloc/mtrace $(objpfx)bug-regex2.mtrace > $@

@@ -1,5 +1,17 @@
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/Makefile: Add rules to build and run bug-regex2.
+
+2001-02-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex.c (convert_mbs_to_wcs): Change is_binary to char *.
+	(regex_compile): Likewise.
+	(FREE_VARIABLES): Don't free is_binary1 and is_binary2.
+	(re_match_2_internal): Use just is_binary instead of two variables.
+	Use REGEX_TALLOC to allocate it and FREE_VAR to free on failure.
+
+2001-02-09  Ulrich Drepper  <drepper@redhat.com>
+
 	* version.h (VERSION): Bump to 2.2.2.
 
 	* iconv/Makefile (distribute): Add iconv_charmap.c and
