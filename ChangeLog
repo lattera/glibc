@@ -1,3 +1,11 @@
+Sat Jul 20 13:28:52 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Don't poll on the last
+	call __io_select unless there's only a single descriptor, as each
+	descriptor now has its own reply port.
+	If there is only a single descriptor, just use its reply port for
+	everything and don't bother creating the port set.
+
 Sat Jul 20 07:15:33 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* crypt/Makefile, crypt/nocrypt.c: Removed.  It is illegal to export
