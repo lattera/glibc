@@ -1,4 +1,4 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
+#ifdef	__GNUC__
+
 /* Return the base 2 signed integral exponent of X.  */
 double
 DEFUN(__logb, (x), double x)
@@ -35,3 +37,7 @@ DEFUN(__logb, (x), double x)
 
   return x;
 }
+
+#else
+#include <sysdeps/ieee754/__logb.c>
+#endif
