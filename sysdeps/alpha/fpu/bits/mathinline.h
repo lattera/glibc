@@ -18,7 +18,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if defined (__GNUC__) && !defined (__NO_MATH_INLINES)
+#ifdef __GNUC__
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 extern __inline double
 __copysign (double __x, double __y)
@@ -41,4 +42,5 @@ atan (double __x)
   return __atan2 (__x, 1.0);
 }
 
+#endif
 #endif

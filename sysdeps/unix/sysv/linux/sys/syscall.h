@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@
    programs expect the traditional form `SYS_<name>'.  So in building libc
    we scan the kernel's list and produce <bits/syscall.h> with macros for
    all the `SYS_' names.  */
-#include <bits/syscall.h>
+# include <bits/syscall.h>
 #endif
 
 #endif

@@ -31,8 +31,9 @@ extern const unsigned short int __mon_yday[2][13];
 
 extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
-extern void __tzfile_default __P ((char *std, char *dst,
+extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
+extern const char * __tzstring __P ((const char *string));
 extern int __tz_compute __P ((time_t timer, const struct tm *tm));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
@@ -53,7 +54,7 @@ weak_alias (__timezone, timezone)
    timezone given in the POSIX standard TZ envariable.  */
 typedef struct
   {
-    char *name;
+    const char *name;
 
     /* When to change.  */
     enum { J0, J1, M } type;	/* Interpretation of:  */
@@ -74,6 +75,68 @@ static tz_rule tz_rules[2];
 
 static int compute_change __P ((tz_rule *rule, int year));
 
+/* Header for a list of buffers containing time zone strings.  */
+struct tzstring_head 
+{
+  struct tzstring_head *next;
+  /* The buffer itself immediately follows the header.
+     The buffer contains zero or more (possibly overlapping) strings.
+     The last string is followed by 2 '\0's instead of the usual 1.  */
+};
+
+/* First in a list of buffers containing time zone strings.
+   All the buffers but the last are read-only.  */
+static struct
+{
+  struct tzstring_head head;
+  char data[48];
+} tzstring_list;
+
+/* Size of the last buffer in the list, not counting its header.  */
+static size_t tzstring_last_buffer_size = sizeof tzstring_list.data;
+
+/* Allocate a time zone string with given contents.
+   The string will never be moved or deallocated.
+   However, its contents may be shared with other such strings.  */
+const char *
+__tzstring (string)
+     const char *string;
+{
+  struct tzstring_head *h = &tzstring_list.head;
+  size_t needed;
+  char *p;
+
+  /* Look through time zone string list for a duplicate of this one.  */
+  for (h = &tzstring_list.head;  ;  h = h->next)
+    {
+      for (p = (char *) (h + 1);  p[0] | p[1];  p++)
+	if (strcmp (p, string) == 0)
+	  return p;
+      if (! h->next)
+	break;
+    }
+
+  /* No duplicate was found.  Copy to the end of this buffer if there's room;
+     otherwise, append a large-enough new buffer to the list and use it.  */
+  p++;
+  needed = strlen (string) + 2; /* Need 2 trailing '\0's after last string.  */
+
+  if ((size_t) ((char *) (h + 1) + tzstring_last_buffer_size - p) < needed)
+    {
+      size_t buffer_size = tzstring_last_buffer_size;
+      while ((buffer_size *= 2) < needed)
+	continue;
+      if (! (h = h->next = malloc (sizeof *h + buffer_size)))
+	return NULL;
+      h->next = NULL;
+      tzstring_last_buffer_size = buffer_size;
+      p = (char *) (h + 1);
+    }
+
+  strncpy (p, string, needed);
+  return p;
+}
+
 static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
@@ -85,6 +148,7 @@ __tzset_internal (always)
   static int is_initialized = 0;
   register const char *tz;
   register size_t l;
+  char *tzbuf;
   unsigned short int hh, mm, ss;
   unsigned short int whichrule;
 
@@ -112,12 +176,6 @@ __tzset_internal (always)
     /* No change, simply return.  */
     return;
 
-  /* Free old storage.  */
-  if (tz_rules[0].name != NULL && *tz_rules[0].name != '\0')
-    free ((void *) tz_rules[0].name);
-  if (tz_rules[1].name != NULL && *tz_rules[1].name != '\0' &&
-      tz_rules[1].name != tz_rules[0].name)
-    free ((void *) tz_rules[1].name);
   tz_rules[0].name = NULL;
   tz_rules[1].name = NULL;
 
@@ -135,16 +193,7 @@ __tzset_internal (always)
 
   if (tz == NULL || *tz == '\0')
     {
-      static const char UTC[] = "UTC";
-      size_t len = sizeof UTC;
-      tz_rules[0].name = (char *) malloc (len);
-      if (tz_rules[0].name == NULL)
-	return;
-      tz_rules[1].name = (char *) malloc (len);
-      if (tz_rules[1].name == NULL)
-	return;
-      memcpy ((void *) tz_rules[0].name, UTC, len);
-      memcpy ((void *) tz_rules[1].name, UTC, len);
+      tz_rules[0].name = tz_rules[1].name = "UTC";
       tz_rules[0].type = tz_rules[1].type = J0;
       tz_rules[0].m = tz_rules[0].n = tz_rules[0].d = 0;
       tz_rules[1].m = tz_rules[1].n = tz_rules[1].d = 0;
@@ -157,11 +206,11 @@ __tzset_internal (always)
 
   /* Clear out old state and reset to unnamed UTC.  */
   memset (tz_rules, 0, sizeof tz_rules);
-  tz_rules[0].name = tz_rules[1].name = (char *) "";
+  tz_rules[0].name = tz_rules[1].name = "";
 
   /* Get the standard timezone name.  */
-  tz_rules[0].name = (char *) malloc (strlen (tz) + 1);
-  if (tz_rules[0].name == NULL)
+  tzbuf = malloc (strlen (tz) + 1);
+  if (! tzbuf)
     {
       /* Clear the old tz name so we will try again.  */
       free (old_tz);
@@ -169,25 +218,23 @@ __tzset_internal (always)
       return;
     }
 
-  if (sscanf (tz, "%[^0-9,+-]", tz_rules[0].name) != 1 ||
-      (l = strlen(tz_rules[0].name)) < 3)
+  if (sscanf (tz, "%[^0-9,+-]", tzbuf) != 1 ||
+      (l = strlen (tzbuf)) < 3)
     {
-      free (tz_rules[0].name);
-      tz_rules[0].name = (char *) "";
+      free (tzbuf);
       return;
     }
 
-  {
-    char *n = realloc ((void *) tz_rules[0].name, l + 1);
-    if (n != NULL)
-      tz_rules[0].name = n;
-  }
+  tz_rules[0].name = __tzstring (tzbuf);
 
   tz += l;
 
   /* Figure out the standard offset from UTC.  */
   if (*tz == '\0' || (*tz != '+' && *tz != '-' && !isdigit (*tz)))
-    return;
+    {
+      free (tzbuf);
+      return;
+    }
 
   if (*tz == '-' || *tz == '+')
     tz_rules[0].offset = *tz++ == '-' ? 1L : -1L;
@@ -196,6 +243,7 @@ __tzset_internal (always)
   switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
     {
     default:
+      free (tzbuf);
       return;
     case 1:
       mm = 0;
@@ -218,23 +266,14 @@ __tzset_internal (always)
   /* Get the DST timezone name (if any).  */
   if (*tz != '\0')
     {
-      char *n = malloc (strlen (tz) + 1);
-      if (n != NULL)
-	{
-	  tz_rules[1].name = n;
-	  if (sscanf (tz, "%[^0-9,+-]", tz_rules[1].name) != 1 ||
-	      (l = strlen (tz_rules[1].name)) < 3)
-	    {
-	      free (n);
-	      tz_rules[1].name = (char *) "";
-	      goto done_names;	/* Punt on name, set up the offsets.  */
-	    }
-	  n = realloc ((void *) tz_rules[1].name, l + 1);
-	  if (n != NULL)
-	    tz_rules[1].name = n;
+      char *n = tzbuf + strlen (tzbuf) + 1;
+      if (sscanf (tz, "%[^0-9,+-]", n) != 1 ||
+	  (l = strlen (n)) < 3)
+	goto done_names;	/* Punt on name, set up the offsets.  */
 
-	  tz += l;
-	}
+      tz_rules[1].name = __tzstring (n);
+
+      tz += l;
 
       /* Figure out the DST offset from GMT.  */
       if (*tz == '-' || *tz == '+')
@@ -271,6 +310,7 @@ __tzset_internal (always)
     tz_rules[1].name = tz_rules[0].name;
 
  done_names:
+  free (tzbuf);
 
   if (*tz == '\0' || (tz[0] == ',' && tz[1] == '\0'))
     {

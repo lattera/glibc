@@ -89,7 +89,7 @@ _nss_nisplus_parse_netent (nis_result *result, struct netent *network,
               __set_errno (ERANGE);
               return 0;
             }
-          p = stpcpy(p, " ");
+	  *p++ = ' ';
           p = stpncpy (p, NISENTRYVAL (i, 1, result),
                        NISENTRYLEN (i, 1, result));
           *p = '\0';

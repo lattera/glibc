@@ -44,7 +44,7 @@
 #endif
 
 /* Get libc version number.  */
-#include "../../version.h"
+#include <version.h>
 
 #define PACKAGE _libc_intl_domainname
 
@@ -91,12 +91,12 @@ main (int argc, char *argv[])
 
   /* Set the text message domain.  */
   textdomain (PACKAGE);
-  
+
   /* Initialize local variables.  */
   debug = 0;
   do_help = 0;
   do_version = 0;
-  
+
   while ((opt = getopt_long (argc, argv, "dhV", long_options, NULL)) != -1)
     switch (opt)
       {
@@ -119,12 +119,12 @@ main (int argc, char *argv[])
   if (do_version)
     {
       printf ("utmpd (GNU %s) %s\n", PACKAGE, VERSION);
-      printf (gettext ("\
+      printf (_("\
 Copyright (C) %s Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.  There is NO\n\
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
 "), "1997");
-      printf (gettext ("Written by %s.\n"), "Mark Kettenis");
+      printf (_("Written by %s.\n"), "Mark Kettenis");
 
       exit (EXIT_SUCCESS);
     }
@@ -136,7 +136,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   signal (SIGINT, termination_handler);
   signal (SIGQUIT, termination_handler);
   signal (SIGTERM, termination_handler);
-  
+
   /* Check if we are already running.  */
   if (check_pid (_PATH_UTMPDPID))
     error (EXIT_FAILURE, 0, _("already running"));
@@ -163,7 +163,7 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
   if (!debug)
     {
       openlog ("utmpd", LOG_CONS | LOG_ODELAY, LOG_DAEMON);
-      
+
       if (daemon (0, 0) < 0)
 	error (EXIT_FAILURE, errno, _("cannot auto-background"));
       forked = 1;
@@ -176,10 +176,10 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
       signal (SIGTTIN, SIG_IGN);
       signal (SIGTSTP, SIG_IGN);
     }
-  
+
   /* Drop priviliges.  */
   drop_priviliges ();
-  
+
   /* Handle incoming requests.  */
   handle_requests ();
 }
@@ -190,21 +190,21 @@ static void
 usage (int status)
 {
   if (status != EXIT_SUCCESS)
-    fprintf (stderr, gettext ("Try `%s --help' for more information.\n"),
+    fprintf (stderr, _("Try `%s --help' for more information.\n"),
 	     program_invocation_name);
   else
     {
-      printf (gettext ("\
+      printf (_("\
 Usage: %s [OPTION]...\n\
   -d, --debug           do not fork and display messages on the current tty\n\
   -h, --help	        display this help and exit\n\
   -V, --version         output version information and exit\n"),
 	      program_invocation_name);
-      fputs (gettext ("\
-Report bugs to <kettenis@phys.uva.nl>.\n"),
+      fputs (_("\
+Report bugs using the `glibcbug' script to <bugs@gnu.ai.mit.edu>.\n"),
 	     stdout);
     }
-  
+
   exit (status);
 }
 
@@ -247,10 +247,10 @@ make_socket (const char *name)
      terminating null byte. */
   size = (offsetof (struct sockaddr_un, sun_path)
 	  + strlen (addr.sun_path));
-     
+
   if (bind (sock, (struct sockaddr *) &addr, size) < 0)
     error (EXIT_FAILURE, errno, "%s", name);
-     
+
   return sock;
 }
 
@@ -265,7 +265,7 @@ void handle_requests (void)
   fd_set read_fd_set;
   fd_set write_fd_set;
   int fd;
-  
+
   /* Initialize the set of active sockets.  */
   FD_ZERO (&active_read_fd_set);
   FD_ZERO (&active_write_fd_set);
@@ -329,7 +329,7 @@ void handle_requests (void)
 	      if (connection->write_ptr == connection->write_base)
 		FD_CLR (fd, &active_write_fd_set);
 	    }
-	}	
+	}
     }
 }
 
@@ -344,7 +344,7 @@ termination_handler (int signum)
 
   /* Restore user id.  */
   seteuid (getuid ());
-  
+
   /* Clean up the files created by `bind'.  */
   unlink (_PATH_UTMPD_RO);
   unlink (_PATH_UTMPD_RW);
@@ -354,7 +354,7 @@ termination_handler (int signum)
 
   /* Clean up pid file.  */
   unlink (_PATH_UTMPDPID);
-  
+
   exit (EXIT_SUCCESS);
 }
 
@@ -364,12 +364,12 @@ static int
 check_pid (const char *file)
 {
   FILE *fp;
-  
+
   fp = fopen (_PATH_UTMPDPID, "r");
   if (fp)
     {
       pid_t pid;
-      
+
       fscanf (fp, "%d", &pid);
       fclose (fp);
 
@@ -386,17 +386,16 @@ static int
 write_pid (const char *file)
 {
   FILE *fp;
-  
+
   fp = fopen (_PATH_UTMPDPID, "w");
   if (fp == NULL)
     return -1;
-  
+
   fprintf (fp, "%d\n", getpid ());
   if (ferror (fp))
     return -1;
-  
+
   fclose (fp);
 
   return 0;
 }
-

@@ -424,15 +424,13 @@ strftime (s, maxsize, format, tp)
   const char *f;
 
   zone = NULL;
-#if !defined _LIBC && HAVE_TM_ZONE
-  /* XXX We have some problems here.  First, the string pointed to by
-     tm_zone is dynamically allocated while loading the zone data.  But
-     when another zone is loaded since the information in TP were
-     computed this would be a stale pointer.
-     The second problem is the POSIX test suite which assumes setting
+#if HAVE_TM_ZONE
+  /* The POSIX test suite assumes that setting
      the environment variable TZ to a new value before calling strftime()
      will influence the result (the %Z format) even if the information in
-     TP is computed with a totally different time zone.  --drepper@gnu  */
+     TP is computed with a totally different time zone.
+     This is bogus: though POSIX allows bad behavior like this,
+     POSIX does not require it.  Do the right thing instead.  */
   zone = (const char *) tp->tm_zone;
 #endif
 #if HAVE_TZNAME

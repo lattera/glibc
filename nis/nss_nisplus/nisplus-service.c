@@ -91,7 +91,7 @@ _nss_nisplus_parse_servent (nis_result *result, struct servent *serv,
         {
           if (NISENTRYLEN (i, 1, result) + 2 > room_left)
             goto no_more_room;
-          p = stpcpy(p, " ");
+	  *p++ = ' ';
           p = stpncpy (p, NISENTRYVAL (i, 1, result),
                        NISENTRYLEN (i, 1, result));
           *p = '\0';

@@ -17,16 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef __MATH_H
-#define __MATH_H
-
 #ifdef __GNUC__
-#ifndef __NO_MATH_INLINES
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 #ifdef __cplusplus
-#define        __MATH_INLINE __inline
+# define __MATH_INLINE __inline
 #else
-#define        __MATH_INLINE extern __inline
+# define __MATH_INLINE extern __inline
 #endif
 
 __MATH_INLINE double __sgn1 (double __x);
@@ -64,7 +61,5 @@ fabs (double __x)
   return __value;
 }
 
-#endif /* __NO_MATH_INLINES  */
+#endif /* __NO_MATH_INLINES && __OPTIMZE__ */
 #endif /* __GNUC__  */
-
-#endif /* __MATH_H  */

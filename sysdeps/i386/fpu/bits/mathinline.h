@@ -21,7 +21,56 @@
 #ifndef _BITS_MATHINLINE_H
 #define _BITS_MATHINLINE_H	1
 
-#if defined __GNUG__ && \
+
+#if defined __USE_ISOC9X && defined __GNUC__ && __GNUC__ >= 2
+/* ISO C 9X defines some macros to perform unordered comparisons.  The
+   ix87 FPU supports this with special opcodes and we should use them.
+   These must not be inline functions since we have to be able to handle
+   all floating-point types.  */
+# define isgreater(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; andb $0x45, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+# define isgreaterequal(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+# define isless(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
+		 "setz %%al; andl $0xff, %0"				      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+# define islessequal(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
+		 "setz %%al; andl $0xff, %0"				      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+# define islessgreater(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
+		 "andl $0xff, %0"					      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+
+# define isunordered(x, y) \
+     ({ int result;							      \
+	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0xff, %0"	      \
+		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
+	result; })
+#endif
+
+
+#if defined __GNUC__ && \
     (__GNUC__ < 2 || (__GNUC__ == 2 && __GNUC_MINOR__ <= 7))
 /* gcc 2.7.2 and 2.7.2.1 have problems with inlining `long double'
    functions so we disable this now.  */
@@ -29,8 +78,9 @@
 # define __NO_MATH_INLINES
 #endif
 
+
 #ifdef	__GNUC__
-#ifndef __NO_MATH_INLINES
+#if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
 #ifdef __cplusplus
 # define __MATH_INLINE __inline
@@ -258,10 +308,8 @@ __log2 (double __x)
 {
   register double __value;
   __asm __volatile__
-    ("fld1\n\t"
-     "fxch\n\t"
-     "fyl2x"
-     : "=t" (__value) : "0" (__x));
+    ("fyl2x"
+     : "=t" (__value) : "0" (__x), "u" (1.0));
 
   return __value;
 }
@@ -441,7 +489,10 @@ logb (double __x)
 
   return __value;
 }
+#endif
 
+
+#ifdef __USE_MISC
 __MATH_INLINE double drem (double __x, double __y);
 __MATH_INLINE double
 drem (double __x, double __y)
@@ -471,55 +522,6 @@ __finite (double __x)
   return __result;
 }
 
-
-/* ISO C 9X defines some macros to perform unordered comparisons.  The
-   ix87 FPU supports this with special opcodes and we should use them.
-   These must not be inline functions since we have to be able to handle
-   all floating-point types.  */
-# define isgreater(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; andb $0x45, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-
-# define isgreaterequal(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; testb $0x05, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-
-# define isless(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x45, %%ah;"      \
-		 "setz %%al; andl $0xff, %0"				      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-
-# define islessequal(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; xorb $0x01, %%ah; testb $0x05, %%ah;"      \
-		 "setz %%al; andl $0xff, %0"				      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-
-# define islessgreater(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; testb $0x44, %%ah; setz %%al;"	      \
-		 "andl $0xff, %0"					      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-
-# define isunordered(x, y) \
-     ({ int result;							      \
-	__asm__ ("fucompp; fnstsw; sahf; setp %%al; andl $0xff, %0"	      \
-		 : "=a" (result) : "t" (x), "u" (y) : "cc");		      \
-	result; })
-#endif
-
-
-#ifdef __USE_MISC
 __MATH_INLINE double coshm1 (double __x);
 __MATH_INLINE double
 coshm1 (double __x)

@@ -43,6 +43,8 @@ struct leap
     long int change;		/* Seconds of correction to apply.  */
   };
 
+extern const char * __tzstring (const char *); /* Defined in tzset.c.  */
+
 static struct ttinfo *find_transition (time_t timer);
 static void compute_tzname_max (size_t);
 
@@ -267,9 +269,9 @@ __tzfile_read (const char *file)
   info = find_transition (0);
   for (i = 0; i < num_types && i < sizeof (__tzname) / sizeof (__tzname[0]);
        ++i)
-    __tzname[types[i].isdst] = &zone_names[types[i].idx];
+    __tzname[types[i].isdst] = __tzstring (&zone_names[types[i].idx]);
   if (info->isdst < sizeof (__tzname) / sizeof (__tzname[0]))
-    __tzname[info->isdst] = &zone_names[info->idx];
+    __tzname[info->isdst] = __tzstring (&zone_names[info->idx]);
 
   compute_tzname_max (chars);
 
@@ -285,7 +287,8 @@ __tzfile_read (const char *file)
    from the TZDEFRULES file.  */
 
 void
-__tzfile_default (char *std, char *dst, long int stdoff, long int dstoff)
+__tzfile_default (const char *std, const char *dst,
+		  long int stdoff, long int dstoff)
 {
   size_t stdlen, dstlen, i;
   long int rule_offset, rule_stdoff, rule_dstoff;
@@ -372,8 +375,8 @@ __tzfile_default (char *std, char *dst, long int stdoff, long int dstoff)
   types[1].isdst = 1;
 
   /* Reset the zone names to point to the user's names.  */
-  __tzname[0] = &zone_names[0];
-  __tzname[1] = &zone_names[stdlen];
+  __tzname[0] = (char *) std;
+  __tzname[1] = (char *) dst;
 
   compute_tzname_max (stdlen + dstlen);
 }
@@ -455,7 +458,7 @@ __tzfile_compute (time_t timer, long int *leap_correct, int *leap_hit)
 void
 compute_tzname_max (size_t chars)
 {
-  extern size_t __tzname_cur_max; /* Defined in __tzset.c. */
+  extern size_t __tzname_cur_max; /* Defined in tzset.c. */
 
   const char *p;
 

@@ -1,3 +1,55 @@
+1997-07-14 23:37  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/getnameinfo.c: Pretty print.
+	Correctly enlarge buffers.
+
+	* login/programs/utmpd.c: Use _() instead of gettext().
+
+	* nis/nss_nisplus/nisplus-hosts.c: Optimize some uses of stpcpy away.
+	* nis/nss_nisplus/nisplus-network.c: Likewise.
+	* nis/nss_nisplus/nisplus-proto.c: Likewise.
+	* nis/nss_nisplus/nisplus-rpc.c: Likewise.
+	* nis/nss_nisplus/nisplus-service.c: Likewise.
+
+	* sysdeps/alpha/fpu/bits/mathinline.h: Only define functions if
+	__OPTIMIZE__.
+	* sysdeps/powerpc/bits/mathinline.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathinline.h: Define ISO C9x comparison
+	function always.
+	* sysdeps/m68k/fpu/bits/mathinline.h: Likewise.
+	* sysdeps/stub/bits/mathinline.h: Add conditionals to show how
+	it should look like in real files.
+
+	* sysdeps/generic/bits/select.h (__FD_ZERO): Don't use memset to
+	prevent prototype trouble, use simple loop.
+	* sysdeps/i386/bits/select.h [!__GNUC__] (__FD_ZERO): Likewise.
+
+	* sysdeps/mips/mips64/Implies: Imply ieee754.
+
+	* sysdeps/unix/sysv/linux/Makefile: Make sure bits/syscall.h is
+	installed.
+	* sysdeps/unix/sysv/linux/sys/syscal.h: Pretty print.
+
+1997-07-14 00:25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/bits/stdio_lim.h: Unify with standalone version.
+	* sysdeps/standalone/bits/stdio_lim.h: Removed.
+	Patch by Zack Weinberg <zack@rabi.phys.columbia.edu>.
+
+1997-06-22  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime): Use tm_zone if available, even if _LIBC.
+
+	* time/tzfile.c (__tzstring): New decl.
+	(__tzfile_read, __tzfile_default): Set __tzname to permanent strings.
+	(__tzfile_default): First two args are now const char *.
+
+	* time/tzset.c (__tzstring): New function.
+	(tz_rule): Name is now const char *.
+	(struct tzstring_head): New type.
+	(tzstring_list, tzstring_last_buffer_size): New static vars.
+	(__tzset_internal): Time zone names are now permanent, not temporary.
+
 1997-07-13 01:18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* setjmp/setjmp.h: Define _setjmp and _longjmp also if __USE_XOPEN.

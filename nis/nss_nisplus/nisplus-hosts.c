@@ -118,7 +118,7 @@ _nss_nisplus_parse_hostent (nis_result *result, int af, struct hostent *host,
 	      __set_errno (ERANGE);
 	      return 0;
 	    }
-	  p = stpcpy(p, " ");
+	  *p++ = ' ';
 	  p = stpncpy (p, NISENTRYVAL (i, 1, result),
 		       NISENTRYLEN (i, 1, result));
 	  *p = '\0';

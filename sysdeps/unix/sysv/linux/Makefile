@@ -13,6 +13,8 @@ sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h sys/mtio.h \
 		  sys/debugreg.h sys/kd.h sys/soundcard.h sys/vt.h \
 		  sys/quota.h
 
+install-others += $(inst_includedir)/bits/syscall.h
+
 # Generate the list of SYS_* macros for the system calls (__NR_* macros).
 $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscall.h
 	rm -f $(@:.h=.d)
@@ -24,6 +26,13 @@ $(objpfx)syscall-%.h $(objpfx)syscall-%.d: ../sysdeps/unix/sysv/linux/sys/syscal
 	sed -n >> $(@:.d=.h).new \
 	      's@^#define __NR_\([^ ]*\) .*$$@#define SYS_\1 __NR_\1@p'
 	mv -f $(@:.d=.h).new $(@:.d=.h)
+
+$(inst_includedir)/bits/syscall.h: $(objpfx)syscall-list.h
+	$(make-target-directory)
+	if test -r $@ && cmp -s $< $@; \
+        then echo 'bits/syscall.h unchanged'; \
+        else $(INSTALL_DATA) $< $@; fi
+
 ifndef no_deps
 # Get the generated list of dependencies (probably /usr/include/asm/unistd.h).
 -include $(objpfx)syscall-list.d

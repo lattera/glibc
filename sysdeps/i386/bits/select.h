@@ -48,8 +48,14 @@
 
 #else	/* ! GNU CC */
 
+/* We don't use `memset' because this would require a prototype and
+   the array isn't too big.  */
 #define __FD_ZERO(set)  \
-  ((void) memset ((__ptr_t) (set), 0, sizeof (fd_set)))
+  do {									      \
+    unsigned int __i;							      \
+    for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
+      ((__fd_mask *) set)[__i] = '\0';					      \
+  } while (0)
 #define __FD_SET(d, set)	((set)->fds_bits[__FDELT(d)] |= __FDMASK(d))
 #define __FD_CLR(d, set)	((set)->fds_bits[__FDELT(d)] &= ~__FDMASK(d))
 #define __FD_ISSET(d, set)	((set)->fds_bits[__FDELT(d)] & __FDMASK(d))
