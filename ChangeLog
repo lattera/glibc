@@ -1,5 +1,9 @@
 Mon Mar 27 02:23:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* mach/Makefile (headers): Add mach/mach_traps.h.
+
+	* Makerules ($(installed-libcs) rule): Fix typos.
+
 	* sysdeps/unix/bsd/bsd4.4/revoke.S: New file.
 	* sysdeps/stub/revoke.c: New file.
 	* misc/Makefile (routines): Add revoke.

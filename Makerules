@@ -452,9 +452,9 @@ install: $(installed-libcs)
 # __.SYMDEF time stamp up to date, which avoids messages from some linkers.
 # Depending on subdir_install gets all the subdirs to update the library,
 # and is optimal for `make install' at top level.
-$(install-libcs): $(libdir)/lib$(libprefix)%: libobjs subdir_install
+$(installed-libcs): $(libdir)/lib$(libprefix)%: libobjs subdir_install
 	$(make-target-directory)
-	$(INSTALL_DATA) $(common-objpfx)lib$* $@
+	$(INSTALL_DATA) $(common-objpfx)lib$(*:$(libc-name)%=c%) $@
 	$(RANLIB) $@
 endif
 

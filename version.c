@@ -20,7 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 CONST char __libc_release[] = "alpha";
-CONST char __libc_version[] = "1.09.5";
+CONST char __libc_version[] = "1.09.6";
 
 void
 DEFUN_VOID(__libc_print_version)
