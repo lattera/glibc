@@ -1737,13 +1737,13 @@ do_positional:
 	  args_value[cnt].mem = va_arg (ap_save, type);			      \
 	  break
 
-	T (PA_CHAR, pa_char, int); /* Promoted.  */
+	T (PA_CHAR, pa_int, int); /* Promoted.  */
 	T (PA_WCHAR, pa_wchar, wint_t);
-	T (PA_INT|PA_FLAG_SHORT, pa_short_int, int); /* Promoted.  */
+	T (PA_INT|PA_FLAG_SHORT, pa_int, int); /* Promoted.  */
 	T (PA_INT, pa_int, int);
 	T (PA_INT|PA_FLAG_LONG, pa_long_int, long int);
 	T (PA_INT|PA_FLAG_LONG_LONG, pa_long_long_int, long long int);
-	T (PA_FLOAT, pa_float, double);	/* Promoted.  */
+	T (PA_FLOAT, pa_double, double);	/* Promoted.  */
 	T (PA_DOUBLE, pa_double, double);
 	T (PA_DOUBLE|PA_FLAG_LONG_DOUBLE, pa_long_double, long double);
 	T (PA_STRING, pa_string, const char *);
