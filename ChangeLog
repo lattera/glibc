@@ -1,3 +1,17 @@
+1998-06-08 18:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (subdirs): Add debug.
+	* configure.in: Use sysdeps/generic/elf subdir if ELF platform.
+	* libc.map: Add __backtrace, __backtrace_symbols, backtrace and
+	backtrace_symbols.
+	* sysdeps/generic/backtrace.c: New file.
+	* sysdeps/generic/backtracesyms.c: New file.
+	* sysdeps/generic/elf/backtracesyms.c: New file.
+	* sysdeps/i386/backtrace.c: New file.
+	* debug/Makefile: New file.
+	* debug/backtrace-tst.c: New file.
+	* debug/execinfo.h: New file.
+
 1998-06-08 13:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/sprof.c: Implement call graph profiling.

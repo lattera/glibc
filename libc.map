@@ -490,7 +490,7 @@ GLIBC_2.1 {
     __syscall_rt_sigqueueinfo;
     __xstat64; __fxstat64; __lxstat64;
     __pread64; __pwrite64;
-    __backtrace; __backtracesyms;
+    __backtrace; __backtrace_symbols;
 
     # helper functions
     __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;
@@ -536,7 +536,7 @@ GLIBC_2.1 {
     authdes_create; authdes_getucred; authdes_pk_create;
 
     # b*
-    backtrace; backtracesyms;
+    backtrace; backtrace_symbols;
 
     # c*
     capget; capset; cbc_crypt; creat64;

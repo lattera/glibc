@@ -429,7 +429,11 @@ changequote([,])dnl
 done
 
 # Add the default directories.
-sysnames="$names sysdeps/generic"
+if test "$elf" = yes; then
+  sysnames="$names sysdeps/generic/elf sysdeps/generic"
+else
+  sysnames="$names sysdeps/generic"
+fi
 AC_SUBST(sysnames)
 # The other names were emitted during the scan.
 AC_MSG_RESULT(sysdeps/generic)
