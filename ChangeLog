@@ -1,5 +1,8 @@
 2002-03-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-sysdep.c (_dl_important_hwcaps): Fix creation
+	of .str elements in the returned data structure.
+
 	* elf/elf.h: Add Alpha TLS bits.
 
 2002-02-28  Jakub Jelinek  <jakub@redhat.com>

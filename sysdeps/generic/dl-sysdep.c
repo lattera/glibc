@@ -325,15 +325,16 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
       temp[m].len = platform_len;
       ++m;
     }
+  assert (m == cnt);
 
   /* Determine the total size of all strings together.  */
   if (cnt == 1)
     total = temp[0].len;
   else
     {
-      total = (1 << (cnt - 2)) * (temp[0].len + temp[cnt - 1].len + 2);
+      total = (1UL << (cnt - 2)) * (temp[0].len + temp[cnt - 1].len + 2);
       for (n = 1; n + 1 < cnt; ++n)
-	total += (1 << (cnt - 3)) * (temp[n].len + 1);
+	total += (1UL << (cnt - 3)) * (temp[n].len + 1);
     }
 
   /* The result structure: we use a very compressed way to store the
@@ -415,12 +416,11 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   rp = &result[2];
   while (n != (1UL << (cnt - 1)))
     {
-      if ((n & 1) != 0)
+      if ((--n & 1) != 0)
 	rp[0].str = rp[-2].str + rp[-2].len;
       else
 	rp[0].str = rp[-1].str;
       ++rp;
-      --n;
     }
 
   /* The second have starts right after the first part of the string of
