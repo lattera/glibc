@@ -1,5 +1,7 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/ldbl-96/s_frexpl.c: Include <float.h>.
+
 	* conform/conformtest.pl: Define $mustprepend{"stdio.h"}.
 	* libio/stdio.h: Define va_list correctly.
 
