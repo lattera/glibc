@@ -278,7 +278,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\
 			    test-installation.pl gen-FAQ.pl versions.awk\
-			    gen-sorted.awk abi-versions.awk		\
+			    gen-sorted.awk abi-versions.awk abilist.awk	\
 			    firstversions.awk documented.sh cpp)
 
 distribute := $(strip $(distribute))

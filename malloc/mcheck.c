@@ -30,6 +30,9 @@
 /* Old hook values.  */
 static void (*old_free_hook) __P ((__ptr_t ptr, __const __ptr_t));
 static __ptr_t (*old_malloc_hook) __P ((__malloc_size_t size, const __ptr_t));
+static __ptr_t (*old_memalign_hook) __P ((__malloc_size_t alignment,
+					  __malloc_size_t size,
+					  const __ptr_t));
 static __ptr_t (*old_realloc_hook) __P ((__ptr_t ptr, __malloc_size_t size,
 					 __const __ptr_t));
 
@@ -49,6 +52,8 @@ struct hdr
     unsigned long int magic;	/* Magic number to check header integrity.  */
     struct hdr *prev;
     struct hdr *next;
+    __ptr_t block;		/* Real block allocated, for memalign.  */
+    unsigned long int magic2;	/* Extra, keeps us doubleword aligned.  */
   };
 
 /* This is the beginning of the list of all memory blocks allocated.
@@ -100,6 +105,8 @@ checkhdr (hdr)
     case MAGICWORD:
       if (((char *) &hdr[1])[hdr->size] != MAGICBYTE)
 	status = MCHECK_TAIL;
+      else if ((hdr->magic2 ^ (uintptr_t) hdr->block) != MAGICWORD)
+	status = MCHECK_HEAD;
       else
 	status = MCHECK_OK;
       break;
@@ -190,10 +197,11 @@ freehook (ptr, caller)
       struct hdr *hdr = ((struct hdr *) ptr) - 1;
       checkhdr (hdr);
       hdr->magic = MAGICFREE;
+      hdr->magic2 = MAGICFREE;
       unlink_blk (hdr);
       hdr->prev = hdr->next = NULL;
       flood (ptr, FREEFLOOD, hdr->size);
-      ptr = (__ptr_t) hdr;
+      ptr = hdr->block;
     }
   __free_hook = old_free_hook;
   if (old_free_hook != NULL)
@@ -226,6 +234,44 @@ mallochook (size, caller)
 
   hdr->size = size;
   link_blk (hdr);
+  hdr->block = hdr;
+  hdr->magic2 = (uintptr_t) hdr ^ MAGICWORD;
+  ((char *) &hdr[1])[size] = MAGICBYTE;
+  flood ((__ptr_t) (hdr + 1), MALLOCFLOOD, size);
+  return (__ptr_t) (hdr + 1);
+}
+
+static __ptr_t memalignhook __P ((__malloc_size_t, __malloc_size_t,
+				  const __ptr_t));
+static __ptr_t
+memalignhook (alignment, size, caller)
+     __malloc_size_t alignment, size;
+     const __ptr_t caller;
+{
+  struct hdr *hdr;
+  __malloc_size_t slop;
+  char *block;
+
+  if (pedantic)
+    mcheck_check_all ();
+
+  slop = (sizeof *hdr + alignment - 1) & -alignment;
+
+  __memalign_hook = old_memalign_hook;
+  if (old_memalign_hook != NULL)
+    block = (*old_memalign_hook) (alignment, slop + size + 1, caller);
+  else
+    block = memalign (alignment, slop + size + 1);
+  __memalign_hook = memalignhook;
+  if (block == NULL)
+    return NULL;
+
+  hdr = ((struct hdr *) (block + slop)) - 1;
+
+  hdr->size = size;
+  link_blk (hdr);
+  hdr->block = (__ptr_t) block;
+  hdr->magic2 = (uintptr_t) block ^ MAGICWORD;
   ((char *) &hdr[1])[size] = MAGICBYTE;
   flood ((__ptr_t) (hdr + 1), MALLOCFLOOD, size);
   return (__ptr_t) (hdr + 1);
@@ -261,6 +307,7 @@ reallochook (ptr, size, caller)
     }
   __free_hook = old_free_hook;
   __malloc_hook = old_malloc_hook;
+  __memalign_hook = old_memalign_hook;
   __realloc_hook = old_realloc_hook;
   if (old_realloc_hook != NULL)
     hdr = (struct hdr *) (*old_realloc_hook) ((__ptr_t) hdr,
@@ -271,12 +318,15 @@ reallochook (ptr, size, caller)
 				  sizeof (struct hdr) + size + 1);
   __free_hook = freehook;
   __malloc_hook = mallochook;
+  __memalign_hook = memalignhook;
   __realloc_hook = reallochook;
   if (hdr == NULL)
     return NULL;
 
   hdr->size = size;
   link_blk (hdr);
+  hdr->block = hdr;
+  hdr->magic2 = (uintptr_t) hdr ^ MAGICWORD;
   ((char *) &hdr[1])[size] = MAGICBYTE;
   if (size > osize)
     flood ((char *) (hdr + 1) + osize, MALLOCFLOOD, size - osize);
@@ -334,6 +384,8 @@ mcheck (func)
       __free_hook = freehook;
       old_malloc_hook = __malloc_hook;
       __malloc_hook = mallochook;
+      old_memalign_hook = __memalign_hook;
+      __memalign_hook = memalignhook;
       old_realloc_hook = __realloc_hook;
       __realloc_hook = reallochook;
       mcheck_used = 1;

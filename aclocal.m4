@@ -96,6 +96,8 @@ AS=`$CC -print-prog-name=as`
 LD=`$CC -print-prog-name=ld`
 AR=`$CC -print-prog-name=ar`
 AC_SUBST(AR)
+OBJDUMP=`$CC -print-prog-name=objdump`
+AC_SUBST(OBJDUMP)
 
 # ranlib has to be treated a bit differently since it might not exist at all.
 ac_ranlib=`$CC -print-prog-name=ranlib`

@@ -309,7 +309,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S PWD_P CC MAKE MSGFMT MAKEINFO SED AUTOCONF CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP AR RANLIB ac_ct_RANLIB MIG AS LD CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO OLD_DEBIAN_INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup libc_cv_z_combreloc libc_cv_have_initfini no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S PWD_P CC MAKE MSGFMT MAKEINFO SED AUTOCONF CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO OLD_DEBIAN_INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup libc_cv_z_combreloc libc_cv_have_initfini no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -3500,6 +3500,8 @@ AS=`$CC -print-prog-name=as`
 LD=`$CC -print-prog-name=ld`
 AR=`$CC -print-prog-name=ar`
 
+OBJDUMP=`$CC -print-prog-name=objdump`
+
 
 # ranlib has to be treated a bit differently since it might not exist at all.
 ac_ranlib=`$CC -print-prog-name=ranlib`
@@ -5001,7 +5003,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5004 "configure"
+#line 5006 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5261,7 +5263,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5264 "configure"
+#line 5266 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5360,7 +5362,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5363 "configure"
+#line 5365 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5428,7 +5430,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5431 "configure"
+#line 5433 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
@@ -6982,6 +6984,7 @@ s,@BUILD_CC@,$BUILD_CC,;t t
 s,@cross_compiling@,$cross_compiling,;t t
 s,@CPP@,$CPP,;t t
 s,@AR@,$AR,;t t
+s,@OBJDUMP@,$OBJDUMP,;t t
 s,@RANLIB@,$RANLIB,;t t
 s,@ac_ct_RANLIB@,$ac_ct_RANLIB,;t t
 s,@MIG@,$MIG,;t t

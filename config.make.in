@@ -92,6 +92,7 @@ MIG = @MIG@
 PWD_P = @PWD_P@
 BISON = @BISON@
 AUTOCONF = @AUTOCONF@
+OBJDUMP = @OBJDUMP@
 
 # Installation tools.
 INSTALL = @INSTALL@

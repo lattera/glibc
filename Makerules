@@ -1073,6 +1073,28 @@ endif
 
 # The include magic above causes those files to use this variable for flags.
 CPPFLAGS-nonlib = -DNOT_IN_libc=1
+
+
+ifeq ($(versioning),yes)
+# Generate normalized lists of symbols, versions, and data sizes.
+# This is handy for checking against existing library binaries.
+
+$(objpfx)%.symlist: $(..)scripts/abilist.awk $(objpfx)%.dynsym
+	$(AWK) -f $^ > $@T
+	mv -f $@T $@
+
+$(objpfx)%.dynsym: $(objpfx)%.so
+	$(OBJDUMP) --dynamic-syms $< > $@T
+	mv -f $@T $@
+
+tests: $(patsubst %.so,$(objpfx)%.symlist,$(install-lib.so-versioned))
+generated += $(install-lib.so-versioned:.so=.symlist)
+
+ifndef subdir
+tests: $(objpfx)libc.symlist
+generated += libc.symlist
+endif
+endif
 
 .PHONY: TAGS
 TAGS: $(objpfx)distinfo $(..)MakeTAGS

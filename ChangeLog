@@ -1,5 +1,23 @@
 2002-11-13  Roland McGrath  <roland@redhat.com>
 
+	* scripts/abilist.awk: New file.
+	* Makefile (distribute): Add it.
+	* Makerules ($(objpfx)%.dynsym, $(objpfx)%.symlist): New rules.
+	(tests): Depend on .symlist file for each $(install-lib.so-versioned).
+	[! subdir] (tests): Depend on libc.symlist.
+	(generated): Add those files.
+	* aclocal.m4 (LIBC_PROG_BINUTILS): Check for objdump, set OBJDUMP.
+	* configure: Regenerated.
+	* config.make.in (OBJDUMP): New variable, substituted by configure.
+
+	* malloc/mcheck.c (struct hdr): New members `block' and `magic2'.
+	(mallochook, reallochook): Set them up.
+	(checkhdr): Check HDR->magic2 value.
+	(freehook): Reset HDR->magic2.
+	(memalignhook): New static function.
+	(old_memalign_hook): New static variable.
+	(mcheck, reallochook): Set __memalign_hook to memalignhook.
+
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_storage): Zero the space
 	for the new TCB.
 
