@@ -77,6 +77,7 @@ struct termios
 # define IXANY		0004000
 # define IUCLC		0010000
 # define IMAXBEL	0020000
+# define IUTF8		0040000
 #endif
 
 /* c_oflag bits */
