@@ -1,4 +1,5 @@
-/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000, 2001, 2003, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jes Sorensen <jes@linuxcare.com>, July 2000
 
@@ -36,7 +37,7 @@ struct ia64_fpreg
 
 struct sigcontext
 {
-  unsigned long int sc_flags;	/* see manifest constants above */
+  unsigned long int sc_flags;	/* see manifest constants below */
   unsigned long int sc_nat;	/* bit i == 1 iff scratch reg gr[i] is a NaT */
   stack_t sc_stack;		/* previously active stack */
 

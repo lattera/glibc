@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 
 #define SIGCONTEXT siginfo_t *_si, struct sigcontext *
 #define SIGCONTEXT_EXTRA_ARGS _si,
-#define GET_PC(ctx)	((void *) 0)
+#define GET_PC(ctx)	((ctx)->sc_ip)
 #define GET_FRAME(ctx)	((void *) 0)
 #define GET_STACK(ctx)	((void *) 0)
 

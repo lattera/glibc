@@ -1,3 +1,15 @@
+2004-10-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/segfault.c: Include alloca.h and stdint.h.
+	Don't include frame.h.
+	(CURRENT_STACK_FRAME, INNER_THAN, ADVANCE_STACK_FRAME): Remove.
+	(catch_segfault): Use backtrace function.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/sigcontext.h: Fix comment.
+	* sysdeps/unix/sysv/linux/ia64/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/sigcontextinfo.h (GET_PC): Return sc_ip
+	field.
+
 2004-10-13  Ulrich Drepper  <drepper@redhat.com>
 
 	Add support for namespaces in the dynamic linker.

@@ -19,11 +19,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <ctype.h>
 #include <errno.h>
 #include <execinfo.h>
 #include <fcntl.h>
 #include <signal.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,44 +35,12 @@
 
 #include <bp-checks.h>
 
-/* Get the definition of "struct layout".  */
-#include <frame.h>
-
 /* This file defines macros to access the content of the sigcontext element
    passed up by the signal handler.  */
 #include <sigcontextinfo.h>
 
 /* Get code to possibly dump the content of all registers.  */
 #include <register-dump.h>
-
-/* This implementation assumes a stack layout that matches the defaults
-   used by gcc's `__builtin_frame_address' and `__builtin_return_address'
-   (FP is the frame pointer register):
-
-	  +-----------------+     +-----------------+
-    FP -> | previous FP --------> | previous FP ------>...
-	  |                 |     |                 |
-	  | return address  |     | return address  |
-	  +-----------------+     +-----------------+
-
-  */
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#ifndef CURRENT_STACK_FRAME
-# define CURRENT_STACK_FRAME  ({ char __csf; &__csf; })
-#endif
-
-/* By default we assume that the stack grows downward.  */
-#ifndef INNER_THAN
-# define INNER_THAN <
-#endif
-
-/* By default assume the `next' pointer in struct layout points to the
-   next struct layout.  */
-#ifndef ADVANCE_STACK_FRAME
-# define ADVANCE_STACK_FRAME(next) BOUNDED_1 ((struct layout *) (next))
-#endif
 
 /* We'll use tis a lot.  */
 #define WRITE_STRING(s) write (fd, s, strlen (s))
@@ -102,13 +72,10 @@ write_strsignal (int fd, int signal)
 static void
 catch_segfault (int signal, SIGCONTEXT ctx)
 {
-  struct layout *current;
-  void *__unbounded top_frame;
-  void *__unbounded top_stack;
-  int fd;
+  int fd, cnt, i;
   void **arr;
-  size_t cnt;
   struct sigaction sa;
+  uintptr_t pc;
 
   /* This is the name of the file we are writing to.  If none is given
      or we cannot write to this file write to stderr.  */
@@ -130,41 +97,26 @@ catch_segfault (int signal, SIGCONTEXT ctx)
 
   WRITE_STRING ("\nBacktrace:\n");
 
-  top_frame = GET_FRAME (ctx);
-  top_stack = GET_STACK (ctx);
+  /* Get the backtrace.  */
+  arr = alloca (256 * sizeof (void *));
+  cnt = backtrace (arr, 256);
 
-  /* First count how many entries we'll have.  */
-  cnt = 1;
-  current = BOUNDED_1 ((struct layout *) top_frame);
-  while (!((void *) current INNER_THAN top_stack
-	   || !((void *) current INNER_THAN __libc_stack_end)))
-    {
-      ++cnt;
+  /* Now try to locate the PC from signal context in the backtrace.
+     Normally it will be found at arr[2], but it might appear later
+     if there were some signal handler wrappers.  Allow a few bytes
+     difference to cope with as many arches as possible.  */
+  pc = (uintptr_t) GET_PC (ctx);
+  for (i = 0; i < cnt; ++i)
+    if ((uintptr_t) arr[i] >= pc - 16 && (uintptr_t) arr[i] <= pc + 16)
+      break;
 
-      current = ADVANCE_STACK_FRAME (current->next);
-    }
-
-  arr = alloca (cnt * sizeof (void *));
-
-  /* First handle the program counter from the structure.  */
-  arr[0] = GET_PC (ctx);
-
-  current = BOUNDED_1 ((struct layout *) top_frame);
-  cnt = 1;
-  while (!((void *) current INNER_THAN top_stack
-	   || !((void *) current INNER_THAN __libc_stack_end)))
-    {
-      arr[cnt++] = current->return_address;
-
-      current = ADVANCE_STACK_FRAME (current->next);
-    }
-
-  /* If the last return address was NULL, assume that it doesn't count.  */
-  if (arr[cnt-1] == NULL)
-    cnt--;
+  /* If we haven't found it, better dump full backtrace even including
+     the signal handler frames instead of not dumping anything.  */
+  if (i == cnt)
+    i = 0;
 
   /* Now generate nicely formatted output.  */
-  __backtrace_symbols_fd (arr, cnt, fd);
+  __backtrace_symbols_fd (arr + i, cnt - i, fd);
 
 #ifdef HAVE_PROC_SELF
   /* Now the link map.  */
