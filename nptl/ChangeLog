@@ -1,3 +1,8 @@
+2003-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/tls.h (CALL_THREAD_FCT): Align stack of called
+	function correctly.
+
 2003-03-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread): Move most often used elements to the front.
