@@ -1,3 +1,12 @@
+2004-06-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/bits/string.h (memcpy): Add () around arguments.
+	(memchr, __memrchr, strlen, strcmp, strncmp, __strchr_g, __strchr_c,
+	__strchrnul_g, __strchrnul_c, strspn, strcspn, strpbrk): Add memory
+	the asm uses as its input, either of size __n where __n is known or
+	0xfffffff.
+	(strstr): Add "memory" clobber.
+
 2004-06-14  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #219]

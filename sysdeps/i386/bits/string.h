@@ -43,8 +43,8 @@
 #define _HAVE_STRING_ARCH_memcpy 1
 #define memcpy(dest, src, n) \
   (__extension__ (__builtin_constant_p (n)				      \
-		  ? __memcpy_c (dest, src, n)				      \
-		  : memcpy (dest, src, n)))
+		  ? __memcpy_c ((dest), (src), (n))			      \
+		  : memcpy ((dest), (src), (n))))
 /* This looks horribly ugly, but the compiler can optimize it totally,
    as the count is constant.  */
 __STRING_INLINE void *__memcpy_c (void *__dest, __const void *__src,
@@ -301,7 +301,8 @@ memchr (__const void *__s, int __c, size_t __n)
      "movl $1,%0\n"
      "1:"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n)
+     : "a" (__c), "0" (__s), "1" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -324,7 +325,8 @@ __memrchr (__const void *__s, int __c, size_t __n)
      "1:\tcld\n\t"
      "incl %0"
      : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s + __n - 1), "1" (__n)
+     : "a" (__c), "0" (__s + __n - 1), "1" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s)
      : "cc");
   return __res;
 }
@@ -346,7 +348,8 @@ strlen (__const char *__str)
      "repne; scasb\n\t"
      "notl %0"
      : "=c" (__res), "=&D" (__d0)
-     : "1" (__str), "a" (0), "0" (0xffffffff)
+     : "1" (__str), "a" (0), "0" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__str)
      : "cc");
   return __res - 1;
 }
@@ -475,7 +478,9 @@ strcmp (__const char *__s1, __const char *__s2)
      "orb	$1,%%al\n"
      "3:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1)
-     : "1" (__s1), "2" (__s2)
+     : "1" (__s1), "2" (__s2),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s1),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s2)
      : "cc");
   return __res;
 }
@@ -507,7 +512,9 @@ strncmp (__const char *__s1, __const char *__s2, size_t __n)
      "orb	$1,%%al\n"
      "4:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
-     : "1" (__s1), "2" (__s2), "3" (__n)
+     : "1" (__s1), "2" (__s2), "3" (__n),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s1),
+       "m" ( *(struct { __extension__ char __x[__n]; } *)__s2)
      : "cc");
   return __res;
 }
@@ -541,7 +548,8 @@ __strchr_g (__const char *__s, int __c)
      "2:\n\t"
      "movl	%1,%0"
      : "=a" (__res), "=&S" (__d0)
-     : "0" (__c), "1" (__s)
+     : "0" (__c), "1" (__s),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -565,7 +573,8 @@ __strchr_c (__const char *__s, int __c)
      "2:\n\t"
      "movl	%1,%0"
      : "=a" (__res), "=&S" (__d0)
-     : "0" (__c), "1" (__s)
+     : "0" (__c), "1" (__s),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -599,7 +608,8 @@ __strchrnul_g (__const char *__s, int __c)
      "2:\n\t"
      "movl	%1,%0"
      : "=a" (__res), "=&S" (__d0)
-     : "0" (__c), "1" (__s)
+     : "0" (__c), "1" (__s),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -622,7 +632,8 @@ __strchrnul_c (__const char *__s, int __c)
      "2:\n\t"
      "movl	%1,%0"
      : "=a" (__res), "=&S" (__d0)
-     : "0" (__c), "1" (__s)
+     : "0" (__c), "1" (__s),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res - 1;
 }
@@ -660,7 +671,8 @@ strcspn (__const char *__s, __const char *__reject)
      "2:\n\t"
      "popl	%%ebx"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "d" (__reject), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "d" (__reject), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -687,7 +699,8 @@ strcspn (__const char *__s, __const char *__reject)
      "jne	1b\n"
      "2:"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
-     : "g" (__reject), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "g" (__reject), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -724,7 +737,8 @@ strspn (__const char *__s, __const char *__accept)
      "2:\n\t"
      "popl	%%ebx"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -751,7 +765,8 @@ strspn (__const char *__s, __const char *__accept)
      "je	1b\n"
      "2:"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
-     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return (__res - 1) - __s;
 }
@@ -791,7 +806,8 @@ strpbrk (__const char *__s, __const char *__accept)
      "3:\n\t"
      "popl	%%ebx"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&D" (__d2)
-     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "r" (__accept), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -822,7 +838,8 @@ strpbrk (__const char *__s, __const char *__accept)
      "xorl	%0,%0\n"
      "3:"
      : "=&S" (__res), "=&a" (__d0), "=&c" (__d1), "=&d" (__d2), "=&D" (__d3)
-     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff)
+     : "g" (__accept), "0" (__s), "1" (0), "2" (0xffffffff),
+       "m" ( *(struct { char __x[0xfffffff]; } *)__s)
      : "cc");
   return __res;
 }
@@ -862,7 +879,7 @@ strstr (__const char *__haystack, __const char *__needle)
      "popl	%%ebx"
      : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
      : "r" (__needle), "0" (0), "1" (0xffffffff), "2" (__haystack)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 # else
@@ -892,7 +909,7 @@ strstr (__const char *__haystack, __const char *__needle)
      "2:"
      : "=&a" (__res), "=&c" (__d0), "=&S" (__d1), "=&d" (__d2), "=&D" (__d3)
      : "g" (__needle), "0" (0), "1" (0xffffffff), "2" (__haystack)
-     : "cc");
+     : "memory", "cc");
   return __res;
 }
 # endif
