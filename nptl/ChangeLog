@@ -1,3 +1,7 @@
+2004-09-15  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/vfork.S: Use libc_hidden_def.
+
 2004-09-01  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/jmpbuf-unwind.h
