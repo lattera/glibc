@@ -18,8 +18,10 @@
 
 #include <unistd.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__setpgid (pid, pgid)
+     int pid;
+     int pgid;
 {
-  return sbrk (delta);
+  return setpgid (pid, pgid);
 }

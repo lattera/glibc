@@ -16,10 +16,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
+#include <sys/time.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__select (nfds, readfds, writefds, exceptfds, timeout)
+     int nfds;
+     fd_set *readfds;
+     fd_set *writefds;
+     fd_set *exceptfds;
+     struct timeval *timeout;
 {
-  return sbrk (delta);
+  return select (nfds, readfds, writefds, exceptfds, timeout);
 }

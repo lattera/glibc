@@ -18,8 +18,8 @@
 
 #include <unistd.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__setsid ()
 {
-  return sbrk (delta);
+  return setsid ();
 }

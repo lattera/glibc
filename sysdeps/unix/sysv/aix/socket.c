@@ -16,10 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
+#include <sys/socket.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__socket (int domain, int type, int protocol)
 {
-  return sbrk (delta);
+  return socket (domain, type, protocol);
 }

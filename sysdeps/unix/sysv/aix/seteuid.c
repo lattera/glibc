@@ -18,9 +18,8 @@
 
 #include <unistd.h>
 
+#define ID_EFFECTIVE	0x01
 
-/* is there a reason *NOT* to include <sys/id.h>? If so #define ID_EFFECTIVE */
-#include <sys/id.h>
 
 extern int setuidx (int mask, uid_t uid);
 

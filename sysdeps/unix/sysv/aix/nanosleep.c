@@ -20,14 +20,12 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-/* this is declared in <sys/time.h> not <time.h > */
-#if 0
 struct timestruc_t
 {
   time_t tv_sec;	/* seconds.  */
   suseconds_t tv_nsec;	/* and nanoseconds.  */
 };
-#endif
+
 
 extern int _nsleep (struct timestruc_t *rqtp, struct timestruc_t *rmtp);
 

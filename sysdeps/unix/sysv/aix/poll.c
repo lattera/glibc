@@ -16,10 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
+#include <sys/poll.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__poll (fds, nfds, timeout)
+     struct pollfd *fds;
+     unsigned long int nfds;
+     int timeout;
 {
-  return sbrk (delta);
+  return poll (fds, nfds, timeout);
 }

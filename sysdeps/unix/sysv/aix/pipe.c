@@ -18,8 +18,9 @@
 
 #include <unistd.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__pipe (pipedes)
+     int pipedes[2];
 {
-  return sbrk (delta);
+  return pipe (pipedes);
 }

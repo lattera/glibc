@@ -18,8 +18,8 @@
 
 #include <unistd.h>
 
-/* is there a reason *NOT* to include <sys/id.h>?  If so #define ID_REAL */
-#include <sys/id.h>
+#define ID_REAL	0x02
+
 
 extern int setuidx (int mask, uid_t uid);
 

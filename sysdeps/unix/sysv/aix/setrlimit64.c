@@ -16,10 +16,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
+#include <sys/resource.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__setrlimit64 (enum __rlimit_resource resource, const struct rlimit64 *rlimits)
 {
-  return sbrk (delta);
+  return setrlimit64 (resource, rlimits);
 }

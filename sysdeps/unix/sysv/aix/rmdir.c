@@ -18,8 +18,8 @@
 
 #include <unistd.h>
 
-void *
-__sbrk (intptr_t delta)
+int
+__rmdir (const char *name)
 {
-  return sbrk (delta);
+  return rmdir (name);
 }
