@@ -1,5 +1,5 @@
 /* Special .init and .fini section support.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -72,12 +72,13 @@ _init (void)
      module which has a constructor; but then user code's constructors
      would come first, and not be profiled.  */
   extern void __gmon_start__ (void) __attribute__ ((weak)); /*weak_extern (__gmon_start__);*/
-
 #ifndef WEAK_GMON_START
   __gmon_start__ ();
 #else
-  if (__gmon_start__)
-    __gmon_start__ ();
+  void (*gmon_start) (void) = __gmon_start__;
+
+  if (gmon_start)
+    gmon_start ();
 #endif
 
   asm ("ALIGN");
