@@ -338,8 +338,8 @@ __printf_fphex (FILE *fp,
   /* Look for trailing zeroes.  */
   if (! zero_mantissa)
     {
-      wnumend = wnumbuf + sizeof wnumbuf;
-      numend = numbuf + sizeof numbuf;
+      wnumend = &wnumbuf[sizeof wnumbuf / sizeof wnumbuf[0]];
+      numend = &numbuf[sizeof numbuf / sizeof numbuf[0]];
       while (wnumend[-1] == L'0')
 	{
 	  --wnumend;
@@ -433,17 +433,13 @@ __printf_fphex (FILE *fp,
 	    + ((expbuf + sizeof expbuf) - expstr));
 	    /* Exponent.  */
 
-  /* Count the decimal point.  */
+  /* Count the decimal point.
+     A special case when the mantissa or the precision is zero and the `#'
+     is not given.  In this case we must not print the decimal point.  */
   if (precision > 0 || info->alt)
     width -= wide ? 1 : strlen (decimal);
 
-  /* A special case when the mantissa or the precision is zero and the `#'
-     is not given.  In this case we must not print the decimal point.  */
-  if (precision == 0 && !info->alt)
-    ++width;		/* This nihilates the +1 for the decimal-point
-			   character in the following equation.  */
-
-  if (!info->left && width > 0)
+  if (!info->left && info->pad != '0' && width > 0)
     PADN (' ', width);
 
   if (negative)
@@ -458,6 +454,10 @@ __printf_fphex (FILE *fp,
     outchar (info->spec + ('x' - 'a'));
   else
     outchar (info->spec == 'A' ? 'X' : 'x');
+
+  if (!info->left && info->pad == '0' && width > 0)
+    PADN ('0', width);
+
   outchar (leading);
 
   if (precision > 0 || info->alt)
@@ -473,9 +473,6 @@ __printf_fphex (FILE *fp,
       if (tofill > 0)
 	PADN ('0', tofill);
     }
-
-  if (info->left && info->pad == '0' && width > 0)
-    PADN ('0', width);
 
   if ('P' - 'A' == 'p' - 'a')
     outchar (info->spec + ('p' - 'a'));

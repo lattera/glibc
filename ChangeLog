@@ -1,3 +1,12 @@
+2002-10-23  Roland McGrath  <roland@redhat.com>
+
+	* stdio-common/tst-fphex.c: New file.
+	* stdio-common/Makefile (tests): Add tst-fphex.
+	* sysdeps/generic/printf_fphex.c (__printf_fphex): Fix initialization
+	of WNUMEND.  Fix counting of decimal point in WIDTH.  Print '0' pad
+	chars always before the value digits.
+	Reported by James Antill <james.antill@redhat.com>.
+
 2002-10-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (re_comp): Call __regfree on re_comp_buf.
