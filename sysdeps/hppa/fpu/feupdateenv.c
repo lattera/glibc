@@ -27,13 +27,11 @@ feupdateenv (const fenv_t *envp)
 
   /* Get the current exception status. */
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-  sw[0] &= (FE_ALL_EXCEPT << 27);
-
+  sw[0] &= FE_ALL_EXCEPT;
+  envp->__status_word = envp->__status_word | sw[0];
+  
   /* Install new environment.  */
   fesetenv (envp);
-
-  /* Raise the saved exception. */
-  feraiseexcept (sw[0] >> 27);
 
   /* Success.  */
   return 0;
