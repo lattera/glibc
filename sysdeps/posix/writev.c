@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <sys/param.h>
 #include <sys/uio.h>
 
 /* Write data pointed by the buffers described by VECTOR, which
@@ -35,23 +38,46 @@ __writev (fd, vector, count)
   char *buffer;
   register char *bp;
   size_t bytes, to_copy;
+  ssize_t bytes_written;
   int i;
+  bool use_malloc = false;
 
   /* Find the total number of bytes to be written.  */
   bytes = 0;
   for (i = 0; i < count; ++i)
-    bytes += vector[i].iov_len;
+    {
+      /* Check for ssize_t overflow.  */
+      if (SSIZE_MAX - bytes < vector[i].iov_len)
+	{
+	  errno = EINVAL;
+	  return -1;
+	}
+      bytes += vector[i].iov_len;
+    }
 
-  /* Allocate a temporary buffer to hold the data.  */
-  buffer = (char *) __alloca (bytes);
+  /* Allocate a temporary buffer to hold the data.  We should normally
+     use alloca since it's faster and does not require synchronization
+     with other threads.  But we cannot if the amount of memory
+     required is too large.  Use 512k as the limit.  */
+  if (bytes < 512 * 1024)
+    buffer = (char *) __alloca (bytes);
+  else
+    {
+      buffer = (char *) malloc (bytes);
+      if (buffer == NULL)
+	/* XXX I don't know whether it is acceptable to try writing
+	   the data in chunks.  Probably not so we just fail here.  */
+	return -1;
+
+      use_malloc = true;
+    }
 
   /* Copy the data into BUFFER.  */
   to_copy = bytes;
   bp = buffer;
   for (i = 0; i < count; ++i)
     {
-#define	min(a, b)	((a) > (b) ? (b) : (a))
-      size_t copy = min (vector[i].iov_len, to_copy);
+      size_t copy = MIN (vector[i].iov_len, to_copy);
 
       bp = __mempcpy ((void *) bp, (void *) vector[i].iov_base, copy);
 
@@ -60,7 +86,12 @@ __writev (fd, vector, count)
 	break;
     }
 
-  return __write (fd, buffer, bytes);
+  bytes_written = __write (fd, buffer, bytes);
+
+  if (use_malloc)
+    free (buffer);
+
+  return bytes_written;
 }
 #ifndef __writev
 weak_alias (__writev, writev)

@@ -19,6 +19,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -217,9 +218,23 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   kcountsize = textsize / HISTFRACTION;
   hashfraction = HASHFRACTION;
   if ((HASHFRACTION & (HASHFRACTION - 1)) == 0)
-    /* If HASHFRACTION is a power of two, mcount can use shifting
-       instead of integer division.  Precompute shift amount.  */
-    log_hashfraction = __ffs (hashfraction * sizeof (*froms)) - 1;
+    {
+      /* If HASHFRACTION is a power of two, mcount can use shifting
+	 instead of integer division.  Precompute shift amount.
+
+	 This is a constant but the compiler cannot compile the
+	 expression away since the __ffs implementation is not known
+	 to the compiler.  Help the compiler by precomputing the
+	 usual cases.  */
+      assert (hashfraction == 2);
+
+      if (sizeof (*froms) == 8)
+	log_hashfraction = 4;
+      else if (sizeof (*froms) == 16)
+	log_hashfraction = 5;
+      else
+	log_hashfraction = __ffs (hashfraction * sizeof (*froms)) - 1;
+    }
   else
     log_hashfraction = -1;
   tossize = textsize / HASHFRACTION;

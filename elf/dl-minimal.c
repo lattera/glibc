@@ -171,7 +171,7 @@ __strerror_r (int errnum, char *buf, size_t buflen)
       /* No need to check buffer size, all calls in the dynamic linker
 	 provide enough space.  */
       buf[buflen - 1] = '\0';
-      msg = _itoa_word (errnum, buf + buflen - 1, 10, 0);
+      msg = _itoa (errnum, buf + buflen - 1, 10, 0);
       msg = memcpy (msg - (sizeof ("Error ") - 1), "Error ",
 		    sizeof ("Error ") - 1);
       break;
@@ -270,9 +270,9 @@ __strtoul_internal (const char *nptr, char **endptr, int base, int group)
 }
 
 
-#if HP_TIMING_AVAIL && ULONG_MAX <= 4294967295UL
-/* We need this function to print the cycle count.  On 64-bit machines the
-   _itoa_word function should be used.  */
+/* We always use _itoa instead of _itoa_word in ld.so since the former
+   also has to be present and it is never about speed when these
+   functions are used.  */
 char *
 _itoa (value, buflim, base, upper_case)
      unsigned long long int value;
@@ -280,17 +280,16 @@ _itoa (value, buflim, base, upper_case)
      unsigned int base;
      int upper_case;
 {
-  char *bp = buflim;
+  extern const char _itoa_lower_digits[];
 
-  assert (base == 10);
+  assert (! upper_case);
 
   do
-    *--bp = '0' + value % 10;
-  while ((value /= 10) != 0);
+    *--buflim = _itoa_lower_digits[value % base];
+  while ((value /= base) != 0);
 
-  return bp;
+  return buflim;
 }
-#endif
 
 
 /* The following is not a complete strsep implementation.  It cannot
@@ -302,6 +301,8 @@ char *
 __strsep (char **stringp, const char *delim)
 {
   char *begin;
+
+  assert (delim[0] != '\0');
 
   begin = *stringp;
   if (begin != NULL)

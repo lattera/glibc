@@ -142,9 +142,10 @@ _dl_new_object (char *realname, const char *libname, int type,
 	      goto out;
 	    }
 
-	  /* Find the end of the path and see whether we have to add
-	     a slash.  */
-	  cp = __rawmemchr (origin, '\0');
+	  /* Find the end of the path and see whether we have to add a
+	     slash.  We could use rawmemchr but this need not be
+	     fast.  */
+	  cp = (strchr) (origin, '\0');
 	  if (cp[-1] != '/')
 	    *cp++ = '/';
 	}

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1994, 95, 96, 97, 98, 99, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,14 +35,13 @@ _itoa_word (unsigned long value, char *buflim,
 {
   extern const char _itoa_upper_digits[], _itoa_lower_digits[];
   const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
-  char *bp = buflim;
 
   switch (base)
     {
 #define SPECIAL(Base)							      \
     case Base:								      \
       do								      \
-	*--bp = digits[value % Base];					      \
+	*--buflim = digits[value % Base];				      \
       while ((value /= Base) != 0);					      \
       break
 
@@ -51,10 +50,10 @@ _itoa_word (unsigned long value, char *buflim,
       SPECIAL (8);
     default:
       do
-	*--bp = digits[value % base];
+	*--buflim = digits[value % base];
       while ((value /= base) != 0);
     }
-  return bp;
+  return buflim;
 }
 
 static inline char * __attribute__ ((unused))

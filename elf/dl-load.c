@@ -496,12 +496,19 @@ decompose_rpath (struct r_search_path_struct *sps,
   if (__builtin_expect (GL(dl_inhibit_rpath) != NULL, 0)
       && !__libc_enable_secure)
     {
-      const char *found = strstr (GL(dl_inhibit_rpath), where);
-      if (found != NULL)
+      const char *inhp = GL(dl_inhibit_rpath);
+
+      do
 	{
-	  size_t len = strlen (where);
-	  if ((found == GL(dl_inhibit_rpath) || found[-1] == ':')
-	      && (found[len] == '\0' || found[len] == ':'))
+	  const char *wp = where;
+
+	  while (*inhp == *wp && *wp != '\0')
+	    {
+	      ++inhp;
+	      ++wp;
+	    }
+
+	  if (*wp == '\0' && (*inhp == '\0' || *inhp == ':'))
 	    {
 	      /* This object is on the list of objects for which the
 		 RUNPATH and RPATH must not be used.  */
@@ -522,7 +529,12 @@ decompose_rpath (struct r_search_path_struct *sps,
 
 	      return;
 	    }
+
+	  while (*inhp != '\0')
+	    if (*inhp++ == ':')
+	      break;
 	}
+      while (*inhp != '\0');
     }
 
   /* Make a writable copy.  At the same time expand possible dynamic

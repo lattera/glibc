@@ -258,9 +258,9 @@ _dl_show_auxv (void)
 	      const char *val = av->a_un.a_ptr;
 
 	      if (__builtin_expect (auxvars[idx].form, dec) == dec)
-		val = _itoa_word (av->a_un.a_val, buf + sizeof buf - 1, 10, 0);
+		val = _itoa (av->a_un.a_val, buf + sizeof buf - 1, 10, 0);
 	      else if (__builtin_expect (auxvars[idx].form, hex) == hex)
-		val = _itoa_word (av->a_un.a_val, buf + sizeof buf - 1, 16, 0);
+		val = _itoa (av->a_un.a_val, buf + sizeof buf - 1, 16, 0);
 
 	      _dl_printf ("%s%s\n", auxvars[idx].label, val);
 	    }

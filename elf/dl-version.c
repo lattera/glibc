@@ -121,8 +121,8 @@ no version information available (required by ", name, ")");
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
 	  errstring = make_string ("unsupported version ",
-				   _itoa_word (def->vd_version,
-					       &buf[sizeof (buf) - 1], 10, 0),
+				   _itoa (def->vd_version,
+					  &buf[sizeof (buf) - 1], 10, 0),
 				   " of Verdef record");
 	  result = 1;
 	  goto call_cerror;
@@ -210,8 +210,8 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
 	  errstring = make_string ("unsupported version ",
-				   _itoa_word (ent->vn_version,
-					       &buf[sizeof (buf) - 1], 10, 0),
+				   _itoa (ent->vn_version,
+					  &buf[sizeof (buf) - 1], 10, 0),
 				   " of Verneed record\n");
 	call_error:
 	  INT(_dl_signal_error) (errval, (*map->l_name

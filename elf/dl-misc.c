@@ -105,7 +105,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	      char *p;
 	      pid = __getpid ();
 	      assert (pid >= 0 && pid < 100000);
-	      p = _itoa_word (pid, &pidbuf[5], 10, 0);
+	      p = _itoa (pid, &pidbuf[5], 10, 0);
 	      while (p > pidbuf)
 		*--p = '0';
 	      pidbuf[5] = ':';
@@ -185,7 +185,7 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 		   having more than one integer formatting in a call.  */
 		char *buf = (char *) alloca (3 * sizeof (unsigned long int));
 		char *endp = &buf[3 * sizeof (unsigned long int)];
-		char *cp = _itoa_word (num, endp, *fmt == 'x' ? 16 : 10, 0);
+		char *cp = _itoa (num, endp, *fmt == 'x' ? 16 : 10, 0);
 
 		/* Pad to the width the user specified.  */
 		if (width != -1)

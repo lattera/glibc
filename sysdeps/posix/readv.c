@@ -38,7 +38,7 @@ __readv (fd, vector, count)
   char *buffer;
   char *buffer_start;
   size_t bytes;
-  int bytes_read;
+  ssize_t bytes_read;
   int i;
   bool use_malloc = false;
 

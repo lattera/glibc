@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
    and Ulrich Drepper <drepper@gnu.org>.
@@ -170,7 +170,6 @@ _itoa (value, buflim, base, upper_case)
      int upper_case;
 {
   const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
-  char *bp = buflim;
   const struct base_table_t *brec = &_itoa_base_table[base - 2];
 
   switch (base)
@@ -191,7 +190,7 @@ _itoa (value, buflim, base, upper_case)
 		  work_lo = value & 0xfffffffful;			      \
 		  for (cnt = BITS_PER_MP_LIMB / BITS; cnt > 0; --cnt)	      \
 		    {							      \
-		      *--bp = digits[work_lo & ((1ul << BITS) - 1)];	      \
+		      *--buflim = digits[work_lo & ((1ul << BITS) - 1)];      \
 		      work_lo >>= BITS;					      \
 		    }							      \
 		  if (BITS_PER_MP_LIMB % BITS != 0)			      \
@@ -205,7 +204,7 @@ _itoa (value, buflim, base, upper_case)
 		      if (work_hi == 0)					      \
 			work_hi = work_lo;				      \
 		      else						      \
-			*--bp = digits[work_lo];			      \
+			*--buflim = digits[work_lo];			      \
 		    }							      \
 		}							      \
 	      else							      \
@@ -213,7 +212,7 @@ _itoa (value, buflim, base, upper_case)
 	    }								      \
 	  do								      \
 	    {								      \
-	      *--bp = digits[work_hi & ((1 << BITS) - 1)];		      \
+	      *--buflim = digits[work_hi & ((1 << BITS) - 1)];		      \
 	      work_hi >>= BITS;						      \
 	    }								      \
 	  while (work_hi != 0);						      \
@@ -239,7 +238,7 @@ _itoa (value, buflim, base, upper_case)
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = (x + ((value - x) >> 1)) >> (brec->post_shift - 1);
 	      rem = value - quo * base;
-	      *--bp = digits[rem];
+	      *--buflim = digits[rem];
 	      value = quo;
 	    }
 	else
@@ -250,7 +249,7 @@ _itoa (value, buflim, base, upper_case)
 	      umul_ppmm (x, dummy, value, base_multiplier);
 	      quo = x >> brec->post_shift;
 	      rem = value - quo * base;
-	      *--bp = digits[rem];
+	      *--buflim = digits[rem];
 	      value = quo;
 	    }
 #endif
@@ -376,7 +375,7 @@ _itoa (value, buflim, base, upper_case)
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = (x + ((ti - x) >> 1)) >> (brec->post_shift - 1);
 		  rem = ti - quo * base;
-		  *--bp = digits[rem];
+		  *--buflim = digits[rem];
 		  ti = quo;
 		  ++ndig_for_this_limb;
 		}
@@ -388,7 +387,7 @@ _itoa (value, buflim, base, upper_case)
 		  umul_ppmm (x, dummy, ti, base_multiplier);
 		  quo = x >> brec->post_shift;
 		  rem = ti - quo * base;
-		  *--bp = digits[rem];
+		  *--buflim = digits[rem];
 		  ti = quo;
 		  ++ndig_for_this_limb;
 		}
@@ -399,7 +398,7 @@ _itoa (value, buflim, base, upper_case)
 
 		quo = ti / base;
 		rem = ti % base;
-		*--bp = digits[rem];
+		*--buflim = digits[rem];
 		ti = quo;
 		++ndig_for_this_limb;
 	      }
@@ -408,7 +407,7 @@ _itoa (value, buflim, base, upper_case)
 	    if (n != 0)
 	      while (ndig_for_this_limb < brec->big.ndigits)
 		{
-		  *--bp = '0';
+		  *--buflim = '0';
 		  ++ndig_for_this_limb;
 		}
 	  }
@@ -418,5 +417,5 @@ _itoa (value, buflim, base, upper_case)
       break;
     }
 
-  return bp;
+  return buflim;
 }

@@ -59,9 +59,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     lazy = 0;
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_RELOC, 0))
-    _dl_printf ("\nrelocation processing: %s%s\n",
-		l->l_name[0] ? l->l_name : _dl_argv[0],
-		lazy ? " (lazy)" : "");
+    INT(_dl_debug_printf) ("\nrelocation processing: %s%s\n",
+			   l->l_name[0] ? l->l_name : _dl_argv[0],
+			   lazy ? " (lazy)" : "");
 
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
      But we rewrite the DT_FLAGS entry to a DT_TEXTREL entry to make

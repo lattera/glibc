@@ -1,12 +1,48 @@
+2002-02-03  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/posix/readv.c: Use ssize_t for bytes_read.
+	* sysdeps/posix/writev.c: Use ssize_t for bytes_written.  Fix comment.
+
+2002-02-03  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/posix/writev.c: Check for ssize_t overflow, don't use
+	alloca if the memory reqirements are too high.
+
+2002-02-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (decompose_rpath): Avoid using strstr.
+	* elf/dl-minimal.c (_strerror_r): Use _itoa instead of _itoa_word since
+	the former is available anyway and speed isn't important here.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Likewise.
+	* elf/dl-version.c (match_symbol): Likewise.
+	(_dl_check_map_versions): Likewise.
+	* elf/rtld.c (process_envvars): Likewise.
+	(print_statistics): Likewise.
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Likewise.
+	* elf/dl-minimal.c (_itoa): Always define it.  Make it work for all
+	bases.  Add assert to catch uses of unimplemented features.
+	(__strsep): Add assert to catch uses of unimplemented features.
+	* elf/dl-object.c (_dl_new_object): Don't use rawmemchr.  Use strchr
+	and avoid inline optimization.
+	* elf/rtld.c (process_envvars): Likewise.
+	* elf/dl-open.c: Don't include <stdio-common/_itoa.h>.
+	* elf/dl-profile.c (_dl_start_profile): Help compiler to avoid ffs.
+	* elf/rtld.c (dl_main): Avoid strsep inline optimization.
+
 2002-02-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_itoa.h: Minor simplifications of the code.
+	* stdio-common/_itoa.c: Likewise.
+
+	* elf/dl-reloc.c (_dl_relocate_object): Use _dl_debug_printf
+	instead of _dl_printf for debugging info output.
 
 	* manual/examples/mkfsock.c (make_named_socket): Make sure name is
 	always NUL-terminated.  Patch by Chris D. Sloan <cds@cs.hmc.edu>.
 
 2002-02-01  H.J. Lu  <hjl@gnu.org>
 
-	* sysdeps/mips/atomicity.h (exchange_and_add): Use branch
-	likely.
+	* sysdeps/mips/atomicity.h (exchange_and_add): Use branch likely.
 	(atomic_add): Likewise.
 	(compare_and_swap): Return 0 only when failed to compare. Use
 	branch likely.

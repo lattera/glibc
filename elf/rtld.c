@@ -697,7 +697,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 
       HP_TIMING_NOW (start);
 
-      while ((p = strsep (&list, " :")) != NULL)
+      /* Prevent optimizing strsep.  Speed is not important here.  */
+      while ((p = (strsep) (&list, " :")) != NULL)
 	if (p[0] != '\0'
 	    && (__builtin_expect (! __libc_enable_secure, 1)
 		|| strchr (p, '/') == NULL))
@@ -1063,8 +1064,8 @@ of this helper program; chances are you did not intend to run this program.\n\
     {
       ElfW(Lib) *liblist, *liblistend;
       struct link_map **r_list, **r_listend, *l;
-      const char *strtab = (const void *)
-			   D_PTR (GL(dl_loaded), l_info[DT_STRTAB]);
+      const char *strtab = (const void *) D_PTR (GL(dl_loaded),
+						 l_info[DT_STRTAB]);
 
       assert (GL(dl_loaded)->l_info [VALIDX (DT_GNU_LIBLISTSZ)] != NULL);
       liblist = (ElfW(Lib) *)
@@ -1550,7 +1551,8 @@ process_envvars (enum mode *modep)
       do
 	{
 	  unsetenv (nextp);
-	  nextp = (char *) rawmemchr (nextp, '\0') + 1;
+	  /* We could use rawmemchr but this need not be fast.  */
+	  nextp = (char *) (strchr) (nextp, '\0') + 1;
 	}
       while (*nextp != '\0');
 
@@ -1572,7 +1574,7 @@ process_envvars (enum mode *modep)
       char *startp;
 
       buf[name_len + 11] = '\0';
-      startp = _itoa_word (__getpid (), &buf[name_len + 11], 10, 0);
+      startp = _itoa (__getpid (), &buf[name_len + 11], 10, 0);
       *--startp = '.';
       startp = memcpy (startp - name_len, debug_output, name_len);
 
@@ -1607,8 +1609,8 @@ print_statistics (void)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
-      cp = _itoa_word ((1000ULL * relocate_time) / rtld_total_time,
-		       pbuf + sizeof (pbuf), 10, 0);
+      cp = _itoa ((1000ULL * relocate_time) / rtld_total_time,
+		  pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)
 	{
@@ -1637,8 +1639,8 @@ print_statistics (void)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), load_time);
-      cp = _itoa_word ((1000ULL * load_time) / rtld_total_time,
-		       pbuf + sizeof (pbuf), 10, 0);
+      cp = _itoa ((1000ULL * load_time) / rtld_total_time,
+		  pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)
 	{
