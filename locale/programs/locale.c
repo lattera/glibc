@@ -336,7 +336,20 @@ write_locales (void)
 	  }
 
 	if (S_ISDIR (mode))
-	  PUT (strdup (dirent->d_name));
+	  {
+	    /* Test whether at least the LC_CTYPE data is there.  Some
+               directories only contain translations.  */
+	    char buf[sizeof (LOCALEDIR) + strlen (dirent->d_name)
+		    + sizeof "/LC_CTYPE"];
+	    struct stat st;
+
+	    stpcpy (stpcpy (stpcpy (stpcpy (buf, LOCALEDIR), "/"),
+			    dirent->d_name),
+		    "/LC_CTYPE");
+
+	    if (stat (buf, &st) == 0 && S_ISREG (st.st_mode))
+	      PUT (strdup (dirent->d_name));
+	  }
       }
 
   closedir (dir);

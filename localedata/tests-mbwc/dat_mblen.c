@@ -100,7 +100,7 @@ TST_MBLEN tst_mblen_loc [] = {
       /* 03: a character + an invalid byte.  */
       {	 { 1, "\260\241\200",	   USE_MBCURMAX }, { 0, 0, 1,  2 }	 },
       /* 04: control/invalid characters.  */
-      {	 { 1, "\200\202",  USE_MBCURMAX }, { 1, EILSEQ, 1, -1 }	 },
+      {	 { 1, "\377\202",  USE_MBCURMAX }, { 1, EILSEQ, 1, -1 }	 },
       /* 05: a null string.  */
       {	 { 1, "",	   USE_MBCURMAX }, { 0, 0,	1,  0 }	 },
       /* 06: a null pointer.  */

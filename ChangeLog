@@ -1,3 +1,9 @@
+2000-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/locale.c (write_locales): Don't simply add all
+	directories found in the subdir, test whether at least the
+	LC_CTYPE file is in there.
+
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/euc-jp.c: Map characters in C1 area to itself.

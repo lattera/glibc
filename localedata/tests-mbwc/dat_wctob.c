@@ -42,12 +42,8 @@ TST_WCTOB tst_wctob_loc [] = {
 	  {  { WEOF   }, { 0,0,	 1, EOF	       }  },
 	  {  { 0x0020 }, { 0,0,	 1, 0x20       }  },
 	  {  { 0x0061 }, { 0,0,	 1, 0x61       }  },
-#ifdef SHOJI_IS_RIGHT
-	  {  { 0x0080 }, { 0,0,	 1, 0x80       }  },  /* <WAIVER> */
-#else
-	  /* XXX These are no valid characters.  */
-	  {  { 0x0080 }, { 0,0,	 1, EOF        }  },
-#endif
+	  {  { 0x0080 }, { 0,0,	 1, 0x80       }  },
+	  {  { 0x00FF }, { 0,0,	 1, EOF        }  },
 	  {  { 0x00C4 }, { 0,0,	 1, EOF	       }  },
 	  {  { 0x30C4 }, { 0,0,	 1, EOF	       }  },
 	  {  is_last: 1 } /* Last element.  */
