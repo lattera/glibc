@@ -1,6 +1,6 @@
 2003-03-17  Ulrich Drepper  <drepper@redhat.com>
 
-	* localedata/en_ZA: hanged %x for LC_TIME to use dd/mm/ccyy.
+	* localedata/en_ZA: Changed %x for LC_TIME to use dd/mm/ccyy.
 	Added ^ to LC_MESSAGES regex "^[yY].*".
 	Confirmed LC_PAPER adn LC_MEASUREMENT settings.
 	Added country and language names to LC_ADDRESS.

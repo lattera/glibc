@@ -1,3 +1,11 @@
+2003-03-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_wait.c: Correct exit criteria.
+	* sysdeps/pthread/pthread_cond_timedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	Patch by Ewald Snel <ewald@rambo.its.tudelft.nl>.
+
 2003-03-16  Roland McGrath  <roland@redhat.com>
 
 	* tst-fork4.c: Include <string.h>.
@@ -6,6 +14,10 @@
 	* tst-mutex2.c: Include <stdlib.h>.
 
 2003-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S
+	(__lll_mutex_timedlock_wait): Correct expected value after
+	spurious wakeup.  Otherwise we would never wait again.
 
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Work around red
 	zone versus inline asm stupidity.  Use correct instructions.
