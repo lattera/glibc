@@ -1,3 +1,26 @@
+2004-11-03  Paolo Bonzini  <bonzini@gnu.org>
+
+	* posix/regex_internal.h (struct re_backref_cache_entry): Remove flag
+	field.
+	(struct re_sift_context_t): Remove cur_bkref, cls_subexp_idx,
+	check_subexp fields.  Move limits last.
+	* posix/regexec.c (match_ctx_clear_flag): Remove.
+	(sift_ctx_init): Remove check_subexp parameter.  Do not set removed
+	fields.  Callers adjusted.
+	(expand_bkref_cache): Remove last_str parameter.  Callers adjusted.
+	(re_search_internal): Remove fast_translate variable.
+	(update_cur_sifted_state): Pass candidates as the final parameter
+	to sift_states_bkref.
+	(sift_states_bkref): Change last unused parameter to be "candidates",
+	do not fetch candidates into a local variable.
+	Remove dead test for "node == sctx->bkref", and the cur_bkref_idx
+	variable.
+	Remove loops that set/reset the flag field of backref cache entries.
+	(check_arrival_add_next_nodes): Use a signed int to hold the return
+	value of re_node_set_insert.
+	(group_nodes_into_DFAstates): Likewise.
+	(match_ctx_add_entry): Do not set the flag field of the new entry.
+
 2004-11-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Define
