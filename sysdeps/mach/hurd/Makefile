@@ -133,7 +133,7 @@ endif
 rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
 	       $(common-objpfx)hurd/libhurduser.so
 link-rpcuserlibs := $(rpcuserlibs:%user.so=%user-link.so)
-$(common-objpfx)libc.so: $(link-rpcuserlibs)
+$(common-objpfx)libc.so subdir_lib: $(link-rpcuserlibs)
 rpath-dirs += mach hurd
 
 $(link-rpcuserlibs): %-link.so: %_pic.a
