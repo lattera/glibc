@@ -46,6 +46,13 @@ __pathconf (const char *file, int name)
     case _PC_2_SYMLINKS:
       return __statfs_symlinks (__statfs (file, &fsbuf), &fsbuf);
 
+    case _PC_PIPE_BUF:
+#ifdef  PIPE_BUF
+      return PIPE_BUF;
+#else
+      return __getpagesize ();
+#endif
+
     default:
       return posix_pathconf (file, name);
     }

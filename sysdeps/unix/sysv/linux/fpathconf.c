@@ -45,6 +45,13 @@ __fpathconf (fd, name)
     case _PC_2_SYMLINKS:
       return __statfs_symlinks (__fstatfs (fd, &fsbuf), &fsbuf);
 
+    case _PC_PIPE_BUF:
+#ifdef  PIPE_BUF
+      return PIPE_BUF;
+#else
+      return __getpagesize ();
+#endif
+
     default:
       return posix_fpathconf (fd, name);
     }
