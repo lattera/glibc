@@ -1,3 +1,14 @@
+1998-07-20 18:23  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/libioP.h: Use __PMT in typedef.
+	* libio/strfile.h: Likewise.
+
+1998-07-20 18:20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/gethostname.c: Return ENAMETOOLONG if
+	buffer is too small.
+	Reported by John Levon <j_levon@ncc.co.uk>.
+
 1998-07-20 17:09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* shlib-versions: Remove definition for libSegFault.
