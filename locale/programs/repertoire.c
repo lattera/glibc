@@ -462,6 +462,7 @@ hexadecimal range format should use only capital characters"));
 
       obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",
 		      prefix_len, from, len1 - prefix_len, cnt);
+      obstack_1grow (ob, '\0');
 
       insert_entry (ht, buf, len1,
 		    (void *) (unsigned long int) this_value);

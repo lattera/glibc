@@ -1,5 +1,8 @@
 2000-02-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/repertoire.c (repertoire_new_char): NUL
+	terminated names of character in range.
+
 	* stdio-common/vfprintf.c (vfprintf): Initialize thousands_sep.
 	Define and initialize use_outdigits in the inner loops.
 
