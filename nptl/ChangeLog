@@ -1,5 +1,26 @@
 2003-09-02  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h (PSEUDO): Also
+	defined symbol for entry point to avoid cancellation.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h (PSEUDO):
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/not-cancel.h (__open_nocancel,
+	__close_nocancel, __read_nocancel, __write_nocancel,
+	__waitpid_nocancel): Add attribute_hidden.  If not in libc.so,
+	libpthread.so or librt.so, define to corresponding function
+	without _nocancel suffix.
+	* sysdeps/unix/sysv/linux/s390/not-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/not-cancel.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/not-cancel.h: New file.
+
 	* sysdeps/unix/sysv/linux/x86_64/not-cancel.h: Fix a typo.
 
 2003-09-02  Ulrich Drepper  <drepper@redhat.com>

@@ -33,8 +33,12 @@
     cfi_startproc;							\
     SINGLE_THREAD_P;							\
     bne- .Lpseudo_cancel;						\
+  .type .__##syscall_name##_nocancel,@function;				\
+  .globl .__##syscall_name##_nocancel;					\
+  .__##syscall_name##_nocancel:						\
     DO_CALL (SYS_ify (syscall_name));					\
     PSEUDO_RET;								\
+  .size .__##syscall_name##_nocancel,.-.__##syscall_name##_nocancel;	\
   .Lpseudo_cancel:							\
     stdu 1,-128(1);							\
     cfi_adjust_cfa_offset (128);					\

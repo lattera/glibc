@@ -59,11 +59,15 @@ L(pseudo_cancel):							      \
 ENTRY(name)								      \
 	SINGLE_THREAD_P(%r1)						      \
 	jne	L(pseudo_cancel);					      \
+.type	__##syscall_name##_nocancel,@function;				      \
+.globl	__##syscall_name##_nocancel;					      \
+__##syscall_name##_nocancel:						      \
 	DO_CALL(syscall_name, args);					      \
 L(pseudo_check):							      \
 	lhi	%r4,-4095;						      \
 	clr	%r2,%r4;						      \
 	jnl	SYSCALL_ERROR_LABEL;					      \
+.size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
 L(pseudo_end):
 
 # ifdef IS_IN_libpthread

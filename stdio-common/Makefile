@@ -85,6 +85,7 @@ CFLAGS-tmpfile.c = -fexceptions
 CFLAGS-tmpfile64.c = -fexceptions
 CFLAGS-tempname.c = -fexceptions
 CFLAGS-psignal.c = -fexceptions
+CFLAGS-vprintf.c = -fexceptions
 
 tst-sscanf-ENV = LOCPATH=$(common-objpfx)localedata
 tst-swprintf-ENV = LOCPATH=$(common-objpfx)localedata

@@ -31,10 +31,14 @@
 ENTRY(name)								      \
 	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;			      \
 	brnz,pn %g1, 1f;						      \
+.type	__##syscall_name##_nocancel,@function;				      \
+.globl	__##syscall_name##_nocancel;					      \
+__##syscall_name##_nocancel:						      \
 	 mov SYS_ify(syscall_name), %g1;				      \
 	ta 0x6d;							      \
 	bcs,pn %xcc, __syscall_error_handler;				      \
 	 nop;								      \
+.size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
 	.subsection 2;							      \
 1:	save %sp, -192, %sp;						      \
 	CENABLE;							      \

@@ -32,10 +32,14 @@ ENTRY(name)								      \
 	ld [%g7 + MULTIPLE_THREADS_OFFSET], %g1;			      \
 	cmp %g1, 0;							      \
 	bne 1f;								      \
+.type	__##syscall_name##_nocancel,@function;				      \
+.globl	__##syscall_name##_nocancel;					      \
+__##syscall_name##_nocancel:						      \
 	 mov SYS_ify(syscall_name), %g1;				      \
 	ta 0x10;							      \
 	bcs __syscall_error_handler;					      \
 	 nop;								      \
+.size	__##syscall_name##_nocancel,.-__##syscall_name##_nocancel;	      \
 	.subsection 2;							      \
 	cfi_startproc;							      \
 1:	save %sp, -96, %sp;						      \
