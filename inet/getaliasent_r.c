@@ -25,6 +25,5 @@
 #define	GETFUNC_NAME		getaliasent
 #define	ENDFUNC_NAME		endaliasent
 #define DATABASE_NAME		aliases
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

@@ -18,12 +18,8 @@ extern int __mbsinit (__const __mbstate_t *__ps);
 extern size_t __mbrtowc (wchar_t *__restrict __pwc,
 			 __const char *__restrict __s, size_t __n,
 			 __mbstate_t *__restrict __p);
-extern size_t __mbrtowc_internal (wchar_t *__restrict __pwc,
-				  __const char *__restrict __s, size_t __n,
-				  __mbstate_t *__restrict __p)
-     attribute_hidden;
-extern size_t __mbrlen_internal (__const char *__restrict __s, size_t __n,
-				 mbstate_t *__restrict __ps) attribute_hidden;
+libc_hidden_proto (__mbrtowc)
+libc_hidden_proto (__mbrlen)
 extern size_t __wcrtomb (char *__restrict __s, wchar_t __wc,
 			 __mbstate_t *__restrict __ps);
 extern size_t __mbsrtowcs (wchar_t *__restrict __dst,
@@ -67,11 +63,6 @@ extern int __vfwprintf (__FILE *__restrict __s,
 			__const wchar_t *__restrict __format,
 			__gnuc_va_list __arg)
      /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
-
-#  ifndef NOT_IN_libc
-#   define __mbrlen(s, n, ps) INTUSE(__mbrlen) (s, n, ps)
-#   define __mbrtowc(pwc, s, n, p) INTUSE(__mbrtowc) (pwc, s, n, p)
-#  endif
 
 # endif
 #endif

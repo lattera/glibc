@@ -28,6 +28,5 @@
 #define STAYOPEN_VAR		stayopen
 #define NEED__RES		1
 #define NEED_H_ERRNO		1
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

@@ -1,8 +1,8 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
-getpgid		-	bsdgetpgrp	1	__getpgid	getpgid
+getpgid		-	bsdgetpgrp	1	__getpgid	getpgid __GI___getpgid
 msync		-	msync		3	msync
-setpgid		-	bsdsetpgrp	2	__setpgid	setpgid
+setpgid		-	bsdsetpgrp	2	__setpgid	setpgid __GI___setpgid
 signal		-	signal		3	__raw_signal
 sysmp		-	sysmp		4	__sysmp
 syssgi		-	syssgi		2	__syssgi

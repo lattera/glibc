@@ -35,4 +35,5 @@ ENTRY(__pipe)
        br.cond.spnt.few __syscall_error
 PSEUDO_END(__pipe)
 
+libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

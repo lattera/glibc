@@ -1,5 +1,5 @@
 /* statfs -- Return information about the filesystem on which FILE resides.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,6 +28,7 @@ __statfs (const char *file, struct statfs *buf)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__statfs)
 weak_alias (__statfs, statfs)
 
 stub_warning (statfs)

@@ -38,6 +38,5 @@ __chown (file, owner, group)
     return __hurd_fail (err);
   return 0;
 }
-
-INTDEF(__chown)
+libc_hidden_def (__chown)
 weak_alias (__chown, chown)

@@ -1,4 +1,5 @@
 #define memcpy __mempcpy
 #include <sysdeps/i386/i586/memcpy.S>
 
+libc_hidden_def (BP_SYM (__mempcpy))
 weak_alias (BP_SYM (__mempcpy), BP_SYM (mempcpy))

@@ -25,6 +25,5 @@
 #define DATABASE_NAME		services
 #define ADD_PARAMS		int port, const char *proto
 #define ADD_VARIABLES		port, proto
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -95,5 +95,6 @@ __stpncpy (dest, src, n)
   return dest - 1;
 }
 #ifdef weak_alias
+libc_hidden_def (__stpncpy)
 weak_alias (__stpncpy, stpncpy)
 #endif

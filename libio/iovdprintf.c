@@ -26,7 +26,6 @@
    in files containing the exception.  */
 
 #include "libioP.h"
-#include "libio.h"
 #include <stdio_ext.h>
 
 int

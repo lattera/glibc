@@ -2,7 +2,7 @@
    SRC to DEST, returning the address of the terminating '\0' in
    DEST, if any, or else DEST + N.
    For SPARC v9.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz> and
 		  Jan Vondrak <jvon4518@ss1000.ms.mff.cuni.cz>.
@@ -421,4 +421,5 @@ ENTRY(__stpncpy)
 	 sllx		%o4, 56, %g3			/* IEU0				*/
 END(__stpncpy)
 
-weak_alias(__stpncpy, stpncpy)
+libc_hidden_def (__stpncpy)
+weak_alias (__stpncpy, stpncpy)

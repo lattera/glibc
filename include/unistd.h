@@ -22,17 +22,19 @@ extern ssize_t __libc_pwrite (int __fd, __const void *__buf, size_t __n,
 			      __off_t __offset);
 extern ssize_t __pwrite64 (int __fd, __const void *__buf, size_t __n,
 			   __off64_t __offset);
+libc_hidden_proto (__pwrite64)
 extern ssize_t __libc_pwrite64 (int __fd, __const void *__buf, size_t __n,
 				__off64_t __offset);
 extern ssize_t __libc_read (int __fd, void *__buf, size_t __n);
+libc_hidden_proto (__libc_read)
 extern ssize_t __libc_write (int __fd, __const void *__buf, size_t __n);
+libc_hidden_proto (__libc_write)
 extern int __pipe (int __pipedes[2]);
+libc_hidden_proto (__pipe)
 extern unsigned int __sleep (unsigned int __seconds);
 extern int __chown (__const char *__file,
 		    __uid_t __owner, __gid_t __group);
-extern int __chown_internal (__const char *__file,
-			     __uid_t __owner, __gid_t __group)
-     attribute_hidden;
+libc_hidden_proto (__chown)
 extern int __fchown (int __fd,
 		     __uid_t __owner, __gid_t __group);
 extern int __lchown (__const char *__file, __uid_t __owner,
@@ -54,14 +56,14 @@ char *__canonicalize_directory_name_internal (__const char *__thisdir,
 
 extern int __dup (int __fd);
 extern int __dup2 (int __fd, int __fd2);
-extern int __dup2_internal (int __fd, int __fd2) attribute_hidden;
+libc_hidden_proto (__dup2)
 extern int __execve (__const char *__path, char *__const __argv[],
 		     char *__const __envp[]);
 extern long int __pathconf (__const char *__path, int __name);
 extern long int __fpathconf (int __fd, int __name);
 extern long int __sysconf (int __name);
 extern __pid_t __getpid (void);
-extern __pid_t __getpid_internal (void) attribute_hidden;
+libc_hidden_proto (__getpid)
 extern __pid_t __getppid (void);
 extern __pid_t __setsid (void);
 extern __uid_t __getuid (void);
@@ -69,12 +71,13 @@ extern __uid_t __geteuid (void);
 extern __gid_t __getgid (void);
 extern __gid_t __getegid (void);
 extern int __getgroups (int __size, __gid_t __list[]);
-extern __pid_t __getpgid_internal (__pid_t __pid) attribute_hidden;
+libc_hidden_proto (__getpgid)
 extern int __group_member (__gid_t __gid);
 extern int __setuid (__uid_t __uid);
 extern int __setreuid (__uid_t __ruid, __uid_t __euid);
 extern int __setgid (__gid_t __gid);
 extern int __setpgid (__pid_t __pid, __pid_t __pgid);
+libc_hidden_proto (__setpgid)
 extern int __setregid (__gid_t __rgid, __gid_t __egid);
 extern __pid_t __vfork (void);
 extern int __ttyname_r (int __fd, char *__buf, size_t __buflen);
@@ -89,18 +92,18 @@ extern int __profil (unsigned short int *__sample_buffer, size_t __size,
 extern int __getdtablesize (void);
 extern int __brk (void *__addr);
 extern int __close (int __fd);
-extern int __close_internal (int __fd) attribute_hidden;
+libc_hidden_proto (__close)
 extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
+libc_hidden_proto (__read)
 extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
-extern ssize_t __write_internal (int __fd, __const void *__buf, size_t __n)
-     attribute_hidden;
+libc_hidden_proto (__write)
 extern __pid_t __fork (void);
 extern int __getpagesize (void) __attribute__ ((__const__));
-extern int __getpagesize_internal (void)
-     __attribute__ ((__const__)) attribute_hidden;
+libc_hidden_proto (__getpagesize)
 extern int __ftruncate (int __fd, __off_t __length);
 extern int __ftruncate64 (int __fd, __off64_t __length);
 extern void *__sbrk (intptr_t __delta);
+libc_hidden_proto (__sbrk)
 
 
 /* This variable is set nonzero at startup if the process's effective
@@ -117,17 +120,5 @@ extern int __libc_enable_secure_internal attribute_hidden;
 
 /* Various internal function.  */
 extern void __libc_check_standard_fds (void);
-
-
-#ifndef NOT_IN_libc
-# define __close(fd) INTUSE(__close) (fd)
-# define __dup2(fd, fd2) INTUSE(__dup2) (fd, fd2)
-# define __getpagesize() INTUSE(__getpagesize) ()
-# define __getpgid(pid) INTUSE(__getpgid) (pid)
-# define __getpid() INTUSE(__getpid) ()
-# ifdef SHARED
-#  define __libc_write(fd, buf, n) INTUSE(__write) (fd, buf, n)
-# endif
-#endif
 
 #endif

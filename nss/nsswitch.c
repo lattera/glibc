@@ -136,6 +136,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 
   return 0;
 }
+libc_hidden_def (__nss_database_lookup)
 
 
 /* -1 == not found
@@ -199,6 +200,7 @@ __nss_next (service_user **ni, const char *fct_name, void **fctp, int status,
 
   return *fctp != NULL ? 0 : -1;
 }
+libc_hidden_def (__nss_next)
 
 
 int

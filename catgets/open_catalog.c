@@ -332,3 +332,4 @@ __open_catalog (const char *cat_name, const char *nlspath, const char *env_var,
 
   return result;
 }
+libc_hidden_def (__open_catalog)

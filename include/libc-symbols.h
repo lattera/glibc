@@ -381,4 +381,186 @@
 # define INTVARDEF2(name, newname)
 #endif
 
+/* The following macros are used for PLT bypassing within libc.so
+   (and if needed other libraries similarly).
+   First of all, you need to have the function prototyped somewhere,
+   say in foo/foo.h:
+
+   int foo (int __bar);
+
+   If calls to foo within libc.so should always go to foo defined in libc.so,
+   then in include/foo.h you add:
+
+   libc_hidden_proto (foo)
+
+   line and after the foo function definition:
+
+   int foo (int __bar)
+   {
+     return __bar;
+   }
+   libc_hidden_def (foo)
+
+   or
+
+   int foo (int __bar)
+   {
+     return __bar;
+   }
+   libc_hidden_weak (foo)
+
+   If foo is normally just an alias (strong or weak) of some other function,
+   you should use the normal strong_alias first, then add libc_hidden_def
+   or libc_hidden_weak:
+
+   int baz (int __bar)
+   {
+     return __bar;
+   }
+   strong_alias (baz, foo)
+   libc_hidden_weak (foo)
+
+   If the function should be internal to multiple objects, say ld.so and
+   libc.so, the best way is to use:
+
+   #if !defined NOT_IN_libc || defined IS_IN_rtld
+   hidden_proto (foo)
+   #endif
+
+   in include/foo.h and the normal macros at all function definitions
+   depending on what DSO they belong to.
+
+   If versioned_symbol macro is used to define foo,
+   libc_hidden_ver macro should be used, as in:
+
+   int __real_foo (int __bar)
+   {
+     return __bar;
+   }
+   versioned_symbol (libc, __real_foo, foo, GLIBC_2_1);
+   libc_hidden_ver (__real_foo, foo)  */
+
+#if defined SHARED && defined DO_VERSIONING \
+    && defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+# ifndef __ASSEMBLER__
+#  ifdef HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+#   define __hidden_proto_hiddenattr
+#  else
+#   define __hidden_proto_hiddenattr attribute_hidden
+#  endif
+#  ifndef HAVE_BROKEN_ALIAS_ATTRIBUTE
+#   define hidden_proto(name) __hidden_proto (name, __GI_##name)
+#  else
+#   define hidden_proto(name)
+#  endif
+#  define __hidden_proto(name, internal) \
+  __typeof (name) internal; \
+  __typeof (name) name __asm__ (__hidden_asmname (#internal)) \
+  __hidden_proto_hiddenattr;
+#  define __hidden_asmname(name) \
+  __hidden_asmname1 (__USER_LABEL_PREFIX__, name)
+#  define __hidden_asmname1(prefix, name) __hidden_asmname2(prefix, name)
+#  define __hidden_asmname2(prefix, name) #prefix name
+#  ifdef HAVE_ASM_SET_DIRECTIVE
+#   define __hidden_def1(original, alias)			\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
+  .set C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
+#  else
+#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#    define __hidden_def1(original, alias)			\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
+#   else
+#    define __hidden_def1(original, alias)			\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+#   endif
+#  endif
+#  define __hidden_def2(...) #__VA_ARGS__
+#  define __hidden_def3(...) __hidden_def2 (__VA_ARGS__)
+#  define hidden_def(name)					\
+  __asm__ (__hidden_def3 (__hidden_def1 (__GI_##name, name)));
+#  define hidden_ver(local, name)				\
+  __asm__ (__hidden_def3 (__hidden_def1 (local, __GI_##name)));
+#  ifdef HAVE_WEAK_SYMBOLS
+#   ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#    define __hidden_weak1(original, alias)			\
+  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
+#   else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#    ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#     define __hidden_weak1(original, alias)			\
+  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
+#    else
+#     define __hidden_weak1(original, alias)			\
+  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+#    endif
+#   endif
+#   define hidden_weak(name)					\
+  __asm__ (__hidden_def3 (__hidden_weak1 (__GI_##name, name)));
+#  else
+#   define hidden_weak(name) hidden_def (name)
+#  endif
+# else
+/* For assembly, we need to do the opposite of what we do in C:
+   in assembly gcc __REDIRECT stuff is not in place, so functions
+   are defined by its normal name and we need to create the
+   __GI_* alias to it, in C __REDIRECT causes the function definition
+   to use __GI_* name and we need to add alias to the real name.
+   hidden_proto and hidden_weak don't make sense for assembly.  */
+#  define hidden_def(name) strong_alias (name, __GI_##name)
+#  define hidden_ver(local, name) strong_alias (local, __GI_##name)
+# endif
+#else
+# ifndef __ASSEMBLY__
+#  define hidden_proto(name)
+#  define hidden_weak(name)
+# endif
+# define hidden_def(name)
+# define hidden_ver(local, name)
+#endif
+
+#if !defined NOT_IN_libc && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+# define libc_hidden_proto(name) hidden_proto (name)
+# define libc_hidden_def(name) hidden_def (name)
+# define libc_hidden_weak(name) hidden_weak (name)
+# define libc_hidden_ver(local, name) hidden_ver (local, name)
+#else
+# define libc_hidden_proto(name)
+# define libc_hidden_def(name)
+# define libc_hidden_weak(name)
+# define libc_hidden_ver(local, name)
+#endif
+
+#if defined NOT_IN_libc && defined IS_IN_rtld \
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+# define rtld_hidden_proto(name) hidden_proto (name)
+# define rtld_hidden_def(name) hidden_def (name)
+# define rtld_hidden_weak(name) hidden_weak (name)
+# define rtld_hidden_ver(local, name) hidden_ver (local, name)
+#else
+# define rtld_hidden_proto(name)
+# define rtld_hidden_def(name)
+# define rtld_hidden_weak(name)
+# define rtld_hidden_ver(local, name)
+#endif
+
+#if defined NOT_IN_libc && defined IS_IN_libm \
+    && !defined HAVE_BROKEN_ALIAS_ATTRIBUTE
+# define libm_hidden_proto(name) hidden_proto (name)
+# define libm_hidden_def(name) hidden_def (name)
+# define libm_hidden_weak(name) hidden_weak (name)
+# define libm_hidden_ver(local, name) hidden_ver (local, name)
+#else
+# define libm_hidden_proto(name)
+# define libm_hidden_def(name)
+# define libm_hidden_weak(name)
+# define libm_hidden_ver(local, name)
+#endif
+
 #endif /* libc-symbols.h */

@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,4 +28,5 @@ __libc_send (int fd, const void *buf, size_t n, int flags)
 }
 
 weak_alias (__libc_send, __send)
+libc_hidden_weak (__send)
 weak_alias (__send, send)

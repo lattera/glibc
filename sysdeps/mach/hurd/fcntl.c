@@ -23,10 +23,6 @@
 #include <stdarg.h>
 #include <sys/file.h>		/* XXX for LOCK_* */
 
-#undef __libc_fcntl
-#undef __fcntl
-
-
 /* Perform file control operations on FD.  */
 int
 __libc_fcntl (int fd, int cmd, ...)
@@ -200,7 +196,7 @@ __libc_fcntl (int fd, int cmd, ...)
 
   return result;
 }
-
-INTDEF2 (__libc_fcntl, __fcntl)
+libc_hidden_def (__libc_fcntl)
 weak_alias (__libc_fcntl, __fcntl)
+libc_hidden_weak (__fcntl)
 weak_alias (__libc_fcntl, fcntl)

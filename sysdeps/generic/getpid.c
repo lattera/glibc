@@ -19,8 +19,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#undef __getpid
-
 /* Get the process ID of the calling process.  */
 int
 __getpid ()
@@ -28,8 +26,8 @@ __getpid ()
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__getpid)
 stub_warning (getpid)
 
-INTDEF(__getpid)
 weak_alias (__getpid, getpid)
 #include <stub-tag.h>

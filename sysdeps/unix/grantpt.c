@@ -116,7 +116,7 @@ grantpt (int fd)
   uid = __getuid ();
   if (st.st_uid != uid)
     {
-      if (INTUSE(__chown) (buf, uid, st.st_gid) < 0)
+      if (__chown (buf, uid, st.st_gid) < 0)
 	goto helper;
     }
 
@@ -132,7 +132,7 @@ grantpt (int fd)
   /* Make sure the group of the device is that special group.  */
   if (st.st_gid != gid)
     {
-      if (INTUSE(__chown) (buf, uid, gid) < 0)
+      if (__chown (buf, uid, gid) < 0)
 	goto helper;
     }
 

@@ -21,9 +21,6 @@
 #include <unistd.h>
 #include <stddef.h>
 
-#undef __libc_write
-#undef __write
-
 /* Write NBYTES of BUF to FD.  Return the number written, or -1.  */
 ssize_t
 __libc_write (int fd, const void *buf, size_t nbytes)
@@ -44,9 +41,10 @@ __libc_write (int fd, const void *buf, size_t nbytes)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__libc_write)
 stub_warning (write)
 
 weak_alias (__libc_write, __write)
-INTDEF(__write)
+libc_hidden_weak (__write)
 weak_alias (__libc_write, write)
 #include <stub-tag.h>

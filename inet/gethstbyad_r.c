@@ -48,6 +48,6 @@
     }
 
 /* Special name for the lookup function.  */
-#define DB_LOOKUP_FCT INTUSE(__nss_hosts_lookup)
+#define DB_LOOKUP_FCT __nss_hosts_lookup
 
 #include "../nss/getXXbyYY_r.c"

@@ -1146,6 +1146,7 @@ __printf_fp (FILE *fp,
   }
   return done;
 }
+libc_hidden_def (__printf_fp)
 
 /* Return the number of extra grouping characters that will be inserted
    into a number with INTDIG_MAX integer digits.  */

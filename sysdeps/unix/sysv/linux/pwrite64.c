@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -61,6 +61,7 @@ __libc_pwrite64 (fd, buf, count, offset)
 }
 
 weak_alias (__libc_pwrite64, __pwrite64)
+libc_hidden_weak (__pwrite64)
 weak_alias (__libc_pwrite64, pwrite64)
 
 # define __libc_pwrite64(fd, buf, count, offset) \

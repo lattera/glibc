@@ -22,9 +22,6 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-#undef __dup2
-
-
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
    open on the same file as FD is.  Return FD2 or -1.  */
 int
@@ -133,6 +130,5 @@ __dup2 (fd, fd2)
 
   return fd2;
 }
-
-INTDEF(__dup2)
+libc_hidden_def (__dup2)
 weak_alias (__dup2, dup2)

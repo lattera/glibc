@@ -135,6 +135,9 @@ res_ninit(res_state statp) {
 
 	return (__res_vinit(statp, 0));
 }
+#ifdef _LIBC
+libc_hidden_def (__res_ninit)
+#endif
 
 /* This function has to be reachable by res_data.c but not publically. */
 int
@@ -521,6 +524,9 @@ res_randomid(void) {
 	__gettimeofday(&now, NULL);
 	return (0xffff & (now.tv_sec ^ now.tv_usec ^ __getpid()));
 }
+#ifdef _LIBC
+libc_hidden_def (__res_randomid)
+#endif
 
 /*
  * This routine is for closing the socket if a virtual circuit is used and

@@ -94,10 +94,6 @@
 # define NEED__RES 0
 #endif
 
-#ifndef NSS_attribute_hidden
-# define NSS_attribute_hidden
-#endif
-
 /* This handle for the NSS data base is shared between all
    set/get/endXXXent functions.  */
 static service_user *nip;
@@ -118,7 +114,8 @@ __libc_lock_define_initialized (static, lock)
 
 /* The lookup function for the first entry of this service.  */
 extern int DB_LOOKUP_FCT (service_user **nip, const char *name, void **fctp)
-     internal_function NSS_attribute_hidden;
+     internal_function;
+libc_hidden_proto (DB_LOOKUP_FCT)
 
 void
 SETFUNC_NAME (STAYOPEN)

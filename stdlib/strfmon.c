@@ -76,6 +76,7 @@
 
 extern int __printf_fp (FILE *, const struct printf_info *,
 			const void *const *);
+libc_hidden_proto (__printf_fp)
 /* This function determines the number of digit groups in the output.
    The definition is in printf_fp.c.  */
 extern unsigned int __guess_grouping (unsigned int intdig_max,

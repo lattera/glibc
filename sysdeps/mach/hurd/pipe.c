@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 99, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,99,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 /* Create a one-way communication channel (pipe).
    Actually the channel is two-way on the Hurd.
@@ -46,5 +47,5 @@ __pipe (int fds[2])
 
   return result;
 }
-
+libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

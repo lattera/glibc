@@ -15,6 +15,7 @@ extern void __libc_global_ctors (void);
 /* Discover the tick frequency of the machine if something goes wrong,
    we return 0, an impossible hertz.  */
 extern int __profile_frequency (void);
+libc_hidden_proto (__profile_frequency)
 
 /* Hooks for the instrumenting functions.  */
 extern void __cyg_profile_func_enter (void *this_fn, void *call_site);
@@ -25,6 +26,7 @@ extern hp_timing_t __get_clockfreq (void);
 
 /* Free all allocated resources.  */
 extern void __libc_freeres (void);
+libc_hidden_proto (__libc_freeres)
 
 /* Define and initialize `__progname' et. al.  */
 extern void __init_misc (int, char **, char **);

@@ -19,8 +19,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#undef __getpgid
-
 extern pid_t __pgrpsys __P ((int type, ...));
 
 /* Get the process group ID of process PID.  */
@@ -30,6 +28,5 @@ __getpgid (pid)
 {
   return __pgrpsys (4, pid);
 }
-
-INTDEF(__getpgid)
+libc_hidden_def (__getpgid)
 weak_alias (__getpgid, getpgid)

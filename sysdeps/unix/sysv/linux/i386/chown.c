@@ -154,14 +154,14 @@ compat_symbol (libc, _chown_is_lchown, chown, GLIBC_2_0);
 #endif
 
 #ifdef __NR_lchown
-INTDEF2(__real_chown, __chown)
 strong_alias (__real_chown, _real_chown)
 versioned_symbol (libc, __real_chown, __chown, GLIBC_2_1);
 versioned_symbol (libc, _real_chown, chown, GLIBC_2_1);
+libc_hidden_ver (__real_chown, __chown)
 #else
-INTDEF2(__chown_is_lchown, __chown)
 strong_alias (__chown_is_lchown, __chown_is_lchown21)
 strong_alias (__chown_is_lchown, _chown_is_lchown21)
 versioned_symbol (libc, __chown_is_lchown21, __chown, GLIBC_2_1);
 versioned_symbol (libc, _chown_is_lchown21, chown, GLIBC_2_1);
+libc_hidden_ver (__chown_is_lchown, __chown)
 #endif

@@ -26,6 +26,5 @@
 #define	ENDFUNC_NAME		endspent
 #define DATABASE_NAME		shadow
 #define BUFLEN			1024
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

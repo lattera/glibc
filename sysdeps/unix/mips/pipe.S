@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -29,4 +29,5 @@ SYSCALL__ (pipe, 1)
 	j ra
 	.end __pipe
 
+libc_hidden_def (__pipe)
 weak_alias (__pipe, pipe)

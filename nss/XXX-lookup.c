@@ -57,6 +57,7 @@ service_user *DATABASE_NAME_SYMBOL attribute_hidden;
 
 extern int DB_LOOKUP_FCT (service_user **ni, const char *fct_name,
 			  void **fctp) internal_function;
+libc_hidden_proto (DB_LOOKUP_FCT)
 
 int
 internal_function
@@ -71,3 +72,4 @@ DB_LOOKUP_FCT (service_user **ni, const char *fct_name, void **fctp)
 
   return __nss_lookup (ni, fct_name, fctp);
 }
+libc_hidden_def (DB_LOOKUP_FCT)

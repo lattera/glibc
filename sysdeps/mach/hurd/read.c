@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,94,95,97,98,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,98,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@ __libc_read (int fd, void *buf, size_t nbytes)
   error_t err = HURD_FD_USE (fd, _hurd_fd_read (descriptor, buf, &nbytes, -1));
   return err ? __hurd_dfail (fd, err) : nbytes;
 }
-
+libc_hidden_def (__libc_read)
 weak_alias (__libc_read, __read)
+libc_hidden_weak (__read)
 weak_alias (__libc_read, read)

@@ -40,4 +40,5 @@ __send (fd, buf, n, flags)
 
   return err ? __hurd_dfail (fd, err) : wrote;
 }
+libc_hidden_def (__send)
 weak_alias (__send, send)

@@ -26,6 +26,5 @@
 #define DATABASE_NAME		services
 #define STAYOPEN		int stayopen
 #define STAYOPEN_VAR		stayopen
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXent_r.c"

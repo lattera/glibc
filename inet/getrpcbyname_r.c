@@ -25,6 +25,5 @@
 #define DATABASE_NAME		rpc
 #define ADD_PARAMS		const char *name
 #define ADD_VARIABLES		name
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

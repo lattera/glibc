@@ -370,6 +370,7 @@ __libc_read (int fd, void *buf, size_t nbytes)
 
   return nread;
 }
+libc_hidden_weak (__libc_read)
 
 __ssize_t weak_function
 __libc_write (int fd, const void *buf, size_t nbytes)
@@ -385,6 +386,7 @@ __libc_write (int fd, const void *buf, size_t nbytes)
 
   return nwrote;
 }
+libc_hidden_weak (__libc_write)
 
 /* This is only used for printing messages (see dl-misc.c).  */
 __ssize_t weak_function

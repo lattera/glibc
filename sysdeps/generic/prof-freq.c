@@ -52,3 +52,4 @@ __profile_frequency (void)
     return 0;
   return (1000000 / tim.it_interval.tv_usec);
 }
+libc_hidden_def (__profile_frequency)

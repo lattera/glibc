@@ -28,6 +28,5 @@
 #define ADD_VARIABLES		net, type
 #define NEED__RES		1
 #define NEED_H_ERRNO		1
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

@@ -19,8 +19,6 @@
 #include <errno.h>
 #include <fcntl.h>
 
-#undef __fcntl
-
 /* Perform file control operations on FD.  */
 int
 __fcntl (fd, cmd)
@@ -36,6 +34,7 @@ __fcntl (fd, cmd)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__fcntl)
 stub_warning (fcntl)
 
 weak_alias (__fcntl, fcntl)

@@ -19,8 +19,6 @@
 #include <errno.h>
 #include <unistd.h>
 
-#undef __getpagesize
-
 /* Return the system page size.  */
 int
 __getpagesize ()
@@ -28,8 +26,8 @@ __getpagesize ()
   __set_errno (ENOSYS);
   return 0;
 }
+libc_hidden_def (__getpagesize)
 stub_warning (getpagesize)
 
-INTDEF(__getpagesize)
 weak_alias (__getpagesize, getpagesize)
 #include <stub-tag.h>

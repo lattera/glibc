@@ -25,9 +25,6 @@
 #include <sys/syscall.h>
 #include "../kernel-features.h"
 
-#undef __libc_fcntl
-#undef __fcntl
-
 extern int __syscall_fcntl (int __fd, int __cmd, ...);
 #ifdef __NR_fcntl64
 extern int __syscall_fcntl64 (int __fd, int __cmd, ...);
@@ -133,7 +130,8 @@ __libc_fcntl (int fd, int cmd, ...)
   return -1;
 #endif  /* __ASSUME_FCNTL64  */
 }
-INTDEF2(__libc_fcntl, __fcntl);
+libc_hidden_def (__libc_fcntl)
 
 weak_alias (__libc_fcntl, __fcntl)
+libc_hidden_weak (__fcntl)
 weak_alias (__libc_fcntl, fcntl)

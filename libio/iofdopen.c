@@ -37,7 +37,7 @@
 
 #ifndef _IO_fcntl
 #ifdef _LIBC
-#define _IO_fcntl INTUSE(__fcntl)
+#define _IO_fcntl __fcntl
 #else
 #define _IO_fcntl fcntl
 #endif

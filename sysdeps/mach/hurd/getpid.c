@@ -20,8 +20,6 @@
 #include <unistd.h>
 #include <hurd.h>
 
-#undef __getpid
-
 /* Get the process ID of the calling process.  */
 pid_t
 __getpid ()
@@ -29,6 +27,5 @@ __getpid ()
   /* Assumes atomic word fetch and store, so doesn't lock _hurd_pid_lock.  */
   return _hurd_pid;
 }
-
-INTDEF(__getpid)
+libc_hidden_def (__getpid)
 weak_alias (__getpid, getpid)

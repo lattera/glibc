@@ -8,6 +8,9 @@
 
 /* Now define the internal interfaces.  */
 #ifndef __Need_M_And_C
+
+libc_hidden_proto (__secure_getenv)
+
 extern long int __random (void);
 extern void __srandom (unsigned int __seed);
 extern char *__initstate (unsigned int __seed, char *__statebuf,

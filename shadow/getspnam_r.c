@@ -26,6 +26,5 @@
 #define ADD_PARAMS		const char *name
 #define ADD_VARIABLES		name
 #define BUFLEN			1024
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

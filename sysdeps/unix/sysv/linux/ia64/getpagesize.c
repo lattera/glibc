@@ -24,8 +24,6 @@
 #include <sysdep.h>
 #include <sys/syscall.h>
 
-#undef __getpagesize
-
 /* Return the system page size.  The return value will depend on how
    the kernel is configured.  A program must use this call to
    determine the page size to ensure proper alignment for calls such
@@ -37,6 +35,5 @@ __getpagesize ()
   assert (GL(dl_pagesize) != 0);
   return GL(dl_pagesize);
 }
-
-INTDEF(__getpagesize)
+libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)

@@ -19,8 +19,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-#undef __getpgid
-
 /* Get the process group ID of process PID.  */
 pid_t
 __getpgid (pid)
@@ -28,7 +26,7 @@ __getpgid (pid)
 {
   return pid;
 }
-INTDEF(__getpgid)
+libc_hidden_def (__getpgid)
 weak_alias (__getpgid, getpgid)
 
 stub_warning (getpgid)

@@ -3,3 +3,4 @@
 #define	NARGS	4
 #include <socket.S>
 weak_alias (__libc_send, __send)
+libc_hidden_def (__send)

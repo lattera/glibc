@@ -236,6 +236,7 @@ __overflow (f, ch)
     _IO_fwide (f, -1);
   return _IO_OVERFLOW (f, ch);
 }
+libc_hidden_def (__overflow)
 
 static int save_for_backup __P ((_IO_FILE *fp, char *end_p))
 #ifdef _LIBC

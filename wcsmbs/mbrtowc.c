@@ -29,8 +29,6 @@
 # define EILSEQ EINVAL
 #endif
 
-#undef __mbrtowc
-
 /* This is the private state used if PS is NULL.  */
 static mbstate_t state;
 
@@ -106,5 +104,5 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   return result;
 }
-INTDEF(__mbrtowc)
+libc_hidden_def (__mbrtowc)
 weak_alias (__mbrtowc, mbrtowc)

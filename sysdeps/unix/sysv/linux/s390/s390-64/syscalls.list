@@ -2,7 +2,7 @@
 
 llseek		EXTRA	lseek		3	__libc_lseek64	__lseek llseek __lseek64 lseek64
 pread		-	pread		4	__libc_pread	__libc_pread64 __pread pread __pread64 pread64
-pwrite		-	pwrite		4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64
+pwrite		-	pwrite		4	__libc_pwrite	__libc_pwrite64 __pwrite pwrite __pwrite64 pwrite64 __GI___pwrite64
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs fstatfs64 __fstatfs64
 statfs		-	statfs		i:sp	__statfs	statfs statfs64
 getpeername	-	getpeername	i:ipp	__getpeername	getpeername
@@ -35,7 +35,7 @@ listen		-	listen		i:ii	__listen	listen
 recv		-	recv		i:ibni	__libc_recv	__recv recv
 recvfrom	-	recvfrom	i:ibniBN	__libc_recvfrom	__recvfrom recvfrom
 recvmsg		-	recvmsg		i:ipi	__libc_recvmsg	__recvmsg recvmsg
-send		-	send		i:ibni	__libc_send	__send send
+send		-	send		i:ibni	__libc_send	__send send __GI___send
 sendmsg		-	sendmsg		i:ipi	__libc_sendmsg	__sendmsg sendmsg
 sendto		-	sendto		i:ibnibn	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	i:iiibn	__setsockopt	setsockopt

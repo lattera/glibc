@@ -1,6 +1,6 @@
 /* rawmemchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For SPARC v9.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
    This version is developed using the same algorithm as the fast C
@@ -175,4 +175,5 @@ ENTRY(__rawmemchr)
 	 add		%o0, -1, %o0			/* IEU0				*/
 END(__rawmemchr)
 
+libc_hidden_def (__rawmemchr)
 weak_alias (__rawmemchr, rawmemchr)

@@ -21,8 +21,6 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#undef __open
-
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
 int
@@ -49,8 +47,8 @@ __open (file, oflag)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__open)
 stub_warning (open)
 
-INTDEF(__open)
 weak_alias (__open, open)
 #include <stub-tag.h>

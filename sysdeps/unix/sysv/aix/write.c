@@ -21,9 +21,6 @@
 
 #include "kernel_proto.h"
 
-#undef __libc_write
-#undef __write
-
 ssize_t
 __write (fd, ptr, n)
      int fd;
@@ -32,7 +29,8 @@ __write (fd, ptr, n)
 {
   return kwrite (fd, ptr, n);
 }
-INTDEF(__write)
+libc_hidden_def (__write)
 /* AIX has no weak aliases (yet) but let's hope for better times.  */
 weak_alias (__write, write)
 strong_alias (__write, __libc_write)
+libc_hidden_def (__libc_write)

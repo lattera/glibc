@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999, 2000, 2002
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +50,7 @@ __libc_open64 (file, oflag)
   return -1;
 }
 strong_alias (__libc_open64, __open64)
+libc_hidden_def (__open64)
 weak_alias (__libc_open64, BP_SYM (open64))
 
 stub_warning (open64)

@@ -19,8 +19,6 @@
 
 #include <wchar.h>
 
-#undef __mbrlen
-
 /* The mbrlen function has an internal shift state which gets used if
    the PS parameter is NULL.  */
 static mbstate_t internal;
@@ -34,5 +32,5 @@ __mbrlen (s, n, ps)
 {
   return __mbrtowc (NULL, s, n, ps ?: &internal);
 }
-INTDEF(__mbrlen)
+libc_hidden_def (__mbrlen)
 weak_alias (__mbrlen, mbrlen)

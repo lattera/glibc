@@ -21,8 +21,6 @@
 
 #include <ldsodefs.h>
 
-#undef __getpagesize
-
 /* Return the system page size.  */
 int
 __getpagesize ()
@@ -43,6 +41,5 @@ __getpagesize ()
 #endif	/* NBPG.  */
 #endif	/* EXEC_PAGESIZE.  */
 }
-
-INTDEF(__getpagesize)
+libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)

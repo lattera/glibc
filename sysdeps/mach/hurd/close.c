@@ -21,8 +21,6 @@
 #include <hurd.h>
 #include <hurd/fd.h>
 
-#undef __close
-
 /* Close the file descriptor FD.  */
 int
 __close (int fd)
@@ -33,6 +31,5 @@ __close (int fd)
 
   return err ? __hurd_fail (err) : 0;
 }
-
-INTDEF (__close)
+libc_hidden_def (__close)
 weak_alias (__close, close)

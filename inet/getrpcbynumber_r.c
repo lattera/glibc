@@ -25,6 +25,5 @@
 #define DATABASE_NAME		rpc
 #define ADD_PARAMS		int number
 #define ADD_VARIABLES		number
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

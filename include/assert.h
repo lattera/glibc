@@ -1,10 +1,12 @@
 #include <assert/assert.h>
 
-extern void __assert_fail_internal (__const char *__assertion,
-				    __const char *__file,
-				    unsigned int __line,
-				    __const char *__function)
-     __attribute__ ((__noreturn__)) attribute_hidden;
-#if defined SHARED && !defined NOT_IN_libc
-# define __assert_fail __assert_fail_internal
+/* This prints an "Assertion failed" message and aborts.
+   In installed assert.h this is only conditionally declared,
+   so it has to be repeated here.  */
+extern void __assert_fail (__const char *__assertion, __const char *__file,
+			   unsigned int __line, __const char *__function)
+  __THROW __attribute__ ((__noreturn__));
+
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+hidden_proto (__assert_fail)
 #endif

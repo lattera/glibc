@@ -21,8 +21,6 @@
 #include <hurd.h>
 #include <hurd/port.h>
 
-#undef __getpgid
-
 /* Get the process group ID of process PID.  */
 int
 __getpgid (pid)
@@ -42,6 +40,5 @@ __getpgid (pid)
 
   return err ? __hurd_fail (err) : pgrp;
 }
-
-INTDEF(__getpgid)
+libc_hidden_def (__getpgid)
 weak_alias (__getpgid, getpgid)

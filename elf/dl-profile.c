@@ -122,6 +122,7 @@
    entries in the call graph table and add it to the appropriate list.  */
 
 extern int __profile_frequency (void);
+libc_hidden_proto (__profile_frequency)
 
 /* We define a special type to address the elements of the arc table.
    This is basically the `gmon_cg_arc_record' format but it includes

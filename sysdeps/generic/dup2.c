@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -41,6 +41,7 @@ __dup2 (fd, fd2)
   __set_errno (ENOSYS);
   return -1;
 }
+libc_hidden_def (__dup2)
 stub_warning (dup2)
 
 weak_alias (__dup2, dup2)

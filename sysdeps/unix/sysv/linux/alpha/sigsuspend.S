@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger <davidm@cs.arizona.edu>, 1995.
 
@@ -51,4 +51,5 @@ error:
 
 	END(__sigsuspend)
 
+libc_hidden_def (__sigsuspend)
 weak_alias(__sigsuspend, sigsuspend)

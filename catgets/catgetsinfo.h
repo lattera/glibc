@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -54,3 +54,4 @@ typedef struct catalog_info
 /* Prototypes for helper functions.  */
 extern int __open_catalog (const char *cat_name, const char *nlspath,
 			   const char *env_var, __nl_catd __catalog);
+libc_hidden_proto (__open_catalog)

@@ -246,6 +246,7 @@ __woverflow (f, wch)
     _IO_fwide (f, 1);
   return _IO_OVERFLOW (f, wch);
 }
+libc_hidden_def (__woverflow)
 
 
 wint_t

@@ -27,6 +27,7 @@ extern int __getpeername (int __fd, __SOCKADDR_ARG __addr,
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 extern ssize_t __send (int __fd, __const void *__buf, size_t __n, int __flags);
+libc_hidden_proto (__send)
 
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson (rth@tamu.edu)
 
@@ -103,4 +103,5 @@ $zerocount:
 
 	END(__stpncpy)
 
+libc_hidden_def (__stpncpy)
 weak_alias (__stpncpy, stpncpy)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1996,1997,1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,5 +30,5 @@ __setpgid (pid, pgid)
 {
   return __pgrpsys (5, pid, pgid);
 }
-
+libc_hidden_def (__setpgid)
 weak_alias (__setpgid, setpgid)

@@ -109,12 +109,12 @@ strong_alias (__chown_is_lchown, _chown_is_lchown)
 compat_symbol (libc, __chown_is_lchown, __chown, GLIBC_2_0);
 compat_symbol (libc, _chown_is_lchown, chown, GLIBC_2_0);
 
-INTDEF2(__real_chown, __chown)
 strong_alias (__real_chown, _real_chown)
 versioned_symbol (libc, __real_chown, __chown, GLIBC_2_1);
 versioned_symbol (libc, _real_chown, chown, GLIBC_2_1);
+libc_hidden_ver (__real_chown, __chown)
 #else
-INTDEF2(__real_chown, __chown)
 strong_alias (__real_chown, __chown)
+libc_hidden_def (__chown)
 weak_alias (__real_chown, chown)
 #endif

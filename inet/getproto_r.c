@@ -25,6 +25,5 @@
 #define DATABASE_NAME		protocols
 #define ADD_PARAMS		int proto
 #define ADD_VARIABLES		proto
-#define NSS_attribute_hidden	attribute_hidden
 
 #include "../nss/getXXbyYY_r.c"

@@ -20,9 +20,6 @@
 #include <stdarg.h>
 #include <unistd.h>
 
-#undef __libc_open
-#undef __open
-
 int
 __open (const char *file, int oflag, ...)
 {
@@ -38,5 +35,6 @@ __open (const char *file, int oflag, ...)
 
   return open (file, oflag, mode);
 }
+libc_hidden_def (__open)
 strong_alias (__open, __libc_open)
-INTDEF(__open)
+libc_hidden_def (__libc_open)

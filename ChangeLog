@@ -1,3 +1,9 @@
+2002-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in (HAVE_BROKEN_ALIAS_ATTRIBUTE): Add check for
+	broken alias attribute handling.
+	* config.h.in (HAVE_BROKEN_ALIAS_ATTRIBUTE): Add.
+
 2002-08-02  Roland McGrath  <roland@redhat.com>
 
 	* include/rpc/rpc.h: Declare RPC_VARS tsd as extern.
@@ -20,6 +26,344 @@
 	* wctype/wctrans.c (wctrans): Likewise.
 	* wctype/wctype.c (__wctype): Likewise.
 	* intl/loadmsgcat.c (_nl_init_domain_conv): Use _NL_CURRENT.
+
+2002-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert.c (__assert_fail): Fix typo in comment.
+
+	* include/rpc/rpc.h: Declare __libc_tsd_RPC_VARS if USE_TLS &&
+	HAVE___THREAD.
+	* sunrpc/rpc_thread.c: Don't define __libc_tsd_RPC_VARS as static
+	if USE_TLS && HAVE___THREAD.
+	* sunrpc/Versions [libc] (GLIBC_PRIVATE): Export __libc_tsd_RPC_VARS.
+
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* assert/assert.c (__assert_fail): Remove undef.
+	Replace INTDEF with libc_hidden_def.
+	* assert/__assert.c (__assert): Remove INTUSE.
+	* elf/dl-minimal.c (__assert_fail): Replace INTDEF with
+	libc_hidden_weak.
+	* include/libc-symbols.h (hidden_proto, hidden_def, hidden_weak,
+	hidden_ver, libc_hidden_proto, libc_hidden_def, libc_hidden_weak,
+	libc_hidden_ver, rtld_hidden_proto, rtld_hidden_def, rtld_hidden_weak,
+	rltd_hidden_ver, libm_hidden_proto, libm_hidden_def, libm_hidden_weak,
+	libm_hiden_ver): Define.
+	* include/assert.h (__assert_fail_internal): Remove.
+	(__assert_fail): Add prototype.  Add hidden_proto.
+	* include/libc-internal.h (__libc_freeres, __profile_frequency): Add
+	libc_hidden_proto.
+	* include/wchar.h (__mbrtowc_internal, __mbrlen_internal): Remove.
+	(__mbrtowc, __mbrlen): Use libc_hidden_proto.  Remove macros.
+	* include/string.h (__mempcpy, __stpncpy, __rawmemchr, __strcasecmp):
+	Add libc_hidden_proto.
+	* include/fcntl.h (__open64, __libc_open, __libc_fcntl, __open,
+	__fcntl): Add libc_hidden_proto.  Remove macros.
+	(__open_internal, __fcntl_internal): Remove.
+	* libio/iofdopen.c (_IO_fcntl): Remove INTUSE from __fcntl.
+	* malloc/set-freeres.c (__libc_freeres): Add libc_hidden_def.
+	* nss/nsswitch.h (__nss_database_lookup, __nss_next): Add
+	libc_hiden_proto.
+	* nss/nsswitch.c (__nss_database_lookup, __nss_next): Add
+	libc_hidden_def.
+	* sysdeps/generic/mempcpy.c (__mempcpy): Remove undef.
+	Add libc_hidden_def.
+	* sysdeps/generic/open64.c (__open64): Add libc_hidden_def.
+	* sysdeps/generic/open.c (__open): Remove undef.
+	Add libc_hidden_def.  Remove INTDEF.
+	* sysdeps/generic/fcntl.c (__fcntl): Remove undef.
+	Add libc_hidden_def.
+	* sysdeps/mach/hurd/fcntl.c (__fcntl): Likewise.
+	* sysdeps/i386/i586/mempcpy.S (__mempcpy): Add libc_hidden_def.
+	* sysdeps/i386/i686/mempcpy.S (__mempcpy): Likewise.
+	* sysdeps/mach/hurd/fcntl.c (__libc_fcntl, __fcntl): Remove undef.
+	(__fcntl): Remove INTDEF2.  Add libc_hidden_weak.
+	(__libc_fcntl): Add libc_hidden_def.
+	* sysdeps/mach/hurd/open.c (__libc_open, __open): Remove undef.
+	(__open): Remove INTDEF2.  Add libc_hidden_weak.
+	(__libc_open): Add libc_hidden_def.
+	* sysdeps/posix/open64.c (__open64): Add libc_hidden_weak.
+	* sysdeps/standalone/open.c (__open): Add libc_hidden_def.
+	* sysdeps/unix/sysv/aix/fcntl.c (__libc_fcntl, __fcntl): Remove undef.
+	Add libc_hidden_def.
+	* sysdeps/unix/sysv/aix/open.c (__libc_open, __open): Remove undef.
+	Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl, __fcntl): Remove
+	undef.
+	(__fcntl): Remove INTDEF2.  Add libc_hidden_weak.
+	(__libc_fcntl): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/syscalls.list (__fcntl_internal,
+	__getpgid_internal, __chown_internal): Remove.
+	(__GI___fcntl, __GI___libc_fcntl, __GI___getpgid, __GI___pipe,
+	__GI___sched_setscheduler, __GI___select, __GI___setpgid,
+	__GI___chown): Add.
+	* sysdeps/unix/syscalls.list (__close_internal, __dup2_internal,
+	__getpid_internal, __open_internal, __write_internal): Remove.
+	(__GI___fcntl, __GI___libc_fcntl, __GI___open, __GI___libc_open,
+	__GI___chown, __GI___close, __GI___dup2, __GI___getpid,
+	__GI___libc_open, __GI___open, __GI___read, __GI___libc_read,
+	__GI___select, __GI___statfs, __GI___write, __GI___libc_write): Add.
+	* wcsmbs/mbrlen.c (__mbrlen): Remove undef.
+	Replace INTDEF with libc_hidden_def.
+	* wcsmbs/mbrtowc.c (__mbrtowc): Likewise.
+	* catgets/catgetsinfo.h (__open_catalog): Add libc_hidden_proto.
+	* catgets/open_catalog.c (__open_catalog): Add libc_hidden_def.
+	* elf/dl-profile.c (__profile_frequency): Add libc_hidden_proto.
+	* include/rpc/rpc.h (__rpc_thread_svc_fdset, __rpc_thread_createerr):
+	Add libc_hidden_proto.
+	* include/sys/poll.h (__poll): Add libc_hidden_proto.
+	* include/sys/select.h (__select): Likewise.
+	* include/sys/socket.h (__send): Likewise.
+	* include/sys/statfs.h (__statfs): Likewise.
+	* include/unistd.h (__pwrite64, __libc_read, __pipe, __chown, __dup2,
+	__getpid, __getpgid, __setpgid, __close, __read, __write,
+	__getpagesize, __sbrk): Likewise.
+	(__chown_internal, __dup2_internal, __getpid_internal,
+	__getpgid_internal, __close_internal, __write_internal,
+	__getpagesize_internal): Remove.
+	(__close, __dup2, __getpagesize, __getpgid, __getpid, __libc_write):
+	Remove macros.
+	* include/printf.h (__printf_fp): Add libc_hidden_proto.
+	* include/sched.h (__sched_setscheduler): Likewise.
+	* include/resolv.h (__res_ninit, __res_randomid): Likewise.
+	* include/stdlib.h (__secure_getenv): Likewise.
+	* include/signal.h (__sigaction, __sigsuspend): Likewise.
+	* inet/getaliasent_r.c (NSS_attribute_hidden): Remove.
+	* inet/getaliasname_r.c (NSS_attribute_hidden): Remove.
+	* inet/getnetbyad_r.c (NSS_attribute_hidden): Remove.
+	* inet/getnetbynm_r.c (NSS_attribute_hidden): Remove.
+	* inet/getnetent_r.c (NSS_attribute_hidden): Remove.
+	* inet/getproto_r.c (NSS_attribute_hidden): Remove.
+	* inet/getprtent_r.c (NSS_attribute_hidden): Remove.
+	* inet/getprtname_r.c (NSS_attribute_hidden): Remove.
+	* inet/getrpcbyname_r.c (NSS_attribute_hidden): Remove.
+	* inet/getrpcbynumber_r.c (NSS_attribute_hidden): Remove.
+	* inet/getrpcent_r.c (NSS_attribute_hidden): Remove.
+	* inet/getservent_r.c (NSS_attribute_hidden): Remove.
+	* inet/getsrvbynm_r.c (NSS_attribute_hidden): Remove.
+	* inet/getsrvbypt_r.c (NSS_attribute_hidden): Remove.
+	* inet/gethstbyad_r.c (DB_LOOKUP_FCT): Remove INTUSE.
+	* inet/gethstbynm2_r.c (DB_LOOKUP_FCT): Likewise.
+	* inet/gethstbynm_r.c (DB_LOOKUP_FCT): Likewise.
+	* inet/gethstent_r.c (DB_LOOKUP_FCT): Likewise.
+	* libio/genops.c (__overflow): Add libc_hidden_def.
+	* libio/iovdprintf.c: Remove libio.h include.
+	* libio/libioP.h (libc_hidden_proto, libc_hidden_def,
+	libc_hidden_weak): Define to nothing if not defined.
+	(__overflow, __woverflow): Add libc_hidden_proto.
+	* libio/wgenops.c (__woverflow): Add libc_hidden_def.
+	* nss/getXXent_r.c (NSS_attribute_hidden): Remove.
+	(DB_LOOKUP_FCT): Add libc_hidden_proto.
+	* nss/getXXbyYY_r.c (NSS_attribute_hidden): Remove.
+	(DB_LOOKUP_FCT): Add libc_hidden_proto.
+	* nss/XXX-lookup.c (DB_LOOKUP_FCT): Add libc_hidden_proto
+	and libc_hidden_def.
+	* nss/hosts-lookup.c (__nss_hosts_lookup): Remove INTDEF.
+	* posix/bsd-getpgrp.c (__getpgid_internal): Remove.
+	(__getpgid): Add libc_hidden_proto.
+	(__bsd_getpgrp): Remove INTUSE.
+	* resolv/res_init.c (__res_ninit, __res_randomid): Add
+	libc_hidden_def.
+	* shadow/getspent_r.c (NSS_attribute_hidden): Remove.
+	* shadow/getspnam_r.c (NSS_attribute_hidden): Remove.
+	* stdio-common/printf_fp.c (__printf_fp): Add libc_hidden_def.
+	* stdlib/strfmon.c (__printf_fp): Add libc_hidden_proto.
+	* stdlib/secure-getenv.c (__secure_getenv): Add libc_hidden_def.
+	* sunrpc/rpc_thread.c (__rpc_thread_svc_fdset,
+	__rpc_thread_createerr): Add libc_hidden_def.
+	* sysdeps/alpha/alphaev67/rawmemchr.S (__rawmemchr): Add
+	libc_hidden_def.
+	* sysdeps/alpha/alphaev67/stpncpy.S (__stpncpy): Likewise.
+	* sysdeps/alpha/rawmemchr.S (__rawmemchr): Likewise.
+	* sysdeps/alpha/stpncpy.S (__stpncpy): Likewise.
+	* sysdeps/generic/chown.c (__chown): Likewise.
+	* sysdeps/generic/close.c (__close): Likewise.
+	* sysdeps/generic/dup2.c (__dup2): Likewise.
+	* sysdeps/generic/pipe.c (__pipe): Likewise.
+	* sysdeps/generic/prof-freq.c (__profile_frequency): Likewise.
+	* sysdeps/generic/pwrite64.c (__pwrite64): Likewise.
+	* sysdeps/generic/rawmemchr.c (__rawmemchr): Likewise.
+	* sysdeps/generic/read.c (__libc_read): Likewise.
+	(__read): Add libc_hidden_weak.
+	* sysdeps/generic/sbrk.c (__sbrk): Add libc_hidden_def.
+	* sysdeps/generic/sched_sets.c (__sched_setscheduler): Likewise.
+	* sysdeps/generic/select.c (__select): Likewise.
+	* sysdeps/generic/send.c (__send): Likewise.
+	* sysdeps/generic/setpgid.c (__setpgid): Likewise.
+	* sysdeps/generic/sigaction.c (__sigaction): Likewise.
+	* sysdeps/generic/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/generic/statfs.c (__statfs): Likewise.
+	* sysdeps/generic/stpncpy.c (__stpncpy): Likewise.
+	* sysdeps/generic/strcasecmp.c (__strcasecmp): Likewise.
+	* sysdeps/generic/getpagesize.c (__getpagesize): Likewise.
+	Remove undef and INTDEF.
+	* sysdeps/generic/getpgid.c (__getpgid): Likewise.
+	* sysdeps/generic/getpid.c (__getpid): Likewise.
+	* sysdeps/generic/write.c (__libc_write): Likewise.
+	(__write): Add libc_hidden_weak.  Remove undef and INTDEF.
+	* sysdeps/i386/rawmemchr.S (__rawmemchr): Add libc_hidden_def.
+	* sysdeps/i386/stpncpy.S (__stpncpy): Likewise.
+	* sysdeps/m68k/rawmemchr.S (__rawmemchr): Likewise.
+	* sysdeps/mach/hurd/chown.c (__chown): Likewise.  Remove INTDEF.
+	* sysdeps/mach/hurd/close.c (__close): Add libc_hidden_def.
+	Remove undef and INTDEF.
+	* sysdeps/mach/hurd/dup2.c (__dup2): Likewise.
+	* sysdeps/mach/hurd/getpgid.c (__getpgid): Likewise.
+	* sysdeps/mach/hurd/getpid.c (__getpid): Likewise.
+	* sysdeps/mach/getpagesize.c (__getpagesize): Likewise.
+	* sysdeps/mach/hurd/write.c (__libc_write): Likewise.
+	(__write): Add libc_hidden_weak.  Remove undef and INTDEF.
+	* sysdeps/mach/hurd/pipe.c: Include unistd.h.
+	(__pipe): Add libc_hidden_def.
+	* sysdeps/mach/hurd/dl-sysdep.c (__libc_read, __libc_write): Add
+	libc_hidden_weak.
+	* sysdeps/mach/hurd/poll.c (__poll): Add libc_hidden_def.
+	* sysdeps/mach/hurd/profil.c (__profile_frequency): Likewise.
+	* sysdeps/mach/hurd/read.c (__libc_read): Likewise.
+	(__read): Add libc_hidden_weak.
+	* sysdeps/mach/hurd/pwrite64.c (__pwrite64): Likewise.
+	(__libc_pwrite64): Add libc_hidden_def.
+	* sysdeps/mach/hurd/sbrk.c (__sbrk): Likewise.
+	* sysdeps/mach/hurd/select.c (__select): Likewise.
+	* sysdeps/mach/hurd/send.c (__send): Likewise.
+	* sysdeps/mach/hurd/setpgid.c (__setpgid): Likewise.
+	* sysdeps/mach/hurd/sigaction.c (__sigaction): Likewise.
+	* sysdeps/mach/hurd/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/mach/hurd/statfs.c (__statfs): Likewise.
+	* sysdeps/posix/dup2.c: Likewise.
+	Remove undef and INTDEF.
+	* sysdeps/posix/getpagesize.c (__getpagesize): Likewise.
+	* sysdeps/posix/pwrite64.c (__libc_pwrite64): Add libc_hidden_def.
+	(__pwrite64): Add libc_hidden_weak.
+	* sysdeps/posix/sigsuspend.c (__sigsuspend): Add libc_hidden_def.
+	* sysdeps/sparc/sparc64/rawmemchr.S (__rawmemchr): Likewise.
+	* sysdeps/sparc/sparc64/stpncpy.S (__stpncpy): Likewise.
+	* sysdeps/standalone/close.c (__close): Likewise.
+	* sysdeps/standalone/write.c (__libc_write): Likewise.
+	(__write): Add libc_hidden_weak.
+	* sysdeps/standalone/read.c (__read): Likewise.
+	(__libc_read): Add libc_hidden_def.
+	* sysdeps/unix/grantpt.c (grantpt): Remove INTUSE.
+	* sysdeps/unix/bsd/m68k/pipe.S (__pipe): Add libc_hidden_def.
+	* sysdeps/unix/bsd/osf/alpha/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/bsd/vax/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/bsd/syscalls.list (__GI___getpagesize): Likewise.
+	* sysdeps/unix/bsd/poll.c (__poll): Likewise.
+	* sysdeps/unix/bsd/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/bsd/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/unix/common/syscalls.list (__GI___getpgid, __GI___setpgid,
+	__GI___sigaction): Add.
+	* sysdeps/unix/i386/pipe.S (__pipe): Add libc_hidden_def.
+	* sysdeps/unix/inet/syscalls.list (__GI___send): Add.
+	* sysdeps/unix/mips/pipe.S (__pipe): Add libc_hidden_def.
+	* sysdeps/unix/sparc/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/sysv/irix4/syscalls.list (__GI___getpgid,
+	__GI___setpgid): Add.
+	* sysdeps/unix/sysv/aix/chown.c (__chown): Add libc_hidden_def.
+	Remove undef and INTDEF.
+	* sysdeps/unix/sysv/aix/getpgid.c (__getpgid): Likewise.
+	* sysdeps/unix/sysv/aix/write.c (__write, __libc_write): Likewise.
+	* sysdeps/unix/sysv/aix/close.c (__close): Add libc_hidden_def.
+	* sysdeps/unix/sysv/aix/getpid.c (__getpid): Likewise.
+	* sysdeps/unix/sysv/aix/pipe.c (__pipe): Likewise.
+	* sysdeps/unix/sysv/aix/read.c (__read, __libc_read): Likewise.
+	* sysdeps/unix/sysv/aix/poll.c (__poll): Likewise.
+	* sysdeps/unix/sysv/aix/sbrk.c (__sbrk): Likewise.
+	* sysdeps/unix/sysv/aix/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/sysv/aix/sigsuspend.c (__sigsuspend): Likewise.
+	* sysdeps/unix/sysv/aix/statfs.c (__statfs): Likewise.
+	* sysdeps/unix/sysv/aix/select.c (__select): Likewise.
+	* sysdeps/unix/sysv/aix/setpgid.c (__setpgid): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list (__GI___pwrite64,
+	__GI___statfs, __GI___send): Add.
+	* sysdeps/unix/sysv/linux/alpha/select.S (__select): Add
+	libc_hidden_ver resp. libc_hidden_def.
+	* sysdeps/unix/sysv/linux/alpha/sigsuspend.S (__sigsuspend): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/ia64/getpagesize.c (__getpagesize):
+	Likewise.  Remove undef and INTDEF.
+	* sysdeps/unix/sysv/linux/ia64/pipe.S (__pipe): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (__GI___pwrite64,
+	__GI___statfs, __GI___send): Add.
+	* sysdeps/unix/sysv/linux/ia64/sigaction.c (__sigaction): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/ia64/sigsuspend.c (__sigsuspend):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/pipe.S (__pipe): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c (__chown): Add
+	libc_hidden_ver resp. libc_hidden_def.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list (__GI___pwrite64,
+	__GI___send): Add.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigaction.c (__sigaction):
+	Add libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sigsuspend.c (__sigsuspend):
+	Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list (__GI___send): Add.
+	* sysdeps/unix/sysv/linux/arm/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/i386/chown.c (__chown): Add libc_hidden_ver
+	resp. libc_hidden_def.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/m68k/chown.c (__chown): Likewise.  Remove
+	INTDEF.
+	* sysdeps/unix/sysv/linux/m68k/getpagesize.c (__getpagesize):
+	Likewise.  Remove undef.
+	* sysdeps/unix/sysv/linux/mips/pwrite64.c (__pwrite64): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list (__GI___send): Add.
+	* sysdeps/unix/sysv/linux/mips/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c (__chown): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/powerpc/pwrite64.c (__pwrite64): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/getpagesize.c (__getpagesize):
+	Likewise.  Remove undef and INTDEF.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/pipe.S (__pipe): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/pipe.S (__pipe): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list
+	(__GI___pwrite64, __GI___statfs, __GI___select, __GI___send): Add.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigsuspend.c (__sigsuspend):
+	Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list (__GI___pwrite64,
+	__GI___statfs): Add.
+	* sysdeps/unix/sysv/linux/x86_64/send.c (__send): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/sysv/linux/getpagesize.c: Add libc_hidden_def.
+	Remove undef and INTDEF.
+	* sysdeps/unix/sysv/linux/poll.c (__poll): Add libc_hidden_def.
+	* sysdeps/unix/sysv/linux/pwrite64.c (__pwrite64): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/send.S (__send): Likewise.
+	* sysdeps/unix/sysv/linux/sigaction.c (__sigaction): Add
+	libc_hidden_weak.
+	* sysdeps/unix/sysv/linux/sigsuspend.c (__sigsuspend): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/sco3.2.4/__setpgid.c (__setpgid): Likewise.
+	* sysdeps/unix/sysv/sco3.2.4/sigaction.S (__sigaction): Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/syscalls.list (__GI___sigaction):
+	Add.
+	* sysdeps/unix/sysv/sysv4/__getpgid.c (__getpgid): Add
+	libc_hidden_def.  Remove undef and INTDEF.
+	* sysdeps/unix/sysv/sysv4/getpgid.c (__getpgid): Likewise.
+	* sysdeps/unix/sysv/sysv4/__setpgid.c (__setpgid): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/sysv4/setpgid.c (__setpgid): Likewise.
+	* sysdeps/unix/sysv/sysv4/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/sysv/sigaction.c (__sigaction): Likewise.
+	* sysdeps/unix/getpagesize.c (__getpagesize): Add libc_hidden_def.
+	Remove undef and INTDEF.
+	* configure.in (HAVE_BROKEN_VISIBILITY_ATTRIBUTE): Add check for
+	broken visibility attribute handling.
+	* config.h.in (HAVE_BROKEN_VISIBILITY_ATTRIBUTE): Add.
 
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 

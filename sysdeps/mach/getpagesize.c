@@ -19,14 +19,11 @@
 #include <unistd.h>
 #include <mach.h>
 
-#undef __getpagesize
-
 /* Return the system page size.  */
 int
 __getpagesize ()
 {
   return __vm_page_size;
 }
-
-INTDEF(__getpagesize)
+libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)

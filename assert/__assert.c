@@ -23,5 +23,5 @@
 void
 __assert (const char *assertion, const char *file, int line)
 {
-  INTUSE(__assert_fail) (assertion, file, line, (const char *) 0);
+  __assert_fail (assertion, file, line, (const char *) 0);
 }

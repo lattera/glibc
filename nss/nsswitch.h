@@ -103,7 +103,7 @@ typedef struct name_database
    than one function can use the database.  */
 int __nss_database_lookup (const char *database, const char *alternative_name,
 			   const char *defconfig, service_user **ni);
-
+libc_hidden_proto (__nss_database_lookup)
 
 /* Put first function with name FCT_NAME for SERVICE in FCTP.  The
    position is remembered in NI.  The function returns a value < 0 if
@@ -125,6 +125,7 @@ int __nss_lookup (service_user **ni, const char *fct_name, void **fctp);
    natural end.  */
 int __nss_next (service_user **ni, const char *fct_name, void **fctp,
 		int status, int all_values);
+libc_hidden_proto (__nss_next)
 
 /* Search for the service described in NI for a function named FCT_NAME
    and return a pointer to this function if successful.  */

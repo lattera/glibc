@@ -1,5 +1,5 @@
 /* poll file descriptors.  Hurd version.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,4 +47,5 @@ __poll (fds, nfds, timeout)
 
   return _hurd_select (nfds, fds, NULL, NULL, NULL, to, NULL);
 }
+libc_hidden_def (__poll)
 weak_alias (__poll, poll)

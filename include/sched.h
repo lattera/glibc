@@ -7,6 +7,7 @@ extern int __sched_setparam (__pid_t __pid,
 extern int __sched_getparam (__pid_t __pid, struct sched_param *__param);
 extern int __sched_setscheduler (__pid_t __pid, int __policy,
 				 __const struct sched_param *__param);
+libc_hidden_proto (__sched_setscheduler)
 extern int __sched_getscheduler (__pid_t __pid);
 extern int __sched_yield (void);
 extern int __sched_get_priority_max (int __algorithm);

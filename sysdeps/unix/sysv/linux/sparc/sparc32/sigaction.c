@@ -1,5 +1,5 @@
 /* POSIX.1 sigaction call for Linux/SPARC.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx), 1997.
 
@@ -136,6 +136,7 @@ __libc_sigaction (int sig, __const struct sigaction *act,
 }
 
 weak_alias (__libc_sigaction, __sigaction);
+libc_hidden_weak (__sigaction)
 weak_alias (__libc_sigaction, sigaction);
 
 static void

@@ -123,7 +123,7 @@ __chown (const char *file, uid_t owner, gid_t group)
    errno = ELOOP;
    return -1;
 }
-INTDEF(__chown)
+libc_hidden_def (__chown)
 
 #include <shlib-compat.h>
 versioned_symbol (libc, __chown, chown, GLIBC_2_1);

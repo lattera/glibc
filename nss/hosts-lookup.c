@@ -21,5 +21,3 @@
 #define DEFAULT_CONFIG "dns [!UNAVAIL=return] files"
 
 #include "XXX-lookup.c"
-
-INTDEF(__nss_hosts_lookup)

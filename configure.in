@@ -1013,6 +1013,48 @@ EOF
     fi
   fi
 
+  if test $libc_cv_visibility_attribute = yes; then
+    AC_CACHE_CHECK(for broken __attribute__((visibility())),
+		 libc_cv_broken_visibility_attribute,
+		 [cat > conftest.c <<EOF
+		  int foo (int x);
+		  int bar (int x) __asm__ ("foo") __attribute__ ((visibility ("hidden")));
+		  int bar (int x) { return x; }
+EOF
+		  libc_cv_broken_visibility_attribute=yes
+		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+changequote(,)dnl
+		    if grep '\.hidden[ 	_]foo' conftest.s >/dev/null; then
+changequote([,])dnl
+		      libc_cv_broken_visibility_attribute=no
+		    fi
+		  fi
+		  rm -f conftest.c conftest.s
+		 ])
+    if test $libc_cv_broken_visibility_attribute = yes; then
+      AC_DEFINE(HAVE_BROKEN_VISIBILITY_ATTRIBUTE)
+    fi
+  fi
+
+  AC_CACHE_CHECK(for broken __attribute__((alias())),
+		 libc_cv_broken_alias_attribute,
+		 [cat > conftest.c <<EOF
+		  extern int foo (int x) __asm ("xyzzy");
+		  int bar (int x) { return x; }
+                  extern __typeof (bar) foo __attribute ((weak, alias ("bar")));
+EOF
+		  libc_cv_broken_alias_attribute=yes
+		  if ${CC-cc} -Werror -S conftest.c -o conftest.s >/dev/null 2>&1; then
+		    if grep 'xyzzy' conftest.s >/dev/null; then
+		      libc_cv_broken_alias_attribute=no
+		    fi
+		  fi
+		  rm -f conftest.c conftest.s
+		 ])
+  if test $libc_cv_broken_alias_attribute = yes; then
+    AC_DEFINE(HAVE_BROKEN_ALIAS_ATTRIBUTE)
+  fi
+
   if test $libc_cv_visibility_attribute = yes -a $gnu_ld = yes; then
     AC_CACHE_CHECK(whether to put _rtld_local into .sdata section,
 		 libc_cv_have_sdata_section,

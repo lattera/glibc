@@ -19,9 +19,6 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
-#undef __libc_fcntl
-#undef __fcntl
-
 extern int kfcntl (int fdes, int cmd, unsigned long int arg);
 
 int
@@ -40,5 +37,7 @@ __fcntl (int fdes, int cmd, ...)
 
   return res;
 }
+libc_hidden_def (__fcntl)
 strong_alias (__fcntl, fcntl)
 strong_alias (__fcntl, __libc_fcntl)
+libc_hidden_def (__libc_fcntl)
