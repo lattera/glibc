@@ -988,45 +988,86 @@ re_node_set_add_intersect (dest, src1, src2)
      re_node_set *dest;
      const re_node_set *src1, *src2;
 {
-  int i1, i2, id;
-  if (src1->nelem > 0 && src2->nelem > 0)
-    {
-      if (src1->nelem + src2->nelem + dest->nelem > dest->alloc)
-	{
-	  int new_alloc = src1->nelem + src2->nelem + dest->nelem;
-	  int *new_elems = re_realloc (dest->elems, int, new_alloc);
-	  if (BE (new_elems == NULL, 0))
-	    return REG_ESPACE;
-	  dest->elems = new_elems;
-	  dest->alloc = new_alloc;
-	}
-    }
-  else
+  int i1, i2, is, id, delta, sbase;
+  if (src1->nelem == 0 || src2->nelem == 0)
     return REG_NOERROR;
 
-  for (i1 = i2 = id = 0 ; i1 < src1->nelem && i2 < src2->nelem ;)
+  /* We need dest->nelem + 2 * elems_in_intersection; this is a
+     conservative estimate.  */
+  if (src1->nelem + src2->nelem + dest->nelem > dest->alloc)
     {
-      if (src1->elems[i1] > src2->elems[i2])
-	{
-	  ++i2;
-	  continue;
-	}
+      int new_alloc = src1->nelem + src2->nelem + dest->alloc;
+      int *new_elems = re_realloc (dest->elems, int, new_alloc);
+      if (BE (new_elems == NULL, 0))
+        return REG_ESPACE;
+      dest->elems = new_elems;
+      dest->alloc = new_alloc;
+    }
+
+  /* Find the items in the intersection of SRC1 and SRC2, and copy
+     into the top of DEST those that are not already in DEST itself.  */
+  sbase = dest->nelem + src1->nelem + src2->nelem;
+  i1 = src1->nelem - 1;
+  i2 = src2->nelem - 1;
+  id = dest->nelem - 1;
+  for (;;)
+    {
       if (src1->elems[i1] == src2->elems[i2])
 	{
-	  while (id < dest->nelem && dest->elems[id] < src2->elems[i2])
-	    ++id;
-	  if (id < dest->nelem && dest->elems[id] == src2->elems[i2])
-	    ++id;
-	  else
-	    {
-	      memmove (dest->elems + id + 1, dest->elems + id,
-		       sizeof (int) * (dest->nelem - id));
-	      dest->elems[id++] = src2->elems[i2++];
-	      ++dest->nelem;
-	    }
+	  /* Try to find the item in DEST.  Maybe we could binary search?  */
+	  while (id >= 0 && dest->elems[id] > src1->elems[i1])
+	    --id;
+
+          if (id < 0 || dest->elems[id] != src1->elems[i1])
+            dest->elems[--sbase] = src1->elems[i1];
+
+	  if (--i1 < 0 || --i2 < 0)
+	    break;
 	}
-      ++i1;
+
+      /* Lower the highest of the two items.  */
+      else if (src1->elems[i1] < src2->elems[i2])
+	{
+	  if (--i2 < 0)
+	    break;
+	}
+      else
+	{
+	  if (--i1 < 0)
+	    break;
+	}
     }
+
+  id = dest->nelem - 1;
+  is = dest->nelem + src1->nelem + src2->nelem - 1;
+  delta = is - sbase + 1;
+
+  /* Now copy.  When DELTA becomes zero, the remaining
+     DEST elements are already in place; this is more or
+     less the same loop that is in re_node_set_merge.  */
+  dest->nelem += delta;
+  if (delta > 0 && id >= 0)
+    for (;;)
+      {
+        if (dest->elems[is] > dest->elems[id])
+          {
+            /* Copy from the top.  */
+            dest->elems[id + delta--] = dest->elems[is--];
+            if (delta == 0)
+              break;
+          }
+        else
+          {
+            /* Slide from the bottom.  */
+            dest->elems[id + delta] = dest->elems[id];
+            if (--id < 0)
+              break;
+          }
+      }
+
+  /* Copy remaining SRC elements.  */
+  memcpy (dest->elems, dest->elems + sbase, delta * sizeof (int));
+
   return REG_NOERROR;
 }
 
@@ -1091,10 +1132,10 @@ re_node_set_merge (dest, src)
      re_node_set *dest;
      const re_node_set *src;
 {
-  int si, di;
+  int is, id, sbase, delta;
   if (src == NULL || src->nelem == 0)
     return REG_NOERROR;
-  if (dest->alloc < src->nelem + dest->nelem)
+  if (dest->alloc < 2 * src->nelem + dest->nelem)
     {
       int new_alloc = 2 * (src->nelem + dest->alloc);
       int *new_buffer = re_realloc (dest->elems, int, new_alloc);
@@ -1104,52 +1145,65 @@ re_node_set_merge (dest, src)
       dest->alloc = new_alloc;
     }
 
-  for (si = 0, di = 0 ; si < src->nelem && di < dest->nelem ;)
+  if (BE (dest->nelem == 0, 0))
     {
-      int cp_from, ncp, mid, right, src_elem = src->elems[si];
-      /* Binary search the spot we will add the new element.  */
-      right = dest->nelem;
-      while (di < right)
-	{
-	  mid = (di + right) / 2;
-	  if (dest->elems[mid] < src_elem)
-	    di = mid + 1;
-	  else
-	    right = mid;
-	}
-      if (di >= dest->nelem)
-	break;
-
-      if (dest->elems[di] == src_elem)
-	{
-	  /* Skip since, DEST already has the element.  */
-	  ++di;
-	  ++si;
-	  continue;
-	}
-
-      /* Skip the src elements which are less than dest->elems[di].  */
-      cp_from = si;
-      while (si < src->nelem && src->elems[si] < dest->elems[di])
-	++si;
-      /* Copy these src elements.  */
-      ncp = si - cp_from;
-      memmove (dest->elems + di + ncp, dest->elems + di,
-	       sizeof (int) * (dest->nelem - di));
-      memcpy (dest->elems + di, src->elems + cp_from,
-	      sizeof (int) * ncp);
-      /* Update counters.  */
-      di += ncp;
-      dest->nelem += ncp;
+      dest->nelem = src->nelem;
+      memcpy (dest->elems, src->elems, src->nelem * sizeof (int));
+      return REG_NOERROR;
     }
 
-  /* Copy remaining src elements.  */
-  if (si < src->nelem)
+  /* Copy into the top of DEST the items of SRC that are not
+     found in DEST.  Maybe we could binary search in DEST?  */
+  for (sbase = dest->nelem + 2 * src->nelem,
+       is = src->nelem - 1, id = dest->nelem - 1; is >= 0 && id >= 0; )
     {
-      memcpy (dest->elems + di, src->elems + si,
-	      sizeof (int) * (src->nelem - si));
-      dest->nelem += src->nelem - si;
+      if (dest->elems[id] == src->elems[is])
+        is--, id--;
+      else if (dest->elems[id] < src->elems[is])
+        dest->elems[--sbase] = src->elems[is--];
+      else /* if (dest->elems[id] > src->elems[is]) */
+        --id;
     }
+
+  if (is >= 0)
+    {
+      /* If DEST is exhausted, the remaining items of SRC must be unique.  */
+      sbase -= is + 1;
+      memcpy (dest->elems + sbase, src->elems, (is + 1) * sizeof (int));
+    }
+
+  id = dest->nelem - 1;
+  is = dest->nelem + 2 * src->nelem - 1;
+  delta = is - sbase + 1;
+  if (delta == 0)
+    return REG_NOERROR;
+
+  /* Now copy.  When DELTA becomes zero, the remaining
+     DEST elements are already in place.  */
+  dest->nelem += delta;
+  for (;;)
+    {
+      if (dest->elems[is] > dest->elems[id])
+        {
+	  /* Copy from the top.  */
+          dest->elems[id + delta--] = dest->elems[is--];
+	  if (delta == 0)
+	    break;
+	}
+      else
+        {
+          /* Slide from the bottom.  */
+          dest->elems[id + delta] = dest->elems[id];
+	  if (--id < 0)
+	    {
+	      /* Copy remaining SRC elements.  */
+	      memcpy (dest->elems, dest->elems + sbase,
+	              delta * sizeof (int));
+	      break;
+	    }
+	}
+    }
+
   return REG_NOERROR;
 }
 
@@ -1196,8 +1250,8 @@ re_node_set_insert (set, elem)
   if (elem < set->elems[0])
     {
       idx = 0;
-      memmove (set->elems + 1, set->elems,
-	       sizeof (int) * set->nelem);
+      for (idx = set->nelem; idx > 0; idx--)
+        set->elems[idx] = set->elems[idx - 1];
     }
   else
     {
@@ -1221,7 +1275,7 @@ re_node_set_compare (set1, set2)
   int i;
   if (set1 == NULL || set2 == NULL || set1->nelem != set2->nelem)
     return 0;
-  for (i = 0 ; i < set1->nelem ; i++)
+  for (i = set1->nelem ; --i >= 0 ; )
     if (set1->elems[i] != set2->elems[i])
       return 0;
   return 1;
@@ -1259,10 +1313,9 @@ re_node_set_remove_at (set, idx)
 {
   if (idx < 0 || idx >= set->nelem)
     return;
-  if (idx < set->nelem - 1)
-    memmove (set->elems + idx, set->elems + idx + 1,
-	     sizeof (int) * (set->nelem - idx - 1));
   --set->nelem;
+  for (; idx < set->nelem; idx++)
+    set->elems[idx] = set->elems[idx + 1];
 }
 
 
