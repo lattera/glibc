@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    ARM version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Philip Blundell <philb@gnu.org>.
 
@@ -19,13 +19,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 
 /* This will not work on ARM1 or ARM2 because SWP is lacking on those
    machines.  Unfortunately we have no way to detect this at compile
    time; let's hope nobody tries to use one.  */
 
 /* Spinlock implementation; required.  */
-extern inline int
+PT_EI int
 testandset (int *spinlock)
 {
   register unsigned int ret;

@@ -19,9 +19,13 @@
    not, write to the Free Software Foundation, Inc.,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 
 /* Spinlock implementation; required.  */
-extern inline int
+PT_EI int
 testandset (int *spinlock)
 {
   int ret;
@@ -36,7 +40,7 @@ testandset (int *spinlock)
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("%sp");
+register char *stack_pointer __asm__ ("%sp");
 
 
 /* Registers %g6 and %g7 are reserved by the ABI for "system use".  It
@@ -54,7 +58,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("%g6");
 /* Compare-and-swap for semaphores. */
 
 #define HAS_COMPARE_AND_SWAP
-extern inline int
+PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   long int readval;

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    m68k version.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -19,9 +19,13 @@
    not, write to the Free Software Foundation, Inc.,
    59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 
 /* Spinlock implementation; required.  */
-extern inline int
+PT_EI int
 testandset (int *spinlock)
 {
   char ret;
@@ -44,7 +48,7 @@ register char * stack_pointer __asm__ ("%sp");
 /* Compare-and-swap for semaphores. */
 
 #define HAS_COMPARE_AND_SWAP
-extern inline int
+PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   char ret;

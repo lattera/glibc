@@ -3,6 +3,19 @@
 	* sysdeps/i386/i686/pt-machine.h: Remove unused inline
 	definitions.
 
+	* Makefile (libpthread-routines): Add pt-machine.
+	* pt-machine.c: New file.
+	* sysdeps/alpha/pt-machine.h: Define PT_EI as extern inline is not
+	yet defined.  Use PT_EI in extern inline definitions.
+	* sysdeps/arm/pt-machine.h: Likewise.
+	* sysdeps/i386/pt-machine.h: Likewise.
+	* sysdeps/i386/i686/pt-machine.h: Likewise.
+	* sysdeps/m68k/pt-machine.h: Likewise.
+	* sysdeps/mips/pt-machine.h: Likewise.
+	* sysdeps/powerpc/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/pt-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+
 1998-10-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* semaphore.h: Include <sys/types.h> so that _pthread_descr

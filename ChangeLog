@@ -1,3 +1,26 @@
+1998-10-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/ptestcases.h: Fix typo.
+
+1998-10-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* posix/regex.c (regcomp): Allocate and prepare a fastmap.
+	(regexec): Allocate regs.start and regs.end as one block.
+
+1998-10-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Remove comma at end of
+	enum decl.
+
+1998-10-08  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/profil-counter.h: Move definition of
+	sigcontext union to ...
+	* sysdeps/unix/sysv/linux/arm/bits/armsigctx.h: ... here.  New
+	file.
+	* sysdeps/unix/sysv/linux/arm/register-dump.h: Add support for
+	version 2.0 kernels.
+
 1998-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* malloc/mtrace.c (tr_reallochook): Produce better output for real

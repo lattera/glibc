@@ -19,8 +19,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 /* Spinlock implementation; required.  */
-static inline int testandset(int *spinlock)
+PT_EI int
+testandset (int *spinlock)
 {
   int ret;
 

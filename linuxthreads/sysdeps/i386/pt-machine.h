@@ -19,9 +19,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
 
 /* Spinlock implementation; required.  */
-extern inline int
+PT_EI int
 testandset (int *spinlock)
 {
   int ret;
@@ -49,7 +52,7 @@ register char * stack_pointer __asm__ ("%esp");
 #define HAS_COMPARE_AND_SWAP
 #define TEST_FOR_COMPARE_AND_SWAP
 
-extern inline int
+PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   char ret;
@@ -78,7 +81,7 @@ set_eflags (int newflags)
 }
 
 
-extern inline int
+PT_EI int
 compare_and_swap_is_available (void)
 {
   int oldflags = get_eflags ();

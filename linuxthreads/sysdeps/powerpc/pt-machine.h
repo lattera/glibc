@@ -21,6 +21,10 @@
 /* These routines are from Appendix G of the 'PowerPC 601 RISC Microprocessor
    User's Manual', by IBM and Motorola.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 /* For multiprocessor systems, we want to ensure all memory accesses
    are completed before we reset a lock.  */
 #if 0
@@ -42,10 +46,10 @@ register char * stack_pointer __asm__ ("r1");
 #if BROKEN_PPC_ASM_CR0
 static
 #else
-extern inline
+PT_EI
 #endif
 int
-__compare_and_swap (long *p, long oldval, long newval)
+__compare_and_swap (long int *p, long int oldval, long int newval)
 {
   int ret;
 

@@ -19,13 +19,18 @@
    write to the Free Software Foundation, Inc.,  59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 #include <asm/pal.h>
 
 
 /* Spinlock implementation; required.  */
-extern inline long testandset(int *spinlock)
+PT_EI long int
+testandset (int *spinlock)
 {
-  long ret, temp;
+  long int ret, temp;
 
   __asm__ __volatile__(
 	"/* Inline spinlock test & set */\n"
@@ -80,9 +85,10 @@ register char *stack_pointer __asm__("$30");
 /* Compare-and-swap for semaphores. */
 
 #define HAS_COMPARE_AND_SWAP
-extern inline int __compare_and_swap(long * p, long oldval, long newval)
+PT_EI int
+__compare_and_swap (long int *p, long int oldval, long int newval)
 {
-  long ret;
+  long int ret;
 
   __asm__ __volatile__ (
 	"/* Inline compare & swap */\n"

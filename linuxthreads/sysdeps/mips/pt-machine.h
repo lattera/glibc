@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
 
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>.
    Based on the Alpha version by Richard Henderson <rth@tamu.edu>.
@@ -26,11 +26,16 @@
    yet correctly.  There is however a better solution for R3000
    uniprocessor machines possible.  */
 
+#ifndef PT_EI
+# define PT_EI extern inline
+#endif
+
 
 /* Spinlock implementation; required.  */
-extern inline long testandset(int *spinlock)
+PT_EI long int
+testandset (int *spinlock)
 {
-  long ret, temp;
+  long int ret, temp;
 
   __asm__ __volatile__(
 	"# Inline spinlock test & set\n\t"
@@ -61,7 +66,8 @@ register char * stack_pointer __asm__ ("$29");
 /* Compare-and-swap for semaphores. */
 
 #define HAS_COMPARE_AND_SWAP
-extern inline int __compare_and_swap(long * p, long oldval, long newval)
+PT_EI int
+__compare_and_swap (long int *p, long int oldval, long int newval)
 {
   long ret;
 
