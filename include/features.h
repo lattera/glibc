@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,7 @@
    __USE_XOPEN		Define XPG things.
    __USE_XOPEN_EXTENDED	Define X/Open Unix things.
    __USE_UNIX98		Define Single Unix V2 things.
+   __USE_XOPEN2K        Define XPG6 things
    __USE_LARGEFILE64	Define LFS things with separate names.
    __USE_FILE_OFFSET64	Define 64bit interface as default.
    __USE_BSD		Define 4.3BSD things.
@@ -87,6 +88,7 @@
 #undef	__USE_XOPEN
 #undef	__USE_XOPEN_EXTENDED
 #undef	__USE_UNIX98
+#undef	__USE_XOPEN2K
 #undef	__USE_LARGEFILE
 #undef	__USE_LARGEFILE64
 #undef	__USE_FILE_OFFSET64
