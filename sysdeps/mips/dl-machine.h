@@ -219,7 +219,7 @@ elf_machine_got_rel (struct link_map *map, int lazy)
    will jump to the on-demand fixup code in dl-runtime.c.  */
 
 static inline int
-elf_machine_runtime_setup (struct link_map *l, int lazy)
+elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 {
   ElfW(Addr) *got;
   extern void _dl_runtime_resolve (ElfW(Word));
@@ -533,9 +533,9 @@ _RTLD_EPILOGUE(ENTRY_POINT)\
 
 static inline void
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
-		 const ElfW(Sym) *sym, const struct r_found_version *version)
+		 const ElfW(Sym) *sym, const struct r_found_version *version,
+		 ElfW(Addr) *const reloc_addr)
 {
-  ElfW(Addr) *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   ElfW(Addr) loadbase;
   ElfW(Addr) undo __attribute__ ((unused));
 
