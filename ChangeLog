@@ -1,3 +1,14 @@
+2002-09-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_load_address): Don't
+	rely on *r_offset of R_SPARC_RELATIVE reloc in .got to contain the
+	addend.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_load_address): Use
+	the same l_addr computation.
+	* sysdeps/sparc/sparc64/configure.in: Removed.
+	* sysdeps/sparc/sparc64/configure: Removed.
+	* config.h.in (SPARC64_DYNAMIC_BEFORE_GOT): Remove.
+
 2002-09-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dynamic-link.h (elf_get_dynamic_info): Relocate DT_HASH entry
