@@ -1,3 +1,11 @@
+2003-03-01  GOTO Masanori  <gotom@debian.or.jp>
+
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h (O_DIRECT): Define.
+
+2003-02-26  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/fcntl.h (O_DIRECT): Define.
+
 2003-02-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_rela): Remove
