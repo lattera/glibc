@@ -1,3 +1,8 @@
+2001-03-26  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/mman.h: Add MAP_* and MADV_*
+	defines to match other architectures.
+
 2001-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/Makefile (tests): Add tst-ext.

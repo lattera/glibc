@@ -288,7 +288,8 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
   attr->__guardsize = descr->p_guardsize;
   attr->__stackaddr_set = descr->p_userstack;
 #ifdef NEED_SEPARATE_REGISTER_STACK
-  attr->__stacksize *= 2;
+  if (descr->p_userstack == 0)
+    attr->__stacksize *= 2;
   /* XXX This is awkward.  The guard pages are in the middle of the
      two stacks.  We must count the guard size in the stack size since
      otherwise the range of the stack area cannot be computed.  */
@@ -297,7 +298,7 @@ int pthread_getattr_np (pthread_t thread, pthread_attr_t *attr)
 #ifndef _STACK_GROWS_UP
   attr->__stackaddr = (char *)(descr + 1);
 #else
-#error __stackaddr not handled
+# error __stackaddr not handled
 #endif
 
   return 0;

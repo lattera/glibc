@@ -1,3 +1,10 @@
+2001-03-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* attr.c (pthread_getattr_np): Correct computation of stack size
+	for machiens with register stack.
+
+	* Examples/ex17.c (main): Correct detection of failed mmap call.
+
 2001-03-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (__pthread_initialize_manager): Fix a typo.

@@ -28,7 +28,7 @@ main (void)
 		PROT_READ | PROT_WRITE | PROT_EXEC,
 		MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 
-  if (stack == (void *)-1)
+  if (stack == MAP_FAILED)
     {
       perror ("mmap failed");
       return 1;
