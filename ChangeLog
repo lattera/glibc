@@ -1,8 +1,14 @@
+1998-05-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/errno.h: Undefine EILSEQ before
+	including linux/errno.h.
+
 1998-05-06 09:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Add LFS support.
 	Use correct types.
 	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: New file.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/errno.h: New file.
 
 1998-05-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

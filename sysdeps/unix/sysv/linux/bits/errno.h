@@ -20,6 +20,7 @@
 #ifdef _ERRNO_H
 
 # undef EDOM
+# undef EILSEQ
 # undef ERANGE
 # include <linux/errno.h>
 
