@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
+#include <float.h>
 #include <math.h>
 
 int
