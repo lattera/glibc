@@ -1,5 +1,27 @@
 2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/dl-machine.h: Include sys/asm.h.
+	(elf_machine_matches_host): Prevent linking of o32 and n32
+	together.
+	(elf_machine_dynamic): Document assumption on $gp.
+	(STRINGXP, STRINGXV, STRINGV_): New macros.
+	(elf_machine_load_address): Use them to stringize PTR_LA and
+	PTR_SUBU.
+	(ELF_DL_FRAME_SIZE, ELF_DL_SAVE_ARG_REGS,
+	ELF_DL_RESTORE_ARG_REGS, IFABIO32): New macros used in...
+	(_dl_runtime_resolve): Adjust it for all 3 ABIs.
+	(__dl_runtime_resolve): Cast the symtab initializer to the
+	right type.
+	(RTLD_START): Use it.  Adjust it for all 3 ABIs.
+	(elf_machine_rel): Mark as always_inline in RTLD_BOOTSTRAP.
+	Handle 64-bit R_MIPS_REL composite relocation and accept
+	R_MIPS_64 relocations to shift addend size to 64 bits.
+	Document assumption regarding local GOT entries.  Document
+	backward-compatibility departing from the ABI behavior in
+	applying relocations that reference section symbols, no longer
+	used.  Support relocations to mis-aligned offsets.
+	* sysdeps/mips/mips64/dl-machine.h: Deleted, obsolete.
+
 	* sysdeps/unix/sysv/linux/mips/readelflib.c: New file.
 
 	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h
