@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2002, 2004 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2002, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,8 +70,6 @@ typedef struct
  * can be refernced safely only after verifying that PPC_FEATURE_HAS_ALTIVEC
  * is set in AT_HWCAP.  */
     
-# include <asm/types.h>
-
 /* Number of general registers.  */
 # define NGREG	48	/* includes r0-r31, nip, msr, lr, etc.   */
 # define NFPREG	33	/* includes fp0-fp31 &fpscr.  */

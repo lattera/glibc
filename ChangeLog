@@ -1,3 +1,8 @@
+2005-03-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: Don't include
+	asm/types.h.
+
 2005-03-10  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/bits/mman.h: Define MAP_POPULATE and
