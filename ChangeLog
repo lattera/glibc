@@ -1,3 +1,22 @@
+1997-05-07 20:27  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* sys/ttydefaults.h: Removed.
+
+1997-05-07 14:10  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* termios/sys/ttydefaults.h: Delete file.
+	* sysdeps/generic/sys/ttydefaults.h: New file; use OXTABS in
+	TTYDEF_OFLAG.
+	* sysdeps/unix/bsd/sun/sunos4/sys/ttydefaults.h: New file; use
+	XTABS in TTYDEF_OFLAG.
+	* sysdeps/unix/sysv/linux/sys/ttydefaults.h: New file; use XTABS
+	in TTYDEF_OFLAG (which is correct for all existing Linux ports).
+
+1997-05-05 14:22  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (_hurdsig_preemptors): Provide initialization.
+	* hurd/hurdfault.c (_hurdsig_fault_preemptor): Likewise.
+
 1997-05-07 16:31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/categories.def: Change type of _NL_CTYPE_CLASS_NAMES and
