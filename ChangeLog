@@ -1,3 +1,27 @@
+Thu Dec  7 02:27:56 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* resolv/res_comp.c, resolv/res_debug.c, resolv/res_send.c:
+	Updated from BIND 4.9.3-BETA27.
+
+Wed Dec  6 18:44:01 1995  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/select.c (__select): Swap size args to mach_msg.
+
+	* sysdeps/mach/hurd/select.c (__select): Frob TYPES correctly when
+	we get a delayed reply.
+	Only grab values out of entries in TYPES that have SELECT_RETURNED
+ 	turned on, and turn it on whenever an rpc returns.
+	Only clear bits in the user's fdsets -- those needing to be set
+	should be already.
+	Use SELECT_ALL in appropiate places.
+	(SELECT_RETURNED, SELECT_ALL): New macros.
+
+Wed Dec  6 09:10:39 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/sys/param.h (NBBY): New macro.
+
+	* gnu-versions.h (_GNU_GLOB_INTERFACE_VERSION): New macro.
+
 Tue Dec  5 14:00:17 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* misc/Makefile (headers): Add error.h, err.h.
