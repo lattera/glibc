@@ -1,5 +1,9 @@
 2003-01-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/pm_getport.c (pmap_getport): Open TCP socket if protocol
+	== IPPROTO_TCP.
+	Patch by James Strandboge <jamie@tpptraining.com> [PR libc/4943].
+
 	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c (_dl_x86_cap_flags):
 	Fix entry for bit 31.
 
