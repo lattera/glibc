@@ -1,3 +1,8 @@
+2004-04-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h
+	(SEM_VALUE_MAX): Add missing brace.
+
 2004-04-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/Makefile (tests): Add tst-mqueue8x

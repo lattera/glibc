@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -29,7 +29,7 @@
 #define SEM_FAILED      ((sem_t *) 0)
 
 /* Maximum value the semaphore can have.  */
-#define SEM_VALUE_MAX   ((int) (2147483647)
+#define SEM_VALUE_MAX   ((int) (2147483647))
 
 
 typedef union
