@@ -21,11 +21,20 @@ struct old_kernel_sigaction {
 #endif
 };
 
+
+#define _KERNEL_NSIG	       128
+#define _KERNEL_NSIG_BPW       32
+#define _KERNEL_NSIG_WORDS     (_KERNEL_NSIG / _KERNEL_NSIG_BPW)
+
+typedef struct {
+	unsigned long sig[_KERNEL_NSIG_WORDS];
+} kernel_sigset_t;
+
 /* This is the sigaction structure from the Linux 2.1.68 kernel.  */
 struct kernel_sigaction {
 	unsigned int	sa_flags;
 	__sighandler_t	k_sa_handler;
-	sigset_t	sa_mask;
+	kernel_sigset_t	sa_mask;
 	void		(*sa_restorer)(void);
 	int		s_resv[1]; /* reserved */
 };
