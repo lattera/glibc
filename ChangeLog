@@ -1,3 +1,12 @@
+1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Fix bugs I introduced in last change.
+
+	* sysdeps/i386/i486/bits/string.h (memcmp): Don't introduce partial
+	register stall.
+	Extend memset optimization.
+	Correct i686 version of memchr.
+
 1999-04-30  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* sysdeps/i386/bzero.c: Add #undef __bzero.

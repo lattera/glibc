@@ -176,7 +176,7 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
      "repe; cmpsb\n\t"
      "je	1f\n\t"
      "sbbl	%0,%0\n\t"
-     "orb	$1,%b0\n"
+     "orl	$1,%0\n"
      "1:"
      : "=a" (__res), "=&S" (__d0), "=&D" (__d1), "=&c" (__d2)
      : "0" (0), "1" (__s1), "2" (__s2), "3" (__n)
@@ -189,24 +189,157 @@ memcmp (__const void *__s1, __const void *__s2, size_t __n)
 /* Set N bytes of S to C.  */
 #define _HAVE_STRING_ARCH_memset 1
 #define memset(s, c, n) \
-  (__extension__ (__builtin_constant_p (c)				      \
-		  ? memset (s, c, n)					      \
-		  : (__builtin_constant_p (n)				      \
-		     ? __memset_gc (s, c, n)				      \
-		     : __memset_gg (s, c, n))))
-#define __memset_gc(s, c, n) \
-  ((n) == 0								      \
-   ? (s)								      \
-   : (((n) % 4== 0)							      \
-      ? __memset_gc_by4 (s, c, n)					      \
-      : (((n) % 2 == 0)							      \
-	 ? __memset_gc_by2 (s, c, n)					      \
-	 : __memset_gg (s, c, n))))
+  (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
+		  ? (__builtin_constant_p (c)				      \
+		     ? __memset_gc (s, ((unsigned char) (c)) * 0x01010101, n) \
+		     : ((n) == 1					      \
+			? __memset_c1 (s, c)				      \
+			: __memset_gc (s, c, n)))			      \
+		  : (__builtin_constant_p (c)				      \
+		     ? (__builtin_constant_p (n)			      \
+			? __memset_ccn (s, c, n)			      \
+			: __memset_gg (s, c, n))			      \
+		     : (__builtin_constant_p (n)			      \
+			? __memset_gcn (s, c, n)			      \
+			: __memset_gg (s, c, n)))))
 
-__STRING_INLINE void *__memset_gc_by4 (void *__s, int __c, size_t __n);
+#define __memset_c1(s, c) ({ void *__s = (s);				      \
+			     *((__uint8_t *) __s) = (__uint8_t) (c); __s; })
+
+#define __memset_gc(s, c, n) \
+  ({ void *__s = (s);							      \
+     __uint32_t *__ts = (__uint32_t *) __s;				      \
+     __uint8_t __c = (__uint8_t) (c);					      \
+									      \
+     /* We apply a trick here.  `gcc' would implement the following	      \
+	assignments using absolute operands.  But this uses to much	      \
+	memory (7, instead of 4 bytes).  */				      \
+     if (n >= 5)							      \
+       __asm__ __volatile__ ("" : "=r" (__c) : "0" (__c));		      \
+									      \
+     /* This `switch' statement will be removed at compile-time.  */	      \
+     switch (n)								      \
+       {								      \
+       case 15:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 11:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 7:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 3:								      \
+	 *((__uint16_t *) __ts)++ = __c * 0x0101;			      \
+	 *((__uint8_t *) __ts) = __c;					      \
+	 break;								      \
+									      \
+       case 14:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 10:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 6:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 2:								      \
+	 *((__uint16_t *) __ts) = __c * 0x0101;				      \
+	 break;								      \
+									      \
+       case 13:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 9:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 5:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 1:								      \
+	 *((__uint8_t *) __ts) = __c;					      \
+	 break;								      \
+									      \
+       case 16:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 12:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 8:								      \
+	 *__ts++ = __c * 0x01010101;					      \
+       case 4:								      \
+	 *__ts = __c * 0x01010101;					      \
+       case 0:								      \
+	 break;								      \
+       }								      \
+									      \
+     __s; })
+
+#define __memset_ccn(s, c, n) \
+  (((n) % 4 == 0)							      \
+   ? __memset_ccn_by4 (s, ((__uint8_t) (c)) * 0x01010101, n)		      \
+   : (((n) % 2 == 0)							      \
+      ? __memset_ccn_by2 (s, ((__uint8_t) (c)) * 0x01010101, n)		      \
+      : __memset_gg (s, c, n)))
+
+__STRING_INLINE void *__memset_ccn_by4 (void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
-__memset_gc_by4 (void *__s, int __c, size_t __n)
+__memset_ccn_by4 (void *__s, int __c, size_t __n)
+{
+  register void *__tmp = __s;
+  register unsigned long int __d0;
+#ifdef __i686__
+  __asm__ __volatile__
+    ("cld\n\t"
+     "rep; stosl"
+     : "=&a" (__c), "=&D" (__tmp), "=&c" (__d0)
+     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
+     : "memory", "cc");
+#else
+  __asm__ __volatile__
+    ("1:\n\t"
+     "movl	%0,(%1)\n\t"
+     "addl	$4,%1\n\t"
+     "decl	%2\n\t"
+     "jnz	1b\n"
+     : "=&q" (__c), "=&r" (__tmp), "=&r" (__d0)
+     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
+     : "memory", "cc");
+#endif
+  return __s;
+}
+
+__STRING_INLINE void *__memset_ccn_by2 (void *__s, int __c, size_t __n);
+
+__STRING_INLINE void *
+__memset_ccn_by2 (void *__s, int __c, size_t __n)
+{
+  register unsigned long int __d0, __d1;
+  register void *__tmp = __s;
+#ifdef __i686__
+  __asm__ __volatile__
+    ("cld\n\t"
+     "rep; stosl\n"
+     "stosw"
+    : "=&a" (__d0), "=&D" (__tmp), "=&c" (__d1)
+     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
+     : "memory", "cc");
+#else
+  __asm__ __volatile__
+    ("1:\tmovl	%0,(%1)\n\t"
+     "leal	4(%1),%1\n\t"
+     "decl	%2\n\t"
+     "jnz	1b\n"
+     "movw	%w0,(%1)"
+     : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
+     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
+     : "memory", "cc");
+#endif
+  return __s;
+}
+
+#define __memset_gcn(s, c, n) \
+  (((n) % 4 == 0)							      \
+   ? __memset_gcn_by4 (s, c, n)						      \
+   : (((n) % 2 == 0)							      \
+      ? __memset_gcn_by2 (s, c, n)					      \
+      : __memset_gg (s, c, n)))
+
+__STRING_INLINE void *__memset_gcn_by4 (void *__s, int __c, size_t __n);
+
+__STRING_INLINE void *
+__memset_gcn_by4 (void *__s, int __c, size_t __n)
 {
   register void *__tmp = __s;
   register unsigned long int __d0;
@@ -226,17 +359,15 @@ __memset_gc_by4 (void *__s, int __c, size_t __n)
   return __s;
 }
 
-__STRING_INLINE void *__memset_gc_by2 (void *__s, int __c, size_t __n);
+__STRING_INLINE void *__memset_gcn_by2 (void *__s, int __c, size_t __n);
 
 __STRING_INLINE void *
-__memset_gc_by2 (void *__s, int __c, size_t __n)
+__memset_gcn_by2 (void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0, __d1;
   register void *__tmp = __s;
   __asm__ __volatile__
     ("movb	%b0,%h0\n\t"
-     "shrl	$1,%2\n\t"	/* may be divisible also by 4 */
-     "jz	2f\n\t"
      "pushw	%w0\n\t"
      "shll	$16,%0\n\t"
      "popw	%w0\n"
@@ -245,10 +376,9 @@ __memset_gc_by2 (void *__s, int __c, size_t __n)
      "leal	4(%1),%1\n\t"
      "decl	%2\n\t"
      "jnz	1b\n"
-     "2:\n\t"
      "movw	%w0,(%1)"
      : "=&q" (__d0), "=&r" (__tmp), "=&r" (__d1)
-     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 2)
+     : "0" ((unsigned int) __c), "1" (__tmp), "2" (__n / 4)
      : "memory", "cc");
   return __s;
 }
@@ -261,7 +391,8 @@ __memset_gg (void *__s, int __c, size_t __n)
   register unsigned long int __d0, __d1;
   register void *__tmp = __s;
   __asm__ __volatile__
-    ("movb	%%al,%%ah\n\t"
+    ("cld\n\t"
+     "movb	%%al,%%ah\n\t"
      "shrl	$1,%%ecx\n\t"
      "rep; stosw\n\t"
      "jnc	1f\n\t"
@@ -280,18 +411,20 @@ __STRING_INLINE void *
 memchr (__const void *__s, int __c, size_t __n)
 {
   register unsigned long int __d0;
+#ifdef __i686__
+  register unsigned long int __d1;
+#endif
   register unsigned char *__res;
   if (__n == 0)
     return NULL;
 #ifdef __i686__
   __asm__ __volatile__
-    ("movl $1, %%edx\n\t"
-     "cld\n\t"
+    ("cld\n\t"
      "repne; scasb\n\t"
-     "cmovne %%edx,%0"
-     : "=D" (__res), "=&c" (__d0)
-     : "a" (__c), "0" (__s), "1" (__n)
-     : "dx", "cc");
+     "cmovne %2,%0"
+     : "=D" (__res), "=&c" (__d0), "=&r" (__d1)
+     : "a" (__c), "0" (__s), "1" (__n), "2" (1)
+     : "cc");
 #else
   __asm__ __volatile__
     ("cld\n\t"
