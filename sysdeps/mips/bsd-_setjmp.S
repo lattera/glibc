@@ -27,14 +27,16 @@
 	.option pic2
 #endif
 ENTRY (_setjmp)
-	.set noreorder
 #ifdef __PIC__
+	.set	noreorder
 	.cpload t9
+	.set	reorder
 	la	t9, C_SYMBOL_NAME (__sigsetjmp)
+#endif
+	move	a1,zero		/* Pass a second argument of zero.  */
+#ifdef __PIC__
 	jr	t9
 #else
 	j	C_SYMBOL_NAME (__sigsetjmp)
 #endif
-	move	a1,zero		/* Pass a second argument of zero.  */
-	.set	reorder
 	.end	_setjmp
