@@ -1,5 +1,8 @@
 2001-02-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h: Remove commented-out variable
+	declaractions.
+
 	* elf/rtld.c: Little optimizations in handling _dl_lazy.
 
 	* elf/cache.c (save_cache): Portability changes.
