@@ -38,15 +38,19 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 
   if (inbuf == NULL || *inbuf == NULL)
     {
-      result = __gconv (gcd, NULL, NULL, outbuf, outstart + *outbytesleft,
+      result = __gconv (gcd, NULL, NULL, (unsigned char **) outbuf,
+			(unsigned char *) (outstart + *outbytesleft),
 			&converted);
     }
   else
     {
       const char *instart = *inbuf;
 
-      result = __gconv (gcd, inbuf, *inbuf + *inbytesleft, outbuf,
-			*outbuf + *outbytesleft, &converted);
+      result = __gconv (gcd, (unsigned char **) inbuf,
+			(unsigned char *)  (*inbuf + *inbytesleft),
+			(unsigned char **) outbuf,
+			(unsigned char *) (*outbuf + *outbytesleft),
+			&converted);
 
       *inbytesleft -= *inbuf - instart;
     }

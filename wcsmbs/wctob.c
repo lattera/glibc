@@ -53,13 +53,13 @@ wctob (c)
   inbuf[0] = c;
 
   status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb, &data,
-					     (const char **) &inptr,
-					     (const char *) &inbuf[1],
+					     (const unsigned char **) &inptr,
+					     (const unsigned char *) &inbuf[1],
 					     &dummy, 0);
   /* The conversion failed or the output is too long.  */
   if ((status != GCONV_OK && status != GCONV_FULL_OUTPUT
        && status != GCONV_EMPTY_INPUT)
-      || data.outbuf != buf + 1)
+      || data.outbuf != (unsigned char *) (buf + 1))
     return EOF;
 
   return buf[0];

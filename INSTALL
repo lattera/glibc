@@ -82,7 +82,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
      given with no list, it enables all the add-on packages it finds.
      If you do not wish to use some add-on package that you have
      present in your source tree, give this option a list of the
-     add-ons that you *do* want used, like this:
+     add-ons that you _do_ want used, like this:
      `--enable-add-ons=crypt,linuxthreads'
 
 `--with-binutils=DIRECTORY'
@@ -299,6 +299,7 @@ build the GNU C library:
      Perl is not required, but it is used if present to test the
      installation.  We may decide to use it elsewhere in the future.
 
+
 If you change any of the `configure.in' files you will also need
 
    * GNU `autoconf' 2.12 or higher
@@ -401,7 +402,7 @@ installed there.
 library on your system against the new library for the sake of new code,
 but keep the old libraries around for old binaries to use.  This is
 complicated and difficult.  Consult the Glibc2 HOWTO at
-`http://www.imaxx.net/~thrytis/glibc' for details.
+<http://www.imaxx.net/~thrytis/glibc> for details.
 
    You cannot use `nscd' with 2.0 kernels, due to bugs in the
 kernel-side thread support.  `nscd' happens to hit these bugs

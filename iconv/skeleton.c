@@ -196,8 +196,8 @@ gconv_init (struct gconv_step *step)
 
 int
 FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
-	       const char **inbuf, const char *inbufend, size_t *written,
-	       int do_flush)
+	       const unsigned char **inbuf, const unsigned char *inbufend,
+	       size_t *written, int do_flush)
 {
   struct gconv_step *next_step = step + 1;
   struct gconv_step_data *next_data = data + 1;
@@ -224,10 +224,10 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
   else
     {
       /* We preserve the initial values of the pointer variables.  */
-      const char *inptr = *inbuf;
-      char *outbuf = data->outbuf;
-      char *outend = data->outbufend;
-      char *outptr;
+      const unsigned char *inptr = *inbuf;
+      unsigned char *outbuf = data->outbuf;
+      unsigned char *outend = data->outbufend;
+      unsigned char *outstart;
 
       /* This variable is used to count the number of characters we
 	 actually converted.  */
@@ -242,7 +242,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  /* Remember the start value for this round.  */
 	  inptr = *inbuf;
 	  /* The outbuf buffer is empty.  */
-	  outptr = outbuf;
+	  outstart = outbuf;
 
 #ifdef SAVE_RESET_STATE
 	  SAVE_RESET_STATE (1);
@@ -250,18 +250,12 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
 	  if (FROM_DIRECTION)
 	    /* Run the conversion loop.  */
-	    status = FROM_LOOP ((const unsigned char **) inbuf,
-				(const unsigned char *) inbufend,
-				(unsigned char **) &outbuf,
-				(unsigned char *) outend,
+	    status = FROM_LOOP (inbuf, inbufend, &outbuf, outend,
 				data->statep, step->data, &converted
 				EXTRA_LOOP_ARGS);
 	  else
 	    /* Run the conversion loop.  */
-	    status = TO_LOOP ((const unsigned char **) inbuf,
-			      (const unsigned char *) inbufend,
-			      (unsigned char **) &outbuf,
-			      (unsigned char *) outend,
+	    status = TO_LOOP (inbuf, inbufend, &outbuf, outend,
 			      data->statep, step->data, &converted
 			      EXTRA_LOOP_ARGS);
 
@@ -279,9 +273,9 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	    }
 
 	  /* Write out all output which was produced.  */
-	  if (outbuf > outptr)
+	  if (outbuf > outstart)
 	    {
-	      const char *outerr = data->outbuf;
+	      const unsigned char *outerr = data->outbuf;
 	      int result;
 
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
@@ -300,7 +294,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
 		      /* Reload the pointers.  */
 		      *inbuf = inptr;
-		      outbuf = outptr;
+		      outbuf = outstart;
 
 		      /* Reset the state.  */
 # ifdef SAVE_RESET_STATE

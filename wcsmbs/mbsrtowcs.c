@@ -58,8 +58,8 @@ __mbsrtowcs (dst, src, len, ps)
   if (dst == NULL)
     {
       wchar_t buf[64];		/* Just an arbitrary size.  */
-      const char *srcend = *src + strlen (*src) + 1;
-      const char *inbuf = *src;
+      const unsigned char *inbuf = (const unsigned char *) *src;
+      const unsigned char *srcend = inbuf + strlen (inbuf) + 1;
 
       data.outbufend = data.outbuf + sizeof (buf);
       do
@@ -85,14 +85,19 @@ __mbsrtowcs (dst, src, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      const char *srcend = *src + __strnlen (*src, len * MB_CUR_MAX) + 1;
+      const unsigned char *srcend;
 
-      data.outbuf = (char *) dst;
+      srcend = (const unsigned char *) (*src
+					+ __strnlen (*src, len * MB_CUR_MAX)
+					+ 1);
+
+      data.outbuf = (unsigned char *) dst;
       data.outbufend = data.outbuf + len * sizeof (wchar_t);
 
       status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						 &data, src, srcend,
-						 &result, 0);
+						 &data,
+						 (const unsigned char **) src,
+						 srcend, &result, 0);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */

@@ -75,7 +75,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
   else
     {
       /* Do a normal conversion.  */
-      const char *inbuf = (const char *) &wc;
+      const unsigned char *inbuf = (const unsigned char *) &wc;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
 						 &data, &inbuf,
@@ -94,7 +94,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 
   if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
       || status == GCONV_FULL_OUTPUT)
-    result = data.outbuf - s;
+    result = data.outbuf - (unsigned char *) s;
   else
     {
       result = (size_t) -1;

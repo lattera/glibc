@@ -56,7 +56,7 @@ __wcsrtombs (dst, src, len, ps)
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
     {
-      char buf[256];		/* Just an arbitrary value.  */
+      unsigned char buf[256];		/* Just an arbitrary value.  */
       const wchar_t *srcend = *src + __wcslen (*src) + 1;
       const wchar_t *inbuf = *src;
       size_t dummy;
@@ -70,8 +70,8 @@ __wcsrtombs (dst, src, len, ps)
 
 	  status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
 						     &data,
-						     (const char **) &inbuf,
-						     (const char *) srcend,
+						     (const unsigned char **) &inbuf,
+						     (const unsigned char *) srcend,
 						     &dummy, 0);
 
 	  /* Count the number of bytes.  */
@@ -99,12 +99,13 @@ __wcsrtombs (dst, src, len, ps)
       data.outbufend = dst + len;
 
       status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, (const char **) src,
-						 (const char *) srcend,
+						 &data,
+						 (const unsigned char **) src,
+						 (const unsigned char *) srcend,
 						 &dummy, 0);
 
       /* Count the number of bytes.  */
-      result = data.outbuf - dst;
+      result = data.outbuf - (unsigned char *) dst;
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
@@ -112,7 +113,7 @@ __wcsrtombs (dst, src, len, ps)
 	   || status == GCONV_FULL_OUTPUT)
 	  && data.outbuf[-1] == '\0')
 	{
-	  assert (data.outbuf != dst);
+	  assert (data.outbuf != (unsigned char *) dst);
 	  assert (__mbsinit (data.statep));
 	  *src = NULL;
 	  --result;

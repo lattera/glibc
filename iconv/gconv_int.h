@@ -106,8 +106,9 @@ extern int __gconv_close (gconv_t cd)
    according to rules described by CD and place up to *OUTBYTESLEFT
    bytes in buffer starting at *OUTBUF.  Return number of written
    characters in *CONVERTED if this pointer is not null.  */
-extern int __gconv (gconv_t __cd, const char **__inbuf, const char *inbufend,
-		    char **__outbuf, char *outbufend, size_t *converted)
+extern int __gconv (gconv_t __cd, const unsigned char **__inbuf,
+		    const unsigned char *inbufend, unsigned char **__outbuf,
+		    unsigned char *outbufend, size_t *converted)
      internal_function;
 
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
@@ -154,8 +155,9 @@ extern void __gconv_get_builtin_trans (const char *__name,
 #ifdef _LIBC
 # define __BUILTIN_TRANS(Name) \
   extern int Name (struct gconv_step *__step, struct gconv_step_data *__data, \
-		   const char **__inbuf, const char *__inbufend,	      \
-		   size_t *__written, int __do_flush)
+		   const unsigned char **__inbuf,			      \
+		   const unsigned char *__inbufend, size_t *__written,	      \
+		   int __do_flush)
 
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ascii);

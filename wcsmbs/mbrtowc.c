@@ -39,7 +39,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   int status;
   size_t result;
   size_t dummy;
-  const char *inbuf;
+  const unsigned char *inbuf;
   char *outbuf = (char *) (pwc ?: buf);
 
   /* Tell where we want the result.  */
@@ -63,7 +63,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   update_conversion_ptrs ();
 
   /* Do a normal conversion.  */
-  inbuf = s;
+  inbuf = (const unsigned char *) s;
   status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
 					     &data, &inbuf, inbuf + n,
 					     &dummy, 0);
@@ -80,14 +80,15 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
       || status == GCONV_FULL_OUTPUT)
     {
-      if (data.outbuf != outbuf && *(wchar_t *)outbuf == L'\0')
+      if (data.outbuf != (unsigned char *) outbuf
+	  && *(wchar_t *) outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
 	  assert (__mbsinit (data.statep));
 	  result = 0;
 	}
       else
-	result = inbuf - s;
+	result = inbuf - (const unsigned char *) s;
     }
   else
     {

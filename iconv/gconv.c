@@ -27,8 +27,8 @@
 
 int
 internal_function
-__gconv (gconv_t cd, const char **inbuf, const char *inbufend, char **outbuf,
-	 char *outbufend, size_t *converted)
+__gconv (gconv_t cd, const unsigned char **inbuf, const unsigned char *inbufend,
+	 unsigned char **outbuf, unsigned char *outbufend, size_t *converted)
 {
   size_t last_step = cd->nsteps - 1;
   int result;

@@ -199,7 +199,7 @@ gconv_end (struct gconv_step *data)
 	data->statep->count = ASCII_set;				      \
       else								      \
 	{								      \
-	  char *outbuf = data->outbuf;					      \
+	  unsigned char *outbuf = data->outbuf;				      \
 									      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit the sequence `Esc ( B'.  */			      \

@@ -44,7 +44,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
      size_t len;
      mbstate_t *ps;
 {
-  const char *srcend;
+  const unsigned char *srcend;
   struct gconv_step_data data;
   size_t result = 0;
   int status;
@@ -66,7 +66,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   if (dst == NULL)
     {
       wchar_t buf[64];		/* Just an arbitrary size.  */
-      const char *inbuf = *src;
+      const unsigned char *inbuf = *src;
 
       data.outbufend = data.outbuf + sizeof (buf);
       do
@@ -89,12 +89,13 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      data.outbuf = (char *) dst;
+      data.outbuf = (unsigned char *) dst;
       data.outbufend = data.outbuf + len * sizeof (wchar_t);
 
       status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						 &data, src, srcend,
-						 &result, 0);
+						 &data,
+						 (const unsigned char **) src,
+						 srcend, &result, 0);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */

@@ -31,8 +31,8 @@ __btowc (c)
 {
   wchar_t result;
   struct gconv_step_data data;
-  char inbuf[1];
-  const char *inptr = inbuf;
+  unsigned char inbuf[1];
+  const unsigned char *inptr = inbuf;
   size_t dummy;
   int status;
 
@@ -42,7 +42,7 @@ __btowc (c)
     return WEOF;
 
   /* Tell where we want the result.  */
-  data.outbuf = (char *) &result;
+  data.outbuf = (unsigned char *) &result;
   data.outbufend = data.outbuf + sizeof (wchar_t);
   data.invocation_counter = 0;
   data.internal_use = 1;

@@ -1,3 +1,25 @@
+1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.h (gconv_fct): Change parameter from `char' to
+	`unsigned char'.
+	(gconv_step_data): Likewise.
+	* iconv/gconv_int.h (__gconv): Likewise.
+	(__BUILINT_TRANS): Likewise.
+	* iconv/gconv.c (__gconv): Likewise.
+	* iconv/iconv.c (iconv): Add casts for call of __gconv.
+	* iconv/skeleton.c: Change local parameters and variable from `char' to
+	`unsigned char'.  Remove casts from calls into modules.
+	* iconvdata/iso-2022-jp.c (gconv): Change local variable outbuf from
+	`char' to `unsigned char'.
+	* wcsmbs/btowc.c: Change pointers from `char *' to `unsigned char *'.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
 1999-03-15  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/Versions (ld.so) [GLIBC_2.0]: Add
