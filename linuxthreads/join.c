@@ -79,12 +79,37 @@ void pthread_exit(void * retval)
   _exit(0);
 }
 
+/* Function called by pthread_cancel to remove the thread from
+   waiting on a condition variable queue. */
+
+static int join_extricate_func(void *obj, pthread_descr th)
+{
+  volatile pthread_descr self = thread_self();
+  pthread_handle handle = obj;
+  pthread_descr jo;
+  int did_remove = 0;
+
+  __pthread_lock(&handle->h_lock, self);
+  jo = handle->h_descr;
+  did_remove = jo->p_joining != NULL;
+  jo->p_joining = NULL;
+  __pthread_unlock(&handle->h_lock);
+
+  return did_remove;
+}
+
 int pthread_join(pthread_t thread_id, void ** thread_return)
 {
   volatile pthread_descr self = thread_self();
   struct pthread_request request;
   pthread_handle handle = thread_handle(thread_id);
   pthread_descr th;
+  pthread_extricate_if extr;
+  int already_canceled = 0;
+
+  /* Set up extrication interface */
+  extr.pu_object = handle;
+  extr.pu_extricate_func = join_extricate_func;
 
   __pthread_lock(&handle->h_lock, self);
   if (invalid_handle(handle, thread_id)) {
@@ -103,13 +128,28 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
   }
   /* If not terminated yet, suspend ourselves. */
   if (! th->p_terminated) {
-    th->p_joining = self;
+    /* Register extrication interface */
+    __pthread_set_own_extricate_if(self, &extr); 
+    if (!(THREAD_GETMEM(self, p_canceled)
+	&& THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE))
+      th->p_joining = self;
+    else
+      already_canceled = 1;
     __pthread_unlock(&handle->h_lock);
-    suspend_with_cancellation(self);
+
+    if (already_canceled) {
+      __pthread_set_own_extricate_if(self, 0); 
+      pthread_exit(PTHREAD_CANCELED);
+    }
+
+    suspend(self);
+    /* Deregister extrication interface */
+    __pthread_set_own_extricate_if(self, 0); 
+
     /* This is a cancellation point */
-    if (THREAD_GETMEM(self, p_canceled)
+    if (THREAD_GETMEM(self, p_woken_by_cancel)
 	&& THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
-      th->p_joining = NULL;
+      THREAD_SETMEM(self, p_woken_by_cancel, 0);
       pthread_exit(PTHREAD_CANCELED);
     }
     __pthread_lock(&handle->h_lock, self);

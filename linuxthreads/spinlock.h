@@ -72,3 +72,31 @@ static inline int __pthread_trylock (struct _pthread_fastlock * lock)
 }
 
 #define LOCK_INITIALIZER {0, 0}
+
+/* Operations on pthread_atomic, which is defined in internals.h */
+
+static inline long atomic_increment(struct pthread_atomic *pa)
+{
+    long oldval;
+
+    do {
+	oldval = pa->p_count;
+    } while (!compare_and_swap(&pa->p_count, oldval, oldval + 1, &pa->p_spinlock));
+
+    return oldval;
+}
+
+
+static inline long atomic_decrement(struct pthread_atomic *pa)
+{
+    long oldval;
+
+    do {
+	oldval = pa->p_count;
+    } while (!compare_and_swap(&pa->p_count, oldval, oldval - 1, &pa->p_spinlock));
+
+    return oldval;
+}
+
+#define ATOMIC_INITIALIZER { 0, 0 }
+

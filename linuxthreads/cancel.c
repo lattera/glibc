@@ -52,16 +52,54 @@ int pthread_cancel(pthread_t thread)
 {
   pthread_handle handle = thread_handle(thread);
   int pid;
+  int dorestart = 0;
+  pthread_descr th;
+  pthread_extricate_if *pextricate;
 
   __pthread_lock(&handle->h_lock, NULL);
   if (invalid_handle(handle, thread)) {
     __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
-  handle->h_descr->p_canceled = 1;
-  pid = handle->h_descr->p_pid;
+
+  th = handle->h_descr;
+
+  if (th->p_canceled) {
+    __pthread_unlock(&handle->h_lock);
+    return 0;
+  }
+
+  pextricate = th->p_extricate;
+  th->p_canceled = 1;
+  pid = th->p_pid;
+
+  /* If the thread has registered an extrication interface, then
+     invoke the interface. If it returns 1, then we succeeded in
+     dequeuing the thread from whatever waiting object it was enqueued
+     with. In that case, it is our responsibility to wake it up. 
+     And also to set the p_woken_by_cancel flag so the woken thread
+     can tell that it was woken by cancellation. */
+
+  if (pextricate != NULL) {
+    dorestart = pextricate->pu_extricate_func(pextricate->pu_object, th);
+    th->p_woken_by_cancel = dorestart;
+  }
+
   __pthread_unlock(&handle->h_lock);
-   kill(pid, __pthread_sig_cancel);
+
+  /* If the thread has suspended or is about to, then we unblock it by
+     issuing a restart, instead of a cancel signal. Otherwise we send
+     the cancel signal to unblock the thread from a cancellation point,
+     or to initiate asynchronous cancellation. The restart is needed so
+     we have proper accounting of restarts; suspend decrements the thread's
+     resume count, and restart() increments it.  This also means that suspend's
+     handling of the cancel signal is obsolete. */
+
+  if (dorestart)
+    restart(th);
+  else 
+    kill(pid, __pthread_sig_cancel);
+
   return 0;
 }
 

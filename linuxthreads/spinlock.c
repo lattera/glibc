@@ -40,6 +40,7 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 				      pthread_descr self)
 {
   long oldstatus, newstatus;
+  int spurious_wakeup_count = 0;
 
   do {
     oldstatus = lock->__status;
@@ -56,7 +57,28 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
     }
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
-  if (oldstatus != 0) suspend(self);
+
+  /* Suspend with guard against spurious wakeup. 
+     This can happen in pthread_cond_timedwait_relative, when the thread
+     wakes up due to timeout and is still on the condvar queue, and then
+     locks the queue to remove itself. At that point it may still be on the
+     queue, and may be resumed by a condition signal. */
+
+  if (oldstatus != 0) {
+    for (;;) {
+      suspend(self);
+      if (self->p_nextlock != NULL) {
+	/* Count resumes that don't belong to us. */
+	spurious_wakeup_count++;
+	continue;
+      }
+      break;
+    }
+  }
+
+  /* Put back any resumes we caught that don't belong to us. */
+  while (spurious_wakeup_count--)
+    restart(self);
 }
 
 void internal_function __pthread_unlock(struct _pthread_fastlock * lock)

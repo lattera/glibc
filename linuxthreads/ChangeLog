@@ -1,3 +1,21 @@
+2000-01-03  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Redesigned how cancellation unblocks a thread from internal
+	cancellation points (sem_wait, pthread_join,
+	pthread_cond_{wait,timedwait}).
+	Cancellation won't eat a signal in any of these functions
+	(*required* by POSIX and Single Unix Spec!).
+	* condvar.c: spontaneous wakeup on pthread_cond_timedwait won't eat a
+	simultaneous condition variable signal (not required by POSIX
+	or Single Unix Spec, but nice).
+	* spinlock.c: __pthread_lock queues back any received restarts
+	that don't belong to it instead of assuming ownership of lock
+	upon any restart; fastlock can no longer be acquired by two threads
+	simultaneously.
+	* restart.h: restarts queue even on kernels that don't have
+	queued real time signals (2.0, early 2.1), thanks to atomic counter,
+	avoiding a rare race condition in pthread_cond_timedwait.
+
 1999-12-31  Andreas Jaeger  <aj@suse.de>
 
 	* internals.h: Remove duplicate prototype declarations.

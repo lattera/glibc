@@ -23,8 +23,8 @@
 #include <pthread.h>
 #include "internals.h"
 #include "queue.h"
-#include "restart.h"
 #include "spinlock.h"
+#include "restart.h"
 
 int
 pthread_rwlock_init (pthread_rwlock_t *rwlock,

@@ -38,9 +38,31 @@ int __new_sem_init(sem_t *sem, int pshared, unsigned int value)
   return 0;
 }
 
+/* Function called by pthread_cancel to remove the thread from
+   waiting inside __new_sem_wait. */
+
+static int new_sem_extricate_func(void *obj, pthread_descr th)
+{
+  volatile pthread_descr self = thread_self();
+  sem_t *sem = obj;
+  int did_remove = 0;
+
+  __pthread_lock((struct _pthread_fastlock *) &sem->__sem_lock, self);
+  did_remove = remove_from_queue(&sem->__sem_waiting, th);
+  __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+
+  return did_remove;
+}
+
 int __new_sem_wait(sem_t * sem)
 {
   volatile pthread_descr self = thread_self();
+  pthread_extricate_if extr;
+  int already_canceled = 0;
+
+  /* Set up extrication interface */
+  extr.pu_object = sem;
+  extr.pu_extricate_func = new_sem_extricate_func;
 
   __pthread_lock((struct _pthread_fastlock *) &sem->__sem_lock, self);
   if (sem->__sem_value > 0) {
@@ -48,17 +70,31 @@ int __new_sem_wait(sem_t * sem)
     __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
     return 0;
   }
-  enqueue(&sem->__sem_waiting, self);
-  /* Wait for sem_post or cancellation */
+  /* Register extrication interface */
+  __pthread_set_own_extricate_if(self, &extr); 
+  /* Enqueue only if not already cancelled. */
+  if (!(THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE))
+    enqueue(&sem->__sem_waiting, self);
+  else
+    already_canceled = 1;
   __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
-  suspend_with_cancellation(self);
-  /* This is a cancellation point */
-  if (THREAD_GETMEM(self, p_canceled)
+
+  if (already_canceled) {
+    __pthread_set_own_extricate_if(self, 0); 
+    pthread_exit(PTHREAD_CANCELED);
+  } 
+
+  /* Wait for sem_post or cancellation, or fall through if already canceled */
+  suspend(self);
+  __pthread_set_own_extricate_if(self, 0); 
+
+  /* Terminate only if the wakeup came from cancellation. */
+  /* Otherwise ignore cancellation because we got the semaphore. */
+
+  if (THREAD_GETMEM(self, p_woken_by_cancel)
       && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
-    /* Remove ourselves from the waiting list if we're still on it */
-    __pthread_lock((struct _pthread_fastlock *) &sem->__sem_lock, self);
-    remove_from_queue(&sem->__sem_waiting, self);
-    __pthread_unlock((struct _pthread_fastlock *) &sem->__sem_lock);
+    THREAD_SETMEM(self, p_woken_by_cancel, 0);
     pthread_exit(PTHREAD_CANCELED);
   }
   /* We got the semaphore */

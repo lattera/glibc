@@ -43,13 +43,14 @@ static inline pthread_descr dequeue(pthread_descr * q)
   return th;
 }
 
-static inline void remove_from_queue(pthread_descr * q, pthread_descr th)
+static inline int remove_from_queue(pthread_descr * q, pthread_descr th)
 {
   for (; *q != NULL; q = &((*q)->p_nextwaiting)) {
     if (*q == th) {
       *q = th->p_nextwaiting;
       th->p_nextwaiting = NULL;
-      return;
+      return 1;
     }
   }
+  return 0;
 }

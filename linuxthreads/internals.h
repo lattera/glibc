@@ -86,6 +86,27 @@ struct pthread_key_struct {
 
 typedef struct _pthread_descr_struct * pthread_descr;
 
+/* Callback interface for removing the thread from waiting on an
+   object if it is cancelled while waiting or about to wait.
+   This hold a pointer to the object, and a pointer to a function
+   which ``extricates'' the thread from its enqueued state.
+   The function takes two arguments: pointer to the wait object,
+   and a pointer to the thread. It returns 1 if an extrication
+   actually occured, and hence the thread must also be signalled.
+   It returns 0 if the thread had already been extricated. */
+
+typedef struct _pthread_extricate_struct {
+    void *pu_object;
+    int (*pu_extricate_func)(void *, pthread_descr);
+} pthread_extricate_if;
+
+/* Atomic counter made possible by compare_and_swap */
+
+struct pthread_atomic {
+  long p_count;
+  int p_spinlock;
+};
+
 struct _pthread_descr_struct {
   pthread_descr p_nextlive, p_prevlive;
                                 /* Double chaining of active threads */
@@ -96,6 +117,7 @@ struct _pthread_descr_struct {
   int p_priority;               /* Thread priority (== 0 if not realtime) */
   struct _pthread_fastlock * p_lock; /* Spinlock for synchronized accesses */
   int p_signal;                 /* last signal received */
+  struct pthread_atomic p_resume_count; /* number of times restart() was called on thread */
   sigjmp_buf * p_signal_jmp;    /* where to siglongjmp on a signal or NULL */
   sigjmp_buf * p_cancel_jmp;    /* where to siglongjmp on a cancel or NULL */
   char p_terminated;            /* true if terminated e.g. by pthread_exit */
@@ -108,6 +130,8 @@ struct _pthread_descr_struct {
   char p_cancelstate;           /* cancellation state */
   char p_canceltype;            /* cancellation type (deferred/async) */
   char p_canceled;              /* cancellation request pending */
+  char p_woken_by_cancel;       /* cancellation performed wakeup */
+  pthread_extricate_if *p_extricate; /* See above */
   int * p_errnop;               /* pointer to used errno variable */
   int p_errno;                  /* error returned by last system call */
   int * p_h_errnop;             /* pointer to used h_errno variable */
@@ -353,6 +377,7 @@ void __pthread_manager_sighandler(int sig);
 void __pthread_reset_main_thread(void);
 void __fresetlockfiles(void);
 void __pthread_manager_adjust_prio(int thread_prio);
+void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif);
 
 extern int __pthread_attr_setguardsize (pthread_attr_t *__attr,
 					size_t __guardsize);
@@ -371,6 +396,21 @@ extern int __pthread_setconcurrency (int __level);
 extern int __pthread_mutexattr_gettype (const pthread_mutexattr_t *__attr,
 					int *__kind);
 extern void __pthread_kill_other_threads_np (void);
+
+void __pthread_restart_old(pthread_descr th);
+void __pthread_suspend_old(pthread_descr self);
+
+void __pthread_restart_new(pthread_descr th);
+void __pthread_suspend_new(pthread_descr self);
+
+void __pthread_wait_for_restart_signal(pthread_descr self);
+
+void __pthread_init_condvar(int rt_sig_available);
+
+/* Global pointers to old or new suspend functions */
+
+extern void (*__pthread_restart)(pthread_descr);
+extern void (*__pthread_suspend)(pthread_descr);
 
 /* Prototypes for the function without cancelation support when the
    normal version has it.  */

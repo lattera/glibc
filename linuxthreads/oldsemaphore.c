@@ -68,13 +68,29 @@ int __old_sem_init(old_sem_t *sem, int pshared, unsigned int value)
   return 0;
 }
 
+/* Function called by pthread_cancel to remove the thread from
+   waiting inside __old_sem_wait. Here we simply unconditionally
+   indicate that the thread is to be woken, by returning 1. */
+
+static int old_sem_extricate_func(void *obj, pthread_descr th)
+{
+    return 1;
+}
+
 int __old_sem_wait(old_sem_t * sem)
 {
     long oldstatus, newstatus;
     volatile pthread_descr self = thread_self();
     pthread_descr * th;
+    pthread_extricate_if extr;
+
+    /* Set up extrication interface */
+    extr.pu_object = 0;
+    extr.pu_extricate_func = old_sem_extricate_func;
 
     while (1) {
+	/* Register extrication interface */
+	__pthread_set_own_extricate_if(self, &extr); 
 	do {
             oldstatus = sem->sem_status;
             if ((oldstatus & 1) && (oldstatus != 1))
@@ -85,11 +101,15 @@ int __old_sem_wait(old_sem_t * sem)
 	    }
 	}
 	while (! sem_compare_and_swap(sem, oldstatus, newstatus));
-	if (newstatus & 1)
+	if (newstatus & 1) {
 	    /* We got the semaphore. */
+	  __pthread_set_own_extricate_if(self, 0); 
 	    return 0;
+	}
 	/* Wait for sem_post or cancellation */
-	suspend_with_cancellation(self);
+	suspend(self);
+	__pthread_set_own_extricate_if(self, 0); 
+
 	/* This is a cancellation point */
 	if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
 	    /* Remove ourselves from the waiting list if we're still on it */

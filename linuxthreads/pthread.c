@@ -43,6 +43,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* int p_priority */
   &__pthread_handles[0].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
+  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
   0,                          /* char p_terminated */
@@ -55,6 +56,8 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
+  0,                          /* char p_woken_by_cancel */
+  NULL,                       /* struct pthread_extricate_if *p_extricate */
   NULL,                       /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
@@ -86,6 +89,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_priority */
   &__pthread_handles[1].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
+  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
   0,                          /* char p_terminated */
@@ -98,6 +102,8 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
+  0,                          /* char p_woken_by_cancel */
+  NULL,                       /* struct pthread_extricate_if *p_extricate */
   &__pthread_manager_thread.p_errno, /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
@@ -143,6 +149,12 @@ char *__pthread_manager_thread_tos = NULL;
 
 int __pthread_exit_requested = 0;
 int __pthread_exit_code = 0;
+
+/* Pointers that select new or old suspend/resume functions 
+   based on availability of rt signals. */
+
+void (*__pthread_restart)(pthread_descr) = __pthread_restart_old;
+void (*__pthread_suspend)(pthread_descr) = __pthread_suspend_old;
 
 /* Communicate relevant LinuxThreads constants to gdb */
 
@@ -215,13 +227,18 @@ init_rtsigs (void)
       __pthread_sig_cancel = SIGUSR2;
       __pthread_sig_debug = 0;
 #endif
+      __pthread_init_condvar(0);
     }
   else
     {
 #if __SIGRTMAX - __SIGRTMIN >= 3
       current_rtmin = __SIGRTMIN + 3;
+      __pthread_restart = __pthread_restart_new;
+      __pthread_suspend = __pthread_wait_for_restart_signal;
+      __pthread_init_condvar(1);
 #else
       current_rtmin = __SIGRTMIN;
+      __pthread_init_condvar(0);
 #endif
 
       current_rtmax = __SIGRTMAX;
@@ -447,7 +464,7 @@ int __pthread_initialize_manager(void)
       raise(__pthread_sig_debug);
       /* We suspend ourself and gdb will wake us up when it is
 	 ready to handle us. */
-      suspend(thread_self());
+      __pthread_wait_for_restart_signal(thread_self());
     }
   /* Synchronize debugging of the thread manager */
   request.req_kind = REQ_DEBUG;
@@ -769,6 +786,53 @@ int __pthread_getconcurrency(void)
   return current_level;
 }
 weak_alias (__pthread_getconcurrency, pthread_getconcurrency)
+
+void __pthread_set_own_extricate_if(pthread_descr self, pthread_extricate_if *peif)
+{
+  __pthread_lock(self->p_lock, self);
+  THREAD_SETMEM(self, p_extricate, peif);
+  __pthread_unlock(self->p_lock);
+}
+
+/* Primitives for controlling thread execution */
+
+void __pthread_wait_for_restart_signal(pthread_descr self)
+{
+  sigset_t mask;
+
+  sigprocmask(SIG_SETMASK, NULL, &mask); /* Get current signal mask */
+  sigdelset(&mask, __pthread_sig_restart); /* Unblock the restart signal */
+  do {
+    self->p_signal = 0;
+    sigsuspend(&mask);                   /* Wait for signal */
+  } while (self->p_signal !=__pthread_sig_restart );
+}
+
+/* The _old variants are for 2.0 and early 2.1 kernels which don't have RT signals.
+   On these kernels, we use SIGUSR1 and SIGUSR2 for restart and cancellation.
+   Since the restart signal does not queue, we use an atomic counter to create
+   queuing semantics. This is needed to resolve a rare race condition in
+   pthread_cond_timedwait_relative. */
+    
+void __pthread_restart_old(pthread_descr th)
+{
+  if (atomic_increment(&th->p_resume_count) == -1)
+    kill(th->p_pid, __pthread_sig_restart);
+}
+
+void __pthread_suspend_old(pthread_descr self)
+{
+  if (atomic_decrement(&self->p_resume_count) <= 0)
+    __pthread_wait_for_restart_signal(self);
+}
+
+void __pthread_restart_new(pthread_descr th)
+{
+    kill(th->p_pid, __pthread_sig_restart);
+}
+
+/* There is no __pthread_suspend_new because it would just
+   be a wasteful wrapper for __pthread_wait_for_restart_signal */
 
 /* Debugging aid */
 
