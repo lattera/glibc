@@ -157,7 +157,7 @@ __ieee754_acosl (x)
       if (ix == 0x3fff0000
 	  && (u.parts32.w1 | u.parts32.w2 | u.parts32.w3) == 0)
 	{			/* |x| == 1 */
-	  if (sign & 0x80000000)
+	  if ((sign & 0x80000000) == 0)
 	    return 0.0;		/* acos(1) = 0  */
 	  else
 	    return (2.0 * pio2_hi) + (2.0 * pio2_lo);	/* acos(-1)= pi */
