@@ -232,6 +232,8 @@ _nss_files_get##name##_r (proto,					      \
 		  /* Compute the new buffer end.  */			      \
 		  bufferend = (char *) &new_h_aliases[naliases + 1];	      \
 		  assert (bufferend <= buffer + buflen);		      \
+									      \
+		  result = old_result;					      \
 		}							      \
 	    }								      \
 									      \
