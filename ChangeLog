@@ -1,3 +1,9 @@
+2003-07-22  Andreas Jaeger  <aj@suse.de>
+
+	* include/libc-symbols.h (_elf_set_element): Use attribute used so
+	that gcc will not optimize it away.
+	(link_warning): Likewise.
+
 2003-07-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* wcsmbs/wcpncpy.c (__wcpncpy): Correct destination pointer handling.
