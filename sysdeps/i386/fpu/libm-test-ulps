@@ -8,14 +8,19 @@ ldouble: 1
 # asin
 Test "asin (-0.5) == -pi/6":
 ldouble: 1
+ildouble: 1
 Test "asin (-1.0) == -pi/2":
 ldouble: 1
+ildouble: 1
 Test "asin (0.5) == pi/6":
 ldouble: 1
+ildouble: 1
 Test "asin (0.75) == 0.848062078981481008052944338998418080":
 ldouble: 1
+ildouble: 1
 Test "asin (1.0) == pi/2":
 ldouble: 1
+ildouble: 1
 
 # atanh
 Test "atanh (0.75) == 0.972955074527656652552676371721589865":
@@ -862,6 +867,7 @@ ldouble: 622
 
 Function: "asin":
 ldouble: 1
+ildouble: 1
 
 Function: "atanh":
 ildouble: 2
