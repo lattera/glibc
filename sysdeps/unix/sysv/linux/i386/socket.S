@@ -76,7 +76,7 @@ L(pseudo_end):
 1:	pushl %esi
 
 	/* Enable asynchronous cancellation.  */
-	call __libc_enable_asynccancel	/* No @plt */
+	CENABLE
 	movl %eax, %esi
 
 	/* Save registers.  */
@@ -93,7 +93,7 @@ L(pseudo_end):
 
 	/* Restore the cancellation.  */
 	xchgl %esi, %eax
-	call __libc_disable_asynccancel	/* No @plt */
+	CDISABLE
 
 	/* Restore registers.  */
 	movl %esi, %eax

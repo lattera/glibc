@@ -1,3 +1,44 @@
+2002-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* libc-cancellation.c: Guard both function with
+	#if !defined NOT_IN_libc.
+	* Makefile (libpthread-routines): Use ptw-, not pt- prefix for the
+	automatically provided pthread wrappers.
+	* pthreadP.h (LIBC_CANCEL_ASYNC, LIBC_CANCEL_RESET): Define to
+	CANCEL_* if IS_IN_libpthread and to dummy versions if not in libc
+	nor in libpthread.
+	* pt-open.c: Removed.
+	* pt-fcntl.c: Removed.
+	* pt-fsync.c: Removed.
+	* pt-lseek.c: Removed.
+	* pt-msgrcv.c: Removed.
+	* pt-msgsnd.c: Removed.
+	* pt-msync.c: Removed.
+	* pt-nanosleep.c: Removed.
+	* pt-open64.c: Removed.
+	* pt-pause.c: Removed.
+	* pt-pread.c: Removed.
+	* pt-pread64.c: Removed.
+	* pt-pwrite.c: Removed.
+	* pt-pwrite64.c: Removed.
+	* pt-read.c: Removed.
+	* pt-recv.c: Removed.
+	* pt-recvfrom.c: Removed.
+	* pt-recvmsg.c: Removed.
+	* pt-send.c: Removed.
+	* pt-sendto.c: Removed.
+	* pt-sigtimedwait.c: Removed.
+	* pt-sigwait.c: Removed.
+	* pt-wait.c: Removed.
+	* pt-waitpid.c: Removed.
+	* pt-write.c: Removed.
+	* pt-accept.c: Removed.
+	* pt-close.c: Removed.
+	* pt-connect.c: Removed.
+	* pt-lseek64.c: Removed.
+	* pt-sendmsg.c: Removed.
+	* pt-tcdrain.c: Removed.
+
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Renamed from

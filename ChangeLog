@@ -1,3 +1,19 @@
+2002-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Use CENABLE and CDISABLE
+	macros instead of doing the calls directly.
+	* sysdeps/unix/make-syscalls.sh: Add ptw-*.$o target name to rules.
+	* Makerules ($(+sysdir_pfx)sysd-rules): Emit rules for ptw-%
+	targets.
+
+2002-12-16  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Backout last change.
+	* sysdeps/ieee754/bits/nan.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list (__syscall_open,
+	__syscall_wait4, __syscall_ioctl, __syscall_write): Add.
+
 2002-12-16  Roland McGrath  <roland@redhat.com>
 
 	* sunrpc/xdr_mem.c (xdrmem_inline): Fix argument type.

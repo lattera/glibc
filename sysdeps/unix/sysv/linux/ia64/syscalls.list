@@ -81,6 +81,10 @@ s_stat		xstat	stat		i:sp	__syscall_stat
 s_lstat		lxstat	lstat		i:sp	__syscall_lstat
 s_fstat		fxstat	fstat		i:ip	__syscall_fstat
 s_sysctl	sysctl	_sysctl		i:p	__syscall__sysctl
+s_open		open	open		i:siv	__syscall_open
+s_wait4		wait4	wait4		i:iWiP	__syscall_wait4
+s_ioctl		ioctl	ioctl		i:iiI	__syscall_ioctl
+s_write		write	write		i:ibn	__syscall_write
 
 # IA-64 specific
 getunwind	EXTRA	getunwind	i:pi	getunwind

@@ -129,12 +129,20 @@ extern struct pthread_functions __libc_pthread_functions attribute_hidden;
 #define CANCEL_RESET(oldtype) \
   __pthread_disable_asynccancel (oldtype)
 
+#if !defined NOT_IN_libc
 /* Same as CANCEL_ASYNC, but for use in libc.so.  */
-#define LIBC_CANCEL_ASYNC() \
+# define LIBC_CANCEL_ASYNC() \
   __libc_enable_asynccancel ()
 /* Same as CANCEL_RESET, but for use in libc.so.  */
-#define LIBC_CANCEL_RESET(oldtype) \
+# define LIBC_CANCEL_RESET(oldtype) \
   __libc_disable_asynccancel (oldtype)
+#elif defined NOT_IN_libc && defined IS_IN_libpthread
+# define LIBC_CANCEL_ASYNC() CANCEL_ASYNC ()
+# define LIBC_CANCEL_RESET(val) CANCEL_RESET (val)
+#else
+# define LIBC_CANCEL_ASYNC()	0 /* Just a dummy value.  */
+# define LIBC_CANCEL_RESET(val)	((void)(val)) /* Nothing, but evaluate it.  */
+#endif
 
 
 /* This function is responsible for calling all registered cleanup

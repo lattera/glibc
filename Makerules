@@ -263,10 +263,16 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		  \$$(compile-command.S)";				      \
 	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.s \$$(before-compile); \
 		  \$$(compile-command.s)";			              \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.S \$$(before-compile); \
+		  \$$(compile-command.S)";				      \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.s \$$(before-compile); \
+		  \$$(compile-command.s)";			              \
 	     $(close-check-inhibit-asm)	\
 	     echo "\$$(objpfx)%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	     echo "\$$(objpfx)rtld-%$$o: $$dir/%.c \$$(before-compile); \
+		  \$$(compile-command.c)";				      \
+	     echo "\$$(objpfx)ptw-%$$o: $$dir/%.c \$$(before-compile); \
 		  \$$(compile-command.c)";				      \
 	   done; \
 	   $(open-check-inhibit-asm) \
@@ -274,14 +280,20 @@ $(+sysdir_pfx)sysd-rules: $(+sysdir_pfx)config.make $(..)Makerules \
 		\$$(make-dummy-dep)";			       \
 	   echo "\$$(objpfx)rtld-%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
 		\$$(make-dummy-dep)";			       \
+	   echo "\$$(objpfx)ptw-%.d: $$dir/%.s \$$(common-objpfx)dummy.d; \
+		\$$(make-dummy-dep)";			       \
 	   echo "\$$(objpfx)%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)rtld-%.d: $$dir/%.S \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)ptw-%.d: $$dir/%.S \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   $(close-check-inhibit-asm)	\
 	   echo "\$$(objpfx)%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)rtld-%.d: $$dir/%.c \$$(before-compile); \
+		\$$(+make-deps)";					      \
+	   echo "\$$(objpfx)ptw-%.d: $$dir/%.c \$$(before-compile); \
 		\$$(+make-deps)";					      \
 	   echo "\$$(objpfx)m_%.S: $$dir/s_%.S; \$$(+make-include-of-dep)";   \
 	   echo "\$$(objpfx)m_%.c: $$dir/s_%.c; \$$(+make-include-of-dep)";   \

@@ -23,6 +23,8 @@
 #include "atomic.h"
 
 
+#if !defined NOT_IN_libc
+
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
    They do not need to check parameters etc.  */
@@ -82,3 +84,5 @@ __libc_disable_asynccancel (int oldtype)
 	break;
     }
 }
+
+#endif

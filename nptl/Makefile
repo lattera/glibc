@@ -94,13 +94,14 @@ libpthread-routines = init events \
 		      lowlevellock lowlevelmutex lowlevelcond lowlevelrwlock \
 		      lowlevelsem \
 		      pt-vfork \
-		      pt-write pt-read pt-close pt-fcntl pt-accept pt-connect \
-		      pt-recv pt-recvfrom pt-recvmsg pt-send pt-sendmsg \
-		      pt-sendto pt-fsync pt-lseek pt-lseek64 pt-msync \
-		      pt-nanosleep pt-open pt-open64 pt-pause pt-pread \
-		      pt-pread64 pt-pwrite pt-pwrite64 pt-tcdrain pt-system \
-		      pt-wait pt-waitpid pt-msgrcv pt-msgsnd pt-sigwait \
-		      pt-raise \
+		      ptw-write ptw-read ptw-close ptw-fcntl ptw-accept \
+		      ptw-connect ptw-recv ptw-recvfrom ptw-recvmsg ptw-send \
+		      ptw-sendmsg ptw-sendto ptw-fsync ptw-lseek ptw-llseek \
+		      ptw-msync ptw-nanosleep ptw-open ptw-open64 ptw-pause \
+		      ptw-pread ptw-pread64 ptw-pwrite ptw-pwrite64 \
+		      ptw-tcdrain ptw-wait ptw-waitpid ptw-msgrcv ptw-msgsnd \
+		      ptw-sigwait \
+		      pt-raise pt-system \
 		      flockfile ftrylockfile funlockfile \
 		      sigaction \
 		      herrno res pt-allocrtsig \
