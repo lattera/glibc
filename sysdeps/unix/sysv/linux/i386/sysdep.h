@@ -291,9 +291,9 @@ asm (".L__X'%ebx = 1\n\t"
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
     unsigned int resultvar = INTERNAL_SYSCALL(name, nr, args);		      \
-    if (resultvar >= 0xfffff001)					      \
+    if (INTERNAL_SYSCALL_ERROR_P (resultvar))				      \
       {									      \
-	__set_errno (-resultvar);					      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar));		      \
 	resultvar = 0xffffffff;						      \
       }									      \
     (int) resultvar; })
@@ -314,6 +314,12 @@ asm (".L__X'%ebx = 1\n\t"
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASMFMT_##nr(args) : "memory", "cc");		      \
     (int) resultvar; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((val) >= 0xfffff001)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define LOADARGS_0
 #define LOADARGS_1 \

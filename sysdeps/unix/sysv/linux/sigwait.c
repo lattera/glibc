@@ -40,9 +40,19 @@ __sigwait (set, sig)
 
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  /* XXX INLINE_SYSCALL_NOERROR candiate.  */
-  ret =  INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			 NULL, NULL, _NSIG / 8);
+#ifdef INTERNAL_SYSCALL
+  ret = INTERNAL_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			  NULL, NULL, _NSIG / 8);
+  if (! INTERNAL_SYSCALL_ERROR_P (ret))
+    {
+      *sig = ret;
+      ret = 0;
+    }
+  else
+    ret = INTERNAL_SYSCALL_ERRNO (ret);
+#else
+  ret = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			NULL, NULL, _NSIG / 8);
   if (ret != -1)
     {
       *sig = ret;
@@ -50,6 +60,7 @@ __sigwait (set, sig)
     }
   else
     ret = errno;
+#endif
 
   return ret;
 }
