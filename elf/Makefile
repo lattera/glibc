@@ -42,7 +42,8 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   do-lookup.h sprof.c gen-trusted-dirs.awk \
 		   testobj1.c testobj2.c testobj3.c testobj4.c testobj5.c \
 		   testobj6.c testobj1_1.c failobj.c \
-		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c
+		   ldconfig.h ldconfig.c cache.c readlib.c readelflib.c \
+		   dep1.c dep2.c dep3.c dep4.c
 
 include ../Makeconfig
 
@@ -80,10 +81,11 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1
+	constload1 order
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
-		testobj1_1 failobj constload2 constload3
+		testobj1_1 failobj constload2 constload3 \
+		dep1 dep2 dep3 dep4
 extra-objs += $(modules-names:=.os)
 
 include ../Rules
@@ -219,6 +221,9 @@ $(objpfx)testobj4.so: $(libdl)
 $(objpfx)testobj5.so: $(libdl)
 $(objpfx)testobj6.so: $(libdl)
 $(objpfx)failobj.so: $(objpfx)testobj6.so
+$(objpfx)dep1.so: $(objpfx)dep2.so $(objpfx)dep4.so
+$(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
+$(objpfx)dep4.so: $(objpfx)dep3.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -262,3 +267,11 @@ endif
 
 $(objpfx)constload1: $(libdl)
 $(objpfx)constload1.out: $(objpfx)constload2.so $(objpfx)constload3.so
+
+$(objpfx)order: $(addprefix $(objpfx),dep4.so dep3.so dep2.so dep1.so)
+
+$(objpfx)order.out: $(objpfx)order
+	$(elf-objpfx)$(rtld-installed-name) \
+	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
+	  $(objpfx)order > $@
+	(echo "0123456789" | cmp $@ -) > /dev/null
