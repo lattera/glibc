@@ -1,3 +1,7 @@
+2001-08-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* wcsmbs/wcsmbs-tst1.c (main): Avoid warning.  Pretty printing.
+
 2001-08-05  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/unix/bsd/bsd4.4/bits/dirent.h (struct dirent): Rename member
