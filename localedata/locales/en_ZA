@@ -1,0 +1,91 @@
+escape_char  /
+comment_char  %
+
+% English language locale for South Africa
+% Source: RAP
+% Email: nic@sig.co.za
+% Tel: +27 83 7659503
+% Fax: +27 12 3478098
+% Language: en
+% Territory: ZA
+% Revision: 1.0
+% Date: 1999-03-28
+% Users: general
+% Repertoiremap: mnemonic,ds
+% Charset: ISO-8859-1
+% Distribution and use is free, also
+% for commercial purposes.
+
+LC_CTYPE
+copy "en_DK"
+END LC_CTYPE
+
+LC_COLLATE
+copy "en_DK"
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol         "<Z><A><R><SP>"
+currency_symbol         "<R>"
+mon_decimal_point       "<.>"
+mon_thousands_sep       "<,>"
+mon_grouping            3;3
+positive_sign           ""
+negative_sign           "<->"
+int_frac_digits         2
+frac_digits             2
+p_cs_precedes           1
+p_sep_by_space          0
+n_cs_precedes           1
+n_sep_by_space          0
+p_sign_posn             1
+n_sign_posn             1
+END LC_MONETARY
+
+LC_NUMERIC
+decimal_point           "<.>"
+thousands_sep           "<,>"
+grouping                3;3
+END LC_NUMERIC
+
+LC_TIME
+abday       "<S><u><n>";"<M><o><n>";/
+            "<T><u><e>";"<W><e><d>";/
+            "<T><h><u>";"<F><r><i>";/
+            "<S><a><t>"
+day         "<S><u><n><d><a><y>";/
+            "<M><o><n><d><a><y>";/
+            "<T><u><e><s><d><a><y>";/
+            "<W><e><d><n><e><s><d><a><y>";/
+            "<T><h><u><r><s><d><a><y>";/
+            "<F><r><i><d><a><y>";/
+            "<S><a><t><u><r><d><a><y>"
+abmon       "<J><a><n>";"<F><e><b>";/
+            "<M><a><r>";"<A><p><r>";/
+            "<M><a><y>";"<J><u><n>";/
+            "<J><u><l>";"<A><u><g>";/
+            "<S><e><p>";"<O><c><t>";/
+            "<N><o><v>";"<D><e><c>"
+mon         "<J><a><n><u><a><r><y>";/
+            "<F><e><b><r><u><a><r><y>";/
+            "<M><a><r><c><h>";/
+            "<A><p><r><i><l>";/
+            "<M><a><y>";/
+            "<J><u><n><e>";/
+            "<J><u><l><y>";/
+            "<A><u><g><u><s><t>";/
+            "<S><e><p><t><e><m><b><e><r>";/
+            "<O><c><t><o><b><e><r>";/
+            "<N><o><v><e><m><b><e><r>";/
+            "<D><e><c><e><m><b><e><r>"
+d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
+d_fmt       "<%><d><//><%><m><//><%><y>"
+t_fmt       "<%><T>"
+am_pm       "";""
+t_fmt_ampm  ""
+END LC_TIME
+
+LC_MESSAGES
+yesexpr     "<<(><y><Y><)/>><.><*>"
+noexpr      "<<(><n><N><)/>><.><*>"
+END LC_MESSAGES
