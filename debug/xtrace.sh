@@ -78,8 +78,8 @@ format_line() {
 # If the variable COLUMNS is not set do this now.
 COLUMNS=${COLUMNS:-80}
 
-# If `TERM' is not set, set it to `xterm'.
-TERM=${TERM:-xterm}
+# If `TERMINAL_PROG' is not set, set it to `xterm'.
+TERMINAL_PROG=${TERMINAL_PROG:-xterm}
 
 # The data file to process, if any.
 data=
@@ -108,6 +108,12 @@ while test $# -gt 0; do
     shift
     break
     ;;
+  --help)
+    do_help
+    ;;
+  --version)
+    do_version
+    ;;
   --*)
     echo >&2 $"memprof: unrecognized option \`$1'"
     do_usage
@@ -130,7 +136,7 @@ fi
 program=$1
 shift
 if test ! -f "$program"; then
-  echo >2& $"\executable \`$program' not found"
+  echo >2& $"executable \`$program' not found"
   do_usage
 fi
 if test ! -x "$program"; then
@@ -155,7 +161,7 @@ else
   fifo=$(mktemp -u ${TMPDIR:-/tmp}/xprof.XXXXXX)
   mkfifo -m 0600 $fifo || exit 1
   # Now start the program and let it write to the FIFO.
-  $TERM -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read $fifo" &
+  $TERMINAL_PROG -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read $fifo" &
   termpid=$!
   $pcprofiledump $fifo |
   sed 's/this = \([^,]*\).*/\1/' |

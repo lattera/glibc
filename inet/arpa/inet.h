@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,67 +28,67 @@ __BEGIN_DECLS
 
 /* Convert Internet host address from numbers-and-dots notation in CP
    into binary data in network byte order.  */
-extern u_int32_t inet_addr __P ((__const char *__cp));
+extern u_int32_t inet_addr (__const char *__cp) __THROW;
 
 /* Convert Internet host address from numbers-and-dots notation in CP
    into binary data and store the result in the structure INP.  */
-extern int inet_aton __P ((__const char *__cp, struct in_addr *__inp));
+extern int inet_aton (__const char *__cp, struct in_addr *__inp) __THROW;
 
 /* Return the local host address part of the Internet address in IN.  */
-extern u_int32_t inet_lnaof __P ((struct in_addr __in));
+extern u_int32_t inet_lnaof (struct in_addr __in) __THROW;
 
 /* Make Internet host address in network byte order by combining the
    network number NET with the local address HOST.  */
-extern struct in_addr inet_makeaddr __P ((u_int32_t __net, u_int32_t __host));
+extern struct in_addr inet_makeaddr (u_int32_t __net, u_int32_t __host) __THROW;
 
 /* Format a network number NET into presentation format and place result
    in buffer starting at BUF with length of LEN bytes.  */
-extern char *inet_neta __P ((u_int32_t __net, char *__buf, size_t __len));
+extern char *inet_neta (u_int32_t __net, char *__buf, size_t __len) __THROW;
 
 /* Return network number part of the Internet address IN.  */
-extern u_int32_t inet_netof __P ((struct in_addr __in));
+extern u_int32_t inet_netof (struct in_addr __in) __THROW;
 
 /* Extract the network number in network byte order from the address
    in numbers-and-dots natation starting at CP.  */
-extern u_int32_t inet_network __P ((__const char *__cp));
+extern u_int32_t inet_network (__const char *__cp) __THROW;
 
 /* Convert network number for interface type AF in buffer starting at
    CP to presentation format.  The result will specifiy BITS bits of
    the number.  */
-extern char *inet_net_ntop __P ((int __af, __const void *__cp, int __bits,
-				 char *__buf, size_t __len));
+extern char *inet_net_ntop (int __af, __const void *__cp, int __bits,
+			    char *__buf, size_t __len) __THROW;
 
 /* Convert network number for interface type AF from presentation in
    buffer starting at CP to network format and store result int
    buffer starting at BUF of size LEN.  */
-extern int inet_net_pton __P ((int __af, __const char *__cp,
-			       void *__buf, size_t __len));
+extern int inet_net_pton (int __af, __const char *__cp,
+			  void *__buf, size_t __len) __THROW;
 
 /* Convert Internet number in IN to ASCII representation.  The return value
    is a pointer to an internal array containing the string.  */
-extern char *inet_ntoa __P ((struct in_addr __in));
+extern char *inet_ntoa (struct in_addr __in) __THROW;
 
 /* Convert from presentation format of an Internet number in buffer
    starting at CP to the binary network format and store result for
    interface type AF in buffer starting at BUF.  */
-extern int inet_pton __P ((int __af, __const char *__cp, void *__buf));
+extern int inet_pton (int __af, __const char *__cp, void *__buf) __THROW;
 
 /* Convert a Internet address in binary network format for interface
    type AF in buffer starting at CP to presentation form and place
    result in buffer of length LEN astarting at BUF.  */
-extern __const char *inet_ntop __P ((int __af, __const void *__cp,
-				     char *__buf, size_t __len));
+extern __const char *inet_ntop (int __af, __const void *__cp,
+				char *__buf, size_t __len) __THROW;
 
 /* Convert ASCII representation in hexadecimal form of the Internet
    address to binary form and place result in buffer of length LEN
    starting at BUF.  */
-extern unsigned int inet_nsap_addr __P ((__const char *__cp,
-					 unsigned char *__buf, int __len));
+extern unsigned int inet_nsap_addr (__const char *__cp,
+				    unsigned char *__buf, int __len) __THROW;
 
 /* Convert internet address in binary form in LEN bytes starting at CP
    a presentation form and place result in BUF.  */
-extern char *inet_nsap_ntoa __P ((int __len, __const unsigned char *__cp,
-				  char *__buf));
+extern char *inet_nsap_ntoa (int __len, __const unsigned char *__cp,
+			     char *__buf) __THROW;
 
 __END_DECLS
 

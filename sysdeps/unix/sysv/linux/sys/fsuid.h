@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,10 @@ __BEGIN_DECLS
 
 /* Change uid used for file access control to UID, without affecting
    other privileges (such as who can send signals at the process).  */
-extern int setfsuid __P ((__uid_t __uid));
+extern int setfsuid (__uid_t __uid) __THROW;
 
 /* Ditto for group id. */
-extern int setfsgid __P ((__gid_t __gid));
+extern int setfsgid (__gid_t __gid) __THROW;
 
 __END_DECLS
 

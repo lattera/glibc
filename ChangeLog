@@ -1,3 +1,83 @@
+1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* scripts/config.sub: Update from latest autoconf version.
+	* scripts/config.guess: Likewise.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* inet/arpa/inet.h: Remove K&R compatibility.
+	* math/fenv.h: Likewise.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h (struct
+	kernel_sigaction): Remove K&R compatibility.
+	* sysdeps/unix/sysv/linux/net/if.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/acct.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/fsuid.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/io.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/kdaemon.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/klog.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/mount.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/prctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/ptrace.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/quota.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/swap.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysctl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/sysinfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sys/timex.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/vm86.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/perm.h: Likewise.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/iconv_prog.c (process_block): Save errno value from iconv call.
+	Patch by Bruno Haible <haible@ilog.fr> [libc/1402].
+
+1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/gl.po: New file.
+
+1999-10-18  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Correct
+	namespace selection.
+
+1999-10-18  Andreas Schwab  <schwab@suse.de>
+
+	* debug/xtrace.sh: Use TERMINAL_PROG instead of TERM to avoid
+	clash with the TERM environment variable.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/generic/s_cproj.c (__cproj): Fix bug: NaN + i NaN
+	returns now NaN + i NaN.
+	* sysdeps/generic/s_cprojf.c (__cprojf): Likewise
+	* sysdeps/generic/s_cprojl.c (__cprojl): Likewise.
+
+1999-10-18  Andreas Jaeger  <aj@suse.de>
+
+	* include/aio.h: Remove K&R compatiblity.
+	* include/alloca.h: Likewise.
+	* include/db.h: Likewise.
+	* include/dirent.h: Likewise.
+	* include/fcntl.h: Likewise.
+	* include/fpu_control.h: Likewise.
+	* include/glob.h: Likewise.
+	* include/grp.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/socket.h: Likewise.
+
+	* include/execinfo.h: Add __THROW.
+
+1999-10-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/mips/Implies: Remove wordsize-32 reference.
+	* sysdeps/mips/mips3/Implies: Add it here.
+
 1999-10-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Add various platform and architecture extensions.

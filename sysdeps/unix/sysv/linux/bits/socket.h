@@ -244,8 +244,8 @@ struct cmsghdr
 			 + CMSG_ALIGN (sizeof (struct cmsghdr)))
 #define CMSG_LEN(len)   (CMSG_ALIGN (sizeof (struct cmsghdr)) + (len))
 
-extern struct cmsghdr *__cmsg_nxthdr __P ((struct msghdr *__mhdr,
-					   struct cmsghdr *__cmsg));
+extern struct cmsghdr *__cmsg_nxthdr (struct msghdr *__mhdr,
+				      struct cmsghdr *__cmsg) __THROW;
 #ifdef __USE_EXTERN_INLINES
 # ifndef _EXTERN_INLINE
 #  define _EXTERN_INLINE extern __inline

@@ -2,14 +2,14 @@
 # include <dirent/dirent.h>
 
 /* Now define the internal interfaces.  */
-extern DIR *__opendir __P ((__const char *__name));
-extern int __closedir __P ((DIR *__dirp));
-extern struct dirent *__readdir __P ((DIR *__dirp));
-extern struct dirent64 *__readdir64 __P ((DIR *__dirp));
-extern int __readdir_r __P ((DIR *__dirp, struct dirent *__entry,
-			     struct dirent **__result));
-extern __ssize_t __getdents __P ((int __fd, char *__buf, size_t __nbytes))
+extern DIR *__opendir (__const char *__name) __THROW;
+extern int __closedir (DIR *__dirp) __THROW;
+extern struct dirent *__readdir (DIR *__dirp) __THROW;
+extern struct dirent64 *__readdir64 (DIR *__dirp) __THROW;
+extern int __readdir_r (DIR *__dirp, struct dirent *__entry,
+			struct dirent **__result) __THROW;
+extern __ssize_t __getdents (int __fd, char *__buf, size_t __nbytes)
      internal_function;
-extern __ssize_t __getdents64 __P ((int __fd, char *__buf, size_t __nbytes))
+extern __ssize_t __getdents64 (int __fd, char *__buf, size_t __nbytes)
      internal_function;
 #endif

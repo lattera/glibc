@@ -320,6 +320,8 @@ process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
       if (outptr != outbuf)
 	{
 	  /* We have something to write out.  */
+	  int errno_save = errno;
+
 	  if (fwrite (outbuf, 1, outptr - outbuf, output) < outptr - outbuf
 	      || ferror (output))
 	    {
@@ -328,6 +330,8 @@ process_block (iconv_t cd, const char *addr, size_t len, FILE *output)
 conversion stopped due to problem in writing the output"));
 	      return -1;
 	    }
+
+	  errno = errno_save;
 	}
 
       if (n != (size_t) -1)

@@ -53,8 +53,8 @@ __BEGIN_DECLS
 
 /* Clone current process.  */
 #ifdef __USE_MISC
-extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
-		       int __flags, void *__arg));
+extern int clone (int (*__fn) (void *__arg), void *__child_stack,
+		  int __flags, void *__arg) __THROW;
 #endif
 
 __END_DECLS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 __BEGIN_DECLS
 
 /* Enter virtual 8086 mode.  */
-extern int vm86 __P ((struct vm86_struct *__info));
+extern int vm86 (struct vm86_struct *__info) __THROW;
 
 __END_DECLS
 

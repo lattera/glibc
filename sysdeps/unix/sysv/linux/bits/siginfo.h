@@ -257,7 +257,7 @@ typedef struct sigevent
 
 	struct
 	  {
-	    void (*_function) __PMT ((sigval_t)); /* Function to start.  */
+	    void (*_function) (sigval_t);	  /* Function to start.  */
 	    void *_attribute;			  /* Really pthread_attr_t.  */
 	  } _sigev_thread;
       } _sigev_un;

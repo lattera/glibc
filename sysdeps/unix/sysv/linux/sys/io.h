@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,13 +33,13 @@ __BEGIN_DECLS
    Portability note: not all Linux platforms support this call.  Most
    platforms based on the PC I/O architecture probably will, however.
    E.g., Linux/Alpha for Alpha PCs supports this.  */
-extern int ioperm __P ((unsigned long int __from, unsigned long int __num,
-			int __turn_on));
+extern int ioperm (unsigned long int __from, unsigned long int __num,
+		   int __turn_on) __THROW;
 
 /* Set the I/O privilege level to LEVEL.  If LEVEL>3, permission to
    access any I/O port is granted.  This call requires root
    privileges. */
-extern int iopl __P ((int __level));
+extern int iopl (int __level) __THROW;
 
 __END_DECLS
 

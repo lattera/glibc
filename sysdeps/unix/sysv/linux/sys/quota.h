@@ -150,8 +150,8 @@ struct dqstats
 
 __BEGIN_DECLS
 
-extern int quotactl __P ((int __cmd, const char *__special, int __id,
-			  caddr_t __addr));
+extern int quotactl (int __cmd, const char *__special, int __id,
+		     caddr_t __addr) __THROW;
 
 __END_DECLS
 

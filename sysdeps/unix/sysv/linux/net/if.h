@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -169,8 +169,8 @@ __BEGIN_DECLS
 
 /* Convert an interface name to an index, and vice versa.  */
 
-extern unsigned int if_nametoindex __P ((__const char *__ifname));
-extern char *if_indextoname __P ((unsigned int __ifindex, char *__ifname));
+extern unsigned int if_nametoindex (__const char *__ifname) __THROW;
+extern char *if_indextoname (unsigned int __ifindex, char *__ifname) __THROW;
 
 /* Return a list of all interfaces and their indices.  */
 
@@ -180,11 +180,11 @@ struct if_nameindex
     char *if_name;		/* null terminated name: "eth0", ... */
   };
 
-extern struct if_nameindex *if_nameindex __P ((void));
+extern struct if_nameindex *if_nameindex (void) __THROW;
 
 /* Free the data returned from if_nameindex.  */
 
-extern void if_freenameindex __P ((struct if_nameindex *__ptr));
+extern void if_freenameindex (struct if_nameindex *__ptr) __THROW;
 
 __END_DECLS
 

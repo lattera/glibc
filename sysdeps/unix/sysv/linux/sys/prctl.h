@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 __BEGIN_DECLS
 
 /* Control process execution.  */
-extern int prctl __P ((int __option, ...));
+extern int prctl (int __option, ...) __THROW;
 
 __END_DECLS
 

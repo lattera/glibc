@@ -1,5 +1,5 @@
 /* Calls to enable and disable swapping on specified locations.  Linux version.
-   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,10 +33,10 @@ __BEGIN_DECLS
 
 /* Make the block special device PATH available to the system for swapping.
    This call is restricted to the super-user.  */
-extern int swapon __P ((__const char *__path, int __flags));
+extern int swapon (__const char *__path, int __flags) __THROW;
 
 /* Stop using block special device PATH for swapping.  */
-extern int swapoff __P ((__const char *__path));
+extern int swapoff (__const char *__path) __THROW;
 
 __END_DECLS
 

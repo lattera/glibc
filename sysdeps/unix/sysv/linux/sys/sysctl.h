@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@ __BEGIN_DECLS
 #include <linux/sysctl.h>
 
 /* Read or write system parameters.  */
-extern int sysctl __P ((int *__name, int __nlen, void *__oldval,
-			size_t *__oldlenp, void *__newval, size_t __newlen));
+extern int sysctl (int *__name, int __nlen, void *__oldval,
+		   size_t *__oldlenp, void *__newval, size_t __newlen) __THROW;
 
 __END_DECLS
 

@@ -1,5 +1,5 @@
 /* Header file for mounting/unmount Linux filesystems.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -93,15 +93,15 @@ enum
 __BEGIN_DECLS
 
 /* Mount a filesystem.  */
-extern int mount __P ((__const char *__special_file, __const char *__dir,
-		       __const char *__fstype, unsigned long int __rwflag,
-		       __const void *__data));
+extern int mount (__const char *__special_file, __const char *__dir,
+		  __const char *__fstype, unsigned long int __rwflag,
+		  __const void *__data) __THROW;
 
 /* Unmount a filesystem.  */
-extern int umount __P ((__const char *__special_file));
+extern int umount (__const char *__special_file) __THROW;
 
 /* Unmount a filesystem.  Force unmounting if FLAGS is set to MNT_FORCE.  */
-extern int umount2 __P ((__const char *__special_file, int __flags));
+extern int umount2 (__const char *__special_file, int __flags) __THROW;
 
 __END_DECLS
 

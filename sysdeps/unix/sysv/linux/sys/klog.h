@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ __BEGIN_DECLS
    the kernel's syslog system call, but that name is easily confused
    with the user-level syslog facility, which is something completely
    different.  */
-extern int klogctl __P ((int __type, char *__bufp, int __len));
+extern int klogctl (int __type, char *__bufp, int __len) __THROW;
 
 __END_DECLS
 

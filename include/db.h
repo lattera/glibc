@@ -6,8 +6,9 @@
 # include <db2/db.h>
 
 /* Internal interface for NSS.  */
-int __nss_db_open __P((const char *,
-		       DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **));
+extern int __nss_db_open (const char *,
+			  DBTYPE, u_int32_t, int, DB_ENV *, DB_INFO *, DB **)
+     __THROW;
 #endif
 
 #endif

@@ -27,21 +27,21 @@
 __BEGIN_DECLS
 
 /* Returns information on overall system statistics.  */
-extern int sysinfo __P ((struct sysinfo *__info));
+extern int sysinfo (struct sysinfo *__info) __THROW;
 
 
 /* Return number of configured processors.  */
-extern int get_nprocs_conf __P ((void));
+extern int get_nprocs_conf (void) __THROW;
 
 /* Return number of available processors.  */
-extern int get_nprocs __P ((void));
+extern int get_nprocs (void) __THROW;
 
 
 /* Return number of physical pages of memory in the system.  */
-extern int get_phys_pages __P ((void));
+extern int get_phys_pages (void) __THROW;
 
 /* Return number of available physical pages of memory in the system.  */
-extern int get_avphys_pages __P ((void));
+extern int get_avphys_pages (void) __THROW;
 
 __END_DECLS
 

@@ -36,7 +36,7 @@
 extern int errno;
 
 /* Function to get address of global `errno' variable.  */
-extern int *__errno_location __P ((void)) __attribute__ ((__const__));
+extern int *__errno_location (void) __attribute__ ((__const__)) __THROW;
 
 #  if defined _LIBC
 /* We wouldn't need a special macro anymore but it is history.  */

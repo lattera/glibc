@@ -30,8 +30,8 @@ __BEGIN_DECLS
 
 /* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
    descriptor OUT_FD.  */
-extern ssize_t sendfile __P ((int __out_fd, int __in_fd, off_t *offset,
-			      size_t __count));
+extern ssize_t sendfile (int __out_fd, int __in_fd, off_t *offset,
+			 size_t __count) __THROW;
 
 __END_DECLS
 
