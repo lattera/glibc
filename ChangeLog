@@ -1,5 +1,8 @@
 1998-12-11  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Fixl_addr parameter
+	type.  Reported by job bogan <job@piquin.uchicago.edu>.
+
 	* sysdeps/unix/opendir.c (__opendir): Use __xstat instead of
 	__stat.
 
