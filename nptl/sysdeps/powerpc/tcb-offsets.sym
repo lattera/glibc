@@ -12,3 +12,4 @@
 MULTIPLE_THREADS_OFFSET		thread_offsetof (header.multiple_threads)
 #endif
 PID				thread_offsetof (pid)
+TID				thread_offsetof (tid)

@@ -1,3 +1,8 @@
+2004-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: Add support
+	for pid caching in nptl.
+
 2004-10-18  Maciej W. Rozycki  <macro@mips.com>
 
 	* sysdeps/unix/sysv/linux/mips/bits/socket.h (__cmsg_nxthdr): Use

@@ -23,6 +23,9 @@
 #include <bp-sym.h>
 #include <bp-asm.h>
 
+#define CLONE_VM	0x00000100
+#define CLONE_THREAD	0x00010000
+
 /* This is the only really unusual system call in PPC linux, but not
    because of any weirdness in the system call itself; because of
    all the freaky stuff we have to do to make the call useful.  */
@@ -45,10 +48,13 @@ ENTRY (BP_SYM (__clone))
 	beq-	cr0,L(badargs)
 
 	/* Set up stack frame for parent.  */
-	stdu	r1,-80(r1)
+	stdu	r1,-88(r1)
 	std	r29,56(r1)
 	std	r30,64(r1)
 	std	r31,72(r1)
+#ifdef RESET_PID
+	std	r28,80(r1)
+#endif
 
 	/* Set up stack frame for child.  */
 	clrrdi	r4,r4,4
@@ -58,6 +64,9 @@ ENTRY (BP_SYM (__clone))
 	/* Save fn, args, stack across syscall.  */
 	mr	r29,r3			/* Function in r29.  */
 	mr	r30,r4			/* Stack pointer in r30.  */
+#ifdef RESET_PID
+	mr	r28,r5			/* Flags in r28.  */
+#endif
 	mr	r31,r6			/* Argument in r31.  */
 
 	/* 'flags' argument is first parameter to clone syscall. (The other
@@ -81,6 +90,20 @@ ENTRY (BP_SYM (__clone))
 	   it adds a race condition if a signal is sent to a thread
 	   just after it is created (in the previous three instructions).  */
 	mr	r1,r30
+
+#ifdef RESET_PID
+	andis.	r0,r28,1	/* This is & CLONE_THREAD */
+	bne+	r0,L(oldpid)
+	andi.	r0,r28,CLONE_VM
+	li	r3,-1
+	bne-	r0,L(nomoregetpid)
+	DO_CALL(SYS_ify(getpid))
+L(nomoregetpid):
+	stw	r3,TID(r13)
+	stw	r3,PID(r13)
+L(oldpid):
+#endif
+
 	/* Call procedure.  */
 	ld	r0,0(r29)
 	ld	r2,8(r29)
@@ -96,10 +119,13 @@ ENTRY (BP_SYM (__clone))
 
 L(parent):
 	/* Parent.  Restore registers & return.  */
+#ifdef RESET_PID
+	ld	r28,88(r1)
+#endif
 	ld	r31,72(r1)
 	ld	r30,64(r1)
 	ld	r29,56(r1)
-	addi	r1,r1,80
+	addi	r1,r1,88
 	bnslr+
 	b	JUMPTARGET(__syscall_error)
 

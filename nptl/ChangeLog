@@ -1,3 +1,11 @@
+2004-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/tcb-offsets.sym: Add TID.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/clone.S: New file.
+
+	* tst-getpid1.c: If child crashes, report this first.  Print which
+	signal.
+
 2004-12-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* init.c (__pthread_initialize_minimal_internal): Also unblock
