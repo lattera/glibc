@@ -224,6 +224,11 @@ typedef __off64_t off64_t;
 #  define __off64_t_defined
 # endif
 
+# ifndef __useconds_t_defined
+typedef __useconds_t useconds_t;
+#  define __useconds_t_defined
+# endif
+
 # ifndef __pid_t_defined
 typedef __pid_t pid_t;
 #  define __pid_t_defined
@@ -371,12 +376,12 @@ extern unsigned int sleep __P ((unsigned int __seconds));
    microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
    timer is reset to go off every INTERVAL microseconds thereafter.
    Returns the number of microseconds remaining before the alarm.  */
-extern unsigned int ualarm __P ((unsigned int __value,
-				 unsigned int __interval));
+extern __useconds_t ualarm __P ((__useconds_t __value,
+				 __useconds_t __interval));
 
 /* Sleep USECONDS microseconds, or until a signal arrives that is not blocked
    or ignored.  */
-extern void usleep __P ((unsigned int __useconds));
+extern void usleep __P ((__useconds_t __useconds));
 #endif
 
 

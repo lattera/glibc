@@ -121,6 +121,10 @@ typedef __key_t key_t;
 #include <time.h>
 
 #ifdef __USE_XOPEN
+# ifndef __useconds_t_defined
+typedef __useconds_t useconds_t;
+#  define __useconds_t_defined
+# endif
 typedef __suseconds_t suseconds_t;
 #endif
 

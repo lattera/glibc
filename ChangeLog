@@ -1,5 +1,15 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* posix/sys/types.h: Define type useconds_t if not done already.
+	* posix/unistd.h: Likewise.  Use this in ualarm and usleep
+	declarations.
+	* sysdeps/generic/bits/types.h: Define type __useconds_t.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Likewise.
+
 	* dirent/dirent.h (telldir): Change return type to long int.
 	* sysdeps/generic/telldir.c: Likewise.
 	* sysdeps/mach/hurd/telldir.c: Likewise.
