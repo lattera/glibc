@@ -274,7 +274,9 @@ ctype_startup (struct linereader *lr, struct localedef_t *locale,
 	{
 	  ctype->map_collection[0][cnt] = cnt;
 	  ctype->map_collection[1][cnt] = cnt;
+#ifdef PREDEFINED_CLASSES
 	  ctype->map_collection[2][cnt] = cnt;
+#endif
 	  ctype->map256_collection[0][cnt] = cnt;
 	  ctype->map256_collection[1][cnt] = cnt;
 	}
@@ -1843,11 +1845,6 @@ unknown character class `%s' in category `LC_CTYPE'"),
 	      uint32_t wch;
 	      struct charseq *seq;
 
-	      if (now->tok != tok_bsymbol)
-		/* XXX Cannot be handled yet.  We will have support
-		   for tok_ucs4 soon.  */
-		goto err_label;
-
 	      if (ellipsis_token == tok_none)
 		{
 		  if (get_character (now, charmap, repertoire, &seq, &wch))
@@ -1867,8 +1864,13 @@ unknown character class `%s' in category `LC_CTYPE'"),
 
 		  last_token = now->tok;
 		  /* Terminate the string.  */
-		  now->val.str.startmb[now->val.str.lenmb] = '\0';
-		  last_str = now->val.str.startmb;
+		  if (last_token == tok_bsymbol)
+		    {
+		      now->val.str.startmb[now->val.str.lenmb] = '\0';
+		      last_str = now->val.str.startmb;
+		    }
+		  else
+		    last_str = NULL;
 		  last_seq = seq;
 		  last_wch = wch;
 		  memcpy (last_charcode, now->val.charcode.bytes, 16);

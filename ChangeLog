@@ -1,3 +1,8 @@
+1999-11-20  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/ld-ctype.c (ctype_read): Fix reading of <U....>
+	values in charmaps.
+
 1999-11-18  Paul Eggert  <eggert@twinsun.com>
 
 	* time/strftime.c (my_strftime): Some old compilers object to
