@@ -1,3 +1,7 @@
+1999-10-04  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* stdlib/stdlib.h [__USE_BSD]: Declare getloadavg.
+
 1999-10-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/i486/bits/string.h (__memrchr): New function.
