@@ -23,8 +23,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-ENTRY(setjmp)
+ENTRY(_setjmp)
 	lda	$27, __sigsetjmp	/* Load address to jump to.  */
 	bis	$31, $31, $17		/* Pass a second argument of zero.  */
 	jmp	$31, ($27), __sigsetjmp /* Call __sigsetjmp.  */
-	.end setjmp
+	END(_setjmp)
