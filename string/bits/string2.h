@@ -1044,15 +1044,13 @@ __strtok_r_1c (char *__s, char __sep, char **__nextp)
   else
     {
       __result = __s;
-      while (*__s != '\0' && *__s != __sep)
-	++__s;
-      if (*__s == '\0')
-	*__nextp = __s;
-      else
-	{
-	  *__s = '\0';
-	  *__nextp = __s + 1;
-	}
+      while (*__s != '\0')
+	if (*__s++ == __sep)
+	  {
+	    __s[-1] = '\0';
+	    break;
+	  }
+      *__nextp = __s;
     }
   return __result;
 }

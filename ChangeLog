@@ -1,5 +1,7 @@
 2001-09-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/bits/string2.h (__strtok_r_1c): Optimize a bit.
+
 	* sysdeps/unix/sysv/linux/net/ethernet.h: Correct references to
 	ETHER_CRC_LEN.
 
