@@ -628,7 +628,7 @@ gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
   gnu_ld=yes gnu_as=yes
 esac
 case "$os" in
-gnu*elf* | linux* | sysv4* | solaris2*)
+gnu* | linux* | sysv4* | solaris2*)
   # These systems always use the ELF format.
   elf=yes
 esac
