@@ -1,3 +1,8 @@
+2000-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* crypt/tcrypt.texi: Moved to...
+	* manual/crypt.texi: ...here.
+
 2000-02-28  Geoff Keating  <geoffk@cygnus.com>
 
 	* Makeconfig (all-subdirs): Add 'crypt' subdirectory.
