@@ -67,12 +67,12 @@ test (const char *encoding, char *inbuf, size_t inbufsize, size_t outbufsize)
 
   if (!empty_input && empty_output)
     {
-      fprintf (stderr, "%s: ate %d input bytes\n", encoding, inptr - inbuf);
+      fprintf (stderr, "%s: ate %td input bytes\n", encoding, inptr - inbuf);
       exit (1);
     }
   if (empty_input && !empty_output)
     {
-      fprintf (stderr, "%s: produced %d output bytes\n",
+      fprintf (stderr, "%s: produced %td output bytes\n",
 	       encoding, outptr - outbuf);
       exit (1);
     }
