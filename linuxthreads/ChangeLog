@@ -1,3 +1,9 @@
+2001-11-26  Andreas Schwab  <schwab@suse.de>
+
+	* manager.c (pthread_handle_create): Start the child thread with
+	the cancel signal blocked, so that it does not handle it before
+	the thread register is set up.  Save errno from failed clone call.
+
 2001-11-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/Implies: Removed.
