@@ -1,5 +1,9 @@
 2002-12-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* init.c (__pthread_initialize_minimal_internal): Renamed from
+	__pthread_initialize_minimal.  Make old name an alias.  This
+	converts a normal relocation into a relative relocation.
+
 	* pt-fcntl.c (__fcntl): Use fcntl64 syscall, not fcntl.
 
 	* Versions [libpthread: GLIBC_2.3.2]: Remove creat, poll, pselect,
