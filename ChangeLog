@@ -1,5 +1,9 @@
 2000-12-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/message.texi: Add Estonian to plural overview list.
+	Correct rule for Slavic languages.
+	Patch by Stanislav Brabec <utx@penguin.cz>.
+
 	* nis/nss_nis/nis-netgrp.c: Remove unnecessary initializations.
 
 2000-12-18  Andreas Jaeger  <aj@suse.de>

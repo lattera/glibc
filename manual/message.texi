@@ -1259,7 +1259,7 @@ Languages with this property include:
 @item Germanic family
 Danish, Dutch, English, German, Norwegian, Swedish
 @item Finno-Ugric family
-Finnish
+Estonian, Finnish
 @item Latin/Greek family
 Greek
 @item Semitic family
@@ -1300,11 +1300,11 @@ Languages with this property include:
 Gaeilge
 @end table
 
-@item Three forms, special case for one and all numbers ending in 2, 3, or 4
+@item Three forms, special cases for numbers ending in 1 and 2, 3, 4, except those ending in 1[1-4]
 The header entry would look like this:
 
 @smallexample
-nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 ? 1 : 2
+nplurals=3; plural=n%100/10==1 ? 2 : n%10==1 ? 0 : (n+9)%10>3 ? 2 : 1
 @end smallexample
 
 @noindent
@@ -1312,7 +1312,7 @@ Languages with this property include:
 
 @table @asis
 @item Slavic family
-Russian
+Czech, Russian, Slovak
 @end table
 
 @item Three forms, special case for one and some numbers ending in 2, 3, or 4
