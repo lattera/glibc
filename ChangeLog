@@ -1,3 +1,7 @@
+2002-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/fr.po: Update from translation team.
+
 2002-02-25  Bruno Haible  <bruno@clisp.org>
 
 	* MakeTAGS (extract): Use --sort-by-file instead of --sort-output.
