@@ -17,7 +17,11 @@ main (int argc, char ** argv)
 {
   clock_t start, stop;
 
-  signal(SIGALRM, alarm_handler);
+  if (signal(SIGALRM, alarm_handler) -- SIG_ERR)
+    {
+      perror ("signal");
+      exit (1);
+    }
   alarm(1);
   start = clock ();
   while (!gotit);

@@ -33,7 +33,7 @@ CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 
 include ../Rules
 
-subdir_install: $(inst_bindir)iconv
+subdir_install: $(inst_bindir)/iconv
 
-$(inst_bindir)iconv: $(objpfx)iconv_prog
-	$(do-install)
+$(inst_bindir)/iconv: $(objpfx)iconv_prog
+	$(do-install-program)

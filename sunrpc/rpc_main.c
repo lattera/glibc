@@ -349,7 +349,11 @@ open_input (const char *infile, const char *define)
   int pd[2];
 
   infilename = (infile == NULL) ? "<stdin>" : infile;
-  pipe (pd);
+  if (pipe (pd) != 0)
+    {
+      perror ("pipe");
+      exit (1);
+    }
   switch (fork ())
     {
     case 0:

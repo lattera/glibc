@@ -1,3 +1,9 @@
+1998-02-25  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_isnanl.c: Ignore the explicit integer
+	bit.
+	* sysdeps/libm-ieee754/s_isinfl.c: Likewise.
+
 1998-02-27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add __adjtimex.
@@ -62,9 +68,6 @@
 	* sysdeps/unix/sysv/linux/alpha/adjtimex.S: New.
 
 1998-02-25 08:28  H.J. Lu  <hjl@gnu.org>
-
-	* math/test-fenv.c (print_rounding): Fix a typo in
-	FE_TOWARDSZERO.
 
 	* sysdeps/alpha/fpu/fraiseexcpt.c (feraiseexcept): Use a dummy
 	for FE_DIVBYZERO. Kludge for FE_UNDERFLOW.

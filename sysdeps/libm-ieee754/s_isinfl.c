@@ -21,9 +21,9 @@ __isinfl (long double x)
 {
 	int32_t se,hx,lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
-	hx |= lx | ((se & 0x7fff) ^ 0x7fff);
-	hx |= -hx;
+	lx |= (hx & 0x7fffffff) | ((se & 0x7fff) ^ 0x7fff);
+	lx |= -lx;
 	se &= 0x8000;
-	return ~(hx >> 31) & (1 - (se >> 14));
+	return ~(lx >> 31) & (1 - (se >> 14));
 }
 weak_alias (__isinfl, isinfl)

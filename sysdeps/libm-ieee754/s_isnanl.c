@@ -36,8 +36,8 @@ static char rcsid[] = "$NetBSD: $";
 	int32_t se,hx,lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
 	se = (se & 0x7fff) << 1;
-	hx |= lx;
-	se |= (u_int32_t)(hx|(-hx))>>31;
+	lx |= hx & 0x7fffffff;
+	se |= (u_int32_t)(lx|(-lx))>>31;
 	se = 0xfffe - se;
 	return (int)((u_int32_t)(se))>>16;
 }
