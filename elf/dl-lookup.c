@@ -129,8 +129,6 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
 	  if (runp != NULL)
 	    {
-	      unsigned int j;
-
 	      /* The object is still available.  Add the reference now.  */
 	      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
 		{
