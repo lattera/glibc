@@ -29,7 +29,7 @@
 	* spinlock.h (__pthread_trylock): Use __compare_and_swap, not
 	compare_and_swap.
 
-	* pthread.c (pthread_initialize): Don't use syscond to determine
+	* pthread.c (pthread_initialize): Don't use sysconf to determine
 	whether the machine has more than one processor.
 
 	* spinlock.c (__pthread_alt_timedlock): Add back one of the
@@ -41,7 +41,7 @@
 	__compare_and_swap to compare_and_swap in code which assumes
 	compare swap is available.
 
-2000-07-18 Kaz Kylheku <kaz@ashi.footprints.net>
+2000-07-18  Kaz Kylheku  <kaz@ashi.footprints.net>
 
 	* spinlock.c (__pthread_alt_lock, __pthread_alt_timedlock): Fixed
 	bug whereby thr field of waitnode structure would not be correctly
