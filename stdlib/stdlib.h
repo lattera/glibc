@@ -410,7 +410,7 @@ extern char *initstate (unsigned int __seed, char *__statebuf,
 
 /* Switch the random number generator to state buffer STATEBUF,
    which should have been previously initialized by `initstate'.  */
-extern char *setstate (__const char *__statebuf) __THROW;
+extern char *setstate (char *__statebuf) __THROW;
 
 
 # ifdef __USE_MISC
