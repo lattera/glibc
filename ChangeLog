@@ -1,5 +1,9 @@
 Tue Jan 16 17:37:39 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/seekdir.c: Don't modify POS before seeking.
+	* sysdeps/unix/telldir.c: Fix position calculation to account for
+	buffered data properly.
+
 	* sysdeps/m68k/Makefile (crypt): Don't define if building a shared
 	library.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -39,5 +39,5 @@ DEFUN(telldir, (dirp), DIR *dirp)
   pos = __lseek(dirp->__fd, (off_t) 0, SEEK_CUR);
   if (pos == (off_t) -1)
     return (off_t) -1;
-  return pos + (dirp->__size - dirp->__offset);
+  return pos + dirp->__size - dirp->__offset;
 }
