@@ -454,11 +454,12 @@ char *alloca ();
 /* Rename the non ISO C functions.  This is required by the standard
    because some ISO C functions will require linking with this object
    file and the name space must not be polluted.  */
-# define open   open_not_cancel_2
-# define close  close_not_cancel_no_status
-# define read   read_not_cancel
-# define mmap   __mmap
-# define munmap __munmap
+# define open(name, flags)	open_not_cancel_2 (name, flags)
+# define close(fd)		close_not_cancel_no_status (fd)
+# define read(fd, buf, n)	read_not_cancel (fd, buf, n)
+# define mmap(addr, len, prot, flags, fd, offset) \
+  __mmap (addr, len, prot, flags, fd, offset)
+# define munmap(addr, len)	__munmap (addr, len)
 #endif
 
 /* For those losing systems which don't have `alloca' we have to add
