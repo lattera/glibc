@@ -2,9 +2,7 @@ Thu Mar  9 17:16:53 1995  Brendan Kehoe  (brendan@zen.org)
 
 	* sysdeps/alpha/__longjmp.c (__longjmp): Remove obsolete __NORETURN
 	keyword.
-
-	* sysdeps/alpha/__math.h (__copysign): Use attribute instead of old
-	__CONSTVALUE by adding forward decl first with the const attribute.
+	* sysdeps/alpha/__math.h (__copysign): Remove obsolete __CONSTVALUE.
 
 	* configure.in: Match `osf*', not `osf1*'.
 	* configure: Likewise.
