@@ -1,5 +1,8 @@
 2002-11-20  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/powerpc/powerpc32/dl-machine.c [! SHARED]: Further
+	conditionalize [! DO_VERSIONING] #error.
+
 	* scripts/abilist.awk: Grok function descriptor symbols.
 
 	* intl/tst-gettext.c (main): Check return values from setlocale.

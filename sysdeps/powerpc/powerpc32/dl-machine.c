@@ -29,7 +29,7 @@
 /* Because ld.so is now versioned, these functions can be in their own file;
    no relocations need to be done to call them.
    Of course, if ld.so is not versioned...  */
-#if !(DO_VERSIONING - 0)
+#if defined SHARED && !(DO_VERSIONING - 0)
 #error This will not work with versioning turned off, sorry.
 #endif
 
