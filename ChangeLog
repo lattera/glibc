@@ -1,3 +1,17 @@
+2001-11-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c: If incomplete nan of inf(inity) strings
+	are found call conv_error and not input_error [PR libc/2669].
+
+	* math/bits/mathcalls.h: Mark ceil and floor as const.
+	Reported by David Mosberger.
+
+2001-11-21  Jim Meyering  <meyering@lucent.com>
+
+	* posix/regex.c (iswctype, mbrtowc, wcslen, wcscoll, wcrtomb) [_LIBC]:
+	Define to be __-prefixed.
+	Remove unnecessary duplication in `#ifdef _LIBC' blocks.
+
 2001-11-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/hppa/brk.c: Remove __brk_addr alias,

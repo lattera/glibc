@@ -1383,9 +1383,10 @@ If @var{c} is @code{EOF}, @code{ungetc} does nothing and just returns
 The character that you push back doesn't have to be the same as the last
 character that was actually read from the stream.  In fact, it isn't
 necessary to actually read any characters from the stream before
-unreading them with @code{ungetc}!  But that is a strange way to write
-a program; usually @code{ungetc} is used only to unread a character
-that was just read from the same stream.
+unreading them with @code{ungetc}!  But that is a strange way to write a
+program; usually @code{ungetc} is used only to unread a character that
+was just read from the same stream.  The GNU C library supports this
+even on files opened in binary mode, but other systems might not.
 
 The GNU C library only supports one character of pushback---in other
 words, it does not work to call @code{ungetc} twice without doing input

@@ -1596,7 +1596,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width == 0 || inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
-	      if (! ISDIGIT (c) && TOLOWER (c) != L_('i'))
+	      if (! ISDIGIT (c) && TOLOWER (c) != L_('i')
+		  && TOLOWER (c) != L_('n'))
 		{
 #ifdef COMPILE_WSCANF
 		  if (c != decimal)
@@ -1654,12 +1655,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      /* Maybe "nan".  */
 	      ADDW (c);
 	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('a'))
-		input_error ();
+		conv_error ();
 	      if (width > 0)
 		--width;
 	      ADDW (c);
 	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('n'))
-		input_error ();
+		conv_error ();
 	      if (width > 0)
 		--width;
 	      ADDW (c);
@@ -1671,12 +1672,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      /* Maybe "inf" or "infinity".  */
 	      ADDW (c);
 	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('n'))
-		input_error ();
+		conv_error ();
 	      if (width > 0)
 		--width;
 	      ADDW (c);
 	      if (width == 0 || inchar () == EOF || TOLOWER (c) != L_('f'))
-		input_error ();
+		conv_error ();
 	      if (width > 0)
 		--width;
 	      ADDW (c);
@@ -1691,25 +1692,25 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		      ADDW (c);
 		      if (width == 0 || inchar () == EOF
 			  || TOLOWER (c) != L_('n'))
-			input_error ();
+			conv_error ();
 		      if (width > 0)
 			--width;
 		      ADDW (c);
 		      if (width == 0 || inchar () == EOF
 			  || TOLOWER (c) != L_('i'))
-			input_error ();
+			conv_error ();
 		      if (width > 0)
 			--width;
 		      ADDW (c);
 		      if (width == 0 || inchar () == EOF
 			  || TOLOWER (c) != L_('t'))
-			input_error ();
+			conv_error ();
 		      if (width > 0)
 			--width;
 		      ADDW (c);
 		      if (width == 0 || inchar () == EOF
 			  || TOLOWER (c) != L_('y'))
-			input_error ();
+			conv_error ();
 		      if (width > 0)
 			--width;
 		      ADDW (c);

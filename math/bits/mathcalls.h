@@ -159,13 +159,13 @@ __MATHCALL (cbrt,, (_Mdouble_ __x));
 /* Nearest integer, absolute value, and remainder functions.  */
 
 /* Smallest integral value not less than X.  */
-__MATHCALL (ceil,, (_Mdouble_ __x));
+__MATHCALLX (ceil,, (_Mdouble_ __x), (__const__));
 
 /* Absolute value of X.  */
 __MATHCALLX (fabs,, (_Mdouble_ __x), (__const__));
 
 /* Largest integer not greater than X.  */
-__MATHCALL (floor,, (_Mdouble_ __x));
+__MATHCALLX (floor,, (_Mdouble_ __x), (__const__));
 
 /* Floating-point modulo remainder of X/Y.  */
 __MATHCALL (fmod,, (_Mdouble_ __x, _Mdouble_ __y));
