@@ -3007,8 +3007,8 @@ toupper	(<a>,<A>);(<a!>,<A!>);/
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr	"<<(><e><E><)/>><.><*>"
-noexpr	"<<(><h><H><)/>><.><*>"
+yesexpr	"<'/>><<(><e><E><)/>><.><*>"
+noexpr	"<'/>><<(><h><H><)/>><.><*>"
 yesstr	"<e><v><e><t>"
 nostr	"<h><a><y><i.><r>"
 END LC_MESSAGES

@@ -95,8 +95,11 @@ _dl_close (struct link_map *map)
 	      do
 		--tail;
 	      while (*tail != imap);
-	      memcpy (tail, tail + 1,
-		      (char *) _dl_global_scope_end - (char *) tail);
+	      while (tail <= _dl_global_scope_end)
+		{
+		  tail[0] = tail[1];
+		  ++tail;
+		}
 	      --_dl_global_scope_end;
 	    }
 

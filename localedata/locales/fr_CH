@@ -28,8 +28,8 @@ copy "en_DK"
 END LC_COLLATE
 
 LC_MESSAGES
-yesexpr "<<(><O><o><j><J><s><S><y><Y><)/>><.><*>"
-noexpr  "<<(><n><N><)/>><.><*>"
+yesexpr "<'/>><<(><O><o><j><J><s><S><y><Y><)/>><.><*>"
+noexpr  "<'/>><<(><n><N><)/>><.><*>"
 END LC_MESSAGES
 
 LC_MONETARY
@@ -71,7 +71,7 @@ mon     "<j><a><n><v><i><e><r>";/
         "<s><e><p><t><e><m><b><r><e>";/
         "<o><c><t><o><b><r><e>";/
         "<n><o><v><e><m><b><r><e>";/
-        "<d><e'><c><e><m><b><r><e>"     
+        "<d><e'><c><e><m><b><r><e>"
 d_t_fmt "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
 d_fmt   "<%><d><.><SP><%><m><.><SP><%><y>"
 t_fmt   "<%><T>"

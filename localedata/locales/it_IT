@@ -28,8 +28,8 @@ copy "en_DK"
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<<(><s><S><y><Y><)/>><.><*>"
-noexpr  "<<(><n><N><)/>><.><*>"
+yesexpr "<'/>><<(><s><S><y><Y><)/>><.><*>"
+noexpr  "<'/>><<(><n><N><)/>><.><*>"
 END LC_MESSAGES
 
 LC_MONETARY

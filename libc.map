@@ -459,6 +459,10 @@ GLIBC_2.1 {
     # Changed getline function in libio.
     _IO_getline_info;
 
+    # Special Pointer to avoid keyserv deadlock
+    __key_decryptsession_pk_LOCAL; __key_encryptsession_pk_LOCAL;
+    __key_gendes_LOCAL;
+
     # chown interface change.
     chown;
 
@@ -494,9 +498,9 @@ GLIBC_2.1 {
     fopen; fclose; fdopen;
 
     # g*
-    gai_strerror; getcontext; getdate; getdate_r; getnameinfo; getpt; grantpt;
-    getitimer; getrusage; getrlimit64; gettimeofday;
-    getutxent; getutxid; getutxline;
+    gai_strerror; getcontext; getdate; getdate_r; getitimer; getname;
+    getnameinfo; getpt; getrlimit64; getrusage; gettimeofday;
+    getutxent; getutxid; getutxline; grantpt;
 
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;

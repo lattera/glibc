@@ -77,6 +77,6 @@ t_fmt_ampm  ""
 END LC_TIME
 
 LC_MESSAGES
-yesexpr  "<<(><J><j><Y><y><A><a><)/>><.><*>"
-noexpr   "<<(><N><n><)/>><.><*>"
+yesexpr  "<'/>><<(><J><j><Y><y><A><a><)/>><.><*>"
+noexpr   "<'/>><<(><N><n><)/>><.><*>"
 END LC_MESSAGES

@@ -79,6 +79,7 @@ static const struct argp_option options[] =
   { "debug", 'd', NULL, 0,
     N_("Do not fork and display messages on the current tty") },
   { "shutdown", 'K', NULL, 0, N_("Shut the server down") },
+  { "statistic", 'g', NULL, 0, N_("Print current configuration statistic") },
   { NULL, 0, NULL, 0, NULL }
 };
 

@@ -2,7 +2,7 @@ escape_char /
 comment_char %
 %
 % Czech Language Locale for Czech
-% Source: 
+% Source:
 % Address: 	U ¹koly 292		Without diactitical chars:	U skoly 292
 %		783 72 Velký Týnec					782 72 Velky Tynec
 % Contact: Vladimir Michl
@@ -41,41 +41,41 @@ comment_char %
 % jsou vynechány v¹echny speciální znaky, které nejsou písmena, nebo èíslice
 % (kromì nerozdìlitelné mezery).
 % K tìmto znakùm se pøihlí¾í pouze pøi jinak zcela shodných výrazech.
-% V cs_CZ je spojení písmen c a h následujících po sobì je v¾dy pova¾ováno 
+% V cs_CZ je spojení písmen c a h následujících po sobì je v¾dy pova¾ováno
 % jako písmeno ch.
 % V cs_CZ-ch je spojení písmen c a h pova¾ováno jako dvì písmena c a h, tj.
 % písmeno ch je zaøazeno pod písmeno c.
 % 3.2:
-% Mezera se øadí pøed první písmeno abecedy, ale ka¾dý znak mezery je 
+% Mezera se øadí pøed první písmeno abecedy, ale ka¾dý znak mezery je
 % uva¾ován samostatnì.
 % 3.6:
 % Není dodr¾en celý:
 % 3.7:
 % Pokud jsou výrazy stejné pøi primárním øazení (podle std. èes. abecedy)
-% a zároveò stejné i pøi sekundárním øazení (porovnávání diakritických 
+% a zároveò stejné i pøi sekundárním øazení (porovnávání diakritických
 % znamének), pak mají velká písmena pøednost pøed malými.
 % 3.8:
 % Tento bod je dodr¾en pouze pro nìkolik písmen (nìmecké ostré Beta (ss))
-% Zde pøedpokládám splnìní podmínek bodu 3.9 (tj. pøi vìt¹ím výskytu 
-% písmen z cicích abeced je povoleno je nerozepisovat a øadit a¾ za lat. 
+% Zde pøedpokládám splnìní podmínek bodu 3.9 (tj. pøi vìt¹ím výskytu
+% písmen z cicích abeced je povoleno je nerozepisovat a øadit a¾ za lat.
 % abecedu a èíslice)
 % 3.10:
 % Èísla nejsou øazena podle èíselné hodnoty, ale podle jednotlivých èíslic
 % 3.12:
-% Pokud jsou výrazy shodné v prvních tøech prùchodech, pak jsou 
-% porovnávány pozice jednotlivých nepísmených a neèíselných znaèek. Jako 
+% Pokud jsou výrazy shodné v prvních tøech prùchodech, pak jsou
+% porovnávány pozice jednotlivých nepísmených a neèíselných znaèek. Jako
 % první bude zaøazeno heslo, u kterého je tato znaèka blí¾e zaèátku slova.
 % Pokud jsou i potom stejné, pak je se teprve porovnávají hodnoty znaèek.
 % 3.13:
 % Tento bod jsem se sna¾il dodr¾et, bohu¾el seøadit znaménka je dost nároèné
-% a navíc je zde zále¾í na implementaci, kam budou znaménka zaøazena, 
+% a navíc je zde zále¾í na implementaci, kam budou znaménka zaøazena,
 % pokud se vyskytne jako výraz pouze nepísmený èi neèíselný znak(y).
 
 % zpracování:
 %%    localedef -c -i <tento-soubor> -f "ISO_8859-2:1987" 'cs_CZ.ISO-8859-2'
 %% pokud se podaøí odstranit chyby, lze -c vynechat.
 
-%% pro úspì¹né pøelo¾ení je tøeba mít kolekci lokalizací WG15collection. Tuto rozbalit do adresáøe 
+%% pro úspì¹né pøelo¾ení je tøeba mít kolekci lokalizací WG15collection. Tuto rozbalit do adresáøe
 %% /usr/share/i18n
 %% Lokalizace se pak budou tvoøit v adresáøi /usr/share/locale
 
@@ -103,7 +103,7 @@ LC_COLLATE
 %     members of equivalence classes
 %  3. A distinction is made with regards
 %     to case as noted below.
-%  4. Special characters are ignored 
+%  4. Special characters are ignored
 %     when comparing letters, but then
 %     they are considered
 %  5. The alphabets are sorted in order
@@ -131,10 +131,10 @@ collating-symbol <SMALL>
 % and Spanish <C><h> being treated
 % as one letter.
 
-% The <a8> ...... <z8> collating 
+% The <a8> ...... <z8> collating
 % symbols have defined weights as
 % the last character in a group of
-% Latin letters. They are used 
+% Latin letters. They are used
 % to specify deltas by locales using
 % a locale as the default ordering
 % and by "replace-after" statements
@@ -360,7 +360,7 @@ order_start forward;forward;forward;position;forward
 <1H>	IGNORE;IGNORE;IGNORE;<1H>;<1H>
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Zde jsou v¹echna latinská písmena s diakritikou 
+% Zde jsou v¹echna latinská písmena s diakritikou
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 <A>	<A>;<NONE>;<CAPITAL>;IGNORE;IGNORE
@@ -2264,10 +2264,10 @@ END LC_CTYPE
 %% ekvivalenty yes/no
 %% -------------------------
 
-LC_MESSAGES 
+LC_MESSAGES
 
-yesexpr		"<<(><a><A><y><Y><)/>><.><*>"
-noexpr  	"<<(><n><N><)/>><.><*>"
+yesexpr		"<'/>><<(><a><A><y><Y><)/>><.><*>"
+noexpr  	"<'/>><<(><n><N><)/>><.><*>"
 yesstr		"<a><n><o>"
 nostr		"<n><e>"
 
@@ -2342,7 +2342,7 @@ mon		"<l><e><d><e><n>";/
 		"<p><r><o><s><i><n><e><c>"
 
 % Obávám se, ¾e èe¹tina ¾ádné zkratky pro mìsíce nezná :-)
-% No nevím zda je to dobøe vyskloòováno, ale 
+% No nevím zda je to dobøe vyskloòováno, ale
 %  na razítkách obèas bývá tøeba 1. èervce ...
 
 abmon		"<l><e><d><e><n>";/

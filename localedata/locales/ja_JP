@@ -99,7 +99,7 @@ space   <tab>;<newline>;<vertical-tab>;<form-feed>;\
 #
 # cntrl class: C0 and C1 control characters as per ISO 6429.
 # SS2 and SS3 may be excluded if an acompanying charmap uses them
-# as single shifts to invoke graphic characters (as in EUC). 
+# as single shifts to invoke graphic characters (as in EUC).
 # Control characters in udc or vdc may be added.
 
 cntrl   <alert>;<backspace>;<tab>;<newline>;<vertical-tab>;\
@@ -621,7 +621,7 @@ ascii   <NUL>;<SOH>;<STX>;<ETX>;<EOT>;<ENQ>;<ACK>;\
 #
 
 line    <j0801>;...;<j0832>
- 
+
 #
 # jdigit class: The digit characters in JIS X 0208
 
@@ -946,7 +946,7 @@ jkata  <kana-WO>;<kana-a>;<kana-i>;<kana-u>;<kana-e>;<kana-o>;\
 # jhankana class:
 # The Katakana characters in JIS X 0201.
 # The voiced, semivoiced and prolonged sound marks in JIS X 0201.
-# Katakana characters, Katakana symbols in JIS X 0201, or udc/vdc 
+# Katakana characters, Katakana symbols in JIS X 0201, or udc/vdc
 # in undefined area of JIS X 0201 may be added.
 #
 
@@ -1107,12 +1107,12 @@ jkanji  <j1601>;...;<j1694>;\
 #
 # jspace class: The space character in JIS X 0208
 #
- 
+
 jspace  <j0101>
 
-# Kinsoku Processing Class (Optional): 
+# Kinsoku Processing Class (Optional):
 #       bkinsoku (Japanese line-breaking rule for the beginning of a line)
-#       ekinsoku (Japanese line-breaking rule for the end of a line) 
+#       ekinsoku (Japanese line-breaking rule for the end of a line)
 #
 
 bkinsoku        <right-parenthesis>;\
@@ -2573,9 +2573,9 @@ LC_MESSAGES
 # Installations may add other definitions such as for
 # Hiragana and Katakana strings.
 
-yesexpr "^[<y><Y><j0389><j0357>]"
+yesexpr "<'/>><<(><y><Y><j0389><j0357><)/>><.><*>"
 
-noexpr  "^[<n><N><j0378><j0346>]"
+noexpr  "<'/>><<)><n><N><j0378><j0346><)/>><.><*>"
 
 END LC_MESSAGES
 

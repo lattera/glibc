@@ -3056,8 +3056,8 @@ toupper (<a>,<A>);(<a!>,<A!>);/
 END LC_CTYPE
 
 LC_MESSAGES
-yesexpr "<<(><n*><N*><)/>><.><*>"
-noexpr  "<<(><o*><O*><)/>><.><*>"
+yesexpr "<'/>><<(><n*><N*><)/>><.><*>"
+noexpr  "<'/>><<(><o*><O*><)/>><.><*>"
 END LC_MESSAGES
 
 LC_MONETARY

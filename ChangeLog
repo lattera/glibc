@@ -1,5 +1,27 @@
 1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-close.c (_dl_close): Replace questionable memcpy by loop.
+
+1998-03-24  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc.map: Add more rpc auth functions/variables.
+
+	* nscd/nscd.c: Add -g option to argp options.
+
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Be prepared for gcc 2.9.10 and up.
+	* configure.in: Add missing disabling of quote characters in
+	compiler version check.  Reported by HJ Lu.
+
+1998-03-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* malloc/mtrace.c: Include elf/ldsodefs.h instead of link.h.
+
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/locale.alias: Fix spelling of romanian.
+
 	* sunrpc/Makefile (headers): Add rpc/rpc_des.h.
 	(distribute): Remove des.h.
 	* include/des.h: New file.

@@ -470,14 +470,16 @@ AC_CHECK_TOOL(RANLIB, ranlib, :)
 
 # check for recent compiler
 AC_MSG_CHECKING(compiler version)
+changequote(,)dnl
 case `${CC-cc} -v 2>&1` in
-  *egcs-2.91.* | *egcs-1.0.[2-9]* | *egcs-1.1* | *2.8.[1-9]* | *2.9.[0-9] )
+  *egcs-2.91.* | *egcs-1.0.[2-9]* | *egcs-1.1* | *2.8.[1-9]* | *2.9.[0-9]*)
     cc_is_recent="ok"
     ;;
   *)
     cc_is_recent="too old"
     ;;
 esac
+changequote([,])dnl
 AC_MSG_RESULT($cc_is_recent)
 if test "$cc_is_recent" != "ok"; then
   AC_MSG_WARN([

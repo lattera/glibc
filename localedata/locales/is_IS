@@ -34,7 +34,7 @@ LC_COLLATE
 %     members of equivalence classes
 %  3. A distinction is made with regards
 %     to case as noted below.
-%  4. Special characters are ignored 
+%  4. Special characters are ignored
 %     when comparing letters, but then
 %     they are considered
 %  5. The alphabets are sorted in order
@@ -62,10 +62,10 @@ collating-symbol <SMALL>
 % and Spanish <C><h> being treated
 % as one letter.
 
-% The <a8> ...... <z8> collating 
+% The <a8> ...... <z8> collating
 % symbols have defined weights as
 % the last character in a group of
-% Latin letters. They are used 
+% Latin letters. They are used
 % to specify deltas by locales using
 % a locale as the default ordering
 % and by "reorder-after" statements
@@ -1017,7 +1017,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <a->	<A>;<MACRON>;<SMALL>;IGNORE
 <A7>	<A>;<MACRON+DOT>;<CAPITAL>;IGNORE
 <a7>	<A>;<MACRON+DOT>;<SMALL>;IGNORE
-<a8>	
+<a8>
 <a'>	<a'>;<NONE>;<SMALL>;IGNORE
 <A'>	<a'>;<NONE>;<CAPITAL>;IGNORE
 <AE'>	"<A><E>";"<AE'><AE'>";"<CAPITAL><CAPITAL>";IGNORE
@@ -1032,7 +1032,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <b-.>	<B>;<DOT-BELOW>;<SMALL>;IGNORE
 <B_>	<B>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <b_>	<B>;<LINE-BELOW>;<SMALL>;IGNORE
-<b8>	
+<b8>
 <C>	<C>;<NONE>;<CAPITAL>;IGNORE
 <c>	<C>;<NONE>;<SMALL>;IGNORE
 <C'>	<C>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1049,7 +1049,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <c,>	<C>;<CEDILLA>;<SMALL>;IGNORE
 <C,'>	<C>;<CEDILLA+ACUTE>;<CAPITAL>;IGNORE
 <c,'>	<C>;<CEDILLA+ACUTE>;<SMALL>;IGNORE
-<c8>	
+<c8>
 <D>	<D>;<NONE>;<CAPITAL>;IGNORE
 <d>	<D>;<NONE>;<SMALL>;IGNORE
 <D<>	<D>;<CARON>;<CAPITAL>;IGNORE
@@ -1066,7 +1066,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <d-/>>	<D>;<MACRON+CIRCUMFLEX>;<SMALL>;IGNORE
 <D_>	<D>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <d_>	<D>;<LINE-BELOW>;<SMALL>;IGNORE
-<d8>	
+<d8>
 <d->	<d->;<NONE>;<SMALL>;IGNORE
 <D->	<d->;<NONE>;<CAPITAL>;IGNORE
 <E>	<E>;<NONE>;<CAPITAL>;IGNORE
@@ -1117,7 +1117,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <e-!>	<E>;<MACRON+GRAVE>;<SMALL>;IGNORE
 <E-/>>	<E>;<MACRON+CIRCUMFLEX>;<CAPITAL>;IGNORE
 <e-/>>	<E>;<MACRON+CIRCUMFLEX>;<SMALL>;IGNORE
-<e8>	
+<e8>
 <e'>	<e'>;<NONE>;<SMALL>;IGNORE
 <E'>	<e'>;<NONE>;<CAPITAL>;IGNORE
 <F>	<F>;<NONE>;<CAPITAL>;IGNORE
@@ -1126,7 +1126,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <f2>	<F>;<HOOK>;<SMALL>;IGNORE
 <F.>	<F>;<DOT>;<CAPITAL>;IGNORE
 <f.>	<F>;<DOT>;<SMALL>;IGNORE
-<f8>	
+<f8>
 <ff>	"<F><F>";"<NONE><NONE>";"<ff><ff>";IGNORE
 <fi>	"<F><I>";"<NONE><NONE>";"<fi><fi>";IGNORE
 <fl>	"<F><L>";"<NONE><NONE>";"<fl><fl>";IGNORE
@@ -1153,7 +1153,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <g,>	<G>;<CEDILLA>;<SMALL>;IGNORE
 <G->	<G>;<MACRON>;<CAPITAL>;IGNORE
 <g->	<G>;<MACRON>;<SMALL>;IGNORE
-<g8>	
+<g8>
 <H>	<H>;<NONE>;<CAPITAL>;IGNORE
 <h>	<H>;<NONE>;<SMALL>;IGNORE
 <H-(>	<H>;<BREVE-BELOW>;<CAPITAL>;IGNORE
@@ -1170,7 +1170,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <h//>	<H>;<STROKE>;<SMALL>;IGNORE
 <H,>	<H>;<CEDILLA>;<CAPITAL>;IGNORE
 <h,>	<H>;<CEDILLA>;<SMALL>;IGNORE
-<h8>	
+<h8>
 <I>	<I>;<NONE>;<CAPITAL>;IGNORE
 <i>	<I>;<NONE>;<SMALL>;IGNORE
 <I!>	<I>;<GRAVE>;<CAPITAL>;IGNORE
@@ -1203,7 +1203,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <i;>	<I>;<OGONEK>;<SMALL>;IGNORE
 <I->	<I>;<MACRON>;<CAPITAL>;IGNORE
 <i->	<I>;<MACRON>;<SMALL>;IGNORE
-<i8>	
+<i8>
 <i'>	<i'>;<NONE>;<SMALL>;IGNORE
 <I'>	<i'>;<NONE>;<CAPITAL>;IGNORE
 <IJ>	"<I><J>";"<IJ><IJ>";"<CAPITAL><CAPITAL>";IGNORE
@@ -1212,7 +1212,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <j>	<J>;<NONE>;<SMALL>;IGNORE
 <J/>>	<J>;<CIRCUMFLEX>;<CAPITAL>;IGNORE
 <j/>>	<J>;<CIRCUMFLEX>;<SMALL>;IGNORE
-<j8>	
+<j8>
 <K>	<K>;<NONE>;<CAPITAL>;IGNORE
 <k>	<K>;<NONE>;<SMALL>;IGNORE
 <K'>	<K>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1227,7 +1227,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <k,>	<K>;<CEDILLA>;<SMALL>;IGNORE
 <K_>	<K>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <k_>	<K>;<LINE-BELOW>;<SMALL>;IGNORE
-<k8>	
+<k8>
 <kk>	<K>;<kk>;<SMALL>;IGNORE
 <L>	<L>;<NONE>;<CAPITAL>;IGNORE
 <l>	<L>;<NONE>;<SMALL>;IGNORE
@@ -1249,7 +1249,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <l-/>>	<L>;<MACRON+CIRCUMFLEX>;<SMALL>;IGNORE
 <L_>	<L>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <l_>	<L>;<LINE-BELOW>;<SMALL>;IGNORE
-<l8>	
+<l8>
 <St>	<LONG>;<SPECIAL>;<SMALL>;IGNORE
 <M>	<M>;<NONE>;<CAPITAL>;IGNORE
 <m>	<M>;<NONE>;<SMALL>;IGNORE
@@ -1259,7 +1259,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <m.>	<M>;<DOT>;<SMALL>;IGNORE
 <M-.>	<M>;<DOT-BELOW>;<CAPITAL>;IGNORE
 <m-.>	<M>;<DOT-BELOW>;<SMALL>;IGNORE
-<m8>	
+<m8>
 <N>	<N>;<NONE>;<CAPITAL>;IGNORE
 <n>	<N>;<NONE>;<SMALL>;IGNORE
 <N'>	<N>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1279,7 +1279,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <N_>	<N>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <n_>	<N>;<LINE-BELOW>;<SMALL>;IGNORE
 <'n>	<N>;<PRECEDED-BY-APOSTROPHE>;<SMALL>;IGNORE
-<n8>	
+<n8>
 <NG>	<N>;<NG>;<CAPITAL>;IGNORE
 <ng>	<N>;<NG>;<SMALL>;IGNORE
 <O>	<O>;<NONE>;<CAPITAL>;IGNORE
@@ -1343,7 +1343,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <o9?>	<O>;<HORN+TILDE>;<SMALL>;IGNORE
 <O9-.>	<O>;<HORN+DOT-BELOW>;<CAPITAL>;IGNORE
 <o9-.>	<O>;<HORN+DOT-BELOW>;<SMALL>;IGNORE
-<o8>	
+<o8>
 <o'>	<o'>;<NONE>;<SMALL>;IGNORE
 <O'>	<o'>;<NONE>;<CAPITAL>;IGNORE
 <P>	<P>;<NONE>;<CAPITAL>;IGNORE
@@ -1352,10 +1352,10 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <p'>	<P>;<ACUTE>;<SMALL>;IGNORE
 <P.>	<P>;<DOT>;<CAPITAL>;IGNORE
 <p.>	<P>;<DOT>;<SMALL>;IGNORE
-<p8>	
+<p8>
 <Q>	<Q>;<NONE>;<CAPITAL>;IGNORE
 <q>	<Q>;<NONE>;<SMALL>;IGNORE
-<q8>	
+<q8>
 <R>	<R>;<NONE>;<CAPITAL>;IGNORE
 <r>	<R>;<NONE>;<SMALL>;IGNORE
 <R'>	<R>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1376,7 +1376,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <r--.>	<R>;<MACRON+DOT-BELOW>;<SMALL>;IGNORE
 <R_>	<R>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <r_>	<R>;<LINE-BELOW>;<SMALL>;IGNORE
-<r8>	
+<r8>
 <S>	<S>;<NONE>;<CAPITAL>;IGNORE
 <s>	<S>;<NONE>;<SMALL>;IGNORE
 <st>	"<S><T>";"<NONE><NONE>";"<st><st>";IGNORE
@@ -1398,7 +1398,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <s.-.>	<S>;<DOT+DOT-BELOW>;<SMALL>;IGNORE
 <S,>	<S>;<CEDILLA>;<CAPITAL>;IGNORE
 <s,>	<S>;<CEDILLA>;<SMALL>;IGNORE
-<s8>	
+<s8>
 <s1>	<S>;<s1>;<SMALL>;IGNORE
 <ss>	"<S><S>";"<NONE><NONE>";"<SMALL><ss>";IGNORE
 <T>	<T>;<NONE>;<CAPITAL>;IGNORE
@@ -1417,7 +1417,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <t-/>>	<T>;<MACRON+CIRCUMFLEX>;<SMALL>;IGNORE
 <T_>	<T>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <t_>	<T>;<LINE-BELOW>;<SMALL>;IGNORE
-<t8>	
+<t8>
 <U>	<U>;<NONE>;<CAPITAL>;IGNORE
 <u>	<U>;<NONE>;<SMALL>;IGNORE
 <U!>	<U>;<GRAVE>;<CAPITAL>;IGNORE
@@ -1478,7 +1478,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <u9?>	<U>;<HORN+TILDE>;<SMALL>;IGNORE
 <U9-.>	<U>;<HORN+DOT-BELOW>;<CAPITAL>;IGNORE
 <u9-.>	<U>;<HORN+DOT-BELOW>;<SMALL>;IGNORE
-<u8>	
+<u8>
 <u'>	<u'>;<NONE>;<SMALL>;IGNORE
 <U'>	<u'>;<NONE>;<CAPITAL>;IGNORE
 <V>	<V>;<NONE>;<CAPITAL>;IGNORE
@@ -1487,7 +1487,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <v?>	<V>;<TILDE>;<SMALL>;IGNORE
 <V-.>	<V>;<DOT-BELOW>;<CAPITAL>;IGNORE
 <v-.>	<V>;<DOT-BELOW>;<SMALL>;IGNORE
-<v8>	
+<v8>
 <W>	<W>;<NONE>;<CAPITAL>;IGNORE
 <w>	<W>;<NONE>;<SMALL>;IGNORE
 <W'>	<W>;<ACUTE>;<CAPITAL>;IGNORE
@@ -1502,14 +1502,14 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <w.>	<W>;<DOT>;<SMALL>;IGNORE
 <W-.>	<W>;<DOT-BELOW>;<CAPITAL>;IGNORE
 <w-.>	<W>;<DOT-BELOW>;<SMALL>;IGNORE
-<w8>	
+<w8>
 <X>	<X>;<NONE>;<CAPITAL>;IGNORE
 <x>	<X>;<NONE>;<SMALL>;IGNORE
 <X:>	<X>;<DIAERESIS>;<CAPITAL>;IGNORE
 <x:>	<X>;<DIAERESIS>;<SMALL>;IGNORE
 <X.>	<X>;<DOT>;<CAPITAL>;IGNORE
 <x.>	<X>;<DOT>;<SMALL>;IGNORE
-<x8>	
+<x8>
 <Y>	<Y>;<NONE>;<CAPITAL>;IGNORE
 <y>	<Y>;<NONE>;<SMALL>;IGNORE
 <Y!>	<Y>;<GRAVE>;<CAPITAL>;IGNORE
@@ -1526,7 +1526,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <y.>	<Y>;<DOT>;<SMALL>;IGNORE
 <Y-.>	<Y>;<DOT-BELOW>;<CAPITAL>;IGNORE
 <y-.>	<Y>;<DOT-BELOW>;<SMALL>;IGNORE
-<y8>	
+<y8>
 <y'>	<y'>;<NONE>;<SMALL>;IGNORE
 <Y'>	<y'>;<NONE>;<CAPITAL>;IGNORE
 <Z>	<Z>;<NONE>;<CAPITAL>;IGNORE
@@ -1545,7 +1545,7 @@ UNDEFINED	IGNORE;IGNORE;IGNORE
 <z//>	<Z>;<STROKE>;<SMALL>;IGNORE
 <Z_>	<Z>;<LINE-BELOW>;<CAPITAL>;IGNORE
 <z_>	<Z>;<LINE-BELOW>;<SMALL>;IGNORE
-<z8>	
+<z8>
 <th>	<th>;<NONE>;<SMALL>;IGNORE
 <TH>	<th>;<NONE>;<CAPITAL>;IGNORE
 <ae>	<ae>;<NONE>;<SMALL>;IGNORE
@@ -2196,6 +2196,6 @@ t_fmt_ampm ""
 END LC_TIME
 
 LC_MESSAGES
-yesexpr "<<(><j><J><y><Y><)/>><.><*>"
-noexpr  "<<(><n><N><)/>><.><*>"
+yesexpr "<'/>><<(><j><J><y><Y><)/>><.><*>"
+noexpr  "<'/>><<(><n><N><)/>><.><*>"
 END LC_MESSAGES
