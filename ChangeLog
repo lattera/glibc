@@ -1,3 +1,14 @@
+2001-02-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-96/e_j0l.c: New file.
+	Contributed by Stephen L. Moshier <moshier@na-net.ornl.gov>.
+
+2001-02-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/strtoll.c (__strtoq_internal): Ressurect alias
+	which was exported from libc.
+	* sysdeps/generic/strtoull.c (__strtouq_internal): Likewise.
+
 2001-02-12  Andreas Jaeger  <aj@suse.de>
 
 	* manual/arith.texi (Parsing of Integers): Fix some wordings.

@@ -205,6 +205,84 @@ This is a GNU extension.
 @end table
 @end deftp
 
+For use in the @code{glob64} function @file{glob.h} contains another
+definition for a very similar type.  @code{glob64_t} differs from
+@code{glob_t} only in the types of the members @code{gl_readdir},
+@code{gl_stat}, and @code{gl_lstat}.
+
+@comment glob.h
+@comment GNU
+@deftp {Data Type} glob64_t
+This data type holds a pointer to a word vector.  More precisely, it
+records both the address of the word vector and its size.  The GNU
+implementation contains some more fields which are non-standard
+extensions.
+
+@table @code
+@item gl_pathc
+The number of elements in the vector, excluding the initial null entries
+if the GLOB_DOOFFS flag is used (see gl_offs below).
+
+@item gl_pathv
+The address of the vector.  This field has type @w{@code{char **}}.
+
+@item gl_offs
+The offset of the first real element of the vector, from its nominal
+address in the @code{gl_pathv} field.  Unlike the other fields, this
+is always an input to @code{glob}, rather than an output from it.
+
+If you use a nonzero offset, then that many elements at the beginning of
+the vector are left empty.  (The @code{glob} function fills them with
+null pointers.)
+
+The @code{gl_offs} field is meaningful only if you use the
+@code{GLOB_DOOFFS} flag.  Otherwise, the offset is always zero
+regardless of what is in this field, and the first real element comes at
+the beginning of the vector.
+
+@item gl_closedir
+The address of an alternative implementation of the @code{closedir}
+function.  It is used if the @code{GLOB_ALTDIRFUNC} bit is set in
+the flag parameter.  The type of this field is
+@w{@code{void (*) (void *)}}.
+
+This is a GNU extension.
+
+@item gl_readdir
+The address of an alternative implementation of the @code{readdir64}
+function used to read the contents of a directory.  It is used if the
+@code{GLOB_ALTDIRFUNC} bit is set in the flag parameter.  The type of
+this field is @w{@code{struct dirent64 *(*) (void *)}}.
+
+This is a GNU extension.
+
+@item gl_opendir
+The address of an alternative implementation of the @code{opendir}
+function.  It is used if the @code{GLOB_ALTDIRFUNC} bit is set in
+the flag parameter.  The type of this field is
+@w{@code{void *(*) (const char *)}}.
+
+This is a GNU extension.
+
+@item gl_stat
+The address of an alternative implementation of the @code{stat64} function
+to get information about an object in the filesystem.  It is used if the
+@code{GLOB_ALTDIRFUNC} bit is set in the flag parameter.  The type of
+this field is @w{@code{int (*) (const char *, struct stat64 *)}}.
+
+This is a GNU extension.
+
+@item gl_lstat
+The address of an alternative implementation of the @code{lstat64}
+function to get information about an object in the filesystems, not
+following symbolic links.  It is used if the @code{GLOB_ALTDIRFUNC} bit
+is set in the flag parameter.  The type of this field is @code{@w{int
+(*) (const char *,} @w{struct stat64 *)}}.
+
+This is a GNU extension.
+@end table
+@end deftp
+
 @comment glob.h
 @comment POSIX.2
 @deftypefun int glob (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob_t *@var{vector-ptr})
@@ -234,7 +312,7 @@ that your application is making.
 If @code{glob} succeeds, it returns 0.  Otherwise, it returns one
 of these error codes:
 
-@table @code
+@vtable @code
 @comment glob.h
 @comment POSIX.2
 @item GLOB_ABORTED
@@ -261,10 +339,38 @@ at least one file.
 @comment POSIX.2
 @item GLOB_NOSPACE
 It was impossible to allocate memory to hold the result.
-@end table
+@end vtable
 
 In the event of an error, @code{glob} stores information in
 @code{*@var{vector-ptr}} about all the matches it has found so far.
+
+It is important to notive that the @code{glob} function will not fail if
+it encounters directories or files which cannot be handled without the
+LFS interfaces.  The implementation of @code{glob} is supposed to use
+these functions internally.  This at least is the assumptions made by
+the Unix standard.  The GNU extension of allowing the user to provide
+own directory handling and @code{stat} functions complicates things a
+bit.  If these callback functions are used and a large file or directory
+is encountered @code{glob} @emph{can} fail.
+@end deftypefun
+
+@comment glob.h
+@comment GNU
+@deftypefun int glob64 (const char *@var{pattern}, int @var{flags}, int (*@var{errfunc}) (const char *@var{filename}, int @var{error-code}), glob64_t *@var{vector-ptr})
+The @code{glob64} function was added as part of the Large File Summit
+extensions but is not part of the original LFS proposal.  The reason for
+this is simple: it is not necessary.  The necessity for a @code{glob64}
+function is added by the extensions of the GNU @code{glob}
+implementation which allows the user to provide own directory handling
+and @code{stat} functions.  The @code{readdir} and @code{stat} functions
+do depend on the choice of @code{_FILE_OFFSET_BITS} since the definition
+of the types @code{struct dirent} and @code{struct stat} will change
+depending on the choice.
+
+Beside this difference the @code{glob64} works just like @code{glob} in
+all aspects.
+
+This function is a GNU extension.
 @end deftypefun
 
 @node Flags for Globbing
@@ -274,7 +380,7 @@ This section describes the flags that you can specify in the
 @var{flags} argument to @code{glob}.  Choose the flags you want,
 and combine them with the C bitwise OR operator @code{|}.
 
-@table @code
+@vtable @code
 @comment glob.h
 @comment POSIX.2
 @item GLOB_APPEND
@@ -362,7 +468,7 @@ If you use @code{GLOB_NOESCAPE}, then @samp{\} is an ordinary character.
 @code{glob} does its work by calling the function @code{fnmatch}
 repeatedly.  It handles the flag @code{GLOB_NOESCAPE} by turning on the
 @code{FNM_NOESCAPE} flag in calls to @code{fnmatch}.
-@end table
+@end vtable
 
 @node More Flags for Globbing
 @subsection More Flags for Globbing
@@ -372,7 +478,7 @@ Beside the flags described in the last section, the GNU implementation of
 @file{glob.h} file.  Some of the extensions implement functionality
 which is available in modern shell implementations.
 
-@table @code
+@vtable @code
 @comment glob.h
 @comment GNU
 @item GLOB_PERIOD
@@ -502,7 +608,7 @@ This functionality is only available with the GNU @code{glob}
 implementation.  It is mainly used internally to increase the
 performance but might be useful for a user as well and therefore is
 documented here.
-@end table
+@end vtable
 
 Calling @code{glob} will in most cases allocate resources which are used
 to represent the result of the function call.  If the same object of
@@ -517,6 +623,13 @@ The @code{globfree} function frees all resources allocated by previous
 calls to @code{glob} associated with the object pointed to by
 @var{pglob}.  This function should be called whenever the currently used
 @code{glob_t} typed object isn't used anymore.
+@end deftypefun
+
+@comment glob.h
+@comment GNU
+@deftypefun void globfree64 (glob64_t *@var{pglob})
+This function is equivalent to @code{globfree} but it frees records of
+type @code{glob64_t} which were allocated by @code{glob64}.
 @end deftypefun
 
 
