@@ -1,3 +1,8 @@
+Wed Apr 19 18:40:11 1995  Brendan Kehoe  (brendan@zen.org)
+
+	* time/tzset.c (__tzname, __daylight, __timezone): Don't check
+	HAVE_WEAK_SYBMOLS for doing weak_alias.
+
 Tue Apr 18 14:00:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* configure.in (libc_cv_asm_global_directive): New check to define

@@ -36,19 +36,13 @@ extern void EXFUN(__tzfile_default, (char *std AND char *dst AND
 				     long int stdoff AND long int dstoff));
 extern int EXFUN(__tzfile_compute, (time_t, struct tm));
 
-#ifndef	HAVE_WEAK_SYMBOLS
-#define	__tzname	tzname
-#define	__daylight	daylight
-#define	__timezone	timezone
-#else
-weak_alias (__tzname, tzname)
-weak_alias (__daylight, daylight)
-weak_alias (__timezone, timezone)
-#endif
-
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;
 long int __timezone = 0L;
+
+weak_alias (__tzname, tzname)
+weak_alias (__daylight, daylight)
+weak_alias (__timezone, timezone)
 
 
 #define	min(a, b)	((a) < (b) ? (a) : (b))
