@@ -27,9 +27,6 @@
 /* The first piece of initialized data.  */
 int __data_start = 0;
 
-__volatile int __errno = 0;
-strong_alias (__errno, errno)
-
 extern void __libc_init __P ((int argc, char **argv, char **envp));
 extern int main __P ((int argc, char **argv, char **envp));
 

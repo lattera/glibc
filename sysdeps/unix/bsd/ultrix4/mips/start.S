@@ -19,9 +19,6 @@
 
 #include <sysdep.h>
 
-__errno:
-.comm errno,		4
-
 ENTRY(__start)
   .set noreorder
 

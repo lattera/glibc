@@ -28,11 +28,6 @@ __syscall_error (int err_no)
   return -1;
 }
 
-/* We also have to have a 'real' definition of errno.  */
-#undef errno
-int errno = 0;
-weak_alias (errno, _errno)
-
 
 /* HPPA implements syscall() in 'C'; the assembler version would
    typically be in syscall.S.  */

@@ -18,13 +18,6 @@
 
 #include <sysdep.h>
 
-/* We define errno here, to be consistent with Linux/i386.  */
-	.bss
-	.globl C_SYMBOL_NAME(errno)
-	.type C_SYMBOL_NAME(errno),%object
-	.size C_SYMBOL_NAME(errno),4
-C_SYMBOL_NAME(errno):	.zero 4
-weak_alias (errno, _errno)
 	.text
 
 /* The syscall stubs jump here when they detect an error.

@@ -20,19 +20,6 @@
 #include <sysdep.h>
 #include <features.h>
 
-	.section .bss
-	.globl errno
-	.align 2
-errno:	.space 4
-#ifdef __ELF__
-	.type errno, @object
-	.size errno, 4
-#endif
-	.globl __errno
-__errno = errno
-	.globl _errno
-_errno = errno
-
 	.text
 	.align 2
 
