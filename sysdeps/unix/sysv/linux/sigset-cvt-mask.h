@@ -19,17 +19,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define sigset_set_old_mask(set, mask) \
-  ({									      \
-    unsigned long int *__ptr;						      \
-    int __cnt;								      \
-    __ptr = &(set)->__val[0];						      \
-    *__ptr++ = (unsigned long int) (mask);				      \
-    __cnt = _SIGSET_NWORDS - 2;						      \
-    do									      \
-      *__ptr++ = 0ul;							      \
-    while (--__cnt >= 0);						      \
-    0; })
+static inline int __attribute__ ((unused))
+sigset_set_old_mask (sigset_t *set, int mask)
+{
+  unsigned long int *ptr;
+  int cnt;
 
-#define sigset_get_old_mask(set) \
-  ((unsigned int) (set)->__val[0])
+  ptr = &set->__val[0];
+
+  *ptr++ = (unsigned int) mask;
+
+  cnt = _SIGSET_NWORDS - 2;
+  do
+    *ptr++ = 0ul;
+  while (--cnt >= 0);
+
+  return 0;
+}
+
+static inline int __attribute__ ((unused))
+sigset_get_old_mask (const sigset_t *set)
+{
+  return (unsigned int) set->__val[0];
+}

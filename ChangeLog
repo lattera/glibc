@@ -1,3 +1,21 @@
+2002-09-04  Bruno Haible  <bruno@clisp.org>
+
+        * elf/readlib.c (process_file): Conditionalize check for QMAGIC.
+
+	* sysdeps/unix/sysv/linux/sigset-cvt-mask.h (sigset_set_old_mask,
+	sigset_get_old_mask): Turn into inline functions.
+	* sysdeps/unix/sysv/aix/sigset-cvt-mask.h (sigset_set_old_mask,
+	sigset_get_old_mask): Likewise.
+	* sysdeps/unix/sysv/sysv4/sigset-cvt-mask.h (sigset_set_old_mask,
+	sigset_get_old_mask): Likewise.
+
+	* sysdeps/generic/_strerror.c (_sys_errlist, _sys_nerr): Remove
+	default definitions.
+	(__strerror_r): Use _sys_errlist_internal instead of _sys_errlist,
+	_sys_nerr_internal instead of _sys_nerr.
+
+	* nscd/connections.c (handle_request): Declare CALLER inside #if.
+
 2002-07-29  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/__longjmp.S: Moved to...

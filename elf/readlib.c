@@ -123,7 +123,10 @@ process_file (const char *real_file_name, const char *file_name,
   /* First check if this is an aout file.  */
   aout_header = (struct exec *) file_contents;
   if (N_MAGIC (*aout_header) == ZMAGIC
-      || N_MAGIC (*aout_header) == QMAGIC)
+#ifdef QMAGIC			/* Linuxism.  */
+      || N_MAGIC (*aout_header) == QMAGIC
+#endif
+      )
     {
       /* Aout files don't have a soname, just return the name
          including the major number.  */

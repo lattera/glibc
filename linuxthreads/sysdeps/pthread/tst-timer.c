@@ -1,5 +1,5 @@
 /* Tests for POSIX timer implementation.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -66,23 +66,16 @@ main (void)
     .sigev_notify = SIGEV_SIGNAL,
     .sigev_signo = ZSIGALRM
   };
-  struct sigevent sigev2 =
-  {
-    .sigev_notify = SIGEV_THREAD,
-    ._sigev_un =
-    {
-      ._sigev_thread =
-      {
-	._function = notify_func
-      }
-    }
-  };
+  struct sigevent sigev2;
   struct itimerspec itimer1 = { { 0, 200000000 }, { 0, 200000000 } };
   struct itimerspec itimer2 = { { 0, 100000000 }, { 0, 500000000 } };
   struct itimerspec itimer3 = { { 0, 150000000 }, { 0, 300000000 } };
   struct itimerspec old;
 
   retval = clock_gettime (CLOCK_REALTIME, &ts);
+
+  sigev2.sigev_notify = SIGEV_THREAD;
+  sigev2.sigev_notify_function = notify_func;
 
   setvbuf (stdout, 0, _IOLBF, 0);
 

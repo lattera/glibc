@@ -1,5 +1,5 @@
 /* Wrapper arpund system calls to provide cancelation points.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-1999,2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -69,6 +69,8 @@ name param_list								      \
   return result;							      \
 }
 
+#define PROMOTE_INTEGRAL_TYPE(type) __typeof__ ((type) 0 + 0)
+
 
 /* close(2).  */
 CANCELABLE_SYSCALL (int, close, (int fd), (fd))
@@ -110,13 +112,17 @@ strong_alias (nanosleep, __nanosleep)
 
 /* open(2).  */
 CANCELABLE_SYSCALL_VA (int, open, (const char *pathname, int flags, ...),
-		       (pathname, flags, va_arg (ap, mode_t)), flags)
+		       (pathname, flags,
+			va_arg (ap, PROMOTE_INTEGRAL_TYPE (mode_t))),
+		       flags)
 strong_alias (open, __open)
 
 
 /* open64(3).  */
 CANCELABLE_SYSCALL_VA (int, open64, (const char *pathname, int flags, ...),
-		       (pathname, flags, va_arg (ap, mode_t)), flags)
+		       (pathname, flags,
+			va_arg (ap, PROMOTE_INTEGRAL_TYPE (mode_t))),
+		       flags)
 strong_alias (open64, __open64)
 
 

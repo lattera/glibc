@@ -391,12 +391,12 @@ cannot handle old request version %d; current version is %d"),
 	}
       else
 	{
-	  struct ucred caller;
-	  socklen_t optlen = sizeof (caller);
-
 	  /* Some systems have no SO_PEERCRED implementation.  They don't
 	     care about security so we don't as well.  */
 #ifdef SO_PEERCRED
+	  struct ucred caller;
+	  socklen_t optlen = sizeof (caller);
+
 	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
 	    {
 	      char buf[256];
