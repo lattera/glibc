@@ -1,3 +1,12 @@
+1998-05-23  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nis_defaults.c: Fix buffer problems and typos.
+
+1998-05-23 08:42  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/dcgettext.c: Don't use any alloca hacks if C_ALLOCA is defined.
+	Patch by Fred Fish.
+
 1998-05-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/random_r.c (__random_r): Rewrite last patch to fix buffer

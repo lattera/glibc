@@ -25,11 +25,11 @@
 
 #include <sys/types.h>
 
-#ifdef __GNUC__
+#if defined __GNUC__ && !defined C_ALLOCA
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else
-# if defined HAVE_ALLOCA_H || defined _LIBC
+# if (defined HAVE_ALLOCA_H || defined _LIBC && !defined C_ALLOCA
 #  include <alloca.h>
 # else
 #  ifdef _AIX
