@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +26,33 @@
 
 
 static int check_ascii (const char *locname);
+
+/* Test for mbrtowc, contributed by Markus Kuhn <mkuhn@acm.org>.  */
+static int
+utf8_test (void)
+{
+  /* UTF-8 single byte feeding test for mbrtowc().  */
+  wchar_t wc;
+  mbstate_t s;
+  const char *locale = "de_DE.UTF-8";
+
+  if (!setlocale (LC_CTYPE, locale))
+    {
+      fprintf (stderr, "locale '%s' not available!\n", locale);
+      exit (1);
+    }
+  wc = 42;			/* arbitrary number */
+  memset (&s, 0, sizeof (s));	/* get s into initial state */
+  assert (mbrtowc (&wc, "\xE2", 1, &s) == (size_t) - 2);	/* 1st byte processed */
+  assert (mbrtowc (&wc, "\x89", 1, &s) == (size_t) - 2);	/* 2nd byte processed */
+  assert (wc == 42);		/* no value has not been stored into &wc yet */
+  assert (mbrtowc (&wc, "\xA0", 1, &s) == 1);	/* 3nd byte processed */
+  assert (wc == 0x2260);	/* E2 89 A0 = U+2260 (not equal) decoded correctly */
+  assert (mbrtowc (&wc, "", 1, &s) == 0);	/* test final byte processing */
+  assert (wc == 0);		/* test final byte decoding */
+
+  return 0;
+}
 
 
 int
@@ -40,6 +68,7 @@ main (void)
 
   setlocale (LC_ALL, "de_DE.UTF-8");
   result |= check_ascii (setlocale (LC_ALL, NULL));
+  result |= utf8_test ();
 
   setlocale (LC_ALL, "ja_JP.EUC-JP");
   result |= check_ascii (setlocale (LC_ALL, NULL));
