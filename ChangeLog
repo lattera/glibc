@@ -1,3 +1,12 @@
+2000-08-28  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/getpeername.c (__getpeername): Renamed from
+	getpeername.  Use ISO C style function definition.
+	(getpeername): Provide weak alias.
+	* sysdeps/mach/hurd/setrlimit.c (__setrlimit): Renamed from
+	setrlimit.  Use ISO C style function definition.
+	(setrlimit): Provide weak alias.
+
 2000-08-28  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* shlib-versions: Add a rule for S/390 to the libm version list.

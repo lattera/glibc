@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/socket.h>
+
 #include <hurd.h>
 #include <hurd/fd.h>
 #include <hurd/socket.h>
@@ -26,10 +27,7 @@
 /* Put the address of the peer connected to socket FD into *ADDR
    (which is *LEN bytes long), and its actual length into *LEN.  */
 int
-getpeername (fd, addrarg, len)
-     int fd;
-     __SOCKADDR_ARG addrarg;
-     socklen_t *len;
+__getpeername (int fd, __SOCKADDR_ARG addrarg, socklen_t *len)
 {
   error_t err;
   mach_msg_type_number_t buflen = *len;
@@ -60,3 +58,5 @@ getpeername (fd, addrarg, len)
 
   return 0;
 }
+
+weak_alias (__getpeername, getpeername)

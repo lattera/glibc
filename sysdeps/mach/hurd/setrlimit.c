@@ -16,20 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <hurd.h>
-#include <hurd/resource.h>
 #include <errno.h>
-#include <hurd/fd.h>
 
+#include <hurd.h>
+#include <hurd/fd.h>
+#include <hurd/resource.h>
 
 /* Set the soft and hard limits for RESOURCE to *RLIMITS.
    Only the super-user can increase hard limits.
    Return 0 if successful, -1 if not (and sets errno).  */
-/* XXX should be __setrlimit ? */
 int
-setrlimit (resource, rlimits)
-     enum __rlimit_resource resource;
-     const struct rlimit *rlimits;
+__setrlimit (enum __rlimit_resource resource, const struct rlimit *rlimits)
 {
   struct rlimit lim;
 
@@ -59,3 +56,5 @@ setrlimit (resource, rlimits)
 
   return 0;
 }
+
+weak_alias (__setrlimit, setrlimit)
