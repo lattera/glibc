@@ -1,5 +1,5 @@
 /* Perform a `longjmp' on a Mach thread_state.  Alpha version.
-   Copyright (C) 1991, 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,15 +27,22 @@
 void
 _hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
 {
-  struct alpha_thread_state *ts = state;
+  struct alpha_thread_state *const ts = state;
 
-  ts->r9 = env[0].__jmpbuf[0].__9;
-  ts->r11 = env[0].__jmpbuf[0].__11;
-  ts->r12 = env[0].__jmpbuf[0].__12;
-  ts->r13 = env[0].__jmpbuf[0].__13;
-  ts->r14 = env[0].__jmpbuf[0].__14;
-  ts->r15 = (long int) env[0].__jmpbuf[0].__fp;
-  ts->r30 = (long int) env[0].__jmpbuf[0].__sp;
-  ts->pc = (long int) env[0].__jmpbuf[0].__pc;
+  ts->r9 = env[0].__jmpbuf[JB_S0];
+  ts->r10 = env[0].__jmpbuf[JB_S1];
+  ts->r11 = env[0].__jmpbuf[JB_S2];
+  ts->r12 = env[0].__jmpbuf[JB_S3];
+  ts->r13 = env[0].__jmpbuf[JB_S4];
+  ts->r13 = env[0].__jmpbuf[JB_S5];
+  ts->pc = env[0].__jmpbuf[JB_PC];
+  ts->r15 = env[0].__jmpbuf[JB_FP];
+  ts->r30 = env[0].__jmpbuf[JB_SP];
   ts->r0 = val ?: 1;
+
+  /* XXX
+     To mimic longjmp we ought to restore some fp registers too.
+     But those registers are in struct alpha_float_state.
+     The only use of this is in fork, and it probably won't matter.
+  */
 }
