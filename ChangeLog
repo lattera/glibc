@@ -1,3 +1,7 @@
+1998-03-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-support.c: Add definition of _dl_debug_impcalls.
+
 1998-03-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c (process_envvars): Also recognize LD_LIBRARY_PATH,

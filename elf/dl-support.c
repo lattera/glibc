@@ -36,6 +36,7 @@ const char *_dl_rpath = DEFAULT_RPATH;
 const char *_dl_platform;
 size_t _dl_platformlen;
 int _dl_debug_libs;
+int _dl_debug_impcalls;
 
 /* If nonzero print warnings about problematic situations.  */
 int _dl_verbose;
