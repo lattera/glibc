@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
+   Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -84,7 +84,7 @@
    aren't checked at the moment.
 
    NaN values: There exist signalling and quiet NaNs.  This implementation
-   only uses signalling NaN as parameter but does not differenciate
+   only uses quiet NaN as parameter but does not differenciate
    between the two kinds of NaNs as result.
 
    Inline functions: Inlining functions should give an improvement in
