@@ -844,30 +844,6 @@ gnu*)
   ;;
 esac
 
-###
-### I put this here to prevent those annoying emails from people who cannot
-### read and try to compile glibc on unsupported platforms.  --drepper
-###
-### By using the undocumented --enable-hacker-mode option for configure
-### one can skip this test to make the configuration not fail for unsupported
-### platforms.
-###
-if test -z "$enable_hacker_mode"; then
-  case "$machine-$host_os" in
-  *-linux* | *-gnu* | arm*-none*)
-    ;;
-  *)
-    echo "*** The GNU C library is currently not available for this platform."
-    echo "*** So far nobody cared to port it and if there is no volunteer it"
-    echo "*** might never happen.  So, if you have interest to see glibc on"
-    echo "*** this platform visit"
-    echo "***	http://www.gnu.org/software/libc/porting.html"
-    echo "*** and join the group of porters"
-    exit 1
-    ;;
-  esac
-fi
-
 # We keep the original values in `$config_*' and never modify them, so we
 # can write them unchanged into config.make.  Everything else uses
 # $machine, $vendor, and $os, and changes them whenever convenient.
@@ -892,6 +868,30 @@ esac
 machine=$config_machine
 vendor=$config_vendor
 os=$config_os
+
+###
+### I put this here to prevent those annoying emails from people who cannot
+### read and try to compile glibc on unsupported platforms.  --drepper
+###
+### By using the undocumented --enable-hacker-mode option for configure
+### one can skip this test to make the configuration not fail for unsupported
+### platforms.
+###
+if test -z "$enable_hacker_mode"; then
+  case "$machine-$host_os" in
+  *-linux* | *-gnu* | arm*-none*)
+    ;;
+  *)
+    echo "*** The GNU C library is currently not available for this platform."
+    echo "*** So far nobody cared to port it and if there is no volunteer it"
+    echo "*** might never happen.  So, if you have interest to see glibc on"
+    echo "*** this platform visit"
+    echo "***	http://www.gnu.org/software/libc/porting.html"
+    echo "*** and join the group of porters"
+    exit 1
+    ;;
+  esac
+fi
 
 # Expand the configuration machine name into a subdirectory by architecture
 # type and particular chip.
@@ -1281,10 +1281,10 @@ else
   # Found it, now check the version.
   echo $ac_n "checking version of $CC""... $ac_c" 1>&6
 echo "configure:1284: checking version of $CC" >&5
-  ac_prog_version=`$CC -v 2>&1 | sed -n 's/^.*version \([egcst0-9.-]*\).*$/\1/p'`
+  ac_prog_version=`$CC -v 2>&1 | sed -n 's/^.*version \([egcst-]*[0-9.]*\).*$/\1/p'`
   case $ac_prog_version in
     '') ac_prog_version="v. ?.??, bad"; ac_verc_fail=yes;;
-    egcs-2.9[1-9].*|egcs-2.90.2[789]|egcs-2.90.[3-9][0-9]|*2.8.[1-9]*|*2.9.[0-9]*)
+    egcs-2.9[1-9].*|egcs-2.90.2[789]|egcs-2.90.[3-9][0-9]|*2.8.[1-9]*|*2.9|*2.9.[0-9]*)
        ac_prog_version="$ac_prog_version, ok"; ac_verc_fail=no;;
     *) ac_prog_version="$ac_prog_version, bad"; ac_verc_fail=yes;;
 
