@@ -1,3 +1,8 @@
+2004-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (__strncat_g): Fix i686
+	implementation.
+
 2004-09-08  H.J. Lu  <hongjiu.lu@intel.com>
 
 	* Makeconfig (libunwind): New.
