@@ -26,19 +26,20 @@ main (void)
 {
   int result = 0;
 
-  if (sizeof (long double) >= 12)
-    {
-      long double x = 0x100000001ll + (long double) 0.5;
-      long double q;
-      long double r;
+#ifndef NO_LONG_DOUBLE
+  {
+    long double x = 0x100000001ll + (long double) 0.5;
+    long double q;
+    long double r;
 
-      r = modfl (x, &q);
-      if (q != (long double) 0x100000001ll || r != 0.5)
-	{
-	  printf ("modfl (%Lg, ...) failed\n", x);
-	  result = 1;
-	}
-    }
+    r = modfl (x, &q);
+    if (q != (long double) 0x100000001ll || r != 0.5)
+      {
+	printf ("modfl (%Lg, ...) failed\n", x);
+	result = 1;
+      }
+  }
+#endif
 
   {
     double x = 0x100000001ll + (double) 0.5;

@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdarg.h>
@@ -84,7 +85,7 @@ __libc_fcntl (int fd, int cmd, ...)
 	fl.l_whence = fl64->l_whence;
 	fl.l_pid = fl64->l_pid;
 
-	res = INLINE_SYSCALL (fcntl, 3, fd, cmd, &fl);
+	res = INLINE_SYSCALL (fcntl, 3, fd, F_GETLK, &fl);
 	if (res  != 0)
 	  return res;
 	/* Everything ok, convert back.  */
@@ -120,7 +121,8 @@ __libc_fcntl (int fd, int cmd, ...)
 	fl.l_type = fl64->l_type;
 	fl.l_whence = fl64->l_whence;
 	fl.l_pid = fl64->l_pid;
-	return INLINE_SYSCALL (fcntl, 3, fd, cmd, &fl);
+	assert (F_SETLK - F_SETLKW == F_SETLK64 - F_SETLKW64);
+	return INLINE_SYSCALL (fcntl, 3, fd, cmd + F_SETLK - F_SETLK64, &fl);
       }
     default:
       return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);

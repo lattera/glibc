@@ -1,3 +1,16 @@
+2000-10-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c (__libc_fcntl): When
+	converting struct flock64 to struct flock and back, use fcntl commands
+	which work on struct flock.
+
+2000-10-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* math/test-misc.c (main): Only check modfl if NO_LONG_DOUBLE is not
+	defined.
+	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Update.
+	* sysdeps/sparc/sparc64/fpu/libm-test-ulps: Update.
+
 2000-10-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/arm/libm-test-ulps: Updated.
