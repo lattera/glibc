@@ -1,5 +1,7 @@
 1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo in last change.
+
 	* time/time.h: Avoid unneccesary #ifdef.
 
 1999-02-15  Geoff Keating  <geoffk@ozemail.com.au>
