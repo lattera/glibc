@@ -258,7 +258,11 @@ int __pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
   /* XXX This function has a stupid definition.  The standard specifies
      no error value but what is if no stack address was set?  We simply
      return the value we have in the member.  */
+#ifndef _STACK_GROWS_UP
+  *stackaddr = (char *) attr->__stackaddr - attr->__stacksize;
+#else
   *stackaddr = attr->__stackaddr;
+#endif
   *stacksize = attr->__stacksize;
   return 0;
 }
