@@ -21,6 +21,7 @@ Boston, MA 02111-1307, USA.  */
 #include <printf.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <errno.h>
 #include <wchar.h>
 #include "_itoa.h"
 #include "../locale/localeinfo.h"

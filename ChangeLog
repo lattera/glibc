@@ -1,3 +1,9 @@
+Tue Apr 23 21:09:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* hurd/hurdsig.c (signal_allowed): For SIGIO/SIGURG, add a new
+ 	variable, LUCKY, to use instead of setting D to -1 (which fucks
+ 	things up).
+
 Tue Apr 23 15:56:56 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* config.h.in (HAVE_REGEX): New macro.
