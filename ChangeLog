@@ -11,6 +11,9 @@
 	place pointed to.
 	* include/dlfcn.h: Adjust _dl_catch_error prototype.
 	* sysdeps/generic/ldsodefs.h: Adjust _dl_signal_error prototype.
+	* dlfcn/dlerror.c (struct dl_action_result): Add objname member.
+	(dlerror): Add objname to asprintf() parameters.
+	(_dl_error_run): Pass new parameter to _dl_catch_error.
 	* elf/dl-libc.c (dlerror_run): Pass new parameter to _dl_catch_error.
 	* elf/dl-open.c (_dl_open): Likewise.
 	* elf/rtld.c (dl_main): Likewise.

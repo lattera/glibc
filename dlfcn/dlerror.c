@@ -1,5 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <dlfcn.h>
+#include <libintl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -28,7 +29,8 @@ struct dl_action_result
   {
     int errcode;
     int returned;
-    char *errstring;
+    const char *objname;
+    const char *errstring;
   };
 static struct dl_action_result last_result;
 static struct dl_action_result *static_buf;
@@ -59,20 +61,21 @@ dlerror (void)
       /* We can now free the string.  */
       if (result->errstring != NULL)
 	{
-	  free (result->errstring);
+	  free ((char *) result->errstring);
 	  result->errstring = NULL;
 	}
       buf = NULL;
     }
   else
     {
-      buf = result->errstring;
+      buf = (char *) result->errstring;
       if (result->errcode != 0
-	  && __asprintf (&buf, "%s: %s",
-			 result->errstring, strerror (result->errcode)) != -1)
+	  && __asprintf (&buf, "%s: %s: %s",
+			 result->objname, _(result->errstring),
+			 strerror (result->errcode)) != -1)
 	{
 	  /* We don't need the error string anymore.  */
-	  free (result->errstring);
+	  free ((char *) result->errstring);
 	  result->errstring = buf;
 	}
 
@@ -119,9 +122,10 @@ _dlerror_run (void (*operate) (void *), void *args)
   if (result->errstring != NULL)
     /* Free the error string from the last failed command.  This can
        happen if `dlerror' was not run after an error was found.  */
-    free (result->errstring);
+    free ((char *) result->errstring);
 
-  result->errcode = _dl_catch_error (&result->errstring, operate, args);
+  result->errcode = _dl_catch_error (&result->objname, &result->errstring,
+				     operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;
