@@ -313,7 +313,7 @@ _dl_start_user:
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
 #define ELF_MACHINE_JMP_SLOT	R_ARM_JUMP_SLOT
 
-/* The i386 never uses Elf32_Rela relocations.  */
+/* The ARM never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
 
 /* We define an initialization functions.  This is called very early in
