@@ -35,6 +35,10 @@ ld {
     # functions used in other libraries
     _dl_mcount;
   }
+  GLIBC_2.3 {
+    # runtime interface to TLS
+    __tls_get_addr;
+  }
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure; __libc_stack_end;
