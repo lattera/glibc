@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,4 +22,4 @@
 
 #define DL_RO_DYN_SECTION 1
 
-#include <sysdeps/generic/ldsodefs.h>
+#include_next <ldsodefs.h>
