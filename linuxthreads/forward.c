@@ -128,6 +128,15 @@ compat_symbol (libc, __pthread_cond_wait_2_0, pthread_cond_wait, GLIBC_2_0);
 #endif
 versioned_symbol (libc, __pthread_cond_wait, pthread_cond_wait, GLIBC_2_3_2);
 
+FORWARD (__pthread_cond_timedwait,
+	 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+	  const struct timespec *abstime), (cond, mutex, abstime), 0)
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
+strong_alias (__pthread_cond_timedwait, __pthread_cond_timedwait_2_0)
+compat_symbol (libc, __pthread_cond_timedwait_2_0, pthread_cond_timedwait, GLIBC_2_0);
+#endif
+versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait, GLIBC_2_3_2);
+
 
 FORWARD (pthread_equal, (pthread_t thread1, pthread_t thread2),
 	 (thread1, thread2), 1)

@@ -9,6 +9,7 @@ libc {
     pthread_condattr_destroy; pthread_condattr_init;
     pthread_cond_broadcast; pthread_cond_destroy;
     pthread_cond_init; pthread_cond_signal; pthread_cond_wait;
+    pthread_cond_timedwait;
     pthread_equal; pthread_exit;
     pthread_getschedparam; pthread_setschedparam;
     pthread_mutex_destroy; pthread_mutex_init;
@@ -23,7 +24,7 @@ libc {
     # Changed pthread_cond_t.
     pthread_cond_init; pthread_cond_destroy;
     pthread_cond_wait; pthread_cond_signal;
-    pthread_cond_broadcast;
+    pthread_cond_broadcast; pthread_cond_timedwait;
   }
   GLIBC_PRIVATE {
     # Internal libc interface to libpthread

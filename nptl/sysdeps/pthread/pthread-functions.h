@@ -52,12 +52,17 @@ struct pthread_functions
 				  const pthread_condattr_t *);
   int (*ptr___pthread_cond_signal) (pthread_cond_t *);
   int (*ptr___pthread_cond_wait) (pthread_cond_t *, pthread_mutex_t *);
+  int (*ptr___pthread_cond_timedwait) (pthread_cond_t *, pthread_mutex_t *,
+				       const struct timespec *);
   int (*ptr___pthread_cond_broadcast_2_0) (pthread_cond_2_0_t *);
   int (*ptr___pthread_cond_destroy_2_0) (pthread_cond_2_0_t *);
   int (*ptr___pthread_cond_init_2_0) (pthread_cond_2_0_t *,
 				      const pthread_condattr_t *);
   int (*ptr___pthread_cond_signal_2_0) (pthread_cond_2_0_t *);
   int (*ptr___pthread_cond_wait_2_0) (pthread_cond_2_0_t *, pthread_mutex_t *);
+  int (*ptr___pthread_cond_timedwait_2_0) (pthread_cond_2_0_t *,
+					   pthread_mutex_t *,
+					   const struct timespec *);
   int (*ptr_pthread_equal) (pthread_t, pthread_t);
   void (*ptr___pthread_exit) (void *);
   int (*ptr_pthread_getschedparam) (pthread_t, int *, struct sched_param *);

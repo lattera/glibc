@@ -1,3 +1,9 @@
+2003-09-01  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/iw_IL: Add comment stating why there are two locales for
+	Hebrew in Israel, and that he_IL replaces iw_IL.
+	* locales/he_IL: Likewise.
+
 2003-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/an_ES: Fix locale header information.

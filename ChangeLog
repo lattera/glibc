@@ -1,3 +1,19 @@
+2003-09-01  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_compat/compat-spwd.c (getspnam_plususer): Return
+	NSS_STATUS_SUCCESS if entry was found.
+	(getspent_next_file): Store user in blacklist after entry
+	was found, use innetgr.
+
+2003-09-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise.c: New.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/posix_fadvise64.c: New.
+
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): Fix tls offset
+	computation for TCB_AT_TP.  Support l_firstbyte_offset != 0 for
+	DTV_AT_TP, optimize.
+
 2003-08-31  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/Versions: Add posix_fadvise64 and

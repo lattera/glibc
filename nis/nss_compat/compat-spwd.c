@@ -435,7 +435,7 @@ getspnam_plususer (const char *name, struct spwd *result, ent_t *ent,
   copy_spwd_changes (result, &pwd, p, plen);
   give_spwd_free (&pwd);
   /* We found the entry.  */
-  return NSS_STATUS_RETURN;
+  return NSS_STATUS_SUCCESS;
 }
 
 static enum nss_status
@@ -539,18 +539,23 @@ getspent_next_file (struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '+' && result->sp_namp[1] != '\0'
 	  && result->sp_namp[1] != '@')
 	{
+	  size_t len = strlen (result->sp_namp);
+	  char buf[len];
 	  enum nss_status status;
 
 	  /* Store the User in the blacklist for the "+" at the end of
 	     /etc/passwd */
-	  blacklist_store_name (&result->sp_namp[1], ent);
+	  memcpy (buf, &result->sp_namp[1], len);
 	  status = getspnam_plususer (&result->sp_namp[1], result, ent,
 				      buffer, buflen, errnop);
+	  blacklist_store_name (buf, ent);
 
 	  if (status == NSS_STATUS_SUCCESS)	/* We found the entry. */
 	    break;
-	  else if (status == NSS_STATUS_RETURN	/* We couldn't parse the entry */
-		   || status == NSS_STATUS_NOTFOUND)	/* entry doesn't exist */
+	  /* We couldn't parse the entry */
+	  else if (status == NSS_STATUS_RETURN
+		   /* entry doesn't exist */
+		   || status == NSS_STATUS_NOTFOUND)
 	    continue;
 	  else
 	    {
@@ -653,6 +658,9 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	      return NSS_STATUS_TRYAGAIN;
 	    }
 
+          /* Terminate the line for any case.  */
+	  buffer[buflen - 1] = '\0';
+
 	  /* Skip leading blanks.  */
 	  while (isspace (*p))
 	    ++p;
@@ -686,21 +694,8 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '-' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
-	  /* XXX Do not use fixed length buffers.  */
-	  char buf2[1024];
-	  char *user, *host, *domain;
-	  struct __netgrent netgrdata;
-
-	  bzero (&netgrdata, sizeof (struct __netgrent));
-	  __internal_setnetgrent (&result->sp_namp[2], &netgrdata);
-	  while (__internal_getnetgrent_r (&host, &user, &domain, &netgrdata,
-					   buf2, sizeof (buf2), errnop))
-	    {
-	      if (user != NULL && user[0] != '-')
-		if (strcmp (user, name) == 0)
-		  return NSS_STATUS_NOTFOUND;
-	    }
-	  __internal_endnetgrent (&netgrdata);
+	  if (innetgr (&result->sp_namp[2], NULL, name, NULL))
+	    return NSS_STATUS_NOTFOUND;
 	  continue;
 	}
 
@@ -708,25 +703,18 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
       if (result->sp_namp[0] == '+' && result->sp_namp[1] == '@'
 	  && result->sp_namp[2] != '\0')
 	{
-	  char *buf = strdupa (&result->sp_namp[2]);
-	  int status;
+	  enum nss_status status;
 
-	  ent->netgroup = TRUE;
-	  ent->first = TRUE;
-	  copy_spwd_changes (&ent->pwd, result, NULL, 0);
-
-	  do
+	  if (innetgr (&result->sp_namp[2], NULL, name, NULL))
 	    {
-	      status = getspent_next_nss_netgr (name, result, ent, buf,
-						buffer, buflen, errnop);
+	      status = getspnam_plususer (name, result, ent, buffer,
+					  buflen, errnop);
+
 	      if (status == NSS_STATUS_RETURN)
 		continue;
 
-	      if (status == NSS_STATUS_SUCCESS
-		  && strcmp (result->sp_namp, name) == 0)
-		return NSS_STATUS_SUCCESS;
+	      return status;
 	    }
-	  while (status == NSS_STATUS_SUCCESS);
 	  continue;
 	}
 
@@ -767,8 +755,12 @@ internal_getspnam_r (const char *name, struct spwd *result, ent_t *ent,
 	  status = getspnam_plususer (name, result, ent,
 				      buffer, buflen, errnop);
 
-	  if (status == NSS_STATUS_RETURN)	/* We couldn't parse the entry */
-	    return NSS_STATUS_NOTFOUND;
+	  if (status == NSS_STATUS_SUCCESS)
+	    /* We found the entry. */
+            break;
+          else if (status == NSS_STATUS_RETURN)
+	    /* We couldn't parse the entry */
+            return NSS_STATUS_NOTFOUND;
 	  else
 	    return status;
 	}
@@ -796,10 +788,8 @@ _nss_compat_getspnam_r (const char *name, struct spwd *pwd,
 
   result = internal_setspent (&ent, 0);
 
-  if (result != NSS_STATUS_SUCCESS)
-    return result;
-
-  result = internal_getspnam_r (name, pwd, &ent, buffer, buflen, errnop);
+  if (result == NSS_STATUS_SUCCESS)
+    result = internal_getspnam_r (name, pwd, &ent, buffer, buflen, errnop);
 
   internal_endspent (&ent);
 

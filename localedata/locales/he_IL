@@ -18,6 +18,10 @@ escape_char  /
 % Charset: ISO-8859-8
 % Distribution and use is free, also
 % for commercial purposes.
+%
+% This locale replaces iw_IL, as the ISO-639 code for Hebrew was changed
+% from 'iw' to 'he' in 1989, according to Bruno Haible on libc-alpha
+% 2003-09-01.
 
 LC_IDENTIFICATION
 title      "Hebrew locale for Israel"

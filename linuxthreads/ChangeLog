@@ -17,6 +17,15 @@
 	* tst-tls1modf.c: New.
 	* tst-tls2.sh: New test.
 
+	* internals.h (__pthread_cond_timedwait): New prototype.
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions): Add
+	ptr___pthread_cond_timedwait.
+	* pthread.c (__pthread_functions): Initialize them.
+	* forward.c (pthread_cond_timedwait@GLIBC_2.0,
+	pthread_cond_timedwait@@GLIBC_2.3.2): New forwards.
+	* Versions (libc): Export pthread_cond_timedwait@GLIBC_2.0,
+	pthread_cond_timedwait@@GLIBC_2.3.2.
+
 2003-08-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Don't mark pthread_exit,

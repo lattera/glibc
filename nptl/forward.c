@@ -136,6 +136,19 @@ FORWARD (__pthread_cond_wait, (pthread_cond_t *cond, pthread_mutex_t *mutex),
 versioned_symbol (libc, __pthread_cond_wait, pthread_cond_wait,
 		  GLIBC_2_3_2);
 
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
+FORWARD (__pthread_cond_timedwait_2_0,
+	 (pthread_cond_2_0_t *cond, pthread_mutex_t *mutex,
+	  const struct timespec *abstime), (cond, mutex, abstime), 0)
+compat_symbol (libc, __pthread_cond_timedwait_2_0, pthread_cond_timedwait,
+	       GLIBC_2_0);
+#endif
+FORWARD (__pthread_cond_timedwait,
+	 (pthread_cond_t *cond, pthread_mutex_t *mutex,
+	  const struct timespec *abstime), (cond, mutex, abstime), 0)
+versioned_symbol (libc, __pthread_cond_timedwait, pthread_cond_timedwait,
+		  GLIBC_2_3_2);
+
 
 FORWARD (pthread_equal, (pthread_t thread1, pthread_t thread2),
 	 (thread1, thread2), 1)

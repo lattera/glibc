@@ -260,6 +260,7 @@ struct pthread_functions __pthread_functions =
     .ptr___pthread_cond_init = __pthread_cond_init,
     .ptr___pthread_cond_signal = __pthread_cond_signal,
     .ptr___pthread_cond_wait = __pthread_cond_wait,
+    .ptr___pthread_cond_timedwait = __pthread_cond_timedwait,
     .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
     .ptr_pthread_getschedparam = __pthread_getschedparam,

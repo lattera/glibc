@@ -117,16 +117,17 @@ internal_function
 _dl_determine_tlsoffset (void)
 {
   struct dtv_slotinfo *slotinfo;
-  size_t max_align;
-  size_t offset;
+  size_t max_align = TLS_TCB_ALIGN;
+  size_t offset, freetop = 0, freebottom = 0;
   size_t cnt;
-  size_t freebytes;
 
   /* The first element of the dtv slot info list is allocated.  */
   assert (GL(dl_tls_dtv_slotinfo_list) != NULL);
   /* There is at this point only one element in the
      dl_tls_dtv_slotinfo_list list.  */
   assert (GL(dl_tls_dtv_slotinfo_list)->next == NULL);
+
+  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
 
   /* Determining the offset of the various parts of the static TLS
      block has several dependencies.  In addition we have to work
@@ -158,88 +159,90 @@ _dl_determine_tlsoffset (void)
 
 # if TLS_TCB_AT_TP
   /* We simply start with zero.  */
-  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
-  max_align = slotinfo[1].map != NULL ? slotinfo[1].map->l_tls_align : 1;
   offset = 0;
-  freebytes = 0;
 
   for (cnt = 1; slotinfo[cnt].map != NULL; ++cnt)
     {
       assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
 
-      size_t blsize = (slotinfo[cnt].map->l_tls_blocksize
-		       + slotinfo[cnt].map->l_tls_firstbyte_offset);
-
-      if (blsize <= freebytes)
-	{
-	  /* When we come here the amount of memory we was "wasted"
-             for the correct alignment of the previous block is larger
-             than what we need for this module.  So use it.  */
-	  size_t n = (freebytes - blsize) / slotinfo[cnt].map->l_tls_align;
-	  freebytes = (n * slotinfo[cnt].map->l_tls_align
-		       + slotinfo[cnt].map->l_tls_firstbyte_offset);
-	}
-      else
-	{
-	  /* There is either no gap from the bottom of the static TLS
-             block to the first used byte or the gap is too small.
-             Extend the static TLS block.  */
-	  offset += roundup (blsize, max_align);
-	  freebytes = slotinfo[cnt].map->l_tls_firstbyte_offset;
-	}
-
+      size_t firstbyte = (-slotinfo[cnt].map->l_tls_firstbyte_offset
+			  & (slotinfo[cnt].map->l_tls_align - 1));
+      size_t off;
       max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
+
+      if (freebottom - freetop >= slotinfo[cnt].map->l_tls_blocksize)
+	{
+	  off = roundup (freetop + slotinfo[cnt].map->l_tls_blocksize
+			 - firstbyte, slotinfo[cnt].map->l_tls_align)
+		+ firstbyte;
+	  if (off <= freebottom)
+	    {
+	      freetop = off;
+
+	      /* XXX For some architectures we perhaps should store the
+		 negative offset.  */
+	      slotinfo[cnt].map->l_tls_offset = off;
+	      continue;
+	    }
+	}
+
+      off = roundup (offset + slotinfo[cnt].map->l_tls_blocksize - firstbyte,
+		     slotinfo[cnt].map->l_tls_align) + firstbyte;
+      if (off > offset + slotinfo[cnt].map->l_tls_blocksize
+		+ (freebottom - freetop))
+	{
+	  freetop = offset;
+	  freebottom = off - slotinfo[cnt].map->l_tls_blocksize;
+	}
+      offset = off;
 
       /* XXX For some architectures we perhaps should store the
 	 negative offset.  */
-      slotinfo[cnt].map->l_tls_offset = offset - freebytes;
+      slotinfo[cnt].map->l_tls_offset = off;
     }
 
-  /* The thread descriptor (pointed to by the thread pointer) has its
-     own alignment requirement.  Adjust the static TLS size
-     and TLS offsets appropriately.  */
-  // XXX How to deal with this.  We cannot simply add zero bytes
-  // XXX after the first (closest to the TCB) TLS block since this
-  // XXX would invalidate the offsets the linker creates for the LE
-  // XXX model.
-
   GL(dl_tls_static_used) = offset;
-  GL(dl_tls_static_size) = (offset + roundup (TLS_STATIC_SURPLUS, max_align)
+  GL(dl_tls_static_size) = (roundup (offset + TLS_STATIC_SURPLUS, max_align)
 			    + TLS_TCB_SIZE);
 # elif TLS_DTV_AT_TP
   /* The TLS blocks start right after the TCB.  */
   offset = TLS_TCB_SIZE;
-  max_align = __alignof (void *);
 
-  /* The first block starts right after the TCB.  */
-  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
-  if (slotinfo[1].map != NULL)
+  for (cnt = 1; slotinfo[cnt].map != NULL; ++cnt)
     {
-      size_t prev_size;
+      assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
 
-      offset = roundup (offset, slotinfo[1].map->l_tls_align);
-      slotinfo[1].map->l_tls_offset = offset;
-      max_align = slotinfo[1].map->l_tls_align;
-      prev_size = slotinfo[1].map->l_tls_blocksize;
+      size_t firstbyte = (-slotinfo[cnt].map->l_tls_firstbyte_offset
+			  & (slotinfo[cnt].map->l_tls_align - 1));
+      size_t off;
+      max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
 
-      for (cnt = 2; slotinfo[cnt].map != NULL; ++cnt)
+      if (slotinfo[cnt].map->l_tls_blocksize >= freetop - freebottom)
 	{
-	  assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
-
-	  max_align = MAX (max_align, slotinfo[cnt].map->l_tls_align);
-
-	  /* Compute the offset of the next TLS block.  */
-	  offset = roundup (offset + prev_size,
-			    slotinfo[cnt].map->l_tls_align);
-
-	  /* XXX For some architectures we perhaps should store the
-	     negative offset.  */
-	  slotinfo[cnt].map->l_tls_offset = offset;
-
-	  prev_size = slotinfo[cnt].map->l_tls_blocksize;
+	  off = roundup (freebottom, slotinfo[cnt].map->l_tls_align);
+	  if (off - freebottom < firstbyte)
+	    off += slotinfo[cnt].map->l_tls_align;
+	  if (off + slotinfo[cnt].map->l_tls_blocksize - firstbyte <= freetop)
+	    {
+	      slotinfo[cnt].map->l_tls_offset = off - firstbyte;
+	      freebottom = off + slotinfo[cnt].map->l_tls_blocksize
+			   - firstbyte;
+	      continue;
+	    }
 	}
 
-      offset += prev_size;
+      off = roundup (offset, slotinfo[cnt].map->l_tls_align);
+      if (off - offset < firstbyte)
+	off += slotinfo[cnt].map->l_tls_align;
+
+      slotinfo[cnt].map->l_tls_offset = off - firstbyte;
+      if (off - firstbyte - offset > freetop - freebottom)
+	{
+	  freebottom = offset;
+	  freetop = off - firstbyte;
+	}
+
+      offset = off + slotinfo[cnt].map->l_tls_blocksize - firstbyte;
     }
 
   GL(dl_tls_static_used) = offset;

@@ -21,6 +21,14 @@
 	* tst-tls5modf.c: New.
 	* tst-tls6.sh: New test.
 
+	* sysdeps/pthread/pthread-functions.h (struct pthread_functions): Add
+	ptr___pthread_cond_timedwait and ptr___pthread_cond_timedwait_2_0.
+	* init.c (pthread_functions): Initialize them.
+	* forward.c (pthread_cond_timedwait@GLIBC_2.0,
+	pthread_cond_timedwait@@GLIBC_2.3.2): New forwards.
+	* Versions (libc): Export pthread_cond_timedwait@GLIBC_2.0,
+	pthread_cond_timedwait@@GLIBC_2.3.2.
+
 2003-09-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/timer_create.c: New file.

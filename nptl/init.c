@@ -95,12 +95,14 @@ static struct pthread_functions pthread_functions =
     .ptr___pthread_cond_init = __pthread_cond_init,
     .ptr___pthread_cond_signal = __pthread_cond_signal,
     .ptr___pthread_cond_wait = __pthread_cond_wait,
+    .ptr___pthread_cond_timedwait = __pthread_cond_timedwait,
 # if SHLIB_COMPAT(libpthread, GLIBC_2_0, GLIBC_2_3_2)
     .ptr___pthread_cond_broadcast_2_0 = __pthread_cond_broadcast_2_0,
     .ptr___pthread_cond_destroy_2_0 = __pthread_cond_destroy_2_0,
     .ptr___pthread_cond_init_2_0 = __pthread_cond_init_2_0,
     .ptr___pthread_cond_signal_2_0 = __pthread_cond_signal_2_0,
     .ptr___pthread_cond_wait_2_0 = __pthread_cond_wait_2_0,
+    .ptr___pthread_cond_timedwait_2_0 = __pthread_cond_timedwait_2_0,
 # endif
     .ptr_pthread_equal = __pthread_equal,
     .ptr___pthread_exit = __pthread_exit,
