@@ -237,17 +237,17 @@
 #define	__GLIBC__	2
 #define	__GLIBC_MINOR__	1
 
-
-#if !defined __GNUC__ || __GNUC__ < 2
-/* In GCC version 2, (__extension__ EXPR) will not complain
-   about GCC extensions used in EXPR under -ansi or -pedantic.  */
-# define __extension__
-#endif
-
-
 /* This is here only because every header file already includes this one.  */
 #ifndef __ASSEMBLER__
 # include <sys/cdefs.h>
+
+/* If we don't have __REDIRECT, prototypes will be missing if
+   __USE_FILE_OFFSET64 but not __USE_LARGEFILE[64]. */
+# if defined __USE_FILE_OFFSET64 && !defined __REDIRECT
+#  define __USE_LARGEFILE
+#  define __USE_LARGEFILE64
+# endif
+
 #endif
 
 /* This is here only because every header file already includes this one.  */

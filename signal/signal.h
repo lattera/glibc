@@ -65,13 +65,13 @@ extern __sighandler_t __sysv_signal __P ((int __sig,
 #ifdef __USE_BSD
 extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler));
 #else
-/* Make sure the used `signal' implementation is the SVID version.
-   When GNU CC is used we have a clean way to write this.  */
-# if defined __GNUC__ && __GNUC__ >= 2
-extern __sighandler_t signal __P ((int __sig, __sighandler_t __handler))
-     __asm__ ("__sysv_signal");
+/* Make sure the used `signal' implementation is the SVID version. */
+# ifdef __REDIRECT
+extern __sighandler_t __REDIRECT (signal,
+				  __P ((int __sig, __sighandler_t __handler)),
+				  __sysv_signal);
 # else
-#  define signal(sig, handler) __sysv_signal ((sig), (handler))
+#  define signal __sysv_signal
 # endif
 #endif
 

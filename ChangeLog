@@ -1,3 +1,26 @@
+1998-04-21 21:49  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* misc/sys/cdefs.h: New macro __REDIRECT to support changing the
+	asm symbol name of functions.
+	* include/features.h: Kill redundant test.
+
+	* dirent/dirent.h: Use new macros to implement __USE_FILE_OFFSET64.
+	* io/ftw.h: Likewise.
+	* io/sys/stat.h: Likewise.
+	* io/sys/statfs.h: Likewise.
+	* io/sys/statvfs.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* resource/sys/resource.h: Likewise.
+	* rt/aio.h: Likewise.
+
+	* posix/unistd.h: Use new macros for __USE_FILE_OFFSET64 and
+	 __FAVOR_BSD.
+	* signal/signal.h: Use new macros for BSD vs. SysV signal().
+
+	* misc/Makefile: Drop bsd-compat.c.  Make libbsd-compat.a
+	a dummy library.
+	* misc/bsd-compat.c: Removed.
+
 1998-04-21 20:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/loop.c: Allow EXTRA_LOOP_DECLS be defined and use it in

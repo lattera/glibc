@@ -34,8 +34,13 @@ extern int __getrlimit __P ((enum __rlimit_resource __resource,
 extern int getrlimit __P ((enum __rlimit_resource __resource,
 			   struct rlimit *__rlimits));
 #else
-extern int getrlimit __P ((enum __rlimit_resource __resource,
-			   struct rlimit *__rlimits)) __asm__ ("getrlimit64");
+# ifdef __REDIRECT
+extern int __REDIRECT (getrlimit, __P ((enum __rlimit_resource __resource,
+					struct rlimit *__rlimits)),
+		       getrlimit64);
+# else
+#  define getrlimit getrlimit64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int getrlimit64 __P ((enum __rlimit_resource __resource,
@@ -49,8 +54,13 @@ extern int getrlimit64 __P ((enum __rlimit_resource __resource,
 extern int setrlimit __P ((enum __rlimit_resource __resource,
 			   struct rlimit *__rlimits));
 #else
-extern int setrlimit __P ((enum __rlimit_resource __resource,
-			   struct rlimit *__rlimits)) __asm__ ("setrlimit64");
+# ifdef __REDIRECT
+extern int __REDIRECT (setrlimit, __P ((enum __rlimit_resource __resource,
+					struct rlimit *__rlimits)),
+		       setrlimit64);
+# else
+#  define setrlimit setrlimit64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int setrlimit64 __P ((enum __rlimit_resource __resource,

@@ -138,108 +138,90 @@ extern void aio_init __P ((__const struct aioinit *__init));
 #endif
 
 
+#ifndef __USE_FILE_OFFSET64
 /* Enqueue read request for given number of bytes and the given priority.  */
-#ifndef __USE_FILE_OFFSET64
 extern int aio_read __P ((struct aiocb *__aiocbp));
-#else
-extern int aio_read __P ((struct aiocb *__aiocbp)) __asm__ ("aio_read64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_read64 __P ((struct aiocb64 *__aiocbp));
-#endif
-
 /* Enqueue write request for given number of bytes and the given priority.  */
-#ifndef __USE_FILE_OFFSET64
 extern int aio_write __P ((struct aiocb *__aiocbp));
-#else
-extern int aio_write __P ((struct aiocb *__aiocbp)) __asm__ ("aio_write64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_write64 __P ((struct aiocb64 *__aiocbp));
-#endif
-
 
 /* Initiate list of I/O requests.  */
-#ifndef __USE_FILE_OFFSET64
 extern int lio_listio __P ((int __mode, struct aiocb *__const __list[],
 			    int __nent, struct sigevent *__sig));
-#else
-extern int lio_listio __P ((int __mode, struct aiocb *__const __list[],
-			    int __nent, struct sigevent *__sig))
-     __asm__ ("lio_listio64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int lio_listio64 __P ((int __mode, struct aiocb64 *__const __list[],
-			      int __nent, struct sigevent *__sig));
-#endif
-
 
 /* Retrieve error status associated with AIOCBP.  */
-#ifndef __USE_FILE_OFFSET64
 extern int aio_error __P ((__const struct aiocb *__aiocbp));
-#else
-extern int aio_error __P ((__const struct aiocb *__aiocbp))
-     __asm__ ("aio_error64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_error64 __P ((__const struct aiocb64 *__aiocbp));
-#endif
-
-
 /* Return status associated with AIOCBP.  */
-#ifndef __USE_FILE_OFFSET64
 extern __ssize_t aio_return __P ((struct aiocb *__aiocbp));
-#else
-extern __ssize_t aio_return __P ((struct aiocb *__aiocbp))
-     __asm__ ("aio_return64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern __ssize_t aio_return64 __P ((struct aiocb64 *__aiocbp));
-#endif
-
 
 /* Try to cancel asynchronous I/O requests outstanding against file
-   descriptot FILDES.  */
-#ifndef __USE_FILE_OFFSET64
+   descriptor FILDES.  */
 extern int aio_cancel __P ((int __fildes, struct aiocb *__aiocbp));
-#else
-extern int aio_cancel __P ((int __fildes, struct aiocb *__aiocbp))
-     __asm__ ("aio_cancel64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_cancel64 __P ((int __fildes, struct aiocb64 *__aiocbp));
-#endif
-
 
 /* Suspend calling thread until at least one of the asynchronous I/O
    operations referenced by LIST has completed.  */
-#ifndef __USE_FILE_OFFSET64
 extern int aio_suspend __P ((__const struct aiocb *__const __list[],
 			     int __nent, __const struct timespec *__timeout));
-#else
-extern int aio_suspend __P ((__const struct aiocb *__const __list[],
-			     int __nent, __const struct timespec *__timeout))
-     __asm__ ("aio_suspend64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_suspend64 __P ((__const struct aiocb64 *__const __list[],
-			       int __nent,
-			       __const struct timespec *__timeout));
-#endif
-
 
 /* Force all operations associated with file desriptor described by
    `aio_fildes' member of AIOCBP.  */
-#ifndef __USE_FILE_OFFSET64
 extern int aio_fsync __P ((int __op, struct aiocb *__aiocbp));
 #else
-extern int aio_fsync __P ((int __op, struct aiocb *__aiocbp))
-     __asm__ ("aio_fsync64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int aio_fsync64 __P ((int __op, struct aiocb64 *__aiocbp));
+# ifdef __REDIRECT
+extern int __REDIRECT (aio_read, __P ((struct aiocb *__aiocbp)), aio_read64);
+extern int __REDIRECT (aio_write, __P ((struct aiocb *__aiocbp)), aio_write64);
+
+extern int __REDIRECT (lio_listio, __P ((int __mode,
+					 struct aiocb *__const __list[],
+					 int __nent, struct sigevent *__sig)),
+		       lio_listio64);
+
+extern int __REDIRECT (aio_error, __P ((__const struct aiocb *__aiocbp)),
+		       aio_error64);
+extern __ssize_t __REDIRECT (aio_return, __P ((struct aiocb *__aiocbp)),
+			     aio_return64);
+
+extern int __REDIRECT (aio_cancel, __P ((int __fildes,
+					 struct aiocb *__aiocbp)),
+		       aio_cancel64);
+
+extern int __REDIRECT (aio_suspend,
+		       __P ((__const struct aiocb *__const __list[],
+			     int __nent, __const struct timespec *__timeout)),
+		       aio_suspend64);
+
+extern int __REDIRECT (aio_fsync __P ((int __op, struct aiocb *__aiocbp)),
+		       aio_fsync64);
+
+# else
+#  define aio_read aio_read64
+#  define aio_write aio_write64
+#  define lio_listio lio_listio64
+#  define aio_error aio_error64
+#  define aio_return aio_return64
+#  define aio_cancel aio_cancel64
+#  define aio_suspend aio_suspend64
+#  define aio_fsync aio_fsync64
+# endif
 #endif
 
+#ifdef __USE_LARGEFILE64
+extern int aio_read64 __P ((struct aiocb64 *__aiocbp));
+extern int aio_write64 __P ((struct aiocb64 *__aiocbp));
+
+extern int lio_listio64 __P ((int __mode, struct aiocb64 *__const __list[],
+			      int __nent, struct sigevent *__sig));
+
+extern int aio_error64 __P ((__const struct aiocb64 *__aiocbp));
+extern __ssize_t aio_return64 __P ((struct aiocb64 *__aiocbp));
+
+extern int aio_cancel64 __P ((int __fildes, struct aiocb64 *__aiocbp));
+
+extern int aio_suspend64 __P ((__const struct aiocb64 *__const __list[],
+			       int __nent,
+			       __const struct timespec *__timeout));
+
+extern int aio_fsync64 __P ((int __op, struct aiocb64 *__aiocbp));
+#endif
 
 __END_DECLS
 

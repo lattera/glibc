@@ -109,8 +109,12 @@ typedef int (*__nftw64_func_t) __P ((__const char *__filename,
 extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
 		     int __descriptors));
 #else
-extern int ftw __P ((__const char *__dir, __ftw_func_t __func,
-		     int __descriptors)) __asm__ ("ftw64");
+# ifdef __REDIRECT
+extern int __REDIRECT (ftw, __P ((__const char *__dir, __ftw_func_t __func,
+				  int __descriptors)), ftw64);
+# else
+#  define nftw nftw64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int ftw64 __P ((__const char *__dir, __ftw64_func_t __func,
@@ -124,8 +128,12 @@ extern int ftw64 __P ((__const char *__dir, __ftw64_func_t __func,
 extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
 		      int __descriptors, int __flag));
 # else
-extern int nftw __P ((__const char *__dir, __nftw_func_t __func,
-		      int __descriptors, int __flag)) __asm__ ("nftw64");
+#  ifdef __REDIRECT
+extern int __REDIRECT (nftw, __P ((__const char *__dir, __nftw_func_t __func,
+				   int __descriptors, int __flag)), nftw64);
+#  else
+#   define nftw nftw64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int nftw64 __P ((__const char *__dir, __nftw64_func_t __func,

@@ -173,37 +173,42 @@ __BEGIN_DECLS
 
 /* Get file attributes for FILE and put them in BUF.  */
 extern int __stat __P ((__const char *__file, struct stat *__buf));
-#ifndef __USE_FILE_OFFSET64
-extern int stat __P ((__const char *__file, struct stat *__buf));
-#else
-extern int stat __P ((__const char *__file, struct stat *__buf))
-     __asm__ ("stat64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int stat64 __P ((__const char *__file, struct stat64 *__buf));
-#endif
-
 /* Get file attributes for the file, device, pipe, or socket
    that file descriptor FD is open on and put them in BUF.  */
 extern int __fstat __P ((int __fd, struct stat *__buf));
-#ifndef __USE_FILE_OFFSET64
-extern int fstat __P ((int __fd, struct stat *__buf));
-#else
-extern int fstat __P ((int __fd, struct stat *__buf)) __asm__ ("fstat64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern int fstat64 __P ((int __fd, struct stat64 *__buf));
-#endif
-
 /* Get file attributes about FILE and put them in BUF.
    If FILE is a symbolic link, do not follow it.  */
 extern int __lstat __P ((__const char *__file, struct stat *__buf));
+
+
+#ifndef __USE_FILE_OFFSET64
+extern int stat __P ((__const char *__file, struct stat *__buf));
+extern int fstat __P ((int __fd, struct stat *__buf));
+#else
+# ifdef __REDIRECT
+extern int __REDIRECT (stat, __P ((__const char *__file, struct stat *__buf)),
+		       stat64);
+extern int __REDIRECT (fstat, __P ((int __fd, struct stat *__buf)), fstat64);
+# else
+#  define stat stat64
+#  define fstat fstat64
+# endif
+#endif
+#ifdef __USE_LARGEFILE64
+extern int stat64 __P ((__const char *__file, struct stat64 *__buf));
+extern int fstat64 __P ((int __fd, struct stat64 *__buf));
+#endif
+
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 # ifndef __USE_FILE_OFFSET64
 extern int lstat __P ((__const char *__file, struct stat *__buf));
 # else
-extern int lstat __P ((__const char *__file, struct stat *__buf))
-     __asm__ ("lstat64");
+#  ifdef __REDIRECT
+extern int __REDIRECT (lstat, __P ((__const char *__file, struct stat *__buf)),
+		       lstat64);
+#  else
+#   define lstat lstat64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lstat64 __P ((__const char *__file, struct stat64 *__buf));
@@ -283,16 +288,21 @@ extern int __xstat __P ((int __ver, __const char *__filename,
 extern int __lxstat __P ((int __ver, __const char *__filename,
 			  struct stat *__stat_buf));
 #else
-extern int __fxstat __P ((int __ver, int __fildes,
-			  struct stat *__stat_buf))
-     __asm__ ("__fxstat64");
-extern int __xstat __P ((int __ver, __const char *__filename,
-			 struct stat *__stat_buf))
-     __asm__ ("__xstat64");
-extern int __lxstat __P ((int __ver, __const char *__filename,
-			  struct stat *__stat_buf))
-     __asm__ ("__lxstat64");
+# ifdef __REDIRECT
+extern int __REDIRECT (__fxstat, __P ((int __ver, int __fildes,
+				       struct stat *__stat_buf)), __fxstat64);
+extern int __REDIRECT (__xstat, __P ((int __ver, __const char *__filename,
+				      struct stat *__stat_buf)), __xstat64);
+extern int __REDIRECT (__lxstat __P ((int __ver, __const char *__filename,
+				      struct stat *__stat_buf)), __lxstat64);
+
+# else
+#  define __fxstat __fxstat64
+#  define __xstat __xstat64
+#  define __lxstat __lxstat64
+# endif
 #endif
+
 #ifdef __USE_LARGEFILE64
 extern int __fxstat64 __P ((int __ver, int __fildes,
 			    struct stat64 *__stat_buf));

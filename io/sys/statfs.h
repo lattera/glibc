@@ -32,8 +32,12 @@ extern int __statfs __P ((__const char *__file, struct statfs *__buf));
 #ifndef __USE_FILE_OFFSET64
 extern int statfs __P ((__const char *__file, struct statfs *__buf));
 #else
-extern int statfs __P ((__const char *__file, struct statfs *__buf))
-     __asm__ ("statfs64");
+# ifdef __REDIRECT
+extern int __REDIRECT (statfs, __P ((__const char *__file,
+				     struct statfs *__buf)), statfs64);
+# else
+#  define statfs statfs64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int statfs64 __P ((__const char *__file, struct statfs64 *__buf));
@@ -45,8 +49,12 @@ extern int __fstatfs __P ((int __fildes, struct statfs *__buf));
 #ifndef __USE_FILE_OFFSET64
 extern int fstatfs __P ((int __fildes, struct statfs *__buf));
 #else
-extern int fstatfs __P ((int __fildes, struct statfs *__buf))
-     __asm__ ("fstatfs64");
+# ifdef __REDIRECT
+extern int __REDIRECT (fstatfs, __P ((int __fildes, struct statfs *__buf)),
+		       fstatfs64);
+# else
+#  define statfs statfs64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int fstatfs64 __P ((int __fildes, struct statfs64 *__buf));

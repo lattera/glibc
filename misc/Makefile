@@ -58,23 +58,15 @@ routines := brk sbrk sstk ioctl \
 	    err error ustat \
 	    getsysstats dirname regexp
 aux := init-misc
-distribute := bsd-compat.c
-extra-objs := bsd-compat.o
 install-lib := libbsd-compat.a libg.a
-non-lib.a := libbsd-compat.a
 gpl2lgpl := error.c error.h
 
 tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt
 
 include ../Rules
 
-
-$(objpfx)libbsd-compat.a: $(objpfx)bsd-compat.o
-	rm -f $@
-	ln $< $@
-
+$(objpfx)libbsd-compat.a: $(dep-dummy-lib); $(make-dummy-lib)
 $(objpfx)libg.a: $(dep-dummy-lib); $(make-dummy-lib)
-
 
 CFLAGS-init-misc.c = -fkeep-inline-functions
 

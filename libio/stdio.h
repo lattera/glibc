@@ -145,7 +145,11 @@ extern int rename __P ((__const char *__old, __const char *__new));
 #ifndef __USE_FILE_OFFSET64
 extern FILE *tmpfile __P ((void));
 #else
-extern FILE *tmpfile __P ((void)) __asm__ ("tmpfile64");
+# ifdef __REDIRECT
+extern FILE *__REDIRECT (tmpfile, __P ((void)), tmpfile64);
+# else
+#  define tmpfile tmpfile64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern FILE *tmpfile64 __P ((void));
@@ -190,30 +194,31 @@ extern int fcloseall __P ((void));
 #endif
 
 
-/* Open a file and create a new stream for it.  */
 #ifndef __USE_FILE_OFFSET64
+/* Open a file and create a new stream for it.  */
 extern FILE *fopen __P ((__const char *__restrict __filename,
 			 __const char *__restrict __modes));
-#else
-extern FILE *fopen __P ((__const char *__restrict __filename,
-			 __const char *__restrict __modes))
-     __asm__ ("fopen64");
-#endif
-#ifdef __USE_LARGEFILE64
-extern FILE *fopen64 __P ((__const char *__restrict __filename,
-			   __const char *__restrict __modes));
-#endif
 /* Open a file, replacing an existing stream with it. */
-#ifndef __USE_FILE_OFFSET64
 extern FILE *freopen __P ((__const char *__restrict __filename,
 			   __const char *__restrict __modes,
 			   FILE *__restrict __stream));
 #else
-extern FILE *freopen __P ((__const char *__restrict __filename,
-			   __const char *__restrict __modes,
-			   FILE *__restrict __stream)) __asm__ ("freopen64");
+# ifdef __REDIRECT
+extern FILE *__REDIRECT (fopen, __P ((__const char *__restrict __filename,
+				   __const char *__restrict __modes)),
+			 fopen64);
+extern FILE *__REDIRECT (freopen, __P ((__const char *__restrict __filename,
+					__const char *__restrict __modes,
+					FILE *__restrict __stream)),
+			 freopen64);
+# else
+#  define fopen fopen64
+#  define freopen freopen64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
+extern FILE *fopen64 __P ((__const char *__restrict __filename,
+			   __const char *__restrict __modes));
 extern FILE *freopen64 __P ((__const char *__restrict __filename,
 			     __const char *__restrict __modes,
 			     FILE *__restrict __stream));
@@ -558,51 +563,43 @@ typedef __off64_t off64_t;
 #  define off64_t off64_t
 # endif
 
+
+# ifndef __USE_FILE_OFFSET64
 /* Seek to a certain position on STREAM.  */
-# ifndef __USE_FILE_OFFSET64
 extern int fseeko __P ((FILE *__stream, __off_t __off, int __whence));
-# else
-extern int fseeko __P ((FILE *__stream, __off64_t __off, int __whence))
-     __asm__ ("fseeko64");
-# endif
-# ifdef __USE_LARGEFILE64
-extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
-# endif
-
 /* Return the current position of STREAM.  */
-# ifndef __USE_FILE_OFFSET64
 extern __off_t ftello __P ((FILE *__stream));
-# else
-extern __off64_t ftello __P ((FILE *__stream)) __asm__ ("ftello64");
-# endif
-# ifdef __USE_LARGEFILE64
-extern __off64_t ftello64 __P ((FILE *__stream));
-# endif
-#endif
-
 /* Get STREAM's position.  */
-#ifndef __USE_FILE_OFFSET64
 extern int fgetpos __P ((FILE *__restrict __stream,
 			 fpos_t *__restrict __pos));
-#else
-extern int fgetpos __P ((FILE *__restrict __stream,
-			 fpos_t *__restrict __pos)) __asm__ ("fgetpos64");
-#endif
-#ifdef __USE_LARGEFILE64
+/* Set STREAM's position.  */
+extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
+# else
+# ifdef __REDIRECT
+extern int __REDIRECT (fseeko,
+		       __P ((FILE *__stream, __off64_t __off, int __whence)),
+		       fseeko64);
+extern __off64_t __REDIRECT (ftello, __P ((FILE *__stream)), ftello64);
+extern int __REDIRECT (fgetpos, __P ((FILE *__restrict __stream,
+				      fpos_t *__restrict __pos)), fgetpos64);
+extern int __REDIRECT (fsetpos, __P, ((FILE *__stream, __const fpos_t *__pos)),
+		       fsetpos64);
+#  else
+#   define fseeko fseeko64
+#   define ftello ftello64
+#   define fgetpos fgetpos64
+#   define fsetpos fsetpos64
+#  endif
+# endif
+
+# ifdef __USE_LARGEFILE64
+extern int fseeko64 __P ((FILE *__stream, __off64_t __off, int __whence));
+extern __off64_t ftello64 __P ((FILE *__stream));
 extern int fgetpos64 __P ((FILE *__restrict __stream,
 			   fpos64_t *__restrict __pos));
-#endif
-/* Set STREAM's position.  */
-#ifndef __USE_FILE_OFFSET64
-extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos));
-#else
-extern int fsetpos __P ((FILE *__stream, __const fpos_t *__pos))
-     __asm__ ("fsetpos64");
-#endif
-#ifdef __USE_LARGEFILE64
 extern int fsetpos64 __P ((FILE *__stream, __const fpos64_t *__pos));
+# endif
 #endif
-
 
 /* Clear the error and EOF indicators for STREAM.  */
 extern void clearerr __P ((FILE *__stream));

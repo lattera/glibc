@@ -274,8 +274,14 @@ extern __off64_t __lseek64 __P ((int __fd, __off64_t __offset, int __whence));
 #ifndef __USE_FILE_OFFSET64
 extern __off_t lseek __P ((int __fd, __off_t __offset, int __whence));
 #else
-extern __off64_t lseek __P ((int __fd, __off64_t __offset, int __whence))
-     __asm__ ("lseek64");
+# ifdef __REDIRECT
+extern __off64_t __REDIRECT (lseek,
+			     __P ((int __fd, __off64_t __offset,
+				   int __whence)),
+			     lseek64);
+# else
+#  define lseek lseek64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern __off64_t lseek64 __P ((int __fd, __off64_t __offset, int __whence));
@@ -300,39 +306,41 @@ extern ssize_t write __P ((int __fd, __const __ptr_t __buf, size_t __n));
    or 0 for EOF.  */
 extern ssize_t __pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			     __off_t __offset));
-# ifndef __USE_FILE_OFFSET64
-extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			   __off_t __offset));
-# else
-extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			   __off64_t __offset)) __asm__ ("pread64");
-# endif
 extern ssize_t __pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
 			       __off64_t __offset));
-# ifdef __USE_LARGEFILE64
-extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
-			     __off64_t __offset));
-# endif
-
 /* Write N bytes of BUF to FD at the given position OFFSET without
    changing the file pointer.  Return the number written, or -1.  */
 extern ssize_t __pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			      __off_t __offset));
+extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
+				__off64_t __offset));
+
 # ifndef __USE_FILE_OFFSET64
+extern ssize_t pread __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			   __off_t __offset));
 extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			    __off_t __offset));
 # else
-extern ssize_t pwrite __P ((int __fd, __const __ptr_t __buf, size_t __n,
-			    __off64_t __offset)) __asm__ ("pwrite64");
+#  ifdef __REDIRECT
+extern ssize_t __REDIRECT (pread, __P ((int __fd, __ptr_t __buf,
+					size_t __nbytes,__off64_t __offset)),
+			   pread64);
+extern ssize_t __REDIRECT (pwrite, __P ((int __fd, __const __ptr_t __buf,
+					 size_t __nbytes, __off64_t __offset)),
+			pwrite64);
+#  else
+#   define pread pread64
+#   define pwrite pwrite64
+#  endif
 # endif
-extern ssize_t __pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
-				__off64_t __offset));
+
 # ifdef __USE_LARGEFILE64
+extern ssize_t pread64 __P ((int __fd, __ptr_t __buf, size_t __nbytes,
+			     __off64_t __offset));
 extern ssize_t pwrite64 __P ((int __fd, __const __ptr_t __buf, size_t __n,
 			      __off64_t __offset));
 # endif
 #endif
-
 
 /* Create a one-way communication channel (pipe).
    If successful, two file descriptors are stored in PIPEDES;
@@ -540,27 +548,30 @@ extern __pid_t getpid __P ((void));
 extern __pid_t __getppid __P ((void));
 extern __pid_t getppid __P ((void));
 
-/* Get the process group ID of the calling process.  */
+/* Get the process group ID of the calling process.
+   This function is different on old BSD. */
+#ifndef __FAVOR_BSD
 extern __pid_t getpgrp __P ((void));
-/* The old BSD definition is a bit different.  */
-extern __pid_t __bsd_getpgrp __P ((__pid_t __pid));
-#ifdef __FAVOR_BSD
-/* When we explicitely compile BSD sources use the BSD definition of this
-   function.  Please note that we cannot use parameters for the macro.  */
-# define getpgrp __bsd_getpgrp
+#else
+# ifdef __REDIRECT
+extern __pid_t __REDIRECT (getpgrp, __P ((__pid_t __pid)), __getpgid);
+# else
+#  define getpgrp __getpgid
+# endif
 #endif
-
-/* Set the process group ID of the process matching PID to PGID.
-   If PID is zero, the current process's process group ID is set.
-   If PGID is zero, the process ID of the process is used.  */
-extern int __setpgid __P ((__pid_t __pid, __pid_t __pgid));
-extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
 /* Get the process group ID of process PID.  */
 extern __pid_t __getpgid __P ((__pid_t __pid));
 #ifdef __USE_XOPEN_EXTENDED
 extern __pid_t getpgid __P ((__pid_t __pid));
 #endif
+
+
+/* Set the process group ID of the process matching PID to PGID.
+   If PID is zero, the current process's process group ID is set.
+   If PGID is zero, the process ID of the process is used.  */
+extern int __setpgid __P ((__pid_t __pid, __pid_t __pgid));
+extern int setpgid __P ((__pid_t __pid, __pid_t __pgid));
 
 #if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Both System V and BSD have `setpgrp' functions, but with different
@@ -571,7 +582,7 @@ extern __pid_t getpgid __P ((__pid_t __pid));
    New programs should always use `setpgid' instead.
 
    The default in GNU is to provide the System V function.  The BSD
-   function is available under -D_BSD_SOURCE with -lbsd-compat.  */
+   function is available under -D_BSD_SOURCE.  */
 
 # ifndef __FAVOR_BSD
 
@@ -582,7 +593,12 @@ extern int setpgrp __P ((void));
 # else
 
 /* Another name for `setpgid' (above).  */
-extern int setpgrp __P ((__pid_t __pid, __pid_t __pgrp));
+#  ifdef __REDIRECT
+extern int __REDIRECT (setpgrp, __P ((__pid_t __pid, __pid_t __pgrp)),
+		       setpgid);
+#  else
+#   define setpgrp setpgid
+#  endif
 
 # endif	/* Favor BSD.  */
 #endif	/* Use SVID or BSD.  */
@@ -879,8 +895,13 @@ extern int getpagesize __P ((void));
 #ifndef __USE_FILE_OFFSET64
 extern int truncate __P ((__const char *__file, __off_t __length));
 #else
-extern int truncate __P ((__const char *__file, __off64_t __length))
-     __asm__ ("truncate64");
+# ifdef __REDIRECT
+extern int __REDIRECT (truncate,
+		       __P ((__const char *__file, __off64_t __length)),
+		       truncate64);
+# else
+#  define truncate truncate64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int truncate64 __P ((__const char *__file, __off64_t __length));
@@ -891,8 +912,12 @@ extern int __ftruncate __P ((int __fd, __off_t __length));
 #ifndef __USE_FILE_OFFSET64
 extern int ftruncate __P ((int __fd, __off_t __length));
 #else
-extern int ftruncate __P ((int __fd, __off64_t __length))
-     __asm__ ("ftruncate64");
+# ifdef __REDIRECT
+extern int __REDIRECT (ftruncate, __P ((int __fd, __off64_t __length)),
+		       ftruncate64);
+# else
+#  define ftruncate ftruncate64
+# endif
 #endif
 #ifdef __USE_LARGEFILE64
 extern int ftruncate64 __P ((int __fd, __off64_t __length));
@@ -959,8 +984,12 @@ extern long int syscall __P ((long int __sysno, ...));
 # ifndef __USE_FILE_OFFSET64
 extern int lockf __P ((int __fd, int __cmd, __off_t __len));
 # else
-extern int lockf __P ((int __fd, int __cmd, __off64_t __len))
-     __asm__ ("lockf64");
+#  ifdef __REDIRECT
+extern int __REDIRECT (lockf, __P ((int __fd, int __cmd, __off64_t __len)),
+		       lockf64);
+#  else
+#   define lockf lockf64
+#  endif
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lockf64 __P ((int __fd, int __cmd, __off64_t __len));

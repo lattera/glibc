@@ -95,15 +95,39 @@
 # define __END_DECLS
 #endif
 
-/* GCC2 has various useful declarations that can be made with the
-   `__attribute__' syntax.  All of the ways we use this do fine if
-   they are omitted for compilers that don't understand it.  */
-#if !defined __GNUC__ || __GNUC__ < 2
-# define __attribute__(xyz)	/* Ignore.  */
+/* __asm__ ("xyz") is used throughout the headers to rename functions
+   at the assembly language level.  This is wrapped by the __REDIRECT
+   macro, in order to support compilers that can do this some other
+   way.  When compilers don't support asm-names at all, we have to do
+   preprocessor tricks instead (which don't have exactly the right
+   semantics, but it's the best we can do).
+
+   Example:
+   int __REDIRECT(setpgrp, __P((__pid_t pid, __pid_t pgrp)), setpgid); */
+
+#if defined __GNUC__ && __GNUC__ >= 2
+
+# define __REDIRECT(name, proto, asname) name proto __asm__ (#asname)
+
+/*
+#elif __SOME_OTHER_COMPILER__
+
+# define __attribute__(xyz)
+# define __ALIAS(name, proto, asname) name proto; \
+                  _Pragma("let " #name " = " #asname)
+*/
 #endif
 
+/* GCC has various useful declarations that can be made with the
+   `__attribute__' syntax.  All of the ways we use this do fine if
+   they are omitted for compilers that don't understand it. */
+#if !defined __GNUC__ || __GNUC__ < 2
 
-/* For now no version of gcc knows the `restrict' keyword.  Define it
+# define __attribute__(xyz)	/* Ignore. */
+
+#endif
+
+/* No current version of gcc knows the `restrict' keyword.  Define it
    for now unconditionally to the empty string.  */
 #define __restrict
 
