@@ -1,3 +1,8 @@
+2001-06-05  Philipp Thomas  <pthomas@suse.de>
+
+	* nis/nis_call.c (__nisbind_connect): Don't mark for translation
+	what can't be translated.
+
 2001-06-05  Andreas Jaeger  <aj@suse.de>
 
 	* manual/stdio.texi (Portable Positioning): Fix description of

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -153,7 +153,7 @@ __nisbind_connect (dir_binding *dbp)
   clnt_control (dbp->clnt, CLSET_TIMEOUT, (caddr_t)&RPCTIMEOUT);
   /* If the program exists, close the socket */
   if (fcntl (dbp->socket, F_SETFD, 1) == -1)
-    perror (_("fcntl: F_SETFD"));
+    perror ("fcntl: F_SETFD");
 
   if (dbp->use_auth)
     {
