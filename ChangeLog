@@ -1,5 +1,9 @@
 1999-08-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* inet/netinet/in.h (IN6ADDR_ANY_INIT): Add correct number of
+	braces to avoid warnings.
+	(IN6ADDR_LOOPBACK_INIT): Likewise.
+
 	* sysdeps/unix/sysv/linux/bits/socket.h: Fix typo (MSG_TRUNC ->
 	MSG_DONTWAIT).
 
