@@ -1,4 +1,4 @@
-# Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@ headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr eval
 distribute	:= dlopenold.c glreflib1.c glreflib2.c failtestmod.c eval.c \
-		   defaultmod1.c defaultmod2.c
+		   defaultmod1.c defaultmod2.c errmsg1mod.c
 
 extra-libs-others := libdl
 

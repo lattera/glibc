@@ -3,6 +3,11 @@
 	* version.h (VERSION): Bump to 2.2.1.
 
 	* sysdeps/unix/sysv/linux/mips/Dist: Remove sys/acct.h.
+	* sysdeps/alpha/Dist: Add alphaev6/stxncpy.S and alphaev6/stxcpy.S.
+	* sysdeps/unix/sysv/aix/Dist: Add uitrunc.c, savef.S, and restf.S.
+	* dlfcn/Makefile (distribute): Add errmsg1mod.c.
+	* Makefile (distribute): Add include/libc-internal.h.
+	* libio/Makefile (distribute): Avoid overwriting.
 
 	* iconvdata/ibm937.c (BODY to IBM937): Correct several mistakes in
 	buffer and table handling.

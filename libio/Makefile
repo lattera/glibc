@@ -1,4 +1,4 @@
-# Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+# Copyright (C) 1995,96,97,98,99,2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,6 @@ routines	:=							      \
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen
 test-srcs = test-freopen
-distribute = test-freopen.sh
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -94,7 +93,7 @@ shared-only-routines = oldiofopen oldiofdopen oldiofclose oldfileops	\
 		       oldiofgetpos oldiofgetpos64 oldiofsetpos		\
 		       oldiofsetpos64
 
-distribute := iolibio.h libioP.h strfile.h Banner
+distribute := iolibio.h libioP.h strfile.h Banner test-freopen.sh
 
 include ../Rules
 

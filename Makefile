@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -259,7 +259,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		config-name.in Makefile.in sysdep.h set-hooks.h		\
 		libc-symbols.h version.h shlib-versions rpm/Makefile	\
 		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
-		test-skeleton.c include/des.h		 		\
+		test-skeleton.c include/des.h include/libc-internal.h	\
 		include/shlib-compat.h Versions.def			\
 		INTERFACE CONFORMANCE NAMESPACE				\
 		$(addprefix scripts/,					\
