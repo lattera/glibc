@@ -359,7 +359,7 @@ gconv_end (struct __gconv_step *data)
 	else if (__builtin_expect (set2, ISO88597_set) == ISO88597_set)	      \
 	  {								      \
 	    /* We use the table from the ISO 8859-7 module.  */		      \
-	    if (inptr[2] < 0x20 || inptr[2] > 0x80)			      \
+	    if (inptr[2] < 0x20 || inptr[2] >= 0x80)			      \
 	      {								      \
 		if (! ignore_errors_p ())				      \
 		  {							      \
@@ -800,7 +800,7 @@ gconv_end (struct __gconv_step *data)
 			      }						      \
 			    *outptr++ = ESC;				      \
 			    *outptr++ = 'N';				      \
-			    *outptr++ = ch;				      \
+			    *outptr++ = ch - 0x80;			      \
 			  }						      \
 			else						      \
 			  {						      \
