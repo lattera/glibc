@@ -1,3 +1,24 @@
+2003-01-16  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: New file.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h: New file.
+	* sysdeps/unix/sysv/linux/configure.in: Minimum kernel for PPC64
+	is 2.4.21.
+
+2003-01-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c (glob): Assume sysconf() always returns
+	values != -1 for _LIBC.  Use extend_alloca to reallocate alloca'ed
+	buffers.
+
+	* sysdeps/generic/sysconf.c: Unconditionally implement
+	_SC_GETPW_R_SIZE_MAX and _SC_GETGR_R_SIZE_MAX.
+	* sysdeps/posix/sysconf.c: Likewise.
+
 2003-01-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (parse_bracket_exp): If build_charclass fails,

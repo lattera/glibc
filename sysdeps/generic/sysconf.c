@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1993,1995-1997,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1995-1997,2001,2002,2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -142,6 +143,12 @@ __sysconf (name)
     case _SC_USHRT_MAX:
       return USHRT_MAX;
 
+    case _SC_GETGR_R_SIZE_MAX:
+      return NSS_BUFLEN_GROUP;
+
+    case _SC_GETPW_R_SIZE_MAX:
+      return NSS_BUFLEN_PASSWD;
+
     case _SC_ARG_MAX:
     case _SC_CHILD_MAX:
     case _SC_CLK_TCK:
@@ -211,8 +218,6 @@ __sysconf (name)
 
     case _SC_THREADS:
     case _SC_THREAD_SAFE_FUNCTIONS:
-    case _SC_GETGR_R_SIZE_MAX:
-    case _SC_GETPW_R_SIZE_MAX:
     case _SC_LOGIN_NAME_MAX:
     case _SC_TTY_NAME_MAX:
     case _SC_THREAD_DESTRUCTOR_ITERATIONS:

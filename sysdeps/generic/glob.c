@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -284,6 +284,7 @@ extern char *alloca ();
 #endif
 
 #ifdef _LIBC
+# include <alloca.h>
 # undef strdup
 # define strdup(str) __strdup (str)
 # define sysconf(id) __sysconf (id)
@@ -697,10 +698,12 @@ glob (pattern, flags, errfunc, pglob)
 		  struct passwd pwbuf;
 		  int save = errno;
 
+#    ifndef _LIBC
 		  if (pwbuflen == -1)
 		    /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.
 		       Try a moderate value.  */
 		    pwbuflen = 1024;
+#    endif
 		  pwtmpbuf = (char *) __alloca (pwbuflen);
 
 		  while (getpwnam_r (name, &pwbuf, pwtmpbuf, pwbuflen, &p)
@@ -711,8 +714,13 @@ glob (pattern, flags, errfunc, pglob)
 			  p = NULL;
 			  break;
 			}
+#    ifdef _LIBC
+		      pwtmpbuf = extend_alloca (pwtmpbuf, pwbuflen,
+						2 * pwbuflen);
+#    else
 		      pwbuflen *= 2;
 		      pwtmpbuf = (char *) __alloca (pwbuflen);
+#    endif
 		      __set_errno (save);
 		    }
 #   else
@@ -781,10 +789,12 @@ glob (pattern, flags, errfunc, pglob)
 	    struct passwd pwbuf;
 	    int save = errno;
 
+#   ifndef _LIBC
 	    if (buflen == -1)
 	      /* `sysconf' does not support _SC_GETPW_R_SIZE_MAX.  Try a
 		 moderate value.  */
 	      buflen = 1024;
+#   endif
 	    pwtmpbuf = (char *) __alloca (buflen);
 
 	    while (getpwnam_r (user_name, &pwbuf, pwtmpbuf, buflen, &p) != 0)
@@ -794,8 +804,12 @@ glob (pattern, flags, errfunc, pglob)
 		    p = NULL;
 		    break;
 		  }
+#   ifdef _LIBC
+		pwtmpbuf = extend_alloca (pwtmpbuf, buflen, 2 * buflen);
+#   else
 		buflen *= 2;
 		pwtmpbuf = __alloca (buflen);
+#   endif
 		__set_errno (save);
 	      }
 #  else
@@ -1326,9 +1340,9 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      int fnm_flags = ((!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0)
 			       | ((flags & GLOB_NOESCAPE) ? FNM_NOESCAPE : 0)
 #if defined _AMIGA || defined VMS
-				   | FNM_CASEFOLD
+			       | FNM_CASEFOLD
 #endif
-				   );
+			       );
 	      nfound = 0;
 	      flags |= GLOB_MAGCHAR;
 

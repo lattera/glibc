@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,93,1995-1997,1999-2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,1995-1997,1999-2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -509,18 +509,10 @@ __sysconf (name)
 #endif
 
     case _SC_GETGR_R_SIZE_MAX:
-#ifdef	NSS_BUFLEN_GROUP
       return NSS_BUFLEN_GROUP;
-#else
-      return -1;
-#endif
 
     case _SC_GETPW_R_SIZE_MAX:
-#ifdef	NSS_BUFLEN_PASSWD
       return NSS_BUFLEN_PASSWD;
-#else
-      return -1;
-#endif
 
     case _SC_LOGIN_NAME_MAX:
 #ifdef	_POSIX_LOGIN_NAME_MAX
