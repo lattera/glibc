@@ -1,3 +1,18 @@
+2003-01-04  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/syscalls.list: Mark
+	__syscall_pread64 and __syscall_pwrite64 cancelable.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_SYSCALL): New macro.
+	(LOADARGS_0, LOADARGS_1): Fix.
+
+2003-01-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules (build-shlip-helper): Unless told otherwise, add
+	-Wl,-z,defs to linker command line.
+	* rt/Makefile (librt.so): Link with ld.so.
+	* dlfcn/Makefile (libdl.so): Likewise.
+
 2003-01-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/socket.S: Add support for

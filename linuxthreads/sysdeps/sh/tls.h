@@ -1,5 +1,5 @@
 /* Definition for thread-local data handling.  linuxthreads/SH version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,10 +20,12 @@
 #ifndef _TLS_H
 #define _TLS_H
 
-#ifndef __ASSEMBLER__
-#include <stddef.h>
+# include <dl-sysdep.h>
+# include <pt-machine.h>
 
-#include <pt-machine.h>
+#ifndef __ASSEMBLER__
+# include <stddef.h>
+# include <stdint.h>
 
 /* Type for the dtv.  */
 typedef union dtv
@@ -39,18 +41,24 @@ typedef struct
 			   thread descriptor used by libpthread.  */
   dtv_t *dtv;
   void *self;		/* Pointer to the thread descriptor.  */
+  int multiple_threads;
 } tcbhead_t;
+#else /* __ASSEMBLER__ */
+# include <tcb-offsets.h>
+#endif /* __ASSEMBLER__ */
 
 
 /* We can support TLS only if the floating-stack support is available.  */
-#if defined FLOATING_STACKS && defined HAVE_TLS_SUPPORT
-
-/* Get system call information.  */
-# include <sysdep.h>
+#if defined HAVE_TLS_SUPPORT \
+    && (defined FLOATING_STACKS || !defined IS_IN_libpthread)
 
 /* Signal that TLS support is available.  */
 # define USE_TLS	1
 
+#ifndef __ASSEMBLER__
+
+/* Get system call information.  */
+# include <sysdep.h>
 
 /* Get the thread descriptor definition.  */
 # include <linuxthreads/descr.h>
@@ -103,13 +111,17 @@ typedef struct
     0;									      \
   })
 
+/* Indicate that dynamic linker shouldn't try to initialize TLS even
+   when no PT_TLS segments are found in the program and libraries
+   it is linked against.  */
+#  define TLS_INIT_TP_EXPENSIVE 1
 
 /* Return the address of the dtv for the current thread.  */
 # define THREAD_DTV() \
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
 
-#endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
+# endif	/* HAVE_TLS_SUPPORT && (FLOATING_STACKS || !IS_IN_libpthread) */
 #endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */

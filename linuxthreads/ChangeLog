@@ -1,3 +1,12 @@
+2003-01-05  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/tls.h: Include dl-sysdep.h	and stdint.h.
+	(tcbhead_t): Add multiple_threads member.
+	(TLS_INIT_TP_EXPENSIVE): Define.
+	* sysdeps/unix/sysv/linux/sh/pt-initfini.c: Don't use multi-line
+	strings.  Remove unused code.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h: New file.
+
 2003-01-04  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: New file.
