@@ -1,5 +1,5 @@
 %% TeX macros to handle Texinfo files.
-%% $Id: texinfo.tex,v 2.188 1996/11/09 18:44:09 karl Exp $
+%% $Id: texinfo.tex,v 2.189 1996/11/09 23:37:11 karl Exp $
 
 %  Copyright (C) 1985, 86, 88, 90, 91, 92, 93,
 %                94, 95, 1996 Free Software Foundation, Inc.
@@ -36,7 +36,7 @@
 
 % This automatically updates the version number based on RCS.
 \def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.188 $
+\deftexinfoversion$Revision: 2.189 $
 \message{Loading texinfo package [Version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
@@ -868,7 +868,9 @@ where each line of input produces a line of output.}
 % didn't need it.  Make sure the catcode of space is correct to avoid
 % losing inside @example, for instance.
 %
-\def\set{\begingroup\catcode` =10 \parsearg\setxxx}
+\def\set{\begingroup\catcode` =10
+  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
+  \parsearg\setxxx}
 \def\setxxx#1{\setyyy#1 \endsetyyy}
 \def\setyyy#1 #2\endsetyyy{%
   \def\temp{#2}%
@@ -889,10 +891,16 @@ where each line of input produces a line of output.}
 
 % @value{foo} gets the text saved in variable foo.
 %
-\def\value#1{\expandafter
-                \ifx\csname SET#1\endcsname\relax
-                        {\{No value for ``#1''\}}
-                \else \csname SET#1\endcsname \fi}
+\def\value{\begingroup
+  \catcode`\-=12 \catcode`\_=12 % Allow - and _ in VAR.
+  \parsearg\valuexxx}
+\def\valuexxx#1{%
+  \expandafter\ifx\csname SET#1\endcsname\relax
+    {\{No value for ``#1''\}}%
+  \else
+    \csname SET#1\endcsname
+  \fi
+\endgroup}
 
 % @ifset VAR ... @end ifset reads the `...' iff VAR has been defined
 % with @set.
