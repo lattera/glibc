@@ -30,14 +30,6 @@
 
 
 #if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
-/* GCC has builtins that can be used.  */
-# define isgreater(x, y) __builtin_isgreater (x, y)
-# define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
-# define isless(x, y) __builtin_isless (x, y)
-# define islessequal(x, y) __builtin_islessequal (x, y)
-# define islessgreater(x, y) __builtin_islessgreater (x, y)
-# define isunordered(x, y) __builtin_isunordered (x, y)
-
 
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int

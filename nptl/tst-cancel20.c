@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jakub@redhat.com>, 2003.
 
@@ -105,6 +105,7 @@ tf (void *arg)
 static int
 do_one_test (void)
 {
+  in_sh_body = 0;
   cleanups = 0;
   if (pipe (fd) != 0 || pipe (fd + 2) != 0)
     {

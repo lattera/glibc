@@ -24,9 +24,13 @@
 
 #include <bits/wordsize.h>
 
-#ifdef __GNUC__
-
-#ifdef __USE_ISOC99
+#if defined __USE_ISOC99 && defined __GNUC__ && !__GNUC_PREREQ(3,0)
+# undef isgreater
+# undef isgreaterequal
+# undef isless
+# undef islessequal
+# undef islessgreater
+# undef isunordered
 
 # if __WORDSIZE == 32
 

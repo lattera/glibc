@@ -30,19 +30,18 @@
 
 
 #if defined __USE_ISOC99 && defined __GNUC__ && __GNUC__ >= 2
-# if __GNUC_PREREQ (2,97)
 /* GCC 2.97 and up have builtins that actually can be used.  */
-#  define isgreater(x, y) __builtin_isgreater (x, y)
-#  define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
-#  define isless(x, y) __builtin_isless (x, y)
-#  define islessequal(x, y) __builtin_islessequal (x, y)
-#  define islessgreater(x, y) __builtin_islessgreater (x, y)
-#  define isunordered(x, y) __builtin_isunordered (x, y)
-# else
+# if !__GNUC_PREREQ (2,97)
 /* ISO C99 defines some macros to perform unordered comparisons.  The
    ix87 FPU supports this with special opcodes and we should use them.
    These must not be inline functions since we have to be able to handle
    all floating-point types.  */
+#  undef isgreater
+#  undef isgreaterequal
+#  undef isless
+#  undef islessequal
+#  undef islessgreater
+#  undef isunordered
 #  ifdef __i686__
 /* For the PentiumPro and more recent processors we can provide
    better code.  */

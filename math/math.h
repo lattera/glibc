@@ -357,18 +357,28 @@ extern int matherr (struct exception *__exc);
 # define __NO_MATH_INLINES	1
 #endif
 
+#if __USE_ISOC99 && __GNUC_PREREQ(2,97)
+/* ISO C99 defines some macros to compare number while taking care for
+   unordered numbers.  Many FPUs provide special instructions to support
+   these operations.  Generic support in GCC for these as builtins went
+   in before 3.0.0, but not all cpus added their patterns.  We define
+   versions that use the builtins here, and <bits/mathinline.h> will
+   undef/redefine as appropriate for the specific GCC version in use.  */
+# define isgreater(x, y)	__builtin_isgreater(x, y)
+# define isgreaterequal(x, y)	__builtin_isgreaterequal(x, y)
+# define isless(x, y)		__builtin_isless(x, y)
+# define islessequal(x, y)	__builtin_islessequal(x, y)
+# define islessgreater(x, y)	__builtin_islessgreater(x, y)
+# define isunordered(u, v)	__builtin_isunordered(u, v)
+#endif
+
 /* Get machine-dependent inline versions (if there are any).  */
 #ifdef __USE_EXTERN_INLINES
 # include <bits/mathinline.h>
 #endif
 
-
 #if __USE_ISOC99
-/* ISO C99 defines some macros to compare number while taking care
-   for unordered numbers.  Since many FPUs provide special
-   instructions to support these operations and these tests are
-   defined in <bits/mathinline.h>, we define the generic macros at
-   this late point and only if they are not defined yet.  */
+/* If we've still got undefined comparison macros, provide defaults.  */
 
 /* Return nonzero value if X is greater than Y.  */
 # ifndef isgreater
