@@ -1,3 +1,15 @@
+1998-11-22  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init): Provide temporary storage
+	for the per-thread variables of the main user thread to make it
+	possible to use malloc as soon as _hurd_preinit_hook has been run.
+	For cthreads, copy values to new stack from there.
+	For non-cthreads, malloc threadvar array here and copy from temp space.
+	(init1): No longer initialize threadvars here.
+	(doinit1): Made static void at top level.
+	(init): Folded into [PIC] _init or [!PIC] doinit1, since GCC cannot
+	inline a function that uses dynamic auto arrays.
+
 1998-11-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.103.
