@@ -177,11 +177,6 @@ subdir_install: install-no-libc.a lib-noranlib stubs
 subdir_TAGS: TAGS
 subdir_dist: dist
 
-# Convenient target to update all the generated source files.
-.PHONY: generated
-generated: $(addprefix $(common-objpfx),$(common-generated)) \
-	$(addprefix $(objpfx),$(generated))
-
 # Target required by the Hurd to ensure that all the MiG-generated
 # headers are in place before building a subdirectory.
 .PHONY: before-compile

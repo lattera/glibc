@@ -166,3 +166,9 @@ $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 		       $(wildcard $(addsuffix /err_*.sub,$(+sysdep_dirs)))
 	$(AWK) -v subsys='$(filter-out $<,$^)' -f $^ > $@.n
 	mv -f $@.n $@
+
+
+# Convenient target to update all the generated source files.
+.PHONY: generated
+generated: $(addprefix $(common-objpfx),$(common-generated)) \
+	   $(addprefix $(objpfx),$(generated))
