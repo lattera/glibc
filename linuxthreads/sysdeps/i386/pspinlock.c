@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  x86 version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #include <errno.h>
 #include <pthread.h>
 #include "internals.h"
+#include "kernel-features.h"
+
 
 /* This implementation is similar to the one used in the Linux kernel.
    But the kernel is byte instructions for the memory access.  This is
@@ -95,3 +97,7 @@ __pthread_spin_destroy (pthread_spinlock_t *lock)
   return 0;
 }
 weak_alias (__pthread_spin_destroy, pthread_spin_destroy)
+
+#ifndef __ASSUME_SET_THREAD_AREA_SYSCALL
+int __have_no_set_thread_area;
+#endif

@@ -3452,16 +3452,23 @@ public_cALLOc(size_t n, size_t elem_size)
 {
   mstate av;
   mchunkptr oldtop, p;
-  INTERNAL_SIZE_T sz, csz, oldtopsize;
+  INTERNAL_SIZE_T bytes, sz, csz, oldtopsize;
   Void_t* mem;
   unsigned long clearsize;
   unsigned long nclears;
   INTERNAL_SIZE_T* d;
-
   __malloc_ptr_t (*hook) __MALLOC_PMT ((size_t, __const __malloc_ptr_t)) =
     __malloc_hook;
+
+  /* size_t is unsigned so the behavior on overflow is defined.  */
+  bytes = n * elem_size;
+  if (bytes / elem_size != n) {
+    MALLOC_FAILURE_ACTION;
+    return 0;
+  }
+
   if (hook != NULL) {
-    sz = n * elem_size;
+    sz = bytes;
     mem = (*hook)(sz, RETURN_ADDRESS (0));
     if(mem == 0)
       return 0;
@@ -3473,8 +3480,7 @@ public_cALLOc(size_t n, size_t elem_size)
 #endif
   }
 
-  /* FIXME: check for overflow on multiplication.  */
-  sz = n * elem_size;
+  sz = bytes;
 
   arena_get(av, sz);
   if(!av)

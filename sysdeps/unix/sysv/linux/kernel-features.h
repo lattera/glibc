@@ -1,6 +1,6 @@
 /* Set flags signalling availability of kernel features based on given
    kernel version number.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -182,6 +182,12 @@
 #if __LINUX_KERNEL_VERSION >= (132096+5) && defined __powerpc__
 # define __ASSUME_STD_AUXV		1
 # define __ASSUME_MMAP2_SYSCALL		1
+#endif
+
+/* On x86, the set_thread_area syscall was introduced in 2.5.29, but its
+   semantics was changed in 2.5.30.  */
+#if __LINUX_KERNEL_VERSION >= 132382 && defined __i386__
+# define __ASSUME_SET_THREAD_AREA_SYSCALL	1
 #endif
 
 /* There are an infinite number of PA-RISC kernel versions numbered
