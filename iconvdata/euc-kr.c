@@ -28,7 +28,8 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
   if (ch > 0x7f)
     {
-      if (ucs4_to_ksc5601 (ch, cp, 2) != __UNKNOWN_10646_CHAR)
+      if (__builtin_expect (ucs4_to_ksc5601 (ch, cp, 2), 0)
+	  != __UNKNOWN_10646_CHAR)
 	{
 	  cp[0] |= 0x80;
 	  cp[1] |= 0x80;
@@ -78,7 +79,9 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
       ++inptr;								      \
     /* 0xfe(->0x7e : row 94) and 0xc9(->0x59 : row 41) are		      \
        user-defined areas.  */						      \
-    else if (ch <= 0xa0 || ch > 0xfe || ch == 0xc9)			      \
+    else if (__builtin_expect (ch, 0xa1) <= 0xa0			      \
+	     || __builtin_expect (ch, 0xa1) > 0xfe			      \
+	     || __builtin_expect (ch, 0xa1) == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \
@@ -97,13 +100,13 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	   is also available.  */					      \
 	ch = ksc5601_to_ucs4 (&inptr,					      \
 			      NEED_LENGTH_TEST ? inptr - inend : 2, 0x80);    \
-	if (NEED_LENGTH_TEST && ch == 0)				      \
+	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
 	  {								      \
 	    /* The second character is not available.  */		      \
 	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (ch == __UNKNOWN_10646_CHAR)					      \
+	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -139,7 +142,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
        Jamos should be considered either here or in euckr_from_ucs4() */      \
     euckr_from_ucs4 (ch, cp) ;						      \
 									      \
-    if (cp[0] == '\0' && ch != 0)					      \
+    if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
       {									      \
 	/* Illegal character.  */					      \
 	if (! ignore_errors_p ())					      \
@@ -157,7 +160,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     /* Now test for a possible second byte and write this if possible.  */    \
     if (cp[1] != '\0')							      \
       {									      \
-	if (NEED_LENGTH_TEST && outptr >= outend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outptr >= outend, 0))	      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \

@@ -46,7 +46,8 @@
 									      \
     if (ch <= 0x7f)							      \
       ++inptr;								      \
-    else if ((ch <= 0xa0 && ch != 0x8e && ch != 0x8f) || ch > 0xfe)	      \
+    else if ((__builtin_expect (ch, 0xa1) <= 0xa0 && ch != 0x8e && ch != 0x8f)\
+	     || __builtin_expect (ch, 0xfe) > 0xfe)			      \
       {									      \
 	/* This is illegal.  */						      \
 	if (! ignore_errors_p ())					      \
@@ -65,7 +66,7 @@
 	   character is also available.  */				      \
 	int ch2;							      \
 									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
@@ -76,7 +77,7 @@
 	ch2 = inptr[1];							      \
 									      \
 	/* All second bytes of a multibyte character must be >= 0xa1. */      \
-	if (ch2 < 0xa1)							      \
+	if (__builtin_expect (ch2, 0xa1) < 0xa1)			      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -119,13 +120,13 @@
 				       0x80);				      \
 	      }								      \
 									      \
-	    if (NEED_LENGTH_TEST && ch == 0)				      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)	      \
 	      {								      \
 		/* Not enough input available.  */			      \
 		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
-	    if (ch == __UNKNOWN_10646_CHAR)				      \
+	    if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		/* Illegal character.  */				      \
 		if (! ignore_errors_p ())				      \
@@ -173,7 +174,7 @@
 	size_t found;							      \
 									      \
 	/* See whether we have room for at least two characters.  */	      \
-	if (NEED_LENGTH_TEST && outptr + 1 >= outend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outptr + 1 >= outend, 0))   \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
@@ -204,13 +205,13 @@
 					  (NEED_LENGTH_TEST		      \
 					   ? outend - outptr - 1 : 2));	      \
 		  							      \
-		if (found == 0)						      \
+		if (__builtin_expect (found, 1) == 0)			      \
 		  {							      \
 		    /* We ran out of space.  */				      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
 		  }							      \
-		else if (found != __UNKNOWN_10646_CHAR)			      \
+		else if (__builtin_expect (found, 0) != __UNKNOWN_10646_CHAR) \
 		  {							      \
 		    /* It's a JIS 0212 character, adjust it for EUC-JP.  */   \
 		    *outptr++ = 0x8f;					      \

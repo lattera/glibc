@@ -71,7 +71,7 @@
 		UCS4 -> GB2312 -> GBK -> UCS4				      \
 									      \
 	   might not produce identical text.  */			      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
@@ -79,7 +79,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && outend - outptr < 2)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outend - outptr < 2, 0))    \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \
@@ -89,11 +89,16 @@
 	ch = (ch << 8) | inptr[1];					      \
 									      \
 	/* Now determine whether the character is valid.  */		      \
-	if (ch < 0xa1a1 || ch > 0xf7fe || inptr[1] < 0xa1		      \
+	if (__builtin_expect (ch, 0xa1a1) < 0xa1a1			      \
+	    || __builtin_expect (ch, 0xa1a1) > 0xf7fe			      \
+	    || __builtin_expect (inptr[1], 0xa1) < 0xa1			      \
 	    /* Now test the exceptions.  */				      \
-	    || (ch >= 0xa2a1 && ch <= 0xa2aa)				      \
-	    || (ch >= 0xa6e0 && ch <= 0xa6f5)				      \
-	    || (ch >= 0xa8bb && ch <= 0xa8c0))				      \
+	    || (__builtin_expect (ch, 0xa1a1) >= 0xa2a1			      \
+		&& __builtin_expect (ch, 0xa1a1) <= 0xa2aa)		      \
+	    || (__builtin_expect (ch, 0xa1a1) >= 0xa6e0			      \
+		&& __builtin_expect (ch, 0xa1a1) <= 0xa6f5)		      \
+	    || (__builtin_expect (ch, 0xa1a1) >= 0xa8bb			      \
+		&& __builtin_expect (ch, 0xa1a1) <= 0xa8c0))		      \
 	  {								      \
 	    /* One of the characters we cannot map.  */			      \
 	    if (! ignore_errors_p ())					      \
@@ -131,7 +136,7 @@
 									      \
     if (ch > 0x7f)							      \
       {									      \
-	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))     \
 	  {								      \
 	    /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -139,7 +144,7 @@
 	    break;							      \
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && outend - outptr < 2)			      \
+	if (NEED_LENGTH_TEST && __builtin_expect (outend - outptr < 2, 0))    \
 	  {								      \
 	    /* We ran out of space.  */					      \
 	    result = __GCONV_FULL_OUTPUT;				      \

@@ -13121,7 +13121,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
     if (ch <= 0x7f)							      \
       ++inptr;								      \
     else								      \
-      if (ch <= 0x80 || ch > 0xfe)					      \
+      if (__builtin_expect (ch, 0x81) <= 0x80				      \
+	  || __builtin_expect (ch, 0x81) > 0xfe)			      \
 	{								      \
 	  /* This is illegal.  */					      \
 	  if (! ignore_errors_p ())					      \
@@ -13141,7 +13142,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  uint32_t ch2;							      \
 	  int idx;							      \
 									      \
-	  if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	  if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))   \
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -13152,7 +13153,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  ch2 = inptr[1];						      \
 									      \
 	  /* All second bytes of a multibyte character must be >= 0x40. */    \
-	  if (ch2 < 0x40)						      \
+	  if (__builtin_expect (ch2, 0x41) < 0x40)			      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
 	      if (! ignore_errors_p ())					      \
@@ -13172,7 +13173,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 									      \
 	  ch = __gbk_to_ucs[idx];					      \
 									      \
-	  if (ch == 0 && *inptr != '\0')				      \
+	  if (__builtin_expect (ch, 1) == 0 && *inptr != '\0')		      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
 	      if (! ignore_errors_p ())					      \
@@ -13446,7 +13447,7 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  cp = "";							      \
 	  break; 							      \
 	}								      \
-      if (cp == NULL || (cp[0] == '\0' && ch != 0))			      \
+      if (__builtin_expect (cp[0], '\1') == '\0' && ch != 0)		      \
 	{								      \
 	  /* Illegal character.  */					      \
 	  if (! ignore_errors_p ())					      \
@@ -13458,7 +13459,8 @@ static const char __gbk_from_ucs4_tab12[][2] =
 	  ++*converted;							      \
 	}								      \
       /* See whether there is enough room for the second byte we write.  */   \
-      else if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)     \
+      else if (NEED_LENGTH_TEST && cp[1] != '\0'			      \
+	       && __builtin_expect (outptr + 1 >= outend, 0))		      \
 	{								      \
 	  /* We have not enough room.  */				      \
 	  result = __GCONV_FULL_OUTPUT;					      \

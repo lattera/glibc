@@ -44,7 +44,8 @@
     if (ch <= 0x7f)							      \
       ++inptr;								      \
     else								      \
-      if ((ch <= 0xa0 && ch != 0x8e && ch != 0x8f) || ch > 0xfe)	      \
+      if ((__builtin_expect (ch, 0xa1) <= 0xa0 && ch != 0x8e && ch != 0x8f)   \
+	  || __builtin_expect (ch, 0xfe) > 0xfe)			      \
 	{								      \
 	  /* This is illegal.  */					      \
 	  if (! ignore_errors_p ())					      \
@@ -63,7 +64,7 @@
 	     next character is also available.  */			      \
 	  const unsigned char *endp;					      \
 									      \
-	  if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
+	  if (NEED_LENGTH_TEST && __builtin_expect (inptr + 1 >= inend, 0))   \
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
@@ -74,7 +75,7 @@
 	  ch = inptr[1];						      \
 									      \
 	  /* All second bytes of a multibyte character must be >= 0xa1. */    \
-	  if (ch < 0xa1)						      \
+	  if (__builtin_expect (ch, 0xa1) < 0xa1)			      \
 	    {								      \
 	      if (! ignore_errors_p ())					      \
 		{							      \
@@ -92,7 +93,7 @@
 	  endp = inptr;							      \
 									      \
 	  ch = gb2312_to_ucs4 (&endp, 2, 0x80);				      \
-	  if (ch == __UNKNOWN_10646_CHAR)				      \
+	  if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
 	      if (! ignore_errors_p ())					      \
@@ -135,9 +136,9 @@
 	found = ucs4_to_gb2312 (ch, outptr,				      \
 				(NEED_LENGTH_TEST			      \
 				 ? outend - outptr : MAX_NEEDED_OUTPUT));     \
-	if (!NEED_LENGTH_TEST || found != 0)				      \
+	if (!NEED_LENGTH_TEST || __builtin_expect (found, 1) != 0)	      \
 	  {								      \
-	    if (found == __UNKNOWN_10646_CHAR)				      \
+	    if (__builtin_expect (found, 0) == __UNKNOWN_10646_CHAR)	      \
 	      {								      \
 		/* Illegal character.  */				      \
 		if (! ignore_errors_p ())				      \

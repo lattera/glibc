@@ -88,15 +88,13 @@ enum
 	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (outbuf == data->__outbufend)				      \
+	  if (__builtin_expect (outbuf == data->__outbufend, 0))	      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      if (data->__flags & __GCONV_IS_LAST)			      \
-		*written += 1;						      \
 	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set;			      \
 	    }								      \
@@ -123,7 +121,7 @@ enum
     uint32_t ch = *inptr;						      \
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
-    if (ch > 0x7f)							      \
+    if (__builtin_expect (ch, 0) > 0x7f)				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -137,16 +135,18 @@ enum
       }									      \
 									      \
     /* Recognize escape sequences.  */					      \
-    if (ch == ESC)							      \
+    if (__builtin_expect (ch, 0) == ESC)				      \
       {									      \
 	/* We don't really have to handle escape sequences since all the      \
 	   switching is done using the SI and SO bytes.  But we have to	      \
 	   recognize `Esc $ ) C' since this is a kind of flag for this	      \
 	   encoding.  We simply ignore it.  */				      \
-	if ((NEED_LENGTH_TEST && inptr + 1 > inend)			      \
+	if ((NEED_LENGTH_TEST && __builtin_expect (inptr + 1 > inend, 0))     \
 	    || (inptr[1] == '$'						      \
-		&& ((NEED_LENGTH_TEST && inptr + 2 > inend)		      \
-		    || (inptr[2] == ')' && inptr + 3 > inend))))	      \
+		&& ((NEED_LENGTH_TEST					      \
+		     && __builtin_expect (inptr + 2 > inend, 0))	      \
+		    || (inptr[2] == ')'					      \
+			&& __builtin_expect (inptr + 3 > inend, 0)))))	      \
 									      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
@@ -159,14 +159,14 @@ enum
 	    continue;							      \
 	  }								      \
       }									      \
-    else if (ch == SO)							      \
+    else if (__builtin_expect (ch, 0) == SO)				      \
       {									      \
 	/* Switch to use KSC.  */					      \
 	++inptr;							      \
 	set = KSC5601_set;						      \
 	continue;							      \
       }									      \
-    else if (ch == SI)							      \
+    else if (__builtin_expect (ch, 0) == SI)				      \
       {									      \
 	/* Switch to use ASCII.  */					      \
 	++inptr;							      \
@@ -187,12 +187,12 @@ enum
 	ch = ksc5601_to_ucs4 (&inptr,					      \
 			      NEED_LENGTH_TEST ? inend - inptr : 2, 0);	      \
 									      \
-	if (NEED_LENGTH_TEST && ch == 0)				      \
+	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (ch == __UNKNOWN_10646_CHAR)				      \
+	else if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
@@ -252,7 +252,7 @@ enum
 									      \
 	written = ucs4_to_ksc5601 (ch, buf, 2);				      \
 									      \
-	if (written == __UNKNOWN_10646_CHAR)				      \
+	if (__builtin_expect (written, 0) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    /* Illegal character.  */					      \
 	    if (! ignore_errors_p ())					      \
@@ -274,7 +274,7 @@ enum
 		set = KSC5601_set;					      \
 	      }								      \
 									      \
-	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	    if (NEED_LENGTH_TEST && __builtin_expect (outptr + 2 > outend, 0))\
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \

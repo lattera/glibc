@@ -86,15 +86,13 @@ enum
 	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (outbuf == data->__outbufend)				      \
+	  if (__builtin_expect (outbuf == data->__outbufend, 0))	      \
 	    /* We don't have enough room in the output buffer.  */	      \
 	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      if (data->__flags & __GCONV_IS_LAST)			      \
-		*written += 1;						      \
 	      data->__outbuf = outbuf;					      \
 	      data->__statep->__count = ASCII_set;			      \
 	    }								      \
@@ -121,7 +119,7 @@ enum
     uint32_t ch = *inptr;						      \
 									      \
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
-    if (ch > 0x7f)							      \
+    if (__builtin_expect (ch, 0) > 0x7f)				      \
       {									      \
 	if (! ignore_errors_p ())					      \
 	  {								      \
@@ -135,7 +133,7 @@ enum
       }									      \
 									      \
     /* Recognize escape sequences.  */					      \
-    if (ch == ESC)							      \
+    if (__builtin_expect (ch, 0) == ESC)				      \
       {									      \
 	/* There are two kinds of escape sequences we have to handle:	      \
 	   - those announcing the use of GB and CNS characters on the	      \
@@ -143,12 +141,15 @@ enum
 	   - the initial byte of the SS2 sequence.			      \
 	*/								      \
 	if (NEED_LENGTH_TEST						      \
-	    && (inptr + 1 > inend					      \
+	    && (__builtin_expect (inptr + 1 > inend, 0)			      \
 		|| (inptr[1] == '$'					      \
-		    && (inptr + 2 > inend				      \
-			|| (inptr[2] == ')' && inptr + 3 > inend)	      \
-			|| (inptr[2] == '*' && inptr + 3 > inend)))	      \
-		|| (inptr[1] == SS2_1 && inptr + 3 > inend)))		      \
+		    && (__builtin_expect (inptr + 2 > inend, 0)		      \
+			|| (inptr[2] == ')'				      \
+			    && __builtin_expect (inptr + 3 > inend, 0))	      \
+			|| (inptr[2] == '*'				      \
+			    && __builtin_expect (inptr + 3 > inend, 0))))     \
+		|| (inptr[1] == SS2_1					      \
+		    && __builtin_expect (inptr + 3 > inend, 0))))	      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
@@ -166,7 +167,7 @@ enum
 	    continue;							      \
 	  }								      \
       }									      \
-    else if (ch == SO)							      \
+    else if (__builtin_expect (ch, 0) == SO)				      \
       {									      \
 	/* Switch to use GB2312 or CNS 11643 plane 1, depending on which      \
 	   S0 designation came last.  The only problem is what to do with     \
@@ -177,7 +178,7 @@ enum
 	set = ann == CNS11643_1_ann ? CNS11643_1_set : GB2312_set;	      \
 	continue;							      \
       }									      \
-    else if (ch == SI)							      \
+    else if (__builtin_expect (ch, 0) == SI)				      \
       {									      \
 	/* Switch to use ASCII.  */					      \
 	++inptr;							      \
@@ -185,14 +186,14 @@ enum
 	continue;							      \
       }									      \
 									      \
-    if (ch == ESC && inptr[1] == SS2_1)					      \
+    if (__builtin_expect (ch, 0) == ESC && inptr[1] == SS2_1)		      \
       {									      \
 	/* This is a character from CNS 11643 plane 2.			      \
 	   XXX We could test here whether the use of this character	      \
 	   set was announced.  */					      \
 	inptr += 2;							      \
 	ch = cns11643l2_to_ucs4 (&inptr, 2, 0);				      \
-	if (ch == __UNKNOWN_10646_CHAR)					      \
+	if (__builtin_expect (ch, 0) == __UNKNOWN_10646_CHAR)		      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
@@ -224,12 +225,12 @@ enum
 				     NEED_LENGTH_TEST ? inend - inptr : 2, 0);\
 	  }								      \
 									      \
-	if (NEED_LENGTH_TEST && ch == 0)				      \
+	if (NEED_LENGTH_TEST && __builtin_expect (ch, 1) == 0)		      \
 	  {								      \
 	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (ch == __UNKNOWN_10646_CHAR)				      \
+	else if (__builtin_expect (ch, 1) == __UNKNOWN_10646_CHAR)	      \
 	  {								      \
 	    if (! ignore_errors_p ())					      \
 	      {								      \
@@ -261,10 +262,7 @@ enum
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch;							      \
-    size_t written = 0;							      \
-									      \
-    ch = get32 (inptr);							      \
+    uint32_t ch = get32 (inptr);					      \
 									      \
     /* First see whether we can write the character using the currently	      \
        selected character set.  */					      \
@@ -274,7 +272,7 @@ enum
 	  {								      \
 	    *outptr++ = SI;						      \
 	    set = ASCII_set;						      \
-	    if (NEED_LENGTH_TEST && outptr == outend)			      \
+	    if (NEED_LENGTH_TEST && __builtin_expet (outptr == outend, 0))    \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
@@ -282,7 +280,6 @@ enum
 	  }								      \
 									      \
 	*outptr++ = ch;							      \
-	written = 1;							      \
 									      \
 	/* At the end of the line we have to clear the `ann' flags since      \
 	   every line must contain this information again.  */		      \
@@ -293,6 +290,7 @@ enum
       {									      \
 	char buf[2];							      \
 	int used;							      \
+	size_t written = 0;						      \
 									      \
 	if (set == GB2312_set || (ann & CNS11643_1_ann) == 0)		      \
 	  {								      \
@@ -321,7 +319,7 @@ enum
 		else							      \
 		  written = ucs4_to_gb2312 (ch, buf, 2);		      \
 									      \
-		if (written != __UNKNOWN_10646_CHAR)			      \
+		if (__builin_expect (written, 0) != __UNKNOWN_10646_CHAR)     \
 		  /* Oh well, then switch SO.  */			      \
 		  used = GB2312_set + CNS11643_1_set - set;		      \
 		else							      \
@@ -350,7 +348,8 @@ enum
 	      {								      \
 		const char *escseq;					      \
 									      \
-		if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
+		if (NEED_LENGTH_TEST					      \
+		    && __builtin_expect (outptr + 4 > outend, 0))	      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -373,7 +372,7 @@ enum
 									      \
 	    if (used == CNS11643_2_set)					      \
 	      {								      \
-		if (outptr + 2 > outend)				      \
+		if (__builtin_expect (outptr + 2 > outend, 0))		      \
 		  {							      \
 		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
@@ -388,7 +387,7 @@ enum
 		   SO charset.  */					      \
 		if (set == ASCII_set)					      \
 		  {							      \
-		    if (outptr + 1 > outend)				      \
+		    if (__builtin_expect (outptr + 1 > outend, 0))	      \
 		      {							      \
 			result = __GCONV_FULL_OUTPUT;			      \
 			break;						      \
@@ -399,13 +398,14 @@ enum
 									      \
 	    /* Always test the length here since we have used up all the      \
 	       guaranteed output buffer slots.  */			      \
-	    if (outptr + 2 > outend)					      \
+	    if (__builtin_expect (outptr + 2 > outend, 0))		      \
 	      {								      \
 		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
-	else if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
+	else if (NEED_LENGTH_TEST					      \
+		 && __builtin_expect (outptr + 2 > outend, 0))		      \
 	  {								      \
 	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
