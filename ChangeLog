@@ -1,3 +1,10 @@
+2002-07-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def (libc): Add GLIBC_2.3.
+	* stdlib/Versions [libc] (GLIBC_2.3): Add realpath.
+	* stdlib/canonicalize.c: Add compatibility version for realpath
+	and make new code available in GLIBC_2.3.
+
 2002-07-06  Bruno Haible  <bruno@clisp.org>
 
 	* malloc/hooks.c (public_gET_STATe): Access max_total_mem in mp_.

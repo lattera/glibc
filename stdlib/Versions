@@ -90,6 +90,10 @@ libc {
     # used by new G++ ABI
     __cxa_atexit; __cxa_finalize;
   }
+  GLIBC_2.3 {
+    # Silent change in SUS.
+    realpath;
+  }
   GLIBC_PRIVATE {
     # functions which have an additional interface since they are
     # are cancelable.

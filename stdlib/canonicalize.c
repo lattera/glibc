@@ -26,6 +26,8 @@
 #include <errno.h>
 #include <stddef.h>
 
+#include <shlib-compat.h>
+
 /* Return the canonical absolute name of file NAME.  A canonical name
    does not contain any `.', `..' components nor any repeated path
    separators ('/') or symlinks.  All path components must exist.  If
@@ -204,7 +206,23 @@ error:
     free (rpath);
   return NULL;
 }
-weak_alias (__realpath, realpath)
+versioned_symbol (libc, __realpath, realpath, GLIBC_2_3);
+
+
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3)
+char *
+__old_realpath (const char *name, char *resolved)
+{
+  if (resolved == NULL)
+    {
+      __set_errno (EINVAL);
+      return NULL;
+    }
+
+  return __realpath (name, resolved);
+}
+compat_symbol (libc, __old_realpath, realpath, GLIBC_2_0);
+#endif
 
 
 char *
