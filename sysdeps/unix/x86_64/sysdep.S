@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,6 +21,7 @@
 #include <bits/errno.h>
 #include <bp-asm.h>
 #include <bp-sym.h>
+#include <tls.h>
 
 .globl C_SYMBOL_NAME(errno)
 .globl syscall_error
@@ -40,28 +41,31 @@ syscall_error:
 	movq $EAGAIN, %rax	/* Yes; translate it to EAGAIN.  */
 notb:
 #endif
-#ifndef	PIC
+#if USE_TLS && HAVE___THREAD
+	movq C_SYMBOL_NAME(errno)@GOTTPOFF(%rip), %rcx
+	movl %eax, %fs:0(%rcx)
+#elif !defined PIC
 # ifndef _LIBC_REENTRANT
-	movq %rax, C_SYMBOL_NAME(errno)
+	movl %eax, C_SYMBOL_NAME(errno)
 # else
 	pushq %rax
 	PUSH_ERRNO_LOCATION_RETURN
 	call BP_SYM (__errno_location)
 	POP_ERRNO_LOCATION_RETURN
 	popq %rcx
-	movq %rcx, (%rax)
+	movl %ecx, (%rax)
 # endif
 #else
 # ifndef _LIBC_REENTRANT
 	movq C_SYMBOL_NAME(errno)@GOTPCREL(%rip), %rcx
-	movq %rax, (%rcx)
+	movl %eax, (%rcx)
 # else
 	pushq %rax
 	PUSH_ERRNO_LOCATION_RETURN
 	call C_SYMBOL_NAME (BP_SYM (__errno_location)@PLT)
 	POP_ERRNO_LOCATION_RETURN
 	popq %rcx
-	movq %rcx, (%rax)
+	movl %ecx, (%rax)
 # endif
 #endif
 	movq $-1, %rax

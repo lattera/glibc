@@ -1,3 +1,14 @@
+2002-09-29  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.S [USE_TLS && HAVE___THREAD]:
+	Define errno in .tbss.
+	* sysdeps/unix/x86_64/sysdep.S [USE_TLS && HAVE___THREAD]: Use TLS
+	access for setting errno.
+
+	* sysdeps/unix/x86_64/sysdep.S: Store 32 bits at errno, not 64 bits.
+	AFAICT, it was just blind luck that the word following errno in .bss
+	was just alignment padding and not some other variable to be clobbered.
+
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h
