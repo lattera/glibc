@@ -27,11 +27,11 @@ extra-libs	= libelf libdl
 libelf-routines	:= elf_hash
 libdl-routines	:= dlopen dlclose dlsym dlerror
 libdl-inhibit-o	= $(filter-out .so,$(object-suffixes)) # Build only shared.
-LDLIBS-dl.so	:= -lc -lld
+LDFLAGS-dl.so	:= -e 0 # work around ld bug
 
 rtld-routines	:= rtld $(addprefix dl-,load lookup object reloc	\
 				        runtime sysdep error init fini)
-distribute	= $(rtld-routines:=.c) dynamic-link.h
+distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h
 
 include ../Makeconfig
 
@@ -48,4 +48,7 @@ $(objpfx)ld.so: $(rtld-routines:%=$(objpfx)%.so) \
 	$(LINK.o) -nostdlib -shared -o $@ \
 		  '-Wl,-(' $^ -lgcc '-Wl,-)'
 
-$(objpfx)libdl.so: $(common-objpfx)libc.so $(objpfx)ld.so
+$(objpfx)libdl.so: $(objpfx)libdl_pic.a $(common-objpfx)libc.so $(objpfx)ld.so
+	$(patsubst %/,cd %;,$(objpfx)) \
+	$(LINK.o) -shared -o $(@:$(objpfx)%=%) \
+		  $(LDFLAGS-dl.so) -Wl,--whole-archive $(^:$(objpfx)%=%)
