@@ -1,3 +1,7 @@
+2004-08-09  Roland McGrath  <roland@redhat.com>
+
+	* time/strptime_l.c: #include <stdbool.h>, `bool' used in last change.
+
 2004-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tzset.c (tzset_internal): If TZ is not set do not compare
