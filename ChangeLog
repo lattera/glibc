@@ -12,6 +12,13 @@ Thu Feb 15 13:57:08 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 	(fioctl): Use __hurd_dfail.
 	(fioctl, fioclex): Use ENOTTY for bogus request instead of EGRATUITOUS.
 
+Thu Feb 15 11:49:45 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/sysv4/Makefile [$(subdir)-signal]
+	(sysdep_routines): Don't add sys-sig.
+
+	* sysdeps/unix/sysv/sysv4/solaris2/syscalls.list: New file.
+
 Wed Feb 14 00:21:17 1996 David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sysdeps/alpha/memchr.c (memchr): loop searching for matching
