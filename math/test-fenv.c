@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de> and
    Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -117,28 +117,29 @@ static void
 print_rounding (int rounding)
 {
 
-  switch (rounding) {
+  switch (rounding)
+    {
 #ifdef FE_TONEAREST
-  case FE_TONEAREST:
-    printf ("TONEAREST");
-    break;
+    case FE_TONEAREST:
+      printf ("TONEAREST");
+      break;
 #endif
 #ifdef FE_UPWARD
-  case FE_UPWARD:
-    printf ("UPWARD");
-    break;
+    case FE_UPWARD:
+      printf ("UPWARD");
+      break;
 #endif
 #ifdef FE_DOWNWARD
-  case FE_DOWNWARD:
-    printf ("DOWNWARD");
-    break;
+    case FE_DOWNWARD:
+      printf ("DOWNWARD");
+      break;
 #endif
 #ifdef FE_TOWARDZERO
-  case FE_TOWARDZERO:
-    printf ("TOWARDZERO");
-    break;
+    case FE_TOWARDZERO:
+      printf ("TOWARDZERO");
+      break;
 #endif
-  }
+    }
   printf (".\n");
 }
 
@@ -154,11 +155,12 @@ test_rounding (const char *test_name, int rounding_mode)
       printf ("  Pass: Rounding mode is ");
       print_rounding (curr_rounding);
     }
-  else {
-    ++count_errors;
-    printf ("  Fail: Rounding mode is ");
-    print_rounding (curr_rounding);
-  }
+  else
+    {
+      ++count_errors;
+      printf ("  Fail: Rounding mode is ");
+      print_rounding (curr_rounding);
+    }
 }
 
 
@@ -247,7 +249,7 @@ feenv_nomask_test (const char *flag_name, int fe_exc)
 
   printf ("Test: after fesetenv (FE_NOMASK_ENV) processes will abort\n");
   printf ("      when feraiseexcept (%s) is called.\n", flag_name);
-  pid = fork  ();
+  pid = fork ();
   if (pid == 0)
     {
 #ifdef RLIMIT_CORE

@@ -1,7 +1,7 @@
 	    List of known bugs (certainly very incomplete)
 	    ----------------------------------------------
 
-Time-stamp: <1998-02-20T15:02:41-0800 drepper>
+Time-stamp: <1998-02-26T09:19:15-0800 drepper>
 
 This following list contains those bugs which I'm aware of.  Please
 make sure that bugs you report are not listed here.  If you can fix one
@@ -26,8 +26,6 @@ Severity: [  *] to [***]
 
 
 [ **]  There are problems with signal handling when using LinuxThreads.
-
-[ **]  The libm-ieee `log2' function seems to be very inaccurate.
 
 [  *]  The precision of the `sinhl' and/or `asinhl' function do not seem
        to be the best.
@@ -56,7 +54,11 @@ Severity: [  *] to [***]
        category.
        [PR libc/207]
 
-[  *]  The libm-ieee `asin' function gives wrong results (at least for 0.5).
+[  *]  The libm-ieee `gamma' function gives wrong results (at least for
+       -0.5).
+
+[  *]  The libm-ieee `scalb' function gives wrong results for
+       non-integral second parameters.
 
 [  *]  _IO_getline can loop forever, at least with C++
        [PR libc/332]

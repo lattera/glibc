@@ -150,6 +150,17 @@ in configparms.  Later versions of egcs may fix these problems.
 
   If you have some more measurements let me know.
 
+??	What version of the Linux kernel headers should be used?
+
+{AJ,UD} The headers from the most recent Linux kernel should be used.
+The headers used while compiling the GNU C library and the kernel
+binary used when using the library do not need to match.  The GNU C
+library runs without problems on kernels that are older than the
+kernel headers used.  The other way round (compiling the GNU C library
+with old kernel headers and running on a recent kernel) does not
+necessarily work.  For example you can't use new kernel features when
+using old kernel headers for compiling the GNU C library.
+
 ??	When I run `nm -u libc.so' on the produced library I still
 	find unresolved symbols.  Can this be ok?
 
@@ -601,10 +612,10 @@ problem.
 ??	What do I need for C++ development?
 
 {HJ,AJ} You need either egcs 1.0.1 or gcc-2.8.0 with libstdc++
-2.8.0. libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work very 
+2.8.0. libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work very
 well with the GNU C library due to vtable thunks.
 If you're upgrading from glibc 2.0.x to 2.1 you have to recompile
-libstc++ the library compiled for 2.0 is not compatible due to the new 
+libstc++ the library compiled for 2.0 is not compatible due to the new
 Large File Support (LFS) in version 2.1.
 
 ? Source and binary incompatibilities, and what to do about them

@@ -1,5 +1,5 @@
 /* Test floating-point arithmetic operations.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -574,7 +574,7 @@ int main(int argc, char **argv)
   fesetenv(FE_DFL_ENV);
   fesetround(FE_TONEAREST);
   fegetenv(rmodes+0);
-  fesetround(FE_TOWARDSZERO);
+  fesetround(FE_TOWARDZERO);
   fegetenv(rmodes+1);
   fesetround(FE_UPWARD);
   fegetenv(rmodes+2);

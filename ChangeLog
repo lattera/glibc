@@ -1,3 +1,62 @@
+1998-02-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/ypclnt.c (yp_master): Check result of strdup.
+	Patch by Thorsten Kukuk.
+
+1998-02-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/ypclnt.c: Give clnt handle after error checking free, change
+	return codes to fix problems with rpc.nisd in YP mode on Ultra's.
+
+1998-02-26 09:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/fstab.c: Partly rewritten to use dynamically allocated buffer.
+	Patch by Joe Keane <jgk@jgk.org>.
+
+	* misc/fstab.h (struct fstab): Change fs_type member to be const.
+	* misc/fstab.c: Remove casts in fs_type assignments.
+
+1998-02-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/fpu/bits/fenv.h: Correct typo.  ISO C 9X defines
+	FE_TOWARDZERO and not FE_TOWARDSZERO.  Reported by H.J. Lu.
+	* sysdeps/sparc/sparc64/fpu/bits/fenv.h: Likewise.
+	* sysdeps/sparc/sparc32/fpu/bits/fenv.h: Likewise.
+	* sysdeps/powerpc/bits/fenv.h: Likewise.
+	* sysdeps/m68k/fpu/bits/fenv.h: Likewise.
+	* sysdeps/generic/bits/fenv.h: Likewise.
+	* sysdeps/alpha/fpu/bits/fenv.h: Likewise.
+	* sysdeps/i386/fpu/fesetenv.c (fesetenv): Likewise.
+	* sysdeps/powerpc/test-arith.c (main): Likewise.
+
+1998-02-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h: Also fix i386 versions of
+	the comparison macros.
+
+1998-02-21 20:14  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/libm-ieee754/s_log2.c (ln2): Added.
+	(__log2): Fixed return values.
+	* sysdeps/libm-ieee754/s_log2f.c: Likewise.
+
+1998-02-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/math.h (isunordered): Rename local variables to ensure
+	correct code.  Reported by HJ Lu.
+
+1998-02-25 10:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdpes/i386/fpu/bits/mathinline.h (isgreater, isgreaterequal,
+	isless, islessequal, islessgreater, isunordered): Fix syntax for
+	fucompip instruction.
+	(isless, islessequal): Fix logic.
+
+1998-02-21  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c (sqrt_test): Add test for sqrt(2).
+	(comparisons_test): New tests for comparison macros.
+
 1998-02-24 15:12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Filter out frame-pointer effecting options when

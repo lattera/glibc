@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,98 +19,175 @@
 #include <fstab.h>
 #include <mntent.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <bits/libc-lock.h>
 
-static FILE *fstab;
-static struct mntent mntres;
-static char buffer[8192];
+#define BUFFER_SIZE 0x1fc0
 
-
-static FILE *
-fstab_stream (void)
+struct fstab_state
 {
-  if (! fstab)
-    fstab = setmntent (_PATH_FSTAB, "r");
-  return fstab;
-}
+  FILE *fs_fp;
+  char *fs_buffer;
+  struct mntent fs_mntres;
+  struct fstab fs_ret;
+};
+
+static struct fstab_state *fstab_init (int opt_rewind);
+static struct mntent *fstab_fetch (struct fstab_state *state);
+static struct fstab *fstab_convert (struct fstab_state *state);
+
+static struct fstab_state fstab_state;
+
 
 int
 setfsent (void)
 {
-  if (fstab)
-    {
-      rewind (fstab);
-      return 1;
-    }
-  else
-    fstab = setmntent (_PATH_FSTAB, "r");
-  return fstab ? 0 : 1;
+  return fstab_init (1) != NULL;
 }
 
-static struct fstab *
-internal_function
-mnt2fs (struct mntent *m)
-{
-  static struct fstab f;
-
-  if (m == NULL)
-    return NULL;
-
-  f.fs_spec = m->mnt_fsname;
-  f.fs_file = m->mnt_dir;
-  f.fs_vfstype = m->mnt_type;
-  f.fs_mntops = m->mnt_opts;
-  f.fs_type = (hasmntopt (m, FSTAB_RW) ? (char *) FSTAB_RW :
-	       hasmntopt (m, FSTAB_RQ) ? (char *) FSTAB_RQ :
-	       hasmntopt (m, FSTAB_RO) ? (char *) FSTAB_RO :
-	       hasmntopt (m, FSTAB_SW) ? (char *) FSTAB_SW :
-	       hasmntopt (m, FSTAB_XX) ? (char *) FSTAB_XX :
-	       (char *) "??");
-  f.fs_freq = m->mnt_freq;
-  f.fs_passno = m->mnt_passno;
-  return &f;
-}
 
 struct fstab *
 getfsent (void)
 {
-  FILE *s = fstab_stream ();
+  struct fstab_state *state;
 
-  if (! s)
+  state = fstab_init (0);
+  if (state == NULL)
     return NULL;
-
-  return mnt2fs (__getmntent_r (s, &mntres, buffer, sizeof buffer));
+  if (fstab_fetch (state) == NULL)
+    return NULL;
+  return fstab_convert (state);
 }
+
 
 struct fstab *
 getfsspec (name)
-     register const char *name;
+     const char *name;
 {
+  struct fstab_state *state;
   struct mntent *m;
-  if (setfsent ())
-    while (m = __getmntent_r (fstab, &mntres, buffer, sizeof buffer))
-      if (!strcmp (m->mnt_fsname, name))
-	return mnt2fs (m);
+
+  state = fstab_init (1);
+  if (state == NULL)
+    return NULL;
+  while ((m = fstab_fetch (state)) != NULL)
+    if (strcmp (m->mnt_fsname, name) == 0)
+      return fstab_convert (state);
   return NULL;
 }
 
+
 struct fstab *
 getfsfile (name)
-     register const char *name;
+     const char *name;
 {
+  struct fstab_state *state;
   struct mntent *m;
-  if (setfsent ())
-    while (m = __getmntent_r (fstab, &mntres, buffer, sizeof buffer))
-      if (!strcmp (m->mnt_dir, name))
-	return mnt2fs (m);
+
+  state = fstab_init (1);
+  if (state == NULL)
+    return NULL;
+  while ((m = fstab_fetch (state)) != NULL)
+    if (strcmp (m->mnt_dir, name) == 0)
+      return fstab_convert (state);
   return NULL;
 }
+
 
 void
 endfsent ()
 {
-  if (fstab)
+  struct fstab_state *state;
+
+  state = &fstab_state;
+  if (state->fs_fp != NULL)
     {
-      (void) endmntent (fstab);
-      fstab = NULL;
+      (void) endmntent (state->fs_fp);
+      state->fs_fp = NULL;
     }
 }
+
+
+static struct fstab_state *
+fstab_init (int opt_rewind)
+{
+  struct fstab_state *state;
+  char *buffer;
+  FILE *fp;
+
+  state = &fstab_state;
+
+  buffer = state->fs_buffer;
+  if (buffer == NULL)
+    {
+      buffer = (char *) malloc (BUFFER_SIZE);
+      if (buffer == NULL)
+	return NULL;
+      state->fs_buffer = buffer;
+    }
+
+  fp = state->fs_fp;
+  if (fp != NULL)
+    {
+      if (opt_rewind)
+	rewind (fp);
+    }
+  else
+    {
+      fp = setmntent (_PATH_FSTAB, "r");
+      if (fp == NULL)
+	return NULL;
+      state->fs_fp = fp;
+    }
+
+  return state;
+}
+
+
+static struct mntent *
+fstab_fetch (struct fstab_state *state)
+{
+  return __getmntent_r (state->fs_fp, &state->fs_mntres,
+			state->fs_buffer, BUFFER_SIZE);
+}
+
+
+static struct fstab *
+fstab_convert (struct fstab_state *state)
+{
+  struct mntent *m;
+  struct fstab *f;
+
+  m = &state->fs_mntres;
+  f = &state->fs_ret;
+
+  f->fs_spec = m->mnt_fsname;
+  f->fs_file = m->mnt_dir;
+  f->fs_vfstype = m->mnt_type;
+  f->fs_mntops = m->mnt_opts;
+  f->fs_type = (hasmntopt (m, FSTAB_RW) ? FSTAB_RW :
+		hasmntopt (m, FSTAB_RQ) ? FSTAB_RQ :
+		hasmntopt (m, FSTAB_RO) ? FSTAB_RO :
+		hasmntopt (m, FSTAB_SW) ? FSTAB_SW :
+		hasmntopt (m, FSTAB_XX) ? FSTAB_XX :
+		"??");
+  f->fs_freq = m->mnt_freq;
+  f->fs_passno = m->mnt_passno;
+  return f;
+}
+
+
+/* Make sure the memory is freed if the programs ends while in
+   memory-debugging mode and something actually was allocated.  */
+static void
+__attribute__ ((unused))
+fstab_free (void)
+{
+  char *buffer;
+
+  buffer = fstab_state.fs_buffer;
+  if (buffer != NULL)
+    free ((void *) buffer);
+}
+
+text_set_element (__libc_subfreeres, fstab_free);

@@ -62,6 +62,7 @@ static const double
 #else
 static double
 #endif
+ln2 = 0.69314718055994530942,
 two54   =  1.80143985094819840000e+16,  /* 43500000 00000000 */
 Lg1 = 6.666666666666735130e-01,  /* 3FE55555 55555593 */
 Lg2 = 3.999999999940941908e-01,  /* 3FD99999 9997FA04 */
@@ -109,7 +110,7 @@ static double zero   =  0.0;
 	if((0x000fffff&(2+hx))<3) {	/* |f| < 2**-20 */
 	    if(f==zero) return dk;
 	    R = f*f*(0.5-0.33333333333333333*f);
-	    return dk-(R-f);
+	    return dk-(R-f)/ln2;
 	}
  	s = f/(2.0+f);
 	z = s*s;
@@ -122,9 +123,9 @@ static double zero   =  0.0;
 	R = t2+t1;
 	if(i>0) {
 	    hfsq=0.5*f*f;
-	    return dk-((hfsq-(s*(hfsq+R)))-f);
+	    return dk-((hfsq-(s*(hfsq+R)))-f)/ln2;
 	} else {
-	    return dk-((s*(f-R))-f);
+	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
 

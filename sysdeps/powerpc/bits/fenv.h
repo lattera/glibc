@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -106,8 +106,8 @@ enum
   {
     FE_TONEAREST = 0,
 #define FE_TONEAREST	FE_TONEAREST
-    FE_TOWARDSZERO = 1,
-#define FE_TOWARDSZERO	FE_TOWARDSZERO
+    FE_TOWARDZERO = 1,
+#define FE_TOWARDZERO	FE_TOWARDZERO
     FE_UPWARD = 2,
 #define FE_UPWARD	FE_UPWARD
     FE_DOWNWARD = 3,

@@ -46,6 +46,7 @@
    fabs, fdim, floor, fma, fmax, fmin, fmod, fpclassify,
    frexp, gamma, hypot,
    ilogb, isfinite, isinf, isnan, isnormal,
+   isless, islessequal, isgreater, isgreaterequal, islessgreater, isunordered,
    ldexp, lgamma, log, log10, log1p, log2, logb,
    modf, nearbyint, nextafter,
    pow, remainder, remquo, rint, lrint, llrint,
@@ -60,7 +61,7 @@
    conj, cproj, cimag, creal, drem,
    j0, j1, jn, y0, y1, yn,
    significand,
-   nan, comparison macros (isless,isgreater,...).
+   nan
 
    The routines using random variables are still under construction. I don't
    like it the way it's working now and will change it.
@@ -361,7 +362,7 @@ check_equal (MATHTYPE computed, MATHTYPE supplied, MATHTYPE eps, MATHTYPE * diff
   ret_value = (*diff <= eps &&
                (signbit (computed) == signbit (supplied) || eps != 0.0));
 
-  /* Make sure the subtraction/comparsion have no influence on the exceptions. */
+  /* Make sure the subtraction/comparison have no influence on the exceptions. */
   feclearexcept (FE_ALL_EXCEPT);
 
   return ret_value;
@@ -2458,6 +2459,7 @@ sqrt_test (void)
   x = random_value (0, 10000);
   check_ext ("sqrt (x*x) == x", FUNC(sqrt) (x*x), x, x);
   check ("sqrt (4) == 2", FUNC(sqrt) (4), 2);
+  check ("sqrt (2) == 1.14142...", FUNC(sqrt) (2), M_SQRT2l);
   check ("sqrt (0.25) == 0.5", FUNC(sqrt) (0.25), 0.5);
   check ("sqrt (6642.25) == 81.5", FUNC(sqrt) (6642.25), 81.5);
   check_eps ("sqrt (15239.903) == 123.45", FUNC(sqrt) (15239.903), 123.45,
@@ -5530,6 +5532,95 @@ fma_test (void)
 }
 
 
+/*
+  Tests for the comparison macros
+ */
+typedef enum {is_less, is_equal, is_greater, is_unordered} comp_result;
+
+
+static void
+comparison2_test (MATHTYPE x, MATHTYPE y, comp_result comp)
+{
+  char buf[255];
+  int result;
+  int expected;
+
+  expected = (comp == is_greater);
+  sprintf (buf, "isgreater (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (isgreater (x, y) == expected);
+  check_bool (buf, result);
+
+  expected = (comp == is_greater || comp == is_equal);
+  sprintf (buf, "isgreaterequal (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (isgreaterequal (x, y) == expected);
+  check_bool (buf, result);
+
+  expected = (comp == is_less);
+  sprintf (buf, "isless (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (isless (x, y) == expected);
+  check_bool (buf, result);
+
+  expected = (comp == is_less || comp == is_equal);
+  sprintf (buf, "islessequal (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (islessequal (x, y) == expected);
+  check_bool (buf, result);
+
+  expected = (comp == is_greater || comp == is_less);
+  sprintf (buf, "islessgreater (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (islessgreater (x, y) == expected);
+  check_bool (buf, result);
+
+  expected = (comp == is_unordered);
+  sprintf (buf, "isunordered (%" PRINTF_EXPR ", %" PRINTF_EXPR ") == %d", x, y,
+	   expected);
+  result = (isunordered (x, y) == expected);
+  check_bool (buf, result);
+
+}
+
+
+static void
+comparison1_test (MATHTYPE x, MATHTYPE y, comp_result comp)
+{
+  comp_result comp_swap;
+  switch (comp)
+    {
+    case is_less:
+      comp_swap = is_greater;
+      break;
+    case is_greater:
+      comp_swap = is_less;
+      break;
+    default:
+      comp_swap = comp;
+      break;
+    }
+  comparison2_test (x, y, comp);
+  comparison2_test (y, x, comp_swap);
+}
+
+
+static void
+comparisons_test (void)
+{
+  comparison1_test (1, 2, is_less);
+  comparison1_test (-30, 30, is_less);
+  comparison1_test (42, 42, is_equal);
+  comparison1_test (1, plus_infty, is_less);
+  comparison1_test (35, minus_infty, is_greater);
+  comparison1_test (1, nan_value, is_unordered);
+  comparison1_test (nan_value, nan_value, is_unordered);
+  comparison1_test (plus_infty, nan_value, is_unordered);
+  comparison1_test (minus_infty, nan_value, is_unordered);
+  comparison1_test (plus_infty, minus_infty, is_greater);
+}
+
+
 static void
 inverse_func_pair_test (const char *test_name,
 			mathfunc f1, mathfunc inverse,
@@ -5837,6 +5928,8 @@ main (int argc, char *argv[])
   isfinite_test ();
   isnormal_test ();
   signbit_test ();
+
+  comparisons_test ();
 
   /* trigonometric functions */
   acos_test ();

@@ -23,6 +23,7 @@ static const float
 #else
 static float
 #endif
+ln2 = 0.69314718055994530942,
 two25 =    3.355443200e+07,	/* 0x4c000000 */
 Lg1 = 6.6666668653e-01,	/* 3F2AAAAB */
 Lg2 = 4.0000000596e-01,	/* 3ECCCCCD */
@@ -69,7 +70,7 @@ static float zero   =  0.0;
 	if((0x007fffff&(15+ix))<16) {	/* |f| < 2**-20 */
 	    if(f==zero) return dk;
 	    R = f*f*((float)0.5-(float)0.33333333333333333*f);
-	    return dk-(R-f);
+	    return dk-(R-f)/ln2;
 	}
  	s = f/((float)2.0+f);
 	z = s*s;
@@ -82,9 +83,9 @@ static float zero   =  0.0;
 	R = t2+t1;
 	if(i>0) {
 	    hfsq=(float)0.5*f*f;
-	    return dk-((hfsq-(s*(hfsq+R)))-f);
+	    return dk-((hfsq-(s*(hfsq+R)))-f)/ln2;
 	} else {
-	    return dk-((s*(f-R))-f);
+	    return dk-((s*(f-R))-f)/ln2;
 	}
 }
 weak_alias (__log2f, log2f)

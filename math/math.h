@@ -354,10 +354,10 @@ extern int matherr __P ((struct exception *__exc));
 
 /* Return nonzero value if arguments are unordered.  */
 # ifndef isunordered
-#  define isunordered(x, y) \
+#  define isunordered(u, v) \
   (__extension__							      \
-   ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
-      fpclassify (__x) == FP_NAN || fpclassify (__y) == FP_NAN; }))
+   ({ __typeof__(u) __u = (u); __typeof__(v) __v = (v);			      \
+      fpclassify (__u) == FP_NAN || fpclassify (__v) == FP_NAN; }))
 # endif
 
 #endif

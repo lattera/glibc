@@ -1,5 +1,5 @@
 /* Install given floating-point environment.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -50,7 +50,7 @@ fesetenv (const fenv_t *envp)
     }
   else if (envp == FE_NOMASK_ENV)
     {
-      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDSZERO);
+      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
       temp.status_word &= ~FE_ALL_EXCEPT;
       temp.eip = 0;
       temp.cs_selector = 0;
@@ -60,9 +60,9 @@ fesetenv (const fenv_t *envp)
     }
   else
     {
-      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDSZERO);
+      temp.control_word &= ~(FE_ALL_EXCEPT | FE_TOWARDZERO);
       temp.control_word |= (envp->control_word
-			    & (FE_ALL_EXCEPT | FE_TOWARDSZERO));
+			    & (FE_ALL_EXCEPT | FE_TOWARDZERO));
       temp.status_word &= ~FE_ALL_EXCEPT;
       temp.status_word |= envp->status_word & FE_ALL_EXCEPT;
       temp.eip = envp->eip;
