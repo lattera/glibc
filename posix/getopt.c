@@ -256,10 +256,10 @@ static int last_nonopt;
 #ifdef USE_NONOPTION_FLAGS
 /* Defined in getopt_init.c  */
 extern char *__getopt_nonoption_flags;
-#endif
 
 static int nonoption_flags_max_len;
 static int nonoption_flags_len;
+#endif
 
 static int original_argc;
 static char *const *original_argv;
