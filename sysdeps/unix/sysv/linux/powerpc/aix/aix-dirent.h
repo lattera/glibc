@@ -1,19 +1,19 @@
-#include "linuxtypes.h"
+#include "aix-types.h"
 
-struct linuxdirent
+struct aixdirent
   {
-    __linux_ino_t d_ino;
-    __linux_off_t d_off;
+    aixino_t d_ino;
+    aixoff_t d_off;
     unsigned short int d_reclen;
-    unsigned char d_type;
+    unsigned short int d_namlen;
     char d_name[256];           /* We must not include limits.h! */
   };
 
-struct linuxdirent64
+struct aixdirent64
   {
-    __linux_ino64_t d_ino;
-    __linux_off64_t d_off;
+    aixino64_t d_ino;
+    aixoff64_t d_off;
     unsigned short int d_reclen;
-    unsigned char d_type;
+    unsigned short int d_namlen;
     char d_name[256];           /* We must not include limits.h! */
   };

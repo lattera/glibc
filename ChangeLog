@@ -1,3 +1,23 @@
+2000-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/aix/linux/errnoconv.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/aix/errnoconv.c: ...here.
+	* sysdeps/unix/sysv/aix/linux/statconv.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/aix/statconv.c: ...here.
+	* sysdeps/unix/sysv/aix/linux/direntconv.c: Moved to...
+	* sysdeps/unix/sysv/linux/powerpc/aix/direntconv.c: ...here.
+
+	* sysdeps/unix/sysv/aix/linux/linux-errno.h: Removed.
+	* sysdeps/unix/sysv/aix/linux/linux-stat.h: Removed
+	* sysdeps/unix/sysv/aix/linux/linux-dirent.h: Removed.
+
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-dirent.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-errno.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-stat.h: New file.
+	* sysdeps/unix/sysv/linux/powerpc/aix/aix-termios.h: New file.
+
+	* sysdeps/unix/sysv/linux/powerpc/aix/tcsetattr.c: New file.
+
 2000-05-05  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h: New file.
