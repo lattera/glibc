@@ -689,8 +689,11 @@ $(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
 	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		       : "$$conf"` != 0 || continue; \
 	    lib=`echo $$version | sed 's/=.*$$//'`; \
-	    number=`echo $$version | sed "s/^.*=//"`; \
-	    echo $$lib $$number $$setname; \
+	    if eval test -z "\$${versioned_$${lib}}"; then \
+	      eval versioned_$${lib}=yes; \
+	      number=`echo $$version | sed "s/^.*=//"`; \
+	      echo $$lib $$number $$setname; \
+	    fi; \
 	  done > $@T; exit 0
 	mv -f $@T $@
 $(common-objpfx)soversions.mk: $(common-objpfx)soversions.i
