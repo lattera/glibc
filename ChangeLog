@@ -1,3 +1,14 @@
+2004-04-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoi.c (_Qp_qtoi): Use %f31
+	for single precision register, add it to __asm clobbers [BZ #139].
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoui.c (_Qp_qtoui): Use %f31
+	for single precision register, add it to __asm clobbers.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtoux.c (_Qp_qtoux): Use fqtox
+	instead of fqtoi in QP_HANDLE_EXCEPTIONS.
+	* sysdeps/sparc/sparc64/soft-fp/qp_qtox.c (_Qp_qtox): Likewise.
+	Reported by M. H. VanLeeuwen <vanl@megsinet.net>.
+
 2004-04-23  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/register-dump.h: Use
