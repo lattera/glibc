@@ -27,8 +27,8 @@ dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
 tests := mallocbug tst-malloc tst-valloc tst-calloc
 
-distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memprof.h \
-	     memprof.sh memprofstat.c
+distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \
+	     memusage.sh memusagestat.c
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore
@@ -40,11 +40,11 @@ install-lib := libmcheck.a
 non-lib.a := libmcheck.a
 
 # Additional library.
-extra-libs = libmemprof
+extra-libs = libmemusage
 extra-libs-others = $(extra-libs)
 
-libmemprof-routines = memprof
-libmemprof-inhibit-o = $(filter-out .os,$(object-suffixes))
+libmemusage-routines = memusage
+libmemusage-inhibit-o = $(filter-out .os,$(object-suffixes))
 
 # These should be removed by `make clean'.
 extra-objs = mcheck-init.o libmcheck.a
@@ -68,17 +68,17 @@ address-width=18
 endif
 endif
 
-# If the gd library is available we build the `memprofstat' program.
+# If the gd library is available we build the `memusagestat' program.
 ifneq ($(LIBGD),no)
-install-bin += memprofstat memprof
+install-bin += memusagestat memusage
 endif
 
 # Another goal which can be used to override the configure decision.
-.PHONY: do-memprofstat
-do-memprofstat: $(objpfx)memprofstat
+.PHONY: do-memusagestat
+do-memusagestat: $(objpfx)memusagestat
 
-memprofstat-modules = memprofstat
-$(objpfx)memprofstat: $(memprofstat-modules:%=$(objpfx)%.o)
+memusagestat-modules = memusagestat
+$(objpfx)memusagestat: $(memusagestat-modules:%=$(objpfx)%.o)
 	$(LINK.o) -o $@ $^ $(libgd-LDFLAGS) -lgd -lpng -lz
 
 include ../Rules
@@ -100,7 +100,7 @@ $(objpfx)mtrace: mtrace.pl
 	    -e 's|@VERSION@|$(version)|' $^ > $@.new \
 	&& rm -f $@ && mv $@.new $@ && chmod +x $@
 
-$(objpfx)memprof: memprof.sh
+$(objpfx)memusage: memusage.sh
 	rm -f $@.new
 	sed -e 's|@BASH@|$(BASH)|' -e 's|@VERSION@|$(version)|' \
 	    -e 's|@LIBDIR@|$(libdir)|' -e 's|@BINDIR@|$(bindir)|' $^ > $@.new \
@@ -108,4 +108,4 @@ $(objpfx)memprof: memprof.sh
 
 
 # The implementation uses `dlsym'
-$(objpfx)libmemprof.so: $(common-objpfx)dlfcn/libdl.so
+$(objpfx)libmemusage.so: $(common-objpfx)dlfcn/libdl.so

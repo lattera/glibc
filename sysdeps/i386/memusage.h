@@ -19,4 +19,4 @@
 #define GETSP() ({ register uintptr_t stack_ptr asm ("esp"); stack_ptr; })
 #define GETTIME(low,high) asm ("rdtsc" : "=a" (low), "=d" (high))
 
-#include <sysdeps/generic/memprof.h>
+#include <sysdeps/generic/memusage.h>

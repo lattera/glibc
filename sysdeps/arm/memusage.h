@@ -18,4 +18,4 @@
 
 #define GETSP() ({ register uintptr_t stack_ptr asm ("sp"); stack_ptr; })
 
-#include <sysdeps/generic/memprof.h>
+#include <sysdeps/generic/memusage.h>
