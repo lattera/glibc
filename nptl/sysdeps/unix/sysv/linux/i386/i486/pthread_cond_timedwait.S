@@ -134,7 +134,6 @@ __pthread_cond_timedwait:
 	subl	16(%esp), %edx
 #else
 	/* Get the current time.  */
-	movl	%ebx, %edx
 	leal	12(%esp), %ebx
 	xorl	%ecx, %ecx
 	movl	$SYS_gettimeofday, %eax
