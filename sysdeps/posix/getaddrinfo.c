@@ -337,17 +337,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
   if (name != NULL)
     {
       at = __alloca (sizeof(struct gaih_addrtuple));
-      if (at == NULL)
-	return -EAI_MEMORY;
 
       at->family = 0;
       at->next = NULL;
 
-      if (at->family || !req->ai_family || (req->ai_family == AF_INET))
+      if (req->ai_family == 0 || req->ai_family == AF_INET)
 	if (inet_pton (AF_INET, name, at->addr) > 0)
 	  at->family = AF_INET;
 
-      if (!at->family && (!req->ai_family || (req->ai_family == AF_INET6)))
+      if (!at->family && (req->ai_family == 0 || req->ai_family == AF_INET6))
 	if (inet_pton (AF_INET6, name, at->addr) > 0)
 	  at->family = AF_INET6;
 
@@ -356,10 +354,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  struct hostent *h;
 	  struct gaih_addrtuple **pat = &at;
 
-	  if ((req->ai_family == AF_UNSPEC) || (req->ai_family == AF_INET6))
+	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	    gethosts (AF_INET6, struct in6_addr);
 
-	  if ((req->ai_family == AF_UNSPEC) || (req->ai_family == AF_INET))
+	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    gethosts (AF_INET, struct in_addr);
 	}
 
@@ -369,24 +367,30 @@ gaih_inet (const char *name, const struct gaih_service *service,
     }
   else
     {
-      at = __alloca (sizeof(struct gaih_addrtuple));
-      if (at == NULL)
-	return -EAI_MEMORY;
-
+      struct gaih_addrtuple *atr;
+      atr = at = __alloca (sizeof(struct gaih_addrtuple));
       memset (at, 0, sizeof(struct gaih_addrtuple));
 
-      at->next = __alloca (sizeof(struct gaih_addrtuple));
-      if (at->next == NULL)
-	return -EAI_MEMORY;
+      if (req->ai_family == 0)
+	{
+	  at->next = __alloca (sizeof(struct gaih_addrtuple));
+	  memset (at->next, 0, sizeof(struct gaih_addrtuple));
+	}
 
-      at->family = AF_INET6;
-      if ((req->ai_flags & AI_PASSIVE) == 0)
-	memcpy (at->addr, &in6addr_loopback, sizeof (struct in6_addr));
+      if (req->ai_family == 0 || req->ai_family == AF_INET6)
+	{
+	  at->family = AF_INET6;
+	  if ((req->ai_flags & AI_PASSIVE) == 0)
+	    memcpy (at->addr, &in6addr_loopback, sizeof (struct in6_addr));
+	  atr = at->next;
+	}
 
-      memset (at->next, 0, sizeof(struct gaih_addrtuple));
-      at->next->family = AF_INET;
-      if ((req->ai_flags & AI_PASSIVE) == 0)
-	*(uint32_t *) at->next->addr = htonl (INADDR_LOOPBACK);
+      if (req->ai_family == 0 || req->ai_family == AF_INET)
+	{
+	  atr->family = AF_INET;
+	  if ((req->ai_flags & AI_PASSIVE) == 0)
+	    *(uint32_t *) atr->addr = htonl (INADDR_LOOPBACK);
+	}
     }
 
   if (pai == NULL)
@@ -571,21 +575,22 @@ getaddrinfo (const char *name, const char *service,
 
   while (g->gaih)
     {
-      if ((hints->ai_family == g->family) || (hints->ai_family == AF_UNSPEC))
+      if (hints->ai_family == g->family || hints->ai_family == AF_UNSPEC)
 	{
 	  j++;
-	  if ((pg == NULL) || (pg->gaih != g->gaih))
+	  if (pg == NULL || pg->gaih != g->gaih)
 	    {
 	      pg = g;
-	      if ((i = g->gaih (name, pservice, hints, end)))
+	      i = g->gaih (name, pservice, hints, end);
+	      if (i != 0)
 		{
-		  if ((hints->ai_family == AF_UNSPEC) && (i & GAIH_OKIFUNSPEC))
+		  if (hints->ai_family == AF_UNSPEC && (i & GAIH_OKIFUNSPEC))
 		    continue;
 
 		  if (p)
 		    freeaddrinfo (p);
 
-		  return (i)?-(i & GAIH_EAI):EAI_NONAME;
+		  return -(i & GAIH_EAI);
 		}
 	      if (end)
 		while(*end) end = &((*end)->ai_next);

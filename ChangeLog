@@ -1,3 +1,8 @@
+1999-07-27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Only return information
+	for the hinted protocol.
+
 1999-07-26  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* time/Versions: Add POSIX.1b timer and clock functions to GLIBC_2.2.
@@ -9,7 +14,7 @@
 	* elf/dl-load.c (_dl_map_object): Likewise.
 	* elf/do-lookup.h (do_lookup*): Likewise.
 	* sysdeps/generic/bits/elfclass.h: Define Elf_Symndx as uint32_t.
-	* sysdeps/unix/sysv/linux/alpha/bits/elfclass.h: Define Elf_symndx
+	* sysdeps/unix/sysv/linux/alpha/bits/elfclass.h: Define Elf_Symndx
 	as uint64_t.
 	* elf/elf.h: Remove Elf32_Symndx and Elf64_Symndx.
 
