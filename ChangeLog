@@ -1,3 +1,8 @@
+2001-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ieee754/ldbl-128/s_atanl.c: New file.
+	Contributed by Stephen L Moshier <moshier@mediaone.net>.
+
 2001-04-13  Jes Sorensen  <jes@linuxcare.com>
 
 	* intl/tst-codeset.c: Include string.h to get prototype for strcmp().
