@@ -1,5 +1,19 @@
 2003-01-31  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/unix/sysv/linux/alpha/syscalls.list: Remove __GI_*
+	aliases, already added by make-syscalls.sh.
+	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/syscalls.list: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/unix/inet/syscalls.list: Likewise.
+	* sysdeps/unix/syscalls.list: Likewise.
+
+2003-01-31  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/m68k/Makefile (sysdep-CFLAGS): Don't define, not needed
 	any more.
 
