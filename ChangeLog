@@ -1,3 +1,10 @@
+2000-11-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (struct cmsghdr): Use
+	__flexarr.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (struct cmsghdr):
+	Likewise.
+
 2000-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/getusershell.c: Make strings in okshells array const.
