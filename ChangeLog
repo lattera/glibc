@@ -1,3 +1,8 @@
+2001-02-07  Andreas Jaeger  <aj@suse.de>
+
+	* manual/install.texi (Tools for Compilation): Fix typo.
+	Reported by Pavel Machek <pavel@bug.ucw.cz>.
+
 2001-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/strtod.c: Never stop prematurely reading digits before the
