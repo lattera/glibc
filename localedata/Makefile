@@ -36,7 +36,7 @@ repertoiremaps := $(filter-out $(addprefix repertoiremaps/, CVS RCS SCCS %~), \
 					   $(wildcard repertoiremaps/*))
 
 test-srcs := collate-test xfrm-test tst-fmon tst-rpmatch tst-trans \
-	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3
+	     tst-mbswcs1 tst-mbswcs2 tst-mbswcs3 tst-mbswcs4 tst-mbswcs5
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1 \
 	      hr_HR.ISO-8859-2 # once it is fixed: cs_CZ.ISO-8859-2
 test-input-data = $(addsuffix .in, $(basename $(test-input)))
@@ -92,7 +92,7 @@ do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-tst-fmon
 do-tst-trans: tst-trans.sh $(objpfx)tst-trans
 	$(SHELL) -e $< $(common-objpfx)
 do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
-	       $(objpfx)tst-mbswcs3
+	       $(objpfx)tst-mbswcs3 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5
 	$(SHELL) -e $< $(common-objpfx)
 endif
 endif

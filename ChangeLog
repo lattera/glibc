@@ -1,5 +1,11 @@
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* localedata/Makefile (test-srcs): Add tst-mbswcs4 and tst-mbswcs5.
+	(do-tst-mbswcs): Add tst-mbswcs4 and tst-mbswcs5 to dependencies.
+	* localedata/tst-mbswcs.sh: Run tst-mbswcs4 and tst-mbswcs5.
+	* localedata/tst-mbswcs4.c: New file.
+	* localedata/tst-mbswcs5.c: New file.
+
 	* wcsmbs/wcrtomb.c (__wcrtomb): Set end of buffer correctly if s
 	== NULL.  Little optimization.
 
