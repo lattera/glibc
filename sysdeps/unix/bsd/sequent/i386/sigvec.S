@@ -36,8 +36,8 @@ ENTRY (__sigvec)
 	pushl 16(%esp)		/* Push third arg: our third arg.  */
 	pushl 16(%esp)		/* Push second arg: our second arg.  */
 	pushl 16(%esp)		/* Push first arg: our first arg.  */
-	ARGS_4	 		/* Point the syscall at the arguments.  */
+	mov %esp, %ecx 		/* Point the syscall at the arguments.  */
+	addl $16, %esp		/* Pop those four args.  */
 	DO_CALL (sigvec, 4)	/* Do the system call.  */
-	addl %esp, $16		/* Pop those four args.  */
 	jb syscall_error	/* Check for error.  */
 	ret
