@@ -1,5 +1,5 @@
 /* Definitions for POSIX memory map interface.  Linux/Alpha version.
-   Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,11 +60,13 @@
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	  0x1000	/* Stack-like segment.  */
-# define MAP_DENYWRITE	  0x2000	/* ETXTBSY */
-# define MAP_EXECUTABLE	  0x4000	/* Mark it as an executable.  */
-# define MAP_LOCKED	  0x8000	/* Lock the mapping.  */
+# define MAP_GROWSDOWN	  0x01000	/* Stack-like segment.  */
+# define MAP_DENYWRITE	  0x02000	/* ETXTBSY */
+# define MAP_EXECUTABLE	  0x04000	/* Mark it as an executable.  */
+# define MAP_LOCKED	  0x08000	/* Lock the mapping.  */
 # define MAP_NORESERVE	  0x10000	/* Don't check for reservations.  */
+# define MAP_POPULATE	  0x20000	/* Populate (prefault) pagetables.  */
+# define MAP_NONBLOCK	  0x40000	/* Do not block on IO.  */
 #endif
 
 /* Flags to `msync'.  */

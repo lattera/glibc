@@ -52,11 +52,13 @@
 
 /* These are Linux-specific.  */
 #ifdef __USE_MISC
-# define MAP_GROWSDOWN	0x0100		/* Stack-like segment.  */
-# define MAP_DENYWRITE	0x0800		/* ETXTBSY */
-# define MAP_EXECUTABLE	0x1000		/* Mark it as an executable.  */
-# define MAP_LOCKED	0x2000		/* Lock the mapping.  */
-# define MAP_NORESERVE	0x4000		/* Don't check for reservations.  */
+# define MAP_GROWSDOWN	0x00100		/* Stack-like segment.  */
+# define MAP_DENYWRITE	0x00800		/* ETXTBSY */
+# define MAP_EXECUTABLE	0x01000		/* Mark it as an executable.  */
+# define MAP_LOCKED	0x02000		/* Lock the mapping.  */
+# define MAP_NORESERVE	0x04000		/* Don't check for reservations.  */
+# define MAP_POPULATE	0x08000		/* Populate (prefault) pagetables.  */
+# define MAP_NONBLOCK	0x10000		/* Do not block on IO.  */
 #endif
 
 /* Flags to `msync'.  */
