@@ -1,3 +1,11 @@
+2005-03-29  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/dl-osinfo.h (_dl_discover_osversion): New
+	function, inline broken out of ...
+	(DL_SYSDEP_OSCHECK): ... here.  Use that.
+	Do the discovery and set GLRO(dl_osversion) if successful,
+	if __LINUX_KERNEL_VERSION <= 0.
+
 2005-03-29  Alfred M. Szmidt  <ams@gnu.org>
 
 	* manual/install.texi (Tools for Compilation): GNU binutils 2.15

@@ -1,5 +1,5 @@
-/* Operating system specific code  for generic dynamic loader functions.
-   Copyright (C) 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
+/* Operating system specific code for generic dynamic loader functions.  Linux.
+   Copyright (C) 2000,2001,2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,7 @@
 #include <sys/sysctl.h>
 #include <sys/utsname.h>
 #include "kernel-features.h"
+#include <dl-sysdep.h>
 
 #ifndef MIN
 # define MIN(a,b) (((a)<(b))?(a):(b))
@@ -39,71 +40,79 @@ dl_fatal (const char *str)
 }
 #endif
 
+static inline int __attribute__ ((always_inline))
+_dl_discover_osversion (void)
+{
+  char bufmem[64];
+  char *buf = bufmem;
+  unsigned int version;
+  int parts;
+  char *cp;
+  struct utsname uts;
 
-#define DL_SYSDEP_OSCHECK(FATAL) \
+  /* Try the uname system call.  */
+  if (__uname (&uts))
+    {
+      /* This was not successful.  Now try reading the /proc filesystem.  */
+      int fd = __open ("/proc/sys/kernel/osrelease", O_RDONLY);
+      if (fd < 0)
+	return -1;
+      ssize_t reslen = __read (fd, bufmem, sizeof (bufmem));
+      __close (fd);
+      if (reslen <= 0)
+	/* This also didn't work.  We give up since we cannot
+	   make sure the library can actually work.  */
+	return -1;
+      buf[MIN (reslen, (ssize_t) sizeof (bufmem) - 1)] = '\0';
+    }
+  else
+    buf = uts.release;
+
+  /* Now convert it into a number.  The string consists of at most
+     three parts.  */
+  version = 0;
+  parts = 0;
+  cp = buf;
+  while ((*cp >= '0') && (*cp <= '9'))
+    {
+      unsigned int here = *cp++ - '0';
+
+      while ((*cp >= '0') && (*cp <= '9'))
+	{
+	  here *= 10;
+	  here += *cp++ - '0';
+	}
+
+      ++parts;
+      version <<= 8;
+      version |= here;
+
+      if (*cp++ != '.')
+	/* Another part following?  */
+	break;
+    }
+
+  if (parts < 3)
+    version <<= 8 * (3 - parts);
+
+  return version;
+}
+
+#define DL_SYSDEP_OSCHECK(FATAL)					      \
   do {									      \
-    /* Test whether the kernel is new enough.  This test is only	      \
-       performed if the library is not compiled to run on all		      \
-       kernels.  */							      \
-    if (__LINUX_KERNEL_VERSION > 0)					      \
+    /* Test whether the kernel is new enough.  This test is only performed    \
+       if the library is not compiled to run on all kernels.  */	      \
+									      \
+    int version = _dl_discover_osversion ();				      \
+    if (__builtin_expect (version >= 0, 1))				      \
       {									      \
-	char bufmem[64];						      \
-	char *buf = bufmem;						      \
-	unsigned int version;						      \
-	int parts;							      \
-	char *cp;							      \
-	struct utsname uts;						      \
-									      \
-	/* Try the uname syscall */					      \
-	if (__uname (&uts))					      	      \
-	  {							      	      \
-	    /* This was not successful.  Now try reading the /proc	      \
-	       filesystem.  */						      \
-	    ssize_t reslen;						      \
-	    int fd = __open ("/proc/sys/kernel/osrelease", O_RDONLY);	      \
-	    if (fd == -1						      \
-		|| (reslen = __read (fd, bufmem, sizeof (bufmem))) <= 0)      \
-  	      /* This also didn't work.  We give up since we cannot	      \
-		 make sure the library can actually work.  */		      \
-	      FATAL ("FATAL: cannot determine kernel version\n");	      \
-	    __close (fd);						      \
-	    buf[MIN (reslen, (ssize_t) sizeof (bufmem) - 1)] = '\0';	      \
-	  }								      \
-	else								      \
-          buf = uts.release;						      \
-									      \
-	/* Now convert it into a number.  The string consists of at most      \
-	   three parts.  */						      \
-	version = 0;							      \
-	parts = 0;							      \
-	cp = buf;							      \
-	while ((*cp >= '0') && (*cp <= '9'))				      \
-	  {								      \
-	    unsigned int here = *cp++ - '0';				      \
-									      \
-	    while ((*cp >= '0') && (*cp <= '9'))			      \
-	      {								      \
-		here *= 10;						      \
-		here += *cp++ - '0';					      \
-	      }								      \
-									      \
-	    ++parts;							      \
-	    version <<= 8;						      \
-	    version |= here;						      \
-									      \
-	    if (*cp++ != '.')						      \
-	      /* Another part following?  */				      \
-	      break;							      \
-	  }								      \
-									      \
-	if (parts < 3)							      \
-	  version <<= 8 * (3 - parts);					      \
+	GLRO(dl_osversion) = version;					      \
 									      \
 	/* Now we can test with the required version.  */		      \
-	if (version < __LINUX_KERNEL_VERSION)				      \
+	if (__LINUX_KERNEL_VERSION > 0 && version < __LINUX_KERNEL_VERSION)   \
 	  /* Not sufficent.  */						      \
 	  FATAL ("FATAL: kernel too old\n");				      \
-									      \
-	GLRO(dl_osversion) = version;					      \
       }									      \
+    else if (__LINUX_KERNEL_VERSION > 0)				      \
+      FATAL ("FATAL: cannot determine kernel version\n");		      \
   } while (0)
