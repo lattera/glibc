@@ -1,3 +1,8 @@
+Mon Jul  8 13:10:50 1996  Michael I. Bushnell p/BSG  <mib@psilocin.gnu.ai.mit.edu>
+
+	* string/argz-delete.c (argz_delete): Use memmove instead of
+ 	memcpy for possbly overlapping strings.
+
 Mon Jul  8 02:14:25 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* libc-symbols.h [GCC >= 2.7] (strong_alias, weak_alias): Use extern
