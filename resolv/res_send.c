@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- * 
+ *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -100,7 +100,7 @@ static const char rcsid[] = "$BINDId: res_send.c,v 8.38 2000/03/30 20:16:51 vixi
 #else
 
 /* From ev_streams.c.  */
-   
+
 static inline struct iovec
 evConsIovec(void *buf, size_t cnt) {
 	struct iovec ret;
@@ -238,21 +238,22 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in6 *inp)
 res_ourserver_p(const res_state statp, const struct sockaddr_in *inp)
 #endif
 {
-	struct sockaddr_in ina;
 	int ns;
 
 #ifdef _LIBC
         if (inp->sin6_family == AF_INET) {
-            ina = *(struct sockaddr_in *)inp;
+            struct sockaddr_in *in4p = (struct sockaddr_in *) inp;
+	    in_port_t port = in4p->sin_port;
+	    in_addr_t addr = in4p->sin_addr.s_addr;
 
             for (ns = 0;  ns < MAXNS;  ns++) {
                 const struct sockaddr_in *srv =
 		    (struct sockaddr_in *)EXT(statp).nsaddrs[ns];
 
                 if ((srv != NULL) && (srv->sin_family == AF_INET) &&
-                    (srv->sin_port == ina.sin_port) &&
+                    (srv->sin_port == port) &&
                     (srv->sin_addr.s_addr == INADDR_ANY ||
-                     srv->sin_addr.s_addr == ina.sin_addr.s_addr))
+                     srv->sin_addr.s_addr == addr))
                     return (1);
             }
         } else if (inp->sin6_family == AF_INET6) {
@@ -268,7 +269,7 @@ res_ourserver_p(const res_state statp, const struct sockaddr_in *inp)
             }
         }
 #else
-	ina = *inp;
+	struct sockaddr_in ina = *inp;
 	for (ns = 0; ns < statp->nscount; ns++) {
 		const struct sockaddr_in *srv = &statp->nsaddr_list[ns];
 
@@ -425,7 +426,7 @@ res_nsend(res_state statp,
 #endif
 		for (ns = 0; ns < statp->nscount; ns++) {
 #ifdef _LIBC
-			/* find a hole */  
+			/* find a hole */
 		  	while ((n < MAXNS) &&
 			    (EXT(statp).nsaddrs[n] != NULL) &&
 			    (EXT(statp).nsaddrs[n]->sin6_family == AF_INET6) &&
@@ -1127,14 +1128,16 @@ sock_eq(struct sockaddr_in *a1, struct sockaddr_in *a2) {
 static void
 convaddr4to6(struct sockaddr_in6 *sa)
 {
-    const struct sockaddr_in sa4 = *(struct sockaddr_in *)sa;
+    struct sockaddr_in *sa4p = (struct sockaddr_in *) sa;
+    in_port_t port = sa4p->sin_port;
+    in_addr_t addr = sa4p->sin_addr.s_addr;
 
     sa->sin6_family = AF_INET6;
-    sa->sin6_port = sa4.sin_port;
+    sa->sin6_port = port;
     sa->sin6_addr.s6_addr32[0] = 0;
     sa->sin6_addr.s6_addr32[1] = 0;
     sa->sin6_addr.s6_addr32[2] = htonl(0xFFFF);
-    sa->sin6_addr.s6_addr32[3] = sa4.sin_addr.s_addr;
+    sa->sin6_addr.s6_addr32[3] = addr;
 }
 #endif
 
