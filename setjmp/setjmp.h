@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,13 +34,22 @@ __BEGIN_DECLS
 typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
   {
     /* NOTE: The machine-dependent definitions of `__sigsetjmp'
-       assume that a `jmp_buf' begins with a `__jmp_buf'.
-       Do not move this member or add others before it.  */
+       assume that a `jmp_buf' begins with a `__jmp_buf' and that
+       `__mask_was_saved' follows it.  Do not move these members
+       or add others before it.  */
     __jmp_buf __jmpbuf;		/* Calling environment.  */
     int __mask_was_saved;	/* Saved the signal mask?  */
     __sigset_t __saved_mask;	/* Saved signal mask.  */
   } jmp_buf[1];
 
+
+/* Store the calling environment in ENV, also saving the signal mask.
+   Return 0.  */
+extern int setjmp (jmp_buf __env) __THROW;
+
+/* Store the calling environment in ENV, not saving the signal mask.
+   Return 0.  */
+extern int _setjmp (jmp_buf __env) __THROW;
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.
@@ -48,21 +57,15 @@ typedef struct __jmp_buf_tag	/* C++ doesn't like tagless structs.  */
 extern int __sigsetjmp (jmp_buf __env, int __savemask) __THROW;
 
 #ifndef	__FAVOR_BSD
-/* Set ENV to the current position and return 0, not saving the signal mask.
-   This is just like `sigsetjmp (ENV, 0)'.
-   The ISO C standard says `setjmp' is a macro.  */
-# define setjmp(env)	__sigsetjmp ((env), 0)
+/* Do not save the signal mask.  This is equivalent to the `_setjmp'
+   BSD function.  */
+# define setjmp(env)	_setjmp (env)
 #else
 /* We are in 4.3 BSD-compatibility mode in which `setjmp'
-   saves the signal mask like `sigsetjmp (ENV, 1)'.  */
-# define setjmp(env)	__sigsetjmp ((env), 1)
+   saves the signal mask like `sigsetjmp (ENV, 1)'.  We have to
+   define a macro since ISO C says `setjmp' is one.  */
+# define setjmp(env)	setjmp (env)
 #endif /* Favor BSD.  */
-
-#if defined __USE_BSD || defined __USE_XOPEN
-/* Set ENV to the current position and return 0, not saving the signal mask.
-   This is the 4.3 BSD name for ISO `setjmp'.  */
-# define _setjmp(env)	__sigsetjmp ((env), 0)
-#endif
 
 
 /* Jump to the environment saved in ENV, making the
@@ -86,7 +89,7 @@ typedef jmp_buf sigjmp_buf;
 
 /* Store the calling environment in ENV, also saving the
    signal mask if SAVEMASK is nonzero.  Return 0.  */
-# define sigsetjmp(env, savemask)	__sigsetjmp ((env), (savemask))
+# define sigsetjmp(env, savemask)	__sigsetjmp (env, savemask)
 
 /* Jump to the environment saved in ENV, making the
    sigsetjmp call there return VAL, or 1 if VAL is 0.

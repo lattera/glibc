@@ -35,18 +35,21 @@
 ENTRY (BP_SYM (_setjmp))
 	ENTER
 
-	movl JMPBUF(%esp), %eax
-	CHECK_BOUNDS_BOTH_WIDE (%eax, JMPBUF(%esp), $JB_SIZE)
+	xorl %eax, %eax
+	movl JMPBUF(%esp), %edx
+	CHECK_BOUNDS_BOTH_WIDE (%edx, JMPBUF(%esp), $(JB_SIZE+4))
 
      	/* Save registers.  */
-	movl %ebx, (JB_BX*4)(%eax)
-	movl %esi, (JB_SI*4)(%eax)
-	movl %edi, (JB_DI*4)(%eax)
+	movl %ebx, (JB_BX*4)(%edx)
+	movl %esi, (JB_SI*4)(%edx)
+	movl %edi, (JB_DI*4)(%edx)
 	leal JMPBUF(%esp), %ecx	/* Save SP as it will be after we return.  */
-     	movl %ecx, (JB_SP*4)(%eax)
+     	movl %ecx, (JB_SP*4)(%edx)
 	movl PCOFF(%esp), %ecx	/* Save PC we are returning to now.  */
-     	movl %ecx, (JB_PC*4)(%eax)
+     	movl %ecx, (JB_PC*4)(%edx)
 	LEAVE
-	movl %ebp, (JB_BP*4)(%eax) /* Save caller's frame pointer.  */
+	movl %ebp, (JB_BP*4)(%edx) /* Save caller's frame pointer.  */
+
+	movl %eax, JB_SIZE(%edx) /* No signal mask set.  */
 	ret
 END (BP_SYM (_setjmp))

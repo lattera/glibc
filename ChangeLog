@@ -1,5 +1,7 @@
 2001-01-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* setjmp/setjmp.h: Cleanup definition of setjmp macro.
+
 	* sysdeps/i386/elf/bsd-setjmp.S: Real implementation.
 	* sysdeps/i386/elf/bsd-_setjmp.S: Removed.
 	* sysdeps/i386/elf/setjmp.S (setjmp): Removed here.
