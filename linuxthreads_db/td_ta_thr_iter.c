@@ -37,10 +37,6 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
     {
       struct pthread_handle_struct phc;
 
-      if (cnt == 1)
-	/* Skip the manager thread.  */
-	continue;
-
       if (ps_pdread (ta->ph, handles, &phc,
 		     sizeof (struct pthread_handle_struct)) != PS_OK)
 	return TD_ERR;	/* XXX Other error value?  */

@@ -1,3 +1,9 @@
+1999-10-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_thr_get_info.c: Initialize ti_type field.
+
+	* td_ta_thr_iter.c: Also report the manager thread.
+
 1999-10-08  Andreas Jaeger  <aj@suse.de>
 
 	* thread_db.h: Fix typos in comments.

@@ -1116,7 +1116,7 @@ The glibc-compat add-on will provide the libcompat.a library, the older
 nss modules, and a few other files.  Together, they should make it
 possible to do development with old static libraries on a glibc 2.1
 system.  This add-on is still in development.  You can get it from
-	<ftp://alpha.gnu.org/gnu/glibc-compat-2.1.tar.gz>
+	<ftp://alpha.gnu.org/gnu/glibc/glibc-compat-2.1.tar.gz>
 but please keep in mind that it is experimental.
 
 

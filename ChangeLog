@@ -1,3 +1,8 @@
+1999-10-11  Cristian Gafton  <gafton@redhat.com> 
+ 
+        * sysdeps/unix/sysv/linux/alpha/bits/sigaction.h: Declare
+	SA_SIGINFO.
+ 
 1999-10-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/atexit.c (initial): New variable.  Use to initialize

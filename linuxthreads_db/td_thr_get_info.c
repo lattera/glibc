@@ -43,6 +43,10 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
   infop->ti_tid = pds.p_tid;
   infop->ti_tls = (char *) pds.p_specific;
   infop->ti_pri = pds.p_priority;
+  /* The first thread (0 being the initial one) is the manager thread
+     Mark it appropriately.  */
+  infop->ti_type = ((pds.p_tid % th->th_ta_p->pthread_threads_max) == 1
+		    ? TD_THR_SYSTEM : TD_THR_USER);
 
   /* We can get the following information only if the thread descriptor
      in the target processor is large enough, i.e., comes from a recent
