@@ -58,14 +58,15 @@ __BEGIN_DECLS
 /*
  * Unix style credentials.
  */
-struct authunix_parms {
-	u_long	 aup_time;
-	char	*aup_machname;
-	int	 aup_uid;
-	int	 aup_gid;
-	u_int	 aup_len;
-	int	*aup_gids;
-};
+struct authunix_parms
+  {
+    u_long aup_time;
+    char *aup_machname;
+    __uid_t aup_uid;
+    __gid_t aup_gid;
+    u_int aup_len;
+    __gid_t *aup_gids;
+  };
 
 extern bool_t xdr_authunix_parms __P ((XDR *__xdrs,
 				       struct authunix_parms *__p));
@@ -75,9 +76,10 @@ extern bool_t xdr_authunix_parms __P ((XDR *__xdrs,
  * then the body of the response verifier encapsulates the following structure;
  * again it is serialized in the obvious fashion.
  */
-struct short_hand_verf {
-	struct opaque_auth new_cred;
-};
+struct short_hand_verf
+  {
+    struct opaque_auth new_cred;
+  };
 
 __END_DECLS
 

@@ -1,5 +1,5 @@
 /*
-Copyright (C) 1993, 1995 Free Software Foundation
+Copyright (C) 1993, 1995, 1996 Free Software Foundation, Inc.
 
 This file is part of the GNU IO Library.  This library is free
 software; you can redistribute it and/or modify it under the
@@ -28,28 +28,10 @@ the executable file might be covered by the GNU General Public License. */
 #endif
 
 int
-_IO_fclose (fp)
-     register _IO_FILE *fp;
+__fcloseall ()
 {
-  int status;
-
-  CHECK_FILE(fp, EOF);
-
-  _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
-  _IO_flockfile (fp);
-  if (fp->_IO_file_flags & _IO_IS_FILEBUF)
-    status = _IO_file_close_it (fp);
-  else
-    status = fp->_flags & _IO_ERR_SEEN ? -1 : 0;
-  _IO_FINISH (fp);
-  _IO_cleanup_region_end (1);
-  if (fp != _IO_stdin && fp != _IO_stdout && fp != _IO_stderr)
-    {
-      fp->_IO_file_flags = 0;
-      free(fp);
-    }
-
-  return status;
+  /* Close all streams.  */
+  _IO_cleanup ();
+  return 0;
 }
-
-weak_alias (_IO_fclose, fclose)
+weak_alias (__fcloseall, fcloseall)

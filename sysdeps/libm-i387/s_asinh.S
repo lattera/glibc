@@ -101,7 +101,7 @@ ENTRY(__asinh)
 	fchs				// x
 4:	fld	%st			// x : x
 	faddl	MO(huge)		// huge+x : x
-	fincstp				// x
+	fstp	%st(0)			// x
 	ret
 
 	// |x| > 2^28 => y = sign(x) * (log(|x|) + log(2))

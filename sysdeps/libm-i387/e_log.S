@@ -53,7 +53,7 @@ ENTRY(__ieee754_log)
 	fyl2xp1			// log(x)
 	ret
 
-2:	fincstp			// x : log(2)
+2:	fstp	%st(0)		// x : log(2)
 	fyl2x			// log(x)
 	ret
 END (__ieee754_log)

@@ -14,13 +14,13 @@
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_powf.c,v 1.6 1995/05/12 04:57:35 jtc Exp $";
+static char rcsid[] = "$NetBSD: e_powf.c,v 1.7 1996/04/08 15:43:44 phil Exp $";
 #endif
 
 #include "math.h"
 #include "math_private.h"
 
-static const volatile float huge = 1.0e+30, tiny = 1.0e-30;
+static const float huge = 1.0e+30, tiny = 1.0e-30;
 
 #ifdef __STDC__
 static const float

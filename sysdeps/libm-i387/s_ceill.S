@@ -9,27 +9,25 @@
 RCSID("$NetBSD: $")
 
 ENTRY(__ceill)
-	pushl	%ebp
-	movl	%esp,%ebp
+	fldt	4(%esp)
 	subl	$8,%esp
 
-	fstcw	-4(%ebp)		/* store fpu control word */
+	fstcw	4(%esp)			/* store fpu control word */
 
 	/* We use here %edx although only the low 1 bits are defined.
 	   But none of the operations should care and they are faster
 	   than the 16 bit operations.  */
-	movl	-4(%ebp),%edx
-	orl	$0x0800,%edx		/* round towards +oo */
+	movl	$0x0800,%edx		/* round towards +oo */
+	orl	4(%esp),%edx
 	andl	$0xfbff,%edx
-	movl	%edx,-8(%ebp)
-	fldcw	-8(%ebp)		/* load modified control word */
+	movl	%edx,(%esp)
+	fldcw	(%esp)			/* load modified control word */
 
-	fldt	8(%ebp);		/* round */
-	frndint
+	frndint				/* round */
 
-	fldcw	-4(%ebp)		/* restore original control word */
+	fldcw	4(%esp)			/* restore original control word */
 
-	leave
+	addl	$8,%esp
 	ret
 END (__ceill)
 weak_alias (__ceill, ceill)

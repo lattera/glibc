@@ -8,19 +8,19 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_expf.c,v 1.5 1995/05/10 20:45:05 jtc Exp $";
+static char rcsid[] = "$NetBSD: e_expf.c,v 1.6 1996/04/08 15:43:43 phil Exp $";
 #endif
 
 #include "math.h"
 #include "math_private.h"
 
-static const volatile float huge = 1.0e+30;
+static const float huge = 1.0e+30;
 
 #ifdef __STDC__
 static const float
@@ -69,7 +69,7 @@ P5   =  4.1381369442e-08; /* 0x3331bb4c */
 	}
 
     /* argument reduction */
-	if(hx > 0x3eb17218) {		/* if  |x| > 0.5 ln2 */ 
+	if(hx > 0x3eb17218) {		/* if  |x| > 0.5 ln2 */
 	    if(hx < 0x3F851592) {	/* and |x| < 1.5 ln2 */
 		hi = x-ln2HI[xsb]; lo=ln2LO[xsb]; k = 1-xsb-xsb;
 	    } else {
@@ -79,7 +79,7 @@ P5   =  4.1381369442e-08; /* 0x3331bb4c */
 		lo = t*ln2LO[0];
 	    }
 	    x  = hi - lo;
-	} 
+	}
 	else if(hx < 0x31800000)  {	/* when |x|<2**-28 */
 	    if(huge+x>one) return one+x;/* trigger inexact */
 	}
@@ -88,7 +88,7 @@ P5   =  4.1381369442e-08; /* 0x3331bb4c */
     /* x is now in primary range */
 	t  = x*x;
 	c  = x - t*(P1+t*(P2+t*(P3+t*(P4+t*P5))));
-	if(k==0) 	return one-((x*c)/(c-(float)2.0)-x); 
+	if(k==0) 	return one-((x*c)/(c-(float)2.0)-x);
 	else 		y = one-((lo-(x*c)/((float)2.0-c))-hi);
 	if(k >= -125) {
 	    u_int32_t hy;

@@ -166,6 +166,9 @@ extern int __vsscanf __P ((__const char *, __const char *, _G_va_list));
 #endif
 
 #ifdef __USE_GNU
+extern int __fcloseall __P ((void));
+extern int fcloseall __P ((void));
+
 struct obstack;
 extern int obstack_vprintf __P ((struct obstack *__obstack,
 				 __const char *__fmt, _G_va_list));

@@ -1,3 +1,147 @@
+Wed Jan  1 15:15:00 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/Makefile (routines): Add fcloseall.
+	* libio/fcloseall.c: New file.
+	* libio/stdio.h [__USE_GNU]: Add prototype for fcloseall.
+	* libio/iofclose.c: Don't close all streams when argument is NULL.
+
+	* stdio/Makefile (routines): Add fcloseall.
+	* stdio/fcloseall.c: New file.
+	* stdio/stdio.h [__USE_GNU]: Add prototype for fcloseall.
+	* stdio/fclose.c: Don't close all streams when argument is NULL.
+
+	* manual/stdio.texi: Document fcloseall.
+
+	* sysdeps/generic/abort.c: Call __fcloseall instead of fclose with
+	NULL argument.
+
+	* socket/sys/un.h (SUN_LEN): Add cast.
+
+	* sunrpc/auth_unix.c (authunix_create): Change parameter types
+	of uid, gid, and aup_gids to uid_t and gid_t respectively.
+	(authunix_create_default): Likewise.
+	(authunix_refresh): Correct cast for aup_gids assignment.
+	* sunrpc/rpc/auth.h (authunix_create): Correct types in declaration.
+	* sunrpc/rpc/auth_unix.h (struct authunix_parms): Correct field
+	types to uid_t and gid_t respectively.
+	(struct short_hand_verf): Likewise.
+	Reported by Andreas Schwab.
+
+	* sysdeps/ieee754/Makefile: New file.  Make sure ieee754.h gets
+	installed.
+	* sysdeps/ieee754/ieee754.h: Protect against multiple inclusion and
+	use in C++ programs.
+
+	* sysdeps/libm-i387/e_pow.S: New file.  Optimized ix87 assembler
+	version of pow() function.
+	* sysdeps/libm-i387/e_powf.S: New file.  Float version.
+	* sysdeps/libm-i387/e_powl.S: New file.  Long double version.
+
+	* sysdeps/libm-i387/s_expm1.S: New file.  Optimized ix87 assembler
+	version of expm1() function.
+	* sysdeps/libm-i387/s_expm1f.S: New file.  Float version.
+	* sysdeps/libm-i387/s_expm1l.S: New file.  Long double version.
+
+	* sysdeps/libm-i387/e_exp.S: Optimize handling of +-Inf.
+	Better handling of computation stack from current NetBSD sources.
+	* sysdeps/libm-i387/e_expf.S: Likewise.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+
+	* sysdeps/libm-i387/e_log.S: Use fstp instead of fincstp.
+	* sysdeps/libm-i387/e_logf.S: Likewise.
+	* sysdeps/libm-i387/e_logl.S: Likewise.
+	* sysdeps/libm-i387/e_log10.S: Likewise.
+	* sysdeps/libm-i387/e_log10f.S: Likewise.
+	* sysdeps/libm-i387/e_log10l.S: Likewise.
+	* sysdeps/libm-i387/s_asinh.S: Likewise.
+	* sysdeps/libm-i387/s_asinhf.S: Likewise.
+	* sysdeps/libm-i387/s_asinhl.S: Likewise.
+	* sysdeps/libm-i387/s_significandl.S: Likewise.
+
+	* sysdeps/libm-i387/s_ceil.S: Don't create stack frame.  Modify
+	stack pointer directly.  Use 32 bit instead of 16 bit operations.
+	* sysdeps/libm-i387/s_ceilf.S: Likewise.
+	* sysdeps/libm-i387/s_ceill.S: Likewise.
+	* sysdeps/libm-i387/s_floor.S: Likewise.
+	* sysdeps/libm-i387/s_floorf.S: Likewise.
+	* sysdeps/libm-i387/s_floorl.S: Likewise.
+
+	* sysdeps/libm-ieee754/e_coshf.c (huge): Don't declare volatile.
+	* sysdeps/libm-ieee754/e_expf.c: Likewise.
+	* sysdeps/libm-ieee754/e_powf.c: Likewise.
+	From current NetBSD sources.
+
+	* sysdeps/libm-ieee754/e_hypot.c (__ieee754_hypot): Don't initialize
+	`a' and `b' in definition.
+	* sysdeps/libm-ieee754/e_hypotf.c: Likewise.
+
+	* sysdeps/libm-ieee754/e_hypotl.c: New file.  Long double
+	implementation.
+	* sysdeps/libm-ieee754/e_sinhl.c: New file.  Long double
+	implementation.
+	* sysdeps/stub/e_hypotl.c: Removed.  We have a real version now.
+	* sysdeps/stub/e_sinhl.c: Removed.
+
+	* sysdeps/posix/sigpause.c (__sigpause): Use sigdelset instead of
+	sigaddset.  Reported by Andreas Schwab.
+	(__default_sigpause): New function.  Call __sigpause as BSD version.
+	Make this the default function by providing alias sigpause.
+	* sysdeps/stub/sigpause.c (__default_sigpause): New funciton.
+	Simply fail.  Provide alias sigpause.
+
+Wed Jan  1 12:34:54 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* po/es.po: Update for glibc-1.98.
+	* po/fr.po: Likewise.
+	* po/sv.po: New file.  Swedish translation.
+
+Wed Jan  1 12:18:07 1997   MacGyver  <macgyver@tos.net>
+
+	* values.h: Fix typos: use SHRT_MAX but SHORT_MAX and SHRT_MIN but
+	SHORT_MIN.
+
+Tue Dec 24 23:10:21 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile: Replace `stubs.h' by `gnu/stubs.h'.
+	* features.h: Include <gnu/stubs.h> instead of <stubs.h>.
+
+Tue Dec 24 22:16:55 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (subdirs): Move `elf' last so that librtld.so isn't
+	relinked in the `make others' pass if an add-on adds something to
+	libc.
+
+Mon Dec 23 21:23:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/abort-instr.h: New File.
+
+Mon Dec 23 21:16:38 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/Makefile ($(subdir)=elf): Define CFLAGS-rtld.c
+	to prevent warning.
+
+Mon Dec 23 21:14:22 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* resolv/Makefile (subdirs-dirs): Define.
+
+Mon Dec 23 20:56:49 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/gnu/utmpbits.h (struct utmp): Fix padding.
+
+Mon Dec 30 11:05:11 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Update from ADO tzcode1996o.
+	* time/difftime.c: De-ANSI-declfy.  Simplify computation of hibit
+	according to ADO version.
+	* time/zic.c: Correct typo is message.
+
+	Update from ADO tzdata1996n.
+	* time/asia: Updated.
+	* time/australasia: Likewise.
+	* time/europe: Likewise.
+	* time/northamerica: Likewise.
+	* time/southamerica: Likewise.
+
 Mon Dec 30 01:32:59 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* tme/localtime.c: Rewrite so that localtime_r does not call tzset,

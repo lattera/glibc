@@ -324,10 +324,16 @@ extern char *tempnam __P ((__const char *__dir, __const char *__pfx));
 extern int __flshfp __P ((FILE *__stream, int __c));
 
 
-/* Close STREAM, or all streams if STREAM is NULL.  */
+/* Close STREAM.  */
 extern int fclose __P ((FILE *__stream));
 /* Flush STREAM, or all streams if STREAM is NULL.  */
 extern int fflush __P ((FILE *__stream));
+
+#ifdef __USE_GNU
+/* Close all streams.  */
+extern int __fcloseall __P ((void));
+extern int fcloseall __P ((void));
+#endif
 
 
 /* Open a file and create a new stream for it.  */

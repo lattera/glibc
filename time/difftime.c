@@ -1,28 +1,30 @@
-/* Copyright (C) 1991, 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1991, 1994, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
-#include <ansidecl.h>
 #include <time.h>
+#include <values.h>
 
 
 /* Return the difference between TIME1 and TIME0.  */
 double
-DEFUN(difftime, (time1, time0), time_t time1 AND time_t time0)
+difftime (time1, time0)
+     time_t time1;
+     time_t time0;
 {
   /* Algorithm courtesy Paul Eggert (eggert@twinsun.com).  */
 
@@ -30,8 +32,8 @@ DEFUN(difftime, (time1, time0), time_t time1 AND time_t time0)
 
   if (sizeof (time_t) < sizeof (double))
     return (double) time1 - (double) time0;
-  if (sizeof (time_t) < sizeof (LONG_DOUBLE))
-    return (LONG_DOUBLE) time1 - (LONG_DOUBLE) time0;
+  if (sizeof (time_t) < sizeof (long double))
+    return (long double) time1 - (long double) time0;
 
   if (time1 < time0)
     return - difftime (time0, time1);
@@ -43,9 +45,7 @@ DEFUN(difftime, (time1, time0), time_t time1 AND time_t time0)
     return delta;
 
   /* Repair delta overflow.  */
-  hibit = 1;
-  while ((hibit <<= 1) > 0)
-    continue;
+  hibit = (~ (time_t) 0) << (_TYPEBITS (time_t) - 1);
 
   /* The following expression rounds twice, which means the result may not
      be the closest to the true answer.  For example, suppose time_t is
@@ -62,5 +62,5 @@ DEFUN(difftime, (time1, time0), time_t time1 AND time_t time0)
      round twice when converting large unsigned types to small floating
      types, so if time_t is unsigned the "return delta" above has the same
      double-rounding problem.  */
-  return delta - 2 * (LONG_DOUBLE) hibit;
+  return delta - 2 * (long double) hibit;
 }

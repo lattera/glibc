@@ -96,7 +96,7 @@ struct utmp
   long ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
   int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  char pad[18];			/* Reserved for future use.  */
+  char pad[20];			/* Reserved for future use.  */
 };
 
 /* Backwards compatibility hacks.  */

@@ -16,30 +16,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef	_SYS_UN_H
-
-#define	_SYS_UN_H	1
-#include <sys/cdefs.h>
-
-#include <string.h>		/* For prototype of `strlen'.  */
-
-/* Get the definition of the macro to define the common sockaddr members.  */
-#include <sockaddrcom.h>
-
-__BEGIN_DECLS
-
-/* Structure describing the address of an AF_LOCAL (aka AF_UNIX) socket.  */
-struct sockaddr_un
-  {
-    __SOCKADDR_COMMON (sun_);
-    char sun_path[108];		/* Path name.  */
-  };
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
 
 
-/* Evaluate to actual length of the `sockaddr_un' structure.  */
-#define SUN_LEN(ptr) ((size_t) (((struct sockaddr_un *) 0)->sun_path)	      \
-		      + strlen ((ptr)->sun_path))
-
-__END_DECLS
-
-#endif	/* sys/un.h  */
+/* Close a stream.  */
+int
+__fcloseall ()
+{
+  /* Close all streams.  */
+  register FILE *f;
+  for (f = __stdio_head; f != NULL; f = f->__next)
+    if (__validfp(f))
+      (void) fclose(f);
+  return 0;
+}
+weak_alias (__fcloseall, fcloseall)

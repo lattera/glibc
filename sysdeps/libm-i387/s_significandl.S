@@ -11,7 +11,7 @@ RCSID("$NetBSD: $")
 ENTRY(__significandl)
 	fldt	4(%esp)
 	fxtract
-	fincstp
+	fstp	%st(0)
 	ret
 END (__significandl)
 weak_alias (__significandl, significandl)

@@ -279,6 +279,27 @@ you are using NFS.
 The function @code{fclose} is declared in @file{stdio.h}.
 @end deftypefun
 
+To close all streams currently available the GNU C Library provides
+another function.
+
+@comment stdio.h
+@comment GNU
+@deftypefun int fcloseall (void)
+This function causes all open streams of the process to be closed and
+the connection to corresponding files to be broken.  All buffered data
+is written and any buffered inputis discarded.  The @code{fcloseall}
+function returns a value of @code{0} if all the files were closed
+successfully, and @code{EOF} if an error was detected.
+
+This function should be used in only in special situation, e.g., when an
+error occurred and the program must be aborted.  Normally each single
+stream should be closed separately so that problems with one stream can
+be identifier.  It is also problematic since the standard streams
+(@pxref{Standard Streams}) will also be closed.
+
+The function @code{fcloseall} is declared in @file{stdio.h}.
+@end deftypefun
+
 If the @code{main} function to your program returns, or if you call the
 @code{exit} function (@pxref{Normal Termination}), all open streams are
 automatically closed properly.  If your program terminates in any other

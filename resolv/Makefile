@@ -33,6 +33,7 @@ libresolv-routines := gethnamaddr res_comp res_debug	\
 		      res_data res_mkquery res_query res_send		\
 		      inet_net_ntop inet_net_pton inet_neta base64
 
+subdirs-dirs = nss_dns
 vpath %.c nss_dns
 
 libnss_dns-routines	:= dns-host dns-network

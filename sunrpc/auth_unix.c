@@ -92,10 +92,10 @@ static bool_t marshal_new_auth();
 AUTH *
 authunix_create(machname, uid, gid, len, aup_gids)
 	char *machname;
-	int uid;
-	int gid;
+	uid_t uid;
+	gid_t gid;
 	register int len;
-	int *aup_gids;
+	gid_t *aup_gids;
 {
 	struct authunix_parms aup;
 	char mymem[MAX_AUTH_BYTES];
@@ -172,8 +172,8 @@ authunix_create_default()
 {
 	register int len;
 	char machname[MAX_MACHINE_NAME + 1];
-	register int uid;
-	register int gid;
+	register uid_t uid;
+	register gid_t gid;
 	int max_nr_groups = sysconf (_SC_NGROUPS_MAX);
 	gid_t gids[max_nr_groups];
 
@@ -260,7 +260,7 @@ authunix_refresh(auth)
 
 	/* first deserialize the creds back into a struct authunix_parms */
 	aup.aup_machname = NULL;
-	aup.aup_gids = (int *)NULL;
+	aup.aup_gids = (gid_t *)NULL;
 	xdrmem_create(&xdrs, au->au_origcred.oa_base,
 	    au->au_origcred.oa_length, XDR_DECODE);
 	stat = xdr_authunix_parms(&xdrs, &aup);

@@ -8,20 +8,20 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
 
 #if defined(LIBM_SCCS) && !defined(lint)
-static char rcsid[] = "$NetBSD: e_coshf.c,v 1.5 1995/05/10 20:45:01 jtc Exp $";
+static char rcsid[] = "$NetBSD: e_coshf.c,v 1.6 1996/04/08 15:43:41 phil Exp $";
 #endif
 
 #include "math.h"
 #include "math_private.h"
 
 #ifdef __STDC__
-static const volatile float huge = 1.0e30;
+static const float huge = 1.0e30;
 static const float one = 1.0, half=0.5;
 #else
 static float one = 1.0, half=0.5, huge = 1.0e30;
@@ -33,7 +33,7 @@ static float one = 1.0, half=0.5, huge = 1.0e30;
 	float __ieee754_coshf(x)
 	float x;
 #endif
-{	
+{
 	float t,w;
 	int32_t ix;
 
@@ -41,7 +41,7 @@ static float one = 1.0, half=0.5, huge = 1.0e30;
 	ix &= 0x7fffffff;
 
     /* x is INF or NaN */
-	if(ix>=0x7f800000) return x*x;	
+	if(ix>=0x7f800000) return x*x;
 
     /* |x| in [0,0.5*ln2], return 1+expm1(|x|)^2/(2*exp(|x|)) */
 	if(ix<0x3eb17218) {

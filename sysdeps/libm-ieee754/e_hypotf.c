@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -27,7 +27,7 @@ static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
 	float x, y;
 #endif
 {
-	float a=x,b=y,t1,t2,y1,y2,w;
+	float a,b,t1,t2,y1,y2,w;
 	int32_t j,k,ha,hb;
 
 	GET_FLOAT_WORD(ha,x);
@@ -52,7 +52,7 @@ static char rcsid[] = "$NetBSD: e_hypotf.c,v 1.5 1995/05/12 04:57:30 jtc Exp $";
 	   SET_FLOAT_WORD(b,hb);
 	}
 	if(hb < 0x26800000) {	/* b < 2**-50 */
-	    if(hb <= 0x007fffff) {	/* subnormal b or 0 */	
+	    if(hb <= 0x007fffff) {	/* subnormal b or 0 */
 	        if(hb==0) return a;
 		SET_FLOAT_WORD(t1,0x3f000000);	/* t1=2^126 */
 		b *= t1;

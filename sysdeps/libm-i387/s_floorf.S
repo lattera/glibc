@@ -8,23 +8,25 @@
 RCSID("$NetBSD: s_floorf.S,v 1.3 1995/05/09 00:04:32 jtc Exp $")
 
 ENTRY(__floorf)
-	pushl	%ebp
-	movl	%esp,%ebp
+	flds	4(%esp)
 	subl	$8,%esp
 
-	fstcw	-4(%ebp)		/* store fpu control word */
-	movw	-4(%ebp),%dx
-	orw	$0x0400,%dx		/* round towards -oo */
-	andw	$0xf7ff,%dx
-	movw	%dx,-8(%ebp)
-	fldcw	-8(%ebp)		/* load modified control word */
+	fstcw	4(%esp)			/* store fpu control word */
 
-	flds	8(%ebp);		/* round */
-	frndint
+	/* We use here %edx although only the low 1 bits are defined.
+	   But none of the operations should care and they are faster
+	   than the 16 bit operations.  */
+	movl	$0x400,%edx		/* round towards -oo */
+	orl	4(%esp),%edx
+	andl	$0xf7ff,%edx
+	movl	%edx,(%esp)
+	fldcw	(%esp)			/* load modified control word */
 
-	fldcw	-4(%ebp)		/* restore original control word */
+	frndint				/* round */
 
-	leave
+	fldcw	4(%esp)			/* restore original control word */
+
+	addl	$8,%esp
 	ret
 END (__floorf)
 weak_alias (__floorf, floorf)

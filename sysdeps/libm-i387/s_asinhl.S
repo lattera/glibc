@@ -109,7 +109,7 @@ ENTRY(__asinhl)
 4:	fld	%st			// x : x
 	fldt	MO(huge)		// huge : x : x
 	faddp				// huge+x : x
-	fincstp				// x
+	fstp	%st(0)			// x
 	ret
 
 	// |x| > 2^34 => y = sign(x) * (log(|x|) + log(2))

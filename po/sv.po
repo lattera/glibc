@@ -1,304 +1,242 @@
-# Mensajes en español para GNU libc.
+# GNU libc message catalog for swedish
 # Copyright (C) 1996 Free Software Foundation, Inc.
-# Enrique Melero Gómez <justine@iprolink.ch>, 1996.
+# Jan Djärv <Jan.Djarv@mbox200.swipnet.se>, 1996.
+# $Revision$
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 1.98\n"
+"Project-Id-Version: libc 1.99\n"
 "POT-Creation-Date: 1996-12-03 13:50+0100\n"
-"PO-Revision-Date: 1996-12-14 17:30+0100\n"
-"Last-Translator: Enrique Melero Gómez <justine@iprolink.ch>\n"
-"Language-Team: Spanish <es@li.org>\n"
+"PO-Revision-Date: $Date$\n"
+"Last-Translator: Jan Djärv <Jan.Djarv@mbox200.swipnet.se>\n"
+"Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
-"Content-Transfer-Encoding: 8-bit\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 #: sunrpc/rpcinfo.c:612
 msgid "       rpcinfo -b prognum versnum\n"
-msgstr "       rpcinfo -b númprog númvers\n"
+msgstr "       rpcinfo -b prognr versnr\n"
 
 #: sunrpc/rpcinfo.c:613
 msgid "       rpcinfo -d prognum versnum\n"
-msgstr "       rpcinfo -d númprog númvers\n"
+msgstr "       rpcinfo -d prognr versnr\n"
 
 #: sunrpc/rpcinfo.c:611
 msgid "       rpcinfo -p [ host ]\n"
-msgstr "        rpcinfo -p [ host ]\n"
+msgstr "       rpcinfo -p [ värd ]\n"
 
 #: sunrpc/rpcinfo.c:610
 msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
-msgstr "       rpcinfo [ -n númpuerto ] -t host númprog [ númvers ]\n"
+msgstr "       rpcinfo [ -n portnr ] -t värd prognr [ versnr ]\n"
 
 #: sunrpc/rpcinfo.c:517
 msgid "   program vers proto   port\n"
-msgstr "   programa vers proto   puerto\n"
+msgstr "   program vers proto   port\n"
 
 #: time/zic.c:424
 #, c-format
 msgid " (rule from \"%s\", line %d)"
-msgstr " (regla desde \"%s\", línea %d)"
+msgstr " (regel från \"%s\", rad %d)"
 
 #: locale/programs/ld-collate.c:360 locale/programs/ld-ctype.c:1234
 msgid " done\n"
-msgstr " hecho\n"
+msgstr " klar\n"
 
 #: time/zic.c:421
 #, c-format
 msgid "\"%s\", line %d: %s"
-msgstr "\"%s\", línea %d: %s"
+msgstr "\"%s\", rad %d: %s"
 
 #: time/zic.c:945
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
-msgstr "la línea \"Zone %s\" y la opción -l son mutuamente excluyentes"
+msgstr "\"Zone %s\"-rad och flaggan -l är ömsesidigt uteslutande"
 
 #: time/zic.c:953
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
-msgstr "la línea \"Zone %s\" y la opción -p son mutuamente excluyentes"
+msgstr "\"Zone %s\" rad och -p flagga är ömsesidigt uteslutande"
 
 #: time/zic.c:758
 #, c-format
 msgid "%s in ruleless zone"
-msgstr "%s en una zona sin reglas"
+msgstr "%s i zon utan regel"
 
-# La traducción de Jochen es exactamente esta: Zusicherung %s nicht erfüllt
-#   que viene a decir algo así que las promesas no se han cumplido, o que
-#   las afirmaciones hechas no son ciertas.
-# ??? %s%s's correctos ?
 #: assert/assert.c:46
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr "%s%s%s:%u: %s%sLa declaración `%s' no se cumple.\n"
+msgstr "%s%s%s:%u: %s%sFörsäkran \"%s\" falskt.\n"
 
-# ¿Qué tiene de malo "inesperado"? sv
-#
-# Parece el nombre de película de los '50 em
-# ... y antes de que digas nada, a mí me encantan
-# las películas de los 50 em
-#
-# Pero es que esa palabra *existe* y significa "no esperado".
-# ¿Por qué quieres empobrecer el idioma de esa forma?
-# ¿No podrías emplear la forma in-loquesea unas veces sí y otras no,
-# para darle variedad a la cosa? (Por ejemplo aquí sí, pues no te debe
-# recordar a una opción en silla de ruedas...). sv+
 #: assert/assert-perr.c:47
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
-msgstr "%s%s%s:%u: %s%sError no esperado: %s.\n"
+msgstr "%s%s%s:%u: %s%sOväntat fel: %s.\n"
 
 #: stdio-common/psignal.c:47
 #, c-format
 msgid "%s%sUnknown signal %d\n"
-msgstr "%s%sSeñal desconocida %d\n"
+msgstr "%s%sOkänd signal %d\n"
 
 #: time/zic.c:2139
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
-msgstr "%s: %d no extendió el signo correctamente\n"
+msgstr "%s: %d teckenexpanderades inte korrekt\n"
 
 #: locale/programs/charmap.c:176
 #, c-format
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
-msgstr "%s: <mb_cur_max> debe ser más grande que <mb_cur_min>\n"
+msgstr "%s: <mb_cur_max> måste vara större än <mb_cur_min>\n"
 
 #: time/zic.c:1430
 #, c-format
 msgid "%s: Can't create %s: %s\n"
-msgstr "%s: No se puede crear %s: %s\n"
+msgstr "%s: Kan inte skapa %s: %s\n"
 
 #: time/zic.c:2118
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
-msgstr "%s; No se puede crear el directorio %s: %s\n"
+msgstr "%s: Kan inte skapa katalog %s: %s\n"
 
-# Sugerencia: "desde %s hasta %s" o bien "de %s a %s" pero no mezclar. sv+
 #: time/zic.c:612
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
-msgstr "%s: No se pudo crear un enlace desde %s a %s: %s\n"
+msgstr "%s: Kan inte länka från %s till %s: %s\n"
 
 #: time/zic.c:783
 #, c-format
 msgid "%s: Can't open %s: %s\n"
-msgstr "%s: No se puede abrir %s: %s\n"
+msgstr "%s: Kan inte öppna %s: %s\n"
 
 #: time/zic.c:851
 #, c-format
 msgid "%s: Error closing %s: %s\n"
-msgstr "%s: Error al cerrar %s: %s\n"
+msgstr "%s: Fel vid stängning av %s: %s\n"
 
 #: time/zic.c:845
 #, c-format
 msgid "%s: Error reading %s\n"
-msgstr "%s: Error al leer %s\n"
+msgstr "%s: Fel vid läsning från %s\n"
 
 #: time/zic.c:1494
 #, c-format
 msgid "%s: Error writing %s\n"
-msgstr "%s: Error al escribir %s\n"
+msgstr "%s: Fel vid skrivning till %s\n"
 
 #: time/zdump.c:258
 #, c-format
 msgid "%s: Error writing standard output "
-msgstr "%s: Error al escribir en la salida estándar "
+msgstr "%s: Fel vid skrivning till standard ut "
 
-# ¿¿ cómo se dirá eso ??, pregunto en spanglish
-#
-# diría que la porción "de años bisiestos" sobra. sv
-#
-# Mejor dejarlo bien clarito. Después de haberme enterado de
-# qué diablos era eso ;)
-#
-# En ningún sitio dice que la línea de ajuste sea "de años bisiestos"
-# Si pones algo que no viene en el original puedes acabar cambiando
-# el sentido.
-# O quitas lo de "de años bisiestos" o miras el código fuente
-# a ver si de verdad es un ajuste de años bisiestos o más bien de segundos
-# intercalares. En cualquier caso me parece que queda más largo añadiendo
-# eso. sv
-#
-# Otra cosa: "en un archivo que no es el de" -> "en un archivo que no es de"
-# (sin "el"). Si no, da a entender que sólo puede haber uno,
-# y el original no da a entender eso. sv
-#
-# Varias cosas, según he entendido los ajustes en segundo se llaman
-# indiferentemente 'segundos intercalares' o 'segundos bisiestos'
-# el ajuste en sí es un ajuste de años bisiestos ( no son exactamente
-# un día ) . Por lo tanto Leap ( año bisiesto ) line, son las líneas
-# que caracterizan al leap seconds file, que podríamos llamarlo archivo
-# de ajuste de años bisiestos, archivo intercalar o incluso bisiestifile
-# De todas maneras creo que lo cambio, este mensaje, si alguna vez tengo
-# la mala suerte de que me aparezca, me acoxonaría, tal y como está
-# redactado
-# Segundo, según he visto en la documentación, sólo existe un archivo
-# de leap lines, por eso pongo 'el'... em+
-#
 #: time/zic.c:830
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
-msgstr ""
-"%s: Línea de segundos intercalares en un archivo que no es el de\n"
-"ajuste de años bisiestos %s\n"
+msgstr "%s: \"Leap\"-rad i fil %s som inte är skottsekundsfil\n"
 
 #: time/zic.c:362
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
-msgstr "%s: Memoria agotada: %s\n"
+msgstr "%s: Minnet slut: %s\n"
 
 #: time/zic.c:527
 #, c-format
 msgid "%s: More than one -L option specified\n"
-msgstr "%s: La opción -L se ha especificado más de una vez\n"
+msgstr "%s: Flaggan -L given mer än en gång\n"
 
 #: time/zic.c:487
 #, c-format
 msgid "%s: More than one -d option specified\n"
-msgstr "%s: La opción -d se ha especificado más de una vez\n"
+msgstr "%s: Flagga -d given mer än en gång\n"
 
 #: time/zic.c:497
 #, c-format
 msgid "%s: More than one -l option specified\n"
-msgstr "%s: La opción -l se ha especificado más de una vez\n"
+msgstr "%s: Flaggan -l given mer än en gång\n"
 
 #: time/zic.c:507
 #, c-format
 msgid "%s: More than one -p option specified\n"
-msgstr "%s: La opción -p se ha especificado más de una vez\n"
+msgstr "%s: Flaggan -p given mer än en gång\n"
 
 #: time/zic.c:517
 #, c-format
 msgid "%s: More than one -y option specified\n"
-msgstr "%s: La opción -y se ha especificado más de una vez\n"
+msgstr "%s: Flaggan -y given mer än en gång\n"
 
 #: time/zic.c:1845
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
-msgstr "%s: la orden fue '%s', el resultado fue %d\n"
+msgstr "%s: kommandot var \"%s\", resultatet blev %d\n"
 
-# FUZZY
-# ¿ Se le ocurre a alguien algo ? em+
-# Podría ser "error en el estado de la máquina" (?). sv+
 #: locale/programs/charmap.c:593 locale/programs/locfile.c:878
 #, c-format
 msgid "%s: error in state machine"
-msgstr "%s: error en la máquina de estado"
+msgstr "%s: fel i tillståndsmaskin"
 
 #: posix/getopt.c:687
 #, c-format
 msgid "%s: illegal option -- %c\n"
-msgstr "%s: opción no permitida -- %c\n"
+msgstr "%s: otillåten flagga -- %c\n"
 
-# ¿Qué tiene de malo "inválida"? sv
-# Jopé, ¿y qué tiene de malo no válida ?
-# usuario inválido tiene un doble sentido claro
-# ya que uso usuario no válido me parece bien usar
-# tambien opción no válida, aunque solo sea de vez
-# en cuando em
-#
-# Pues que *inválida* existe. Piensa en retroreferencia, por ejemplo.
-# Se puede poner retroreferencia porque significa referencia hacia atrás.
-# (Bueno, en este caso esa palabra se usa poco, pero inválida no). sv+
-#
 #: posix/getopt.c:690
 #, c-format
 msgid "%s: invalid option -- %c\n"
-msgstr "%s: opción no válida -- %c\n"
+msgstr "%s: ogiltig flagga -- %c\n"
 
 #: posix/getopt.c:611
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: la opción `%c%s' no admite ningún argumento\n"
+msgstr "%s: flaggan \"%c%s\" tar inget argument\n"
 
 #: posix/getopt.c:582
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
-msgstr "%s: la opción `%s' es ambigua\n"
+msgstr "%s: flaggan \"%s\" är tvetydig\n"
 
 #: posix/getopt.c:628 posix/getopt.c:801
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
-msgstr "%s: la opción `%s' requiere un argumento\n"
+msgstr "%s: flaggan \"%s\" behöver ett argument\n"
 
 #: posix/getopt.c:606
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: la opción `--%s' no admite ningún argumento\n"
+msgstr "%s: flaggan \"--%s\" tar inget argument\n"
 
 #: posix/getopt.c:786
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
-msgstr "%s: la opción `-W %s' no admite ningún argumento\n"
+msgstr "%s: flaggan \"-W %s\" tar inget argument\n"
 
 #: posix/getopt.c:767
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
-msgstr "%s: la opción `-W %s' es ambigua\n"
+msgstr "%s: flaggan \"-W %s\" är tvetydig\n"
 
 #: posix/getopt.c:721 posix/getopt.c:850
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
-msgstr "%s: la opción requiere un argumento --%c\n"
+msgstr "%s: flaggan behöver ett argument -- %c\n"
 
 #: time/zic.c:837 time/zic.c:1248 time/zic.c:1268
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
-msgstr "%s: grave: valor_l no válido %d\n"
+msgstr "%s: panik: ogiltigt l_value %d\n"
 
 #: locale/programs/charmap.c:600
 #, c-format
 msgid "%s: premature end of file"
-msgstr "%s: fin de archivo no esperado"
+msgstr "%s: för tidigt filslut"
 
 #: posix/getopt.c:661
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
-msgstr "%s: opción desconocida `%c%s'\n"
+msgstr "%s: okänd flagga \"%c%s\"\n"
 
 #: posix/getopt.c:657
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
-msgstr "%s: opción desconocida `--%s'\n"
+msgstr "%s: okänd flagga \"--%s\"\n"
 
 #: time/zic.c:446
 #, c-format
@@ -307,81 +245,67 @@ msgid ""
 "directory ]\n"
 "\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
 msgstr ""
-"%s: el modo de empleo es %s [ -s ] [ -v ] [ -l hora_local ] [ -p reglasposix "
-"]\n"
-" [ -d directorio ] [ -L segundos_intercalares ] [ -y tipoaño ] [ archivo ... "
-"]\n"
+"%s: användning är %s [ -s ] [ -v ] [ -l lokaltid ] [ -p posixregler ] [ -d "
+"katalog ]\n"
+"\t[ -L skottsekunder ] [ -y årkontrollprogram ] [ filnamn ... ]\n"
 
 #: time/zdump.c:165
 #, c-format
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
-msgstr "%s: el modo de empleo es %s [ -v ] [-c cutoff ] nombrezona ...\n"
+msgstr "%s: användning är %s [ -v ] [ -c gräns ] zonnamn ...\n"
 
 #: sunrpc/clnt_perr.c:125
 #, c-format
 msgid "(unknown authentication error - %d)"
-msgstr "(error de autentificación desconocido - %d)"
+msgstr "(okänt fel vid äkthetskontroll - %d)"
 
-# FUZZY. sv
-# Sugerencia: Borrar "señal". sv
-# Sugerencia: Asegurarse de que a lo que se refiere es femenino. sv
-# Según los antiguos fuentes esto era una señal ( lo comprobé entonces )
-# de todas maneras queda pendiente de revisar con la versión alemana
-# no quites el fuzzy em+
 #: sunrpc/rpcinfo.c:555
 msgid "(unknown)"
-msgstr "(señal desconocida)"
+msgstr "(okänt)"
 
 #: catgets/gencat.c:253
 msgid "*standard input*"
-msgstr "*entrada estándar*"
+msgstr "*standard in*"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:766
 msgid ".lib section in a.out corrupted"
-msgstr "la sección .lib en el a.out está corrompida"
+msgstr ".lib-sektion i a.out korrupt"
 
-# ## Sugerencia: Añadir (fstat) después de información. sv
 #: inet/rcmd.c:358
 msgid ".rhosts fstat failed"
-msgstr "No se pudo obtener información (fstat) del archivo .rhosts"
+msgstr "misslyckades ta status (fstat) på .rhosts"
 
-# ## Lo mismo con lstat. sv
 #: inet/rcmd.c:354
 msgid ".rhosts lstat failed"
-msgstr "No se pudo obtener información (lstat) del archivo .rhosts"
+msgstr "misslyckades ta status (lstat) på .rhosts"
 
-#  lo de regular no me gusta, pero ?
 #: inet/rcmd.c:356
 msgid ".rhosts not regular file"
-msgstr ".rhosts no es un archivo regular"
+msgstr ".rhosts är inte en normal fil"
 
 #: inet/rcmd.c:362
 msgid ".rhosts writeable by other than owner"
-msgstr ".rhosts puede ser modificado por otros además del propietario"
+msgstr ".rhosts kan skrivas av andra än ägaren"
 
 #: sunrpc/clnt_perr.c:112 sunrpc/clnt_perr.c:133
 #, c-format
 msgid "; low version = %lu, high version = %lu"
-msgstr "; versión menor = %lu, versión mayor = %lu"
+msgstr "; undre version = %lu, övre version = %lu"
 
 #: sunrpc/clnt_perr.c:119
 msgid "; why = "
-msgstr "; causa ="
+msgstr "; varför = "
 
 #: locale/programs/ld-ctype.c:326
 #, c-format
 msgid "<SP> character must not be in class `%s'"
-msgstr "El carácter <SP> no debe estar en la clase '%s'"
+msgstr "<SP>-tecknet får inte vara i klass \"%s\""
 
 #: locale/programs/ld-ctype.c:317
 #, c-format
 msgid "<SP> character not in class `%s'"
-msgstr "El carácter <SP> no está en la clase `%s'"
+msgstr "<SP>-tecknet är inte i klass \"%s\""
 
-# ## ¿? ATENCIÓN.
-# ## Informar de esto a Ulrich Drepper. Debe haber en algún lugar
-# ## una cadena que permita "¿".
-# ## Solucionado: Con suerte desaparecerá en la próxima versión.
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
@@ -391,27 +315,25 @@ msgstr "?"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:762
 msgid "Accessing a corrupted shared library"
-msgstr "Accediendo a una biblioteca compartida que está corrompida"
+msgstr "Öppnar ett korrupt delat bibliotek"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:354
 msgid "Address already in use"
-msgstr "La dirección ya se está usando"
+msgstr "Adressen används redan"
 
 #. TRANS The address family specified for a socket is not supported; it is
 #. TRANS inconsistent with the protocol being used on the socket.  @xref{Sockets}.
 #: stdio-common/../sysdeps/gnu/errlist.c:349
 msgid "Address family not supported by protocol"
-msgstr "Esta familia de direcciones no está soportada por el protocolo"
+msgstr "Adressfamiljen stöds inte av protokollet"
 
-# FUZZY
-# Lo dejo fuzzy aposta, a ver qué se os ocurre em+
 #: stdio-common/../sysdeps/gnu/errlist.c:730
 msgid "Advertise error"
-msgstr "Error de advertencia"
+msgstr "Annonseringsfel"
 
 msgid "Alarm clock"
-msgstr "Temporizador"
+msgstr "Alarmklocka"
 
 #. TRANS Argument list too long; used when the arguments passed to a new program
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
@@ -419,74 +341,53 @@ msgstr "Temporizador"
 #. TRANS GNU system.
 #: stdio-common/../sysdeps/gnu/errlist.c:57
 msgid "Argument list too long"
-msgstr "La lista de argumentos es demasiado larga"
+msgstr "Argumentlistan för lång"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:770
 msgid "Attempting to link in too many shared libraries"
-msgstr "Se intenta enlazar en demasiadas bibliotecas compartidas"
+msgstr "Försök att länka in för många delade bibliotek"
 
 #: sunrpc/clnt_perr.c:276
 msgid "Authentication OK"
-msgstr "Autentificación válida"
+msgstr "Äkthetskontroll OK"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:549
 msgid "Authentication error"
-msgstr "Error de autentificación"
+msgstr "Äkthetskontroll misslyckades"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS In the GNU system, this error never happens; you get a signal instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:102
 msgid "Bad address"
-msgstr "Dirección incorrecta"
+msgstr "Felaktig adress"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
 #. TRANS versa).
 #: stdio-common/../sysdeps/gnu/errlist.c:70
 msgid "Bad file descriptor"
-msgstr "Descriptor de archivo erróneo"
+msgstr "Felaktig filidentifierare"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:718
 msgid "Bad font file format"
-msgstr "Formato de archivo fuente incorrecto"
+msgstr "Felaktigt format på typsnittsfil"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:610
 msgid "Bad message"
-msgstr "Mensaje erróneo"
+msgstr "Felaktigt meddelande"
 
-# ## Ya estamos ...
-# ¿ Dispositivo de bloques ?, ¿ cómo se le puede llamar a esto ?
-# ## al principio puse, 'se precisa de' pero me sonó mal
-# ## Pongo doble almohadilla a lo anterior, para que a nadie más se le ocurra... sv
-#
-# Creo que se pueden borrar los apóstrofos.
-# Parece que hay dos tipos de dispositivos:
-# Dispositivos de bloques y dispositivos de caracteres.
-# Supongo que así se llamarán en español. sv
-# yo los llamo así, desde luego em
-# ## Entonces asunto concluído. sv+
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
 #: stdio-common/../sysdeps/gnu/errlist.c:109
 msgid "Block device required"
-msgstr "Se requiere un dispositivo de bloques"
+msgstr "Blockspecialfil krävs"
 
-#  ??? sinceramente creo, broadcast no habría que traducirlo
-#  pero si hubiese, que ?
-#  después de ver los fuentes no consigo llegar a otra solución, sólo
-#  mensaje ( packet ?  ) broadcast, que creo que refleja bien
-#  los errores que describen estos mensajes.
-# ## Sugerencia: `broadcast'. sv
-#  Creo que este mensaje está mal traducido ...
-#  habrá que echar mano a las fuentes em+
 #: sunrpc/pmap_rmt.c:337
 msgid "Broadcast select problem"
-msgstr "Problema en la selección del `broadcast'"
+msgstr "Problem med \"select\" i utsändning"
 
-#  Vi traducido pipe como tubo en un libro sobre pc/dos, y me horrorizó
-#  menos mal que venía siempre la palabra `pipe' al lado entrecomillada
 #. TRANS Broken pipe; there is no process reading from the other end of a pipe.
 #. TRANS Every library function that returns this error code also generates a
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
@@ -494,158 +395,127 @@ msgstr "Problema en la selección del `broadcast'"
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
 #: stdio-common/../sysdeps/gnu/errlist.c:222
 msgid "Broken pipe"
-msgstr "Tubería (pipe) rota"
+msgstr "Brutet rör"
 
 msgid "Bus error"
-msgstr "Error del bus"
+msgstr "Bussfel"
 
 msgid "CPU time limit exceeded"
-msgstr "Rebasado el límite de tiempo de CPU"
+msgstr "begränsning av CPU-tid överskriden"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:758
 msgid "Can not access a needed shared library"
-msgstr "No se puede acceder a una biblioteca compartida que se necesita"
+msgstr "Kan inte komma åt ett nödvändigt delat bibliotek"
 
 #: nis/ypclnt.c:637
 msgid "Can't bind to server which serves this domain"
-msgstr ""
-"Ha fallado la llamada a bind() con el servidor que sirve a este dominio"
+msgstr "Kan inte ansluta till betjänt som betjänar denna domän"
 
-# ¡Necesitamos ayuda para "mapeador"!
-#
-# Sugerencia: to map -> asignar, map -> correspondencia. sv+
-#
 #: nis/ypclnt.c:649
 msgid "Can't communicate with portmapper"
-msgstr "no se puede comunicar con el mapeador de puertos (`portmapper')"
+msgstr "Kan inte kommunicera med portmapper"
 
 #: nis/ypclnt.c:651
 msgid "Can't communicate with ypbind"
-msgstr "No se puede establecer comunicación con 'ypbind'"
+msgstr "Kan inte kommunicera med ypbind"
 
 #: nis/ypclnt.c:653
 msgid "Can't communicate with ypserv"
-msgstr "No se puede establecer comunicación con 'ypserv'"
+msgstr "Kan inte kommunicera med ypserv"
 
 #. TRANS No memory available.  The system cannot allocate more virtual memory
 #. TRANS because its capacity is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:91
 msgid "Cannot allocate memory"
-msgstr "No se pudo asignar memoria"
+msgstr "Kan inte allokera minne"
 
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:361
 msgid "Cannot assign requested address"
-msgstr "No se puede asignar la dirección solicitada"
+msgstr "Kan inte tilldela begärd adress"
 
-# He intentado mejorarlo un poco ...
-#
-# Por favor, pon `broadcast' en lugar de broadcast.
-# Si vamos a usar términos ingleses a lo bestia, reconozcamos al menos que
-# no son términos españoles. sv
 #: sunrpc/pmap_rmt.c:255
 msgid "Cannot create socket for broadcast rpc"
-msgstr "No se puede crear `socket' para enviar un mensaje `broadcast' del rpc"
+msgstr "Kan inte skapa uttag (socket) för utsändnings-rpc"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:774
 msgid "Cannot exec a shared library directly"
-msgstr "No se puede ejecutar una biblioteca compartida directamente"
+msgstr "Kan inte köra ett delat bibliotek direkt"
 
-# ## ¿Qué tal "... recibir la respuesta al `broadcast'"?
-# ## Mucho mejor em
-# ## Gracias. sv+
 #: sunrpc/pmap_rmt.c:349
 msgid "Cannot receive reply to broadcast"
-msgstr "No se puede recibir la respuesta al `broadcast'"
+msgstr "Kan inte ta emot svar på utsändning"
 
 #: sunrpc/pmap_clnt.c:79
 msgid "Cannot register service"
-msgstr "No se pudo registrar el servicio"
+msgstr "Kan inte registrera tjänst"
 
 #. TRANS The socket has already been shut down.
 #: stdio-common/../sysdeps/gnu/errlist.c:422
 msgid "Cannot send after transport endpoint shutdown"
-msgstr "No se puede enviar tras la destrucción del punto de destino"
+msgstr "Kan inte skicka efter att transportslutpunkten har tagits ned"
 
-# ## ???
-# ## En todo caso. mandar -> enviar. sv
 #: sunrpc/pmap_rmt.c:313
 msgid "Cannot send broadcast packet"
-msgstr "No se pudo enviar el mensaje `broadcast'"
+msgstr "Kan inte skicka utsändningspaket"
 
 #: sunrpc/pmap_rmt.c:261
 msgid "Cannot set socket option SO_BROADCAST"
-msgstr "No se pudo especificar la opción SO_BROADCAST para el `socket'"
+msgstr "Kan inte sätta uttagsflaggan (socket) SO_BROADCAST"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:658
 msgid "Channel number out of range"
-msgstr "Número de canal fuera de rango"
+msgstr "Kanalnummer utanför giltigt intervall"
 
 msgid "Child exited"
-msgstr "El proceso hijo terminó"
+msgstr "Barnet avslutade"
 
 #: sunrpc/clnt_perr.c:286
 msgid "Client credential too weak"
-msgstr "Las credenciales del cliente son poco fiables"
+msgstr "Klientens referenser är för svaga"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:738
 msgid "Communication error on send"
-msgstr "Error de comunicación al enviar"
+msgstr "Kommunikationsfel vid sändning"
 
-#  ¿ qué diablos es esto ?, esperemos a tener las fuentes
-#  estupendo, este error parece mostrarse en dos ocasiones
-# - Macro: int EIEIO
-#     Go home and have a glass of warm, dairy-fresh milk.
-#  Jochen tambien lo traduce así.  em
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
 #: stdio-common/../sysdeps/gnu/errlist.c:601
 msgid "Computer bought the farm"
-msgstr "El ordenador ha comprado una granja"
+msgstr "Datorn packade ihop"
 
 #: locale/programs/ld-ctype.c:1197
 msgid "Computing table size for character classes might take a while..."
-msgstr ""
-"El cálculo del tamaño de la tabla de clases de caracteres podría tardar un\n"
-"rato ..."
+msgstr "Att beräkna tabellstorlek för teckenklasser kan ta ett tag..."
 
-# FUZZY
-# Collating, uff, lo he visto por lo menos 10 veces, en varios contextos
-# diferentes. Uno de ellos en el de comparaciones de strings en el DM de DB2.
-# Podría traducirse tambien como 'uniones' o 'emparejamientos' ... em+
 #: locale/programs/ld-collate.c:327
 msgid "Computing table size for collation information might take a while..."
 msgstr ""
-"El cálculo del tamaño de la tabla de información de secuencias podría "
-"tardar\n"
-"un rato ..."
+"Att beräkna tabellstorlek för kollationeringsinformation kan ta ett tag..."
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
 #: stdio-common/../sysdeps/gnu/errlist.c:439
 msgid "Connection refused"
-msgstr "Conexión rehusada"
+msgstr "Förbindelse vägras"
 
-# Se aceptan sugerencias alternativas para "peer"
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: stdio-common/../sysdeps/gnu/errlist.c:389
 msgid "Connection reset by peer"
-msgstr "Conexión reinicializada por la máquina remota"
+msgstr "Förbindelse borttagen av kommunikationspartnern"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
 #: stdio-common/../sysdeps/gnu/errlist.c:433
 msgid "Connection timed out"
-msgstr "Expiró el tiempo de conexión"
+msgstr "Förbindelsens tid tog slut"
 
 msgid "Continued"
-msgstr "Continúa"
+msgstr "Fortsätter"
 
-# ## ¡¡Esto ya lo traduje en recode!! sv
-# ## Lo pongo igual.
 #: catgets/gencat.c:169 db/makedb.c:120 locale/programs/locale.c:187
 #: locale/programs/localedef.c:177
 #, c-format
@@ -655,25 +525,24 @@ msgid ""
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
-"Esto es software libre; vea el código fuente para las condiciones de copia.\n"
-"No hay NINGUNA garantía; ni siquiera de COMERCIABILIDAD o IDONEIDAD PARA UN\n"
-"FIN DETERMINADO.\n"
+"Detta är fri programvara; se källkoden för kopieringsvillkor.  Det finns\n"
+"INGEN garanti; inte ens för SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT\n"
+"ÄNDAMÅL.\n"
 
 #: nis/ypclnt.c:663
 msgid "Database is busy"
-msgstr "La base de datos está ocupada"
+msgstr "Databasen är upptagen"
 
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
 #: stdio-common/../sysdeps/gnu/errlist.c:417
 msgid "Destination address required"
-msgstr "Se debe especificar la dirección de destino"
+msgstr "Måladress krävs"
 
-# FUZZY
 #: stdio-common/../sysdeps/gnu/errlist.c:638
 msgid "Device not a stream"
-msgstr "El dispositivo no es un `stream'"
+msgstr "Enheten är inte en stream"
 
 #. TRANS No such device or address.  The system tried to use the device
 #. TRANS represented by a file you specified, and it couldn't find the device.
@@ -682,183 +551,134 @@ msgstr "El dispositivo no es un `stream'"
 #. TRANS computer.
 #: stdio-common/../sysdeps/gnu/errlist.c:49
 msgid "Device not configured"
-msgstr "Dispositivo no configurado"
+msgstr "Enheten är inte konfigurerad"
 
 #. TRANS Resource busy; a system resource that can't be shared is already in use.
 #. TRANS For example, if you try to delete a file that is the root of a currently
 #. TRANS mounted filesystem, you get this error.
 #: stdio-common/../sysdeps/gnu/errlist.c:116
 msgid "Device or resource busy"
-msgstr "Dispositivo o recurso ocupado"
+msgstr "Enhet eller resurs upptagen"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
 #: stdio-common/../sysdeps/gnu/errlist.c:468
 msgid "Directory not empty"
-msgstr "El directorio no está vacío"
+msgstr "Katalog inte tom"
 
 #. TRANS The user's disk quota was exceeded.
 #: stdio-common/../sysdeps/gnu/errlist.c:486
 msgid "Disc quota exceeded"
-msgstr "Se ha excedido la cuota de disco"
+msgstr "Diskkvot överskriden"
 
-# FUZZY
 #: nis/ypclnt.c:709
 msgid "Domain not bound"
-msgstr "No se pudo conectar con el dominio"
+msgstr "Domän inte bunden"
 
 #: sunrpc/clnt_perr.c:254
 #, c-format
 msgid "Error %d"
-msgstr "Error %d"
+msgstr "Fel %d"
 
 #: string/../sysdeps/mach/_strerror.c:52
 msgid "Error in unknown error system: "
-msgstr "Error de sistema desconocido: "
+msgstr "Fel i okänt felsystem: "
 
 #: inet/ruserpass.c:161
 msgid "Error: .netrc file is readable by others."
-msgstr "Error: el archivo .netrc es leible por otros usuarios."
+msgstr "Fel: .netrc kan läsas av andra."
 
-# FUZZY em+
 #: stdio-common/../sysdeps/gnu/errlist.c:698
 msgid "Exchange full"
-msgstr "Intercambio lleno"
+msgstr "Växeln full"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: stdio-common/../sysdeps/gnu/errlist.c:63
 msgid "Exec format error"
-msgstr "Formato de ejecutable incorrecto"
+msgstr "Formatfel på körbar fil"
 
 #: locale/programs/localedef.c:213
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
-msgstr "Error fatal: el sistema no define `_POSIX2_LOCALEDEF'"
+msgstr "FATALT: systemet definierar inte \"_POSIX2_LOCALEDEF\""
 
 #: sunrpc/clnt_perr.c:290
 msgid "Failed (unspecified error)"
-msgstr "Falló (error no especificado)"
+msgstr "Misslyckades (ospecificerat fel)"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:750
 msgid "File descriptor in bad state"
-msgstr "El descriptor de archivo está en mal estado"
+msgstr "Filidentifierare i felaktigt tillstånd"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
 #: stdio-common/../sysdeps/gnu/errlist.c:122
 msgid "File exists"
-msgstr "El archivo existe"
+msgstr "Filen existerar"
 
-# FUZZY em+
 #: stdio-common/../sysdeps/gnu/errlist.c:714
 msgid "File locking deadlock error"
-msgstr "error `deadlock' al bloquear el archivo"
+msgstr "Fillåsning gav dödläge"
 
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
 #: stdio-common/../sysdeps/gnu/errlist.c:452
 msgid "File name too long"
-msgstr "Nombre de archivo demasiado largo"
+msgstr "Filnamn för långt"
 
 msgid "File size limit exceeded"
-msgstr "Superado el límite de tamaño de archivo"
+msgstr "Begränsning av filstorlek överskriden"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
 #: stdio-common/../sysdeps/gnu/errlist.c:190
 msgid "File too large"
-msgstr "Archivo demasiado grande"
+msgstr "Fil för stor"
 
 msgid "Floating point exception"
-msgstr "Excepción de coma flotante"
+msgstr "Flyttalsberäkningsfel"
 
-# ## ¿No existe en español "implementar"? sv
-# ## ¿ Crees que es tan importante ? em
-# ## No, pero si el autor hubiera querido decir soportada, podría haber puesto
-# ## "supported". por eso creo que lo lógico sería:
-# ## supported -> soportada  e  implemented -> implementada.
-# ## "no soportado" tiene el matiz de que puede estar implementado pero si no
-# ## funciona no tienes a quien quejarte.
-# ## En cambio no implementada es que no está implementada. sv
-# ## Ok, me has convencido em
 #. TRANS Function not implemented.  Some functions have commands or options defined
 #. TRANS that might not be supported in all implementations, and this is the kind
 #. TRANS of error you get if you request them and they are not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:561
 msgid "Function not implemented"
-msgstr "Función no implementada"
+msgstr "Funktion inte implementerad"
 
 #. TRANS This error code has no purpose.
 #: stdio-common/../sysdeps/gnu/errlist.c:606
 msgid "Gratuitous error"
-msgstr "Error injustificado"
+msgstr "Omotiverat fel"
 
-#  Habrá que mirar esto
-#  Mirado, efectivamente esto es una señal que habrá
-#  que dejarla con su nombre original ( entre paréntesis )
 msgid "Hangup"
-msgstr "Colgar (hangup)"
+msgstr "Lägg på"
 
-# Otras posibilidades: El host está caído o está abajo.
-#
-# Según spanglish, host *es* anfitrión.
-# Si te parece, pon "anfitrión (`host')" o algo parecido.
-# Si así lo decides, busca host en todos los sitios en los que aparezca. sv
-#
-# En este caso creo que no se llegó a nada claro. De hecho la
-#  palabra host me parece equívoca, ya que da a entender
-#  cosas que no son. A un 'huésped' también se le llama
-#  host. Entonces ?, mejor usar siempre host
-#
-# Como te parezca, ¿Le ponemos apóstrofos ... ? `host'  sv
-#
-# No creo que haga falta em
-#
-# Pues yo sí. No se deberían usar palabras inglesas alegremente, como
-# si fueran españolas. sv
-# ##
-# ## A esto no me has contestado todavía. sv
-# ##
-# ## Ni te lo voy a contestar, habrá que aceptar que el español
-# ## sigue Enrique-ciendose con nuevas palabras em
-# ## La frase anterior no me gusta NADA. sv+
-#
-# Enrique, ni tú ni yo somos nadie para inventarnos palabras.
-# Sé humilde y pon las palabras guiris con apóstrofos.
-# Y si no, pregúntale a Iñaky, verás como está de acuerdo conmigo. sv+
 #. TRANS The remote host for a requested network connection is down.
 #: stdio-common/../sysdeps/gnu/errlist.c:457
 msgid "Host is down"
-msgstr "El host no está operativo"
+msgstr "Värddator är nere"
 
 #: resolv/herror.c:75
 msgid "Host name lookup failure"
-msgstr "Nombre de host no encontrado"
+msgstr "Uppslagning av värdnamn misslyckades"
 
 msgid "I/O possible"
-msgstr "Operación de entrada/salida permitida"
+msgstr "I/O möjligt"
 
-#  ???, siempre lo he usado como trap, nunca encontramos la palabra
-#  y es una señal estándar Unix, así que no creo conveniente traducirla
 msgid "IOT trap"
-msgstr "`trap' de IOT"
+msgstr "IOT fälla"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:614
 msgid "Identifier removed"
-msgstr "El identificador se ha eliminado"
+msgstr "Identifierare borttagen"
 
-# Se trata de una instrucción ilegal en el juego de instrucciones del 486
-# que provoca una "excepción".
 msgid "Illegal Instruction"
-msgstr "Instrucción ilegal"
+msgstr "Otillåten instruktion"
 
-# ¿"seek" no era "desplazamiento"? sv
-# Según el contexto no se puede saber a qué se refiere
-# cambio ... por no permitida em+
 #. TRANS Invalid seek operation (such as on a pipe).
 #: stdio-common/../sysdeps/gnu/errlist.c:201
 msgid "Illegal seek"
-msgstr "Búsqueda no permitida"
+msgstr "Otillåten sökning"
 
 #. TRANS Inappropriate file type or format.  The file was the wrong type for the
 #. TRANS operation, or a data file had the wrong format.
@@ -867,27 +687,14 @@ msgstr "Búsqueda no permitida"
 #. TRANS sticky bit on a non-directory file; @pxref{Setting Permissions}.
 #: stdio-common/../sysdeps/gnu/errlist.c:544
 msgid "Inappropriate file type or format"
-msgstr "Formato o tipo de archivo no apropiado"
+msgstr "Filtyp eller format olämplig"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
 #: stdio-common/../sysdeps/gnu/errlist.c:176
 msgid "Inappropriate ioctl for device"
-msgstr "Función ioctl no apropiada para el dispositivo"
+msgstr "Ioctl för enhet olämplig"
 
-#  Habrá que ver a qué se refiere.
-#
-# Si le pones el "es", ponle el "La" al principio.
-# O no le pongas ninguno de los dos, si no es realmente necesario.
-# Creo que no es malo que una oración no tenga verbo, pero si lo tiene
-# debe ser una oración completa. Me explico:
-# 1 "operación no válida" sería admisible.
-# 2 "operación no es válida" suena completamente a indio (inadmisible).
-# 3 "la operación no es válida" es mucho mejor que 2, pero no siempre
-# es mejor que 1. sv
-#
-# En este caso, creo que sobran el "La" y el "es". Por eso le he quitado
-# el "es". sv
 #. TRANS In the GNU system, servers supporting the @code{term} protocol return
 #. TRANS this error for certain operations when the caller is not in the
 #. TRANS foreground process group of the terminal.  Users do not usually see this
@@ -896,27 +703,23 @@ msgstr "Función ioctl no apropiada para el dispositivo"
 #. TRANS for information on process groups and these signals.
 #: stdio-common/../sysdeps/gnu/errlist.c:577
 msgid "Inappropriate operation for background process"
-msgstr "Operación no válida para un proceso en segundo plano"
+msgstr "Operation för bakgrundsprocess olämplig"
 
 #. TRANS Input/output error; usually used for physical read or write errors.
 #: stdio-common/../sysdeps/gnu/errlist.c:40
 msgid "Input/output error"
-msgstr "Error de entrada/salida"
+msgstr "In/ut-fel"
 
-#  ??? lo mismo que arriba
 #: nis/ypclnt.c:643
 msgid "Internal NIS error"
-msgstr "Error interno del determinador de nombres"
+msgstr "Internt NIS-fel"
 
-# FUZZY FUZZY
-# Esto se está poniendo imposible, estas funciones
-# nuevas ...
 #: nis/ypclnt.c:707
 msgid "Internal ypbind error"
-msgstr "Error en la llamada a bind para el servicio de páginas amarillas"
+msgstr "Internt ypbind-fel"
 
 msgid "Interrupt"
-msgstr "Interrupción"
+msgstr "Avbrutet"
 
 #. TRANS Interrupted function call; an asynchronous signal occured and prevented
 #. TRANS completion of the call.  When this happens, you should try the call
@@ -927,386 +730,296 @@ msgstr "Interrupción"
 #. TRANS Primitives}.
 #: stdio-common/../sysdeps/gnu/errlist.c:35
 msgid "Interrupted system call"
-msgstr "Llamada al sistema interrumpida"
+msgstr "Avbrutet systemanrop"
 
-# FUZZY
 #: stdio-common/../sysdeps/gnu/errlist.c:654
 msgid "Interrupted system call should be restarted"
-msgstr "La llamada al sistema interrumpida debería volverse a iniciar"
+msgstr "Avbrutet systemanrop borde omstartas"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
 #: stdio-common/../sysdeps/gnu/errlist.c:152
 msgid "Invalid argument"
-msgstr "Argumento no válido"
+msgstr "Ogiltigt argument"
 
 #: posix/regex.c:946
 msgid "Invalid back reference"
-msgstr "Referencia hacia atrás no válida"
+msgstr "Ogiltig bakåtreferens"
 
 #: posix/regex.c:944
 msgid "Invalid character class name"
-msgstr "Nombre de clase de carácter no válido"
+msgstr "Ogiltigt teckenklassnamn"
 
 #: sunrpc/clnt_perr.c:278
 msgid "Invalid client credential"
-msgstr "Credenciales del cliente inválidas"
+msgstr "Ogiltiga klientreferenser"
 
 #: sunrpc/clnt_perr.c:282
 msgid "Invalid client verifier"
-msgstr "Verificación del cliente no válida "
+msgstr "Ogiltig klientverifierare"
 
 #: posix/regex.c:943
 msgid "Invalid collation character"
-msgstr "Caracter de unión no válido"
+msgstr "Ogiltigt kollationeringstecken"
 
 #: posix/regex.c:950
 msgid "Invalid content of \\{\\}"
-msgstr "Contenido de \\{\\} inválido"
+msgstr "Ogiltig användning av \\{\\}"
 
-#  ??? ver esto.
 #. TRANS An attempt to make an improper link across file systems was detected.
 #. TRANS This happens not only when you use @code{link} (@pxref{Hard Links}) but
 #. TRANS also when you rename a file with @code{rename} (@pxref{Renaming Files}).
 #: stdio-common/../sysdeps/gnu/errlist.c:129
 msgid "Invalid cross-device link"
-msgstr "Enlace cruzado entre dispositivos no permitido"
+msgstr "Ogiltig länk över skilda enheter"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:690
 msgid "Invalid exchange"
-msgstr "Intercambio no válido"
+msgstr "Ogiltig växel"
 
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: stdio-common/../sysdeps/gnu/errlist.c:567
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "El carácter multibyte o extendido está incompleto o es inválido"
+msgstr "Ogiltig eller inte komplett flerbyte eller brett tecken"
 
 #: posix/regex.c:953
 msgid "Invalid preceding regular expression"
-msgstr "La expresión regular precedente es inválida"
+msgstr "Ogiltigt föregående reguljärt uttryck"
 
 #: posix/regex.c:951
 msgid "Invalid range end"
-msgstr "Final de rango no válido"
+msgstr "Ogiltigt intervallslut"
 
 #: posix/regex.c:942
 msgid "Invalid regular expression"
-msgstr "La expresión regular es errónea"
+msgstr "Ogiltigt reguljärt uttryck"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:706
 msgid "Invalid request code"
-msgstr "Código de petición incorrecto"
+msgstr "Ogiltig åtkomstkod"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:694
 msgid "Invalid request descriptor"
-msgstr "El descriptor de archivo solicitado es erróneo"
+msgstr "Ogiltig frågedeskriptor"
 
 #: sunrpc/clnt_perr.c:288
 msgid "Invalid server verifier"
-msgstr "Verificación del servidor no válido"
+msgstr "Ogiltig betjäntverifierare"
 
-# Ranura no válida ?, creo que no hay traducción para slot :) em+
 #: stdio-common/../sysdeps/gnu/errlist.c:710
 msgid "Invalid slot"
-msgstr "`slot' incorrecto"
+msgstr "Ogiltig plats"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
 #: stdio-common/../sysdeps/gnu/errlist.c:146
 msgid "Is a directory"
-msgstr "Es un directorio"
+msgstr "Är en katalog"
 
-# ## Añado el "de tipo" sv+
-# FUZZY em+
-# ¿ Será esto un `named pipe' ? ¿ cómo se traduce ?
 #: stdio-common/../sysdeps/gnu/errlist.c:794
 msgid "Is a named type file"
-msgstr "Es un archivo de tipo `named'"
+msgstr "Är en namngiven filtyp"
 
-#  A quien se le ocurra `matar' un proceso, que especifique con qué señal.
-#  En todo caso ` Terminado ( KILL ) ' sería apropiado. Ver fuentes
 msgid "Killed"
-msgstr "Terminado (killed)"
+msgstr "Dödad"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:686
 msgid "Level 2 halted"
-msgstr "Nivel 2 detenido"
+msgstr "Nivå 2 stannad"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:662
 msgid "Level 2 not synchronized"
-msgstr "Nivel 2 no sincronizado"
+msgstr "Nivå 2 inte synkroniserad"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:666
 msgid "Level 3 halted"
-msgstr "Nivel 3 detenido"
+msgstr "Nivå 3 stannad"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:670
 msgid "Level 3 reset"
-msgstr "Nivel 3 restablecido"
+msgstr "Nivå 3 omstartad"
 
-# FUZZY em+
-# ¿ qué significa esto ?
 #: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "Link has been severed"
-msgstr "En enlace se ha cortado"
+msgstr "Länken har brutits"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:674
 msgid "Link number out of range"
-msgstr "Número de enlace fuera de rango"
+msgstr "Länktal utanför giltigt område"
 
 #: nis/ypclnt.c:655
 msgid "Local domain name not set"
-msgstr "No se ha establecido el nombre del dominio local"
+msgstr "Lokalt domännamn inte satt"
 
 #: nis/ypclnt.c:645
 msgid "Local resource allocation failure"
-msgstr "La asignación de recursos locales ha fallado"
+msgstr "Allokeringsfel för lokal resurs"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:722
 msgid "Machine is not on the network"
-msgstr "La máquina no está en red"
+msgstr "Maskinen finns inte på nätverket"
 
 #: posix/regex.c:952
 msgid "Memory exhausted"
-msgstr "Memoria agotada"
+msgstr "Minnet slut"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
 #: stdio-common/../sysdeps/gnu/errlist.c:305
 msgid "Message too long"
-msgstr "Mensaje demasiado largo"
+msgstr "Meddelandet för långt"
 
-# FUZZY em+
-# No tengo ni idea de qué es un HOP
-# este error, que ya lo vi en errno no
-# lo encuentro documentado
 #: stdio-common/../sysdeps/gnu/errlist.c:618
 msgid "Multihop attempted"
-msgstr "Se ha intentado un multihop"
+msgstr "Flerhopp försöktes"
 
-# No debe explicarse la terminología dentro de su propio contexto.
-# Creo que deberías borrar lo que hay entre paréntesis.
-# De verdad. sv+
 #: nis/ypclnt.c:659
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr ""
-"La versión de NIS (sistema de información de la red) del servidor y del "
-"ciente\n"
-"no coinciden - no se puede proveer el servicio"
+msgstr "NIS klient/betjänt versionsskillnad - kan inte betjäna"
 
-# Aquí se podría poner "la tabla NIS". sv+
-# mapa es un palabro.
 #: nis/ypclnt.c:657
 msgid "NIS map data base is bad"
-msgstr "La base de datos del mapa NIS no es correcta"
+msgstr "NIS tabelldatabas är felaktig"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:746
 msgid "Name not unique on network"
-msgstr "El nombre no es único en la red"
+msgstr "Namnet inte unikt i nätverket"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:554
 msgid "Need authenticator"
-msgstr "Se necesita un autentificador"
+msgstr "Behöver äkthetsintygare"
 
 #. TRANS A network connection was reset because the remote host crashed.
 #: stdio-common/../sysdeps/gnu/errlist.c:377
 msgid "Network dropped connection on reset"
-msgstr "La conexión de red se perdió al reinicializar"
+msgstr "Nätverket tog bort förbindelsen vid omstart"
 
 #. TRANS A socket operation failed because the network was down.
 #: stdio-common/../sysdeps/gnu/errlist.c:366
 msgid "Network is down"
-msgstr "La red no está activa"
+msgstr "Nätverket är nere"
 
-# Este no me gusta. Preferiría poner "la red es inaccesible", o al menos
-# añadirle un "es": "Es imposible conectar con la red". sv
-# En muchos mensajes he puesto el 'Es' al principio, terminaremos hablando
-# como indios si no. em
-#
-# Mira un mensaje que he puesto más arriba a ver si estás de acuerdo con
-# mi definición de "indio". sv
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:372
 msgid "Network is unreachable"
-msgstr "Es imposible conectar con la red"
+msgstr "Nätverket kan inte nås"
 
-# FUZZY
 #: stdio-common/../sysdeps/gnu/errlist.c:682
 msgid "No CSI structure available"
-msgstr "No quedan estructuras CSI disponibles"
+msgstr "Inga CSI-strukturer tillgängliga"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:790
 msgid "No XENIX semaphores available"
-msgstr "No quedan semáforos XENIX disponibles"
+msgstr "Inga XENIX-semaforer tillgängliga"
 
-# ## Pongo "ninguna" en vez de "una". sv+
 #: resolv/herror.c:77
 msgid "No address associated with name"
-msgstr "No existe ninguna dirección asociada al nombre"
+msgstr "Ingen adress associerad med namnet"
 
-# FUZZY
-# anode o catode :), qué diablos ? em+
-#
-# Pongo esto provisionalmente, en electricidad se usan los términos
-# ánodo y cátodo para los polos positivo y negativo, pero no sé
-# si esto será lo mismo.
-# De cualquier forma, mantengo el FUZZY por si sale algo mejor. sv+
 #: stdio-common/../sysdeps/gnu/errlist.c:702
 msgid "No anode"
-msgstr "No hay ningún ánodo"
+msgstr "Ingen anod"
 
-# Memoria intermedia me parece una traducción óptima.
-# Desgraciadamente no tengo ningún diccionario de Castellano
-# Enrique, creo que en español existe "búfer", míralo si puedes. sv
-#  ¿ Buffer ? memoria intermedia.
-# A ver qué dice Iñaky... sv
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
 #: stdio-common/../sysdeps/gnu/errlist.c:396
 msgid "No buffer space available"
-msgstr "No queda espacio para memoria intermedia"
+msgstr "Ingen buffertplats tillgänglig"
 
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
 #: stdio-common/../sysdeps/gnu/errlist.c:77
 msgid "No child processes"
-msgstr "Ningún proceso hijo"
+msgstr "Inga barnprocesser"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:622
 msgid "No data available"
-msgstr "No hay datos disponibles"
+msgstr "Data otillgängligt"
 
-# Ojo: ¿Solamente los archivos se pueden bloquear?
-# Propondría: "No quedan bloqueos disponibles" o algo así. sv
-#
-# Efectivamente puede que tengas razón, pero ...
-#  los dispositivos en UNIX son siempre archivos /dev :)  em
-#
-# Lo sé, lo sé, pero: Cuando bloqueas /dev/cua3, ¿dices que estás bloqueando un
-# archivo o que estás bloqueando el módem, que es un dispositivo? sv
-# Decir archivos podría traer equívocos, por más que formalmente todos
-# lo sean. sv
-#
-# ¿Y qué se te ocurre?, ¿poner bloquear archivos/dispositivos? em
-#
-# ( Pues mira, no estaría mal. sv )
-# A esto no me has contestado. sv
-#
-#  no quedan bloqueos me parece que no colabora a entender nada. em
-#  Miro la versión alemana.
-#  ??? ¿ locks ? ¿ cómo diablos ?
 #. TRANS No locks available.  This is used by the file locking facilities; see
 #. TRANS @ref{File Locks}.  This error is never generated by the GNU system, but
 #. TRANS it can result from an operation to an NFS server running another
 #. TRANS operating system.
 #: stdio-common/../sysdeps/gnu/errlist.c:535
 msgid "No locks available"
-msgstr "No se pueden bloquear más archivos"
+msgstr "Inga lås tillgängliga"
 
 #: posix/regex.c:941
 msgid "No match"
-msgstr "Ninguna coincidencia"
+msgstr "Ingen träff"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:630
 msgid "No message of desired type"
-msgstr "Ningún mensaje del tipo deseado"
+msgstr "Inget meddelande av önskad typ"
 
-# FUZZY
-# Bueno, bueno
 #: nis/ypclnt.c:647
 msgid "No more records in map database"
-msgstr "No hay más registros en la base de datos del mapa"
+msgstr "Inga fler poster i tabelldatabasen"
 
 #: posix/regex.c:5204
 msgid "No previous regular expression"
-msgstr "No existe una expresión regular anterior"
+msgstr "Inget föregående reguljärt uttryck"
 
-# No me gusta "programa rpc". El rpc debería sobrar por el contexto. sv
-# A ver qué te parece esto em+
-# Igual de raro: Te repito la frase de César: "No hay que explicar
-# la terminología dentro de su propio contexto".
-# Con lo fácil que es poner:
-# "No se ha registrado ningún programa remoto.\n" sv+
 #: sunrpc/rpcinfo.c:515
 msgid "No remote programs registered.\n"
-msgstr "No existe ningún procedimiento rpc registrado en la máquina remota.\n"
+msgstr "Inga fjärrprogram registrerade.\n"
 
-# Sugerencia: ninguna ruta. sv
-# Doppel verneinung, o doble negación, también
-# lo hacen en Bayern, bueno aquí es peor, porque
-# tienen la drei Fach Verneinung ( o sea, tres veces ) em+
-#
-# Enrique, ¡se te olvida el español! :-|
-# En español es absolutamente correcto, y además queda mejor.
-# "No existe ninguna ruta hasta el host". sv+
 #. TRANS The remote host for a requested network connection is not reachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:462
 msgid "No route to host"
-msgstr "No existe ruta hasta el host"
+msgstr "Ingen väg till värd"
 
-# ## "No queda más espacio" queda muy raro en español.
-# ## Lo cambio. sv+
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:196
 msgid "No space left on device"
-msgstr "No queda espacio en el dispositivo"
+msgstr "Enheten är full"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
 #: stdio-common/../sysdeps/gnu/errlist.c:19
 msgid "No such file or directory"
-msgstr "No existe el archivo o el directorio"
+msgstr "Filen eller katalogen finns inte"
 
 #: nis/ypclnt.c:641
 msgid "No such key in map"
-msgstr "No exite esta clave en el mapa"
+msgstr "Ingen sådan nyckel i tabellen"
 
 #: nis/ypclnt.c:639
 msgid "No such map in server's domain"
-msgstr "No existe este mapa en el dominio del servidor"
+msgstr "Ingen sådan tabell i betjäntens domän"
 
-# Sugerencia: No existe el proceso. sv
-# ¿ Porqué ?
-# Porque si "No such file or directory" se ha traducido por
-# "no existe el archivo o el directorio", está claro que si le dices un
-# proceso y te dice "no existe el proceso" se refiere al que
-# tú le has dicho y no a otro. sv
-#
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:24
 msgid "No such process"
-msgstr "No existe tal proceso"
+msgstr "Processen finns inte"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:786
 msgid "Not a XENIX named type file"
-msgstr "No es un archivo XENIX del tipo `named'"
+msgstr "Inte en XENIX-namngiven fil"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:140
 msgid "Not a directory"
-msgstr "No es un directorio"
+msgstr "Inte en katalog"
 
-#  fuentes
-# Sugerencia: Argumento numérico. sv
-#
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
 #: stdio-common/../sysdeps/gnu/errlist.c:228
 msgid "Numerical argument out of domain"
-msgstr "Argumento numérico fuera del dominio de la función"
+msgstr "Numeriskt argument är utanför området"
 
 #. TRANS Range error; used by mathematical functions when the result value is
 #. TRANS not representable because of overflow or underflow.
 #: stdio-common/../sysdeps/gnu/errlist.c:234
 msgid "Numerical result out of range"
-msgstr "Resultado numérico fuera de rango"
+msgstr "Numeriskt resultat är utanför giltigt område"
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -1314,26 +1027,23 @@ msgstr "Resultado numérico fuera de rango"
 #. TRANS properly on the GNU system, making this error code impossible.)
 #: stdio-common/../sysdeps/gnu/errlist.c:502
 msgid "Object is remote"
-msgstr "El objeto es remoto"
+msgstr "Är ett fjärrobjekt"
 
 #: time/zic.c:1939
 msgid "Odd number of quotation marks"
-msgstr "Número impar de comillas"
+msgstr "Ojämnt antal citationstecken"
 
-# Vale, pero muy poco más abajo has puesto "en curso", que me parece mejor. sv
-# Creo que prefiero dejar uno de cada. Se me ocurre si no cambiar el
-# de abajo también. em
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
 #: stdio-common/../sysdeps/gnu/errlist.c:294
 msgid "Operation already in progress"
-msgstr "La operación ya se está llevando a cabo"
+msgstr "Operationen pågår redan"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
 #: stdio-common/../sysdeps/gnu/errlist.c:12
 msgid "Operation not permitted"
-msgstr "Operación no permitida"
+msgstr "Operationen inte tillåten"
 
 #. TRANS The operation you requested is not supported.  Some socket functions
 #. TRANS don't make sense for all types of sockets, and others may not be
@@ -1343,13 +1053,13 @@ msgstr "Operación no permitida"
 #. TRANS nothing to do for that call.
 #: stdio-common/../sysdeps/gnu/errlist.c:338
 msgid "Operation not supported"
-msgstr "La operación no está soportada"
+msgstr "Operationen stöds inte"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
 #: stdio-common/../sysdeps/gnu/errlist.c:135
 msgid "Operation not supported by device"
-msgstr "La operación no está soportada por el dispositivo"
+msgstr "Operationen stöds inte av enheten"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -1361,7 +1071,7 @@ msgstr "La operación no está soportada por el dispositivo"
 #. TRANS has completed; @pxref{Waiting for I/O}.
 #: stdio-common/../sysdeps/gnu/errlist.c:288
 msgid "Operation now in progress"
-msgstr "Operación en curso"
+msgstr "Operationen pågår nu"
 
 #. TRANS In the GNU C library, this is another name for @code{EAGAIN} (above).
 #. TRANS The values are always the same, on every operating system.
@@ -1370,287 +1080,223 @@ msgstr "Operación en curso"
 #. TRANS separate error code.
 #: stdio-common/../sysdeps/gnu/errlist.c:276
 msgid "Operation would block"
-msgstr "La operación se bloquearía"
+msgstr "Operationen skulle blockera"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:634
 msgid "Out of streams resources"
-msgstr "Alcanzado el límite de recursos de `streams'"
+msgstr "Stream-resurserna är slut"
 
-# FUZZY
-# aquí va a haber coña em+
 #: stdio-common/../sysdeps/gnu/errlist.c:726
 msgid "Package not installed"
-msgstr "El paquete no está instalado"
+msgstr "Paketet är inte installerat"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
 #: nis/ypclnt.c:661 stdio-common/../sysdeps/gnu/errlist.c:96
 msgid "Permission denied"
-msgstr "Permiso denegado"
+msgstr "Åtkomst nekas"
 
 msgid "Power failure"
-msgstr "Fallo de alimentación"
+msgstr "Spänningsfall"
 
 #: posix/regex.c:954
 msgid "Premature end of regular expression"
-msgstr "Fin no esperado de la expresión regular"
+msgstr "För tidigt slut på reguljärt uttryck"
 
-# ¿No habría que traducir profile? sv
-# Miré los fuentes, y la última documentación de Glibc
-# No se me ocurre traducción para profile ( así se llamaba
-# en los viejos apple al disco duro de 5 Megas ) em
-# Pero esto no tiene nada que ver, ¿no?
-# "Profiling" es ejecutar un programa midiendo qué partes de él consumen
-# más tiempo. Creo recordar que esto tenía nombre en español, pero no
-# me acuerdo de cuál. sv
-# Gracias por la explicación, sé que era algo referente
-#  al trace o debug de un programa. Miro a la alemana.
 msgid "Profiling timer expired"
-msgstr "El tiempo de CPU expiró"
+msgstr "Profileringstiden tog slut"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:678
 msgid "Protocol driver not attached"
-msgstr "Protocolo no disponible"
+msgstr "Styrprogram för protokoll inte anslutet"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:646
 msgid "Protocol error"
-msgstr "error de protocolo"
+msgstr "Protokollfel"
 
 #. TRANS The socket communications protocol family you requested is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:343
 msgid "Protocol family not supported"
-msgstr "Familia de protocolos no soportada"
+msgstr "Protokollfamiljen stöds ej"
 
 #. TRANS You specified a socket option that doesn't make sense for the
 #. TRANS particular protocol being used by the socket.  @xref{Socket Options}.
 #: stdio-common/../sysdeps/gnu/errlist.c:316
 msgid "Protocol not available"
-msgstr "Protocolo no disponible"
+msgstr "Protokollet ej tillgängligt"
 
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid.)
 #. TRANS @xref{Creating a Socket}.
 #: stdio-common/../sysdeps/gnu/errlist.c:323
 msgid "Protocol not supported"
-msgstr "Protocolo no soportado"
+msgstr "Protokollet stöds ej"
 
 #. TRANS The socket type does not support the requested communications protocol.
 #: stdio-common/../sysdeps/gnu/errlist.c:310
 msgid "Protocol wrong type for socket"
-msgstr "Tipo de protocolo incorrecto para el `socket'"
+msgstr "Fel protokolltyp för uttag (socket)"
 
-# ## Podría ser también "Abandonar" sv+
 msgid "Quit"
-msgstr "Abandona"
+msgstr "Sluta"
 
-# FUZZY
 #: stdio-common/../sysdeps/gnu/errlist.c:742
 msgid "RFS specific error"
-msgstr "error específico de RFS"
+msgstr "RFS-specifikt fel"
 
-# ## qué horror
-# ## Pues mira, quizá añadiendo dos puntos después del RPC mejoraría algo:
-# ## "RPC: procedimiento erróneo..." sv
-# FIXME -> Comunicarlo al autor.
-# En inglés podría quedar también mejor.
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:527
 msgid "RPC bad procedure for program"
-msgstr "RPC: procedimiento erróneo para el programa"
+msgstr "RPC dålig procedur för program"
 
 #: nis/ypclnt.c:635
 msgid "RPC failure on NIS operation"
-msgstr "Fallo RPC en una operación NIS"
+msgstr "RPC-fel vid NIS-operation"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:517
 msgid "RPC program not available"
-msgstr "Programa RPC no disponible"
+msgstr "RPC programmet ej tillgängligt"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:522
 msgid "RPC program version wrong"
-msgstr "Versión del programa RPC incorrecta"
+msgstr "RPC fel programversion"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:507
 msgid "RPC struct is bad"
-msgstr "la estructura RPC es incorrecta"
+msgstr "RPC struktur dålig"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:512
 msgid "RPC version wrong"
-msgstr "versión de RPC incorrecta"
+msgstr "RPC fel version"
 
 #: sunrpc/clnt_perr.c:217
 msgid "RPC: (unknown error code)"
-msgstr "RPC: (código de error desconocido)"
+msgstr "RPC: (okänd felkod)"
 
 #: sunrpc/clnt_perr.c:179
 msgid "RPC: Authentication error"
-msgstr "RPC: Error de autentificación"
+msgstr "RPC: Fel vid äkthetskontroll"
 
-#  Si da el error es porque lo intentó descodificar
-#  y no lo consiguió. Es decir, que lo intentó ( pasado )
-#  En muchos de los mensajes de GNU se usa presente o pasado
-#  indiferentemente. Ya se sabe lo mal que les suena el pasado de can,
-#  sobre todo en frases afirmativas ( que no es el caso, pero bueno )
-#
 #: sunrpc/clnt_perr.c:169
 msgid "RPC: Can't decode result"
-msgstr "RPC: No se pudo descodificar la respuesta"
+msgstr "RPC: Kan inte avkoda resultatet"
 
 #: sunrpc/clnt_perr.c:167
 msgid "RPC: Can't encode arguments"
-msgstr "RPC: No se pudieron codificar los argumentos"
+msgstr "RPC: Kan inte koda argumentet"
 
-#  ??? Falló, fracasó, pinchó ;-)
 #: sunrpc/clnt_perr.c:199
 msgid "RPC: Failed (unspecified error)"
-msgstr "RPC: Falló (error no especificado)"
+msgstr "RPC: Misslyckades (ospecificerat fel)"
 
 #: sunrpc/clnt_perr.c:177
 msgid "RPC: Incompatible versions of RPC"
-msgstr "RPC: Versión incompatible de RPC"
+msgstr "RPC: Inkompatibla versioner av RPC"
 
-# Apuesto a que existe algo mejor que "mapeador". sv
-# Propón que yo dispondré em+
-# A ver:  Asignador.
-# (Al menos no es un palabro). sv+
 #: sunrpc/clnt_perr.c:195
 msgid "RPC: Port mapper failure"
-msgstr "RPC: Fallo del mapeador de puertos"
+msgstr "RPC: Fel i portöversättare"
 
-#  ??? prefiero añadir rpc otra vez,
-#  parece que queda más claro cual es el error y son solo tres letras
-#
-# No sé lo que es el RPC, pero igual es un disparate "procedimiento rpc"
-# En estos casos, preferiría no añadir nada y no "arriesgar". sv
-#
-# Está bien, por homogeneizar todo un poco lo quitaré. Pero que conste que
-# procedimiento rpc es perfectamente válido ( rcp: remote procedure call )
-# em
-#
-# Incluyo una cita de César Ballardini a ver qué te parece:
-# "no es necesario explicar la terminología obvia dentro de su contexto"
-# Creo que no hace falta poner rpc dos veces. El primero ya te avisa "de qué
-# va el rollo". sv+
-#
-# Por cierto, unavailable es NO disponible. Lo cambio.
-# Y quito el "rpc" sv+
 #: sunrpc/clnt_perr.c:185
 msgid "RPC: Procedure unavailable"
-msgstr "RPC: Procedimiento no disponible"
+msgstr "RPC: Procedur inte tillgänglig"
 
 #: sunrpc/clnt_perr.c:197
 msgid "RPC: Program not registered"
-msgstr "RPC: Programa no registrado"
+msgstr "RPC: Programmet inte registrerat"
 
 #: sunrpc/clnt_perr.c:181
 msgid "RPC: Program unavailable"
-msgstr "RPC: Programa no disponible"
+msgstr "RPC: Programmet otillgängligt"
 
 #: sunrpc/clnt_perr.c:183
 msgid "RPC: Program/version mismatch"
-msgstr "RPC: La versión del programa no coincide"
+msgstr "RPC: Program/version-inkompabilitet"
 
 #: sunrpc/clnt_perr.c:189
 msgid "RPC: Remote system error"
-msgstr "RPC: Error del sistema remoto"
+msgstr "RPC: Fjärrsystemsfel"
 
 #: sunrpc/clnt_perr.c:187
 msgid "RPC: Server can't decode arguments"
-msgstr "RPC: El servidor no puede descifrar los argumentos"
+msgstr "RPC: Betjänt kan inte avkoda argumenten"
 
 #: sunrpc/clnt_perr.c:165
 msgid "RPC: Success"
-msgstr "RPC: Conseguido"
+msgstr "RPC: Lyckat"
 
 #: sunrpc/clnt_perr.c:175
 msgid "RPC: Timed out"
-msgstr "RPC: El tiempo expiró"
+msgstr "RPC: Tiden löpte ut"
 
-# Me parece que incapaz expresa mejor lo que pasa. Intenta
-#  recibir, pero no puede. De la otra forma (no se puede recibir)
-#  da la impresión de que ni siquiera se intenta
-# A lo mejor es que ni siquiera puede intentarlo ... sv
 #: sunrpc/clnt_perr.c:173
 msgid "RPC: Unable to receive"
-msgstr "RPC: Incapaz de recibir"
+msgstr "RPC: Kan inte ta emot"
 
-# Sugerencia: No se puede enviar. (?) (no estoy muy seguro) sv
 #: sunrpc/clnt_perr.c:171
 msgid "RPC: Unable to send"
-msgstr "RPC: Incapaz de enviar"
+msgstr "RPC: Kan inte skicka"
 
 #: sunrpc/clnt_perr.c:191
 msgid "RPC: Unknown host"
-msgstr "RPC: Host desconocido"
+msgstr "RPC: Okänd värdmaskin"
 
 #: sunrpc/clnt_perr.c:193
 msgid "RPC: Unknown protocol"
-msgstr "RPC: Protocolo desconocido"
+msgstr "RPC: Okänt protokoll"
 
 #: elf/dlsym.c:49
 msgid "RTLD_NEXT used in code not dynamically loaded"
-msgstr ""
-"Se ha usado RTLD_NEXT en una parte del código que no se cargó dinámicamente"
+msgstr "RTLD_NEXT används i kod som inte är dynamiskt laddad"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:206
 msgid "Read-only file system"
-msgstr "Sistema de archivos de sólo lectura"
+msgstr "Filsystemet endast läsbart"
 
 #: posix/regex.c:955
 msgid "Regular expression too big"
-msgstr "La expresión regular es demasiado grande"
+msgstr "Reguljärt uttryck för stort"
 
-# Sugerencia: Error de E/S. sv+
 #: stdio-common/../sysdeps/gnu/errlist.c:798
 msgid "Remote I/O error"
-msgstr "Error de entrada/salida en la máquina remota"
+msgstr "I/O-fel på fjärrmaskin"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:754
 msgid "Remote address changed"
-msgstr "La dirección remota ha cambiado"
+msgstr "Fjärradress ändrades"
 
-# ## Reescribo la frase, creo que no habías cogido el sentido. sv+
-# ## Antes decía:
-# ## "El password remoto o archivo make no es leible por los demás"
 #: inet/ruserpass.c:162
 msgid "Remove password or make file unreadable by others."
-msgstr "Elimine la contraseña o haga el archivo no legible por otros."
+msgstr "Ta bort lösenord eller gör filen oläsbar för andra"
 
-# ## Lo cambio. Ver fileutils. sv+
 #: catgets/gencat.c:224 db/makedb.c:227 locale/programs/locale.c:257
 #: locale/programs/localedef.c:408
 msgid "Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
-msgstr "Comunicar `bugs' a <bug-glibc@prep.ai.mit.edu>.\n"
+msgstr "Rapportera fel till <bug-glibc@prep.ai.mit.edu>.\n"
 
 #: nis/ypclnt.c:633
 msgid "Request arguments bad"
-msgstr "Los argumentos de la petición son incorrectos"
+msgstr "Argument för förfrågan felaktiga"
 
-#  ??? resolvedor, determinador, investigador, solucionador  ?
-# Me suena que quizá exista resolvedor. Habría que enterarse. sv
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
-msgstr "Error del determinador de nombres 0 (ningún error)"
+msgstr "Resolver-fel 0 (inget fel)"
 
-#  ??? lo mismo que arriba
 #: resolv/herror.c:117
 msgid "Resolver internal error"
-msgstr "Error interno del determinador de nombres"
+msgstr "Internt fel i namnlösare"
 
-# ¿ Sugerencias ? em
-# ¿Evitado? sv
-# Esperemos a ver la opinión de otro. em
 #. TRANS Deadlock avoided; allocating a system resource would have resulted in a
 #. TRANS deadlock situation.  The system does not guarantee that it will notice
 #. TRANS all such situations.  This error means you got lucky and the system
 #. TRANS noticed; it might just hang.  @xref{File Locks}, for an example.
 #: stdio-common/../sysdeps/gnu/errlist.c:85
 msgid "Resource deadlock avoided"
-msgstr "Esquivado el bloqueo para el recurso"
+msgstr "Resursdödläge undveks"
 
 #. TRANS Resource temporarily unavailable; the call might work if you try again
 #. TRANS later.  The macro @code{EWOULDBLOCK} is another name for @code{EAGAIN};
@@ -1683,107 +1329,77 @@ msgstr "Esquivado el bloqueo para el recurso"
 #. TRANS @end itemize
 #: stdio-common/../sysdeps/gnu/errlist.c:267
 msgid "Resource temporarily unavailable"
-msgstr "Recurso no disponible temporalmente"
+msgstr "Resursen tillfälligt otillgänglig"
 
-# ¿De "segmento", o de "segmentación"? sv
-# De segmentación me parece incorrecto. La memoria ya estaba
-#  segmentada, y se intentó acceder a un segmento
-#  que no pertenece al programa. em
-# ¿Entonces dirías que está mal el original inglés? sv
-#  No, en inglés siempre se ha dicho así. Siempre he traducido
-#  Segmentation fault como violación de segmento. Consultémoslo,
-#  es un mensaje que se ve demasiado a menudo em
 msgid "Segmentation fault"
-msgstr "Violación de segmento"
+msgstr "Minnessegmentsfel"
 
 #: sunrpc/clnt_perr.c:280
 msgid "Server rejected credential"
-msgstr "El servidor rechazó la credencial"
+msgstr "Betjänt förkastade kreditiv"
 
 #: sunrpc/clnt_perr.c:284
 msgid "Server rejected verifier"
-msgstr "El servidor rechazó el verificador"
+msgstr "Betjänt förkastade verifierare"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:299
 msgid "Socket operation on non-socket"
-msgstr "Operación de `socket' en un `no-socket'"
+msgstr "Uttagsoperation på icke-uttag (socket)"
 
 #. TRANS The socket type is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:328
 msgid "Socket type not supported"
-msgstr "Tipo de `socket' no soportado"
+msgstr "Uttagstyp (socket) stöds inte"
 
 #. TRANS A network connection was aborted locally.
 #: stdio-common/../sysdeps/gnu/errlist.c:382
 msgid "Software caused connection abort"
-msgstr "El programa provocó el fin de la conexión"
+msgstr "Mjukvara orsakade förbindelsebrott"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:734
 msgid "Srmount error"
-msgstr "Error de `srmount'"
+msgstr "Srmount-fel"
 
-# ?? sugerencias ?
-# Habrá que traducir el "handle" de alguna forma... sv
-# No veo porqué. em
-# ¿No puede un archivo tener varios `handles'
-# y que unos estén bloqueados y otros no? sv
-#  En efecto la traducción es incorrecta, el uso de file handle
-#  en vez de file descriptor, debe ser porque nos referimos a archivos
-#  compartidos con NFS. Al igual que no se bloquean, sino que se stalan :)
-#
 #. TRANS Stale NFS file handle.  This indicates an internal confusion in the NFS
 #. TRANS system which is due to file system rearrangements on the server host.
 #. TRANS Repairing this condition usually requires unmounting and remounting
 #. TRANS the NFS file system on the local host.
 #: stdio-common/../sysdeps/gnu/errlist.c:494
 msgid "Stale NFS file handle"
-msgstr "Archivo NFS bloqueado"
+msgstr "Förlegad NFS-filhandtag"
 
 msgid "Stopped"
-msgstr "Parado"
+msgstr "Stoppad"
 
 msgid "Stopped (signal)"
-msgstr "Parado (por una señal)"
+msgstr "Stoppad (signal)"
 
-# Perdonad que sea tan largo, pero es algo que nunca esta de más
-# Creo que mejora al original ;)
 msgid "Stopped (tty input)"
-msgstr "Parado (requiere entrada de terminal)"
+msgstr "Stoppad (tty-läsning)"
 
-# Perdonad que sea tan largo, pero es algo que nunca esta de más
-# Creo que mejora al original ;)
-#
 msgid "Stopped (tty output)"
-msgstr "Parado (requiere salida por terminal)"
+msgstr "Stoppad (tty-skrivning)"
 
-# FUZZY FUZZY
-# ¡ Esto no hay quien lo traduzca ! em+
 #: stdio-common/../sysdeps/gnu/errlist.c:778
 msgid "Streams pipe error"
-msgstr "Error en de tubería de streams"
+msgstr "Streams-rörfel"
 
-# FUZZY
-# O me cojo otras traducciones o ando perdido em+
 #: stdio-common/../sysdeps/gnu/errlist.c:782
 msgid "Structure needs cleaning"
-msgstr "La estructura necesita una limpieza"
+msgstr "Strukturen behöver städas"
 
-# "¡conseguido!" me recuerda a los "sketches" de Faemimo y Cansado...
-# me gustaría que hubiera otra palabra mejor. SV
-# Siempre me han gustado F&C ;-)
-# A mí también :-) sv
 #: nis/ypclnt.c:631 nis/ypclnt.c:705 posix/regex.c:940
 #: stdio-common/../sysdeps/gnu/errlist.c:7
 msgid "Success"
-msgstr "Conseguido"
+msgstr "Lyckat"
 
 #: nis/ypclnt.c:711
 msgid "System resource allocation failure"
-msgstr "Fallo en la asignación de recursos del sistema"
+msgstr "Allokeringsfel för systemresurs"
 
 msgid "Terminated"
-msgstr "Terminado"
+msgstr "Terminerad"
 
 #. TRANS An attempt to execute a file that is currently open for writing, or
 #. TRANS write to a file that is currently being executed.  Often using a
@@ -1792,24 +1408,24 @@ msgstr "Terminado"
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
 #: stdio-common/../sysdeps/gnu/errlist.c:185
 msgid "Text file busy"
-msgstr "El archivo de texto está ocupado"
+msgstr "Kodfil upptagen"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:650
 msgid "Timer expired"
-msgstr "El temporizador llegó al final"
+msgstr "Tidtagning avslutad"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
 #. TRANS This often indicates a cycle of symbolic links.
 #: stdio-common/../sysdeps/gnu/errlist.c:445
 msgid "Too many levels of symbolic links"
-msgstr "Demasiados niveles de enlaces simbólicos"
+msgstr "För många nivåer av symboliska länkar"
 
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
 #: stdio-common/../sysdeps/gnu/errlist.c:213
 msgid "Too many links"
-msgstr "Demasiados enlaces (links)"
+msgstr "För många länkar"
 
 #. TRANS The current process has too many files open and can't open any more.
 #. TRANS Duplicate descriptors do count toward this limit.
@@ -1820,60 +1436,52 @@ msgstr "Demasiados enlaces (links)"
 #. TRANS @pxref{Limits on Resources}.
 #: stdio-common/../sysdeps/gnu/errlist.c:163
 msgid "Too many open files"
-msgstr "Demasiados archivos abiertos"
+msgstr "För många öppna filer"
 
 #. TRANS There are too many distinct file openings in the entire system.  Note
 #. TRANS that any number of linked channels count as just one file opening; see
 #. TRANS @ref{Linked Channels}.  This error never occurs in the GNU system.
 #: stdio-common/../sysdeps/gnu/errlist.c:170
 msgid "Too many open files in system"
-msgstr "Demasiados archivos abiertos en el sistema"
+msgstr "För många öppna filer i systemet"
 
 #. TRANS This means that the per-user limit on new process would be exceeded by
 #. TRANS an attempted @code{fork}.  @xref{Limits on Resources}, for details on
 #. TRANS the @code{RLIMIT_NPROC} limit.
 #: stdio-common/../sysdeps/gnu/errlist.c:475
 msgid "Too many processes"
-msgstr "Demasiados procesos"
+msgstr "För många processer"
 
-# FUZZY
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:427
 msgid "Too many references: cannot splice"
-msgstr "Demasiadas referencias: no se pueden solapar"
+msgstr "För många referenser: kan inte skarva"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
 #: stdio-common/../sysdeps/gnu/errlist.c:481
 msgid "Too many users"
-msgstr "Demasiados usuarios"
+msgstr "För många användare"
 
 msgid "Trace/breakpoint trap"
-msgstr "`trap' para punto de parada/seguimiento"
+msgstr "Spårning/brytpunktsfälla"
 
 #: posix/regex.c:945
 msgid "Trailing backslash"
-msgstr "Barra invertida extra al final `\\'"
+msgstr "Felplacerat omvänt snedstreck"
 
-# Requiescant in pace. ¿de verdad lo vas a dejar así? :-) sv
-# Creí que el traductor eras tú. cuídate, oye.
-# Lo siento pero no se me ocurre nada en su lugar. sv
-#
-# Tengo que mirar los fuentes, de esto y de muchas otras cosas
-#  todo esta en mi disco duro en mi ordenador roto. em
-#
 #. TRANS In the GNU system, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
 #: stdio-common/../sysdeps/gnu/errlist.c:584
 msgid "Translator died"
-msgstr "Murió el traductor"
+msgstr "Översättaren dog"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
 #: stdio-common/../sysdeps/gnu/errlist.c:402
 msgid "Transport endpoint is already connected"
-msgstr "El otro extremo ya está conectado"
+msgstr "Transportslutpunkten är redan förbunden"
 
 #. TRANS The socket is not connected to anything.  You get this error when you
 #. TRANS try to transmit data over a socket, without first specifying a
@@ -1881,87 +1489,81 @@ msgstr "El otro extremo ya está conectado"
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:410
 msgid "Transport endpoint is not connected"
-msgstr "El otro extremo de la conexión no está conectado"
+msgstr "Transportslutpunkten är inte förbunden"
 
 #: catgets/gencat.c:208 db/makedb.c:209 locale/programs/locale.c:241
 #: locale/programs/localedef.c:389
 #, c-format
 msgid "Try `%s --help' for more information.\n"
-msgstr "Pruebe `%s --help' para más información.\n"
+msgstr "Försök med \"%s --help\" för mer information\n"
 
-# ## Nota: este no tiene nada que ver con el anterior. sv
 #: inet/rcmd.c:136
 #, c-format
 msgid "Trying %s...\n"
-msgstr "Intentando %s...\n"
+msgstr "Provar %s...\n"
 
 #: inet/ruserpass.c:246
 #, c-format
 msgid "Unknown .netrc keyword %s"
-msgstr "palabra clave desconocida en .netrc %s"
+msgstr "Okänt .netrc-nyckelord %s"
 
 #: nis/ypclnt.c:665
 msgid "Unknown NIS error code"
-msgstr "Error del NIS desconocido"
+msgstr "Okänd NIS-felkod"
 
 #: string/../sysdeps/generic/_strerror.c:44
 #: string/../sysdeps/mach/_strerror.c:67
 msgid "Unknown error "
-msgstr "Error desconocido "
+msgstr "Okänt fel "
 
-# En el libro de Infovía traducen host por "anfitrión"
 #: resolv/herror.c:74
 msgid "Unknown host"
-msgstr "Host desconocido"
+msgstr "Okänd värd"
 
 #: resolv/herror.c:120
 msgid "Unknown resolver error"
-msgstr "Error del determinador de nombres desconocido"
+msgstr "Okänt fel hos namnlösare"
 
 #: resolv/herror.c:76
 msgid "Unknown server error"
-msgstr "Error del servidor desconocido"
+msgstr "Okänt fel hos tjänsteställe"
 
 #: string/strsignal.c:41
 #, c-format
 msgid "Unknown signal %d"
-msgstr "Señal desconocida %d"
+msgstr "Okänd signal %d"
 
 #: misc/error.c:95
 msgid "Unknown system error"
-msgstr "Error del sistema desconocido"
+msgstr "Okänt systemfel"
 
 #: nis/ypclnt.c:713
 msgid "Unknown ypbind error"
-msgstr "Error desconocido en la llamada a 'ypbind()'"
+msgstr "Okänt ypbind-fel"
 
 #: posix/regex.c:948
 msgid "Unmatched ( or \\("
-msgstr "( ó \\( desemparejados"
+msgstr "Obalanserade ( eller \\("
 
 #: posix/regex.c:956
 msgid "Unmatched ) or \\)"
-msgstr ") ó \\) desemparejados"
+msgstr "Obalanserade ) eller \\)"
 
 #: posix/regex.c:947
 msgid "Unmatched [ or [^"
-msgstr "[ ó ^[ desemparejados"
+msgstr "Obalanserade [ eller [^"
 
 #: posix/regex.c:949
 msgid "Unmatched \\{"
-msgstr "\\{ desemparejado"
+msgstr "Obalanserad \\{"
 
-# ## FUZZY. Este te dejo que se lo quites tú. sv
-# ## :) em+
 #: posix/getconf.c:260
 #, c-format
 msgid "Unrecognized variable `%s'"
-msgstr "Variable desconocida `%s'"
+msgstr "Okänd variabel \"%s\""
 
-# Sugerencia: de E/S sv+
-#  ?? sigo pensando en una traducción para condición
 msgid "Urgent I/O condition"
-msgstr "Condición urgente de entrada/saluda"
+msgstr "Viktigt I/O-tillstånd"
 
 #: catgets/gencat.c:212
 #, c-format
@@ -1977,21 +1579,17 @@ msgid ""
 "If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
 msgstr ""
-"Modo de empleo: %s [OPCIÓN]... -o ARCHIVO-SALIDA [ARCHIVO-ENTRADA]...\n"
-"                %s [OPCIÓN]... [ARCHIVO-SALIDA [ARCHIVO-ENTRADA]...]\n"
-"Los argumentos obligatorios para las opciones largas son también "
-"obligatorios\n"
-"para las opciones cortas.\n"
-"   -H, --header         Crea un archivo de cabecera C con las definiciones "
-"de\n"
-"                        los símbolos\n"
-"   -h, --help           Muestra esta ayuda y finaliza\n"
-"       --new            no usa el catálogo existente, crea un nuevo archivo\n"
-"                        de salida\n"
-"   -o, --output=ARCHIVO escribe el resultado en el archivo ARCHIVO\n"
-"   -V, --version        informa de la versión y finaliza\n"
-"Si ARCHIVO-ENTRADA es -, la entrada se lee de la entrada estándar.\n"
-"Si ARCHIVO-SALIDA es -, el resultado se escribe en la salida estándar.\n"
+"Användning: %s [FLAGGA]... -o UTFIL [INFIL]...\n"
+"            %s [FLAGGA]... [UTFIL [INFIL]...]\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de "
+"korta.\n"
+"  -H, --header        skapa en C-deklarationsfil med symboldefinitioner\n"
+"  -h, --help          visa denna hjälptext och avsluta\n"
+"      --new           använd inte existerande katalog, gör en ny utfil\n"
+"  -o, --output=NAMN   skriv resultatet till filen NAMN\n"
+"  -V, --version       visa versionsinformation och avsluta.\n"
+"Om INFIL är -, läs indata från standard in.  Om UTFIL är -, skriv\n"
+"resultatet till standard ut.\n"
 
 #: db/makedb.c:213
 #, c-format
@@ -2008,23 +1606,19 @@ msgid ""
 "  -V, --version       output version information and exit\n"
 "If INPUT-FILE is -, input is read from standard input.\n"
 msgstr ""
-"Modo de empleo: %s [OPCIÓN]... ARCHIVO-ENTRADA ARCHIVO-SALIDA\n"
-"                %s [OPCIÓN]... -o ARCHIVO-SALIDA ARCHIVO-ENTRADA\n"
-"                %s [OPCIÓN]... -u ARCHIVO-ENTRADA\n"
-"Los argumentos obligatorios para las opciones largas son también "
-"obligatorios\n"
-"para las opciones cortas.\n"
-"   -f, --fold-case      convierte las claves a minúsculas\n"
-"   -h, --help           Muestra esta ayuda y finaliza\n"
-"   -o, --output=ARCHIVO escribe el resultado en el archivo ARCHIVO\n"
-"       --quiet          no muestra mensajes al construir la base de datos\n"
-"   -u, --undo           muestra el contenido del archivo de datos, una\n"
-"                        entrada por línea\n"
-"   -V, --version        informa de la versión y finaliza\n"
-"Si ARCHIVO-ENTRADA es -, la entrada se lee de la entrada estándar.\n"
+"Användning: %s [FLAGGA]... INFIL UTFIL\n"
+"            %s [FLAGGA]... -o UTFIL INFIL\n"
+"            %s [FLAGGA]... -u INFIL\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de "
+"korta.\n"
+"  -f, --fold-case     omvandla nyckel till små bokstäver\n"
+"  -h, --help          visa denna hjälptext och avsluta\n"
+"  -o, --output=NAMN   skriv resultatet till filen NAMN\n"
+"      --quiet         visa inga meddelanden när databasen byggs\n"
+"  -u, --undo          skriv innehållet i databasen, en post per rad\n"
+"  -V, --version       visa versionsinformation och avsluta\n"
+"Om INFIL är -, läs indata från standard in\n"
 
-# ## Cambio la frase final. Ten en cuenta que a lo mejor el nombre del
-# ## directorio se sale si no. sv+
 #: locale/programs/localedef.c:393
 #, c-format
 msgid ""
@@ -2043,27 +1637,21 @@ msgid ""
 "System's directory for character maps: %s\n"
 "                       locale files  : %s\n"
 msgstr ""
-"Modo de empleo: %s [OPCIÓN]... nombre\n"
-"Los argumentos obligatorios para las opciones largas son también "
-"obligatorios\n"
-"para las opciones cortas.\n"
-"  -c, --force                crea el resultado incluso si existieron "
-"mensajes\n"
-"                             de aviso\n"
-"  -h, --help                 muestra esta ayuda y finaliza\n"
-"  -f, --charmap=ARCHIVO      los nombres símbólicos de caracteres se "
-"encuentran\n"
-"                             en ARCHIVO\n"
-"  -i, --inputfile=ARCHIVO    las definiciones fuente  se encuetran en "
-"ARCHIVO\n"
-"  -u, --code-set-name=NOMBRE especifica el conjunto de códigos para mapear\n"
-"                             los elementos ISO 10646\n"
-"  -v, --verbose              incrementa el número de mensajes mostrados\n"
-"  -V, --version              informa de la versión y finaliza\n"
-"      --posix                atiende estrictamente las especificaciones "
-"POSIX\n"
-"Directorio del sistema para los mapas de caracteres: %s\n"
-"                            los archivos de locales: %s\n"
+"Användning: %s [FLAGGA]... namn\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de "
+"korta.\n"
+"  -c, --force               skapa resultatfil även om varningar gavs\n"
+"  -h, --help                visa denna hjälptext och avsluta\n"
+"  -f, --charmap=FIL         symboliska teckennamn definieras i FIL\n"
+"  -i, --inputfile=FIL       källdefinitioner finns i FIL\n"
+"  -u, --code-set-name=NAMN  ange koduppsättning för att översätta\n"
+"                            ISO 10646-element\n"
+"  -v, --verbose             skriv mer meddelanden\n"
+"  -V, --version             visa versionsinformation och avsluta\n"
+"      --posix               följ POSIX strikt\n"
+"\n"
+"Systemets katalog för teckenuppsättningar: %s\n"
+"                      meddelandekataloger: %s\n"
 
 #: locale/programs/locale.c:245
 #, c-format
@@ -2079,294 +1667,251 @@ msgid ""
 "  -c, --category-name   write names of selected categories\n"
 "  -k, --keyword-name    write names of selected keywords\n"
 msgstr ""
-"Modo de empleo: %s [OPCIÓN]... nombre\n"
-"Los argumentos para las opciones largas son tambien obligatorios para las\n"
-"opciones cortas.\n"
-"  -h, --help            muestra esta ayuda y finaliza\n"
-"  -V, --version         informa de la versión y finaliza\n"
+"Användning: %s [FLAGGA]... namn\n"
+"Obligatoriska argument till långa flaggor är obligatoriska även för de "
+"korta.\n"
+"  -h, --help            visa denna hjälptext och avsluta\n"
+"  -V, --version         visa versionsinformation och avsluta\n"
 "\n"
-"  -a, --all-locales     muestra los nombres de todos los locales "
-"disponibles\n"
-"  -m, --charmaps        muestra los nombres de todos los mapas de "
-"caracteres\n"
-"                        disponibles\n"
+"  -a, --all-locales     skriv namnen på tillgängliga lokaler\n"
+"  -m, --charmaps        skriv namnen på tillgängliga teckenuppsättningar\n"
 "\n"
-"  -c, --category-name   muestra los nombres de las categorías seleccionadas\n"
-"  -k, --keyword-name    muestra los nombres de las palabras clave "
-"seleccionadas\n"
+"  -c, --category-name   skriv namnen på utvalda kategorier\n"
+"  -k, --keyword-name    skriv namnen på utvalda nyckelord\n"
 
 #: posix/getconf.c:200
 #, c-format
 msgid "Usage: %s variable_name [pathname]\n"
-msgstr "Modo de empleo: %s nombre_de_variable [ruta]\n"
+msgstr "Användning: %s variabelnamn [sökväg]\n"
 
-# Sugerencia: numprogr -> numprog. sv
-# Sugerencia: numpuerto -> númpuerto. sv
-# Sugerencia: numprog -> númprog. sv
-# OK, lo he cambiado en todo
 #: sunrpc/rpcinfo.c:609
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
-msgstr ""
-"Modo de empleo: rpcinfo [ -n númpuerto ] -u host progrnúm [ numversión ]\n"
+msgstr "Användning: rpcinfo [ -n portnr ] -u värd prognr [ versnr ]\n"
 
 msgid "User defined signal 1"
-msgstr "Señal definida por el usuario 1"
+msgstr "Användarsignal 1"
 
 msgid "User defined signal 2"
-msgstr "Señal definida por el usuario 2"
+msgstr "Användarsignal 2"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:642
 msgid "Value too large for defined data type"
-msgstr "Valor demasiado grande para el tipo de datos definido"
+msgstr "Värdet för stort för definierad datatyp"
 
 msgid "Virtual timer expired"
-msgstr "El temporizador virtual llegó al final"
+msgstr "Virtuell tidtagare löpte ut"
 
-# # Otra opción, resultado incongruente al ejecutar la orden em
 #: time/zic.c:1844
 msgid "Wild result from command execution"
-msgstr "Resultado salvaje en la ejecución de la orden"
+msgstr "Vilt resultat från kommandokörning"
 
 msgid "Window changed"
-msgstr "Ventana cambiada"
+msgstr "Fönstret ändrades"
 
 #: catgets/gencat.c:174 db/makedb.c:125 locale/programs/locale.c:192
 #: locale/programs/localedef.c:182
 #, c-format
 msgid "Written by %s.\n"
-msgstr "Escrito por %s.\n"
+msgstr "Skriven av %s.\n"
 
 #: nis/ypclnt.c:146
 msgid "YPBINDPROC_DOMAIN: Internal error\n"
-msgstr "YPBINDPROC_DOMAIN: Error interno\n"
+msgstr "YPBINDPROC_DOMAIN: Internt fel\n"
 
 #: nis/ypclnt.c:150
 #, c-format
 msgid "YPBINDPROC_DOMAIN: No server for domain %s\n"
-msgstr "YPBINDPROC_DOMAIN: No hay servidor para el dominio %s\n"
+msgstr "YPBINDPROC_DOMAIN: Ingen betjänt för domän %s\n"
 
 #: nis/ypclnt.c:154
 msgid "YPBINDPROC_DOMAIN: Resource allocation failure\n"
-msgstr "YPBINDPROC_DOMAIN: Fallo en la asignación de recursos\n"
+msgstr "YPBINDPROC_DOMAIN: Allokeringsfel för resurs\n"
 
 #: nis/ypclnt.c:158
 msgid "YPBINDPROC_DOMAIN: Unknown error\n"
-msgstr "YPBINDPROC_DOMAIN: Error desconocido\n"
+msgstr "YPBINDPROC_DOMAIN: Okänt fel\n"
 
-# ?? Ni idea de como traducir esto
-# "Ciertamente expiraste durante este tiempo" em
-# this time es esta *vez* Pero como no acabo de verle el sentido a la frase
-# prefiero que no corramos el riesgo. sv
-# Sin fuentes no se puede hacer. Cogeré la traducción de Ulrich Drepper
-# al alemán, no sé cómo no se me había ocurrido antes. em
-# Muy buena idea. Suerte que tenemos un coordinador que sabe alemán :-) sv
-#  El problema es que la 1.10.1 no esta disponible todavía. Le he mandado un
-#  mail para que me envíe lo que tenga hecho. em
-# Ok, traducido exactamente igual que lo tiene Jochen. Es ist keine Schuld
-#   von mir wenn es gar nicht stimmt.
-#
-# Sugerencia: "Ahora sí que te lo has cargado". sv+
-# (Preguntar a nuestros amigos americanos si se entiende).
-# (Es que me suena que "blew" no es muy fino, por eso romper es
-# demasiado suave).
-#
 #. TRANS You did @strong{what}?
 #: stdio-common/../sysdeps/gnu/errlist.c:596
 msgid "You really blew it this time"
-msgstr "Esta vez si que lo has roto"
+msgstr "Du strulade till det den här gången"
 
-# VER
 #: time/zic.c:1050
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
-"La línea de continuación de la zona no esta después del tiempo de final\n"
-"de la línea anterior"
+"Zon-fortsättningsradens sluttid är inte efter sluttiden på föregående rad"
 
 #: locale/programs/charmap.c:397 locale/programs/locfile.c:341
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
-msgstr "La definición `%1$s' no termina con `END %1$s'"
+msgstr "\"%1$s\" definition slutar ej med \"END %1$s\""
 
 #: locale/programs/ld-monetary.c:358 locale/programs/ld-numeric.c:190
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
-msgstr ""
-"`-1' tiene que ser la última especificación en el campo `%s' de la "
-"categoría\n"
-"`%s'"
+msgstr "\"-1\" måste vara sista post i fält \"%s\" i kategori \"%s\""
 
-# FUZZY
-# entries ? debe haber algo para eso
-# lo traducí antes como especificación, pero ... em+
 #: locale/programs/ld-collate.c:1652
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
-msgstr "`...' debe ser usado únicamente en las entradas `...' y `UNDEFINED'"
+msgstr "\"...\" får endast användas för post \"...\" och post \"UNDEFINED\""
 
 #: locale/programs/locfile.c:538
 msgid "`from' expected after first argument to `collating-element'"
 msgstr ""
-"Se esperaba `from' después del primer argumento para `collating-element'"
+"\"from\" förväntades efter första argumentet till \"collating-element\""
 
 #: locale/programs/ld-collate.c:1109
 msgid ""
 "`from' string in collation element declaration contains unknown character"
 msgstr ""
-"La cadena de caracteres `from' en la declaración de elemento de unión "
-"contiene\n"
-"un carácter desconocido"
+"\"från\"-sträng i deklaration av kollationeringselement innehåller okänt "
+"tecken"
 
 #: locale/programs/charmap.c:267
 #, c-format
 msgid "argument to <%s> must be a single character"
-msgstr "el argumento para <%s> debe ser un único carácter"
+msgstr "argumentet till <%s> måste vara ett enskilt tecken"
 
 #: locale/programs/locfile.c:215
 #, c-format
 msgid "argument to `%s' must be a single character"
-msgstr "el argumento para `%s' debe ser un único carácter"
+msgstr "argumentet till \"%s\" måste vara ett enskilt tecken"
 
-#  ??? mariscalización ?
 #: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
-msgstr "auth_none.c - Problema muy grave con autorización marshall"
+msgstr "auth_none.c - Fatalt kodningsproblem"
 
 #: inet/rcmd.c:360
 msgid "bad .rhosts owner"
-msgstr "El propietario del archivo .rhosts no es válido"
+msgstr "dålig .rhosts-ägare"
 
 #: locale/programs/charmap.c:212 locale/programs/locfile.c:209
 msgid "bad argument"
-msgstr "Argumento no válido"
+msgstr "dåligt argument"
 
 #: time/zic.c:1172
 msgid "blank FROM field on Link line"
-msgstr "Campo FROM vacío en la línea `Link'"
+msgstr "tomt \"FROM\"-fält på \"Link\"-rad"
 
 #: time/zic.c:1176
 msgid "blank TO field on Link line"
-msgstr "Campo TO vacío en la línea `Link'"
+msgstr "tomt \"TO\"-fält på \"Link\"-rad"
 
 #: malloc/mcheck.c:189
 msgid "block freed twice"
-msgstr "bloque liberado dos veces"
+msgstr "block avallokerat två gånger"
 
-# Revisar lo de bogus. creo que es eso.
 #: malloc/mcheck.c:192
 msgid "bogus mcheck_status, library is buggy"
-msgstr "Valor de mcheck_status incorrecto, la biblioteca tiene un bug"
+msgstr "felaktig mcheck_status, biblioteket är felaktigt"
 
 #: sunrpc/pmap_rmt.c:179
 msgid "broadcast: ioctl (get interface configuration)"
-msgstr "broadcast: iotcl (lee la configuración del interfaz)"
+msgstr "utsändning: ioctl (hämta gränssnittskonfiguration)"
 
-#  Mejorando lo presente ( idea de Jochen )
 #: sunrpc/pmap_rmt.c:186
 msgid "broadcast: ioctl (get interface flags)"
-msgstr "broadcast: iotcl (lee las propiedades del interfaz)"
+msgstr "utsändning: ioctl (hämta gränssnittsflaggor)"
 
 #: sunrpc/svc_udp.c:402
 msgid "cache_set: victim not found"
-msgstr "cache_set: no se encontró el objetivo"
+msgstr "cache_set: offer hittades ej"
 
-# FUZZY
 #: time/zic.c:1685
 msgid "can't determine time zone abbrevation to use just after until time"
 msgstr ""
-"No se puede determinar la abreviación de zona horaria que se usará justo\n"
-"después"
+"kan inte avgöra tidszonsförkortning att använda just efter \"until\"-tid"
 
 #: sunrpc/svc_simple.c:64
 #, c-format
 msgid "can't reassign procedure number %d\n"
-msgstr "no se puede reasignar el procedimiento número %d\n"
+msgstr "kan inte återtilldela procedurnummer %d\n"
 
 #: locale/programs/localedef.c:287
 #, c-format
 msgid "cannot `stat' locale file `%s'"
-msgstr "la llamada a `stat' falló en el archivo de locales `%s'"
+msgstr "kan inte ta status på lokalfil \"%s\""
 
 #: locale/programs/ld-collate.c:1314
 #, c-format
 msgid "cannot insert collation element `%.*s'"
-msgstr "no se puede insertar el elemento de unión `%.*s' "
+msgstr "kan inte sätta in kollationselement \"%.*s\""
 
 #: locale/programs/ld-collate.c:1493 locale/programs/ld-collate.c:1498
 msgid "cannot insert into result table"
-msgstr "no se puede insertar el la tabla de resultados"
+msgstr "kan inte sätta in i resultattabell"
 
-# FUZZY
 #: locale/programs/ld-collate.c:1166 locale/programs/ld-collate.c:1208
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
-msgstr "no se puede insertar la nueva definición para el símbolo de unión: %s"
+msgstr "kan inte sätta in ny kollationssymbolsdefinition: %s"
 
 #: db/makedb.c:161
 #, c-format
 msgid "cannot open database file `%s': %s"
-msgstr "no se puede abrir el archivo de datos `%s': %s"
+msgstr "kan inte öppna databasfil \"%s\": %s"
 
 #: catgets/gencat.c:259 db/makedb.c:180
 #, c-format
 msgid "cannot open input file `%s'"
-msgstr "no se puede abrir el archivo de entrada `%s'"
+msgstr "kan inte öppna infil \"%s\""
 
 #: locale/programs/localedef.c:221
 #, c-format
 msgid "cannot open locale definition file `%s'"
-msgstr "no se puede abrir el archivo de definición de locales `%s'"
+msgstr "kan inte öppna lokaldefinitionsfil \"%s\""
 
 #: catgets/gencat.c:764 catgets/gencat.c:805 db/makedb.c:189
 #, c-format
 msgid "cannot open output file `%s'"
-msgstr "no se puede abrir el archivo de salida `%s'"
+msgstr "kan inte öppna utfil \"%s\""
 
 #: locale/programs/locfile.c:986
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
-msgstr "no se puede abrir el archivo de salida `%s' para la categoría `%s'"
+msgstr "kan inte öppna utfil \"%s\" för kategori \"%s\""
 
-# FUZZY
 #: locale/programs/ld-collate.c:1360
 msgid "cannot process order specification"
-msgstr "no se pueden procesar las especificaciones de orden"
+msgstr "kan inte bearbeta sorteringsspecifikation"
 
 #: locale/programs/locale.c:303
 #, c-format
 msgid "cannot read character map directory `%s'"
-msgstr "no se puede leer el directorio de mapas de caracters `%s'"
+msgstr "kan inte läsa teckenuppsättningskatalog \"%s\""
 
 #: locale/programs/locale.c:278
 #, c-format
 msgid "cannot read locale directory `%s'"
-msgstr "No se puede leer directorio de locales %s"
+msgstr "kan inte läsa lokalkatalog \"%s\""
 
 #: locale/programs/localedef.c:309
 #, c-format
 msgid "cannot read locale file `%s'"
-msgstr "no se puede leer el archivo de locales `%s'"
+msgstr "kan inte läsa lokalfil \"%s\""
 
 #: locale/programs/localedef.c:334
 #, c-format
 msgid "cannot write output files to `%s'"
-msgstr "no se puede escribir en el archivo de salida `%s'"
+msgstr "kan inte skriva utfiler till \"%s\""
 
 #: locale/programs/localedef.c:377
 msgid "category data requested more than once: should not happen"
-msgstr "categoría de datos reclamada más de una vez, no debería de ocurrir"
+msgstr "kategoridata begärd mer än en gång: borde inte inträffa"
 
 #: locale/programs/ld-ctype.c:265
 #, c-format
 msgid "character %s'%s' in class `%s' must be in class `%s'"
-msgstr "el carácter %s'%s' en la clase `%s' debe estar en la clase `%s'"
+msgstr "tecken %s\"%s\" i klass \"%s\" måste vara i klass \"%s\""
 
 #: locale/programs/ld-ctype.c:289
 #, c-format
 msgid "character %s'%s' in class `%s' must not be in class `%s'"
-msgstr "el carácter %s'%s' en la clase `%s' no debe estar en la clase `%s"
+msgstr "tecken %s\"%s\" i klass \"%s\" kan inte vara i klass \"%s\""
 
 #: locale/programs/ld-ctype.c:310
 msgid "character <SP> not defined in character map"
-msgstr "el carácter <SP> no está definido en el mapa de caracteres'"
+msgstr "tecken <SP> inte definierat i teckenuppsättning"
 
 #: locale/programs/ld-ctype.c:939 locale/programs/ld-ctype.c:1002
 #: locale/programs/ld-ctype.c:1010 locale/programs/ld-ctype.c:1018
@@ -2376,62 +1921,60 @@ msgstr "el carácter <SP> no está definido en el mapa de caracteres'"
 #: locale/programs/ld-ctype.c:1141 locale/programs/ld-ctype.c:1152
 #, c-format
 msgid "character `%s' not defined while needed as default value"
-msgstr ""
-"el carácter `%s' no está definido cuando se necesitó como valor por defecto"
+msgstr "tecken \"%s\" inte definierad men behövs som standardvärde"
 
 #: locale/programs/ld-ctype.c:801
 #, c-format
 msgid "character class `%s' already defined"
-msgstr "la clase de carácter  `%s' ya fue definida"
+msgstr "teckenklass \"%s\" redan definierad"
 
 #: locale/programs/ld-ctype.c:833
 #, c-format
 msgid "character map `%s' already defined"
-msgstr "mapa de caracteres `%s' ya está definido"
+msgstr "teckenuppsättning \"%s\" redan definierad"
 
 #: locale/programs/charmap.c:76
 #, c-format
 msgid "character map file `%s' not found"
-msgstr "el mapa de caracteres `%s' no se encontró"
+msgstr "teckenuppsättningsfil \"%s\" inte funnen"
 
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
-msgstr "clnt_raw.c - Error grave en la secuencia de cabecera"
+msgstr "clnt_raw.c - Fatalt fel vid serialisation."
 
 #: locale/programs/ld-collate.c:1329
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
-msgstr ""
-"el elemento de unión `%.*s' aparece más de una vez: pasando por alto la línea"
+msgstr "kollationselement \"%.*s\" finns mer än en gång: rad ignorerad"
 
 #: locale/programs/ld-collate.c:1347
 #, c-format
 msgid "collation symbol `%.*s' appears more than once: ignore line"
-msgstr "símbolo de unión `%.*s' aparece más de una vez: descartando la línea"
+msgstr "kollationssymbol \"%.*s\" finns mer än en gång: rad ignorerad"
 
 #: locale/programs/locfile.c:522
 #, c-format
 msgid "collation symbol expected after `%s'"
-msgstr "símbolo de unión esperado después de `%s'"
+msgstr "kollationssymbol förväntades efter \"%s\""
 
 #: inet/rcmd.c:129
 #, c-format
 msgid "connect to address %s: "
-msgstr "conexión a la dirección %s: "
+msgstr "koppla till adress %s: "
 
 #: sunrpc/svc_simple.c:70
 msgid "couldn't create an rpc server\n"
-msgstr "no se pudo crear un servidor rpc\n"
+msgstr "kunde inte skapa en rpc-betjänt\n"
 
 #: sunrpc/svc_simple.c:77
 #, c-format
 msgid "couldn't register prog %d vers %d\n"
-msgstr "no se pudo registrar el programa %d versión %d\n"
+msgstr "kunde inte registrera prog %d vers %d\n"
 
 #: locale/programs/charmap.c:86
 #, c-format
 msgid "default character map file `%s' not found"
-msgstr " no se encontró el archivo de mapa de caracteres por defecto `%s'"
+msgstr "standardteckenuppsättningsfil \"%s\" inte hittad"
 
 #: locale/programs/ld-time.c:154
 #, c-format
@@ -2439,8 +1982,8 @@ msgid ""
 "direction flag in string %d in `era' field in category `%s' is not '+' nor "
 "'-'"
 msgstr ""
-"el indicador de dirección en la cadena %d en el campo `era' de la categoría\n"
-"`%s' no es '+' o  '-'"
+"riktningsflagga i sträng %d i \"era\"-fält i kategori \"%s\" är inte \"+\" "
+"eller \"-\""
 
 #: locale/programs/ld-time.c:164
 #, c-format
@@ -2448,568 +1991,506 @@ msgid ""
 "direction flag in string %d in `era' field in category `%s' is not a single "
 "character"
 msgstr ""
-"el indicador de dirección en la cadena %d en el campo `era' de la categoría\n"
-"`%s' no es un único carácter"
+"riktningsflagga i sträng %d i \"era\"-fält i kategori \"%s\" är inte ett "
+"tecken"
 
 #: locale/programs/charset.c:87 locale/programs/charset.c:132
 #, c-format
 msgid "duplicate character name `%s'"
-msgstr "nombre de carácter duplicado `%s'"
+msgstr "duplicerat teckennamn \"%s\""
 
 #: locale/programs/ld-collate.c:1141
 msgid "duplicate collating element definition"
-msgstr "definición duplicada del elemento de unión"
+msgstr "dubbla definitioner av kollationselement"
 
 #: locale/programs/ld-collate.c:1287
 #, c-format
 msgid "duplicate definition for character `%.*s'"
-msgstr "definición duplicada del carácter `%.*s"
+msgstr "dubbla definitioner för tecken \"%.*s\""
 
 #: db/makedb.c:310
 msgid "duplicate key"
-msgstr "tecla duplicada"
+msgstr "duplicerad nyckel"
 
 #: catgets/gencat.c:378
 msgid "duplicate set definition"
-msgstr "definición de conjunto duplicada"
+msgstr "duplicerad definition av uppsättning"
 
 #: time/zic.c:965
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
-msgstr "nombre de zona %s duplicado (archivo \"%s\", línea %d)"
+msgstr "duplicerat zonnamn %s (fil \"%s\", rad %d)"
 
 #: catgets/gencat.c:541
 msgid "duplicated message identifier"
-msgstr "identificador de mensaje duplicado"
+msgstr "duplicerad meddelandeidentifierare"
 
 #: catgets/gencat.c:514
 msgid "duplicated message number"
-msgstr "número de mensaje duplicado"
+msgstr "duplicerat meddelandenummer"
 
 #: locale/programs/ld-collate.c:1696
 msgid "empty weight name: line ignored"
-msgstr "nombre de peso vacío: la línea se pasa por alto"
+msgstr "tomt viktnamn: rad ignorerad"
 
 #: sunrpc/svc_udp.c:348
 msgid "enablecache: cache already enabled"
-msgstr "enablecache: el caché ya estaba activado"
+msgstr "enablecache: cache redan påslagen"
 
-# Se consultó a la lista sobre si era "la caché" o "el caché"
-# Parece ser indistinto, así que unas veces puede ser "la" y otras "el".
-# dependiendo del caso (lo que mejor suene).
-#
 #: sunrpc/svc_udp.c:353
 msgid "enablecache: could not allocate cache"
-msgstr "enablecache: no se pudo crear espacio para el caché"
+msgstr "enablecache: kunde inte allokera cache"
 
 #: sunrpc/svc_udp.c:360
 msgid "enablecache: could not allocate cache data"
-msgstr "enablecache: no se pudo crear espacio para los datos del caché"
+msgstr "enablecache: kunde inte allokera cache-data"
 
 #: sunrpc/svc_udp.c:366
 msgid "enablecache: could not allocate cache fifo"
-msgstr "enablecache: no se pudo crear espacio para la pila del caché"
+msgstr "enablecache: kunde inte allokera cache-fifo"
 
-# ## ellipsis NO era elipse... sv+
 #: locale/programs/ld-collate.c:1419
 msgid "end point of ellipsis range is bigger then start"
-msgstr ""
-"el punto de final para el rango de la elipsis es mayor que el de comienzo"
+msgstr "slutpunkt för ... är större än startvärdet"
 
 #: locale/programs/ld-collate.c:1149
 msgid "error while inserting collation element into hash table"
-msgstr "error cuando se insertaba el elemento de unión en la tabla enlazada"
+msgstr "fel vid insättning av kollationselement i hashtabellen"
 
 #: locale/programs/ld-collate.c:1161
 msgid "error while inserting to hash table"
-msgstr "error al insertar en la tabla enlazada"
+msgstr "fel vis insättning till hashtabellen"
 
 #: locale/programs/locfile.c:465
 msgid "expect string argument for `copy'"
-msgstr "se espera un argumento de cadena de caracteres para `copy'"
+msgstr "förväntar strängargument för \"copy\""
 
 #: time/zic.c:856
 msgid "expected continuation line not found"
-msgstr "la línea de continuación esperada no se encuentra"
+msgstr "förväntad fortsättningsrad ej funnen"
 
 #: locale/programs/locfile.c:1010
 #, c-format
 msgid "failure while writing data for category `%s'"
-msgstr "error al escribir los datos para la categoría `%s'"
+msgstr "misslyckades skriva data för kategori \"%s\""
 
 #: locale/programs/ld-monetary.c:154 locale/programs/ld-numeric.c:95
 #, c-format
 msgid "field `%s' in category `%s' not defined"
-msgstr "el campo `%s' en la categoría `%s' no está definido"
+msgstr "fält \"%s\" i kategori \"%s\" inte definierad"
 
 #: locale/programs/ld-messages.c:81 locale/programs/ld-messages.c:102
 #, c-format
 msgid "field `%s' in category `%s' undefined"
-msgstr "el campo `%s' en la categoría `%s' no se ha definido"
+msgstr "fält \"%s\" i kategori \"%s\" odefinierad"
 
 #: locale/programs/locfile.c:547
 msgid "from-value of `collating-element' must be a string"
-msgstr ""
-"el valor `from-value' del elemento de unión ha de ser una cadena de "
-"caracteres"
+msgstr "frånvärde för \"collating-element\" måste vara en sträng"
 
 #: locale/programs/linereader.c:328
 msgid "garbage at end of character code specification"
-msgstr ""
-"inconsistencias al final de la línea de especificación de código de "
-"caracteres"
+msgstr "skräp i slutet av teckenkodsspecifikation"
 
 #: locale/programs/linereader.c:214
 msgid "garbage at end of digit"
-msgstr "inconsistencias al final del dígito"
+msgstr "skräp i slutet av nummer"
 
 #: locale/programs/ld-time.c:183
 #, c-format
 msgid ""
 "garbage at end of offset value in string %d in `era' field in category `%s'"
 msgstr ""
-"incongruencias al final del valor de desplazamiento en la cadena %d en el\n"
-"campo `era' de la categoría `%s'"
+"skräp i slutet av tilläggsvärde i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: locale/programs/ld-time.c:238
 #, c-format
 msgid ""
 "garbage at end of starting date in string %d in `era' field in category `%s'"
 msgstr ""
-"incongruencias al final de la fecha de comienzo en la cadena %d en el\n"
-"campo `era' de la categoría `%s'"
+"skräp i slutet av startdatum i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: locale/programs/ld-time.c:310
 #, c-format
 msgid ""
 "garbage at end of stopping date in string %d in `era' field in category `%s'"
 msgstr ""
-"incongruencias al final de la fecha de parada en la cadena %d en el<\n"
-"campo `era' de la categoría `%s'"
+"skräp i slutet av slutdatum i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: sunrpc/get_myaddr.c:73
 msgid "get_myaddress: ioctl (get interface configuration)"
-msgstr "get_myaddress: ioctl (lee la configuración del interfaz)"
+msgstr "get_myaddress: ioctl (hämta gränssnittskonfiguration)"
 
 #: time/zic.c:1149
 msgid "illegal CORRECTION field on Leap line"
-msgstr "El campo CORRECTION en la línea de año bisiesto no es válido"
+msgstr "otillåtet \"CORRECTION\"-fält på \"Leap\"-rad"
 
 #: time/zic.c:1153
 msgid "illegal Rolling/Stationary field on Leap line"
-msgstr "Campo Rolling/Stationary no válido en la línea de año bisiesto"
+msgstr "otillåtet \"Rolling/Stationary\"-fält på \"Leap\"-rad"
 
 #: locale/programs/ld-collate.c:1767
 msgid "illegal character constant in string"
-msgstr "carácter no válido en el archivo: "
+msgstr "otillåten teckenkonstant i sträng"
 
 #: locale/programs/ld-collate.c:1116
 msgid "illegal collation element"
-msgstr "elemento de unión no válido"
+msgstr "otillåtet kollationselement"
 
 #: locale/programs/charmap.c:196
 msgid "illegal definition"
-msgstr "definición no válida"
+msgstr "otillåten definition"
 
 #: locale/programs/charmap.c:349
 msgid "illegal encoding given"
-msgstr "especificada una codificación no válida"
+msgstr "otillåten kodning given"
 
 #: locale/programs/linereader.c:546
 msgid "illegal escape sequence at end of string"
-msgstr "secuencia de escape no permitida al final de la cadena de caracteres"
+msgstr "otillåten teckensekvens vid strängslut"
 
 #: locale/programs/charset.c:101
 msgid "illegal names for character range"
-msgstr "nombres no permitidos para el rango de caracteres"
+msgstr "otillåtna namn för teckenomfång"
 
 #: locale/programs/ld-time.c:176
 #, c-format
 msgid "illegal number for offset in string %d in `era' field in category `%s'"
 msgstr ""
-"número de desplazamiento no válido en la cadena %d en el campo `era' de la\n"
-"categoría `%s'"
+"otillåtet tal för tilläggsvärde i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: catgets/gencat.c:351 catgets/gencat.c:428
 msgid "illegal set number"
-msgstr "número de conjunto inválido"
+msgstr "otillåtet tal för uppsättning"
 
 #: locale/programs/ld-time.c:230
 #, c-format
 msgid "illegal starting date in string %d in `era' field in category `%s'"
-msgstr ""
-"fecha de comienzo no válida en la cadena %d en el campo `era' de la\n"
-"categoría `%s'"
+msgstr "otillåtet startdatum i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: locale/programs/ld-time.c:302
 #, c-format
 msgid "illegal stopping date in string %d in `era' field in category `%s'"
-msgstr ""
-"fecha de parada no válida en la cadena %d en el campo `era' de la\n"
-"categoría `%s'"
+msgstr "otillåtet slutdatum i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: locale/programs/ld-ctype.c:807
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
-msgstr ""
-"límite de la implementación: no se permiten más de %d clases de caracteres "
+msgstr "implementationsbegränsning: inte fler än %d teckenklasser tillåtet"
 
 #: locale/programs/ld-ctype.c:839
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
-"límite de la implementación: no se permiten más de %d mapas de caracteres"
+"implementationsbegränsning: inte fler än %d teckenuppsättningar tillåtet"
 
 #: db/makedb.c:163
 msgid "incorrectly formatted file"
-msgstr "archivo formateado incorrectamente"
+msgstr "felaktigt formaterad rad"
 
 #: time/zic.c:814
 msgid "input line of unknown type"
-msgstr "línea de entrada de tipo desconocido"
+msgstr "inrad av okänd typ"
 
 #: time/zic.c:1733
 msgid "internal error - addtype called with bad isdst"
-msgstr "error interno - se llamó a 'addtype' con 'isdst' erróneo"
+msgstr "internt fel - addtype anropad med felaktig isdst"
 
 #: time/zic.c:1741
 msgid "internal error - addtype called with bad ttisgmt"
-msgstr "error interno - se llamó a 'addtype' con 'ttisgmt' erróneo"
+msgstr "internt fel - addtype anropad med felaktig ttisgmt"
 
 #: time/zic.c:1737
 msgid "internal error - addtype called with bad ttisstd"
-msgstr "error interno - se llamó a 'addtype' con 'ttisstd' erróneo"
+msgstr "internt fel - addtype anropad med felaktig ttisstd"
 
 #: locale/programs/ld-ctype.c:301
 #, c-format
 msgid "internal error in %s, line %u"
-msgstr "error interno en %s, línea %u"
+msgstr "internt fel i %s, rad %u"
 
 #: time/zic.c:1021
 msgid "invalid GMT offset"
-msgstr "desplazamiento GMT no válido"
+msgstr "ogiltigt tilläggsvärde till GMT"
 
-# ¿No será "abreviatura"? sv+
 #: time/zic.c:1024
 msgid "invalid abbreviation format"
-msgstr "formato de abreviación incorrecto"
+msgstr "ogiltigt förkortningsformat"
 
 #: time/zic.c:1114 time/zic.c:1313 time/zic.c:1327
 msgid "invalid day of month"
-msgstr "día del mes no válido"
+msgstr "ogiltig dag i månaden"
 
 #: time/zic.c:1272
 msgid "invalid ending year"
-msgstr "año de final no válido"
+msgstr "ogiltigt slutår"
 
 #: time/zic.c:1086
 msgid "invalid leaping year"
-msgstr "año bisiesto inválido"
+msgstr "ogiltigt skottår"
 
 #: time/zic.c:1101 time/zic.c:1204
 msgid "invalid month name"
-msgstr "nombre de mes incorrecto"
+msgstr "ogiltigt månadsnamn"
 
 #: time/zic.c:920
 msgid "invalid saved time"
-msgstr "la hora almacenada no es válida"
+msgstr "ogiltigt sparad tid"
 
 #: time/zic.c:1252
 msgid "invalid starting year"
-msgstr "año de comienzo no válido"
+msgstr "ogiltigt startår"
 
 #: time/zic.c:1130 time/zic.c:1232
 msgid "invalid time of day"
-msgstr "hora del día no válida"
+msgstr "ogiltig tid på dagen"
 
 #: time/zic.c:1318
 msgid "invalid weekday name"
-msgstr "nombre del día de la semana incorrecto"
+msgstr "ogiltigt veckodagsnamn"
 
 #: locale/programs/ld-collate.c:1412
 msgid "line after ellipsis must contain character definition"
-msgstr ""
-"la línea de después de la elipsis tiene que contener una definición de "
-"carácter"
+msgstr "rad efter ... får inte innehålla teckendefinition"
 
 #: locale/programs/ld-collate.c:1391
 msgid "line before ellipsis does not contain definition for character constant"
-msgstr ""
-"la línea posterior a la elipsis no contiene una definición para una "
-"constante de carácter"
+msgstr "rad före ... innehåller inte definition för teckenkonstant"
 
 #: time/zic.c:794
 msgid "line too long"
-msgstr "línea demasiado larga"
+msgstr "rad för lång"
 
 #: locale/programs/localedef.c:281
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
-msgstr ""
-"archivo de locales `%s', que se usa en una orden `copy', no se encuentra"
+msgstr "lokalfil \"%s\", använd i \"copy\", inte funnen"
 
 #: catgets/gencat.c:609
 msgid "malformed line ignored"
-msgstr "línea incorrecta se ignoró"
+msgstr "felaktig rad ignorerad"
 
-#  ??? y bien ?, alguna sugerencia ?, alborotada, retorcida, descolocada,
-#  enrollada :)
-# ¿estropeada?       ¿alterada? <- votaría por ésta. sv
-#  Pues después de ver la traducción de Jochen estoy perdido
-#   le voy a consultar a él directamente. em
 #: malloc/mcheck.c:183
 msgid "memory clobbered before allocated block"
-msgstr "memoria alterada antes del comienzo del bloque de memoria asignado"
+msgstr "minnet förstört före allokerat block"
 
-#  ??? lo mismo digo
-#  aceptado hasta que consulte con Jochen
-# lo mismo sugiero. sv
 #: malloc/mcheck.c:186
 msgid "memory clobbered past end of allocated block"
-msgstr "memoria alterada pasado el final del bloque de memoria asignado"
+msgstr "minnet förstört efter slutet på allokerat block"
 
 #: locale/programs/ld-collate.c:167 locale/programs/ld-collate.c:173
 #: locale/programs/ld-collate.c:177 locale/programs/ld-collate.c:1439
 #: locale/programs/ld-collate.c:1468 locale/programs/locfile.c:940
 #: locale/programs/xmalloc.c:68 posix/getconf.c:250
 msgid "memory exhausted"
-msgstr "memoria agotada"
+msgstr "minne slut"
 
 #: malloc/obstack.c:425
 msgid "memory exhausted\n"
-msgstr "Memoria agotada\n"
+msgstr "minnet slut\n"
 
-# biblioteca está recogida en la lista de pifias de Ángel Álvarez.
 #: malloc/mcheck.c:180
 msgid "memory is consistent, library is buggy"
-msgstr "no hay problemas con la memoria, la biblioteca tiene un bug"
+msgstr "minnet är konsistent, biblioteket är felaktigt"
 
 #: locale/programs/ld-time.c:348
 #, c-format
 msgid "missing era format in string %d in `era' field in category `%s'"
-msgstr ""
-"nombre de era no encontrado en la cadena %d en el campo `era' de la\n"
-"categoría `%s'"
+msgstr "saknar eraformat i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: locale/programs/ld-time.c:337
 #, c-format
 msgid "missing era name in string %d in `era' fieldin category `%s'"
-msgstr ""
-"nomnbre de era no encontrado en la cadena %d en el campo `era' de la\n"
-"categoría `%s'"
+msgstr "saknar eranamn i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: time/zic.c:915
 msgid "nameless rule"
-msgstr "regla sin nombre"
+msgstr "namnlös regel"
 
 #: sunrpc/svc_simple.c:140
 #, c-format
 msgid "never registered prog %d\n"
-msgstr "el programa %d no fue registrado nunca\n"
+msgstr "aldrig registrerat prog %d\n"
 
 #: locale/programs/ld-messages.c:95 locale/programs/ld-messages.c:116
 #, c-format
 msgid "no correct regular expression for field `%s' in category `%s': %s"
-msgstr ""
-"falta una expresión regular correcta para el campo `%s' en la categoría "
-"`%s':\n"
-"%s'"
+msgstr "felaktigt reguljärt uttryck för fält \"%s\" i kategori \"%s\": %s"
 
-# ## Antes tenías: "no hay día en la regla de coincidencia de mes" sv
-# Esto debe tener algo que ver con la función menopausie() em
-# No se me había ocurrido... ¿Se te ocurre algo mejor, ahora que ya
-# sabemos lo que quiere decir? sv
 #: time/zic.c:2059
 msgid "no day in month matches rule"
-msgstr "ningún día del mes coincide con la regla"
+msgstr "ingen dag i månaden matchar regeln"
 
 #: locale/programs/ld-collate.c:259
 msgid "no definition of `UNDEFINED'"
-msgstr "no hay definición para `UNDEFINED'"
+msgstr "ingen definition av \"UNDEFINED\""
 
 #: locale/programs/locfile.c:479
 msgid "no other keyword shall be specified when `copy' is used"
-msgstr "ninguna otra palabra clave debe ser especificada al usar `copy'"
+msgstr "inget annat nyckelord ska anges när \"copy\" används"
 
 #: locale/programs/localedef.c:340
 msgid "no output file produced because warning were issued"
-msgstr "no se produjo archivo de salida debido a la existencia de warnings"
+msgstr "ingen utfil skapad på grund av varningar"
 
 #: locale/programs/charmap.c:315 locale/programs/charmap.c:466
 #: locale/programs/charmap.c:545
 msgid "no symbolic name given"
-msgstr "no se proporció un nombre simbólico"
+msgstr "inget symboliskt namn givet"
 
 #: locale/programs/charmap.c:380 locale/programs/charmap.c:512
 #: locale/programs/charmap.c:578
 msgid "no symbolic name given for end of range"
-msgstr "no se proporció un nombre simbólico para el final del rango"
+msgstr "inget symboliskt namn givet för slutet på omfånget"
 
 #: locale/programs/ld-collate.c:244
 #, c-format
 msgid "no weight defined for symbol `%s'"
-msgstr "el peso no está definido para el símbolo `%s'"
+msgstr "ingen vikt definierad för symbol \"%s\""
 
 #: locale/programs/charmap.c:430
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
-msgstr ""
-"solo están permitidas definiciones WIDTH después de la una definición CHARMAP"
+msgstr "endast definition av \"WIDTH\" får följa definitionen av \"CHARMAP\""
 
 #: db/makedb.c:326
 #, c-format
 msgid "problems while reading `%s'"
-msgstr "problemas mientras se leía `%s'"
+msgstr "problem läsa \"%s\""
 
-# ## Borro un fuzzy que había. sv
 #: sunrpc/rpcinfo.c:222 sunrpc/rpcinfo.c:350
 #, c-format
 msgid "program %lu is not available\n"
-msgstr "el programa %lu no está disponible\n"
+msgstr "program %lu är inte tillgängligt\n"
 
 #: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:282 sunrpc/rpcinfo.c:371
 #: sunrpc/rpcinfo.c:408 sunrpc/rpcinfo.c:429 sunrpc/rpcinfo.c:462
 #, c-format
 msgid "program %lu version %lu is not available\n"
-msgstr "el programa %lu versión %lu no está disponible\n"
+msgstr "program %lu version %lu är inte tillgängligt\n"
 
-# Sugerencia: esperando -> a la espera. sv+
 #: sunrpc/rpcinfo.c:466
 #, c-format
 msgid "program %lu version %lu ready and waiting\n"
-msgstr "el programa %lu versión %lu está listo y esperando\n"
+msgstr "program %lu version %lu klar och väntar\n"
 
 #: inet/rcmd.c:171
 #, c-format
 msgid "rcmd: select (setting up stderr): %m\n"
-msgstr "rcmd: select (activando la salida de error estándar): %m\n"
+msgstr "rcmd: select (sätter upp standard error): %m\n"
 
 #: inet/rcmd.c:103
 msgid "rcmd: socket: All ports in use\n"
-msgstr "rcmd: socket: Todos los puertos están siendo usados\n"
+msgstr "rcmd: uttag (socket): Alla portar används\n"
 
 #: inet/rcmd.c:159
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
-msgstr "rcmd: write (activando la salida de error estándar): %m\n"
+msgstr "rcmd: write: (sätter upp standard error): %m\n"
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
-msgstr "registerrpc: memoria agotada\n"
+msgstr "registerrpc: minnet slut\n"
 
 #: time/zic.c:1794
 msgid "repeated leap second moment"
-msgstr "segundo intercalar repetido"
+msgstr "upprepad skottsekundstillfälle"
 
 #: sunrpc/rpcinfo.c:659
 #, c-format
 msgid "rpcinfo: %s is unknown host\n"
-msgstr "rpcinfo: el host %s es desconocido\n"
+msgstr "rpcinfo: %s är en okänd värd\n"
 
 #: sunrpc/rpcinfo.c:626
 #, c-format
 msgid "rpcinfo: %s is unknown service\n"
-msgstr "rpcinfo: el servicio `%s' es desconocido\n"
+msgstr "rpcinfo: %s är en okänd tjänst\n"
 
-# FUZZY. Se podría añadir rpcinfo: al principio. sv
-# Estoy pensando en poner 'dar de baja' en vez de eso em+
 #: sunrpc/rpcinfo.c:600
 #, c-format
 msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
-msgstr "no se pudo borrar el registro para el programa %s versión %s\n"
+msgstr "rpcinfo: Kunde inte ta bort registrering för prog %s version %s\n"
 
-# Sugerencia: broadcast -> `broadcast'. sv+
 #: sunrpc/rpcinfo.c:576
 #, c-format
 msgid "rpcinfo: broadcast failed: %s\n"
-msgstr "rpcinfo: el broadcast no tuvo éxito: %s\n"
+msgstr "rpcinfo: utsändning misslyckades: %s\n"
 
-# ¡Necesitamos ayuda para "mapeador"!
 #: sunrpc/rpcinfo.c:505
 msgid "rpcinfo: can't contact portmapper"
-msgstr ""
-"rpcinfo: no se puede comunicar con el mapeador de puertos (`portmapper')"
+msgstr "rpcinfo: kan inte kontakta portmapper"
 
 #: sunrpc/rpcinfo.c:510
 msgid "rpcinfo: can't contact portmapper: "
-msgstr ""
-"rpcinfo: no se puede comunicar con el mapeador de puertos (`portmapper'): "
+msgstr "rpcinfo: kan inte kontakta portmapper: "
 
 #: time/zic.c:708 time/zic.c:710
 msgid "same rule name in multiple files"
-msgstr "mismo nombre de regla en varios archivos"
+msgstr "samma regel i flera filer"
 
-#  ¿en la configuración del servicio?, ¿del circuito?, ¿o dejarlo así?
-#  Es de locos, estuve viendo las/los fuentes, preferí dejarlo así. em
 #: inet/rcmd.c:174
 msgid "select: protocol failure in circuit setup\n"
-msgstr "select: fallo de protocolo al configurar el circuito\n"
+msgstr "select: protokollfel i förbindelseuppsättning\n"
 
-#  ??? lo mismo que arriba
 #: inet/rcmd.c:192
 msgid "socket: protocol failure in circuit setup\n"
-msgstr "socket: fallo de protocolo al configurar el circuito\n"
+msgstr "uttag (socket): protokollfel i förbindelseuppsättning\n"
 
 #: locale/programs/locfile.c:600
 msgid "sorting order `forward' and `backward' are mutually exclusive"
-msgstr "los órdenes `forward' y `backward' son mutuamente excluyentes"
+msgstr ""
+"sorteringsordning \"forward\" och \"backward\" är ömsesidigt uteslutande"
 
 #: locale/programs/ld-collate.c:1568 locale/programs/ld-collate.c:1614
 msgid ""
 "specification of sorting weight for collation symbol does not make sense"
 msgstr ""
-"la especificación para el orden de peso del símbolo de unión no tiene "
-"sentido "
+"specifikation av sorteringsvikter för kollationssymbol verkar inte vettig"
 
 #: time/zic.c:779
 msgid "standard input"
-msgstr "entrada estándar"
+msgstr "standard in"
 
 #: time/zdump.c:260
 msgid "standard output"
-msgstr "salida estándar"
+msgstr "standard ut"
 
 #: locale/programs/ld-time.c:256
 #, c-format
 msgid "starting date is illegal in string %d in `era' field in category `%s'"
-msgstr ""
-"la fecha de comienzo no es válida en la cadena %d del campo `era' de la\n"
-"categoría `%s'"
+msgstr "startdatum är otillåtet i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: time/zic.c:1276
 msgid "starting year greater than ending year"
-msgstr "año de comienzo mayor que año de final"
+msgstr "startår är större än slutår"
 
-# ## Corregido el estropicio. sv+
 #: locale/programs/ld-time.c:328
 #, c-format
 msgid "stopping date is illegal in string %d in `era' field in category `%s'"
-msgstr ""
-"la fecha de final no es válida en la cadena %d del campo `era' de la\n"
-"categoría `%s'"
+msgstr "slutdatum är otillåtet i sträng %d i \"era\"-fält i kategori \"%s\""
 
 #: sunrpc/svc_tcp.c:201 sunrpc/svc_tcp.c:206
 msgid "svc_tcp: makefd_xprt: out of memory\n"
-msgstr "svc_tcp: makefd_xprt: memoria agotada\n"
+msgstr "svc_tcp: makefd_xprt: minnet slut\n"
 
 #: sunrpc/svc_tcp.c:149
 msgid "svctcp_.c - cannot getsockname or listen"
-msgstr "svctcp_.c - fallo en la ejecución de `getsockname()' o `listen()'"
+msgstr "svctcp_.c - kan inte anropa getsockname eller listen"
 
 #: sunrpc/svc_tcp.c:136
 msgid "svctcp_.c - udp socket creation problem"
-msgstr "svctcp_.c - problema al crear el `socket' del `udp'"
+msgstr "svctcp_.c - problem att skapa udp-uttag (socket)"
 
 #: sunrpc/svc_tcp.c:156 sunrpc/svc_tcp.c:163
 msgid "svctcp_create: out of memory\n"
-msgstr "svctcp_create: memoria agotada\n"
+msgstr "svctcp_create: minnet slut\n"
 
 #: sunrpc/svc_udp.c:123
 msgid "svcudp_create - cannot getsockname"
-msgstr "svcudp_create - fallo en la ejecución de `getsockname'"
+msgstr "svcudp_create - kan inte anropa getsockname"
 
 #: sunrpc/svc_udp.c:111
 msgid "svcudp_create: socket creation problem"
-msgstr "svcudp_create: problemas para crear el `socket'"
+msgstr "svcudp_create: problem att skapa uttag (socket)"
 
 #: locale/programs/ld-collate.c:1191
 #, c-format
@@ -3017,8 +2498,7 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates element "
 "definition"
 msgstr ""
-"el símbolo para el elemento de unión para multi-caracter `%.*s'  repite la\n"
-"definición de otro elemento"
+"symbol för flerteckenskollationselement \"%.*s\" duplicerar elementdefinition"
 
 #: locale/programs/ld-collate.c:1064
 #, c-format
@@ -3026,9 +2506,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other element "
 "definition"
 msgstr ""
-"el símbolo para el elemento de unión multicarácter `%.*s' repite la "
-"definición\n"
-"de otro elemento"
+"symbol för flerteckenskollationselement \"%.*s\" duplicerar annan\n"
+"elementdefinition"
 
 #: locale/programs/ld-collate.c:1200
 #, c-format
@@ -3036,9 +2515,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates other symbol "
 "definition"
 msgstr ""
-"el símbolo para el elemento de unión multicarácter `%.*s' repite la "
-"definición\n"
-"de otro símbolo"
+"symbol för flerteckenskollationselement \"%.*s\" duplicerar annan\n"
+"symboldefinition"
 
 #: locale/programs/ld-collate.c:1073
 #, c-format
@@ -3046,9 +2524,7 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbol "
 "definition"
 msgstr ""
-"el símbolo para el elemento de unión multicarácter `%.*s' repite la "
-"definición\n"
-"repite la definición de otro símbolo"
+"symbol för flerteckenskollationselement \"%.*s\" duplicerar symboldefinition"
 
 #: locale/programs/ld-collate.c:1055 locale/programs/ld-collate.c:1182
 #, c-format
@@ -3056,9 +2532,8 @@ msgid ""
 "symbol for multicharacter collating element `%.*s' duplicates symbolic name "
 "in charset"
 msgstr ""
-"el símbolo para el elemento de unión multicarácter `%.*s' repite otro "
-"nombre\n"
-"de símbolo en el conjunto de caracteres"
+"symbol för flerteckenskollationselement \"%.*s\" duplicerar symbolnamn i\n"
+"teckenuppsättning"
 
 #: locale/programs/charmap.c:314 locale/programs/charmap.c:348
 #: locale/programs/charmap.c:378 locale/programs/charmap.c:465
@@ -3066,465 +2541,288 @@ msgstr ""
 #: locale/programs/charmap.c:576
 #, c-format
 msgid "syntax error in %s definition: %s"
-msgstr "error de sintaxis en ls definición de %s: %s"
+msgstr "syntaxfel i definition av %s: %s"
 
 #: locale/programs/locfile.c:620
 msgid "syntax error in `order_start' directive"
-msgstr "error de sintaxis en la directiva  `order_start'"
+msgstr "syntaxfel i direktivet \"order_start\""
 
 #: locale/programs/locfile.c:362
 msgid "syntax error in character class definition"
-msgstr "error de sintaxis en el nombre de clase de carácter"
+msgstr "syntaxfel i teckenklassdefinition"
 
 #: locale/programs/locfile.c:420
 msgid "syntax error in character conversion definition"
-msgstr "error de sintaxis en la definición de la conversión de carácter"
+msgstr "syntaxfel i teckenkonverteringsdefinition"
 
 #: locale/programs/locfile.c:662
 msgid "syntax error in collating order definition"
-msgstr "error de sintaxis en la definición del orden de unión"
+msgstr "syntaxfel i kollationssorteringsdefinition"
 
 #: locale/programs/locfile.c:512
 msgid "syntax error in collation definition"
-msgstr "error de sintaxis en la definición de la unión"
+msgstr "syntaxfel i kollationsdefinition"
 
 #: locale/programs/locfile.c:335
 msgid "syntax error in definition of LC_CTYPE category"
-msgstr "error de sintaxis en una definición de categoría LC_CTYPE"
+msgstr "syntaxfel i definition av kategorin LC_CTYPE"
 
 #: locale/programs/locfile.c:278
 msgid "syntax error in definition of new character class"
-msgstr "error de sintaxis en la definición de una nueva clase de carácter"
+msgstr "syntaxfel i definition av ny teckenklass"
 
 #: locale/programs/locfile.c:288
 msgid "syntax error in definition of new character map"
-msgstr "error de sintaxis en la definición de un nuevo mapa de carácter"
+msgstr "syntaxfel i definition av ny teckenuppsättning"
 
 #: locale/programs/locfile.c:873
 msgid "syntax error in message locale definition"
-msgstr "error de sintaxis en la definición de local para mensajes"
+msgstr "syntaxfel i definition av meddelandelokal"
 
 #: locale/programs/locfile.c:784
 msgid "syntax error in monetary locale definition"
-msgstr "error de sintaxis en la definición de local para moneda"
+msgstr "syntaxfel i definition av monetärlokal"
 
 #: locale/programs/locfile.c:811
 msgid "syntax error in numeric locale definition"
-msgstr "error de sintaxis en la definición de local para números"
+msgstr "syntaxfel i definition av numerisk lokal"
 
 #: locale/programs/locfile.c:722
 msgid "syntax error in order specification"
-msgstr "error de sintaxis en la especificación de orden"
+msgstr "syntaxfel i sorteringsspecifikation"
 
 #: locale/programs/charmap.c:195 locale/programs/charmap.c:211
 #, c-format
 msgid "syntax error in prolog: %s"
-msgstr "error de sintaxis en el prólogo: %s"
+msgstr "syntaxfel i prolog: %s"
 
 #: locale/programs/locfile.c:849
 msgid "syntax error in time locale definition"
-msgstr "error de sintaxis en la definición de local para la hora"
+msgstr "syntaxfel i definition av tidslokal"
 
 #: locale/programs/locfile.c:255
 msgid "syntax error: not inside a locale definition section"
-msgstr ""
-"error de sintaxis: no está dentro de una seción de definición para un local"
+msgstr "syntaxfel: inte inne i en lokaldefinition"
 
 #: catgets/gencat.c:380 catgets/gencat.c:516 catgets/gencat.c:543
 msgid "this is the first definition"
-msgstr "esta es la primera vez que aparece la definición"
+msgstr "detta är den första definitionen"
 
 #: time/zic.c:1119
 msgid "time before zero"
-msgstr "hora antes de cero"
+msgstr "tid före noll"
 
-# Sugerencia: Desbordamiento de fecha. (?) sv+
 #: time/zic.c:1127 time/zic.c:1959 time/zic.c:1978
 msgid "time overflow"
-msgstr "desbordamiento horario"
+msgstr "för stort tidsvärde"
 
 #: locale/programs/charset.c:44
 msgid "too few bytes in character encoding"
-msgstr "demasiados pocos bytes en la codificación del carácter"
+msgstr "för få byte i teckenkodning"
 
 #: locale/programs/charset.c:46
 msgid "too many bytes in character encoding"
-msgstr "demasiados bytes en la codificación del carácter"
+msgstr "för många tecken i teckenkodning"
 
 #: locale/programs/locales.h:72
 msgid "too many character classes defined"
-msgstr "demasiadas clases de caracteres definidas"
+msgstr "för många teckenklasser definierade"
 
 #: time/zic.c:1788
 msgid "too many leap seconds"
-msgstr "demasiados segundos intercalares"
+msgstr "för många skottsekunder"
 
 #: time/zic.c:1760
 msgid "too many local time types"
-msgstr "demasiados tipos de hora local"
+msgstr "för många lokala tidstyper"
 
 #: time/zic.c:1714
 msgid "too many transitions?!"
-msgstr "¡¿demasiadas transiciones?!"
+msgstr "för många övergångar?!"
 
-# FUZZY
-# ¿ Qué puede ser esto ? em+
 #: locale/programs/ld-collate.c:1623
 msgid "too many weights"
-msgstr "¡demasiados pesos!"
+msgstr "för många vikter"
 
-# ## Sugerencia: abreviaturas. sv
-# ## Ok em+
 #: time/zic.c:2082
 msgid "too many, or too long, time zone abbreviations"
-msgstr "demasiadas o demasiado largas abreviaturas de zona horaria"
+msgstr "för många eller för långa tidszonförkortningar"
 
-# FUZZY
-# es una traducción un poco libre, ¿ qué te parece ? em+
-# Pues que en ninguna parte dice que las esté ignorando.
-# Solamente dice que hay basurilla al final.
-# Yo borraría el "ignorando". sv+
 #: locale/programs/linereader.h:146
 msgid "trailing garbage at end of line"
-msgstr "ignorando inconsistencias al final de la línea"
+msgstr "avslutande skräp vid radslutet"
 
 #: sunrpc/svc_simple.c:132
 #, c-format
 msgid "trouble replying to prog %d\n"
-msgstr "dificultades para responder al programa %d\n"
+msgstr "problem att svara till prog %d\n"
 
 #: locale/programs/ld-collate.c:1383
 msgid "two lines in a row containing `...' are not allowed"
-msgstr "no están permitidas dos líneas en una misma fila con `...'"
+msgstr "två rader efter varann som har \"...\" är inte tillåtet"
 
 #: time/zic.c:1283
 msgid "typed single year"
-msgstr "tecleado un único año"
+msgstr "satte typ på endast ett år"
 
 #: posix/getconf.c:239
 msgid "undefined"
-msgstr "sin definir"
+msgstr "odefinierad"
 
 #: locale/programs/charmap.c:617 locale/programs/charmap.c:628
 #, c-format
 msgid "unknown character `%s'"
-msgstr "carácter desconocido `%s'"
+msgstr "okänt tecken \"%s\""
 
 #: locale/programs/ld-messages.c:193 locale/programs/ld-messages.c:204
 #: locale/programs/ld-messages.c:215 locale/programs/ld-messages.c:226
 #: locale/programs/ld-time.c:696
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
-msgstr "carácter no reconocido en el campo `%s' de la categoría `%s'"
+msgstr "okänt tecken i fält \"%s\" i kategori \"%s\""
 
-# FUZZY em+
 #: locale/programs/locfile.c:585
 msgid "unknown collation directive"
-msgstr "la directiva de unión es desconocida"
+msgstr "okänt kollationsdirektiv"
 
-# ## descartada (?) sv
-# ## ¿ y así ?  em
-# ## por mí, vale. sv+
 #: catgets/gencat.c:477
 #, c-format
 msgid "unknown directive `%s': line ignored"
-msgstr "directiva desconocida '%s': línea pasada por alto"
+msgstr "okänt direktiv \"%s\": rad ignorerad"
 
 #: catgets/gencat.c:456
 #, c-format
 msgid "unknown set `%s'"
-msgstr "conjunto `%s' desconocido"
+msgstr "okänd uppsättning \"%s\""
 
 msgid "unknown signal"
-msgstr "señal desconocida"
+msgstr "okänd signal"
 
-# descartada (?) sv
-# Me gusta más `pasada por alto' em+
 #: locale/programs/ld-collate.c:1367 locale/programs/ld-collate.c:1558
 #: locale/programs/ld-collate.c:1732
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
-msgstr "símbolo desconocido `%.*s': línea descartada"
+msgstr "okänd symbol \"%.*s\": rad ignorerad"
 
 #: time/zic.c:751
 msgid "unruly zone"
-msgstr "zona sin reglas"
+msgstr "besvärlig zon"
 
 #: catgets/gencat.c:961
 msgid "unterminated message"
-msgstr "mensaje sin terminar"
+msgstr "oavslutat meddelande"
 
 #: locale/programs/linereader.c:515 locale/programs/linereader.c:550
 msgid "unterminated string"
-msgstr "cadena de caracteres sin terminar"
+msgstr "oavslutad sträng"
 
 #: locale/programs/linereader.c:385
 msgid "unterminated symbolic name"
-msgstr "nombre simbólico sin terminar"
+msgstr "oavslutat symboliskt namn"
 
 #: locale/programs/ld-collate.c:1685
 msgid "unterminated weight name"
-msgstr "nombre de peso sin terminar"
+msgstr "oavslutat viktnamn"
 
 #: locale/programs/charset.c:119
 msgid "upper limit in range is not smaller then lower limit"
-msgstr "el límite superior del rango no es menor que el límite inferior"
+msgstr "övre gräns i område är inte mindre än undre gräns"
 
-# A lo mejor si pones "veintinueve de febrero" o "29 de febrero"
-# se entiende mejor. no sé. sv
-# Si, estas pensando lo mismo que yo, 29 de febrero puede confundir, porque
-# en el archivo pondrá 2/29  em
-# Sugerencia: "uso de 2/29 ..." (usando sería "using") sv
-# Tienes razón em+
 #: time/zic.c:2025
 msgid "use of 2/29 in non leap-year"
-msgstr "uso de 2/29 en un año no bisiesto"
+msgstr "använder 29/2 i icke-skottår"
 
-# Lo siento Santiago em+
 #: locale/programs/charmap.c:438 locale/programs/charmap.c:492
 #, c-format
 msgid "value for %s must be an integer"
-msgstr "el valor para %s tiene que ser un número entero"
+msgstr "värdet för %s måste vara heltal"
 
 #: locale/programs/charmap.c:233
 #, c-format
 msgid "value for <%s> must lie between 1 and 4"
-msgstr "el valor para <%s> debe estar entre 1 y 4"
+msgstr "värde för <%s> måste vara mellan 1 och 4"
 
 #: locale/programs/ld-monetary.c:148 locale/programs/ld-numeric.c:89
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
-msgstr "el valor para el campo `%s' en la categoría `%s' no debe estar vacío"
+msgstr "värde för fält \"%s\" i kategori \"%s\" får inte vara tom sträng"
 
 #: locale/programs/charmap.c:245
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
-msgstr ""
-"el valor de <mb_cur_max> tiene que ser mayor que el valor de <mb_cur_min>"
+msgstr "värdet på <mb_cur_max> måste vara större än värdet på <mb_cur_min>"
 
 #: locale/programs/ld-monetary.c:138
 msgid ""
 "value of field `int_curr_symbol' in category `LC_MONETARY' does not "
 "correspond to a valid name in ISO 4217"
 msgstr ""
-"el valor del campo `int_curr_symbol' en la categoría `LC_MONETARY' no se\n"
-"corresponde con un nombre válido en ISO 4217"
+"värdet på fältet \"int_curr_symbol\" i kategorin LC_MONETARY stämmer inte "
+"med värden i ISO 4217"
 
-# FUZZY
-# ¿ Errónea ? em+
-# También se puede poner equivocada. sv+
 #: locale/programs/ld-monetary.c:133
 msgid ""
 "value of field `int_curr_symbol' in category `LC_MONETARY' has wrong length"
 msgstr ""
-"el valor del campo `int_curr_symbol' en la categoría `LC_MONETARY' tiene\n"
-"una longitud errónea"
+"värdet på fältet \"int_curr_symbol\" i kategorin LC_MONETARY har fel längd"
 
 #: locale/programs/ld-monetary.c:370 locale/programs/ld-numeric.c:199
 #, c-format
 msgid "values for field `%s' in category `%s' must be smaller than 127"
-msgstr "el valor para el campo `%s' en la categoría `%s' no debe ser cero"
+msgstr "värden på fält \"%s\" i kategorin \"%s\" måste vara mindre än 127"
 
 #: locale/programs/ld-monetary.c:366
 #, c-format
 msgid "values for field `%s' in category `%s' must not be zero"
-msgstr "el valor para el campo `%s' en la categoría `%s' no debe ser cero"
+msgstr "värden på fält \"%s\" i kategorin \"%s\" får inte vara noll"
 
 #: login/utmp_file.c:84
 msgid "while opening UTMP file"
-msgstr "al abrir el archivo UTMP"
+msgstr "när UTMP-filen öppnades"
 
 #: catgets/gencat.c:988
 msgid "while opening old catalog file"
-msgstr "al abrir el archivo de catálogo antiguo"
+msgstr "när gammal katalogfil öppnades"
 
 #: db/makedb.c:353
 msgid "while reading database"
-msgstr "al leer el archivo de datos"
+msgstr "när databasen lästes"
 
 #: db/makedb.c:315
 msgid "while writing data base file"
-msgstr "al abrir el archivo de datos"
+msgstr "när databasen skrevs"
 
 #: db/makedb.c:142
 msgid "wrong number of arguments"
-msgstr "número incorrecto de argumentos"
+msgstr "fel antal argument"
 
-# En todas estas, yo pondría "número incorrecto de campos",
-# "número incorrecto de argumentos", etc.
-# creo que quedaría mucho mejor. sv
-# La mitad como tú dices, y la mitad como yo em
-#
-# Eso es que te da igual...
-# O es mejor como digo, o no es mejor.
-# Si es mejor, ponlo en todos los sitios. Y si no, en ninguno.
-# Yo creo que es mucho mejor poner "número incorrecto ..."
-# Si no, queda como "al revés". sv+
 #: time/zic.c:1077
 msgid "wrong number of fields on Leap line"
-msgstr "número incorrecto de campos en la línea de bisiesto ( Leap )"
+msgstr "fel antal fält på \"Leap\"-rad"
 
 #: time/zic.c:1168
 msgid "wrong number of fields on Link line"
-msgstr "número incorrecto de campos en la línea de enlace ( Link )"
+msgstr "fel antal fält på \"Link\"-rad"
 
 #: time/zic.c:911
 msgid "wrong number of fields on Rule line"
-msgstr "número incorrecto de argumentos en la línea de regla ( Rule )"
+msgstr "fel antal fält på \"Rule\"-rad"
 
 #: time/zic.c:981
 msgid "wrong number of fields on Zone continuation line"
-msgstr "número de campos incorrecto en la línea de continuación de zona (Zone)"
+msgstr "fel antal fält på \"Zone\"-fortsättningsrad"
 
 #: time/zic.c:939
 msgid "wrong number of fields on Zone line"
-msgstr "número de campos incorrecto en la línea de zona ( Zone )"
+msgstr "fel antal fält på \"Zone\"-rad"
 
 #: nis/ypclnt.c:570
 msgid "yp_all: clnttcp_create failed"
-msgstr "yp_all: ha fallado la llamada a 'clnttcp_create()'"
+msgstr "yp_all: clnttcp_create misslyckades"
 
 #: nis/ypclnt.c:772
 msgid "yp_update: cannot convert host to netname\n"
-msgstr "yp_update: no puede convertir el nombre del host a nombre de red\n"
+msgstr "yp_update: kan inte omvandla värd till nätnamn\n"
 
 #: nis/ypclnt.c:784
 msgid "yp_update: cannot get server address\n"
-msgstr "yp_update: no se puede encontrar la dirección del servidor\n"
-
-#~ msgid "character `%c' not defined while needed as default value"
-#~ msgstr ""
-#~ "el carácter `%c' no está definido cuando se necesitó como valor por defecto"
-
-# ## Antes decía: no se pudo crear un servidor rpc
-# ## Lo he cambiado por lo que ves. sv
-# ## Borro el "fuzzy". sv
-#~ msgid "couldn't do tcp_create\n"
-#~ msgstr "no se ha podido ejecutar tcp_create\n"
-
-# ## Borro el fuzzy. sv
-#~ msgid "couldn't do udp_create\n"
-#~ msgstr "no se pudo ejecutar udp_create\n"
-
-#~ msgid "portmap CALLIT: cannot fork.\n"
-#~ msgstr "portmap CALLIT: llamada a fork() sin éxito\n"
-
-#~ msgid "portmap cannot create socket"
-#~ msgstr "el mapeador de puertos `portmap' no ha podido crear el `socket'"
-
-#~ msgid "run_svc returned unexpectedly\n"
-#~ msgstr "run_svc terminó inesperadamente\n"
-
-#~ msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
-#~ msgstr ""
-#~ "       %s [-c | -h | -l | -m] [-o archivo_salida] [archivo_entrada]\n"
-
-#~ msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
-#~ msgstr "       %s [-s udp|tcp]* [-o archivo_salida] [archivo_entrada]\n"
-
-#~ msgid "%s, line %d: "
-#~ msgstr "%s, línea %d: "
-
-#~ msgid "%s: output would overwrite %s\n"
-#~ msgstr "%s: la salida sobreescribiría %s\n"
-
-#~ msgid "%s: unable to open "
-#~ msgstr "%s: no se pudo abrir "
-
-# A los "arrays" les digo matrices. Igual en América se dice de otra forma.
-# Creo que habría que consultarlo. SV.
-# Echando mano de los fuentes, está claro que se refiere a un array de
-# caracteres, ¿ Cadena de caracteres ?, si claro. EM
-# Pues no, puede ser ambas cosas, o un array de caracteres, o una cadena.
-# ¿por qué te comes la palabra "declaración"?
-# ¿Qué tal "esperada una declaración de `array'"? sv
-# Una declaración de array es> "char *a" por ejemplo. Lo que espera
-#   es algo así>"pepe" , escrito en un archivo de texto, con toda
-#   seguridad ( consulté los fuentes ) em
-# Creí que una declaración y una constante eran cosas distintas. sv
-# ¿Está mal el original inglés? sv
-#  Desde luego que esta mal, o poco claro al menos. Estoy convencido
-#  de que la traducción mejora una vez más al original. em
-#~ msgid "array declaration expected"
-#~ msgstr "esperado un array"
-
-#~ msgid "constant or identifier expected"
-#~ msgstr "esperada una constante o un identificador"
-
-#~ msgid "definition keyword expected"
-#~ msgstr "esperada una palabra clave"
-
-# Sugerencia: se esperaba `%s'. sv
-# Ok em+
-#~ msgid "expected '%s'"
-#~ msgstr "se esperaba `%s'"
-
-# Sugerencia: Lo mismo de antes. sv
-# OK em+
-#~ msgid "expected '%s' or '%s'"
-#~ msgstr "se esperaba `%s' ó `%s' "
-
-# Lo mismo. sv
-#~ msgid "expected '%s', '%s' or '%s'"
-#~ msgstr "se esperaba `%s', `%s' ó `%s'"
-
-#~ msgid "expected type specifier"
-#~ msgstr "esperado especificador de tipo"
-
-#~ msgid "illegal character in file: "
-#~ msgstr "carácter no válido en el archivo: "
-
-#~ msgid "illegal result type"
-#~ msgstr "tipo resultante no válido"
-
-#~ msgid "no array-of-pointer declarations -- use typedef"
-#~ msgstr "no existe ninguna declaración de array-of-pointer -- usar typedef"
-
-#~ msgid "preprocessor error"
-#~ msgstr "error del preprocesador"
-
-#~ msgid "too many files!\n"
-#~ msgstr "¡demasiados archivos!\n"
-
-#~ msgid "unterminated string constant"
-#~ msgstr "cadena de caracteres sin terminar"
-
-# También se podría haber puesto "Uso:"
-# En recode ya se puso "Modo de empleo"
-# me suena a prospecto de crecepelo EM
-#
-#~ msgid "usage: %s infile\n"
-#~ msgstr "Modo de empleo: %s archivo_de_entrada\n"
-
-# "array" es "array"?
-# Lo miro con cuidado, los archivos rpc_*.c de la libc son especialmente
-# complicados. Sí, creo que se refiere a los aliases de servicios rpc, y
-# efectivamente es un array de longitud variable. No se me ocurriría
-# traducirlo de otra forma, yo no lo entendería mejor que así.
-# otra vez está ausente la "declaración", ¿no habría que ponerla ? sv
-# rpc_parse contiene las funciones para 'parsear' un archivo de config. em
-# Habrá que inventar algo para 'parsear' ... sv
-# Los alemanes dicen parsen, habe geparst  em, quizá comprobar
-# sintaxis o interpretar ? ( parsear es ambas cosas juntas, no ? ) em
-# Creo que "examinar" podría valer, al menos para empezar. sv
-#
-# Sugerencia: "esperado un..." -> "se esperaba un..." sv
-#~ msgid "variable-length array declaration expected"
-#~ msgstr "esperado un array de longitud variable"
-
-#~ msgid "voids allowed only inside union and program definitions"
-#~ msgstr ""
-#~ "voids sólo se permiten dentro de las definiciones de uniones y de programa"
-
-# ## Borro todos los errores reservados menos este.
-# ## Si aparecen otra vez le dices a Ulrich que ponga
-# ## "Reserved error %d", digo yo. sv+
-# ## Borra este mismo si te parece.
-#~ msgid "Reserved error 82"
-#~ msgstr "Error reservado 82"
-
-# Probablemente la traducción de path sería algo así
-# como "ruta de búsqueda" sv
-# por cierto: ¿qué son los niveles de "remote"? sv
-# Niveles de profundidad ?, ver fuentes em ??
-#~ msgid "Too many levels of remote in path"
-#~ msgstr "Demasiados niveles en el `path'"
+msgstr "yp_update: kan inte hämta betjäntadress\n"

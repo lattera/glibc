@@ -12,9 +12,9 @@
 # Library General Public License for more details.
 
 # You should have received a copy of the GNU Library General Public
-# License along with the GNU C Library; see the file COPYING.LIB.  If
-# not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-# Cambridge, MA 02139, USA.
+# License along with the GNU C Library; see the file COPYING.LIB.  If not,
+# write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
 
 #
 #	Specific makefile for stdio.
@@ -34,7 +34,7 @@ routines	:=							      \
 	fputc putc putchar						      \
 	fgets gets fputs puts						      \
 	getdelim							      \
-	fclose fflush							      \
+	fclose fcloseall fflush						      \
 	vdprintf vsnprintf vsprintf vasprintf vsscanf vscanf		      \
 	memstream obstream linewrap					      \
 	internals sysd-stdio pipestream stdio_init libc_fatal

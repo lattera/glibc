@@ -34,7 +34,7 @@ __sigpause (sig_or_mask, is_sig)
       /* The modern X/Open implementation is requested.  */
       if (sigprocmask (0, NULL, &set) < 0
 	  /* Yes, we call `sigaddset' and not `__sigaddset'.  */
-	  || sigaddset (&set, sig_or_mask) < 0)
+	  || sigdelset (&set, sig_or_mask) < 0)
 	return -1;
     }
   else
@@ -54,3 +54,16 @@ __sigpause (sig_or_mask, is_sig)
 
   return sigsuspend (&set);
 }
+
+
+/* We have to provide a default version of this function since the
+   standards demand it.  The version which is a bit more reasonable is
+   the BSD version.  So make this the default.  */
+int __default_sigpause __P ((int mask));
+int
+__default_sigpause (mask)
+     int mask;
+{
+  return __sigpause (mask, 0);
+}
+weak_alias (__default_sigpause, sigpause)

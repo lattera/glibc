@@ -26,21 +26,11 @@
 /* Close a stream.  */
 int
 fclose (stream)
-     register FILE *stream;
+     FILE *stream;
 {
   int status;
 
-  if (stream == NULL)
-    {
-      /* Close all streams.  */
-      register FILE *f;
-      for (f = __stdio_head; f != NULL; f = f->__next)
-	if (__validfp(f))
-	  (void) fclose(f);
-      return 0;
-    }
-
-  if (!__validfp(stream))
+  if (!__validfp (stream))
     {
       __set_errno (EINVAL);
       return EOF;
@@ -53,18 +43,18 @@ fclose (stream)
 
   /* Free the buffer's storage.  */
   if (stream->__buffer != NULL && !stream->__userbuf)
-    free(stream->__buffer);
+    free (stream->__buffer);
 
   /* Close the system file descriptor.  */
   if (stream->__io_funcs.__close != NULL)
-    status = (*stream->__io_funcs.__close)(stream->__cookie);
+    status = (*stream->__io_funcs.__close) (stream->__cookie);
   else if (!stream->__seen && stream->__cookie != NULL)
-    status = __stdio_close(stream->__cookie);
+    status = __stdio_close (stream->__cookie);
   else
     status = 0;
 
   /* Nuke the stream, making it available for re-use.  */
-  __invalidate(stream);
+  __invalidate (stream);
 
   return status < 0 ? EOF : 0;
 }

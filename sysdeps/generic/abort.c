@@ -90,7 +90,7 @@ abort (void)
   if (stage == 4)
     {
       ++stage;
-      fclose (NULL);
+      __fcloseall ();
     }
 
   /* Try again.  */

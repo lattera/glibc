@@ -35,11 +35,11 @@
 #define DOUBLEBITS	_TYPEBITS (double)
 #define FLOATBITS	_TYPEBITS (float)
 
-#define MINSHORT	SHORT_MIN
+#define MINSHORT	SHRT_MIN
 #define	MININT		INT_MIN
 #define	MINLONG		LONG_MIN
 
-#define	MAXSHORT	SHORT_MAX
+#define	MAXSHORT	SHRT_MAX
 #define	MAXINT		INT_MAX
 #define	MAXLONG		LONG_MAX
 

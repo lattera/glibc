@@ -17,16 +17,16 @@ ENTRY(__ieee754_expf)
    -- drepper@cygnus.com.  */
 	fxam				/* Is NaN or +-Inf?  */
 	fstsw	%ax
-	sahf
-	jnc	.LnoInfNaN		/* No, jump.   */
-	jp	.LisInf			/* Is +-Inf, jump.  */
-.LnoInfNaN:
+	movb	$0x45, %dh
+	andb	%ah, %dh
+	cmpb	$0x05, %dh
+	je	1f			/* Is +-Inf, jump.  */
 	fldl2e
 	fmulp				/* x * log2(e) */
 	fstl	%st(1)
 	frndint				/* int(x * log2(e)) */
-	fstl	%st(2)
-	fsubrp				/* fract(x * log2(e)) */
+	fsub	%st,%st(1)		/* fract(x * log2(e)) */
+	fxch
 	f2xm1				/* 2^(fract(x * log2(e))) - 1 */
 	fld1
 	faddp				/* 2^(fract(x * log2(e))) */
@@ -34,9 +34,8 @@ ENTRY(__ieee754_expf)
 	fstp	%st(1)
 	ret
 
-.LisInf:
-	andb	$2, %ah			/* Test sign.  */
-	jz	.LpInf			/* If positive, jump.  */
+1:	testl	$0x200, %eax		/* Test sign.  */
+	jz	2f			/* If positive, jump.  */
 	fldz				/* Set result to 0.  */
-.LpInf:	ret
+2:	ret
 END (__ieee754_expf)

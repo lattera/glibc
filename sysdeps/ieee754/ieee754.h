@@ -16,7 +16,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _IEEE754_H
+
+#define _IEEE754_H 1
+#include <features.h>
+
 #include <endian.h>
+
+__BEGIN_DECLS
 
 union ieee754_float
   {
@@ -153,3 +160,7 @@ union ieee854_long_double
   };
 
 #define IEEE854_LONG_DOUBLE_BIAS 0x3fff
+
+__END_DECLS
+
+#endif /* ieee754.h */
