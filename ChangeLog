@@ -1,3 +1,18 @@
+2002-07-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/libc-tls.c: New file.
+	* csu/Makefile (routines): Add libc-tls.
+	(static-only-routines): Add libc-tls.
+	* elf/dl-support.c (_dl_phdr): New variable.
+	(_dl_phnum): New variable.
+	(_dl_aux_init): Initialize _dl_phdr and _dl_phnum from aux vector.
+	* sysdeps/generic/libc-start.c (__libc_start_main): Reorganize code
+	for !SHARED.  First look through auxiliary vector.  If TLS always
+	call __pthread_initialize_minimal.
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls): Make sure size argument
+	in mmap call is never zero.
+
 2002-07-23  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/fpu/s_copysign.S: Use optimized version.

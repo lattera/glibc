@@ -394,13 +394,26 @@ extern void *__dso_handle __attribute__ ((weak));
 #endif
 
 
+#if defined USE_TLS && !defined SHARED
+extern void __libc_setup_tls (size_t tcbsize, size_t tcbalign);
+#endif
+
+
 /* Do some minimal initialization which has to be done during the
    startup of the C library.  */
 void
 __pthread_initialize_minimal(void)
 {
 #ifdef USE_TLS
-  pthread_descr self = THREAD_SELF;
+  pthread_descr self;
+
+# ifndef SHARED
+  /* Unlike in the dynamically linked case the dynamic linker has not
+     taken care of initializing the TLS data structures.  */
+  __libc_setup_tls (TLS_TCB_SIZE, TLS_TCB_ALIGN);
+# endif
+
+  self = THREAD_SELF;
 
   /* The memory for the thread descriptor was allocated elsewhere as
      part of the TLS allocation.  We have to initialize the data

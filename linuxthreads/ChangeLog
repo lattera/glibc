@@ -1,6 +1,10 @@
 2002-07-22  Ulrich Drepper  <drepper@redhat.com>
 
-	* Makefile: Actually creat tst-signal.out file when running the test.
+	* pthread.c (__pthread_initialize_minimal): If !SHARED and TLS
+	call __libc_setup_tls first.
+	* Makefile: Actually create tst-signal.out file when running the test.
+	(tests): Add tststatic.
+	* Examples/tststatic.c: New file.
 
 2002-07-19  Ulrich Drepper  <drepper@redhat.com>
 

@@ -77,10 +77,23 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
   __libc_stack_end = stack_end;
 
 #ifndef SHARED
+# ifdef HAVE_AUX_VECTOR
+  /* First process the auxiliary vector since we need to find the
+     program header to locate an eventually present PT_TLS entry.  */
+  for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
+       *auxvec != NULL; ++auxvec);
+  ++auxvec;
+  _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+# endif
+
   /* Initialize the thread library at least a bit since the libgcc
      functions are using thread functions if these are available and
-     we need to setup errno.  */
+     we need to setup errno.  If there is no thread library and we
+     handle TLS the function is defined in the libc to initialized the
+     TLS handling.  */
+# ifndef TLS
   if (__pthread_initialize_minimal)
+# endif
     __pthread_initialize_minimal ();
 
   /* Some security at this point.  Prevent starting a SUID binary where
@@ -89,13 +102,6 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
      loader did the work already.  */
   if (__builtin_expect (__libc_enable_secure, 0))
     __libc_check_standard_fds ();
-
-# ifdef HAVE_AUX_VECTOR
-  for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
-       *auxvec != NULL; ++auxvec);
-  ++auxvec;
-  _dl_aux_init ((ElfW(auxv_t) *) auxvec);
-# endif
 #endif
 
   /* Register the destructor of the dynamic linker if there is any.  */

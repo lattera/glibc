@@ -1,5 +1,5 @@
 # Makefile for csu code for GNU C library.
-# Copyright (C) 1995,96,97,98,99,2000,01 Free Software Foundation, Inc.
+# Copyright (C) 1995,96,97,98,99,2000,01,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,9 @@
 
 subdir := csu
 
-routines = init-first libc-start $(libc-init) sysdep version check_fds
+routines = init-first libc-start $(libc-init) sysdep version check_fds \
+	   libc-tls
+static-only-routines = libc-tls
 csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
 	     $(start-installed-name) g$(start-installed-name) $(csu-dummies)

@@ -215,7 +215,7 @@ _dl_allocate_tls (void)
     GL(dl_zerofd) = _dl_sysdep_open_zero_fill ();
 #  define MAP_ANON 0
 # endif
-  result = __mmap (0, GL(dl_tls_static_size), PROT_READ|PROT_WRITE,
+  result = __mmap (0, GL(dl_tls_static_size) ?: 1, PROT_READ|PROT_WRITE,
 		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
 
   /* We allocate a few more elements in the dtv than are needed for the
