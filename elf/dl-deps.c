@@ -192,6 +192,17 @@ _dl_map_object_deps (struct link_map *map,
   for (runp = known; runp; )
     {
       struct link_map *l = runp->map;
+      struct link_map **needed = NULL;
+      unsigned int nneeded = 0;
+
+      /* Unless otherwise stated, this object is handled.  */
+      runp->done = 1;
+
+      /* Allocate a temporary record to contain the references to the
+	 dependencies of this object.  */
+      if (l->l_searchlist.r_list == NULL && l != map && l->l_ldnum > 0)
+	needed = (struct link_map **) alloca (l->l_ldnum
+					      * sizeof (struct link_map *));
 
       if (l->l_info[DT_NEEDED] || l->l_info[AUXTAG] || l->l_info[FILTERTAG])
 	{
@@ -199,9 +210,6 @@ _dl_map_object_deps (struct link_map *map,
 	  struct openaux_args args;
 	  struct list *orig;
 	  const ElfW(Dyn) *d;
-
-	  /* Mark map as processed.  */
-	  runp->done = 1;
 
 	  args.strtab = strtab;
 	  args.map = l;
@@ -250,6 +258,10 @@ _dl_map_object_deps (struct link_map *map,
 		    /* Set the mark bit that says it's already in the list.  */
 		    dep->l_reserved = 1;
 		  }
+
+		/* Remember this dependency.  */
+		if (needed != NULL)
+		  needed[nneeded++] = dep;
 	      }
 	    else if (d->d_tag == DT_AUXILIARY || d->d_tag == DT_FILTER)
 	      {
@@ -319,6 +331,10 @@ _dl_map_object_deps (struct link_map *map,
 		/* Initialize new entry.  */
 		orig->done = 0;
 		orig->map = args.aux;
+
+		/* Remember this dependency.  */
+		if (needed != NULL)
+		  needed[nneeded++] = args.aux;
 
 		/* We must handle two situations here: the map is new,
 		   so we must add it in all three lists.  If the map
@@ -427,9 +443,19 @@ _dl_map_object_deps (struct link_map *map,
 		++nduplist;
 	      }
 	}
-      else
-	/* Mark as processed.  */
-	runp->done = 1;
+
+      /* Terminate the list of dependencies and store the array address.  */
+      if (needed != NULL)
+	{
+	  needed[nneeded++] = NULL;
+
+	  l->l_initfini =
+	    (struct link_map **) malloc (nneeded * sizeof (struct link_map));
+	  if (l->l_initfini == NULL)
+	    _dl_signal_error (ENOMEM, map->l_name,
+			      "cannot allocate dependency list");
+	  memcpy (l->l_initfini, needed, nneeded * sizeof (struct link_map));
+	}
 
       /* If we have no auxiliary objects just go on to the next map.  */
       if (runp->done)
@@ -440,7 +466,9 @@ _dl_map_object_deps (struct link_map *map,
 
   /* Store the search list we built in the object.  It will be used for
      searches in the scope of this object.  */
-  map->l_searchlist.r_list = malloc (nlist * sizeof (struct link_map *));
+  map->l_searchlist.r_list = malloc ((2 * nlist
+				      + (nlist == nduplist ? 0 : nduplist))
+				     * sizeof (struct link_map *));
   if (map->l_searchlist.r_list == NULL)
     _dl_signal_error (ENOMEM, map->l_name,
 		      "cannot allocate symbol search list");
@@ -466,11 +494,7 @@ _dl_map_object_deps (struct link_map *map,
     {
       unsigned int cnt;
 
-      map->l_searchlist.r_duplist = malloc (nduplist
-					    * sizeof (struct link_map *));
-      if (map->l_searchlist.r_duplist == NULL)
-	_dl_signal_error (ENOMEM, map->l_name,
-			  "cannot allocate symbol search list");
+      map->l_searchlist.r_duplist = map->l_searchlist.r_list + nlist;
 
       for (cnt = 0, runp = known; runp; runp = runp->dup)
 	if (trace_mode && runp->map->l_opencount == 0)
@@ -478,5 +502,52 @@ _dl_map_object_deps (struct link_map *map,
 	  --map->l_searchlist.r_nduplist;
 	else
 	  map->l_searchlist.r_duplist[cnt++] = runp->map;
+    }
+
+  /* Now determine the order in which the initialization has to happen.  */
+  map->l_initfini =
+    (struct link_map **) memcpy (map->l_searchlist.r_duplist + nduplist,
+				 map->l_searchlist.r_list,
+				 nlist * sizeof (struct link_map *));
+  /* We can skip looking for the binary itself which is at the front
+     of the search list.  Look through the list backward so that circular
+     dependencies are not changing the order.  */
+  for (i = 1; i < nlist; ++i)
+    {
+      struct link_map *l = map->l_searchlist.r_list[i];
+      unsigned int j;
+      unsigned int k;
+
+      /* Find the place in the initfini list where the map is currently
+	 located.  */
+      for (j = 1; map->l_initfini[j] != l; ++j)
+	;
+
+      /* Find all object for which the current one is a dependency and
+	 move the found object (if necessary) in front.  */
+      for (k = j + 1; k < nlist; ++k)
+	{
+	  struct link_map **runp;
+
+	  runp = map->l_initfini[k]->l_initfini;
+	  if (runp != NULL)
+	    {
+	      while (*runp != NULL)
+		if (*runp == l)
+		  {
+		    struct link_map *here = map->l_initfini[k];
+
+		    /* Move it now.  */
+		    memmove (&map->l_initfini[j] + 1,
+			     &map->l_initfini[j],
+			     (k - j) * sizeof (struct link_map *));
+		    map->l_initfini[j] = here;
+
+		    break;
+		  }
+		else
+		  ++runp;
+	    }
+	}
     }
 }

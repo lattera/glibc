@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -217,47 +217,33 @@ _dl_start_user:\n\
 	movl _dl_skip_args@GOT(%ebx), %eax\n\
 	movl (%eax), %eax\n\
 	# Pop the original argument count.\n\
-	popl %ecx\n\
+	popl %esi\n\
 	# Subtract _dl_skip_args from it.\n\
-	subl %eax, %ecx\n\
+	subl %eax, %esi\n\
 	# Adjust the stack pointer to skip _dl_skip_args words.\n\
 	leal (%esp,%eax,4), %esp\n\
-	# Push back the modified argument count.\n\
-	pushl %ecx\n\
-	# Push the searchlist of the main object as argument in\n\
-	# _dl_init_next call below.\n\
-	movl _dl_main_searchlist@GOT(%ebx), %eax\n\
-	movl (%eax), %esi\n\
-	# First run the pre-initializers.\n\
-0:	movl %esi,%eax\n\
-	# Call _dl_init_next to return the address of an initializer\n\
-	# function to run.\n\
-	call _dl_preinit_next@PLT\n\
-	# Check for zero return, when out of initializers.\n\
-	testl %eax, %eax\n\
-	jz 0f\n\
-	# Call the pre-initilizer.\n\
-	call *%eax\n\
-	# Loop to call _dl_preinit_next for the next initializer.\n\
-	jmp 0b\n\
-0:	movl %esi,%eax\n\
-	# Call _dl_init_next to return the address of an initializer\n\
-	# function to run.\n\
-	call _dl_init_next@PLT\n\
-	# Check for zero return, when out of initializers.\n\
-	testl %eax, %eax\n\
-	jz 1f\n\
-	# Call the shared object initializer function.\n\
-	# NOTE: We depend only on the registers (%ebx, %esi and %edi)\n\
-	# and the return address pushed by this call;\n\
-	# the initializer is called with the stack just\n\
-	# as it appears on entry, and it is free to move\n\
-	# the stack around, as long as it winds up jumping to\n\
-	# the return address on the top of the stack.\n\
-	call *%eax\n\
-	# Loop to call _dl_init_next for the next initializer.\n\
-	jmp 0b\n\
-1:	# Clear the startup flag.\n\
+	# Move the argv pointer in a register.\n\
+	leal 4(%esp,%esi,4), %edx\n\
+	movl %esp, %ecx\n\
+	pushl %edx\n\
+	movl %esi, %edx\n\
+	# Get the searchlist of the main object as argument for\n\
+	# _dl_preinit and _dl_init calls below.\n\
+	movl _dl_loaded@GOT(%ebx), %ebp\n\
+	movl (%ebp), %eax\n\
+	# Call the function to run the pre-initializers.\n\
+	call _dl_preinit@PLT\n\
+	# Load the parameters again.\n\
+	leal 4(%esp,%esi,4), %edx\n\
+	movl %esp, %ecx\n\
+	pushl %edx\n\
+	movl %esi, %edx\n\
+	movl (%ebp), %eax\n\
+	# Call the function to run the initializers.\n\
+	call _dl_init@PLT\n\
+	# Push argc back on the stack.\n\
+	push %esi\n\
+	# Clear the startup flag.\n\
 	movl _dl_starting_up@GOT(%ebx), %eax\n\
 	movl $0, (%eax)\n\
 	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\

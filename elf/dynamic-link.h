@@ -114,19 +114,6 @@ elf_get_dynamic_info (struct link_map *l)
       if (flags & DF_BIND_NOW)
 	info[DT_BIND_NOW] = info[DT_FLAGS];
     }
-#ifndef DL_RO_DYN_SECTION
-  /* Determine how many constructors there are.  */
-  if (info[DT_INIT_ARRAY] != NULL)
-    info[DT_INIT_ARRAY]->d_un.d_ptr += l_addr;
-#endif
-  l->l_initcount = 1 + (info[DT_INIT_ARRAY]
-			? (info[DT_INIT_ARRAYSZ]->d_un.d_val
-			   / sizeof (ElfW(Addr)))
-			: 0);
-  l->l_preinitcount = (info[DT_PREINIT_ARRAY]
-		       ? (info[DT_PREINIT_ARRAYSZ]->d_un.d_val
-			  / sizeof (ElfW(Addr)))
-		       : 0);
   if (info[DT_RUNPATH] != NULL)
     /* If both RUNPATH and RPATH are given, the latter is ignored.  */
     info[DT_RPATH] = NULL;

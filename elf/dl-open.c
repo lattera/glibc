@@ -85,8 +85,6 @@ dl_open_worker (void *a)
   const char *file = args->file;
   int mode = args->mode;
   struct link_map *new, *l;
-  ElfW(Addr) init;
-  struct r_debug *r;
   const char *dst;
   int lazy;
 
@@ -194,17 +192,8 @@ dl_open_worker (void *a)
       l = l->l_prev;
     }
 
-  /* Notify the debugger we have added some objects.  We need to call
-     _dl_debug_initialize in a static program in case dynamic linking has
-     not been used before.  */
-  r = _dl_debug_initialize (0);
-  r->r_state = RT_ADD;
-  _dl_debug_state ();
-
   /* Run the initializer functions of new objects.  */
-  while ((init = _dl_init_next (&new->l_searchlist)))
-    (*(void (*) (int, char **, char **)) init) (__libc_argc, __libc_argv,
-						__environ);
+  _dl_init (new, __libc_argc, __libc_argv, __environ);
 
   /* Now we can make the new map available in the global scope.  */
   if (mode & RTLD_GLOBAL)

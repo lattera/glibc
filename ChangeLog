@@ -1,3 +1,48 @@
+2000-03-30  Ulrich Drepper  <drepper@redhat.com>
+
+	Implement dynamic determination of constructor/destructor order in
+	the dynamic linker.
+	* elf/Versions [ld.so] (GLIBC_2.0): Remove _dl_init_next.
+	(GLIBC_2.2): Add _dl_init.
+	* elf/dl-close.c: Also call all destructors in FINI_ARRAY.
+	r_duplist is not anymore allocated separately.  l_initfini is and
+	therefore free it if necessary.
+	* elf/dl-deps.c: If a searchlist has to be allocated, put all in one
+	malloc block.  Otherwise allocate l_initfini list only.
+	Put dependencies for the object in l_initfini list.
+	Sort dependencies for the object to be loaded topologically.
+	* elf/dl-fini.c: Before running the destructors sort the topologically.
+	* elf/dl-init.c (_dl_init): Renamed from _dl_init_next.  Rewrite to
+	call constructors instead of iterating over the pointers.  Get list of
+	objects for which to run constructors from l_initfini element. Accept
+	argc, argv, and env as parameters and pass them to the constructors.
+	* elf/ld-load.c (_dl_map_object_from_fd): Initialize l_ldnum member
+	with size of dynamic section.
+	* elf/dl-open.c (dl_open_worker): Only call _dl_init instead of
+	_dl_init_next and calling constructors ourself.
+	* elf/dl-preinit.c (_dl_preinit): Renamed from _dl_preinit_next.
+	Take argc, argv, and env as parameters and pass them to the
+	constructors.  Rewrite to call all constructors and not iterate over
+	the pointers.
+	* elf/dynamic-link.h: Don't relocate DT_FINI_ARRAY entry.  Don't
+	precompute l_initcount and l_preinitcount.
+	* elf/link.h (struct link_map): Add l_ldnum member.
+	Make l_phdr_allocated part of the bitfield.  Remove l_runcount,
+	l_initcount, and l_preinitcount.  Add l_initfini.
+	* sysdeps/generic/ldsodefs.h: Replace _dl_init_next prototype with
+	one for _dl_init.
+	* sysdeps/i386/dl-machine (RTLD_START): Rewrite to match new init
+	function interface.
+	* sysdeps/unix/sysv/linux/init-first.h: Removed.
+	* sysdeps/unix/sysv/linux/Dist: Delete file here as well.
+	* sysdeps/unix/sysv/linux/init-first.c [PIC]: Don't use
+	SYSDEP_CALL_INIT.  Make _init a strong alias of init.  The calling
+	conventions now match.
+
+	* sysdeps/generic/libc-start.c: Calling __libc_init_first has no
+	effect for shared objects.  Don't emit message and call only for
+	static library.
+
 2000-03-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/testdata/CSA_Z243.4-1985-1..UCS-2BE: Renamed from

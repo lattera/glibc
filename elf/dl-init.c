@@ -21,82 +21,112 @@
 #include <ldsodefs.h>
 
 
-/* Run initializers for MAP and its dependencies, in inverse dependency
-   order (that is, leaf nodes first).  */
+/* Type of the initializer.  */
+typedef void (*init_t) (int, char **, char **);
 
-ElfW(Addr)
+
+static void
 internal_function
-_dl_init_next (struct r_scope_elem *searchlist)
+_dl_init_rec (struct link_map *map, int argc, char **argv, char **env)
 {
   unsigned int i;
 
-  /* The search list for symbol lookup is a flat list in top-down
-     dependency order, so processing that list from back to front gets us
-     breadth-first leaf-to-root order.  */
+  /* Stupid users forces the ELF specification to be changed.  It now
+     says that the dynamic loader is responsible for determining the
+     order in which the constructors have to run.  The constructors
+     for all dependencies of an object must run before the constructor
+     for the object itself.  Circular dependencies are left unspecified.
 
-  i = searchlist->r_nlist;
+     This is highly questionable since it puts the burden on the dynamic
+     loader which has to find the dependencies at runtime instead of
+     letting the user do it right.  Stupidity rules!  */
+
+  i = map->l_searchlist.r_nlist;
   while (i-- > 0)
     {
-      struct link_map *l = searchlist->r_list[i];
-      ElfW(Addr) *array;
+      struct link_map *l = map->l_initfini[i];
+      int message_written;
+      init_t init;
 
       if (l->l_init_called)
 	/* This object is all done.  */
 	continue;
 
-      /* Check for object which constructors we do not run here.
-	 XXX Maybe this should be pre-computed, but where?  */
+      /* Avoid handling this constructor again in case we have a circular
+	 dependency.  */
+      l->l_init_called = 1;
+
+      /* Check for object which constructors we do not run here.  */
       if (l->l_name[0] == '\0' && l->l_type == lt_executable)
-	{
-	  l->l_init_called = 1;
-	  continue;
-	}
+	continue;
 
-      /* Account for running next constructor.  */
-      ++l->l_runcount;
+      /* See whether any dependent objects are not yet initialized.
+	 XXX Is this necessary?  I'm not sure anymore...  */
+      if (l->l_searchlist.r_nlist > 1)
+	_dl_init_rec (l, argc, argv, env);
 
-      if (l->l_runcount == 1)
+      /* Now run the local constructors.  There are several of them:
+	 - the one named by DT_INIT
+	 - the others in the DT_INIT_ARRAY.
+      */
+      message_written = 0;
+      if (l->l_info[DT_INIT])
 	{
-	  /* Try running the DT_INIT constructor.  */
-	  if (l->l_info[DT_INIT])
+	  /* Print a debug message if wanted.  */
+	  if (_dl_debug_impcalls)
 	    {
-	      /* Print a debug message if wanted.  */
-	      if (_dl_debug_impcalls)
-		_dl_debug_message (1, "\ncalling init: ",
-				   l->l_name[0] ? l->l_name : _dl_argv[0],
-				   "\n\n", NULL);
-
-	      return l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr;
+	      _dl_debug_message (1, "\ncalling init: ",
+				 l->l_name[0] ? l->l_name : _dl_argv[0],
+				 "\n\n", NULL);
+	      message_written = 1;
 	    }
 
-	  /* No DT_INIT, so go on with the array.  */
-	  ++l->l_runcount;
+	  init = (init_t) (l->l_addr + l->l_info[DT_INIT]->d_un.d_ptr);
+
+	  /* Call the function.  */
+	  init (argc, argv, env);
 	}
 
-      if (l->l_runcount > l->l_initcount)
+      /* Next see whether there is an array with initialiazation functions.  */
+      if (l->l_info[DT_INIT_ARRAY])
 	{
-	  /* That were all of the constructors.  */
-	  l->l_runcount = 0;
-	  l->l_init_called = 1;
-	  continue;
+	  unsigned int j;
+	  unsigned int jm;
+	  ElfW(Addr) *addrs;
+
+	  jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
+
+	  if (jm > 0 && _dl_debug_impcalls && ! message_written)
+	    _dl_debug_message (1, "\ncalling init: ",
+			       l->l_name[0] ? l->l_name : _dl_argv[0],
+			       "\n\n", NULL);
+
+	  addrs = (ElfW(Addr) *) (l->l_info[DT_INIT_ARRAY]->d_un.d_ptr
+				  + l->l_addr);
+	  for (j = 0; j < jm; ++j)
+	    ((init_t) addrs[j]) (argc, argv, env);
 	}
-
-      /* Print a debug message if wanted.  */
-      if (_dl_debug_impcalls && l->l_info[DT_INIT] == NULL
-	  && l->l_runcount == 2)
-	_dl_debug_message (1, "\ncalling init: ",
-			   l->l_name[0] ? l->l_name : _dl_argv[0],
-			   "\n\n", NULL);
-
-      array = (ElfW(Addr) *) D_PTR (l, l_info[DT_INIT_ARRAY]);
-      return l->l_addr + array[l->l_runcount - 2];
-      /* NOTREACHED */
     }
+}
 
 
-  /* Notify the debugger all new objects are now ready to go.  */
-  _r_debug.r_state = RT_CONSISTENT;
+void
+internal_function
+_dl_init (struct link_map *main_map, int argc, char **argv, char **env)
+{
+  struct r_debug *r;
+
+  /* Notify the debugger we have added some objects.  We need to call
+     _dl_debug_initialize in a static program in case dynamic linking has
+     not been used before.  */
+  r = _dl_debug_initialize (0);
+  r->r_state = RT_ADD;
   _dl_debug_state ();
 
-  return 0;
+  /* Recursively call the constructors.  */
+  _dl_init_rec (main_map, argc, argv, env);
+
+  /* Notify the debugger all new objects are now ready to go.  */
+  r->r_state = RT_CONSISTENT;
+  _dl_debug_state ();
 }

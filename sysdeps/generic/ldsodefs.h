@@ -354,11 +354,10 @@ extern int _dl_check_all_versions (struct link_map *map, int verbose)
 extern int _dl_check_map_versions (struct link_map *map, int verbose)
      internal_function;
 
-/* Return the address of the next initializer function for SCOPE or one of
-   its dependencies that has not yet been run.  When there are no more
-   initializers to be run, this returns zero.  The functions are returned
-   in the order they should be called.  */
-extern ElfW(Addr) _dl_init_next (struct r_scope_elem *scope) internal_function;
+/* Initialize the object in SCOPE by calling the constructors with
+   ARGC, ARGV, and ENV as the parameters.  */
+extern void _dl_init (struct link_map *main_map, int argc, char **argv,
+		      char **env) internal_function;
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */

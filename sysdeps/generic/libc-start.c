@@ -63,12 +63,12 @@ __libc_start_main (int (*main) (int, char **, char **), int argc,
   if (rtld_fini != NULL)
     atexit (rtld_fini);
 
-  /* Call the initializer of the libc.  */
-#ifdef PIC
-  if (_dl_debug_impcalls)
-    _dl_debug_message (1, "\ninitialize libc\n\n", NULL);
-#endif
+  /* Call the initializer of the libc.  This is only needed here if we
+     are compiling for the static library in which case we haven't
+     run the constructors in `_dl_start_user'.  */
+#ifndef PIC
   __libc_init_first (argc, argv, __environ);
+#endif
 
   /* Register the destructor of the program, if any.  */
   if (fini)

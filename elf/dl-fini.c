@@ -17,59 +17,128 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
+#include <string.h>
 #include <ldsodefs.h>
+
+
+/* Type of the constructor functions.  */
+typedef void (*fini_t) (void);
+
 
 void
 internal_function
 _dl_fini (void)
 {
+  /* Lots of fun ahead.  We have to call the destructors for all still
+     loaded objects.  The problem is that the ELF specification now
+     demands that dependencies between the modules are taken into account.
+     I.e., the destructor for a module is called before the ones for any
+     of its dependencies.
+
+     To make things more complicated, we cannot simply use the reverse
+     order of the constructors.  Since the user might have loaded objects
+     using `dlopen' there are possibly several other modules with its
+     dependencies to be taken into account.  Therefore we have to start
+     determining the order of the modules once again from the beginning.  */
+  unsigned int nloaded = 0;
+  unsigned int i;
   struct link_map *l;
+  struct link_map **maps;
 
-  for (l = _dl_loaded; l; l = l->l_next)
-    if (l->l_init_called)
-      {
-	int first = 1;
+  /* First count how many objects are there.  */
+  for (l = _dl_loaded; l != NULL; l = l->l_next)
+    ++nloaded;
 
-	/* Make sure nothing happens if we are called twice.  */
-	l->l_init_called = 0;
+  /* XXX Could it be (in static binaries) that there is no object loaded?  */
+  assert (nloaded > 0);
 
-	/* Don't call the destructors for objects we are not supposed to.  */
-	if (l->l_name[0] == '\0' && l->l_type == lt_executable)
-	  continue;
+  /* Now we can allocate an array to hold all the pointers and copy
+     the pointers in.  */
+  maps = (struct link_map **) alloca (nloaded * sizeof (struct link_map *));
+  for (l = _dl_loaded, nloaded = 0; l != NULL; l = l->l_next)
+    maps[nloaded++] = l;
 
-	/* First see whether an array is given.  */
-	if (l->l_info[DT_FINI_ARRAY] != NULL)
-	  {
-	    ElfW(Addr) *array =
-	      (ElfW(Addr) *) (l->l_addr
-			      + l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
-	    unsigned int sz = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
-			       / sizeof (ElfW(Addr)));
-	    unsigned int cnt;
+  /* Now we have to do the sorting.  */
+  for (l = _dl_loaded->l_next; l != NULL; l = l->l_next)
+    {
+      unsigned int j;
+      unsigned int k;
 
-	    for (cnt = 0; cnt < sz; ++cnt)
-	      {
-		/* When debugging print a message first.  */
-		if (_dl_debug_impcalls && first)
-		  _dl_debug_message (1, "\ncalling fini: ",
-				     l->l_name[0] ? l->l_name : _dl_argv[0],
-				     "\n\n", NULL);
-		first = 0;
+      /* Find the place in the `maps' array.  */
+      for (j = 1; maps[j] != l; ++j)
+	;
 
-		(*(void (*) (void)) (l->l_addr + array[cnt])) ();
-	      }
-	  }
+      /* Find all object for which the current one is a dependency and
+	 move the found object (if necessary) in front.  */
+      for (k = j + 1; k < nloaded; ++k)
+	{
+	  struct link_map **runp;
 
-	/* Next try the old-style destructor.  */
-	if (l->l_info[DT_FINI])
-	  {
-	    /* When debugging print a message first.  */
-	    if (_dl_debug_impcalls && first)
-	      _dl_debug_message (1, "\ncalling fini: ",
-				 l->l_name[0] ? l->l_name : _dl_argv[0],
-				 "\n\n", NULL);
+	  runp = maps[k]->l_initfini;
+	  if (runp != NULL)
+	    {
+	      while (*runp != NULL)
+		if (*runp == l)
+		  {
+		    struct link_map *here = maps[k];
 
-	    (*(void (*) (void)) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
-	  }
-      }
+		    /* Move it now.  */
+		    memmove (&maps[j] + 1,
+			     &maps[j],
+			     (k - j) * sizeof (struct link_map *));
+		    maps[j] = here;
+
+		    break;
+		  }
+		else
+		  ++runp;
+	    }
+	}
+    }
+
+  /* `maps' now contains the objects in the right order.  Now call the
+     destructors.  We have the process this array from the front.  */
+  for (i = 0; i < nloaded; ++i)
+    {
+      l = maps[i];
+
+      if (l->l_init_called)
+	{
+	  /* Make sure nothing happens if we are called twice.  */
+	  l->l_init_called = 0;
+
+	  /* Don't call the destructors for objects we are not supposed to.  */
+	  if (l->l_name[0] == '\0' && l->l_type == lt_executable)
+	    continue;
+
+	  /* Is there a destructor function?  */
+	  if (l->l_info[DT_FINI_ARRAY] == NULL && l->l_info[DT_FINI] == NULL)
+	    continue;
+
+	  /* When debugging print a message first.  */
+	  if (_dl_debug_impcalls)
+	    _dl_debug_message (1, "\ncalling fini: ",
+			       l->l_name[0] ? l->l_name : _dl_argv[0],
+			       "\n\n", NULL);
+
+	  /* First see whether an array is given.  */
+	  if (l->l_info[DT_FINI_ARRAY] != NULL)
+	    {
+	      ElfW(Addr) *array =
+		(ElfW(Addr) *) (l->l_addr
+				+ l->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+	      unsigned int sz = (l->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+				 / sizeof (ElfW(Addr)));
+	      unsigned int cnt;
+
+	      for (cnt = 0; cnt < sz; ++cnt)
+		((fini_t) (l->l_addr + array[cnt])) ();
+	    }
+
+	  /* Next try the old-style destructor.  */
+	  if (l->l_info[DT_FINI] != NULL)
+	    ((fini_t) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
+	}
+    }
 }

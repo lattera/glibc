@@ -1,5 +1,5 @@
 /* Close a shared object opened by `_dl_open'.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,6 +25,10 @@
 #include <ldsodefs.h>
 #include <sys/types.h>
 #include <sys/mman.h>
+
+
+/* Type of the constructor functions.  */
+typedef void (*fini_t) (void);
 
 
 /* During the program run we must not modify the global data of
@@ -64,9 +68,9 @@ _dl_close (void *_map)
   /* Call all termination functions at once.  */
   for (i = 0; i < nsearchlist; ++i)
     {
-      struct link_map *imap = list[i];
+      struct link_map *imap = map->l_initfini[i];
       if (imap->l_opencount == 1 && imap->l_type == lt_loaded
-	  && imap->l_info[DT_FINI]
+	  && (imap->l_info[DT_FINI] || imap->l_info[DT_FINI_ARRAY])
 	  /* Skip any half-cooked objects that were never initialized.  */
 	  && imap->l_init_called)
 	{
@@ -74,9 +78,25 @@ _dl_close (void *_map)
 	  if (_dl_debug_impcalls)
 	    _dl_debug_message (1, "\ncalling fini: ", imap->l_name,
 			       "\n\n", NULL);
+
 	  /* Call its termination function.  */
-	  (*(void (*) (void)) ((void *) imap->l_addr
-			       + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
+	  if (imap->l_info[DT_FINI_ARRAY] != NULL)
+	    {
+	      ElfW(Addr) *array =
+		(ElfW(Addr) *) (imap->l_addr
+				+ imap->l_info[DT_FINI_ARRAY]->d_un.d_ptr);
+	      unsigned int sz = (imap->l_info[DT_FINI_ARRAYSZ]->d_un.d_val
+				 / sizeof (ElfW(Addr)));
+	      unsigned int cnt;
+
+	      for (cnt = 0; cnt < sz; ++cnt)
+		((fini_t) (imap->l_addr + array[cnt])) ();
+	    }
+
+	  /* Next try the old-style destructor.  */
+	  if (imap->l_info[DT_FINI] != NULL)
+	    (*(void (*) (void)) ((void *) imap->l_addr
+				 + imap->l_info[DT_FINI]->d_un.d_ptr)) ();
 	}
     }
 
@@ -157,14 +177,13 @@ _dl_close (void *_map)
 	  while (lnp != NULL);
 
 	  /* Remove the searchlists.  */
-	  if (imap->l_searchlist.r_duplist != imap->l_searchlist.r_list)
+	  if (imap != map)
 	    {
-	      /* If a r_list exists there always also is a r_duplist.  */
-	      assert (imap->l_searchlist.r_list != NULL);
-	      free (imap->l_searchlist.r_duplist);
+	    if (imap->l_searchlist.r_list != NULL)
+	      free (imap->l_searchlist.r_list);
+	    else if (imap->l_initfini != NULL)
+	      free (imap->l_initfini);
 	    }
-	  if (imap != map && imap->l_searchlist.r_list != NULL)
-	    free (imap->l_searchlist.r_list);
 
 	  if (imap->l_phdr_allocated)
 	    free ((void *) imap->l_phdr);

@@ -858,6 +858,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	     verbatim, and later correct for the run-time load address.  */
 	case PT_DYNAMIC:
 	  l->l_ld = (void *) ph->p_vaddr;
+	  l->l_ldnum = ph->p_memsz / sizeof (ElfW(Dyn));
 	  break;
 	case PT_PHDR:
 	  l->l_phdr = (void *) ph->p_vaddr;

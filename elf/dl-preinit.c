@@ -21,29 +21,35 @@
 #include <ldsodefs.h>
 
 
+/* Type of the initializer.  */
+typedef void (*init_t) (int, char **, char **);
+
+
 /* Run initializers for MAP and its dependencies, in inverse dependency
    order (that is, leaf nodes first).  */
 
-ElfW(Addr)
+void
 internal_function
-_dl_preinit_next (struct r_scope_elem *searchlist)
+_dl_preinit (struct link_map *main_map, int argc, char **argv, char **env)
 {
-  struct link_map *l = searchlist->r_list[0];
-  ElfW(Addr) *array;
+  /* Don't do anything if there is no preinit array.  */
+  ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAYSZ];
+  unsigned int max;
 
-  if (l->l_runcount >= l->l_preinitcount)
+  if (preinit_array != NULL
+      && (max = preinit_array->d_un.d_val / sizeof (ElfW(Addr))) > 0)
     {
-      /* That were all of the constructors.  */
-      l->l_runcount = 0;
-      return 0;
+      ElfW(Addr) *addrs;
+      unsigned int cnt;
+
+      if (_dl_debug_impcalls)
+	_dl_debug_message (1, "\ncalling preinit: ",
+			   main_map->l_name[0]
+			   ? main_map->l_name : _dl_argv[0], "\n\n", NULL);
+
+      addrs = (ElfW(Addr) *) (main_map->l_info[DT_PREINIT_ARRAY]->d_un.d_ptr
+			      + main_map->l_addr);
+      for (cnt = 0; cnt < max; ++cnt)
+	((init_t) addrs[cnt]) (argc, argv, env);
     }
-
-  /* Print a debug message if wanted.  */
-  if (_dl_debug_impcalls && l->l_runcount == 0)
-    _dl_debug_message (1, "\ncalling preinit: ",
-		       l->l_name[0] ? l->l_name : _dl_argv[0],
-		       "\n\n", NULL);
-
-  array = (ElfW(Addr) *) l->l_info[DT_PREINIT_ARRAY]->d_un.d_ptr;
-  return l->l_addr + array[l->l_runcount++];
 }

@@ -1,6 +1,6 @@
 /* Data structure for communication from the run-time dynamic linker for
    loaded ELF shared objects.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -137,6 +137,7 @@ struct link_map
     const ElfW(Phdr) *l_phdr;	/* Pointer to program header table in core.  */
     ElfW(Addr) l_entry;		/* Entry point location.  */
     ElfW(Half) l_phnum;		/* Number of program header entries.  */
+    ElfW(Half) l_ldnum;	/* Number of dynamic segment entries.  */
 
     /* Array of DT_NEEDED dependencies and their dependencies, in
        dependency order for symbol lookup (with and without
@@ -166,6 +167,8 @@ struct link_map
     unsigned int l_init_called:1; /* Nonzero if DT_INIT function called.  */
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
+    unsigned int l_phdr_allocated:1; /* Nonzero if the data structure pointed
+					to by `l_phdr' is allocated.  */
 
     /* Array with version names.  */
     unsigned int l_nversions;
@@ -200,22 +203,11 @@ struct link_map
     dev_t l_dev;
     ino_t l_ino;
 
-    /* Nonzero if the data structure pointed to by `l_phdr' is allocated.  */
-    int l_phdr_allocated;
-
-    /* Counter for running constructors and destructors.  */
-    unsigned int l_runcount;
-
-    /* Number of constructors.  We compute this during loading to avoid
-       duplication of this during the possibly many calls to _dl_init_next.  */
-    unsigned int l_initcount;
-
     /* Collected information about own RUNPATH directories.  */
     struct r_search_path_elem **l_runpath_dirs;
 
-    /* Number of pre-constructors.  We compute this during loading to avoid
-       duplication of this during the possibly many calls to _dl_init_next.  */
-    unsigned int l_preinitcount;
+    /* List of object in order of the init and fini calls.  */
+    struct link_map **l_initfini;
   };
 
 #endif /* link.h */
