@@ -55,18 +55,20 @@ extern void *memset (void *__s, int __c, size_t __n) __THROW;
 
 /* Compare N bytes of S1 and S2.  */
 extern int memcmp (__const void *__s1, __const void *__s2, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 
 /* Search N bytes of S for C.  */
-extern void *memchr (__const void *__s, int __c, size_t __n) __THROW;
+extern void *memchr (__const void *__s, int __c, size_t __n)
+      __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
-extern void *rawmemchr (__const void *__s, int __c) __THROW;
+extern void *rawmemchr (__const void *__s, int __c) __THROW __attribute_pure__;
 
 /* Search N bytes of S for the final occurrence of C.  */
-extern void *memrchr (__const void *__s, int __c, size_t __n) __THROW;
+extern void *memrchr (__const void *__s, int __c, size_t __n)
+      __THROW __attribute_pure__;
 #endif
 
 
@@ -85,13 +87,15 @@ extern char *strncat (char *__restrict __dest, __const char *__restrict __src,
 		      size_t __n) __THROW;
 
 /* Compare S1 and S2.  */
-extern int strcmp (__const char *__s1, __const char *__s2) __THROW;
+extern int strcmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
 /* Compare N characters of S1 and S2.  */
 extern int strncmp (__const char *__s1, __const char *__s2, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 
 /* Compare the collated forms of S1 and S2.  */
-extern int strcoll (__const char *__s1, __const char *__s2) __THROW;
+extern int strcoll (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
 extern size_t strxfrm (char *__restrict __dest,
 		       __const char *__restrict __src, size_t __n) __THROW;
@@ -104,7 +108,7 @@ extern size_t strxfrm (char *__restrict __dest,
 
 /* Compare the collated forms of S1 and S2 using rules from L.  */
 extern int __strcoll_l (__const char *__s1, __const char *__s2, __locale_t __l)
-     __THROW;
+     __THROW __attribute_pure__;
 /* Put a transformation of SRC into no more than N bytes of DEST.  */
 extern size_t __strxfrm_l (char *__dest, __const char *__src, size_t __n,
 			   __locale_t __l) __THROW;
@@ -148,33 +152,37 @@ extern char *strndup (__const char *__string, size_t __n)
 #endif
 
 /* Find the first occurrence of C in S.  */
-extern char *strchr (__const char *__s, int __c) __THROW;
+extern char *strchr (__const char *__s, int __c) __THROW __attribute_pure__;
 /* Find the last occurrence of C in S.  */
-extern char *strrchr (__const char *__s, int __c) __THROW;
+extern char *strrchr (__const char *__s, int __c) __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* This funciton is similar to `strchr'.  But it returns a pointer to
    the closing NUL byte in case C is not found in S.  */
-extern char *strchrnul (__const char *__s, int __c) __THROW;
+extern char *strchrnul (__const char *__s, int __c) __THROW __attribute_pure__;
 #endif
 
 /* Return the length of the initial segment of S which
    consists entirely of characters not in REJECT.  */
-extern size_t strcspn (__const char *__s, __const char *__reject) __THROW;
+extern size_t strcspn (__const char *__s, __const char *__reject)
+     __THROW __attribute_pure__;
 /* Return the length of the initial segment of S which
    consists entirely of characters in ACCEPT.  */
-extern size_t strspn (__const char *__s, __const char *__accept) __THROW;
+extern size_t strspn (__const char *__s, __const char *__accept)
+     __THROW __attribute_pure__;
 /* Find the first occurrence in S of any character in ACCEPT.  */
-extern char *strpbrk (__const char *__s, __const char *__accept) __THROW;
+extern char *strpbrk (__const char *__s, __const char *__accept)
+     __THROW __attribute_pure__;
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
-extern char *strstr (__const char *__haystack, __const char *__needle) __THROW;
+extern char *strstr (__const char *__haystack, __const char *__needle)
+     __THROW __attribute_pure__;
 
 #ifdef __USE_GNU
 /* Similar to `strstr' but this function ignores the case of both strings.  */
 extern char *__strcasestr (__const char *__haystack, __const char *__needle)
-     __THROW;
+     __THROW __attribute_pure__;
 extern char *strcasestr (__const char *__haystack, __const char *__needle)
-     __THROW;
+     __THROW __attribute_pure__;
 #endif
 
 /* Divide S into tokens separated by characters in DELIM.  */
@@ -196,7 +204,8 @@ extern char *strtok_r (char *__restrict __s, __const char *__restrict __delim,
    NEEDLE is NEEDLELEN bytes long;
    HAYSTACK is HAYSTACKLEN bytes long.  */
 extern void *memmem (__const void *__haystack, size_t __haystacklen,
-		     __const void *__needle, size_t __needlelen) __THROW;
+		     __const void *__needle, size_t __needlelen)
+     __THROW __attribute_pure__;
 
 /* Copy N bytes of SRC to DEST, return pointer to bytes after the
    last written byte.  */
@@ -208,12 +217,13 @@ extern void *mempcpy (void *__restrict __dest,
 
 
 /* Return the length of S.  */
-extern size_t strlen (__const char *__s) __THROW;
+extern size_t strlen (__const char *__s) __THROW __attribute_pure__;
 
 #ifdef	__USE_GNU
 /* Find the length of STRING, but scan at most MAXLEN characters.
    If no '\0' terminator is found in that many characters, return MAXLEN.  */
-extern size_t strnlen (__const char *__string, size_t __maxlen) __THROW;
+extern size_t strnlen (__const char *__string, size_t __maxlen)
+     __THROW __attribute_pure__;
 #endif
 
 
@@ -238,13 +248,14 @@ extern void bcopy (__const void *__src, void *__dest, size_t __n) __THROW;
 extern void bzero (void *__s, size_t __n) __THROW;
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
-extern int bcmp (__const void *__s1, __const void *__s2, size_t __n) __THROW;
+extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
+     __THROW __attribute_pure__;
 
 /* Find the first occurrence of C in S (same as strchr).  */
-extern char *index (__const char *__s, int __c) __THROW;
+extern char *index (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Find the last occurrence of C in S (same as strrchr).  */
-extern char *rindex (__const char *__s, int __c) __THROW;
+extern char *rindex (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
@@ -262,22 +273,25 @@ __extension__ extern int ffsll (long long int __ll)
 # endif
 
 /* Compare S1 and S2, ignoring case.  */
-extern int __strcasecmp (__const char *__s1, __const char *__s2) __THROW;
-extern int strcasecmp (__const char *__s1, __const char *__s2) __THROW;
+extern int __strcasecmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
+extern int strcasecmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
 extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 #endif /* Use BSD.  */
 
 #ifdef	__USE_GNU
 /* Again versions of a few functions which use the given locale instead
    of the global one.  */
 extern int __strcasecmp_l (__const char *__s1, __const char *__s2,
-			   __locale_t __loc) __THROW;
+			   __locale_t __loc) __THROW __attribute_pure__;
 
 extern int __strncasecmp_l (__const char *__s1, __const char *__s2,
-			    size_t __n, __locale_t __loc) __THROW;
+			    size_t __n, __locale_t __loc)
+     __THROW __attribute_pure__;
 #endif
 
 #ifdef	__USE_BSD
@@ -289,7 +303,8 @@ extern char *strsep (char **__restrict __stringp,
 
 #ifdef	__USE_GNU
 /* Compare S1 and S2 as strings holding name & indices/version numbers.  */
-extern int strverscmp (__const char *__s1, __const char *__s2) __THROW;
+extern int strverscmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
 
 /* Return a string describing the meaning of the signal number in SIG.  */
 extern char *strsignal (int __sig) __THROW;

@@ -1,3 +1,10 @@
+2000-05-11  Jan Hubicka  <jh@suse.cz>
+
+	* misc/sys/cdefs.h: Add support for pure attribute.
+
+	* include/string.h: Add __attribute_pure__ to various functions.
+	* string/string.h: Likewise.
+
 2000-05-10  Jakub Jelinek  <jakub@redhat.com>
 
  	* elf/dl-reloc.c (_dl_reloc_bad_type): Sync messages with plt
