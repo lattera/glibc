@@ -1,3 +1,7 @@
+1999-08-20  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: Fix typo.
+
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/execve.c: New file.  This version terminates

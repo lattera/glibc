@@ -23,7 +23,7 @@
 #include <sys/types.h>
 
 #ifdef __USE_FILE_OFFSET64
-# error "<sendfile.h> cannot be used with _FILE_OFFSET=64"
+# error "<sendfile.h> cannot be used with _FILE_OFFSET_BITS=64"
 #endif
 
 __BEGIN_DECLS
