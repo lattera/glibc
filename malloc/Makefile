@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,11 +25,12 @@ all:
 
 dist-headers := malloc.h
 headers := $(dist-headers) obstack.h mcheck.h
-tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack
+tests := mallocbug tst-malloc tst-valloc tst-calloc tst-obstack \
+	 tst-mallocstate
 test-srcs = tst-mtrace
 
 distribute = thread-m.h mtrace.pl mcheck-init.c stackinfo.h memusage.h \
-	     memusage.sh memusagestat.c tst-mtrace.sh
+	     memusage.sh memusagestat.c tst-mtrace.sh arena.c hooks.c
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore
@@ -109,7 +110,7 @@ endif
 endif
 
 # Uncomment this for test releases.  For public releases it is too expensive.
-#CPPFLAGS-malloc.o += -DMALLOC_DEBUG
+#CPPFLAGS-malloc.o += -DMALLOC_DEBUG=1
 
 $(objpfx)mtrace: mtrace.pl
 	rm -f $@.new
@@ -126,3 +127,6 @@ $(objpfx)memusage: memusage.sh
 
 # The implementation uses `dlsym'
 $(objpfx)libmemusage.so: $(common-objpfx)dlfcn/libdl.so
+
+# Extra dependencies
+$(foreach o,$(all-object-suffixes),$(objpfx)malloc$(o)): arena.c hooks.c

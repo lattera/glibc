@@ -20,24 +20,26 @@
 #ifndef _MALLOC_H
 #define _MALLOC_H 1
 
+#ifdef _LIBC
 #include <features.h>
+#endif
 
 /*
-  `ptmalloc', a malloc implementation for multiple threads without
-  lock contention, by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>.
-  See the files `ptmalloc.c' or `COPYRIGHT' for copying conditions.
+  $Id$
+  `ptmalloc2', a malloc implementation for multiple threads without
+  lock contention, by Wolfram Gloger <wg@malloc.de>.
 
-  VERSION 2.6.4-pt Wed Dec  4 00:35:54 MET 1996
+  VERSION 2.7.0
 
-  This work is mainly derived from malloc-2.6.4 by Doug Lea
+  This work is mainly derived from malloc-2.7.0 by Doug Lea
   <dl@cs.oswego.edu>, which is available from:
 
-                 ftp://g.oswego.edu/pub/misc/malloc.c
+                 ftp://gee.cs.oswego.edu/pub/misc/malloc.c
 
   This trimmed-down header file only provides function prototypes and
   the exported data structures.  For more detailed function
   descriptions and compile-time options, see the source file
-  `ptmalloc.c'.
+  `malloc.c'.
 */
 
 #if defined(__STDC__) || defined (__cplusplus)
@@ -112,11 +114,6 @@ extern "C" {
 #endif
 extern int __malloc_initialized;
 
-/* Initialize global configuration.  Not needed with GNU libc. */
-#ifndef __GLIBC__
-extern void ptmalloc_init __MALLOC_P ((void));
-#endif
-
 /* Allocate SIZE bytes of memory.  */
 extern __malloc_ptr_t malloc __MALLOC_P ((size_t __size)) __attribute_malloc__;
 
@@ -156,16 +153,17 @@ extern __malloc_ptr_t __default_morecore __MALLOC_P ((ptrdiff_t __size))
        __attribute_malloc__;
 
 /* SVID2/XPG mallinfo structure */
+
 struct mallinfo {
-  int arena;    /* total space allocated from system */
-  int ordblks;  /* number of non-inuse chunks */
-  int smblks;   /* unused -- always zero */
+  int arena;    /* non-mmapped space allocated from system */
+  int ordblks;  /* number of free chunks */
+  int smblks;   /* number of fastbin blocks */
   int hblks;    /* number of mmapped regions */
-  int hblkhd;   /* total space in mmapped regions */
-  int usmblks;  /* unused -- always zero */
-  int fsmblks;  /* unused -- always zero */
+  int hblkhd;   /* space in mmapped regions */
+  int usmblks;  /* maximum total allocated space */
+  int fsmblks;  /* space available in freed fastbin blocks */
   int uordblks; /* total allocated space */
-  int fordblks; /* total non-inuse space */
+  int fordblks; /* total free space */
   int keepcost; /* top-most, releasable (via malloc_trim) space */
 };
 
@@ -174,7 +172,7 @@ extern struct mallinfo mallinfo __MALLOC_P ((void));
 
 /* SVID2/XPG mallopt options */
 #ifndef M_MXFAST
-# define M_MXFAST  1	/* UNUSED in this malloc */
+# define M_MXFAST  1	/* maximum request size for "fastbins" */
 #endif
 #ifndef M_NLBLKS
 # define M_NLBLKS  2	/* UNUSED in this malloc */
@@ -214,7 +212,6 @@ extern __malloc_ptr_t malloc_get_state __MALLOC_P ((void));
    malloc_get_state(). */
 extern int malloc_set_state __MALLOC_P ((__malloc_ptr_t __ptr));
 
-#if defined __GLIBC__ || defined MALLOC_HOOKS
 /* Called once when malloc is initialized; redefining this variable in
    the application provides the preferred way to set up the hook
    pointers. */
@@ -234,7 +231,19 @@ extern void (*__after_morecore_hook) __MALLOC_PMT ((void));
 
 /* Activate a standard set of debugging hooks. */
 extern void __malloc_check_init __MALLOC_P ((void));
-#endif
+
+/* Internal routines, operating on "arenas".  */
+struct malloc_state;
+typedef struct malloc_state *mstate;
+
+extern mstate         _int_new_arena __MALLOC_P ((size_t __ini_size));
+extern __malloc_ptr_t _int_malloc __MALLOC_P ((mstate __m, size_t __size));
+extern void           _int_free __MALLOC_P ((mstate __m, __malloc_ptr_t __ptr));
+extern __malloc_ptr_t _int_realloc __MALLOC_P ((mstate __m,
+						__malloc_ptr_t __ptr,
+						size_t __size));
+extern __malloc_ptr_t _int_memalign __MALLOC_P ((mstate __m, size_t __alignment,
+						 size_t __size));
 
 #ifdef __cplusplus
 }; /* end of extern "C" */

@@ -92,9 +92,6 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 {
   register char *base_ptr = (char *) pbase;
 
-  /* Allocating SIZE bytes for a pivot buffer facilitates a better
-     algorithm below since we can do comparisons directly on the pivot. */
-  char *pivot_buffer = (char *) __alloca (size);
   const size_t max_thresh = MAX_THRESH * size;
 
   if (total_elems == 0)
@@ -113,8 +110,6 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
           char *left_ptr;
           char *right_ptr;
 
-	  char *pivot = pivot_buffer;
-
 	  /* Select median value from among LO, MID, and HI. Rearrange
 	     LO and HI so the three values are sorted. This lowers the
 	     probability of picking a pathological pivot value and
@@ -132,8 +127,6 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 	  if ((*cmp) ((void *) mid, (void *) lo) < 0)
 	    SWAP (mid, lo, size);
 	jump_over:;
-	  memcpy (pivot, mid, size);
-	  pivot = pivot_buffer;
 
 	  left_ptr  = lo + size;
 	  right_ptr = hi - size;
@@ -143,15 +136,19 @@ _quicksort (void *const pbase, size_t total_elems, size_t size,
 	     that this algorithm runs much faster than others. */
 	  do
 	    {
-	      while ((*cmp) ((void *) left_ptr, (void *) pivot) < 0)
+	      while ((*cmp) ((void *) left_ptr, (void *) mid) < 0)
 		left_ptr += size;
 
-	      while ((*cmp) ((void *) pivot, (void *) right_ptr) < 0)
+	      while ((*cmp) ((void *) mid, (void *) right_ptr) < 0)
 		right_ptr -= size;
 
 	      if (left_ptr < right_ptr)
 		{
 		  SWAP (left_ptr, right_ptr, size);
+		  if (mid == left_ptr)
+		    mid = right_ptr;
+		  else if (mid == right_ptr)
+		    mid = left_ptr;
 		  left_ptr += size;
 		  right_ptr -= size;
 		}

@@ -1,3 +1,25 @@
+2002-01-18  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c: Rewrite, adapted from Doug Lea's malloc-2.7.0.c.
+	* malloc/malloc.h: Likewise.
+	* malloc/arena.c: New file.
+	* malloc/hooks.c: New file.
+	* malloc/tst-mallocstate.c: New file.
+	* malloc/Makefile: Add new testcase tst-mallocstate.
+	Add arena.c and hooks.c to distribute.  Fix commented CPPFLAGS.
+
+2002-01-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/msort.c: Remove last patch.  The optimization violates the
+	same rule which qsort.c had problems with.
+
+2002-01-27  Paul Eggert  <eggert@twinsun.com>
+
+	* stdlib/qsort.c (_quicksort): Do not apply the comparison function
+	to a pivot element that lies outside the array to be sorted, as
+	ISO C99 requires that the comparison function be called only with
+	addresses of array elements [PR libc/2880].
+
 2002-01-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): Remove incorrect optimization
