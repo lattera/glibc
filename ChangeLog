@@ -1,3 +1,10 @@
+1999-11-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Remove duplicate definitions.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/sys/procfs.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/procfs.h: Likewise.
+
 1999-11-15  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add
