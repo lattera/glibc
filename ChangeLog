@@ -1,5 +1,9 @@
 2000-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_dst_substitute): Pretty print comment.
+	(add_name_to_object): Add cast in malloc call.
+	(fillin_rpath): Optimize loop to initialize ->status a bit.
+
 	* sysdeps/i386/dl-machine.h: Undo last change.
 	* sysdeps/mach/hurd/i386/dl-machine.h (RTLD_START_SPECIAL_INIT):
 	Restore %edx register after call here.

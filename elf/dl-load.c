@@ -203,8 +203,8 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 	  const char *repl;
 	  size_t len;
 
-      /* Note that it is no bug that the strings in the first two `strncmp'
-	 calls are longer than the sequence which is actually tested.  */
+	  /* Note that it is no bug that the strings in the first two `strncmp'
+	     calls are longer than the sequence which is actually tested.  */
 	  if ((((strncmp (&name[1], "ORIGIN}", 6) == 0 && (len = 7) != 0)
 		|| (strncmp (&name[1], "PLATFORM}", 8) == 0 && (len = 9) != 0))
 	       && (name[len] == '\0' || name[len] == '/'
@@ -311,7 +311,7 @@ add_name_to_object (struct link_map *l, const char *name)
       return;
 
   name_len = strlen (name) + 1;
-  newname = malloc (sizeof *newname + name_len);
+  newname = (struct libname_list *) malloc (sizeof *newname + name_len);
   if (newname == NULL)
     {
       /* No more memory.  */
@@ -407,6 +407,7 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
       else
 	{
 	  size_t cnt;
+	  enum r_dir_status init_val;
 
 	  /* It's a new directory.  Create an entry and add it.  */
 	  dirp = (struct r_search_path_elem *)
@@ -424,12 +425,9 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	  /* We have to make sure all the relative directories are never
 	     ignored.  The current directory might change and all our
 	     saved information would be void.  */
-	  if (cp[0] != '/')
-	    for (cnt = 0; cnt < ncapstr; ++cnt)
-	      dirp->status[cnt] = existing;
-	  else
-	    for (cnt = 0; cnt < ncapstr; ++cnt)
-	      dirp->status[cnt] = unknown;
+	  init_val = cp[0] != '/' ? existing : unknown;
+	  for (cnt = 0; cnt < ncapstr; ++cnt)
+	    dirp->status[cnt] = init_val;
 
 	  dirp->what = what;
 	  dirp->where = where;
