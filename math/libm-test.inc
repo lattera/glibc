@@ -3674,8 +3674,8 @@ scalb_test (void)
 
   START (scalb);
 
-  TEST_ff_f (scalb, 2.0, 0.5, nan_value);
-  TEST_ff_f (scalb, 3.0, -2.5, nan_value);
+  TEST_ff_f (scalb, 2.0, 0.5, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, 3.0, -2.5, nan_value, INVALID_EXCEPTION);
 
   TEST_ff_f (scalb, 0, nan_value, nan_value);
   TEST_ff_f (scalb, 1, nan_value, nan_value);
@@ -3710,8 +3710,8 @@ scalb_test (void)
   TEST_ff_f (scalb, plus_infty, plus_infty, plus_infty);
   TEST_ff_f (scalb, minus_infty, plus_infty, minus_infty);
 
-  TEST_ff_f (scalb, plus_infty, minus_infty, nan_value);
-  TEST_ff_f (scalb, minus_infty, minus_infty, nan_value);
+  TEST_ff_f (scalb, plus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
+  TEST_ff_f (scalb, minus_infty, minus_infty, nan_value, INVALID_EXCEPTION);
 
   TEST_ff_f (scalb, nan_value, 1, nan_value);
   TEST_ff_f (scalb, 1, nan_value, nan_value);
