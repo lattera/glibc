@@ -313,7 +313,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  break;
 
 	case R_SPARC_JMP_SLOT:
-	  elf_machine_fixup_plt(map, NULL, reloc, reloc_addr, value);
+	  elf_machine_fixup_plt(map, 0, reloc, reloc_addr, value);
 	  break;
 
 	case R_SPARC_UA64:

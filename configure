@@ -677,7 +677,7 @@ fi
 
 if test -n "$libgd_include"; then
   config_vars="$config_vars
-CFLAGS-memprofstat.c = $libgd_include"
+CFLAGS-memusagestat.c = $libgd_include"
 fi
 if test -n "$libgd_ldflags"; then
   config_vars="$config_vars
