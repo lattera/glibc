@@ -1,3 +1,12 @@
+2003-02-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-join4.
+	* tst-join4.c: New file.
+
+2003-02-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cond4.c (main): Add test of pthread_attr_getpshared.
+
 2003-02-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/tls.h (THREAD_GETMEM, THREAD_GETMEM_NC, THREAD_SETMEM,

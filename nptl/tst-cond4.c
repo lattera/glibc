@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -140,9 +140,33 @@ main (void)
       exit (1);
     }
 
+  if (pthread_condattr_getpshared (&ca, &p) != 0)
+    {
+      puts ("1st condattr_getpshared failed");
+      exit (1);
+    }
+
+  if (p != PTHREAD_PROCESS_PRIVATE)
+    {
+      puts ("default value for pshared in condattr wrong");
+      exit (1);
+    }
+
   if (pthread_condattr_setpshared (&ca, PTHREAD_PROCESS_SHARED) != 0)
     {
       puts ("condattr_setpshared failed");
+      exit (1);
+    }
+
+  if (pthread_condattr_getpshared (&ca, &p) != 0)
+    {
+      puts ("2nd condattr_getpshared failed");
+      exit (1);
+    }
+
+  if (p != PTHREAD_PROCESS_SHARED)
+    {
+      puts ("pshared condattr still not set");
       exit (1);
     }
 
