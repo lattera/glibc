@@ -52,6 +52,11 @@
 #endif
 
 
+/* Let the architecture add some flags to the mmap() call used to
+   allocate stacks.  */
+#ifndef ARCH_MAP_FLAGS
+# define ARCH_MAP_FLAGS 0
+#endif
 
 
 /* Cache handling for not-yet free stacks.  */
@@ -303,6 +308,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       size_t reqsize;
       void *mem;
 
+#undef COLORING_INCREMENT
 #if COLORING_INCREMENT != 0
       /* Add one more page for stack coloring.  Don't to it for stacks
 	 with 16 times pagesize or larger.  This might just cause
@@ -330,7 +336,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       if (pd == NULL)
 	{
 	  mem = mmap (NULL, size, PROT_READ | PROT_WRITE | PROT_EXEC,
-		      MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+		      MAP_PRIVATE | MAP_ANONYMOUS | ARCH_MAP_FLAGS, -1, 0);
 
 	  if (__builtin_expect (mem == MAP_FAILED, 0))
 	    return errno;

@@ -1,5 +1,14 @@
 2003-03-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* pthread_create.c: Define __pthread_keys using nocommon
+	attribute, not by placing it explicitly in bss.
+	Remove DEFINE_DEALLOC definition.  Not needed anymore.
+
+	* allocatestack.c: Define ARCH_MAP_FLAGS if not already defined.
+	Use it in mmap call to allocate stacks.
+
+	* sysdeps/pthread/createthread.c (create_thread): Fix comment.
+
 	* pthread_create.c (start_thread): Use THREAD_SETMEM to store
 	result of the thread function.
 
