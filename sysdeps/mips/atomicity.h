@@ -1,5 +1,5 @@
 /* Low-level functions for atomic operations. Mips version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,16 +32,12 @@ exchange_and_add (volatile uint32_t *mem, int val)
   int result, tmp;
 
   __asm__ __volatile__
-    ("/* Inline exchange & add */\n\t"
-     "ll	%0,%3\n"
+    ("/* Inline exchange & add */\n"
      "1:\n\t"
+     "ll	%0,%3\n\t"
      "addu	%1,%4,%0\n\t"
      "sc	%1,%2\n\t"
-     ".set	push\n\t"
-     ".set	noreorder\n\t"
-     "beqzl	%1,1b\n\t"
-     " ll	%0,%3\n\t"
-     ".set	pop\n\t"
+     "beqz	%1,1b\n\t"
      "/* End exchange & add */"
      : "=&r"(result), "=&r"(tmp), "=m"(*mem)
      : "m" (*mem), "r"(val)
@@ -57,16 +53,12 @@ atomic_add (volatile uint32_t *mem, int val)
   int result;
 
   __asm__ __volatile__
-    ("/* Inline atomic add */\n\t"
-     "ll	%0,%2\n"
+    ("/* Inline atomic add */\n"
      "1:\n\t"
+     "ll	%0,%2\n\t"
      "addu	%0,%3,%0\n\t"
      "sc	%0,%1\n\t"
-     ".set	push\n\t"
-     ".set	noreorder\n\t"
-     "beqzl	%0,1b\n\t"
-     " ll	%0,%2\n\t"
-     ".set	pop\n\t"
+     "beqz	%0,1b\n\t"
      "/* End atomic add */"
      : "=&r"(result), "=m"(*mem)
      : "m" (*mem), "r"(val)
@@ -80,18 +72,17 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   long int ret, temp;
 
   __asm__ __volatile__
-    ("/* Inline compare & swap */\n\t"
-     "ll	%1,%5\n"
+    ("/* Inline compare & swap */\n"
      "1:\n\t"
+     "ll	%1,%5\n\t"
      ".set	push\n\t"
      ".set	noreorder\n\t"
      "bne	%1,%3,2f\n\t"
      " move	%0,$0\n\t"
+     ".set	pop\n\t"
      "move	%0,%4\n\t"
      "sc	%0,%2\n\t"
-     "beqzl	%0,1b\n\t"
-     " ll	%1,%5\n\t"
-     ".set	pop\n"
+     "beqz	%0,1b\n"
      "2:\n\t"
      "/* End compare & swap */"
      : "=&r" (ret), "=&r" (temp), "=m" (*p)

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
 
-   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
    Based on the Alpha version by Richard Henderson <rth@tamu.edu>.
@@ -57,18 +57,17 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   long int ret, temp;
 
   __asm__ __volatile__
-    ("/* Inline compare & swap */\n\t"
-     "ll	%1,%5\n"
+    ("/* Inline compare & swap */\n"
      "1:\n\t"
+     "ll	%1,%5\n\t"
      ".set	push\n\t"
      ".set	noreorder\n\t"
      "bne	%1,%3,2f\n\t"
      " move	%0,$0\n\t"
+     ".set	pop\n\t"
      "move	%0,%4\n\t"
      "sc	%0,%2\n\t"
-     "beqzl	%0,1b\n\t"
-     " ll	%1,%5\n\t"
-     ".set	pop\n"
+     "beqz	%0,1b\n"
      "2:\n\t"
      "/* End compare & swap */"
      : "=&r" (ret), "=&r" (temp), "=m" (*p)
