@@ -1,6 +1,6 @@
-GNU C Library NEWS -- history of user-visible changes.  2000-11-28
+GNU C Library NEWS -- history of user-visible changes.  2001-1-12
 
-Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
+Copyright (C) 1992-1999, 2000, 2001 Free Software Foundation, Inc.
 See the end for copying conditions.
 
 Please send GNU C library bug reports using the `glibcbug' script to
@@ -24,6 +24,14 @@ Version 2.2.1
 * New codeset conversion modules: IBM-922  (Estonia PC codeset),
   IBM-1124 (Ukraine PC codeset), IBM-1129 (Vietnamese PC codeset).
   Contributed by Masahide Washizawa <washi@jp.ibm.com>.
+
+* Optimized string functions for Alpha ev6 and ev67 by Richard Henderson
+  <rth@redhat.com> and Rick Gorton <rick.gorton@alpha-processor.com>.
+
+* The LANGUAGE environment variable is now ignored unless the locale is
+  changed from the default "C" locale.
+
+* The usual bug fixes.
 
 Version 2.2
 

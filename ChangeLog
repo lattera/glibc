@@ -1,3 +1,8 @@
+2001-01-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* assert/assert.h: Use static_cast instead of C-style cast for C++.
+	Patch by Enrico Scholz <enrico.scholz@informatik.tu-chemnitz.de>.
+
 2001-01-12  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/generic/segfault.c (install_handler): Use access, not
