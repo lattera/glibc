@@ -31,6 +31,13 @@ Cambridge, MA 02139, USA.  */
 /* Get the bit values from the kernel header file.  */
 #include <linux/mman.h>
 
+#ifndef MAP_ANON
+#define MAP_ANON	MAP_ANONYMOUS
+#endif
+#ifndef MAP_FILE
+#define MAP_FILE	0
+#endif
+
 __BEGIN_DECLS
 /* Map addresses starting near ADDR and extending for LEN bytes.  from
    OFFSET into the file FD describes according to PROT and FLAGS.  If ADDR

@@ -69,7 +69,11 @@ endif
 # The name of the symbol table archive member.  The default is suitable for
 # BSD style archives.  It can be overridden in sysdep Makefiles when SYSV
 # style archive are used.
+ifeq (no,$(elf))
 ar-symtab-name = __.SYMDEF
+else
+ar-symtab-name = # The null name is used in ELF archives.
+endif
 
 # Include any system-specific makefiles.
 

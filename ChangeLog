@@ -1,3 +1,11 @@
+Sat Feb 10 13:09:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sys/mman.h: Define MAP_ANON and
+	MAP_FILE if not already defined.
+
+	* elf/elf.h: Add m68k reloc definitions.
+	* sysdeps/m68k/dl-machine.h, sysdeps/m68k/elf/start.S: New files.
+
 Tue Feb 13 00:12:12 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/i386/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE,

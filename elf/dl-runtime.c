@@ -48,7 +48,11 @@ static Elf32_Addr fixup (struct link_map *l, Elf32_Word reloc_offset)
    function.  */
 
 static Elf32_Addr
-fixup (struct link_map *l, Elf32_Word reloc_offset)
+fixup (
+#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+       ELF_MACHINE_RUNTIME_FIXUP_ARGS,
+#endif
+       struct link_map *l, Elf32_Word reloc_offset)
 {
   const Elf32_Sym *const symtab
     = (const Elf32_Sym *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
