@@ -1,3 +1,15 @@
+1999-04-14  Scott Bambrough  <scottb@netwinder.org>
+
+	* sysdeps/unix/sysv/linux/arm/net/ethernet.h: struct ether_addr
+	and struct ether_header must be packed on the ARM.  The default
+	alignment constraints add padding to the end of the structures.
+
+1999-04-14  Scott Bambrough  <scottb@netwinder.org>
+
+	* inet/arpa/tftp.h: struct tftphdr must be packed on the ARM.  The
+	default alignment constraints add padding to the end of the
+	structure and between members.
+
 1999-05-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/generic/dl-cache.c (_dl_load_cache_lookup): Use

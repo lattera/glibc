@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ __BEGIN_DECLS
 struct ether_addr
 {
   u_int8_t ether_addr_octet[ETH_ALEN];
-};
+} __attribute__ ((__packed__));
 
 /* 10Mb/s ethernet header */
 struct ether_header
@@ -41,7 +41,7 @@ struct ether_header
   u_int8_t  ether_dhost[ETH_ALEN];	/* destination eth addr	*/
   u_int8_t  ether_shost[ETH_ALEN];	/* source ether addr	*/
   u_int16_t ether_type;		        /* packet type ID field	*/
-};
+} __attribute__ ((__packed__));
 
 /* Ethernet protocol ID's */
 #define	ETHERTYPE_PUP		0x0200          /* Xerox PUP */

@@ -58,7 +58,7 @@ struct	tftphdr {
 		char	tu_stuff[1];		/* request packet stuff */
 	} th_u;
 	char	th_data[1];			/* data or error string */
-};
+} __attribute__ ((__packed__));
 
 #define	th_block	th_u.tu_block
 #define	th_code		th_u.tu_code
