@@ -1,5 +1,7 @@
 2000-09-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/tst-printf.sh: Also allow output from 64-bit machines.
+
 	* sysdeps/unix/sysv/linux/dl-osinfo.h (DL_SYSDEP_OSCHECK): Change
 	to not use sysctl().  Too many architectures have problems with it.
 
