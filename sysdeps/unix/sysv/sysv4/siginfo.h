@@ -24,19 +24,34 @@ Cambridge, MA 02139, USA.  */
 /* SVR4 puts a ton of other stuff in this structure.  For now, we'll just
    define the two things we really need out of it, and hope for the best.  */
 
+/* These define the different states a child can have on exit. Need these
+to build the correct status return for things like waitpid */
+
+#define EXITED 		1
+#define KILLED		2
+#define CORED		3
+#define TRAPPED		4
+#define STOPPED		5
+#define CONTINUED	6
+
 typedef struct __siginfo
 {
-  int filler1[3];
+  int filler1;
 
-  /* The PID of the child.  */
-  __pid_t __pid;
+  /* Code indicating child's status */
+  int __code;
 
   int filler2;
+
+  /* The PID of the child.  */
+  long __pid;
+
+  int filler3;
 
   /* The child's status.  */
   int __status;
 
-  int filler3[26];
+  int filler4[26];
 
 } __siginfo_t;
 
