@@ -4,6 +4,9 @@
 Test "acos (0.0625) == 1.50825556499840522843072005474337068":
 ildouble: 622
 ldouble: 622
+Test "acos (0.75) == 0.722734247813415611178377352641333362":
+ildouble: 1
+ldouble: 1
 
 # asin
 Test "asin (-0.5) == -pi/6":
@@ -83,6 +86,8 @@ double: 1
 float: 1
 idouble: 1
 ifloat: 1
+ildouble: 1
+ldouble: 1
 
 # catan
 Test "Imaginary part of: catan (-2 - 3 i) == -1.4099210495965755225306193844604208 - 0.22907268296853876629588180294200276 i":
@@ -277,8 +282,8 @@ ildouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
-ildouble: 587
-ldouble: 587
+ildouble: 588
+ldouble: 588
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 ildouble: 1
 ldouble: 1
