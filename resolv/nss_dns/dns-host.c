@@ -163,7 +163,7 @@ _nss_dns_gethostbyname2_r (const char *name, int af, struct hostent *result,
   if (n < 0)
     {
       *h_errnop = h_errno;
-      *errnop = errno;
+      *errnop = *h_errnop == TRY_AGAIN ? EAGAIN : ENOENT;
       return errno == ECONNREFUSED ? NSS_STATUS_UNAVAIL : NSS_STATUS_NOTFOUND;
     }
 
@@ -342,6 +342,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       name_ok = res_dnok;
       break;
     default:
+      *errnop = ENOENT;
       return NSS_STATUS_UNAVAIL;  /* XXX should be abort(); */
     }
 
@@ -356,6 +357,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   if (qdcount != 1)
     {
       *h_errnop = NO_RECOVERY;
+      *errnop = ENOENT;
       return NSS_STATUS_UNAVAIL;
     }
 
@@ -390,6 +392,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (n >= MAXHOSTNAMELEN)
 	{
 	  *h_errnop = NO_RECOVERY;
+	  *errnop = ENOENT;
 	  return NSS_STATUS_TRYAGAIN;
 	}
       result->h_name = bp;
@@ -660,5 +663,6 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     }
  no_recovery:
   *h_errnop = NO_RECOVERY;
+  *errnop = ENOENT;
   return NSS_STATUS_TRYAGAIN;
 }

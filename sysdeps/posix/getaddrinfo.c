@@ -120,7 +120,7 @@ gaih_local (const char *name, const struct gaih_service *service,
   struct utsname utsname;
 
   if ((name != NULL) || (req->ai_flags & AI_CANONNAME))
-    if (uname(&utsname))
+    if (uname (&utsname))
       return -EAI_SYSTEM;
 
   if (name != NULL)
@@ -132,7 +132,23 @@ gaih_local (const char *name, const struct gaih_service *service,
 	return GAIH_OKIFUNSPEC | -EAI_NONAME;
     }
 
-  *pai = malloc (sizeof(struct addrinfo) + sizeof(struct sockaddr_un)
+  if (req->ai_protocol || req->ai_socktype)
+    {
+      struct gaih_typeproto *tp = gaih_inet_typeproto;
+
+      for (tp++; tp->name &&
+	     ((req->ai_socktype != tp->socktype) || !req->ai_socktype) &&
+	     ((req->ai_protocol != tp->protocol) || !req->ai_protocol); tp++);
+      if (tp->name == NULL)
+	{
+	  if (req->ai_socktype)
+	    return (GAIH_OKIFUNSPEC | -EAI_SOCKTYPE);
+	  else
+	    return (GAIH_OKIFUNSPEC | -EAI_SERVICE);
+	}
+    }
+
+  *pai = malloc (sizeof (struct addrinfo) + sizeof (struct sockaddr_un)
 		 + ((req->ai_flags & AI_CANONNAME)
 		    ? (strlen(utsname.nodename) + 1): 0));
   if (*pai == NULL)
@@ -143,8 +159,8 @@ gaih_local (const char *name, const struct gaih_service *service,
   (*pai)->ai_family = AF_LOCAL;
   (*pai)->ai_socktype = req->ai_socktype ? req->ai_socktype : SOCK_STREAM;
   (*pai)->ai_protocol = req->ai_protocol;
-  (*pai)->ai_addrlen = sizeof(struct sockaddr_un);
-  (*pai)->ai_addr = (void *)(*pai) + sizeof(struct addrinfo);
+  (*pai)->ai_addrlen = sizeof (struct sockaddr_un);
+  (*pai)->ai_addr = (void *) (*pai) + sizeof (struct addrinfo);
 
 #if SALEN
   ((struct sockaddr_un *) (*pai)->ai_addr)->sun_len =
@@ -181,8 +197,9 @@ gaih_local (const char *name, const struct gaih_service *service,
     }
 
   if (req->ai_flags & AI_CANONNAME)
-    strcpy ((*pai)->ai_canonname = (char *)(*pai) + sizeof(struct addrinfo) +
-	    sizeof(struct sockaddr_un), utsname.nodename);
+    (*pai)->ai_canonname = strcpy ((char *) *pai + sizeof (struct addrinfo)
+				   + sizeof (struct sockaddr_un),
+				   utsname.nodename);
   else
     (*pai)->ai_canonname = NULL;
   return 0;
@@ -201,14 +218,12 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
   do
     {
       tmpbuf = __alloca (tmpbuflen);
-      if (tmpbuf == NULL)
-	return -EAI_MEMORY;
 
       r = __getservbyname_r (servicename, tp->name, &ts, tmpbuf, tmpbuflen,
 			     &s);
-      if (r || s == NULL)
+      if (r != 0 || s == NULL)
 	{
-	  if (errno == ERANGE)
+	  if (r == ERANGE)
 	    tmpbuflen *= 2;
 	  else
 	    return GAIH_OKIFUNSPEC | -EAI_SERVICE;
@@ -234,12 +249,10 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
   do {								\
     tmpbuflen *= 2;						\
     tmpbuf = __alloca (tmpbuflen);				\
-    if (tmpbuf == NULL)						\
-      return -EAI_MEMORY;					\
     rc = __gethostbyname2_r (name, _family, &th, tmpbuf,	\
          tmpbuflen, &h, &herrno);				\
   } while (rc == ERANGE && herrno == NETDB_INTERNAL);		\
-  if ((rc != 0) && (herrno == NETDB_INTERNAL))			\
+  if (rc != 0 && herrno == NETDB_INTERNAL)			\
     {								\
       __set_h_errno (herrno);					\
       return -EAI_SYSTEM;					\
@@ -249,11 +262,7 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
       for (i = 0; h->h_addr_list[i]; i++)			\
 	{							\
 	  if (*pat == NULL)					\
-	    {							\
-	      *pat = __alloca (sizeof(struct gaih_addrtuple));	\
-	      if (*pat == NULL)					\
-		return -EAI_MEMORY;				\
-	    }							\
+	    *pat = __alloca (sizeof(struct gaih_addrtuple));	\
 	  (*pat)->next = NULL;					\
 	  (*pat)->family = _family;				\
 	  memcpy ((*pat)->addr, h->h_addr_list[i],		\
@@ -261,6 +270,7 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
 	  pat = &((*pat)->next);				\
 	}							\
     }								\
+  no_data = rc != 0 && herrno == NO_DATA;			\
  }
 
 static int
@@ -322,10 +332,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	}
       else
 	{
-	  st = __alloca (sizeof(struct gaih_servtuple));
-	  if (st == NULL)
-	    return -EAI_MEMORY;
-
+	  st = __alloca (sizeof (struct gaih_servtuple));
 	  st->next = NULL;
 	  st->socktype = tp->socktype;
 	  st->protocol = tp->protocol;
@@ -335,45 +342,58 @@ gaih_inet (const char *name, const struct gaih_service *service,
 
   if (name != NULL)
     {
-      at = __alloca (sizeof(struct gaih_addrtuple));
+      at = __alloca (sizeof (struct gaih_addrtuple));
 
-      at->family = 0;
+      at->family = AF_UNSPEC;
       at->next = NULL;
 
-      if (req->ai_family == 0 || req->ai_family == AF_INET)
-	if (inet_pton (AF_INET, name, at->addr) > 0)
-	  at->family = AF_INET;
+      if (inet_pton (AF_INET, name, at->addr) > 0)
+	{
+	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
+	    at->family = AF_INET;
+	  else
+	    return -EAI_ADDRFAMILY;
+	}
 
-      if (!at->family && (req->ai_family == 0 || req->ai_family == AF_INET6))
-	if (inet_pton (AF_INET6, name, at->addr) > 0)
-	  at->family = AF_INET6;
+      if (at->family == AF_UNSPEC && inet_pton (AF_INET6, name, at->addr) > 0)
+	{
+	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
+	    at->family = AF_INET6;
+	  else
+	    return -EAI_ADDRFAMILY;
+	}
 
       if (at->family == AF_UNSPEC)
 	{
 	  struct hostent *h;
 	  struct gaih_addrtuple **pat = &at;
+	  int no_data = 0;
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET6)
 	    gethosts (AF_INET6, struct in6_addr);
 
 	  if (req->ai_family == AF_UNSPEC || req->ai_family == AF_INET)
 	    gethosts (AF_INET, struct in_addr);
+
+	  if (no_data != 0)
+	    /* We made requests but they turned out no data.  The name
+	       is known, though.  */
+	    return (GAIH_OKIFUNSPEC | -EAI_NODATA);
 	}
 
       if (at->family == AF_UNSPEC)
 	return (GAIH_OKIFUNSPEC | -EAI_NONAME);
-
     }
   else
     {
       struct gaih_addrtuple *atr;
-      atr = at = __alloca (sizeof(struct gaih_addrtuple));
-      memset (at, 0, sizeof(struct gaih_addrtuple));
+      atr = at = __alloca (sizeof (struct gaih_addrtuple));
+      memset (at, '\0', sizeof (struct gaih_addrtuple));
 
       if (req->ai_family == 0)
 	{
-	  at->next = __alloca (sizeof(struct gaih_addrtuple));
-	  memset (at->next, 0, sizeof(struct gaih_addrtuple));
+	  at->next = __alloca (sizeof (struct gaih_addrtuple));
+	  memset (at->next, '\0', sizeof (struct gaih_addrtuple));
 	}
 
       if (req->ai_family == 0 || req->ai_family == AF_INET6)
@@ -433,10 +453,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 					&h, &herrno);
 
 	      }
-	    while ((rc != 0) && (herrno == NETDB_INTERNAL)
-		   && (errno == ERANGE));
+	    while (rc == errno && herrno == NETDB_INTERNAL);
 
-	    if ((rc != 0) && (herrno == NETDB_INTERNAL))
+	    if (rc != 0 && herrno == NETDB_INTERNAL)
 	      {
 		__set_h_errno (herrno);
 		return -EAI_SYSTEM;
@@ -527,7 +546,7 @@ int
 getaddrinfo (const char *name, const char *service,
 	     const struct addrinfo *hints, struct addrinfo **pai)
 {
-  int i = 0, j = 0;
+  int i = 0, j = 0, last_i = 0;
   struct addrinfo *p = NULL, **end;
   struct gaih *g = gaih, *pg = NULL;
   struct gaih_service gaih_service, *pservice;
@@ -583,6 +602,11 @@ getaddrinfo (const char *name, const char *service,
 	      i = g->gaih (name, pservice, hints, end);
 	      if (i != 0)
 		{
+		  /* EAI_NODATA is a more specific result as it says that
+		     we found a result but it is not usable.  */
+		  if (last_i != (GAIH_OKIFUNSPEC | -EAI_NODATA))
+		    last_i = i;
+
 		  if (hints->ai_family == AF_UNSPEC && (i & GAIH_OKIFUNSPEC))
 		    continue;
 
@@ -607,13 +631,13 @@ getaddrinfo (const char *name, const char *service,
       return 0;
     }
 
-  if (pai == NULL && i == 0)
+  if (pai == NULL && last_i == 0)
     return 0;
 
   if (p)
     freeaddrinfo (p);
 
-  return i ? -(i & GAIH_EAI) : EAI_NONAME;
+  return last_i ? -(last_i & GAIH_EAI) : EAI_NONAME;
 }
 
 void
