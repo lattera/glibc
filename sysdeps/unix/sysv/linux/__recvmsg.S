@@ -1,5 +1,5 @@
-#define	socket	__recvmsg
-#define	__socket __libc_recvmsg
-#define SOCKOP___recvmsg SOCKOP_recvmsg
+#define	socket	___syscall_recvmsg
+#define	__socket __syscall_recvmsg
+#define SOCKOP____syscall_recvmsg SOCKOP_recvmsg
 #define	NARGS	3
 #include <socket.S>

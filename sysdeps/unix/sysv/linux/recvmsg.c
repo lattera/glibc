@@ -32,10 +32,10 @@ struct __kernel_ucred
   __kernel_gid_t gid;
 };
 
-extern int __recvmsg (int, struct msghdr *, int);
+extern int __syscall_recvmsg (int, struct msghdr *, int);
 
 int
-recvmsg (fd, message, flags)
+__libc_recvmsg (fd, message, flags)
      int fd;
      struct msghdr *message;
      int flags;
@@ -61,7 +61,7 @@ recvmsg (fd, message, flags)
     }
 
 
-  ret = __recvmsg (fd, message, flags);
+  ret = __syscall_recvmsg (fd, message, flags);
 
   if (ret == -1)
     return ret;
@@ -91,3 +91,6 @@ recvmsg (fd, message, flags)
       }
   return ret;
 }
+
+weak_alias (__libc_recvmsg, __recvmsg)
+weak_alias (__libc_recvmsg, recvmsg)

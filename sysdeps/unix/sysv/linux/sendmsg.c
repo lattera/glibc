@@ -32,12 +32,12 @@ struct __kernel_ucred
   __kernel_gid_t gid;
 };
 
-extern int __sendmsg (int, const struct msghdr *, int);
+extern int __syscall_sendmsg (int, const struct msghdr *, int);
 
 /* Send a message described by MESSAGE on socket FD.
    Returns the number of bytes sent, or -1 for errors.  */
 int
-sendmsg (fd, message, flags)
+__libc_sendmsg (fd, message, flags)
      int fd;
      const struct msghdr *message;
      int flags;
@@ -87,5 +87,8 @@ sendmsg (fd, message, flags)
       cm = CMSG_NXTHDR ((struct msghdr *) message, cm);
     }
 
-  return __sendmsg (fd, message, flags);
+  return __syscall_sendmsg (fd, message, flags);
 }
+
+weak_alias (__libc_sendmsg, __sendmsg)
+weak_alias (__libc_sendmsg, sendmsg)
