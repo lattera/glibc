@@ -489,10 +489,7 @@ print_and_abort ()
     __fwprintf (stderr, L"%s\n", _("memory exhausted"));
   else
 #endif
-    {
-      fputs (_("memory exhausted"), stderr);
-      fputc ('\n', stderr);
-    }
+    fprintf (stderr, "%s\n", _("memory exhausted"));
   exit (obstack_exit_failure);
 }
 

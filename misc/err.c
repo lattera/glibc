@@ -69,7 +69,7 @@ convert_and_print (const char *format, __gnuc_va_list ap)
 
 	  if (wformat == NULL)
 	    {
-	      fputws (L"out of memory\n", stderr);
+	      fputws_unlocked (L"out of memory\n", stderr);
 	      return;
 	    }
 	}

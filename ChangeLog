@@ -1,3 +1,11 @@
+2001-08-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/error.c (error_tail): Use fputws_unlocked instead of fputws.
+	* misc/err.c (convert_and_print): Likewise.
+
+	* malloc/obstack.c (print_and_abort): Use fprintf instead of two
+	function calls.
+
 2001-08-20  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Revert the
