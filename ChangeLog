@@ -1,3 +1,8 @@
+2000-02-25  Andreas Jaeger  <aj@suse.de>
+
+	* malloc/Versions: Change version of __libc_freeres to 2.1 in
+	accordance with usage in glibc 2.1.3.
+
 2000-02-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdlib/msort.c (qsort): Limit the amount of memory spend on a
