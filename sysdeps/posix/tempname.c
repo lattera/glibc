@@ -27,6 +27,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/time.h>
+#include <assert.h>
 
 /* Return nonzero if DIR is an existent directory.  */
 static int
@@ -106,20 +107,27 @@ static const char letters[] =
 /* Generate a temporary file name based on TMPL.  TMPL must match the
    rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
    does not exist at the time of the call to __gen_tempname.  TMPL is
-   overwritten with the result.  If OPENIT is nonzero, creates the
-   file and returns a read-write fd; the file is mode 0600 modulo
-   umask.  If LARGEFILE is nonzero, uses open64() instead of open().
+   overwritten with the result.
+
+   KIND may be one of:
+   __GT_NOCREATE:	simply verify that the name does not exist
+			at the time of the call.
+   __GT_FILE:		create the file using open(O_CREAT|O_EXCL)
+			and return a read-write fd.  The file is mode 0600.
+   __GT_BIGFILE:	same as __GT_FILE but use open64().
+   __GT_DIR:		create a directory, which will be mode 0700.
 
    We use a clever algorithm to get hard-to-predict names. */
 int
-__gen_tempname (char *tmpl, int openit, int largefile)
+__gen_tempname (char *tmpl, int kind)
 {
   int len;
   char *XXXXXX;
   static uint64_t value;
   struct timeval tv;
-  int count, fd;
+  int count, fd = -1;
   int save_errno = errno;
+  struct stat st;
 
   len = strlen (tmpl);
   if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX"))
@@ -152,24 +160,25 @@ __gen_tempname (char *tmpl, int openit, int largefile)
       v /= 62;
       XXXXXX[5] = letters[v % 62];
 
-      if (openit)
+      switch (kind)
 	{
-	  fd = (largefile
-		? __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600)
-		: __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600));
-	  if (fd >= 0)
-	    {
-	      __set_errno (save_errno);
-	      return fd;
-	    }
-	  else if (errno != EEXIST)
-	    /* Any other error will apply also to other names we might
-	       try, and there are 2^32 or so of them, so give up now. */
-	    return -1;
-	}
-      else
-	{
-	  struct stat st;
+	case __GT_FILE:
+	  fd = __open (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600);
+	  break;
+
+	case __GT_BIGFILE:
+	  fd = __open64 (tmpl, O_RDWR | O_CREAT | O_EXCL, 0600);
+	  break;
+
+	case __GT_DIR:
+	  fd = __mkdir (tmpl, 0700);
+	  break;
+
+	case __GT_NOCREATE:
+	  /* This case is backward from the other three.  __gen_tempname
+	     succeeds if __xstat fails because the name does not exist.
+	     Note the continue to bypass the common logic at the bottom
+	     of the loop.  */
 	  if (__xstat (_STAT_VER, tmpl, &st) < 0)
 	    {
 	      if (errno == ENOENT)
@@ -181,7 +190,19 @@ __gen_tempname (char *tmpl, int openit, int largefile)
 		/* Give up now. */
 		return -1;
 	    }
+	  continue;
+
+	default:
+	  assert (! "invalid KIND in __gen_tempname");
 	}
+
+      if (fd >= 0)
+	{
+	  __set_errno (save_errno);
+	  return fd;
+	}
+      else if (errno != EEXIST)
+	return -1;
     }
 
   /* We got out of the loop because we ran out of combinations to try.  */

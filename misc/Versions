@@ -102,4 +102,8 @@ libc {
     # t*
     tdestroy; truncate64;
   }
+  GLIBC_2.2 {
+    # m*
+    mkdtemp;
+  }
 }

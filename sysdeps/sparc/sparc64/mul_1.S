@@ -72,13 +72,12 @@ ENTRY(__mpn_mul_1)
 	addcc	%i0,%o0,%i0		! add cy_limb to low 64 bits of result
 	mov	0,%g5
 	movcs	%xcc,1,%g5
-	add	%o7,1,%o7
+	addcc	%o7,1,%o7
 	stx	%i0,[%o4+%g1]
-	brnz	%o7,.Loop
+	bne,pt	%xcc,.Loop
 	 add	%i1,%g5,%o0		! compute new cy_limb
 
-	mov	%o0,%i0
 	jmpl	%i7+8,%g0
-	 restore
+	 restore %o0,%g0,%o0
 
 END(__mpn_mul_1)

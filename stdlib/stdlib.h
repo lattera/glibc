@@ -573,6 +573,15 @@ extern char *mktemp __P ((char *__template));
 extern int mkstemp __P ((char *__template));
 #endif
 
+#ifdef __USE_BSD
+/* Create a unique temporary directory from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the directory name unique.
+   Returns TEMPLATE, or a null pointer if it cannot get a unique name.
+   The directory is created mode 700.  */
+extern char *mkdtemp __P ((char *__template));
+#endif
+
 
 /* Execute the given line as a shell command.  */
 extern int system __P ((__const char *__command));

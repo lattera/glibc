@@ -30,29 +30,26 @@
    s2_limb	o3  */
 
 ENTRY(__mpn_submul_1)
-	!#PROLOGUE#	0
 	save	%sp,-192,%sp
-	!#PROLOGUE#	1
 
 	sub	%g0,%i2,%o7
-	sllx	%o7,3,%g5
-	sub	%i1,%g5,%o3
-	sub	%i0,%g5,%o4
 	mov	0,%o0			! zero cy_limb
-
+	sllx	%o7,3,%o7
+	sethi	%hi(0x80000000),%o2
 	srl	%i3,0,%o1		! extract low 32 bits of s2_limb
+	sub	%i1,%o7,%o3
 	srlx	%i3,32,%i3		! extract high 32 bits of s2_limb
-	mov	1,%o2
-	sllx	%o2,32,%o2		! o2 = 0x100000000
+	sub	%i0,%o7,%o4
+	add	%o2,%o2,%o2		! o2 = 0x100000000
 
 	!   hi   !
              !  mid-1 !
              !  mid-2 !
 		 !   lo   !
-.Loop:
-	sllx	%o7,3,%g1
-	ldx	[%o3+%g1],%g5
+1:
+	ldx	[%o3+%o7],%g5
 	srl	%g5,0,%i0		! zero hi bits
+	ldx	[%o4+%o7],%l1
 	srlx	%g5,32,%g5
 	mulx	%o1,%i0,%i4		! lo product
 	mulx	%i3,%i0,%i1		! mid-1 product
@@ -63,25 +60,24 @@ ENTRY(__mpn_submul_1)
 	addcc	%i1,%l2,%i1		! add mid products
 	mov	0,%l0			! we need the carry from that add...
 	movcs	%xcc,%o2,%l0		! ...compute it and...
+	sllx	%i1,32,%i0		!  align low bits of mid product
 	add	%i5,%l0,%i5		! ...add to bit 32 of the hi product
-	sllx	%i1,32,%i0		! align low bits of mid product
 	srl	%i4,0,%g5		! zero high 32 bits of lo product
 	add	%i0,%g5,%i0		! combine into low 64 bits of result
 	srlx	%i1,32,%i1		! extract high bits of mid product...
+	addcc	%i0,%o0,%i0		!  add cy_limb to low 64 bits of result
 	add	%i5,%i1,%i1		! ...and add them to the high result
-	addcc	%i0,%o0,%i0		! add cy_limb to low 64 bits of result
 	mov	0,%g5
 	movcs	%xcc,1,%g5
-	add	%o7,1,%o7
-	ldx	[%o4+%g1],%l1
 	subcc	%l1,%i0,%i0
-	movcs	%xcc,1,%g5
-	stx	%i0,[%o4+%g1]
-	brnz	%o7,.Loop
+	stx	%i0,[%o4+%o7]
+	add	%g5,1,%l1
+	movcs	%xcc,%l1,%g5
+	addcc	%o7,8,%o7
+	bne,pt	%xcc,1b
 	 add	%i1,%g5,%o0		! compute new cy_limb
 
-	mov	%o0,%i0
-	jmpl	%i7+8,%g0
-	 restore
+	jmpl	%i7+8, %g0
+	 restore %o0,%g0,%o0
 
 END(__mpn_submul_1)

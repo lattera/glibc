@@ -929,7 +929,7 @@ typedef struct
 #define R_SPARC_10	30		/* Direct 10 bit */
 #define R_SPARC_11	31		/* Direct 11 bit */
 #define R_SPARC_64	32		/* Direct 64 bit */
-#define R_SPARC_OLO10	33		/* ?? */
+#define R_SPARC_OLO10	33		/* 10bit with secondary 13bit addend */
 #define R_SPARC_HH22	34		/* Top 22 bits of direct 64 bit */
 #define R_SPARC_HM10	35		/* High middle 10 bits of ... */
 #define R_SPARC_LM22	36		/* Low middle 22 bits of ... */

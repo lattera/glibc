@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95-98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,13 +38,17 @@ stub_warning (__path_search)
 
 /* Generate a (hopefully) unique temporary filename
    in DIR (if applicable), using template TMPL.
-   If OPENIT is 1, open the file and return a fd.  If LARGEFILE is 1,
-   use open64() to do that. */
+   KIND determines what to do with that name.  It may be one of:
+     __GT_FILE:		create a file and return a read-write fd.
+     __GT_BIGFILE:	same, but use open64() (or equivalent).
+     __GT_DIR:		create a directory.
+     __GT_NOCREATE:	just find a name not currently in use.
+ */
+
 int
-__gen_tempname (tmpl, openit, largefile)
+__gen_tempname (tmpl, kind)
      char *tmpl;
-     int openit;
-     int largefile;
+     int kind;
 {
   __set_errno (ENOSYS);
   return -1;

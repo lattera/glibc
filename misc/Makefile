@@ -42,7 +42,7 @@ routines := brk sbrk sstk ioctl \
 	    acct chroot fsync sync fdatasync reboot \
 	    gethostid sethostid \
 	    revoke vhangup \
-	    swapon swapoff mktemp mkstemp \
+	    swapon swapoff mktemp mkstemp mkdtemp \
 	    ualarm usleep \
 	    gtty stty \
 	    ptrace \

@@ -1,3 +1,71 @@
+1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Update for some more
+	motherboards.
+	Patch by Jay Estabrook.
+
+	* sysdeps/unix/sysv/linux/configure.in: Don't test for libc4 in
+	ldd for SPARC.
+	* /sysdeps/unix/sysv/linux/sparc/ldd-rewrite.sed: New file.
+	Patch by Cristian Gafton.
+
+1999-07-02  Cristian Gafton  <gafton@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): "return 0"
+	instead of "return NULL" to make C++ happy.
+
+1999-07-04  Mark Kettenis  <kettenis@gnu.org>
+
+	* libio/iofdopen.c (_IO_new_fdopen): Set EINVAL if MODE is not
+	allowed by the file access mode of the open file.
+
+1999-07-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/setfpucw.c: Include math.h to get all needed
+	macros defined.
+
+1999-07-03  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc64/submul_1.S: Fix carry handling. Optimize.
+	* sysdeps/sparc/sparc64/lshift.S: Make a leaf subroutine. Optimize.
+	* sysdeps/sparc/sparc64/rshift.S: Likewise.
+	* sysdeps/sparc/sparc64/mul_1.S: Optimize.
+
+1999-07-04  Wolfram Gloger  <wmglo@dent.med.uni-muenchen.de>
+
+	* malloc/malloc.c (request2size): Check for overflow and return
+	NULL whenever it is encountered.
+
+1999-07-04  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* sysdeps/posix/tempname.c (__gen_tempname):   Add
+	ability to create directories.  Replace OPENIT and LARGEFILE
+	args with a single flags parameter.
+	* sysdeps/generic/tempname.c: Likewise.
+	* include/stdio.h: Adjust prototype of __gen_tempname to
+	match.  Define symbolic constants for second argument.
+
+	* misc/mkdtemp.c: New file, provides new function mkdtemp().
+	* stdlib/stdlib.h: Prototype it.
+	* misc/Versions: Export it.
+	* misc/Makefile (routines): Add mktemp.
+	* manual/filesys.texi: Document it.
+
+	* misc/mktemp.c: Adjust call of __gen_tempname to match new
+	convention.
+	* misc/mkstemp.c: Likewise.
+	* stdio-common/tempnam.c: Likewise.
+	* stdio-common/tmpfile.c: Likewise.
+	* stdio-common/tmpfile64.c: Likewise.
+	* stdio-common/tmpnam.c: Likewise.
+	* stdio-common/tmpnam_r.c: Likewise.
+
+1999-07-05  Jakub Jelinek   <jj@ultra.linux.cz>
+
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Support
+	R_SPARC_OLO10 relocations.
+	* elf/elf.h (R_SPARC_OLO10): Fix comment.
+
 1999-07-02  Tim Waugh  <tim@cyberelk.demon.co.uk>
 
 	* posix/wordexp-test.c: Revert bogus 'unset IFS' change.  It

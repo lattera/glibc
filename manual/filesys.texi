@@ -2935,7 +2935,7 @@ end with @samp{XXXXXX}, @code{mkstemp} returns @code{-1} and does not
 modify @var{template}.
 
 The file is opened using mode @code{0600}.  If the file is meant to be
-used by other users the mode must explicitly changed.
+used by other users the mode must be changed explicitly.
 @end deftypefun
 
 Unlike @code{mktemp}, @code{mkstemp} is actually guaranteed to create a
@@ -2943,3 +2943,28 @@ unique file that cannot possibly clash with any other program trying to
 create a temporary file.  This is because it works by calling
 @code{open} with the @code{O_EXCL} flag bit, which says you want to
 always create a new file, and get an error if the file already exists.
+
+@comment stdlib.h
+@comment BSD
+@deftypefun {char *} mkdtemp (char *@var{template})
+The @code{mkdtemp} function creates a directory with a unique name.  If
+it succeeds, it overwrites @var{template} with the name of the
+directory, and returns @var{template}.  As with @code{mktemp} and
+@code{mkstemp}, @var{template} should be a string ending with
+@samp{XXXXXX}.
+
+If @code{mkdtemp} cannot create an uniquely named directory, it returns
+@code{NULL} and sets @var{errno} appropriately.  If @var{template} does
+not end with @samp{XXXXXX}, @code{mkdtemp} returns @code{NULL} and does
+not modify @var{template}.  @var{errno} will be set to @code{EINVAL} in
+this case.
+
+The directory is created using mode @code{0700}.
+@end deftypefun
+
+The directory created by @code{mkdtemp} cannot clash with temporary
+files or directories created by other users.  This is because directory
+creation always works like @code{open} with @code{O_EXCL}.
+@xref{Creating Directories}.
+
+The @code{mkdtemp} function comes from OpenBSD.

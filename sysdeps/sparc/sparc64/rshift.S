@@ -1,6 +1,6 @@
 /* SPARC v9 __mpn_rshift --
 
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1999 Free Software Foundation, Inc.
 
    This file is part of the GNU MP Library.
 
@@ -22,72 +22,69 @@
 #include <sysdep.h>
 
 /* INPUT PARAMETERS
-   res_ptr	%i0
-   src_ptr	%i1
-   size		%i2
-   cnt		%i3  */
+   res_ptr	%o0
+   src_ptr	%o1
+   size		%o2
+   cnt		%o3  */
 
 ENTRY(__mpn_rshift)
-	save	%sp, -192, %sp
+	ldx	[%o1],%g2	! load first limb
+	sub	%g0,%o3,%o5	! negate shift count
+	add	%o2,-1,%o2
+	andcc	%o2,4-1,%g4	! number of limbs in first loop
+	sllx	%g2,%o5,%g1	! compute function result
+	be,pn	%xcc,.L0	! if multiple of 4 limbs, skip first loop
+	 mov	%g1,%g5
 
-	ldx	[%i1],%g2	! load first limb
-	sub	%g0,%i3,%i5	! negate shift count
-	add	%i2,-1,%i2
-	and	%i2,4-1,%l4	! number of limbs in first loop
-	sllx	%g2,%i5,%g1	! compute function result
-	brz,pn	%l4,.L0		! if multiple of 4 limbs, skip first loop
-	mov	%g1,%l1
+	sub	%o2,%g4,%o2	! adjust count for main loop
 
-	sub	%i2,%l4,%i2	! adjust count for main loop
-
-.Loop0:	ldx	[%i1+8],%g3
-	add	%i0,8,%i0
-	add	%i1,8,%i1
-	add	%l4,-1,%l4
-	srlx	%g2,%i3,%i4
-	sllx	%g3,%i5,%g1
+.Loop0:	ldx	[%o1+8],%g3
+	add	%o0,8,%o0
+	add	%o1,8,%o1
+	srlx	%g2,%o3,%o4
+	addcc	%g4,-1,%g4
+	sllx	%g3,%o5,%g1
 	mov	%g3,%g2
-	or	%i4,%g1,%i4
-	brnz,pt	%l4,.Loop0
-	 stx	%i4,[%i0-8]
+	or	%o4,%g1,%o4
+	bne,pt	%xcc,.Loop0
+	 stx	%o4,[%o0-8]
 
-.L0:	brz,pn	%i2,.Lend
+.L0:	brz,pn	%o2,.Lend
 	 nop
 
-.Loop:	ldx	[%i1+8],%g3
-	add	%i0,32,%i0
-	add	%i2,-4,%i2
-	srlx	%g2,%i3,%i4
-	sllx	%g3,%i5,%g1
+.Loop:	ldx	[%o1+8],%g3
+	add	%o0,32,%o0
+	srlx	%g2,%o3,%o4
+	addcc	%o2,-4,%o2
+	sllx	%g3,%o5,%g1
 
-	ldx	[%i1+16],%g2
-	srlx	%g3,%i3,%l4
-	or	%i4,%g1,%i4
-	stx	%i4,[%i0-32]
-	sllx	%g2,%i5,%g1
+	ldx	[%o1+16],%g2
+	srlx	%g3,%o3,%g4
+	or	%o4,%g1,%o4
+	stx	%o4,[%o0-32]
+	sllx	%g2,%o5,%g1
 
-	ldx	[%i1+24],%g3
-	srlx	%g2,%i3,%i4
-	or	%l4,%g1,%l4
-	stx	%l4,[%i0-24]
-	sllx	%g3,%i5,%g1
+	ldx	[%o1+24],%g3
+	srlx	%g2,%o3,%o4
+	or	%g4,%g1,%g4
+	stx	%g4,[%o0-24]
+	sllx	%g3,%o5,%g1
 
-	ldx	[%i1+32],%g2
-	srlx	%g3,%i3,%l4
-	or	%i4,%g1,%i4
-	stx	%i4,[%i0-16]
-	sllx	%g2,%i5,%g1
+	ldx	[%o1+32],%g2
+	srlx	%g3,%o3,%g4
+	or	%o4,%g1,%o4
+	stx	%o4,[%o0-16]
+	sllx	%g2,%o5,%g1
 
-	add	%i1,32,%i1
-	or	%l4,%g1,%l4
-	brnz	%i2,.Loop
-	 stx	%l4,[%i0-8]
+	add	%o1,32,%o1
+	or	%g4,%g1,%g4
+	bne,pt	%xcc,.Loop
+	 stx	%g4,[%o0-8]
 
-.Lend:	srlx	%g2,%i3,%g2
-	stx	%g2,[%i0-0]
+.Lend:	srlx	%g2,%o3,%g2
+	stx	%g2,[%o0-0]
 
-	mov	%l1,%i0
-	jmpl	%i7+8,%g0
-	 restore
+	jmpl	%o7+8,%g0
+	 mov	%g5,%o0
 
 END(__mpn_rshift)

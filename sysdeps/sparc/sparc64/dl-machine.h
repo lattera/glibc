@@ -25,6 +25,9 @@
 #include <elf/ldsodefs.h>
 #include <sysdep.h>
 
+#define ELF64_R_TYPE_ID(info)	((info) & 0xff)
+#define ELF64_R_TYPE_DATA(info) ((info) >> 8)
+
 /* Return nonzero iff E_MACHINE is compatible with the running host.  */
 static inline int
 elf_machine_matches_host (Elf64_Half e_machine)
@@ -178,14 +181,14 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
   weak_extern (_dl_rtld_map);
 #endif
 
-  if (ELF64_R_TYPE (reloc->r_info) == R_SPARC_RELATIVE)
+  if (ELF64_R_TYPE_ID (reloc->r_info) == R_SPARC_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself. */
 #endif
 	*reloc_addr = map->l_addr + reloc->r_addend;
     }
-  else if (ELF64_R_TYPE (reloc->r_info) != R_SPARC_NONE) /* Who is Wilbur? */
+  else if (ELF64_R_TYPE_ID (reloc->r_info) != R_SPARC_NONE) /* Who is Wilbur? */
     {
       const Elf64_Sym *const refsym = sym;
       Elf64_Addr value;
@@ -194,13 +197,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	value = map->l_addr;
       else
 	{
-	  value = RESOLVE (&sym, version, ELF64_R_TYPE (reloc->r_info));
+	  value = RESOLVE (&sym, version, ELF64_R_TYPE_ID (reloc->r_info));
 	  if (sym)
 	    value += sym->st_value;
 	}
       value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
-      switch (ELF64_R_TYPE (reloc->r_info))
+      switch (ELF64_R_TYPE_ID (reloc->r_info))
 	{
 	case R_SPARC_COPY:
 	  if (sym == NULL)
@@ -261,6 +264,11 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	  *(unsigned int *) reloc_addr =
 	    ((*(unsigned int *)reloc_addr & 0xffc00000) |
 	     (value >> 10));
+	  break;
+	case R_SPARC_OLO10:
+	  *(unsigned int *) reloc_addr =
+	    ((*(unsigned int *)reloc_addr & ~0x1fff) |
+	     (((value & 0x3ff) + ELF64_R_TYPE_DATA (reloc->r_info)) & 0x1fff));
 	  break;
 
 	/* MEDMID code model relocs */

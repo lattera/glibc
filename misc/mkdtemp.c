@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,1993,1996,1997,1998,1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,19 +17,19 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
+#include <stdlib.h>
 
-/* Generate a unique filename in P_tmpdir.  If S is NULL return NULL.
-   This makes this function thread safe.  */
+/* Generate a unique temporary directory from TEMPLATE.
+   The last six characters of TEMPLATE must be "XXXXXX";
+   they are replaced with a string that makes the filename unique.
+   The directory is created, mode 700, and its name is returned.
+   (This function comes from OpenBSD.) */
 char *
-tmpnam_r (char *s)
+mkdtemp (template)
+     char *template;
 {
-  if (s == NULL)
+  if (__gen_tempname (template, __GT_DIR))
     return NULL;
-
-  if (__path_search (s, L_tmpnam, NULL, NULL, 0))
-    return NULL;
-  if (__gen_tempname (s, __GT_NOCREATE))
-    return NULL;
-
-  return s;
+  else
+    return template;
 }

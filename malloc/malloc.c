@@ -1259,12 +1259,12 @@ static void      free_atfork();
 #define chunk2mem(p)   ((Void_t*)((char*)(p) + 2*SIZE_SZ))
 #define mem2chunk(mem) ((mchunkptr)((char*)(mem) - 2*SIZE_SZ))
 
-/* pad request bytes into a usable size */
+/* pad request bytes into a usable size, return non-zero on overflow */
 
-#define request2size(req) \
- (((long)((req) + (SIZE_SZ + MALLOC_ALIGN_MASK)) < \
-  (long)(MINSIZE + MALLOC_ALIGN_MASK)) ? MINSIZE : \
-   (((req) + (SIZE_SZ + MALLOC_ALIGN_MASK)) & ~(MALLOC_ALIGN_MASK)))
+#define request2size(req, nb) \
+ ((nb = (req) + (SIZE_SZ + MALLOC_ALIGN_MASK)),\
+  ((long)nb <= 0 ? 1 : ((nb < (MINSIZE + MALLOC_ALIGN_MASK) ? (nb = MINSIZE) :\
+                         (nb &= ~MALLOC_ALIGN_MASK)), 0)))
 
 /* Check if m has acceptable alignment */
 
@@ -2622,7 +2622,8 @@ Void_t* mALLOc(bytes) size_t bytes;
   }
 #endif
 
-  nb = request2size(bytes);
+  if(request2size(bytes, nb))
+    return 0;
   arena_get(ar_ptr, nb);
   if(!ar_ptr)
     return 0;
@@ -3133,7 +3134,8 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   oldp    = mem2chunk(oldmem);
   oldsize = chunksize(oldp);
 
-  nb = request2size(bytes);
+  if(request2size(bytes, nb))
+    return 0;
 
 #if HAVE_MMAP
   if (chunk_is_mmapped(oldp))
@@ -3399,7 +3401,8 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
 
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
-  nb = request2size(bytes);
+  if(request2size(bytes, nb))
+    return 0;
   arena_get(ar_ptr, nb + alignment + MINSIZE);
   if(!ar_ptr)
     return 0;
@@ -3574,7 +3577,8 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
   }
 #endif
 
-  sz = request2size(n * elem_size);
+  if(request2size(n * elem_size, sz))
+    return 0;
   arena_get(ar_ptr, sz);
   if(!ar_ptr)
     return 0;
@@ -4364,8 +4368,10 @@ malloc_check(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   mchunkptr victim;
-  INTERNAL_SIZE_T nb = request2size(sz + 1);
+  INTERNAL_SIZE_T nb;
 
+  if(request2size(sz+1, nb))
+    return 0;
   (void)mutex_lock(&main_arena.mutex);
   victim = (top_check() >= 0) ? chunk_alloc(&main_arena, nb) : NULL;
   (void)mutex_unlock(&main_arena.mutex);
@@ -4434,7 +4440,10 @@ realloc_check(oldmem, bytes, caller)
   }
   oldsize = chunksize(oldp);
 
-  nb = request2size(bytes+1);
+  if(request2size(bytes+1, nb)) {
+    (void)mutex_unlock(&main_arena.mutex);
+    return 0;
+  }
 
 #if HAVE_MMAP
   if (chunk_is_mmapped(oldp)) {
@@ -4491,7 +4500,8 @@ memalign_check(alignment, bytes, caller)
   if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes, NULL);
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
-  nb = request2size(bytes+1);
+  if(request2size(bytes+1, nb))
+    return 0;
   (void)mutex_lock(&main_arena.mutex);
   p = (top_check() >= 0) ? chunk_align(&main_arena, nb, alignment) : NULL;
   (void)mutex_unlock(&main_arena.mutex);
@@ -4511,7 +4521,12 @@ malloc_starter(size_t sz, const Void_t *caller)
 malloc_starter(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
-  mchunkptr victim = chunk_alloc(&main_arena, request2size(sz));
+  INTERNAL_SIZE_T nb;
+  mchunkptr victim;
+
+  if(request2size(sz, nb))
+    return 0;
+  victim = chunk_alloc(&main_arena, nb);
 
   return victim ? chunk2mem(victim) : 0;
 }
@@ -4547,16 +4562,20 @@ malloc_atfork(sz, caller) size_t sz; const Void_t *caller;
 #endif
 {
   Void_t *vptr = NULL;
+  INTERNAL_SIZE_T nb;
   mchunkptr victim;
 
   tsd_getspecific(arena_key, vptr);
   if(!vptr) {
     if(save_malloc_hook != malloc_check) {
-      victim = chunk_alloc(&main_arena, request2size(sz));
+      if(request2size(sz, nb))
+        return 0;
+      victim = chunk_alloc(&main_arena, nb);
       return victim ? chunk2mem(victim) : 0;
     } else {
-      if(top_check() < 0) return 0;
-      victim = chunk_alloc(&main_arena, request2size(sz+1));
+      if(top_check()<0 || request2size(sz+1, nb))
+        return 0;
+      victim = chunk_alloc(&main_arena, nb);
       return victim ? chunk2mem_check(victim, sz) : 0;
     }
   } else {

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1993,1996,1997,1998,1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -37,7 +37,7 @@ tmpfile64 ()
 
   if (__path_search (buf, FILENAME_MAX, NULL, "tmpf", 0))
     return NULL;
-  fd = __gen_tempname (buf, 1, 1);
+  fd = __gen_tempname (buf, __GT_BIGFILE);
   if (fd < 0)
     return NULL;
 
