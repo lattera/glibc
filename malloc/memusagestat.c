@@ -18,6 +18,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define _FILE_OFFSET_BITS 64
+
 #include <argp.h>
 #include <assert.h>
 #include <errno.h>
@@ -128,6 +130,8 @@ main (int argc, char *argv[])
   uint64_t start_time;
   uint64_t end_time;
   uint64_t total_time;
+  const char *heap_format, *stack_format;
+  int heap_scale, stack_scale, line;
 
   outname = NULL;
   xsize = XSIZE;
@@ -241,13 +245,46 @@ main (int argc, char *argv[])
 
   gdImageRectangle (im_out, 40, 20, xsize - 40, ysize - 20, blue);
 
+  if (maxsize_heap < 1024)
+    {
+      heap_format = "%Zu";
+      heap_scale = 1;
+    }
+  else if (maxsize_heap < 1024 * 1024 * 100)
+    {
+      heap_format = "%Zuk";
+      heap_scale = 1024;
+    }
+  else
+    {
+      heap_format = "%ZuM";
+      heap_scale = 1024 * 1024;
+    }
+
+  if (maxsize_stack < 1024)
+    {
+      stack_format = "%Zu";
+      stack_scale = 1;
+    }
+  else if (maxsize_stack < 1024 * 1024 * 100)
+    {
+      stack_format = "%Zuk";
+      stack_scale = 1024;
+    }
+  else
+    {
+      stack_format = "%ZuM";
+      stack_scale = 1024 * 1024;
+    }
+
   gdImageString (im_out, gdFontSmall, 38, ysize - 14, (unsigned char *) "0",
 		 blue);
+  snprintf(buf, sizeof (buf), heap_format, 0);
   gdImageString (im_out, gdFontSmall, maxsize_heap < 1024 ? 32 : 26,
-		 ysize - 26,
-		 (unsigned char *) (maxsize_heap < 1024 ? "0" : "0k"), red);
+		 ysize - 26, buf, red);
+  snprintf(buf, sizeof (buf), stack_format, 0);
   gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26,
-		 (unsigned char *) (maxsize_stack < 1024 ? "0" : "0k"), green);
+		 buf, green);
 
   if (string != NULL)
     gdImageString (im_out, gdFontLarge, (xsize - strlen (string) * 8) / 2,
@@ -263,147 +300,32 @@ main (int argc, char *argv[])
   gdImageStringUp (im_out, gdFontSmall, xsize - 27, ysize / 2 - 10,
 		   (unsigned char *) "stack", green);
 
-  if (maxsize_heap < 1024)
-    {
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_heap);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6, 14, buf, red);
-    }
-  else
-    {
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_heap / 1024);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6, 14, buf, red);
-    }
-  if (maxsize_stack < 1024)
-    {
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_stack);
-      gdImageString (im_out, gdFontSmall, xsize - 37, 14, buf, green);
-    }
-  else
-    {
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_stack / 1024);
-      gdImageString (im_out, gdFontSmall, xsize - 37, 14, buf, green);
-    }
+  snprintf (buf, sizeof (buf), heap_format, maxsize_heap / heap_scale);
+  gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6, 14, buf, red);
+  snprintf (buf, sizeof (buf), stack_format, maxsize_stack / stack_scale);
+  gdImageString (im_out, gdFontSmall, xsize - 37, 14, buf, green);
 
+  for (line = 1; line <= 3; ++line)
+    {
+      cnt = ((ysize - 40) * (maxsize_heap / 4 * line / heap_scale)) /
+	(maxsize_heap / heap_scale);
+      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
+			 ysize - 20 - cnt, red);
+      snprintf (buf, sizeof (buf), heap_format, maxsize_heap / 4 * line / 
+		heap_scale);
+      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
+		     ysize - 26 - cnt, buf, red);
 
-  if (maxsize_heap < 1024)
-    {
-      cnt = ((ysize - 40) * (maxsize_heap / 4)) / maxsize_heap;
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_heap / 4);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  else
-    {
-      cnt = ((ysize - 40) * (maxsize_heap / 4096)) / (maxsize_heap / 1024);
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_heap / 4096);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  if (maxsize_stack < 1024)
-    {
-      cnt2 = ((ysize - 40) * (maxsize_stack / 4)) / maxsize_stack;
+      cnt2 = ((ysize - 40) * (maxsize_stack / 4 * line / stack_scale)) /
+	(maxsize_stack / stack_scale);
       if (cnt != cnt2)
 	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
 			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_stack / 4);
+      snprintf (buf, sizeof (buf), stack_format, maxsize_stack / 4 * line /
+		stack_scale);
       gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
 		     buf, green);
     }
-  else
-    {
-      cnt2 = ((ysize - 40) * (maxsize_stack / 4096)) / (maxsize_stack / 1024);
-      if (cnt != cnt2)
-	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
-			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_stack / 4096);
-      gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
-    }
-
-  if (maxsize_heap < 1024)
-    {
-      cnt = ((ysize - 40) * (maxsize_heap / 2)) / maxsize_heap;
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_heap / 2);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  else
-    {
-      cnt = ((ysize - 40) * (maxsize_heap / 2048)) / (maxsize_heap / 1024);
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_heap / 2048);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  if (maxsize_stack < 1024)
-    {
-      cnt2 = ((ysize - 40) * (maxsize_stack / 2)) / maxsize_stack;
-      if (cnt != cnt2)
-	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
-			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zu", maxsize_stack / 2);
-      gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
-    }
-  else
-    {
-      cnt2 = ((ysize - 40) * (maxsize_stack / 2048)) / (maxsize_stack / 1024);
-      if (cnt != cnt2)
-	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
-			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zuk", maxsize_stack / 2048);
-      gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
-    }
-
-  if (maxsize_heap < 1024)
-    {
-      cnt = ((ysize - 40) * ((3 * maxsize_heap) / 4)) / maxsize_heap;
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zu", (3 * maxsize_heap) / 4);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  else
-    {
-      cnt = ((ysize - 40) * ((3 * maxsize_heap) / 4096)) / (maxsize_heap
-							    / 1024);
-      gdImageDashedLine (im_out, 40, ysize - 20 - cnt, xsize - 40,
-			 ysize - 20 - cnt, red);
-      snprintf (buf, sizeof (buf), "%Zuk", (3 * maxsize_heap) / 4096);
-      gdImageString (im_out, gdFontSmall, 39 - strlen (buf) * 6,
-		     ysize - 26 - cnt, buf, red);
-    }
-  if (maxsize_stack < 1024)
-    {
-      cnt2 = ((ysize - 40) * ((3 * maxsize_stack) / 4)) / maxsize_stack;
-      if (cnt != cnt2)
-	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
-			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zu", (3 * maxsize_stack) / 4);
-      gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
-    }
-  else
-    {
-      cnt2 = (((ysize - 40) * ((3 * maxsize_stack) / 4096))
-	      / (maxsize_stack / 1024));
-      if (cnt != cnt2)
-	gdImageDashedLine (im_out, 40, ysize - 20 - cnt2, xsize - 40,
-			   ysize - 20 - cnt2, green);
-      snprintf (buf, sizeof (buf), "%Zuk", (3 * maxsize_stack) / 4096);
-      gdImageString (im_out, gdFontSmall, xsize - 37, ysize - 26 - cnt2,
-		     buf, green);
-    }
-
 
   snprintf (buf, sizeof (buf), "%llu", (unsigned long long) total);
   gdImageString (im_out, gdFontSmall, xsize - 50, ysize - 14, buf, blue);

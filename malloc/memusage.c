@@ -1,5 +1,5 @@
 /* Profile heap and stack memory usage of running program.
-   Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998-2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -233,7 +233,7 @@ me (void)
       if (outname != NULL && outname[0] != '\0'
 	  && (access (outname, R_OK | W_OK) == 0 || errno == ENOENT))
 	{
-	  fd = creat (outname, 0666);
+	  fd = creat64 (outname, 0666);
 
 	  if (fd == -1)
 	    /* Don't do anything in future calls if we cannot write to
