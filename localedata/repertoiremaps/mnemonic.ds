@@ -233,7 +233,7 @@ escape_char /
 <S3>                   <U008F> SINGLE-SHIFT THREE (SS3)
 <DC>                   <U0090> DEVICE CONTROL STRING (DCS)
 <P1>                   <U0091> PRIVATE USE ONE (PU1)
-<P2>                   <U0092> PRIVATE USE ONE (PU2)
+<P2>                   <U0092> PRIVATE USE TWO (PU2)
 <TS>                   <U0093> SET TRANSMIT STATE (STS)
 <CC>                   <U0094> CANCEL CHARACTER (CCH)
 <MW>                   <U0095> MESSAGE WAITING (MW)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -81,10 +81,7 @@ _IO_cookie_seek (fp, offset, dir)
   pos = _IO_pos_0;
   _IO_pos_adjust (pos, offset);
 
-  if (cfile->io_functions.seek (cfile->cookie, pos, dir))
-    return _IO_pos_BAD;
-
-  return pos;
+  return cfile->io_functions.seek (cfile->cookie, pos, dir);
 }
 
 static int

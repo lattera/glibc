@@ -1,4 +1,3 @@
-/* @(#)pmap_clnt.c	2.2 88/08/01 4.0 RPCSRC */
 /*
  * Sun RPC is a product of Sun Microsystems, Inc. and is provided for
  * unrestricted use provided that this legend is included on all tape
@@ -27,20 +26,80 @@
  * 2550 Garcia Avenue
  * Mountain View, California  94043
  */
-#if !defined(lint) && defined(SCCSIDS)
-static char sccsid[] = "@(#)pmap_clnt.c 1.37 87/08/11 Copyr 1984 Sun Micro";
-#endif
-
+/*
+ * Copyright (C) 1984, Sun Microsystems, Inc.
+ */
 /*
  * pmap_clnt.c
  * Client interface to pmap rpc service.
- *
- * Copyright (C) 1984, Sun Microsystems, Inc.
  */
 
+#include <stdio.h>
+#include <unistd.h>
+#include <net/if.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <rpc/rpc.h>
 #include <rpc/pmap_prot.h>
 #include <rpc/pmap_clnt.h>
+
+/*
+ * Same as get_myaddress, but we try to use the loopback
+ * interface. portmap caches interfaces, and on DHCP clients,
+ * it could be that only loopback is started at this time.
+ */
+static void
+__get_myaddress (struct sockaddr_in *addr)
+{
+  int s;
+  char buf[BUFSIZ];
+  struct ifconf ifc;
+  struct ifreq ifreq, *ifr;
+  int len, loopback = 1;
+
+  if ((s = __socket (AF_INET, SOCK_DGRAM, 0)) < 0)
+    {
+      perror ("__get_myaddress: socket");
+      exit (1);
+    }
+  ifc.ifc_len = sizeof (buf);
+  ifc.ifc_buf = buf;
+  if (__ioctl (s, SIOCGIFCONF, (char *) &ifc) < 0)
+    {
+      perror (_("__get_myaddress: ioctl (get interface configuration)"));
+      exit (1);
+    }
+
+ again:
+  ifr = ifc.ifc_req;
+  for (len = ifc.ifc_len; len; len -= sizeof ifreq)
+    {
+      ifreq = *ifr;
+      if (__ioctl (s, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+        {
+          perror ("__get_myaddress: ioctl");
+          exit (1);
+        }
+      if ((ifreq.ifr_flags & IFF_UP) && (ifr->ifr_addr.sa_family == AF_INET)
+          && ((ifreq.ifr_flags & IFF_LOOPBACK) || (loopback == 0)))
+        {
+          *addr = *((struct sockaddr_in *) &ifr->ifr_addr);
+          addr->sin_port = htons (PMAPPORT);
+          __close (s);
+          return;
+        }
+      ifr++;
+    }
+  if (loopback == 1)
+    {
+      loopback = 0;
+      goto again;
+    }
+  __close (s);
+}
+
 
 static const struct timeval timeout = {5, 0};
 static const struct timeval tottimeout = {60, 0};
@@ -58,7 +117,7 @@ pmap_set (u_long program, u_long version, int protocol, u_short port)
   struct pmap parms;
   bool_t rslt;
 
-  get_myaddress (&myaddress);
+  __get_myaddress (&myaddress);
   client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
 			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
@@ -92,7 +151,7 @@ pmap_unset (u_long program, u_long version)
   struct pmap parms;
   bool_t rslt;
 
-  get_myaddress (&myaddress);
+  __get_myaddress (&myaddress);
   client = clntudp_bufcreate (&myaddress, PMAPPROG, PMAPVERS,
 			timeout, &socket, RPCSMALLMSGSIZE, RPCSMALLMSGSIZE);
   if (client == (CLIENT *) NULL)
