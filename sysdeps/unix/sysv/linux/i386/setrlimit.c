@@ -31,6 +31,8 @@ extern int __syscall_setrlimit (unsigned int resource,
 				const struct rlimit *__unbounded rlimits);
 extern int __syscall_ugetrlimit (unsigned int resource,
 				 const struct rlimit *__unbounded rlimits);
+extern int __new_setrlimit (enum __rlimit_resource resource,
+			    const struct rlimit *__unboundedrlimits);
 
 /* Linux 2.3.25 introduced a new system call since the types used for
    the limits are now unsigned.  */

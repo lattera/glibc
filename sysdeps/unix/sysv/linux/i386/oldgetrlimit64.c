@@ -26,6 +26,9 @@
 #include <sys/types.h>
 
 extern int __new_getrlimit (enum __rlimit_resource, struct rlimit *);
+extern int __old_getrlimit64 (enum __rlimit_resource resource,
+			      struct rlimit64 *rlimits);
+
 
 /* Put the soft and hard limits for RESOURCE in *RLIMITS.
    Returns 0 if successful, -1 if not (and sets errno).  */

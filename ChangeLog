@@ -1,5 +1,19 @@
 2000-12-28  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/generic/dl-environ.c: Add prototype for unsetenv.
+
+	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Add prototype for
+	__new_setrlimit.
+
+	* sysdeps/unix/sysv/linux/i386/oldgetrlimit64.c: Add prototype for
+	__old_getrlimit64.
+
+	* sysdeps/unix/sysv/linux/i386/getrlimit.c: Add prototype for
+	__new_getrlimit.
+
+	* sysdeps/unix/sysv/linux/i386/chown.c: Add prototypes for
+	__chown_is_lchown and __real_chown.
+
 	* sysdeps/generic/ldsodefs.h: Add noreturn attribute to
 	_dl_reloc_bad_type.
 

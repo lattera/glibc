@@ -21,6 +21,7 @@
 #include <ldsodefs.h>
 
 extern char **_environ;
+extern void unsetenv (const char *name);
 
 /* Walk through the environment of the process and return all entries
    starting with `LD_'.  */

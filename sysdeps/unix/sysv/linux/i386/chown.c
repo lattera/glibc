@@ -39,6 +39,12 @@
 
 extern int __syscall_chown (const char *__file,
 			    __kernel_uid_t __owner, __kernel_gid_t __group);
+
+extern int __chown_is_lchown (const char *__file, uid_t __owner,
+			      gid_t __group);
+extern int __real_chown (const char *__file, uid_t __owner, gid_t __group);
+
+
 #if defined __NR_lchown || __ASSUME_LCHOWN_SYSCALL > 0
 /* Running under Linux > 2.1.80.  */
 
