@@ -25,11 +25,20 @@
 #include "aio_misc.h"
 
 
+struct notify_func
+  {
+    void (*func) (sigval_t);
+    sigval_t value;
+  };
+
 static void *
 notify_func_wrapper (void *arg)
 {
-  struct sigevent *sigev = arg;
-  sigev->sigev_notify_function (sigev->sigev_value);
+  struct notify_func *const n = arg;
+  void (*func) (sigval_t) = n->func;
+  sigval_t value = n->value;
+  free (n);
+  (*func) (value);
   return NULL;
 }
 
@@ -55,8 +64,26 @@ __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
 	  pattr = &attr;
 	}
 
-      if (pthread_create (&tid, pattr, notify_func_wrapper, sigev) < 0)
+      /* SIGEV may be freed as soon as we return, so we cannot let the
+	 notification thread use that pointer.  Even though a sigval_t is
+	 only one word and the same size as a void *, we cannot just pass
+	 the value through pthread_create as the argument and have the new
+	 thread run the user's function directly, because on some machines
+	 the calling convention for a union like sigval_t is different from
+	 that for a pointer type like void *.  */
+      struct notify_func *nf = malloc (sizeof *nf);
+      if (nf == NULL)
 	result = -1;
+      else
+	{
+	  nf->func = sigev->sigev_notify_function;
+	  nf->value = sigev->sigev_value;
+	  if (pthread_create (&tid, pattr, notify_func_wrapper, nf) < 0)
+	    {
+	      free (nf);
+	      result = -1;
+	    }
+	}
     }
   else if (sigev->sigev_notify == SIGEV_SIGNAL)
     {

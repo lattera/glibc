@@ -1,3 +1,10 @@
+2002-12-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/aio_notify.c (notify_func_wrapper): Take a malloc'd
+	struct containing function ptr and value, free it.
+	(__aio_notify_only): Allocate that and copy values from SIGEV into it.
+	It's not safe to let the new thread use the SIGEV pointer.
+
 2001-10-20  Paul Eggert  <eggert@twinsun.com>
 
 	* misc/error.c (strerror_r): Do not declare unless [!_LIBC].
