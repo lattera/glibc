@@ -183,4 +183,8 @@ ifeq (hurd, $(subdir))
 sysdep_routines += cthreads
 endif
 
+ifeq (posix, $(subdir))
+sysdep_routines += clk_tck
+endif
+
 endif	# in-Makerules
