@@ -1,5 +1,5 @@
 /* Data from initial program startup for running under the GNU Hurd.
-   Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #ifndef _HURDSTARTUP_H
 #define _HURDSTARTUP_H 1
 
+# include <stdint.h>
 
 /* Interesting data saved from the exec_startup reply.
    The DATA argument to *MAIN (see below) points to:
@@ -57,7 +58,7 @@ struct hurd_startup_data
    of the entry point function that is called with the stack exactly as the
    exec server or kernel sets it.  */
 
-extern void _hurd_startup (void **argptr, void (*main) (int *data));
+extern void _hurd_startup (void **argptr, void (*main) (intptr_t *data));
 
 
 #endif	/* hurdstartup.h */

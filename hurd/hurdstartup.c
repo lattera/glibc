@@ -1,5 +1,5 @@
 /* Initial program startup for running under the GNU Hurd.
-   Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,95,96,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,7 +55,7 @@ extern void __mach_init (void);
 
 
 void
-_hurd_startup (void **argptr, void (*main) (int *data))
+_hurd_startup (void **argptr, void (*main) (intptr_t *data))
 {
   error_t err;
   mach_port_t in_bootstrap;
@@ -64,7 +64,7 @@ _hurd_startup (void **argptr, void (*main) (int *data))
   struct hurd_startup_data data;
   char **argv, **envp;
   int argc, envc;
-  int *argcptr;
+  intptr_t *argcptr;
   vm_address_t addr;
 
   /* Attempt to map page zero redzoned before we receive any RPC
@@ -107,7 +107,7 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 	 Hopefully either they will be on the stack as expected, or the
 	 stack will be zeros so we don't crash.  */
 
-      argcptr = (int *) argptr;
+      argcptr = (intptr_t *) argptr;
       argc = argcptr[0];
       argv = (char **) &argcptr[1];
       envp = &argv[argc + 1];
@@ -129,7 +129,7 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 	 pointers and fill them in.  We allocate the space for the
 	 environment pointers immediately after the argv pointers because
 	 the ELF ABI will expect it.  */
-      argcptr = __alloca (sizeof (int) +
+      argcptr = __alloca (sizeof (intptr_t) +
 			  (argc + 1 + envc + 1) * sizeof (char *) +
 			  sizeof (struct hurd_startup_data));
       *argcptr = argc;
@@ -163,7 +163,7 @@ _hurd_startup (void **argptr, void (*main) (int *data))
 	 hurd_startup_data'.  Move them.  */
       struct
 	{
-	  int count;
+	  intptr_t count;
 	  char *argv[argc + 1];
 	  char *envp[envc + 1];
 	  struct hurd_startup_data data;
