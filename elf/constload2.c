@@ -1,4 +1,6 @@
 #include <dlfcn.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 extern int bar (void);
 
@@ -21,4 +23,24 @@ __attribute__ ((__constructor__))
 init (void)
 {
   h = dlopen ("constload3.so", RTLD_GLOBAL | RTLD_LAZY);
+  if (h == NULL)
+    {
+      puts ("failed to load constload3");
+      exit (1);
+    }
+  else
+    puts ("succeeded loading constload3");
+}
+
+static void
+__attribute__ ((__destructor__))
+fini (void)
+{
+  if (dlclose (h) != 0)
+    {
+      puts ("failed to unload constload3");
+      exit (1);
+    }
+  else
+    puts ("succeeded unloading constload3");
 }
