@@ -32,7 +32,7 @@ endif
 ifeq ($(subdir),stdio-common)
 
 vpath errlist.c $(full_config_sysdirs)
-ifeq ($(build-shared),yes)
+ifeq ($(versioning),yes)
 $(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(common-objpfx)Versions.v.i
 else
