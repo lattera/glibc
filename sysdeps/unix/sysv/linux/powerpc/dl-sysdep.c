@@ -29,22 +29,8 @@
     (envp) = (argv) + (argc) + 1;				\
     for (_tmp = (envp); *_tmp; ++_tmp)				\
       continue;							\
-    /* The following '++' is important!  */			\
-    ++_tmp;							\
-    if (*_tmp == 0)						\
-      {								\
-	size_t _test = (size_t)_tmp;				\
-	_test = _test + 0xf & ~0xf;				\
-	/* When ld.so is being run directly, there is no	\
-	   alignment (and no argument vector), so we make a	\
-	   basic sanity check of the argument vector.  Of	\
-	   course, this means that in future, the argument	\
-	   vector will have to be laid out to allow for this	\
-	   test :-(.  */					\
-	if (((ElfW(auxv_t) *)_test)->a_type <= AT_PHDR)		\
-	  _tmp = (char **)_test;				\
-      }								\
-    (auxp) = (ElfW(auxv_t) *) _tmp;				\
+    (auxp) = (void *) ++_tmp;					\
+    (auxp) = (void *)(((size_t)(auxp) + 0xF) & 0xFFFFFFF0);	\
   } while (0)
 
 

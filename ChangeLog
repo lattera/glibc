@@ -1,3 +1,10 @@
+1998-05-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c
+	(DL_FIND_ARG_COMPONENTS): Find correct alignment for auxiliary
+	vector.  Patch by Mark Hatle <fray@kernel.crashing.org>
+	and Matt McLean <keys@brio.yikes.com>.
+
 1998-05-08 23:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* misc/Makefile (tests): Add tst-mntent.
