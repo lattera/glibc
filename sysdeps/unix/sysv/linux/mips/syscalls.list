@@ -8,8 +8,6 @@ cachectl	-	cachectl	i:pii	__cachectl	cachectl
 cacheflush	-	cacheflush	i:pii	_flush_cache	cacheflush
 sysmips		-	sysmips		i:iiii	__sysmips	sysmips
 
-# override select.S in parent directory:
-select		-	select		i:iPPPP	__select	select
 sigsuspend	-	sigsuspend	i:p	__sigsuspend	sigsuspend
 
 #
