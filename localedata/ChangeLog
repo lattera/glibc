@@ -1,3 +1,8 @@
+2003-07-27  Andreas Jaeger  <aj@suse.de>
+
+	* collate-test.c: Include error.h for error prototype.
+	* xfrm-test.c: Likewise.
+
 2003-07-13  Petter Reinholdtsen  <pere@hungry.com>
 
 	* collate-test.c (main): Correct handling of files with more then
