@@ -702,9 +702,9 @@ ifeq (yes, $(build-shared))
 # %ifdef et al based on config.h settings or other %include'd files.
 define preprocess-versions
 sed '/^[ 	]*#/d;s/^[ 	]*%/#/' \
-| $(CC) -traditional -E -undef -I$(common-objdir) -I$(..)include \
+| $(CC) -E -undef -I$(common-objdir) -I$(..)include \
 		  -include $(common-objpfx)config.h \
-		  -x c - \
+		  -x assembler-with-cpp - \
 | sed '/^[ 	]*#/d;/^[ 	]*$$/d'
 endef
 
