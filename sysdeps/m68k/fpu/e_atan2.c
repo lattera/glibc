@@ -35,55 +35,42 @@ float_type
 s(__ieee754_atan2) (float_type y, float_type x)
 {
   float_type pi, pi_2, z;
+  unsigned long y_cond, x_cond;
 
   __asm ("fmovecr%.x %#0, %0" : "=f" (pi));
   __asm ("fscale%.w %#-1, %0" : "=f" (pi_2) : "0" (pi));
-  if (x != x || y != y)
+  y_cond = __m81_test (y);
+  x_cond = __m81_test (x);
+
+  if ((x_cond | y_cond) & __M81_COND_NAN)
     z = x + y;
-  else if (y == 0)
+  else if (y_cond & __M81_COND_ZERO)
     {
-      if (m81(__signbit) (x))
-	z = m81(__signbit) (y) ? -pi : pi;
+      if (x_cond & __M81_COND_NEG)
+	z = y_cond & __M81_COND_NEG ? -pi : pi;
       else
 	z = y;
     }
-  else if (m81(__isinf) (x))
+  else if (x_cond & __M81_COND_INF)
     {
-      if (m81(__isinf) (y))
+      if (y_cond & __M81_COND_INF)
 	{
 	  float_type pi_4;
 	  __asm ("fscale%.w %#-2, %0" : "=f" (pi_4) : "0" (pi));
-	  z = x > 0 ? pi_4 : 3 * pi_4;
+	  z = x_cond & __M81_COND_NEG ? 3 * pi_4 : pi_4;
 	}
       else
-	z = x > 0 ? 0 : pi;
-      if (m81(__signbit) (y))
+	z = x_cond & __M81_COND_NEG ? pi : 0;
+      if (y_cond & __M81_COND_NEG)
 	z = -z;
     }
-  else if (m81(__isinf) (y))
-    z = y > 0 ? pi_2 : -pi_2;
-  else if (x > 0)
+  else if (y_cond & __M81_COND_INF)
+    z = y_cond & __M81_COND_NEG ? -pi_2 : pi_2;
+  else if (x_cond & __M81_COND_NEG)
     {
-      if (y > 0)
+      if (y_cond & __M81_COND_NEG)
 	{
-	  if (x > y)
-	    z = m81(__atan) (y / x);
-	  else
-	    z = pi_2 - m81(__atan) (x / y);
-	}
-      else
-	{
-	  if (x > -y)
-	    z = m81(__atan) (y / x);
-	  else
-	    z = -pi_2 - m81(__atan) (x / y);
-	}
-    }
-  else
-    {
-      if (y < 0)
-	{
-	  if (-x > y)
+	  if (-x > -y)
 	    z = -pi + m81(__atan) (y / x);
 	  else
 	    z = -pi_2 - m81(__atan) (x / y);
@@ -92,6 +79,23 @@ s(__ieee754_atan2) (float_type y, float_type x)
 	{
 	  if (-x > y)
 	    z = pi + m81(__atan) (y / x);
+	  else
+	    z = pi_2 - m81(__atan) (x / y);
+	}
+    }
+  else
+    {
+      if (y_cond & __M81_COND_NEG)
+	{
+	  if (x > -y)
+	    z = m81(__atan) (y / x);
+	  else
+	    z = -pi_2 - m81(__atan) (x / y);
+	}
+      else
+	{
+	  if (x > y)
+	    z = m81(__atan) (y / x);
 	  else
 	    z = pi_2 - m81(__atan) (x / y);
 	}
