@@ -99,7 +99,7 @@ gnu_getcwd ()
     @{
       char *buffer = (char *) xmalloc (size);
       if (getcwd (buffer, size) == buffer)
-	return buffer;
+        return buffer;
       free (buffer);
       if (errno != ERANGE)
         return 0;
