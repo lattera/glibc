@@ -55,7 +55,7 @@ extern struct __res_state _res;
 #ifdef USE_TLS
 
 /* We need only a few variables.  */
-static pthread_descr manager_thread;
+pthread_descr manager_thread attribute_hidden;
 
 #else
 
@@ -896,7 +896,7 @@ pthread_descr __pthread_find_self(void)
 
 #else
 
-static pthread_descr thread_self_stack(void)
+pthread_descr __pthread_self_stack(void)
 {
   char *sp = CURRENT_STACK_FRAME;
   pthread_handle h;
@@ -1023,7 +1023,7 @@ static void pthread_atexit_retcode(void *arg, int retcode)
 
 static void pthread_handle_sigrestart(int sig)
 {
-  pthread_descr self = thread_self();
+  pthread_descr self = check_thread_self();
   THREAD_SETMEM(self, p_signal, sig);
   if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
     siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
@@ -1036,31 +1036,13 @@ static void pthread_handle_sigrestart(int sig)
 
 static void pthread_handle_sigcancel(int sig)
 {
-  pthread_descr self = thread_self();
+  pthread_descr self = check_thread_self();
   sigjmp_buf * jmpbuf;
 
   if (self == manager_thread)
     {
-#ifdef THREAD_SELF
-      /* A new thread might get a cancel signal before it is fully
-	 initialized, so that the thread register might still point to the
-	 manager thread.  Double check that this is really the manager
-	 thread.  */
-      pthread_descr real_self = thread_self_stack();
-      if (real_self == manager_thread)
-	{
-	  __pthread_manager_sighandler(sig);
-	  return;
-	}
-      /* Oops, thread_self() isn't working yet..  */
-      self = real_self;
-# ifdef INIT_THREAD_SELF
-      INIT_THREAD_SELF(self, self->p_nr);
-# endif
-#else
       __pthread_manager_sighandler(sig);
       return;
-#endif
     }
   if (__builtin_expect (__pthread_exit_requested, 0)) {
     /* Main thread should accumulate times for thread manager and its
