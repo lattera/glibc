@@ -1,5 +1,8 @@
 2001-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/sparc/sparc32/sparcv9/Dist: Add hp-timing.c.
+	* sysdeps/sparc/sparc64/Dist: Add hp-timing.c.
+
 	* libio/Makefile (distribute): Add fd_to_filename.h.
 
 2001-04-05  David S. Miller  <davem@redhat.com>
@@ -26,7 +29,7 @@
 	error_print_progname != NULL.
 	(error_at_line): Likewise.
 
-2001-04-07  Bruno Haible <haible@clisp.cons.org>
+2001-04-07  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/gettextP.h (struct loaded_domain): Add codeset_cntr field.
 	(struct binding): Add codeset_cntr field.

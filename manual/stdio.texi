@@ -4555,7 +4555,7 @@ flushed.  Solaris introduced a function especially for this.  It was
 always available in the GNU C library in some form but never officially
 exported.
 
-@comment stdio.h
+@comment stdio_ext.h
 @comment GNU
 @deftypefun void _flushlbf (void)
 The @code{_flushlbf} function flushes all line buffered streams
