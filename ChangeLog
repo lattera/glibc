@@ -1,3 +1,41 @@
+2000-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: Update comment about
+	_SLOWDOWN flags.  Patch by Jim Blandy <jimb@cygnus.com>.
+
+2000-03-17  Cristian Gafton  <gafton@redhat.com>
+
+	* elf/Makefile ($(rtld-version-installed-name)): Delay replacing
+	existing rtld-installed-name.
+	($(rtld-installed-name)): Request libc-$(version) be installed too.
+	replace existing rtld-installed-name using $(symbolic-link-prog).
+
+2000-03-17  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* locale/programs/ld-collate.c (collate_read): Remove bogus cast.
+	(insert_value, handle_ellipsis, collate_read): Replace %zu in format
+	strings with %Zu, because gcc-2.95.2's -Wformat knows about the latter
+	but not the former.
+
+2000-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/glob.c [_LIBC]: Always use __xstat64, not only for
+	glob64.  Since there is no glob64 in the LFS proposal applications
+	can assume that glob handles LFS situations.  glob64 is only needed
+	if alternative filesystem functions are used.
+
+2000-03-19  Geoff Clare  <gwc@unisoft.com>
+
+	* sysdeps/generic/glob.c: Correct gl_pathc value returned
+	when GLOB_DOOFFS is set; correct handling of patterns
+	containing escaped wildcards (and no unescaped ones);
+	GLOB_ERR flag was being ignored in some situations.
+
+	* posix/globtest.c, posix/globtest.sh: Updated to include
+	tests for the problems fixed by the above changes to glob.c.
+
+	* manual/pattern.texi (Calling Glob): Update description of gl_pathc.
+
 2000-03-19  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Makeconfig (soversion.i): Use only first match for each lib.
