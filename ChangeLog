@@ -1,5 +1,7 @@
 2001-04-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/environments.h: Fix typos.
+
 	* sysdeps/generic/bits/confname.h: Add _CS_V6_WIDTH_RESTRICTED_ENVS.
 	* posix/confstr.c: Handle _CS_V6_WIDTH_RESTRICTED_ENVS.
 	* posix/getconf.c: Handle _POSIX_V6_WIDTH_RESTRICTED_ENVS.
