@@ -1,3 +1,38 @@
+2002-12-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/pt-socket.S: Changes folded into the
+	regular Linux version.  Remove file.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/llseek.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/open64.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/pselect.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sigpause.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sigwait.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/system.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/tcdrain.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/wait.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/waitid.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/waitpid.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.  Remove file.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.  Remove file.
+
 2002-12-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: New file.
