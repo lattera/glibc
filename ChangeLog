@@ -1,3 +1,9 @@
+2001-12-22  Roland McGrath  <roland@frob.com>
+
+	* mach/Versions (libc: GLIBC_2.2.5): Add mig_strncpy.
+	* hurd/Versions (libc: GLIBC_2.2.5): Add _hurd_port_set
+	and __hurd_self_sigstate.
+
 2001-12-21  Andreas Jaeger  <aj@suse.de>
 
 	* elf/dblloadmod1.c: Add prototype to avoid warning.
