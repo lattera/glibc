@@ -1,3 +1,12 @@
+1999-03-15  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/poll.c (__poll): Correctly pass NULL to
+	_hurd_select if TIMEMOUT is -1.
+
+1999-03-15  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Allow ADDR to be NULL.
+
 1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c: Compute rtld_search_dir array size correctly.
