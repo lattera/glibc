@@ -35,13 +35,6 @@ do_test (void)
       return 1;
     }
 
-  fpos_t pos;
-  if (fgetpos (f, &pos) != 0)
-    {
-      printf ("fgetpos: %m\n");
-      return 1;
-    }
-
 #define L_(s) L##s
   //#define fwscanf fscanf
   //#define fwprintf fprintf
@@ -53,15 +46,16 @@ do_test (void)
       return 1;
     }
 
-  if (fsetpos (f, &pos) != 0)
+  rewind (f);
+  if (ferror (f))
     {
-      printf ("fsetpos: %m\n");
+      printf ("rewind: %m\n");
       return 1;
     }
 
-  if (fwprintf (f, L_("1!")) < 2)
+  if (fputws (L_("1!"), f) == EOF)
     {
-      printf ("fwprintf: %m\n");
+      printf ("fputws: %m\n");
       return 1;
     }
 

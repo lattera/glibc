@@ -1,5 +1,8 @@
 2002-11-10  Roland McGrath  <roland@redhat.com>
 
+	* libio/bug-wfflush.c (do_test): Call rewind instead of fsetpos.
+	Call fputs instead of fwprintf (simpler to follow in debugger).
+
 	* crypt/md5-crypt.c: Doc fix.
 
 	* sysdeps/unix/make-syscalls.sh: Insert $(make-target-directory) at
