@@ -1,5 +1,11 @@
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/Makefile: Add rules build, run, and distribute tst-widetext.c.
+	* libio/tst-widetext.c: New file.
+	* libio/tst-widetext.input: New file.
+
+	* libio/iogetwline.c (_IO_getwline_info): Pretty print.
+
 	* libio/wfileops.c (_IO_wfile_underflow): Correct not entirely
 	empty external buffer correctly.
 

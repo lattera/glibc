@@ -86,32 +86,32 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
 	  *ptr++ = wc;
 	  n--;
 	}
-	else
-	  {
-	    wchar_t *t;
-	    if ((_IO_size_t) len >= n)
-	      len = n;
-	    t = wmemchr ((void *) fp->_wide_data->_IO_read_ptr, delim, len);
-	    if (t != NULL)
-	      {
-		_IO_size_t old_len = ptr - buf;
-		len = t - fp->_wide_data->_IO_read_ptr;
-		if (extract_delim >= 0)
-		  {
-		    ++t;
-		    if (extract_delim > 0)
-		      ++len;
-		  }
-		wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
-			 len);
-		fp->_wide_data->_IO_read_ptr = t;
-		return old_len + len;
-	      }
-	    wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
-	    fp->_wide_data->_IO_read_ptr += len;
-	    ptr += len;
-	    n -= len;
-	  }
+      else
+	{
+	  wchar_t *t;
+	  if ((_IO_size_t) len >= n)
+	    len = n;
+	  t = wmemchr ((void *) fp->_wide_data->_IO_read_ptr, delim, len);
+	  if (t != NULL)
+	    {
+	      _IO_size_t old_len = ptr - buf;
+	      len = t - fp->_wide_data->_IO_read_ptr;
+	      if (extract_delim >= 0)
+		{
+		  ++t;
+		  if (extract_delim > 0)
+		    ++len;
+		}
+	      wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr,
+		       len);
+	      fp->_wide_data->_IO_read_ptr = t;
+	      return old_len + len;
+	    }
+	  wmemcpy ((void *) ptr, (void *) fp->_wide_data->_IO_read_ptr, len);
+	  fp->_wide_data->_IO_read_ptr += len;
+	  ptr += len;
+	  n -= len;
+	}
     }
   return ptr - buf;
 }
