@@ -287,10 +287,27 @@ extern int versionsort64 __P ((__const __ptr_t __e1, __const __ptr_t __e2));
    Reading starts at offset *BASEP, and *BASEP is updated with the new
    position after reading.  Returns the number of bytes read; zero when at
    end of directory; or -1 for errors.  */
+# ifndef __USE_FILE_OFFSET64
 extern __ssize_t getdirentries __P ((int __fd, char *__restrict __buf,
 				     size_t __nbytes,
 				     __off_t *__restrict __basep));
+# else
+#  ifdef __REDIRECT
+extern __ssize_t __REDIRECT (getdirentries,
+			     __P ((int __fd, char *__restrict __buf,
+				   size_t __nbytes,
+				   __off_t *__restrict __basep)),
+			     getdirentries64);
+#  else
+#   define getdirentries getdirentries64
+#  endif
+# endif
 
+# ifdef __USE_LARGEFILE64
+extern __ssize_t getdirentries64 __P ((int __fd, char *__restrict __buf,
+				       size_t __nbytes,
+				       __off64_t *__restrict __basep));
+# endif
 
 #endif /* Use BSD or misc.  */
 

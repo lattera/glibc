@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,23 +16,22 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SYS_SENDFILE_H
-#define _SYS_SENDFILE_H	1
-
-#include <features.h>
+#include <stddef.h>
+#include <errno.h>
 #include <sys/types.h>
+#include <dirent.h>
 
-#ifdef __USE_FILE_OFFSET64
-# error "<sendfile.h> cannot be used with _FILE_OFFSET=64"
-#endif
+ssize_t
+__getdirentries64 (fd, buf, nbytes, basep)
+     int fd;
+     char *buf;
+     size_t nbytes;
+     off64_t *basep;
+{
+  __set_errno (ENOSYS);
+  return -1;
+}
+weak_alias (__getdirentries64, getdirentries64)
 
-__BEGIN_DECLS
-
-/* Send COUNT bytes from file associated with IN_FD starting at OFFSET to
-   descriptor OUT_FD.  */
-extern ssize_t sendfile __P ((int __out_fd, int __in_fd, off_t *offset,
-			      size_t __count));
-
-__END_DECLS
-
-#endif	/* sys/sendfile.h */
+stub_warning (getdirentries64)
+#include <stub-tag.h>

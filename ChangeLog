@@ -1,5 +1,19 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* dirent/Makefile (routines): Add getdents64.
+	* sysdeps/unix/sysv/linux/Makefile [dirent] (sysdep_routines):
+	Remove getdents64.
+	* dirent/dirent.h: Redirect getdirentries to getdirentries64 if
+	compiled with _FILE_OFFSET_BITS=64.
+	* sysdeps/generic/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/getdirentries.c: Also redefine off_t and
+	__lseek for getdirentries64 definition.
+
+	* sysdeps/unix/sysv/linux/llseek.c: Make __lseek64 a strong alias.
+
+	* sysdeps/unix/sysv/linux/sys/sendfile.h: Don't allow use with
+	_FILE_OFFSET_BITS=64.
+
 	* sysdeps/unix/bsd/telldir.c (seekdir): Correct type of second
 	parameter.
 

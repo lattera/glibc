@@ -96,7 +96,7 @@ endif
 inhibit-glue = yes
 
 ifeq ($(subdir),dirent)
-sysdep_routines += getdents64 getdirentries getdirentries64
+sysdep_routines += getdirentries getdirentries64
 endif
 
 ifeq ($(subdir),nis)
