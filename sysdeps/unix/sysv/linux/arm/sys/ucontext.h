@@ -23,7 +23,7 @@
 
 #include <features.h>
 #include <signal.h>
-#include <sys/elf.h>
+#include <sys/procfs.h>
 
 typedef int greg_t;
 
