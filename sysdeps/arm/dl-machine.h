@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  ARM version.
-   Copyright (C) 1995,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -109,10 +109,10 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	{
 	  got[2] = (Elf32_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (_dl_profile, l))
+	  if (_dl_name_match_p (GL(dl_profile), l))
 	    /* Say that we really want profiling and the timers are
 	       started.  */
-	    _dl_profile_map = l;
+	    GL(dl_profile_map) = l;
 	}
       else
 	/* This function will get called to fix up the GOT entry indicated by
@@ -324,7 +324,7 @@ _dl_start_user:
 .L_STACK_END:
 	.word	__libc_stack_end(GOT)
 .L_LOADED:
-	.word	_dl_loaded(GOT)
+	.word	_rtld_global(GOT)
 .previous\n\
 ");
 
@@ -347,14 +347,12 @@ _dl_start_user:
    _dl_sysdep_start.  */
 #define DL_PLATFORM_INIT dl_platform_init ()
 
-extern const char *_dl_platform;
-
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform != NULL && *_dl_platform == '\0')
+  if (GL(dl_platform) != NULL && *GL(dl_platform) == '\0')
     /* Avoid an empty string which would disturb us.  */
-    _dl_platform = NULL;
+    GL(dl_platform) = NULL;
 }
 
 static inline Elf32_Addr
@@ -452,7 +450,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (GL(dl_verbose) && sym->st_size < refsym->st_size))
 	    {
 	      const char *strtab;
 
@@ -484,7 +482,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
 	      rtld.c contains the common defn for _dl_rtld_map, which
 	      is incompatible with a weak decl in the same file.  */
+# ifndef SHARED
 	    weak_extern (_dl_rtld_map);
+# endif
 	    if (map == &_dl_rtld_map)
 	      /* Undo the relocation done here during bootstrapping.
 		 Now we will relocate it anew, possibly using a

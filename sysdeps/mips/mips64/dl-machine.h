@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS64 version.
-   Copyright (C) 1996, 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -289,7 +289,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
     }
 
     {
-      struct link_map *l = _dl_loaded;
+      struct link_map *l = GL(dl_loaded);
 
       while (l)
 	{
@@ -480,7 +480,7 @@ _dl_start_user:\n\
 	# Save back the modified argument count.\n\
 	sd $4, 0($29)\n\
 1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
-	ld $4, _dl_loaded\n\
+	ld $4, _rtld_global\n\
 	ld $5, 0($29)\n\
 	dla $6, 4($29)\n\
 	dla $7, 8($29)\n\
@@ -492,7 +492,7 @@ _dl_start_user:\n\
 	dla $31, _dl_fini\n\
 	# Jump to the user entry point.\n\
 1:	# Call _dl_init (struct link_map *main_map, int argc, char **argv, char **env) \n\
-	lw $4, _dl_loaded\n\
+	lw $4, _rtld_global\n\
 	lw $5, 0($29)\n\
 	la $6, 4($29)\n\
 	la $7, 8($29)\n\
@@ -553,8 +553,10 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	   RTLD_BOOTSTRAP) because rtld.c contains the common defn for
 	   _dl_rtld_map, which is incompatible with a weak decl in the same
 	   file.  */
-	weak_extern (_dl_rtld_map);
-	if (map == &_dl_rtld_map)
+# ifndef SHARED
+	weak_extern (GL(dl_rtld_map));
+# endif
+	if (map == &GL(dl_rtld_map))
 	  /* Undo the relocation done here during bootstrapping.  Now we will
 	     relocate it anew, possibly using a binding found in the user
 	     program or a loaded library rather than the dynamic linker's

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Schwab <schwab@suse.de>.
 
@@ -21,6 +21,7 @@
 #include <sys/param.h>
 #include <errno.h>
 
+#include <ldsodefs.h>
 #include <sysdep.h>
 #include <sys/syscall.h>
 
@@ -28,13 +29,12 @@
 int
 __getpagesize ()
 {
-  extern size_t _dl_pagesize;
 #ifdef __NR_getpagesize
   int result;
 #endif
 
-  if (_dl_pagesize != 0)
-    return _dl_pagesize;
+  if (GL(dl_pagesize) != 0)
+    return GL(dl_pagesize);
 
 #ifdef __NR_getpagesize
   result = INLINE_SYSCALL (getpagesize, 0);

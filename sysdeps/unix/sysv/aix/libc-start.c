@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the XCOFF startup code.  AIX version.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,10 +72,6 @@ extern int __loadx (int flag, void *module, void *arg1, void *arg2,
 		    void *arg3);
 /* Needed by setenv */
 char  **__environ;
-
-/* Needed by dl-support.c */
-/* XXX stubbing out dl-support.c for now..
-   size_t _dl_pagesize = 0; */
 
 /*
  * Find __rtinit symbol
@@ -277,7 +273,7 @@ __libc_start_main (void)
 
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ninitialize program: %s\n\n",
 		      __libc_start_data.argv[0]);
 #endif
@@ -285,7 +281,7 @@ __libc_start_main (void)
     (*__libc_start_data.init) ();
 
 #ifdef SHARED
-  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_IMPCALLS, 0))
+  if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
     _dl_debug_printf ("\ntransferring control: %s\n\n",
 		      __libc_start_data.argv[0]);
 #endif
