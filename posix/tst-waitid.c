@@ -450,6 +450,7 @@ do_test (int argc, char *argv[])
  out:
   if (spurious_sigchld)
     status = EXIT_FAILURE;
+  signal (SIGCHLD, SIG_IGN);
   kill (pid, SIGKILL);		/* Make sure it's dead if we bailed early.  */
   return status;
 }
