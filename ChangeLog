@@ -1,3 +1,14 @@
+1999-02-28  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/getsockname.c (getsockname): Set *LEN to the
+	actual length if the adress length is smaller than the input
+	value.  Change type of *LEN paramater to socklen_t.
+	* sysdeps/mach/hurd/getpeername.c (getpeername): Likewise.
+	* sysdeps/mach/hurd/accept.c (accept): Likewise.
+	* sysdeps/mach/hurd/recvfrom.c (recvfrom): Likewise.
+	* sysdeps/mach/hurd/sendto.c (sendto): Change type of ADDR_LEN
+	paramater to socklen_t.
+
 1999-02-28  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurd-raise.c (_hurd_raise_signal): Send "poll request"
