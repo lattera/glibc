@@ -1,3 +1,19 @@
+2000-01-10  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h: Add missing
+	int's.
+
+	* sysdeps/unix/sysv/linux/mips/sys/acct.h: Remove K&R support, add
+	missing int's.
+
+	* sysdeps/unix/sysv/linux/mips/bits/errno.h: Remove K&R support.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/cachectl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/sys/sysmips.h: Likewise.
+
 2000-01-09  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/arm/dl-machine.h (CLEAR_CACHE): System calls clobber R0.
