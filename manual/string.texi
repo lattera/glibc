@@ -1436,7 +1436,7 @@ The prototype for this function is in @file{string.h}.
 
 @comment string.h
 @comment GNU
-@deftypefun char *strfry(char *@var{string}) 
+@deftypefun {char *} strfry (char *@var{string}) 
 
 @code{strfry} creates a pseudorandom anagram of a string, replacing the
 input with the anagram in place.  For each position in the string,

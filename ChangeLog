@@ -1,3 +1,9 @@
+2000-04-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/string.texi: Fix typo.
+	* manual/terminal.texi: Document gtty and stty.
+	Patch by Bryan Henderson <bryanh@giraffe-data.com>.
+
 2000-04-30  Andreas Jaeger  <aj@suse.de>
 
 	* posix/bits/posix1_lim.h (_POSIX_PATH_MAX): Increase to 256 in

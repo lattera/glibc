@@ -19,7 +19,8 @@ descriptor is and how to open a file descriptor for a terminal device.
 * Canonical or Not::            Two basic styles of input processing.
 * Terminal Modes::              How to examine and modify flags controlling
 			         details of terminal I/O: echoing,
-                                 signals, editing.
+                                 signals, editing.  Posix.
+* BSD Terminal Modes::          BSD compatible terminal mode setting
 * Line Control::                Sending break sequences, clearing
                                  terminal buffers @dots{}
 * Noncanon Example::            How to read single characters without echo.
@@ -170,7 +171,11 @@ The choice of canonical or noncanonical input is controlled by the
 This section describes the various terminal attributes that control how
 input and output are done.  The functions, data structures, and symbolic
 constants are all declared in the header file @file{termios.h}.
-@c !!! should mention terminal attributes are distinct from file attributes
+
+Don't confuse terminal attributes with file attributes.  A device special
+file which is associated with a terminal has file attributes as described
+in @ref{File Attributes}.  These are unrelated to the attributes of the
+terminal device itself, which are discussed in this section.
 
 @menu
 * Mode Data Types::             The data type @code{struct termios} and
@@ -1627,6 +1632,59 @@ It does exactly this:
   @var{termios-p}->c_cflag &= ~(CSIZE|PARENB);
   @var{termios-p}->c_cflag |= CS8;
 @end smallexample
+@end deftypefun
+
+
+@node BSD Terminal Modes
+@section BSD Terminal Modes
+@cindex terminal modes, BSD
+
+The usual way to get and set terminal modes is with the functions described
+in @ref{Terminal Modes}.  However, on some systems you can use the 
+BSD-derived functions in this section to do some of the same thing.  On
+many systems, these functions do not exist.  Even with the GNU C library,
+the functions simply fail with @code{errno} = @code{ENOSYS} with many
+kernels, including Linux.
+
+The symbols used in this section are declared in @file{sgtty.h}.
+
+@comment termios.h
+@comment BSD
+@deftp {Data Type} {struct sgttyb}
+This structure is an input or output parameter list for @code{gtty} and
+@code{stty}.
+
+@table @code
+@item char sg_ispeed
+Line speed for input
+@item char sg_ospeed
+Line speed for output
+@item char sg_erase
+Erase character
+@item char sg_kill
+Kill character
+@item int sg_flags
+Various flags
+@end table
+@end deftp
+
+@comment sgtty.h
+@comment BSD
+@deftypefun int gtty (int @var{filedes}, struct sgttyb *@var{attributes})
+This function gets the attributes of a terminal.
+
+@code{gtty} sets *@var{attributes} to describe the terminal attributes
+of the terminal which is open with file descriptor @var{filedes}.
+@end deftypefun
+
+@comment sgtty.h
+@comment BSD
+@deftypefun int stty (int @var{filedes}, struct sgttyb * attributes)
+
+This function sets the attributes of a terminal.
+
+@code{stty} sets the terminal attributes of the terminal which is open with
+file descriptor @var{filedes} to those described by *@var{filedes}.
 @end deftypefun
 
 @node Line Control
