@@ -1,4 +1,5 @@
-/* Copyright (C) 1992,93,94,95,96,97,99,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,99,2001,2004
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -141,6 +142,8 @@ __hurd_file_name_split (error_t (*use_init_port)
 				     dirname, 0, 0, dir);
 	}
     }
+  else if (file_name[0] == '\0')
+    return ENOENT;
   else
     {
       /* "foobar" => cwdir + "foobar".  */
@@ -216,6 +219,8 @@ __hurd_directory_name_split (error_t (*use_init_port)
 				     dirname, 0, 0, dir);
 	}
     }
+  else if (file_name[0] == '\0')
+    return ENOENT;
   else
     {
       /* "foobar" => cwdir + "foobar".  */
