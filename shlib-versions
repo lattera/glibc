@@ -23,6 +23,12 @@
 
 s390x-.*-linux.*        DEFAULT			GLIBC_2.2
 cris-.*-linux.*		DEFAULT			GLIBC_2.2
+%if defined(USE_IN_LIBIO) && !defined(GLIBC_OLDEST_ABI)
+// If you use configure --enable-libio --enable-oldest-abi=2.0 then we
+// won't rename the old version sets and all the libraries except libc
+// itself ought to be binary compatible with the libc.so.0.2 ABI.
+.*-.*-gnu-gnu.*		DEFAULT			GLIBC_2.2.4
+%endif
 
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------
@@ -56,9 +62,9 @@ hppa.*-.*-.*		libc=6			GLIBC_2.2
 %ifndef USE_IN_LIBIO
 # libc.so.0.2 is for the Hurd alpha release 0.2.
 .*-.*-gnu-gnu.*		libc=0.2
-%else				/* experimental only! */
-# libc.so.0.3 is
-.*-.*-gnu-gnu.*		libc=0.2.91.libio	GLIBC_2.2.3
+%else
+# libc.so.0.3 is the first Hurd libc using libio.
+.*-.*-gnu-gnu.*		libc=0.3
 %endif
 
 # The dynamic loader also requires different names.
