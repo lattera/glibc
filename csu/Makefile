@@ -31,9 +31,10 @@ routines = init-first libc-start $(libc-init) sysdep version check_fds \
 aux	 = errno
 elide-routines.os = libc-tls
 static-only-routines = elf-init
-csu-dummies = $(filter-out $(start-installed-name),crt1.o Scrt1.o Mcrt1.o)
+csu-dummies = $(filter-out $(start-installed-name),crt1.o Mcrt1.o)
 extra-objs = start.o gmon-start.o \
-	     $(start-installed-name) g$(start-installed-name) $(csu-dummies)
+	     $(start-installed-name) g$(start-installed-name) $(csu-dummies) \
+	     S$(start-installed-name)
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			     b$(start-installed-name) $(csu-dummies) \
 			     S$(start-installed-name))
@@ -186,8 +187,7 @@ $(addprefix $(objpfx),$(sort g$(start-installed-name) \
 
 # These extra files are sometimes expected by system standard linking
 # procedures, but we have nothing for them to do.  So compile empty files.
-$(addprefix $(objpfx),$(filter-out $(start-installed-name)\
-				   S$(start-installed-name),$(csu-dummies))):\
+$(addprefix $(objpfx),$(filter-out $(start-installed-name), $(csu-dummies))):\
   $(before-compile)
 	$(COMPILE.c) -o $@ -x c /dev/null
 
