@@ -33,6 +33,11 @@
 # include <rpc/netdb.h>
 #endif
 
+#ifdef __USE_GNU
+# define __need_sigevent_t
+# include <bits/siginfo.h>
+#endif
+
 #include <bits/netdb.h>
 
 /* Absolute file name for network data base files.  */
@@ -412,23 +417,48 @@ struct addrinfo
   struct addrinfo *ai_next;	/* Pointer to next in list.  */
 };
 
+# ifdef __USE_GNU
+/* Structure used as control block for asynchronous lookup.  */
+struct gaicb
+{
+  const char *ar_name;		/* Name to look up.  */
+  const char *ar_service;	/* Service name.  */
+  const struct addrinfo *ar_request; /* Additional request specification.  */
+  struct addrinfo *ar_result;	/* Pointer to result.  */
+  /* The following are internal elements.  */
+  int __return;
+  int __unused[5];
+};
+
+/* Lookup mode.  */
+#  define GAI_WAIT	0
+#  define GAI_NOWAIT	1
+# endif
+
 /* Possible values for `ai_flags' field in `addrinfo' structure.  */
 # define AI_PASSIVE	0x0001	/* Socket address is intended for `bind'.  */
 # define AI_CANONNAME	0x0002	/* Request for canonical name.  */
 # define AI_NUMERICHOST	0x0004	/* Don't use name resolution.  */
 
 /* Error values for `getaddrinfo' function.  */
-# define EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */
-# define EAI_NONAME	-2	/* NAME or SERVICE is unknown.  */
-# define EAI_AGAIN	-3	/* Temporary failure in name resolution.  */
-# define EAI_FAIL	-4	/* Non-recoverable failure in name res.  */
-# define EAI_NODATA	-5	/* No address associated with NAME.  */
-# define EAI_FAMILY	-6	/* `ai_family' not supported.  */
-# define EAI_SOCKTYPE	-7	/* `ai_socktype' not supported.  */
-# define EAI_SERVICE	-8	/* SERVICE not supported for `ai_socktype'.  */
-# define EAI_ADDRFAMILY	-9	/* Address family for NAME not supported.  */
-# define EAI_MEMORY	-10	/* Memory allocation failure.  */
-# define EAI_SYSTEM	-11	/* System error returned in `errno'.  */
+# define EAI_BADFLAGS	  -1	/* Invalid value for `ai_flags' field.  */
+# define EAI_NONAME	  -2	/* NAME or SERVICE is unknown.  */
+# define EAI_AGAIN	  -3	/* Temporary failure in name resolution.  */
+# define EAI_FAIL	  -4	/* Non-recoverable failure in name res.  */
+# define EAI_NODATA	  -5	/* No address associated with NAME.  */
+# define EAI_FAMILY	  -6	/* `ai_family' not supported.  */
+# define EAI_SOCKTYPE	  -7	/* `ai_socktype' not supported.  */
+# define EAI_SERVICE	  -8	/* SERVICE not supported for `ai_socktype'.  */
+# define EAI_ADDRFAMILY	  -9	/* Address family for NAME not supported.  */
+# define EAI_MEMORY	  -10	/* Memory allocation failure.  */
+# define EAI_SYSTEM	  -11	/* System error returned in `errno'.  */
+# ifdef __USE_GNU
+#  define EAI_INPROGRESS  -100	/* Processing request in progress.  */
+#  define EAI_CANCELED	  -101	/* Request canceled.  */
+#  define EAI_NOTCANCELED -102	/* Request not canceled.  */
+#  define EAI_ALLDONE	  -103	/* All requests done.  */
+#  define EAI_INTR	  -104	/* Interrupted by a signal.  */
+# endif
 
 # define NI_MAXHOST      1025
 # define NI_MAXSERV      32
@@ -458,6 +488,26 @@ extern int getnameinfo (__const struct sockaddr *__restrict __sa,
 			socklen_t __hostlen, char *__restrict __serv,
 			socklen_t __servlen, unsigned int __flags) __THROW;
 
+# ifdef __USE_GNU
+/* Enqueue ENT requests from the LIST.  If MODE is GAI_WAIT wait until all
+   requests are handled.  If WAIT is GAI_NOWAIT return immediately after
+   queueing the requests and signal completion according to SIG.  */
+extern int getaddrinfo_a (int __mode, struct gaicb *__list[__restrict_arr],
+			  int __ent, struct sigevent *__restrict __sig)
+     __THROW;
+
+/* Suspend execution of the thread until at least one of the ENT requests
+   in LIST is handled.  If TIMEOUT is not a null pointer it specifies the
+   longest time the function keeps waiting before returning with an error.  */
+extern int gai_suspend (__const struct gaicb *__const __list[], int __ent,
+			const struct timespec *__timeout) __THROW;
+
+/* Get the error status of the request REQ.  */
+extern int gai_error (struct gaicb *__req) __THROW;
+
+/* Cancel the requests associated with GAICBP.  */
+extern int gai_cancel (struct gaicb *__gaicbp) __THROW;
+# endif	/* GNU */
 #endif	/* POSIX */
 
 __END_DECLS

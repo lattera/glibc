@@ -1,7 +1,6 @@
-/* Enqueue and list of read or write requests.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@redhat.com>, 2001.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -18,12 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <aio.h>
 #include <errno.h>
+#include <netdb.h>
+#include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "aio_misc.h"
+#include "gai_misc.h"
 
 
 /* We need this special structure to handle asynchronous I/O.  */
@@ -36,23 +36,19 @@ struct async_waitlist
 
 
 int
-lio_listio (mode, list, nent, sig)
-     int mode;
-     struct aiocb *const list[];
-     int nent;
-     struct sigevent *sig;
+getaddrinfo_a (int mode, struct gaicb *list[], int ent, struct sigevent *sig)
 {
   struct sigevent defsigev;
-  struct requestlist *requests[nent];
+  struct requestlist *requests[ent];
   int cnt;
   volatile int total = 0;
   int result = 0;
 
   /* Check arguments.  */
-  if (mode != LIO_WAIT && mode != LIO_NOWAIT)
+  if (mode != GAI_WAIT && mode != GAI_NOWAIT)
     {
       __set_errno (EINVAL);
-      return -1;
+      return EAI_SYSTEM;
     }
 
   if (sig == NULL)
@@ -62,24 +58,22 @@ lio_listio (mode, list, nent, sig)
     }
 
   /* Request the mutex.  */
-  pthread_mutex_lock (&__aio_requests_mutex);
+  pthread_mutex_lock (&__gai_requests_mutex);
 
   /* Now we can enqueue all requests.  Since we already acquired the
      mutex the enqueue function need not do this.  */
-  for (cnt = 0; cnt < nent; ++cnt)
-    if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
+  for (cnt = 0; cnt < ent; ++cnt)
+    if (list[cnt] != NULL)
       {
-	list[cnt]->aio_sigevent.sigev_notify = SIGEV_NONE;
-	requests[cnt] = __aio_enqueue_request ((aiocb_union *) list[cnt],
-					       list[cnt]->aio_lio_opcode);
+	requests[cnt] = __gai_enqueue_request (list[cnt]);
 
 	if (requests[cnt] != NULL)
 	  /* Successfully enqueued.  */
 	  ++total;
 	else
 	  /* Signal that we've seen an error.  `errno' and the error code
-	     of the aiocb will tell more.  */
-	  result = -1;
+	     of the gaicb will tell more.  */
+	  result = EAI_SYSTEM;
       }
     else
       requests[cnt] = NULL;
@@ -92,23 +86,23 @@ lio_listio (mode, list, nent, sig)
       /* Release the mutex.  We do this before raising a signal since the
 	 signal handler might do a `siglongjmp' and then the mutex is
 	 locked forever.  */
-      pthread_mutex_unlock (&__aio_requests_mutex);
+      pthread_mutex_unlock (&__gai_requests_mutex);
 
-      if (mode == LIO_NOWAIT)
-	__aio_notify_only (sig,
+      if (mode == GAI_NOWAIT)
+	__gai_notify_only (sig,
 			   sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0);
 
       return result;
     }
-  else if (mode == LIO_WAIT)
+  else if (mode == GAI_WAIT)
     {
       pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-      struct waitlist waitlist[nent];
+      struct waitlist waitlist[ent];
       int oldstate;
 
       total = 0;
-      for (cnt = 0; cnt < nent; ++cnt)
-	if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
+      for (cnt = 0; cnt < ent; ++cnt)
+	if (requests[cnt] != NULL)
 	  {
 	    waitlist[cnt].cond = &cond;
 	    waitlist[cnt].next = requests[cnt]->waiting;
@@ -125,7 +119,7 @@ lio_listio (mode, list, nent, sig)
       pthread_setcancelstate (PTHREAD_CANCEL_DISABLE, &oldstate);
 
       while (total > 0)
-	pthread_cond_wait (&cond, &__aio_requests_mutex);
+	pthread_cond_wait (&cond, &__gai_requests_mutex);
 
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
@@ -141,20 +135,17 @@ lio_listio (mode, list, nent, sig)
 
       waitlist = (struct async_waitlist *)
 	malloc (sizeof (struct async_waitlist)
-		+ (nent * sizeof (struct waitlist)));
+		+ (ent * sizeof (struct waitlist)));
 
       if (waitlist == NULL)
-	{
-	  __set_errno (EAGAIN);
-	  result = -1;
-	}
+	result = EAI_AGAIN;
       else
 	{
 	  pid_t caller_pid = sig->sigev_notify == SIGEV_SIGNAL ? getpid () : 0;
 	  total = 0;
 
-	  for (cnt = 0; cnt < nent; ++cnt)
-	    if (requests[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP)
+	  for (cnt = 0; cnt < ent; ++cnt)
+	    if (requests[cnt] != NULL)
 	      {
 		waitlist->list[cnt].cond = NULL;
 		waitlist->list[cnt].next = requests[cnt]->waiting;
@@ -171,7 +162,7 @@ lio_listio (mode, list, nent, sig)
     }
 
   /* Release the mutex.  */
-  pthread_mutex_unlock (&__aio_requests_mutex);
+  pthread_mutex_unlock (&__gai_requests_mutex);
 
   return result;
 }

@@ -251,8 +251,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
     }
 #endif
 
-  if (//__builtin_expect (_dl_debug_statistics, 0))
-      __builtin_expect (_dl_debug_mask & DL_DEBUG_STATISTICS, 0))
+  if (__builtin_expect (_dl_debug_mask & DL_DEBUG_STATISTICS, 0))
     print_statistics ();
 
   return *start_addr;

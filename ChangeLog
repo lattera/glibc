@@ -1,5 +1,40 @@
 2001-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* Versions.def: Add libanl definition.
+	* shlig-versions: Add entry for libanl.
+	* resolv/Makefile (distribute): Add gai_misc.h and ga_test.c.
+	(routines): Add gai_sigqueue.
+	(extra-libs): Add libanl.
+	(libanl-routines): New variable.
+	Add rules to build libanl and ga_test.
+	* resolv/Versions [libc] (GLIBC_2.2.3): Add __gai_sigqueue.
+	[libanl]: New library.
+	* resolv/netdb.h: Add definitions for libanl.
+	* resolv/getaddrinfo_a.c: New file.
+	* resolv/gai_cancel.c: New file.
+	* resolv/gai_error.c: New file.
+	* resolv/gai_misc.c: New file.
+	* resolv/gai_misc.h: New file.
+	* resolv/gai_notify.c: New file.
+	* resolv/gai_suspend.c: New file.
+	* resolv/ga_test.c: New file.
+	* sysdeps/generic/gai_sigqueue.c: New file.
+	* sysdeps/unix/sysv/linux/gai_sigqueue.c: New file.
+	* sysdeps/generic/bits/siginfo.h: Allow __need_sigevent_t being defined
+	and provide only that definition.
+	* sysdeps/unix/sysv/linux/alpha/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/siginfo.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/siginfo.h: Likewise.
+
+	* rt/aio_misc.c: Fix typos in comments.
+	* rt/lio_listio.c: Pretty printing.  Little optimization in request
+	list handling.
+
+	* elf/rtld.c: Remove commented out code.
+
 	* sysdeps/unix/sysv/linux/linux_fsinfo.h (SHMFS_SUPER_MAGIC):
 	Update for real 2.4 kernels.
 

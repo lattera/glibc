@@ -95,3 +95,6 @@ ld {
 libthread_db {
   GLIBC_2.1.3
 }
+libanl {
+  GLIBC_2.2.3
+}

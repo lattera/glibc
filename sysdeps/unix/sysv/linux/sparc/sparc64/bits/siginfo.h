@@ -17,15 +17,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#if !defined _SIGNAL_H && !defined __need_siginfo_t
+#if !defined _SIGNAL_H && !defined __need_siginfo_t \
+    && !defined __need_sigevent_t
 # error "Never include this file directly.  Use <signal.h> instead"
 #endif
 
 #include <bits/wordsize.h>
 
-#if (!defined __have_siginfo_t \
-     && (defined _SIGNAL_H || defined __need_siginfo_t))
-# define __have_siginfo_t	1
+#if (!defined __have_sigval_t \
+     && (defined _SIGNAL_H || defined __need_siginfo_t \
+	 || defined __need_sigevent_t))
+# define __have_sigval_t	1
 
 /* Type for data associated with a signal.  */
 typedef union sigval
@@ -33,6 +35,11 @@ typedef union sigval
     int sival_int;
     void *sival_ptr;
   } sigval_t;
+#endif
+
+#if (!defined __have_siginfo_t \
+     && (defined _SIGNAL_H || defined __need_siginfo_t))
+# define __have_siginfo_t	1
 
 # define __SI_MAX_SIZE     128
 # if __WORDSIZE == 64
@@ -246,7 +253,8 @@ enum
 #endif	/* !have siginfo_t && (have _SIGNAL_H || need siginfo_t).  */
 
 
-#if defined _SIGNAL_H && !defined __have_sigevent_t
+#if (defined _SIGNAL_H || defined __need_sigevent_t) \
+    && !defined __have_sigevent_t
 # define __have_sigevent_t	1
 
 /* Structure to transport application-defined values with signals.  */

@@ -22,6 +22,9 @@ libc {
     # r*
     __res_state; __res_init; __res_nclose; __res_ninit; _res_hconf;
   }
+  GLIBC_2.2.3 {
+    __gai_sigqueue;
+  }
 }
 
 libresolv {
@@ -64,5 +67,11 @@ libnss_dns {
     _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
     _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
     _nss_dns_getnetbyname_r;
+  }
+}
+
+libanl {
+  GLIBC_2.2.3 {
+    getaddrinfo_a; gai_cancel; gai_error; gai_suspend;
   }
 }

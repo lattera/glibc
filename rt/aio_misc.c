@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -115,7 +115,7 @@ get_elem (void)
 	  pool = new_tab;
 	}
 
-      /* Allocat the new row.  */
+      /* Allocate the new row.  */
       cnt = pool_size == 0 ? optim.aio_num : ENTRIES_PER_ROW;
       new_row = (struct requestlist *) calloc (cnt,
 					       sizeof (struct requestlist));
@@ -414,7 +414,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
 	    ++nthreads;
 	  else
 	    {
-	      /* Reset the running flat.  The new request is not running.  */
+	      /* Reset the running flag.  The new request is not running.  */
 	      running = newp->running = yes;
 
 	      if (nthreads == 0)

@@ -116,3 +116,6 @@ hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
 # The real-time library from POSIX.1b.
 mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
 .*-.*-.*		librt=1
+
+# The asynchronous name lookup library.
+.*-.*-.*		libanl=1
