@@ -787,7 +787,7 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 			     $(common-objpfx)sysd-dirs $(..)Makeconfig
 	(files="$(all-Depend-files)";					\
 	 for f in $$files; do						\
-	   dir=`echo $$f | sed 's/^$(..)\(.*\)\/[^/]*$$/\1/'`;		\
+	   dir=`echo $$f | sed 's@^$(..)\(.*\)/[^/]*$$@\1@'`;		\
 	   while read on; do						\
 	     echo "depend $$dir $$on";					\
 	   done < $$f;							\
