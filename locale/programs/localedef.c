@@ -370,7 +370,8 @@ System's directory for character maps : %s\n\
                        locale path    : %s\n\
 %s"),
 		CHARMAP_PATH, REPERTOIREMAP_PATH, LOCALE_PATH, gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
       return cp;
     default:
       break;

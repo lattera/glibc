@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, January 1997.
 
@@ -70,18 +70,18 @@ handler:
 
 #if RTLD_PRIVATE_ERRNO
 # define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc.get_pic.l7,"ax",@progbits;	\
-	.globl __sparc.get_pic.l7;					\
-	.hidden __sparc.get_pic.l7;					\
-	.type __sparc.get_pic.l7,@function;				\
-__sparc.get_pic.l7:							\
+	.section .gnu.linkonce.t.__sparc_get_pic_l7,"ax",@progbits;	\
+	.globl __sparc_get_pic_l7;					\
+	.hidden __sparc_get_pic_l7;					\
+	.type __sparc_get_pic_l7,@function;				\
+__sparc_get_pic_l7:							\
 	retl;								\
 	 add	%o7, %l7, %l7;						\
 	.previous;							\
 SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	save	%sp,-96,%sp;						\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc.get_pic.l7;					\
+	call	__sparc_get_pic_l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
 	ld	[%l7 + errno], %l0;					\
 	st	%i0, [%l0];						\
@@ -96,11 +96,11 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 # endif
 # ifdef SHARED
 #  define SYSCALL_ERROR_HANDLER						\
-	.section .gnu.linkonce.t.__sparc.get_pic.l7,"ax",@progbits;	\
-	.globl __sparc.get_pic.l7;					\
-	.hidden __sparc.get_pic.l7;					\
-	.type __sparc.get_pic.l7,@function;				\
-__sparc.get_pic.l7:							\
+	.section .gnu.linkonce.t.__sparc_get_pic_l7,"ax",@progbits;	\
+	.globl __sparc_get_pic_l7;					\
+	.hidden __sparc_get_pic_l7;					\
+	.type __sparc_get_pic_l7,@function;				\
+__sparc_get_pic_l7:							\
 	retl;								\
 	 add	%o7, %l7, %l7;						\
 	.previous;							\
@@ -108,7 +108,7 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler)			\
 	save	%sp,-96,%sp;						\
 	sethi	%tie_hi22(SYSCALL_ERROR_ERRNO), %l1;			\
 	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
-	call	__sparc.get_pic.l7;					\
+	call	__sparc_get_pic_l7;					\
 	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
 	add	%l1, %tie_lo10(SYSCALL_ERROR_ERRNO), %l1;		\
 	ld	[%l7 + %l1], %l1, %tie_ld(SYSCALL_ERROR_ERRNO);		\

@@ -33,7 +33,8 @@ if test $# -eq 0; then
       echo 'Usage: catchsegv PROGRAM ARGS...'
       echo '  --help      print this help, then exit'
       echo '  --version   print version number, then exit'
-      echo "Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
+      echo "For bug reporting instructions, please see:"
+      echo "<http://www.gnu.org/software/libc/bugs.html>."
       exit 0
       ;;
     --v | --ve | --ver | --vers | --versi | --versio | --version)

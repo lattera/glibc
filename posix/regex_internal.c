@@ -242,7 +242,7 @@ build_wcs_buffer (pstr)
 	  for (i = 0; i < pstr->mb_cur_max && i < remain_len; ++i)
 	    {
 	      ch = pstr->raw_mbs [pstr->raw_mbs_idx + byte_idx + i];
-	      buf[i] = pstr->trans[ch];
+	      buf[i] = pstr->mbs[byte_idx + i] = pstr->trans[ch];
 	    }
 	  p = (const char *) buf;
 	}

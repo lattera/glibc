@@ -61,7 +61,8 @@ Profile memory usage of PROGRAM.
 Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
-Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>."
   exit 0
 }
 

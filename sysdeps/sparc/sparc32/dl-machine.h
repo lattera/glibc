@@ -521,22 +521,27 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  /* We know the offset of object the symbol is contained in.
 	     It is a negative value which will be added to the
 	     thread pointer.  */
-	  CHECK_STATIC_TLS (map, sym_map);
-	  *reloc_addr
-	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
-	      + reloc->r_addend;
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr = sym->st_value - sym_map->l_tls_offset
+			    + reloc->r_addend;
+	    }
 	  break;
 # ifndef RTLD_BOOTSTRAP
 	case R_SPARC_TLS_LE_HIX22:
 	case R_SPARC_TLS_LE_LOX10:
-	  CHECK_STATIC_TLS (map, sym_map);
-	  value = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
-		  + reloc->r_addend;
-	  if (r_type == R_SPARC_TLS_LE_HIX22)
-	    *reloc_addr = (*reloc_addr & 0xffc00000) | ((~value) >> 10);
-	  else
-	    *reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
-			  | 0x1c00;
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      value = sym->st_value - sym_map->l_tls_offset
+		      + reloc->r_addend;
+	      if (r_type == R_SPARC_TLS_LE_HIX22)
+		*reloc_addr = (*reloc_addr & 0xffc00000) | ((~value) >> 10);
+	      else
+		*reloc_addr = (*reloc_addr & 0xffffe000) | (value & 0x3ff)
+			      | 0x1c00;
+	    }
 	  break;
 # endif
 #endif

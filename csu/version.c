@@ -37,7 +37,8 @@ Compiled by GNU CC version "__VERSION__".\n"
 #ifdef USE_TLS
 "Thread-local storage support included.\n"
 #endif
-"Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n";
+"For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n";
 
 #include <unistd.h>
 

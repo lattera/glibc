@@ -54,7 +54,8 @@ do_help() {
 Mandatory arguments to long options are also mandatory for any corresponding
 short options.
 
-Report bugs using the \`glibcbug' script to <bugs@gnu.org>.\n"
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>.\n"
   exit 0
 }
 

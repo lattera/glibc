@@ -580,10 +580,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	     It is a positive value which will be added to the thread
 	     pointer.  To get the variable position in the TLS block
 	     we add the offset from that of the TLS block.  */
-	  CHECK_STATIC_TLS (map, sym_map);
-	  *reloc_addr
-	    = ((sym == NULL ? 0 : sym_map->l_tls_offset + sym->st_value)
-	       + reloc->r_addend);
+	  if (sym != NULL)
+	    {
+	      CHECK_STATIC_TLS (map, sym_map);
+	      *reloc_addr = sym_map->l_tls_offset + sym->st_value
+			    + reloc->r_addend;
+	    }
 # endif
 	  break;
 #endif	/* use TLS */

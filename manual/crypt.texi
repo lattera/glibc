@@ -79,8 +79,8 @@ royalty for commercial production or sale of any product developed with
 the source code'' to most countries.
 
 The rules in this area are continuously changing.  If you know of any
-information in this manual that is out-of-date, please report it using
-the @code{glibcbug} script. @xref{Reporting Bugs}.
+information in this manual that is out-of-date, please report it to
+the bug database.  @xref{Reporting Bugs}.
 
 @node getpass
 @section Reading Passwords

@@ -559,7 +559,7 @@ It is a good idea to verify that the problem has not already been
 reported.  Bugs are documented in two places: The file @file{BUGS}
 describes a number of well known bugs and the bug tracking system has a
 WWW interface at
-@url{http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl}.  The WWW
+@url{http://sources.redhat.com/bugzilla/}.  The WWW
 interface gives you access to open and closed reports.  A closed report
 normally includes a patch or a hint on solving the problem.
 
@@ -582,20 +582,13 @@ library, you really only need to narrow it down to one library
 function call, if possible.  This should not be too difficult.
 
 The final step when you have a simple test case is to report the bug.
-Do this using the @code{glibcbug} script.  It is installed with libc, or
-if you haven't installed it, will be in your build directory.  Send your
-test case, the results you got, the results you expected, and what you
-think the problem might be (if you've thought of anything).
-@code{glibcbug} will insert the configuration information we need to
-see, and ship the report off to @email{bugs@@gnu.org}.  Don't send
-a message there directly; it is fed to a program that expects mail to be
-formatted in a particular way.  Use the script.
+Do this using the WWW interface to the bug database.
 
 If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
-errors or omissions in this manual, please report them to the Internet
-address @email{bug-glibc-manual@@gnu.org}.  If you refer to specific
+errors or omissions in this manual, please report them to the
+bug database.  If you refer to specific
 sections of the manual, please include the section names for easier
 identification.

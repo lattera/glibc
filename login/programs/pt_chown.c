@@ -86,7 +86,8 @@ The owner is set to the current user, the group is set to `%s',\
  and the access permission is set to `%o'.\n\n\
 %s"),
 		TTY_GROUP, S_IRUSR|S_IWUSR|S_IWGRP, gettext ("\
-Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"));
+For bug reporting instructions, please see:\n\
+<http://www.gnu.org/software/libc/bugs.html>.\n"));
       return cp;
     default:
       break;

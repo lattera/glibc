@@ -51,7 +51,8 @@ warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
   -d, --data-relocs       process data relocations
   -r, --function-relocs   process data and function relocations
   -v, --verbose           print all information
-Report bugs using the \`glibcbug' script to <bugs@gnu.org>."
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/libc/bugs.html>."
     exit 0
     ;;
   -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \

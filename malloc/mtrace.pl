@@ -30,7 +30,8 @@ sub usage {
     print "  --help       print this help, then exit\n";
     print "  --version    print version number, then exit\n";
     print "\n";
-    print "Report bugs using the `glibcbug' script to <bugs\@gnu.org>.\n";
+    print "For bug reporting instructions, please see:\n"
+    print "<http://www.gnu.org/software/libc/bugs.html>.\n";
     exit 0;
 }
 
