@@ -1,4 +1,4 @@
-# Copyright (C) 1998, 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1998,2000,2002,2003,2004,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -56,6 +56,8 @@ nscd-modules += selinux
 selinux-LIBS := -lselinux
 endif
 
+LDLIBS-nscd = $(selinux-LIBS)
+
 distribute := nscd.h nscd-client.h dbg_log.h \
 	      $(addsuffix .c, $(filter-out xmalloc, $(nscd-modules))) \
 	      nscd_nischeck.c nscd.conf nscd.init nscd_proto.h \
@@ -110,7 +112,7 @@ $(objpfx)nscd: $(addprefix $(objpfx),$(nscd-modules:=.o))
 	  $(extra-B-$(@F:lib%.so=%).so) $(load-map-file) \
 	  $(LDFLAGS) $(LDFLAGS-$(@F)) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
-	  -o $@ $^ $(selinux-LIBS) $(common-objpfx)libc_nonshared.a
+	  -o $@ $^ $(LDLIBS-nscd) $(common-objpfx)libc_nonshared.a
 endif
 
 # This makes sure -DNOT_IN_libc is passed for all these modules.
