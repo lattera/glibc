@@ -1,5 +1,25 @@
 1998-09-25  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/strftime.c [emacs]: Define my_strftime to emacs_strftimeu.
+	Define ut_argument, ut_argument_spec, and ut_argument_spec_iso to
+	allow using `ut' parameter.
+	[!emacs]: Define ut_argument, ut_argument_spec, and
+	ut_argument_spec_iso as empty.  Define ut to 0.  Add ut_argument and
+	argument_spec to prototypes and definitions.
+	(my_strftime): Don't call tzset of ut != 0.
+	Compute diff as 0 is ut != 0;
+	[emacs]: Define new emacs_strftime function.
+	Based on a patch by Paul Eggert.
+
+1998-09-24  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (my_strftime): When asking for the length of the
+	subformatted buffer, do not limit the length to look for;
+	otherwise, we have no reliable way to distinguish between the
+	empty buffer and an error.
+
+1998-09-25  Ulrich Drepper  <drepper@cygnus.com>
+
 	* math/Makefile (gmp-objs): Add mp_clz_tab.
 
 1998-09-25  David S. Miller  <davem@pierdol.cobaltmicro.com>
@@ -25,7 +45,7 @@
 
 1998-09-24  Ulrich Drepper  <drepper@cygnus.com>
 
-	* debug/catchsegv.sh: Also produce output if cloned process died.
+	* debug/catchsegv.sh: Also produce output if clone process died.
 
 1998-09-24  Paul Eggert  <eggert@twinsun.com>
 

@@ -374,26 +374,35 @@ static char const month_name[][10] =
 
 
 #ifdef emacs
-# define my_strftime emacs_strftime
+# define my_strftime emacs_strftimeu
+# define ut_argument , ut
+# define ut_argument_spec int ut;
+# define ut_argument_spec_iso , int ut
 #else
 # define my_strftime strftime
+# define ut_argument
+# define ut_argument_spec
+# define ut_argument_spec_iso
+/* We don't have this information in general.  */
+# define ut 0
 #endif
 
 #if !defined _LIBC && HAVE_TZNAME && HAVE_TZSET
   /* Solaris 2.5 tzset sometimes modifies the storage returned by localtime.
      Work around this bug by copying *tp before it might be munged.  */
   size_t _strftime_copytm __P ((char *, size_t, const char *,
-			        const struct tm *));
+			        const struct tm * ut_argument_spec_iso));
   size_t
-  my_strftime (s, maxsize, format, tp)
+  my_strftime (s, maxsize, format, tp ut_argument)
       char *s;
       size_t maxsize;
       const char *format;
       const struct tm *tp;
+      ut_argument_spec
   {
     struct tm tmcopy;
     tmcopy = *tp;
-    return _strftime_copytm (s, maxsize, format, &tmcopy);
+    return _strftime_copytm (s, maxsize, format, &tmcopy ut_argument);
   }
 # undef my_strftime
 # define my_strftime(S, Maxsize, Format, Tp) \
@@ -408,11 +417,12 @@ static char const month_name[][10] =
    anywhere, so to determine how many characters would be
    written, use NULL for S and (size_t) UINT_MAX for MAXSIZE.  */
 size_t
-my_strftime (s, maxsize, format, tp)
+my_strftime (s, maxsize, format, tp ut_argument)
       char *s;
       size_t maxsize;
       const char *format;
       const struct tm *tp;
+      ut_argument_spec
 {
   int hour12 = tp->tm_hour;
 #ifdef _NL_CURRENT
@@ -459,11 +469,21 @@ my_strftime (s, maxsize, format, tp)
      POSIX does not require it.  Do the right thing instead.  */
   zone = (const char *) tp->tm_zone;
 #endif
-#if HAVE_TZNAME && HAVE_TZSET
-  /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
-     time zone names contained in the external variable `tzname' shall
-     be set as if the tzset() function had been called.  */
-  tzset ();
+#if HAVE_TZNAME
+  if (ut)
+    {
+      if (! (zone && *zone))
+	zone = "GMT";
+    }
+  else
+    {
+      /* POSIX.1 8.1.1 requires that whenever strftime() is called, the
+	 time zone names contained in the external variable `tzname' shall
+	 be set as if the tzset() function had been called.  */
+# if HAVE_TZSET
+      tzset ();
+# endif
+    }
 #endif
 
   if (hour12 > 12)
@@ -713,9 +733,7 @@ my_strftime (s, maxsize, format, tp)
 	subformat:
 	  {
 	    char *old_start = p;
-	    size_t len = my_strftime (NULL, maxsize - i, subfmt, tp);
-	    if (len == 0 && *subfmt)
-	      return 0;
+	    size_t len = my_strftime (NULL, (size_t) -1, subfmt, tp);
 	    add (len, my_strftime (p, maxsize - i, subfmt, tp));
 
 	    if (to_uppcase)
@@ -1161,34 +1179,39 @@ my_strftime (s, maxsize, format, tp)
 #if HAVE_TM_GMTOFF
 	    diff = tp->tm_gmtoff;
 #else
-	    struct tm gtm;
-	    struct tm ltm;
-	    time_t lt;
-
-	    ltm = *tp;
-	    lt = mktime (&ltm);
-
-	    if (lt == (time_t) -1)
+	    if (ut)
+	      diff = 0;
+	    else
 	      {
-		/* mktime returns -1 for errors, but -1 is also a
-		   valid time_t value.  Check whether an error really
-		   occurred.  */
-		struct tm tm;
+		struct tm gtm;
+		struct tm ltm;
+		time_t lt;
 
-		if (! localtime_r (&lt, &tm)
-		    || ((ltm.tm_sec ^ tm.tm_sec)
-			| (ltm.tm_min ^ tm.tm_min)
-			| (ltm.tm_hour ^ tm.tm_hour)
-			| (ltm.tm_mday ^ tm.tm_mday)
-			| (ltm.tm_mon ^ tm.tm_mon)
-			| (ltm.tm_year ^ tm.tm_year)))
+		ltm = *tp;
+		lt = mktime (&ltm);
+
+		if (lt == (time_t) -1)
+		  {
+		    /* mktime returns -1 for errors, but -1 is also a
+		       valid time_t value.  Check whether an error really
+		       occurred.  */
+		    struct tm tm;
+
+		    if (! localtime_r (&lt, &tm)
+			|| ((ltm.tm_sec ^ tm.tm_sec)
+			    | (ltm.tm_min ^ tm.tm_min)
+			    | (ltm.tm_hour ^ tm.tm_hour)
+			    | (ltm.tm_mday ^ tm.tm_mday)
+			    | (ltm.tm_mon ^ tm.tm_mon)
+			    | (ltm.tm_year ^ tm.tm_year)))
+		      break;
+		  }
+
+		if (! gmtime_r (&lt, &gtm))
 		  break;
+
+		diff = tm_diff (&ltm, &gtm);
 	      }
-
-	    if (! gmtime_r (&lt, &gtm))
-	      break;
-
-	    diff = tm_diff (&ltm, &gtm);
 #endif
 
 	    if (diff < 0)
@@ -1225,3 +1248,19 @@ my_strftime (s, maxsize, format, tp)
     *p = '\0';
   return i;
 }
+
+
+#ifdef emacs
+/* For Emacs we have a separate interface which corresponds to the normal
+   strftime function and does not have the extra information whether the
+   TP arguments comes from a `gmtime' call or not.  */
+size_t
+emacs_strftime (s, maxsize, format, tp)
+      char *s;
+      size_t maxsize;
+      const char *format;
+      const struct tm *tp;
+{
+  return my_strftime (s, maxsize, format, tp, 0);
+}
+#endif
