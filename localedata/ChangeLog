@@ -1,5 +1,20 @@
 2000-06-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-ctype.c: Read in more tests from stdin.
+	* tst-ctype.sh: Feed extra test data to program via stdin.
+	* tst-ctype-de_DE.in: New file.
+
+	* locales/i18n (punct): Exclude U00A0.
+	(blank): Include U00A0.
+
+	* locales/ja_JP: Updates for new format.
+
+	* Makefile (test-srcs): Add tst-ctype.
+	(distribute): Add tst-ctype.sh.
+	(do-tst-ctype): New target.  Run for tests.
+	* tst-ctype.c: New file.
+	* tst-ctype.sh: New file.
+
 	* locales/i18n: NUL character must not be in cntrl.
 
 	* Makefile (test-input): Add en_US.ISO-8859-1.

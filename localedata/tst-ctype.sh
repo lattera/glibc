@@ -25,9 +25,14 @@ status=0
 # Run the test programs.
 rm -f ${common_objpfx}localedata/tst-ctype.out
 for loc in de_DE en_US; do
+  if test -f tst-ctype-$loc.in; then
+    input=tst-ctype-$loc.in
+  else
+    input=/dev/null
+  fi
   LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
   LC_ALL=$loc ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}localedata/tst-ctype \
+    ${common_objpfx}localedata/tst-ctype < $input \
     >> ${common_objpfx}localedata/tst-ctype.out || status=1
 done
 
