@@ -1,3 +1,12 @@
+2004-03-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/strtod_l.c (INTERNAL (__STRTOF)): Clear the rest of retval,
+	not just one limb if RETURN_LIMB_SIZE > 2.  Fix shifting up if
+	RETURN_LIMB_SIZE > 2.
+
+	* stdio-common/printf_fp.c (__printf_fp): For IEEE quad long double
+	on 32-bit architectures reserve 8 limbs instead of 4.
+
 2004-03-23  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/sysdep.h (__NR_pread, __NR_pwrite):

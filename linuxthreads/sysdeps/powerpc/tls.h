@@ -130,14 +130,12 @@ typedef struct
 
 # endif /* __ASSEMBLER__ */
 
-#elif !defined __ASSEMBLER__ && !defined __powerpc64__
+#elif !defined __ASSEMBLER__
 
-/* This overlaps the start of the pthread_descr.  On PPC32, system
-   calls and such use this to find the multiple_threads flag and need
+/* This overlaps the start of the pthread_descr.  System calls
+   and such use this to find the multiple_threads flag and need
    to use the same offset relative to the thread register in both
-   single-threaded and multi-threaded code.  On PPC64, the global
-   variable is always used, so single-threaded code without TLS
-   never needs to initialize the thread register at all.  */
+   single-threaded and multi-threaded code.  */
 typedef struct
 {
   void *tcb;			/* Never used.  */

@@ -31,7 +31,7 @@ really_getpid (pid_t oldval)
   if (__builtin_expect (oldval == 0, 1))
     {
       pid_t selftid = THREAD_GETMEM (THREAD_SELF, tid);
-      if (__builtin_expect (selftid != 0), 1)
+      if (__builtin_expect (selftid != 0, 1))
 	return selftid;
     }
 

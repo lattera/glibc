@@ -1155,7 +1155,11 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
       memcpy (retval, num, numsize * sizeof (mp_limb_t));
 #if RETURN_LIMB_SIZE > 1
       if (numsize < RETURN_LIMB_SIZE)
+# if RETURN_LIMB_SIZE == 2
         retval[numsize] = 0;
+# else
+	MPN_ZERO (retval + numsize, RETURN_LIMB_SIZE - numsize);
+# endif
 #endif
     }
 
@@ -1461,8 +1465,10 @@ INTERNAL (__STRTOF) (nptr, endptr, group, loc)
 		      __mpn_lshift_1 (retval, RETURN_LIMB_SIZE,
 				      BITS_PER_MP_LIMB, 0);
 #else
-		      for (i = RETURN_LIMB_SIZE; i > empty; --i)
+		      for (i = RETURN_LIMB_SIZE - 1; i >= empty; --i)
 			retval[i] = retval[i - empty];
+		      while (i >= 0)
+			retval[i--] = 0;
 #endif
 		      for (i = numsize; i > 0; --i)
 			num[i + empty] = num[i - 1];

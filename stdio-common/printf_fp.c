@@ -430,7 +430,9 @@ __printf_fp (FILE *fp,
      would be really big it could lead to memory problems.  */
   {
     mp_size_t bignum_size = ((ABS (exponent) + BITS_PER_MP_LIMB - 1)
-			     / BITS_PER_MP_LIMB + 4) * sizeof (mp_limb_t);
+			     / BITS_PER_MP_LIMB
+			     + (LDBL_MANT_DIG / BITS_PER_MP_LIMB > 2 ? 8 : 4))
+			    * sizeof (mp_limb_t);
     frac = (mp_limb_t *) alloca (bignum_size);
     tmp = (mp_limb_t *) alloca (bignum_size);
     scale = (mp_limb_t *) alloca (bignum_size);

@@ -45,15 +45,15 @@ but it's better to pretty print it first.  "gen-libm-test.pl"  has an option
 to generate a pretty-printed and sorted new ULPs file from the output
 of the test drivers.
 
-To generate a new "libm-test-ulps" file, you can execute for example:
+To generate a new "libm-test-ulps" file, first remove "ULPs" file in the
+current directory, then you can execute for example:
 test-double -u --ignore-max-ulp=yes
 This generates a file "ULPs" with all double ULPs in it, ignoring any
 previous calculated ULPs.
-Now move this away, e.g. "mv ULPs allULPs" and generate the ULPs
-for all other formats and concat all ULP files together (e.g. "cat
-ULPs >> allULPs").  As final step run "gen-libm-test.pl" with the file
-as input and ask to generate a pretty printed output in the file "NewUlps":
-  gen-libm-test.pl -u allULPs -n
+Now generate the ULPs for all other formats, the tests will be appending
+the data to the "ULPs" file.  As final step run "gen-libm-test.pl" with the
+file as input and ask to generate a pretty printed output in the file "NewUlps":
+  gen-libm-test.pl -u ULPs -n
 
 Now you can rename "NewUlps" to "libm-test-ulps" and move it into
 sysdeps.
