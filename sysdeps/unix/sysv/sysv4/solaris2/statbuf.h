@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 /* Structure describing file characteristics.  */
 struct stat
   {
-    short int st_dev;
+    unsigned long int st_dev;
     long st_filler1[3];
     __ino_t st_ino;		/* File serial number.		*/
     unsigned long int st_mode;	/* File mode.  */
