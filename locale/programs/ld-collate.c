@@ -1012,7 +1012,7 @@ handle_ellipsis (struct linereader *ldfile, const char *symstr, size_t symlen,
       || (endp != NULL && (endp->name == NULL|| ! endp->is_character)))
     {
       lr_error (ldfile, _("\
-%s: the start end the end symbol of a range must stand for characters"),
+%s: the start and the end symbol of a range must stand for characters"),
 		"LC_COLLATE");
       return;
     }
