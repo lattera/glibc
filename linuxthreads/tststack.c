@@ -1,4 +1,4 @@
-/* Tests for variable stacksize handling.
+/* Tests for variable stack size handling.
    Copyright (C) 2000 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
@@ -19,6 +19,7 @@
 
 #include <pthread.h>
 #include <stdio.h>
+#include <unistd.h>
 
 static void *f1 (void *);
 static void *f2 (void *);

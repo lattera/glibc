@@ -1,3 +1,7 @@
+2000-08-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* Banner: Bump version number to 0.9.
+
 2000-08-04  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tststack.  Add rule to build the program.
@@ -10,7 +14,7 @@
 	* manager.c (thread_segment): Return always NULL if FLOATING_STACKS.
 	(pthread_allocate_stack): Allow kernel to choose stack address if
 	FLOATING_STACKS.  This also handles variable-sized stacks.
-	Always allocate stack and guardoage together.  Use mprotect to
+	Always allocate stack and guardpage together.  Use mprotect to
 	change guardpage access.
 	* sysdeps/i386/useldt.h: Define FLOATING_STACKS and
 	ARCH_STACK_MAX_SIZE.

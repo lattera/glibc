@@ -1,3 +1,15 @@
+Release 0.9:
+- more ports (SH, IA-64, s390)
+- many bug fixes
+- timed sync object wait functions
+- barrier implementation
+- spinlocks implementation
+- thread register on x86
+- variable stack size and position on some platforms
+
+Release 0.8:
+(ehmm, forgot to update, don't know anymore)
+
 Release 0.7:
 - Destructors for thread-specific data now conform to the POSIX semantics
   (call destructors again if non-NULL TSD remains after a round of
@@ -6,7 +18,7 @@ Release 0.7:
   and smaller thread descriptors (Ulrich Drepper).
 - Added "error checking" mutexes.
 - Protect against multiple sigwait() on the same signals.
-- Simplified implementation of semaphores when compare_and_swap is 
+- Simplified implementation of semaphores when compare_and_swap is
   not available.
 - Fixed bug in fork() where stdin was closed if fork() was called before
   the first pthread_create().
@@ -20,7 +32,7 @@ Release 0.6:
 - Validation of thread identifiers: no more crashes when operating on
   a thread that has exited (based on Pavel Krauz's ideas).
 - Added fallback implementation of semaphores for the 386 and the
-  Sparc. 
+  Sparc.
 - Fixed a bug in signal handling causing false restarts of suspended
   threads.
 - Fixed a bug in realtime scheduling causing all threads to have
@@ -49,7 +61,7 @@ Release 0.4:
 - Race condition in pthread_cond_timedwait fixed.
 - Recursive mutexes are back by popular demand.
 - Partial support for realtime scheduling (initiated by Richard Neitzel).
-- pthread.h cleaned up a lot: now C++ compatible, added missing "const" 
+- pthread.h cleaned up a lot: now C++ compatible, added missing "const"
   qualifiers, added short documentation, put to GNU libc standards
   for name space pollution (Ulrich Drepper).
 - Motorola 68k port (contributed by Andreas Schwab).
