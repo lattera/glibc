@@ -41,12 +41,12 @@ ENTRY(__makecontext)
   addi  r6,r1,FRAME_PARM4_SAVE
   std   r0,FRAME_LR_SAVE(r1)
   stdu  r1,-128(r1)
-  
+
   /* Get the ucontexts stack pointer and size.  Compute the top of stack
-     and round down to a quadword boundary.  Then stack a dummy frame 
+     and round down to a quadword boundary.  Then stack a dummy frame
      with a null back chain.  We store the context pointer in the frames
-     "compiler double word" field so we can recover if is the function 
-     returns.  Finally save the callers link register and TOC pointer 
+     "compiler double word" field so we can recover if is the function
+     returns.  Finally save the callers link register and TOC pointer
      into this frame so the debugger can display a backtrace.
   */
   ld    r7,UCONTEXT_STACK_SP(r3)
@@ -59,38 +59,38 @@ ENTRY(__makecontext)
   mflr  r0
   std   r2,FRAME_TOC_SAVE(r7)  /* Store the TOC pointer for later.  */
   std   r0,FRAME_LR_SAVE(r7)
-  
+
   /* Now we need to stack another frame to hold the parameter save area
-     for the function.  We need to allocate a frame with the minimum 48 
-     byte header and 8 parameter register.  However if there are more 
+     for the function.  We need to allocate a frame with the minimum 48
+     byte header and 8 parameter register.  However if there are more
      than 8 parameters addition space is need to hold all the parameters.
-     The total size it rounded up to a quadword multiple then a frame is 
+     The total size it rounded up to a quadword multiple then a frame is
      stacked.  This address is stored in the ucontext as GPR 1.  */
-     
-  cmpdi cr1,r5,8  
+
+  cmpdi cr1,r5,8
   sldi  r8,r5,3
   bgt   cr1,L(gt8)
   li    r8,64
 L(gt8):
   addi  r8,r8,FRAME_PARM_SAVE+8 /* Add header plus rounding factor.  */
   clrrdi  r8,r8,4  /* Round down to quadword.  */
-  
+
   subf  r8,r8,r7
   std   r7,0(r8)   /* Stack the frame.  */
   std   r8,(SIGCONTEXT_GP_REGS+(PT_R1*8))(r3)
-  
-  /* Now we need to copy the target functions parameters.  The functions 
+
+  /* Now we need to copy the target functions parameters.  The functions
      parameters are saved in the parameter save area.  We skip over the
-     first three parameters and copy up to 8 double word into the 
-     SIGCONTEXT_GP_REGS starting with R3.  If there are more than 8 
+     first three parameters and copy up to 8 double word into the
+     SIGCONTEXT_GP_REGS starting with R3.  If there are more than 8
      parameters then doublewords 8-N are copied into the parameter
-     save area of the context frame.  */ 
+     save area of the context frame.  */
   cmpdi r5,0
   beq   L(noparms)
   mr    r0,r5
   ble   cr1,L(le8)
   li    r0,8
-L(le8):    
+L(le8):
   mtctr r0
   addi  r7,r6,-8
   addi  r9,r3,(SIGCONTEXT_GP_REGS+(PT_R3*8)-8)
@@ -98,29 +98,29 @@ L(parmloop2):
   ldu   r0,8(r7)
   stdu  r0,8(r9)
   bdnz  L(parmloop2)
-  
-  addi  r0,r5,-8 
-  ble   cr1,L(noparms) 
+
+  addi  r0,r5,-8
+  ble   cr1,L(noparms)
   mtctr r0
   addi  r9,r8,FRAME_PARM9_SAVE-8
 L(parmloop):
   ldu   r0,8(r7)
   stdu  r0,8(r9)
   bdnz  L(parmloop)
-  
+
 L(noparms):
-  
+
   /* Load the function address and TOC from the function descriptor
-     and store them in the ucontext as NIP and r2.  Store the 3rd 
+     and store them in the ucontext as NIP and r2.  Store the 3rd
      field of the function descriptor into the ucontext as r11 in case
      the calling language needs the "environment pointer".  */
   ld    r0,0(r4)
   ld    r10,8(r4);
-  ld    r9,16(r4); 
-  std   r0,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)  
-  std   r10,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3) 
+  ld    r9,16(r4);
+  std   r0,(SIGCONTEXT_GP_REGS+(PT_NIP*8))(r3)
+  std   r10,(SIGCONTEXT_GP_REGS+(PT_R2*8))(r3)
   std   r9,(SIGCONTEXT_GP_REGS+(PT_R11*8))(r3)
-  
+
   /* If the target function returns we need to do some cleanup.  We use a
      code trick to get the address of our cleanup function into the link
      register.  Do not add any code between here and L(exitcode).  */
@@ -147,15 +147,19 @@ L(BADSTATUS):
 /* If setcontext returns (which can happen if the syscall fails) we will
    exit the program with error status (-1).  */
   li    r3,-1
+#ifdef SHARED
+  b     JUMPTARGET(__GI_exit);
+#else
   b     JUMPTARGET(exit);
-  
+#endif
+
   /* The address of the exit code is in the link register.  Store the lr
-     in the ucontext as LNK so the target function will return to our 
+     in the ucontext as LNK so the target function will return to our
      exit code.  */
 L(gotexitcodeaddr):
   mflr  r0
   std   r0,(SIGCONTEXT_GP_REGS+(PT_LNK*8))(r3)
-  ld    r0,128+FRAME_LR_SAVE(r1)  
+  ld    r0,128+FRAME_LR_SAVE(r1)
   addi  r1,r1,128
   mtlr  r0
   blr
@@ -168,7 +172,7 @@ L(gotexitcodeaddr):
   bl   JUMPTARGET(__syscall_error)
   nop
   li   r3,-1
-  ld   r0,128+FRAME_LR_SAVE(r1)  
+  ld   r0,128+FRAME_LR_SAVE(r1)
   addi r1,r1,128
   mtlr r0
   blr
