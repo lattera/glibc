@@ -660,7 +660,7 @@ FCT (pattern, string, no_leading_period, flags)
 				   representation is UCS4.  */
 				for (strcnt = 0; strcnt < c1; ++strcnt)
 				  str[strcnt] = startp[1 + strcnt];
-#endif
+# endif
 
 				table_size =
 				  _NL_CURRENT_WORD (LC_COLLATE,
