@@ -205,25 +205,16 @@ _dl_allocate_tls_storage (void)
   size_t dtv_length;
 
   /* Allocate a correctly aligned chunk of memory.  */
-  /* XXX For now */
-  assert (GL(dl_tls_static_align) <= GL(dl_pagesize));
-# ifdef MAP_ANON
-#  define _dl_zerofd (-1)
-# else
-#  define _dl_zerofd GL(dl_zerofd)
-  if ((dl_zerofd) == -1)
-    GL(dl_zerofd) = _dl_sysdep_open_zero_fill ();
-#  define MAP_ANON 0
-# endif
-  result = __mmap (0, GL(dl_tls_static_size) ?: 1, PROT_READ|PROT_WRITE,
-		   MAP_ANON|MAP_PRIVATE, _dl_zerofd, 0);
+  result = __libc_memalign (GL(dl_tls_static_align), GL(dl_tls_static_size));
+  if (__builtin_expect (result == NULL, 0))
+    return result;
 
   /* We allocate a few more elements in the dtv than are needed for the
      initial set of modules.  This should avoid in most cases expansions
      of the dtv.  */
   dtv_length = GL(dl_tls_max_dtv_idx) + DTV_SURPLUS;
   dtv = (dtv_t *) malloc ((dtv_length + 2) * sizeof (dtv_t));
-  if (result != MAP_FAILED && dtv != NULL)
+  if (dtv != NULL)
     {
 # if TLS_TCB_AT_TP
       /* The TCB follows the TLS blocks.  */
@@ -241,7 +232,7 @@ _dl_allocate_tls_storage (void)
       /* Add the dtv to the thread data structures.  */
       INSTALL_DTV (result, dtv);
     }
-  else if (result != NULL)
+  else
     {
       free (result);
       result = NULL;
@@ -335,7 +326,7 @@ _dl_deallocate_tls (void *tcb)
   /* The array starts with dtv[-1].  */
   free (dtv - 1);
 
-  munmap (tcb, GL(dl_tls_static_size));
+  free (tcb);
 }
 
 
