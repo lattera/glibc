@@ -78,7 +78,7 @@ static char *old_tz = NULL;
 
 /* Interpret the TZ envariable.  */
 void
-__tzset ()
+__tzset_internal ()
 {
   register const char *tz;
   register size_t l;
@@ -374,7 +374,7 @@ size_t __tzname_cur_max;
 long int
 __tzname_max ()
 {
-  __tzset ();
+  __tzset_internal ();
 
   return __tzname_cur_max;
 }
@@ -472,7 +472,7 @@ __tz_compute (timer, tm)
      time_t timer;
      const struct tm *tm;
 {
-  __tzset ();
+  __tzset_internal ();
 
   if (! compute_change (&tz_rules[0], 1900 + tm->tm_year) ||
       ! compute_change (&tz_rules[1], 1900 + tm->tm_year))
@@ -505,14 +505,11 @@ __libc_lock_define (, __tzset_lock)
 #undef tzset
 
 void
-#ifdef weak_function
-weak_function
-#endif
-tzset (void)
+__tzset (void)
 {
   __libc_lock_lock (__tzset_lock);
 
-  __tzset ();
+  __tzset_internal ();
 
   if (!__use_tzfile)
     {
@@ -523,3 +520,4 @@ tzset (void)
 
   __libc_lock_unlock (__tzset_lock);
 }
+weak_alias (__tzset, tzset)

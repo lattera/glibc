@@ -19,5 +19,6 @@
 
 #define DATABASE_NAME shadow
 #define ALTERNATE_NAME passwd
+#define DEFAULT_CONFIG "compat [NOTFOUND=return] files"
 
 #include "XXX-lookup.c"

@@ -41,7 +41,7 @@ ttyname (fd)
   dev_t mydev;
   ino_t myino;
   DIR *dirstream;
-  struct dirent dirbuf, *d;
+  struct dirent *d;
   int save = errno;
 
   if (!__isatty (fd))
@@ -56,7 +56,7 @@ ttyname (fd)
   if (dirstream == NULL)
     return NULL;
 
-  while (__readdir_r (dirstream, &dirbuf, &d) >= 0)
+  while ((d = readdir (dirstream)) != NULL)
     if ((ino_t) d->d_fileno == myino)
       {
 	size_t dlen = _D_ALLOC_NAMLEN (d);
@@ -66,7 +66,11 @@ ttyname (fd)
 	    namelen = 2 * (sizeof (dev) + dlen); /* Big enough.  */
 	    name = malloc (namelen);
 	    if (! name)
-	      return NULL;
+	      {
+		/* Perhaps it helps to free the directory stream buffer.  */
+		(void) closedir (dirstream);
+		return NULL;
+	      }
 	    (void) memcpy (name, dev, sizeof (dev) - 1);
 	    name[sizeof (dev) - 1] = '/';
 	  }

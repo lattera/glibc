@@ -428,6 +428,12 @@ extern void (*_IO_cleanup_registration_needed) __P ((void));
 
 #if _G_HAVE_MMAP
 
+#ifdef _LIBC
+/* When using this code in the GNU libc we must not pollute the name space.  */
+#define mmap __mmap
+#define munmap __munmap
+#endif
+
 #define ROUND_TO_PAGE(_S) \
        (((_S) + EXEC_PAGESIZE - 1) & ~(EXEC_PAGESIZE - 1))
 

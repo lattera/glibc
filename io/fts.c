@@ -570,7 +570,7 @@ fts_build(sp, type)
 	register FTS *sp;
 	int type;
 {
-	struct dirent dirbuf, *dp;
+	struct dirent *dp;
 	register FTSENT *p, *head;
 	register int nitems;
 	FTSENT *cur, *tail;
@@ -660,8 +660,7 @@ fts_build(sp, type)
 
 	/* Read the directory, attaching each entry to the `link' pointer. */
 	adjaddr = NULL;
-	for (head = tail = NULL, nitems = 0;
-	     __readdir_r (dirp, &dirbuf, &dp) >= 0;) {
+	for (head = tail = NULL, nitems = 0; dp = readdir(dirp);) {
 		int namlen;
 
 		if (!ISSET(FTS_SEEDOT) && ISDOT(dp->d_name))

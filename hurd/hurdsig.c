@@ -78,7 +78,7 @@ _hurd_thread_sigstate (thread_t thread)
       __sigemptyset (&ss->blocked);
       __sigemptyset (&ss->pending);
       memset (&ss->sigaltstack, 0, sizeof (ss->sigaltstack));
-      ss->preempters = NULL;
+      ss->preemptors = NULL;
       ss->suspended = 0;
       ss->intr_port = MACH_PORT_NULL;
       ss->context = NULL;
@@ -421,7 +421,7 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
       }
 }
 
-struct hurd_signal_preempter *_hurdsig_preempters;
+struct hurd_signal_preemptor *_hurdsig_preemptors;
 sigset_t _hurdsig_preempted_set;
 
 /* Mask of stop signals.  */
@@ -439,7 +439,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   error_t err;
   struct machine_thread_all_state thread_state;
   enum { stop, ignore, core, term, handle } act;
-  struct hurd_signal_preempter *pe;
+  struct hurd_signal_preemptor *pe;
   sighandler_t handler;
   sigset_t pending;
   int ss_suspended;
@@ -542,16 +542,16 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
      critical sections.  */
 
   handler = SIG_ERR;
-  for (pe = ss->preempters; pe && handler == SIG_ERR; pe = pe->next)
+  for (pe = ss->preemptors; pe && handler == SIG_ERR; pe = pe->next)
     if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
-      handler = (*pe->preempter) (pe, ss, &signo, detail);
+      handler = (*pe->preemptor) (pe, ss, &signo, detail);
 
   if (handler == SIG_ERR && (__sigmask (signo) & _hurdsig_preempted_set))
     {
       __mutex_lock (&_hurd_siglock);
-      for (pe = _hurdsig_preempters; pe && handler == SIG_ERR; pe = pe->next)
+      for (pe = _hurdsig_preemptors; pe && handler == SIG_ERR; pe = pe->next)
 	if (HURD_PREEMPT_SIGNAL_P (pe, signo, detail->code))
-	  handler = (*pe->preempter) (pe, ss, &signo, detail);
+	  handler = (*pe->preemptor) (pe, ss, &signo, detail);
       __mutex_unlock (&_hurd_siglock);
     }
 
@@ -1250,22 +1250,22 @@ _hurdsig_getenv (const char *variable)
       while (*ep)
 	{
 	  const char *p = *ep;
-	  _hurdsig_fault_preempter.first = (long int) p;
-	  _hurdsig_fault_preempter.last = VM_MAX_ADDRESS;
+	  _hurdsig_fault_preemptor.first = (long int) p;
+	  _hurdsig_fault_preemptor.last = VM_MAX_ADDRESS;
 	  if (! strncmp (p, variable, len) && p[len] == '=')
 	    {
 	      char *value;
 	      size_t valuelen;
 	      p += len + 1;
 	      valuelen = strlen (p);
-	      _hurdsig_fault_preempter.last = (long int) (p + valuelen);
+	      _hurdsig_fault_preemptor.last = (long int) (p + valuelen);
 	      value = malloc (++valuelen);
 	      if (value)
 		memcpy (value, p, valuelen);
 	      break;
 	    }
-	  _hurdsig_fault_preempter.first = (long int) ++ep;
-	  _hurdsig_fault_preempter.last = (long int) (ep + 1);
+	  _hurdsig_fault_preemptor.first = (long int) ++ep;
+	  _hurdsig_fault_preemptor.last = (long int) (ep + 1);
 	}
       _hurdsig_end_catch_fault ();
       return value;

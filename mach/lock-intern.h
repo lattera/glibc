@@ -1,20 +1,20 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _LOCK_INTERN_H
 #define	_LOCK_INTERN_H
@@ -47,7 +47,7 @@ __spin_lock (__spin_lock_t *__lock)
     __spin_lock_solid (__lock);
 }
 
-/* Name space-clean internal interface to mutex locks.  
+/* Name space-clean internal interface to mutex locks.
 
    Code internal to the C library uses these functions to lock and unlock
    mutex locks.  These locks are of type `struct mutex', defined in
@@ -84,6 +84,13 @@ __mutex_unlock (void *__lock)
 {
   __spin_unlock ((__spin_lock_t *) __lock);
   __mutex_unlock_solid (__lock);
+}
+
+
+_EXTERN_INLINE int
+__mutex_trylock (void *__lock)
+{
+  return __spin_try_lock ((__spin_lock_t *) __lock);
 }
 
 #endif /* lock-intern.h */

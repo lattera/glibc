@@ -1,21 +1,21 @@
 /* Implementing POSIX.1 signals under the Hurd.
-Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef	_HURD_SIGNAL_H
 
@@ -40,7 +40,7 @@ Cambridge, MA 02139, USA.  */
 #include <cthreads.h>		/* For `struct mutex'.  */
 #include <spin-lock.h>
 #include <hurd/threadvar.h>	/* We cache sigstate in a threadvar.  */
-struct hurd_signal_preempter;	/* <hurd/sigpreempt.h> */
+struct hurd_signal_preemptor;	/* <hurd/sigpreempt.h> */
 
 
 /* Full details of a signal.  */
@@ -71,11 +71,11 @@ struct hurd_sigstate
     struct sigaction actions[NSIG];
     struct sigaltstack sigaltstack;
 
-    /* Chain of thread-local signal preempters; see <hurd/sigpreempt.h>.
+    /* Chain of thread-local signal preemptors; see <hurd/sigpreempt.h>.
        Each element of this chain is in local stack storage, and the chain
        parallels the stack: the head of this chain is in the innermost
        stack frame, and each next element in an outermore frame.  */
-    struct hurd_signal_preempter *preempters;
+    struct hurd_signal_preemptor *preemptors;
 
     /* For each signal that may be pending, the details to deliver it with.  */
     struct hurd_signal_detail pending_data[NSIG];

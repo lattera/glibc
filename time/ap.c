@@ -29,9 +29,7 @@ main (int argc, char **argv)
   char buf[20];
   time_t t;
 
-#ifndef NO_MCHECK
   mcheck (NULL);
-#endif
 
   if (argc != 1)
     fprintf(stderr, "Usage: %s\n", argv[0]);

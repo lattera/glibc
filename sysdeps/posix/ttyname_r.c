@@ -43,7 +43,7 @@ __ttyname_r (fd, buf, buflen)
   dev_t mydev;
   ino_t myino;
   DIR *dirstream;
-  struct dirent dirbuf, *d;
+  struct dirent *d;
   int save = errno;
 
   /* Test for the absolute minimal size.  This makes life easier inside
@@ -74,7 +74,7 @@ __ttyname_r (fd, buf, buflen)
   buf[sizeof (dev) - 1] = '/';
   buflen -= sizeof (dev);
 
-  while (__readdir_r (dirstream, &dirbuf, &d) >= 0)
+  while ((d = readdir (dirstream)) != NULL)
     if ((ino_t) d->d_fileno == myino)
       {
 	char *cp;

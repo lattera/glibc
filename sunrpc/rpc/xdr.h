@@ -298,6 +298,9 @@ extern bool_t xdrrec_skiprecord __P ((XDR *__xdrs));
 /* true if no more input */
 extern bool_t xdrrec_eof __P ((XDR *__xdrs));
 
+/* free memory buffers for xdr */
+extern void xdr_free __P ((xdrproc_t __proc, char *__objp));
+
 __END_DECLS
 
 #endif /* !__XDR_HEADER__ */

@@ -152,6 +152,7 @@ extern wctype_t wctype __P ((__const char *__property));
 
 /* Determine whether the wide-character WC has the property described by
    DESC.  */
+extern int __iswctype __P ((wint_t __wc, wctype_t __desc));
 extern int iswctype __P ((wint_t __wc, wctype_t __desc));
 
 
@@ -179,20 +180,20 @@ extern wint_t towctrans __P ((wint_t __wc, wctrans_t __desc));
 
 
 #ifndef	__NO_WCTYPE
-#define	iswalnum(wc)	iswctype ((wc), _ISalnum)
-#define	iswalpha(wc)	iswctype ((wc), _ISalpha)
-#define	iswcntrl(wc)	iswctype ((wc), _IScntrl)
-#define	iswdigit(wc)	iswctype ((wc), _ISdigit)
-#define	iswlower(wc)	iswctype ((wc), _ISlower)
-#define	iswgraph(wc)	iswctype ((wc), _ISgraph)
-#define	iswprint(wc)	iswctype ((wc), _ISprint)
-#define	iswpunct(wc)	iswctype ((wc), _ISpunct)
-#define	iswspace(wc)	iswctype ((wc), _ISspace)
-#define	iswupper(wc)	iswctype ((wc), _ISupper)
-#define	iswxdigit(wc)	iswctype ((wc), _ISxdigit)
+#define	iswalnum(wc)	__iswctype ((wc), _ISalnum)
+#define	iswalpha(wc)	__iswctype ((wc), _ISalpha)
+#define	iswcntrl(wc)	__iswctype ((wc), _IScntrl)
+#define	iswdigit(wc)	__iswctype ((wc), _ISdigit)
+#define	iswlower(wc)	__iswctype ((wc), _ISlower)
+#define	iswgraph(wc)	__iswctype ((wc), _ISgraph)
+#define	iswprint(wc)	__iswctype ((wc), _ISprint)
+#define	iswpunct(wc)	__iswctype ((wc), _ISpunct)
+#define	iswspace(wc)	__iswctype ((wc), _ISspace)
+#define	iswupper(wc)	__iswctype ((wc), _ISupper)
+#define	iswxdigit(wc)	__iswctype ((wc), _ISxdigit)
 
 #ifdef	__USE_GNU
-#define	iswblank(wc)	iswctype ((wc), _ISblank)
+#define	iswblank(wc)	__iswctype ((wc), _ISblank)
 #endif
 
 /* Pointer to conversion tables.  */

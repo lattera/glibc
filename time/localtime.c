@@ -1,21 +1,21 @@
 /* localtime -- convert `time_t' to `struct tm' in local time zone
-Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <time.h>
@@ -23,6 +23,10 @@ Cambridge, MA 02139, USA.  */
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;
+
+/* Prototype for the internal function to get information based on TZ.  */
+extern void __tzset_internal __P ((void));
+
 
 /* Return the `struct tm' representation of *TIMER in the local timezone.  */
 struct tm *
@@ -57,7 +61,7 @@ __localtime_r (timer, tp)
   __libc_lock_lock (__tzset_lock);
 
   /* Make sure the database is initialized.  */
-  __tzset ();
+  __tzset_internal ();
 
   if (__use_tzfile)
     {

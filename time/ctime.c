@@ -27,10 +27,7 @@
 char *
 ctime (const time_t *t)
 {
-  static char buf[64];		/* POSIX.1 suggests at least 26 bytes.  */
-  struct tm tm;
-  struct tm *tp = __localtime_r (t, &tm);
-  if (tp == NULL)
-    return NULL;
-  return __asctime_r (tp, buf);
+  /* The C Standard says ctime (t) is equivalent to asctime (localtime (t)).
+     In particular, ctime and asctime must yield the same pointer.  */
+  return asctime (localtime (t));
 }

@@ -187,10 +187,6 @@ extern char *alloca ();
 #define __getcwd getcwd
 #endif
 
-#if defined HAVE_READDIR_R && !defined _LIBC
-#define __readdir_r readdir_r
-#endif
-
 /* Get the pathname of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
@@ -254,9 +250,6 @@ __getcwd (buf, size)
     {
       register DIR *dirstream;
       struct dirent *d;
-#if defined HAVE_READDIR_R || defined _LIBC
-      struct dirent dirbuf;
-#endif
       dev_t dotdev;
       ino_t dotino;
       char mount_point;
@@ -299,13 +292,7 @@ __getcwd (buf, size)
       dirstream = __opendir (dotp);
       if (dirstream == NULL)
 	goto lose;
-      while (
-#if defined HAVE_READDIR_R || defined _LIBC
-	     __readdir_r (dirstream, &dirbuf, &d) >= 0
-#else
-	     (d = __readdir (dirstream)) != NULL
-#endif
-	     )
+      while ((d = __readdir (dirstream)) != NULL)
 	{
 	  if (d->d_name[0] == '.' &&
 	      (d->d_name[1] == '\0' ||

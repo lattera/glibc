@@ -843,24 +843,10 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	  {
 	    const char *name;
 	    size_t len;
-	    struct dirent dirbuf, *d;
-	    int success;
-
-	    if (flags & GLOB_ALTDIRFUNC)
-	      {
-		d = (*pglob->gl_readdir) (stream);
-		success = d != NULL;
-	      }
-	    else
-	      {
-#if defined HAVE_READDIR_R || defined _LIBC
-		success = __readdir_r ((DIR *) stream, &dirbuf, &d) >= 0;
-#else
-		d = readdir ((DIR *) stream);
-		success = d != NULL;
-#endif
-	      }
-	    if (! success)
+	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
+				(*pglob->gl_readdir) (stream) :
+				readdir ((DIR *) stream));
+	    if (d == NULL)
 	      break;
 	    if (! REAL_DIR_ENTRY (d))
 	      continue;

@@ -119,7 +119,7 @@ __nss_database_lookup (const char *database, const char *alternate_name,
      or null to use the most common default.  */
   if (*ni == NULL)
     *ni = nss_parse_service_list (defconfig
-				  ?: "compat [NOTFOUND=return] files");
+				  ?: "nis [NOTFOUND=return] files");
 
   __libc_lock_unlock (lock);
 

@@ -146,7 +146,3 @@ CFLAGS-zic.c = -Wno-strict-prototypes -DNOID $(tz-cflags)
 CFLAGS-ialloc.c = -Wno-strict-prototypes -DNOID
 CFLAGS-scheck.c = -Wno-strict-prototypes -DNOID
 CFLAGS-tzfile.c = $(tz-cflags)
-
-ifeq ($(malloc),new-malloc)
-CFLAGS-ap.c = -DNO_MCHECK
-endif

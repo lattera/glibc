@@ -147,6 +147,7 @@ extern struct mallinfo mallinfo __MALLOC_P ((void));
 #define M_TOP_PAD           -2
 #define M_MMAP_THRESHOLD    -3
 #define M_MMAP_MAX          -4
+#define M_CHECK_ACTION      -5
 
 /* General SVID/XPG interface to tunable parameters. */
 extern int mallopt __MALLOC_P ((int __param, int __val));
@@ -161,6 +162,22 @@ extern size_t malloc_usable_size __MALLOC_P ((__malloc_ptr_t __ptr));
 
 /* Prints brief summary statistics on stderr. */
 extern void malloc_stats __MALLOC_P ((void));
+
+#if defined(__GLIBC__) || defined(MALLOC_HOOKS)
+
+/* Hooks for debugging versions. */
+extern void (*__malloc_initialize_hook) __MALLOC_P ((void));
+extern void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr));
+extern __malloc_ptr_t (*__malloc_hook) __MALLOC_P ((size_t __size));
+extern __malloc_ptr_t (*__realloc_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
+						     size_t __size));
+extern __malloc_ptr_t (*__memalign_hook) __MALLOC_P ((size_t __size,
+						      size_t __alignment));
+
+/* Activate a standard set of debugging hooks. */
+extern void malloc_check_init __MALLOC_P ((void));
+
+#endif
 
 #ifdef __cplusplus
 }; /* end of extern "C" */

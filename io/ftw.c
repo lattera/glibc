@@ -39,13 +39,13 @@ ftw_dir (DIR **dirs, int level, int descriptors, char *dir, size_t len,
 	 int (*func) (const char *file, struct stat *status, int flag))
 {
   int got;
-  struct dirent dirbuf, *entry;
+  struct dirent *entry;
 
   got = 0;
 
   __set_errno (0);
 
-  while (__readdir_r (dirs[level], &dirbuf, &entry) >= 0)
+  while ((entry = readdir (dirs[level])) != NULL)
     {
       struct stat s;
       int flag, retval, newlev;
@@ -136,7 +136,7 @@ ftw_dir (DIR **dirs, int level, int descriptors, char *dir, size_t len,
 	  while (skip-- != 0)
 	    {
 	      __set_errno (0);
-	      if (__readdir_r (dirs[level], &dirbuf, &entry) < 0)
+	      if (readdir (dirs[level]) == NULL)
 		return errno == 0 ? 0 : -1;
 	    }
 	}

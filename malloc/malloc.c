@@ -19,7 +19,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* VERSION 2.6.4-pt Wed Dec  4 00:35:54 MET 1996
+/* V2.6.4-pt2 Sat Dec 14 1996
 
   This work is mainly derived from malloc-2.6.4 by Doug Lea
   <dl@cs.oswego.edu>, which is available from:
@@ -52,8 +52,8 @@
   ptmalloc_init();
      Initialize global configuration.  When compiled for multiple threads,
      this function must be called once before any other function in the
-     package.  It is not required otherwise. It is called automatically
-     in the Linux/GNU C libray.
+     package.  It is not required otherwise.  It is called automatically
+     in the Linux/GNU C libray or when compiling with MALLOC_HOOKS.
   malloc(size_t n);
      Return a pointer to a newly allocated chunk of at least n bytes, or null
      if no space is available.
@@ -154,7 +154,6 @@
 
     Here are some features that are NOT currently supported
 
-    * No user-definable hooks for callbacks and the like.
     * No automated mechanism for fully checking that all accesses
       to malloced memory stay within their bounds.
     * No support for compaction.
@@ -180,6 +179,9 @@
      Define to enable debugging. Adds fairly extensive assertion-based
      checking to help track down memory errors, but noticeably slows down
      execution.
+  MALLOC_HOOKS              (default: NOT defined)
+     Define to enable support run-time replacement of the allocation
+     functions through user-defined `hooks'.
   REALLOC_ZERO_BYTES_FREES (default: NOT defined)
      Define this if you think that realloc(p, 0) should be equivalent
      to free(p). Otherwise, since malloc returns a unique pointer for
@@ -234,6 +236,10 @@
      These values may also be changed dynamically via mallopt(). The
      preset defaults are those that give best performance for typical
      programs/systems.
+  DEFAULT_CHECK_ACTION
+     When the standard debugging hooks are in place, and a pointer is
+     detected as corrupt, do nothing (0), print an error message (1),
+     or call abort() (2).
 
 
 */
@@ -290,9 +296,12 @@
 #endif /*Void_t*/
 
 #if __STD_C
-#include <stddef.h>   /* for size_t */
+# include <stddef.h>   /* for size_t */
+# if defined(_LIBC) || defined(MALLOC_HOOKS)
+#  include <stdlib.h>  /* for getenv() */
+# endif
 #else
-#include <sys/types.h>
+# include <sys/types.h>
 #endif
 
 /* Macros for handling mutexes and thread-specific data.  This is
@@ -305,6 +314,13 @@ extern "C" {
 #endif
 
 #include <stdio.h>    /* needed for malloc_stats */
+
+/* We must not pollute the name space in the GNU libc.  */
+#ifdef _LIBC
+#define malloc_stats __malloc_stats
+#define malloc_usable_size __malloc_usable_size
+#define malloc_trim __malloc_trim
+#endif
 
 
 /*
@@ -380,7 +396,7 @@ extern "C" {
 
 */
 
-#define HAVE_MEMCPY
+#define HAVE_MEMCPY 1
 
 #ifndef USE_MEMCPY
 #ifdef HAVE_MEMCPY
@@ -768,6 +784,16 @@ do {                                                                          \
 
 
 
+#ifndef DEFAULT_CHECK_ACTION
+#define DEFAULT_CHECK_ACTION 1
+#endif
+
+/* What to do if the standard debugging hooks are in place and a
+   corrupt pointer is detected: do nothing (0), print an error message
+   (1), or call abort() (2). */
+
+
+
 #define HEAP_MIN_SIZE (32*1024)
 #define HEAP_MAX_SIZE (1024*1024) /* must be a power of two */
 
@@ -813,6 +839,11 @@ static Void_t *(*__morecore)() = __default_morecore;
 #define MORECORE (*__morecore)
 #define MORECORE_FAILURE 0
 #define MORECORE_CLEARS 1
+#define mmap    __mmap
+#define munmap  __munmap
+#define mremap  __mremap
+#undef malloc_getpagesize
+#define malloc_getpagesize __getpagesize()
 
 #else /* _LIBC */
 
@@ -836,7 +867,7 @@ extern Void_t*     sbrk();
 
 #endif /* _LIBC */
 
-#if 0 && defined(_LIBC)
+#ifdef _LIBC
 
 #define cALLOc          __libc_calloc
 #define fREe            __libc_free
@@ -847,17 +878,6 @@ extern Void_t*     sbrk();
 #define pvALLOc         __libc_pvalloc
 #define mALLINFo        __libc_mallinfo
 #define mALLOPt         __libc_mallopt
-
-#pragma weak calloc = __libc_calloc
-#pragma weak free = __libc_free
-#pragma weak cfree = __libc_free
-#pragma weak malloc = __libc_malloc
-#pragma weak memalign = __libc_memalign
-#pragma weak realloc = __libc_realloc
-#pragma weak valloc = __libc_valloc
-#pragma weak pvalloc = __libc_pvalloc
-#pragma weak mallinfo = __libc_mallinfo
-#pragma weak mallopt = __libc_mallopt
 
 #else
 
@@ -888,8 +908,11 @@ Void_t* vALLOc(size_t);
 Void_t* pvALLOc(size_t);
 Void_t* cALLOc(size_t, size_t);
 void    cfree(Void_t*);
+int     __malloc_trim(size_t);
 int     malloc_trim(size_t);
+size_t  __malloc_usable_size(Void_t*);
 size_t  malloc_usable_size(Void_t*);
+void    __malloc_stats(void);
 void    malloc_stats(void);
 int     mALLOPt(int, int);
 struct mallinfo mALLINFo(void);
@@ -905,8 +928,11 @@ Void_t* vALLOc();
 Void_t* pvALLOc();
 Void_t* cALLOc();
 void    cfree();
+int     __malloc_trim();
 int     malloc_trim();
+size_t  _malloc_usable_size();
 size_t  malloc_usable_size();
+void    __malloc_stats();
 void    malloc_stats();
 int     mALLOPt();
 struct mallinfo mALLINFo();
@@ -1136,19 +1162,41 @@ typedef struct _heap_info {
 */
 
 #if __STD_C
+
 static void      chunk_free(arena *ar_ptr, mchunkptr p);
 static mchunkptr chunk_alloc(arena *ar_ptr, INTERNAL_SIZE_T size);
+static mchunkptr chunk_realloc(arena *ar_ptr, mchunkptr oldp,
+			       INTERNAL_SIZE_T oldsize, INTERNAL_SIZE_T nb);
+static mchunkptr chunk_align(arena *ar_ptr, INTERNAL_SIZE_T nb,
+			     size_t alignment);
 static int       main_trim(size_t pad);
 #ifndef NO_THREADS
 static int       heap_trim(heap_info *heap, size_t pad);
 #endif
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+static Void_t*   malloc_check(size_t sz);
+static void      free_check(Void_t* mem);
+static Void_t*   realloc_check(Void_t* oldmem, size_t bytes);
+static Void_t*   memalign_check(size_t alignment, size_t bytes);
+#endif
+
 #else
+
 static void      chunk_free();
 static mchunkptr chunk_alloc();
+static mchunkptr chunk_realloc();
+static mchunkptr chunk_align();
 static int       main_trim();
 #ifndef NO_THREADS
 static int       heap_trim();
 #endif
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+static Void_t*   malloc_check();
+static void      free_check();
+static Void_t*   realloc_check();
+static Void_t*   memalign_check();
+#endif
+
 #endif
 
 
@@ -1416,6 +1464,7 @@ static unsigned long trim_threshold   = DEFAULT_TRIM_THRESHOLD;
 static unsigned long top_pad          = DEFAULT_TOP_PAD;
 static unsigned int  n_mmaps_max      = DEFAULT_MMAP_MAX;
 static unsigned long mmap_threshold   = DEFAULT_MMAP_THRESHOLD;
+static int           check_action     = DEFAULT_CHECK_ACTION;
 
 /* The first value returned from sbrk */
 static char* sbrk_base = (char*)(-1);
@@ -1444,7 +1493,9 @@ static unsigned long max_mmapped_mem = 0;
 
 /* Initialization routine. */
 #if defined(_LIBC)
+#if 0
 static void ptmalloc_init __MALLOC_P ((void)) __attribute__ ((constructor));
+#endif
 
 static void
 ptmalloc_init __MALLOC_P((void))
@@ -1454,23 +1505,102 @@ ptmalloc_init __MALLOC_P((void))
 #endif
 {
   static int first = 1;
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  const char* s;
+#endif
 
+  if(!first) return;
+  first = 0;
 #if defined(_LIBC)
   /* Initialize the pthreads interface. */
   if (__pthread_initialize != NULL)
     __pthread_initialize();
 #endif
-
-  if(first) {
-    first = 0;
 #ifndef NO_THREADS
-    mutex_init(&main_arena.mutex);
-    mutex_init(&list_lock);
-    tsd_key_create(&arena_key, NULL);
-    tsd_setspecific(arena_key, (Void_t *)&main_arena);
+  mutex_init(&main_arena.mutex);
+  mutex_init(&list_lock);
+  tsd_key_create(&arena_key, NULL);
+  tsd_setspecific(arena_key, (Void_t *)&main_arena);
 #endif
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  s = getenv("MALLOC_CHECK_");
+  if(s) {
+    if(s[0]) mallopt(M_CHECK_ACTION, (int)(s[0] - '0'));
+    malloc_check_init();
   }
+  if(__malloc_initialize_hook != NULL)
+    (*__malloc_initialize_hook)();
+#endif
 }
+
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+
+/* Hooks for debugging versions.  The initial hooks just call the
+   initialization routine, then do the normal work. */
+
+static Void_t*
+#if __STD_C
+malloc_hook_ini(size_t sz)
+#else
+malloc_hook_ini(sz) size_t sz;
+#endif
+{
+  __malloc_hook = NULL;
+  __realloc_hook = NULL;
+  __memalign_hook = NULL;
+  ptmalloc_init();
+  return mALLOc(sz);
+}
+
+static Void_t*
+#if __STD_C
+realloc_hook_ini(Void_t* ptr, size_t sz)
+#else
+realloc_hook_ini(ptr, sz) Void_t* ptr; size_t sz;
+#endif
+{
+  __malloc_hook = NULL;
+  __realloc_hook = NULL;
+  __memalign_hook = NULL;
+  ptmalloc_init();
+  return rEALLOc(ptr, sz);
+}
+
+static Void_t*
+#if __STD_C
+memalign_hook_ini(size_t sz, size_t alignment)
+#else
+memalign_hook_ini(sz, alignment) size_t sz; size_t alignment;
+#endif
+{
+  __malloc_hook = NULL;
+  __realloc_hook = NULL;
+  __memalign_hook = NULL;
+  ptmalloc_init();
+  return mEMALIGn(sz, alignment);
+}
+
+void (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
+void (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr)) = NULL;
+__malloc_ptr_t (*__malloc_hook)
+ __MALLOC_P ((size_t __size)) = malloc_hook_ini;
+__malloc_ptr_t (*__realloc_hook)
+ __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size)) = realloc_hook_ini;
+__malloc_ptr_t (*__memalign_hook)
+ __MALLOC_P ((size_t __size, size_t __alignment)) = memalign_hook_ini;
+
+/* Activate a standard set of debugging hooks. */
+void
+malloc_check_init()
+{
+  __malloc_hook = malloc_check;
+  __free_hook = free_check;
+  __realloc_hook = realloc_check;
+  __memalign_hook = memalign_check;
+  fprintf(stderr, "Using debugging hooks\n");
+}
+
+#endif
 
 
 
@@ -2224,9 +2354,19 @@ Void_t* mALLOc(bytes) size_t bytes;
 #endif
 {
   arena *ar_ptr;
-  INTERNAL_SIZE_T nb = request2size(bytes);  /* padded request size; */
+  INTERNAL_SIZE_T nb; /* padded request size */
   mchunkptr victim;
 
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if (__malloc_hook != NULL) {
+    Void_t* result;
+
+    result = (*__malloc_hook)(bytes);
+    return result;
+  }
+#endif
+
+  nb = request2size(bytes);
   arena_get(ar_ptr, nb + top_pad);
   if(!ar_ptr)
     return 0;
@@ -2501,6 +2641,13 @@ void fREe(mem) Void_t* mem;
   arena *ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if (__free_hook != NULL) {
+    (*__free_hook)(mem);
+    return;
+  }
+#endif
+
   if (mem == 0)                              /* free(0) has no effect */
     return;
 
@@ -2676,38 +2823,33 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   INTERNAL_SIZE_T    oldsize; /* its size */
 
   mchunkptr newp;             /* chunk to return */
-  INTERNAL_SIZE_T    newsize; /* its size */
-  Void_t*   newmem;           /* corresponding user mem */
 
-  mchunkptr next;             /* next contiguous chunk after oldp */
-  INTERNAL_SIZE_T  nextsize;  /* its size */
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if (__realloc_hook != NULL) {
+    Void_t* result;
 
-  mchunkptr prev;             /* previous contiguous chunk before oldp */
-  INTERNAL_SIZE_T  prevsize;  /* its size */
-
-  mchunkptr remainder;        /* holds split off extra space from newp */
-  INTERNAL_SIZE_T  remainder_size;   /* its size */
-
-  mchunkptr bck;              /* misc temp for linking */
-  mchunkptr fwd;              /* misc temp for linking */
+    result = (*__realloc_hook)(oldmem, bytes);
+    return result;
+  }
+#endif
 
 #ifdef REALLOC_ZERO_BYTES_FREES
   if (bytes == 0) { fREe(oldmem); return 0; }
 #endif
 
-
   /* realloc of null is supposed to be same as malloc */
   if (oldmem == 0) return mALLOc(bytes);
 
-  newp    = oldp    = mem2chunk(oldmem);
-  newsize = oldsize = chunksize(oldp);
-
+  oldp    = mem2chunk(oldmem);
+  oldsize = chunksize(oldp);
 
   nb = request2size(bytes);
 
 #if HAVE_MMAP
   if (chunk_is_mmapped(oldp))
   {
+    Void_t* newmem;
+
 #if HAVE_MREMAP
     newp = mremap_chunk(oldp, nb);
     if(newp) return chunk2mem(newp);
@@ -2738,6 +2880,36 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   /* As in malloc(), remember this arena for the next allocation. */
   tsd_setspecific(arena_key, (Void_t *)ar_ptr);
 
+  newp = chunk_realloc(ar_ptr, oldp, oldsize, nb);
+
+  (void)mutex_unlock(&ar_ptr->mutex);
+  return newp ? chunk2mem(newp) : NULL;
+}
+
+static mchunkptr
+#if __STD_C
+chunk_realloc(arena* ar_ptr, mchunkptr oldp, INTERNAL_SIZE_T oldsize,
+             INTERNAL_SIZE_T nb)
+#else
+chunk_realloc(ar_ptr, oldp, oldsize, nb)
+arena* ar_ptr; mchunkptr oldp; INTERNAL_SIZE_T oldsize, nb;
+#endif
+{
+  mchunkptr newp = oldp;      /* chunk to return */
+  INTERNAL_SIZE_T newsize = oldsize; /* its size */
+
+  mchunkptr next;             /* next contiguous chunk after oldp */
+  INTERNAL_SIZE_T  nextsize;  /* its size */
+
+  mchunkptr prev;             /* previous contiguous chunk before oldp */
+  INTERNAL_SIZE_T  prevsize;  /* its size */
+
+  mchunkptr remainder;        /* holds split off extra space from newp */
+  INTERNAL_SIZE_T  remainder_size;   /* its size */
+
+  mchunkptr bck;              /* misc temp for linking */
+  mchunkptr fwd;              /* misc temp for linking */
+
   check_inuse_chunk(ar_ptr, oldp);
 
   if ((long)(oldsize) < (long)(nb))
@@ -2759,8 +2931,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
           top(ar_ptr) = chunk_at_offset(oldp, nb);
           set_head(top(ar_ptr), (newsize - nb) | PREV_INUSE);
           set_head_size(oldp, nb);
-          (void)mutex_unlock(&ar_ptr->mutex);
-          return chunk2mem(oldp);
+          return oldp;
         }
       }
 
@@ -2797,13 +2968,11 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
             unlink(prev, bck, fwd);
             newp = prev;
             newsize += prevsize + nextsize;
-            newmem = chunk2mem(newp);
-            MALLOC_COPY(newmem, oldmem, oldsize - SIZE_SZ);
+            MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
             top(ar_ptr) = chunk_at_offset(newp, nb);
             set_head(top(ar_ptr), (newsize - nb) | PREV_INUSE);
             set_head_size(newp, nb);
-            (void)mutex_unlock(&ar_ptr->mutex);
-            return newmem;
+            return newp;
           }
         }
 
@@ -2814,8 +2983,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
           unlink(prev, bck, fwd);
           newp = prev;
           newsize += nextsize + prevsize;
-          newmem = chunk2mem(newp);
-          MALLOC_COPY(newmem, oldmem, oldsize - SIZE_SZ);
+          MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
           goto split;
         }
       }
@@ -2826,8 +2994,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
         unlink(prev, bck, fwd);
         newp = prev;
         newsize += prevsize;
-        newmem = chunk2mem(newp);
-        MALLOC_COPY(newmem, oldmem, oldsize - SIZE_SZ);
+        MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
         goto split;
       }
     }
@@ -2850,11 +3017,9 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
     }
 
     /* Otherwise copy, free, and exit */
-    newmem = chunk2mem(newp);
-    MALLOC_COPY(newmem, oldmem, oldsize - SIZE_SZ);
+    MALLOC_COPY(chunk2mem(newp), chunk2mem(oldp), oldsize - SIZE_SZ);
     chunk_free(ar_ptr, oldp);
-    (void)mutex_unlock(&ar_ptr->mutex);
-    return newmem;
+    return newp;
   }
 
 
@@ -2876,8 +3041,7 @@ Void_t* rEALLOc(oldmem, bytes) Void_t* oldmem; size_t bytes;
   }
 
   check_inuse_chunk(ar_ptr, newp);
-  (void)mutex_unlock(&ar_ptr->mutex);
-  return chunk2mem(newp);
+  return newp;
 }
 
 
@@ -2910,14 +3074,16 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
 {
   arena *ar_ptr;
   INTERNAL_SIZE_T    nb;      /* padded  request size */
-  char*     m;                /* memory returned by malloc call */
-  mchunkptr p;                /* corresponding chunk */
-  char*     brk;              /* alignment point within p */
-  mchunkptr newp;             /* chunk to return */
-  INTERNAL_SIZE_T  newsize;   /* its size */
-  INTERNAL_SIZE_T  leadsize;  /* leading space befor alignment point */
-  mchunkptr remainder;        /* spare room at end to split off */
-  long      remainder_size;   /* its size */
+  mchunkptr p;
+
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if (__memalign_hook != NULL) {
+    Void_t* result;
+
+    result = (*__memalign_hook)(alignment, bytes);
+    return result;
+  }
+#endif
 
   /* If need less alignment than we give anyway, just relay to malloc */
 
@@ -2927,18 +3093,36 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
 
   if (alignment <  MINSIZE) alignment = MINSIZE;
 
-  /* Call malloc with worst case padding to hit alignment. */
-
   nb = request2size(bytes);
   arena_get(ar_ptr, nb + alignment + MINSIZE);
   if(!ar_ptr)
     return 0;
-  p = chunk_alloc(ar_ptr, nb + alignment + MINSIZE);
+  p = chunk_align(ar_ptr, nb, alignment);
+  (void)mutex_unlock(&ar_ptr->mutex);
+  return p ? chunk2mem(p) : NULL;
+}
 
-  if (p == 0) {
-    (void)mutex_unlock(&ar_ptr->mutex);
+static mchunkptr
+#if __STD_C
+chunk_align(arena* ar_ptr, INTERNAL_SIZE_T nb, size_t alignment)
+#else
+chunk_align(ar_ptr, nb, alignment)
+arena* ar_ptr; INTERNAL_SIZE_T nb; size_t alignment;
+#endif
+{
+  char*     m;                /* memory returned by malloc call */
+  mchunkptr p;                /* corresponding chunk */
+  char*     brk;              /* alignment point within p */
+  mchunkptr newp;             /* chunk to return */
+  INTERNAL_SIZE_T  newsize;   /* its size */
+  INTERNAL_SIZE_T  leadsize;  /* leading space befor alignment point */
+  mchunkptr remainder;        /* spare room at end to split off */
+  long      remainder_size;   /* its size */
+
+  /* Call chunk_alloc with worst case padding to hit alignment. */
+  p = chunk_alloc(ar_ptr, nb + alignment + MINSIZE);
+  if (p == 0)
     return 0; /* propagate failure */
-  }
 
   m = chunk2mem(p);
 
@@ -2946,8 +3130,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
   {
 #if HAVE_MMAP
     if(chunk_is_mmapped(p)) {
-      (void)mutex_unlock(&ar_ptr->mutex);
-      return chunk2mem(p); /* nothing more to do */
+      return p; /* nothing more to do */
     }
 #endif
   }
@@ -2963,7 +3146,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     */
 
     brk = (char*)mem2chunk(((unsigned long)(m + alignment - 1)) & -alignment);
-    if ((long)(brk - (char*)(p)) < (long)MINSIZE) brk = brk + alignment;
+    if ((long)(brk - (char*)(p)) < (long)MINSIZE) brk += alignment;
 
     newp = (mchunkptr)brk;
     leadsize = brk - (char*)(p);
@@ -2974,8 +3157,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
     {
       newp->prev_size = p->prev_size + leadsize;
       set_head(newp, newsize|IS_MMAPPED);
-      (void)mutex_unlock(&ar_ptr->mutex);
-      return chunk2mem(newp);
+      return newp;
     }
 #endif
 
@@ -3003,9 +3185,7 @@ Void_t* mEMALIGn(alignment, bytes) size_t alignment; size_t bytes;
   }
 
   check_inuse_chunk(ar_ptr, p);
-  (void)mutex_unlock(&ar_ptr->mutex);
-  return chunk2mem(p);
-
+  return p;
 }
 
 
@@ -3044,7 +3224,7 @@ Void_t* pvALLOc(bytes) size_t bytes;
 
 /*
 
-  calloc calls malloc, then zeroes out the allocated chunk.
+  calloc calls chunk_alloc, then zeroes out the allocated chunk.
 
 */
 
@@ -3056,11 +3236,23 @@ Void_t* cALLOc(n, elem_size) size_t n; size_t elem_size;
 {
   arena *ar_ptr;
   mchunkptr p, oldtop;
-  INTERNAL_SIZE_T csz, oldtopsize;
+  INTERNAL_SIZE_T sz, csz, oldtopsize;
   Void_t* mem;
 
-  INTERNAL_SIZE_T sz = request2size(n * elem_size);
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+  if (__malloc_hook != NULL) {
+    sz = n * elem_size;
+    mem = (*__malloc_hook)(sz);
+#ifdef HAVE_MEMCPY
+    memset(mem, 0, sz);
+#else
+    while(sz > 0) mem[--sz] = 0; /* rather inefficient */
+#endif
+    return mem;
+  }
+#endif
 
+  sz = request2size(n * elem_size);
   arena_get(ar_ptr, sz);
   if(!ar_ptr)
     return 0;
@@ -3232,7 +3424,7 @@ heap_trim(heap, pad) heap_info *heap; size_t pad;
     assert(p->size == (0|PREV_INUSE)); /* must be fencepost */
     p = prev_chunk(p);
     new_size = chunksize(p) + (MINSIZE-2*SIZE_SZ);
-    assert(new_size>0 && new_size<(long int)(2*MINSIZE));
+    assert(new_size>0 && new_size<(long)(2*MINSIZE));
     if(!prev_inuse(p))
       new_size += p->prev_size;
     assert(new_size>0 && new_size<HEAP_MAX_SIZE);
@@ -3513,28 +3705,240 @@ int mALLOPt(param_number, value) int param_number; int value;
 #else
       if (value != 0) return 0; else  n_mmaps_max = value; return 1;
 #endif
+    case M_CHECK_ACTION:
+      check_action = value; return 1;
 
     default:
       return 0;
   }
 }
+
+#ifdef _LIBC
+weak_alias (__libc_calloc, __calloc) weak_alias (__libc_calloc, calloc)
+weak_alias (__libc_free, __cfree) weak_alias (__libc_free, cfree)
+weak_alias (__libc_free, __free) weak_alias (__libc_free, free)
+weak_alias (__libc_malloc, __malloc) weak_alias (__libc_malloc, malloc)
+weak_alias (__libc_memalign, __memalign) weak_alias (__libc_memalign, memalign)
+weak_alias (__libc_realloc, __realloc) weak_alias (__libc_realloc, realloc)
+weak_alias (__libc_valloc, __valloc) weak_alias (__libc_valloc, valloc)
+weak_alias (__libc_pvalloc, __pvalloc) weak_alias (__libc_pvalloc, pvalloc)
+weak_alias (__libc_mallinfo, __mallinfo) weak_alias (__libc_mallinfo, mallinfo)
+weak_alias (__libc_mallopt, __mallopt) weak_alias (__libc_mallopt, mallopt)
 
-#if 0 && defined(_LIBC)
-weak_alias (__libc_calloc, calloc)
-weak_alias (__libc_free, cfree)
-weak_alias (__libc_free, free)
-weak_alias (__libc_malloc, malloc)
-weak_alias (__libc_memalign, memalign)
-weak_alias (__libc_realloc, realloc)
-weak_alias (__libc_valloc, valloc)
-weak_alias (__libc_pvalloc, pvalloc)
-weak_alias (__libc_mallinfo, mallinfo)
-weak_alias (__libc_mallopt, mallopt)
+#undef malloc_stats
+weak_alias (__malloc_stats, malloc_stats)
+#undef malloc_usable_size
+weak_alias (__malloc_usable_size, malloc_usable_size)
+#undef malloc_trim
+weak_alias (__malloc_trim, malloc_trim)
 #endif
+
+
+#if defined(_LIBC) || defined(MALLOC_HOOKS)
+
+/* A simple, standard set of debugging hooks.  Overhead is `only' one
+   byte per chunk; still this will catch most cases of double frees or
+   overruns. */
+
+#define MAGICBYTE ((char)0xd7)
+
+/* Convert a pointer to be free()d or realloc()ed to a valid chunk
+   pointer.  If the provided pointer is not valid, return NULL.  The
+   goal here is to avoid crashes, unlike in the MALLOC_DEBUG code. */
+
+static mchunkptr
+#if __STD_C
+mem2chunk_check(Void_t* mem)
+#else
+mem2chunk_check(mem) Void_t* mem;
+#endif
+{
+  mchunkptr p;
+  INTERNAL_SIZE_T sz;
+
+  p = mem2chunk(mem);
+  if(!aligned_OK(p)) return NULL;
+  if( (char*)p>=sbrk_base && (char*)p<(sbrk_base+sbrked_mem) ) {
+    /* Must be a chunk in conventional memory. */
+    if(chunk_is_mmapped(p) ||
+       ( (sz = chunksize(p)), ((char*)p + sz)>=(sbrk_base+sbrked_mem) ) ||
+       sz<MINSIZE || sz&MALLOC_ALIGN_MASK || !inuse(p) ) return NULL;
+    if(*((char*)p + sz + (SIZE_SZ-1)) != MAGICBYTE) return NULL;
+    *((char*)p + sz + (SIZE_SZ-1)) = 0;
+  } else {
+    unsigned long offset, page_mask = malloc_getpagesize-1;
+
+    /* mmap()ed chunks have MALLOC_ALIGNMENT or higher power-of two
+       alignment relative to the beginning of a page.  Check this
+       first. */
+    offset = (unsigned long)mem & page_mask;
+    if((offset!=MALLOC_ALIGNMENT && offset!=0 && offset!=0x10 &&
+       offset!=0x20 && offset!=0x40 && offset!=0x80 && offset!=0x100 &&
+       offset!=0x200 && offset!=0x400 && offset!=0x800 && offset!=0x1000 &&
+       offset<0x2000) ||
+       !chunk_is_mmapped(p) || (p->size & PREV_INUSE) ||
+       ( (((unsigned long)p - p->prev_size) & page_mask) != 0 ) ||
+       ( (sz = chunksize(p)), ((p->prev_size + sz) & page_mask) != 0 ) )
+      return NULL;
+    if(*((char*)p + sz - 1) != MAGICBYTE) return NULL;
+    *((char*)p + sz - 1) = 0;
+  }
+  return p;
+}
+
+static Void_t*
+#if __STD_C
+malloc_check(size_t sz)
+#else
+malloc_check(sz) size_t sz;
+#endif
+{
+  mchunkptr victim;
+  INTERNAL_SIZE_T nb = request2size(sz + 1);
+
+  (void)mutex_lock(&main_arena.mutex);
+  victim = chunk_alloc(&main_arena, nb);
+  (void)mutex_unlock(&main_arena.mutex);
+  if(!victim) return NULL;
+  nb = chunksize(victim);
+  if(chunk_is_mmapped(victim))
+    --nb;
+  else
+    nb += SIZE_SZ - 1;
+  *((char*)victim + nb) = MAGICBYTE;
+  return chunk2mem(victim);
+}
+
+static void
+#if __STD_C
+free_check(Void_t* mem)
+#else
+free_check(mem) Void_t* mem;
+#endif
+{
+  mchunkptr p;
+
+  if(!mem) return;
+  p = mem2chunk_check(mem);
+  if(!p) {
+    switch(check_action) {
+    case 1:
+      fprintf(stderr, "free(): invalid pointer %lx!\n", (long)(mem));
+      break;
+    case 2:
+      abort();
+    }
+    return;
+  }
+#if HAVE_MMAP
+  if (chunk_is_mmapped(p)) {
+    munmap_chunk(p);
+    return;
+  }
+#endif
+  (void)mutex_lock(&main_arena.mutex);
+  chunk_free(&main_arena, p);
+  (void)mutex_unlock(&main_arena.mutex);
+}
+
+static Void_t*
+#if __STD_C
+realloc_check(Void_t* oldmem, size_t bytes)
+#else
+realloc_check(oldmem, bytes) Void_t* oldmem; size_t bytes;
+#endif
+{
+  mchunkptr oldp, newp;
+  INTERNAL_SIZE_T nb, oldsize;
+
+  if (oldmem == 0) return malloc_check(bytes);
+  oldp = mem2chunk_check(oldmem);
+  if(!oldp) {
+    switch(check_action) {
+    case 1:
+      fprintf(stderr, "realloc(): invalid pointer %lx!\n", (long)(oldmem));
+      break;
+    case 2:
+      abort();
+    }
+    return malloc_check(bytes);
+  }
+  oldsize = chunksize(oldp);
+
+  nb = request2size(bytes+1);
+
+  (void)mutex_lock(&main_arena.mutex);
+#if HAVE_MMAP
+  if (chunk_is_mmapped(oldp)) {
+#if HAVE_MREMAP
+    newp = mremap_chunk(oldp, nb);
+    if(!newp) {
+#endif
+      /* Note the extra SIZE_SZ overhead. */
+      if(oldsize - SIZE_SZ >= nb) newp = oldp; /* do nothing */
+      else {
+       /* Must alloc, copy, free. */
+       newp = chunk_alloc(&main_arena, nb);
+       if (newp) {
+         MALLOC_COPY(chunk2mem(newp), oldmem, oldsize - 2*SIZE_SZ);
+         munmap_chunk(oldp);
+       }
+      }
+#if HAVE_MREMAP
+    }
+#endif
+  } else
+#endif /* HAVE_MMAP */
+    newp = chunk_realloc(&main_arena, oldp, oldsize, nb);
+  (void)mutex_unlock(&main_arena.mutex);
+
+  if(!newp) return NULL;
+  nb = chunksize(newp);
+  if(chunk_is_mmapped(newp))
+    --nb;
+  else
+    nb += SIZE_SZ - 1;
+  *((char*)newp + nb) = MAGICBYTE;
+  return chunk2mem(newp);
+}
+
+static Void_t*
+#if __STD_C
+memalign_check(size_t alignment, size_t bytes)
+#else
+memalign_check(alignment, bytes) size_t alignment; size_t bytes;
+#endif
+{
+  INTERNAL_SIZE_T nb;
+  mchunkptr p;
+
+  if (alignment <= MALLOC_ALIGNMENT) return malloc_check(bytes);
+  if (alignment <  MINSIZE) alignment = MINSIZE;
+
+  nb = request2size(bytes+1);
+  (void)mutex_lock(&main_arena.mutex);
+  p = chunk_align(&main_arena, nb, alignment);
+  (void)mutex_unlock(&main_arena.mutex);
+  if(!p) return NULL;
+  nb = chunksize(p);
+  if(chunk_is_mmapped(p))
+    --nb;
+  else
+    nb += SIZE_SZ - 1;
+  *((char*)p + nb) = MAGICBYTE;
+  return chunk2mem(p);
+}
+
+#endif /* defined(_LIBC) || defined(MALLOC_HOOKS) */
 
 /*
 
 History:
+
+    V2.6.4-pt2 Sat Dec 14 1996 Wolfram Gloger (wmglo@dent.med.uni-muenchen.de)
+      * Added debugging hooks
+      * Fixed possible deadlock in realloc() when out of memory
+      * Don't pollute namespace in glibc: use __getpagesize, __mmap, etc.
 
     V2.6.4-pt Wed Dec  4 1996 Wolfram Gloger (wmglo@dent.med.uni-muenchen.de)
       * Very minor updates from the released 2.6.4 version.

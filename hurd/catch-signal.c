@@ -1,21 +1,21 @@
 /* Convenience function to catch expected signals during an operation.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd/signal.h>
 #include <hurd/sigpreempt.h>
@@ -25,14 +25,14 @@ Cambridge, MA 02139, USA.  */
 error_t
 hurd_catch_signal (sigset_t sigset,
 		   unsigned long int first, unsigned long int last,
-		   error_t (*operate) (struct hurd_signal_preempter *),
+		   error_t (*operate) (struct hurd_signal_preemptor *),
 		   sighandler_t handler)
 {
   jmp_buf buf;
   void throw (int signo, long int sigcode, struct sigcontext *scp)
     { longjmp (buf, scp->sc_error ?: EGRATUITOUS); }
 
-  struct hurd_signal_preempter preempter =
+  struct hurd_signal_preemptor preemptor =
     {
       sigset, first, last,
       NULL, handler == SIG_ERR ? (sighandler_t) &throw : handler,
@@ -50,23 +50,23 @@ hurd_catch_signal (sigset_t sigset,
 
   if (error == 0)
     {
-      /* Install a signal preempter for the thread.  */
+      /* Install a signal preemptor for the thread.  */
       __spin_lock (&ss->lock);
-      preempter.next = ss->preempters;
-      ss->preempters = &preempter;
+      preemptor.next = ss->preemptors;
+      ss->preemptors = &preemptor;
       __spin_unlock (&ss->lock);
 
       /* Try the operation that might crash.  */
-      (*operate) (&preempter);
+      (*operate) (&preemptor);
     }
 
   /* Either FUNCTION completed happily and ERROR is still zero, or it hit
      an expected signal and `throw' made setjmp return the signal error
-     code in ERROR.  Now we can remove the preempter and return.  */
+     code in ERROR.  Now we can remove the preemptor and return.  */
 
   __spin_lock (&ss->lock);
-  assert (ss->preempters == &preempter);
-  ss->preempters = preempter.next;
+  assert (ss->preemptors == &preemptor);
+  ss->preemptors = preemptor.next;
   __spin_unlock (&ss->lock);
 
   return error;
@@ -76,7 +76,7 @@ hurd_catch_signal (sigset_t sigset,
 error_t
 hurd_safe_memset (void *dest, int byte, size_t nbytes)
 {
-  error_t operate (struct hurd_signal_preempter *preempter)
+  error_t operate (struct hurd_signal_preemptor *preemptor)
     {
       memset (dest, byte, nbytes);
       return 0;
@@ -90,7 +90,7 @@ hurd_safe_memset (void *dest, int byte, size_t nbytes)
 error_t
 hurd_safe_copyout (void *dest, const void *src, size_t nbytes)
 {
-  error_t operate (struct hurd_signal_preempter *preempter)
+  error_t operate (struct hurd_signal_preemptor *preemptor)
     {
       memcpy (dest, src, nbytes);
       return 0;
@@ -103,7 +103,7 @@ hurd_safe_copyout (void *dest, const void *src, size_t nbytes)
 error_t
 hurd_safe_copyin (void *dest, const void *src, size_t nbytes)
 {
-  error_t operate (struct hurd_signal_preempter *preempter)
+  error_t operate (struct hurd_signal_preemptor *preemptor)
     {
       memcpy (dest, src, nbytes);
       return 0;
@@ -120,18 +120,18 @@ hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
   void throw (int signo, long int sigcode, struct sigcontext *scp)
     { longjmp (buf, scp->sc_error ?: EGRATUITOUS); }
 
-  struct hurd_signal_preempter src_preempter =
+  struct hurd_signal_preemptor src_preemptor =
     {
       sigmask (SIGBUS) | sigmask (SIGSEGV),
       (vm_address_t) src, (vm_address_t) src + nbytes,
       NULL, (sighandler_t) &throw,
     };
-  struct hurd_signal_preempter dest_preempter =
+  struct hurd_signal_preemptor dest_preemptor =
     {
       sigmask (SIGBUS) | sigmask (SIGSEGV),
       (vm_address_t) dest, (vm_address_t) dest + nbytes,
       NULL, (sighandler_t) &throw,
-      &src_preempter
+      &src_preemptor
     };
 
   struct hurd_sigstate *const ss = _hurd_self_sigstate ();
@@ -142,10 +142,10 @@ hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
 
   if (error == 0)
     {
-      /* Install a signal preempter for the thread.  */
+      /* Install a signal preemptor for the thread.  */
       __spin_lock (&ss->lock);
-      src_preempter.next = ss->preempters;
-      ss->preempters = &dest_preempter;
+      src_preemptor.next = ss->preemptors;
+      ss->preemptors = &dest_preemptor;
       __spin_unlock (&ss->lock);
 
       /* Do the copy; it might fault.  */
@@ -154,13 +154,12 @@ hurd_safe_memmove (void *dest, const void *src, size_t nbytes)
 
   /* Either memmove completed happily and ERROR is still zero, or it hit
      an expected signal and `throw' made setjmp return the signal error
-     code in ERROR.  Now we can remove the preempter and return.  */
+     code in ERROR.  Now we can remove the preemptor and return.  */
 
   __spin_lock (&ss->lock);
-  assert (ss->preempters == &dest_preempter);
-  ss->preempters = src_preempter.next;
+  assert (ss->preemptors == &dest_preemptor);
+  ss->preemptors = src_preemptor.next;
   __spin_unlock (&ss->lock);
 
   return error;
 }
-

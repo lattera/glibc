@@ -31,7 +31,7 @@ scandir (dir, namelist, select, cmp)
   DIR *dp = opendir (dir);
   struct dirent **v = NULL;
   size_t vsize = 0, i;
-  struct dirent dirbuf, *d;
+  struct dirent *d;
   int save;
 
   if (dp == NULL)
@@ -41,7 +41,7 @@ scandir (dir, namelist, select, cmp)
   __set_errno (0);
 
   i = 0;
-  while (__readdir_r (dp, &dirbuf, &d) >= 0)
+  while ((d = __readdir (dp)) != NULL)
     if (select == NULL || (*select) (d))
       {
 	size_t dsize;

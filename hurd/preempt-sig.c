@@ -1,55 +1,55 @@
 /* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd/sigpreempt.h>
 #include <hurd/signal.h>
 #include <assert.h>
 
 void
-hurd_preempt_signals (struct hurd_signal_preempter *preempter)
+hurd_preempt_signals (struct hurd_signal_preemptor *preemptor)
 {
   __mutex_lock (&_hurd_siglock);
-  preempter->next = _hurdsig_preempters;
-  _hurdsig_preempters = preempter;
-  _hurdsig_preempted_set |= preempter->signals;
+  preemptor->next = _hurdsig_preemptors;
+  _hurdsig_preemptors = preemptor;
+  _hurdsig_preempted_set |= preemptor->signals;
   __mutex_unlock (&_hurd_siglock);
 }
 
 void
-hurd_unpreempt_signals (struct hurd_signal_preempter *preempter)
+hurd_unpreempt_signals (struct hurd_signal_preemptor *preemptor)
 {
-  struct hurd_signal_preempter **p;
+  struct hurd_signal_preemptor **p;
   sigset_t preempted = 0;
 
   __mutex_lock (&_hurd_siglock);
 
-  p = &_hurdsig_preempters;
+  p = &_hurdsig_preemptors;
   while (*p)
-    if (*p == preempter)
+    if (*p == preemptor)
       {
 	/* Found it; take it off the chain.  */
 	*p = (*p)->next;
-	if ((preempter->signals & preempted) != preempter->signals)
+	if ((preemptor->signals & preempted) != preemptor->signals)
 	  {
-	    /* This might have been the only preempter for some
+	    /* This might have been the only preemptor for some
 	       of those signals, so we must collect the full mask
 	       from the others.  */
-	    struct hurd_signal_preempter *pp;
+	    struct hurd_signal_preemptor *pp;
 	    for (pp = *p; pp; pp = pp->next)
 	      preempted |= pp->signals;
 	    _hurdsig_preempted_set = preempted;
@@ -64,5 +64,5 @@ hurd_unpreempt_signals (struct hurd_signal_preempter *preempter)
       }
 
   __mutex_unlock (&_hurd_siglock); /* Avoid deadlock during death rattle.  */
-  assert (! "removing absent preempter");
+  assert (! "removing absent preemptor");
 }

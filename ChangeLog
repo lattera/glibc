@@ -1,3 +1,106 @@
+Wed Dec 18 03:31:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* dirent/scandir.c: Undo change from Mon Dec  2 15:32:15 1996.
+	The stream is private and usages outside glibc don't care about
+	reentrancy.
+	* io/fts.c: Likewise.
+	* io/ftw.c: Likewise.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/posix/ttyname.c: Likewise.
+	* sysdeps/posix/ttyname_r.c: Likewise.
+	* sysdeps/posix/glob.c: Likewise.
+
+	* libio/iovsprintf.c: Add cast to prevent warning.
+	* libio/iovsscanf.c: Likewise.
+
+	* libio/libioP.h: Define mmap to __mmap and munmap to __munmap
+	to keep namespace clean.
+
+	* new-malloc/malloc.c: Update to last version from Wolfram Gloger.
+	Add hooks and check functions from old GNU malloc.
+	* new-malloc/malloc.h: Likewise.
+
+	* nis/ypclnt.c: Remove prototype for xdr_free.
+	* snrpc/rpc/xdr.h: Add prototype for xdr_free.
+
+	* manual/nss.texi: Correct description of default values and don't
+	meantion NSS as an add-on.
+
+	* nss/grp-lookup.c: Provide default value as
+	"compat [NOTFOUND=return] files".
+	* nss/pwd-lookup.c: Likewise.
+	* nss/spwd-lookup.c: Likewise.
+	* nss/network-lookup.c: Correct default to
+	"dns [!UNAVAIL=return] files".
+	* nss/nsswitch.c: Change default-default value to "nis
+	[NOTFOUND=return] files" since compat is only available for group,
+	passwd, and shadow.
+
+	* stdlib/on_exit.c (on_exit): Rename to __on_exit and make old name
+	a weak alias.
+	* stdlib/stdlib.h: Add prototype for __on_exit.
+
+	* sysdeps/unix/sysv/linux/schedbits.h: Add prototype for __clone.
+
+	* time/Makefile: Undo change from Sun Dec  8 06:56:49 1996.
+	The new malloc now has mcheck.
+	* time/ap.c: Likewise.
+
+	* time/tzset.c (__tzset): Rename to __tzset_internal.
+	(tzset): Rename to __tzset.  Make tzset a weak alias for __tzset.
+	* time/localtime.c: Use __tzset_internal not __tzset.
+	* time/strftime.c [_LIBC]: Define tzname as __tzname and tzset
+	as __tzset to prevent namespace pollution.
+
+	* wctype/iswctype.h (icwctype): Rename to __iswctype.  Make iswctype
+	a weak alias of __iswctype.
+	* wctype/wctype.h: Add prototype for __iswctype.
+	(iswalnum, iswalpha, iswcntrl, iswdigit, iswlower, iswgraph,
+	iswprint, iswpunct, iswspace, iswupper, iswxdigit, iswblank):
+	Use __iswctype for the test, not iswctype.
+
+1996-12-16  Paul Eggert  <eggert@twinsun.com>
+
+	* hurd/hurd/sigpreempt.h
+	(struct hurd_signal_preemptor.preemptor, _hurdsig_preemptors),
+	hurd/hurd/signal.h (struct hurd_sigstate.preemptors),
+	hurd/hurdfault.c, hurd/hurdfault.h (_hurdsig_fault_preemptor),
+	hurd/hurdsig.c (_hurdsig_preempters):
+	Renamed to fix spelling from `preempter' to `preemptor'.
+	All uses changed.
+
+1996-12-15  Paul Eggert  <eggert@twinsun.com>
+
+	* ctime.c (ctime): Return asctime (localtime (t)), as the C
+	standard requires.
+
+Tue Dec 17 02:05:48 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/libc-lock.h (__libc_lock_trylock): Invert return
+	value because Mach/cthreads uses the opposite convention from
+	Posix/glibc.
+
+Mon Dec 16 22:41:01 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/fcloseall.c: Correct test of already_called.
+	Reported by Thomas Bushnell, n/BSG.
+
+Mon Dec 16 14:52:07 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* mach/lock-intern.h (__mutex_try_lock): New function.
+
+Sun Dec 15 16:33:44 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* termios/sys/ttydefaults.h (TTYDEF_OFLAG): Only use OXTABS if
+	defined, else XTABS.
+	(CEOL, CSTATUS): Use _POSIX_VDISABLE if defined.
+
+Sun Dec 15 11:56:19 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/mremap.S: New file.
+	* sysdeps/unix/sysv/linux/m68k/Dist: Distribute it.
+	* sysdeps/unix/sysv/linux/m68k/Makefile (sysdep_routines): Add mremap.
+
 Mon Dec 16 02:15:42 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	Make sure tzset() sets always tzname[].

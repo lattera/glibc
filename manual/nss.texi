@@ -267,20 +267,25 @@ For the @code{hosts} and @code{network} databases the default value is
 the DNS service not to be available but if it is available the answer it
 returns is ultimative.
 
+The @code{passwd}, @code{group}, and @code{shadow} databases are
+traditionally handled in a special way.  The appropriate files in the
+@file{/etc} directory are read but if an entry with a name starting
+with a @code{+} character is found NIS is used.  This kind of lookup
+remains possible by using the special lookup service @code{compat}
+and the default value for the three databases above is
+@code{compat [NOTFOUND=return] files}.
+
 For all other databases the default value is
-@code{compat [NOTFOUND=return] files}.  This solution give the best
-chance to be correct since NIS and file based lookup is used.  The
-@code{compat} service is available in a separate add-on to GNU C
-library, available in the same place you got the GNU C library source
-from.
+@code{nis [NOTFOUND=return] files}.  This solution give the best
+chance to be correct since NIS and file based lookup is used.
 
 @cindex optimizing NSS
 A second point is that the user should try to optimize the lookup
-process.  The different service have different response times.  A simple
-file look up on a local file could be fast, but if the file is long and the
-needed entry is near the end of the file this may take quite some time.
-In this case it might be better to use the @code{db} service which
-allows fast local access to large data sets.
+process.  The different service have different response times.
+A simple file look up on a local file could be fast, but if the file
+is long and the needed entry is near the end of the file this may take
+quite some time.  In this case it might be better to use the @code{db}
+service which allows fast local access to large data sets.
 
 Often the situation is that some global information like NIS must be
 used.  So it is unavoidable to use service entries like @code{nis} etc.

@@ -30,7 +30,7 @@ void
 __close_all_streams (void)
 {
   /* We must be prepared for multi-threading on multiple calls.  */
-  if (! __libc_lock_trylock (lock) && already_called)
+  if (! __libc_lock_trylock (lock) && ! already_called)
     {
       /* Signal that we already did this.  */
       already_called = 1;

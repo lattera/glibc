@@ -1,20 +1,20 @@
 /* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ansidecl.h>
 #include <stddef.h>
@@ -112,7 +112,7 @@ timer_thread (void)
 
 
 static sighandler_t
-restart_itimer (struct hurd_signal_preempter *preempter,
+restart_itimer (struct hurd_signal_preemptor *preemptor,
 		struct hurd_sigstate *ss,
 		int *signo, struct hurd_signal_detail *detail)
 {
@@ -170,18 +170,18 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
     {
       /* Make sure the itimer thread is set up.  */
 
-      /* Set up a signal preempter global for all threads to
+      /* Set up a signal preemptor global for all threads to
 	 run `restart_itimer' each time a SIGALRM would arrive.  */
-      static struct hurd_signal_preempter preempter =
+      static struct hurd_signal_preemptor preemptor =
 	{
 	  __sigmask (SIGALRM), 0, 0,
 	  &restart_itimer,
 	};
       __mutex_lock (&_hurd_siglock);
-      if (! preempter.next && _hurdsig_preempters != &preempter)
+      if (! preemptor.next && _hurdsig_preemptors != &preemptor)
 	{
-	  preempter.next = _hurdsig_preempters;
-	  _hurdsig_preempters = &preempter;
+	  preemptor.next = _hurdsig_preemptors;
+	  _hurdsig_preemptors = &preemptor;
 	}
       __mutex_unlock (&_hurd_siglock);
 

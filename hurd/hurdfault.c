@@ -1,21 +1,21 @@
 /* Handle faults in the signal thread.
-Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <hurd.h>
 #include <hurd/signal.h>
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
 #include <assert.h>
 
 jmp_buf _hurdsig_fault_env;
-struct hurd_signal_preempter _hurdsig_fault_preempter;
+struct hurd_signal_preemptor _hurdsig_fault_preemptor;
 
 static mach_port_t forward_sigexc;
 
@@ -56,7 +56,7 @@ _hurdsig_fault_catch_exception_raise (mach_port_t port,
      codes into a signal number and subcode.  */
   _hurd_exception2signal (&d, &signo);
 
-  return HURD_PREEMPT_SIGNAL_P (&_hurdsig_fault_preempter, signo, d.code)
+  return HURD_PREEMPT_SIGNAL_P (&_hurdsig_fault_preemptor, signo, d.code)
     ? 0 : EGREGIOUS;
 }
 
@@ -97,7 +97,7 @@ faulted (void)
   if (reply.result)
     __libc_fatal ("BUG: unexpected fault in signal thread\n");
 
-  _hurdsig_fault_preempter.signals = 0;
+  _hurdsig_fault_preemptor.signals = 0;
   longjmp (_hurdsig_fault_env, 1);
 }
 
@@ -158,4 +158,3 @@ _hurdsig_fault_init (void)
   __mach_port_deallocate (__mach_task_self (), sigexc);
   assert_perror (err);
 }
-

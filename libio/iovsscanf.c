@@ -39,7 +39,7 @@ DEFUN(_IO_vsscanf, (string, format, args),
   _IO_JUMPS((_IO_FILE*)&sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE*)&sf, (char*)string, 0, NULL);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, &sf);
-  _IO_flockfile (&sf);
+  _IO_flockfile ((_IO_FILE *) &sf);
   ret = _IO_vfscanf((_IO_FILE*)&sf, format, args, NULL);
   _IO_cleanup_region_end (1);
   return ret;

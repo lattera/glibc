@@ -367,6 +367,8 @@ extern int atexit __P ((void (*__func) (void)));
 #ifdef	__USE_MISC
 /* Register a function to be called with the status
    given to `exit' and the given argument.  */
+extern int __on_exit __P ((void (*__func) (int __status, __ptr_t __arg),
+			   __ptr_t __arg));
 extern int on_exit __P ((void (*__func) (int __status, __ptr_t __arg),
 			 __ptr_t __arg));
 #endif
