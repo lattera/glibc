@@ -1,5 +1,5 @@
 /* Generic definitions for spinlock initializers.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,9 +20,9 @@
 /* Initial value of a spinlock.  Most platforms should use zero,
    unless they only implement a "test and clear" operation instead of
    the usual "test and set". */
-#define LT_SPINLOCK_INIT 0
+#define __LT_SPINLOCK_INIT 0
 
 /* Macros for lock initializers, using the above definition. */
-#define LOCK_INITIALIZER { 0, LT_SPINLOCK_INIT }
-#define ALT_LOCK_INITIALIZER { 0, LT_SPINLOCK_INIT }
-#define ATOMIC_INITIALIZER { 0, LT_SPINLOCK_INIT }
+#define __LOCK_INITIALIZER { 0, __LT_SPINLOCK_INIT }
+#define __ALT_LOCK_INITIALIZER { 0, __LT_SPINLOCK_INIT }
+#define __ATOMIC_INITIALIZER { 0, __LT_SPINLOCK_INIT }

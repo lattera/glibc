@@ -91,7 +91,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* Always index 0 */
   0,                          /* int p_report_events */
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
-  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
+  __ATOMIC_INITIALIZER,       /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
   0,                          /* char p_condvar_avail */
   0,                          /* char p_sem_avail */
@@ -148,7 +148,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   1,                          /* Always index 1 */
   0,                          /* int p_report_events */
   {{{0, }}, 0, NULL},         /* td_eventbuf_t p_eventbuf */
-  ATOMIC_INITIALIZER,         /* struct pthread_atomic p_resume_count */
+  __ATOMIC_INITIALIZER,       /* struct pthread_atomic p_resume_count */
   0,                          /* char p_woken_by_cancel */
   0,                          /* char p_condvar_avail */
   0,                          /* char p_sem_avail */

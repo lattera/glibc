@@ -99,7 +99,7 @@ extern int __pthread_unlock(struct _pthread_fastlock *lock);
 static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 {
   lock->__status = 0;
-  lock->__spinlock = LT_SPINLOCK_INIT;
+  lock->__spinlock = __LT_SPINLOCK_INIT;
 }
 
 static inline int __pthread_trylock (struct _pthread_fastlock * lock)
@@ -141,7 +141,7 @@ extern void __pthread_alt_unlock(struct _pthread_fastlock *lock);
 static inline void __pthread_alt_init_lock(struct _pthread_fastlock * lock)
 {
   lock->__status = 0;
-  lock->__spinlock = LT_SPINLOCK_INIT;
+  lock->__spinlock = __LT_SPINLOCK_INIT;
 }
 
 static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
@@ -165,7 +165,7 @@ static inline int __pthread_alt_trylock (struct _pthread_fastlock * lock)
 	    WRITE_MEMORY_BARRIER();
 	    res = 0;
 	  }
-	lock->__spinlock = LT_SPINLOCK_INIT;
+	lock->__spinlock = __LT_SPINLOCK_INIT;
       }
     return res;
   }

@@ -32,9 +32,7 @@ __BEGIN_DECLS
 # define __need_NULL
 # include <stddef.h>
 
-# ifndef __USE_XOPEN
-#  define __need___va_list
-# endif
+# define __need___va_list
 # include <stdarg.h>
 
 # include <bits/types.h>

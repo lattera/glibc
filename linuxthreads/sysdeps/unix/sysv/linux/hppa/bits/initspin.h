@@ -1,5 +1,5 @@
 /* PA-RISC specific definitions for spinlock initializers.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,9 +19,9 @@
 
 /* Initial value of a spinlock.  PA-RISC only implements atomic load
    and clear so this must be non-zero. */
-#define LT_SPINLOCK_INIT 1
+#define __LT_SPINLOCK_INIT 1
 
 /* Macros for lock initializers, using the above definition. */
-#define LOCK_INITIALIZER { 0, LT_SPINLOCK_INIT }
-#define ALT_LOCK_INITIALIZER { 0, LT_SPINLOCK_INIT }
-#define ATOMIC_INITIALIZER { 0, LT_SPINLOCK_INIT }
+#define __LOCK_INITIALIZER { 0, __LT_SPINLOCK_INIT }
+#define __ALT_LOCK_INITIALIZER { 0, __LT_SPINLOCK_INIT }
+#define __ATOMIC_INITIALIZER { 0, __LT_SPINLOCK_INIT }
