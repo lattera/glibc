@@ -23,8 +23,8 @@ echo 1_2 > $testdir/dir1/file1_2
 # Run some tests.
 result=0
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*" |
+${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${common_objpfx}posix/globtest "$testdir" "*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1'
@@ -34,8 +34,8 @@ cat <<"EOF" | cmp - $testout || result=1
 not NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/*" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
@@ -43,40 +43,40 @@ cat <<"EOF" | cmp - $testout || result=1
 not NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/1" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/*1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
 not NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*/file1_1" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 `dir1/file1_1'
 not NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*-/*" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*-/*" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH
 NULL
 EOF
 
-LD_LIBRARY_PATH=$common_objpfx \
-${elf_objpfx}${rtld_installed_name} ${common_objpfx}posix/globtest "$testdir" "*-" |
+${elf_objpfx}${rtld_installed_name} --library-path $common_objpfx \
+${common_objpfx}posix/globtest "$testdir" "*-" |
 sort > $testout
 cat <<"EOF" | cmp - $testout || result=1
 GLOB_NOMATCH

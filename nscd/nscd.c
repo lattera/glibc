@@ -107,7 +107,7 @@ main (int argc, char **argv)
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
-  if (remaining != 0)
+  if (remaining != argc)
     {
       error (0, 0, gettext ("wrong number of arguments"));
       argp_help (&argp, stdout, ARGP_HELP_SEE, program_invocation_short_name);
@@ -152,8 +152,11 @@ main (int argc, char **argv)
   /* Create first sockets */
   init_sockets ();
   /* Init databases */
-  cache_pwdinit ();
-  cache_grpinit ();
+  if ((cache_pwdinit () < 0) || (cache_grpinit () < 0))
+    {
+      fputs (_("Not enough memory\n"), stderr);
+      return 1;
+    }
   /* Handle incoming requests */
   handle_requests ();
 

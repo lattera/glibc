@@ -163,7 +163,7 @@ add_cache (struct passwd *pwd)
 				       strlen (pwd->pw_name)) % modulo;
 
   if (debug_flag)
-    dbg_log (_("add_cache (%s)"), pwd->pw_name);
+    dbg_log (_("pwd_add_cache (%s)"), pwd->pw_name);
 
   work = &pwdtbl[hash];
 
@@ -231,7 +231,7 @@ add_negcache (char *key)
   unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
 
   if (debug_flag)
-    dbg_log (_("add_netgache (%s|%ld)"), key, hash);
+    dbg_log (_("pwd_add_netgache (%s|%ld)"), key, hash);
 
   work = &negtbl[hash];
 
@@ -249,7 +249,7 @@ add_negcache (char *key)
       work->next->key = strdup (key);
       work = work->next;
     }
-  /* Set a pointer from the pwuid hash table to the pwname hash table */
+
   time (&work->create);
 
   return 0;
@@ -261,10 +261,10 @@ cache_search_neg (const char *key)
   neghash *work;
   unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
 
-  work = &negtbl[hash];
-
   if (debug_flag)
-    dbg_log (_("cache_search_neg (%s|%ld)"), key, hash);
+    dbg_log (_("pwd_cache_search_neg (%s|%ld)"), key, hash);
+
+  work = &negtbl[hash];
 
   while (work->key != NULL)
     {
@@ -281,8 +281,8 @@ cache_search_neg (const char *key)
 void *
 cache_getpwnam (void *v_param)
 {
+  struct passwd *pwd;
   param_t *param = (param_t *)v_param;
-  struct passwd *pwd, resultbuf;
 
   pthread_rwlock_rdlock (&pwdlock);
   pwd = cache_search_name (param->key);
@@ -300,13 +300,13 @@ cache_getpwnam (void *v_param)
       close_socket (param->conn);
 
       pthread_rwlock_unlock (&pwdlock);
-      pwd = &resultbuf;
     }
   else
     {
       int status;
       int buflen = 1024;
-      char *buffer = malloc (buflen);
+      char *buffer = calloc (1, buflen);
+      struct passwd resultbuf;
 
       if (debug_flag)
 	dbg_log (_("Doesn't found \"%s\" in cache !"), param->key);
@@ -366,6 +366,9 @@ void *
 cache_pw_disabled (void *v_param)
 {
   param_t *param = (param_t *)v_param;
+
+  if (debug_flag)
+    dbg_log (_("\tpasswd cache is disabled\n"));
 
   pw_send_disabled (param->conn);
   return NULL;

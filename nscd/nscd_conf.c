@@ -122,6 +122,11 @@ nscd_parse_file (const char *fname)
 	  if (strcmp (arg1, "passwd") == 0
 	      && strcmp (arg2, "no") == 0)
 	    disabled_passwd = 1;
+	  else if (strcmp (arg1, "group") == 0
+		   && strcmp (arg2, "no") == 0)
+	    disabled_group = 1;
+	  else
+	    dbg_log (_("service %s is not supported"), arg1);
 	}
       else if (strcmp (entry, "logfile") == 0)
 	{

@@ -26,8 +26,8 @@
 
 extern int __syscall_sigaction (int, const struct old_kernel_sigaction *,
 				struct old_kernel_sigaction *);
-extern int __syscall_rt_sigaction (int, const struct sigaction *,
-				   struct sigaction *, size_t);
+extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
+				   struct kernel_sigaction *, size_t);
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
@@ -43,17 +43,41 @@ __sigaction (sig, act, oact)
      struct sigaction *oact;
 {
   struct old_kernel_sigaction k_sigact, k_osigact;
-  int error;
+  int result;
 
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
+      struct kernel_sigaction kact, koact;
+
+      if (act)
+	{
+	  kact.k_sa_handler = act->sa_handler;
+	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+	  kact.sa_flags = act->sa_flags;
+#ifdef HAVE_SA_RESTORER
+	  kact.sa_restorer = act->sa_restorer;
+#endif
+	}
+
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      int result = __syscall_rt_sigaction (sig, act, oact, _NSIG / 8);
+      result = __syscall_rt_sigaction (sig, act ? &kact : 0,
+				       oact ? &koact : 0, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
-	return result;
+	{
+	  if (oact && result >= 0)
+	    {
+	      oact->sa_handler = koact.k_sa_handler;
+	      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
+	      oact->sa_flags = koact.sa_flags;
+#ifdef HAVE_SA_RESTORER
+	      oact->sa_restorer = koact.sa_restorer;
+#endif
+	    }
+	  return result;
+	}
 
       __libc_missing_rt_sigs = 1;
     }
@@ -67,9 +91,9 @@ __sigaction (sig, act, oact)
       k_sigact.sa_restorer = act->sa_restorer;
 #endif
     }
-  error = __syscall_sigaction (sig, act ? &k_sigact : 0,
+  result = __syscall_sigaction (sig, act ? &k_sigact : 0,
 			       oact ? &k_osigact : 0);
-  if (oact && error >= 0)
+  if (oact && result >= 0)
     {
       oact->sa_handler = k_osigact.k_sa_handler;
       oact->sa_mask.__val[0] = k_osigact.sa_mask;
@@ -78,7 +102,7 @@ __sigaction (sig, act, oact)
       oact->sa_restorer = k_osigact.sa_restorer;
 #endif
     }
-  return error;
+  return result;
 }
 
 weak_alias (__sigaction, sigaction)

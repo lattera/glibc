@@ -109,7 +109,7 @@ cache_grpinit ()
   grptbl = calloc (modulo, sizeof (grphash));
   if (grptbl == NULL)
     return -1;
-  calloc (modulo, sizeof (grphash));
+  gidtbl = calloc (modulo, sizeof (grphash));
   if (gidtbl == NULL)
     return -1;
   negtbl = calloc (modulo, sizeof (neghash));
@@ -179,6 +179,9 @@ add_cache (struct group *grp)
   unsigned long int hash = __nis_hash (grp->gr_name,
 				       strlen (grp->gr_name)) % modulo;
 
+  if (debug_flag)
+    dbg_log (_("grp_add_cache (%s)"), grp->gr_name);
+
   work = &grptbl[hash];
 
   if (grptbl[hash].grp == NULL)
@@ -244,10 +247,16 @@ add_negcache (char *key)
   neghash *work;
   unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
 
+  if (debug_flag)
+    dbg_log (_("grp_add_netgache (%s|%ld)"), key, hash);
+
   work = &negtbl[hash];
 
   if (negtbl[hash].key == NULL)
-    negtbl[hash].key = strdup (key);
+    {
+      negtbl[hash].key = strdup (key);
+      negtbl[hash].next = NULL;
+    }
   else
     {
       while (work->next != NULL)
@@ -268,6 +277,9 @@ cache_search_neg (const char *key)
   neghash *work;
   unsigned long int hash = __nis_hash (key, strlen (key)) % modulo;
 
+  if (debug_flag)
+    dbg_log (_("grp_cache_search_neg (%s|%ld)"), key, hash);
+
   work = &negtbl[hash];
 
   while (work->key != NULL)
@@ -286,7 +298,7 @@ void *
 cache_getgrnam (void *v_param)
 {
   param_t *param = (param_t *)v_param;
-  struct group *grp, resultbuf;
+  struct group *grp;
 
   pthread_rwlock_rdlock (&grplock);
   grp = cache_search_name (param->key);
@@ -294,7 +306,7 @@ cache_getgrnam (void *v_param)
   /* I don't like it to hold the read only lock longer, but it is
      necessary to avoid to much malloc/free/strcpy.  */
 
-  if (grp)
+  if (grp != NULL)
     {
       if (debug_flag)
 	dbg_log (_("Found \"%s\" in cache !"), param->key);
@@ -307,9 +319,10 @@ cache_getgrnam (void *v_param)
     }
   else
     {
+      int status;
       int buflen = 1024;
       char *buffer = calloc (1, buflen);
-      int status;
+      struct group resultbuf;
 
       if (debug_flag)
 	dbg_log (_("Doesn't found \"%s\" in cache !"), param->key);
@@ -370,6 +383,9 @@ void *
 cache_gr_disabled (void *v_param)
 {
   param_t *param = (param_t *)v_param;
+
+  if (debug_flag)
+    dbg_log (_("\tgroup cache is disabled\n"));
 
   gr_send_disabled (param->conn);
   return NULL;

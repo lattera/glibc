@@ -278,7 +278,7 @@ write_sample_server (definition * def)
 	  f_print(fout, "\txdr_free (xdr_result, result);\n");
 	  f_print(fout,
 		  "\n\t/*\n\t * Insert additional freeing code here, if needed\n\t */\n");
-	  f_print(fout, "\n\treturn 0;\n}\n");
+	  f_print(fout, "\n\treturn 1;\n}\n");
 	}
     }
 }

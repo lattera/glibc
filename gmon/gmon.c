@@ -79,6 +79,10 @@ __moncontrol (mode)
 {
   struct gmonparam *p = &_gmonparam;
 
+  /* Don't change the state if we ran into an error.  */
+  if (p->state == GMON_PROF_ERROR)
+    return;
+
   if (mode)
     {
       /* start */
@@ -131,7 +135,9 @@ __monstartup (lowpc, highpc)
   cp = calloc (p->kcountsize + p->fromssize + p->tossize, 1);
   if (! cp)
     {
-      ERR(_("monstartup: out of memory\n"));
+      ERR("monstartup: out of memory\n");
+      p->tos = NULL;
+      p->state = GMON_PROF_ERROR;
       return;
     }
   p->tos = (struct tostruct *)cp;
@@ -350,10 +356,12 @@ weak_alias (__write_profiling, write_profiling)
 void
 _mcleanup (void)
 {
-    __moncontrol (0);
+  __moncontrol (0);
 
+  if (_gmonparam.state != GMON_PROF_ERROR)
     write_gmon ();
 
-    /* free the memory. */
+  /* free the memory. */
+  if (_gmonparam.tos != NULL)
     free (_gmonparam.tos);
 }

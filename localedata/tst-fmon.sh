@@ -32,19 +32,19 @@ for l in $lang; do
     cns=`echo $l | sed 's/\(.*\)[.][^.]*/\1/'`
     cn=locales/$cns
     fn=charmaps/`echo $l | sed 's/.*[.]\([^.]*\)/\1/'`
-    LD_LIBRARY_PATH=$common_objpfx I18NPATH=./locales \
-    ${common_objpfx}elf/ld.so ${common_objpfx}locale/localedef \
+    I18NPATH=./locales \
+    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
+    ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
 done
 
 # Run the tests.
 IFS="	"                # This is a TAB
-cat $datafile |
 while read locale format value expect; do
     if [ -n "$format" ]; then
 	LOCPATH=${common_objpfx}localedata \
-	LD_LIBRARY_PATH=$common_objpfx \
-	${common_objpfx}elf/ld.so ${common_objpfx}localedata/tst-fmon \
+	${common_objpfx}elf/ld.so --library-path $common_objpfx \
+        ${common_objpfx}localedata/tst-fmon \
 	    "$locale" "$format" "$value" "$expect"
 	if [ $? -eq 0 ]; then
 	    if [ $DEBUG -eq 1 ]; then
@@ -57,7 +57,7 @@ while read locale format value expect; do
 	    exit 1
 	fi
     fi
-done
+done < $datafile
 
 exit $?
 # Local Variables:

@@ -393,7 +393,7 @@ pw_send_disabled (int conn)
 
   if (sock[conn] == 0)
     {
-      dbg_log ("bad connection id on send response [%d|%d]",
+      dbg_log (_("bad connection id on send response [%d|%d]"),
 	       conn, sock[conn]);
       return;
     }

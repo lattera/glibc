@@ -17,6 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <elf.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <link.h>
@@ -67,7 +68,7 @@
 #define byteorder ELFDATANONE
 #endif
 
-#define STRING(x) #x
+#define STRING(x) __STRING (x)
 
 #ifdef MAP_ANON
 /* The fd is not examined when using MAP_ANON.  */
@@ -561,7 +562,7 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 #define ELF32_CLASS ELFCLASS32
 #define ELF64_CLASS ELFCLASS64
   if (header->e_ident[EI_CLASS] != ELFW(CLASS))
-    LOSE ("ELF file class not " STRING(__ELF_WORDSIZE) "-bit");
+    LOSE ("ELF file class not " STRING(__ELF_NATIVE_CLASS) "-bit");
   if (header->e_ident[EI_DATA] != byteorder)
     LOSE ("ELF file data encoding not " byteorder_name);
   if (header->e_ident[EI_VERSION] != EV_CURRENT)

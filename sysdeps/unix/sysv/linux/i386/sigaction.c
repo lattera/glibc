@@ -28,8 +28,8 @@
 #include <kernel_sigaction.h>
 
 
-extern int __syscall_rt_sigaction (int, const struct sigaction *,
-				   struct sigaction *, size_t);
+extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
+				   struct kernel_sigaction *, size_t);
 
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  */
@@ -47,27 +47,34 @@ __sigaction (int sig, const struct sigaction *act, struct sigaction *oact)
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
     {
-      struct sigaction nact, *nactp;
+      struct kernel_sigaction kact, koact;
 
       if (act)
 	{
-	  nact.sa_handler = act->sa_handler;
-	  memcpy (&nact.sa_mask, &act->sa_mask, sizeof (sigset_t));
-	  nact.sa_flags = act->sa_flags;
+	  kact.k_sa_handler = act->sa_handler;
+	  memcpy (&kact.sa_mask, &act->sa_mask, sizeof (sigset_t));
+	  kact.sa_flags = act->sa_flags;
 
-	  nact.sa_restorer = ((act->sa_flags & SA_NOMASK)
+	  kact.sa_restorer = ((act->sa_flags & SA_NOMASK)
 			      ? &&restore_nomask : &&restore);
-	  nactp = &nact;
 	}
-      else
-	nactp = NULL;
 
       /* XXX The size argument hopefully will have to be changed to the
 	 real size of the user-level sigset_t.  */
-      result = __syscall_rt_sigaction (sig, nactp, oact, _NSIG / 8);
+      result = __syscall_rt_sigaction (sig, act ? &kact : NULL,
+				       oact ? &koact : NULL, _NSIG / 8);
 
       if (result >= 0 || errno != ENOSYS)
-	return result;
+	{
+	  if (oact && result >= 0)
+	    {
+	      oact->sa_handler = koact.k_sa_handler;
+	      memcpy (&oact->sa_mask, &koact.sa_mask, sizeof (sigset_t));
+	      oact->sa_flags = koact.sa_flags;
+	      oact->sa_restorer = koact.sa_restorer;
+	    }
+	  return result;
+	}
 
       __libc_missing_rt_sigs = 1;
     }

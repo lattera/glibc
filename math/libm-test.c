@@ -902,7 +902,7 @@ asin_test (void)
   check ("asin (1.0) ==  pi/2", FUNC(asin) (1.0), M_PI_2l);
   check ("asin (-1.0) ==  -pi/2", FUNC(asin) (-1.0), -M_PI_2l);
   check_eps ("asin (0.7) ==  0.775397496...", FUNC(asin) (0.7),
-	     0.7753974966107530637L, CHOOSE(7e-17L, 2e-16, 0));
+	     0.7753974966107530637L, CHOOSE(7e-17L, 2e-16, 2e-7));
 }
 
 
@@ -917,7 +917,7 @@ asinh_test (void)
   check_isinfn ("asinh(-inf) == -inf", FUNC(asinh) (minus_infty));
 #endif
   check_eps ("asinh(0.7) == 0.652666566...", FUNC(asinh) (0.7),
-	     0.652666566082355786L, CHOOSE(4e-17L, 0, 0));
+	     0.652666566082355786L, CHOOSE(4e-17L, 0, 6e-8));
 
 }
 
@@ -1945,7 +1945,7 @@ tanh_test (void)
   check ("tanh (-inf) == -1", FUNC(tanh) (minus_infty), -1);
 #endif
   check_eps ("tanh (0.7) == 0.6043677771...", FUNC(tanh) (0.7),
-	     0.60436777711716349631L, CHOOSE(3e-17L, 0, 0));
+	     0.60436777711716349631L, CHOOSE(3e-17L, 0, 6e-8));
 }
 
 
@@ -2708,7 +2708,7 @@ cexp_test (void)
 
   result = FUNC(cexp) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(cexp(0.7 + i 1.2)) == 0.72969...", __real__ result,
-	     0.7296989091503236012L, CHOOSE(6e-17L, 0, 2e-7));
+	     0.7296989091503236012L, CHOOSE(6e-17L, 2e-16, 2e-7));
   check_eps ("imag(cexp(0.7 + i 1.2)) == 1.87689...", __imag__ result,
 	     1.8768962328348102821L, CHOOSE(2e-16L, 0, 3e-7));
 
@@ -4603,9 +4603,9 @@ ctanh_test (void)
 
   result = FUNC(ctanh) (BUILD_COMPLEX (0.7, 1.2));
   check_eps ("real(ctanh(0.7 + i 1.2)) == 1.34721...", __real__ result,
-	     1.3472197399061191630L, CHOOSE(4e-17L, 6e-17, 2e-7));
+	     1.3472197399061191630L, CHOOSE(4e-17L, 3e-16, 2e-7));
   check_eps ("imag(ctanh(0.7 + i 1.2)) == -0.47786...", __imag__ result,
-	     0.4778641038326365540L, CHOOSE(9e-17L, 6e-17, 0));
+	     0.4778641038326365540L, CHOOSE(9e-17L, 6e-17, 9e-8));
 
   result = FUNC(ctanh) (BUILD_COMPLEX (-2, -3));
   check_eps ("real(ctanh(-2 - i 3)) == -0.96538...", __real__ result,

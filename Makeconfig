@@ -551,8 +551,8 @@ libio-include = -I$(..)libio
 CPPFLAGS = $(+includes) $(defines) -include $(..)include/libc-symbols.h \
 	   $(sysdep-CPPFLAGS) $(CPPFLAGS-$(suffix $@)) $(CPPFLAGS-$(<F)) \
 	   $(CPPFLAGS-$(@F))
-override CFLAGS	= $(+cflags) $(sysdep-CFLAGS) $(CFLAGS-$(suffix $@)) \
-		  $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
+override CFLAGS	= $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
+		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
 
 # This is the macro that the implicit linking rules use.
@@ -576,6 +576,7 @@ all-object-suffixes := .o .os .op .og .ob
 object-suffixes :=
 ifeq (yes,$(build-static))
 CPPFLAGS-.o = $(pic-default)
+CFLAGS-.o = $(filter %frame-pointer,$(+cflags))
 libtype.o := lib%.a
 object-suffixes += .o
 endif
@@ -584,7 +585,7 @@ ifeq (yes,$(build-shared))
 # The PIC object files are named foo.os.
 object-suffixes += .os
 CPPFLAGS-.os = -DPIC
-CFLAGS-.os = $(pic-ccflag)
+CFLAGS-.os = $(filter %frame-pointer,$(+cflags)) $(pic-ccflag)
 libtype.os := lib%_pic.a
 # This can be changed by a sysdep makefile
 pic-ccflag = -fPIC
@@ -604,8 +605,8 @@ ifeq (yes,$(build-omitfp))
 object-suffixes += .og
 CPPFLAGS-.og = $(pic-default)
 CFLAGS-.og = -g
-CFLAGS-.o = -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
-CFLAGS-.os += $(CFLAGS-.o)
+CFLAGS-.o = $(filter %frame-pointer,$(+cflags)) -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
+CFLAGS-.os += -g0 -O99 -fomit-frame-pointer -D__USE_STRING_INLINES
 libtype.og = lib%_g.a
 endif
 ifeq (yes,$(build-bounded))

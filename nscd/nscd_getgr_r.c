@@ -205,7 +205,12 @@ __nscd_getgr_r (const char *key, request_type type, struct group *resultbuf,
 	      return 1;
 	    }
 	}
+      close (sock);
+      return 0;
     }
-  close (sock);
-  return 0;
+  else
+    {
+      close (sock);
+      return -1;
+    }
 }

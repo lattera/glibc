@@ -1,3 +1,85 @@
+1998-02-24 15:12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Filter out frame-pointer effecting options when
+	compiling profiling or debugging code.
+	* config.h.in (internal_function): Don't define here if PROF is
+	defined.
+	* gmon/gmon.c (__moncontrol): Don't change state if already in error
+	state.
+	(__monstartup): If calloc fails set error state and mark array as
+	not allocated.
+	(_mcleanup): Don't call write_gmon if in error state.  Don't try
+	to free array if not  successfully allocated.
+
+	* elf/dl-load.c (STRING): Define to __STRING to enble expansion.
+	Include elf.h to get macro definitions.
+	Use __ELF?NATIVE?CLASS in message, not __ELF_WORDSIZE.
+
+1998-02-24 09:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.sh.in: Add compatibility for broken old shells.
+	* elf/ldd.bash.in: Likewise.
+
+1998-02-24 08:11  H.J. Lu  <hjl@gnu.org>
+
+	* sunrpc/rpc_main.c (open_input): Check pipe return error.
+
+	* time/clocktest.c (main): Check signal return error.
+
+1998-02-24  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* iconv/Makefile ($(inst_bindir)/iconv): Correct typo, add
+	"/" and use do-install-program. Reported by Mark M. Kettenis.
+	(subdir_install):  Likewise.
+
+1998-02-22  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/rpc_sample.c: Fix typo.
+
+	* nscd/connections.c: Use locale.
+	* nscd/grpcache.c: Add debug messages, gidtbl should get the
+	  calloc result.
+	* nscd/nscd.c: Check if init functions fails.
+	* nscd/nscd_conf.c: Allow disabling of group cache.
+	* nscd/nscd_getgr_r.c: Fix return code if group not found.
+	* nscd/pwdcache.c: Fix debug messages.
+
+1998-02-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Add __monstartup and _mcleanup for profiling support.
+
+1998-02-20  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Export __getpagesize, for binary compatibility with
+	2.0.
+
+1998-02-21  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/globtest.sh: Use --library-path instead of
+	LD_LIBRARY_PATH.
+	* localedata/sort-test.sh: Likewise.
+	* localedata/tst-fmon.sh: Likewise.  Avoid useless use of cat.
+
+1998-02-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: Translate between struct
+	sigaction and struct kernel_sigaction for __syscall_rt_sigaction.
+	* sysdeps/unix/sysv/linux/i386/sigaction.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h (struct
+	kernel_sigaction): Define.
+	* sysdeps/unix/sysv/linux/alpha/kernel_sigaction.h (struct
+	kernel_sigaction): Define.
+
+1998-02-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm-test.c: Change epsilons for libm-ieee754.
+
+1998-02-23 12:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/__longjmp.S: Fix race condition.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 1998-02-20 18:43  Ulrich Drepper  <drepper@cygnus.com>
 
 	* hesiod/hesiod.c: Pretty print.  Don't use __ protected names.
