@@ -1,3 +1,7 @@
+2003-06-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/Makefile (CFLAGS-librt-cancellation.c): Define.
+
 2003-06-26  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/configure.in: Barf rather than define NO_CREATION_TIME.

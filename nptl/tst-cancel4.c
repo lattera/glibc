@@ -1891,6 +1891,8 @@ tf_msgrcv (void *arg)
 	}
     }
 
+  ssize_t s;
+
   pthread_cleanup_push (cl, NULL);
 
   struct
@@ -1906,13 +1908,13 @@ tf_msgrcv (void *arg)
   do
     {
       errno = 0;
-      msgrcv (tempmsg, (struct msgbuf *) &m, 10, randnr, 0);
+      s = msgrcv (tempmsg, (struct msgbuf *) &m, 10, randnr, 0);
     }
-  while (errno == EIDRM);
+  while (errno == EIDRM || errno == EINTR);
 
   pthread_cleanup_pop (0);
 
-  printf ("%s: msgrcv returned\n", __FUNCTION__);
+  printf ("%s: msgrcv returned %zd with errno = %m\n", __FUNCTION__, s);
 
   exit (1);
 }

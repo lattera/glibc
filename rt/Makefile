@@ -51,6 +51,7 @@ include ../Rules
 
 CFLAGS-aio_suspend.c = -fexceptions
 CFLAGS-clock_nanosleep.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-librt-cancellation.c = -fasynchronous-unwind-tables
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by

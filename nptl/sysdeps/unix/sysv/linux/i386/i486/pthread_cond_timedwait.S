@@ -334,8 +334,9 @@ versioned_symbol (libpthread, __pthread_cond_timedwait, pthread_cond_timedwait,
 
 	.type	__condvar_tw_cleanup3, @function
 __condvar_tw_cleanup3:
-	leal	wakeup_seq(%edx), %ebx # XXX Is this correct?  %edx preserved?
+	movl	40(%esp), %ebx
 .LSbl5:
+	jmp	__condvar_tw_cleanup
 	.size	__condvar_tw_cleanup3, .-__condvar_tw_cleanup3
 	.type	__condvar_tw_cleanup2, @function
 __condvar_tw_cleanup2:
