@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -115,6 +115,12 @@ typedef union querybuf
   HEADER hdr;
   u_char buf[MAXPACKET];
 } querybuf;
+
+/* These functions are defined in res_comp.c.  */
+#define NS_MAXCDNAME	255	/* maximum compressed domain name */
+extern int __ns_name_ntop __P ((const u_char *, char *, size_t));
+extern int __ns_name_unpack __P ((const u_char *, const u_char *,
+				  const u_char *, u_char *, size_t));
 
 
 static enum nss_status getanswer_r (const querybuf *answer, int anslen,
@@ -315,6 +321,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
   char tbuf[MAXDNAME];
   const char *tname;
   int (*name_ok) __P ((const char *));
+  u_char packtmp[NS_MAXCDNAME];
 
   tname = qname;
   result->h_name = NULL;
@@ -346,20 +353,27 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       return NSS_STATUS_UNAVAIL;
     }
 
-  n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
-  if (n < 0 || (*name_ok) (bp) == 0)
+  n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			packtmp, sizeof packtmp);
+  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
     {
       if (errno == EMSGSIZE)
 	{
-	  /* There is not enough room in the input buffer.  */
 	  *errnop = ERANGE;
 	  *h_errnop = NETDB_INTERNAL;
+	  return NSS_STATUS_TRYAGAIN;
 	}
-      else
-	{
-	  *errnop = errno;
-	  *h_errnop = NO_RECOVERY;
-	}
+
+      n = -1;
+    }
+
+  if (n > 0 && bp[0] == '.')
+    bp[0] = '\0';
+
+  if (n < 0 || (*name_ok) (bp) == 0)
+    {
+      *errnop = errno;
+      *h_errnop = NO_RECOVERY;
       return NSS_STATUS_UNAVAIL;
     }
   cp += n + QFIXEDSZ;
@@ -396,7 +410,20 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
     {
       int type, class;
 
-      n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
+      n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			    packtmp, sizeof packtmp);
+      if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	{
+	  if (errno == EMSGSIZE)
+	    {
+	      *errnop = ERANGE;
+	      *h_errnop = NETDB_INTERNAL;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  n = -1;
+	}
+
       if (n < 0 || (*name_ok) (bp) == 0)
 	{
 	  ++had_error;
@@ -405,9 +432,9 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       cp += n;				/* name */
       type = _getshort (cp);
       cp += INT16SZ;			/* type */
-      class = _getshort(cp);
+      class = _getshort (cp);
       cp += INT16SZ + INT32SZ;		/* class, TTL */
-      n = _getshort(cp);
+      n = _getshort (cp);
       cp += INT16SZ;			/* len */
       if (class != C_IN)
 	{
@@ -444,8 +471,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      continue;
 	    }
-	  result->h_name = strcpy (bp, tbuf);	/* Cannot overflow.  */
-	  bp += n;
+	  result->h_name = bp;
+	  bp = __mempcpy (bp, tbuf, n);	/* Cannot overflow.  */
 	  linebuflen -= n;
 	  continue;
 	}
@@ -466,8 +493,8 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      ++had_error;
 	      continue;
 	    }
-	  tname = strcpy (bp, tbuf);	/* Cannot overflow.  */
-	  bp += n;
+	  tname = bp;
+	  bp = __mempcpy (bp, tbuf, n);	/* Cannot overflow.  */
 	  linebuflen -= n;
 	  continue;
 	}
@@ -493,13 +520,27 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       switch (type)
 	{
 	case T_PTR:
-	  if (strcasecmp (tname, bp) != 0)
+	  if (__strcasecmp (tname, bp) != 0)
 	    {
 	      syslog (LOG_NOTICE | LOG_AUTH, AskedForGot, qname, bp);
 	      cp += n;
 	      continue;			/* XXX - had_error++ ? */
 	    }
-	  n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
+
+	  n = __ns_name_unpack (answer->buf, end_of_message, cp,
+				packtmp, sizeof packtmp);
+	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	    {
+	      if (errno == EMSGSIZE)
+		{
+		  *errnop = ERANGE;
+		  *h_errnop = NETDB_INTERNAL;
+		  return NSS_STATUS_TRYAGAIN;
+		}
+
+	      n = -1;
+	    }
+
 	  if (n < 0 || res_hnok (bp) == 0)
 	    {
 	      ++had_error;
@@ -577,8 +618,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      cp += n;
 	      continue;
 	    }
-	  memcpy (*hap++ = bp, cp, n);
-	  bp += n;
+	  bp = __mempcpy (*hap++ = bp, cp, n);
 	  cp += n;
 	  linebuflen -= n;
 	  break;
@@ -606,10 +646,16 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
       if (result->h_name == NULL)
 	{
 	  n = strlen (qname) + 1;	/* For the \0.  */
-	  if (n > linebuflen || n >= MAXHOSTNAMELEN)
+	  if (n > linebuflen)
+	    {
+	      *errnop = ERANGE;
+	      *h_errnop = NETDB_INTERNAL;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+	  if (n >= MAXHOSTNAMELEN)
 	    goto no_recovery;
-	  result->h_name = strcpy (bp, qname);	/* Cannot overflow.  */
-	  bp += n;
+	  result->h_name = bp;
+	  bp = __mempcpy (bp, qname, n);	/* Cannot overflow.  */
 	  linebuflen -= n;
 	}
 

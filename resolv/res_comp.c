@@ -75,10 +75,10 @@ static char rcsid[] = "$Id$";
 # include "../conf/portability.h"
 #endif
 
-static int	ns_name_ntop __P((const u_char *, char *, size_t));
+extern int	__ns_name_ntop __P((const u_char *, char *, size_t));
 static int	ns_name_pton __P((const char *, u_char *, size_t));
-static int	ns_name_unpack __P((const u_char *, const u_char *,
-				    const u_char *, u_char *, size_t));
+extern int	__ns_name_unpack __P((const u_char *, const u_char *,
+				      const u_char *, u_char *, size_t));
 static int	ns_name_pack __P((const u_char *, u_char *, int,
 				  const u_char **, const u_char **));
 static int	ns_name_uncompress __P((const u_char *, const u_char *,
@@ -349,7 +349,7 @@ __putlong(l, msgp)
 
 /* Data. */
 
-static char		digits[] = "0123456789";
+static const char	digits[] = "0123456789";
 
 /* Forward. */
 
@@ -370,8 +370,8 @@ static int		dn_find(const u_char *, const u_char *,
  *	The root is returned as "."
  *	All other domains are returned in non absolute form
  */
-static int
-ns_name_ntop(src, dst, dstsiz)
+int
+__ns_name_ntop(src, dst, dstsiz)
 	const u_char *src;
 	char *dst;
 	size_t dstsiz;
@@ -388,7 +388,7 @@ ns_name_ntop(src, dst, dstsiz)
 	while ((n = *cp++) != 0) {
 		if ((n & NS_CMPRSFLGS) != 0) {
 			/* Some kind of compression pointer. */
-			__set_errno (EMSGSIZE);
+			__set_errno (EINVAL);
 			return (-1);
 		}
 		if (dn != dst) {
@@ -565,8 +565,8 @@ ns_name_pton(src, dst, dstsiz)
  * return:
  *	-1 if it fails, or consumed octets if it succeeds.
  */
-static int
-ns_name_unpack(msg, eom, src, dst, dstsiz)
+int
+__ns_name_unpack(msg, eom, src, dst, dstsiz)
 	const u_char *msg;
 	const u_char *eom;
 	const u_char *src;
@@ -767,9 +767,9 @@ ns_name_uncompress(msg, eom, src, dst, dstsiz)
 	u_char tmp[NS_MAXCDNAME];
 	int n;
 
-	if ((n = ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1)
+	if ((n = __ns_name_unpack(msg, eom, src, tmp, sizeof tmp)) == -1)
 		return (-1);
-	if (ns_name_ntop(tmp, dst, dstsiz) == -1)
+	if (__ns_name_ntop(tmp, dst, dstsiz) == -1)
 		return (-1);
 	return (n);
 }

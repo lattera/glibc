@@ -67,3 +67,7 @@ libutil {
 libdb1 {
   GLIBC_2.0
 }
+ld.so {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}

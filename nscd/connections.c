@@ -1,5 +1,5 @@
 /* Inner loops of cache daemon.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -24,6 +24,7 @@
 #include <pthread.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <arpa/inet.h>
 #include <sys/param.h>
 #include <sys/poll.h>
 #include <sys/socket.h>
@@ -214,7 +215,19 @@ cannot handle old request version %d; current version is %d"),
       struct database *db = &dbs[serv2db[req->type]];
 
       if (debug_level > 0)
-	dbg_log ("\t%s (%s)", serv2str[req->type], key);
+	{
+	  if (req->type == GETHOSTBYADDR || req->type == GETHOSTBYADDRv6)
+	    {
+	      char buf[INET6_ADDRSTRLEN];
+
+	      dbg_log ("\t%s (%s)", serv2str[req->type],
+		       inet_ntop (req->type == GETHOSTBYADDR
+				  ? AF_INET : AF_INET6,
+				  key, buf, sizeof (buf)));
+	    }
+	  else
+	    dbg_log ("\t%s (%s)", serv2str[req->type], key);
+	}
 
       /* Is this service enabled?  */
       if (!db->enabled)

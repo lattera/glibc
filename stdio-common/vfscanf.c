@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
 #include <wctype.h>
 #include <bits/libc-lock.h>
 #include <locale/localeinfo.h>
@@ -199,6 +200,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   wchar_t decimal;
   /* The thousands character of the current locale.  */
   wchar_t thousands;
+  /* State for the conversions.  */
+  mbstate_t state;
   /* Integral holding variables.  */
   union
     {
@@ -247,16 +250,24 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   ARGCHECK (s, format);
 
   /* Figure out the decimal point character.  */
-  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+  memset (&state, '\0', sizeof (state));
+  if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+		 strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)), &state)
+      <= 0)
     decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
   /* Figure out the thousands separator character.  */
-  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-	      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+  memset (&state, '\0', sizeof (state));
+  if (__mbrtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		 strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
+		 &state) <= 0)
     thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 
   /* Lock the stream.  */
   LOCK_STREAM (s);
+
+
+  /* From now on we use `state' to convert the format string.  */
+  memset (&state, '\0', sizeof (state));
 
   /* Run through the format string.  */
   while (*f != '\0')
@@ -298,7 +309,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen (f, strlen (f));
+	  int len = __mbrlen (f, strlen (f), &state);
 	  if (len > 0)
 	    {
 	      do
@@ -973,6 +984,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
+	      if (! isdigit (c) && c != decimal)
+		{
+		  /* This is no valid number.  */
+		  ungetc (c, s);
+		  input_error ();
+		}
 	      if (width > 0)
 		--width;
 	    }
@@ -1008,7 +1025,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  if (_tolower (c) == 'i')
 		    {
-		      /* No we have to read the rest as well.  */
+		      /* Now we have to read the rest as well.  */
 		      ADDW (c);
 		      if (inchar () == EOF || _tolower (c) != 'n')
 			input_error ();

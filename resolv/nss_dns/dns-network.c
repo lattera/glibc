@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Extended from original form by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -94,6 +94,12 @@ typedef union querybuf
   HEADER hdr;
   u_char buf[MAXPACKET];
 } querybuf;
+
+/* These functions are defined in res_comp.c.  */
+#define NS_MAXCDNAME	255	/* maximum compressed domain name */
+extern int __ns_name_ntop __P ((const u_char *, char *, size_t));
+extern int __ns_name_unpack __P ((const u_char *, const u_char *,
+				  const u_char *, u_char *, size_t));
 
 
 /* Prototypes for local functions.  */
@@ -235,6 +241,7 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
   char **alias_pointer;
   int have_answer;
   char *ans;
+  u_char packtmp[NS_MAXCDNAME];
 
   if (question_count == 0)
     {
@@ -267,6 +274,22 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
       int n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
       int type, class;
 
+      n = __ns_name_unpack (answer->buf, end_of_message, cp,
+			    packtmp, sizeof packtmp);
+      if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	{
+	  if (errno == EMSGSIZE)
+	    {
+	      errno = ERANGE;
+	      return NSS_STATUS_TRYAGAIN;
+	    }
+
+	  n = -1;
+	}
+
+      if (n > 0 && bp[0] == '.')
+	bp[0] = '\0';
+
       if (n < 0 || res_dnok (bp) == 0)
 	break;
       cp += n;
@@ -278,7 +301,19 @@ getanswer_r (const querybuf *answer, int anslen, struct netent *result,
 
       if (class == C_IN && type == T_PTR)
 	{
-	  n = dn_expand (answer->buf, end_of_message, cp, bp, linebuflen);
+	  n = __ns_name_unpack (answer->buf, end_of_message, cp,
+				packtmp, sizeof packtmp);
+	  if (n != -1 && __ns_name_ntop (packtmp, bp, linebuflen) == -1)
+	    {
+	      if (errno == EMSGSIZE)
+		{
+		  errno = ERANGE;
+		  return NSS_STATUS_TRYAGAIN;
+		}
+
+	      n = -1;
+	    }
+
 	  if (n < 0 || !res_hnok (bp))
 	    {
 	      /* XXX What does this mean?  The original form from bind

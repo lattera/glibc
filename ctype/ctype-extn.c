@@ -30,12 +30,12 @@ isblank (int c)
 int
 _tolower (int c)
 {
-  return __tolower (c);
+  return c < -128 || c > 255 ? c : __ctype_tolower[c];
 }
 int
 _toupper (int c)
 {
-  return __toupper (c);
+  return c < -128 || c > 255 ? c : __ctype_toupper[c];
 }
 
 int

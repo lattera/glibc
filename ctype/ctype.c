@@ -39,11 +39,11 @@ func (isxdigit, _ISxdigit)
 int
 tolower (int c)
 {
-  return c >= -128 && c < 256 ? __tolower (c) : c;
+  return c >= -128 && c < 256 ? __ctype_tolower[c] : c;
 }
 
 int
 toupper (int c)
 {
-  return c >= -128 && c < 256 ? __toupper (c) : c;
+  return c >= -128 && c < 256 ? __ctype_toupper[c] : c;
 }

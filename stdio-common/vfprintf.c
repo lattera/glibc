@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1121,10 +1121,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       /* XXX Completely wrong.  Use wctob.  */
       if (grouping == (const char *) -1)
 	{
+	  mbstate_t mbstate;
+
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc (&thousands_sep,
-		      _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	  memset (&mbstate, '\0', sizeof (mbstate));
+	  if (__mbrtowc (&thousands_sep,
+			 _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+			 strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
+			 &mbstate) <= 0)
 	    thousands_sep = (wchar_t)
 	      *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	  grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
@@ -1284,11 +1288,14 @@ do_positional:
 
     if (grouping == (const char *) -1)
       {
-	/* XXX Use wctob.  But this is incompatible for now.  */
+	mbstate_t mbstate;
+
 	/* Figure out the thousands separator character.  */
-	if (mbtowc (&thousands_sep,
-		    _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		    strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+	memset (&mbstate, '\0', sizeof (mbstate));
+	if (__mbrtowc (&thousands_sep,
+		       _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+		       strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
+		       &mbstate) <= 0)
 	  thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
 	if (*grouping == '\0' || *grouping == CHAR_MAX

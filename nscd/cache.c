@@ -225,10 +225,23 @@ prune_cache (struct database *table, time_t now)
 	  struct hashentry *old = head;
 
 	  if (debug_level > 0)
-	    dbg_log ("remove %s entry \"%s\"",
-		     serv2str[old->type],
-		     old->last
-		     ? old->key : old->data == (void *) -1 ? old->key : "???");
+	    {
+	      char buf[INET6_ADDRSTRLEN];
+	      const char *str;
+
+	      if ((old->type == GETHOSTBYADDR || old->type == GETHOSTBYADDRv6)
+		  && (old->last || old->data == (void *) -1))
+		{
+		  inet_ntop (old->type == GETHOSTBYADDR ? AF_INET : AF_INET6,
+			     old->key, buf, sizeof (buf));
+		  str = buf;
+		}
+	      else
+		str = old->last ? old->key : (old->data == (void *) -1
+					      ? old->key : "???");
+
+	      dbg_log ("remove %s entry \"%s\"", serv2str[old->type], str);
+	    }
 
 	  /* Free the data structures.  */
 	  if (old->data == (void *) -1)

@@ -1,5 +1,5 @@
 /* Cache handling for host lookup.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -324,7 +324,7 @@ addhstbyaddr (struct database *db, int fd, request_header *req, void *key)
 
   if (debug_level > 0)
     {
-      char buf[64];
+      char buf[INET_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
 	       inet_ntop (AF_INET, key, buf, sizeof (buf)));
     }
@@ -356,7 +356,12 @@ addhstbynamev6 (struct database *db, int fd, request_header *req, void *key)
   struct hostent *hst;
 
   if (debug_level > 0)
-    dbg_log (_("Haven't found \"%s\" in hosts cache!"), key);
+    {
+      char buf[INET6_ADDRSTRLEN];
+
+      dbg_log (_("Haven't found \"%s\" in hosts cache!"),
+	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
+    }
 
   while (gethostbyname2_r (key, AF_INET6, &resultbuf, buffer, buflen, &hst,
 			   &h_errno) != 0
@@ -386,7 +391,7 @@ addhstbyaddrv6 (struct database *db, int fd, request_header *req, void *key)
 
   if (debug_level > 0)
     {
-      char buf[64];
+      char buf[INET6_ADDRSTRLEN];
       dbg_log (_("Haven't found \"%s\" in hosts cache!"),
 	       inet_ntop (AF_INET6, key, buf, sizeof (buf)));
     }

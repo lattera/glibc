@@ -42,6 +42,10 @@ libresolv {
     __res_send;
     __sym_ntop; __sym_ntos; __sym_ston;
   }
+  GLIBC_2.1 {
+    # Needed in libnss_dns.
+    __ns_name_unpack; __ns_name_ntop;
+  }
 }
 
 libnss_dns {

@@ -82,9 +82,6 @@ extern __const __int32_t *__ctype_toupper; /* Case conversions.  */
 #define	__isascii(c)	(((c) & ~0x7f) == 0)	/* If C is a 7 bit value.  */
 #define	__toascii(c)	((c) & 0x7f)		/* Mask off high bits.  */
 
-#define	__tolower(c)	((int) __ctype_tolower[(int) (c)])
-#define	__toupper(c)	((int) __ctype_toupper[(int) (c)])
-
 #define	__exctype(name)	extern int name __P ((int))
 
 /* The following names are all functions:
@@ -128,7 +125,8 @@ extern int toascii __P ((int __c));
 #endif /* Use SVID or use misc.  */
 
 #if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
-/* These are the same as `toupper' and `tolower'.  */
+/* These are the same as `toupper' and `tolower' except that they do not
+   check the argument for being in the range of a `char'.  */
 __exctype (_toupper);
 __exctype (_tolower);
 #endif
@@ -151,26 +149,47 @@ __exctype (_tolower);
 #endif
 
 #if defined __OPTIMIZE__ && !defined __OPTIMIZE_SIZE__ \
-    && defined __USE_EXTERN_INLINES
+ && defined __USE_EXTERN_INLINES
 extern __inline int
 tolower (int __c)
 {
-  return __c >= -128 && __c < 256 ? __tolower (__c) : __c;
+  return __c >= -128 && __c < 256 ? __ctype_tolower[__c] : __c;
 }
 
 extern __inline int
 toupper (int __c)
 {
-  return __c >= -128 && __c < 256 ? __toupper (__c) : __c;
+  return __c >= -128 && __c < 256 ? __ctype_toupper[__c] : __c;
 }
 #endif
 
-#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
-# define isascii(c)	__isascii(c)
-# define toascii(c)	__toascii(c)
+#if __GNUC__ >= 2 && defined __OPTIMIZE__
+# define __tobody(c, f, a) \
+  ({ int __res;								      \
+     if (sizeof (c) > 1)						      \
+       {								      \
+	 if (__builtin_constant_p (c))					      \
+	   {								      \
+	     int __c = (c);						      \
+	     __res = __c < -128 || __c > 255 ? __c : a[__c];		      \
+	   }								      \
+	 else								      \
+	   __res = f (c);						      \
+       }								      \
+     else								      \
+       __res = a[(int) (c)];						      \
+     __res; })
 
-# define _tolower(c)	__tolower(c)
-# define _toupper(c)	__toupper(c)
+# define tolower(c) __tobody (c, tolower, __ctype_tolower)
+# define toupper(c) __tobody (c, toupper, __ctype_toupper)
+#endif	/* Optimizing gcc */
+
+#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
+# define isascii(c)	__isascii (c)
+# define toascii(c)	__toascii (c)
+
+# define _tolower(c)	((int) __ctype_tolower[(int) (c)])
+# define _toupper(c)	((int) __ctype_toupper[(int) (c)])
 #endif
 
 #endif /* Not __NO_CTYPE.  */

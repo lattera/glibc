@@ -41,6 +41,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #ifndef NDEBUG
 # define NDEBUG			/* Undefine this for debugging assertions.  */
@@ -233,14 +234,22 @@ __printf_fp (FILE *fp,
   /* Figure out the decimal point character.  */
   if (info->extra == 0)
     {
-      if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-		  strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+      mbstate_t state;
+
+      memset (&state, '\0', sizeof (state));
+      if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+		     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)),
+		     &state) <= 0)
 	decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
     }
   else
     {
-      if (mbtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
-		  strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT))) <= 0)
+      mbstate_t state;
+
+      memset (&state, '\0', sizeof (state));
+      if (__mbrtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
+		     strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT)),
+		     &state) <= 0)
 	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
     }
   /* Give default value.  */
@@ -262,19 +271,26 @@ __printf_fp (FILE *fp,
 	  /* Figure out the thousands separator character.  */
 	  if (info->extra == 0)
 	    {
-	      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC,
-						       THOUSANDS_SEP),
-			  strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)))
-		  <= 0)
+	      mbstate_t state;
+
+	      memset (&state, '\0', sizeof (state));
+	      if (__mbrtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC,
+							  THOUSANDS_SEP),
+			     strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
+			     &state) <= 0)
 		thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC,
 							THOUSANDS_SEP);
 	    }
 	  else
 	    {
-	      if (mbtowc (&thousands_sep, _NL_CURRENT (LC_MONETARY,
-						       MON_THOUSANDS_SEP),
-			  strlen (_NL_CURRENT (LC_MONETARY,
-					       MON_THOUSANDS_SEP))) <= 0)
+	      mbstate_t state;
+
+	      memset (&state, '\0', sizeof (state));
+	      if (__mbrtowc (&thousands_sep, _NL_CURRENT (LC_MONETARY,
+							  MON_THOUSANDS_SEP),
+			     strlen (_NL_CURRENT (LC_MONETARY,
+						  MON_THOUSANDS_SEP)),
+			     &state) <= 0)
 		thousands_sep = (wchar_t) *_NL_CURRENT (LC_MONETARY,
 							MON_THOUSANDS_SEP);
 	    }

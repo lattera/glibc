@@ -15,9 +15,6 @@ libc {
     errno;
   }
   GLIBC_2.1 {
-    # global variables
-    __libc_stack_end;
-
     # New special glibc functions.
     gnu_get_libc_release; gnu_get_libc_version;
   }

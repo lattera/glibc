@@ -55,7 +55,7 @@ endif
 before-compile = $(objpfx)trusted-dirs.h
 
 ifeq ($(versioning),yes)
-ld-map		= $(common-objpfx)libc.map
+ld-map		= $(common-objpfx)ld.so.map
 endif
 
 ifeq (yes,$(build-shared))

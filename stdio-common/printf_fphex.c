@@ -1,6 +1,6 @@
 /* Print floating point number in hexadecimal notation according to
    ISO C 9X.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,6 +26,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <wchar.h>
 #include "_itoa.h"
 #include <locale/localeinfo.h>
 
@@ -135,14 +136,22 @@ __printf_fphex (FILE *fp,
   /* Figure out the decimal point character.  */
   if (info->extra == 0)
     {
-      if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-		  strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
+      mbstate_t state;
+
+      memset (&state, '\0', sizeof (state));
+      if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+		     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)),
+		     &state) <= 0)
 	decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
     }
   else
     {
-      if (mbtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
-		  strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT))) <= 0)
+      mbstate_t state;
+
+      memset (&state, '\0', sizeof (state));
+      if (__mbrtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
+		     strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT)),
+		     &state) <= 0)
 	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
     }
   /* Give default value.  */
