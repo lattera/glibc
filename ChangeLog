@@ -1,5 +1,10 @@
 2001-05-11  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/configure.in: Move binutils check to...
+	* sysdeps/unix/sysv/linux/mips/configure.in: ...here.  New file.
+
+2001-05-11  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/unix/sysv/linux/configure.in: Check binutils version on
 	MIPS.
 
