@@ -36,19 +36,20 @@ strlen (const char *str)
 
   for (;;)
     {
+      const unsigned long int longword = *longword_ptr++;
       int mask;
-      asm ("cmpbge %1, %2, %0" : "=r" (mask) : "r" (0), "r" (*longword_ptr++));
+
+      /* Set bits in MASK if bytes in LONGWORD are zero.  */
+      asm ("cmpbge $31, %1, %0" : "=r" (mask) : "r" (longword));
       if (mask)
 	{
 	  /* Which of the bytes was the zero?  */
-
 	  const char *cp = (const char *) (longword_ptr - 1);
 	  int i;
 
-	  for (i = 0; i < 6; i++)
+	  for (i = 0; i < 8; i++)
 	    if (cp[i] == 0)
 	      return cp - str + i;
-	  return cp - str + 7;
 	}
     }
 }
