@@ -58,7 +58,7 @@ modules.so := $(addsuffix .so, $(modules))
 include ../Makeconfig
 
 ifeq (yes,$(build-shared))
-tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big
+tests = bug-iconv1 bug-iconv2 tst-loading tst-e2big tst-iconv4
 
 test-srcs := tst-table-from tst-table-to
 endif
@@ -321,6 +321,8 @@ $(objpfx)bug-iconv2.out: $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so))
 $(objpfx)tst-loading.out: $(objpfx)gconv-modules \
 			  $(addprefix $(objpfx),$(modules.so))
+$(objpfx)tst-iconv4.out: $(objpfx)gconv-modules \
+			 $(addprefix $(objpfx),$(modules.so))
 
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \

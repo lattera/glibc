@@ -1,3 +1,10 @@
+2002-11-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/Makefile (tests): Remove tst-iconv4.c
+	* iconv/tst-iconv4.c: Moved to...
+	* iconvdata/tst-iconv4.c: ...here.  New file.
+	* iconvdata/Makefile (tests): Add tst-iconv4.  Add dependencies.
+
 2002-11-25  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c: Include <ldsodefs.h>
