@@ -102,7 +102,7 @@ typedef void *psaddr_t;
 
 /* Register sets.  Linux has different names.  */
 typedef elf_gregset_t prgregset_t;
-typedef elf_fpregset_t *prfpregset_t;
+typedef elf_fpregset_t prfpregset_t;
 
 /* We don't have any differences between processes and threads,
    therefore habe only ine PID type.  */
