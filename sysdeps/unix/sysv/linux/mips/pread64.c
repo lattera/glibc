@@ -21,11 +21,18 @@
 #include <unistd.h>
 #include <endian.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
 #include <kernel-features.h>
+
+#ifdef __NR_pread64             /* Newer kernels renamed but it's the same.  */
+# ifdef __NR_pread
+#  error "__NR_pread and __NR_pread64 both defined???"
+# endif
+# define __NR_pread __NR_pread64
+#endif
 
 #if defined __NR_pread || __ASSUME_PREAD_SYSCALL > 0
 
@@ -48,6 +55,23 @@ __libc_pread64 (fd, buf, count, offset)
 {
   ssize_t result;
 
+
+  if (SINGLE_THREAD_P)
+    {
+     /* First try the syscall.  */
+     result = INLINE_SYSCALL (pread, 6, fd, CHECK_N (buf, count), count, 0,
+			      __LONG_LONG_PAIR ((off_t) (offset >> 32),
+			      (off_t) (offset & 0xffffffff)));
+# if __ASSUME_PREAD_SYSCALL == 0
+     if (result == -1 && errno == ENOSYS)
+     /* No system call available.  Use the emulation.  */
+     result = __emulate_pread64 (fd, buf, count, offset);
+# endif
+     return result;
+    }
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
   /* First try the syscall.  */
   result = INLINE_SYSCALL (pread, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
@@ -57,6 +81,9 @@ __libc_pread64 (fd, buf, count, offset)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread64 (fd, buf, count, offset);
 # endif
+
+  LIBC_CANCEL_RESET (oldtype);
+
   return result;
 }
 
