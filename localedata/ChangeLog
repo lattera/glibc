@@ -1,3 +1,8 @@
+2002-05-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/be_BY: Fix int_curr_symbol.
+	Patch by Alexander Mikhailian <lowry@altern.org> [PR libc/3565].
+
 2002-05-06  Jungshik Shin  <jshin@mailaps.org>
 
 	* charmaps/UTF-8: Fix wcwidth for Hangul Conjoining medial vowels
