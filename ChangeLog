@@ -1,3 +1,7 @@
+2004-02-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sysconf.c: Include stdlib.h.
+
 2004-02-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c: Pass result also to the nscd_* function.  Don't

@@ -1,3 +1,9 @@
+2004-02-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (tests): Add tst-cond14 and tst-cond15.
+	* tst-cond14.c: New file.
+	* tst-cond15.c: New file.
+
 2004-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/createthread.c (create_thread): Remove use of

@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <fcntl.h>
+#include <stdlib.h>
 #include <sysdep.h>
 #include <time.h>
 #include <unistd.h>
