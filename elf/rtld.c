@@ -1260,7 +1260,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
       struct link_map *l = _dl_new_object ((char *) "", "", lt_library, NULL);
       if (__builtin_expect (l != NULL, 1))
 	{
-	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT];
+	  static ElfW(Dyn) dyn_temp[DL_RO_DYN_TEMP_CNT] attribute_relro;
 
 	  l->l_phdr = ((const void *) GLRO(dl_sysinfo_dso)
 		       + GLRO(dl_sysinfo_dso)->e_phoff);
