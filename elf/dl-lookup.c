@@ -75,9 +75,11 @@ __libc_lock_define (extern, _dl_load_lock)
    without versioning.  gcc is not able to optimize a single function
    definition serving for both purposes so we define two functions.  */
 #define VERSIONED	0
+#define PROTECTED	0
 #include "do-lookup.h"
 
 #define VERSIONED	1
+#define PROTECTED	0
 #include "do-lookup.h"
 
 
@@ -194,13 +196,16 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
+  int protected;
+  int noexec = elf_machine_lookup_noexec_p (reloc_type);
+  int noplt = elf_machine_lookup_noplt_p (reloc_type);
 
   ++_dl_num_relocations;
 
   /* Search the relevant loaded objects for a definition.  */
   for (scope = symbol_scope; *scope; ++scope)
     if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		   *scope, 0, NULL, reloc_type))
+		   *scope, 0, NULL, noexec, noplt))
       {
 	/* We have to check whether this would bind UNDEF_MAP to an object
 	   in the global scope which was dynamically loaded.  In this case
@@ -232,6 +237,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       return 0;
     }
 
+  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+
   if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
@@ -239,10 +246,33 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 			: (_dl_argv[0] ?: "<main program>")),
 		       " to ", current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "'\n", NULL);
+		       ": ", protected ? "protected" : "normal",
+		       " symbol `", undef_name, "'\n", NULL);
 
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
+  if (__builtin_expect (protected == 0, 1))
+    {
+      *ref = current_value.s;
+      return LOOKUP_VALUE (current_value.m);
+    }
+  else
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      for (scope = symbol_scope; *scope; ++scope)
+	if (do_lookup (undef_name, undef_map, hash, *ref,
+		       &protected_value, *scope, 0, NULL, 0, 1))
+	  break;
+
+      if (protected_value.s == NULL || protected_value.m == undef_map)
+	{
+	  *ref = current_value.s;
+	  return LOOKUP_VALUE (current_value.m);
+	}
+
+      return LOOKUP_VALUE (undef_map);
+    }
 }
 
 
@@ -263,6 +293,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
   size_t i;
+  int protected;
 
   ++_dl_num_relocations;
 
@@ -273,7 +304,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
   if (i < (*scope)->r_nlist
       && do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		    *scope, i, skip_map, 0))
+		    *scope, i, skip_map, 0, 0))
     {
       /* We have to check whether this would bind UNDEF_MAP to an object
 	 in the global scope which was dynamically loaded.  In this case
@@ -293,7 +324,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
   else
     while (*++scope)
       if (do_lookup (undef_name, undef_map, hash, *ref, &current_value,
-		     *scope, 0, skip_map, 0))
+		     *scope, 0, skip_map, 0, 0))
 	{
 	  /* We have to check whether this would bind UNDEF_MAP to an object
 	     in the global scope which was dynamically loaded.  In this case
@@ -319,6 +350,8 @@ _dl_lookup_symbol_skip (const char *undef_name,
       return 0;
     }
 
+  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+
   if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
@@ -326,10 +359,36 @@ _dl_lookup_symbol_skip (const char *undef_name,
 			: (_dl_argv[0] ?: "<main program>")),
 		       " to ", current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "' (skip)\n", NULL);
+		       ": ", protected ? "protected" : "normal",
+		       " symbol `", undef_name, "'\n", NULL);
 
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
+  if (__builtin_expect (protected == 0, 1))
+    {
+      *ref = current_value.s;
+      return LOOKUP_VALUE (current_value.m);
+    }
+  else
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      if (i >= (*scope)->r_nlist
+	  || !do_lookup (undef_name, undef_map, hash, *ref, &protected_value,
+			 *scope, i, skip_map, 0, 1))
+	while (*++scope)
+	  if (do_lookup (undef_name, undef_map, hash, *ref, &protected_value,
+			 *scope, 0, skip_map, 0, 1))
+	    break;
+
+      if (protected_value.s == NULL || protected_value.m == undef_map)
+	{
+	  *ref = current_value.s;
+	  return LOOKUP_VALUE (current_value.m);
+	}
+
+      return LOOKUP_VALUE (undef_map);
+    }
 }
 
 
@@ -350,6 +409,9 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   const unsigned long int hash = _dl_elf_hash (undef_name);
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
+  int protected;
+  int noexec = elf_machine_lookup_noexec_p (reloc_type);
+  int noplt = elf_machine_lookup_noplt_p (reloc_type);
 
   ++_dl_num_relocations;
 
@@ -358,7 +420,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
     {
       int res = do_lookup_versioned (undef_name, undef_map, hash, *ref,
 				     &current_value, *scope, 0, version, NULL,
-				     reloc_type);
+				     noexec, noplt);
       if (res > 0)
 	{
 	  /* We have to check whether this would bind UNDEF_MAP to an object
@@ -412,6 +474,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       return 0;
     }
 
+  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+
   if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
@@ -419,11 +483,35 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			: (_dl_argv[0] ?: "<main program>")),
 		       " to ", current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "' [", version->name,
+		       ": ", protected ? "protected" : "normal",
+		       " symbol `", undef_name, "' [", version->name,
 		       "]\n", NULL);
 
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
+  if (__builtin_expect (protected == 0, 1))
+    {
+      *ref = current_value.s;
+      return LOOKUP_VALUE (current_value.m);
+    }
+  else
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      for (scope = symbol_scope; *scope; ++scope)
+	if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
+				 &protected_value, *scope, 0, version, NULL,
+				 0, 1))
+	  break;
+
+      if (protected_value.s == NULL || protected_value.m == undef_map)
+	{
+	  *ref = current_value.s;
+	  return LOOKUP_VALUE (current_value.m);
+	}
+
+      return LOOKUP_VALUE (undef_map);
+    }
 }
 
 
@@ -443,6 +531,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
   struct sym_val current_value = { NULL, NULL };
   struct r_scope_elem **scope;
   size_t i;
+  int protected;
 
   ++_dl_num_relocations;
 
@@ -453,7 +542,8 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 
   if (i < (*scope)->r_nlist
       && do_lookup_versioned (undef_name, undef_map, hash, *ref,
-			      &current_value, *scope, i, version, skip_map, 0))
+			      &current_value, *scope, i, version, skip_map,
+			      0, 0))
     {
       /* We have to check whether this would bind UNDEF_MAP to an object
 	 in the global scope which was dynamically loaded.  In this case
@@ -475,7 +565,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
     while (*++scope)
       if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
 			       &current_value, *scope, 0, version, skip_map,
-			       0))
+			       0, 0))
 	{
 	  /* We have to check whether this would bind UNDEF_MAP to an object
 	     in the global scope which was dynamically loaded.  In this case
@@ -512,19 +602,48 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
       return 0;
     }
 
+  protected = *ref && ELFW(ST_VISIBILITY) ((*ref)->st_other) == STV_PROTECTED;
+
   if (__builtin_expect (_dl_debug_bindings, 0))
     _dl_debug_message (1, "binding file ",
 		       (reference_name && reference_name[0]
 			? reference_name
 			: (_dl_argv[0] ?: "<main program>")),
-		       " to ",
-		       current_value.m->l_name[0]
+		       " to ", current_value.m->l_name[0]
 		       ? current_value.m->l_name : _dl_argv[0],
-		       ": symbol `", undef_name, "' [", version->name,
-		       "] (skip)\n", NULL);
+		       ": ", protected ? "protected" : "normal",
+		       " symbol `", undef_name, "' [", version->name,
+		       "]\n", NULL);
 
-  *ref = current_value.s;
-  return LOOKUP_VALUE (current_value.m);
+  if (__builtin_expect (protected == 0, 1))
+    {
+      *ref = current_value.s;
+      return LOOKUP_VALUE (current_value.m);
+    }
+  else
+    {
+      /* It is very tricky. We need to figure out what value to
+         return for the protected symbol */
+      struct sym_val protected_value = { NULL, NULL };
+
+      if (i >= (*scope)->r_nlist
+	  || !do_lookup_versioned (undef_name, undef_map, hash, *ref,
+				   &protected_value, *scope, i, version,
+				   skip_map, 0, 1))
+	while (*++scope)
+	  if (do_lookup_versioned (undef_name, undef_map, hash, *ref,
+				   &protected_value, *scope, 0, version,
+				   skip_map, 0, 1))
+	    break;
+
+      if (protected_value.s == NULL || protected_value.m == undef_map)
+	{
+	  *ref = current_value.s;
+	  return LOOKUP_VALUE (current_value.m);
+	}
+
+      return LOOKUP_VALUE (undef_map);
+    }
 }
 
 

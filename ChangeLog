@@ -1,3 +1,19 @@
+2000-05-21  H.J. Lu  <hjl@gnu.org>
+
+	* elf/do-lookup.h (do_lookup_versioned): Replace reloc_type parameter
+	with noexec and noplt parameter.
+	(do_lookup): Likewise.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Change for new parameters of
+	do_lookup.  Support STV_PROTECTED.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+
+	* elf/dl-reloc.c (RESOLVE): Check STB_LOCAL instead of ST_VISIBILITY.
+
+	* elf/dl-runtime.c (profile_fixup): Fix a typo in comment.
+
 2000-05-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/arm/bits/huge_val.h: Prereq gcc 2.96+, not 2.95.
