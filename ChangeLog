@@ -1,5 +1,9 @@
 2002-11-11  Randolf Chung  <tausq@debian.org>
 
+	* sysdeps/unix/sysv/linux/hppa/bits/fcntl.h [__USE_FILE_OFFSET64]
+	(F_GETLK, F_SETLK, F_SETLKW): Define to F_*64 versions.
+	* sysdeps/unix/sysv/linux/hppa/fcntl.c: New file.
+
 	* sysdeps/hppa/fpu/libm-test-ulps: New file (generated).
 
 	* sysdeps/hppa/Makefile (CFLAGS-rtld.c): New variable.
