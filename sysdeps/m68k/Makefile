@@ -48,7 +48,7 @@ define compile-command.S
 $(CC) $(CPPFLAGS) $(asm-CPPFLAGS) -E $< \
 | sed 's/(@@@Hash-Here@@@)/#/g' > $@s
 $(AS) $(ASFLAGS) $@s -o $@
--rm -f $@
+-rm -f $@s
 endef
 
 endif
