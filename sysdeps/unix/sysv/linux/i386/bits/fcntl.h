@@ -68,11 +68,9 @@
 #define F_GETLK		5	/* Get record locking info.  */
 #define F_SETLK		6	/* Set record locking info (non-blocking).  */
 #define F_SETLKW	7	/* Set record locking info (blocking).  */
-
-/* XXX missing */
-#define F_GETLK64	5	/* Get record locking info.  */
-#define F_SETLK64	6	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	7	/* Set record locking info (blocking).  */
+#define F_GETLK64	12	/* Get record locking info.  */
+#define F_SETLK64	13	/* Set record locking info (non-blocking).  */
+#define F_SETLKW64	14	/* Set record locking info (blocking).  */
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	8	/* Get owner of socket (receiver of SIGIO).  */
@@ -92,12 +90,12 @@
 #define F_WRLCK		1	/* Write lock.  */
 #define F_UNLCK		2	/* Remove lock.  */
 
-/* for old implementation of bsd flock () */
+/* For old implementation of bsd flock().  */
 #define F_EXLCK		4	/* or 3 */
 #define F_SHLCK		8	/* or 4 */
 
 #ifdef __USE_BSD
-/* operations for bsd flock(), also used by the kernel implementation */
+/* Operations for bsd flock(), also used by the kernel implementation.  */
 # define LOCK_SH	1	/* shared lock */
 # define LOCK_EX	2	/* exclusive lock */
 # define LOCK_NB	4	/* or'd with one of the above to prevent

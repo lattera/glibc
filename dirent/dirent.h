@@ -111,8 +111,10 @@ enum
 # define DT_REG		DT_REG
     DT_LNK = 10,
 # define DT_LNK		DT_LNK
-    DT_SOCK = 12
+    DT_SOCK = 12,
 # define DT_SOCK	DT_SOCK
+    DT_WHT = 14
+# define DT_WHT		DT_WHT
   };
 
 /* Convert between stat structure types and directory types.  */

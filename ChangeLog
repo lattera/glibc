@@ -1,3 +1,20 @@
+2000-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_FCNTL64):
+	Define for 2.4.1 on x86.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: New file.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Fill in correct values
+	for F_GETLK64, F_SETLK64, and F_SETLKW64.
+
+	* dirent/dirent.h: Define DT_WHT.
+
+	* sysdeps/unix/sysv/linux/arm/alphasort64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/getdents64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/readdir64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/readdir64_r.c: New file.
+	* sysdeps/unix/sysv/linux/arm/scandir64.c: New file.
+	* sysdeps/unix/sysv/linux/arm/versionsort64.c: New file.
+
 2000-08-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/digits_dots.c: Don't pass NULL in h_aliases for successful
