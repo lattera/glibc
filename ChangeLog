@@ -1,5 +1,9 @@
 2000-05-08  Andreas Schwab  <schwab@suse.de>
 
+	* posix/execle.c: Fix size parameter of memcpy.
+
+2000-05-08  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: New file.  Use
 	getpagesize syscall if available.
 
