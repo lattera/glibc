@@ -21,80 +21,80 @@
 
 /* See strlen.s for comments on how the end-of-string testing works.  */
 
-EALIGN(__stpcpy,4,0)
 /* char * [r3] stpcpy (char *dest [r3], const char *src [r4])  */
 
-/* General register assignments:
-   r0:	temporary
-   r3:	pointer to previous word in dest
-   r4:	pointer to previous word in src
-   r6:	current word from src
-   r7:	0xfefefeff
-   r8:	0x7f7f7f7f
-   r9:	~(word in src | 0x7f7f7f7f)
-   r10:	alternate word from src.  */
+EALIGN (__stpcpy, 4, 0)
 
-	or    r0,r4,r3
-	clrlwi. r0,r0,30
-	addi  r3,r3,-4
-	bne   L(unaligned)
+#define rTMP	r0
+#define rDEST	r3		/* pointer to previous word in dest */
+#define rSRC	r4		/* pointer to previous word in src */
+#define rWORD	r6		/* current word from src */
+#define rFEFE	r7		/* 0xfefefeff */
+#define r7F7F	r8		/* 0x7f7f7f7f */
+#define rNEG	r9		/* ~(word in src | 0x7f7f7f7f) */
+#define rALT	r10		/* alternate word from src */
 
-	lis   r7,0xfeff
-	lis   r8,0x7f7f
-	lwz   r6,0(r4)
-	addi  r7,r7,-0x101
-	addi  r8,r8,0x7f7f
-	b     L(g2)
+	or	rTMP, rSRC, rDEST
+	clrlwi.	rTMP, rTMP, 30
+	addi	rDEST, rDEST, -4
+	bne	L(unaligned)
 
-L(g0):	lwzu  r10,4(r4)
-	stwu  r6,4(r3)
-	add   r0,r7,r10
-	nor   r9,r8,r10
-	and.  r0,r0,r9
-	bne-  L(g1)
-	lwzu  r6,4(r4)
-	stwu  r10,4(r3)
-L(g2):	add   r0,r7,r6
-	nor   r9,r8,r6
-	and.  r0,r0,r9
-	beq+  L(g0)
+	lis	rFEFE, -0x101
+	lis	r7F7F, 0x7f7f
+	lwz	rWORD, 0(rSRC)
+	addi	rFEFE, rFEFE, -0x101
+	addi	r7F7F, r7F7F, 0x7f7f
+	b	L(g2)
 
-	mr    r10,r6
+L(g0):	lwzu	rALT, 4(rSRC)
+	stwu	rWORD, 4(rDEST)
+	add	rTMP, rFEFE, rALT
+	nor	rNEG, r7F7F, rALT
+	and.	rTMP, rTMP, rNEG
+	bne-	L(g1)
+	lwzu	rWORD, 4(rSRC)
+	stwu	rALT, 4(rDEST)
+L(g2):	add	rTMP, rFEFE, rWORD
+	nor	rNEG, r7F7F, rWORD
+	and.	rTMP, rTMP, rNEG
+	beq+	L(g0)
+
+	mr	rALT, rWORD
 /* We've hit the end of the string.  Do the rest byte-by-byte.  */
-L(g1):	rlwinm. r0,r10,8,24,31
-	stbu  r0,4(r3)
+L(g1):	rlwinm.	rTMP, rALT, 8, 24, 31
+	stbu	rTMP, 4(rDEST)
 	beqlr-
-	rlwinm. r0,r10,16,24,31
-	stbu  r0,1(r3)
+	rlwinm.	rTMP, rALT, 16, 24, 31
+	stbu	rTMP, 1(rDEST)
 	beqlr-
-	rlwinm. r0,r10,24,24,31
-	stbu  r0,1(r3)
+	rlwinm.	rTMP, rALT, 24, 24, 31
+	stbu	rTMP, 1(rDEST)
 	beqlr-
-	stbu  r10,1(r3)
+	stbu	rALT, 1(rDEST)
 	blr
 
 /* Oh well.  In this case, we just do a byte-by-byte copy.  */
 	.align 4
 	nop
 L(unaligned):
-	lbz   r6,0(r4)
-	addi  r3,r3,3
-	cmpwi r6,0
-	beq-  L(u2)
+	lbz	rWORD, 0(rSRC)
+	addi	rDEST, rDEST, 3
+	cmpwi	rWORD, 0
+	beq-	L(u2)
 
-L(u0):	lbzu  r10,1(r4)
-	stbu  r6,1(r3)
-	cmpwi r10,0
-	beq-  L(u1)
+L(u0):	lbzu	rALT, 1(rSRC)
+	stbu	rWORD, 1(rDEST)
+	cmpwi	rALT, 0
+	beq-	L(u1)
 	nop		/* Let 601 load start of loop.  */
-	lbzu  r6,1(r4)
-	stbu  r10,1(r3)
-	cmpwi r6,0
-	bne+  L(u0)
-L(u2):	stbu  r6,1(r3)
+	lbzu	rWORD, 1(rSRC)
+	stbu	rALT, 1(rDEST)
+	cmpwi	rWORD, 0
+	bne+	L(u0)
+L(u2):	stbu	rWORD, 1(rDEST)
 	blr
-L(u1):	stbu  r10,1(r3)
+L(u1):	stbu	rALT, 1(rDEST)
 	blr
-END(__stpcpy)
+END (__stpcpy)
 
 weak_alias (__stpcpy, stpcpy)
