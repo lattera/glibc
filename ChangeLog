@@ -1,3 +1,11 @@
+2004-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/ctype.h: For libc, define isdigit, isdigit_l, and
+	__isdigit_l as simple comparison macros.
+	* include/wctype.h: For libc, define iswdigit, iswdigit_l, and
+	__iswdigit_l as simple comparison macros.
+	* wctype/wcfuncs_l.c: #undef iswdigit and __iswdigit.
+
 2004-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/sparc/fpu/bits/mathinline.h: Restore missing #ifdef.
@@ -17,12 +25,17 @@
 	and bits/inf.h.
 	* math/math.h: Include them.
 
-	* sysdeps/alpha/fpu/bits/mathdef.h, sysdeps/arm/fpu/bits/mathdef.h,
-	sysdeps/generic/bits/mathdef.h, sysdeps/i386/fpu/bits/mathdef.h,
-	sysdeps/ia64/fpu/bits/mathdef.h, sysdeps/m68k/fpu/bits/mathdef.h,
-	sysdeps/mips/fpu/bits/mathdef.h, sysdeps/powerpc/fpu/bits/mathdef.h,
-	sysdeps/sh/sh4/fpu/bits/mathdef.h, sysdeps/sparc/fpu/bits/mathdef.h,
-	sysdeps/x86_64/fpu/bits/mathdef.h: Remove INFINITY.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Remove INFINITY.
+	* sysdeps/arm/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/generic/bits/mathdef.h: Likewise.
+	* sysdeps/i386/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/ia64/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/m68k/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/mips/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/powerpc/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/sh/sh4/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/sparc/fpu/bits/mathdef.h: Likewise.
+	* sysdeps/x86_64/fpu/bits/mathdef.h: Likewise.
 
 	* sysdeps/arm/bits/huge_val.h (HUGE_VAL): Use __builtin_huge_val.
 	(HUGE_VALF, HUGE_VALL): Remove.

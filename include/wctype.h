@@ -84,4 +84,15 @@ libc_hidden_proto (__iswxdigit_l)
 libc_hidden_proto (__towlower_l)
 libc_hidden_proto (__towupper_l)
 
+/* The spec says that isdigit must only match the decimal digits.  We
+   can check this without a memory access.  */
+# ifndef NOT_IN_libc
+#  undef iswdigit
+#  define iswdigit(c) ({ wint_t __c = (c); __c >= L'0' && __c <= L'9'; })
+#  undef iswdigit_l
+#  define iswdigit_l(c, l) ({ wint_t __c = (c); __c >= L'0' && __c <= L'9'; })
+#  undef __iswdigit_l
+#  define __iswdigit_l(c, l) ({ wint_t __c = (c); __c >= L'0' && __c <= L'9'; })
+# endif
+
 #endif

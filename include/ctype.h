@@ -68,4 +68,15 @@ __ctype_tolower_loc (void)
 
 # include <ctype/ctype.h>
 
+# if !defined __NO_CTYPE && !defined NOT_IN_libc
+/* The spec says that isdigit must only match the decimal digits.  We
+   can check this without a memory access.  */
+#  undef isdigit
+#  define isdigit(c) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+#  undef isdigit_l
+#  define isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+#  undef __isdigit_l
+#  define __isdigit_l(c, l) ({ int __c = (c); __c >= '0' && __c <= '9'; })
+# endif
+
 #endif /* ctype.h */
