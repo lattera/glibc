@@ -974,6 +974,13 @@ double: 1
 idouble: 1
 ildouble: 521
 ldouble: 521
+Test "tanh (-0.7) == -0.60436777711716349631":
+float: 1
+ifloat: 1
+double: 1
+idouble: 1
+ildouble: 521
+ldouble: 521
 
 # tgamma
 Test "tgamma (-0.5) == -2 sqrt (pi)":

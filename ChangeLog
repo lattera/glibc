@@ -1,3 +1,17 @@
+2001-05-22  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/memmove.S: Increase MEMLAT from 6 to 21 for better
+	performance.
+	* sysdeps/ia64/memcpy.S: Likewise.
+
+	* sysdeps/ia64/bcopy.S: New file.
+
+	* sysdeps/ia64/bzero.S: New file (derived from memset.S).
+
+2001-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/fpu/libm-test-ulps: Add deltas for tanh(-0.7).
+
 2001-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/Makefile: Add rules for CP10007.

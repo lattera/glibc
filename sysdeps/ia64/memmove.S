@@ -26,7 +26,7 @@
         in2:    byte count
 
    The core of the function is the memcpy implementation used in memcpy.S.
-   When bytes have to be copied backwards, only the easy case, when 
+   When bytes have to be copied backwards, only the easy case, when
    all arguments are multiples of 8, is optimised.
 
    In this form, it assumes little endian mode.  For big endian mode,
@@ -67,10 +67,12 @@
 		br.ctop.sptk .loop##shift ;				\
 		br.cond.sptk .cpyfew ; /* deal with the remaining bytes */
 
+#define MEMLAT	21
+#define Nrot	(((2*MEMLAT+3) + 7) & ~7)
+
 ENTRY(memmove)
 	.prologue
-	alloc 	r2 = ar.pfs, 3, 29, 0, 32
-#include "softpipe.h"
+	alloc 	r2 = ar.pfs, 3, Nrot - 3, 0, Nrot
 	.rotr	r[MEMLAT + 2], q[MEMLAT + 1]
 	.rotp	p[MEMLAT + 2]
 	mov	ret0 = in0		// return value = dest
@@ -90,7 +92,7 @@ ENTRY(memmove)
 	and	tmp4 = 7, tmp3 		// tmp4 = (dest | src | len) & 7
 	cmp.le	p6, p0 = dest, src	// if dest <= src it's always safe
 (p6)	br.cond.spnt .forward		// to copy forward
-	add	tmp3 = src, len;;	
+	add	tmp3 = src, len;;
 	cmp.lt	p6, p0 = dest, tmp3	// if dest > src && dest < src + len
 (p6)	br.cond.spnt .backward		// we have to copy backward
 
@@ -113,7 +115,7 @@ ENTRY(memmove)
 (p6)	br.cond.spnt .restore_and_exit;;// the one-word special case
 	adds	adest = 8, dest		// set adest one word ahead of dest
 	adds	asrc = 8, src ;;	// set asrc one word ahead of src
-	nop.b	0			// get the "golden" alignment for 
+	nop.b	0			// get the "golden" alignment for
 	nop.b	0			// the next loop
 .l0:
 (p[0])		ld8	r[0] = [src], 16
@@ -139,8 +141,8 @@ ENTRY(memmove)
 .l1:					// copy -dest % 8 bytes
 	ld1	value = [src], 1	// value = *src++
 	;;
-	st1	[dest] = value, 1	// *dest++ = value  
-	br.cloop.dptk .l1	
+	st1	[dest] = value, 1	// *dest++ = value
+	br.cloop.dptk .l1
 .dest_aligned:
 	and	sh1 = 7, src 		// sh1 = src % 8
 	and	tmp2 = -8, len   	// tmp2 = len & -OPSIZ
@@ -148,7 +150,7 @@ ENTRY(memmove)
 	shr.u	loopcnt = len, 3	// loopcnt = len / 8
 	and	len = 7, len;;		// len = len % 8
 	adds	loopcnt = -1, loopcnt	// --loopcnt
-	addl	tmp4 = @ltoff(.table), gp 
+	addl	tmp4 = @ltoff(.table), gp
 	addl	tmp3 = @ltoff(.loop56), gp
 	mov     ar.ec = MEMLAT + 1	// set EC
 	mov     pr.rot = 1 << 16;;	// set rotating predicates
@@ -174,7 +176,7 @@ ENTRY(memmove)
 	LOOP(40)
 	LOOP(48)
 	LOOP(56)
-	
+
 .src_aligned:
 .l3:
 (p[0])		ld8	r[0] = [src], 8
@@ -220,7 +222,7 @@ ENTRY(memmove)
 	adds	src = -1, src		// src points to the last byte
 	adds	dest = -1, dest		// dest points to the last byte
 	adds	loopcnt = -1, len;;	// loopcnt = len - 1
-	mov	ar.lc = loopcnt;;	// set the loop counter	
+	mov	ar.lc = loopcnt;;	// set the loop counter
 .l6:
 (p[0])		ld1	r[0] = [src], -1
 (p[MEMLAT])	st1	[dest] = r[MEMLAT], -1

@@ -68,10 +68,12 @@
 		br.ctop.sptk .loop##shift ;				\
 		br.cond.sptk .cpyfew ; /* deal with the remaining bytes */
 
+#define MEMLAT	21
+#define Nrot	(((2*MEMLAT+3) + 7) & ~7)
+
 ENTRY(memcpy)
 	.prologue
-	alloc 	r2 = ar.pfs, 3, 16 - 3, 0, 16
-#include "softpipe.h"
+	alloc 	r2 = ar.pfs, 3, Nrot - 3, 0, Nrot
 	.rotr	r[MEMLAT + 2], q[MEMLAT + 1]
 	.rotp	p[MEMLAT + 2]
 	mov	ret0 = in0		// return value = dest
