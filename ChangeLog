@@ -1,3 +1,8 @@
+1999-04-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Add SOL_PACKET, SOL_ATM,
+	SOL_AAL, and SOL_IRDA.
+
 1999-04-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/fstatvfs.c: Set f_frsize to zero.  Don't

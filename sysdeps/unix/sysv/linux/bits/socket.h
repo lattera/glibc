@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,6 +120,10 @@ enum __socket_type
 #define SOL_RAW		255
 #define SOL_DECNET      261
 #define SOL_X25         262
+#define SOL_PACKET	263
+#define SOL_ATM		264	/* ATM layer (cell level).  */
+#define SOL_AAL		265	/* ATM Adaption Layer (packet level).  */
+#define SOL_IRDA	266
 
 /* Maximum queue length specifiable by listen.  */
 #define SOMAXCONN	128
