@@ -1,3 +1,7 @@
+2004-10-18  Roland McGrath  <roland@redhat.com>
+
+	* dlfcn/bug-dlsym1.c (main): Remove bogus setenv call.
+
 2004-10-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Avoid dereferencing map in
