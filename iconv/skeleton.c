@@ -143,6 +143,12 @@ gconv_init (struct gconv_step *step)
   step->min_needed_to = MIN_NEEDED_TO;
   step->max_needed_to = MAX_NEEDED_TO;
 
+#ifdef RESET_STATE
+  step->stateful = 1;
+#else
+  step->stateful = 0;
+#endif
+
   return GCONV_OK;
 }
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,8 @@
 
 #include <stdlib.h>
 #include <wchar.h>
+#include <gconv.h>
+#include <wcsmbs/wcsmbsload.h>
 
 
 extern mbstate_t __no_r_state;	/* Defined in mbtowc.c.  */
@@ -34,12 +36,14 @@ wctomb (char *s, wchar_t wchar)
 {
   /* If S is NULL the function has to return null or not null
      depending on the encoding having a state depending encoding or
-     not.  This is nonsense because any multibyte encoding has a
-     state.  The ISO C amendment 1 corrects this while introducing the
-     restartable functions.  We simply say here all encodings have a
-     state.  */
+     not.  */
   if (s == NULL)
-    return 1;
+    {
+      /* Make sure we use the correct value.  */
+      update_conversion_ptrs ();
+
+      return __wcsmbs_gconv_fcts.tomb->stateful;
+    }
 
   return __wcrtomb (s, wchar, &__no_r_state);
 }

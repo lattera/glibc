@@ -81,4 +81,7 @@ __gconv_get_builtin_trans (const char *name, struct gconv_step *step)
   step->max_needed_from = map[cnt].max_needed_from;
   step->min_needed_to = map[cnt].min_needed_to;
   step->max_needed_to = map[cnt].max_needed_to;
+
+  /* None of the builtin converters handles stateful encoding.  */
+  step->stateful = 0;
 }

@@ -1,3 +1,15 @@
+1998-04-21 19:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv.h (struct gconv_step): Add element stateful.
+	* iconv/gconv_builtin.c (__gconv_builtin_trans): Initialize stateful
+	to zero for all internal conversions.
+	* iconv/skeleton.c: Initialize stateful depending on whether or not
+	RESET_STATE is defined to one or zero respectively.
+	* stdlib/mblen.c: Use stateful element of currently selected
+	converter for result if S is NULL.
+	* stdlib/mbtowc.c: Likewise.
+	* stdlib/wctomb.c: Likewise.
+
 1998-04-21 18:00  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.c (__gconv): Remove bogus input buffer size computation.

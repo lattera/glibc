@@ -18,6 +18,8 @@
 
 #include <stdlib.h>
 #include <wchar.h>
+#include <gconv.h>
+#include <wcsmbs/wcsmbsload.h>
 
 
 /* Return the length of the multibyte character (if there is one)
@@ -32,12 +34,14 @@ mblen (const char *s, size_t n)
 
   /* If S is NULL the function has to return null or not null
      depending on the encoding having a state depending encoding or
-     not.  This is nonsense because any multibyte encoding has a
-     state.  The ISO C amendment 1 corrects this while introducing the
-     restartable functions.  We simply say here all encodings have a
-     state.  */
+     not.  */
   if (s == NULL)
-    result = 1;
+    {
+      /* Make sure we use the correct value.  */
+      update_conversion_ptrs ();
+
+      result = __wcsmbs_gconv_fcts.towc->stateful;
+    }
   else if (*s == '\0')
     /* According to the ISO C 89 standard this is the expected behaviour.
        Idiotic, but true.  */

@@ -87,6 +87,9 @@ struct gconv_step
   int min_needed_to;
   int max_needed_to;
 
+  /* Flag whether this is a stateful encoding or not.  */
+  int stateful;
+
   void *data;		/* Pointer to step-local data.  */
 };
 
