@@ -113,7 +113,7 @@ init1 (int argc, char *arg0, ...)
   __libc_init (argc, argv, __environ);
 
   /* This is a hack to make the special getopt in GNU libc working.  */
-  __getopt_clean_environment (envp);
+  __getopt_clean_environment (__environ);
 
 #ifdef PIC
   __libc_global_ctors ();

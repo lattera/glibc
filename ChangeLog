@@ -1,4 +1,11 @@
+1998-09-05  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/mach/hurd/i386/init-first.c (init1): Call
+	__getopt_clean_environment with __environ instead of envp.
+
 1998-09-05  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/i386/Makefile (omit-deps): Define to crt0.
 
 	* string/argz-extract.c (__argz_extract): Add de-consting cast for
 	setting results.
