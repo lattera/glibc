@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@ Cambridge, MA 02139, USA.  */
 #define	O_READ		O_RDONLY /* Open for reading.  */
 #define O_WRITE		O_WRONLY /* Open for writing.  */
 #define	O_EXEC		0x0004	/* Open for execution.  */
+#define O_NORW		0	/* Open without R/W access.  */
 #endif
 /* POSIX.1 standard names.  */
 #define	O_RDONLY	0x0001	/* Open read-only.  */
