@@ -81,11 +81,13 @@ endif
 
 ifeq (yes,$(build-shared))
 tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
-	constload1 order
+	constload1 order $(tests-vis-$(have-protected))
+tests-vis-yes = vismain
 endif
 modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		testobj1_1 failobj constload2 constload3 \
-		dep1 dep2 dep3 dep4
+		dep1 dep2 dep3 dep4 $(modules-vis-$(have-protected))
+modules-vis-yes = vismod1 vismod2 vismod3
 extra-objs += $(modules-names:=.os)
 
 include ../Rules
@@ -275,3 +277,7 @@ $(objpfx)order.out: $(objpfx)order
 	  --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
 	  $(objpfx)order > $@
 	(echo "0123456789" | cmp $@ -) > /dev/null
+
+$(objpfx)vismain: $(addprefix $(objpfx),vismod1.so vismod2.so)
+$(objpfx)vismain.out: $(addprefix $(objpfx),vismod3.so)
+vismain-ENV = LD_PRELOAD=$(addprefix $(objpfx),vismod3.so)
