@@ -26,15 +26,21 @@ prepare (int argc, char *argv[])
 
   size_t len = strlen (argv[1]);
   static const char ext[] = "globXXXXXX";
-  fname = malloc (len + 1 + sizeof (ext));
+  fname = malloc (len + sizeof (ext));
   if (fname == NULL)
     error (EXIT_FAILURE, errno, "cannot create temp file");
-  strcpy (stpcpy (stpcpy (fname, argv[1]), "/"), ext);
+ again:
+  strcpy (stpcpy (fname, argv[1]), ext);
   fname = mktemp (fname);
   if (fname == NULL || *fname == '\0')
     error (EXIT_FAILURE, errno, "cannot create temp file name");
   if (symlink ("bug-glob1-does-not-exist", fname) != 0)
-    error (EXIT_FAILURE, errno, "cannot create symlink");
+    {
+      if (errno == EEXIST)
+	goto again;
+
+      error (EXIT_FAILURE, errno, "cannot create symlink");
+    }
   add_temp_file (fname);
 }
 
