@@ -608,8 +608,8 @@ indicates that at least one child process has terminated.
 void
 sigchld_handler (int signum)
 @{
-  int pid;
-  int status;
+  int pid, status, serrno;
+  serrno = errno;
   while (1)
     @{
       pid = waitpid (WAIT_ANY, &status, WNOHANG);
@@ -622,6 +622,7 @@ sigchld_handler (int signum)
         break;
       notice_termination (pid, status);
     @}
+  errno = serrno;
 @}
 @end group
 @end smallexample

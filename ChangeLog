@@ -1,3 +1,7 @@
+1998-04-10 12:40  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* manual/process.texi (SIGCHLD example): Save errno.
+
 1998-04-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* posix/regex.c: Define regerror really as __regerror.
@@ -13,6 +17,7 @@
 	* sysdeps/i386/i486/bits/string.h: Remove unused variables.
 
 	* misc/syslog.c (closelog_internal): Set LogTag to NULL.
+	Patch by Christian Gafton.
 
 1998-04-09 14:27  Ulrich Drepper  <drepper@cygnus.com>
 
