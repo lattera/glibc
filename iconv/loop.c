@@ -307,10 +307,10 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #endif
 
   /* Are there enough bytes in the input buffer?  */
-  if (__builtin_expect (inptr + (MAX_NEEDED_INPUT - inlen) > inend, 0))
+  if (__builtin_expect (inptr + (MIN_NEEDED_INPUT - inlen) > inend, 0))
     {
-#ifdef STORE_REST
       *inptrp = inend;
+#ifdef STORE_REST
       inptr = bytebuf;
       inptrp = &inptr;
       inend = &bytebuf[inlen];
@@ -335,27 +335,52 @@ SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
   /*  Now add characters from the normal input buffer.  */
   do
     bytebuf[inlen++] = *inptr++;
-  while (inlen < MAX_NEEDED_INPUT);
+  while (inlen < MAX_NEEDED_INPUT && inptr < inend);
 
   inptr = bytebuf;
-  inend = &inptr[MAX_NEEDED_INPUT];
+  inend = &bytebuf[inlen];
+#undef NEED_LENGTH_TEST
+#define NEED_LENGTH_TEST	1
   do
     {
       BODY
     }
   while (0);
 
-  if (result == __GCONV_OK)
+  /* Now we either have produced an output character and consumed all the
+     bytes from the state and at least one more, or the character is still
+     incomplete, or we have some other error (like illegal input character,
+     no space in output buffer).  */
+  if (inptr != bytebuf)
     {
-      /* We successfully converted the character (maybe even more).
-	 Update the pointers passed in.  */
+      /* We found a new character.  */
       assert (inptr - bytebuf > (state->__count & 7));
 
       *inptrp += inptr - bytebuf - (state->__count & 7);
       *outptrp = outptr;
 
+      result = __GCONV_OK;
+
       /* Clear the state buffer.  */
       state->__count &= ~7;
+    }
+  else if (result == __GCONV_INCOMPLETE_INPUT)
+    {
+      /* This can only happen if we have less than MAX_NEEDED_INPUT bytes
+	 available.  */
+      assert (inend != &bytebuf[MAX_NEEDED_INPUT]);
+
+      *inptrp += inend - bytebuf - (state->__count & 7);
+#ifdef STORE_REST
+      inptrp = &inptr;
+
+      STORE_REST
+#else
+      /* We don't have enough input for another complete input
+	 character.  */
+      while (inptr < inend)
+	state->__value.__wchb[inlen++] = *inptr++;
+#endif
     }
 
   return result;

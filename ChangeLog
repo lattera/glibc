@@ -1,4 +1,22 @@
-2000-04-27  Bruno Haible  <clisp.cons.org>
+2000-04-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_simple.c (utf8_internal_loop): Correctly reconstruct
+	stored character in state in UNPACK_BYTES macro.
+	* iconv/loop.c (SINGLE(LOOPFCT)): Make it actually work.  Correct
+	test for available characters, handle result of BODY code correctly.
+	* localedata/Makefile (test-srcs): Add tst-mbswcs1.
+	(distribute): Add tst-mbswcs.sh.
+	Add rule to run tst-mbswcs.sh.
+	* localedata/tst-mbswcs.sh: New file.
+	* localedata/tst-mbswcs1.c: New file.
+
+2000-04-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* nis/nis_callback.c (__nis_create_callback): Do failed memory
+	allocation fixups centrally, fix __builtin_expect call, return NULL
+	on failure, not NIS_NOMEMORY.
+
+2000-04-27  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/ngettext.c [!_LIBC]: Fix definition of NGETTEXT.
 

@@ -279,29 +279,21 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   unsigned short port;
 
   cb = (struct nis_cb *) calloc (1, sizeof (struct nis_cb));
-  if (__builtin_expect (cb == NULL, ))
-    {
-      syslog (LOG_ERR, "NIS+: out of memory allocating callback");
-      return NULL;
-    }
-
+  if (__builtin_expect (cb == NULL, 0))
+    goto failed;
   cb->serv = (nis_server *) calloc (1, sizeof (nis_server));
   if (__builtin_expect (cb->serv == NULL, 0))
-    {
-      free (cb);
-      syslog (LOG_ERR, "NIS+: out of memory allocating callback");
-      return NULL;
-    }
+    goto failed;
   cb->serv->name = strdup (nis_local_principal ());
   if (__builtin_expect (cb->serv->name == NULL, 0))
-    return NIS_NOMEMORY;
+    goto failed;
   cb->serv->ep.ep_val = (endpoint *) calloc (2, sizeof (endpoint));
   if (__builtin_expect (cb->serv->ep.ep_val == NULL, 0))
-    return NIS_NOMEMORY;
+    goto failed;
   cb->serv->ep.ep_len = 1;
   cb->serv->ep.ep_val[0].family = strdup ("inet");
   if (__builtin_expect (cb->serv->ep.ep_val[0].family == NULL, 0))
-    return NIS_NOMEMORY;
+    goto failed;
   cb->callback = callback;
   cb->userdata = userdata;
 
@@ -331,18 +323,11 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
 #endif
     }
 
-  if (flags & USE_DGRAM)
-    {
-      cb->serv->ep.ep_val[0].proto = strdup ("udp");
-      cb->xprt = svcudp_bufcreate (sock, 100, 8192);
-    }
-  else
-    {
-      cb->serv->ep.ep_val[0].proto = strdup ("tcp");
-      cb->xprt = svctcp_create (sock, 100, 8192);
-    }
+  cb->serv->ep.ep_val[0].proto = strdup ((flags & USE_DGRAM) ? "udp" : "tcp");
   if (__builtin_expect (cb->serv->ep.ep_val[0].proto == NULL, 0))
-    return NIS_NOMEMORY;
+    goto failed;
+  cb->xprt = (flags & USE_DGRAM) ? svcudp_bufcreate (sock, 100, 8192) :
+				   svctcp_create (sock, 100, 8192);
   cb->sock = cb->xprt->xp_sock;
   if (!svc_register (cb->xprt, CB_PROG, CB_VERS, cb_prog_1, 0))
     {
@@ -372,6 +357,19 @@ __nis_create_callback (int (*callback) (const_nis_name, const nis_object *,
   cb->serv->ep.ep_val[0].uaddr = strdup (addr);
 
   return cb;
+
+ failed:
+  if (cb)
+    {
+      if (cb->serv)
+	{
+	  xdr_free ((xdrproc_t) _xdr_nis_server, (char *) cb->serv);
+	  free (cb->serv);
+	}
+      free (cb);
+    }
+  syslog (LOG_ERR, "NIS+: out of memory allocating callback");
+  return NULL;
 }
 
 nis_error
