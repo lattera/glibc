@@ -106,15 +106,22 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
     /* We do not need a TLS block and no thread descriptor.  */
     return;
 
+
   /* We have to set up the TCB block which also (possibly) contains
      'errno'.  Therefore we avoid 'malloc' which might touch 'errno'.
      Instead we use 'sbrk' which would only uses 'errno' if it fails.
      In this case we are right away out of memory and the user gets
-     what she/he deserves.  */
+     what she/he deserves.
+
+     The initialized value of _dl_tls_static_size is provided by dl-open.c
+     to request some surplus that permits dynamic loading of modules with
+     IE-model TLS.  */
 # if TLS_TCB_AT_TP
-  tlsblock = __sbrk (roundup (memsz, tcbalign) + tcbsize + max_align);
+  tlsblock = __sbrk (roundup (memsz, tcbalign) + tcbsize + max_align
+		     + GL(dl_tls_static_size));
 # elif TLS_DTV_AT_TP
-  tlsblock = __sbrk (roundup (tcbsize, align) + memsz + max_align);
+  tlsblock = __sbrk (roundup (tcbsize, align) + memsz + max_align
+		     + GL(dl_tls_static_size));
 # else
   /* In case a model with a different layout for the TCB and DTV
      is defined add another #elif here and in the following #ifs.  */
