@@ -1,3 +1,8 @@
+2001-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* catgets/test-gencat.sh: Use <<"EOF" instead of <<EOF to prevent
+	substitution in here document.
+
 2001-07-16  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/posix/spawni.c: Fix typo when iterating over signal numbers.

@@ -29,7 +29,7 @@ NLSPATH=${common_objpfx}catgets/%N.%c.cat LC_ALL=ja_JP.SJIS \
     > ${common_objpfx}catgets/test-gencat.out
 
 # Compare with the expected result.
-cmp - ${common_objpfx}catgets/test-gencat.out <<EOF
+cmp - ${common_objpfx}catgets/test-gencat.out <<"EOF"
 LC_MESSAGES = ja_JP.SJIS
 sample1:ABCDEF:
 sample2:“ú–{Œê:
