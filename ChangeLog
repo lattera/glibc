@@ -1,3 +1,16 @@
+2003-05-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Add CFI directives.
+
+	* sysdeps/unix/sysv/linux/x86_64/sigaction.c (RESTORE2): Add CFI
+	directives.
+
+	* sysdeps/generic/sysdep.h: Add CFI_* macros for C files.
+
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (SYSCALL_ERROR_HANDLER):
+	Add CFI directives.
+
 2003-05-30  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/elf/start.S: Make code compilable with

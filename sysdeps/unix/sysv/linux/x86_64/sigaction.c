@@ -97,14 +97,15 @@ weak_alias (__libc_sigaction, sigaction)
    appropriate GDB maintainer.  */
 
 #define RESTORE(name, syscall) RESTORE2 (name, syscall)
-#define RESTORE2(name, syscall) \
+# define RESTORE2(name, syscall) \
 asm						\
   (						\
    ".align 16\n"				\
+   CFI_STARTPROC "\n"				\
    "__" #name ":\n"				\
    "	movq $" #syscall ", %rax\n"		\
    "	syscall\n"				\
+   CFI_ENDPROC "\n"				\
    );
-
 /* The return code for realtime-signals.  */
 RESTORE (restore_rt, __NR_rt_sigreturn)

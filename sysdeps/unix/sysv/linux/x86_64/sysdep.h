@@ -132,11 +132,13 @@
 0:						\
   xorq %rdx, %rdx;				\
   subq %rax, %rdx;				\
-  pushq %rdx					\
+  pushq %rdx;					\
+  cfi_adjust_cfa_offset(8);			\
   PUSH_ERRNO_LOCATION_RETURN;			\
   call BP_SYM (__errno_location)@PLT;		\
   POP_ERRNO_LOCATION_RETURN;			\
   popq %rdx;					\
+  cfi_adjust_cfa_offset(-8);			\
   movl %edx, (%rax);				\
   orq $-1, %rax;				\
   jmp L(pseudo_end);

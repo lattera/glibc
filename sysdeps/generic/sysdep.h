@@ -66,5 +66,31 @@
 #  define cfi_offset(reg, off)
 # endif
 
+#else /* ! ASSEMBLER */
+# ifdef HAVE_ASM_CFI_DIRECTIVES
+#  define CFI_STRINGIFY(Name) CFI_STRINGIFY2 (Name)
+#  define CFI_STRINGIFY2(Name) #Name
+#  define CFI_STARTPROC	".cfi_startproc"
+#  define CFI_ENDPROC	".cfi_endproc"
+#  define CFI_DEF_CFA(reg, off)	\
+   ".cfi_def_cfa " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
+#  define CFI_DEF_CFA_REGISTER(reg) \
+   ".cfi_def_cfa_register " CFI_STRINGIFY(reg)
+#  define CFI_DEF_CFA_OFFSET(off) \
+   ".cfi_def_cfa_offset " CFI_STRINGIFY(off)
+#  define CFI_ADJUST_CFA_OFFSET(off) \
+   ".cfi_adjust_cfa_offset " CFI_STRINGIFY(off)
+#  define CFI_OFFSET(reg, off) \
+   ".cfi_offset " CFI_STRINGIFY(reg) "," CFI_STRINGIFY(off)
+# else
+#  define CFI_STARTPROC
+#  define CFI_ENDPROC
+#  define CFI_DEF_CFA(reg, off)
+#  define CFI_DEF_CFA_REGISTER(reg)
+#  define CFI_DEF_CFA_OFFSET(off)
+#  define CFI_ADJUST_CFA_OFFSET(off)
+#  define CFI_OFFSET(reg, off)
+# endif
 
 #endif /* __ASSEMBLER__ */
+

@@ -24,6 +24,7 @@
 #define ELF_MACHINE_NAME "x86_64"
 
 #include <sys/param.h>
+#include <sysdep.h>
 
 /* Return nonzero iff ELF header is compatible with the running host.  */
 static inline int __attribute__ ((unused))
@@ -136,14 +137,17 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	.globl _dl_runtime_resolve\n\
 	.type _dl_runtime_resolve, @function\n\
 	.align 16\n\
+	" CFI_STARTPROC "\n\
 _dl_runtime_resolve:\n\
-	pushq %rax		# Preserve registers otherwise clobbered.\n\
-	pushq %rcx\n\
-	pushq %rdx\n\
-	pushq %rsi\n\
-	pushq %rdi\n\
-	pushq %r8\n\
-	pushq %r9\n\
+	subq $56,%rsp\n\
+	" CFI_ADJUST_CFA_OFFSET(72)" # Incorporate PLT\n\
+	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.\n\
+	movq %rcx,8(%rsp)\n\
+	movq %rdx,16(%rsp)\n\
+	movq %rsi,24(%rsp)\n\
+	movq %rdi,32(%rsp)\n\
+	movq %r8,40(%rsp)\n\
+	movq %r9,48(%rsp)\n\
 	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.\n\
 	movq %rsi,%r11		# Multiply by 24\n\
 	addq %r11,%rsi\n\
@@ -152,28 +156,33 @@ _dl_runtime_resolve:\n\
 	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset\n\
 	call fixup		# Call resolver.\n\
 	movq %rax, %r11		# Save return value\n\
-	popq %r9		# Get register content back.\n\
-	popq %r8\n\
-	popq %rdi\n\
-	popq %rsi\n\
-	popq %rdx\n\
-	popq %rcx\n\
-	popq %rax\n\
-	addq $16,%rsp		# Adjust stack\n\
+	movq 48(%rsp),%r9	# Get register content back.\n\
+	movq 40(%rsp),%r8\n\
+	movq 32(%rsp),%rdi\n\
+	movq 24(%rsp),%rsi\n\
+	movq 16(%rsp),%rdx\n\
+	movq 8(%rsp),%rcx\n\
+	movq (%rsp),%rax\n\
+	addq $72,%rsp		# Adjust stack(PLT did 2 pushes)\n\
+	" CFI_ADJUST_CFA_OFFSET(-72)" \n\
 	jmp *%r11		# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 \n\
 	.globl _dl_runtime_profile\n\
 	.type _dl_runtime_profile, @function\n\
 	.align 16\n\
+	" CFI_STARTPROC "\n\
 _dl_runtime_profile:\n\
-	pushq %rax		# Preserve registers otherwise clobbered.\n\
-	pushq %rcx\n\
-	pushq %rdx\n\
-	pushq %rsi\n\
-	pushq %rdi\n\
-	pushq %r8\n\
-	pushq %r9\n\
+	subq $56,%rsp\n\
+	" CFI_ADJUST_CFA_OFFSET(72)" # Incorporate PLT\n\
+	movq %rax,(%rsp)	# Preserve registers otherwise clobbered.\n\
+	movq %rcx,8(%rsp)\n\
+	movq %rdx,16(%rsp)\n\
+	movq %rsi,24(%rsp)\n\
+	movq %rdi,32(%rsp)\n\
+	movq %r8,40(%rsp)\n\
+	movq %r9,48(%rsp)\n\
 	movq 72(%rsp), %rdx	# Load return address if needed\n\
 	movq 64(%rsp), %rsi	# Copy args pushed by PLT in register.\n\
 	movq %rsi,%r11		# Multiply by 24\n\
@@ -183,15 +192,17 @@ _dl_runtime_profile:\n\
 	movq 56(%rsp), %rdi	# %rdi: link_map, %rsi: reloc_offset\n\
 	call profile_fixup	# Call resolver.\n\
 	movq %rax, %r11		# Save return value\n\
-	popq %r9		# Get register content back.\n\
-	popq %r8\n\
-	popq %rdi\n\
-	popq %rsi\n\
-	popq %rdx\n\
-	popq %rcx\n\
-	popq %rax\n\
-	addq $16,%rsp		# Adjust stack\n\
+	movq 48(%rsp),%r9	# Get register content back.\n\
+	movq 40(%rsp),%r8\n\
+	movq 32(%rsp),%rdi\n\
+	movq 24(%rsp),%rsi\n\
+	movq 16(%rsp),%rdx\n\
+	movq 8(%rsp),%rcx\n\
+	movq (%rsp),%rax\n\
+	addq $72,%rsp		# Adjust stack\n\
+	" CFI_ADJUST_CFA_OFFSET(-72)"\n\
 	jmp *%r11		# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
 	.previous\n\
 ");
@@ -203,6 +214,7 @@ _dl_runtime_profile:\n\
 	.type _dl_runtime_resolve, @function\n\
 	.type _dl_runtime_profile, @function\n\
 	.align 16\n\
+	" CFI_STARTPROC "\n\
 _dl_runtime_resolve:\n\
 _dl_runtime_profile:\n\
 	pushq %rax		# Preserve registers otherwise clobbered.\n\
@@ -229,6 +241,7 @@ _dl_runtime_profile:\n\
 	popq %rax\n\
 	addq $16,%rsp		# Adjust stack\n\
 	jmp *%r11		# Jump to function address.\n\
+	" CFI_ENDPROC "\n\
 	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
 	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
 	.previous\n\
