@@ -1,3 +1,9 @@
+2004-07-20  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Update to use
+	_dl_lookup_symbol_x.
+	(elf_machine_runtime_link_map): Don't INTUSE _dl_signal_error.
+
 2004-07-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* inet/netinet/in.h: Define struct ip_mreq and struct
