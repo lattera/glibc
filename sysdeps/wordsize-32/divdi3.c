@@ -307,10 +307,7 @@ __moddi3 (DWtype u, DWtype v)
       u = -u;
     }
   if (v < 0)
-    {
-      c = ~c;
-      v = -v;
-    }
+    v = -v;
   __udivmoddi4 (u, v, &w);
   if (c)
     w = -w;

@@ -1,5 +1,19 @@
 2002-05-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/sk.po: Update from translation team.
+
+2002-05-28  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/generic/readelflib.c (process_elf_file): Give correct
+	message when finding object of wrong class.
+
+2002-05-28  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/wordsize-32/divdi3.c (__moddi3): Fix pasto.
+	Patch by <radu@netsoft.ro>.
+
+2002-05-30  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/Makefile [$(subdir)==misc] (sysdep_routines):
 	Add readahead.
 	* sysdeps/unix/sysv/linux/readahead.c: New file.

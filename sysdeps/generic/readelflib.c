@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999 and
 		  Jakub Jelinek <jakub@redhat.com>, 1999.
@@ -63,9 +63,9 @@ process_elf_file (const char *file_name, const char *lib, int *flag,
     {
       if (opt_verbose)
 	{
-	  if (ElfW (CLASS) == ELFCLASS32)
+	  if (elf_header->e_ident [EI_CLASS] == ELFCLASS32)
 	    error (0, 0, _("%s is a 32 bit ELF file.\n"), file_name);
-	  else if (ElfW (CLASS) == ELFCLASS64)
+	  else if (elf_header->e_ident [EI_CLASS] == ELFCLASS64)
 	    error (0, 0, _("%s is a 64 bit ELF file.\n"), file_name);
 	  else
 	    error (0, 0, _("Unknown ELFCLASS in file %s.\n"), file_name);

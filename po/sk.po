@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.2.5\n"
 "POT-Creation-Date: 2001-08-17 13:03-0700\n"
-"PO-Revision-Date: 2002-02-08 10:17+0100\n"
+"PO-Revision-Date: 2002-05-30 10:00+0200\n"
 "Last-Translator: Marcel Telka <marcel@telka.sk>\n"
 "Language-Team: Slovak <sk-i18n@lists.linux.sk>\n"
 "MIME-Version: 1.0\n"
@@ -117,12 +117,20 @@ msgstr ""
 "%15s  skontrolujte /etc/%s na zmeny\n"
 
 #: nis/nis_print.c:255
-msgid "\nGroup Members :\n"
-msgstr "\nÈlenovia skupín  :\n"
+msgid ""
+"\n"
+"Group Members :\n"
+msgstr ""
+"\n"
+"Èlenovia skupín  :\n"
 
 #: nis/nis_print.c:326
-msgid "\nTime to Live  : "
-msgstr "\n®ivotnos»        : "
+msgid ""
+"\n"
+"Time to Live  : "
+msgstr ""
+"\n"
+"®ivotnos»        : "
 
 #: sunrpc/rpcinfo.c:679
 msgid "       rpcinfo -b prognum versnum\n"
@@ -251,13 +259,7 @@ msgstr "%.*s: Parameter ARGP_HELP_FMT vy¾aduje hodnotu"
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Neznámy parameter ARGP_HELP_FMT"
 
-#: locale/programs/ld-address.c:581 locale/programs/ld-collate.c:2612
-#: locale/programs/ld-collate.c:3740 locale/programs/ld-ctype.c:2112
-#: locale/programs/ld-ctype.c:2849 locale/programs/ld-identification.c:448
-#: locale/programs/ld-measurement.c:237 locale/programs/ld-messages.c:331
-#: locale/programs/ld-monetary.c:936 locale/programs/ld-name.c:305
-#: locale/programs/ld-numeric.c:375 locale/programs/ld-paper.c:238
-#: locale/programs/ld-telephone.c:313 locale/programs/ld-time.c:1199
+#: locale/programs/ld-address.c:581 locale/programs/ld-collate.c:2612 locale/programs/ld-collate.c:3740 locale/programs/ld-ctype.c:2112 locale/programs/ld-ctype.c:2849 locale/programs/ld-identification.c:448 locale/programs/ld-measurement.c:237 locale/programs/ld-messages.c:331 locale/programs/ld-monetary.c:936 locale/programs/ld-name.c:305 locale/programs/ld-numeric.c:375 locale/programs/ld-paper.c:238 locale/programs/ld-telephone.c:313 locale/programs/ld-time.c:1199
 #, c-format
 msgid "%1$s: definition does not end with `END %1$s'"
 msgstr "%1$s: Definícia nekonèí `END %1$s'"
@@ -427,8 +429,7 @@ msgstr "%s: Voµba -y zadaná viac ako raz\n"
 msgid "%s: Too many arguments\n"
 msgstr "%s: Priveµa argumentov\n"
 
-#: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483
-#: locale/programs/ld-collate.c:499
+#: locale/programs/ld-collate.c:457 locale/programs/ld-collate.c:483 locale/programs/ld-collate.c:499
 #, c-format
 msgid "%s: `%s' mentioned more than once in definition of weight %d"
 msgstr "%s: `%s' spomenuté viac ako raz v definícii váhy %d"
@@ -438,8 +439,7 @@ msgstr "%s: `%s' spomenuté viac ako raz v definícii váhy %d"
 msgid "%s: `%s' must be a character"
 msgstr "%s: `%s' musí by» znak"
 
-#: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276
-#: locale/programs/ld-address.c:309 locale/programs/ld-address.c:321
+#: locale/programs/ld-address.c:248 locale/programs/ld-address.c:276 locale/programs/ld-address.c:309 locale/programs/ld-address.c:321
 #, c-format
 msgid "%s: `%s' value does not match `%s' value"
 msgstr "%s: hodnota `%s' nezodpovedá hodnote `%s'"
@@ -484,11 +484,7 @@ msgstr "%s: `%s' nemô¾e by» koncovým znakom rozsahu pokraèovania"
 msgid "%s: cannot reorder after %.*s: symbol not known"
 msgstr "%s: nie je mo¾né preradi» za %.*s: neznámy symbol"
 
-#: locale/programs/ld-ctype.c:2912 locale/programs/ld-ctype.c:2996
-#: locale/programs/ld-ctype.c:3016 locale/programs/ld-ctype.c:3037
-#: locale/programs/ld-ctype.c:3058 locale/programs/ld-ctype.c:3079
-#: locale/programs/ld-ctype.c:3100 locale/programs/ld-ctype.c:3140
-#: locale/programs/ld-ctype.c:3161 locale/programs/ld-ctype.c:3228
+#: locale/programs/ld-ctype.c:2912 locale/programs/ld-ctype.c:2996 locale/programs/ld-ctype.c:3016 locale/programs/ld-ctype.c:3037 locale/programs/ld-ctype.c:3058 locale/programs/ld-ctype.c:3079 locale/programs/ld-ctype.c:3100 locale/programs/ld-ctype.c:3140 locale/programs/ld-ctype.c:3161 locale/programs/ld-ctype.c:3228
 #, c-format
 msgid "%s: character `%s' in charmap not representable with one byte"
 msgstr "%s: znak `%s' v znakovej mape nie je vyjadriteµný jedným bajtom"
@@ -503,11 +499,7 @@ msgstr "%s: znak `%s' je potrebný ako prednastavená hodnota nevyjadriteµná jedný
 msgid "%s: character `%s' not defined in charmap while needed as default value"
 msgstr "%s: znak `%s' nie je definovaný v mape znakov a je potrebný ako implicitná hodnota"
 
-#: locale/programs/ld-ctype.c:2991 locale/programs/ld-ctype.c:3011
-#: locale/programs/ld-ctype.c:3053 locale/programs/ld-ctype.c:3074
-#: locale/programs/ld-ctype.c:3095 locale/programs/ld-ctype.c:3135
-#: locale/programs/ld-ctype.c:3156 locale/programs/ld-ctype.c:3223
-#: locale/programs/ld-ctype.c:3265 locale/programs/ld-ctype.c:3290
+#: locale/programs/ld-ctype.c:2991 locale/programs/ld-ctype.c:3011 locale/programs/ld-ctype.c:3053 locale/programs/ld-ctype.c:3074 locale/programs/ld-ctype.c:3095 locale/programs/ld-ctype.c:3135 locale/programs/ld-ctype.c:3156 locale/programs/ld-ctype.c:3223 locale/programs/ld-ctype.c:3265 locale/programs/ld-ctype.c:3290
 #, c-format
 msgid "%s: character `%s' not defined while needed as default value"
 msgstr "%s: znak `%s' nie je definovaný a je potrebný ako implicitná hodnota"
@@ -562,45 +554,22 @@ msgstr "%s: prázdny re»azec váhy nie je povolený"
 msgid "%s: error in state machine"
 msgstr "%s: chyba v stavovom automate"
 
-#: locale/programs/ld-address.c:489 locale/programs/ld-address.c:526
-#: locale/programs/ld-address.c:564 locale/programs/ld-ctype.c:2485
-#: locale/programs/ld-identification.c:360
-#: locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300
-#: locale/programs/ld-monetary.c:694 locale/programs/ld-monetary.c:729
-#: locale/programs/ld-monetary.c:770 locale/programs/ld-name.c:278
-#: locale/programs/ld-numeric.c:263 locale/programs/ld-paper.c:221
-#: locale/programs/ld-telephone.c:288 locale/programs/ld-time.c:1104
-#: locale/programs/ld-time.c:1146
+#: locale/programs/ld-address.c:489 locale/programs/ld-address.c:526 locale/programs/ld-address.c:564 locale/programs/ld-ctype.c:2485 locale/programs/ld-identification.c:360 locale/programs/ld-measurement.c:220 locale/programs/ld-messages.c:300 locale/programs/ld-monetary.c:694 locale/programs/ld-monetary.c:729 locale/programs/ld-monetary.c:770 locale/programs/ld-name.c:278 locale/programs/ld-numeric.c:263 locale/programs/ld-paper.c:221 locale/programs/ld-telephone.c:288 locale/programs/ld-time.c:1104 locale/programs/ld-time.c:1146
 #, c-format
 msgid "%s: field `%s' declared more than once"
 msgstr "%s: pole `%s' deklarované viac ako raz"
 
-#: locale/programs/ld-ctype.c:1526 locale/programs/ld-ctype.c:1651
-#: locale/programs/ld-ctype.c:1757 locale/programs/ld-ctype.c:2348
-#: locale/programs/ld-ctype.c:3331
+#: locale/programs/ld-ctype.c:1526 locale/programs/ld-ctype.c:1651 locale/programs/ld-ctype.c:1757 locale/programs/ld-ctype.c:2348 locale/programs/ld-ctype.c:3331
 #, c-format
 msgid "%s: field `%s' does not contain exactly ten entries"
 msgstr "%s: pole `%s' neobsahuje presne desa» polo¾iek"
 
-#: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205
-#: locale/programs/ld-address.c:230 locale/programs/ld-address.c:259
-#: locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
+#: locale/programs/ld-address.c:154 locale/programs/ld-address.c:205 locale/programs/ld-address.c:230 locale/programs/ld-address.c:259 locale/programs/ld-name.c:115 locale/programs/ld-telephone.c:117
 #, c-format
 msgid "%s: field `%s' must not be empty"
 msgstr "%s: pole `%s' nesmie by» prázdne"
 
-#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:180
-#: locale/programs/ld-address.c:197 locale/programs/ld-address.c:224
-#: locale/programs/ld-address.c:284 locale/programs/ld-address.c:303
-#: locale/programs/ld-address.c:315 locale/programs/ld-identification.c:145
-#: locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:206
-#: locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260
-#: locale/programs/ld-monetary.c:272 locale/programs/ld-name.c:104
-#: locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:113
-#: locale/programs/ld-numeric.c:127 locale/programs/ld-paper.c:101
-#: locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105
-#: locale/programs/ld-telephone.c:163 locale/programs/ld-time.c:175
-#: locale/programs/ld-time.c:195
+#: locale/programs/ld-address.c:142 locale/programs/ld-address.c:180 locale/programs/ld-address.c:197 locale/programs/ld-address.c:224 locale/programs/ld-address.c:284 locale/programs/ld-address.c:303 locale/programs/ld-address.c:315 locale/programs/ld-identification.c:145 locale/programs/ld-measurement.c:104 locale/programs/ld-monetary.c:206 locale/programs/ld-monetary.c:244 locale/programs/ld-monetary.c:260 locale/programs/ld-monetary.c:272 locale/programs/ld-name.c:104 locale/programs/ld-name.c:141 locale/programs/ld-numeric.c:113 locale/programs/ld-numeric.c:127 locale/programs/ld-paper.c:101 locale/programs/ld-paper.c:109 locale/programs/ld-telephone.c:105 locale/programs/ld-telephone.c:163 locale/programs/ld-time.c:175 locale/programs/ld-time.c:195
 #, c-format
 msgid "%s: field `%s' not defined"
 msgstr "%s: pole `%s' nie je definované"
@@ -630,12 +599,7 @@ msgstr "%s: smetie za koncom koncového dátumu v re»azci %Zd poµa `era'"
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: neprípustná voµba -- %c\n"
 
-#: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738
-#: locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445
-#: locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329
-#: locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303
-#: locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236
-#: locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
+#: locale/programs/ld-address.c:578 locale/programs/ld-collate.c:3738 locale/programs/ld-ctype.c:2846 locale/programs/ld-identification.c:445 locale/programs/ld-measurement.c:234 locale/programs/ld-messages.c:329 locale/programs/ld-monetary.c:934 locale/programs/ld-name.c:303 locale/programs/ld-numeric.c:373 locale/programs/ld-paper.c:236 locale/programs/ld-telephone.c:311 locale/programs/ld-time.c:1197
 #, c-format
 msgid "%s: incomplete `END' line"
 msgstr "%s: nekompletný riadok `END'"
@@ -645,8 +609,7 @@ msgstr "%s: nekompletný riadok `END'"
 msgid "%s: invalid escape `%%%c' sequence in field `%s'"
 msgstr "%s: neprípustná escape `%%%c' sekvencia v poli `%s'"
 
-#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126
-#: locale/programs/ld-telephone.c:150
+#: locale/programs/ld-name.c:127 locale/programs/ld-telephone.c:126 locale/programs/ld-telephone.c:150
 #, c-format
 msgid "%s: invalid escape sequence in field `%s'"
 msgstr "%s: chybná escape-sekvencia v poli `%s'"
@@ -726,8 +689,7 @@ msgstr "%s: riadok %d: za oddeµovaèom zoznamu nenasleduje doména"
 msgid "%s: line %d: list delimiter not followed by keyword"
 msgstr "%s: line %d: za oddeµovaèom zoznamu nenasleduje kµúèové slovo"
 
-#: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
-#: locale/programs/ld-collate.c:3716
+#: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365 locale/programs/ld-collate.c:3716
 #, c-format
 msgid "%s: missing `order_end' keyword"
 msgstr "%s: chýbajúce kµúèové slovo `order_end'"
@@ -797,8 +759,7 @@ msgstr "%s: voµba `%c%s' nedovoµuje pou¾i» argument\n"
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: voµba `%s' nie je jednoznaèná\n"
 
-#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
-#: posix/getopt.c:1082
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070 posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: voµba `%s' vy¾aduje argument\n"
@@ -818,8 +779,7 @@ msgstr "%s: voµba `-W %s' nedovoµuje pou»i» argument\n"
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: voµba `-W %s' nie je jednoznaèná\n"
 
-#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
-#: posix/getopt.c:1147
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136 posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: voµba vy¾aduje argument -- %c\n"
@@ -849,15 +809,7 @@ msgstr "%s: výstup by prepísal %s\n"
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: fatálna chyba: Neprípustná l_hodnota %d\n"
 
-#: locale/programs/charmap.c:843 locale/programs/ld-address.c:597
-#: locale/programs/ld-collate.c:2609 locale/programs/ld-collate.c:3756
-#: locale/programs/ld-ctype.c:2109 locale/programs/ld-ctype.c:2866
-#: locale/programs/ld-identification.c:464
-#: locale/programs/ld-measurement.c:253 locale/programs/ld-messages.c:347
-#: locale/programs/ld-monetary.c:952 locale/programs/ld-name.c:321
-#: locale/programs/ld-numeric.c:391 locale/programs/ld-paper.c:254
-#: locale/programs/ld-telephone.c:329 locale/programs/ld-time.c:1215
-#: locale/programs/locfile.h:103 locale/programs/repertoire.c:325
+#: locale/programs/charmap.c:843 locale/programs/ld-address.c:597 locale/programs/ld-collate.c:2609 locale/programs/ld-collate.c:3756 locale/programs/ld-ctype.c:2109 locale/programs/ld-ctype.c:2866 locale/programs/ld-identification.c:464 locale/programs/ld-measurement.c:253 locale/programs/ld-messages.c:347 locale/programs/ld-monetary.c:952 locale/programs/ld-name.c:321 locale/programs/ld-numeric.c:391 locale/programs/ld-paper.c:254 locale/programs/ld-telephone.c:329 locale/programs/ld-time.c:1215 locale/programs/locfile.h:103 locale/programs/repertoire.c:325
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: predèasný koniec súboru"
@@ -887,16 +839,7 @@ msgstr "%s: pokraèovanie symbolického rozsahu nesmie by» priamo nasledované `ord
 msgid "%s: symbolic range ellipsis must not directly follow `order_start'"
 msgstr "%s: pokraèovanie symbolického rozsahu nesmie priamo nasledo» `order_start'"
 
-#: locale/programs/ld-address.c:588 locale/programs/ld-collate.c:518
-#: locale/programs/ld-collate.c:570 locale/programs/ld-collate.c:865
-#: locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2599
-#: locale/programs/ld-collate.c:3747 locale/programs/ld-ctype.c:1841
-#: locale/programs/ld-ctype.c:2099 locale/programs/ld-ctype.c:2675
-#: locale/programs/ld-ctype.c:2857 locale/programs/ld-identification.c:455
-#: locale/programs/ld-measurement.c:244 locale/programs/ld-messages.c:338
-#: locale/programs/ld-monetary.c:943 locale/programs/ld-name.c:312
-#: locale/programs/ld-numeric.c:382 locale/programs/ld-paper.c:245
-#: locale/programs/ld-telephone.c:320 locale/programs/ld-time.c:1206
+#: locale/programs/ld-address.c:588 locale/programs/ld-collate.c:518 locale/programs/ld-collate.c:570 locale/programs/ld-collate.c:865 locale/programs/ld-collate.c:878 locale/programs/ld-collate.c:2599 locale/programs/ld-collate.c:3747 locale/programs/ld-ctype.c:1841 locale/programs/ld-ctype.c:2099 locale/programs/ld-ctype.c:2675 locale/programs/ld-ctype.c:2857 locale/programs/ld-identification.c:455 locale/programs/ld-measurement.c:244 locale/programs/ld-messages.c:338 locale/programs/ld-monetary.c:943 locale/programs/ld-name.c:312 locale/programs/ld-numeric.c:382 locale/programs/ld-paper.c:245 locale/programs/ld-telephone.c:320 locale/programs/ld-time.c:1206
 #, c-format
 msgid "%s: syntax error"
 msgstr "%s: chyba syntaxe"
@@ -986,12 +929,7 @@ msgstr "%s: neznámy znak v názve ekvivalentnej definície"
 msgid "%s: unknown character in equivalent definition value"
 msgstr "%s: neznámy znak v hodnote ekvivalentnej definície"
 
-#: locale/programs/ld-address.c:493 locale/programs/ld-address.c:531
-#: locale/programs/ld-identification.c:364 locale/programs/ld-messages.c:310
-#: locale/programs/ld-monetary.c:698 locale/programs/ld-monetary.c:733
-#: locale/programs/ld-name.c:282 locale/programs/ld-numeric.c:267
-#: locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:999
-#: locale/programs/ld-time.c:1067 locale/programs/ld-time.c:1109
+#: locale/programs/ld-address.c:493 locale/programs/ld-address.c:531 locale/programs/ld-identification.c:364 locale/programs/ld-messages.c:310 locale/programs/ld-monetary.c:698 locale/programs/ld-monetary.c:733 locale/programs/ld-name.c:282 locale/programs/ld-numeric.c:267 locale/programs/ld-telephone.c:292 locale/programs/ld-time.c:999 locale/programs/ld-time.c:1067 locale/programs/ld-time.c:1109
 #, c-format
 msgid "%s: unknown character in field `%s'"
 msgstr "%s: neznámy znak v poli `%s'"
@@ -1128,8 +1066,7 @@ msgstr ""
 "-o VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...\n"
 "[ VÝSTUPNÝ_SÚBOR [VSTUPNÝ_SÚBOR]...]"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:797
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
+#: stdio-common/../sysdeps/gnu/errlist.c:797 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
 msgid ".lib section in a.out corrupted"
 msgstr "Po¹kodená sekcia .lib v a.out"
 
@@ -1177,14 +1114,12 @@ msgstr "Zru¹ené"
 msgid "Access Rights : "
 msgstr "Prístupové práva : "
 
-#: stdio-common/../sysdeps/gnu/errlist.c:793
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
+#: stdio-common/../sysdeps/gnu/errlist.c:793 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
 msgid "Accessing a corrupted shared library"
 msgstr "Prístup k po¹kodenej zdieµanej kni¾nici"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
-#: stdio-common/../sysdeps/gnu/errlist.c:367
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
+#: stdio-common/../sysdeps/gnu/errlist.c:367 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
 msgid "Address already in use"
 msgstr "Adresa je pou¾ívaná"
 
@@ -1202,8 +1137,7 @@ msgstr "Trieda adries nie je podporovaná protokolom"
 msgid "Address family not supported by protocol family"
 msgstr "Trieda adries nie je podporovaná rodinou protokolov"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:761
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
+#: stdio-common/../sysdeps/gnu/errlist.c:761 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
 msgid "Advertise error"
 msgstr "Chyba pri zverejnení"
 
@@ -1270,8 +1204,7 @@ msgstr "POCHYBNÝ OBJEKT\n"
 
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS In the GNU system, this error never happens; you get a signal instead.
-#: stdio-common/../sysdeps/gnu/errlist.c:115
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
+#: stdio-common/../sysdeps/gnu/errlist.c:115 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
 msgid "Bad address"
 msgstr "Chybná adresa"
 
@@ -1290,8 +1223,7 @@ msgstr "Chybný deskriptor súboru"
 msgid "Bad file number"
 msgstr "Chybné èíslo súboru"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:749
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
+#: stdio-common/../sysdeps/gnu/errlist.c:749 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
 msgid "Bad font file format"
 msgstr "Chybný formát súboru rezov písma"
 
@@ -1326,8 +1258,7 @@ msgstr "Binárne údaje\n"
 #. TRANS A file that isn't a block special file was given in a situation that
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
-#: stdio-common/../sysdeps/gnu/errlist.c:122
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
+#: stdio-common/../sysdeps/gnu/errlist.c:122 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
 msgid "Block device required"
 msgstr "Vy¾adované blokové zariadenie"
 
@@ -1340,10 +1271,7 @@ msgstr "Problém pri volaní poll pre v¹eobecné vysielanie"
 #. TRANS @code{SIGPIPE} signal; this signal terminates the program if not handled
 #. TRANS or blocked.  Thus, your program will never actually see @code{EPIPE}
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
-#: stdio-common/../sysdeps/gnu/errlist.c:235
-#: stdio-common/../sysdeps/unix/siglist.c:39
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62
-#: sysdeps/generic/siglist.h:39
+#: stdio-common/../sysdeps/gnu/errlist.c:235 stdio-common/../sysdeps/unix/siglist.c:39 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62 sysdeps/generic/siglist.h:39
 msgid "Broken pipe"
 msgstr "Preru¹ená rúra"
 
@@ -1359,8 +1287,7 @@ msgstr "Prekroèený èasový limit pre procesor"
 msgid "Cache expired"
 msgstr "®ivotnos» cache vypr¹ala"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:789
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
+#: stdio-common/../sysdeps/gnu/errlist.c:789 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
 msgid "Can not access a needed shared library"
 msgstr "Prístup k potrebnej zdieµanej kni¾nici nie je mo¾ný"
 
@@ -1457,8 +1384,7 @@ msgstr "Nie je mo¾né prideli» pamä»"
 #. TRANS The requested socket address is not available; for example, you tried
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
-#: stdio-common/../sysdeps/gnu/errlist.c:374
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
+#: stdio-common/../sysdeps/gnu/errlist.c:374 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
 msgid "Cannot assign requested address"
 msgstr "Priradenie po¾adovanej adresy nie je mo¾né"
 
@@ -1544,8 +1470,7 @@ msgstr "Zmeni» adresár na ROOT a pou¾i» ho ako koreòový adresár"
 msgid "Changing access rights of %s to %#o failed"
 msgstr "Zmena prístupových práv %s na %#o zlyhala"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:689
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
+#: stdio-common/../sysdeps/gnu/errlist.c:689 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
 msgid "Channel number out of range"
 msgstr "Èíslo kanálu mimo povoleného rozsahu"
 
@@ -1566,8 +1491,7 @@ msgstr "Oprávnenia klienta sú nepostaèujúce"
 msgid "Columns             :\n"
 msgstr "Ståpce                 :\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:769
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
+#: stdio-common/../sysdeps/gnu/errlist.c:769 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
 msgid "Communication error on send"
 msgstr "Chyba komunikácie pri vysielaní"
 
@@ -1586,23 +1510,20 @@ msgstr "Konfigurácia runtime väzieb dynamického linkera."
 
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
-#: stdio-common/../sysdeps/gnu/errlist.c:452
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
+#: stdio-common/../sysdeps/gnu/errlist.c:452 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
 msgid "Connection refused"
 msgstr "Spojenie odmietnuté"
 
 #. TRANS A network connection was closed for reasons outside the control of the
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
-#: stdio-common/../sysdeps/gnu/errlist.c:402
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
+#: stdio-common/../sysdeps/gnu/errlist.c:402 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
 msgid "Connection reset by peer"
 msgstr "Spojenie zru¹ené druhou stranou"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
-#: stdio-common/../sysdeps/gnu/errlist.c:446
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
+#: stdio-common/../sysdeps/gnu/errlist.c:446 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
 msgid "Connection timed out"
 msgstr "Èasový limit pre spojenie vypr¹al"
 
@@ -1614,19 +1535,17 @@ msgstr "Pokraèovanie"
 msgid "Convert encoding of given files from one encoding to another."
 msgstr "Konverzia kódovania zadaných súborov na iné."
 
-#: catgets/gencat.c:246 elf/ldconfig.c:259 elf/sprof.c:355
-#: iconv/iconv_prog.c:393 iconv/iconvconfig.c:335 locale/programs/locale.c:281
-#: locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90
-#: nss/getent.c:63 posix/getconf.c:904
+#: catgets/gencat.c:246 elf/ldconfig.c:259 elf/sprof.c:355 iconv/iconv_prog.c:393 iconv/iconvconfig.c:335 locale/programs/locale.c:281 locale/programs/localedef.c:311 nscd/nscd.c:287 nscd/nscd_nischeck.c:90 nss/getent.c:63 posix/getconf.c:904
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
 "This is free software; see the source for copying conditions.  There is NO\n"
 "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
 msgstr ""
-"Copyright (C) %s Free Software Foundation, Inc.\n"
-"Toto je voµne ¹íriteµný software; pre podmienky kopírovania pozri\n"
-"zdrojový kód.Na software nie je poskytovaná ®IADNA záruka.\n"
+"Autorské práva (C) %s Free Software Foundation, Inc.\n"
+"Toto je voµne ¹íriteµný softvér; pre podmienky kopírovania pozri zdrojový kód.\n"
+"Neposkytuje sa ®IADNA záruka; ani èo sa týka OBCHODOVATE¥NOSTI alebo VHODNOSTI\n"
+"NA KONKRÉTNY ÚÈEL.\n"
 
 #: nscd/nscd_conf.c:166
 #, c-format
@@ -1662,8 +1581,7 @@ msgstr "Odkaz medzi zariadeniami"
 msgid "DATAFILE [OUTFILE]"
 msgstr "DÁTOVÝ_SÚBOR [VÝSTUPNÝ_SÚBOR]"
 
-#: nis/nss_nisplus/nisplus-publickey.c:96
-#: nis/nss_nisplus/nisplus-publickey.c:172
+#: nis/nss_nisplus/nisplus-publickey.c:96 nis/nss_nisplus/nisplus-publickey.c:172
 #, c-format
 msgid "DES entry for netname %s not unique\n"
 msgstr "DES záznam pre sie»ový názov %s nie je jednoznaèný\n"
@@ -1699,8 +1617,7 @@ msgstr "Implicitné príst. práva  :\n"
 #. TRANS No default destination address was set for the socket.  You get this
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
-#: stdio-common/../sysdeps/gnu/errlist.c:430
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
+#: stdio-common/../sysdeps/gnu/errlist.c:430 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
 msgid "Destination address required"
 msgstr "Je potrebné zada» cieµovú hodnotu"
 
@@ -1731,8 +1648,7 @@ msgstr "Adresár          : %s\n"
 
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
-#: stdio-common/../sysdeps/gnu/errlist.c:481
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
+#: stdio-common/../sysdeps/gnu/errlist.c:481 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
 msgid "Directory not empty"
 msgstr "Adresár nie je prázdny"
 
@@ -1950,8 +1866,7 @@ msgstr "Chyba v RPC subsystéme"
 msgid "Error in accessing NIS+ cold start file.  Is NIS+ installed?"
 msgstr "Chyba pri prístupe NIS+ súboru studeného ¹tartu. Je NIS+ nain¹talované?"
 
-#: string/../sysdeps/mach/_strerror.c:58
-#: sysdeps/mach/hurd/mips/dl-machine.c:68
+#: string/../sysdeps/mach/_strerror.c:58 sysdeps/mach/hurd/mips/dl-machine.c:68
 msgid "Error in unknown error system: "
 msgstr "Chyba v neznámom chybovom systéme: "
 
@@ -1973,8 +1888,7 @@ msgstr "Stredisko plné"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
-#: stdio-common/../sysdeps/gnu/errlist.c:76
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
+#: stdio-common/../sysdeps/gnu/errlist.c:76 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
 msgid "Exec format error"
 msgstr "Chybný formát spustiteµného súboru"
 
@@ -2000,15 +1914,13 @@ msgstr "Nepodarilo sa vyhµada» pou¾ívateµa '%s', pod ktorým má server be¾a»"
 msgid "File %s is too small, not checked."
 msgstr "Súbor %s je príli¹ krátky, neskontrolovaný."
 
-#: stdio-common/../sysdeps/gnu/errlist.c:781
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
+#: stdio-common/../sysdeps/gnu/errlist.c:781 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "File descriptor in bad state"
 msgstr "Deskriptor súboru v chybnom stave"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
-#: stdio-common/../sysdeps/gnu/errlist.c:135
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
+#: stdio-common/../sysdeps/gnu/errlist.c:135 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
 msgid "File exists"
 msgstr "Súbor existuje"
 
@@ -2027,8 +1939,7 @@ msgstr "Vzájomné zablokovanie pri zamykaní súboru"
 #. TRANS Filename too long (longer than @code{PATH_MAX}; @pxref{Limits for
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
-#: stdio-common/../sysdeps/gnu/errlist.c:465
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
+#: stdio-common/../sysdeps/gnu/errlist.c:465 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
 msgid "File name too long"
 msgstr "Meno súboru príli¹ dlhé"
 
@@ -2041,8 +1952,7 @@ msgid "File table overflow"
 msgstr "Preteèenie tabuµky súborov"
 
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
-#: stdio-common/../sysdeps/gnu/errlist.c:203
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
+#: stdio-common/../sysdeps/gnu/errlist.c:203 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
 msgid "File too large"
 msgstr "Súbor je príli¹ veµký"
 
@@ -2162,8 +2072,7 @@ msgstr "Nenájdené \"%d\" v cache hesiel!"
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Nenájdené \"%s\" v cache skupín!"
 
-#: nscd/hstcache.c:299 nscd/hstcache.c:341 nscd/hstcache.c:386
-#: nscd/hstcache.c:430
+#: nscd/hstcache.c:299 nscd/hstcache.c:341 nscd/hstcache.c:386 nscd/hstcache.c:430
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Nenájdené \"%s\" v cache poèítaèov!"
@@ -2174,8 +2083,7 @@ msgid "Haven't found \"%s\" in password cache!"
 msgstr "Nenájdené \"%s\" v cache hesiel!"
 
 #. TRANS The remote host for a requested network connection is down.
-#: stdio-common/../sysdeps/gnu/errlist.c:470
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
+#: stdio-common/../sysdeps/gnu/errlist.c:470 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
 msgid "Host is down"
 msgstr "Poèítaè je vypnutý"
 
@@ -2195,8 +2103,7 @@ msgstr "V/V mo¾ný"
 msgid "IOT trap"
 msgstr "IOT preru¹enie"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:645
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
+#: stdio-common/../sysdeps/gnu/errlist.c:645 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
 msgid "Identifier removed"
 msgstr "Identifikátor odstránený"
 
@@ -2218,8 +2125,7 @@ msgid "Illegal object type for operation"
 msgstr "Neprípustný typ objektu pre operáciu"
 
 #. TRANS Invalid seek operation (such as on a pipe).
-#: stdio-common/../sysdeps/gnu/errlist.c:214
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
+#: stdio-common/../sysdeps/gnu/errlist.c:214 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
 msgid "Illegal seek"
 msgstr "Neprípustné nastavenie pozície"
 
@@ -2234,8 +2140,7 @@ msgstr "Nevhodný typ alebo formát súboru"
 
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
-#: stdio-common/../sysdeps/gnu/errlist.c:189
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
+#: stdio-common/../sysdeps/gnu/errlist.c:189 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
 msgid "Inappropriate ioctl for device"
 msgstr "Nevhodný ioctl pre toto zariadenie"
 
@@ -2298,8 +2203,7 @@ msgstr "Preru¹ené signálom"
 #. TRANS You can choose to have functions resume after a signal that is handled,
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
-#: stdio-common/../sysdeps/gnu/errlist.c:48
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
+#: stdio-common/../sysdeps/gnu/errlist.c:48 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
 msgid "Interrupted system call"
 msgstr "Preru¹ené volanie systému"
 
@@ -2309,8 +2213,7 @@ msgstr "Preru¹ené volanie systému by malo by» znovu spustené"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
-#: stdio-common/../sysdeps/gnu/errlist.c:165
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
+#: stdio-common/../sysdeps/gnu/errlist.c:165 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
 msgid "Invalid argument"
 msgstr "Neprípustný argument"
 
@@ -2383,8 +2286,7 @@ msgstr "Neprípustný deskriptor ¾iadosti"
 msgid "Invalid server verifier"
 msgstr "Neplatné overenie servera"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:741
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
+#: stdio-common/../sysdeps/gnu/errlist.c:741 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
 msgid "Invalid slot"
 msgstr "Neplatná priehradka"
 
@@ -2394,8 +2296,7 @@ msgstr "Zneplatni» zadanú cache"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
-#: stdio-common/../sysdeps/gnu/errlist.c:159
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
+#: stdio-common/../sysdeps/gnu/errlist.c:159 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
 msgid "Is a directory"
 msgstr "Je adresár"
 
@@ -2424,33 +2325,27 @@ msgstr "ODKAZ\n"
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "LOCAL záznam pre UID %d v adresári %s nie je jednoznaèný\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:717
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
+#: stdio-common/../sysdeps/gnu/errlist.c:717 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
 msgid "Level 2 halted"
 msgstr "Úroveò 2 zastavená"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:693
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
+#: stdio-common/../sysdeps/gnu/errlist.c:693 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
 msgid "Level 2 not synchronized"
 msgstr "Úroveò 2 nie je synchronizovaná"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:697
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
+#: stdio-common/../sysdeps/gnu/errlist.c:697 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
 msgid "Level 3 halted"
 msgstr "Úroveò 3 zastavená"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:701
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
+#: stdio-common/../sysdeps/gnu/errlist.c:701 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
 msgid "Level 3 reset"
 msgstr "Úroveò 3 nastavená na východzie hodnoty"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:657
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
+#: stdio-common/../sysdeps/gnu/errlist.c:657 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
 msgid "Link has been severed"
 msgstr "Odkaz bol znièený"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:705
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
+#: stdio-common/../sysdeps/gnu/errlist.c:705 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
 msgid "Link number out of range"
 msgstr "Èíslo odkazu mimo rozsahu"
 
@@ -2475,8 +2370,7 @@ msgstr "Meno miestnej domény nie je nastavené"
 msgid "Local resource allocation failure"
 msgstr "Chyba pri pridelení miestnych zdrojov"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:753
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
+#: stdio-common/../sysdeps/gnu/errlist.c:753 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
 msgid "Machine is not on the network"
 msgstr "Poèítaè nie je zapojený v sieti"
 
@@ -2514,8 +2408,7 @@ msgstr "Plná tabuµka správ"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
-#: stdio-common/../sysdeps/gnu/errlist.c:318
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
+#: stdio-common/../sysdeps/gnu/errlist.c:318 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
 msgid "Message too long"
 msgstr "Príli¹ dlhá správa"
 
@@ -2540,8 +2433,7 @@ msgstr "Operácia zmeny zlyhala"
 msgid "Modify output format:"
 msgstr "Modifikova» výstupný formát:"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:649
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
+#: stdio-common/../sysdeps/gnu/errlist.c:649 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
 msgid "Multihop attempted"
 msgstr "Pokus o spojenie cez viac uzlov"
 
@@ -2549,8 +2441,7 @@ msgstr "Pokus o spojenie cez viac uzlov"
 msgid "Must specify user name for server-user option"
 msgstr "Pre server-user voµbu je potrebné zada» meno pou¾ívateµa"
 
-#: catgets/gencat.c:111 catgets/gencat.c:115 locale/programs/localedef.c:115
-#: nscd/nscd.c:83
+#: catgets/gencat.c:111 catgets/gencat.c:115 locale/programs/localedef.c:115 nscd/nscd.c:83
 msgid "NAME"
 msgstr "NÁZOV"
 
@@ -2603,8 +2494,7 @@ msgstr "Démon cache slu¾by názvov."
 msgid "Name not served by this server"
 msgstr "Názov nie je obsluhovaný týmto serverom"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:777
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
+#: stdio-common/../sysdeps/gnu/errlist.c:777 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
 msgid "Name not unique on network"
 msgstr "Meno nie je v sieti jednoznaèné"
 
@@ -2639,20 +2529,17 @@ msgid "Network dropped connection on reset"
 msgstr "Sie» zru¹ila spojenie (problém so vzdialeným poèítaèom)"
 
 #. TRANS A socket operation failed because the network was down.
-#: stdio-common/../sysdeps/gnu/errlist.c:379
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
+#: stdio-common/../sysdeps/gnu/errlist.c:379 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
 msgid "Network is down"
 msgstr "Sie» je nefunkèná"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
-#: stdio-common/../sysdeps/gnu/errlist.c:385
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
+#: stdio-common/../sysdeps/gnu/errlist.c:385 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
 msgid "Network is unreachable"
 msgstr "Sie» nie je dostupná"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:713
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
+#: stdio-common/../sysdeps/gnu/errlist.c:713 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
 msgid "No CSI structure available"
 msgstr "CSI ¹truktúra nedostupná"
 
@@ -2675,8 +2562,7 @@ msgstr "®iadny anode"
 #. TRANS The kernel's buffers for I/O operations are all in use.  In GNU, this
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
-#: stdio-common/../sysdeps/gnu/errlist.c:409
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
+#: stdio-common/../sysdeps/gnu/errlist.c:409 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
 msgid "No buffer space available"
 msgstr "Nie je mo¾né prideli» pamä» pre V/V operácie"
 
@@ -2687,22 +2573,15 @@ msgstr "V znakovej mape nie je zadaný názov znakovej sady"
 #. TRANS There are no child processes.  This error happens on operations that are
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
-#: stdio-common/../sysdeps/gnu/errlist.c:90
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
+#: stdio-common/../sysdeps/gnu/errlist.c:90 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
 msgid "No child processes"
 msgstr "Detské procesy neexistujú"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:653
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
+#: stdio-common/../sysdeps/gnu/errlist.c:653 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
 msgid "No data available"
 msgstr "Dáta nie sú k dispozícii"
 
-#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1513
-#: locale/programs/ld-ctype.c:415 locale/programs/ld-identification.c:132
-#: locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98
-#: locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94
-#: locale/programs/ld-numeric.c:99 locale/programs/ld-paper.c:91
-#: locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:160
+#: locale/programs/ld-address.c:131 locale/programs/ld-collate.c:1513 locale/programs/ld-ctype.c:415 locale/programs/ld-identification.c:132 locale/programs/ld-measurement.c:93 locale/programs/ld-messages.c:98 locale/programs/ld-monetary.c:194 locale/programs/ld-name.c:94 locale/programs/ld-numeric.c:99 locale/programs/ld-paper.c:91 locale/programs/ld-telephone.c:94 locale/programs/ld-time.c:160
 #, c-format
 msgid "No definition for %s category found"
 msgstr "Nebola nájdená definícia kategórie %s"
@@ -2732,8 +2611,7 @@ msgstr "®iadna zhoda"
 msgid "No medium found"
 msgstr "Nenájdené ¾iadne médium"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:661
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
+#: stdio-common/../sysdeps/gnu/errlist.c:661 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
 msgid "No message of desired type"
 msgstr "®iadna správa ¾elaného typu"
 
@@ -2754,22 +2632,19 @@ msgid "No remote programs registered.\n"
 msgstr "Nie sú registrované ¾iadne vzdialené programy\n"
 
 #. TRANS The remote host for a requested network connection is not reachable.
-#: stdio-common/../sysdeps/gnu/errlist.c:475
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
+#: stdio-common/../sysdeps/gnu/errlist.c:475 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
 msgid "No route to host"
 msgstr "Cesta k poèítaèu neexistuje"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
-#: stdio-common/../sysdeps/gnu/errlist.c:209
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
+#: stdio-common/../sysdeps/gnu/errlist.c:209 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
 msgid "No space left on device"
 msgstr "Na zariadení u¾ nie je ¾iadne miesto"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
-#: stdio-common/../sysdeps/gnu/errlist.c:148
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
+#: stdio-common/../sysdeps/gnu/errlist.c:148 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
 msgid "No such device"
 msgstr "Také zariadenie neexistuje"
 
@@ -2778,16 +2653,14 @@ msgstr "Také zariadenie neexistuje"
 #. TRANS This can mean that the device file was installed incorrectly, or that
 #. TRANS the physical device is missing or not correctly attached to the
 #. TRANS computer.
-#: stdio-common/../sysdeps/gnu/errlist.c:62
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
+#: stdio-common/../sysdeps/gnu/errlist.c:62 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
 msgid "No such device or address"
 msgstr "Také zariadenie alebo adresa neexistuje"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
-#: stdio-common/../sysdeps/gnu/errlist.c:32
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
+#: stdio-common/../sysdeps/gnu/errlist.c:32 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
 msgid "No such file or directory"
 msgstr "Adresár alebo súbor neexistuje"
 
@@ -2800,8 +2673,7 @@ msgid "No such map in server's domain"
 msgstr "Táto mapa sa v doméne servera nenachádza"
 
 #. TRANS No process matches the specified process ID.
-#: stdio-common/../sysdeps/gnu/errlist.c:37
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
+#: stdio-common/../sysdeps/gnu/errlist.c:37 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
 msgid "No such process"
 msgstr "Tento proces neexistuje"
 
@@ -2826,8 +2698,7 @@ msgid "Not a data message"
 msgstr "Nejde o dátovú správu"
 
 #. TRANS A file that isn't a directory was specified when a directory is required.
-#: stdio-common/../sysdeps/gnu/errlist.c:153
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
+#: stdio-common/../sysdeps/gnu/errlist.c:153 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
 msgid "Not a directory"
 msgstr "Nie je adresár"
 
@@ -2859,8 +2730,7 @@ msgstr "Nenájdené, takýto názov neexistuje"
 msgid "Not master server for this domain"
 msgstr "Nie je hlavný server pre túto doménu"
 
-#: nis/nis_error.c:40
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
+#: nis/nis_error.c:40 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
 msgid "Not owner"
 msgstr "Nie je vlastníkom"
 
@@ -2924,8 +2794,7 @@ msgstr "Typ objektu      : "
 #. TRANS already specifies an NFS-mounted file.
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on the GNU system, making this error code impossible.)
-#: stdio-common/../sysdeps/gnu/errlist.c:515
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
+#: stdio-common/../sysdeps/gnu/errlist.c:515 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
 msgid "Object is remote"
 msgstr "Objekt je vzdialený"
 
@@ -2947,8 +2816,7 @@ msgstr "Táto voµba je dostupná iba superu¾ívateµovi!"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
-#: stdio-common/../sysdeps/gnu/errlist.c:307
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
+#: stdio-common/../sysdeps/gnu/errlist.c:307 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
 msgid "Operation already in progress"
 msgstr "Operácia je u¾ rozpracovaná"
 
@@ -2972,8 +2840,7 @@ msgstr "Operácia nie je povolená"
 #. TRANS error can happen for many calls when the object does not support the
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
-#: stdio-common/../sysdeps/gnu/errlist.c:351
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
+#: stdio-common/../sysdeps/gnu/errlist.c:351 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
 msgid "Operation not supported"
 msgstr "Operácia nie je podporovaná"
 
@@ -2989,8 +2856,7 @@ msgstr "Operácia nie je podporovaná na koncovom bode komunikácie"
 #. TRANS the object before the call completes return @code{EALREADY}.  You can
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
-#: stdio-common/../sysdeps/gnu/errlist.c:301
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
+#: stdio-common/../sysdeps/gnu/errlist.c:301 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
 msgid "Operation now in progress"
 msgstr "Operácia prebieha"
 
@@ -3036,8 +2902,7 @@ msgstr "Vlastník         : %s\n"
 msgid "PRIVATE\n"
 msgstr "SÚKROMNÝ\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:757
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
+#: stdio-common/../sysdeps/gnu/errlist.c:757 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
 msgid "Package not installed"
 msgstr "Balík nie je nain¹talovaný"
 
@@ -3060,9 +2925,7 @@ msgid "Path `%s' given more than once"
 msgstr "Cesta `%s' bola zadaná viac ako raz"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:39 nis/ypclnt.c:818
-#: stdio-common/../sysdeps/gnu/errlist.c:109
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
+#: nis/nis_error.c:39 nis/ypclnt.c:818 stdio-common/../sysdeps/gnu/errlist.c:109 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
 msgid "Permission denied"
 msgstr "Prístup odmietnutý"
 
@@ -3110,19 +2973,16 @@ msgstr "Po¾iadavka na spracovanie je u¾ rozpracovaná"
 msgid "Profiling timer expired"
 msgstr "Profilovací èasovaè vypr¹al"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:709
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
+#: stdio-common/../sysdeps/gnu/errlist.c:709 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
 msgid "Protocol driver not attached"
 msgstr "Ovládaè protokolu nepripojený"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:677
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
+#: stdio-common/../sysdeps/gnu/errlist.c:677 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
 msgid "Protocol error"
 msgstr "Chyba protokolu"
 
 #. TRANS The socket communications protocol family you requested is not supported.
-#: stdio-common/../sysdeps/gnu/errlist.c:356
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
+#: stdio-common/../sysdeps/gnu/errlist.c:356 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
 msgid "Protocol family not supported"
 msgstr "Rodina protokolov nie je podporovaná"
 
@@ -3135,14 +2995,12 @@ msgstr "Protokol nie je k dispozícii"
 #. TRANS The socket domain does not support the requested communications protocol
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
-#: stdio-common/../sysdeps/gnu/errlist.c:336
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
+#: stdio-common/../sysdeps/gnu/errlist.c:336 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
 msgid "Protocol not supported"
 msgstr "Protokol nie je podporovaný"
 
 #. TRANS The socket type does not support the requested communications protocol.
-#: stdio-common/../sysdeps/gnu/errlist.c:323
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
+#: stdio-common/../sysdeps/gnu/errlist.c:323 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
 msgid "Protocol wrong type for socket"
 msgstr "Protokol nie je socketom podporovaný"
 
@@ -3281,8 +3139,7 @@ msgid "Read configuration data from NAME"
 msgstr "Naèíta» údaje o konfigurácii z NÁZOV"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
-#: stdio-common/../sysdeps/gnu/errlist.c:219
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
+#: stdio-common/../sysdeps/gnu/errlist.c:219 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
 msgid "Read-only file system"
 msgstr "Súborový systém dovoµuje len èítanie"
 
@@ -3295,13 +3152,11 @@ msgstr "Signál reálneho èasu %d"
 msgid "Regular expression too big"
 msgstr "Regulérny výraz príli¹ veµký"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:829
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
+#: stdio-common/../sysdeps/gnu/errlist.c:829 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
 msgid "Remote I/O error"
 msgstr "Vzdialená V/V chyba"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:785
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
+#: stdio-common/../sysdeps/gnu/errlist.c:785 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
 msgid "Remote address changed"
 msgstr "Vzdialená adresa sa zmenila"
 
@@ -3328,9 +3183,7 @@ msgstr "Replika      :\n"
 msgid "Report bugs to %s.\n"
 msgstr "Chyby hláste na adrese %s.\n"
 
-#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:379
-#: iconv/iconvconfig.c:321 locale/programs/locale.c:268
-#: locale/programs/localedef.c:297 malloc/memusagestat.c:602
+#: catgets/gencat.c:233 debug/pcprofiledump.c:181 iconv/iconv_prog.c:379 iconv/iconvconfig.c:321 locale/programs/locale.c:268 locale/programs/localedef.c:297 malloc/memusagestat.c:602
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr "Chyby hláste na adrese <bugs@gnu.org> - pou¾ite skript `glibcbug'.\n"
 
@@ -3399,8 +3252,7 @@ msgstr "Zdroj bol stratený"
 #. TRANS so usually an interactive program should report the error to the user
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
-#: stdio-common/../sysdeps/gnu/errlist.c:280
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
+#: stdio-common/../sysdeps/gnu/errlist.c:280 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
 msgid "Resource temporarily unavailable"
 msgstr "Zdroj je doèasne neprístupný"
 
@@ -3458,20 +3310,17 @@ msgid "Signal 0"
 msgstr "Signál 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
-#: stdio-common/../sysdeps/gnu/errlist.c:312
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
+#: stdio-common/../sysdeps/gnu/errlist.c:312 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
 msgid "Socket operation on non-socket"
 msgstr "Socketová operácia na objekte, ktorý nie je socket"
 
 #. TRANS The socket type is not supported.
-#: stdio-common/../sysdeps/gnu/errlist.c:341
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
+#: stdio-common/../sysdeps/gnu/errlist.c:341 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
 msgid "Socket type not supported"
 msgstr "Typ socketu nie je podporovaný"
 
 #. TRANS A network connection was aborted locally.
-#: stdio-common/../sysdeps/gnu/errlist.c:395
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
+#: stdio-common/../sysdeps/gnu/errlist.c:395 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
 msgid "Software caused connection abort"
 msgstr "Software spôsobil zru¹enie spojenia"
 
@@ -3483,8 +3332,7 @@ msgstr "Bohu¾iaµ - nie ste superu¾ívateµ\n"
 msgid "Source definitions are found in FILE"
 msgstr "Zdrojové definície sa nachádzajú v SÚBORe"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:765
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
+#: stdio-common/../sysdeps/gnu/errlist.c:765 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
 msgid "Srmount error"
 msgstr "Chyba srmount"
 
@@ -3496,8 +3344,7 @@ msgstr "Chyba zásobníka"
 #. TRANS system which is due to file system rearrangements on the server host.
 #. TRANS Repairing this condition usually requires unmounting and remounting
 #. TRANS the NFS file system on the local host.
-#: stdio-common/../sysdeps/gnu/errlist.c:507
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
+#: stdio-common/../sysdeps/gnu/errlist.c:507 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
 msgid "Stale NFS file handle"
 msgstr "Zastaralý odkaz na NFS súbor"
 
@@ -3530,13 +3377,11 @@ msgstr "Zastavené (výstup na terminál)"
 msgid "Streams pipe error"
 msgstr "Chyba rúry prúdov"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:813
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
+#: stdio-common/../sysdeps/gnu/errlist.c:813 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
 msgid "Structure needs cleaning"
 msgstr "©truktúra potrebuje opravu"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
-#: stdio-common/../sysdeps/gnu/errlist.c:20
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366 stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Úspech"
 
@@ -3607,8 +3452,7 @@ msgstr "Ukonèené"
 #. TRANS debugger to run a program is considered having it open for writing and
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
-#: stdio-common/../sysdeps/gnu/errlist.c:198
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
+#: stdio-common/../sysdeps/gnu/errlist.c:198 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
 msgid "Text file busy"
 msgstr "Spustiteµný súbor je pou¾ívaný"
 
@@ -3635,8 +3479,7 @@ msgstr "Táto implementácia nepodporuje nový ¹týl alebo MT-bezpeèný kód!\n"
 msgid "Time to live : "
 msgstr "®ivotnos»       : "
 
-#: stdio-common/../sysdeps/gnu/errlist.c:681
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
+#: stdio-common/../sysdeps/gnu/errlist.c:681 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
 msgid "Timer expired"
 msgstr "Èasovaè vypr¹al"
 
@@ -3657,8 +3500,7 @@ msgstr "Priveµa úrovní symbolických odkazov"
 #. TRANS Too many links; the link count of a single file would become too large.
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
-#: stdio-common/../sysdeps/gnu/errlist.c:226
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
+#: stdio-common/../sysdeps/gnu/errlist.c:226 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
 msgid "Too many links"
 msgstr "Priveµa odkazov"
 
@@ -3669,8 +3511,7 @@ msgstr "Priveµa odkazov"
 #. TRANS limit that can usually be increased.  If you get this error, you might
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
-#: stdio-common/../sysdeps/gnu/errlist.c:176
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
+#: stdio-common/../sysdeps/gnu/errlist.c:176 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
 msgid "Too many open files"
 msgstr "Priveµa otvorených súborov"
 
@@ -3689,15 +3530,13 @@ msgid "Too many processes"
 msgstr "Priveµa procesov"
 
 #. TRANS ???
-#: stdio-common/../sysdeps/gnu/errlist.c:440
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
+#: stdio-common/../sysdeps/gnu/errlist.c:440 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
 msgid "Too many references: cannot splice"
 msgstr "Priveµa odkazov - nie je mo¾né rozdeli»"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
-#: stdio-common/../sysdeps/gnu/errlist.c:494
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
+#: stdio-common/../sysdeps/gnu/errlist.c:494 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
 msgid "Too many users"
 msgstr "Priveµa pou¾ívateµov"
 
@@ -3718,8 +3557,7 @@ msgstr "Prekladací program skonèil"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
-#: stdio-common/../sysdeps/gnu/errlist.c:415
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
+#: stdio-common/../sysdeps/gnu/errlist.c:415 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
 msgid "Transport endpoint is already connected"
 msgstr "Koncový komunikaèný bod je u¾ spojený"
 
@@ -3727,8 +3565,7 @@ msgstr "Koncový komunikaèný bod je u¾ spojený"
 #. TRANS try to transmit data over a socket, without first specifying a
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
-#: stdio-common/../sysdeps/gnu/errlist.c:423
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
+#: stdio-common/../sysdeps/gnu/errlist.c:423 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
 msgid "Transport endpoint is not connected"
 msgstr "Koncový komunikaèný bod nie je spojený"
 
@@ -3799,9 +3636,7 @@ msgstr "Neznáma databáza %s\n"
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: string/../sysdeps/generic/_strerror.c:48
-#: string/../sysdeps/mach/_strerror.c:88
-#: sysdeps/mach/hurd/mips/dl-machine.c:83
+#: string/../sysdeps/generic/_strerror.c:48 string/../sysdeps/mach/_strerror.c:88 sysdeps/mach/hurd/mips/dl-machine.c:83
 msgid "Unknown error "
 msgstr "Neznáma chyba "
 
@@ -3897,8 +3732,7 @@ msgstr "Pou¾ívateµom definovaný signál 1"
 msgid "User defined signal 2"
 msgstr "Pou¾ívateµom definovaný signál 2"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:673
-#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
+#: stdio-common/../sysdeps/gnu/errlist.c:673 stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
 msgid "Value too large for defined data type"
 msgstr "Hodnota je pre daný dátový typ priveµká"
 
@@ -3942,10 +3776,7 @@ msgstr "Zápi údajov do cache zlyhal"
 msgid "Writing of cache data failed."
 msgstr "Zápi údajov do cache zlyhal."
 
-#: catgets/gencat.c:251 elf/ldconfig.c:264 elf/sprof.c:361
-#: iconv/iconv_prog.c:398 iconv/iconvconfig.c:340 locale/programs/locale.c:286
-#: locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95
-#: nss/getent.c:68 posix/getconf.c:909
+#: catgets/gencat.c:251 elf/ldconfig.c:264 elf/sprof.c:361 iconv/iconv_prog.c:398 iconv/iconvconfig.c:340 locale/programs/locale.c:286 locale/programs/localedef.c:316 nscd/nscd.c:292 nscd/nscd_nischeck.c:95 nss/getent.c:68 posix/getconf.c:909
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Autor: %s.\n"
@@ -4008,8 +3839,7 @@ msgstr "`%.*s' bol u¾ definovaný v znakovej mape"
 msgid "`%.*s' already defined in repertoire"
 msgstr "`%.*s' bol u¾ definovaný v repertoári"
 
-#: locale/programs/charmap.c:604 locale/programs/locfile.h:96
-#: locale/programs/repertoire.c:314
+#: locale/programs/charmap.c:604 locale/programs/locfile.h:96 locale/programs/repertoire.c:314
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "Definícia `%1$s' nekonèí `END %1$s'"
@@ -4054,13 +3884,11 @@ msgstr "argument pre `%s' musí by» jeden znak"
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - Fatálna chyba marshallingu"
 
-#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
-#: sunrpc/auth_unix.c:153
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150 sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: nedostatok pamäti\n"
 
-#: locale/programs/charmap.c:369 locale/programs/locfile.c:120
-#: locale/programs/locfile.c:147 locale/programs/repertoire.c:176
+#: locale/programs/charmap.c:369 locale/programs/locfile.c:120 locale/programs/locfile.c:147 locale/programs/repertoire.c:176
 msgid "bad argument"
 msgstr "chybný argument"
 
@@ -4154,8 +3982,7 @@ msgstr "nie je mo¾né zmeni» ochranu pamäti"
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "nie je mo¾né vytvori» kópiu RUNPATH/RPATH"
 
-#: elf/dl-load.c:456 elf/dl-load.c:525 elf/dl-load.c:553 elf/dl-load.c:600
-#: elf/dl-load.c:693
+#: elf/dl-load.c:456 elf/dl-load.c:525 elf/dl-load.c:553 elf/dl-load.c:600 elf/dl-load.c:693
 msgid "cannot create cache for search path"
 msgstr "Nie je mo¾né vytvori» cache pre hµadanie v ceste"
 
@@ -4249,8 +4076,7 @@ msgstr "nie je mo¾né otvori» vstupný súbor"
 msgid "cannot open input file `%s'"
 msgstr "nie je mo¾né otvori» vstupný súbor `%s'"
 
-#: locale/programs/localedef.c:203 locale/programs/localedef.c:218
-#: locale/programs/localedef.c:513 locale/programs/localedef.c:533
+#: locale/programs/localedef.c:203 locale/programs/localedef.c:218 locale/programs/localedef.c:513 locale/programs/localedef.c:533
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "nie je mo¾né otvori» súbor definície národného prostredia `%s'"
@@ -4551,8 +4377,7 @@ msgstr "chyba poèas zatvárania výstupného súboru"
 msgid "error while closing the profiling data file"
 msgstr "chyba poèas zatvárania súboru profilovacích údajov"
 
-#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:538 iconv/iconv_prog.c:516
-#: iconv/iconv_prog.c:547
+#: iconv/iconv_charmap.c:507 iconv/iconv_charmap.c:538 iconv/iconv_prog.c:516 iconv/iconv_prog.c:547
 msgid "error while reading the input"
 msgstr "poèas èítania vstupu"
 
@@ -4785,8 +4610,7 @@ msgstr "neprípustný mód pre dlopen()"
 msgid "invalid month name"
 msgstr "neprípustný názov mesiaca"
 
-#: locale/programs/charmap.c:974 locale/programs/ld-collate.c:2888
-#: locale/programs/repertoire.c:418
+#: locale/programs/charmap.c:974 locale/programs/ld-collate.c:2888 locale/programs/repertoire.c:418
 msgid "invalid names for character range"
 msgstr "neprípustné mená pre rozsah znakov"
 
@@ -4887,8 +4711,7 @@ msgstr "pamä» pred prideleným blokom prepísaná\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "pamä» za koncom prideleného bloku prepísaná\n"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
-#: posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493 posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "nedostatok pamäti"
 
@@ -4908,10 +4731,7 @@ msgstr "viac ako jeden dynamický segment\n"
 msgid "nameless rule"
 msgstr "bezmenné pravidlo"
 
-#: nis/nss_nisplus/nisplus-publickey.c:281
-#: nis/nss_nisplus/nisplus-publickey.c:287
-#: nis/nss_nisplus/nisplus-publickey.c:346
-#: nis/nss_nisplus/nisplus-publickey.c:355
+#: nis/nss_nisplus/nisplus-publickey.c:281 nis/nss_nisplus/nisplus-publickey.c:287 nis/nss_nisplus/nisplus-publickey.c:346 nis/nss_nisplus/nisplus-publickey.c:355
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
 msgstr "netname2user: (nis+ lookup): %s\n"
@@ -4978,13 +4798,11 @@ msgstr "neboli definované ¾iadne výstupné èíslice a v znakovej mape nie je ¾iadn
 msgid "no output file produced because warning were issued"
 msgstr "výstupný súbor nebol vytvorený kvôli výskytu varovaní"
 
-#: locale/programs/charmap.c:493 locale/programs/charmap.c:673
-#: locale/programs/charmap.c:769 locale/programs/repertoire.c:231
+#: locale/programs/charmap.c:493 locale/programs/charmap.c:673 locale/programs/charmap.c:769 locale/programs/repertoire.c:231
 msgid "no symbolic name given"
 msgstr "nebolo zadané ¾iadne symbolické meno"
 
-#: locale/programs/charmap.c:580 locale/programs/charmap.c:728
-#: locale/programs/charmap.c:811 locale/programs/repertoire.c:297
+#: locale/programs/charmap.c:580 locale/programs/charmap.c:728 locale/programs/charmap.c:811 locale/programs/repertoire.c:297
 msgid "no symbolic name given for end of range"
 msgstr "nebolo zadané ¾iadne symbolické meno pre koniec rozsahu"
 
@@ -5090,9 +4908,7 @@ msgstr "profilovacie údaje `%s' nesúhlasia so zdieµanýmobjektom `%s'"
 msgid "program %lu is not available\n"
 msgstr "program %lu nie je dostupný\n"
 
-#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333
-#: sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476
-#: sunrpc/rpcinfo.c:510
+#: sunrpc/rpcinfo.c:264 sunrpc/rpcinfo.c:310 sunrpc/rpcinfo.c:333 sunrpc/rpcinfo.c:407 sunrpc/rpcinfo.c:453 sunrpc/rpcinfo.c:476 sunrpc/rpcinfo.c:510
 #, c-format
 msgid "program %lu version %lu is not available\n"
 msgstr "program %lu verzie %lu nie je dostupný\n"
@@ -5308,27 +5124,21 @@ msgstr "symbol `%s' má rovnaké kódovanie ako"
 msgid "symbol `%s' not defined"
 msgstr "symbol `%s' nie je definovaný"
 
-#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007
-#: locale/programs/ld-ctype.c:2049
+#: locale/programs/ld-ctype.c:1956 locale/programs/ld-ctype.c:2007 locale/programs/ld-ctype.c:2049
 msgid "syntax error"
 msgstr "chyba syntaxe"
 
-#: locale/programs/charmap.c:492 locale/programs/charmap.c:546
-#: locale/programs/charmap.c:578 locale/programs/charmap.c:672
-#: locale/programs/charmap.c:727 locale/programs/charmap.c:768
-#: locale/programs/charmap.c:809
+#: locale/programs/charmap.c:492 locale/programs/charmap.c:546 locale/programs/charmap.c:578 locale/programs/charmap.c:672 locale/programs/charmap.c:727 locale/programs/charmap.c:768 locale/programs/charmap.c:809
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "chyba syntaxe v definícii %s: %s"
 
-#: locale/programs/charmap.c:351 locale/programs/charmap.c:368
-#: locale/programs/repertoire.c:175
+#: locale/programs/charmap.c:351 locale/programs/charmap.c:368 locale/programs/repertoire.c:175
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr "chyba syntaxe v prológu: %s"
 
-#: locale/programs/repertoire.c:230 locale/programs/repertoire.c:271
-#: locale/programs/repertoire.c:296
+#: locale/programs/repertoire.c:230 locale/programs/repertoire.c:271 locale/programs/repertoire.c:296
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr "chyba syntaxe v definícii mapy repertoáru: %s"
