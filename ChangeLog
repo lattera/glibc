@@ -1,5 +1,8 @@
 2001-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/gnu/net/if.h: Correct _IOT_ifreq and add _IOT_ifreq_short
+	and _IOT_ifreq_int.  Patch by Mark Kettenis <kettenis@wins.uva.nl>.
+
 	* elf/dl-deps.c (_dl_map_object_deps): Fix handling of failing
 	_dl_catch_error calls.
 

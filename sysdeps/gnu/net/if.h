@@ -163,7 +163,9 @@ struct ifreq
 # define ifr_bandwidth	ifr_ifru.ifru_ivalue	/* link bandwidth	*/
 # define ifr_qlen	ifr_ifru.ifru_ivalue	/* queue length		*/
 # define ifr_newname	ifr_ifru.ifru_newname	/* New name		*/
-# define _IOT_ifreq	_IOT(_IOTS(struct ifreq),1,0,0,0,0) /* not right */
+# define _IOT_ifreq	_IOT(_IOTS(char),IFNAMSIZ,_IOTS(char),16,0,0)
+# define _IOT_ifreq_short _IOT(_IOTS(char),IFNAMSIZ,_IOTS(short),1,0,0)
+# define _IOT_ifreq_int	_IOT(_IOTS(char),IFNAMSIZ,_IOTS(int),1,0,0)
 
 
 /* Structure used in SIOCGIFCONF request.  Used to retrieve interface
