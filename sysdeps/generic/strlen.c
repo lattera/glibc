@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1993, 1997, 2000 Free Software Foundation, Inc.
    Written by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se);
    commentary by Jim Blandy (jimb@ai.mit.edu).
@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
+#include <stdlib.h>
 
 #undef strlen
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1993, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,96,97,99,2000 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -34,6 +34,7 @@
 #if defined (_LIBC)
 # include <string.h>
 # include <memcopy.h>
+# include <stdlib.h>
 #else
 # define reg_char char
 #endif

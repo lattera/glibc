@@ -1,5 +1,9 @@
 2000-07-05  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/mips/fpu_control.h: Fix type of fpu_control_t.
+	(_FPU_GETCW): Remove extra colon.
+	Patch by Ralf Baechle <ralf@uni-koblenz.de>.
+
 	* posix/fnmatch_loop.c (FCT): Only declare len if
 	!WIDE_CHAR_VERSION to silence GCC.
 
@@ -60,7 +64,7 @@
 2000-07-03  Greg McGary  <greg@mcgary.org>
 
 	* sysdeps/i386/bits/setjmp.h (PUSH_SIGNAL_MASK): Fix typo.
-	
+
 	* csu/Makefile (extra-objs, install-lib): Add BP objects conditionally.
 	($(objpfx)b$(start-installed-name)): Add non-elf rule.
 

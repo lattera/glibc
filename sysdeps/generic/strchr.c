@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
    Based on strlen implementation by Torbjorn Granlund (tege@sics.se),
    with help from Dan Sahlin (dan@sics.se) and
    bug fix and commentary by Jim Blandy (jimb@ai.mit.edu);
@@ -22,6 +22,7 @@
 
 #include <string.h>
 #include <memcopy.h>
+#include <stdlib.h>
 
 #undef strchr
 
