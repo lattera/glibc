@@ -529,10 +529,10 @@ three methods of tree traversal (or even a combination of them).
 @item preorder
 The current node is an internal node and the function is called before
 the first child was processed.
-@item endorder
+@item postorder
 The current node is an internal node and the function is called after
 the first child was processed.
-@item postorder
+@item endorder
 The current node is an internal node and the function is called after
 the second child was processed.
 @item leaf
@@ -543,7 +543,7 @@ The current node is a leaf.
 @comment search.h
 @comment SVID
 @deftypefun void twalk (const void *@var{root}, __action_fn_t @var{action})
-For each node in the tree with a node pointed to by @var{root} the
+For each node in the tree with a node pointed to by @var{root}, the
 @code{twalk} function calls the function provided by the parameter
 @var{action}.  For leaf nodes the function is called exactly once with
 @var{value} set to @code{leaf}.  For internal nodes the function is
@@ -554,8 +554,8 @@ by one for the descend to a child, starting with the value @math{0} for
 the root node.
 
 Since the functions used for the @var{action} parameter to @code{twalk}
-must not modify the tree data it is safe to run @code{twalk} is more
-than one thread at the same time working on the same tree.  It is also
+must not modify the tree data, it is safe to run @code{twalk} in more
+than one thread at the same time, working on the same tree.  It is also
 safe to call @code{tfind} in parallel.  Functions which modify the tree
-must not be used.  Otherwise the behaviour is undefined.
+must not be used, otherwise the behaviour is undefined.
 @end deftypefun
