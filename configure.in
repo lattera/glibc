@@ -309,6 +309,8 @@ mips*)		base_machine=mips
 		IP22) machine=mips/mips3 ;;
 		*)    machine=mips/$machine ;;
 		esac ;;
+s390)           base_machine=s390 machine=s390/s390-32 ;;
+s390x)          base_machine=s390 machine=s390/s390-64 ;;
 sh3*)		base_machine=sh machine=sh/sh3 ;;
 sh4*)		base_machine=sh machine=sh/sh4 ;;
 sparc | sparcv[67])

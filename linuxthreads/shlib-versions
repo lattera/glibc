@@ -4,4 +4,5 @@ sparc64-.*-linux.*	libpthread=0		GLIBC_2.2
 sh.*-.*-linux.*		libpthread=0		GLIBC_2.2
 ia64.*-.*-linux.*	libpthread=0		GLIBC_2.2
 hppa.*-.*-linux.*	libpthread=0		GLIBC_2.2
+s390x-.*-linux.*	libpthread=0		GLIBC_2.2
 .*-.*-linux.*		libpthread=0

@@ -1,3 +1,15 @@
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* shlib-versions: Add rule for Linux on 64 bit S/390.
+	* sysdeps/s390/s390-64/pt-machine.h: New file.
+	* sysdeps/unix/sysv/linux/s390/s390-64/pt-initfini.c: New file.
+
+2001-03-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/pt-machine.h: Move to...
+	* sysdeps/s390/s390-32/pt-machine.h: ...here.
+	Add defines for FLOATING_STACK and ARCH_STACK_MAX_SIZE.
+
 2001-03-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions [libpthread] (GLIBC_2.2.3): Add pthread_getattr_np.

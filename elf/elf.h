@@ -2028,7 +2028,16 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_390_GOT16     15             /* 16 bit GOT offset.  */
 #define R_390_PC16      16             /* PC relative 16 bit.  */
 #define R_390_PC16DBL   17             /* PC relative 16 bit shifted by 1.  */
-#define R_390_PLT16DBL  18             /* 32 bit PC rel. PLT shifted by 1.  */
+#define R_390_PLT16DBL  18             /* 16 bit PC rel. PLT shifted by 1.  */
+#define R_390_PC32DBL   19             /* PC relative 32 bit shifted by 1.  */
+#define R_390_PLT32DBL  20             /* 32 bit PC rel. PLT shifted by 1.  */
+#define R_390_GOTPCDBL  21             /* 32 bit PC rel. GOT shifted by 1.  */
+#define R_390_64        22             /* Direct 64 bit.  */
+#define R_390_PC64      23             /* PC relative 64 bit.  */
+#define R_390_GOT64     24             /* 64 bit GOT offset.  */
+#define R_390_PLT64     25             /* 64 bit PC relative PLT address.  */
+#define R_390_GOTENT    26             /* 32 bit PC rel. to GOT entry >> 1. */
+
 /* Keep this the last entry.  */
 #define R_390_NUM       19
 
