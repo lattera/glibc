@@ -33,6 +33,7 @@ libc {
     mach_error; mach_error_string; mach_error_type;
     mach_host_self;
     mach_msg; mach_msg_destroy;
+    mach_msg_send; mach_msg_receive;
     mach_msg_server; mach_msg_server_timeout;
     mach_open_devstream;
     mach_port_allocate; mach_port_allocate_name; mach_port_deallocate;
