@@ -2,6 +2,10 @@
 
 	* version.h (VERSION): Bump to 2.0.109.
 
+	* Makefile (distribute): Add INTERFACE and CONFORMANCE.
+	* elf/Makefile (distribute): Add hp-timing.h.
+	* sysdeps/i386/i686/Dist: New file.
+
 	* mach/Versions: Add mach_msg_send and mach_msg_receive.
 	Patch by UCHIYAMA Yasushi <uch@nop.or.jp>.
 
