@@ -1,3 +1,7 @@
+2000-4-10  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/stackinfo.h: New file.
+
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/tst-C-locale.c (run_test): Add tests for locale objects.

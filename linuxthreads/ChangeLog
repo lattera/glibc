@@ -1,3 +1,10 @@
+2001-04-10  kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/pspinlock.c (__pthread_spin_lock): Fix a reverse
+	test.
+	(__pthread_spin_trylock): Likewise.
+	* sysdeps/sh/pt-machine.h (testandset): Likewise.
+
 2001-04-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* join.c (pthread_exit): Move code to new function __pthread_do_exit

@@ -1,5 +1,5 @@
 /* POSIX spinlock implementation.  SH version.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __pthread_spin_lock (pthread_spinlock_t *lock)
 		  : "=r" (val)
 		  : "r" (lock)
 		  : "memory");
-  while (val != 0);
+  while (val == 0);
 
   return 0;
 }
@@ -47,7 +47,7 @@ __pthread_spin_trylock (pthread_spinlock_t *lock)
 		: "=r" (val)
 		: "r" (lock)
 		: "memory");
-  return val ? EBUSY : 0;
+  return val ? 0 : EBUSY;
 }
 weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
 

@@ -1,8 +1,5 @@
-/* Machine-dependent pthreads configuration and inline functions.
-   SuperH version.
-   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Niibe Yutaka <gniibe@m17n.org>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,28 +16,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef PT_EI
-# define PT_EI extern inline
-#endif
+/* This file contains a bit of information about the stack allocation
+   of the processor.  */
 
-/* Spinlock implementation; required.  */
-PT_EI long int
-testandset (int *spinlock)
-{
-  int ret;
+#ifndef _STACKINFO_H
+#define _STACKINFO_H	1
 
-  __asm__ __volatile__(
-       "tas.b	@%1\n\t"
-       "movt	%0"
-       : "=r" (ret)
-       : "r" (spinlock)
-       : "memory", "cc");
+/* On SH the stack grows down.  */
+#define _STACK_GROWS_DOWN	1
 
-  return (ret == 0);
-}
-
-
-/* Get some notion of the current stack.  Need not be exactly the top
-   of the stack, just something somewhere in the current frame.  */
-#define CURRENT_STACK_FRAME  stack_pointer
-register char * stack_pointer __asm__ ("r15");
+#endif	/* stackinfo.h */

@@ -375,6 +375,7 @@ run_test (const char *locname)
 	    }
 	  CLASSTEST (alnum);
 	  CLASSTEST (alpha);
+	  CLASSTEST (blank);
 	  CLASSTEST (cntrl);
 	  CLASSTEST (digit);
 	  CLASSTEST (lower);
@@ -396,6 +397,8 @@ run_test (const char *locname)
 	  MAPTEST (lower);
 	  MAPTEST (upper);
 	}
+
+      __freelocale (loc);
     }
 
   return result;
