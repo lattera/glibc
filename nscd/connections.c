@@ -32,6 +32,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#ifdef HAVE_EPOLL
+# include <sys/epoll.h>
+#endif
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/poll.h>
@@ -1017,33 +1020,55 @@ handle_request: request received (Version = %d)"), req.version);
 }
 
 
+static unsigned int nconns;
+
+static void
+fd_ready (int fd)
+{
+  pthread_mutex_lock (&readylist_lock);
+
+  /* Find an empty entry in FDLIST.  */
+  size_t inner;
+  for (inner = 0; inner < nconns; ++inner)
+    if (fdlist[inner].next == NULL)
+      break;
+  assert (inner < nconns);
+
+  fdlist[inner].fd = fd;
+
+  if (readylist == NULL)
+    readylist = fdlist[inner].next = &fdlist[inner];
+  else
+    {
+      fdlist[inner].next = readylist->next;
+      readylist = readylist->next = &fdlist[inner];
+    }
+
+  bool do_signal = true;
+  if (__builtin_expect (nready == 0, 0))
+    {
+      ++client_queued;
+      do_signal = false;
+    }
+
+  pthread_mutex_unlock (&readylist_lock);
+
+  /* Tell one of the worker threads there is work to do.  */
+  if (do_signal)
+    pthread_cond_signal (&readylist_cond);
+}
+
+
+/* Time a connection was accepted.  */
+static time_t *starttime;
+
+
 static void
 __attribute__ ((__noreturn__))
-main_loop (void)
+main_loop_poll (void)
 {
-  /* Determine how much room for descriptors we should initially
-     allocate.  This might need to change later if we cap the number
-     with MAXCONN.  */
-  const long int nfds = sysconf (_SC_OPEN_MAX);
-  unsigned int nconns;
-#define MINCONN 32
-#define MAXCONN 16384
-  if (nfds == -1 || nfds > MAXCONN)
-    nconns = MAXCONN;
-  else if (nfds < MINCONN)
-    nconns = MINCONN;
-  else
-    nconns = nfds;
-
   struct pollfd *conns = (struct pollfd *) xmalloc (nconns
 						    * sizeof (conns[0]));
-
-  /* We need two mirroring arrays filled with the times the connection
-     was accepted and a place to pass descriptors on to the worker
-     threads.  We cannot put this in the same data structure as the
-     CONNS data since CONNS is passed as an array to poll().  */
-  time_t *starttime = (time_t *) xmalloc (nconns * sizeof (starttime[0]));
-  fdlist = (struct fdlist *) xcalloc (nconns, sizeof (fdlist[0]));
 
   conns[0].fd = sock;
   conns[0].events = POLLRDNORM;
@@ -1074,17 +1099,9 @@ main_loop (void)
 	      /* We have a new incoming connection.  Accept the connection.  */
 	      int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
 
-	      if (fd >= 0)
+	      /* use the descriptor if we have not reached the limit.  */
+	      if (fd >= 0 && firstfree < nconns)
 		{
-		  /* We have a new file descriptor.  Keep it around
-		     and wait until data becomes available.  */
-		  if (firstfree == nconns)
-		    {
-		      // XXX Maybe extend array.  For now, reject
-		      close (fd);
-		      goto reject_out;
-		    }
-
 		  conns[firstfree].fd = fd;
 		  conns[firstfree].events = POLLRDNORM;
 		  starttime[firstfree] = now;
@@ -1096,44 +1113,13 @@ main_loop (void)
 		  while (firstfree < nused && conns[firstfree].fd != -1);
 		}
 
-	    reject_out:
 	      --n;
 	    }
 
 	  for (size_t cnt = 1; cnt < nused && n > 0; ++cnt)
 	    if (conns[cnt].revents != 0)
 	      {
-		pthread_mutex_lock (&readylist_lock);
-
-		/* Find an empty entry in FDLIST.  */
-		size_t inner;
-		for (inner = 0; inner < nconns; ++inner)
-		  if (fdlist[inner].next == NULL)
-		    break;
-		assert (inner < nconns);
-
-		fdlist[inner].fd = conns[cnt].fd;
-
-		if (readylist == NULL)
-		  readylist = fdlist[inner].next = &fdlist[inner];
-		else
-		  {
-		    fdlist[inner].next = readylist->next;
-		    readylist = readylist->next = &fdlist[inner];
-		  }
-
-		bool do_signal = true;
-		if (__builtin_expect (nready == 0, 0))
-		  {
-		    ++client_queued;
-		    do_signal = false;
-		  }
-
-		pthread_mutex_unlock (&readylist_lock);
-
-		/* Tell one of the worker threads there is work to do.  */
-		if (do_signal)
-		  pthread_cond_signal (&readylist_cond);
+		fd_ready (conns[cnt].fd);
 
 		/* Clean up the CONNS array.  */
 		conns[cnt].fd = -1;
@@ -1150,15 +1136,16 @@ main_loop (void)
 
       /* Now find entries which have timed out.  */
       assert (nused > 0);
-      for (size_t cnt = nused - 1; cnt > 0; --cnt)
-	{
-	  /* We make the timeout length depend on the number of file
-	     descriptors currently used.  */
+
+      /* We make the timeout length depend on the number of file
+	 descriptors currently used.  */
 #define ACCEPT_TIMEOUT \
   (MAX_ACCEPT_TIMEOUT							      \
    - ((MAX_ACCEPT_TIMEOUT - MIN_ACCEPT_TIMEOUT) * nused) / nconns)
+      time_t laststart = now - ACCEPT_TIMEOUT;
 
-	  time_t laststart = now - ACCEPT_TIMEOUT;
+      for (size_t cnt = nused - 1; cnt > 0; --cnt)
+	{
 	  if (conns[cnt].fd != -1 && starttime[cnt] < laststart)
 	    {
 	      /* Remove the entry, it timed out.  */
@@ -1175,6 +1162,99 @@ main_loop (void)
 	}
     }
 }
+
+
+#ifdef HAVE_EPOLL
+static void
+main_loop_epoll (int efd)
+{
+  struct epoll_event ev = { 0, };
+  int nused = 1;
+  size_t highest = 0;
+
+  /* Add the socket.  */
+  ev.events = EPOLLRDNORM;
+  ev.data.fd = sock;
+  if (epoll_ctl (efd, EPOLL_CTL_ADD, sock, &ev) == -1)
+    /* We cannot use epoll.  */
+    return;
+
+  while (1)
+    {
+      struct epoll_event revs[100];
+# define nrevs (sizeof (revs) / sizeof (revs[0]))
+
+      int n = epoll_wait (efd, revs, nrevs, MAIN_THREAD_TIMEOUT);
+
+      time_t now = time (NULL);
+
+      for (int cnt = 0; cnt < n; ++cnt)
+	if (revs[cnt].data.fd == sock)
+	  {
+	    /* A new connection.  */
+	    int fd = TEMP_FAILURE_RETRY (accept (sock, NULL, NULL));
+
+	    if (fd >= 0)
+	      {
+		/* Try to add the  new descriptor.  */
+		ev.data.fd = fd;
+		if (fd >= nconns
+		    || epoll_ctl (efd, EPOLL_CTL_ADD, fd, &ev) == -1)
+		  /* The descriptor is too large or something went
+		     wrong.  Close the descriptor.  */
+		  close (fd);
+		else
+		  {
+		    /* Remember when we accepted the connection.  */
+		    starttime[fd] = now;
+
+		    if (fd > highest)
+		      highest = fd;
+
+		    ++nused;
+		  }
+	      }
+	  }
+	else
+	  {
+	    /* Remove the descriptor from the epoll descriptor.  */
+	    struct epoll_event ev = { 0, };
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, revs[cnt].data.fd, &ev);
+
+	    /* Get a worked to handle the request.  */
+	    fd_ready (revs[cnt].data.fd);
+
+	    /* Reset the time.  */
+	    starttime[revs[cnt].data.fd] = 0;
+	    if (revs[cnt].data.fd == highest)
+	      do
+		--highest;
+	      while (highest > 0 && starttime[highest] == 0);
+
+	    --nused;
+	  }
+
+      /*  Now look for descriptors for accepted connections which have
+	  no reply in too long of a time.  */
+      time_t laststart = now - ACCEPT_TIMEOUT;
+      for (int cnt = highest; cnt > STDERR_FILENO; --cnt)
+	if (cnt != sock && starttime[cnt] != 0 && starttime[cnt] < laststart)
+	  {
+	    /* We are waiting for this one for too long.  Close it.  */
+	    struct epoll_event ev = {0, };
+	    (void) epoll_ctl (efd, EPOLL_CTL_DEL, cnt, &ev);
+
+	    (void) close (cnt);
+
+	    starttime[cnt] = 0;
+	    if (cnt == highest)
+	      --highest;
+	  }
+	else if (cnt != sock && starttime[cnt] == 0 && cnt == highest)
+	  --highest;
+    }
+}
+#endif
 
 
 /* Start all the threads we want.  The initial process is thread no. 1.  */
@@ -1216,9 +1296,36 @@ start_threads (void)
 
   pthread_attr_destroy (&attr);
 
+  /* Determine how much room for descriptors we should initially
+     allocate.  This might need to change later if we cap the number
+     with MAXCONN.  */
+  const long int nfds = sysconf (_SC_OPEN_MAX);
+#define MINCONN 32
+#define MAXCONN 16384
+  if (nfds == -1 || nfds > MAXCONN)
+    nconns = MAXCONN;
+  else if (nfds < MINCONN)
+    nconns = MINCONN;
+  else
+    nconns = nfds;
+
+  /* We need memory to pass descriptors on to the worker threads.  */
+  fdlist = (struct fdlist *) xcalloc (nconns, sizeof (fdlist[0]));
+  /* Array to keep track when connection was accepted.  */
+  starttime = (time_t *) xcalloc (nconns, sizeof (starttime[0]));
+
   /* In the main thread we execute the loop which handles incoming
      connections.  */
-  main_loop ();
+#ifdef HAVE_EPOLL
+  int efd = epoll_create (100);
+  if (efd != -1)
+    {
+      main_loop_epoll (efd);
+      close (efd);
+    }
+#endif
+
+  main_loop_poll ();
 }
 
 

@@ -1,4 +1,14 @@
+2004-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Implement alternative loop for main thread
+	which uses epoll.
+	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd]
+	(CFLAGS-connections.c): Add -DHAVE_EPOLL.
+
 2004-10-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/Makefile (CFLAGS-initgrcache.c): Add to CFLAGS-* variables,
+	don't replace old content.
 
 	* nscd/connections.c: Rewrite handling of incoming connections.  All
 	are handled by one thread which then hands of the descriptors for the

@@ -150,3 +150,7 @@ ifeq ($(subdir),rt)
 CFLAGS-mq_send.c += -fexceptions
 CFLAGS-mq_receive.c += -fexceptions
 endif
+
+ifeq ($(subdir),nscd)
+CFLAGS-connections.c += -DHAVE_EPOLL
+endif
