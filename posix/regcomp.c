@@ -335,6 +335,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
           if (cset->non_match || cset->ncoll_syms || cset->nequiv_classes
               || cset->nranges || cset->nchar_classes)
             {
+#ifdef _LIBC
               if (_NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES) != 0)
                 {
                   /* In this case we want to catch the bytes which are
@@ -351,6 +352,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
                       if (table[ch] < 0)
                         fastmap[ch] = 1;
                 }
+#endif
             }
           for (i = 0; i < cset->nmbchars; ++i)
             {
@@ -3024,10 +3026,12 @@ static void
 free_charset (re_charset_t *cset)
 {
   re_free (cset->mbchars);
+#ifdef _LIBC
   re_free (cset->coll_syms);
   re_free (cset->equiv_classes);
   re_free (cset->range_starts);
   re_free (cset->range_ends);
+#endif
   re_free (cset->char_classes);
   re_free (cset);
 }
