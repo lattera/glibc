@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  ARM version.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,6 +22,10 @@
 #endif
 
 /* We must defeat the generic optimized versions of these functions in
-   <bits/string2.h> since they don't work on the ARM.  */
+   <bits/string2.h> since they don't work on the ARM.  This is because
+   the games they play with the __STRING2_COPY_ARR# structures fail
+   when structs are always 32-bit aligned.
+   XXX Should provide suitably optimal replacements.  */
 #define _HAVE_STRING_ARCH_strcpy 1
 #define _HAVE_STRING_ARCH_stpcpy 1
+#define _HAVE_STRING_ARCH_mempcpy 1
