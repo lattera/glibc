@@ -1,5 +1,7 @@
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/elf.h: Add missing official relocations.
+
 	* libio/stdio.h: Define __FILE if __need___FILE is defined.
 	* stdio/stdio.h: Likewise.
 	* wcsmbs/wchar.h: Get definition of __FILE. Use __FILE instead of FILE.

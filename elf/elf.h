@@ -1873,6 +1873,10 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_PCREL64LSB	0x4f	/* @pcrel(sym + add), data8 LSB */
 #define R_IA64_LTOFF_FPTR22	0x52	/* @ltoff(@fptr(s+a)), imm22 */
 #define R_IA64_LTOFF_FPTR64I	0x53	/* @ltoff(@fptr(s+a)), imm64 */
+#define R_IA64_LTOFF_FPTR32MSB	0x54	/* @ltoff(@fptr(s+a)), data4 MSB */
+#define R_IA64_LTOFF_FPTR32LSB	0x55	/* @ltoff(@fptr(s+a)), data4 LSB */
+#define R_IA64_LTOFF_FPTR64MSB	0x56	/* @ltoff(@fptr(s+a)), data8 MSB */
+#define R_IA64_LTOFF_FPTR64LSB	0x57	/* @ltoff(@fptr(s+a)), data8 LSB */
 #define R_IA64_SEGREL32MSB	0x5c	/* @segrel(sym + add), data4 MSB */
 #define R_IA64_SEGREL32LSB	0x5d	/* @segrel(sym + add), data4 LSB */
 #define R_IA64_SEGREL64MSB	0x5e	/* @segrel(sym + add), data8 MSB */
@@ -1885,12 +1889,16 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_IA64_REL32LSB		0x6d	/* data 4 + REL */
 #define R_IA64_REL64MSB		0x6e	/* data 8 + REL */
 #define R_IA64_REL64LSB		0x6f	/* data 8 + REL */
-#define R_IA64_LTV32MSB		0x70	/* symbol + addend, data4 MSB */
-#define R_IA64_LTV32LSB		0x71	/* symbol + addend, data4 LSB */
-#define R_IA64_LTV64MSB		0x72	/* symbol + addend, data8 MSB */
-#define R_IA64_LTV64LSB		0x73	/* symbol + addend, data8 LSB */
+#define R_IA64_LTV32MSB		0x74	/* symbol + addend, data4 MSB */
+#define R_IA64_LTV32LSB		0x75	/* symbol + addend, data4 LSB */
+#define R_IA64_LTV64MSB		0x76	/* symbol + addend, data8 MSB */
+#define R_IA64_LTV64LSB		0x77	/* symbol + addend, data8 LSB */
+#define R_IA64_PCREL21BI	0x79	/* @pcrel(sym + add), 21bit inst */
+#define R_IA64_PCREL22		0x7a	/* @pcrel(sym + add), 22bit inst */
+#define R_IA64_PCREL64I		0x7b	/* @pcrel(sym + add), 64bit inst */
 #define R_IA64_IPLTMSB		0x80	/* dynamic reloc, imported PLT, MSB */
 #define R_IA64_IPLTLSB		0x81	/* dynamic reloc, imported PLT, LSB */
+#define R_IA64_SUB		0x85	/* Addend and symbol difference */
 #define R_IA64_LTOFF22X		0x86	/* LTOFF22, relaxable.  */
 #define R_IA64_LDXMOV		0x87	/* Use of LTOFF22X.  */
 
