@@ -7,7 +7,7 @@ are presented here.
 
 
 Open Group's hdrchk
--------------------
+===================
 
 The hdrchk test suite is available from the Open Group at
 
@@ -48,3 +48,121 @@ struct sigevent { <members> };
 include files (namely, putting some of them in gcc-local directory) I
 copied over the iso646.h, float.h, and stddef.h headers and ignored the
 problems resulting from the splitted limits.h file).
+
+
+Technical C standards conformance issues in glibc
+=================================================
+
+If you compile programs against glibc with __STRICT_ANSI__ defined
+(as, for example, by gcc -ansi, gcc -std=c89, gcc -std=iso1990:199409
+or gcc -std=c99), and use only the headers specified by the version of
+the C standard chosen, glibc will attempt to conform to that version
+of the C standard (as indicated by __STDC_VERSION__):
+
+GCC options		Standard version
+-ansi			ISO/IEC 9899:1990
+-std=c89		ISO/IEC 9899:1990
+-std=iso9899:199409	ISO/IEC 9899:1990 as amended by Amd.1:1995
+-std=c99		ISO/IEC 9899:1999
+
+(Note that -std=c99 is not available in GCC 2.95.2, and that no
+version of GCC presently existing implements the full C99 standard.)
+
+You may then define additional feature test macros to enable the
+features from other standards, and use the headers defined in those
+standards (for example, defining _POSIX_C_SOURCE to be 199506L to
+enable features from ISO/IEC 9945-1:1996).
+
+There are some technical ways in which glibc is known not to conform
+to the supported versions of the C standard, as detailed below.  Some
+of these relate to defects in the standard that are expected to be
+fixed, or to compiler limitations.
+
+
+Defects in the C99 standard
+===========================
+
+The definition of macros such as INT8_C in <stdint.h> and <inttypes.h>
+is not implementable (Defect Report #209); this is expected to be
+fixed in a Technical Corrigendum to make the macros yield a constant
+expression of the promoted type (for example, int rather than char)
+rather than needing to be able to represent constants of type char.
+glibc follows this corrected version.
+
+Several of the <fenv.h> functions are specified to return void, but
+Defect Report #202 points out that under some circumstances they may
+need to return an error status.  They are expected to be corrected to
+return int; glibc follows this corrected specification.
+
+
+Implementation of library functions
+===================================
+
+The implementation of some library functions does not fully follow the
+standard specification:
+
+C99 added additional forms of floating point constants (hexadecimal
+constants, NaNs and infinities) to be recognised by strtod() and
+scanf().  The effect is to change the behavior of some strictly
+conforming C90 programs; glibc implements the C99 versions only
+irrespective of the standard version selected.
+
+C99 added %a as another scanf format specifier for floating point
+values.  This conflicts with the glibc extension where %as, %a[ and
+%aS mean to allocate the string for the data read.  A strictly
+conforming C99 program using %as, %a[ or %aS in a scanf format string
+will misbehave under glibc.
+
+
+Compiler limitations
+====================
+
+The macros __STDC_IEC_559__, __STDC_IEC_559_COMPLEX__ and
+__STDC_ISO_10646__ are properly supposed to be defined by the
+compiler, and to be constant throughout the translation unit (before
+and after any library headers are included).  However, they mainly
+relate to library features, and the necessary magic has yet to be
+implemented for GCC to predefine them to the correct values for the
+library in use, so glibc defines them in <features.h>.  Programs that
+test them before including any standard headers may misbehave.
+
+GCC doesn't support the optional imaginary types.  Nor does it
+understand the keyword _Complex.  This has the corresponding impact on
+the relevant headers.
+
+glibc's use of extern inline conflicts with C99: in C99, extern inline
+means that an external definition is generated as well as possibly an
+inline definition, but in GCC it means that no external definition is
+generated.  When GCC's C99 mode implements C99 inline semantics, this
+will break the uses of extern inline in glibc's headers.  (Actually,
+glibc uses `extern __inline', which is beyond the scope of the
+standard, but it would clearly be very confusing for `__inline' and
+plain `inline' to have different meanings in C99 mode.)
+
+glibc's <tgmath.h> implementation is arcane but thought to work
+correctly; a clean and comprehensible version requires compiler
+builtins.
+
+For most of the headers required of freestanding implementations,
+glibc relies on GCC to provide correct versions.  (At present, glibc
+provides <stdint.h>, and GCC doesn't.)  GCC's <float.h> is missing
+FLT_EVAL_METHOD and DECIMAL_DIG; glibc instead provides them in
+<math.h>, which is not what the standard specifies.  GCC's <stdbool.h>
+is broken: GCC lacks support for the _Bool type.
+
+Implementing MATH_ERRNO, MATH_ERREXCEPT and math_errhandling in
+<math.h> needs compiler support: see
+
+http://sources.redhat.com/ml/libc-hacker/2000-06/msg00008.html
+http://sources.redhat.com/ml/libc-hacker/2000-06/msg00014.html
+http://sources.redhat.com/ml/libc-hacker/2000-06/msg00015.html
+
+
+Issues with headers
+===================
+
+There are various technical issues with the definitions contained in
+glibc's headers.  See
+
+http://sources.redhat.com/ml/libc-alpha/2000-07/msg00259.html
+http://sources.redhat.com/ml/libc-alpha/2000-07/msg00279.html

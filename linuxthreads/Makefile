@@ -41,7 +41,7 @@ nodelete-yes = -Wl,--enable-new-dtags,-z,nodelete
 LDFLAGS-pthread.so = $(nodelete-$(have-z-nodelete))
 
 vpath %.c Examples
-tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 joinrace tststack
+tests = ex1 ex2 ex3 ex4 ex5 ex6 ex7 ex8 ex9 ex10 ex11 ex12 joinrace tststack
 
 include ../Rules
 
@@ -76,5 +76,6 @@ $(objpfx)ex8: $(libpthread)
 $(objpfx)ex9: $(libpthread)
 $(objpfx)ex10: $(libpthread) $(librt)
 $(objpfx)ex11: $(libpthread) $(librt)
+$(objpfx)ex12: $(libpthread)
 $(objpfx)joinrace: $(libpthread)
 $(objpfx)tststack: $(libpthread)
