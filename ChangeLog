@@ -1,5 +1,8 @@
 2000-11-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/Makefile (CFLAGS-initfini.s): Add -O1 to avoid
+	the problems introduced when the user selects -O3.
+
 	* iconv/gconv.h (__gconv_info): Define __data element using __flexarr.
 	* misc/sys/cdefs.h: Define __flexarr.
 	Proposed by Joseph S. Myers <jsm28@cam.ac.uk>.
