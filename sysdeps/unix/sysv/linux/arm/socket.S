@@ -35,7 +35,7 @@
 #define __socket P(__,socket)
 #endif
 
-#define PUSHARGS_1	stmfd sp!, {a1}
+#define PUSHARGS_1	str a1, [sp, $-4]!
 #define PUSHARGS_2	stmfd sp!, {a1, a2}
 #define PUSHARGS_3	stmfd sp!, {a1, a2, a3}
 #define PUSHARGS_4	stmfd sp!, {a1, a2, a3, a4}
@@ -78,10 +78,8 @@ ENTRY (__socket)
 
 	/* r0 is < 0 if there was an error.  */
 	cmn r0, $124
-	bhs PLTJMP(syscall_error)
-
-	/* Successful; return the syscall's value.  */
-	ret
+	RETINSTR(movcc, pc, r14)
+	b PLTJMP(syscall_error)
 
 PSEUDO_END (__socket)
 
