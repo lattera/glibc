@@ -202,6 +202,8 @@ static struct
 			       MinT, MaxT)
 #include <gconv_builtin.h>
   };
+#undef BUILTIN_ALIAS
+#undef BUILTIN_TRANSFORMATION
 #define nbuiltin_alias (sizeof (builtin_alias) / sizeof (builtin_alias[0]))
 
 static struct
