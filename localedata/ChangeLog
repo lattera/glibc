@@ -1,3 +1,8 @@
+2002-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/zh_TW: Use shorter forms for abday and day.
+	Patch by Rex Tsai <chihchun@kalug.linux.org.tw>.
+
 2002-09-23  Roland McGrath  <roland@redhat.com>
 
 	* tst-xlocale1.c (main): int -> size_t for counter.

@@ -82,16 +82,16 @@ END LC_NUMERIC
 
 LC_TIME
 % day: Sun, Mon, Tue, Wed, Thr, Fri, Sat
-abday	"<U9031><U65E5>";"<U9031><U4E00>";"<U9031><U4E8C>";"<U9031><U4E09>";/
-	"<U9031><U56DB>";"<U9031><U4E94>";"<U9031><U516D>"
+abday	"<U65E5>";"<U4E00>";"<U4E8C>";"<U4E09>";/
+	"<U56DB>";"<U4E94>";"<U516D>"
 
-day	"<U661F><U671F><U65E5>";/
-	"<U661F><U671F><U4E00>";/
-	"<U661F><U671F><U4E8C>";/
-	"<U661F><U671F><U4E09>";/
-	"<U661F><U671F><U56DB>";/
-	"<U661F><U671F><U4E94>";/
-	"<U661F><U671F><U516D>"
+day	"<U9031><U65E5>";/
+	"<U9031><U4E00>";/
+	"<U9031><U4E8C>";/
+	"<U9031><U4E09>";/
+	"<U9031><U56DB>";/
+	"<U9031><U4E94>";/
+	"<U9031><U516D>"
 
 % month: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec.
 abmon	"<U0020><U0031><U6708>";"<U0020><U0032><U6708>";/

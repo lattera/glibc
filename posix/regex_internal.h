@@ -407,8 +407,9 @@ struct re_state_table_entry
 struct re_backref_cache_entry
 {
   int node;
-  int from;
-  int to;
+  int str_idx;
+  int subexp_from;
+  int subexp_to;
   int flag;
 };
 
@@ -427,8 +428,23 @@ typedef struct
   int nbkref_ents;
   int abkref_ents;
   struct re_backref_cache_entry *bkref_ents;
-  int max_bkref_len;
+  int max_mb_elem_len;
 } re_match_context_t;
+
+typedef struct
+{
+  int cur_bkref;
+  int cls_subexp_idx;
+
+  re_dfastate_t **sifted_states;
+  re_dfastate_t **limited_states;
+
+  re_node_set limits;
+
+  int last_node;
+  int last_str_idx;
+  int check_subexp;
+} re_sift_context_t;
 
 struct re_dfa_t
 {
@@ -459,6 +475,10 @@ struct re_dfa_t
   /* If this dfa has "multibyte node", which is a backreference or
      a node which can accept multibyte character or multi character
      collating element.  */
+#ifdef DEBUG
+  char* re_str;
+#endif
+  unsigned int has_plural_match : 1;
   unsigned int has_mb_node : 1;
 };
 typedef struct re_dfa_t re_dfa_t;
@@ -470,9 +490,6 @@ static reg_errcode_t re_node_set_init_2 (re_node_set *set, int elem1,
 #define re_node_set_init_empty(set) memset (set, '\0', sizeof (re_node_set))
 static reg_errcode_t re_node_set_init_copy (re_node_set *dest,
                                             const re_node_set *src);
-static reg_errcode_t re_node_set_intersect (re_node_set *dest,
-                                            const re_node_set *src1,
-                                            const re_node_set *src2);
 static reg_errcode_t re_node_set_add_intersect (re_node_set *dest,
                                                 const re_node_set *src1,
                                                 const re_node_set *src2);

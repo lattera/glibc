@@ -636,6 +636,9 @@ regfree (preg)
 
       if (dfa->word_char != NULL)
         re_free (dfa->word_char);
+#ifdef DEBUG
+      re_free (dfa->re_str);
+#endif
       re_free (dfa);
     }
   re_free (preg->fastmap);
@@ -740,6 +743,10 @@ re_compile_internal (preg, pattern, length, syntax)
       preg->buffer = NULL;
       return err;
     }
+#ifdef DEBUG
+  dfa->re_str = re_malloc (char, length + 1);
+  strncpy (dfa->re_str, pattern, length + 1);
+#endif
 
   err = re_string_construct (&regexp, pattern, length, preg->translate,
                              syntax & RE_ICASE);
@@ -874,6 +881,25 @@ create_initial_state (dfa)
       {
         int node_idx = init_nodes.elems[i];
         re_token_type_t type = dfa->nodes[node_idx].type;
+
+        int clexp_idx;
+        int entity = (type != OP_CONTEXT_NODE ? node_idx
+                      : dfa->nodes[node_idx].opr.ctx_info->entity);
+        if ((type != OP_CONTEXT_NODE
+             || (dfa->nodes[entity].type != OP_BACK_REF))
+            && (type != OP_BACK_REF))
+          continue;
+        for (clexp_idx = 0; clexp_idx < init_nodes.nelem; ++clexp_idx)
+          {
+            re_token_t *clexp_node;
+            clexp_node = dfa->nodes + init_nodes.elems[clexp_idx];
+            if (clexp_node->type == OP_CLOSE_SUBEXP
+                && clexp_node->opr.idx + 1 == dfa->nodes[entity].opr.idx)
+              break;
+          }
+        if (clexp_idx == init_nodes.nelem)
+          continue;
+
         if (type == OP_CONTEXT_NODE
             && (dfa->nodes[dfa->nodes[node_idx].opr.ctx_info->entity].type
                 == OP_BACK_REF))
@@ -1816,6 +1842,7 @@ parse_reg_exp (regexp, preg, token, syntax, nest, err)
       tree = create_tree (tree, branch, 0, new_idx);
       if (BE (new_idx == -1 || tree == NULL, 0))
         return *err = REG_ESPACE, NULL;
+      dfa->has_plural_match = 1;
     }
   return tree;
 }
@@ -2035,6 +2062,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       tree = parse_dup_op (tree, regexp, dfa, token, syntax, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
         return NULL;
+      dfa->has_plural_match = 1;
     }
 
   return tree;
@@ -2919,6 +2947,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
       if (BE (new_idx == -1 || mbc_tree == NULL, 0))
         goto parse_bracket_exp_espace;
       /* Then join them by ALT node.  */
+      dfa->has_plural_match = 1;
       alt_token.type = OP_ALT;
       new_idx = re_dfa_add_node (dfa, alt_token, 0);
       work_tree = create_tree (work_tree, mbc_tree, 0, new_idx);

@@ -47,7 +47,11 @@ static reg_errcode_t match_ctx_init (re_match_context_t *cache, int eflags,
 				     re_string_t *input, int n);
 static void match_ctx_free (re_match_context_t *cache);
 static reg_errcode_t match_ctx_add_entry (re_match_context_t *cache, int node,
-                                          int from, int to);
+                                          int str_idx, int from, int to);
+static void match_ctx_clear_flag (re_match_context_t *mctx);
+static void sift_ctx_init (re_sift_context_t *sctx, re_dfastate_t **sifted_sts,
+                           re_dfastate_t **limited_sts, int last_node,
+                           int last_str_idx, int check_subexp);
 static reg_errcode_t re_search_internal (const regex_t *preg,
                                          const char *string, int length,
                                          int start, int range, int stop,
@@ -77,7 +81,7 @@ static int check_halt_state_context (const regex_t *preg,
                                      const re_match_context_t *mctx, int idx);
 static void update_regs (re_dfa_t *dfa, regmatch_t *pmatch, int cur_node,
                          int cur_idx, int nmatch);
-static int proceed_next_node (const regex_t *preg,
+static int proceed_next_node (const regex_t *preg, regmatch_t *regs,
                               const re_match_context_t *mctx,
                               int *pidx, int node, re_node_set *eps_via_nodes);
 static reg_errcode_t set_regs (const regex_t *preg,
@@ -86,22 +90,41 @@ static reg_errcode_t set_regs (const regex_t *preg,
 #ifdef RE_ENABLE_I18N
 static int sift_states_iter_mb (const regex_t *preg,
                                 const re_match_context_t *mctx,
+                                re_sift_context_t *sctx,
                                 int node_idx, int str_idx, int max_str_idx);
 #endif /* RE_ENABLE_I18N */
-static int sift_states_iter_bkref (const re_dfa_t *dfa,
-                                   re_dfastate_t **state_log,
-                                   struct re_backref_cache_entry *mctx_entry,
-                                   int node_idx, int idx, int match_last);
 static reg_errcode_t sift_states_backward (const regex_t *preg,
-                                           const re_match_context_t *mctx,
-                                           int last_node);
+                                           re_match_context_t *mctx,
+                                           re_sift_context_t *sctx);
+static reg_errcode_t update_cur_sifted_state (const regex_t *preg,
+                                              re_match_context_t *mctx,
+                                              re_sift_context_t *sctx,
+                                              int str_idx,
+                                              re_node_set *dest_nodes);
+static reg_errcode_t add_epsilon_src_nodes (re_dfa_t *dfa,
+                                            re_node_set *dest_nodes,
+                                            const re_node_set *candidates);
+static reg_errcode_t sub_epsilon_src_nodes (re_dfa_t *dfa, int node,
+                                            re_node_set *dest_nodes,
+                                            const re_node_set *and_nodes);
+static reg_errcode_t check_subexp_limits (re_dfa_t *dfa,
+                                          re_node_set *dest_nodes,
+                                          const re_node_set *candidates,
+                                          re_node_set *limits,
+                                          struct re_backref_cache_entry *bkref_ents,
+                                          int str_idx);
+static reg_errcode_t search_subexp (const regex_t *preg,
+                                    re_match_context_t *mctx,
+                                    re_sift_context_t *sctx, int str_idx,
+                                    re_node_set *dest_nodes);
+static reg_errcode_t sift_states_bkref (const regex_t *preg,
+                                        re_match_context_t *mctx,
+                                        re_sift_context_t *sctx,
+                                        int str_idx, re_node_set *dest_nodes);
 static reg_errcode_t clean_state_log_if_need (re_match_context_t *mctx,
                                               int next_state_log_idx);
-static reg_errcode_t add_epsilon_backreference (const re_dfa_t *dfa,
-                                                const re_match_context_t *mctx,
-                                                const re_node_set *plog,
-                                                int idx,
-                                                re_node_set *state_buf);
+static reg_errcode_t merge_state_array (re_dfa_t *dfa, re_dfastate_t **dst,
+                                        re_dfastate_t **src, int num);
 static re_dfastate_t *transit_state (reg_errcode_t *err, const regex_t *preg,
                                      re_match_context_t *mctx,
                                      re_dfastate_t *state, int fl_search);
@@ -633,7 +656,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
             {
               /* It seems to be appropriate one, then use the matcher.  */
               /* We assume that the matching starts from 0.  */
-              mctx.state_log_top = mctx.nbkref_ents = mctx.max_bkref_len = 0;
+              mctx.state_log_top = mctx.nbkref_ents = mctx.max_mb_elem_len = 0;
               match_last = check_matching (preg, &mctx, 0, fl_longest_match);
               if (match_last != -1)
                 {
@@ -667,15 +690,45 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
         {
           /* We need the ranges of all the subexpressions.  */
           int halt_node;
+          re_dfastate_t **sifted_states;
+          re_dfastate_t **lim_states = NULL;
           re_dfastate_t *pstate = mctx.state_log[match_last];
+          re_sift_context_t sctx;
 #ifdef DEBUG
           assert (mctx.state_log != NULL);
 #endif
           halt_node = check_halt_state_context (preg, pstate, &mctx,
                                                 match_last);
-          err = sift_states_backward (preg, &mctx, halt_node);
-          if (BE (err != REG_NOERROR, 0))
-            return err;
+          if (dfa->has_plural_match)
+            {
+              match_ctx_clear_flag (&mctx);
+              sifted_states = re_malloc (re_dfastate_t *, match_last + 1);
+              if (BE (sifted_states == NULL, 0))
+                return REG_ESPACE;
+              if (dfa->nbackref)
+                {
+                  lim_states = calloc (sizeof (re_dfastate_t *),
+                                       match_last + 1);
+                  if (BE (lim_states == NULL, 0))
+                    return REG_ESPACE;
+                }
+              sift_ctx_init (&sctx, sifted_states, lim_states, halt_node,
+                             mctx.match_last, 0);
+              err = sift_states_backward (preg, &mctx, &sctx);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+              if (lim_states != NULL)
+                {
+                  err = merge_state_array (dfa, sifted_states, lim_states,
+                                           match_last + 1);
+                  if (BE (err != REG_NOERROR, 0))
+                    return err;
+                  re_free (lim_states);
+                }
+              re_node_set_free (&sctx.limits);
+              re_free (mctx.state_log);
+              mctx.state_log = sifted_states;
+            }
           err = set_regs (preg, &mctx, nmatch, pmatch, halt_node);
           if (BE (err != REG_NOERROR, 0))
             return err;
@@ -695,6 +748,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   if (dfa->nbackref)
     match_ctx_free (&mctx);
   re_string_destruct (&input);
+
   return (match_last == -1) ? REG_NOMATCH : REG_NOERROR;
 }
 
@@ -766,6 +820,39 @@ check_matching (preg, mctx, fl_search, fl_longest_match)
     return -2;
   if (mctx->state_log != NULL)
     mctx->state_log[cur_str_idx] = cur_state;
+
+  if (cur_state->has_backref)
+    {
+      int i;
+      re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
+      for (i = 0; i < cur_state->nodes.nelem; ++i)
+        {
+          re_token_type_t type;
+          int node = cur_state->nodes.elems[i];
+          int entity = (dfa->nodes[node].type != OP_CONTEXT_NODE ? node
+                        : dfa->nodes[node].opr.ctx_info->entity);
+          type = dfa->nodes[entity].type;
+          if (type == OP_BACK_REF)
+            {
+              int clexp_idx;
+              for (clexp_idx = 0; clexp_idx < cur_state->nodes.nelem;
+                   ++clexp_idx)
+                {
+                  re_token_t *clexp_node;
+                  clexp_node = dfa->nodes + cur_state->nodes.elems[clexp_idx];
+                  if (clexp_node->type == OP_CLOSE_SUBEXP
+                      && clexp_node->opr.idx + 1== dfa->nodes[entity].opr.idx)
+                    {
+                      err = match_ctx_add_entry (mctx, node, 0, 0, 0);
+                      if (BE (err != REG_NOERROR, 0))
+                        return -2;
+                      break;
+                    }
+                }
+            }
+        }
+    }
+
   /* If the RE accepts NULL string.  */
   if (cur_state->halt)
     {
@@ -894,8 +981,9 @@ check_halt_state_context (preg, state, mctx, idx)
    of errors.  */
 
 static int
-proceed_next_node (preg, mctx, pidx, node, eps_via_nodes)
+proceed_next_node (preg, regs, mctx, pidx, node, eps_via_nodes)
     const regex_t *preg;
+    regmatch_t *regs;
     const re_match_context_t *mctx;
     int *pidx, node;
     re_node_set *eps_via_nodes;
@@ -956,12 +1044,9 @@ proceed_next_node (preg, mctx, pidx, node, eps_via_nodes)
 #endif /* RE_ENABLE_I18N */
       if (type == OP_BACK_REF)
         {
-          for (i = 0; i < mctx->nbkref_ents; ++i)
-            {
-              if (mctx->bkref_ents[i].node == node
-                  && mctx->bkref_ents[i].from == *pidx)
-                naccepted = mctx->bkref_ents[i].to - *pidx;
-            }
+          int subexp_idx = dfa->nodes[entity].opr.idx;
+          naccepted = regs[subexp_idx].rm_eo - regs[subexp_idx].rm_so;
+
           if (naccepted == 0)
             {
               err = re_node_set_insert (eps_via_nodes, node);
@@ -1031,7 +1116,8 @@ set_regs (preg, mctx, nmatch, pmatch, last_node)
         break;
 
       /* Proceed to next node.  */
-      cur_node = proceed_next_node (preg, mctx, &idx, cur_node, &eps_via_nodes);
+      cur_node = proceed_next_node (preg, pmatch, mctx, &idx, cur_node,
+                                    &eps_via_nodes);
       if (BE (cur_node < 0, 0))
         return REG_ESPACE;
     }
@@ -1061,11 +1147,11 @@ update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
   else if (type == OP_CLOSE_SUBEXP)
     /* We are at the first node of this sub expression.  */
     pmatch[reg_num].rm_eo = cur_idx;
- }
+}
 
 #define NUMBER_OF_STATE 1
 
-/* This function checks the STATE_LOG from the MCTX->match_last to 0
+/* This function checks the STATE_LOG from the SCTX->last_str_idx to 0
    and sift the nodes in each states according to the following rules.
    Updated state_log will be wrote to STATE_LOG.
 
@@ -1089,124 +1175,104 @@ update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
   ((state) != NULL && re_node_set_contains (&(state)->nodes, node))
 
 static reg_errcode_t
-sift_states_backward (preg, mctx, last_node)
-    const regex_t *preg;
-    const re_match_context_t *mctx;
-    int last_node;
+sift_states_backward (preg, mctx, sctx)
+     const regex_t *preg;
+     re_match_context_t *mctx;
+     re_sift_context_t *sctx;
 {
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
-  re_node_set state_buf;
-  int str_idx = mctx->match_last;
-  re_node_set *plog;	/* Points the state_log[str_idx]->nodes  */
+  int null_cnt = 0;
+  int str_idx = sctx->last_str_idx;
+  re_node_set cur_dest;
+  re_node_set *cur_src; /* Points the state_log[str_idx]->nodes  */
 
 #ifdef DEBUG
   assert (mctx->state_log != NULL && mctx->state_log[str_idx] != NULL);
 #endif
-  err = re_node_set_alloc (&state_buf, NUMBER_OF_STATE);
-  if (BE (err != REG_NOERROR, 0))
-    return err;
-  plog = &mctx->state_log[str_idx]->nodes;
+  cur_src = &mctx->state_log[str_idx]->nodes;
 
   /* Build sifted state_log[str_idx].  It has the nodes which can epsilon
      transit to the last_node and the last_node itself.  */
-  err = re_node_set_intersect (&state_buf, plog, dfa->inveclosures + last_node);
+  err = re_node_set_init_1 (&cur_dest, sctx->last_node);
   if (BE (err != REG_NOERROR, 0))
     return err;
-
-  if (mctx->state_log[str_idx] != NULL
-      && mctx->state_log[str_idx]->has_backref)
-    {
-      err = add_epsilon_backreference (dfa, mctx, plog, str_idx, &state_buf);
-      if (BE (err != REG_NOERROR, 0))
-        return err;
-    }
-
-  /* Update state log.  */
-  mctx->state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
-  if (BE (mctx->state_log[str_idx] == NULL && err != REG_NOERROR, 0))
+  err = update_cur_sifted_state (preg, mctx, sctx, str_idx, &cur_dest);
+  if (BE (err != REG_NOERROR, 0))
     return err;
 
   /* Then check each states in the state_log.  */
   while (str_idx > 0)
     {
-      int i, j;
+      int i, ret;
       /* Update counters.  */
-      re_node_set_empty (&state_buf);
+      null_cnt = (sctx->sifted_states[str_idx] == NULL) ? null_cnt + 1 : 0;
+      if (null_cnt > mctx->max_mb_elem_len)
+        {
+          memset (sctx->sifted_states, '\0',
+                  sizeof (re_dfastate_t *) * str_idx);
+          return REG_NOERROR;
+        }
+      re_node_set_empty (&cur_dest);
       --str_idx;
-      plog = ((mctx->state_log[str_idx] == NULL) ? &empty_set
-              : &mctx->state_log[str_idx]->nodes);
+      cur_src = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+                 : &mctx->state_log[str_idx]->nodes);
 
       /* Then build the next sifted state.
-         We build the next sifted state on `state_buf', and update
-         `state_log[str_idx]' with `state_buf'.
+         We build the next sifted state on `cur_dest', and update
+         `sifted_states[str_idx]' with `cur_dest'.
          Note:
-         `state_buf' is the sifted state from `state_log[str_idx + 1]'.
-         `plog' points the node_set of the old `state_log[str_idx]'.  */
-      for (i = 0; i < plog->nelem; i++)
+         `cur_dest' is the sifted state from `state_log[str_idx + 1]'.
+         `cur_src' points the node_set of the old `state_log[str_idx]'.  */
+      for (i = 0; i < cur_src->nelem; i++)
         {
-          int prev_node = plog->elems[i];
+          int prev_node = cur_src->elems[i];
           int entity = prev_node;
           int naccepted = 0;
           re_token_type_t type = dfa->nodes[prev_node].type;
+
+          if (IS_EPSILON_NODE(type))
+            continue;
           if (type == OP_CONTEXT_NODE)
             {
               entity = dfa->nodes[prev_node].opr.ctx_info->entity;
               type = dfa->nodes[entity].type;
             }
-
 #ifdef RE_ENABLE_I18N
           /* If the node may accept `multi byte'.  */
           if (ACCEPT_MB_NODE (type))
-            naccepted = sift_states_iter_mb (preg, mctx, entity, str_idx,
-                                             mctx->match_last);
+            naccepted = sift_states_iter_mb (preg, mctx, sctx, entity, str_idx,
+                                             sctx->last_str_idx);
 
-          /* If the node is a back reference.  */
-          else
 #endif /* RE_ENABLE_I18N */
-          if (type == OP_BACK_REF)
-            for (j = 0; j < mctx->nbkref_ents; ++j)
-              {
-                naccepted = sift_states_iter_bkref (dfa, mctx->state_log,
-                                                    mctx->bkref_ents + j,
-                                                    prev_node, str_idx,
-                                                    mctx->match_last);
-                if (naccepted)
-                  break;
-              }
+          /* We don't check backreferences here.
+             See update_cur_sifted_state().  */
 
           if (!naccepted
               && check_node_accept (preg, dfa->nodes + prev_node, mctx,
                                     str_idx)
-              && STATE_NODE_CONTAINS (mctx->state_log[str_idx + 1],
+              && STATE_NODE_CONTAINS (sctx->sifted_states[str_idx + 1],
                                       dfa->nexts[prev_node]))
             naccepted = 1;
 
           if (naccepted == 0)
             continue;
 
-          /* `prev_node' may point the entity of the OP_CONTEXT_NODE,
-             then we use plog->elems[i] instead.  */
-          err = re_node_set_add_intersect (&state_buf, plog,
-                                           dfa->inveclosures + prev_node);
-          if (BE (err != REG_NOERROR, 0))
-            return err;
-        }
-      if (mctx->state_log[str_idx] != NULL
-          && mctx->state_log[str_idx]->has_backref)
-        {
-          err = add_epsilon_backreference (dfa, mctx, plog, str_idx, &state_buf);
-          if (BE (err != REG_NOERROR, 0))
+          ret = re_node_set_insert (&cur_dest, prev_node);
+          if (BE (ret == -1, 0))
             return err;
         }
 
-      /* Update state_log.  */
-      mctx->state_log[str_idx] = re_acquire_state (&err, dfa, &state_buf);
-      if (BE (mctx->state_log[str_idx] == NULL && err != REG_NOERROR, 0))
+      /* Add all the nodes which satisfy the following conditions:
+         - It can epsilon transit to a node in CUR_DEST.
+         - It is in CUR_SRC.
+         And update state_log.  */
+      err = update_cur_sifted_state (preg, mctx, sctx, str_idx, &cur_dest);
+      if (BE (err != REG_NOERROR, 0))
         return err;
     }
 
-  re_node_set_free (&state_buf);
+  re_node_set_free (&cur_dest);
   return REG_NOERROR;
 }
 
@@ -1238,11 +1304,515 @@ clean_state_log_if_need (mctx, next_state_log_idx)
   return REG_NOERROR;
 }
 
+static reg_errcode_t merge_state_array (dfa, dst, src, num)
+     re_dfa_t *dfa;
+     re_dfastate_t **dst;
+     re_dfastate_t **src;
+     int num;
+{
+  int st_idx;
+  reg_errcode_t err;
+  for (st_idx = 0; st_idx < num; ++st_idx)
+    {
+      if (dst[st_idx] == NULL)
+        dst[st_idx] = src[st_idx];
+      else if (src[st_idx] != NULL)
+        {
+          re_node_set merged_set;
+          err = re_node_set_init_union (&merged_set, &dst[st_idx]->nodes,
+                                        &src[st_idx]->nodes);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          dst[st_idx] = re_acquire_state (&err, dfa, &merged_set);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          re_node_set_free (&merged_set);
+        }
+    }
+  return REG_NOERROR;
+}
+
+static reg_errcode_t
+update_cur_sifted_state (preg, mctx, sctx, str_idx, dest_nodes)
+     const regex_t *preg;
+     re_match_context_t *mctx;
+     re_sift_context_t *sctx;
+     int str_idx;
+     re_node_set *dest_nodes;
+{
+  reg_errcode_t err;
+  re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
+  const re_node_set *candidates;
+  candidates = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+                : &mctx->state_log[str_idx]->nodes);
+
+  /* At first, add the nodes which can epsilon transit to a node in
+     DEST_NODE.  */
+  err = add_epsilon_src_nodes (dfa, dest_nodes, candidates);
+  if (BE (err != REG_NOERROR, 0))
+    return err;
+
+  /* Then, check the limitations in the current sift_context.  */
+  if (sctx->limits.nelem)
+    {
+      err = check_subexp_limits (dfa, dest_nodes, candidates, &sctx->limits,
+                                 mctx->bkref_ents, str_idx);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+
+  /* Update state_log.  */
+  sctx->sifted_states[str_idx] = re_acquire_state (&err, dfa, dest_nodes);
+  if (BE (sctx->sifted_states[str_idx] == NULL && err != REG_NOERROR, 0))
+    return err;
+
+  /* If we are searching for the subexpression candidates.
+     Note that we were from transit_state_bkref_loop() in this case.  */
+  if (sctx->check_subexp)
+    {
+      err = search_subexp (preg, mctx, sctx, str_idx, dest_nodes);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+
+  if ((mctx->state_log[str_idx] != NULL
+       && mctx->state_log[str_idx]->has_backref))
+    {
+      err = sift_states_bkref (preg, mctx, sctx, str_idx, dest_nodes);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+  return REG_NOERROR;
+}
+
+static reg_errcode_t
+add_epsilon_src_nodes (dfa, dest_nodes, candidates)
+     re_dfa_t *dfa;
+     re_node_set *dest_nodes;
+     const re_node_set *candidates;
+{
+  reg_errcode_t err;
+  int src_idx;
+  re_node_set src_copy;
+
+  err = re_node_set_init_copy (&src_copy, dest_nodes);
+  if (BE (err != REG_NOERROR, 0))
+    return err;
+  for (src_idx = 0; src_idx < src_copy.nelem; ++src_idx)
+    {
+      err = re_node_set_add_intersect (dest_nodes, candidates,
+                                       dfa->inveclosures
+                                       + src_copy.elems[src_idx]);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+  re_node_set_free (&src_copy);
+  return REG_NOERROR;
+}
+
+static reg_errcode_t
+sub_epsilon_src_nodes (dfa, node, dest_nodes, candidates)
+     re_dfa_t *dfa;
+     int node;
+     re_node_set *dest_nodes;
+     const re_node_set *candidates;
+{
+    int ecl_idx;
+    reg_errcode_t err;
+    re_node_set *inv_eclosure = dfa->inveclosures + node;
+    re_node_set except_nodes;
+    re_node_set_init_empty (&except_nodes);
+    for (ecl_idx = 0; ecl_idx < inv_eclosure->nelem; ++ecl_idx)
+      {
+        int cur_node = inv_eclosure->elems[ecl_idx];
+        if (cur_node == node)
+          continue;
+        if (dfa->edests[cur_node].nelem)
+          {
+            int edst1 = dfa->edests[cur_node].elems[0];
+            int edst2 = ((dfa->edests[cur_node].nelem > 1)
+                         ? dfa->edests[cur_node].elems[1] : -1);
+            if ((!re_node_set_contains (inv_eclosure, edst1)
+                 && re_node_set_contains (dest_nodes, edst1))
+                || (edst2 > 0
+                    && !re_node_set_contains (inv_eclosure, edst2)
+                    && re_node_set_contains (dest_nodes, edst2)))
+              {
+                err = re_node_set_add_intersect (&except_nodes, candidates,
+                                                 dfa->inveclosures + cur_node);
+                if (BE (err != REG_NOERROR, 0))
+                  return err;
+              }
+          }
+      }
+    for (ecl_idx = 0; ecl_idx < inv_eclosure->nelem; ++ecl_idx)
+      {
+        int cur_node = inv_eclosure->elems[ecl_idx];
+        if (!re_node_set_contains (&except_nodes, cur_node))
+          {
+            int idx = re_node_set_contains (dest_nodes, cur_node) - 1;
+            re_node_set_remove_at (dest_nodes, idx);
+          }
+      }
+    re_node_set_free (&except_nodes);
+    return REG_NOERROR;
+}
+
+/* Check the limitations of sub expressions LIMITS, and remove the nodes
+   which are against limitations from DEST_NODES. */
+
+static reg_errcode_t
+check_subexp_limits (dfa, dest_nodes, candidates, limits, bkref_ents, str_idx)
+     re_dfa_t *dfa;
+     re_node_set *dest_nodes;
+     const re_node_set *candidates;
+     re_node_set *limits;
+     struct re_backref_cache_entry *bkref_ents;
+     int str_idx;
+{
+  reg_errcode_t err;
+  int node_idx, lim_idx;
+
+  for (lim_idx = 0; lim_idx < limits->nelem; ++lim_idx)
+    {
+      int bkref, subexp_idx;
+      struct re_backref_cache_entry *ent;
+      ent = bkref_ents + limits->elems[lim_idx];
+
+      if (str_idx <= ent->subexp_from || ent->str_idx < str_idx)
+        continue; /* This is unrelated limitation.  */
+
+      bkref = (dfa->nodes[ent->node].type == OP_CONTEXT_NODE
+               ? dfa->nodes[ent->node].opr.ctx_info->entity : ent->node);
+      subexp_idx = dfa->nodes[bkref].opr.idx - 1;
+
+      if (ent->subexp_to == str_idx)
+        {
+          int ops_node = -1;
+          int cls_node = -1;
+          for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
+            {
+              int node = dest_nodes->elems[node_idx];
+              re_token_type_t type= dfa->nodes[node].type;
+              if (type == OP_OPEN_SUBEXP
+                  && subexp_idx == dfa->nodes[node].opr.idx)
+                ops_node = node;
+              else if (type == OP_CLOSE_SUBEXP
+                       && subexp_idx == dfa->nodes[node].opr.idx)
+                cls_node = node;
+            }
+
+          /* Check the limitation of the open subexpression.  */
+          /* Note that (ent->subexp_to = str_idx != ent->subexp_from).  */
+          if (ops_node >= 0)
+            {
+              err = sub_epsilon_src_nodes(dfa, ops_node, dest_nodes,
+                                          candidates);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+            }
+          /* Check the limitation of the close subexpression.  */
+          for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
+            {
+              int node = dest_nodes->elems[node_idx];
+              if (!re_node_set_contains (dfa->inveclosures + node, cls_node)
+                  && !re_node_set_contains (dfa->eclosures + node, cls_node))
+                {
+                  /* It is against this limitation.
+                     Remove it form the current sifted state.  */
+                  err = sub_epsilon_src_nodes(dfa, node, dest_nodes,
+                                              candidates);
+                  if (BE (err != REG_NOERROR, 0))
+                    return err;
+                  --node_idx;
+                }
+            }
+        }
+      else /* (ent->subexp_to != str_idx)  */
+        {
+          for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
+            {
+              int node = dest_nodes->elems[node_idx];
+              re_token_type_t type= dfa->nodes[node].type;
+              if (type == OP_CLOSE_SUBEXP || type == OP_OPEN_SUBEXP)
+                {
+                  if (subexp_idx != dfa->nodes[node].opr.idx)
+                    continue;
+                  if ((type == OP_CLOSE_SUBEXP && ent->subexp_to != str_idx)
+                      || (type == OP_OPEN_SUBEXP))
+                    {
+                      /* It is against this limitation.
+                         Remove it form the current sifted state.  */
+                      err = sub_epsilon_src_nodes(dfa, node, dest_nodes,
+                                                  candidates);
+                      if (BE (err != REG_NOERROR, 0))
+                        return err;
+                    }
+                }
+            }
+        }
+    }
+  return REG_NOERROR;
+}
+
+/* Search for the top (in case of sctx->check_subexp < 0) or the
+   bottom (in case of sctx->check_subexp > 0) of the subexpressions
+   which the backreference sctx->cur_bkref can match.  */
+
+static reg_errcode_t
+search_subexp (preg, mctx, sctx, str_idx, dest_nodes)
+     const regex_t *preg;
+     re_match_context_t *mctx;
+     re_sift_context_t *sctx;
+     int str_idx;
+     re_node_set *dest_nodes;
+{
+  reg_errcode_t err;
+  re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
+  re_sift_context_t local_sctx;
+  int node_idx, node;
+  const re_node_set *candidates;
+  candidates = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+                : &mctx->state_log[str_idx]->nodes);
+  local_sctx.sifted_states = NULL; /* Mark that it hasn't been initialized.  */
+
+  for (node_idx = 0; node_idx < dest_nodes->nelem; ++node_idx)
+    {
+      re_token_type_t type;
+      int entity;
+      node = dest_nodes->elems[node_idx];
+      type = dfa->nodes[node].type;
+      entity = (type != OP_CONTEXT_NODE ? node
+                : dfa->nodes[node].opr.ctx_info->entity);
+      type = (type != OP_CONTEXT_NODE ? type : dfa->nodes[entity].type);
+
+      if (type == OP_CLOSE_SUBEXP
+          && sctx->check_subexp == dfa->nodes[node].opr.idx + 1)
+        {
+          /* Found the bottom of the subexpression, then search for the
+             top of it.  */
+          if (local_sctx.sifted_states == NULL)
+            {
+              /* It hasn't been initialized yet, initialize it now.  */
+              local_sctx = *sctx;
+              err = re_node_set_init_copy (&local_sctx.limits, &sctx->limits);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+            }
+          local_sctx.check_subexp = -sctx->check_subexp;
+          local_sctx.last_node = node;
+          local_sctx.last_str_idx = local_sctx.cls_subexp_idx = str_idx;
+          err = sift_states_backward (preg, mctx, &local_sctx);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          /* There must not 2 same node in a node set.  */
+          break;
+        }
+      else if (type == OP_OPEN_SUBEXP
+               && -sctx->check_subexp == dfa->nodes[node].opr.idx + 1)
+        {
+          /* Found the top of the subexpression, check that the
+             backreference can match the input string.  */
+          char *buf;
+          int dest_str_idx;
+          int bkref_str_idx = re_string_cur_idx (mctx->input);
+          int subexp_len = sctx->cls_subexp_idx - str_idx;
+          if (subexp_len < 0 || bkref_str_idx + subexp_len > mctx->input->len)
+            break;
+
+          if (bkref_str_idx + subexp_len > mctx->input->valid_len
+              && mctx->input->valid_len < mctx->input->len)
+            {
+              reg_errcode_t err;
+              err = extend_buffers (mctx);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+            }
+          buf = (char *) re_string_get_buffer (mctx->input);
+          if (strncmp (buf + str_idx, buf + bkref_str_idx, subexp_len) != 0)
+            break;
+          /* Successfully matched, add a new cache entry.  */
+          dest_str_idx = bkref_str_idx + subexp_len;
+          err = match_ctx_add_entry (mctx, sctx->cur_bkref, bkref_str_idx,
+                                     str_idx, sctx->cls_subexp_idx);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          err = clean_state_log_if_need (mctx, dest_str_idx);
+          if (BE (err != REG_NOERROR, 0))
+            return err;
+          break;
+        }
+    }
+
+  /* Remove the top/bottom of the sub expression we processed.  */
+  if (node_idx < dest_nodes->nelem)
+    {
+      err = sub_epsilon_src_nodes(dfa, node, dest_nodes, candidates);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+      /* Update state_log.  */
+      sctx->sifted_states[str_idx] = re_acquire_state (&err, dfa, dest_nodes);
+      if (BE (err != REG_NOERROR, 0))
+        return err;
+    }
+
+  if (local_sctx.sifted_states != NULL)
+    re_node_set_free (&local_sctx.limits);
+  return REG_NOERROR;
+}
+
+static reg_errcode_t
+sift_states_bkref (preg, mctx, sctx, str_idx, dest_nodes)
+     const regex_t *preg;
+     re_match_context_t *mctx;
+     re_sift_context_t *sctx;
+     int str_idx;
+     re_node_set *dest_nodes;
+{
+  reg_errcode_t err;
+  re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
+  int node_idx, node;
+  re_sift_context_t local_sctx;
+  const re_node_set *candidates;
+  candidates = ((mctx->state_log[str_idx] == NULL) ? &empty_set
+                : &mctx->state_log[str_idx]->nodes);
+  local_sctx.sifted_states = NULL; /* Mark that it hasn't been initialized.  */
+
+  for (node_idx = 0; node_idx < candidates->nelem; ++node_idx)
+    {
+      int entity;
+      int cur_bkref_idx = re_string_cur_idx (mctx->input);
+      re_token_type_t type;
+      node = candidates->elems[node_idx];
+      type = dfa->nodes[node].type;
+      entity = (type != OP_CONTEXT_NODE ? node
+                : dfa->nodes[node].opr.ctx_info->entity);
+      type = (type != OP_CONTEXT_NODE ? type : dfa->nodes[entity].type);
+      if (node == sctx->cur_bkref && str_idx == cur_bkref_idx)
+        continue;
+      /* Avoid infinite loop for the REs like "()\1+".  */
+      if (node == sctx->last_node && str_idx == sctx->last_str_idx)
+        continue;
+      if (type == OP_BACK_REF)
+        {
+          int enabled_idx, ret;
+          for (enabled_idx = 0; enabled_idx < mctx->nbkref_ents; ++enabled_idx)
+            {
+              int disabled_idx, subexp_len, to_idx;
+              struct re_backref_cache_entry *entry;
+              entry = mctx->bkref_ents + enabled_idx;
+              subexp_len = entry->subexp_to - entry->subexp_from;
+              to_idx = str_idx + subexp_len;
+
+              if (entry->node != node || entry->str_idx != str_idx
+                  || to_idx > sctx->last_str_idx
+                  || sctx->sifted_states[to_idx] == NULL)
+                continue;
+              if (!STATE_NODE_CONTAINS (sctx->sifted_states[to_idx],
+                                        dfa->nexts[node]))
+                {
+                  int dst_idx;
+                  re_node_set *dsts = &sctx->sifted_states[to_idx]->nodes;
+                  for (dst_idx = 0; dst_idx < dsts->nelem; ++dst_idx)
+                    {
+                      int dst_node = dsts->elems[dst_idx];
+                      if (dfa->nodes[dst_node].type == OP_CONTEXT_NODE
+                          && (dfa->nodes[dst_node].opr.ctx_info->entity
+                              == dfa->nexts[node]))
+                        break;
+                    }
+                  if (dst_idx == dsts->nelem)
+                    continue;
+                }
+
+              if (sctx->check_subexp == dfa->nodes[entity].opr.idx)
+                {
+                  char *buf;
+                  buf = (char *) re_string_get_buffer (mctx->input);
+                  if (strncmp (buf + entry->subexp_from,
+                               buf + cur_bkref_idx, subexp_len) != 0)
+                    continue;
+                  err = match_ctx_add_entry (mctx, sctx->cur_bkref,
+                                             cur_bkref_idx, entry->subexp_from,
+                                             entry->subexp_to);
+                  if (BE (err != REG_NOERROR, 0))
+                    return err;
+                  err = clean_state_log_if_need (mctx, cur_bkref_idx
+                                                 + subexp_len);
+                  if (BE (err != REG_NOERROR, 0))
+                    return err;
+                }
+              else
+                {
+                  entry->flag = 0;
+                  for (disabled_idx = enabled_idx + 1;
+                       disabled_idx < mctx->nbkref_ents; ++disabled_idx)
+                    {
+                      struct re_backref_cache_entry *entry2;
+                      entry2 = mctx->bkref_ents + enabled_idx;
+                      if (entry2->node != node || entry2->str_idx != str_idx)
+                        continue;
+                      entry2->flag = 1;
+                    }
+
+                  if (local_sctx.sifted_states == NULL)
+                    {
+                      local_sctx = *sctx;
+                      local_sctx.sifted_states = re_malloc (re_dfastate_t *,
+                                                            str_idx + 1);
+                      if (BE (local_sctx.sifted_states == NULL, 0))
+                        return REG_ESPACE;
+                      err = re_node_set_init_copy (&local_sctx.limits,
+                                                   &sctx->limits);
+                      if (BE (err != REG_NOERROR, 0))
+                        return err;
+                    }
+                  local_sctx.last_node = node;
+                  local_sctx.last_str_idx = str_idx;
+                  ret = re_node_set_insert (&local_sctx.limits, enabled_idx);
+                  if (BE (err < 0, 0))
+                    return REG_ESPACE;
+                  err = sift_states_backward (preg, mctx, &local_sctx);
+                  if (BE (err != REG_NOERROR, 0))
+                    return err;
+                  if (sctx->limited_states != NULL)
+                    {
+                      err = merge_state_array (dfa, sctx->limited_states,
+                                               local_sctx.sifted_states,
+                                               str_idx + 1);
+                      if (BE (err != REG_NOERROR, 0))
+                        return err;
+                    }
+                  re_node_set_remove_at (&local_sctx.limits,
+                                         local_sctx.limits.nelem - 1);
+                  entry->flag = 1;
+                }
+            }
+          for (enabled_idx = 0; enabled_idx < mctx->nbkref_ents; ++enabled_idx)
+            {
+              struct re_backref_cache_entry *entry;
+              entry = mctx->bkref_ents + enabled_idx;
+              if (entry->node == node && entry->str_idx == str_idx)
+                entry->flag = 0;
+            }
+        }
+    }
+  if (local_sctx.sifted_states != NULL)
+    {
+      free (local_sctx.sifted_states);
+      re_node_set_free (&local_sctx.limits);
+    }
+
+  return REG_NOERROR;
+}
+
+
 #ifdef RE_ENABLE_I18N
 static int
-sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
+sift_states_iter_mb (preg, mctx, sctx, node_idx, str_idx, max_str_idx)
     const regex_t *preg;
     const re_match_context_t *mctx;
+    re_sift_context_t *sctx;
     int node_idx, str_idx, max_str_idx;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
@@ -1250,7 +1820,7 @@ sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
   /* Check the node can accept `multi byte'.  */
   naccepted = check_node_accept_bytes (preg, node_idx, mctx->input, str_idx);
   if (naccepted > 0 && str_idx + naccepted <= max_str_idx &&
-      !STATE_NODE_CONTAINS (mctx->state_log[str_idx + naccepted],
+      !STATE_NODE_CONTAINS (sctx->sifted_states[str_idx + naccepted],
                             dfa->nexts[node_idx]))
     /* The node can't accept the `multi byte', or the
        destination was already throwed away, then the node
@@ -1262,63 +1832,6 @@ sift_states_iter_mb (preg, mctx, node_idx, str_idx, max_str_idx)
 }
 #endif /* RE_ENABLE_I18N */
 
-static int
-sift_states_iter_bkref (dfa, state_log, mctx_entry, node_idx, idx, match_last)
-    const re_dfa_t *dfa;
-    re_dfastate_t **state_log;
-    struct re_backref_cache_entry *mctx_entry;
-    int node_idx, idx, match_last;
-{
-  int naccepted = 0;
-  int from_idx, to_idx;
-  from_idx = mctx_entry->from;
-  to_idx = mctx_entry->to;
-  if (mctx_entry->node == node_idx
-      && from_idx == idx && to_idx <= match_last
-      && STATE_NODE_CONTAINS (state_log[to_idx], dfa->nexts[node_idx]))
-    naccepted = to_idx - from_idx;
-  return naccepted;
-}
-
-static reg_errcode_t
-add_epsilon_backreference (dfa, mctx, plog, idx, state_buf)
-    const re_dfa_t *dfa;
-    const re_match_context_t *mctx;
-    const re_node_set *plog;
-    int idx;
-    re_node_set *state_buf;
-{
-  int i, j;
-  for (i = 0; i < plog->nelem; ++i)
-    {
-      int node_idx = plog->elems[i];
-      re_token_type_t type = dfa->nodes[node_idx].type;
-      if (type == OP_CONTEXT_NODE)
-        type = dfa->nodes[dfa->nodes[node_idx].opr.ctx_info->entity].type;
-
-      if (type == OP_BACK_REF &&
-          !re_node_set_contains (state_buf, node_idx))
-        {
-          for (j = 0; j < mctx->nbkref_ents; ++j)
-            {
-              struct re_backref_cache_entry *entry;
-              entry = mctx->bkref_ents + j;
-              if (entry->from == entry->to && entry->from == idx)
-                break;
-            }
-          if (j < mctx->nbkref_ents || idx == 0)
-            {
-              reg_errcode_t err;
-              err = re_node_set_add_intersect (state_buf, plog,
-                                               dfa->inveclosures + node_idx);
-              if (BE (err != REG_NOERROR, 0))
-                return err;
-              i = 0;
-            }
-        }
-    }
-  return REG_NOERROR;
-}
 
 /* Functions for state transition.  */
 
@@ -1554,6 +2067,8 @@ transit_state_mb (preg, pstate, mctx)
 
       /* The node can accepts `naccepted' bytes.  */
       dest_idx = re_string_cur_idx (mctx->input) + naccepted;
+      mctx->max_mb_elem_len = ((mctx->max_mb_elem_len < naccepted) ? naccepted
+                               : mctx->max_mb_elem_len);
       err = clean_state_log_if_need (mctx, dest_idx);
       if (BE (err != REG_NOERROR, 0))
         return err;
@@ -1617,8 +2132,7 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
 {
   reg_errcode_t err;
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  int i, j;
-  re_dfastate_t **state_log_bak;
+  int i;
   regmatch_t *cur_regs = re_malloc (regmatch_t, preg->re_nsub + 1);
   int cur_str_idx = re_string_cur_idx (mctx->input);
   if (BE (cur_regs == NULL, 0))
@@ -1626,13 +2140,12 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
 
   for (i = 0; i < nodes->nelem; ++i)
     {
-      char *buf;
-      int dest_str_idx, subexp_idx, prev_nelem, subexp_len;
+      int dest_str_idx, subexp_idx, prev_nelem, bkc_idx;
       int node_idx = nodes->elems[i];
       unsigned int context;
       re_token_t *node = dfa->nodes + node_idx;
-      re_dfastate_t *dest_state;
       re_node_set *new_dest_nodes;
+      re_sift_context_t sctx;
 
       /* Check whether `node' is a backreference or not.  */
       if (node->type == OP_BACK_REF)
@@ -1650,46 +2163,12 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
         continue;
 
       /* `node' is a backreference.
-         At first, set registers to check the backreference. */
-      cur_regs[0].rm_so = 0;
-      cur_regs[0].rm_eo = cur_str_idx;
-      memcpy (work_state_log, mctx->state_log,
-              sizeof (re_dfastate_t *) * (cur_str_idx  + 1));
-      mctx->match_last = cur_str_idx;
-      state_log_bak = mctx->state_log;
-      mctx->state_log = work_state_log;
-      sift_states_backward (preg, mctx, node_idx);
-      if (!STATE_NODE_CONTAINS (work_state_log[0], dfa->init_node))
-        continue;
-      for (j = 1; j <= preg->re_nsub; ++j)
-        cur_regs[j].rm_so = cur_regs[j].rm_eo = -1;
-      set_regs (preg, mctx, subexp_idx + 1, cur_regs, node_idx);
-      mctx->state_log = state_log_bak;
-
-      /* Then check that the backreference can match the input string.  */
-      subexp_len = cur_regs[subexp_idx].rm_eo - cur_regs[subexp_idx].rm_so;
-      if (subexp_len < 0 || cur_str_idx + subexp_len > mctx->input->len)
-        continue;
-
-      if (cur_str_idx + subexp_len > mctx->input->valid_len
-          && mctx->input->valid_len < mctx->input->len)
-        {
-          reg_errcode_t err;
-          err = extend_buffers (mctx);
-          if (BE (err != REG_NOERROR, 0))
-            return err;
-        }
-      buf = (char *) re_string_get_buffer (mctx->input);
-      if (strncmp (buf + cur_regs[subexp_idx].rm_so, buf + cur_str_idx,
-                   subexp_len) != 0)
-        continue;
-
-      /* Successfully matched, add a new cache entry.  */
-      dest_str_idx = cur_str_idx + subexp_len;
-      err = match_ctx_add_entry (mctx, node_idx, cur_str_idx, dest_str_idx);
-      if (BE (err != REG_NOERROR, 0))
-        return err;
-      err = clean_state_log_if_need (mctx, dest_str_idx);
+         Check the substring which the substring matched.  */
+      sift_ctx_init (&sctx, work_state_log, NULL, node_idx, cur_str_idx,
+                     subexp_idx);
+      sctx.cur_bkref = node_idx;
+      match_ctx_clear_flag (mctx);
+      err = sift_states_backward (preg, mctx, &sctx);
       if (BE (err != REG_NOERROR, 0))
         return err;
 
@@ -1698,50 +2177,61 @@ transit_state_bkref_loop (preg, nodes, work_state_log, mctx)
 #ifdef DEBUG
       assert (dfa->nexts[node_idx] != -1);
 #endif
-      if (node->type == OP_CONTEXT_NODE && subexp_len == 0)
-        new_dest_nodes = dfa->nodes[node_idx].opr.ctx_info->bkref_eclosure;
-      else
-        new_dest_nodes = dfa->eclosures + dfa->nexts[node_idx];
-      context = (IS_WORD_CHAR (re_string_byte_at (mctx->input,
-                                                  dest_str_idx - 1))
-                 ? CONTEXT_WORD : 0);
-      dest_state = mctx->state_log[dest_str_idx];
-
-      prev_nelem = ((mctx->state_log[cur_str_idx] == NULL) ? 0
-                    : mctx->state_log[cur_str_idx]->nodes.nelem);
-      /* Add `new_dest_node' to state_log.  */
-      if (dest_state == NULL)
+      for (bkc_idx = 0; bkc_idx < mctx->nbkref_ents; ++bkc_idx)
         {
-          mctx->state_log[dest_str_idx]
-            = re_acquire_state_context (&err, dfa, new_dest_nodes, context);
-          if (BE (mctx->state_log[dest_str_idx] == NULL
-                  && err != REG_NOERROR, 0))
-            return err;
-        }
-      else
-        {
-          re_node_set dest_nodes;
-          err = re_node_set_init_union (&dest_nodes, dest_state->entrance_nodes,
-                                        new_dest_nodes);
-          if (BE (err != REG_NOERROR, 0))
-            return err;
-          mctx->state_log[dest_str_idx]
-            = re_acquire_state_context (&err, dfa, &dest_nodes, context);
-          if (BE (mctx->state_log[dest_str_idx] == NULL
-                  && err != REG_NOERROR, 0))
-            return err;
-          re_node_set_free (&dest_nodes);
-        }
-
-      /* We need to check recursively if the backreference can epsilon
-         transit.  */
-      if (subexp_len == 0
-          && mctx->state_log[cur_str_idx]->nodes.nelem > prev_nelem)
-        {
-          err = transit_state_bkref_loop (preg, new_dest_nodes, work_state_log,
-                                          mctx);
-          if (BE (err != REG_NOERROR, 0))
-            return err;
+          int subexp_len;
+          re_dfastate_t *dest_state;
+          struct re_backref_cache_entry *bkref_ent;
+          bkref_ent = mctx->bkref_ents + bkc_idx;
+          if (bkref_ent->node != node_idx || bkref_ent->str_idx != cur_str_idx)
+            continue;
+          subexp_len = bkref_ent->subexp_to - bkref_ent->subexp_from;
+          new_dest_nodes = ((node->type == OP_CONTEXT_NODE && subexp_len == 0)
+                            ? dfa->nodes[node_idx].opr.ctx_info->bkref_eclosure
+                            : dfa->eclosures + dfa->nexts[node_idx]);
+          dest_str_idx = (cur_str_idx + bkref_ent->subexp_to
+                          - bkref_ent->subexp_from);
+          context = (IS_WORD_CHAR (re_string_byte_at (mctx->input,
+                                                      dest_str_idx - 1))
+                     ? CONTEXT_WORD : 0);
+          dest_state = mctx->state_log[dest_str_idx];
+          prev_nelem = ((mctx->state_log[cur_str_idx] == NULL) ? 0
+                        : mctx->state_log[cur_str_idx]->nodes.nelem);
+          /* Add `new_dest_node' to state_log.  */
+          if (dest_state == NULL)
+            {
+              mctx->state_log[dest_str_idx]
+                = re_acquire_state_context (&err, dfa, new_dest_nodes,
+                                            context);
+              if (BE (mctx->state_log[dest_str_idx] == NULL
+                      && err != REG_NOERROR, 0))
+                return err;
+            }
+          else
+            {
+              re_node_set dest_nodes;
+              err = re_node_set_init_union (&dest_nodes,
+                                            dest_state->entrance_nodes,
+                                            new_dest_nodes);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+              mctx->state_log[dest_str_idx]
+                = re_acquire_state_context (&err, dfa, &dest_nodes, context);
+              if (BE (mctx->state_log[dest_str_idx] == NULL
+                      && err != REG_NOERROR, 0))
+                return err;
+              re_node_set_free (&dest_nodes);
+            }
+          /* We need to check recursively if the backreference can epsilon
+             transit.  */
+          if (subexp_len == 0
+              && mctx->state_log[cur_str_idx]->nodes.nelem > prev_nelem)
+            {
+              err = transit_state_bkref_loop (preg, new_dest_nodes,
+                                              work_state_log, mctx);
+              if (BE (err != REG_NOERROR, 0))
+                return err;
+            }
         }
     }
   re_free (cur_regs);
@@ -2415,7 +2905,7 @@ match_ctx_init (mctx, eflags, input, n)
     mctx->bkref_ents = NULL;
   mctx->nbkref_ents = 0;
   mctx->abkref_ents = n;
-  mctx->max_bkref_len = 0;
+  mctx->max_mb_elem_len = 0;
   return REG_NOERROR;
 }
 
@@ -2429,9 +2919,9 @@ match_ctx_free (mctx)
 /* Add a new backreference entry to the cache.  */
 
 static reg_errcode_t
-match_ctx_add_entry (mctx, node, from, to)
+match_ctx_add_entry (mctx, node, str_idx, from, to)
     re_match_context_t *mctx;
-    int node, from, to;
+    int node, str_idx, from, to;
 {
   if (mctx->nbkref_ents >= mctx->abkref_ents)
     {
@@ -2445,9 +2935,37 @@ match_ctx_add_entry (mctx, node, from, to)
       mctx->abkref_ents *= 2;
     }
   mctx->bkref_ents[mctx->nbkref_ents].node = node;
-  mctx->bkref_ents[mctx->nbkref_ents].from = from;
-  mctx->bkref_ents[mctx->nbkref_ents++].to = to;
-  if (mctx->max_bkref_len < to - from)
-    mctx->max_bkref_len = to - from;
+  mctx->bkref_ents[mctx->nbkref_ents].str_idx = str_idx;
+  mctx->bkref_ents[mctx->nbkref_ents].subexp_from = from;
+  mctx->bkref_ents[mctx->nbkref_ents].subexp_to = to;
+  mctx->bkref_ents[mctx->nbkref_ents++].flag = 0;
+  if (mctx->max_mb_elem_len < to - from)
+    mctx->max_mb_elem_len = to - from;
   return REG_NOERROR;
+}
+
+static void
+match_ctx_clear_flag (mctx)
+     re_match_context_t *mctx;
+{
+  int i;
+  for (i = 0; i < mctx->nbkref_ents; ++i)
+    {
+      mctx->bkref_ents[i].flag = 0;
+    }
+}
+
+static void
+sift_ctx_init (sctx, sifted_sts, limited_sts, last_node, last_str_idx,
+               check_subexp)
+    re_sift_context_t *sctx;
+    re_dfastate_t **sifted_sts, **limited_sts;
+    int last_node, last_str_idx, check_subexp;
+{
+  sctx->sifted_states = sifted_sts;
+  sctx->limited_states = limited_sts;
+  sctx->last_node = last_node;
+  sctx->last_str_idx = last_str_idx;
+  sctx->check_subexp = check_subexp;
+  re_node_set_init_empty (&sctx->limits);
 }

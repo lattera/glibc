@@ -628,11 +628,55 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   *reloc_addr = value;
 }
 
+#define DO_ELF_MACHINE_REL_RELATIVE(map, l_addr, relative) \
+  elf_machine_rel_relative (map, l_addr, relative,			      \
+			    (void *) (l_addr + relative->r_offset))
+
+/* hppa doesn't have an R_PARISC_RELATIVE reloc, but uses relocs with
+   ELF32_R_SYM (info) == 0 for a similar purpose.  */
 static inline void
-elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+elf_machine_rela_relative (struct link_map *map, Elf32_Addr l_addr,
+			   const Elf32_Rela *reloc,
 			   Elf32_Addr *const reloc_addr)
 {
-  /* XXX Nothing to do.  There is no relative relocation, right?  */
+  unsigned long const r_type = ELF32_R_TYPE (reloc->r_info);
+  Elf32_Addr value;
+
+  value = l_addr + reloc->r_addend;
+
+  if (ELF32_R_SYM (reloc->r_info) != 0)
+    asm volatile ("iitlbp	%r0,(%r0)");  /* Crash. */
+
+  switch (r_type)
+    {
+    case R_PARISC_DIR32:
+      /* .eh_frame can have unaligned relocs.  */
+      if ((unsigned long) reloc_addr & 3)
+	{
+	  char *rel_addr = (char *) reloc_addr;
+	  rel_addr[0] = value >> 24;
+	  rel_addr[1] = value >> 16;
+	  rel_addr[2] = value >> 8;
+	  rel_addr[3] = value;
+	  return;
+	}
+      break;
+
+    case R_PARISC_PLABEL32:
+      break;
+
+    case R_PARISC_IPLT:
+      elf_machine_fixup_plt (NULL, map, reloc, reloc_addr, value);
+      return;
+
+    case R_PARISC_NONE:
+      return;
+
+    default:
+      _dl_reloc_bad_type (map, r_type, 0);
+    }
+
+  *reloc_addr = value;
 }
 
 static inline void

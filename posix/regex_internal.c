@@ -620,50 +620,6 @@ re_node_set_init_copy (dest, src)
   return REG_NOERROR;
 }
 
-/* Calculate the intersection of the sets SRC1 and SRC2. And store it in
-   DEST. Return value indicate the error code or REG_NOERROR if succeeded.
-   Note: We assume dest->elems is NULL, when dest->alloc is 0.  */
-
-static reg_errcode_t
-re_node_set_intersect (dest, src1, src2)
-     re_node_set *dest;
-     const re_node_set *src1, *src2;
-{
-  int i1, i2, id;
-  if (src1->nelem > 0 && src2->nelem > 0)
-    {
-      if (src1->nelem + src2->nelem > dest->alloc)
-        {
-          dest->alloc = src1->nelem + src2->nelem;
-          dest->elems = re_realloc (dest->elems, int, dest->alloc);
-          if (BE (dest->elems == NULL, 0))
-            return REG_ESPACE;
-        }
-    }
-  else
-    {
-      /* The intersection of empty sets is also empty set.  */
-      dest->nelem = 0;
-      return REG_NOERROR;
-    }
-
-  for (i1 = i2 = id = 0; i1 < src1->nelem && i2 < src2->nelem; )
-    {
-      if (src1->elems[i1] > src2->elems[i2])
-        {
-          ++i2;
-          continue;
-        }
-      /* The intersection must have the elements which are in both of
-         SRC1 and SRC2.  */
-      if (src1->elems[i1] == src2->elems[i2])
-        dest->elems[id++] = src2->elems[i2++];
-      ++i1;
-    }
-  dest->nelem = id;
-  return REG_NOERROR;
-}
-
 /* Calculate the intersection of the sets SRC1 and SRC2. And merge it to
    DEST. Return value indicate the error code or REG_NOERROR if succeeded.
    Note: We assume dest->elems is NULL, when dest->alloc is 0.  */
@@ -912,7 +868,7 @@ re_node_set_compare (set1, set2)
   return 1;
 }
 
-/* Return 1 if SET contains the element ELEM, return 0 otherwise.  */
+/* Return (idx + 1) if SET contains the element ELEM, return 0 otherwise.  */
 
 static int
 re_node_set_contains (set, elem)
@@ -934,7 +890,7 @@ re_node_set_contains (set, elem)
       else
         right = mid;
     }
-  return set->elems[idx] == elem;
+  return set->elems[idx] == elem ? idx + 1 : 0;
 }
 
 static void
