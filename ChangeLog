@@ -1,3 +1,18 @@
+2005-02-22  Roland McGrath  <roland@redhat.com>
+
+	* include/sys/socket.h: Declare __recv.
+	* sysdeps/generic/recv.c (recv): Rename to __recv, and add weak alias.
+	* sysdeps/mach/hurd/recv.c: Likewise.
+
+	* sysdeps/unix/sysv/linux/libc_fatal.c: Include <execinfo.h> for
+	__backtrace_* decls.
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h
+	(INTERNAL_SYSCALL_ERROR_P): Evalute VAL.  Parenthesize ERR.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep.h: Likewise.
+
+	* include/signal.h: Include <string.h> for memset decl.
+
 2005-02-22  Andreas Schwab  <schwab@suse.de>
 
 	* posix/execvp.c (execvp): Fix invalid free.

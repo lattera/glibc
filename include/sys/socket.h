@@ -59,6 +59,14 @@ extern int __connect (int __fd, __CONST_SOCKADDR_ARG __addr, socklen_t __len);
 extern int __connect_internal (int __fd, __CONST_SOCKADDR_ARG __addr,
 			       socklen_t __len) attribute_hidden;
 
+/* Read N bytes into BUF from socket FD.
+   Returns the number read or -1 for errors.
+
+   This function is a cancellation point and therefore not marked with
+   __THROW.  */
+extern ssize_t __recv (int __fd, void *__buf, size_t __n, int __flags)
+     attribute_hidden;
+
 /* Send N bytes of BUF on socket FD to peer at address ADDR (which is
    ADDR_LEN bytes long).  Returns the number sent, or -1 for errors.  */
 extern ssize_t __libc_sendto (int __fd, __const void *__buf, size_t __n,

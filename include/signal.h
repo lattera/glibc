@@ -50,6 +50,7 @@ extern int __xpg_sigpause (int sig);
 
 /* Simplified sigemptyset() implementation without the parameter checking.  */
 #undef __sigemptyset
+#include <string.h>
 #define __sigemptyset(ss) (memset (ss, '\0', sizeof (sigset_t)), 0)
 
 
