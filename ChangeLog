@@ -1,5 +1,8 @@
 2004-10-04  H.J. Lu  <hongjiu.lu@intel.com>
 
+	* sysdeps/unix/sysv/linux/ia64/clock_getcpuclockid.c
+	(clock_getcpuclockid): Add missing retval.
+
 	* sysdeps/unix/sysv/linux/ia64/sysconf.c (linux_sysconf): Fix a typo.
 
 2004-10-04  Roland McGrath  <roland@redhat.com>
