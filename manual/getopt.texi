@@ -224,7 +224,7 @@ was seen.
 
 @comment getopt.h
 @comment GNU
-@deftypefun int getopt_long (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
+@deftypefun int getopt_long (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
 Decode options from the vector @var{argv} (whose length is @var{argc}).
 The argument @var{shortopts} describes the short options to accept, just as
 it does in @code{getopt}.  The argument @var{longopts} describes the long
@@ -277,7 +277,7 @@ getopt functionality there is one more function available.
 
 @comment getopt.h
 @comment GNU
-@deftypefun int getopt_long_only (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, struct option *@var{longopts}, int *@var{indexptr})
+@deftypefun int getopt_long_only (int @var{argc}, char *const *@var{argv}, const char *@var{shortopts}, const struct option *@var{longopts}, int *@var{indexptr})
 
 The @code{getopt_long_only} function is equivalent to the
 @code{getopt_long} function but it allows to specify the user of the
