@@ -79,8 +79,8 @@
 #endif
 
 
-#ifndef atomic_set_bit
-# define atomic_set_bit(mem, bit) \
+#ifndef atomic_bit_set
+# define atomic_bit_set(mem, bit) \
   (void) ({ __typeof (mem) __memp = (mem);				      \
 	    while (1)							      \
 	      {								      \
