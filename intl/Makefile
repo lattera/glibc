@@ -51,7 +51,7 @@ ifneq ($(strip $(MSGFMT)),:)
 .PHONY: do-gettext-test
 tests: do-gettext-test
 do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
-	$(SHELL) -e $< $(common-objpfx) $(objpfx)
+	$(SHELL) -e $< $(common-objpfx) $(common-objpfx)intl/
 endif
 endif
 endif

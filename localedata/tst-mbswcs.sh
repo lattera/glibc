@@ -19,33 +19,29 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx=$1; shift
+run_program_prefix=$1; shift
 
 status=0
 
 # Run the test programs.
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-  ${common_objpfx}localedata/tst-mbswcs1 \
+${run_program_prefix} ${common_objpfx}localedata/tst-mbswcs1 \
   > ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-  ${common_objpfx}localedata/tst-mbswcs2 \
+${run_program_prefix} ${common_objpfx}localedata/tst-mbswcs2 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-  ${common_objpfx}localedata/tst-mbswcs3 \
+${run_program_prefix} ${common_objpfx}localedata/tst-mbswcs3 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-  ${common_objpfx}localedata/tst-mbswcs4 \
+${run_program_prefix} ${common_objpfx}localedata/tst-mbswcs4 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
-  ${common_objpfx}localedata/tst-mbswcs5 \
+${run_program_prefix} ${common_objpfx}localedata/tst-mbswcs5 \
   >> ${common_objpfx}localedata/tst-mbswcs.out || status=1
 
 exit $status

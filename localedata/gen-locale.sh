@@ -19,6 +19,7 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx="$1"; shift
+localedef="$1"; shift
 locfile="$1"; shift
 
 generate_locale ()
@@ -27,8 +28,7 @@ generate_locale ()
     input=$2
     out=$3
     I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
-    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
+    ${localedef} --quiet -c -f $charmap -i $input \
       ${common_objpfx}localedata/$out
 
     if [ $? -ne 0 ]; then
@@ -38,8 +38,9 @@ generate_locale ()
     fi
 }
 
-locale=`echo $locfile|sed 's|.*/\([^/.]*\)[.].*/LC_CTYPE|\1|'`
-charmap=`echo $locfile|sed 's|.*/[^/.]*[.]\(.*\)/LC_CTYPE|\1|'`
+locfile=`echo $locfile|sed 's|.*/\([^/]*/LC_CTYPE\)|\1|'`
+locale=`echo $locfile|sed 's|\([^.]*\)[.].*/LC_CTYPE|\1|'`
+charmap=`echo $locfile|sed 's|[^.]*[.]\(.*\)/LC_CTYPE|\1|'`
 
 echo "Generating locale $locale.$charmap: this might take a while..."
 generate_locale $charmap $locale $locale.$charmap

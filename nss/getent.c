@@ -366,7 +366,7 @@ services_keys (int number, char *key[])
 	  *proto++ = '\0';
 
 	  if (isdigit (key[i][0]))
-	    serv = getservbyport (atol (key[i]), proto);
+	    serv = getservbyport (htons (atol (key[i])), proto);
 	  else
 	    serv = getservbyname (key[i], proto);
 

@@ -475,20 +475,18 @@ elf-objpfx = $(common-objpfx)elf/
 # How to run a program we just linked with our library.
 # The program binary is assumed to be $(word 2,$^).
 built-program-file = $(dir $(word 2,$^))$(notdir $(word 2,$^))
-ifneq (yes,$(build-shared))
-built-program-cmd = $(built-program-file)
-else
+ifeq (yes,$(build-shared))
 comma = ,
 sysdep-library-path = \
 $(subst $(empty) ,:,$(strip $(patsubst -Wl$(comma)-rpath-link=%, %,\
 				       $(filter -Wl$(comma)-rpath-link=%,\
 						$(sysdep-LDFLAGS)))))
-define built-program-cmd
-$(elf-objpfx)$(rtld-installed-name) \
-	--library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path)) \
-	$(built-program-file)
-endef
+run-program-prefix = $(elf-objpfx)$(rtld-installed-name) \
+		     --library-path $(rpath-link)$(patsubst %,:%,$(sysdep-library-path))
+else
+run-program-prefix =
 endif
+built-program-cmd = $(run-program-prefix) $(built-program-file)
 
 ifndef LD
 LD := ld -X

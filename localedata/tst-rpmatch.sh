@@ -20,14 +20,14 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx=$1
-IFS="&"
+tst_rpmatch=$2
+
 rc=0
-while read locale string result dummy; do
+while IFS=\& read locale string result dummy; do
     if [ "$locale" != "#" ]; then
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
-	${common_objpfx}elf/ld.so --library-path $common_objpfx \
-	${common_objpfx}localedata/tst-rpmatch $locale $string $result \
+	${tst_rpmatch} $locale $string $result \
 	|| exit 1
     fi
 done <<EOF

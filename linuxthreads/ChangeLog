@@ -1,3 +1,10 @@
+2000-07-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* spinlock.c: Fix code for TEST_FOR_COMPARE_AND_SWAP being defined.
+	Add tests also to new alternative spinlock implementation.
+	* spinlock.h: Likewise.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-07-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* Version: Export __sigaction.

@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
-#include <wait.h>
+#include <sys/wait.h>
 
 enum
 {

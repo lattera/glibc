@@ -19,10 +19,11 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx=$1
+run_program_prefix=$2
 
 # Generate the necessary locale data.
 I18NPATH=. GCONV_PATH=${common_objpfx}/iconvdata \
-${common_objpfx}elf/ld.so --library-path $common_objpfx \
+${run_program_prefix} \
 ${common_objpfx}locale/localedef --quiet \
 -i tests/trans.def -f charmaps/ISO-8859-1 \
 ${common_objpfx}localedata/tt_TT ||
@@ -30,7 +31,7 @@ exit 1
 
 # Run the test program.
 LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}iconvdata \
-LC_ALL=tt_TT ${common_objpfx}elf/ld.so --library-path $common_objpfx \
+LC_ALL=tt_TT ${run_program_prefix} \
 ${common_objpfx}localedata/tst-trans > ${common_objpfx}localedata/tst-trans.out
 
 exit $?

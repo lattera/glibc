@@ -76,7 +76,6 @@ distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 include ../Makeconfig
 
 ifeq (no,$(cross-compiling))
-ifeq (yes,$(build-shared))
 locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_iswctype tst_iswdigit tst_iswgraph            \
 		     tst_iswlower tst_iswprint tst_iswpunct            \
@@ -93,7 +92,6 @@ locale_test_suite := tst_iswalnum tst_iswalpha tst_iswcntrl            \
 		     tst_wctype tst_wcwidth
 
 tests = $(locale_test_suite)
-endif
 endif
 
 # Files to install.
@@ -117,7 +115,6 @@ CFLAGS-tst-trans.c = -Wno-format
 
 
 ifeq (no,$(cross-compiling))
-ifeq (yes,$(build-shared))
 # We have to generate locales
 LOCALES := de_DE.ISO-8859-1 de_DE.UTF-8 en_US.ANSI_X3.4-1968 \
 	   en_US.ISO-8859-1 ja_JP.EUC-JP
@@ -130,9 +127,9 @@ generated-dirs += $(LOCALES)
 # Dependency for the locale files.  We actually make it depend only on
 # one of the files.
 $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
-  gen-locale.sh Makefile $(common-objpfx)locale/localedef \
+  gen-locale.sh $(common-objpfx)locale/localedef Makefile \
   $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
-	@$(SHELL) -e gen-locale.sh $(common-objpfx) $@
+	@$(SHELL) -e gen-locale.sh $(common-objpfx) '$(built-program-cmd)' $@
 
 $(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))
@@ -143,27 +140,26 @@ tests: do-collate-test do-tst-fmon do-tst-locale do-tst-rpmatch do-tst-trans \
        do-tst-mbswcs do-tst-ctype
 do-collate-test: sort-test.sh $(objpfx)collate-test $(objpfx)xfrm-test \
 		 $(test-input-data) $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) $(test-input)
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' $(test-input)
 do-tst-fmon: tst-fmon.sh $(objpfx)tst-fmon tst-fmon.data do-collate-test \
 	     $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx) tst-fmon.data
-do-tst-locale: tst-locale.sh $(ld-test-srcs) \
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)' tst-fmon.data
+do-tst-locale: tst-locale.sh $(common-objpfx)locale/localedef $(ld-test-srcs) \
 	       $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 do-tst-rpmatch: tst-rpmatch.sh $(objpfx)tst-rpmatch do-tst-fmon \
 		$(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 do-tst-trans: tst-trans.sh $(objpfx)tst-trans \
 	      $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'
 do-tst-mbswcs: tst-mbswcs.sh $(objpfx)tst-mbswcs1 $(objpfx)tst-mbswcs2 \
 	       $(objpfx)tst-mbswcs3 $(objpfx)tst-mbswcs4 $(objpfx)tst-mbswcs5 \
 	       $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx)
+	$(SHELL) -e $< $(common-objpfx) '$(run-program-prefix)'
 do-tst-ctype: tst-ctype.sh $(objpfx)tst-ctype do-collate-test \
 	      $(addprefix $(objpfx),$(CTYPE_FILES))
-	$(SHELL) -e $< $(common-objpfx)
-endif
+	$(SHELL) -e $< $(common-objpfx) '$(built-program-cmd)'
 endif
 
 # Sometimes the whole collection of locale files should be installed.

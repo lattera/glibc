@@ -25,7 +25,8 @@ case $1 in
 esac
 
 common_objpfx=$1
-datafile=$2
+run_program_prefix=$2
+datafile=$3
 
 here=`pwd`
 
@@ -37,19 +38,17 @@ for cns in `cd ./tst-fmon-locales && ls tstfmon_*`; do
     fn=charmaps/ISO-8859-1
     I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
     LOCPATH=${common_objpfx}localedata LC_ALL=C LANGUAGE=C \
-    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}locale/localedef \
+    ${run_program_prefix} ${common_objpfx}locale/localedef \
     --quiet -i $cn -f $fn ${common_objpfx}localedata/$cns
 done
 
 # Run the tests.
-IFS="	"                # This is a TAB
-while read locale format value expect; do
+# There's a TAB for IFS
+while IFS="	" read locale format value expect; do
     if [ -n "$format" ]; then
 	LOCPATH=${common_objpfx}localedata \
 	GCONV_PATH=${common_objpfx}/iconvdata \
-	${common_objpfx}elf/ld.so --library-path $common_objpfx \
-        ${common_objpfx}localedata/tst-fmon \
+	${run_program_prefix} ${common_objpfx}localedata/tst-fmon \
 	    "$locale" "$format" "$value" "$expect"
 	if [ $? -eq 0 ]; then
 	    if [ $DEBUG -eq 1 ]; then

@@ -24,6 +24,11 @@
 #include "spinlock.h"
 #include "restart.h"
 
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+static void __pthread_acquire(int * spinlock);
+#endif
+
+
 /* The status field of a spinlock is a pointer whose least significant
    bit is a locked flag.
 
@@ -59,10 +64,10 @@ void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 #if defined TEST_FOR_COMPARE_AND_SWAP
   if (!__pthread_has_cas)
 #endif
-#if !defined HAS_COMPARE_AND_SWAP
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
     __pthread_acquire(&lock->__spinlock);
-    return 0;
+    return;
   }
 #endif
 
@@ -147,7 +152,7 @@ int __pthread_unlock(struct _pthread_fastlock * lock)
 #if defined TEST_FOR_COMPARE_AND_SWAP
   if (!__pthread_has_cas)
 #endif
-#if !defined HAS_COMPARE_AND_SWAP
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
   {
     WRITE_MEMORY_BARRIER();
     lock->__spinlock = 0;
@@ -237,7 +242,9 @@ struct wait_node {
 };
 
 static long wait_node_free_list;
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
 static int wait_node_free_list_spinlock;
+#endif
 
 /* Allocate a new node from the head of the free list using an atomic
    operation, or else using malloc if that list is empty.  A fundamental
@@ -247,8 +254,33 @@ static int wait_node_free_list_spinlock;
 
 static struct wait_node *wait_node_alloc(void)
 {
+#if defined HAS_COMPARE_AND_SWAP
   long oldvalue, newvalue;
+#endif
 
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    struct wait_node *new_node = 0;
+
+    __pthread_acquire(&wait_node_free_list_spinlock);
+    if (wait_node_free_list != 0) {
+      new_node = (struct wait_node *) wait_node_free_list;
+      wait_node_free_list = (long) new_node->next;
+    }
+    WRITE_MEMORY_BARRIER();
+    wait_node_free_list_spinlock = 0;
+
+    if (new_node == 0)
+      return malloc(sizeof *wait_node_alloc());
+
+    return new_node;
+  }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
   do {
     oldvalue = wait_node_free_list;
 
@@ -257,10 +289,10 @@ static struct wait_node *wait_node_alloc(void)
 
     newvalue = (long) ((struct wait_node *) oldvalue)->next;
     WRITE_MEMORY_BARRIER();
-  } while (! compare_and_swap(&wait_node_free_list, oldvalue, newvalue,
-                              &wait_node_free_list_spinlock));
+  } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
 
   return (struct wait_node *) oldvalue;
+#endif
 }
 
 /* Return a node to the head of the free list using an atomic
@@ -268,16 +300,35 @@ static struct wait_node *wait_node_alloc(void)
 
 static void wait_node_free(struct wait_node *wn)
 {
+#if defined HAS_COMPARE_AND_SWAP
   long oldvalue, newvalue;
+#endif
 
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    __pthread_acquire(&wait_node_free_list_spinlock);
+    wn->next = (struct wait_node *) wait_node_free_list;
+    wait_node_free_list = (long) wn;
+    WRITE_MEMORY_BARRIER();
+    wait_node_free_list_spinlock = 0;
+    return;
+  }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
   do {
     oldvalue = wait_node_free_list;
     wn->next = (struct wait_node *) oldvalue;
     newvalue = (long) wn;
     WRITE_MEMORY_BARRIER();
-  } while (! compare_and_swap(&wait_node_free_list, oldvalue, newvalue,
-                              &wait_node_free_list_spinlock));
+  } while (! __compare_and_swap(&wait_node_free_list, oldvalue, newvalue));
+#endif
 }
+
+#if defined HAS_COMPARE_AND_SWAP
 
 /* Remove a wait node from the specified queue.  It is assumed
    that the removal takes place concurrently with only atomic insertions at the
@@ -285,20 +336,17 @@ static void wait_node_free(struct wait_node *wn)
 
 static void wait_node_dequeue(struct wait_node **pp_head,
 			      struct wait_node **pp_node,
-			      struct wait_node *p_node,
-			      int *spinlock)
+			      struct wait_node *p_node)
 {
-  long oldvalue, newvalue;
-
   /* If the node is being deleted from the head of the
      list, it must be deleted using atomic compare-and-swap.
      Otherwise it can be deleted in the straightforward way. */
 
   if (pp_node == pp_head) {
-    oldvalue = (long) p_node;
-    newvalue = (long) p_node->next;
-
-    if (compare_and_swap((long *) pp_node, oldvalue, newvalue, spinlock))
+    long oldvalue = (long) p_node;
+    long newvalue = (long) p_node->next;
+       
+    if (__compare_and_swap((long *) pp_node, oldvalue, newvalue))
       return;
 
     /* Oops! Compare and swap failed, which means the node is
@@ -314,12 +362,46 @@ static void wait_node_dequeue(struct wait_node **pp_head,
   return;
 }
 
+#endif
+
 void __pthread_alt_lock(struct _pthread_fastlock * lock,
 		        pthread_descr self)
 {
-  struct wait_node wait_node;
+#if defined HAS_COMPARE_AND_SWAP
   long oldstatus, newstatus;
+#endif
+  struct wait_node wait_node;
 
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    int suspend_needed = 0;
+    __pthread_acquire(&lock->__spinlock);
+
+    if (lock->__status == 0)
+      lock->__status = 1;
+    else {
+      if (self == NULL)
+	self = thread_self();
+
+      wait_node.abandoned = 0;
+      wait_node.next = (struct wait_node *) lock->__status;
+      wait_node.thr = self = thread_self();
+      suspend_needed = 1;
+    }
+
+    WRITE_MEMORY_BARRIER();
+    lock->__spinlock = 0;
+
+    if (suspend_needed)
+      suspend (self);
+    return;
+  }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
   do {
     oldstatus = lock->__status;
     if (oldstatus == 0) {
@@ -344,6 +426,7 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
 
   if (oldstatus != 0)
     suspend(self);
+#endif
 }
 
 /* Timed-out lock operation; returns 0 to indicate timeout. */
@@ -351,8 +434,11 @@ void __pthread_alt_lock(struct _pthread_fastlock * lock,
 int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 			    pthread_descr self, const struct timespec *abstime)
 {
+  long oldstatus;
+#if defined HAS_COMPARE_AND_SWAP
+  long newstatus;
+#endif
   struct wait_node *p_wait_node = wait_node_alloc();
-  long oldstatus, newstatus;
 
   /* Out of memory, just give up and do ordinary lock. */
   if (p_wait_node == 0) {
@@ -360,6 +446,32 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
     return 1;
   }
 
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    __pthread_acquire(&lock->__spinlock);
+
+    if (lock->__status == 0)
+      lock->__status = 1;
+    else {
+      if (self == NULL)
+	self = thread_self();
+
+      p_wait_node->abandoned = 0;
+      p_wait_node->next = (struct wait_node *) lock->__status;
+      p_wait_node->thr = self = thread_self();
+    }
+
+    WRITE_MEMORY_BARRIER();
+    lock->__spinlock = 0;
+    oldstatus = 1; /* force suspend */
+    goto suspend;
+  }
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
   do {
     oldstatus = lock->__status;
     if (oldstatus == 0) {
@@ -376,6 +488,11 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
     MEMORY_BARRIER();
   } while(! compare_and_swap(&lock->__status, oldstatus, newstatus,
                              &lock->__spinlock));
+#endif
+
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  suspend:
+#endif
 
   /* If we did not get the lock, do a timed suspend. If we wake up due
      to a timeout, then there is a race; the old lock owner may try
@@ -402,24 +519,50 @@ int __pthread_alt_timedlock(struct _pthread_fastlock * lock,
 
 void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 {
-  long oldstatus;
   struct wait_node *p_node, **pp_node, *p_max_prio, **pp_max_prio;
   struct wait_node ** const pp_head = (struct wait_node **) &lock->__status;
   int maxprio;
+
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    __pthread_acquire(&lock->__spinlock);
+  }
+#endif
 
   while (1) {
 
   /* If no threads are waiting for this lock, try to just
      atomically release it. */
-
-    oldstatus = lock->__status;
-    if (oldstatus == 0 || oldstatus == 1) {
-      if (compare_and_swap_with_release_semantics (&lock->__status, oldstatus,
-						   0, &lock->__spinlock))
-	return;
-      else
-	continue;
+#if defined TEST_FOR_COMPARE_AND_SWAP
+    if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+    {
+      if (lock->__status == 0 || lock->__status == 1) {
+	lock->__status = 0;
+	break;
+      }
     }
+#endif
+
+#if defined TEST_FOR_COMPARE_AND_SWAP
+    else
+#endif
+
+#if defined HAS_COMPARE_AND_SWAP
+    {
+      long oldstatus = lock->__status;
+      if (oldstatus == 0 || oldstatus == 1) {
+	if (__compare_and_swap_with_release_semantics (&lock->__status, oldstatus, 0))
+	  break;
+	else
+	  continue;
+      }
+    }
+#endif
 
     /* Process the entire queue of wait nodes. Remove all abandoned
        wait nodes and put them into the global free queue, and
@@ -435,7 +578,18 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
 
       if (p_node->abandoned) {
 	/* Remove abandoned node. */
-	wait_node_dequeue(pp_head, pp_node, p_node, &lock->__spinlock);
+#if defined TEST_FOR_COMPARE_AND_SWAP
+	if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+	  *pp_node = p_node->next;
+#endif
+#if defined TEST_FOR_COMPARE_AND_SWAP
+	else
+#endif
+#if defined HAS_COMPARE_AND_SWAP
+	  wait_node_dequeue(pp_head, pp_node, p_node);
+#endif
 	wait_node_free(p_node);
 	READ_MEMORY_BARRIER();
 	p_node = *pp_node;
@@ -469,12 +623,33 @@ void __pthread_alt_unlock(struct _pthread_fastlock *lock)
        whole unlock operation. */
 
     if (!testandset(&p_max_prio->abandoned)) {
-      wait_node_dequeue(pp_head, pp_max_prio, p_max_prio, &lock->__spinlock);
+#if defined TEST_FOR_COMPARE_AND_SWAP
+      if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+	*pp_max_prio = p_max_prio->next;
+#endif
+#if defined TEST_FOR_COMPARE_AND_SWAP
+      else
+#endif
+#if defined HAS_COMPARE_AND_SWAP
+	wait_node_dequeue(pp_head, pp_max_prio, p_max_prio);
+#endif
       WRITE_MEMORY_BARRIER();
       restart(p_max_prio->thr);
-      return;
+      break;
     }
   }
+
+#if defined TEST_FOR_COMPARE_AND_SWAP
+  if (!__pthread_has_cas)
+#endif
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
+  {
+    WRITE_MEMORY_BARRIER();
+    lock->__spinlock = 0;
+  }
+#endif
 }
 
 
@@ -485,8 +660,6 @@ int __pthread_has_cas = 0;
 #endif
 
 #if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
-
-static void __pthread_acquire(int * spinlock);
 
 int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
                                int * spinlock)

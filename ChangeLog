@@ -1,3 +1,34 @@
+2000-07-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_open.c (__gconv_open): Merge duplicated code.
+
+2000-07-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_builtin.c (__gconv_get_builtin_trans): Initialize
+	__modname.
+
+2000-07-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconv/gconv_open.c (__gconv_open): Initialize
+	result->__steps[cnt].__data.
+
+2000-07-12  Mark Kettenis  <kettenis@gnu.org>
+
+	* nss/getent.c (services_keys): Pass port number in network byte
+	order in call to getservbyport.
+
+2000-07-11  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/Makefile (test-canon-ARGS): Fix for building in the
+	source dir.
+	* intl/Makefile (do-gettext-test): Likewise.
+	* dirent/Makefile (opendir-tst1-ARGS): Likewise.
+
+2000-07-11  Andreas Schwab  <schwab@suse.de>
+
+	* Makeconfig (run-program-prefix): New rule.
+	(built-program-cmd): Use run-program-prefix.
+
 2000-07-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/langinfo.h: Make CRNCYSTR, RADIXCHAR, THOUSANDS_SEP, YESEXPR,

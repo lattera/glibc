@@ -20,6 +20,7 @@
 # 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 
 common_objpfx=$1; shift
+localedef=$1; shift
 
 test_locale ()
 {
@@ -32,8 +33,7 @@ test_locale ()
     fi
     I18NPATH=. GCONV_PATH=${common_objpfx}iconvdata \
     LOCPATH=${common_objpfx}localedata LC_ALL=C LANGUAGE=C \
-    ${common_objpfx}elf/ld.so --library-path $common_objpfx \
-    ${common_objpfx}locale/localedef --quiet -c -f $charmap -i $input \
+    ${localedef} --quiet -c -f $charmap -i $input \
       ${rep} ${common_objpfx}localedata/$out
 
     if [ $? -ne 0 ]; then

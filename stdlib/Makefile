@@ -127,7 +127,7 @@ clean-mpn:
 endif
 
 # Testdir has to be named stdlib and needs to be writable
-test-canon-ARGS = --test-dir=${objdir}/stdlib
+test-canon-ARGS = --test-dir=${common-objpfx}stdlib
 
 # Run a test on the header files we use.
 tests: $(objpfx)isomac
