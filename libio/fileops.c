@@ -1197,28 +1197,54 @@ _IO_file_xsgetn_mmap (fp, data, n)
 {
   register _IO_size_t have;
   char *read_ptr = fp->_IO_read_ptr;
+  register char *s = (char *) data;
 
   have = fp->_IO_read_end - fp->_IO_read_ptr;
 
   if (have < n)
     {
-      /* Maybe the read buffer is not yet fully set up.  */
-      fp->_IO_read_ptr = fp->_IO_read_end;
-      if (fp->_IO_read_end < fp->_IO_buf_end
-	  && _IO_file_underflow_mmap (fp) != EOF)
-	have = fp->_IO_read_end - read_ptr;
+      if (__builtin_expect (_IO_in_backup (fp), 0))
+	{
+#ifdef _LIBC
+	  s = __mempcpy (s, read_ptr, have);
+#else
+	  memcpy (s, read_ptr, have);
+	  s += have;
+#endif
+	  n -= have;
+	  _IO_switch_to_main_get_area (fp);
+	  read_ptr = fp->_IO_read_ptr;
+	  have = fp->_IO_read_end - fp->_IO_read_ptr;
+	}
+
+      if (have < n)
+	{
+	  /* Maybe the read buffer is not yet fully set up.  */
+	  fp->_IO_read_ptr = fp->_IO_read_end;
+	  if (fp->_IO_read_end < fp->_IO_buf_end
+	      && _IO_file_underflow_mmap (fp) != EOF)
+	    have = fp->_IO_read_end - read_ptr;
+	}
     }
 
   if (have == 0)
-    fp->_flags |= _IO_EOF_SEEN;
+    {
+      if (s == (char *) data)
+	fp->_flags |= _IO_EOF_SEEN;
+    }
   else
     {
       have = MIN (have, n);
-      memcpy (data, read_ptr, have);
+#ifdef _LIBC
+      s = __mempcpy (s, read_ptr, have);
+#else
+      memcpy (s, read_ptr, have);
+      s += have;
+#endif
       fp->_IO_read_ptr = read_ptr + have;
     }
 
-  return have;
+  return s - (char *) data;
 }
 
 struct _IO_jump_t _IO_file_jumps =

@@ -18,6 +18,7 @@ main (int argc, char *argv[])
   FILE *fp = NULL;
   int retval = 0;
   int c;
+  char buffer[64];
 
   name = tmpnam (NULL);
   fp = fopen (name, "w");
@@ -40,6 +41,17 @@ main (int argc, char *argv[])
   assert (feof (fp) == 0);
   assert (getc (fp) == c);
   assert (getc (fp) == EOF);
+  fclose (fp);
+  fp = NULL;
+
+  fp = fopen (name, "r");
+  assert (fp != NULL);
+  assert (getc (fp) == 'b');
+  assert (getc (fp) == 'l');
+  assert (ungetc ('b', fp) == 'b');
+  assert (fread (buffer, 1, 64, fp) == 2);
+  assert (buffer[0] == 'b');
+  assert (buffer[1] == 'a');
 
 the_end:
   if (fp != NULL)

@@ -1,3 +1,15 @@
+2002-02-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/iofopen.c (__fopen_maybe_mmap): Set the initial
+	position to fp->_offset if it is set.
+	* stdio-common/Makefile (tests): Add tst-fdopen.
+	* stdio-common/tst-fdopen.c: New test.
+
+2002-02-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/fileops.c (_IO_file_xsgetn_mmap): Handle reading from backup.
+	* stdio-common/tst-ungetc.c (main): Add another test.
+
 2002-02-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* assert/assert-perr.c: Use INTUSE to reference functions and variables

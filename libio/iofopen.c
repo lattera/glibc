@@ -53,7 +53,9 @@ __fopen_maybe_mmap (fp)
       if (_IO_SYSSTAT (fp, &st) == 0
 	  && S_ISREG (st.st_mode) && st.st_size != 0
 	  /* Limit the file size to 1MB for 32-bit machines.  */
-	  && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024))
+	  && (sizeof (ptrdiff_t) > 4 || st.st_size < 1*1024*1024)
+	  /* Sanity check.  */
+	  && (fp->_offset == _IO_pos_BAD || fp->_offset <= st.st_size))
 	{
 	  /* Try to map the file.  */
 	  void *p;
@@ -72,15 +74,17 @@ __fopen_maybe_mmap (fp)
 		 underflow functions which never tries to read
 		 anything from the file.  */
 	      INTUSE(_IO_setb) (fp, p, (char *) p + st.st_size, 0);
-	      _IO_setg (fp, p, p, p);
+
+	      if (fp->_offset == _IO_pos_BAD)
+		fp->_offset = 0;
+
+	      _IO_setg (fp,  p, p + fp->_offset, p + fp->_offset);
 
 	      if (fp->_mode <= 0)
 		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_file_jumps_mmap;
 	      else
 		_IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_wfile_jumps_mmap;
 	      fp->_wide_data->_wide_vtable = &_IO_wfile_jumps_mmap;
-
-	      fp->_offset = 0;
 	    }
 	}
     }
