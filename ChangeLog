@@ -1,5 +1,7 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/do-lookup.h: Add some __builtin_expect.
+
 	* dlfcn/dlfcn.h: Pretty print dladdr declaraction.
 
 	* elf/rtld.c (process_envvars): Recognize LD_DYNAMIC_WEAK.

@@ -92,7 +92,7 @@ FCT (const char *undef_name, struct link_map *undef_map,
 	    continue;
 
 #if VERSIONED
-	  if (verstab == NULL)
+	  if (__builtin_expect (verstab == NULL, 0))
 	    {
 	      /* We need a versioned symbol but haven't found any.  If
 		 this is the object which is referenced in the verneed
@@ -184,7 +184,7 @@ FCT (const char *undef_name, struct link_map *undef_map,
       /* If this current map is the one mentioned in the verneed entry
 	 and we have not found a weak entry, it is a bug.  */
       if (symidx == STN_UNDEF && version->filename != NULL
-	  && _dl_name_match_p (version->filename, map))
+	  && __builtin_expect (_dl_name_match_p (version->filename, map), 0))
 	return -1;
 #endif
     }
