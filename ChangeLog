@@ -1,3 +1,9 @@
+1999-10-20  Andreas Jaeger  <aj@suse.de>
+
+	* manual/socket.texi (Address Formats): Describe usage of AF_UNIX
+	versus AF_LOCAL.
+	Patch by Robert Bihlmeyer <robbe@orcus.priv.at>.
+
 1999-10-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* math/libm-test.inc: Disable some boundary case tests for inline

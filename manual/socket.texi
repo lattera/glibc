@@ -335,11 +335,15 @@ This designates the address format that goes with the local namespace.
 Details}, for information about this address format.
 
 @comment sys/socket.h
-@comment BSD
+@comment BSD, Unix98
 @item AF_UNIX
 @vindex AF_UNIX
-This is a synonym for @code{AF_LOCAL}, for compatibility.
-(@code{PF_UNIX} is likewise a synonym for @code{PF_LOCAL}.)
+This is a synonym for @code{AF_LOCAL}.  Although @code{AF_LOCAL} is
+mandated by POSIX.1g, @code{AF_UNIX} is portable to more systems.
+@code{AF_UNIX} was the traditional name stemming from BSD, so even most
+POSIX systems support it.  It is also the name of choice in the Unix98
+specification. (The same is true for @code{PF_UNIX}
+vs. @code{PF_LOCAL}).
 
 @comment sys/socket.h
 @comment GNU
