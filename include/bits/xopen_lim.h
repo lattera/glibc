@@ -104,7 +104,7 @@
 #endif
 
 /* Number of bits in a word of type `long int'.  */
-#if INT_MAX == 2147483647
+#if LONG_MAX == 2147483647
 # define LONG_BIT	32
 #else
 /* Safe assumption.  */

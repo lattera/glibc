@@ -1,5 +1,8 @@
 2000-09-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/bits/xopen_lim.h (LONG_BIT): Use LONG_MAX, not INT_MAX.
+	Patch by Thorsten Kukuk <kukuk@suse.de>.
+
 	* dlfcn/Makefile (distribute): Add defaultmod1.c and defaultmod2.c.
 	(test): Add default.
 	(modules-names): Add defaultmod1 and defaultmod2.
