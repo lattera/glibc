@@ -30,9 +30,9 @@ tcgetsid (fd)
   pid_t pgrp;
   pid_t sid;
 #ifdef TIOCGSID
-  static int tiocgsid_does_not_works;
+  static int tiocgsid_does_not_work;
 
-  if (! tiocgsid_does_not_works)
+  if (! tiocgsid_does_not_work)
     {
       int serrno = errno;
       int sid;
@@ -41,7 +41,7 @@ tcgetsid (fd)
 	{
 	  if (errno == EINVAL)
 	    {
-	      tiocgsid_does_not_works = 1;
+	      tiocgsid_does_not_work = 1;
 	      __set_errno (serrno);
 	    }
 	  else

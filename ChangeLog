@@ -1,3 +1,8 @@
+1999-04-29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXbyYY_r.c: Include assert.h.
+	* nss/getXXbyYY.c: Likewise.
+
 1999-04-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* termios/tcgetsid.c (tcgetsid): Rename variable to
