@@ -27,5 +27,5 @@
 	!__r;								\
 })
 
-#define	TSL_UNSET(tsl)	((tsl) = 0)
+#define	TSL_UNSET(tsl)	(*(tsl) = 0)
 #define	TSL_INIT(tsl)	TSL_UNSET(tsl)
