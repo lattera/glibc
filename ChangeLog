@@ -1,3 +1,8 @@
+2004-03-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/localedef.c (construct_output_path): Remove
+	remnants of CEN locale names.
+
 2004-03-30  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/termios.h: Add IUTF8.

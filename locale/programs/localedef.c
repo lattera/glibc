@@ -421,8 +421,7 @@ construct_output_path (char *path)
       startp = path;
       /* We must be prepared for finding a CEN name or a location of
 	 the introducing `.' where it is not possible anymore.  */
-      while (*startp != '\0' && *startp != '@' && *startp != '.'
-	     && *startp != '+' && *startp != ',')
+      while (*startp != '\0' && *startp != '@' && *startp != '.')
 	++startp;
       if (*startp == '.')
 	{
