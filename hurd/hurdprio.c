@@ -1,5 +1,5 @@
 /* Support code for dealing with priorities in the Hurd.
-   Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,95,96,97,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 			  int pi_flags)
 {
   mach_msg_type_number_t npids = 64, i;
-  pid_t pidbuf[npids], *pids;
+  pid_t pidbuf[npids], *pids = pidbuf;
   error_t err;
   struct procinfo *pip;
   int pibuf[sizeof *pip + 5 * sizeof (pip->threadinfos[0])], *pi = pibuf;
