@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,8 +28,8 @@
 
 __BEGIN_DECLS
 
-extern int sysmips __P ((__const int cmd, __const int arg1,
-			 __const int arg2, __const int arg3));
+extern int sysmips (__const int cmd, __const int arg1,
+		    __const int arg2, __const int arg3) __THROW;
 
 __END_DECLS
 

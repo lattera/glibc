@@ -1,5 +1,5 @@
 /* Structure types for pre-termios terminal ioctls.  Linux/MIPS version.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,19 +26,19 @@
 
 struct winsize
   {
-    unsigned short ws_row;
-    unsigned short ws_col;
-    unsigned short ws_xpixel;
-    unsigned short ws_ypixel;
+    unsigned short int ws_row;
+    unsigned short int ws_col;
+    unsigned short int ws_xpixel;
+    unsigned short int ws_ypixel;
   };
 
 #define NCC	8
 struct termio
   {
-    unsigned short c_iflag;		/* input mode flags */
-    unsigned short c_oflag;		/* output mode flags */
-    unsigned short c_cflag;		/* control mode flags */
-    unsigned short c_lflag;		/* local mode flags */
+    unsigned short int c_iflag;		/* input mode flags */
+    unsigned short int c_oflag;		/* output mode flags */
+    unsigned short int c_cflag;		/* control mode flags */
+    unsigned short int c_lflag;		/* local mode flags */
     char c_line;			/* line discipline */
     /* Yes, this is really NCCS.  */
     unsigned char c_cc[32 /* NCCS */]; /* control characters */

@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/MIPS's sigaction.
-   Copyright (C) 1993, 94, 95, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,95,97,98,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ struct sigaction
 	/* Used if SA_SIGINFO is not set.  */
 	__sighandler_t sa_handler;
 	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) __PMT ((int, siginfo_t *, void *));
+	void (*sa_sigaction) (int, siginfo_t *, void *);
       }
     __sigaction_handler;
 # define sa_handler    __sigaction_handler.sa_handler
@@ -47,7 +47,7 @@ struct sigaction
 
     /* The ABI says here are two unused ints following. */
     /* Restore handler.  */
-    void (*sa_restorer) __PMT ((void));
+    void (*sa_restorer) (void);
 
 #if _MIPS_ISA == _MIPS_ISA_MIPS1 || _MIPS_ISA == _MIPS_ISA_MIPS2
     int sa_resv[1];

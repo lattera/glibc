@@ -1,5 +1,5 @@
 /* Error constants.  MIPS/Linux specific version.
-   Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@
 extern int errno;
 
 /* Function to get address of global `errno' variable.  */
-extern int *__errno_location __P ((void)) __attribute__ ((__const__));
+extern int *__errno_location (void) __THROW __attribute__ ((__const__));
 
 #  if defined _LIBC
 /* We wouldn't need a special macro anymore but it is history.  */
