@@ -114,7 +114,18 @@ main (argc, argv)
 
   /* Version information is requested.  */
   if (do_version)
-    printf ("%s - GNU %s %s\n", program_invocation_name, PACKAGE, VERSION);
+    {
+      fprintf (stderr, "makedb - GNU %s %s\n", PACKAGE, VERSION);
+      fprintf (stderr, _("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1996");
+      fprintf (stderr, _("Written by %s\n"),
+	       "Ulrich Drepper <drepper@cygnus.com>");
+
+      exit (EXIT_SUCCESS);
+    }
 
   /* Help is requested.  */
   if (do_help)

@@ -183,7 +183,15 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "%s - GNU %s %s\n", __progname, PACKAGE, VERSION);
+      fprintf (stderr, "locale - GNU %s %s\n", PACKAGE, VERSION);
+      fprintf (stderr, _("\
+Copyright (C) %s Free Software Foundation, Inc.\n\
+This is free software; see the source for copying conditions.  There is NO\n\
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\
+"), "1995, 1996");
+      fprintf (stderr, _("Written by %s\n"),
+	       "Ulrich Drepper <drepper@cygnus.com>");
+
       exit (EXIT_SUCCESS);
     }
 

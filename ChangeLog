@@ -1,7 +1,19 @@
+Sun Sep 22 15:18:41 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Define dummy function
+ 	`_dl_start' so that linking fails if this file should ever be used
+ 	in ld.so.
+
+	* catgets/gencat.c (main): Change --version message according to
+ 	RMS' last standard revision.
+	* db/makedb.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+
 Sat Sep 21 23:42:39 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/getsysstats.c: Include <sys/sysinfo.h>.
- 	(__get_nproc_conf): New function.
+	(__get_nproc_conf): New function.
 
 Sun Sep 22 03:40:52 1996  Ulrich Drepper  <drepper@cygnus.com>
 

@@ -87,3 +87,15 @@ __libc_init_first (void)
 SYSDEP_CALL_INIT(__libc_init_first, init);
 
 #endif
+
+
+/* This function is defined here so that if this file ever gets into
+   ld.so we will get a link error.  Having this file silently included
+   in ld.so causes disaster, because the _init definition above will
+   cause ld.so to gain an init function, which is not a cool thing. */
+
+void
+_dl_start ()
+{
+  abort ();
+}
