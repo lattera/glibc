@@ -112,6 +112,9 @@ libpthread-shared-only-routines = pt-allocrtsig
 
 libpthread-nonshared = pthread_atfork
 
+# Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
+omit-deps = $(unix-syscalls:%=ptw-%)
+
 
 tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-mutex7 \

@@ -47,6 +47,8 @@ libpthread-routines := attr cancel condvar join manager mutex ptfork \
 		       ptw-open ptw-open64 ptw-pause ptw-pread ptw-pread64 \
 		       ptw-pwrite ptw-pwrite64 ptw-tcdrain ptw-wait \
 		       ptw-waitpid pt-system
+# Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
+omit-deps = $(unix-syscalls:%=ptw-%)
 
 libpthread-shared-only-routines = pt-allocrtsig
 
