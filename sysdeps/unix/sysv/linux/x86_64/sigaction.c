@@ -39,7 +39,13 @@
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
 				   struct kernel_sigaction *__unbounded, size_t);
 
+/* Using the hidden attribute here does not change the code but it
+   helps to avoid warnings.  */
+#if defined HAVE_HIDDEN && !defined HAVE_BROKEN_VISIBILITY_ATTRIBUTE
+extern void restore_rt (void) asm ("__restore_rt") attribute_hidden;
+#else
 static void restore_rt (void) asm ("__restore_rt");
+#endif
 
 
 /* If ACT is not NULL, change the action for SIG to *ACT.
