@@ -9,6 +9,7 @@
 	* Makeconfig: Likewise.
 	* Makerules: Likewise.
 	* Rules: Likewise.
+	* manual/Makefile: Likewise.
 	* sunrpc/Makefile (xtests): Add thrsvc if thread library available.
 	* sunrpc/thrsvc.c: New file.  By Zack Weinberg.
 
