@@ -776,6 +776,7 @@ tf_sigwait (void *arg)
 
   /* Block SIGUSR1.  */
   sigset_t mask;
+  sigemptyset (&mask);
   sigaddset (&mask, SIGUSR1);
   if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
     {
@@ -819,6 +820,7 @@ tf_sigwaitinfo (void *arg)
 
   /* Block SIGUSR1.  */
   sigset_t mask;
+  sigemptyset (&mask);
   sigaddset (&mask, SIGUSR1);
   if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
     {
@@ -863,6 +865,7 @@ tf_sigtimedwait (void *arg)
 
   /* Block SIGUSR1.  */
   sigset_t mask;
+  sigemptyset (&mask);
   sigaddset (&mask, SIGUSR1);
   if (pthread_sigmask (SIG_BLOCK, &mask, NULL) != 0)
     {
