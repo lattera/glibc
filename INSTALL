@@ -1,8 +1,8 @@
-Installing the GNU C Library
-****************************
+Appendix A Installing the GNU C Library
+***************************************
 
-   Before you do anything else, you should read the file `FAQ' located
-at the top level of the source tree.  This file answers common questions
+Before you do anything else, you should read the file `FAQ' located at
+the top level of the source tree.  This file answers common questions
 and describes problems you may experience with compilation and
 installation.  It is updated more frequently than this manual.
 
@@ -23,15 +23,15 @@ bundle; the file is `glibc-linuxthreads-VERSION.tar.gz'.
 and GNU Make, and possibly others.  *Note Tools for Compilation::,
 below.
 
-Configuring and compiling GNU Libc
-==================================
+A.1 Configuring and compiling GNU Libc
+======================================
 
-   GNU libc can be compiled in the source directory, but we strongly
-advise building it in a separate build directory.  For example, if you
-have  unpacked the glibc sources in `/src/gnu/glibc-2.3', create a
-directory `/src/gnu/glibc-build' to put the object files in.  This
-allows removing the whole build directory in case an error occurs,
-which is the safest way to get a fresh start and should always be done.
+GNU libc can be compiled in the source directory, but we strongly advise
+building it in a separate build directory.  For example, if you have
+unpacked the glibc sources in `/src/gnu/glibc-2.3', create a directory
+`/src/gnu/glibc-build' to put the object files in.  This allows
+removing the whole build directory in case an error occurs, which is the
+safest way to get a fresh start and should always be done.
 
    From your object directory, run the shell script `configure' located
 at the top level of the source tree.  In the scenario above, you'd type
@@ -214,16 +214,16 @@ library.  You may need to set `AR' and `RANLIB' to cross-compiling
 versions of `ar' and `ranlib' if the native tools are not configured to
 work with object files for the target you configured for.
 
-Installing the C Library
-========================
+A.2 Installing the C Library
+============================
 
-   To install the library and its header files, and the Info files of
-the manual, type `env LANGUAGE=C LC_ALL=C make install'.  This will
-build things, if necessary, before installing them; however, you should
-still compile everything first.  If you are installing glibc as your
-primary C library, we recommend that you shut the system down to
-single-user mode first, and reboot afterward.  This minimizes the risk
-of breaking things when the library changes out from underneath.
+To install the library and its header files, and the Info files of the
+manual, type `env LANGUAGE=C LC_ALL=C make install'.  This will build
+things, if necessary, before installing them; however, you should still
+compile everything first.  If you are installing glibc as your primary
+C library, we recommend that you shut the system down to single-user
+mode first, and reboot afterward.  This minimizes the risk of breaking
+things when the library changes out from underneath.
 
    If you're upgrading from Linux libc5 or some other C library, you
 need to replace the `/usr/include' with a fresh directory before
@@ -288,10 +288,10 @@ which is in `/usr/share/zoneinfo' to the file `/etc/localtime'.  For
 Germany, you might execute `ln -s /usr/share/zoneinfo/Europe/Berlin
 /etc/localtime'.
 
-Recommended Tools for Compilation
-=================================
+A.3 Recommended Tools for Compilation
+=====================================
 
-   We recommend installing the following GNU tools before attempting to
+We recommend installing the following GNU tools before attempting to
 build the GNU C library:
 
    * GNU `make' 3.79 or newer
@@ -362,10 +362,10 @@ and if you change any of the message translation files you will need
 You may also need these packages if you upgrade your source tree using
 patches, although we try to avoid this.
 
-Supported Configurations
-========================
+A.4 Supported Configurations
+============================
 
-   The GNU C Library currently supports configurations that match the
+The GNU C Library currently supports configurations that match the
 following patterns:
 
      alpha*-*-linux
@@ -420,7 +420,9 @@ used to run on the following configurations:
 they are not supported at the moment.  They probably don't compile;
 they definitely don't work anymore.  Porting the library is not hard.
 If you are interested in doing a port, please contact the glibc
-maintainers by sending electronic mail to <bug-glibc@gnu.org>.
+maintainers.  Start at `http://www.gnu.org/software/libc/' and read the
+references there on how to go about getting involved and contacting the
+developers.
 
    Valid cases of `iX86' include `i386', `i486', `i586', and `i686'.
 All of those configurations produce a library that can run on this
@@ -432,17 +434,17 @@ some `i686' specific instructions.  To generate code for other models,
 you have to configure for that model and give GCC the appropriate
 `-march=' and `-mcpu=' compiler switches via CFLAGS.
 
-Specific advice for GNU/Linux systems
-=====================================
+A.5 Specific advice for GNU/Linux systems
+=========================================
 
-   If you are installing GNU libc on a GNU/Linux system, you need to
-have the header files from a 2.2 or newer kernel around for reference.
-For some architectures, like ia64, sh and hppa, you need at least
-headers from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not
-need to use that kernel, just have its headers where glibc can access
-at them.  The easiest way to do this is to unpack it in a directory
-such as `/usr/src/linux-2.2.1'.  In that directory, run `make config'
-and accept all the defaults.  Then run `make include/linux/version.h'.
+If you are installing GNU libc on a GNU/Linux system, you need to have
+the header files from a 2.2 or newer kernel around for reference.  For
+some architectures, like ia64, sh and hppa, you need at least headers
+from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to
+use that kernel, just have its headers where glibc can access at them.
+The easiest way to do this is to unpack it in a directory such as
+`/usr/src/linux-2.2.1'.  In that directory, run `make config' and
+accept all the defaults.  Then run `make include/linux/version.h'.
 Finally, configure glibc with the option
 `--with-headers=/usr/src/linux-2.2.1/include'.  Use the most recent
 kernel you can get your hands on.
@@ -480,17 +482,17 @@ installed there.
 library on your system against the new library for the sake of new code,
 but keep the old libraries around for old binaries to use.  This is
 complicated and difficult.  Consult the Glibc2 HOWTO at
-<http://www.imaxx.net/~thrytis/glibc> for details.
+`http://www.imaxx.net/~thrytis/glibc' for details.
 
    You cannot use `nscd' with 2.0 kernels, due to bugs in the
 kernel-side thread support.  `nscd' happens to hit these bugs
 particularly hard, but you might have problems with any threaded
 program.
 
-Reporting Bugs
-==============
+A.6 Reporting Bugs
+==================
 
-   There are probably bugs in the GNU C library.  There are certainly
+There are probably bugs in the GNU C library.  There are certainly
 errors and omissions in this manual.  If you report them, they will get
 fixed.  If you don't, no one will ever know about them and they will
 remain unfixed for all eternity, if not longer.
@@ -498,9 +500,9 @@ remain unfixed for all eternity, if not longer.
    It is a good idea to verify that the problem has not already been
 reported.  Bugs are documented in two places: The file `BUGS' describes
 a number of well known bugs and the bug tracking system has a WWW
-interface at <http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  The
-WWW interface gives you access to open and closed reports.  A closed
-report normally includes a patch or a hint on solving the problem.
+interface at `http://sources.redhat.com/bugzilla/'.  The WWW interface
+gives you access to open and closed reports.  A closed report normally
+includes a patch or a hint on solving the problem.
 
    To report a bug, first you must find it.  With any luck, this will
 be the hard part.  Once you've found a bug, make sure it's really a
@@ -521,21 +523,13 @@ library, you really only need to narrow it down to one library function
 call, if possible.  This should not be too difficult.
 
    The final step when you have a simple test case is to report the bug.
-Do this using the `glibcbug' script.  It is installed with libc, or if
-you haven't installed it, will be in your build directory.  Send your
-test case, the results you got, the results you expected, and what you
-think the problem might be (if you've thought of anything).  `glibcbug'
-will insert the configuration information we need to see, and ship the
-report off to <bugs@gnu.org>.  Don't send a message there directly; it
-is fed to a program that expects mail to be formatted in a particular
-way.  Use the script.
+Do this using the WWW interface to the bug database.
 
    If you are not sure how a function should behave, and this manual
 doesn't tell you, that's a bug in the manual.  Report that too!  If the
 function's behavior disagrees with the manual, then either the library
 or the manual has a bug, so report the disagreement.  If you find any
-errors or omissions in this manual, please report them to the Internet
-address <bug-glibc-manual@gnu.org>.  If you refer to specific sections
-of the manual, please include the section names for easier
-identification.
+errors or omissions in this manual, please report them to the bug
+database.  If you refer to specific sections of the manual, please
+include the section names for easier identification.
 

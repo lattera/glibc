@@ -2,7 +2,6 @@
    This file is part of the GNU C Library.
    Copyright (C) 1992, 1998 Free Software Foundation, Inc.
    NOTE: The canonical source of this file is maintained with the GNU cpio.
-   Bugs can be reported to bug-glibc@gnu.org.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public

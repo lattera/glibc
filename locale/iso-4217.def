@@ -2,7 +2,9 @@
  * Defines the valid international currency symbols according to ISO 4217.
  * This is used in monetary.c(monetary_check).
  *
- * If you find something missing or wrong contact <bug-glibc@gnu.org>
+ * If you find something missing or wrong, please go to the URL
+ * http://www.gnu.org/software/libc/bugs.html and follow
+ * instructions there to file a bug report.
  *
  * !!! The list has to be sorted !!!
  */

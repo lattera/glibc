@@ -474,7 +474,9 @@ Since no one has volunteered to test and fix these configurations,
 they are not supported at the moment.  They probably don't compile;
 they definitely don't work anymore.  Porting the library is not hard.
 If you are interested in doing a port, please contact the glibc
-maintainers by sending electronic mail to @email{bug-glibc@@gnu.org}.
+maintainers.  Start at @url{http://www.gnu.org/software/libc/} and
+read the references there on how to go about getting involved and
+contacting the developers.
 
 Valid cases of @samp{i@var{x}86} include @samp{i386}, @samp{i486},
 @samp{i586}, and @samp{i686}.  All of those configurations produce a
