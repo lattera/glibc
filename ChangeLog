@@ -1,3 +1,14 @@
+2002-07-21  Roland McGrath  <roland@frob.com>
+
+	* wcsmbs/Makefile (strtox-CFLAGS): New variable,
+	put -I../include before -I../stdlib so we get the right errno.h et al.
+	(CFLAGS-wcstod.c): Use that variable instead of -I../stdlib.
+	(CFLAGS-wcstof.c): Likewise.
+	(CFLAGS-wcstold.c): Likewise.
+	(CFLAGS-wcstod_l.c): Likewise.
+	(CFLAGS-wcstof_l.c): Likewise.
+	(CFLAGS-wcstold_l.c): Likewise.
+
 2002-07-19  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/errnos.awk: Remove __set_errno defn from output.

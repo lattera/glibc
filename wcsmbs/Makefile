@@ -47,20 +47,21 @@ include ../Rules
 CFLAGS-wcwidth.c = -I../wctype
 CFLAGS-wcswidth.c = -I../wctype
 
-CFLAGS-wcstol.c = -I../stdlib
-CFLAGS-wcstoul.c = -I../stdlib
-CFLAGS-wcstoll.c = -I../stdlib
-CFLAGS-wcstoull.c = -I../stdlib
-CFLAGS-wcstod.c = -I../stdlib
-CFLAGS-wcstold.c = -I../stdlib
-CFLAGS-wcstof.c = -I../stdlib
-CFLAGS-wcstol_l.c = -I../stdlib
-CFLAGS-wcstoul_l.c = -I../stdlib
-CFLAGS-wcstoll_l.c = -I../stdlib
-CFLAGS-wcstoull_l.c = -I../stdlib
-CFLAGS-wcstod_l.c = -I../stdlib
-CFLAGS-wcstold_l.c = -I../stdlib
-CFLAGS-wcstof_l.c = -I../stdlib
+strtox-CFLAGS = -I../include -I../stdlib
+CFLAGS-wcstol.c = $(strtox-CFLAGS)
+CFLAGS-wcstoul.c = $(strtox-CFLAGS)
+CFLAGS-wcstoll.c = $(strtox-CFLAGS)
+CFLAGS-wcstoull.c = $(strtox-CFLAGS)
+CFLAGS-wcstod.c = $(strtox-CFLAGS)
+CFLAGS-wcstold.c = $(strtox-CFLAGS)
+CFLAGS-wcstof.c = $(strtox-CFLAGS)
+CFLAGS-wcstol_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstoul_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstoll_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstoull_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstod_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstold_l.c = $(strtox-CFLAGS)
+CFLAGS-wcstof_l.c = $(strtox-CFLAGS)
 
 tst-btowc-ENV = LOCPATH=$(common-objpfx)localedata
 tst-mbrtowc-ENV = LOCPATH=$(common-objpfx)localedata
