@@ -28,6 +28,7 @@ librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 		  aio_write64 lio_listio lio_listio64 aio_sigqueue	\
 		  aio_notify get_clockfreq clock_getcpuclockid		\
 		  clock_getres clock_gettime clock_settime		\
+		  clock_nanosleep					\
 		  timer_create timer_delete timer_getoverr		\
 		  timer_gettime timer_settime				\
 		  shm_open shm_unlink
