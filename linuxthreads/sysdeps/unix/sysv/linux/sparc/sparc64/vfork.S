@@ -19,13 +19,28 @@
 
 #include <sysdep-cancel.h>
 
-	.text
-ENTRY(__vfork)
-	ld	[%g7 + MULTIPLE_THREADS_OFFSET], %o0
 #ifdef SHARED
-	cmp	%o0, 0
-	bne	HIDDEN_JUMPTARGET (__fork)
+.LLGETPC0:
+	retl
+	 addl	%o7, %o0, %o0
+#endif
+ENTRY(__vfork)
+#ifdef SHARED
+	mov	%o7, %o1
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %o0
+	call	.LLGETPC0
+	 add	%o0, %lo(_GLOBAL_OFFSET_TABLE_+4), %o0
+	sethi	%hi(__libc_pthread_functions), %o2
+	mov	%o1, %o7
+	or	%o2, %lo(__libc_pthread_functions), %o2
+	ldx	[%o0 + %o2], %o2
+	ldx	[%o2], %o2
+	cmp	%o2, 0
+	bne	HIDDEN_JUMPTARGET(__fork)
 #else
+	.weak	__pthread_fork
+	sethi	%hi(__pthread_fork), %o0
+	or	%o0, %lo(__pthread_fork), %o0
 	brnz,pn	%o0, 1f
 #endif
 	 mov	__NR_vfork, %g1

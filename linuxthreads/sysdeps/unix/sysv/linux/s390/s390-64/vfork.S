@@ -27,7 +27,14 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-	SINGLE_THREAD_P
+#ifdef SHARED
+	larl	%r1,__libc_pthread_functions
+	lg	%r1,0(%r1)
+#else
+	.weak	__pthread_fork
+	larl	%r1,__pthread_fork
+#endif
+	ltgr	%r1,%r1
 	jgne	HIDDEN_JUMPTARGET(__fork)
 
 	/* Do vfork system call.  */

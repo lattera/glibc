@@ -27,7 +27,13 @@
 
 ENTRY (__vfork)
 
-	SINGLE_THREAD_P
+#ifdef SHARED
+	cmpq	$0, __libc_pthread_functions(%rip)
+#else
+	.weak	__pthread_fork
+	movq	$__pthread_fork, %eax
+	testq	%rax, %rax
+#endif
 	jne	HIDDEN_JUMPTARGET (__fork)
 
 	/* Pop the return PC value into RDI.  We need a register that

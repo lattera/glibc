@@ -27,10 +27,12 @@ __LABEL(__vfork)
 	.prologue 1
 	PSEUDO_PROF
 
-	SINGLE_THREAD_P(t0)
 #ifdef SHARED
+	ldq	t0, __libc_pthread_functions(gp) !gprel
 	bne	t0, HIDDEN_JUMPTARGET (__fork) !samegp
 #else
+	.weak	__pthread_fork
+	ldq	t0, __pthread_fork(gp) !literal
 	bne	t0, $do_fork
 #endif
 

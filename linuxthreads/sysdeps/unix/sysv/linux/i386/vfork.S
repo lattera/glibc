@@ -31,7 +31,19 @@ ENTRY (__vfork)
 
 #ifdef __NR_vfork
 
-	SINGLE_THREAD_P
+# ifdef SHARED
+#  if !defined HAVE_HIDDEN || !USE___THREAD
+	SETUP_PIC_REG (cx)
+#  else
+	call	__i686.get_pc_thunk.cx
+#  endif
+	addl	$_GLOBAL_OFFSET_TABLE_, %ecx
+	cmpl	$0, __libc_pthread_functions@GOTOFF(%ecx)
+# else
+	.weak	__pthread_fork
+	movl	$__pthread_fork, %eax
+	testl	%eax, %eax
+# endif
 	jne	HIDDEN_JUMPTARGET (__fork)
 
 	/* Pop the return PC value into ECX.  */

@@ -151,7 +151,8 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-unload \
 	tst-sysconf \
 	tst-locale1 tst-locale2 \
-	tst-umask1
+	tst-umask1 \
+	tst-popen1
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 

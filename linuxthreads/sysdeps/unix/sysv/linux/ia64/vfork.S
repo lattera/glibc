@@ -30,7 +30,14 @@
 /* Implemented as __clone_syscall(CLONE_VFORK | CLONE_VM | SIGCHLD, 0)	*/
 
 ENTRY(__vfork)
-	SINGLE_THREAD_P
+#ifdef SHARED
+	addl r14 = @gprel(__libc_pthread_functions#), gp;;
+#else
+	.weak	__pthread_fork
+	addl r14 = @ltoff(@fptr(__pthread_fork#)), gp;;
+#endif
+	ld8 r14 = [r14];;
+	cmp.ne p6, p7 = 0, r14
 (p6)	br.cond.spnt.few HIDDEN_JUMPTARGET (__fork);;
 	alloc r2=ar.pfs,0,0,2,0
 	mov out0=CLONE_VM+CLONE_VFORK+SIGCHLD

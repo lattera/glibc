@@ -1,5 +1,8 @@
 2003-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-popen1.
+	* tst-popen1.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Remove wrong
 	but inactive generalization.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
