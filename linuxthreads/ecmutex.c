@@ -130,7 +130,7 @@ worker (void *arg)
 
 
 #define TEST_FUNCTION do_test ()
-int
+static int
 do_test (void)
 {
   pthread_t threads[NTHREADS];

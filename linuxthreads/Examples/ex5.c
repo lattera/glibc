@@ -10,50 +10,56 @@
 
 /* Circular buffer of integers. */
 
-struct prodcons {
-  int buffer[BUFFER_SIZE];      /* the actual data */
-  int readpos, writepos;        /* positions for reading and writing */
-  sem_t sem_read;               /* number of elements available for reading */
-  sem_t sem_write;              /* number of locations available for writing */
+struct prodcons
+{
+  int buffer[BUFFER_SIZE];	/* the actual data */
+  int readpos, writepos;	/* positions for reading and writing */
+  sem_t sem_read;		/* number of elements available for reading */
+  sem_t sem_write;		/* number of locations available for writing */
 };
 
 /* Initialize a buffer */
 
-void init(struct prodcons * b)
+static void
+init (struct prodcons *b)
 {
-  sem_init(&b->sem_write, 0, BUFFER_SIZE - 1);
-  sem_init(&b->sem_read, 0, 0);
+  sem_init (&b->sem_write, 0, BUFFER_SIZE - 1);
+  sem_init (&b->sem_read, 0, 0);
   b->readpos = 0;
   b->writepos = 0;
 }
 
 /* Store an integer in the buffer */
 
-void put(struct prodcons * b, int data)
+static void
+put (struct prodcons *b, int data)
 {
   /* Wait until buffer is not full */
-  sem_wait(&b->sem_write);
+  sem_wait (&b->sem_write);
   /* Write the data and advance write pointer */
   b->buffer[b->writepos] = data;
   b->writepos++;
-  if (b->writepos >= BUFFER_SIZE) b->writepos = 0;
+  if (b->writepos >= BUFFER_SIZE)
+    b->writepos = 0;
   /* Signal that the buffer contains one more element for reading */
-  sem_post(&b->sem_read);
+  sem_post (&b->sem_read);
 }
 
 /* Read and remove an integer from the buffer */
 
-int get(struct prodcons * b)
+static int
+get (struct prodcons *b)
 {
   int data;
   /* Wait until buffer is not empty */
-  sem_wait(&b->sem_read);
+  sem_wait (&b->sem_read);
   /* Read the data and advance read pointer */
   data = b->buffer[b->readpos];
   b->readpos++;
-  if (b->readpos >= BUFFER_SIZE) b->readpos = 0;
+  if (b->readpos >= BUFFER_SIZE)
+    b->readpos = 0;
   /* Signal that the buffer has now one more location for writing */
-  sem_post(&b->sem_write);
+  sem_post (&b->sem_write);
   return data;
 }
 
@@ -64,39 +70,45 @@ int get(struct prodcons * b)
 
 struct prodcons buffer;
 
-void * producer(void * data)
+static void *
+producer (void *data)
 {
   int n;
-  for (n = 0; n < 10000; n++) {
-    printf("%d --->\n", n);
-    put(&buffer, n);
-  }
-  put(&buffer, OVER);
+  for (n = 0; n < 10000; n++)
+    {
+      printf ("%d --->\n", n);
+      put (&buffer, n);
+    }
+  put (&buffer, OVER);
   return NULL;
 }
 
-void * consumer(void * data)
+static void *
+consumer (void *data)
 {
   int d;
-  while (1) {
-    d = get(&buffer);
-    if (d == OVER) break;
-    printf("---> %d\n", d);
-  }
+  while (1)
+    {
+      d = get (&buffer);
+      if (d == OVER)
+	break;
+      printf ("---> %d\n", d);
+    }
   return NULL;
 }
 
-int main(void)
+int
+main (void)
 {
   pthread_t th_a, th_b;
-  void * retval;
+  void *retval;
 
-  init(&buffer);
+  init (&buffer);
   /* Create the threads */
-  pthread_create(&th_a, NULL, producer, 0);
-  pthread_create(&th_b, NULL, consumer, 0);
+  pthread_create (&th_a, NULL, producer, 0);
+  pthread_create (&th_b, NULL, consumer, 0);
   /* Wait until producer and consumer finish. */
-  pthread_join(th_a, &retval);
-  pthread_join(th_b, &retval);
+  pthread_join (th_a, &retval);
+  pthread_join (th_b, &retval);
   return 0;
 }

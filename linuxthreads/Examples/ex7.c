@@ -9,32 +9,37 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-#define NTHREADS 20	/* number of threads */
+#define NTHREADS 20		/* number of threads */
 
-static void *thread(void *arg)
+static void *
+thread (void *arg)
 {
-  printf("thread terminating\n");
+  printf ("thread terminating\n");
   return 0;
 }
 
-void cleanup(void)
+static void
+cleanup (void)
 {
-  printf("atexit handler called\n");
+  printf ("atexit handler called\n");
 }
 
-int main(void)
+int
+main (void)
 {
   int i;
 
-  atexit(cleanup);
+  atexit (cleanup);
 
-  for (i = 0; i < NTHREADS; i++) {
-    pthread_t id;
-    if (pthread_create(&id, 0, thread, 0) != 0) {
-      fprintf(stderr, "pthread_create failed\n");
-      abort();
+  for (i = 0; i < NTHREADS; i++)
+    {
+      pthread_t id;
+      if (pthread_create (&id, 0, thread, 0) != 0)
+	{
+	  fprintf (stderr, "pthread_create failed\n");
+	  abort ();
+	}
     }
-  }
 
-  pthread_exit(0);
+  pthread_exit (0);
 }

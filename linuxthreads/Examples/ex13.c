@@ -32,7 +32,7 @@ struct thr_ctrl
   int retval;
 };
 
-void
+static void
 dump_mut (pthread_mutex_t * mut)
 {
   int i;
@@ -43,7 +43,7 @@ dump_mut (pthread_mutex_t * mut)
 };
 
 /* Helper, the opposite of pthread_cond_wait (cond, mut).  */
-void
+static void
 pthr_cond_signal_mutex (pthread_cond_t * cond, pthread_mutex_t * mut)
 {
   int err;
@@ -59,7 +59,7 @@ pthr_cond_signal_mutex (pthread_cond_t * cond, pthread_mutex_t * mut)
 }
 
 
-void *
+static void *
 thread_start (void *ptr)
 {
   struct thr_ctrl *tc = ptr;
