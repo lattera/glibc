@@ -34,7 +34,7 @@
  # 1. ldq has a 3 cycle delay, srl and sll have a 2 cycle delay.
  # 2. Only aligned instruction pairs can be paired.
  # 3. The store buffer or silo might not be able to deal with the bandwidth.
-      
+
 	.set	noreorder
 	.set	noat
 .text
@@ -51,11 +51,11 @@ __mpn_rshift:
 	and	$18,4-1,$20	# number of limbs in first loop
 	sll	$4,$7,$0	# compute function result
 
-	beq	$20,L0
+	beq	$20,.L0
 	subq	$18,$20,$18
 
 	.align	3
-Loop0:
+.Loop0:
 	ldq	$3,0($17)
 	addq	$16,8,$16
 	addq	$17,8,$17
@@ -65,12 +65,12 @@ Loop0:
 	bis	$3,$3,$4
 	bis	$5,$6,$8
 	stq	$8,-8($16)
-	bne	$20,Loop0
+	bne	$20,.Loop0
 
-L0:	beq	$18,Lend
+.L0:	beq	$18,.Lend
 
 	.align	3
-Loop:	ldq	$3,0($17)
+.Loop:	ldq	$3,0($17)
 	addq	$16,32,$16
 	subq	$18,4,$18
 	srl	$4,$19,$5
@@ -98,9 +98,9 @@ Loop:	ldq	$3,0($17)
 	bis	$1,$2,$8
 	stq	$8,-8($16)
 
-	bgt	$18,Loop
+	bgt	$18,.Loop
 
-Lend:	srl	$4,$19,$8
+.Lend:	srl	$4,$19,$8
 	stq	$8,0($16)
 	ret	$31,($26),1
 	.end	__mpn_rshift

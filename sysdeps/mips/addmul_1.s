@@ -1,7 +1,7 @@
  # MIPS __mpn_addmul_1 -- Multiply a limb vector with a single limb and
  # add the product to a second limb vector.
 
- # Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+ # Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 
  # This file is part of the GNU MP Library.
 
@@ -63,7 +63,7 @@ Loop:	lw	$10,0($4)
 	addu	$2,$2,$10
 	sw	$3,0($4)
 	addiu	$4,$4,4
-	bne	$6,$0,Loop	# should be "bnel"
+	bne	$6,$0,Loop
 	 addu	$2,$9,$2	# add high product limb and carry from addition
 
  # cool down phase 1

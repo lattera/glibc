@@ -1,7 +1,7 @@
 ! Z8000 __mpn_mul_1 -- Multiply a limb vector with a limb and store
 ! the result in a second limb vector.
 
-! Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+! Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 
 ! This file is part of the GNU MP Library.
 

@@ -1,7 +1,7 @@
 ; mc88100 __mpn_mul_1 -- Multiply a limb vector with a single limb and
 ; store the product in a second limb vector.
 
-; Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+; Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 
 ; This file is part of the GNU MP Library.
 
@@ -55,14 +55,14 @@ ___mpn_mul_1:
 	; Make S1_PTR and RES_PTR point at the end of their blocks
 	; and negate SIZE.
 	lda	 r3,r3[r4]
-	lda	 r6,r2[r4]		; RES_PTR in r6 since r2 is retval
+	lda	 r6,r2[r4]	; RES_PTR in r6 since r2 is retval
 	subu	 r4,r0,r4
 
-	addu.co	 r2,r0,r0		; r2 = cy = 0
+	addu.co	 r2,r0,r0	; r2 = cy = 0
 	ld	 r9,r3[r4]
-	mask	 r7,r5,0xffff		; r7 = lo(S2_LIMB)
-	extu	 r8,r5,16		; r8 = hi(S2_LIMB)
-	bcnd.n	 eq0,r8,Lsmall		; jump if (hi(S2_LIMB) == 0)
+	mask	 r7,r5,0xffff	; r7 = lo(S2_LIMB)
+	extu	 r8,r5,16	; r8 = hi(S2_LIMB)
+	bcnd.n	 eq0,r8,Lsmall	; jump if (hi(S2_LIMB) == 0)
 	 subu	 r6,r6,4
 
 ; General code for any value of S2_LIMB.
@@ -75,28 +75,27 @@ ___mpn_mul_1:
 	br.n	L1
 	addu	 r4,r4,1
 
-Loop:
-	ld	 r9,r3[r4]
+Loop:	ld	 r9,r3[r4]
 	st	 r26,r6[r4]
-; bcnd	ne0,r0,0			; bubble
+; bcnd	ne0,r0,0		; bubble
 	addu	 r4,r4,1
-L1:	mul	 r26,r9,r5		; low word of product	mul_1	WB ld
-	mask	 r12,r9,0xffff		; r12 = lo(s1_limb)	mask_1
-	mul	 r11,r12,r7		; r11 =  prod_0		mul_2	WB mask_1
-	mul	 r10,r12,r8		; r10 = prod_1a		mul_3
-	extu	 r13,r9,16		; r13 = hi(s1_limb)	extu_1	WB mul_1
-	mul	 r12,r13,r7		; r12 = prod_1b		mul_4	WB extu_1
-	mul	 r25,r13,r8		; r25  = prod_2		mul_5	WB mul_2
-	extu	 r11,r11,16		; r11 = hi(prod_0)	extu_2	WB mul_3
-	addu	 r10,r10,r11		;			addu_1	WB extu_2
-; bcnd	ne0,r0,0			; bubble			WB addu_1
-	addu.co	 r10,r10,r12		;				WB mul_4
-	mask.u	 r10,r10,0xffff		; move the 16 most significant bits...
-	addu.ci	 r10,r10,r0		; ...to the low half of the word...
-	rot	 r10,r10,16		; ...and put carry in pos 16.
-	addu.co	 r26,r26,r2		; add old carry limb
+L1:	mul	 r26,r9,r5	; low word of product	mul_1	WB ld
+	mask	 r12,r9,0xffff	; r12 = lo(s1_limb)	mask_1
+	mul	 r11,r12,r7	; r11 =  prod_0		mul_2	WB mask_1
+	mul	 r10,r12,r8	; r10 = prod_1a		mul_3
+	extu	 r13,r9,16	; r13 = hi(s1_limb)	extu_1	WB mul_1
+	mul	 r12,r13,r7	; r12 = prod_1b		mul_4	WB extu_1
+	mul	 r25,r13,r8	; r25  = prod_2		mul_5	WB mul_2
+	extu	 r11,r11,16	; r11 = hi(prod_0)	extu_2	WB mul_3
+	addu	 r10,r10,r11	;			addu_1	WB extu_2
+; bcnd	ne0,r0,0		; bubble			WB addu_1
+	addu.co	 r10,r10,r12	;				WB mul_4
+	mask.u	 r10,r10,0xffff	; move the 16 most significant bits...
+	addu.ci	 r10,r10,r0	; ...to the low half of the word...
+	rot	 r10,r10,16	; ...and put carry in pos 16.
+	addu.co	 r26,r26,r2	; add old carry limb
 	bcnd.n	 ne0,r4,Loop
-	 addu.ci r2,r25,r10		; compute new carry limb
+	 addu.ci r2,r25,r10	; compute new carry limb
 
 	st	 r26,r6[r4]
 	ld.d	 r25,r31,8
@@ -109,20 +108,19 @@ Lsmall:
 	br.n	SL1
 	addu	 r4,r4,1
 
-SLoop:
-	ld	 r9,r3[r4]		;
-	st	 r8,r6[r4]		;
-	addu	 r4,r4,1		;
-SL1:	mul	 r8,r9,r5		; low word of product
-	mask	 r12,r9,0xffff		; r12 = lo(s1_limb)
-	extu	 r13,r9,16		; r13 = hi(s1_limb)
-	mul	 r11,r12,r7		; r11 =  prod_0
-	mul	 r12,r13,r7		; r12 = prod_1b
-	addu.cio r8,r8,r2		; add old carry limb
-	extu	 r10,r11,16		; r11 = hi(prod_0)
-	addu	 r10,r10,r12		;
+SLoop:	ld	 r9,r3[r4]	;
+	st	 r8,r6[r4]	;
+	addu	 r4,r4,1	;
+SL1:	mul	 r8,r9,r5	; low word of product
+	mask	 r12,r9,0xffff	; r12 = lo(s1_limb)
+	extu	 r13,r9,16	; r13 = hi(s1_limb)
+	mul	 r11,r12,r7	; r11 =  prod_0
+	mul	 r12,r13,r7	; r12 = prod_1b
+	addu.cio r8,r8,r2	; add old carry limb
+	extu	 r10,r11,16	; r11 = hi(prod_0)
+	addu	 r10,r10,r12	;
 	bcnd.n	 ne0,r4,SLoop
-	extu	 r2,r10,16		; r2 = new carry limb
+	extu	 r2,r10,16	; r2 = new carry limb
 
 	jmp.n	 r1
 	st	 r8,r6[r4]

@@ -25,7 +25,7 @@
  # size		r18
  # cnt		r19
 
- # This code runs at 4.25 cycles/limb on the EV5.
+ # This code runs at 3.25 cycles/limb on the EV5.
 
 	.set	noreorder
 	.set	noat
@@ -42,11 +42,11 @@ __mpn_rshift:
 	and	$18,4-1,$28	# number of limbs in first loop
 	sll	$4,$20,$0	# compute function result
 
-	beq	$28,L0
+	beq	$28,.L0
 	subq	$18,$28,$18
 
 	.align	3
-Loop0:	ldq	$3,8($17)
+.Loop0:	ldq	$3,8($17)
 	addq	$16,8,$16
 	srl	$4,$19,$5
 	addq	$17,8,$17
@@ -55,17 +55,17 @@ Loop0:	ldq	$3,8($17)
 	or	$3,$3,$4
 	or	$5,$6,$8
 	stq	$8,-8($16)
-	bne	$28,Loop0
+	bne	$28,.Loop0
 
-L0:	srl	$4,$19,$24
-	beq	$18,Lend
+.L0:	srl	$4,$19,$24
+	beq	$18,.Lend
  # warm up phase 1
 	ldq	$1,8($17)
 	subq	$18,4,$18
 	ldq	$2,16($17)
 	ldq	$3,24($17)
 	ldq	$4,32($17)
-	beq	$18,Lcool1
+	beq	$18,.Lend1
  # warm up phase 2
 	sll	$1,$20,$7
 	srl	$1,$19,$21
@@ -82,10 +82,10 @@ L0:	srl	$4,$19,$24
 	srl	$4,$19,$24
 	ldq	$4,64($17)
 	subq	$18,4,$18
-	beq	$18,Lcool2
+	beq	$18,.Lend2
 	.align  4
  # main loop
-Loop:	stq	$7,0($16)
+.Loop:	stq	$7,0($16)
 	or	$5,$22,$5
 	stq	$8,8($16)
 	or	$6,$23,$6
@@ -116,11 +116,9 @@ Loop:	stq	$7,0($16)
 	ldq	$4,96($17)
 
 	addq	$17,32,$17
-	bne	$18,Loop
-	unop
-	unop
+	bne	$18,.Loop
  # cool down phase 2/1
-Lcool2:	stq	$7,0($16)
+.Lend2:	stq	$7,0($16)
 	or	$5,$22,$5
 	stq	$8,8($16)
 	or	$6,$23,$6
@@ -148,7 +146,7 @@ Lcool2:	stq	$7,0($16)
 	ret	$31,($26),1
 
  # cool down phase 1/1
-Lcool1:	sll	$1,$20,$7
+.Lend1:	sll	$1,$20,$7
 	srl	$1,$19,$21
 	sll	$2,$20,$8
 	srl	$2,$19,$22
@@ -168,6 +166,6 @@ Lcool1:	sll	$1,$20,$7
 	stq	$24,32($16)
 	ret	$31,($26),1
 
-Lend:	stq	$24,0($16)
+.Lend:	stq	$24,0($16)
 	ret	$31,($26),1
 	.end	__mpn_rshift

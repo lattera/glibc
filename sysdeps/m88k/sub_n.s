@@ -1,7 +1,7 @@
 ; mc88100 __mpn_sub -- Subtract two limb vectors of the same length > 0 and
 ; store difference in a third limb vector.
 
-; Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+; Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 
 ; This file is part of the GNU MP Library.
 
@@ -41,9 +41,10 @@ ___mpn_sub_n:
 	extu	r10,r5,3
 	ld	r7,r4,0			; read first limb from s2_ptr
 
-	subu.co	r5,r0,r5		; (clear carry as side effect)
+	subu	r5,r0,r5
 	mak	r5,r5,3<4>
-	bcnd	eq0,r5,Lzero
+	bcnd.n	eq0,r5,Lzero
+	subu.co	r0,r0,r0		; initialize carry
 
 	or	r12,r0,lo16(Lbase)
 	or.u	r12,r12,hi16(Lbase)

@@ -53,11 +53,11 @@ __mpn_lshift:
 	and	$18,4-1,$20	# number of limbs in first loop
 	srl	$4,$7,$0	# compute function result
 
-	beq	$20,L0
+	beq	$20,.L0
 	subq	$18,$20,$18
 
 	.align	3
-Loop0:
+.Loop0:
 	ldq	$3,-8($17)
 	subq	$16,8,$16
 	subq	$17,8,$17
@@ -67,12 +67,12 @@ Loop0:
 	bis	$3,$3,$4
 	bis	$5,$6,$8
 	stq	$8,0($16)
-	bne	$20,Loop0
+	bne	$20,.Loop0
 
-L0:	beq	$18,Lend
+.L0:	beq	$18,.Lend
 
 	.align	3
-Loop:	ldq	$3,-8($17)
+.Loop:	ldq	$3,-8($17)
 	subq	$16,32,$16
 	subq	$18,4,$18
 	sll	$4,$19,$5
@@ -100,9 +100,9 @@ Loop:	ldq	$3,-8($17)
 	bis	$1,$2,$8
 	stq	$8,0($16)
 
-	bgt	$18,Loop
+	bgt	$18,.Loop
 
-Lend:	sll	$4,$19,$8
+.Lend:	sll	$4,$19,$8
 	stq	$8,-8($16)
 	ret	$31,($26),1
 	.end	__mpn_lshift

@@ -1,7 +1,7 @@
-; mc88110 __mpn_mul_1 -- Multiply a limb vector with a single limb and
+; mc88110 __mpn_addmul_1 -- Multiply a limb vector with a single limb and
 ; store the product in a second limb vector.
 
-; Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+; Copyright (C) 1996 Free Software Foundation, Inc.
 
 ; This file is part of the GNU MP Library.
 
@@ -28,31 +28,33 @@
 
 	text
 	align	16
-	global	___mpn_mul_1
-___mpn_mul_1:
-	; Make S1_PTR and RES_PTR point at the end of their blocks
-	; and negate SIZE.
+	global	___mpn_addmul_1
+___mpn_addmul_1:
 	lda	 r3,r3[r4]
 	lda	 r8,r2[r4]		; RES_PTR in r8 since r2 is retval
 	subu	 r4,r0,r4
-
 	addu.co	 r2,r0,r0		; r2 = cy = 0
 
 	ld	 r6,r3[r4]
 	addu	 r4,r4,1
-	mulu.d	 r10,r6,r5
+	subu	 r8,r8,4
 	bcnd.n	 eq0,r4,Lend
-	 subu	 r8,r8,8
+	 mulu.d	 r10,r6,r5
 
-Loop:	ld	 r6,r3[r4]
+Loop:	ld	 r7,r8[r4]
+	ld	 r6,r3[r4]
 	addu.cio r9,r11,r2
-	or	 r2,r10,r0		; could be avoided if unrolled
+	addu.ci	 r2,r10,r0
+	addu.co	 r9,r9,r7
+	st	 r9,r8[r4]
 	addu	 r4,r4,1
 	mulu.d	 r10,r6,r5
-	bcnd.n	 ne0,r4,Loop
-	 st	 r9,r8[r4]
+	bcnd	 ne0,r4,Loop
 
-Lend:	addu.cio r9,r11,r2
-	st	 r9,r8,4
+Lend:	ld	 r7,r8,0
+	addu.cio r9,r11,r2
+	addu.ci	 r2,r10,r0
+	addu.co	 r9,r9,r7
+	st	 r9,r8,0
 	jmp.n	 r1
-	 addu.ci r2,r10,r0
+	 addu.ci r2,r2,r0

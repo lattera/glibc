@@ -59,7 +59,7 @@ Loop:	mflo	$10
 	sltu	$2,$10,$2	# carry from previous addition -> $2
 	sd	$10,0($4)
 	daddiu	$4,$4,8
-	bne	$6,$0,Loop	# should be "bnel"
+	bne	$6,$0,Loop
 	 daddu	$2,$9,$2	# add high product limb and carry from addition
 
  # cool down phase 1
