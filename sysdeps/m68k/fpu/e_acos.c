@@ -22,9 +22,12 @@ Cambridge, MA 02139, USA.  */
 #ifndef	FUNC
 #define	FUNC	__ieee754_acos
 #endif
+#ifndef float_type
+#define float_type double
+#endif
 
-double
-DEFUN(FUNC, (x), double x)
+float_type
+DEFUN(FUNC, (x), float_type x)
 {
   return __m81_u(FUNC)(x);
 }

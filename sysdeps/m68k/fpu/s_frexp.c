@@ -19,9 +19,19 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <math.h>
 
-double
-DEFUN(__frexp, (value, expptr), double value AND int *expptr)
+#ifndef FUNC
+#define FUNC frexp
+#endif
+#ifndef float_type
+#define float_type double
+#endif
+
+#define __CONCATX(a,b) __CONCAT(a,b)
+
+float_type
+DEFUN(__CONCATX(__,FUNC), (value, expptr), float_type value AND int *expptr)
 {
-  return __m81_u(__frexp)(value, expptr);
+  return __m81_u(__CONCATX(__,FUNC))(value, expptr);
 }
-weak_alias (__frexp, frexp)
+#define weak_aliasx(a,b) weak_alias(a,b)
+weak_aliasx (__CONCATX(__,FUNC), FUNC)
