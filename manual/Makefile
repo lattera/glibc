@@ -1,6 +1,6 @@
 # Makefile for the GNU C Library manual.
 
-# Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -148,7 +148,7 @@ ETAGS = etags -T
 endif
 TAGS: $(minimal-dist)
 	$(ETAGS) -o $@ $^
-
+
 # These are targets that each glibc subdirectory is expected to understand.
 # ../Rules defines them for code subdirectories; for us, they are no-ops.
 glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
@@ -157,13 +157,13 @@ glibc-targets	:= subdir_lib objects objs others tests subdir_lint.out \
 $(glibc-targets):
 
 stubs: $(common-objpfx)stub-manual
-$(common-objpfx)stub-manual:
+$(common-objpfx)stub-manual ../po/manual.pot:
 	cp /dev/null $@
 
 # The top-level glibc Makefile expects subdir_install to update the stubs file.
 subdir_install: stubs
 
-
+
 # Get rid of these variables if they came from the parent.
 routines =
 aux =

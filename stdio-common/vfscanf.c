@@ -528,6 +528,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width > 0)
 		--width;
 
+	      ADDW (c);
 	      (void) inchar ();
 
 	      if (width != 0 && tolower (c) == 'x')

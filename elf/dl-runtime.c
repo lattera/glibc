@@ -37,7 +37,11 @@ Cambridge, MA 02139, USA.  */
    in the trampoline code will be a local PC-relative call.  Tell the
    compiler not to worry that the function appears not to be called.  */
 
-static Elf32_Addr fixup (struct link_map *l, Elf32_Word reloc_offset)
+static Elf32_Addr fixup (
+#ifdef ELF_MACHINE_RUNTIME_FIXUP_ARGS
+			 ELF_MACHINE_RUNTIME_FIXUP_ARGS,
+#endif
+			 struct link_map *l, Elf32_Word reloc_offset)
      __attribute__ ((unused));
 
 /* This function is called through a special trampoline from the PLT the

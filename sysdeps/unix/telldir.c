@@ -36,8 +36,8 @@ DEFUN(telldir, (dirp), DIR *dirp)
       return (off_t) -1;
     }
 
-  pos = __lseek(dirp->__fd, (off_t) 0, SEEK_CUR);
+  pos = __lseek(dirp->fd, (off_t) 0, SEEK_CUR);
   if (pos == (off_t) -1)
     return (off_t) -1;
-  return pos + dirp->__size - dirp->__offset;
+  return pos + dirp->size - dirp->offset;
 }

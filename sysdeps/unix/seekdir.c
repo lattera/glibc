@@ -27,7 +27,7 @@ Cambridge, MA 02139, USA.  */
 void
 DEFUN(seekdir, (dirp, pos), DIR *dirp AND __off_t pos)
 {
-  (void) __lseek(dirp->__fd, pos, SEEK_SET);
-  dirp->__size = 0;
-  dirp->__offset = 0;
+  (void) __lseek(dirp->fd, pos, SEEK_SET);
+  dirp->size = 0;
+  dirp->offset = 0;
 }

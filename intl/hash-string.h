@@ -1,5 +1,5 @@
 /* hash-string - Implements a string hashing function.
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,22 +21,28 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* @@ end of prolog @@ */
 
-#ifndef BITSPERBYTE
-# define BITSPERBYTE 8
+#ifndef PARAMS
+# if __STDC__
+#  define PARAMS(Args) Args
+# else
+#  define PARAMS(Args) ()
+# endif
 #endif
 
-#ifndef LONGBITS
-# define LONGBITS (sizeof (long) * BITSPERBYTE)
-#endif	/* LONGBITS  */
+/* We assume to have `unsigned long int' value with at least 32 bits.  */
+#define HASHWORDBITS 32
+
 
 /* Defines the so called `hashpjw' function by P.J. Weinberger
    [see Aho/Sethi/Ullman, COMPILERS: Principles, Techniques and Tools,
-   1986, 1987 Bell Telephone Laboratories, Inc.]  */ 
+   1986, 1987 Bell Telephone Laboratories, Inc.]  */
+static unsigned long hash_string PARAMS ((const char *__str_param));
+
 static inline unsigned long
 hash_string (str_param)
      const char *str_param;
 {
-  unsigned long hval, g;
+  unsigned long int hval, g;
   const char *str = str_param;
 
   /* Compute the hash value for the given string.  */
@@ -45,10 +51,10 @@ hash_string (str_param)
     {
       hval <<= 4;
       hval += (unsigned long) *str++;
-      g = hval & ((unsigned long) 0xf << (LONGBITS - 4));
+      g = hval & ((unsigned long) 0xf << (HASHWORDBITS - 4));
       if (g != 0)
 	{
-	  hval ^= g >> (LONGBITS - 8);
+	  hval ^= g >> (HASHWORDBITS - 8);
 	  hval ^= g;
 	}
     }

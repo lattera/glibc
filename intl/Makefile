@@ -31,9 +31,9 @@ CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
 
 ifdef gettext-srcdir
 
-%:: $(gettext-srcdir)/intl/%.glibc; $(copysrc)
-%:: $(gettext-srcdir)/intl/%.c; $(copysrc)
-%:: $(gettext-srcdir)/intl/%.h; $(copysrc)
+%.h:: $(gettext-srcdir)/intl/%.glibc; $(copysrc)
+%.c:: $(gettext-srcdir)/intl/%.c; $(copysrc)
+%.h:: $(gettext-srcdir)/intl/%.h; $(copysrc)
 
 define copysrc
 cp -f $< $@.new

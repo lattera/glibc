@@ -1,5 +1,5 @@
 /* finddomain.c -- handle list of needed message catalogs
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 This program is free software; you can redistribute it and/or modify
@@ -83,21 +83,21 @@ void free ();
 static struct loaded_domain *_nl_loaded_domains;
 
 /* Prototypes for local functions.  */
-static struct loaded_domain *make_entry_rec __P ((const char *dirname,
-						  int mask,
-						  const char *language,
-						  const char *territory,
-						  const char *codeset,
-						  const char *modifier,
-						  const char *special,
-						  const char *sponsor,
-						  const char *revision,
-						  const char *domainname,
-						  int do_allocate));
+static struct loaded_domain *make_entry_rec PARAMS ((const char *dirname,
+						     int mask,
+						     const char *language,
+						     const char *territory,
+						     const char *codeset,
+						     const char *modifier,
+						     const char *special,
+						     const char *sponsor,
+						     const char *revision,
+						     const char *domainname,
+						     int do_allocate));
 
 /* Substitution for systems lacking this function in their C library.  */
 #if !_LIBC && !HAVE_STPCPY
-static char *stpcpy __P ((char *dest, const char *src));
+static char *stpcpy PARAMS ((char *dest, const char *src));
 #endif
 
 

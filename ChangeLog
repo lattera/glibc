@@ -1,3 +1,47 @@
+Mon Feb 19 15:30:26 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* stdio-common/tstscanf.c (main): Add check for "0" as %d.
+
+	* sysdeps/stub/msync.c: Undo change of Jan 29; just two args.
+	Only some systems have three args; let them define their own stub.
+
+	* sysdeps/generic/dl-sysdep.c: Declare _dl_secure.
+
+	* sysdeps/generic/machine-gmon.h: New file.
+	* gmon/Makefile (distribute): Add machine-gmon.h.
+	* gmon/mcount.c: Undo changes of Feb 13.
+	Include "machine-gmon.h".
+
+Sun Feb 18 13:24:06 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/direct.h: File removed, since it is
+	identical to unix/common/direct.h.
+
+	* sysdeps/unix/Makefile [no_deps]: Don't include s-proto.d.
+
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines): Don't add ipc.
+
+	* stdio-common/Makefile (tests): Remove scanf6.
+
+	* sysdeps/unix/sysv/linux/Makefile (non-lib.a): Append libieee.a.
+
+	* time/mktime.c (mktime): Move static variable localtime_offset to
+	file scope.
+
+	* stdio-common/vfscanf.c: Put '0' in buffer before scanning for %i
+	base indicator.
+
+Thu Feb 15 16:56:17 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_load_address): Corrected.
+	(ELF_MACHINE_BEFORE_RTLD_RELOC): Define.
+	(_dl_runtime_resolve): Save %a1 as well.
+	(ELF_MACHINE_RUNTIME_FIXUP_ARGS): Add second dummy arg.
+	(elf_machine_relplt): Define.
+
+	* elf/dl-runtime.c: Include possible extra args in declaration of
+ 	fixup.
+
 Fri Feb 16 11:01:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* time/tzset.c: Limit hours to 23, not 12.  From jaffer.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
 This file is part of the GNU C Library.
@@ -146,12 +146,13 @@ ydhms_tm_diff (year, yday, hour, min, sec, tp)
 }
 
 
+static time_t localtime_offset;
+
 /* Convert *TP to a time_t value.  */
 time_t
 mktime (tp)
      struct tm *tp;
 {
-  static time_t localtime_offset;
   return __mktime_internal (tp, localtime_r, &localtime_offset);
 }
 

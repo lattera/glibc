@@ -1,5 +1,5 @@
 /* gettextP.h -- header describing internals of gettext library
-   Copyright (C) 1995 Software Foundation, Inc.
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,17 +20,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* @@ end of prolog @@ */
 
-#ifndef __P
+#ifndef PARAMS
 # if __STDC__
-#  define __P(args) args
+#  define PARAMS(args) args
 # else
-#  define __P(args) ()
+#  define PARAMS(args) ()
 # endif
 #endif
 
 #ifndef W
 # define W(flag, data) ((flag) ? SWAP (data) : (data))
 #endif
+
+
+static nls_uint32 SWAP PARAMS ((nls_uint32 i));
 
 static inline nls_uint32
 SWAP (i)
@@ -64,12 +67,12 @@ struct binding
   char *dirname;
 };
 
-struct loaded_domain *_nl_find_domain __P ((const char *__dirname,
-					    char *__locale,
-					    const char *__domainname));
-void _nl_load_domain __P ((struct loaded_domain *__domain));
+struct loaded_domain *_nl_find_domain PARAMS ((const char *__dirname,
+					       char *__locale,
+					       const char *__domainname));
+void _nl_load_domain PARAMS ((struct loaded_domain *__domain));
 
-const char *_nl_expand_alias __P ((const char *__name));
+const char *_nl_expand_alias PARAMS ((const char *__name));
 
 /* @@ begin of epilog @@ */
 

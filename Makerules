@@ -621,6 +621,10 @@ check: tests
 TAGS: distinfo $(..)MakeTAGS
 	$(MAKE) $(addprefix -f ,$^) $@
 
+$(..)po/%.pot: distinfo $(..)MakeTAGS
+	$(MAKE) $(addprefix -f ,$^) $@
+
+
 .PHONY: echo-headers
 echo-headers:
 	@echo $(headers)

@@ -37,34 +37,36 @@ __BEGIN_DECLS
 /* Look up MSGID in the current default message catalog for the current
    LC_MESSAGES locale.  If not found, returns MSGID itself (the default
    text).  */
-extern char *gettext __P ((const char *__msgid));
-extern char *__gettext __P ((const char *__msgid));
+extern char *gettext __P ((__const char *__msgid));
+extern char *__gettext __P ((__const char *__msgid));
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current
    LC_MESSAGES locale.  */
-extern char *dgettext __P ((const char *__domainname, const char *__msgid));
-extern char *__dgettext __P ((const char *__domainname, const char *__msgid));
+extern char *dgettext __P ((__const char *__domainname,
+			    __const char *__msgid));
+extern char *__dgettext __P ((__const char *__domainname,
+			      __const char *__msgid));
 
 /* Look up MSGID in the DOMAINNAME message catalog for the current CATEGORY
    locale.  */
-extern char *dcgettext __P ((const char *__domainname, const char *__msgid,
-			     int __category));
-extern char *__dcgettext __P ((const char *__domainname, const char *__msgid,
-			       int __category));
+extern char *dcgettext __P ((__const char *__domainname,
+			     __const char *__msgid, int __category));
+extern char *__dcgettext __P ((__const char *__domainname,
+			       __const char *__msgid, int __category));
 
 
 /* Set the current default message catalog to DOMAINNAME.
    If DOMAINNAME is null, return the current default.
    If DOMAINNAME is "", reset to the default of "messages".  */
-extern char *textdomain __P ((const char *__domainname));
-extern char *__textdomain __P ((const char *__domainname));
+extern char *textdomain __P ((__const char *__domainname));
+extern char *__textdomain __P ((__const char *__domainname));
 
 /* Specify that the DOMAINNAME message catalog will be found
    in DIRNAME rather than in the system locale data base.  */
-extern char *bindtextdomain __P ((const char *__domainname,
-				  const char *__dirname));
-extern char *__bindtextdomain __P ((const char *__domainname,
-				    const char *__dirname));
+extern char *bindtextdomain __P ((__const char *__domainname,
+				  __const char *__dirname));
+extern char *__bindtextdomain __P ((__const char *__domainname,
+				    __const char *__dirname));
 
 
 /* Optimized version of the function above.  */
@@ -73,9 +75,9 @@ extern char *__bindtextdomain __P ((const char *__domainname,
    `__builtin_constant_p' predicate in dcgettext would always return
    false.  */
 
-# define gettext (msgid) dgettext (NULL, msgid)
+# define gettext(msgid) dgettext (NULL, msgid)
 
-# define dgettext (domainname, msgid)					      \
+# define dgettext(domainname, msgid)					      \
   dcgettext (domainname, msgid, LC_MESSAGES)
 
 # if __GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)

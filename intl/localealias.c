@@ -1,5 +1,5 @@
 /* localealias.c -- handle aliases for locale names
-   Copyright (C) 1995 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -86,10 +86,10 @@ static size_t maxmap = 0;
 
 
 /* Prototypes for local functions.  */
-static size_t read_alias_file __P ((const char *fname, int fname_len));
-static void extend_alias_table __P ((void));
-static int alias_compare __P ((const struct alias_map *map1,
-			       const struct alias_map *map2));
+static size_t read_alias_file PARAMS ((const char *fname, int fname_len));
+static void extend_alias_table PARAMS ((void));
+static int alias_compare PARAMS ((const struct alias_map *map1,
+				  const struct alias_map *map2));
 
 
 const char *
@@ -109,9 +109,9 @@ _nl_expand_alias (name)
       if (nmap > 0)
 	retval = (struct alias_map *) bsearch (&item, map, nmap,
 					       sizeof (struct alias_map),
-					       (int (*) (const void *,
-							 const void *))
-						 alias_compare);
+					       (int (*) PARAMS ((const void *,
+								 const void *))
+						) alias_compare);
       else
 	retval = NULL;
 
@@ -257,7 +257,7 @@ read_alias_file (fname, fname_len)
 
   if (added > 0)
     qsort (map, nmap, sizeof (struct alias_map),
-	   (int (*) (const void *, const void *)) alias_compare);
+	   (int (*) PARAMS ((const void *, const void *))) alias_compare);
 
   return added;
 }
@@ -309,6 +309,8 @@ alias_compare (map1, map2)
       c2 = isupper (*p2) ? tolower (*p2) : *p2;
       if (c1 == '\0')
 	break;
+      ++p1;
+      ++p2;
     }
   while (c1 == c2);
 

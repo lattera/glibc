@@ -1,5 +1,5 @@
-/* dcgettext.c -- implemenatation of the dcgettext(3) function
-   Copyright (C) 1995 Software Foundation, Inc.
+/* dcgettext.c -- implementation of the dcgettext(3) function
+   Copyright (C) 1995 Free Software Foundation, Inc.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 #ifdef __GNUC__
 # define alloca __builtin_alloca
 #else
-# ifdef HAVE_ALLOCA_H || defined _LIBC
+# if defined HAVE_ALLOCA_H || defined _LIBC
 #  include <alloca.h>
 # else
 #  ifdef _AIX
@@ -151,10 +151,11 @@ const char _nl_default_dirname[] = GNULOCALEDIR;
 struct binding *_nl_domain_bindings;
 
 /* Prototypes for local functions.  */
-static char *find_msg __P ((struct loaded_domain *domain, const char *msgid));
-static const char *category_to_name __P((int category));
-static const char *guess_category_value __P((int category,
-					     const char *categoryname));
+static char *find_msg PARAMS ((struct loaded_domain *domain,
+			       const char *msgid));
+static const char *category_to_name PARAMS ((int category));
+static const char *guess_category_value PARAMS ((int category,
+						 const char *categoryname));
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -182,6 +183,7 @@ DCGETTEXT (domainname, msgid, category)
   char *dirname, *xdomainname;
   char *single_locale;
   char *retval;
+  int saved_errno = errno;
 
   /* If no real MSGID is given return NULL.  */
   if (msgid == NULL)
@@ -233,9 +235,12 @@ DCGETTEXT (domainname, msgid, category)
 	}
 
       if (ret == NULL)
-	/* We cannot get the current working directory.  Don't signal an
-	   error but simply return the default string.  */
-	return (char *) msgid;
+	{
+	  /* We cannot get the current working directory.  Don't signal an
+	     error but simply return the default string.  */
+	  errno = saved_errno;
+	  return (char *) msgid;
+	}
 
       /* We don't want libintl.a to depend on any other library.  So
 	 we avoid the non-standard function stpcpy.  In GNU C Library
@@ -302,7 +307,10 @@ DCGETTEXT (domainname, msgid, category)
 	 domain.  Return the MSGID.  */
       if (strcmp (single_locale, "C") == 0
 	  || strcmp (single_locale, "POSIX") == 0)
-	return (char *) msgid;
+	{
+	  errno = saved_errno;
+	  return (char *) msgid;
+	}
 
 
       /* Find structure describing the message catalog matching the
@@ -317,7 +325,7 @@ DCGETTEXT (domainname, msgid, category)
 	    {
 	      int cnt;
 
-	      for (cnt = 0; domain->successor[cnt] != NULL; --cnt)
+	      for (cnt = 0; domain->successor[cnt] != NULL; ++cnt)
 		{
 		  retval = find_msg (domain->successor[cnt], msgid);
 
@@ -327,7 +335,10 @@ DCGETTEXT (domainname, msgid, category)
 	    }
 
 	  if (retval != NULL)
-	    return retval;
+	    {
+	      errno = saved_errno;
+	      return retval;
+	    }
 	}
     }
   /* NOTREACHED */
@@ -375,8 +386,8 @@ find_msg (domain, msgid)
 
       while (1)
 	{
-	  if (idx >= W (domain->must_swap, domain->hash_size) - incr)
-	    idx -= W (domain->must_swap, domain->hash_size) - incr;
+	  if (idx >= domain->hash_size - incr)
+	    idx -= domain->hash_size - incr;
 	  else
 	    idx += incr;
 
