@@ -154,18 +154,54 @@ __sigreturn (struct sigcontext *scp)
 
   /* Load all the registers from the sigcontext.  */
 #define restore_gpr(n) \
-  asm volatile ("ldq $" #n ",%0" : : "m" (scpreg->sc_gpr[n]))
+  asm volatile ("ldq $" #n ",%0" : : "m" (scpreg->sc_regs[n]))
 
   {
-    /* The `rei' PAL pseudo-instruction restores registers $2..$7,
-       the PC and processor status.  So we can use these few registers
-       for our working variables.  */
+    /* The `rei' PAL pseudo-instruction restores registers $2..$7, the PC
+       and processor status.  So we can use these few registers for our
+       working variables.  Unfortunately, it finds its data on the stack
+       and merely pops the SP ($30) over the words of state restored,
+       allowing no other option for the new SP value.  So we must push the
+       registers and PSW it will to restore, onto the user's stack and let
+       it pop them from there.  */
     register const struct sigcontext *const scpreg asm ("$2") = scp;
-    register long int *sp asm ("$30");
+    register integer_t *usp asm ("$3") = scpreg->sc_regs[30];
+    register integer_t usp_align asm ("$4");
+    register integer_t *sp asm ("$30");
+
+    /* Push an 8-word "trap frame" onto the user stack for `rei':
+       registers $2..$7, the PC, and the PSW.  */
+
+    register struct rei_frame
+      {
+	integer_t regs[5], pc, ps;
+      } *rei_frame asm ("$5");
+
+    usp -= 8;
+    /* `rei' demands that the stack be aligned to a 64 byte (8 word)
+       boundary; bits 61..56 of the PSW are OR'd back into the SP value
+       after popping the 8-word trap frame, so we store (sp % 64)
+       there and this restores the original user SP.  */
+    usp_align = (integer_t) usp & 63L;
+    rei_frame = (void *) ((integer_t) usp & ~63L);
+
+    /* Copy the registers and PC from the sigcontext.  */
+    memcpy (rei_frame->regs, &scpreg->sc_regs[2], sizeof rei_frame->regs);
+    rei_frame->pc = scpreg->sc_pc;
+
+    /* Compute the new PS value to be restored.  `rei' adds the value at
+       bits 61..56 to the SP to compensate for the alignment above that
+       cleared the low 6 bits; bits 5..3 are the new mode/privilege level
+       (must be >= current mode; 3 == user mode); bits 2..0 are "software",
+       unused by the processor or kernel (XXX should trampoline save these?
+       How?); in user mode, `rei' demands that all other bits be zero.  */
+    rei_frame->ps = (usp_align << 56) | (3 << 3); /* XXX low 3 bits??? */
 
     asm volatile (".set noreorder; .set noat;");
 
-    /* Restore the other general registers.  */
+    /* Restore the other general registers: everything except $2..$7, which
+       are in the `rei' trap frame we set up above, and $30, which is the
+       SP which is popped by `rei'.  */
     restore_gpr (1);
     restore_gpr (8);
     restore_gpr (9);
@@ -189,30 +225,14 @@ __sigreturn (struct sigcontext *scp)
     restore_gpr (27);
     restore_gpr (28);
     restore_gpr (29);
-    restore_gpr (30);		/* Stack pointer.  */
 
-    /* The magical `rei' instruction looks at the SP ($30) for:
-
-	       sp-->	t1 ($2)
-	       +0x8	t2 ($3)
-	       +0x10	t3 ($4)
-	       +0x18	t4 ($5)
-	       +0x20	t5 ($6)
-	       +0x28	t6 ($7)
-	       +0x30	PC
-	       +0x38	PS
-
-       For the first six words, &scp->sc_regs[2] already looks like this.  
-       So we clobber the following words words where $8 and $9 were saved
-       (we already restored them above) with the PC and PS to be restored,
-       and then point the SP there.  */
-
-    scpreg->sc_regs[8] = scpreg->sc_pc;
-    /* scpreg->sc_regs[9] = scpreg->sc_ps; XXX where to get it from??? */
-
-    /* XXX What will restore the user's SP??? */
-    sp = &scpreg->sc_regs[2];
-    asm volatile ("call_pal %0" : : "i" (op_rei));
+    /* Switch the stack pointer to the trap frame set up on
+       the user stack and do the magical `rei' PAL call.  */
+    asm volatile ("mov %0, $30\n"
+		  "call_pal %0"
+		  : : "r" (rei_frame), "i" (op_rei));
+    /* Firewall.  */
+    asm volatile ("call_pal %0" : : "i" (op_halt));
 
     asm volatile (".set reorder; .set at;");
   }
