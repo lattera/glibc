@@ -15,13 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program; see the file COPYING.  If not, write to
 the Free Software Foundation, 675 Mass Ave, Cambridge, MA 02139, USA.  */
 
-#include <stdio.h>
-#include <sys/types.h>		/* Some systems need this for <signal.h>.  */
-#include <signal.h>
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#include <stdio.h>
+#include <sys/types.h>		/* Some systems need this for <signal.h>.  */
+#include <signal.h>
 
 /* Some systems declare `sys_siglist in <unistd.h>; if
    configure defined SYS_SIGLIST_DECLARED, it may expect
