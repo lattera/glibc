@@ -1,4 +1,4 @@
-/* Copyright (C) 1998,1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1998-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -221,7 +221,7 @@ check_and_add_group (const char *user, gid_t group, long int *start,
       }
 }
 
-/* get the next group from NSS  (+ entry). If the NSS module supports
+/* Get the next group from NSS  (+ entry). If the NSS module supports
    initgroups_dyn, get all entries at once.  */
 static enum nss_status
 getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
@@ -241,8 +241,12 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
      database with getgrent_r.  */
   if (nss_initgroups_dyn && nss_getgrgid_r)
     {
-      long int mystart = 0, mysize = limit;
-      gid_t *mygroupsp = __alloca (limit * sizeof (gid_t));
+      long int mystart = 0;
+      long int mysize = limit;
+      gid_t *mygroupsp = malloc (limit * sizeof (gid_t));
+
+      if (mygroupsp == NULL)
+	return NSS_STATUS_TRYAGAIN;
 
       /* For every gid in the list we get from the NSS module,
          get the whole group entry. We need to do this, since we
@@ -280,8 +284,13 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
 		check_and_add_group (user, group, start, size, groupsp,
 				     limit, &grpbuf);
 	    }
+
+	  free (mygroupsp);
+
 	  return NSS_STATUS_NOTFOUND;
 	}
+
+      free (mygroupsp);
     }
 
   /* If we come here, the NSS module does not support initgroups_dyn
