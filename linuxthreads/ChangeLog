@@ -1,3 +1,11 @@
+1998-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/pthread/pthread.h: Remove __pthread_setcanceltype
+ 	declaration since it's not needed.
+
+	* sysdeps/pthread/pthread.h: Move internal functions to ...
+	* internals.h: ...here.
+
 1998-12-02  H.J. Lu  <hjl@gnu.org>
 
 	* pthread.c (__pthread_sig_restart): Initiliaze to 0 if
