@@ -1,5 +1,8 @@
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/sr_YU: Correct month entries for June and July
+	[PR libc/2955].  Patch by Alastair McKinstry <alastair@pdd.3com.com>.
+
 	* locales/pl_PL: Update int_curr_symbol.
 
 2002-02-08  Ulrich Drepper  <drepper@redhat.com>

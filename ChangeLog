@@ -1,5 +1,17 @@
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* po/da.po: Update from translation team.
+
+	* locale/categories.def: Fix typo [PR libc/2948].
+	* po/Makefile (BROKEN_LINGUAS): Works with current gettext
+	[PR libc/2949].
+	* locale/iso-4217.def: Update from official version [PR libc/2950].
+	* glibcbug.in: Honor TMPDIR [PR libc/2951].
+	* locale/programs/ld-collate.c (collate_finish): Bail out with a
+	message if input is too confusion instead of using assert.
+	(collate_read): Don't crash on unknown symbol [PR libc/2952].
+	Patches by Alastair McKinstry <alastair@pdd.3com.com>.
+
 	* elf/tst-tls1.c: Move #include "tls-macros.h" instead #ifdef USE_TLS.
 	* elf/tst-tls2.c: Likewise.
 	* elf/tst-tls3.c: Likewise.

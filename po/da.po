@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.2.4\n"
-"POT-Creation-Date: 2001-08-13 15:08-0700\n"
-"PO-Revision-Date: 2001-08-28 19:18-04:00\n"
+"Project-Id-Version: libc 2.2.5\n"
+"POT-Creation-Date: 2001-08-17 13:03-0700\n"
+"PO-Revision-Date: 2002-02-13 20:18-04:00\n"
 "Last-Translator: Keld Simonsen <keld@dkuug.dk>\n"
 "Language-Team: Danish <dansk@klid.dk>\n"
 "MIME-Version: 1.0\n"
@@ -306,17 +306,17 @@ msgstr "%s er ikke en symbolsk lænke\n"
 msgid "%s is not an ELF file - it has the wrong magic bytes at the start.\n"
 msgstr "%s er ikke en ELF fil - den har de forkerte signaturtegn i starten.\n"
 
-#: assert/assert.c:52
+#: assert/assert.c:54
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sForudsætningen (assertion) '%s' fejlede.\n"
 
-#: assert/assert-perr.c:54
+#: assert/assert-perr.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sUventet fejl: %s.\n"
 
-#: stdio-common/psignal.c:48
+#: stdio-common/psignal.c:62
 #, c-format
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sUkendt signal %d\n"
@@ -624,7 +624,7 @@ msgstr "%s: snavs i slutningen af startdato i streng %Zd i 'era'-felt"
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
 msgstr "%s: snavs i slutningen af slutdato i streng %Zd i 'era'-felt"
 
-#: posix/getopt.c:788
+#: posix/getopt.c:887 posix/getopt.c:890
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: ulovligt flag -- %c\n"
@@ -660,7 +660,7 @@ msgstr "%s: ulovligt tal for tillægsværdi i streng %Zd i 'era'-felt"
 msgid "%s: invalid number of sorting rules"
 msgstr "%s: ulovligt antal sorteringsregler"
 
-#: posix/getopt.c:791
+#: posix/getopt.c:896 posix/getopt.c:899
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: ugyldigt flag -- %c\n"
@@ -684,6 +684,46 @@ msgstr "%s: ugyldig værdi for felt '%s'"
 #, c-format
 msgid "%s: language abbreviation `%s' not defined"
 msgstr "%s: sprog-forkortelsen '%s' ikke defineret"
+
+#: resolv/res_hconf.c:366
+#, c-format
+msgid "%s: line %d: bad command `%s'\n"
+msgstr "%s: linje %d: forkert kommando `%s'\n"
+
+#: resolv/res_hconf.c:165
+#, c-format
+msgid "%s: line %d: cannot specify more than %d services"
+msgstr "%s: linje %d: kan ikke specificere mere end %d tjenester"
+
+#: resolv/res_hconf.c:231
+#, c-format
+msgid "%s: line %d: cannot specify more than %d trim domains"
+msgstr "%s: linje %d: kan ikke specificere mere end %d trim-domæner"
+
+#: resolv/res_hconf.c:319
+#, c-format
+msgid "%s: line %d: expected `on' or `off', found `%s'\n"
+msgstr "%s: linje %d: forventede 'on' eller 'off', fandt '%s'\n"
+
+#: resolv/res_hconf.c:147
+#, c-format
+msgid "%s: line %d: expected service, found `%s'\n"
+msgstr "%s: linje %d: forventede tjeneste, fandt '%s'\n"
+
+#: resolv/res_hconf.c:395
+#, c-format
+msgid "%s: line %d: ignoring trailing garbage `%s'\n"
+msgstr "%s: linje %d: ignorerer efterfølgende fnadder '%s'\n"
+
+#: resolv/res_hconf.c:256
+#, c-format
+msgid "%s: line %d: list delimiter not followed by domain"
+msgstr "%s: linje %d: listeadskiller ikke fulgt af domæne"
+
+#: resolv/res_hconf.c:191
+#, c-format
+msgid "%s: line %d: list delimiter not followed by keyword"
+msgstr "%s: linje %d: listeadskiller ikke fulgt af nøgleord"
 
 #: locale/programs/ld-collate.c:3242 locale/programs/ld-collate.c:3365
 #: locale/programs/ld-collate.c:3716
@@ -746,37 +786,39 @@ msgstr "%s: ikke nok sorteringsregler"
 msgid "%s: numeric country code `%d' not valid"
 msgstr "%s: numerisk landekode '%d' er ugyldig"
 
-#: posix/getopt.c:711
+#: posix/getopt.c:743 posix/getopt.c:748
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: flaget '%c%s' tager ikke argumenter\n"
 
-#: posix/getopt.c:681
+#: posix/getopt.c:688 posix/getopt.c:698
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: flaget '%s' er flertydigt\n"
 
-#: posix/getopt.c:729 posix/getopt.c:902
+#: posix/getopt.c:782 posix/getopt.c:793 posix/getopt.c:1070
+#: posix/getopt.c:1082
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: flaget '%s' skal have et argument\n"
 
-#: posix/getopt.c:706
+#: posix/getopt.c:730 posix/getopt.c:734
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: flaget '--%s' tager ikke argumenter\n"
 
-#: posix/getopt.c:886
+#: posix/getopt.c:1038 posix/getopt.c:1049
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaget '-W %s' tager ikke argumenter\n"
 
-#: posix/getopt.c:868
+#: posix/getopt.c:1004 posix/getopt.c:1014
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: flaget '-W %s' er flertydigt\n"
 
-#: posix/getopt.c:821 posix/getopt.c:951
+#: posix/getopt.c:942 posix/getopt.c:952 posix/getopt.c:1136
+#: posix/getopt.c:1147
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: flaget skal have et argument -- %c\n"
@@ -827,12 +869,12 @@ msgstr "%s: sektion '%.*s' ukendt"
 #: locale/programs/ld-time.c:358
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
-msgstr "%s: startdato er ugyldig i streng %d i 'era'-felt"
+msgstr "%s: startdato er ugyldig i streng %Zd i 'era'-felt"
 
 #: locale/programs/ld-time.c:435
 #, c-format
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
-msgstr "%s: slutdato er ugyldig i streng %d i 'era'-felt"
+msgstr "%s: slutdato er ugyldig i streng %Zd i 'era'-felt"
 
 #: locale/programs/ld-collate.c:1261
 #, c-format
@@ -963,12 +1005,12 @@ msgstr "%s: ukendt sektionsnavn '%s'"
 msgid "%s: unknown symbol `%s' in equivalent definition"
 msgstr "%s: ukendt symbol '%s' i ækvivalens-definition"
 
-#: posix/getopt.c:762
+#: posix/getopt.c:841 posix/getopt.c:844
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: ukendt flag '%c%s'\n"
 
-#: posix/getopt.c:758
+#: posix/getopt.c:830 posix/getopt.c:833
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: ukendt flag '--%s'\n"
@@ -1054,7 +1096,7 @@ msgstr "(PROGRAMFEJL) Flag skulle have været genkendt!?"
 msgid "(Unknown object)\n"
 msgstr "(Ukendt objekt)\n"
 
-#: sunrpc/clnt_perr.c:132
+#: sunrpc/clnt_perr.c:133
 #, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(ukendt fejl ved autentificering - %d)"
@@ -1090,12 +1132,12 @@ msgstr ""
 msgid ".lib section in a.out corrupted"
 msgstr ".lib-sektion i a.out skadet"
 
-#: sunrpc/clnt_perr.c:118 sunrpc/clnt_perr.c:139
+#: sunrpc/clnt_perr.c:119 sunrpc/clnt_perr.c:140
 #, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; nedre version = %lu, øvre version = %lu"
 
-#: sunrpc/clnt_perr.c:125
+#: sunrpc/clnt_perr.c:126
 msgid "; why = "
 msgstr "; hvorfor = "
 
@@ -1212,7 +1254,7 @@ msgstr "Forsøger at indlænke flere delte biblioteker end systemet tillader"
 msgid "Attempting to link in too many shared libraries"
 msgstr "Forsøger at indlænke for mange delte biblioteker"
 
-#: sunrpc/clnt_perr.c:338
+#: sunrpc/clnt_perr.c:354
 msgid "Authentication OK"
 msgstr "Autentificering OK"
 
@@ -1474,7 +1516,7 @@ msgstr "Kan ikke sætte sokkel-flag SO_BROADCAST"
 
 #: sunrpc/rpc_main.c:1195
 msgid "Cannot specify more than one input file!\n"
-msgstr "Kan ikke specifisere mere end én indfil!\n"
+msgstr "Kan ikke specificere mere end én indfil!\n"
 
 #: elf/ldconfig.c:701
 #, c-format
@@ -1516,7 +1558,7 @@ msgstr "Tegn-separator      : %c\n"
 msgid "Child exited"
 msgstr "Barnet afsluttet"
 
-#: sunrpc/clnt_perr.c:357
+#: sunrpc/clnt_perr.c:373
 msgid "Client credential too weak"
 msgstr "Klientens troværdighed er for svag"
 
@@ -1945,7 +1987,7 @@ msgstr "FATALT: systemet definerer ikke '_POSIX2_LOCALEDEF'"
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FIL indeholder mapning fra symbolske navne til UCS4-værdier"
 
-#: sunrpc/clnt_perr.c:365
+#: sunrpc/clnt_perr.c:381
 msgid "Failed (unspecified error)"
 msgstr "Fejlet (uspecificeret fejl)"
 
@@ -2273,27 +2315,27 @@ msgstr "Afbrudt systemkald burde startes om"
 msgid "Invalid argument"
 msgstr "Ugyldigt argument"
 
-#: posix/regex.c:1380
+#: posix/regex.c:1384
 msgid "Invalid back reference"
 msgstr "Ugyldig tilbage-reference"
 
-#: posix/regex.c:1374
+#: posix/regex.c:1378
 msgid "Invalid character class name"
 msgstr "Ugyldigt tegnklassenavn"
 
-#: sunrpc/clnt_perr.c:341
+#: sunrpc/clnt_perr.c:357
 msgid "Invalid client credential"
 msgstr "Ugyldige klientreferencer"
 
-#: sunrpc/clnt_perr.c:349
+#: sunrpc/clnt_perr.c:365
 msgid "Invalid client verifier"
 msgstr "Ugyldig klientverifikator"
 
-#: posix/regex.c:1371
+#: posix/regex.c:1375
 msgid "Invalid collation character"
 msgstr "Ugyldigt sammenligningstegn"
 
-#: posix/regex.c:1392
+#: posix/regex.c:1396
 msgid "Invalid content of \\{\\}"
 msgstr "Ugyldig brug af \\{\\}"
 
@@ -2318,15 +2360,15 @@ msgstr "Ugyldigt objekt for operation"
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Ugyldigt eller ufuldstændigt multibyte eller bredt tegn"
 
-#: posix/regex.c:1401
+#: posix/regex.c:1405
 msgid "Invalid preceding regular expression"
 msgstr "Ugyldigt foregående regulært udtryk"
 
-#: posix/regex.c:1395
+#: posix/regex.c:1399
 msgid "Invalid range end"
 msgstr "Ugyldigt intervalslut"
 
-#: posix/regex.c:1368
+#: posix/regex.c:1372
 msgid "Invalid regular expression"
 msgstr "Ugyldigt regulært udtryk"
 
@@ -2338,7 +2380,7 @@ msgstr "Ugyldig adgangskode"
 msgid "Invalid request descriptor"
 msgstr "Ugyldig forespørgseldeskriptor"
 
-#: sunrpc/clnt_perr.c:361
+#: sunrpc/clnt_perr.c:377
 msgid "Invalid server verifier"
 msgstr "Ugyldig tjenerverifikator"
 
@@ -2463,7 +2505,7 @@ msgstr "Hovedtjener optaget, fuld lagring udsat."
 msgid "Memory allocation failure"
 msgstr "Lagerallokeringsfejl"
 
-#: posix/regex.c:1398
+#: posix/regex.c:1402
 msgid "Memory exhausted"
 msgstr "Lageret opbrugt"
 
@@ -2683,7 +2725,7 @@ msgstr "Ingen lænke oprettet da .so-navn ikke kunne findes for %s"
 msgid "No locks available"
 msgstr "Ingen låse tilgængelige"
 
-#: posix/regex.c:1365
+#: posix/regex.c:1369
 msgid "No match"
 msgstr "Ingen træf"
 
@@ -2700,7 +2742,7 @@ msgstr "Ingen meddelelser af ønsket type"
 msgid "No more records in map database"
 msgstr "Ikke flere poster i tabellen"
 
-#: posix/regex.c:7919
+#: posix/regex.c:7956
 msgid "No previous regular expression"
 msgstr "Intet foregående regulært udtryk"
 
@@ -3029,7 +3071,7 @@ msgstr "Adgang nægtet"
 msgid "Power failure"
 msgstr "Strømmen gik"
 
-#: posix/regex.c:1404
+#: posix/regex.c:1408
 msgid "Premature end of regular expression"
 msgstr "For tidlig afslutning på regulært udtryk"
 
@@ -3146,79 +3188,79 @@ msgstr "RPC-strukturen er ugyldig"
 msgid "RPC version wrong"
 msgstr "forkert RPC-version"
 
-#: sunrpc/clnt_perr.c:278
+#: sunrpc/clnt_perr.c:284
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (ukendt fejlkode)"
 
-#: sunrpc/clnt_perr.c:197
+#: sunrpc/clnt_perr.c:203
 msgid "RPC: Authentication error"
 msgstr "RPC: Fejl ved autentificering"
 
-#: sunrpc/clnt_perr.c:177
+#: sunrpc/clnt_perr.c:183
 msgid "RPC: Can't decode result"
 msgstr "RPC: Kan ikke afkode resultatet"
 
-#: sunrpc/clnt_perr.c:173
+#: sunrpc/clnt_perr.c:179
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Kan ikke kode argumentet"
 
-#: sunrpc/clnt_perr.c:237
+#: sunrpc/clnt_perr.c:243
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Fejlet (uspecificeret fejl)"
 
-#: sunrpc/clnt_perr.c:193
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Inkompatible versioner af RPC"
 
-#: sunrpc/clnt_perr.c:229
+#: sunrpc/clnt_perr.c:235
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Fejl i portmapper"
 
-#: sunrpc/clnt_perr.c:209
+#: sunrpc/clnt_perr.c:215
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Procedure ikke tilgængelig"
 
-#: sunrpc/clnt_perr.c:233
+#: sunrpc/clnt_perr.c:239
 msgid "RPC: Program not registered"
 msgstr "RPC: Programmet ikke registreret"
 
-#: sunrpc/clnt_perr.c:201
+#: sunrpc/clnt_perr.c:207
 msgid "RPC: Program unavailable"
 msgstr "RPC: Programmet utilgængeligt"
 
-#: sunrpc/clnt_perr.c:205
+#: sunrpc/clnt_perr.c:211
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Program/version-uoverensstemmelse"
 
-#: sunrpc/clnt_perr.c:217
+#: sunrpc/clnt_perr.c:223
 msgid "RPC: Remote system error"
 msgstr "RPC: Systemfejl hos modtager"
 
-#: sunrpc/clnt_perr.c:213
+#: sunrpc/clnt_perr.c:219
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Tjener kan ikke afkode argumenterne"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:176
 msgid "RPC: Success"
 msgstr "RPC: Succes"
 
-#: sunrpc/clnt_perr.c:189
+#: sunrpc/clnt_perr.c:195
 msgid "RPC: Timed out"
 msgstr "RPC: Tidsgrænsen overskredet"
 
-#: sunrpc/clnt_perr.c:185
+#: sunrpc/clnt_perr.c:191
 msgid "RPC: Unable to receive"
 msgstr "RPC: Kan ikke tage imod"
 
-#: sunrpc/clnt_perr.c:181
+#: sunrpc/clnt_perr.c:187
 msgid "RPC: Unable to send"
 msgstr "RPC: Kan ikke sende"
 
-#: sunrpc/clnt_perr.c:221
+#: sunrpc/clnt_perr.c:227
 msgid "RPC: Unknown host"
 msgstr "RPC: Ukendt værtsmaskine"
 
-#: sunrpc/clnt_perr.c:225
+#: sunrpc/clnt_perr.c:231
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Ukendt protokol"
 
@@ -3250,7 +3292,7 @@ msgstr "Filsystem med kun læseadgang"
 msgid "Real-time signal %d"
 msgstr "Realtid-signal %d"
 
-#: posix/regex.c:1407
+#: posix/regex.c:1411
 msgid "Regular expression too big"
 msgstr "Regulært udtryk for stort"
 
@@ -3266,7 +3308,7 @@ msgstr "Fjernadresse ændret"
 
 #: inet/ruserpass.c:185
 msgid "Remove password or make file unreadable by others."
-msgstr "Fjern adgangskode, eller gør filen ulæsbar for andre."
+msgstr "Fjern adgangskode, eller gør filen ulæselig for andre."
 
 #: elf/cache.c:431
 #, c-format
@@ -3392,11 +3434,11 @@ msgstr "Tjener optaget, prøv igen"
 msgid "Server out of memory"
 msgstr "Tjener tom for lager"
 
-#: sunrpc/clnt_perr.c:345
+#: sunrpc/clnt_perr.c:361
 msgid "Server rejected credential"
 msgstr "Tjener afviste referencerne"
 
-#: sunrpc/clnt_perr.c:353
+#: sunrpc/clnt_perr.c:369
 msgid "Server rejected verifier"
 msgstr "Tjener afviste verifikator"
 
@@ -3494,7 +3536,7 @@ msgstr "Strøm-rørfejl"
 msgid "Structure needs cleaning"
 msgstr "Strukturen trænger til oprydning"
 
-#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1362
+#: nis/nis_error.c:29 nis/ypclnt.c:788 nis/ypclnt.c:862 posix/regex.c:1366
 #: stdio-common/../sysdeps/gnu/errlist.c:20
 msgid "Success"
 msgstr "Succes"
@@ -3665,7 +3707,7 @@ msgstr "For mange brugere"
 msgid "Trace/breakpoint trap"
 msgstr "Sporings-/stoppunkts-fælde"
 
-#: posix/regex.c:1377
+#: posix/regex.c:1381
 msgid "Trailing backslash"
 msgstr "Efterfølgende backslash"
 
@@ -3696,6 +3738,11 @@ msgstr "Transport-endepunkterne er ikke sammenkoblet"
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Prøv '%s --help' eller '%s --usage' for mere information.\n"
+
+#: inet/rcmd.c:223
+#, c-format
+msgid "Trying %s...\n"
+msgstr "Prøver %s...\n"
 
 #: nis/nis_print.c:167
 #, c-format
@@ -3786,7 +3833,7 @@ msgstr "Ukendt tjener-fejl"
 msgid "Unknown signal %d"
 msgstr "Ukendt signal %d"
 
-#: misc/error.c:113 timezone/zic.c:390
+#: misc/error.c:117 timezone/zic.c:390
 msgid "Unknown system error"
 msgstr "Ukendt systemfejl"
 
@@ -3794,19 +3841,19 @@ msgstr "Ukendt systemfejl"
 msgid "Unknown ypbind error"
 msgstr "Ukendt ypbind-fejl"
 
-#: posix/regex.c:1386
+#: posix/regex.c:1390
 msgid "Unmatched ( or \\("
 msgstr "Ubalanceret ( eller \\("
 
-#: posix/regex.c:1410
+#: posix/regex.c:1414
 msgid "Unmatched ) or \\)"
 msgstr "Ubalanceret ) eller \\)"
 
-#: posix/regex.c:1383
+#: posix/regex.c:1387
 msgid "Unmatched [ or [^"
 msgstr "Ubalanceret [ eller [^"
 
-#: posix/regex.c:1389
+#: posix/regex.c:1393
 msgid "Unmatched \\{"
 msgstr "Ubalanceret \\{"
 
@@ -4005,11 +4052,12 @@ msgstr "argument til <%s> skal være et enkelt tegn"
 msgid "argument to `%s' must be a single character"
 msgstr "argument til '%s' skal være et enkelt tegn"
 
-#: sunrpc/auth_unix.c:311
+#: sunrpc/auth_unix.c:322
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - Fatal kodningsfejl"
 
-#: sunrpc/auth_unix.c:106 sunrpc/auth_unix.c:112 sunrpc/auth_unix.c:142
+#: sunrpc/auth_unix.c:114 sunrpc/auth_unix.c:117 sunrpc/auth_unix.c:150
+#: sunrpc/auth_unix.c:153
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: ikke mere lager\n"
 
@@ -4018,7 +4066,7 @@ msgstr "authunix_create: ikke mere lager\n"
 msgid "bad argument"
 msgstr "ugyldigt argument"
 
-#: inet/rcmd.c:425
+#: inet/rcmd.c:514
 msgid "bad owner"
 msgstr "forkert ejer"
 
@@ -4046,15 +4094,15 @@ msgstr "broadcast: ioctl (hent grænsesnitkonfiguration)"
 msgid "broadcast: ioctl (get interface flags)"
 msgstr "broadcast: ioctl (hent grænsesnitsflag)"
 
-#: sunrpc/svc_udp.c:528
+#: sunrpc/svc_udp.c:541
 msgid "cache_set: could not allocate new rpc_buffer"
 msgstr "cache_set: kunne ikke allokere ny rpc-buffer"
 
-#: sunrpc/svc_udp.c:522
+#: sunrpc/svc_udp.c:535
 msgid "cache_set: victim alloc failed"
 msgstr "cache_set: offer-allokering fejlede"
 
-#: sunrpc/svc_udp.c:511
+#: sunrpc/svc_udp.c:524
 msgid "cache_set: victim not found"
 msgstr "cache_set: offer ikke fundet"
 
@@ -4062,7 +4110,7 @@ msgstr "cache_set: offer ikke fundet"
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr "kan ikke afgøre tidszoneforkortelse for brug lige efter 'until'-tid"
 
-#: sunrpc/svc_simple.c:85
+#: sunrpc/svc_simple.c:88
 #, c-format
 msgid "can't reassign procedure number %ld\n"
 msgstr "kan ikke omfordele procedurenummer %ld\n"
@@ -4185,7 +4233,7 @@ msgstr "Kan ikke gøre segment skrivbart for omflytning"
 msgid "cannot map zero-fill pages"
 msgstr "kan ikke mappe nulstil-sider"
 
-#: inet/rcmd.c:421
+#: inet/rcmd.c:510
 msgid "cannot open"
 msgstr "kan ikke åbne"
 
@@ -4355,17 +4403,22 @@ msgstr "cirkulære afhængigheder mellem lokale-definitioner"
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Fatal fejl ved serialisering af hoved."
 
-#: sunrpc/clnt_tcp.c:127 sunrpc/clnt_tcp.c:136
+#: sunrpc/clnt_tcp.c:134 sunrpc/clnt_tcp.c:137
 msgid "clnttcp_create: out of memory\n"
 msgstr "cnlttcp_create: ikke mere lager\n"
 
-#: sunrpc/clnt_udp.c:132 sunrpc/clnt_udp.c:143
+#: sunrpc/clnt_udp.c:141 sunrpc/clnt_udp.c:144
 msgid "clntudp_create: out of memory\n"
 msgstr "cnltudp_create: ikke mere lager\n"
 
-#: sunrpc/clnt_unix.c:125 sunrpc/clnt_unix.c:134
+#: sunrpc/clnt_unix.c:131 sunrpc/clnt_unix.c:134
 msgid "clntunix_create: out of memory\n"
 msgstr "cnlsunix_create: ikke mere lager\n"
+
+#: inet/rcmd.c:209
+#, c-format
+msgid "connect to address %s: "
+msgstr "koble til adresse %s: "
 
 #: sunrpc/rpc_scan.c:116
 msgid "constant or identifier expected"
@@ -4388,11 +4441,11 @@ msgstr "vekselkurs-værdi kan ikke være nul"
 msgid "conversion stopped due to problem in writing the output"
 msgstr "konvertering stoppet på grund af problem ved skrivning af uddata"
 
-#: sunrpc/svc_simple.c:93
+#: sunrpc/svc_simple.c:97
 msgid "couldn't create an rpc server\n"
 msgstr "kunne ikke oprette en rpc-tjener\n"
 
-#: sunrpc/svc_simple.c:101
+#: sunrpc/svc_simple.c:105
 #, c-format
 msgid "couldn't register prog %ld vers %ld\n"
 msgstr "kunne ikke registrere prog %ld vers %ld\n"
@@ -4454,19 +4507,19 @@ msgstr "tom dynamisk strengelement-erstatning"
 msgid "empty dynamics string token substitution"
 msgstr "tom dynamisk strengelement-erstatning"
 
-#: sunrpc/svc_udp.c:454
+#: sunrpc/svc_udp.c:467
 msgid "enablecache: cache already enabled"
 msgstr "enablecache: cache/hurtiglager allerede sluttet til"
 
-#: sunrpc/svc_udp.c:460
+#: sunrpc/svc_udp.c:473
 msgid "enablecache: could not allocate cache"
 msgstr "enablecache: kunne ikke tildele cache/hurtiglager"
 
-#: sunrpc/svc_udp.c:468
+#: sunrpc/svc_udp.c:481
 msgid "enablecache: could not allocate cache data"
 msgstr "enablecache: kunne ikke tildele cache/hurtiglager-data"
 
-#: sunrpc/svc_udp.c:475
+#: sunrpc/svc_udp.c:488
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: kunne ikke tildele cache/hurtiglager-fifo"
 
@@ -4559,7 +4612,7 @@ msgstr "filen '%s' eksisterer allerede og kan blive overskrevet\n"
 msgid "file too short"
 msgstr "For kort fil"
 
-#: inet/rcmd.c:423
+#: inet/rcmd.c:512
 msgid "fstat failed"
 msgstr "fstat fejlede"
 
@@ -4596,7 +4649,7 @@ msgstr "handle_request: forespørgsel modtaget (version = %d)"
 msgid "hard link failed, symbolic link used"
 msgstr "hård lænke fejlede, symbolsk lænke brugt"
 
-#: inet/rcmd.c:429
+#: inet/rcmd.c:518
 msgid "hard linked somewhere"
 msgstr "hårdlænket et eller andet sted"
 
@@ -4800,7 +4853,7 @@ msgstr "list alle kendte kodede tegnsæt"
 msgid "locale name should consist only of portable characters"
 msgstr "lokale-navn bør bestå af bare portable tegn"
 
-#: inet/rcmd.c:414
+#: inet/rcmd.c:503
 msgid "lstat failed"
 msgstr "lstat fejlede"
 
@@ -4836,7 +4889,8 @@ msgstr "området foran tildelt lagerblok snavset til\n"
 msgid "memory clobbered past end of allocated block\n"
 msgstr "området efter tildelt lagerblok snavset til\n"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:484 posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:489 malloc/obstack.c:493
+#: posix/getconf.c:996
 msgid "memory exhausted"
 msgstr "lageret opbrugt"
 
@@ -4888,7 +4942,7 @@ msgstr "netname2user: navn på 'principal' '%s' for langt"
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: burde ikke have uid 0"
 
-#: sunrpc/svc_simple.c:168
+#: sunrpc/svc_simple.c:183
 #, c-format
 msgid "never registered prog %d\n"
 msgstr "aldrig registreret prog %d\n"
@@ -4948,7 +5002,7 @@ msgstr "ikke alle tegn brugt i 'outdigit' er tilstede i tegntabellen"
 msgid "not all characters used in `outdigit' are available in the repertoire"
 msgstr "ikke alle tegn brugt i 'outdigit' er tilstede i repertoiret"
 
-#: inet/rcmd.c:416
+#: inet/rcmd.c:505
 msgid "not regular file"
 msgstr "ikke en almindelig fil"
 
@@ -4996,11 +5050,15 @@ msgstr "tom for lager"
 msgid "output file"
 msgstr "udfil"
 
+#: posix/../sysdeps/generic/wordexp.c:1801
+msgid "parameter null or not set"
+msgstr "parameter er nul eller ikke sat"
+
 #: sunrpc/pm_getmaps.c:74
 msgid "pmap_getmaps rpc problem"
 msgstr "pmap_getmaps rpc-problem"
 
-#: inet/rcmd.c:234
+#: inet/rcmd.c:293
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: protokolfejl i opsætning af forbindelse\n"
 
@@ -5046,26 +5104,26 @@ msgstr "program %lu version %lu er ikke tilgængelig\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "program %lu version %lu klar og venter\n"
 
-#: inet/rcmd.c:271
+#: inet/rcmd.c:354
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: kort indlæsning"
 
-#: inet/rcmd.c:231
+#: inet/rcmd.c:290
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (opsætter stderr): %m\n"
 
-#: inet/rcmd.c:159
+#: inet/rcmd.c:172 inet/rcmd.c:175
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: sokkel: Alle porte i brug\n"
 
-#: inet/rcmd.c:221
+#: inet/rcmd.c:270
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write: (opsætter standard error): %m\n"
 
-#: sunrpc/svc_simple.c:108
+#: sunrpc/svc_simple.c:112
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: ikke mere lager\n"
 
@@ -5141,7 +5199,7 @@ msgstr "afkortet læsning ved læsning af forespørgsel: %s"
 msgid "short write in %s: %s"
 msgstr "afkortet skrivning i %s: %s"
 
-#: inet/rcmd.c:261
+#: inet/rcmd.c:335
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "sokkel: protokolfejl i opsætning af forbindelse\n"
 
@@ -5173,51 +5231,51 @@ msgstr "undertryk advarsler"
 msgid "svc_run: - poll failed"
 msgstr "svc_run: - poll fejlede"
 
-#: sunrpc/svc_tcp.c:170
+#: sunrpc/svc_tcp.c:171
 msgid "svc_tcp.c - cannot getsockname or listen"
 msgstr "svc_tcp.c - kan ikke kalde getsockname() eller listen()"
 
-#: sunrpc/svc_tcp.c:155
+#: sunrpc/svc_tcp.c:156
 msgid "svc_tcp.c - tcp socket creation problem"
 msgstr "svc_tcp.c - problem med oprettelse af tcp-sokkel"
 
-#: sunrpc/svc_tcp.c:219 sunrpc/svc_tcp.c:225
+#: sunrpc/svc_tcp.c:224 sunrpc/svc_tcp.c:227
 msgid "svc_tcp: makefd_xprt: out of memory\n"
 msgstr "svc_tcp: makefd_xprt: ikke mere lager\n"
 
-#: sunrpc/svc_unix.c:146
+#: sunrpc/svc_unix.c:150
 msgid "svc_unix.c - AF_UNIX socket creation problem"
 msgstr "svc_unix.c - problem med oprettelse af AF_UNIX-sokkel"
 
-#: sunrpc/svc_unix.c:162
+#: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
 msgstr "svc_unix.c - kan ikke kalde getsockname() eller listen()"
 
-#: sunrpc/svc_unix.c:212 sunrpc/svc_unix.c:218
+#: sunrpc/svc_unix.c:220 sunrpc/svc_unix.c:223
 msgid "svc_unix: makefd_xprt: out of memory\n"
 msgstr "svc_unix: makefd_xprt: ikke mere lager\n"
 
-#: sunrpc/svc_tcp.c:178 sunrpc/svc_tcp.c:186
+#: sunrpc/svc_tcp.c:182 sunrpc/svc_tcp.c:185
 msgid "svctcp_create: out of memory\n"
 msgstr "svctcp_create: ikke mere lager\n"
 
-#: sunrpc/svc_udp.c:141
+#: sunrpc/svc_udp.c:143
 msgid "svcudp_create - cannot getsockname"
 msgstr "svcudp_create - kan ikke kalde getsockname()"
 
-#: sunrpc/svc_udp.c:149 sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:161
+#: sunrpc/svc_udp.c:155 sunrpc/svc_udp.c:158
 msgid "svcudp_create: out of memory\n"
 msgstr "svcudp_create: ikke mere lager\n"
 
-#: sunrpc/svc_udp.c:127
+#: sunrpc/svc_udp.c:129
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problem ved oprettelse af sokkel"
 
-#: sunrpc/svc_udp.c:177
+#: sunrpc/svc_udp.c:179 sunrpc/svc_udp.c:182
 msgid "svcudp_create: xp_pad is too small for IP_PKTINFO\n"
 msgstr "svcudp_create: xp_pad er for lille til IP_PKTINFO\n"
 
-#: sunrpc/svc_unix.c:171 sunrpc/svc_unix.c:179
+#: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: ikke mere lager\n"
 
@@ -5324,7 +5382,7 @@ msgstr "for mange eller for lange tidszoneforkortelser"
 msgid "trailing garbage at end of line"
 msgstr "efterfølgende snavs på slutningen af linien"
 
-#: sunrpc/svc_simple.c:160
+#: sunrpc/svc_simple.c:175
 #, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "problem med at svare prog %d\n"
@@ -5479,7 +5537,7 @@ msgstr "ved symbolske interval-værdier må den absolutte ellipse '...' ikke bruge
 msgid "write incomplete"
 msgstr "skrivning ufuldstændig"
 
-#: inet/rcmd.c:427
+#: inet/rcmd.c:516
 msgid "writeable by other than owner"
 msgstr "skrivbar af andre end ejer"
 
@@ -5507,11 +5565,23 @@ msgstr "galt antal felter på 'Zone'-fortsættelseslinie"
 msgid "wrong number of fields on Zone line"
 msgstr "galt antal felter på 'Zone'-linie"
 
-#: sunrpc/xdr_ref.c:85
+#: sunrpc/xdr_array.c:106 sunrpc/xdr_array.c:109
+msgid "xdr_array: out of memory\n"
+msgstr "xdr_array: ikke mere lager\n"
+
+#: sunrpc/xdr.c:558 sunrpc/xdr.c:561
+msgid "xdr_bytes: out of memory\n"
+msgstr "xdr_bytes: ikke mere lager\n"
+
+#: sunrpc/xdr_ref.c:89 sunrpc/xdr_ref.c:92
 msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: ikke mere lager\n"
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr.c:710 sunrpc/xdr.c:713
+msgid "xdr_string: out of memory\n"
+msgstr "xdr_string: ikke mere lager\n"
+
+#: sunrpc/xdr_rec.c:155 sunrpc/xdr_rec.c:158
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: ikke mere lager\n"
 
@@ -5610,9 +5680,6 @@ msgstr "yp_update: kan ikke hente tjeneradresse\n"
 #~ msgid "Print content of database file, one entry a line"
 #~ msgstr "Skriv indholdet af en databasefil ud, en indtastning per linie"
 
-#~ msgid "Trying %s...\n"
-#~ msgstr "Prøver %s...\n"
-
 #~ msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 #~ msgstr "'...' kan kun bruges i posterne '...' og 'UNDEFINED'"
 
@@ -5654,9 +5721,6 @@ msgstr "yp_update: kan ikke hente tjeneradresse\n"
 
 #~ msgid "collation symbol expected after `%s'"
 #~ msgstr "sammenligningssymbol forventet efter '%s'"
-
-#~ msgid "connect to address %s: "
-#~ msgstr "koble til adresse %s: "
 
 #~ msgid "duplicate character name `%s'"
 #~ msgstr "duplikeret tegnnavn '%s'"

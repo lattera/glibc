@@ -1809,7 +1809,15 @@ symbol `%s' has the same encoding as"), (*eptr)->name);
   sect = collate->sections;
   while (sect != NULL && sect->rules == NULL)
     sect = sect->next;
-  assert (sect != NULL);
+
+  /* Bail out if we have no sections because of earlier errors.  */
+  if (sect == NULL)
+    {
+      WITH_CUR_LOCALE (error (EXIT_FAILURE, 0,
+			      _("too many errors; giving up")));
+      return;
+    }
+
   ruleidx = 0;
   do
     {
@@ -3489,10 +3497,17 @@ error while adding equivalent collating symbol"));
 	      symstr = ucs4buf;
 	      symlen = 9;
 	    }
-	  else
+	  else if (arg != NULL)
 	    {
 	      symstr = arg->val.str.startmb;
 	      symlen = arg->val.str.lenmb;
+	    }
+	  else
+	    {
+	      lr_error (ldfile, _("%s: bad symbol <%.*s>"), "LC_COLLATE",
+			ldfile->token.val.str.lenmb,
+			ldfile->token.val.str.startmb);
+	      break;
 	    }
 
 	  if (state == 0)
