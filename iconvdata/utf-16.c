@@ -129,7 +129,7 @@ gconv_init (struct __gconv_step *step)
 	  new_data->var = var;
 	  step->__data = new_data;
 
-	  if (var == from_utf16)
+	  if (dir == from_utf16)
 	    {
 	      step->__min_needed_from = MIN_NEEDED_FROM;
 	      step->__max_needed_from = MIN_NEEDED_FROM;

@@ -1,3 +1,7 @@
+2000-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/utf-16.c (gconv_init): Fix typo.
+
 2000-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/gconv-modules: Fix typo.
