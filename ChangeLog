@@ -1,3 +1,10 @@
+2001-03-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-dst.h (DL_DST_COUNT): Add __builtin_expect.
+
+	* elf/dl-load.c (_dl_dst_count): Make DST recognition more robust.
+	(_dl_dst_substitute): Likewise.
+
 2001-03-17  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/loadmsgcat.c (_nl_load_domain) [!_LIBC]: Use fstat, not fstat64.

@@ -180,26 +180,28 @@ _dl_dst_count (const char *name, int is_path)
     {
       size_t len = 1;
 
-      /* $ORIGIN is not expanded for SUID/GUID programs.
+      /* $ORIGIN is not expanded for SUID/GUID programs and it must
+	 always appear first in path.
 
-	 Note that it is no bug that the strings in the first two `strncmp'
-	 calls are longer than the sequence which is actually tested.  */
-      if ((((strncmp (&name[1], "ORIGIN}", 6) == 0
-	     && (!__libc_enable_secure
-		 || ((name[7] == '\0' || (is_path && name[7] == ':'))
-		     && (name == start || (is_path && name[-1] == ':'))))
-	     && (len = 7) != 0)
-	    || (strncmp (&name[1], "PLATFORM}", 8) == 0 && (len = 9) != 0))
-	   && (name[len] == '\0' || name[len] == '/'
-	       || (is_path && name[len] == ':')))
-	  || (name[1] == '{'
-	      && ((strncmp (&name[2], "ORIGIN}", 7) == 0
-		   && (!__libc_enable_secure
-		       || ((name[9] == '\0' || (is_path && name[9] == ':'))
-			   && (name == start || (is_path && name[-1] == ':'))))
-		   && (len = 9) != 0)
-		  || (strncmp (&name[2], "PLATFORM}", 9) == 0
-		      && (len = 11) != 0))))
+	 Note that it is no bug that the string in the second and
+	 fourth `strncmp' call is longer than the sequence which is
+	 actually tested.  */
+      if (((strncmp (&name[1], "{ORIGIN}", 8) == 0 && (len = 9) != 0)
+	   || (strncmp (&name[1], "{ORIGIN}" + 1, 6) == 0
+	       && (name[7] == '\0' || name[7] == '/'
+		   || (is_path && name[7] == ':'))
+	       && (len = 7) != 0)))
+	{
+	  if (__builtin_expect (!__libc_enable_secure, 1)
+	      && (name == start || (is_path && name[-1] == ':')))
+	    ++cnt;
+	}
+      else if ((strncmp (&name[1], "{PLATFORM}", 10) == 0
+		&& (len = 11) != 0)
+	       || (strncmp (&name[1], "{PLATFORM}" + 1, 8) == 0
+		   && (name[9] == '\0' || name[9] == '/'
+		       || (is_path && name[9] == ':'))
+		   && (len = 9) != 0))
 	++cnt;
 
       name = strchr (name + len, '$');
@@ -225,57 +227,56 @@ _dl_dst_substitute (struct link_map *l, const char *name, char *result,
 
   do
     {
-      if (*name == '$')
+      if (__builtin_expect (*name, 'a') == '$')
 	{
-	  const char *repl;
-	  size_t len;
+	  const char *repl = NULL;
+	  size_t len = 1;
 
-	  /* Note that it is no bug that the strings in the first two `strncmp'
-	     calls are longer than the sequence which is actually tested.  */
-	  if ((((strncmp (&name[1], "ORIGIN}", 6) == 0 && (len = 7) != 0)
-		|| (strncmp (&name[1], "PLATFORM}", 8) == 0 && (len = 9) != 0))
-	       && (name[len] == '\0' || name[len] == '/'
-		   || (is_path && name[len] == ':')))
-	      || (name[1] == '{'
-		  && ((strncmp (&name[2], "ORIGIN}", 7) == 0 && (len = 9) != 0)
-		      || (strncmp (&name[2], "PLATFORM}", 9) == 0
-			  && (len = 11) != 0))))
+	  /* Note that it is no bug that the string in the second and
+	     fourth `strncmp' call is longer than the sequence which
+	     is actually tested.  */
+	  if (((strncmp (&name[1], "{ORIGIN}", 8) == 0 && (len = 9) != 0)
+	       || (strncmp (&name[1], "{ORIGIN}" + 1, 6) == 0
+		   && (name[7] == '\0' || name[7] == '/'
+		       || (is_path && name[7] == ':'))
+		   && (len = 7) != 0)))
 	    {
-	      repl = ((len == 7 || name[2] == 'O')
-		      ? (__libc_enable_secure
-			 && ((name[len] != '\0'
-			      && (!is_path || name[len] != ':'))
-			     || (name != start
-				 && (!is_path || name[-1] != ':')))
-			 ? NULL : l->l_origin)
-		      : _dl_platform);
+	      if (__builtin_expect (!__libc_enable_secure, 1)
+		  && (name == start || (is_path && name[-1] == ':')))
+		repl = l->l_origin;
+	    }
+	  else if ((strncmp (&name[1], "{PLATFORM}", 10) == 0
+		    && (len = 11) != 0)
+		   || (strncmp (&name[1], "{PLATFORM}" + 1, 8) == 0
+		       && (name[9] == '\0' || name[9] == '/' || name[9] == ':')
+		       && (len = 9) != 0))
+	    repl = _dl_platform;
 
-	      if (repl != NULL && repl != (const char *) -1)
-		{
-		  wp = __stpcpy (wp, repl);
-		  name += len;
-		}
-	      else
-		{
-		  /* We cannot use this path element, the value of the
-		     replacement is unknown.  */
-		  wp = last_elem;
-		  name += len;
-		  while (*name != '\0' && (!is_path || *name != ':'))
-		    ++name;
-		}
+
+	  if (repl != NULL && repl != (const char *) -1)
+	    {
+	      wp = __stpcpy (wp, repl);
+	      name += len;
+	    }
+	  else if (len > 1)
+	    {
+	      /* We cannot use this path element, the value of the
+		 replacement is unknown.  */
+	      wp = last_elem;
+	      name += len;
+	      while (*name != '\0' && (!is_path || *name != ':'))
+		++name;
 	    }
 	  else
 	    /* No DST we recognize.  */
 	    *wp++ = *name++;
 	}
-      else if (is_path && *name == ':')
+      else
 	{
 	  *wp++ = *name++;
-	  last_elem = wp;
+	  if (is_path && *name == ':')
+	    last_elem = wp;
 	}
-      else
-	*wp++ = *name++;
     }
   while (*name != '\0');
 
