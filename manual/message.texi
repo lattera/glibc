@@ -729,7 +729,7 @@ Sun Microsystems tried to standardize a different approach to message
 translation in the Uniforum group.  There never was a real standard
 defined but still the interface was used in Sun's operation systems.
 Since this approach fits better in the development process of free
-software it is also used throughout the GNU package and the GNU
+software it is also used throughout the GNU project and the GNU
 @file{gettext} package provides support for this outside the GNU C
 Library.
 
@@ -837,7 +837,7 @@ called) we would get a wrong message.
 So there is no easy way to detect a missing message catalog beside
 comparing the argument string with the result.  But it is normally the
 task of the user to react on missing catalogs.  The program cannot guess
-when a message catalog is really necessary since for a user who s peaks
+when a message catalog is really necessary since for a user who speaks
 the language the program was developed in does not need any translation.
 @end deftypefun
 
@@ -909,19 +909,8 @@ When using the three functions above in a program it is a frequent case
 that the @var{msgid} argument is a constant string.  So it is worth to
 optimize this case.  Thinking shortly about this one will realize that
 as long as no new message catalog is loaded the translation of a message
-will not change.  I.e., the algorithm to determine the translation is
-deterministic.
-
-Exactly this is what the optimizations implemented in the
-@file{libintl.h} header will use.  Whenever a program is compiler with
-the GNU C compiler, optimization is selected and the @var{msgid}
-argument to @code{gettext}, @code{dgettext} or @code{dcgettext} is a
-constant string the actual function call will only be done the first
-time the message is used and then always only if any new message catalog
-was loaded and so the result of the translation lookup might be
-different.  See the @file{libintl.h} header file for details.  For the
-user it is only important to know that the result is always the same,
-independent of the compiler or compiler options in use.
+will not change.  This optimization is actually implemented by the
+@code{gettext}, @code{dgettext} and @code{dcgettext} functions.
 
 
 @node Locating gettext catalog
@@ -1389,6 +1378,8 @@ recommended that all @var{msgid}s be US-ASCII strings.
 @deftypefun {char *} bind_textdomain_codeset (const char *@var{domainname}, const char *@var{codeset})
 The @code{bind_textdomain_codeset} function can be used to specify the
 output character set for message catalogs for domain @var{domainname}.
+The @var{codeset} argument must be a valid codeset name which can be used
+for the @code{iconv_open} function, or a null pointer.
 
 If the @var{codeset} parameter is the null pointer,
 @code{bind_textdomain_codeset} returns the currently selected codeset
@@ -1410,8 +1401,8 @@ global variable @var{errno} is set accordingly.  @end deftypefun
 @node GUI program problems
 @subsubsection How to use @code{gettext} in GUI programs
 
-One place where the @code{gettext} functions if used normally have big
-programs is within programs with graphical user interfaces (GUIs).  The
+One place where the @code{gettext} functions, if used normally, have big
+problems is within programs with graphical user interfaces (GUIs).  The
 problem is that many of the strings which have to be translated are very
 short.  They have to appear in pull-down menus which restricts the
 length.  But strings which are not containing entire sentences or at
@@ -1635,17 +1626,23 @@ to work:
 
 @smallexample
 @{
+  setlocale (LC_ALL, "");
   textdomain ("test-package");
   bindtextdomain ("test-package", "/usr/local/share/locale");
   puts (gettext ("Hello, world!"));
 @}
 @end smallexample
 
-At the program start the default domain is @code{messages}.  The
-@code{textdomain} call changes this to @code{test-package}.  The
-@code{bindtextdomain} call specifies that the message catalogs for the
-domain @code{test-package} can be found below the directory
-@file{/usr/local/share/locale}.
+At the program start the default domain is @code{messages}, and the
+default locale is "C".  The @code{setlocale} call sets the locale
+according to the user's environment variables; remember that correct
+functioning of @code{gettext} relies on the correct setting of the
+@code{LC_MESSAGES} locale (for looking up the message catalog) and
+of the @code{LC_CTYPE} locale (for the character set conversion).
+The @code{textdomain} call changes the default domain to
+@code{test-package}.  The @code{bindtextdomain} call specifies that
+the message catalogs for the domain @code{test-package} can be found
+below the directory @file{/usr/local/share/locale}.
 
 If now the user set in her/his environment the variable @code{LANGUAGE}
 to @code{de} the @code{gettext} function will try to use the

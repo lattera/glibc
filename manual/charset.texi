@@ -2761,7 +2761,7 @@ The return value must be one of the following values:
 @table @code
 @item __GCONV_EMPTY_INPUT
 All input was consumed and there is room left in the output buffer.
-@item __GCONV_OUTPUT_FULL
+@item __GCONV_FULL_OUTPUT
 No more room in the output buffer.  In case this is not the last step
 this value is propagated down from the call of the next conversion
 function in the chain.

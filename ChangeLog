@@ -1,3 +1,11 @@
+2000-10-25  Bruno Haible  <haible@clisp.cons.org>
+
+	* manual/charset.texi: Fix spelling of __GCONV_FULL_OUTPUT.
+	* manual/message.texi (Translation with gettext): Remove paragraph
+	about macros contained in libintl.h.
+	(bind_textdomain_codeset): Describe codeset argument.
+	(Using gettextized software): Add setlocale call to sample code.
+
 2000-10-26  Kazumoto Kojima  <kkojima@rr.iij4u.or.jp>
 	    Yutaka Niibe  <gniibe@chroot.org>
 
