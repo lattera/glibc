@@ -72,7 +72,7 @@ res_init(void) {
 
 #if USE___THREAD
 /* With __thread support, this per-thread variable is used in all cases.  */
-__thread struct __res_state _res = { ._vcsock = -1 };
+__thread struct __res_state _res;
 extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
   attribute_hidden;
 # define _res __libc_res
