@@ -1,3 +1,11 @@
+2002-08-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/tst-tlsmod1.c (in_dso): Make sure the TLS variable access is
+	not moved ahead of the fputs call.
+	* elf/tst-tlsmod2.c (in_dso): Likewise.
+	* elf/tst-tlsmod3.c (in_dso2): Likewise.
+	* elf/tst-tlsmod4.c (in_dso): Likewise.
+
 2002-08-25  Andreas Schwab  <schwab@suse.de>
 
 	* elf/dl-reloc.c (_dl_reloc_bad_type): Nul-terminate message.

@@ -16,6 +16,7 @@ in_dso (int n, int *caller_foop)
   int result = 0;
 
   puts ("foo");			/* Make sure PLT is used before macros.  */
+  asm ("" ::: "memory");
 
   foop = TLS_GD (foo);
 
