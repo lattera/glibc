@@ -1,5 +1,9 @@
 2004-01-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/epoll.h: Add EPOLLONESHOT.
+	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: Likewise.
+	Patch by Davide Libenzi.
+
 	* sysdeps/unix/sysv/linux/kernel-features.h: Define
 	__ASSUME_NO_CLONE_DETACHED for 2.6.2+ kernels.
 
