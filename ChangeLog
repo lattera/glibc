@@ -1,3 +1,10 @@
+2000-06-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/big5hkscs.c: New file.
+	Modified from big5.c by Roger So <rogerso@sis.dhs.org>.
+
+	* iconvdata/gconv-modules: Add entry for new module.
+
 2000-06-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* libc/sysdeps/alpha/fpu/bits/mathinline.h: Add __THROW to all
