@@ -1,20 +1,20 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include "gmp.h"
 #include "gmp-impl.h"
@@ -61,8 +61,8 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	*expt = 0;
       else
 	{
-          /* It is a denormal number, meaning it has no implicit leading
-  	     one bit, and its exponent is in fact the format minimum.  */
+	  /* It is a denormal number, meaning it has no implicit leading
+	     one bit, and its exponent is in fact the format minimum.  */
 	  int cnt;
 
 	  /* One problem with Intel's 80-bit format is that the explicit
@@ -78,11 +78,11 @@ __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 	      if (cnt != 0)
 		{
 #if N == 2
-	          res_ptr[N - 1] = res_ptr[N - 1] << cnt
-			           | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
-	          res_ptr[0] <<= cnt;
+		  res_ptr[N - 1] = res_ptr[N - 1] << cnt
+				   | (res_ptr[0] >> (BITS_PER_MP_LIMB - cnt));
+		  res_ptr[0] <<= cnt;
 #else
-	          res_ptr[N - 1] <<= cnt;
+		  res_ptr[N - 1] <<= cnt;
 #endif
 		}
 	      *expt = LDBL_MIN_EXP - 1 - cnt;

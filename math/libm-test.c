@@ -1316,7 +1316,7 @@ gamma_test (void)
 {
   int save_lib_version = _LIB_VERSION;
   errno = 0;
-  FUNC(gamma) (0);
+  FUNC(gamma) (1);
   if (errno == ENOSYS)
     /* Function not implemented.  */
     return;
@@ -1421,16 +1421,21 @@ lgamma_test (void)
 static void
 ilogb_test (void)
 {
+  int i;
 
   check_int ("ilogb (1) == 0", FUNC(ilogb) (1), 0);
   check_int ("ilogb (e) == 1", FUNC(ilogb) (M_E), 1);
   check_int ("ilogb (1024) == 10", FUNC(ilogb) (1024), 10);
   check_int ("ilogb (-2000) == 10", FUNC(ilogb) (-2000), 10);
 
-  check_int_exc ("ilogb (0) == FP_ILOGB0", FUNC(ilogb) (0.0), FP_ILOGB0,
-		 DIVIDE_BY_ZERO_EXCEPTION|INVALID_EXCEPTION);
-  check_int_exc ("ilogb (NaN) == FP_ILOGBNAN", FUNC(ilogb) (nan_value),
-		 FP_ILOGBNAN, INVALID_EXCEPTION);
+  /* XXX We have a problem here: the standard does not tell us whether
+     exceptions are allowed/required.  ignore them for now.  */
+  i = FUNC (ilogb) (0.0);
+  feclearexcept (FE_ALL_EXCEPT);
+  check_int ("ilogb (0) == FP_ILOGB0", i, FP_ILOGB0);
+  i = FUNC(ilogb) (nan_value);
+  feclearexcept (FE_ALL_EXCEPT);
+  check_int ("ilogb (NaN) == FP_ILOGBNAN", i, FP_ILOGBNAN);
 
 }
 
@@ -1642,9 +1647,6 @@ scalb_test (void)
   check_isinfp ("scalb (+inf, 2) == +inf", FUNC(scalb) (plus_infty, 2));
   check_isinfn ("scalb (-inf, 100) == -inf", FUNC(scalb) (minus_infty, 100));
 
-  check ("scalb (0, -inf) == 0", FUNC(scalb) (0.0, minus_infty), 0.0);
-  check ("scalb (-0, -inf) == -0", FUNC(scalb) (minus_zero, minus_infty),
-	 minus_zero);
   x = random_greater (0.0);
   check ("scalb (x, -inf) == 0", FUNC(scalb) (x, minus_infty), 0.0);
   check ("scalb (-x, -inf) == -0", FUNC(scalb) (-x, minus_infty), minus_zero);

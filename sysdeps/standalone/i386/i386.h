@@ -1,29 +1,28 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
    Contributed by Joel Sherrill (jsherril@redstone-emh2.army.mil),
      On-Line Applications Research Corporation.
- 
-This file is part of the GNU C Library.
- 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
- 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
- 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /*  i386.h
  *
- *  This file contains macros which are used to access i80386 
+ *  This file contains macros which are used to access i80386
  *  registers which are not addressable by C.  This file contains
- *  functions which are useful to those developing target 
+ *  functions which are useful to those developing target
  *  specific support routines.
  */
 
@@ -37,16 +36,16 @@ typedef unsigned int    unsigned32;
 #define disable_intr( isrlevel ) \
   { (isrlevel) = 0; \
     asm volatile ( "pushf ; \
-                    pop  %0 ; \
-                    cli   " \
-                    : "=r" ((isrlevel)) : "0" ((isrlevel)) ); \
+		    pop  %0 ; \
+		    cli   " \
+		    : "=r" ((isrlevel)) : "0" ((isrlevel)) ); \
   }
 
 
 #define enable_intr( isrlevel ) \
   { asm volatile ( "push %0 ; \
-                    popf " \
-                    : "=r" ((isrlevel)) : "0" ((isrlevel)) ); \
+		    popf " \
+		    : "=r" ((isrlevel)) : "0" ((isrlevel)) ); \
   }
 
 #define delay( _microseconds ) \
@@ -56,10 +55,10 @@ typedef unsigned int    unsigned32;
     _counter = (_microseconds); \
     \
     asm volatile ( "0: nop;" \
-                   " mov %0,%0 ;" \
-                   " loop 0" : "=c" (_counter) \
-                                      : "0"  (_counter) \
-                 ); \
+		   " mov %0,%0 ;" \
+		   " loop 0" : "=c" (_counter) \
+				      : "0"  (_counter) \
+		 ); \
     \
   }
 
@@ -69,7 +68,7 @@ static inline unsigned16 get_cs()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%cs,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%cs,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -78,7 +77,7 @@ static inline unsigned16 get_ds()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%ds,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%ds,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -87,7 +86,7 @@ static inline unsigned16 get_es()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%es,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%es,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -96,7 +95,7 @@ static inline unsigned16 get_ss()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%ss,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%ss,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -105,7 +104,7 @@ static inline unsigned16 get_fs()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%fs,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%fs,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -114,7 +113,7 @@ static inline unsigned16 get_gs()
 {
   register unsigned16 segment = 0;
 
-  asm volatile ( "movw %%gs,%0" : "=r" (segment) : "0" (segment) ); 
+  asm volatile ( "movw %%gs,%0" : "=r" (segment) : "0" (segment) );
 
   return segment;
 }
@@ -126,8 +125,8 @@ static inline unsigned16 get_gs()
      register unsigned8  __value = _value; \
      \
      asm volatile ( "outb %0,%1" : "=a" (__value), "=d" (__port) \
-                                 : "0"   (__value), "1"  (__port) \
-                  ); \
+				 : "0"   (__value), "1"  (__port) \
+		  ); \
    }
 
 #define outport_word( _port, _value ) \
@@ -135,8 +134,8 @@ static inline unsigned16 get_gs()
      register unsigned16 __value = _value; \
      \
      asm volatile ( "outw %0,%1" : "=a" (__value), "=d" (__port) \
-                                 : "0"   (__value), "1"  (__port) \
-                  ); \
+				 : "0"   (__value), "1"  (__port) \
+		  ); \
    }
 
 #define outport_long( _port, _value ) \
@@ -144,8 +143,8 @@ static inline unsigned16 get_gs()
      register unsigned32 __value = _value; \
      \
      asm volatile ( "outl %0,%1" : "=a" (__value), "=d" (__port) \
-                                 : "0"   (__value), "1"  (__port) \
-                  ); \
+				 : "0"   (__value), "1"  (__port) \
+		  ); \
    }
 
 #define inport_byte( _port, _value ) \
@@ -153,8 +152,8 @@ static inline unsigned16 get_gs()
      register unsigned8  __value = 0; \
      \
      asm volatile ( "inb %1,%0" : "=a" (__value), "=d" (__port) \
-                                : "0"   (__value), "1"  (__port) \
-                  ); \
+				: "0"   (__value), "1"  (__port) \
+		  ); \
      _value = __value; \
    }
 
@@ -163,8 +162,8 @@ static inline unsigned16 get_gs()
      register unsigned16 __value = 0; \
      \
      asm volatile ( "inw %1,%0" : "=a" (__value), "=d" (__port) \
-                                : "0"   (__value), "1"  (__port) \
-                  ); \
+				: "0"   (__value), "1"  (__port) \
+		  ); \
      _value = __value; \
    }
 
@@ -173,8 +172,8 @@ static inline unsigned16 get_gs()
      register unsigned32 __value = 0; \
      \
      asm volatile ( "inl %1,%0" : "=a" (__value), "=d" (__port) \
-                                : "0"   (__value), "1"  (__port) \
-                  ); \
+				: "0"   (__value), "1"  (__port) \
+		  ); \
      _value = __value; \
    }
 
@@ -191,7 +190,7 @@ struct GDT_slot {
   unsigned8  base_24_31;
 };
 
-/* See Chapter 9 - Exceptions and Interrupts in i386 manual 
+/* See Chapter 9 - Exceptions and Interrupts in i386 manual
  *
  *  NOTE: This is the IDT entry for interrupt gates ONLY.
  */
@@ -249,12 +248,12 @@ void *Physical_to_logical(
     register unsigned32  _temporary = 0; \
     \
     asm volatile( "movl %%gs:(%0),%1 ; \
-                   movl %1,(%2) ; \
-                   movl %%gs:4(%0),%1 ; \
-                   movl %1,4(%2)"  \
-                     : "=r" (_gdt_slot), "=r" (_temporary), "=r" (_slot) \
-                     : "0"  (_gdt_slot), "1"  (_temporary), "2"  (_slot) \
-                );  \
+		   movl %1,(%2) ; \
+		   movl %%gs:4(%0),%1 ; \
+		   movl %1,4(%2)"  \
+		     : "=r" (_gdt_slot), "=r" (_temporary), "=r" (_slot) \
+		     : "0"  (_gdt_slot), "1"  (_temporary), "2"  (_slot) \
+		);  \
   }
 
 #define set_GDT_slot( _gdtr_base, _segment, _slot_address ) \
@@ -264,63 +263,63 @@ void *Physical_to_logical(
     register unsigned32  _temporary = 0; \
     \
     asm volatile( "movl (%2),%1 ; \
-                   movl %1,%%gs:(%0) ; \
-                   movl 4(%2),%1 ; \
-                   movl %1,%%gs:4(%0) \
-                  " \
-                     : "=r" (_gdt_slot), "=r" (_temporary), "=r" (_slot) \
-                     : "0"  (_gdt_slot), "1"  (_temporary), "2"  (_slot) \
-                );  \
+		   movl %1,%%gs:(%0) ; \
+		   movl 4(%2),%1 ; \
+		   movl %1,%%gs:4(%0) \
+		  " \
+		     : "=r" (_gdt_slot), "=r" (_temporary), "=r" (_slot) \
+		     : "0"  (_gdt_slot), "1"  (_temporary), "2"  (_slot) \
+		);  \
   }
 
-static inline void set_segment( 
-  unsigned16 segment, 
+static inline void set_segment(
+  unsigned16 segment,
   unsigned32 base,
-  unsigned32 limit 
-) 
-{ 
-  struct DTR_load_save_format  gdtr; 
+  unsigned32 limit
+)
+{
+  struct DTR_load_save_format  gdtr;
   volatile struct GDT_slot     Gdt_slot;
   volatile struct GDT_slot    *gdt_slot = &Gdt_slot;
   unsigned16             tmp_segment = 0;
   unsigned32             limit_adjusted;
- 
-  
+
+
   /* load physical address of the GDT */
 
   get_GDTR( &gdtr );
- 
+
   gdt_slot->type_dt_dpl_p  = 0x92;             /* present, dpl=0,      */
-                                               /* application=1,       */
-                                               /* type=data read/write */
+					       /* application=1,       */
+					       /* type=data read/write */
   gdt_slot->limit_16_19_granularity = 0x40;    /* 32 bit segment       */
 
   limit_adjusted = limit;
   if ( limit > 4095 ) {
     gdt_slot->limit_16_19_granularity |= 0x80; /* set granularity bit */
     limit_adjusted /= 4096;
-  } 
- 
+  }
+
   gdt_slot->limit_16_19_granularity |= (limit_adjusted >> 16) & 0xff;
   gdt_slot->limit_0_15               = limit_adjusted & 0xffff;
- 
+
   gdt_slot->base_0_15  = base & 0xffff;
   gdt_slot->base_16_23 = (base >> 16) & 0xff;
   gdt_slot->base_24_31 = (base >> 24);
- 
+
   set_GDT_slot( gdtr.physical_address, segment, gdt_slot );
 
   /* Now, reload all segment registers so the limit takes effect. */
 
   asm volatile( "movw %%ds,%0 ; movw %0,%%ds
-                 movw %%es,%0 ; movw %0,%%es
-                 movw %%fs,%0 ; movw %0,%%fs
-                 movw %%gs,%0 ; movw %0,%%gs
-                 movw %%ss,%0 ; movw %0,%%ss"
-                   : "=r" (tmp_segment) 
-                   : "0"  (tmp_segment)
-              );
-                 
+		 movw %%es,%0 ; movw %0,%%es
+		 movw %%fs,%0 ; movw %0,%%fs
+		 movw %%gs,%0 ; movw %0,%%gs
+		 movw %%ss,%0 ; movw %0,%%ss"
+		   : "=r" (tmp_segment)
+		   : "0"  (tmp_segment)
+	      );
+
 }
 
 #endif

@@ -43,7 +43,8 @@ extern struct in_addr inet_makeaddr __P ((u_int32_t __net, u_int32_t __host));
 
 /* Format a network number NET into presentation format and place result
    in buffer starting at BUF with length of LEN bytes.  */
-extern char *inet_neta __P ((u_long __net, char *__buf, size_t __len));
+extern char *inet_neta __P ((unsigned long int __net, char *__buf,
+			     size_t __len));
 
 /* Return network number part of the Internet address IN.  */
 extern u_int32_t inet_netof __P ((struct in_addr __in));
@@ -55,8 +56,8 @@ extern u_int32_t inet_network __P ((__const char *__cp));
 /* Convert network number for interface type AF in buffer starting at
    CP to presentation format.  The result will specifiy BITS bits of
    the number.  */
-extern char *inet_net_ntop __P((int __af, __const void *__cp, int __bits,
-				char *__buf, size_t __len));
+extern char *inet_net_ntop __P ((int __af, __const void *__cp, int __bits,
+				 char *__buf, size_t __len));
 
 /* Convert network number for interface type AF from presentation in
    buffer starting at CP to network format and store result int

@@ -42,9 +42,13 @@ static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
 	if (__isnanf(x)||__isnanf(fn)) return x*fn;
 	if (!__finitef(fn)) {
 	    if(fn>(float)0.0) return x*fn;
+	    else if (x == 0)
+	      return x;
+	    else if (!__finitef (x))
+	      return __nanf ("");
 	    else       return x/(-fn);
 	}
-	if (__rintf(fn)!=fn) return (fn-fn)/(fn-fn);
+	if (__rintf(fn)!=fn) return __nanf ("");
 	if ( fn > (float)65000.0) return __scalbnf(x, 65000);
 	if (-fn > (float)65000.0) return __scalbnf(x,-65000);
 	return __scalbnf(x,(int)fn);

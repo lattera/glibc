@@ -45,9 +45,13 @@ static char rcsid[] = "$NetBSD: e_scalb.c,v 1.6 1995/05/10 20:46:09 jtc Exp $";
 	if (__isnan(x)||__isnan(fn)) return x*fn;
 	if (!__finite(fn)) {
 	    if(fn>0.0) return x*fn;
+	    else if (x == 0)
+	      return x;
+	    else if (!__finite (x))
+	      return __nan ("");
 	    else       return x/(-fn);
 	}
-	if (__rint(fn)!=fn) return (fn-fn)/(fn-fn);
+	if (__rint(fn)!=fn) return __nan ("");
 	if ( fn > 65000.0) return __scalbn(x, 65000);
 	if (-fn > 65000.0) return __scalbn(x,-65000);
 	return __scalbn(x,(int)fn);

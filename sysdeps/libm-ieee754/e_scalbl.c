@@ -49,9 +49,13 @@ static char rcsid[] = "$NetBSD: $";
 	if (__isnanl(x)||__isnanl(fn)) return x*fn;
 	if (!__finitel(fn)) {
 	    if(fn>0.0) return x*fn;
+	    else if (x == 0)
+	      return x;
+	    else if (!__finitel (x))
+	      return __nanl ("");
 	    else       return x/(-fn);
 	}
-	if (__rintl(fn)!=fn) return (fn-fn)/(fn-fn);
+	if (__rintl(fn)!=fn) return __nanl ("");
 	if ( fn > 65000.0) return __scalbnl(x, 65000);
 	if (-fn > 65000.0) return __scalbnl(x,-65000);
 	return __scalbnl(x,(int)fn);

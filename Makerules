@@ -426,7 +426,7 @@ endif
 
 +depfiles := $(strip $(sources:.c=.d) \
 		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.so=.o))) \
-		     $(addsuffix .d,$(others) $(tests)))
+		     $(addsuffix .d,$(others) $(tests) $(test-srcs)))
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
 				      $(+depfiles)))
@@ -930,7 +930,7 @@ rm -f $@.new
 echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
-	      others tests extra-libs $(extra-libs:%=%-routines) \
+	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
 	      versioned \
 	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'

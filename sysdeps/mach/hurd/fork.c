@@ -1,20 +1,20 @@
-/* Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
 #include <unistd.h>
@@ -124,8 +124,8 @@ __fork (void)
 	 so nothing changes.  */
       err = __proc_dostop (_hurd_ports[INIT_PORT_PROC].port, ss->thread);
       if (!err)
-        {
-          stopped = 1;
+	{
+	  stopped = 1;
 
 #define XXX_KERNEL_PAGE_FAULT_BUG /* XXX work around page fault bug in mk */
 
@@ -148,7 +148,7 @@ __fork (void)
 #endif
 	  /* Create the child task.  It will inherit a copy of our memory.  */
 	  err = __task_create (__mach_task_self (), 1, &newtask);
-        }
+	}
 
       /* Unlock the global signal state lock, so we do not
 	 block the signal thread any longer than necessary.  */
@@ -318,9 +318,9 @@ __fork (void)
 		  insert = MACH_PORT_NULL;
 		  record_refs = &thread_refs;
 		  /* Allocate a dead name right for this name as a
-                     placeholder, so the kernel will not chose this name
-                     for any other new port (it might use it for one of the
-                     rights created when a thread is created).  */
+		     placeholder, so the kernel will not chose this name
+		     for any other new port (it might use it for one of the
+		     rights created when a thread is created).  */
 		  if (err = __mach_port_allocate_name
 		      (newtask, MACH_PORT_RIGHT_DEAD_NAME, portnames[i]))
 		    LOSE;
@@ -421,7 +421,7 @@ __fork (void)
       ports_locked = 0;
 
       /* All state has now been copied from the parent.  It is safe to
-         resume other parent threads.  */
+	 resume other parent threads.  */
       resume_threads ();
 
       /* Create the child main user thread and signal thread.  */
@@ -430,9 +430,9 @@ __fork (void)
 	LOSE;
 
       /* Insert send rights for those threads.  We previously allocated
-         dead name rights with the names we want to give the thread ports
-         in the child as placeholders.  Now deallocate them so we can use
-         the names.  */
+	 dead name rights with the names we want to give the thread ports
+	 in the child as placeholders.  Now deallocate them so we can use
+	 the names.  */
       if ((err = __mach_port_deallocate (newtask, ss->thread)) ||
 	  (err = __mach_port_insert_right (newtask, ss->thread,
 					   thread, MACH_MSG_TYPE_COPY_SEND)))
@@ -570,8 +570,8 @@ __fork (void)
       struct hurd_sigstate *oldstates;
 
       /* We are the child task.  Unlock the standard port cells, which were
-         locked in the parent when we copied its memory.  The parent has
-         inserted send rights with the names that were in the cells then.  */
+	 locked in the parent when we copied its memory.  The parent has
+	 inserted send rights with the names that were in the cells then.  */
       for (i = 0; i < _hurd_nports; ++i)
 	__spin_unlock (&_hurd_ports[i].lock);
 

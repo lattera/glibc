@@ -1,21 +1,21 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
+   Copyright (C) 1991, 92, 93, 94, 96, 97 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-Copyright (C) 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-This file is free software; you can redistribute it and/or modify
-it under the terms of the GNU Library General Public License as published by
-the Free Software Foundation; either version 2 of the License, or (at your
-option) any later version.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-This file is distributed in the hope that it will be useful, but
-WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Library General Public
-License for more details.
-
-You should have received a copy of the GNU Library General Public License
-along with this file; see the file COPYING.LIB.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
-MA 02111-1307, USA. */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* You have to define the following before including this file:
 
@@ -585,7 +585,7 @@ extern USItype __udiv_qrnnd ();
 	addx%.l	%2,%0
 	| End inlined umul_ppmm"					\
 	      : "=&d" ((USItype)(xh)), "=&d" ((USItype)(xl)),		\
-	        "=d" (__umul_tmp1), "=&d" (__umul_tmp2)			\
+		"=d" (__umul_tmp1), "=&d" (__umul_tmp2)			\
 	      : "%2" ((USItype)(a)), "d" ((USItype)(b)));		\
   } while (0)
 #define UMUL_TIME 100

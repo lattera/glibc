@@ -31,7 +31,7 @@
 float_type
 __CONCATX(__,FUNC) (x, exp)
      float_type x;
-     int exp;
+     long int exp;
 {
   return __m81_u(__CONCATX(__,FUNC))(x, exp);
 }

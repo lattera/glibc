@@ -46,6 +46,7 @@
 	 mant = 0x8000000000000ULL;					      \
        u.ieee.mantissa0 = ((mant) >> 32) & 0xfffff;			      \
        u.ieee.mantissa1 = (mant) & 0xffffffff;				      \
+       (flt) = u.d;							      \
   } while (0)
 #endif
 /* End of configuration part.  */
@@ -504,11 +505,9 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
     {
       int matched = 0;
       /* Check for `INF' or `INFINITY'.  */
-      if (TOLOWER (c) == L_('i') && ((STRNCASECMP (cp, L_("nf"), 2) == 0
-				      && (matched = 2))
-				     || (STRNCASECMP (cp, L_("nfinity"), 7)
-					 == 0
-					 && (matched = 7))))
+      if (TOLOWER (c) == L_('i')
+	  && ((STRNCASECMP (cp, L_("inf"), 3) == 0 && (matched = 3))
+	      || (STRNCASECMP (cp, L_("infinity"), 8) == 0 && (matched = 8))))
 	{
 	  /* Return +/- inifity.  */
 	  if (endptr != NULL)
@@ -517,46 +516,44 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 	  return negative ? -FLOAT_HUGE_VAL : FLOAT_HUGE_VAL;
 	}
 
-      if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("an"), 2) == 0)
+      if (TOLOWER (c) == L_('n') && STRNCASECMP (cp, L_("nan"), 3) == 0)
 	{
+	  /* Return NaN.  */
 	  FLOAT retval = NAN;
 
-	  /* Return NaN.  */
-	  if (endptr != NULL)
-	    {
-	      cp += 2;
+	  cp += 3;
 
-	      /* Match `(n-char-sequence-digit)'.  */
-	      if (*cp == L_('('))
-		{
-		  const STRING_TYPE *startp = cp;
-		  do
-		    ++cp;
-		  while ((*cp >= '0' && *cp <= '9')
-			 || (TOLOWER (*cp) >= 'a' && TOLOWER (*cp) <= 'z')
+	  /* Match `(n-char-sequence-digit)'.  */
+	  if (*cp == L_('('))
+	    {
+	      const STRING_TYPE *startp = cp;
+	      do
+		++cp;
+	      while ((*cp >= L_('0') && *cp <= L_('9'))
+		     || (TOLOWER (*cp) >= L_('a') && TOLOWER (*cp) <= L_('z'))
 		     || *cp == L_('_'));
 
-		  if (*cp != L_(')'))
-		    /* The closing brace is missing.  Only match the NAN
-		       part.  */
-		    cp = startp;
-		  else
-		    {
-		      /* This is a system-dependent way to specify the
-			 bitmask used for the NaN.  We expect it to be
-			 a number which is put in the mantissa of the
-			 number.  */
-		      STRING_TYPE *endp;
-		      unsigned long long int mant;
+	      if (*cp != L_(')'))
+		/* The closing brace is missing.  Only match the NAN
+		   part.  */
+		cp = startp;
+	      else
+		{
+		  /* This is a system-dependent way to specify the
+		     bitmask used for the NaN.  We expect it to be
+		     a number which is put in the mantissa of the
+		     number.  */
+		  STRING_TYPE *endp;
+		  unsigned long long int mant;
 
-		      mant = STRTOULL (startp, &endp, 0);
-		      if (endp == cp)
-			SET_MANTISSA (retval, mant);
-		    }
+		  mant = STRTOULL (startp + 1, &endp, 0);
+		  if (endp == cp)
+		    SET_MANTISSA (retval, mant);
 		}
-
-	      *endptr = (STRING_TYPE *) cp;
 	    }
+
+	  if (endptr != NULL)
+	    *endptr = (STRING_TYPE *) cp;
 
 	  return retval;
 	}

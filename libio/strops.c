@@ -193,7 +193,7 @@ _IO_ssize_t
 DEFUN(_IO_str_count, (fp),
       register _IO_FILE *fp)
 {
-  return (fp->_IO_write_ptr > fp->_IO_read_end ? fp->_IO_write_ptr
+  return (fp->_IO_write_end > fp->_IO_read_end ? fp->_IO_write_end
 	  : fp->_IO_read_end)
     - fp->_IO_read_base;
 }

@@ -34,7 +34,7 @@ __BEGIN_DECLS
 
 /* Get machine-dependent NAN value (returned for some domain errors).  */
 #ifdef	 __USE_GNU
-#include <bits/nan.h>
+# include <bits/nan.h>
 #endif
 
 
@@ -69,13 +69,13 @@ __BEGIN_DECLS
    instead of `double' and appending f to each function name.  */
 
 #ifndef _Mfloat_
-#define _Mfloat_		float
+# define _Mfloat_		float
 #endif
 #define _Mdouble_ 		_Mfloat_
 #ifdef __STDC__
-#define __MATH_PRECNAME(name,r)	name##f##r
+# define __MATH_PRECNAME(name,r) name##f##r
 #else
-#define __MATH_PRECNAME(name,r) name/**/f/**/r
+# define __MATH_PRECNAME(name,r) name/**/f/**/r
 #endif
 #include <bits/mathcalls.h>
 #undef	_Mdouble_
@@ -85,18 +85,18 @@ __BEGIN_DECLS
 /* Include the file of declarations again, this time using `long double'
    instead of `double' and appending l to each function name.  */
 
-#ifndef _Mlong_double_
-#define _Mlong_double_		long double
-#endif
-#define _Mdouble_ 		_Mlong_double_
-#ifdef __STDC__
-#define __MATH_PRECNAME(name,r)	name##l##r
-#else
-#define __MATH_PRECNAME(name,r) name/**/l/**/r
-#endif
-#include <bits/mathcalls.h>
-#undef	_Mdouble_
-#undef	__MATH_PRECNAME
+# ifndef _Mlong_double_
+#  define _Mlong_double_	long double
+# endif
+# define _Mdouble_ 		_Mlong_double_
+# ifdef __STDC__
+#  define __MATH_PRECNAME(name,r) name##l##r
+# else
+#  define __MATH_PRECNAME(name,r) name/**/l/**/r
+# endif
+# include <bits/mathcalls.h>
+# undef	_Mdouble_
+# undef	__MATH_PRECNAME
 
 #endif /* __STDC__ || __GNUC__ */
 
@@ -132,50 +132,50 @@ extern int signgam;
 
      INFINITY	representation of the infinity value of type `float_t'
 */
-#include <bits/mathdef.h>
+# include <bits/mathdef.h>
 
 /* All floating-point numbers can be put in one of these categories.  */
 enum
   {
     FP_NAN,
-#define FP_NAN FP_NAN
+# define FP_NAN FP_NAN
     FP_INFINITE,
-#define FP_INFINITE FP_INFINITE
+# define FP_INFINITE FP_INFINITE
     FP_ZERO,
-#define FP_ZERO FP_ZERO
+# define FP_ZERO FP_ZERO
     FP_SUBNORMAL,
-#define FP_SUBNORMAL FP_SUBNORMAL
+# define FP_SUBNORMAL FP_SUBNORMAL
     FP_NORMAL
-#define FP_NORMAL FP_NORMAL
+# define FP_NORMAL FP_NORMAL
   };
 
 /* Return number of classification appropriate for X.  */
-#define fpclassify(x) \
+# define fpclassify(x) \
      (sizeof (x) == sizeof (float) ?					      \
         __fpclassifyf (x)						      \
       : sizeof (x) == sizeof (double) ?					      \
         __fpclassify (x) : __fpclassifyl (x))
 
 /* Return nonzero value if sign of X is negative.  */
-#define signbit(x) \
+# define signbit(x) \
      (sizeof (x) == sizeof (float) ?					      \
         __signbitf (x)							      \
       : sizeof (x) == sizeof (double) ?					      \
         __signbit (x) : __signbitl (x))
 
 /* Return nonzero value if X is not +-Inf or NaN.  */
-#define isfinite(x) \
+# define isfinite(x) \
      (sizeof (x) == sizeof (float) ?					      \
         __finitef (x)							      \
       : sizeof (x) == sizeof (double) ?					      \
         __finite (x) : __finitel (x))
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
-#define isnormal(x) (fpclassify (x) == FP_NORMAL)
+# define isnormal(x) (fpclassify (x) == FP_NORMAL)
 
 /* Return nonzero value if X is a NaN.  We could use `fpclassify' but
    we already have this functions `__isnan' and it is faster.  */
-#define isnan(x) \
+# define isnan(x) \
      (sizeof (x) == sizeof (float) ?					      \
         __isnanf (x)							      \
       : sizeof (x) == sizeof (double) ?					      \
@@ -198,23 +198,23 @@ extern long long int llround __P ((long double __x));
 /* Comparison macros.  */
 
 /* Return nonzero value if X is greater than Y.  */
-#define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
+# define isgreater(x, y) (!isunordered ((x), (y)) && (x) > (y))
 
 /* Return nonzero value if X is greater than or equal to Y.  */
-#define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
+# define isgreaterequal(x, y) (!isunordered ((x), (y)) && (x) >= (y))
 
 /* Return nonzero value if X is less than Y.  */
-#define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
+# define isless(x, y) (!isunordered ((x), (y)) && (x) < (y))
 
 /* Return nonzero value if X is less than or equal to Y.  */
-#define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
+# define islessequal(x, y) (!isunordered ((x), (y)) && (x) <= (y))
 
 /* Return nonzero value if either X is less than Y or Y is less than X.  */
-#define islessgreater(x, y) \
+# define islessgreater(x, y) \
      (!isunordered ((x), (y)) && ((x) < (y) || (y) < (x)))
 
 /* Return nonzero value if arguments are unordered.  */
-#define isunordered(x, y) \
+# define isunordered(x, y) \
      (fpclassify (x) == FP_NAN || fpclassify (y) == FP_NAN)
 
 #endif /* Use ISO C 9X.  */
@@ -237,11 +237,11 @@ extern _LIB_VERSION_TYPE _LIB_VERSION;
 
    We have a problem when using C++ since `exception' is reserved in
    C++.  */
-#ifdef __cplusplus
+# ifdef __cplusplus
 struct __exception
-#else
+# else
 struct exception
-#endif
+# endif
   {
     int type;
     char *name;
@@ -250,35 +250,35 @@ struct exception
     double retval;
   };
 
-#ifdef __cplusplus
-extern int __matherr __P ((struct __exception *));
-extern int matherr __P ((struct __exception *));
-#else
-extern int __matherr __P ((struct exception *));
-extern int matherr __P ((struct exception *));
-#endif
+# ifdef __cplusplus
+extern int __matherr __P ((struct __exception *__exc));
+extern int matherr __P ((struct __exception *__exc));
+# else
+extern int __matherr __P ((struct exception *__exc));
+extern int matherr __P ((struct exception *__exc));
+# endif
 
-#define X_TLOSS		1.41484755040568800000e+16
+# define X_TLOSS	1.41484755040568800000e+16
 
 /* Types of exceptions in the `type' field.  */
-#define	DOMAIN		1
-#define	SING		2
-#define	OVERFLOW	3
-#define	UNDERFLOW	4
-#define	TLOSS		5
-#define	PLOSS		6
+# define DOMAIN		1
+# define SING		2
+# define OVERFLOW	3
+# define UNDERFLOW	4
+# define TLOSS		5
+# define PLOSS		6
 
 /* SVID mode specifies returning this large value instead of infinity.  */
-#define HUGE		FLT_MAX
-#include <float.h>		/* Defines FLT_MAX.  */
+# define HUGE		FLT_MAX
+# include <float.h>		/* Defines FLT_MAX.  */
 
 #else	/* !SVID */
 
-#ifdef __USE_XOPEN
+# ifdef __USE_XOPEN
 /* X/Open wants another strange constant.  */
-#define MAXFLOAT	FLT_MAX
-#include <float.h>
-#endif
+#  define MAXFLOAT	FLT_MAX
+#  include <float.h>
+# endif
 
 #endif	/* SVID */
 
@@ -286,19 +286,19 @@ extern int matherr __P ((struct exception *));
 #ifdef __USE_BSD
 
 /* Some useful constants.  */
-#define	M_E		_Mldbl(2.7182818284590452354)	/* e */
-#define	M_LOG2E		_Mldbl(1.4426950408889634074)	/* log 2e */
-#define	M_LOG10E	_Mldbl(0.43429448190325182765)	/* log 10e */
-#define	M_LN2		_Mldbl(0.69314718055994530942)	/* log e2 */
-#define	M_LN10		_Mldbl(2.30258509299404568402)	/* log e10 */
-#define	M_PI		_Mldbl(3.14159265358979323846)	/* pi */
-#define	M_PI_2		_Mldbl(1.57079632679489661923)	/* pi/2 */
-#define	M_PI_4		_Mldbl(0.78539816339744830962)	/* pi/4 */
-#define	M_1_PI		_Mldbl(0.31830988618379067154)	/* 1/pi */
-#define	M_2_PI		_Mldbl(0.63661977236758134308)	/* 2/pi */
-#define	M_2_SQRTPI	_Mldbl(1.12837916709551257390)	/* 2/sqrt(pi) */
-#define	M_SQRT2		_Mldbl(1.41421356237309504880)	/* sqrt(2) */
-#define	M_SQRT1_2	_Mldbl(0.70710678118654752440)	/* 1/sqrt(2) */
+# define M_E		_Mldbl(2.7182818284590452354)	/* e */
+# define M_LOG2E	_Mldbl(1.4426950408889634074)	/* log 2e */
+# define M_LOG10E	_Mldbl(0.43429448190325182765)	/* log 10e */
+# define M_LN2		_Mldbl(0.69314718055994530942)	/* log e2 */
+# define M_LN10		_Mldbl(2.30258509299404568402)	/* log e10 */
+# define M_PI		_Mldbl(3.14159265358979323846)	/* pi */
+# define M_PI_2		_Mldbl(1.57079632679489661923)	/* pi/2 */
+# define M_PI_4		_Mldbl(0.78539816339744830962)	/* pi/4 */
+# define M_1_PI		_Mldbl(0.31830988618379067154)	/* 1/pi */
+# define M_2_PI		_Mldbl(0.63661977236758134308)	/* 2/pi */
+# define M_2_SQRTPI	_Mldbl(1.12837916709551257390)	/* 2/sqrt(pi) */
+# define M_SQRT2	_Mldbl(1.41421356237309504880)	/* sqrt(2) */
+# define M_SQRT1_2	_Mldbl(0.70710678118654752440)	/* 1/sqrt(2) */
 
 #endif
 
@@ -306,19 +306,24 @@ extern int matherr __P ((struct exception *));
    Use `long double' constants in standard and GNU C, where they are
    supported and the cast to `double'.
 
-   Please not we define the macro even if the constants are not defined.
+   If the constants are use in code which does not use prototypes, one
+   might get problems if a function takes a `double' argument and any
+   of the constants are provided as the argument.  In this case, cast
+   the argument to `double'.
+
+   Please note we define the macro even if the constants are not defined.
    This helps us to use the macros in other places.  */
 #if __STDC__ - 0 || __GNUC__ - 0
-#define _Mldbl(x) x##L
+# define _Mldbl(x) x##L
 #else	/* Traditional C.  */
-#define _Mldbl(x) x
+# define _Mldbl(x) x
 #endif	/* Standard or GNU C.  */
 
 
 /* Get machine-dependent inline versions (if there are any).  */
 #if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
     || defined __LIBC_M81_MATH_INLINES
-#include <bits/mathinline.h>
+# include <bits/mathinline.h>
 #endif
 
 

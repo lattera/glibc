@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+# Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,8 @@
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
 
-ifeq (,$(filter-out $(sysdep_dir)/stub/ $(common-objpfx),\
-	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bytesex.h))))))
+ifeq (,$(filter-out $(sysdep_dir)/stub/bits $(common-objpfx)/bits,\
+	$(dir $(firstword $(wildcard $(+sysdep_dirs:%=%/bits/endian.h))))))
 
 $(common-objpfx)bytesex.h: $(common-objpfx)det_endian
 	$(dir $<)$(notdir $<) > $@-tmp
@@ -26,8 +26,8 @@ $(common-objpfx)bytesex.h: $(common-objpfx)det_endian
 $(common-objpfx)det_endian: $(sysdep_dir)/generic/det_endian.c
 	$(common-objdir-compile)
 
-before-compile := $(before-compile) $(common-objpfx)bytesex.h
-common-generated := $(common-generated) bytesex.h det_endian
+before-compile := $(before-compile) $(common-objpfx)bits/endian.h
+common-generated := $(common-generated) bits/endian.h det_endian
 
 endif
 

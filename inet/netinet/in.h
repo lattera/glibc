@@ -1,15 +1,15 @@
 /* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
-   The GNU C Library is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
@@ -227,28 +227,28 @@ extern u_int16_t htons __P ((u_int16_t __hostshort));
 #endif
 
 #define IN6_IS_ADDR_UNSPECIFIED(a) \
-        ((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
-         (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == 0))
+	((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
+	 (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == 0))
 
 #define IN6_IS_ADDR_LOOPBACK(a) \
-        ((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
-         (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == htonl (1)))
+	((((u_int32_t *) (a))[0] == 0) && ((u_int32_t *) (a))[1] == 0) && \
+	 (((u_int32_t *) (a))[2] == 0) && ((u_int32_t *) (a))[3] == htonl (1)))
 
 #define IN6_IS_ADDR_MULTICAST(a) (((u_int8_t *) (a))[0] == 0xff)
 
 #define IN6_IS_ADDR_LINKLOCAL(a) \
-        ((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
+	((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfe800000))
 
 #define IN6_IS_ADDR_SITELOCAL(a) \
-        ((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
+	((((u_int32_t *) (a))[0] & htonl (0xffc00000)) == htonl (0xfec00000))
 
 #define IN6_IS_ADDR_V4MAPPED(a) \
-        ((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
-         (((u_int32_t *) (a))[2] == htonl (0xffff)))
+	((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
+	 (((u_int32_t *) (a))[2] == htonl (0xffff)))
 
 #define IN6_IS_ADDR_V4COMPAT(a) \
-        ((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
-         (((u_int32_t *) (a))[2] == 0) && (ntohl (((u_int32_t *) (a))[3]) > 1))
+	((((u_int32_t *) (a))[0] == 0) && (((u_int32_t *) (a))[1] == 0) && \
+	 (((u_int32_t *) (a))[2] == 0) && (ntohl (((u_int32_t *) (a))[3]) > 1))
 
 
 /* Bind socket to a privileged IP port.  */

@@ -1,21 +1,21 @@
 /* Machine-dependent signal context structure for GNU Hurd.  i386 version.
-Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1991, 1992, 1994, 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 /* Signal handlers are actually called:
    void handler (int sig, int code, struct sigcontext *scp);  */
@@ -42,8 +42,8 @@ struct sigcontext
     /* All following members are machine-dependent.  The rest of this
        structure is written to be laid out identically to:
        {
-         struct i386_thread_state basic;
-         struct i386_float_state fpu;
+	 struct i386_thread_state basic;
+	 struct i386_float_state fpu;
        }
        trampoline.c knows this, so it must be changed if this changes.  */
 
@@ -53,7 +53,7 @@ struct sigcontext
     int sc_fs;
     int sc_es;
     int sc_ds;
-  
+
     /* "General" registers.  These members are in the order that the i386
        `pusha' and `popa' instructions use (`popa' ignores %esp).  */
     int sc_edi;
@@ -64,10 +64,10 @@ struct sigcontext
     int sc_edx;
     int sc_ecx;
     int sc_eax;
-  
+
     int sc_eip;			/* Instruction pointer.  */
     int sc_cs;			/* Code segment register.  */
-  
+
     int sc_efl;			/* Processor flags.  */
 
     int sc_uesp;		/* This stack pointer is used.  */

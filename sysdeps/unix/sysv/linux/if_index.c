@@ -1,20 +1,20 @@
 /* Copyright (C) 1997 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <string.h>
 #include <stdio.h>
@@ -25,8 +25,8 @@ Cambridge, MA 02139, USA.  */
 
 /* /proc/net/if_inet6 contains lines that look like this:
  *
- * fe8000000000000000000000836fc168 0b 00 20 80     sit7 
- *                        
+ * fe8000000000000000000000836fc168 0b 00 20 80     sit7
+ *
  *                               |   |  |  |  |      |
  *                     address --'   |  |  |  |      |
  *                     index --------'  |  |  |      |
@@ -67,7 +67,7 @@ unsigned int if_nametoindex(const char *ifname)
       fclose(fd);
       return this_index;
     }
-  } 
+  }
   fclose(fd);
   return 0;
 }
@@ -82,7 +82,7 @@ char *if_indextoname(unsigned int ifindex, char *ifname)
       fclose(fd);
       return ifname;
     }
-  } 
+  }
   fclose(fd);
   return NULL;
 }
@@ -90,7 +90,7 @@ char *if_indextoname(unsigned int ifindex, char *ifname)
 void if_freenameindex(struct if_nameindex *ifn)
 {
   struct if_nameindex *ptr = ifn;
-  while (ptr->if_name || ptr->if_index) 
+  while (ptr->if_name || ptr->if_index)
     {
       if (ptr->if_name)
 	free(ptr->if_name);
@@ -105,15 +105,15 @@ struct if_nameindex *if_nameindex(void)
   struct if_nameindex *ifn = NULL;
   int nifs = 0;
   if (!fd) return NULL;
-  do 
+  do
     {
       struct if_nameindex *newifn;
       nifs++;
       newifn = realloc(ifn, nifs*sizeof(struct if_nameindex));
-      if (!newifn) 
+      if (!newifn)
 	{
 	  /* We ran out of memory. */
-	  if (--nifs) 
+	  if (--nifs)
 	    {
 	      free(ifn[nifs-1].if_name);
 	      ifn[nifs-1].if_name = 0;
@@ -125,13 +125,13 @@ struct if_nameindex *if_nameindex(void)
       ifn = newifn;
       ifn[nifs-1].if_index = 0;
       ifn[nifs-1].if_name = malloc(IFNAMSIZ);
-      if (ifn[nifs-1].if_name == NULL) 
+      if (ifn[nifs-1].if_name == NULL)
 	{
 	  if_freenameindex(ifn);
 	  return NULL;
 	}
     }
-  while (get_one_interface(fd, ifn[nifs-1].if_name, IFNAMSIZ, 
+  while (get_one_interface(fd, ifn[nifs-1].if_name, IFNAMSIZ,
 			   &ifn[nifs-1].if_index) == 0);
   free(ifn[nifs-1].if_name);
   ifn[nifs-1].if_name = NULL;
