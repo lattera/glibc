@@ -1,5 +1,8 @@
 2002-08-31  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/fpu/libm-test-ulps: Add ulps for float and long
+	double tests.
+
 	* sysdeps/unix/sysv/linux/x86_64/Makefile (sysdep_routines): Add
 	__start_context.
 
