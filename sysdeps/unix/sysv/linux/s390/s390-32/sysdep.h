@@ -59,7 +59,7 @@
   SYSCALL_ERROR_HANDLER;						      \
   END (name)
 
-#undef PSEUDO
+#undef PSEUDO_NOERRNO
 #define	PSEUDO_NOERRNO(name, syscall_name, args)			      \
   .text;                                                                      \
   ENTRY (name)							              \
