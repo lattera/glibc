@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,11 @@ Cambridge, MA 02139, USA.  */
 
 .globl syscall_error
 syscall_error:
+#ifdef __motorola__
+	move.l d0, _errno
+	moveq.l #-1, d0
+#else
 	movel d0, _errno
 	moveq #-1, d0
+#endif
 	rts
