@@ -28,7 +28,8 @@
    all the freaky stuff we have to do to make the call useful.  */
 
 /* int [r3] clone(int (*fn)(void *arg) [r3], void *child_stack [r4],
-   		  int flags [r5], void *arg [r6]); */
+   		  int flags [r5], void *arg [r6], void *parent_tid [r7],
+		  void *tls [r8], void *child_tid [r9]); */
 
 ENTRY (BP_SYM (__clone))
 	/* GKM FIXME: add bounds checks, where sensible.  */
@@ -58,6 +59,11 @@ ENTRY (BP_SYM (__clone))
 	/* 'flags' argument is first parameter to clone syscall. (The other
 	   argument is the stack pointer, already in r4.)  */
 	mr	r3,r5
+
+	/* Move the parent_tid, child_tid and tls arguments. */
+	mr	r5,r7
+	mr	r6,r8
+	mr	r7,r9
 
 	/* Do the call.  */
 	DO_CALL(SYS_ify(clone))
