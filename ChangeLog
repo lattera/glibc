@@ -1,3 +1,13 @@
+2001-09-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/Dist: New.
+
+	* sysdeps/x86_64/Dist: New.
+
+	* sysdeps/x86_64/soft-fp/Dist: New.
+
+	* sysdeps/gnu/Dist: Remove eval.c.
+
 2001-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/memusage.c (realloc): Don't count already allocated
