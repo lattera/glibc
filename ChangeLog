@@ -1,5 +1,7 @@
 1999-01-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.0.111.
+
 	* elf/dl-close.c: Rewrite the way adding to the global scope works
 	to handle error cases better than the last change.
 	The l_global flag is now only set when the object is actually
