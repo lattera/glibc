@@ -1,3 +1,7 @@
+2003-04-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_detach.c (pthread_detach): Fix test for invalid TID.
+
 2003-04-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* descr.h (struct pthread): Move cancelhandling member to the front.

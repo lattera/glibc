@@ -29,7 +29,7 @@ pthread_detach (th)
   struct pthread *pd = (struct pthread *) th;
 
   /* Make sure the descriptor is valid.  */
-  if (INVALID_TD_P (pd))
+  if (INVALID_NOT_TERMINATED_TD_P (pd))
     /* Not a valid thread handle.  */
     return ESRCH;
 
