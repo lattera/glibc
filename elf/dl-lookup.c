@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <libelf.h>
 #include <link.h>
+#include <assert.h>
 
 /* Search loaded objects' symbol tables for a definition of 
    the symbol UNDEF_NAME.  Don't use a PLT defn in UNDEF_MAP, since
@@ -70,13 +71,13 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	      continue;
 	    }
 
-	  if (sym == *ref)
+	  if (sym->st_shndx == SHN_UNDEF)
 	    /* This is the same symbol we are looking for the value for.
 	       If it is a PLT entry, it will have a value of its own;
 	       but that is not what we are looking for.  */
-	    continue;
+	      continue;
 
-	  if (strcmp (strtab + sym->st_name, undef_name))
+	  if (sym != *ref && strcmp (strtab + sym->st_name, undef_name))
 	    /* Not the symbol we are looking for.  */
 	    continue;
 
@@ -106,8 +107,8 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
       const char msg[] = "undefined symbol: ";
       char buf[sizeof msg + strlen (undef_name)];
       memcpy (buf, msg, sizeof msg - 1);
-      memcpy (&buf[sizeof msg - 1], undef_name, sizeof buf - sizeof msg);
-      _dl_signal_error (0, reference_name, msg);
+      memcpy (&buf[sizeof msg - 1], undef_name, sizeof buf - sizeof msg + 1);
+      _dl_signal_error (0, reference_name, buf);
     }
 
   *ref = weak_value.s;

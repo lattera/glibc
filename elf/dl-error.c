@@ -43,8 +43,14 @@ _dl_catch_error (const char **errstring,
 
   signalled_errstring = signalled_objname = NULL;
   errcode = setjmp (catch_env);
-  (*operate) ();
+  if (errcode == 0)
+    {
+      (*operate) ();
+      return 0;
+    }
+
+  /* We get here only if we longjmp'd out of OPERATE.  */
   *errstring = signalled_errstring;
   *objname = signalled_objname;
-  return *errstring ? errcode : 0;
+  return errcode == -1 ? 0 : errcode;
 }

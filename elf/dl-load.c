@@ -158,11 +158,12 @@ _dl_map_object (struct link_map *loader, const char *name,
 
       size_t namelen = strlen (name) + 1;
 
-      void trypath (const char *dirpath)
+      inline void trypath (const char *dirpath)
 	{
 	  fd = open_path (name, namelen, dirpath, &realname);
 	}
 
+      fd = -1;
       if (loader && loader->l_info[DT_RPATH])
 	trypath ((const char *) (loader->l_addr +
 				 loader->l_info[DT_RPATH]->d_un.d_ptr));
@@ -317,14 +318,14 @@ _dl_map_object (struct link_map *loader, const char *name,
 	    if (ph->p_memsz > ph->p_filesz)
 	      {
 		/* Extra zero pages should appear at the end of this segment,
-		   after the data mapped from the file.  Adjust MAPEND to map
-		   only the data from the file.  We will later allocate zero
-		   pages following the data mapping.  */
-		caddr_t zero = mapat - mapstart + ph->p_filesz;
-		caddr_t zeroend = mapat - mapstart + ph->p_memsz;
-		caddr_t zeropage
-		  = (caddr_t) ((Elf32_Addr) (zero + pagesize - 1)
-			       & ~(pagesize - 1));
+		   after the data mapped from the file.   */
+		caddr_t zero, zeroend, zeropage;
+
+		mapat += ph->p_vaddr - mapstart;
+		zero = mapat + ph->p_filesz;
+		zeroend = mapat + ph->p_memsz;
+		zeropage = (caddr_t) ((Elf32_Addr) (zero + pagesize - 1)
+				      & ~(pagesize - 1));
 
 		if (zeroend < zeropage)
 		  /* All the extra data is in the last page of the segment.
@@ -342,7 +343,7 @@ _dl_map_object (struct link_map *loader, const char *name,
 				      prot|PROT_WRITE) < 0)
 			  lose (errno, "cannot change memory protections");
 		      }
-		    memset (zero, 0, zeroend - zero);
+		    memset (zero, 0, zeropage - zero);
 		    if ((prot & PROT_WRITE) == 0)
 		      mprotect ((caddr_t) ((Elf32_Addr) zero
 					   & ~(pagesize - 1)),

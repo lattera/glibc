@@ -93,6 +93,8 @@ _dl_start (void *arg)
 
 void _start (void);
 
+static int rtld_command;	/* Nonzero if we were run directly.  */
+
 static void
 dl_main (const Elf32_Phdr *phdr,
 	 Elf32_Word phent,
@@ -138,6 +140,7 @@ file you run.  This is mostly of use for maintainers to test new versions\n\
 of this helper program; chances are you did not intend to run this program.\n"
 			      );
 
+	  rtld_command = 1;
 	  interpreter_name = _dl_argv[0];
 	  --_dl_argc;
 	  ++_dl_argv;
@@ -164,7 +167,7 @@ of this helper program; chances are you did not intend to run this program.\n"
 	  case PT_DYNAMIC:
 	    /* This tells us where to find the dynamic section,
 	       which tells us everything we need to do.  */
-	    l->l_ld = (void *) ph->p_vaddr;
+	    l->l_ld = (void *) l->l_addr + ph->p_vaddr;
 	    break;
 	  case PT_INTERP:
 	    /* This "interpreter segment" was used by the program loader to
@@ -173,7 +176,7 @@ of this helper program; chances are you did not intend to run this program.\n"
 	       dlopen call or DT_NEEDED entry, for something that wants to link
 	       against the dynamic linker as a shared library, will know that
 	       the shared object is already loaded.  */
-	    interpreter_name = (void *) ph->p_vaddr;
+	    interpreter_name = (void *) l->l_addr + ph->p_vaddr;
 	    break;
 	  }
       assert (interpreter_name); /* How else did we get here?  */
@@ -220,7 +223,7 @@ of this helper program; chances are you did not intend to run this program.\n"
 	    l->l_next->l_prev = l->l_prev;
 	}
 
-      lazy = _dl_secure || *(getenv ("LD_BIND_NOW") ?: "");
+      lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
       /* Now we have all the objects loaded.  Relocate them all.
 	 We do this in reverse order so that copy relocs of earlier

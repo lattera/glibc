@@ -46,15 +46,17 @@ _dl_init_next (void)
 	{
 	  /* Find each dependency in order, and see if it
 	     needs to run an initializer.  */
+	  const char *strtab
+	    = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 	  const Elf32_Dyn *d;
 	  for (d = l->l_ld; d->d_tag != DT_NULL; ++d)
 	    if (d->d_tag == DT_NEEDED)
 	      {
-		struct link_map *needed = _dl_map_object
-		  (l, (const char *) (l->l_addr + d->d_un.d_ptr), NULL);
+		struct link_map *needed
+		  = _dl_map_object (l, strtab + d->d_un.d_val, NULL);
 		Elf32_Addr init;
 		--needed->l_opencount;
-		init = next_init (l); /* Recurse on this dependency.  */
+		init = next_init (needed); /* Recurse on this dependency.  */
 		if (init != 0)
 		  return init;
 	      }
@@ -74,7 +76,7 @@ _dl_init_next (void)
     }
 
   /* Look for the first initializer not yet called.  */
-  l = _dl_loaded;
+  l = _dl_loaded->l_next;	/* Skip the executable itself.  */
   do
     {
       init = next_init (l);

@@ -83,7 +83,7 @@ _dl_relocate_object (struct link_map *l, int lazy)
     l->l_prev->l_next = l;
   }
 
-  if (l->l_info[DT_JMPREL] && ! lazy)
+  if (l->l_info[DT_JMPREL] && lazy)
     /* Set up the PLT so its unrelocated entries will
        jump to _dl_runtime_resolve, which will relocate them.  */
     elf_machine_runtime_setup (l);

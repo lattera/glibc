@@ -36,6 +36,8 @@ Cambridge, MA 02139, USA.  */
 
 #include "dl-machine.h"
 
+extern void __mach_init (void);
+
 extern int _dl_argc;
 extern char **_dl_argv;
 extern char **_environ;
@@ -52,8 +54,8 @@ _dl_sysdep_start (void **start_argptr,
       char **p;
 
       /* Cache the information in various global variables.  */
-      _dl_argc = *argdata++;
-      _dl_argv = (void *) argdata;
+      _dl_argc = *argdata;
+      _dl_argv = (void *) &argdata[1];
       _environ = &_dl_argv[_dl_argc + 1];
       for (p = _environ; *p; ++p);
       _dl_hurd_data = (void *) ++p;
@@ -66,6 +68,12 @@ _dl_sysdep_start (void **start_argptr,
 		  _dl_hurd_data->phdrsz / sizeof (Elf32_Phdr),
 		  &_dl_hurd_data->user_entry);
 
+      /* Deallocate the reply port and task port rights acquired by
+	 __mach_init.  We are done with them now, and the user will
+	 reacquire them for himself when he wants them.  */
+      __mig_dealloc_reply_port (MACH_PORT_NULL);
+      __mach_port_deallocate (__mach_task_self (), __mach_task_self_);
+
       {
 	extern void _dl_start_user (void);
 	/* Unwind the stack to ARGDATA and simulate a return from _dl_start
@@ -73,6 +81,9 @@ _dl_sysdep_start (void **start_argptr,
 	RETURN_TO (argdata, &_dl_start_user, _dl_hurd_data->user_entry);
       }
     }
+
+  /* Set up so we can do RPCs.  */
+  __mach_init ();
 
   /* See hurd/hurdstartup.c; this deals with getting information
      from the exec server and slicing up the arguments.

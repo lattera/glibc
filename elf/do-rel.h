@@ -30,37 +30,46 @@ Cambridge, MA 02139, USA.  */
 /* Perform the relocations in MAP on the running program image as specified
    by RELTAG, SZTAG.  *RESOLVE is called to resolve symbol values; it
    modifies its argument pointer to point to the defining symbol, and
-   returns the base load address of the defining object.  */
+   returns the base load address of the defining object.  If LAZY is
+   nonzero, this is the first pass on PLT relocations; they should be set
+   up to call _dl_runtime_resolve, rather than fully resolved now.  */
 
 static inline void
 elf_dynamic_do_rel (struct link_map *map,
 		    int reltag, int sztag, 
-		    Elf32_Addr (*resolve) (const Elf32_Sym **))
+		    Elf32_Addr (*resolve) (const Elf32_Sym **),
+		    int lazy)
 {
   const Elf32_Sym *const symtab
-    = (const Elf32_Sym *) map->l_info[DT_SYMTAB]->d_un.d_ptr;
-  const Elf32_Rel *r = (const Elf32_Rel *) map->l_info[reltag]->d_un.d_ptr;
+    = (const Elf32_Sym *) (map->l_addr + map->l_info[DT_SYMTAB]->d_un.d_ptr);
+  const Elf32_Rel *r
+    = (const Elf32_Rel *) (map->l_addr + map->l_info[reltag]->d_un.d_ptr);
   const Elf32_Rel *end = &r[map->l_info[sztag]->d_un.d_val / sizeof *r];
 
-  for (; r < end; ++r)
-    {
-      const Elf32_Sym *definer = &symtab[ELF32_R_SYM (r->r_info)];
-      Elf32_Addr loadbase;
+  if (lazy)
+    /* Doing lazy PLT relocations; they need very little info.  */
+    for (; r < end; ++r)
+      elf_machine_lazy_rel (map, r);
+  else
+    for (; r < end; ++r)
+      {
+	const Elf32_Sym *definer = &symtab[ELF32_R_SYM (r->r_info)];
+	Elf32_Addr loadbase;
 
-      if (ELF32_R_SYM (r->r_info) == STN_UNDEF)
-	loadbase = 0;		/* This value will not be consulted.  */
-      else
-	{
-	  if (resolve)
-	    loadbase = (*resolve) (&definer);
-	  else
-	    {
-	      assert (definer->st_shndx != SHN_UNDEF);
-	      loadbase = map->l_addr;
-	    }
-	}
-      elf_machine_rel (map, r, loadbase, definer);
-    }
+	if (ELF32_R_SYM (r->r_info) == STN_UNDEF)
+	  loadbase = 0;		/* This value will not be consulted.  */
+	else
+	  {
+	    if (resolve)
+	      loadbase = (*resolve) (&definer);
+	    else
+	      {
+		assert (definer->st_shndx != SHN_UNDEF);
+		loadbase = map->l_addr;
+	      }
+	  }
+	elf_machine_rel (map, r, loadbase, definer);
+      }
 }
 
 #undef elf_dynamic_do_rel

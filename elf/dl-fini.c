@@ -26,5 +26,5 @@ _dl_fini (void)
 
   for (l = _dl_loaded; l; l = l->l_next)
     if (l->l_init_called && l->l_info[DT_FINI])
-      (*(void (*) (void)) l->l_info[DT_FINI]->d_un.d_ptr) ();
+      (*(void (*) (void)) (l->l_addr + l->l_info[DT_FINI]->d_un.d_ptr)) ();
 }

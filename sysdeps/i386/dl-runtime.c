@@ -34,15 +34,16 @@ void
 _dl_runtime_resolve (Elf32_Word reloc_offset)
 {
   __label__ return_insn;
-  struct link_map *l = (void *) &(&reloc_offset)[-1];
+  struct link_map *l = (void *) (&reloc_offset)[-1];
 
   const Elf32_Sym *const symtab
-    = (const Elf32_Sym *) l->l_info[DT_SYMTAB]->d_un.d_ptr;
-  const char *strtab
-    = ((void *) l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
+    = (const Elf32_Sym *) (l->l_addr + l->l_info[DT_SYMTAB]->d_un.d_ptr);
+  const char *strtab =
+    (const char *) (l->l_addr + l->l_info[DT_STRTAB]->d_un.d_ptr);
 
-  const Elf32_Rel *const reloc = (void *) (l->l_info[DT_JMPREL]->d_un.d_ptr
-					   + reloc_offset);
+  const Elf32_Rel *const reloc
+    = (const void *) (l->l_addr + l->l_info[DT_JMPREL]->d_un.d_ptr +
+		      reloc_offset);
 
   const Elf32_Sym *definer;
   Elf32_Addr loadbase;
@@ -83,7 +84,7 @@ _dl_runtime_resolve (Elf32_Word reloc_offset)
      referred to by this PLT entry; once "ret" pops this address, the
      function in the shared object will run with the stack arranged just as
      when the user entered the PLT.  */
-  (&reloc_offset)[0] = *(Elf32_Word *) reloc->r_offset;
+  (&reloc_offset)[0] = *(Elf32_Word *) (l->l_addr + reloc->r_offset);
 
   return;
 

@@ -1,3 +1,9 @@
+Tue May 30 15:52:32 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* mach/Makefile (server-interfaces): Removed notify and
+ 	device_reply.  For shlibs with eager binding, libmachuser.so must
+ 	not refer to any functions not defined in libc.
+
 Sat May 27 16:23:22 1995  Jim Meyering  (meyering@comco.com)
 
 	* sysdeps/generic/memchr.c: Cast RHS to const unsigned char *

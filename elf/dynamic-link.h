@@ -56,9 +56,9 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 #include "do-rel.h"
 #define ELF_DYNAMIC_DO_REL(map, lazy, resolve)				      \
   if ((map)->l_info[DT_REL])						      \
-    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, (resolve));		      \
-  if (!(lazy) && (map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)	      \
-    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve));
+    elf_dynamic_do_rel ((map), DT_REL, DT_RELSZ, (resolve), 0);		      \
+  if ((map)->l_info[DT_PLTREL]->d_un.d_val == DT_REL)			      \
+    elf_dynamic_do_rel ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
 #else
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
 #endif
@@ -68,9 +68,9 @@ elf_get_dynamic_info (Elf32_Dyn *dyn, Elf32_Dyn *info[DT_NUM])
 #include "do-rel.h"
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve)				      \
   if ((map)->l_info[DT_RELA])						      \
-    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, (resolve));		      \
-  if (!(lazy) && (map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)	      \
-    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (resolve);
+    elf_dynamic_do_rela ((map), DT_RELA, DT_RELASZ, (resolve), 0);	      \
+  if ((map)->l_info[DT_PLTREL]->d_un.d_val == DT_RELA)			      \
+    elf_dynamic_do_rela ((map), DT_JMPREL, DT_PLTRELSZ, (resolve), (lazy));
 #else
 #define ELF_DYNAMIC_DO_RELA(map, lazy, resolve) /* Nothing to do.  */
 #endif

@@ -75,7 +75,7 @@ elf_machine_rel (struct link_map *map,
 		 const Elf32_Rel *reloc,
 		 Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
 {
-  Elf32_Addr *const reloc_addr = (Elf32_Addr *) reloc->r_offset;
+  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   const Elf32_Addr sym_value = sym_loadaddr + sym->st_value;
 
   switch (ELF32_R_TYPE (reloc->r_info))
@@ -102,6 +102,20 @@ elf_machine_rel (struct link_map *map,
     }
 }
 
+static inline void
+elf_machine_lazy_rel (struct link_map *map, const Elf32_Rel *reloc)
+{
+  Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
+  switch (ELF32_R_TYPE (reloc->r_info))
+    {
+    case R_386_JMP_SLOT:
+      *reloc_addr += map->l_addr;
+      break;
+    default:
+      assert (! "unexpected PLT reloc type");
+      break;
+    }
+}
 
 /* The i386 never uses Elf32_Rela relocations.  */
 #define ELF_MACHINE_NO_RELA 1
@@ -113,12 +127,14 @@ elf_machine_rel (struct link_map *map,
 static inline void
 elf_machine_runtime_setup (struct link_map *l)
 {
+  Elf32_Addr *got;
   extern void _dl_runtime_resolve (Elf32_Word);
+
   /* The GOT entries for functions in the PLT have not yet been filled
      in.  Their initial contents will arrange when called to push an
      offset into the .rel.plt section, push _GLOBAL_OFFSET_TABLE_[1],
      and then jump to _GLOBAL_OFFSET_TABLE[2].  */
-  Elf32_Addr *got = (Elf32_Addr *) l->l_info[DT_PLTGOT]->d_un.d_ptr;
+  got = (Elf32_Addr *) (l->l_addr + l->l_info[DT_PLTGOT]->d_un.d_ptr);
   got[1] = (Elf32_Addr) l;	/* Identify this shared object.  */
   /* This function will get called to fix up the GOT entry indicated by
      the offset on the stack, and then jump to the resolved address.  */
@@ -140,9 +156,20 @@ _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
 	# Point %ebx at the GOT.
-1:	call 2f\n\
-2:	popl %ebx\n\
-	addl $_GLOBAL_OFFSET_TABLE_+[.-2b], %ebx\n\
+	call 0f\n\
+0:	popl %ebx\n\
+	addl $_GLOBAL_OFFSET_TABLE_+[.-0b], %ebx\n\
+	# See if we were run as a command with the executable file\n\
+	# name as an extra leading argument.\n\
+	movl rtld_command@GOT(%ebx), %eax\n\
+	movl (%eax),%eax\n\
+	testl %eax,%eax\n\
+	jz 0f\n\
+	# Pop the original argument count, decrement it, and replace\n\
+	# the original first argument pointer with the new count.\n\
+	popl %eax\n\
+	decl %eax\n\
+	movl %eax,(%esp)\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\
 0:	call _dl_init_next@PLT\n\
@@ -150,7 +177,7 @@ _dl_start_user:\n\
 	testl %eax,%eax\n\
 	jz 1f\n\
 	# Call the shared object initializer function.\n\
-	# NOTE: We depend only on the registers (%ebx)\n\
+	# NOTE: We depend only on the registers (%ebx and %edi)\n\
 	# and the return address pushed by this call;\n\
 	# the initializer is called with the stack just\n\
 	# as it appears on entry, and it is free to move\n\
@@ -159,8 +186,8 @@ _dl_start_user:\n\
 	call *%eax\n\
 	# Loop to call _dl_init_next for the next initializer.\n\
 	jmp 0b\n\
-	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
-	leal _dl_fini@GOT(%ebx), %edx\n\
+1:	# Pass our finalizer function to the user in %edx, as per ELF ABI.\n\
+	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
 ");

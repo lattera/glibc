@@ -95,8 +95,8 @@ init1 (int argc, char *arg0, ...)
   __libc_init (argc, argv, __environ);
 }
 
-static void 
-init (int *data, int retaddr)
+static void
+init (int *data, void *usercode, void **retaddrloc)
 {
   int argc = *data;
   char **argv = (void *) (data + 1);
@@ -114,6 +114,11 @@ init (int *data, int retaddr)
      how much space to leave for thread variables.  */
   if (__hurd_threadvar_max < _HURD_THREADVAR_MAX)
     __hurd_threadvar_max = _HURD_THREADVAR_MAX;
+
+
+  /* After possibly switching stacks, call `init1' (above) with the user
+     code as the return address, and the argument data immediately above
+     that on the stack.  */
 
   if (_cthread_init_routine)
     {
@@ -136,13 +141,45 @@ init (int *data, int retaddr)
 	/* Copy the Hurd startup data block to the new stack.  */
 	*od = *d;
 
-      data = newsp;
+      /* Push the user code address on the top of the new stack.  It will
+	 be the return address for `init1'; we will jump there with NEWSP
+	 as the stack pointer.  */
+      *--(void **) newsp = usercode;
+      /* Mutate our own return address to run the code below.  */
+      *retaddrloc = &&switch_stacks;
+      /* Force NEWSP into %ecx and &init1 into %eax, which are not restored
+         by function return.  */
+      asm volatile ("# a %0 c %1" : : "a" (&init1), "c" (newsp));
+      return;
+    switch_stacks:
+      /* Our return address was redirected to here, so at this point our
+	 stack is unwound and callers' registers restored.  Only %ecx and
+	 %eax are call-clobbered and thus still have the values we set just
+	 above.  Fetch from there the new stack pointer we will run on, and
+	 jmp to the run-time address of `init1'; when it returns, it will
+	 run the user code with the argument data at the top of the stack.  */
+      asm volatile ("movl %ecx, %esp; jmp *%eax");
+      /* NOTREACHED */
     }
-
-  /* Call `init1' (above) with the user code as the return address,
-     and the argument data immediately above that on the stack.  */
-  *--data = retaddr;
-  asm volatile ("movl %0, %%esp; jmp %*%1" : : "g" (data), "r" (&init1));
+  else
+    {
+      /* We are not switching stacks, but we must play some games with
+	 the one we've got, similar to the stack-switching code above.  */
+      *retaddrloc = &&call_init1;
+      /* Force the user code address into %ecx and the run-time address of
+	 `init1' into %eax, for use below.  */
+      asm volatile ("# a %0 c %1" : : "a" (&init1), "c" (usercode));
+      return;
+    call_init1:
+      /* As in the stack-switching case, at this point our stack is unwound
+	 and callers' registers restored, and only %ecx and %eax
+	 communicate values from the lines above.  In this case we have
+	 stashed in %ecx the user code return address.  Push it on the top
+	 of the stack so it acts as init1's return address, and then jump
+	 there.  */
+      asm volatile ("pushl %ecx; jmp *%eax");
+      /* NOTREACHED */
+    }
 }  
 
 
@@ -151,30 +188,32 @@ init (int *data, int retaddr)
    It is called just before the user _start code from i386/elf/start.S,
    with the stack set up as that code gets it.  */
 
-static void soinit (int argc, ...) __attribute__ ((unused, section (".init")));
+/* NOTE!  The linker notices the magical name `_init' and sets the DT_INIT
+   pointer in the dynamic section based solely on that.  It is convention
+   for this function to be in the `.init' section, but the symbol name is
+   the only thing that really matters!!  */
+/*void _init (int argc, ...) __attribute__ ((unused, section (".init")));*/
 
-static void
-soinit (int argc, ...)
+void
+_init (int argc, ...)
 {
   /* Initialize data structures so we can do RPCs.  */
   __mach_init ();
 
   RUN_HOOK (_hurd_preinit_hook, ());
   
-  init (&argc, (&argc)[-1]);
-
-  (void) &soinit;		/* Avoid gcc optimizing this fn out.  */
+  init (&argc, ((void **) &argc)[-1], &((void **) &argc)[-1]);
 }
 #endif
 
 
 void
-__libc_init_first (int argc, ...)
+__libc_init_first (int argc __attribute__ ((unused)), ...)
 {
 #ifndef PIC
   void doinit (int *data)
     {
-      init (data, (&argc)[-1]);
+      init (data, ((void **) &argc)[-1], &((void **) &data)[-1]);
     }
 
   /* Initialize data structures so we can do RPCs.  */
