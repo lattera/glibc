@@ -1,5 +1,13 @@
 Tue Mar 19 14:18:42 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sysdeps/i386/fpu/__math.h (asinh): Call log1p instead of __log1p.
+
+	* math/math.h: Move M_* constants before __math.h include.
+	[__NO_MATH_INLINES || __OPTIMIZE__]: Include __math.h only #if this.
+
+	* misc/efgcvt_r.c (ecvt_r): Declare floor, log10, fabs as weak extern.
+	If log10 is not defined (i.e. no -lm), use stupid loop instead.
+
 	* features.h (__FAVOR_BSD): Define only if _BSD_SOURCE is defined
 	and no other _*_SOURCE macro is.
 	(_GNU_SOURCE): Don't define by default.

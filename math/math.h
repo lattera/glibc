@@ -115,13 +115,6 @@ extern int matherr __P ((struct exception *));
 #endif
 
 
-/* Get machine-dependent inline versions (if there are any).  */
-#include <__math.h>
-
-
-__END_DECLS
-
-
 #ifdef __USE_BSD
 /* Some useful constants.  */
 #define	M_E		2.7182818284590452354	/* e */
@@ -138,6 +131,15 @@ __END_DECLS
 #define	M_SQRT2		1.41421356237309504880	/* sqrt(2) */
 #define	M_SQRT1_2	0.70710678118654752440	/* 1/sqrt(2) */
 #endif
+
+
+/* Get machine-dependent inline versions (if there are any).  */
+#if defined (__NO_MATH_INLINES) || defined (__OPTIMIZE__)
+#include <__math.h>
+#endif
+
+
+__END_DECLS
 
 
 #endif /* math.h  */

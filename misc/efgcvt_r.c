@@ -1,6 +1,6 @@
 /* [efg]cvt -- compatibility functions for floating point formatting,
    reentrent versions.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -60,6 +60,8 @@ fcvt_r (value, ndigit, decpt, sign, buf, len)
   return 0;
 }
 
+weak_symbol (floor) weak_symbol (log10) weak_symbol (fabs)
+
 int
 ecvt_r (value, ndigit, decpt, sign, buf, len)
      double value;
@@ -67,8 +69,22 @@ ecvt_r (value, ndigit, decpt, sign, buf, len)
      char *buf;
      size_t len;
 {
-  ndigit -= (int) floor (log10 (value < 0.0 ? -value : value));
-  if (ndigit < 0)
-    ndigit = 0;
+  if (&log10)
+    {
+      /* Use the reasonable code if -lm is included.  */
+      ndigit -= (int) floor (log10 (fabs (value)));
+      if (ndigit < 0)
+	ndigit = 0;
+    }
+  else
+    {
+      /* Slow code that doesn't require -lm functions.  */
+      double d;
+      for (d = value < 0.0 ? - value : value;
+	   ndigit > 0 && d >= 10.0;
+	   d *= 0.1)
+	--ndigit;
+    }
+
   return fcvt_r (value, ndigit, decpt, sign, buf, len);
 }
