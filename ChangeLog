@@ -1,3 +1,8 @@
+2001-06-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/argp.texi: Tons of cleanups.
+	Patch by Clifford U. Smith <cuel@swbell.net>.
+
 2001-06-28  Mark Kettenis  <kettenis@gnu.org>
 
 	* manual/users.texi (Setting Groups): Correct initgroups

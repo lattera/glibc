@@ -1,3 +1,12 @@
+2001-06-28  H.J. Lu  <hjl@gnu.org>
+
+	* Makefile: Include SUPPORTED.
+	(INSTALL-SUPPORTED-LOCALES): New.
+	($(INSTALL-SUPPORTED-LOCALES)): New target.
+	(install-locales-dir): Likewise.
+	(install-locales): Depend on $(INSTALL-SUPPORTED-LOCALES).
+	* SUPPORTED: Changed the format for parallel install.
+
 2001-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add rules to build and run tst-leaks.

@@ -1,7 +1,7 @@
 @ignore
    Documentation for the argp argument parser
 
-   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -28,60 +28,61 @@
 @cindex argument parsing with argp
 @cindex option parsing with argp
 
-@dfn{Argp} is an interface for parsing unix-style argument vectors
-(@pxref{Program Arguments}).
+@dfn{Argp} is an interface for parsing unix-style argument vectors.
+@xref{Program Arguments}.
 
-Unlike the more common @code{getopt} interface, it provides many related
-convenience features in addition to parsing options, such as
-automatically producing output in response to @samp{--help} and
-@samp{--version} options (as defined by the GNU coding standards).
-Doing these things in argp results in a more consistent look for
-programs that use it, and makes less likely that implementors will
-neglect to implement them or keep them up-to-date.
+Argp provides features unavailable in the more commonly used
+@code{getopt} interface.  These features include automatically producing
+output in response to the @samp{--help} and @samp{--version} options, as
+described in the GNU coding standards.  Using argp makes it less likely
+that programmers will neglect to implement these additional options or
+keep them up to date.
 
 Argp also provides the ability to merge several independently defined
-option parsers into one, mediating conflicts between them, and making
-the result appear seamless.  A library can export an argp option parser,
-which programs can easily use in conjunction with their own option
-parser.  This results in less work for user programs (indeed, some may
-use only argument parsers exported by libraries, and have no options of
-their own), and more consistent option-parsing for the abstractions
-implemented by the library.
+option parsers into one, mediating conflicts between them and making the
+result appear seamless.  A library can export an argp option parser that
+user programs might employ in conjunction with their own option parsers,
+resulting in less work for the user programs.  Some programs may use only
+argument parsers exported by libraries, thereby achieving consistent and
+efficient option-parsing for abstractions implemented by the libraries.
 
 @pindex argp.h
 The header file @file{<argp.h>} should be included to use argp.
 
 @subsection The @code{argp_parse} Function
 
-The main interface to argp is the @code{argp_parse} function; often, a
-call to @code{argp_parse} is the only argument-parsing code needed in
-@code{main} (@pxref{Program Arguments}).
+The main interface to argp is the @code{argp_parse} function.  In many
+cases, calling @code{argp_parse} is the only argument-parsing code
+needed in @code{main}.
+@xref{Program Arguments}.
 
 @comment argp.h
 @comment GNU
 @deftypefun {error_t} argp_parse (const struct argp *@var{argp}, int @var{argc}, char **@var{argv}, unsigned @var{flags}, int *@var{arg_index}, void *@var{input})
 The @code{argp_parse} function parses the arguments in @var{argv}, of
-length @var{argc}, using the argp parser @var{argp} (@pxref{Argp
-Parsers}); a value of zero is the same as a @code{struct argp}
-containing all zeros.  @var{flags} is a set of flag bits that modify the
-parsing behavior (@pxref{Argp Flags}).  @var{input} is passed through to
-the argp parser @var{argp}, and has meaning defined by it; a typical
-usage is to pass a pointer to a structure which can be used for
-specifying parameters to the parser and passing back results from it.
+length @var{argc}, using the argp parser @var{argp}.  @xref{Argp
+Parsers}.
+
+A value of zero is the same as a @code{struct argp}containing all
+zeros.  @var{flags} is a set of flag bits that modify the parsing
+behavior.  @xref{Argp Flags}.  @var{input} is passed through to the argp
+parser @var{argp}, and has meaning defined by @var{argp}.  A typical
+usage is to pass a pointer to a structure which is used for specifying
+parameters to the parser and passing back the results.
 
 Unless the @code{ARGP_NO_EXIT} or @code{ARGP_NO_HELP} flags are included
 in @var{flags}, calling @code{argp_parse} may result in the program
-exiting---for instance when an unknown option is encountered.
-@xref{Program Termination}.
+exiting.  This behavior is true if an error is detected, or when an
+unknown option is encountered.  @xref{Program Termination}.
 
 If @var{arg_index} is non-null, the index of the first unparsed option
-in @var{argv} is returned in it.
+in @var{argv} is returned as a value.
 
 The return value is zero for successful parsing, or an error code
-(@pxref{Error Codes}) if an error was detected.  Different argp parsers
-may return arbitrary error codes, but standard ones are @code{ENOMEM} if
-a memory allocation error occurred, or @code{EINVAL} if an unknown option
-or option argument was encountered.
+(@pxref{Error Codes}) if an error is detected.  Different argp parsers
+may return arbitrary error codes, but the standard error codes are:
+@code{ENOMEM} if a memory allocation error occurred, or @code{EINVAL} if
+an unknown option or option argument is encountered.
 @end deftypefun
 
 @menu
@@ -97,40 +98,41 @@ or option argument was encountered.
 @node Argp Global Variables, Argp Parsers, , Argp
 @subsection Argp Global Variables
 
-These variables make it very easy for every user program to implement
-the @samp{--version} option and provide a bug-reporting address in the
-@samp{--help} output (which is implemented by argp regardless).
+These variables make it easy for user programs to implement the
+@samp{--version} option and provide a bug-reporting address in the
+@samp{--help} output.  These are implemented in argp by default.
 
 @comment argp.h
 @comment GNU
 @deftypevar {const char *} argp_program_version
 If defined or set by the user program to a non-zero value, then a
-@samp{--version} option is added when parsing with @code{argp_parse}
-(unless the @code{ARGP_NO_HELP} flag is used), which will print this
-string followed by a newline and exit (unless the @code{ARGP_NO_EXIT}
-flag is used).
+@samp{--version} option is added when parsing with @code{argp_parse},
+which will print the @samp{--version} string followed by a newline and
+exit.  The exception to this is if the @code{ARGP_NO_EXIT} flag is used.
 @end deftypevar
 
 @comment argp.h
 @comment GNU
 @deftypevar {const char *} argp_program_bug_address
 If defined or set by the user program to a non-zero value,
-@code{argp_program_bug_address} should point to a string that is the
-bug-reporting address for the program.  It will be printed at the end of
-the standard output for the @samp{--help} option, embedded in a sentence
-that says something like @samp{Report bugs to @var{address}.}.
+@code{argp_program_bug_address} should point to a string that will be
+printed at the end of the standard output for the @samp{--help} option,
+embedded in a sentence that says @samp{Report bugs to @var{address}.}.
 @end deftypevar
 
 @need 1500
 @comment argp.h
 @comment GNU
 @defvar argp_program_version_hook
-If defined or set by the user program to a non-zero value, then a
-@samp{--version} option is added when parsing with @code{argp_parse}
-(unless the @code{ARGP_NO_HELP} flag is used), which calls this function
-to print the version, and then exits with a status of 0 (unless the
-@code{ARGP_NO_EXIT} flag is used).  It should point to a function with
-the following type signature:
+If defined or set by the user program to a non-zero value, a
+@samp{--version} option is added when parsing with @code{arg_parse},
+which prints the program version and exits with a status of zero.  This
+is not the case if the @code{ARGP_NO_HELP} flag is used.  If the
+@code{ARGP_NO_EXIT} flag is set, the exit behavior of the program is
+suppressed or modified, as when the argp parser is going to be used by
+other programs.
+
+It should point to a function with this type of signature:
 
 @smallexample
 void @var{print-version} (FILE *@var{stream}, struct argp_state *@var{state})
@@ -139,16 +141,16 @@ void @var{print-version} (FILE *@var{stream}, struct argp_state *@var{state})
 @noindent
 @xref{Argp Parsing State}, for an explanation of @var{state}.
 
-This variable takes precedent over @code{argp_program_version}, and is
-useful if a program has version information that cannot be easily
-specified as a simple string.
+This variable takes precedence over @code{argp_program_version}, and is
+useful if a program has version information not easily expressed in a
+simple string.
 @end defvar
 
 @comment argp.h
 @comment GNU
 @deftypevar error_t argp_err_exit_status
-The exit status that argp will use when exiting due to a parsing error.
-If not defined or set by the user program, this defaults to
+This is the exit status used when argp exits due to a parsing error.  If
+not defined or set by the user program, this defaults to:
 @code{EX_USAGE} from @file{<sysexits.h>}.
 @end deftypevar
 
@@ -156,7 +158,7 @@ If not defined or set by the user program, this defaults to
 @subsection Specifying Argp Parsers
 
 The first argument to the @code{argp_parse} function is a pointer to a
-@code{struct argp}, which known as an @dfn{argp parser}:
+@code{struct argp}, which is known as an @dfn{argp parser}:
 
 @comment argp.h
 @comment GNU
@@ -174,49 +176,49 @@ options at all.  @xref{Argp Option Vectors}.
 @item argp_parser_t parser
 A pointer to a function that defines actions for this parser; it is
 called for each option parsed, and at other well-defined points in the
-parsing process.  A value of zero is the same as a pointer to a
-function that always returns @code{ARGP_ERR_UNKNOWN}.
-@xref{Argp Parser Functions}.
+parsing process.  A value of zero is the same as a pointer to a function
+that always returns @code{ARGP_ERR_UNKNOWN}.  @xref{Argp Parser
+Functions}.
 
 @item const char *args_doc
-If non-zero, a string describing what non-option arguments are wanted by
-this parser; it is only used to print the @samp{Usage:} message.  If it
-contains newlines, the strings separated by them are considered
-alternative usage patterns, and printed on separate lines (lines after
-the first are prefixed by @samp{ or: } instead of @samp{Usage:}).
+If non-zero, a string describing what non-option arguments are called by
+this parser.  This is only used to print the @samp{Usage:} message.  If
+it contains newlines, the strings separated by them are considered
+alternative usage patterns and printed on separate lines.  Lines after
+the first are prefixed by @samp{ or: } instead of @samp{Usage:}.
 
 @item const char *doc
 If non-zero, a string containing extra text to be printed before and
 after the options in a long help message, with the two sections
 separated by a vertical tab (@code{'\v'}, @code{'\013'}) character.  By
 convention, the documentation before the options is just a short string
-saying what the program does, and that afterwards is longer, describing
-the behavior in more detail.
+explaining what the program does.  Documentation printed after the
+options describe behavior in more detail.
 
 @item const struct argp_child *children
-A pointer to a vector of @code{argp_children} structures specifying
-additional argp parsers that should be combined with this one.
-@xref{Argp Children}.
+A pointer to a vector of @code{argp_children} structures.  This pointer
+specifies which additional argp parsers should be combined with this
+one.  @xref{Argp Children}.
 
 @item char *(*help_filter)(int @var{key}, const char *@var{text}, void *@var{input})
-If non-zero, a pointer to a function to filter the output of help
+If non-zero, a pointer to a function that filters the output of help
 messages.  @xref{Argp Help Filtering}.
 
 @item const char *argp_domain
 If non-zero, the strings used in the argp library are translated using
-the domain described by this string.  Otherwise the currently installed
-default domain is used.
+the domain described by this string.  If zero, the current default domain
+is used.
 
 @end table
 @end deftp
 
-The @code{options}, @code{parser}, @code{args_doc}, and @code{doc}
-fields are usually all that are needed.  If an argp parser is defined as
-an initialized C variable, only the used fields need be specified in
-the initializer---the rest will default to zero due to the way C
-structure initialization works (this fact is exploited for most argp
-structures, grouping the most-used fields near the beginning, so that
-unused fields can simply be left unspecified).
+Of the above group, @code{options}, @code{parser}, @code{args_doc}, and
+the @code{doc} fields are usually all that are needed.  If an argp
+parser is defined as an initialized C variable, only the fields used
+need be specified in the initializer.  The rest will default to zero due
+to the way C structure initialization works.  This design is exploited in
+most argp structures; the most-used fields are grouped near the
+beginning, the unused fields left unspecified.
 
 @menu
 * Options: Argp Option Vectors.   Specifying options in an argp parser.
@@ -230,69 +232,71 @@ unused fields can simply be left unspecified).
 
 The @code{options} field in a @code{struct argp} points to a vector of
 @code{struct argp_option} structures, each of which specifies an option
-that argp parser supports (actually, sometimes multiple entries may used
-for a single option if it has many names).  It should be terminated by
-an entry with zero in all fields (note that when using an initialized C
-array for options, writing @code{@{ 0 @}} is enough to achieve this).
+that the argp parser supports.  Multiple entries may be used for a single
+option provided it has multiple names.  This should be terminated by an
+entry with zero in all fields.  Note that when using an initialized C
+array for options, writing @code{@{ 0 @}} is enough to achieve this.
 
 @comment argp.h
 @comment GNU
 @deftp {Data Type} {struct argp_option}
 This structure specifies a single option that an argp parser
-understands, and how to parse and document it.  It has the following fields:
+understands, as well as how to parse and document that option.  It has
+the following fields:
 
 @table @code
 @item const char *name
 The long name for this option, corresponding to the long option
-@samp{--@var{name}}; this field can be zero if this option only has a
-short name.  To specify multiple names for an option, additional entries
-may follow this one, with the @code{OPTION_ALIAS} flag set (@pxref{Argp
-Option Flags}).
+@samp{--@var{name}}; this field may be zero if this option @emph{only}
+has a short name.  To specify multiple names for an option, additional
+entries may follow this one, with the @code{OPTION_ALIAS} flag
+set.  @xref{Argp Option Flags}.
 
 @item int key
-The integer key that is provided to the argp parser's parsing function
-when this option is being parsed.  Also, if @var{key} has a value that
-is a printable @sc{ascii} character (i.e., @code{isascii (@var{key})} is
-true), it @emph{also} specifies a short option @samp{-@var{char}}, where
-@var{char} is the @sc{ascii} character with the code @var{key}.
+The integer key provided by the current option to the option parser.  If
+@var{key} has a value that is a printable @sc{ascii} character (i.e.,
+@code{isascii (@var{key})} is true), it @emph{also} specifies a short
+option @samp{-@var{char}}, where @var{char} is the @sc{ascii} character
+with the code @var{key}.
 
 @item const char *arg
 If non-zero, this is the name of an argument associated with this
 option, which must be provided (e.g., with the
 @samp{--@var{name}=@var{value}} or @samp{-@var{char} @var{value}}
-syntaxes) unless the @code{OPTION_ARG_OPTIONAL} flag (@pxref{Argp Option
-Flags}) is set, in which case it @emph{may} be provided.
+syntaxes), unless the @code{OPTION_ARG_OPTIONAL} flag (@pxref{Argp
+Option Flags}) is set, in which case it @emph{may} be provided.
 
 @item int flags
-Flags associated with this option (some of which are referred to above).
+Flags associated with this option, some of which are referred to above.
 @xref{Argp Option Flags}.
 
 @item const char *doc
 A documentation string for this option, for printing in help messages.
 
 If both the @code{name} and @code{key} fields are zero, this string
-will be printed out-dented from the normal option column, making it
-useful as a group header (it will be the first thing printed in its
-group); in this usage, it's conventional to end the string with a
+will be printed tabbed left from the normal option column, making it
+useful as a group header.  This will be the first thing printed in its
+group.  In this usage, it's conventional to end the string with a
 @samp{:} character.
 
 @item int group
-The group this option is in.
+Group identity for this option.
 
 In a long help message, options are sorted alphabetically within each
 group, and the groups presented in the order 0, 1, 2, @dots{}, @var{n},
-@minus{}@var{m}, @dots{}, @minus{}2, @minus{}1.  Every entry in an
-options array with this
-field 0 will inherit the group number of the previous entry, or zero if
-it's the first one, unless its a group header (@code{name} and
-@code{key} fields both zero), in which case, the previous entry + 1 is
-the default.  Automagic options such as @samp{--help} are put into group
-@minus{}1.
+@minus{}@var{m}, @dots{}, @minus{}2, @minus{}1.
 
-Note that because of C structure initialization rules, this field
-often need not be specified, because 0 is the right value.
+Every entry in an options array with this field 0 will inherit the group
+number of the previous entry, or zero if it's the first one.  If it's a
+group header with @code{name} and @code{key} fields both zero, the
+previous entry + 1 is the default.  Automagic options such as
+@samp{--help} are put into group @minus{}1.
+
+Note that because of C structure initialization rules, this field often
+need not be specified, because 0 is the correct value.
 @end table
 @end deftp
+
 
 @menu
 * Flags: Argp Option Flags.     Flags for options.
@@ -302,8 +306,9 @@ often need not be specified, because 0 is the right value.
 @subsubsection Flags for Argp Options
 
 The following flags may be or'd together in the @code{flags} field of a
-@code{struct argp_option}, and control various aspects of how that
-option is parsed or displayed in help messages:
+@code{struct argp_option}.  These flags control various aspects of how
+that option is parsed or displayed in help messages:
+
 
 @vtable @code
 @comment argp.h
@@ -321,33 +326,35 @@ This option isn't displayed in any help messages.
 @item OPTION_ALIAS
 This option is an alias for the closest previous non-alias option.  This
 means that it will be displayed in the same help entry, and will inherit
-fields other than @code{name} and @code{key} from the aliased option.
+fields other than @code{name} and @code{key} from the option being
+aliased.
+
 
 @comment argp.h
 @comment GNU
 @item OPTION_DOC
-This option isn't actually an option (and so should be ignored by the
-actual option parser), but rather an arbitrary piece of documentation
-that should be displayed in much the same manner as the options (known
-as a @dfn{documentation option}).
+This option isn't actually an option and should be ignored by the actual
+option parser.  It is an arbitrary section of documentation that should
+be displayed in much the same manner as the options.  This is known as a
+@dfn{documentation option}.
 
 If this flag is set, then the option @code{name} field is displayed
-unmodified (e.g., no @samp{--} prefix is added) at the left-margin
-(where a @emph{short} option would normally be displayed), and the
-documentation string in the normal place.  For purposes of sorting, any
-leading whitespace and punctuation is ignored, except that if the first
-non-whitespace character is not @samp{-}, this entry is displayed after
-all options (and @code{OPTION_DOC} entries with a leading @samp{-}) in
-the same group.
+unmodified (e.g., no @samp{--} prefix is added) at the left-margin where
+a @emph{short} option would normally be displayed, and this
+documentation string is left in it's usual place.  For purposes of
+sorting, any leading whitespace and punctuation is ignored, unless the
+first non-whitespace character is @samp{-}.  This entry is displayed
+after all options, after @code{OPTION_DOC} entries with a leading
+@samp{-}, in the same group.
 
 @comment argp.h
 @comment GNU
 @item OPTION_NO_USAGE
-This option shouldn't be included in `long' usage messages (but is still
-included in help messages).  This is mainly intended for options that
-are completely documented in an argp's @code{args_doc} field
-(@pxref{Argp Parsers}), in which case including the option
-in the generic usage list would be redundant.
+This option shouldn't be included in `long' usage messages, but should
+still be included in other help messages.  This is intended for options
+that are completely documented in an argp's @code{args_doc}
+field.  @xref{Argp Parsers}.  Including this option in the generic usage
+list would be redundant, and should be avoided.
 
 For instance, if @code{args_doc} is @code{"FOO BAR\n-x BLAH"}, and the
 @samp{-x} option's purpose is to distinguish these two cases, @samp{-x}
@@ -359,9 +366,8 @@ should probably be marked @code{OPTION_NO_USAGE}.
 
 The function pointed to by the @code{parser} field in a @code{struct
 argp} (@pxref{Argp Parsers}) defines what actions take place in response
-to each option or argument that is parsed, and is also used as a hook,
-to allow a parser to do something at certain other points during
-parsing.
+to each option or argument parsed.  It is also used as a hook, allowing a
+parser to perform tasks at certain other points during parsing.
 
 @need 2000
 Argp parser functions have the following type signature:
@@ -377,40 +383,40 @@ where the arguments are as follows:
 @table @var
 @item key
 For each option that is parsed, @var{parser} is called with a value of
-@var{key} from that option's @code{key} field in the option vector
-(@pxref{Argp Option Vectors}).  @var{parser} is also called at other
-times with special reserved keys, such as @code{ARGP_KEY_ARG} for
+@var{key} from that option's @code{key} field in the option
+vector.  @xref{Argp Option Vectors}.  @var{parser} is also called at
+other times with special reserved keys, such as @code{ARGP_KEY_ARG} for
 non-option arguments.  @xref{Argp Special Keys}.
 
 @item arg
-If @var{key} is an option, @var{arg} is the value given for it, or zero
-if no value was specified.  Only options that have a non-zero @code{arg}
-field can ever have a value, and those must @emph{always} have a value,
-unless the @code{OPTION_ARG_OPTIONAL} flag was specified (if the input
-being parsed specifies a value for an option that doesn't allow one, an
-error results before @var{parser} ever gets called).
+If @var{key} is an option, @var{arg} is its given value.  This defaults
+to zero if no value is specified.  Only options that have a non-zero
+@code{arg} field can ever have a value.  These must @emph{always} have a
+value unless the @code{OPTION_ARG_OPTIONAL} flag is specified.  If the
+input being parsed specifies a value for an option that doesn't allow
+one, an error results before @var{parser} ever gets called.
 
-If @var{key} is @code{ARGP_KEY_ARG}, @var{arg} is a non-option argument;
-other special keys always have a zero @var{arg}.
+If @var{key} is @code{ARGP_KEY_ARG}, @var{arg} is a non-option
+argument.  Other special keys always have a zero @var{arg}.
 
 @item state
 @var{state} points to a @code{struct argp_state}, containing useful
-information about the current parsing state for use by @var{parser}.
-@xref{Argp Parsing State}.
+information about the current parsing state for use by
+@var{parser}.  @xref{Argp Parsing State}.
 @end table
 
 When @var{parser} is called, it should perform whatever action is
-appropriate for @var{key}, and return either @code{0} for success,
-@code{ARGP_ERR_UNKNOWN}, if the value of @var{key} is not handled by
-this parser function, or a unix error code if a real error occurred
-(@pxref{Error Codes}).
+appropriate for @var{key}, and return @code{0} for success,
+@code{ARGP_ERR_UNKNOWN} if the value of @var{key} is not handled by this
+parser function, or a unix error code if a real error
+occurred.  @xref{Error Codes}.
 
 @comment argp.h
 @comment GNU
 @deftypevr Macro int ARGP_ERR_UNKNOWN
 Argp parser functions should return @code{ARGP_ERR_UNKNOWN} for any
 @var{key} value they do not recognize, or for non-option arguments
-(@code{@var{key} == ARGP_KEY_ARG}) that they do not wish to handle.
+(@code{@var{key} == ARGP_KEY_ARG}) that they are not equipped to handle.
 @end deftypevr
 
 @need 3000
@@ -444,8 +450,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
 In addition to key values corresponding to user options, the @var{key}
 argument to argp parser functions may have a number of other special
-values (@var{arg} and @var{state} refer to parser function arguments;
-@pxref{Argp Parser Functions}):
+values.  In the following example @var{arg} and @var{state} refer to
+parser function arguments.  @xref{Argp Parser Functions}.
 
 @vtable @code
 @comment argp.h
@@ -454,19 +460,19 @@ values (@var{arg} and @var{state} refer to parser function arguments;
 This is not an option at all, but rather a command line argument, whose
 value is pointed to by @var{arg}.
 
-When there are multiple parser functions (due to argp parsers being
-combined), it's impossible to know which one wants to handle an
-argument, so each is called in turn, until one returns 0 or an error
-other than @code{ARGP_ERR_UNKNOWN}; if an argument is handled by no one,
+When there are multiple parser functions in play due to argp parsers
+being combined, it's impossible to know which one will handle a specific
+argument.  Each is called until one returns 0 or an error other than
+@code{ARGP_ERR_UNKNOWN}; if an argument is not handled,
 @code{argp_parse} immediately returns success, without parsing any more
 arguments.
 
 Once a parser function returns success for this key, that fact is
-recorded, and the @code{ARGP_KEY_NO_ARGS} case won't be used.
-@emph{However}, if while processing the argument, a parser function
+recorded, and the @code{ARGP_KEY_NO_ARGS} case won't be
+used.  @emph{However}, if while processing the argument a parser function
 decrements the @code{next} field of its @var{state} argument, the option
 won't be considered processed; this is to allow you to actually modify
-the argument (perhaps into an option), and have it processed again.
+the argument, perhaps into an option, and have it processed again.
 
 @comment argp.h
 @comment GNU
@@ -477,10 +483,11 @@ If a parser function returns @code{ARGP_ERR_UNKNOWN} for
 convenient for consuming all remaining arguments.  @var{arg} is 0, and
 the tail of the argument vector may be found at @code{@var{state}->argv
 + @var{state}->next}.  If success is returned for this key, and
-@code{@var{state}->next} is unchanged, then all remaining arguments are
-considered to have been consumed, otherwise, the amount by which
-@code{@var{state}->next} has been adjust indicates how many were used.
-For instance, here's an example that uses both, for different args:
+@code{@var{state}->next} is unchanged, all remaining arguments are
+considered to have been consumed.  Otherwise, the amount by which
+@code{@var{state}->next} has been adjusted indicates how many were used.
+Here's an example that uses both, for different args:
+
 
 @smallexample
 ...
@@ -501,131 +508,132 @@ case ARGP_KEY_ARGS:
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_END
-There are no more command line arguments at all.  The parser functions
-are called in different order (means children first) for this value
-which allows each parser to clean up its state for the parent.
+This indicates that there are no more command line arguments.  Parser
+functions are called in a different order, children first.  This allows
+each parser to clean up its state for the parent.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_NO_ARGS
-Because it's common to want to do some special processing if there
-aren't any non-option args, parser functions are called with this key if
-they didn't successfully process any non-option arguments.  Called just
-before @code{ARGP_KEY_END} (where more general validity checks on
-previously parsed arguments can take place).
+Because it's common to do some special processing if there aren't any
+non-option args, parser functions are called with this key if they
+didn't successfully process any non-option arguments.  This is called
+just before @code{ARGP_KEY_END}, where more general validity checks on
+previously parsed arguments take place.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_INIT
-Passed in before any parsing is done.  Afterwards, the values of each
-element of the @code{child_input} field of @var{state}, if any, are
+This is passed in before any parsing is done.  Afterwards, the values of
+each element of the @code{child_input} field of @var{state}, if any, are
 copied to each child's state to be the initial value of the @code{input}
 when @emph{their} parsers are called.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_SUCCESS
-Passed in when parsing has successfully been completed (even if there are
-still arguments remaining).
+Passed in when parsing has successfully been completed, even if
+arguments remain.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_ERROR
-Passed in if an error has occurred, and parsing terminated (in which case
-a call with a key of @code{ARGP_KEY_SUCCESS} is never made).
+Passed in if an error has occurred and parsing is terminated.  In this
+case a call with a key of @code{ARGP_KEY_SUCCESS} is never made.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_FINI
-The final key ever seen by any parser (even after
-@code{ARGP_KEY_SUCCESS} and @code{ARGP_KEY_ERROR}).  Any resources
-allocated by @code{ARGP_KEY_INIT} may be freed here (although sometimes
-certain resources allocated there are to be returned to the caller after
-a successful parse; in that case, those particular resources can be
-freed in the @code{ARGP_KEY_ERROR} case).
+The final key ever seen by any parser, even after
+@code{ARGP_KEY_SUCCESS} and @code{ARGP_KEY_ERROR}.  Any resources
+allocated by @code{ARGP_KEY_INIT} may be freed here.  At times, certain
+resources allocated are to be returned to the caller after a successful
+parse.  In that case, those particular resources can be freed in the
+@code{ARGP_KEY_ERROR} case.
 @end vtable
 
 In all cases, @code{ARGP_KEY_INIT} is the first key seen by parser
-functions, and @code{ARGP_KEY_FINI} the last (unless an error was
-returned by the parser for @code{ARGP_KEY_INIT}).  Other keys can occur
-in one the following orders (@var{opt} refers to an arbitrary option
-key):
+functions, and @code{ARGP_KEY_FINI} the last, unless an error was
+returned by the parser for @code{ARGP_KEY_INIT}.  Other keys can occur
+in one the following orders.  @var{opt} refers to an arbitrary option
+key:
 
 @table @asis
 @item @var{opt}@dots{} @code{ARGP_KEY_NO_ARGS} @code{ARGP_KEY_END} @code{ARGP_KEY_SUCCESS}
-The arguments being parsed contained no non-option arguments at all.
+The arguments being parsed did not contain any non-option arguments.
 
 @item ( @var{opt} | @code{ARGP_KEY_ARG} )@dots{} @code{ARGP_KEY_END} @code{ARGP_KEY_SUCCESS}
-All non-option arguments were successfully handled by a parser function
-(there may be multiple parser functions if multiple argp parsers were
-combined).
+All non-option arguments were successfully handled by a parser
+function.  There may be multiple parser functions if multiple argp
+parsers were combined.
 
 @item ( @var{opt} | @code{ARGP_KEY_ARG} )@dots{} @code{ARGP_KEY_SUCCESS}
-Some non-option argument was unrecognized.
+Some non-option argument went unrecognized.
 
 This occurs when every parser function returns @code{ARGP_KEY_UNKNOWN}
-for an argument, in which case parsing stops at that argument.  If
-@var{arg_index} is a null pointer otherwise an error occurs.
+for an argument, in which case parsing stops at that argument if
+@var{arg_index} is a null pointer.  Otherwise an error occurs.
 @end table
 
-In all cases, if a non-null value for @var{arg_index} was passed to
+In all cases, if a non-null value for @var{arg_index} gets passed to
 @code{argp_parse}, the index of the first unparsed command-line argument
-is passed back in it.
+is passed back in that value.
 
-If an error occurs (either detected by argp, or because a parser
-function returned an error value), then each parser is called with
-@code{ARGP_KEY_ERROR}, and no further calls are made except the final
-call with @code{ARGP_KEY_FINI}.
+If an error occurs and is either detected by argp or because a parser
+function returned an error value, each parser is called with
+@code{ARGP_KEY_ERROR}.  No further calls are made, except the final call
+with @code{ARGP_KEY_FINI}.
 
 @node Argp Helper Functions, , Argp Parsing State, Argp Parser Functions
 @subsubsection Functions For Use in Argp Parsers
 
-Argp provides a number of functions for the user of argp parser
-functions (@pxref{Argp Parser Functions}), mostly for producing error
-messages.  These take as their first argument the @var{state} argument
-to the parser function (@pxref{Argp Parsing State}).
+Argp provides a number of functions available to the user of argp
+(@pxref{Argp Parser Functions}), mostly for producing error messages.
+These take as their first argument the @var{state} argument to the
+parser function.  @xref{Argp Parsing State}.
+
 
 @cindex usage messages, in argp
 @comment argp.h
 @comment GNU
 @deftypefun void argp_usage (const struct argp_state *@var{state})
-Output the standard usage message for the argp parser referred to by
+Outputs the standard usage message for the argp parser referred to by
 @var{state} to @code{@var{state}->err_stream} and terminate the program
-with @code{exit (argp_err_exit_status)} (@pxref{Argp Global Variables}).
+with @code{exit (argp_err_exit_status)}.  @xref{Argp Global Variables}.
 @end deftypefun
 
 @cindex syntax error messages, in argp
 @comment argp.h
 @comment GNU
 @deftypefun void argp_error (const struct argp_state *@var{state}, const char *@var{fmt}, @dots{})
-Print the printf format string @var{fmt} and following args, preceded by
-the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
---help}} message, and terminate the program with an exit status of
-@code{argp_err_exit_status} (@pxref{Argp Global Variables}).
+Prints the printf format string @var{fmt} and following args, preceded
+by the program name and @samp{:}, and followed by a @w{@samp{Try @dots{}
+--help}} message, and terminates the program with an exit status of
+@code{argp_err_exit_status}.  @xref{Argp Global Variables}.
 @end deftypefun
 
 @cindex error messages, in argp
 @comment argp.h
 @comment GNU
 @deftypefun void argp_failure (const struct argp_state *@var{state}, int @var{status}, int @var{errnum}, const char *@var{fmt}, @dots{})
-Similarly to the standard gnu error-reporting function @code{error},
-print the printf format string @var{fmt} and following args, preceded by
-the program name and @samp{:}, and followed by the standard unix error
-text for @var{errnum} if it is non-zero; then if @var{status} is
-non-zero, terminate the program with that as its exit status.
+Similar to the standard gnu error-reporting function @code{error}, this
+prints the program name and @samp{:}, the printf format string
+@var{fmt}, and the appropriate following args.  If it is non-zero, the
+standard unix error text for @var{errnum} is printed.  If @var{status} is
+non-zero, it terminates the program with that value as its exit status.
 
-The difference between this function and @code{argp_error} is that
+The difference between @code{argp_failure} and @code{argp_error} is that
 @code{argp_error} is for @emph{parsing errors}, whereas
 @code{argp_failure} is for other problems that occur during parsing but
-don't reflect a syntactic problem with the input---such as illegal
-values for options, bad phase of the moon, etc.
+don't reflect a syntactic problem with the input, such as illegal values
+for options, bad phase of the moon, etc.
 @end deftypefun
 
 @comment argp.h
 @comment GNU
 @deftypefun void argp_state_help (const struct argp_state *@var{state}, FILE *@var{stream}, unsigned @var{flags})
-Output a help message for the argp parser referred to by @var{state} to
-@var{stream}.  The @var{flags} argument determines what sort of help
+Outputs a help message for the argp parser referred to by @var{state},
+to @var{stream}.  The @var{flags} argument determines what sort of help
 message is produced.  @xref{Argp Help Flags}.
 @end deftypefun
 
@@ -633,15 +641,15 @@ Error output is sent to @code{@var{state}->err_stream}, and the program
 name printed is @code{@var{state}->name}.
 
 The output or program termination behavior of these functions may be
-suppressed if the @code{ARGP_NO_EXIT} or @code{ARGP_NO_ERRS} flags,
-respectively, were passed to @code{argp_parse}.  @xref{Argp Flags}.
+suppressed if the @code{ARGP_NO_EXIT} or @code{ARGP_NO_ERRS} flags are
+passed to @code{argp_parse}.  @xref{Argp Flags}.
 
 This behavior is useful if an argp parser is exported for use by other
 programs (e.g., by a library), and may be used in a context where it is
-not desirable to terminate the program in response to parsing errors.
-In argp parsers intended for such general use, calls to any of these
-functions should be followed by code return of an appropriate error code
-for the case where the program @emph{doesn't} terminate; for example:
+not desirable to terminate the program in response to parsing errors.  In
+argp parsers intended for such general use, and for the case where the
+program @emph{doesn't} terminate, calls to any of these functions should
+be followed by code that returns the appropriate error code:
 
 @smallexample
 if (@var{bad argument syntax})
@@ -652,8 +660,8 @@ if (@var{bad argument syntax})
 @end smallexample
 
 @noindent
-If it's known that a parser function will only be used when
-@code{ARGP_NO_EXIT} is not set, the return may be omitted.
+If a parser function will @emph{only} be used when @code{ARGP_NO_EXIT}
+is not set, the return may be omitted.
 
 @node Argp Parsing State, Argp Helper Functions, Argp Special Keys, Argp Parser Functions
 @subsubsection Argp Parsing State
@@ -671,53 +679,54 @@ This structure has the following fields, which may be modified as noted:
 @item const struct argp *const root_argp
 The top level argp parser being parsed.  Note that this is often
 @emph{not} the same @code{struct argp} passed into @code{argp_parse} by
-the invoking program (@pxref{Argp}), but instead an internal argp parser
-that contains options implemented by @code{argp_parse} itself (such as
-@samp{--help}).
+the invoking program.  @xref{Argp}.  It is an internal argp parser that
+contains options implemented by @code{argp_parse} itself, such as
+@samp{--help}.
 
 @item int argc
 @itemx char **argv
-The argument vector being parsed.  May be modified.
+The argument vector being parsed.  This may be modified.
 
 @item int next
-The index in @code{argv} of the next argument to be parsed.  May be modified.
+The index in @code{argv} of the next argument to be parsed.  This may be
+modified.
 
 One way to consume all remaining arguments in the input is to set
-@code{@var{state}->next = @var{state}->argc} (perhaps after recording
-the value of the @code{next} field to find the consumed arguments).
-Also, you can cause the current option to be re-parsed by decrementing
-this field, and then modifying
-@code{@var{state}->argv[@var{state}->next]} to be the option that should
-be reexamined.
+@code{@var{state}->next = @var{state}->argc}, perhaps after recording
+the value of the @code{next} field to find the consumed arguments.  The
+current option can be re-parsed immediately by decrementing this field,
+then modifying @code{@var{state}->argv[@var{state}->next]} to reflect
+the option that should be reexamined.
 
 @item unsigned flags
-The flags supplied to @code{argp_parse}.  May be modified, although some
-flags may only take effect when @code{argp_parse} is first invoked.
-@xref{Argp Flags}.
+The flags supplied to @code{argp_parse}.  These may be modified, although
+some flags may only take effect when @code{argp_parse} is first
+invoked.  @xref{Argp Flags}.
 
 @item unsigned arg_num
 While calling a parsing function with the @var{key} argument
-@code{ARGP_KEY_ARG}, this is the number of the current arg, starting at
-0, and incremented after each such call returns.  At all other times,
-this is the number of such arguments that have been processed.
+@code{ARGP_KEY_ARG}, this represents the number of the current arg,
+starting at 0.  It is incremented after each @code{ARGP_KEY_ARG} call
+returns.  At all other times, this is the number of @code{ARGP_KEY_ARG}
+arguments that have been processed.
 
 @item int quoted
 If non-zero, the index in @code{argv} of the first argument following a
-special @samp{--} argument (which prevents anything following being
-interpreted as an option).  Only set once argument parsing has proceeded
-past this point.
+special @samp{--} argument.  This prevents anything that follows from
+being interpreted as an option.  It is only set after argument parsing
+has proceeded past this point.
 
 @item void *input
 An arbitrary pointer passed in from the caller of @code{argp_parse}, in
 the @var{input} argument.
 
 @item void **child_inputs
-Values to pass to child parsers.  This vector will be the same length as
-the number of children in the current parser, and each child parser will
-be given the value of @code{@var{state}->child_inputs[@var{i}]} as
-@emph{its} @code{@var{state}->input} field, where @var{i} is the index
-of the child in the this parser's @code{children} field.  @xref{Argp
-Children}.
+These are values that will be passed to child parsers.  This vector will
+be the same length as the number of children in the current parser.  Each
+child parser will be given the value of
+@code{@var{state}->child_inputs[@var{i}]} as @emph{its}
+@code{@var{state}->input} field, where @var{i} is the index of the child
+in the this parser's @code{children} field.  @xref{Argp Children}.
 
 @item void *hook
 For the parser function's use.  Initialized to 0, but otherwise ignored
@@ -725,15 +734,15 @@ by argp.
 
 @item char *name
 The name used when printing messages.  This is initialized to
-@code{argv[0]}, or @code{program_invocation_name} if that is
+@code{argv[0]}, or @code{program_invocation_name} if @code{argv[0]} is
 unavailable.
 
 @item FILE *err_stream
 @itemx FILE *out_stream
-Stdio streams used when argp prints something; error messages are
-printed to @code{err_stream}, and all other output (such as
-@samp{--help} output) to @code{out_stream}.  These are initialized to
-@code{stderr} and @code{stdout} respectively (@pxref{Standard Streams}).
+The stdio streams used when argp prints.  Error messages are printed to
+@code{err_stream}, all other output, such as @samp{--help} output) to
+@code{out_stream}.  These are initialized to @code{stderr} and
+@code{stdout} respectively.  @xref{Standard Streams}.
 
 @item void *pstate
 Private, for use by the argp implementation.
@@ -743,45 +752,48 @@ Private, for use by the argp implementation.
 @node Argp Children, Argp Help Filtering, Argp Parser Functions, Argp Parsers
 @subsection Combining Multiple Argp Parsers
 
-The @code{children} field in a @code{struct argp} allows other argp
-parsers to be combined with the referencing one to parse a single set of
-arguments.  It should point to a vector of @code{struct argp_child},
-terminated by an entry having a value of zero in the @code{argp} field.
+The @code{children} field in a @code{struct argp} enables other argp
+parsers to be combined with the referencing one for the parsing of a
+single set of arguments.  This field should point to a vector of
+@code{struct argp_child}, which is terminated by an entry having a value
+of zero in the @code{argp} field.
 
-Where conflicts between combined parsers arise (for instance, if two
-specify an option with the same name), they are resolved in favor of
-the parent argp parsers, or earlier argp parsers in the list of children.
+Where conflicts between combined parsers arise, as when two specify an
+option with the same name, the parser conflicts are resolved in favor of
+the parent argp parser(s), or the earlier of the argp parsers in the
+list of children.
 
 @comment argp.h
 @comment GNU
 @deftp {Data Type} {struct argp_child}
 An entry in the list of subsidiary argp parsers pointed to by the
-@code{children} field in a @code{struct argp}.  The fields are as follows:
+@code{children} field in a @code{struct argp}.  The fields are as
+follows:
 
 @table @code
 @item const struct argp *argp
-The child argp parser, or zero to end the list.
+The child argp parser, or zero to end of the list.
 
 @item int flags
 Flags for this child.
 
 @item const char *header
-If non-zero, an optional header to be printed in help output before the
-child options.  As a side-effect, a non-zero value forces the child
-options to be grouped together; to achieve this effect without actually
-printing a header string, use a value of @code{""}.  As with header
-strings specified in an option entry, the value conventionally has
-@samp{:} as the last character.  @xref{Argp Option Vectors}.
+If non-zero, this is an optional header to be printed within help output
+before the child options.  As a side-effect, a non-zero value forces the
+child options to be grouped together.  To achieve this effect without
+actually printing a header string, use a value of @code{""}.  As with
+header strings specified in an option entry, the conventional value of
+the last character is @samp{:}.  @xref{Argp Option Vectors}.
 
 @item int group
-Where to group the child options relative to the other (`consolidated')
-options in the parent argp parser.  The values are the same as the
-@code{group} field in @code{struct argp_option} (@pxref{Argp Option
-Vectors}), but all child-groupings follow parent options at a particular
-group level.  If both this field and @code{header} are zero, then the
-child's options aren't grouped together at all, but rather merged with
-the parent options (merging the child's grouping levels with the
-parents).
+This is where the child options are grouped relative to the other
+`consolidated' options in the parent argp parser.  The values are the
+same as the @code{group} field in @code{struct argp_option}.  @xref{Argp
+Option Vectors}.  All child-groupings follow parent options at a
+particular group level.  If both this field and @code{header} are zero,
+then the child's options aren't grouped together, they are merged with
+parent options at the parent option group level.
+
 @end table
 @end deftp
 
@@ -798,10 +810,9 @@ modify these defaults, the following flags may be or'd together in the
 @comment GNU
 @item ARGP_PARSE_ARGV0
 Don't ignore the first element of the @var{argv} argument to
-@code{argp_parse}.  Normally (and always unless @code{ARGP_NO_ERRS} is
-set) the first element of the argument vector is skipped for option
-parsing purposes, as it corresponds to the program name in a command
-line.
+@code{argp_parse}.  Unless @code{ARGP_NO_ERRS} is set, the first element
+of the argument vector is skipped for option parsing purposes, as it
+corresponds to the program name in a command line.
 
 @comment argp.h
 @comment GNU
@@ -809,44 +820,44 @@ line.
 Don't print error messages for unknown options to @code{stderr}; unless
 this flag is set, @code{ARGP_PARSE_ARGV0} is ignored, as @code{argv[0]}
 is used as the program name in the error messages.  This flag implies
-@code{ARGP_NO_EXIT} (on the assumption that silent exiting upon errors
-is bad behavior).
+@code{ARGP_NO_EXIT}.  This is based on the assumption that silent exiting
+upon errors is bad behavior.
 
 @comment argp.h
 @comment GNU
 @item ARGP_NO_ARGS
-Don't parse any non-option args.  Normally non-option args are parsed by
-calling the parse functions with a key of @code{ARGP_KEY_ARG}, and the
-actual arg as the value.  This flag needn't normally be set, as the
-normal behavior is to stop parsing as soon as some argument isn't
-accepted by a parsing function.  @xref{Argp Parser Functions}.
+Don't parse any non-option args.  Normally these are parsed by calling
+the parse functions with a key of @code{ARGP_KEY_ARG}, the actual
+argument being the value.  This flag needn't normally be set, as the
+default behavior is to stop parsing as soon as an argument fails to be
+parsed.  @xref{Argp Parser Functions}.
 
 @comment argp.h
 @comment GNU
 @item ARGP_IN_ORDER
 Parse options and arguments in the same order they occur on the command
-line---normally they're rearranged so that all options come first
+line.  Normally they're rearranged so that all options come first.
 
 @comment argp.h
 @comment GNU
 @item ARGP_NO_HELP
 Don't provide the standard long option @samp{--help}, which ordinarily
-causes usage and option help information to be output to @code{stdout},
-and @code{exit (0)} called.
+causes usage and option help information to be output to @code{stdout}
+and @code{exit (0)}.
 
 @comment argp.h
 @comment GNU
 @item ARGP_NO_EXIT
-Don't exit on errors (they may still result in error messages).
+Don't exit on errors, although they may still result in error messages.
 
 @comment argp.h
 @comment GNU
 @item ARGP_LONG_ONLY
-Use the gnu getopt `long-only' rules for parsing arguments.  This
-allows long-options to be recognized with only a single @samp{-} (for
-instances, @samp{-help}), but results in a generally somewhat less
-useful interface, that conflicts with the way most GNU programs work.
-For this reason, its use is discouraged.
+Use the gnu getopt `long-only' rules for parsing arguments.  This allows
+long-options to be recognized with only a single @samp{-}
+(i.e.  @samp{-help}).  This results in a less useful interface, and its
+use is discouraged as it conflicts with the way most GNU programs work
+as well as the GNU coding standards.
 
 @comment argp.h
 @comment GNU
@@ -860,27 +871,28 @@ Turns off any message-printing/exiting options, specifically
 @subsection Customizing Argp Help Output
 
 The @code{help_filter} field in a @code{struct argp} is a pointer to a
-function to filter the text of help messages before displaying them.
-They have a function signature like:
+function that filters the text of help messages before displaying
+them.  They have a function signature like:
 
 @smallexample
 char *@var{help-filter} (int @var{key}, const char *@var{text}, void *@var{input})
 @end smallexample
 
-@noindent
-where @var{key} is either a key from an option, in which case @var{text}
-is that option's help text (@pxref{Argp Option Vectors}), or one of the
-special keys with names beginning with @samp{ARGP_KEY_HELP_}, describing
-which other help text @var{text} is (@pxref{Argp Help Filter Keys}).
 
-The function should return either @var{text}, if it should be used
-as-is, a replacement string, which should be allocated using
-@code{malloc}, and will be freed by argp, or zero, meaning `print
-nothing'.  The value of @var{text} supplied is @emph{after} any
-translation has been done, so if any of the replacement text also needs
-translation, that should be done by the filter function.  @var{input} is
-either the input supplied to @code{argp_parse}, or zero, if
-@code{argp_help} was called directly by the user.
+@noindent
+Where @var{key} is either a key from an option, in which case @var{text}
+is that option's help text.  @xref{Argp Option Vectors}.  Alternately, one
+of the special keys with names beginning with @samp{ARGP_KEY_HELP_}
+might be used, describing which other help text @var{text} will contain.
+@xref{Argp Help Filter Keys}.
+
+The function should return either @var{text} if it remains as-is, or a
+replacement string allocated using @code{malloc}.  This will be either be
+freed by argp or zero, which prints nothing.  The value of @var{text} is
+supplied @emph{after} any translation has been done, so if any of the
+replacement text needs translation, it will be done by the filter
+function.  @var{input} is either the input supplied to @code{argp_parse}
+or it is zero, if @code{argp_help} was called directly by the user.
 
 @menu
 * Keys: Argp Help Filter Keys.  Special @var{key} values for help filter functions.
@@ -890,66 +902,63 @@ either the input supplied to @code{argp_parse}, or zero, if
 @subsubsection Special Keys for Argp Help Filter Functions
 
 The following special values may be passed to an argp help filter
-function as the first argument, in addition to key values for user
-options, and specify which help text the @var{text} argument contains:
+function as the first argument in addition to key values for user
+options.  They specify which help text the @var{text} argument contains:
 
 @vtable @code
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_PRE_DOC
-Help text preceding options.
+The help text preceding options.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_POST_DOC
-Help text following options.
+The help text following options.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_HEADER
-Option header string.
+The option header string.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_EXTRA
-After all other documentation; @var{text} is zero for this key.
+This is used after all other documentation; @var{text} is zero for this key.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_DUP_ARGS_NOTE
-The explanatory note emitted when duplicate option arguments have been
-suppressed.
+The explanatory note printed when duplicate option arguments have been suppressed.
 
 @comment argp.h
 @comment GNU
 @item ARGP_KEY_HELP_ARGS_DOC
-The argument doc string (the @code{args_doc} field from the argp parser;
-@pxref{Argp Parsers}).
+The argument doc string; formally the @code{args_doc} field from the argp parser.  @xref{Argp Parsers}.
 @end vtable
 
 @node Argp Help, Argp Examples, Argp Flags, Argp
 @subsection The @code{argp_help} Function
 
-Normally programs using argp need not worry too much about printing
-argument-usage-type help messages, because the standard @samp{--help}
-option is handled automatically by argp, and the typical error cases can
-be handled using @code{argp_usage} and @code{argp_error} (@pxref{Argp
-Helper Functions}).
-
-However, if it's desirable to print a standard help message in some
-context other than parsing the program options, argp offers the
-@code{argp_help} interface.
+Normally programs using argp need not be written with particular
+printing argument-usage-type help messages in mind as the standard
+@samp{--help} option is handled automatically by argp.  Typical error
+cases can be handled using @code{argp_usage} and
+@code{argp_error}.  @xref{Argp Helper Functions}.  However, if it's
+desirable to print a help message in some context other than parsing the
+program options, argp offers the @code{argp_help} interface.
 
 @comment argp.h
 @comment GNU
 @deftypefun void argp_help (const struct argp *@var{argp}, FILE *@var{stream}, unsigned @var{flags}, char *@var{name})
-Output a help message for the argp parser @var{argp} to @var{stream}.
-What sort of messages is printed is determined by @var{flags}.
+This outputs a help message for the argp parser @var{argp} to
+@var{stream}.  The type of messages printed will be determined by
+@var{flags}.
 
 Any options such as @samp{--help} that are implemented automatically by
 argp itself will @emph{not} be present in the help output; for this
-reason, it is better to use @code{argp_state_help} if calling from
-within an argp parser function.  @xref{Argp Helper Functions}.
+reason it is best to use @code{argp_state_help} if calling from within
+an argp parser function.  @xref{Argp Helper Functions}.
 @end deftypefun
 
 @menu
@@ -959,73 +968,74 @@ within an argp parser function.  @xref{Argp Helper Functions}.
 @node Argp Help Flags, , , Argp Help
 @subsection Flags for the @code{argp_help} Function
 
-When calling @code{argp_help} (@pxref{Argp Help}), or
-@code{argp_state_help} (@pxref{Argp Helper Functions}), exactly what is
-output is determined by the @var{flags} argument, which should consist
-of any of the following flags, or'd together:
+When calling @code{argp_help} (@pxref{Argp Help}) or
+@code{argp_state_help} (@pxref{Argp Helper Functions}) the exact output
+is determined by the @var{flags} argument.  This should consist of any of
+the following flags, or'd together:
 
 @vtable @code
 @item ARGP_HELP_USAGE
 A unix @samp{Usage:} message that explicitly lists all options.
 
 @item ARGP_HELP_SHORT_USAGE
-A unix @samp{Usage:} message that displays only an appropriate
-placeholder to indicate where the options go; useful for showing
-the non-option argument syntax.
+A unix @samp{Usage:} message that displays an appropriate placeholder to
+indicate where the options go; useful for showing the non-option
+argument syntax.
 
 @item ARGP_HELP_SEE
 A @samp{Try @dots{} for more help} message; @samp{@dots{}} contains the
 program name and @samp{--help}.
 
 @item ARGP_HELP_LONG
-A verbose option help message that gives each option understood along
+A verbose option help message that gives each option available along
 with its documentation string.
 
 @item ARGP_HELP_PRE_DOC
-The part of the argp parser doc string that precedes the verbose option help.
+The part of the argp parser doc string preceding the verbose option help.
 
 @item ARGP_HELP_POST_DOC
-The part of the argp parser doc string that follows the verbose option help.
+The part of the argp parser doc string that following the verbose option help.
 
 @item ARGP_HELP_DOC
 @code{(ARGP_HELP_PRE_DOC | ARGP_HELP_POST_DOC)}
 
 @item ARGP_HELP_BUG_ADDR
-A message saying where to report bugs for this program, if the
-@code{argp_program_bug_address} variable contains one.
+A message that prints where to report bugs for this program, if the
+@code{argp_program_bug_address} variable contains this information.
 
 @item ARGP_HELP_LONG_ONLY
-Modify any output appropriately to reflect @code{ARGP_LONG_ONLY} mode.
+This will modify any output to reflect the @code{ARGP_LONG_ONLY} mode.
 @end vtable
 
 The following flags are only understood when used with
-@code{argp_state_help}, and control whether the function returns after
+@code{argp_state_help}.  They control whether the function returns after
 printing its output, or terminates the program:
 
 @vtable @code
 @item ARGP_HELP_EXIT_ERR
-Terminate the program with @code{exit (argp_err_exit_status)}.
+This will terminate the program with @code{exit (argp_err_exit_status)}.
 
 @item ARGP_HELP_EXIT_OK
-Terminate the program with @code{exit (0)}.
+This will terminate the program with @code{exit (0)}.
 @end vtable
 
-The following flags are combinations of the basic ones for printing
+The following flags are combinations of the basic flags for printing
 standard messages:
 
 @vtable @code
 @item ARGP_HELP_STD_ERR
-Assuming an error message for a parsing error has already printed,
-prints a note on how to get help, and terminates the program with an
+Assuming that an error message for a parsing error has printed, this
+prints a message on how to get help, and terminates the program with an
 error.
 
 @item ARGP_HELP_STD_USAGE
-Prints a standard usage message and terminates the program with an
-error.  This is used when no more specific error message is appropriate.
+This prints a standard usage message and terminates the program with an
+error.  This is used when no other specific error messages are
+appropriate or available.
 
 @item ARGP_HELP_STD_HELP
-Prints the standard response for a @samp{--help} option, and terminates
-the program successfully.
+This prints the standard response for a @samp{--help} option, and
+terminates the program successfully.
 @end vtable
 
 @node Argp Examples, Argp User Customization, Argp Help, Argp
@@ -1043,9 +1053,9 @@ These example programs demonstrate the basic usage of argp.
 @node Argp Example 1, Argp Example 2, , Argp Examples
 @subsubsection A Minimal Program Using Argp
 
-This is (probably) the smallest possible program that uses argp.
-It won't do much except give an error messages and exit when there are any
-arguments, and print a (rather pointless) message for @samp{--help}.
+This is perhaps the smallest program possible that uses argp.  It won't
+do much except give an error messages and exit when there are any
+arguments, and prints a rather pointless message for @samp{--help}.
 
 @smallexample
 @include argp-ex1.c.texi
@@ -1054,22 +1064,23 @@ arguments, and print a (rather pointless) message for @samp{--help}.
 @node Argp Example 2, Argp Example 3, Argp Example 1, Argp Examples
 @subsubsection A Program Using Argp with Only Default Options
 
-This program doesn't use any options or arguments, but uses argp to be
+This program doesn't use any options or arguments, it uses argp to be
 compliant with the GNU standard command line format.
 
-In addition to making sure no arguments are given, and implementing a
-@samp{--help} option, this example will have a @samp{--version} option,
-and will put the given documentation string and bug address in the
-@samp{--help} output, as per GNU standards.
+In addition to giving no arguments and implementing a @samp{--help}
+option, this example has a @samp{--version} option, which will put the
+given documentation string and bug address in the @samp{--help} output,
+as per GNU standards.
 
-The variable @code{argp} contains the argument parser specification;
-adding fields to this structure is the way most parameters are passed to
-@code{argp_parse} (the first three fields are usually used, but not in
-this small program).  There are also two global variables that argp
-knows about defined here, @code{argp_program_version} and
-@code{argp_program_bug_address} (they are global variables because they
-will almost always be constant for a given program, even if it uses
-different argument parsers for various tasks).
+The variable @code{argp} contains the argument parser
+specification.  Adding fields to this structure is the way most
+parameters are passed to @code{argp_parse}.  The first three fields are
+normally used, but they are not in this small program.  There are also
+two global variables that argp can use defined here,
+@code{argp_program_version} and @code{argp_program_bug_address}.  They
+are considered global variables because they will almost always be
+constant for a given program, even if they use different argument
+parsers for various tasks.
 
 @smallexample
 @include argp-ex2.c.texi
@@ -1078,20 +1089,20 @@ different argument parsers for various tasks).
 @node Argp Example 3, Argp Example 4, Argp Example 2, Argp Examples
 @subsubsection A Program Using Argp with User Options
 
-This program uses the same features as example 2, and adds user options
+This program uses the same features as example 2, adding user options
 and arguments.
 
-We now use the first four fields in @code{argp} (@pxref{Argp Parsers}),
-and specifies @code{parse_opt} as the parser function (@pxref{Argp
-Parser Functions}).
+We now use the first four fields in @code{argp} (@pxref{Argp Parsers})
+and specify @code{parse_opt} as the parser function.  @xref{Argp Parser
+Functions}.
 
 Note that in this example, @code{main} uses a structure to communicate
 with the @code{parse_opt} function, a pointer to which it passes in the
-@code{input} argument to @code{argp_parse} (@pxref{Argp}), and is
-retrieved by @code{parse_opt} through the @code{input} field in its
-@code{state} argument (@pxref{Argp Parsing State}).  Of course, it's
-also possible to use global variables instead, but using a structure
-like this is somewhat more flexible and clean.
+@code{input} argument to @code{argp_parse}.  @xref{Argp}.  It is retrieved
+by @code{parse_opt} through the @code{input} field in its @code{state}
+argument.  @xref{Argp Parsing State}.  Of course, it's also possible to
+use global variables instead, but using a structure like this is
+somewhat more flexible and clean.
 
 @smallexample
 @include argp-ex3.c.texi
@@ -1101,26 +1112,27 @@ like this is somewhat more flexible and clean.
 @subsubsection A Program Using Multiple Combined Argp Parsers
 
 This program uses the same features as example 3, but has more options,
-and somewhat more structure in the @samp{--help} output.  It also shows
-how you can `steal' the remainder of the input arguments past a certain
-point, for programs that accept a list of items, and the special
-@var{key} value @code{ARGP_KEY_NO_ARGS}, which is only given if no
-non-option arguments were supplied to the program (@pxref{Argp Special
-Keys}).
+and presents more structure in the @samp{--help} output.  It also
+illustrates how you can `steal' the remainder of the input arguments
+past a certain point for programs that accept a list of items.  It also
+illustrates the @var{key} value @code{ARGP_KEY_NO_ARGS}, which is only
+given if no non-option arguments were supplied to the
+program.  @xref{Argp Special Keys}.
 
-For structuring the help output, two features are used: @emph{headers},
-which are entries in the options vector (@pxref{Argp Option Vectors})
-with the first four fields being zero, and a two part documentation
-string (in the variable @code{doc}), which allows documentation both
-before and after the options (@pxref{Argp Parsers}); the
-two parts of @code{doc} are separated by a vertical-tab character
-(@code{'\v'}, or @code{'\013'}).  By convention, the documentation
-before the options is just a short string saying what the program does,
-and that afterwards is longer, describing the behavior in more detail.
-All documentation strings are automatically filled for output, although
-newlines may be included to force a line break at a particular point.
-All documentation strings are also passed to the @code{gettext}
-function, for possible translation into the current locale.
+For structuring help output, two features are used: @emph{headers} and a
+two part option string.  The @emph{headers} are entries in the options
+vector.  @xref{Argp Option Vectors}.  The first four fields are zero.  The
+two part documentation string are in the variable @code{doc}, which
+allows documentation both before and after the options.  @xref{Argp
+Parsers}; the two parts of @code{doc} are separated by a vertical-tab
+character (@code{'\v'}, or @code{'\013'}).  By convention, the
+documentation before the options is a short string stating what the
+program does, and after any options it is longer, describing the
+behavior in more detail.  All documentation strings are automatically
+filled for output, although newlines may be included to force a line
+break at a particular point.  In addition, documentation strings are
+passed to the @code{gettext} function, for possible translation into the
+current locale.
 
 @smallexample
 @include argp-ex4.c.texi
@@ -1130,47 +1142,49 @@ function, for possible translation into the current locale.
 @subsection Argp User Customization
 
 @cindex ARGP_HELP_FMT environment variable
-The way formatting of argp @samp{--help} output may be controlled to
-some extent by a program's users, by setting the @code{ARGP_HELP_FMT}
-environment variable to a comma-separated list (whitespace is ignored)
-of the following tokens:
+The formatting of argp @samp{--help} output may be controlled to some
+extent by a program's users, by setting the @code{ARGP_HELP_FMT}
+environment variable to a comma-separated list of tokens.  Whitespace is
+ignored:
 
 @table @samp
 @item dup-args
 @itemx no-dup-args
-Turn @dfn{duplicate-argument-mode} on or off.  In duplicate argument
-mode, if an option which accepts an argument has multiple names, the
-argument is shown for each name; otherwise, it is only shown for the
-first long option, and a note is emitted later so the user knows that it
-applies to the other names as well.  The default is @samp{no-dup-args},
+These turn @dfn{duplicate-argument-mode} on or off.  In duplicate
+argument mode, if an option that accepts an argument has multiple names,
+the argument is shown for each name.  Otherwise, it is only shown for the
+first long option.  A note is subsequently printed so the user knows that
+it applies to other names as well.  The default is @samp{no-dup-args},
 which is less consistent, but prettier.
 
 @item dup-args-note
 @item no-dup-args-note
-Enable or disable the note informing the user of suppressed option
-argument duplication.  The default is @samp{dup-args-note}.
+These will enable or disable the note informing the user of suppressed
+option argument duplication.  The default is @samp{dup-args-note}.
 
 @item short-opt-col=@var{n}
-Show the first short option in column @var{n} (default 2).
+This prints the first short option in column @var{n}.  The default is 2.
 
 @item long-opt-col=@var{n}
-Show the first long option in column @var{n} (default 6).
+This prints the first long option in column @var{n}.  The default is 6.
 
 @item doc-opt-col=@var{n}
-Show `documentation options' (@pxref{Argp Option Flags}) in column
-@var{n} (default 2).
+This prints `documentation options' (@pxref{Argp Option Flags}) in
+column @var{n}.  The default is 2.
 
 @item opt-doc-col=@var{n}
-Show the documentation for options starting in column @var{n} (default 29).
+This prints the documentation for options starting in column
+@var{n}.  The default is 29.
 
 @item header-col=@var{n}
-Indent group headers (which document groups of options) to column
-@var{n} (default 1).
+This will indent the group headers that document groups of options to
+column @var{n}.  The default is 1.
 
 @item usage-indent=@var{n}
-Indent continuation lines in @samp{Usage:} messages to column @var{n}
-(default 12).
+This will indent continuation lines in @samp{Usage:} messages to column
+@var{n}.  The default is 12.
 
 @item rmargin=@var{n}
-Word wrap help output at or before column @var{n} (default 79).
+This will word wrap help output at or before column @var{n}.  The default
+is 79.
 @end table
