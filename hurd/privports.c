@@ -28,7 +28,8 @@ kern_return_t
 __get_privileged_ports (host_priv_t *host_priv_ptr,
 			device_t *device_master_ptr)
 {
-  if (! _hurd_host_priv)
+  if ((host_priv_ptr && _hurd_host_priv == MACH_PORT_NULL)
+      || (device_master_ptr && _hurd_device_master == MACH_PORT_NULL))
     {
       error_t err;
 
@@ -47,16 +48,24 @@ __get_privileged_ports (host_priv_t *host_priv_ptr,
 
   if (host_priv_ptr)
     {
-      __mach_port_mod_refs (mach_task_self (),
-			    _hurd_host_priv, MACH_PORT_RIGHT_SEND, 1);
+      error_t err = _hurd_host_priv == MACH_PORT_NULL ? 0
+	: __mach_port_mod_refs (mach_task_self (),
+				_hurd_host_priv, MACH_PORT_RIGHT_SEND, +1);
+      if (err)
+	return err;
       *host_priv_ptr = _hurd_host_priv;
     }
+
   if (device_master_ptr)
     {
-      __mach_port_mod_refs (mach_task_self (),
-			    _hurd_device_master, MACH_PORT_RIGHT_SEND, 1);
+      error_t err = _hurd_device_master == MACH_PORT_NULL ? 0
+	: __mach_port_mod_refs (mach_task_self (),
+				_hurd_device_master, MACH_PORT_RIGHT_SEND, +1);
+      if (err)
+	return err;
       *device_master_ptr = _hurd_device_master;
     }
+
   return KERN_SUCCESS;
 }
 weak_alias (__get_privileged_ports, get_privileged_ports)
