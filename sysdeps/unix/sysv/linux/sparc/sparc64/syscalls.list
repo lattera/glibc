@@ -46,6 +46,7 @@ s_getdents	getdents getdents	3	__syscall_getdents
 s_getpriority	getpriority getpriority	2	__syscall_getpriority
 s_getresgid	getresgid getresgid	3	__syscall_getresgid
 s_getresuid	getresuid getresuid	3	__syscall_getresuid
+s_ipc		msgget	ipc		5	__syscall_ipc
 s_poll		poll	poll		3	__syscall_poll
 s_ptrace	ptrace	ptrace		4	__syscall_ptrace
 s_reboot	reboot	reboot		3	__syscall_reboot

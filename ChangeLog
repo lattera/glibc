@@ -1,3 +1,11 @@
+1998-12-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/texinfo.tex: Update to latest version.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/syscalls.list: Add ipc.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/syscalls.list: Likewise.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
 1998-12-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/gconv-modules: Add remaining aliases from Internet
