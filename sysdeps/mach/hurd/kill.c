@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -50,7 +50,8 @@ __kill (pid_t pid, int sig)
 	  {
 	    task_t refport;
 	    err = __proc_pid2task (proc, pid, &refport);
-	    if (!err)
+	    /* Ignore zombies.  */
+	    if (!err && refport != MACH_PORT_NULL)
 	      {
 		err = __task_terminate (refport);
 		__mach_port_deallocate (__mach_task_self (), refport);
@@ -73,6 +74,12 @@ __kill (pid_t pid, int sig)
 		/* If we could not get the task port, we can do nothing.  */
 		return taskerr;
 
+	      if (refport == MACH_PORT_NULL)
+		/* proc_pid2task returned success with a null task port.
+		   That means the process is a zombie.  Signals
+		   to zombies should return success and do nothing.  */
+		return 0;
+
 	      /* For user convenience in the case of a task that has
 		 not registered any message port with the proc server,
 		 translate a few signals to direct task operations.  */
@@ -85,6 +92,7 @@ __kill (pid_t pid, int sig)
 		  return __task_suspend (refport);
 		case SIGCONT:
 		  return __task_resume (refport);
+		case SIGTERM:
 		case SIGQUIT:
 		case SIGINT:
 		  return __task_terminate (refport);
@@ -111,7 +119,7 @@ __kill (pid_t pid, int sig)
       /* Send SIG to each process in pgrp (- PID).  */
       pid_t pidbuf[10], *pids = pidbuf;
       mach_msg_type_number_t i, npids = sizeof (pidbuf) / sizeof (pidbuf[0]);
-      
+
       err = __proc_getpgrppids (proc, - pid, &pids, &npids);
       if (!err)
 	{
