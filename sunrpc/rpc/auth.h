@@ -62,14 +62,10 @@ enum auth_stat {
 	AUTH_FAILED=7			/* some unknown reason */
 };
 
-#if 1 /* (mc68000 || sparc || vax || i386) --roland@gnu */
-typedef u_long u_int32;	/* 32-bit unsigned integers */
-#endif
-
 union des_block {
 	struct {
-		u_int32 high;
-		u_int32 low;
+		u_int32_t high;
+		u_int32_t low;
 	} key;
 	char c[8];
 };

@@ -83,7 +83,7 @@ _svcauth_unix(rqst, msg)
 		bcopy((caddr_t)buf, aup->aup_machname, (u_int)str_len);
 		aup->aup_machname[str_len] = 0;
 		str_len = RNDUP(str_len);
-		buf += str_len / sizeof (long);
+		buf = (u_long *) ((char *) buf + str_len);
 		aup->aup_uid = IXDR_GET_LONG(buf);
 		aup->aup_gid = IXDR_GET_LONG(buf);
 		gid_len = IXDR_GET_U_LONG(buf);

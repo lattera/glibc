@@ -1,6 +1,6 @@
 Dnl Process this file with autoconf to produce a configure script.
 AC_REVISION([$CVSid$])
-AC_PREREQ(2.4.2)dnl		dnl Minimum Autoconf version required.
+AC_PREREQ(2.9)dnl		dnl Minimum Autoconf version required.
 AC_INIT(features.h)
 AC_CONFIG_HEADER(config.h)
 
@@ -49,9 +49,6 @@ test $gnu_binutils = yes && gnu_as=yes gnu_ld=yes
 AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
 	    elf=$withval, elf=no)
-AC_ARG_WITH(weak-symbols, dnl
-  --with-weak-symbols	  if weak symbols are available in as and ld,
-	    weak=$withval, weak=no)
 
 AC_ARG_ENABLE(libio, dnl
 [  --enable-libio          build in GNU libio instead of GNU stdio],
@@ -406,6 +403,69 @@ if test $elf != yes; then
   fi
 fi
 
+if test $elf = yes; then
+  libc_cv_asm_underscores=no
+else
+  AC_CACHE_CHECK(for _ prefix on C symbol names, libc_cv_asm_underscores,
+		 [AC_TRY_COMPILE([asm ("_glibc_foobar:");], [glibc_foobar ();],
+				 libc_cv_asm_underscores=yes,
+				 libc_cv_asm_underscores=no)])
+fi
+if test $libc_cv_asm_underscores = no; then
+  AC_DEFINE(NO_UNDERSCORES)
+fi
+
+if test $elf = yes; then
+  libc_cv_weak_symbols=yes
+  libc_cv_asm_weak_directive=yes
+  libc_cv_asm_weakext_directive=no
+else
+  AC_CACHE_CHECK(for assembler .weak directive, libc_cv_asm_weak_directive,
+		 [dnl
+cat > conftest.s <<EOF
+.text
+${libc_cv_asm_global_directive} foo
+foo: .long 0
+.weak foo
+.weak bar; bar = foo
+EOF
+  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+    libc_cv_asm_weak_directive=yes
+  else
+    libc_cv_asm_weak_directive=no
+  fi
+  rm -f conftest*])
+
+if $libc_cv_asm_weak_directive = no; then
+  AC_CACHE_CHECK(for assembler .weakext directive,
+		 libc_cv_asm_weakext_directive,
+		 [dnl
+cat > conftest.s <<EOF
+.text
+${libc_cv_asm_global_directive} foo
+foo: .long 0
+.weakext foo
+.weak bar, foo
+EOF
+  if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
+    libc_cv_asm_weakext_directive=yes
+  else
+    libc_cv_asm_weakext_directive=no
+  fi
+  rm -f conftest*])
+
+  fi # no .weak
+fi # not ELF
+
+if test $libc_cv_asm_weak_directive; then
+  AC_DEFINE(HAVE_ASM_WEAK_DIRECTIVE)
+elif test $libc_cv_asm_weakext_directive; then
+  AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
+fi
+
+### End of automated tests.
+### Now run sysdeps configure fragments.
+
 # sysdeps configure fragments may set these with files to be linked below.
 libc_link_dests=
 libc_link_sources=
@@ -498,7 +558,7 @@ default) stdio=stdio ;;
 esac
 AC_MSG_RESULT($stdio)
 
-AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf) AC_SUBST(weak)
+AC_SUBST(gnu_ld) AC_SUBST(gnu_as) AC_SUBST(elf)
 if test $gnu_ld = yes; then
   AC_DEFINE(HAVE_GNU_LD)
 fi
@@ -507,9 +567,6 @@ if test $gnu_as = yes; then
 fi
 if test $elf = yes; then
   AC_DEFINE(HAVE_ELF)
-fi
-if test $weak = yes; then
-  AC_DEFINE(HAVE_WEAK_SYMBOLS)
 fi
 
 AC_SUBST(shared)

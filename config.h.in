@@ -4,12 +4,19 @@
 #undef	HAVE_GNU_LD
 
 /* Define if using ELF, which supports weak symbols.
-   This implies HAVE_WEAK_SYMBOLS; set by --with-elf.  */
+   This implies HAVE_ASM_WEAK_DIRECTIVE and NO_UNDERSCORES; set by
+   --with-elf.  */
 #undef	HAVE_ELF
 
-/* Define if weak symbols are available in the assembler and
-   linker being used.  Set by --with-weak-symbols.  */
-#undef	HAVE_WEAK_SYMBOLS
+/* Define if C symbols are asm symbols.  Don't define if C symbols
+   have a `_' prepended to make the asm symbol.  */
+#undef	NO_UNDERSCORES
+
+/* Define if weak symbols are available via the `.weak' directive.  */
+#undef	HAVE_ASM_WEAK_DIRECTIVE
+
+/* Define if weak symbols are available via the `.weakext' directive.  */
+#undef	HAVE_ASM_WEAKEXT_DIRECTIVE
 
 /* Define if not using ELF, but `.init' and `.fini' sections are available.  */
 #undef	HAVE_INITFINI
@@ -23,13 +30,6 @@
 /* Define to the name of the assembler's directive for
    declaring a symbol global (default `.globl').  */
 #undef	ASM_GLOBAL_DIRECTIVE
-
-/* ELF has weak symbols, and with GNU ld a.out does too.  */
-#ifndef HAVE_WEAK_SYMBOLS
-#if defined (HAVE_ELF) || defined (HAVE_GNU_LD)
-#define HAVE_WEAK_SYMBOLS
-#endif
-#endif
 
 /* Define to use GNU libio instead of GNU stdio.
    This is defined by configure under --enable-libio.  */

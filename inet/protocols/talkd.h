@@ -54,6 +54,8 @@
  * stream connection through which the conversation takes place.
  */
 
+#include <sys/types.h>
+
 /*
  * Client->server request message format.
  */
@@ -62,10 +64,10 @@ typedef struct {
 	u_char	type;		/* request type, see below */
 	u_char	answer;		/* not used */
 	u_char	pad;
-	u_long	id_num;		/* message id */
+	u_int32_t id_num;	/* message id */
 	struct	osockaddr addr;		/* old (4.3) style */
 	struct	osockaddr ctl_addr;	/* old (4.3) style */
-	long	pid;		/* caller's process id */
+	int32_t	pid;		/* caller's process id */
 #define	NAME_SIZE	12
 	char	l_name[NAME_SIZE];/* caller's name */
 	char	r_name[NAME_SIZE];/* callee's name */
@@ -81,7 +83,7 @@ typedef struct {
 	u_char	type;		/* type of request message, see below */
 	u_char	answer;		/* respose to request message, see below */
 	u_char	pad;
-	u_long	id_num;		/* message id */
+	u_int32_t id_num;	/* message id */
 	struct	osockaddr addr;	/* address for establishing conversation */
 } CTL_RESPONSE;
 

@@ -52,8 +52,8 @@ static char sccsid[] = "@(#)rcmd.c	8.3 (Berkeley) 3/26/94";
 #include <ctype.h>
 #include <string.h>
 
-int	__ivaliduser __P((FILE *, u_long, const char *, const char *));
-static int __icheckhost __P((u_long, char *));
+int	__ivaliduser __P((FILE *, u_int32_t, const char *, const char *));
+static int __icheckhost __P((u_int32_t, char *));
 
 int
 rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
@@ -65,7 +65,7 @@ rcmd(ahost, rport, locuser, remuser, cmd, fd2p)
 	struct hostent *hp;
 	struct sockaddr_in sin, from;
 	fd_set reads;
-	long oldmask;
+	int32_t oldmask;
 	pid_t pid;
 	int s, lport, timo;
 	char c;
@@ -242,7 +242,7 @@ ruserok(rhost, superuser, ruser, luser)
 	int superuser;
 {
 	struct hostent *hp;
-	u_long addr;
+	u_int32_t addr;
 	char **ap;
 
 	if ((hp = gethostbyname(rhost)) == NULL)
@@ -266,7 +266,7 @@ ruserok(rhost, superuser, ruser, luser)
  */
 int
 iruserok(raddr, superuser, ruser, luser)
-	u_long raddr;
+	u_int32_t raddr;
 	int superuser;
 	const char *ruser, *luser;
 {
@@ -347,7 +347,7 @@ again:
 int
 __ivaliduser(hostf, raddr, luser, ruser)
 	FILE *hostf;
-	u_long raddr;
+	u_int32_t raddr;
 	const char *luser, *ruser;
 {
 	register char *user, *p;
@@ -389,15 +389,15 @@ __ivaliduser(hostf, raddr, luser, ruser)
  */
 static int
 __icheckhost(raddr, lhost)
-	u_long raddr;
+	u_int32_t raddr;
 	register char *lhost;
 {
 	register struct hostent *hp;
-	register u_long laddr;
+	register u_int32_t laddr;
 	register char **pp;
 
 	/* Try for raw ip address first. */
-	if (isdigit(*lhost) && (long)(laddr = inet_addr(lhost)) != -1)
+	if (isdigit(*lhost) && (int32_t)(laddr = inet_addr(lhost)) != -1)
 		return (raddr == laddr);
 
 	/* Better be a hostname. */
@@ -406,7 +406,7 @@ __icheckhost(raddr, lhost)
 
 	/* Spin through ip addresses. */
 	for (pp = hp->h_addr_list; *pp; ++pp)
-		if (!bcmp(&raddr, *pp, sizeof(u_long)))
+		if (!bcmp(&raddr, *pp, sizeof(u_int32_t)))
 			return (1);
 
 	/* No match. */

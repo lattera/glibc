@@ -33,7 +33,7 @@
  *	@(#)tcp.h	8.1 (Berkeley) 6/10/93
  */
 
-typedef	u_long	tcp_seq;
+typedef	unsigned int	tcp_seq;
 /*
  * TCP header.
  * Per RFC 793, September, 1981.

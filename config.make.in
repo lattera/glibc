@@ -15,7 +15,6 @@ config-sysdirs = @sysnames@
 config-defines = @DEFS@
 
 elf = @elf@
-weak-symbols = @weak@
 have-initfini = @libc_cv_have_initfini@
 
 # Configuration options.

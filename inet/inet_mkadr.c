@@ -45,9 +45,9 @@ static char sccsid[] = "@(#)inet_makeaddr.c	8.1 (Berkeley) 6/4/93";
  */
 struct in_addr
 inet_makeaddr(net, host)
-	u_long net, host;
+	u_int32_t net, host;
 {
-	u_long addr;
+	u_int32_t addr;
 
 	if (net < 128)
 		addr = (net << IN_CLASSA_NSHIFT) | (host & IN_CLASSA_HOST);

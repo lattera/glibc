@@ -39,14 +39,15 @@
 /* External definitions for functions in inet(3) */
 
 #include <sys/cdefs.h>
+#include <sys/types.h>
 
 __BEGIN_DECLS
-unsigned long	 inet_addr __P((const char *));
+u_int32_t	 inet_addr __P((const char *));
 int		 inet_aton __P((const char *, struct in_addr *));
-unsigned long	 inet_lnaof __P((struct in_addr));
-struct in_addr	 inet_makeaddr __P((u_long , u_long));
-unsigned long	 inet_netof __P((struct in_addr));
-unsigned long	 inet_network __P((const char *));
+u_int32_t	 inet_lnaof __P((struct in_addr));
+struct in_addr	 inet_makeaddr __P((u_int32_t , u_int32_t));
+u_int32_t	 inet_netof __P((struct in_addr));
+u_int32_t	 inet_network __P((const char *));
 char		*inet_ntoa __P((struct in_addr));
 __END_DECLS
 

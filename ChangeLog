@@ -1,8 +1,29 @@
 Tue Mar 19 14:18:42 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* config.make.in (weak-symbols): Variable removed.
+	* configure.in (--with-weak-symbols): Option removed.
+	(NO_UNDERSCORES, HAVE_ASM_WEAK_DIRECTIVE, HAVE_ASM_WEAKEXT_DIRECTIVE):
+	New tests.
+	* config.h.in (HAVE_WEAK_SYMBOLS): #undef removed.
+	(NO_UNDERSCORES, HAVE_ASM_WEAK_DIRECTIVE, HAVE_ASM_WEAKEXT_DIRECTIVE):
+	New #undefs.
+	* libc-symbols.h: Use them instead of HAVE_WEAK_SYMBOLS.
+
 	* sysdeps/unix/bsd/pause.c: Moved to sysdeps/unix/common/pause.c.
 
 Mon Mar  4 20:17:28 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* inet/inet_lnaof.c: Use u_int32_t instead of u_long.
+	* inet/inet_mkadr.c: Likewise.
+	* inet/inet_net.c: Likewise.
+	* inet/inet_netof.c: Likewise.
+	* inet/rcmd.c: Likewise.
+	* inet/arpa/inet.h: Likewise.
+	* inet/netinet/in.h: Likewise.
+	* inet/netinet/tcp.h: Likewise.
+	* inet/protocols/rwhod.h: Likewise.
+	* inet/protocols/talkd.h: Likewise.
+	* resolv/inet_addr.c: Likewise.
 
 	* sysdeps/unix/sysv/linux/adjtime.c: Use INT_MAX instead of LONG_MAX.
 
@@ -190,12 +211,12 @@ Wed Feb 14 00:21:17 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* sunrpc/svc.c (maskp): changed from u_long* to u_int32*.
 
+	* sunrpc/rpc/xdr.h (IXDR_GET_LONG, IXDR_PUT_LONG): change casts to
+ 	u_int32_t (instead of u_long).
+
 	* sunrpc/rpc_cmsg.c (xdr_callmsg), sunrpc/svc_authux.c: increment
 	"buf" pointer by casting it to a char* first since a long* may be 8
  	bytes or more and oa->oa_length may be any multiple of 4.
-
-	* sunrpc/rpc/xdr.h (IXDR_GET_LONG, IXDR_PUT_LONG): change casts to
- 	u_int32_t (instead of u_long).
 
 	* sunrpc/clnt_udp.c (clntudp_call): replaced sizeof(u_long) by 4
 	since it really is testing for 32 bits.  Fixed casts to use
