@@ -12,6 +12,17 @@
 # listed, which must be in ascending version order reading left to right
 # and must appear in this same order in the Versions.def file.  Each listed
 # version subsumes all prior versions back to the previous listed version.
+#
+# An entry with DEFAULT in the second column gives a default third column
+# to apply on matching configurations when the matching entry for a particular
+# library has no third column.  The defaults must precede the entries they
+# apply to.
+
+# Configuration		DEFAULT			Earliest symbol set
+# -------------		---------------		------------------------------
+
+s390x-.*-linux.*        DEFAULT			GLIBC_2.2
+cris-.*-linux.*		DEFAULT			GLIBC_2.2
 
 # Configuration		Library=version		Earliest symbol set (optional)
 # -------------		---------------		------------------------------
@@ -23,8 +34,6 @@ mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
 ia64-.*-linux.*		libm=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libm=6			GLIBC_2.2
 hppa.*-.*-.*		libm=6			GLIBC_2.2
-s390x-.*-linux.*        libm=6			GLIBC_2.2
-cris-.*-linux.*		libm=6			GLIBC_2.2
 .*-.*-linux.*		libm=6
 .*-.*-gnu-gnu.*		libm=6
 
@@ -36,8 +45,6 @@ ia64-.*-linux.*		libc=6.1		GLIBC_2.2
 sh.*-.*-linux.*		libc=6			GLIBC_2.2
 sparc64-.*-linux.*	libc=6			GLIBC_2.2
 hppa.*-.*-.*		libc=6			GLIBC_2.2
-s390x-.*-linux.*	libc=6			GLIBC_2.2
-cris-.*-linux.*		libc=6			GLIBC_2.2
 .*-.*-linux.*		libc=6
 
 # libmachuser.so.1 corresponds to mach/*.defs as of Utah's UK22 release.
@@ -46,11 +53,12 @@ cris-.*-linux.*		libc=6			GLIBC_2.2
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
 .*-.*-gnu-gnu.*		libhurduser=0.0
 
+%ifndef USE_IN_LIBIO
 # libc.so.0.2 is for the Hurd alpha release 0.2.
-%ifdef USE_IN_LIBIO /* experimental only! */
-.*-.*-gnu-gnu.*		libc=0.2.90.libio	GLIBC_2.2
-%else
 .*-.*-gnu-gnu.*		libc=0.2
+%else				/* experimental only! */
+# libc.so.0.3 is
+.*-.*-gnu-gnu.*		libc=0.2.91.libio	GLIBC_2.2.3
 %endif
 
 # The dynamic loader also requires different names.
@@ -71,15 +79,11 @@ cris-.*-linux.*		ld=ld.so.1		GLIBC_2.2
 # The -ldl interface (see <dlfcn.h>) is the same on all platforms.
 alpha.*-.*-linux.*	libdl=2.1
 mips.*-.*-linux.*	libdl=2			GLIBC_2.0 GLIBC_2.2
-s390x-.*-linux.*        libdl=2			GLIBC_2.2
-cris-.*-linux.*		libdl=2			GLIBC_2.2
 .*-.*-.*		libdl=2
 
 # So far the -lutil interface is the same on all platforms, except for the
 # `struct utmp' format, which depends on libc.
 alpha.*-.*-linux.*	libutil=1.1
-s390x-.*-linux.*        libutil=1		GLIBC_2.2
-cris-.*-linux.*		libutil=1		GLIBC_2.2
 .*-.*-.*		libutil=1
 
 # Version number 2 is used on other systems for the BIND 4.9.5 resolver
@@ -98,20 +102,6 @@ mips.*-.*-linux.*	libnss_nis=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_nisplus=2	GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_ldap=2		GLIBC_2.0 GLIBC_2.2
 mips.*-.*-linux.*	libnss_hesiod=2		GLIBC_2.0 GLIBC_2.2
-s390x-.*-linux.*	libnss_files=2		GLIBC_2.2
-s390x-.*-linux.*	libnss_dns=2		GLIBC_2.2
-s390x-.*-linux.*	libnss_compat=2		GLIBC_2.2
-s390x-.*-linux.*	libnss_nis=2		GLIBC_2.2
-s390x-.*-linux.*	libnss_nisplus=2	GLIBC_2.2
-s390x-.*-linux.*	libnss_ldap=2		GLIBC_2.2
-s390x-.*-linux.*	libnss_hesiod=2		GLIBC_2.2
-cris-.*-linux.*		libnss_files=2		GLIBC_2.2
-cris-.*-linux.*		libnss_dns=2		GLIBC_2.2
-cris-.*-linux.*		libnss_compat=2		GLIBC_2.2
-cris-.*-linux.*		libnss_nis=2		GLIBC_2.2
-cris-.*-linux.*		libnss_nisplus=2	GLIBC_2.2
-cris-.*-linux.*		libnss_ldap=2		GLIBC_2.2
-cris-.*-linux.*		libnss_hesiod=2		GLIBC_2.2
 .*-.*-.*		libnss_files=2
 .*-.*-.*		libnss_dns=2
 .*-.*-.*		libnss_compat=2
@@ -123,14 +113,10 @@ cris-.*-linux.*		libnss_hesiod=2		GLIBC_2.2
 # Version for libnsl with YP and NIS+ functions.
 alpha.*-.*-linux.*	libnsl=1.1
 mips.*-.*-linux.*	libnsl=1		GLIBC_2.0 GLIBC_2.2
-s390x-.*-linux.*	libnsl=1		GLIBC_2.2
-cris-.*-linux.*		libnsl=1		GLIBC_2.2
 .*-.*-.*		libnsl=1
 
 # This defines the shared library version numbers we will install.
 alpha.*-.*-linux.*	libcrypt=1.1
-s390x-.*-linux.*	libcrypt=1		GLIBC_2.2
-cris-.*-linux.*		libcrypt=1		GLIBC_2.2
 .*-.*-.*		libcrypt=1
 
 # The gross patch for programs assuming broken locale implementations.
@@ -139,14 +125,10 @@ ia64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sh.*-.*-.*		libBrokenLocale=1	GLIBC_2.2
 sparc64-.*-.*		libBrokenLocale=1	GLIBC_2.2
 hppa-.*-.*		libBrokenLocale=1	GLIBC_2.2
-s390x-.*-linux.*	libBrokenLocale=1	GLIBC_2.2
-cris-.*-linux.*		libBrokenLocale=1	GLIBC_2.2
 .*-.*-.*		libBrokenLocale=1
 
 # The real-time library from POSIX.1b.
 mips.*-.*-linux.*	librt=1			GLIBC_2.0 GLIBC_2.2
-s390x-.*-linux.*	librt=1			GLIBC_2.2
-cris-.*-linux.*		librt=1			GLIBC_2.2
 .*-.*-.*		librt=1
 
 # The asynchronous name lookup library.

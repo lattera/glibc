@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2000,01 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -725,11 +725,15 @@ $(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
 	    test -n "$$version" && \
 	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
 		       : "$$conf"` != 0 || continue; \
-	    lib=`echo $$version | sed 's/=.*$$//'`; \
-	    if eval test -z "\$${versioned_$${lib}}"; then \
-	      eval versioned_$${lib}=yes; \
-	      number=`echo $$version | sed "s/^.*=//"`; \
-	      echo $$lib $$number $$setname; \
+	    if test "x$$version" = xDEFAULT; then \
+	      default_setname="$$setname"; \
+	    else \
+	      lib=`echo $$version | sed 's/=.*$$//'`; \
+	      if eval test -z "\$${versioned_$${lib}}"; then \
+		eval versioned_$${lib}=yes; \
+		number=`echo $$version | sed "s/^.*=//"`; \
+		echo $$lib $$number $${setname:-$${default_setname}}; \
+	      fi; \
 	    fi; \
 	  done > $@T; exit 0
 	mv -f $@T $@
