@@ -37,6 +37,7 @@ _IO_new_fgetpos64 (fp, posp)
 {
 #ifdef _G_LSEEK64
   _IO_off64_t pos;
+  int result = 0;
   CHECK_FILE (fp, EOF);
   _IO_acquire_lock (fp);
   pos = _IO_seekoff_unlocked (fp, 0, _IO_seek_cur, 0);
@@ -45,7 +46,6 @@ _IO_new_fgetpos64 (fp, posp)
       if (fp->_mode <= 0)
 	pos -= fp->_IO_save_end - fp->_IO_save_base;
     }
-  _IO_release_lock (fp);
   if (pos == _IO_pos_BAD)
     {
       /* ANSI explicitly requires setting errno to a positive value on
@@ -54,14 +54,18 @@ _IO_new_fgetpos64 (fp, posp)
       if (errno == 0)
 	__set_errno (EIO);
 # endif
-      return EOF;
+      result = EOF;
     }
-  posp->__pos = pos;
-  if (fp->_mode > 0
-      && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
-    /* This is a stateful encoding, safe the state.  */
-    posp->__state = fp->_wide_data->_IO_state;
-  return 0;
+  else
+    {
+      posp->__pos = pos;
+      if (fp->_mode > 0
+	  && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
+	/* This is a stateful encoding, safe the state.  */
+	posp->__state = fp->_wide_data->_IO_state;
+    }
+  _IO_release_lock (fp);
+  return result;
 #else
   __set_errno (ENOSYS);
   return EOF;

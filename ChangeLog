@@ -1,3 +1,16 @@
+2003-08-28  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Add semtimedop.
+
+2003-08-29  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/iofgetpos64.c (_IO_new_fgetpos64): Move lock release to the
+	end.
+
+2003-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/stdio.h: Remove a few more __THROW.
+
 2003-08-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/Makefile: Compile fputc.c, fputwc.c, freopen64.c, freopen.c,
@@ -33,8 +46,8 @@
 	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
 	* libio/iofgets.c (_IO_fgets): Likewise.
 	* libio/iofgetws.c (fgetws): Likewise.
-	* libio/iofputs.c (_IO_fputs):
-	* libio/iofputws.c (_IO_fputs): Likewise.
+	* libio/iofputs.c (_IO_fputs): Likewise.
+	* libio/iofputws.c (fputws): Likewise.
 	* libio/iofread.c (_IO_fread): Likewise.
 	* libio/iofsetpos64.c (_IO_new_fsetpos64): Likewise.
 	* libio/iofsetpos.c (_IO_new_fsetpos): Likewise.

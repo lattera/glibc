@@ -470,9 +470,12 @@ __BEGIN_NAMESPACE_STD
 /* Write a character to STREAM.
 
    These functions are possible cancellation points and therefore not
+   marked with __THROW.
+
+   These functions is a possible cancellation point and therefore not
    marked with __THROW.  */
-extern int fputc (int __c, FILE *__stream) __THROW;
-extern int putc (int __c, FILE *__stream) __THROW;
+extern int fputc (int __c, FILE *__stream);
+extern int putc (int __c, FILE *__stream);
 
 /* Write a character to stdout.
 
@@ -508,10 +511,10 @@ extern int putchar_unlocked (int __c);
 #if defined __USE_SVID || defined __USE_MISC \
     || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
 /* Get a word (int) from STREAM.  */
-extern int getw (FILE *__stream) __THROW;
+extern int getw (FILE *__stream);
 
 /* Write a word (int) to STREAM.  */
-extern int putw (int __w, FILE *__stream) __THROW;
+extern int putw (int __w, FILE *__stream);
 #endif
 
 
@@ -626,9 +629,9 @@ extern int fputs_unlocked (__const char *__restrict __s,
    or due to the implementation they are cancellation points and
    therefore not marked with __THROW.  */
 extern size_t fread_unlocked (void *__restrict __ptr, size_t __size,
-			      size_t __n, FILE *__restrict __stream) __THROW;
+			      size_t __n, FILE *__restrict __stream);
 extern size_t fwrite_unlocked (__const void *__restrict __ptr, size_t __size,
-			       size_t __n, FILE *__restrict __stream) __THROW;
+			       size_t __n, FILE *__restrict __stream);
 #endif
 
 
@@ -757,11 +760,17 @@ extern int fileno_unlocked (FILE *__stream) __THROW;
 
 #if (defined __USE_POSIX2 || defined __USE_SVID  || defined __USE_BSD || \
      defined __USE_MISC)
-/* Create a new stream connected to a pipe running the given command.  */
-extern FILE *popen (__const char *__command, __const char *__modes) __THROW;
+/* Create a new stream connected to a pipe running the given command.
 
-/* Close a stream opened by popen and return the status of its child.  */
-extern int pclose (FILE *__stream) __THROW;
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern FILE *popen (__const char *__command, __const char *__modes);
+
+/* Close a stream opened by popen and return the status of its child.
+
+   This function is a possible cancellation point and therefore not
+   marked with __THROW.  */
+extern int pclose (FILE *__stream);
 #endif
 
 
