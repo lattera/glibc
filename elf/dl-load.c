@@ -1514,7 +1514,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
-      if (l->l_faked == 0)
+      if (l->l_faked != 0)
 	continue;
       if (!_dl_name_match_p (name, l))
 	{

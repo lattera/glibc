@@ -1,3 +1,8 @@
+2001-03-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/makecontext.c (__makecontext):
+	Internationalize.
+
 2001-02-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object): Don't test l_opencount when

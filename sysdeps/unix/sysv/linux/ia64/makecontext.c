@@ -1,6 +1,6 @@
 /* Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-     Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
+   Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
+#include <sys/rse.h>
 
-#include <ia64/rse.h>
 
 struct fdesc
   {
@@ -59,8 +59,8 @@ __makecontext (ucontext_t *ucp, void (*func) (void), int argc, ...)
 
   if (argc > 8)
     {
-      fprintf (stderr, "__makecontext: does not know how to handle more "
-	       "than 8 arguments\n");
+      fprintf (stderr, _("\
+makecontext: does not know how to handle more than 8 arguments\n"));
       exit (-1);
     }
 
