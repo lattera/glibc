@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>, 1996.
 
@@ -24,7 +24,9 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg) */
+/* int clone(int (*fn)(void *arg), void *child_stack, int flags, void *arg,
+		       pid_t *tid, void *tls);
+ */
 
         .text
 ENTRY(__clone)
@@ -49,24 +51,29 @@ ENTRY(__clone)
 	stq	a0,0(a1)
 	stq	a3,8(a1)
 
-	/* Do the system call */
+	/* Shift the flags, tid and tls arguments into place; the
+	   child_stack argument is already correct.  */
 	mov	a2,a0
+	mov	a4,a2
+	mov	a5,a3
+
+	/* Do the system call.  */
 	ldiq	v0,__NR_clone
 	call_pal PAL_callsys
 
 	bne	a3,$error
 	beq	v0,thread_start
 
-	/* Successful return from the parent */
+	/* Successful return from the parent.  */
 	ret
 
-	/* Something bad happened -- no child created */
+	/* Something bad happened -- no child created.  */
 $error:
 #ifndef PROF
 	br	gp,1f
 1:	ldgp	gp,0(gp)
 #endif
-	jmp	zero,__syscall_error
+	SYSCALL_ERROR_HANDLER
 
 	END(__clone)
 
@@ -85,11 +92,11 @@ thread_start:
 	ldq	a0,8(sp)
 	addq	sp,16,sp
 
-	/* Call the user's function */
+	/* Call the user's function.  */
 	jsr	ra,(pv)
 	ldgp	gp,0(ra)
 
-	/* Call _exit rather than doing it inline for breakpoint purposes */
+	/* Call _exit rather than doing it inline for breakpoint purposes.  */
 	mov	v0,a0
 	jsr	ra,_exit
 
