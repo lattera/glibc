@@ -1,6 +1,7 @@
 2003-04-18  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/pthread/pthread.h: Don't mark pthread_testcancel with
+	* sysdeps/pthread/pthread.h: Don't mark pthread_testcancel,
+	pthread_cancel, pthread_setcancelstate, and pthread_setcanceltype with
 	__THROW.
 
 2003-04-16  Jakub Jelinek  <jakub@redhat.com>

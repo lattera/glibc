@@ -366,14 +366,14 @@ extern int pthread_once (pthread_once_t *__once_control,
 
 /* Set cancelability state of current thread to STATE, returning old
    state in *OLDSTATE if OLDSTATE is not NULL.  */
-extern int pthread_setcancelstate (int __state, int *__oldstate) __THROW;
+extern int pthread_setcancelstate (int __state, int *__oldstate);
 
 /* Set cancellation state of current thread to TYPE, returning the old
    type in *OLDTYPE if OLDTYPE is not NULL.  */
-extern int pthread_setcanceltype (int __type, int *__oldtype) __THROW;
+extern int pthread_setcanceltype (int __type, int *__oldtype);
 
 /* Cancel THREAD immediately or at the next possibility.  */
-extern int pthread_cancel (pthread_t __th) __THROW;
+extern int pthread_cancel (pthread_t __th);
 
 /* Test for pending cancellation for the current thread and terminate
    the thread as per pthread_exit(PTHREAD_CANCELED) if it has been
