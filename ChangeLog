@@ -1,3 +1,36 @@
+2001-04-21  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c: Correct check for invalid
+	offset.
+
+2001-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/getopt.h: Treat __cplusplus like __STDC__.
+
+2001-04-20  John S. Marvin  <jsm@fc.hp.com>
+
+	* sysdeps/unix/sysv/linux/hppa/clone.S: Fix clone system call
+	entry point stub.
+
+2001-04-20  Richard Hirst  <rhirst@linuxcare.com>
+
+	* elf/elf.h: Corrected R_PARISC_DIR14R (should be 6, not 5),
+	and added R_PARISC_DPREL21L and R_PARISC_DPREL14R for modutils.
+
+	* sysdeps/unix/sysv/linux/hppa/syscalls.list: Removed ptrace
+	entry so the ptrace.c wrapper is used.
+
+2001-04-20  Alan Modra  <amodra@one.net.au>
+
+	* sysdeps/hppa/dl-lookupcfg.h (_dl_function_address): Prototype.
+	(DL_FUNCTION_ADDRESS): Define.
+	(DL_DT_INIT_ADDRESS): Define.
+	(DL_DT_FINI_ADDRESS): Define.
+	* sysdeps/hppa/Versions: Add _dl_function_address.
+	* sysdeps/hppa/dl-machine.h (ELF_MACHINE_START_ADDRESS): Define.
+	* sysdeps/hppa/dl-symaddr.c (_dl_start_address): Rename to
+	_dl_function_address.
+
 2001-04-21  Andreas Jaeger  <aj@suse.de>
 
 	* rt/aio_misc.c (handle_fildes_io): Add noreturn attribute.

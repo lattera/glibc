@@ -32,8 +32,6 @@ shutdown	-	shutdown	i:ii	__shutdown	shutdown
 socket		-	socket		i:iii	__socket	socket
 socketpair	-	socketpair	i:iiif	__socketpair	socketpair
 
-ptrace		-	ptrace		4	__ptrace	ptrace
-
 getresuid	-	getresuid	i:ppp	getresuid
 getresgid	-	getresgid	i:ppp	getresgid
 

@@ -42,7 +42,7 @@ static int have_no_mmap2;
 void *
 __mmap64 (void *addr, size_t len, int prot, int flags, int fd, off64_t offset)
 {
-  if (! (offset & ((1 << PAGE_SHIFT)-1)))
+  if (offset & ((1 << PAGE_SHIFT)-1))
     {
       __set_errno (EINVAL);
       return MAP_FAILED;

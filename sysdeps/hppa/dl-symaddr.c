@@ -33,7 +33,7 @@ _dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref)
 }
 
 ElfW(Addr)
-_dl_start_address (const struct link_map *map, ElfW(Addr) start)
+_dl_function_address (const struct link_map *map, ElfW(Addr) start)
 {
   return __hppa_make_fptr (map, start, &__fptr_root, NULL);
 }

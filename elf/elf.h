@@ -1537,12 +1537,14 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_PARISC_DIR21L		2	/* Left 21 bits of eff. address.  */
 #define R_PARISC_DIR17R		3	/* Right 17 bits of eff. address.  */
 #define R_PARISC_DIR17F		4	/* 17 bits of eff. address.  */
-#define R_PARISC_DIR14R		5	/* Right 14 bits of eff. address.  */
+#define R_PARISC_DIR14R		6	/* Right 14 bits of eff. address.  */
 #define R_PARISC_PCREL32	9	/* 32-bit rel. address.  */
 #define R_PARISC_PCREL21L	10	/* Left 21 bits of rel. address.  */
 #define R_PARISC_PCREL17R	11	/* Right 17 bits of rel. address.  */
 #define R_PARISC_PCREL17F	12	/* 17 bits of rel. address.  */
 #define R_PARISC_PCREL14R	14	/* Right 14 bits of rel. address.  */
+#define R_PARISC_DPREL21L	18	/* Left 21 bits of rel. address.  */
+#define R_PARISC_DPREL14R	22	/* Right 14 bits of rel. address.  */
 #define R_PARISC_GPREL21L	26	/* GP-relative, left 21 bits.  */
 #define R_PARISC_GPREL14R	30	/* GP-relative, right 14 bits.  */
 #define R_PARISC_LTOFF21L	34	/* LT-relative, left 21 bits.  */
