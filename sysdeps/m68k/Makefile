@@ -26,7 +26,6 @@ endif
 asm-CPPFLAGS += $(m68k-syntax-flag)
 
 pic-ccflag = -fpic
-CFLAGS-.oS += -fPIC
 
 # Make sure setjmp.c is compiled with a frame pointer
 CFLAGS-setjmp.c := -fno-omit-frame-pointer
