@@ -312,7 +312,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 {
   re_dfa_t *dfa = (re_dfa_t *) bufp->buffer;
   int node_cnt;
-  int icase = (MB_CUR_MAX == 1 && (bufp->syntax & RE_ICASE));
+  int icase = (dfa->mb_cur_max == 1 && (bufp->syntax & RE_ICASE));
   for (node_cnt = 0; node_cnt < init_state->nodes.nelem; ++node_cnt)
     {
       int node = init_state->nodes.elems[node_cnt];
@@ -324,7 +324,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 #ifdef RE_ENABLE_I18N
 	  if ((bufp->syntax & RE_ICASE) && !icase)
 	    {
-	      unsigned char *buf = alloca (MB_CUR_MAX), *p;
+	      unsigned char *buf = alloca (dfa->mb_cur_max), *p;
 	      wchar_t wc;
 	      mbstate_t state;
 
@@ -376,7 +376,7 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 			re_set_fastmap (fastmap, icase, ch);
 		}
 # else
-	      if (MB_CUR_MAX > 1)
+	      if (dfa->mb_cur_max > 1)
 		for (i = 0; i < SBC_MAX; ++i)
 		  if (__btowc (i) == WEOF)
 		    re_set_fastmap (fastmap, icase, i);
@@ -744,7 +744,8 @@ re_compile_internal (preg, pattern, length, syntax)
 #endif
 
   err = re_string_construct (&regexp, pattern, length, preg->translate,
-			     syntax & RE_ICASE);
+			     syntax & RE_ICASE, dfa->mb_cur_max,
+			     dfa->is_utf8);
   if (BE (err != REG_NOERROR, 0))
     {
       re_free (dfa);
@@ -811,6 +812,13 @@ init_dfa (dfa, pat_len)
   dfa->subexps_alloc = 1;
   dfa->subexps = re_malloc (re_subexp_t, dfa->subexps_alloc);
   dfa->word_char = NULL;
+
+  dfa->mb_cur_max = MB_CUR_MAX;
+#ifdef _LIBC
+  if (dfa->mb_cur_max > 1
+      && strcmp (_NL_CURRENT (LC_CTYPE, _NL_CTYPE_CODESET_NAME), "UTF-8") == 0)
+    dfa->is_utf8 = 1;
+#endif
 
   if (BE (dfa->nodes == NULL || dfa->state_table == NULL
 	  || dfa->subexps == NULL, 0))
@@ -1522,7 +1530,7 @@ peek_token (token, input, syntax)
 
 #ifdef RE_ENABLE_I18N
   token->mb_partial = 0;
-  if (MB_CUR_MAX > 1 &&
+  if (input->mb_cur_max > 1 &&
       !re_string_first_byte (input, re_string_cur_idx (input)))
     {
       token->type = CHARACTER;
@@ -1738,7 +1746,7 @@ peek_token_bracket (token, input, syntax)
   token->opr.c = c;
 
 #ifdef RE_ENABLE_I18N
-  if (MB_CUR_MAX > 1 &&
+  if (input->mb_cur_max > 1 &&
       !re_string_first_byte (input, re_string_cur_idx (input)))
     {
       token->type = CHARACTER;
@@ -1976,7 +1984,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  return NULL;
 	}
 #ifdef RE_ENABLE_I18N
-      if (MB_CUR_MAX > 1)
+      if (dfa->mb_cur_max > 1)
 	{
 	  while (!re_string_eoi (regexp)
 		 && !re_string_first_byte (regexp, re_string_cur_idx (regexp)))
@@ -2111,7 +2119,7 @@ parse_expression (regexp, preg, token, syntax, nest, err)
 	  *err = REG_ESPACE;
 	  return NULL;
 	}
-      if (MB_CUR_MAX > 1)
+      if (dfa->mb_cur_max > 1)
 	dfa->has_mb_node = 1;
       break;
     case OP_WORD:
@@ -2883,7 +2891,7 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 	  goto parse_bracket_exp_free_return;
 	}
 #ifdef RE_ENABLE_I18N
-      if (MB_CUR_MAX > 1)
+      if (dfa->mb_cur_max > 1)
 	for (i = 0; i < SBC_MAX; ++i)
 	  if (__btowc (i) == WEOF)
 	    bitset_set (sbcset, i);
@@ -3042,8 +3050,8 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
 #ifdef RE_ENABLE_I18N
   if (mbcset->nmbchars || mbcset->ncoll_syms || mbcset->nequiv_classes
-      || mbcset->nranges || (MB_CUR_MAX > 1 && (mbcset->nchar_classes
-						|| mbcset->non_match)))
+      || mbcset->nranges || (dfa->mb_cur_max > 1 && (mbcset->nchar_classes
+						     || mbcset->non_match)))
     {
       re_token_t alt_token;
       bin_tree_t *mbc_tree;
@@ -3377,7 +3385,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
 	bitset_set(cset->sbcset, '\0');
       */
       mbcset->non_match = 1;
-      if (MB_CUR_MAX > 1)
+      if (dfa->mb_cur_max > 1)
 	for (i = 0; i < SBC_MAX; ++i)
 	  if (__btowc (i) == WEOF)
 	    bitset_set (sbcset, i);
@@ -3423,7 +3431,7 @@ build_charclass_op (dfa, trans, class_name, extra, not, err)
     goto build_word_op_espace;
 
 #ifdef RE_ENABLE_I18N
-  if (MB_CUR_MAX > 1)
+  if (dfa->mb_cur_max > 1)
     {
       re_token_t alt_token;
       bin_tree_t *mbc_tree;

@@ -757,6 +757,8 @@ NFTW_NAME (path, func, descriptors, flags)
 
 #include <shlib-compat.h>
 
+int NFTW_NEW_NAME (const char *, NFTW_FUNC_T, int, int);
+
 int
 NFTW_NEW_NAME (path, func, descriptors, flags)
      const char *path;
@@ -778,6 +780,8 @@ versioned_symbol (libc, NFTW_NEW_NAME, NFTW_NAME, GLIBC_2_3_3);
 #if SHLIB_COMPAT(libc, GLIBC_2_1, GLIBC_2_3_3)
 
 /* Older nftw* version just ignored all unknown flags.  */
+
+int NFTW_OLD_NAME (const char *, NFTW_FUNC_T, int, int);
 
 int
 NFTW_OLD_NAME (path, func, descriptors, flags)

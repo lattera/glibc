@@ -1,3 +1,63 @@
+2003-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/ftw.c (NFTW_NEW_NAME, NFTW_OLD_NAME): Add prototypes.
+
+2003-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/tst-regex.c (umemlen): New variable.
+	(test_expr): Add expectedicase argument.  Test case insensitive
+	searches as well as backwards searches (case sensitive and
+	insensitive) too.
+	(run_test): Add icase argument.  Use it to compute regcomp flags.
+	(run_test_backwards): New function.
+	(main): Cast read to size_t to avoid warning.  Set umemlen.
+	Add expectedicase arguments to test_expr.
+	* posix/regex_internal.c (re_string_reconstruct): If is_utf8,
+	find previous character by walking back instead of converting
+	all chars from beginning.
+
+2003-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (struct re_string_t): Add is_utf8
+	and mb_cur_max fields.
+	(struct re_dfa_t): Likewise.  Reorder fields to make structure
+	smaller on 64-bit arches.
+	(re_string_allocate, re_string_construct): Add mb_cur_max and
+	is_utf8 arguments.
+	(re_string_char_size_at, re_string_wchar_at): Use pstr->mb_cur_max
+	instead of MB_CUR_MAX.
+	* posix/regcomp.c (re_compile_fastmap_iter): Use dfa->mb_cur_max
+	instead of MB_CUR_MAX.
+	(re_compile_internal): Pass new arguments to re_string_construct.
+	(init_dfa): Initialize mb_cur_max and is_utf8 fields.
+	(peek_token, peek_token_bracket): Use input->mb_cur_max instead
+	of MB_CUR_MAX.
+	(parse_expression, parse_bracket_exp, parse_charclass_op): Use
+	dfa->mb_cur_max instead of MB_CUR_MAX.
+	* posix/regex_internal.c (re_string_construct_common): Add
+	mb_cur_max and is_utf8 arguments.  Initialize fields with them.
+	(re_string_allocate, re_string_construct): Add mb_cur_max and
+	is_utf8 arguments, pass them to re_string_construct_common.
+	Use mb_cur_max instead of MB_CUR_MAX.
+	(re_string_realloc_buffers): Use pstr->mb_cur_max instead of
+	MB_CUR_MAX.
+	(re_string_reconstruct): Likewise.
+	(re_string_context_at): Use input->mb_cur_max instead of
+	MB_CUR_MAX.
+	(create_ci_newstate, create_cd_newstate): Use dfa->mb_cur_max
+	instead of MB_CUR_MAX.
+	* posix/regexec.c (re_search_internal): Likewise.
+	Pass new arguments to re_string_allocate.
+	(check_matching, transit_state_sb): Use dfa->mb_cur_max instead of
+	MB_CUR_MAX.
+	(extend_buffers): Use pstr->mb_cur_max instead of MB_CUR_MAX.
+
+2003-11-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/Makefile (tests): Add bug-regex19.
+	(bug-regex19-ENV): Add LOCPATH.
+	* posix/bug-regex19.c: New test.
+
 2003-11-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regcomp.c (re_compile_fastmap_iter): Handle RE_ICASE

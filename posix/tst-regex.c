@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,10 +44,13 @@ static iconv_t cd;
 static char *mem;
 static char *umem;
 static size_t memlen;
+static size_t umemlen;
 
-static int test_expr (const char *expr, int expected);
+static int test_expr (const char *expr, int expected, int expectedicase);
 static int run_test (const char *expr, const char *mem, size_t memlen,
-		     int expected);
+		     int icase, int expected);
+static int run_test_backwards (const char *expr, const char *mem,
+			       size_t memlen, int icase, int expected);
 
 
 int
@@ -78,7 +81,7 @@ main (void)
   if (mem == NULL)
     error (EXIT_FAILURE, errno, "while allocating buffer");
 
-  if (read (fd, mem, memlen) != memlen)
+  if ((size_t) read (fd, mem, memlen) != memlen)
     error (EXIT_FAILURE, 0, "cannot read entire file");
   mem[memlen] = '\0';
 
@@ -102,6 +105,7 @@ main (void)
   outmem = umem;
   outlen = 2 * memlen - 1;
   iconv (cd, &inmem, &inlen, &outmem, &outlen);
+  umemlen = outmem - umem;
   if (inlen != 0)
     error (EXIT_FAILURE, errno, "cannot convert buffer");
 
@@ -116,11 +120,11 @@ main (void)
 
   /* Run the actual tests.  All tests are run in a single-byte and a
      multi-byte locale.  */
-  result = test_expr ("[הבאגיטךםלמסצףעפüתשû]", 2);
-  result |= test_expr ("G.ran", 2);
-  result |= test_expr ("G.\\{1\\}ran", 2);
-  result |= test_expr ("G.*ran", 3);
-  result |= test_expr ("[הבאג]", 0);
+  result = test_expr ("[הבאגיטךםלמסצףעפüתשû]", 2, 2);
+  result |= test_expr ("G.ran", 2, 3);
+  result |= test_expr ("G.\\{1\\}ran", 2, 3);
+  result |= test_expr ("G.*ran", 3, 44);
+  result |= test_expr ("[הבאג]", 0, 0);
 
   /* Free the resources.  */
   free (umem);
@@ -132,7 +136,7 @@ main (void)
 
 
 static int
-test_expr (const char *expr, int expected)
+test_expr (const char *expr, int expected, int expectedicase)
 {
   int result;
   char *inmem;
@@ -146,7 +150,14 @@ test_expr (const char *expr, int expected)
     error (EXIT_FAILURE, 0, "cannot set locale de_DE.ISO-8859-1");
 
   printf ("\nTest \"%s\" with 8-bit locale\n", expr);
-  result = run_test (expr, mem, memlen, expected);
+  result = run_test (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" with 8-bit locale, case insensitive\n", expr);
+  result |= run_test (expr, mem, memlen, 1, expectedicase);
+  printf ("\nTest \"%s\" backwards with 8-bit locale\n", expr);
+  result |= run_test_backwards (expr, mem, memlen, 0, expected);
+  printf ("\nTest \"%s\" backwards with 8-bit locale, case insensitive\n",
+	  expr);
+  result |= run_test_backwards (expr, mem, memlen, 1, expectedicase);
 
   /* Second test: search with an UTF-8 locale.  */
   if (setlocale (LC_ALL, "de_DE.UTF-8") == NULL)
@@ -163,14 +174,22 @@ test_expr (const char *expr, int expected)
 
   /* Run the tests.  */
   printf ("\nTest \"%s\" with multi-byte locale\n", expr);
-  result |= run_test (uexpr, umem, 2 * memlen - outlen, expected);
+  result |= run_test (uexpr, umem, umemlen, 0, expected);
+  printf ("\nTest \"%s\" with multi-byte locale, case insensitive\n", expr);
+  result |= run_test (uexpr, umem, umemlen, 1, expectedicase);
+  printf ("\nTest \"%s\" backwards with multi-byte locale\n", expr);
+  result |= run_test_backwards (uexpr, umem, umemlen, 0, expected);
+  printf ("\nTest \"%s\" backwards with multi-byte locale, case insensitive\n",
+	  expr);
+  result |= run_test_backwards (uexpr, umem, umemlen, 1, expectedicase);
 
   return result;
 }
 
 
 static int
-run_test (const char *expr, const char *mem, size_t memlen, int expected)
+run_test (const char *expr, const char *mem, size_t memlen, int icase,
+	  int expected)
 {
 #ifdef _POSIX_CPUTIME
   struct timespec start;
@@ -186,7 +205,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int expected)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
 
-  err = regcomp (&re, expr, REG_NEWLINE);
+  err = regcomp (&re, expr, REG_NEWLINE | (icase ? REG_ICASE : 0));
   if (err != REG_NOERROR)
     {
       char buf[200];
@@ -226,6 +245,100 @@ run_test (const char *expr, const char *mem, size_t memlen, int expected)
       printf ("match %d: \"%.*s\"\n", ++cnt, (int) (ep - sp), sp);
 
       offset = ep + 1 - mem;
+    }
+
+  regfree (&re);
+
+#ifdef _POSIX_CPUTIME
+  if (use_clock)
+    {
+      use_clock = clock_gettime (cl, &finish) == 0;
+      if (use_clock)
+	{
+	  if (finish.tv_nsec < start.tv_nsec)
+	    {
+	      finish.tv_nsec -= start.tv_nsec - 1000000000;
+	      finish.tv_sec -= 1 + start.tv_sec;
+	    }
+	  else
+	    {
+	      finish.tv_nsec -= start.tv_nsec;
+	      finish.tv_sec -= start.tv_sec;
+	    }
+
+	  printf ("elapsed time: %ld.%09ld sec\n",
+		  finish.tv_sec, finish.tv_nsec);
+	}
+    }
+#endif
+
+  /* Return an error if the number of matches found is not match we
+     expect.  */
+  return cnt != expected;
+}
+
+
+static int
+run_test_backwards (const char *expr, const char *mem, size_t memlen,
+		    int icase, int expected)
+{
+#ifdef _POSIX_CPUTIME
+  struct timespec start;
+  struct timespec finish;
+#endif
+  struct re_pattern_buffer re;
+  const char *err;
+  size_t offset;
+  int cnt;
+
+#ifdef _POSIX_CPUTIME
+  if (use_clock)
+    use_clock = clock_gettime (cl, &start) == 0;
+#endif
+
+  re_set_syntax ((RE_SYNTAX_POSIX_BASIC & ~RE_DOT_NEWLINE)
+		 | RE_HAT_LISTS_NOT_NEWLINE
+		 | (icase ? RE_ICASE : 0));
+
+  memset (&re, 0, sizeof (re));
+  re.fastmap = malloc (256);
+  if (re.fastmap == NULL)
+    error (EXIT_FAILURE, errno, "cannot allocate fastmap");
+
+  err = re_compile_pattern (expr, strlen (expr), &re);
+  if (err != NULL)
+    error (EXIT_FAILURE, 0, "cannot compile expression: %s", err);
+
+  if (re_compile_fastmap (&re))
+    error (EXIT_FAILURE, 0, "couldn't compile fastmap");
+
+  cnt = 0;
+  offset = memlen;
+  assert (mem[memlen] == '\0');
+  while (offset <= memlen)
+    {
+      int start;
+      const char *sp;
+      const char *ep;
+
+      start = re_search (&re, mem, memlen, offset, -offset, NULL);
+      if (start == -1)
+	break;
+
+      if (start == -2)
+	error (EXIT_FAILURE, 0, "internal error in re_search");
+
+      sp = mem + start;
+      while (sp > mem && sp[-1] != '\n')
+	--sp;
+
+      ep = mem + start;
+      while (*ep != '\0' && *ep != '\n')
+	++ep;
+
+      printf ("match %d: \"%.*s\"\n", ++cnt, (int) (ep - sp), sp);
+
+      offset = sp - 1 - mem;
     }
 
   regfree (&re);

@@ -334,6 +334,8 @@ struct re_string_t
   RE_TRANSLATE_TYPE trans;
   /* 1 if REG_ICASE.  */
   unsigned int icase : 1;
+  unsigned int is_utf8 : 1;
+  int mb_cur_max;
 };
 typedef struct re_string_t re_string_t;
 /* In case of REG_ICASE, we allocate the buffer dynamically for mbs.  */
@@ -345,10 +347,12 @@ typedef struct re_string_t re_string_t;
 
 static reg_errcode_t re_string_allocate (re_string_t *pstr, const char *str,
 					 int len, int init_len,
-					 RE_TRANSLATE_TYPE trans, int icase);
+					 RE_TRANSLATE_TYPE trans, int icase,
+					 int mb_cur_max, int is_utf8);
 static reg_errcode_t re_string_construct (re_string_t *pstr, const char *str,
 					  int len, RE_TRANSLATE_TYPE trans,
-					  int icase);
+					  int icase, int mb_cur_max,
+					  int is_utf8);
 static reg_errcode_t re_string_reconstruct (re_string_t *pstr, int idx,
 					    int eflags, int newline);
 static reg_errcode_t re_string_realloc_buffers (re_string_t *pstr,
@@ -571,11 +575,7 @@ struct re_fail_stack_t
 struct re_dfa_t
 {
   re_bitset_ptr_t word_char;
-
-  /* number of subexpressions `re_nsub' is in regex_t.  */
-  int subexps_alloc;
   re_subexp_t *subexps;
-
   re_token_t *nodes;
   int nodes_alloc;
   int nodes_len;
@@ -586,11 +586,14 @@ struct re_dfa_t
   re_node_set *eclosures;
   re_node_set *inveclosures;
   struct re_state_table_entry *state_table;
-  unsigned int state_hash_mask;
   re_dfastate_t *init_state;
   re_dfastate_t *init_state_word;
   re_dfastate_t *init_state_nl;
   re_dfastate_t *init_state_begbuf;
+
+  /* number of subexpressions `re_nsub' is in regex_t.  */
+  int subexps_alloc;
+  unsigned int state_hash_mask;
   int states_alloc;
   int init_node;
   int nbackref; /* The number of backreference in this dfa.  */
@@ -604,6 +607,8 @@ struct re_dfa_t
      a node which can accept multibyte character or multi character
      collating element.  */
   unsigned int has_mb_node : 1;
+  unsigned int is_utf8 : 1;
+  int mb_cur_max;
 };
 typedef struct re_dfa_t re_dfa_t;
 
@@ -700,7 +705,7 @@ re_string_char_size_at (pstr, idx)
      int idx;
 {
   int byte_idx;
-  if (MB_CUR_MAX == 1)
+  if (pstr->mb_cur_max == 1)
     return 1;
   for (byte_idx = 1; idx + byte_idx < pstr->valid_len; ++byte_idx)
     if (pstr->wcs[idx + byte_idx] != WEOF)
@@ -713,7 +718,7 @@ re_string_wchar_at (pstr, idx)
      const re_string_t *pstr;
      int idx;
 {
-  if (MB_CUR_MAX == 1)
+  if (pstr->mb_cur_max == 1)
     return (wint_t) pstr->mbs[idx];
   return (wint_t) pstr->wcs[idx];
 }

@@ -77,7 +77,8 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-gnuglob tst-regex bug-regex5 bug-regex6 bug-regex7 \
 		   bug-regex8 bug-regex9 bug-regex10 bug-regex11 bug-regex12 \
 		   bug-regex13 bug-regex14 bug-regex15 bug-regex16 \
-		   bug-regex17 bug-regex18 tst-nice tst-nanosleep transbug
+		   bug-regex17 bug-regex18 bug-regex19 \
+		   tst-nice tst-nanosleep transbug
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -155,6 +156,7 @@ bug-regex5-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex6-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex17-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex18-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex19-ENV = LOCPATH=$(common-objpfx)localedata
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T

@@ -605,7 +605,8 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   fl_longest_match = (nmatch != 0 || dfa->nbackref);
 
   err = re_string_allocate (&input, string, length, dfa->nodes_len + 1,
-			    preg->translate, preg->syntax & RE_ICASE);
+			    preg->translate, preg->syntax & RE_ICASE,
+			    dfa->mb_cur_max, dfa->is_utf8);
   if (BE (err != REG_NOERROR, 0))
     goto free_return;
   input.stop = stop;
@@ -643,7 +644,7 @@ re_search_internal (preg, string, length, start, range, stop, nmatch, pmatch,
   incr = (range < 0) ? -1 : 1;
   left_lim = (range < 0) ? start + range : start;
   right_lim = (range < 0) ? start : start + range;
-  sb = MB_CUR_MAX == 1;
+  sb = dfa->mb_cur_max == 1;
   fast_translate = sb || !(preg->syntax & RE_ICASE || preg->translate);
 
   for (;;)
@@ -1018,7 +1019,7 @@ check_matching (preg, mctx, fl_search, fl_longest_match)
 	      /* Restart from initial state, since we are searching
 		 the point from where matching start.  */
 #ifdef RE_ENABLE_I18N
-	      if (MB_CUR_MAX == 1
+	      if (dfa->mb_cur_max == 1
 		  || re_string_first_byte (mctx->input, cur_str_idx))
 #endif /* RE_ENABLE_I18N */
 		cur_state = acquire_init_state_context (&err, preg, mctx,
@@ -2280,7 +2281,7 @@ transit_state_sb (err, preg, state, fl_search, mctx)
     {
 #ifdef RE_ENABLE_I18N
       int not_initial = 0;
-      if (MB_CUR_MAX > 1)
+      if (dfa->mb_cur_max > 1)
 	for (node_cnt = 0; node_cnt < next_nodes.nelem; ++node_cnt)
 	  if (dfa->nodes[next_nodes.elems[node_cnt]].type == CHARACTER)
 	    {
@@ -3772,7 +3773,7 @@ extend_buffers (mctx)
   if (pstr->icase)
     {
 #ifdef RE_ENABLE_I18N
-      if (MB_CUR_MAX > 1)
+      if (pstr->mb_cur_max > 1)
 	build_wcs_upper_buffer (pstr);
       else
 #endif /* RE_ENABLE_I18N  */
@@ -3781,7 +3782,7 @@ extend_buffers (mctx)
   else
     {
 #ifdef RE_ENABLE_I18N
-      if (MB_CUR_MAX > 1)
+      if (pstr->mb_cur_max > 1)
 	build_wcs_buffer (pstr);
       else
 #endif /* RE_ENABLE_I18N  */
