@@ -18,6 +18,10 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <stdarg.h>
 #include <stdlib.h>
 #include "gettext.h"
@@ -228,7 +232,8 @@ yylex (YYSTYPE *lval, const char **pexp)
   result = *exp++;
   switch (result)
     {
-    case '0' ... '9':
+    case '0': case '1': case '2': case '3': case '4':
+    case '5': case '6': case '7': case '8': case '9':
       {
 	unsigned long int n = exp[-1] - '0';
 	while (exp[0] >= '0' && exp[0] <= '9')

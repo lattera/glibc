@@ -21,8 +21,6 @@
 # include <config.h>
 #endif
 
-#include <ctype.h>
-#include <errno.h>
 #include <stdio.h>
 #include <sys/types.h>
 
@@ -41,7 +39,7 @@ void free ();
 #else
 # include <strings.h>
 # ifndef memcpy
-#  define memcpy(Dst, Src, Num) bcopy (Src, Dst, Num)
+#  define memcpy(Dst, Src, Num) (bcopy (Src, Dst, Num), (Dst))
 # endif
 #endif
 

@@ -1,3 +1,25 @@
+2000-07-31  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/plural.y: Include config.h. Needed to define 'inline' away for
+	C compilers that don't support it.
+	(yylex): Don't use gcc specific case range syntax.
+	* intl/loadmsgcat.c (INIT_GERMANIC_PLURAL): New macro, for old
+	compilers.
+
+2000-10-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/finddomain.c: Remove unneeded includes.
+
+2000-10-12  Bruno Haible  <haible@clisp.cons.org>
+
+	* intl/localealias.c (memcpy): Return first argument, just like the
+	real memcpy function does.
+	* intl/bindtextdom.c (memcpy): Likewise.
+	* intl/finddomain.c (memcpy): Likewise.
+	* intl/l10nflist.c (memcpy): Likewise.
+	* intl/textdomain.c (memcpy): Likewise.
+	From Paul Eggert <eggert@twinsun.com>.
+
 2001-01-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/resolv.h (struct __res_state): Add nsinit field.
