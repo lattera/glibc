@@ -1,5 +1,11 @@
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/sysv4/setsid.c: Correct types.
+	* sysdeps/generic/getpgrp.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/setpgid.c: Likewise.
+	* sysdeps/unix/sysv/sysv4/getpgid.c: Likewise.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
 	* sysdeps/posix/wait3.c: Help compiling in presence of
 	__transparent_union__.  Reported by John Tobey <jtobey@banta-im.com>.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <unistd.h>
 
 /* Get the process group ID of the calling process.  */
-int
+pid_t
 getpgrp (void)
 {
   return __getpgid (0);
