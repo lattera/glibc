@@ -95,6 +95,7 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	 doesn't use memcpy but instead copies each array element one
 	 by one.  */
       assert (sizeof (int32_t) == sizeof (gid_t));
+      assert (initgr_resp->ngrps > 0);
 
       /* Make sure we have enough room.  We always count GROUP in even
 	 though we might not end up adding it.  */
@@ -125,25 +126,21 @@ __nscd_getgrouplist (const char *user, gid_t group, long int *size,
 	  retval = initgr_resp->ngrps;
 	  memcpy (*groupsp, respdata, retval * sizeof (gid_t));
 	}
-
-      /* Check whether GROUP is part of the mix.  If not, add it.  */
-      if (retval >= 0)
-	{
-	  int cnt;
-	  for (cnt = 0; cnt < retval; ++cnt)
-	    if ((*groupsp)[cnt] == group)
-	      break;
-
-	  if (cnt == retval)
-	    (*groupsp)[retval++] = group;
-	}
     }
   else
+    /* No group found yet.   */
+    retval = 0;
+
+  /* Check whether GROUP is part of the mix.  If not, add it.  */
+  if (retval >= 0)
     {
-      /* The `errno' to some value != ERANGE.  */
-      __set_errno (ENOENT);
-      /* Even though we have not found anything, the result is zero.  */
-      retval = 0;
+      int cnt;
+      for (cnt = 0; cnt < retval; ++cnt)
+	if ((*groupsp)[cnt] == group)
+	  break;
+
+      if (cnt == retval)
+	(*groupsp)[retval++] = group;
     }
 
   if (sock != -1)

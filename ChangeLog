@@ -1,5 +1,8 @@
 2004-10-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): Always add the
+	group the caller provided unless there is a real problem.
+
 	* posix/bug-glob1.c (prepare): Fix creation of symlink.
 
 2004-09-30  Ulrich Drepper  <drepper@redhat.com>

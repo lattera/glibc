@@ -152,7 +152,7 @@ __lll_mutex_timedlock_wait:
 
 	/* Make sure the current holder knows we are going to sleep.  */
 	movl	%edx, %eax
-	xchgl	%eax, (%ebx)
+	xchgl	%eax, (%rdi)
 	testl	%eax, %eax
 	jz	6b
 	jmp	1b
