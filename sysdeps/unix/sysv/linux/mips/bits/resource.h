@@ -56,30 +56,30 @@ enum __rlimit_resource
      This affects swapping; processes that are exceeding their
      resident set size will be more likely to have physical memory
      taken from them.  */
-  RLIMIT_RSS = 7,
-#define	RLIMIT_RSS RLIMIT_RSS
+  __RLIMIT_RSS = 7,
+#define	RLIMIT_RSS __RLIMIT_RSS
 
   /* Number of open files.  */
   RLIMIT_NOFILE = 5,
-  RLIMIT_OFILE = RLIMIT_NOFILE, /* BSD name for same.  */
+  __RLIMIT_OFILE = RLIMIT_NOFILE, /* BSD name for same.  */
 #define RLIMIT_NOFILE RLIMIT_NOFILE
-#define RLIMIT_OFILE RLIMIT_OFILE
+#define RLIMIT_OFILE __RLIMIT_OFILE
 
   /* Address space limit (?) */
   RLIMIT_AS = 6,
 #define RLIMIT_AS RLIMIT_AS
 
   /* Number of processes.  */
-  RLIMIT_NPROC = 8,
-#define RLIMIT_NPROC RLIMIT_NPROC
+  __RLIMIT_NPROC = 8,
+#define RLIMIT_NPROC __RLIMIT_NPROC
 
   /* Locked-in-memory address space.  */
-  RLIMIT_MEMLOCK = 9,
-#define RLIMIT_MEMLOCK RLIMIT_MEMLOCK
+  __RLIMIT_MEMLOCK = 9,
+#define RLIMIT_MEMLOCK __RLIMIT_MEMLOCK
 
   /* Maximum number of file locks.  */
-  RLIMIT_LOCKS = 10,
-#define RLIMIT_LOCKS RLIMIT_LOCKS
+  __RLIMIT_LOCKS = 10,
+#define RLIMIT_LOCKS __RLIMIT_LOCKS
 
   /* Maximum number of pending signals.  */
   __RLIMIT_SIGPENDING = 11,
@@ -89,10 +89,10 @@ enum __rlimit_resource
   __RLIMIT_MSGQUEUE = 12,
 #define RLIMIT_MSGQUEUE __RLIMIT_MSGQUEUE
 
-  RLIMIT_NLIMITS = 13,
-  RLIM_NLIMITS = RLIMIT_NLIMITS
-#define RLIMIT_NLIMITS RLIMIT_NLIMITS
-#define RLIM_NLIMITS RLIM_NLIMITS
+  __RLIMIT_NLIMITS = 13,
+  __RLIM_NLIMITS = __RLIMIT_NLIMITS
+#define RLIMIT_NLIMITS __RLIMIT_NLIMITS
+#define RLIM_NLIMITS __RLIM_NLIMITS
 };
 
 /* Value to indicate that there is no limit.  */
@@ -151,8 +151,8 @@ enum __rusage_who
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
 
   /* Both.  */
-  RUSAGE_BOTH = -2
-#define RUSAGE_BOTH RUSAGE_BOTH
+  __RUSAGE_BOTH = -2
+#define RUSAGE_BOTH __RUSAGE_BOTH
 };
 
 #define __need_timeval

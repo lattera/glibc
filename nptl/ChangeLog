@@ -1,3 +1,13 @@
+2004-08-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* DESIGN-rwlock.txt: Add decreasing of nr_readers_queued to
+	pthread_rwlock_rdlock.
+	* sysdeps/pthread/pthread_rwlock_rdlock (__pthread_rwlock_rdlock):
+	Decrease __nr_readers_queued after reacquiring lock.
+	* sysdeps/pthread/pthread_rwlock_timedrdlock
+	(pthread_rwlock_timedrdlock): Likewise.
+	Reported by Bob Cook <bobcook47@hotmail.com>.
+
 2004-08-11  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-rwlock14.c (tf): Read main thread handle from *ARG

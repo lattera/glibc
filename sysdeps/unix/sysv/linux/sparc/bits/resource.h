@@ -167,8 +167,8 @@ enum __rusage_who
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
 
   /* Both.  */
-  RUSAGE_BOTH = -2
-#define RUSAGE_BOTH RUSAGE_BOTH
+  __RUSAGE_BOTH = -2
+#define RUSAGE_BOTH __RUSAGE_BOTH
 };
 
 #define __need_timeval

@@ -1,3 +1,13 @@
+2004-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define non-standard
+	RUSAGE_ enums as __RUSAGE_ and adjust macros accordingly.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Likewise.
+	Define non-standard RLIMIT_ enums as __RLIMIT_ and adjust macros
+	accordingly.
+
 2004-08-11  Andreas Schwab  <schwab@suse.de>
 
 	* resolv/res_libc.c: Move definition of __res_initstamp ...
