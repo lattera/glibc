@@ -1,5 +1,10 @@
 1999-11-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* manual/setjmp.texi: Many changes to correct bad English introduced
+	mainly by me.
+	* manual/time.texi: Likewise.
+	Patches by Neil Booth <neil@rosenet.ne.jp>.
+
 	* include/string.h: Remove K&R compatibility.
 
 1999-11-23  Ulrich Drepper  <drepper@cygnus.com>

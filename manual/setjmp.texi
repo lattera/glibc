@@ -12,7 +12,7 @@ functions.
 
 @menu
 * Intro: Non-Local Intro.        When and how to use these facilities.
-* Details: Non-Local Details.   Functions for nonlocal exits.
+* Details: Non-Local Details.   Functions for non-local exits.
 * Non-Local Exits and Signals::  Portability issues.
 @end menu
 
@@ -44,11 +44,11 @@ only a single function call, transferring control back to the point at
 which it was called, a non-local exit can potentially abandon many
 levels of nested function calls.
 
-You identify return points for non-local exits calling the function
+You identify return points for non-local exits by calling the function
 @code{setjmp}.  This function saves information about the execution
 environment in which the call to @code{setjmp} appears in an object of
 type @code{jmp_buf}.  Execution of the program continues normally after
-the call to @code{setjmp}, but if a exit is later made to this return
+the call to @code{setjmp}, but if an exit is later made to this return
 point by calling @code{longjmp} with the corresponding @w{@code{jmp_buf}}
 object, control is transferred back to the point where @code{setjmp} was
 called.  The return value from @code{setjmp} is used to distinguish

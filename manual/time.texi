@@ -331,7 +331,7 @@ about the local time zone.  It has the following members:
 This is the number of minutes west of UTC.
 
 @item int tz_dsttime
-If nonzero, daylight saving time applies during some part of the year.
+If nonzero, Daylight Saving Time applies during some part of the year.
 @end table
 
 The @code{struct timezone} type is obsolete and should never be used.
@@ -455,9 +455,9 @@ and @code{adjtime} functions are derived from BSD.
 @cindex calendar time and broken-down time
 
 Calendar time is represented as a number of seconds.  This is convenient
-for calculation, but has no resemblance to the way people normally
+for calculation, but has no relation to the way people normally
 represent dates and times.  By contrast, @dfn{broken-down time} is a binary
-representation separated into year, month, day, and so on.  Broken down
+representation separated into year, month, day, and so on.  Broken-down
 time values are not useful for calculations, but they are useful for
 printing human readable time.
 
@@ -552,7 +552,7 @@ Zone Functions}.
 
 Using the @code{localtime} function is a big problem in multi-threaded
 programs.  The result is returned in a static buffer and this is used in
-all threads.  POSIX.1c introduced a varient of this function.
+all threads.  POSIX.1c introduced a variant of this function.
 
 @comment time.h
 @comment POSIX.1c
@@ -608,7 +608,7 @@ The @code{mktime} function ignores the specified contents of the
 @code{tm_wday} and @code{tm_yday} members of the broken-down time
 structure.  It uses the values of the other components to compute the
 calendar time; it's permissible for these components to have
-unnormalized values outside of their normal ranges.  The last thing that
+unnormalized values outside their normal ranges.  The last thing that
 @code{mktime} does is adjust the components of the @var{brokentime}
 structure (including the @code{tm_wday} and @code{tm_yday}).
 
@@ -655,8 +655,8 @@ string.)
 @deftypefun {char *} asctime_r (const struct tm *@var{brokentime}, char *@var{buffer})
 This function is similar to @code{asctime} but instead of placing the
 result in a static buffer it writes the string in the buffer pointed to
-by the parameter @var{buffer}.  This buffer should have at least room
-for 16 bytes.
+by the parameter @var{buffer}.  This buffer should have room
+for at least 26 bytes, including the terminating null.
 
 If no error occurred the function returns a pointer to the string the
 result was written into, i.e., it returns @var{buffer}.  Otherwise
@@ -979,8 +979,8 @@ A literal @samp{%} character.
 The @var{size} parameter can be used to specify the maximum number of
 characters to be stored in the array @var{s}, including the terminating
 null character.  If the formatted time requires more than @var{size}
-characters, @code{strftime} returns zero and the content of the array
-@var{s} is indetermined.  Otherwise the return value indicates the
+characters, @code{strftime} returns zero and the contents of the array
+@var{s} are undefined.  Otherwise the return value indicates the
 number of characters placed in the array @var{s}, not including the
 terminating null character.
 
@@ -1018,7 +1018,7 @@ For an example of @code{strftime}, see @ref{Time Functions Example}.
 @comment ISO/Amend1
 @deftypefun size_t wcsftime (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, const struct tm *@var{brokentime})
 The @code{wcsftime} function is equivalent to the @code{strftime}
-function with the difference that it operates one wide character
+function with the difference that it operates on wide character
 strings.  The buffer where the result is stored, pointed to by @var{s},
 must be an array of wide characters.  The parameter @var{size} which
 specifies the size of the output buffer gives the number of wide
@@ -1026,7 +1026,7 @@ character, not the number of bytes.
 
 Also the format string @var{template} is a wide character string.  Since
 all characters needed to specify the format string are in the basic
-characater set it is portably possible to write format strings in the C
+character set it is portably possible to write format strings in the C
 source code using the @code{L"..."} notation.  The parameter
 @var{brokentime} has the same meaning as in the @code{strftime} call.
 
@@ -1044,10 +1044,11 @@ same problems indicated in the @code{strftime} documentation.
 
 The @w{ISO C} standard does not specify any functions which can convert
 the output of the @code{strftime} function back into a binary format.
-This lead to variety of more or less successful implementations with
-different interfaces over the years.  Then the Unix standard got
-extended by two functions: @code{strptime} and @code{getdate}.  Both
-have kind of strange interfaces but at least they are widely available.
+This led to a variety of more-or-less successful implementations with
+different interfaces over the years.  Then the Unix standard was
+extended by the addition of two functions: @code{strptime} and
+@code{getdate}.  Both have strange interfaces but at least they are
+widely available.
 
 @menu
 * Low-Level Time String Parsing::  Interpret string according to given format.
@@ -1058,34 +1059,31 @@ have kind of strange interfaces but at least they are widely available.
 @node Low-Level Time String Parsing
 @subsubsection Interpret string according to given format
 
-The first function is a rather low-level interface.  It is nevertheless
-frequently used in user programs since it is better known.  Its
-implementation and the interface though is heavily influenced by the
-@code{getdate} function which is defined and implemented in terms of
-calls to @code{strptime}.
+he first function is rather low-level.  It is nevertheless frequently
+used in software since it is better known.  Its interface and
+implementation are heavily influenced by the @code{getdate} function,
+which is defined and implemented in terms of calls to @code{strptime}.
 
 @comment time.h
 @comment XPG4
 @deftypefun {char *} strptime (const char *@var{s}, const char *@var{fmt}, struct tm *@var{tp})
 The @code{strptime} function parses the input string @var{s} according
-to the format string @var{fmt} and stores the found values in the
+to the format string @var{fmt} and stores its results in the
 structure @var{tp}.
 
-The input string can be retrieved in any way.  It does not matter
-whether it was generated by a @code{strftime} call or made up directly
-by a program.  It is also not necessary that the content is in any
-human-recognizable format.  I.e., it is OK if a date is written like
-@code{"02:1999:9"} which is not understandable without context.  As long
-the format string @var{fmt} matches the format of the input string
-everything goes.
+The input string could be generated by a @code{strftime} call or
+obtained any other way.  It does not need to be in a human-recognizable
+format; e.g. a date passed as @code{"02:1999:9"} is acceptable, even
+though it is ambiguous without context.  As long as the format string
+@var{fmt} matches the input string the function will succeed.
 
 The format string consists of the same components as the format string
-for the @code{strftime} function.  The only difference is that the flags
+of the @code{strftime} function.  The only difference is that the flags
 @code{_}, @code{-}, @code{0}, and @code{^} are not allowed.
 @comment Is this really the intention?  --drepper
-Several of the formats which @code{strftime} handled differently do the
-same work in @code{strptime} since differences like case of the output
-do not matter.  For symmetry reasons all formats are supported, though.
+Several of the distinct formats of @code{strftime} do the same work in
+@code{strptime} since differences like case of the input do not matter.
+For reasons of symmetry all formats are supported, though.
 
 The modifiers @code{E} and @code{O} are also allowed everywhere the
 @code{strftime} function allows them.
@@ -1119,9 +1117,9 @@ contains the @code{%y} format.
 @item %EC
 The locale's representation of the period.
 
-Unlike @code{%C} it makes sometimes sense to use this format since in
-some cultures it is required to specify years relative to periods
-instead of using the Gregorian years.
+Unlike @code{%C} it sometimes makes sense to use this format since some
+cultures represent years relative to the beginning of eras instead of
+using the Gregorian years.
 
 @item %d
 @item %e
@@ -1130,15 +1128,15 @@ Leading zeroes are permitted but not required.
 
 @item %Od
 @itemx %Oe
-Same as @code{%d} but the locale's alternative numeric symbols are used.
+Same as @code{%d} but using the locale's alternative numeric symbols.
 
 Leading zeroes are permitted but not required.
 
 @item %D
-Equivalent to the use of @code{%m/%d/%y} in this place.
+Equivalent to @code{%m/%d/%y}.
 
 @item %F
-Equivalent to the use of @code{%Y-%m-%d} which is the @w{ISO 8601} date
+Equivalent to @code{%Y-%m-%d}, which is the @w{ISO 8601} date
 format.
 
 This is a GNU extension following an @w{ISO C99} extension to
@@ -1148,7 +1146,7 @@ This is a GNU extension following an @w{ISO C99} extension to
 The year corresponding to the ISO week number, but without the century
 (range @code{00} through @code{99}).
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 This format is a GNU extension following a GNU extension of @code{strftime}.
@@ -1156,7 +1154,7 @@ This format is a GNU extension following a GNU extension of @code{strftime}.
 @item %G
 The year corresponding to the ISO week number.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 This format is a GNU extension following a GNU extension of @code{strftime}.
@@ -1169,7 +1167,7 @@ The hour as a decimal number, using a 24-hour clock (range @code{00} through
 @code{%k} is a GNU extension following a GNU extension of @code{strftime}.
 
 @item %OH
-Same as @code{%H} but using the locale's alternative numeric symbols are used.
+Same as @code{%H} but using the locale's alternative numeric symbols.
 
 @item %I
 @itemx %l
@@ -1179,7 +1177,7 @@ The hour as a decimal number, using a 12-hour clock (range @code{01} through
 @code{%l} is a GNU extension following a GNU extension of @code{strftime}.
 
 @item %OI
-Same as @code{%I} but using the locale's alternative numeric symbols are used.
+Same as @code{%I} but using the locale's alternative numeric symbols.
 
 @item %j
 The day of the year as a decimal number (range @code{1} through @code{366}).
@@ -1192,7 +1190,7 @@ The month as a decimal number (range @code{1} through @code{12}).
 Leading zeroes are permitted but not required.
 
 @item %Om
-Same as @code{%m} but using the locale's alternative numeric symbols are used.
+Same as @code{%m} but using the locale's alternative numeric symbols.
 
 @item %M
 The minute as a decimal number (range @code{0} through @code{59}).
@@ -1200,7 +1198,7 @@ The minute as a decimal number (range @code{0} through @code{59}).
 Leading zeroes are permitted but not required.
 
 @item %OM
-Same as @code{%M} but using the locale's alternative numeric symbols are used.
+Same as @code{%M} but using the locale's alternative numeric symbols.
 
 @item %n
 @itemx %t
@@ -1238,12 +1236,12 @@ The seconds as a decimal number (range @code{0} through @code{61}).
 
 Leading zeroes are permitted but not required.
 
-Please note the nonsense with @code{61} being allowed.  This is what the
-Unix specification says.  They followed the stupid decision once made to
-allow double leap seconds.  These do not exist but the myth persists.
+Note the nonsense with @code{61}, as given in the Unix specification.
+This is a result of a decision to allow double leap seconds.  These do
+not in fact exist but the myth persists.
 
 @item %OS
-Same as @code{%S} but using the locale's alternative numeric symbols are used.
+Same as @code{%S} but using the locale's alternative numeric symbols.
 
 @item %T
 Equivalent to the use of @code{%H:%M:%S} in this place.
@@ -1254,7 +1252,7 @@ The day of the week as a decimal number (range @code{1} through
 
 Leading zeroes are permitted but not required.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 @item %U
@@ -1264,7 +1262,7 @@ through @code{53}).
 Leading zeroes are permitted but not required.
 
 @item %OU
-Same as @code{%U} but using the locale's alternative numeric symbols are used.
+Same as @code{%U} but using the locale's alternative numeric symbols.
 
 @item %V
 The @w{ISO 8601:1988} week number as a decimal number (range @code{1}
@@ -1272,7 +1270,7 @@ through @code{53}).
 
 Leading zeroes are permitted but not required.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 @item %w
@@ -1281,11 +1279,11 @@ The day of the week as a decimal number (range @code{0} through
 
 Leading zeroes are permitted but not required.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 @item %Ow
-Same as @code{%w} but using the locale's alternative numeric symbols are used.
+Same as @code{%w} but using the locale's alternative numeric symbols.
 
 @item %W
 The week number of the current year as a decimal number (range @code{0}
@@ -1293,11 +1291,11 @@ through @code{53}).
 
 Leading zeroes are permitted but not required.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 @item %OW
-Same as @code{%W} but using the locale's alternative numeric symbols are used.
+Same as @code{%W} but using the locale's alternative numeric symbols.
 
 @item %x
 The date using the locale's date format.
@@ -1317,7 +1315,7 @@ The year without a century as a decimal number (range @code{0} through
 
 Leading zeroes are permitted but not required.
 
-Please note that it is at least questionable to use this format without
+Note that it is questionable to use this format without
 the @code{%C} format.  The @code{strptime} function does regard input
 values in the range @math{68} to @math{99} as the years @math{1969} to
 @math{1999} and the values @math{0} to @math{68} as the years
@@ -1347,7 +1345,7 @@ This is the full @w{ISO 8601} date and time format.
 @item %Z
 The timezone name.
 
-@emph{Note:} This is not really implemented currently.  The format is
+@emph{Note:} Currently, this is not fully implemented.  The format is
 recognized, input is consumed but no field in @var{tm} is set.
 
 @item %%
@@ -1356,7 +1354,7 @@ A literal @samp{%} character.
 
 All other characters in the format string must have a matching character
 in the input string.  Exceptions are white spaces in the input string
-which can match zero or more white space characters in the input string.
+which can match zero or more white space characters in the format string.
 
 The @code{strptime} function processes the input string from right to
 left.  Each of the three possible input elements (white space, literal,
@@ -1364,50 +1362,48 @@ or format) are handled one after the other.  If the input cannot be
 matched to the format string the function stops.  The remainder of the
 format and input strings are not processed.
 
-The return value of the function is a pointer to the first character not
-processed in this function call.  In case the input string contains more
-characters than required by the format string the return value points
-right after the last consumed input character.  In case the whole input
-string is consumed the return value points to the NUL byte at the end of
-the string.  If @code{strptime} fails to match all of the format string
-and therefore an error occurred the function returns @code{NULL}.
+The function returns a pointer to the first character it was unable to
+process.  If the input string contains more characters than required by
+the format string the return value points right after the last consumed
+input character.  If the whole input string is consumed the return value
+points to the @code{NULL} byte at the end of the string.  If an error
+occurs, i.e. @code{strptime} fails to match all of the format string,
+the function returns @code{NULL}.
 @end deftypefun
 
-The specification of the function in the XPG standard is rather vague.
-It leaves out a few important pieces of information.  Most important it
+The specification of the function in the XPG standard is rather vague,
+leaving out a few important pieces of information.  Most importantly, it
 does not specify what happens to those elements of @var{tm} which are
-not directly initialized by the different formats.  Various
+not directly initialized by the different formats.  The
 implementations on different Unix systems vary here.
 
 The GNU libc implementation does not touch those fields which are not
 directly initialized.  Exceptions are the @code{tm_wday} and
-@code{tm_yday} elements which are recomputed if any of the year, month,
+@code{tm_yday} elements, which are recomputed if any of the year, month,
 or date elements changed.  This has two implications:
 
 @itemize @bullet
 @item
-Before calling the @code{strptime} function for a new input string one
-has to prepare the structure passed in as the @var{tm}.  Normally this
-will mean that all values are initialized to zero.  Alternatively one
-can use all fields to values like @code{INT_MAX} which allows to
-determine which elements were set by the function call.  Zero does not
-work here since it is a valid value for many of the fields.
+Before calling the @code{strptime} function for a new input string, you
+should prepare the @var{tm} structure you pass.  Normally this will mean
+initializing all values are to zero.  Alternatively, you can set all
+fields to values like @code{INT_MAX}, allowing you to determine which
+elements were set by the function call.  Zero does not work here since
+it is a valid value for many of the fields.
 
-Careful initialization is necessary if one wants to find out whether a
+Careful initialization is necessary if you want to find out whether a
 certain field in @var{tm} was initialized by the function call.
 
 @item
-One can construct a @code{struct tm} value in several @code{strptime}
-calls in a row.  A useful application of this is for example the parsing
-of two separate strings, one containing the date information, the other
-the time information.  By parsing both one after the other without
-clearing the structure in between one can construct a complete
-broken-down time.
+You can construct a @code{struct tm} value with several consecutive
+@code{strptime} calls.  A useful application of this is e.g. the parsing
+of two separate strings, one containing date information and the other
+time information.  By parsing one after the other without clearing the
+structure in-between, you can construct a complete broken-down time.
 @end itemize
 
 The following example shows a function which parses a string which is
-supposed to contain the date information in either US style or @w{ISO
-8601} form.
+contains the date information in either US style or @w{ISO 8601} form:
 
 @smallexample
 const char *
@@ -1431,20 +1427,20 @@ parse_date (const char *input, struct tm *tm)
 @end smallexample
 
 @node General Time String Parsing
-@subsubsection A user-friendlier way to parse times and dates
+@subsubsection A More User-friendly Way to Parse Times and Dates
 
-The Unix standard defines another function to parse date strings.  The
-interface is, mildly said, weird.  But if this function fits into the
-application to be written it is just fine.  It is a problem when using
-this function in multi-threaded programs or in libraries since it
-returns a pointer to a static variable, uses a global variable, and a
-global state (an environment variable).
+The Unix standard defines another function for parsing date strings.
+The interface is weird, but if the function happens to suit your
+application it is just fine.  It is problematic to use this function
+in multi-threaded programs or libraries, since it returns a pointer to
+a static variable, and uses a global variable and global state (an
+environment variable).
 
 @comment time.h
 @comment Unix98
 @defvar getdate_err
-This variable of type @code{int} will contain the error code of the last
-unsuccessful call of the @code{getdate} function.  Defined values are:
+This variable of type @code{int} contains the error code of the last
+unsuccessful call to @code{getdate}.  Defined values are:
 
 @table @math
 @item 1
@@ -1455,7 +1451,7 @@ cannot be opened.
 @item 3
 Information about the template file cannot retrieved.
 @item 4
-The template file is no regular file.
+The template file is not a regular file.
 @item 5
 An I/O error occurred while reading the template file.
 @item 6
@@ -1463,67 +1459,66 @@ Not enough memory available to execute the function.
 @item 7
 The template file contains no matching template.
 @item 8
-The input string is invalid for a template which would match otherwise.
-This includes error like February 31st, or return values which can be
-represented using @code{time_t}.
+The input date is invalid, but would match a template otherwise.  This
+includes dates like February 31st, and dates which cannot be represented
+in a @code{time_t} variable.
 @end table
 @end defvar
 
 @comment time.h
 @comment Unix98
 @deftypefun {struct tm *} getdate (const char *@var{string})
-The interface of the @code{getdate} function is the simplest possible
-for a function to parse a string and return the value.  @var{string} is
-the input string and the result is passed to the user in a statically
-allocated variable.
+The interface to @code{getdate} is the simplest possible for a function
+to parse a string and return the value.  @var{string} is the input
+string and the result is returned in a statically-allocated variable.
 
-The details about how the string is processed is hidden from the user.
-In fact, it can be outside the control of the program.  Which formats
+The details about how the string is processed are hidden from the user.
+In fact, they can be outside the control of the program.  Which formats
 are recognized is controlled by the file named by the environment
-variable @code{DATEMSK}.  The content of the named file should contain
+variable @code{DATEMSK}.  This file should contain
 lines of valid format strings which could be passed to @code{strptime}.
 
 The @code{getdate} function reads these format strings one after the
 other and tries to match the input string.  The first line which
 completely matches the input string is used.
 
-Elements which were not initialized through the format string get
-assigned the values of the time the @code{getdate} function is called.
+Elements not initialized through the format string retain the values
+present at the time of the @code{getdate} function call.
 
-The format elements recognized by @code{getdate} are the same as for
+The formats recognized by @code{getdate} are the same as for
 @code{strptime}.  See above for an explanation.  There are only a few
-extension to the @code{strptime} behavior:
+extensions to the @code{strptime} behavior:
 
 @itemize @bullet
 @item
 If the @code{%Z} format is given the broken-down time is based on the
-current time in the timezone matched, not in the current timezone of the
+current time of the timezone matched, not of the current timezone of the
 runtime environment.
 
 @emph{Note}: This is not implemented (currently).  The problem is that
 timezone names are not unique.  If a fixed timezone is assumed for a
-given string (say @code{EST} meaning US East Coast time) uses for
+given string (say @code{EST} meaning US East Coast time), then uses for
 countries other than the USA will fail.  So far we have found no good
-solution for this.
+solution to this.
 
 @item
 If only the weekday is specified the selected day depends on the current
 date.  If the current weekday is greater or equal to the @code{tm_wday}
-value this weeks day is selected.  Otherwise next weeks day.
+value the current week's day is chosen, otherwise the day next week is chosen.
 
 @item
-A similar heuristic is used if only the month is given, not the year.
-For value corresponding to the current or a later month the current year
-s used.  Otherwise the next year.  The first day of the month is assumed
-if it is not explicitly specified.
+A similar heuristic is used when only the month is given and not the
+year.  If the month is greater than or equal to the current month, then
+the current year is used.  Otherwise it wraps to next year.  The first
+day of the month is assumed if one is not explicitly specified.
 
 @item
-The current hour, minute, and second is used if the appropriate value is
+The current hour, minute, and second are used if the appropriate value is
 not set through the format.
 
 @item
-If no date is given the date for the next day is used if the time is
-smaller than the current time.  Otherwise it is the same day.
+If no date is given tomorrow's date is used if the time is
+smaller than the current time.  Otherwise today's date is taken.
 @end itemize
 
 It should be noted that the format in the template file need not only
@@ -1542,12 +1537,13 @@ run job at %I %p,%B %dnd
 %A den %d. %B %Y %H.%M Uhr
 @end smallexample
 
-As one can see the template list can contain very specific strings like
+As you can see, the template list can contain very specific strings like
 @code{run job at %I %p,%B %dnd}.  Using the above list of templates and
-assuming the current time is Mon Sep 22 12:19:47 EDT 1986 we can get the
+assuming the current time is Mon Sep 22 12:19:47 EDT 1986 we can obtain the
 following results for the given input.
 
 @multitable {xxxxxxxxxxxx} {xxxxxxxxxx} {xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx}
+@item        Input @tab     Match @tab Result
 @item        Mon @tab       %a @tab    Mon Sep 22 12:19:47 EDT 1986
 @item        Sun @tab       %a @tab    Sun Sep 28 12:19:47 EDT 1986
 @item        Fri @tab       %a @tab    Fri Sep 26 12:19:47 EDT 1986
@@ -1565,18 +1561,17 @@ following results for the given input.
 @end multitable
 
 The return value of the function is a pointer to a static variable of
-type @w{@code{struct tm}} or a null pointer if an error occurred.  The
-result in the variable pointed to by the return value is only valid
-until the next @code{getdate} call which makes this function unusable in
-multi-threaded applications.
+type @w{@code{struct tm}}, or a null pointer if an error occurred.  The
+result is only valid until the next @code{getdate} call, making this
+function unusable in multi-threaded applications.
 
 The @code{errno} variable is @emph{not} changed.  Error conditions are
-signalled using the global variable @code{getdate_err}.  See the
+stored in the global variable @code{getdate_err}.  See the
 description above for a list of the possible error values.
 
 @emph{Warning:} The @code{getdate} function should @emph{never} be
 used in SUID-programs.  The reason is obvious: using the
-@code{DATEMSK} environment variable one can get the function to open
+@code{DATEMSK} environment variable you can get the function to open
 any arbitrary file and chances are high that with some bogus input
 (such as a binary file) the program will crash.
 @end deftypefun
@@ -1586,20 +1581,19 @@ any arbitrary file and chances are high that with some bogus input
 @deftypefun int getdate_r (const char *@var{string}, struct tm *@var{tp})
 The @code{getdate_r} function is the reentrant counterpart of
 @code{getdate}.  It does not use the global variable @code{getdate_err}
-to signal the error but instead the return value now is this error code.
-The same error codes as described in the @code{getdate_err}
-documentation above are used.
+to signal an error, but instead returns an error code.  The same error
+codes as described in the @code{getdate_err} documentation above are
+used, with 0 meaning success.
 
-@code{getdate_r} also does not store the broken-down time in a static
-variable.  Instead it takes an second argument which must be a pointer
-to a variable of type @code{struct tm} where the broken-down can be
-stored.
+Moreover, @code{getdate_r} stores the broken-down time in the variable
+of type @code{struct tm} pointed to by the second argument, rather than
+in a static variable.
 
 This function is not defined in the Unix standard.  Nevertheless it is
 available on some other Unix systems as well.
 
-As for @code{getdate} the warning for using this function in
-SUID-programs applies to @code{getdate_r} as well.
+The warning against using @code{getdate} in SUID-programs applies to
+@code{getdate_r} as well.
 @end deftypefun
 
 @node TZ Variable
@@ -1614,11 +1608,11 @@ for accessing the time zone are declared in @file{time.h}.
 
 You should not normally need to set @code{TZ}.  If the system is
 configured properly, the default time zone will be correct.  You might
-set @code{TZ} if you are using a computer over the network from a
-different time zone, and would like times reported to you in the time zone
-that local for you, rather than what is local for the computer.
+set @code{TZ} if you are using a computer over a network from a
+different time zone, and would like times reported to you in the time
+zone local to you, rather than what is local to the computer.
 
-In POSIX.1 systems the value of the @code{TZ} variable can be of one of
+In POSIX.1 systems the value of the @code{TZ} variable can be in one of
 three formats.  With the GNU C library, the most common format is the
 last one, which can specify a selection from a large database of time
 zone information for many regions of the world.  The first two formats
@@ -1636,12 +1630,12 @@ summer time) in the local time zone:
 @end smallexample
 
 The @var{std} string specifies the name of the time zone.  It must be
-three or more characters long and must not contain a leading colon or
-embedded digits, commas, or plus or minus signs.  There is no space
+three or more characters long and must not contain a leading colon,
+embedded digits, commas, nor plus and minus signs.  There is no space
 character separating the time zone name from the @var{offset}, so these
 restrictions are necessary to parse the specification correctly.
 
-The @var{offset} specifies the time value one must add to the local time
+The @var{offset} specifies the time value you must add to the local time
 to get a Coordinated Universal Time value.  It has syntax like
 [@code{+}|@code{-}]@var{hh}[@code{:}@var{mm}[@code{:}@var{ss}]].  This
 is positive if the local time zone is west of the Prime Meridian and
@@ -1649,7 +1643,7 @@ negative if it is east.  The hour must be between @code{0} and
 @code{23}, and the minute and seconds between @code{0} and @code{59}.
 
 For example, here is how we would specify Eastern Standard Time, but
-without any daylight saving time alternative:
+without any Daylight Saving Time alternative:
 
 @smallexample
 EST+5
@@ -1663,11 +1657,11 @@ The second format is used when there is Daylight Saving Time:
 
 The initial @var{std} and @var{offset} specify the standard time zone, as
 described above.  The @var{dst} string and @var{offset} specify the name
-and offset for the corresponding daylight saving time zone; if the
+and offset for the corresponding Daylight Saving Time zone; if the
 @var{offset} is omitted, it defaults to one hour ahead of standard time.
 
-The remainder of the specification describes when daylight saving time is
-in effect.  The @var{start} field is when daylight saving time goes into
+The remainder of the specification describes when Daylight Saving Time is
+in effect.  The @var{start} field is when Daylight Saving Time goes into
 effect and the @var{end} field is when the change is made back to standard
 time.  The following formats are recognized for these fields:
 
@@ -1693,8 +1687,8 @@ The @var{time} fields specify when, in the local time currently in
 effect, the change to the other time occurs.  If omitted, the default is
 @code{02:00:00}.
 
-For example, here is how one would specify the Eastern time zone in the
-United States, including the appropriate daylight saving time and its dates
+For example, here is how you would specify the Eastern time zone in the
+United States, including the appropriate Daylight Saving Time and its dates
 of applicability.  The normal offset from UTC is 5 hours; since this is
 west of the prime meridian, the sign is positive.  Summer time begins on
 the first Sunday in April at 2:00am, and ends on the last Sunday in October
@@ -1704,7 +1698,7 @@ at 2:00am.
 EST+5EDT,M4.1.0/2,M10.5.0/2
 @end smallexample
 
-The schedule of daylight saving time in any particular jurisdiction has
+The schedule of Daylight Saving Time in any particular jurisdiction has
 changed over the years.  To be strictly correct, the conversion of dates
 and times in the past should be based on the schedule that was in effect
 then.  However, this format has no facilities to let you specify how the
@@ -1757,13 +1751,13 @@ community of volunteers and put in the public domain.
 @comment POSIX.1
 @deftypevar {char *} tzname [2]
 The array @code{tzname} contains two strings, which are the standard
-names of the pair of time zones (standard and daylight
-saving) that the user has selected.  @code{tzname[0]} is the name of
+names of the pair of time zones (standard and Daylight
+Saving) that the user has selected.  @code{tzname[0]} is the name of
 the standard time zone (for example, @code{"EST"}), and @code{tzname[1]}
-is the name for the time zone when daylight saving time is in use (for
+is the name for the time zone when Daylight Saving Time is in use (for
 example, @code{"EDT"}).  These correspond to the @var{std} and @var{dst}
 strings (respectively) from the @code{TZ} environment variable.  If
-daylight saving time is never used, @code{tzname[1]} is the empty string.
+Daylight Saving Time is never used, @code{tzname[1]} is the empty string.
 
 The @code{tzname} array is initialized from the @code{TZ} environment
 variable whenever @code{tzset}, @code{ctime}, @code{strftime},
@@ -1777,7 +1771,7 @@ GNU programs it is better to use the @code{tm_zone} member of the
 broken-down time structure, since @code{tm_zone} reports the correct
 abbreviation even when it is not the latest one.
 
-Though the strings are declared as @code{char *} the user must stay away
+Though the strings are declared as @code{char *} the user must refrain
 from modifying these strings.  Modifying the strings will almost certainly
 lead to trouble.
 
@@ -1812,9 +1806,9 @@ it is not the latest one.
 @comment time.h
 @comment SVID
 @deftypevar int daylight
-This variable has a nonzero value if daylight savings time rules apply.
-A nonzero value does not necessarily mean that daylight savings time is
-now in effect; it means only that daylight savings time is sometimes in
+This variable has a nonzero value if Daylight Saving Time rules apply.
+A nonzero value does not necessarily mean that Daylight Saving Time is
+now in effect; it means only that Daylight Saving Time is sometimes in
 effect.
 @end deftypevar
 
@@ -1921,7 +1915,7 @@ This is the estimated error, measured in microseconds.  This value can
 be set using bit @code{MOD_ESTERROR}.
 
 @item int status
-This valiable reflects the various states of the clock machinery.  There
+This variable reflects the various states of the clock machinery.  There
 are symbolic constants for the significant bits, starting with
 @code{STA_}.  Some of these flags can be updated using the
 @code{MOD_STATUS} bit.
@@ -1959,7 +1953,7 @@ This value represents the median filtered dispersion of the PPS
 frequency in scaled PPM.
 
 @item long int jitcnt
-This counter represents the numer of pulses where the jitter exceeded
+This counter represents the number of pulses where the jitter exceeded
 the allowed maximum @code{MAXTIME}.
 
 @item long int calcnt
@@ -2044,11 +2038,11 @@ set a timer that has not yet expired, that timer is simply reset to the
 new value.
 
 You should establish a handler for the appropriate alarm signal using
-@code{signal} or @code{sigaction} before issuing a call to @code{setitimer}
-or @code{alarm}.  Otherwise, an unusual chain of events could cause the
-timer to expire before your program establishes the handler, and in that
-case it would be terminated, since that is the default action for the alarm
-signals.  @xref{Signal Handling}.
+@code{signal} or @code{sigaction} before issuing a call to
+@code{setitimer} or @code{alarm}.  Otherwise, an unusual chain of events
+could cause the timer to expire before your program establishes the
+handler.  In this case it would be terminated, since termination is the
+default action for the alarm signals.  @xref{Signal Handling}.
 
 The @code{setitimer} function is the primary means for setting an alarm.
 This facility is declared in the header file @file{sys/time.h}.  The
@@ -2215,7 +2209,7 @@ Instead, compute the time at which the program should stop waiting, and
 keep trying to wait until that time.  This won't be off by more than a
 second.  With just a little more work, you can use @code{select} and
 make the waiting period quite accurate.  (Of course, heavy system load
-can cause unavoidable additional delays---unless the machine is
+can cause additional unavoidable delays---unless the machine is
 dedicated to one application, there is no way you can avoid this.)
 
 On some systems, @code{sleep} can do strange things if your program uses
@@ -2236,7 +2230,7 @@ the same program, because @code{sleep} does not work by means of
 @comment time.h
 @comment POSIX.1
 @deftypefun int nanosleep (const struct timespec *@var{requested_time}, struct timespec *@var{remaining})
-If the resolution of seconds is not enough the @code{nanosleep} function
+If resolution to seconds is not enough the @code{nanosleep} function
 can be used.  As the name suggests the sleeping period can be specified
 in nanoseconds.  The actual period of waiting time might be longer since
 the requested time in the @var{requested_time} parameter is rounded up
@@ -2258,12 +2252,12 @@ illegal value.  Either the value is negative or greater than or equal to
 1000 million.
 @end table
 
-This function is a cancelation point in multi-threaded programs.  This
+This function is a cancellation point in multi-threaded programs.  This
 is a problem if the thread allocates some resources (like memory, file
 descriptors, semaphores or whatever) at the time @code{nanosleep} is
 called.  If the thread gets canceled these resources stay allocated
 until the program ends.  To avoid this calls to @code{nanosleep} should
-be protected using cancelation handlers.
+be protected using cancellation handlers.
 @c ref pthread_cleanup_push / pthread_cleanup_pop
 
 The @code{nanosleep} function is declared in @file{time.h}.
@@ -2273,14 +2267,14 @@ The @code{nanosleep} function is declared in @file{time.h}.
 @section Resource Usage
 
 @pindex sys/resource.h
-The function @code{getrusage} and the data type @code{struct rusage}
-are used for examining the usage figures of a process.  They are declared
-in @file{sys/resource.h}.
+The function @code{getrusage} and the data type @code{struct rusage} are
+used to examine the resource usage of a process.  They are declared in
+@file{sys/resource.h}.
 
 @comment sys/resource.h
 @comment BSD
 @deftypefun int getrusage (int @var{processes}, struct rusage *@var{rusage})
-This function reports the usage totals for processes specified by
+This function reports resource usage totals for processes specified by
 @var{processes}, storing the information in @code{*@var{rusage}}.
 
 In most systems, @var{processes} has only two valid values:
@@ -2294,7 +2288,7 @@ Just the current process.
 @comment sys/resource.h
 @comment BSD
 @item RUSAGE_CHILDREN
-All child processes (direct and indirect) that have terminated already.
+All child processes (direct and indirect) that have already terminated.
 @end table
 
 In the GNU system, you can also inquire about a particular child process
@@ -2309,15 +2303,15 @@ The argument @var{processes} is not valid.
 @end table
 @end deftypefun
 
-One way of getting usage figures for a particular child process is with
+One way of getting resource usage for a particular child process is with
 the function @code{wait4}, which returns totals for a child when it
 terminates.  @xref{BSD Wait Functions}.
 
 @comment sys/resource.h
 @comment BSD
 @deftp {Data Type} {struct rusage}
-This data type records a collection usage amounts for various sorts of
-resources.  It has the following members, and possibly others:
+This data type stores various resource usage statistics.  It has the
+following members, and possibly others:
 
 @table @code
 @item struct timeval ru_utime
@@ -2328,7 +2322,8 @@ Time spent in operating system code on behalf of @var{processes}.
 
 @item long int ru_maxrss
 The maximum resident set size used, in kilobytes.  That is, the maximum
-number of kilobytes that @var{processes} used in real memory simultaneously.
+number of kilobytes of physical memory that @var{processes} used
+simultaneously.
 
 @item long int ru_ixrss
 An integral value expressed in kilobytes times ticks of execution, which
@@ -2337,11 +2332,11 @@ processes.
 
 @item long int ru_idrss
 An integral value expressed the same way, which is the amount of
-unshared memory used in data.
+unshared memory used for data.
 
 @item long int ru_isrss
 An integral value expressed the same way, which is the amount of
-unshared memory used in stack space.
+unshared memory used for stack space.
 
 @item long int ru_minflt
 The number of page faults which were serviced without requiring any I/O.
@@ -2374,13 +2369,13 @@ The number of times @var{processes} voluntarily invoked a context switch
 (usually to wait for some service).
 
 @item long int ru_nivcsw
-The number of times an involuntary context switch took place (because
-the time slice expired, or another process of higher priority became
-runnable).
+The number of times an involuntary context switch took place (because a
+time slice expired, or another process of higher priority was
+scheduled).
 @end table
 @end deftp
 
-An additional historical function for examining usage figures,
+An additional historical function for examining resource usage,
 @code{vtimes}, is supported but not documented here.  It is declared in
 @file{sys/vtimes.h}.
 
@@ -2391,8 +2386,8 @@ An additional historical function for examining usage figures,
 @cindex usage limits
 
 You can specify limits for the resource usage of a process.  When the
-process tries to exceed a limit, it may get a signal, or the system call
-by which it tried to do so may fail, depending on the limit.  Each
+process tries to exceed a given limit, it may get a signal, or the system call
+by which it tried to do so may fail, depending on the limit in question.  Each
 process initially inherits its limit values from its parent, but it can
 subsequently change them.
 
@@ -2409,21 +2404,21 @@ The return value is @code{0} on success and @code{-1} on failure.  The
 only possible @code{errno} error condition is @code{EFAULT}.
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is in fact @code{getrlimit64}.  I.e., the
+32-bit system, this function is in fact @code{getrlimit64}.  Thus the
 LFS interface transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
 @comment Unix98
 @deftypefun int getrlimit64 (int @var{resource}, struct rlimit64 *@var{rlp})
-This function is similar to the @code{getrlimit} but its second
-parameter is a pointer to a variable of type @code{struct rlimit64}
-which allows this function to read values which wouldn't fit in the
-member of a @code{struct rlimit}.
+This function is similar to @code{getrlimit}, but its second
+parameter is a pointer to a variable of type @code{struct rlimit64},
+allowing it to read values which wouldn't fit in the member
+of a @code{struct rlimit}.
 
-If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
-bits machine this function is available under the name @code{getrlimit}
-and so transparently replaces the old interface.
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit machine, this function is available under the name
+@code{getrlimit} and so transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
@@ -2442,21 +2437,21 @@ but you don't have privileges to do so.
 @end table
 
 When the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
-32 bits system this function is in fact @code{setrlimit64}.  I.e., the
+32-bit system this function is in fact @code{setrlimit64}.  Thus the
 LFS interface transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
 @comment Unix98
 @deftypefun int setrlimit64 (int @var{resource}, const struct rlimit64 *@var{rlp})
-This function is similar to the @code{setrlimit} but its second
-parameter is a pointer to a variable of type @code{struct rlimit64}
-which allows this function to set values which wouldn't fit in the
-member of a @code{struct rlimit}.
+This function is similar to @code{setrlimit}, but its second parameter
+is a pointer to a variable of type @code{struct rlimit64}, allowing it
+to set values which wouldn't fit in the member of a @code{struct
+rlimit}.
 
-If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a 32
-bits machine this function is available under the name @code{setrlimit}
-and so transparently replaces the old interface.
+If the sources are compiled with @code{_FILE_OFFSET_BITS == 64} on a
+32-bit machine, this function is available under the name
+@code{setrlimit} and so transparently replaces the old interface.
 @end deftypefun
 
 @comment sys/resource.h
@@ -2474,13 +2469,13 @@ This is also called the ``soft limit''.
 @item rlim_t rlim_max
 The maximum permissible value of the limit in question.  You cannot set
 the current value of the limit to a larger number than this maximum.
-Only the super user can change the maximum permissible value.
+Only the super-user can change the maximum permissible value.
 This is also called the ``hard limit''.
 @cindex hard limit
 @end table
 
-In @code{getrlimit}, the structure is an output; it receives the current
-values.  In @code{setrlimit}, it specifies the new values.
+For @code{getrlimit}, the structure is an output; it receives the current
+value.  With @code{setrlimit} it specifies the new value.
 @end deftp
 
 For the LFS functions a similar type is defined in @file{sys/resource.h}.
@@ -2499,23 +2494,23 @@ This is also called the ``soft limit''.
 @item rlim64_t rlim_max
 The maximum permissible value of the limit in question.  You cannot set
 the current value of the limit to a larger number than this maximum.
-Only the super user can change the maximum permissible value.
+Only the super-user can change the maximum permissible value.
 This is also called the ``hard limit''.
 @end table
 
-In @code{getrlimit64}, the structure is an output; it receives the current
-values.  In @code{setrlimit64}, it specifies the new values.
+For @code{getrlimit64}, the structure is an output; it receives the current
+value.  With @code{setrlimit64} it specifies the new value.
 @end deftp
 
 Here is a list of resources that you can specify a limit for.
-Those that are sizes are measured in bytes.
+Memory sizes are measured in bytes.
 
 @table @code
 @comment sys/resource.h
 @comment BSD
 @item RLIMIT_CPU
 @vindex RLIMIT_CPU
-The maximum amount of cpu time the process can use.  If it runs for
+The maximum amount of CPU time the process can use.  If it runs for
 longer than this, it gets a signal: @code{SIGXCPU}.  The value is
 measured in seconds.  @xref{Operation Error Signals}.
 
@@ -2548,7 +2543,7 @@ its stack past this size, it gets a @code{SIGSEGV} signal.
 @item RLIMIT_CORE
 @vindex RLIMIT_CORE
 The maximum size core file that this process can create.  If the process
-terminates and would dump a core file larger than this maximum size,
+terminates and would dump a core file larger than this,
 then no core file is created.  So setting this limit to zero prevents
 core files from ever being created.
 
@@ -2581,7 +2576,7 @@ with @code{EAGAIN}.  @xref{Creating a Process}.
 @itemx RLIMIT_OFILE
 @vindex RLIMIT_OFILE
 The maximum number of files that the process can open.  If it tries to
-open more files than this, it gets error code @code{EMFILE}.
+open more files than this, it gets the error code @code{EMFILE}.
 @xref{Error Codes}.  Not all systems support this limit; GNU does, and
 4.4 BSD does.
 
@@ -2665,7 +2660,7 @@ process.
 The value of @var{class} is not valid.
 @end table
 
-When the return value is @code{-1}, it could indicate failure, or it
+If the return value is @code{-1}, it could indicate failure, or it
 could be the priority value.  The only way to make certain is to set
 @code{errno = 0} before calling @code{getpriority}, then use @code{errno
 != 0} afterward as the criterion for failure.
@@ -2699,7 +2694,7 @@ privileges for that.
 @end deftypefun
 
 The arguments @var{class} and @var{id} together specify a set of
-processes you are interested in.  These are the possible values for
+processes you are interested in.  These are the possible values of
 @var{class}:
 
 @table @code
@@ -2735,7 +2730,7 @@ current process group, or the current user, according to @var{class}.
 Increment the priority of the current process by @var{increment}.
 The return value is the same as for @code{setpriority}.
 
-Here is an equivalent definition for @code{nice}:
+Here is an equivalent definition of @code{nice}:
 
 @smallexample
 int
