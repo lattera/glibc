@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,2002,2003 Free Software Foundation, Inc.
    Contributed by David Mosberger (davidm@cs.arizona.edu).
    This file is part of the GNU C Library.
 
@@ -33,7 +33,7 @@ const static struct sqrt_data_struct {
 	unsigned long dn, up, half, almost_three_half;
 	unsigned long one_and_a_half, two_to_minus_30, one, nan;
 	const int T2[64];
-} sqrt_data = {
+} sqrt_data __attribute__((used)) = {
 	0x3fefffffffffffff,	/* __dn = nextafter(1,-Inf) */
 	0x3ff0000000000001,	/* __up = nextafter(1,+Inf) */
 	0x3fe0000000000000,	/* half */
