@@ -2,6 +2,7 @@
 
 	* sysdeps/vax, sysdeps/unix/bsd/vax: Directories and all files removed.
 	These are now in the ports repository.
+	* sysdeps/tahoe, sysdeps/unix/bsd/tahoe: Likewise.
 
 2004-10-23  Ulrich Drepper  <drepper@redhat.com>
 
