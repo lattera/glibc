@@ -1,3 +1,7 @@
+2002-01-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/pt-machine.h (INIT_THREAD_SELF): Avoid warning.
+
 2002-01-11  Andreas Schwab  <schwab@suse.de>
 
 	* signals.c (sighandler): Initialize all elements to SIG_ERR.
