@@ -728,6 +728,7 @@ define o-iterator-doit
 $(objpfx)stamp$o: $(o-objects); $$(do-stamp)
 endef
 define do-stamp
+$(make-target-directory)
 echo '$(patsubst $(objpfx)%,$(addsuffix /,$(subdir))%,$^)' > $@T
 mv -f $@T $@
 endef
