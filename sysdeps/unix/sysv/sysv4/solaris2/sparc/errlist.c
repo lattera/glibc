@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
+#include <libintl.h>
 
 
 /* This is a list of all known `errno' codes.  */
