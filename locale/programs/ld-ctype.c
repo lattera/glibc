@@ -833,7 +833,7 @@ void
 ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	      const char *output_path)
 {
-  static const char nulbytes[3] = { 0, 0, 0 };
+  static const char nulbytes[4] = { 0, 0, 0, 0 };
   struct locale_ctype_t *ctype = locale->categories[LC_CTYPE].ctype;
   const size_t nelems = (_NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)
 			 + (ctype->map_collection_nr - 2));
@@ -936,7 +936,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		  = strlen (ctype->classnames[cnt]) + 1;
 		total += iov[2 + elem + offset].iov_len;
 	      }
-	    iov[2 + elem + offset].iov_base = (void *) "\0\0\0";
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
 	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
 	    total += 1 + (4 - ((total + 1) % 4));
 
@@ -954,7 +954,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		  = strlen (ctype->mapnames[cnt]) + 1;
 		total += iov[2 + elem + offset].iov_len;
 	      }
-	    iov[2 + elem + offset].iov_base = (void *) "\0\0\0";
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
 	    iov[2 + elem + offset].iov_len = 1 + (4 - ((total + 1) % 4));
 	    total += 1 + (4 - ((total + 1) % 4));
 
@@ -993,6 +993,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN):
+	    /* Align entries.  */
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
+	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
+	    idx[elem] += iov[2 + elem + offset].iov_len;
+	    ++offset;
+
 	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    *(uint32_t *) iov[2 + elem + offset].iov_base =
@@ -1000,15 +1006,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + sizeof (uint32_t);
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-	    /* FALLTRHOUGH */
-
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS1_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_MB):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_MB):
 	    /* Compute the length of all possible characters.  For INDIGITS
 	       there might be more than one.  We simply concatenate all of
 	       them with a NUL byte following.  The NUL byte wouldn't be
@@ -1048,15 +1046,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC):
-	    /* Align entries.  */
-	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
-	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
-	    idx[elem] += iov[2 + elem + offset].iov_len;
-	    ++offset;
-	    /* FALLTHROUGH */
-
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS1_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC):
 	    total = ctype->wcdigits_act / 10;
 
 	    iov[2 + elem + offset].iov_base =
@@ -1070,7 +1060,15 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC):
+	    /* Align entries.  */
+	    iov[2 + elem + offset].iov_base = (void *) nulbytes;
+	    iov[2 + elem + offset].iov_len = (4 - idx[elem] % 4) % 4;
+	    idx[elem] += iov[2 + elem + offset].iov_len;
+	    ++offset;
+	    /* FALLTRHOUGH */
+
+	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT1_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
 	    cnt = elem - _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC);
 	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);

@@ -18,6 +18,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -215,7 +216,11 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	  goto puntmap;
 	}
       if (__builtin_expect (_nl_value_types[category][cnt] == word, 0))
-	newdata->values[cnt].word = *((u_int32_t *) (newdata->filedata + idx));
+	{
+	  assert (idx % 4 == 0);
+	  newdata->values[cnt].word =
+	    *((u_int32_t *) (newdata->filedata + idx));
+	}
       else
 	newdata->values[cnt].string = newdata->filedata + idx;
     }
