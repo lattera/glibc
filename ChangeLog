@@ -1,5 +1,7 @@
 2001-02-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* version.h (VERSION): Bump to 2.2.2.
+
 	* configure.in: Require makeinfo version 4.
 
 	* libio/tst_wscanf.c (main): Add cast to avoid warning.
