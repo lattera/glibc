@@ -34,7 +34,7 @@ __new_sem_post (sem_t *sem)
 
   lll_compare_and_swap ((int *) sem, oldval, newval, "lr %2,%1; ahi %2,1");
   err = lll_futex_wake(((int *) sem), newval);
-  if (err != 0)
+  if (err < 0)
     {
       __set_errno(-err);
       return -1;

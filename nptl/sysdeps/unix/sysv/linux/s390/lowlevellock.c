@@ -42,7 +42,6 @@ ___lll_lock (futex, newval)
 hidden_proto (___lll_lock)
 
 
-/* XXX Should not be in libc.so  */
 int
 lll_unlock_wake_cb (futex)
      int *futex;
@@ -58,7 +57,6 @@ lll_unlock_wake_cb (futex)
 hidden_proto (lll_unlock_wake_cb)
 
 
-/* XXX Should not be in libc.so  */
 int
 ___lll_timedwait_tid (ptid, abstime)
      int *ptid;

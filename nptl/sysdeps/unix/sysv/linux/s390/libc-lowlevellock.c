@@ -17,5 +17,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* No difference to lowlevellock.c  */
-#include "lowlevellock.c"
+#include <errno.h>
+#include <sysdep.h>
+#include <lowlevellock.h>
+#include <sys/time.h>
+
+
+void
+___lll_lock (futex, newval)
+     int *futex;
+     int newval;
+{
+  do
+    {
+      int oldval;
+
+      lll_futex_wait (futex, newval);
+      lll_compare_and_swap (futex, oldval, newval, "lr %2,%1; ahi %2,-1");
+    }
+  while (newval != 0);
+
+  *futex = -1;
+}
+hidden_proto (___lll_lock)

@@ -37,6 +37,8 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
 
   while (1)
     {
+      int err;
+
       /* Get the rwlock if there is no writer...  */
       if (rwlock->__data.__writer == 0
 	  /* ...and if either no writer is waiting or we prefer readers.  */
@@ -111,14 +113,14 @@ pthread_rwlock_timedrdlock (rwlock, abstime)
       lll_mutex_unlock (rwlock->__data.__lock);
 
       /* Wait for the writer to finish.  */
-      result = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
-				     waitval, &rt);
+      err = lll_futex_timed_wait (&rwlock->__data.__readers_wakeup,
+				  waitval, &rt);
 
       /* Get the lock.  */
       lll_mutex_lock (rwlock->__data.__lock);
 
       /* Did the futex call time out?  */
-      if (result == -ETIMEDOUT)
+      if (err == -ETIMEDOUT)
 	{
 	  /* Yep, report it.  */
 	  result = ETIMEDOUT;

@@ -1,3 +1,25 @@
+2003-03-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* atomic.h (atomic_exchange_and_add): Return newval, not oldval.
+
+	* sysdeps/pthread/pthread_cond_timedwait.c (__pthread_cond_timedwait):
+	Fix handling of cancellation and failing pthread_mutex_unlock call.
+	* sysdeps/pthread/pthread_cond_wait.c (__condvar_cleanup): Likewise.
+	(__pthread_cond_wait): Likewise.
+
+	* sysdeps/pthread/pthread_rwlock_timedrdlock.c
+	(pthread_rwlock_timedrdlock): Fix clobber of result variable by
+	lll_futex_timed_wait call.
+	* sysdeps/pthread/pthread_rwlock_timedwrlock.c
+	(pthread_rwlock_timedwrlock): Likewise.
+
+	* sysdeps/unix/sysv/linux/s390/libc-lowlevellock.c (___lll_lock):
+	Don't define lll_unlock_wake_cb and ___lll_timedwait_tid in libc.so.
+	* sysdeps/unix/sysv/linux/s390/lowlevellock.c: Remove XXX comments.
+
+	* sysdeps/unix/sysv/linux/s390/sem_post.c (__new_sem_post): Fix
+	check of lll_futex_wake return value.
+
 2003-03-03  Roland McGrath  <roland@redhat.com>
 
 	* forward.c: Fix typo in __pthread_attr_init_2_0 compat_symbol decl.

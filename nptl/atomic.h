@@ -60,7 +60,7 @@
      while (atomic_compare_and_exchange_acq (__memp, __oldval + __value,      \
 					     __oldval));		      \
 									      \
-     __oldval; })
+     __oldval + __value; })
 #endif
 
 

@@ -31,6 +31,12 @@
 extern void __condvar_cleanup (void *arg)
      __attribute__ ((visibility ("hidden")));
 
+struct _condvar_cleanup_buffer
+{
+  int oldtype;
+  pthread_cond_t *cond;
+  pthread_mutex_t *mutex;
+};
 
 int
 __pthread_cond_timedwait (cond, mutex, abstime)
@@ -39,6 +45,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
      const struct timespec *abstime;
 {
   struct _pthread_cleanup_buffer buffer;
+  struct _condvar_cleanup_buffer cbuffer;
   int result = 0;
 
   /* Catch invalid parameters.  */
@@ -54,9 +61,13 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
 
+  /* Prepare structure passed to cancellation handler.  */
+  cbuffer.cond = cond;
+  cbuffer.mutex = mutex;
+
   /* Before we block we enable cancellation.  Therefore we have to
      install a cancellation handler.  */
-  __pthread_cleanup_push (&buffer, __condvar_cleanup, cond);
+  __pthread_cleanup_push (&buffer, __condvar_cleanup, &cbuffer);
 
   /* The current values of the wakeup counter.  The "woken" counter
      must exceed this value.  */
@@ -76,6 +87,8 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 
   while (1)
     {
+      int err;
+
       /* Get the current time.  So far we support only one clock.  */
       struct timeval tv;
       (void) gettimeofday (&tv, NULL);
@@ -104,14 +117,14 @@ __pthread_cond_timedwait (cond, mutex, abstime)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      int oldtype = __pthread_enable_asynccancel ();
+      cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
-      result = lll_futex_timed_wait (futex, (unsigned int) val, &rt);
+      err = lll_futex_timed_wait (futex, (unsigned int) val, &rt);
 
       /* Disable asynchronous cancellation.  */
-      __pthread_disable_asynccancel (oldtype);
+      __pthread_disable_asynccancel (cbuffer.oldtype);
 
       /* We are going to look at shared data again, so get the lock.  */
       lll_mutex_lock(cond->__data.__lock);
@@ -123,7 +136,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
 	break;
 
       /* Not woken yet.  Maybe the time expired?  */
-      if (result == -ETIMEDOUT)
+      if (err == -ETIMEDOUT)
 	{
 	  /* Yep.  Adjust the counters.  */
 	  ++cond->__data.__wakeup_seq;

@@ -27,22 +27,35 @@
 #include <shlib-compat.h>
 
 
+struct _condvar_cleanup_buffer
+{
+  int oldtype;
+  pthread_cond_t *cond;
+  pthread_mutex_t *mutex;
+};
+
 void
 __attribute__ ((visibility ("hidden")))
 __condvar_cleanup (void *arg)
 {
-  pthread_cond_t *cond = (pthread_cond_t *) arg;
+  struct _condvar_cleanup_buffer *cbuffer =
+    (struct _condvar_cleanup_buffer *) arg;
 
   /* We are going to modify shared data.  */
-  lll_mutex_lock (cond->__data.__lock);
+  lll_mutex_lock (cbuffer->cond->__data.__lock);
 
   /* This thread is not waiting anymore.  Adjust the sequence counters
      appropriately.  */
-  ++cond->__data.__wakeup_seq;
-  ++cond->__data.__woken_seq;
+  ++cbuffer->cond->__data.__wakeup_seq;
+  ++cbuffer->cond->__data.__woken_seq;
 
   /* We are done.  */
-  lll_mutex_unlock (cond->__data.__lock);
+  lll_mutex_unlock (cbuffer->cond->__data.__lock);
+
+  /* Get the mutex before returning unless asynchronous cancellation
+     is in effect.  */
+  if (!(cbuffer->oldtype & CANCELTYPE_BITMASK))
+    __pthread_mutex_lock_internal (cbuffer->mutex);
 }
 
 
@@ -52,19 +65,30 @@ __pthread_cond_wait (cond, mutex)
      pthread_mutex_t *mutex;
 {
   struct _pthread_cleanup_buffer buffer;
+  struct _condvar_cleanup_buffer cbuffer;
+  int err;
 
   /* Make sure we are along.  */
   lll_mutex_lock (cond->__data.__lock);
 
   /* Now we can release the mutex.  */
-  __pthread_mutex_unlock_internal (mutex);
+  err = __pthread_mutex_unlock_internal (mutex);
+  if (err)
+    {
+      lll_mutex_unlock (cond->__data.__lock);
+      return err;
+    }
 
   /* We have one new user of the condvar.  */
   ++cond->__data.__total_seq;
 
+  /* Prepare structure passed to cancellation handler.  */
+  cbuffer.cond = cond;
+  cbuffer.mutex = mutex;
+
   /* Before we block we enable cancellation.  Therefore we have to
      install a cancellation handler.  */
-  __pthread_cleanup_push (&buffer, __condvar_cleanup, cond);
+  __pthread_cleanup_push (&buffer, __condvar_cleanup, &cbuffer);
 
   /* The current values of the wakeup counter.  The "woken" counter
      must exceed this value.  */
@@ -88,14 +112,14 @@ __pthread_cond_wait (cond, mutex)
       lll_mutex_unlock (cond->__data.__lock);
 
       /* Enable asynchronous cancellation.  Required by the standard.  */
-      int oldtype = __pthread_enable_asynccancel ();
+      cbuffer.oldtype = __pthread_enable_asynccancel ();
 
       /* Wait until woken by signal or broadcast.  Note that we
 	 truncate the 'val' value to 32 bits.  */
       lll_futex_wait (futex, (unsigned int) val);
 
       /* Disable asynchronous cancellation.  */
-      __pthread_disable_asynccancel (oldtype);
+      __pthread_disable_asynccancel (cbuffer.oldtype);
 
       /* We are going to look at shared data again, so get the lock.  */
       lll_mutex_lock(cond->__data.__lock);

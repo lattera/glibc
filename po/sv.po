@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003.
-# Revision: 1.44
+# Revision: 1.45
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
 "POT-Creation-Date: 2003-02-22 15:34-0800\n"
-"PO-Revision-Date: 2003-03-03 19:14+0100\n"
+"PO-Revision-Date: 2003-03-03 21:11+0100\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -4714,7 +4714,7 @@ msgid ""
 "Group Members :\n"
 msgstr ""
 "\n"
-"Guppmedlemmar:\n"
+"Gruppmedlemmar:\n"
 
 #: nis/nis_print.c:266
 #, c-format
