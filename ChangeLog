@@ -1,3 +1,8 @@
+2005-03-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/gnu/errlist-compat.awk: Use NERR in all array decls, so
+	array types match exactly in C alias decls.
+
 2005-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/arena.c (ptmalloc_init): Recognize MALLOC_PERTURB_ and call
