@@ -110,4 +110,16 @@
 /* POSIX shared memory objects are implemented.  */
 #define _POSIX_SHARED_MEMORY_OBJECTS	1
 
+/* GNU libc provides regular expression handling.  */
+#define _POSIX_REGEXP	1
+
+/* Reader/Writer locks are available.  */
+#define _POSIX_READER_WRITER_LOCKS	200912L
+
+/* We have a POSIX shell.  */
+#define _POSIX_SHELL	1
+
+/* We support the Timeouts option.  */
+#define _POSIX_TIMEOUTS	200912L
+
 #endif /* posix_opt.h */

@@ -1,3 +1,9 @@
+2000-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add various new POSIX
+	macros.
+	* sysdeps/unix/sysv/linux/i386/bits/posix_opt.h: New file.
+
 2000-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Add

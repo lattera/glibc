@@ -1,5 +1,21 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/getconf.c: Add support for many more POSIX options.
+	* sysdeps/posix/sysconf.c: Likewise.
+	* sysdeps/generic/bits/confname.h: Add many more POSIX options.
+	* sysdeps/mach/hurd/bits/posix_opt.h: Add _POSIX_REGEXP and
+	_POSIX_SHELL.
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Rename __CLOCK_HIGHRES to
+	CLOCK_PROCESS_CPUTIME_ID.  Add define CLOCK_MONOTONIC and
+	CLOCK_THREAD_CPUTIME_ID.
+	* sysdeps/unix/i386/clock_getcpuclockid.c: Set *clock_id to
+	CLOCK_PROCESS_CPUTIME_ID.
+	* sysdeps/unix/i386/i586/clock_getres.c: Change for renaming of
+	__CLOCK_HIGHRES to CLOCK_PROCESS_CPUTIME_ID.  Handle
+	CLOCK_THREAD_CPUTIME_ID and CLOCK_MONOTONIC the same.
+	* sysdeps/unix/i386/i586/clock_gettime.c: Likewise.
+
 	* malloc/Makefile (tests): Add tst-calloc.
 	* malloc/tst-calloc.c: New file.
 

@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,12 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/*
- * Never include this file directly; use <unistd.h> instead.
- */
-
-#ifndef	_BITS_POSIX_OPT_H
-#define	_BITS_POSIX_OPT_H	1
+#ifndef	_POSIX_OPT_H
+#define	_POSIX_OPT_H	1
 
 /* Job control is supported.  */
 #define	_POSIX_JOB_CONTROL	1
@@ -70,27 +66,69 @@
 /* X/Open realtime support is available.  */
 #define _XOPEN_REALTIME	1
 
+/* X/Open realtime thread support is available.  */
+#define _XOPEN_REALTIME_THREADS	1
+
 /* XPG4.2 shared memory is supported.  */
 #define	_XOPEN_SHM	1
+
+/* Tell we have POSIX threads.  */
+#define _POSIX_THREADS	1
+
+/* We have the reentrant functions described in POSIX.  */
+#define _POSIX_REENTRANT_FUNCTIONS      1
+#define _POSIX_THREAD_SAFE_FUNCTIONS	1
+
+/* We provide priority scheduling for threads.  */
+#define	_POSIX_THREAD_PRIORITY_SCHEDULING	1
+
+/* We support user-defined stack sizes.  */
+#define _POSIX_THREAD_ATTR_STACKSIZE	1
+
+/* We support user-defined stacks.  */
+#define _POSIX_THREAD_ATTR_STACKADDR	1
+
+/* We support POSIX.1b semaphores, but only the non-shared form for now.  */
+/*#define _POSIX_SEMAPHORES	1	XXX We are not quite there now.  */
 
 /* Real-time signals are supported.  */
 #define _POSIX_REALTIME_SIGNALS	1
 
-/* The LFS interface is available, except for the asynchronous I/O.  */
+/* We support asynchronous I/O.  */
+#define _POSIX_ASYNCHRONOUS_IO	1
+/* Alternative name for Unix98.  */
+#define _LFS_ASYNCHRONOUS_IO	1
+
+/* The LFS support in asynchronous I/O is also available.  */
+#define _LFS64_ASYNCHRONOUS_IO	1
+
+/* The rest of the LFS is also available.  */
 #define _LFS_LARGEFILE		1
 #define _LFS64_LARGEFILE	1
 #define _LFS64_STDIO		1
 
-/* POSIX timers are available.  */
-#define _POSIX_TIMERS	1
-
 /* POSIX shared memory objects are implemented.  */
 #define _POSIX_SHARED_MEMORY_OBJECTS	1
+
+/* CPU-time clocks supported.  */
+#define _POSIX_CPUTIME	200912L
+
+/* We support the clock also in threads.  */
+#define _POSIX_THREAD_CPUTIME	200912L
+
+/* Monotonic clock is supported.  */
+#define _POSIX_MONOTONIC_CLOCK	200912L
 
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
 
+/* Reader/Writer locks are available.  */
+#define _POSIX_READER_WRITER_LOCKS	200912L
+
 /* We have a POSIX shell.  */
 #define _POSIX_SHELL	1
 
-#endif /* bits/posix_opt.h */
+/* We support the Timeouts option.  */
+#define _POSIX_TIMEOUTS	200912L
+
+#endif /* posix_opt.h */

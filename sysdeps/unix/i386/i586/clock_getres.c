@@ -39,9 +39,15 @@ static long int nsec;
 /* We add an limitation here: we assume that the machine is not up as
    long as it takes to wrap-around the 64-bit timestamp counter.  On a
    4GHz machine it would take 136 years of uptime to wrap around so
-   this "limitation" is not severe.  */
+   this "limitation" is not severe.
+
+   We use this clock also as the monotonic clock since we don't allow
+   setting the CPU-time clock.  If this should ever change we will have
+   to separate the two.  */
 #define EXTRA_CLOCK_CASES \
-  case __CLOCK_HIGHRES:							      \
+  case CLOCK_PROCESS_CPUTIME_ID:					      \
+  case CLOCK_THREAD_CPUTIME_ID:						      \
+  case CLOCK_MONOTONIC:							      \
     {									      \
       if (__builtin_expect (nsec == 0, 0))				      \
 	{								      \

@@ -28,7 +28,7 @@ clock_getcpuclockid (pid_t pid, clockid_t *clock_id)
     return EPERM;
 
   /* Store the number.  */
-  *clock_id = __CLOCK_HIGHRES;
+  *clock_id = CLOCK_PROCESS_CPUTIME_ID;
 
   return 0;
 }

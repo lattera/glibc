@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -590,6 +590,133 @@ static const struct conf vars[] =
 #endif
 #ifdef _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS
     { "XBS5_LPBIG_OFFBIG_LINTFLAGS", _CS_XBS5_LPBIG_OFFBIG_LINTFLAGS, CONFSTR },
+#endif
+
+#ifdef _SC_ADVISORY_INFO
+    { "ADVISORY_INFO", _SC_ADVISORY_INFO, SYSCONF },
+#endif
+#ifdef _SC_BARRIERS
+    { "BARRIERS", _SC_BARRIERS, SYSCONF },
+#endif
+#ifdef _SC_BASE
+    { "BASE", _SC_BASE, SYSCONF },
+#endif
+#ifdef _SC_C_LANG_SUPPORT
+    { "C_LANG_SUPPORT", _SC_C_LANG_SUPPORT, SYSCONF },
+#endif
+#ifdef _SC_C_LANG_SUPPORT_R
+    { "C_LANG_SUPPORT_R", _SC_C_LANG_SUPPORT_R, SYSCONF },
+#endif
+#ifdef _SC_CLOCK_SELECTION
+    { "CLOCK_SELECTION", _SC_CLOCK_SELECTION, SYSCONF },
+#endif
+#ifdef _SC_CPUTIME
+    { "CPUTIME", _SC_CPUTIME, SYSCONF },
+#endif
+#ifdef _SC_THREAD_CPUTIME
+    { "THREAD_CPUTIME", _SC_THREAD_CPUTIME, SYSCONF },
+#endif
+#ifdef _SC_DEVICE_SPECIFIC
+    { "DEVICE_SPECIFIC", _SC_DEVICE_SPECIFIC, SYSCONF },
+#endif
+#ifdef _SC_DEVICE_SPECIFIC_R
+    { "DEVICE_SPECIFIC_R", _SC_DEVICE_SPECIFIC_R, SYSCONF },
+#endif
+#ifdef _SC_FD_MGMT
+    { "FD_MGMT", _SC_FD_MGMT, SYSCONF },
+#endif
+#ifdef _SC_FIFO
+    { "FIFO", _SC_FIFO, SYSCONF },
+#endif
+#ifdef _SC_PIPE
+    { "PIPE", _SC_PIPE, SYSCONF },
+#endif
+#ifdef _SC_FILE_ATTRIBUTES
+    { "FILE_ATTRIBUTES", _SC_FILE_ATTRIBUTES, SYSCONF },
+#endif
+#ifdef _SC_FILE_LOCKING
+    { "FILE_LOCKING", _SC_FILE_LOCKING, SYSCONF },
+#endif
+#ifdef _SC_FILE_SYSTEM
+    { "FILE_SYSTEM", _SC_FILE_SYSTEM, SYSCONF },
+#endif
+#ifdef _SC_MONOTONIC_CLOCK
+    { "MONOTONIC_CLOCK", _SC_MONOTONIC_CLOCK, SYSCONF },
+#endif
+#ifdef _SC_MULTIPLE_PROCESS
+    { "MULTIPLE_PROCESS", _SC_MULTIPLE_PROCESS, SYSCONF },
+#endif
+#ifdef _SC_SINGLE_PROCESS
+    { "SINGLE_PROCESS", _SC_SINGLE_PROCESS, SYSCONF },
+#endif
+#ifdef _SC_NETWORKING
+    { "NETWORKING", _SC_NETWORKING, SYSCONF },
+#endif
+#ifdef _SC_READER_WRITER_LOCKS
+    { "READER_WRITER_LOCKS", _SC_READER_WRITER_LOCKS, SYSCONF },
+#endif
+#ifdef _SC_SPIN_LOCKS
+    { "SPIN_LOCKS", _SC_SPIN_LOCKS, SYSCONF },
+#endif
+#ifdef _SC_REXEXP
+    { "REGEXP", _SC_REXEXP, SYSCONF },
+#endif
+#ifdef _SC_REXEXP
+    { "REGEXP", _SC_REXEXP, SYSCONF },
+#endif
+#ifdef _SC_REXEX_VERSION
+    { "REGEX_VERSION", _SC_REXEX_VERSION, SYSCONF },
+#endif
+#ifdef _SC_SHELL
+    { "SHELL", _SC_SHELL, SYSCONF },
+#endif
+#ifdef _SC_SIGNALS
+    { "SIGNALS", _SC_SIGNALS, SYSCONF },
+#endif
+#ifdef _SC_SPAWN
+    { "SPAWN", _SC_SPAWN, SYSCONF },
+#endif
+#ifdef _SC_SPORADIC_SERVER
+    { "SPORADIC_SERVER", _SC_SPORADIC_SERVER, SYSCONF },
+#endif
+#ifdef _SC_THREAD_SPORADIC_SERVER
+    { "THREAD_SPORADIC_SERVER", _SC_THREAD_SPORADIC_SERVER, SYSCONF },
+#endif
+#ifdef _SC_SYSTEM_DATABASE
+    { "SYSTEM_DATABASE", _SC_SYSTEM_DATABASE, SYSCONF },
+#endif
+#ifdef _SC_SYSTEM_DATABASE_R
+    { "SYSTEM_DATABASE_R", _SC_SYSTEM_DATABASE_R, SYSCONF },
+#endif
+#ifdef _SC_TIMEOUTS
+    { "TIMEOUTS", _SC_TIMEOUTS, SYSCONF },
+#endif
+#ifdef _SC_TYPED_MEMORY_OBJECTS
+    { "TYPED_MEMORY_OBJECTS", _SC_TYPED_MEMORY_OBJECTS, SYSCONF },
+#endif
+#ifdef _SC_USER_GROUPS
+    { "USER_GROUPS", _SC_USER_GROUPS, SYSCONF },
+#endif
+#ifdef _SC_USER_GROUPS_R
+    { "USER_GROUPS_R", _SC_USER_GROUPS_R, SYSCONF },
+#endif
+#ifdef _SC_PBS
+    { "PBS", _SC_PBS, SYSCONF },
+#endif
+#ifdef _SC_PBS_ACCOUNTING
+    { "PBS_ACCOUNT", _SC_PBS_ACCOUNTING, SYSCONF },
+#endif
+#ifdef _SC_PBS_LOCATE
+    { "PBS_LOCATE", _SC_PBS_LOCATE, SYSCONF },
+#endif
+#ifdef _SC_PBS_TRACK
+    { "PBS_TRACK", _SC_PBS_TRACK, SYSCONF },
+#endif
+#ifdef _SC_PBS_MESSAGE
+    { "PBS_MESSAGE", _SC_PBS_MESSAGE, SYSCONF },
+#endif
+#ifdef _SC_SYMLOOP
+    { "SYMLOOP", _SC_SYMLOOP, SYSCONF },
 #endif
 
     { NULL, 0, SYSCONF }

@@ -817,6 +817,277 @@ __sysconf (name)
 #else
       return -1;
 #endif
+
+    case _SC_ADVISORY_INFO:
+#ifdef _POSIX_ADVISORY_INFO
+      return _POSIX_ADVISORY_INFO;
+#else
+      return -1;
+#endif
+
+    case _SC_BARRIERS:
+#ifdef _POSIX_BARRIERS
+      return _POSIX_BARRIERS;
+#else
+      return -1;
+#endif
+
+    case _SC_BASE:
+#ifdef _POSIX_BASE
+      return _POSIX_BASE;
+#else
+      return -1;
+#endif
+    case _SC_C_LANG_SUPPORT:
+#ifdef _POSIX_C_LANG_SUPPORT
+      return _POSIX_C_LANG_SUPPORT;
+#else
+      return -1;
+#endif
+    case _SC_C_LANG_SUPPORT_R:
+#ifdef _POSIX_C_LANG_SUPPORT_R
+      return _POSIX_C_LANG_SUPPORT_R;
+#else
+      return -1;
+#endif
+
+    case _SC_CLOCK_SELECTION:
+#ifdef _POSIX_CLOCK_SELECTION
+      return _POSIX_CLOCK_SELECTION;
+#else
+      return -1;
+#endif
+
+    case _SC_CPUTIME:
+#ifdef _POSIX_CPUTIME
+      return _POSIX_CPUTIME;
+#else
+      return -1;
+#endif
+
+    case _SC_DEVICE_IO:
+#ifdef _POSIX_DEVICE_IO
+      return _POSIX_DEVICE_IO;
+#else
+      return -1;
+#endif
+    case _SC_DEVICE_SPECIFIC:
+#ifdef _POSIX_DEVICE_SPCIFIC
+      return _POSIX_DEVICE_SPECIFIC;
+#else
+      return -1;
+#endif
+    case _SC_DEVICE_SPECIFIC_R:
+#ifdef _POSIX_DEVICE_SPCIFIC_R
+      return _POSIX_DEVICE_SPECIFIC_R;
+#else
+      return -1;
+#endif
+
+    case _SC_FD_MGMT:
+#ifdef _POSIX_FD_MGMT
+      return _POSIX_FD_MGMT;
+#else
+      return -1;
+#endif
+
+    case _SC_FIFO:
+#ifdef _POSIX_FIFO
+      return _POSIX_FIFO;
+#else
+      return -1;
+#endif
+    case _SC_PIPE:
+#ifdef _POSIX_PIPE
+      return _POSIX_PIPE;
+#else
+      return -1;
+#endif
+
+    case _SC_FILE_ATTRIBUTES:
+#ifdef _POSIX_FILE_ATTRIBUTES
+      return _POSIX_FILE_ATTRIBUTES;
+#else
+      return -1;
+#endif
+    case _SC_FILE_LOCKING:
+#ifdef _POSIX_FILE_LOCKING
+      return _POSIX_FILE_LOCKING;
+#else
+      return -1;
+#endif
+    case _SC_FILE_SYSTEM:
+#ifdef _POSIX_FILE_SYSTEM
+      return _POSIX_FILE_SYSTEM;
+#else
+      return -1;
+#endif
+
+    case _SC_MONOTONIC_CLOCK:
+#ifdef _POSIX_MONOTONIC_CLOCK
+      return _POSIX_MONOTONIC_CLOCK;
+#else
+      return -1;
+#endif
+
+    case _SC_MULTIPLE_PROCESS:
+#ifdef _POSIX_MULTIPLE_PROCESS
+      return _POSIX_MULTIPLE_PROCESS;
+#else
+      return -1;
+#endif
+    case _SC_SINGLE_PROCESS:
+#ifdef _POSIX_SINGLE_PROCESS
+      return _POSIX_SINGLE_PROCESS;
+#else
+      return -1;
+#endif
+
+    case _SC_NETWORKING:
+#ifdef _POSIX_NETWORKING
+      return _POSIX_NETWORKING;
+#else
+      return -1;
+#endif
+
+    case _SC_READER_WRITER_LOCKS:
+#ifdef _POSIX_READER_WRITER_LOCKS
+      return _POSIX_READER_WRITER_LOCKS;
+#else
+      return -1;
+#endif
+    case _SC_SPIN_LOCKS:
+#ifdef _POSIX_SPIN_LOCKS
+      return _POSIX_SPIN_LOCKS;
+#else
+      return -1;
+#endif
+
+    case _SC_REGEXP:
+#ifdef _POSIX_REGEXP
+      return _POSIX_REGEXP;
+#else
+      return -1;
+#endif
+    case _SC_REGEX_VERSION:
+#ifdef _POSIX_REGEX_VERSION
+      return _POSIX_REGEX_VERSION;
+#else
+      return -1;
+#endif
+
+    case _SC_SHELL:
+#ifdef _POSIX_SHELL
+      return _POSIX_SHELL;
+#else
+      return -1;
+#endif
+
+    case _SC_SIGNALS:
+#ifdef _POSUX_SIGNALS
+      return _POSIX_SIGNALS;
+#else
+      return -1;
+#endif
+
+    case _SC_SPAWN:
+#ifdef _POSIX_SPAWN
+      return _POSIX_SPAWN;
+#else
+      return -1;
+#endif
+
+    case _SC_SPORADIC_SERVER:
+#ifdef _POSIX_SPORADIC_SERVER
+      return _POSIX_SPORADIC_SERVER;
+#else
+      return -1;
+#endif
+    case _SC_THREAD_SPORADIC_SERVER:
+#ifdef _POSIX_THREAD_SPORADIC_SERVER
+      return _POSIX_THREAD_SPORADIC_SERVER;
+#else
+      return -1;
+#endif
+
+    case _SC_SYSTEM_DATABASE:
+#ifdef _POSIX_SYSTEM_DATABASE
+      return _POSIX_SYSTEM_DATABASE;
+#else
+      return -1;
+#endif
+    case _SC_SYSTEM_DATABASE_R:
+#ifdef _POSIX_SYSTEM_DATABASE_R
+      return _POSIX_SYSTEM_DATABASE_R;
+#else
+      return -1;
+#endif
+
+    case _SC_THREAD_CPUTIME:
+#ifdef _POSIX_THREAD_CPUTIME
+      return _POSIX_THREAD_CPUTIME;
+#else
+      return -1;
+#endif
+
+    case _SC_TIMEOUTS:
+#ifdef _POSIX_TIMEOUTS
+      return _POSIX_TIMEOUTS;
+#else
+      return -1;
+#endif
+
+    case _SC_TYPED_MEMORY_OBJECTS:
+#ifdef _POSIX_TYPED_MEMORY_OBJECTS
+      return _POSIX_TYPED_MEMORY_OBJECTS;
+#else
+      return -1;
+#endif
+
+    case _SC_USER_GROUPS:
+#ifdef _POSIX_USER_GROUPS
+      return _POSIX_USER_GROUPS;
+#else
+      return -1;
+#endif
+    case _SC_USER_GROUPS_R:
+#ifdef _POSIX_USER_GROUPS_R
+      return _POSIX_USER_GROUPS_R;
+#else
+      return -1;
+#endif
+
+    case _SC_PBS:
+#ifdef _POSIX2_PBS
+      return _POSIX2_PBS;
+#else
+      return -1;
+#endif
+    case _SC_PBS_ACCOUNTING:
+#ifdef _POSIX2_PBS_ACCOUNTING
+      return _POSIX2_PBS_ACCOUNTING;
+#else
+      return -1;
+#endif
+    case _SC_PBS_LOCATE:
+#ifdef _POSIX2_PBS_LOCATE
+      return _POSIX2_PBS_LOCATE;
+#else
+      return -1;
+#endif
+    case _SC_PBS_TRACK:
+#ifdef _POSIX2_PBS_TRACK
+      return _POSIX2_PBS_TRACK;
+#else
+      return -1;
+#endif
+
+    case _SC_SYMLOOP:
+#ifdef SYMLOOP_MAX
+      return SYMLOOP_MAX;
+#else
+      return -1;
+#endif
     }
 }
 
