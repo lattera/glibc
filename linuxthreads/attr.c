@@ -22,6 +22,7 @@
 #include "pthread.h"
 #include "internals.h"
 #include <shlib-compat.h>
+#include <stackinfo.h>
 
 int __pthread_attr_init_2_1(pthread_attr_t *attr)
 {
@@ -224,3 +225,39 @@ int __pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize)
   return 0;
 }
 weak_alias (__pthread_attr_getstacksize, pthread_attr_getstacksize)
+
+int __pthread_attr_setstack (pthread_attr_t *attr, void *stackaddr,
+			     size_t stacksize)
+{
+  int err;
+
+  if ((((uintptr_t) stackaddr)
+       & ~__alignof__ (struct _pthread_descr_struct)) != 0)
+    err = EINVAL;
+  else
+    err = __pthread_attr_setstacksize (attr, stacksize);
+  if (err == 0)
+    {
+#ifdef _STACK_GROWS_UP
+      attr->__stackaddr = (char *) stackaddr + stacksize;
+#else
+      attr->__stackaddr = stackaddr;
+#endif
+      attr->__stackaddr_set = 1;
+    }
+
+  return err;
+}
+weak_alias (__pthread_attr_setstack, pthread_attr_setstack)
+
+int __pthread_attr_getstack (const pthread_attr_t *attr, void **stackaddr,
+			     size_t *stacksize)
+{
+  /* XXX This function has a stupid definition.  The standard specifies
+     no error value but what is if no stack address was set?  We simply
+     return the value we have in the member.  */
+  *stackaddr = attr->__stackaddr;
+  *stacksize = attr->__stacksize;
+  return 0;
+}
+weak_alias (__pthread_attr_getstack, pthread_attr_getstack)

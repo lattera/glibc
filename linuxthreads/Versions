@@ -139,6 +139,7 @@ libpthread {
 
     # New functions from IEEE Std. 1003.1-200x.
     sem_timedwait;
+    pthread_attr_getstack; pthread_attr_setstack;
     pthread_spin_destroy; pthread_spin_init; pthread_spin_lock;
     pthread_spin_trylock; pthread_spin_unlock;
     pthread_getcpuclockid;

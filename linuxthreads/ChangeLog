@@ -1,3 +1,11 @@
+2000-09-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h: Declare pthread_attr_getstack and
+	pthread_attr_setstack.
+	* Versions [libpthread] (GLIBC_2.2): Export pthread_attr_getstack and
+	pthread_attr_setstack.
+	* attr.c (pthread_attr_getstack, pthread_attr_setstack): New functions.
+
 2000-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* Examples/ex14.c: New file.
