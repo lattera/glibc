@@ -1,3 +1,7 @@
+Wed Apr 12 23:27:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/environ.c: Add weak alias `_environ'.
+
 Tue Apr 11 20:38:55 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/i386/add_n.S [PIC]: Use self-call to avoid generating reloc.
