@@ -11,8 +11,8 @@ CFLAGS-condvar.c += -fno-omit-frame-pointer
 CFLAGS-join.c += -fno-omit-frame-pointer
 CFLAGS-manager.c += -fno-omit-frame-pointer
 CFLAGS-oldsemaphore.c += -fno-omit-frame-pointer
-CFLAGS-pthreads.c += -fno-omit-frame-pointer
+CFLAGS-pthread.c += -fno-omit-frame-pointer
 CFLAGS-ptlongjmp.c += -fno-omit-frame-pointer
 CFLAGS-semaphore.c += -fno-omit-frame-pointer
-CFLAGS-signals.c += -fno-omit-frame-pointer
+CFLAGS-sighandler.c += -fno-omit-frame-pointer
 endif

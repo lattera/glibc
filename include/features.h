@@ -281,7 +281,7 @@
 #if defined __GNUC__ \
     || (defined __PGI && defined __i386__ ) \
     || (defined __INTEL_COMPILER && (defined __i386__ || defined __ia64__)) \
-    || (defined __STDC_VERSION && __STDC_VERSION >= 199901L)
+    || (defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L)
 # define __GLIBC_HAVE_LONG_LONG	1
 #endif
 
