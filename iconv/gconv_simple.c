@@ -20,6 +20,7 @@
 
 #include <errno.h>
 #include <gconv.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
@@ -286,6 +287,256 @@ __gconv_transform_utf8_ucs4 (struct gconv_step *step,
 
   if (written != NULL && data->is_last)
     *written = do_write;
+
+  return result;
+}
+
+
+int
+__gconv_transform_ucs2_ucs4 (struct gconv_step *step,
+			     struct gconv_step_data *data, const char *inbuf,
+			     size_t *inlen, size_t *written, int do_flush)
+{
+  struct gconv_step *next_step = step + 1;
+  struct gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->fct;
+  size_t do_write;
+  int result;
+
+  /* If the function is called with no input this means we have to reset
+     to the initial state.  The possibly partly converted input is
+     dropped.  */
+  if (do_flush)
+    {
+      /* Clear the state.  */
+      memset (data->data, '\0', sizeof (mbstate_t));
+      do_write = 0;
+
+      /* Call the steps down the chain if there are any.  */
+      if (data->is_last)
+	result = GCONV_OK;
+      else
+	{
+	  struct gconv_step *next_step = step + 1;
+	  struct gconv_step_data *next_data = data + 1;
+
+	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
+	}
+    }
+  else
+    {
+      int save_errno = errno;
+      do_write = 0;
+
+      do
+	{
+	  const uint16_t *newinbuf = (const uint16_t *) inbuf;
+	  wchar_t *outbuf = (wchar_t *) &data->outbuf[data->outbufavail];
+	  size_t actually = 0;
+
+	  errno = 0;
+
+	  while (data->outbufavail + 4 <= data->outbufsize
+		 && *inlen >= 2)
+	    {
+	      outbuf[actually++] = *newinbuf++;
+	      data->outbufavail += 4;
+	      *inlen -= 2;
+	    }
+
+	  if (*inlen != 1)
+	    {
+	      /* We have an incomplete input character.  */
+	      mbstate_t *state = (mbstate_t *) data->data;
+	      state->count = 1;
+	      state->value = *(uint8_t *) newinbuf;
+	      --*inlen;
+	    }
+
+	  /* Remember how much we converted.  */
+	  do_write += actually * sizeof (wchar_t);
+
+	  /* Check whether an illegal character appeared.  */
+	  if (errno != 0)
+	    {
+	      result = GCONV_ILLEGAL_INPUT;
+	      break;
+	    }
+
+	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = (data->outbufavail + sizeof (wchar_t) > data->outbufsize
+			? GCONV_FULL_OUTPUT : GCONV_EMPTY_INPUT);
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
+	  if (data->outbufavail > 0)
+	    {
+	      /* Call the functions below in the chain.  */
+	      size_t newavail = data->outbufavail;
+
+	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
+			       written, 0);
+
+	      /* Correct the output buffer.  */
+	      if (newavail != data->outbufavail && newavail > 0)
+		{
+		  memmove (data->outbuf,
+			   &data->outbuf[data->outbufavail - newavail],
+			   newavail);
+		  data->outbufavail = newavail;
+		}
+	    }
+	}
+      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
+    }
+
+  if (written != NULL && data->is_last)
+    *written = do_write;
+
+  return result;
+}
+
+
+int
+__gconv_transform_ucs4_ucs2 (struct gconv_step *step,
+			     struct gconv_step_data *data, const char *inbuf,
+			     size_t *inlen, size_t *written, int do_flush)
+{
+  struct gconv_step *next_step = step + 1;
+  struct gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->fct;
+  size_t do_write;
+  int result;
+
+  /* If the function is called with no input this means we have to reset
+     to the initial state.  The possibly partly converted input is
+     dropped.  */
+  if (do_flush)
+    {
+      /* Clear the state.  */
+      memset (data->data, '\0', sizeof (mbstate_t));
+      do_write = 0;
+
+      /* Call the steps down the chain if there are any.  */
+      if (data->is_last)
+	result = GCONV_OK;
+      else
+	{
+	  struct gconv_step *next_step = step + 1;
+	  struct gconv_step_data *next_data = data + 1;
+
+	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
+
+	  /* Clear output buffer.  */
+	  data->outbufavail = 0;
+	}
+    }
+  else
+    {
+      int save_errno = errno;
+      do_write = 0;
+
+      do
+	{
+	  const wchar_t *newinbuf = (const wchar_t *) inbuf;
+	  uint16_t *outbuf = (uint16_t *) &data->outbuf[data->outbufavail];
+	  size_t actually = 0;
+
+	  errno = 0;
+
+	  while (data->outbufavail + 2 <= data->outbufsize
+		 && *inlen >= 4)
+	    {
+	      if (*newinbuf >= 0x10000)
+		{
+		  __set_errno (EILSEQ);
+		    break;
+		}
+	      outbuf[actually++] = (wchar_t) *newinbuf;
+	      *inlen -= 4;
+	      data->outbufavail += 2;
+	    }
+
+	  if (*inlen < 4)
+	    {
+	      /* We have an incomplete input character.  */
+	      mbstate_t *state = (mbstate_t *) data->data;
+	      state->count = *inlen;
+	      state->value = 0;
+	      while (*inlen > 0)
+		{
+		  state->value <<= 8;
+		  state->value += *(uint8_t *) newinbuf;
+		  --*inlen;
+		}
+	    }
+
+	  /* Remember how much we converted.  */
+	  do_write += (const char *) newinbuf - inbuf;
+
+	  /* Check whether an illegal character appeared.  */
+	  if (errno != 0)
+	    {
+	      result = GCONV_ILLEGAL_INPUT;
+	      break;
+	    }
+
+	  if (*inlen == 0 && !mbsinit ((mbstate_t *) data->data))
+	    {
+	      /* We have an incomplete character at the end.  */
+	      result = GCONV_INCOMPLETE_INPUT;
+	      break;
+	    }
+
+	  if (data->is_last)
+	    {
+	      /* This is the last step.  */
+	      result = *inlen == 0 ? GCONV_EMPTY_INPUT : GCONV_FULL_OUTPUT;
+	      break;
+	    }
+
+	  /* Status so far.  */
+	  result = GCONV_EMPTY_INPUT;
+
+	  if (data->outbufavail > 0)
+	    {
+	      /* Call the functions below in the chain.  */
+	      size_t newavail = data->outbufavail;
+
+	      result = (*fct) (next_step, next_data, data->outbuf, &newavail,
+			       written, 0);
+
+	      /* Correct the output buffer.  */
+	      if (newavail != data->outbufavail && newavail > 0)
+		{
+		  memmove (data->outbuf,
+			   &data->outbuf[data->outbufavail - newavail],
+			   newavail);
+		  data->outbufavail = newavail;
+		}
+	    }
+	}
+      while (*inlen > 0 && result == GCONV_EMPTY_INPUT);
+
+      __set_errno (save_errno);
+    }
+
+  if (written != NULL && data->is_last)
+    *written = do_write / sizeof (wchar_t);
 
   return result;
 }

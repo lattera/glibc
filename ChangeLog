@@ -1,3 +1,16 @@
+1998-04-01 17:38  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv?simple.c: New builtins for UCS en/decoding.
+	* iconv/gconv_builtin.h: Add definitions for new builtins.
+	* iconv/gconv.h: Add prototypes for new builtins.
+
+	* iconvdata/Makefile (modules): Add ISO646.
+	Add rules for ISO646 module.
+	(distribute): Add iso646.c.
+	* iconvdata/gconv-modules: Add module and alias definition for
+	ISO646 charsets.
+	* iconvdata/iso646.c: New file.
+
 1998-04-01 16:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libc.map: Add __gconv_alias_db, __gconv_nmodules, __gconv_modules_db.

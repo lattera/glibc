@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -200,6 +200,8 @@ extern void __gconv_get_builtin_trans __P ((__const char *__name,
 __BUILTIN_TRANS (__gconv_transform_dummy);
 __BUILTIN_TRANS (__gconv_transform_ucs4_utf8);
 __BUILTIN_TRANS (__gconv_transform_utf8_ucs4);
+__BUILTIN_TRANS (__gconv_transform_ucs2_ucs4);
+__BUILTIN_TRANS (__gconv_transform_ucs4_ucs2);
 # undef __BUITLIN_TRANS
 
 extern int __gconv_transform_init_rstate __P ((struct gconv_step *__step,

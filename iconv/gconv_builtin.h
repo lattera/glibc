@@ -21,15 +21,30 @@
 BUILTIN_ALIAS ("UTF8//", "ISO-10646/UTF8/")
 BUILTIN_ALIAS ("UTF-8//", "ISO-10646/UTF8/")
 
-BUILTIN_TRANSFORMATION ("([^/]+)/UCS4/([^/]*)", NULL, 0,
-			"\\1/UTF8/\\2", 1, "=ucs4->utf8",
+BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS4/", 15,
+			"ISO-10646/UTF8/", 1, "=ucs4->utf8",
 			__gconv_transform_ucs4_utf8,
 			__gconv_transform_init_rstate,
 			__gconv_transform_end_rstate)
 
-BUILTIN_TRANSFORMATION ("([^/]+)/UTF-?8/([^/]*)", NULL, 0,
-			"\\1/UCS4/\\2", 1, "=utf8->ucs4",
+BUILTIN_TRANSFORMATION ("ISO-10646/UTF-?8/", "ISO-10646/UTF", 13,
+			"ISO-10646/UCS4/", 1, "=utf8->ucs4",
 			__gconv_transform_utf8_ucs4,
+			__gconv_transform_init_rstate,
+			__gconv_transform_end_rstate)
+
+BUILTIN_ALIAS ("UCS2//", "ISO-10646/UCS2/")
+BUILTIN_ALIAS ("UCS-2//", "ISO-10646/UCS2/")
+
+BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS2/", 15, "ISO-10646/UCS4/",
+			1, "=ucs2->ucs4",
+			__gconv_transform_ucs2_ucs4,
+			__gconv_transform_init_rstate,
+			__gconv_transform_end_rstate)
+
+BUILTIN_TRANSFORMATION (NULL, "ISO-10646/UCS4/", 15, "ISO-10646/UCS2/",
+			1, "=ucs4->ucs2",
+			__gconv_transform_ucs4_ucs2,
 			__gconv_transform_init_rstate,
 			__gconv_transform_end_rstate)
 

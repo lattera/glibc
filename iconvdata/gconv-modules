@@ -39,6 +39,26 @@ alias	10646-1:1993//		ISO-10646/UCS4/
 alias	10646-1:1993/UCS4/	ISO-10646/UCS4/
 
 #	from			  to			  module	cost
+alias	ISO-IR-6//		ANSI_X3.4-1968//
+alias	ANSI_X3.4-1986//	ANSI_X3.4-1968//
+alias	ISO_646.IRV:1991//	ANSI_X3.4-1968//
+alias	ASCII//			ANSI_X3.4-1968//
+alias	ISO646-US//		ANSI_X3.4-1968//
+alias	US-ASCII//		ANSI_X3.4-1968//
+alias	US//			ANSI_X3.4-1968//
+alias	IBM367//		ANSI_X3.4-1968//
+alias	CP367//			ANSI_X3.4-1968//
+module	ANSI_X3.4-1968//	ISO-10646/UCS4/		ISO646		1
+module	ISO-10646/UCS4/		ANSI_X3.4-1968//	ISO646		1
+
+alias	ISO-IR-4//		BS_4730//
+alias	ISO646-GB//		BS_4730//
+alias	GB//			BS_4730//
+alias	UK//			BS_4730//
+module	BS_4730//		ISO-10646/UCS4/		ISO646
+module	ISO-10646/UCS4/		BS_4730//		ISO646
+
+#	from			  to			  module	cost
 alias	ISO-IR-100//		ISO-8859-1//
 alias	ISO_8859-1:1987//	ISO-8859-1//
 alias	ISO_8859-1//		ISO-8859-1//

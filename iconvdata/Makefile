@@ -26,7 +26,7 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		\
 	   ISO8859-6 ISO8859-7 ISO8859-8 ISO8859-9 ISO8859-10		\
 	   T.61 ISO_6937 SJIS KOI-8 KOI8-R LATIN-GREEK LATIN-GREEK-1	\
 	   HP-ROMAN8 EBCDIC-AT-DE EBCDIC-AT-DE-A EBCDIC-CA-FR		\
-	   EUC-KR UHC JOHAB libJIS libKSC
+	   EUC-KR UHC JOHAB libJIS libKSC ISO646
 modules.so := $(addsuffix .so, $(modules))
 
 
@@ -42,6 +42,7 @@ ISO8859-7-routines := iso8859-7
 ISO8859-8-routines := iso8859-8
 ISO8859-9-routines := iso8859-9
 ISO8859-10-routines := iso8859-10
+ISO646-routines := iso646
 T.61-routines := t61
 ISO_6937-routines := iso6937
 SJIS-routines := sjis
@@ -74,7 +75,8 @@ distribute := 8bit-generic.c 8bit-gap.c gap.pl gaptab.pl gconv-modules	    \
 	      koi-8.c koi8-r.c koi8-r.h hp-roman8.c latin-greek.c	    \
 	      latin-greek.h latin-greek-1.c latin-greek-1.h ebcdic-at-de.c  \
 	      ebcdic-at-de-a.c ebcdic-ca-fr.c jis0201.c jis0208.c jis0212.c \
-	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h
+	      extra-module.mk euckr.c johab.c uhc.c ksc5601.c ksc5601.h	    \
+	      iso646.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
