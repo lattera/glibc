@@ -22,16 +22,16 @@ sysdep_routines := $(sysdep_routines) switch
 
 # Find all the sources that have 68881 versions.
 +68881-sources := \
-  $(notdir $(wildcard $(addprefix $(filter %/68881,$(sysdirs)),$(sources))))
+  $(notdir $(wildcard $(addprefix $(filter %/fpu,$(sysdirs)),$(sources))))
 
-# Sysdep directories other than 68881 and 68881-sw (this one).
-+non68881-dirs := $(filter-out %/68881 %/68881-switch,$(+sysdep_dirs))
+# Sysdep directories other than fpu and fpu/switch (this one).
++non68881-dirs := $(filter-out %/fpu %/fpu/switch,$(+sysdep_dirs))
 
 # Get a non-68881 version of the target.
 +non68881-version = $(firstword $(wildcard $(addsuffix /$@,$(+non68881-dirs))))
 
 # Directory containing 68881 sources.
-+68881-dir := $(filter %/68881,$(+sysdep_dirs))
++68881-dir := $(filter %/fpu,$(+sysdep_dirs))
 
 # For all the files that have 68881 versions and don't exist already in
 # the source directory (math), automatically make ones that switch between

@@ -18,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <ansidecl.h>
 #include <signal.h>
-#include <68881-switch.h>
+#include <68881-sw.h>
 
 
 /* The signal that is sent when a 68881 instruction

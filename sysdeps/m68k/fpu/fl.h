@@ -6,7 +6,10 @@
 /* ansidecl.m4 here inserts the ieee file.  Kludge o rama.
    $) ENDCOMMENT INCLUDE($sysdeps/ieee754/fl.h$) STARTCOMMENT */
 
-#if	defined(FLT_ROUNDS) && defined(__GNUC__)
+#ifndef	__need_HUGE_VAL
+
+#ifdef	__GNUC__
+
 #undef	FLT_ROUNDS
 
 /* Interrogate the 68881 to find the current rounding mode.  */
@@ -33,4 +36,6 @@ DEFUN_VOID(__flt_rounds)
 
 #define	FLT_ROUNDS	(__flt_rounds())
 
-#endif
+#endif	/* GCC.  */
+
+#endif	/* Don't need HUGE_VAL.  */
