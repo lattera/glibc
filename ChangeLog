@@ -1,5 +1,8 @@
 2004-02-09  Andreas Jaeger  <aj@suse.de>
 
+	* configure.in: Remove glibcbug creation.
+	* configure: Regenerated.
+
 	* sysdeps/x86_64/fpu/s_copysignf.S: Only load 4 bytes.
 
 2004-02-03  Thorsten Kukuk  <kukuk@suse.de>

@@ -7246,7 +7246,7 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 
 
 
-                                        ac_config_files="$ac_config_files config.make glibcbug ${config_makefile} ${config_uname}"
+                                        ac_config_files="$ac_config_files config.make ${config_makefile} ${config_uname}"
 
           ac_config_commands="$ac_config_commands default"
 
@@ -7785,7 +7785,6 @@ do
   case "$ac_config_target" in
   # Handling of arguments.
   "config.make" ) CONFIG_FILES="$CONFIG_FILES config.make" ;;
-  "glibcbug" ) CONFIG_FILES="$CONFIG_FILES glibcbug" ;;
   "${config_makefile}" ) CONFIG_FILES="$CONFIG_FILES ${config_makefile}" ;;
   "${config_uname}" ) CONFIG_FILES="$CONFIG_FILES ${config_uname}" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;

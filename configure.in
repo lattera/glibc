@@ -2079,7 +2079,7 @@ RELEASE=`sed -n -e 's/^#define RELEASE "\([^"]*\)"/\1/p' < $srcdir/version.h`
 AC_SUBST(VERSION)
 AC_SUBST(RELEASE)
 
-AC_CONFIG_FILES([config.make glibcbug ${config_makefile} ${config_uname}])
+AC_CONFIG_FILES([config.make ${config_makefile} ${config_uname}])
 AC_CONFIG_COMMANDS([default],[[
 case $CONFIG_FILES in *config.make*)
 echo "$config_vars" >> config.make;;
