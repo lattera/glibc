@@ -217,7 +217,7 @@ case $basic_machine in
 		| mips64orion | mips64orionel | mipstx39 | mipstx39el \
 		| mips64vr4300 | mips64vr4300el | mips64vr4100 | mips64vr4100el \
 		| mips64vr5000 | miprs64vr5000el | mcore \
-		| sparc | sparclet | sparclite | sparc64 | sparcv9 | v850 | c4x \
+		| sparc | sparclet | sparclite | sparc64 | sparcv9 | sparcv9b | v850 | c4x \
 		| thumb | d10v | d30v | fr30 | avr)
 		basic_machine=$basic_machine-unknown
 		;;
@@ -255,7 +255,7 @@ case $basic_machine in
 	      | we32k-* | cydra-* | ns16k-* | pn-* | np1-* | xps100-* \
 	      | clipper-* | orion-* \
 	      | sparclite-* | pdp11-* | sh-* | powerpc-* | powerpcle-* \
-	      | sparc64-* | sparcv9-* | sparc86x-* | mips16-* | mips64-* | mipsel-* \
+	      | sparc64-* | sparcv9-* | sparcv9b-* | sparc86x-* | mips16-* | mips64-* | mipsel-* \
 	      | mips64el-* | mips64orion-* | mips64orionel-* \
 	      | mips64vr4100-* | mips64vr4100el-* | mips64vr4300-* | mips64vr4300el-* \
 	      | mipstx39-* | mipstx39el-* | mcore-* \
@@ -914,7 +914,7 @@ case $basic_machine in
 	sh3 | sh4)
 		basic_machine=sh-unknown
 		;;
-	sparc | sparcv9)
+	sparc | sparcv9 | sparcv9b)
 		basic_machine=sparc-sun
 		;;
         cydra)

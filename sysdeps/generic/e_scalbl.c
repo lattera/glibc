@@ -54,14 +54,18 @@ static char rcsid[] = "$NetBSD: $";
 	      return x;
 	    else if (!__finitel (x))
 	      {
+# ifdef FE_INVALID
 		feraiseexcept (FE_INVALID);
+# endif
 		return __nanl ("");
 	      }
 	    else       return x/(-fn);
 	}
 	if (__rintl(fn)!=fn)
 	  {
+# ifdef FE_INVALID
 	    feraiseexcept (FE_INVALID);
+# endif
 	    return __nanl ("");
 	  }
 	if ( fn > 65000.0) return __scalbnl(x, 65000);

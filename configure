@@ -1025,8 +1025,12 @@ sparcv8 | supersparc | hypersparc)
 		base_machine=sparc machine=sparc/sparc32/sparcv8 ;;
 sparcv8plus | sparcv8plusa | sparcv9)
 		base_machine=sparc machine=sparc/sparc32/sparcv9 ;;
+sparcv8plusb | sparcv9b)
+		base_machine=sparc machine=sparc/sparc32/sparcv9b ;;
 sparc64 | ultrasparc)
 		base_machine=sparc machine=sparc/sparc64 ;;
+sparc64b | ultrasparc3)
+		base_machine=sparc machine=sparc/sparc64/sparcv9b ;;
 thumb*)		base_machine=thumb machine=arm/thumb/$machine ;;
 esac
 

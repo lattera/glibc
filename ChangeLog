@@ -1,3 +1,29 @@
+2001-04-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/e_scalb.c: Don't use FE_INVALID unless it's
+	available.
+	* sysdeps/generic/e_scalbf.c: Likewise.
+	* sysdeps/generic/e_scalbl.c: Likewise.
+	Patch by Mark Hatle <fray@mvista.com>.
+
+2001-04-05  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/abort-instr.h: New file.
+
+2001-04-05  Matt Wilson  <msw@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/getsysstats.c (GET_NPROCS_PARSER):
+	added code to parse new 2.4 format.
+	(GET_NPROCS_CONF_PARSER): Likewise.
+
+2001-04-05  David S. Miller  <davem@redhat.com>
+
+	* scripts/config.sub: Recognize sparcv9b like sparcv9.
+	* configure.in: Add sparcv9b.
+	* sysdeps/sparc/sparc32/sparcv9b/Implies: New file
+	* sysdeps/sparc/sparc32/sparcv9b/memcpy.S: New file
+	* sysdeps/sparc/sparc64/sparcv9b/memcpy.S: New file
+
 2001-04-06  David Mosberger  <davidm@hpl.hp.com>
 
 	* stdlib/tst-setcontext.c: Move st2[] to global scope.

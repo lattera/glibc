@@ -29,7 +29,9 @@
 	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
       (RESULT) = 1;							   \
       while (fgets_unlocked (BUFFER, sizeof (BUFFER), FP) != NULL)	   \
-	if (sscanf (BUFFER, "CPUs probed %*d active %d", &(RESULT)) == 1)  \
+	if ((sscanf (BUFFER, "cpus active : %d", &(RESULT)) == 1)	   \
+	    || (sscanf (BUFFER, "CPUs probed %*d active %d",		   \
+			&(RESULT)) == 1))  				   \
 	  break;							   \
     }									   \
   while (0)
@@ -46,7 +48,8 @@
 	 If there is no "CPUs ..." line then we are on a UP system.  */	   \
       (RESULT) = 1;							   \
       while (fgets_unlocked ((BUFFER), sizeof (BUFFER), (FP)) != NULL)	   \
-	if (sscanf (buffer, "CPUs probed %d", &(RESULT)) == 1)		   \
+	if ((sscanf (buffer, "cpus detected : %d", &(RESULT)) == 1)	   \
+	    || (sscanf (buffer, "CPUs probed %d", &(RESULT)) == 1))	   \
 	  break;							   \
     }									   \
   while (0)

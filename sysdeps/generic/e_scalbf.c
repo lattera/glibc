@@ -47,14 +47,18 @@ static char rcsid[] = "$NetBSD: e_scalbf.c,v 1.3 1995/05/10 20:46:12 jtc Exp $";
 	      return x;
 	    else if (!__finitef (x))
 	      {
+# ifdef FE_INVALID
 		feraiseexcept (FE_INVALID);
+# endif
 		return __nanf ("");
 	      }
 	    else       return x/(-fn);
 	}
 	if (__rintf(fn)!=fn)
 	  {
+# ifdef FE_INVALID
 	    feraiseexcept (FE_INVALID);
+# endif
 	    return __nanf ("");
 	  }
 	if ( fn > (float)65000.0) return __scalbnf(x, 65000);
