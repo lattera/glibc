@@ -91,7 +91,6 @@ internal_ucs4_loop (struct __gconv_step *step,
 
   for (cnt = 0; cnt < n_convert; ++cnt, inptr += 4)
     *outptr32++ = bswap_32 (*(const uint32_t *) inptr);
-  outptr = 
 
   *inptrp = inptr;
   *outptrp = (unsigned char *) outptr32;

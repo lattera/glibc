@@ -1,4 +1,4 @@
-/* Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -22,6 +22,7 @@
 
 #include "gconv.h"
 #include <stdlib.h>		/* For alloca used in macro below.  */
+#include <bits/libc-lock.h>
 
 __BEGIN_DECLS
 
@@ -123,6 +124,9 @@ extern struct gconv_module *__gconv_modules_db attribute_hidden;
 
 /* Value of the GCONV_PATH environment variable.  */
 extern const char *__gconv_path_envvar attribute_hidden;
+
+/* Lock for the conversion database content.  */
+__libc_lock_define (extern, __gconv_lock);
 
 
 /* The gconv functions expects the name to be in upper case and complete,

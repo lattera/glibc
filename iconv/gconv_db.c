@@ -1,5 +1,5 @@
 /* Provide access to the collection of available transformation modules.
-   Copyright (C) 1997,98,99,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -37,7 +37,7 @@ void *__gconv_alias_db;
 struct gconv_module *__gconv_modules_db;
 
 /* We modify global data.   */
-__libc_lock_define_initialized (static, lock)
+__libc_lock_define_initialized (, __gconv_lock)
 
 
 /* Provide access to module database.  */
@@ -683,20 +683,20 @@ __gconv_find_transform (const char *toset, const char *fromset,
   __libc_once (once, __gconv_read_conf);
 
   /* Acquire the lock.  */
-  __libc_lock_lock (lock);
+  __libc_lock_lock (__gconv_lock);
 
   result = __gconv_lookup_cache (toset, fromset, handle, nsteps, flags);
   if (result != __GCONV_NODB)
     {
       /* We have a cache and could resolve the request, successful or not.  */
-      __libc_lock_unlock (lock);
+      __libc_lock_unlock (__gconv_lock);
       return result;
     }
 
   /* If we don't have a module database return with an error.  */
   if (__gconv_modules_db == NULL)
     {
-      __libc_lock_unlock (lock);
+      __libc_lock_unlock (__gconv_lock);
       return __GCONV_NOCONV;
     }
 
@@ -715,7 +715,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
 		      && strcmp (toset_expand, fromset_expand) == 0)))))
     {
       /* Both character sets are the same.  */
-      __libc_lock_unlock (lock);
+      __libc_lock_unlock (__gconv_lock);
       return __GCONV_NOCONV;
     }
 
@@ -723,7 +723,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
 			    handle, nsteps);
 
   /* Release the lock.  */
-  __libc_lock_unlock (lock);
+  __libc_lock_unlock (__gconv_lock);
 
   /* The following code is necessary since `find_derivation' will return
      GCONV_OK even when no derivation was found but the same request
@@ -743,7 +743,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
   size_t cnt;
 
   /* Acquire the lock.  */
-  __libc_lock_lock (lock);
+  __libc_lock_lock (__gconv_lock);
 
 #ifndef STATIC_GCONV
   cnt = nsteps;
@@ -757,7 +757,7 @@ __gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
   __gconv_release_cache (steps, nsteps);
 
   /* Release the lock.  */
-  __libc_lock_unlock (lock);
+  __libc_lock_unlock (__gconv_lock);
 
   return result;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,1995,1997-2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993,1995,1997-2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,8 +71,10 @@ _IO_new_fclose (fp)
 	 the conversion functions.  */
       struct _IO_codecvt *cc = fp->_codecvt;
 
+      __libc_lock_lock (__gconv_lock);
       __gconv_release_step (cc->__cd_in.__cd.__steps);
       __gconv_release_step (cc->__cd_out.__cd.__steps);
+      __libc_lock_unlock (__gconv_lock);
 #endif
     }
   else

@@ -1,5 +1,16 @@
 2004-03-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_db.c: Don't define lock as static.  Rename to
+	__gconv_lock and export from the file.
+	* iconv/gconv_int.h: Declare __gconv_lock.
+	* libio/iofclose.c [_LIBC] (_IO_new_fclose): Lock gconv lock
+	before __gconv_release_step calls.
+	Patch by Shunichi Sagawa <s-sagawa@jp.fujitsu.com>.
+
+	* iconv/gconv_simple.c (internal_ucs4_loop): Fix typo in last change.
+
+	* iconv/gconv_db.c
+
 	* posix/Makefile (tests): Add tst-vfork1.
 	* posix/tst-vfork1.c: New file.
 
