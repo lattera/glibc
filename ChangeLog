@@ -1,3 +1,20 @@
+2002-11-10  Andreas Jaeger  <aj@suse.de>
+
+	* nss/getXXent.c (GETFUNC_NAME): Use union type to avoid strict
+	aliasing problem.
+	* nss/getXXbyYY_r.c (INTERNAL): Likewise.
+	* nss/getnssent_r.c (__nss_getent_r): Likewise.
+	(__nss_setent): Likewise.
+	(__nss_getent_r): Likewise.
+	* inet/getnetgrent_r.c (innetgr): Likewise.
+	(__internal_setnetgrent_reuse): Likewise.
+	(internal_getnetgrent_r): Likewise.
+	* inet/ether_hton.c (ether_hostton): Likewise.
+	* inet/ether_ntoh.c (ether_ntohost): Likewise.
+	* sunrpc/netname.c (netname2user): Likewise.
+	* sunrpc/publickey.c (getpublickey): Likewise.
+	(getsecretkey): Likewise.
+
 2002-11-09  Marcus Brinkmann  <marcus@gnu.org>
 
         * sysdeps/mach/hurd/i386/ioperm.c (ioperm): Correct off by one
