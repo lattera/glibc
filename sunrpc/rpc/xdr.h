@@ -262,10 +262,8 @@ struct xdr_discrim
  * and shouldn't be used any longer. Code which use this defines or longs
  * in the RPC code will not work on 64bit Solaris platforms !
  */
-#define IXDR_GET_LONG(buf) \
-	((long)ntohl((u_long)*__extension__((u_int32_t*)(buf))++))
-#define IXDR_PUT_LONG(buf, v) \
-	(*__extension__((u_int32_t*)(buf))++ = (long)htonl((u_long)(v)))
+#define IXDR_GET_LONG(buf) ((long)IXDR_GET_U_INT32(buf))
+#define IXDR_PUT_LONG(buf, v) ((long)IXDR_PUT_INT32(buf, (long)(v)))
 #define IXDR_GET_U_LONG(buf)	      ((u_long)IXDR_GET_LONG(buf))
 #define IXDR_PUT_U_LONG(buf, v)	      IXDR_PUT_LONG(buf, (long)(v))
 

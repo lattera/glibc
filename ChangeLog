@@ -1,3 +1,14 @@
+2004-03-22  Joseph S. Myers  <jsm@polyomino.org.uk>
+
+	* sunrpc/rpc/xdr.h (IXDR_GET_LONG, IXDR_PUT_LONG): Do not use
+	casts as lvalues.
+
+2004-03-22  Andreas Jaeger  <aj@suse.de>
+
+	* elf/tst-dlmodcount.c (unload): Remove unused variable.
+
+	* misc/tst-mntent.c (main): Use tmpfile instead of tmpnam.
+
 2004-03-20  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/dl-execstack.c: New file.

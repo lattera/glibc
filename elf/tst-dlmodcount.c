@@ -85,8 +85,6 @@ load (const char *path)
 static void
 unload (const char *path, void *handle)
 {
-  int ret;
-
   printf ("unloading `%s'\n", path);
   if (dlclose (handle) < 0)
     exit (2);
