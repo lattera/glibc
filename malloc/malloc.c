@@ -488,6 +488,9 @@ Void_t *(*__morecore)(ptrdiff_t) = __default_morecore;
 #endif /* _LIBC */
 #endif /* USE_DL_PREFIX */
 
+#ifndef _LIBC
+#define __builtin_expect(expr, val)	(expr)
+#endif
 
 /*
   HAVE_MEMCPY should be defined if you are not otherwise using
@@ -3466,9 +3469,13 @@ public_cALLOc(size_t n, size_t elem_size)
 
   /* size_t is unsigned so the behavior on overflow is defined.  */
   bytes = n * elem_size;
-  if (bytes / elem_size != n) {
-    MALLOC_FAILURE_ACTION;
-    return 0;
+#define HALF_INTERNAL_SIZE_T \
+  (((INTERNAL_SIZE_T) 1) << (8 * sizeof (INTERNAL_SIZE_T) / 2))
+  if (__builtin_expect ((n | elem_size) >= HALF_INTERNAL_SIZE_T, 0)) {
+    if (bytes / elem_size != n) {
+      MALLOC_FAILURE_ACTION;
+      return 0;
+    }
   }
 
   if (hook != NULL) {
