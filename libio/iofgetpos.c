@@ -35,7 +35,7 @@ _IO_new_fgetpos (fp, posp)
      _IO_FILE *fp;
      _IO_fpos_t *posp;
 {
-  _IO_off_t pos;
+  _IO_off64_t pos;
   int result = 0;
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
@@ -53,6 +53,13 @@ _IO_new_fgetpos (fp, posp)
 #ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
+#endif
+      result = EOF;
+    }
+  else if ((_IO_off64_t) (__typeof (posp->__pos)) pos != pos)
+    {
+#ifdef EOVERFLOW
+      __set_errno (EOVERFLOW);
 #endif
       result = EOF;
     }

@@ -44,7 +44,15 @@ logwtmp (const char *line, const char *name, const char *host)
 #endif
 
 #if _HAVE_UT_TV - 0
-  __gettimeofday (&ut.ut_tv, NULL);
+  if (sizeof (ut.ut_tv) == sizeof (struct timeval))
+    __gettimeofday ((struct timeval *) &ut.ut_tv, NULL);
+  else
+    {
+      struct timeval tv;
+      __gettimeofday (&tv, NULL);
+      ut.ut_tv.tv_sec = tv.tv_sec;
+      ut.ut_tv.tv_usec = tv.tv_usec;
+    }
 #else
   ut.ut_time = time (NULL);
 #endif

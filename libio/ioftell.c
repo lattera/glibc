@@ -34,7 +34,7 @@ long int
 _IO_ftell (fp)
      _IO_FILE *fp;
 {
-  _IO_off_t pos;
+  _IO_off64_t pos;
   CHECK_FILE (fp, -1L);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
@@ -51,6 +51,13 @@ _IO_ftell (fp)
 #ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
+#endif
+      return -1L;
+    }
+  if ((_IO_off64_t) (off_t) pos != pos)
+    {
+#ifdef EOVERFLOW
+      __set_errno (EOVERFLOW);
 #endif
       return -1L;
     }

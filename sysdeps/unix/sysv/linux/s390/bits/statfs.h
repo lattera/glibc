@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,12 @@
 # error "Never include <bits/statfs.h> directly; use <sys/statfs.h> instead."
 #endif
 
-#include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t*/
+#include <bits/types.h>  /* for __fsid_t and __fsblkcnt_t.  */
 
 struct statfs
   {
-    long int f_type;
-    long int f_bsize;
+    int f_type;
+    int f_bsize;
 #ifndef __USE_FILE_OFFSET64
     __fsblkcnt_t f_blocks;
     __fsblkcnt_t f_bfree;
@@ -40,25 +40,25 @@ struct statfs
     __fsfilcnt64_t f_ffree;
 #endif
     __fsid_t f_fsid;
-    long int f_namelen;
-    long int f_spare[6];
+    int f_namelen;
+    int f_spare[6];
   };
 
 #ifdef __USE_LARGEFILE64
 struct statfs64
   {
-    long int f_type;
-    long int f_bsize;
+    int f_type;
+    int f_bsize;
     __fsblkcnt64_t f_blocks;
     __fsblkcnt64_t f_bfree;
     __fsblkcnt64_t f_bavail;
     __fsfilcnt64_t f_files;
     __fsfilcnt64_t f_ffree;
     __fsid_t f_fsid;
-    long int f_namelen;
-    long int f_spare[6];
+    int f_namelen;
+    int f_spare[6];
   };
 #endif
 
-/* Tell code we have these members.  */
+/* Tell code we have this member.  */
 #define _STATFS_F_NAMELEN

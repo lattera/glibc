@@ -21,6 +21,7 @@
 #endif
 
 #include <bits/types.h>
+#include <bits/ipctypes.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
 #endif
 
 /* Get system dependent definition of `struct ipc_perm' and more.  */
+#include <bits/ipctypes.h>
 #include <bits/ipc.h>
 
 #ifndef __uid_t_defined

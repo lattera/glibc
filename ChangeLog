@@ -1,3 +1,72 @@
+2002-10-23  Roland McGrath  <roland@redhat.com>
+
+	* libio/ftello.c (ftello): Use _IO_off64_t for type of POS.
+	Check for the result overflowing off_t and fail with EOVERFLOW.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/iofgetpos.c (_IO_new_fgetpos): Likewise.
+
+	* login/logwtmp.c (logwtmp): If sizeof ut_tv != sizeof struct timeval,
+	use a temporary timeval on the stack for gettimeofday and copy it.
+	* login/logout.c (logout): Likewise.
+	Reported by Steven Munroe <sjmunroe@us.ibm.com>.
+
+	* sysdeps/unix/sysv/linux/bits/statfs.h (struct statfs):
+	Use __SWORD_TYPE instead of int for member types.
+	(struct statfs64): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/statfs.h: New file.
+	* sysdeps/unix/sysv/linux/s390/bits/statfs.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/bits/statfs.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/statfs.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/statfs.h: File removed.
+
+	* sysdeps/unix/sysv/linux/sparc/bits/statvfs.h: Moved to ...
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: ... here.
+	(ST_NODIRATIME): Restore fixed value of 2048.
+	* sysdeps/unix/sysv/linux/alpha/bits/statvfs.h: File removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/statvfs.h: File removed.
+
+	Rearranged <bits/types.h> definitions to reduce duplication.
+	* sysdeps/generic/bits/types.h: Rewritten, using macros from
+	<bits/wordsize.h> and new header <bits/typesizes.h>.
+	* posix/Makefile (headers): Add bits/typesizes.h here.
+	* sysdeps/generic/bits/typesizes.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/typesizes.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/typesizes.h: New file.
+	* sysdeps/mach/hurd/bits/typesizes.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/ia64/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/s390/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/sparc/bits/types.h: File removed.
+	* sysdeps/unix/sysv/linux/x86_64/bits/types.h: File removed.
+	* posix/sys/types.h [__USE_POSIX199506 || __USE_UNIX98]: Include
+	<bits/pthreadtypes.h> here, not in <bits/types.h>.
+	* signal/signal.h: Likewise.
+
+	* streams/stropts.h: Include <bits/xtitypes.h>.
+	* streams/Makefile (headers): Add bits/xtitypes.h here.
+	* sysdeps/generic/bits/xtitypes.h: New file.
+	* sysdeps/s390/bits/xtitypes.h: New file.
+	* sysdeps/ia64/bits/xtitypes.h: New file.
+	* sysdeps/x86_64/bits/xtitypes.h: New file.
+
+	* sysvipc/Makefile (headers): Add bits/ipctypes.h here.
+	* sysdeps/generic/bits/ipctypes.h: New file.
+	* sysdeps/mips/bits/ipctypes.h: New file.
+	* sysdeps/gnu/bits/shm.h: Include <bits/ipctypes.h>.
+	* sysdeps/gnu/bits/msq.h: Likewise.
+	* sysvipc/sys/ipc.h: Likewise.
+
+2002-10-22  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/libc-tls.c (_dl_tls_static_used): New variable.
+	* sysdeps/generic/ldsodefs.h (struct rtld_global): New member
+	`_dl_tls_static_used'.
+	(TLS_STATIC_MIN): New macro.
+	* elf/dl-reloc.c [USE_TLS] (allocate_static_tls): New function.
+	(CHECK_STATIC_TLS): Use it.
+
 2002-10-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (struct filebuf): For buf element to have the

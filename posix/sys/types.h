@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1994,1995,1996,1997,1998,1999,2000,2001,2002
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -257,6 +258,12 @@ typedef __fsfilcnt64_t fsfilcnt_t; /* Type to count file system inodes.  */
 typedef __blkcnt64_t blkcnt64_t;     /* Type to count number of disk blocks. */
 typedef __fsblkcnt64_t fsblkcnt64_t; /* Type to count file system blocks.  */
 typedef __fsfilcnt64_t fsfilcnt64_t; /* Type to count file system inodes.  */
+#endif
+
+
+/* Now add the thread types.  */
+#if defined __USE_POSIX199506 || defined __USE_UNIX98
+# include <bits/pthreadtypes.h>
 #endif
 
 __END_DECLS
