@@ -634,7 +634,8 @@ libio-include = -I$(..)libio
 # These are the variables that the implicit compilation rules use.
 CPPFLAGS = $($(subdir)-CPPFLAGS) $(+includes) $(defines) \
 	   -include $(..)include/libc-symbols.h $(sysdep-CPPFLAGS) \
-	   $(CPPFLAGS-$(suffix $@)) $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F))
+	   $(CPPFLAGS-$(suffix $@)) $(CPPFLAGS-$(<F)) $(CPPFLAGS-$(@F)) \
+	   $(CPPFLAGS-$(patsubst %$(suffix $@),%,$(@F)))
 override CFLAGS	= $(filter-out %frame-pointer,$(+cflags)) $(sysdep-CFLAGS) \
 		  $(CFLAGS-$(suffix $@)) $(CFLAGS-$(<F)) $(CFLAGS-$(@F))
 
