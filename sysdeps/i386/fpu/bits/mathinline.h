@@ -581,7 +581,9 @@ __MATH_INLINE int __finite (double __x) __attribute__ ((__const__));
 __MATH_INLINE int
 __finite (double __x)
 {
-  return ((((int *) &__x)[1] | 0x800fffff) + 1) >> 31;
+  return (__extension__
+	  (((((union { double __d; int __i[2]; }) {__d: __x}).i[1]
+	     | 0x800fffff) + 1) >> 31));
 }
 
 /* Miscellaneous functions */

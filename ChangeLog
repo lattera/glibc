@@ -1,3 +1,8 @@
+1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__finite): Use alias-safe
+	code.
+
 1998-06-26  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
 
 	* nis/nis_call.c: Don't copy server structure.
