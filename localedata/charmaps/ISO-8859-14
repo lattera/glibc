@@ -239,7 +239,7 @@ CHARMAP
 <S3>                   /x8F     <U008F> SINGLE-SHIFT THREE (SS3)
 <DC>                   /x90     <U0090> DEVICE CONTROL STRING (DCS)
 <P1>                   /x91     <U0091> PRIVATE USE ONE (PU1)
-<P2>                   /x92     <U0092> PRIVATE USE ONE (PU2)
+<P2>                   /x92     <U0092> PRIVATE USE TWO (PU2)
 <TS>                   /x93     <U0093> SET TRANSMIT STATE (STS)
 <CC>                   /x94     <U0094> CANCEL CHARACTER (CCH)
 <MW>                   /x95     <U0095> MESSAGE WAITING (MW)

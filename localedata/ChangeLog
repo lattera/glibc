@@ -8,6 +8,10 @@
 	* charmaps/ISO-8859-15: Likewise.
 	* charmaps/MAC-UK: Likewise.
 
+	* charmaps/ISO-8859-13: Correct typo.
+	* charmaps/ISO-8859-14: Likewise.
+	* charmaps/ISO-8859-15: Likewise.
+
 1999-08-16  Andreas Schwab  <schwab@suse.de>
 
 	* charmaps/UTF8: Add entries for /x00.  Remove spurious
