@@ -42,9 +42,10 @@ user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
 				     memory_object_user			\
 				     memory_object_default		\
 				     exc mach4				\
+				     default_pager default_pager_helper	\
 	            )\
 		   $(addprefix device/,device device_request)
-server-interfaces := device/device_reply mach/exc mach/notify
+server-interfaces := mach/exc 
 tests := hello
 # It is important that we do not use the wildcard function to expand
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
