@@ -148,6 +148,7 @@ extern int __lll_timedlock_wait
   ((void) ({								      \
     int *__futex = &(lock);						      \
     *__futex = 0;							      \
+    __asm __volatile (__lll_rel_instr ::: "memory");			      \
     lll_futex_wake (__futex, 1);					      \
   }))
 

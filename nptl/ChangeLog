@@ -1,3 +1,9 @@
+2003-08-26  Steven Munroe <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/lowlevellock.h
+	(lll_mutex_unlock_force): Add memory barrier between store and futex
+	syscall.
+
 2003-08-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-cancel4.c (do_test): Also unlink tempfname and remove
