@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1993,94,96,97,2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,13 @@ ifneq (mach,$(subdir))
 mach-objpfx = $(common-objpfx)mach/
 
 # These are all the generated files that <mach.h> includes.
+# Actually, it's only some of them.  We omit mach_interface.h
+# because it's different in Darwin and the conditional crap is
+# too much trouble.  This should suffice for getting the mach/Makefile
+# rules invoked when they need to be.
 mach-before-compile := $(mach-objpfx)mach-shortcuts.h \
 		       $(patsubst %,$(mach-objpfx)mach/mach_%.h,\
-				  interface port host)
+				  port host)
 
 # This patsubst generates patterns like `m%h-shortcuts.h', which are damn
 # likely to match just the corresponding particular file we want.

@@ -1,5 +1,8 @@
 2002-02-16  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/Makefile (mach-before-compile): Don't include
+	mach_interface.h here, since not all variants use that name.
+
 	* sysdeps/mach/configure.in: Add some checks for Mach headers
 	to ensure a sane installation.
 	(mach_interface_list): Define this variable by checking for .defs
