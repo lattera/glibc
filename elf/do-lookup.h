@@ -136,7 +136,7 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 	  if (verstab != NULL)
 	    {
 	      ElfW(Half) ndx = verstab[symidx] & 0x7fff;
-	      if (ndx > 2) /* map->l_versions[ndx].hash != 0) */
+	      if (ndx >= 2) /* map->l_versions[ndx].hash != 0) */
 		{
 		  /* Don't accept hidden symbols.  */
 		  if ((verstab[symidx] & 0x8000) == 0 && num_versions++ == 0)
