@@ -66,7 +66,7 @@ again:
 			continue;
 		}
 		if (base == 16 && isxdigit(c)) {
-			val = (val << 4) + (c + 10 - (islower(c) ? 'a' : 'A'));
+			val = (val << 4) + (tolower (c) + 10 - 'a');
 			cp++;
 			digit = 1;
 			continue;
@@ -75,9 +75,9 @@ again:
 	}
 	if (!digit)
 		return (INADDR_NONE);
+	if (pp >= parts + 4 || val > 0xff)
+		return (INADDR_NONE);
 	if (*cp == '.') {
-		if (pp >= parts + 4 || val > 0xff)
-			return (INADDR_NONE);
 		*pp++ = val, cp++;
 		goto again;
 	}
@@ -85,8 +85,6 @@ again:
 		return (INADDR_NONE);
 	*pp++ = val;
 	n = pp - parts;
-	if (n > 4)
-		return (INADDR_NONE);
 	for (val = 0, i = 0; i < n; i++) {
 		val <<= 8;
 		val |= parts[i] & 0xff;

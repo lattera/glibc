@@ -1,6 +1,5 @@
-/* Print floating point number in hexadecimal notation according to
-   ISO C99.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Print floating point number in hexadecimal notation according to ISO C99.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -28,6 +27,7 @@
 #include <string.h>
 #include <wchar.h>
 #include "_itoa.h"
+#include "_itowa.h"
 #include <locale/localeinfo.h>
 
 /* #define NDEBUG 1*/		/* Undefine this for debugging assertions.  */
@@ -38,7 +38,7 @@
 #ifdef USE_IN_LIBIO
 # include <libioP.h>
 # define PUT(f, s, n) _IO_sputn (f, s, n)
-# define PAD(f, c, n) (wide  ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
+# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
 # undef putc
@@ -63,13 +63,16 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
       ++done;								      \
     } while (0)
 
-#define PRINT(ptr, len)							      \
+#define PRINT(ptr, wptr, len)						      \
   do									      \
     {									      \
-       int outlen = (len);						      \
-       const char *cp = (ptr);						      \
-       while (outlen-- > 0)						      \
-	 outchar (*cp++);						      \
+      register size_t outlen = (len);					      \
+      if (wide)								      \
+	while (outlen-- > 0)						      \
+	  outchar (*wptr++);						      \
+      else								      \
+	while (outlen-- > 0)						      \
+	  outchar (*ptr++);						      \
     } while (0)
 
 #define PADN(ch, len)							      \
@@ -100,21 +103,28 @@ __printf_fphex (FILE *fp,
   fpnum;
 
   /* Locale-dependent representation of decimal point.	*/
-  wchar_t decimal;
+  const char *decimal;
+  wchar_t decimalwc;
 
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
+  const wchar_t *wspecial = NULL;
 
   /* Buffer for the generated number string for the mantissa.  The
      maximal size for the mantissa is 128 bits.  */
   char numbuf[32];
   char *numstr;
   char *numend;
+  wchar_t wnumbuf[32];
+  wchar_t *wnumstr;
+  wchar_t *wnumend;
   int negative;
 
   /* The maximal exponent of two in decimal notation has 5 digits.  */
   char expbuf[5];
   char *expstr;
+  wchar_t wexpbuf[5];
+  wchar_t *wexpstr;
   int expnegative;
   int exponent;
 
@@ -140,27 +150,17 @@ __printf_fphex (FILE *fp,
   /* Figure out the decimal point character.  */
   if (info->extra == 0)
     {
-      mbstate_t state;
-
-      memset (&state, '\0', sizeof (state));
-      if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-		     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)),
-		     &state) <= 0)
-	decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+      decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+      decimalwc = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
     }
   else
     {
-      mbstate_t state;
-
-      memset (&state, '\0', sizeof (state));
-      if (__mbrtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
-		     strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT)),
-		     &state) <= 0)
-	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      decimalwc = _NL_CURRENT_WORD (LC_MONETARY,
+				    _NL_MONETARY_DECIMAL_POINT_WC);
     }
-  /* Give default value.  */
-  if (decimal == L'\0')
-    decimal = L'.';
+  /* The decimal point character must never be zero.  */
+  assert (*decimal != '\0' && decimalwc != L'\0');
 
 
   /* Fetch the argument value.	*/
@@ -172,13 +172,33 @@ __printf_fphex (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl.d))
 	{
-	  special = isupper (info->spec) ? "NAN" : "nan";
+	  if (isupper (info->spec))
+	    {
+	      special = "NAN";
+	      wspecial = L"NAN";
+	    }
+	  else
+	    {
+	      special = "nan";
+	      wspecial = L"nan";
+	    }
 	  negative = 0;
 	}
       else
 	{
 	  if (__isinfl (fpnum.ldbl.d))
-	    special = isupper (info->spec) ? "INF" : "inf";
+	    {
+	      if (isupper (info->spec))
+		{
+		  special = "INF";
+		  wspecial = L"INF";
+		}
+	      else
+		{
+		  special = "inf";
+		  wspecial = L"inf";
+		}
+	    }
 
 	  negative = signbit (fpnum.ldbl.d);
 	}
@@ -191,13 +211,33 @@ __printf_fphex (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl.d))
 	{
-	  special = isupper (info->spec) ? "NAN" : "nan";
+	  if (isupper (info->spec))
+	    {
+	      special = "NAN";
+	      wspecial = L"NAN";
+	    }
+	  else
+	    {
+	      special = "nan";
+	      wspecial = L"nan";
+	    }
 	  negative = 0;
 	}
       else
 	{
 	  if (__isinf (fpnum.dbl.d))
-	    special = isupper (info->spec) ? "INF" : "inf";
+	    {
+	      if (isupper (info->spec))
+		{
+		  special = "INF";
+		  wspecial = L"INF";
+		}
+	      else
+		{
+		  special = "inf";
+		  wspecial = L"inf";
+		}
+	    }
 
 	  negative = signbit (fpnum.dbl.d);
 	}
@@ -221,7 +261,7 @@ __printf_fphex (FILE *fp,
       else if (info->space)
 	outchar (' ');
 
-      PRINT (special, 3);
+      PRINT (special, wspecial, 3);
 
       if (info->left && width > 0)
 	PADN (' ', width);
@@ -243,15 +283,26 @@ __printf_fphex (FILE *fp,
       zero_mantissa = num == 0;
 
       if (sizeof (unsigned long int) > 6)
-	numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
-			     info->spec == 'A');
+	{
+	  wnumstr = _itowa_word (num, wnumbuf + sizeof wnumbuf, 16,
+				 info->spec == 'A');
+	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,
+			       info->spec == 'A');
+	}
       else
-	numstr = _itoa (num, numbuf + sizeof numbuf, 16,
-			info->spec == 'A');
+	{
+	  wnumstr = _itowa (num, wnumbuf + sizeof wnumbuf, 16,
+			    info->spec == 'A');
+	  numstr = _itoa (num, numbuf + sizeof numbuf, 16,
+			  info->spec == 'A');
+	}
 
       /* Fill with zeroes.  */
-      while (numstr > numbuf + (sizeof numbuf - 52 / 4))
-	*--numstr = '0';
+      while (wnumstr > wnumbuf + (sizeof wnumbuf - 52 / 4))
+	{
+	  *--wnumstr = L'0';
+	  *--numstr = '0';
+	}
 
       leading = fpnum.dbl.ieee.exponent == 0 ? '0' : '1';
 
@@ -287,9 +338,13 @@ __printf_fphex (FILE *fp,
   /* Look for trailing zeroes.  */
   if (! zero_mantissa)
     {
+      wnumend = wnumbuf + sizeof wnumbuf;
       numend = numbuf + sizeof numbuf;
-      while (numend[-1] == '0')
-	--numend;
+      while (wnumend[-1] == L'0')
+	{
+	  --wnumend;
+	  --numend;
+	}
 
       if (precision == -1)
 	precision = numend - numstr;
@@ -316,17 +371,22 @@ __printf_fphex (FILE *fp,
 		 like in ASCII.  This is true for the rest of GNU, too.  */
 	      if (ch == '9')
 		{
+		  wnumstr[cnt] = (wchar_t) info->spec;
 		  numstr[cnt] = info->spec;	/* This is tricky,
-						   think about it!  */
+		  				   think about it!  */
 		  break;
 		}
 	      else if (tolower (ch) < 'f')
 		{
 		  ++numstr[cnt];
+		  ++wnumstr[cnt];
 		  break;
 		}
 	      else
-		numstr[cnt] = '0';
+		{
+		  numstr[cnt] = '0';
+		  wnumstr[cnt] = L'0';
+		}
 	    }
 	  if (cnt < 0)
 	    {
@@ -357,10 +417,12 @@ __printf_fphex (FILE *fp,
       if (precision == -1)
 	precision = 0;
       numend = numstr;
+      wnumend = wnumstr;
     }
 
   /* Now we can compute the exponent string.  */
   expstr = _itoa_word (exponent, expbuf + sizeof expbuf, 10, 0);
+  wexpstr = _itowa_word (exponent, wexpbuf + sizeof wexpbuf, 10, 0);
 
   /* Now we have all information to compute the size.  */
   width -= ((negative || info->showsign || info->space)
@@ -394,11 +456,14 @@ __printf_fphex (FILE *fp,
   outchar (leading);
 
   if (precision > 0 || info->alt)
-    outchar (decimal);
+    {
+      const wchar_t *wtmp = &decimalwc;
+      PRINT (decimal, wtmp, wide ? 1 : strlen (decimal));
+    }
 
   if (precision > 0)
     {
-      PRINT (numstr, MIN (numend - numstr, precision));
+      PRINT (numstr, wnumstr, MIN (numend - numstr, precision));
       if (precision > numend - numstr)
 	PADN ('0', precision - (numend - numstr));
     }
@@ -413,7 +478,7 @@ __printf_fphex (FILE *fp,
 
   outchar (expnegative ? '-' : '+');
 
-  PRINT (expstr, (expbuf + sizeof expbuf) - expstr);
+  PRINT (expstr, wexpstr, (expbuf + sizeof expbuf) - expstr);
 
   if (info->left && info->pad != '0' && width > 0)
     PADN (info->pad, width);

@@ -76,7 +76,10 @@ canonicalize (const char *name, char *resolved)
   if (name[0] != '/')
     {
       if (!__getcwd (rpath, path_max))
-	goto error;
+	{
+	  rpath[0] = '\0';
+	  goto error;
+	}
       dest = strchr (rpath, '\0');
     }
   else
@@ -122,6 +125,9 @@ canonicalize (const char *name, char *resolved)
 	      if (resolved)
 		{
 		  __set_errno (ENAMETOOLONG);
+		  if (dest > rpath + 1)
+		    dest--;
+		  *dest = '\0';
 		  goto error;
 		}
 	      new_size = rpath_limit - rpath;

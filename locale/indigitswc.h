@@ -49,7 +49,7 @@ indigitwc_value (wchar_t wc, int *decided)
       /* Get the string for the digits with value N.  */
       wcdigits[n] = _NL_CURRENT (LC_CTYPE, _NL_CTYPE_INDIGITS0_WC + n);
 
-      if (wc == wcdigits[n])
+      if (wc == *wcdigits[n])
 	{
 	  /* Found it.  */
 	  if (*decided == -1)
@@ -67,7 +67,7 @@ indigitwc_value (wchar_t wc, int *decided)
       /* Search all ten digits of this level.  */
       for (n = 0; n < 10; ++n)
 	{
-	  if (wc == wcdigits[n])
+	  if (wc == *wcdigits[n])
 	    {
 	      /* Found it.  */
 	      if (*decided == -1)

@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -24,26 +24,27 @@
 #include <math.h>
 #include <printf.h>
 #ifdef USE_IN_LIBIO
-#  include <libioP.h>
+# include <libioP.h>
 #else
-#  include <stdio.h>
+# include <stdio.h>
 #endif
 
 
 /* This defines make it possible to use the same code for GNU C library and
    the GNU I/O library.	 */
 #ifdef USE_IN_LIBIO
-#  define PUT(f, s, n) _IO_sputn (f, s, n)
-#  define PAD(f, c, n) _IO_padn (f, c, n)
+# define PUT(f, s, n) _IO_sputn (f, s, n)
+# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
-#  undef putc
-#  define putc(c, f) _IO_putc_unlocked (c, f)
-#  define size_t     _IO_size_t
-#  define FILE	     _IO_FILE
+# undef putc
+# define putc(c, f) (wide \
+		     ? _IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
+# define size_t	_IO_size_t
+# define FILE	_IO_FILE
 #else	/* ! USE_IN_LIBIO */
-#  define PUT(f, s, n) fwrite (s, 1, n, f)
-#  define PAD(f, c, n) __printf_pad (f, c, n)
+# define PUT(f, s, n) fwrite (s, 1, n, f)
+# define PAD(f, c, n) __printf_pad (f, c, n)
 ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
 #endif	/* USE_IN_LIBIO */
 
@@ -58,21 +59,25 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
       ++done;								      \
     } while (0)
 
-#define PRINT(ptr, len)							      \
+#define PRINT(ptr, wptr, len)						      \
   do									      \
     {									      \
       register size_t outlen = (len);					      \
       if (len > 20)							      \
 	{								      \
-	  if (PUT (fp, ptr, outlen) != outlen)				      \
+	  if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
 	    return -1;							      \
 	  ptr += outlen;						      \
 	  done += outlen;						      \
 	}								      \
       else								      \
 	{								      \
-	  while (outlen-- > 0)						      \
-	    outchar (*ptr++);						      \
+	  if (wide)							      \
+	    while (outlen-- > 0)					      \
+	      outchar (*wptr++);					      \
+	  else								      \
+	    while (outlen-- > 0)					      \
+	      outchar (*ptr++);						      \
 	}								      \
     } while (0)
 
@@ -117,9 +122,11 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
+  const wchar_t *wspecial = NULL;
 
   struct printf_info fp_info;
   int done = 0;
+  int wide = info->wide;
 
 
   /* Fetch the argument value.	*/
@@ -132,11 +139,13 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
       if (__isnanl (fpnum.ldbl.d))
 	{
 	  special = "nan";
+	  wspecial = L"nan";
 	  negative = 0;
 	}
       else if (__isinfl (fpnum.ldbl.d))
 	{
 	  special = "inf";
+	  wspecial = L"inf";
 
 	  negative = fpnum.ldbl.d < 0;
 	}
@@ -156,11 +165,13 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
       if (__isnan (fpnum.dbl.d))
 	{
 	  special = "nan";
+	  wspecial = L"nan";
 	  negative = 0;
 	}
       else if (__isinf (fpnum.dbl.d))
 	{
 	  special = "inf";
+	  wspecial = L"inf";
 
 	  negative = fpnum.dbl.d < 0;
 	}
@@ -174,7 +185,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
 
   if (special)
     {
-      int width = info->prec > info->width ? info->prec : info->width;
+      int width = info->prec > width ? info->prec : width;
 
       if (negative || info->showsign || info->space)
 	--width;
@@ -190,7 +201,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
       else if (info->space)
 	outchar (' ');
 
-      PRINT (special, 3);
+      PRINT (special, wspecial, 3);
 
       if (info->left && width > 0)
 	PADN (' ', width);
@@ -212,7 +223,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
   fp_info.group = info->group;
   fp_info.extra = info->extra;
   fp_info.pad = info->pad;
-  fp_info.wide = 0;
+  fp_info.wide = wide;
 
   if (fp_info.left && fp_info.pad == L' ')
     {

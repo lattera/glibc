@@ -184,7 +184,7 @@ CHARMAP
 <NO>                   /xAC   <U00AC> NOT SIGN
 <-->                   /xAD   <U00AD> SOFT HYPHEN
 <Rg>                   /xAE   <U00AE> REGISTERED SIGN
-<'->                   /xAF   <U203E> OVERLINE
+<'m>                   /xAF   <U00AF> MACRON
 <DG>                   /xB0   <U00B0> DEGREE SIGN
 <+->                   /xB1   <U00B1> PLUS-MINUS SIGN
 <2S>                   /xB2   <U00B2> SUPERSCRIPT TWO
@@ -228,6 +228,8 @@ CHARMAP
 <R+>                   /xF8   <U05E8> HEBREW LETTER RESH
 <Sh>                   /xF9   <U05E9> HEBREW LETTER SHIN
 <T+>                   /xFA   <U05EA> HEBREW LETTER TAV
+<LR>                   /xFD   <U200E> LEFT-TO-RIGHT MARK
+<RL>                   /xFE   <U200F> RIGHT-TO-LEFT MARK
 <NUL>                  /x00   <U0000> NUL
 <SOH>                  /x01   <U0001> START OF HEADING (SOH)
 <STX>                  /x02   <U0002> START OF TEXT (STX)

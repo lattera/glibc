@@ -12,6 +12,7 @@ exec_prefix = @exec_prefix@
 datadir = @datadir@
 libdir = @libdir@
 slibdir = @libc_cv_slibdir@
+localedir = @libc_cv_localedir@
 sysconfdir = @libc_cv_sysconfdir@
 libexecdir = @libexecdir@
 rootsbindir = @libc_cv_rootsbindir@

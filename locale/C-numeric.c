@@ -37,7 +37,7 @@ const struct locale_data _nl_C_LC_NUMERIC =
     { string: "." },
     { string: "" },
     { string: not_available },
-    { wstr: (uint32_t *) L"." },
-    { wstr: (uint32_t *) L"" }
+    { word: (unsigned int) L'.' },
+    { word: (unsigned int) L'\0' }
   }
 };

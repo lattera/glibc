@@ -46,7 +46,8 @@ ld-test-srcs := $(addprefix tests/,$(addsuffix .cm,$(ld-test-names)) \
 				   $(addsuffix .def,$(ld-test-names)))
 
 generated := $(test-input) $(test-output)
-generated-dirs := $(basename $(test-input)) en_US $(ld-test-names) tt_TT
+generated-dirs := $(basename $(test-input)) en_US $(ld-test-names) tt_TT\
+		  de_DE.437
 
 distribute := CHECKSUMS README SUPPORTED ChangeLog			\
 	      $(charmaps) $(locales) $(repertoiremaps)			\

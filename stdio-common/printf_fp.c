@@ -1,5 +1,5 @@
 /* Floating point output for `printf'.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -51,18 +51,18 @@
 /* This defines make it possible to use the same code for GNU C library and
    the GNU I/O library.	 */
 #ifdef USE_IN_LIBIO
-#  define PUT(f, s, n) _IO_sputn (f, s, n)
-#  define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
+# define PUT(f, s, n) _IO_sputn (f, s, n)
+# define PAD(f, c, n) (wide ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
-#  undef putc
-#  define putc(c, f) (wide \
+# undef putc
+# define putc(c, f) (wide \
 		      ? _IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
-#  define size_t     _IO_size_t
-#  define FILE	     _IO_FILE
+# define size_t     _IO_size_t
+# define FILE	     _IO_FILE
 #else	/* ! USE_IN_LIBIO */
-#  define PUT(f, s, n) fwrite (s, 1, n, f)
-#  define PAD(f, c, n) __printf_pad (f, c, n)
+# define PUT(f, s, n) fwrite (s, 1, n, f)
+# define PAD(f, c, n) __printf_pad (f, c, n)
 ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
 #endif	/* USE_IN_LIBIO */
 
@@ -77,21 +77,25 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
       ++done;								      \
     } while (0)
 
-#define PRINT(ptr, len)							      \
+#define PRINT(ptr, wptr, len)						      \
   do									      \
     {									      \
       register size_t outlen = (len);					      \
       if (len > 20)							      \
 	{								      \
-	  if (PUT (fp, ptr, outlen) != outlen)				      \
+	  if (PUT (fp, wide ? (const char *) wptr : ptr, outlen) != outlen)   \
 	    return -1;							      \
 	  ptr += outlen;						      \
 	  done += outlen;						      \
 	}								      \
       else								      \
 	{								      \
-	  while (outlen-- > 0)						      \
-	    outchar (*ptr++);						      \
+	  if (wide)							      \
+	    while (outlen-- > 0)					      \
+	      outchar (*wptr++);					      \
+	  else								      \
+	    while (outlen-- > 0)					      \
+	      outchar (*ptr++);						      \
 	}								      \
     } while (0)
 
@@ -125,11 +129,12 @@ extern mp_size_t __mpn_extract_long_double (mp_ptr res_ptr, mp_size_t size,
 					    int *expt, int *is_neg,
 					    long double value);
 extern unsigned int __guess_grouping (unsigned int intdig_max,
-				      const char *grouping, wchar_t sepchar);
+				      const char *grouping);
 
 
-static char *group_number (char *buf, char *bufend, unsigned int intdig_no,
-			   const char *grouping, wchar_t thousands_sep)
+static wchar_t *group_number (wchar_t *buf, wchar_t *bufend,
+			      unsigned int intdig_no, const char *grouping,
+			      wchar_t thousands_sep, int ngroups)
      internal_function;
 
 
@@ -147,14 +152,17 @@ __printf_fp (FILE *fp,
   fpnum;
 
   /* Locale-dependent representation of decimal point.	*/
-  wchar_t decimal;
+  const char *decimal;
+  wchar_t decimalwc;
 
   /* Locale-dependent thousands separator and grouping specification.  */
-  wchar_t thousands_sep;
+  const char *thousands_sep = NULL;
+  wchar_t thousands_sepwc = 0;
   const char *grouping;
 
   /* "NaN" or "Inf" for the special cases.  */
   const char *special = NULL;
+  const wchar_t *wspecial = NULL;
 
   /* We need just a few limbs for the input before shifting to the right
      position.	*/
@@ -178,7 +186,7 @@ __printf_fp (FILE *fp,
   MPN_VAR(tmp);
 
   /* Digit which is result of last hack_digit() call.  */
-  int digit;
+  wchar_t digit;
 
   /* The type of output format that will be used: 'e'/'E' or 'f'.  */
   int type;
@@ -192,7 +200,7 @@ __printf_fp (FILE *fp,
   /* Nonzero if this is output on a wide character stream.  */
   int wide = info->wide;
 
-  char hack_digit (void)
+  wchar_t hack_digit (void)
     {
       mp_limb_t hi;
 
@@ -222,7 +230,7 @@ __printf_fp (FILE *fp,
 		  /* We're not prepared for an mpn variable with zero
 		     limbs.  */
 		  fracsize = 1;
-		  return '0' + hi;
+		  return L'0' + hi;
 		}
 	    }
 
@@ -231,35 +239,24 @@ __printf_fp (FILE *fp,
 	    frac[fracsize++] = cy;
 	}
 
-      return '0' + hi;
+      return L'0' + hi;
     }
 
 
   /* Figure out the decimal point character.  */
   if (info->extra == 0)
     {
-      mbstate_t state;
-
-      memset (&state, '\0', sizeof (state));
-      if (__mbrtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
-		     strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT)),
-		     &state) <= 0)
-	decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+      decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+      decimalwc = _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_DECIMAL_POINT_WC);
     }
   else
     {
-      mbstate_t state;
-
-      memset (&state, '\0', sizeof (state));
-      if (__mbrtowc (&decimal, _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT),
-		     strlen (_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT)),
-		     &state) <= 0)
-	decimal = (wchar_t) *_NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+      decimalwc = _NL_CURRENT_WORD (LC_MONETARY,
+				    _NL_MONETARY_DECIMAL_POINT_WC);
     }
-  /* Give default value.  */
-  if (decimal == L'\0')
-    decimal = L'.';
-
+  /* The decimal point character must not be zero.  */
+  assert (*decimal != L'\0');
 
   if (info->group)
     {
@@ -273,34 +270,33 @@ __printf_fp (FILE *fp,
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (info->extra == 0)
+	  if (wide)
 	    {
-	      mbstate_t state;
-
-	      memset (&state, '\0', sizeof (state));
-	      if (__mbrtowc (&thousands_sep, _NL_CURRENT (LC_NUMERIC,
-							  THOUSANDS_SEP),
-			     strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
-			     &state) <= 0)
-		thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC,
-							THOUSANDS_SEP);
+	      if (info->extra == 0)
+		thousands_sepwc =
+		  _NL_CURRENT_WORD (LC_NUMERIC, _NL_NUMERIC_THOUSANDS_SEP_WC);
+	      else
+		thousands_sepwc =
+		  _NL_CURRENT_WORD (LC_MONETARY,
+				    _NL_MONETARY_THOUSANDS_SEP_WC);
 	    }
 	  else
 	    {
-	      mbstate_t state;
-
-	      memset (&state, '\0', sizeof (state));
-	      if (__mbrtowc (&thousands_sep, _NL_CURRENT (LC_MONETARY,
-							  MON_THOUSANDS_SEP),
-			     strlen (_NL_CURRENT (LC_MONETARY,
-						  MON_THOUSANDS_SEP)),
-			     &state) <= 0)
-		thousands_sep = (wchar_t) *_NL_CURRENT (LC_MONETARY,
-							MON_THOUSANDS_SEP);
+	      if (info->extra == 0)
+		thousands_sep = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	      else
+		thousands_sep = _NL_CURRENT (LC_MONETARY, MON_THOUSANDS_SEP);
 	    }
 
-	  if (thousands_sep == L'\0')
+	  if ((wide && thousands_sepwc == L'\0')
+	      || (! wide && *thousands_sep == '\0'))
 	    grouping = NULL;
+	  else if (thousands_sepwc == L'\0')
+	    /* If we are printing multibyte characters and there is a
+	       multibyte representation for the thousands separator,
+	       we must ensure the wide character thousands separator
+	       is available, even if it is fake.  */
+	    thousands_sepwc = 0xfffffffe;
 	}
     }
   else
@@ -315,12 +311,30 @@ __printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnanl (fpnum.ldbl))
 	{
-	  special = isupper (info->spec) ? "NAN" : "nan";
+	  if (isupper (info->spec))
+	    {
+	      special = "NAN";
+	      wspecial = L"NAN";
+	    }
+	    else
+	      {
+		special = "nan";
+		wspecial = L"nan";
+	      }
 	  is_neg = 0;
 	}
       else if (__isinfl (fpnum.ldbl))
 	{
-	  special = isupper (info->spec) ? "INF" : "inf";
+	  if (isupper (info->spec))
+	    {
+	      special = "INF";
+	      wspecial = L"INF";
+	    }
+	  else
+	    {
+	      special = "inf";
+	      wspecial = L"inf";
+	    }
 	  is_neg = fpnum.ldbl < 0;
 	}
       else
@@ -341,12 +355,30 @@ __printf_fp (FILE *fp,
       /* Check for special values: not a number or infinity.  */
       if (__isnan (fpnum.dbl))
 	{
-	  special = isupper (info->spec) ? "NAN" : "nan";
+	  if (isupper (info->spec))
+	    {
+	      special = "NAN";
+	      wspecial = L"NAN";
+	    }
+	  else
+	    {
+	      special = "nan";
+	      wspecial = L"nan";
+	    }
 	  is_neg = 0;
 	}
       else if (__isinf (fpnum.dbl))
 	{
-	  special = isupper (info->spec) ? "INF" : "inf";
+	  if (isupper (info->spec))
+	    {
+	      special = "INF";
+	      wspecial = L"INF";
+	    }
+	  else
+	    {
+	      special = "inf";
+	      wspecial = L"inf";
+	    }
 	  is_neg = fpnum.dbl < 0;
 	}
       else
@@ -377,7 +409,7 @@ __printf_fp (FILE *fp,
       else if (info->space)
 	outchar (' ');
 
-      PRINT (special, 3);
+      PRINT (special, wspecial, 3);
 
       if (info->left && width > 0)
 	PADN (' ', width);
@@ -746,7 +778,7 @@ __printf_fp (FILE *fp,
 
   {
     int width = info->width;
-    char *buffer, *startp, *cp;
+    wchar_t *wbuffer, *wstartp, *wcp;
     int buffer_malloced;
     int chars_needed;
     int expscale;
@@ -754,6 +786,7 @@ __printf_fp (FILE *fp,
     int fracdig_min, fracdig_max, fracdig_no = 0;
     int dig_max;
     int significant;
+    int ngroups = 0;
 
     if (_tolower (info->spec) == 'e')
       {
@@ -811,25 +844,28 @@ __printf_fp (FILE *fp,
       }
 
     if (grouping)
-      /* Guess the number of groups we will make, and thus how
-	 many spaces we need for separator characters.  */
-      chars_needed += __guess_grouping (intdig_max, grouping, thousands_sep);
+      {
+	/* Guess the number of groups we will make, and thus how
+	   many spaces we need for separator characters.  */
+	ngroups = __guess_grouping (intdig_max, grouping);
+	chars_needed += ngroups;
+      }
 
     /* Allocate buffer for output.  We need two more because while rounding
        it is possible that we need two more characters in front of all the
        other output.  If the amount of memory we have to allocate is too
        large use `malloc' instead of `alloca'.  */
-    buffer_malloced = chars_needed > 20000;
+    buffer_malloced = chars_needed > 5000;
     if (buffer_malloced)
       {
-	buffer = (char *) malloc (2 + chars_needed);
-	if (buffer == NULL)
+	wbuffer = (wchar_t *) malloc ((2 + chars_needed) * sizeof (wchar_t));
+	if (wbuffer == NULL)
 	  /* Signal an error to the caller.  */
 	  return -1;
       }
     else
-      buffer = (char *) alloca (2 + chars_needed);
-    cp = startp = buffer + 2;	/* Let room for rounding.  */
+      wbuffer = (wchar_t *) alloca ((2 + chars_needed) * sizeof (wchar_t));
+    wcp = wstartp = wbuffer + 2;	/* Let room for rounding.  */
 
     /* Do the real work: put digits in allocated buffer.  */
     if (expsign == 0 || type != 'f')
@@ -838,21 +874,21 @@ __printf_fp (FILE *fp,
 	while (intdig_no < intdig_max)
 	  {
 	    ++intdig_no;
-	    *cp++ = hack_digit ();
+	    *wcp++ = hack_digit ();
 	  }
 	significant = 1;
 	if (info->alt
 	    || fracdig_min > 0
 	    || (fracdig_max > 0 && (fracsize > 1 || frac[0] != 0)))
-	  *cp++ = decimal;
+	  *wcp++ = decimalwc;
       }
     else
       {
 	/* |fp| < 1.0 and the selected type is 'f', so put "0."
 	   in the buffer.  */
-	*cp++ = '0';
+	*wcp++ = L'0';
 	--exponent;
-	*cp++ = decimal;
+	*wcp++ = decimalwc;
       }
 
     /* Generate the needed number of fractional digits.	 */
@@ -860,8 +896,8 @@ __printf_fp (FILE *fp,
 	   || (fracdig_no < fracdig_max && (fracsize > 1 || frac[0] != 0)))
       {
 	++fracdig_no;
-	*cp = hack_digit ();
-	if (*cp != '0')
+	*wcp = hack_digit ();
+	if (*wcp != L'0')
 	  significant = 1;
 	else if (significant == 0)
 	  {
@@ -869,16 +905,16 @@ __printf_fp (FILE *fp,
 	    if (fracdig_min > 0)
 	      ++fracdig_min;
 	  }
-	++cp;
+	++wcp;
       }
 
     /* Do rounding.  */
     digit = hack_digit ();
-    if (digit > '4')
+    if (digit > L'4')
       {
-	char *tp = cp;
+	wchar_t *wtp = wcp;
 
-	if (digit == '5' && (*(cp - 1) & 1) == 0)
+	if (digit == L'5' && (*(wcp - 1) & 1) == 0)
 	  {
 	    /* This is the critical case.	 */
 	    if (fracsize == 1 && frac[0] == 0)
@@ -903,31 +939,31 @@ __printf_fp (FILE *fp,
 	  {
 	    /* Process fractional digits.  Terminate if not rounded or
 	       radix character is reached.  */
-	    while (*--tp != decimal && *tp == '9')
-	      *tp = '0';
-	    if (*tp != decimal)
+	    while (*--wtp != decimalwc && *wtp == L'9')
+	      *wtp = '0';
+	    if (*wtp != decimalwc)
 	      /* Round up.  */
-	      (*tp)++;
+	      (*wtp)++;
 	  }
 
-	if (fracdig_no == 0 || *tp == decimal)
+	if (fracdig_no == 0 || *wtp == decimalwc)
 	  {
 	    /* Round the integer digits.  */
-	    if (*(tp - 1) == decimal)
-	      --tp;
+	    if (*(wtp - 1) == decimalwc)
+	      --wtp;
 
-	    while (--tp >= startp && *tp == '9')
-	      *tp = '0';
+	    while (--wtp >= wstartp && *wtp == L'9')
+	      *wtp = L'0';
 
-	    if (tp >= startp)
+	    if (wtp >= wstartp)
 	      /* Round up.  */
-	      (*tp)++;
+	      (*wtp)++;
 	    else
 	      /* It is more critical.  All digits were 9's.  */
 	      {
 		if (type != 'f')
 		  {
-		    *startp = '1';
+		    *wstartp = '1';
 		    exponent += expsign == 0 ? 1 : -1;
 		  }
 		else if (intdig_no == dig_max)
@@ -935,13 +971,13 @@ __printf_fp (FILE *fp,
 		    /* This is the case where for type %g the number fits
 		       really in the range for %f output but after rounding
 		       the number of digits is too big.	 */
-		    *--startp = decimal;
-		    *--startp = '1';
+		    *--wstartp = decimalwc;
+		    *--wstartp = L'1';
 
 		    if (info->alt || fracdig_no > 0)
 		      {
 			/* Overwrite the old radix character.  */
-			startp[intdig_no + 2] = '0';
+			wstartp[intdig_no + 2] = L'0';
 			++fracdig_no;
 		      }
 
@@ -956,7 +992,7 @@ __printf_fp (FILE *fp,
 		  {
 		    /* We can simply add another another digit before the
 		       radix.  */
-		    *--startp = '1';
+		    *--wstartp = L'1';
 		    ++intdig_no;
 		  }
 
@@ -965,7 +1001,7 @@ __printf_fp (FILE *fp,
 		   fractional digits.  */
 		if (intdig_no + fracdig_no > dig_max)
 		  {
-		    cp -= intdig_no + fracdig_no - dig_max;
+		    wcp -= intdig_no + fracdig_no - dig_max;
 		    fracdig_no -= intdig_no + fracdig_no - dig_max;
 		  }
 	      }
@@ -974,25 +1010,26 @@ __printf_fp (FILE *fp,
 
   do_expo:
     /* Now remove unnecessary '0' at the end of the string.  */
-    while (fracdig_no > fracdig_min && *(cp - 1) == '0')
+    while (fracdig_no > fracdig_min && *(wcp - 1) == L'0')
       {
-	--cp;
+	--wcp;
 	--fracdig_no;
       }
     /* If we eliminate all fractional digits we perhaps also can remove
        the radix character.  */
-    if (fracdig_no == 0 && !info->alt && *(cp - 1) == decimal)
-      --cp;
+    if (fracdig_no == 0 && !info->alt && *(wcp - 1) == decimalwc)
+      --wcp;
 
     if (grouping)
       /* Add in separator characters, overwriting the same buffer.  */
-      cp = group_number (startp, cp, intdig_no, grouping, thousands_sep);
+      wcp = group_number (wstartp, wcp, intdig_no, grouping, thousands_sepwc,
+			  ngroups);
 
     /* Write the exponent if it is needed.  */
     if (type != 'f')
       {
-	*cp++ = type;
-	*cp++ = expsign ? '-' : '+';
+	*wcp++ = (wchar_t) type;
+	*wcp++ = expsign ? L'-' : L'+';
 
 	/* Find the magnitude of the exponent.	*/
 	expscale = 10;
@@ -1001,23 +1038,23 @@ __printf_fp (FILE *fp,
 
 	if (exponent < 10)
 	  /* Exponent always has at least two digits.  */
-	  *cp++ = '0';
+	  *wcp++ = L'0';
 	else
 	  do
 	    {
 	      expscale /= 10;
-	      *cp++ = '0' + (exponent / expscale);
+	      *wcp++ = L'0' + (exponent / expscale);
 	      exponent %= expscale;
 	    }
 	  while (expscale > 10);
-	*cp++ = '0' + exponent;
+	*wcp++ = L'0' + exponent;
       }
 
     /* Compute number of characters which must be filled with the padding
        character.  */
     if (is_neg || info->showsign || info->space)
       --width;
-    width -= cp - startp;
+    width -= wcp - wstartp;
 
     if (!info->left && info->pad != '0' && width > 0)
       PADN (info->pad, width);
@@ -1032,14 +1069,66 @@ __printf_fp (FILE *fp,
     if (!info->left && info->pad == '0' && width > 0)
       PADN ('0', width);
 
-    PRINT (startp, cp - startp);
+    {
+      char *buffer = NULL;
+      char *cp = NULL;
+
+      if (! wide)
+	{
+	  /* Create the single byte string.  */
+	  const char *decimal;
+	  size_t decimal_len;
+	  size_t thousands_sep_len;
+	  wchar_t *copywc;
+
+	  if (info->extra == 0)
+	    decimal = _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+	  else
+	    decimal = _NL_CURRENT (LC_MONETARY, MON_DECIMAL_POINT);
+	  decimal_len = strlen (decimal);
+
+	  if (thousands_sep == NULL)
+	    thousands_sep_len = 0;
+	  else
+	    thousands_sep_len = strlen (thousands_sep);
+
+	  if (buffer_malloced)
+	    {
+	      buffer = (char *) malloc (2 + chars_needed + decimal_len
+					+ ngroups * thousands_sep_len);
+	      if (buffer == NULL)
+		/* Signal an error to the caller.  */
+		return -1;
+	    }
+	  else
+	    buffer = (char *) alloca (2 + chars_needed + decimal_len
+				      + ngroups * thousands_sep_len);
+
+	  /* Now copy the wide character string.  Since the character
+	     (except for the decimal point and thousands separator) must
+	     be coming from the ASCII range we can esily convert the
+	     string without mapping tables.  */
+	  for (cp = buffer, copywc = wstartp; copywc < wcp; ++copywc)
+	    if (*copywc == decimalwc)
+	      cp = (char *) __mempcpy (cp, decimal, decimal_len);
+	    else if (*copywc == thousands_sepwc)
+	      cp = (char *) __mempcpy (cp, thousands_sep, thousands_sep_len);
+	    else
+	      *cp++ = (char) *copywc;
+	}
+
+      PRINT (buffer, wstartp, wide ? wcp - wstartp : cp - buffer);
+
+      /* Free the memory if necessary.  */
+      if (buffer_malloced)
+	{
+	  free (buffer);
+	  free (wbuffer);
+	}
+    }
 
     if (info->left && width > 0)
       PADN (info->pad, width);
-
-    /* Free the memory if necessary.  */
-    if (buffer_malloced)
-      free (buffer);
   }
   return done;
 }
@@ -1048,8 +1137,7 @@ __printf_fp (FILE *fp,
    into a number with INTDIG_MAX integer digits.  */
 
 unsigned int
-__guess_grouping (unsigned int intdig_max, const char *grouping,
-		  wchar_t sepchar)
+__guess_grouping (unsigned int intdig_max, const char *grouping)
 {
   unsigned int groups;
 
@@ -1087,22 +1175,21 @@ __guess_grouping (unsigned int intdig_max, const char *grouping,
    There is guaranteed enough space past BUFEND to extend it.
    Return the new end of buffer.  */
 
-static char *
+static wchar_t *
 internal_function
-group_number (char *buf, char *bufend, unsigned int intdig_no,
-	      const char *grouping, wchar_t thousands_sep)
+group_number (wchar_t *buf, wchar_t *bufend, unsigned int intdig_no,
+	      const char *grouping, wchar_t thousands_sep, int ngroups)
 {
-  unsigned int groups = __guess_grouping (intdig_no, grouping, thousands_sep);
-  char *p;
+  wchar_t *p;
 
-  if (groups == 0)
+  if (ngroups == 0)
     return bufend;
 
   /* Move the fractional part down.  */
-  memmove (buf + intdig_no + groups, buf + intdig_no,
-	   bufend - (buf + intdig_no));
+  wmemmove (buf + intdig_no + ngroups, buf + intdig_no,
+	    bufend - (buf + intdig_no));
 
-  p = buf + intdig_no + groups - 1;
+  p = buf + intdig_no + ngroups - 1;
   do
     {
       unsigned int len = *grouping++;
@@ -1128,5 +1215,5 @@ group_number (char *buf, char *bufend, unsigned int intdig_no,
     *p-- = buf[--intdig_no];
   while (p > buf);
 
-  return bufend + groups;
+  return bufend + ngroups;
 }

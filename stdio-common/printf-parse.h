@@ -149,6 +149,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
   spec->info.showsign = 0;
   spec->info.group = 0;
   spec->info.pad = ' ';
+  spec->info.wide = sizeof (UCHAR_T) > 1;
 
   /* Test for positional argument.  */
   if (ISDIGIT (*format))

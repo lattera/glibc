@@ -97,6 +97,8 @@ if test "$prefix" = "/usr"; then
     libc_cv_slibdir="/lib64"
     if test "$libdir" = '${exec_prefix}/lib'; then
       libdir='${exec_prefix}/lib64';
+      # Locale data can be shared between 32bit and 64bit libraries
+      libc_cv_localedir='${exec_prefix}/lib/locale'
     fi
   else
     libc_cv_slibdir="/lib"

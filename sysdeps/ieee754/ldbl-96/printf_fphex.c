@@ -1,6 +1,5 @@
-/* Print floating point number in hexadecimal notation according to
-   ISO C99.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Print floating point number in hexadecimal notation according to ISO C99.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,14 +35,25 @@ do {									      \
       zero_mantissa = num == 0;						      \
 									      \
       if (sizeof (unsigned long int) > 6)				      \
-	numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,		      \
-			     info->spec == 'A');			      \
+	{								      \
+	  numstr = _itoa_word (num, numbuf + sizeof numbuf, 16,		      \
+			       info->spec == 'A');			      \
+	  wnumstr = _itowa_word (num, wnumbuf + sizeof wnumbuf, 16,	      \
+				 info->spec == 'A');			      \
+	}								      \
       else								      \
-	numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');  \
+	{								      \
+	  numstr = _itoa (num, numbuf + sizeof numbuf, 16, info->spec == 'A');\
+	  wnumstr = _itowa (num, wnumbuf + sizeof wnumbuf, 16,		      \
+			    info->spec == 'A');				      \
+	}								      \
 									      \
       /* Fill with zeroes.  */						      \
       while (numstr > numbuf + (sizeof numbuf - 64 / 4))		      \
-	*--numstr = '0';						      \
+	{								      \
+	  *--numstr = '0';						      \
+	  *--wnumstr = L'0';						      \
+	}								      \
 									      \
       /* We use a full nibble for the leading digit.  */		      \
       leading = *numstr++;						      \

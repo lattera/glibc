@@ -3475,6 +3475,7 @@ s%@uname_version@%$uname_version%g
 s%@stdio@%$stdio%g
 s%@old_glibc_headers@%$old_glibc_headers%g
 s%@libc_cv_slibdir@%$libc_cv_slibdir%g
+s%@libc_cv_localedir@%$libc_cv_localedir%g
 s%@libc_cv_sysconfdir@%$libc_cv_sysconfdir%g
 s%@libc_cv_rootsbindir@%$libc_cv_rootsbindir%g
 s%@use_ldconfig@%$use_ldconfig%g

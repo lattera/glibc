@@ -78,7 +78,7 @@ const struct locale_data _nl_C_LC_MONETARY =
     { word: 99991231 },
     { word: 1 },
     { word: 1 },
-    { wstr: (uint32_t *) L"." },
-    { wstr: (uint32_t *) L"" }
+    { word: (unsigned int) L'.' },
+    { word: (unsigned int) L'\0' }
   }
 };

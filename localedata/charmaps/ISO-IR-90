@@ -497,5 +497,5 @@ CHARMAP
 <vertical-line>        /x7C   <U007C> VERTICAL LINE
 <right-brace>          /x7D   <U007D> RIGHT CURLY BRACKET
 <right-curly-bracket>  /x7D   <U007D> RIGHT CURLY BRACKET
-<tilde>                /x20   <U007E> TILDE
+<tilde>                /xC4/x20   <U007E> TILDE
 END CHARMAP

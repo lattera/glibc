@@ -176,8 +176,11 @@ CHARMAP
 <f2>                   /xA6   <U0192> LATIN SMALL LETTER F WITH HOOK
 <SE>                   /xA7   <U00A7> SECTION SIGN
 <Cu>                   /xA8   <U00A4> CURRENCY SIGN
+<'9>                   /xA9   <U2019> RIGHT SINGLE QUOTATION MARK
 <"6>                   /xAA   <U201C> LEFT DOUBLE QUOTATION MARK
 <<<>                   /xAB   <U00AB> LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+<<1>                   /xAC   <U2039> SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+</>1>                  /xAD   <U203A> SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
 <fi>                   /xAE   <UFB01> LATIN SMALL LIGATURE FI
 <fl>                   /xAF   <UFB02> LATIN SMALL LIGATURE FL
 <Rg>                   /xB0   <U00AE> REGISTERED SIGN
@@ -188,6 +191,8 @@ CHARMAP
 <BB>                   /xB5   <U00A6> BROKEN BAR
 <PI>                   /xB6   <U00B6> PILCROW SIGN
 <sb>                   /xB7   <U2022> BULLET
+<.9>                   /xB8   <U201A> SINGLE LOW-9 QUOTATION MARK
+<:9>                   /xB9   <U201E> DOUBLE LOW-9 QUOTATION MARK
 <"9>                   /xBA   <U201D> RIGHT DOUBLE QUOTATION MARK
 </>/>>                 /xBB   <U00BB> RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
 <.3>                   /xBC   <U2026> HORIZONTAL ELLIPSIS

@@ -1,3 +1,61 @@
+2000-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/printf-parse.h (parse_one_spec): Set wide elements.
+
+	* stdio-common/printf_fp.c: Truely support wide characater output.
+	Finally handle decimal points and thousands separator characters
+	correctly for multibyte output.
+	* stdio-common/printf_size.c: Likewise.
+	* sysdeps/generic/printf_fphex.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/printf_fphex.c: Likewise.
+
+	* stdio-common/vfscanf.c: Implement I modifier for numbers to read
+	locale dependent digits.
+
+	* locale/C-monetary.c (_nl_C_LC_MONETARY): Change wide character
+	decimal point and thousands separator values to wide characters from
+	wide character strings.
+	* locale/C-numeric.c (_nl_C_LC_NUMERIC): Likewise.
+
+	* locale/indigitswc.h: Dereference wcdigits array elements.
+
+2000-02-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/canonicalize.c (canonicalize): Zero terminate
+	path to copy on error.
+
+2000-02-01  Cristian Gafton  <gafton@redhat.com>
+
+	* misc/syslog.c (closelog): Reset LogType to SOCK_DGRAM.
+
+2000-01-31  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/fpu/fpu_control.h (_FPU_DEFAULT): Set the AC bit.
+
+2000-01-31  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile (generated): msgs.h is generated.
+
+	* localedata/Makefile (generated-dirs): Add de_DE.437.
+
+2000-01-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* config.make.in: Allow default localedir to come from configure.
+	* configure.in: Export libc_cv_localedir.
+	* sysdeps/unix/sysv/linux/configure.in: For sparc64, put locale
+	stuff into $exec_prefix/lib/locale because it can be shared between
+	32bit and 64bit libraries.
+	* configure: Rebuilt.
+	* sysdeps/unix/sysv/linux/configure: Rebuilt.
+
+2000-01-31  Andreas Jaeger  <aj@suse.de>
+
+	* inet/tst-network.c: New file.
+	* inet/Makefile (tests): Add tst-network.
+
+	* inet/inet_net.c (inet_network): Don't overwrite memory or allow
+	to great last digits.
+
 2000-02-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/clone.S: Rewritten.

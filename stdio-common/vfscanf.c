@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -62,6 +62,7 @@
 #define GROUP		0x080	/* ': group numbers */
 #define MALLOC		0x100	/* a: malloc strings */
 #define CHAR		0x200	/* hh: char */
+#define I18N		0x400	/* I: use locale's digits */
 
 
 #ifdef USE_IN_LIBIO
@@ -479,8 +480,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	}
 
-      /* Check for the assignment-suppressing and the number grouping flag.  */
-      while (*f == L_('*') || *f == L_('\''))
+      /* Check for the assignment-suppressing, the number grouping flag,
+	 and the signal to use the locale's digit representation.  */
+      while (*f == L_('*') || *f == L_('\'') || *f == L_('I'))
 	switch (*f++)
 	  {
 	  case L_('*'):
@@ -488,6 +490,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    break;
 	  case L_('\''):
 	    flags |= GROUP;
+	    break;
+	  case L_('I'):
+	    flags |= I18N;
 	    break;
 	  }
 
@@ -1192,22 +1197,137 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (base == 0)
 	    base = 10;
 
-	  /* Read the number into workspace.  */
-	  while (c != EOF && width != 0)
+	  if (base == 10 && (flags & I18N) != 0)
 	    {
-	      if (base == 16 ? !ISXDIGIT (c) :
-		  ((!ISDIGIT (c) || c - L_('0') >= base) &&
-		   !((flags & GROUP) && base == 10 && c == thousands)))
-		break;
-	      ADDW (c);
-	      if (width > 0)
-		--width;
+	      int from_level;
+	      int to_level;
+#ifdef COMPILE_WPRINTF
+	      const wchar_t *wcdigits;
+#else
+	      const char *mbdigits[10];
+#endif
+	      int n;
 
-	      c = inchar ();
+	      from_level = 0;
+#ifdef COMPILE_WPRINTF
+	      to_level = _NL_CURRENT_WORD (LC_CTYPE,
+					   _NL_CTYPE_INDIGITS_WC_LEN) - 1;
+#else
+	      to_level = _NL_CURRENT_WORD (LC_CTYPE,
+					   _NL_CTYPE_INDIGITS_MB_LEN) - 1;
+#endif
+
+	      /* In this round we get the pointer to the digit strings
+		 and also perform the first round of comparisons.  */
+	      for (n = 0; n < 10; ++n)
+		{
+		  size_t dlen;
+		  size_t dcnt;
+
+		  /* Get the string for the digits with value N.  */
+#ifdef COMPILE_WPRINTF
+		  wcdigits[n] = _NL_CURRENT (LC_CTYPE,
+					     _NL_CTYPE_INDIGITS0_WC + n);
+		  if (c == *wcdigit[n])
+		    break;
+
+		  /* Advance the pointer to the next string.  */
+		  ++wcdigits[n];
+#else
+		  mbdigits[n] = _NL_CURRENT (LC_CTYPE,
+					     _NL_CTYPE_INDIGITS0_MB + n);
+		  dlen = strlen (mbdigits[n]);
+
+		  dcnt = 0;
+		  do
+		    {
+		      if (c != mbdigits[n][dcnt])
+			break;
+		      c = inchar ();
+		    }
+		  while (--dcnt > 0);
+
+		  if (dcnt == 0)
+		    /* We found it.  */
+		    break;
+
+		  /* Advance the pointer to the next string.  */
+		  mbdigits[n] += dlen + 1;
+		}
+#endif
+
+	      if (n == 10)
+		{
+		  /*Have not yet found the digit.  */
+		  while (++from_level <= to_level)
+		    {
+		      /* Search all ten digits of this level.  */
+		      for (n = 0; n < 10; ++n)
+			{
+#ifdef COMPILE_WPRINTF
+			  if (c == *wcdigit[n])
+			    break;
+
+			  /* Advance the pointer to the next string.  */
+			  ++wcdigits[n];
+#else
+			  size_t dlen = strlen (mbdigits[n]);
+			  size_t dcnt;
+
+			  dcnt = 0;
+			  do
+			    {
+			      if (c != mbdigits[n][dcnt])
+				break;
+			      c = inchar ();
+			    }
+			  while (--dcnt > 0);
+
+			  if (dcnt == 0)
+			    /* We found it.  */
+			    break;
+
+			  /* Advance the pointer to the next string.  */
+			  mbdigits[n] += dlen + 1;
+#endif
+			}
+
+		      if (n < 10)
+			/* Found it.  */
+			break;
+
+		      /* Next level.  */
+		      ++from_level;
+		    }
+		}
+
+	      if (n == 10)
+		{
+		  /* Haven't found anything.  Push the last character back
+		     and return an error.  */
+		  ungetc (c, s);
+		  input_error ();
+		}
+
+	      ADDW (L_('0') + n);
 	    }
+	  else
+	    /* Read the number into workspace.  */
+	    while (c != EOF && width != 0)
+	      {
+		if (base == 16 ? !ISXDIGIT (c) :
+		    ((!ISDIGIT (c) || c - L_('0') >= base) &&
+		     !((flags & GROUP) && base == 10 && c == thousands)))
+		  break;
+		ADDW (c);
+		if (width > 0)
+		  --width;
 
-	  if (wpsize == 0 ||
-	      (wpsize == 1 && (wp[0] == L_('+') || wp[0] == L_('-'))))
+		c = inchar ();
+	      }
+
+	  if (wpsize == 0
+	      || (wpsize == 1 && (wp[0] == L_('+') || wp[0] == L_('-'))))
 	    {
 	      /* There was no number.  If we are supposed to read a pointer
 		 we must recognize "(nil)" as well.  */
