@@ -37,12 +37,11 @@ endif
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c
 
 others		= iconv_prog
+install-others	= $(inst_bindir)/iconv
 
 CFLAGS-gconv_conf.c = -DGCONV_PATH='"$(gconvdir)"'
 
 include ../Rules
-
-subdir_install: $(inst_bindir)/iconv
 
 $(inst_bindir)/iconv: $(objpfx)iconv_prog $(+force)
 	$(do-install-program)

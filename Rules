@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -75,10 +75,7 @@ endef
 $(common-objpfx)dummy.c:
 	rm -f $@
 	echo 'void __dummy__ (void) { }' > $@
-$(common-objpfx)empty.c:
-	cp -f /dev/null $@
-common-generated += dummy.o dummy.c empty.c \
-		    $(addprefix empty,$(object-suffixes))
+common-generated += dummy.o dummy.c
 
 # This makes all the auxiliary and test programs.
 
@@ -90,22 +87,16 @@ others: $(addprefix $(objpfx),$(extra-objs))
 endif
 ifeq ($(cross-compiling),yes)
 tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
-ifeq ($(build-static),yes)
-tests: $(addprefix $(objpfx),$(tests-static))
-endif
 else
 tests: $(tests:%=$(objpfx)%.out)
-ifeq ($(build-static),yes)
-tests: $(tests-static:%=$(objpfx)%.sout)
-endif
 endif
 
 ifeq ($(build-programs),yes)
 binaries-all = $(others) $(sysdep-others) $(tests) $(test-srcs)
-binaries-static = $(others-static) $(tests-static) $(test-srcs-static)
+binaries-static = $(others-static)
 else
 binaries-all = $(tests) $(test-srcs)
-binaries-static = $(tests-static) $(test-srcs-static)
+binaries-static =
 endif
 
 binaries-shared = $(filter-out $(binaries-static), $(binaries-all))
@@ -136,26 +127,14 @@ $(objpfx)%.out: %.input $(objpfx)%
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
 	$($*-ENV) $(built-program-cmd) > $@
 endif	# tests
-
-ifneq "$(strip $(tests-static) $(test-static-srcs))" ""
-# These are the implicit rules for making test outputs
-# from the test programs and whatever input files are present.
-$(objpfx)%.sout: %.args $(objpfx)% %.input
-	$($*-ENV) $(built-program-file) `cat $(word 1,$^)` < $(word 3,$^) > $@
-$(objpfx)%.sout: %.args $(objpfx)%
-	$($*-ENV) $(built-program-file) `cat $(word 1,$^)` > $@
-$(objpfx)%.sout: %.input $(objpfx)%
-	$($*-ENV) $(built-program-file) < $(word 1,$^) > $@
-$(objpfx)%.sout: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	$($*-ENV) $(built-program-file) > $@
-endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
-	subdir_clean subdir_mostlyclean
+	subdir_clean subdir_mostlyclean subdir_testclean
 subdir_mostlyclean: mostlyclean
 subdir_clean: clean
 subdir_distclean: distclean
 subdir_realclean: realclean
+subdir_testclean: do-tests-clean
 realclean: distclean
 distclean: clean
 
@@ -187,19 +166,8 @@ generated: $(addprefix $(common-objpfx),$(common-generated)) \
 .PHONY: before-compile
 before-compile: $(before-compile)
 
-define o-iterator-doit
-$(common-objpfx)empty$o: $(common-objpfx)empty.c $(before-compile);
-	$$(compile-command.c)
-endef
-object-suffixes-left := $(object-suffixes)
-include $(o-iterator)
-
-define o-iterator-doit
-$(common-objpfx)dummy$o: $(common-objpfx)dummy.c $(before-compile);
-	$$(compile-command.c)
-endef
-object-suffixes-left := $(object-suffixes)
-include $(o-iterator)
+$(common-objpfx)dummy.o: $(common-objpfx)dummy.c $(before-compile);
+	$(compile-command.c)
 
 # There's no good place to put this - here will do.
 # The dependencies are wrong if it's run from the top level.

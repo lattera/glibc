@@ -294,7 +294,10 @@ find_derivation (const char *toset, const char *toset_expand,
   result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
 			      handle, nsteps);
   if (result == GCONV_OK)
-    return result;
+    {
+      __libc_lock_unlock (lock);
+      return result;
+    }
 
   /* ### TODO
      For now we use a simple algorithm with quadratic runtime behaviour.
@@ -527,7 +530,10 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
   /* If we don't have a module database return with an error.  */
   if (__gconv_modules_db == NULL)
-    return GCONV_NOCONV;
+    {
+      __libc_lock_unlock (lock);
+      return GCONV_NOCONV;
+    }
 
   /* See whether the names are aliases.  */
   if (__gconv_alias_db != NULL)

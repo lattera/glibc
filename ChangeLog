@@ -1,3 +1,56 @@
+1999-01-04  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/gencat.c: Update year in copyright message text.
+	* db2/makedb.c: Likewise.
+	* debug/catchsegv.sh: Likewise.
+	* elf/ldd.bash.in: Likewise.
+	* iconv/iconv_prog.c: Likewise.
+	* locale/programs/locale.c: Likewise.
+	* locale/programs/localedef.c: Likewise.
+	* malloc/mtrace.pl: Likewise.
+	* nscd/nscd.c: Likewise.
+
+1999-01-02  Philip Blundell  <philb@gnu.org>
+
+	* sunrpc/Makefile: Ensure that we really use the right path for cpp.
+
+1999-01-03  Philip Blundell  <philb@gnu.org>
+
+	* Makefile (tests-clean): New test output files.
+	* Makerules (do-tests-clean): New rule to support the above.
+	* Rules (subdir_testclean): Likewise.
+
+1999-01-03  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* iconv/Makefile: Use install-others instead of explicit
+	dependency on subdir_install.
+
+1999-01-02  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* iconv/gconv_db.c (find_derivation): Release lock before
+	returning.
+	(__gconv_find_transform): Likewise.
+
+1999-01-01  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* inet/ether_ntoa.c (ether_ntoa): Make `asc' static since that's
+	what we return.
+
+1999-01-01  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* Makerules: Remove all references to obsolete variables
+	tests-static and test-srcs-static.
+	* Make-dist: Likewise.
+	* Rules: Likewise.  Remove rules to generate obsolete
+	empty.{c,o*}.
+
+1999-01-03  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/pread.c: Use the i386 implementation.
+	* sysdeps/unix/sysv/linux/arm/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/arm/pwrite64.c: Likewise.
+
 1998-12-28  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Reorder expression

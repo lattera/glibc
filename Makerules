@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -444,7 +444,7 @@ endif
 
 +depfiles := $(sources:.c=.d) \
 	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
-	     $(addsuffix .d,$(tests) $(test-srcs) $(tests-static))
+	     $(addsuffix .d,$(tests) $(test-srcs))
 ifeq ($(build-programs),yes)
 +depfiles += $(addsuffix .d,$(others) $(sysdep-others))
 endif
@@ -879,20 +879,22 @@ echo-headers:
 
 # Common cleaning targets.
 
-.PHONY: common-mostlyclean common-clean mostlyclean clean
+.PHONY: common-mostlyclean common-clean mostlyclean clean do-tests-clean
 clean: common-clean
 mostlyclean: common-mostlyclean
+
+do-tests-clean:
+	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(test-srcs)) \
+				     $(addsuffix .sout,$(tests-static)))
 
 # Remove the object files.
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
-				     $(sysdep-others) $(tests-static) stubs \
+				     $(sysdep-others) stubs \
 				     $(addsuffix .o,$(tests) $(test-srcs) \
-						    $(tests-static) \
 						    $(others) \
 						    $(sysdep-others)) \
-				     $(addsuffix .out,$(tests) $(test-srcs)) \
-				     $(addsuffix .sout,$(tests-static)))
+				     $(addsuffix .out,$(tests) $(test-srcs))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
@@ -959,7 +961,7 @@ echo > $@.new 'subdir := $(subdir)'
 $(foreach var,subdir-dirs sources elided-routines sysdep_routines \
 	      headers sysdep_headers distribute dont_distribute generated \
 	      others tests test-srcs extra-libs $(extra-libs:%=%-routines) \
-	      tests-static versioned \
+	      versioned \
 	      $(addprefix install-,lib lib.so data bin sbin others),
 echo >> $@.new '$(subdir)-$(var) := $($(var))'
 echo >> $@.new '$(var) = $$($(subdir)-$(var))')

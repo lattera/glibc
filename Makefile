@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -57,6 +57,7 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 		   subdir_distinfo					\
 		   subdir_echo-headers subdir_echo-distinfo		\
 		   subdir_install					\
+		   subdir_testclean					\
 		   $(addprefix install-, no-libc.a bin lib data headers others)
 
 headers := errno.h sys/errno.h bits/errno.h limits.h values.h	\
@@ -184,7 +185,8 @@ $(all-subdirs-targets):
 
 # Targets to clean things up to various degrees.
 
-.PHONY: clean realclean distclean distclean-1 parent-clean parent-mostlyclean
+.PHONY: clean realclean distclean distclean-1 parent-clean parent-mostlyclean \
+	tests-clean
 
 # Subroutines of all cleaning targets.
 parent-mostlyclean: common-mostlyclean # common-mostlyclean is in Makerules.
@@ -206,6 +208,9 @@ clean: parent-clean
 mostlyclean: parent-mostlyclean
 	@$(MAKE) subdir_mostlyclean no_deps=t
 	-rm -f $(postclean)
+
+tests-clean:
+	@$(MAKE) subdir_testclean no_deps=t
 
 # The realclean target is just like distclean for the parent, but we want
 # the subdirs to know the difference in case they care.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -24,7 +24,7 @@
 char *
 ether_ntoa (const struct ether_addr *addr)
 {
-  char asc[18];
+  static char asc[18];
 
   return ether_ntoa_r (addr, asc);
 }

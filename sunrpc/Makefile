@@ -1,4 +1,4 @@
-# Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1994, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -149,7 +149,8 @@ $(rpcsvc:%.x=$(objpfx)rpcsvc/%.h): $(objpfx)rpcsvc/%.h: $(objpfx)rpcsvc/%.stmp
 $(objpfx)rpcsvc/%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	$(make-target-directory)
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -Y `$(CC) -print-file-name=.` -h $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -Y `$(CC) -print-file-name=cpp | sed "s|/cpp$$||"` \
+		      -h $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=h)
 	touch $@
 
@@ -158,7 +159,8 @@ $(rpcsvc:%.x=$(objpfx)x%.c): $(objpfx)x%.c: $(objpfx)x%.stmp
 	@:
 $(objpfx)x%.stmp: rpcsvc/%.x $(objpfx)rpcgen
 	-@rm -f ${@:stmp=T} $@
-	$(rpcgen-cmd) -Y `$(CC) -print-file-name=.` -c $< -o ${@:stmp=T}
+	$(rpcgen-cmd) -Y `$(CC) -print-file-name=cpp | sed "s|/cpp$$||"` \
+		      -c $< -o ${@:stmp=T}
 	$(move-if-change) $(@:stmp=T) $(@:stmp=c)
 	touch $@
 

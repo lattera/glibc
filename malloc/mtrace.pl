@@ -1,9 +1,9 @@
 #! @PERL@
 eval "exec @PERL@ -S $0 $*"
     if 0;
-# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1997.
+# Contributed by Ulrich Drepper <drepper@gnu.org>, 1997.
 # Based on the mtrace.awk script.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ arglist: while (@ARGV) {
 	$ARGV[0] eq "--vers" || $ARGV[0] eq "--versi" ||
 	$ARGV[0] eq "--versio" || $ARGV[0] eq "--version") {
 	print "mtrace (GNU $PACKAGE) $VERSION\n";
-	print "Copyright (C) 1997, 1998 Free Software Foundation, Inc.\n";
+	print "Copyright (C) 1999 Free Software Foundation, Inc.\n";
 	print "This is free software; see the source for copying conditions.  There is NO\n";
 	print "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
 	print "Written by Ulrich Drepper <drepper\@gnu.org>\n";
