@@ -1,5 +1,8 @@
 2003-03-22  Alexandre Oliva  <aoliva@redhat.com>
 
+	* sysdeps/mips/elf/ldsodefs.h: Add mips-specific elf64 relocation
+	data structures and macros.  Protect from multiple inclusion.
+
 	* sysdeps/mips/dl-machine.h (ELF_MIPS_GNU_GOT1_MASK): Fix harmless
 	typo in #if test.
 
