@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
 
@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sys/types.h>
+#include <bits/libc-lock.h>
 
 
 struct catalog_obj
@@ -47,6 +48,8 @@ typedef struct catalog_info
 
   struct catalog_obj *file_ptr;
   size_t file_size;
+
+  __libc_lock_define (,lock);
 } *__nl_catd;
 
 
@@ -56,4 +59,4 @@ typedef struct catalog_info
 
 
 /* Prototypes for helper functions.  */
-void __open_catalog (__nl_catd __catalog, int __with_path);
+void __open_catalog (__nl_catd __catalog);

@@ -2,7 +2,7 @@
 				  and
 		    POSIX character set descriptions
 
-Ulrich Drepper			Time-stamp: <1997/02/12 22:13:01 drepper>
+Ulrich Drepper			Time-stamp: <1997/06/04 01:36:26 drepper>
 drepper@cygnus.com
 
 
@@ -34,10 +34,10 @@ desired data should happen like this:
 	localedef -i fr_CA -f ISO-8859-1 fr_CA
 
 This will place the 6 output files in the appropriate directory where
-the GNU libc functions can find them.  Please note that you need the
-rights to write to this directory ($(prefix)/share/locale, where
+the GNU libc functions can find them.  Please note that you need
+permission to write to this directory ($(prefix)/share/locale, where
 $(prefix) is the value you specified while configuring GNU libc).  If
-you do not have the necessary rights, you can write the files into an
+you do not have the necessary permissions, you can write the files into an
 arbitrary directory by giving a path including a '/' character instead
 of `fr_CA'.  E.g., to put the new files in a subdirectory of the
 current directory simply use
@@ -48,7 +48,7 @@ How to use these data files is described in the GNU libc manual,
 especially in the section describing the `setlocale' function.
 
 
-The here contained files can originally be found at
+The files contained here were originally from
 
 	ftp://dkuug.dk/i18n/WG15-collection
 
@@ -60,7 +60,7 @@ data or want to add something please contact
 and
 	Ulrich Drepper <drepper@cygnus.com>
 
-Please make sure your corrections are relativ to the originally
+Please make sure your corrections are relative to the originally
 distributed files.  Consult the CHECKSUMS file which contains the MD5
 sums for all data files.
 

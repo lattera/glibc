@@ -45,6 +45,21 @@ int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
 				   of init-first.  */
 static ElfW(auxv_t) *_dl_auxv;
 
+
+#ifndef DL_FIND_ARG_COMPONENTS
+#define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
+  do {								\
+    void **_tmp;						\
+    (argc) = *(long *) cookie;					\
+    (argv) = (char **) cookie + 1;				\
+    (envp) = (argv) + (argc) + 1;				\
+    for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
+      continue;							\
+    (auxp) = (void *) ++_tmp;					\
+  } while (0)
+#endif
+
+
 ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
 		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
@@ -60,21 +75,15 @@ _dl_sysdep_start (void **start_argptr,
   gid_t egid = 0;
   unsigned int seen;
 
+  DL_FIND_ARG_COMPONENTS (start_argptr, _dl_argc, _dl_argv, _environ, _dl_auxv);
+
   user_entry = (ElfW(Addr)) &ENTRY_POINT;
-  _dl_argc = *(long *) start_argptr;
-  _dl_argv = (char **) start_argptr + 1;
-  _environ = &_dl_argv[_dl_argc + 1];
   _dl_platform = NULL; /* Default to nothing known about the platform.  */
-  start_argptr = (void **) _environ;
-  while (*start_argptr)
-    ++start_argptr;
 
   seen = 0;
 #define M(type) (1 << (type))
 
-  for (av = _dl_auxv = (void *) ++start_argptr;
-       av->a_type != AT_NULL;
-       seen |= M ((++av)->a_type))
+  for (av = _dl_auxv; av->a_type != AT_NULL; seen |= M ((++av)->a_type))
     switch (av->a_type)
       {
       case AT_PHDR:

@@ -126,6 +126,7 @@ $(addprefix $(objpfx),$(filter-out $(start-installed-name),$(csu-dummies))):
 
 / := $$/# bite me.
 $(objpfx)abi-tag.h: $(..)abi-tags
+	$(make-target-directory)
 	rm -f $@.new
 	sed 's/#.*$//;/^[ 	]*$$/d' $< | while read conf tag; do \
 	  test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \

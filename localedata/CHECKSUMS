@@ -156,6 +156,7 @@ db3c60025eb80244d70bf7889f058055  charmaps/T.101-G2
 572baa84bd05d4b236b7e2fb211d0dfd  charmaps/T.61-7BIT
 1e39e36aa7544014059b0aa8381ab051  charmaps/T.61-8BIT
 81c8e12a75dff4371ce82773d670cd6d  charmaps/VIDEOTEX-SUPPL
+910e8174540ecba1ac61b5f27f6dc359  locales/cs_CZ
 45ade09ead9fd385d58504bfc005ecab  locales/da_DK
 249894e0554d46d1fbdae4a5fb8cc20e  locales/de_AT
 b3628f73e00bb655a5e96bcc2331893c  locales/de_BE
@@ -175,14 +176,13 @@ bda978c8b0e379d57a8599edfdb2e858  locales/fi_FI
 a25300033ea6c619a4e15051f14aa65e  locales/fo_FO
 02ca55b19338f94530f0b60999638ed4  locales/fr_BE
 655c7b8713b9aad20014df2c27928cb7  locales/fr_CA
-8e60885c3fda81bc7773f139657974f3  locales/fr_CA,2.13
-8a76a0e3ea2923367fdbab78a6bc67cb  locales/fr_CA,2.13.orig
+d5bec15a74c4107a77a46fe185883574  locales/fr_CA,2.13
 19403a5cd69a9ad658b173859eb022ef  locales/fr_CH
 48d8981b117e72c5eb2e9c181cbd7d2b  locales/fr_FR
 cc1b77cf4cdc4488a99637e730e0f57f  locales/fr_LU
 1987b72e766038b0f475165c994d1469  locales/ga_IE
 be2ef06fd9a4b4def515216972fe9250  locales/gr_GR
-9e2de7fe4b41f9bad952cdc5bfd77cd4  locales/hr_HR
+e7ad1d62ccf958b04f018cbd96ede3b2  locales/hr_HR
 7f35d03bbe29b53831674704f8b307af  locales/hu_HU
 1a8b95f6663b7a99703a32c6135d8896  locales/is_IS
 47620dbc36bf3ffe04b32dd16b7aae3c  locales/it_IT
@@ -194,7 +194,7 @@ d5394568c45886788becf67b54bc916e  locales/lt_LT
 e71081f29649cfd4ac8563ae1f7932fa  locales/nl_NL
 3a0720088defd80baa0623990c6d196a  locales/no_NO
 6d1bb18d4271cd712e5dc24eec4706b9  locales/pl_PL
-b07ce7e57dda4687f2a83cd5ec79a3e0  locales/POSIX
+bbbcbd6f0a484ec25d8a592217a76ebb  locales/POSIX
 509fc74fdd394f6876358d357f955645  locales/pt_BR
 7c2463bcee68bccde3145642a34a8ef1  locales/pt_PT
 32c766f85eb82823856485e5802dce19  locales/ro_RO

@@ -33,14 +33,22 @@
 
 
 void
-__open_catalog (__nl_catd catalog, int with_path)
+__open_catalog (__nl_catd catalog)
 {
   int fd;
   struct stat st;
   int swapping;
 
-  if (strchr (catalog->cat_name, '/') != NULL || !with_path)
-    fd = open (catalog->cat_name, O_RDONLY);
+  /* Make sure we are alone.  */
+  __libc_lock_lock (catalog->lock);
+
+  /* Check whether there was no other thread faster.  */
+  if (catalog->status != closed)
+    /* While we waited some other thread tried to open the catalog.  */
+    goto unlock_return;
+
+  if (strchr (catalog->cat_name, '/') != NULL || catalog->nlspath == NULL)
+    fd = __open (catalog->cat_name, O_RDONLY);
   else
     {
       const char *run_nlspath = catalog->nlspath;
@@ -164,7 +172,7 @@ __open_catalog (__nl_catd catalog, int with_path)
   if (fd < 0 || __fstat (fd, &st) < 0)
     {
       catalog->status = nonexisting;
-      return;
+      goto unlock_return;
     }
 
 #ifndef MAP_COPY
@@ -195,7 +203,7 @@ __open_catalog (__nl_catd catalog, int with_path)
       if (catalog->file_ptr == NULL)
 	{
 	  catalog->status = nonexisting;
-	  return;
+	  goto unlock_return;
 	}
       todo = st.st_size;
       /* Save read, handle partial reads.  */
@@ -207,7 +215,7 @@ __open_catalog (__nl_catd catalog, int with_path)
 	    {
 	      free ((void *) catalog->file_ptr);
 	      catalog->status = nonexisting;
-	      return;
+	      goto unlock_return;
 	    }
 	  todo -= now;
 	}
@@ -227,14 +235,14 @@ __open_catalog (__nl_catd catalog, int with_path)
     swapping = 1;
   else
     {
-      /* Illegal file.  Free he resources and mark catalog as not
+      /* Illegal file.  Free the resources and mark catalog as not
 	 usable.  */
       if (catalog->status == mmapped)
 	__munmap ((void *) catalog->file_ptr, catalog->file_size);
       else
 	free (catalog->file_ptr);
       catalog->status = nonexisting;
-      return;
+      goto unlock_return;
     }
 
 #define SWAP(x) (swapping ? SWAPU32 (x) : (x))
@@ -260,4 +268,8 @@ __open_catalog (__nl_catd catalog, int with_path)
   catalog->strings =
     (const char *) &catalog->file_ptr->name_ptr[catalog->plane_size
 					       * catalog->plane_depth * 3 * 2];
+
+  /* Release the lock again.  */
+ unlock_return:
+  __libc_lock_unlock (catalog->lock);
 }

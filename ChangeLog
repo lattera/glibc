@@ -1,3 +1,58 @@
+1997-08-29 02:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (version-info.h): Use ISO form for the date.
+
+	* catgets/catgetsinfo.h: Include <bits/libc-lock.h>.
+	(struct catalog_obj): Add lock field.
+	(__open_catalog): Remove second parameter from prototype.
+	* catgets/catgets.c (catopen): Initialize lock field.
+	(catgets): Don't pass second parameter to __open_catalog.
+	* catgets/gencat.c: Initialize lock field and don't pass second
+	parameter to __open_catalog.
+	* catgets/open_catalog.c (__open_catalog): Decide about use of
+	path by examining path in struct, not based on extra argument.
+	Acquire a the lock before trying to load the catalog and release
+	it before returning.
+
+	* csu/Makefile (abi-tag.h): Make sure target directory exists.
+
+	* io/Makefile (headers): Add bits/poll.h.
+	* io/sys/poll.h: Remove definitions of POLL* constants.
+	Include <bits/poll.h>.
+	* sysdeps/generic/bits/poll.h: New file.
+	* sysdeps/unix/sysv/linux/bits/poll.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/bits/poll.h: New file.
+	* sysdeps/unix/sysv/linux/mips/bits/poll.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/poll.h: New file.
+
+	* libio/fileops.c (_IO_file_read, _IO_file_write): Remove dead code.
+
+	* malloc/obstack.c: Add casts to keep very verbose compilers on
+	64bit machine quiet.
+
+	* nss/Makefile (libnss_db.so): Find libdb.so in db2 directory.
+
+1997-08-28 17:30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/catgets.c (catopen): Correctly determine length of string
+	in NLSPATH evironment variable.  Patch by HJ Lu <hjl@gnu.ai.mit.edu>.
+
+1997-08-27 23:19  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/generic/dl-sysdep.c (DL_FIND_ARG_COMPONENTS): Provide
+	default macro to track down arguments from stack start.
+	(_dl_sysdep_start): Use it.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Truncate to simply
+	providing a special DL_FIND_ARG_COMPONENTS and including the next
+	file up the line.
+
+	* sysdeps/powerpc/e_sqrt.c: Move contents to w_sqrt.c and provide stub.
+	* sysdeps/powerpc/e_sqrtf.c: Likewise.
+	* sysdeps/powerpc/s_copysignf.S: Provide empty file; symbol is with
+	the double precision version.
+	* sysdeps/powerpc/s_fabsf.S: Likewise.
+	* sysdeps/powerpc/s_isnanf.S: Likewise.
+
 1997-08-10 19:17  Philip Blundell  <Philip.Blundell@pobox.com>
 
 	* nss/nss_db/db-XXX.c: Include <db_185.h> not <db.h>.  Somebody

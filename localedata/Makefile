@@ -30,9 +30,9 @@ charmaps := $(filter-out $(addprefix charmaps/, CVS RCS %~), \
 locales := $(filter-out $(addprefix locales/, CVS RCS %~), \
 				    $(wildcard locales/*))
 
-test-srcs := collate-test xfrm-test
+test-srcs := collate-test xfrm-test tst-fmon
 test-input := de_DE.ISO-8859-1 da_DK.ISO-8859-1 fr_CA,2.13.ISO-8859-1
-
+fmon-input := de_DE.ISO-8859-1 en_US.ISO-8859-1
 
 # Get $(inst_i18ndir) defined.
 include ../Makeconfig
@@ -48,6 +48,7 @@ $(inst_i18ndir)/locales/%: locales/%; $(do-install)
 
 
 ifeq (no,$(cross-compiling))
-tests: $(objpfx)collate-test $(objpfx)xfrm-test
+tests: $(objpfx)collate-test $(objpfx)xfrm-test $(objpfx)tst-fmon
 	$(SHELL) -e sort-test.sh $(common-objpfx) $(test-input)
+	$(SHELL) -e tst-fmon.sh $(common-objpfx) $(fmon-input)
 endif

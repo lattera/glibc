@@ -575,19 +575,7 @@ _IO_file_read (fp, buf, size)
      void *buf;
      _IO_ssize_t size;
 {
-  for (;;)
-    {
-      _IO_ssize_t count = _IO_read (fp->_fileno, buf, size);
-#if 0 && defined EINTR
-      /* We must not do this optimization since POSIX.1 explicitly
-	 requests that the stream operations must return with the
-	 error EINTR if this happens.  There must be the possibility
-	 that stream operations time out.  --drepper  */
-      if (count == -1 && errno == EINTR)
-	continue;
-#endif
-      return count;
-    }
+  return _IO_read (fp->_fileno, buf, size);
 }
 
 _IO_pos_t
@@ -626,19 +614,8 @@ _IO_file_write (f, data, n)
       _IO_ssize_t count = _IO_write (f->_fileno, data, to_do);
       if (count == EOF)
 	{
-#if 0 && defined EINTR
-	  /* We must not do this optimization since POSIX.1 explicitly
-	     requests that the stream operations must return with the
-	     error EINTR if this happens.  There must be the
-	     possibility that stream operations time out.  --drepper  */
-	  if (errno == EINTR)
-	    continue;
-	  else
-#endif
-	    {
-	      f->_flags |= _IO_ERR_SEEN;
-	      break;
-            }
+	  f->_flags |= _IO_ERR_SEEN;
+	  break;
         }
       to_do -= count;
       data = (void *) ((char *) data + count);

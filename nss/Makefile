@@ -70,7 +70,7 @@ endif
 include ../Rules
 
 
-$(objpfx)libnss_db.so: $(common-objpfx)db/libdb.so $(objpfx)libnss_files.so
+$(objpfx)libnss_db.so: $(common-objpfx)db2/libdb.so $(objpfx)libnss_files.so
 
 $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	@rm -f $@.new

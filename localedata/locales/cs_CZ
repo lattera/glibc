@@ -2,9 +2,9 @@ escape_char /
 comment_char %
 %
 % Czech Language Locale for Czech
-% Source:
-% Address: U ¹koly 292		Without diactitical chars: U skoly 292
-%	   783 72 Velký Týnec				   782 72 Velky Tynec
+% Source: 
+% Address: 	U ¹koly 292		Without diactitical chars:	U skoly 292
+%		783 72 Velký Týnec					782 72 Velky Tynec
 % Contact: Vladimir Michl
 % Email: Vladimir.Michl@upol.cz
 % Tel:
@@ -19,13 +19,15 @@ comment_char %
 % Charset: ISO_8859-2:1987
 % Distribution and use is free, also
 % for commercial purposes.
+% 1997-08-20: Michael Mráka <michael@fi.muni.cz>
+%      Zmìny zejména v sekci LC_TIME. (Changes especially in LC_TIME section.)
+
 
 % zpracování:
 %%    localedef -c -i <tento-soubor> -f "ISO_8859-2:1987" 'cs_CZ.ISO-8859-2'
 %% pokud se podaøí odstranit chyby, lze -c vynechat.
 
-%% pro úspì¹né pøelo¾ení je tøeba mít kolekci lokalizací WG15collection.
-%% Tuto rozbalit do adresáøe
+%% pro úspì¹né pøelo¾ení je tøeba mít kolekci lokalizací WG15collection. Tuto rozbalit do adresáøe 
 %% /usr/share/i18n
 %% Lokalizace se pak budou tvoøit v adresáøi /usr/share/locale
 
@@ -42,9 +44,9 @@ comment_char %
 
 LC_COLLATE
 % Definice písmene ch
-collating-element <c-h> from "<c><h>"
-collating-element <C-h> from "<C><h>"
-collating-element <C-H> from "<C><H>"
+collating-element <ch> from "<c><h>"
+collating-element <Ch> from "<C><h>"
+collating-element <CH> from "<C><H>"
 
 collating-symbol <CAPITAL>
 collating-symbol <SMALL>
@@ -65,11 +67,10 @@ collating-symbol <STROKE>
 collating-symbol <CEDILLA>
 collating-symbol <OGONEK>
 
-order_start forward;backward/
-            ;forward;position
+order_start forward;forward;forward;forward
 
-<CAPITAL>
 <SMALL>
+<CAPITAL>
 
 <NONE>
 <ACUTE>
@@ -87,7 +88,7 @@ order_start forward;backward/
 <CEDILLA>
 <OGONEK>
 
-%
+% 
 <NS>    <NS>;<NS>;<NS>;IGNORE
 <SP>    IGNORE;IGNORE;IGNORE;<SP>
 <HT>    IGNORE;IGNORE;IGNORE;<HT>
@@ -202,8 +203,8 @@ order_start forward;backward/
 <OC>    IGNORE;IGNORE;IGNORE;<OC>
 <PM>    IGNORE;IGNORE;IGNORE;<PM>
 <AC>    IGNORE;IGNORE;IGNORE;<AC>
-UNDEFINED       IGNORE;IGNORE;IGNORE
-
+UNDEFINED       IGNORE;IGNORE;IGNORE;IGNORE
+ 
 <0>     <0>;<0>;IGNORE;IGNORE
 <1>     <1>;<1>;IGNORE;IGNORE
 <2>     <2>;<2>;IGNORE;IGNORE
@@ -267,9 +268,9 @@ UNDEFINED       IGNORE;IGNORE;IGNORE
 <H>     <H>;<NONE>;<CAPITAL>;IGNORE
 <h>     <H>;<NONE>;<SMALL>;IGNORE
 
-<C-H>	<C-H>;<NONE>;<CAPITAL>;IGNORE
-<C-h>	<C-h>;<NONE>;<CAPITAL>;IGNORE
-<c-h>   <c-h>;<NONE>;<SMALL>;IGNORE
+<CH>    <CH>;<NONE>;<CAPITAL>;IGNORE
+<Ch>    <Ch>;<NONE>;<CAPITAL>;IGNORE
+<ch>    <ch>;<NONE>;<SMALL>;IGNORE
 
 <I>     <I>;<NONE>;<CAPITAL>;IGNORE
 <i>     <I>;<NONE>;<SMALL>;IGNORE
@@ -385,13 +386,10 @@ END LC_COLLATE
 
 LC_CTYPE
 
-digit	<0>;<1>;<2>;<3>;<4>;/
-	<5>;<6>;<7>;<8>;<9>
+digit	<0>;<1>;<2>;<3>;<4>;<5>;<6>;<7>;<8>;<9>
 
-xdigit	<0>;<1>;<2>;<3>;<4>;/
-	<5>;<6>;<7>;<8>;<9>;/
-	<a>;...;<f>;/
-	<A>;...;<F>
+xdigit	<0>;<1>;<2>;<3>;<4>;<5>;<6>;<7>;<8>;<9>;/
+	<a>;...;<f>;<A>;...;<F>
 
 punct	<!>;...;<//>;/
 	<:>;...;<At>;/
@@ -406,7 +404,7 @@ blank	<SP>;<HT>;<NS>
 
 space   <SP>;<LF>;<VT>;<FF>;/
         <CR>;<HT>;<NS>
-
+ 
 cntrl   <NU>;<SH>;<SX>;<EX>;<ET>;<EQ>;/
         <AK>;<BL>;<BS>;<HT>;<LF>;<VT>;/
         <FF>;<CR>;<SO>;<SI>;<DL>;<D1>;/
@@ -419,89 +417,6 @@ cntrl   <NU>;<SH>;<SX>;<EX>;<ET>;<EQ>;/
         <MW>;<SG>;<EG>;<SS>;<GC>;<SC>;/
         <CI>;<ST>;<OC>;<PM>;<AC>
 
-alpha	<A>;...;<Z>;/
-	<A;>;/
-	<L//>;/
-	<L<>;/
-	<S'>;/
-	<S<>;/
-	<S,>;/
-	<T<>;/
-	<Z'>;/
-	<Z<>;/
-	<Z.>;/
-	<R'>;/
-	<A'>;/
-	<A/>>;/
-	<A(>;/
-	<A:>;/
-	<L'>;/
-	<C'>;/
-	<C,>;/
-	<C<>;/
-	<E'>;/
-	<E;>;/
-	<E:>;/
-	<E<>;/
-	<I'>;/
-	<I/>>;/
-	<D<>;/
-	<D//>;/
-	<N'>;/
-	<N<>;/
-	<O'>;/
-	<O/>>;/
-	<O">;/
-	<O:>;/
-	<R<>;/
-	<U0>;/
-	<U'>;/
-	<U">;/
-	<U:>;/
-	<Y'>;/
-	<T,>;/
-	<a>;...;<z>;/
-	<a;>;/
-	<l//>;/
-	<l<>;/
-	<s'>;/
-	<s<>;/
-	<s,>;/
-	<t<>;/
-	<z'>;/
-	<z<>;/
-	<z.>;/
-	<ss>;/
-	<r'>;/
-	<a'>;/
-	<a/>>;/
-	<a(>;/
-	<a:>;/
-	<l'>;/
-	<c'>;/
-	<c,>;/
-	<c<>;/
-	<e'>;/
-	<e;>;/
-	<e:>;/
-	<e<>;/
-	<i'>;/
-	<i/>>;/
-	<d<>;/
-	<d//>;/
-	<n'>;/
-	<n<>;/
-	<o'>;/
-	<o/>>;/
-	<o">;/
-	<o:>;/
-	<r<>;/
-	<u0>;/
-	<u'>;/
-	<u">;/
-	<u:>;/
-	<y'>;/
-	<t,>
 
 upper	<A>;...;<Z>;/
 	<A;>;/
@@ -588,6 +503,89 @@ lower	<a>;...;<z>;/
 	<y'>;/
 	<t,>
 
+alpha <A>;...;<Z>;/
+	<A;>;/
+	<L//>;/
+	<L<>;/
+	<S'>;/
+	<S<>;/
+	<S,>;/
+	<T<>;/
+	<Z'>;/
+	<Z<>;/
+	<Z.>;/
+	<R'>;/
+	<A'>;/
+	<A/>>;/
+	<A(>;/
+	<A:>;/
+	<L'>;/
+	<C'>;/
+	<C,>;/
+	<C<>;/
+	<E'>;/
+	<E;>;/
+	<E:>;/
+	<E<>;/
+	<I'>;/
+	<I/>>;/
+	<D<>;/
+	<D//>;/
+	<N'>;/
+	<N<>;/
+	<O'>;/
+	<O/>>;/
+	<O">;/
+	<O:>;/
+	<R<>;/
+	<U0>;/
+	<U'>;/
+	<U">;/
+	<U:>;/
+	<Y'>;/
+	<T,>;/
+	<a>;...;<z>;/
+	<a;>;/
+	<l//>;/
+	<l<>;/
+	<s'>;/
+	<s<>;/
+	<s,>;/
+	<t<>;/
+	<z'>;/
+	<z<>;/
+	<z.>;/
+	<ss>;/
+	<r'>;/
+	<a'>;/
+	<a/>>;/
+	<a(>;/
+	<a:>;/
+	<l'>;/
+	<c'>;/
+	<c,>;/
+	<c<>;/
+	<e'>;/
+	<e;>;/
+	<e:>;/
+	<e<>;/
+	<i'>;/
+	<i/>>;/
+	<d<>;/
+	<d//>;/
+	<n'>;/
+	<n<>;/
+	<o'>;/
+	<o/>>;/
+	<o">;/
+	<o:>;/
+	<r<>;/
+	<u0>;/
+	<u'>;/
+	<u">;/
+	<u:>;/
+	<y'>;/
+	<t,>
 
 toupper (<a>,<A>);(<b>,<B>);(<c>,<C>);(<d>,<D>);(<e>,<E>);(<f>,<F>);/
 	(<g>,<G>);(<h>,<H>);(<i>,<I>);(<j>,<J>);(<k>,<K>);(<l>,<L>);/
@@ -687,7 +685,7 @@ END LC_CTYPE
 %% ekvivalenty yes/no
 %% -------------------------
 
-LC_MESSAGES
+LC_MESSAGES 
 
 yesexpr		"<<(><a><A><y><Y><)/>><.><*>"
 noexpr  	"<<(><n><N><)/>><.><*>"
@@ -734,6 +732,7 @@ END LC_NUMERIC
 
 LC_TIME
 
+
 abday		"<N><e>";/
 		"<P><o>";/
 		"<U'><t>";/
@@ -750,18 +749,22 @@ day		"<N><e><d><e<><l><e>";/
 		"<P><a'><t><e><k>";/
 		"<S><o><b><o><t><a>"
 
-abmon		"<L><e><d>";/
-		"<U'><n><o>";/
-		"<B><r<><e>";/
-		"<D><u><b>";/
-		"<K><v><e<>";/
-		"<C<><e><r>";/
-		"<C<><n><c>";/
-		"<S><r><p>";/
-		"<Z><a'><r<>";/
-		"<R<><i'><j>";/
-		"<L><i><s>";/
-		"<P><r><o>"
+%abmon		"<L><e><d>";"<U'><n><o>";"<B><r<><e>";"<D><u><b>";"<K><v><e<>";/
+%		"<C<><e><r>";"<C<><n><c>";"<S><r><p>";"<Z><a'><r<>";"<R<><i'><j>";/
+%		"<L><i><s>";"<P><r><o>"
+% Obávám se, ¾e èe¹tina ¾ádné zkratky pro mìsíce nezná :-)
+abmon		"<L><e><d><e><n>";/
+		"<U'><n><o><r>";/
+		"<B><r<><e><z><e><n>";/
+		"<D><u><b><e><n>";/
+		"<K><v><e<><t><e><n>";/
+		"<C<><e><r><v><e><n>";/
+		"<C<><e><r><v><e><n><e><c>";/
+		"<S><r><p><e><n>";/
+		"<Z><a'><r<><i'>";/
+		"<R<><i'><j><e><n>";/
+		"<L><i><s><t><o><p><a><d>";/
+		"<P><r><o><s><i><n><e><c>"
 
 mon		"<L><e><d><e><n>";/
 		"<U'><n><o><r>";/
@@ -777,32 +780,15 @@ mon		"<L><e><d><e><n>";/
 		"<P><r><o><s><i><n><e><c>"
 
 
-d_t_fmt		"<%><a><SP><%><d><.><SP><%><B><SP><%><Y><SP><%><H><:><%><M><:><%><S><SP><%><Z>"
-%d_t_fmt		"<%><d><.><%><m><.><%><Y><SP><%><T><SP><%><Z>"
+d_t_fmt		"<%><a><SP><%><e><.><SP><%><B><SP><%><Y><,><SP><%><H><:><%><M><:><%><S><SP><%><Z>"
 
 d_fmt 		"<%><d><.><%><m><.><%><Y>"
-%d_fmt 		"<%><d><.><%><m><.><%><Y>"
 
 t_fmt		"<%><H><:><%><M><:><%><S>"
-%t_fmt		"<%><T>"
 
 t_fmt_ampm	"<%><I><:><%><M><:><%><S>"
-%t_fmt_ampm	""
 
-%am_pm   	"am";"pm"
 am_pm   	"";""
-
-% Zde nevím, co následující polo¾ky znamenají
-% V pøípadì potøeby prosím opravte
-
-%era 		"<%><Y>"
-
-%era_year	"<%><y>"
-
-%alt_digits	"<0>";"<1>";"<2>";"<3>";"<4>";/
-%		"<5>";"<6>";"<7>";"<8>"
-
-%era_d_fmt	"<%><e><SP><%><B><SP><%><Y>"
 
 END LC_TIME
 

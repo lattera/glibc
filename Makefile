@@ -146,7 +146,7 @@ all-Banner-files = $(wildcard $(addsuffix /Banner, $(subdirs)))
 $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 	(case $(config-os) in \
 	   linux*) version=`(echo -e "#include <linux/version.h>\nUTS_RELEASE"\
-			     | $(CC)  -E -P - | \
+			     | $(CC) -E -P - | \
 			     sed -e 's/"\([^"]*\)".*/\1/p' -e d) 2>/dev/null`;\
 		   if [ -z "$$version" ]; then \
 		     if [ -r /proc/version ]; then \
@@ -157,7 +157,7 @@ $(objpfx)version-info.h: $(+sysdir_pfx)config.make $(all-Banner-files)
 		     fi; \
 		   fi; \
 		   echo -n "\"Compiled on a Linux $$version system "; \
-		   echo "on `date +%Y/%m/%d`.\\n\"" ;; \
+		   echo "on `date +%Y-%m-%d`.\\n\"" ;; \
 	   *) ;; \
 	 esac; \
 	 files="$(all-Banner-files)";				\

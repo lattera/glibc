@@ -87,7 +87,7 @@ catopen (const char *cat_name, int flag)
       if (nlspath != NULL && *nlspath != '\0')
 	{
 	  /* Append the system dependent directory.  */
-	  size_t len = strlen (nlspath + 1 + sizeof NLSPATH);
+	  size_t len = strlen (nlspath) + 1 + sizeof NLSPATH;
 	  char *tmp = alloca (len);
 
 	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
@@ -111,6 +111,8 @@ catopen (const char *cat_name, int flag)
       result->nlspath = NULL;
     }
 
+  __libc_lock_init (result->lock);
+
   return (nl_catd) result;
 }
 
@@ -130,7 +132,7 @@ catgets (nl_catd catalog_desc, int set, int message, const char *string)
   catalog = (__nl_catd) catalog_desc;
 
   if (catalog->status == closed)
-    __open_catalog (catalog, 1);
+    __open_catalog (catalog);
 
   if (catalog->status == nonexisting)
     {

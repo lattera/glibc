@@ -23,7 +23,7 @@ subdir	:= io
 
 headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
 	   fcntl.h sys/fcntl.h bits/fcntl.h \
-	   poll.h sys/poll.h \
+	   poll.h sys/poll.h bits/poll.h \
 	   utime.h ftw.h fts.h
 
 routines :=							      \

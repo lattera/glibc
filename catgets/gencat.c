@@ -988,9 +988,11 @@ read_old (struct catalog *catalog, const char *file_name)
 
   old_cat_obj.status = closed;
   old_cat_obj.cat_name = file_name;
+  old_cat_obj.nlspath = NULL;
+  __libc_lock_init (old_cat_obj.lock);
 
   /* Try to open catalog, but don't look through the NLSPATH.  */
-  __open_catalog (&old_cat_obj, 0);
+  __open_catalog (&old_cat_obj);
 
   if (old_cat_obj.status != mmapped && old_cat_obj.status != malloced)
     if (errno == ENOENT)

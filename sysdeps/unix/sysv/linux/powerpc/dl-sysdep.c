@@ -17,135 +17,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <elf.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <fcntl.h>
-#include <link.h>
-#include <unistd.h>
+
+/* The PowerPC's auxiliary argument block gets aligned to a 16-byte
+   boundary.  This is history and impossible to change compatibly.  */
+
+#define DL_FIND_ARG_COMPONENTS(cookie, argc, argv, envp, auxp)	\
+  do {								\
+    void **_tmp;						\
+    (argc) = *(long *) cookie;					\
+    (argv) = (char **) cookie + 1;				\
+    (envp) = (argv) + (argc) + 1;				\
+    for (_tmp = (void **) (envp); *_tmp; ++_tmp)		\
+      continue;							\
+    if (*_tmp == 0 && ((size_t)_tmp & 0xf) != 0)		\
+      {								\
+	size_t _test = (size_t)_tmp;				\
+	_test = _test + 0xf & ~0xf;				\
+	if (*(long *)_test == AT_PHDR)				\
+	  _tmp = (void **)_test;				\
+      }								\
+    (auxp) = (void *) _tmp;					\
+  } while (0)
 
 
-extern int _dl_argc;
-extern char **_dl_argv;
-extern char **_environ;
-extern size_t _dl_pagesize;
-extern void _end;
-extern void _start (void);
-
-int __libc_enable_secure;
-int __libc_multiple_libcs;	/* Defining this here avoids the inclusion
-				   of init-first.  */
-
-ElfW(Addr)
-_dl_sysdep_start (void **start_argptr,
-		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
-				   ElfW(Addr) *user_entry))
-{
-  const ElfW(Phdr) *phdr = NULL;
-  ElfW(Word) phnum = 0;
-  ElfW(Addr) user_entry;
-  ElfW(auxv_t) *av;
-  uid_t uid = 0;
-  uid_t euid = 0;
-  gid_t gid = 0;
-  gid_t egid = 0;
-  unsigned int seen;
-
-  user_entry = (ElfW(Addr)) &_start;
-  _dl_argc = *(long *) start_argptr;
-  _dl_argv = (char **) start_argptr + 1;
-  _environ = &_dl_argv[_dl_argc + 1];
-  start_argptr = (void **) _environ;
-  while (*start_argptr)
-    ++start_argptr;
-  ++start_argptr;
-
-  if (*start_argptr == 0 &&
-      ((unsigned)(char *)start_argptr & 0xF) != 0)
-    {
-      unsigned test_sap = (int)(char *)start_argptr;
-      test_sap = test_sap + 0xF & ~0xF;
-      if (*(long *)(char *)test_sap == AT_PHDR)
-	start_argptr = (void **)(char *)test_sap;
-    }
-
-  seen = 0;
-#define M(type) (1 << (type))
-
-  for (av = (void *) start_argptr;
-       av->a_type != AT_NULL;
-       seen |= M ((++av)->a_type))
-    switch (av->a_type)
-      {
-      case AT_PHDR:
-	phdr = av->a_un.a_ptr;
-	break;
-      case AT_PHNUM:
-	phnum = av->a_un.a_val;
-	break;
-      case AT_PAGESZ:
-	_dl_pagesize = av->a_un.a_val;
-	break;
-      case AT_ENTRY:
-	user_entry = av->a_un.a_val;
-	break;
-      case AT_UID:
-	uid = av->a_un.a_val;
-	break;
-      case AT_GID:
-	gid = av->a_un.a_val;
-	break;
-      case AT_EUID:
-	euid = av->a_un.a_val;
-	break;
-      case AT_EGID:
-	egid = av->a_un.a_val;
-	break;
-      }
-
-  /* Linux doesn't provide us with any of these values on the stack
-     when the dynamic linker is run directly as a program.  */
-
-#define SEE(UID, uid) if ((seen & M (AT_##UID)) == 0) uid = __get##uid ()
-  SEE (UID, uid);
-  SEE (GID, gid);
-  SEE (EUID, euid);
-  SEE (EGID, egid);
-
-
-  __libc_enable_secure = uid != euid || gid != egid;
-
-  __brk (0);			/* Initialize the break.  */
-
-  if (__sbrk (0) == &_end)
-    {
-      /* The dynamic linker was run as a program, and so the initial break
-	 starts just after our bss, at &_end.  The malloc in dl-minimal.c
-	 will consume the rest of this page, so tell the kernel to move the
-	 break up that far.  When the user program examines its break, it
-	 will see this new value and not clobber our data.  */
-      size_t pg = __getpagesize ();
-
-      __sbrk (pg - ((&_end - (void *) 0) & pg));
-      __sbrk (pg - ((&_end - (void *) 0) & (pg - 1)));
-    }
-
-  (*dl_main) (phdr, phnum, &user_entry);
-  return user_entry;
-}
-
-void
-_dl_sysdep_start_cleanup (void)
-{
-}
-
-#ifndef MAP_ANON
-/* This is only needed if the system doesn't support MAP_ANON.  */
-
-int
-_dl_sysdep_open_zero_fill (void)
-{
-  return __open ("/dev/zero", O_RDONLY);
-}
-#endif
+#include <sysdeps/unix/sysv/linux/dl-sysdep.c>
