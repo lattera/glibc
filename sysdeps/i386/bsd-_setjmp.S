@@ -29,4 +29,5 @@ ENTRY (_setjmp)
 	pushl $0		/* Push second argument of zero.  */
 	pushl %ecx		/* Push back first argument.  */
 	pushl %eax		/* Push back return PC.  */
-	jmp C_SYMBOL_NAME (__sigsetjmp)
+	jmp JUMPTARGET (C_SYMBOL_NAME (__sigsetjmp))
+
