@@ -136,6 +136,16 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      /* Copy the key data.  */
 	      memcpy (dataset->strdata, key, req->key_len);
 
+	      /* If necessary, we also propagate the data to disk.  */
+	      if (db->persistent)
+		{
+		  // XXX async OK?
+		  uintptr_t pval = (uintptr_t) dataset & ~pagesize_m1;
+		  msync ((void *) pval,
+			 ((uintptr_t) dataset & pagesize_m1)
+			 + sizeof (struct dataset) + req->key_len, MS_ASYNC);
+		}
+
 	      /* Now get the lock to safely insert the records.  */
 	      pthread_rwlock_rdlock (&db->lock);
 
@@ -282,7 +292,7 @@ cache_addhst (struct database_dyn *db, int fd, request_header *req,
 	      && memcmp (&dataset->resp, dh->data,
 			 dh->allocsize - offsetof (struct dataset, resp)) == 0)
 	    {
-	      /* The sata has not changed.  We will just bump the
+	      /* The data has not changed.  We will just bump the
 		 timeout value.  Note that the new record has been
 		 allocated on the stack and need not be freed.  */
 	      dh->timeout = dataset->head.timeout;
@@ -386,15 +396,14 @@ lookup (int type, void *key, struct hostent *resultbufp, char *buffer,
   if (type == GETHOSTBYNAME)
     return __gethostbyname2_r (key, AF_INET, resultbufp, buffer, buflen, hst,
 			       &h_errno);
-  else if (type == GETHOSTBYNAMEv6)
+  if (type == GETHOSTBYNAMEv6)
     return __gethostbyname2_r (key, AF_INET6, resultbufp, buffer, buflen, hst,
 			       &h_errno);
-  else if (type == GETHOSTBYADDR)
+  if (type == GETHOSTBYADDR)
     return __gethostbyaddr_r (key, NS_INADDRSZ, AF_INET, resultbufp, buffer,
 			      buflen, hst, &h_errno);
-  else
-    return __gethostbyaddr_r (key, NS_IN6ADDRSZ, AF_INET6, resultbufp, buffer,
-			      buflen, hst, &h_errno);
+  return __gethostbyaddr_r (key, NS_IN6ADDRSZ, AF_INET6, resultbufp, buffer,
+			    buflen, hst, &h_errno);
 }
 
 
