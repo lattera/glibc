@@ -1,3 +1,7 @@
+1999-02-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/dcgettext.c: Include locale.h is available.
+
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* po/nl.po: Update from translation team.

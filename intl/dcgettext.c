@@ -1,5 +1,5 @@
 /* Implementation of the dcgettext(3) function.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 
    This file is part of the GNU C Library.  Its master source is NOT part of
    the C library, however.
@@ -77,6 +77,10 @@ void free ();
 
 #if defined HAVE_UNISTD_H || defined _LIBC
 # include <unistd.h>
+#endif
+
+#if defined HAVE_LOCALE_H || defined _LIBC
+# include <locale.h>
 #endif
 
 #include "gettext.h"
