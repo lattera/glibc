@@ -51,5 +51,8 @@ libc {
   GLIBC_2.2 {
     # m*
     mcheck_check_all; mcheck_pedantic;
+
+    # p*
+    posix_memalign;
   }
 }

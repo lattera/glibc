@@ -1,3 +1,10 @@
+2000-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/Versions [libc] (GLIBC_2.2): Add posix_memalign.
+	* malloc/malloc.c: Implement posix_memalign for glibc.
+	* include/stdlib.h: Add prototype for __posix_memalign.
+	* stdlib/stdlib.h: Add prototype for posix_memalign.
+
 2000-04-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/madvise.c: Fix typos.
