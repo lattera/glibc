@@ -1011,7 +1011,8 @@ write_output (void)
   char finalname[prefix_len + sizeof (GCONV_MODULES_CACHE)];
 
   /* Function to insert the names.  */
-  static void name_insert (const void *nodep, VISIT value, int level)
+  auto void
+  name_insert (const void *nodep, VISIT value, int level)
     {
       struct name *name;
       unsigned int idx;

@@ -1,5 +1,5 @@
 /* Do relocations for ELF dynamic linking.
-   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@
    relocations; they should be set up to call _dl_runtime_resolve, rather
    than fully resolved now.  */
 
-static inline void __attribute__ ((always_inline))
+auto inline void __attribute__ ((always_inline))
 elf_dynamic_do_rel (struct link_map *map,
 		    ElfW(Addr) reladdr, ElfW(Addr) relsize,
 		    int lazy)

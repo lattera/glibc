@@ -64,8 +64,12 @@ elf_machine_lazy_rel (struct link_map *map,
 
 
 /* Read the dynamic section at DYN and fill in INFO with indices DT_*.  */
-
-static inline void __attribute__ ((unused, always_inline))
+#ifndef RESOLVE
+static
+#else
+auto
+#endif
+inline void __attribute__ ((unused, always_inline))
 elf_get_dynamic_info (struct link_map *l, ElfW(Dyn) *temp)
 {
   ElfW(Dyn) *dyn = l->l_ld;
