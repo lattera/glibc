@@ -23,7 +23,7 @@
 int
 feholdexcept (fenv_t *envp)
 {
-  return 0;		/* Signal failure.  */
+  return 1;		/* Signal failure.  */
 }
 stub_warning (feholdexcept)
 #include <stub-tag.h>

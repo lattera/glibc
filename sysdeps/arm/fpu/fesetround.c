@@ -23,5 +23,5 @@ int
 fesetround (int round)
 {
   /* We only support FE_TONEAREST, so there is no need for any work.  */
-  return (round == FE_TONEAREST)?1:0;
+  return (round == FE_TONEAREST)?0:1;
 }

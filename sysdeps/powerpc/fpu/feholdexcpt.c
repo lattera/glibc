@@ -34,5 +34,5 @@ feholdexcept (fenv_t *envp)
   /* Put the new state in effect.  */
   fesetenv_register (u.fenv);
 
-  return 1;
+  return 0;
 }

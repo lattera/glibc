@@ -1,5 +1,23 @@
 2000-01-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/alpha/fpu/feholdexcpt.c: Correct return value according to
+	the standard.
+	* sysdeps/alpha/fpu/fesetround.c: Likewise.
+	* sysdeps/arm/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/arm/fpu/fesetround.c: Likewise.
+	* sysdeps/generic/feholdexcpt.c: Likewise.
+	* sysdeps/generic/fesetround.c: Likewise.
+	* sysdeps/i386/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/i386/fpu/fesetround.c: Likewise.
+	* sysdeps/m68k/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fesetround.c: Likewise.
+	* sysdeps/mips/fpu/fesetround.c: Likewise.
+	* sysdeps/powerpc/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/powerpc/fpu/fesetround.c: Likewise.
+	* sysdeps/sparc/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/sparc/fpu/fesetround.c: Likewise.
+	Patch by Miloslav Trmac <mitr@volny.cz>.
+
 	* locale/programs/ld-collate.c (struct locale_collate_t): Change
 	type of plane_size and plane_cnt to uint32_t.
 	Reported by Jakub Jelinek.

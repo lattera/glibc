@@ -26,7 +26,7 @@ fesetround (int round)
   fenv_union_t u;
 
   if ((unsigned int) round > 3)
-    return 0;
+    return 1;
 
   /* Get the current state.  */
   u.fenv = fegetenv_register ();
@@ -37,5 +37,5 @@ fesetround (int round)
   /* Put the new state in effect.  */
   fesetenv_register (u.fenv);
 
-  return 1;
+  return 0;
 }

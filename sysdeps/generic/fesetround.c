@@ -23,7 +23,7 @@
 int
 fesetround (int round)
 {
-  return 0;	/* Signal we are unable to set the direction.  */
+  return 1;	/* Signal we are unable to set the direction.  */
 }
 stub_warning (fesetround)
 #include <stub-tag.h>

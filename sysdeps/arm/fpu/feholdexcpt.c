@@ -33,5 +33,5 @@ feholdexcept (fenv_t *envp)
   temp &= ~(FE_ALL_EXCEPT << FE_EXCEPT_SHIFT);
   _FPU_SETCW(temp);
 
-  return 1;
+  return 0;
 }

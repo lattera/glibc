@@ -26,12 +26,12 @@ fesetround (int round)
 
   if ((round & ~__FE_ROUND_MASK) != 0)
     /* ROUND is no valid rounding mode.  */
-    return 0;
+    return 1;
 
   __fenv_stfsr (tmp);
   tmp &= ~__FE_ROUND_MASK;
   tmp |= round;
   __fenv_ldfsr (tmp);
 
-  return 1;
+  return 0;
 }

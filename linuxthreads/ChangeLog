@@ -1,3 +1,11 @@
+2000-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* condvar.c (pthread_cond_timedwait_relative_old): Recompute time
+	before every nanosleep call to account for time spent in the rest
+	of the function.
+	(pthread_cond_timedwait_relative_new): Likewise.
+	Patch by khendricks@ivey.uwo.ca (PR libc/1564).
+
 2000-01-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_timedwait_relative_old): Get remaining time

@@ -31,5 +31,5 @@ feholdexcept (fenv_t *envp)
 
   __fenv_ldfsr (tmp);
 
-  return 1;
+  return 0;
 }

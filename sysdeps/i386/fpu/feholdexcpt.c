@@ -32,5 +32,5 @@ feholdexcept (fenv_t *envp)
   work = envp->__control_word | 0x3f;
   __asm__ ("fldcw %0" : : "m" (*&work));
 
-  return 1;
+  return 0;
 }

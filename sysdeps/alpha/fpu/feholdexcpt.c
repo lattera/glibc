@@ -29,5 +29,5 @@ feholdexcept (fenv_t *envp)
   /* Clear all exception status bits and exception enable bits.  */
   __ieee_set_fp_control(0);
 
-  return 1;
+  return 0;
 }

@@ -27,12 +27,12 @@ fesetround (int round)
 
   if ((round & ~0xc00) != 0)
     /* ROUND is no valid rounding mode.  */
-    return 0;
+    return 1;
 
   __asm__ ("fnstcw %0" : "=m" (*&cw));
   cw &= ~0xc00;
   cw |= round;
   __asm__ ("fldcw %0" : : "m" (*&cw));
 
-  return 1;
+  return 0;
 }

@@ -26,13 +26,13 @@
 #include "restart.h"
 
 static int pthread_cond_timedwait_relative_old(pthread_cond_t *,
-    pthread_mutex_t *, struct timespec *);
+    pthread_mutex_t *, const struct timespec *);
 
 static int pthread_cond_timedwait_relative_new(pthread_cond_t *,
-    pthread_mutex_t *, struct timespec *);
+    pthread_mutex_t *, const struct timespec *);
 
 static int (*pthread_cond_tw_rel)(pthread_cond_t *, pthread_mutex_t *,
-    struct timespec *) = pthread_cond_timedwait_relative_old;
+    const struct timespec *) = pthread_cond_timedwait_relative_old;
 
 /* initialize this module */
 void __pthread_init_condvar(int rt_sig_available)
@@ -130,15 +130,28 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 static int
 pthread_cond_timedwait_relative_old(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
-				struct timespec * reltime)
+				const struct timespec * abstime)
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
   int retsleep, already_canceled, was_signalled;
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
+  struct timeval now;
+  struct timespec reltime;
 
 requeue_and_wait_again:
+
+  /* Compute a time offset relative to now.  */
+  __gettimeofday (&now, NULL);
+  reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+  reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+  if (reltime.tv_nsec < 0) {
+    reltime.tv_nsec += 1000000000;
+    reltime.tv_sec -= 1;
+  }
+  if (reltime.tv_sec < 0)
+    return ETIMEDOUT;
 
   retsleep = 0;
   already_canceled = 0;
@@ -179,7 +192,7 @@ requeue_and_wait_again:
       sigaddset(&unblock, __pthread_sig_restart);
       sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
       /* Sleep for the required duration */
-      retsleep = __libc_nanosleep(reltime, reltime);
+      retsleep = __libc_nanosleep(&reltime, NULL);
       /* Block the restart signal again */
       sigprocmask(SIG_SETMASK, &initial_mask, NULL);
       was_signalled = 0;
@@ -250,15 +263,28 @@ requeue_and_wait_again:
 static int
 pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 				pthread_mutex_t *mutex,
-				struct timespec * reltime)
+				const struct timespec * abstime)
 {
   volatile pthread_descr self = thread_self();
   sigset_t unblock, initial_mask;
   int retsleep, already_canceled, was_signalled;
   sigjmp_buf jmpbuf;
   pthread_extricate_if extr;
+  struct timeval now;
+  struct timespec reltime;
 
  requeue_and_wait_again:
+
+  /* Compute a time offset relative to now.  */
+  __gettimeofday (&now, NULL);
+  reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+  reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+  if (reltime.tv_nsec < 0) {
+    reltime.tv_nsec += 1000000000;
+    reltime.tv_sec -= 1;
+  }
+  if (reltime.tv_sec < 0)
+    return ETIMEDOUT;
 
   retsleep = 0;
   already_canceled = 0;
@@ -298,7 +324,7 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
     sigaddset(&unblock, __pthread_sig_restart);
     sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
     /* Sleep for the required duration */
-    retsleep = __libc_nanosleep(reltime, reltime);
+    retsleep = __libc_nanosleep(&reltime, NULL);
     /* Block the restart signal again */
     sigprocmask(SIG_SETMASK, &initial_mask, NULL);
     was_signalled = 0;
@@ -363,20 +389,8 @@ pthread_cond_timedwait_relative_new(pthread_cond_t *cond,
 int pthread_cond_timedwait(pthread_cond_t *cond, pthread_mutex_t *mutex,
                            const struct timespec * abstime)
 {
-  struct timeval now;
-  struct timespec reltime;
-  /* Compute a time offset relative to now */
-  __gettimeofday(&now, NULL);
-  reltime.tv_sec = abstime->tv_sec - now.tv_sec;
-  reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
-  if (reltime.tv_nsec < 0) {
-    reltime.tv_nsec += 1000000000;
-    reltime.tv_sec -= 1;
-  }
-  if (reltime.tv_sec < 0) return ETIMEDOUT;
-
   /* Indirect call through pointer! */
-  return pthread_cond_tw_rel(cond, mutex, &reltime);
+  return pthread_cond_tw_rel(cond, mutex, abstime);
 }
 
 int pthread_cond_signal(pthread_cond_t *cond)
