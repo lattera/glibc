@@ -1,3 +1,8 @@
+2003-02-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):
+	Check pthread_create existance, not __pthread_fork.
+
 2003-02-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/Makefile: Define CFLAGS-confstr.c.

@@ -25,23 +25,46 @@
    The calling process is suspended until the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
    and the process ID of the new process to the old process.  */
+   
+	.section	".toc","aw"
+.LC0:
+	.tc __libc_pthread_functions[TC],__libc_pthread_functions
+	.section	".text"
+	.align 2
 
 ENTRY (__vfork)
 
 #ifdef __NR_vfork
-
-	SINGLE_THREAD_P
-	bne-	HIDDEN_JUMPTARGET(__fork)
+	
+# ifdef SHARED
+  ld  10,.LC0@toc(2)
+  ld  10,0(10)
+  cmpwi  10,0
+  bne-  HIDDEN_JUMPTARGET(__fork)
+# else
+  .weak  pthread_create
+	lis  10,pthread_create@highest
+	ori  10,10,pthread_create@higher
+  sldi 10,10,32
+  oris 10,10,pthread_create@h
+  ori  10,10,pthread_create@l
+  cmpwi  10,0
+  bne-  .Lhidden_fork
+# endif
 
 	DO_CALL (SYS_ify (vfork));
-
+	
 # ifdef __ASSUME_VFORK_SYSCALL
-	PSEUDO_RET
+  PSEUDO_RET
 # else
-	bnslr+
-	/* Check if vfork syscall is known at all.  */
-	cmpdi	r3,ENOSYS
-	bne	JUMPTARGET(__syscall_error)
+  bnslr+
+  /* Check if vfork syscall is known at all.  */
+  cmpdi	r3,ENOSYS
+# ifdef SHARED
+  bne	JUMPTARGET(__syscall_error)
+# else
+  bne-  .Lsyscall_error
+# endif
 
 # endif
 #endif
@@ -52,6 +75,13 @@ ENTRY (__vfork)
 	DO_CALL (SYS_ify (fork));
 	PSEUDO_RET
 #endif
+
+# ifndef SHARED
+.Lhidden_fork:
+	b	HIDDEN_JUMPTARGET(__fork)
+.Lsyscall_error:
+	b	JUMPTARGET(__syscall_error)
+# endif
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)
