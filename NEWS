@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  14 March 1996
+GNU C Library NEWS -- history of user-visible changes.  28 March 1996
 
 Copyright (C) 1992, 93, 94, 95, 96 Free Software Foundation, Inc.
 See the end for copying conditions.
@@ -64,7 +64,8 @@ Version 1.10
   various locale-dependent data (using the locale chosen with `setlocale').
 
 * Ulrich Drepper has contributed a new suite of functions for operation on
-  wide-character and multibyte-character strings; see <wcstr.h> and <mbstr.h>.
+  wide-character and multibyte-character strings, in <wcstr.h> and <mbstr.h>;
+  and classification and case conversion of wide characters, in <wctype.h>.
   These new functions are intended to conform to the ISO C specification.
 
 * You can now use positional parameter specifications in format strings
