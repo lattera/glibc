@@ -1,3 +1,8 @@
+2002-11-14  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: Fix unterminated
+	string.
+
 2002-11-13  Roland McGrath  <roland@redhat.com>
 
 	* Examples/ex6.c (main): Improve error reporting.
