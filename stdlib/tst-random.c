@@ -101,7 +101,7 @@ main (void)
 	{
 	  char *oldstate = (char *) setstate (state[s]);
 	  if (oldstate != state[(s + nseq - 1) % nseq])
-	    fail ("bad setstate() return value", i, s);
+	    fail ("bad setstate() return value", s, i);
 	  if (rnd[s][i] != random ())
 	    fail ("bad value generated in interleave test", s, i);
 	}

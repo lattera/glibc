@@ -60,6 +60,7 @@ struct sym_val
 
 /* Statistics function.  */
 unsigned long int _dl_num_relocations;
+unsigned long int _dl_num_cache_relocations;
 
 
 /* We have two different situations when looking up a simple: with or
@@ -184,6 +185,9 @@ _dl_do_lookup_versioned (const char *undef_name, unsigned long int hash,
 			 const struct r_found_version *const version,
 			 struct link_map *skip, int noexec, int noplt);
 
+struct lookup_cache _dl_lookup_cache;
+struct lookup_cache _dl_lookup_cache_versioned;
+
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  */
 
@@ -200,6 +204,17 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   int protected;
   int noexec = elf_machine_lookup_noexec_p (reloc_type);
   int noplt = elf_machine_lookup_noplt_p (reloc_type);
+
+  /* First check if we can find it in the cache.  */
+  if (__builtin_expect (*ref == _dl_lookup_cache.sym, 0)
+      && _dl_lookup_cache.map == undef_map
+      && _dl_lookup_cache.noexec == noexec
+      && _dl_lookup_cache.noplt == noplt)
+    {
+      ++_dl_num_cache_relocations;
+      *ref = _dl_lookup_cache.ret;
+      return _dl_lookup_cache.value;
+    }
 
   ++_dl_num_relocations;
 
@@ -229,6 +244,11 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	break;
       }
 
+  /* Update common information in the cache.  */
+  _dl_lookup_cache.sym = *ref;
+  _dl_lookup_cache.noexec = noexec;
+  _dl_lookup_cache.noplt = noplt;
+
   if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
@@ -238,6 +258,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 			       ? reference_name
 			       : (_dl_argv[0] ?: "<main program>")),
 			   make_string (undefined_msg, undef_name));
+      _dl_lookup_cache.ret = NULL;
+      _dl_lookup_cache.value = 0;
       *ref = NULL;
       return 0;
     }
@@ -254,6 +276,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
   if (__builtin_expect (protected == 0, 1))
     {
+      _dl_lookup_cache.ret = current_value.s;
+      _dl_lookup_cache.value = LOOKUP_VALUE (current_value.m);
       *ref = current_value.s;
       return LOOKUP_VALUE (current_value.m);
     }
@@ -270,9 +294,13 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
 	{
+	  _dl_lookup_cache.ret = current_value.s;
+	  _dl_lookup_cache.value = LOOKUP_VALUE (current_value.m);
 	  *ref = current_value.s;
 	  return LOOKUP_VALUE (current_value.m);
 	}
+      _dl_lookup_cache.ret = *ref;
+      _dl_lookup_cache.value = LOOKUP_VALUE (undef_map);
 
       return LOOKUP_VALUE (undef_map);
     }
@@ -379,6 +407,18 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   int noexec = elf_machine_lookup_noexec_p (reloc_type);
   int noplt = elf_machine_lookup_noplt_p (reloc_type);
 
+  /* First check if we can find it in the cache.  */
+  if (__builtin_expect (*ref == _dl_lookup_cache_versioned.sym, 0)
+      && _dl_lookup_cache_versioned.map == undef_map
+      && _dl_lookup_cache_versioned.noexec == noexec
+      && _dl_lookup_cache_versioned.noplt == noplt
+      && _dl_lookup_cache_versioned.version == version)
+    {
+      ++_dl_num_cache_relocations;
+      *ref = _dl_lookup_cache_versioned.ret;
+      return _dl_lookup_cache_versioned.value;
+    }
+
   ++_dl_num_relocations;
 
   /* Search the relevant loaded objects for a definition.  */
@@ -430,6 +470,12 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	}
     }
 
+  /* Update common information in the cache.  */
+  _dl_lookup_cache_versioned.sym = *ref;
+  _dl_lookup_cache_versioned.noexec = noexec;
+  _dl_lookup_cache_versioned.noplt = noplt;
+  _dl_lookup_cache_versioned.version = version;
+
   if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
@@ -440,6 +486,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 			       : (_dl_argv[0] ?: "<main program>")),
 			   make_string (undefined_msg, undef_name,
 					", version ", version->name ?: NULL));
+      _dl_lookup_cache_versioned.ret = NULL;
+      _dl_lookup_cache_versioned.value = 0;
       *ref = NULL;
       return 0;
     }
@@ -457,6 +505,8 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 
   if (__builtin_expect (protected == 0, 1))
     {
+      _dl_lookup_cache_versioned.ret = current_value.s;
+      _dl_lookup_cache_versioned.value = LOOKUP_VALUE (current_value.m);
       *ref = current_value.s;
       return LOOKUP_VALUE (current_value.m);
     }
@@ -473,10 +523,14 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 
       if (protected_value.s == NULL || protected_value.m == undef_map)
 	{
+	  _dl_lookup_cache_versioned.ret = current_value.s;
+	  _dl_lookup_cache_versioned.value = LOOKUP_VALUE (current_value.m);
 	  *ref = current_value.s;
 	  return LOOKUP_VALUE (current_value.m);
 	}
 
+      _dl_lookup_cache_versioned.ret = *ref;
+      _dl_lookup_cache_versioned.value = LOOKUP_VALUE (undef_map);
       return LOOKUP_VALUE (undef_map);
     }
 }
@@ -605,7 +659,7 @@ _dl_do_lookup (const char *undef_name, unsigned long int hash,
 	       struct link_map *skip, int noexec, int noplt)
 {
   return do_lookup (undef_name, hash, ref, result, scope, i, skip, noexec,
-  		    noplt);
+		    noplt);
 }
 
 static int

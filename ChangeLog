@@ -1,4 +1,32 @@
+2001-08-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/ldconfig.c (search_dir): Remove stale symlinks.
+
+2001-08-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (lookup_cache, lookup_cache_versioned): New.
+	(_dl_lookup_symbol): Lookup relocations in cache and store successfull
+	lookups in cache.
+	(_dl_lookup_versioned_symbol): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object): Initialize cache for
+	relocation lookup.
+	* elf/rtld.c (print_statistics): Output _dl_num_cache_relocations.
+	* sysdeps/generic/ldsodefs.h (struct lookup_cache): New definition.
+	(lookup_cache, lookup_cache_versioned): Add declarations.
+
 2001-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/tst-random.c (main): Swap parameters in fail call.
+	Patch by Pete Bevin <pete@petebevin.com>.
+
+2001-08-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/inttypes.h: Use __gwchar_t instead of __wchar_t.
+
+2001-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/obstack.c: Indent preprocessor directives.
+	Patch by Jim Meyering <meyering@ascend.com>.
 
 	* po/ja.po: Update from translation team.
 

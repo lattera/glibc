@@ -327,6 +327,21 @@ extern void _dl_map_object_deps (struct link_map *map,
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map) internal_function;
 
+/* This holds symbol lookup cache.  */
+struct lookup_cache
+  {
+    const ElfW(Sym) *sym;
+    struct link_map *map;
+    const struct r_found_version *version;
+    int noexec;
+    int noplt;
+    lookup_t value;
+    const ElfW(Sym) *ret;
+  };
+
+extern struct lookup_cache _dl_lookup_cache;
+extern struct lookup_cache _dl_lookup_cache_versioned;
+
 
 /* Search loaded objects' symbol tables for a definition of the symbol
    referred to by UNDEF.  *SYM is the symbol table entry containing the

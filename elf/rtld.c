@@ -127,6 +127,7 @@ static hp_timing_t relocate_time;
 static hp_timing_t load_time;
 #endif
 extern unsigned long int _dl_num_relocations;	/* in dl-lookup.c */
+extern unsigned long int _dl_num_cache_relocations;	/* in dl-lookup.c */
 
 static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 				   hp_timing_t start_time);
@@ -1524,6 +1525,8 @@ print_statistics (void)
 #endif
   _dl_debug_printf ("                 number of relocations: %lu\n",
 		    _dl_num_relocations);
+  _dl_debug_printf ("                 number of relocations from cache: %lu\n",
+		    _dl_num_cache_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */

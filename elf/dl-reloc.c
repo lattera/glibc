@@ -89,7 +89,14 @@ cannot make segment writable for relocation"));
      : l->l_addr)
 
 #include "dynamic-link.h"
+    /* Start symbol lookup caching for this object.  */
+    _dl_lookup_cache.map = l;
+    _dl_lookup_cache_versioned.map = l;
+
     ELF_DYNAMIC_RELOCATE (l, lazy, consider_profiling);
+
+    _dl_lookup_cache.map = NULL;
+    _dl_lookup_cache_versioned.map = NULL;
 
     if (__builtin_expect (consider_profiling, 0))
       {

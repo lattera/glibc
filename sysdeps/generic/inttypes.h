@@ -28,15 +28,15 @@
 #include <stdint.h>
 
 /* Get a definition for wchar_t.  But we must not define wchar_t itself.  */
-#ifndef ____wchar_t_defined
+#ifndef ____gwchar_t_defined
 # ifdef __WCHAR_TYPE__
-typedef __WCHAR_TYPE__ __wchar_t;
+typedef __WCHAR_TYPE__ __gwchar_t;
 # else
 #  defined __need_wchar_t
 #  include <stddef.h>
-typedef wchar_t __wchar_t;
+typedef wchar_t __gwchar_t;
 # endif
-# define ____wchar_t_defined	1
+# define ____gwchar_t_defined	1
 #endif
 
 
@@ -308,13 +308,13 @@ extern uintmax_t strtoumax (__const char *__restrict __nptr,
 			    char ** __restrict __endptr, int __base) __THROW;
 
 /* Like `wcstol' but convert to `intmax_t'.  */
-extern intmax_t wcstoimax (__const __wchar_t *__restrict __nptr,
-			   __wchar_t **__restrict __endptr, int __base)
+extern intmax_t wcstoimax (__const __gwchar_t *__restrict __nptr,
+			   __gwchar_t **__restrict __endptr, int __base)
      __THROW;
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
-extern uintmax_t wcstoumax (__const __wchar_t *__restrict __nptr,
-			    __wchar_t ** __restrict __endptr, int __base)
+extern uintmax_t wcstoumax (__const __gwchar_t *__restrict __nptr,
+			    __gwchar_t ** __restrict __endptr, int __base)
      __THROW;
 
 #ifdef __USE_EXTERN_INLINES
@@ -352,13 +352,13 @@ strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 
 /* Like `wcstol' but convert to `intmax_t'.  */
 #  ifndef __wcstol_internal_defined
-extern long int __wcstol_internal (__const __wchar_t * __restrict __nptr,
-				   __wchar_t **__restrict __endptr,
+extern long int __wcstol_internal (__const __gwchar_t * __restrict __nptr,
+				   __gwchar_t **__restrict __endptr,
 				   int __base, int __group) __THROW;
 #   define __wcstol_internal_defined	1
 #  endif
 extern __inline intmax_t
-wcstoimax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
+wcstoimax (__const __gwchar_t *__restrict nptr, __gwchar_t **__restrict endptr,
 	   int base) __THROW
 {
   return __wcstol_internal (nptr, endptr, base, 0);
@@ -367,15 +367,15 @@ wcstoimax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
 
 /* Like `wcstoul' but convert to `uintmax_t'.  */
 #  ifndef __wcstoul_internal_defined
-extern unsigned long int __wcstoul_internal (__const __wchar_t *
+extern unsigned long int __wcstoul_internal (__const __gwchar_t *
 					     __restrict __nptr,
-					     __wchar_t **
+					     __gwchar_t **
 					     __restrict __endptr,
 					     int __base, int __group) __THROW;
 #   define __wcstoul_internal_defined	1
 #  endif
 extern __inline uintmax_t
-wcstoumax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
+wcstoumax (__const __gwchar_t *__restrict nptr, __gwchar_t **__restrict endptr,
 	   int base) __THROW
 {
   return __wcstoul_internal (nptr, endptr, base, 0);
@@ -419,14 +419,14 @@ strtoumax (__const char *__restrict nptr, char **__restrict endptr,
 /* Like `wcstol' but convert to `intmax_t'.  */
 #  ifndef __wcstoll_internal_defined
 __extension__
-extern long long int __wcstoll_internal (__const __wchar_t *
+extern long long int __wcstoll_internal (__const __gwchar_t *
 					 __restrict __nptr,
-					 __wchar_t **__restrict __endptr,
+					 __gwchar_t **__restrict __endptr,
 					 int __base, int __group) __THROW;
 #   define __wcstoll_internal_defined	1
 #  endif
 extern __inline intmax_t
-wcstoimax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
+wcstoimax (__const __gwchar_t *__restrict nptr, __gwchar_t **__restrict endptr,
 	   int base) __THROW
 {
   return __wcstoll_internal (nptr, endptr, base, 0);
@@ -436,16 +436,16 @@ wcstoimax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
 /* Like `wcstoul' but convert to `uintmax_t'.  */
 #  ifndef __wcstoull_internal_defined
 __extension__
-extern unsigned long long int __wcstoull_internal (__const __wchar_t *
+extern unsigned long long int __wcstoull_internal (__const __gwchar_t *
 						   __restrict __nptr,
-						   __wchar_t **
+						   __gwchar_t **
 						   __restrict __endptr,
 						   int __base,
 						   int __group) __THROW;
 #   define __wcstoull_internal_defined	1
 #  endif
 extern __inline uintmax_t
-wcstoumax (__const __wchar_t *__restrict nptr, __wchar_t **__restrict endptr,
+wcstoumax (__const __gwchar_t *__restrict nptr, __gwchar_t **__restrict endptr,
 	   int base) __THROW
 {
   return __wcstoull_internal (nptr, endptr, base, 0);

@@ -699,6 +699,10 @@ search_dir (const struct dir_entry *entry)
 	    {
 	      if (opt_verbose)
 		error (0, errno, _("Cannot stat %s"), file_name);
+
+	      /* Remove stale symlinks.  */
+	      if (strstr (direntry->d_name, ".so."))
+		unlink (real_file_name);
 	      continue;
 	    }
 	  is_dir = S_ISDIR (stat_buf.st_mode);
