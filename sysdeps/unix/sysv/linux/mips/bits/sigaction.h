@@ -55,18 +55,20 @@ struct sigaction
   };
 
 /* Bits in `sa_flags'.  */
-#define SA_NOCLDSTOP  0x00020000 /* Don't send SIGCHLD when children stop.  */
+/* Please note that some Linux kernels versions use different values for these
+   flags which is a bug in those kernel versions.  */
+#define SA_NOCLDSTOP  0x00000001 /* Don't send SIGCHLD when children stop.  */
 #define SA_SIGINFO    0x00000008 /* Invoke signal-catching function with
 				    three arguments instead of one.  */
 #if defined __USE_UNIX98 || defined __USE_MISC
-# define SA_ONSTACK   0x00000001 /* Use signal stack by using `sa_restorer'. */
-# define SA_RESETHAND 0x00000002 /* Reset to SIG_DFL on entry to handler.  */
-# define SA_RESTART   0x00000004 /* Restart syscall on signal return.  */
-# define SA_NODEFER   0x00000010 /* Don't automatically block the signal when
+# define SA_ONSTACK   0x08000000 /* Use signal stack by using `sa_restorer'. */
+# define SA_RESETHAND 0x80000000 /* Reset to SIG_DFL on entry to handler.  */
+# define SA_RESTART   0x10000000 /* Restart syscall on signal return.  */
+# define SA_NODEFER   0x40000000 /* Don't automatically block the signal when
 				    its handler is being executed.  */
 #endif
 #ifdef __USE_MISC
-# define SA_INTERRUPT 0x01000000 /* Historical no-op.  */
+# define SA_INTERRUPT 0x20000000 /* Historical no-op.  */
 
 /* Some aliases for the SA_ constants.  */
 # define SA_NOMASK    SA_NODEFER
