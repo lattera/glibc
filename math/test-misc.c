@@ -144,5 +144,24 @@ main (void)
     }
 #endif
 
+#ifdef __i386__
+  /* This is a test for the strange long doubles in x86 FPUs.  */
+  {
+    union
+    {
+      char b[10];
+      long double d;
+    } u =
+      { .b = { 0, 0, 0, 0, 0, 0, 0, 0x80, 0, 0 } };
+
+    if (fpclassify (u.d) != FP_NORMAL)
+      {
+	printf ("fpclassify (0x00008000000000000000) failed: %d (%Lg)\n",
+		fpclassify (u.d), u.d);
+	result = 1;
+      }
+  }
+#endif
+
   return result;
 }

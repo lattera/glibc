@@ -1,5 +1,6 @@
 2000-12-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/test-misc.c (main): Test for pseudo denormal numbers on x86.
 	* sysdeps/i386/fpu/fpclassify.c: New file.
 
 	* sysdeps/i386/ldbl2mpn.c (__mpn_extract_long_double): Handle the
