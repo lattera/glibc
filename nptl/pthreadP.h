@@ -22,6 +22,7 @@
 
 #include <pthread.h>
 #include <setjmp.h>
+#include <stdbool.h>
 #include <sys/syscall.h>
 #include "descr.h"
 #include <tls.h>
@@ -243,16 +244,22 @@ extern int __pthread_setcancelstate (int state, int *oldstate);
 extern int __pthread_mutex_init (pthread_mutex_t *__mutex,
 				 __const pthread_mutexattr_t *__mutexattr);
 extern int __pthread_mutex_init_internal (pthread_mutex_t *__mutex,
-					  __const pthread_mutexattr_t *__mutexattr);
+					  __const pthread_mutexattr_t *__mutexattr)
+     attribute_hidden;
 extern int __pthread_mutex_destroy (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_destroy_internal (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_destroy_internal (pthread_mutex_t *__mutex)
+     attribute_hidden;
 extern int __pthread_mutex_trylock (pthread_mutex_t *_mutex);
 extern int __pthread_mutex_lock (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_lock_internal (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_lock_internal (pthread_mutex_t *__mutex)
+     attribute_hidden;
 extern int __pthread_mutex_cond_lock (pthread_mutex_t *__mutex)
      attribute_hidden;
 extern int __pthread_mutex_unlock (pthread_mutex_t *__mutex);
-extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex);
+extern int __pthread_mutex_unlock_internal (pthread_mutex_t *__mutex)
+     attribute_hidden;
+extern int __pthread_mutex_unlock_usercnt (pthread_mutex_t *__mutex,
+					   bool __decr) internal_function;
 extern int __pthread_mutexattr_init (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_destroy (pthread_mutexattr_t *attr);
 extern int __pthread_mutexattr_settype (pthread_mutexattr_t *attr, int kind);
