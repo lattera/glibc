@@ -1,7 +1,7 @@
 /* Inline math functions for SPARC.
    Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>.
+   Contributed by Jakub Jelinek <jakub@redhat.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -62,13 +62,13 @@
       if (sizeof(x) == 4 && sizeof(y) == 4)				      \
 	{								      \
 	  float __x = (x); float __y = (y);				      \
-	  __asm__("fcmps\t%%fcc3,%1,%2\n\tmov" ## op ## "\t%%fcc3,1,%0"	      \
+	  __asm__("fcmps\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
 		  : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");	      \
 	}								      \
       else if (sizeof(x) <= 8 && sizeof(y) <= 8)			      \
 	{								      \
 	  double __x = (x); double __y = (y);				      \
-	  __asm__("fcmpd\t%%fcc3,%1,%2\n\tmov" ## op ## "\t%%fcc3,1,%0"	      \
+	  __asm__("fcmpd\t%%fcc3,%1,%2\n\tmov" op "\t%%fcc3,1,%0"	      \
 		  : "=r" (__r) : "f" (__x), "f" (__y), "0" (0) : "cc");	      \
 	}								      \
       else								      \
