@@ -104,15 +104,6 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	}
     }
 
-#define TEST_ELEM(cat, default)						      \
-  if (numeric->cat == NULL && ! be_quiet && ! nothing)			      \
-    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", #cat);	      \
-  if (numeric->cat##_wc == L'\0')					      \
-    numeric->cat##_wc = default
-
-  TEST_ELEM (decimal_point, L'.');
-  TEST_ELEM (thousands_sep, L'\0');
-
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
      != "".  */
@@ -129,6 +120,8 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 %s: value for field `%s' must not be the empty string"),
 	     "LC_NUMERIC", "decimal_point");
     }
+  if (numeric->decimal_point_wc == L'\0')
+    numeric->decimal_point_wc = L'.';
 
   if (numeric->grouping_len == 0 && ! be_quiet && ! nothing)
     error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", "grouping");
@@ -168,6 +161,7 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = numeric->grouping;
   iov[cnt].iov_len = numeric->grouping_len;
+  ++cnt;
 
   idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
   iov[cnt].iov_base = (void *) &numeric->decimal_point_wc;
@@ -176,8 +170,7 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
 
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = (void *) &numeric->thousands_sep_wc;
-  iov[cnt].iov_len = sizeof (uint32_t);;
-  ++cnt;
+  iov[cnt].iov_len = sizeof (uint32_t);
 
   assert (cnt + 1 == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 
