@@ -306,7 +306,7 @@ expand_dynamic_string_token (struct link_map *l, const char *s)
   cnt = DL_DST_COUNT (s, 1);
 
   /* If we do not have to replace anything simply copy the string.  */
-  if (cnt == 0)
+  if (__builtin_expect (cnt, 0) == 0)
     return local_strdup (s);
 
   /* Determine the length of the substituted string.  */
@@ -905,8 +905,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 		if (ph->p_flags & PF_X)
 		  c->prot |= PROT_EXEC;
 	      }
-	    break;
 	  }
+	  break;
 	}
 
     /* Now process the load commands and map segments into memory.  */
@@ -953,7 +953,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       {
 	/* This object is loaded at a fixed address.  This must never
            happen for objects loaded with dlopen().  */
-	if (mode & __RTLD_DLOPEN)
+	if (__builtin_expect (mode & __RTLD_DLOPEN, 0))
 	  {
 	    LOSE (0, N_("cannot dynamically load executable"));
 	  }
@@ -1007,7 +1007,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 				    _dl_pagesize, c->prot|PROT_WRITE) < 0)
 		      LOSE (errno, N_("cannot change memory protections"));
 		  }
-		memset ((void *) zero, 0, zeropage - zero);
+		memset ((void *) zero, '\0', zeropage - zero);
 		if ((c->prot & PROT_WRITE) == 0)
 		  __mprotect ((caddr_t) (zero & ~(_dl_pagesize - 1)),
 			      _dl_pagesize, c->prot);
@@ -1030,7 +1030,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
     if (l->l_phdr == NULL)
       {
-	/* The program header is not contained in any of the segmenst.
+	/* The program header is not contained in any of the segments.
 	   We have to allocate memory ourself and copy it over from
 	   out temporary place.  */
 	ElfW(Phdr) *newp = (ElfW(Phdr) *) malloc (header->e_phnum
@@ -1138,7 +1138,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     }
 
   /* Remember whether this object must be initialized first.  */
-  if (l->l_flags_1 & DF_1_INITFIRST)
+  if (__builtin_expect (l->l_flags_1 & DF_1_INITFIRST, 0))
     _dl_initfirst = l;
 
   /* Finally the file information.  */
@@ -1220,7 +1220,7 @@ open_verify (const char *name, struct filebuf *fbp)
   };
   static const struct {
     ElfW(Word) vendorlen, datalen, type;
-    char vendor [4];
+    char vendor[4];
   } expected_note = { 4, 16, 1, "GNU" };
   int fd;
 
@@ -1339,10 +1339,10 @@ open_verify (const char *name, struct filebuf *fbp)
 	    if (memcmp (abi_note, &expected_note, sizeof (expected_note)))
 	      continue;
 
-	    osversion = (abi_note [5] & 0xff) * 65536
-			+ (abi_note [6] & 0xff) * 256
-			+ (abi_note [7] & 0xff);
-	    if (abi_note [4] != __ABI_TAG_OS
+	    osversion = (abi_note[5] & 0xff) * 65536
+			+ (abi_note[6] & 0xff) * 256
+			+ (abi_note[7] & 0xff);
+	    if (abi_note[4] != __ABI_TAG_OS
 		|| (_dl_osversion && _dl_osversion < osversion))
 	      {
 	      close_and_out:
@@ -1384,6 +1384,7 @@ open_path (const char *name, size_t namelen, int preloaded,
       size_t cnt;
       char *edp;
       int here_any = 0;
+      int err;
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
@@ -1436,7 +1437,8 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  /* Remember whether we found any existing directory.  */
 	  here_any |= this_dir->status[cnt] == existing;
 
-	  if (fd != -1 && preloaded && __libc_enable_secure)
+	  if (fd != -1 && __builtin_expect (preloaded, 0)
+	      && __libc_enable_secure)
 	    {
 	      /* This is an extra security effort to make sure nobody can
 		 preload broken shared objects which are in the trusted
@@ -1474,7 +1476,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	      return -1;
 	    }
 	}
-      if (here_any && errno != ENOENT && errno != EACCES)
+      if (here_any && (err = errno) != ENOENT && err != EACCES)
 	/* The file exists and is readable, but something went wrong.  */
 	return -1;
 
@@ -1484,7 +1486,7 @@ open_path (const char *name, size_t namelen, int preloaded,
   while (*++dirs != NULL);
 
   /* Remove the whole path if none of the directories exists.  */
-  if (! any)
+  if (__builtin_expect (! any, 0))
     {
       /* Paths which were allocated using the minimal malloc() in ld.so
 	 must not be freed using the general free() in libc.  */
@@ -1515,7 +1517,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
-      if (l->l_faked != 0)
+      if (__builtin_expect (l->l_faked, 0) != 0)
 	continue;
       if (!_dl_name_match_p (name, l))
 	{
@@ -1626,7 +1628,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 			    &loader->l_runpath_dirs, &realname, &fb);
 	}
 
-      if (fd == -1 && (! preloaded || ! __libc_enable_secure))
+      if (fd == -1
+	  && (__builtin_expect (! preloaded, 1) || ! __libc_enable_secure))
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
 	     for compatibility with Linux's ldconfig program.  */
@@ -1665,7 +1668,7 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	      if (cached)
 		{
 		  fd = open_verify (cached, &fb);
-		  if (fd != -1)
+		  if (__builtin_expect (fd, 0) != -1)
 		    {
 		      realname = local_strdup (cached);
 		      if (realname == NULL)
@@ -1701,12 +1704,12 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
       else
 	{
 	  fd = open_verify (realname, &fb);
-	  if (fd == -1)
+	  if (__builtin_expect (fd, 0) == -1)
 	    free (realname);
 	}
     }
 
-  if (fd == -1)
+  if (__builtin_expect (fd, 0) == -1)
     {
       if (trace_mode)
 	{

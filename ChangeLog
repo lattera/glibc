@@ -1,5 +1,7 @@
 2001-03-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c: Various little optimizations.
+
 	* sysdeps/unix/sysv/linux/pathconf.c (__pathconf): Return
 	LINUX_LINK_MAX only if the statfs function is not implemented for
 	the filesystem.
