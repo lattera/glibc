@@ -1,3 +1,18 @@
+Fri Jan 19 13:28:59 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): Use prototype in getlogin decl.
+
+Thu Jan 18 00:32:43 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (_GNU_SOURCE): Define if undefined, so glob.h
+	defines GNU extensions.
+	* posix/fnmatch.c: Likewise.
+
+Fri Jan 12 13:40:01 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): Add parens in glob call flags arg for
+	GLOB_BRACE case.
+
 Thu Dec 14 02:28:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob.c (glob_in_dir): Cast result of opendir to __ptr_t,
