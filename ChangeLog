@@ -1,3 +1,8 @@
+2000-03-27  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* include/shlib-compat.h: Conditionalize <abi-versions.h> include
+	on [HAVE_ELF && DO_VERSIONING].
+
 2000-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/tst-obprintf.c: New file.
