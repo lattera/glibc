@@ -1,5 +1,8 @@
 2000-03-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/gconv_builtin.h: Fix length in transformation definition
+	for UNICODEBIG.
+
 	* iconvdata/TESTS: Use UCS-2BE instead of UCS2.
 
 	* iconv/loop.c: Define get16, get32, put16, and put32 macros to
