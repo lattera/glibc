@@ -504,7 +504,7 @@ name.  If no interface exists with the name given, it returns 0.
 
 @comment net/if.h
 @comment IPv6 basic API
-@deftypefun char *if_indextoname (unsigned int ifindex, char *ifname)
+@deftypefun {char *} if_indextoname (unsigned int ifindex, char *ifname)
 This function maps an interface index to its corresponding name.  The
 returned name is placed in the buffer pointed to by @code{ifname}, which
 must be at least @code{IFNAMSIZE} bytes in length.  If the index was

@@ -1,3 +1,8 @@
+1998-04-09 14:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/socket.texi (Interface Naming): Correct @deftypefun line
+	for if_indextoname.
+
 1998-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sysdeps/unix/sysv/linux/bits/sockunion.h: Fix error message.
