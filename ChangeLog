@@ -1,5 +1,8 @@
 2004-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Undo unintended
+	changes in last patch.
+
 	* posix/regexec.c (transit_state): Fix typo in commented-out code
 	[BZ #6].
 

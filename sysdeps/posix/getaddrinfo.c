@@ -62,14 +62,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UNIX_PATH_MAX  108
 #endif
 
-extern int idna_to_ascii_lz (const char *input, char **output, int flags);
-#define IDNA_SUCCESS 0
-#ifdef HAVE_LIBIDN
-# define SUPPORTED_IDN_FLAGS AI_IDN|AI_CANONIDN
-#else
-# define SUPPORTED_IDN_FLAGS 0
-#endif
-
 struct gaih_service
   {
     const char *name;
@@ -546,18 +538,6 @@ gaih_inet (const char *name, const struct gaih_service *service,
       at->family = AF_UNSPEC;
       at->scopeid = 0;
       at->next = NULL;
-
-#if 0
-      if (req->ai_flags & AI_IDN)
-	{
-	  char *p;
-	  rc = idna_to_ascii_lz (name, &p, 0);
-	  if (rc != IDNA_SUCCESS)
-	    return -EAI_IDN_ENCODE;
-	  name = strdupa (p);
-	  free (p);
-	}
-#endif
 
       if (inet_pton (AF_INET, name, at->addr) > 0)
 	{
@@ -1270,10 +1250,10 @@ getaddrinfo (const char *name, const char *service,
 
   if (hints->ai_flags
       & ~(AI_PASSIVE|AI_CANONNAME|AI_NUMERICHOST|AI_ADDRCONFIG|AI_V4MAPPED
-	  |SUPPORTED_IDN_FLAGS|AI_ALL))
+	  |AI_ALL))
     return EAI_BADFLAGS;
 
-  if ((hints->ai_flags & (AI_CANONNAME|AI_CANONIDN)) && name == NULL)
+  if ((hints->ai_flags & AI_CANONNAME) && name == NULL)
     return EAI_BADFLAGS;
 
   if (hints->ai_flags & AI_ADDRCONFIG)
