@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/types.h>
 #include "dynamic-link.h"
 
@@ -47,8 +48,10 @@ _dl_resolve_conflicts (struct link_map *l, ElfW(Rela) *conflict,
 #define RESOLVE_CONFLICT_FIND_MAP(map, r_offset)		\
 do								\
   {								\
-    while (resolve_conflict_map->l_map_end < (r_offset)		\
-	   || resolve_conflict_map->l_map_start > (r_offset))	\
+    while ((resolve_conflict_map->l_map_end			\
+	    < (ElfW(Addr))(r_offset))				\
+	   || (resolve_conflict_map->l_map_start		\
+	       > (ElfW(Addr))(r_offset)))			\
       resolve_conflict_map					\
 	= resolve_conflict_map->l_next;				\
     (map) = resolve_conflict_map;				\
