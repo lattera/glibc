@@ -1,6 +1,7 @@
 2002-08-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c: Include <errno.h>.
+	* sysdeps/generic/libc-tls.c: Likewise.
 
 2002-08-07  Roland McGrath  <roland@redhat.com>
 
