@@ -43,14 +43,12 @@ strlen (const char *str)
 	  /* Which of the bytes was the zero?  */
 
 	  const char *cp = (const char *) (longword_ptr - 1);
+	  int i;
 
-	  if (cp[0] == 0)
-	    return cp - str;
-	  if (cp[1] == 0)
-	    return cp - str + 1;
-	  if (cp[2] == 0)
-	    return cp - str + 2;
-	  return cp - str + 3;
+	  for (i = 0; i < 6; i++)
+	    if (cp[i] == 0)
+	      return cp - str + i;
+	  return cp - str + 7;
 	}
     }
 }

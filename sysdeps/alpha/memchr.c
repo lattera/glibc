@@ -25,6 +25,7 @@ memchr (const void *s, int c, size_t n)
   const char *char_ptr;
   const unsigned long int *longword_ptr;
   unsigned long int charmask;
+  size_t x;
 
   c = (unsigned char) c;
 
@@ -35,17 +36,28 @@ memchr (const void *s, int c, size_t n)
     if (*char_ptr == c)
       return (void *) char_ptr;
 
+  if (n == (size_t)0)
+    return NULL;
+
+  x = n;
+
   longword_ptr = (unsigned long int *) char_ptr;
 
   /* Set up a longword, each of whose bytes is C.  */
   charmask = c | (c << 8);
   charmask |= charmask << 16;
   charmask |= charmask << 32;
+  charmask |= charmask << 64;
 
   for (;;)
     {
       const unsigned long int longword = *longword_ptr++;
       int ge, le;
+
+      if (x < 4)
+	x = (size_t) 0;
+      else
+	x -= 4;
 
       /* Set bits in GE if bytes in CHARMASK are >= bytes in LONGWORD.  */
       asm ("cmpbge %1, %2, %0" : "=r" (ge) : "r" (charmask), "r" (longword));
@@ -58,15 +70,18 @@ memchr (const void *s, int c, size_t n)
 	{
 	  /* Which of the bytes was the C?  */
 
-	  char *cp = (char *) (longword_ptr - 1);
+	  unsigned char *cp = (unsigned char *) (longword_ptr - 1);
+	  int i;
 
-	  if (cp[0] == c)
-	    return cp;
-	  if (cp[1] == c)
-	    return &cp[1];
-	  if (cp[2] == c)
-	    return &cp[2];
-	  return &cp[3];
+	  for (i = 0; i < 6; i++)
+	    if (cp[i] == c)
+	      return &cp[i];
+	  return &cp[7];
 	}
+
+      if (x == (size_t)0)
+	break;
     }
+
+  return NULL;
 }

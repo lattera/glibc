@@ -16,12 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#define __NO_MATH_INLINES
+
 #include <math.h>
 
 /* Return X with its sign changed to Y's.  */
-double
-__copysign (double x, double y)
+__inline __CONSTVALUE double
+__copysign (double __x, double __y)
 {
-  asm ("cpys %1, %2, %0" : "=f" (x) : "f" (y), "f" (x));
-  return x;
+  __asm ("cpys %1, %2, %0" : "=f" (__x) : "f" (__y), "f" (__x));
+  return __x;
 }

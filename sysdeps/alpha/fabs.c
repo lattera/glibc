@@ -16,11 +16,13 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#define __NO_MATH_INLINES
+
 #include <math.h>
 
-double
-fabs (double x)
+__inline double
+fabs (double __x)
 {
-  asm ("cpys $f31, %1, %0" : "=f" (x) : "f" (x));
-  return x;
+  __asm ("cpys $f31, %1, %0" : "=f" (__x) : "f" (__x));
+  return __x;
 }

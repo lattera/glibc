@@ -1,5 +1,5 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@zen.org).
+/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -18,34 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-#ifndef SYS_brk
-#define SYS_brk 17
-#endif
+#include <sys/ult_syscall.h>
+#define SYS_vhangup SYS_ult_vhangup
 
-#ifndef       HAVE_GNU_LD
-#define __end           end
-#endif
-
-.data
-	.extern __end,8
-	.globl __curbrk
-__curbrk:
-	.quad __end
-
-.text
-ENTRY(__brk)
-	! FIXME We do not check for asking for less than a page yet.
-	ldiq v0, SYS_brk
-	call_pal PAL_callsys
-	bne a3, error
-
-	/* Update __curbrk and exit cleanly.  */
-!	ldgp gp, 0(t12)
-	stl a0, __curbrk
-
-	mov zero, v0
+SYSCALL (vhangup, 1)
 	ret
-	/* What a horrible way to die.  */
-error:	ldgp gp,0(gp)
-	jmp zero,syscall_error
-	.end __brk

@@ -17,35 +17,24 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+#define _ERRNO_H
+#include <errnos.h>
 
-#ifndef SYS_brk
-#define SYS_brk 17
+ENTRY(syscall_error)
+#ifdef EWOULDBLOCK_sys
+	/* We translate the system's EWOULDBLOCK error into EAGAIN.
+	   The GNU C library always defines EWOULDBLOCK==EAGAIN.
+	   EWOULDBLOCK_sys is the original number.  */
+	subq v0, EWOULDBLOCK_sys, t0
+	cmoveq t0, EAGAIN, v0
 #endif
 
-#ifndef       HAVE_GNU_LD
-#define __end           end
-#endif
-
-.data
-	.extern __end,8
-	.globl __curbrk
-__curbrk:
-	.quad __end
-
-.text
-ENTRY(__brk)
-	! FIXME We do not check for asking for less than a page yet.
-	ldiq v0, SYS_brk
-	call_pal PAL_callsys
-	bne a3, error
-
-	/* Update __curbrk and exit cleanly.  */
+	/* Store it in errno... */
 !	ldgp gp, 0(t12)
-	stl a0, __curbrk
+	stl v0, errno
 
-	mov zero, v0
+	/* And just kick back a -1.  */
+	ldil v0, -1
 	ret
-	/* What a horrible way to die.  */
-error:	ldgp gp,0(gp)
-	jmp zero,syscall_error
-	.end __brk
+
+	.end syscall_error

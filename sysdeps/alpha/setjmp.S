@@ -26,3 +26,4 @@ ENTRY (__setjmp)
 	bis $15, $15, $17	/* Pass FP as 2nd arg.  */
 	bis $30, $30, $18	/* Pass SP as 3nd arg.  */
 	jmp $31, ($27), __setjmp_aux /* Call __setjmp_aux.  */
+	.end __setjmp

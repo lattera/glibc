@@ -32,10 +32,10 @@ strchr (const char *str, int c)
   /* Handle the first few characters by reading one character at a time.
      Do this until STR is aligned on a 8-byte border.  */
   for (char_ptr = str; ((unsigned long int) char_ptr & 7) != 0; ++char_ptr)
-    if (*char_ptr == '\0')
-      return NULL;
-    else if (*char_ptr == c)
+    if (*char_ptr == c)
       return (char *) char_ptr;
+    else if (*char_ptr == '\0')
+      return NULL;
 
   longword_ptr = (unsigned long int *) char_ptr;
 
@@ -43,6 +43,7 @@ strchr (const char *str, int c)
   charmask = c | (c << 8);
   charmask |= charmask << 16;
   charmask |= charmask << 32;
+  charmask |= charmask << 64;
 
   for (;;)
     {
@@ -64,21 +65,15 @@ strchr (const char *str, int c)
 	  /* Which of the bytes was the C?  */
 
 	  char *cp = (char *) (longword_ptr - 1);
+	  int i;
 
-	  if (cp[0] == c)
-	    return cp;
-	  if (cp[0] == 0)
-	    return NULL;
-	  if (cp[1] == c)
-	    return &cp[1];
-	  if (cp[1] == 0)
-	    return NULL;
-	  if (cp[2] == c)
-	    return &cp[2];
-	  if (cp[2] == 0)
-	    return NULL;
-	  if (cp[3] == c)
-	    return &cp[3];
+	  for (i = 0; i < 8; i++)
+	    {
+	      if (cp[i] == c)
+		return &cp[i];
+	      if (cp[i] == 0)
+		return NULL;
+	    }
 	  return NULL;
 	}
     }
