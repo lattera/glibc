@@ -1,3 +1,16 @@
+2003-06-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/test-utime.c: If _STATBUF_ST_NSEC is defined, adjust lower
+	boundary test to take rounding of nanoseconds into account.
+
+	* sysdeps/unix/sysv/linux/bits/stat.h: Define _STATBUF_ST_NSEC.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/stat.h: Likewise.
+
 2003-06-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/m68k/fpu/bits/mathinline.h: Don't inline frexp.
