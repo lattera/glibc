@@ -152,6 +152,8 @@ __MATH_INLINE float floorf (float __x) __THROW { return __floorf(__x); }
 __MATH_INLINE double floor (double __x) __THROW { return __floor(__x); }
 
 
+#ifdef __USE_ISOC99
+
 __MATH_INLINE float __fdimf (float __x, float __y) __THROW
 {
   return __x < __y ? 0.0f : __x - __y;
@@ -171,3 +173,5 @@ __MATH_INLINE double fdim (double __x, double __y) __THROW
 {
   return __x < __y ? 0.0 : __x - __y;
 }
+
+#endif
