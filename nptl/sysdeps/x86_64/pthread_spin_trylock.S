@@ -30,18 +30,11 @@
 	.type	pthread_spin_trylock,@function
 	.align	16
 pthread_spin_trylock:
-	movl	4(%esp), %edx
 	movl	$1, %eax
 	xorl	%ecx, %ecx
 	LOCK
-	cmpxchgl %ecx, (%edx)
+	cmpxchgl %ecx, (%rdi)
 	movl	$EBUSY, %eax
-#ifdef HAVE_CMOV
 	cmovel	%ecx, %eax
-#else
-	jne	0f
-	movl	%ecx, %eax
-0:
-#endif
-	ret
+	retq
 	.size	pthread_spin_trylock,.-pthread_spin_trylock

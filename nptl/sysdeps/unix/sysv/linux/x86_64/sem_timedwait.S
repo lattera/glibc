@@ -44,7 +44,7 @@ sem_timedwait:
 2:	testl	%eax, %eax
 	je	1f
 
-	leal	-1(%eax), %edx
+	leaq	-1(%rax), %rdx
 	LOCK
 	cmpxchgl %edx, (%rdi)
 	jne	2b
@@ -64,13 +64,13 @@ sem_timedwait:
 	movl	$EINVAL, %eax
 	jae	6f
 
-7:	xorl	%rsi, %rsi
+7:	xorq	%rsi, %rsi
 	movq	%rsp, %rdi
 	movq	$SYS_gettimeofday, %rax
 	syscall
 
 	/* Compute relative timeout.  */
-	movq	8(%rsp), %eax
+	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r9), %rdi
@@ -84,8 +84,8 @@ sem_timedwait:
 	movl	$ETIMEDOUT, %eax
 	js	6f		/* Time is already up.  */
 
-	movl	%rdi, (%rsp)	/* Store relative timeout.  */
-	movl	%rsi, 8(%rsp)
+	movq	%rdi, (%rsp)	/* Store relative timeout.  */
+	movq	%rsi, 8(%rsp)
 
 	movq	%r8, %rdi
 	xorq	%rsi, %rsi
@@ -102,7 +102,7 @@ sem_timedwait:
 8:	testl	%eax, %eax
 	je	7b
 
-	leal	-1(%eax), %ecx
+	leaq	-1(%rax), %rcx
 	LOCK
 	cmpxchgl %ecx, (%rdi)
 	jne	8b
@@ -111,7 +111,7 @@ sem_timedwait:
 	xorl	%eax, %eax
 	retq
 
-3:	negq	%eax
+3:	negq	%rax
 6:
 #if USE___THREAD
 	movq	errno@gottpoff(%rip), %rdx

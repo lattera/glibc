@@ -303,7 +303,7 @@ union user_desc_init
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
-       asm volatile ("movb %0,%%gs:%P1" :				      \
+       asm volatile ("movb %b0,%%gs:%P1" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member)));	      \
      else if (sizeof (descr->member) == 4)				      \
@@ -328,7 +328,7 @@ union user_desc_init
 /* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
-       asm volatile ("movb %0,%%gs:%P1(%2)" :				      \
+       asm volatile ("movb %b0,%%gs:%P1(%2)" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member)),		      \
 		       "r" (idx));					      \

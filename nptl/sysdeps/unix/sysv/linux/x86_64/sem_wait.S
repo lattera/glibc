@@ -41,7 +41,7 @@ __new_sem_wait:
 2:	testl	%eax, %eax
 	je	1f
 
-	leal	-1(%eax), %edx
+	leaq	-1(%rax), %rdx
 	LOCK
 	cmpxchgl %edx, (%rdi)
 	jne	2b

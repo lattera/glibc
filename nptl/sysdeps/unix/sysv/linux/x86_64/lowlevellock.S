@@ -113,8 +113,8 @@ __lll_unlock_wake:
 	.hidden	__lll_timedwait_tid
 	.align	16
 __lll_timedwait_tid:
-	movl	%rdi, %r8
-	movl	%rsi, %r9
+	movq	%rdi, %r8
+	movq	%rsi, %r9
 
 	subq	$16, %rsp
 
@@ -125,7 +125,7 @@ __lll_timedwait_tid:
 	syscall
 
 	/* Compute relative timeout.  */
-	movq	8(%esp), %rax
+	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r9), %rdi

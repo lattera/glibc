@@ -321,7 +321,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* This is at least the second thread.  */
       pd->multiple_threads = 1;
 #else
-      __pthread_multiple_threads = __libc_multiple_threads = 1;
+      __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
 #ifdef NEED_DL_SYSINFO
@@ -437,7 +437,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  /* This is at least the second thread.  */
 	  pd->multiple_threads = 1;
 #else
-	  __pthread_multiple_threads = __libc_multiple_threads = 1;
+	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
 #ifdef NEED_DL_SYSINFO

@@ -62,7 +62,7 @@ __pthread_cond_signal:
 	/* Wake up one thread.  */
 	movq	$FUTEX_WAKE, %rsi
 	movq	$SYS_futex, %rax
-	movq	%rsi, %edx	/* movl $1, %edx */
+	movq	%rsi, %rdx	/* movl $1, %edx */
 	syscall
 
 	/* Unlock.  */

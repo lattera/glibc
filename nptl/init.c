@@ -260,8 +260,11 @@ __pthread_initialize_minimal_internal (void)
 #endif
 
   /* Register the fork generation counter with the libc.  */
-  __libc_pthread_init (&__fork_generation, __reclaim_stacks,
-		       ptr_pthread_functions);
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
+  __libc_multiple_threads_ptr =
+#endif
+    __libc_pthread_init (&__fork_generation, __reclaim_stacks,
+			 ptr_pthread_functions);
 }
 strong_alias (__pthread_initialize_minimal_internal,
 	      __pthread_initialize_minimal)

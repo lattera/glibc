@@ -40,7 +40,7 @@
 __new_sem_post:
 	movl	$1, %edx
 	LOCK
-	xaddl	%edx, (%ebx)
+	xaddl	%edx, (%rdi)
 
 	movq	$SYS_futex, %rax
 	movq	$FUTEX_WAKE, %rsi

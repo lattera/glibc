@@ -90,7 +90,7 @@ extern int __lll_mutex_unlock_wait (int *__futex) attribute_hidden;
 		       ".previous\n"					      \
 		       "2:"						      \
 		       : "=a" (result), "=&D" (ignore1), "=&S" (ignore2),     \
-			 "=&d" (ignore2), "=m" (futex)			      \
+			 "=&d" (ignore3), "=m" (futex)			      \
 		       : "0" (1), "4" (futex), "m" (timeout)		      \
 		       : "memory", "cx", "cc", "r10");			      \
      result; })
@@ -245,14 +245,15 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
     int __ignore;							      \
     register __typeof (tid) _tid asm ("edx") = (tid);			      \
     if (_tid != 0)							      \
-      __asm __volatile ("1:\tmovq %1, %%rax\n\t"			      \
+      __asm __volatile ("xorq %%r10, %%r10\n\t"				      \
+			"1:\tmovq %3, %%rax\n\t"			      \
 			"syscall\n\t"					      \
 			"cmpl $0, (%%rdi)\n\t"				      \
 			"jne 1b"					      \
 			: "=&a" (__ignore)				      \
-			: "i" (SYS_futex), "D" (&tid), "r10" (0),	      \
-			  "S" (FUTEX_WAIT), "d" (_tid)			      \
-			: "memory", "cc", "r11", "cx");			      \
+			: "S" (FUTEX_WAIT), "i" (SYS_futex), "D" (&tid),      \
+			  "d" (_tid)					      \
+			: "memory", "cc", "r10", "r11", "cx");		      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)

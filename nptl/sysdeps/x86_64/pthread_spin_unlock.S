@@ -17,31 +17,15 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define EBUSY	16
-
-
-#ifdef UP
-# define LOCK
-#else
-# define LOCK lock
-#endif
-
-	.globl	pthread_spin_trylock
-	.type	pthread_spin_trylock,@function
+	.globl	pthread_spin_unlock
+	.type	pthread_spin_unlock,@function
 	.align	16
-pthread_spin_trylock:
-	movl	4(%esp), %edx
-	movl	$1, %eax
-	xorl	%ecx, %ecx
-	LOCK
-	cmpxchgl %ecx, (%edx)
-	movl	$EBUSY, %eax
-#ifdef HAVE_CMOV
-	cmovel	%ecx, %eax
-#else
-	jne	0f
-	movl	%ecx, %eax
-0:
-#endif
-	ret
-	.size	pthread_spin_trylock,.-pthread_spin_trylock
+pthread_spin_unlock:
+	movl	$1, (%rdi)
+	xorl	%eax, %eax
+	retq
+	.size	pthread_spin_unlock,.-pthread_spin_unlock
+
+	/* The implementation of pthread_spin_init is identical.  */
+	.globl	pthread_spin_init
+pthread_spin_init = pthread_spin_unlock

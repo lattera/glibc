@@ -73,7 +73,7 @@ __pthread_once:
 
 	/* Somebody else got here first.  Wait.  */
 	movq	%r10, %rsi		/* movl $FUTEX_WAIT, %ecx */
-	movq	$SYS_futex, %eax
+	movq	$SYS_futex, %rax
 	syscall
 	jmp	6b
 

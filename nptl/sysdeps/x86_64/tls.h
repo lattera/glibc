@@ -145,7 +145,7 @@ typedef struct
    do not get optimized away.  */
 # define THREAD_SELF \
   ({ struct pthread *__self;						      \
-     asm ("movq %%fs:%c1,%0" : "=r" (__self)				      \
+     asm ("movq %%fs:%c1,%q0" : "=r" (__self)				      \
 	  : "i" (offsetof (struct pthread, self)));		 	      \
      __self;})
 
@@ -168,7 +168,7 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movq %%fs:%P1,%0"					      \
+	 asm ("movq %%fs:%P1,%q0"					      \
 	      : "=r" (__value)						      \
 	      : "i" (offsetof (struct pthread, member)));		      \
        }								      \
@@ -179,12 +179,12 @@ typedef struct
 # define THREAD_GETMEM_NC(descr, member, idx) \
   ({ __typeof (descr->member[0]) __value;				      \
      if (sizeof (__value) == 1)						      \
-       asm ("movb %%fs:%P2(%3),%b0"					      \
+       asm ("movb %%fs:%P2(%q3),%b0"					      \
 	    : "=q" (__value)						      \
 	    : "0" (0), "i" (offsetof (struct pthread, member[0])),	      \
 	      "r" (idx));						      \
      else if (sizeof (__value) == 4)					      \
-       asm ("movl %%fs:%P1(,%2,4),%0"					      \
+       asm ("movl %%fs:%P1(,%q2,4),%0"					      \
 	    : "=r" (__value)						      \
 	    : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
      else								      \
@@ -194,7 +194,7 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm ("movq %%fs:%P1(,%2,8),%0"					      \
+	 asm ("movq %%fs:%P1(,%q2,8),%q0"				      \
 	      : "=r" (__value)						      \
 	      : "i" (offsetof (struct pthread, member[0])), "r" (idx));	      \
        }								      \
@@ -204,7 +204,7 @@ typedef struct
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM(descr, member, value) \
   ({ if (sizeof (descr->member) == 1)					      \
-       asm volatile ("movb %0,%%fs:%P1" :				      \
+       asm volatile ("movb %b0,%%fs:%P1" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member)));	      \
      else if (sizeof (descr->member) == 4)				      \
@@ -218,7 +218,7 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm volatile ("movq %0,%%fs:%P1" :				      \
+	 asm volatile ("movq %q0,%%fs:%P1" :				      \
 		       : "ir" ((unsigned long int) value),		      \
 			 "i" (offsetof (struct pthread, member)));	      \
        }})
@@ -227,12 +227,12 @@ typedef struct
 /* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
   ({ if (sizeof (descr->member[0]) == 1)				      \
-       asm volatile ("movb %0,%%fs:%P1(%2)" :				      \
+       asm volatile ("movb %b0,%%fs:%P1(%q2)" :				      \
 		     : "iq" (value),					      \
 		       "i" (offsetof (struct pthread, member[0])),	      \
 		       "r" (idx));					      \
      else if (sizeof (descr->member[0]) == 4)				      \
-       asm volatile ("movl %0,%%fs:%P1(,%2,4)" :			      \
+       asm volatile ("movl %0,%%fs:%P1(,%q2,4)" :			      \
 		     : "ir" (value),					      \
 		       "i" (offsetof (struct pthread, member[0])),	      \
 		       "r" (idx));					      \
@@ -243,7 +243,7 @@ typedef struct
 	      4 or 8.  */						      \
 	   abort ();							      \
 									      \
-	 asm volatile ("movq %0,%%fs:%P1(,%2,8)" :			      \
+	 asm volatile ("movq %q0,%%fs:%P1(,%q2,8)" :			      \
 		       : "r" ((unsigned long int) value),		      \
 			 "i" (offsetof (struct pthread, member[0])),	      \
 			 "r" (idx));					      \

@@ -84,7 +84,7 @@ __lll_mutex_timedlock_wait:
 
 	movq	%rdi, %r8
 	movq	%rdx, %r9
-	leal	1(%eax), %edx
+	leaq	1(%rax), %rdx
 
 	/* Get current time.  */
 1:
@@ -94,7 +94,7 @@ __lll_mutex_timedlock_wait:
 	syscall
 
 	/* Compute relative timeout.  */
-	movq	8(%esp), %rax
+	movq	8(%rsp), %rax
 	movq	$1000, %rdi
 	mul	%rdi		/* Milli seconds to nano seconds.  */
 	movq	(%r9), %rdi

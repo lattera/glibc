@@ -1,5 +1,44 @@
 2003-03-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.S: Fix asm syntax.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_once.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_trywait.S: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sem_wait.S: Likewise.
+
+	* sysdeps/x86_64/tls.h (THREAD_SELF, THREAD_GETMEM, THREAD_GETMEM_NC,
+	THREAD_SETMEM, THREAD_SETMEM_NC): Correct asm syntax.
+
+	* allocatestack.c [! TLS_MULTIPLE_THREADS_IN_TCB] (allocate_stack):
+	Initialize *__libc_multiple_threads_ptr not __libc_multiple_threads.
+	* sysdeps/pthread/createthread.c [! TLS_MULTIPLE_THREADS_IN_TCB]
+	(create_thread): Likewise.
+	Define __pthread_multiple_threads and __libc_multiple_threads_ptr.
+	* init.c (__pthread_initialize_minimal_internal): Initialize
+	__libc_multiple_threads_ptr if necessary.
+	* pthreadP.h: Adjust prototype for __libc_pthread_init.  Declare
+	__pthread_multiple_threads and __libc_multiple_threads_ptr.
+	* sysdeps/unix/sysv/linux/libc_pthread_init.c: Define
+	__libc_multiple_threads.
+	(__libc_pthread_init): Return pointer to __libc_pthread_init if
+	necessary.
+
+	* sysdeps/i386/tls.h (THREAD_SETMEM): Fix one-byte variant.
+	(THREAD_SETMEM_NC): Likewise.
+
+	* sysdeps/x86_64/pthread_spin_trylock.c: Removed.
+	* sysdeps/x86_64/pthread_spin_trylock.S: New file.
+	* sysdeps/x86_64/pthread_spin_unlock.c: Removed.
+	* sysdeps/x86_64/pthread_spin_unlock.S: New file.
+
+	* sysdeps/i386/i486/pthread_spin_trylock.S (pthread_spin_trylock):
+	Eliminate one entire instruction.
+
 	* cancellation.c (__pthread_enable_asynccancel_2): New function.
 	* pthreadP.h: Declare __pthread_enable_asynccancel_2.
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S

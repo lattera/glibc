@@ -42,7 +42,7 @@
 __condvar_cleanup:
 	/* Get internal lock.  */
 	movq	%rdi, %r8
-	movl	8(%rdi), %rdi
+	movq	8(%rdi), %rdi
 	movl	$1, %esi
 	LOCK
 #if cond_lock == 0
@@ -89,7 +89,7 @@ __condvar_cleanup:
 2:	testq	$2, (%r8)
 	jne	3f
 
-	movq	16(%r8), %edi
+	movq	16(%r8), %rdi
 	callq	__pthread_mutex_lock_internal
 
 3:	retq
@@ -101,7 +101,7 @@ __condvar_cleanup:
 	.type	__pthread_cond_wait, @function
 	.align	16
 __pthread_cond_wait:
-	pushq	%12
+	pushq	%r12
 	subq	$64, %rsp
 
 	/* Prepare structure passed to cancellation handler.  */
@@ -131,7 +131,7 @@ __pthread_cond_wait:
 
 	/* Install cancellation handler.  */
 #ifdef PIC
-	leaq	__condvar_cleanup@GOTOFF(%rip), %rsi
+	leaq	__condvar_cleanup(%rip), %rsi
 #else
 	leaq	__condvar_cleanup, %rsi
 #endif
@@ -153,7 +153,7 @@ __pthread_cond_wait:
 #endif
 	jne	3f
 
-4:	movq	%rsp, %edi
+4:	movq	%rsp, %rdi
 	callq	__pthread_enable_asynccancel_2
 
 	movq	8(%rsp), %rdi

@@ -39,6 +39,14 @@
 #endif
 
 
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
+/* Variable set to a nonzero value if more than one thread runs or ran.  */
+int __pthread_multiple_threads attribute_hidden;
+/* Pointer to the corresponding variable in libc.  */
+int *__libc_multiple_threads_ptr attribute_hidden;
+#endif
+
+
 static int
 create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 {
@@ -79,7 +87,7 @@ create_thread (struct pthread *pd, STACK_VARIABLES_PARMS)
 	  /* We now have for sure more than one thread.  */
 	  pd->multiple_threads = 1;
 #else
-	  __pthread_multiple_threads = __libc_multiple_threads = 1;
+	  __pthread_multiple_threads = *__libc_multiple_threads_ptr = 1;
 #endif
 
 	  /* Now fill in the information about the new thread in

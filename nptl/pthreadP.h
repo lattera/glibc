@@ -202,9 +202,22 @@ hidden_proto (__nptl_create_event)
 hidden_proto (__nptl_death_event)
 
 /* Register the generation counter in the libpthread with the libc.  */
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 extern void __libc_pthread_init (unsigned long int *ptr,
 				 void (*reclaim) (void),
-				 const struct pthread_functions *functions);
+				 const struct pthread_functions *functions)
+     internal_function;
+#else
+extern int *__libc_pthread_init (unsigned long int *ptr,
+				 void (*reclaim) (void),
+				 const struct pthread_functions *functions)
+     internal_function;
+
+/* Variable set to a nonzero value if more than one thread runs or ran.  */
+extern int __pthread_multiple_threads attribute_hidden;
+/* Pointer to the corresponding variable in libc.  */
+extern int *__libc_multiple_threads_ptr attribute_hidden;
+#endif
 
 
 /* Namespace save aliases.  */

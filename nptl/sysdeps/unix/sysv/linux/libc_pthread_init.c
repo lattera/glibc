@@ -30,7 +30,13 @@
 struct fork_handler __pthread_child_handler attribute_hidden;
 
 
+#ifdef TLS_MULTIPLE_THREADS_IN_TCB
 void
+#else
+int __libc_multiple_threads attribute_hidden;
+
+int *
+#endif
 __libc_pthread_init (ptr, reclaim, functions)
      unsigned long int *ptr;
      void (*reclaim) (void);
@@ -51,5 +57,9 @@ __libc_pthread_init (ptr, reclaim, functions)
      can be done with one memory access instead of two.  */
   memcpy (&__libc_pthread_functions, functions,
 	  sizeof (__libc_pthread_functions));
+#endif
+
+#ifndef TLS_MULTIPLE_THREADS_IN_TCB
+  return &__libc_multiple_threads;
 #endif
 }
