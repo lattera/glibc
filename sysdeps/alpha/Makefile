@@ -44,3 +44,7 @@ sysdep-CFLAGS += -mno-fp-regs
 endif
 
 divrem := divl divq reml remq
+
+# For now, build everything with full IEEE math support. 
+# TODO: build separate libm and libm-ieee.
+sysdep-CFLAGS += -mieee
