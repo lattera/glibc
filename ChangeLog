@@ -1,3 +1,13 @@
+2003-04-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Add cast to
+	avoid warning.
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_sigaction): If
+	__ASSUME_VSYSCALL is defined don't add restorer.
+	* sysdeps/unix/sysv/linux/kernel-features.h: Define
+	__ASSUME_VSYSCALL for 2.5.53.
+
 2003-04-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/libc-start.c: Cleanup MAIN_AUXVEC_ARG handling.
