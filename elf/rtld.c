@@ -509,8 +509,8 @@ _dl_start (void *arg)
 	 data access using the global offset table.  */
 
       ELF_DYNAMIC_RELOCATE (&bootstrap_map, 0, 0);
-      bootstrap_map.l_relocated = 1;
     }
+  bootstrap_map.l_relocated = 1;
 
   /* Please note that we don't allow profiling of this object and
      therefore need not test whether we have to allocate the array
