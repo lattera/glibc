@@ -1,3 +1,8 @@
+2001-05-26  H.J. Lu <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h (ipc_perm): Put
+	back __key.
+
 2001-05-25  Bruce Mitchener  <bruce@cubik.org>
 
 	* manual/ctype.texi: Minor fix.
