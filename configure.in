@@ -148,6 +148,11 @@ AC_ARG_ENABLE(add-ons, dnl
    esac],
   [add_ons=])
 
+dnl Let the user avoid using TLS.  Don't know why but...
+AC_ARG_WITH(tls, dnl
+[  --without-tls           prevent support for TLS],
+	    usetls=$withval, usetls=yes)
+
 AC_CONFIG_SUBDIRS($add_ons)
 add_ons_pfx=
 if test x"$add_ons" != x; then

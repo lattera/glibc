@@ -1,3 +1,13 @@
+2002-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Add --without-tls option.
+	* sysdeps/i386/elf/configure.in: Don't check for TLS support if
+	--without-tls is given.
+
+	* sysdeps/generic/dl-tls.c: Include <tls.h>.
+
+	* sysdeps/i386/dl-tls.h: Don't define anything if !USE_TLS.
+
 2002-02-06  Roland McGrath  <roland@frob.com>
 
 	* malloc/hooks.c [! HAVE_MREMAP]: Conditionalize unused decls.

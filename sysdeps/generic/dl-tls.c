@@ -19,6 +19,7 @@
 
 #include <assert.h>
 
+#include <tls.h>
 #include <dl-tls.h>
 #include <ldsodefs.h>
 
@@ -99,6 +100,10 @@ _dl_determine_tlsoffset (struct link_map *firstp)
       runp->l_tls_offset = offset;
     }
   while ((runp = runp->l_tls_nextimage) != firstp);
+
+  /* The thread descriptor (pointed to by the thread pointer) has its
+     own alignment requirement.  Adjust the static TLS size
+     appropriately.  */
 # elif TLS_DTV_AT_TP
   struct link_map *lastp;
 

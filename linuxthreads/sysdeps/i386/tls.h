@@ -20,6 +20,8 @@
 #ifndef _TLS_H
 #define _TLS_H
 
+#include <stddef.h>
+
 /* Type for the dtv.  */
 typedef union dtv
 {

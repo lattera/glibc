@@ -1,5 +1,7 @@
 2002-02-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/tls.h: Include <stddef.h> for size_t.
+
 	* sysdeps/i386/tls.h: Define THREAD_DTV.
 
 2002-02-04  Ulrich Drepper  <drepper@redhat.com>

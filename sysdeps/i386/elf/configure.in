@@ -2,6 +2,7 @@ sinclude(./aclocal.m4)dnl Autoconf lossage
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 # Local configure fragment for sysdeps/unix/sysv/linux.
 
+if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and
 # linker.
 AC_CACHE_CHECK(for i386 TLS support, libc_cv_386_tls, [dnl
@@ -27,4 +28,5 @@ fi
 rm -f conftest*])
 if test $libc_cv_386_tls = yes; then
   AC_DEFINE(HAVE_TLS_SUPPORT)
+fi
 fi

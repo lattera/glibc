@@ -119,7 +119,7 @@ will be used, and CFLAGS sets optimization options for the compiler.
 `--enable-omitfp'
      Use maximum optimization for the normal (static and shared)
      libraries, and compile separate static libraries with debugging
-     information and no optimisation.  We recommend against this.  The
+     information and no optimization.  We recommend against this.  The
      extra optimization doesn't gain you much, it may provoke compiler
      bugs, and you won't be able to trace bugs through the C library.
 
@@ -133,6 +133,12 @@ will be used, and CFLAGS sets optimization options for the compiler.
      This is not recommended because it defeats the purpose of NSS; a
      program linked statically with the NSS libraries cannot be
      dynamically reconfigured to use a different name database.
+
+`--without-tls'
+     By default the C library is build with support for thread-local
+     storage if the used tools support it.  By using `--without-tls'
+     this can be prevented though there generally is no reason since it
+     creates compatibility problems.
 
 `--build=BUILD-SYSTEM'
 `--host=HOST-SYSTEM'
@@ -159,26 +165,16 @@ produce a lot of output, some of which may look like errors from `make'
 but isn't.  Look for error messages from `make' containing `***'.
 Those indicate that something is really wrong.
 
-   The compilation process takes several hours even on fast hardware.
-Expect at least two hours for the default configuration on i586 for
-Linux.  For Hurd times are much longer.  Except for EGCS 1.1 and GCC
-2.95 (and later versions of GCC), all supported versions of GCC have a
-problem which causes them to take several minutes to compile certain
-files in the iconvdata directory.  Do not panic if the compiler appears
-to hang.
+   The compilation process can take several hours.  Expect at least two
+hours for the default configuration on i586 for Linux.  For Hurd times
+are much longer.  Except for EGCS 1.1 and GCC 2.95 (and later versions
+of GCC), all supported versions of GCC have a problem which causes them
+to take several minutes to compile certain files in the iconvdata
+directory.  Do not panic if the compiler appears to hang.
 
-   If you want to run a parallel make, you can't just give `make' the
-`-j' option, because it won't be passed down to the sub-makes.
-Instead, edit the generated `Makefile' and uncomment the line
-
-     # PARALLELMFLAGS = -j 4
-
-You can change the `4' to some other number as appropriate for your
-system.  Instead of changing the `Makefile', you could give this option
-directly to `make' and call it as, for example, `make
-PARALLELMFLAGS=-j4'.  If you're building in the source directory, you
-must use the latter approach since in this case no new `Makefile' is
-generated for you to change.
+   If you want to run a parallel make, simply pass the `-j' option with
+an appropriate numeric parameter to `make'.  You need a recent GNU
+`make' version, though.
 
    To build and run test programs which exercise some of the library
 facilities, type `make check'.  If it does not complete successfully,
@@ -187,6 +183,11 @@ problem is not already known.  *Note Reporting Bugs::, for instructions
 on reporting bugs.  Note that some of the tests assume they are not
 being run by `root'.  We recommend you compile and test glibc as an
 unprivileged user.
+
+   Before reporting bugs make sure there is no problem with your system.
+The tests (and later installation) uses some pre-existing files of the
+system such as `/etc/passwd', `/etc/nsswitch.conf' and others.  These
+files must all contain correct and sensible content.
 
    To format the `GNU C Library Reference Manual' for printing, type
 `make dvi'.  You need a working TeX installation to do this.  The
@@ -440,11 +441,13 @@ Specific advice for Linux systems
 =================================
 
    If you are installing GNU libc on a Linux system, you need to have
-the header files from a 2.2 kernel around for reference.  You do not
-need to use the 2.2 kernel, just have its headers where glibc can access
-at them.  The easiest way to do this is to unpack it in a directory
-such as `/usr/src/linux-2.2.1'.  In that directory, run `make config'
-and accept all the defaults.  Then run `make include/linux/version.h'.
+the header files from a 2.2 or newer kernel around for reference.  For
+some architectures, like ia64, sh and hppa, you need at least headers
+from kernel 2.3.99 (sh and hppa) or 2.4.0 (ia64).  You do not need to
+use that kernel, just have its headers where glibc can access at them.
+The easiest way to do this is to unpack it in a directory such as
+`/usr/src/linux-2.2.1'.  In that directory, run `make config' and
+accept all the defaults.  Then run `make include/linux/version.h'.
 Finally, configure glibc with the option
 `--with-headers=/usr/src/linux-2.2.1/include'.  Use the most recent
 kernel you can get your hands on.

@@ -156,6 +156,12 @@ This is not recommended because it defeats the purpose of NSS; a program
 linked statically with the NSS libraries cannot be dynamically
 reconfigured to use a different name database.
 
+@item --without-tls
+By default the C library is build with support for thread-local storage
+if the used tools support it.  By using @samp{--without-tls} this can be
+prevented though there generally is no reason since it creates
+compatibility problems.
+
 @item --build=@var{build-system}
 @itemx --host=@var{host-system}
 These options are for cross-compiling.  If you specify both options and
