@@ -243,7 +243,6 @@ $(objpfx)dep1.so: $(objpfx)dep2.so $(objpfx)dep4.so
 $(objpfx)dep2.so: $(objpfx)dep3.so $(objpfx)dep4.so
 $(objpfx)dep4.so: $(objpfx)dep3.so
 $(objpfx)nodelmod3.so: $(objpfx)nodelmod4.so
-$(objpfx)filtmod1.so: $(objpfx)filtmod2.so
 
 $(test-modules): $(objpfx)%.so: $(objpfx)%.os
 	$(build-module)
@@ -315,5 +314,9 @@ LDFLAGS-nodlopenmod.so = -Wl,--enable-new-dtags,-z,nodlopen
 $(objpfx)nodlopen: $(libdl)
 $(objpfx)nodlopen.out: $(objpfx)nodlopenmod.so
 
-LDFLAGS-filtmod1.so = -Wl,-F,$(objpfx)filtmod2.so
+$(objpfx)filtmod1.so: $(objpfx)filtmod1.os $(objpfx)filtmod2.so
+	$(LINK.o) -shared -o $@ -B$(csu-objpfx) $(LDFLAGS.so) \
+		  -L$(subst :, -L,$(rpath-link)) \
+		  -Wl,-rpath-link=$(rpath-link) \
+		  $< -Wl,-F,$(objpfx)filtmod2.so
 $(objpfx)filter: $(objpfx)filtmod1.so
