@@ -26,8 +26,15 @@
 
 
 int
-__fcntl_nocancel (int fd, int cmd, void *arg)
+__fcntl_nocancel (int fd, int cmd, ...)
 {
+  va_list ap;
+  void *arg;
+
+  va_start (ap, cmd);
+  arg = va_arg (ap, void *);
+  va_end (ap);
+
   return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
 }
 
