@@ -44,7 +44,7 @@
 #include <sys/poll.h>
 
 #ifdef _RPC_THREAD_SAFE_
-#define xports ((SVCXPRT **)RPC_THREAD_VARIABLE(svc_xports_s))
+#define xports RPC_THREAD_VARIABLE(svc_xports_s)
 #else
 static SVCXPRT **xports;
 #endif
@@ -63,7 +63,7 @@ struct svc_callout {
   void (*sc_dispatch) (struct svc_req *, SVCXPRT *);
 };
 #ifdef _RPC_THREAD_SAFE_
-#define svc_head ((struct svc_callout *)RPC_THREAD_VARIABLE(svc_head_s))
+#define svc_head RPC_THREAD_VARIABLE(svc_head_s)
 #else
 static struct svc_callout *svc_head;
 #endif

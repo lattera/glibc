@@ -61,7 +61,7 @@ struct clntraw_private_s
     u_int mcnt;
   };
 #ifdef _RPC_THREAD_SAFE_
-#define clntraw_private ((struct clntraw_private_s *)RPC_THREAD_VARIABLE(clntraw_private_s))
+#define clntraw_private RPC_THREAD_VARIABLE(clntraw_private_s)
 #else
 static struct clntraw_private_s *clntraw_private;
 #endif

@@ -17,24 +17,24 @@ struct rpc_thread_variables {
 	struct pollfd	*svc_pollfd_s;		/* Global, rpc_common.c */
 	int		svc_max_pollfd_s;	/* Global, rpc_common.c */
 
-	void		*clnt_perr_buf_s;	/* clnt_perr.c */
+	char		*clnt_perr_buf_s;	/* clnt_perr.c */
 
-	void		*clntraw_private_s;	/* clnt_raw.c */
+	struct clntraw_private_s *clntraw_private_s;	/* clnt_raw.c */
 
-	void		*callrpc_private_s;	/* clnt_simp.c */
+	struct callrpc_private_s *callrpc_private_s;	/* clnt_simp.c */
 
-	void		*key_call_private_s;	/* key_call.c */
+	struct key_call_private *key_call_private_s;	/* key_call.c */
 
-	void		*authdes_cache_s;	/* svcauth_des.c */
-	void		*authdes_lru_s;		/* svcauth_des.c */
+	struct cache_entry *authdes_cache_s;	/* svcauth_des.c */
+	int		*authdes_lru_s;		/* svcauth_des.c */
 
-	void		*svc_xports_s;		/* svc.c */
-	void		*svc_head_s;		/* svc.c */
+	SVCXPRT		**svc_xports_s;		/* svc.c */
+	struct svc_callout *svc_head_s;		/* svc.c */
 
-	void		*svcraw_private_s;	/* svc_raw.c */
+	struct svcraw_private_s *svcraw_private_s;	/* svc_raw.c */
 
-	void		*svcsimple_proglst_s;	/* svc_simple.c */
-	void		*svcsimple_transp_s;	/* svc_simple.c */
+	struct proglst_ *svcsimple_proglst_s;	/* svc_simple.c */
+	SVCXPRT		*svcsimple_transp_s;	/* svc_simple.c */
 };
 
 extern struct rpc_thread_variables *__rpc_thread_variables(void)

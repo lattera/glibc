@@ -54,7 +54,7 @@ struct svcraw_private_s
     char verf_body[MAX_AUTH_BYTES];
   };
 #ifdef _RPC_THREAD_SAFE_
-#define svcraw_private ((struct svcraw_private_s *)RPC_THREAD_VARIABLE(svcraw_private_s))
+#define svcraw_private RPC_THREAD_VARIABLE(svcraw_private_s)
 #else
 static struct svcraw_private_s *svcraw_private;
 #endif

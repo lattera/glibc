@@ -370,7 +370,7 @@ struct  key_call_private {
   uid_t   uid;            /* user-id at last authorization */
 };
 #ifdef _RPC_THREAD_SAFE_
-#define key_call_private_main ((struct  key_call_private *)RPC_THREAD_VARIABLE(key_call_private_s))
+#define key_call_private_main RPC_THREAD_VARIABLE(key_call_private_s)
 #else
 static struct key_call_private *key_call_private_main;
 #endif

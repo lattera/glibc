@@ -72,8 +72,8 @@ struct cache_entry
     char *localcred;		/* generic local credential */
   };
 #ifdef _RPC_THREAD_SAFE_
-#define authdes_cache ((struct cache_entry *)RPC_THREAD_VARIABLE(authdes_cache_s))
-#define authdes_lru ((int *)RPC_THREAD_VARIABLE(authdes_lru_s))
+#define authdes_cache RPC_THREAD_VARIABLE(authdes_cache_s)
+#define authdes_lru RPC_THREAD_VARIABLE(authdes_lru_s)
 #else
 static struct cache_entry *authdes_cache;
 static int *authdes_lru;

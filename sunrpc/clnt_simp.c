@@ -55,7 +55,7 @@ struct callrpc_private_s
     char *oldhost;
   };
 #ifdef _RPC_THREAD_SAFE_
-#define callrpc_private ((struct callrpc_private_s *)RPC_THREAD_VARIABLE(callrpc_private_s))
+#define callrpc_private RPC_THREAD_VARIABLE(callrpc_private_s)
 #else
 static struct callrpc_private_s *callrpc_private;
 #endif

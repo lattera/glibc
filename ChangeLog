@@ -1,3 +1,16 @@
+2004-02-09  Andreas Schwab  <schwab@suse.de>
+
+	* include/rpc/rpc.h: Declare thread variables with their correct
+	type.
+	* sunrpc/clnt_perr.c: Don't cast thread variables.
+	* sunrpc/clnt_raw.c: Likewise.
+	* sunrpc/clnt_simp.c: Likewise.
+	* sunrpc/key_call.c: Likewise.
+	* sunrpc/svcauth_des.c: Likewise.
+	* sunrpc/svc.c: Likewise.
+	* sunrpc/svc_raw.c: Likewise.
+	* sunrpc/svc_simple.c: Likewise.
+
 2004-02-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/_i18n_number.h: Support printing localized decimal

@@ -55,7 +55,7 @@ static char *auth_errmsg (enum auth_stat stat) internal_function;
  * buf variable in a few functions.  Overriding a global variable
  * with a local variable of the same name is a bad idea, anyway.
  */
-#define buf ((char *)RPC_THREAD_VARIABLE(clnt_perr_buf_s))
+#define buf RPC_THREAD_VARIABLE(clnt_perr_buf_s)
 #else
 static char *buf;
 #endif
