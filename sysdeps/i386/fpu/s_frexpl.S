@@ -72,6 +72,7 @@ ENTRY (BP_SYM (__frexpl))
 	fmull	MO(two64)	/* It's not necessary to use a 80bit factor */
 	movl	$-64, %ecx
 	fstpt	VAL0(%esp)
+	fwait
 	movl	VAL2(%esp), %eax
 	movl	%eax, %edx
 	andl	$0x7fff, %eax

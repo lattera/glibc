@@ -67,6 +67,7 @@ ENTRY (BP_SYM (__frexpf))
 	fmuls	MO(two25)
 	movl	$-25, %ecx
 	fstps	VAL(%esp)
+	fwait
 	movl	VAL(%esp), %eax
 	movl	%eax, %edx
 	andl	$0x7fffffff, %eax

@@ -1,5 +1,9 @@
 2000-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/i386/fpu/s_frexp.S: Add missing fwait.
+	* sysdeps/i386/fpu/s_frexpf.S: Likewise.
+	* sysdeps/i386/fpu/s_frexpl.S: Likewise.
+
 	* sysdeps/generic/glob.c: Adjust types of several variables to
 	avoid warnings.
 
