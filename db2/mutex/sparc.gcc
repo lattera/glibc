@@ -13,21 +13,19 @@
  * For gcc/sparc, 0 is clear, 1 is set.
  */
 
-#if defined(__sparcv9__)
-Does the following code need membar instructions for V9 processors?
-#endif
+/* The stbar is needed for v8, and is implemented as membar #sync on v9,
+   so is functional there as well.  For v7, stbar may generate an illegal
+   instruction and we have no way to tell what we're running on.  Some
+   operating systems notice and skip this instruction in the fault handler.  */
 
 #define	TSL_SET(tsl) ({							\
 	register tsl_t *__l = (tsl);					\
 	register tsl_t __r;						\
 	__asm__ volatile						\
-	    ("ldstub [%1],%0"						\
+	    ("ldstub [%1],%0; stbar"					\
 	    : "=r"( __r) : "r" (__l));					\
 	!__r;								\
 })
 
-#define	TSL_UNSET(tsl) ({						\
-         register tsl_t *__l = (tsl);					\
-        __asm__ volatile ("stb %%g0,[%0]" : : "r" (__l));		\
-})
+#define	TSL_UNSET(tsl)	((tsl) = 0)
 #define	TSL_INIT(tsl)	TSL_UNSET(tsl)

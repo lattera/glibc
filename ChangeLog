@@ -1,5 +1,13 @@
 1999-08-30  Ulrich Drepper  <drepper@cygnus.com>
 
+	* db2/db_int.h: Change tsl_t type to u_int32_t.
+	* db2/mutex/mutex.c: Allow Alpha mutex definitions.
+	* db2/mutex/alpha.h: New file.
+	* db2/mutex/sparc.gcc: Fix store code for v9.  Simplify clear code.
+	* sysdeps/alpha/Makefile [db2]: Set CFLAGS of mutex.c to make spinlocks
+	known.
+	Patches by Richard Henderson.
+
 	* stdlib/tst-environ.c: Add cast to avoid warning.
 	* timezone/test-tz.c: Use setenv instead of putenv.
 

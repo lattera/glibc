@@ -34,7 +34,7 @@ main (int argc, char ** argv)
 
   for (i = 0; i < sizeof (tests) / sizeof (tests[0]); ++i)
     {
-      setenv ("TZ", tests[i].env);
+      setenv ("TZ", tests[i].env, 1);
       t = mktime (&tm);
       if (t != tests[i].expected)
 	{

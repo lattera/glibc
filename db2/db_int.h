@@ -138,7 +138,7 @@ typedef struct __fn {
 /*******************************************************
  * Mutex support.
  *******************************************************/
-typedef unsigned char tsl_t;
+typedef u_int32_t tsl_t;
 
 /*
  * !!!

@@ -1,4 +1,4 @@
-# Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1993, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -16,6 +16,10 @@
 # License along with the GNU C Library; see the file COPYING.LIB.  If not,
 # write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 # Boston, MA 02111-1307, USA.
+
+ifeq ($(subdir),db2)
+CPPFLAGS += -DHAVE_SPINLOCKS=1 -DHAVE_ASSEM_ALPHA=1
+endif
 
 ifeq ($(subdir),gmon)
 sysdep_routines += _mcount

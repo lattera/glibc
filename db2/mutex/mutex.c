@@ -110,6 +110,10 @@ static const char sccsid[] = "@(#)mutex.c	10.52 (Sleepycat) 11/8/98";
 #include "x86.gcc"
 #endif
 
+#ifdef HAVE_ASSEM_ALPHA
+#include "alpha.h"
+#endif
+
 #ifdef WIN16
 /* Win16 spinlocks are simple because we cannot possibly be preempted. */
 #define	TSL_INIT(tsl)
