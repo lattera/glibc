@@ -120,6 +120,7 @@ __inline_mathop(__ieee754_asin, asin)
 __inline_mathop(__ieee754_cosh, cosh)
 __inline_mathop(__ieee754_sinh, sinh)
 __inline_mathop(__ieee754_exp, etox)
+__inline_mathop(__ieee754_exp2, twotox)
 __inline_mathop(__ieee754_log10, log10)
 __inline_mathop(__ieee754_log, logn)
 __inline_mathop(__ieee754_sqrt, sqrt)
@@ -139,7 +140,6 @@ __inline_mathop(__log1p, lognp1)
 __inline_mathop(__significand, getman)
 
 __inline_mathop(__log2, log2)
-__inline_mathop(__exp2, twotox)
 __inline_mathop(__trunc, intrz)
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__

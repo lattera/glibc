@@ -1,2 +1,2 @@
-#define FUNC exp2l
-#include <s_atanl.c>
+#define FUNC __ieee754_exp2l
+#include <e_acosl.c>
