@@ -1,3 +1,7 @@
+2001-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/Versions: Remove __new_exitfn again.  Not needed.
+
 2001-03-05  Andreas Jaeger  <aj@suse.de>
 
 	* stdlib/msort.c (qsort): Don't use alloca in a function call.
@@ -27,7 +31,7 @@
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Adjust for addition of lgammal.
 
-	* rt/lib_listio.c: Add a few asserts.
+	* rt/lio_listio.c: Add a few asserts.
 
 	* elf/global.c: New file.
 	* elf/globalmod1.c: New file.
