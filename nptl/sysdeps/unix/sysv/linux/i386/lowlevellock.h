@@ -192,7 +192,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 		       "lock\n"						      \
 		       "0:\tcmpxchgl %2, %1; setne %0"			      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (0), "1" (futex), "0" (1),			      \
+		       : "r" (0), "1" (futex), "0" (0),			      \
 		         "i" (offsetof (tcbhead_t, multiple_threads))	      \
 		       : "memory");					      \
      ret; })
