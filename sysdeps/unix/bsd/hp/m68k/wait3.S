@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 
 .globl ___wait3
 ___wait3:
+	movel sp@(8), d1
+	moveal sp@(12), a0
 	movel #SYS_wait, d0
 	/* Set all condition codes to tell the kernel this is wait3.  */
 	movew #31, ccr
