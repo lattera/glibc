@@ -1,3 +1,8 @@
+2003-07-21  Art Haas  <ahaas@airmail.net>
+
+	* manual/charset.texi (Converting a Character): Fix example code so a
+	valid pointer is returned.
+
 2003-07-22  Andreas Jaeger  <aj@suse.de>
 
 	* elf/readlib.c (process_file): Check that file is a shared
