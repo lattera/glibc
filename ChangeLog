@@ -1,6 +1,10 @@
+1999-08-23  Mark Kettenis  <kettenis@gnu.org>
+
+	* hurd/hurdsig.c (_hurd_internal_post_signal): Add missing else.
+
 1999-08-23  Ulrich Drepper  <drepper@cygnus.com>
 
-	* stdio-common/Makefile: Mode addition to routines to the right place.
+	* stdio-common/Makefile: Move addition to routines to the right place.
 
 1999-08-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
