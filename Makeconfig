@@ -364,7 +364,11 @@ else
 # some additional bizarre files.
 start-installed-name = crt1.o
 endif
-
+# On systems that do not need a special startfile for statically linked
+# binaries, simply set it to the normal name.
+ifndef static-start-installed-name
+static-start-installed-name = $(start-installed-name)
+endif
 
 # Command for linking programs with the C library.
 ifndef +link
@@ -382,7 +386,7 @@ endif
 ifndef +link-static
 +link-static = $(CC) -nostdlib -nostartfiles -static -o $@ \
 	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
-	      $(addprefix $(csu-objpfx),$(start-installed-name)) \
+	      $(addprefix $(csu-objpfx),$(static-start-installed-name)) \
 	      $(+preinit) $(+prector) \
 	      $(filter-out $(addprefix $(csu-objpfx),start.o \
 						     $(start-installed-name))\

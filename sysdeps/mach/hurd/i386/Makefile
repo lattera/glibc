@@ -1,3 +1,6 @@
+# We need special startup code for statically linked binaries.
+static-start-installed-name = crt0.o
+
 ifeq ($(subdir),csu)
 extra-objs += crt0.o
 install-lib += crt0.o

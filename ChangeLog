@@ -1,5 +1,14 @@
 1999-06-12  Mark Kettenis  <kettenis@gnu.org>
 
+	* Makeconfig (static-start-installed-name): Set to
+	$(start-installed-name) if not defined.
+	(+link-static): Use $(static-start-installed-name) instead of
+	$(start-installed-name).
+	* sysdeps/mach/hurd/i386/Makefile (static-start-installed-name):
+	Set to crt0.o.
+
+1999-06-12  Mark Kettenis  <kettenis@gnu.org>
+
 	* sysdeps/mach/hurd/fork.c (__fork): Make use of `insert_type' when
 	inserting a send right into the child instead of unconditionally
 	copying the send right.
