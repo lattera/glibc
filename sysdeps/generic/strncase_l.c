@@ -1,6 +1,6 @@
 /* Compare at most N characters of two strings without taking care for
    the case using given locale.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,5 @@
 
 #define USE_IN_EXTENDED_LOCALE_MODEL	1
 #include <sysdeps/generic/strncase.c>
+
+libc_hidden_def (__strncasecmp_l)

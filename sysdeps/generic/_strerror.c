@@ -69,3 +69,4 @@ __strerror_r (int errnum, char *buf, size_t buflen)
   return (char *) _(INTUSE(_sys_errlist)[errnum]);
 }
 weak_alias (__strerror_r, strerror_r)
+libc_hidden_def (__strerror_r)

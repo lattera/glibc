@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,6 +47,9 @@ __strdup (const char *s)
 
   return (char *) memcpy (new, s, len);
 }
+#ifdef libc_hidden_def
+libc_hidden_def (__strdup)
+#endif
 #ifdef weak_alias
 weak_alias (__strdup, strdup)
 #endif

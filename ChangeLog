@@ -1,3 +1,14 @@
+2002-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/string.h: Use libc_hidden_proto for __strcasecmp_l,
+	__strncasecmp_l, __strdup, __strndup, __strerror_r.
+	* sysdeps/generic/strcasecmp_l.c (__strcasecmp_l): Add
+	libc_hidden_def.
+	* string/strdup.c (__strdup): Likewise.
+	* string/strndup.c (__strndup): Likewise.
+	* sysdeps/generic/_strerror.c (__strerror_r): Likewise.
+	* sysdeps/generic/strncase_l.c (__strncasecmp_l): Likewise.
+
 2002-08-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/libio.h: New file.
