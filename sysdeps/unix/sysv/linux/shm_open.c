@@ -38,7 +38,7 @@ static struct
 } mountpoint;
 
 /* This is the default directory.  */
-const char defaultdir[] = "/dev/shm/";
+static const char defaultdir[] = "/dev/shm/";
 
 /* Protect the `mountpoint' variable above.  */
 __libc_once_define (static, once);
@@ -82,7 +82,15 @@ where_is_shmfs (void)
       {
 	/* Found it.  There might be more than one place where the
            filesystem is mounted but one is enough for us.  */
-	size_t namelen = strlen (mp->mnt_dir);
+	size_t namelen;
+
+	/* First make sure this really is the correct entry.  At least
+	   some versions of the kernel give wrong information because
+	   of the implicit mount of the shmfs for SysV IPC.  */
+	if (__statfs (mp->mnt_dir, &f) != 0 || f.f_type != SHMFS_SUPER_MAGIC)
+	  continue;
+
+	namelen = strlen (mp->mnt_dir);
 
 	if (namelen == 0)
 	  /* Hum, maybe some crippled entry.  Keep on searching.  */
