@@ -1,24 +1,3 @@
-1999-07-16  Roland McGrath  <roland@baalperazim.frob.com>
-
-	* elf/dl-reloc.c (_dl_reloc_bad_type): New function.
-	* elf/ldsodefs.h: Declare it.
-	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela): Use it
-	instead of assert.
-	(elf_machine_lazy_rel): Likewise.
-	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela): Likewise.
-	(elf_machine_lazy_rel): Likewise.
-	* sysdeps/mips/dl-machine.h (elf_machine_rel): Likewise.
-	* sysdeps/mips/mips64/dl-machine.h (elf_machine_rel): Likewise.
-	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Likewise.
-	(elf_machine_lazy_rel): Likewise.
-	* sysdeps/i386/dl-machine.h (elf_machine_rel): Likewise.
-	(elf_machine_lazy_rel): Likewise.
-	* sysdeps/generic/dl-machine.h (elf_machine_rel): Likewise.
-	* sysdeps/arm/dl-machine.h (elf_machine_rel): Likewise.
-	(elf_machine_lazy_rel): Likewise.
-	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
-	(elf_machine_lazy_rel): Likewise.
-
 1999-07-21  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/mach/hurd/read.c: Do not include <hurd.h> and
