@@ -36,7 +36,7 @@ sys_mknod	xmknod	mknod		3	__syscall_mknod
 # proper socket implementations:
 accept		-	accept		3	__libc_accept	__accept accept
 bind		-	bind		3	__bind		bind
-connect		-	connect		3	__libc_connect	__connect connect
+connect		-	connect		3	__libc_connect	__connect_internal __connect connect
 getpeername	-	getpeername	3	__getpeername	getpeername
 getsockname	-	getsockname	3	__getsockname	getsockname
 getsockopt	-	getsockopt	5	__getsockopt	getsockopt
