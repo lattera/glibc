@@ -137,6 +137,8 @@
 #define _IO_BAD_SEEN 0x4000
 #define _IO_USER_LOCK 0x8000
 
+#define _IO_FLAGS2_MMAP 1
+
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
 #define _IO_SKIPWS 01
 #define _IO_LEFT 02
@@ -282,7 +284,11 @@ struct _IO_FILE {
   struct _IO_FILE *_chain;
 
   int _fileno;
+#if 0
   int _blksize;
+#else
+  int _flags2;
+#endif
   _IO_off_t _old_offset; /* This used to be _offset but it's too small.  */
 
 #define __HAVE_COLUMN /* temporary */

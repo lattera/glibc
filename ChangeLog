@@ -1,3 +1,16 @@
+2002-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_fopen): Recognize new mode specifier
+	'm' to enable mmap I/O.
+	* libio/libio.h (_IO_FILE): Rename _blksize field to _flags2.  The
+	former wasn't used (anymore?).
+	(_IO_FLAGS2_MMAP): New define.
+	* libio/genops.c (_IO_no_init): Initialize _flags2 field.
+	* libio/iofopen.c (__fopen_maybe_mmap): Use mmap callbacks only if
+	_IO_FLAGS2_MMAP bit is set.
+	* libio/iofdopen.c (_IO_new_fdopen): Recognize 'm' mode specifier.
+	Enable mmap-using mode only if 'm' was set.
+
 2002-08-29  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup: doinit):

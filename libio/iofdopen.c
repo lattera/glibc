@@ -59,8 +59,10 @@ _IO_new_fdopen (fd, mode)
     struct _IO_wide_data wd;
   } *new_f;
   int fd_flags;
+  int i;
+  int use_mmap = 0;
 
-  switch (*mode++)
+  switch (*mode)
     {
     case 'r':
       read_write = _IO_NO_WRITES;
@@ -76,8 +78,26 @@ _IO_new_fdopen (fd, mode)
       MAYBE_SET_EINVAL;
       return NULL;
   }
-  if (mode[0] == '+' || (mode[0] == 'b' && mode[1] == '+'))
-    read_write &= _IO_IS_APPENDING;
+  for (i = 1; i < 5; ++i)
+    {
+      switch (*++mode)
+	{
+	case '\0':
+	  break;
+	case '+':
+	  read_write &= _IO_IS_APPENDING;
+	  break;
+	case 'm':
+	  use_mmap = 1;
+	  continue;
+	case 'x':
+	case 'b':
+	default:
+	  /* Ignore */
+	  continue;
+	}
+      break;
+    }
 #ifdef F_GETFL
   fd_flags = _IO_fcntl (fd, F_GETFL);
 #ifndef O_ACCMODE
@@ -129,12 +149,13 @@ _IO_new_fdopen (fd, mode)
      call _IO_file_attach or else it will allocate a buffer immediately.  */
   _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd,
 #ifdef _G_HAVE_MMAP
-	       (read_write & _IO_NO_WRITES) ? &_IO_wfile_jumps_maybe_mmap :
+	       (use_mmap && (read_write & _IO_NO_WRITES))
+	       ? &_IO_wfile_jumps_maybe_mmap :
 #endif
 	       &INTUSE(_IO_wfile_jumps));
   _IO_JUMPS (&new_f->fp) =
 #ifdef _G_HAVE_MMAP
-    (read_write & _IO_NO_WRITES) ? &_IO_file_jumps_maybe_mmap :
+    (use_mmap && (read_write & _IO_NO_WRITES)) ? &_IO_file_jumps_maybe_mmap :
 #endif
       &INTUSE(_IO_file_jumps);
   INTUSE(_IO_file_init) (&new_f->fp);

@@ -610,6 +610,7 @@ _IO_no_init (fp, flags, orientation, wd, jmp)
      struct _IO_jump_t *jmp;
 {
   fp->_flags = _IO_MAGIC|flags;
+  fp->_flags2 = 0;
   fp->_IO_buf_base = NULL;
   fp->_IO_buf_end = NULL;
   fp->_IO_read_base = NULL;
