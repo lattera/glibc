@@ -1,5 +1,9 @@
 2000-03-26  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* libio/Makefile (headers): Add bits/stdio-lock.h here.
+
+	* sysdeps/mach/hurd/bits/stdio-lock.h: New file.
+
 	* include/shlib-compat.h: Include <abi-versions.h> unconditionally.
 
 	* posix/unistd.h (intptr_t): Conditionalize on [__USE_MISC ||
