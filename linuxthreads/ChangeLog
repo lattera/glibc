@@ -1,3 +1,7 @@
+2002-06-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/pt-machine.h (MEMORY_BARRIER): Fix typo.
+
 2002-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/pt-machine.h (MEMORY_BARRIER): Use __sync_synchronize.
