@@ -3,6 +3,9 @@
 	* sysdeps/powerpc/bzero.S: Moved to...
 	* sysdeps/powerpc/elf/bzero.S: ...here.  New file.
 
+	* posix/environ.c: Moved to...
+	* sysdeps/generic/environ.c: ...here.  New file.
+
 2000-02-25  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/Makefile (CFLAGS-_itoa.c): The code has been
