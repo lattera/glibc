@@ -1,7 +1,7 @@
 2000-11-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/__longjmp.c (__longjmp): Remove obsolete
-	NORETURN.
+	NORETURN, fix parameter list.
 
 	* string/bug-strncat1.c (main): Fix typo.
 	Patch by Bernhard Kaindl <bernhard.kaindl@suse.de>.

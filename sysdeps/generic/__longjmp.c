@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,7 @@
 /* Jump to the position specified by ENV, causing the
    setjmp call there to return VAL, or 1 if VAL is 0.  */
 void
-__longjmp (env, val)
-     const __jmp_buf env;
-     int val;
+__longjmp (__jmp_buf env, int val)
 {
   if (val == 0)
     val = 1;
