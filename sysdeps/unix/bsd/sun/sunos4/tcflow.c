@@ -19,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 #include <ansidecl.h>
 #include <errno.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 /* Suspend or restart transmission on FD.  */
 int
