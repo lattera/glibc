@@ -9,14 +9,10 @@
 #ifdef _RPC_THREAD_SAFE_
 
 
-/* Variable used in non-threaded applications.  */
+/* Variable used in non-threaded applications or for the first thread.  */
 static struct rpc_thread_variables __libc_tsd_RPC_VARS_mem;
 static struct rpc_thread_variables *__libc_tsd_RPC_VARS_data =
      &__libc_tsd_RPC_VARS_mem;
-
-
-/* This is the variable used for the first thread.  */
-static struct rpc_thread_variables rpc_default;
 
 /*
  * Task-variable destructor
@@ -26,7 +22,7 @@ __rpc_thread_destroy (void)
 {
 	struct rpc_thread_variables *tvp = __rpc_thread_variables();
 
-	if (tvp != NULL && tvp != &rpc_default) {
+	if (tvp != NULL && tvp != &__libc_tsd_RPC_VARS_mem) {
 		__rpc_thread_svc_cleanup ();
 		__rpc_thread_clnt_cleanup ();
 		__rpc_thread_key_cleanup ();
@@ -47,7 +43,7 @@ __rpc_thread_destroy (void)
 static void
 rpc_thread_multi (void)
 {
-  __libc_tsd_set (RPC_VARS, &rpc_default);
+  __libc_tsd_set (RPC_VARS, &__libc_tsd_RPC_VARS_mem);
 }
 
 
@@ -88,7 +84,7 @@ __rpc_thread_svc_fdset (void)
 	struct rpc_thread_variables *tvp;
 
 	tvp = __rpc_thread_variables ();
-	if (tvp == &rpc_default)
+	if (tvp == &__libc_tsd_RPC_VARS_mem)
 		return &svc_fdset;
 	return &tvp->svc_fdset_s;
 }
@@ -99,7 +95,7 @@ __rpc_thread_createerr (void)
 	struct rpc_thread_variables *tvp;
 
 	tvp = __rpc_thread_variables ();
-	if (tvp == &rpc_default)
+	if (tvp == &__libc_tsd_RPC_VARS_mem)
 		return &rpc_createerr;
 	return &tvp->rpc_createerr_s;
 }
@@ -110,7 +106,7 @@ __rpc_thread_svc_pollfd (void)
 	struct rpc_thread_variables *tvp;
 
 	tvp = __rpc_thread_variables ();
-	if (tvp == &rpc_default)
+	if (tvp == &__libc_tsd_RPC_VARS_mem)
 		return &svc_pollfd;
 	return &tvp->svc_pollfd_s;
 }
@@ -121,7 +117,7 @@ __rpc_thread_svc_max_pollfd (void)
 	struct rpc_thread_variables *tvp;
 
 	tvp = __rpc_thread_variables ();
-	if (tvp == &rpc_default)
+	if (tvp == &__libc_tsd_RPC_VARS_mem)
 		return &svc_max_pollfd;
 	return &tvp->svc_max_pollfd_s;
 }
