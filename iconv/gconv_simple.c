@@ -1158,7 +1158,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = *((const uint16_t *) inptr);				      \
+    uint16_t u1 = get16 (inptr);					      \
 									      \
     if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
       {									      \
@@ -1216,7 +1216,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       {									      \
-	*((uint16_t *) outptr) = val;					      \
+	put16 (outptr, val);						      \
         outptr += sizeof (uint16_t);					      \
 	inptr += 4;							      \
       }									      \
@@ -1242,7 +1242,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
-    uint16_t u1 = bswap_16 (*((const uint16_t *) inptr));		      \
+    uint16_t u1 = bswap_16 (get16 (inptr));				      \
 									      \
     if (__builtin_expect (u1 >= 0xd800 && u1 < 0xe000, 0))		      \
       {									      \
@@ -1308,7 +1308,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
       }									      \
     else								      \
       {									      \
-	*((uint16_t *) outptr) = bswap_16 (val);			      \
+	put16 (outptr, bswap_16 (val));					      \
 	outptr += sizeof (uint16_t);					      \
 	inptr += 4;							      \
       }									      \
