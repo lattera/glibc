@@ -20,6 +20,9 @@
 # error "Never use <bits/ioctls.h> directly; include <sys/ioctl.h> instead."
 #endif
 
+/* Get the necessary definitions.  */
+#include <termios.h>
+
 /* Use the definitions from the kernel header files.  */
 #include <asm/ioctls.h>
 
