@@ -66,7 +66,6 @@ cfsetospeed  (termios_p, speed)
       return -1;
     }
 
-  termios_p->c_iflag &= ~IBAUD0;
   termios_p->c_cflag &= ~(CBAUD | CBAUDEX);
   termios_p->c_cflag |= speed;
 

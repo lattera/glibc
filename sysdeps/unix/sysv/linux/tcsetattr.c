@@ -73,7 +73,9 @@ tcsetattr (fd, optional_actions, termios_p)
       return -1;
     }
 
-  k_termios.c_iflag = termios_p->c_iflag & ~IBAUD0;
+  termios_p->c_iflag &= ~IBAUD0;
+
+  k_termios.c_iflag = termios_p->c_iflag;
   k_termios.c_oflag = termios_p->c_oflag;
   k_termios.c_cflag = termios_p->c_cflag;
   k_termios.c_lflag = termios_p->c_lflag;

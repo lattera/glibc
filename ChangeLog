@@ -1,3 +1,11 @@
+1998-12-08  H.J. Lu  <hjl@gnu.org> 
+ 
+	* sysdeps/unix/sysv/linux/speed.c (cfsetospeed): Don't clear 
+	the IBAUD0 bit in c_iflag. 
+ 
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Clear the 
+	the IBAUD0 bit in c_iflag. 
+ 
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/Makefile (tests): Add tst-strptime.
