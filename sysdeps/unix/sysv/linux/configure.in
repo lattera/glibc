@@ -191,3 +191,14 @@ ${ac_prefix}/include directory out of the way.])
     AC_MSG_RESULT(ok)
   fi
 fi
+
+case "$machine" in
+  mips*)
+	AC_CHECK_PROG_VER(AS, $AS, --version,
+	  [GNU assembler.* \([0-9]*\.[0-9.]*\(-ia64-[0-9]*\)*\)],
+	  [2.11.90.0.[5-9]* | 2.11.90.[1-9]* | 2.11.9[1-9]* | 2.11.[1-9]* | 2.1[2-9]*| 2.[2-9]*], 
+	AC_MSG_WARN([*** Your binutils versions are too old.  
+*** We strongly advise to update binutils.  For details check 
+*** the FAQ and INSTALL documents.]))
+	;;
+esac
