@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,6 +35,22 @@ int _hurd_itimer_thread_suspended; /* Nonzero if that thread is suspended.  */
 vm_address_t _hurd_itimer_thread_stack_base; /* Base of its stack.  */
 vm_address_t _hurd_itimer_thread_stack_size; /* Size of its stack.  */
 struct timeval _hurd_itimer_started; /* Time the thread started waiting.  */
+
+static void
+quantize_timeval (struct timeval *tv)
+{
+  static time_t quantum = -1;
+  
+  if (quantum == -1)
+    quantum = 1000000 / __libc_clk_tck ();
+
+  tv->tv_usec = ((tv->tv_usec + (quantum - 1)) / quantum) * quantum;
+  if (tv->tv_usec >= 1000000)
+    {
+      ++tv->tv_sec;
+      tv->tv_usec -= 1000000;
+    }
+}
 
 static inline void
 subtract_timeval (struct timeval *from, const struct timeval *subtract)
@@ -165,6 +181,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
     }
 
   newval = *new;
+  quantize_timeval (&newval.it_interval);
+  quantize_timeval (&newval.it_value);
   if ((newval.it_value.tv_sec | newval.it_value.tv_usec) != 0)
     {
       /* Make sure the itimer thread is set up.  */
@@ -267,8 +285,8 @@ setitimer_locked (const struct itimerval *new, struct itimerval *old,
 	}
     }
   /* See if the timeout changed.  If so, we must alert the itimer thread.  */
-  else if (remaining.tv_sec != new->it_value.tv_sec ||
-	   remaining.tv_usec != new->it_value.tv_usec)
+  else if (remaining.tv_sec != newval.it_value.tv_sec ||
+	   remaining.tv_usec != newval.it_value.tv_usec)
     {
       /* The timeout value is changing.  Tell the itimer thread to
 	 reexamine it and start counting down.  If the itimer thread is
