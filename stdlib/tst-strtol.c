@@ -66,7 +66,7 @@ static const struct ltest tests[] =
     { "0xffffffffffffffffg",	0xffffffffffffffff,	0,	'g',	0 },
     { "0xf1f2f3f4f5f6f7f8f9",	0xffffffffffffffff,	0,	0,	ERANGE },
     { "-0x123456789abcdef01",	0xffffffffffffffff,	0,	0,	ERANGE },
-    { "-0xfedcba987654321",	0x0123456789abcdf,	0,	0,	0 },
+    { "-0xfedcba987654321",	0xf0123456789abcdf,	0,	0,	0 },
     { NULL,		0,		0,	0,	0 },
 #endif
   };

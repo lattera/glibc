@@ -239,7 +239,14 @@ _dl_start_user:
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_pltrel_p(type)  ((type) == R_ALPHA_JMP_SLOT)
+#define elf_machine_lookup_noplt_p(type)  ((type) == R_ALPHA_JMP_SLOT)
+
+/* Nonzero iff TYPE should not be allowed to resolve to one of
+   the main executable's symbols, as for a COPY reloc, which we don't use.  */
+#define elf_machine_lookup_noexec_p(type)  (0)
+
+/* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
+#define ELF_MACHINE_RELOC_NOPLT	 R_ALPHA_JMP_SLOT
 
 /* The alpha never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
@@ -328,7 +335,7 @@ elf_machine_rela (struct link_map *map,
 		  const struct r_found_version *version)
 {
   Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
-  unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);
+  unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
 
 #ifndef RTLD_BOOTSTRAP
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
@@ -342,7 +349,7 @@ elf_machine_rela (struct link_map *map,
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
-  if (r_info == R_ALPHA_RELATIVE)
+  if (r_type == R_ALPHA_RELATIVE)
     {
 #ifndef RTLD_BOOTSTRAP
       /* Already done in dynamic linker.  */
@@ -350,24 +357,23 @@ elf_machine_rela (struct link_map *map,
 #endif
 	*reloc_addr += map->l_addr;
     }
-  else if (r_info == R_ALPHA_NONE)
+  else if (r_type == R_ALPHA_NONE)
     return;
   else
     {
       Elf64_Addr loadbase, sym_value;
 
-      loadbase = RESOLVE (&sym, version,
-			  r_info == R_ALPHA_JMP_SLOT ? DL_LOOKUP_NOPLT : 0);
+      loadbase = RESOLVE (&sym, version, r_type);
       sym_value = sym ? loadbase + sym->st_value : 0;
 
-      if (r_info == R_ALPHA_GLOB_DAT)
+      if (r_type == R_ALPHA_GLOB_DAT)
 	*reloc_addr = sym_value;
-      else if (r_info == R_ALPHA_JMP_SLOT)
+      else if (r_type == R_ALPHA_JMP_SLOT)
 	{
 	  *reloc_addr = sym_value;
 	  elf_alpha_fix_plt (map, reloc, (Elf64_Addr) reloc_addr, sym_value);
 	}
-      else if (r_info == R_ALPHA_REFQUAD)
+      else if (r_type == R_ALPHA_REFQUAD)
 	{
 	  sym_value += *reloc_addr;
 #ifndef RTLD_BOOTSTRAP
@@ -397,15 +403,15 @@ static inline void
 elf_machine_lazy_rel (struct link_map *map, const Elf64_Rela *reloc)
 {
   Elf64_Addr * const reloc_addr = (void *)(map->l_addr + reloc->r_offset);
-  unsigned long const r_info = ELF64_R_TYPE (reloc->r_info);
+  unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
 
-  if (r_info == R_ALPHA_JMP_SLOT)
+  if (r_type == R_ALPHA_JMP_SLOT)
     {
       /* Perform a RELATIVE reloc on the .got entry that transfers
 	 to the .plt.  */
       *reloc_addr += map->l_addr;
     }
-  else if (r_info == R_ALPHA_NONE)
+  else if (r_type == R_ALPHA_NONE)
     return;
   else
     assert (! "unexpected PLT reloc type");

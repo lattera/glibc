@@ -184,8 +184,8 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
 
 #endif	/* RESOLVE */
 
-/* Nonzero iff TYPE describes relocation of a PLT entry, so
-   PLT entries should not be allowed to define the value.  */
+/* Nonzero iff TYPE should not be allowed to resolve to one of
+   the main executable's symbols, as for a COPY reloc.  */
 #define elf_machine_lookup_noexec_p(type) ((type) == R_SPARC_COPY)
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so

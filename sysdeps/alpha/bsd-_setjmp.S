@@ -35,3 +35,5 @@ ENTRY(_setjmp)
 	bis	$31, $31, $17		/* Pass a second argument of zero.  */
 	jmp	$31, __sigsetjmp	/* Call __sigsetjmp.  */
 	END(_setjmp)
+
+strong_alias_asm(_setjmp, __setjmp)

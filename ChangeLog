@@ -1,3 +1,18 @@
+1997-03-24 19:58  Richard Henderson  <rth@tamu.edu>
+
+	* stdlib/tst-strtol.c (tests): Correct 64-bit entry.
+
+	* sysdeps/alpha/bsd-_setjmp.S: Alias _setjmp to __setjmp for
+	change to tst-setjmp.c.
+
+	* sysdeps/alpha/dl-machine.h: Mirror Roland's recent changes.
+	* sysdeps/i386/dl-machine.h: Correct noexec_p comment.
+	* sysdeps/sparc/dl-machine.h: Likewise.
+
+	* sysdeps/libm-ieee754/s_remquo.c: Rename {hp,lp} -> {hy,ly}.
+	Add missing qs variable.
+	* sysdeps/libm-ieee754/s_remquof.c: Likewise.
+
 1997-03-25 02:15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* gmon/gmon.c: Optimize a bit by using more sets of records to

@@ -29,70 +29,70 @@ static const float zero = 0.0;
 float
 __remquof (float x, float y, int *quo)
 {
-  int32_t hx,hp;
+  int32_t hx,hy;
   u_int32_t sx;
-  int cquo;
+  int cquo, qs;
 
   GET_FLOAT_WORD (hx, x);
-  GET_FLOAT_WORD (hp, p);
+  GET_FLOAT_WORD (hy, y);
   sx = hx & 0x80000000;
-  qs = (sx ^ (hp & 0x80000000)) >> 31;
-  hp &= 0x7fffffff;
+  qs = sx ^ (hy & 0x80000000);
+  hy &= 0x7fffffff;
   hx &= 0x7fffffff;
 
   /* Purge off exception values.  */
-  if (hp == 0)
-    return (x * p) / (x * p); 			/* p = 0 */
+  if (hy == 0)
+    return (x * y) / (x * y); 			/* y = 0 */
   if ((hx >= 0x7f800000)			/* x not finite */
-      || (hp > 0x7f800000))			/* p is NaN */
-    return (x * p) / (x * p);
+      || (hy > 0x7f800000))			/* y is NaN */
+    return (x * y) / (x * y);
 
-  if (hp <= 0x7dffffff)
+  if (hy <= 0x7dffffff)
     {
-      x = __ieee754_fmodf (x, 8 * p);		/* now x < 8p */
+      x = __ieee754_fmodf (x, 8 * y);		/* now x < 8y */
 
-      if (fabs (x) >= 4 * fabs (p))
+      if (fabs (x) >= 4 * fabs (y))
 	cquo += 4;
     }
 
-  if ((hx - hp) == 0)
+  if ((hx - hy) == 0)
     {
       *quo = qs ? -1 : 1;
       return zero * x;
     }
 
   x  = fabsf (x);
-  p  = fabsf (p);
+  y  = fabsf (y);
   cquo = 0;
 
-  if (x >= 2 * p)
+  if (x >= 2 * y)
     {
-      x -= 4 * p;
+      x -= 4 * y;
       cquo += 2;
     }
-  if (x >= p)
+  if (x >= y)
     {
-      x -= 2 * p;
+      x -= 2 * y;
       ++cquo;
     }
 
-  if (hp < 0x01000000)
+  if (hy < 0x01000000)
     {
-      if (x + x > p)
+      if (x + x > y)
 	{
-	  x -= p;
-	  if (x + x >= p)
-	    x -= p;
+	  x -= y;
+	  if (x + x >= y)
+	    x -= y;
 	}
     }
   else
     {
-      float p_half = 0.5 * p;
-      if(x > p_half)
+      float y_half = 0.5 * y;
+      if(x > y_half)
 	{
-	  x -= p;
-	  if (x >= p_half)
-	    x -= p;
+	  x -= y;
+	  if (x >= y_half)
+	    x -= y;
 	}
     }
 
