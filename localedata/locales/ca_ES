@@ -1,7 +1,7 @@
 comment_char %
 escape_char  /
 %
-% Catalan Language Locale for Catalonia
+% Catalan Language Locale for Spain
 % Source: RAP
 % Contact: Joan Carles Soler
 % Email: Joan.Soler@uv.es
@@ -27,7 +27,7 @@ email      "bug-glibc@gnu.org"
 tel        ""
 fax        ""
 language   "Catalan"
-territory  "Catalonia"
+territory  "Spain"
 revision   "1.0"
 date       "2000-06-29"
 %

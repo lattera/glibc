@@ -129,7 +129,7 @@ DEFINE_INT_CURR("MYR ")		/* Malaysian Ringgit  */
 DEFINE_INT_CURR("MZM ")		/* Mozambique Metical  */
 DEFINE_INT_CURR("NAD ")		/* Namibia Dollar  */
 DEFINE_INT_CURR("NGN ")		/* Nigeria Naira  */
-DEFINE_INT_CURR("NIC ")		/* Nicaragua Cordoba  */
+DEFINE_INT_CURR("NIO ")		/* Nicaragua Cordoba Oro  */
 DEFINE_INT_CURR("NLG ")		/* Netherlands Guilder  */
 DEFINE_INT_CURR("NOK ")		/* Norwegian Krone  */
 DEFINE_INT_CURR("NPR ")		/* Nepalese Rupee  */

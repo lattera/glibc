@@ -1,5 +1,8 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/ca_ES@euro: Country is Spain.
+	* locales/ca_ES: Likewise.
+
 	* locales/es_MX: Correct int_curr_symbol.
 	* locales/es_PE: Likewise.
 
