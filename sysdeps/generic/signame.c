@@ -216,6 +216,9 @@ signame_init ()
 #if defined (SIGDANGER)
   init_sig (SIGDANGER, "DANGER", "Danger signal");
 #endif
+#if defined (SIGINFO)
+  init_sig (SIGINFO, "INFO", "Information request");
+#endif
 }
 
 /* Return the abbreviation for signal NUMBER.  */
