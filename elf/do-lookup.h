@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,9 +54,10 @@ do_lookup_x (const char *undef_name, unsigned long int hash,
 
       /* Print some debugging info if wanted.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
-	_dl_debug_printf ("symbol=%s;  lookup in file=%s\n",
+	_dl_debug_printf ("symbol=%s;  lookup in file=%s [%lu]\n",
 			  undef_name,
-			  map->l_name[0] ? map->l_name : rtld_progname);
+			  map->l_name[0] ? map->l_name : rtld_progname,
+			  map->l_ns);
 
       symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
       strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);

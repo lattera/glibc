@@ -1,6 +1,7 @@
 2005-03-06  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-version.c (match_symbol): Add namespace info to debug output.
+	* elf/do-lookup.h (do_lookup_x): Add namespace info to debug output.
+	* elf/dl-version.c (match_symbol): Likewise.
 
 	* posix/bits/unistd.h (pread): Fix typo in __USE_FILE_OFFSET64 code.
 
