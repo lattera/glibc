@@ -1,5 +1,7 @@
 2005-02-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-addr.c: Cleanups.  Move declaration next to first use.
+
 	* dlfcn/dlerror.c (check_free): New function.  Extract common code
 	from fini and free_key_mem.  Check whether this is libdl in the
 	base namespace.

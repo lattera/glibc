@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2003, 2004   Free Software Foundation, Inc.
+   Copyright (C) 1996-2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,16 +28,12 @@ _dl_addr (const void *address, Dl_info *info,
 	  struct link_map **mapp, const ElfW(Sym) **symbolp)
 {
   const ElfW(Addr) addr = DL_LOOKUP_ADDRESS (address);
-  struct link_map *match;
-  const ElfW(Sym) *symtab, *matchsym, *symtabend;
-  const char *strtab;
-  ElfW(Word) strtabsize;
 
   /* Protect against concurrent loads and unloads.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
   /* Find the highest-addressed object that ADDRESS is not below.  */
-  match = NULL;
+  struct link_map *match = NULL;
   for (Lmid_t ns = 0; ns < DL_NNS; ++ns)
     for (struct link_map *l = GL(dl_ns)[ns]._ns_loaded; l; l = l->l_next)
       if (addr >= l->l_map_start && addr < l->l_map_end)
@@ -72,11 +68,12 @@ _dl_addr (const void *address, Dl_info *info,
 	  && match->l_type == lt_executable)
 	info->dli_fname = _dl_argv[0];
 
-      symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
-      strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
+      const ElfW(Sym) *symtab = D_PTR (match, l_info[DT_SYMTAB]);
+      const char *strtab = (const char *) D_PTR (match, l_info[DT_STRTAB]);
 
-      strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
+      ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
 
+      const ElfW(Sym) *symtabend;
       if (match->l_info[DT_HASH] != NULL)
 	symtabend = (symtab
 		     + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
@@ -90,6 +87,7 @@ _dl_addr (const void *address, Dl_info *info,
       /* We assume that the string table follows the symbol table,
 	 because there is no way in ELF to know the size of the
 	 dynamic symbol table!!  */
+      const ElfW(Sym) *matchsym;
       for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
 	if (addr >= match->l_addr + symtab->st_value
 #if defined USE_TLS
