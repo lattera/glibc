@@ -1,3 +1,26 @@
+2001-05-17  Bruce Mitchener  <bruce@cubik.org>
+
+	* manual/arpg.texi: Spelling, misc fixes.
+	* manual/arith.texi: Likewise.
+	* manual/crypt.texi: Likewise.
+	* manual/debug.texi: Likewise.
+	* manual/getopt.texi: Likewise.
+	* manual/intro.texi: Likewise.
+	* manual/memory.texi: Likewise.
+	* manual/nss.texi: Likewise.
+	* manual/pattern.texi: Likewise.
+	* manual/process.texi: Likewise.
+	* manual/resource.texi: Likewise.
+	* manual/search.texi: Likewise.
+	* manual/setjmp.texi: Likewise.
+	* manual/signal.texi: Likewise.
+	* manual/socket.texi: Likewise.
+	* manual/stdio.texi: Likewise.
+	* manual/string.texi: Likewise.
+	* manual/sysinfo.texi: Likewise.
+	* manual/terminal.texi: Likewise.
+	* manual/llio.texi: Document madvise().
+
 2001-05-20  Roland McGrath  <roland@frob.com>
 
 	* Makeconfig (sysdep-makeconfigs): Include any Makeconfig files
