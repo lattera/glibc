@@ -31,12 +31,7 @@
    visible as if the object were linked directly into the program.  */
 #define RTLD_GLOBAL	0x004
 
-__BEGIN_DECLS
-
-/* Some SGI specific calls that aren't implemented yet.  */
-extern void *sgidladd __P ((__const char *, int));
-extern void *sgidlopen_version __P ((__const char *, int, __const char *,
-				     int));
-extern char *sgigetdsoversion __P ((__const char *));
-
-__END_DECLS
+/* Unix98 demands the following flag which is the inverse to RTLD_GLOBAL.
+   The implementation does this by default and so we can define the
+   value to zero.  */
+#define RTLD_LOCAL      0
