@@ -38,7 +38,7 @@ extern struct path_elem *__gconv_path_elem;
 extern size_t __gconv_max_path_elem_len;
 
 
-/* Structure for alias definition.  Simply to strings.  */
+/* Structure for alias definition.  Simply two strings.  */
 struct gconv_alias
 {
   char *fromname;
