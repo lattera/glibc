@@ -1,5 +1,8 @@
 2004-10-23  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/i386/tls.h (_hurd_tls_init): Don't return early
+	after an RPC succeeds.
+
 	* sysdeps/vax, sysdeps/unix/bsd/vax: Directories and all files removed.
 	These are now in the ports repository.
 	* sysdeps/tahoe, sysdeps/unix/bsd/tahoe: Likewise.

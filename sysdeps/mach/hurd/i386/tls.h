@@ -75,9 +75,10 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 	  sel = 0x27;
 	  err = __i386_set_ldt (tcb->self, sel, &desc, 1);
 	  assert_perror (err);
-	  return "i386_set_ldt failed";
+	  if (err)
+	    return "i386_set_ldt failed";
 	}
-      else
+      else if (err)
 	{
 	  assert_perror (err); /* Separate from above with different line #. */
 	  return "i386_set_gdt failed";
@@ -95,13 +96,15 @@ _hurd_tls_init (tcbhead_t *tcb, int secondcall)
 	{
 	  error_t err = __i386_set_ldt (tcb->self, sel, &desc, 1);
 	  assert_perror (err);
-	  return "i386_set_ldt failed";
+	  if (err)
+	    return "i386_set_ldt failed";
 	}
       else
 	{
 	  error_t err = __i386_set_gdt (tcb->self, &sel, desc);
 	  assert_perror (err);
-	  return "i386_set_gdt failed";
+	  if (err)
+	    return "i386_set_gdt failed";
 	}
     }
 
