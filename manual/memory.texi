@@ -898,7 +898,7 @@ behaviour of the program it is no wise idea to call @code{mtrace} in all
 programs.  Just imagine you debug a program using @code{mtrace} and all
 other programs used in the debug sessions also trace their @code{malloc}
 calls.  The output file would be the same for all programs and so is
-unusable.  Therefore on should call @code{mtrace} only if compiled for
+unusable.  Therefore one should call @code{mtrace} only if compiled for
 debugging.  A program could therefore start like this:
 
 @example

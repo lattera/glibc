@@ -1714,6 +1714,11 @@ modf_test (void)
   result = FUNC(modf) (21, &intpart);
   check ("modf (21, &x) returns 0", result, 0);
   check ("modf (21, &x) sets x to 21", intpart, 21);
+
+  result = FUNC(modf) (89.6, &intpart);
+  check_eps ("modf (89.6, &x) returns 0.6", result, 0.6,
+	     CHOOSE(6e-15L, 6e-15, 2e-6));
+  check ("modf (89.6, &x) sets x to 89", intpart, 89);
 }
 
 

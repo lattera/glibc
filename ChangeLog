@@ -1,3 +1,9 @@
+1998-02-11  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/memory.texi (Using the Memory Debugger): Fix typo.
+
+	* math/libm-test.c (modf_test): Add one more test for modf.
+
 1998-02-11 14:39  Ulrich Drepper  <drepper@happy.cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (__libc_missing_rt_sigs):
