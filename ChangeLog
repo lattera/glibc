@@ -1,3 +1,9 @@
+2000-10-30  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/dl-machine.h (elf_machine_rel): Add the symbol's
+	value plus the run-time displacement to the relocation for non-GOT
+	symbols.  Set the relocation to the GOT entry for GOT symbols.
+
 2000-11-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/s390/bits/time.h: Removed.
