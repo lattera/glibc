@@ -530,7 +530,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
     {
     case 't':
       num = strtoul (arg, NULL, 0);
-      if (num < MAX_THREADS)
+      if (num <= MAX_THREADS)
 	threads = num;
       else
 	printf ("\
