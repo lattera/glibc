@@ -25,6 +25,8 @@
 #include <ldsodefs.h>
 #include <tls.h>
 
+#include "kernel-features.h"
+
 
 #define CLONE_SIGNAL    	(CLONE_SIGHAND | CLONE_THREAD)
 
@@ -55,7 +57,20 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
   PREPARE_CREATE;
 #endif
 
-  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, clone_flags,
+  /* Lame old kernels do not have CLONE_STOPPED support.  For those do
+     not pass the flag, not instead use the futex method.  */
+#ifndef __ASSUME_CLONE_STOPPED
+# define final_clone_flags clone_flags & ~CLONE_STOPPED
+  if (clone_flags & CLONE_STOPPED)
+    /* We Make sure the thread does not run far by forcing it to get a
+       lock.  We lock it here too so that the new thread cannot continue
+       until we tell it to.  */
+    lll_lock (pd->lock);
+#else
+# define final_clone_flags clone_flags
+#endif
+
+  if (ARCH_CLONE (fct, STACK_VARIABLES_ARGS, final_clone_flags,
 		  pd, &pd->tid, TLS_VALUE, &pd->tid) == -1)
     /* Failed.  */
     return errno;
@@ -86,8 +101,10 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	    goto err_out;
 	}
 
+#ifdef __ASSUME_CLONE_STOPPED
       /* Now start the thread for real.  */
       res = INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
+#endif
 
       /* If something went wrong, kill the thread.  */
       if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (res, err), 0))
@@ -98,8 +115,10 @@ do_clone (struct pthread *pd, const struct pthread_attr *attr,
 	err_out:
 	  (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCANCEL);
 
+#ifdef __ASSUME_CLONE_STOPPED
 	  /* Then wake it up so that the signal can be processed.  */
-	  (void) INTERNAL_SYSCALL (tkill, err, 2, pd->tid, SIGCONT);
+	  (void) INTERNAL_SYSCALL (tkill, err2, 2, pd->tid, SIGCONT);
+#endif
 
 	  return INTERNAL_SYSCALL_ERRNO (res, err);
 	}
@@ -175,15 +194,10 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
       if ((_mask & (__nptl_threads_events.event_bits[_idx]
 		    | pd->eventbuf.eventmask.event_bits[_idx])) != 0)
 	{
-	  /* We have to report the new thread.  Make sure the thread
-	     does not run far by forcing it to get a lock.  We lock it
-	     here too so that the new thread cannot continue until we
-	     tell it to.  */
-	  lll_lock (pd->lock);
-
-	  /* Create the thread.  */
-	  int res = do_clone (pd, attr, clone_flags, start_thread_debug,
-			      STACK_VARIABLES_ARGS);
+	  /* Create the thread.  We always create the thread stopped
+	     so that it does not get far before we tell the debugger.  */
+	  int res = do_clone (pd, attr, clone_flags | CLONE_STOPPED,
+			      start_thread, STACK_VARIABLES_ARGS);
 	  if (res == 0)
 	    {
 	      /* Now fill in the information about the new thread in
@@ -216,5 +230,16 @@ create_thread (struct pthread *pd, const struct pthread_attr *attr,
 #endif
 
   /* Actually create the thread.  */
-  return do_clone (pd, attr, clone_flags, start_thread, STACK_VARIABLES_ARGS);
+  int res = do_clone (pd, attr, clone_flags, start_thread,
+		      STACK_VARIABLES_ARGS);
+
+#ifndef __ASSUME_CLONE_STOPPED
+  if (res == 0 && (clone_flags & CLONE_STOPPED))
+    {
+      /* And finally restart the new thread.  */
+      lll_unlock (pd->lock);
+    }
+#endif
+
+  return res;
 }

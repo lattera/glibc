@@ -308,7 +308,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* The first TSD block is included in the TCB.  */
       pd->specific[0] = pd->specific_1stblock;
 
-#if LLL_LOCK_INITIALIZER != 0
+#if defined __ASSUME_CLONE_STOPPED && LLL_LOCK_INITIALIZER != 0
       /* Initialize the lock.  */
       pd->lock = LLL_LOCK_INITIALIZER;
 #endif
@@ -451,7 +451,7 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	     descriptor.  */
 	  pd->specific[0] = pd->specific_1stblock;
 
-#if LLL_LOCK_INITIALIZER != 0
+#if defined __ASSUME_CLONE_STOPPED && LLL_LOCK_INITIALIZER != 0
 	  /* Initialize the lock.  */
 	  pd->lock = LLL_LOCK_INITIALIZER;
 #endif
@@ -563,6 +563,13 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	  pd->guardsize = guardsize;
 	}
     }
+
+#ifndef __ASSUME_CLONE_STOPPED
+  /* Initialize the lock.  We have to do this unconditionally if the
+     CLONE_STOPPED flag is not available since then the stillborn
+     thread could be canceled while the lock is taken.  */
+  pd->lock = LLL_LOCK_INITIALIZER;
+#endif
 
   /* We place the thread descriptor at the end of the stack.  */
   *pdp = pd;
@@ -744,7 +751,7 @@ __pthread_init_static_tls (struct link_map *map)
 
   /* Now the list with threads using user-allocated stacks.  */
   list_for_each (runp, &__stack_user)
-    init_one_static_tls (list_entry (runp, struct pthread, list), map);  
+    init_one_static_tls (list_entry (runp, struct pthread, list), map);
 
   lll_unlock (stack_cache_lock);
 }

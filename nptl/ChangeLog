@@ -1,5 +1,18 @@
 2003-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/createthread.c (do_clone): If __ASSUME_CLONE_STOPPED
+	is not defined, do explicit synchronization.
+	(create_thread): Do not lock pd->lock here.  If __ASSUME_CLONE_STOPPED
+	is not defined also unlock pd->lock for non-debugging case in case
+	it is necessary.
+	* pthread_create.c (start_thread): Always get and release pd->lock
+	if __ASSUME_CLONE_STOPPED is not defined.
+	(start_thread_debug): Removed.  Adjust users.
+	* allocatestack.c (allocate_stack): Always initialize lock if
+	__ASSUME_CLONE_STOPPED is not defined.
+	* Makefile (tests): Add tst-sched1.
+	* tst-sched1.c: New file.
+
 	* sysdeps/pthread/createthread.c (do_clone): Only use
 	sched_setschduler and pass correct parameters.
 

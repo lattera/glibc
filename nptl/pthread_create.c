@@ -33,8 +33,6 @@
 
 /* Local function to start thread and handle cleanup.  */
 static int start_thread (void *arg);
-/* Similar version used when debugging.  */
-static int start_thread_debug (void *arg);
 
 
 /* Nozero if debugging mode is enabled.  */
@@ -232,6 +230,13 @@ start_thread (void *arg)
 
   struct pthread *pd = (struct pthread *) arg;
 
+#ifndef __ASSUME_CLONE_STOPPED
+  /* Get the lock the parent locked to force synchronization.  */
+  lll_lock (pd->lock);
+  /* And give it up right away.  */
+  lll_unlock (pd->lock);
+#endif
+
 #if HP_TIMING_AVAIL
   /* Remember the time when the thread was started.  */
   hp_timing_t now;
@@ -328,23 +333,6 @@ start_thread (void *arg)
 
   /* NOTREACHED */
   return 0;
-}
-
-
-/* Just list start_thread but we do some more things needed for a run
-   with a debugger attached.  */
-static int
-start_thread_debug (void *arg)
-{
-  struct pthread *pd = (struct pthread *) arg;
-
-  /* Get the lock the parent locked to force synchronization.  */
-  lll_lock (pd->lock);
-  /* And give it up right away.  */
-  lll_unlock (pd->lock);
-
-  /* Now do the actual startup.  */
-  return start_thread (arg);
 }
 
 
