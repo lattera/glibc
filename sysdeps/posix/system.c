@@ -64,9 +64,7 @@ do_system (const char *line)
 #ifndef _LIBC_REENTRANT
   struct sigaction intr, quit;
 #endif
-#ifndef WAITPID_CANNOT_BLOCK_SIGCHLD
-  sigset_t block, omask;
-#endif
+  sigset_t omask;
 
   sa.sa_handler = SIG_IGN;
   sa.sa_flags = 0;
@@ -78,8 +76,7 @@ do_system (const char *line)
       if (__sigaction (SIGINT, &sa, &intr) < 0)
 	{
 	  SUB_REF ();
-	  DO_UNLOCK ();
-	  return -1;
+	  goto out;
 	}
       if (__sigaction (SIGQUIT, &sa, &quit) < 0)
 	{
@@ -90,25 +87,28 @@ do_system (const char *line)
     }
   DO_UNLOCK ();
 
-  __sigemptyset (&block);
-  __sigaddset (&block, SIGCHLD);
+  /* We reuse the bitmap in the 'sa' structure.  */
+  __sigaddset (&sa.sa_mask, SIGCHLD);
   save = errno;
-  if (__sigprocmask (SIG_BLOCK, &block, &omask) < 0)
+  if (__sigprocmask (SIG_BLOCK, &sa.sa_mask, &omask) < 0)
     {
+#ifndef _LIBC
       if (errno == ENOSYS)
 	__set_errno (save);
       else
+#endif
 	{
-	  save = errno;
 	  DO_LOCK ();
 	  if (SUB_REF () == 0)
 	    {
+	      save = errno;
 	      (void) __sigaction (SIGQUIT, &quit, (struct sigaction *) NULL);
 	    out_restore_sigint:
 	      (void) __sigaction (SIGINT, &intr, (struct sigaction *) NULL);
+	      __set_errno (save);
 	    }
+	out:
 	  DO_UNLOCK ();
-	  __set_errno (save);
 	  return -1;
 	}
     }
