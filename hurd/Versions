@@ -41,6 +41,9 @@ libc {
     # <hurd/port.h>
     _hurd_port_cleanup;
 
+    # <hurd/fd.h>
+    _hurd_dtable; _hurd_dtablesize; _hurd_dtable_lock; _hurd_intern_fd;
+
     # Internal functions referenced by libmachuser and libhurduser.
     _S_catch_exception_raise;
     _S_msg_add_auth; _S_msg_del_auth;
