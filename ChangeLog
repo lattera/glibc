@@ -1,3 +1,9 @@
+Mon Jun  5 04:02:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/elf.h (ELFMAG): Use \177 instead of \x7f.  It seems GCC
+ 	insists on seeing the following E as part of hex 7FE, and
+ 	complaining that is wider than a byte.
+
 Sun Jun  4 22:14:11 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/Makefile (sig): Added thread-self.

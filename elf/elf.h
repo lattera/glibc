@@ -73,7 +73,7 @@ typedef struct
 #define ELFMAG3		'F'		/* Magic number byte 3 */
 
 /* Conglomeration of the identification bytes, for easy testing as a word.  */
-#define	ELFMAG		"\x7fELF"
+#define	ELFMAG		"\177ELF"
 #define	SELFMAG		4
 
 #define EI_CLASS	4		/* File class byte index */
