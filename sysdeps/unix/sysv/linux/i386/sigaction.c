@@ -45,7 +45,9 @@ extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 int __libc_missing_rt_sigs;
 #endif
 
+#ifdef __NR_rt_sigaction
 static void restore_rt (void) asm ("__restore_rt");
+#endif
 static void restore (void) asm ("__restore");
 
 
@@ -155,8 +157,10 @@ asm						\
    "	int  $0x80"				\
    );
 
+#ifdef __NR_rt_sigaction
 /* The return code for realtime-signals.  */
 RESTORE (restore_rt, __NR_rt_sigreturn)
+#endif
 
 /* For the boring old signals.  */
 # undef RESTORE2
