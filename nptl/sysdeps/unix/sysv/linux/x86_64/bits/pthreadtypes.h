@@ -20,15 +20,29 @@
 #ifndef _BITS_PTHREADTYPES_H
 #define _BITS_PTHREADTYPES_H	1
 
-#define __SIZEOF_PTHREAD_ATTR_T 56
-#define __SIZEOF_PTHREAD_MUTEX_T 40
-#define __SIZEOF_PTHREAD_MUTEXATTR_T 4
-#define __SIZEOF_PTHREAD_COND_T 48
-#define __SIZEOF_PTHREAD_CONDATTR_T 4
-#define __SIZEOF_PTHREAD_RWLOCK_T 56
-#define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
-#define __SIZEOF_PTHREAD_BARRIER_T 32
-#define __SIZEOF_PTHREAD_BARRIERATTR_T 4
+#include <bits/wordsize.h>
+
+#if __WORDSIZE == 64
+# define __SIZEOF_PTHREAD_ATTR_T 56
+# define __SIZEOF_PTHREAD_MUTEX_T 40
+# define __SIZEOF_PTHREAD_MUTEXATTR_T 4
+# define __SIZEOF_PTHREAD_COND_T 48
+# define __SIZEOF_PTHREAD_CONDATTR_T 4
+# define __SIZEOF_PTHREAD_RWLOCK_T 56
+# define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
+# define __SIZEOF_PTHREAD_BARRIER_T 32
+# define __SIZEOF_PTHREAD_BARRIERATTR_T 4
+#else
+# define __SIZEOF_PTHREAD_ATTR_T 36
+# define __SIZEOF_PTHREAD_MUTEX_T 24
+# define __SIZEOF_PTHREAD_MUTEXATTR_T 4
+# define __SIZEOF_PTHREAD_COND_T 48
+# define __SIZEOF_PTHREAD_CONDATTR_T 4
+# define __SIZEOF_PTHREAD_RWLOCK_T 32
+# define __SIZEOF_PTHREAD_RWLOCKATTR_T 8
+# define __SIZEOF_PTHREAD_BARRIER_T 20
+# define __SIZEOF_PTHREAD_BARRIERATTR_T 4
+#endif
 
 
 /* Thread identifiers.  The structure of the attribute type is not
@@ -52,10 +66,15 @@ typedef union
     int __lock;
     unsigned int __count;
     int __owner;
+#if __WORDSIZE == 64
     unsigned int __nusers;
+#endif
     /* KIND must stay at this position in the structure to maintain
        binary compatibility.  */
     int __kind;
+#if __WORDSIZE != 64
+    unsigned int __nusers;
+#endif
     int __spins;
   } __data;
   char __size[__SIZEOF_PTHREAD_MUTEX_T];
@@ -85,7 +104,7 @@ typedef union
     unsigned int __broadcast_seq;
   } __data;
   char __size[__SIZEOF_PTHREAD_COND_T];
-  long int __align;
+  long long int __align;
 } pthread_cond_t;
 
 typedef union
@@ -108,6 +127,7 @@ typedef int pthread_once_t;
    structure of the attribute type is not exposed on purpose.  */
 typedef union
 {
+# if __WORDSIZE == 64
   struct
   {
     int __lock;
@@ -124,6 +144,21 @@ typedef union
        binary compatibility.  */
     unsigned int __flags;
   } __data;
+# else
+  struct
+  {
+    int __lock;
+    unsigned int __nr_readers;
+    unsigned int __readers_wakeup;
+    unsigned int __writer_wakeup;
+    unsigned int __nr_readers_queued;
+    unsigned int __nr_writers_queued;
+    /* FLAGS must stay at this position in the structure to maintain
+       binary compatibility.  */
+    unsigned int __flags;
+    int __writer;
+  } __data;
+# endif
   char __size[__SIZEOF_PTHREAD_RWLOCK_T];
   long int __align;
 } pthread_rwlock_t;
