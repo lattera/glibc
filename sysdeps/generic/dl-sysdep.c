@@ -238,7 +238,8 @@ _dl_show_auxv (void)
 	  [AT_FPUCW - 2] =		{ "AT_FPUCW:       ", hex },
 	  [AT_DCACHEBSIZE - 2] =	{ "AT_DCACHEBSIZE: 0x", hex },
 	  [AT_ICACHEBSIZE - 2] =	{ "AT_ICACHEBSIZE: 0x", hex },
-	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE: 0x", hex }
+	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE: 0x", hex },
+	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:     0x", hex }
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 

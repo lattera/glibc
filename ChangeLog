@@ -1,3 +1,9 @@
+2002-12-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/elf.h (AT_SYSINFO): New define.
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Add support for
+	AT_SYSINFO.
+
 2002-12-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (msgrcv, msgsnd):

@@ -946,6 +946,10 @@ typedef struct
    interpretation of the AUXV. Must be > 16.  */
 #define AT_IGNOREPPC	22		/* Entry should be ignored */
 
+/* Pointer to the global system page used for system calls and other
+   nice things.  */
+#define AT_SYSINFO	32
+
 
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */
