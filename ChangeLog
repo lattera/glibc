@@ -1,3 +1,18 @@
+2003-06-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Versions (libc): Add _dl_open_hook@GLIBC_PRIVATE.
+	* elf/dl-libc.c (struct dl_open_hook): New.
+	(_dl_open_hook): New variable.
+	(do_dlsym_private): New function.
+	(__libc_dlopen_mode) [!SHARED]: Lookup _dl_open_hook@GLIBC_PRIVATE
+	and initialize it if found.
+	(__libc_dlopen_mode) [SHARED]: If _dl_open_hook is non-NULL,
+	call dlopen_mode hook.
+	(__libc_dlsym) [SHARED]: If _dl_open_hook is non-NULL,
+	call dlsym hook.
+	(__libc_dlclose) [SHARED]: If _dl_open_hook is non-NULL,
+	call dlclose hook.
+
 2003-06-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/cris/sysdep.h (INLINE_SYSCALL): Cast

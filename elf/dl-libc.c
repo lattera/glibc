@@ -96,6 +96,50 @@ do_dlclose (void *ptr)
   _dl_close ((struct link_map *) ptr);
 }
 
+/* This code is to support __libc_dlopen from __libc_dlopen'ed shared
+   libraries.  We need to ensure the statically linked __libc_dlopen
+   etc. functions are used instead of the dynamically loaded.  */
+struct dl_open_hook
+{
+  void *(*dlopen_mode) (const char *name, int mode);
+  void *(*dlsym) (void *map, const char *name);
+  int (*dlclose) (void *map);
+};
+
+#ifdef SHARED
+extern struct dl_open_hook *_dl_open_hook;
+libc_hidden_proto (_dl_open_hook);
+struct dl_open_hook *_dl_open_hook __attribute__((nocommon));
+libc_hidden_data_def (_dl_open_hook);
+#else
+static void
+do_dlsym_private (void *ptr)
+{
+  lookup_t l;
+  struct r_found_version vers;
+  vers.name = "GLIBC_PRIVATE";
+  vers.hidden = 1;
+  /* vers.hash = _dl_elf_hash (version);  */
+  vers.hash = 0x0963cf85;
+  /* FIXME: Shouldn't we use libc.so.6* here?  */
+  vers.filename = NULL;
+
+  struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
+  args->ref = NULL;
+  l = _dl_lookup_versioned_symbol (args->name, args->map,
+				   &args->ref, args->map->l_scope,
+				   &vers, 0, 0);
+  args->loadbase = l;
+}
+
+static struct dl_open_hook _dl_open_hook =
+  {
+    .dlopen_mode = __libc_dlopen_mode,
+    .dlsym = __libc_dlsym,
+    .dlclose = __libc_dlclose
+  };
+#endif
+
 /* ... and these functions call dlerror_run. */
 
 void *
@@ -105,7 +149,29 @@ __libc_dlopen_mode (const char *name, int mode)
   args.name = name;
   args.mode = mode;
 
+#ifdef SHARED
+  if (__builtin_expect (_dl_open_hook != NULL, 0))
+    return _dl_open_hook->dlopen_mode (name, mode);
   return (dlerror_run (do_dlopen, &args) ? NULL : (void *) args.map);
+#else
+  if (dlerror_run (do_dlopen, &args))
+    return NULL;
+
+  struct do_dlsym_args sargs;
+  sargs.map = args.map;
+  sargs.name = "_dl_open_hook";
+
+  if (! dlerror_run (do_dlsym_private, &sargs))
+    {
+      struct dl_open_hook **hook
+	= (struct dl_open_hook **)
+	  (DL_SYMBOL_ADDRESS (sargs.loadbase, sargs.ref));
+      if (hook != NULL)
+	*hook = &_dl_open_hook;
+    }
+
+  return (void *) args.map;
+#endif
 }
 
 void *
@@ -115,6 +181,10 @@ __libc_dlsym (void *map, const char *name)
   args.map = map;
   args.name = name;
 
+#ifdef SHARED
+  if (__builtin_expect (_dl_open_hook != NULL, 0))
+    return _dl_open_hook->dlsym (map, name);
+#endif
   return (dlerror_run (do_dlsym, &args) ? NULL
 	  : (void *) (DL_SYMBOL_ADDRESS (args.loadbase, args.ref)));
 }
@@ -122,6 +192,10 @@ __libc_dlsym (void *map, const char *name)
 int
 __libc_dlclose (void *map)
 {
+#ifdef SHARED
+  if (__builtin_expect (_dl_open_hook != NULL, 0))
+    return _dl_open_hook->dlclose (map);
+#endif
   return dlerror_run (do_dlclose, map);
 }
 
