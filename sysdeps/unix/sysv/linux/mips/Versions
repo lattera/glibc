@@ -5,7 +5,7 @@ libc {
   # for all GNU/Linux configurations.
 
   GLIBC_2.0 {
-    #errlist-compat	1134
+    #errlist-compat	123
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
 
     # Exception handling support functions from libgcc
@@ -21,16 +21,11 @@ libc {
     # s*
     sysmips;
   }
-  GLIBC_2.1 {
+  GLIBC_2.2 {
     #errlist-compat	1134
     _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
-  }
-  GLIBC_2.2 {
+
     # _*
     _test_and_set;
-  }
-  GLIBC_2.3 {
-    #errlist-compat	1134
-    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
   }
 }
