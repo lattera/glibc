@@ -51,10 +51,8 @@ function void endhostent (void)
 function void endnetent (void)
 function void endprotoent (void)
 function void endservent (void)
-function void freehostent (struct hostent*)
 function {struct hostent*} gethostbyaddr (const void*, socklen_t, int)
 function {struct hostent*} gethostbyname (const char*)
 function {struct hostent*} gethostent (void)
-function {struct hostent*} getipnodebyaddr (const void*, socklen_t, int, int*)
 
 #endif

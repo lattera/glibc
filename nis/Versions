@@ -95,7 +95,7 @@ libnss_nis {
     _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
   }
   GLIBC_2.2 {
-    _nss_nis_getipnodebyname_r; _nss_nis_initgroups_dyn;
+    _nss_nis_initgroups_dyn;
   }
 }
 
@@ -127,8 +127,5 @@ libnss_nisplus {
     _nss_nisplus_setnetent; _nss_nisplus_setnetgrent; _nss_nisplus_setprotoent;
     _nss_nisplus_setpwent; _nss_nisplus_setrpcent; _nss_nisplus_setservent;
     _nss_nisplus_setspent;
-  }
-  GLIBC_2.2 {
-    _nss_nisplus_getipnodebyname_r;
   }
 }

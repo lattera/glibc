@@ -1,4 +1,4 @@
-# Copyright (C) 1999 Free Software Foundation, Inc.
+# Copyright (C) 1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -43,6 +43,7 @@ libthread_db-routines = td_init td_log td_ta_delete td_ta_get_nthreads      \
 
 libthread_db-inhibit-o = $(filter-out .os,$(object-suffixes))
 
+distribute = thread_dbP.h shlib-versions proc_service.h
 include ../Rules
 
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.

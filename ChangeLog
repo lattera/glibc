@@ -1,5 +1,20 @@
 2000-08-01  Andreas Jaeger  <aj@suse.de>
 
+	* conform/data/netdb.h-data: Remove getipnodebyaddr and friends.
+
+	* include/netdb.h: Remove getipnodebyaddr and friends, leave
+	constants in.
+
+	* nis/Versions: Remove _nss_nis_getipnodebyname_r and
+	_nss_nisplus_getipnodebyname_r.
+
+	* nis/nss_nis/nis-hosts.c (_nss_nis_getipnodebyname_r): #if 0 for
+	now, getipnodebyname is deprecated.
+	* nis/nss_nisplus/nisplus-hosts.c (_nss_nisplus_getipnodebyname_r): Likewise.
+
+	* inet/Makefile (routines): Don't build getipnodebyaddr and
+	friends.
+
 	* intl/Makefile (distribute): Add tst-translit.sh and translit.po.
 
 	* hesiod/Makefile (distribute): Add nss_hesiod/nss_hesiod.h.

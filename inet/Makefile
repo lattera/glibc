@@ -45,8 +45,7 @@ routines := htonl htons		\
 	    rcmd rexec ruserpass \
 	    getnetgrent_r getnetgrent \
 	    getaliasent_r getaliasent getaliasname getaliasname_r \
-	    in6_addr getnameinfo if_index getipnodebyad freehostent \
-	    getipnodebynm
+	    in6_addr getnameinfo if_index
 
 tests := htontest test_ifindex tst-ntoa tst-ether_aton tst-network # tst-ipnode
 

@@ -1,3 +1,7 @@
+2000-08-01  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile (distribute): Add missing files.
+
 2000-04-24  Mark Kettenis  <kettenis@gnu.org>
 
 	* td_thr_get_info.c (td_thr_get_info): Set ti_state to

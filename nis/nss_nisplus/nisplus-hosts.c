@@ -416,6 +416,7 @@ _nss_nisplus_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			 ((_res.options & RES_USE_INET6) ? AI_V4MAPPED : 0));
 }
 
+#if 0
 enum nss_status
 _nss_nisplus_getipnodebyname_r (const char *name, int af, int flags,
 				struct hostent *result, char *buffer,
@@ -424,6 +425,7 @@ _nss_nisplus_getipnodebyname_r (const char *name, int af, int flags,
   return internal_gethostbyname2_r (name, af, result, buffer, buflen,
 				    errnop, herrnop, flags);
 }
+#endif
 
 enum nss_status
 _nss_nisplus_gethostbyname_r (const char *name, struct hostent *host,

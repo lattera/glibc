@@ -434,6 +434,7 @@ _nss_nis_gethostbyaddr_r (const void *addr, socklen_t addrlen, int af,
   return NSS_STATUS_SUCCESS;
 }
 
+#if 0
 enum nss_status
 _nss_nis_getipnodebyname_r (const char *name, int af, int flags,
 			    struct hostent *result, char *buffer,
@@ -442,3 +443,4 @@ _nss_nis_getipnodebyname_r (const char *name, int af, int flags,
   return internal_gethostbyname2_r (name, af, result, buffer, buflen,
 				    errnop, herrnop, flags);
 }
+#endif
