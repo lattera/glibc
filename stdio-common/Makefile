@@ -40,7 +40,8 @@ tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite \
 	 xbug errnobug \
 	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 \
-	 tfformat tiformat tstdiomisc
+	 tfformat tiformat tstdiomisc \
+	 scanf1 scanf2 scanf3 scanf4 scanf5 scanf6 scanf7 scanf8 scanf9
 
 
 include ../Rules

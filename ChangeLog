@@ -1,3 +1,8 @@
+Wed Jan 24 03:22:07 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio-common/Makefile (tests): Add scanf[1-9].
+	* stdio-common/scanf[1-9].c: New files.  Bug tests from hjl.
+
 Wed Jan 24 04:18:36 1996  Paul Eggert  <eggert@twinsun.com>
 
 	* strftime.c (strftime):
