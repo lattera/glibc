@@ -154,11 +154,7 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 	    {
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
-	      if (flags & O_EXLOCK)
-		;		/* XXX */
-	      if (!err && (flags & O_SHLOCK))
-		;		/* XXX */
-	      if (!err && (flags & O_TRUNC))
+	      if (flags & O_TRUNC)
 		err = __file_set_size (*result, 0);
 
 	      if (err)

@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+Copyright (C) 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -69,6 +69,10 @@ Cambridge, MA 02139, USA.  */
 #ifdef __USE_GNU
 #define	O_NOATIME	0x0800	/* Don't set access time on read (owner).  */
 #endif
+#ifdef	__USE_MISC
+#define	O_SHLOCK	0x00020000 /* Open with shared file lock.  */
+#define	O_EXLOCK	0x00040000 /* Open with exclusive file lock.  */
+#endif
 
 
 /* The name O_NONBLOCK is unfortunately overloaded; it is both a file name
@@ -103,10 +107,6 @@ Cambridge, MA 02139, USA.  */
    once the file has been opened.  */
 
 #define	O_TRUNC		0x00010000 /* Truncate file to zero length.  */
-#ifdef	__USE_MISC
-#define	O_SHLOCK	0x00020000 /* Open with shared file lock.  */
-#define	O_EXLOCK	0x00040000 /* Open with exclusive file lock.  */
-#endif
 
 
 /* Controlling terminal flags.  These are understood only by `open',
