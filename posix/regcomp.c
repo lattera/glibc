@@ -1157,7 +1157,7 @@ calc_first (dfa, node)
     case OP_CLOSE_EQUIV_CLASS:
     case OP_OPEN_CHAR_CLASS:
     case OP_CLOSE_CHAR_CLASS:
-      /* These must not be appeared here.  */
+      /* These must not appear here.  */
       assert (0);
 #endif
     case END_OF_RE:
@@ -1336,8 +1336,6 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
 	  dfa->nexts[clone_node] = dfa->nexts[org_node];
-	  if (clone_dest == -1)
-	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1375,8 +1373,6 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
-	  if (clone_dest == -1)
-	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1395,16 +1391,13 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	      err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	      if (BE (err != REG_NOERROR, 0))
 		return err;
-	      if (clone_dest != -1)
-		{
-		  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
-		  if (BE (ret < 0, 0))
-		    return REG_ESPACE;
-		  err = duplicate_node_closure (dfa, org_dest, clone_dest,
-						root_node, constraint);
-		  if (BE (err != REG_NOERROR, 0))
-		    return err;
-		}
+	      ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
+	      if (BE (ret < 0, 0))
+		return REG_ESPACE;
+	      err = duplicate_node_closure (dfa, org_dest, clone_dest,
+					    root_node, constraint);
+	      if (BE (err != REG_NOERROR, 0))
+		return err;
 	    }
 	  else
 	    {
@@ -1419,8 +1412,6 @@ duplicate_node_closure (dfa, top_org_node, top_clone_node, root_node,
 	  err = duplicate_node (&clone_dest, dfa, org_dest, constraint);
 	  if (BE (err != REG_NOERROR, 0))
 	    return err;
-	  if (clone_dest == -1)
-	    break;
 	  ret = re_node_set_insert (dfa->edests + clone_node, clone_dest);
 	  if (BE (ret < 0, 0))
 	    return REG_ESPACE;
@@ -1460,21 +1451,7 @@ duplicate_node (new_idx, dfa, org_idx, constraint)
      int *new_idx, org_idx;
      unsigned int constraint;
 {
-  int dup_idx;
-
-  if (dfa->nodes[org_idx].type == CHARACTER
-      && (((constraint & NEXT_WORD_CONSTRAINT)
-	   && !dfa->nodes[org_idx].word_char)
-	  || ((constraint & NEXT_NOTWORD_CONSTRAINT)
-	      && dfa->nodes[org_idx].word_char)))
-    {
-      /* \<!, \>W etc. can never match.  Don't duplicate them, instead
-	 tell the caller they shouldn't be added to edests.  */
-      *new_idx = -1;
-      return REG_NOERROR;
-    }
-
-  dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
+  int dup_idx = re_dfa_add_node (dfa, dfa->nodes[org_idx], 1);
   if (BE (dup_idx == -1, 0))
     return REG_ESPACE;
   dfa->nodes[dup_idx].constraint = constraint;
@@ -2443,23 +2420,23 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 	  else
 	    goto parse_dup_op_ebrace;
 	}
-      if (BE (start == 0 && end == 0, 0))
+      if (BE ((start == 0 && end == 0) || tree == NULL, 0))
 	{
-	  /* We treat "<re>{0}" and "<re>{0,0}" as null string.  */
+	  /* We treat "<re>{0}" and "<re>{0,0}" as null string.
+	     Similarly "<re>{0}{m,n}".  */
 	  fetch_token (token, regexp, syntax);
 	  return NULL;
 	}
 
       /* Extract "<re>{n,m}" to "<re><re>...<re><re>{0,<m-n>}".  */
       elem = tree;
-      for (i = 0; i < start; ++i)
-	if (i != 0)
-	  {
-	    work_tree = duplicate_tree (elem, dfa);
-	    tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
-	    if (BE (work_tree == NULL || tree == NULL, 0))
-	      goto parse_dup_op_espace;
-	  }
+      for (i = 1; i < start; ++i)
+	{
+	  work_tree = duplicate_tree (elem, dfa);
+	  tree = create_tree (dfa, tree, work_tree, CONCAT, 0);
+	  if (BE (work_tree == NULL || tree == NULL, 0))
+	    goto parse_dup_op_espace;
+	}
 
       if (end == -1)
 	{
@@ -2516,6 +2493,9 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
 	    }
 	}
     }
+  /* Treat "<re>{0}*" etc. as "<re>{0}".  */
+  else if (tree == NULL)
+    ;
   else
     {
       tree = re_dfa_add_tree_node (dfa, tree, NULL, token);
