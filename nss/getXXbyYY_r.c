@@ -236,7 +236,7 @@ OLD (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
 #define do_symbol_version(real, name, version) \
   compat_symbol (libc, real, name, version)
-do_symbol_version (OLD (REENTRANT_GETNAME), REENTRANT_NAME, GLIBC_2_0);
+do_symbol_version (OLD (REENTRANT_NAME), REENTRANT_NAME, GLIBC_2_0);
 
 #define do_default_symbol_version(real, name, version) \
   versioned_symbol (libc, real, name, version)
