@@ -317,7 +317,7 @@ COMPILE.S = \
   $(CC) -c $(CPPFLAGS) -DASSEMBLER $(asm-CPPFLAGS) $(ASFLAGS-$(suffix $@))
 COMPILE.s = $(filter-out -pipe,$(CC)) -c $(ASFLAGS)
 
-# If we want to generate MD% checksums for the sources do this now.
+# If we want to generate MD5 checksums for the sources do this now.
 ifeq ($(md5),yes)
 generate-md5 = ; rm -f $(@:.d=.md5); \
 $(CC) -E $< $(CFLAGS) $(CPPFLAGS) $($(<:$*.%=%)-CPPFLAGS) | \
