@@ -1,3 +1,13 @@
+2000-09-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/arm/lockf64.c: New file.
+
+	* sysdeps/unix/sysv/linux/arm/fcntl.c: New file.
+
+	* sysdeps/unix/sysv/linux/arm/bits/fcntl.h
+	(F_GETLK64,F_SETLK64,F_SETLKW64): Use values from 2.4.0-test8.
+	(F_GETLK,F_SETLK,F_SETLKW): Handle __USE_FILE_OFFSET64 correctly.
+
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/tst-tables.sh: Enable EUC-KR test.
