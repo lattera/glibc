@@ -1,3 +1,21 @@
+2004-01-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Define HAVE_Z_RELRO if the linker supports -z relro.
+	* config.h.in: Add entry for HAVE_Z_RELRO.
+	* include/libc-symbols.h: Define attribute_relro.
+	* elf/dl-load.c: Add attribute_relro to env_path_list, capstr, ncapstr,
+	max_capstrlen, and max_dirnamelen definitions.
+	* elf/rtld.c: Add attribute_relro to _dl_argc, _dl_argv, _dl_skip_args,
+	load_time, start_time, library_path, preloadlist, version_info,
+	any_debug.
+	Remove rtld_total_time.  Make it a local variable.  Pass pointer to
+	it to print_statistics.  Change print_statistics accordingly.
+	* sysdeps/generic/dl-sysdep.c: Add attribute_relro to _dl_auxv.  Use
+	attribute_relro instead of explicitly assigning variable to the
+	.data.rel.ro section for __libc_enable_secure and __libc_stack_end.
+	* sysdeps/generic/ldsodefs.h: Declare __libc_stack_end, _dl_argc,
+	_dl_argv, _dl_argv_internal with attribute_relro.
+
 2004-01-13  Segher Boessenkool  <boessen@de.ibm.com>
 
 	* Makerules (gen-as-const): Don't silently continue on failure.

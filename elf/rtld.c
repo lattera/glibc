@@ -57,7 +57,7 @@ static void print_missing_version (int errcode, const char *objname,
 				   const char *errsting);
 
 /* Print the various times we collected.  */
-static void print_statistics (void);
+static void print_statistics (hp_timing_t *total_timep);
 
 /* This is a list of all the modes the dynamic loader can be in.  */
 enum mode { normal, list, verify, trace };
@@ -67,12 +67,12 @@ enum mode { normal, list, verify, trace };
    all the entries.  */
 static void process_envvars (enum mode *modep);
 
-int _dl_argc attribute_hidden;
-char **_dl_argv = NULL;
+int _dl_argc attribute_relro attribute_hidden;
+char **_dl_argv attribute_relro;
 INTDEF(_dl_argv)
 
 /* Nonzero if we were run directly.  */
-unsigned int _dl_skip_args attribute_hidden;
+unsigned int _dl_skip_args attribute_relro attribute_hidden;
 
 /* Set nonzero during loading and initialization of executable and
    libraries, cleared before the executable's entry point runs.  This
@@ -115,6 +115,7 @@ extern struct rtld_global _rtld_local
 static void dl_main (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
 		     ElfW(Addr) *user_entry);
 
+/* These two variables cannot be moved into .data.rel.ro.  */
 static struct libname_list _dl_rtld_libname;
 static struct libname_list _dl_rtld_libname2;
 
@@ -126,10 +127,9 @@ static struct libname_list _dl_rtld_libname2;
 
 /* Variable for statistics.  */
 #ifndef HP_TIMING_NONAVAIL
-static hp_timing_t rtld_total_time;
 static hp_timing_t relocate_time;
-static hp_timing_t load_time;
-static hp_timing_t start_time;
+static hp_timing_t load_time attribute_relro;
+static hp_timing_t start_time attribute_relro;
 #endif
 
 /* Additional definitions needed by TLS initialization.  */
@@ -263,6 +263,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
   start_addr = _dl_sysdep_start (arg, &dl_main);
 
 #ifndef HP_TIMING_NONAVAIL
+  hp_timing_t rtld_total_time;
   if (HP_TIMING_AVAIL)
     {
       hp_timing_t end_time;
@@ -276,7 +277,7 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
-    print_statistics ();
+    print_statistics (&rtld_total_time);
 
   return start_addr;
 }
@@ -619,10 +620,12 @@ static void rtld_lock_default_unlock_recursive (void *lock)
 #endif
 
 
-static const char *library_path;	/* The library search path.  */
-static const char *preloadlist;		/* The list preloaded objects.  */
-static int version_info;		/* Nonzero if information about
-					   versions has to be printed.  */
+/* The library search path.  */
+static const char *library_path attribute_relro;
+/* The list preloaded objects.  */
+static const char *preloadlist attribute_relro;
+/* Nonzero if information about versions has to be printed.  */
+static int version_info attribute_relro;
 
 static void
 dl_main (const ElfW(Phdr) *phdr,
@@ -1815,7 +1818,7 @@ print_missing_version (int errcode __attribute__ ((unused)),
 }
 
 /* Nonzero if any of the debugging options is enabled.  */
-static int any_debug;
+static int any_debug attribute_relro;
 
 /* Process the string given as the parameter which explains which debugging
    options are enabled.  */
@@ -2127,7 +2130,7 @@ process_envvars (enum mode *modep)
 
 /* Print the various times we collected.  */
 static void
-print_statistics (void)
+print_statistics (hp_timing_t *rtld_total_timep)
 {
 #ifndef HP_TIMING_NONAVAIL
   char buf[200];
@@ -2137,18 +2140,15 @@ print_statistics (void)
   /* Total time rtld used.  */
   if (HP_TIMING_AVAIL)
     {
-      HP_TIMING_PRINT (buf, sizeof (buf), rtld_total_time);
+      HP_TIMING_PRINT (buf, sizeof (buf), *rtld_total_timep);
       INTUSE(_dl_debug_printf) ("\nruntime linker statistics:\n"
 				"  total startup time in dynamic loader: %s\n",
 				buf);
-    }
 
-  /* Print relocation statistics.  */
-  if (HP_TIMING_AVAIL)
-    {
+      /* Print relocation statistics.  */
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
-      cp = _itoa ((1000ULL * relocate_time) / rtld_total_time,
+      cp = _itoa ((1000ULL * relocate_time) / *rtld_total_timep,
 		  pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)
@@ -2198,7 +2198,7 @@ print_statistics (void)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), load_time);
-      cp = _itoa ((1000ULL * load_time) / rtld_total_time,
+      cp = _itoa ((1000ULL * load_time) / *rtld_total_timep,
 		  pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)

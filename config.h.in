@@ -202,6 +202,9 @@
 /* Defined if forced unwind support is available.  */
 #undef	HAVE_FORCED_UNWIND
 
+/* Defined if the linker supports the -z relro option.  */
+#undef HAVE_Z_RELRO
+
 /*
  */
 

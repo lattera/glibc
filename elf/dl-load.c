@@ -121,12 +121,12 @@ struct filebuf
 };
 
 /* This is the decomposed LD_LIBRARY_PATH search path.  */
-static struct r_search_path_struct env_path_list;
+static struct r_search_path_struct env_path_list attribute_relro;
 
 /* List of the hardware capabilities we might end up using.  */
-static const struct r_strlenpair *capstr;
-static size_t ncapstr;
-static size_t max_capstrlen;
+static const struct r_strlenpair *capstr attribute_relro;
+static size_t ncapstr attribute_relro;
+static size_t max_capstrlen attribute_relro;
 
 
 /* Get the generated information about the trusted directories.  */
@@ -357,9 +357,9 @@ add_name_to_object (struct link_map *l, const char *name)
 }
 
 /* Standard search directories.  */
-static struct r_search_path_struct rtld_search_dirs;
+static struct r_search_path_struct rtld_search_dirs attribute_relro;
 
-static size_t max_dirnamelen;
+static size_t max_dirnamelen attribute_relro;
 
 static struct r_search_path_elem **
 fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,

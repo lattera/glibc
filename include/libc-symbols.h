@@ -1,6 +1,6 @@
 /* Support macros for making weak and strong aliases for symbols,
    and for using symbol sets and linker warnings with GNU ld.
-   Copyright (C) 1995-1998,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998,2000-2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -458,10 +458,16 @@ for linking")
 # define attribute_hidden
 #endif
 
-#if defined HAVE_TLS_MODEL_ATTRIBUTE
+#ifdef HAVE_TLS_MODEL_ATTRIBUTE
 # define attribute_tls_model_ie __attribute__ ((tls_model ("initial-exec")))
 #else
 # define attribute_tls_model_ie
+#endif
+
+#ifdef HAVE_Z_RELRO
+# define attribute_relro __attribute__ ((section (".data.rel.ro")))
+#else
+# define attribute_relro
 #endif
 
 /* Handling on non-exported internal names.  We have to do this only

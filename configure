@@ -5516,6 +5516,12 @@ fi
 echo "$as_me:$LINENO: result: $libc_cv_z_relro" >&5
 echo "${ECHO_T}$libc_cv_z_relro" >&6
 
+  if test $libc_cv_z_relro = yes; then
+    cat >>confdefs.h <<\_ACEOF
+#define HAVE_Z_RELRO 1
+_ACEOF
+
+  fi
 
   echo "$as_me:$LINENO: checking for -Bgroup option" >&5
 echo $ECHO_N "checking for -Bgroup option... $ECHO_C" >&6
