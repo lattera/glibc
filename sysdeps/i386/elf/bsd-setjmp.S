@@ -1,5 +1,5 @@
 /* BSD `setjmp' entry point to `sigsetjmp (..., 1)'.  i386 version.
-   Copyright (C) 1995,1996,1997,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997,2000,2001,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ ENTRY (BP_SYM (setjmp))
            we can't save and restore our caller's value.  Instead, we do an
            indirect jump through the GOT, using for the temporary register
            %ecx, which is call-clobbered.  */
-	call 1f
+	call __i686.get_pc_thunk.cx
 	addl $_GLOBAL_OFFSET_TABLE_, %ecx
 	leal C_SYMBOL_NAME (BP_SYM (__sigjmp_save)@GOTOFF)(%ecx), %ecx
 	call *%ecx
@@ -66,8 +66,13 @@ ENTRY (BP_SYM (setjmp))
 	popl %ecx
 	popl %edx
 	ret
-#ifdef PIC
-1:	movl (%esp), %ecx
-	ret
-#endif
 END (BP_SYM (setjmp))
+
+	.section .gnu.linkonce.t.__i686.get_pc_thunk.cx,"ax",@progbits
+	.globl __i686.get_pc_thunk.cx
+	.hidden __i686.get_pc_thunk.cx
+	.type __i686.get_pc_thunk.cx,@function
+__i686.get_pc_thunk.cx:
+	movl (%esp), %ecx
+	ret
+	.size __i686.get_pc_thunk.cx, . - __i686.get_pc_thunk.cx

@@ -1,3 +1,8 @@
+2003-10-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once):
+	Check __sigsetjmp return value.  Reported by Daniel Jacobowitz.
+
 2003-10-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (DOCARGS_1): Use
