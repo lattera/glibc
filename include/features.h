@@ -286,8 +286,8 @@
 /* If we don't have __REDIRECT, prototypes will be missing if
    __USE_FILE_OFFSET64 but not __USE_LARGEFILE[64]. */
 # if defined __USE_FILE_OFFSET64 && !defined __REDIRECT
-#  define __USE_LARGEFILE
-#  define __USE_LARGEFILE64
+#  define __USE_LARGEFILE	1
+#  define __USE_LARGEFILE64	1
 # endif
 
 #endif	/* !ASSEMBLER */
