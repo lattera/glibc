@@ -46,10 +46,12 @@ include ../Rules
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
+ifneq ($(strip $(MSGFMT)),:)
 .PHONY: do-gettext-test
 tests: do-gettext-test
 do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
 	$(SHELL) -e $< $(common-objpfx) $(objpfx)
+endif
 endif
 endif
 
