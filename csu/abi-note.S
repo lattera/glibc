@@ -1,5 +1,5 @@
 /* Special .init and .fini section support.
-   Copyright (C) 1997, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,13 +38,13 @@
    Offsets and lengths are bytes or (parenthetical references) to the
    values in other fields.
 
-offset	length	contents	
+offset	length	contents
 0	4	length of name
 4	4	length of data
 8	4	note type
 12	(0)	vendor name
 		- null-terminated ASCII string, padded to 4-byte alignment
-12+(0)	(4)	note data, 
+12+(0)	(4)	note data,
 
    The GNU project and cooperating development efforts (including the
    Linux community) use note type 1 and a vendor name string of "GNU"
@@ -56,18 +56,18 @@ offset	length	contents
 
 #include <config.h>
 #include <abi-tag.h>		/* OS-specific ABI tag value */
-	
+
 /* The linker (GNU ld 2.8 and later) recognizes an allocated section whose
    name begins with `.note' and creates a PT_NOTE program header entry
    pointing at it. */
 
 	.section ".note.ABI-tag", "a"
-	.align 4
+	.p2align 2
 	.long 1f - 0f		/* name length */
 	.long 3f - 2f		/* data length */
 	.long  1		/* note type */
 0:	.asciz "GNU"		/* vendor name */
-1:	.align 4		
+1:	.p2align 2
 2:	.long __ABI_TAG_OS	/* note data: the ABI tag */
 	.long __ABI_TAG_VERSION
-3:	.align 4		/* pad out section */
+3:	.p2align 2		/* pad out section */
