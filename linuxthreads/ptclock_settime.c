@@ -16,20 +16,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* For i686 and up we have a better and faster source of random bits in the
-   form of the time stamp counter.  */
-#define RANDOM_BITS(Var) \
-  if (__builtin_expect (value == UINT64_C (0), 0))			      \
-    {									      \
-      /* If this is the first time this function is used initialize	      \
-	 the variable we accumulate the value in to some somewhat	      \
-	 random value.  If we'd not do this programs at startup time	      \
-	 might have a reduced set of possible names, at least on slow	      \
-	 machines.  */							      \
-      struct timeval tv;						      \
-      __gettimeofday (&tv, NULL);					      \
-      value = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;		      \
-    }									      \
-  __asm__ __volatile__ ("rdtsc" : "=A" (Var))
+#include <time.h>
+#include <libc-internal.h>
+#include "internals.h"
 
-#include_next <tempname.c>
+
+#if HP_TIMING_AVAIL
+void
+__pthread_clock_settime (hp_timing_t offset)
+{
+  pthread_descr self = thread_self ();
+
+  /* Compute the offset since the start time of the process.  */
+  THREAD_SETMEM (self, p_cpuclock_offset, offset);
+}
+#endif

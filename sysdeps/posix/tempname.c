@@ -107,6 +107,25 @@
 # define __secure_getenv getenv
 #endif
 
+#ifdef _LIBC
+# include <hp-timing.h>
+# if HP_TIMING_AVAIL
+#  define RANDOM_BITS(Var) \
+  if (__builtin_expect (value == UINT64_C (0), 0))			      \
+    {									      \
+      /* If this is the first time this function is used initialize	      \
+	 the variable we accumulate the value in to some somewhat	      \
+	 random value.  If we'd not do this programs at startup time	      \
+	 might have a reduced set of possible names, at least on slow	      \
+	 machines.  */							      \
+      struct timeval tv;						      \
+      __gettimeofday (&tv, NULL);					      \
+      value = ((uint64_t) tv.tv_usec << 16) ^ tv.tv_sec;		      \
+    }									      \
+  HP_TIMING_NOW (Var)
+# endif
+#endif
+
 /* Use the widest available unsigned type if uint64_t is not
    available.  The algorithm below extracts a number less than 62**6
    (approximately 2**35.725) from uint64_t, so ancient hosts where

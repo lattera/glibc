@@ -1,5 +1,5 @@
-/* Get frequency of the system processor.  i386/Linux version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Get frequency of the system processor.  IA-64/Linux version.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,9 +29,7 @@ __get_clockfreq (void)
 {
   /* We read the information from the /proc filesystem.  It contains at
      least one line like
-	cpu MHz         : 497.840237
-     or also
-	cpu MHz         : 497.841
+	itc MHz    : 733.390988
      We search for this line and convert the number in an integer.  */
   static hp_timing_t result;
   int fd;
@@ -51,7 +49,7 @@ __get_clockfreq (void)
       n = read (fd, buf, sizeof buf);
       if (__builtin_expect (n, 1) > 0)
 	{
-	  char *mhz = memmem (buf, n, "cpu MHz", 7);
+	  char *mhz = memmem (buf, n, "itc MHz", 7);
 
 	  if (__builtin_expect (mhz != NULL, 1))
 	    {

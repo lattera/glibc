@@ -4,6 +4,8 @@
 #ifndef _LIBC_INTERNAL
 # define _LIBC_INTERNAL 1
 
+#include <hp-timing.h>
+
 /* Initialize the `__libc_enable_secure' flag.  */
 extern void __libc_init_secure (void);
 
@@ -19,7 +21,7 @@ extern void __cyg_profile_func_enter (void *this_fn, void *call_site);
 extern void __cyg_profile_func_exit (void *this_fn, void *call_site);
 
 /* Get frequency of the system processor.  */
-extern unsigned long long int __get_clockfreq (void);
+extern hp_timing_t __get_clockfreq (void);
 
 /* Free all allocated resources.  */
 extern void __libc_freeres (void);

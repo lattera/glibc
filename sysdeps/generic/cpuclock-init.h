@@ -1,1 +1,0 @@
-/* In general there is no CPU clock.  */

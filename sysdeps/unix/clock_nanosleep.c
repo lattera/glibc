@@ -20,9 +20,14 @@
 #include <assert.h>
 #include <errno.h>
 #include <time.h>
+#include <hp-timing.h>
 
 
-#ifndef CLOCK_P
+#if HP_TIMING_AVAIL
+# define CLOCK_P(clock) \
+  (clock) != CLOCK_PROCESS_CPUTIME_ID					      \
+  && (clock) != CLOCK_THREAD_CPUTIME_ID
+#else
 # define CLOCK_P(clock) 0
 #endif
 

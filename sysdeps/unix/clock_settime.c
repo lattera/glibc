@@ -19,11 +19,25 @@
 #include <errno.h>
 #include <time.h>
 #include <sys/time.h>
+#include <libc-internal.h>
 
 
-#ifndef EXTRA_CLOCK_CASES
-# define EXTRA_CLOCK_CASES
+#if HP_TIMING_AVAIL
+/* Clock frequency of the processor.  We make it a 64-bit variable
+   because some jokers are already playing with processors with more
+   than 4GHz.  */
+static hp_timing_t freq;
+
+
+/* We need the starting time for the process.  */
+extern hp_timing_t _dl_cpuclock_offset;
+
+
+/* This function is defined in the thread library.  */
+extern void __pthread_clock_settime (hp_timing_t offset)
+     __attribute__ ((__weak__));
 #endif
+
 
 /* Set CLOCK to value TP.  */
 int
@@ -47,7 +61,45 @@ clock_settime (clockid_t clock_id, const struct timespec *tp)
       retval = settimeofday (&tv, NULL);
       break;
 
-      EXTRA_CLOCK_CASES
+#if HP_TIMING_AVAIL
+    case CLOCK_PROCESS_CPUTIME_ID:
+    case CLOCK_THREAD_CPUTIME_ID:
+      {
+	hp_timing_t tsc;
+	hp_timing_t usertime;
+
+	/* First thing is to get the current time.  */
+	HP_TIMING_NOW (tsc);
+
+	if (__builtin_expect (freq == 0, 0))
+	  {
+	    /* This can only happen if we haven't initialized the `freq'
+	       variable yet.  Do this now. We don't have to protect this
+	       code against multiple execution since all of them should
+	       lead to the same result.  */
+	    freq = __get_clockfreq ();
+	    if (__builtin_expect (freq == 0, 0))
+	      {
+		/* Something went wrong.  */
+		retval = -1;
+		break;
+	      }
+	  }
+
+	/* Convert the user-provided time into CPU ticks.  */
+	usertime = tp->tv_sec * freq + (tp->tv_nsec * freq) / 1000000000ull;
+
+	/* Determine the offset and use it as the new base value.  */
+	if (clock_id != CLOCK_THREAD_CPUTIME_ID
+	    || __pthread_clock_settime == NULL)
+	  _dl_cpuclock_offset = tsc - usertime;
+	else
+	  __pthread_clock_settime (tsc - usertime);
+
+	retval = 0;
+      }
+      break;
+#endif
 
     default:
       __set_errno (EINVAL);

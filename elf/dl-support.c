@@ -29,7 +29,7 @@
 #include <bits/libc-lock.h>
 #include <dl-librecon.h>
 #include <unsecvars.h>
-#include <cpuclock-init.h>
+#include <hp-timing.h>
 
 extern char *__progname;
 char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
@@ -94,8 +94,8 @@ struct r_scope_elem *_dl_main_searchlist = &_dl_initial_searchlist;
 int _dl_starting_up = 1;
 
 /* Initial value of the CPU clock.  */
-#ifdef CPUCLOCK_VARDEF
-CPUCLOCK_VARDEF (_dl_cpuclock_offset);
+#if HP_TIMING_AVAIL
+hp_timing_t _dl_cpuclock_offset;
 #endif
 
 /* During the program run we must not modify the global data of
@@ -133,8 +133,8 @@ static void non_dynamic_init (void) __attribute__ ((unused));
 static void
 non_dynamic_init (void)
 {
-#ifdef CPUCLOCK_INIT
-  CPUCLOCK_INIT (_dl_cpuclock_offset);
+#if HP_TIMING_AVAIL
+  HP_TIMING_NOW (_dl_cpuclock_offset);
 #endif
 
   if (!_dl_pagesize)

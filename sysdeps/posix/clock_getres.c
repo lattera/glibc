@@ -17,13 +17,18 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <stdint.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/param.h>
+#include <libc-internal.h>
 
 
-#ifndef EXTRA_CLOCK_CASES
-# define EXTRA_CLOCK_CASES
+#if HP_TIMING_AVAIL
+/* Clock frequency of the processor.  */
+static long int nsec;
 #endif
+
 
 /* Get resolution of clock.  */
 int
@@ -50,7 +55,35 @@ clock_getres (clockid_t clock_id, struct timespec *res)
       }
       break;
 
-      EXTRA_CLOCK_CASES
+#if HP_TIMING_AVAIL
+    case CLOCK_PROCESS_CPUTIME_ID:
+    case CLOCK_THREAD_CPUTIME_ID:
+      {
+	if (__builtin_expect (nsec == 0, 0))
+	  {
+	    hp_timing_t freq;
+
+	    /* This can only happen if we haven't initialized the `freq'
+	       variable yet.  Do this now. We don't have to protect this
+	       code against multiple execution since all of them should
+	       lead to the same result.  */
+	    freq = __get_clockfreq ();
+	    if (__builtin_expect (freq == 0, 0))
+	      /* Something went wrong.  */
+	      break;
+
+	    nsec = MAX (UINT64_C (1000000000) / freq, 1);
+	  }
+
+	/* File in the values.  The seconds are always zero (unless we
+	   have a 1Hz machine).  */
+	res->tv_sec = 0;
+	res->tv_nsec = nsec;
+
+	retval = 0;
+      }
+      break;
+#endif
 
     default:
       __set_errno (EINVAL);

@@ -1,5 +1,41 @@
 2001-04-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/i386/i586/clock_getres.c: Removed.
+	* sysdeps/unix/i386/i586/clock_gettime.c: Removed.
+	* sysdeps/unix/i386/i586/clock_nanosleep.c: Removed.
+	* sysdeps/unix/i386/i586/clock_settime.c: Removed.
+	* sysdeps/unix/i386/i586/cpuclock-init.h: Removed.
+	* sysdeps/generic/cpuclock-init.h: Removed.
+	* sysdeps/unix/i386/i686/Implies: Removed.
+	* sysdeps/unix/i386/i686/tempname.c: Removed.
+	* sysdeps/i386/i686/Versions: New file.
+	* sysdeps/unix/i386/i586/Versions: Removed.
+
+	* sysdeps/posix/clock_getres.c: If HP_TIMING_AVAIL is nonzero handle
+	CLOCK_PROCESS_CPUTIME_ID and CLOCK_THREAD_CPUTIME_ID.
+	* sysdeps/unix/clock_gettime.c: Likewise.
+	* sysdeps/unix/clock_nanosleep.c: Likewise.
+	* sysdeps/unix/clock_settime.c: Likewise.
+	* sysdeps/posix/tempname.c: Is HP_TIMING_AVAIL is nonzero define
+	RANDOM_BITS use CPU clock.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9/bits/time.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sparcv9b/bits/time.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/time.h: New file.
+	* sysdeps/sparc/Versions: New file.
+
+	* elf/dl-support.c: Don't use cpuclock-init.h definitions, use
+	hp-timing.h definitions.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+
+	* include/libc-internal.h: Include hp-timing.h.  Use hp_timing_t in
+	__get_clockfreq prototype.
+
+	* sysdeps/unix/sysv/linux/i386/get_clockfreq.c (__get_clockfreq):
+	Use hp_timing_t type.
+
+	* sysdeps/unix/sysv/linux/ia64/get_clockfreq.c: New file.
+
 	* sysdeps/posix/pathconf.c (__pathconf): For _PC_ASYNC_IO test
 	whether named file is a regular file or a block device.
 	* sysdeps/posix/fpathconf.c (__fpathconf): Likewise.

@@ -18,15 +18,29 @@
 
 #include <time.h>
 #include <libc-internal.h>
+#include "internals.h"
 
-#include "../../../internals.h"
 
-
-void
-__pthread_clock_settime (unsigned long long int offset)
+#if HP_TIMING_AVAIL
+int
+__pthread_clock_gettime (hp_timing_t freq, struct timespec *tp)
 {
+  hp_timing_t tsc;
   pthread_descr self = thread_self ();
 
+  /* Get the current counter.  */
+  HP_TIMING_NOW (tsc);
+
   /* Compute the offset since the start time of the process.  */
-  THREAD_SETMEM (self, p_cpuclock_offset, offset);
+  tsc -= THREAD_GETMEM (self, p_cpuclock_offset);
+
+  /* Compute the seconds.  */
+  tp->tv_sec = tsc / freq;
+
+  /* And the nanoseconds.  This computation should be stable until
+     we get machines with about 16GHz frequency.  */
+  tp->tv_nsec = ((tsc % freq) * 1000000000ull) / freq;
+
+  return 0;
 }
+#endif

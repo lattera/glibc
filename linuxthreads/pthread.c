@@ -226,8 +226,8 @@ static void pthread_handle_sigrestart(int sig);
 static void pthread_handle_sigdebug(int sig);
 
 /* CPU clock handling.  */
-#ifdef CPUCLOCK_VARDECL
-CPUCLOCK_VARDECL (_dl_cpuclock_offset);
+#if HP_TIMING_AVAIL
+extern hp_timing_t _dl_cpuclock_offset;
 #endif
 
 /* Signal numbers used for the communication.
@@ -395,7 +395,7 @@ __pthread_initialize_minimal(void)
 #ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(&__pthread_initial_thread, 0);
 #endif
-#ifdef CPUCLOCK_INIT
+#if HP_TIMING_AVAIL
   __pthread_initial_thread.p_cpuclock_offset = _dl_cpuclock_offset;
 #endif
 }

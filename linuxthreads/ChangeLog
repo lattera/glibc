@@ -1,3 +1,18 @@
+2001-04-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (libpthread-routines): Add ptclock_gettime and
+	ptclock_settime.
+	* internals.h: Don't use cpuclock-init.h definitions, use
+	hp-timing.h definitions.
+	* pthread.c: Likewise.
+	* manager.c: Likewise.
+	* ptclock_gettime.c: New file.
+	* ptclock_settime.c: New file.
+
+	* sysdeps/i386/i586/ptclock_gettime.c: Removed.
+	* sysdeps/i386/i586/ptclock_settime.c: Removed.
+	* sysdeps/i386/i586/Makefile: Removed.
+
 2001-04-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define _POSIX_ASYNCH_IO.
