@@ -73,7 +73,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
 #if __ASSUME_32BITUIDS > 0
   return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
-			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
+			 CHECK_SEMCTL (&arg, semid, cmd | __IPC_64)->array);
 #else
   switch (cmd) {
     case SEM_STAT:
@@ -82,7 +82,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
       break;
     default:
       return INLINE_SYSCALL (semctl, 4, semid, semnum, cmd,
-			     CHECK_SEMCTL (&arg, semid, cmd));
+			     CHECK_SEMCTL (&arg, semid, cmd)->array);
   }
 
   {
@@ -93,7 +93,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
     /* Unfortunately there is no way how to find out for sure whether
        we should use old or new semctl.  */
     result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd | __IPC_64,
-			     CHECK_SEMCTL (&arg, semid, cmd | __IPC_64));
+			     CHECK_SEMCTL (&arg, semid, cmd | __IPC_64)->array);
     if (result != -1 || errno != EINVAL)
       return result;
 
@@ -113,7 +113,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 	  }
       }
     result = INLINE_SYSCALL (semctl, 4, semid, semnum, cmd,
-			     CHECK_SEMCTL (&arg, semid, cmd));
+			     CHECK_SEMCTL (&arg, semid, cmd)->array);
     if (result != -1 && cmd != IPC_SET)
       {
 	memset(buf, 0, sizeof(*buf));

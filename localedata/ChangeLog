@@ -1,3 +1,8 @@
+2000-10-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/iso14651_t1: Handle Macedonian correctly.
+	Patch by Damjan <arhiv@freemail.org.mk>.
+
 2000-10-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/iso14651_t1: Add currency symbols.

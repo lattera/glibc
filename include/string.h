@@ -17,6 +17,12 @@ extern int __strncasecmp (__const char *__s1, __const char *__s2,
 			  size_t __n)
      __attribute_pure__;
 
+extern int __strcasecmp (__const char *__s1, __const char *__s2)
+     __attribute_pure__;
+
+extern char *__strcasestr (__const char *__haystack, __const char *__needle)
+     __attribute_pure__;
+
 extern char *__strdup (__const char *__string)
      __attribute_malloc__;
 extern char *__strndup (__const char *__string, size_t __n)
