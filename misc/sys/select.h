@@ -42,7 +42,7 @@ typedef __sigset_t sigset_t;
 #define __need_timespec
 #include <time.h>
 #define __need_timeval
-#include <sys/time.h>
+#include <bits/time.h>
 
 
 /* The fd_set member is required to be an array of longs.  */

@@ -1,5 +1,15 @@
 2001-01-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/fnmatch_loop.c: Remove incorrect reverse condition in
+	[. .] matching.  Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
+2001-01-31  Mark Kettenis  <kettenis@gnu.org>
+
+	* misc/sys/select.h: Include <bits/time.h> instead of <sys/time.h>
+	to get definition of `struct timeval'.
+
+2001-01-31  Ulrich Drepper  <drepper@redhat.com>
+
 	* posix/tst-fnmatch.input: Add test cases for de_DE.UTF-8 locale.
 	* posix/fnmatch_loop.c: Fix handling of [= =] for multibyte charsets.
 

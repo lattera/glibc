@@ -531,7 +531,7 @@ FCT (pattern, string, no_leading_period, flags)
 
 				c = *p++;
 			      }
-			    else if (symb_table[2 * elem] != 0 && c1 == 1)
+			    else if (c1 == 1)
 			      {
 				/* No valid character.  Match it as a
 				   single byte.  */
