@@ -1,3 +1,23 @@
+1998-10-08  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (__mktime_internal): When the requested time falls
+	in a spring-forward gap of size DT, return a time that is DT away
+	from the requested time, preferring a time whose tm_isdst differs
+	from the requested value.  Bump the max number of probes from 4 to
+	6 to account for the extra probes needed to discover a
+	spring-forward gap in the worst case.
+
+1998-10-07 17:05  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Improve the autodetection
+	of the weird alpha architectures.
+	Patch by Cristian Gafton <gafton@redhat.com>.
+
+1998-02-18 23:31  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/alpha/ioperm.c: Add support for
+	RAWHIDE and TSUNAMI.  Patch from Jay.Estabrook@digital.com.
+
 1998-10-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-open.c (_dl_global_scope_alloc): Make global.
