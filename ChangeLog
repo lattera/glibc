@@ -1,3 +1,7 @@
+2003-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/fi.po: Update from translation team.
+
 2003-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/tst-aio7.c (do_test): Change BYTES into a #define.
