@@ -11,8 +11,6 @@
 	pthread_attr_setstacksize): Change PTHREAD_STACK_SIZE to
 	PTHREAD_STACK_MIN in comments.
 
-2003-07-31  Jakub Jelinek  <jakub@redhat.com>
-
 	* sysdeps/alpha/pt-machine.h (PT_EI): Add
 	__attribute__((always_inline)).
 	* sysdeps/arm/pt-machine.h (PT_EI): Likewise.
