@@ -1,6 +1,7 @@
 2003-07-29  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile: Revert accidental changes in last commit.
+	* elf/dl-support.c: Likewise.
 
 	* rt/tst-timer2.c: New file.
 	* rt/Makefile (tests): Add it.
