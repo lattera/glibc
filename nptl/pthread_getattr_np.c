@@ -27,6 +27,7 @@
 #include <sys/resource.h>
 #include "pthreadP.h"
 #include <lowlevellock.h>
+#include <ldsodefs.h>
 
 
 int
