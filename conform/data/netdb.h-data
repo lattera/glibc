@@ -1,6 +1,6 @@
 #ifndef ISO
-type in_port_t
-type in_addr_t
+optional-type in_port_t
+optional-type in_addr_t
 
 type {struct hostent}
 
@@ -42,17 +42,63 @@ macro NO_DATA
 macro NO_RECOVERY
 macro TRY_AGAIN
 
-macro AI_V4MAPPED
-macro AI_ALL
-macro AI_ADDRCONFIG
-macro AI_DEFAULT
+type {struct addrinfo}
+element {struct addrinfo} int ai_flags
+element {struct addrinfo} int ai_family
+element {struct addrinfo} int ai_socktype
+element {struct addrinfo} int ai_protocol
+element {struct addrinfo} socklen_t ai_addrlen
+element {struct addrinfo} {struct sockaddr*} ai_addr
+element {struct addrinfo} {char*} ai_canonname
+element {struct addrinfo} {struct addrinfo*} ai_next
+
+macro AI_PASSIVE
+macro AI_CANONNAME
+macro AI_NUMERICHOST
+
+macro NI_NOFQDN
+macro NI_NUMERICHOST
+macro NI_NAMEREQD
+macro NI_NUMERICSERV
+macro NI_DGRAM
+
+macro EAI_AGAIN
+macro EAI_BADFLAGS
+macro EAI_FAIL
+macro EAI_FAMILY
+macro EAI_MEMORY
+macro EAI_NONAME
+macro EAI_SERVICE
+macro EAI_SOCKTYPE
+macro EAI_SYSTEM
 
 function void endhostent (void)
 function void endnetent (void)
 function void endprotoent (void)
 function void endservent (void)
+function void freeaddrinfo (struct addrinfo*)
+function {char*} gai_strerror (int)
+function int getaddrinfo (const char*, const char*, const struct addrinfo*, struct addrinfo**)
 function {struct hostent*} gethostbyaddr (const void*, socklen_t, int)
 function {struct hostent*} gethostbyname (const char*)
 function {struct hostent*} gethostent (void)
+function int getnameinfo (const struct sockaddr*, socklen_t, char*, socklen_t, char*, socklen_t, unsigned)
+function {struct netent*} getnetbyaddr (uint32_t, int)
+function {struct netent*} getnetbyname (const char*)
+function {struct netent*} getnetent (void)
+function {struct protoent*} getprotobyname (const char *)
+function {struct protoent*} getprotobynumber (int)
+function {struct protoent*} getprotoent (void)
+function {struct servent*} getservbyname (const char*, const char*)
+function {struct servent*} getservbyport (int, const char*)
+function {struct servent*} getservent (void)
+function void sethostent (int)
+function void setnetent (int)
+function void setprotoent (int)
+function void setservent (int)
 
+type socklen_t
+
+allow-header netinet/in.h
+allow-header inttypes.h
 #endif

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -25,16 +25,12 @@
 
 #include <features.h>
 
+#include <netinet/in.h>
+#include <stdint.h>
+#ifdef __USE_MISC
 /* This is necessary to make this include file properly replace the
    Sun version.  */
-#include <rpc/netdb.h>
-#include <sys/socket.h>		/* need socklen_t */
-#define __need_size_t
-#include <stddef.h>
-
-#ifndef __uint32_t_defined
-typedef unsigned int		uint32_t;
-# define __uint32_t_defined
+# include <rpc/netdb.h>
 #endif
 
 #include <bits/netdb.h>
@@ -87,6 +83,11 @@ __set_h_errno (int __err)
 				   type.  */
 #define	NO_ADDRESS	NO_DATA	/* No address, look for MX record.  */
 
+#ifdef __USE_XOPEN2K
+/* Highest reserved Internet port number.  */
+# define IPPORT_RESERVED	1024
+#endif
+
 #ifdef __USE_GNU
 /* Scope delimiter for getaddrinfo(), getnameinfo().  */
 # define SCOPE_DELIMITER	'%'
@@ -107,7 +108,7 @@ struct hostent
   char *h_name;			/* Official name of host.  */
   char **h_aliases;		/* Alias list.  */
   int h_addrtype;		/* Host address type.  */
-  socklen_t h_length;		/* Length of address.  */
+  int h_length;			/* Length of address.  */
   char **h_addr_list;		/* List of addresses from name server.  */
 #define	h_addr	h_addr_list[0]	/* Address, for backward compatibility.  */
 };
@@ -455,7 +456,7 @@ extern char *gai_strerror (int __ecode) __THROW;
 extern int getnameinfo (__const struct sockaddr *__restrict __sa,
 			socklen_t __salen, char *__restrict __host,
 			socklen_t __hostlen, char *__restrict __serv,
-			socklen_t __servlen, int __flags) __THROW;
+			socklen_t __servlen, unsigned int __flags) __THROW;
 
 #endif	/* POSIX */
 

@@ -166,7 +166,8 @@ nrl_domainname (void)
 
 int
 getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
-	     socklen_t hostlen, char *serv, socklen_t servlen, int flags)
+	     socklen_t hostlen, char *serv, socklen_t servlen,
+	     unsigned int flags)
 {
   int serrno = errno;
   int tmpbuflen = 1024;

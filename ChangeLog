@@ -1,5 +1,15 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Implement optional-type.
+
+	* resolv/netdb.h: Include <netinet/in.h> not <sys/socket.h>.  Include
+	<rpc/netdb.h> only if __USE_MISC.  Include <stdint.h> instead of
+	defining uint32_t here.  Define IPPORT_RESERVED.
+	(struct hostent): Type of h_length element is int.
+	(getnameinfo): Type of flags parameter is unsigned int.
+	* inet/getnameinfo.c (getnameinfo): flags argument is unsigned.
+	* conform/data/netdb.h-data: Add many missing definitions.
+
 	* conform/conformtest.pl: Implement optional-macro.
 	* conform/data/math.h-data: Update for XPG6.
 

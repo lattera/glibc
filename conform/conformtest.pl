@@ -546,6 +546,30 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
+    } elsif (/^optional-type *({([^}]*)|([a-zA-Z0-9_]*))/) {
+      my($type) = "$2$3";
+
+      # Remember that this name is allowed.
+      if ($type =~ /^struct *(.*)/) {
+	push @allow, $1;
+      } elsif ($type =~ /^union *(.*)/) {
+	push @allow, $1;
+      } else {
+	push @allow, $type;
+      }
+
+      # Remember that this name is allowed.
+      push @allow, $type;
+
+      # Generate a program to test for the availability of this constant.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "$type *a;\n";
+      close (TESTFILE);
+
+      compiletest ($fnamebase, "Testing for type $type",
+		   "Type \"$type\" not available.", $missing, 1);
     } elsif (/^type *({([^}]*)|([a-zA-Z0-9_]*))/) {
       my($type) = "$2$3";
 
