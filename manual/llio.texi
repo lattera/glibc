@@ -1119,21 +1119,26 @@ of the file that a program actually accesses are loaded.  Accesses to
 not-yet-loaded parts of the mmapped region are handled in the same way as
 swapped out pages.
 
-Since mmapped pages can be stored back to their file when physical memory
-is low, it is possible to mmap files orders of magnitude larger than both
-the physical memory @emph{and} swap space.  The only limit is address
-space.  The theoretical limit is 4GB on a 32-bit machine - however, the
-actual limit will be smaller since some areas will be reserved for other
-purposes.
+Since mmapped pages can be stored back to their file when physical
+memory is low, it is possible to mmap files orders of magnitude larger
+than both the physical memory @emph{and} swap space.  The only limit is
+address space.  The theoretical limit is 4GB on a 32-bit machine -
+however, the actual limit will be smaller since some areas will be
+reserved for other purposes.  If the LFS interface is used the file size
+on 32-bit systems is not limited to 2GB (offsets are signed which
+reduces the addressable area of 4GB by half); the full 64-bit are
+available.
 
 Memory mapping only works on entire pages of memory.  Thus, addresses
 for mapping must be page-aligned, and length values will be rounded up.
 To determine the size of a page the machine uses one should use
 
+@vindex _SC_PAGESIZE
 @smallexample
 size_t page_size = (size_t) sysconf (_SC_PAGESIZE);
 @end smallexample
 
+@noindent
 These functions are declared in @file{sys/mman.h}.
 
 @deftypefun {void *} mmap (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off_t @var{offset})
@@ -1250,6 +1255,20 @@ The file is on a filesystem that doesn't support mapping.
 
 @end table
 
+@end deftypefun
+
+@deftypefun {void *} mmap64 (void *@var{address}, size_t @var{length},int @var{protect}, int @var{flags}, int @var{filedes}, off64_t @var{offset})
+The @code{mmap64} function is equivalent to the @code{mmap} function but
+the @var{offset} parameter is of type @code{off64_t}.  On 32-bit systems
+this allows the file associated with the @var{filedes} descriptor to be
+larger than 2GB.  @var{filedes} must be a descriptor returned from a
+call to @code{open64} or @code{fopen64} and @code{freopen64} where the
+descriptor is retrieved with @code{fileno}.
+
+When the sources are translated with @code{_FILE_OFFSET_BITS == 64} this
+function is actually available under the name @code{mmap}.  I.e., the
+new, extended API using 64 bit file sizes and offsets transparently
+replaces the old API.
 @end deftypefun
 
 @deftypefun int munmap (void *@var{addr}, size_t @var{length})

@@ -316,7 +316,7 @@ Here are the symbolic constants for use as the @var{parameter} argument
 to @code{sysconf}.  The values are all integer constants (more
 specifically, enumeration type values).
 
-@table @code
+@vtable @code
 @comment unistd.h
 @comment POSIX.1
 @item _SC_ARG_MAX
@@ -752,8 +752,7 @@ support.
 @comment GNU
 @item _SC_PAGESIZE
 Inquire about the virtual memory page size of the machine.
-@code{getpagesize} returns the same value.
-@c @xref{XXX getpagesize}. !!! ???
+@code{getpagesize} returns the same value (@pxref{Query Memory Parameters}).
 
 @comment unistd.h
 @comment GNU
@@ -795,6 +794,21 @@ Inquire about the parameter corresponding to @code{_XOPEN_XCU_VERSION}.
 @comment X/Open
 @item _SC_XOPEN_UNIX
 Inquire about the parameter corresponding to @code{_XOPEN_UNIX}.
+
+@comment unistd.h
+@comment X/Open
+@item _SC_XOPEN_REALTIME
+Inquire about the parameter corresponding to @code{_XOPEN_REALTIME}.
+
+@comment unistd.h
+@comment X/Open
+@item _SC_XOPEN_REALTIME_THREADS
+Inquire about the parameter corresponding to @code{_XOPEN_REALTIME_THREADS}.
+
+@comment unistd.h
+@comment X/Open
+@item _SC_XOPEN_LEGACY
+Inquire about the parameter corresponding to @code{_XOPEN_LEGACY}.
 
 @comment unistd.h
 @comment X/Open
@@ -960,7 +974,7 @@ Inquire about the parameter corresponding to @code{NL_SETMAX}.
 @comment X/Open
 @item _SC_NL_TEXTMAX
 Inquire about the parameter corresponding to @code{NL_TEXTMAX}.
-@end table
+@end vtable
 
 @node Examples of Sysconf
 @subsection Examples of @code{sysconf}
@@ -1290,6 +1304,33 @@ bytes in a file name.  The value of this constant is @code{256}.
 The most restrictive limit permitted by POSIX for the maximum number of
 bytes that can be written atomically to a pipe.  The value of this
 constant is @code{512}.
+
+@comment limits.h
+@comment POSIX.1
+@item SYMLINK_MAX
+Maximum number of bytes in a symbolic link.
+
+@comment limits.h
+@comment POSIX.1
+@item POSIX_REC_INCR_XFER_SIZE
+Recommended increment for file transfer sizes between the
+@code{POSIX_REC_MIN_XFER_SIZE} and @code{POSIX_REC_MAX_XFER_SIZE}
+values.
+
+@comment limits.h
+@comment POSIX.1
+@item POSIX_REC_MAX_XFER_SIZE
+Maximum recommended file transfer size.
+
+@comment limits.h
+@comment POSIX.1
+@item POSIX_REC_MIN_XFER_SIZE
+Minimum recommended file transfer size.
+
+@comment limits.h
+@comment POSIX.1
+@item POSIX_REC_XFER_ALIGN
+Recommended file transfer buffer alignment.
 @end table
 
 @node Pathconf
@@ -1417,6 +1458,31 @@ Inquire about the value of @code{_POSIX_PRIO_IO}.
 @comment POSIX.1g
 @item _PC_SOCK_MAXBUF
 Inquire about the value of @code{_POSIX_PIPE_BUF}.
+
+@comment unistd.h
+@comment LFS
+@item _PC_FILESIZEBITS
+Inquire about the availability of large files on the filesystem.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_REC_INCR_XFER_SIZE
+Inquire about the value of @code{POSIX_REC_INCR_XFER_SIZE}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_REC_MAX_XFER_SIZE
+Inquire about the value of @code{POSIX_REC_MAX_XFER_SIZE}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_REC_MIN_XFER_SIZE
+Inquire about the value of @code{POSIX_REC_MIN_XFER_SIZE}.
+
+@comment unistd.h
+@comment POSIX.1
+@item _PC_REC_XFER_ALIGN
+Inquire about the value of @code{POSIX_REC_XFER_ALIGN}.
 @end table
 
 @node Utility Limits

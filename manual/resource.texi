@@ -9,6 +9,8 @@ limits on future usage.
 * Resource Usage::		Measuring various resources used.
 * Limits on Resources::		Specifying limits on resource usage.
 * Priority::			Reading or setting process run priority.
+* Memory Resources::            Querying memory available resources.
+* Processor Resources::         Learn about the processors available.
 @end menu
 
 
@@ -431,8 +433,9 @@ above do.  The functions above are better choices.
 
 @code{ulimit} and the command symbols are declared in @file{ulimit.h}.
 @pindex ulimit.h
-@comment ulimit.h
 
+@comment ulimit.h
+@comment BSD
 @deftypefun int ulimit (int @var{cmd}, ...)
 
 @code{ulimit} gets the current limit or sets the current and maximum
@@ -475,10 +478,10 @@ A process tried to increase a maximum limit, but is not superuser.
 @end deftypefun
 
 @code{vlimit} and its resource symbols are declared in @file{sys/vlimit.h}.
-@comment sys/vlimit.h
 @pindex sys/vlimit.h
-@comment BSD
 
+@comment sys/vlimit.h
+@comment BSD
 @deftypefun int vlimit (int @var{resource}, int @var{limit})
 
 @code{vlimit} sets the current limit for a resource for a process.
@@ -666,7 +669,7 @@ most important feature of the absolute priority:  its absoluteness.
 
 @node Realtime Scheduling
 @subsection Realtime Scheduling
-@comment realtime scheduling
+@cindex realtime scheduling
 
 Whenever two processes with the same absolute priority are ready to run,
 the kernel has a decision to make, because only one can run at a time.
@@ -1122,19 +1125,17 @@ runs from @code{-20} to @code{20}.  A lower nice value corresponds to
 higher priority for the process.  These constants describe the range of
 priority values:
 
-@table @code
+@vtable @code
 @comment sys/resource.h
 @comment BSD
 @item PRIO_MIN
-@vindex PRIO_MIN
 The lowest valid nice value.
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_MAX
-@vindex PRIO_MAX
 The highest valid nice value.
-@end table
+@end vtable
 
 @comment sys/resource.h
 @comment BSD,POSIX
@@ -1198,34 +1199,30 @@ The arguments @var{class} and @var{id} together specify a set of
 processes in which you are interested.  These are the possible values of
 @var{class}:
 
-@table @code
+@vtable @code
 @comment sys/resource.h
 @comment BSD
 @item PRIO_PROCESS
-@vindex PRIO_PROCESS
 One particular process.  The argument @var{id} is a process ID (pid).
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_PGRP
-@vindex PRIO_PGRP
 All the processes in a particular process group.  The argument @var{id} is
 a process group ID (pgid).
 
 @comment sys/resource.h
 @comment BSD
 @item PRIO_USER
-@vindex PRIO_USER
 All the processes owned by a particular user (i.e. whose real uid
 indicates the user).  The argument @var{id} is a user ID (uid).
-@end table
+@end vtable
 
 If the argument @var{id} is 0, it stands for the calling process, its
 process group, or its owner (real uid), according to @var{class}.
 
-@c ??? I don't know where we should say this comes from.
-@comment Unix
-@comment dunno.h
+@comment unistd.h
+@comment BSD
 @deftypefun int nice (int @var{increment})
 Increment the nice value of the calling process by @var{increment}.
 The return value is the same as for @code{setpriority}.
@@ -1241,3 +1238,166 @@ nice (int increment)
 @}
 @end smallexample
 @end deftypefun
+
+@node Memory Resources
+@section Querying memory available resources
+
+The amount of memory available in the system and the way it is organized
+determines oftentimes the way programs can and have to work.  For
+functions like @code{mman} it is necessary to know about the size of
+individual memory pages and knowing how much memory is available enables
+a program to select appropriate sizes for, say, caches.  Before we get
+into these details a few words about memory subsystems in traditional
+Unix systems.
+
+@menu
+* Memory Subsystem::           Overview about traditional Unix memory handling.
+* Query Memory Parameters::    How to get information about the memory
+                                subsystem?
+@end menu
+
+@node Memory Subsystem
+@subsection Overview about traditional Unix memory handling
+
+@cindex address space
+@cindex physical memory
+@cindex physical address
+Unix systems normally provide processes virtual address spaces.  This
+means that the addresses of the memory regions do not have to correspond
+directly to the addresses of the actual physical memory which stores the
+data.  An extra level of indirection is introduced which translates
+virtual addresses into physical addresses.  This is normally done by the
+hardware of the processor.
+
+@cindex shared memory
+Using a virtual address space has several advantage.  The most important
+is process isolation.  The different processes running on the system
+cannot interfere directly with each other.  No process can write into
+the address space of another process (except when shared memory is used
+but then it is wanted and controlled).
+
+Another advantage of virtual memory is that the address space the
+processes see can actually be larger than the physical memory available.
+The physical memory can be extended by storage on an external media
+where the content of currently unused memory regions is stored.  The
+address translation can then intercept accesses to these memory regions
+and make memory content available again by loading the data back into
+memory.  This concept makes it necessary that programs which have to use
+lots of memory know the difference between available virtual address
+space and available physical memory.  If the working set of virtual
+memory of all the processes is larger than the available physical memory
+the system will slow down dramatically due to constant swapping of
+memory content from the memory to the storage media and back.  This is
+called ``thrashing''.
+@cindex thrashing
+
+@cindex memory page
+@cindex page, memory
+A final aspect of virtual memory which is important and follows from
+what is said in the last paragraph is the granularity of the virtual
+address space handling.  When we said that the virtual address handling
+stores memory content externally it cannot do this on a byte-by-byte
+basis.  The administrative overhead does not allow this (leaving alone
+the processor hardware).  Instead several thousand bytes are handled
+together and form a @dfn{page}.  The size of each page is always a power
+of two byte.  The smallest page size in use today is 4096, with 8192,
+16384, and 65536 being other popular sizes.
+
+@node Query Memory Parameters
+@subsection How to get information about the memory subsystem?
+
+The page size of the virtual memory the process sees is essential to
+know in several situations.  Some programming interface (e.g.,
+@code{mmap}, @pxref{Memory-mapped I/O}) require the user to provide
+information adjusted to the page size.  In the case of @code{mmap} is it
+necessary to provide a length argument which is a multiple of the page
+size.  Another place where the knowledge about the page size is useful
+is in memory allocation.  If one allocates pieces of memory in larger
+chunks which are then subdivided by the application code it is useful to
+adjust the size of the larger blocks to the page size.  If the total
+memory requirement for the block is close (but not larger) to a multiple
+of the page size the kernel's memory handling can work more effectively
+since it only has to allocate memory pages which are fully used.  (To do
+this optimization it is necessary to know a bit about the memory
+allocator which will require a bit of memory itself for each block and
+this overhead must not push the total size over the page size multiple.
+
+The page size traditionally was a compile time constant.  But recent
+development of processors changed this.  Processors now support
+different page sizes and they can possibly even vary among different
+processes on the same system.  Therefore the system should be queried at
+runtime about the current page size and no assumptions (except about it
+being a power of two) should be made.
+
+@vindex _SC_PAGESIZE
+The correct interface to query about the page size is @code{sysconf}
+(@pxref{Sysconf Definition}) with the parameter @code{_SC_PAGESIZE}.
+There is a much older interface available, too.
+
+@comment unistd.h
+@comment BSD
+@deftypefun int getpagesize (void)
+The @code{getpagesize} function returns the page size of the process.
+This value is fixed for the runtime of the process but can vary in
+different runs of the application.
+
+The function is declared in @file{unistd.h}.
+@end deftypefun
+
+Widely available on @w{System V} derived systems is a method to get
+information about the physical memory the system has.  The call
+
+@vindex _SC_PHYS_PAGES
+@cindex sysconf
+@smallexample
+  sysconf (_SC_PHYS_PAGES)
+@end smallexample
+
+@noindent returns the total number of page of physical the system has.
+This does not mean all this memory is available.  This information can
+be found using
+
+@vindex _SC_AVPHYS_PAGES
+@cindex sysconf
+@smallexample
+  sysconf (_SC_AVPHYS_PAGES)
+@end smallexample
+
+These two values help to optimize applications.  The value returned for
+@code{_SC_AVPHYS_PAGES} is the amount of memory the application can use
+without hindering any other process (given that no other process
+increases its memory usage).  The value returned for
+@code{_SC_PHYS_PAGES} is more or less a hard limit for the working set.
+If all applications together constantly use more than that amount of
+memory the system is in trouble.
+
+@node Processor Resources
+@section Learn about the processors available
+
+The use of threads or processes with shared memory allows an application
+to take advantage of all the processing power a system can provide.  If
+the task can be parallelized the optimal way to write an application is
+to have at any time as many processes running as there are processors.
+To determine the number of processors available to the system one can
+run
+
+@vindex _SC_NPROCESSORS_CONF
+@cindex sysconf
+@smallexample
+  sysconf (_SC_NPROCESSORS_CONF)
+@end smallexample
+
+@noindent
+which returns the number of processors the operating system configured.
+But it might be possible for the operating system to disable individual
+processors and so the call
+
+@vindex _SC_NPROCESSORS_ONLN
+@cindex sysconf
+@smallexample
+  sysconf (_SC_NPROCESSORS_ONLN)
+@end smallexample
+
+@noindent
+returns the number of processors which are currently inline (i.e.,
+available).

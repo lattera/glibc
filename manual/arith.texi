@@ -2058,11 +2058,17 @@ one by one.
 @subsection Parsing of Integers
 
 @pindex stdlib.h
-These functions are declared in @file{stdlib.h}.
+@pindex wchar.h
+The @samp{str} functions are declared in @file{stdlib.h} and those
+beginning with @samp{wcs} are declared in @file{wchar.h}.  One might
+wonder about the use of @code{restrict} in the prototypes of the
+functions in this section.  It is seemingly useless but the @w{ISO C}
+standard uses it (for the functions defined there) so we have to do it
+as well.
 
 @comment stdlib.h
 @comment ISO
-@deftypefun {long int} strtol (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {long int} strtol (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtol} (``string-to-long'') function converts the initial
 part of @var{string} to a signed integer, which is returned as a value
 of type @code{long int}.
@@ -2123,9 +2129,18 @@ case there was overflow.
 There is an example at the end of this section.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {long int} wcstol (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstol} function is equivalent in nearly all aspect to the
+@code{strtol} function but it handles wide character string.
+
+The @code{wcstol} function was introduced in @w{Amendment 1} of @w{ISO C90}.
+@end deftypefun
+
 @comment stdlib.h
 @comment ISO
-@deftypefun {unsigned long int} strtoul (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {unsigned long int} strtoul (const char *retrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtoul} (``string-to-unsigned-long'') function is like
 @code{strtol} except it converts to an @code{unsigned long int} value.
 The syntax is the same as described above for @code{strtol}.  The value
@@ -2141,9 +2156,18 @@ and an input more negative than @code{LONG_MIN} returns
 range, or @code{ERANGE} on overflow.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {unsigned long int} wcstoul (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoul} function is equivalent in nearly all aspect to the
+@code{strtoul} function but it handles wide character string.
+
+The @code{wcstoul} function was introduced in @w{Amendment 1} of @w{ISO C90}.
+@end deftypefun
+
 @comment stdlib.h
 @comment ISO
-@deftypefun {long long int} strtoll (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {long long int} strtoll (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtoll} function is like @code{strtol} except that it returns
 a @code{long long int} value, and accepts numbers with a correspondingly
 larger range.
@@ -2157,30 +2181,66 @@ appropriate for the sign of the value.  It also sets @code{errno} to
 The @code{strtoll} function was introduced in @w{ISO C99}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {long long int} wcstoll (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoll} function is equivalent in nearly all aspect to the
+@code{strtoll} function but it handles wide character string.
+
+The @code{wcstoll} function was introduced in @w{Amendment 1} of @w{ISO C90}.
+@end deftypefun
+
 @comment stdlib.h
 @comment BSD
-@deftypefun {long long int} strtoq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {long long int} strtoq (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 @code{strtoq} (``string-to-quad-word'') is the BSD name for @code{strtoll}.
+@end deftypefun
+
+@comment wchar.h
+@comment GNU
+@deftypefun {long long int} wcstoq (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoq} function is equivalent in nearly all aspect to the
+@code{strtoq} function but it handles wide character string.
+
+The @code{wcstoq} function is a GNU extension.
 @end deftypefun
 
 @comment stdlib.h
 @comment ISO
-@deftypefun {unsigned long long int} strtoull (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {unsigned long long int} strtoull (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtoull} function is related to @code{strtoll} the same way
 @code{strtoul} is related to @code{strtol}.
 
 The @code{strtoull} function was introduced in @w{ISO C99}.
 @end deftypefun
 
+@comment wchar.h
+@comment ISO
+@deftypefun {unsigned long long int} wcstoull (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoull} function is equivalent in nearly all aspect to the
+@code{strtoull} function but it handles wide character string.
+
+The @code{wcstoull} function was introduced in @w{Amendment 1} of @w{ISO C90}.
+@end deftypefun
+
 @comment stdlib.h
 @comment BSD
-@deftypefun {unsigned long long int} strtouq (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@deftypefun {unsigned long long int} strtouq (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 @code{strtouq} is the BSD name for @code{strtoull}.
 @end deftypefun
 
+@comment wchar.h
+@comment GNU
+@deftypefun {unsigned long long int} wcstouq (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstouq} function is equivalent in nearly all aspect to the
+@code{strtouq} function but it handles wide character string.
+
+The @code{wcstoq} function is a GNU extension.
+@end deftypefun
+
 @comment inttypes.h
-@comment ???
-@deftypefun {long long int} strtoimax (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@comment ISO
+@deftypefun intmax_t strtoimax (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtoimax} function is like @code{strtol} except that it returns
 a @code{intmax_t} value, and accepts numbers of a corresponding range.
 
@@ -2190,21 +2250,36 @@ representable because of overflow, @code{strtoimax} returns either
 appropriate for the sign of the value.  It also sets @code{errno} to
 @code{ERANGE} to indicate there was overflow.
 
-The symbols for @code{strtoimax} are declared in @file{inttypes.h}.
+See @ref{Integers} for a description of the @code{intmax_t} type.  The
+@code{strtoimax} function was introduced in @w{ISO C99}.
+@end deftypefun
 
-See @ref{Integers} for a description of the @code{intmax_t} type.
+@comment wchar.h
+@comment ISO
+@deftypefun intmax_t wcstoimax (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoimax} function is equivalent in nearly all aspect to the
+@code{strtoimax} function but it handles wide character string.
 
+The @code{wcstoimax} function was introduced in @w{ISO C99}.
 @end deftypefun
 
 @comment inttypes.h
-@comment ???
-@deftypefun uintmax_t strtoumax (const char *@var{string}, char **@var{tailptr}, int @var{base})
+@comment ISO
+@deftypefun uintmax_t strtoumax (const char *restrict @var{string}, char **restrict @var{tailptr}, int @var{base})
 The @code{strtoumax} function is related to @code{strtoimax}
 the same way that @code{strtoul} is related to @code{strtol}.
 
-The symbols for @code{strtoimax} are declared in @file{inttypes.h}.
+See @ref{Integers} for a description of the @code{intmax_t} type.  The
+@code{strtoumax} function was introduced in @w{ISO C99}.
+@end deftypefun
 
-See @ref{Integers} for a description of the @code{intmax_t} type.
+@comment wchar.h
+@comment ISO
+@deftypefun uintmax_t wcstoumax (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr}, int @var{base})
+The @code{wcstoumax} function is equivalent in nearly all aspect to the
+@code{strtoumax} function but it handles wide character string.
+
+The @code{wcstoumax} function was introduced in @w{ISO C99}.
 @end deftypefun
 
 @comment stdlib.h
@@ -2234,25 +2309,12 @@ The @code{atoll} function was introduced in @w{ISO C99}.  It too is
 obsolete (despite having just been added); use @code{strtoll} instead.
 @end deftypefun
 
-@c !!! please fact check this paragraph -zw
-@findex strtol_l
-@findex strtoul_l
-@findex strtoll_l
-@findex strtoull_l
-@cindex parsing numbers and locales
-@cindex locales, parsing numbers and
-Some locales specify a printed syntax for numbers other than the one
-that these functions understand.  If you need to read numbers formatted
-in some other locale, you can use the @code{strtoX_l} functions.  Each
-of the @code{strtoX} functions has a counterpart with @samp{_l} added to
-its name.  The @samp{_l} counterparts take an additional argument: a
-pointer to an @code{locale_t} structure, which describes how the numbers
-to be read are formatted.  @xref{Locales}.
-
-@strong{Portability Note:} These functions are all GNU extensions.  You
-can also use @code{scanf} or its relatives, which have the @samp{'} flag
-for parsing numeric input according to the current locale
-(@pxref{Numeric Input Conversions}).  This feature is standard.
+All the functions mentioned in this section so far do not handle
+alternative representations of characters as described in the locale
+data.  Some locales specify thousands separator and the way they have to
+be used which can help to make large numbers more readable.  To read
+such numbers one has to use the @code{scanf} functions with the @samp{'}
+flag.
 
 Here is a function which parses a string as a sequence of integers and
 returns the sum of them:
@@ -2294,11 +2356,16 @@ sum_ints_from_string (char *string)
 @subsection Parsing of Floats
 
 @pindex stdlib.h
-These functions are declared in @file{stdlib.h}.
+The @samp{str} functions are declared in @file{stdlib.h} and those
+beginning with @samp{wcs} are declared in @file{wchar.h}.  One might
+wonder about the use of @code{restrict} in the prototypes of the
+functions in this section.  It is seemingly useless but the @w{ISO C}
+standard uses it (for the functions defined there) so we have to do it
+as well.
 
 @comment stdlib.h
 @comment ISO
-@deftypefun double strtod (const char *@var{string}, char **@var{tailptr})
+@deftypefun double strtod (const char *restrict @var{string}, char **restrict @var{tailptr})
 The @code{strtod} (``string-to-double'') function converts the initial
 part of @var{string} to a floating-point number, which is returned as a
 value of type @code{double}.
@@ -2392,6 +2459,24 @@ can be much slower but has more precision (on systems where @code{long
 double} is a separate type).
 
 These functions have been GNU extensions and are new to @w{ISO C99}.
+@end deftypefun
+
+@comment wchar.h
+@comment ISO
+@deftypefun double wcstod (const wchar_t *restrict @var{string}, wchar_t **restrict @var{tailptr})
+@comment stdlib.h
+@comment ISO
+@deftypefunx float wcstof (const wchar_t *@var{string}, wchar_t **@var{tailptr})
+@comment stdlib.h
+@comment ISO
+@deftypefunx {long double} wcstold (const wchar_t *@var{string}, wchar_t **@var{tailptr})
+The @code{wcstod}, @code{wcstof}, and @code{wcstol} functions are
+equivalent in nearly all aspect to the @code{strtod}, @code{strtof}, and
+@code{strtold} functions but it handles wide character string.
+
+The @code{wcstod} function was introduced in @w{Amendment 1} of @w{ISO
+C90}.  The @code{wcstof} and @code{wcstold} functions were introduced in
+@w{ISO C99}.
 @end deftypefun
 
 @comment stdlib.h

@@ -225,6 +225,7 @@ The function @code{setlocale} sets the current locale for category
 @var{category} to @var{locale}.  A list of all the locales the system
 provides can be created by running
 
+@pindex locale
 @smallexample
   locale -a
 @end smallexample
@@ -676,11 +677,16 @@ A second advantage is that in addition to the numeric and monetary
 formatting information, information from the
 @code{LC_TIME} and @code{LC_MESSAGES} categories is available.
 
+@pindex langinfo.h
 The type @code{nl_type} is defined in @file{nl_types.h}.  The argument
 @var{item} is a numeric value defined in the header @file{langinfo.h}.
 The X/Open standard defines the following values:
 
 @vtable @code
+@item CODESET
+@code{nl_langinfo} returns a string with the name of the coded character
+set used in the selected locale.
+
 @item ABDAY_1
 @itemx ABDAY_2
 @itemx ABDAY_3
@@ -832,6 +838,26 @@ The same as the value returned by @code{localeconv} in the
 @item N_SIGN_POSN
 The same as the value returned by @code{localeconv} in the
 @code{n_sign_posn} element of the @code{struct lconv}.
+
+@item INT_P_CS_PRECEDES
+The same as the value returned by @code{localeconv} in the
+@code{int_p_cs_precedes} element of the @code{struct lconv}.
+@item INT_P_SEP_BY_SPACE
+The same as the value returned by @code{localeconv} in the
+@code{int_p_sep_by_space} element of the @code{struct lconv}.
+@item INT_N_CS_PRECEDES
+The same as the value returned by @code{localeconv} in the
+@code{int_n_cs_precedes} element of the @code{struct lconv}.
+@item INT_N_SEP_BY_SPACE
+The same as the value returned by @code{localeconv} in the
+@code{int_n_sep_by_space} element of the @code{struct lconv}.
+@item INT_P_SIGN_POSN
+The same as the value returned by @code{localeconv} in the
+@code{int_p_sign_posn} element of the @code{struct lconv}.
+@item INT_N_SIGN_POSN
+The same as the value returned by @code{localeconv} in the
+@code{int_n_sign_posn} element of the @code{struct lconv}.
+
 @item DECIMAL_POINT
 @itemx RADIXCHAR
 The same as the value returned by @code{localeconv} in the
@@ -862,9 +888,15 @@ to a yes/no question.
 Using this value is deprecated since it is a very special case of
 message translation, and is better handled by the message
 translation functions (@pxref{Message Translation}).
+
+The use of this symbol is deprecated.  Instead message translation
+should be used.
 @item NOSTR
 The return value is a locale-specific translation of the negative response
 to a yes/no question.  What is said for @code{YESSTR} is also true here.
+
+The use of this symbol is deprecated.  Instead message translation
+should be used.
 @end vtable
 
 The file @file{langinfo.h} defines a lot more symbols but none of them

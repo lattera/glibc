@@ -663,7 +663,9 @@ valloc (size_t size)
   return memalign (getpagesize (), size);
 @}
 @end smallexample
-@c !!! xref getpagesize
+
+@ref{Query Memory Parameters} for more information about the memory
+subsystem.
 @end deftypefun
 
 @node Malloc Tunable Parameters

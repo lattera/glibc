@@ -169,7 +169,7 @@ timeval_subtract (result, x, y)
 @}
 @end smallexample
 
-Common functions that use @code{struct timeval} are @code{gettimeofday} 
+Common functions that use @code{struct timeval} are @code{gettimeofday}
 and @code{settimeofday}.
 
 
@@ -2341,9 +2341,8 @@ The return value and error conditions are the same as for @code{setitimer}.
 
 @comment sys/time.h
 @comment BSD
-@table @code
+@vtable @code
 @item ITIMER_REAL
-@findex ITIMER_REAL
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the real-time
 timer.
@@ -2351,7 +2350,6 @@ timer.
 @comment sys/time.h
 @comment BSD
 @item ITIMER_VIRTUAL
-@findex ITIMER_VIRTUAL
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the virtual
 timer.
@@ -2359,11 +2357,10 @@ timer.
 @comment sys/time.h
 @comment BSD
 @item ITIMER_PROF
-@findex ITIMER_PROF
 This constant can be used as the @var{which} argument to the
 @code{setitimer} and @code{getitimer} functions to specify the profiling
 timer.
-@end table
+@end vtable
 
 @comment unistd.h
 @comment POSIX.1
@@ -2484,7 +2481,7 @@ The function returns as *@code{remaining} the elapsed time left in the
 interval for which you requested to sleep.  If the interval completed
 without getting interrupted by a signal, this is zero.
 
-@code{struct timespec} is described in @xref{Elapsed Time}.    
+@code{struct timespec} is described in @xref{Elapsed Time}.
 
 If the function returns because the interval is over the return value is
 zero.  If the function returns @math{-1} the global variable @var{errno}
@@ -2513,5 +2510,3 @@ be protected using cancellation handlers.
 
 The @code{nanosleep} function is declared in @file{time.h}.
 @end deftypefun
-
-

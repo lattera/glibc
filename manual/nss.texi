@@ -364,7 +364,7 @@ Sun's NSS modules are usable as modules which get indirectly loaded
 only.
 
 The NSS modules in the GNU C Library are prepared to be used as normal
-libraries themselves.  This is @emph{not} true at the moment, though.  
+libraries themselves.  This is @emph{not} true at the moment, though.
 However,  the organization of the name space in the modules does not make it
 impossible like it is for Solaris.  Now you can see why the modules are
 still libraries.@footnote{There is a second explanation: we were too
@@ -404,11 +404,7 @@ change of the return value and the omission of the @var{result}
 parameter.  While the user-level function returns a pointer to the
 result the reentrant function return an @code{enum nss_status} value:
 
-@vindex NSS_STATUS_TRYAGAIN
-@vindex NSS_STATUS_UNAVAIL
-@vindex NSS_STATUS_NOTFOUND
-@vindex NSS_STATUS_SUCCESS
-@ftable @code
+@vtable @code
 @item NSS_STATUS_TRYAGAIN
 numeric value @code{-2}
 
@@ -420,7 +416,7 @@ numeric value @code{0}
 
 @item NSS_STATUS_SUCCESS
 numeric value @code{1}
-@end ftable
+@end vtable
 
 @noindent
 Now you see where the action items of the @file{/etc/nsswitch.conf} file

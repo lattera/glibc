@@ -23,18 +23,12 @@ through a @dfn{one-way function}, a function which makes it difficult to
 work out what its input was by looking at its output, before storing in
 the file.
 
-The GNU C library already provides a one-way function based on MD5.  The
-@code{crypt} add-on provides additional compatibility with the standard
-UNIX one-way function based on the Data Encryption Standard.
+The GNU C library already provides a one-way function based on MD5 and
+for compatibility with Unix systems the standard one-way function based
+on the Data Encryption Standard.
 
 It also provides support for Secure RPC, and some library functions that
 can be used to perform normal DES encryption.
-
-The add-on is not included in the main distribution of the GNU C library
-because some governments, most notably those of France, Russia,
-and the US, have very restrictive rules governing the distribution and
-use of encryption software.  The first section below tries to describe some
-of those rules.
 
 @menu
 * Legal Problems::              This software can get you locked up, or worse.
@@ -53,8 +47,8 @@ may help you when you try to find out what the laws of your country are.
 
 Some countries require that you have a licence to use, posess, or import
 cryptography.  These countries are believed to include Byelorussia,
-Burma, France, India, Indonesia, Israel, Kazakhstan, Pakistan, Russia,
-and Saudi Arabia.
+Burma, India, Indonesia, Israel, Kazakhstan, Pakistan, Russia, and Saudi
+Arabia.
 
 Some countries restrict the transmission of encrypted messages by radio;
 some telecommunications carriers restrict the transmission of encrypted
@@ -94,7 +88,7 @@ in a convenient way.
 
 @comment unistd.h
 @comment BSD
-@deftypefun {char *} getpass (const char * @var{prompt})
+@deftypefun {char *} getpass (const char *@var{prompt})
 
 @code{getpass} outputs @var{prompt}, then reads a string in from the
 terminal without echoing it.  It tries to connect to the real terminal,
@@ -129,7 +123,7 @@ The substitute takes the same parameters as @code{getline}
 
 @comment crypt.h
 @comment BSD, SVID
-@deftypefun {char *} crypt (const char * @var{key}, const char * @var{salt})
+@deftypefun {char *} crypt (const char *@var{key}, const char *@var{salt})
 
 The @code{crypt} function takes a password, @var{key}, as a string, and
 a @var{salt} character array which is described below, and returns a
@@ -193,7 +187,7 @@ for a password and prints ``Access granted.'' if the user types
 
 @comment crypt.h
 @comment GNU
-@deftypefun {char *} crypt_r (const char * @var{key}, const char * @var{salt}, {struct crypt_data *} @var{data})
+@deftypefun {char *} crypt_r (const char *@var{key}, const char *@var{salt}, {struct crypt_data *} @var{data})
 
 The @code{crypt_r} function does the same thing as @code{crypt}, but
 takes an extra parameter which includes space for its result (among
@@ -238,7 +232,7 @@ specifies the unused bits.
 
 @comment crypt.h
 @comment BSD, SVID
-@deftypefun void setkey (const char * @var{key})
+@deftypefun void setkey (const char *@var{key})
 
 The @code{setkey} function sets an internal data structure to be an
 expanded form of @var{key}.  @var{key} is specified as an array of 64
@@ -249,7 +243,7 @@ parity.
 
 @comment crypt.h
 @comment BSD, SVID
-@deftypefun void encrypt (char * @var{block}, int @var{edflag})
+@deftypefun void encrypt (char *@var{block}, int @var{edflag})
 
 The @code{encrypt} function encrypts @var{block} if
 @var{edflag} is 0, otherwise it decrypts @var{block}, using a key
@@ -262,10 +256,10 @@ stored in a @code{char}, but there are no parity bits in @var{block}.
 
 @comment crypt.h
 @comment GNU
-@deftypefun void setkey_r (const char * @var{key}, {struct crypt_data *} @var{data})
+@deftypefun void setkey_r (const char *@var{key}, {struct crypt_data *} @var{data})
 @comment crypt.h
 @comment GNU
-@deftypefunx void encrypt_r (char * @var{block}, int @var{edflag}, {struct crypt_data *} @var{data})
+@deftypefunx void encrypt_r (char *@var{block}, int @var{edflag}, {struct crypt_data *} @var{data})
 
 These are reentrant versions of @code{setkey} and @code{encrypt}.  The
 only difference is the extra parameter, which stores the expanded
@@ -284,7 +278,7 @@ recommended instead.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
-@deftypefun int ecb_crypt (char * @var{key}, char * @var{blocks}, unsigned @var{len}, unsigned @var{mode})
+@deftypefun int ecb_crypt (char *@var{key}, char *@var{blocks}, unsigned @var{len}, unsigned @var{mode})
 
 The function @code{ecb_crypt} encrypts or decrypts one or more blocks
 using DES.  Each block is encrypted independently.
@@ -303,25 +297,22 @@ The result of the encryption replaces the input in @var{blocks}.
 
 The @var{mode} parameter is the bitwise OR of two of the following:
 
-@table @code
+@vtable @code
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DES_ENCRYPT
-@findex DES_ENCRYPT
 This constant, used in the @var{mode} parameter, specifies that
 @var{blocks} is to be encrypted.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DES_DECRYPT
-@findex DES_DECRYPT
 This constant, used in the @var{mode} parameter, specifies that
 @var{blocks} is to be decrypted.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DES_HW
-@findex DES_HW
 This constant, used in the @var{mode} parameter, asks to use a hardware
 device.  If no hardware device is available, encryption happens anyway,
 but in software.
@@ -329,30 +320,26 @@ but in software.
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DES_SW
-@findex DES_SW
 This constant, used in the @var{mode} parameter, specifies that no
 hardware device is to be used.
-@end table
+@end vtable
 
 The result of the function will be one of these values:
 
-@table @code
+@vtable @code
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DESERR_NONE
-@findex DESERR_NONE
 The encryption succeeded.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DESERR_NOHWDEVICE
-@findex DESERR_NOHWDEVICE
 The encryption succeeded, but there was no hardware device available.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DESERR_HWERROR
-@findex DESERR_HWERROR
 The encryption failed because of a hardware problem.  In the GNU
 library, this error code is also returned if the @code{crypt} add-on was
 not used to build the library.
@@ -360,10 +347,9 @@ not used to build the library.
 @comment rpc/des_crypt.h
 @comment SUNRPC
 @item DESERR_BADPARAM
-@findex DESERR_BADPARAM
 The encryption failed because of a bad parameter, for instance @var{len}
 is not a multiple of 8 or @var{len} is larger than @code{DES_MAXDATA}.
-@end table
+@end vtable
 @end deftypefun
 
 @comment rpc/des_crypt.h
@@ -375,7 +361,7 @@ This macro returns 1 if @var{err} is a `success' result code from
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
-@deftypefun int cbc_crypt (char * @var{key}, char * @var{blocks}, unsigned @var{len}, unsigned @var{mode}, char * @var{ivec})
+@deftypefun int cbc_crypt (char *@var{key}, char *@var{blocks}, unsigned @var{len}, unsigned @var{mode}, char *@var{ivec})
 
 The function @code{cbc_crypt} encrypts or decrypts one or more blocks
 using DES in Cipher Block Chaining mode.
@@ -401,7 +387,7 @@ Otherwise, all the parameters are similar to those for @code{ecb_crypt}.
 
 @comment rpc/des_crypt.h
 @comment SUNRPC
-@deftypefun void des_setparity (char * @var{key})
+@deftypefun void des_setparity (char *@var{key})
 
 The function @code{des_setparity} changes the 64-bit @var{key}, stored
 packed in 8-bit bytes, to have odd parity by altering the low bits of
