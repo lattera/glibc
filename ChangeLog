@@ -1,3 +1,8 @@
+2004-01-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/generic/dl-sysdep.c: Define __libc_stack_end with
+	rtld_hidden_data_def.
+
 2004-01-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/libio.h: Add const to function tables types.
