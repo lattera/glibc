@@ -1,3 +1,9 @@
+2001-08-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/programs/ld-collate (insert_value): If symbol in order
+	definition does not exist create it as a sequence without
+	associated multibyte and wide representation.
+
 2001-07-30  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/bits/libc-lock.h (__libc_cleanup_region_start): Diddle
