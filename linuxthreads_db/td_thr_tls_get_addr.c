@@ -21,16 +21,18 @@
 
 #include "link.h"
 #include "thread_dbP.h"
-#include "tls.h"
 
 /* Value used for dtv entries for which the allocation is delayed.  */
 # define TLS_DTV_UNALLOCATED	((void *) -1l)
 
 
 td_err_e
-td_thr_tls_get_addr (const td_thrhandle_t *th, struct link_map *map,
-		     size_t offset, void **address)
+td_thr_tls_get_addr (const td_thrhandle_t *th __attribute_used__,
+		     struct link_map *map __attribute_used__,
+		     size_t offset __attribute_used__,
+		     void **address __attribute_used__)
 {
+#if USE_TLS
   struct _pthread_descr_struct pds;
   size_t modid;
   union dtv pdtv;
@@ -59,4 +61,7 @@ td_thr_tls_get_addr (const td_thrhandle_t *th, struct link_map *map,
   *address = (char *) pdtv.pointer + offset;
 
   return TD_OK;
+#else
+  return TD_ERR;
+#endif
 }
