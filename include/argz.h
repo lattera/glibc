@@ -1,4 +1,4 @@
-f#ifndef _ARGZ_H
+#ifndef _ARGZ_H
 
 #include <string/argz.h>
 
