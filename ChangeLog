@@ -1,3 +1,8 @@
+2001-07-31  Andreas Jaeger  <aj@suse.de>
+
+	* libio/genops.c (flush_cleanup): Guard list_all_lock to allow
+	compilation without threads.
+
 2001-07-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fr.po: Update from translation team.
