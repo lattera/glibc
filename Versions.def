@@ -49,6 +49,7 @@ libnss_files {
 }
 libnss_hesiod {
   GLIBC_2.1
+  GLIBC_2.2 GLIBC_2.1
 }
 libnss_nis {
   GLIBC_2.0
