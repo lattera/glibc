@@ -65,7 +65,7 @@ __libc_pwrite (fd, buf, count, offset)
       /* First try the syscall.  */
      assert (sizeof (offset) == 4);
 #if defined _ABI64 && _MIPS_SIM == _ABI64
-     result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+     result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
 			      offset);
 #else
      result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
@@ -85,7 +85,7 @@ __libc_pwrite (fd, buf, count, offset)
   /* First try the syscall.  */
   assert (sizeof (offset) == 4);
 #if defined _ABI64 && _MIPS_SIM == _ABI64
-  result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
+  result = INLINE_SYSCALL (pwrite, 5, fd, CHECK_N (buf, count), count, 0,
 			   offset);
 #else
   result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
