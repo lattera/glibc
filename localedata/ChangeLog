@@ -1,3 +1,9 @@
+2000-07-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/i18n: Fix typos.
+
+	* locales/iso14651_t1: Correct syntax for HAN script.
+
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/GB18030: New file.

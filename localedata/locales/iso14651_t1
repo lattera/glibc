@@ -1468,8 +1468,10 @@ order_start <CYRIL>;forward;forward;forward;forward,position
 <U044F> <CYR-YA>;<BAS>;<MIN>;IGNORE
 <U042F> <CYR-YA>;<BAS>;<CAP>;IGNORE
 
-order_start <HAN>;forward;forward;forward;forward,position
-<U4E00>......<U9FA5> <U4E00>......<U9FA5>;IGNORE;IGNORE;IGNORE
+# order_start <HAN>;forward;forward;forward;forward,position
+<U4E00>	<U4E00>;IGNORE;IGNORE;IGNORE
+...	...;IGNORE;IGNORE;IGNORE
+<U9FA5> <U9FA5>;IGNORE;IGNORE;IGNORE
 #
 order_end
 #
