@@ -244,7 +244,8 @@ tests += tst-cancelx2 tst-cancelx3 tst-cancelx4 tst-cancelx5 \
 	 tst-cancelx6 tst-cancelx7 tst-cancelx8 tst-cancelx9 tst-cancelx10 \
 	 tst-cancelx11 tst-cancelx12 tst-cancelx13 tst-cancelx14 tst-cancelx15\
 	 tst-cancelx16 tst-cancelx17 tst-cancelx18 \
-	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3
+	 tst-cleanupx0 tst-cleanupx1 tst-cleanupx2 tst-cleanupx3 \
+	 tst-oncex3 tst-oncex4
 endif
 ifeq ($(build-shared),yes)
 tests += tst-atfork2 tst-tls3
@@ -369,6 +370,8 @@ CFLAGS-tst-cleanupx0.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx1.c += -fexceptions -fasynchronous-unwind-tables
 CFLAGS-tst-cleanupx2.c += -fexceptions
 CFLAGS-tst-cleanupx3.c += -fexceptions
+CFLAGS-tst-oncex3.c += -fexceptions
+CFLAGS-tst-oncex4.c += -fexceptions
 
 tst-cancel7-ARGS = --command "$(built-program-cmd)"
 tst-umask1-ARGS = $(objpfx)tst-umask1.temp

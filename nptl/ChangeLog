@@ -2,6 +2,8 @@
 
 	* sysdeps/unix/sysv/linux/i386/pthread_once.S (__pthread_once):
 	Use correct cleanup handler registration.  Add unwind info.
+	* sysdeps/unix/sysv/linux/unwindbuf.sym: New file.
+	* sysdeps/unix/sysv/linux/Makefile: Add rule to build unwindbuf.h.
 	* tst-once3.c: Add cleanup handler and check it is called.
 	* tst-once4.c: Likewise.
 	* tst-oncex3.c: New file.
