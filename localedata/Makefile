@@ -144,7 +144,7 @@ $(addprefix $(objpfx),$(CTYPE_FILES)): %: \
   $(addprefix charmaps/,$(CHARMAPS)) $(addprefix locales/,$(LOCALE_SRCS))
 	@$(SHELL) -e gen-locale.sh $(common-objpfx) '$(built-program-cmd)' $@
 
-$(addsuffix .out,$(addprefix $(objpfx),$(locale_test_suite))): %: \
+$(addsuffix .out,$(addprefix $(objpfx),$(tests))): %: \
   $(addprefix $(objpfx),$(CTYPE_FILES))
 
 tests: $(objpfx)sort-test.out $(objpfx)tst-fmon.out $(objpfx)tst-locale.out \

@@ -1,3 +1,7 @@
+2001-07-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/alpha/fpu/libm-test-ulps: Add deltas for tanh(-0.7).
+
 2001-07-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (RESTORE2): Put asm
