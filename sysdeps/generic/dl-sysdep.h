@@ -1,5 +1,5 @@
 /* System-specific settings for dynamic linker code.  Generic version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifndef _DL_SYSDEP_H
+#define _DL_SYSDEP_H   1
+
 /* This macro must be defined to either 0 or 1.
 
    If 1, then an errno global variable hidden in ld.so will work right with
@@ -30,3 +33,5 @@
 #else
 # define RTLD_PRIVATE_ERRNO 0
 #endif
+
+#endif /* dl-sysdep.h */

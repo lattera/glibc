@@ -1,5 +1,8 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/dl-sysdep.h: Removed.  The generic
+	version is just fine.
+
 	* sysdeps/unix/sysv/linux/libc_pthread_init.c
 	(__pthread_child_handler): Renamed from pthread_child_handler,
 	exported, and marked hidden.  Change all users.
