@@ -115,11 +115,12 @@ $(patsubst %,$(objpfx)%.ustamp,$(user-interfaces)): $(objpfx)%.ustamp:
 	done
 	touch $@
 -include $(patsubst %,$(objpfx)%.udeps,$(user-interfaces))
-$(patsubst %,$(objpfx)%.udeps,$(user-interfaces)): $(objpfx)%.udeps:
+$(patsubst %,$(objpfx)%.udeps,$(user-interfaces)):
+  $(objpfx)%.udeps: $(..)mach/Machrules
 	$(make-target-directory)
 	echo '#include <$*.defs>' | \
 	$(CC) $(CPPFLAGS) -M -x c - | \
-	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) \
+	sed -e 's,- *:,$@ $(@:.udeps=.ustamp) $(@:.udeps=.uh) $(@:.udeps=.__h)\
 			  $(@:.udeps=_server.c) $(@:.udeps=_server.h):,' \
 	    $(sed-remove-objpfx) > $@.new
 	mv -f $@.new $@
@@ -137,16 +138,18 @@ $(objpfx)%_server.c $(objpfx)%_server.h:
 
 # To get header files that declare both the straight and __ functions,
 # we generate two files and paste them together.
-$(objpfx)%.uh: %.defs; $(mig.uh)
+$(objpfx)%.uh:; $(mig.uh)
 define mig.uh
 $(make-target-directory)
-$(MIG) $< $(MIGFLAGS) \
+echo '#include <$*.defs>' | \
+$(MIG) - /dev/null $(MIGFLAGS) \
        -header $@ -server /dev/null -user /dev/null
 endef
-$(objpfx)%.__h: %.defs; $(mig.__h)
+$(objpfx)%.__h:; $(mig.__h)
 define mig.__h
 $(make-target-directory)
-$(MIG) $< $(MIGFLAGS) -prefix __ \
+echo '#include <$*.defs>' | \
+$(MIG) - /dev/null $(MIGFLAGS) -prefix __ \
        -header $@ -server /dev/null -user /dev/null
 endef
 

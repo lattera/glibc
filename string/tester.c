@@ -40,6 +40,8 @@ char two[50];
 int
 DEFUN(main, (argc, argv), int argc AND char **argv)
 {
+  char *cp;
+
   /* Test strcmp first because we use it to test other things.  */
   it = "strcmp";
   check(strcmp("", "") == 0, 1);		/* Trivial case. */
@@ -354,6 +356,100 @@ DEFUN(main, (argc, argv), int argc AND char **argv)
   equal(strtok((char *)NULL, ","), "b", 27);
   equal(strtok((char *)NULL, ","), "c", 28);
   check(strtok((char *)NULL, ",") == NULL, 29);
+  equal(one+6, "gh", 30);			/* Stomped past end? */
+  equal(one, "a", 31);			/* Stomped old tokens? */
+  equal(one+2, "b", 32);
+  equal(one+4, "c", 33);
+
+  /* strtok_r.  */
+  it = "strtok_r";
+  (void) strcpy(one, "first, second, third");
+  equal(strtok_r(one, ", ", &cp), "first", 1);	/* Basic test. */
+  equal(one, "first", 2);
+  equal(strtok_r((char *)NULL, ", ", &cp), "second", 3);
+  equal(strtok_r((char *)NULL, ", ", &cp), "third", 4);
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 5);
+  (void) strcpy(one, ", first, ");
+  equal(strtok_r(one, ", ", &cp), "first", 6);	/* Extra delims, 1 tok. */
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 7);
+  (void) strcpy(one, "1a, 1b; 2a, 2b");
+  equal(strtok_r(one, ", ", &cp), "1a", 8);	/* Changing delim lists. */
+  equal(strtok_r((char *)NULL, "; ", &cp), "1b", 9);
+  equal(strtok_r((char *)NULL, ", ", &cp), "2a", 10);
+  (void) strcpy(two, "x-y");
+  equal(strtok_r(two, "-", &cp), "x", 11);	/* New string before done. */
+  equal(strtok_r((char *)NULL, "-", &cp), "y", 12);
+  check(strtok_r((char *)NULL, "-", &cp) == NULL, 13);
+  (void) strcpy(one, "a,b, c,, ,d");
+  equal(strtok_r(one, ", ", &cp), "a", 14);	/* Different separators. */
+  equal(strtok_r((char *)NULL, ", ", &cp), "b", 15);
+  equal(strtok_r((char *)NULL, " ,", &cp), "c", 16);	/* Permute list too. */
+  equal(strtok_r((char *)NULL, " ,", &cp), "d", 17);
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 18);
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 19);	/* Persistence. */
+  (void) strcpy(one, ", ");
+  check(strtok_r(one, ", ", &cp) == NULL, 20);	/* No tokens. */
+  (void) strcpy(one, "");
+  check(strtok_r(one, ", ", &cp) == NULL, 21);	/* Empty string. */
+  (void) strcpy(one, "abc");
+  equal(strtok_r(one, ", ", &cp), "abc", 22);	/* No delimiters. */
+  check(strtok_r((char *)NULL, ", ", &cp) == NULL, 23);
+  (void) strcpy(one, "abc");
+  equal(strtok_r(one, "", &cp), "abc", 24);	/* Empty delimiter list. */
+  check(strtok_r((char *)NULL, "", &cp) == NULL, 25);
+  (void) strcpy(one, "abcdefgh");
+  (void) strcpy(one, "a,b,c");
+  equal(strtok_r(one, ",", &cp), "a", 26);	/* Basics again... */
+  equal(strtok_r((char *)NULL, ",", &cp), "b", 27);
+  equal(strtok_r((char *)NULL, ",", &cp), "c", 28);
+  check(strtok_r((char *)NULL, ",", &cp) == NULL, 29);
+  equal(one+6, "gh", 30);			/* Stomped past end? */
+  equal(one, "a", 31);			/* Stomped old tokens? */
+  equal(one+2, "b", 32);
+  equal(one+4, "c", 33);
+
+  /* strsep.  */
+  it = "strsep";
+  cp = strcpy(one, "first, second, third");
+  equal(strsep(&cp, ", "), "first", 1);	/* Basic test. */
+  equal(one, "first", 2);
+  equal(strsep(&cp, ", "), "second", 3);
+  equal(strsep(&cp, ", "), "third", 4);
+  check(strsep(&cp, ", ") == NULL, 5);
+  cp = strcpy(one, ", first, ");
+  equal(strsep(&cp, ", "), "first", 6);	/* Extra delims, 1 tok. */
+  check(strsep(&cp, ", ") == NULL, 7);
+  cp = strcpy(one, "1a, 1b; 2a, 2b");
+  equal(strsep(&cp, ", "), "1a", 8);	/* Changing delim lists. */
+  equal(strsep(&cp, "; "), "1b", 9);
+  equal(strsep(&cp, ", "), "2a", 10);
+  cp = strcpy(two, "x-y");
+  equal(strsep(&cp, "-"), "x", 11);	/* New string before done. */
+  equal(strsep(&cp, "-"), "y", 12);
+  check(strsep(&cp, "-") == NULL, 13);
+  cp = strcpy(one, "a,b, c,, ,d");
+  equal(strsep(&cp, ", "), "a", 14);	/* Different separators. */
+  equal(strsep(&cp, ", "), "b", 15);
+  equal(strsep(&cp, " ,"), "c", 16);	/* Permute list too. */
+  equal(strsep(&cp, " ,"), "d", 17);
+  check(strsep(&cp, ", ") == NULL, 18);
+  check(strsep(&cp, ", ") == NULL, 19);	/* Persistence. */
+  cp = strcpy(one, ", ");
+  check(strsep(&cp, ", ") == NULL, 20);	/* No tokens. */
+  cp = strcpy(one, "");
+  check(strsep(&cp, ", ") == NULL, 21);	/* Empty string. */
+  cp = strcpy(one, "abc");
+  equal(strsep(&cp, ", "), "abc", 22);	/* No delimiters. */
+  check(strsep(&cp, ", ") == NULL, 23);
+  cp = strcpy(one, "abc");
+  equal(strsep(&cp, ""), "abc", 24);	/* Empty delimiter list. */
+  check(strsep(&cp, "") == NULL, 25);
+  (void) strcpy(one, "abcdefgh");
+  cp = strcpy(one, "a,b,c");
+  equal(strsep(&cp, ","), "a", 26);	/* Basics again... */
+  equal(strsep(&cp, ","), "b", 27);
+  equal(strsep(&cp, ","), "c", 28);
+  check(strsep(&cp, ",") == NULL, 29);
   equal(one+6, "gh", 30);			/* Stomped past end? */
   equal(one, "a", 31);			/* Stomped old tokens? */
   equal(one+2, "b", 32);

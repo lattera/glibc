@@ -221,6 +221,16 @@ ifndef localtime-file
 localtime-file = $(sysconfdir)/localtime
 endif
 
+# What to use for leap second specifications in compiling the default
+# timezone files.  Set this to `/dev/null' for no leap second handling as
+# 1003.1 requires, or to `leapseconds' for proper leap second handling.
+# Both zone flavors are always available as `posix/ZONE' and `right/ZONE'.
+# This variable determines the default: if it's `/dev/null',
+# ZONE==posix/ZONE; if it's `leapseconds', ZONE==right/ZONE.
+ifndef leapseconds
+leapseconds = /dev/null
+endif
+
 # What timezone's DST rules should be used when a POSIX-style TZ
 # environment variable doesn't specify any rules.  For 1003.1 compliance
 # this timezone must use rules that are as U.S. federal law defines DST.

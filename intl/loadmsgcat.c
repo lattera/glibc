@@ -161,7 +161,7 @@ _nl_load_domain (domain_file)
 
   domain_file->data
     = (struct loaded_domain *) malloc (sizeof (struct loaded_domain *));
-  if (domain->data == NULL)
+  if (domain_file->data == NULL)
     return;
 
   domain = (struct loaded_domain *) domain_file->data;

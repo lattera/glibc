@@ -365,9 +365,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
   CHAR_TYPE c;
 
   /* The radix character of the current locale.  */
-  wchar_t decimal;
+  wint_t decimal;
   /* The thousands character of the current locale.  */
-  wchar_t thousands;
+  wint_t thousands;
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
@@ -380,9 +380,10 @@ INTERNAL (STRTOF) (nptr, endptr, group)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+	  if (mbtowc ((wchar_t *) &thousands,
+		      _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
 		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+	    thousands = (wint_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	  if (thousands == L'\0')
 	    grouping = NULL;
 	}
@@ -394,9 +395,9 @@ INTERNAL (STRTOF) (nptr, endptr, group)
     }
 
   /* Find the locale's decimal point character.  */
-  if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
+  if (mbtowc ((wchar_t *) &decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
 	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
-    decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+    decimal = (wint_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
 
 
   /* Prepare number representation.  */

@@ -1,6 +1,6 @@
 /* strcat(dest, src) -- Append SRC on the end of DEST.
 For Intel 80x86, x>=4.
-Copyright (C) 1994, 1995 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995, 1996 Free Software Foundation, Inc.
 Contributed by Ulrich Drepper <drepper@ipd.info.uni-karlsruhe.de>.
 Optimised a little by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
 This file is part of the GNU C Library.
@@ -40,19 +40,19 @@ ENTRY (strcat)
 	jz L8			/* yes => return */
 
 	/* Test the first bytes separately until destination is aligned.  */
-	testb $3, %edx		/* destination pointer aligned? */
+	testl $3, %edx		/* destination pointer aligned? */
 	jz L1			/* yes => begin scan loop */
 	testb $0xff, (%edx)	/* is end of string? */
 	jz L2			/* yes => start appending */
 	incl %edx		/* increment source pointer */
 
-	testb $3, %edx		/* destination pointer aligned? */
+	testl $3, %edx		/* destination pointer aligned? */
 	jz L1			/* yes => begin scan loop */
 	testb $0xff, (%edx)	/* is end of string? */
 	jz L2			/* yes => start appending */
 	incl %edx		/* increment source pointer */
 
-	testb $3, %edx		/* destination pointer aligned? */
+	testl $3, %edx		/* destination pointer aligned? */
 	jz L1			/* yes => begin scan loop */
 	testb $0xff, (%edx)	/* is end of string? */
 	jz L2			/* yes => start appending */
@@ -152,27 +152,27 @@ L3:	testb %al, %al		/* is first byte NUL? */
 L2:	subl %ecx, %edx		/* reduce number of loop variants */
 
 	/* Now we have to align the source pointer.  */
-	testb $3, %ecx		/* pointer correctly aligned? */
+	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L29			/* yes => start copy loop */
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
-	andl %al, %al		/* is byte NUL? */
+	andb %al, %al		/* is byte NUL? */
 	jz L8			/* yes => return */
 	incl %ecx		/* increment pointer */
 
-	testb $3, %ecx		/* pointer correctly aligned? */
+	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L29			/* yes => start copy loop */
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
-	andl %al, %al		/* is byte NUL? */
+	andb %al, %al		/* is byte NUL? */
 	jz L8			/* yes => return */
 	incl %ecx		/* increment pointer */
 
-	testb $3, %ecx		/* pointer correctly aligned? */
+	testl $3, %ecx		/* pointer correctly aligned? */
 	jz L29			/* yes => start copy loop */
 	movb (%ecx), %al	/* get first byte */
 	movb %al, (%ecx,%edx)	/* and store it */
-	andl %al, %al		/* is byte NUL? */
+	andb %al, %al		/* is byte NUL? */
 	jz L8			/* yes => return */
 	incl %ecx		/* increment pointer */
 

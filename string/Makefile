@@ -28,7 +28,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn strdup	\
 		   strerror _strerror strlen strnlen			\
 		   strncat strncmp strncpy				\
 		   strrchr strpbrk strsignal strspn strstr strtok	\
-		   strxfrm memchr memcmp memmove memset			\
+		   strtok_r strxfrm memchr memcmp memmove memset	\
 		   bcopy bzero ffs stpcpy stpncpy			\
 		   strcasecmp strncase					\
 		   memccpy memcpy wordcopy strsep			\
@@ -42,3 +42,5 @@ distribute	:= memcopy.h pagecopy.h
 
 
 include ../Rules
+
+tester-ENV = LANGUAGE=C

@@ -1,4 +1,5 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* `long long int' absolute value.
+Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +17,15 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
-#include <wchar.h>
+#include <stdlib.h>
 
-#define WIDE_VERSION 1
-#define STRING_TYPE wchar_t
-#define USTRING_TYPE wint_t
-#define L_(Ch) L##Ch
-#define STRXFRM wcsxfrm
-#define STRLEN wcslen
-#define STPNCPY __wcpncpy
+#undef	llabs
 
-#include "../string/strxfrm.c"
+
+/* Return the absolute value of I.  */
+long long int
+llabs (i)
+     long long int i;
+{
+  return i < 0 ? -i : i;
+}

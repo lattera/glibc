@@ -22,7 +22,7 @@ struct dirent
     unsigned int d_fileno;	/* 32 bits.  */
     unsigned short int d_reclen; /* 16 bits.  */
     unsigned short int d_namlen; /* 16 bits.  */
-    char d_name[0];		/* Variable length.  */
+    char d_name[1];		/* Variable length.  */
   };
 
 #define _DIRENT_HAVE_D_RECLEN 1

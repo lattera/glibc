@@ -1,4 +1,111 @@
+Sun May 26 15:15:08 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdlib/ldiv.c: Deansideclized.
+
+Sun May 26 19:39:53 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* intl/loadmsgcat.c (_nl_load_domain): Test correct variable
+	after malloc.
+
+	* string/Makefile (tester-ENV): New variable to suppress message
+ 	translation in test.
+
+	* string/tester.c: Add tests for strtok_r and strsep.
+
+	* sysdeps/i386/i486/strcat.S: Correct some more 8bit operation
+	<-> 32 bit operand conflicts.
+
+	* sysdeps/i386/strsep.S: Wrapper around <sysdeps/i386/strtok.S>
+	to produce strsep function.
+	* sysdeps/i386/strtok.S: Optimized implementation of strtok
+	function.
+	* sysdeps/i386/strtok_r.S: Wrapper around <sysdeps/i386/strtok.S>
+	to produce strtok_r function.
+
+	* sysdeps/generic/strtok.c: Moved here from string/strtok.c.
+	Corrected example in comment.
+
+	* string/Makefile (routines): Add strtok_r.
+	* sysdeps/generic/strtok_r.c: New file.  Implement reentrant version
+	of strtok_r.
+	* string/string.h: Add prototype for strtok_r.
+	* wcsmbs/wcstok.c: Handle illegal SAVE_PTR argument the same
+	as in strtok_r.
+
+Sun May 26 13:28:23 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/tzset.c (__tzset): Ignore leading : in $TZ; always try tzfile
+	first and fall back to 1003.1 syntax only if it fails.
+
+	* time/Makefile (install-others): Also install posix/ZONE and
+	right/ZONE for each ZONE in $(zonenames).
+	(z.% rule): Generate rules for right/ZONE and posix/ZONE targets too,
+	the difference begin leapseconds vs /dev/null as 3rd dep.  For
+	original ZONE targets use $(leapseconds), to be set in Makeconfig.
+	(target-zone-flavor): New variable.
+	(tzcompile): Use it to get the right -d for posix/ and right/ flavors.
+	* Makeconfig (leapseconds): New variable.
+
+	* mach/Machrules (%.udeps rule): Depend on Machrules.
+	Emit deps for .uh and .__h files.
+	(%.uh, %.__h rules): Don't depend on %.defs; use #include <$*.defs>
+	instead.
+
+Sun May 26 01:06:47 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/Makefile (routines): Add llabs, lldiv.
+	* stdlib/llabs.c: New file.  Implementation of return
+	absolute value of long long argument.
+	* stdlib/lldiv.c: New file.  Implementation of division with remainder
+	of long long argument.
+	* stdlib/stdlib.h [__USE_GNU] (lldiv_t): New type for lldiv
+	function.
+	Define prototypes for lldiv and llabs functions.
+
+	* locale/C-collate.c: Initialize _NL_COLLATE_NRULES element.
+
+	* stdlib/strtod.c: Replace wchar_t with wint_t.  The later is
+	really the type for a single wide character.
+
+	* string/strxfrm.c (print_val): Define separate version for
+	use as wcsxfrm.  Here we don't need UTF8 encoding.
+
+	* wcsmbs/wchar.h:  gcc-2.7.2-960517 finally introduces wint_t
+	in <stddef.h>.  Use this value and only for older gcc version
+	define in place.
+	(uwchar_t): Remove definition.
+
+	* wcsmbs/wcscmp.c, wcsmbs/wcscoll.c, wcsmbs/wcsncmp.c,
+	wcsmbs/wcsxfrm.c, wcsmbs/wmemcmp.c: : Don't use uwchar_t as unsigned
+	type.  wint_t is intended for this.
+
+Sat May 25 14:10:19 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/bsd/direntry.h: Use [1] instead of [0] for d_name to
+	quiet -ansi -pedantic.
+	* sysdeps/unix/common/direntry.h: Likewise.
+
+	* login/Makefile (headers): Add lastlog.h.
+	* login/lastlog.h: New file.
+
+	* login/Makefile (CFLAGS): Don't append -D_THREAD_SAFE.
+	* login/utmp.h [_REENTRANT || _THREAD_SAFE]: Replace this conditional
+	with #ifdef __USE_REENTRANT.
+
+	* features.h (__GNU_LIBRARY__): Set to 6.
+	[_GNU_SOURCE] (_POSIX_SOURCE, _POSIX_C_SOURCE, _BSD_SOURCE,
+	_SVID_SOURCE): Make sure they are all defined.
+
+	* sysdeps/unix/sysv/linux/gnu/types.h: Instead of including
+	<linux/posix_types.h>, define _LINUX_TYPES_DONT_EXPORT and then
+	include <linux/types.h>.
+
+	* resource/sys/resource.h: Remove trailing commas from enums.
+
 Fri May 24 17:30:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/netinet/in.h: Remove trailing commas from enums.
+	* sysdeps/unix/sysv/linux/netinet/in.h: Likewise.
 
 	* login/getutline_r.c: Include string.h.
 

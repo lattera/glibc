@@ -90,18 +90,23 @@ DEFUN_VOID(__tzset)
       tz_rules[1].name != tz_rules[0].name)
     free((PTR) tz_rules[1].name);
 
-  tz = getenv("TZ");
+  /* Examine the TZ environment variable.  */
+  tz = getenv ("TZ");
 
-  if (tz != NULL && *tz == ':')
+  if (tz != NULL)
     {
-      __tzfile_read(tz + 1);
+      /* A leading colon means "implementation defined syntax".
+	 We ignore the colon and always use the same algorithm:
+	 try a data file, and if none exists parse the 1003.1 syntax.  */
+      if (*tz == ':')
+	++tz;
+
+      __tzfile_read (tz);
       if (__use_tzfile)
 	{
 	  __tzset_run = 1;
 	  return;
 	}
-      else
-	tz = NULL;
     }
 
   if (tz == NULL || *tz == '\0')

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ enum
     IPPROTO_IDP = 22,	/* XNS IDP protocol.  */
 
     IPPROTO_RAW = 255,	/* Raw IP packets.  */
-    IPPROTO_MAX,
+    IPPROTO_MAX
   };
 
 /* Standard well-known ports.  */
@@ -76,7 +76,7 @@ enum
     IPPORT_RESERVED = 1024,
 
     /* Ports greater this value are reserved for (non-privileged) servers.  */
-    IPPORT_USERRESERVED = 5000,
+    IPPORT_USERRESERVED = 5000
   };
 
 

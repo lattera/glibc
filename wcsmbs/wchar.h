@@ -27,43 +27,30 @@ Cambridge, MA 02139, USA.  */
 
 __BEGIN_DECLS
 
-/* Get size_t, wchar_t, uwchar_t and NULL from <stddef.h>.  */
+/* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
 #define __need_size_t
 #define __need_wchar_t
-/* #define __need_uwchar_t */
+#define __need_wint_t
 #define __need_NULL
-/* __need_WCHAR_MAX */
-/* __need_WCHAR_MIN */
 #include <stddef.h>
-
-/* FIXME: Should go with this or another name in stddef.h.  */
-typedef unsigned int uwchar_t;
 
 /* Conversion state information.  */
 typedef int mbstate_t; /* FIXME */
 
-/* Should come from <stddef.h> */
-#define WCHAR_MIN ((wchar_t) 0)	/* FIXME */
-#define WCHAR_MAX (~WCHAR_MIN)	/* FIXME */
+#define WCHAR_MIN ((wchar_t) 0)
+#define WCHAR_MAX (~WCHAR_MIN)
 
 #ifndef WEOF
 # define WEOF (0xffffffffu)
 #endif
 
-/* FIXME: should this go into <stddef.h>???  */
-#if 0
-#define __need_wint_t
-#include <stddef.h>
-#else
+#ifndef _WINT_T
 /* Integral type unchanged by default argument promotions that can
    hold any value corresponding to members of the extended character
    set, as well as at least one value that does not correspond to any
    member of the extended character set.  */
-#ifndef __have_wint_t_defined
-#define __have_wint_t_defined 1
-/* This is a hack!!! */
+#define _WINT_T	1
 typedef unsigned int wint_t;
-#endif
 #endif
 
 

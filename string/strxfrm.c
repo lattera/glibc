@@ -21,9 +21,10 @@ Boston, MA 02111-1307, USA.  */
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef STRING_TYPE
+#ifndef WIDE_VERSION
 # define STRING_TYPE char
 # define USTRING_TYPE unsigned char
+# define L_(Ch) Ch
 # define STRXFRM strxfrm
 # define STRLEN strlen
 # define STPNCPY __stpncpy
@@ -34,9 +35,10 @@ Boston, MA 02111-1307, USA.  */
 #include "../locale/weight.h"
 
 
+#ifndef WIDE_VERSION
 /* Write 32 bit value UTF-8 encoded but only if enough space is left.  */
 static __inline size_t
-print_val (u_int32_t value, STRING_TYPE *dest, size_t max, size_t act)
+print_val (u_int32_t value, char *dest, size_t max, size_t act)
 {
   char tmp[6];
   int idx = 0;
@@ -90,6 +92,48 @@ print_val (u_int32_t value, STRING_TYPE *dest, size_t max, size_t act)
 
   return act;
 }
+#else
+static __inline size_t
+print_val (u_int32_t value, wchar_t *dest, size_t max, size_t act)
+{
+  /* We cannot really assume wchar_t is 32 bits wide.  But it is for
+     GCC and so we don't do much optimization for the other case.  */
+  if (sizeof (wchar_t) == 4)
+    {
+      if (act < max)
+	dest[act] = (wchar_t) value;
+      ++act;
+    }
+  else
+    {
+      wchar_t tmp[3];
+      size_t idx = 0;
+
+      if (value < 0x8000)
+	tmp[idx++] = (wchar_t) act;
+      else
+	{
+	  tmp[idx++] = (wchar_t) (0x8000 + (value & 0x3fff));
+	  value >>= 14;
+	  if (value < 0x2000)
+	    tmp[idx++] = (wchar_t) (0xc000 + value);
+	  else
+	    {
+	      tmp[idx++] = (wchar_t) (0x8000 + (value & 0x3fff));
+	      value >>= 14;
+	      tmp[idx++] = (wchar_t) (0xe000 + value);
+	    }
+	}
+      while (idx-- > 0)
+	{
+	  if (act < max)
+	    dest[act] = tmp[idx];
+	  ++act;
+	}
+    }
+  return act;
+}
+#endif
 
 
 /* Transform SRC into a form such that the result of strcmp
@@ -184,5 +228,9 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n)
     }
 
   /* Terminate string.  */
-  return print_val (0, dest, n, written);
+  if (written < n)
+    dest[written] = L_('\0');
+
+  /* Return length without counting the terminating '\0'.  */
+  return written;
 }

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1996 Free Software Foundation, Inc.
+/* Reentrant string tokenizer.  Generic version.
+Copyright (C) 1991, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -20,40 +21,40 @@ Boston, MA 02111-1307, USA.  */
 #include <string.h>
 
 
-static char *olds = NULL;
-
 /* Parse S into tokens separated by characters in DELIM.
-   If S is NULL, the last string strtok() was called with is
-   used.  For example:
+   If S is NULL, the saved pointer in SAVE_PTR is used as
+   the next starting point.  For example:
 	char s[] = "-abc-=-def";
-	x = strtok(s, "-");		// x = "abc"
-	x = strtok(NULL, "-=");		// x = "def"
-	x = strtok(NULL, "=");		// x = NULL
+	char *sp;
+	x = strtok_r(s, "-", &sp);	// x = "abc", sp = "=-def"
+	x = strtok_r(NULL, "-=", &sp);	// x = "def", sp = NULL
+	x = strtok_r(NULL, "=", &sp);	// x = NULL
 		// s = "abc\0-def\0"
 */
 char *
-strtok (s, delim)
+strtok_r (s, delim, save_ptr)
      char *s;
      const char *delim;
+     char **save_ptr;
 {
   char *token;
 
   if (s == NULL)
     {
-      if (olds == NULL)
+      if (*save_ptr == NULL)
 	{
 	  errno = EINVAL;
 	  return NULL;
 	}
       else
-	s = olds;
+	s = *save_ptr;
     }
 
   /* Scan leading delimiters.  */
   s += strspn (s, delim);
   if (*s == '\0')
     {
-      olds = NULL;
+      *save_ptr = NULL;
       return NULL;
     }
 
@@ -62,12 +63,12 @@ strtok (s, delim)
   s = strpbrk (token, delim);
   if (s == NULL)
     /* This token finishes the string.  */
-    olds = NULL;
+    *save_ptr = NULL;
   else
     {
-      /* Terminate the token and make OLDS point past it.  */
+      /* Terminate the token and make *SAVE_PTR point past it.  */
       *s = '\0';
-      olds = s + 1;
+      *save_ptr = s + 1;
     }
   return token;
 }

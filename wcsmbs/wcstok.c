@@ -1,6 +1,6 @@
 /* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -13,9 +13,9 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Library General Public License for more details.
 
 You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.	 If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA 02111-1307, USA.  */
 
 #include <wchar.h>
 #include <errno.h>
@@ -25,20 +25,26 @@ Cambridge, MA 02139, USA.  */
    NULL, the last string wcstok() was called with is used.  */
 wchar_t *
 wcstok (wcs, delim, ptr)
-     register wchar_t *wcs;
-     register const wchar_t *delim;
-     register wchar_t **ptr;
+     wchar_t *wcs;
+     const wchar_t *delim;
+     wchar_t **save_ptr;
 {
   wchar_t *result;
 
   if (wcs == NULL)
-    wcs = *ptr;
+    if (*save_ptr == NULL)
+      {
+	errno = EINVAL;
+	return NULL;
+      }
+    else
+      wcs = *save_ptr;
 
   /* Scan leading delimiters.  */
   wcs += wcsspn (wcs, delim);
   if (*wcs == L'\0')
     {
-      *ptr = NULL;
+      *save_ptr = NULL;
       return NULL;
     }
 
@@ -47,12 +53,12 @@ wcstok (wcs, delim, ptr)
   wcs = wcspbrk (result, delim);
   if (wcs == NULL)
     /* This token finishes the string.	*/
-    *ptr = NULL;
+    *save_ptr = NULL;
   else
     {
-      /* Terminate the token and make OLDS point past it.  */
+      /* Terminate the token and make *SAVE_PTR point past it.  */
       *wcs = L'\0';
-      *ptr = wcs + 1;
+      *save_ptr = wcs + 1;
     }
   return result;
 }

@@ -64,7 +64,9 @@ installed-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
 
 ifeq ($(cross-compiling),no)
 # Don't try to install the zoneinfo files since we can't run zic.
-install-others = $(addprefix $(zonedir)/,$(zonenames)) \
+install-others = $(addprefix $(zonedir)/,$(zonenames) \
+					 $(zonenames:%=posix/%) \
+					 $(zonenames:%=right/%)) \
 		 $(installed-localtime-file) $(installed-posixrules-file)
 endif
 
@@ -81,7 +83,13 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	 echo '$*-zones := $$(subst $$(nl), ,$$($*-zones))'		;\
 	 echo 'ifdef $*-zones'						;\
 	 echo '$$(addprefix $$(datadir)/zone%/,$$($*-zones)): \'	;\
+	 echo '$< $$(objpfx)zic $$(leapseconds) yearistype'		;\
+	 echo '	$$(tzcompile)'						;\
+	 echo '$$(addprefix $$(datadir)/zone%/right/,$$($*-zones)): \'	;\
 	 echo '$< $$(objpfx)zic leapseconds yearistype'			;\
+	 echo '	$$(tzcompile)'						;\
+	 echo '$$(addprefix $$(datadir)/zone%/posix/,$$($*-zones)): \'	;\
+	 echo '$< $$(objpfx)zic /dev/null yearistype'			;\
 	 echo '	$$(tzcompile)'						;\
 	 echo 'endif'							;\
 	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
@@ -98,8 +106,17 @@ echo-zonenames: zonenames
 # the command line of `make install' (e.g., "make install prefix=/foo").
 zic-cmd = $(built-program-cmd) -d $(zonedir)
 define tzcompile
-$(zic-cmd) -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
+$(zic-cmd)$(target-zone-flavor)
+ -L $(word 3,$^) -y $(dir $(word 4,$^))$(notdir $(word 4,$^)) $<
 endef
+
+# The source files specify the zone names relative to the -d directory,
+# so for the posix/ and right/ flavors we need to pass -d $(zonedir)/posix
+# and the like.  This magic extracts /posix or /right if it's the first
+# component after $(zonedir) in the target name $@.
+target-zone-flavor = $(filter /posix /right, \
+			      /$(firstword $(subst /, , \
+					   $(patsubst $(zonedir)/%,%,$@))))
 
 ifdef localtime
 $(installed-localtime-file): $(zonedir)/$(localtime) $(objpfx)zic

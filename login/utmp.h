@@ -62,7 +62,7 @@ extern struct utmp *getutline __P ((__const struct utmp *__line));
 extern struct utmp *pututline __P ((__const struct utmp *__utmp_ptr));
 
 
-#if defined(_REENTRANT) || defined(_THREAD_SAFE)
+#ifdef	__USE_REENTRANT
 /* Define the data structure needed for the reentrent version.  */
 struct utmp_data
 {
@@ -89,7 +89,7 @@ extern int getutline_r __P ((__const struct utmp *__line, struct utmp **__utmp,
 extern int pututline_r __P ((__const struct utmp *__utmp_ptr,
 			     struct utmp_data *__utmp_data));
 
-#endif /* _REENTRENT || _THREAD_SAFE */
+#endif	/* Use reentrant.  */
 
 __END_DECLS
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -59,7 +59,7 @@ enum __rusage_who
     RUSAGE_SELF = 0,
 #define	RUSAGE_SELF	RUSAGE_SELF
     /* All of its terminated child processes.  */
-    RUSAGE_CHILDREN = -1,
+    RUSAGE_CHILDREN = -1
 #define	RUSAGE_CHILDREN	RUSAGE_CHILDREN
   };
 
@@ -134,7 +134,7 @@ enum __priority_which
   {
     PRIO_PROCESS = 0,		/* WHO is a process ID.  */
     PRIO_PGRP = 1,		/* WHO is a process group ID.  */
-    PRIO_USER = 2,		/* WHO is a user ID.  */
+    PRIO_USER = 2		/* WHO is a user ID.  */
   };
 
 /* Return the highest priority of any process specified by WHICH and WHO

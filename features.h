@@ -50,7 +50,6 @@ Cambridge, MA 02139, USA.  */
 
    The macro `__GNU_LIBRARY__' is defined by this file unconditionally.
 
-   All macros defined by this file are defined as 1.
    All macros listed above as possibly being defined by this file are
    explicitly undefined if they are not explicitly defined.
    Feature-test macros that are not defined by the user or compiler
@@ -80,32 +79,42 @@ Cambridge, MA 02139, USA.  */
 #define	__FAVOR_BSD	1
 #endif
 
+/* If _GNU_SOURCE was defined by the user, turn on all the other features.  */
+#ifdef _GNU_SOURCE
+/* If the user specifies some of the following without _GNU_SOURCE,
+   they are mutually exclusive.  But they all default below to on,
+   so undefine them to get all the features turned on for _GNU_SOURCE.  */
+#undef _POSIX_SOURCE
+#undef _POSIX_C_SOURCE
+#undef _BSD_SOURCE
+#undef _SVID_SOURCE
+#endif
 
 /* If nothing (other than _GNU_SOURCE) is defined,
    define _BSD_SOURCE and _SVID_SOURCE.  */
-#if (!defined(__STRICT_ANSI__) && !defined(_POSIX_SOURCE) && \
-     !defined(_POSIX_C_SOURCE) && !defined(_BSD_SOURCE) && \
-     !defined(_SVID_SOURCE))
+#if (!defined (__STRICT_ANSI__) && !defined (_POSIX_SOURCE) && \
+     !defined (_POSIX_C_SOURCE) && !defined (_BSD_SOURCE) && \
+     !defined (_SVID_SOURCE))
 #define	_BSD_SOURCE	1
 #define	_SVID_SOURCE	1
 #endif
 
 /* If none of the ANSI/POSIX macros are defined, use POSIX.1 and POSIX.2.  */
-#if (!defined(__STRICT_ANSI__) && !defined(_POSIX_SOURCE) && \
-     !defined(_POSIX_C_SOURCE))
+#if (!defined (__STRICT_ANSI__) && !defined (_POSIX_SOURCE) && \
+     !defined (_POSIX_C_SOURCE))
 #define	_POSIX_SOURCE	1
 #define	_POSIX_C_SOURCE	2
 #endif
 
-#if	defined(_POSIX_SOURCE) || _POSIX_C_SOURCE >= 1
+#if	defined (_POSIX_SOURCE) || _POSIX_C_SOURCE >= 1
 #define	__USE_POSIX	1
 #endif
 
-#if	defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 2
+#if	defined (_POSIX_C_SOURCE) && _POSIX_C_SOURCE >= 2
 #define	__USE_POSIX2	1
 #endif
 
-#if defined(_BSD_SOURCE) || defined(_SVID_SOURCE)
+#if defined (_BSD_SOURCE) || defined (_SVID_SOURCE)
 #define	__USE_MISC	1
 #endif
 
@@ -133,10 +142,10 @@ Cambridge, MA 02139, USA.  */
    the shared C library corresponding to this set of header files.  */
 
 #undef	__GNU_LIBRARY__
-#define	__GNU_LIBRARY__	5
+#define	__GNU_LIBRARY__	6
 
 
-#if	!defined(__GNUC__) || __GNUC__ < 2
+#if	!defined (__GNUC__) || __GNUC__ < 2
 /* In GCC version 2, (__extension__ EXPR) will not complain
    about GCC extensions used in EXPR under -ansi or -pedantic.  */
 #define	__extension__

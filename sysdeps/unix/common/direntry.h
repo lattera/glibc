@@ -22,7 +22,7 @@ struct dirent
     unsigned int d_fileno;
     int d_off;			/* Position in directory of following entry. */
     unsigned short int d_reclen;
-    char d_name[0];		/* Variable length.  */
+    char d_name[1];		/* Variable length.  */
   };
 
 #define _DIRENT_HAVE_D_RECLEN 1

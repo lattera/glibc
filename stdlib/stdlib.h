@@ -50,6 +50,15 @@ typedef struct
     long int rem;		/* Remainder.  */
   } ldiv_t;
 
+#ifdef __USE_GNU
+/* Returned by `lldiv'.  */
+typedef struct
+  {
+    long long int quot;		/* Quotient.  */
+    long long int rem;		/* Remainder.  */
+  } lldiv_t;
+#endif
+
 
 /* The largest number rand will return (same as INT_MAX).  */
 #define	RAND_MAX	2147483647
@@ -407,13 +416,19 @@ extern void qsort __P ((__ptr_t __base, size_t __nmemb, size_t __size,
 /* Return the absolute value of X.  */
 extern int abs __P ((int __x)) __attribute__ ((__const__));
 extern long int labs __P ((long int __x)) __attribute__ ((__const__));
+#ifdef __USE_GNU
+extern long long int llabs __P ((long long int __x)) __attribute__ ((__const__));
+#endif
 
 
-/* Return the `div_t' or `ldiv_t' representation
+/* Return the `div_t', `ldiv_t' or `lldiv_t' representation
    of the value of NUMER over DENOM. */
 /* GCC may have built-ins for these someday.  */
 extern div_t div __P ((int __numer, int __denom)) __attribute__ ((__const__));
 extern ldiv_t ldiv __P ((long int __numer, long int __denom)) __attribute__ ((__const__));
+#ifdef __USE_GNU
+extern lldiv_t lldiv __P ((long long int __numer, long long int __denom)) __attribute__ ((__const__));
+#endif
 
 
 #ifdef __USE_SVID
