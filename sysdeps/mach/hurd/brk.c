@@ -38,7 +38,7 @@ vm_address_t _hurd_brk;
 /* This name is used by the Linux crtbeginS.o for reasons you don't even
    want to think about it.  It's just easier to provide some definition for
    it than even to explain the braindamage involved.  */
-weak_alias (_hurd_brk, ___brk_addr)
+vm_address_t ___brk_addr = 0;
 
 struct mutex _hurd_brk_lock;
 
