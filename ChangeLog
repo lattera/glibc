@@ -1,7 +1,11 @@
+Wed May 22 17:22:14 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.c [VMS]: Don't include <pwd.h>.
+
 Wed May 22 14:46:53 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
-	* hurd/hurdstartup.c (_hurd_startup): Pass the correct counts to
-	argz_extract, and terminate the resulting vectors.
+	* hurd/hurdstartup.c (_hurd_startup): Terminate the vectors we get
+	back from argz_extract.
 
 Wed May 22 13:56:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
