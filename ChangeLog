@@ -31,8 +31,8 @@
 
 	* sysdeps/generic/e_scalb.c: Set invalid exception for invalid
 	parameters.
-	* sysdeps/generic/e_scalbf.c: New file.
-	* sysdeps/generic/e_scalbl.c: New file.
+	* sysdeps/generic/e_scalbf.c: Likewise.
+	* sysdeps/generic/e_scalbl.c: Likewise.
 
 	* sysdeps/ia64/fpu/Makefile (libm-sysdep-routines): Add libm_error,
 	libm_frexp4, libm_frexp4f, libm_frexp4l, and all the functions also
