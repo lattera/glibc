@@ -1,3 +1,10 @@
+2001-03-04  Andreas Jaeger  <aj@suse.de>
+
+	* resolv/tst-aton.c: Add testcase for IP with four points.
+
+	* resolv/inet_addr.c: Don't recognize an IP with four points.
+	Patch by Andre' Breiler <A.Breiler@gmx.net>.
+
 2001-02-27  Philip Blundell  <pb@futuretv.com>
 
 	* elf/elf.h: Add new ARM definitions from latest (B-01)
