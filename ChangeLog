@@ -1,3 +1,22 @@
+2003-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add time syscall.
+
+	* elf/Makefile: Use LC_ALL=C in a few cases where we call external
+	text processing tools.
+
+	* sysdeps/pthread/aio_misc.h (struct waitlist): Don't add caller_pid
+	element unless BROKEN_THREAD_SIGNALS is defined.
+	(struct requestlist): Likewise.
+	* sysdeps/pthread/aio_misc.c (__aio_enqueue_request): Don't fill in
+	caller_pid of new request unless BROKEN_THREAD_SIGNALS is defined.
+	* sysdeps/pthread/aio_suspend.c (aio_suspend): Likewise.
+	* sysdeps/pthread/aio_notify.c (__aio_notify_only): Remove caller_pid
+	parameter unless BROKEN_THREAD_SIGNALS is defined.  Adjust callers.
+	Pass current PID to __aio_sigqueue.
+	* sysdeps/pthread/lio_listio.c (lio_listio): Adjust __aio_notify_only
+	call.  Don't initialize caller_pid field of waitlist element.
+
 2003-08-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/libioP.h (_IO_vtable_offset): Define.

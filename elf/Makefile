@@ -221,13 +221,15 @@ $(objpfx)librtld.map: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 	mv -f $@T $@
 
 $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
+	LC_ALL=C \
 	sed -n 's@^$(common-objpfx)\([^(]*\)(\([^)]*\.os\)) *.*$$@\1 \2@p' \
 	    $< | \
 	while read lib file; do \
 	  case $$lib in \
 	  libc_pic.a) \
-	    fgrep -l /$$file \
+	    LC_ALL=C fgrep -l /$$file \
 		  $(common-objpfx)stamp.os $(common-objpfx)*/stamp.os | \
+	    LC_ALL=C \
 	    sed 's@^$(common-objpfx)\([^/]*\)/stamp\.os$$@rtld-\1'" +=$$file@"\
 	    ;; \
 	  */*.a) \
@@ -235,8 +237,8 @@ $(objpfx)librtld.mk: $(objpfx)librtld.map Makefile
 	  *) echo "Wasn't expecting $$lib($$file)" >&2; exit 1 ;; \
 	  esac; \
 	done > $@T
-	echo rtld-subdirs = `sed 's/^rtld-\([^ ]*\).*$$/\1/' $@T \
-			     | sort -u` >> $@T
+	echo rtld-subdirs = `LC_ALL=C sed 's/^rtld-\([^ ]*\).*$$/\1/' $@T \
+			     | LC_ALL=C sort -u` >> $@T
 	mv -f $@T $@
 
 $(objpfx)rtld-libc.a: $(objpfx)librtld.mk FORCE
@@ -251,6 +253,7 @@ $(objpfx)ld.so: $(objpfx)librtld.os $(ld-map)
 	@rm -f $@.lds
 	$(LINK.o) -nostdlib -nostartfiles -shared			\
 		  $(LDFLAGS-rtld) -Wl,-z,defs -Wl,--verbose 2>&1 |	\
+		  LC_ALL=C \
 		  sed -e '/^=========/,/^=========/!d;/^=========/d'	\
 		      -e 's/\. = 0 + SIZEOF_HEADERS;/& _begin = . - SIZEOF_HEADERS;/' \
 		  > $@.lds
@@ -317,11 +320,11 @@ endif
 
 ifeq ($(ldd-rewrite-script),no)
 define gen-ldd
-sed $($(ldd-shell)-ldd-rewrite) < $< > $@.new
+LC_ALL=C sed $($(ldd-shell)-ldd-rewrite) < $< > $@.new
 endef
 else
 define gen-ldd
-sed $($(ldd-shell)-ldd-rewrite) < $< | sed -f $(ldd-rewrite-script) > $@.new
+LC_ALL=C sed $($(ldd-shell)-ldd-rewrite) < $< | LC_ALL=C sed -f $(ldd-rewrite-script) > $@.new
 endef
 endif
 

@@ -78,7 +78,7 @@
   if (width > 0)							      \
     done += INTUSE(_IO_padn) (s, (Padchar), width)
 #  define PUTC(C, F)	_IO_putc_unlocked (C, F)
-#  define ORIENT	if (s->_vtable_offset == 0 && _IO_fwide (s, -1) != -1)\
+#  define ORIENT	if (_IO_vtable_offset (s) == 0 && _IO_fwide (s, -1) != -1)\
 			  return -1
 # else
 #  define vfprintf	_IO_vfwprintf
@@ -1267,7 +1267,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Check for correct orientation.  */
   if (
 # ifdef USE_IN_LIBIO
-      s->_vtable_offset == 0 &&
+      _IO_vtable_offset (s) == 0 &&
 # endif
       _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
       != (sizeof (CHAR_T) == 1 ? -1 : 1))

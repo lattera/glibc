@@ -115,7 +115,9 @@ aio_suspend (list, nent, timeout)
 		waitlist[cnt].next = requestlist[cnt]->waiting;
 		waitlist[cnt].counterp = &dummy;
 		waitlist[cnt].sigevp = NULL;
+#ifdef BROKEN_THREAD_SIGNALS
 		waitlist[cnt].caller_pid = 0;	/* Not needed.  */
+#endif
 		requestlist[cnt]->waiting = &waitlist[cnt];
 		any = true;
 	      }

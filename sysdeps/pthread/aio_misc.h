@@ -50,9 +50,11 @@ struct waitlist
     volatile int *counterp;
     /* The next field is used in asynchronous `lio_listio' operations.  */
     struct sigevent *sigevp;
+#ifdef BROKEN_THREAD_SIGNALS
     /* XXX See requestlist, it's used to work around the broken signal
        handling in Linux.  */
     pid_t caller_pid;
+#endif
   };
 
 
@@ -80,9 +82,11 @@ struct requestlist
     /* Pointer to the actual data.  */
     aiocb_union *aiocbp;
 
+#ifdef BROKEN_THREAD_SIGNALS
     /* PID of the initiator thread.
        XXX This is only necessary for the broken signal handling on Linux.  */
     pid_t caller_pid;
+#endif
 
     /* List of waiting processes.  */
     struct waitlist *waiting;
@@ -120,8 +124,13 @@ extern void __aio_notify (struct requestlist *req)
      attribute_hidden internal_function;
 
 /* Notify initiator of request.  */
+#ifdef BROKEN_THREAD_SIGNALS
 extern int __aio_notify_only (struct sigevent *sigev, pid_t caller_pid)
      attribute_hidden internal_function;
+#else
+extern int __aio_notify_only (struct sigevent *sigev)
+     attribute_hidden internal_function;
+#endif
 
 /* Send the signal.  */
 extern int __aio_sigqueue (int sig, const union sigval val, pid_t caller_pid)

@@ -1,5 +1,6 @@
 ifeq ($(subdir),rt)
 librt-sysdep_routines += timer_routines
+CPPFLAGS += -DBROKEN_THREAD_SIGNALS
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-timer: $(objpfx)librt.so $(shared-thread-library)

@@ -120,7 +120,7 @@
 #  define ISDIGIT(Ch)	  isdigit (Ch)
 #  define ISXDIGIT(Ch)	  isxdigit (Ch)
 #  define TOLOWER(Ch)	  tolower (Ch)
-#  define ORIENT	  if (s->_vtable_offset == 0			      \
+#  define ORIENT	  if (_IO_vtable_offset (s) == 0		      \
 			      && _IO_fwide (s, -1) != -1)		      \
 			    return EOF
 

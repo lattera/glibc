@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -328,8 +328,10 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       return NULL;
     }
   newp->aiocbp = aiocbp;
+#ifdef BROKEN_THREAD_SIGNALS
   newp->caller_pid = (aiocbp->aiocb.aio_sigevent.sigev_notify == SIGEV_SIGNAL
 		      ? getpid () : 0);
+#endif
   newp->waiting = NULL;
 
   aiocbp->aiocb.__abs_prio = prio;
