@@ -58,7 +58,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("r13");
 
 #define HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS
 
-PT_EI long int
+PT_EI int
 __compare_and_swap (long int *p, long int oldval, long int newval)
 {
   long int readval;
@@ -72,7 +72,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
   return readval == oldval;
 }
 
-PT_EI long int
+PT_EI int
 __compare_and_swap_with_release_semantics (long int *p,
 					   long int oldval,
 					   long int newval)

@@ -1,3 +1,8 @@
+2000-12-18  Jes Sorensen  <jes@linuxcare.com>
+
+	* linuxthreads/sysdeps/ia64/pt-machine.h: __compare_and_swap
+	and compare_and_swap_with_release_semantics returns int not long.
+
 2000-12-17  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/s390/pt-machine.h (testandset): Use long int as return
