@@ -105,7 +105,7 @@ localtime_r (t, tp)
 									      \
      if (*decided != raw)						      \
        {								      \
-	 val = _nl_parse_alt_digit (&rp);				      \
+	 val = _nl_parse_alt_digit (&rp HELPER_LOCALE_ARG);		      \
 	 if (val == -1 && *decided != loc)				      \
 	   {								      \
 	     *decided = loc;						      \
@@ -195,15 +195,24 @@ const unsigned short int __mon_yday[2][13] =
 # undef _NL_CURRENT
 # define _NL_CURRENT(category, item) \
   (current->values[_NL_ITEM_INDEX (item)].string)
+# undef _NL_CURRENT_WORD
+# define _NL_CURRENT_WORD(category, item) \
+  (current->values[_NL_ITEM_INDEX (item)].word)
 # define LOCALE_PARAM , locale
 # define LOCALE_ARG , locale
 # define LOCALE_PARAM_PROTO , __locale_t locale
 # define LOCALE_PARAM_DECL __locale_t locale;
+# define HELPER_LOCALE_ARG , current
 #else
 # define LOCALE_PARAM
 # define LOCALE_ARG
 # define LOCALE_PARAM_DECL
 # define LOCALE_PARAM_PROTO
+# ifdef _LIBC
+#  define HELPER_LOCALE_ARG , _NL_CURRENT_DATA (LC_TIME)
+# else
+#  define HELPER_LOCALE_ARG
+# endif
 #endif
 
 
@@ -731,8 +740,8 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		{
 		  if (era_cnt >= 0)
 		    {
-		      era = _nl_select_era_entry (era_cnt);
-		      if (match_string (era->era_name, rp))
+		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      if (era != NULL && match_string (era->era_name, rp))
 			{
 			  *decided = loc;
 			  break;
@@ -747,8 +756,9 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		      for (era_cnt = 0; era_cnt < (int) num_eras;
 			   ++era_cnt, rp = rp_backup)
 			{
-			  era = _nl_select_era_entry (era_cnt);
-			  if (match_string (era->era_name, rp))
+			  era = _nl_select_era_entry (era_cnt
+						      HELPER_LOCALE_ARG);
+			  if (era != NULL && match_string (era->era_name, rp))
 			    {
 			      *decided = loc;
 			      break;
@@ -787,8 +797,8 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 		  for (era_cnt = 0; era_cnt < (int) num_eras;
 		       ++era_cnt, rp = rp_backup)
 		    {
-		      era = _nl_select_era_entry (era_cnt);
-		      if (recursive (era->era_format))
+		      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+		      if (era != NULL && recursive (era->era_format))
 			break;
 		    }
 		  if (era_cnt == (int) num_eras)
@@ -971,7 +981,9 @@ strptime_internal (rp, fmt, tm, decided, era_cnt LOCALE_PARAM)
 
   if (era_cnt != -1)
     {
-      era = _nl_select_era_entry (era_cnt);
+      era = _nl_select_era_entry (era_cnt HELPER_LOCALE_ARG);
+      if (era == NULL)
+	return NULL;
       if (want_era)
 	tm->tm_year = (era->start_date[0]
 		       + ((tm->tm_year - era->offset)
