@@ -21,8 +21,6 @@
 #define _SIGNAL_H
 #include <bits/signum.h>
 
-#define JUMPTARGET(name) name
-
 /* The following are defined in linux/sched.h, which unfortunately	*/
 /* is not safe for inclusion in an assembly file.			*/
 #define CLONE_VM        0x00000100      /* set if VM shared between processes */

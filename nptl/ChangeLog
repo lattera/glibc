@@ -1,3 +1,13 @@
+2003-01-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* pthread_mutex_lock.c (__pthread_mutex_lock_internal): Make
+	the alias unconditional.
+	* pthread_mutex_unlock.c  (__pthread_mutex_unlock_internal): Likewise.
+
+2003-01-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (CFLAGS-pthread_self.c): New definition.
+
 2003-01-06  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/pthread_sigmask.c (pthread_sigmask): Add

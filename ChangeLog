@@ -1,3 +1,24 @@
+2003-01-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/alpha/sysdep.h (INLINE_SYSCALL): Undefined before
+	defining.
+
+2003-01-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-64/initfini.c: Avoid unterminated string literals.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (L): Don't define it
+	here.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (L): Likewise.
+
+2003-01-13  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/s390/s390-32/sysdep.h (JUMPTARGET): Move branch instructions
+	from here...
+	(PSEUDO): ... to here.
+	* sysdeps/s390/s390-64/sysdep.h (JUMPTARGET): Move branch instruction
+	from here...
+	(PSEUDO): ... to here.
+
 2003-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/charmap-dir.c (charmap_readdir): Use struct
@@ -29,7 +50,7 @@
 
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-close.c (_dl_close): Type typo, must be == not = in
+	* elf/dl-close.c (_dl_close): Fix typo, must be == not = in
 	search for removed searchlist.  Reported by Roland McGrath.
 
 	* io/ftwtest-sh: Add test for case of symlink to nonexisting file

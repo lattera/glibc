@@ -129,6 +129,7 @@ $syscall_error:					\
 /* ??? Linux needs to be able to override INLINE_SYSCALL for one
    particular special case.  Make this easy.  */
 
+#undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
 	INLINE_SYSCALL1(name, nr, args)
 
