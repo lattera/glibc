@@ -83,7 +83,7 @@ calls = s_isinf s_isnan s_finite s_copysign s_modf s_scalbn s_frexp s_ldexp \
 generated += $(foreach s,.c .S l.c l.S f.c f.S,$(calls:s_%=m_%$s))
 routines = $(calls) $(calls:=f) $(long-c-$(long-double-fcts))
 long-c-yes = $(calls:=l)
-distribute += $(long-m-yes:=.c) $(long-c-yes:=.c)
+distribute += $(filter-out $(generated),$(long-m-yes:=.c) $(long-c-yes:=.c))
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
