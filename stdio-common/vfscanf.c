@@ -57,8 +57,9 @@
 # define va_list	_IO_va_list
 # define ungetc(c, s)	((void) ((int) c != EOF && --read_in),		      \
 			 _IO_ungetc (c, s))
-# define inchar()	((c = _IO_getc_unlocked (s)), \
-			 (void) (c != EOF && ++read_in), c)
+# define inchar()	(c == EOF ? EOF					      \
+			 : ((c = _IO_getc_unlocked (s)),		      \
+			    (void) (c != EOF && ++read_in), c))
 # define encode_error()	do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
@@ -102,7 +103,8 @@
 # define UNLOCK_STREAM __libc_cleanup_region_end (1)
 #else
 # define ungetc(c, s)	((void) (c != EOF && --read_in), ungetc (c, s))
-# define inchar()	((c = getc (s)), (void) (c != EOF && ++read_in), c)
+# define inchar()	(c == EOF ? EOF					      \
+			 : (c = getc (s)), (void) (c != EOF && ++read_in), c)
 # define encode_error()	do {						      \
 			  funlockfile (s);				      \
 			  __set_errno (EILSEQ);				      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -179,8 +179,27 @@ _nss_nis_getnetbyname_r (const char *name, struct netent *net, char *buffer,
   if (yp_get_default_domain (&domain))
     return NSS_STATUS_UNAVAIL;
 
-  retval = yperr2nss (yp_match (domain, "networks.byname", name,
-                                strlen (name), &result, &len));
+  if (buflen < sizeof *data + 1)
+    {
+      *herrnop = NETDB_INTERNAL;
+      *errnop = ERANGE;
+      return NSS_STATUS_TRYAGAIN;
+    }
+  else
+    {
+      /* Convert name to lowercase.  */
+      size_t namlen = strlen (name);
+      char name2[namlen + 1];
+      int i;
+
+      for (i = 0; i < namlen; ++i)
+	name2[i] = tolower (name[i]);
+      name2[i] = '\0';
+
+      retval = yperr2nss (yp_match (domain, "networks.byname", name2,
+				    namlen, &result, &len));
+    }
+
 
   if (retval != NSS_STATUS_SUCCESS)
     {

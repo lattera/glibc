@@ -1,3 +1,26 @@
+1998-02-17  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* math/libm.map: Move all symbols that are new in glibc 2.1 to
+	version GLIBC_2.1.
+
+1998-02-17  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c (inchar): Check c for being EOF before
+	trying to read another character.
+
+1998-02-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/nss_nis/nis-alias.c (_nss_nis_getaliasbyname_r): Convert
+	name to lowercase.
+
+	* nis/nss_nis/nis-network.c (_nss_nis_getnetbyname_r): Convert
+	name to lowercase, add test for big enough buffer.
+
+1998-02-03  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/alpha/rt_sigaction.S (rt_sigreturn):
+	Make compatible with older kernels. Patch by Richard Henderson.
+
 1998-02-17 15:10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (open_path): Use __xstat instead of stat.

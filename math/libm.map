@@ -16,16 +16,11 @@ GLIBC_2.0 {
     drem; dremf; dreml;
     erf; erff; erfl;
     erfc; erfcf; erfcl;
-    exp2; exp2f; exp2l;
     exp; expf; expl;
     expm1; expm1f; expm1l;
     fabs; fabsf; fabsl;
-    fdim; fdimf; fdiml;
     finite; finitef; finitel;
     floor; floorf; floorl;
-    fma; fmaf; fmal;
-    fmax; fmaxf; fmaxl;
-    fmin; fminf; fminl;
     fmod; fmodf; fmodl;
     frexp; frexpf; frexpl;
     gamma; gammaf; gammal;
@@ -40,38 +35,60 @@ GLIBC_2.0 {
     lgamma_r; lgammaf_r; lgammal_r;
     log10; log10f; log10l;
     log1p; log1pf; log1pl;
-    log2; log2f; log2l;
     log; logf; logl;
     logb; logbf; logbl;
     matherr;
     modf; modff; modfl;
-    nan; nanf; nanl;
-    nearbyint; nearbyintf; nearbyintl;
     nextafter; nextafterf; nextafterl;
-    nextafterx; nextafterxf; nextafterxl;
     pow; powf; powl;
     remainder; remainderf; remainderl;
-    remquo; remquof; remquol;
     rint; rintf; rintl;
+    scalb; scalbf; scalbl;
+    scalbn; scalbnf; scalbnl;
+    significand; significandf; significandl;
+    sin; sinf; sinl;
+    sinh; sinhf; sinhl;
+    sqrt; sqrtf; sqrtl;
+    tan; tanf; tanl;
+    tanh; tanhf; tanhl;
+    y0; y0f; y0l;
+    y1; y1f; y1l;
+    yn; ynf; ynl;
+
+
+    # global variables
+    _LIB_VERSION; signgam;
+
+    # functions used in inline functions or macros
+    __log1p;
+
+  local:
+    *;
+};
+
+
+GLIBC_2.1 {
+  global:
+
+    # mathematical functions
+    exp2; exp2f; exp2l;
+    fdim; fdimf; fdiml;
+    fma; fmaf; fmal;
+    fmax; fmaxf; fmaxl;
+    fmin; fminf; fminl;
+    log2; log2f; log2l;
+    nan; nanf; nanl;
+    nearbyint; nearbyintf; nearbyintl;
+    nextafterx; nextafterxf; nextafterxl;
+    remquo; remquof; remquol;
     lrint; lrintf; lrintl;
     llrint; llrintf; llrintl;
     round; roundf; roundl;
     lround; lroundf; lroundl;
     llround; llroundf; llroundl;
-    scalb; scalbf; scalbl;
-    scalbn; scalbnf; scalbnl;
     scalbln; scalblnf; scalblnl;
-    significand; significandf; significandl;
-    sin; sinf; sinl;
     sincos; sincosf; sincosl;
-    sinh; sinhf; sinhl;
-    sqrt; sqrtf; sqrtl;
-    tan; tanf; tanl;
-    tanh; tanhf; tanhl;
     trunc; truncf; truncl;
-    y0; y0f; y0l;
-    y1; y1f; y1l;
-    yn; ynf; ynl;
 
     # complex functions
     cabs; cabsf; cabsl;
@@ -105,19 +122,12 @@ GLIBC_2.0 {
     fesetenv; fesetexceptflag; fesetround;
     fetestexcept; feupdateenv;
 
-    # global variables
-    _LIB_VERSION; signgam;
-
     # functions used in inline functions or macros
+    __finite; __finitef; __finitel;
     __fpclassify; __fpclassifyf; __fpclassifyl;
     __signbit; __signbitf; __signbitl;
-    __finite; __finitef; __finitel;
-
-    __log1p;
 
     # symbols used in macros from sysdeps/powerpc/bits/fenv.h
     __fe_dfl_env; __fe_enabled_env; __fe_nonieee_env; __fe_nomask_env;
 
-  local:
-    *;
-};
+} GLIBC_2.0;
