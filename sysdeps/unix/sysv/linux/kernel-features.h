@@ -74,3 +74,8 @@
 #if __LINUX_KERNEL_VERSION >= 131408
 # define __ASSUME_SIOCGIFNAME		1
 #endif
+
+/* On x86 another `getrlimit' syscall was added in 2.3.25.  */
+#if __LINUX_KERNEL_VERSION >= 131865 && defined __i386__
+# define __ASSUME_NEW_GETRLIMIT_SYSCALL	1
+#endif
