@@ -14,6 +14,10 @@
 
 2002-12-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-locale1.  If buid-static is yes link
+	statically.
+	* tst-locale1.c: New file.
+
 	* pthread_cond_timedwait.c: Include <stdlib.h>.
 
 	* Makefile (tests): Add tst-fork2 and tst-fork3.

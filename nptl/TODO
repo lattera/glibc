@@ -8,17 +8,15 @@ sys_futex
 
 
 
-- in case a thread calls 'fork' the stacks of all the other threads in
-  the child process are currently list.  Instead they should be recovered
-  and added to the stack cache.  This can be done by adding another global
-  list (maybe one per cluster) which lists all running threads and which
-  is processed by the child branch of fork.  All the stacks are simply
-  added to the stack cache.
-
-
-
 - test with threaded process terminating and semadj (?) being applied
   only after all threads are gone
 
 
-- raise sends the signal to calling thread or process?
+- system() is cancelable.  What happens to the child process?  It probably
+  should be killed.
+
+  The signal handler setting is a process resource.  Setting and resetting
+  it from multiple thread must be possible.
+
+
+- the syscall wrapping code should really be in libc

@@ -132,7 +132,8 @@ tests = tst-mutex1 tst-mutex2 tst-mutex3 tst-mutex4 tst-mutex5 tst-mutex6 \
 	tst-exec1 tst-exec2 tst-exec3 \
 	tst-exit1 \
 	tst-stack1 \
-	tst-unload
+	tst-unload \
+	tst-locale1
 
 LDFLAGS-pthread.so = -Wl,--enable-new-dtags,-z,nodelete,-z,initfirst
 
@@ -154,6 +155,10 @@ CFLAGS-pt-initfini.s = -g0 -fPIC -fno-inline-functions
 endif
 
 include ../Rules
+
+ifeq ($(build-static),yes)
+tests-static += tst-locale1
+endif
 
 # What we install as libc.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
