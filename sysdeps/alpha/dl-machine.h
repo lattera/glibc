@@ -1,22 +1,22 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Richard Henderson <rth@tamu.edu>.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Richard Henderson <rth@tamu.edu>.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If
+   not, write to the Free Software Foundation, Inc.,
+   59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  */
 
 /* This was written in the absence of an ABI -- don't expect
    it to remain unchanged.  */
@@ -37,13 +37,13 @@ elf_machine_matches_host (Elf64_Word e_machine)
   return e_machine == EM_ALPHA;
 }
 
-/* Return the run-time address of the _GLOBAL_OFFSET_TABLE_.
-   Must be inlined in a function which uses global data.  */
-static inline Elf64_Addr *
-elf_machine_got (void)
+/* Return the link-time address of _DYNAMIC.  The multiple-got-capable
+   linker no longer allocates the first .got entry for this.  But not to
+   worry, no special tricks are needed.  */
+static inline Elf64_Addr
+elf_machine_dynamic (void)
 {
-  register Elf64_Addr gp __asm__("$29");
-  return (Elf64_Addr *)(gp - 0x8000);
+  return (Elf64_Addr) &_DYNAMIC;
 }
 
 /* Return the run-time load address of the shared object.  */
