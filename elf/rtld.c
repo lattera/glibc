@@ -150,6 +150,11 @@ static ElfW(Addr) _dl_start_final (void *arg,
 				   struct link_map *bootstrap_map_p);
 #endif
 
+/* These defined magically in the linker script.  */
+extern char _begin[] attribute_hidden;
+extern char _end[] attribute_hidden;
+
+
 #ifdef RTLD_START
 RTLD_START
 #else
@@ -180,8 +185,6 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p)
 #endif
 {
   ElfW(Addr) start_addr;
-  extern char _begin[] attribute_hidden;
-  extern char _end[] attribute_hidden;
 
   if (HP_TIMING_AVAIL)
     {
@@ -313,9 +316,17 @@ _dl_start (void *arg)
   bootstrap_map.l_tls_modid = 0;
 # endif
 
-  /* Get the dynamic linkers program header.  */
+  /* Get the dynamic linker's own program header.  First we need the ELF
+     file header.  The `_begin' symbol created by the linker script points
+     to it.  When we have something like GOTOFF relocs, we can use a plain
+     reference to find the runtime address.  Without that, we have to rely
+     on the `l_addr' value, which is not the value we want when prelinked.  */
+#ifdef DONT_USE_BOOTSTRAP_MAP
+  ehdr = (ElfW(Ehdr) *) &_begin;
+#else
   ehdr = (ElfW(Ehdr) *) bootstrap_map.l_addr;
-  phdr = (ElfW(Phdr) *) (bootstrap_map.l_addr + ehdr->e_phoff);
+#endif
+  phdr = (ElfW(Phdr) *) ((ElfW(Addr)) ehdr + ehdr->e_phoff);
   for (cnt = 0; cnt < ehdr->e_phnum; ++cnt)
     if (phdr[cnt].p_type == PT_TLS)
       {
