@@ -26,10 +26,9 @@
 #endif
 
 static void
-perror_internal (FILE *fp, const char *s)
+perror_internal (FILE *fp, const char *s, int errnum)
 {
   char buf[1024];
-  int errnum = errno;
   const char *colon;
   const char *errstring;
 
@@ -55,6 +54,7 @@ perror_internal (FILE *fp, const char *s)
 void
 perror (const char *s)
 {
+  int errnum = errno;
 #ifdef USE_IN_LIBIO
   FILE *fp;
   int fd = -1;
@@ -73,20 +73,20 @@ perror (const char *s)
 	__close (fd);
 
       /* Use standard error as is.  */
-      perror_internal (stderr, s);
+      perror_internal (stderr, s, errnum);
     }
   else
     {
       /* We don't have to do any special hacks regarding the file
 	 position.  Since the stderr stream wasn't used so far we just
 	 write to the descriptor.  */
-      perror_internal (fp, s);
+      perror_internal (fp, s, errnum);
       /* Close the stream.  */
       fclose (fp);
 
       ((_IO_FILE *) stderr)->_offset = _IO_pos_BAD;
     }
 #else
-  perror_internal (stderr, s);
+  perror_internal (stderr, s, errnum);
 #endif
 }

@@ -121,14 +121,20 @@ struct link_map _dl_rtld_map;
 struct libname_list _dl_rtld_libname;
 struct libname_list _dl_rtld_libname2;
 
+/* We expect less than a second for relocation.  */
+#ifdef HP_SMALL_TIMING_AVAIL
+# undef HP_TIMING_AVAIL
+# define HP_TIMING_AVAIL HP_SMALL_TIMING_AVAIL
+#endif
+
 /* Variable for statistics.  */
 #ifndef HP_TIMING_NONAVAIL
 static hp_timing_t rtld_total_time;
 static hp_timing_t relocate_time;
 static hp_timing_t load_time;
 #endif
-extern unsigned long int _dl_num_relocations;	/* in dl-lookup.c */
-extern unsigned long int _dl_num_cache_relocations;	/* in dl-lookup.c */
+extern unsigned long int _dl_num_relocations;		/* in dl-lookup.c */
+extern unsigned long int _dl_num_cache_relocations;	/* in dl-reloc.c */
 
 static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 				   hp_timing_t start_time);
@@ -136,7 +142,7 @@ static ElfW(Addr) _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
 #ifdef RTLD_START
 RTLD_START
 #else
-#error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
+# error "sysdeps/MACHINE/dl-machine.h fails to define RTLD_START"
 #endif
 
 static ElfW(Addr)
@@ -1506,7 +1512,7 @@ print_statistics (void)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), relocate_time);
-      cp = _itoa_word ((1000 * relocate_time) / rtld_total_time,
+      cp = _itoa_word ((1000ULL * relocate_time) / rtld_total_time,
 		       pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)
@@ -1535,7 +1541,7 @@ print_statistics (void)
     {
       char pbuf[30];
       HP_TIMING_PRINT (buf, sizeof (buf), load_time);
-      cp = _itoa_word ((1000 * load_time) / rtld_total_time,
+      cp = _itoa_word ((1000ULL * load_time) / rtld_total_time,
 		       pbuf + sizeof (pbuf), 10, 0);
       wp = pbuf;
       switch (pbuf + sizeof (pbuf) - cp)

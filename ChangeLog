@@ -1,3 +1,22 @@
+2001-08-31  Richard Henderson  <rth@redhat.com>
+
+	* elf/dl-support.c (_dl_cpuclock_offset): Protect with NONAVAIL.
+	(HP_TIMING_AVAIL): Set to HP_SMALL_TIMING_AVAIL if present.
+	* elf/rtld.c (HP_TIMING_AVAIL): Likewise.
+	(print_statistics): Make scalar unsigned long long.
+	* sysdeps/alpha/hp-timing.h: New file.
+
+2001-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdio-common/perror.c (perror): Save errno early, pass it
+	down to perror_internal.
+	(perror_internal): Add errnum argument.
+
+2001-08-31  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Remove unused code.
+	Don't add old memory content for R_ALPHA_REFQUAD.
+
 2001-08-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* crypt/md5-crypt.c (__md5_crypt_r): Compute used and required

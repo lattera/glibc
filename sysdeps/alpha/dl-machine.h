@@ -522,24 +522,7 @@ elf_machine_rela (struct link_map *map,
       else if (r_type == R_ALPHA_REFQUAD)
 	{
 	  void *reloc_addr_1 = reloc_addr;
-	  Elf64_Addr reloc_addr_val;
 
-	  /* Load value without causing unaligned trap.  */
-	  memcpy (&reloc_addr_val, reloc_addr_1, 8);
-	  sym_value += reloc_addr_val;
-	  if (map == &_dl_rtld_map)
-	    {
-	      /* Undo the relocation done here during bootstrapping.
-		 Now we will relocate anew, possibly using a binding
-		 found in the user program or a loaded library rather
-		 than the dynamic linker's built-in definitions used
-		 while loading those libraries.  */
-	      const Elf64_Sym *const dlsymtab
-		= (void *) D_PTR (map, l_info[DT_SYMTAB]);
-	      sym_value -= map->l_addr;
-	      sym_value -= dlsymtab[ELF64_R_SYM(reloc->r_info)].st_value;
-	      sym_value -= reloc->r_addend;
-	    }
 	  /* Store value without causing unaligned trap.  */
 	  memcpy (reloc_addr_1, &sym_value, 8);
 	}
