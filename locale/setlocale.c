@@ -36,7 +36,7 @@ Boston, MA 02111-1307, USA.  */
 #define DEFINE_CATEGORY(category, category_name, items, a, b, c, d) \
 extern const struct locale_data *_nl_current_##category;		      \
 extern const struct locale_data _nl_C_##category;			      \
-weak_symbol (_nl_current_##category) weak_symbol (_nl_C_##category)
+weak_extern (_nl_current_##category) weak_extern (_nl_C_##category)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 

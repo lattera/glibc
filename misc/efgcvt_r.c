@@ -60,7 +60,7 @@ fcvt_r (value, ndigit, decpt, sign, buf, len)
   return 0;
 }
 
-weak_symbol (floor) weak_symbol (log10) weak_symbol (fabs)
+weak_extern (floor) weak_extern (log10) weak_extern (fabs)
 
 int
 ecvt_r (value, ndigit, decpt, sign, buf, len)
@@ -70,7 +70,7 @@ ecvt_r (value, ndigit, decpt, sign, buf, len)
      size_t len;
 {
   double (*log10_function) (double) = &log10;
-  
+
   if (log10_function)
     {
       /* Use the reasonable code if -lm is included.  */

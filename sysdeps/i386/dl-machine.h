@@ -111,7 +111,7 @@ elf_machine_rel (struct link_map *map,
 	   RTLD_BOOTSTRAP) because rtld.c contains the common defn for
 	   _dl_rtld_map, which is incompatible with a weak decl in the same
 	   file.  */
-	weak_symbol (_dl_rtld_map);
+	weak_extern (_dl_rtld_map);
 	if (map == &_dl_rtld_map)
 	  /* Undo the relocation done here during bootstrapping.  Now we will
 	     relocate it anew, possibly using a binding found in the user
