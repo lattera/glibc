@@ -277,6 +277,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		PROJECTS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
 		ChangeLog.1[0-9] Makefile Makeconfig Makerules Rules	\
 		Make-dist MakeTAGS extra-lib.mk o-iterator.mk configure	\
+		extra-modules.mk					\
 		configure.in aclocal.m4 config.h.in config.make.in	\
 		config-name.in Makefile.in sysdep.h set-hooks.h		\
 		libc-symbols.h version.h shlib-versions rpm/Makefile	\

@@ -6,7 +6,7 @@
 	* elf/Makefile (CFLAGS-interp.c): Add -DNOT_IN_libc=1.
 	* csu/Makefile ($(objpfx)version-info.h): Pass -DNOT_IN_libc=1 to
 	compiler.
-	* Makefile (distribute): Add symbol-hacks.h.
+	* Makefile (distribute): Add symbol-hacks.h and extra-modules.mk.
 	* sysdeps/generic/symbol-hacks.h: New file.
 	* sysdeps/wordsize-32/symbol-hacks.h: New file.
 	* sysdeps/wordsize-32/divdi3.c: Define *_internal aliases for __divdi3,
