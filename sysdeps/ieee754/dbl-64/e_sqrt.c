@@ -52,8 +52,8 @@ double __ieee754_sqrt(double x) {
     rt3 = 3.12523626554518656309172508769531E-01;
   static const double big =  134217728.0, big1 =  134217729.0;
   double y,t,del,res,res1,hy,z,zz,p,hx,tx,ty,s;
-  mynumber a,b,c={{0,0}};
-  int4 n,k;
+  mynumber a,c={{0,0}};
+  int4 k;
 
   a.x=x;
   k=a.i[HIGH_HALF];
