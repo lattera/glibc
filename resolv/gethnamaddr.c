@@ -143,7 +143,7 @@ extern int h_errno;
 
 #ifdef DEBUG
 static void
-dprintf(msg, num)
+Dprintf(msg, num)
 	char *msg;
 	int num;
 {
@@ -155,7 +155,7 @@ dprintf(msg, num)
 	}
 }
 #else
-# define dprintf(msg, num) /*nada*/
+# define Dprintf(msg, num) /*nada*/
 #endif
 
 #define BOUNDED_INCR(x) \
@@ -429,13 +429,13 @@ getanswer(answer, anslen, qname, qtype)
 			bp += sizeof(align) - ((u_long)bp % sizeof(align));
 
 			if (bp + n >= &hostbuf[sizeof hostbuf]) {
-				dprintf("size (%d) too big\n", n);
+				Dprintf("size (%d) too big\n", n);
 				had_error++;
 				continue;
 			}
 			if (hap >= &h_addr_ptrs[MAXADDRS-1]) {
 				if (!toobig++) {
-					dprintf("Too many addresses (%d)\n",
+					Dprintf("Too many addresses (%d)\n",
 						MAXADDRS);
 				}
 				cp += n;
@@ -627,7 +627,7 @@ gethostbyname2(name, af)
 				    &buf.ptr)) < 0) {
 		if (buf.buf != origbuf)
 			free (buf.buf);
-		dprintf("res_nsearch failed (%d)\n", n);
+		Dprintf("res_nsearch failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyname2(name, af));
 		return (NULL);
@@ -729,7 +729,7 @@ gethostbyaddr(addr, len, af)
 	if (n < 0) {
 		if (buf.buf != orig_buf)
 			free (buf.buf);
-		dprintf("res_nquery failed (%d)\n", n);
+		Dprintf("res_nquery failed (%d)\n", n);
 		if (errno == ECONNREFUSED)
 			return (_gethtbyaddr(addr, len, af));
 		return (NULL);

@@ -1,5 +1,9 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* resolv/res_send.c: Compiling with DEBUG defined works again.
+	* resolv/gethnamaddr.c (dprintf): Renamed to Dprintf.  Adjust all
+	callers.
+
 	* resolv/tst-leaks.c (TIMEOUT): Define so that if no server is
 	available the process is not killed. [BZ #41]
 

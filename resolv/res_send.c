@@ -190,7 +190,7 @@ static int		send_dg(res_state, const u_char *, int,
 				int *, int *, u_char **);
 #ifdef DEBUG
 static void		Aerror(const res_state, FILE *, const char *, int,
-			       struct sockaddr_in);
+			       const struct sockaddr *);
 static void		Perror(const res_state, FILE *, const char *, int);
 #endif
 #ifdef _LIBC
@@ -576,9 +576,17 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 			} while (!done);
 		}
 
+#ifdef _LIBC
+		char tmpbuf[40];
+		Dprint(statp->options & RES_DEBUG,
+		       (stdout, ";; Querying server (# %d) address = %s\n",
+			ns + 1, inet_ntop(AF_INET6, &nsap->sin6_addr,
+					  tmpbuf, sizeof (tmpbuf))));
+#else
 		Dprint(statp->options & RES_DEBUG,
 		       (stdout, ";; Querying server (# %d) address = %s\n",
 			ns + 1, inet_ntoa(nsap->sin_addr)));
+#endif
 
 		if (v_circuit) {
 			/* Use VC; at most one attempt per server. */
@@ -610,7 +618,7 @@ __libc_res_nsend(res_state statp, const u_char *buf, int buflen,
 
 		DprintQ((statp->options & RES_DEBUG) ||
 			(statp->pfcode & RES_PRF_REPLY),
-			(stdout, ""),
+			(stdout, "%s", ""),
 			ans, (resplen > anssiz) ? anssiz : resplen);
 
 		/*
@@ -743,7 +751,8 @@ send_vc(res_state statp,
 		if (connect(statp->_vcsock, (struct sockaddr *)nsap,
 			    sizeof *nsap) < 0) {
 			*terrno = errno;
-			Aerror(statp, stderr, "connect/vc", errno, *nsap);
+			Aerror(statp, stderr, "connect/vc", errno,
+			       (struct sockaddr *) nsap);
 			res_nclose(statp);
 			return (0);
 		}
@@ -948,7 +957,8 @@ send_dg(res_state statp,
 		 */
 		if (connect(EXT(statp).nssocks[ns], (struct sockaddr *)nsap,
 			    sizeof *nsap) < 0) {
-			Aerror(statp, stderr, "connect(dg)", errno, *nsap);
+			Aerror(statp, stderr, "connect(dg)", errno,
+			       (struct sockaddr *) nsap);
 			res_nclose(statp);
 			return (0);
 		}
@@ -972,7 +982,8 @@ send_dg(res_state statp,
 	if (sendto(s, (char*)buf, buflen, 0,
 		   (struct sockaddr *)nsap, sizeof *nsap) != buflen)
 	{
-		Aerror(statp, stderr, "sendto", errno, *nsap);
+		Aerror(statp, stderr, "sendto", errno,
+		       (struct sockaddr *) nsap);
 		res_nclose(statp);
 		return (0);
 	}
@@ -1130,18 +1141,22 @@ send_dg(res_state statp,
 #ifdef DEBUG
 static void
 Aerror(const res_state statp, FILE *file, const char *string, int error,
-       struct sockaddr_in address)
+       const struct sockaddr *address)
 {
 	int save = errno;
 
 	if ((statp->options & RES_DEBUG) != 0) {
-		char tmp[sizeof "255.255.255.255"];
+		char tmp[sizeof "xxxx.xxxx.xxxx.255.255.255.255"];
 
 		fprintf(file, "res_send: %s ([%s].%u): %s\n",
 			string,
-			inet_ntop(address.sin_family, &address.sin_addr,
+			inet_ntop(address->sa_family, address->sa_data,
 				  tmp, sizeof tmp),
-			ntohs(address.sin_port),
+			(address->sa_family == AF_INET
+			 ? ntohs(((struct sockaddr_in *) address)->sin_port)
+			 : address->sa_family == AF_INET6
+			 ? ntohs(((struct sockaddr_in6 *) address)->sin6_port)
+			 : 0),
 			strerror(error));
 	}
 	__set_errno (save);
