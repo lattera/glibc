@@ -168,20 +168,21 @@ for ifc in mach mach4 \
 	   clock clock_priv host_priv host_security ledger lock_set \
 	   processor processor_set task thread_act vm_map \
 	   memory_object memory_object_default default_pager \
+	   i386/mach_i386 \
 	   ; do
   ac_safe=`echo "mach/${ifc}.defs" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/${ifc}.defs""... $ac_c" 1>&6
-echo "configure:175: checking for mach/${ifc}.defs" >&5
+echo "configure:176: checking for mach/${ifc}.defs" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 180 "configure"
+#line 181 "configure"
 #include "confdefs.h"
 #include <mach/${ifc}.defs>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:185: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:186: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -208,12 +209,12 @@ if test "x$mach_interface_list" = x; then
 fi
 
 echo $ac_n "checking for host_page_size in mach_host.defs""... $ac_c" 1>&6
-echo "configure:212: checking for host_page_size in mach_host.defs" >&5
+echo "configure:213: checking for host_page_size in mach_host.defs" >&5
 if eval "test \"`echo '$''{'libc_cv_mach_host_page_size'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 217 "configure"
+#line 218 "configure"
 #include "confdefs.h"
 #include <mach/mach_host.defs>
 EOF
@@ -239,17 +240,17 @@ fi
 
 ac_safe=`echo "mach/machine/ndr_def.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for mach/machine/ndr_def.h""... $ac_c" 1>&6
-echo "configure:243: checking for mach/machine/ndr_def.h" >&5
+echo "configure:244: checking for mach/machine/ndr_def.h" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 248 "configure"
+#line 249 "configure"
 #include "confdefs.h"
 #include <mach/machine/ndr_def.h>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:253: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:254: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -270,17 +271,17 @@ else
   echo "$ac_t""no" 1>&6
 ac_safe=`echo "machine/ndr_def.h" | sed 'y%./+-%__p_%'`
 echo $ac_n "checking for machine/ndr_def.h""... $ac_c" 1>&6
-echo "configure:274: checking for machine/ndr_def.h" >&5
+echo "configure:275: checking for machine/ndr_def.h" >&5
 if eval "test \"`echo '$''{'ac_cv_header_$ac_safe'+set}'`\" = set"; then
   echo $ac_n "(cached) $ac_c" 1>&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 279 "configure"
+#line 280 "configure"
 #include "confdefs.h"
 #include <machine/ndr_def.h>
 EOF
 ac_try="$ac_cpp conftest.$ac_ext >/dev/null 2>conftest.out"
-{ (eval echo configure:284: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
+{ (eval echo configure:285: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }
 ac_err=`grep -v '^ *+' conftest.out | grep -v "^conftest.${ac_ext}\$"`
 if test -z "$ac_err"; then
   rm -rf conftest*
@@ -303,3 +304,33 @@ fi
 
 fi
 
+
+echo $ac_n "checking for i386_io_perm_modify in mach_i386.defs""... $ac_c" 1>&6
+echo "configure:310: checking for i386_io_perm_modify in mach_i386.defs" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_i386_ioports'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 315 "configure"
+#include "confdefs.h"
+#include <mach/i386/mach_i386.defs>
+EOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "i386_io_perm_modify" >/dev/null 2>&1; then
+  rm -rf conftest*
+  libc_cv_mach_i386_ioports=yes
+else
+  rm -rf conftest*
+  libc_cv_mach_i386_ioports=no
+fi
+rm -f conftest*
+
+fi
+
+echo "$ac_t""$libc_cv_mach_i386_ioports" 1>&6
+if test $libc_cv_mach_i386_ioports = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_I386_IO_PERM_MODIFY 1
+EOF
+
+fi

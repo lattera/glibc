@@ -64,6 +64,14 @@ _hurd_select (int nfds,
     } d[nfds];
   sigset_t oset;
 
+  union typeword		/* Use this to avoid unkosher casts.  */
+    {
+      mach_msg_type_t type;
+      uint32_t word;
+    };
+  assert (sizeof (union typeword) == sizeof (mach_msg_type_t));
+  assert (sizeof (uint32_t) == sizeof (mach_msg_type_t));
+
   if (sigmask && __sigprocmask (SIG_SETMASK, sigmask, &oset))
     return -1;
 
@@ -298,15 +306,15 @@ _hurd_select (int nfds,
 	  struct
 	    {
 	      mach_msg_header_t head;
-	      mach_msg_type_t err_type;
+	      union typeword err_type;
 	      error_t err;
 	    } error;
 	  struct
 	    {
 	      mach_msg_header_t head;
-	      mach_msg_type_t err_type;
+	      union typeword err_type;
 	      error_t err;
-	      mach_msg_type_t result_type;
+	      union typeword result_type;
 	      int result;
 	    } success;
 #endif
@@ -321,15 +329,16 @@ _hurd_select (int nfds,
 	  /* We got a message.  Decode it.  */
 #define IO_SELECT_REPLY_MSGID (21012 + 100) /* XXX */
 #ifdef MACH_MSG_TYPE_BIT
-	  const mach_msg_type_t inttype =
-	    { MACH_MSG_TYPE_INTEGER_T, sizeof (MACH_MSG_TYPE_INTEGER_T) * 8,
-	      1, 1, 0, 0 };
+	  const union typeword inttype =
+	  { type:
+	    { MACH_MSG_TYPE_INTEGER_T, sizeof (integer_t) * 8, 1, 1, 0, 0 }
+	  };
 #endif
-	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID
-	      && msg.head.msgh_size >= sizeof msg.error
-	      && !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX)
+	  if (msg.head.msgh_id == IO_SELECT_REPLY_MSGID &&
+	      msg.head.msgh_size >= sizeof msg.error &&
+	      !(msg.head.msgh_bits & MACH_MSGH_BITS_COMPLEX) &&
 #ifdef MACH_MSG_TYPE_BIT
-	      && *(int *) &msg.error.err_type == *(int *) &inttype
+	      msg.error.err_type.word == inttype.word
 #endif
 	      )
 	    {
@@ -346,7 +355,7 @@ _hurd_select (int nfds,
 	      if (msg.error.err ||
 		  msg.head.msgh_size != sizeof msg.success ||
 #ifdef MACH_MSG_TYPE_BIT
-		  *(int *) &msg.success.result_type != *(int *) &inttype ||
+		  msg.success.result_type.word != inttype.word ||
 #endif
 		  (msg.success.result & SELECT_ALL) == 0)
 		{

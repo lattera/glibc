@@ -1,3 +1,27 @@
+2002-03-31  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdselect.c (_hurd_select): Fix
+	MACH_MSG_TYPE_INTEGER_T -> integer_t in sizeof.
+	Use a union rather than casts to compare mach_msg_type_t as int.
+
+2002-03-25  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdchdir.c (_hurd_change_directory_port_from_name): Don't
+	check off the end of NAME when it's shorter than 2 chars.
+	Reported by Ognyan Kulev <ogi@fmi.uni-sofia.bg>.
+
+2002-03-17  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/sys/io.h: New file.
+	* sysdeps/mach/hurd/i386/ioperm.c: New file.
+	* sysdeps/mach/hurd/i386/Dist: Add them.
+	* sysdeps/mach/hurd/i386/Versions
+	(libc: GLIBC_2.2.6): New set, add ioperm.
+	* sysdeps/mach/configure.in: New check to set HAVE_I386_IO_PERM_MODIFY.
+	(mach_interface_list): Check for mach_i386.defs.
+	* config.h.in (HAVE_I386_IO_PERM_MODIFY): #undef it.
+	* sysdeps/mach/configure: Regenerated.
+
 2002-03-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/fr.po: Update from translation team.
