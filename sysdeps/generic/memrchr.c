@@ -24,24 +24,24 @@
 #include <stdlib.h>
 
 #ifdef HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 #undef __ptr_t
-#if defined (__cplusplus) || (defined (__STDC__) && __STDC__)
+#if defined __cplusplus || (defined __STDC__ && __STDC__)
 # define __ptr_t void *
 #else /* Not C++ or ANSI C.  */
 # define __ptr_t char *
 #endif /* C++ or ANSI C.  */
 
-#if defined (_LIBC)
+#if defined _LIBC
 # include <string.h>
 # include <memcopy.h>
 #else
 # define reg_char char
 #endif
 
-#if defined (HAVE_LIMITS_H) || defined (_LIBC)
+#if defined HAVE_LIMITS_H || defined _LIBC
 # include <limits.h>
 #endif
 
@@ -53,8 +53,12 @@
 
 #include <sys/types.h>
 
+#undef __memrchr
 #undef memrchr
 
+#ifndef weak_alias
+# define __memrchr memrchr
+#endif
 
 /* Search no more than N bytes of S for C.  */
 __ptr_t
@@ -200,4 +204,6 @@ __memrchr (s, c_in, n)
 
   return 0;
 }
+#ifdef weak_alias
 weak_alias (__memrchr, memrchr)
+#endif
