@@ -205,7 +205,7 @@ __pthread_rwlock_init (pthread_rwlock_t *rwlock,
 
   return 0;
 }
-strong_alias (__pthread_init_lock, pthread_init_lock)
+strong_alias (__pthread_rwlock_init, pthread_rwlock_init)
 
 
 int

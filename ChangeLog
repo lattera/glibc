@@ -25,7 +25,7 @@
 	* dlfcn/dlfcn.h: Remove DL_CALL_FCT definition here.
 	* sysdeps/generic/bits/dlfcn.h: Define DL_CALL_FCT here.
 	* sysdeps/mips/bits/dlfcn.h: Define DL_CALL_FCT here.
-	* iconv/skeleton.c: If DL_CALL_FCT is not yet defined, add dumy
+	* iconv/skeleton.c: If DL_CALL_FCT is not yet defined, add dummy
 	definition here.
 
 	* sysdeps/generic/libc-start.c: Fix typo in comment.
