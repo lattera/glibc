@@ -1455,10 +1455,18 @@ start_threads (void)
   pthread_condattr_t condattr;
   pthread_condattr_init (&condattr);
 
-#if _POSIX_CLOCK_SELECTION >= 0 && _POSIX_MONOTONIC_CLOCK >= 0
+#if defined _POSIX_CLOCK_SELECTION && _POSIX_CLOCK_SELECTION >= 0 \
+    && defined _POSIX_MONOTONIC_CLOCK && _POSIX_MONOTONIC_CLOCK >= 0
   /* Determine whether the monotonous clock is available.  */
   struct timespec dummy;
-  if (clock_getres (CLOCK_MONOTONIC, &dummy) == 0
+  if (
+# if _POSIX_MONOTONIC_CLOCK == 0
+      sysconf (_SC_MONOTONIC_CLOCK) > 0 &&
+# endif
+# if _POSIX_CLOCK_SELECTION == 0
+      sysconf (_SC_CLOCK_SELECTION) > 0 &&
+# endif
+      clock_getres (CLOCK_MONOTONIC, &dummy) == 0
       && pthread_condattr_setclock (&condattr, CLOCK_MONOTONIC) == 0)
     timeout_clock = CLOCK_MONOTONIC;
 #endif

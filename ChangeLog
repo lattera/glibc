@@ -1,7 +1,11 @@
 2004-10-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* nscd/connections.c (start_threads): Use sysconf in case
+	_POSIX_CLOCK_SELECTION or _POSIX_MONOTONIC_CLOCK is not greater zero.
+
 	* nscd/Makefile (nscd-modules): Add gai.
 	* nscd/gai.c: New file.
+	* nscd/nscd.c: Remove getaddrinfo stub definition.
 
 	* assert/assert.h: Give up on using __builtin_expect.
 
