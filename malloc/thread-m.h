@@ -35,29 +35,21 @@
 
 #ifdef PTHREAD_MUTEX_INITIALIZER
 
-typedef pthread_t thread_id;
-
 /* mutex */
-typedef pthread_mutex_t	mutex_t;
-
-#define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
+__libc_lock_define (typedef, mutex_t)
 
 /* Even if not linking with libpthread, ensure usability of mutex as
    an `in use' flag, see also the NO_THREADS case below.  Assume
    pthread_mutex_t is at least one int wide.  */
 
 #define mutex_init(m)		\
-   (__pthread_mutex_init != NULL \
-    ? __pthread_mutex_init (m, NULL) : (*(int *)(m) = 0))
+  __libc_lock_init (*m)
 #define mutex_lock(m)		\
-   (__pthread_mutex_lock != NULL \
-    ? __pthread_mutex_lock (m) : ((*(int *)(m) = 1), 0))
+  __libc_lock_lock (*m)
 #define mutex_trylock(m)	\
-   (__pthread_mutex_trylock != NULL \
-    ? __pthread_mutex_trylock (m) : (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
+  __libc_lock_trylock (*m)
 #define mutex_unlock(m)		\
-   (__pthread_mutex_unlock != NULL \
-    ? __pthread_mutex_unlock (m) : (*(int*)(m) = 0))
+  __libc_lock_unlock (*m)
 
 #define thread_atfork(prepare, parent, child) \
    (__pthread_atfork != NULL ? __pthread_atfork(prepare, parent, child) : 0)
@@ -114,8 +106,6 @@ __libc_tsd_define (static, MALLOC)	/* declaration/common definition */
 
 #include <pthread.h>
 
-typedef pthread_t thread_id;
-
 /* mutex */
 #if (defined __i386__ || defined __x86_64__) && defined __GNUC__ && \
     !defined USE_NO_SPINLOCKS
@@ -128,7 +118,6 @@ typedef struct {
   int pad0_;
 } mutex_t;
 
-#define MUTEX_INITIALIZER          { 0 }
 #define mutex_init(m)              ((m)->lock = 0)
 static inline int mutex_lock(mutex_t *m) {
   int cnt = 0, r;
@@ -174,7 +163,6 @@ static inline int mutex_unlock(mutex_t *m) {
 /* Normal pthread mutex.  */
 typedef pthread_mutex_t mutex_t;
 
-#define MUTEX_INITIALIZER          PTHREAD_MUTEX_INITIALIZER
 #define mutex_init(m)              pthread_mutex_init(m, NULL)
 #define mutex_lock(m)              pthread_mutex_lock(m)
 #define mutex_trylock(m)           pthread_mutex_trylock(m)
@@ -218,9 +206,6 @@ typedef pthread_key_t tsd_key_t;
 
 #include <thread.h>
 
-typedef thread_t thread_id;
-
-#define MUTEX_INITIALIZER          { 0 }
 #define mutex_init(m)              mutex_init(m, USYNC_THREAD, NULL)
 
 /*
@@ -244,11 +229,8 @@ typedef void *tsd_key_t[256];
 #include <sys/prctl.h>
 #include <abi_mutex.h>
 
-typedef int thread_id;
-
 typedef abilock_t mutex_t;
 
-#define MUTEX_INITIALIZER          { 0 }
 #define mutex_init(m)              init_lock(m)
 #define mutex_lock(m)              (spin_lock(m), 0)
 #define mutex_trylock(m)           acquire_lock(m)
@@ -270,8 +252,6 @@ int tsd_key_next;
 
 #ifdef NO_THREADS /* No threads, provide dummy macros */
 
-typedef int thread_id;
-
 /* The mutex functions used to do absolutely nothing, i.e. lock,
    trylock and unlock would always just return 0.  However, even
    without any concurrently active threads, a mutex can be used
@@ -280,7 +260,6 @@ typedef int thread_id;
    be based on atomic test-and-set operations, for example. */
 typedef int mutex_t;
 
-#define MUTEX_INITIALIZER          0
 #define mutex_init(m)              (*(m) = 0)
 #define mutex_lock(m)              ((*(m) = 1), 0)
 #define mutex_trylock(m)           (*(m) ? 1 : ((*(m) = 1), 0))

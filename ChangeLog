@@ -1,3 +1,13 @@
+2002-12-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/thread-m.h: Remove thread_id type and MUTEX_INITIALIZER
+	definitions.  Not needed.
+	[_LIBC]: Use definitions from libc-lock.h instead of referencing
+	pthread routines directly.
+	* malloc/arena.c (ptmalloc_unlock_all2): Don't add (void) to
+	mutex_init calls.
+	(arena_get2): Don't look at return value of mutex_lock.
+
 2002-12-11  Roland McGrath  <roland@redhat.com>
 
 	* csu/Makefile ($(objpfx)elf-init.oS): New target, just clone
