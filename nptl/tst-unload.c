@@ -1,5 +1,5 @@
 /* Tests for non-unloading of libpthread.
-   Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2003, 2004 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2000.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@
 static int
 do_test (void)
 {
-  void *p = dlopen (PREFIX LIBPTHREAD_SO, RTLD_LAZY);
+  void *p = dlopen (LIBPTHREAD_SO, RTLD_LAZY);
 
   if (p == NULL)
     {

@@ -238,6 +238,9 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-backtrace1 \
 	tst-oddstacklimit
 
+# Files which must not be linked with libpthread.
+tests-nolibpthread = tst-unload
+
 # This sets the stack resource limit to 1023kb, which is not a multiple
 # of the page size since every architecture's page size is > 1k.
 tst-oddstacklimit-ENV = ; ulimit -s 1023;
@@ -375,8 +378,6 @@ endif
 # function frequently to get a thread-specific handle.
 CFLAGS-pthread_self.os += -fomit-frame-pointer
 
-CFLAGS-tst-unload.c += -DPREFIX=\"$(objpfx)\"
-
 # Run the cancellation and cleanup tests also for the modern, exception-based
 # implementation.  For this we have to pass the -fexceptions parameter.
 CFLAGS-tst-cancelx2.c += -fexceptions
@@ -484,7 +485,7 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
-  $(filter-out $(tests-static) $(tests-reverse), \
+  $(filter-out $(tests-static) $(tests-reverse) $(tests-nolibpthread), \
     $(tests) $(test-srcs))): $(objpfx)libpthread.so \
 			     $(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so

@@ -1,5 +1,11 @@
 2004-02-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests-nolibpthread): Add tst-unload.  Don't link with
+	libpthread for the files in this list.
+	(CFLAGS-tst-unload): Removed.
+	* tst-unload.c (do_test): Don't use complete path for
+	LIBPHREAD_SO.
+
 	* Makefile: Define sonames for tst-tls5mod, tst-_res1mod1, and
 	tst-_res1mod2.
 
