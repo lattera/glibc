@@ -1,5 +1,10 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile: Add rules to build and run tst-pathopt.
+	* elf/tst-pathopt.c: New file.
+	* elf/tst-pathopt.sh: New file.
+	* elf/pathoptobj.c: New file.
+
 	* elf/elf.h (SHN_XINDEX): Define.
 
 2000-10-28  Ulrich Drepper  <drepper@redhat.com>

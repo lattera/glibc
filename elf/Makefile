@@ -53,14 +53,15 @@ distribute	:= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		   nodlopenmod.c nodelete.c nodelmod1.c nodelmod2.c \
 		   nodelmod3.c nodelmod4.c nodlopen.c dl-osinfo.h \
 		   reldepmod1.c reldepmod2.c reldepmod3.c reldepmod4.c \
-		   nextmod1.c nextmod2.c \
+		   nextmod1.c nextmod2.c pathoptobj.c \
 		   neededobj1.c neededobj2.c neededobj3.c neededobj4.c \
 		   unload2mod.c unload2dep.c ltglobmod1.c ltglobmod2.c
 
 include ../Makeconfig
 
 before-compile  = $(objpfx)trusted-dirs.h
-generated	:= trusted-dirs.h trusted-dirs.st
+generated	:= trusted-dirs.h trusted-dirs.st for-renamed/renamed.so
+generated-dirs	:= for-renamed
 
 ifeq ($(versioning),yes)
 ld-map		= $(common-objpfx)ld.map
@@ -99,6 +100,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	reldep reldep2 reldep3 next $(tests-nodelete-$(have-z-nodelete)) \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 unload2 lateglobal
+test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
 tests-nodlopen-yes = nodlopen
@@ -110,7 +112,7 @@ modules-names = testobj1 testobj2 testobj3 testobj4 testobj5 testobj6 \
 		$(modules-nodlopen-$(have-z-nodlopen)) filtmod1 filtmod2 \
 		reldepmod1 reldepmod2 reldepmod3 reldepmod4 nextmod1 nextmod2 \
 		neededobj1 neededobj2 neededobj3 neededobj4 \
-		unload2mod unload2dep ltglobmod1 ltglobmod2
+		unload2mod unload2dep ltglobmod1 ltglobmod2 pathoptobj
 modules-vis-yes = vismod1 vismod2 vismod3
 modules-nodelete-yes = nodelmod1 nodelmod2 nodelmod3 nodelmod4
 modules-nodlopen-yes = nodlopenmod
@@ -239,6 +241,8 @@ CFLAGS-cache.c = $(SYSCONF-FLAGS)
 
 test-modules = $(addprefix $(objpfx),$(addsuffix .so,$(strip $(modules-names))))
 generated += $(addsuffix .so,$(strip $(modules-names)))
+
+tests: $(objpfx)tst-pathopt.out
 
 $(objpfx)testobj1.so: $(libdl)
 $(objpfx)testobj1_1.so: $(objpfx)testobj1.so $(libdl)
@@ -371,3 +375,8 @@ $(objpfx)unload2.out: $(objpfx)unload2mod.so $(objpfx)unload2dep.so
 
 $(objpfx)lateglobal: $(libdl)
 $(objpfx)lateglobal.out: $(objpfx)ltglobmod1.so $(objpfx)ltglobmod2.so
+
+$(objpfx)tst-pathopt: $(libdl)
+$(objpfx)tst-pathopt.out: tst-pathopt.sh $(objpfx)tst-pathopt \
+			  $(objpfx)pathoptobj.so
+	$(SHELL) -e $< $(common-objpfx)
