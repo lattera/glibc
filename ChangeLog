@@ -1,5 +1,7 @@
 2002-08-25  Roland McGrath  <roland@redhat.com>
 
+	* manual/llio.texi (Access Modes): Fix typos in O_READ/O_WRITE defns.
+
 	* sysdeps/generic/utmp_file.c (LOCK_FILE): Check for error from fcntl.
 	(getutent_r_file, internal_getut_r): Updated all callers.
 	(getutline_r_file, pututline_file, updwtmp_file): Likewise.
