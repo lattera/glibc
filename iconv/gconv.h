@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -100,7 +100,7 @@ struct __gconv_step_data
 {
   unsigned char *__outbuf;    /* Output buffer for this step.  */
   unsigned char *__outbufend; /* Address of first byte after the output
-				 buffer.*/
+				 buffer.  */
 
   /* Is this the last module in the chain.  */
   int __is_last;
@@ -114,7 +114,7 @@ struct __gconv_step_data
   int __internal_use;
 
   __mbstate_t *__statep;
-  __mbstate_t __state;	/* This element should not be used directly by
+  __mbstate_t __state;	/* This element must not be used directly by
 			   any module; always use STATEP!  */
 };
 

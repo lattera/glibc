@@ -261,6 +261,9 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			      data->__statep, step->__data, &converted
 			      EXTRA_LOOP_ARGS);
 
+	  /* We finished one use of the loops.  */
+	  ++data->__invocation_counter;
+
 	  /* If this is the last step leave the loop, there is nothing
              we can do.  */
 	  if (data->__is_last)
@@ -324,6 +327,11 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 			 rerun.  */
 		      assert (outbuf == outerr);
 		      assert (nstatus == __GCONV_FULL_OUTPUT);
+
+		      /* If we haven't consumed a single byte decrement
+			 the invocation counter.  */
+		      if (outbuf == outstart)
+			--data->__invocation_counter;
 #endif	/* reset input buffer */
 		    }
 
@@ -336,9 +344,6 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		if (status == __GCONV_FULL_OUTPUT)
 		  status = __GCONV_OK;
 	    }
-
-	  /* We finished one use of the loops.  */
-	  ++data->__invocation_counter;
 	}
       while (status == __GCONV_OK);
 

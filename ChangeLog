@@ -1,3 +1,18 @@
+2000-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/skeleton.c: Increment __invocation_counter in inner loop
+	since modules depend on it counting the number of times the conversion
+	function got called.
+
+	* iconv/gconv_open.c: Optimize loop to setup step data structure.
+
+	* iconv/gconv.h: Pretty print.
+
+2000-03-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/wordexp-test.c: Correct one of the tests added in the last
+	change.  Really get the root passwd entry to check again ~root.
+
 2000-03-10  Andreas Jaeger  <aj@suse.de>
 
 	* manual/filesys.texi (Working Directory): Fix last patch.

@@ -1,5 +1,5 @@
 /* Find matching transformation algorithms and initialize steps.
-   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -57,11 +57,13 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 
 	  /* Call all initialization functions for the transformation
 	     step implementations.  */
-	  for (cnt = 0; cnt < nsteps; ++cnt)
+	  for (cnt = 0; cnt < nsteps - 1; ++cnt)
 	    {
+	      size_t size;
+
 	      /* If this is the last step we must not allocate an
 		 output buffer.  */
-	      result->__data[cnt].__is_last = cnt == nsteps - 1;
+	      result->__data[cnt].__is_last = 0;
 
 	      /* Reset the counter.  */
 	      result->__data[cnt].__invocation_counter = 0;
@@ -73,21 +75,23 @@ __gconv_open (const char *toset, const char *fromset, __gconv_t *handle,
 	      result->__data[cnt].__statep = &result->__data[cnt].__state;
 
 	      /* Allocate the buffer.  */
-	      if (!result->__data[cnt].__is_last)
-		{
-		  size_t size = (GCONV_NCHAR_GOAL
-				 * steps[cnt].__max_needed_to);
+	      size = (GCONV_NCHAR_GOAL * steps[cnt].__max_needed_to);
 
-		  result->__data[cnt].__outbuf = (char *) malloc (size);
-		  if (result->__data[cnt].__outbuf == NULL)
-		    {
-		      res = __GCONV_NOMEM;
-		      break;
-		    }
-		  result->__data[cnt].__outbufend =
-		    result->__data[cnt].__outbuf + size;
+	      result->__data[cnt].__outbuf = (char *) malloc (size);
+	      if (result->__data[cnt].__outbuf == NULL)
+		{
+		  res = __GCONV_NOMEM;
+		  break;
 		}
+	      result->__data[cnt].__outbufend =
+		result->__data[cnt].__outbuf + size;
 	    }
+
+	  /* Now handle the last entry.  */
+	  result->__data[cnt].__is_last = 1;
+	  result->__data[cnt].__invocation_counter = 0;
+	  result->__data[cnt].__internal_use = 0;
+	  result->__data[cnt].__statep = &result->__data[cnt].__state;
 	}
     }
 
