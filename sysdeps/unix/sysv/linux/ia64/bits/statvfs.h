@@ -66,7 +66,7 @@ struct statvfs64
 #endif
 
 /* Definitions for the flag in `f_flag'.  These definitions should be
-   kept in sync which the definitions in <sys/mount.h>.  */
+   kept in sync with the definitions in <sys/mount.h>.  */
 enum
 {
   ST_RDONLY = 1,		/* Mount read-only.  */

@@ -404,6 +404,9 @@ double: 1
 idouble: 1
 
 # erfc
+Test "erfc (0.75) == 0.288844366346484868401062165408589223":
+float: 1
+ifloat: 1
 Test "erfc (1.25) == 0.0770998717435417698634765188027188596":
 ildouble: 1
 ldouble: 1
@@ -493,6 +496,9 @@ float: 1
 ifloat: 1
 ildouble: 1
 ldouble: 1
+Test "j1 (0.75) == 0.349243602174862192523281016426251335":
+double: 1
+idouble: 1
 Test "j1 (2.0) == 0.576724807756873387202448242269137087":
 double: 1
 idouble: 1
@@ -705,8 +711,8 @@ ildouble: 1
 ldouble: 1
 ifloat: 1
 float: 1
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 Test "y0 (10.0) == 0.0556711672835993914244598774101900481":
 float: 1
 ifloat: 1
@@ -762,8 +768,8 @@ ildouble: 1
 ldouble: 1
 ifloat: 1
 float: 1
-double: 1
-idouble: 1
+double: 2
+idouble: 2
 Test "yn (0, 1.5) == 0.382448923797758843955068554978089862":
 ifloat: 1
 float: 1
@@ -818,13 +824,15 @@ ifloat: 1
 ildouble: 4
 ldouble: 4
 Test "yn (10, 1.0) == -121618014.278689189288130426667971145":
-float: 1
-ifloat: 1
+double: 1
+float: 2
+idouble: 1
+ifloat: 2
 Test "yn (10, 10.0) == -0.359814152183402722051986577343560609":
 double: 1
-float: 1
+float: 3
 idouble: 1
-ifloat: 1
+ifloat: 3
 Test "yn (10, 2.0) == -129184.542208039282635913145923304214":
 float: 1
 ifloat: 1
@@ -833,9 +841,14 @@ ildouble: 1
 ldouble: 1
 Test "yn (3, 0.75) == -12.9877176234475433186319774484809207":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 2
 ldouble: 2
+Test "yn (3, 2.0) == -1.12778377684042778608158395773179238":
+float: 1
+ifloat: 1
 Test "yn (3, 10.0) == -0.251362657183837329779204747654240998":
 double: 1
 float: 1
@@ -1063,7 +1076,9 @@ idouble: 1
 
 Function: "erfc":
 double: 1
+float: 1
 idouble: 1
+ifloat: 1
 ildouble: 1
 ldouble: 1
 
@@ -1149,9 +1164,9 @@ ildouble: 1
 ldouble: 1
 
 Function: "y0":
-double: 1
+double: 2
 float: 1
-idouble: 1
+idouble: 2
 ifloat: 1
 ildouble: 1
 ldouble: 1
@@ -1166,9 +1181,9 @@ ldouble: 1
 
 Function: "yn":
 double: 2
-float: 2
+float: 3
 idouble: 2
-ifloat: 2
+ifloat: 3
 ildouble: 4
 ldouble: 4
 

@@ -1,3 +1,19 @@
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/i386/fpu/libm-test-ulps: Add some ulps for AMD K7.
+
+	* rt/Makefile (tests): Don't add tst-aio* in a single-threaded build.
+
+	* sysdeps/unix/bsd/sun/sunos4/bits/utsname.h: Test for _SYS_UTSNAME_H,
+	not _UTSNAME_H.
+	* sysdeps/unix/bsd/ultrix4/bits/utsname.h: Likewise.
+
+	* sysdeps/generic/bits/stropts.h: Protect against direct inclusion.
+	* sysdeps/generic/bits/ustat.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/bits/statvfs.h (ST_NODIRATIME): Set to
+	2048.
+
 2002-07-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/elf/initfini.c (__asm__): Call call_gmon_start.
