@@ -12,7 +12,7 @@ understand what you are undertaking before you begin.
 If you have any questions you think should be answered in this document,
 please let me know.
 
-						  --drepper@cygnus.com
+						  --drepper@redhat.com
 
 ? Compiling glibc
 
@@ -649,7 +649,7 @@ files to the XPG4 form:
 
 -----------------------------------------------------------------------
 # Change catalog source in Linux specific format to standard XPG format.
-# Ulrich Drepper <drepper@cygnus.com>, 1996.
+# Ulrich Drepper <drepper@redhat.com>, 1996.
 #
 /^\$ #/ {
   h
