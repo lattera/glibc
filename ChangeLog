@@ -1,3 +1,7 @@
+2004-01-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions.def: Add GLIBC_2.3.4.
+
 2004-01-15  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/alpha/sysdep.h: Revert last change.
@@ -46,7 +50,7 @@
 	versions for setcontext, getcontext, swapcontext, and makecontext.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S
 	(__getcontext):  Upgrade to save Altivec regs and version GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_getcontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)] (__novec_getcontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/makecontext.S
 	(__makecontext): Use parm save area instead of compiler_dw to hold
@@ -54,11 +58,11 @@
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S
 	(__setcontext):  Upgrade to restore Altivec regs and version
 	GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_setcontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)] (__novec_setcontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S
 	(__swapcontext): Upgrade to swap Altivec regs and version GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)](__novec_swapcontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3, GLIBC_2_3_4)] (__novec_swapcontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/ucontext_i.h
 	(SIGCONTEXT_V_REGS_PTR, SIGCONTEXT_V_RESERVE): Defined.
@@ -70,17 +74,17 @@
 	versions for setcontext, getcontext, swapcontext, and makecontext.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/getcontext.S
 	(__getcontext):  Upgrade to save Altivec regs and version GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_getcontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)] (__novec_getcontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/makecontext.S
 	(__makecontext): Upgrade to align for Altivec regs and version
 	GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_makecontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)] (__novec_makecontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/setcontext.S
 	(__setcontext):  Upgrade to restore Altivec regs and version
 	GLIBC_2_3_4.
-	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)](__novec_setcontext):
+	[SHLIB_COMPAT (libc, GLIBC_2_3_3, GLIBC_2_3_4)] (__novec_setcontext):
 	Compatible with GLIBC_2.3.3 release.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
 	(__swapcontext): Upgrade to swap Altivec regs and version GLIBC_2_3_4.
