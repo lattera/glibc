@@ -36,6 +36,20 @@ This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
 PARTICULAR PURPOSE.");
 }
+
+#ifdef HAVE_ELF
+/* This function is the entry point for the shared object.
+   Running the library as a program will get here.  */
+
+#include <stdlib.h>
+
+void
+__libc_main (void)
+{
+  __libc_print_version ();
+  exit (0);
+}
+#endif
 
 /*
    Local Variables:

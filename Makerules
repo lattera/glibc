@@ -491,7 +491,7 @@ endef
 # since we define our own `.init' section specially.
 LDFLAGS-c.so = -nostdlib -nostartfiles
 # Give libc.so an entry point and make it directly runnable itself.
-LDFLAGS-c.so += -e __libc_print_version
+LDFLAGS-c.so += -e __libc_main
 # Use our own special initializer and finalizer files for libc.so.
 elfobjdir := $(firstword $(objdir) $(patsubst ../$(subdir),.,$(..)elf))
 $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \

@@ -1,3 +1,12 @@
+Tue Jun 11 23:23:30 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (LDFLAGS-c.so): Use __libc_main instead of
+	__libc_print_version as entry point for shared object.
+	* version.c [HAVE_ELF] (__libc_main): New function.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Relocate l_entry with the
+	load address.
+
 Tue Jun 11 19:13:04 1996  Richard Henderson  <rth@tamu.edu>
 
 	* elf/dl-close.c: Include <string.h> for memcpy.

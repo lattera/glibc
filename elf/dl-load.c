@@ -357,6 +357,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
     l->l_phdr = (void *) ((const ElfW(Ehdr) *) l->l_addr)->e_phoff;
   (ElfW(Addr)) l->l_phdr += l->l_addr;
 
+  l->l_entry += l->l_addr;
+
   elf_get_dynamic_info (l->l_ld, l->l_info);
   if (l->l_info[DT_HASH])
     _dl_setup_hash (l);
