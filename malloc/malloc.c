@@ -280,6 +280,9 @@ extern "C" {
 /* For uintptr_t.  */
 #include <stdint.h>
 
+/* For va_arg, va_start, va_end.  */
+#include <stdarg.h>
+
 /*
   Debugging:
 
@@ -1498,6 +1501,7 @@ static size_t   mUSABLe(Void_t*);
 static void     mSTATs(void);
 static int      mALLOPt(int, int);
 static struct mallinfo mALLINFo(mstate);
+static void malloc_printf_nc(int action, const char *template, ...);
 
 static Void_t* internal_function mem2mem_check(Void_t *p, size_t sz);
 static int internal_function top_check(void);
@@ -1966,6 +1970,9 @@ typedef struct malloc_chunk* mbinptr;
 #define unlink(P, BK, FD) {                                            \
   FD = P->fd;                                                          \
   BK = P->bk;                                                          \
+  if (__builtin_expect (FD->bk != P || BK->fd != P, 0))                \
+    malloc_printf_nc (check_action,                                    \
+		      "corrupted double-linked list at %p!\n", P);     \
   FD->bk = BK;                                                         \
   BK->fd = FD;                                                         \
 }
@@ -2325,6 +2332,15 @@ __malloc_ptr_t weak_variable (*__memalign_hook)
  __MALLOC_P ((size_t __alignment, size_t __size, const __malloc_ptr_t))
      = memalign_hook_ini;
 void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
+
+
+/* ---------------- Error behavior ------------------------------------ */
+
+#ifndef DEFAULT_CHECK_ACTION
+#define DEFAULT_CHECK_ACTION 3
+#endif
+
+static int check_action = DEFAULT_CHECK_ACTION;
 
 
 /* ------------------- Support for multiple arenas -------------------- */
@@ -4164,21 +4180,7 @@ _int_free(mstate av, Void_t* mem)
        here by accident or by "design" from some intruder.  */
     if (__builtin_expect ((uintptr_t) p > (uintptr_t) -size, 0))
       {
-	if (check_action & 1)
-	  {
-#ifdef _LIBC
-	    _IO_flockfile (stderr);
-	    int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-	    ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
-	    fprintf (stderr, "free(): invalid pointer %p!\n", mem);
-#ifdef _LIBC
-	    ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-	    _IO_funlockfile (stderr);
-#endif
-	  }
-	if (check_action & 2)
-	  abort ();
+	malloc_printf_nc (check_action, "free(): invalid pointer %p!\n", mem);
 	return;
       }
 
@@ -5403,6 +5405,35 @@ int mALLOPt(param_number, value) int param_number; int value;
 
 */
 
+
+/* Helper code.  */
+
+static void
+malloc_printf_nc(int action, const char *template, ...)
+{
+  if (action & 1)
+    {
+#ifdef _LIBC
+      _IO_flockfile (stderr);
+      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
+      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+#endif
+
+      va_list ap;
+      va_start (ap, template);
+
+      vfprintf (stderr, template, ap);
+
+      va_end (ap);
+
+#ifdef _LIBC
+      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
+      _IO_funlockfile (stderr);
+#endif
+    }
+  if (action & 2)
+    abort ();
+}
 
 #ifdef _LIBC
 # include <sys/param.h>

@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -19,10 +19,6 @@
    Boston, MA 02111-1307, USA.  */
 
 /* $Id$ */
-
-#ifndef DEFAULT_CHECK_ACTION
-#define DEFAULT_CHECK_ACTION 1
-#endif
 
 /* What to do if the standard debugging hooks are in place and a
    corrupt pointer is detected: do nothing (0), print an error message
@@ -71,9 +67,6 @@ memalign_hook_ini(alignment, sz, caller)
   return public_mEMALIGn(alignment, sz);
 }
 
-
-static int check_action = DEFAULT_CHECK_ACTION;
-
 /* Whether we are using malloc checking.  */
 static int using_malloc_checking;
 
@@ -106,18 +99,7 @@ __malloc_check_init()
   __realloc_hook = realloc_check;
   __memalign_hook = memalign_check;
   if(check_action & 1)
-    {
-#ifdef _LIBC
-      _IO_flockfile (stderr);
-      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
-      fprintf(stderr, "malloc: using debugging hooks\n");
-#ifdef _LIBC
-      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-      _IO_funlockfile (stderr);
-#endif
-    }
+    malloc_printf_nc (1, "malloc: using debugging hooks\n");
 }
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
@@ -234,21 +216,7 @@ top_check()
   if((char*)t + chunksize(t) == mp_.sbrk_base + main_arena.system_mem ||
      t == initial_top(&main_arena)) return 0;
 
-  if(check_action & 1)
-    {
-#ifdef _LIBC
-      _IO_flockfile (stderr);
-      int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-      ((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
-      fprintf(stderr, "malloc: top chunk is corrupt\n");
-#ifdef _LIBC
-      ((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-      _IO_funlockfile (stderr);
-#endif
-    }
-  if(check_action & 2)
-    abort();
+  malloc_printf_nc (check_action, "malloc: top chunk is corrupt\n");
 
   /* Try to set up a new top chunk. */
   brk = MORECORE(0);
@@ -299,21 +267,8 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   p = mem2chunk_check(mem);
   if(!p) {
     (void)mutex_unlock(&main_arena.mutex);
-    if(check_action & 1)
-      {
-#ifdef _LIBC
-	_IO_flockfile (stderr);
-	int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-	((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
-	fprintf(stderr, "free(): invalid pointer %p!\n", mem);
-#ifdef _LIBC
-	((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-	_IO_funlockfile (stderr);
-#endif
-      }
-    if(check_action & 2)
-      abort();
+
+    malloc_printf_nc(check_action, "free(): invalid pointer %p!\n", mem);
     return;
   }
 #if HAVE_MMAP
@@ -347,21 +302,7 @@ realloc_check(oldmem, bytes, caller)
   oldp = mem2chunk_check(oldmem);
   (void)mutex_unlock(&main_arena.mutex);
   if(!oldp) {
-    if(check_action & 1)
-      {
-#ifdef _LIBC
-	_IO_flockfile (stderr);
-	int old_flags2 = ((_IO_FILE *) stderr)->_flags2;
-	((_IO_FILE *) stderr)->_flags2 |= _IO_FLAGS2_NOTCANCEL;
-#endif
-	fprintf(stderr, "realloc(): invalid pointer %p!\n", oldmem);
-#ifdef _LIBC
-	((_IO_FILE *) stderr)->_flags2 |= old_flags2;
-	_IO_funlockfile (stderr);
-#endif
-      }
-    if(check_action & 2)
-      abort();
+    malloc_printf_nc(check_action, "realloc(): invalid pointer %p!\n", oldmem);
     return malloc_check(bytes, NULL);
   }
   oldsize = chunksize(oldp);
