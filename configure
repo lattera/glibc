@@ -1834,7 +1834,7 @@ m68k)		base_machine=m68k machine=m68k/m68020 ;;
 m88???)		base_machine=m88k machine=m88k/$machine ;;
 m88k)		base_machine=m88k machine=m88k/m88100 ;;
 mips64*)	base_machine=mips64
-		case "$CC $CPPFLAGS $CFLAGS " in
+		case "$CC $CFLAGS $CPPFLAGS " in
 		*" -mabi=n32 "*) mips_cc_abi=n32 ;;
 		*" -mabi=64 "*|*" -mabi=n64 "*) mips_cc_abi=64 ;;
 		*" -mabi=32 "*|*" -mabi=o32 "*) mips_cc_abi=32 ;;
@@ -3931,7 +3931,7 @@ int a;
 char b;
 void c(void) {}
 EOF
-$CC $CFLAGS -c conftest.c
+$CC $CFLAGS $CPPFLAGS -c conftest.c
 $AR cr conftest.a conftest.o
 cp conftest.a conftest2.a
 $RANLIB conftest.a
@@ -4389,7 +4389,7 @@ else
 #include "confdefs.h"
 /* Nothing whatsoever.  */
 EOF
-if { ac_try='${CC-cc} $CFLAGS -c conftest.S 1>&5'
+if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -c conftest.S 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4417,7 +4417,7 @@ else
 .text
 EOF
 libc_cv_dot_text=
-if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4448,7 +4448,7 @@ for ac_globl in .globl .global .EXPORT; do
 	${ac_globl} foo
 foo:
 EOF
-  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4523,7 +4523,7 @@ for ac_try_prefix in '@' '%' '#'; do
 foo:
 	.byte 1
 EOF
-  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4564,7 +4564,7 @@ ${libc_cv_dot_text}
 _sym:
 .symver _sym,sym@VERS
 EOF
-if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&5 2>&5; then
+if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
   libc_cv_asm_symver_directive=yes
 else
   libc_cv_asm_symver_directive=no
@@ -4593,10 +4593,11 @@ VERS_2 {
         global: sym;
 } VERS_1;
 EOF
-  if ${CC-cc} -c $CFLAGS $CPPFLAGS conftest.s 1>&5 2>&5; then
-    if { ac_try='${CC-cc} $CFLAGS -shared -o conftest.so conftest.o
-					-nostartfiles -nostdlib
-					-Wl,--version-script,conftest.map
+  if ${CC-cc} -c $ASFLAGS conftest.s 1>&5 2>&5; then
+    if { ac_try='${CC-cc} $CFLAGS $LDFLAGS -shared
+				-o conftest.so conftest.o
+				-nostartfiles -nostdlib
+				-Wl,--version-script,conftest.map
 		       1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -4649,7 +4650,7 @@ else
 .section foo_section
 .previous
 EOF
-  if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4678,7 +4679,7 @@ else
 .pushsection foo_section
 .popsection
 EOF
-    if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+    if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4710,7 +4711,7 @@ foo:
 .hidden bar
 bar:
 EOF
-  if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -4850,7 +4851,7 @@ if test "${libc_cv_have_sdata_section+set}" = set; then
 else
   echo "int i;" > conftest.c
 		  libc_cv_have_sdata_section=no
-		  if ${CC-cc} -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
+		  if ${CC-cc} $LDFLAGS -shared -Wl,--verbose conftest.c -o conftest.so 2>&1 \
 		     | grep '\.sdata' >/dev/null; then
 		    libc_cv_have_sdata_section=yes
 		  fi
@@ -4878,7 +4879,7 @@ int __start (void) { return 0; }
 int foo (void) { return 1; }
 int (*fp) (void) __attribute__ ((section (".init_array"))) = foo;
 EOF
-  if { ac_try='${CC-cc} -o conftest conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -o conftest conftest.c
 		     -static -nostartfiles -nostdlib 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -4914,7 +4915,8 @@ else
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if { ac_try='${CC-cc} -shared -o conftest.so conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+		     -shared -o conftest.so conftest.c
 		     -nostartfiles -nostdlib
 		     -Wl,--enable-new-dtags,-z,nodelete 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -4941,7 +4943,8 @@ else
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if { ac_try='${CC-cc} -shared -o conftest.so conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			-shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
 			-Wl,--enable-new-dtags,-z,nodlopen 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -4968,7 +4971,8 @@ else
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if { ac_try='${CC-cc} -shared -o conftest.so conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			-shared -o conftest.so conftest.c
 			-nostartfiles -nostdlib
 			-Wl,--enable-new-dtags,-z,initfirst 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -4995,7 +4999,9 @@ else
     cat > conftest.c <<EOF
 int _start (void) { return 42; }
 EOF
-  if { ac_try='${CC-cc} -shared -o conftest.so conftest.c -Wl,-Bgroup -nostdlib 1>&5'
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			      -shared -o conftest.so conftest.c
+			      -Wl,-Bgroup -nostdlib 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5022,7 +5028,8 @@ extern int bar (int);
 extern int mumble;
 int foo (void) { return bar (mumble); }
 EOF
-  if { ac_try='${CC-cc} -shared -o conftest.so conftest.c
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
+			-shared -o conftest.so conftest.c
 			-nostdlib -nostartfiles
 			-Wl,-z,combreloc 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -5196,7 +5203,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5199 "configure"
+#line 5206 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5248,7 +5255,7 @@ foo:
 .weak foo
 .weak bar; bar = foo
 EOF
-if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5278,7 +5285,7 @@ foo:
 ${libc_cv_asm_global_directive} baz
 baz:
 EOF
-  if { ac_try='${CC-cc} $CFLAGS -c conftest.s 1>&5'
+  if { ac_try='${CC-cc} $ASFLAGS -c conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5324,7 +5331,7 @@ else
     cat > conftest.s <<EOF
  nop ; is_old_puffin
 EOF
-  if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5372,7 +5379,7 @@ foo:
 	/* comment */
 	nop
 EOF
-if { ac_try='${CC-cc} $CFLAGS -g -c conftest.S 1>&5'
+if { ac_try='${CC-cc} $CPPFLAGS $ASFLAGS -g -c conftest.S 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5411,7 +5418,7 @@ _start () {}
 int __eh_pc;
 __throw () {}
 EOF
-if { ac_try='${CC-cc} $CFLAGS
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
 			    -nostdlib -nostartfiles -Wl,--no-whole-archive
 			    -o conftest conftest.c 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -5441,7 +5448,7 @@ _start () {}
 int __eh_pc;
 __throw () {}
 EOF
-if { ac_try='${CC-cc} $CFLAGS
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS
 			    -nostdlib -nostartfiles -fexceptions
 			    -o conftest conftest.c 1>&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
@@ -5522,7 +5529,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5525 "configure"
+#line 5532 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5548,7 +5555,8 @@ abort () {}
 __bzero () {}
 dl_iterate_phdr () {}
 EOF
-libc_unwind_check="${CC-cc} $CFLAGS -DCHECK__register_frame_info \
+libc_unwind_check="${CC-cc} $CFLAGS $CPPFLAGS -DCHECK__register_frame_info \
+			    $LDFLAGS \
 			    -nostdlib -nostartfiles -o conftest conftest.c \
 			    -lgcc"
 # Some platforms' specs put -lgcc first.  The second one doesn't hurt.
@@ -5575,8 +5583,8 @@ else
   libc_cv_gcc_dwarf2_unwind_info=no
 fi
 if test $libc_cv_gcc_dwarf2_unwind_info = no; then
-  if { ac_try='${CC-cc} $CFLAGS -DCHECK__register_frame
-			      -nostdlib -nostartfiles
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -DCHECK__register_frame
+			      $LDFLAGS -nostdlib -nostartfiles
 			      -o conftest conftest.c -lgcc >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -5617,14 +5625,14 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5620 "configure"
+#line 5628 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
   return a == 10 ? 0 : 1;
 }
 EOF
-if { ac_try='${CC-cc} $CFLAGS -nostdlib -nostartfiles
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles
 			    -o conftest conftest.c -lgcc >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -5685,7 +5693,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5688 "configure"
+#line 5696 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
@@ -5697,7 +5705,7 @@ int foo (int a)
   return 2;
 }
 EOF
-if { ac_try='${CC-cc} $CFLAGS -nostdlib -nostartfiles
+if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS -nostdlib -nostartfiles
 			    -o conftest conftest.c -lgcc >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
@@ -5728,7 +5736,7 @@ else
   cat > conftest.c <<\EOF
 __thread int a = 42;
 EOF
-  if { ac_try='${CC-cc} $CFLAGS -c conftest.c >&5'
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -c conftest.c >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
@@ -5761,7 +5769,7 @@ else
     cat > conftest.c <<\EOF
 extern __thread int a __attribute__((tls_model ("initial-exec")));
 EOF
-  if { ac_try='${CC-cc} $CFLAGS -S -Werror conftest.c >&5'
+  if { ac_try='${CC-cc} $CFLAGS $CPPFLAGS -S -Werror conftest.c >&5'
   { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
