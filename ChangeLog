@@ -1,3 +1,12 @@
+1999-11-14  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/hurd/nfs/nfs.h: New file, empty but for comments.
+	Its presence lets librpcsvc compile ok.  This from Mark Kettenis.
+	We don't install this file for users.
+	* sysdeps/mach/hurd/Dist: Add it.
+	* sysdeps/mach/hurd/Makefile [$(subdir) = sunrpc] (sysdep_headers):
+	Append nfs/nfs.h here.
+
 1999-12-01  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/if_index.c (__protocol_available): Add missing
