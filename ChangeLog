@@ -1,3 +1,8 @@
+2002-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/socket.S: Use SINGLE_THREAD_P
+	macro instead of comparing %gs:MULTIPLE_THREADS_OFFSET directly.
+
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): If __nss_lookup_function
@@ -6,6 +11,9 @@
 2002-12-16  Art Haas  <ahaas@airmail.net>
 
 	* io/ftw.c: Convert GCC extension initializer syntax to C99.
+	* iconvdata/iso-ir-165.c: Likewise.
+	* iconvdata/jis0208.c: Likewise.
+	* iconvdata/jis0212.c: Likewise.
 
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 

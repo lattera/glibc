@@ -43,7 +43,7 @@
 .globl __socket
 ENTRY (__socket)
 #if defined NEED_CANCELLATION && defined CENABLE
-	cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
+	SINGLE_THREAD_P
 	jne 1f
 #endif
 

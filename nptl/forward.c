@@ -30,7 +30,7 @@ struct pthread_functions __libc_pthread_functions attribute_hidden;
 
 
 #if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_3_2)
-# define FORWARD3(name, rettype, decl, params, defaction, version) \
+# define FORWARD4(name, export, rettype, decl, params, defaction, version) \
 rettype									      \
 __noexport_##name decl							      \
 {									      \
@@ -39,7 +39,10 @@ __noexport_##name decl							      \
 									      \
   return __libc_pthread_functions.ptr_##name params;			      \
 }									      \
-compat_symbol (libc, __noexport_##name, name, version)
+compat_symbol (libc, __noexport_##name, export, version)
+
+# define FORWARD3(name, rettype, decl, params, defaction, version) \
+  FORWARD4 (name, name, rettype, decl, params, defaction, version)
 
 # define FORWARD2(name, decl, params, defretval, version) \
   FORWARD3 (name, int, decl, params, return defretval, version)
@@ -50,7 +53,13 @@ compat_symbol (libc, __noexport_##name, name, version)
 
 FORWARD (pthread_attr_destroy, (pthread_attr_t *attr), (attr), 0);
 
-FORWARD2 (pthread_attr_init, (pthread_attr_t *attr), (attr), 0, GLIBC_2_1);
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_1)
+FORWARD4 (pthread_attr_init_2_0, pthread_attr_init, int,
+	  (pthread_attr_t *attr), (attr), 0, GLIBC_2_0);
+#endif
+
+FORWARD4 (pthread_attr_init_2_1, pthread_attr_init, int,
+	  (pthread_attr_t *attr), (attr), 0, GLIBC_2_1);
 
 FORWARD (pthread_attr_getdetachstate,
 	 (const pthread_attr_t *attr, int *detachstate), (attr, detachstate),

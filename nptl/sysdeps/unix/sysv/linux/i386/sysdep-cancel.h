@@ -76,11 +76,15 @@
 # define POPCARGS_4	POPCARGS_2
 # define POPCARGS_5	POPCARGS_2
 
-# define SINGLE_THREAD_P \
+# ifndef ASSEMBLER
+#  define SINGLE_THREAD_P \
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
 				   header.data.multiple_threads) == 0, 1)
+# else
+#  define SINGLE_THREAD_P cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
+# endif
 
-#else
+#elif !defined ASSEMBLER
 
 /* This code should never be used but we define it anyhow.  */
 # define SINGLE_THREAD_P (1)

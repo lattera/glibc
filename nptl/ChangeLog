@@ -1,3 +1,18 @@
+2002-12-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h (SINGLE_THREAD_P):
+	Define meaningfully for assembler as well.
+	* pthreadP.h (struct pthread_functions): Remove
+	ptr_pthread_attr_init field.  Add ptr_pthread_attr_init_2_0
+	and ptr_pthread_attr_init_2_1 fields.
+	* init.c (pthread_functions): Initialize ptr_pthread_attr_init_2_0
+	and ptr_pthread_attr_init_2_1 instead of ptr_pthread_attr_init.
+	* forward.c (FORWARD4): Renamed from FORWARD3. Add export argument.
+	(FORWARD3): Define using FORWARD4.
+	(pthread_attr_init): Provide both @GLIBC_2.0 and @@GLIBC_2.1
+	versions.
+	* pt-system.c: Remove duplicate stdlib.h include.
+
 2002-12-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sem_init.c: Define sem_init@GLIBC_2.0.
