@@ -1,7 +1,11 @@
+2000-05-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Use l_map_start and l_map_end to
+	test for pointer in range of DSO address space.
+
 2000-05-04  Andreas Jaeger  <aj@suse.de>
 
-	* nscd/pwdcache.c (addpwbyname): Initialize oldeuid to silence
-	GCC.
+	* nscd/pwdcache.c (addpwbyname): Initialize oldeuid to silence GCC.
 
 2000-05-03  Ulrich Drepper  <drepper@redhat.com>
 
