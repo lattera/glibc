@@ -66,14 +66,19 @@
 #define F_SETFD		2	/* Set file descriptor flags.  */
 #define F_GETFL		3	/* Get file status flags.  */
 #define F_SETFL		4	/* Set file status flags.  */
-#define F_GETLK		14	/* Get record locking info.  */
-#define F_SETLK		6	/* Set record locking info (non-blocking).  */
-#define F_SETLKW	7	/* Set record locking info (blocking).  */
+#ifndef __USE_FILE_OFFSET64
+# define F_GETLK	14	/* Get record locking info.  */
+# define F_SETLK	6	/* Set record locking info (non-blocking).  */
+# define F_SETLKW	7	/* Set record locking info (blocking).  */
+#else
+# define F_GETLK	F_GETLK64  /* Get record locking info.  */
+# define F_SETLK	F_SETLK64  /* Set record locking info (non-blocking).*/
+# define F_SETLKW	F_SETLKW64 /* Set record locking info (blocking).  */
+#endif
 
-/* XXX missing */
-#define F_GETLK64	14	/* Get record locking info.  */
-#define F_SETLK64	6	/* Set record locking info (non-blocking).  */
-#define F_SETLKW64	7	/* Set record locking info (blocking).  */
+#define F_GETLK64	33	/* Get record locking info.  */
+#define F_SETLK64	34	/* Set record locking info (non-blocking).  */
+#define F_SETLKW64	35	/* Set record locking info (blocking).  */
 
 #if defined __USE_BSD || defined __USE_XOPEN2K
 # define F_SETOWN	24	/* Get owner of socket (receiver of SIGIO).  */
@@ -113,14 +118,16 @@ typedef struct flock
 #ifndef __USE_FILE_OFFSET64
     __off_t l_start;	/* Offset where the lock begins.  */
     __off_t l_len;	/* Size of the locked area; zero means until EOF.  */
+    long int l_sysid;	/* XXX */
 #else
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
 #endif
-    long int l_sysid;	/* XXX */
     __pid_t l_pid;	/* Process holding the lock.  */
+#ifndef __USE_FILE_OFFSET64
     long int pad[4];	/* XXX */
-  } flock_t;
+#endif
+} flock_t;
 
 #ifdef __USE_LARGEFILE64
 struct flock64
@@ -129,9 +136,7 @@ struct flock64
     short int l_whence;	/* Where `l_start' is relative to (like `lseek').  */
     __off64_t l_start;	/* Offset where the lock begins.  */
     __off64_t l_len;	/* Size of the locked area; zero means until EOF.  */
-    long int l_sysid;	/* XXX */
     __pid_t l_pid;	/* Process holding the lock.  */
-    long int pad[4];	/* XXX */
   };
 #endif
 
