@@ -1,3 +1,8 @@
+2002-07-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* manager.c (pthread_handle_create): Initialize self-reference in
+	descriptor.
+
 2002-07-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Examples/ex9.c (main): Remove unused th variable.
