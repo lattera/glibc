@@ -1,5 +1,7 @@
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/arm/sys/ucontext.h: File was using crlf.
+
 	* elf/dl-init.c: Add a few __builtin_expect.
 
 	* hesiod/hesiod.c: Remove unnecessary code.  Remove all uses of strcat.
