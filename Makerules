@@ -663,7 +663,8 @@ ifeq ($(build-programs),yes)
 endif
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
-				      $(+depfiles)))
+				      $(+depfiles))) \
+	     $(addprefix $(common-objpfx),$(gen-as-const-headers:.sym=.h.d))
 
 ifdef +depfiles
 ifneq ($(no_deps),t)
@@ -1177,6 +1178,23 @@ common-generated += libc.symlist
 endif
 
 endif
+
+# Generating headers for assembly constants.
+$(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk %.sym
+	$(AWK) -f $^ \
+	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
+		-MD -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
+	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^@]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
+	sed $(sed-remove-objpfx) \
+	    -e 's@  *\([^ 	\/][^ 	\]*\)@ $$(..)\1@g' \
+	    -e 's@  *\.\.\/\([^ 	\]*\)@ $$(..)\1@g' \
+	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
+	rm -f $(@:.h=.h.d)T
+	mv -f $(@:.h=.h.d)T2 $(@:.h=.h.d)
+	mv -f $(@:.h.d=.h)T $(@:.h.d=.h)
+vpath %.sym $(sysdirs)
+
+before-compile += $(gen-as-const-headers:%.sym=$(common-objpfx)%.h)
 
 .PHONY: TAGS
 TAGS: $(objpfx)distinfo $(..)MakeTAGS

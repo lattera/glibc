@@ -280,7 +280,7 @@ distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 			    test-installation.pl gen-FAQ.pl versions.awk\
 			    gen-sorted.awk abi-versions.awk abilist.awk	\
 			    firstversions.awk documented.sh cpp		\
-			    output-format.sed)
+			    output-format.sed gen-as-const.awk)
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h
