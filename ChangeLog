@@ -1,3 +1,10 @@
+2002-06-04  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/cris/stackinfo.h: New file.
+
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela): Cast reloc_addr
+	to an integer type before performing bit operations on it.
+
 2002-06-05  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/sendfile.c: Include <errno.h>.

@@ -531,7 +531,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	return;
 #endif
       /* .eh_frame can have unaligned relocs.  */
-      if (reloc_addr & 3)
+      if ((unsigned long) reloc_addr & 3)
 	{
 	  char *rel_addr = (char *) reloc_addr;
 	  rel_addr[0] = value >> 24;
