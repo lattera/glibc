@@ -1,3 +1,20 @@
+1998-10-08  Paul Eggert  <eggert@twinsun.com> 
+
+	* time/mktime.c (my_mktime_localtime_r): Renamed from localtime_r. 
+	Define also if HAVE_LOCALTIME_R && defined localtime_r, with 
+	a body that merely expands localtime_r; this works around a 
+	bug in Digital Unix 4.0A and 4.0D. 
+
+1998-10-14  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add s_ioctl.
+	* sysdeps/unix/sysv/linux/powerpc/tcgetattr.c: New file. Define
+	__ioctl to __syscall_ioctl and include Linux version of this file.
+	* sysdeps/unix/sysv/linux/powerpc/tcsetattr.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/ioctl.c: New file.  Redirect
+	ioctl calls which handle struct termios.
+	Based on a patch by Dan Jacobowitz <drow@false.org>.
+
 1998-10-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* version.h (VERSION): Bump to 2.0.98.

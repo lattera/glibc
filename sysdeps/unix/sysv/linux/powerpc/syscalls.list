@@ -1,4 +1,5 @@
 # File name	Caller	Syscall name	# args	Strong name	Weak names
 
+s_ioctl		ioctl	ioctl		3	__syscall_ioctl
 s_llseek	llseek	_llseek		5	__sys_llseek
 s_chown		chown	chown		3	__syscall_chown
