@@ -1,3 +1,10 @@
+2004-10-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/rtld.c (_dl_start): Fix one last dl_loaded.
+	* elf/dl-load.c (_dl_map_object_from_fd): Avoid definition of
+	label when it is not needed.
+	* elf/dl-close.c (_dl_close): Typo: & -> &&.
+
 2004-10-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/segfault.c: Include alloca.h and stdint.h.

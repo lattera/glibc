@@ -909,7 +909,9 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
   l = _dl_new_object (realname, name, l_type, loader, mode, nsid);
   if (__builtin_expect (l == NULL, 0))
     {
+#ifdef SHARED
     fail_new:
+#endif
       errstring = N_("cannot create shared object descriptor");
       goto call_lose_errno;
     }

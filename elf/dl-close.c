@@ -237,7 +237,7 @@ _dl_close (void *_map)
 				struct link_map *rl = depmap->l_initfini[k];
 
 				if (rl->l_idx < nopencount
-				    & list[rl->l_idx] == rl)
+				    && list[rl->l_idx] == rl)
 				  {
 				    assert (new_opencount[rl->l_idx] > 0);
 				    if (--new_opencount[rl->l_idx] ==  0)

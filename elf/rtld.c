@@ -537,7 +537,7 @@ _dl_start (void *arg)
 # define ELF_MACHINE_START_ADDRESS(map, start) (start)
 #endif
 
-    return ELF_MACHINE_START_ADDRESS (GL(dl_loaded), entry);
+    return ELF_MACHINE_START_ADDRESS (GL(dl_ns)[LM_ID_BASE]._ns_loaded, entry);
   }
 }
 
