@@ -39,12 +39,12 @@
 
 	* nscd/grpcache.c: Fix gr_name pointer [PR/1702].
 
-2000-04-23  Bruno Haible  <clisp.cons.org>
+2000-04-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/dcigettext.c: Define _GNU_SOURCE as early as possible.
 	* intl/l10nflist.c: Likewise.
 
-2000-04-23  Bruno Haible  <clisp.cons.org>
+2000-04-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/bindtextdom.c [!_LIBC]: Define __libc_rwlock_define,
 	__libc_rwlock_wrlock, __libc_rwlock_unlock as empty.
@@ -54,12 +54,12 @@
 	* intl/loadmsgcat.c (_nl_load_domain) [!_LIBC, !HAVE_ICONV]: Avoid
 	syntax error.
 
-2000-04-23  Bruno Haible  <clisp.cons.org>
+2000-04-23  Bruno Haible  <haible@clisp.cons.org>
 
 	* intl/dcigettext.c (_nl_find_msg): Do the plural treatment and
 	character set conversion also in the case the translation was found
-	after a hash collision or through binary search. Store the maximum
-	index together with the converted message. Use iconv() when available.
+	after a hash collision or through binary search.  Store the maximum
+	index together with the converted message.  Use iconv() when available.
 	In case of out of memory during conversion, return the unconverted
 	translated string, not NULL.
 
