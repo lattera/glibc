@@ -1,3 +1,9 @@
+2004-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c: Define __stack_prot.
+	* sysdeps/unix/sysv/linux/dl-execstack.c: Don't define
+	__stack_prot here, just declare it.
+
 2004-09-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* configure.in (libc_cv_z_relro): Only set to yes if linker script

@@ -28,12 +28,7 @@
 #include "kernel-features.h"
 
 
-int __stack_prot attribute_hidden attribute_relro
-#if _STACK_GROWS_DOWN
-     = PROT_READ|PROT_WRITE|PROT_GROWSDOWN;
-#elif _STACK_GROWS_UP
-     = PROT_READ|PROT_WRITE|PROT_GROWSUP;
-#endif
+extern int __stack_prot attribute_relro attribute_hidden;
 
 
 int

@@ -34,6 +34,7 @@
 #include "dynamic-link.h"
 #include <abi-tag.h>
 #include <dl-osinfo.h>
+#include <stackinfo.h>
 
 #include <dl-dst.h>
 
@@ -102,7 +103,13 @@ ELF_PREFERRED_ADDRESS_DATA;
 #endif
 
 
-extern int __stack_prot attribute_relro attribute_hidden;
+int __stack_prot attribute_hidden attribute_relro
+#if _STACK_GROWS_DOWN
+     = PROT_READ|PROT_WRITE|PROT_GROWSDOWN;
+#elif _STACK_GROWS_UP
+     = PROT_READ|PROT_WRITE|PROT_GROWSUP;
+#endif
+
 
 /* Type for the buffer we put the ELF header and hopefully the program
    header.  This buffer does not really have to be too large.  In most
