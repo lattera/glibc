@@ -1,3 +1,9 @@
+2005-01-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/sys/cdefs.h: Define __wur.
+	* libio/stdio.h: Use __wur for a number of interfaces.
+	* posix/unistd.h: Likewise.
+
 2004-12-29  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/libm_support.h (__libm_error_support): Use
@@ -342,6 +348,7 @@
 	(transit_state): Expect state->trtable to be a 256-item
 	transition table.  Reorganize code to have less tests in
 	the common case, and to save an indentation level.
+	* posix/regex_internal.c (free_state): Free word_trtable.
 
 2004-12-21  Jakub Jelinek  <jakub@redhat.com>
 

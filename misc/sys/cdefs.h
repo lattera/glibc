@@ -255,6 +255,14 @@
 # define __nonnull(params)
 #endif
 
+/* If fortification mode, we warn about unused results of certain
+   function calls which can lead to problems.  */
+#if __GNUC_PREREQ (3,4) && __USE_FORTIFY_LEVEL > 0
+# define __wur __attribute__ ((__warn_unused_result__))
+#else
+# define __wur /* Ignore */
+#endif
+
 /* It is possible to compile containing GCC extensions even if GCC is
    run in pedantic mode if the uses are carefully marked using the
    `__extension__' keyword.  But this is not generally available before
