@@ -66,7 +66,7 @@ DEFUN(__setuid, (uid), uid_t uid)
 	      newaux = auxbuf;
 	      naux = 2;
 	    }
-	  _hurd_id.aux.uids[0] = _hurd_id.aux.uids[1] = uid;
+	  newaux[0] = newaux[1] = uid;
 	}
       else
 	{

@@ -11,6 +11,12 @@ Fri Dec 22 00:57:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 	* sysdeps/mach/hurd/fork.c: Peek __mach_task_self_ value before
 	proc_dostop call to work around kernel paging bug.
 
+Fri Dec 22 00:38:00 1995  H.J. Lu  <hjl@nynexst.com>
+
+        * stdio-common/vfscanf.c: Correctly handle white space skipping.
+	* stdio-common/Makefile (tests): Add bug11.
+	* stdio-common/bug11.c: New file.
+
 Thu Dec 21 12:19:32 1995  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/setuid.c (__setuid): Actually add the new uid

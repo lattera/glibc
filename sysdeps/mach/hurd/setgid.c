@@ -66,7 +66,7 @@ DEFUN(__setgid, (gid), gid_t gid)
 	      newaux = auxbuf;
 	      naux = 2;
 	    }
-	  _hurd_id.aux.gids[0] = _hurd_id.aux.gids[1] = gid;
+	  newaux[0] = newaux[1] = gid;
 	}
       else
 	{

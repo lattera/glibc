@@ -233,9 +233,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (c == EOF)
 	    input_error ();
 
-	  /* We saw an white space as the last character in the format
-	     string.  Now it's time to skip all leading white
-	     spaces.  */
+	  /* We saw white space char as the last character in the format
+	     string.  Now it's time to skip all leading white space.  */
 	  if (skip_space)
 	    {
 	      while (isspace (c))
@@ -243,7 +242,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      skip_space = 0;
 	    }
 
-	  else if (c == fc)
+	  if (c == fc)
 	    (void) inchar ();
 	  else
 	    conv_error ();

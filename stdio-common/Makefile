@@ -39,7 +39,7 @@ distribute := _itoa.h printf-parse.h
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite \
 	 xbug errnobug \
-	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 \
+	 bug1 bug2 bug3 bug4 bug5 bug6 bug7 bug8 bug9 bug10 bug11 \
 	 tfformat tiformat tstdiomisc
 
 
