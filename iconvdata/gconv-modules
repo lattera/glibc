@@ -33,12 +33,12 @@
 #  alias:	alias name which is not really recognized.
 #  name:	the real name of the character set
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-10646//		ISO-10646/UCS4/
 alias	10646-1:1993//		ISO-10646/UCS4/
 alias	10646-1:1993/UCS4/	ISO-10646/UCS4/
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-6//		ANSI_X3.4-1968//
 alias	ANSI_X3.4-1986//	ANSI_X3.4-1968//
 alias	ISO_646.IRV:1991//	ANSI_X3.4-1968//
@@ -58,7 +58,7 @@ alias	UK//			BS_4730//
 module	BS_4730//		ISO-10646/UCS4/		ISO646		2
 module	ISO-10646/UCS4/		BS_4730//		ISO646		2
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-100//		ISO-8859-1//
 alias	ISO_8859-1:1987//	ISO-8859-1//
 alias	ISO_8859-1//		ISO-8859-1//
@@ -69,7 +69,7 @@ alias	CP819//			ISO-8859-1//
 module	ISO-8859-1//		ISO-10646/UCS4/		ISO8859-1	1
 module	ISO-10646/UCS4/		ISO-8859-1//		ISO8859-1	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-101//		ISO-8859-2//
 alias	ISO_8859-2:1987//	ISO-8859-2//
 alias	ISO_8859-2//		ISO-8859-2//
@@ -78,7 +78,7 @@ alias	L2//			ISO-8859-2//
 module	ISO-8859-2//		ISO-10646/UCS4/		ISO8859-2	1
 module	ISO-10646/UCS4/		ISO-8859-2//		ISO8859-2	1
 
-#	from			  to			  module	cost
+#	from			  to			 module		cost
 alias	ISO-IR-109//		ISO-8859-3//
 alias	ISO_8859-3:1988//	ISO-8859-3//
 alias	ISO_8859-3//		ISO-8859-3//
@@ -87,7 +87,7 @@ alias	L3//			ISO-8859-3//
 module	ISO-8859-3//		ISO-10646/UCS4/		ISO8859-3	1
 module	ISO-10646/UCS4/		ISO-8859-3//		ISO8859-3	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-110//		ISO-8859-4//
 alias	ISO_8859-4:1988//	ISO-8859-4//
 alias	ISO_8859-4//		ISO-8859-4//
@@ -96,7 +96,7 @@ alias	L4//			ISO-8859-4//
 module	ISO-8859-4//		ISO-10646/UCS4/		ISO8859-4	1
 module	ISO-10646/UCS4/		ISO-8859-4//		ISO8859-4	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-144//		ISO-8859-5//
 alias	ISO_8859-5:1988//	ISO-8859-5//
 alias	ISO_8859-5//		ISO-8859-5//
@@ -104,7 +104,7 @@ alias	CYRILLIC//		ISO-8859-5//
 module	ISO-8859-5//		ISO-10646/UCS4/		ISO8859-5	1
 module	ISO-10646/UCS4/		ISO-8859-5//		ISO8859-5	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-127//		ISO-8859-6//
 alias	ISO_8859-6:1987//	ISO-8859-6//
 alias	ISO_8859-6//		ISO-8859-6//
@@ -114,7 +114,7 @@ alias	ARABIC//		ISO-8859-6//
 module	ISO-8859-6//		ISO-10646/UCS4/		ISO8859-6	1
 module	ISO-10646/UCS4/		ISO-8859-6//		ISO8859-6	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-126//		ISO-8859-7//
 alias	ISO_8859-7:1987//	ISO-8859-7//
 alias	ISO_8859-7//		ISO-8859-7//
@@ -125,7 +125,7 @@ alias	GREEK8//		ISO-8859-7//
 module	ISO-8859-7//		ISO-10646/UCS4/		ISO8859-7	1
 module	ISO-10646/UCS4/		ISO-8859-7//		ISO8859-7	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-138//		ISO-8859-8//
 alias	ISO_8859-8:1988//	ISO-8859-8//
 alias	ISO_8859-8//		ISO-8859-8//
@@ -133,7 +133,7 @@ alias	HEBREW//		ISO-8859-8//
 module	ISO-8859-8//		ISO-10646/UCS4/		ISO8859-8	1
 module	ISO-10646/UCS4/		ISO-8859-8//		ISO8859-8	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-148//		ISO-8859-9//
 alias	ISO_8859-9:1989//	ISO-8859-9//
 alias	ISO_8859-9//		ISO-8859-9//
@@ -142,7 +142,7 @@ alias	L5//			ISO-8859-9//
 module	ISO-8859-9//		ISO-10646/UCS4/		ISO8859-9	1
 module	ISO-10646/UCS4/		ISO-8859-9//		ISO8859-9	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-157//		ISO-8859-10//
 alias	ISO_8859-10:1993//	ISO-8859-10//
 alias	ISO_8859-10//		ISO-8859-10//
@@ -151,71 +151,78 @@ alias	L6//			ISO-8859-10//
 module	ISO-8859-10//		ISO-10646/UCS4/		ISO8859-10	1
 module	ISO-10646/UCS4/		ISO-8859-10//		ISO8859-10	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	T.61//			T.61-8BIT//
 alias	ISO-IR-103//		T.61-8BIT//
 module	T.61-8BIT//		ISO-10646/UCS4/		T.61		1
 module	ISO-10646/UCS4/		T.61-8BIT//		T.61		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-156//		ISO_6937//
 alias	ISO_6937:1992//		ISO_6937//
 alias	ISO6937//		ISO_6937//
 module	ISO_6937//		ISO-10646/UCS4/		ISO_6937	1
 module	ISO-10646/UCS4/		ISO_6937//		ISO_6937	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	SHIFT-JIS//		SJIS//
 module	SJIS//			ISO-10646/UCS4/		SJIS		1
 module	ISO-10646/UCS4/		SJIS//			SJIS		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 module	KOI-8//			ISO-10646/UCS4/		KOI-8		1
 module	ISO-10646/UCS4/		KOI-8//			KOI-8		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 module	KOI8-R//		ISO-10646/UCS4/		KOI8-R		1
 module	ISO-10646/UCS4/		KOI8-R//		KOI8-R		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-19//		LATIN-GREEK//
 module	LATIN-GREEK//		ISO-10646/UCS4/		LATIN-GREEK	1
 module	ISO-10646/UCS4/		LATIN-GREEK//		LATIN-GREEK	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ISO-IR-27//		LATIN-GREEK//
 module	LATIN-GREEK-1//		ISO-10646/UCS4/		LATIN-GREEK-1	1
 module	ISO-10646/UCS4/		LATIN-GREEK-1//		LATIN-GREEK-1	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	ROMAN8//		HP-ROMAN8//
 alias	R8//			HP-ROMAN8//
 module	HP-ROMAN8//		ISO-10646/UCS4/		HP-ROMAN8	1
 module	ISO-10646/UCS4/		HP-ROMAN8//		HP-ROMAN8	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 module	EBCDIC-AT-DE//		ISO-10646/UCS4/		EBCDIC-AT-DE	1
 module	ISO-10646/UCS4/		EBCDIC-AT-DE//		EBCDIC-AT-DE	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 module	EBCDIC-AT-DE-A//	ISO-10646/UCS4/		EBCDIC-AT-DE-A	1
 module	ISO-10646/UCS4/		EBCDIC-AT-DE-A//	EBCDIC-AT-DE-A	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 module	EBCDIC-CA-FR//		ISO-10646/UCS4/		EBCDIC-CA-FR	1
 module	ISO-10646/UCS4/		EBCDIC-CA-FR//		EBCDIC-CA-FR	1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	EUCKR//			EUC-KR//
 module	EUC-KR//		ISO-10646/UCS4/		EUC-KR		1
 module	ISO-10646/UCS4/		EUC-KR//		EUC-KR		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	MSCP949//		UHC//
 module	UHC//			ISO-10646/UCS4/		UHC		1
 module	ISO-10646/UCS4/		UHC//			UHC		1
 
-#	from			  to			  module	cost
+#	from			  to			module		cost
 alias	MSCP1361//		JOHAB//
 module	JOHAB//			ISO-10646/UCS4/		JOHAB		1
 module	ISO-10646/UCS4/		JOHAB//			JOHAB		1
+
+#	from			  to			module		cost
+alias	BIG-FIVE//		BIG5//
+alias	BIGFIVE//		BIG5//
+alias	BIG-5//			BIG5//
+module	BIG5//			ISO-10646/UCS4/		BIG5		1
+module	ISO-10646/UCS4/		BIG5//			BIG5		1

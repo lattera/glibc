@@ -4055,9 +4055,6 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 	result = GCONV_OK;
       else
 	{
-	  struct gconv_step *next_step = step + 1;
-	  struct gconv_step_data *next_data = data + 1;
-
 	  result = (*fct) (next_step, next_data, NULL, 0, written, 1);
 
 	  /* Clear output buffer.  */

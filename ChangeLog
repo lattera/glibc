@@ -1,5 +1,11 @@
 1998-04-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/sjis.c (gconv): Remove superfluous varaible declarations.
+
+	* iconvdata/Makefile: Add rules for big5 conversion.
+	* iconvdata/gconv-modules: Likewise.
+	* iconvdata/big5.c: New file.
+
 	* time/mktime.c (TYPE_MAXIMUM): Add missing cast.
 	Patch by Jim Meyering.
 
