@@ -45,7 +45,7 @@ mkstemp (template)
   if (len < 6 || strcmp (&template[len - 6], "XXXXXX"))
     {
       __set_errno (EINVAL);
-      return NULL;
+      return -1;
     }
 
   /* This is where the Xs start.  */
@@ -57,7 +57,6 @@ mkstemp (template)
 
   for (count = 0; count < TMP_MAX; ++count)
     {
-      struct stat ignored;
       uint32_t v = value;
       int fd;
 

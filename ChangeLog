@@ -1,3 +1,24 @@
+1998-04-07 17:50  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* glibcbug.in: Report version of gcc in use.  Remove unused variable
+	ENVIRONMENT.
+
+1998-04-07  Gordon Matzigkeit  <gord@profitpress.com>
+
+	* aclocal.m4 (LIBC_PROG_BINUTILS): Use `-print-prog-name', not
+	`-print-file-name' to find as and ld.
+
+1998-04-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/mkstemp.c (mkstemp): Correct return value in case
+	template is wrong.  Remove unused varaible `ignored'.
+
+1998-04-07  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* libc.map: Export __libc_sa_len.
+
+	* iconv/gconv_conf.c (MAXPATHLEN): Define correctly.
+
 1998-04-07 08:51  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.c: Take care for NULL arguments.
@@ -105,19 +126,6 @@
 
 	* elf/dl-load.c (decompose_rpath): Use local_strdup instead of
 	strdupa to copy rpath.
-
-1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* configure.in: Fix gcc version check.
-
-	* aclocal.m4 (AC_PROG_CHECK_VER): Rewritten to make less confusing.
-
-1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
-
-	* configure.in: Fix gcc version check.
-
-	* aclocal.m4 (AC_PROG_CHECK_VER): Rewritten to make less
-	confusing.
 
 1998-04-05  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 

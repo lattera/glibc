@@ -400,7 +400,7 @@ __gconv_read_conf (void)
     {
 #ifndef MAXPATHLEN
       /* We define a reasonable limit.  */
-# define 4096
+# define MAXPATHLEN 4096
 #endif
       char real_elem[MAXPATHLEN];
 

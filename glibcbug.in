@@ -76,7 +76,6 @@ else
   # and to protect shell metacharacters in the expansion of $LOGNAME
   $PASSWD | grep "^$LOGNAME:" | awk -F: '{print $5}' | sed -e 's/,.*//' > $TEMP
   ORIGINATOR="`cat $TEMP`"
-  rm -f $TEMP
 fi
 
 if [ -n "$ORGANIZATION" ]; then
@@ -107,6 +106,7 @@ SYSTEM=`( [ -f /bin/uname ] && /bin/uname -a ) || \
         ( [ -f /usr/bin/uname ] && /usr/bin/uname -a ) || echo ""`
 ARCH=`[ -f /bin/arch ] && /bin/arch`
 MACHINE=`[ -f /bin/machine ] && /bin/machine`
+CCVERSION=`$CC -v 2>&1 | sed -n 's/gcc version //p'`
 
 ORGANIZATION_C='<organization of PR author (multiple lines)>'
 SYNOPSIS_C='<synopsis of the problem (one line)>'
@@ -149,7 +149,8 @@ ${ORGANIZATION- $ORGANIZATION_C}
 `[ -n "$ADDONS" ] && echo Addons: $ADDONS`
 `[ -n "$CFLAGS" ] && echo Build CFLAGS: $CFLAGS`
 `[ -n "$CC" ] && echo Build CC: $CC`
-`[ -n "$VERSIONING" ] && echo Versioning: $VERSIONING`
+`[ -n "$CCVERSION" ] && echo Compiler version: $CCVERSION`
+`[ -n "$VERSIONING" ] && echo Symbol versioning: $VERSIONING`
 `[ -n "$BUILD_STATIC" ] && echo Build static: $BUILD_STATIC`
 `[ -n "$BUILD_SHARED" ] && echo Build shared: $BUILD_SHARED`
 `[ -n "$BUILD_PIC_DEFAULT" ] && echo Build pic-default: $BUILD_PIC_DEFAULT`

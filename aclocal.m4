@@ -113,8 +113,8 @@ if test -n "$path_binutils"; then
     path_binutils=`(cd $path_binutils; pwd) | sed 's%/*$%/%'`
     CC="$CC -B$path_binutils"
 fi
-AS=`$CC -print-file-name=as`
-LD=`$CC -print-file-name=ld`
+AS=`$CC -print-prog-name=as`
+LD=`$CC -print-prog-name=ld`
 
 # Determine whether we are using GNU binutils.
 AC_CACHE_CHECK(whether $AS is GNU as, libc_cv_prog_as_gnu,

@@ -436,7 +436,7 @@ GLIBC_2.1 {
     getdate_err; in6addr_any; in6addr_loopback;
 
     # functions used in inline functions or macros
-    __signbit; __signbitf; __signbitl;
+    __signbit; __signbitf; __signbitl; __libc_sa_len;
 
     # functions used in other libraries
     _IO_fclose; _IO_fopen; _IO_fdopen;
