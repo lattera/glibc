@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -126,5 +126,9 @@ typedef __u_long __ino64_t;
 
 /* Type of file sizes and offsets.  */
 typedef __loff_t __off64_t;
+
+/* Used in XTI.  */
+typedef int __t_scalar_t;
+typedef unsigned int __t_uscalar_t;
 
 #endif /* bits/types.h */
