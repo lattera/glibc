@@ -1,3 +1,8 @@
+2002-11-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/vfork.S: Don't trash the CPU's
+	branch prediction buffers by using unpaired call/ret.
+
 2002-11-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (ASMFMT_2): Fix typo in

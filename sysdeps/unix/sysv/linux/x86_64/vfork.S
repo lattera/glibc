@@ -29,22 +29,19 @@ ENTRY (__vfork)
 
 	/* Pop the return PC value into RDI.  We need a register that
 	   is preserved by the syscall and that we're allowed to destroy. */
-	popq %rdi
+	popq	%rdi
 
 	/* Stuff the syscall number in RAX and enter into the kernel.  */
 	movl	$SYS_ify (vfork), %eax
 	syscall
-	cmpl	$-4095, %eax
-	jae	.Lerror		/* Branch forward if it failed.  */
 
-	/* Jump to the return PC.  */
-	jmp	*%rdi
-
-.Lerror:
 	/* Push back the return PC.  */
 	pushq	%rdi
-	jmp	SYSCALL_ERROR_LABEL
 
+	cmpl	$-4095, %eax
+	jae SYSCALL_ERROR_LABEL		/* Branch forward if it failed.  */
+
+	/* Normal return.  */
 .Lpseudo_end:
 	ret
 
