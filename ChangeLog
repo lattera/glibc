@@ -1,3 +1,34 @@
+2001-07-05  Andreas Jaeger  <aj@suse.de>
+
+	Synch with Linux 2.4.5:
+	* sysdeps/unix/sysv/linux/sparc/bits/socket.h (PF_BLUETOOTH):
+	New.
+	(AF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/s390/s390-64/bits/socket.h
+	(PF_BLUETOOTH): New.
+	(AF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/mips/bits/socket.h (AF_BLUETOOTH): New.
+	(PF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/ia64/bits/socket.h (AF_BLUETOOTH): New.
+	(PF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/alpha/bits/socket.h (PF_BLUETOOTH): New.
+	(AF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (PF_BLUETOOTH): New.
+	(AF_BLUETOOTH): New.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h (ARPHRD_IEEE80211): New.
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/termios.h (N_HCI): New.
+
+	* sysdeps/unix/sysv/linux/mips/bits/ioctl-types.h (N_HCI): New.
+
+	* sysdeps/unix/sysv/linux/bits/ioctl-types.h (N_HCI): New.
+
 2001-07-04  Roland McGrath  <roland@frob.com>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): For SS->suspended
