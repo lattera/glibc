@@ -1,5 +1,5 @@
 /* Locate the shared object symbol nearest a given address.
-   Copyright (C) 1996-2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,9 @@ _dl_addr (const void *address, Dl_info *info,
   const char *strtab;
   ElfW(Word) strtabsize;
 
+  /* Protect against concurrent loads and unloads.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
   /* Find the highest-addressed object that ADDRESS is not below.  */
   match = NULL;
   for (l = GL(dl_loaded); l; l = l->l_next)
@@ -56,62 +59,71 @@ _dl_addr (const void *address, Dl_info *info,
 	break;
       }
 
-  if (match == NULL)
-    return 0;
-
-  /* Now we know what object the address lies in.  */
-  info->dli_fname = match->l_name;
-  info->dli_fbase = (void *) match->l_map_start;
-
-  /* If this is the main program the information is incomplete.  */
-  if (__builtin_expect (l->l_name[0], 'a') == '\0'
-      && l->l_type == lt_executable)
-    info->dli_fname = _dl_argv[0];
-
-  symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
-  strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
-
-  strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
-
-  if (match->l_info[DT_HASH] != NULL)
-    symtabend = symtab + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1];
-  else
-    /* There is no direct way to determine the number of symbols in the
-       dynamic symbol table and no hash table is present.  The ELF
-       binary is ill-formed but what shall we do?  Use the beginning of
-       the string table which generally follows the symbol table.  */
-    symtabend = (const ElfW(Sym) *) strtab;
-
-  /* We assume that the string table follows the symbol table, because
-     there is no way in ELF to know the size of the dynamic symbol table!!  */
-  for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
-    if (addr >= match->l_addr + symtab->st_value
-	&& ((symtab->st_size == 0 && addr == match->l_addr + symtab->st_value)
-	    || addr < match->l_addr + symtab->st_value + symtab->st_size)
-	&& symtab->st_name < strtabsize
-	&& (matchsym == NULL || matchsym->st_value < symtab->st_value)
-	&& (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
-	    || ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
-      matchsym = (ElfW(Sym) *) symtab;
-
-  if (mapp)
-    *mapp = match;
-  if (symbolp)
-    *symbolp = matchsym;
-
-  if (matchsym)
+  int result = 0;
+  if (match != NULL)
     {
-      /* We found a symbol close by.  Fill in its name and exact address.  */
-      info->dli_sname = strtab + matchsym->st_name;
-      info->dli_saddr = (void *) (match->l_addr + matchsym->st_value);
-    }
-  else
-    {
-      /* No symbol matches.  We return only the containing object.  */
-      info->dli_sname = NULL;
-      info->dli_saddr = NULL;
+      /* Now we know what object the address lies in.  */
+      info->dli_fname = match->l_name;
+      info->dli_fbase = (void *) match->l_map_start;
+
+      /* If this is the main program the information is incomplete.  */
+      if (__builtin_expect (l->l_name[0], 'a') == '\0'
+	  && l->l_type == lt_executable)
+	info->dli_fname = _dl_argv[0];
+
+      symtab = (const void *) D_PTR (match, l_info[DT_SYMTAB]);
+      strtab = (const void *) D_PTR (match, l_info[DT_STRTAB]);
+
+      strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;
+
+      if (match->l_info[DT_HASH] != NULL)
+	symtabend = (symtab
+		     + ((Elf_Symndx *) D_PTR (match, l_info[DT_HASH]))[1]);
+      else
+	/* There is no direct way to determine the number of symbols in the
+	   dynamic symbol table and no hash table is present.  The ELF
+	   binary is ill-formed but what shall we do?  Use the beginning of
+	   the string table which generally follows the symbol table.  */
+	symtabend = (const ElfW(Sym) *) strtab;
+
+      /* We assume that the string table follows the symbol table,
+	 because there is no way in ELF to know the size of the
+	 dynamic symbol table!!  */
+      for (matchsym = NULL; (void *) symtab < (void *) symtabend; ++symtab)
+	if (addr >= match->l_addr + symtab->st_value
+	    && ((symtab->st_size == 0
+		 && addr == match->l_addr + symtab->st_value)
+		|| addr < match->l_addr + symtab->st_value + symtab->st_size)
+	    && symtab->st_name < strtabsize
+	    && (matchsym == NULL || matchsym->st_value < symtab->st_value)
+	    && (ELFW(ST_BIND) (symtab->st_info) == STB_GLOBAL
+		|| ELFW(ST_BIND) (symtab->st_info) == STB_WEAK))
+	  matchsym = (ElfW(Sym) *) symtab;
+
+      if (mapp)
+	*mapp = match;
+      if (symbolp)
+	*symbolp = matchsym;
+
+      if (matchsym)
+	{
+	  /* We found a symbol close by.  Fill in its name and exact
+	     address.  */
+	  info->dli_sname = strtab + matchsym->st_name;
+	  info->dli_saddr = (void *) (match->l_addr + matchsym->st_value);
+	}
+      else
+	{
+	  /* No symbol matches.  We return only the containing object.  */
+	  info->dli_sname = NULL;
+	  info->dli_saddr = NULL;
+	}
+
+      result = 1;
     }
 
-  return 1;
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
+  return result;
 }
 libc_hidden_def (_dl_addr)

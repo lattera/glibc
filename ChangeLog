@@ -1,3 +1,11 @@
+2004-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* dlfcn/dlsym.c: Get ld.so loading lock before the call into ld.so.
+	* dlfcn/dlvsym.c: Likewise.
+	* elf/dl-addr.c: Get loading lock while using _dl_loaded data.
+	* elf/dl-fini.c: Likewise.
+	Patch by Shunichi Sagawa <s-sagawa@jp.fujitsu.com>.
+
 2004-02-20  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/sparc/sparc32/fpu/libm-test-ulps: Add ulps for the

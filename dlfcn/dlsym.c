@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,8 @@
 
 #include <dlfcn.h>
 #include <stddef.h>
+
+#include <ldsodefs.h>
 
 struct dlsym_args
 {
@@ -48,5 +50,12 @@ dlsym (void *handle, const char *name)
   args.handle = handle;
   args.name = name;
 
-  return (_dlerror_run (dlsym_doit, &args) ? NULL : args.sym);
+  /* Protect against concurrent loads and unloads.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
+  void *result = (_dlerror_run (dlsym_doit, &args) ? NULL : args.sym);
+
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
+
+  return result;
 }

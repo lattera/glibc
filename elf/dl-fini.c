@@ -1,5 +1,5 @@
 /* Call the termination functions of loaded shared objects.
-   Copyright (C) 1995,96,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995,96,1998-2002,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -46,6 +46,9 @@ _dl_fini (void)
   struct link_map *l;
   struct link_map **maps;
 
+  /* Protect against concurrent loads and unloads.  */
+  __rtld_lock_lock_recursive (GL(dl_load_lock));
+
   /* XXX Could it be (in static binaries) that there is no object loaded?  */
   assert (GL(dl_nloaded) > 0);
 
@@ -71,7 +74,7 @@ _dl_fini (void)
       unsigned int j;
       unsigned int k;
 
-      /* Find the place in the `maps' array.  */
+      /* Find the place in the 'maps' array.  */
       for (j = 1; maps[j] != l; ++j)
 	;
 
@@ -79,9 +82,7 @@ _dl_fini (void)
 	 move the found object (if necessary) in front.  */
       for (k = j + 1; k < GL(dl_nloaded); ++k)
 	{
-	  struct link_map **runp;
-
-	  runp = maps[k]->l_initfini;
+	  struct link_map **runp = maps[k]->l_initfini;
 	  if (runp != NULL)
 	    {
 	      while (*runp != NULL)
@@ -120,13 +121,12 @@ _dl_fini (void)
 
 		      break;
 		    }
-
 		}
 	    }
 	}
     }
 
-  /* `maps' now contains the objects in the right order.  Now call the
+  /* 'maps' now contains the objects in the right order.  Now call the
      destructors.  We have to process this array from the front.  */
   for (i = 0; i < GL(dl_nloaded); ++i)
     {
@@ -171,6 +171,8 @@ _dl_fini (void)
       /* Correct the previous increment.  */
       --l->l_opencount;
     }
+
+  __rtld_lock_unlock_recursive (GL(dl_load_lock));
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     {
