@@ -20,26 +20,39 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern void __libc_init_first (void);
+extern void __libc_init_first (int argc, char **argv, char **envp);
+
+extern int _dl_starting_up;
+weak_extern (_dl_starting_up)
+extern int __libc_multiple_libcs;
 
 int
 __libc_start_main (int (*main) (int, char **, char **), int argc,
 		   char **argv, void (*init) (void), void (*fini) (void),
 		   void (*rtld_fini) (void))
 {
+#ifndef PIC
+  /* The next variable is only here to work around a bug in gcc <= 2.7.2.2.
+     If the address would be taken inside the expression the optimizer
+     would try to be too smart and throws it away.  Grrr.  */
+  int *dummy_addr = &_dl_starting_up;
+
+  __libc_multiple_libcs = dummy_addr && !_dl_starting_up;
+#endif
+
   /* Register the destructor of the dynamic linker if there is any.  */
   if (rtld_fini != NULL)
     atexit (rtld_fini);
+
+  /* Set the global _environ variable correctly.  */
+  __environ = &argv[argc + 1];
 
   /* Call the initializer of the libc.  */
 #ifdef PIC
   if (_dl_debug_impcalls)
     _dl_debug_message ("\tinitialize libc\n\n", NULL);
 #endif
-  __libc_init_first ();
-
-  /* Set the global _environ variable correctly.  */
-  __environ = &argv[argc + 1];
+  __libc_init_first (argc, argv, __environ);
 
   /* Call the initializer of the program.  */
 #ifdef PIC

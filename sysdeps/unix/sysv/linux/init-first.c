@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  Linux version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -97,9 +97,11 @@ __libc_init_first (void)
 }
 
 #else
-
-SYSDEP_CALL_INIT(__libc_init_first, init);
-
+void
+__libc_init_first (int argc, char **argv, char **envp)
+{
+  init (argc, argv, envp);
+}
 #endif
 
 

@@ -1,3 +1,11 @@
+1998-03-09 23:36  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/init-first.c [!PIC]: Expect arguments
+	in correct format.
+	* sysdeps/unix/sysv/linux/libc-start.c: Call __libc_init_first
+	with correct parameters.
+	[!PIC]: Initialize __libc_multiple_libcs.
+
 1998-03-09 18:21  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-support.c (_dl_debug_bindings): Add definition.
