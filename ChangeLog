@@ -4,6 +4,9 @@
 	* rt/aio_read64.c: Likewise.
 	Reported by Christian Gafton.
 
+	* rt/aio_write.c: Fix return value.
+	* rt/aio_write64.c: Likewise.
+
 	* rt/aio_misc.c: Set errno at correct place.
 
 1999-08-04  Andreas Schwab  <schwab@suse.de>
