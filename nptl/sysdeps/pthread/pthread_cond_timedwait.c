@@ -50,7 +50,7 @@ __pthread_cond_timedwait (cond, mutex, abstime)
   int result = 0;
 
   /* Catch invalid parameters.  */
-  if (abstime->tv_nsec >= 1000000000)
+  if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)
     return EINVAL;
 
   /* Make sure we are along.  */

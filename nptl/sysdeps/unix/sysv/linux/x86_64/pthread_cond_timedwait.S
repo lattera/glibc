@@ -54,6 +54,11 @@ __pthread_cond_timedwait:
 #define FRAME_SIZE 80
 	subq	$FRAME_SIZE, %rsp
 .Lsubq:
+
+	cmpq	$1000000000, 8(%rdx)
+	movl	$EINVAL, %rax
+	jae	18f
+
 	/* Stack frame:
 
 	   rsp + 80

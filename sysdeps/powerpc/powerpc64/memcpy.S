@@ -79,6 +79,8 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     rldicl. 0,12,0,61
     cmpldi cr6,31,7
     ble-  cr6,.L2  /* less than 8 bytes left.  */
+    srdi  11,31,3
+    andi. 10,12,7
     bne-  0,.L6   /* Source is not DW aligned.  */
     srdi. 9,31,3
     mr    10,3
@@ -164,19 +166,17 @@ EALIGN (BP_SYM (memcpy), 5, 0)
     ld 30,-16(1)
     blr
 
+    .align  4
 .L6:
-    srdi 11,31,3
-    mr 4,3
-    mr 5,12
 
   /* Copy doublewords where the destination is aligned but the source is
      not.  Use aligned doubleword loads from the source, shifted to realign
      the data, to allow aligned destination stores.  */
-    andi. 10,5,7
+    subf  5,10,12
     andi. 0,11,1
-    subf  5,10,5
-    ld    6,0(5)
     sldi  10,10,3
+    mr    4,3
+    ld    6,0(5)
     ld    7,8(5)
     subfic  9,10,64
     beq   2f

@@ -55,6 +55,10 @@ __pthread_cond_timedwait:
 	movl	20(%esp), %ebx
 	movl	28(%esp), %ebp
 
+	cmpl	$1000000000, 4(%ebp)
+	movl	$EINVAL, %eax
+	jae	18f
+
 	/* Get internal lock.  */
 	movl	$1, %edx
 	xorl	%eax, %eax

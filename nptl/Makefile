@@ -194,7 +194,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-spin1 tst-spin2 tst-spin3 \
 	tst-cond1 tst-cond2 tst-cond3 tst-cond4 tst-cond5 tst-cond6 tst-cond7 \
 	tst-cond8 tst-cond9 tst-cond10 tst-cond11 tst-cond12 tst-cond13 \
-	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 \
+	tst-cond14 tst-cond15 tst-cond16 tst-cond17 tst-cond18 tst-cond19 \
 	tst-rwlock1 tst-rwlock2 tst-rwlock3 tst-rwlock4 tst-rwlock5 \
 	tst-rwlock6 tst-rwlock7 tst-rwlock8 tst-rwlock9 tst-rwlock10 \
 	tst-rwlock11 tst-rwlock12 tst-rwlock13 \
@@ -454,6 +454,7 @@ $(objpfx)tst-dlsym1: $(libdl) $(shared-thread-library)
 
 ifeq (yes,$(build-shared))
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.so
+$(objpfx)tst-cond19: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.so
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.so
@@ -465,6 +466,7 @@ LDFLAGS-tst-_res1mod2.so = -Wl,-soname,tst-_res1mod2.so
 $(objpfx)tst-_res1: $(objpfx)tst-_res1mod2.so $(shared-thread-library)
 else
 $(objpfx)tst-cond11: $(common-objpfx)rt/librt.a
+$(objpfx)tst-cond19: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancelx17: $(common-objpfx)rt/librt.a
 $(objpfx)tst-cancel18: $(common-objpfx)rt/librt.a

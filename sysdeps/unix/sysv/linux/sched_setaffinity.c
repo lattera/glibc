@@ -60,9 +60,12 @@ __sched_setaffinity_new (pid_t pid, size_t cpusetsize, const cpu_set_t *cpuset)
      does not request to set a bit beyond that.  */
   for (size_t cnt = __kernel_cpumask_size; cnt < cpusetsize; ++cnt)
     if (((char *) cpuset)[cnt] != '\0')
-      /* Found a nonzero byte.  This means the user request cannot be
-	 fulfilled.  */
-      return EINVAL;
+      {
+        /* Found a nonzero byte.  This means the user request cannot be
+	   fulfilled.  */
+	__set_errno (EINVAL);
+	return -1;
+      }
 
   return INLINE_SYSCALL (sched_setaffinity, 3, pid, cpusetsize, cpuset);
 }

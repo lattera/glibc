@@ -1,3 +1,14 @@
+2004-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_timedwait.c
+	(__pthread_cond_timedwait): Also check for negativ nanoseconds.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__pthread_cond_timedwait): Check for invalid nanosecond in
+	timeout value.
+	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_timedwait.S: Likewise.
+	* tst-cond19.c: New file.
+	* Makefile: Add rules to build and run tst-cond19.
+
 2004-06-15  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* tst-context1.c (GUARD_PATTERN): Defined.
