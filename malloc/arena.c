@@ -482,8 +482,13 @@ ptmalloc_init (void)
 		s = &envline[7];
 	      break;
 	    case 8:
-	      if (! secure && memcmp (envline, "TOP_PAD_", 8) == 0)
-		mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+	      if (! secure)
+		{
+		  if (memcmp (envline, "TOP_PAD_", 8) == 0)
+		    mALLOPt(M_TOP_PAD, atoi(&envline[9]));
+		  else if (memcmp (envline, "PERTURB_", 8) == 0)
+		    mALLOPt(M_PERTURB, atoi(&envline[9]));
+		}
 	      break;
 	    case 9:
 	      if (! secure && memcmp (envline, "MMAP_MAX_", 9) == 0)
@@ -510,6 +515,8 @@ ptmalloc_init (void)
 	mALLOPt(M_TRIM_THRESHOLD, atoi(s));
       if((s = getenv("MALLOC_TOP_PAD_")))
 	mALLOPt(M_TOP_PAD, atoi(s));
+      if((s = getenv("MALLOC_PERTURB_")))
+	mALLOPt(M_PERTURB, atoi(s));
       if((s = getenv("MALLOC_MMAP_THRESHOLD_")))
 	mALLOPt(M_MMAP_THRESHOLD, atoi(s));
       if((s = getenv("MALLOC_MMAP_MAX_")))
