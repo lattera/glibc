@@ -23,6 +23,7 @@
 #define	__Emath_defined	1
 
 # define EDOM	1
+# define EILSEQ 17
 # define ERANGE	2
 #endif
 
@@ -41,7 +42,6 @@
 # define ENOMSG 14
 # define E2BIG 15
 # define EINTR 16
-# define EILSEQ 17
 # define ENOEXEC 18
 # define ENOENT 19
 # define EPROTOTYPE 20
