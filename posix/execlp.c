@@ -49,7 +49,8 @@ execlp (const char *file, const char *arg, ...)
 	  if ((char *) nptr + argv_max == (char *) argv)
 	    {
 	      /* Stack grows down.  */
-	      argv = (const char **) memcpy (nptr, argv, i);
+	      argv = (const char **) memcpy (nptr, argv,
+					     i * sizeof (const char *));
 	      argv_max += i;
 	    }
 	  else
@@ -61,7 +62,8 @@ execlp (const char *file, const char *arg, ...)
 	  else
 #endif
 	    /* We have a hole in the stack.  */
-	    argv = (const char **) memcpy (nptr, argv, i);
+	    argv = (const char **) memcpy (nptr, argv,
+					   i * sizeof (const char *));
 	}
 
       argv[i] = va_arg (args, const char *);
