@@ -1,5 +1,5 @@
 /* Store current floating-point environment.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1998.
 
@@ -31,4 +31,4 @@ __fegetenv (fenv_t *envp)
 }
 strong_alias (__fegetenv, __old_fegetenv)
 symbol_version (__old_fegetenv, fegetenv, GLIBC_2.1);
-default_symbol_version (__fegetenv, fegetenv, GLIBC_2.1.3);
+default_symbol_version (__fegetenv, fegetenv, GLIBC_2.2);
