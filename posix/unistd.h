@@ -468,7 +468,7 @@ extern char *getwd (char *__buf)
 extern int dup (int __fd) __THROW __wur;
 
 /* Duplicate FD to FD2, closing FD2 and making it open on the same file.  */
-extern int dup2 (int __fd, int __fd2) __THROW __wur;
+extern int dup2 (int __fd, int __fd2) __THROW;
 
 /* NULL-terminated array of "NAME=VALUE" environment variables.  */
 extern char **__environ;

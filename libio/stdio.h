@@ -149,9 +149,9 @@ extern struct _IO_FILE *stderr;		/* Standard error output stream.  */
 
 __BEGIN_NAMESPACE_STD
 /* Remove file FILENAME.  */
-extern int remove (__const char *__filename) __THROW __wur;
+extern int remove (__const char *__filename) __THROW;
 /* Rename file OLD to NEW.  */
-extern int rename (__const char *__old, __const char *__new) __THROW __wur;
+extern int rename (__const char *__old, __const char *__new) __THROW;
 __END_NAMESPACE_STD
 
 
