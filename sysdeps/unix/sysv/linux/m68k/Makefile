@@ -4,6 +4,7 @@ m68k-syntax-flag = -DMOTOROLA_SYNTAX
 
 ifeq ($(subdir),misc)
 sysdep_routines += mremap
+sysdep_headers += sys/reg.h
 endif
 
 ifeq ($(subdir),elf)
