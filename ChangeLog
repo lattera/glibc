@@ -1,3 +1,20 @@
+2000-07-25  Maciej W. Rozycki  <macro@ds2.pg.gda.pl>
+
+	* sysdeps/mips/dl-machine.h (_RTLD_PROLOGUE): Stringify using
+	__STRING(entry) and not #entry.
+	(_RTLD_EPILOGUE): Likewise.
+	* sysdeps/mips/mips64/dl-machine.h: Likewise.
+
+2000-07-25  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/Makefile ($(objpfx)tst-unbputc.out): Change parameter
+	according to changes in test program, run also with static only
+	builds.
+	($(objpfx)tst-printf.out): Likewise.
+
+	* stdio-common/tst-unbputc.sh: Likewise.
+	* stdio-common/tst-printf.sh: Likewise.
+
 2000-07-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/wfileops.c (_IO_wdo_write): Correct return value.
