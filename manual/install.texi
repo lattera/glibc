@@ -336,7 +336,7 @@ GCC 2.95 or newer
 
 The GNU C library can only be compiled with the GNU C compiler family.
 As of the 2.2 release, GCC 2.95.2 or higher is required.  As of this
-writing, GCC 2.95.2 is the compiler we advise to use.
+writing, GCC 2.95.3 is the compiler we advise to use.
 
 You can use whatever compiler you like to compile programs that use GNU
 libc, but be aware that both GCC 2.7 and 2.8 have bugs in their
@@ -432,6 +432,7 @@ m68k-@var{*}-linux
 mips@var{*}-@var{*}-linux
 powerpc-@var{*}-linux
 s390-@var{*}-linux
+s390x-@var{*}-linux
 sparc-@var{*}-linux
 sparc64-@var{*}-linux
 @end smallexample
