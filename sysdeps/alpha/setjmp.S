@@ -74,6 +74,7 @@ END(__sigsetjmp)
 
 ENTRY(_setjmp)
 	ldgp	gp, 0(pv)
+	.prologue 1
 	mov	0, a1
 	br	$sigsetjmp_local
 END(_setjmp)
@@ -81,6 +82,7 @@ libc_hidden_def (_setjmp)
 
 ENTRY(setjmp)
 	ldgp	gp, 0(pv)
+	.prologue 1
 	mov	1, a1
 	br	$sigsetjmp_local
 END(setjmp)
