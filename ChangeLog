@@ -1,5 +1,8 @@
 Mon Feb 12 03:10:41 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
+	* sunrpc/pm_getport.c: #if 0 out gratuitous inclusion of <net/if.h>.
+	* sunrpc/pm_getmaps.c: Likewise.
+
 	* sysdeps/unix/sysv/syscalls.list: Add setrlimit and settimeofday,
  	so real syscalls override unix/sysv/*.c on sysv-derived systems
  	that have them.
