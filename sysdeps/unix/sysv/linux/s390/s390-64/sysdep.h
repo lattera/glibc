@@ -23,6 +23,7 @@
 
 #include <sysdeps/s390/s390-64/sysdep.h>
 #include <sysdeps/unix/sysdep.h>
+#include <dl-sysdep.h>	/* For RTLD_PRIVATE_ERRNO.  */
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h

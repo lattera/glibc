@@ -1,5 +1,12 @@
 2004-10-05  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/timer_create.c (timer_create): Use
+	defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0 instead of
+	defined CLOCK_PROCESS_CPUTIME_ID #ifs and similarly for
+	THREAD_CPUTIME.
+
+2004-10-05  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h (_POSIX_CPUTIME,
 	_POSIX_THREAD_CPUTIME): Define to 0.
 
