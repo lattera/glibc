@@ -43,6 +43,18 @@ struct osockaddr
   };
 #endif
 
+/* The following constants should be used for the second parameter of
+   `shutdown'.  */
+enum
+{
+  SHUT_RD = 0,		/* No more receptions.  */
+#define SHUT_RD		SHUT_RD
+  SHUT_WR,		/* No more transmissions.  */
+#define SHUT_WR		SHUT_WR
+  SHUT_RDWR		/* No more receptions or transmissions.  */
+#define SHUT_RDWR	SHUT_RDWR
+};
+
 /* This is the type we use for generic socket address arguments.
 
    With GCC 2.7 and later, the funky union causes redeclarations or
@@ -178,9 +190,9 @@ extern int accept __P ((int __fd, __SOCKADDR_ARG __addr,
 
 /* Shut down all or part of the connection open on socket FD.
    HOW determines what to shut down:
-     0 = No more receptions;
-     1 = No more transmissions;
-     2 = No more receptions or transmissions.
+     SHUT_RD   = No more receptions;
+     SHUT_WR   = No more transmissions;
+     SHUT_RDWR = No more receptions or transmissions.
    Returns 0 on success, -1 for errors.  */
 extern int shutdown __P ((int __fd, int __how));
 
