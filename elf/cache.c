@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1999.
 
@@ -78,6 +78,12 @@ print_entry (const char *lib, int flag, unsigned int osversion,
 #if defined __ia64__ || defined __i386__
     case FLAG_IA64_LIB64:
       fputs (",IA-64", stdout);
+      break;
+#endif
+#if defined __x86_64__ || defined __i386__
+    case FLAG_X8664_LIB64:
+      fputs (",x86-64", stdout);
+      break;
 #endif
 #if defined __s390__ || defined __s390x__
     case FLAG_S390_LIB64:

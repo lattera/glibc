@@ -1,3 +1,7 @@
+2002-04-08  Andreas Jaeger  <aj@suse.de>
+
+	* elf/cache.c (print_entry): Support x86-64.
+
 2002-04-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig (CPPFLAGS): Also add CPPFLAGS-<basename> where <basename>
