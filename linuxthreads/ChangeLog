@@ -1,3 +1,8 @@
+2003-04-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep-cancel.h (PSEUDO): Add
+	missing ; after ENTRY use [PR libc/4997].
+
 2003-04-03  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread.c (pthread_initialize): Unblock __pthread_sig_cancel

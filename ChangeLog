@@ -1,3 +1,8 @@
+2003-04-03  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Reverse test
+	for atomic_compare_and_exchange_bool_acq failure.
+
 2003-04-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/unistd.h: Define _POSIX_VERSION, _POSIX2_VERSION,
