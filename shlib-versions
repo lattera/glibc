@@ -17,26 +17,20 @@
 # -------------		---------------		------------------------------
 
 # The interface to -lm depends mostly only on cpu, not on operating system.
-i.86-.*-.*		libm=6
-m68k-.*-.*		libm=6
 sparc64-.*-linux.*	libm=6			GLIBC_2.2
-sparc.*-.*-.*		libm=6
 alpha.*-.*-linux.*	libm=6.1
-alpha.*-.*-.*		libm=6
-powerpc-.*-.*		libm=6
 mips.*-.*-linux.*	libm=6			GLIBC_2.0 GLIBC_2.2
-mips.*-.*-.*		libm=6
-arm.*-.*-.*		libm=6
-ia64-.*-.*		libm=6.1		GLIBC_2.2
-sh.*-.*-.*		libm=6			GLIBC_2.2
-s390.*-.*-linux.*       libm=6
+ia64-.*-linux.*		libm=6.1		GLIBC_2.2
+sh.*-.*-linux.*		libm=6			GLIBC_2.2
+.*-.*-linux.*		libm=6
+.*-.*-gnu-gnu.*		libm=6
 
 # We provide libc.so.6 for Linux kernel versions 2.0 and later.
 alpha.*-.*-linux.*	libc=6.1
 # Working mips versions were never released between 2.0 and 2.2.
 mips.*-.*-linux.*	libc=6			GLIBC_2.0 GLIBC_2.2
-ia64-.*-.*		libc=6.1		GLIBC_2.2
-sh.*-.*-.*              libc=6                  GLIBC_2.2
+ia64-.*-linux.*		libc=6.1		GLIBC_2.2
+sh.*-.*-linux.*		libc=6			GLIBC_2.2
 sparc64-.*-linux.*	libc=6			GLIBC_2.2
 .*-.*-linux.*		libc=6
 
@@ -44,13 +38,13 @@ sparc64-.*-linux.*	libc=6			GLIBC_2.2
 .*-.*-gnu-gnu.*		libmachuser=1
 
 # libhurduser.so.0.0 corresponds to hurd/*.defs as of 7 May 1996.
-.*-.*-gnu-gnu*		libhurduser=0.0
+.*-.*-gnu-gnu.*		libhurduser=0.0
 
 # libc.so.0.2 is for the Hurd alpha release 0.2.
 %ifdef USE_IN_LIBIO /* experimental only! */
-.*-.*-gnu-gnu*		libc=0.2.90.libio	GLIBC_2.2
+.*-.*-gnu-gnu.*		libc=0.2.90.libio	GLIBC_2.2
 %else
-.*-.*-gnu-gnu*		libc=0.2
+.*-.*-gnu-gnu.*		libc=0.2
 %endif
 
 # The dynamic loader also requires different names.

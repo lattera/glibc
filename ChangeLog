@@ -1,3 +1,13 @@
+2000-09-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* shlib-versions: Simplify libm entries.  Correct a few Hurd entries.
+
+	* sysdeps/generic/initfini.c: Rewrite slightly to get rid of the
+	ugly GMON_WEAK_START hack.
+	Patch by Philip Blundell <philb@gnu.org>.
+
+	* sysdeps/i386/i486/bits/string.h: Pretty printing.
+
 2000-09-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/powerpc/dl-machine.c: Add volatile to PPC_DCBST, PPC_SYNC,

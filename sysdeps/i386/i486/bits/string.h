@@ -113,7 +113,7 @@ __memcpy_by2 (void *__dest, __const void *__src, size_t __n)
 __STRING_INLINE void *__memcpy_g (void *__dest, __const void *__src,
 				  size_t __n);
 
-     __STRING_INLINE void *
+__STRING_INLINE void *
 __memcpy_g (void *__dest, __const void *__src, size_t __n)
 {
   register unsigned long int __d0, __d1, __d2;
