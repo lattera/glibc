@@ -1,3 +1,8 @@
+2000-09-05  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/thread-m.h [_LIBC]: Even if not linking with libpthread,
+	ensure usability of mutex as an `in use' flag.
+
 2000-09-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* shlib-versions: Simplify libm entries.  Correct a few Hurd entries.

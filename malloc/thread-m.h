@@ -1,6 +1,6 @@
 /* Basic platform-independent macro definitions for mutexes and
    thread-specific data.
-   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>, 1996.
 
@@ -42,14 +42,22 @@ typedef pthread_mutex_t	mutex_t;
 
 #define MUTEX_INITIALIZER	PTHREAD_MUTEX_INITIALIZER
 
+/* Even if not linking with libpthread, ensure usability of mutex as
+   an `in use' flag, see also the NO_THREADS case below.  Assume
+   pthread_mutex_t is at least one int wide.  */
+
 #define mutex_init(m)		\
-   (__pthread_mutex_init != NULL ? __pthread_mutex_init (m, NULL) : 0)
+   (__pthread_mutex_init != NULL \
+    ? __pthread_mutex_init (m, NULL) : (*(int *)(m) = 0))
 #define mutex_lock(m)		\
-   (__pthread_mutex_lock != NULL ? __pthread_mutex_lock (m) : 0)
+   (__pthread_mutex_lock != NULL \
+    ? __pthread_mutex_lock (m) : ((*(int *)(m) = 1), 0))
 #define mutex_trylock(m)	\
-   (__pthread_mutex_trylock != NULL ? __pthread_mutex_trylock (m) : 0)
+   (__pthread_mutex_trylock != NULL \
+    ? __pthread_mutex_trylock (m) : (*(int *)(m) ? 1 : ((*(int *)(m) = 1), 0)))
 #define mutex_unlock(m)		\
-   (__pthread_mutex_unlock != NULL ? __pthread_mutex_unlock (m) : 0)
+   (__pthread_mutex_unlock != NULL \
+    ? __pthread_mutex_unlock (m) : (*(int*)(m) = 0))
 
 #define thread_atfork(prepare, parent, child) \
    (__pthread_atfork != NULL ? __pthread_atfork(prepare, parent, child) : 0)
