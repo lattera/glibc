@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ extern int __syscall_ftruncate64 (int fd, int dummy, int high_length,
 
 /* Truncate the file FD refers to to LENGTH bytes.  */
 int
-ftruncate64 (int fd, off64_t length)
+__ftruncate64 (int fd, off64_t length)
 {
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
   if (! __have_no_truncate64)
@@ -72,6 +72,7 @@ ftruncate64 (int fd, off64_t length)
   return __ftruncate (fd, (off_t) length);
 #endif
 }
+weak_alias (__ftruncate64, ftruncate64)
 
 #else
 /* Use the generic implementation.  */
