@@ -1,3 +1,10 @@
+2000-06-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv.h (__gconv_trans_context_fct): Remove two
+	parameters.
+	* iconv/skeleton.c (FUNCTION_NAME): Call __trans_context_fct if it
+	exists.
+
 2000-06-12  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/kernel_stat.h: New file.

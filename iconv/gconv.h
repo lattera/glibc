@@ -87,9 +87,7 @@ typedef int (*__gconv_trans_fct) (struct __gconv_step *step,
 typedef int (*__gconv_trans_context_fct) (struct __gconv_trans_data *data,
 					  __const unsigned char *,
 					  __const unsigned char *,
-					  __const unsigned char *,
-					  unsigned char *, unsigned char *,
-					  unsigned char *);
+					  unsigned char *, unsigned char *);
 
 /* Function to query module about supported encoded character sets.  */
 typedef int (*__gconv_trans_query_fct) (__const char **, size_t *);
