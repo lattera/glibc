@@ -942,7 +942,19 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	case PT_TLS:
 #ifdef USE_TLS
-	  if (ph->p_memsz > 0)
+	  if (ph->p_memsz == 0)
+	    /* Nothing to do for an empty segment.  */
+	    break;
+
+	  /* If not loading the initial set of shared libraries,
+	     check whether we should permit loading a TLS segment.  */
+	  if (
+# ifdef SHARED
+	      __builtin_expect (l->l_type == lt_library, 1) ||
+# endif
+	      /* If GL(dl_tls_max_dtv_idx) == 0, then rtld.c did not
+		 set up TLS data structures, so don't use them now.  */
+	      __builtin_expect (GL(dl_tls_max_dtv_idx), 1) != 0)
 	    {
 	      l->l_tls_blocksize = ph->p_memsz;
 	      l->l_tls_align = ph->p_align;
@@ -953,14 +965,20 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
 	      /* Assign the next available module ID.  */
 	      l->l_tls_modid = _dl_next_tls_modid ();
+	      break;
 	    }
-#else
+
+	  if (l->l_prev == NULL)
+	    /* We are loading the executable itself when the dynamic linker
+	       was executed directly.  The setup will happen later.  */
+	    break;
+#endif
+
 	  /* Uh-oh, the binary expects TLS support but we cannot
 	     provide it.  */
 	  errval = 0;
 	  errstring = N_("cannot handle TLS data");
 	  goto call_lose;
-#endif
 	  break;
 	}
 

@@ -1,3 +1,20 @@
+2002-12-02  Roland McGrath  <roland@redhat.com>
+
+	* elf/tst-tls4.c: Define an unused TLS variable here, so that no lazy
+	TLS setup is required.
+	* elf/tst-tls5.c: Likewise.
+	* elf/tst-tls6.c: Likewise.
+	* elf/tst-tls7.c: Likewise.
+	* elf/tst-tls8.c: Likewise.
+	* elf/tst-tls9.c: Likewise.
+
+	* elf/rtld.c (dl_main): Remove [! SHARED] conditional from
+	`if (GL(dl_tls_max_dtv_idx) > 0)' tests for doing TLS setup.
+	* elf/dl-close.c (libc_freeres_fn): Check GL(dl_tls_dtv_slotinfo_list)
+	for being null before calling free_slotinfo.
+	* elf/dl-load.c (_dl_map_object_from_fd) [SHARED]: For PT_TLS in
+	dynamic loading, bail with error if GL(dl_tls_max_dtv_idx) is zero.
+
 2002-11-30  Bruno Haible  <bruno@clisp.org>
 
 	* iconv/gconv.h (__gconv_btowc_fct): New typedef.

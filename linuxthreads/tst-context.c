@@ -1,11 +1,18 @@
+/* Ack, a hack!  We need to get the proper definition, or lack thereof,
+   for FLOATING_STACKS.  But when !IS_IN_libpthread, this can get defined
+   incidentally by <tls.h>.  So kludge around it.  */
+
+#define IS_IN_libpthread
+#include <tls.h>
+#undef IS_IN_libpthread
+#undef USE___THREAD
+
 #include <errno.h>
 #include <error.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <ucontext.h>
-
-#include "pt-machine.h"
 
 
 #define N	4

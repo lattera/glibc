@@ -476,12 +476,15 @@ libc_freeres_fn (free_mem)
     }
 
 #ifdef USE_TLS
-  /* Free the memory allocated for the dtv slotinfo array.  We can do
-     this only if all modules which used this memory are unloaded.
-     Also, the first element of the list does not have to be
-     deallocated.  It was allocated in the dynamic linker (i.e., with
-     a different malloc).  */
-  if (free_slotinfo (GL(dl_tls_dtv_slotinfo_list)->next))
-    GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+  if (USE___THREAD || GL(dl_tls_dtv_slotinfo_list) != NULL)
+    {
+      /* Free the memory allocated for the dtv slotinfo array.  We can do
+	 this only if all modules which used this memory are unloaded.
+	 Also, the first element of the list does not have to be
+	 deallocated.  It was allocated in the dynamic linker (i.e., with
+	 a different malloc).  */
+      if (free_slotinfo (GL(dl_tls_dtv_slotinfo_list)->next))
+	GL(dl_tls_dtv_slotinfo_list)->next = NULL;
+    }
 #endif
 }

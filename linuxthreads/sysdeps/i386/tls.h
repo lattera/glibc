@@ -43,8 +43,17 @@ typedef struct
 #endif
 
 
-/* We can support TLS only if the floating-stack support is available.  */
-#if defined FLOATING_STACKS && defined HAVE_TLS_SUPPORT
+/* We can support TLS only if the floating-stack support is available.
+   However, we want to compile in the support and test at runtime whether
+   the running kernel can support it or not.  To avoid bothering with the
+   TLS support code at all, use configure --without-tls.
+
+   We need USE_TLS to be consistently defined, for ldsodefs.h conditionals.
+   But some of the code below can cause problems in building libpthread
+   (e.g. useldt.h will defined FLOATING_STACKS when it shouldn't).  */
+
+#if defined HAVE_TLS_SUPPORT \
+    && (defined FLOATING_STACKS || !defined IS_IN_libpthread)
 
 /* Signal that TLS support is available.  */
 # define USE_TLS	1
@@ -96,8 +105,21 @@ typedef struct
 #   define TLS_LOAD_EBX
 #  endif
 
+#  if __ASSUME_LDT_WORKS > 0
+#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK /* Nothing to do.  */
+#  else
+#   include "useldt.h"		/* For the structure.  */
+#   define TLS_DO_MODIFY_LDT_KERNEL_CHECK				      \
+  if (__builtin_expect (GL(dl_osversion) < 131939, 0))			      \
+    _dl_fatal_printf ("kernel %u.%u.%u cannot support thread-local storage\n",\
+		      (GL(dl_osversion) >> 16) & 0xff,			      \
+		      (GL(dl_osversion) >> 8) & 0xff,			      \
+		      (GL(dl_osversion) >> 0) & 0xff);
+#  endif
+
 #  define TLS_DO_MODIFY_LDT(descr, nr)					      \
 ({									      \
+  TLS_DO_MODIFY_LDT_KERNEL_CHECK					      \
   struct modify_ldt_ldt_s ldt_entry =					      \
     { nr, (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
       1, 0, 0, 1, 0, 1, 0 };						      \
@@ -177,7 +199,7 @@ typedef struct
   ({ struct _pthread_descr_struct *__descr;				      \
      THREAD_GETMEM (__descr, p_header.data.dtvp); })
 
-# endif	/* FLOATING_STACKS && HAVE_TLS_SUPPORT */
+# endif	/* HAVE_TLS_SUPPORT && (FLOATING_STACKS || !IS_IN_libpthread) */
 #endif /* __ASSEMBLER__ */
 
 #endif	/* tls.h */

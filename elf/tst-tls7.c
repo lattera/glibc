@@ -5,6 +5,15 @@
 #include <link.h>
 #include <tls.h>
 
+#ifdef USE_TLS
+# include "tls-macros.h"
+
+/* This gives the executable a TLS segment so that even if the libc.so
+   it loads has none (i.e. --with-tls --without-__thread), ld.so will
+   permit loading of objects with TLS segments.  */
+COMMON_INT_DEF(loser);
+#endif
+
 
 #define TEST_FUNCTION do_test ()
 static int
