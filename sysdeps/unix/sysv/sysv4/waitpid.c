@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,96,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -115,6 +115,6 @@ __libc_waitpid (__pid_t pid, int *stat_loc, int options)
      any PID.  */
   return infop.__pid;
 }
-
 weak_alias (__libc_waitpid, __waitpid)
 weak_alias (__libc_waitpid, waitpid)
+libc_hidden_weak (__waitpid)

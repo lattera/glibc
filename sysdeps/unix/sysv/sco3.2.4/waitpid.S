@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993,94,95,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,4 +33,5 @@ ENTRY (__waitpid)
 	movl r1, (scratch)	/* Yes; store the status there.  */
 null:	ret
 
+libc_hidden_def (__waitpid)
 weak_alias (__waitpid, waitpid)
