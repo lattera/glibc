@@ -93,6 +93,24 @@
 #endif
 
 
+/* Support for flexible arrays.  */
+#if __GNUC_PREREQ (2,97)
+/* GCC 2.97 supports C99 flexible array members.  */
+# define __flexarr	[]
+#else
+# ifdef __GNUC__
+#  define __flexarr	[0]
+# else
+#  ifdef __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
+#   define __flexarr	[]
+#  else
+/* Some other non-C99 compiler.  Approximate with [1].  */
+#   define __flexarr	[1]
+#  endif
+# endif
+#endif
+
+
 /* __asm__ ("xyz") is used throughout the headers to rename functions
    at the assembly language level.  This is wrapped by the __REDIRECT
    macro, in order to support compilers that can do this some other

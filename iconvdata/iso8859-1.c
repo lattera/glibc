@@ -45,7 +45,7 @@
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = *((const uint32_t *) inptr);				      \
     if (__builtin_expect (ch, 0) > 0xff)				      \
       {									      \
 	/* We have an illegal character.  */				      \

@@ -1,3 +1,15 @@
+2000-11-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv.h (__gconv_info): Define __data element using __flexarr.
+	* misc/sys/cdefs.h: Define __flexarr.
+	Proposed by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+	* iconvdata/iso-2022-jp.c: Add prototypes to avoid warnings.
+	* iconv/skeleton.c: Likewise.
+	* iconvdata/iso8859-1.c (BODY to 8859-1): Add const to cast.
+	* iconv/loop.c (get16): Add const to cast.
+	(get32): Likewise.
+
 2000-11-27  Andreas Jaeger  <aj@suse.de>
 
 	* login/programs/pt_chown.c (do_pt_chown): Mark function as static

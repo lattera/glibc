@@ -213,6 +213,7 @@ static int to_object;
 #  error "CHARSET_NAME not defined"
 # endif
 
+extern int gconv_init (struct __gconv_step *step);
 int
 gconv_init (struct __gconv_step *step)
 {
@@ -273,6 +274,12 @@ gconv_init (struct __gconv_step *step)
 #define SINGLE2(fct) fct##_single
 
 
+extern int FUNCTION_NAME (struct __gconv_step *step,
+			  struct __gconv_step_data *data,
+			  const unsigned char **inptrp,
+			  const unsigned char *inend,
+			  unsigned char **outbufstart, size_t *irreversible,
+			  int do_flush, int consume_incomplete);
 int
 FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	       const unsigned char **inptrp, const unsigned char *inend,
