@@ -1,3 +1,15 @@
+2000-05-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (tests): Add $(tests-vis-$(have-protected)).
+	(tests-vis-yes): Add vismain.
+	(modules-names): Add $(modules-vis-$(have-protected)).
+	(modules-vis-yes): Add vismod1, vismod2, and vismod3.
+	Add rules to generate and run vismain.
+	* elf/vismain.c: New file.
+	* elf/vismod1.c: New file.
+	* elf/vismod2.c: New file.
+	* elf/vismod3.c: New file.
+
 2000-05-23  Andreas Jaeger  <aj@suse.de>
 
 	* stdio-common/tfformat.c (sprint_doubles): Add testcase for %a.
