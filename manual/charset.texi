@@ -94,7 +94,7 @@ for multibyte character strings.  The type is defined in @file{stddef.h}.
 The @w{ISO C90} standard, where this type was introduced, does not say
 anything specific about the representation.  It only requires that this
 type is capable to store all elements of the basic character set.
-Therefore it would be legitimate to define @code{wchar_t} and
+Therefore it would be legitimate to define @code{wchar_t} as
 @code{char}.  This might make sense for embedded systems.
 
 But for GNU systems this type is always 32 bits wide.  It is therefore
@@ -1968,7 +1968,7 @@ loading in statically linked programs.  On platforms without his
 capability it is therefore not possible to use this interface in
 statically linked programs.  The GNU C library has on ELF platforms no
 problems with dynamic loading in in these situations and therefore this
-point is mood.  The danger is that one gets acquainted with this and
+point is moot.  The danger is that one gets acquainted with this and
 forgets about the restrictions on other systems.
 
 A second thing to know about other @code{iconv} implementations is that

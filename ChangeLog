@@ -3,6 +3,10 @@
 	* manual/arith.texi (Rounding Functions): Fix documentation of trunc.
 	Patch by Steven G. Johnson <stevenj@gil-galad.mit.edu>.
 
+	* manual/charset.texi (Extended Char Intro): Fix typo (and -> as).
+	(Other iconv Implementations): Fix typo.
+	Patch by Martin Pool <mbp@wistful.humbug.org.au>.
+
 2000-05-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/pread.c: Removed, we can use the
