@@ -1,3 +1,8 @@
+2001-02-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/s_nextafterl.c: New file.
+	* sysdeps/m68k/fpu/s_fpclassifyl.c: New file.
+
 2001-02-15  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/regex.c (init_syntax_once): Add prototype.
