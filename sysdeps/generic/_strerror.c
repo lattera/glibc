@@ -16,6 +16,7 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <libintl.h>
 #include <stdio.h>
 #include <string.h>
 #include "../stdio-common/_itoa.h"
@@ -25,6 +26,9 @@ Cambridge, MA 02139, USA.  */
 #define _sys_nerr sys_nerr
 #endif
 
+/* Set if startup process finished.  */
+extern int _dl_starting_up;
+
 /* Return a string describing the errno code in ERRNUM.  */
 char *
 _strerror_internal (int errnum,
@@ -33,7 +37,8 @@ _strerror_internal (int errnum,
 {
   if (errnum < 0 || errnum >= _sys_nerr)
     {
-      const char *unk = _("Unknown error ");
+      static const char unk_orig[] = N_("Unknown error ");
+      const char *unk = _dl_starting_up ? unk_orig : _(unk_orig);
       const size_t unklen = strlen (unk);
       char *p = buf + buflen;
       *--p = '\0';
@@ -41,5 +46,6 @@ _strerror_internal (int errnum,
       return memcpy (p - unklen, unk, unklen);
     }
 
-  return (char *) _(_sys_errlist[errnum]);
+  return (char *) (_dl_starting_up ? _sys_errlist[errnum]
+		   : _(_sys_errlist[errnum]));
 }

@@ -52,6 +52,8 @@
 #define	_PATH_MAILDIR	"/var/mail"
 #define	_PATH_MAN	"/usr/man"
 #define	_PATH_MEM	"/dev/mem"
+#define	_PATH_MNTTAB    "/etc/fstab"
+#define	_PATH_MOUNTED   "/var/run/mtab"
 #define	_PATH_NOLOGIN	"/etc/nologin"
 #define	_PATH_SENDMAIL	"/usr/sbin/sendmail"
 #define	_PATH_SHELLS	"/etc/shells"

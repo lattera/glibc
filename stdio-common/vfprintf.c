@@ -23,7 +23,6 @@ Boston, MA 02111-1307, USA.  */
 #include <stdlib.h>
 #include <errno.h>
 #include <wchar.h>
-#include <libc-lock.h>
 #include "_itoa.h"
 #include "../locale/localeinfo.h"
 
@@ -124,6 +123,11 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
     }									      \
    while (0)
 # define UNBUFFERED_P(s) ((s)->__buffer == NULL)
+
+/* XXX These declarations should go as soon as the stdio header files
+   have these prototypes.   */
+extern void __flockfile (FILE *);
+extern void __funlockfile (FILE *);
 #endif /* USE_IN_LIBIO */
 
 
@@ -152,8 +156,6 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 # define is_longlong is_long_double
 #endif
 
-extern void __flockfile (FILE *);
-extern void __funlockfile (FILE *);
 
 /* Global variables.  */
 static const char null[] = "(null)";
@@ -848,8 +850,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   f = lead_str_end = find_spec (format, &mbstate);
 
   /* Lock stream.  */
+#ifdef USE_IN_LIBIO
+  __libc_cleanup_region_start ((void (*) (void *)) &_IO_funlockfile, s);
+  _IO_flockfile (s);
+#else
   __libc_cleanup_region_start ((void (*) (void *)) &__funlockfile, s);
   __flockfile (s);
+#endif
 
   /* Write the literal text before the first format.  */
   outstring ((const UCHAR_T *) format,

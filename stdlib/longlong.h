@@ -166,7 +166,7 @@ MA 02111-1307, USA. */
     (q) = __udiv_qrnnd (&__r, (n1), (n0), (d));				\
     (r) = __r;								\
   } while (0)
-extern UDItype __udiv_qrnnd ();
+extern UDItype __udiv_qrnnd __P ((UDItype *, UDItype, UDItype, UDItype));
 #define UDIV_TIME 220
 #endif /* LONGLONG_STANDALONE */
 #endif /* __alpha */
@@ -477,7 +477,7 @@ extern USItype __udiv_qrnnd ();
 	     : "=d" (__w)						\
 	     : "%dI" ((USItype)(u)),					\
 	       "dI" ((USItype)(v)));					\
-    __w; })  
+    __w; })
 #define udiv_qrnnd(q, r, nh, nl, d) \
   do {									\
     union {UDItype __ll;						\

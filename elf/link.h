@@ -195,7 +195,8 @@ extern int _dlerror_run (void (*operate) (void));
    LOADER's DT_RPATH is used in searching for NAME.
    If the object is already opened, returns its existing map.  */
 extern struct link_map *_dl_map_object (struct link_map *loader,
-					const char *name, int type);
+					const char *name, int type,
+					int trace_mode);
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
    MAP->l_searchlist.  PRELOADS points to a vector of NPRELOADS previously
@@ -203,7 +204,7 @@ extern struct link_map *_dl_map_object (struct link_map *loader,
    but before its dependencies.  */
 extern void _dl_map_object_deps (struct link_map *map,
 				 struct link_map **preloads,
-				 unsigned int npreloads);
+				 unsigned int npreloads, int trace_mode);
 
 /* Cache the locations of MAP's hash table.  */
 extern void _dl_setup_hash (struct link_map *map);

@@ -149,6 +149,9 @@ dl_main (const ElfW(Phdr) *phdr,
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
 
+  /* Set up a flag which tells we are just starting.  */
+  _dl_starting_up = 1;
+
   if (*user_entry == (ElfW(Addr)) &_start)
     {
       /* Ho ho.  We are not the program interpreter!  We are the program
@@ -210,7 +213,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	{
 	  void doit (void)
 	    {
-	      l = _dl_map_object (NULL, _dl_argv[0], lt_library);
+	      l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
 	    }
 	  char *err_str = NULL;
 	  const char *obj_name __attribute__ ((unused));
@@ -223,7 +226,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    }
 	}
       else
-	l = _dl_map_object (NULL, _dl_argv[0], lt_library);
+	l = _dl_map_object (NULL, _dl_argv[0], lt_library, 0);
 
       phdr = l->l_phdr;
       phent = l->l_phnum;
@@ -322,7 +325,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  char *p;
 	  while ((p = strsep (&list, ":")) != NULL)
 	    {
-	      (void) _dl_map_object (NULL, p, lt_library);
+	      (void) _dl_map_object (NULL, p, lt_library, 0);
 	      ++npreloads;
 	    }
 	}
@@ -378,7 +381,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  runp = file;
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
 	    {
-	      (void) _dl_map_object (NULL, p, lt_library);
+	      (void) _dl_map_object (NULL, p, lt_library, 0);
 	      ++npreloads;
 	    }
 	}
@@ -386,7 +389,7 @@ of this helper program; chances are you did not intend to run this program.\n",
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  (void) _dl_map_object (NULL, p, lt_library);
+	  (void) _dl_map_object (NULL, p, lt_library, 0);
 	}
 
       /* We don't need the file anymore.  */
@@ -412,7 +415,7 @@ of this helper program; chances are you did not intend to run this program.\n",
   /* Load all the libraries specified by DT_NEEDED entries.  If LD_PRELOAD
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
-  _dl_map_object_deps (l, preloads, npreloads);
+  _dl_map_object_deps (l, preloads, npreloads, mode == trace);
 
 #ifndef MAP_ANON
   /* We are done mapping things, so close the zero-fill descriptor.  */
@@ -459,15 +462,20 @@ of this helper program; chances are you did not intend to run this program.\n",
 	_dl_sysdep_message ("\t", "statically linked\n", NULL);
       else
 	for (l = _dl_loaded->l_next; l; l = l->l_next)
-	  {
-	    char buf[20], *bp;
-	    buf[sizeof buf - 1] = '\0';
-	    bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof l->l_addr * 2)
-	      *--bp = '0';
-	    _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
-				" (0x", bp, ")\n", NULL);
-	  }
+	  if (l->l_opencount == 0)
+	    /* The library was not found.  */
+	    _dl_sysdep_message ("\t", l->l_libname, " => not found\n", NULL);
+	  else
+	    {
+	      char buf[20], *bp;
+	      buf[sizeof buf - 1] = '\0';
+	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+	      while ((size_t) (&buf[sizeof buf - 1] - bp)
+		     < sizeof l->l_addr * 2)
+		*--bp = '0';
+	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
+				  " (0x", bp, ")\n", NULL);
+	    }
 
       if (mode != trace)
 	for (i = 1; i < _dl_argc; ++i)
@@ -562,9 +570,6 @@ of this helper program; chances are you did not intend to run this program.\n",
     r->r_state = RT_ADD;
     _dl_debug_state ();
   }
-
-  /* We finished the intialization and will start up.  */
-  _dl_starting_up = 1;
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */

@@ -45,7 +45,8 @@ routines :=								      \
 	confstr								      \
 	getopt getopt1							      \
 	sched_setp sched_getp sched_sets sched_gets sched_yield sched_primax  \
-	sched_primin sched_rr_gi
+	sched_primin sched_rr_gi					      \
+	getaddrinfo
 
 aux		:= init-posix environ
 tests		:= tstgetopt testfnm
@@ -57,6 +58,7 @@ gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 include ../Rules
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
+CFLAGS-getaddrinfo.c = -DRESOLVER
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a

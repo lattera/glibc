@@ -1,3 +1,114 @@
+Mon Oct 21 01:32:36 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Move initialization of `_dl_starting_up'
+	to beginning of function.  So libc functions can use this flag.
+	* sysdeps/generic/_strerror.c: Don't use dgettext for message
+	translation while `_dl_starting_up' is nonzero.
+
+	* elf/dl-deps.c (_dl_map_object_deps): Add new parameter
+ 	TRACE_MODE.
+	Pass parameter value to _dl_map_object.
+	* elf/dl-load (_dl_map_object): Add new parameter TRACE_MODE.
+	If TRACE_MODE is nonzero don#t signal error when shared lib
+	is not found.  Instead create fake entry for link map.
+	* dl-open.c (dl-open): Pass 0 for new argument to _dl_map_object.
+	* dl-runtime.c (_dl_object_relocation_scope): Pass 0 for new
+	argument to _dl_map_object_deps.
+	* elf/link.h: Add new parameter TRACE_MODE for prototypes of
+	_dl_map_object and _dl_map_object_deps.
+	* elf/rtld.c (dl_main): Pass 0 for new argument to _dl_map_object
+	and _dl_map_object_deps.
+	When mode == trace test for l_opencount == 0 before printing
+	link information since this means the lib is not found.
+
+Sun Oct 20 22:19:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rpm/template: Add INSTALL to %doc line to follow copyright
+	restrictions which demand the distribution of the copyright
+	messages in INSTALL even for binary distributions.
+
+	* features.h: Rename to...
+	* features.h.in: ...this.  Change value of __GNU_LIBRARY__ to 2
+	(for major version numberof package) and add __GNU_LIBRARY_MINOR__
+	and __GNU_LIBRARY_INTERFACE__.
+	* Makefile ($(objpfx)features.h): New rule to generate features.h
+	from template features.h.in.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c: Include <paths.h>.
+
+Sun Oct 20 00:00:13 1996  Richard Henderson  <rth@tamu.edu>
+
+	* locale/programs/linereader.c (lr_open): Cast away const before free.
+	(lr_close): Likewise.
+
+	* misc/mntent.h: Move _PATH_MNTTAB & _PATH_MOUNTED to paths.h.
+	* misc/paths.h: Move to ...
+	* sysdeps/generic/paths.h: ... here.
+	* paths.h: Remove.
+	* sysdeps/unix/sysv/linux/paths.h: New file.  Correct _PATH_STDPATH,
+	_PATH_MAILDIR, _PATH_MOUNTED, _PATH_UNIX to comply with the fsstd.
+
+	* nss/nss_db/db-netgrp.h: Include <string.h>.
+
+	* stdio-common/psignal.c: De-ansidecl-ify.  Allow NULL entries in
+	_sys_siglist, which result in the "Unknown signal" message.
+	* string/strsignal.c: Likewise.
+	* sysdeps/generic/Makefile [stdio-common]: If $(inhibit-siglist),
+	don't auto-generate siglist.c.
+	* sysdeps/unix/sysv/linux/Makefile [stdio-common]: Set inhibit-siglist.
+	* sysdeps/unix/sysv/linux/siglist.c: New file.  Not needing to
+	autogenerate makes bootstrapping and cross-compiling much easier.
+	* sysdeps/unix/sysv/linux/siglist.h: New file.
+
+	* stdlib/longlong.h: Prototype __udiv_qrnnd.
+
+	* sysdeps/unix/sysv/linux/alpha/Makefile (sysdep_headers): Remove
+	sys/io.h.  It is already added in .../linux/Makefile.
+
+	* sysdeps/unix/sysv/linux/alpha/sigaction.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/signum.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/statbuf.h: New file.
+
+Sun Oct 20 17:17:12 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	Add implementation of POSIX.1g function getaddrinfo.
+	* posix/Makefile (routines): Add getaddrinfo.
+	* sysdeps/posix/getaddrinfo.c.: New file.  Add implementation by
+ 	Craig Metz.
+	* sysdeps/stub/getaddrinfo.c: New file.  Stub implementation.
+	* resolv/netdb.h [__USE_POSIX]: Add getaddrinfo prototypes and
+	related constants and structures.
+
+Sun Oct 20 13:02:34 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/lockfile.c: Rename functions to __internal_*.
+	Make all old names weak alises so that they can be replaced
+	by libpthread.
+
+	* stdio-common/vfprintf.c: Only declare __flockfile and __funlockfile
+	for !USE_IN_LIBIO.
+	[USE_IN_LIBIO]: Call _IO_flockfile and _IO_funlockfile instead of
+	__flockfile and __funlockfile.
+	Reported by NIIBE Yutaka.
+
+	* crypt/md5.c: Change form of copyright message according to GNITS
+	rules.
+	Add warning for requirement on RESBUF parameter for `md5_finish_ctx'
+	and `md5_read_ctx' function.
+	* crypt/md5.h: Likewise.
+
+	* grp/testgrp.c: Don't use perror for error cases since getgr* and
+	getpw* functions do not return usable error codes.
+
+Sun Oct 19 23:05:32 1996  Jim Meyering  <meyering@asic.sc.ti.com>
+
+	* crypt/md5.c (md5_process_bytes): Used casting for pointer
+ 	arithmetic.
+
+Sun Oct 20 03:53:23 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sunrpc/Makefile (others): Remove portmap here, too.
+
 Sat Oct 19 17:42:24 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* intl/locale.alias: Language for entry `czech' is `cs'.

@@ -43,5 +43,10 @@ ifeq ($(subdir), termios)
 sysdep_headers += termio.h
 endif
 
+ifeq ($(subdir), stdio-common)
+# Just disable the auto generation in sysdeps/generic
+inhibit-siglist := yes
+endif
+
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes

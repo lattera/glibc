@@ -46,13 +46,13 @@ _dl_open (const char *file, int mode)
   struct r_debug *r;
 
   /* Load the named object.  */
-  new = _dl_map_object (NULL, file, lt_loaded);
+  new = _dl_map_object (NULL, file, lt_loaded, 0);
   if (new->l_searchlist)
     /* It was already open.  */
     return new;
 
   /* Load that object's dependencies.  */
-  _dl_map_object_deps (new, NULL, 0);
+  _dl_map_object_deps (new, NULL, 0, 0);
 
 
   /* Relocate the objects loaded.  We do this in reverse order so that copy

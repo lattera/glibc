@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <signal.h>
 #include <stdio.h>
 #include <string.h>
@@ -27,14 +26,16 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 /* Defined in siglist.c.  */
-extern CONST char *CONST _sys_siglist[];
+extern const char *const _sys_siglist[];
 
 
 /* Return a string describing the meaning of the signal number SIGNUM.  */
 char *
-DEFUN(strsignal, (signum), int signum)
+strsignal (int signum)
 {
-  if (signum < 0 || signum > NSIG)
+  const char *desc;
+
+  if (signum < 0 || signum > NSIG || (desc = _sys_siglist[signum]) == NULL)
     {
       static char buf[512];
       int len = __snprintf (buf, sizeof buf, _("Unknown signal %d"), signum);
@@ -44,5 +45,5 @@ DEFUN(strsignal, (signum), int signum)
       return buf;
     }
 
-  return (char *) _(_sys_siglist[signum]);
+  return (char *) _(desc);
 }

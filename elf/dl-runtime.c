@@ -41,7 +41,7 @@ _dl_object_relocation_scope (struct link_map *l)
 
       if (! l->l_searchlist)
 	/* We must construct the searchlist for this object.  */
-	_dl_map_object_deps (l, NULL, 0);
+	_dl_map_object_deps (l, NULL, 0, 0);
 
       /* The primary scope is this object itself and its
 	 dependencies.  */

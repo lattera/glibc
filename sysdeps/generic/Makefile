@@ -32,8 +32,8 @@ common-generated := $(common-generated) bytesex.h det_endian
 endif
 
 ifeq ($(subdir),stdio-common)
-
-ifeq	"$(filter $(objpfx)siglist.c,$(before-compile))" ""
+ifneq ($(inhibit-siglist),yes)
+ifeq	"$(filter %siglist.c,$(before-compile))" ""
 before-compile := $(before-compile) $(objpfx)siglist.c
 $(objpfx)siglist.c: $(objpfx)make_siglist
 	@rm -f $@
@@ -49,5 +49,5 @@ $(objpfx)make_siglist: $(sysdep_dir)/generic/make_siglist.c
 
 generated := $(generated) make_siglist siglist.c
 endif
-
+endif
 endif

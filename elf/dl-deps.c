@@ -24,7 +24,8 @@ Cambridge, MA 02139, USA.  */
 
 void
 _dl_map_object_deps (struct link_map *map,
-		     struct link_map **preloads, unsigned int npreloads)
+		     struct link_map **preloads, unsigned int npreloads,
+		     int trace_mode)
 {
   struct list
     {
@@ -75,7 +76,7 @@ _dl_map_object_deps (struct link_map *map,
 		struct link_map *dep
 		  = _dl_map_object (l, strtab + d->d_un.d_val,
 				    l->l_type == lt_executable ? lt_library :
-				    l->l_type);
+				    l->l_type, trace_mode);
 
 		if (dep->l_reserved)
 		  /* This object is already in the search list we are

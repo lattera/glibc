@@ -477,7 +477,8 @@ open_path (const char *name, size_t namelen,
 /* Map in the shared object file NAME.  */
 
 struct link_map *
-_dl_map_object (struct link_map *loader, const char *name, int type)
+_dl_map_object (struct link_map *loader, const char *name, int type,
+		int trace_mode)
 {
   int fd;
   char *realname;
@@ -582,7 +583,26 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
     }
 
   if (fd == -1)
-    _dl_signal_error (errno, name, "cannot open shared object file");
+    {
+      if (trace_mode)
+	{
+	  /* We haven't found an appropriate library.  But since we
+	     are only interested in the list of libraries this isn't
+	     so severe.  Fake an entry with all the information we
+	     have (in fact only the name).  */
+
+	  /* Enter the new object in the list of loaded objects.  */
+	  if ((name_copy = local_strdup (name)) == NULL
+	      || (l = _dl_new_object (name_copy, name, type)) == NULL)
+	    _dl_signal_error (ENOMEM, name,
+			      "cannot create shared object descriptor");
+	  /* We use an opencount of 0 as a sign for the faked entry.  */
+	  l->l_opencount = 0;
+	  l->l_reserved = 0;
+	}
+      else
+	_dl_signal_error (errno, name, "cannot open shared object file");
+    }
 
   return _dl_map_object_from_fd (name_copy, fd, realname, loader, type);
 }

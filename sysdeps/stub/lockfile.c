@@ -21,34 +21,40 @@ typedef FILE;
 
 
 void
-__flockfile (FILE *stream)
+__internal_flockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
 }
 #ifdef USE_IN_LIBIO
-strong_alias (__flockfile, _IO_flockfile)
+weak_alias (__internal_flockfile, _IO_flockfile)
+#else
+weak_alias (__internal_flockfile, __flockfile)
 #endif
-weak_alias (__flockfile, flockfile);
+weak_alias (__internal_flockfile, flockfile);
 
 
 void
-__funlockfile (FILE *stream)
+__internal_funlockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
 }
 #ifdef USE_IN_LIBIO
-strong_alias (__funlockfile, _IO_funlockfile)
+weak_alias (__internal_funlockfile, _IO_funlockfile)
+#else
+weak_alias (__internal_funlockfile, __internal_funlockfile)
 #endif
-weak_alias (__funlockfile, funlockfile);
+weak_alias (__internal_funlockfile, funlockfile);
 
 
 int
-__ftrylockfile (FILE *stream)
+__internal_ftrylockfile (FILE *stream)
 {
   /* Do nothing.  Using this version does not do any locking.  */
   return 1;
 }
 #ifdef USE_IN_LIBIO
-strong_alias (__ftrylockfile, _IO_ftrylockfile)
+weak_alias (__internal_ftrylockfile, __ftrylockfile)
+#else
+weak_alias (__internal_ftrylockfile, _IO_ftrylockfile)
 #endif
-weak_alias (__ftrylockfile, ftrylockfile);
+weak_alias (__internal_ftrylockfile, ftrylockfile);

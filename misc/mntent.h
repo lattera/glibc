@@ -26,11 +26,9 @@ Cambridge, MA 02139, USA.  */
 
 
 /* File listing canonical interesting mount points.  */
-#define	_PATH_MNTTAB	"/etc/fstab"
 #define	MNTTAB		_PATH_MNTTAB	/* Deprecated alias.  */
 
 /* File listing currently active mount points.  */
-#define	_PATH_MOUNTED	"/var/run/mtab"
 #define	MOUNTED		_PATH_MOUNTED	/* Deprecated alias.  */
 
 

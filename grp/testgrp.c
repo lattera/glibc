@@ -1,4 +1,3 @@
-#include <ansidecl.h>
 #include <grp.h>
 #include <pwd.h>
 #include <sys/types.h>
@@ -7,7 +6,7 @@
 #include <stdio.h>
 
 int
-DEFUN_VOID(main)
+main (int argc, char *argv[])
 {
   uid_t me;
   struct passwd *my_passwd;
@@ -17,7 +16,7 @@ DEFUN_VOID(main)
   me = getuid ();
   my_passwd = getpwuid (me);
   if (my_passwd == NULL)
-    perror ("getpwuid");
+    printf ("Cannot find user entry for UID %d\n", me);
   else
     {
       printf ("My login name is %s.\n", my_passwd->pw_name);
@@ -27,7 +26,7 @@ DEFUN_VOID(main)
 
       my_group = getgrgid (my_passwd->pw_gid);
       if (my_group == NULL)
-	perror ("getgrgid");
+	printf ("No data for group %d found\n", my_passwd->pw_gid);
       else
 	{
 	  printf ("My default group is %s (%d).\n",
@@ -40,6 +39,3 @@ DEFUN_VOID(main)
 
   exit (my_passwd && my_group ? EXIT_SUCCESS : EXIT_FAILURE);
 }
-
-
-

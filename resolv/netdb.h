@@ -357,6 +357,50 @@ extern int getnetgrent_r __P ((char **__hostp, char **__userp,
 			       char *__buffer, int __buflen));
 #endif
 
+
+/* Extension from POSIX.1g.  */
+#ifdef	__USE_POSIX
+/* Structure to contain information about address of a service provider.  */
+struct addrinfo
+{
+  int ai_flags;			/* Input flags.  */
+  int ai_family;		/* Protocol family for socket.  */
+  int ai_socktype;		/* Socket type.  */
+  int ai_protocol;		/* Protocol for socket.  */
+  int ai_addrlen;		/* Length of socket address.  */
+  struct sockaddr *ai_addr;	/* Socket address for socket.  */
+  char *ai_canonname;		/* Canonical name for service location.  */
+  struct addrinfo *ai_next;	/* Pointer to next in list.  */
+};
+
+/* Possible values for `ai_flags' field in `addrinfo' structure.  */
+#define	AI_PASSIVE	1	/* Socket address is intended for `bind'.  */
+#define	AI_CANONNAME	2	/* Request for canonical name.  */
+
+/* Error values for `getaddrinfo' function.  */
+#define	EAI_BADFLAGS	-1	/* Invalid value for `ai_flags' field.  */
+#define	EAI_NONAME	-2	/* NAME or SERVICE is unknown.  */
+#define	EAI_AGAIN	-3	/* Temporary failure in name resolution.  */
+#define	EAI_FAIL	-4	/* Non-recoverable failure in name res.  */
+#define	EAI_NODATA	-5	/* No address associated with NAME.  */
+#define	EAI_FAMILY	-6	/* `ai_family' not supported.  */
+#define	EAI_SOCKTYPE	-7	/* `ai_socktype' not supported.  */
+#define	EAI_SERVICE	-8	/* SERVICE not supported for `ai_socktype'.  */
+#define	EAI_ADDRFAMILY	-9	/* Address family for NAME not supported.  */
+#define	EAI_MEMORY	-10	/* Memory allocation failure.  */
+#define	EAI_SYSTEM	-11	/* System error returned in `errno'.  */
+
+
+/* Translate name of a service location and/or a service name to set of
+   socket addresses.  */
+extern int getaddrinfo __P ((__const char *__name, __const char *__service,
+			     __const struct addrinfo *__req,
+			     struct addrinfo **__pai));
+
+/* Free `addrinfo' structure AI including associated storage.  */
+extern void freeaddrinfo __P ((struct addrinfo *__ai));
+#endif	/* POSIX */
+
 __END_DECLS
 
 #endif	/* netdb.h */

@@ -66,7 +66,7 @@ routines := auth_none auth_unix authuxprot bindrsvprt \
 	    svc_tcp svc_udp xdr xdr_array xdr_float xdr_mem \
 	    xdr_rec xdr_ref xdr_stdio
 
-others := portmap rpcinfo
+others := rpcinfo
 install-bin := rpcgen
 install-sbin := rpcinfo
 rpcgen-objs = rpc_main.o rpc_hout.o rpc_cout.o rpc_parse.o \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <stdio.h>
 #include <signal.h>
 
@@ -26,24 +25,24 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 /* Defined in sys_siglist.c.  */
-extern CONST char *CONST _sys_siglist[];
+extern const char *const _sys_siglist[];
 
 
 /* Print out on stderr a line consisting of the test in S, a colon, a space,
    a message describing the meaning of the signal number SIG and a newline.
    If S is NULL or "", the colon and space are omitted.  */
 void
-DEFUN(psignal, (sig, s), int sig AND register CONST char *s)
+psignal (int sig, const char *s)
 {
-  CONST char *colon;
+  const char *colon, *desc;
 
   if (s == NULL || s == '\0')
     s = colon = "";
   else
     colon = ": ";
 
-  if (sig >= 0 && sig < NSIG)
-    (void) fprintf (stderr, "%s%s%s\n", s, colon, _(_sys_siglist[sig]));
+  if (sig >= 0 && sig < NSIG && (desc = _sys_siglist[sig]) != NULL)
+    (void) fprintf (stderr, "%s%s%s\n", s, colon, _(desc));
   else
     (void) fprintf (stderr, _("%s%sUnknown signal %d\n"), s, colon, sig);
 }

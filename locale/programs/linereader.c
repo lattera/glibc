@@ -80,7 +80,7 @@ lr_open (const char *fname, kw_hash_fct_t hf)
     {
       int save = errno;
       fclose (result->fp);
-      free (result->fname);
+      free ((char *) result->fname);
       free (result);
       errno = save;
       return NULL;
@@ -108,7 +108,7 @@ void
 lr_close (struct linereader *lr)
 {
   fclose (lr->fp);
-  free (lr->fname);
+  free ((char *) lr->fname);
   free (lr->buf);
   free (lr);
 }

@@ -23,4 +23,4 @@ make
 make install
 
 %files
-%doc FAQ NEWS NOTES README
+%doc FAQ NEWS NOTES README INSTALL
