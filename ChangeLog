@@ -1,3 +1,13 @@
+2001-04-10  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* elf/elf.h (AT_DCACHEBSIZE, AT_ICACHEBSIZE, AT_UCACHEBSIZE,
+	AT_IGNOREPPC): New defines.
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Print them.
+	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_STD_AUXV):
+	Define for newer powerpc kernels.
+	* sysdeps/unix/sysv/linux/powerpc/dl-sysdep.c: Use the standard
+	DL_FIND_ARG_COMPONENTS if __ASSUME_STD_AUXV is defined.
+
 2000-4-10  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/sh/stackinfo.h: New file.

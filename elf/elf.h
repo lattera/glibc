@@ -893,6 +893,15 @@ typedef struct
    performed by the kernel.  */
 #define AT_FPUCW	18		/* Used FPU control word.  */
 
+/* Cache block sizes.  */
+#define AT_DCACHEBSIZE	19		/* Data cache block size.  */
+#define AT_ICACHEBSIZE	20		/* Instruction cache block size.  */
+#define AT_UCACHEBSIZE	21		/* Unified cache block size.  */
+
+/* A special ignored value for PPC, used by the kernel to control the
+   interpretation of the AUXV. Must be > 16.  */
+#define AT_IGNOREPPC	22		/* Entry should be ignored */
+
 
 /* Note section contents.  Each entry in the note section begins with
    a header of a fixed form.  */

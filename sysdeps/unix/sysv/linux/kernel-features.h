@@ -163,3 +163,8 @@
 #if __LINUX_KERNEL_VERSION >= 132097
 # define __ASSUME_AT_PAGESIZE	1
 #endif
+
+/* Starting with 2.4.? kernels PPC passes the AUXV in the standard way.  */
+#if __LINUX_KERNEL_VERSION >= (132096+99) && defined __powerpc__
+# define __ASSUME_STD_AUXV	1
+#endif
