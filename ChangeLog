@@ -1,5 +1,10 @@
 2004-08-04  Roland McGrath  <roland@redhat.com>
 
+	* posix/tst-waitid.c (test_child): Sleep a second before stopping.
+	(do_test): Bump sleep to three seconds.
+	(sigchld, check_sigchld): New functions.
+	(do_test): Handle SIGCHLD and check for getting the right details.
+
 	* posix/tst-waitid.c (do_test): Kill the child process when bailing
 	out early on some failure.
 	[WCONTINUED]: Test WCONTINUED functionality.
