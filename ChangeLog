@@ -1,4 +1,24 @@
+2003-03-26  H.J. Lu  <hjl@gnu.org>
+
+	* elf/vismod.h (getvarlocal1): Return const char **.
+	(getvarinmod1): Likewise.
+	(getvaritcpt1): Likewise.
+	(getvarlocal2): Likewise.
+	(getvarinmod2): Likewise.
+	(getvaritcpt2): Likewise.
+	(getvaritcpt3): Likewise.
+	* elf/vismain.c (do_test): Adjusted.
+	* elf/vismod1.c (getvarlocal1): Return address.
+	(getvarinmod1): Likewise.
+	(getvaritcpt1): Likewise.
+	* elf/vismod2.c (getvarlocal2): Likewise.
+	(getvarinmod2): Likewise.
+	(getvaritcpt2): Likewise.
+	* elf/vismod3.c (getvaritcpt3): Likewise.
+
 2003-03-28  Roland McGrath  <roland@redhat.com>
+
+	* elf/vismain.c (do_test): Print both addresses when they don't match.
 
 	* scripts/abilist.awk: If given -v filename_regexp and/or -v
 	libname_regexp when parsing names, then produce output only

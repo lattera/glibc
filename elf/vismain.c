@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -86,7 +86,8 @@ The handling of `.protected' seems to be implemented incorrectly: giving up");
      first DSO.  */
   if (protinmod != getinmod1 ())
     {
-      puts ("`protinmod' in main and mod1 don't have same address");
+      printf ("&protinmod in main (%p) != &protinmod in mod1 (%p)\n",
+	      protinmod, getinmod1 ());
       res = 1;
     }
   if (protinmod == getinmod2 ())
@@ -116,7 +117,8 @@ The handling of `.protected' seems to be implemented incorrectly: giving up");
      one intercepts the references from the main object.  */
   if (protitcpt != getitcpt3 ())
     {
-      puts ("`protitcpt' in main and mod3 don't have same address");
+      printf ("&protitcpt in main (%p) != &protitcpt in mod3 (%p)\n",
+	      &protitcpt, getitcpt3 ());
       res = 1;
     }
   if (protitcpt == getitcpt1 ())
@@ -150,12 +152,12 @@ pointers to `protitcpt' in mod1 or mod2 or mod3 incorrect (%#x)\n", val);
 
   /* Now look at variables.  First a variable which is available
      everywhere.  We must have three different addresses.  */
-  if (protvarlocal == getvarlocal1 ())
+  if (&protvarlocal == getvarlocal1 ())
     {
       puts ("`protvarlocal' in main and mod1 have same address");
       res = 1;
     }
-  if (protvarlocal == getvarlocal2 ())
+  if (&protvarlocal == getvarlocal2 ())
     {
       puts ("`protvarlocal' in main and mod2 have same address");
       res = 1;
@@ -170,53 +172,55 @@ pointers to `protitcpt' in mod1 or mod2 or mod3 incorrect (%#x)\n", val);
       puts ("`protvarlocal in main has wrong value");
       res = 1;
     }
-  if (strcmp (getvarlocal1 (), "vismod1.c") != 0)
+  if (strcmp (*getvarlocal1 (), "vismod1.c") != 0)
     {
       puts ("`getvarlocal1' returns wrong value");
       res = 1;
     }
-  if (strcmp (getvarlocal2 (), "vismod2.c") != 0)
+  if (strcmp (*getvarlocal2 (), "vismod2.c") != 0)
     {
       puts ("`getvarlocal2' returns wrong value");
       res = 1;
     }
 
   /* Now the case where there is no local definition.  */
-  if (protvarinmod != getvarinmod1 ())
+  if (&protvarinmod != getvarinmod1 ())
     {
-      puts ("`protvarinmod' in main and mod1 have not same address");
+      printf ("&protvarinmod in main (%p) != &protitcpt in mod1 (%p)\n",
+	      &protvarinmod, getvarinmod1 ());
       res = 1;
     }
-  if (protvarinmod == getvarinmod2 ())
+  if (&protvarinmod == getvarinmod2 ())
     {
       puts ("`protvarinmod' in main and mod2 have same address");
       res = 1;
     }
-  if (strcmp (getvarinmod1 (), "vismod1.c") != 0)
+  if (strcmp (*getvarinmod1 (), "vismod1.c") != 0)
     {
       puts ("`getvarinmod1' returns wrong value");
       res = 1;
     }
-  if (strcmp (getvarinmod2 (), "vismod2.c") != 0)
+  if (strcmp (*getvarinmod2 (), "vismod2.c") != 0)
     {
       puts ("`getvarinmod2' returns wrong value");
       res = 1;
     }
 
   /* And a test where a variable definition is intercepted.  */
-  if (protvaritcpt == getvaritcpt1 ())
+  if (&protvaritcpt == getvaritcpt1 ())
     {
       puts ("`protvaritcpt' in main and mod1 have same address");
       res = 1;
     }
-  if (protvaritcpt == getvaritcpt2 ())
+  if (&protvaritcpt == getvaritcpt2 ())
     {
       puts ("`protvaritcpt' in main and mod2 have same address");
       res = 1;
     }
-  if (protvaritcpt != getvaritcpt3 ())
+  if (&protvaritcpt != getvaritcpt3 ())
     {
-      puts ("`protvaritcpt' in main and mod3 have not same address");
+      printf ("&protvaritcpt in main (%p) != &protvaritcpt in mod3 (%p)\n",
+	      &protvaritcpt, getvaritcpt3 ());
       res = 1;
     }
   if (getvaritcpt1 () == getvaritcpt2 ())
@@ -229,12 +233,12 @@ pointers to `protitcpt' in mod1 or mod2 or mod3 incorrect (%#x)\n", val);
       puts ("`protvaritcpt in main has wrong value");
       res = 1;
     }
-  if (strcmp (getvaritcpt1 (), "vismod1.c") != 0)
+  if (strcmp (*getvaritcpt1 (), "vismod1.c") != 0)
     {
       puts ("`getvaritcpt1' returns wrong value");
       res = 1;
     }
-  if (strcmp (getvaritcpt2 (), "vismod2.c") != 0)
+  if (strcmp (*getvaritcpt2 (), "vismod2.c") != 0)
     {
       puts ("`getvaritcpt2' returns wrong value");
       res = 1;
