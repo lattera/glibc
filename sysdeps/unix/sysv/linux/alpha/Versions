@@ -46,7 +46,7 @@ libc {
     # w*
     wait4;
   }
-  GLIBC_2.1.3 {
+  GLIBC_2.1.4 {
     pciconfig_iobase;
   }
 }
