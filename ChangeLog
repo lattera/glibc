@@ -1,5 +1,7 @@
 2000-02-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/alpha/fpu/fpu_control.h: Update comment.
+
 	* malloc/Makefile (tests): Add tst-valloc.
 	* malloc/tst-valloc.c: New file.
 
