@@ -43,7 +43,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       ElfW(Addr) *addrs;
       unsigned int cnt;
 
-      if (_dl_debug_impcalls)
+      if (__builtin_expect (_dl_debug_impcalls, 0))
 	_dl_debug_message (1, "\ncalling preinit: ",
 			   main_map->l_name[0]
 			   ? main_map->l_name : _dl_argv[0], "\n\n", NULL);
@@ -94,7 +94,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 	continue;
 
       /* Print a debug message if wanted.  */
-      if (_dl_debug_impcalls)
+      if (__builtin_expect (_dl_debug_impcalls, 0))
 	_dl_debug_message (1, "\ncalling init: ",
 			   l->l_name[0] ? l->l_name : _dl_argv[0],
 			   "\n\n", NULL);

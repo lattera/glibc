@@ -38,7 +38,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   if (!consider_profiling && l->l_info[DT_BIND_NOW])
     lazy = 0;
 
-  if (_dl_debug_reloc)
+  if (__builtin_expect (_dl_debug_reloc, 0))
     _dl_debug_message (1, "\nrelocation processing: ",
 		       l->l_name[0] ? l->l_name : _dl_argv[0],
 		       lazy ? " (lazy)\n" : "\n", NULL);

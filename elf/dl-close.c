@@ -80,7 +80,7 @@ _dl_close (void *_map)
 	  && imap->l_init_called)
 	{
 	  /* When debugging print a message first.  */
-	  if (_dl_debug_impcalls)
+	  if (__builtin_expect (_dl_debug_impcalls, 0))
 	    _dl_debug_message (1, "\ncalling fini: ", imap->l_name,
 			       "\n\n", NULL);
 

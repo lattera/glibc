@@ -119,7 +119,7 @@ struct list
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
-		if (_dl_debug_libs)					      \
+		if (__builtin_expect (_dl_debug_libs, 0))		      \
 		  _dl_debug_message (1, "cannot load auxiliary `", __str,     \
 				     "' because of empty dynamic string"      \
 				     " token substitution\n", NULL);	      \
@@ -280,7 +280,7 @@ _dl_map_object_deps (struct link_map *map,
 		    args.name = name;
 
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (_dl_debug_libs)
+		    if (__builtin_expect (_dl_debug_libs, 0))
 		      _dl_debug_message (1, "load auxiliary object=",
 					 name, " requested by file=",
 					 l->l_name[0]
@@ -302,7 +302,7 @@ _dl_map_object_deps (struct link_map *map,
 		else
 		  {
 		    /* Say that we are about to load an auxiliary library.  */
-		    if (_dl_debug_libs)
+		    if (__builtin_expect (_dl_debug_libs, 0))
 		      _dl_debug_message (1, "load filtered object=", name,
 					 " requested by file=",
 					 l->l_name[0]

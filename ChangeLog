@@ -1,5 +1,13 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-reloc.c (_dl_relocat_object): Add more __builtin_expect.
+	* elf/dl-lookup.c: Add more __builtin_expect.
+	* elf/dl-init.c (_dl_init): Add more __builtin_expect.
+	* elf/dl-fini.c (_dl_fini): Add more __builtin_expect.
+	* elf/dl-deps.c (_dl_map_object_deps): Add more __builtin_expect.
+	* elf/dl-close.c (_dl_close): Add more __builtin_expect.
+	* elf/rtld.c (_dl_start_final): Add more __builtin_expect.
+
 	* elf/dl-lookup.c (add_dependency): Correct __builtin_expect use.
 
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>

@@ -128,7 +128,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	  if (runp != NULL)
 	    {
 	      /* The object is still available.  Add the reference now.  */
-	      if (act >= undef_map->l_reldepsmax)
+	      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
 		{
 		  /* Allocate more memory for the dependency list.  Since
 		     this can never happen during the startup phase we can
@@ -152,7 +152,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 		 This means this increment can never be reverted and the
 		 object will never be unloaded.  This is semantically the
 		 correct behaviour.  */
-	      if (act < undef_map->l_reldepsmax)
+	      if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 		undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
 
 	      /* And increment the counter in the referenced object.  */
@@ -205,7 +205,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	   in the global scope which was dynamically loaded.  In this case
 	   we have to prevent the latter from being unloaded unless the
 	   UNDEF_MAP object is also unloaded.  */
-	if (current_value.m->l_global
+	if (__builtin_expect (current_value.m->l_global, 0)
 	    && (__builtin_expect (current_value.m->l_type, lt_library)
 		== lt_loaded)
 	    && undef_map != current_value.m
@@ -219,7 +219,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 	break;
       }
 
-  if (current_value.s == NULL)
+  if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
@@ -298,7 +298,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 	     in the global scope which was dynamically loaded.  In this case
 	     we have to prevent the latter from being unloaded unless the
 	     UNDEF_MAP object is also unloaded.  */
-	  if (current_value.m->l_global
+	  if (__builtin_expect (current_value.m->l_global, 0)
 	      && (__builtin_expect (current_value.m->l_type, lt_library)
 		  == lt_loaded)
 	      && undef_map != current_value.m
@@ -312,7 +312,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 	  break;
 	}
 
-  if (current_value.s == NULL)
+  if (__builtin_expect (current_value.s == NULL, 0))
     {
       *ref = NULL;
       return 0;
@@ -364,7 +364,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	     in the global scope which was dynamically loaded.  In this case
 	     we have to prevent the latter from being unloaded unless the
 	     UNDEF_MAP object is also unloaded.  */
-	  if (current_value.m->l_global
+	  if (__builtin_expect (current_value.m->l_global, 0)
 	      && (__builtin_expect (current_value.m->l_type, lt_library)
 		  == lt_loaded)
 	      && undef_map != current_value.m
@@ -379,7 +379,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	  break;
 	}
 
-      if (res < 0)
+      if (__builtin_expect (res, 0) < 0)
 	{
 	  /* Oh, oh.  The file named in the relocation entry does not
 	     contain the needed symbol.  */
@@ -398,7 +398,7 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 	}
     }
 
-  if (current_value.s == NULL)
+  if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	/* We could find no value for a strong reference.  */
@@ -458,7 +458,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	 in the global scope which was dynamically loaded.  In this case
 	 we have to prevent the latter from being unloaded unless the
 	 UNDEF_MAP object is also unloaded.  */
-      if (current_value.m->l_global
+      if (__builtin_expect (current_value.m->l_global, 0)
 	  && (__builtin_expect (current_value.m->l_type, lt_library)
 	      == lt_loaded)
 	  && undef_map != current_value.m
@@ -494,7 +494,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 	  break;
 	}
 
-  if (current_value.s == NULL)
+  if (__builtin_expect (current_value.s == NULL, 0))
     {
       if (*ref == NULL || ELFW(ST_BIND) ((*ref)->st_info) != STB_WEAK)
 	{

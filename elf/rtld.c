@@ -251,7 +251,7 @@ _dl_start_final (void *arg, struct link_map *bootstrap_map_p,
       HP_TIMING_DIFF (rtld_total_time, start_time, end_time);
     }
 
-  if (_dl_debug_statistics)
+  if (__builtin_expect (_dl_debug_statistics, 0))
     print_statistics ();
 
   return *start_addr;

@@ -141,7 +141,7 @@ _dl_fini (void)
 	    continue;
 
 	  /* When debugging print a message first.  */
-	  if (_dl_debug_impcalls)
+	  if (__builtin_expect (_dl_debug_impcalls, 0))
 	    _dl_debug_message (1, "\ncalling fini: ",
 			       l->l_name[0] ? l->l_name : _dl_argv[0],
 			       "\n\n", NULL);
