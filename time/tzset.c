@@ -82,7 +82,7 @@ struct tzstring_l
   char data[0];
 };
 
-struct tzstring_l *tzstring_list;
+static struct tzstring_l *tzstring_list;
 
 /* Allocate a permanent home for S.  It will never be moved or deallocated,
    but may share space with other strings.

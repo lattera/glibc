@@ -1,5 +1,5 @@
 /* Declarations for internal libc locale interfaces
-   Copyright (C) 1995, 96, 97, 98, 99,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,21 +140,23 @@ enum
 
 
 /* For each category declare the variable for the current locale data.  */
+/* XXX _nl_current_LC_CTYPE and _nl_current_LC_COLLATE were exported
+   but where are they used?  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
-extern struct locale_data *_nl_current_##category;
+extern struct locale_data *_nl_current_##category attribute_hidden;
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 
-extern const char *const _nl_category_names[__LC_LAST];
-extern const size_t _nl_category_name_sizes[__LC_LAST];
-extern struct locale_data * *const _nl_current[__LC_LAST];
+extern const char *const _nl_category_names[__LC_LAST] attribute_hidden;
+extern const size_t _nl_category_name_sizes[__LC_LAST] attribute_hidden;
+extern struct locale_data * *const _nl_current[__LC_LAST] attribute_hidden;
 
 /* Name of the standard locales.  */
-extern const char _nl_C_name[];
-extern const char _nl_POSIX_name[];
+extern const char _nl_C_name[] attribute_hidden;
+extern const char _nl_POSIX_name[] attribute_hidden;
 
 /* The standard codeset.  */
-extern const char _nl_C_codeset[];
+extern const char _nl_C_codeset[] attribute_hidden;
 
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
@@ -170,7 +172,7 @@ extern const char _nl_C_codeset[];
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
-  extern struct locale_data _nl_C_##category; \
+  extern struct locale_data _nl_C_##category attribute_hidden; \
   struct locale_data *_nl_current_##category = &_nl_C_##category
 
 /* Load the locale data for CATEGORY from the file specified by *NAME.

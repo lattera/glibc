@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -32,11 +32,11 @@ struct gconv_fcts
   };
 
 /* Set of currently active conversion functions.  */
-extern struct gconv_fcts __wcsmbs_gconv_fcts;
+extern struct gconv_fcts __wcsmbs_gconv_fcts attribute_hidden;
 
 
 /* Last loaded locale for LC_CTYPE.  */
-extern const struct locale_data *__wcsmbs_last_locale;
+extern const struct locale_data *__wcsmbs_last_locale attribute_hidden;
 
 
 /* Load conversion functions for the currently selected locale.  */

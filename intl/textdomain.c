@@ -1,5 +1,5 @@
 /* Implementation of the textdomain(3) function.
-   Copyright (C) 1995-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,10 +52,10 @@
 /* @@ end of prolog @@ */
 
 /* Name of the default text domain.  */
-extern const char _nl_default_default_domain[];
+extern const char _nl_default_default_domain[] attribute_hidden;
 
 /* Default text domain in which entries for gettext(3) are to be found.  */
-extern const char *_nl_current_default_domain;
+extern const char *_nl_current_default_domain attribute_hidden;
 
 
 /* Names for the libintl functions are a problem.  They must not clash
@@ -72,7 +72,7 @@ extern const char *_nl_current_default_domain;
 #endif
 
 /* Lock variable to protect the global data in the gettext implementation.  */
-__libc_rwlock_define (extern, _nl_state_lock)
+__libc_rwlock_define (extern, _nl_state_lock attribute_hidden)
 
 /* Set the current default message catalog to DOMAINNAME.
    If DOMAINNAME is null, return the current default.

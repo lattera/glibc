@@ -1,5 +1,5 @@
 /* Implementation of the internal dcigettext function.
-   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -238,10 +238,11 @@ transcmp (p1, p2)
 
 /* Name of the default domain used for gettext(3) prior any call to
    textdomain(3).  The default value for this is "messages".  */
-const char _nl_default_default_domain[] = "messages";
+const char _nl_default_default_domain[] attribute_hidden = "messages";
 
 /* Value used as the default domain for gettext(3).  */
-const char *_nl_current_default_domain = _nl_default_default_domain;
+const char *_nl_current_default_domain attribute_hidden
+     = _nl_default_default_domain;
 
 /* Contains the default location of the message catalogs.  */
 const char _nl_default_dirname[] = LOCALEDIR;
@@ -323,7 +324,7 @@ typedef unsigned char transmem_block_t;
 
 /* Lock variable to protect the global data in the gettext implementation.  */
 #ifdef _LIBC
-__libc_rwlock_define_initialized (, _nl_state_lock)
+__libc_rwlock_define_initialized (, _nl_state_lock attribute_hidden)
 #endif
 
 /* Checking whether the binaries runs SUID must be done and glibc provides

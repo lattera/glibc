@@ -1,5 +1,5 @@
 /* Header file for constants used in floating point <-> decimal conversions.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995,1996,1997,1998,1999,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -43,7 +43,7 @@
 
 
 /* The array with the number representation. */
-extern const mp_limb_t __tens[];
+extern const mp_limb_t __tens[] attribute_hidden;
 
 /* Table of powers of ten.  This is used by __printf_fp and by
    strtof/strtod/strtold.  */
@@ -54,7 +54,8 @@ struct mp_power
     int p_expo;			/* Exponent of the number 10^(2^i).  */
     int m_expo;			/* Exponent of the number 10^-(2^i-1).  */
   };
-extern const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1];
+extern const struct mp_power _fpioconst_pow10[LDBL_MAX_10_EXP_LOG + 1]
+     attribute_hidden;
 
 /* The constants in the array `_fpioconst_pow10' have an offset.  */
 #if BITS_PER_MP_LIMB == 32

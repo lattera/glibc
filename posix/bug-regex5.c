@@ -20,18 +20,16 @@ main (void)
     }
   printf ("current locale : %s\n", ca);
 
-  nrules = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_NRULES);
+  nrules = (size_t) nl_langinfo (_NL_COLLATE_NRULES);
   if (nrules == 0)
     {
       printf("No rule\n");
       return 1;
     }
 
-  table_size = _NL_CURRENT_WORD (LC_COLLATE, _NL_COLLATE_SYMB_HASH_SIZEMB);
-  symb_table = (const int32_t *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_TABLEMB);
-  extra = (const unsigned char *)
-    _NL_CURRENT (LC_COLLATE, _NL_COLLATE_SYMB_EXTRAMB);
+  table_size = (size_t) nl_langinfo (_NL_COLLATE_SYMB_HASH_SIZEMB);
+  symb_table = (const int32_t *) nl_langinfo (_NL_COLLATE_SYMB_TABLEMB);
+  extra = (const unsigned char *) nl_langinfo (_NL_COLLATE_SYMB_EXTRAMB);
 
   found = 0;
   for (i = 0; i < table_size; ++i)

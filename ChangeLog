@@ -1,3 +1,32 @@
+2002-03-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bug-regex5.c (main): Use nl_langinfo instead of _NL_CURRENT.
+
+	* locale/localeinfo.h: Add attribute_hidden to _nl_current_LC_XXX,
+	_nl_category_names, _nl_category_name_sizes, _nl_current,
+	_nl_C_name, _nl_POSIX_name, _nl_C_codeset, and _nl_C_LC_XXX.
+
+	* intl/dcigettext.c (_nl_default_default_domain): Define as hidden.
+	(_nl_current_default_domain): Likewise
+	(_nl_state_lock): Likewise.
+	* intl/textdomain.c (_nl_default_default_domain): Declare as hidden.
+	(_nl_current_default_domain): Likewise
+	(_nl_state_lock): Likewise.
+	* intl/bindtextdom.c (_nl_state_lock): Likewise.
+
+	* stdlib/fpioconst.h (__tens): Add attribute_hidden.
+	(_fpioconst_pow10): Likewise.
+
+	* include/time.h (_tmbuf): Add attribute_hidden.
+
+	* time/tzset.c (tzstring_list): Define as static.
+
+	* include/time.h: Add attribute_hidden to __tzname_cur_max and
+	__use_tzfile declaration.
+
+	* wcsmbs/wcsmbsload.h: Add attribute_hidden to __wcsmbs_gconv_fcts
+	and __wcsmbs_last_locale declaration.
+
 2002-02-25  Paul Eggert  <eggert@twinsun.com>
 
 	* timezone/Makefile (tzbases): Move systemv from here...

@@ -1,5 +1,5 @@
 /* Implementation of the bindtextdomain(3) function
-   Copyright (C) 1995-1998, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -64,7 +64,7 @@ extern const char _nl_default_dirname[];
 extern struct binding *_nl_domain_bindings;
 
 /* Lock variable to protect the global data in the gettext implementation.  */
-__libc_rwlock_define (extern, _nl_state_lock)
+__libc_rwlock_define (extern, _nl_state_lock attribute_hidden)
 
 
 /* Names for the libintl functions are a problem.  They must not clash
