@@ -1,3 +1,16 @@
+2005-03-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/key_call.c: Remove doors support.
+	* sunrpc/Makefile: Remove CPPFLAGS-key_call.c definition.
+	* configure.in: Remove test for doors support which never existed.
+	* config.make.in: Remove have_doors entry.
+
+	* configure.in: Make sure at least gcc 3.4 is used.  Undo last change.
+	* config.make.in: Undo last change.
+
+	* sysdeps/i386/Makefile ((CFLAGS-initfini.s): Unconditionally use
+	-mtune.
+
 2005-03-05  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h (_dl_out_of_memory_internal): Remove decl.
@@ -22,10 +35,14 @@
 	* config.make.in (cc-mtune): New substituted variable.
 	* configure.in (libc_cv_cc_mtune): New test for -mtune= switch,
 	done only if libc_mtune_example is defined.
-	* configure: Regenerated.
 	* sysdeps/i386/configure.in (libc_mtune_example): Set it.
-	* sysdeps/i386/configure: Regenerated.
 	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Use $(cc-mtune).
+
+2005-03-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/dl-machine.h (ELF_MACHINE_NO_RELA): Define
+	unconditionally to (defined RTLD_BOOTSTRAP).
+	* sysdeps/arm/dl-machine.h (ELF_MACHINE_NO_RELA): Likewise.
 
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 

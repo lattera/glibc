@@ -51,10 +51,6 @@
 #include <rpc/key_prot.h>
 #include <bits/libc-lock.h>
 
-#ifdef HAVE_DOORS
-# include "door/door.h"
-#endif
-
 #define KEY_TIMEOUT	5	/* per-try timeout in seconds */
 #define KEY_NRETRY	12	/* number of retries */
 
@@ -503,73 +499,6 @@ key_call_socket (u_long proc, xdrproc_t xdr_arg, char *arg,
   return result;
 }
 
-#ifdef HAVE_DOORS
-/* returns 0 on failure, 1 on success */
-static int
-internal_function
-key_call_door (u_long proc, xdrproc_t xdr_arg, char *arg,
-	       xdrproc_t xdr_rslt, char *rslt)
-{
-  XDR xdrs;
-  int fd, ret;
-  door_arg_t args;
-  char *data_ptr;
-  u_long data_len = 0;
-  char res[255];
-
-  if ((fd = open("/var/run/keyservdoor", O_RDONLY)) < 0)
-    return 0;
-  res[0] = 0;
-
-  data_len = xdr_sizeof (xdr_arg, arg);
-  data_ptr = calloc (1, data_len + 2 * sizeof (u_long));
-  if (data_ptr == NULL)
-    return 0;
-
-  INTUSE(xdrmem_create) (&xdrs, &data_ptr[2 * sizeof (u_long)], data_len,
-			 XDR_ENCODE);
-  if (!xdr_arg (&xdrs, arg))
-    {
-      xdr_destroy (&xdrs);
-      free (data_ptr);
-      return 0;
-    }
-  xdr_destroy (&xdrs);
-
-  memcpy (data_ptr, &proc, sizeof (u_long));
-  memcpy (&data_ptr[sizeof (proc)], &data_len, sizeof (u_long));
-
-  args.data_ptr = data_ptr;
-  args.data_size = data_len + 2 * sizeof (u_long);
-  args.desc_ptr = NULL;
-  args.desc_num = 0;
-  args.rbuf = res;
-  args.rsize = sizeof (res);
-
-  ret = __door_call (fd, &args);
-  free (data_ptr);
-  close (fd);
-
-  if (ret < 0)
-    return 0;
-
-  memcpy (&data_len, args.data_ptr, sizeof (u_long));
-  if (data_len != 0)
-    return 0;
-
-  memcpy (&data_len, &args.data_ptr[sizeof (u_long)], sizeof (u_long));
-  INTUSE(xdrmem_create) (&xdrs, &args.data_ptr[2 * sizeof (u_long)],
-			 data_len, XDR_DECODE);
-  if (!xdr_rslt (&xdrs, rslt))
-    {
-      xdr_destroy (&xdrs);
-      return 0;
-    }
-  xdr_destroy (&xdrs);
-
-  return 1;
-}
-#endif
 
 /* returns 0 on failure, 1 on success */
 static int
@@ -579,9 +508,6 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
 {
 #ifndef SO_PASSCRED
   static int use_keyenvoy;
-#endif
-#ifdef HAVE_DOORS
-  static int not_use_doors;
 #endif
 
   if (proc == KEY_ENCRYPT_PK && __key_encryptsession_pk_LOCAL)
@@ -605,15 +531,6 @@ key_call (u_long proc, xdrproc_t xdr_arg, char *arg,
       *(des_block *) rslt = *res;
       return 1;
     }
-
-#ifdef HAVE_DOORS
-  if (!not_use_doors)
-    {
-      if (key_call_door (proc, xdr_arg, arg, xdr_rslt, rslt))
-	return 1;
-      not_use_doors = 1;
-    }
-#endif
 
 #ifdef SO_PASSCRED
   return key_call_socket (proc, xdr_arg, arg, xdr_rslt, rslt);

@@ -1,7 +1,7 @@
 ifeq ($(subdir),linuxthreads)
 # On i686 we must avoid generating the trampoline functions generated
 # to get the GOT pointer.
-CFLAGS-pt-initfini.s += -march=i386 $(cc-mtune)=i386
+CFLAGS-pt-initfini.s += -march=i386 -mtune=i386
 
 # Most files must not be compiled without frame pointer since we need
 # the frame base address which is stored in %ebp unless the frame pointer

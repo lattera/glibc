@@ -1,4 +1,4 @@
-# Copyright (C) 1994-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1994-2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -126,9 +126,6 @@ CFLAGS-pmap_rmt.c = -fexceptions
 CFLAGS-clnt_perr.c = -fexceptions
 CFLAGS-openchild.c = -fexceptions
 
-ifeq (yes,$(have_doors))
-CPPFLAGS-key_call.c += -DHAVE_DOORS=1
-endif
 CPPFLAGS += -D_RPC_THREAD_SAFE_
 
 include ../Rules

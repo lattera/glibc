@@ -62,7 +62,6 @@ have-selinux = @have_selinux@
 have-cc-with-libunwind = @libc_cv_cc_with_libunwind@
 fno-unit-at-a-time = @fno_unit_at_a_time@
 bind-now = @bindnow@
-cc-mtune = @cc_mtune@
 
 static-libgcc = @libc_cv_gcc_static_libgcc@
 
@@ -70,7 +69,6 @@ versioning = @VERSIONING@
 oldest-abi = @oldest_abi@
 no-whole-archive = @no_whole_archive@
 exceptions = @exceptions@
-have_doors = @linux_doors@
 
 mach-interface-list = @mach_interface_list@
 
