@@ -1,5 +1,8 @@
 1999-08-19  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Versions: Export __pthread_kill_other_threads_np from libpthread
+	for GLIBC_2.1.2.
+
 	* signals.c: Pass sigcontext through wrapper to the user function.
 
 1999-08-01  Ulrich Drepper  <drepper@cygnus.com>

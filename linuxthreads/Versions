@@ -113,4 +113,7 @@ libpthread {
   GLIBC_2.1.1 {
     sem_close; sem_open; sem_unlink;
   }
+  GLIBC_2.1.2 {
+    __pthread_kill_other_threads_np;
+  }
 }
