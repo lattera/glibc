@@ -1790,9 +1790,11 @@ ctype_read (struct linereader *ldfile, struct localedef_t *result,
 		    }
 		}
 	      else
-		class_bit = _ISwbit (cnt);
+		{
+		  class_bit = _ISwbit (cnt);
 
-	      free (now->val.str.startmb);
+		  free (now->val.str.startmb);
+		}
 	    }
 	  else if (now->tok == tok_digit)
 	    goto handle_tok_digit;
@@ -2070,7 +2072,9 @@ with character code range values one must use the absolute ellipsis `...'"));
 		if (strcmp (now->val.str.startmb, ctype->mapnames[cnt]) == 0)
 		  break;
 
-	      if (cnt >= ctype->map_collection_nr)
+	      if (cnt < ctype->map_collection_nr)
+		free (now->val.str.startmb);
+	      else
 		/* OK, it's a new map.  */
 		ctype_map_new (ldfile, ctype, now->val.str.startmb, charmap);
 
