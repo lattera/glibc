@@ -1,3 +1,26 @@
+Sun Jun  2 22:28:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* linewrap.c (lwupdate): Update D->point_offs when done.
+	Use memmove instead of memcpy where overlap is possible (not
+ 	necessary using current implementation of memcpy, but...).
+	(__line_wrap_update): Don't update D->point_offs (lwupdate does it).
+
+Fri May 31 11:48:46 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* linewrap.c (lwupdate): New function, mostly was __line_wrap_update.
+	Use POINT_COL field instead of POINT.
+	(__line_wrap_output): Use lwupdate.
+	(__line_wrap_update): New function.
+	(ensure_unwrapped, ensure_wrapped): New functions.
+	(line_wrap_set_lmargin, line_wrap_set_rmargin,
+	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
+
+	* linewrap.h (struct line_wrap_data): Rename POINT field to POINT_COL.
+	Add POINT_OFFS field.
+	(__line_wrap_update): New decl.
+	(line_wrap_set_lmargin, line_wrap_set_rmargin,
+	line_wrap_set_wmargin, line_wrap_point): Use __line_wrap_update.
+
 Fri Jul  5 17:34:47 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/logout.c (logout): Do nothing if getutline_r returns ESRCH.

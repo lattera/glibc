@@ -35,7 +35,12 @@ struct line_wrap_data
   {
     size_t lmargin, rmargin;	/* Left and right margins.  */
     size_t wmargin;		/* Margin to wrap to, or -1 to truncate.  */
-    size_t point;		/* Current column of last chars flushed.  */
+
+    /* Point in stdio buffer to which we've processed for wrapping, but
+       not output.  */
+    size_t point_offs;
+    /* Output column at POINT_OFFS.  */
+    size_t point_col;
 
     /* Original cookie and hooks from the stream.  */
     void *cookie;
@@ -85,10 +90,17 @@ extern size_t line_wrap_set_wmargin (FILE *stream, size_t wmargin);
    the current output point.  */
 extern size_t line_wrap_point (FILE *stream); 
 
-
 #ifdef	__OPTIMIZE__
 
 extern void __line_wrap_output (FILE *, int); /* private */
+
+/* If STREAM is not line-wrapped, return 0.  Otherwise all pending text
+   buffered text in STREAM so that the POINT_OFFS field refers to the last
+   position in the stdio buffer, and return the line wrap state object for
+   STREAM.  Since all text has been processed, this means that (1) the
+   POINT_COL field refers to the column at which any new text would be added,
+   and (2) any changes to the margin parameters will only affect new text.  */
+extern struct line_wrap_data *__line_wrap_update (FILE *stream); /* private */
 
 /* Returns true if STREAM is line wrapped.  */
 extern inline int
@@ -111,15 +123,15 @@ line_wrap_lmargin (FILE *stream)
 extern inline size_t
 line_wrap_set_lmargin (FILE *stream, size_t lmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->lmargin;
       d->lmargin = lmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return its left margin.  */
@@ -136,15 +148,15 @@ line_wrap_rmargin (FILE *stream)
 extern inline size_t
 line_wrap_set_rmargin (FILE *stream, size_t rmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->rmargin;
       d->rmargin = rmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return its wrap margin.  */
@@ -161,15 +173,15 @@ line_wrap_wmargin (FILE *stream)
 extern inline size_t
 line_wrap_set_wmargin (FILE *stream, size_t wmargin)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  else
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  if (d)
     {
-      struct line_wrap_data *d = stream->__cookie;
       size_t old = d->wmargin;
       d->wmargin = wmargin;
       return old;
     }
+  else
+    return -1;
 }
 
 /* If STREAM is not line-wrapped return -1, else return the column number of
@@ -177,9 +189,8 @@ line_wrap_set_wmargin (FILE *stream, size_t wmargin)
 extern inline size_t
 line_wrap_point (FILE *stream)
 {
-  if (! line_wrapped (stream))
-    return -1;
-  return ((struct line_wrap_data *)stream->__cookie)->point;
+  struct line_wrap_data *d = __line_wrap_update (stream);
+  return d ? d->point_col : -1;
 }
 
 #endif /* Optimizing.  */
