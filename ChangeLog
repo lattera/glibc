@@ -39,7 +39,7 @@
 
 1999-01-03  Philip Blundell  <philb@gnu.org>
 
-	* Makefile (tests-clean): New test output files.
+	* Makefile (tests-clean): New target to delete test output files.
 	* Makerules (do-tests-clean): New rule to support the above.
 	* Rules (subdir_testclean): Likewise.
 
