@@ -33,7 +33,6 @@ do_test (void)
   sa.sa_handler = handler;
   sigfillset (&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
-  sa.sa_restorer = NULL;
 
   if (sigaction (SIGSEGV, &sa, NULL) == -1)
     printf ("cannot install signal handler: %m\n");

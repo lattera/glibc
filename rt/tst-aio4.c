@@ -101,7 +101,6 @@ do_test (int argc, char *argv[])
   sa.sa_handler = sighandler;
   sigemptyset (&sa.sa_mask);
   sa.sa_flags = SA_RESTART;
-  sa.sa_restorer = NULL;
 
   if (sigaction (MY_SIGNO, &sa, NULL) < 0)
     {
