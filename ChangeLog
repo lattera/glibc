@@ -1,5 +1,7 @@
 2000-09-21  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Tweak some values for K6.
+
 	* libio/oldiofsetpos64.c: Fix alias names.
 
 2000-09-21  Martin Buchholz  <martin@xemacs.org>

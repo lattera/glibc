@@ -1042,8 +1042,12 @@ ifloat: 1
 
 # Maximal error of functions:
 Function: "acos":
-ildouble: 1149
-ldouble: 1149
+ildouble: 1150
+ldouble: 1150
+
+Function: "acosh":
+ildouble: 1
+ldouble: 1
 
 Function: "asin":
 double: 1
@@ -1219,8 +1223,8 @@ double: 2
 float: 1
 idouble: 2
 ifloat: 1
-ildouble: 1402
-ldouble: 1402
+ildouble: 1403
+ldouble: 1403
 
 Function: Imaginary part of "clog10":
 double: 1
@@ -1253,8 +1257,8 @@ double: 1.104
 float: 2.5333
 idouble: 1.104
 ifloat: 2.5333
-ildouble: 2
-ldouble: 2
+ildouble: 4
+ldouble: 4
 
 Function: Real part of "csin":
 ildouble: 966
