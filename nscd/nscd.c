@@ -85,7 +85,7 @@ static const struct argp_option options[] =
 };
 
 /* Short description of program.  */
-static const char doc[] = N_("Name Switch Cache Daemon.");
+static const char doc[] = N_("Name Service Cache Daemon.");
 
 /* Prototype for option handler.  */
 static error_t parse_opt __P ((int key, char *arg, struct argp_state *state));

@@ -1,5 +1,7 @@
 1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/nscd.c (doc): It's "Name Service" not "Name Switch".
+
 	* malloc/mtrace.c (tr_where): Replace snprintf call by mempcpy and
 	_fitoa.
 
