@@ -1,3 +1,15 @@
+2000-02-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile (generated-dirs): Add de_DE.437.
+
+2000-01-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/IBM864: Correct comment for /xC6 mapping.
+	* charmaps/ISO-IR-90: Correct mapping for <tilde>.
+	* charmaps/ISO-8859-8: Update mappings for /xAF, /xFD, and /xFE.
+	* charmaps/NEXTSTEP: Add mappings for /xA9, /xAC, /xAD, /xB8 and /xB9.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 2000-01-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/af_ZA: Fix syntax errors.

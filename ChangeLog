@@ -1,5 +1,8 @@
 2000-02-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/gconv-modules: Add aliases CN-GB and CN-BIG5.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 	* stdio-common/printf-parse.h (parse_one_spec): Set wide elements.
 
 	* stdio-common/printf_fp.c: Truely support wide characater output.

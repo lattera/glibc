@@ -878,6 +878,7 @@ module	INTERNAL		JOHAB//			JOHAB		1
 alias	BIG-FIVE//		BIG5//
 alias	BIGFIVE//		BIG5//
 alias	BIG-5//			BIG5//
+alias	CN-BIG5//		BIG5//
 module	BIG5//			INTERNAL		BIG5		1
 module	INTERNAL		BIG5//			BIG5		1
 
@@ -893,6 +894,7 @@ module	INTERNAL		EUC-JP//		EUC-JP		1
 alias	EUCCN//			EUC-CN//
 alias	GB2312//		EUC-CN//
 alias	csGB2312//		EUC-CN//
+alias	CN-GB//			EUC-CN//
 module	EUC-CN//		INTERNAL		EUC-CN		1
 module	INTERNAL		EUC-CN//		EUC-CN		1
 
