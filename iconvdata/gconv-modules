@@ -643,6 +643,12 @@ module	IBM865//		INTERNAL		IBM865		1
 module	INTERNAL		IBM865//		IBM865		1
 
 #	from			to			module		cost
+alias	CP866//			IBM866//
+alias	866//			IBM866//
+module	IBM866//		INTERNAL		IBM866		1
+module	INTERNAL		IBM866//		IBM866		1
+
+#	from			to			module		cost
 alias	CP868//			IBM868//
 alias	CP-AR//			IBM868//
 alias	OSF10020364//		IBM868//
@@ -822,6 +828,11 @@ module	CP1257//		INTERNAL		CP1257		1
 module	INTERNAL		CP1257//		CP1257		1
 
 #	from			to			module		cost
+module	CP1258//		INTERNAL		CP1258		1
+module	INTERNAL		CP1258//		CP1258		1
+
+#	from			to			module		cost
+alias	874//			CP874//
 module	CP874//			INTERNAL		CP874		1
 module	INTERNAL		CP874//			CP874		1
 
@@ -966,6 +977,10 @@ module	INTERNAL		ISO_10367-BOX//		ISO_10367-BOX	1
 #	from			to			module		cost
 module	MAC-IS//		INTERNAL		MAC-IS		1
 module	INTERNAL		MAC-IS//		MAC-IS		1
+
+#	from			to			module		cost
+module	MAC-UK//		INTERNAL		MAC-UK		1
+module	INTERNAL		MAC-UK//		MAC-UK		1
 
 #	from			to			module		cost
 alias	ISO-IR-9-1//		NATS-DANO//

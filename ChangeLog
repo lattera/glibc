@@ -1,3 +1,20 @@
+1998-12-16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/ibm866.c: New file.
+	* iconvdata/cp1258.c: New file.
+	* iconvdata/cp1258.h: New file.
+	* iconvdata/mac-uk.c: New file.
+	* iconvdata/gconv-modules: Add rules for new modules.
+	* iconvdata/Makefile: Likewise.
+
+	* sysdeps/gnu/bits/ipc.h: Move libc internal bits to...
+	* include/bits/ipc.h: ..here.  New file.
+
+1998-12-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
+ 
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Don't change 
+	read-only struct termios_p* but change k_termios member directly. 
+ 
 1998-12-15  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/posix/tempname.c (__path_search): Fix the maximum

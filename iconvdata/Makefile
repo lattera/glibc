@@ -37,12 +37,13 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM280 IBM281 IBM284 IBM285 IBM290 IBM297 IBM420 IBM424	 \
 	   IBM437 IBM850 IBM851 IBM852 IBM855 IBM857 IBM860 IBM861	 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
+	   IBM866 CP1258						 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
 	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1 BALTIC	 \
 	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
 	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
 	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
-	   ISO_5428 ISO_10367-BOX MAC-IS NATS-DANO NATS-SEFI
+	   ISO_5428 ISO_10367-BOX MAC-IS MAC-UK NATS-DANO NATS-SEFI
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -117,6 +118,7 @@ IBM862-routines := ibm862
 IBM863-routines := ibm863
 IBM864-routines := ibm864
 IBM865-routines := ibm865
+IBM866-routines := ibm866
 IBM868-routines := ibm868
 IBM869-routines := ibm869
 IBM870-routines := ibm870
@@ -142,6 +144,7 @@ CP1254-routines := cp1254
 CP1255-routines := cp1255
 CP1256-routines := cp1256
 CP1257-routines := cp1257
+CP1258-routines := cp1258
 EUC-KR-routines := euckr
 JOHAB-routines := johab
 UHC-routines := uhc
@@ -174,6 +177,7 @@ ISO_5427-EXT-routines := iso_5427-ext
 ISO_5428-routines := iso_5428
 ISO_10367-BOX-routines := iso_10367-box
 MAC-IS-routines := mac-is
+MAC-UK-routines := mac-uk
 NATS-DANO-routines := nats-dano
 NATS-SEFI-routines := nats-dano
 libJIS-routines := jis0201 jis0208 jis0212
@@ -228,13 +232,14 @@ distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      ibm865.c ibm868.c ibm869.c ibm870.c ibm871.c ibm875.c	    \
 	      ibm880.c ibm891.c ibm903.c ibm904.c ibm905.c ibm918.c	    \
 	      ibm1004.c ibm1026.c ibm1047.c cp1250.c cp1251.c cp1252.c	    \
+	      ibm866.c cp1258.c cp1258.h				    \
 	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
 	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c   \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh macintosh.c	    \
 	      iec_p27-1.c baltic.c asmo_449.c ansi_x3.110.c csn_369103.c    \
 	      cwi.c dec-mcs.c ecma-cyrillic.c gost_19768-74.c greek-ccitt.c \
 	      greek7.c greek7-old.c inis.c inis-8.c inis-cyrillic.c	    \
-	      iso6937-2.c iso_2033.c iso_5427.c iso_5427-ext.c		    \
+	      iso6937-2.c iso_2033.c iso_5427.c iso_5427-ext.c mac-uk.c	    \
 	      iso_5428.c iso_10367-box.c mac-is.c nats-dano.c nats-sefi.c
 
 # We build the transformation modules only when we build shared libs.
@@ -299,7 +304,7 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  ibm862.h ibm863.h ibm864.h ibm865.h ibm868.h	 \
 			  ibm869.h ibm875.h ibm880.h ibm918.h ibm1004.h	 \
 			  ibm1026.h cp1250.h cp1251.h cp1252.h cp1253.h	 \
-			  cp1254.h cp1255.h cp1256.h cp1257.h		 \
+			  cp1254.h cp1255.h cp1256.h cp1257.h ibm866.h	 \
 			  iso8859-5.h iso8859-7.h iso8859-8.h		 \
 			  iso8859-10.h iso8859-7jp.h macintosh.h	 \
 			  iec_p27-1.h baltic.h asmo_449.h csn_369103.h	 \
@@ -308,7 +313,7 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  inis-8.h inis-cyrillic.h iso_2033.h iso_5427.h \
 			  iso_5427-ext.h iso_5428.h iso_10367-box.h	 \
 			  mac-is.h nats-dano.h nats-sefi.h iso8859-13.h  \
-			  iso8859-14.h iso8859-15.h
+			  iso8859-14.h iso8859-15.h mac-uk.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
@@ -480,6 +485,8 @@ $(objpfx)ibm864.stmp: ../localedata/charmaps/IBM864 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)ibm865.stmp: ../localedata/charmaps/IBM865 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
+$(objpfx)ibm866.stmp: ../localedata/charmaps/IBM866 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
 $(objpfx)ibm868.stmp: ../localedata/charmaps/IBM868 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)ibm869.stmp: ../localedata/charmaps/IBM869 gen-8bit-gap.sh
@@ -557,6 +564,8 @@ $(objpfx)iso_10367-box.stmp: ../localedata/charmaps/ISO_10367-BOX \
 			     gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)mac-is.stmp: ../localedata/charmaps/MAC-IS gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)mac-uk.stmp: ../localedata/charmaps/MAC-UK gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)nats-dano.stmp: ../localedata/charmaps/NATS-DANO gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
