@@ -135,7 +135,7 @@ extern char *strndup (__const char *__string, size_t __n)
     ({									      \
       __const char *__old = (s);					      \
       size_t __len = strlen (__old) + 1;				      \
-      char *__new = __builtin_alloca (__len);				      \
+      char *__new = (char *) __builtin_alloca (__len);			      \
       (char *) memcpy (__new, __old, __len);				      \
     }))
 
@@ -145,7 +145,7 @@ extern char *strndup (__const char *__string, size_t __n)
     ({									      \
       __const char *__old = (s);					      \
       size_t __len = strnlen (__old, (n));				      \
-      char *__new = __builtin_alloca (__len + 1);			      \
+      char *__new = (char *) __builtin_alloca (__len + 1);		      \
       __new[__len] = '\0';						      \
       (char *) memcpy (__new, __old, __len);				      \
     }))
