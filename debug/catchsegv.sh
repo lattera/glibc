@@ -63,7 +63,7 @@ SEGFAULT_OUTPUT_NAME=$segv_output \
 exval=$?
 
 # Check for output.  Even if the program terminated correctly it might
-# be that a inor process (clone) failed.  Therefore we do not check the
+# be that a minor process (clone) failed.  Therefore we do not check the
 # exit code.
 if test -f "$segv_output"; then
   # The program caught a signal.  The output is in the file with the

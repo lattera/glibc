@@ -1,5 +1,5 @@
 % texinfo.tex -- TeX macros to handle Texinfo files.
-% $Id: texinfo.tex,v 2.220 1998/09/01 10:37:39 drepper Exp $
+\def\texinfoversion{1998-09-30}%
 %
 % Copyright (C) 1985, 86, 88, 90, 91, 92, 93, 94, 95, 96, 97, 98
 % Free Software Foundation, Inc.
@@ -56,15 +56,12 @@
 % Added by gildea November 1993.
 \expandafter\ifx\csname fmtname\endcsname\relax\input plain\fi
 
-% This automatically updates the version number based on RCS.
-\def\deftexinfoversion$#1: #2 ${\def\texinfoversion{#2}}
-\deftexinfoversion$Revision: 2.220 $
-\message{Loading texinfo package [Version \texinfoversion]:}
+\message{Loading texinfo [version \texinfoversion]:}
 
 % If in a .fmt file, print the version number
 % and turn on active characters that we couldn't do earlier because
 % they might have appeared in the input file name.
-\everyjob{\message{[Texinfo version \texinfoversion]}\message{}
+\everyjob{\message{[Texinfo version \texinfoversion]}%
   \catcode`+=\active \catcode`\_=\active}
 
 % Save some parts of plain tex whose names we will redefine.
@@ -4514,6 +4511,17 @@ width0pt\relax} \fi
   \catcode`\^^M=12
   \usembodybackslash}
 
+\def\macroargctxt{%
+  \catcode`\~=12
+  \catcode`\^=12
+  \catcode`\_=12
+  \catcode`\|=12
+  \catcode`\<=12
+  \catcode`\>=12
+  \catcode`\+=12
+  \catcode`\@=12
+  \catcode`\\=12}
+
 % \mbodybackslash is the definition of \ in @macro bodies.
 % It maps \foo\ => \csname macarg.foo\endcsname => #N 
 % where N is the macro parameter number.
@@ -4610,17 +4618,21 @@ width0pt\relax} \fi
         \noexpand\scanmacro{\temp}}%
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
-         \noexpand\scanmacro{\temp}}%
+         \egroup\noexpand\scanmacro{\temp}}%
     \else % many
-      \expandafter\xdef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
+         \noexpand\csname\the\macname xx\endcsname}
+      \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
         \csname\the\macname xxx\endcsname 
-          \paramlist{\noexpand\scanmacro{\temp}}%
+          \paramlist{\egroup\noexpand\scanmacro{\temp}}%
     \fi
   \else
     \ifcase\paramno
@@ -4630,18 +4642,24 @@ width0pt\relax} \fi
         \noexpand\scanmacro{\temp}\egroup}%
     \or % 1
       \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
          \noexpand\braceorline\csname\the\macname xxx\endcsname}%
       \expandafter\xdef\csname\the\macname xxx\endcsname##1{%
+        \egroup
         \noexpand\norecurse{\the\macname}%
         \noexpand\scanmacro{\temp}\egroup}%
     \else % many
-      \expandafter\xdef\csname\the\macname\endcsname##1{%
+      \expandafter\xdef\csname\the\macname\endcsname{%
+         \bgroup\noexpand\macroargctxt
+         \noexpand\csname\the\macname xx\endcsname}
+      \expandafter\xdef\csname\the\macname xx\endcsname##1{%
           \csname\the\macname xxx\endcsname ##1,}%
       \expandafter\expandafter
       \expandafter\xdef
       \expandafter\expandafter
       \csname\the\macname xxx\endcsname
       \paramlist{%
+          \egroup
           \noexpand\norecurse{\the\macname}%
           \noexpand\scanmacro{\temp}\egroup}%
     \fi
@@ -5428,4 +5446,9 @@ width0pt\relax} \fi
 
 @c Local variables:
 @c page-delimiter: "^\\\\message"
+@c update-date-leading-regexp: "def\\texinfoversion{"
+@c update-date-date-regexp: "[-0-9.]+"
+@c update-date-format-string: "%Y-%m-%d"
+@c update-date-trailing-regexp: "}"
+@c eval: (and(load "update-date" t t)(add-hook 'write-file-hooks 'update-date))
 @c End:
