@@ -1,9 +1,6 @@
 # Begin of automatic generation
 
 # acos
-Test "acos (0.0625) == 1.50825556499840522843072005474337068":
-ildouble: 622
-ldouble: 622
 Test "acos (0.75) == 0.722734247813415611178377352641333362":
 ildouble: 1
 ldouble: 1
@@ -284,16 +281,16 @@ ildouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 float: 1
 ifloat: 1
-ildouble: 588
-ldouble: 588
+ildouble: 1
+ldouble: 1
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.0 + 1.0 i) == 0.331825439177608832276067945276730566 + 0.131338600281188544930936345230903032 i":
 ildouble: 1
 ldouble: 1
 Test "Real part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i) == 0.117506293914473555420279832210420483 + 0.346552747708338676483025352060418001 i":
 float: 3
 ifloat: 3
-ildouble: 763
-ldouble: 763
+ildouble: 6
+ldouble: 6
 Test "Imaginary part of: cpow (0.75 + 1.25 i, 0.75 + 1.25 i) == 0.117506293914473555420279832210420483 + 0.346552747708338676483025352060418001 i":
 float: 1
 ifloat: 1
@@ -310,8 +307,8 @@ double: 1
 float: 3
 idouble: 1
 ifloat: 3
-ildouble: 370
-ldouble: 370
+ildouble: 3
+ldouble: 3
 Test "Real part of: cpow (2 + 3 i, 4 + 0 i) == -119.0 - 120.0 i":
 double: 1
 float: 4
