@@ -1,5 +1,19 @@
 Sun Jun  2 14:56:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/dl-lookup.c (_dl_lookup_symbol): Arg NOSELF renamed to NOPLT.
+	Reject SHN_UNDEF defns iff NOPLT is nonzero.
+	* elf/link.h (_dl_lookup_symbol): Update prototype and comment.
+	* elf/dl-runtime.c (fixup): Pass 1 to _dl_lookup_symbol for NOPLT.
+	* elf/dlsym.c (dlsym): Pass 0.
+	* elf/rtld.c (dl_main): Likewise.
+	* elf/dl-reloc.c (_dl_relocate_object: resolve): Second arg R_OFFSET
+	replaced with NOPLT flag.  Pass it through to _dl_lookup_symbol.
+	* elf/do-rel.h (elf_dynamic_do_rel): Update prototype of RESOLVE arg.
+	Pass `elf_machine_pltrel_p (R->r_type)' result as NOPLT flag value.
+	* sysdeps/i386/dl-machine.h (elf_machine_pltrel_p): New macro.
+	* sysdeps/m68k/dl-machine.h (elf_machine_pltrel_p): Likewise.
+	* sysdeps/stub/dl-machine.h (elf_machine_pltrel_p): Likewise.
+
 	* login/pututline_r.c: Fix typo in sizeof for DATA_TMP alloca.
 
 	* sysdeps/generic/gnu/types.h (__clock_t): New type.

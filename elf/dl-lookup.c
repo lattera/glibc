@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -22,16 +22,15 @@ Cambridge, MA 02139, USA.  */
 #include <link.h>
 #include <assert.h>
 
-/* Search loaded objects' symbol tables for a definition of
-   the symbol UNDEF_NAME.  If NOSELF is nonzero, then *REF
-   cannot satisfy the reference itself; some different binding
-   must be found.  */
+/* Search loaded objects' symbol tables for a definition of the symbol
+   UNDEF_NAME.  If NOPLT is nonzero, then a PLT entry cannot satisfy the
+   reference; some different binding must be found.  */
 
 Elf32_Addr
 _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 		   struct link_map *symbol_scope,
 		   const char *reference_name,
-		   int noself)
+		   int noplt)
 {
   unsigned long int hash = elf_hash (undef_name);
   struct link_map *map;
@@ -60,8 +59,7 @@ _dl_lookup_symbol (const char *undef_name, const Elf32_Sym **ref,
 	  const Elf32_Sym *sym = &symtab[symidx];
 
 	  if (sym->st_value == 0 || /* No value.  */
-	      sym->st_shndx == SHN_UNDEF || /* PLT entry.  */
-	      (noself && sym == *ref))	/* The reference can't define it.  */
+	      (noplt && sym->st_shndx == SHN_UNDEF)) /* Unwanted PLT entry.  */
 	    continue;
 
 	  switch (ELF32_ST_TYPE (sym->st_info))

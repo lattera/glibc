@@ -185,14 +185,13 @@ extern void _dl_setup_hash (struct link_map *map);
    reference; it is replaced with the defining symbol, and the base load
    address of the defining object is returned.  SYMBOL_SCOPE is the head of
    the chain used for searching.  REFERENCE_NAME should name the object
-   containing the reference; it is used in error messages.  If NOSELF is
-   nonzero, them *SYM itself cannot define the value; another binding must
-   be found.  */
+   containing the reference; it is used in error messages.  If NOPLT is
+   nonzero, then the reference must not be resolved to a PLT entry.  */
 extern Elf32_Addr _dl_lookup_symbol (const char *undef,
 				     const Elf32_Sym **sym,
 				     struct link_map *symbol_scope,
 				     const char *reference_name,
-				     int noself);
+				     int noplt);
 
 
 /* List of objects currently loaded.  */

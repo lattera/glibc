@@ -318,7 +318,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  const Elf32_Sym *ref = NULL;
 	  Elf32_Addr loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
 						   _dl_loaded, "argument",
-						   1);
+						   0);
 	  char buf[20], *bp;
 	  buf[sizeof buf - 1] = '\0';
 	  bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);

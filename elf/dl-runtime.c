@@ -86,7 +86,7 @@ fixup (
 
   definer = &symtab[ELF32_R_SYM (reloc->r_info)];
   loadbase = _dl_lookup_symbol (strtab + definer->st_name, &definer,
-				scope, l->l_name, 0);
+				scope, l->l_name, 1);
 
   /* Restore list frobnication done above for DT_SYMBOLIC.  */
   l->l_next = real_next;

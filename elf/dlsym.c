@@ -1,5 +1,5 @@
 /* dlsym -- Look up a symbol in a shared object loaded by `dlopen'.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ dlsym (void *handle, const char *name)
   int lose;
   void doit (void)
     {
-      loadbase = _dl_lookup_symbol (name, &ref, map, map->l_name, 1);
+      loadbase = _dl_lookup_symbol (name, &ref, map, map->l_name, 0);
     }
 
   /* Confine the symbol scope to just this map.  */

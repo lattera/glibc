@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Stub version.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -81,12 +81,17 @@ elf_machine_rel (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
 
 static inline void
 elf_machine_rela (Elf32_Addr loadaddr, Elf32_Dyn *info[DT_NUM],
-		  const Elf32_Rela *reloc, 
+		  const Elf32_Rela *reloc,
 		  Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
 {
   _dl_signal_error (0, "Elf32_Rela relocation requested -- unused on "
 		    ELF_MACHINE_NAME);
 }
+
+
+/* Nonzero iff TYPE describes relocation of a PLT entry, so
+   PLT entries should not be allowed to define the value.  */
+#define elf_machine_pltrel_p(type) ((type) == R_???_JMP_SLOT)
 
 
 /* Set up the loaded object described by L so its unrelocated PLT
