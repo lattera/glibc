@@ -80,7 +80,7 @@ __pthread_cond_broadcast:
 	syscall
 
 #ifndef __ASSUME_FUTEX_REQUEUE
-	cmpq	$-EINVAL, %eax
+	cmpq	$-EINVAL, %rax
 	je	9f
 10:
 #endif
