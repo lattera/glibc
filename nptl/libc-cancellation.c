@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -40,20 +40,30 @@ __libc_enable_asynccancel (void)
       oldval = THREAD_GETMEM (self, cancelhandling);
       int newval = oldval | CANCELTYPE_BITMASK;
 
-      if (newval == oldval)
-	break;
+      if (__builtin_expect ((oldval & CANCELED_BITMASK) != 0, 0))
+	{
+	  /* If we are already exiting stop right here.  */
+	  if ((oldval & EXITING_BITMASK) != 0)
+	    break;
+
+	  if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
+					       oldval) == 0)
+	    /* Somebody else modified the word, try again.  */
+	    continue;
+
+	  THREAD_SETMEM (self, result, PTHREAD_CANCELED);
+
+	  /* The thread is exiting now.  */
+	  atomic_bit_set (&self->cancelhandling, EXITING_BIT);
+
+	  __do_cancel ();
+
+	  /* NOTREACHED */
+	}
 
       if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
 					   oldval) == 0)
-	{
-	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
-	    {
-	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
-	      __do_cancel ();
-	    }
-
-	  break;
-	}
+	break;
     }
 
   return oldval;

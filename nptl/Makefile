@@ -142,7 +142,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-fork1 tst-fork2 tst-fork3 \
 	tst-atfork1 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
-	tst-cancel6 tst-cancel7 tst-cancel8 \
+	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 \
 	tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 \

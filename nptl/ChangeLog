@@ -1,3 +1,12 @@
+2003-02-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* libc-cancellation.c (__libc_enable_asynccancel): Rwrite to avoid
+	going into an endless loop.
+	* Makefile (tests): Add tst-cancel9.
+	* tst-cancel9.c: New file.
+
+	* pthread_cancel.c (pthread_cancel): Use the result of __pthread_kill.
+
 2003-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-mutex5.c (do_test): Add more timedlock tests.
