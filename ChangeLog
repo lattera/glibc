@@ -1,5 +1,8 @@
 2001-01-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* sunrpc/xdr_rec.c (xdrrec_getpos): Add cast to long to avoid warning.
+	* sunrpc/xdr_sizeof.c (x_inline): Likewise.
+
 	* sysdeps/ieee754/ldbl-96/s_frexpl.c: Include <float.h>.
 
 	* conform/conformtest.pl: Define $mustprepend{"stdio.h"}.

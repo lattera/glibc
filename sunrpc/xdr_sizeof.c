@@ -93,7 +93,7 @@ x_inline (XDR *xdrs, int len)
 	  xdrs->x_base = 0;
 	  return NULL;
 	}
-      xdrs->x_base = (void *) len;
+      xdrs->x_base = (void *) (long) len;
       xdrs->x_handy += len;
       return (int32_t *) xdrs->x_private;
     }
