@@ -58,105 +58,21 @@ _dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
 #endif
 
 
-void *
+static void *
 internal_function
-_dl_sym (void *handle, const char *name, void *who)
+do_sym (void *handle, const char *name, struct r_found_version *vers,
+	int flags, void *who)
 {
   const ElfW(Sym) *ref = NULL;
   lookup_t result;
   ElfW(Addr) caller = (ElfW(Addr)) who;
-  struct link_map *match;
-  struct link_map *l;
 
   /* If the address is not recognized the call comes from the main
      program (we hope).  */
-  match = GL(dl_loaded);
+  struct link_map *match = GL(dl_loaded);
 
   /* Find the highest-addressed object that CALLER is not below.  */
-  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
-    if (caller >= l->l_map_start && caller < l->l_map_end)
-      {
-	/* There must be exactly one DSO for the range of the virtual
-	   memory.  Otherwise something is really broken.  */
-	match = l;
-	break;
-      }
-
-  if (handle == RTLD_DEFAULT)
-    /* Search the global scope as seen in the caller object.  */
-    result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope, NULL,
-				       0, (DL_LOOKUP_RETURN_NEWEST
-					   | DL_LOOKUP_ADD_DEPENDENCY), NULL);
-  else
-    {
-      if (handle != RTLD_NEXT)
-	{
-	  /* Search the scope of the given object.  */
-	  struct link_map *map = handle;
-
-	  result = GLRO(dl_lookup_symbol_x) (name, match, &ref,
-					     map->l_local_scope, NULL, 0,
-					     DL_LOOKUP_RETURN_NEWEST, NULL);
-	}
-      else
-	{
-	  if (__builtin_expect (match == GL(dl_loaded), 0))
-	    {
-	      if (! GL(dl_loaded)
-		  || caller < GL(dl_loaded)->l_map_start
-		  || caller >= GL(dl_loaded)->l_map_end)
-	        GLRO(dl_signal_error) (0, NULL, NULL, N_("\
-RTLD_NEXT used in code not dynamically loaded"));
-	    }
-
-	  l = match;
-	  while (l->l_loader != NULL)
-	    l = l->l_loader;
-
-	  result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
-					     NULL, 0, 0, match);
-	}
-    }
-
-  if (ref != NULL)
-    {
-#if defined USE_TLS && defined SHARED
-      if (ELFW(ST_TYPE) (ref->st_info) == STT_TLS)
-	/* The found symbol is a thread-local storage variable.
-	   Return the address for the current thread.  */
-	return _dl_tls_symaddr (result, ref);
-#endif
-
-      return DL_SYMBOL_ADDRESS (result, ref);
-    }
-
-  return NULL;
-}
-
-void *
-internal_function
-_dl_vsym (void *handle, const char *name, const char *version, void *who)
-{
-  const ElfW(Sym) *ref = NULL;
-  struct r_found_version vers;
-  lookup_t result;
-  ElfW(Addr) caller = (ElfW(Addr)) who;
-  struct link_map *match;
-  struct link_map *l;
-
-  /* Compute hash value to the version string.  */
-  vers.name = version;
-  vers.hidden = 1;
-  vers.hash = _dl_elf_hash (version);
-  /* We don't have a specific file where the symbol can be found.  */
-  vers.filename = NULL;
-
-  /* If the address is not recognized the call comes from the main
-     program (we hope).  */
-  match = GL(dl_loaded);
-
-  /* Find the highest-addressed object that CALLER is not below.  */
-  for (l = GL(dl_loaded); l != NULL; l = l->l_next)
+  for (struct link_map *l = GL(dl_loaded); l != NULL; l = l->l_next)
     if (caller >= l->l_map_start && caller < l->l_map_end)
       {
 	/* There must be exactly one DSO for the range of the virtual
@@ -168,7 +84,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
     result = GLRO(dl_lookup_symbol_x) (name, match, &ref, match->l_scope,
-				       &vers, 0, DL_LOOKUP_ADD_DEPENDENCY,
+				       vers, 0, flags|DL_LOOKUP_ADD_DEPENDENCY,
 				       NULL);
   else if (handle == RTLD_NEXT)
     {
@@ -181,19 +97,19 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 RTLD_NEXT used in code not dynamically loaded"));
 	}
 
-      l = match;
+      struct link_map *l = match;
       while (l->l_loader != NULL)
 	l = l->l_loader;
 
       result = GLRO(dl_lookup_symbol_x) (name, l, &ref, l->l_local_scope,
-					 &vers, 0, 0, match);
+					 vers, 0, 0, match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
       result = GLRO(dl_lookup_symbol_x) (name, map, &ref, map->l_local_scope,
-					 &vers, 0, 0, NULL);
+					 vers, 0, flags, NULL);
     }
 
   if (ref != NULL)
@@ -209,4 +125,30 @@ RTLD_NEXT used in code not dynamically loaded"));
     }
 
   return NULL;
+}
+
+
+
+void *
+internal_function
+_dl_vsym (void *handle, const char *name, const char *version, void *who)
+{
+  struct r_found_version vers;
+
+  /* Compute hash value to the version string.  */
+  vers.name = version;
+  vers.hidden = 1;
+  vers.hash = _dl_elf_hash (version);
+  /* We don't have a specific file where the symbol can be found.  */
+  vers.filename = NULL;
+
+  return do_sym (handle, name, &vers, 0, who);
+}
+
+
+void *
+internal_function
+_dl_sym (void *handle, const char *name, void *who)
+{
+  return do_sym (handle, name, NULL, DL_LOOKUP_RETURN_NEWEST, who);
 }
