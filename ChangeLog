@@ -1,4 +1,16 @@
+2002-09-17  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/generic/ifreq.h (__if_nextreq): New function.
+	* sysdeps/unix/sysv/linux/ifreq.h (__if_nextreq): New function.
+	* sysdeps/mach/hurd/ifreq.h (__if_nextreq): New function.
+	* sysdeps/gnu/ifaddrs.c (getifaddrs): Use __if_nextreq
+	for iterating through the list of interfaces.
+	* resolv/res_hconf.c (_res_hconf_reorder_addrs): Likewise.
+
 2002-09-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/grantpt.c (pts_name): Set errno when __ptsname_r fails.
+	Reported by Bruno Haible <bruno@clisp.org>.
 
 	* sysdeps/unix/bsd/bsd4.4/isatty.c: New file.
 

@@ -1,3 +1,9 @@
+2002-09-20  Roland McGrath  <roland@redhat.com>
+
+	* gen-locale.sh (generate_locale): Clean up overly baroque sh syntax.
+	Touch the LC_CTYPE file of the output after a successful run.
+	Reported by Bruno Haible <bruno@clisp.org>.
+
 2002-09-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/locales/bg_BG: Update LC_IDENTIFICATION info.

@@ -556,7 +556,7 @@ _res_hconf_reorder_addrs (struct hostent *hp)
 	goto cleanup1;
 
       /* Copy usable interfaces in ifaddrs structure.  */
-      for (cur_ifr = ifr, i = 0;  i < num; ++cur_ifr, ++i)
+      for (cur_ifr = ifr, i = 0; i < num; cur_ifr = __if_nextreq (cur_ifr), ++i)
 	{
 	  if (cur_ifr->ifr_addr.sa_family != AF_INET)
 	    continue;

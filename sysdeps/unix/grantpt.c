@@ -55,7 +55,8 @@ pts_name (int fd, char **pts, size_t buf_len)
 		/* ptsname_r returns with ENOTTY to indicate
 		   a descriptor not referring to a pty master.
 		   For this condition, grantpt must return EINVAL.  */
-		errno = EINVAL;
+		rv = EINVAL;
+	      errno = rv;	/* Not necessarily set by __ptsname_r.  */
 	      break;
 	    }
 

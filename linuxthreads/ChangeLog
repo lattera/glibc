@@ -1,3 +1,13 @@
+2002-09-18  Bruno Haible  <bruno@clisp.org>
+
+	* Examples/ex10.c (thread): Fail if pthread_mutex_timedlock() returns
+	an unexpected error code.
+
+	* internals.h (__pthread_message): Add const to first parameter type.
+	* pthread.c (__pthread_message): Likewise.
+
+	* sysdeps/unix/sysv/linux/configure: Moved to ../sysdeps/pthread.
+
 2002-09-17  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT, TLS_DO_SET_THREAD_AREA):

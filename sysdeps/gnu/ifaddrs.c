@@ -40,7 +40,7 @@ getifaddrs (struct ifaddrs **ifap)
      Some different mechanism entirely must be used for IPv6.  */
   int fd = __socket (AF_INET, SOCK_DGRAM, 0);
   struct ifreq *ifreqs;
-  int nifs, i;
+  int nifs;
 
   if (fd < 0)
     return -1;
@@ -64,6 +64,8 @@ getifaddrs (struct ifaddrs **ifap)
 	struct sockaddr addr, netmask, broadaddr;
 	char name[IF_NAMESIZE];
       } *storage;
+      struct ifreq *ifr;
+      int i;
 
       storage = malloc (nifs * sizeof storage[0]);
       if (storage == NULL)
@@ -74,10 +76,9 @@ getifaddrs (struct ifaddrs **ifap)
 	}
 
       i = 0;
+      ifr = ifreqs;
       do
 	{
-	  struct ifreq *const ifr = &ifreqs[i];
-
 	  /* Fill in all pointers to the storage we've already allocated.  */
 	  storage[i].ia.ifa_next = &storage[i + 1].ia;
 	  storage[i].ia.ifa_addr = &storage[i].addr;
@@ -97,6 +98,7 @@ getifaddrs (struct ifaddrs **ifap)
 	  storage[i].ia.ifa_flags = ifr->ifr_flags;
 
 	  ifr->ifr_addr = storage[i].addr;
+
 	  if (__ioctl (fd, SIOCGIFNETMASK, ifr) < 0)
 	    break;
 	  storage[i].netmask = ifr->ifr_netmask;
@@ -121,6 +123,7 @@ getifaddrs (struct ifaddrs **ifap)
 
 	  storage[i].ia.ifa_data = NULL; /* Nothing here for now.  */
 
+	  ifr = __if_nextreq (ifr);
 	} while (++i < nifs);
       if (i < nifs)		/* Broke out early on error.  */
 	{
@@ -129,6 +132,7 @@ getifaddrs (struct ifaddrs **ifap)
 	  __if_freereq (ifreqs, nifs);
 	  return -1;
 	}
+
       storage[i - 1].ia.ifa_next = NULL;
 
       *ifap = &storage[0].ia;

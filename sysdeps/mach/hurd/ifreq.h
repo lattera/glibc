@@ -66,6 +66,13 @@ __ifreq (struct ifreq **ifreqs, int *num_ifs, int sockfd)
 }
 
 
+static inline struct ifreq *
+__if_nextreq (struct ifreq *ifr)
+{
+  return ifr + 1;
+}
+
+
 static inline void
 __if_freereq (struct ifreq *ifreqs, int num_ifs)
 {
