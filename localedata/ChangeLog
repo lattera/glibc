@@ -1,5 +1,10 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* SUPPORTED: Add zh_HK.BIG5HKSCS.
+
+	* locales/zh_HK: Correct d_t_fmt and t_fmt_ampm.
+	Changes by Roger So <spacehunt@e-fever.org>.
+
 	* SUPPORTED: Add nn_NO.ISO-8859-1.
 	* locales/nn_NO: New file.
 

@@ -113,11 +113,10 @@ mon         "<U4E00><U6708>";"<U4E8C><U6708>";/
 am_pm       "<U4E0A><U5348>";"<U4E0B><U5348>"
 %
 % Appropriate date and time representation
-% %Y”N%bŒŽ%d“ú %A%IŽž%M•ª%S•b %Z
+% Update by Roger So <spacehunt@e-fever.org>
 d_t_fmt     "<U0025><U0059><U5E74><U0025><U0062><U6708><U0025><U0064>/
-<U65E5><U0020><U0025><U0041><U0020><U65F6><U0025><U004D><U5206><U0025>/
-<U0053><U79D2><U0020><U0025><U005A><U0025><U0070><U0025><U0049><U6642>/
-<U0025><U004D><U5206><U0025><U0053><U79D2><U0020><U0025><U005A>"
+<U65E5><U0020><U0025><U0070><U0020><U0025><U0049><U003A><U0025><U004D>/
+<U003A><U0025><U0053>"
 %
 % Appropriate date representation
 % %Y”N%bŒŽ%d“ú %A
@@ -130,9 +129,9 @@ t_fmt       "<U0025><U0049><U6642><U0025><U004D><U5206><U0025><U0053>/
 <U79D2><U0020><U0025><U005A>"
 %
 % Appropriate 12 h time representation (%r)
-t_fmt_ampm  "<U65F6><U0025><U004D><U5206><U0025><U0053><U79D2><U0020>/
-<U0025><U005A><U0025><U0070><U0025><U0049><U6642><U0025><U004D><U5206>/
-<U0025><U0053><U79D2><U0020><U0025><U005A>"
+% Update by Roger So <spacehunt@e-fever.org>
+t_fmt_ampm  "<U0025><U0070><U0020><U0025><U0049><U003A><U0025><U004D>/
+<U003A><U0025><U0053>"
 %
 END LC_TIME
 
