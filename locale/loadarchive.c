@@ -45,6 +45,19 @@ static const char archfname[] = LOCALEDIR "/locale-archive";
    cover the header plus the initial locale.  */
 #define ARCHIVE_MAPPING_WINDOW	(2 * 1024 * 1024)
 
+#ifndef MAP_COPY
+/* This is not quite as good as MAP_COPY since unexamined pages
+   can change out from under us and give us inconsistent data.
+   But we rely on the user not to diddle the system's live archive.
+   Even though we only ever use PROT_READ, using MAP_SHARED would
+   not give the system sufficient freedom to e.g. let the on disk
+   file go away because it doesn't know we won't call mprotect later.  */
+# define MAP_COPY MAP_PRIVATE
+#endif
+#ifndef MAP_FILE
+ /* Some systems do not have this flag; it is superfluous.  */
+# define MAP_FILE 0
+#endif
 
 /* Record of contiguous pages already mapped from the locale archive.  */
 struct archmapped
@@ -208,7 +221,7 @@ _nl_load_locale_from_archive (int category, const char **namep)
       mapsize = (sizeof (void *) > 4 ? archive_stat.st_size
 		 : MIN (archive_stat.st_size, ARCHIVE_MAPPING_WINDOW));
 
-      result = __mmap64 (NULL, mapsize, PROT_READ, MAP_SHARED, fd, 0);
+      result = __mmap64 (NULL, mapsize, PROT_READ, MAP_FILE|MAP_COPY, fd, 0);
       if (result == MAP_FAILED)
 	goto close_and_out;
 
@@ -226,7 +239,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  /* Freakishly long header.  */
 	  /* XXX could use mremap when available */
 	  mapsize = (headsize + ps - 1) & ~(ps - 1);
-	  result = __mmap64 (NULL, mapsize, PROT_READ, MAP_SHARED, fd, 0);
+	  result = __mmap64 (NULL, mapsize, PROT_READ, MAP_FILE|MAP_COPY,
+			     fd, 0);
 	  if (result == MAP_FAILED)
 	    goto close_and_out;
 	}
@@ -357,19 +371,20 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	  upper = cnt;
 	  do
 	    {
+	      to = ranges[upper].from + ranges[upper].len;
+	      if (to > archive_stat.st_size)
+		/* The archive locrectab contains bogus offsets.  */
+		return NULL;
+	      to = (to + ps - 1) & ~(ps - 1);
+
 	      /* If a range is already mmaped in, stop.	 */
 	      if (mapped != NULL && ranges[upper].from >= mapped->from)
 		break;
-	      to = ((ranges[upper].from + ranges[upper].len + ps - 1)
-		    & ~(ps - 1));
+
 	      ++upper;
 	    }
 	  /* Loop while still in contiguous pages. */
 	  while (upper < nranges && ranges[upper].from < to + ps);
-
-	  if (to > archive_stat.st_size)
-	    /* The archive locrectab contains bogus offsets.  */
-	    return NULL;
 
 	  /* Open the file if it hasn't happened yet.  */
 	  if (fd == -1)
@@ -391,7 +406,8 @@ _nl_load_locale_from_archive (int category, const char **namep)
 	    }
 
 	  /* Map the range from the archive.  */
-	  addr = __mmap64 (NULL, to - from, PROT_READ, MAP_SHARED, fd, from);
+	  addr = __mmap64 (NULL, to - from, PROT_READ, MAP_FILE|MAP_COPY,
+			   fd, from);
 	  if (addr == MAP_FAILED)
 	    return NULL;
 

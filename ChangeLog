@@ -1,5 +1,13 @@
 2002-08-22  Roland McGrath  <roland@redhat.com>
 
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Check max file
+	position indicated by locrectab against file bounds before rounding to
+	page size.  In mapping loop, always set TO before breaking out of
+	contiguous range coalescing loop.
+
+	* locale/loadarchive.c (_nl_load_locale_from_archive): Use MAP_PRIVATE
+	(or MAP_COPY if available) instead of MAP_SHARED.
+
 	* scripts/firstversions.awk: When encountering a version newer than
 	the specified earliest version, be sure to emit the specified earliest
 	version first if any renaming of an older version to that has been.
