@@ -56,7 +56,7 @@ __pthread_cond_timedwait:
 .Lsubq:
 
 	cmpq	$1000000000, 8(%rdx)
-	movl	$EINVAL, %rax
+	movq	$EINVAL, %rax
 	jae	18f
 
 	/* Stack frame:
