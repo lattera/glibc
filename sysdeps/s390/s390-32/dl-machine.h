@@ -389,6 +389,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
       switch (r_type)
 	{
+	case R_390_GLOB_DAT:
+	case R_390_JMP_SLOT:
+	  *reloc_addr = value;
+	  break;
+#ifndef RTLD_BOOTSTRAP
 	case R_390_COPY:
 	  if (sym == NULL)
 	    /* This can happen in trace mode if an object could not be
@@ -409,40 +414,37 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
 	  break;
-	case R_390_GLOB_DAT:
-	case R_390_JMP_SLOT:
-	  *reloc_addr = value;
-	  break;
 	case R_390_32:
-	  {
-#ifndef RTLD_BOOTSTRAP
-	   /* This is defined in rtld.c, but nowhere in the static
-	      libc.a; make the reference weak so static programs can
-	      still link.  This declaration cannot be done when
-	      compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP) because
-	      rtld.c contains the common defn for _dl_rtld_map, which
-	      is incompatible with a weak decl in the same file.  */
-	    weak_extern (_dl_rtld_map);
-	    if (map == &_dl_rtld_map)
-	      /* Undo the relocation done here during bootstrapping.
-		 Now we will relocate it anew, possibly using a
-		 binding found in the user program or a loaded library
-		 rather than the dynamic linker's built-in definitions
-		 used while loading those libraries.  */
-	      value -= map->l_addr + refsym->st_value;
-#endif
-	    *reloc_addr = value + reloc->r_addend;
-	    break;
-	  }
-
+	  *reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_390_16:
+	  *(unsigned short *) reloc_addr = value + reloc->r_addend;
+	  break;
+	case R_390_8:
+	  *(char *) reloc_addr = value + reloc->r_addend;
+	  break;
 	case R_390_PC32:
 	  *reloc_addr = value + reloc->r_addend - (Elf32_Addr) reloc_addr;
 	  break;
+	case R_390_PC16DBL:
+	case R_390_PLT16DBL:
+	  *(unsigned short *) reloc_addr = (unsigned short)
+	    ((short) (value + reloc->r_addend - (Elf32_Addr) reloc_addr) >> 1);
+	  break;
+	case R_390_PC16:
+	  *(unsigned short *) reloc_addr =
+	    value + reloc->r_addend - (Elf32_Addr) reloc_addr;
+	  break;
 	case R_390_NONE:
 	  break;
+#endif
+#if !defined(RTLD_BOOTSTRAP) || defined(_NDEBUG)
 	default:
+	  /* We add these checks in the version to relocate ld.so only
+	     if we are still debugging.	 */
 	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
+#endif
 	}
     }
 }
