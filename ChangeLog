@@ -1,4 +1,20 @@
+2002-04-14  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): Move add_dependency call to
+	the end of the function.  Pass original flags to recursive call if
+	add_dependency failed.
+	(_dl_lookup_versioned_symbol): Likewise.
+
+2002-04-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/mktime.c (__mktime_internal): If year is 69, don't bail out
+	early, but check whether it overflowed afterwards.
+	* time/tst-mktime.c (main): Add new tests.
+
 2002-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* debug/xtrace.sh: Fix program name in help message.
+	Patch by Roger Luethi <rl@hellgate.ch>.
 
 	* include/sys/stat.h: Add prototypes for __lxstat_internal and
 	__lxstat64_internal.  Add macros __lxstat and __lxstat64 if not

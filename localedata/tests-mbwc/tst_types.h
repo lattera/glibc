@@ -19,7 +19,7 @@
 #define MBSSIZE		   24
 #define WCSSIZE		   12
 #define MONFMTSIZE	   16
-#define MONSIZE		   32
+#define MONSIZE		   64
 #define USE_MBCURMAX	   99	/* well, but ... */
 #define TST_DBL_EPS	   2.22153e-16
 #define WCSTOK_SEQNUM	   3

@@ -1,3 +1,8 @@
+2002-04-14  Wolfram Gloger  <wg@malloc.de>
+
+	* tests-mbwc/tst_types.h: Increase MONSIZE.
+	* tests-mbwc/tst_strfmon.c: Fail test if buffer too small.
+
 2002-04-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* locales/ms_MY (day): Fix a typo.

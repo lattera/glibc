@@ -27,6 +27,12 @@ tst_strfmon (FILE * fp, int debug_flg)
       fmt = TST_INPUT (strfmon).fmt;
       val = TST_INPUT (strfmon).val;
       memset (buf, 0, MONSIZE);
+      if (nbt > MONSIZE)
+	{
+	  err_count++;
+	  Result (C_FAILURE, S_STRFMON, CASE_3, "buffer too small in test");
+	  continue;
+	}
 
       TST_CLEAR_ERRNO;
       ret = strfmon (buf, nbt, fmt, val, val, val);

@@ -115,7 +115,7 @@ while test $# -gt 0; do
     do_version
     ;;
   --*)
-    echo >&2 $"memprof: unrecognized option \`$1'"
+    echo >&2 $"xtrace: unrecognized option \`$1'"
     do_usage
     ;;
   *)

@@ -5,7 +5,8 @@
 int
 main (void)
 {
-  struct tm time_str;
+  struct tm time_str, *tm;
+  time_t t;
   char daybuf[20];
   int result;
 
@@ -27,6 +28,39 @@ main (void)
       (void) strftime (daybuf, sizeof (daybuf), "%A", &time_str);
       (void) puts (daybuf);
       result = strcmp (daybuf, "Wednesday") != 0;
+    }
+
+  setenv ("TZ", "EST", 1);
+#define EVENING69 1 * 60 * 60 + 2 * 60 + 29
+  t = EVENING69;
+  tm = localtime (&t);
+  if (tm == NULL)
+    {
+      (void) puts ("localtime returned NULL");
+      result = 1;
+    }
+  else
+    {
+      time_str = *tm;
+      t = mktime (&time_str);
+      if (t != EVENING69)
+        {
+          printf ("mktime returned %ld, expected %ld\n",
+		  (long) t, EVENING69);
+	  result = 1;
+        }
+      else
+        (void) puts ("Dec 31 1969 EST test passed");
+
+      setenv ("TZ", "CET", 1);
+      t = mktime (&time_str);
+      if (t != (time_t) -1)
+        {
+	  printf ("mktime returned %ld, expected -1\n", (long) t);
+	  result = 1;
+        }
+      else
+        (void) puts ("Dec 31 1969 CET test passed");
     }
 
   return result;
