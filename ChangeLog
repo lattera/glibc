@@ -1,5 +1,8 @@
 2001-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/bits/byteswap.h (__bswap_64): Partly revert last
+	patch.  We must use unsigned int for l member of union.
+
 	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main): Don't call
 	_dl_aux_init for shared libraries.
 
