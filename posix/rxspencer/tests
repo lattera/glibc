@@ -526,3 +526,12 @@ a((b+|((c)*)))+d	-	abcd	abcd	c,c,c,c
 (((\b))){0}	-	x	@x	-,-,-
 a(((.*)))b((\2)){0}c	-	abc	abc	@bc,@bc,@bc,-,-
 a(((.*)))b((\1)){0}c	-	axbc	axbc	x,x,x,-,-
+
+\b	&	SaT	@aT
+\b	&	aT	@aT
+a.*\b	&	abT	ab
+\b	&	STSS
+\B	&	abc	@bc
+\B	&	aSbTc
+\B	&	SaT	@SaT
+\B	&	aSTSb	@TSb

@@ -1,3 +1,23 @@
+2005-01-26  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.h
+	(SYSCALL_ERROR_HANDLER_TLS_STORE): Remove unnecessary 0 imm.
+
+	[BZ #693]
+	* posix/regex_internal.h (DUMMY_CONSTRAINT): Rename to...
+	(WORD_DELIM_CONSTRAINT): ...this.
+	(NOT_WORD_DELIM_CONSTRAINT): Define.
+	(re_context_type): Add INSIDE_NOTWORD and NOT_WORD_DELIM,
+	change WORD_DELIM to use WORD_DELIM_CONSTRAINT.
+	* posix/regcomp.c (peek_token): For \B create NOT_WORD_DELIM
+	anchor instead of INSIDE_WORD.
+	(parse_expression): Handle NOT_WORD_DELIM constraint.
+	* posix/bug-regex19.c (tests): Adjust tests that relied on \B
+	being inside word instead of not word delim.
+	* posix/tst-rxspencer.c (mb_frob_pattern): Don't frob escaped
+	characters.
+	* posix/rxspencer/tests: Add some new tests.
+
 2005-01-14  GOTO Masanori  <gotom@debian.or.jp>
 
 	* sunrpc/rpc_main.c (s_output): Generate #include <rpc/pmap_clnt.h>

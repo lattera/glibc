@@ -1859,7 +1859,7 @@ peek_token (token, input, syntax)
 	  if (!(syntax & RE_NO_GNU_OPS))
 	    {
 	      token->type = ANCHOR;
-	      token->opr.ctx_type = INSIDE_WORD;
+	      token->opr.ctx_type = NOT_WORD_DELIM;
 	    }
 	  break;
 	case 'w':
@@ -2349,15 +2349,25 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       break;
     case ANCHOR:
       if ((token->opr.ctx_type
-	   & (WORD_DELIM | INSIDE_WORD | WORD_FIRST | WORD_LAST))
+	   & (WORD_DELIM | NOT_WORD_DELIM | WORD_FIRST | WORD_LAST))
 	  && dfa->word_ops_used == 0)
 	init_word_char (dfa);
-      if (token->opr.ctx_type == WORD_DELIM)
+      if (token->opr.ctx_type == WORD_DELIM
+          || token->opr.ctx_type == NOT_WORD_DELIM)
 	{
 	  bin_tree_t *tree_first, *tree_last;
-	  token->opr.ctx_type = WORD_FIRST;
-	  tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
-	  token->opr.ctx_type = WORD_LAST;
+	  if (token->opr.ctx_type == WORD_DELIM)
+	    {
+	      token->opr.ctx_type = WORD_FIRST;
+	      tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+	      token->opr.ctx_type = WORD_LAST;
+            }
+          else
+            {
+	      token->opr.ctx_type = INSIDE_WORD;
+	      tree_first = re_dfa_add_tree_node (dfa, NULL, NULL, token);
+	      token->opr.ctx_type = INSIDE_NOTWORD;
+            }
 	  tree_last = re_dfa_add_tree_node (dfa, NULL, NULL, token);
 	  token->type = OP_ALT;
 	  tree = re_dfa_add_tree_node (dfa, tree_first, tree_last, token);

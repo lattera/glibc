@@ -159,7 +159,7 @@ __i686.get_pc_thunk.reg:						      \
   jmp L(pseudo_end);
 #   ifndef NO_TLS_DIRECT_SEG_REFS
 #    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
-  movl src, %gs:0(destoff)
+  movl src, %gs:(destoff)
 #   else
 #    define SYSCALL_ERROR_HANDLER_TLS_STORE(src, destoff)		      \
   addl %gs:0, destoff;							      \
