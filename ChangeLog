@@ -1,3 +1,8 @@
+2004-10-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (dl_open_worker): Avoid dereferencing map in
+	statically linked code if there might none be found.
+
 2004-10-06  Maciej W. Rozycki  <macro@mips.com>
 
 	* sysdeps/unix/sysv/linux/mips/mips32/sysdep.h
