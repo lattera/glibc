@@ -87,21 +87,16 @@ L(einval):
 #endif
 
 #if !defined __ASSUME_MMAP2_SYSCALL || !defined __NR_mmap2
-
 3:
 	/* Save registers.  */
 	movl %ebx, %edx
 
 	cmpl $0, 28(%esp)
-	jne L(einval)
+	jne L(einval2)
 
 	movl $SYS_ify(mmap), %eax	/* System call number in %eax.  */
 
 	lea 4(%esp), %ebx		/* Address of args is 1st arg.  */
-
-# ifdef __NR_mmap2
-	jmp L(do_syscall)
-# else
 
 	/* Do the system call trap.  */
 	int $0x80
@@ -114,14 +109,15 @@ L(einval):
 	ja SYSCALL_ERROR_LABEL
 
 	/* Successful; return the syscall's value.  */
+#ifndef __NR_mmap2
 L(pseudo_end):
+#endif
 	ret
 
-L(einval):
+L(einval2):
 	movl %edx, %ebx
 	movl $-EINVAL, %eax
 	jmp SYSCALL_ERROR_LABEL
-# endif
 #endif
 
 PSEUDO_END (__mmap64)

@@ -1,3 +1,8 @@
+2000-01-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/mmap64.S: Fix code generated if
+	mmap2 is available when compiling but no at runtime.
+
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/iso-ir-165.c: New file.
