@@ -1,3 +1,8 @@
+2003-02-08  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/vfork.S: Branch to __fork whenever
+	libpthread.so is loaded.
+
 2003-02-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/vfork.S: Make sure
