@@ -1,3 +1,8 @@
+2004-12-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/gnu/Makefile ($(objpfx)errlist-compat.c):
+	Do $(make-target-directory).
+
 2004-11-29  Roland McGrath  <roland@redhat.com>
 
 	* posix/confstr.c: Avoid punctuation in #error text.

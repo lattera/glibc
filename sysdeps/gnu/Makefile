@@ -1,4 +1,4 @@
-# Copyright (C) 1996,1997,1998,1999,2001,2002,2003
+# Copyright (C) 1996,1997,1998,1999,2001,2002,2003,2004
 #	Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
@@ -40,6 +40,7 @@ else
 $(objpfx)errlist-compat.c: errlist.c $(..)sysdeps/gnu/errlist-compat.awk \
 			   $(before-compile)
 endif
+	$(make-target-directory)
 	$(AWK) -v maxerr=`\
 	  $(CC) -S $(CPPFLAGS) $(CFLAGS) -DNOT_IN_libc -DEMIT_ERR_MAX $< -o - \
 	  | sed -n 's/^.*@@@[^0-9]*\([0-9]*\)[^0-9]*@@@.*$$/\1/p'` \
