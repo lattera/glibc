@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <fcntl.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -464,10 +465,10 @@ dl_main (const ElfW(Phdr) *phdr,
   unsigned int npreloads;
   size_t file_size;
   char *file;
-  int has_interp = 0;
+  bool has_interp = false;
   unsigned int i;
-  int prelinked = 0;
-  int rtld_is_main = 0;
+  bool prelinked = false;
+  bool rtld_is_main = false;
 #ifndef HP_TIMING_NONAVAIL
   hp_timing_t start;
   hp_timing_t stop;
@@ -497,7 +498,7 @@ dl_main (const ElfW(Phdr) *phdr,
 	 pay attention to its PT_INTERP command (we are the interpreter
 	 ourselves).  This is an easy way to test a new ld.so before
 	 installing it.  */
-      rtld_is_main = 1;
+      rtld_is_main = true;
 
       /* Note the place where the dynamic linker actually came from.  */
       GL(dl_rtld_map).l_name = _dl_argv[0];
@@ -689,7 +690,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	      }
 	  }
 
-	has_interp = 1;
+	has_interp = true;
 	break;
       case PT_LOAD:
 	{
@@ -1210,7 +1211,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 
 
       if (r_list == r_listend && liblist == liblistend)
-	prelinked = 1;
+	prelinked = true;
 
       if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_LIBS, 0))
 	_dl_printf ("\nprelink checking: %s\n", prelinked ? "ok" : "failed");
@@ -1241,83 +1242,83 @@ of this helper program; chances are you did not intend to run this program.\n\
       _dl_sysdep_start_cleanup ();
     }
   else
-  {
-    /* Now we have all the objects loaded.  Relocate them all except for
-       the dynamic linker itself.  We do this in reverse order so that copy
-       relocs of earlier objects overwrite the data written by later
-       objects.  We do not re-relocate the dynamic linker itself in this
-       loop because that could result in the GOT entries for functions we
-       call being changed, and that would break us.  It is safe to relocate
-       the dynamic linker out of order because it has no copy relocs (we
-       know that because it is self-contained).  */
+    {
+      /* Now we have all the objects loaded.  Relocate them all except for
+	 the dynamic linker itself.  We do this in reverse order so that copy
+	 relocs of earlier objects overwrite the data written by later
+	 objects.  We do not re-relocate the dynamic linker itself in this
+	 loop because that could result in the GOT entries for functions we
+	 call being changed, and that would break us.  It is safe to relocate
+	 the dynamic linker out of order because it has no copy relocs (we
+	 know that because it is self-contained).  */
 
-    struct link_map *l;
-    int consider_profiling = GL(dl_profile) != NULL;
+      struct link_map *l;
+      int consider_profiling = GL(dl_profile) != NULL;
 #ifndef HP_TIMING_NONAVAIL
-    hp_timing_t start;
-    hp_timing_t stop;
-    hp_timing_t add;
+      hp_timing_t start;
+      hp_timing_t stop;
+      hp_timing_t add;
 #endif
 
-    /* If we are profiling we also must do lazy reloaction.  */
-    GL(dl_lazy) |= consider_profiling;
+      /* If we are profiling we also must do lazy reloaction.  */
+      GL(dl_lazy) |= consider_profiling;
 
-    l = GL(dl_loaded);
-    while (l->l_next)
-      l = l->l_next;
+      l = GL(dl_loaded);
+      while (l->l_next)
+	l = l->l_next;
 
-    HP_TIMING_NOW (start);
-    do
-      {
-	/* While we are at it, help the memory handling a bit.  We have to
-	   mark some data structures as allocated with the fake malloc()
-	   implementation in ld.so.  */
-	struct libname_list *lnp = l->l_libname->next;
+      HP_TIMING_NOW (start);
+      do
+	{
+	  /* While we are at it, help the memory handling a bit.  We have to
+	     mark some data structures as allocated with the fake malloc()
+	     implementation in ld.so.  */
+	  struct libname_list *lnp = l->l_libname->next;
 
-	while (__builtin_expect (lnp != NULL, 0))
-	  {
-	    lnp->dont_free = 1;
-	    lnp = lnp->next;
-	  }
+	  while (__builtin_expect (lnp != NULL, 0))
+	    {
+	      lnp->dont_free = 1;
+	      lnp = lnp->next;
+	    }
 
-	if (l != &GL(dl_rtld_map))
-	  INT(_dl_relocate_object) (l, l->l_scope, GL(dl_lazy),
-				    consider_profiling);
+	  if (l != &GL(dl_rtld_map))
+	    INT(_dl_relocate_object) (l, l->l_scope, GL(dl_lazy),
+				      consider_profiling);
 
-	l = l->l_prev;
-      }
-    while (l);
-    HP_TIMING_NOW (stop);
+	  l = l->l_prev;
+	}
+      while (l);
+      HP_TIMING_NOW (stop);
 
-    HP_TIMING_DIFF (relocate_time, start, stop);
+      HP_TIMING_DIFF (relocate_time, start, stop);
 
-    /* Do any necessary cleanups for the startup OS interface code.
-       We do these now so that no calls are made after rtld re-relocation
-       which might be resolved to different functions than we expect.
-       We cannot do this before relocating the other objects because
-       _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
-    _dl_sysdep_start_cleanup ();
+      /* Do any necessary cleanups for the startup OS interface code.
+	 We do these now so that no calls are made after rtld re-relocation
+	 which might be resolved to different functions than we expect.
+	 We cannot do this before relocating the other objects because
+	 _dl_relocate_object might need to call `mprotect' for DT_TEXTREL.  */
+      _dl_sysdep_start_cleanup ();
 
-    /* Now enable profiling if needed.  Like the previous call,
-       this has to go here because the calls it makes should use the
-       rtld versions of the functions (particularly calloc()), but it
-       needs to have _dl_profile_map set up by the relocator.  */
-    if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
-      /* We must prepare the profiling.  */
-      INT(_dl_start_profile) (GL(dl_profile_map), GL(dl_profile_output));
+      /* Now enable profiling if needed.  Like the previous call,
+	 this has to go here because the calls it makes should use the
+	 rtld versions of the functions (particularly calloc()), but it
+	 needs to have _dl_profile_map set up by the relocator.  */
+      if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
+	/* We must prepare the profiling.  */
+	INT(_dl_start_profile) (GL(dl_profile_map), GL(dl_profile_output));
 
-    if (GL(dl_rtld_map).l_opencount > 1)
-      {
-	/* There was an explicit ref to the dynamic linker as a shared lib.
-	   Re-relocate ourselves with user-controlled symbol definitions.  */
-	HP_TIMING_NOW (start);
-	INT(_dl_relocate_object) (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
-				  0, 0);
-	HP_TIMING_NOW (stop);
-	HP_TIMING_DIFF (add, start, stop);
-	HP_TIMING_ACCUM_NT (relocate_time, add);
-      }
-  }
+      if (GL(dl_rtld_map).l_opencount > 1)
+	{
+	  /* There was an explicit ref to the dynamic linker as a shared lib.
+	     Re-relocate ourselves with user-controlled symbol definitions.  */
+	  HP_TIMING_NOW (start);
+	  INT(_dl_relocate_object) (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
+				    0, 0);
+	  HP_TIMING_NOW (stop);
+	  HP_TIMING_DIFF (add, start, stop);
+	  HP_TIMING_ACCUM_NT (relocate_time, add);
+	}
+    }
 
   /* Now set up the variable which helps the assembler startup code.  */
   GL(dl_main_searchlist) = &GL(dl_loaded)->l_searchlist;
