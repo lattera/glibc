@@ -232,14 +232,19 @@ alpha /
    <U30A1>..<U30F6>;<U30FB>..<U30FC>;/
 % TABLE 52 BOPOMOFO/
    <U3105>..<U312C>;/
-% CJK unified ideographs/
-   <U4E01>..<U9FA5>;/
-% HANGUL amendment 5/
-   <UAC00>..<UD7A3>;/
 % Miscellaneous/
    <U00B5>;<U02B0>..<U02B8>;<U02BB>;<U02BD>..<U02C1>;/
    <U02D0>..<U02D1>;<U02E0>..<U02E4>;<U037A>;<U0559>;<U093D>;<U0B3D>;/
    <U1FBE>;<U2160>..<U2182>;<U3021>..<U3029>
+
+% XXX The original version of this also contained the CJK and Hangul
+% XXX ideographs here.  This seems not to be useful since nobody
+% XXX expects them to be here and it bloats the tables.
+% CJK unified ideographs/
+%   <U4E01>..<U9FA5>;/
+% HANGUL amendment 5/
+%   <UAC00>..<UD7A3>;/
+
 %
 % The "digit" class of the "i18n" FDCC-set is reflecting
 % the recommendations in TR 10176 annex A

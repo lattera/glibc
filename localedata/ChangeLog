@@ -1,5 +1,7 @@
 2000-06-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/i18n: Take CJK ideographs and Hangul out of `alpha' table.
+
 	* sort-test.sh: Add more GCONV_PATH usages.
 	* tst-fmon.sh: Likewise.
 	* tst-locale.sh: Likewise.
