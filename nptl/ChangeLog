@@ -1,5 +1,14 @@
 2003-09-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/alpha/timer_create.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/timer_delete.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/timer_getoverr.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/timer_gettime.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/timer_settime.c: New file.
+	* sysdeps/unix/sysv/linux/alpha/Versions: New file.
+
+	* sysdeps/unix/sysv/linux/alpha/aio_cancel.c: New file.
+
 	* sysdeps/unix/sysv/linux/ia64/bits/posix_opt.h: Define
 	_POSIX_THREAD_PRIORITY_SCHEDULING.
 	* sysdeps/unix/sysv/linux/x86_64/bits/posix_opt.h: Likewise.
