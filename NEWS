@@ -107,6 +107,29 @@ Version 1.10
   functions for maintaining the login-record files (primarily of use to
   system programs such as `login'), and convenient functions for
   allocating and initializing a pseudo-terminal (pty) device.
+
+* Ulrich Drepper has contributed new support for System V style
+  shared memory and IPC on systems that support it.
+
+* Ulrich Drepper has contributed several miscellaneous new functions found
+  in System V: The `hsearch' family of functions provide an effective
+  implementation of hash tables; `a64l' and `l64a' provide a very simple
+  binary to ASCII mapping; `drand48' and friends provide a 48-bit random
+  number generator.
+
+* Ulrich Drepper has contributed new reentrant counterparts for the
+  `random' and `hsearch' families of functions; `random_r', `hsearch_r', etc.
+
+* Ulrich Drepper has contributed new, highly-optimized versions of several
+  string functions for the i486/Pentium family of processors.
+
+* Ulrich Drepper has updated the Linux-specific code, based largely 
+  on work done in Hongjiu Lu's version of GNU libc for Linux.
+  The GNU library now supports Linux versions 1.3.29 and later,
+  using the ELF object file format (i[345]86-*-linux).
+
+* Ulrich Drepper has contributed a new set of message catalog functions to
+  support multiple languages, for use with his new package GNU gettext.
 
 Version 1.09
 

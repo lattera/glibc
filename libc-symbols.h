@@ -45,7 +45,7 @@ Cambridge, MA 02139, USA.  */
    Some library code that is shared with other packages also
    tests this symbol to see if it is being compiled as part
    of the C library.  */
-#define _LIBC
+#define _LIBC	1
 
 /* The symbols in all the user (non-_) macros are C symbols.  Predefined
    should be HAVE_WEAK_SYMBOLS and/or HAVE_ELF and/or HAVE_GNU_LD.

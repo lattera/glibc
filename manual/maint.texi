@@ -733,6 +733,98 @@ The @code{getopt} function and related code were written by
 Richard Stallman, @w{David J. MacKenzie}, and @w{Roland McGrath}.
 
 @item
+The merge sort function @code{qsort} was written by Michael J. Haertel.
+
+@item
+The quick sort function used as a fallback by @code{qsort} was written
+by Douglas C. Schmidt.
+
+@item
+The memory allocation functions @code{malloc}, @code{realloc} and
+@code{free} and related code were written by Michael J. Haertel.
+
+@comment tege's name has an umlaut.
+@tex
+\xdef\SETtege{Torbj\"orn Granlund}
+@end tex
+@ifinfo
+@set tege Torbjorn Granlund
+@end ifinfo
+@item
+Fast implementations of many of the string functions (@code{memcpy},
+@code{strlen}, etc.) were written by @value{tege}.
+
+@item
+The @file{tar.h} header file was written by David J. MacKenzie.
+
+@item
+The port to the MIPS DECStation running Ultrix 4
+(@code{mips-dec-ultrix4})
+was contributed by Brendan Kehoe and Ian Lance Taylor.
+
+@item
+The DES encryption function @code{crypt} and related functions were
+contributed by Michael Glad.
+
+@item
+The @code{ftw} function was contributed by Ian Lance Taylor.
+
+@item
+The startup code to support SunOS shared libraries was contributed by
+Tom Quinn.
+
+@item
+The @code{mktime} function was contributed by Noel Cragg.
+
+@item
+The port to the Sequent Symmetry running Dynix version 3
+(@code{i386-sequent-bsd}) was contributed by Jason Merrill.
+
+@item
+The timezone support code is derived from the public-domain timezone
+package by Arthur David Olson and his many contributors.
+
+@item
+The port to the DEC Alpha running OSF/1 (@code{alpha-dec-osf1}) was
+contributed by Brendan Kehoe, using some code written by Roland McGrath.
+
+@item
+The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
+contributed by Tom Quinn.
+
+@item
+The port of the Mach and Hurd code to the MIPS architecture
+(@code{mips-@var{anything}-gnu}) was contributed by Kazumoto Kojima.
+
+@item
+The floating-point printing function used by @code{printf} and friends
+and the floating-point reading function used by @code{scanf},
+@code{strtod} and friends were written by Ulrich Drepper.  The
+multi-precision integer functions used in those functions are taken from
+GNU MP, which was contributed by @value{tege}.
+
+@item
+The internationalization support in the library (@file{locale.h},
+@file{langinfo.h}, etc.) was written by Ulrich Drepper and Roland
+McGrath.  Ulrich Drepper adapted the support code for message catalogs
+(@file{libintl.h}, etc.) from the GNU @code{gettext} package, which he
+also wrote.
+
+@item
+The port to Linux i386/ELF (@code{i386-@var{anything}-linux}) was
+contributed by Ulrich Drepper, based in large part on work done in
+Hongjiu Lu's Linux version of the GNU C Library.
+
+@item
+Stephen R. van den Berg contributed a highly-optimized @code{strstr} function.
+
+@item
+Ulrich Drepper contributed the @code{hsearch} and @code{drand48}
+families of functions; reentrant @samp{@dots{}@code{_r}} versions of the
+@code{random} family; System V shared memory and IPC support code; and
+several highly-optimized string functions for i@var{x}86 processors.
+
+@item
 Most of the math functions are taken from 4.4 BSD; they have been
 modified only slightly to work with the GNU C library.  The
 Internet-related code (most of the @file{inet} subdirectory) and several
@@ -795,94 +887,7 @@ changes to fit into the GNU C library and to fit the ANSI C standard,
 but the functional code is Berkeley's.@refill
 
 @item
-The merge sort function @code{qsort} was written by Michael J. Haertel.
-
-@item
-The quick sort function used as a fallback by @code{qsort} was written
-by Douglas C. Schmidt.
-
-@item
-The memory allocation functions @code{malloc}, @code{realloc} and
-@code{free} and related code were written by Michael J. Haertel.
-
-@comment tege's name has an umlaut.
-@tex
-\xdef\SETtege{Torbj\"orn Granlund}
-@end tex
-@ifinfo
-@set tege Torbjorn Granlund
-@end ifinfo
-@item
-Fast implementations of many of the string functions (@code{memcpy},
-@code{strlen}, etc.) were written by @value{tege}.
-
-@item
-Some of the support code for Mach is taken from Mach 3.0 by CMU,
-and is under the following copyright terms:
-
-@quotation
-@display
-Mach Operating System
-Copyright @copyright{} 1991,1990,1989 Carnegie Mellon University
-All Rights Reserved.
-@end display
-
-Permission to use, copy, modify and distribute this software and its
-documentation is hereby granted, provided that both the copyright
-notice and this permission notice appear in all copies of the
-software, derivative works or modified versions, and any portions
-thereof, and that both notices appear in supporting documentation.
-
-@sc{carnegie mellon allows free use of this software in its ``as is''
-condition.  carnegie mellon disclaims any liability of any kind for
-any damages whatsoever resulting from the use of this software.}
-
-Carnegie Mellon requests users of this software to return to
-
-@display
- Software Distribution Coordinator
- School of Computer Science
- Carnegie Mellon University
- Pittsburgh PA 15213-3890
-@end display
-
-@noindent
-or @samp{Software.Distribution@@CS.CMU.EDU} any improvements or
-extensions that they make and grant Carnegie Mellon the rights to
-redistribute these changes.
-@end quotation
-
-@item
-The @file{tar.h} header file was written by David J. MacKenzie.
-
-@item
-The port to the MIPS DECStation running Ultrix 4
-(@code{mips-dec-ultrix4})
-was contributed by Brendan Kehoe and Ian Lance Taylor.
-
-@item
-The DES encryption function @code{crypt} and related functions were
-contributed by Michael Glad.
-
-@item
-The @code{ftw} function was contributed by Ian Lance Taylor.
-
-@item
-The code to support SunOS shared libraries was contributed by Tom Quinn.
-
-@item
-The @code{mktime} function was contributed by Noel Cragg.
-
-@item
-The port to the Sequent Symmetry running Dynix version 3
-(@code{i386-sequent-bsd}) was contributed by Jason Merrill.
-
-@item
-The timezone support code is derived from the public-domain timezone
-package by Arthur David Olson.
-
-@item
-The Internet resolver code is taken directly from BIND 4.9.1, which is
+The Internet resolver code is taken directly from BIND 4.9.3, which is
 under both the Berkeley copyright above and also:
 
 @quotation
@@ -904,16 +909,6 @@ from loss of use, data or profits, whether in an action of contract,
 negligence or other tortious action, arising out of or in connection
 with the use or performance of this software.}
 @end quotation
-
-@item
-The port to the DEC Alpha running OSF/1 (@code{alpha-dec-osf1}) was
-contributed by Brendan Kehoe, using some code written by Roland McGrath.
-
-@item
-The floating-point printing function used by @code{printf} and friends
-was written by Roland McGrath and @value{tege}.  The multi-precision
-integer functions used in that function are taken from GNU MP, which was
-contributed by @value{tege}.
 
 @item
 The code to support Sun RPC is taken verbatim from Sun's
@@ -955,12 +950,41 @@ Mountain View, California  94043
 @end quotation
 
 @item
-The port to SGI machines running Irix 4 (@code{mips-sgi-irix4}) was
-contributed by Tom Quinn.
+Some of the support code for Mach is taken from Mach 3.0 by CMU,
+and is under the following copyright terms:
 
-@item
-The port of the Mach and Hurd code to the MIPS architecture
-(@code{mips-@var{anything}-gnu}) was contributed by Kazumoto Kojima.
+@quotation
+@display
+Mach Operating System
+Copyright @copyright{} 1991,1990,1989 Carnegie Mellon University
+All Rights Reserved.
+@end display
+
+Permission to use, copy, modify and distribute this software and its
+documentation is hereby granted, provided that both the copyright
+notice and this permission notice appear in all copies of the
+software, derivative works or modified versions, and any portions
+thereof, and that both notices appear in supporting documentation.
+
+@sc{carnegie mellon allows free use of this software in its ``as is''
+condition.  carnegie mellon disclaims any liability of any kind for
+any damages whatsoever resulting from the use of this software.}
+
+Carnegie Mellon requests users of this software to return to
+
+@display
+ Software Distribution Coordinator
+ School of Computer Science
+ Carnegie Mellon University
+ Pittsburgh PA 15213-3890
+@end display
+
+@noindent
+or @samp{Software.Distribution@@CS.CMU.EDU} any improvements or
+extensions that they make and grant Carnegie Mellon the rights to
+redistribute these changes.
+@end quotation
+
 @end itemize
 
 @c @bye

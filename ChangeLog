@@ -1,5 +1,13 @@
 Tue Sep 26 16:50:17 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* locale/libintl.h: Rewritten by Ulrich Drepper for use with GNU
+	gettext code.
+
+	* sysdeps/unix/sysv/linux/sys/param.h: New file.
+	* sysdeps/unix/sysv/linux/Subdirs: File removed.
+
+	* libc-symbols.h (_LIBC): Define to 1, not just empty.
+
 	* gmon: New directory of profiling code, incorporated from
 	4.4BSD-Lite and modified.
 	* sysdeps/i386/machine-gmon.h: New file.
