@@ -76,8 +76,6 @@ extern void
 __mach_msg_destroy (mach_msg_header_t *msg),
 mach_msg_destroy (mach_msg_header_t *msg);
 
-/* XXX should be in mach/message.h. */
-extern typeof (mach_msg) __mach_msg;
 
 #define __need_FILE
 #include <stdio.h>
