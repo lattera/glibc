@@ -1,5 +1,9 @@
 2000-04-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* malloc/malloc.c (cALLOc): Clear only what the user asked for and
+	avoid writing over boundary.
+	Patch by Greg McGary <gkm@eng.ascend.com>.
+
 	* sysdeps/arm/memprof.h: New file.
 
 2000-04-12  Andreas Jaeger  <aj@suse.de>
