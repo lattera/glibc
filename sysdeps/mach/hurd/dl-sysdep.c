@@ -649,8 +649,7 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
   /* Return an empty array.  Hurd has no hardware capabilities.  */
   result = (struct r_strlenpair *) malloc (sizeof (*result));
   if (result == NULL)
-    INTUSE (_dl_signal_error) (ENOMEM, NULL, NULL,
-			       "cannot create capability list");
+    _dl_signal_error (ENOMEM, NULL, NULL, "cannot create capability list");
 
   result[0].str = (char *) result;	/* Does not really matter.  */
   result[0].len = 0;
