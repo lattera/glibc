@@ -1,3 +1,7 @@
+2000-02-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/it.po: Update from translation team.
+
 2000-02-20  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/mmap64.S: Fix off by one error.

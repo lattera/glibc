@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.0.90\n"
-"POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1999-08-10 12:07+02:00\n"
+"Project-Id-Version: libc 2.1.3\n"
+"POT-Creation-Date: 2000-02-16 10:39-0800\n"
+"PO-Revision-Date: 2000-02-20 22:17+01:00\n"
 "Last-Translator: Marco d'Itri <md@linux.it>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -21,22 +21,22 @@ msgstr "\t\tDiritti di Accesso : "
 msgid "\t\tAttributes    : "
 msgstr "\t\tAttributi     : "
 
-#: sunrpc/rpc_main.c:1416
+#: sunrpc/rpc_main.c:1414
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dnome[=valore]] [-i dimes] [-I [-K secondi]] [-Y path] infile\n"
 
-#: sunrpc/rpc_main.c:1418
+#: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 
-#: sunrpc/rpc_main.c:1421
+#: sunrpc/rpc_main.c:1419
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n netid]* [-o outfile] [infile]\n"
 
-#: sunrpc/rpc_main.c:1420
+#: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s nettype]* [-o outfile] [infile]\n"
@@ -113,7 +113,7 @@ msgstr ""
 msgid "\nGroup Members :\n"
 msgstr "\nMembri del gruppo :\n"
 
-#: nis/nis_print.c:320
+#: nis/nis_print.c:322
 msgid "\nTime to Live  : "
 msgstr "\nTempo da vivere: "
 
@@ -141,7 +141,7 @@ msgstr "      no"
 msgid "     yes"
 msgstr "      si"
 
-#: nis/nis_print.c:344
+#: nis/nis_print.c:348
 #, c-format
 msgid "    Data Length = %u\n"
 msgstr "Lunghezza dati = %u\n"
@@ -194,39 +194,39 @@ msgstr "     Membri ricorsivi:\n"
 msgid "   program vers proto   port\n"
 msgstr " programma vers proto   porta\n"
 
-#: argp/argp-help.c:1571
+#: argp/argp-help.c:1573
 msgid "  or: "
 msgstr "   o: "
 
-#: timezone/zic.c:421
+#: timezone/zic.c:423
 #, c-format
 msgid " (rule from \"%s\", line %d)"
 msgstr " (regola da \"%s\", riga %d)"
 
-#: argp/argp-help.c:1583
+#: argp/argp-help.c:1585
 msgid " [OPTION...]"
 msgstr " [OPZIONE...]"
 
-#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1291
+#: locale/programs/ld-collate.c:370 locale/programs/ld-ctype.c:1476
 msgid " done\n"
 msgstr " fatto\n"
 
-#: timezone/zic.c:418
+#: timezone/zic.c:420
 #, c-format
 msgid "\"%s\", line %d: %s"
 msgstr "\"%s\", riga %d: %s"
 
-#: timezone/zic.c:958
+#: timezone/zic.c:984
 #, c-format
 msgid "\"Zone %s\" line and -l option are mutually exclusive"
 msgstr "La riga \"Zone %s\" e l'opzione -l sono mutuamente esclusive"
 
-#: timezone/zic.c:966
+#: timezone/zic.c:992
 #, c-format
 msgid "\"Zone %s\" line and -p option are mutually exclusive"
 msgstr "La riga Zone %s\" e l'opzione -p sono mutuamente esclusive"
 
-#: sunrpc/rpc_main.c:1401
+#: sunrpc/rpc_main.c:1399
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "\"infile\" è necessario per i flag di generazione del template.\n"
 
@@ -240,7 +240,7 @@ msgstr "%.*s: Il parametro ARGP_HELP_FMT richiede un valore"
 msgid "%.*s: Unknown ARGP_HELP_FMT parameter"
 msgstr "%.*s: Parametro ARGP_HELP_FMT sconosciuto"
 
-#: timezone/zic.c:768
+#: timezone/zic.c:794
 #, c-format
 msgid "%s in ruleless zone"
 msgstr "%s in una zona senza regole"
@@ -260,7 +260,7 @@ msgstr "%s%s%s:%u: %s%sErrore inatteso: %s.\n"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sSegnale %d sconosciuto\n"
 
-#: timezone/zic.c:2201
+#: timezone/zic.c:2229
 #, c-format
 msgid "%s: %d did not sign extend correctly\n"
 msgstr "%s: %d non ha esteso correttamente il segno\n"
@@ -270,92 +270,97 @@ msgstr "%s: %d non ha esteso correttamente il segno\n"
 msgid "%s: <mb_cur_max> must be greater than <mb_cur_min>\n"
 msgstr "%s: <mb_cur_max> deve essere maggiore di <mb_cur_min>\n"
 
-#: sunrpc/rpc_main.c:422
+#: sunrpc/rpc_main.c:421
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr "%s: il preprocessore C ha fallito con il codice di uscita %d\n"
 
-#: sunrpc/rpc_main.c:419
+#: sunrpc/rpc_main.c:418
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr "%s: il preprocessore C ha fallito con il segnale %d\n"
 
-#: timezone/zic.c:1469
+#: timezone/zic.c:1495
 #, c-format
 msgid "%s: Can't create %s: %s\n"
 msgstr "%s: Impossibile creare %s: %s\n"
 
-#: timezone/zic.c:2179
+#: timezone/zic.c:2207
 #, c-format
 msgid "%s: Can't create directory %s: %s\n"
 msgstr "%s: Impossibile creare la directory %s: %s\n"
 
-#: timezone/zic.c:620
+#: timezone/zic.c:646
 #, c-format
 msgid "%s: Can't link from %s to %s: %s\n"
 msgstr "%s: Impossibile fare un link da %s a %s: %s\n"
 
-#: timezone/zic.c:794
+#: timezone/zic.c:820
 #, c-format
 msgid "%s: Can't open %s: %s\n"
 msgstr "%s: Impossibile aprire %s: %s\n"
 
-#: timezone/zic.c:1459
+#: timezone/zic.c:1485
 #, c-format
 msgid "%s: Can't remove %s: %s\n"
 msgstr "%s: Impossibile rimuovere %s: %s\n"
 
-#: timezone/zic.c:863
+#: timezone/zic.c:631
+#, c-format
+msgid "%s: Can't unlink  %s: %s\n"
+msgstr "%s: Impossibile cancellare %s: %s\n"
+
+#: timezone/zic.c:889
 #, c-format
 msgid "%s: Error closing %s: %s\n"
 msgstr "%s: Errore chiudendo %s: %s\n"
 
-#: timezone/zic.c:856
+#: timezone/zic.c:882
 #, c-format
 msgid "%s: Error reading %s\n"
 msgstr "%s: Errore leggendo %s\n"
 
-#: timezone/zic.c:1535
+#: timezone/zdump.c:266
+#, c-format
+msgid "%s: Error writing "
+msgstr "%s: Errore scrivendo "
+
+#: timezone/zic.c:1561
 #, c-format
 msgid "%s: Error writing %s\n"
 msgstr "%s: Errore scrivendo %s\n"
 
-#: timezone/zdump.c:266
-#, c-format
-msgid "%s: Error writing standard output "
-msgstr "%s: Errore scrivendo sullo standard output "
-
-#: timezone/zic.c:841
+#: timezone/zic.c:867
 #, c-format
 msgid "%s: Leap line in non leap seconds file %s\n"
 msgstr "%s: riga leap nel file non di secondi intercalari %s\n"
 
-#: timezone/zic.c:359
+#: timezone/zic.c:361
 #, c-format
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Memoria esaurita: %s\n"
 
-#: timezone/zic.c:524
+#: timezone/zic.c:526
 #, c-format
 msgid "%s: More than one -L option specified\n"
 msgstr "%s: È stata specificata più di una opzione -L\n"
 
-#: timezone/zic.c:484
+#: timezone/zic.c:486
 #, c-format
 msgid "%s: More than one -d option specified\n"
 msgstr "%s: È stata specificata più di una opzione -d\n"
 
-#: timezone/zic.c:494
+#: timezone/zic.c:496
 #, c-format
 msgid "%s: More than one -l option specified\n"
 msgstr "%s: È stata specificata più di una opzione -l\n"
 
-#: timezone/zic.c:504
+#: timezone/zic.c:506
 #, c-format
 msgid "%s: More than one -p option specified\n"
 msgstr "%s: È stata specificata più di una opzione -p\n"
 
-#: timezone/zic.c:514
+#: timezone/zic.c:516
 #, c-format
 msgid "%s: More than one -y option specified\n"
 msgstr "%s: È stata specificata più di una opzione -y\n"
@@ -370,57 +375,57 @@ msgstr "%s: Troppi argomenti\n"
 msgid "%s: cannot get modification time"
 msgstr "%s: impossibile ottenere l'orario di modifica"
 
-#: timezone/zic.c:1900
+#: timezone/zic.c:1928
 #, c-format
 msgid "%s: command was '%s', result was %d\n"
 msgstr "%s: il comando era '%s', il risultato %d\n"
 
-#: locale/programs/charmap.c:677 locale/programs/locfile.c:1008
+#: locale/programs/charmap.c:676 locale/programs/locfile.c:1014
 #, c-format
 msgid "%s: error in state machine"
 msgstr "%s: errore nella macchina a stati"
 
-#: posix/getopt.c:784
+#: posix/getopt.c:788
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: opzione non permessa -- %c\n"
 
-#: posix/getopt.c:787
+#: posix/getopt.c:791
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: opzione non valida -- %c\n"
 
-#: posix/getopt.c:707
+#: posix/getopt.c:711
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: l'opzione `%c%s' non accetta argomenti\n"
 
-#: posix/getopt.c:677
+#: posix/getopt.c:681
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: l'opzione `%s' è ambigua\n"
 
-#: posix/getopt.c:725 posix/getopt.c:898
+#: posix/getopt.c:729 posix/getopt.c:902
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: l'opzione `%s' richiede un argomento\n"
 
-#: posix/getopt.c:702
+#: posix/getopt.c:706
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: l'opzione `--%s' non accetta argomenti\n"
 
-#: posix/getopt.c:882
+#: posix/getopt.c:886
 #, c-format
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'opzione `-W %s' non accetta argomenti\n"
 
-#: posix/getopt.c:864
+#: posix/getopt.c:868
 #, c-format
 msgid "%s: option `-W %s' is ambiguous\n"
 msgstr "%s: l'opzione `-W %s' è ambigua\n"
 
-#: posix/getopt.c:817 posix/getopt.c:947
+#: posix/getopt.c:821 posix/getopt.c:951
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: l'opzione richiede un argomento -- %c\n"
@@ -430,32 +435,32 @@ msgstr "%s: l'opzione richiede un argomento -- %c\n"
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: l'output sovrascriverebbe %s\n"
 
-#: timezone/zic.c:848 timezone/zic.c:1262 timezone/zic.c:1287
+#: timezone/zic.c:874 timezone/zic.c:1288 timezone/zic.c:1313
 #, c-format
 msgid "%s: panic: Invalid l_value %d\n"
 msgstr "%s: panico: l_value %d non valido\n"
 
-#: locale/programs/charmap.c:684 locale/programs/repertoire.c:289
+#: locale/programs/charmap.c:683 locale/programs/repertoire.c:301
 #, c-format
 msgid "%s: premature end of file"
 msgstr "%s: fine del file prematura"
 
 #: sunrpc/rpc_main.c:294
 #, c-format
-msgid "%s: unable to open "
-msgstr "%s: impossibile aprire "
+msgid "%s: unable to open %s: %m\n"
+msgstr "%s: impossibile aprire %s: %m\n"
 
-#: posix/getopt.c:758
+#: posix/getopt.c:762
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: opzione `%c%s' non riconosciuta\n"
 
-#: posix/getopt.c:754
+#: posix/getopt.c:758
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: opzione `--%s' non riconosciuta\n"
 
-#: timezone/zic.c:443
+#: timezone/zic.c:445
 #, c-format
 msgid ""
 "%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
@@ -469,10 +474,10 @@ msgstr ""
 msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
 msgstr "%s: l'uso è %s [ -v ] [ -c cutoff ] nomezona ...\n"
 
-#: sunrpc/rpc_main.c:307
+#: sunrpc/rpc_main.c:306
 #, c-format
-msgid "%s: while writing output: "
-msgstr "%s: scrivendo l'output: "
+msgid "%s: while writing output %s: %m"
+msgstr "%s: scrivendo l'output %s: %m"
 
 #: argp/argp-parse.c:164
 msgid "(PROGRAM ERROR) No version known!?"
@@ -495,16 +500,16 @@ msgstr "(errore di autenticazione sconosciuto - %d)"
 msgid "(unknown)"
 msgstr "(sconosciuto)"
 
-#: elf/sprof.c:574
+#: elf/sprof.c:570
 #, c-format
 msgid "*** The file `%s' is stripped: no detailed analysis possible\n"
 msgstr "*** Il file `%s' è stripped: impossibile fare l'analisi dettagliata\n"
 
-#: catgets/gencat.c:266
+#: catgets/gencat.c:267
 msgid "*standard input*"
 msgstr "*standard input*"
 
-#: catgets/gencat.c:120
+#: catgets/gencat.c:121
 msgid ""
 "-o OUTPUT-FILE [INPUT-FILE]...\n"
 "[OUTPUT-FILE [INPUT-FILE]...]"
@@ -512,7 +517,8 @@ msgstr ""
 "-o FILE-OUTPUT [FILE-INPUT]...\n"
 "[FILE-OUTPUT [FILE-INPUT]...]"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:778
+#: stdio-common/../sysdeps/gnu/errlist.c:796
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:114
 msgid ".lib section in a.out corrupted"
 msgstr "sezione .lib nell'a.out danneggiata"
 
@@ -530,12 +536,12 @@ msgstr "; motivo = "
 msgid "<%s> and <%s> are illegal names for range"
 msgstr "<%s> e <%s> non sono nomi leciti per l'intervallo"
 
-#: locale/programs/ld-ctype.c:342
+#: locale/programs/ld-ctype.c:428
 #, c-format
 msgid "<SP> character must not be in class `%s'"
 msgstr "Il carattere <SP> non deve essere nella classe `%s'"
 
-#: locale/programs/ld-ctype.c:330
+#: locale/programs/ld-ctype.c:416
 #, c-format
 msgid "<SP> character not in class `%s'"
 msgstr "Il carattere <SP> non è nella classe `%s'"
@@ -543,24 +549,26 @@ msgstr "Il carattere <SP> non è nella classe `%s'"
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
 #. TRANS @c Don't change it.
-#: stdio-common/../sysdeps/gnu/errlist.c:603
+#: stdio-common/../sysdeps/gnu/errlist.c:621
 msgid "?"
 msgstr "?"
 
-#: sysdeps/unix/sysv/linux/siglist.h:27
+#: sysdeps/generic/siglist.h:34 sysdeps/gnu/siglist.h:28
 msgid "Aborted"
 msgstr "Abortito"
 
-#: nis/nis_print.c:318
+#: nis/nis_print.c:320
 msgid "Access Rights : "
 msgstr "Diritti di Accesso : "
 
-#: stdio-common/../sysdeps/gnu/errlist.c:774
+#: stdio-common/../sysdeps/gnu/errlist.c:792
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:113
 msgid "Accessing a corrupted shared library"
 msgstr "Accesso ad una libreria condivisa danneggiata"
 
 #. TRANS The requested socket address is already in use.  @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:366
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:154
 msgid "Address already in use"
 msgstr "Indirizzo già in uso"
 
@@ -574,14 +582,27 @@ msgstr "Famiglia dell'indirizzo non gestita per l'hostname"
 msgid "Address family not supported by protocol"
 msgstr "Famiglia dell'indirizzo non gestita dal protocollo"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:742
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:153
+msgid "Address family not supported by protocol family"
+msgstr "Famiglia dell'indirizzo non gestita dalla famiglia del protocollo"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:760
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:97
 msgid "Advertise error"
 msgstr "Advertise error"
 
-#: stdio-common/../sysdeps/unix/siglist.c:39
-#: sysdeps/unix/sysv/linux/siglist.h:33
+#: stdio-common/../sysdeps/unix/siglist.c:39 sysdeps/generic/siglist.h:40
+#: sysdeps/gnu/siglist.h:34
 msgid "Alarm clock"
 msgstr "Alarm clock"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:82
+msgid "Anode table overflow"
+msgstr "Overflow della tabella degli anode"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:36
+msgid "Arg list too long"
+msgstr "Lista degli argomenti troppo lunga"
 
 #. TRANS Argument list too long; used when the arguments passed to a new program
 #. TRANS being executed with one of the @code{exec} functions (@pxref{Executing a
@@ -591,15 +612,23 @@ msgstr "Alarm clock"
 msgid "Argument list too long"
 msgstr "Lista degli argomenti troppo lunga"
 
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:62
+msgid "Argument out of domain"
+msgstr "Argomento fuori dal dominio"
+
 #: nis/nis_error.c:65
 msgid "Attempt to remove a non-empty table"
 msgstr "Si è tentato di rimuovere una tabella non vuota"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:782
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:115
+msgid "Attempting to link in more shared libraries than system limit"
+msgstr "Si è tentato di linkare più librerie condivise del limite di sistema"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:800
 msgid "Attempting to link in too many shared libraries"
 msgstr "Si è tentato di linkare troppe librerie condivise"
 
-#: sunrpc/clnt_perr.c:273
+#: sunrpc/clnt_perr.c:328
 msgid "Authentication OK"
 msgstr "Autenticazione OK"
 
@@ -615,8 +644,13 @@ msgstr "BOGUS OBJECT\n"
 #. TRANS Bad address; an invalid pointer was detected.
 #. TRANS In the GNU system, this error never happens; you get a signal instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:114
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:43
 msgid "Bad address"
 msgstr "Indirizzo non valido"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:79
+msgid "Bad exchange descriptor"
+msgstr "Descrittore di scambio non valido"
 
 #. TRANS Bad file descriptor; for example, I/O on a descriptor that has been
 #. TRANS closed or reading from a descriptor open only for writing (or vice
@@ -625,16 +659,29 @@ msgstr "Indirizzo non valido"
 msgid "Bad file descriptor"
 msgstr "Descrittore di file non valido"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:730
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:38
+msgid "Bad file number"
+msgstr "Descrittore di file non valido"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:748
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:86
 msgid "Bad font file format"
 msgstr "Formato del file di font non valido"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:622
+#: stdio-common/../sysdeps/gnu/errlist.c:640
 msgid "Bad message"
 msgstr "Messaggio non valido"
 
-#: stdio-common/../sysdeps/unix/siglist.c:37
-#: sysdeps/unix/sysv/linux/siglist.h:56
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:83
+msgid "Bad request code"
+msgstr "Codice di richiesta non valido"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:80
+msgid "Bad request descriptor"
+msgstr "Descrittore di richiesta non valido"
+
+#: stdio-common/../sysdeps/unix/siglist.c:37 sysdeps/generic/siglist.h:63
+#: sysdeps/gnu/siglist.h:57
 msgid "Bad system call"
 msgstr "Chiamata di sistema non valida"
 
@@ -642,7 +689,7 @@ msgstr "Chiamata di sistema non valida"
 msgid "Bad value for ai_flags"
 msgstr "Valore di ai_flags non valido"
 
-#: locale/programs/localedef.c:104
+#: locale/programs/localedef.c:101
 msgid "Be strictly POSIX conform"
 msgstr "Conformità POSIX rigorosa"
 
@@ -654,6 +701,7 @@ msgstr "Dati binari\n"
 #. TRANS requires one.  For example, trying to mount an ordinary file as a file
 #. TRANS system in Unix gives this error.
 #: stdio-common/../sysdeps/gnu/errlist.c:121
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:44
 msgid "Block device required"
 msgstr "È necessario un dispositivo a blocchi"
 
@@ -668,12 +716,13 @@ msgstr "Problema di poll del broadcast"
 #. TRANS unless it has handled or blocked @code{SIGPIPE}.
 #: stdio-common/../sysdeps/gnu/errlist.c:234
 #: stdio-common/../sysdeps/unix/siglist.c:38
-#: sysdeps/unix/sysv/linux/siglist.h:32
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:61
+#: sysdeps/generic/siglist.h:39 sysdeps/gnu/siglist.h:33
 msgid "Broken pipe"
 msgstr "Pipe rotta"
 
-#: stdio-common/../sysdeps/unix/siglist.c:35
-#: sysdeps/unix/sysv/linux/siglist.h:30
+#: stdio-common/../sysdeps/unix/siglist.c:35 sysdeps/generic/siglist.h:37
+#: sysdeps/gnu/siglist.h:31
 msgid "Bus error"
 msgstr "Bus error"
 
@@ -681,8 +730,8 @@ msgstr "Bus error"
 msgid "CDS"
 msgstr "CDS"
 
-#: stdio-common/../sysdeps/unix/siglist.c:49
-#: sysdeps/unix/sysv/linux/siglist.h:43
+#: stdio-common/../sysdeps/unix/siglist.c:49 sysdeps/generic/siglist.h:50
+#: sysdeps/gnu/siglist.h:44
 msgid "CPU time limit exceeded"
 msgstr "Superato il limite del tempo di CPU"
 
@@ -690,23 +739,28 @@ msgstr "Superato il limite del tempo di CPU"
 msgid "Cache expired"
 msgstr "Cache scaduta"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:770
+#: stdio-common/../sysdeps/gnu/errlist.c:788
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:112
 msgid "Can not access a needed shared library"
 msgstr "Impossibile accedere ad una libreria condivisa necessaria"
 
-#: nis/ypclnt.c:769
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:116
+msgid "Can not exec a shared library directly"
+msgstr "Impossibile eseguire direttamente una libreria condivisa"
+
+#: nis/ypclnt.c:779
 msgid "Can't bind to server which serves this domain"
 msgstr "Impossibile fare il bind al server che serve questo dominio"
 
-#: nis/ypclnt.c:781
+#: nis/ypclnt.c:791
 msgid "Can't communicate with portmapper"
 msgstr "Impossibile comunicare con il portmapper"
 
-#: nis/ypclnt.c:783
+#: nis/ypclnt.c:793
 msgid "Can't communicate with ypbind"
 msgstr "Impossibile comunicare con ypbind"
 
-#: nis/ypclnt.c:785
+#: nis/ypclnt.c:795
 msgid "Can't communicate with ypserv"
 msgstr "Impossibile comunicare con ypserv"
 
@@ -720,6 +774,7 @@ msgstr "Impossibile allocare memoria"
 #. TRANS to give a socket a name that doesn't match the local host name.
 #. TRANS @xref{Socket Addresses}.
 #: stdio-common/../sysdeps/gnu/errlist.c:373
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:155
 msgid "Cannot assign requested address"
 msgstr "Impossibile assegnare l'indirizzo richiesto"
 
@@ -727,11 +782,11 @@ msgstr "Impossibile assegnare l'indirizzo richiesto"
 msgid "Cannot create socket for broadcast rpc"
 msgstr "Impossibile creare il socket per l'rpc broadcast"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:786
+#: stdio-common/../sysdeps/gnu/errlist.c:804
 msgid "Cannot exec a shared library directly"
 msgstr "Impossibile eseguire direttamente una libreria condivisa"
 
-#: sunrpc/rpc_main.c:1406
+#: sunrpc/rpc_main.c:1404
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Impossibile avere più di un flag di generazione del file!\n"
 
@@ -739,14 +794,18 @@ msgstr "Impossibile avere più di un flag di generazione del file!\n"
 msgid "Cannot receive reply to broadcast"
 msgstr "Impossibile ricevere una risposta al broadcast"
 
-#: sunrpc/pmap_clnt.c:74
+#: sunrpc/pmap_clnt.c:133
 msgid "Cannot register service"
 msgstr "Impossibile registrare il servizio"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:172
+msgid "Cannot send after socket shutdown"
+msgstr "Impossibile inviare dopo lo shutdown del socket"
 
 #. TRANS The socket has already been shut down.
 #: stdio-common/../sysdeps/gnu/errlist.c:434
 msgid "Cannot send after transport endpoint shutdown"
-msgstr "Impossibile inviare dopo la chiusura dell'estremità del trasporto"
+msgstr "Impossibile inviare dopo lo shutdown dell'estremità del trasporto"
 
 #: sunrpc/pmap_rmt.c:322
 msgid "Cannot send broadcast packet"
@@ -756,23 +815,24 @@ msgstr "Impossibile inviare il pacchetto broadcast"
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr "Impossibile impostare l'opzione del socket SO_BROADCAST"
 
-#: sunrpc/rpc_main.c:1193
+#: sunrpc/rpc_main.c:1191
 msgid "Cannot specify more than one input file!\n"
 msgstr "Impossibile specificare più di un file di input!\n"
 
-#: sunrpc/rpc_main.c:1363
+#: sunrpc/rpc_main.c:1361
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Impossibile usare il flag netid con il flag inetd!\n"
 
-#: sunrpc/rpc_main.c:1375
+#: sunrpc/rpc_main.c:1373
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Impossibile usare il flag netid senza TIRPC!\n"
 
-#: sunrpc/rpc_main.c:1382
+#: sunrpc/rpc_main.c:1380
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Impossibile usare il flag della tabella con il nuovo stile!\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:670
+#: stdio-common/../sysdeps/gnu/errlist.c:688
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:66
 msgid "Channel number out of range"
 msgstr "Numero del canale fuori dall'intervallo"
 
@@ -781,12 +841,12 @@ msgstr "Numero del canale fuori dall'intervallo"
 msgid "Character Separator : %c\n"
 msgstr "Separatore dei caratteri: %c\n"
 
-#: stdio-common/../sysdeps/unix/siglist.c:45
-#: sysdeps/unix/sysv/linux/siglist.h:39
+#: stdio-common/../sysdeps/unix/siglist.c:45 sysdeps/generic/siglist.h:46
+#: sysdeps/gnu/siglist.h:40
 msgid "Child exited"
 msgstr "Il figlio è uscito"
 
-#: sunrpc/clnt_perr.c:283
+#: sunrpc/clnt_perr.c:347
 msgid "Client credential too weak"
 msgstr "Credenziale del client troppo debole"
 
@@ -794,20 +854,21 @@ msgstr "Credenziale del client troppo debole"
 msgid "Columns             :\n"
 msgstr "Colonne:            :\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:750
+#: stdio-common/../sysdeps/gnu/errlist.c:768
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:99
 msgid "Communication error on send"
 msgstr "Errore di comunicazione durante send"
 
-#: locale/programs/localedef.c:112
+#: locale/programs/localedef.c:109
 msgid "Compile locale specification"
 msgstr "Compila la specifica di localizzazione"
 
 #. TRANS Go home and have a glass of warm, dairy-fresh milk.
-#: stdio-common/../sysdeps/gnu/errlist.c:613
+#: stdio-common/../sysdeps/gnu/errlist.c:631
 msgid "Computer bought the farm"
 msgstr "Il computer ha tirato le cuoia"
 
-#: locale/programs/ld-ctype.c:1253
+#: locale/programs/ld-ctype.c:1438
 msgid "Computing table size for character classes might take a while..."
 msgstr ""
 "Calcolo le dimensioni della tabella per le classi di caratteri.\n"
@@ -822,6 +883,7 @@ msgstr ""
 #. TRANS A remote host refused to allow the network connection (typically because
 #. TRANS it is not running the requested service).
 #: stdio-common/../sysdeps/gnu/errlist.c:451
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:175
 msgid "Connection refused"
 msgstr "Connessione rifiutata"
 
@@ -829,17 +891,19 @@ msgstr "Connessione rifiutata"
 #. TRANS local host, such as by the remote machine rebooting or an unrecoverable
 #. TRANS protocol violation.
 #: stdio-common/../sysdeps/gnu/errlist.c:401
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:160
 msgid "Connection reset by peer"
 msgstr "Connessione abbattuta dal corrispondente"
 
 #. TRANS A socket operation with a specified timeout received no response during
 #. TRANS the timeout period.
 #: stdio-common/../sysdeps/gnu/errlist.c:445
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:174
 msgid "Connection timed out"
 msgstr "Timeout della connessione"
 
-#: stdio-common/../sysdeps/unix/siglist.c:44
-#: sysdeps/unix/sysv/linux/siglist.h:38
+#: stdio-common/../sysdeps/unix/siglist.c:44 sysdeps/generic/siglist.h:45
+#: sysdeps/gnu/siglist.h:39
 msgid "Continued"
 msgstr "Continuato"
 
@@ -851,10 +915,10 @@ msgstr "Converte in un'altra codifica la codifica dei file indicati."
 msgid "Convert key to lower case"
 msgstr "Converte la chiave in minuscolo"
 
-#: catgets/gencat.c:236 db2/makedb.c:242 elf/sprof.c:359
+#: catgets/gencat.c:237 db2/makedb.c:242 elf/sprof.c:355
 #: iconv/iconv_prog.c:294 locale/programs/locale.c:267
-#: locale/programs/localedef.c:403 nscd/nscd.c:223 nss/getent.c:65
-#: posix/getconf.c:624
+#: locale/programs/localedef.c:400 nscd/nscd.c:277 nscd/nscd_nischeck.c:90
+#: nss/getent.c:66 posix/getconf.c:624
 #, c-format
 msgid ""
 "Copyright (C) %s Free Software Foundation, Inc.\n"
@@ -868,16 +932,16 @@ msgstr ""
 "NON c'è alcuna garanzia; neppure di COMMERCIABILITÀ o IDONEITÀ AD UN\n"
 "PARTICOLARE SCOPO.\n"
 
-#: nscd/nscd_conf.c:167
+#: nscd/nscd_conf.c:165
 #, c-format
 msgid "Could not create log file \"%s\""
 msgstr "impossibile creare il file di log \"%s\""
 
-#: catgets/gencat.c:107
+#: catgets/gencat.c:108
 msgid "Create C header file NAME containing symbol definitions"
 msgstr "Crea un header C NOME contenente le definizioni dei simboli"
 
-#: locale/programs/localedef.c:103
+#: locale/programs/localedef.c:100
 msgid "Create output even if warning messages were issued"
 msgstr "Crea l'output anche se sono stati emessi messaggi di avvertimento"
 
@@ -885,13 +949,17 @@ msgstr "Crea l'output anche se sono stati emessi messaggi di avvertimento"
 msgid "Create simple DB database from textual input."
 msgstr "Crea un semplice database DB dall'input testuale."
 
-#: nis/nis_print.c:322
+#: nis/nis_print.c:325
 #, c-format
 msgid "Creation Time : %s"
 msgstr "Orario di creazione : %s"
 
-#: nis/nss_nisplus/nisplus-publickey.c:89
-#: nis/nss_nisplus/nisplus-publickey.c:159
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:47
+msgid "Cross-device link"
+msgstr "Link tra dispositivi"
+
+#: nis/nss_nisplus/nisplus-publickey.c:95
+#: nis/nss_nisplus/nisplus-publickey.c:171
 #, c-format
 msgid "DES entry for netname %s not unique\n"
 msgstr "La voce DES per il netname %s non è unica\n"
@@ -912,9 +980,13 @@ msgstr "DNS"
 msgid "Database for table does not exist"
 msgstr "Non esiste un database per la tabella"
 
-#: nis/ypclnt.c:795
+#: nis/ypclnt.c:805
 msgid "Database is busy"
 msgstr "Il database è occupato"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:74
+msgid "Deadlock situation detected/avoided"
+msgstr "Individuata/evitata una situazione di deadlock"
 
 #: nis/nis_print.c:225
 msgid "Default Access rights :\n"
@@ -924,10 +996,15 @@ msgstr "Diritti di accesso predefiniti:\n"
 #. TRANS error when you try to transmit data over a connectionless socket,
 #. TRANS without first specifying a destination for the data with @code{connect}.
 #: stdio-common/../sysdeps/gnu/errlist.c:429
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:125
 msgid "Destination address required"
 msgstr "È necessario l'indirizzo di destinazione"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:650
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:45
+msgid "Device busy"
+msgstr "Dispositivo occupato"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:668
 msgid "Device not a stream"
 msgstr "Il dispositivo non è uno stream"
 
@@ -952,7 +1029,7 @@ msgstr "Dispositivo o risorsa occupata"
 msgid "Diffie-Hellmann (%d bits)\n"
 msgstr "Diffie-Hellmann (%d bit)\n"
 
-#: nis/nis_print.c:315
+#: nis/nis_print.c:317
 #, c-format
 msgid "Directory     : %s\n"
 msgstr "Directory     : %s\n"
@@ -960,15 +1037,20 @@ msgstr "Directory     : %s\n"
 #. TRANS Directory not empty, where an empty directory was expected.  Typically,
 #. TRANS this error occurs when you are trying to delete a directory.
 #: stdio-common/../sysdeps/gnu/errlist.c:480
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:122
 msgid "Directory not empty"
 msgstr "La directory non è vuota"
 
-#. TRANS The user's disk quota was exceeded.
-#: stdio-common/../sysdeps/gnu/errlist.c:498
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:78
 msgid "Disc quota exceeded"
 msgstr "Superata la quota di disco"
 
-#: nscd/nscd.c:80
+#. TRANS The user's disk quota was exceeded.
+#: stdio-common/../sysdeps/gnu/errlist.c:498
+msgid "Disk quota exceeded"
+msgstr "Superata la quota di disco"
+
+#: nscd/nscd.c:83
 msgid "Do not fork and display messages on the current tty"
 msgstr "Non fa fork e stampa i messaggi sul tty corrente"
 
@@ -976,16 +1058,16 @@ msgstr "Non fa fork e stampa i messaggi sul tty corrente"
 msgid "Do not print messages while building database"
 msgstr "Non stampa messaggi mentre crea il database"
 
-#: catgets/gencat.c:109
+#: catgets/gencat.c:110
 msgid "Do not use existing catalog, force new output file"
 msgstr "Non usa il catalogo esistente, forza un nuovo file di output"
 
-#: nis/ypclnt.c:841
+#: nis/ypclnt.c:851
 msgid "Domain not bound"
 msgstr "Dominio non collegato"
 
-#: stdio-common/../sysdeps/unix/siglist.c:32
-#: sysdeps/unix/sysv/linux/siglist.h:53
+#: stdio-common/../sysdeps/unix/siglist.c:32 sysdeps/generic/siglist.h:60
+#: sysdeps/gnu/siglist.h:54
 msgid "EMT trap"
 msgstr "trap EMT"
 
@@ -998,8 +1080,132 @@ msgid "Encrypted data\n"
 msgstr "Dati cifrati\n"
 
 #: nis/nis_error.c:52
-msgid "Entry/Table type mismatch"
+msgid "Entry/table type mismatch"
 msgstr "I tipi di voce/tabella non coincidono"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:29
+msgid "Error 0"
+msgstr "Errore 0"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:129
+msgid "Error 100"
+msgstr "Errore 100"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:130
+msgid "Error 101"
+msgstr "Errore 101"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:131
+msgid "Error 102"
+msgstr "Errore 102"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:132
+msgid "Error 103"
+msgstr "Errore 103"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:133
+msgid "Error 104"
+msgstr "Errore 104"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:134
+msgid "Error 105"
+msgstr "Errore 105"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:135
+msgid "Error 106"
+msgstr "Errore 106"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:136
+msgid "Error 107"
+msgstr "Errore 107"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:137
+msgid "Error 108"
+msgstr "Errore 108"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:138
+msgid "Error 109"
+msgstr "Errore 108"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:139
+msgid "Error 110"
+msgstr "Errore 110"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:140
+msgid "Error 111"
+msgstr "Errore 111"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:141
+msgid "Error 112"
+msgstr "Errore 112"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:142
+msgid "Error 113"
+msgstr "Errore 113"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:143
+msgid "Error 114"
+msgstr "Errore 114"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:144
+msgid "Error 115"
+msgstr "Errore 115"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:145
+msgid "Error 116"
+msgstr "Errore 116"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:146
+msgid "Error 117"
+msgstr "Errore 117"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:147
+msgid "Error 118"
+msgstr "Errore 118"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:148
+msgid "Error 119"
+msgstr "Errore 119"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:165
+msgid "Error 136"
+msgstr "Errore 136"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:171
+msgid "Error 142"
+msgstr "Errore 142"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:87
+msgid "Error 58"
+msgstr "Errore 58"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:88
+msgid "Error 59"
+msgstr "Errore 59"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:101
+msgid "Error 72"
+msgstr "Errore 72"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:102
+msgid "Error 73"
+msgstr "Errore 73"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
+msgid "Error 75"
+msgstr "Errore 75"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:105
+msgid "Error 76"
+msgstr "Errore 76"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:120
+msgid "Error 91"
+msgstr "Errore 91"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:121
+msgid "Error 92"
+msgstr "Errore 92"
 
 #: nis/nis_error.c:56
 msgid "Error in RPC subsystem"
@@ -1011,7 +1217,7 @@ msgstr ""
 "Errore nell'accesso al file per la partenza a freddo di NIS+.\n"
 "NIS+ è installato?"
 
-#: string/../sysdeps/mach/_strerror.c:56
+#: string/../sysdeps/mach/_strerror.c:57
 #: sysdeps/mach/hurd/mips/dl-machine.c:67
 msgid "Error in unknown error system: "
 msgstr "Errore in un sistema di errore sconosciuto: "
@@ -1020,43 +1226,55 @@ msgstr "Errore in un sistema di errore sconosciuto: "
 msgid "Error while talking to callback proc"
 msgstr "Errore parlando alla procedura di callback"
 
-#: inet/ruserpass.c:161
+#: inet/ruserpass.c:176
 msgid "Error: .netrc file is readable by others."
 msgstr "Errore: il file .netrc è leggibile da altri."
 
-#: stdio-common/../sysdeps/gnu/errlist.c:710
+#: stdio-common/../sysdeps/gnu/errlist.c:728
 msgid "Exchange full"
 msgstr "Scambio pieno"
 
 #. TRANS Invalid executable file format.  This condition is detected by the
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: stdio-common/../sysdeps/gnu/errlist.c:75
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:37
 msgid "Exec format error"
 msgstr "Errore di formato di exec"
 
-#: locale/programs/localedef.c:190
+#: locale/programs/localedef.c:187
 msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr "FATALE: il sistema non definisce `_POSIX2_LOCALEDEF'"
 
-#: locale/programs/localedef.c:99
+#: locale/programs/localedef.c:91 locale/programs/localedef.c:93
+#: locale/programs/localedef.c:95
+msgid "FILE"
+msgstr "FILE"
+
+#: locale/programs/localedef.c:96
 msgid "FILE contains mapping from symbolic names to UCS4 values"
 msgstr "FILE contiene la mappatura dai nomi simbolici ai valori UCS4"
 
-#: sunrpc/clnt_perr.c:287
+#: sunrpc/clnt_perr.c:355
 msgid "Failed (unspecified error)"
 msgstr "Fallito (errore non specificato)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:762
+#: stdio-common/../sysdeps/gnu/errlist.c:780
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:110
 msgid "File descriptor in bad state"
 msgstr "Il descrittore di file è in uno stato non valido"
 
 #. TRANS File exists; an existing file was specified in a context where it only
 #. TRANS makes sense to specify a new file.
 #: stdio-common/../sysdeps/gnu/errlist.c:134
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:46
 msgid "File exists"
 msgstr "Il file esiste"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:726
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:85
+msgid "File locking deadlock"
+msgstr "Deadlock durante il locking del file"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:744
 msgid "File locking deadlock error"
 msgstr "Errore di deadlock durante il locking del file"
 
@@ -1064,25 +1282,31 @@ msgstr "Errore di deadlock durante il locking del file"
 #. TRANS Files}) or host name too long (in @code{gethostname} or
 #. TRANS @code{sethostname}; @pxref{Host Identification}).
 #: stdio-common/../sysdeps/gnu/errlist.c:464
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:107
 msgid "File name too long"
 msgstr "Nome del file troppo lungo"
 
-#: stdio-common/../sysdeps/unix/siglist.c:50
-#: sysdeps/unix/sysv/linux/siglist.h:44
+#: stdio-common/../sysdeps/unix/siglist.c:50 sysdeps/generic/siglist.h:51
+#: sysdeps/gnu/siglist.h:45
 msgid "File size limit exceeded"
 msgstr "Superato il limite di dimensione del file"
 
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:52
+msgid "File table overflow"
+msgstr "Overflow della tabella dei file"
+
 #. TRANS File too big; the size of a file would be larger than allowed by the system.
 #: stdio-common/../sysdeps/gnu/errlist.c:202
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:56
 msgid "File too large"
 msgstr "File troppo grande"
 
 #: nis/nis_error.c:37
-msgid "First/Next chain broken"
+msgid "First/next chain broken"
 msgstr "La prima/prossima catena è rotta"
 
-#: stdio-common/../sysdeps/unix/siglist.c:33
-#: sysdeps/unix/sysv/linux/siglist.h:28
+#: stdio-common/../sysdeps/unix/siglist.c:33 sysdeps/generic/siglist.h:35
+#: sysdeps/gnu/siglist.h:29
 msgid "Floating point exception"
 msgstr "Errore di virgola mobile"
 
@@ -1090,10 +1314,12 @@ msgstr "Errore di virgola mobile"
 msgid "Full resync required for directory"
 msgstr "È necessario un resync completo per la directory"
 
-#. TRANS Function not implemented.  Some functions have commands or options defined
-#. TRANS that might not be supported in all implementations, and this is the kind
-#. TRANS of error you get if you request them and they are not supported.
-#: stdio-common/../sysdeps/gnu/errlist.c:573
+#. TRANS Function not implemented.  This indicates that the function called is
+#. TRANS not implemented at all, either in the C library itself or in the
+#. TRANS operating system.  When you get this error, you can be sure that this
+#. TRANS particular function will always fail with @code{ENOSYS} unless you
+#. TRANS install a new version of the C library or the operating system.
+#: stdio-common/../sysdeps/gnu/errlist.c:575
 msgid "Function not implemented"
 msgstr "Funzione non implementata"
 
@@ -1106,7 +1332,7 @@ msgstr "GRUPPO\n"
 msgid "Garbage in ARGP_HELP_FMT: %s"
 msgstr "Spazzatura in ARGP_HELP_FMT: %s"
 
-#: catgets/gencat.c:115
+#: catgets/gencat.c:116
 msgid ""
 "Generate message catalog.\\vIf INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
@@ -1131,11 +1357,11 @@ msgid "Give this help list"
 msgstr "Dà questa lista di aiuto"
 
 #. TRANS This error code has no purpose.
-#: stdio-common/../sysdeps/gnu/errlist.c:618
+#: stdio-common/../sysdeps/gnu/errlist.c:636
 msgid "Gratuitous error"
 msgstr "Errore gratuito"
 
-#: nis/nis_print.c:317
+#: nis/nis_print.c:319
 #, c-format
 msgid "Group         : %s\n"
 msgstr "Gruppo        : %s\n"
@@ -1153,39 +1379,40 @@ msgstr "Voce del gruppo per il gruppo \"%s.%s\":\n"
 msgid "Hang for SECS seconds (default 3600)"
 msgstr "Si blocca per SECS secondi (predefiniti 3600)"
 
-#: stdio-common/../sysdeps/unix/siglist.c:26
-#: sysdeps/unix/sysv/linux/siglist.h:22
+#: stdio-common/../sysdeps/unix/siglist.c:26 sysdeps/generic/siglist.h:29
+#: sysdeps/gnu/siglist.h:23
 msgid "Hangup"
 msgstr "Hangup"
 
-#: nscd/grpcache.c:238
+#: nscd/grpcache.c:251
 #, c-format
 msgid "Haven't found \"%d\" in group cache!"
 msgstr "Non ho trovato \"%d\" nella cache dei gruppi!"
 
-#: nscd/pwdcache.c:235
+#: nscd/pwdcache.c:249
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
 msgstr "Non ho trovato \"%d\" nella cache delle password!"
 
-#: nscd/grpcache.c:210
+#: nscd/grpcache.c:212
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Non ho trovato \"%s\" nella cache dei gruppi!"
 
-#: nscd/hstcache.c:297 nscd/hstcache.c:328 nscd/hstcache.c:359
-#: nscd/hstcache.c:390
+#: nscd/hstcache.c:291 nscd/hstcache.c:333 nscd/hstcache.c:378
+#: nscd/hstcache.c:422
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Non ho trovato \"%s\" nella cache degli host!"
 
-#: nscd/pwdcache.c:207
+#: nscd/pwdcache.c:210
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr "Non ho trovato \"%s\" nella cache delle password!"
 
 #. TRANS The remote host for a requested network connection is down.
 #: stdio-common/../sysdeps/gnu/errlist.c:469
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:176
 msgid "Host is down"
 msgstr "L'host è giù"
 
@@ -1193,8 +1420,12 @@ msgstr "L'host è giù"
 msgid "Host name lookup failure"
 msgstr "Errore durante la ricerca del nome dell'host"
 
-#: stdio-common/../sysdeps/unix/siglist.c:48
-#: sysdeps/unix/sysv/linux/siglist.h:42
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:34
+msgid "I/O error"
+msgstr "Errore di I/O"
+
+#: stdio-common/../sysdeps/unix/siglist.c:48 sysdeps/generic/siglist.h:49
+#: sysdeps/gnu/siglist.h:43
 msgid "I/O possible"
 msgstr "I/O possibile"
 
@@ -1216,12 +1447,17 @@ msgstr "trap IOT"
 msgid "IVY"
 msgstr "IVY"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:626
+#: stdio-common/../sysdeps/gnu/errlist.c:644
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:65
 msgid "Identifier removed"
 msgstr "Identificatore rimosso"
 
-#: stdio-common/../sysdeps/unix/siglist.c:29
-#: sysdeps/unix/sysv/linux/siglist.h:25
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:117
+msgid "Illegal byte sequence"
+msgstr "Sequenza di byte illecita"
+
+#: stdio-common/../sysdeps/unix/siglist.c:29 sysdeps/generic/siglist.h:32
+#: sysdeps/gnu/siglist.h:26
 msgid "Illegal instruction"
 msgstr "Istruzione illecita"
 
@@ -1231,6 +1467,7 @@ msgstr "Tipo di oggetto illecito per l'operazione"
 
 #. TRANS Invalid seek operation (such as on a pipe).
 #: stdio-common/../sysdeps/gnu/errlist.c:213
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:58
 msgid "Illegal seek"
 msgstr "Seek illecito"
 
@@ -1246,6 +1483,7 @@ msgstr "Tipo di file o formato non appropriato"
 #. TRANS Inappropriate I/O control operation, such as trying to set terminal
 #. TRANS modes on an ordinary file.
 #: stdio-common/../sysdeps/gnu/errlist.c:188
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:54
 msgid "Inappropriate ioctl for device"
 msgstr "IOCTL non appropriata per il dispositivo"
 
@@ -1255,11 +1493,11 @@ msgstr "IOCTL non appropriata per il dispositivo"
 #. TRANS error because functions such as @code{read} and @code{write} translate
 #. TRANS it into a @code{SIGTTIN} or @code{SIGTTOU} signal.  @xref{Job Control},
 #. TRANS for information on process groups and these signals.
-#: stdio-common/../sysdeps/gnu/errlist.c:589
+#: stdio-common/../sysdeps/gnu/errlist.c:607
 msgid "Inappropriate operation for background process"
 msgstr "Operazione non appropriata per un processo sullo sfondo"
 
-#: sysdeps/unix/sysv/linux/siglist.h:62
+#: sysdeps/generic/siglist.h:69 sysdeps/gnu/siglist.h:63
 msgid "Information request"
 msgstr "Richiesta di informazioni"
 
@@ -1267,7 +1505,7 @@ msgstr "Richiesta di informazioni"
 msgid "Information:"
 msgstr "Informazioni: "
 
-#: locale/programs/localedef.c:94
+#: locale/programs/localedef.c:90
 msgid "Input Files:"
 msgstr "File di input:"
 
@@ -1280,16 +1518,16 @@ msgstr "Specifiche del formato di input/output:"
 msgid "Input/output error"
 msgstr "Errore di input/output"
 
-#: nis/ypclnt.c:775
+#: nis/ypclnt.c:785
 msgid "Internal NIS error"
 msgstr "Errore interno di NIS"
 
-#: nis/ypclnt.c:839
+#: nis/ypclnt.c:849
 msgid "Internal ypbind error"
 msgstr "Errore interno di ypbind"
 
-#: stdio-common/../sysdeps/unix/siglist.c:27
-#: sysdeps/unix/sysv/linux/siglist.h:23
+#: stdio-common/../sysdeps/unix/siglist.c:27 sysdeps/generic/siglist.h:30
+#: sysdeps/gnu/siglist.h:24
 msgid "Interrupt"
 msgstr "Interruzione"
 
@@ -1301,44 +1539,42 @@ msgstr "Interruzione"
 #. TRANS rather than failing with @code{EINTR}; see @ref{Interrupted
 #. TRANS Primitives}.
 #: stdio-common/../sysdeps/gnu/errlist.c:47
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:33
 msgid "Interrupted system call"
 msgstr "Chiamata di sistema interrotta"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:666
+#: stdio-common/../sysdeps/gnu/errlist.c:684
 msgid "Interrupted system call should be restarted"
 msgstr "La chiamata di sistema interrotta deve essere ricominciata"
-
-#: nis/nis_error.c:44
-msgid "Invalid Object for operation"
-msgstr "Oggetto non valido per l'operazione"
 
 #. TRANS Invalid argument.  This is used to indicate various kinds of problems
 #. TRANS with passing the wrong argument to a library function.
 #: stdio-common/../sysdeps/gnu/errlist.c:164
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:51
 msgid "Invalid argument"
 msgstr "Argomento non valido"
 
-#: posix/regex.c:1018
+#: posix/regex.c:1034
 msgid "Invalid back reference"
 msgstr "Riferimento all'indietro non valido"
 
-#: posix/regex.c:1016
+#: posix/regex.c:1028
 msgid "Invalid character class name"
 msgstr "Nome della classe di caratteri non valido"
 
-#: sunrpc/clnt_perr.c:275
+#: sunrpc/clnt_perr.c:331
 msgid "Invalid client credential"
 msgstr "Credenziali del client non valide"
 
-#: sunrpc/clnt_perr.c:279
+#: sunrpc/clnt_perr.c:339
 msgid "Invalid client verifier"
 msgstr "Verificatore del client non valido"
 
-#: posix/regex.c:1015
+#: posix/regex.c:1025
 msgid "Invalid collation character"
 msgstr "Carattere di collazione non valido"
 
-#: posix/regex.c:1022
+#: posix/regex.c:1046
 msgid "Invalid content of \\{\\}"
 msgstr "Contenuto di \\{\\} non valido"
 
@@ -1349,51 +1585,65 @@ msgstr "Contenuto di \\{\\} non valido"
 msgid "Invalid cross-device link"
 msgstr "Link tra dispositivi non valido"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:702
+#: stdio-common/../sysdeps/gnu/errlist.c:720
 msgid "Invalid exchange"
 msgstr "Scambio non valido"
 
+#: nis/nis_error.c:44
+msgid "Invalid object for operation"
+msgstr "Oggetto non valido per l'operazione"
+
 #. TRANS While decoding a multibyte character the function came along an invalid
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
-#: stdio-common/../sysdeps/gnu/errlist.c:579
+#: stdio-common/../sysdeps/gnu/errlist.c:597
 msgid "Invalid or incomplete multibyte or wide character"
 msgstr "Carattere largo o multibyte non valido o incompleto"
 
-#: posix/regex.c:1025
+#: posix/regex.c:1055
 msgid "Invalid preceding regular expression"
 msgstr "Espressione regolare precedente non valida"
 
-#: posix/regex.c:1023
+#: posix/regex.c:1049
 msgid "Invalid range end"
 msgstr "Fine dell'intervallo non valida"
 
-#: posix/regex.c:1014
+#: posix/regex.c:1022
 msgid "Invalid regular expression"
 msgstr "Espressione regolare non valida"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:718
+#: stdio-common/../sysdeps/gnu/errlist.c:736
 msgid "Invalid request code"
 msgstr "Codice di richiesta non valido"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:706
+#: stdio-common/../sysdeps/gnu/errlist.c:724
 msgid "Invalid request descriptor"
 msgstr "Descrittore di richiesta non valido"
 
-#: sunrpc/clnt_perr.c:285
+#: sunrpc/clnt_perr.c:351
 msgid "Invalid server verifier"
 msgstr "Verificatore di server non valido"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:722
+#: stdio-common/../sysdeps/gnu/errlist.c:740
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:84
 msgid "Invalid slot"
 msgstr "Slot non valido"
+
+#: nscd/nscd.c:88
+msgid "Invalidate the specified cache"
+msgstr "Invalida la cache indicata"
 
 #. TRANS File is a directory; you cannot open a directory for writing,
 #. TRANS or create or remove hard links to it.
 #: stdio-common/../sysdeps/gnu/errlist.c:158
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:50
 msgid "Is a directory"
 msgstr "È una directory"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:806
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:168
+msgid "Is a name file"
+msgstr "È un file con nome"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:824
 msgid "Is a named type file"
 msgstr "È un tipo di file con nome"
 
@@ -1401,8 +1651,8 @@ msgstr "È un tipo di file con nome"
 msgid "Kerberos.\n"
 msgstr "Kerberos.\n"
 
-#: stdio-common/../sysdeps/unix/siglist.c:34
-#: sysdeps/unix/sysv/linux/siglist.h:29
+#: stdio-common/../sysdeps/unix/siglist.c:34 sysdeps/generic/siglist.h:36
+#: sysdeps/gnu/siglist.h:30
 msgid "Killed"
 msgstr "Ucciso"
 
@@ -1415,33 +1665,39 @@ msgstr "LINK\n"
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
 msgstr "La voce LOCAL per l'UID %d nella directory %s non è unica\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:698
+#: stdio-common/../sysdeps/gnu/errlist.c:716
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:73
 msgid "Level 2 halted"
 msgstr "Livello 2 fermato"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:674
+#: stdio-common/../sysdeps/gnu/errlist.c:692
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:67
 msgid "Level 2 not synchronized"
 msgstr "Livello 2 non sincronizzato"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:678
+#: stdio-common/../sysdeps/gnu/errlist.c:696
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:68
 msgid "Level 3 halted"
 msgstr "Livello 3 fermato"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:682
+#: stdio-common/../sysdeps/gnu/errlist.c:700
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:69
 msgid "Level 3 reset"
 msgstr "Livello 3 reinizializzato"
 
-#: nis/nis_error.c:53
-msgid "Link Points to illegal name"
-msgstr "Il link punta a un nome illecito"
-
-#: stdio-common/../sysdeps/gnu/errlist.c:638
+#: stdio-common/../sysdeps/gnu/errlist.c:656
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:96
 msgid "Link has been severed"
 msgstr "Il link è stato tagliato"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:686
+#: stdio-common/../sysdeps/gnu/errlist.c:704
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:70
 msgid "Link number out of range"
 msgstr "Numero del link fuori dall'intervallo"
+
+#: nis/nis_error.c:53
+msgid "Link points to illegal name"
+msgstr "Il link punta a un nome illecito"
 
 #: nis/nis_print.c:282
 msgid "Linked Object Type : "
@@ -1452,23 +1708,24 @@ msgstr "Tipo di oggetto collegato : "
 msgid "Linked to : %s\n"
 msgstr "Collegato a : %s\n"
 
-#: nis/ypclnt.c:787
+#: nis/ypclnt.c:797
 msgid "Local domain name not set"
 msgstr "Il nome del dominio locale non è stato impostato"
 
-#: nis/ypclnt.c:777
+#: nis/ypclnt.c:787
 msgid "Local resource allocation failure"
 msgstr "Errore di allocazione delle risorse locali"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:734
+#: stdio-common/../sysdeps/gnu/errlist.c:752
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:93
 msgid "Machine is not on the network"
 msgstr "La macchina non è in rete"
 
 #: nis/nis_error.c:45
-msgid "Malformed Name, or illegal name"
+msgid "Malformed name, or illegal name"
 msgstr "Nome malformato o illecito"
 
-#: argp/argp-help.c:1182
+#: argp/argp-help.c:1186
 msgid "Mandatory or optional arguments to long options are also mandatory or optional for any corresponding short options."
 msgstr ""
 "Gli argomenti obbligatori o opzionali delle opzioni lunghe lo sono anche\n"
@@ -1486,13 +1743,18 @@ msgstr "Il master server è occupato, dump integrale rimandato."
 msgid "Memory allocation failure"
 msgstr "Errore di allocazione della memoria"
 
-#: posix/regex.c:1024
+#: posix/regex.c:1052
 msgid "Memory exhausted"
 msgstr "Memoria esaurita"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:81
+msgid "Message tables full"
+msgstr "Tabelle dei messaggi piene"
 
 #. TRANS The size of a message sent on a socket was larger than the supported
 #. TRANS maximum size.
 #: stdio-common/../sysdeps/gnu/errlist.c:317
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:126
 msgid "Message too long"
 msgstr "Messaggio troppo lungo"
 
@@ -1500,7 +1762,7 @@ msgstr "Messaggio troppo lungo"
 msgid "Missing or malformed attribute"
 msgstr "Attributo mancante o malformato"
 
-#: nis/nis_print.c:323
+#: nis/nis_print.c:327
 #, c-format
 msgid "Mod. Time     : %s"
 msgstr "Orario di modifica: %s"
@@ -1517,12 +1779,13 @@ msgstr "Operazione di modifica fallita"
 msgid "Modify output format:"
 msgstr "Modifica il formato di output:"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:630
+#: stdio-common/../sysdeps/gnu/errlist.c:648
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:103
 msgid "Multihop attempted"
 msgstr "Tentato un multihop"
 
-#: catgets/gencat.c:106 catgets/gencat.c:110 db2/makedb.c:59
-#: locale/programs/localedef.c:115 nscd/nscd.c:77
+#: catgets/gencat.c:107 catgets/gencat.c:111 db2/makedb.c:59
+#: locale/programs/localedef.c:112 nscd/nscd.c:80
 msgid "NAME"
 msgstr "NOME"
 
@@ -1538,11 +1801,11 @@ msgstr ""
 msgid "NIS"
 msgstr "NIS"
 
-#: nis/ypclnt.c:791
+#: nis/ypclnt.c:801
 msgid "NIS client/server version mismatch - can't supply service"
 msgstr "versioni di client/server NIS incompatibili - non si può fornire il servizio"
 
-#: nis/ypclnt.c:789
+#: nis/ypclnt.c:799
 msgid "NIS map database is bad"
 msgstr "Il database della mappa NIS non è valido"
 
@@ -1562,16 +1825,16 @@ msgstr "Il servizio NIS+ non è disponibile o non è installato"
 msgid "NO OBJECT\n"
 msgstr "OGGETTO MANCANTE\n"
 
-#: nscd/nscd.c:81
+#: nscd/nscd.c:84
 msgid "NUMBER"
 msgstr "NUMERO"
 
 #: nis/nis_print.c:162
 #, c-format
-msgid "Name : '%s'\n"
-msgstr "Nome : '%s'\n"
+msgid "Name : `%s'\n"
+msgstr "Nome : `%s'\n"
 
-#: nscd/nscd.c:88
+#: nscd/nscd.c:94
 msgid "Name Service Cache Daemon."
 msgstr "Demone di caching del servizio dei nomi."
 
@@ -1579,7 +1842,8 @@ msgstr "Demone di caching del servizio dei nomi."
 msgid "Name not served by this server"
 msgstr "Nome non servito da questo server"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:758
+#: stdio-common/../sysdeps/gnu/errlist.c:776
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:109
 msgid "Name not unique on network"
 msgstr "Il nome non è unico sulla rete"
 
@@ -1600,6 +1864,10 @@ msgstr "L'oggetto indicato non è ricercabile"
 msgid "Need authenticator"
 msgstr "Serve un autenticatore"
 
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:158
+msgid "Network dropped connection because of reset"
+msgstr "La rete ha lasciato cadere la connessione per il reset"
+
 #. TRANS A network connection was reset because the remote host crashed.
 #: stdio-common/../sysdeps/gnu/errlist.c:389
 msgid "Network dropped connection on reset"
@@ -1607,20 +1875,23 @@ msgstr "La rete ha lasciato cadere la connessione per il reset"
 
 #. TRANS A socket operation failed because the network was down.
 #: stdio-common/../sysdeps/gnu/errlist.c:378
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:156
 msgid "Network is down"
 msgstr "La rete è giù"
 
 #. TRANS A socket operation failed because the subnet containing the remote host
 #. TRANS was unreachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:384
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:157
 msgid "Network is unreachable"
 msgstr "La rete non è raggiungibile"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:694
+#: stdio-common/../sysdeps/gnu/errlist.c:712
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:72
 msgid "No CSI structure available"
 msgstr "La struttura CSI non è disponibile"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:802
+#: stdio-common/../sysdeps/gnu/errlist.c:820
 msgid "No XENIX semaphores available"
 msgstr "Non ci sono semafori XENIX disponibili"
 
@@ -1632,7 +1903,7 @@ msgstr "Non ci sono indirizzi associati al nome dell'host"
 msgid "No address associated with name"
 msgstr "Non ci sono indirizzi associati al nome"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:714
+#: stdio-common/../sysdeps/gnu/errlist.c:732
 msgid "No anode"
 msgstr "Manca l'anode"
 
@@ -1640,6 +1911,7 @@ msgstr "Manca l'anode"
 #. TRANS error is always synonymous with @code{ENOMEM}; you may get one or the
 #. TRANS other from network operations.
 #: stdio-common/../sysdeps/gnu/errlist.c:408
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:161
 msgid "No buffer space available"
 msgstr "Non c'è spazio di buffer disponibile"
 
@@ -1647,10 +1919,12 @@ msgstr "Non c'è spazio di buffer disponibile"
 #. TRANS supposed to manipulate child processes, when there aren't any processes
 #. TRANS to manipulate.
 #: stdio-common/../sysdeps/gnu/errlist.c:89
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:39
 msgid "No child processes"
 msgstr "Non ci sono processi figli"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:634
+#: stdio-common/../sysdeps/gnu/errlist.c:652
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:90
 msgid "No data available"
 msgstr "Non ci sono dati disponibili"
 
@@ -1666,25 +1940,30 @@ msgstr "Non c'è spazio per file sul server"
 msgid "No locks available"
 msgstr "Non ci sono lock disponibili"
 
-#: posix/regex.c:1013
+#: posix/regex.c:1019
 msgid "No match"
 msgstr "Nessuna corrispondenza"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:814
+#: stdio-common/../sysdeps/gnu/errlist.c:832
 msgid "No medium found"
 msgstr "Non è stato trovato un medium"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:642
+#: stdio-common/../sysdeps/gnu/errlist.c:660
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:64
 msgid "No message of desired type"
 msgstr "Non ci sono messaggi del tipo desiderato"
 
-#: nis/ypclnt.c:779
+#: nis/ypclnt.c:789
 msgid "No more records in map database"
 msgstr "Non ci sono altri record nel database della mappa"
 
-#: posix/regex.c:5515
+#: posix/regex.c:5569
 msgid "No previous regular expression"
 msgstr "Manca una precedente espressione regolare"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:75
+msgid "No record locks available"
+msgstr "Non ci sono lock di record disponibili"
 
 #: sunrpc/rpcinfo.c:570
 msgid "No remote programs registered.\n"
@@ -1692,38 +1971,47 @@ msgstr "Nessun programma remoto registrato.\n"
 
 #. TRANS The remote host for a requested network connection is not reachable.
 #: stdio-common/../sysdeps/gnu/errlist.c:474
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:177
 msgid "No route to host"
 msgstr "Non c'è una route verso l'host"
 
 #. TRANS No space left on device; write operation on a file failed because the
 #. TRANS disk is full.
 #: stdio-common/../sysdeps/gnu/errlist.c:208
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:57
 msgid "No space left on device"
 msgstr "Non è rimasto spazio sul dispositivo"
 
 #. TRANS The wrong type of device was given to a function that expects a
 #. TRANS particular sort of device.
 #: stdio-common/../sysdeps/gnu/errlist.c:147
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:48
 msgid "No such device"
 msgstr "Dispositivo inesistente"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:35
+msgid "No such device or address"
+msgstr "Dispositivo o indirizzo inesistente"
 
 #. TRANS No such file or directory.  This is a ``file doesn't exist'' error
 #. TRANS for ordinary files that are referenced in contexts where they are
 #. TRANS expected to already exist.
 #: stdio-common/../sysdeps/gnu/errlist.c:31
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:31
 msgid "No such file or directory"
 msgstr "File o directory inesistente"
 
-#: nis/ypclnt.c:773
+#: nis/ypclnt.c:783
 msgid "No such key in map"
 msgstr "La chiave non è nella mappa"
 
-#: nis/ypclnt.c:771
+#: nis/ypclnt.c:781
 msgid "No such map in server's domain"
 msgstr "La mappa non è nel dominio del server"
 
 #. TRANS No process matches the specified process ID.
 #: stdio-common/../sysdeps/gnu/errlist.c:36
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:32
 msgid "No such process"
 msgstr "Processo inesistente"
 
@@ -1739,40 +2027,82 @@ msgstr "Errore irreparabile nella risoluzione dei nomi"
 msgid "None.\n"
 msgstr "Nessuno.\n"
 
-#: nis/nis_error.c:48
-msgid "Not Found, no such name"
-msgstr "Non trovato, nome inesistente"
-
-#: stdio-common/../sysdeps/gnu/errlist.c:798
+#: stdio-common/../sysdeps/gnu/errlist.c:816
 msgid "Not a XENIX named type file"
 msgstr "Non è un file con nome di XENIX"
 
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:106
+msgid "Not a data message"
+msgstr "Non è un messaggio di dati"
+
 #. TRANS A file that isn't a directory was specified when a directory is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:152
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:49
 msgid "Not a directory"
 msgstr "Non è una directory"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:166
+msgid "Not a name file"
+msgstr "Non è un file con nome"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:89
+msgid "Not a stream device"
+msgstr "Non è un dispositivo stream"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:167
+msgid "Not available"
+msgstr "Non disponibile"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
+msgid "Not enough space"
+msgstr "Non c'è abbastanza spazio"
 
 #: nis/nis_error.c:30
 msgid "Not found"
 msgstr "Non trovato"
+
+#: nis/nis_error.c:48
+msgid "Not found, no such name"
+msgstr "Non trovato, nome inesistente"
 
 #: nis/nis_error.c:43
 msgid "Not master server for this domain"
 msgstr "Non è un server master per questo dominio"
 
 #: nis/nis_error.c:39
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:30
 msgid "Not owner"
 msgstr "Non è il proprietario"
+
+#. TRANS Not supported.  A function returns this error when certain parameter
+#. TRANS values are valid, but the functionality they request is not available.
+#. TRANS This can mean that the function does not implement a particular command
+#. TRANS or option value or flag bit at all.  For functions that operate on some
+#. TRANS object given in a parameter, such as a file descriptor or a port, it
+#. TRANS might instead mean that only @emph{that specific object} (file
+#. TRANS descriptor, port, etc.) is unable to support the other parameters given;
+#. TRANS different file descriptors might support different ranges of parameter
+#. TRANS values.
+#. TRANS
+#. TRANS If the entire function is not available at all in the implementation,
+#. TRANS it returns @code{ENOSYS} instead.
+#: stdio-common/../sysdeps/gnu/errlist.c:591
+msgid "Not supported"
+msgstr "Non gestito"
 
 #: nis/nis_print.c:263
 #, c-format
 msgid "Number of Columns   : %d\n"
-msgstr "Numero di colonne   : %d\n"
+msgstr "Numero di Colonne   : %d\n"
 
-#: nis/nis_print.c:358
+#: nis/nis_print.c:362
 #, c-format
 msgid "Number of objects : %u\n"
 msgstr "Numero di oggetti : %u\n"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:119
+msgid "Number of symbolic links encountered during path name traversal exceeds MAXSYMLINKS"
+msgstr "Il numero di link simbolici incontrati durante l'attraversamento del percorso eccede MAXSYMLINKS"
 
 #. TRANS Domain error; used by mathematical functions when an argument value does
 #. TRANS not fall into the domain over which the function is defined.
@@ -1786,17 +2116,17 @@ msgstr "Argomento numerico fuori dal dominio"
 msgid "Numerical result out of range"
 msgstr "Risultato numerico fuori scala"
 
-#: nis/nis_print.c:362
+#: nis/nis_print.c:366
 #, c-format
 msgid "Object #%d:\n"
 msgstr "Oggetto #%d:\n"
 
-#: nis/nis_print.c:314
+#: nis/nis_print.c:316
 #, c-format
 msgid "Object Name   : %s\n"
 msgstr "Nome dell'oggetto: %s\n"
 
-#: nis/nis_print.c:324
+#: nis/nis_print.c:328
 msgid "Object Type   : "
 msgstr "Tipo dell'oggetto: "
 
@@ -1805,6 +2135,7 @@ msgstr "Tipo dell'oggetto: "
 #. TRANS (This is an error on some operating systems, but we expect it to work
 #. TRANS properly on the GNU system, making this error code impossible.)
 #: stdio-common/../sysdeps/gnu/errlist.c:514
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:95
 msgid "Object is remote"
 msgstr "L'oggetto è remoto"
 
@@ -1812,19 +2143,28 @@ msgstr "L'oggetto è remoto"
 msgid "Object with same name exists"
 msgstr "Esiste un oggetto con lo stesso nome"
 
-#: timezone/zic.c:1995
+#: timezone/zic.c:2023
 msgid "Odd number of quotation marks"
 msgstr "Numero dispari di virgolette"
 
-#: nscd/nscd.c:185
+#: nscd/nscd.c:191 nscd/nscd.c:211 nscd/nscd.c:217
 msgid "Only root is allowed to use this option!"
 msgstr "Solo root puo` usare questa opzione!"
 
 #. TRANS An operation is already in progress on an object that has non-blocking
 #. TRANS mode selected.
 #: stdio-common/../sysdeps/gnu/errlist.c:306
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:178
 msgid "Operation already in progress"
 msgstr "Operazione già in corso"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:76
+msgid "Operation canceled"
+msgstr "Operazione cancellata"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:118
+msgid "Operation not applicable"
+msgstr "Operazione non applicabile"
 
 #. TRANS Operation not permitted; only the owner of the file (or other resource)
 #. TRANS or processes with special privileges can perform the operation.
@@ -1839,8 +2179,13 @@ msgstr "Operazione non permessa"
 #. TRANS particular operation; it is a generic indication that the server knows
 #. TRANS nothing to do for that call.
 #: stdio-common/../sysdeps/gnu/errlist.c:350
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:77
 msgid "Operation not supported"
 msgstr "Operazione non gestita"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
+msgid "Operation not supported on transport endpoint"
+msgstr "Operazione non gestita dall'estremità del trasporto"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -1851,6 +2196,7 @@ msgstr "Operazione non gestita"
 #. TRANS use the @code{select} function to find out when the pending operation
 #. TRANS has completed; @pxref{Waiting for I/O}.
 #: stdio-common/../sysdeps/gnu/errlist.c:300
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:179
 msgid "Operation now in progress"
 msgstr "L'operazione ora è in corso"
 
@@ -1863,19 +2209,27 @@ msgstr "L'operazione ora è in corso"
 msgid "Operation would block"
 msgstr "L'operazione si bloccherebbe"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:646
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:128
+msgid "Option not supported by protocol"
+msgstr "Opzione non gestita dal protocollo"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:92
+msgid "Out of stream resources"
+msgstr "Risorse degli streams esaurite"
+
+#: stdio-common/../sysdeps/gnu/errlist.c:664
 msgid "Out of streams resources"
 msgstr "Risorse degli streams esaurite"
 
-#: iconv/iconv_prog.c:59 locale/programs/localedef.c:101
+#: iconv/iconv_prog.c:59 locale/programs/localedef.c:98
 msgid "Output control:"
 msgstr "Controllo dell'output:"
 
-#: elf/sprof.c:76
+#: elf/sprof.c:72
 msgid "Output selection:"
 msgstr "Selezione dell'output:"
 
-#: nis/nis_print.c:316
+#: nis/nis_print.c:318
 #, c-format
 msgid "Owner         : %s\n"
 msgstr "Proprietario  : %s\n"
@@ -1884,17 +2238,18 @@ msgstr "Proprietario  : %s\n"
 msgid "PRIVATE\n"
 msgstr "PRIVATO\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:738
+#: stdio-common/../sysdeps/gnu/errlist.c:756
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:94
 msgid "Package not installed"
 msgstr "Pacchetto non installato"
 
-#: nscd/nscd_conf.c:84
+#: nscd/nscd_conf.c:82
 #, c-format
 msgid "Parse error: %s"
 msgstr "Errore di parsing: %s"
 
 #: nis/nis_error.c:54
-msgid "Partial Success"
+msgid "Partial success"
 msgstr "Successo parziale"
 
 #: nis/nis_error.c:62
@@ -1902,16 +2257,17 @@ msgid "Passed object is not the same object on server"
 msgstr "L'oggetto passato non è lo stesso oggetto sul server"
 
 #. TRANS Permission denied; the file permissions do not allow the attempted operation.
-#: nis/nis_error.c:38 nis/ypclnt.c:793
+#: nis/nis_error.c:38 nis/ypclnt.c:803
 #: stdio-common/../sysdeps/gnu/errlist.c:108
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:42
 msgid "Permission denied"
 msgstr "Permesso negato"
 
-#: sysdeps/unix/sysv/linux/siglist.h:64
+#: sysdeps/generic/siglist.h:71 sysdeps/gnu/siglist.h:65
 msgid "Power failure"
 msgstr "Manca la corrente"
 
-#: posix/regex.c:1026
+#: posix/regex.c:1058
 msgid "Premature end of regular expression"
 msgstr "Fine prematura dell'espressione regolare"
 
@@ -1919,11 +2275,11 @@ msgstr "Fine prematura dell'espressione regolare"
 msgid "Print content of database file, one entry a line"
 msgstr "Stampa il contenuto del file del database, una voce per riga"
 
-#: nscd/nscd.c:83
+#: nscd/nscd.c:86
 msgid "Print current configuration statistic"
 msgstr "Stampa le statistiche della configurazione attuale"
 
-#: locale/programs/localedef.c:107
+#: locale/programs/localedef.c:104
 msgid "Print more messages"
 msgstr "Stampa altri messaggi"
 
@@ -1939,21 +2295,24 @@ msgstr "Probabile successo"
 msgid "Probably not found"
 msgstr "Probabilmente non trovato"
 
-#: stdio-common/../sysdeps/unix/siglist.c:52
-#: sysdeps/unix/sysv/linux/siglist.h:46
+#: stdio-common/../sysdeps/unix/siglist.c:52 sysdeps/generic/siglist.h:53
+#: sysdeps/gnu/siglist.h:47
 msgid "Profiling timer expired"
 msgstr "Timer di profiling scaduto"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:690
+#: stdio-common/../sysdeps/gnu/errlist.c:708
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:71
 msgid "Protocol driver not attached"
 msgstr "Driver del protocollo non collegato"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:658
+#: stdio-common/../sysdeps/gnu/errlist.c:676
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:100
 msgid "Protocol error"
 msgstr "Errore di protocollo"
 
 #. TRANS The socket communications protocol family you requested is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:355
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:152
 msgid "Protocol family not supported"
 msgstr "Famiglia del protocollo non gestita"
 
@@ -1967,11 +2326,13 @@ msgstr "Protocollo non disponibile"
 #. TRANS (perhaps because the requested protocol is completely invalid).
 #. TRANS @xref{Creating a Socket}.
 #: stdio-common/../sysdeps/gnu/errlist.c:335
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:149
 msgid "Protocol not supported"
 msgstr "Protocollo non gestito"
 
 #. TRANS The socket type does not support the requested communications protocol.
 #: stdio-common/../sysdeps/gnu/errlist.c:322
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:127
 msgid "Protocol wrong type for socket"
 msgstr "Tipo di protocollo sbagliato per il socket"
 
@@ -1979,12 +2340,12 @@ msgstr "Tipo di protocollo sbagliato per il socket"
 msgid "Query illegal for named table"
 msgstr "Query illecita per la tabella indicata"
 
-#: stdio-common/../sysdeps/unix/siglist.c:28
-#: sysdeps/unix/sysv/linux/siglist.h:24
+#: stdio-common/../sysdeps/unix/siglist.c:28 sysdeps/generic/siglist.h:31
+#: sysdeps/gnu/siglist.h:25
 msgid "Quit"
 msgstr "Quit"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:754
+#: stdio-common/../sysdeps/gnu/errlist.c:772
 msgid "RFS specific error"
 msgstr "Errore specifico di RFS"
 
@@ -1993,7 +2354,7 @@ msgstr "Errore specifico di RFS"
 msgid "RPC bad procedure for program"
 msgstr "Procedura RPC non valida per il programma"
 
-#: nis/ypclnt.c:767
+#: nis/ypclnt.c:777
 msgid "RPC failure on NIS operation"
 msgstr "Errore di RPC su una operazione NIS"
 
@@ -2017,55 +2378,55 @@ msgstr "La struct RPC non è valida"
 msgid "RPC version wrong"
 msgstr "Versione di RPC sbagliata"
 
-#: sunrpc/clnt_perr.c:215
+#: sunrpc/clnt_perr.c:270
 msgid "RPC: (unknown error code)"
 msgstr "RPC: (codice di errore sconosciuto)"
 
-#: sunrpc/clnt_perr.c:176
+#: sunrpc/clnt_perr.c:189
 msgid "RPC: Authentication error"
 msgstr "RPC: Errore di autenticazione"
 
-#: sunrpc/clnt_perr.c:166
+#: sunrpc/clnt_perr.c:169
 msgid "RPC: Can't decode result"
 msgstr "RPC: Impossibile decodificare il risultato"
 
-#: sunrpc/clnt_perr.c:164
+#: sunrpc/clnt_perr.c:165
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: Impossibile codificare gli argomenti"
 
-#: sunrpc/clnt_perr.c:196
+#: sunrpc/clnt_perr.c:229
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Fallito (errore non specificato)"
 
-#: sunrpc/clnt_perr.c:174
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Versioni di RPC incompatibili"
 
-#: sunrpc/clnt_perr.c:192
+#: sunrpc/clnt_perr.c:221
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Errore del portmapper"
 
-#: sunrpc/clnt_perr.c:182
+#: sunrpc/clnt_perr.c:201
 msgid "RPC: Procedure unavailable"
 msgstr "RPC: Procedura non disponibile"
 
-#: sunrpc/clnt_perr.c:194
+#: sunrpc/clnt_perr.c:225
 msgid "RPC: Program not registered"
 msgstr "RPC: Programma non registrato"
 
-#: sunrpc/clnt_perr.c:178
+#: sunrpc/clnt_perr.c:193
 msgid "RPC: Program unavailable"
 msgstr "RPC: Programma non disponibile"
 
-#: sunrpc/clnt_perr.c:180
+#: sunrpc/clnt_perr.c:197
 msgid "RPC: Program/version mismatch"
 msgstr "RPC: Programma/versione non corrispondenti"
 
-#: sunrpc/clnt_perr.c:186
+#: sunrpc/clnt_perr.c:209
 msgid "RPC: Remote system error"
 msgstr "RPC: Errore del sistema remoto"
 
-#: sunrpc/clnt_perr.c:184
+#: sunrpc/clnt_perr.c:205
 msgid "RPC: Server can't decode arguments"
 msgstr "RPC: Il server non può decodificare gli argomenti"
 
@@ -2073,23 +2434,23 @@ msgstr "RPC: Il server non può decodificare gli argomenti"
 msgid "RPC: Success"
 msgstr "RPC: Successo"
 
-#: sunrpc/clnt_perr.c:172
+#: sunrpc/clnt_perr.c:181
 msgid "RPC: Timed out"
 msgstr "RPC: Tempo scaduto"
 
-#: sunrpc/clnt_perr.c:170
+#: sunrpc/clnt_perr.c:177
 msgid "RPC: Unable to receive"
 msgstr "RPC: Impossibile ricevere"
 
-#: sunrpc/clnt_perr.c:168
+#: sunrpc/clnt_perr.c:173
 msgid "RPC: Unable to send"
 msgstr "RPC: Impossibile inviare"
 
-#: sunrpc/clnt_perr.c:188
+#: sunrpc/clnt_perr.c:213
 msgid "RPC: Unknown host"
 msgstr "RPC: Host sconosciuto"
 
-#: sunrpc/clnt_perr.c:190
+#: sunrpc/clnt_perr.c:217
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Protocollo sconosciuto"
 
@@ -2102,16 +2463,17 @@ msgstr "RSA (%d bit)\n"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "RTLD_NEXT usato in codice non caricato dinamicamente"
 
-#: elf/sprof.c:88
+#: elf/sprof.c:84
 msgid "Read and display shared object profiling data"
 msgstr "Legge e mostra i dati di profilazione degli oggetti condivisi"
 
-#: nscd/nscd.c:78
+#: nscd/nscd.c:81
 msgid "Read configuration data from NAME"
 msgstr "Legge i dati di configurazione da NOME"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:218
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:59
 msgid "Read-only file system"
 msgstr "File system di sola lettura"
 
@@ -2120,23 +2482,25 @@ msgstr "File system di sola lettura"
 msgid "Real-time signal %d"
 msgstr "Segnale real-time %d"
 
-#: posix/regex.c:1027
+#: posix/regex.c:1061
 msgid "Regular expression too big"
 msgstr "Espressione regolare troppo grande"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:810
+#: stdio-common/../sysdeps/gnu/errlist.c:828
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:169
 msgid "Remote I/O error"
 msgstr "Errore di I/O remoto"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:766
+#: stdio-common/../sysdeps/gnu/errlist.c:784
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "Remote address changed"
 msgstr "È cambiato l'indirizzo del remoto"
 
-#: inet/ruserpass.c:162
+#: inet/ruserpass.c:177
 msgid "Remove password or make file unreadable by others."
 msgstr "Rimuovere la password o rendere il file illeggibile dagli altri."
 
-#: elf/sprof.c:537
+#: elf/sprof.c:533
 #, c-format
 msgid "Reopening shared object `%s' failed"
 msgstr "Fallita la riapertura dell'oggetto condiviso `%s'"
@@ -2145,19 +2509,23 @@ msgstr "Fallita la riapertura dell'oggetto condiviso `%s'"
 msgid "Replicate :\n"
 msgstr "Replica   :\n"
 
-#: argp/argp-help.c:1638
+#: argp/argp-help.c:1640
 #, c-format
 msgid "Report bugs to %s.\n"
 msgstr "Segnalare i bug a %s.\n"
 
-#: catgets/gencat.c:223 db2/makedb.c:229 iconv/iconv_prog.c:280
-#: locale/programs/locale.c:254 locale/programs/localedef.c:389
+#: catgets/gencat.c:224 db2/makedb.c:229 iconv/iconv_prog.c:280
+#: locale/programs/locale.c:254 locale/programs/localedef.c:386
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr "Segnalare i bug a <bugs@gnu.org> usando lo script `glibcbug'.\n"
 
-#: nis/ypclnt.c:765
+#: nis/ypclnt.c:775
 msgid "Request arguments bad"
 msgstr "Argomenti della richiesta non validi"
+
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:170
+msgid "Reserved for future use"
+msgstr "Riservato per usi futuri"
 
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
@@ -2175,7 +2543,8 @@ msgstr "Errore interno del resolver"
 msgid "Resource deadlock avoided"
 msgstr "Evitato un deadlock sulle risorse"
 
-#: stdio-common/../sysdeps/unix/siglist.c:54
+#: stdio-common/../sysdeps/unix/siglist.c:54 sysdeps/generic/siglist.h:74
+#: sysdeps/gnu/siglist.h:68
 msgid "Resource lost"
 msgstr "Risorsa persa"
 
@@ -2209,14 +2578,19 @@ msgstr "Risorsa persa"
 #. TRANS and return to its command loop.
 #. TRANS @end itemize
 #: stdio-common/../sysdeps/gnu/errlist.c:279
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:40
 msgid "Resource temporarily unavailable"
 msgstr "Risorsa temporaneamente non disponibile"
 
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:63
+msgid "Result too large"
+msgstr "Risultato troppo grande"
+
 #: nis/nis_error.c:47
-msgid "Results Sent to callback proc"
+msgid "Results sent to callback proc"
 msgstr "Risultati inviati alla procedura di callback"
 
-#: elf/sprof.c:91
+#: elf/sprof.c:87
 msgid "SHOBJ [PROFDATA]"
 msgstr "SHOBJ [PROFDATA]"
 
@@ -2229,8 +2603,8 @@ msgstr "SUNYP"
 msgid "Search Path         : %s\n"
 msgstr "Percorso di ricerca : %s\n"
 
-#: stdio-common/../sysdeps/unix/siglist.c:36
-#: sysdeps/unix/sysv/linux/siglist.h:31
+#: stdio-common/../sysdeps/unix/siglist.c:36 sysdeps/generic/siglist.h:38
+#: sysdeps/gnu/siglist.h:32
 msgid "Segmentation fault"
 msgstr "Segmentation fault"
 
@@ -2242,11 +2616,11 @@ msgstr "Server occupato, riprovare"
 msgid "Server out of memory"
 msgstr "Il server ha esaurito la memoria"
 
-#: sunrpc/clnt_perr.c:277
+#: sunrpc/clnt_perr.c:335
 msgid "Server rejected credential"
 msgstr "Il server ha rifiutato le credenziali"
 
-#: sunrpc/clnt_perr.c:281
+#: sunrpc/clnt_perr.c:343
 msgid "Server rejected verifier"
 msgstr "Il server ha rifiutato il verificatore"
 
@@ -2258,7 +2632,7 @@ msgstr "Servname non gestito per ai_socktype"
 msgid "Set the program name"
 msgstr "Imposta il nome del programma"
 
-#: nscd/nscd.c:82
+#: nscd/nscd.c:85
 msgid "Shut the server down"
 msgstr "Disattiva il server"
 
@@ -2268,16 +2642,19 @@ msgstr "Segnale 0"
 
 #. TRANS A file that isn't a socket was specified when a socket is required.
 #: stdio-common/../sysdeps/gnu/errlist.c:311
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:124
 msgid "Socket operation on non-socket"
 msgstr "Operazione per socket su un non socket"
 
 #. TRANS The socket type is not supported.
 #: stdio-common/../sysdeps/gnu/errlist.c:340
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:150
 msgid "Socket type not supported"
 msgstr "Tipo di socket non gestito"
 
 #. TRANS A network connection was aborted locally.
 #: stdio-common/../sysdeps/gnu/errlist.c:394
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:159
 msgid "Software caused connection abort"
 msgstr "Il programma ha causato la fine della connessione"
 
@@ -2285,15 +2662,16 @@ msgstr "Il programma ha causato la fine della connessione"
 msgid "Sorry. You are not root\n"
 msgstr "Spiacente, non sei root\n"
 
-#: locale/programs/localedef.c:97
+#: locale/programs/localedef.c:94
 msgid "Source definitions are found in FILE"
 msgstr "Le definizioni sorgente sono nel FILE"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:746
+#: stdio-common/../sysdeps/gnu/errlist.c:764
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:98
 msgid "Srmount error"
 msgstr "Errore di srmount"
 
-#: sysdeps/unix/sysv/linux/siglist.h:59
+#: sysdeps/generic/siglist.h:66 sysdeps/gnu/siglist.h:60
 msgid "Stack fault"
 msgstr "Stack fault"
 
@@ -2302,56 +2680,58 @@ msgstr "Stack fault"
 #. TRANS Repairing this condition usually requires unmounting and remounting
 #. TRANS the NFS file system on the local host.
 #: stdio-common/../sysdeps/gnu/errlist.c:506
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:180
 msgid "Stale NFS file handle"
 msgstr "Vecchio file handle NFS"
 
-#: nscd/nscd.c:81
+#: nscd/nscd.c:84
 msgid "Start NUMBER threads"
 msgstr "Lancia NUMERO thread"
 
-#: nis/nis_print.c:357
+#: nis/nis_print.c:361
 #, c-format
 msgid "Status            : %s\n"
 msgstr "Stato             : %s\n"
 
-#: stdio-common/../sysdeps/unix/siglist.c:43
-#: sysdeps/unix/sysv/linux/siglist.h:37
+#: stdio-common/../sysdeps/unix/siglist.c:43 sysdeps/generic/siglist.h:44
+#: sysdeps/gnu/siglist.h:38
 msgid "Stopped"
 msgstr "Fermato"
 
-#: stdio-common/../sysdeps/unix/siglist.c:42
-#: sysdeps/unix/sysv/linux/siglist.h:36
+#: stdio-common/../sysdeps/unix/siglist.c:42 sysdeps/generic/siglist.h:43
+#: sysdeps/gnu/siglist.h:37
 msgid "Stopped (signal)"
 msgstr "Fermato (segnale)"
 
-#: stdio-common/../sysdeps/unix/siglist.c:46
-#: sysdeps/unix/sysv/linux/siglist.h:40
+#: stdio-common/../sysdeps/unix/siglist.c:46 sysdeps/generic/siglist.h:47
+#: sysdeps/gnu/siglist.h:41
 msgid "Stopped (tty input)"
 msgstr "Fermato (input da tty)"
 
-#: stdio-common/../sysdeps/unix/siglist.c:47
-#: sysdeps/unix/sysv/linux/siglist.h:41
+#: stdio-common/../sysdeps/unix/siglist.c:47 sysdeps/generic/siglist.h:48
+#: sysdeps/gnu/siglist.h:42
 msgid "Stopped (tty output)"
 msgstr "Fermato (output da tty)"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:790
+#: stdio-common/../sysdeps/gnu/errlist.c:808
 msgid "Streams pipe error"
 msgstr "Errore di pipe di streams"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:794
+#: stdio-common/../sysdeps/gnu/errlist.c:812
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:164
 msgid "Structure needs cleaning"
 msgstr "La struttura ha bisogno di essere pulita"
 
-#: nis/nis_error.c:28 nis/ypclnt.c:763 nis/ypclnt.c:837 posix/regex.c:1012
+#: nis/nis_error.c:28 nis/ypclnt.c:773 nis/ypclnt.c:847 posix/regex.c:1016
 #: stdio-common/../sysdeps/gnu/errlist.c:19
 msgid "Success"
 msgstr "Successo"
 
-#: locale/programs/localedef.c:106
+#: locale/programs/localedef.c:103
 msgid "Suppress warnings and information messages"
 msgstr "Sopprime messaggi di avvertimento e informazione"
 
-#: locale/programs/localedef.c:96
+#: locale/programs/localedef.c:92
 msgid "Symbolic character names defined in FILE"
 msgstr "Nomi simbolici dei caratteri definiti in FILE"
 
@@ -2363,11 +2743,11 @@ msgstr "Errore di sistema"
 msgid "System information:"
 msgstr "Informazioni sul sistema:"
 
-#: nis/ypclnt.c:843
+#: nis/ypclnt.c:853
 msgid "System resource allocation failure"
 msgstr "Errore di allocazione delle risorse di sistema"
 
-#: locale/programs/localedef.c:384
+#: locale/programs/localedef.c:381
 #, c-format
 msgid ""
 "System's directory for character maps : %s\n"
@@ -2380,9 +2760,17 @@ msgstr ""
 "                     percorso di localizzazione: %s\n"
 "%s"
 
+#: nscd/nscd.c:87
+msgid "TABLE"
+msgstr "TABELLA"
+
 #: nis/nis_print.c:117
 msgid "TABLE\n"
 msgstr "TABELLA\n"
+
+#: nscd/nscd.c:89
+msgid "TABLE,yes"
+msgstr "TABELLA,si"
 
 #: nis/nis_print.c:262
 #, c-format
@@ -2393,8 +2781,8 @@ msgstr "Tipo di tabella     : %s\n"
 msgid "Temporary failure in name resolution"
 msgstr "Errore temporaneo durante la risoluzione del nome"
 
-#: stdio-common/../sysdeps/unix/siglist.c:40
-#: sysdeps/unix/sysv/linux/siglist.h:34
+#: stdio-common/../sysdeps/unix/siglist.c:40 sysdeps/generic/siglist.h:41
+#: sysdeps/gnu/siglist.h:35
 msgid "Terminated"
 msgstr "Terminato"
 
@@ -2404,10 +2792,11 @@ msgstr "Terminato"
 #. TRANS will cause this error.  (The name stands for ``text file busy''.)  This
 #. TRANS is not an error in the GNU system; the text is copied as necessary.
 #: stdio-common/../sysdeps/gnu/errlist.c:197
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:55
 msgid "Text file busy"
 msgstr "File text occupato"
 
-#: iconv/iconv_prog.c:536
+#: iconv/iconv_prog.c:578
 msgid ""
 "The following list contain all the coded character sets known.  This does\n"
 "not necessarily mean that all combinations of these names can be used for\n"
@@ -2432,12 +2821,13 @@ msgstr ""
 msgid "Time to live : "
 msgstr "Tempo di vita: "
 
-#: stdio-common/../sysdeps/gnu/errlist.c:662
+#: stdio-common/../sysdeps/gnu/errlist.c:680
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
 msgid "Timer expired"
 msgstr "Timer scaduto"
 
 #: nis/nis_error.c:55
-msgid "Too Many Attributes"
+msgid "Too many attributes"
 msgstr "Troppi attributi"
 
 #. TRANS Too many levels of symbolic links were encountered in looking up a file name.
@@ -2450,6 +2840,7 @@ msgstr "Troppi livelli di link simbolici"
 #. TRANS @code{rename} can cause this error if the file being renamed already has
 #. TRANS as many links as it can take (@pxref{Renaming Files}).
 #: stdio-common/../sysdeps/gnu/errlist.c:225
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:60
 msgid "Too many links"
 msgstr "Troppi link"
 
@@ -2461,6 +2852,7 @@ msgstr "Troppi link"
 #. TRANS want to increase the @code{RLIMIT_NOFILE} limit or make it unlimited;
 #. TRANS @pxref{Limits on Resources}.
 #: stdio-common/../sysdeps/gnu/errlist.c:175
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:53
 msgid "Too many open files"
 msgstr "Troppi file aperti"
 
@@ -2480,34 +2872,37 @@ msgstr "Troppi processi"
 
 #. TRANS ???
 #: stdio-common/../sysdeps/gnu/errlist.c:439
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:173
 msgid "Too many references: cannot splice"
 msgstr "Troppi riferimenti: impossibile dividere"
 
 #. TRANS The file quota system is confused because there are too many users.
 #. TRANS @c This can probably happen in a GNU system when using NFS.
 #: stdio-common/../sysdeps/gnu/errlist.c:493
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:123
 msgid "Too many users"
 msgstr "Troppi utenti"
 
-#: stdio-common/../sysdeps/unix/siglist.c:30
-#: sysdeps/unix/sysv/linux/siglist.h:26
+#: stdio-common/../sysdeps/unix/siglist.c:30 sysdeps/generic/siglist.h:33
+#: sysdeps/gnu/siglist.h:27
 msgid "Trace/breakpoint trap"
 msgstr "Trap di trace/breakpoint"
 
-#: posix/regex.c:1017
+#: posix/regex.c:1031
 msgid "Trailing backslash"
 msgstr "Backslash finale"
 
 #. TRANS In the GNU system, opening a file returns this error when the file is
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
-#: stdio-common/../sysdeps/gnu/errlist.c:596
+#: stdio-common/../sysdeps/gnu/errlist.c:614
 msgid "Translator died"
 msgstr "Il traduttore è morto"
 
 #. TRANS You tried to connect a socket that is already connected.
 #. TRANS @xref{Connecting}.
 #: stdio-common/../sysdeps/gnu/errlist.c:414
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:162
 msgid "Transport endpoint is already connected"
 msgstr "Estremità del trasporto già connesso"
 
@@ -2516,15 +2911,16 @@ msgstr "Estremità del trasporto già connesso"
 #. TRANS destination for the data.  For a connectionless socket (for datagram
 #. TRANS protocols, such as UDP), you get @code{EDESTADDRREQ} instead.
 #: stdio-common/../sysdeps/gnu/errlist.c:422
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:163
 msgid "Transport endpoint is not connected"
 msgstr "Estremità del trasporto non connesso"
 
-#: argp/argp-help.c:1610
+#: argp/argp-help.c:1612
 #, c-format
 msgid "Try `%s --help' or `%s --usage' for more information.\n"
 msgstr "Usare `%s --help' o `%s --usage' per ulteriori informazioni.\n"
 
-#: inet/rcmd.c:143
+#: inet/rcmd.c:150
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Proviamo %s...\n"
@@ -2559,16 +2955,16 @@ msgstr "Impossibile creare il processo sul server"
 msgid "Unknown (type = %d, bits = %d)\n"
 msgstr "Sconosciuto (tipo = %d, bit = %d)\n"
 
-#: inet/ruserpass.c:248
+#: inet/ruserpass.c:263
 #, c-format
 msgid "Unknown .netrc keyword %s"
 msgstr "Parola chiave di .netrc sconosciuta %s"
 
-#: nis/ypclnt.c:797
+#: nis/ypclnt.c:807
 msgid "Unknown NIS error code"
 msgstr "Codice di errore di NIS sconosciuto"
 
-#: nss/getent.c:505
+#: nss/getent.c:512
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Databae sconosciuto: %s\n"
@@ -2578,7 +2974,7 @@ msgid "Unknown error"
 msgstr "Errore sconosciuto"
 
 #: string/../sysdeps/generic/_strerror.c:48
-#: string/../sysdeps/mach/_strerror.c:86
+#: string/../sysdeps/mach/_strerror.c:87
 #: sysdeps/mach/hurd/mips/dl-machine.c:82
 msgid "Unknown error "
 msgstr "Errore sconosciuto "
@@ -2591,7 +2987,7 @@ msgstr "Host sconosciuto"
 msgid "Unknown object"
 msgstr "Oggetto sconosciuto"
 
-#: nscd/nscd_conf.c:181
+#: nscd/nscd_conf.c:179
 #, c-format
 msgid "Unknown option: %s %s %s"
 msgstr "Opzione sconosciuta: %s %s %s"
@@ -2609,27 +3005,27 @@ msgstr "Errore sconosciuto del server"
 msgid "Unknown signal %d"
 msgstr "Segnale %d sconosciuto"
 
-#: misc/error.c:107
+#: misc/error.c:107 timezone/zic.c:386
 msgid "Unknown system error"
 msgstr "Errore di sistema sconosciuto"
 
-#: nis/ypclnt.c:845
+#: nis/ypclnt.c:855
 msgid "Unknown ypbind error"
 msgstr "Errore sconosciuto di ypbind"
 
-#: posix/regex.c:1020
+#: posix/regex.c:1040
 msgid "Unmatched ( or \\("
 msgstr "( o \\( sbilanciato"
 
-#: posix/regex.c:1028
+#: posix/regex.c:1064
 msgid "Unmatched ) or \\)"
 msgstr ") o \\) sbilanciato"
 
-#: posix/regex.c:1019
+#: posix/regex.c:1037
 msgid "Unmatched [ or [^"
 msgstr "[ o [^ sbilanciato"
 
-#: posix/regex.c:1021
+#: posix/regex.c:1043
 msgid "Unmatched \\{"
 msgstr "\\{ sbilanciato"
 
@@ -2638,12 +3034,12 @@ msgstr "\\{ sbilanciato"
 msgid "Unrecognized variable `%s'"
 msgstr "Variabile `%s' non riconosciuta"
 
-#: stdio-common/../sysdeps/unix/siglist.c:41
-#: sysdeps/unix/sysv/linux/siglist.h:35
+#: stdio-common/../sysdeps/unix/siglist.c:41 sysdeps/generic/siglist.h:42
+#: sysdeps/gnu/siglist.h:36
 msgid "Urgent I/O condition"
 msgstr "Condizione di I/O urgente"
 
-#: argp/argp-help.c:1567
+#: argp/argp-help.c:1569
 msgid "Usage:"
 msgstr "Uso:"
 
@@ -2656,31 +3052,36 @@ msgstr "Uso: %s nome_variabile [percorso]\n"
 msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
 msgstr "Uso: rpcinfo [ -n numporta ] -u host numprog [ numvers ]\n"
 
-#: stdio-common/../sysdeps/unix/siglist.c:55
-#: sysdeps/unix/sysv/linux/siglist.h:48
+#: nscd/nscd.c:89
+msgid "Use separate cache for each user"
+msgstr "Usa una cache separata per ogni utente"
+
+#: stdio-common/../sysdeps/unix/siglist.c:55 sysdeps/generic/siglist.h:55
+#: sysdeps/gnu/siglist.h:49
 msgid "User defined signal 1"
 msgstr "Segnale 1 definito dall'utente"
 
-#: stdio-common/../sysdeps/unix/siglist.c:56
-#: sysdeps/unix/sysv/linux/siglist.h:49
+#: stdio-common/../sysdeps/unix/siglist.c:56 sysdeps/generic/siglist.h:56
+#: sysdeps/gnu/siglist.h:50
 msgid "User defined signal 2"
 msgstr "Segnale 2 definito dall'utente"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:654
+#: stdio-common/../sysdeps/gnu/errlist.c:672
+#: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:108
 msgid "Value too large for defined data type"
 msgstr "Valore troppo grande per il tipo di dato definito"
 
-#: stdio-common/../sysdeps/unix/siglist.c:51
-#: sysdeps/unix/sysv/linux/siglist.h:45
+#: stdio-common/../sysdeps/unix/siglist.c:51 sysdeps/generic/siglist.h:52
+#: sysdeps/gnu/siglist.h:46
 msgid "Virtual timer expired"
 msgstr "Virtual timer expired"
 
-#: timezone/zic.c:1899
+#: timezone/zic.c:1927
 msgid "Wild result from command execution"
 msgstr "Risultato assurdo dall'esecuzione del comando"
 
-#: stdio-common/../sysdeps/unix/siglist.c:53
-#: sysdeps/unix/sysv/linux/siglist.h:47
+#: stdio-common/../sysdeps/unix/siglist.c:53 sysdeps/generic/siglist.h:54
+#: sysdeps/gnu/siglist.h:48
 msgid "Window changed"
 msgstr "Finestra cambiata"
 
@@ -2700,19 +3101,19 @@ msgstr "Scrive i nomi delle categorie selezionate"
 msgid "Write names of selected keywords"
 msgstr "Scrive i nomi delle parole chiave selezionate"
 
-#: catgets/gencat.c:110 db2/makedb.c:59
+#: catgets/gencat.c:111 db2/makedb.c:59
 msgid "Write output to file NAME"
 msgstr "Scrive l'output nel file NOME"
 
-#: catgets/gencat.c:241 db2/makedb.c:247 elf/sprof.c:365
+#: catgets/gencat.c:242 db2/makedb.c:247 elf/sprof.c:361
 #: iconv/iconv_prog.c:299 locale/programs/locale.c:272
-#: locale/programs/localedef.c:408 nscd/nscd.c:228 nss/getent.c:70
-#: posix/getconf.c:629
+#: locale/programs/localedef.c:405 nscd/nscd.c:282 nscd/nscd_nischeck.c:95
+#: nss/getent.c:71 posix/getconf.c:629
 #, c-format
 msgid "Written by %s.\n"
 msgstr "Scritto da %s.\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:818
+#: stdio-common/../sysdeps/gnu/errlist.c:836
 msgid "Wrong medium type"
 msgstr "Tipo di medium errato"
 
@@ -2724,7 +3125,7 @@ msgstr "X500"
 msgid "XCHS"
 msgstr "XCHS"
 
-#: nis/ypclnt.c:185
+#: nis/ypclnt.c:171
 #, c-format
 msgid "YPBINDPROC_DOMAIN: %s\n"
 msgstr "YPBINDPROC_DOMAIN: %s\n"
@@ -2734,11 +3135,11 @@ msgid "Yes, 42 is the meaning of life"
 msgstr "Sì, 42 è il significato della vita"
 
 #. TRANS You did @strong{what}?
-#: stdio-common/../sysdeps/gnu/errlist.c:608
+#: stdio-common/../sysdeps/gnu/errlist.c:626
 msgid "You really blew it this time"
 msgstr "Questa volta hai davvero combinato un pasticcio"
 
-#: timezone/zic.c:1063
+#: timezone/zic.c:1089
 msgid "Zone continuation line end time is not after end time of previous line"
 msgstr ""
 "Il tempo finale della riga di continuazione della zona\n"
@@ -2748,13 +3149,17 @@ msgstr ""
 msgid "[FILE...]"
 msgstr "[FILE...]"
 
-#: locale/programs/charmap.c:481 locale/programs/locfile.c:471
-#: locale/programs/repertoire.c:278
+#: sunrpc/pmap_clnt.c:71
+msgid "__get_myaddress: ioctl (get interface configuration)"
+msgstr "__get_myaddress: ioctl (ottiene la configurazione dell'interfaccia)"
+
+#: locale/programs/charmap.c:480 locale/programs/locfile.c:477
+#: locale/programs/repertoire.c:290
 #, c-format
 msgid "`%1$s' definition does not end with `END %1$s'"
 msgstr "la definizione `%1$s' non finisce con `END %1$s'"
 
-#: elf/sprof.c:766
+#: elf/sprof.c:762
 #, c-format
 msgid "`%s' is no correct profile data file for `%s'"
 msgstr "`%s' non è un file con i dati di profilazione corretti per `%s'"
@@ -2762,17 +3167,17 @@ msgstr "`%s' non è un file con i dati di profilazione corretti per `%s'"
 #: locale/programs/ld-monetary.c:369 locale/programs/ld-numeric.c:193
 #, c-format
 msgid "`-1' must be last entry in `%s' field in `%s' category"
-msgstr "`-1' dev'essere l'ultima voce del campo `%s' nella categoria `%s'"
+msgstr "`-1' deve essere l'ultima voce del campo `%s' nella categoria `%s'"
 
-#: locale/programs/ld-collate.c:1666
+#: locale/programs/ld-collate.c:1670
 msgid "`...' must only be used in `...' and `UNDEFINED' entries"
 msgstr "`...' deve essere usata solo nelle voci `...' e `UNDEFINED'"
 
-#: locale/programs/locfile.c:668
+#: locale/programs/locfile.c:674
 msgid "`from' expected after first argument to `collating-element'"
 msgstr "manca `from' dopo il primo argomento a `collating-element'"
 
-#: locale/programs/ld-collate.c:1118
+#: locale/programs/ld-collate.c:1122
 msgid "`from' string in collation element declaration contains unknown character"
 msgstr ""
 "la stringa `from' nella dichiarazione dell'elemento di collazione\n"
@@ -2786,11 +3191,11 @@ msgstr "ai_family non gestita"
 msgid "ai_socktype not supported"
 msgstr "ai_socktype non gestito"
 
-#: nscd/nscd.c:121
+#: nscd/nscd.c:127
 msgid "already running"
 msgstr "già in esecuzione"
 
-#: locale/programs/charmap.c:352 locale/programs/repertoire.c:152
+#: locale/programs/charmap.c:352 locale/programs/repertoire.c:164
 #, c-format
 msgid "argument to <%s> must be a single character"
 msgstr "l'argomento di <%s> deve essere un unico carattere"
@@ -2800,28 +3205,28 @@ msgstr "l'argomento di <%s> deve essere un unico carattere"
 msgid "argument to `%s' must be a single character"
 msgstr "l'argomento di `%s' deve essere un unico carattere"
 
-#: sunrpc/auth_unix.c:321
+#: sunrpc/auth_unix.c:310
 msgid "auth_none.c - Fatal marshalling problem"
 msgstr "auth_none.c - Problema fatale di marshalling"
 
-#: sunrpc/auth_unix.c:116 sunrpc/auth_unix.c:122 sunrpc/auth_unix.c:151
+#: sunrpc/auth_unix.c:105 sunrpc/auth_unix.c:111 sunrpc/auth_unix.c:141
 msgid "authunix_create: out of memory\n"
 msgstr "authunix_create: memoria esaurita\n"
 
 #: locale/programs/charmap.c:297 locale/programs/locfile.c:234
-#: locale/programs/locfile.c:261 locale/programs/repertoire.c:144
+#: locale/programs/locfile.c:261 locale/programs/repertoire.c:156
 msgid "bad argument"
 msgstr "argomenti non validi"
 
-#: inet/rcmd.c:318
+#: inet/rcmd.c:326
 msgid "bad owner"
 msgstr "proprietario non valido"
 
-#: timezone/zic.c:1185
+#: timezone/zic.c:1211
 msgid "blank FROM field on Link line"
 msgstr "campo FROM vuoto in una riga di Link"
 
-#: timezone/zic.c:1189
+#: timezone/zic.c:1215
 msgid "blank TO field on Link line"
 msgstr "campo TO vuoto in una riga di Link"
 
@@ -2857,7 +3262,7 @@ msgstr "cache_set: fallita l'allocazione della vittima"
 msgid "cache_set: victim not found"
 msgstr "cache_set: vittima non trovata"
 
-#: timezone/zic.c:1726
+#: timezone/zic.c:1752
 msgid "can't determine time zone abbreviation to use just after until time"
 msgstr ""
 "impossibile determinare l'abbreviazione del fuso orario\n"
@@ -2868,63 +3273,63 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr "impossibile riassegnare il numero di procedura %d\n"
 
-#: locale/programs/localedef.c:279
+#: locale/programs/localedef.c:276
 #, c-format
 msgid "cannot `stat' locale file `%s'"
 msgstr "impossibile fare `stat' sul file di localizzazione `%s'"
 
-#: elf/sprof.c:935 elf/sprof.c:987
+#: elf/sprof.c:931 elf/sprof.c:983
 msgid "cannot allocate symbol data"
 msgstr "impossibile allocare i dati dei simboli"
 
-#: elf/sprof.c:719 elf/sprof.c:777
+#: elf/sprof.c:715 elf/sprof.c:773
 msgid "cannot create internal descriptor"
 msgstr "impossibile creare il descrittore interno"
 
-#: elf/sprof.c:417
+#: elf/sprof.c:413
 msgid "cannot create internal descriptors"
 msgstr "impossibile creare i descrittori interni"
 
-#: nscd/connections.c:180
+#: nscd/connections.c:183
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "impossibile abilitare il socket ad accettare connessioni: %s"
 
-#: sunrpc/rpc_main.c:342
+#: sunrpc/rpc_main.c:341
 #, c-format
 msgid "cannot find C preprocessor: %s \n"
 msgstr "impossibile trovare il preprocessore C: %s\n"
 
-#: sunrpc/rpc_main.c:350
+#: sunrpc/rpc_main.c:349
 msgid "cannot find any C preprocessor (cpp)\n"
 msgstr "impossibile trovare un preprocessore C\n"
 
-#: nscd/connections.c:205
+#: nscd/connections.c:224
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr ""
 "impossibile gestire una vecchia richiesta di versione %d;\n"
 "la versione attuale è %d"
 
-#: locale/programs/ld-collate.c:1324
+#: locale/programs/ld-collate.c:1328
 #, c-format
 msgid "cannot insert collation element `%.*s'"
 msgstr "impossibile inserire l'elemento di collazione `%.*s'"
 
-#: locale/programs/ld-collate.c:1503 locale/programs/ld-collate.c:1510
+#: locale/programs/ld-collate.c:1507 locale/programs/ld-collate.c:1514
 msgid "cannot insert into result table"
 msgstr "impossibile l'inserimento nella tabella dei risultati"
 
-#: locale/programs/ld-collate.c:1175 locale/programs/ld-collate.c:1218
+#: locale/programs/ld-collate.c:1179 locale/programs/ld-collate.c:1222
 #, c-format
 msgid "cannot insert new collating symbol definition: %s"
 msgstr "impossibile inserire la nuova definizione di simbolo di collazione: %s"
 
-#: elf/sprof.c:674
+#: elf/sprof.c:670
 msgid "cannot load profiling data"
 msgstr "impossibile leggere i dati di profilazione"
 
-#: inet/rcmd.c:314
+#: inet/rcmd.c:322
 msgid "cannot open"
 msgstr "impossibile aprire"
 
@@ -2938,12 +3343,12 @@ msgstr "impossibile aprire `%s'"
 msgid "cannot open database file `%s': %s"
 msgstr "impossibile aprire il file del database `%s': %s"
 
-#: catgets/gencat.c:272 db2/makedb.c:167 iconv/iconv_prog.c:177
+#: catgets/gencat.c:273 db2/makedb.c:167 iconv/iconv_prog.c:177
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr "impossibile aprire il file di input `%s'"
 
-#: locale/programs/localedef.c:198
+#: locale/programs/localedef.c:195
 #, c-format
 msgid "cannot open locale definition file `%s'"
 msgstr "impossibile aprire il file di definizione della localizzazione `%s'"
@@ -2952,22 +3357,22 @@ msgstr "impossibile aprire il file di definizione della localizzazione `%s'"
 msgid "cannot open output file"
 msgstr "impossibile aprire il file di output"
 
-#: catgets/gencat.c:774 catgets/gencat.c:815 db2/makedb.c:181
+#: catgets/gencat.c:780 catgets/gencat.c:821 db2/makedb.c:181
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "impossibile aprire il file di output `%s'"
 
-#: locale/programs/locfile.c:1129
+#: locale/programs/locfile.c:1135
 #, c-format
 msgid "cannot open output file `%s' for category `%s'"
 msgstr "impossibile aprire il file di output `%s' per la categoria `%s'"
 
-#: nscd/connections.c:162
+#: nscd/connections.c:165
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "impossibile aprire il socket `%s'"
 
-#: locale/programs/ld-collate.c:1370
+#: locale/programs/ld-collate.c:1374
 msgid "cannot process order specification"
 msgstr "impossibile elaborare le specifiche di ordine"
 
@@ -2976,7 +3381,7 @@ msgstr "impossibile elaborare le specifiche di ordine"
 msgid "cannot read character map directory `%s'"
 msgstr "impossibile leggere la directory delle mappe di caratteri `%s'"
 
-#: nscd/connections.c:122
+#: nscd/connections.c:125
 msgid "cannot read configuration file; this is fatal"
 msgstr "impossibile leggere il file di configurazione. Questo è fatale"
 
@@ -2994,14 +3399,14 @@ msgstr "impossibile leggere l'header da `%s'"
 msgid "cannot read locale directory `%s'"
 msgstr "impossibile leggere la directory di localizzazione `%s'"
 
-#: locale/programs/localedef.c:303
+#: locale/programs/localedef.c:300
 #, c-format
 msgid "cannot read locale file `%s'"
 msgstr "impossibile leggere il file di localizzazione `%s'"
 
-#: locale/programs/locfile.c:288 locale/programs/locfile.c:306
-#: locale/programs/locfile.c:324 locale/programs/locfile.c:342
-#: locale/programs/locfile.c:360 locale/programs/locfile.c:378
+#: locale/programs/locfile.c:289 locale/programs/locfile.c:308
+#: locale/programs/locfile.c:327 locale/programs/locfile.c:346
+#: locale/programs/locfile.c:365 locale/programs/locfile.c:384
 #, c-format
 msgid "cannot read repertoire map `%s'"
 msgstr "impossibile leggere la repertoire map `%s'"
@@ -3010,17 +3415,17 @@ msgstr "impossibile leggere la repertoire map `%s'"
 msgid "cannot read statistics data"
 msgstr "impossibile leggere i dati statistici"
 
-#: nscd/cache.c:141 nscd/connections.c:148
+#: nscd/cache.c:150 nscd/connections.c:151
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "impossibile fare stat() sul file `%s': %s"
 
-#: locale/programs/localedef.c:328
+#: locale/programs/localedef.c:325
 #, c-format
 msgid "cannot write output files to `%s'"
 msgstr "impossibile scrivere i file di output su `%s'"
 
-#: nscd/connections.c:229 nscd/connections.c:250
+#: nscd/connections.c:260 nscd/connections.c:281
 #, c-format
 msgid "cannot write result: %s"
 msgstr "impossibile scrivere i risultati: %s"
@@ -3034,40 +3439,50 @@ msgstr "impossibile scrivere le statistiche: %s"
 msgid "cannot write to client"
 msgstr "impossibile scrivere sul client"
 
-#: locale/programs/localedef.c:442
+#: locale/programs/localedef.c:439
 msgid "category data requested more than once: should not happen"
 msgstr "dati di categoria richiesti più di una volta: non dovrebbe succedere"
 
-#: locale/programs/ld-ctype.c:269
+#: locale/programs/ld-ctype.c:278
 #, c-format
-msgid "character %s'%s' in class `%s' must be in class `%s'"
-msgstr "il carattere %s'%s' nella classe `%s' dev'essere nella classe `%s'"
+msgid "character '%s' in class `%s' must be in class `%s'"
+msgstr "il carattere '%s' nella classe `%s' deve essere nella classe `%s'"
 
-#: locale/programs/ld-ctype.c:294
+#: locale/programs/ld-ctype.c:303
 #, c-format
-msgid "character %s'%s' in class `%s' must not be in class `%s'"
-msgstr "il carattere %s'%s' nella classe `%s' non dev'essere nella classe `%s'"
+msgid "character '%s' in class `%s' must not be in class `%s'"
+msgstr "il carattere '%s' nella classe `%s' non deve essere nella classe `%s'"
 
-#: locale/programs/ld-ctype.c:320
+#: locale/programs/ld-ctype.c:405
 msgid "character <SP> not defined in character map"
 msgstr "carattere <SP> non definito nella mappa di caratteri"
 
-#: locale/programs/ld-ctype.c:964 locale/programs/ld-ctype.c:1029
-#: locale/programs/ld-ctype.c:1040 locale/programs/ld-ctype.c:1051
-#: locale/programs/ld-ctype.c:1062 locale/programs/ld-ctype.c:1073
-#: locale/programs/ld-ctype.c:1084 locale/programs/ld-ctype.c:1113
-#: locale/programs/ld-ctype.c:1124 locale/programs/ld-ctype.c:1165
-#: locale/programs/ld-ctype.c:1194 locale/programs/ld-ctype.c:1206
+#: locale/programs/ld-ctype.c:355
+#, c-format
+msgid "character L'%s' (index %Zd) in class `%s' must be in class `%s'"
+msgstr "il carattere L'%s' (indice %Zd) nella classe `%s' deve essere nella classe `%s'"
+
+#: locale/programs/ld-ctype.c:380
+#, c-format
+msgid "character L'%s' (index %Zd) in class `%s' must not be in class `%s'"
+msgstr "il carattere L'%s' (indice %Zd) nella classe `%s' non deve essere nella classe `%s'"
+
+#: locale/programs/ld-ctype.c:1107 locale/programs/ld-ctype.c:1183
+#: locale/programs/ld-ctype.c:1196 locale/programs/ld-ctype.c:1209
+#: locale/programs/ld-ctype.c:1222 locale/programs/ld-ctype.c:1235
+#: locale/programs/ld-ctype.c:1248 locale/programs/ld-ctype.c:1279
+#: locale/programs/ld-ctype.c:1292 locale/programs/ld-ctype.c:1343
+#: locale/programs/ld-ctype.c:1374 locale/programs/ld-ctype.c:1386
 #, c-format
 msgid "character `%s' not defined while needed as default value"
 msgstr "carattere `%s' non definito sebbene necessario come valore predefinito"
 
-#: locale/programs/ld-ctype.c:825
+#: locale/programs/ld-ctype.c:967
 #, c-format
 msgid "character class `%s' already defined"
 msgstr "classe di caratteri `%s' già definita"
 
-#: locale/programs/ld-ctype.c:857
+#: locale/programs/ld-ctype.c:999
 #, c-format
 msgid "character map `%s' already defined"
 msgstr "mappa di caratteri `%s' già definita"
@@ -3085,7 +3500,7 @@ msgstr "clnt_raw.c - Errore fatale di serializzazione dell'header"
 msgid "clnttcp_create: out of memory\n"
 msgstr "clnttcp_create: memoria esaurita\n"
 
-#: sunrpc/clnt_udp.c:124 sunrpc/clnt_udp.c:134
+#: sunrpc/clnt_udp.c:125 sunrpc/clnt_udp.c:135
 msgid "clntudp_create: out of memory\n"
 msgstr "clntudp_create: memoria esaurita\n"
 
@@ -3093,22 +3508,22 @@ msgstr "clntudp_create: memoria esaurita\n"
 msgid "clntunix_create: out of memory\n"
 msgstr "clntunix_create: memoria esaurita\n"
 
-#: locale/programs/ld-collate.c:1339
+#: locale/programs/ld-collate.c:1343
 #, c-format
 msgid "collation element `%.*s' appears more than once: ignore line"
 msgstr "l'elemento di collazione `%.*s' appare più di una volta: riga ignorata"
 
-#: locale/programs/ld-collate.c:1357
+#: locale/programs/ld-collate.c:1361
 #, c-format
 msgid "collation symbol `%.*s' appears more than once: ignore line"
 msgstr "il simbolo di collazione `%.*s' appare più di una volta: riga ignorata"
 
-#: locale/programs/locfile.c:652
+#: locale/programs/locfile.c:658
 #, c-format
 msgid "collation symbol expected after `%s'"
 msgstr "simbolo di collazione non trovato dopo `%s'"
 
-#: inet/rcmd.c:136
+#: inet/rcmd.c:143
 #, c-format
 msgid "connect to address %s: "
 msgstr "connessione all'indirizzo %s: "
@@ -3122,7 +3537,7 @@ msgstr "attesa una costante o un identificatore"
 msgid "conversion from `%s' to `%s' not supported"
 msgstr "conversione da `%s' a `%s' non gestita"
 
-#: iconv/iconv_prog.c:326
+#: iconv/iconv_prog.c:328 iconv/iconv_prog.c:353
 msgid "conversion stopped due to problem in writing the output"
 msgstr "conversione fermata a causa di un problema durante la scrittura dell'output"
 
@@ -3135,7 +3550,7 @@ msgstr "impossibile creare un server rpc\n"
 msgid "couldn't register prog %d vers %d\n"
 msgstr "impossibile registrare il programma %d vers %d\n"
 
-#: nss/getent.c:49
+#: nss/getent.c:50
 msgid "database [key ...]"
 msgstr "database [chiave ...]"
 
@@ -3163,11 +3578,11 @@ msgstr ""
 msgid "duplicate character name `%s'"
 msgstr "nome di carattere `%s' ripetuto"
 
-#: locale/programs/ld-collate.c:1150
+#: locale/programs/ld-collate.c:1154
 msgid "duplicate collating element definition"
 msgstr "definizione di eleento di collazione ripetuta"
 
-#: locale/programs/ld-collate.c:1297
+#: locale/programs/ld-collate.c:1301
 #, c-format
 msgid "duplicate definition for character `%.*s'"
 msgstr "definizione ripetuta per il carattere `%.*s'"
@@ -3176,20 +3591,20 @@ msgstr "definizione ripetuta per il carattere `%.*s'"
 msgid "duplicate key"
 msgstr "chiave ripetuta"
 
-#: catgets/gencat.c:388
+#: catgets/gencat.c:389
 msgid "duplicate set definition"
 msgstr "definizione di insieme ripetuta"
 
-#: timezone/zic.c:978
+#: timezone/zic.c:1004
 #, c-format
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr "nome di zona %s duplicato (file \"%s\", riga %d)"
 
-#: catgets/gencat.c:551
+#: catgets/gencat.c:556
 msgid "duplicated message identifier"
 msgstr "identificatore del messaggio doppio"
 
-#: catgets/gencat.c:524
+#: catgets/gencat.c:528
 msgid "duplicated message number"
 msgstr "numero del messaggio doppio"
 
@@ -3197,7 +3612,7 @@ msgstr "numero del messaggio doppio"
 msgid "empty char string"
 msgstr "stringa di caratteri vuota"
 
-#: locale/programs/ld-collate.c:1710
+#: locale/programs/ld-collate.c:1714
 msgid "empty weight name: line ignored"
 msgstr "nome del peso assente: riga ignorata"
 
@@ -3225,9 +3640,14 @@ msgstr "codifica per l'output"
 msgid "encoding of original text"
 msgstr "codifica del testo originale"
 
-#: locale/programs/ld-collate.c:1429
+#: locale/programs/ld-collate.c:1433
 msgid "end point of ellipsis range is bigger then start"
 msgstr "punto terminale dell'intervallo dei puntini maggiore dell'inizio"
+
+#: nscd/connections.c:357 nscd/connections.c:444
+#, c-format
+msgid "error getting callers id: %s"
+msgstr "errore ottenendo l'id dei chiamanti: %s"
 
 #: iconv/iconv_prog.c:193
 #, c-format
@@ -3238,40 +3658,40 @@ msgstr "errore chiudendo l'input `%s'"
 msgid "error while closing output file"
 msgstr "errore chiudendo il file di output"
 
-#: elf/sprof.c:710
+#: elf/sprof.c:706
 msgid "error while closing the profiling data file"
 msgstr "errore chiudendo il file con i dati di profilazione"
 
-#: locale/programs/ld-collate.c:1158
+#: locale/programs/ld-collate.c:1162
 msgid "error while inserting collation element into hash table"
 msgstr "errore di inserimento dell'elemento di collazione nellatabella hash"
 
-#: locale/programs/ld-collate.c:1170
+#: locale/programs/ld-collate.c:1174
 msgid "error while inserting to hash table"
 msgstr "errore di inserimento nella tabella hash"
 
-#: iconv/iconv_prog.c:389 iconv/iconv_prog.c:420
+#: iconv/iconv_prog.c:417 iconv/iconv_prog.c:448
 msgid "error while reading the input"
 msgstr "errore leggendo l'output"
 
-#: locale/programs/locfile.c:595
+#: locale/programs/locfile.c:601
 msgid "expect string argument for `copy'"
 msgstr "manca un argomento stringa per `copy'"
 
-#: timezone/zic.c:868
+#: timezone/zic.c:894
 msgid "expected continuation line not found"
 msgstr "manca la riga di continuazione"
 
-#: elf/sprof.c:408
+#: elf/sprof.c:404
 #, c-format
 msgid "failed to load shared object `%s'"
 msgstr "impossibile caricare l'oggetto condiviso `%s'"
 
-#: elf/sprof.c:604
+#: elf/sprof.c:600
 msgid "failed to load symbol data"
 msgstr "impossibile caricare i dati dei simboli"
 
-#: elf/sprof.c:702
+#: elf/sprof.c:698
 msgid "failed to mmap the profiling data file"
 msgstr "impossibile fare mmap del file con i dati di profilazione"
 
@@ -3279,7 +3699,7 @@ msgstr "impossibile fare mmap del file con i dati di profilazione"
 msgid "failed to start conversion processing"
 msgstr "impossibile iniziare il processo di conversione"
 
-#: locale/programs/locfile.c:1154
+#: locale/programs/locfile.c:1160
 #, c-format
 msgid "failure while writing data for category `%s'"
 msgstr "errore di scrittura dei dati per la categoria `%s'"
@@ -3288,26 +3708,22 @@ msgstr "errore di scrittura dei dati per la categoria `%s'"
 msgid "fcntl: F_SETFD"
 msgstr "fcntl: F_SETFD"
 
-#: locale/programs/ld-monetary.c:163 locale/programs/ld-numeric.c:98
-#, c-format
-msgid "field `%s' in category `%s' not defined"
-msgstr "il campo `%s' nella categoria `%s' non è definito"
-
 #: locale/programs/ld-messages.c:86 locale/programs/ld-messages.c:110
+#: locale/programs/ld-monetary.c:163 locale/programs/ld-numeric.c:98
 #, c-format
 msgid "field `%s' in category `%s' undefined"
 msgstr "il campo `%s' nella categoria `%s' non è definito"
 
-#: sunrpc/rpc_main.c:1148
+#: sunrpc/rpc_main.c:1146
 #, c-format
-msgid "file '%s' already exists and may be overwritten\n"
-msgstr "il file '%s' esiste già e potrebbe essere sovrascritto\n"
+msgid "file `%s' already exists and may be overwritten\n"
+msgstr "il file `%s' esiste già e potrebbe essere sovrascritto\n"
 
-#: locale/programs/locfile.c:677
+#: locale/programs/locfile.c:683
 msgid "from-value of `collating-element' must be a string"
-msgstr "il valore di partenza di `collating-element' dev'essere una stringa"
+msgstr "il valore di partenza di `collating-element' deve essere una stringa"
 
-#: inet/rcmd.c:316
+#: inet/rcmd.c:324
 msgid "fstat failed"
 msgstr "fstat fallito"
 
@@ -3340,11 +3756,11 @@ msgstr ""
 "spazzatura alla fine della data terminale nella stringa %d,\n"
 "nel campo `era' della categoria `%s'"
 
-#: elf/sprof.c:81
+#: elf/sprof.c:77
 msgid "generate call graph"
 msgstr "genera il grafico delle chiamate"
 
-#: elf/sprof.c:80
+#: elf/sprof.c:76
 msgid "generate flat profile with counts and ticks"
 msgstr "genera un profilo piatto con totali e tick"
 
@@ -3352,32 +3768,32 @@ msgstr "genera un profilo piatto con totali e tick"
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (leggi la configurazione dell'interfaccia)"
 
-#: nss/getent.c:53
+#: nss/getent.c:54
 msgid "getent - get entries from administrative database."
 msgstr "getent - legge voci dal database amministrativo."
 
-#: nscd/connections.c:200
+#: nscd/connections.c:219
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: ricevuta una richiesta (Versione = %d)"
 
-#: timezone/zic.c:613
+#: timezone/zic.c:638
 msgid "hard link failed, symbolic link used"
 msgstr "hard link fallito, usato un link simbolico"
 
-#: inet/rcmd.c:322
+#: inet/rcmd.c:330
 msgid "hard linked somewhere"
 msgstr "ha un hard link da qualche parte"
 
-#: timezone/zic.c:1162
+#: timezone/zic.c:1188
 msgid "illegal CORRECTION field on Leap line"
 msgstr "campo CORRECTION illecito in una riga Leap"
 
-#: timezone/zic.c:1166
+#: timezone/zic.c:1192
 msgid "illegal Rolling/Stationary field on Leap line"
 msgstr "campo Rolling/Stationary illecito in una riga Leap"
 
-#: locale/programs/ld-collate.c:1782
+#: locale/programs/ld-collate.c:1786
 msgid "illegal character constant in string"
 msgstr "costante carattere illecita nella stringa"
 
@@ -3385,7 +3801,7 @@ msgstr "costante carattere illecita nella stringa"
 msgid "illegal character in file: "
 msgstr "carattere illecito nel file: "
 
-#: locale/programs/ld-collate.c:1125
+#: locale/programs/ld-collate.c:1129
 msgid "illegal collation element"
 msgstr "elemento di collazione illecito"
 
@@ -3401,7 +3817,7 @@ msgstr "codifica ottenuta illecita"
 msgid "illegal escape sequence at end of string"
 msgstr "sequenza di escape illecita a fine stringa"
 
-#: iconv/iconv_prog.c:342
+#: iconv/iconv_prog.c:370
 #, c-format
 msgid "illegal input sequence at position %ld"
 msgstr "sequenza di escape illecita alla posizione %ld"
@@ -3410,10 +3826,10 @@ msgstr "sequenza di escape illecita alla posizione %ld"
 msgid "illegal names for character range"
 msgstr "nomi illeciti per l'intervallo di caratteri"
 
-#: sunrpc/rpc_main.c:462
+#: sunrpc/rpc_main.c:461
 #, c-format
-msgid "illegal nettype :'%s'\n"
-msgstr "nettype illecito:'%s'\n"
+msgid "illegal nettype :`%s'\n"
+msgstr "nettype illecito:`%s'\n"
 
 #: locale/programs/ld-time.c:187
 #, c-format
@@ -3422,7 +3838,7 @@ msgstr ""
 "numero illecito per lo scostamento nella stringa %d,\n"
 "nel campo `era' della categoria `%s'"
 
-#: catgets/gencat.c:361 catgets/gencat.c:438
+#: catgets/gencat.c:362 catgets/gencat.c:439
 msgid "illegal set number"
 msgstr "numero dell'insieme illecito"
 
@@ -3440,17 +3856,17 @@ msgstr ""
 "data finale illecita nella stringa %d,\n"
 "nel campo `era' della categoria `%s'"
 
-#: locale/programs/ld-ctype.c:831
+#: locale/programs/ld-ctype.c:973
 #, c-format
 msgid "implementation limit: no more than %d character classes allowed"
 msgstr "limite di implementazione: permesse al piu` %d classi di caratteri"
 
-#: locale/programs/ld-ctype.c:863
+#: locale/programs/ld-ctype.c:1005
 #, c-format
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr "limite di implementazione: permesse al piu` %d mappe di caratteri"
 
-#: iconv/iconv_prog.c:346
+#: iconv/iconv_prog.c:374
 msgid "incomplete character or shift sequence at end of buffer"
 msgstr "carattere o sequenza di shift incompleti alla fine del buffer"
 
@@ -3458,89 +3874,89 @@ msgstr "carattere o sequenza di shift incompleti alla fine del buffer"
 msgid "incorrectly formatted file"
 msgstr "file formattato non correttamente"
 
-#: timezone/zic.c:825
+#: timezone/zic.c:851
 msgid "input line of unknown type"
 msgstr "linea di input di tipo sconosciuto"
 
-#: iconv/iconv_prog.c:350
+#: iconv/iconv_prog.c:378
 msgid "internal error (illegal descriptor)"
 msgstr "errore interno (descrittore illecito)"
 
-#: timezone/zic.c:1788
+#: timezone/zic.c:1814
 msgid "internal error - addtype called with bad isdst"
 msgstr "errore interno - addtype chiamata con isdst errato"
 
-#: timezone/zic.c:1796
+#: timezone/zic.c:1822
 msgid "internal error - addtype called with bad ttisgmt"
 msgstr "errore interno - addtype chiamata con ttisgmt errato"
 
-#: timezone/zic.c:1792
+#: timezone/zic.c:1818
 msgid "internal error - addtype called with bad ttisstd"
 msgstr "errore interno - addtype chiamata con ttisstd errato"
 
-#: locale/programs/ld-ctype.c:307
+#: locale/programs/ld-ctype.c:315 locale/programs/ld-ctype.c:392
 #, c-format
 msgid "internal error in %s, line %u"
 msgstr "errore interno in %s, riga %u"
 
-#: timezone/zic.c:1034
+#: timezone/zic.c:1060
 msgid "invalid UTC offset"
 msgstr "scostamento UTC non valido"
 
-#: timezone/zic.c:1037
+#: timezone/zic.c:1063
 msgid "invalid abbreviation format"
 msgstr "formato di abbreviazione non ammesso"
 
-#: timezone/zic.c:1127 timezone/zic.c:1339 timezone/zic.c:1353
+#: timezone/zic.c:1153 timezone/zic.c:1365 timezone/zic.c:1379
 msgid "invalid day of month"
 msgstr "giorno del mese errato"
 
-#: timezone/zic.c:1291
+#: timezone/zic.c:1317
 msgid "invalid ending year"
 msgstr "anno finale errato"
 
-#: timezone/zic.c:1099
+#: timezone/zic.c:1125
 msgid "invalid leaping year"
 msgstr "anno bisestile errato"
 
-#: elf/dl-open.c:159
+#: elf/dl-open.c:223
 msgid "invalid mode for dlopen()"
 msgstr "modo di dlopen() non valido"
 
-#: timezone/zic.c:1114 timezone/zic.c:1217
+#: timezone/zic.c:1140 timezone/zic.c:1243
 msgid "invalid month name"
 msgstr "nome del meso errato"
 
-#: timezone/zic.c:933
+#: timezone/zic.c:959
 msgid "invalid saved time"
 msgstr "orario salvato errato"
 
-#: timezone/zic.c:1266
+#: timezone/zic.c:1292
 msgid "invalid starting year"
 msgstr "anno iniziale errato"
 
-#: timezone/zic.c:1143 timezone/zic.c:1246
+#: timezone/zic.c:1169 timezone/zic.c:1272
 msgid "invalid time of day"
 msgstr "ora del giorno errata"
 
-#: timezone/zic.c:1344
+#: timezone/zic.c:1370
 msgid "invalid weekday name"
 msgstr "giorno della settimana errato"
 
-#: nscd/connections.c:375
+#: nscd/connections.c:460
 #, c-format
 msgid "key length in request too long: %Zd"
 msgstr "lunghezza della chiave troppo lunga nella richiesta: %Zd"
 
-#: locale/programs/ld-collate.c:1422
+#: locale/programs/ld-collate.c:1426
 msgid "line after ellipsis must contain character definition"
 msgstr "la riga dopo i puntini deve contenere una definizione di carattere"
 
-#: locale/programs/ld-collate.c:1401
+#: locale/programs/ld-collate.c:1405
 msgid "line before ellipsis does not contain definition for character constant"
 msgstr "la riga prima dei puntini deve contenere una definizione di carattere"
 
-#: timezone/zic.c:805
+#: timezone/zic.c:831
 msgid "line too long"
 msgstr "riga troppo lunga"
 
@@ -3548,26 +3964,26 @@ msgstr "riga troppo lunga"
 msgid "list all known coded character sets"
 msgstr "elenca tutti i set di caratteri codificati noti"
 
-#: locale/programs/localedef.c:273
+#: locale/programs/localedef.c:270
 #, c-format
 msgid "locale file `%s', used in `copy' statement, not found"
 msgstr "file di localizzazione `%s', usato nell'istruzione `copy', non trovato"
 
-#: inet/rcmd.c:307
+#: inet/rcmd.c:315
 msgid "lstat failed"
 msgstr "lstat fallito"
 
-#: catgets/gencat.c:619
+#: catgets/gencat.c:625
 msgid "malformed line ignored"
 msgstr "riga malformata ignorata"
 
-#: elf/sprof.c:554
+#: elf/sprof.c:550
 msgid "mapping of section header string table failed"
-msgstr ""
+msgstr "fallita la mappatura della tabella delle stringhe degli header di sezione"
 
-#: elf/sprof.c:544
+#: elf/sprof.c:540
 msgid "mapping of section headers failed"
-msgstr ""
+msgstr "fallita la mappatura degli header di sezione"
 
 #: malloc/mcheck.c:202
 msgid "memory clobbered before allocated block\n"
@@ -3578,23 +3994,19 @@ msgid "memory clobbered past end of allocated block\n"
 msgstr "memoria sovrascritta dopo la fine del blocco allocato\n"
 
 #: locale/programs/ld-collate.c:170 locale/programs/ld-collate.c:176
-#: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1449
-#: locale/programs/ld-collate.c:1478 locale/programs/locfile.c:1082
+#: locale/programs/ld-collate.c:180 locale/programs/ld-collate.c:1453
+#: locale/programs/ld-collate.c:1482 locale/programs/locfile.c:1088
 #: locale/programs/xmalloc.c:70 login/programs/database.c:62
 #: login/programs/database.c:79 login/programs/database.c:95
-#: posix/getconf.c:682
+#: malloc/obstack.c:471 posix/getconf.c:682
 msgid "memory exhausted"
 msgstr "memoria esaurita"
-
-#: malloc/obstack.c:471
-msgid "memory exhausted\n"
-msgstr "memoria esaurita\n"
 
 #: malloc/mcheck.c:199
 msgid "memory is consistent, library is buggy\n"
 msgstr "la memoria è coerente, la libreria è bacata\n"
 
-#: locale/programs/ld-time.c:370
+#: locale/programs/ld-time.c:373
 #, c-format
 msgid "missing era format in string %d in `era' field in category `%s'"
 msgstr ""
@@ -3608,7 +4020,7 @@ msgstr ""
 "manca il nome dell'era nella stringa %d,\n"
 "nel campo `era' della categoria `%s'"
 
-#: timezone/zic.c:928
+#: timezone/zic.c:954
 msgid "nameless rule"
 msgstr "regola anonima"
 
@@ -3616,35 +4028,35 @@ msgstr "regola anonima"
 msgid "neither original nor target encoding specified"
 msgstr "non sono state specificate nè la codifica originale nè quella di destinazione"
 
-#: nis/nss_nisplus/nisplus-publickey.c:262
-#: nis/nss_nisplus/nisplus-publickey.c:268
-#: nis/nss_nisplus/nisplus-publickey.c:327
-#: nis/nss_nisplus/nisplus-publickey.c:336
+#: nis/nss_nisplus/nisplus-publickey.c:280
+#: nis/nss_nisplus/nisplus-publickey.c:286
+#: nis/nss_nisplus/nisplus-publickey.c:345
+#: nis/nss_nisplus/nisplus-publickey.c:354
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
 msgstr "netname2user: (nis+ lookup): %s\n"
 
-#: nis/nss_nisplus/nisplus-publickey.c:281
+#: nis/nss_nisplus/nisplus-publickey.c:299
 #, c-format
 msgid "netname2user: DES entry for %s in directory %s not unique"
 msgstr "netname2user: la voce DES di %s nella directory %s non è unica"
 
-#: nis/nss_nisplus/nisplus-publickey.c:349
+#: nis/nss_nisplus/nisplus-publickey.c:367
 #, c-format
 msgid "netname2user: LOCAL entry for %s in directory %s not unique"
 msgstr "netname2user: la voce LOCAL di %s nella directory %s non è unica"
 
-#: nis/nss_nisplus/nisplus-publickey.c:194
+#: nis/nss_nisplus/nisplus-publickey.c:206
 #, c-format
-msgid "netname2user: missing group id list in '%s'."
-msgstr "netname2user: manca la lista dei group id in '%s'."
+msgid "netname2user: missing group id list in `%s'."
+msgstr "netname2user: manca la lista dei group id in `%s'."
 
-#: nis/nss_nisplus/nisplus-publickey.c:299
+#: nis/nss_nisplus/nisplus-publickey.c:317
 #, c-format
-msgid "netname2user: principal name '%s' too long"
-msgstr "netname2user: nome principale '%s' troppo lungo"
+msgid "netname2user: principal name `%s' too long"
+msgstr "netname2user: nome principale `%s' troppo lungo"
 
-#: nis/nss_nisplus/nisplus-publickey.c:356
+#: nis/nss_nisplus/nisplus-publickey.c:374
 msgid "netname2user: should not have uid 0"
 msgstr "netname2user: non deve avere uid 0"
 
@@ -3653,7 +4065,7 @@ msgstr "netname2user: non deve avere uid 0"
 msgid "never registered prog %d\n"
 msgstr "il programma %d non è mai stato registrato\n"
 
-#: locale/programs/repertoire.c:238
+#: locale/programs/repertoire.c:250
 msgid "no <Uxxxx> or <Uxxxxxxxx> value given"
 msgstr "non è stato dato un valore tipo <Uxxxx> o <Uxxxxxxxx>"
 
@@ -3664,7 +4076,7 @@ msgstr ""
 "nessuna espressione regolare corretta per il campo `%s'\n"
 "della categoria `%s': %s"
 
-#: timezone/zic.c:2115
+#: timezone/zic.c:2143
 msgid "no day in month matches rule"
 msgstr "nessun giorno del mese corrisponde alla regola"
 
@@ -3672,34 +4084,34 @@ msgstr "nessun giorno del mese corrisponde alla regola"
 msgid "no definition of `UNDEFINED'"
 msgstr "nessuna definizione di `UNDEFINED'"
 
-#: elf/sprof.c:276
+#: elf/sprof.c:272
 #, c-format
 msgid "no filename for profiling data given and shared object `%s' has no soname"
 msgstr ""
 "non è stato indicato il nome del file per i dati di profilazione e l'oggetto\n"
 "condiviso `%s' non ha un soname"
 
-#: locale/programs/locfile.c:609
+#: locale/programs/locfile.c:615
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr "nessun'altra parola chiave va specificata quando si usa `copy'"
 
-#: locale/programs/localedef.c:334
+#: locale/programs/localedef.c:331
 msgid "no output file produced because warning were issued"
 msgstr "nessun file di uscita prodotto a causa degli avvertimenti"
 
-#: locale/programs/locfile.c:283 locale/programs/locfile.c:301
-#: locale/programs/locfile.c:319 locale/programs/locfile.c:337
-#: locale/programs/locfile.c:355 locale/programs/locfile.c:373
+#: locale/programs/locfile.c:283 locale/programs/locfile.c:302
+#: locale/programs/locfile.c:321 locale/programs/locfile.c:340
+#: locale/programs/locfile.c:359 locale/programs/locfile.c:378
 msgid "no repertoire map specified: cannot proceed"
 msgstr "non è stata indicata la repertoire map: impossibile procedere"
 
-#: locale/programs/charmap.c:400 locale/programs/charmap.c:550
-#: locale/programs/charmap.c:629 locale/programs/repertoire.c:199
+#: locale/programs/charmap.c:400 locale/programs/charmap.c:549
+#: locale/programs/charmap.c:628 locale/programs/repertoire.c:211
 msgid "no symbolic name given"
 msgstr "nessun nome simbolico fornito"
 
-#: locale/programs/charmap.c:465 locale/programs/charmap.c:596
-#: locale/programs/charmap.c:662 locale/programs/repertoire.c:261
+#: locale/programs/charmap.c:464 locale/programs/charmap.c:595
+#: locale/programs/charmap.c:661 locale/programs/repertoire.c:273
 msgid "no symbolic name given for end of range"
 msgstr "nessun nome simbolico fornito per la fine dell'intervallo"
 
@@ -3708,7 +4120,7 @@ msgstr "nessun nome simbolico fornito per la fine dell'intervallo"
 msgid "no weight defined for symbol `%s'"
 msgstr "nessun peso definito per il simbolo `%s'"
 
-#: inet/rcmd.c:309
+#: inet/rcmd.c:317
 msgid "not regular file"
 msgstr "non è un file regolare"
 
@@ -3727,7 +4139,7 @@ msgstr ""
 msgid "nscd not running!\n"
 msgstr "nscd non è in esecuzione!\n"
 
-#: locale/programs/charmap.c:514
+#: locale/programs/charmap.c:513
 msgid "only WIDTH definitions are allowed to follow the CHARMAP definition"
 msgstr "una definizione CHARMAP può essere seguita solo da definizioni WIDTH"
 
@@ -3743,7 +4155,7 @@ msgstr "file di output"
 msgid "pmap_getmaps rpc problem"
 msgstr "problema rpc di pmap_getmaps"
 
-#: inet/rcmd.c:179
+#: inet/rcmd.c:186
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: problema di protocollo impostando il circuito\n"
 
@@ -3751,9 +4163,9 @@ msgstr "poll: problema di protocollo impostando il circuito\n"
 msgid "preprocessor error"
 msgstr "errore del preprocessore"
 
-#: elf/sprof.c:78
+#: elf/sprof.c:74
 msgid "print list of count paths and their number of use"
-msgstr ""
+msgstr "stampa la lista dei count path e il loro numero d'uso"
 
 #: iconv/iconv_prog.c:61
 msgid "print progress information"
@@ -3764,7 +4176,7 @@ msgstr "stampa informazioni sui progressi"
 msgid "problems while reading `%s'"
 msgstr "problemi leggendo `%s'"
 
-#: elf/sprof.c:691
+#: elf/sprof.c:687
 #, c-format
 msgid "profiling data file `%s' does not match shared object `%s'"
 msgstr ""
@@ -3788,16 +4200,16 @@ msgstr "la versione %2$lu del programma %1$lu non è disponibile\n"
 msgid "program %lu version %lu ready and waiting\n"
 msgstr "la versione %2$lu del programma %1$lu è pronta e in attesa\n"
 
-#: inet/rcmd.c:176
+#: inet/rcmd.c:183
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (impostazione di stderr): %m\n"
 
-#: inet/rcmd.c:110
+#: inet/rcmd.c:117
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: tutte le porte sono in uso\n"
 
-#: inet/rcmd.c:166
+#: inet/rcmd.c:173
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write (impostazione di stderr): %m\n"
@@ -3806,20 +4218,20 @@ msgstr "rcmd: write (impostazione di stderr): %m\n"
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: memoria esaurita\n"
 
-#: timezone/zic.c:1849
+#: timezone/zic.c:1875
 msgid "repeated leap second moment"
 msgstr "momento del secondo intercalare ripetuto"
 
-#: locale/programs/repertoire.c:95
+#: locale/programs/repertoire.c:107
 #, c-format
 msgid "repertoire map file `%s' not found"
 msgstr "repertoire map file `%s' non trovato"
 
-#: sunrpc/rpc_main.c:1117
+#: sunrpc/rpc_main.c:1115
 msgid "rpcgen: arglist coding error\n"
 msgstr "rpcgen: errore di codifica della arglist\n"
 
-#: sunrpc/rpc_main.c:1105
+#: sunrpc/rpc_main.c:1103
 msgid "rpcgen: too many defines\n"
 msgstr "rpcgen: troppi define\n"
 
@@ -3849,38 +4261,38 @@ msgstr "rpcinfo: broadcast fallito: %s\n"
 msgid "rpcinfo: can't contact portmapper"
 msgstr "rpcinfo: impossibile contattare il portmapper"
 
-#: timezone/zic.c:718 timezone/zic.c:720
+#: timezone/zic.c:744 timezone/zic.c:746
 msgid "same rule name in multiple files"
 msgstr "stesso nome di regola in più file"
 
-#: nscd/connections.c:387
+#: nscd/connections.c:472
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "lettura troppo corta leggendo la chiave di richiesta: %s"
 
-#: nscd/connections.c:364
+#: nscd/connections.c:430
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "lettura troppo corta leggendo la richiesta: %s"
 
-#: nscd/grpcache.c:191 nscd/hstcache.c:278 nscd/pwdcache.c:188
+#: nscd/grpcache.c:191 nscd/hstcache.c:270 nscd/pwdcache.c:189
 #, c-format
 msgid "short write in %s: %s"
 msgstr "scrittura troppo corta in %s: %s"
 
-#: inet/rcmd.c:197
+#: inet/rcmd.c:204
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: problema di protocollo impostando il circuito\n"
 
-#: locale/programs/locfile.c:730
+#: locale/programs/locfile.c:736
 msgid "sorting order `forward' and `backward' are mutually exclusive"
 msgstr "gli ordinamenti `forward' e `backward' sono mutuamente esclusivi"
 
-#: locale/programs/ld-collate.c:1582 locale/programs/ld-collate.c:1628
+#: locale/programs/ld-collate.c:1586 locale/programs/ld-collate.c:1632
 msgid "specification of sorting weight for collation symbol does not make sense"
 msgstr "non ha senso specificare pesi di ordinamento per il simbolo di collazione"
 
-#: timezone/zic.c:789
+#: timezone/zic.c:815
 msgid "standard input"
 msgstr "standard input"
 
@@ -3895,15 +4307,15 @@ msgstr ""
 "data iniziale illecita nella stringa %d,\n"
 "nel campo `era' della categoria `%s'"
 
-#: timezone/zic.c:1300
+#: timezone/zic.c:1326
 msgid "starting year greater than ending year"
 msgstr "anno iniziale maggiore dell'anno finale"
 
-#: timezone/zic.c:1272 timezone/zic.c:1297
+#: timezone/zic.c:1298 timezone/zic.c:1323
 msgid "starting year too high to be represented"
 msgstr "anno iniziale troppo grande per essere rappresentato"
 
-#: timezone/zic.c:1270 timezone/zic.c:1295
+#: timezone/zic.c:1296 timezone/zic.c:1321
 msgid "starting year too low to be represented"
 msgstr "anno iniziale troppo piccolo per essere rappresentato"
 
@@ -3962,35 +4374,28 @@ msgstr "svcudp_create: problema di creazione del socket"
 msgid "svcunix_create: out of memory\n"
 msgstr "svcunix_create: memoria esaurita\n"
 
-#: locale/programs/ld-collate.c:1201
+#: locale/programs/ld-collate.c:1077 locale/programs/ld-collate.c:1205
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates element definition"
 msgstr ""
 "il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
 "replica la definizione dell'elemento"
 
-#: locale/programs/ld-collate.c:1073
-#, c-format
-msgid "symbol for multicharacter collating element `%.*s' duplicates other element definition"
-msgstr ""
-"il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
-"replica la definizione di un altro elemento"
-
-#: locale/programs/ld-collate.c:1210
+#: locale/programs/ld-collate.c:1214
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates other symbol definition"
 msgstr ""
 "il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
 "replica la definizione di un altro simbolo"
 
-#: locale/programs/ld-collate.c:1082
+#: locale/programs/ld-collate.c:1086
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates symbol definition"
 msgstr ""
 "il simbolo per l'elemento di collazione multicarattere `%.*s'\n"
 "replica la definizione del simbolo"
 
-#: locale/programs/ld-collate.c:1064 locale/programs/ld-collate.c:1192
+#: locale/programs/ld-collate.c:1068 locale/programs/ld-collate.c:1196
 #, c-format
 msgid "symbol for multicharacter collating element `%.*s' duplicates symbolic name in charset"
 msgstr ""
@@ -3998,78 +4403,78 @@ msgstr ""
 "replica il nome simbolico"
 
 #: locale/programs/charmap.c:399 locale/programs/charmap.c:433
-#: locale/programs/charmap.c:463 locale/programs/charmap.c:549
-#: locale/programs/charmap.c:595 locale/programs/charmap.c:628
-#: locale/programs/charmap.c:660
+#: locale/programs/charmap.c:462 locale/programs/charmap.c:548
+#: locale/programs/charmap.c:594 locale/programs/charmap.c:627
+#: locale/programs/charmap.c:659
 #, c-format
 msgid "syntax error in %s definition: %s"
 msgstr "errore di sintassi nella definizione di %s: %s"
 
-#: locale/programs/locfile.c:750
+#: locale/programs/locfile.c:756
 msgid "syntax error in `order_start' directive"
 msgstr "errore di sintassi nella direttiva `order_start'"
 
-#: locale/programs/locfile.c:492
+#: locale/programs/locfile.c:498
 msgid "syntax error in character class definition"
 msgstr "errore di sintassi nella definizione della classe del carattere"
 
-#: locale/programs/locfile.c:550
+#: locale/programs/locfile.c:556
 msgid "syntax error in character conversion definition"
 msgstr "errore di sintassi nella definizione della conversione del carattere"
 
-#: locale/programs/locfile.c:792
+#: locale/programs/locfile.c:798
 msgid "syntax error in collating order definition"
 msgstr "errore di sintassi nella definizione dell'ordine di collazione"
 
-#: locale/programs/locfile.c:642
+#: locale/programs/locfile.c:648
 msgid "syntax error in collation definition"
 msgstr "errore di sintassi nella definizione della collazione"
 
-#: locale/programs/locfile.c:465
+#: locale/programs/locfile.c:471
 msgid "syntax error in definition of LC_CTYPE category"
 msgstr "errore di sintassi nella categoria di LC_TYPE"
 
-#: locale/programs/locfile.c:408
+#: locale/programs/locfile.c:414
 msgid "syntax error in definition of new character class"
 msgstr "errore di sintassi nella definizione di una nuova classe di caratteri"
 
-#: locale/programs/locfile.c:418
+#: locale/programs/locfile.c:424
 msgid "syntax error in definition of new character map"
 msgstr "errore di sintassi nella definizione di una nuova mappa di caratteri"
 
-#: locale/programs/locfile.c:1003
+#: locale/programs/locfile.c:1009
 msgid "syntax error in message locale definition"
 msgstr "errore di sintassi nella definizione dalla localizzazione del messaggio"
 
-#: locale/programs/locfile.c:914
+#: locale/programs/locfile.c:920
 msgid "syntax error in monetary locale definition"
 msgstr "errore di sintassi nella definizione dalla localizzazione monetaria"
 
-#: locale/programs/locfile.c:941
+#: locale/programs/locfile.c:947
 msgid "syntax error in numeric locale definition"
 msgstr "errore di sintassi nella definizione dalla localizzazione numerica"
 
-#: locale/programs/locfile.c:852
+#: locale/programs/locfile.c:858
 msgid "syntax error in order specification"
 msgstr "errore di sintassi nella specifica di ordinamento"
 
 #: locale/programs/charmap.c:280 locale/programs/charmap.c:296
-#: locale/programs/repertoire.c:143
+#: locale/programs/repertoire.c:155
 #, c-format
 msgid "syntax error in prolog: %s"
 msgstr "errore di sintassi nel prologo: %s"
 
-#: locale/programs/repertoire.c:198 locale/programs/repertoire.c:237
-#: locale/programs/repertoire.c:260
+#: locale/programs/repertoire.c:210 locale/programs/repertoire.c:249
+#: locale/programs/repertoire.c:272
 #, c-format
 msgid "syntax error in repertoire map definition: %s"
 msgstr "errore di sintassi nella definizione della repertoire map: %s"
 
-#: locale/programs/locfile.c:979
+#: locale/programs/locfile.c:985
 msgid "syntax error in time locale definition"
 msgstr "errore di sintassi nella definizione della localizzazione del tempo"
 
-#: locale/programs/locfile.c:385
+#: locale/programs/locfile.c:391
 msgid "syntax error: not inside a locale definition section"
 msgstr "errore di sintassi: fuori da una sezione di definizione di localizzazione"
 
@@ -4077,15 +4482,15 @@ msgstr "errore di sintassi: fuori da una sezione di definizione di localizzazion
 msgid "target encoding not specified using `-t'"
 msgstr "non è stata specificata con `-t' la codifica di destinazione"
 
-#: catgets/gencat.c:390 catgets/gencat.c:526 catgets/gencat.c:553
+#: catgets/gencat.c:391 catgets/gencat.c:530 catgets/gencat.c:559
 msgid "this is the first definition"
 msgstr "questa è la prima definizione"
 
-#: timezone/zic.c:1132
+#: timezone/zic.c:1158
 msgid "time before zero"
 msgstr "tempo precedente a zero"
 
-#: timezone/zic.c:1140 timezone/zic.c:2015 timezone/zic.c:2034
+#: timezone/zic.c:1166 timezone/zic.c:2043 timezone/zic.c:2062
 msgid "time overflow"
 msgstr "overflow del tempo"
 
@@ -4101,23 +4506,23 @@ msgstr "troppi byte nella codifica di carattere"
 msgid "too many character classes defined"
 msgstr "definite troppe classi di carattere"
 
-#: timezone/zic.c:1843
+#: timezone/zic.c:1869
 msgid "too many leap seconds"
 msgstr "troppi secondi intercalari"
 
-#: timezone/zic.c:1815
+#: timezone/zic.c:1841
 msgid "too many local time types"
 msgstr "troppi tipi di tempi locali"
 
-#: timezone/zic.c:1769
+#: timezone/zic.c:1795
 msgid "too many transitions?!"
 msgstr "troppe transizioni?!"
 
-#: locale/programs/ld-collate.c:1637
+#: locale/programs/ld-collate.c:1641
 msgid "too many weights"
 msgstr "troppi pesi"
 
-#: timezone/zic.c:2138
+#: timezone/zic.c:2166
 msgid "too many, or too long, time zone abbreviations"
 msgstr "troppe o troppo lunghe abbreviazioni di fuso orario"
 
@@ -4130,15 +4535,15 @@ msgstr "spazzatura alla fine della riga"
 msgid "trouble replying to prog %d\n"
 msgstr "problema rispondendo al programma %d\n"
 
-#: locale/programs/ld-collate.c:1393
+#: locale/programs/ld-collate.c:1397
 msgid "two lines in a row containing `...' are not allowed"
 msgstr "non sono permesse due righe di seguito contenenti `...'"
 
-#: timezone/zic.c:1307
+#: timezone/zic.c:1333
 msgid "typed single year"
 msgstr "digitato un solo anno"
 
-#: iconv/iconv_prog.c:406
+#: iconv/iconv_prog.c:434
 msgid "unable to allocate buffer for input"
 msgstr "impossibile allocare il buffer per l'input"
 
@@ -4150,48 +4555,48 @@ msgstr "impossibile liberare gli argomenti"
 msgid "undefined"
 msgstr "non definito"
 
-#: locale/programs/charmap.c:701 locale/programs/charmap.c:712
+#: locale/programs/charmap.c:700 locale/programs/charmap.c:711
 #, c-format
 msgid "unknown character `%s'"
 msgstr "carattere sconosciuto `%s'"
 
 #: locale/programs/ld-messages.c:202 locale/programs/ld-messages.c:213
 #: locale/programs/ld-messages.c:224 locale/programs/ld-messages.c:235
-#: locale/programs/ld-time.c:718
+#: locale/programs/ld-time.c:700
 #, c-format
 msgid "unknown character in field `%s' of category `%s'"
 msgstr "carattere sconosciuto nel campo `%s' della categoria `%s'"
 
-#: locale/programs/locfile.c:715
+#: locale/programs/locfile.c:721
 msgid "unknown collation directive"
 msgstr "direttiva di collazione sconosciuta"
 
-#: catgets/gencat.c:487
+#: catgets/gencat.c:488
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr "direttiva `%s' sconosciuta: riga ignorata"
 
-#: iconv/iconv_prog.c:353
+#: iconv/iconv_prog.c:381
 #, c-format
 msgid "unknown iconv() error %d"
 msgstr "errore di iconv() sconosciuto %d"
 
-#: catgets/gencat.c:466
+#: catgets/gencat.c:467
 #, c-format
 msgid "unknown set `%s'"
 msgstr "insieme `%s' sconosciuto"
 
-#: locale/programs/ld-collate.c:1377 locale/programs/ld-collate.c:1572
-#: locale/programs/ld-collate.c:1747
+#: locale/programs/ld-collate.c:1381 locale/programs/ld-collate.c:1576
+#: locale/programs/ld-collate.c:1751
 #, c-format
 msgid "unknown symbol `%.*s': line ignored"
 msgstr "simbolo `%.*s' sconosciuto: riga ignorata"
 
-#: timezone/zic.c:761
+#: timezone/zic.c:787
 msgid "unruly zone"
 msgstr "zona senza regole"
 
-#: catgets/gencat.c:971
+#: catgets/gencat.c:977
 msgid "unterminated message"
 msgstr "messaggio non terminato"
 
@@ -4207,7 +4612,7 @@ msgstr "costante stringa non terminata"
 msgid "unterminated symbolic name"
 msgstr "nome simbolico non terminato"
 
-#: locale/programs/ld-collate.c:1699
+#: locale/programs/ld-collate.c:1703
 msgid "unterminated weight name"
 msgstr "nome di peso non terminato"
 
@@ -4215,16 +4620,16 @@ msgstr "nome di peso non terminato"
 msgid "upper limit in range is not smaller then lower limit"
 msgstr "limite superiore dell'intervallo non minore del limite inferiore"
 
-#: sunrpc/rpc_main.c:1415
+#: sunrpc/rpc_main.c:1413
 #, c-format
-msgid "usage:  %s infile\n"
-msgstr "uso:  %s infile\n"
+msgid "usage: %s infile\n"
+msgstr "uso: %s infile\n"
 
-#: timezone/zic.c:2081
+#: timezone/zic.c:2109
 msgid "use of 2/29 in non leap-year"
 msgstr "uso del 29/2 in anno non bisestile"
 
-#: locale/programs/charmap.c:522 locale/programs/charmap.c:576
+#: locale/programs/charmap.c:521 locale/programs/charmap.c:575
 #, c-format
 msgid "value for %s must be an integer"
 msgstr "il valore di %s deve essere intero"
@@ -4232,18 +4637,18 @@ msgstr "il valore di %s deve essere intero"
 #: locale/programs/charmap.c:318
 #, c-format
 msgid "value for <%s> must lie between 1 and 4"
-msgstr "il valore di <%s> dev'essere compreso fra 1 e 4"
+msgstr "il valore di <%s> deve essere compreso fra 1 e 4"
 
 #: locale/programs/ld-monetary.c:157 locale/programs/ld-numeric.c:92
 #, c-format
 msgid "value for field `%s' in category `%s' must not be the empty string"
 msgstr ""
 "il valore per il campo `%s' della categoria `%s'\n"
-"non dev'essere la stringa vuota"
+"non deve essere la stringa vuota"
 
 #: locale/programs/charmap.c:330
 msgid "value of <mb_cur_max> must be greater than the value of <mb_cur_min>"
-msgstr "il valore di <mb_cur_max> dev'essere maggiore del valore di <mb_cur_min>"
+msgstr "il valore di <mb_cur_max> deve essere maggiore del valore di <mb_cur_min>"
 
 #: locale/programs/ld-monetary.c:147
 msgid "value of field `int_curr_symbol' in category `LC_MONETARY' does not correspond to a valid name in ISO 4217"
@@ -4264,24 +4669,28 @@ msgstr ""
 "i valori dei campi `%s' della categoria `%s' devono essere\n"
 "inferiori a 127"
 
-#: nscd/connections.c:355
+#: timezone/zic.c:435
+msgid "warning: "
+msgstr "attenzione: "
+
+#: nscd/connections.c:421
 #, c-format
 msgid "while accepting connection: %s"
 msgstr "accettando la connessione: %s"
 
-#: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:142
+#: nscd/grpcache.c:149 nscd/hstcache.c:168 nscd/pwdcache.c:143
 msgid "while allocating cache entry"
 msgstr "allocando la voce di cache"
 
-#: nscd/cache.c:85
+#: nscd/cache.c:88
 msgid "while allocating hash table entry"
 msgstr "allocando voce della tabella hash"
 
-#: nscd/grpcache.c:99 nscd/hstcache.c:109 nscd/pwdcache.c:105
+#: nscd/grpcache.c:99 nscd/hstcache.c:111 nscd/pwdcache.c:106
 msgid "while allocating key copy"
 msgstr "allocando la copia della chiave"
 
-#: catgets/gencat.c:1001
+#: catgets/gencat.c:1007
 msgid "while opening old catalog file"
 msgstr "aprendo il file del vecchio catalogo"
 
@@ -4293,7 +4702,7 @@ msgstr "preparando l'output"
 msgid "while reading database"
 msgstr "leggendo il database"
 
-#: elf/sprof.c:683
+#: elf/sprof.c:679
 msgid "while stat'ing profiling data file"
 msgstr "facendo stat del database di profilazione"
 
@@ -4305,31 +4714,31 @@ msgstr "scrivendo il file del database"
 msgid "write incomplete"
 msgstr "write incompleta"
 
-#: inet/rcmd.c:320
+#: inet/rcmd.c:328
 msgid "writeable by other than owner"
 msgstr "scrivibile da altri oltre il proprietario"
 
-#: db2/makedb.c:124 nscd/nscd.c:114 nss/getent.c:392
+#: db2/makedb.c:124 nscd/nscd.c:120 nscd/nscd_nischeck.c:64 nss/getent.c:399
 msgid "wrong number of arguments"
 msgstr "numero di argomenti sbagliato"
 
-#: timezone/zic.c:1090
+#: timezone/zic.c:1116
 msgid "wrong number of fields on Leap line"
 msgstr "numero di campi errato su una riga Leap"
 
-#: timezone/zic.c:1181
+#: timezone/zic.c:1207
 msgid "wrong number of fields on Link line"
 msgstr "numero di campi errato su una riga Link"
 
-#: timezone/zic.c:924
+#: timezone/zic.c:950
 msgid "wrong number of fields on Rule line"
 msgstr "numero di campi errato su una riga Rule"
 
-#: timezone/zic.c:994
+#: timezone/zic.c:1020
 msgid "wrong number of fields on Zone continuation line"
 msgstr "numero di campi errato su una riga Zone di continuazione"
 
-#: timezone/zic.c:952
+#: timezone/zic.c:978
 msgid "wrong number of fields on Zone line"
 msgstr "numero di campi errato su una riga Zone"
 
@@ -4337,14 +4746,14 @@ msgstr "numero di campi errato su una riga Zone"
 msgid "xdr_reference: out of memory\n"
 msgstr "xdr_reference: memoria esaurita\n"
 
-#: sunrpc/xdr_rec.c:151 sunrpc/xdr_rec.c:166
+#: sunrpc/xdr_rec.c:150 sunrpc/xdr_rec.c:165
 msgid "xdrrec_create: out of memory\n"
 msgstr "xdrrec_create: memoria esaurita\n"
 
-#: nis/ypclnt.c:884
+#: nis/ypclnt.c:894
 msgid "yp_update: cannot convert host to netname\n"
 msgstr "yp_update: impossibile convertire l'host in netname\n"
 
-#: nis/ypclnt.c:896
+#: nis/ypclnt.c:906
 msgid "yp_update: cannot get server address\n"
 msgstr "yp_update: impossibile ottenere l'indirizzo del server\n"
