@@ -1,3 +1,7 @@
+2003-01-12  Andreas Jaeger  <aj@suse.de>
+
+	* math/bits/mathcalls.h: Round is a const function.
+
 2003-01-11  Jim Meyering  <jim@meyering.net>
 
 	* io/ftw.c [HAVE_CONFIG_H]: Include <config.h>.
