@@ -4,6 +4,7 @@
 	(BODY from direction): Map \x5c to U20a9.
 	* iconvdata/testdata/EUC-KR..UTF8: Adjust to this change.
 	* iconvdata/EUC-KR.irreversible: New file.
+	* iconvdata/Makefile (distribute): Add EUC-KR.irreversible.
 
 	* argp/argp-parse.c (argp_default_argp): Set libc as message domain.
 	(argp_version_argp): Likewise.
