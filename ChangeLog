@@ -1,3 +1,8 @@
+2002-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/ia64/Makefile: Remove extra endif.
+	* sysdeps/ia64/ia64libgcc.S (__divsf3): Fix typo in symbol version.
+
 2002-05-10  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/powerpc/fpu/w_sqrt.c: Add sqrtl alias.
