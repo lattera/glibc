@@ -1,3 +1,14 @@
+2000-04-27  Bruno Haible  <clisp.cons.org>
+
+	* intl/ngettext.c [!_LIBC]: Fix definition of NGETTEXT.
+
+	* intl/loadinfo.h (internal_function): Define if not already defined.
+
+2000-04-27  Andreas Jaeger  <aj@suse.de>
+
+	* intl/libintl.h: Fix typo, reported by Bruno Haible
+	<clisp.cons.org>.
+
 2000-04-25  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-profile.c (_dl_mcount): Try to be thread-safe while not
