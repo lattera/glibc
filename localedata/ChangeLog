@@ -1,3 +1,14 @@
+2002-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/fa_IR: Fixing the Alef Hamza vs Waw Hamza ordering bug.
+	Adding presentation forms, Alef Wasla, and Rial Sign.
+	Handling frequent canonically equivalent sequences like each other.
+	Patch by Roozbeh Pournader <roozbeh@sharif.edu>.
+
+2002-07-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* locales/es_EC: Fix typo: Equador -> Ecuador.
+
 2002-07-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/th_TH: Change tel_dom_fmt.

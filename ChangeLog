@@ -1,5 +1,8 @@
 2002-08-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-639.def: Add entries for Venda and Nothern Sotho.
+	Reported by Dwayne Bailey <dwayne@obsidian.co.za>.
+
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Adapt
 	previous patch.
 
