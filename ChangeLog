@@ -1,5 +1,11 @@
 2003-06-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/ifaddrs.c (netlink_open): Call getsockname
+	to get the actual PID value used in the records passed up.
+	(getifaddrs): Don't initialize nh.pid here.
+
+2003-06-02  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ifaddrs.c (netlink_receive): Minor
 	optimization.
 

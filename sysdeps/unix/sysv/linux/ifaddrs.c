@@ -233,9 +233,17 @@ netlink_open (struct netlink_handle *h)
   nladdr.nl_family = AF_NETLINK;
   if (__bind (h->fd, (struct sockaddr *) &nladdr, sizeof (nladdr)) < 0)
     {
+    close_and_out:
       netlink_close (h);
       return -1;
     }
+  /* Determine the ID the kernel assigned for this netlink connection.
+     It is not necessarily the PID if there is more than one socket
+     open.  */
+  socklen_t addr_len = sizeof (nladdr);
+  if (__getsockname (h->fd, (struct sockaddr *) &nladdr, &addr_len) < 0)
+    goto close_and_out;
+  h->pid = nladdr.nl_pid;
   return 0;
 }
 
@@ -302,8 +310,6 @@ getifaddrs (struct ifaddrs **ifap)
   if (no_netlink_support)
     return fallback_getifaddrs (ifap);
 #endif
-
-  nh.pid = getpid ();
 
   /* Tell the kernel that we wish to get a list of all
      active interfaces.  */
