@@ -1,5 +1,8 @@
 2003-09-24  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/dl-execstack.c
+	(_dl_make_stack_executable): Remember that we changed the permission.
+
 	* sysdeps/ia64/dl-machine.h (RTLD_START): Remove setting of
 	__libc_stack_end.  Patch by David Mosberger.
 

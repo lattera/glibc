@@ -684,6 +684,20 @@ __make_stacks_executable (void)
 	break;
     }
 
+  /* Also change the permission for the currently unused stacks.  This
+     might be wasted time but better spend it here than adding a check
+     in the fast path.  */
+  list_for_each (runp, &stack_cache)
+    {
+      err = change_stack_perm (list_entry (runp, struct pthread, list)
+#ifdef NEED_SEPARATE_REGISTER_STACK
+			       , pagemask
+#endif
+			       );
+      if (err != 0)
+	break;
+    }
+
   lll_unlock (stack_cache_lock);
 
   if (err == 0)

@@ -110,6 +110,9 @@ _dl_make_stack_executable (void)
 # error "Define either _STACK_GROWS_DOWN or _STACK_GROWS_UP"
 #endif
 
+  /* Remember that we changed the permission.  */
+  GL(dl_stack_flags) |= PF_X;
+
   return 0;
 }
 rtld_hidden_def (_dl_make_stack_executable)
