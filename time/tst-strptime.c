@@ -1,5 +1,5 @@
 /* Test for strptime.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -34,6 +34,7 @@ static const struct
   { "2000-01-01", "%Y-%m-%d", 6, 0 },
   { "03/03/00", "%D", 5, 62 },
   { "9/9/99", "%x", 4, 251 },
+  { "19990502123412", "%Y%m%d%H%M%S", 0, 121 },
 };
 
 
@@ -53,6 +54,14 @@ main (int argc, char *argv[])
 	  printf ("not all of `%s' read\n", day_tests[i].input);
 	  result = 1;
 	}
+
+      printf ("strptime (\"%s\", \"%s\", ...)\n"
+	      "\tshould be: wday = %d, yday = %3d\n"
+	      "\t       is: wday = %d, yday = %3d\n",
+	      day_tests[i].input, day_tests[i].format,
+	      day_tests[i].wday, day_tests[i].yday,
+	      tm.tm_wday, tm.tm_yday);
+
       if (tm.tm_wday != day_tests[i].wday)
 	{
 	  printf ("weekday for `%s' incorrect: %d instead of %d\n",

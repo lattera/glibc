@@ -1,5 +1,8 @@
 1999-07-14  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/tst-strptime.c (main): Add one more test case.  Produce
+	output even when result is ok.
+
 	* time/strptime.c (get_number): Handle number parsing more
 	consistent with strftime.  Only parse a given number of digits.
 	(get_alt_number):  Fix implementation.  Was broken.
