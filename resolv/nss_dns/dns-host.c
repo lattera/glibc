@@ -456,6 +456,16 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	  linebuflen -= n;
 	  continue;
 	}
+      if (type == T_SIG || type == T_KEY || type == T_NXT)
+	{
+	  /* We don't support DNSSEC yet.  For now, ignore the record
+	     and send a low priority message to syslog.  */
+	  syslog (LOG_DEBUG | LOG_AUTH,
+	       "gethostby*.getanswer: asked for \"%s %s %s\", got type \"%s\"",
+		  qname, p_class (C_IN), p_type(qtype), p_type (type));
+	  cp += n;
+	  continue;
+	}
       if (type != qtype)
 	{
 	  syslog (LOG_NOTICE | LOG_AUTH,

@@ -215,12 +215,12 @@ eval echo ~$USER > $testout2
 cmp $testout2 $testout || result=1
 
 # Tilde expansion shouldn't match a file
-#${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
-#${common_objpfx}posix/globtest -t "$testdir" "~file4" |
-#sort > $testout
-#cat <<"EOF" | cmp - $testout || result=1
-#GLOB_NOMATCH
-#EOF
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -T "$testdir" "~file4" |
+sort > $testout
+cat <<"EOF" | cmp - $testout || result=1
+GLOB_NOMATCH
+EOF
 
 # Matching \** should only find *file6
 ${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \

@@ -37,7 +37,7 @@ extern int __REDIRECT (statvfs,
 		       __P ((__const char *__file, struct statvfs *__buf)),
 		       statvfs64);
 # else
-#  define statfs statfs64
+#  define statvfs statvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64
@@ -54,7 +54,7 @@ extern int fstatvfs __P ((int __fildes, struct statvfs *__buf));
 extern int __REDIRECT (fstatvfs, __P ((int __fildes, struct statvfs *__buf)),
 		       fstatvfs64);
 # else
-#  define statfs statfs64
+#  define fstatvfs fstatvfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64

@@ -493,7 +493,7 @@ glob (pattern, flags, errfunc, pglob)
     {
       /* This can mean two things: a simple name or "~name".  The later
 	 case is nothing but a notation for a directory.  */
-      if ((flags & GLOB_TILDE) && pattern[0] == '~')
+      if ((flags & (GLOB_TILDE|GLOB_TILDE_CHECK)) && pattern[0] == '~')
 	{
 	  dirname = (char *) pattern;
 	  dirlen = strlen (pattern);
@@ -553,7 +553,7 @@ glob (pattern, flags, errfunc, pglob)
   oldcount = pglob->gl_pathc;
 
 #ifndef VMS
-  if ((flags & GLOB_TILDE) && dirname[0] == '~')
+  if ((flags & (GLOB_TILDE|GLOB_TILDE_CHECK)) && dirname[0] == '~')
     {
       if (dirname[1] == '\0' || dirname[1] == '/')
 	{
@@ -608,7 +608,10 @@ glob (pattern, flags, errfunc, pglob)
 		}
 	    }
 	  if (home_dir == NULL || home_dir[0] == '\0')
-	    home_dir = (char *) "~"; /* No luck.  */
+	    if (flags & GLOB_TILDE_CHECK)
+	      return GLOB_NOMATCH;
+	    else
+	      home_dir = (char *) "~"; /* No luck.  */
 #  endif /* WINDOWS32 */
 # endif
 	  /* Now construct the full directory.  */
@@ -685,6 +688,11 @@ glob (pattern, flags, errfunc, pglob)
 #  endif
 	      dirname = newp;
 	    }
+	  else
+	    if (flags & GLOB_TILDE_CHECK)
+	      /* We have to regard it as an error if we cannot find the
+		 home directory.  */
+	      return GLOB_NOMATCH;
 	}
 # endif	/* Not Amiga && not WINDOWS32.  */
     }

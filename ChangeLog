@@ -1,14 +1,24 @@
 1998-07-28  Ulrich Drepper  <drepper@cygnus.com>
 
-	* math/libm-test.c (tgamma_test): Remove redundant tests.
+	* resolv/nss_dns/dns-host.c (getanswer_r): Lower the priority of
+	warnings when DNSSEC related records are received.
+	* resolv/gethnamaddr.c (getanswer): Likewise.
+	Patch by Brian Wellington <bwelling@anomaly.munge.com>.
 
-1998-07-28 16:20  Ulrich Drepper  <drepper@cygnus.com>
+	* signal/signal.h: Add prototype for sysv_signal.
+
+	* math/libm-test.c (tgamma_test): Remove redundant tests.
 
 	* sysdeps/generic/glob.c: Correct problems with */foo and GLOB_NOCHECK
 	where foo does not exist in any of the subdirectories.
 	Reported by Paul D. Smith <psmith@BayNetworks.COM>.
 
 	* posix/globtest.sh: Add test for this bug.
+
+	* posix/glob.h: Add GLOB_TILDE_CHECK.
+	* sysdeps/generic/glob.c: Implement GLOB_TILDE_CHECK.
+	* posix/globtest.c: Add option T to enable GLOB_TILDE_CHECK.
+	* posix/globtest.sh: Re-enable test with ~ and non-existing user name.
 
 1998-07-28  Mark Kettenis  <kettenis@phys.uva.nl>
 

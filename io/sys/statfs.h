@@ -1,5 +1,5 @@
 /* Definitions for getting information about a filesystem.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,7 +53,7 @@ extern int fstatfs __P ((int __fildes, struct statfs *__buf));
 extern int __REDIRECT (fstatfs, __P ((int __fildes, struct statfs *__buf)),
 		       fstatfs64);
 # else
-#  define statfs statfs64
+#  define fstatfs fstatfs64
 # endif
 #endif
 #ifdef __USE_LARGEFILE64

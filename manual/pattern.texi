@@ -466,7 +466,26 @@ user name after the tilde character.  So the contents of user
 glob ("~homer/bin/*", GLOB_TILDE, NULL, &result)
 @end smallexample
 
-This functionality is equivalent to what is available in C-shells.
+If the user name is not valid or the home directory cannot be determined
+for some reason the pattern is left untouched and itself used as the
+result.  I.e., if in the last example @code{home} is not available the
+tilde expansion yields to @code{"~homer/bin/*"} and @code{glob} is not
+looking for a directory named @code{~homer}.
+
+This functionality is equivalent to what is available in C-shells if the
+@code{nonomatch} flag is set.
+
+@comment glob.h
+@comment GNU
+@item GLOB_TILDE_CHECK
+If this flag is used @code{glob} behaves like as if @code{GLOB_TILDE} is
+given.  The only difference is that if the user name is not available or
+the home directory cannot be determined for other reasons this leads to
+an error.  @code{glob} will return @code{GLOB_NOMATCH} instead of using
+the pattern itself as the name.
+
+This funcationality is equivalent to what is available in C-shells if
+@code{nonomatch} flag is not set.
 
 @comment glob.h
 @comment GNU

@@ -29,7 +29,7 @@ main (int argc, char *argv[])
   glob_t g;
   int quotes = 1;
 
-  while ((i = getopt (argc, argv, "bcdegmopqst")) != -1)
+  while ((i = getopt (argc, argv, "bcdegmopqstT")) != -1)
     switch(i)
       {
       case 'b':
@@ -65,6 +65,9 @@ main (int argc, char *argv[])
 	break;
       case 't':
 	glob_flags |= GLOB_TILDE;
+	break;
+      case 'T':
+	glob_flags |= GLOB_TILDE_CHECK;
 	break;
       default:
 	exit (-1);

@@ -58,6 +58,9 @@ typedef void (*__sighandler_t) __PMT ((int));
    requested.  */
 extern __sighandler_t __sysv_signal __P ((int __sig,
 					  __sighandler_t __handler));
+#ifdef __USE_GNU
+extern __sighandler_t sysv_signal __P ((int __sig, __sighandler_t __handler));
+#endif
 
 /* Set the handler for the signal SIG to HANDLER, returning the old
    handler, or SIG_ERR on error.
