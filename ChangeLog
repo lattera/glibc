@@ -1,3 +1,10 @@
+1999-07-17  Zack Weinberg  <zack@rabi.columbia.edu>
+
+	* include/libc-symbol.h: Clean up definitions of weak_alias,
+	strong_alias, symbol_version, etc. etc.
+	* posix/getopt.h: Use ctype.h to get features.h included, and don't
+	include it at all if __GNU_LIBRARY__ is already defined.
+
 1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/bug1.c: Include <stdlib.h> to get prototype for free.

@@ -76,121 +76,77 @@
 # endif
 #endif
 
+#ifndef __ASSEMBLER__
+/* GCC understands weak symbols and aliases; use its interface where
+   possible, instead of embedded assembly language.  */
 
-/* Define ALIAS as a strong alias for ORIGINAL.  */
-#ifdef HAVE_ASM_SET_DIRECTIVE
-# define strong_alias_asm(original, alias)	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
-  .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
-# ifdef __ASSEMBLER__
-#  define strong_alias(original, alias)	strong_alias_asm (original, alias)
-# else
-#  define strong_alias(original, alias)	\
-  asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
-       ".set " __SYMBOL_PREFIX #alias "," __SYMBOL_PREFIX #original);
-# endif
-#else
-# define strong_alias_asm(original, alias)	\
-  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
-  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
-# ifdef __ASSEMBLER__
-#  define strong_alias(original, alias)	strong_alias_asm (original, alias)
-# else
-#  define strong_alias(original, alias)	\
-  asm (__string_1 (ASM_GLOBAL_DIRECTIVE) " " __SYMBOL_PREFIX #alias "\n" \
-       __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
-# endif
-#endif
+/* Define ALIASNAME as a strong alias for NAME.  */
+# define strong_alias(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
 
-/* Helper macros used above.  */
-#define __string_1(x) __string_0(x)
-#define __string_0(x) #x
+/* This comes between the return type and function name in
+   a function definition to make that definition weak.  */
+# define weak_function __attribute__ ((weak))
+# define weak_const_function __attribute__ ((weak, __const__))
 
+# ifdef HAVE_WEAK_SYMBOLS
 
-#ifdef HAVE_WEAK_SYMBOLS
-
-# ifdef __ASSEMBLER__
-
-#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-
-/* Define ALIAS as a weak alias for ORIGINAL.
+/* Define ALIASNAME as a weak alias for NAME.
    If weak aliases are not available, this defines a strong alias.  */
-#   define weak_alias(original, alias)	\
-  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
+#  define weak_alias(name, aliasname) \
+  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
 
 /* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
+#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#   define weak_extern(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
+#  else
+#   define weak_extern(symbol)      asm (".weak " __SYMBOL_PREFIX #symbol);
+#  endif
+
+# else
+
+#  define weak_alias(name, aliasname) strong_alias(name, aliasname)
+#  define weak_extern(symbol) /* Nothing. */
+
+# endif
+
+#else /* __ASSEMBLER__ */
+
+# ifdef HAVE_ASM_SET_DIRECTIVE
+#  define strong_alias(original, alias)		\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
+  .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
+# else
+#  define strong_alias(original, alias)		\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias);	\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+# endif
+
+# ifdef HAVE_WEAK_SYMBOLS
+#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
+#   define weak_alias(original, alias)	\
+  .weakext C_SYMBOL_NAME (alias), C_SYMBOL_NAME (original)
 #   define weak_extern(symbol)	\
   .weakext C_SYMBOL_NAME (symbol)
 
 #  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-/* Define ALIAS as a weak alias for ORIGINAL.
-   If weak aliases are not available, this defines a strong alias.  */
 #   define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias);	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
 
-
-/* Declare SYMBOL as weak undefined symbol (resolved to 0 if not defined).  */
 #   define weak_extern(symbol)	\
   .weak C_SYMBOL_NAME (symbol)
 
 #  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-# else /* ! __ASSEMBLER__ */
+# else /* ! HAVE_WEAK_SYMBOLS */
 
-#  ifdef HAVE_ASM_WEAKEXT_DIRECTIVE
-#   define weak_extern_asm(symbol) asm (".weakext " __SYMBOL_PREFIX #symbol);
-#   define weak_alias_asm(original, alias) \
-  asm (".weakext " __SYMBOL_PREFIX #alias ", " __SYMBOL_PREFIX #original);
-#  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
-#   define weak_extern_asm(symbol)	asm (".weak " __SYMBOL_PREFIX #symbol);
-#   define weak_alias_asm(original, alias) \
-  asm (".weak " __SYMBOL_PREFIX #alias "\n" \
-       __SYMBOL_PREFIX #alias " = " __SYMBOL_PREFIX #original);
-#  endif /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
+#  define weak_alias(original, alias) strong_alias(original, alias)
+#  define weak_extern(symbol) /* Nothing */
+# endif /* ! HAVE_WEAK_SYMBOLS */
 
-#  define weak_alias(o, a) weak_alias_asm (o, a)
-#  define weak_extern(symbol) weak_extern_asm (symbol)
-
-# endif /* ! __ASSEMBLER__ */
-#else
-# define weak_alias(original, alias) strong_alias(original, alias)
-# define weak_extern(symbol)	/* Do nothing; the ref will be strong.  */
-#endif
-
-
-#if (!defined __ASSEMBLER__ && \
-     (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)))
-/* GCC 2.7 and later has special syntax for weak symbols and aliases.
-   Using that is better when possible, because the compiler and assembler
-   are better clued in to what we are doing.  */
-# undef	strong_alias
-# define strong_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((alias (#name)));
-
-# ifdef HAVE_WEAK_SYMBOLS
-#  undef weak_alias
-#  define weak_alias(name, aliasname) \
-  extern __typeof (name) aliasname __attribute__ ((weak, alias (#name)));
-
-/* This comes between the return type and function name in
-   a function definition to make that definition weak.  */
-#  define weak_function __attribute__ ((weak))
-#  define weak_const_function __attribute__ ((weak, __const__))
-
-# endif	/* HAVE_WEAK_SYMBOLS.  */
-#endif	/* Not __ASSEMBLER__, and GCC 2.7 or later.  */
-
-
-#ifndef weak_function
-/* If we do not have the __attribute__ ((weak)) syntax, there is no way we
-   can define functions as weak symbols.  The compiler will emit a `.globl'
-   directive for the function symbol, and a `.weak' directive in addition
-   will produce an error from the assembler.  */
-# define weak_function		/* empty */
-# define weak_const_function	/* empty */
-#endif
+#endif /* __ASSEMBLER__ */
 
 /* On some platforms we can make internal function calls (i.e., calls of
    functions not exported) a bit faster by using a different calling

@@ -23,10 +23,16 @@
 # define _GETOPT_H 1
 #endif
 
-/* We include this here since on system susing GNU libc we need some
-   macros defined.  <stdio.h> is probably the most portable header
-   file and it does what we need.  */
-#include <stdio.h>
+/* If __GNU_LIBRARY__ is not already defined, either we are being used
+   standalone, or this is the first header included in the source file.
+   If we are being used with glibc, we need to include <features.h>, but
+   that does not exist if we are standalone.  So: if __GNU_LIBRARY__ is
+   not defined, include <ctype.h>, which will pull in <features.h> for us
+   if it's from glibc.  (Why ctype.h?  It's guaranteed to exist and it
+   doesn't flood the namespace with stuff the way some other headers do.)  */
+#if !defined __GNU_LIBRARY__
+# include <ctype.h>
+#endif
 
 #ifdef	__cplusplus
 extern "C" {
