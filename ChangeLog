@@ -1,5 +1,8 @@
 1999-07-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/wcstombs.c: Do not use global state.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 	* wcsmbs/wctob.c: Avoid sign extension when returning character.
 	Reported by Bruno Haible <haible@ilog.fr>.
 
