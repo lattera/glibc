@@ -118,7 +118,7 @@ typedef struct
 #  else
 #   include "useldt.h"		/* For the structure.  */
 #   define TLS_DO_MODIFY_LDT_KERNEL_CHECK(doit)				      \
-  (__builtin_expect (GL(dl_osversion) < 131939, 0)			      \
+  (__builtin_expect (GLRO(dl_osversion) < 131939, 0)			      \
    ? "kernel too old for thread-local storage support\n"			      \
    : (doit))
 #  endif
