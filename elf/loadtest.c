@@ -69,10 +69,18 @@ static const struct
 
 #include <include/link.h>
 
+#define OUT \
+  for (map = _r_debug.r_map; map != NULL; map = map->l_next)		      \
+    if (map->l_type == lt_loaded)					      \
+      printf ("name = \"%s\", opencount = %d\n",			      \
+	      map->l_name, (int) map->l_opencount);			      \
+  fflush (stdout)
+
 
 int
-main (void)
+main (int argc, char *argv[])
 {
+  int debug = argc > 1 && argv[1][0] != '\0';
   int count = TEST_ROUNDS;
   int result = 0;
 
@@ -85,6 +93,7 @@ main (void)
     {
       int nr = random () % NTESTS;
       int index = tests[nr].index;
+      struct link_map *map;
 
       printf ("%4d: %4d: ", count + 1, nr);
       fflush (stdout);
@@ -125,6 +134,9 @@ main (void)
 
 	  testobjs[index].handle = NULL;
 	}
+
+      if (debug)
+	OUT;
     }
 
   /* Unload all loaded modules.  */

@@ -1,8 +1,9 @@
+#include <dlfcn.h>
+#include <libintl.h>
+#include <link.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <dlfcn.h>
-#include <link.h>
 
 static int
 check_loaded_objects (const char **loaded)
@@ -26,7 +27,7 @@ check_loaded_objects (const char **loaded)
   for (lm = _r_debug.r_map; lm; lm = lm->l_next)
     {
       if (lm->l_name && lm->l_name[0])
-	printf(" %s\n", lm->l_name);
+	printf(" %s, count = %d\n", lm->l_name, (int) lm->l_opencount);
       if (lm->l_type == lt_loaded && lm->l_name)
 	{
 	  int match = 0;
@@ -99,6 +100,6 @@ main (void)
   loaded[0] = NULL;
   errors += check_loaded_objects (loaded);
   if (errors != 0)
-    printf ("%d errorss found\n", errors);
+    printf ("%d errors found\n", errors);
   return errors;
 }

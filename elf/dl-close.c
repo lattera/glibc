@@ -61,6 +61,9 @@ _dl_close (void *_map)
   /* Acquire the lock.  */
   __libc_lock_lock (_dl_load_lock);
 
+  list = map->l_searchlist.r_list;
+  nsearchlist = map->l_searchlist.r_nlist;
+
   /* Decrement the reference count.  */
   if (map->l_opencount > 1 || map->l_type != lt_loaded)
     {
@@ -78,13 +81,13 @@ _dl_close (void *_map)
 			     "\n", NULL);
 	}
 
-      --map->l_opencount;
+      for (i = 0; i < nsearchlist; ++i)
+	if (! (list[i]->l_flags_1 & DF_1_NODELETE))
+	  --list[i]->l_opencount;
+
       __libc_lock_unlock (_dl_load_lock);
       return;
     }
-
-  list = map->l_searchlist.r_list;
-  nsearchlist = map->l_searchlist.r_nlist;
 
   rellist = map->l_reldeps;
   nrellist = map->l_reldepsact;

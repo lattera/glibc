@@ -1,5 +1,16 @@
 2000-10-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c: Decrement opencount for all dependencies which can
+	be removed even if the object is not yet unloaded.
+	* elf/dl-deps.c (_dl_map_object_deps): If dependency is already in
+	the list decrement opencount of all dependencies.
+	* elf/dl-load.c (_dl_map_object_from_fd): Increment object of object
+	and all dependencies.
+	(_dl_map_object): Likewise.
+	* elf/dl-lookup.c (add_dependency): Likewise.
+
+	* elf/loadtest.c: Add debug when with more output.
+
 	* elf/Makefile: Add rules to build and run unload2.
 	* elf/unload2.c: New file.
 	* elf/unload2mod.c: New file.

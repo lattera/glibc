@@ -777,6 +777,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   for (l = _dl_loaded; l; l = l->l_next)
     if (l->l_ino == st.st_ino && l->l_dev == st.st_dev)
       {
+	unsigned int i;
+
 	/* The object is already loaded.
 	   Just bump its reference count and return it.  */
 	__close (fd);
@@ -785,6 +787,10 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	   it.  */
 	free (realname);
 	add_name_to_object (l, name);
+
+	if (l->l_initfini != NULL)
+	  for (i = 1; l->l_initfini[i] != NULL; ++i)
+	    ++l->l_initfini[i]->l_opencount;
 	++l->l_opencount;
 	return l;
       }
@@ -1396,6 +1402,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
   /* Look for this name among those already loaded.  */
   for (l = _dl_loaded; l; l = l->l_next)
     {
+      unsigned int i;
+
       /* If the requested name matches the soname of a loaded object,
 	 use that object.  Elide this check for names that have not
 	 yet been opened.  */
@@ -1408,8 +1416,8 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	  if (l->l_info[DT_SONAME] == NULL)
 	    continue;
 
-	  soname = (const void *) (D_PTR (l, l_info[DT_STRTAB])
-				   + l->l_info[DT_SONAME]->d_un.d_val);
+	  soname = ((const char *) D_PTR (l, l_info[DT_STRTAB])
+		    + l->l_info[DT_SONAME]->d_un.d_val);
 	  if (strcmp (name, soname) != 0)
 	    continue;
 
@@ -1418,6 +1426,9 @@ _dl_map_object (struct link_map *loader, const char *name, int preloaded,
 	}
 
       /* We have a match -- bump the reference count and return it.  */
+      if (l->l_initfini != NULL)
+	for (i = 1; l->l_initfini[i] != NULL; ++i)
+	  ++l->l_initfini[i]->l_opencount;
       ++l->l_opencount;
       return l;
     }

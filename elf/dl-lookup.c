@@ -129,6 +129,8 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
 	  if (runp != NULL)
 	    {
+	      unsigned int j;
+
 	      /* The object is still available.  Add the reference now.  */
 	      if (__builtin_expect (act >= undef_map->l_reldepsmax, 0))
 		{
@@ -158,7 +160,11 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 	      if (__builtin_expect (act < undef_map->l_reldepsmax, 1))
 		undef_map->l_reldeps[undef_map->l_reldepsact++] = map;
 
-	      /* And increment the counter in the referenced object.  */
+	      /* And increment the counter in the referenced object
+                 and its dependencies.  */
+	      if (map->l_initfini != NULL)
+		for (j = 1; map->l_initfini[j] != NULL; ++j)
+		  ++map->l_initfini[j]->l_opencount;
 	      ++map->l_opencount;
 
 	      /* Display information if we are debugging.  */
