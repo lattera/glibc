@@ -1,1 +1,1 @@
-CFLAGS += -mv8
+sysdep-CFLAGS += -mv8

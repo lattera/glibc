@@ -11,8 +11,7 @@
 # The interface to -lm depends mostly only on cpu, not on operating system.
 i.86-.*-.*		libm=6
 m68k-.*-.*		libm=6
-sparc-.*-.*		libm=6
-sparc64-.*-.*		libm=6
+sparc.*-.*-.*		libm=6
 alpha.*-.*-linux.*	libm=6.1
 alpha.*-.*-.*		libm=6
 powerpc-.*-.*		libm=6
@@ -34,8 +33,8 @@ alpha.*-.*-linux.*	libc=6.1
 
 # The dynamic loader also requires different names.
 i.86-.*-linux.*		ld=ld-linux.so.2
-sparc-.*-linux.*	ld=ld-linux.so.2
 sparc64-.*-linux.*	ld=ld-linux64.so.2
+sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 arm.*-.*-linux.*	ld=ld-linux.so.2
 # We use the ELF ABI standard name for the default.

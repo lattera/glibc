@@ -1,3 +1,18 @@
+1999-04-14  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* scripts/config.sub: Allow sparcv[6789]-* and sparcv8plus{,a}-*
+	architectures.
+	* sysdeps/sparc/sparc32/sparcv8/Makefile: Use sysdep-CFLAGS
+	instead of CFLAGS.
+	* sysdeps/sparc/sparc32/sparcv8/Makefile: Use sysdep-CFLAGS
+	instead of CFLAGS. For gnulib and string directories use
+	-Wa,-Av9a gcc ASFLAGS.
+	* sysdeps/sparc/sparc32/sparcv9/memmove.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.h: New file.
+	* shlib-versions: Handle sparcv[6789]-* and sparcv8plus{,a}-*
+	the same way as sparc-*.
+
 1999-04-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locale/programs/locfile.c (locfile_read): Fix typo.
