@@ -1,7 +1,7 @@
 /* Copy memory block and return pointer to following byte.
    For Intel 80x86, x>=6.
    This file is part of the GNU C Library.
-   Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,3 +59,4 @@ ENTRY (BP_SYM (__mempcpy))
 END (BP_SYM (__mempcpy))
 libc_hidden_def (BP_SYM (__mempcpy))
 weak_alias (BP_SYM (__mempcpy), BP_SYM (mempcpy))
+libc_hidden_builtin_def (mempcpy)

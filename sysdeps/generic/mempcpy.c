@@ -1,7 +1,7 @@
 /* Copy memory to memory until the specified number of bytes
    has been copied, return pointer to following byte.
    Overlap is NOT handled correctly.
-   Copyright (C) 1991, 1997, 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 1998, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -66,3 +66,4 @@ __mempcpy (dstpp, srcpp, len)
 }
 libc_hidden_def (__mempcpy)
 weak_alias (__mempcpy, mempcpy)
+libc_hidden_builtin_def (mempcpy)

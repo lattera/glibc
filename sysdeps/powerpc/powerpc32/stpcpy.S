@@ -1,5 +1,5 @@
 /* Optimized stpcpy implementation for PowerPC.
-   Copyright (C) 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,3 +119,4 @@ END (BP_SYM (__stpcpy))
 
 weak_alias (BP_SYM (__stpcpy), BP_SYM (stpcpy))
 libc_hidden_def (__stpcpy)
+libc_hidden_builtin_def (stpcpy)

@@ -94,9 +94,10 @@ __STRING2_COPY_TYPE (8);
   ((size_t)(const void *)((__x) + 1) - (size_t)(const void *)(__x) == 1)
 
 /* Set N bytes of S to C.  */
-#if !defined _HAVE_STRING_ARCH_memset && ! __GNUC_PREREQ (3, 0)
-# if _STRING_ARCH_unaligned
-#  define memset(s, c, n) \
+#if !defined _HAVE_STRING_ARCH_memset
+# if !__GNUC_PREREQ (3, 0)
+#  if _STRING_ARCH_unaligned
+#   define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (n) && (n) <= 16			      \
 		  ? ((n) == 1						      \
 		     ? __memset_1 (s, c)				      \
@@ -105,10 +106,10 @@ __STRING2_COPY_TYPE (8);
 		     ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		     : memset (s, c, n))))
 
-#  define __memset_1(s, c) ({ void *__s = (s);				      \
+#   define __memset_1(s, c) ({ void *__s = (s);				      \
 			    *((__uint8_t *) __s) = (__uint8_t) c; __s; })
 
-#  define __memset_gc(s, c, n) \
+#   define __memset_gc(s, c, n) \
   ({ void *__s = (s);							      \
      union {								      \
        unsigned int __ui;						      \
@@ -177,15 +178,19 @@ __STRING2_COPY_TYPE (8);
        }								      \
 									      \
      __s; })
-# else
-#  define memset(s, c, n) \
+#  else
+#   define memset(s, c, n) \
   (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
 		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
 		  : memset (s, c, n)))
+#  endif
 # endif
 
-/* GCC optimizes memset(s, 0, n) but not bzero(s, n).
-   The optimization is broken before EGCS 1.1.  */
+/* GCC < 3.0 optimizes memset(s, 0, n) but not bzero(s, n).
+   The optimization is broken before EGCS 1.1.
+   GCC 3.0+ has __builtin_bzero as well, but at least till GCC 3.4
+   if it decides to call the library function, it calls memset
+   and not bzero.  */
 # if __GNUC_PREREQ (2, 91)
 #  define __bzero(s, n) __builtin_memset (s, '\0', n)
 # endif

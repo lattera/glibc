@@ -26,7 +26,7 @@
 
 #ifdef __GNUC__
 
-#if defined __USE_ISOC99 && !__GNUC_PREREQ(3,0)
+#if defined __USE_ISOC99 && !__GNUC_PREREQ (3, 0)
 # undef isgreater
 # undef isgreaterequal
 # undef isless
@@ -153,7 +153,7 @@ __signbitl (long double __x) __THROW
 
 #  endif /* __USE_ISOC99 */
 
-#  ifndef __NO_MATH_INLINES
+#  if !defined __NO_MATH_INLINES && !__GNUC_PREREQ (3, 2)
 
 __MATH_INLINE double
 sqrt (double __x) __THROW
@@ -182,7 +182,7 @@ sqrtl (long double __x) __THROW
 }
 #   endif /* sparc64 */
 
-#  endif /* !__NO_MATH_INLINES */
+#  endif /* !__NO_MATH_INLINES && !GCC 3.2+ */
 
 /* This code is used internally in the GNU libc.  */
 #  ifdef __LIBC_INTERNAL_MATH_INLINES

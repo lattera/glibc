@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,4 +49,7 @@ libc_hidden_def (__stpcpy)
 #endif
 #ifdef weak_alias
 weak_alias (__stpcpy, stpcpy)
+#endif
+#ifdef libc_hidden_builtin_def
+libc_hidden_builtin_def (stpcpy)
 #endif

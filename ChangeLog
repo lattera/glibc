@@ -1,3 +1,46 @@
+2004-05-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__expm1_code): Define using
+	__builtin_expm1l for GCC 3.5+.
+	(__expl): Define using __builtin_expl for GCC 3.4+.
+	(exp, expf, expl): Don't define for GCC 3.4+.
+	(tan, tanf, tanl): Don't define for GCC 3.5+.
+	(__atan2l): Define using __builtin_atan2l for GCC 3.4+.
+	(atan2, atan2f, atan2l): Don't define for GCC 3.4+ or !__FAST_MATH__.
+	(fmod, fmodf, fmodl): Don't define for GCC 3.5+ or !__FAST_MATH__.
+	(fabsf, fabsl): Only provide if __USE_MISC or __USE_ISOC99.
+	(sin, sinf, sinl, cos, cosf, cosl, log, logf, logl): Don't define
+	for GCC 3.4+.
+	(log10, log10f, log10l, asin, asinf, asinl, acos, acosf, acosl):
+	Don't define for GCC 3.5+.
+	(atan, atanf, atanl): Don't define for GCC 3.4+ or !__FAST_MATH__.
+	(log1p, log1pf, log1pl, logb, logbf, logbl, log2, log2f, log2l): Don't
+	define for GCC 3.5+.
+	(drem, dremf, dreml): Don't define for GCC 3.5+ or !__FAST_MATH__.
+	* sysdeps/sparc/fpu/bits/mathinline.h (sqrt, sqrtf, sqrtl): Don't
+	define for GCC 3.2+.
+
+2004-05-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* string/bits/string2.h (__bzero): Define even for GCC 3.0+.
+	* sysdeps/alpha/stpcpy.S (stpcpy): Add libc_hidden_builtin_def.
+	* sysdeps/alpha/alphaev67/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/powerpc/powerpc32/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/powerpc/powerpc64/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/sparc/sparc32/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/sparc/sparc64/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/i386/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/i386/i586/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/generic/stpcpy.c (stpcpy): Likewise.
+	* sysdeps/x86_64/stpcpy.S (stpcpy): Likewise.
+	* sysdeps/i386/i586/memcpy.S (memcpy): Remove
+	libc_hidden_builtin_def if MEMPCPY_P.
+	* sysdeps/x86_64/memcpy.S (memcpy): Likewise.
+	* sysdeps/i386/i686/mempcpy.S (mempcpy): Add libc_hidden_builtin_def.
+	* sysdeps/i386/i586/mempcpy.S (mempcpy): Likewise.
+	* sysdeps/generic/mempcpy.c (mempcpy): Likewise.
+	* sysdeps/x86_64/mempcpy.S (mempcpy): Likewise.
+
 2004-05-26  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/generic/bits/in.h
