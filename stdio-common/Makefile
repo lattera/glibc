@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ headers	:= printf.h
 
 routines	:=							      \
 	ctermid cuserid							      \
-	_itoa _itowa itoa-digits itowa-digits				      \
+	_itoa _itowa _i18n_itoa _i18n_itowa itoa-digits itowa-digits	      \
 	vfprintf vprintf printf_fp reg-printf printf-prs printf_fphex	      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
 	vfscanf 							      \
@@ -45,7 +45,8 @@ endif
 install-others := $(inst_includedir)/bits/stdio_lim.h
 
 aux	:= errlist siglist
-distribute := _itoa.h _itowa.h printf-parse.h stdio_lim.h.in
+distribute := _itoa.h _itowa.h _i18n_itoa.h _i18n_itowa.h \
+	      printf-parse.h stdio_lim.h.in
 
 tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 	 temptest tst-fileno test-fwrite tst-ungetc tst-ferror \

@@ -40,6 +40,8 @@ struct locale_numeric_t
   const char *thousands_sep;
   char *grouping;
   size_t grouping_len;
+  uint32_t decimal_point_wc;
+  uint32_t thousands_sep_wc;
 };
 
 
@@ -49,19 +51,15 @@ numeric_startup (struct linereader *lr, struct localedef_t *locale,
 {
   if (!ignore_content)
     {
-      struct locale_numeric_t *numeric;
-
-      locale->categories[LC_NUMERIC].numeric = numeric =
-	(struct locale_numeric_t *) xcalloc (1, sizeof (*numeric));
-
-      numeric->grouping = NULL;
-      numeric->grouping_len = 0;
+      locale->categories[LC_NUMERIC].numeric =
+	(struct locale_numeric_t *) xcalloc (1,
+					     sizeof (struct locale_numeric_t));
     }
 
   if (lr != NULL)
     {
       lr->translate_strings = 1;
-      lr->return_widestr = 0;
+      lr->return_widestr = 1;
     }
 }
 
@@ -106,12 +104,14 @@ numeric_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	}
     }
 
-#define TEST_ELEM(cat)							      \
+#define TEST_ELEM(cat, default)						      \
   if (numeric->cat == NULL && ! be_quiet && ! nothing)			      \
-    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", #cat)
+    error (0, 0, _("%s: field `%s' not defined"), "LC_NUMERIC", #cat);	      \
+  if (numeric->cat##_wc == L'\0')					      \
+    numeric->cat##_wc = default
 
-  TEST_ELEM (decimal_point);
-  TEST_ELEM (thousands_sep);
+  TEST_ELEM (decimal_point, L'.');
+  TEST_ELEM (thousands_sep, L'\0');
 
   /* The decimal point must not be empty.  This is not said explicitly
      in POSIX but ANSI C (ISO/IEC 9899) says in 4.4.2.1 it has to be
@@ -168,6 +168,16 @@ numeric_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
   iov[cnt].iov_base = numeric->grouping;
   iov[cnt].iov_len = numeric->grouping_len;
+
+  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
+  iov[cnt].iov_base = (void *) &numeric->decimal_point_wc;
+  iov[cnt].iov_len = sizeof (uint32_t);
+  ++cnt;
+
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) &numeric->thousands_sep_wc;
+  iov[cnt].iov_len = sizeof (uint32_t);;
+  ++cnt;
 
   assert (cnt + 1 == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_NUMERIC));
 
@@ -246,9 +256,20 @@ numeric_read (struct linereader *ldfile, struct localedef_t *result,
 	      lr_error (ldfile, _("\
 %s: unknown character in field `%s'"), "LC_NUMERIC", #cat);		      \
 	      numeric->cat = "";					      \
+	      numeric->cat##_wc = L'\0';				      \
+	    }								      \
+	  else if (now->val.str.startwc != NULL && now->val.str.lenwc > 1)    \
+	    {								      \
+	      lr_error (ldfile, _("\
+%s: value for field `%s' must be a single character"), "LC_NUMERIC", #cat);   \
 	    }								      \
 	  else if (!ignore_content)					      \
-	    numeric->cat = now->val.str.startmb;			      \
+	    {								      \
+	      numeric->cat = now->val.str.startmb;			      \
+									      \
+	      if (now->val.str.startwc != NULL)				      \
+		numeric->cat##_wc = *now->val.str.startwc;		      \
+	    }								      \
 	  break
 
 	  STR_ELEM (decimal_point);

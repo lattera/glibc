@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -381,6 +381,8 @@ enum
   _NL_MONETARY_DUO_VALID_FROM,
   _NL_MONETARY_DUO_VALID_TO,
   _NL_MONETARY_CONVERSION_RATE,
+  _NL_MONETARY_DECIMAL_POINT_WC,
+  _NL_MONETARY_THOUSANDS_SEP_WC,
   _NL_NUM_LC_MONETARY,
 
   /* LC_NUMERIC category: formatting of numbers.
@@ -399,6 +401,8 @@ enum
 #endif
   GROUPING,
 #define GROUPING		GROUPING
+  _NL_NUMERIC_DECIMAL_POINT_WC,
+  _NL_NUMERIC_THOUSANDS_SEP_WC,
   _NL_NUM_LC_NUMERIC,
 
   YESEXPR = _NL_ITEM (LC_MESSAGES, 0), /* Regex matching ``yes'' input.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,7 @@
 #include <bits/libc-lock.h>
 #include <sys/param.h>
 #include "_itoa.h"
+#include "_i18n_itoa.h"
 #include <locale/localeinfo.h>
 
 /* This code is shared between the standard stdio implementation found
@@ -80,6 +81,7 @@
 			  return -1
 # else
 # include "_itowa.h"
+# include "_i18n_itowa.h"
 
 #  define vfprintf	_IO_vfwprintf
 #  define CHAR_T	wchar_t
@@ -98,6 +100,9 @@
 
 #  define _itoa(Val, Buf, Base, Case) _itowa (Val, Buf, Base, Case)
 #  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, Buf, Base, Case)
+#  define _i18n_itoa(Val, Buf, Base, Case) _i18n_itowa (Val, Buf, Base, Case)
+#  define _i18n_itoa_word(Val, Buf, Base, Case) \
+  _i18n_itowa_word (Val, Buf, Base, Case)
 #  undef EOF
 #  define EOF WEOF
 # endif
@@ -213,8 +218,13 @@ static int printf_unknown __P ((FILE *, const struct printf_info *,
 				const void *const *));
 
 /* Group digits of number string.  */
+#ifdef COMPILE_WPRINTF
 static CHAR_T *group_number __P ((CHAR_T *, CHAR_T *, const char *, wchar_t))
      internal_function;
+#else
+static CHAR_T *group_number __P ((CHAR_T *, CHAR_T *, const char *,
+				  const char *)) internal_function;
+#endif
 
 
 /* The function itself.  */
@@ -222,7 +232,11 @@ int
 vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 {
   /* The character used as thousands separator.  */
+#ifdef COMPILE_WPRINTF
   wchar_t thousands_sep;
+#else
+  const char *thousands_sep;
+#endif
 
   /* The string describing the size of groups of digits.  */
   const char *grouping;
@@ -254,6 +268,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Count number of specifiers we already processed.  */
   int nspecs_done;
 
+  /* This flag is set by the 'I' modifier and selects the use of the
+     `outdigits' as determined by the current locale.  */
+  int use_outdigits;
+
   /* For the %m format we may need the current `errno' value.  */
   int save_errno = errno;
 
@@ -273,7 +291,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	       0,            0,            0,            0,
 	       0, /* 'A' */ 26,            0, /* 'C' */ 25,
 	       0, /* 'E' */ 19,            0, /* 'G' */ 19,
-	       0,            0,            0,            0,
+	       0, /* 'I' */ 29,            0,            0,
     /* 'L' */ 12,            0,            0,            0,
 	       0,            0,            0, /* 'S' */ 21,
 	       0,            0,            0,            0,
@@ -321,7 +339,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 
 #define STEP0_3_TABLE							      \
     /* Step 0: at the beginning.  */					      \
-    static JUMP_TABLE_TYPE step0_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step0_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (flag_space),		/* for ' ' */				      \
@@ -352,9 +370,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
       REF (mod_intmax_t),       /* for 'j' */				      \
+      REF (flag_i18n),	        /* for 'I' */				      \
     };									      \
     /* Step 1: after processing width.  */				      \
-    static JUMP_TABLE_TYPE step1_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step1_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -384,10 +403,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_wcharacter),	/* for 'C' */				      \
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
-      REF (mod_intmax_t)        /* for 'j' */				      \
+      REF (mod_intmax_t),       /* for 'j' */				      \
+      REF (flag_i18n)	        /* for 'I' */				      \
     };									      \
     /* Step 2: after processing precision.  */				      \
-    static JUMP_TABLE_TYPE step2_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step2_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -417,10 +437,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_wcharacter),	/* for 'C' */				      \
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (mod_ptrdiff_t),      /* for 't' */				      \
-      REF (mod_intmax_t)        /* for 'j' */				      \
+      REF (mod_intmax_t),       /* for 'j' */				      \
+      REF (flag_i18n)	        /* for 'I' */				      \
     };									      \
     /* Step 3a: after processing first 'h' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3a_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step3a_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -450,10 +471,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unknown),	/* for 'C' */				      \
       REF (form_unknown),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
-      REF (form_unknown)        /* for 'j' */				      \
+      REF (form_unknown),       /* for 'j' */				      \
+      REF (form_unknown)        /* for 'I' */				      \
     };									      \
     /* Step 3b: after processing first 'l' modifier.  */		      \
-    static JUMP_TABLE_TYPE step3b_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step3b_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -483,12 +505,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_wcharacter),	/* for 'C' */				      \
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
-      REF (form_unknown)        /* for 'j' */				      \
+      REF (form_unknown),       /* for 'j' */				      \
+      REF (form_unknown)        /* for 'I' */				      \
     }
 
 #define STEP4_TABLE							      \
     /* Step 4: processing format specifier.  */				      \
-    static JUMP_TABLE_TYPE step4_jumps[29] =				      \
+    static JUMP_TABLE_TYPE step4_jumps[30] =				      \
     {									      \
       REF (form_unknown),						      \
       REF (form_unknown),	/* for ' ' */				      \
@@ -518,7 +541,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_wcharacter),	/* for 'C' */				      \
       REF (form_floathex),	/* for 'A', 'a' */			      \
       REF (form_unknown),       /* for 't' */				      \
-      REF (form_unknown)        /* for 'j' */				      \
+      REF (form_unknown),       /* for 'j' */				      \
+      REF (form_unknown)        /* for 'I' */				      \
     }
 
 
@@ -624,8 +648,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = _itoa (number.longlong, workend + 1, base,	      \
-			      spec == L_('X'));				      \
+	      if (use_outdigits && base == 10)				      \
+	        string = _i18n_itoa (number.longlong, workend + 1);	      \
+	      else							      \
+	        string = _itoa (number.longlong, workend + 1, base,	      \
+			        spec == L_('X'));			      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -678,8 +705,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = _itoa_word (number.word, workend + 1, base,	      \
-				   spec == L_('X'));			      \
+	      if (use_outdigits && base == 10)				      \
+	        string = _i18n_itoa_word (number.word, workend + 1);	      \
+	      else							      \
+	        string = _itoa_word (number.word, workend + 1, base,	      \
+				     spec == L_('X'));			      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -1302,25 +1332,30 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (flag_quote):
       group = 1;
 
-      /* XXX Completely wrong.  Use wctob.  */
       if (grouping == (const char *) -1)
 	{
-	  mbstate_t mbstate;
+#ifdef COMPILE_WPRINTF
+	  thousands_sep = _NL_CURRENT_WORD (LC_NUMERIC,
+					    _NL_NUMERIC_THOUSANDS_SEP_WC);
+#else
+	  thousands_sep = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+#endif
 
-	  /* Figure out the thousands separator character.  */
-	  memset (&mbstate, '\0', sizeof (mbstate));
-	  if (__mbrtowc (&thousands_sep,
-			 _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-			 strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
-			 &mbstate) <= 0)
-	    thousands_sep = (wchar_t)
-	      *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	  grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
 	  if (*grouping == '\0' || *grouping == CHAR_MAX
-	      || thousands_sep == L'\0')
+#ifdef COMPILE_WPRINTF
+	      || thousands_sep == L'\0'
+#else
+	      || *thousands_sep == '\0'
+#endif
+	      )
 	    grouping = NULL;
 	}
       JUMP (*++f, step0_jumps);
+
+    LABEL (flag_i18n):
+      use_outdigits = 1;
+      break;
 
       /* Get width from argument.  */
     LABEL (width_asterics):
@@ -1492,18 +1527,15 @@ do_positional:
 
     if (grouping == (const char *) -1)
       {
-	mbstate_t mbstate;
+#ifdef COMPILE_WPRINTF
+	thousands_sep = _NL_CURRENT_WORD (LC_NUMERIC,
+					  _NL_NUMERIC_THOUSANDS_SEP_WC);
+#else
+	thousands_sep = _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+#endif
 
-	/* Figure out the thousands separator character.  */
-	memset (&mbstate, '\0', sizeof (mbstate));
-	if (__mbrtowc (&thousands_sep,
-		       _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		       strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP)),
-		       &mbstate) <= 0)
-	  thousands_sep = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 	grouping = _NL_CURRENT (LC_NUMERIC, GROUPING);
-	if (*grouping == '\0' || *grouping == CHAR_MAX
-	    || thousands_sep == L'\0')
+	if (*grouping == '\0' || *grouping == CHAR_MAX)
 	  grouping = NULL;
       }
 
@@ -1781,6 +1813,8 @@ printf_unknown (FILE *s, const struct printf_info *info,
     outchar (L_('-'));
   if (info->pad == L_('0'))
     outchar (L_('0'));
+  if (info->i18n)
+    outchar (L_('I'));
 
   if (info->width != 0)
     {
@@ -1809,10 +1843,18 @@ printf_unknown (FILE *s, const struct printf_info *info,
 static CHAR_T *
 internal_function
 group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
-	      wchar_t thousands_sep)
+#ifdef COMPILE_WPRINTF
+	      wchar_t thousands_sep
+#else
+	      const char *thousands_sep
+#endif
+	      )
 {
   int len;
   CHAR_T *src, *s;
+#ifndef COMPILE_WPRINTF
+  int tlen = strlen (thousands_sep);
+#endif
 
   /* We treat all negative values like CHAR_MAX.  */
 
@@ -1836,7 +1878,14 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const char *grouping,
       if (--len == 0 && s >= src)
 	{
 	  /* A new group begins.  */
+#ifdef COMPILE_WPRINTF
 	  *w-- = thousands_sep;
+#else
+	  int cnt = tlen;
+	  do
+	    *w-- = thousands_sep[--cnt];
+	  while (cnt > 0);
+#endif
 
 	  len = *grouping++;
 	  if (*grouping == '\0')

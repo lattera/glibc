@@ -43,6 +43,8 @@ struct locale_monetary_t
   const char *currency_symbol;
   const char *mon_decimal_point;
   const char *mon_thousands_sep;
+  uint32_t mon_decimal_point_wc;
+  uint32_t mon_thousands_sep_wc;
   char *mon_grouping;
   size_t mon_grouping_len;
   const char *positive_sign;
@@ -150,7 +152,7 @@ monetary_startup (struct linereader *lr, struct localedef_t *locale,
   if (lr != NULL)
     {
       lr->translate_strings = 1;
-      lr->return_widestr = 0;
+      lr->return_widestr = 1;
     }
 }
 
@@ -248,6 +250,8 @@ not correspond to a valid name in ISO 4217"),
 %s: value for field `%s' must not be the empty string"),
 	     "LC_MONETARY", "mon_decimal_point");
     }
+  if (monetary->mon_decimal_point_wc == L'\0')
+    monetary->mon_decimal_point_wc = L'.';
 
   if (monetary->mon_grouping_len == 0)
     {
@@ -575,6 +579,16 @@ monetary_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = 8;
   ++cnt;
 
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) &monetary->mon_decimal_point_wc;
+  iov[cnt].iov_len = sizeof (uint32_t);
+  ++cnt;
+
+  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
+  iov[cnt].iov_base = (void *) &monetary->mon_thousands_sep_wc;
+  iov[cnt].iov_len = sizeof (uint32_t);
+  ++cnt;
+
   assert (cnt == 2 + _NL_ITEM_INDEX (_NL_NUM_LC_MONETARY));
 
   write_locale_data (output_path, "LC_MONETARY",
@@ -666,12 +680,50 @@ monetary_read (struct linereader *ldfile, struct localedef_t *result,
 
 	  STR_ELEM (int_curr_symbol);
 	  STR_ELEM (currency_symbol);
-	  STR_ELEM (mon_decimal_point);
-	  STR_ELEM (mon_thousands_sep);
 	  STR_ELEM (positive_sign);
 	  STR_ELEM (negative_sign);
 	  STR_ELEM (duo_int_curr_symbol);
 	  STR_ELEM (duo_currency_symbol);
+
+#define STR_ELEM_WC(cat) \
+	case tok_##cat:							      \
+	  /* Ignore the rest of the line if we don't need the input of	      \
+	     this line.  */						      \
+	  if (ignore_content)						      \
+	    {								      \
+	      lr_ignore_rest (ldfile, 0);				      \
+	      break;							      \
+	    }								      \
+									      \
+	  now = lr_token (ldfile, charmap, NULL);			      \
+	  if (now->tok != tok_string)					      \
+	    goto err_label;						      \
+	  if (monetary->cat != NULL)					      \
+	    lr_error (ldfile, _("\
+%s: field `%s' declared more than once"), "LC_MONETARY", #cat);		      \
+	  else if (!ignore_content && now->val.str.startmb == NULL)	      \
+	    {								      \
+	      lr_error (ldfile, _("\
+%s: unknown character in field `%s'"), "LC_MONETARY", #cat);		      \
+	      monetary->cat = "";					      \
+	      monetary->cat##_wc = L'\0';				      \
+	    }								      \
+	  else if (now->val.str.startwc != NULL && now->val.str.lenwc > 1)    \
+	    {								      \
+	      lr_error (ldfile, _("\
+%s: value for field `%s' must be a single character"), "LC_MONETARY", #cat);  \
+	    }								      \
+	  else if (!ignore_content)					      \
+	    {								      \
+	      monetary->cat = now->val.str.startmb;			      \
+									      \
+	      if (now->val.str.startwc != NULL)				      \
+		monetary->cat##_wc = *now->val.str.startwc;		      \
+	    }								      \
+	  break
+
+	  STR_ELEM_WC (mon_decimal_point);
+	  STR_ELEM_WC (mon_thousands_sep);
 
 #define INT_ELEM(cat) \
 	case tok_##cat:							      \

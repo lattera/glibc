@@ -1,3 +1,30 @@
+2000-01-28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-monetary.c: Add initializers for new fields.
+	* locale/C-numeric.c: Likewise.
+	* locale/Makefile (distribute): Add indigits.h, indigitswc.h,
+	outdigits.h, and outdigitswc.h.
+	* locale/langinfo.h: Add _NL_MONETARY_DECIMAL_POINT_WC,
+	_NL_MONETARY_THOUSANDS_SEP_WC, _NL_NUMERIC_DECIMAL_POINT_WC,
+	and _NL_NUMERIC_THOUSANDS_SEP_WC.
+	* locale/indigits.h: New file.
+	* locale/indigitswc.h: New file.
+	* locale/outdigits.h: New file.
+	* locale/outdigitswc.h: New file.
+	* locale/programs/ld-monetary.c: Write out decimal point and
+	thousands separator info in wide character form.
+	* locale/programs/ld-numeric.c: Likewise.
+	* stdio-common/Makefile (routines): Add _i18n_itoa and _i18n_itowa.
+	(distribute): Add _i18n_itoa.h and _i18n_itowa.h.
+	* stdio-common/_i18n_itoa.c: New file.
+	* stdio-common/_i18n_itoa.h: New file.
+	* stdio-common/_i18n_itowa.c: New file.
+	* stdio-common/_i18n_itowa.h: New file.
+	* stdio-common/printf-parse.h: Parse 'I' flag.
+	* stdio-common/printf.h (struct printf_info): Add i18n field.
+	* stdio-common/vfprintf.c: Implement 'I' flag to print using locales'
+	outdigits.
+
 2000-01-27  Geoff Keating  <geoffk@cygnus.com>
 
 	* csu/Makefile ($(objpfx)version-info.h): Don't use echo -n

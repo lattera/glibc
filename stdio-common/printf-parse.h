@@ -1,5 +1,5 @@
 /* Internal header for parsing printf format strings.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of th GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -200,6 +200,11 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	/* Show grouping in numbers if the locale information
 	   indicates any.  */
 	spec->info.group = 1;
+	break;
+      case L_('I'):
+	/* Use the internationalized form of the output.  Currently
+	   means to use the `outdigits' of the current locale.  */
+	spec->info.i18n = 1;
 	break;
       }
   if (spec->info.left)
