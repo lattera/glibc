@@ -1,5 +1,8 @@
 Wed Sep  9 10:34:06 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
+	* sysdeps/m68k/dl-machine.h(RTLD_START): Push _dl_main_searchlist
+	instead of _dl_default_scope[2] as argument to _dl_init_next. 
+
 	* sysdeps/m68k/fpu/bits/mathinline.h (isinf): Avoid conflict with
 	C9x macro.
 
