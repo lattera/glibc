@@ -1,3 +1,8 @@
+2003-09-18  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* attr.c (__pthread_attr_init_2_1): Double __guardsize size
+	if NEED_SEPARATE_REGISTER_STACK is defined.
+
 2003-09-22  Philip Blundell  <philb@gnu.org>
 
 	* forward.c: Add _pthread_cleanup_push, _pthread_cleanup_pop.

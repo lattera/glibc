@@ -36,7 +36,11 @@ int __pthread_attr_init_2_1(pthread_attr_t *attr)
   attr->__schedparam.sched_priority = 0;
   attr->__inheritsched = PTHREAD_EXPLICIT_SCHED;
   attr->__scope = PTHREAD_SCOPE_SYSTEM;
+#ifdef NEED_SEPARATE_REGISTER_STACK
+  attr->__guardsize = ps + ps;
+#else
   attr->__guardsize = ps;
+#endif
   attr->__stackaddr = NULL;
   attr->__stackaddr_set = 0;
   attr->__stacksize = STACK_SIZE - ps;

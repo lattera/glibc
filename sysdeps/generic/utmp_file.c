@@ -78,7 +78,7 @@ static void timeout_handler (int signum) {};
   memset (&fl, '\0', sizeof (struct flock));				      \
   fl.l_type = (type);							      \
   fl.l_whence = SEEK_SET;						      \
-  if (__fcntl_nocancel ((fd), F_SETLKW, &fl) < 0)
+  if (fcntl_not_cancel ((fd), F_SETLKW, &fl) < 0)
 
 #define LOCKING_FAILED() \
   goto unalarm_return
@@ -86,7 +86,7 @@ static void timeout_handler (int signum) {};
 #define UNLOCK_FILE(fd) \
   /* Unlock the file.  */						      \
   fl.l_type = F_UNLCK;							      \
-  __fcntl_nocancel ((fd), F_SETLKW, &fl);				      \
+  fcntl_not_cancel ((fd), F_SETLKW, &fl);				      \
 									      \
  unalarm_return:							      \
   /* Reset the signal handler and alarm.  We must reset the alarm	      \
@@ -150,9 +150,9 @@ setutent_file (void)
 	}
 
       /* We have to make sure the file is `closed on exec'.  */
-      result = __fcntl_nocancel (file_fd, F_GETFD, 0);
+      result = fcntl_not_cancel (file_fd, F_GETFD, 0);
       if (result >= 0)
-	result = __fcntl_nocancel (file_fd, F_SETFD, result | FD_CLOEXEC);
+	result = fcntl_not_cancel (file_fd, F_SETFD, result | FD_CLOEXEC);
       if (result == -1)
 	{
 	  close_not_cancel_no_status (file_fd);
