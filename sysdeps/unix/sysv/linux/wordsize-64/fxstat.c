@@ -35,7 +35,7 @@ int
 __fxstat (int vers, int fd, struct stat *buf)
 {
   if (vers == _STAT_VER_KERNEL || vers == _STAT_VER_LINUX)
-    return INLINE_SYSCALL (fstat, 2, fd, CHECK_1 ((struct kernel_stat *) buf));
+    return INLINE_SYSCALL (fstat, 2, fd, CHECK_1 (buf));
 
   __set_errno (EINVAL);
   return -1;

@@ -1,3 +1,12 @@
+2004-03-26  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/unix/sysv/linux/wordsize-64/fxstat.c (__fxstat): Don't
+	use "struct kernel_stat".
+
+2004-04-02  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/ia64/memcmp.S: Fix symbol.
+
 2004-04-04  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* sysdeps/hppa/Dist: Add bits/link.h elf/entry.h.

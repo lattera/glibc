@@ -29,7 +29,7 @@
 #define SEM_FAILED      ((sem_t *) 0)
 
 /* Maximum value the semaphore can have.  */
-#define SEM_VALUE_MAX   ((int) ((~0u) >> 1))
+#define SEM_VALUE_MAX   ((int) (2147483647)
 
 
 typedef union

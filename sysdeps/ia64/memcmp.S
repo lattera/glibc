@@ -162,4 +162,4 @@ ENTRY(memcmp)
 END(memcmp)
 
 weak_alias (memcmp, bcmp)
-libc_hidden_builtin_def (BP_SYM (memcmp))
+libc_hidden_builtin_def (memcmp)

@@ -1,3 +1,15 @@
+2004-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/alpha/bits/semaphore.h (SEM_VALUE_MAX):
+	Just use a plain number.
+	* sysdeps/unix/sysv/linux/i386/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sh/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/semaphore.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: Likewise.
+
 2004-04-16  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Remove unneeded

@@ -1,3 +1,11 @@
+2004-04-17  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/et_EE: Change default charset for et_EE locale from
+	ISO-8859-1 to ISO-8859-15, to reflect the content of
+	<URL:http://www.eki.ee/itstandard/contents.html>.  Based on input
+	from Indrek Hein and Meelis Roos.
+	* SUPPORTED: Add et_EE.ISO-8859-15. [BZ #118]
+
 2004-04-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* SUPPORTED (SUPPORTED-LOCALES): Add kk_KZ/PT154.
@@ -7,8 +15,7 @@
 
 2004-03-19  Petter Reinholdtsen  <pere@hungry.com>
 
-	* locales/af_ZA: Make sure yesexpr and noexpr regex
-	start with '^'.
+	* locales/af_ZA: Make sure yesexpr and noexpr regex start with '^'.
 	* locales/ar_TN: Likewise.
 	* locales/ar_YE: Likewise.
 	* locales/bn_BD: Likewise.

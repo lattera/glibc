@@ -1,3 +1,7 @@
+2004-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* semaphore.h (SEM_VALUE_MAX): Just use a plain number.
+
 2004-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Fix last patch.
