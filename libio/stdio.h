@@ -219,6 +219,9 @@ extern FILE *fopencookie (void *__restrict __magic_cookie,
 			  __const char *__restrict __modes,
 			  _IO_cookie_io_functions_t __io_funcs) __THROW;
 
+/* Create a new stream that refers to a memory buffer.  */
+extern FILE *fmemopen (void *__s, size_t __len, __const char *__modes) __THROW;
+
 /* Open a stream that writes into a malloc'd buffer that is expanded as
    necessary.  *BUFLOC and *SIZELOC are updated with the buffer's location
    and the number of characters written on fflush or fclose.  */

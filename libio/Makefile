@@ -41,10 +41,10 @@ routines	:=							      \
 	iovdprintf vscanf vsnprintf obprintf fcloseall fseeko ftello	      \
 	freopen64 fseeko64 ftello64					      \
 									      \
-	libc_fatal
+	libc_fatal fmemopen
 
 tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
-	tst_wprintf2 tst-widetext
+	tst_wprintf2 tst-widetext test-fmemopen
 
 all: # Make this the default target; it will be defined in Rules.
 

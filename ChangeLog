@@ -1,5 +1,18 @@
 2000-08-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/stdio.h: Add fmemopen prototype.
+
+2000-08-25  Andreas Jaeger  <aj@suse.de>
+
+	* libio/Makefile (routines): Add fmemopen.
+	(tests): Add test-fmemopen.
+	* libio/Versions: Add fmemopen with version GLIBC_2.2.
+	* libio/test-fmemopen.c: New file.
+	* libio/fmemopen.c: New file.
+	Patches by Hanno Mueller <kontakt@hanno.de>.
+
+2000-08-28  Ulrich Drepper  <drepper@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/sigstack.h: Prevent double
 	inclusion.  Patch by Jes Sorensen <jes@linuxcare.com>.
 

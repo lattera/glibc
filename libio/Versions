@@ -121,7 +121,7 @@ libc {
     # f*
     fgetpos; fgetpos64; fgetwc; fgetwc_unlocked; fgetws; fgetws_unlocked;
     fputwc; fputwc_unlocked; fputws; fputws_unlocked; fsetpos; fsetpos64;
-    fwide; fwprintf; fwscanf; fopencookie;
+    fwide; fwprintf; fwscanf; fopencookie; fmemopen;
 
     # g*
     getwc; getwc_unlocked; getwchar; getwchar_unlocked;
