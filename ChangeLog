@@ -1,3 +1,13 @@
+2004-11-11  Simon Josefsson  <jas@extundo.com>
+
+	[BZ #542]
+	* sysdeps/generic/strtok_r.c [HAVE_CONFIG_H]: Include config.h.
+	[!_LIBC]: Include strtok_r.h (in gnulib), map __strtok_r to
+	strtok_r and __rawmemchr to strch.
+	(__strtok_r): Use C89 prototype.
+	[weak_alias]: Move calls to libc_hidden_def and weak_alias into
+	this #ifdef.
+
 2004-11-10  Paul Eggert  <eggert@cs.ucla.edu>
 
 	[BZ #541]

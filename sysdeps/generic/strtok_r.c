@@ -17,10 +17,21 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#ifdef HAVE_CONFIG_H
+# include <config.h>
+#endif
+
 #include <string.h>
 
 #undef strtok_r
 #undef __strtok_r
+
+#ifndef _LIBC
+/* Get specification.  */
+# include "strtok_r.h"
+# define __strtok_r strtok_r
+# define __rawmemchr strchr
+#endif
 
 /* Parse S into tokens separated by characters in DELIM.
    If S is NULL, the saved pointer in SAVE_PTR is used as
@@ -33,10 +44,7 @@
 		// s = "abc\0-def\0"
 */
 char *
-__strtok_r (s, delim, save_ptr)
-     char *s;
-     const char *delim;
-     char **save_ptr;
+__strtok_r (char *s, const char *delim, char **save_ptr)
 {
   char *token;
 
@@ -65,5 +73,7 @@ __strtok_r (s, delim, save_ptr)
     }
   return token;
 }
+#ifdef weak_alias
 libc_hidden_def (__strtok_r)
 weak_alias (__strtok_r, strtok_r)
+#endif
