@@ -1,5 +1,5 @@
 /* Load the dependencies of a mapped object.
-   Copyright (C) 1996-2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -307,7 +307,7 @@ _dl_map_object_deps (struct link_map *map,
 		      {
 			/* We are not interested in the error message.  */
 			assert (errstring != NULL);
-			if (errstring != INTUSE(_dl_out_of_memory))
+			if (errstring != _dl_out_of_memory)
 			  free ((char *) errstring);
 
 			/* Simply ignore this error and continue the work.  */

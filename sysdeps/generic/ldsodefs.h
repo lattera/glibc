@@ -694,10 +694,7 @@ extern char **_dl_argv_internal attribute_hidden
 
 /* The array with message we print as a last resort.  */
 extern const char _dl_out_of_memory[];
-#ifdef IS_IN_rtld
-/* XXX #ifdef should go away.  */
-extern const char _dl_out_of_memory_internal[] attribute_hidden;
-#endif
+rtld_hidden_proto (_dl_out_of_memory)
 
 /* Flag set at startup and cleared when the last initializer has run.  */
 extern int _dl_starting_up;

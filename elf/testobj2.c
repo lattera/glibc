@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "testobj.h"
 

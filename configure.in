@@ -2116,6 +2116,22 @@ fi
 rm -f conftest.*])
 AC_SUBST(pic_default)
 
+# This test comes after sysdeps configure fragments, so that they can
+# define the variable libc_mtune_example to tell us a valid -mtune=value
+# argument that we can test with.
+AC_SUBST(cc_mtune)cc_mtune=-mcpu
+if test "x$libc_mtune_example" != x; then
+  AC_CACHE_CHECK(if compiler supports -mtune option, libc_cv_cc_mtune, [dnl
+    libc_cv_cc_mtune=no
+    save_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -mtune=$libc_mtune_example"
+    AC_TRY_COMPILE(,,[libc_cv_cc_mtune=yes])
+  ])
+  if test "x$libc_cv_cc_mtune" = xyes; then
+    cc_mtune=-mtune
+  fi
+fi
+
 AC_SUBST(profile)
 AC_SUBST(omitfp)
 AC_SUBST(bounded)

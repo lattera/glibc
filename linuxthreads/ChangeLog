@@ -1,3 +1,7 @@
+2005-03-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Use $(cc-mtune).
+
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/tcb-offsets.sym (thread_offsetof): Rework for GCC 4.

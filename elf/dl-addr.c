@@ -68,7 +68,8 @@ _dl_addr (const void *address, Dl_info *info,
 	  && match->l_type == lt_executable)
 	info->dli_fname = _dl_argv[0];
 
-      const ElfW(Sym) *symtab = D_PTR (match, l_info[DT_SYMTAB]);
+      const ElfW(Sym) *symtab
+	= (const ElfW(Sym) *) D_PTR (match, l_info[DT_SYMTAB]);
       const char *strtab = (const char *) D_PTR (match, l_info[DT_STRTAB]);
 
       ElfW(Word) strtabsize = match->l_info[DT_STRSZ]->d_un.d_val;

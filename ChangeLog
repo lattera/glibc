@@ -1,3 +1,32 @@
+2005-03-05  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/generic/ldsodefs.h (_dl_out_of_memory_internal): Remove decl.
+	(_dl_out_of_memory): Use rtld_hidden_proto.
+	* elf/dl-error.c (_dl_out_of_memory): Use rtld_hidden_data_def.
+	(_dl_signal_error): Don't use INTUSE on _dl_out_of_memory.
+	* elf/dl-open.c (_dl_open): Likewise.
+	* elf/dl-deps.c (_dl_map_object_deps): Likewise.
+
+	* sunrpc/des_impl.c (des_set_key): Make first argument unsigned char *.
+
+	* elf/dl-addr.c (_dl_addr): Add a cast.
+
+	* elf/unload3mod4.c: Declare foo.
+	* elf/testobj2.c: Include <stdio.h>.
+
+	* sysdeps/gnu/errlist.awk: Emit NERR macro for _sys_nerr_internal
+	value constant, and use it in the defn.
+	* sysdeps/gnu/errlist-compat.awk: Use NERR in array decl.
+	Use actual size for compat array decls.
+
+	* config.make.in (cc-mtune): New substituted variable.
+	* configure.in (libc_cv_cc_mtune): New test for -mtune= switch,
+	done only if libc_mtune_example is defined.
+	* configure: Regenerated.
+	* sysdeps/i386/configure.in (libc_mtune_example): Set it.
+	* sysdeps/i386/configure: Regenerated.
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Use $(cc-mtune).
+
 2005-03-05  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makerules ($(inst_libdir)/libc.so): Use $(slibdir) instead of

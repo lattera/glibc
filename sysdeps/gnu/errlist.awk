@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2002,2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999,2002,2004,2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -106,8 +106,9 @@ errnoh == 4 \
 END {
   print "  };";
   print "";
-  print "const int _sys_nerr_internal";
-  print "  = sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0];";
+  print "#define NERR \\";
+  print "  (sizeof _sys_errlist_internal / sizeof _sys_errlist_internal [0])";
+  print "const int _sys_nerr_internal = NERR;"
   print "";
   print "#if !defined NOT_IN_libc && !ERRLIST_NO_COMPAT";
   print "# include <errlist-compat.c>";

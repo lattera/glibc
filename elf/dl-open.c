@@ -618,7 +618,7 @@ no more namespaces available for dlmopen()"));
 	  memcpy (local_errstring, errstring, len_errstring);
 	}
 
-      if (errstring != INTUSE(_dl_out_of_memory))
+      if (errstring != _dl_out_of_memory)
 	free ((char *) errstring);
 
       assert (_dl_debug_initialize (0, args.nsid)->r_state == RT_CONSISTENT);

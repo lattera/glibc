@@ -391,14 +391,14 @@ static const unsigned long des_skb[8][64] =
 static const char shifts2[16] =
 {0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0};
 
-static void des_set_key (char *, unsigned long *) internal_function;
+static void des_set_key (unsigned char *, unsigned long *) internal_function;
 static void des_encrypt (unsigned long *, unsigned long *, int)
      internal_function;
 int _des_crypt (char *, unsigned, struct desparams *);
 
 static void
 internal_function
-des_set_key (char *key, unsigned long *schedule)
+des_set_key (unsigned char *key, unsigned long *schedule)
 {
   register unsigned long c, d, t, s;
   register unsigned char *in;
@@ -406,7 +406,7 @@ des_set_key (char *key, unsigned long *schedule)
   register int i;
 
   k = (unsigned long *) schedule;
-  in = (unsigned char *) key;
+  in = key;
 
   c2l (in, c);
   c2l (in, d);

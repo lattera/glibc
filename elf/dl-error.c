@@ -1,5 +1,5 @@
 /* Error handling for runtime dynamic linker.
-   Copyright (C) 1995-2002,2004 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002,2004,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,7 +45,7 @@ struct catch
    variable since we have to avoid freeing it and so have to enable
    a pointer comparison.  See below and in dlfcn/dlerror.c.  */
 const char _dl_out_of_memory[] = "out of memory";
-INTVARDEF(_dl_out_of_memory)
+rtld_hidden_data_def (_dl_out_of_memory)
 
 
 /* This points to a function which is called when an continuable error is
@@ -95,7 +95,7 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 	{
 	  /* This is better than nothing.  */
 	  lcatch->objname = "";
-	  lcatch->errstring = INTUSE(_dl_out_of_memory);
+	  lcatch->errstring = _dl_out_of_memory;
 	}
       longjmp (lcatch->env, errcode ?: -1);
     }

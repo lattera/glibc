@@ -90,7 +90,7 @@ END {
     n = vcount[old];
     printf "#if SHLIB_COMPAT (libc, %s, %s)\n", old, new;
     printf "# include <bits/wordsize.h>\n";
-    printf "extern const char *const __sys_errlist_%s[];\n", old;
+    printf "extern const char *const __sys_errlist_%s[%d];\n", old, n;
     printf "const int __sys_nerr_%s = %d;\n", old, n;
     printf "strong_alias (_sys_errlist_internal, __sys_errlist_%s)\n", old;
     printf "declare_symbol (__sys_errlist_%s, object, __WORDSIZE/8*%d)\n", \
@@ -99,7 +99,7 @@ END {
       old, old;
     printf "compat_symbol (libc, __sys_nerr_%s, sys_nerr, %s);\n", old, old;
 
-    printf "extern const char *const ___sys_errlist_%s[];\n", old;
+    printf "extern const char *const ___sys_errlist_%s[%d];\n", old, n;
     printf "extern const int __sys_nerr_%s;\n", old;
     printf "strong_alias (__sys_errlist_%s, ___sys_errlist_%s)\n", old, old;
     printf "strong_alias (__sys_nerr_%s, ___sys_nerr_%s)\n", old, old;
@@ -110,10 +110,11 @@ END {
   }
 
   printf "\
-extern const char *const __sys_errlist_internal[];\n\
+extern const char *const __sys_errlist_internal[NERR];\n\
 extern const int __sys_nerr_internal;\n\
 strong_alias (_sys_errlist_internal, __sys_errlist_internal)\n\
 strong_alias (_sys_nerr_internal, __sys_nerr_internal)\n\
+extern const char *const sys_errlist[NERR];\n\
 versioned_symbol (libc, _sys_errlist_internal, sys_errlist, %s);\n\
 versioned_symbol (libc, __sys_errlist_internal, _sys_errlist, %s);\n\
 versioned_symbol (libc, _sys_nerr_internal, sys_nerr, %s);\n\
