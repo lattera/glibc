@@ -1,3 +1,11 @@
+2004-08-26  Roland McGrath  <roland@redhat.com>
+
+	* configure.in (add_ons_automatic): New variable, set to yes or no
+	indicating --enable-add-ons with no explicit list.
+	(running add-on fragments): Allow a fragment to modify $libc_add_on
+	and have that affect its place in the list of add-ons to use.
+	* configure: Regenerated.
+
 2004-08-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c: Major rewrite.  The data is now optionally kept in

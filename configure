@@ -1593,11 +1593,13 @@ if test "${enable_add_ons+set}" = set; then
   enableval="$enable_add_ons"
   case "$enableval" in
     yes) add_ons=`cd $srcdir && echo */configure | sed -e 's!/configure!!g'`
+	 add_ons_automatic=yes
 	 test "$add_ons" = "*" && add_ons= ;;
-    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
+    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`
+       add_ons_automatic=no ;;
    esac
 else
-  add_ons=
+  add_ons= add_ons_automatic=no
 fi;
 
 
@@ -1859,7 +1861,11 @@ echo "$as_me: error: add-on directory \"$f\" does not exist" >&2;}
   done
 
   # Now source each add-on's configure fragment.
-  # The fragments can use $srcdir/$libc_add_on to find themselves.
+  # The fragments can use $srcdir/$libc_add_on to find themselves,
+  # and test $add_ons_automatic to see if they were explicitly requested.
+  # A fragment can clear (or even change) $libc_add_on to affect
+  # whether it goes into the list to be actually used in the build.
+  use_add_ons=
   for libc_add_on in $add_ons; do
     libc_add_on_frag=$srcdir/$libc_add_on/configure
     if test -r $libc_add_on_frag; then
@@ -1870,7 +1876,10 @@ echo "${ECHO_T}running configure fragment for add-on $libc_add_on" >&6
       { echo "$as_me:$LINENO: WARNING: add-on fragment $libc_add_on_frag missing" >&5
 echo "$as_me: WARNING: add-on fragment $libc_add_on_frag missing" >&2;}
     fi
+    use_add_ons="$use_add_ons $libc_add_on"
   done
+  # Use echo to strip excess whitespace.
+  add_ons="`echo $use_add_ons`"
 fi
 
 

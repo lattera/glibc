@@ -175,10 +175,12 @@ AC_ARG_ENABLE([add-ons],
                              [configure and build add-ons in DIR1,DIR2,...  search for add-ons if no parameter given]),
   [case "$enableval" in
     yes) add_ons=`cd $srcdir && echo */configure | sed -e 's!/configure!!g'`
+	 add_ons_automatic=yes
 	 test "$add_ons" = "*" && add_ons= ;;
-    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`;;
+    *) add_ons=`echo "$enableval" | sed 's/,/ /g'`
+       add_ons_automatic=no ;;
    esac],
-  [add_ons=])
+  [add_ons= add_ons_automatic=no])
 
 dnl Let the user avoid using TLS.  Don't know why but...
 dnl XXX For now we disable support by default.
@@ -363,7 +365,11 @@ if test x"$add_ons" != x; then
   done
 
   # Now source each add-on's configure fragment.
-  # The fragments can use $srcdir/$libc_add_on to find themselves.
+  # The fragments can use $srcdir/$libc_add_on to find themselves,
+  # and test $add_ons_automatic to see if they were explicitly requested.
+  # A fragment can clear (or even change) $libc_add_on to affect
+  # whether it goes into the list to be actually used in the build.
+  use_add_ons=
   for libc_add_on in $add_ons; do
     libc_add_on_frag=$srcdir/$libc_add_on/configure
     if test -r $libc_add_on_frag; then
@@ -372,7 +378,10 @@ if test x"$add_ons" != x; then
     else
       AC_MSG_WARN(add-on fragment $libc_add_on_frag missing)
     fi
+    use_add_ons="$use_add_ons $libc_add_on"
   done
+  # Use echo to strip excess whitespace.
+  add_ons="`echo $use_add_ons`"
 fi
 AC_SUBST(add_ons)
 

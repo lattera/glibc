@@ -1,3 +1,9 @@
+2004-08-26  Roland McGrath  <roland@redhat.com>
+
+	* configure.in: New file.  If nptl add-on is also selected, barf if
+	explicit and elide ourselves if implicit.
+	* configure: Now generated.
+
 2004-08-25  Richard Sandiford  <rsandifo@redhat.com>
 
 	* sysdeps/unix/sysv/linux/mips/sysdep-cancel.h (CENABLE, CDISABLE,
