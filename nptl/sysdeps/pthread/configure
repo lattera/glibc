@@ -102,7 +102,6 @@ cat >>conftest.$ac_ext <<_ACEOF
 
 #include <stdio.h>
 void cl (void *a) { }
-extern c (void);
 int
 main ()
 {
