@@ -1,3 +1,25 @@
+2004-08-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h: Define non-standard
+	RLIMIT__ enums as __RLIMIT_ and adjust macros accordingly.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h: Likewise.
+
+2004-08-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/resource.h (RLIMIT_SIGPENDING,
+	RLIMIT_MSGQUEUE): Add.
+	(RLIMIT_NLIMITS, RLIM_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/alpha/bits/resource.h (RLIMIT_SIGPENDING,
+	RLIMIT_MSGQUEUE, RLIMIT_NLIMITS): Add.
+	(RLIM_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/sparc/bits/resource.h (RLIMIT_SIGPENDING,
+	RLIMIT_MSGQUEUE, RLIMIT_NLIMITS): Add.
+	(RLIM_NLIMITS): Adjust.
+	* sysdeps/unix/sysv/linux/mips/bits/resource.h (RLIMIT_SIGPENDING,
+	RLIMIT_MSGQUEUE, RLIMIT_NLIMITS): Add.
+	(RLIM_NLIMITS): Adjust.
+
 2004-08-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* resolv/res_query.c (__libc_res_nsearch): Protect the debugging

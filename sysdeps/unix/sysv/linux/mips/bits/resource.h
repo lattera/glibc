@@ -1,5 +1,6 @@
 /* Bit values & structures for resource limits.  Linux/MIPS version.
-   Copyright (C) 1994,1996,1997,1998,1999,2000 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1996, 1997, 1998, 1999, 2000, 2004
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,7 +81,16 @@ enum __rlimit_resource
   RLIMIT_LOCKS = 10,
 #define RLIMIT_LOCKS RLIMIT_LOCKS
 
-  RLIM_NLIMITS = 11
+  /* Maximum number of pending signals.  */
+  __RLIMIT_SIGPENDING = 11,
+#define RLIMIT_SIGPENDING __RLIMIT_SIGPENDING
+
+  /* Maximum bytes in POSIX message queues.  */
+  __RLIMIT_MSGQUEUE = 12,
+#define RLIMIT_MSGQUEUE __RLIMIT_MSGQUEUE
+
+  RLIMIT_NLIMITS = 13,
+  RLIM_NLIMITS = RLIMIT_NLIMITS
 #define RLIMIT_NLIMITS RLIMIT_NLIMITS
 #define RLIM_NLIMITS RLIM_NLIMITS
 };
