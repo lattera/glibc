@@ -1,6 +1,9 @@
 2004-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_mutex_trylock):
+	No need to restrict type of ret.  Make it int.  Add comment.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_mutex_trylock):
 	Remove unnecessary setne instruction.
 
 2004-03-22  Jakub Jelinek  <jakub@redhat.com>

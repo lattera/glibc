@@ -102,8 +102,13 @@ extern int __lll_mutex_unlock_wake (int *__futex)
      __attribute ((regparm (1))) attribute_hidden;
 
 
+/* NB: in the lll_mutex_trylock macro we simply return the value in %eax
+   after the cmpxchg instruction.  In case the operation succeded this
+   value is zero.  In case the operation failed, the cmpxchg instruction
+   has loaded the current value of the memory work which is guaranteed
+   to be nonzero.  */
 #define lll_mutex_trylock(futex) \
-  ({ unsigned char ret;							      \
+  ({ int ret;								      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1"			      \
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), "m" (futex),\

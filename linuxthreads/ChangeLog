@@ -1,3 +1,8 @@
+2004-03-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/ia64/pt-machine.h (BUSY_WAIT_NOP): Define.
+	* sysdeps/x86_64/pt-machine.h (BUSY_WAIT_NOP): Likewise.
+
 2004-03-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/local_lim.h: Add HOST_NAME_MAX.

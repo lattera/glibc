@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    x86-64 version.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -218,5 +218,8 @@ extern int __arch_prctl (int __code, unsigned long __addr);
 
 /* Maximum size of the stack if the rlimit is unlimited.  */
 #define ARCH_STACK_MAX_SIZE	32*1024*1024
+
+/* The ia32e really want some help to prevent overheating.  */
+#define BUSY_WAIT_NOP	__asm__ ("rep; nop")
 
 #endif /* pt-machine.h */
