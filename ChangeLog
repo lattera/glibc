@@ -1,3 +1,48 @@
+2002-02-28  Isamu Hasegawa  <isamu@yamato.ibm.com>
+
+	* posix/regcomp.c (regcomp): Remove a redundant condition.
+	(init_word_char): Add a check on malloc failure.
+	(create_initial_state): Likewise.
+	(duplicate_node): Likewise.
+	(calc_eclosure): Likewise.
+	(calc_eclosure_iter): Likewise.
+	(parse_expression): Likewise.
+	(parse_bracket_exp): Remove unnecessary malloc invocations.
+	(build_equiv_class): Likewise.
+	(build_charclass): Likewise.
+	* posix/regex_internal.c (re_node_set_intersect): Add a check
+	on malloc failure.
+	(re_node_set_add_intersect): Likewise.
+	(re_node_set_merge): Likewise.
+	(re_acquire_state): Likewise.
+	(re_acquire_state_context): Likewise.
+	(create_newstate_common): Likewise.
+	(register_state): Likewise.
+	(create_ci_newstate): Likewise.
+	(create_cd_newstate): Likewise.
+	* posix/regex_internal.h: Fix prototypes of re_acquire_state
+	and re_acquire_state_context.
+	* posix/regexec.c (regexec): Suit it to the error handling of
+	re_search_internal.
+	(re_match): Likewise.
+	(re_search): Likewise.
+	(re_search_internal): Add a check on malloc failure.
+	(acquire_init_state_context): Likewise.
+	(check_matching): Likewise.
+	(proceed_next_node): Likewise.
+	(set_regs): Likewise.
+	(sift_states_backward): Likewise.
+	(sift_states_iter_bkref): Likewise.
+	(add_epsilon_backreference): Likewise.
+	(transit_state): Likewise.
+	(transit_state_sb): Likewise.
+	(transit_state_mb): Likewise.
+	(transit_state_bkref_loop): Likewise.
+	(build_trtable): Likewise.
+	(group_nodes_into_DFAstates): Likewise.
+	(match_ctx_init): Likewise.
+	(match_ctx_add_entry): Likewise.
+
 2002-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Always add SONAME to

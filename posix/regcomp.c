@@ -63,7 +63,7 @@ static void re_compile_fastmap_iter (regex_t *bufp,
                                      const re_dfastate_t *init_state,
                                      char *fastmap);
 static reg_errcode_t init_dfa (re_dfa_t *dfa, int pat_len);
-static void init_word_char (re_dfa_t *dfa);
+static reg_errcode_t init_word_char (re_dfa_t *dfa);
 static void free_charset (re_charset_t *cset);
 static void free_workarea_compile (regex_t *preg);
 static reg_errcode_t create_initial_state (re_dfa_t *dfa);
@@ -72,10 +72,11 @@ static reg_errcode_t analyze_tree (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_first (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_next (re_dfa_t *dfa, bin_tree_t *node);
 static void calc_epsdest (re_dfa_t *dfa, bin_tree_t *node);
-static int duplicate_node (re_dfa_t *dfa, int org_idx,
-                           unsigned int constraint);
+static reg_errcode_t duplicate_node (int *new_idx, re_dfa_t *dfa, int org_idx,
+                                     unsigned int constraint);
 static reg_errcode_t calc_eclosure (re_dfa_t *dfa);
-static re_node_set calc_eclosure_iter (re_dfa_t *dfa, int node, int root);
+static reg_errcode_t calc_eclosure_iter (re_node_set *new_set, re_dfa_t *dfa,
+                                         int node, int root);
 static void calc_inveclosure (re_dfa_t *dfa);
 static int fetch_number (re_string_t *input, re_token_t *token,
                          reg_syntax_t syntax);
@@ -446,8 +447,8 @@ regcomp (preg, pattern, cflags)
   if (ret == REG_ERPAREN)
     ret = REG_EPAREN;
 
-  /* XXX Why the test for preg->fastmap != NULL?  */
-  if (ret == REG_NOERROR && preg->fastmap != NULL)
+  /* We have already checked preg->fastmap != NULL.  */
+  if (ret == REG_NOERROR)
     {
       /* Compute the fastmap now, since regexec cannot modify the pattern
 	 buffer.  */
@@ -772,16 +773,19 @@ init_dfa (dfa, pat_len)
    "word".  In this case "word" means that it is the word construction
    character used by some operators like "\<", "\>", etc.  */
 
-static void
+static reg_errcode_t
 init_word_char (dfa)
      re_dfa_t *dfa;
 {
   int i, j, ch;
   dfa->word_char = (re_bitset_ptr_t) calloc (sizeof (bitset), 1);
+  if (dfa->word_char == NULL)
+    return REG_ESPACE;
   for (i = 0, ch = 0; i < BITSET_UINTS; ++i)
     for (j = 0; j < UINT_BITS; ++j, ++ch)
       if (isalnum (ch) || ch == '_')
         dfa->word_char[i] |= 1 << j;
+  return REG_NOERROR;
 }
 
 /* Free the work area which are only used while compiling.  */
@@ -844,24 +848,28 @@ create_initial_state (dfa)
       }
 
   /* It must be the first time to invoke acquire_state.  */
-  dfa->init_state = re_acquire_state_context (dfa, &init_nodes, 0);
+  dfa->init_state = re_acquire_state_context (&err, dfa, &init_nodes, 0);
+  /* We don't check ERR here, since the initial state must not be NULL.  */
+  if (dfa->init_state == NULL)
+    return err;
   if (dfa->init_state->has_constraint)
     {
-      dfa->init_state_word = re_acquire_state_context (dfa, &init_nodes,
+      dfa->init_state_word = re_acquire_state_context (&err, dfa, &init_nodes,
                                                        CONTEXT_WORD);
-      dfa->init_state_nl = re_acquire_state_context (dfa, &init_nodes,
+      dfa->init_state_nl = re_acquire_state_context (&err, dfa, &init_nodes,
                                                      CONTEXT_NEWLINE);
-      dfa->init_state_begbuf = re_acquire_state_context (dfa, &init_nodes,
+      dfa->init_state_begbuf = re_acquire_state_context (&err, dfa,
+                                                         &init_nodes,
                                                          CONTEXT_NEWLINE
                                                          | CONTEXT_BEGBUF);
+      if (dfa->init_state_word == NULL || dfa->init_state_nl == NULL
+          || dfa->init_state_begbuf == NULL)
+        return err;
     }
   else
     dfa->init_state_word = dfa->init_state_nl
       = dfa->init_state_begbuf = dfa->init_state;
 
-  if (dfa->init_state == NULL || dfa->init_state_word == NULL
-      || dfa->init_state_nl == NULL || dfa->init_state_begbuf == NULL )
-    return REG_ESPACE;
   re_node_set_free (&init_nodes);
   return REG_NOERROR;
 }
@@ -1114,20 +1122,30 @@ calc_epsdest (dfa, node)
     }
 }
 
-static int
-duplicate_node (dfa, org_idx, constraint)
+/* Duplicate the node whose index is ORG_IDX and set the constraint CONSTRAINT.
+   The new index will be stored in NEW_IDX and return REG_NOERROR if succeeded,
+   otherwise return the error code.  */
+
+static reg_errcode_t
+duplicate_node (new_idx, dfa, org_idx, constraint)
      re_dfa_t *dfa;
-     int org_idx;
+     int *new_idx, org_idx;
      unsigned int constraint;
 {
   re_token_t dup;
   int dup_idx;
+  reg_errcode_t err;
 
   dup.type = OP_CONTEXT_NODE;
   if (dfa->nodes[org_idx].type == OP_CONTEXT_NODE)
     {
+      /* If the node whose index is ORG_IDX is the same as the intended
+         node, use it.  */
       if (dfa->nodes[org_idx].constraint == constraint)
-        return org_idx;
+        {
+          *new_idx = org_idx;
+          return REG_NOERROR;
+        }
       dup.constraint = constraint |
         dfa->nodes[org_idx].constraint;
     }
@@ -1137,23 +1155,32 @@ duplicate_node (dfa, org_idx, constraint)
   /* In case that `entity' points OP_CONTEXT_NODE,
      we correct `entity' to real entity in calc_inveclosures(). */
   dup.opr.ctx_info = malloc (sizeof (*dup.opr.ctx_info));
+  dup_idx = re_dfa_add_node (dfa, dup, 1);
+  if (dup.opr.ctx_info == NULL || dup_idx == -1)
+    return REG_ESPACE;
   dup.opr.ctx_info->entity = org_idx;
   dup.opr.ctx_info->bkref_eclosure = NULL;
-  dup_idx = re_dfa_add_node (dfa, dup, 1);
-  dfa->nodes[dup_idx].duplicated = 1;
 
+  dfa->nodes[dup_idx].duplicated = 1;
   dfa->firsts[dup_idx] = dfa->firsts[org_idx];
   dfa->nexts[dup_idx] = dfa->nexts[org_idx];
-  re_node_set_init_copy (dfa->edests + dup_idx, dfa->edests + org_idx);
+  err = re_node_set_init_copy (dfa->edests + dup_idx, dfa->edests + org_idx);
+  if (err != REG_NOERROR)
+    return err;
   /* Since we don't duplicate epsilon nodes, epsilon closure have
      only itself.  */
-  re_node_set_init_1 (dfa->eclosures + dup_idx, dup_idx);
-  re_node_set_init_1 (dfa->inveclosures + dup_idx, dup_idx);
+  err = re_node_set_init_1 (dfa->eclosures + dup_idx, dup_idx);
+  if (err != REG_NOERROR)
+    return err;
+  err = re_node_set_init_1 (dfa->inveclosures + dup_idx, dup_idx);
+  if (err != REG_NOERROR)
+    return err;
   /* Then we must update inveclosure for this node.
      We process them at last part of calc_eclosure(),
      since we don't complete to calculate them here.  */
 
-  return dup_idx;
+  *new_idx = dup_idx;
+  return REG_NOERROR;
 }
 
 static void
@@ -1193,6 +1220,7 @@ calc_eclosure (dfa)
   /* For each nodes, calculate epsilon closure.  */
   for (node_idx = 0, max = dfa->nodes_len; ; ++node_idx)
     {
+      reg_errcode_t err;
       re_node_set eclosure_elem;
       if (node_idx == max)
         {
@@ -1210,7 +1238,9 @@ calc_eclosure (dfa)
       if (dfa->eclosures[node_idx].nelem != 0)
         continue;
       /* Calculate epsilon closure of `node_idx'.  */
-      eclosure_elem = calc_eclosure_iter (dfa, node_idx, 1);
+      err = calc_eclosure_iter (&eclosure_elem, dfa, node_idx, 1);
+      if (err != REG_NOERROR)
+        return err;
 
       if (dfa->eclosures[node_idx].nelem == 0)
         {
@@ -1241,7 +1271,13 @@ calc_eclosure (dfa)
         {
           int dest_node_idx = dfa->eclosures[dfa->nexts[idx]].elems[i];
           if (!IS_EPSILON_NODE (dfa->nodes[dest_node_idx].type))
-            dest_node_idx = duplicate_node (dfa, dest_node_idx, constraint);
+            {
+              reg_errcode_t err;
+              err = duplicate_node (&dest_node_idx, dfa, dest_node_idx,
+                                    constraint);
+              if (err != REG_NOERROR)
+                return err;
+            }
           re_node_set_insert (bkref_eclosure, dest_node_idx);
         }
       dfa->nodes[idx].opr.ctx_info->bkref_eclosure = bkref_eclosure;
@@ -1252,15 +1288,19 @@ calc_eclosure (dfa)
 
 /* Calculate epsilon closure of NODE.  */
 
-static re_node_set
-calc_eclosure_iter (dfa, node, root)
+static reg_errcode_t
+calc_eclosure_iter (new_set, dfa, node, root)
+     re_node_set *new_set;
      re_dfa_t *dfa;
      int node, root;
 {
+  reg_errcode_t err;
   unsigned int constraint;
   int i, max, incomplete = 0;
   re_node_set eclosure;
-  re_node_set_alloc (&eclosure, 1);
+  err = re_node_set_alloc (&eclosure, dfa->edests[node].nelem + 1);
+  if (err != REG_NOERROR)
+    return err;
 
   /* This indicates that we are calculating this node now.
      We reference this value to avoid infinite loop.  */
@@ -1285,7 +1325,11 @@ calc_eclosure_iter (dfa, node, root)
         /* If we haven't calculated the epsilon closure of `edest' yet,
            calculate now. Otherwise use calculated epsilon closure.  */
         if (dfa->eclosures[edest].nelem == 0)
-          eclosure_elem = calc_eclosure_iter (dfa, edest, 0);
+          {
+            err = calc_eclosure_iter (&eclosure_elem, dfa, edest, 0);
+            if (err != REG_NOERROR)
+              return err;
+          }
         else
           eclosure_elem = dfa->eclosures[edest];
         /* Merge the epsilon closure of `edest'.  */
@@ -1307,7 +1351,11 @@ calc_eclosure_iter (dfa, node, root)
         int dest = eclosure.elems[i];
         if (!IS_EPSILON_NODE (dfa->nodes[dest].type))
           {
-            int dup_dest = duplicate_node (dfa, dest, constraint);
+            int dup_dest;
+            reg_errcode_t err;
+            err = duplicate_node (&dup_dest, dfa, dest, constraint);
+            if (err != REG_NOERROR)
+              return err;
             if (dest != dup_dest)
               {
                 re_node_set_remove_at (&eclosure, i--);
@@ -1323,7 +1371,8 @@ calc_eclosure_iter (dfa, node, root)
     dfa->eclosures[node].nelem = 0;
   else
     dfa->eclosures[node] = eclosure;
-  return eclosure;
+  *new_set = eclosure;
+  return REG_NOERROR;
 }
 
 /* Functions for token which are used in the parser.  */
@@ -1865,7 +1914,11 @@ parse_expression (regexp, preg, token, syntax, nest, err)
       break;
     case ANCHOR:
       if (dfa->word_char == NULL)
-        init_word_char (dfa);
+        {
+          *err = init_word_char (dfa);
+          if (*err != REG_NOERROR)
+            return NULL;
+        }
       if (token->opr.ctx_type == WORD_DELIM)
         {
           bin_tree_t *tree_first, *tree_last;
@@ -2137,28 +2190,6 @@ parse_dup_op (dup_elem, regexp, dfa, token, syntax, err)
    I'm not sure, but maybe enough.  */
 #define BRACKET_NAME_BUF_SIZE 32
 
-static inline void *
-extend_array_for_cset (array, num, alloc, type_size)
-     void *array;
-     int num, *alloc, type_size;
-{
-  void *new_array = array;
-  if (*alloc == num)
-    {
-      if (*alloc == 0)
-        {
-          new_array = malloc (type_size);
-          *alloc = 1;
-        }
-      else
-        {
-          new_array = realloc (array, type_size * num * 2);
-          *alloc = 2 * num;
-        }
-    }
-  return new_array;
-}
-
 /* This function parse bracket expression like "[abc]", "[a-c]",
    "[[.a-a.]]" etc.  */
 
@@ -2299,22 +2330,15 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
           uint32_t *new_array_end;
 	  int new_nranges;
 
-	  /* XXX If mbcset->range_starts and mbcset->range_ends are NULL
-	     if *range_alloc == 0 then we do not need the if.  */
-          if (*range_alloc == 0)
-            {
-              new_nranges = 1;
-              new_array_start = re_malloc (uint32_t, 1);
-              new_array_end = re_malloc (uint32_t, 1);
-            }
-          else
-            {
-              new_nranges = 2 * mbcset->nranges;
-              new_array_start = re_realloc (mbcset->range_starts, uint32_t,
-                                            new_nranges);
-              new_array_end = re_realloc (mbcset->range_ends, uint32_t,
-                                          new_nranges);
-            }
+          /* +1 in case of mbcset->nranges is 0.  */
+          new_nranges = 2 * mbcset->nranges + 1;
+	  /* Use realloc since mbcset->range_starts and mbcset->range_ends
+             are NULL if *range_alloc == 0.  */
+          new_array_start = re_realloc (mbcset->range_starts, uint32_t,
+                                        new_nranges);
+          new_array_end = re_realloc (mbcset->range_ends, uint32_t,
+                                      new_nranges);
+
           if (new_array_start == NULL || new_array_end == NULL)
             return REG_ESPACE;
 
@@ -2394,13 +2418,18 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
 
           /* Got valid collation sequence, add it as a new entry.  */
           /* Check the space of the arrays.  */
-          mbcset->coll_syms = extend_array_for_cset (mbcset->coll_syms,
-                                                     mbcset->ncoll_syms,
-                                                     coll_sym_alloc,
-                                                     sizeof (int32_t));
-          if (mbcset->coll_syms == NULL)
-            return REG_ESPACE;
-
+          if (*coll_sym_alloc == mbcset->ncoll_syms)
+            {
+              /* Not enough, realloc it.  */
+              /* +1 in case of mbcset->ncoll_syms is 0.  */
+              *coll_sym_alloc = 2 * mbcset->ncoll_syms + 1;
+              /* Use realloc since mbcset->coll_syms is NULL
+                 if *alloc == 0.  */
+              mbcset->coll_syms = re_realloc (mbcset->coll_syms, int32_t,
+                                              *coll_sym_alloc);
+              if (mbcset->coll_syms == NULL)
+                return REG_ESPACE;
+            }
           mbcset->coll_syms[mbcset->ncoll_syms++] = idx;
           return REG_NOERROR;
         }
@@ -2557,12 +2586,18 @@ parse_bracket_exp (regexp, dfa, token, syntax, err)
               bitset_set (sbcset, start_elem.opr.ch);
               break;
             case MB_CHAR:
-              mbcset->mbchars = extend_array_for_cset (mbcset->mbchars,
-						       mbcset->nmbchars,
-						       &mbchar_alloc,
-						       sizeof (wchar_t));
-              if (mbcset->mbchars == NULL)
-                goto parse_bracket_exp_espace;
+              /* Check whether the array has enough space.  */
+              if (mbchar_alloc == mbcset->nmbchars)
+                {
+                  /* Not enough, realloc it.  */
+                  /* +1 in case of mbcset->nmbchars is 0.  */
+                  mbchar_alloc = 2 * mbcset->nmbchars + 1;
+                  /* Use realloc since array is NULL if *alloc == 0.  */
+                  mbcset->mbchars = re_realloc (mbcset->mbchars, wchar_t,
+                                                mbchar_alloc);
+                  if (mbcset->mbchars == NULL)
+                    goto parse_bracket_exp_espace;
+                }
               mbcset->mbchars[mbcset->nmbchars++] = start_elem.opr.wch;
               break;
             case EQUIV_CLASS:
@@ -2779,14 +2814,18 @@ build_equiv_class (mbcset, sbcset, equiv_class_alloc, name)
                 bitset_set (sbcset, ch);
             }
         }
-      /* Check the space of the arrays, and extend if we need.  */
-      mbcset->equiv_classes = extend_array_for_cset (mbcset->equiv_classes,
-						     mbcset->nequiv_classes,
-						     equiv_class_alloc,
-						     sizeof (int32_t));
-      if (mbcset->equiv_classes == NULL)
-        return REG_ESPACE;
-
+      /* Check whether the array has enough space.  */
+      if (*equiv_class_alloc == mbcset->nequiv_classes)
+        {
+          /* Not enough, realloc it.  */
+          /* +1 in case of mbcset->nequiv_classes is 0.  */
+          *equiv_class_alloc = 2 * mbcset->nequiv_classes + 1;
+          /* Use realloc since the array is NULL if *alloc == 0.  */
+          mbcset->equiv_classes = re_realloc (mbcset->equiv_classes, int32_t,
+                                              *equiv_class_alloc);
+          if (mbcset->equiv_classes == NULL)
+            return REG_ESPACE;
+        }
       mbcset->equiv_classes[mbcset->nequiv_classes++] = idx1;
     }
   else
@@ -2815,12 +2854,17 @@ build_charclass (mbcset, sbcset, char_class_alloc, name)
   int i;
 
   /* Check the space of the arrays.  */
-  mbcset->char_classes = extend_array_for_cset (mbcset->char_classes,
-						mbcset->nchar_classes,
-						char_class_alloc,
-						sizeof (wctype_t));
-  if (mbcset->char_classes == NULL)
-    return REG_ESPACE;
+  if (*char_class_alloc == mbcset->nchar_classes)
+    {
+      /* Not enough, realloc it.  */
+      /* +1 in case of mbcset->nchar_classes is 0.  */
+      *char_class_alloc = 2 * mbcset->nchar_classes + 1;
+      /* Use realloc since array is NULL if *alloc == 0.  */
+      mbcset->char_classes = re_realloc (mbcset->char_classes, wctype_t,
+                                         *char_class_alloc);
+      if (mbcset->char_classes == NULL)
+        return REG_ESPACE;
+    }
 
   mbcset->char_classes[mbcset->nchar_classes++] = __wctype (name);
 

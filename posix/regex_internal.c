@@ -68,6 +68,8 @@ static reg_errcode_t re_string_translate_buffer (re_string_t *pstr,
 static re_dfastate_t *create_newstate_common (re_dfa_t *dfa,
                                               const re_node_set *nodes,
                                               unsigned int hash);
+static reg_errcode_t register_state (re_dfa_t *dfa, re_dfastate_t *newstate,
+                                     unsigned int hash);
 static re_dfastate_t *create_ci_newstate (re_dfa_t *dfa,
                                           const re_node_set *nodes,
                                           unsigned int hash);
@@ -473,6 +475,10 @@ re_node_set_init_copy (dest, src)
   return REG_NOERROR;
 }
 
+/* Calculate the intersection of the sets SRC1 and SRC2. And store it in
+   DEST. Return value indicate the error code or REG_NOERROR if succeeded.
+   Note: We assume dest->elems is NULL, when dest->alloc is 0.  */
+
 static reg_errcode_t
 re_node_set_intersect (dest, src1, src2)
      re_node_set *dest;
@@ -483,31 +489,28 @@ re_node_set_intersect (dest, src1, src2)
     {
       if (src1->nelem + src2->nelem > dest->alloc)
         {
-          int *new_array;
-          if (dest->alloc == 0)
-            new_array = re_malloc (int, src1->nelem + src2->nelem);
-          else
-            new_array = re_realloc (dest->elems, int,
-                                    src1->nelem + src2->nelem);
           dest->alloc = src1->nelem + src2->nelem;
-          if (new_array == NULL)
+          dest->elems = re_realloc (dest->elems, int, dest->alloc);
+          if (dest->elems == NULL)
             return REG_ESPACE;
-          dest->elems = new_array;
         }
     }
   else
     {
+      /* The intersection of empty sets is also empty set.  */
       dest->nelem = 0;
       return REG_NOERROR;
     }
 
-  for (i1 = i2 = id = 0 ; i1 < src1->nelem && i2 < src2->nelem ;)
+  for (i1 = i2 = id = 0; i1 < src1->nelem && i2 < src2->nelem; )
     {
       if (src1->elems[i1] > src2->elems[i2])
         {
           ++i2;
           continue;
         }
+      /* The intersection must have the elements which are in both of
+         SRC1 and SRC2.  */
       if (src1->elems[i1] == src2->elems[i2])
         dest->elems[id++] = src2->elems[i2++];
       ++i1;
@@ -515,6 +518,10 @@ re_node_set_intersect (dest, src1, src2)
   dest->nelem = id;
   return REG_NOERROR;
 }
+
+/* Calculate the intersection of the sets SRC1 and SRC2. And merge it to
+   DEST. Return value indicate the error code or REG_NOERROR if succeeded.
+   Note: We assume dest->elems is NULL, when dest->alloc is 0.  */
 
 static reg_errcode_t
 re_node_set_add_intersect (dest, src1, src2)
@@ -526,16 +533,10 @@ re_node_set_add_intersect (dest, src1, src2)
     {
       if (src1->nelem + src2->nelem + dest->nelem > dest->alloc)
         {
-          int *new_array;
-          if (dest->alloc == 0)
-            new_array = re_malloc (int, src1->nelem + src2->nelem);
-          else
-            new_array = re_realloc (dest->elems, int,
-                                    src1->nelem + src2->nelem + dest->nelem);
           dest->alloc = src1->nelem + src2->nelem + dest->nelem;
-          if (new_array == NULL)
+          dest->elems = re_realloc (dest->elems, int, dest->alloc);
+          if (dest->elems == NULL)
             return REG_ESPACE;
-          dest->elems = new_array;
         }
     }
   else
@@ -566,6 +567,9 @@ re_node_set_add_intersect (dest, src1, src2)
     }
   return REG_NOERROR;
 }
+
+/* Calculate the union set of the sets SRC1 and SRC2. And store it to
+   DEST. Return value indicate the error code or REG_NOERROR if succeeded.  */
 
 static reg_errcode_t
 re_node_set_init_union (dest, src1, src2)
@@ -617,6 +621,9 @@ re_node_set_init_union (dest, src1, src2)
   return REG_NOERROR;
 }
 
+/* Calculate the union set of the sets DEST and SRC. And store it to
+   DEST. Return value indicate the error code or REG_NOERROR if succeeded.  */
+
 static reg_errcode_t
 re_node_set_merge (dest, src)
      re_node_set *dest;
@@ -628,12 +635,16 @@ re_node_set_merge (dest, src)
   else if (dest == NULL)
     {
       dest = re_malloc (re_node_set, 1);
+      if (dest == NULL)
+        return REG_ESPACE;
       return re_node_set_init_copy (dest, src);
     }
   if (dest->alloc < src->nelem + dest->nelem)
     {
       dest->alloc = 2 * (src->nelem + dest->alloc);
       dest->elems = re_realloc (dest->elems, int, dest->alloc);
+      if (dest->elems == NULL)
+        return REG_ESPACE;
     }
 
   for (si = 0, di = 0 ; si < src->nelem && di < dest->nelem ;)
@@ -860,18 +871,28 @@ calc_state_hash (nodes, context)
 
 /* Search for the state whose node_set is equivalent to NODES.
    Return the pointer to the state, if we found it in the DFA.
-   Otherwise create the new one and return it.  */
+   Otherwise create the new one and return it.  In case of an error
+   return NULL and set the error code in ERR.
+   Note: - We assume NULL as the invalid state, then it is possible that
+           return value is NULL and ERR is REG_NOERROR.
+         - We never return non-NULL value in case of any errors, it is for
+           optimization.  */
 
-static re_dfastate_t *
-re_acquire_state (dfa, nodes)
+static re_dfastate_t*
+re_acquire_state (err, dfa, nodes)
+     reg_errcode_t *err;
      re_dfa_t *dfa;
      const re_node_set *nodes;
 {
   unsigned int hash;
+  re_dfastate_t *new_state;
   struct re_state_table_entry *spot;
   int i;
   if (nodes->nelem == 0)
-    return NULL;
+    {
+      *err = REG_NOERROR;
+      return NULL;
+    }
   hash = calc_state_hash (nodes, 0);
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
@@ -893,25 +914,42 @@ re_acquire_state (dfa, nodes)
       }
 
   /* There are no appropriate state in the dfa, create the new one.  */
-  return create_ci_newstate (dfa, nodes, hash);
+  new_state = create_ci_newstate (dfa, nodes, hash);
+  if (new_state != NULL)
+    return new_state;
+  else
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
 }
 
 /* Search for the state whose node_set is equivalent to NODES and
    whose context is equivalent to CONTEXT.
    Return the pointer to the state, if we found it in the DFA.
-   Otherwise create the new one and return it.  */
+   Otherwise create the new one and return it.  In case of an error
+   return NULL and set the error code in ERR.
+   Note: - We assume NULL as the invalid state, then it is possible that
+           return value is NULL and ERR is REG_NOERROR.
+         - We never return non-NULL value in case of any errors, it is for
+           optimization.  */
 
-static re_dfastate_t *
-re_acquire_state_context (dfa, nodes, context)
+static re_dfastate_t*
+re_acquire_state_context (err, dfa, nodes, context)
+     reg_errcode_t *err;
      re_dfa_t *dfa;
      const re_node_set *nodes;
      unsigned int context;
 {
   unsigned int hash;
+  re_dfastate_t *new_state;
   struct re_state_table_entry *spot;
   int i;
   if (nodes->nelem == 0)
-    return NULL;
+    {
+      *err = REG_NOERROR;
+      return NULL;
+    }
   hash = calc_state_hash (nodes, context);
   spot = dfa->state_table + (hash & dfa->state_hash_mask);
 
@@ -934,8 +972,18 @@ re_acquire_state_context (dfa, nodes, context)
           return state;
       }
   /* There are no appropriate state in `dfa', create the new one.  */
-  return create_cd_newstate (dfa, nodes, context, hash);
+  new_state = create_cd_newstate (dfa, nodes, context, hash);
+  if (new_state != NULL)
+    return new_state;
+  else
+    {
+      *err = REG_ESPACE;
+      return NULL;
+    }
 }
+
+/* Allocate memory for DFA state and initialize common properties.
+   Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
 create_newstate_common (dfa, nodes, hash)
@@ -945,6 +993,8 @@ create_newstate_common (dfa, nodes, hash)
 {
   re_dfastate_t *newstate;
   newstate = (re_dfastate_t *) calloc (sizeof (re_dfastate_t), 1);
+  if (newstate == NULL)
+    return NULL;
   re_node_set_init_copy (&newstate->nodes, nodes);
   newstate->trtable = NULL;
   newstate->trtable_search = NULL;
@@ -952,7 +1002,10 @@ create_newstate_common (dfa, nodes, hash)
   return newstate;
 }
 
-static void
+/* Store the new state NEWSTATE whose hash value is HASH in appropriate
+   position.  Return value indicate the error code if failed.  */
+
+static reg_errcode_t
 register_state (dfa, newstate, hash)
      re_dfa_t *dfa;
      re_dfastate_t *newstate;
@@ -972,8 +1025,7 @@ register_state (dfa, newstate, hash)
           spot->alloc = 4;
           new_array = re_malloc (re_dfastate_t *, spot->alloc);
 	  if (new_array == NULL)
-	    /* XXX return value */
-	    return;
+            return REG_ESPACE;
           new_array[0] = spot->entry.state;
         }
       else
@@ -985,7 +1037,11 @@ register_state (dfa, newstate, hash)
       spot->entry.array = new_array;
     }
   spot->entry.array[spot->num++] = newstate;
+  return REG_NOERROR;
 }
+
+/* Create the new state which is independ of contexts.
+   Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
 create_ci_newstate (dfa, nodes, hash)
@@ -994,8 +1050,11 @@ create_ci_newstate (dfa, nodes, hash)
      unsigned int hash;
 {
   int i;
+  reg_errcode_t err;
   re_dfastate_t *newstate;
   newstate = create_newstate_common (dfa, nodes, hash);
+  if (newstate == NULL)
+    return NULL;
   newstate->entrance_nodes = &newstate->nodes;
 
   for (i = 0 ; i < nodes->nelem ; i++)
@@ -1021,10 +1080,12 @@ create_ci_newstate (dfa, nodes, hash)
             newstate->halt = 1;
         }
     }
-
-  register_state (dfa, newstate, hash);
-  return newstate;
+  err = register_state (dfa, newstate, hash);
+  return (err != REG_NOERROR) ? NULL : newstate;
 }
+
+/* Create the new state which is depend on the context CONTEXT.
+   Return the new state if succeeded, otherwise return NULL.  */
 
 static re_dfastate_t *
 create_cd_newstate (dfa, nodes, context, hash)
@@ -1033,9 +1094,12 @@ create_cd_newstate (dfa, nodes, context, hash)
      unsigned int context, hash;
 {
   int i, nctx_nodes = 0;
+  reg_errcode_t err;
   re_dfastate_t *newstate;
 
   newstate = create_newstate_common (dfa, nodes, hash);
+  if (newstate == NULL)
+    return NULL;
   newstate->context = context;
   newstate->entrance_nodes = &newstate->nodes;
 
@@ -1076,7 +1140,6 @@ create_cd_newstate (dfa, nodes, context, hash)
             {
               newstate->entrance_nodes = re_malloc (re_node_set, 1);
 	      if (newstate->entrance_nodes == NULL)
-		/* XXX Return which value?  */
 		return NULL;
               re_node_set_init_copy (newstate->entrance_nodes, nodes);
               nctx_nodes = 0;
@@ -1090,6 +1153,6 @@ create_cd_newstate (dfa, nodes, context, hash)
             }
         }
     }
-  register_state (dfa, newstate, hash);
-  return newstate;
+  err = register_state (dfa, newstate, hash);
+  return (err != REG_NOERROR) ? NULL : newstate;
 }
