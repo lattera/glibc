@@ -236,23 +236,6 @@ Thu Sep 12 19:56:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 
 	* inet/herrno.c (__h_errno_location): Fix return type.
 
-Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
-
-	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): Fix
-	syntax error.
-
-	* stdio-common/Makefile: Put lockfile in routines
-	unconditionally.
-	Define _MT_SAFE_IO if using for libio and compiling reentrant
-	libc.
-
-	* stdio-common/vfprintf.c (__flockfile, __funlockfile): Declare
-	this always, not just if _LIBC_REENTRANT.
-	(__funlockfile): Don't use weak_extern for this one;
-	__libc_cleanup_region_end might be defined and the use of
-	__funlockfile can't be protected the way the use of __flockfile
-	can be.
-
 Fri Sep 13 04:33:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sched.h: New file.  Helper to access posix/sched.h.
