@@ -19,22 +19,35 @@
 #define __LIBC_M81_MATH_INLINES
 #include <math.h>
 
-#ifndef FUNC
-#define FUNC modf
+#ifndef SUFF
+#define SUFF
 #endif
 #ifndef float_type
 #define float_type double
 #endif
 
-#define __CONCATX(a,b) __CONCAT(a,b)
+#define CONCATX(a,b) __CONCAT(a,b)
+#define s(name) CONCATX(name,SUFF)
+#define m81(func) __m81_u(s(func))
 
 float_type
-__CONCATX(__,FUNC) (x, iptr)
-     float_type x;
-     float_type *iptr;
+s(__modf) (float_type x, float_type *iptr)
 {
-  return __m81_u(__CONCATX(__,FUNC))(x, iptr);
+  float_type x_int, result;
+  __asm ("fintrz%.x %1, %0" : "=f" (x_int) : "f" (x));
+  *iptr = x_int;
+  if (m81(__isinf) (x))
+    {
+      result = 0;
+      if (x < 0)
+	result = -result;
+    }
+  else if (x == 0)
+    result = x;
+  else
+    result = x - x_int;
+  return result;
 }
 
 #define weak_aliasx(a,b) weak_alias(a,b)
-weak_aliasx(__CONCATX(__,FUNC), FUNC)
+weak_aliasx(s(__modf), s(modf))
