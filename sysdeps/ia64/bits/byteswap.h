@@ -49,8 +49,6 @@
       (((x) & 0x0000ff00) <<  8) | (((x) & 0x000000ff) << 24))
 
 #if defined __GNUC__ && __GNUC__ >= 2
-/* To swap the bytes in a word the i486 processors and up provide the
-   `bswap' opcode.  On i386 we have to use three instructions.  */
 # define __bswap_32(x) \
      (__extension__							      \
       ({ register unsigned int __v;					      \

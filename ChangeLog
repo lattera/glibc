@@ -1,5 +1,21 @@
 2000-08-01  Ulrich Drepper  <drepper@redhat.com>
 
+	Remove incompatible IPv6 extension of RPC.
+	* sunrpc/Makefile: Undo changes.
+	* sunrpc/rpc_main.c: Likewise.
+	* sunrpc/rpc/clnt.h: Likewise.
+	* sunrpc/rpc/svc.h: Likewise.
+	* sunrpc/bindrsvprt6.c: Removed.
+	* sunrpc/clnt_tcp6.c: Removed.
+	* sunrpc/clnt_udp6.c: Removed.
+	* sunrpc/svc_tcp6.c: Removed.
+	* sunrpc/svc_udp6.c: Removed.
+
+	* intl/libintl.h: Don't use __attribute_format_arg__ for gettext,
+	dgettext, and dcgettetxt.
+
+	* intl/locale.alias: Update japanese aliases.
+
 	* sysdeps/ia64/bits/byteswap.h: New file.
 	Patch by Dan Pop <Dan.Pop@cern.ch>.
 

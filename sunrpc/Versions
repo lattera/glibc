@@ -109,8 +109,5 @@ libc {
   }
   GLIBC_2.2 {
     svc_getreq_common; svc_getreq_poll; svc_max_pollfd; svc_pollfd;
-    svcfd6_create; svctcp6_create; svcudp6_create; svcudp6_bufcreate;
-    svcudp6_enablecache;
-    bindresvport6;
   }
 }

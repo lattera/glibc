@@ -92,7 +92,7 @@ struct SVCXPRT {
 				/* destroy this struct */
   } *xp_ops;
   int		xp_addrlen;	 /* length of remote address */
-  struct sockaddr_storage xp_raddr;	 /* remote address */
+  struct sockaddr_in xp_raddr;	 /* remote address */
   struct opaque_auth xp_verf;	 /* raw response verifier */
   caddr_t		xp_p1;		 /* private */
   caddr_t		xp_p2;		 /* private */
@@ -303,19 +303,6 @@ extern SVCXPRT *svcudp_bufcreate (int __sock, u_int __sendsz, u_int __recvsz)
 extern SVCXPRT *svctcp_create (int __sock, u_int __sendsize, u_int __recvsize)
      __THROW;
 
-
-/*
- * IPv6/Udp based rpc.
- */
-extern SVCXPRT *svcudp6_create (int __sock) __THROW;
-extern SVCXPRT *svcudp6_bufcreate (int __sock, u_int __sendsz,
-				       u_int __recvsz) __THROW;
-
-/*
- * IPv6/Tcp based rpc.
- */
-extern SVCXPRT *svctcp6_create (int __sock, u_int __sendsize,
-  				    u_int __recvsize) __THROW;
 
 /*
  * Unix based rpc.

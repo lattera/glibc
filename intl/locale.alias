@@ -47,8 +47,10 @@ hrvatski	hr_HR.ISO-8859-2
 hungarian       hu_HU.ISO-8859-2
 icelandic       is_IS.ISO-8859-1
 italian         it_IT.ISO-8859-1
-japanese	ja_JP.SJIS
+japanese	ja_JP.eucJP
 japanese.euc	ja_JP.eucJP
+ja_JP		ja_JP.eucJP
+japanese.sjis	ja_JP.SJIS
 lithuanian      lt_LT.ISO-8859-13
 norwegian       no_NO.ISO-8859-1
 polish          pl_PL.ISO-8859-2

@@ -341,52 +341,6 @@ extern CLIENT *clntudp_bufcreate (struct sockaddr_in *__raddr,
 				  u_int __sendsz, u_int __recvsz) __THROW;
 
 
-/*
- * TCP/IPv6 based rpc
- * CLIENT *
- * clnttcp6_create(raddr, prog, vers, sockp, sendsz, recvsz)
- *	struct sockaddr_in6 *raddr;
- *	u_long prog;
- *	u_long version;
- *	register int *sockp;
- *	u_int sendsz;
- *	u_int recvsz;
- */
-extern CLIENT *clnttcp6_create __P ((struct sockaddr_in6 *__raddr,
-				    u_long __prog, u_long __version,
-				    int *__sockp, u_int __sendsz,
-				    u_int __recvsz));
-
-/*
- * UDP/IPv6 based rpc.
- * CLIENT *
- * clntudp6_create(raddr, program, version, wait, sockp)
- *	struct sockaddr_in6 *raddr;
- *	u_long program;
- *	u_long version;
- *	struct timeval wait_resend;
- *	int *sockp;
- *
- * Same as above, but you specify max packet sizes.
- * CLIENT *
- * clntudp6_bufcreate(raddr, program, version, wait, sockp, sendsz, recvsz)
- *	struct sockaddr_in6 *raddr;
- *	u_long program;
- *	u_long version;
- *	struct timeval wait_resend;
- *	int *sockp;
- *	u_int sendsz;
- *	u_int recvsz;
- */
-extern CLIENT *clntudp6_create __P ((struct sockaddr_in6 *__raddr,
-				    u_long __program, u_long __version,
-				    struct timeval __wait_resend,
-				    int *__sockp));
-extern CLIENT *clntudp6_bufcreate __P ((struct sockaddr_in6 *__raddr,
-				       u_long __program, u_long __version,
-				       struct timeval __wait_resend,
-				       int *__sockp, u_int __sendsz,
-				       u_int __recvsz));
 
 
 /*
