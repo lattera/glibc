@@ -577,6 +577,10 @@ elf_machine_rela (struct link_map *map,
     }
 }
 
+/* Let do-rel.h know that on Alpha if l_addr is 0, all RELATIVE relocs
+   can be skipped.  */
+#define ELF_MACHINE_REL_RELATIVE 1
+
 static inline void
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   Elf64_Addr *const reloc_addr)
