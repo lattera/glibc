@@ -115,11 +115,11 @@ libpthread-routines = init events version \
 		      pthread_kill_other_threads \
 		      pthread_getaffinity pthread_setaffinity \
 		      pthread_attr_getaffinity pthread_attr_setaffinity \
-		      cleanup_routine unwind-forcedunwind \
-		      pthread_setuid pthread_seteuid pthread_setreuid \
-		      pthread_setresuid \
-		      pthread_setgid pthread_setegid pthread_setregid \
-		      pthread_setresgid
+		      cleanup_routine unwind-forcedunwind
+#		      pthread_setuid pthread_seteuid pthread_setreuid \
+#		      pthread_setresuid \
+#		      pthread_setgid pthread_setegid pthread_setregid \
+#		      pthread_setresgid
 
 libpthread-shared-only-routines = version pt-allocrtsig unwind-forcedunwind
 libpthread-static-only-routines = pthread_atfork

@@ -14,6 +14,9 @@
 
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
+	* configure.in: If selinux has not explictly been requested, don't
+	comment on it missing.
+
 	* elf/dl-load.c: Define __stack_prot.
 	* sysdeps/unix/sysv/linux/dl-execstack.c: Don't define
 	__stack_prot here, just declare it.

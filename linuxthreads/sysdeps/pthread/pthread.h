@@ -681,36 +681,6 @@ extern int pthread_atfork (void (*__prepare) (void),
 
 extern void pthread_kill_other_threads_np (void) __THROW;
 
-
-#ifdef __USE_GNU
-/* Change UID of calling thread.  */
-extern int pthread_setuid_np (__uid_t __uid) __THROW;
-
-/* Change effective UID of calling thread.  */
-extern int pthread_seteuid_np (__uid_t __uid) __THROW;
-
-/* Change real and effective UID of calling thread.  */
-extern int pthread_setreuid_np (__uid_t __ruid, __uid_t __euid) __THROW;
-
-/* Change real, effective, and saved UID of calling thread.  */
-extern int pthread_setresuid_np (__uid_t __ruid, __uid_t __euid,
-				 __uid_t __suid) __THROW;
-
-
-/* Change GID of calling thread.  */
-extern int pthread_setgid_np (__gid_t __gid) __THROW;
-
-/* Change effective GID of calling thread.  */
-extern int pthread_setegid_np (__gid_t __gid) __THROW;
-
-/* Change real and effective GID of calling thread.  */
-extern int pthread_setregid_np (__gid_t __rgid, __gid_t __egid) __THROW;
-
-/* Change real, effective, and saved GID of calling thread.  */
-extern int pthread_setresgid_np (__gid_t __rgid, __gid_t __egid,
-				 __gid_t __sgid) __THROW;
-#endif
-
 __END_DECLS
 
 #endif	/* pthread.h */
