@@ -7,9 +7,22 @@
 
 RCSID("$NetBSD: s_sinf.S,v 1.3 1995/05/09 00:27:53 jtc Exp $")
 
-/* A float's domain isn't large enough to require argument reduction. */
 ENTRY(__sinf)
 	flds	4(%esp)
+	fsin
+	fnstsw	%ax
+	testl	$0x400,%eax
+	jnz	1f
+	ret
+	.align ALIGNARG(4)
+1:	fldpi
+	fadd	%st(0)
+	fxch	%st(1)
+2:	fprem1
+	fnstsw	%ax
+	testl	$0x400,%eax
+	jnz	2b
+	fstp	%st(1)
 	fsin
 	ret
 END (__sinf)
