@@ -1,5 +1,8 @@
 2002-12-29  Roland McGrath  <roland@redhat.com>
 
+	* resolv/res_libc.c: Move _res defn magic after res_init defn
+	so _res macro is in effect for that code.
+
 	* Makerules ($(common-objpfx)%.h $(common-objpfx)%.h.d): Fix sed
 	pattern for prepending $(..) so it doesn't affect $(foo).
 

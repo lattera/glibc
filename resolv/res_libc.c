@@ -20,28 +20,6 @@
 #include <arpa/nameser.h>
 #include <resolv.h>
 
-#undef _res
-
-#include <tls.h>
-
-#if USE___THREAD
-/* With __thread support, this per-thread variable is used in all cases.  */
-__thread struct __res_state _res;
-extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
-  attribute_hidden;
-# define _res __libc_res
-#else
-/* The resolver state for use by single-threaded programs.  */
-struct __res_state _res;
-
-/* We declare this with compat_symbol so that it's not
-   visible at link time.  Programs must use the accessor functions.  */
-# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
-#  include <shlib-compat.h>
-compat_symbol (libc, _res, _res, GLIBC_2_0);
-# endif
-#endif
-
 
 /* The following bit is copied from res_data.c (where it is #ifdef'ed
    out) since res_init() should go into libc.so but the rest of that
@@ -87,6 +65,28 @@ res_init(void) {
 	return (__res_vinit(&_res, 1));
 }
 
+/* This needs to be after the use of _res in res_init, above.  */
+#undef _res
+
+#include <tls.h>
+
+#if USE___THREAD
+/* With __thread support, this per-thread variable is used in all cases.  */
+__thread struct __res_state _res;
+extern __thread struct __res_state __libc_res __attribute__ ((alias ("_res")))
+  attribute_hidden;
+# define _res __libc_res
+#else
+/* The resolver state for use by single-threaded programs.  */
+struct __res_state _res;
+
+/* We declare this with compat_symbol so that it's not
+   visible at link time.  Programs must use the accessor functions.  */
+# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
+#  include <shlib-compat.h>
+compat_symbol (libc, _res, _res, GLIBC_2_0);
+# endif
+#endif
 
 #include <shlib-compat.h>
 
