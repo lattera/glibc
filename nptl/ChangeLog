@@ -1,3 +1,9 @@
+2003-09-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_mutex_unlock.c (__pthread_mutex_unlock_usercnt): Change
+	type of DECR parameter to int.
+	* pthreadP.h: Adjust prototype of __pthread_mutex_unlock_usercnt.
+
 2003-09-18  Jakub Jelinek  <jakub@redhat.com>
 
 	* tst-attr3.c (tf, do_test): Print stack start/end/size and

@@ -26,7 +26,7 @@ int
 internal_function attribute_hidden
 __pthread_mutex_unlock_usercnt (mutex, decr)
      pthread_mutex_t *mutex;
-     bool decr;
+     int decr;
 {
   switch (__builtin_expect (mutex->__data.__kind, PTHREAD_MUTEX_TIMED_NP))
     {
@@ -72,7 +72,7 @@ int
 __pthread_mutex_unlock (mutex)
      pthread_mutex_t *mutex;
 {
-  return __pthread_mutex_unlock_usercnt (mutex, true);
+  return __pthread_mutex_unlock_usercnt (mutex, 1);
 }
 strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 strong_alias (__pthread_mutex_unlock, __pthread_mutex_unlock_internal)
