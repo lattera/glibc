@@ -1,3 +1,7 @@
+2000-06-27  Andreas Jaeger  <aj@suse.de>
+
+	* Makefile: Add environment setting for all tests from tests-mbwc.
+
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/en_DK.com: Not needed.
