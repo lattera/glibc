@@ -1,3 +1,9 @@
+1999-01-31  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: If the kernel
+	doesn't have vfork, resort to using fork.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Likewise.
+
 1999-01-30  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/sparc/sparc32/__longjmp.S: Include bits/setjmp.h not

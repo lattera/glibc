@@ -19,7 +19,11 @@
 
 #include <sysdep.h>
 
+#ifdef __NR_vfork
 PSEUDO (__vfork, vfork, 0)
+#else
+PSEUDO (__vfork, fork, 0)
+#endif
 	sub	%o1, 1, %o1
 	retl
 	 and	%o0, %o1, %o0
