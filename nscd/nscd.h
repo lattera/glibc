@@ -1,4 +1,4 @@
-/* Copyright (c) 1998, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (c) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1998.
 
@@ -108,7 +108,7 @@ extern int nscd_open_socket (void);
 /* connections.c */
 extern void nscd_init (const char *conffile);
 extern void close_sockets (void);
-extern void start_threads (void);
+extern void start_threads (void) __attribute__ ((__noreturn__));
 
 /* nscd_conf.c */
 extern int nscd_parse_file (const char *fname, struct database dbs[lastdb]);
