@@ -342,11 +342,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       /* The first TSD block is included in the TCB.  */
       pd->specific[0] = pd->specific_1stblock;
 
-#if defined __ASSUME_CLONE_STOPPED && LLL_LOCK_INITIALIZER != 0
-      /* Initialize the lock.  */
-      pd->lock = LLL_LOCK_INITIALIZER;
-#endif
-
       /* Remember the stack-related values.  */
       pd->stackblock = (char *) attr->stackaddr - size;
       pd->stackblock_size = size;
@@ -485,11 +480,6 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
 	     descriptor.  */
 	  pd->specific[0] = pd->specific_1stblock;
 
-#if defined __ASSUME_CLONE_STOPPED && LLL_LOCK_INITIALIZER != 0
-	  /* Initialize the lock.  */
-	  pd->lock = LLL_LOCK_INITIALIZER;
-#endif
-
 	  /* This is at least the second thread.  */
 	  pd->header.multiple_threads = 1;
 #ifndef TLS_MULTIPLE_THREADS_IN_TCB
@@ -623,12 +613,9 @@ allocate_stack (const struct pthread_attr *attr, struct pthread **pdp,
       pd->reported_guardsize = guardsize;
     }
 
-#ifndef __ASSUME_CLONE_STOPPED
-  /* Initialize the lock.  We have to do this unconditionally if the
-     CLONE_STOPPED flag is not available since then the stillborn
-     thread could be canceled while the lock is taken.  */
+  /* Initialize the lock.  We have to do this unconditionally since the
+     stillborn thread could be canceled while the lock is taken.  */
   pd->lock = LLL_LOCK_INITIALIZER;
-#endif
 
   /* We place the thread descriptor at the end of the stack.  */
   *pdp = pd;

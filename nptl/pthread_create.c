@@ -227,12 +227,10 @@ start_thread (void *arg)
 
   struct pthread *pd = (struct pthread *) arg;
 
-#ifndef __ASSUME_CLONE_STOPPED
   /* Get the lock the parent locked to force synchronization.  */
   lll_lock (pd->lock);
   /* And give it up right away.  */
   lll_unlock (pd->lock);
-#endif
 
 #if HP_TIMING_AVAIL
   /* Remember the time when the thread was started.  */

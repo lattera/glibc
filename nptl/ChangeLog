@@ -1,3 +1,10 @@
+2004-09-10  Roland McGrath  <roland@redhat.com>
+
+	[BZ #379]
+	* allocatestack.c (allocate_stack): Remove [__ASSUME_CLONE_STOPPED]
+	code, since we don't try to use the broken CLONE_STOPPED any more.
+	* pthread_create.c (start_thread): Likewise.
+
 2004-09-15  Richard Henderson  <rth@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/vfork.S: Use libc_hidden_def.
