@@ -74,6 +74,10 @@ ifeq ($(subdir),stdio-common)
 inhibit-siglist := yes
 endif
 
+ifeq ($(subdir),posix)
+headers := bits/pthreadtypes.h
+endif
+
 ifeq ($(subdir),inet)
 sysdep_headers += netinet/in_systm.h netinet/udp.h \
 		  netinet/if_fddi.h netinet/if_tr.h netinet/igmp.h \

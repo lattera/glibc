@@ -1,3 +1,17 @@
+1998-06-30 11:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* attr.c: Include errno.h.  Use memcpy to copy sched_param.
+	* internals.h: Include limits.h.
+	* manager.c: Use memcpy to copy sched_param.
+	* ptfork.c: Include errno.h.
+	* pthread.c: Likewise.
+	* semaphore.c: Likewise.
+	* specific.c: Likewise.
+	* spinlock.h: Likewise.
+	* sysdeps/pthread/pthread.h: Include only allowed headers.  Move
+	type definition to ...
+	* sysdeps/pthread/bits/pthreadtypes.h: ...here.  New file.
+
 1998-06-29 12:34  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/pthread/pthread.h: Use __PMT not __P for function pointers.

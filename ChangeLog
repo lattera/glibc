@@ -1,3 +1,9 @@
+1998-06-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/Makefile (headers): Remove bits/pthreadtypes.h.
+	* sysdeps/unix/sysv/linux/Makefile [subdir==posix] (headers): Add
+	bits/pthreadtypes.h.
+
 1998-06-30 11:47  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/aio.h: New file.
