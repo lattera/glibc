@@ -66,8 +66,12 @@ AC_ARG_WITH(elf, dnl
   --with-elf		  if using the ELF object format,
 	    elf=$withval, elf=no)
 AC_ARG_WITH(cvs, dnl
-[  --without-cvs	  if CVS should not be used],
+[  --without-cvs           if CVS should not be used],
 	    with_cvs=$withval, with_cvs=yes)
+if test "$with_cvs" = yes && test -d CVS && grep :pserver: CVS/Root > /dev/null
+then
+  with_cvs=no
+fi
 AC_SUBST(with_cvs)
 
 AC_ARG_WITH(headers, dnl

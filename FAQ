@@ -116,6 +116,7 @@ Removed.  Does not apply anymore.
 2.31.	What happened to the Berkeley DB libraries?  Can I still use db
 	in /etc/nsswitch.conf?
 2.32.	What has do be done when upgrading to glibc 2.2?
+2.33.	The makefiles want to do a CVS commit.
 
 3. Source and binary incompatibilities, and what to do about them
 
@@ -1251,6 +1252,14 @@ be needed after upgrading:
 
 Please read also the NEWS file which is the authoritative source for this
 and gives more details for some topics.
+
+
+2.33.	The makefiles want to do a CVS commit.
+
+{UD} Only if you are not specifying the --without-cvs flag at configure
+time.  This is what you always have to use if you are checking sources
+directly out of the public CVS repository or you have your own private
+repository.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

@@ -1,3 +1,7 @@
+2000-11-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in (with_cvs): Test for pserver access.
+
 2000-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Versions [ld] (GLIBC_2.2): Export _dl_clktck and _dl_pagesize.

@@ -1023,6 +1023,14 @@ Please read also the NEWS file which is the authoritative source for this
 and gives more details for some topics.
 
 
+??	The makefiles want to do a CVS commit.
+
+{UD} Only if you are not specifying the --without-cvs flag at configure
+time.  This is what you always have to use if you are checking sources
+directly out of the public CVS repository or you have your own private
+repository.
+
+
 ? Source and binary incompatibilities, and what to do about them
 
 ??	I expect GNU libc to be 100% source code compatible with
