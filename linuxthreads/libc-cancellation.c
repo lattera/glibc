@@ -31,7 +31,8 @@
 weak_extern (__pthread_do_exit)
 # endif
 
-int __libc_multiple_threads attribute_hidden;
+int __libc_multiple_threads attribute_hidden __attribute__((nocommon));
+strong_alias (__libc_multiple_threads, __librt_multiple_threads);
 
 /* The next two functions are similar to pthread_setcanceltype() but
    more specialized for the use in the cancelable functions like write().
@@ -49,6 +50,7 @@ __libc_enable_asynccancel (void)
 			(PTHREAD_CANCELED, CURRENT_STACK_FRAME), 0);
   return oldtype;
 }
+strong_alias (__libc_enable_asynccancel, __librt_enable_asynccancel)
 
 void
 internal_function attribute_hidden
@@ -57,5 +59,6 @@ __libc_disable_asynccancel (int oldtype)
   pthread_descr self = thread_self();
   LIBC_THREAD_SETMEM(self, p_canceltype, oldtype);
 }
+strong_alias (__libc_disable_asynccancel, __librt_disable_asynccancel)
 
 #endif

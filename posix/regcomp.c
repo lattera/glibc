@@ -3341,7 +3341,7 @@ build_word_op (dfa, trans, not, err)
 #ifdef RE_ENABLE_I18N
 			 mbcset, &alloc,
 #endif /* RE_ENABLE_I18N */
-			 (const unsigned char *) "alpha", 0);
+			 (const unsigned char *) "alnum", 0);
 
   if (BE (ret != REG_NOERROR, 0))
     {

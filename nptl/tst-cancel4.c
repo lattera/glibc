@@ -28,8 +28,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <termios.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/msg.h>
 #include <sys/poll.h>
 #include <sys/select.h>
 #include <sys/socket.h>
@@ -40,17 +42,9 @@
 #include "pthreadP.h"
 
 
-/* The following interfaces are defined to be cancellation points but
-   tests are not yet implemented:
-
-     aio_suspend()         clock_nanosleep()
-     connect()             creat()
-     msgrcv()              msgsnd()
-     sendmsg()             sendto()
-     tcdrain()
-
-   Since STREAMS are not supported in the standard Linux kernel there
-   is no need to test the STREAMS related functions.  This affects
+/* Since STREAMS are not supported in the standard Linux kernel and
+   there we don't advertise STREAMS as supported is no need to test
+   the STREAMS related functions.  This affects
      getmsg()              getpmsg()          putmsg()
      putpmsg()
 
@@ -65,6 +59,10 @@
 
    POSIX message queues aren't implemented yet.  This affects
      mq_receive()    mq_send()   mq_timedreceive()  mq_timedsend()
+
+   aio_suspend() is tested in tst-cancel17.
+
+   clock_nanosleep() is tested in tst-cancel18.
 */
 
 /* Pipe descriptors.  */
@@ -75,6 +73,8 @@ static int tempfd = -1;
 static int tempfd2 = -1;
 /* Name of temporary file to be removed after each round.  */
 static char *tempfname;
+/* Temporary message queue.  */
+static int tempmsg = -1;
 
 /* Often used barrier for two threads.  */
 static pthread_barrier_t b2;
@@ -121,14 +121,15 @@ tf_read  (void *arg)
       exit (1);
     }
 
+  ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
   char buf[100];
-  ssize_t s = read (fd, buf, sizeof (buf));
-
-  printf ("%s: read returns with %zd\n", __FUNCTION__, s);
+  s = read (fd, buf, sizeof (buf));
 
   pthread_cleanup_pop (0);
+
+  printf ("%s: read returns with %zd\n", __FUNCTION__, s);
 
   exit (1);
 }
@@ -165,15 +166,16 @@ tf_readv  (void *arg)
       exit (1);
     }
 
+  ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
   char buf[100];
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
-  ssize_t s = readv (fd, iov, 1);
-
-  printf ("%s: readv returns with %zd\n", __FUNCTION__, s);
+  s = readv (fd, iov, 1);
 
   pthread_cleanup_pop (0);
+
+  printf ("%s: readv returns with %zd\n", __FUNCTION__, s);
 
   exit (1);
 }
@@ -210,15 +212,16 @@ tf_write  (void *arg)
       exit (1);
     }
 
+  ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
-  ssize_t s = write (fd, buf, sizeof (buf));
-
-  printf ("%s: write returns with %zd\n", __FUNCTION__, s);
+  s = write (fd, buf, sizeof (buf));
 
   pthread_cleanup_pop (0);
+
+  printf ("%s: write returns with %zd\n", __FUNCTION__, s);
 
   exit (1);
 }
@@ -255,16 +258,17 @@ tf_writev  (void *arg)
       exit (1);
     }
 
+  ssize_t s;
   pthread_cleanup_push (cl, NULL);
 
   char buf[100000];
   memset (buf, '\0', sizeof (buf));
   struct iovec iov[1] = { [0] = { .iov_base = buf, .iov_len = sizeof (buf) } };
-  ssize_t s = writev (fd, iov, 1);
-
-  printf ("%s: writev returns with %zd\n", __FUNCTION__, s);
+  s = writev (fd, iov, 1);
 
   pthread_cleanup_pop (0);
+
+  printf ("%s: writev returns with %zd\n", __FUNCTION__, s);
 
   exit (1);
 }
@@ -357,8 +361,7 @@ tf_nanosleep (void *arg)
   pthread_cleanup_push (cl, NULL);
 
   struct timespec ts = { .tv_sec = arg == NULL ? 10000000 : 0, .tv_nsec = 0 };
-  while (nanosleep (&ts, &ts) != 0)
-    continue;
+  TEMP_FAILURE_RETRY (nanosleep (&ts, &ts));
 
   pthread_cleanup_pop (0);
 
@@ -403,14 +406,15 @@ tf_select (void *arg)
   FD_ZERO (&rfs);
   FD_SET (fd, &rfs);
 
+  int s;
   pthread_cleanup_push (cl, NULL);
 
-  int s = select (fd + 1, &rfs, NULL, NULL, NULL);
+  s = select (fd + 1, &rfs, NULL, NULL, NULL);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: select returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -451,14 +455,15 @@ tf_pselect (void *arg)
   FD_ZERO (&rfs);
   FD_SET (fd, &rfs);
 
+  int s;
   pthread_cleanup_push (cl, NULL);
 
-  int s = pselect (fd + 1, &rfs, NULL, NULL, NULL, NULL);
+  s = pselect (fd + 1, &rfs, NULL, NULL, NULL, NULL);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: pselect returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -497,14 +502,15 @@ tf_poll (void *arg)
 
   struct pollfd rfs[1] = { [0] = { .fd = fd, .events = POLLIN } };
 
+  int s;
   pthread_cleanup_push (cl, NULL);
 
-  int s = poll (rfs, 1, -1);
+  s = poll (rfs, 1, -1);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: poll returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -550,14 +556,15 @@ tf_wait (void *arg)
       exit (1);
     }
 
+  int s;
   pthread_cleanup_push (cl, NULL);
 
-  int s = wait (NULL);
+  s = wait (NULL);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: wait returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -604,14 +611,15 @@ tf_waitpid (void *arg)
       exit (1);
     }
 
+  int s;
  pthread_cleanup_push (cl, NULL);
 
-  int s = waitpid (-1, NULL, 0);
+  s = waitpid (-1, NULL, 0);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: waitpid returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -657,15 +665,16 @@ tf_waitid (void *arg)
       exit (1);
     }
 
+  int s;
   pthread_cleanup_push (cl, NULL);
 
   siginfo_t si;
-  int s = waitid (P_PID, pid, &si, 0);
+  s = waitid (P_PID, pid, &si, 0);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: waitid returns with %d (%s)\n", __FUNCTION__, s,
 	  strerror (errno));
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -760,8 +769,6 @@ tf_sigwait (void *arg)
 	}
     }
 
-  pthread_cleanup_push (cl, NULL);
-
   /* Block SIGUSR1.  */
   sigset_t mask;
   sigaddset (&mask, SIGUSR1);
@@ -771,13 +778,15 @@ tf_sigwait (void *arg)
       exit (1);
     }
 
-  /* Wait for SIGUSR1.  */
   int sig;
+  pthread_cleanup_push (cl, NULL);
+
+  /* Wait for SIGUSR1.  */
   sigwait (&mask, &sig);
 
-  printf ("%s: sigwait returned with signal %d\n", __FUNCTION__, sig);
-
   pthread_cleanup_pop (0);
+
+  printf ("%s: sigwait returned with signal %d\n", __FUNCTION__, sig);
 
   exit (1);
 }
@@ -803,8 +812,6 @@ tf_sigwaitinfo (void *arg)
 	}
     }
 
-  pthread_cleanup_push (cl, NULL);
-
   /* Block SIGUSR1.  */
   sigset_t mask;
   sigaddset (&mask, SIGUSR1);
@@ -814,14 +821,16 @@ tf_sigwaitinfo (void *arg)
       exit (1);
     }
 
-  /* Wait for SIGUSR1.  */
   siginfo_t info;
+  pthread_cleanup_push (cl, NULL);
+
+  /* Wait for SIGUSR1.  */
   sigwaitinfo (&mask, &info);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: sigwaitinfo returned with signal %d\n", __FUNCTION__,
 	  info.si_signo);
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -847,8 +856,6 @@ tf_sigtimedwait (void *arg)
 	}
     }
 
-  pthread_cleanup_push (cl, NULL);
-
   /* Block SIGUSR1.  */
   sigset_t mask;
   sigaddset (&mask, SIGUSR1);
@@ -861,12 +868,14 @@ tf_sigtimedwait (void *arg)
   /* Wait for SIGUSR1.  */
   siginfo_t info;
   struct timespec ts = { .tv_sec = 60, .tv_nsec = 0 };
+  pthread_cleanup_push (cl, NULL);
+
   sigtimedwait (&mask, &info, &ts);
+
+  pthread_cleanup_pop (0);
 
   printf ("%s: sigtimedwait returned with signal %d\n", __FUNCTION__,
 	  info.si_signo);
-
-  pthread_cleanup_pop (0);
 
   exit (1);
 }
@@ -927,7 +936,7 @@ tf_accept (void *arg)
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
 	}
 
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-1-XXXXXX");
       if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
@@ -995,7 +1004,7 @@ tf_send (void *arg)
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
 	}
 
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-2-XXXXXX");
       if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
@@ -1077,7 +1086,7 @@ tf_recv (void *arg)
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
 	}
 
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-3-XXXXXX");
       if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
@@ -1158,7 +1167,7 @@ tf_recvfrom (void *arg)
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
 	}
 
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-4-XXXXXX");
       if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
@@ -1233,7 +1242,7 @@ tf_recvmsg (void *arg)
 	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
 	}
 
-      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-XXXXXX");
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-5-XXXXXX");
       if (mktemp (sun.sun_path) == NULL)
 	{
 	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
@@ -1548,6 +1557,399 @@ tf_msync (void *arg)
 }
 
 
+static void *
+tf_sendto (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which sendto()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-6-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+  tempfname = strdup (sun.sun_path);
+
+  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[1];
+
+  sendto (tempfd2, mem, arg == NULL ? sizeof (mem) : 1, 0,
+	  (struct sockaddr *) &sun,
+	  offsetof (struct sockaddr_un, sun_path) + strlen (sun.sun_path) + 1);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: sendto returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_sendmsg (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which sendmsg()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-7-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+  tempfname = strdup (sun.sun_path);
+
+  tempfd2 = socket (AF_UNIX, SOCK_DGRAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[1];
+  struct iovec iov[1];
+  iov[0].iov_base = mem;
+  iov[0].iov_len = 1;
+
+  struct msghdr m;
+  m.msg_name = &sun;
+  m.msg_namelen = (offsetof (struct sockaddr_un, sun_path)
+		   + strlen (sun.sun_path) + 1);
+  m.msg_iov = iov;
+  m.msg_iovlen = 1;
+  m.msg_control = NULL;
+  m.msg_controllen = 0;
+
+  sendmsg (tempfd2, &m, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: sendmsg returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_creat (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which sendmsg()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  creat ("tmp/tst-cancel-4-should-not-exist", 0666);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: creat returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_connect (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which connect()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  struct sockaddr_un sun;
+
+  tempfd = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd == -1)
+    {
+      printf ("%s: first socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int tries = 0;
+  do
+    {
+      if (++tries > 10)
+	{
+	  printf ("%s: too many unsuccessful bind calls\n", __FUNCTION__);
+	}
+
+      strcpy (sun.sun_path, "/tmp/tst-cancel4-socket-2-XXXXXX");
+      if (mktemp (sun.sun_path) == NULL)
+	{
+	  printf ("%s: cannot generate temp file name\n", __FUNCTION__);
+	  exit (1);
+	}
+
+      sun.sun_family = AF_UNIX;
+    }
+  while (bind (tempfd, (struct sockaddr *) &sun,
+	       offsetof (struct sockaddr_un, sun_path)
+	       + strlen (sun.sun_path) + 1) != 0);
+  tempfname = strdup (sun.sun_path);
+
+  listen (tempfd, 5);
+
+  tempfd2 = socket (AF_UNIX, SOCK_STREAM, 0);
+  if (tempfd2 == -1)
+    {
+      printf ("%s: second socket call failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  connect (tempfd2, (struct sockaddr *) &sun, sizeof (sun));
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: connect returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_tcdrain (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which tcdrain()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  /* Regardless of stderr being a terminal, the tcdrain call should be
+     canceled.  */
+  tcdrain (STDERR_FILENO);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: tcdrain returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_msgrcv (void *arg)
+{
+  tempmsg = msgget (random (), 0666 | IPC_CREAT);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  if (arg != NULL)
+    {
+      r = pthread_barrier_wait (&b2);
+      if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+	{
+	  printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+	  exit (1);
+	}
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  struct
+  {
+    long int type;
+    char mem[10];
+  } m;
+  msgrcv (tempmsg, (struct msgbuf *) &m, 10, 100, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: msgrcv returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_msgsnd (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which msgsnd()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempmsg = msgget (random (), 0666 | IPC_CREAT);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  struct
+  {
+    long int type;
+    char mem[1];
+  } m;
+  m.type = 100;
+  msgsnd (tempmsg, (struct msgbuf *) &m, sizeof (m.mem), 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: msgsnd returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
 static struct
 {
   const char *name;
@@ -1587,6 +1989,13 @@ static struct
   ADD_TEST (pwrite, 2, 1),
   ADD_TEST (fsync, 2, 1),
   ADD_TEST (msync, 2, 1),
+  ADD_TEST (sendto, 2, 1),
+  ADD_TEST (sendmsg, 2, 1),
+  ADD_TEST (creat, 2, 1),
+  ADD_TEST (connect, 2, 1),
+  ADD_TEST (tcdrain, 2, 1),
+  ADD_TEST (msgrcv, 2, 0),
+  ADD_TEST (msgsnd, 2, 1),
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 
@@ -1783,8 +2192,17 @@ do_test (void)
 	  close (tempfd2);
 	  tempfd2 = -1;
 	}
-      free (tempfname);
-      tempfname = NULL;
+      if (tempfname != NULL)
+	{
+	  unlink (tempfname);
+	  free (tempfname);
+	  tempfname = NULL;
+	}
+      if (tempmsg != -1)
+	{
+	  msgctl (tempmsg, IPC_RMID, NULL);
+	  tempmsg = -1;
+	}
     }
 
   return result;

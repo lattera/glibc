@@ -24,7 +24,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
@@ -108,8 +108,10 @@
 
 #if !defined NOT_IN_libc
 # define __local_multiple_threads __libc_multiple_threads
-#else
+#elif defined IS_IN_libpthread
 # define __local_multiple_threads __pthread_multiple_threads
+#else
+# define __local_multiple_threads __librt_multiple_threads
 #endif
 
 # ifndef __ASSEMBLER__
@@ -118,7 +120,12 @@
   __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
 				   p_header.data.multiple_threads) == 0, 1)
 #  else
-extern int __local_multiple_threads attribute_hidden;
+extern int __local_multiple_threads
+#   if !defined NOT_IN_libc || defined IS_IN_libpthread
+  attribute_hidden;
+#   else
+  ;
+#   endif
 #   define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 #  endif
 # else
@@ -127,16 +134,23 @@ extern int __local_multiple_threads attribute_hidden;
 #  elif defined FLOATING_STACKS && USE___THREAD
 #   define SINGLE_THREAD_P cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
 #  else
+#   if !defined NOT_IN_libc || defined IS_IN_libpthread
+#    define __SINGLE_THREAD_CMP cmpl $0, __local_multiple_threads@GOTOFF(%ecx)
+#   else
+#    define __SINGLE_THREAD_CMP \
+  movl __local_multiple_threads@GOT(%ecx), %ecx;\
+  cmpl $0, (%ecx)
+#   endif
 #   if !defined HAVE_HIDDEN || !USE___THREAD
 #    define SINGLE_THREAD_P \
   SETUP_PIC_REG (cx);				\
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;		\
-  cmpl $0, __local_multiple_threads@GOTOFF(%ecx)
+  __SINGLE_THREAD_CMP
 #   else
 #    define SINGLE_THREAD_P \
   call __i686.get_pc_thunk.cx;			\
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;		\
-  cmpl $0, __local_multiple_threads@GOTOFF(%ecx)
+  __SINGLE_THREAD_CMP
 #   endif
 #  endif
 # endif

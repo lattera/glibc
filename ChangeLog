@@ -1,3 +1,7 @@
+2003-06-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (build_word_op): Use alnum instead of alpha class.
+
 2003-06-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/clock_nanosleep.c (clock_nanosleep): nanosleep

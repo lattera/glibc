@@ -22,7 +22,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				\
@@ -78,14 +78,23 @@
 #  define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)
 #  define __local_multiple_threads __pthread_multiple_threads
-# else
+# elif !defined NOT_IN_libc
 #  define CENABLE	bl JUMPTARGET(__libc_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__libc_disable_asynccancel)
 #  define __local_multiple_threads __libc_multiple_threads
+# else
+#  define CENABLE	bl JUMPTARGET(__librt_enable_asynccancel); nop
+#  define CDISABLE	bl JUMPTARGET(__librt_disable_asynccancel); nop
+#  define __local_multiple_threads __librt_multiple_threads
 # endif
 
 # ifndef __ASSEMBLER__
-extern int __local_multiple_threads attribute_hidden;
+extern int __local_multiple_threads
+#  if !defined NOT_IN_libc || defined IS_IN_libpthread
+  attribute_hidden;
+#  else
+  ;
+#  endif
 #  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 # else
 #   define SINGLE_THREAD_P						\

@@ -31,7 +31,8 @@ libc {
 
     __libc_creat; __libc_poll; __libc_pselect; __libc_select;
     __libc_sigpause; __libc_sigsuspend; __libc_sigwait; __libc_sigwaitinfo;
-    __libc_waitid; __libc___xpg_sigpause;
+    __libc_waitid; __libc___xpg_sigpause; __librt_enable_asynccancel;
+    __librt_disable_asynccancel; __librt_multiple_threads;
   }
 }
 

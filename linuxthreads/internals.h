@@ -257,6 +257,7 @@ static inline int nonexisting_handle(pthread_handle h, pthread_t id)
 
 /* Defined and used in libc.so.  */
 extern int __libc_multiple_threads attribute_hidden;
+extern int __librt_multiple_threads;
 
 /* Debugging */
 
@@ -468,6 +469,10 @@ extern int __libc_enable_asynccancel (void) attribute_hidden;
 extern void __libc_disable_asynccancel (int oldtype)
   internal_function attribute_hidden;
 
+/* The two functions are in libc.so and are exported.  */
+extern int __librt_enable_asynccancel (void);
+extern void __librt_disable_asynccancel (int oldtype) internal_function;
+
 extern void __pthread_cleanup_upto (__jmp_buf target,
 				    char *targetframe) attribute_hidden;
 extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
@@ -480,7 +485,7 @@ extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__libc_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__libc_disable_asynccancel")
-#elif defined NOT_IN_libc && defined IS_IN_libpthread
+#elif defined IS_IN_libpthread
 # define LIBC_CANCEL_ASYNC() \
   __pthread_enable_asynccancel ()
 # define LIBC_CANCEL_RESET(oldtype) \
@@ -488,6 +493,14 @@ extern pid_t __pthread_fork (struct fork_block *b) attribute_hidden;
 # define LIBC_CANCEL_HANDLED() \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_enable_asynccancel"); \
   __asm (".globl " __SYMBOL_PREFIX "__pthread_disable_asynccancel")
+#elif defined IS_IN_librt
+# define LIBC_CANCEL_ASYNC() \
+  __librt_enable_asynccancel ()
+# define LIBC_CANCEL_RESET(oldtype) \
+  __librt_disable_asynccancel (oldtype)
+# define LIBC_CANCEL_HANDLED() \
+  __asm (".globl " __SYMBOL_PREFIX "__librt_enable_asynccancel"); \
+  __asm (".globl " __SYMBOL_PREFIX "__librt_disable_asynccancel")
 #else
 # define LIBC_CANCEL_ASYNC()    0 /* Just a dummy value.  */
 # define LIBC_CANCEL_RESET(val) ((void)(val)) /* Nothing, but evaluate it.  */

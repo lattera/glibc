@@ -1,3 +1,28 @@
+2003-06-18  Jakub Jelinek  <jakub@redhat.com>
+
+	* internals.h (__librt_multiple_threads, __librt_enable_asynccancel,
+	__librt_disable_asynccancel): Declare.
+	(LIBC_CANCEL_ASYNC, LIBC_CANCEL_RESET, LIBC_CANCEL_HANDLED): Define
+	for IS_IN_librt.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Support cancellation
+	in librt.
+	* sysdeps/unix/sysv/linux/ia64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h: Likewise.
+	* sysdeps/x86_64/tcb-offsets.sym: New file.
+	* sysdeps/x86_64/Makefile: New file.
+	* sysdeps/x86_64/tls.h (tcbhead_t): Add multiple_threads.
+	* Versions (libc): Export __librt_enable_asynccancel,
+	__librt_disable_asynccancel and __librt_multiple_threads as
+	GLIBC_PRIVATE.
+	* libc-cancellation.c (__librt_multiple_threads,
+	__librt_enable_asynccancel, __librt_disable_asynccancel): New aliases.
+
 2003-06-12  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/sysdep-cancel.h

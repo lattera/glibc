@@ -23,7 +23,7 @@
 # include <linuxthreads/internals.h>
 #endif
 
-#if !defined NOT_IN_libc || defined IS_IN_libpthread
+#if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
@@ -68,9 +68,12 @@ SYSCALL_ERROR_HANDLER_ENTRY(__syscall_error_handler2)			      \
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel
 #  define CDISABLE	call __pthread_disable_asynccancel
-# else
+# elif defined !NOT_IN_libc
 #  define CENABLE	call __libc_enable_asynccancel
 #  define CDISABLE	call __libc_disable_asynccancel
+# else
+#  define CENABLE	call __librt_enable_asynccancel
+#  define CDISABLE	call __librt_disable_asynccancel
 # endif
 
 #define COPY_ARGS_0	/* Nothing */
