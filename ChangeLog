@@ -1,3 +1,9 @@
+Thu Mar 25 23:57:57 1999  Roland McGrath  <roland@yaumatei.ai.mit.edu>
+
+	* sysdeps/mach/hurd/i386/Makefile [$(subdir) = csu]
+	(CFLAGS-initfini.s): New variable, add -DWEAK_GMON_START.
+	This does for Hurd/i386 what the 1998-09-08 change did for Linux/i386.
+
 1999-03-24  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* Makeconfig (sysd-sorted): Use $(..) on rhs of patsubst, so this rule
