@@ -892,6 +892,11 @@ extern void _dl_init (struct link_map *main_map, int argc, char **argv,
    initializer functions have completed.  */
 extern void _dl_fini (void) internal_function;
 
+/* Sort array MAPS according to dependencies of the contained objects.  */
+extern void _dl_sort_fini (struct link_map *l, struct link_map **maps,
+			   size_t nmaps, char *used, Lmid_t ns)
+     internal_function;
+
 /* The dynamic linker calls this function before and having changing
    any shared object mappings.  The `r_state' member of `struct r_debug'
    says what change is taking place.  This function's address is

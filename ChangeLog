@@ -1,3 +1,12 @@
+2005-03-18  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-fini.c (_dl_fini): Split sorting of the maps in separate
+	function _dl_sort_fini.
+	(_dl_sort_fini): New function.
+	* sysdeps/generic/ldsodefs.h: Declare _dl_sort_fini.
+	* elf/dl-close.c (_dl_close): Call _dl_sort_fini before running
+	destructors to call them in the right order.
+
 2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/bits/link.h (La_ppc64_regs): Add lr_vrsave.

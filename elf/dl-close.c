@@ -136,15 +136,9 @@ _dl_close (void *_map)
       return;
     }
 
-#define NWORDS(n) (((n) + 8 * sizeof (unsigned long int) - 1) \
-		   / (sizeof (unsigned long int)))
-#define SETBIT(a, n) a[(n) / sizeof (unsigned long int)] \
-		       |= 1 << ((n) % (sizeof (unsigned long int)))
-#define ISSET(a, n) (a[(n) / sizeof (unsigned long int)] \
-		     & 1 << ((n) % (sizeof (unsigned long int))))
   const unsigned int nloaded = GL(dl_ns)[ns]._ns_nloaded;
-  unsigned long int used[NWORDS (nloaded)];
-  unsigned long int done[NWORDS (nloaded)];
+  char used[nloaded];
+  char done[nloaded];
   struct link_map *maps[nloaded];
 
   /* Run over the list and assign indeces to the link maps and enter
@@ -168,7 +162,7 @@ _dl_close (void *_map)
     {
       struct link_map *l = maps[done_index];
 
-      if (ISSET (done, done_index))
+      if (done[done_index])
 	/* Already handled.  */
 	continue;
 
@@ -176,12 +170,14 @@ _dl_close (void *_map)
       if (l->l_type == lt_loaded
 	  && l->l_direct_opencount == 0
 	  && (l->l_flags_1 & DF_1_NODELETE) == 0
-	  && !ISSET (used, done_index))
+	  && !used[done_index])
 	continue;
 
       /* We need this object and we handle it now.  */
-      SETBIT (done, done_index);
-      SETBIT (used, done_index);
+      done[done_index] = 1;
+      used[done_index] = 1;
+      /* Signal the object is still needed.  */
+      l->l_idx = -1;
 
       /* Mark all dependencies as used.  */
       if (l->l_initfini != NULL)
@@ -189,13 +185,16 @@ _dl_close (void *_map)
 	  struct link_map **lp = &l->l_initfini[1];
 	  while (*lp != NULL)
 	    {
-	      assert ((*lp)->l_idx >= 0 && (*lp)->l_idx < nloaded);
-
-	      if (!ISSET (used, (*lp)->l_idx))
+	      if ((*lp)->l_idx != -1)
 		{
-		  SETBIT (used, (*lp)->l_idx);
-		  if ((*lp)->l_idx - 1 < done_index)
-		    done_index = (*lp)->l_idx - 1;
+		  assert ((*lp)->l_idx >= 0 && (*lp)->l_idx < nloaded);
+
+		  if (!used[(*lp)->l_idx])
+		    {
+		      used[(*lp)->l_idx] = 1;
+		      if ((*lp)->l_idx - 1 < done_index)
+			done_index = (*lp)->l_idx - 1;
+		    }
 		}
 
 	      ++lp;
@@ -207,16 +206,22 @@ _dl_close (void *_map)
 	  {
 	    struct link_map *jmap = l->l_reldeps[j];
 
-	    assert (jmap->l_idx >= 0 && jmap->l_idx < nloaded);
-
-	    if (!ISSET (used, jmap->l_idx))
+	    if (jmap->l_idx != -1)
 	      {
-		SETBIT (used, jmap->l_idx);
-		if (jmap->l_idx - 1 < done_index)
-		  done_index = jmap->l_idx - 1;
+		assert (jmap->l_idx >= 0 && jmap->l_idx < nloaded);
+
+		if (!used[jmap->l_idx])
+		  {
+		    used[jmap->l_idx] = 1;
+		    if (jmap->l_idx - 1 < done_index)
+		      done_index = jmap->l_idx - 1;
+		  }
 	      }
 	  }
     }
+
+  /* Sort the entries.  */
+  _dl_sort_fini (GL(dl_ns)[ns]._ns_loaded, maps, nloaded, used, ns);
 
   /* Call all termination functions at once.  */
 #ifdef SHARED
@@ -231,7 +236,7 @@ _dl_close (void *_map)
       /* All elements must be in the same namespace.  */
       assert (imap->l_ns == ns);
 
-      if (!ISSET (used, i))
+      if (!used[i])
 	{
 	  assert (imap->l_type == lt_loaded
 		  && (imap->l_flags_1 & DF_1_NODELETE) == 0);
@@ -291,7 +296,7 @@ _dl_close (void *_map)
 	  if (i < first_loaded)
 	    first_loaded = i;
 	}
-      /* Else ISSET (used, i).  */
+      /* Else used[i].  */
       else if (imap->l_type == lt_loaded)
 	{
 	  if (imap->l_searchlist.r_list == NULL
@@ -320,8 +325,9 @@ _dl_close (void *_map)
 		  }
 	    }
 
-	  /* The loader is gone, so mark the object as not having one.  */
-	  if (imap->l_loader != NULL && !ISSET (used, imap->l_loader->l_idx))
+	  /* The loader is gone, so mark the object as not having one.
+	     Note: l_idx == -1 -> object will be removed.  */
+	  if (imap->l_loader != NULL && imap->l_loader->l_idx != -1)
 	    imap->l_loader = NULL;
 
 	  /* Remember where the first dynamically loaded object is.  */
@@ -370,7 +376,7 @@ _dl_close (void *_map)
   for (i = first_loaded; i < nloaded; ++i)
     {
       struct link_map *imap = maps[i];
-      if (!ISSET (used, i))
+      if (!used[i])
 	{
 	  assert (imap->l_type == lt_loaded);
 
