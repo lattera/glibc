@@ -1,3 +1,12 @@
+2002-09-04  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/generic/bits/ustat.h: Comment fix.
+	* io/sys/sendfile.h: Comment fix.
+	* sysdeps/posix/pread.c: Comment fix.
+	* sysdeps/posix/pread64.c: Comment fix.
+	* sysdeps/posix/pwrite.c: Comment fix.
+	* sysdeps/posix/pwrite64.c: Comment fix.
+
 2002-09-06  Roland McGrath  <roland@redhat.com>
 
 	* posix/sys/utsname.h (_UTSNAME_SYSNAME_LENGTH): New macro, defined

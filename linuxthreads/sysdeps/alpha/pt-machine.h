@@ -26,7 +26,11 @@
 # define PT_EI extern inline
 #endif
 
-#include <asm/pal.h>
+#ifdef __linux__
+# include <asm/pal.h>
+#else
+# include <machine/pal.h>
+#endif
 
 extern long int testandset (int *spinlock);
 extern int __compare_and_swap (long int *p, long int oldval, long int newval);

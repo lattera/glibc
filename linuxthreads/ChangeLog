@@ -1,5 +1,8 @@
 2002-09-04  Bruno Haible  <bruno@clisp.org>
 
+        * sysdeps/alpha/pt-machine.h: Choose different include file location
+        on non-Linux platforms.
+
 	* wrapsyscall.c (PROMOTE_INTEGRAL_TYPE): New macro.
 	(open, open64): Change va_arg argument type to the integral type to
 	which mode_t promotes.
