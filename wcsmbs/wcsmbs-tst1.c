@@ -10,18 +10,19 @@
 int
 main (void)
 {
-  int test=0, idx=0;
+  int test = 0;
+  int idx = 0;
   char buf[100], *pchar;
   wchar_t tmp[10];
-  wchar_t tmp1[]={L'W',L'o',L'r',L'l',L'd',L'\0'};
-  char str[]="Hello";
+  wchar_t tmp1[] = { L'W', L'o', L'r', L'l', L'd', L'\0' };
+  char str[] = "Hello";
   int result = 0;
 
-  pchar= setlocale (LC_ALL, "");
+  pchar = setlocale (LC_ALL, "");
   printf ("locale : %s\n",pchar);
-  printf ("MB_CUR_MAX %d\n", MB_CUR_MAX);
+  printf ("MB_CUR_MAX %Zd\n", MB_CUR_MAX);
 
-  puts("---- test 1 ------");
+  puts ("---- test 1 ------");
   test = mbstowcs (tmp, str, (strlen (str) + 1) * sizeof (char));
   printf ("size of string by mbstowcs %d\n", test);
   if (test != strlen (str))
@@ -40,7 +41,7 @@ main (void)
   printf ("string by %%S %S\n", tmp);
   if (wcscmp (tmp, L"Hello") != 0)
     result = 1;
-  puts("---- test 2 ------");
+  puts ("---- test 2 ------");
   printf ("wchar string %S\n", tmp1);
   printf ("wchar %C\n", tmp1[0]);
   test = wcstombs (buf, tmp1, (wcslen (tmp1) + 1) * sizeof (wchar_t));
@@ -52,7 +53,7 @@ main (void)
   printf ("char %s\n", buf);
   if (strcmp (buf, "World") != 0)
     result = 1;
-  puts("------------------");
+  puts ("------------------");
 
   return result;
 }
