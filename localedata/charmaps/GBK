@@ -133,7 +133,6 @@ CHARMAP
 <U007D>     /x7d         RIGHT CURLY BRACKET
 <U007E>     /x7e         TILDE
 <U007F>     /x7f         DELETE (DEL)
-<U0080>     /x80         PADDING CHARACTER (PAD)
 
 <U4E02>     /x81/x40     <CJK>
 <U4E04>     /x81/x41     <CJK>
