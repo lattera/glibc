@@ -1,5 +1,5 @@
 /* Conversion from and to ISO_2033-1983.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -23,7 +23,7 @@
 /* Get the conversion table.  */
 #define TABLES <iso_2033.h>
 
-#define CHARSET_NAME	"ISO_2033-1983//"
+#define CHARSET_NAME	"ISO_2033//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

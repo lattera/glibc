@@ -189,7 +189,7 @@ module	PT//			INTERNAL		ISO646		2
 module	INTERNAL		PT//			ISO646		2
 
 alias	ISO-IR-84//		PT2//
-alias	ISO646-PT2		PT2//
+alias	ISO646-PT2//		PT2//
 alias	CSISO84PORTUGUESE2//	PT2//
 module	PT2//			INTERNAL		ISO646		2
 module	INTERNAL		PT2//			ISO646		2
@@ -380,6 +380,7 @@ module	INTERNAL		ISO_6937-2//		ISO_6937-2	1
 
 #	from			to			module		cost
 alias	SHIFT-JIS//		SJIS//
+alias	SHIFT_JIS//		SJIS//
 alias	CP932//			SJIS//
 alias	MS_KANJI//		SJIS//
 alias	CSSHIFTJIS//		SJIS//

@@ -1,5 +1,12 @@
 1999-12-06  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/sami-ws2.c (CHARSET_NAME): Fix typo.
+	* iconvdata/iso_2033.c (CHARSET_NAME): Fix typo.
+	* iconvdata/ecma-cyrillic.c (CHARSET_NAME): Fix typo.
+	* iconvdata/gconv-modules: Correct ISO646-PT2 alias.  Add
+	SHIFT_JIS alias.
+	Reported by Bruno Haible <haible@ilog.fr>.
+
 	* locale/programs/xstrdup.c: It's _LIBC, not __LIBC.
 
 1999-12-03  Andreas Jaeger  <aj@suse.de>
