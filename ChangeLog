@@ -1,3 +1,8 @@
+2004-08-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/bits/posix1_lim.h (_POSIX_CHILD_MAX, _POSIX_OPEN_MAX): If
+	not __USE_XOPEN2K, use the Unix98 mandated values.
+
 2004-08-27  Roland McGrath  <roland@redhat.com>
 
 	* configure.in (usetls): Default to yes.

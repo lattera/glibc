@@ -38,7 +38,11 @@
 #define	_POSIX_ARG_MAX		4096
 
 /* Maximum simultaneous processes per real user ID.  */
-#define	_POSIX_CHILD_MAX	25
+#ifdef __USE_XOPEN2K
+# define _POSIX_CHILD_MAX	25
+#else
+# define _POSIX_CHILD_MAX	6
+#endif
 
 /* Minimal number of timer expiration overruns.  */
 #define _POSIX_DELAYTIMER_MAX	32
@@ -77,7 +81,11 @@
 #endif
 
 /* Number of files one process can have open at once.  */
-#define	_POSIX_OPEN_MAX		20
+#ifdef __USE_XOPEN2K
+# define _POSIX_OPEN_MAX	20
+#else
+# define _POSIX_OPEN_MAX	16
+#endif
 
 /* Number of descriptors that a process may examine with `pselect' or
    `select'.  */

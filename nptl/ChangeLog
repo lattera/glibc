@@ -1,3 +1,10 @@
+2004-08-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Include
+	bits/wordsize.h.  Make the header match i386 header when __WORDSIZE
+	!= 64.
+	* sysdeps/unix/sysv/linux/x86_64/bits/semaphore.h: Likewise.
+
 2004-08-15  Roland McGrath  <roland@frob.com>
 
 	* pthread_atfork.c: Update copyright terms including special exception
