@@ -181,6 +181,8 @@ extern char *alloca ();
 #endif
 #ifdef STAT_MACROS_BROKEN
 #undef S_ISDIR
+#endif
+#ifndef S_ISDIR
 #define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
 #endif
 #endif
