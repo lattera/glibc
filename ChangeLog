@@ -1,3 +1,10 @@
+2002-03-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/swapcontext.S: New.
+	* sysdeps/unix/sysv/linux/x86_64/getcontext.S: New.
+	* sysdeps/unix/sysv/linux/x86_64/setcontext.S: New.
+	* sysdeps/unix/sysv/linux/x86_64/ucontext_i.h: New.
+
 2002-03-27  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct

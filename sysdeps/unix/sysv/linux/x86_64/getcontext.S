@@ -1,0 +1,76 @@
+/* Save current context.
+   Copyright (C) 2002 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Andreas Jaeger <aj@suse.de>, 2002.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public
+   License as published by the Free Software Foundation; either
+   version 2.1 of the License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with the GNU C Library; if not, write to the Free
+   Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+   02111-1307 USA.  */
+
+#include <sysdep.h>
+
+#include "ucontext_i.h"
+
+/*  int __getcontext (ucontext_t *ucp)
+
+  Saves the machine context in UCP such that when it is activated,
+  it appears as if __getcontext() returned again.
+
+  This implementation is intended to be used for *synchronous* context
+  switches only.  Therefore, it does not have to save anything
+  other than the PRESERVED state.  */
+
+
+ENTRY(__getcontext)
+	/* Save the preserved registers and the return address.  */
+	movq	%rbx, oRBX(%rdi)
+	movq	%rbp, oRBP(%rdi)
+	movq	%r12, oR12(%rdi)
+	movq	%r13, oR13(%rdi)
+	movq	%r14, oR14(%rdi)
+	movq	%r15, oR15(%rdi)
+
+	movq	(%rsp), %rcx
+	movq	%rcx, oRIP(%rdi)
+	leaq	8(%rsp), %rcx		/* Exclude the return address.  */
+	movq	%rcx, oRSP(%rdi)
+
+	/* We have separate floating-point register content memory on the
+	   stack.  We use the __fpregs_mem block in the context.  Set the
+	   links up correctly.  */
+
+	leaq	oFPREGSMEM(%rdi), %rcx
+	movq	%rcx, oFPREGS(%rdi)
+	/* Save the floating-point environment.  */
+	fnstenv	(%rcx)
+	stmxcsr oMXCSR(%rdi)
+
+	/* Save the current signal mask with
+	   rt_sigprocmask (SIG_BLOCK, NULL, set,_NSIG/8).  */
+	leaq	oSIGMASK(%rdi), %rdx
+	xorq	%rsi,%rsi
+	movq	$SIG_BLOCK, %rdi
+	movq	$_NSIG8,%r10
+	movq	$__NR_rt_sigprocmask, %rax
+	syscall
+	cmpq	$-4095, %rax		/* Check %rax for error.  */
+	jae	SYSCALL_ERROR_LABEL	/* Jump to error handler if error.  */
+
+	/* All done, return 0 for success.  */
+	xorq	%rax, %rax
+L(pseudo_end):
+	ret
+PSEUDO_END(__getcontext)
+
+weak_alias(__getcontext, getcontext)
