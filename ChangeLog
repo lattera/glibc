@@ -21,6 +21,12 @@
 	* elf/unload2mod.c: Likewise.
 	* elf/ltglobmod1.c: Likewise.
 	* elf/pathoptobj.c: Likewise.
+	* elf/neededobj1.c: Likewise.
+	* elf/neededobj2.c: Likewise.
+	* elf/neededobj3.c: Likewise.
+	* elf/neededobj4.c: Likewise.
+	* elf/nextmod1.c: Likewise.
+	* elf/nextmod2.c: Likewise.
 
 	* locale/programs/ld-collate.c (collate_finish): Don't use labels
 	at end of compound statement.

@@ -1,4 +1,7 @@
+extern int foo (void);
+
 int some_var;
+
 
 int
 foo (void)

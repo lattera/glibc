@@ -1,3 +1,5 @@
+extern const char *foo (void);
+
 const char *
 foo (void)
 {

@@ -1,3 +1,5 @@
+extern int bar (void);
+
 int
 bar (void)
 {

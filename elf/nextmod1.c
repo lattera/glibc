@@ -1,5 +1,8 @@
 #include <dlfcn.h>
 
+extern int successful_rtld_next_test (void);
+extern void *failing_rtld_next_use (void);
+
 int nextmod1_dummy_var;
 
 int

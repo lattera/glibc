@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+extern int call_me (void);
+
 int
 call_me (void)
 {

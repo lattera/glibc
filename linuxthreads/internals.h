@@ -27,6 +27,9 @@
 #include <sys/types.h>
 #include <bits/libc-tsd.h> /* for _LIBC_TSD_KEY_N */
 
+extern long int testandset (int *spinlock);
+extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+
 #include "pt-machine.h"
 #include "semaphore.h"
 #include "../linuxthreads_db/thread_dbP.h"

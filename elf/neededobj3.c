@@ -1,3 +1,4 @@
+extern void a_function (void);
 extern void b_function (void);
 extern void c_function (void);
 
