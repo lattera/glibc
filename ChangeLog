@@ -1,5 +1,6 @@
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Makefile (distribute): Add dl-dtprocnum.h.
 	* include/elf.h: Include also <dl-dtprocnum.h>.
 	* elf/dl-deps.c: Likewise.
 	* elf/dl-lookup.c: Likewise.
