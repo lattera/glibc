@@ -1,3 +1,7 @@
+2003-07-27  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/init-first.c: Mark init as used.
+
 2003-07-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/a.out.h: Replace with i386 version.
