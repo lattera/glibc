@@ -1,3 +1,8 @@
+Tue Mar 12 04:57:57 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* setjmp/Makefile (tests): Add jmpbug.
+	* setjmp/jmpbug.c: New file.
+
 Tue Mar 12 04:42:01 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/sparc/jmp_buf.h: Rewritten; use array of ints, not struct.

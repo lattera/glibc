@@ -17,6 +17,8 @@ not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
+
+#define _ASM 1
 #include <jmp_buf.h>
 
 ENTRY (__sigsetjmp)

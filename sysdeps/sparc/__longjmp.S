@@ -18,6 +18,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
+#define _ASM 1
 #include <jmp_buf.h>
 #define ENV(reg) [%g1 + (reg * 4)]
 
