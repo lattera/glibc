@@ -83,14 +83,14 @@
 	* stdlib/strtoull_l.c: Moved to ...
 	* sysdeps/generic/strtoull_l.c: ...here.
 
-	* sysdeps/wordexp-64/strtol.c: New file.
-	* sysdeps/wordexp-64/strtoul.c: New file.
-	* sysdeps/wordexp-64/strtoll.c: New file.
-	* sysdeps/wordexp-64/strtoull.c: New file.
-	* sysdeps/wordexp-64/strtol_l.c: New file.
-	* sysdeps/wordexp-64/strtoul_l.c: New file.
-	* sysdeps/wordexp-64/strtoll_l.c: New file.
-	* sysdeps/wordexp-64/strtoull_l.c: New file.
+	* sysdeps/wordsize-64/strtol.c: New file.
+	* sysdeps/wordsize-64/strtoul.c: New file.
+	* sysdeps/wordsize-64/strtoll.c: New file.
+	* sysdeps/wordsize-64/strtoull.c: New file.
+	* sysdeps/wordsize-64/strtol_l.c: New file.
+	* sysdeps/wordsize-64/strtoul_l.c: New file.
+	* sysdeps/wordsize-64/strtoll_l.c: New file.
+	* sysdeps/wordsize-64/strtoull_l.c: New file.
 
 	* wcsmbs/wcstol.c: Moved to ...
 	* sysdeps/generic/wcstol.c: ...here.
@@ -109,14 +109,14 @@
 	* wcsmbs/wcstoull_l.c: Moved to ...
 	* sysdeps/generic/wcstoull_l.c: ...here.
 
-	* sysdeps/wordexp-64/wcstol.c: New file.
-	* sysdeps/wordexp-64/wcstoul.c: New file.
-	* sysdeps/wordexp-64/wcstoll.c: New file.
-	* sysdeps/wordexp-64/wcstoull.c: New file.
-	* sysdeps/wordexp-64/wcstol_l.c: New file.
-	* sysdeps/wordexp-64/wcstoul_l.c: New file.
-	* sysdeps/wordexp-64/wcstoll_l.c: New file.
-	* sysdeps/wordexp-64/wcstoull_l.c: New file.
+	* sysdeps/wordsize-64/wcstol.c: New file.
+	* sysdeps/wordsize-64/wcstoul.c: New file.
+	* sysdeps/wordsize-64/wcstoll.c: New file.
+	* sysdeps/wordsize-64/wcstoull.c: New file.
+	* sysdeps/wordsize-64/wcstol_l.c: New file.
+	* sysdeps/wordsize-64/wcstoul_l.c: New file.
+	* sysdeps/wordsize-64/wcstoll_l.c: New file.
+	* sysdeps/wordsize-64/wcstoull_l.c: New file.
 
 1999-05-24  Jakub Jelinek  <jj@ultra.linux.cz>
 
