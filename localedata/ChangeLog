@@ -1,5 +1,7 @@
 1999-11-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* charmaps/ISO-8859-7: Fix 0xa1 mapping.
+
 	* charmaps/ISO-8859-13: Fix a few entries.
 	Patch by Marius Gedminas <mgedmin@takas.lt>.
 

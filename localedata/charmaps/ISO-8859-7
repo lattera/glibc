@@ -174,7 +174,7 @@ CHARMAP
 <PM>                   /x9E   <U009E> PRIVACY MESSAGE (PM)
 <AC>                   /x9F   <U009F> APPLICATION PROGRAM COMMAND (APC)
 <NS>                   /xA0   <U00A0> NO-BREAK SPACE
-<9'>                   /xA1   <U201B> SINGLE HIGH-REVERSED-9 QUOTATION MARK
+<'6>                   /xA1   <U2018> LEFT SINGLE QUOTATION MARK
 <'9>                   /xA2   <U2019> RIGHT SINGLE QUOTATION MARK
 <Pd>                   /xA3   <U00A3> POUND SIGN
 <BB>                   /xA6   <U00A6> BROKEN BAR

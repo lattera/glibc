@@ -112,7 +112,7 @@ td_ta_thr_iter (const td_thragent_t *ta, td_thr_iter_f *callback,
     return result;
 
   /* Read all the descriptors.  */
-  if (ps_pdread (ta->ph, ta->handles, &phc[2],
+  if (ps_pdread (ta->ph, ta->handles + 2, &phc[2],
 		 (sizeof (struct pthread_handle_struct)
 		  * (pthread_threads_max - 2))) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
