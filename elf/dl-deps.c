@@ -30,11 +30,11 @@
 
 /* Whether an shared object references one or more auxiliary objects
    is signaled by the AUXTAG entry in l_info.  */
-#define AUXTAG	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
+#define AUXTAG	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
 		 + DT_EXTRATAGIDX (DT_AUXILIARY))
 /* Whether an shared object references one or more auxiliary objects
    is signaled by the AUXTAG entry in l_info.  */
-#define FILTERTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGNUM \
+#define FILTERTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGNUM \
 		   + DT_EXTRATAGIDX (DT_FILTER))
 
 /* This is zero at program start to signal that the global scope map is

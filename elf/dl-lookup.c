@@ -28,7 +28,7 @@
 
 #include <assert.h>
 
-#define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
+#define VERSTAG(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
 
 /* We need this string more than once.  */
 static const char undefined_msg[] = "undefined symbol: ";

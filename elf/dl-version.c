@@ -29,7 +29,7 @@
 
 
 #ifndef VERSYMIDX
-# define VERSYMIDX(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
+# define VERSYMIDX(tag)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (tag))
 #endif
 
 

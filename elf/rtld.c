@@ -348,7 +348,7 @@ match_version (const char *string, struct link_map *map)
   const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
   ElfW(Verdef) *def;
 
-#define VERDEFTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERDEF))
+#define VERDEFTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERDEF))
   if (map->l_info[VERDEFTAG] == NULL)
     /* The file has no symbol versioning.  */
     return 0;
@@ -953,7 +953,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		} while (l);
 	    }
 
-#define VERNEEDTAG (DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
+#define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
 	  if (version_info)
 	    {
 	      /* Print more information.  This means here, print information

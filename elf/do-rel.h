@@ -27,7 +27,7 @@
 #endif
 
 #ifndef VERSYMIDX
-# define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
+# define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
 
 /* Perform the relocations in MAP on the running program image as specified

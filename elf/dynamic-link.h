@@ -22,7 +22,7 @@
 #include <assert.h>
 
 #ifndef VERSYMIDX
-# define VERSYMIDX(sym)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (sym))
+# define VERSYMIDX(sym)	(DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (sym))
 #endif
 
 
@@ -51,12 +51,12 @@ elf_get_dynamic_info (struct link_map *l)
       if (dyn->d_tag < DT_NUM)
 	info[dyn->d_tag] = dyn;
       else if (dyn->d_tag >= DT_LOPROC &&
-	       dyn->d_tag < DT_LOPROC + DT_PROCNUM)
+	       dyn->d_tag < DT_LOPROC + DT_THISPROCNUM)
 	info[dyn->d_tag - DT_LOPROC + DT_NUM] = dyn;
       else if ((Elf32_Word) DT_VERSIONTAGIDX (dyn->d_tag) < DT_VERSIONTAGNUM)
 	info[VERSYMIDX (dyn->d_tag)] = dyn;
       else if ((Elf32_Word) DT_EXTRATAGIDX (dyn->d_tag) < DT_EXTRANUM)
-	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_PROCNUM
+	info[DT_EXTRATAGIDX (dyn->d_tag) + DT_NUM + DT_THISPROCNUM
 	     + DT_VERSIONTAGNUM] = dyn;
       else
 	assert (! "bad dynamic tag");
