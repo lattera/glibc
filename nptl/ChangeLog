@@ -1,3 +1,15 @@
+2003-04-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_create.c (deallocate_tsd): Clear/free memory after the last
+	round, not the first.  Use specific_used flag instead of local
+	found_nonzero variable.  Use THREAD_[SG]ETMEM where possible.
+	(__free_tcb): Don't call deallocate_tsd here.
+	(start_thread): Call deallocate_tsd here.
+	* pthread_setspecific.c: Set specific_used flag really only when
+	needed.
+	* Makefile (tests): Add tst-tsd3.c
+	* tst-tsd3.c: New file.
+
 2003-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/lowlevellock.h (__lll_mutex_lock):

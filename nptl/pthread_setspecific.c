@@ -45,6 +45,10 @@ __pthread_setspecific (key, value)
 	return EINVAL;
 
       level2 = &self->specific_1stblock[key];
+
+      /* Remember that we stored at least one set of data.  */
+      if (value != NULL)
+	THREAD_SETMEM (self, specific_used, true);
     }
   else
     {
@@ -76,15 +80,15 @@ __pthread_setspecific (key, value)
 
       /* Pointer to the right array element.  */
       level2 = &level2[idx2nd];
+
+      /* Remember that we stored at least one set of data.  */
+      THREAD_SETMEM (self, specific_used, true);
     }
 
   /* Store the data and the sequence number so that we can recognize
      stale data.  */
   level2->seq = seq;
   level2->data = (void *) value;
-
-  /* Remember that we stored at least one set of data.  */
-  THREAD_SETMEM (self, specific_used, true);
 
   return 0;
 }

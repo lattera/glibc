@@ -112,67 +112,78 @@ deallocate_tsd (struct pthread *pd)
 {
   /* Maybe no data was ever allocated.  This happens often so we have
      a flag for this.  */
-  if (pd->specific_used)
+  if (THREAD_GETMEM (pd, specific_used))
     {
       size_t round;
-      bool found_nonzero;
+      size_t cnt;
 
-      for (round = 0, found_nonzero = true;
-	   found_nonzero && round < PTHREAD_DESTRUCTOR_ITERATIONS;
-	   ++round)
+      round = 0;
+      do
 	{
-	  size_t cnt;
 	  size_t idx;
 
 	  /* So far no new nonzero data entry.  */
-	  found_nonzero = false;
+	  THREAD_SETMEM (pd, specific_used, false);
 
 	  for (cnt = idx = 0; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
-	    if (pd->specific[cnt] != NULL)
-	      {
-		size_t inner;
+	    {
+	      struct pthread_key_data *level2;
 
-		for (inner = 0; inner < PTHREAD_KEY_2NDLEVEL_SIZE;
-		     ++inner, ++idx)
-		  {
-		    void *data = pd->specific[cnt][inner].data;
+	      level2 = THREAD_GETMEM_NC (pd, specific, cnt);
 
-		    if (data != NULL
-			/* Make sure the data corresponds to a valid
-			   key.  This test fails if the key was
-			   deallocated and also if it was
-			   re-allocated.  It is the user's
-			   responsibility to free the memory in this
-			   case.  */
-			&& (pd->specific[cnt][inner].seq
-			    == __pthread_keys[idx].seq)
-			/* It is not necessary to register a destructor
-			   function.  */
-			&& __pthread_keys[idx].destr != NULL)
-		      {
-			pd->specific[cnt][inner].data = NULL;
-			__pthread_keys[idx].destr (data);
-			found_nonzero = true;
-		      }
-		  }
+	      if (level2 != NULL)
+		{
+		  size_t inner;
 
-		if (cnt != 0)
-		  {
-		    /* The first block is allocated as part of the thread
-		       descriptor.  */
-		    free (pd->specific[cnt]);
-		    pd->specific[cnt] = NULL;
-		  }
-		else
-		  /* Clear the memory of the first block for reuse.  */
-		  memset (&pd->specific_1stblock, '\0',
-			  sizeof (pd->specific_1stblock));
-	      }
-	    else
-	      idx += PTHREAD_KEY_1STLEVEL_SIZE;
+		  for (inner = 0; inner < PTHREAD_KEY_2NDLEVEL_SIZE;
+		       ++inner, ++idx)
+		    {
+		      void *data = level2[inner].data;
+
+		      if (data != NULL
+			  /* Make sure the data corresponds to a valid
+			     key.  This test fails if the key was
+			     deallocated and also if it was
+			     re-allocated.  It is the user's
+			     responsibility to free the memory in this
+			     case.  */
+			  && (level2[inner].seq
+			      == __pthread_keys[idx].seq)
+			  /* It is not necessary to register a destructor
+			     function.  */
+			  && __pthread_keys[idx].destr != NULL)
+			{
+			  level2[inner].data = NULL;
+			  __pthread_keys[idx].destr (data);
+			}
+		    }
+		}
+	      else
+		idx += PTHREAD_KEY_1STLEVEL_SIZE;
+	    }
+	}
+      while (THREAD_GETMEM (pd, specific_used)
+	     && ++round < PTHREAD_DESTRUCTOR_ITERATIONS);
+
+      /* Clear the memory of the first block for reuse.  */
+      memset (&pd->specific_1stblock, '\0', sizeof (pd->specific_1stblock));
+
+      /* Free the memory for the other blocks.  */
+      for (cnt = 1; cnt < PTHREAD_KEY_1STLEVEL_SIZE; ++cnt)
+	{
+	  struct pthread_key_data *level2;
+
+	  level2 = THREAD_GETMEM_NC (pd, specific, cnt);
+	  if (level2 != NULL)
+	    {
+	      /* The first block is allocated as part of the thread
+		 descriptor.  */
+	      free (level2);
+	      THREAD_SETMEM_NC (pd, specific, cnt, NULL);
+	    }
 	}
 
-      pd->specific_used = false;
+      THREAD_SETMEM (pd, specific_used, false);
     }
 }
 
@@ -192,9 +203,6 @@ __free_tcb (struct pthread *pd)
 	/* Something is really wrong.  The descriptor for a still
 	   running thread is gone.  */
 	abort ();
-
-      /* Run the destructor for the thread-local data.  */
-      deallocate_tsd (pd);
 
       /* Queue the stack memory block for reuse and exit the process.  The
 	 kernel will signal via writing to the address returned by
@@ -231,6 +239,9 @@ start_thread (void *arg)
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
 #endif
     }
+
+  /* Run the destructor for the thread-local data.  */
+  deallocate_tsd (pd);
 
   /* Clean up any state libc stored in thread-local variables.  */
   __libc_thread_freeres ();
