@@ -1,3 +1,7 @@
+2000-08-16  Andreas Jaeger  <aj@suse.de>
+
+	* elf/elf.h (EM_X8664): Add official x86-64 specific value.
+
 2000-08-15  Marko Myllynen  <myllynen@lut.fi>
 
 	* inet/netinet/icmp6.h: Added Mobile IPv6 definitions.
