@@ -1,3 +1,15 @@
+1999-05-16  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/sys/socketvar.h: Moved to ...
+	* sysdeps/generic/sys/socketvar.h: ... here.
+	* sysdeps/unix/sysv/linux/netinet/in_systm.h: Moved to ...
+	* sysdeps/generic/netinet/in_systm.h: ... here.
+	* sysdeps/unix/sysv/linux/Dist: Remove netinet/in_systm.h,
+	sys/socketvar.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Likewise.
+	* inet/Makefile (headers): Add netinet/in_systm.h here.
+	* socket/Makefile (headers): Add sys/socketvar.h here.
+
 1999-05-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/strtol.c: Optimize inner loop of long long versions.
