@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -23,7 +23,7 @@
 #define LOOKUP_TYPE	struct hostent
 #define FUNCTION_NAME	gethostbyaddr
 #define DATABASE_NAME	hosts
-#define ADD_PARAMS	const char *addr, int len, int type
+#define ADD_PARAMS	const char *addr, size_t len, int type
 #define ADD_VARIABLES	addr, len, type
 #define BUFLEN		1024
 #define NEED_H_ERRNO	1

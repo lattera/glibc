@@ -1,5 +1,10 @@
 1999-07-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* resolv/netdb.h: Adjust parameters of gethostbyaddr and
+	gethostbyaddr_r.
+	* inet/gethstbyad.c: Correct type of len parameter.
+	* inet/gethstbyad_r.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/arm/Versions: Undo last change.
 
 1999-07-17  Zack Weinberg  <zack@rabi.columbia.edu>

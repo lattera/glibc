@@ -113,7 +113,7 @@ extern struct hostent *gethostent __P ((void));
 
 /* Return entry from host data base which address match ADDR with
    length LEN and type TYPE.  */
-extern struct hostent *gethostbyaddr __P ((__const char *__addr, int __len,
+extern struct hostent *gethostbyaddr __P ((__const char *__addr, size_t __len,
 					   int __type));
 
 /* Return entry from host data base for host with NAME.  */
@@ -135,7 +135,7 @@ extern int gethostent_r __P ((struct hostent *__restrict __result_buf,
 			      struct hostent **__restrict __result,
 			      int *__restrict __h_errnop));
 
-extern int gethostbyaddr_r __P ((__const char *__restrict __addr, int __len,
+extern int gethostbyaddr_r __P ((__const char *__restrict __addr, size_t __len,
 				 int __type,
 				 struct hostent *__restrict __result_buf,
 				 char *__restrict __buf, size_t __buflen,
