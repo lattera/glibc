@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 	.text
 
 LEAF(sigsuspend, 0)
-	.prologue 0
+	.prologue 1
 
 	ldq	a0, 0(a0)
 	ldi	v0, __NR_sigsuspend
@@ -34,6 +34,6 @@ LEAF(sigsuspend, 0)
 
 error:	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 	END(sigsuspend)

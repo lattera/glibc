@@ -42,19 +42,19 @@ Cambridge, MA 02139, USA.  */
 
 
 LEAF(__syscall, 0)
-	bis	a0, a0, v0	# Syscall number -> v0
-	bis	a1, a1, a0	# arg1-arg5 -> a0-a4
-	bis	a2, a2, a1
-	bis	a3, a3, a2
-	bis	a4, a4, a3
-	bis	a5, a5, a4
+	mov	a0, v0		/* Syscall number -> v0 */
+	mov	a1, a0		/* arg1-arg5 -> a0-a4 */
+	mov	a2, a1
+	mov	a3, a2
+	mov	a4, a3
+	mov	a5, a4
 
-	call_pal PAL_callsys	# Invoke system call
+	call_pal PAL_callsys	/* Invoke system call */
 	bne	a3, error
 	ret
 
 error:	br	gp, 2f
 2:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 weak_alias(__syscall, syscall)

@@ -24,7 +24,7 @@ Cambridge, MA 02139, USA.  */
 
 LEAF(__ieee_get_fp_control, 8)
 	lda	sp, -8(sp)
-	.prologue 0
+	.prologue 1
 
 	mov	sp, a1
 	ldi	a0, GSI_IEEE_FP_CONTROL
@@ -39,7 +39,7 @@ LEAF(__ieee_get_fp_control, 8)
 error:	lda	sp, 8(sp)
 	br	gp, 1f
 1:	ldgp	gp, 0(gp)
-	jmp	zero, syscall_error
+	jmp	zero, __syscall_error
 
 	END(__ieee_get_fp_control)
 
