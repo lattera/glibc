@@ -996,6 +996,31 @@ Currently the code searches for libraries with a soname of "libdb.so.3"
 (that's the name from db 2.4.14 which comes with glibc 2.1.x) and
 "libdb-3.0.so" (the name used by db 3.0.55 as default).
 
+The nss_db module is now in a separate package since it requires a database
+library being available.
+
+??	What has do be done when upgrading to glibc 2.2?
+
+{AJ} The upgrade to glibc 2.2 should run smoothly, there's in general no
+need to recompile programs or libraries.  Nevertheless, some changes might
+be needed after upgrading:
+- The utmp daemon has been removed and is not supported by glibc anymore.
+  If it has been in use, it should be switched off.
+- Programs using IPv6 have to be recompiled due to incompatible changes in
+  sockaddr_in6 by the IPv6 working group.
+- The Berkeley db libraries have been removed (for details see ??nssdb).
+- The format of the locale files has changed, all locales should be
+  regenerated with localedef.  All statically linked applications which use
+  i18n should be recompiled, otherwise they'll not be localized.
+- glibc comes with a number of new applications.  For example ldconfig has
+  been implemented for glibc, the libc5 version of ldconfig is not needed
+  anymore.
+- There's no more K&R compatibility in the glibc headers.  The GNU C library
+  requires a C compiler that handles especially prototypes correctly.
+
+Please read also the NEWS file which is the authoritative source for this
+and gives more details for some topics.
+
 
 ? Source and binary incompatibilities, and what to do about them
 
