@@ -1,5 +1,90 @@
 2005-01-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* csu/elf-init.c (__libc_csu_fini): Don't do anything here.
+	* sysdeps/generic/libc-start.c: Don't register program destructor here.
+
+	* dlfcn/Makefile: Add rules to build dlfcn.c.
+	(LDFLAGS-dl.so): Removed.
+	* dlfcn/dlclose.c: _dl_close is now in ld.so, use function pointer
+	table.
+	* dlfcn/dlmopen.c: Likewise for _dl_open.
+	* dlfcn/dlopen.c: Likewise.
+	* dlfcn/dlopenold.c: Likewise.
+	* elf/dl-libc.c: Likewise for _dl_open and _dl_close.
+	* elf/Makefile (routines): Remove dl-open and dl-close.
+	(dl-routines): Add dl-open, dl-close, and dl-trampoline.
+	Add rules to build and run tst-audit1.
+	* elf/tst-audit1.c: New file.
+	* elf/tst-auditmod1.c: New file.
+	* elf/Versions [libc]: Remove _dl_open and _dl_close.
+	* elf/dl-close.c: Change for use inside ld.so instead of libc.so.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-debug.c (_dl_debug_initialize): Allow reinitialization,
+	signaled by nonzero parameter.
+	* elf/dl-init.c: Fix use of r_state.
+	* elf/dl-load.c: Likewise.
+
+	* elf/dl-close.c: Add auditing checkpoints.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* elf/dl-object.c: Allocate memory for auditing information.
+	* elf/dl-reloc.c: Remove RESOLV.  We now always need the map.
+	Correctly initialize slotinfo.
+	* elf/dynamic-link.h: Adjust after removal of RESOLV.
+	* sysdeps/hppa/dl-lookupcfg.h: Likewise.
+	* sysdeps/ia64/dl-lookupcfg.h: Likewise.
+	* sysdeps/powerpc/powerpc64/dl-lookupcfg.h: Removed.
+	* elf/dl-runtime.c (_dl_fixup): Little cleanup.
+	(_dl_profile_fixup): New parameters to point to register struct and
+	variable for frame size.
+	Add auditing checkpoints.
+	(_dl_call_pltexit): New function.
+	Don't define trampoline code here.
+	* elf/rtld.c: Recognize LD_AUDIT.  Load modules on startup.
+	Remove all the functions from _rtld_global_ro which only _dl_open
+	and _dl_close needed.
+	Add auditing checkpoints.
+	* elf/link.h: Define symbols for auditing interfaces.
+	* include/link.h: Likewise.
+	* include/dlfcn.h: Define __RTLD_AUDIT.
+	Remove prototypes for _dl_open and _dl_close.
+	Adjust access to argc and argv in libdl.
+	* dlfcn/dlfcn.c: New file.
+	* sysdeps/generic/dl-lookupcfg.h: Remove all content now that RESOLVE
+	is gone.
+	* sysdeps/generic/ldsodefs.h: Add definitions for auditing interfaces.
+	* sysdeps/generic/unsecvars.h: Add LD_AUDIT.
+	* sysdeps/i386/dl-machine.h: Remove trampoline code here.
+	Adjust for removal of RESOLVE.
+	* sysdeps/x86_64/dl-machine.h: Likewise.
+	* sysdeps/generic/dl-trampoline.c: New file.
+	* sysdeps/i386/dl-trampoline.c: New file.
+	* sysdeps/x86_64/dl-trampoline.c: New file.
+
+	* sysdeps/generic/dl-tls.c: Cleanups.  Fixup for dtv_t change.
+	Fix updating of DTV.
+	* sysdeps/generic/libc-tls.c: Likewise.
+
+	* sysdeps/arm/bits/link.h: Renamed to ...
+	* sysdeps/arm/buts/linkmap.h: ...this.
+	* sysdeps/generic/bits/link.h: Renamed to...
+	* sysdeps/generic/bits/linkmap.h: ...this.
+	* sysdeps/hppa/bits/link.h: Renamed to...
+	* sysdeps/hppa/bits/linkmap.h: ...this.
+	* sysdeps/hppa/i386/link.h: Renamed to...
+	* sysdeps/hppa/i386/linkmap.h: ...this.
+	* sysdeps/hppa/ia64/link.h: Renamed to...
+	* sysdeps/hppa/ia64/linkmap.h: ...this.
+	* sysdeps/hppa/s390/link.h: Renamed to...
+	* sysdeps/hppa/s390/linkmap.h: ...this.
+	* sysdeps/hppa/sh/link.h: Renamed to...
+	* sysdeps/hppa/sh/linkmap.h: ...this.
+	* sysdeps/hppa/x86_64/link.h: Renamed to...
+	* sysdeps/hppa/x86_64/linkmap.h: ...this.
+
 	* posix/unistd.h: Declare ftruncate for POSIX 2003.  [BZ #640]
 
 2004-12-22  Steven Munroe  <sjmunroe@us.ibm.com>
@@ -338,9 +423,6 @@
 	l_text_end are set for a VDSO with a single PT_LOAD entry.
 
 2005-01-05  Ulrich Drepper  <drepper@redhat.com>
-
-	* libio/fmemopen.c (fmemopen_seek): SEEK_END should count from
-	maximum used address, not maximum buffer position.
 
 	* libio/iofopncook.c (_IO_cookie_seekoff): Define.  Mark offset as
 	invalid to disable optimizations in fileops which won't work here.
