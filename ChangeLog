@@ -1,5 +1,10 @@
 1999-08-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdio-common/vfprintf.c (process_string_arg) [printf]: Handle
+	possibly unterminated strings for %ls when a precision is
+	specified.
+	Patch by Akira YOSHIYAMA <yosshy@tkf.att.ne.jp>.
+
 	* wcsmbs/wcsmbsload.c (__wcsmbs_clone_conv): Call
 	update_conversion_ptrs.
 	Reported by Shinya Hanataka <hanataka@abyss.rim.or.jp>.

@@ -1105,21 +1105,31 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    mbstate_t mbstate;						      \
 									      \
 	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
-	    len = __wcsrtombs (NULL, &s2, 0, &mbstate);			      \
+									      \
+	    if (prec > 0)						      \
+	      {								      \
+		/* The string `s2' might not be NUL terminated.  */	      \
+		string = (char *) alloca (prec + 1);			      \
+		len = __wcsrtombs (string, &s2, prec + 1, &mbstate);	      \
+	      }								      \
+	    else							      \
+	      {								      \
+		len = __wcsrtombs (NULL, &s2, 0, &mbstate);		      \
+		if (len != (size_t) -1)					      \
+		  {							      \
+		    assert (__mbsinit (&mbstate));			      \
+		    s2 = (const wchar_t *) string;			      \
+		    string = (char *) alloca (len + 1);			      \
+		    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);      \
+		  }							      \
+	      }								      \
+									      \
 	    if (len == (size_t) -1)					      \
 	      {								      \
 	        /* Illegal wide-character string.  */			      \
 		done = -1;						      \
 		goto all_done;						      \
 	      }								      \
-									      \
-	    assert (__mbsinit (&mbstate));				      \
-	    s2 = (const wchar_t *) string;				      \
-	    string = alloca (len + 1);					      \
-	    if (prec > 0 && prec < len)					      \
-	      len = __wcsrtombs (string, &s2, prec, &mbstate);		      \
-	    else							      \
-	      (void) __wcsrtombs (string, &s2, len + 1, &mbstate);	      \
 	  }								      \
 									      \
 	if ((width -= len) < 0)						      \
