@@ -1,5 +1,10 @@
 2000-09-07  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/lockf64.c: New file.
+
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Add prototypes for the
+	syscalls.
+
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add __syscall_fcntl.
 
 	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Fix calls to
