@@ -25,7 +25,7 @@
 # I found in the UCLA library.
 #
 # A reliable and entertaining source about time zones is
-# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
+# Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
 #
 # I invented the abbreviations marked `*' in the following table;
 # the rest are from earlier versions of this file, or from other sources.
@@ -648,6 +648,11 @@ Zone	Asia/Tokyo	9:18:59	-	LMT	1887 Dec 31 15:00u
 # Since 1938, all Japanese possessions have been like Asia/Tokyo.
 
 # Jordan
+# From Steffen Thorsen (1999-05-08):
+# Jordan do not have DST this year.  It also seems that they are not going
+# to use it the next years either.  "We do not need it" was the answer I got
+# from the Jordan National Information Centre (http://www.nic.gov.jo).
+#
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule    Jordan	1973	only	-	Jun	6	0:00	1:00	S
 Rule    Jordan	1973	1975	-	Oct	1	0:00	0	-
@@ -666,9 +671,9 @@ Rule    Jordan	1991	only	-	Apr	17	0:00	1:00	S
 Rule    Jordan	1991	only	-	Sep	27	0:00	0	-
 Rule    Jordan	1992	only	-	Apr	10	0:00	1:00	S
 Rule    Jordan	1992	1993	-	Oct	Fri>=1	0:00	0	-
-Rule    Jordan	1993	max	-	Apr	Fri>=1	0:00	1:00	S
+Rule    Jordan	1993	1998	-	Apr	Fri>=1	0:00	1:00	S
 Rule    Jordan	1994	only	-	Sep	Fri>=15	0:00	0	-
-Rule    Jordan	1995	max	-	Sep	Fri>=15	0:00s	0	-
+Rule    Jordan	1995	1998	-	Sep	Fri>=15	0:00s	0	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Asia/Amman	2:23:44 -	LMT	1931
 			2:00	Jordan	EE%sT
@@ -948,7 +953,7 @@ Zone	Asia/Gaza	2:17:52	-	LMT	1900 Oct
 # no information
 
 # Philippines
-# Howse writes that until 1844 the Philippines kept American date.
+# Howse writes (p 153) that until 1844 the Philippines kept American date.
 # The rest of this data is from Shanks.
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	Phil	1936	only	-	Nov	1	0:00	1:00	S
@@ -992,9 +997,9 @@ Zone	Asia/Singapore	6:55:24 -	LMT	1880
 
 # Sri Lanka
 # From Paul Eggert (1996-09-03):
-# <a href="http://www.virtual-pc.com/lankaweb/news/items/240596-2.html">
-# Sri Lanka advances clock by an hour to avoid blackout (1996-05-24)
-# </a>
+# "Sri Lanka advances clock by an hour to avoid blackout"
+# (www.virtual-pc.com/lankaweb/news/items/240596-2.html, 1996-05-24,
+# no longer available as of 1999-08-17)
 # reported ``the country's standard time will be put forward by one hour at
 # midnight Friday (1830 GMT) `in the light of the present power crisis'.''
 # Transitions before 1996 are from Shanks (1995).

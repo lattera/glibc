@@ -21,7 +21,7 @@
 
 #ifndef lint
 #ifndef NOID
-static char	privatehid[] = "@(#)private.h	7.48";
+static char	privatehid[] = "@(#)private.h	7.49";
 #endif /* !defined NOID */
 #endif /* !defined lint */
 
@@ -50,6 +50,10 @@ static char	privatehid[] = "@(#)private.h	7.48";
 #define HAVE_SYMLINK		1
 #endif /* !defined HAVE_SYMLINK */
 
+#ifndef HAVE_SYS_WAIT_H
+#define HAVE_SYS_WAIT_H		1
+#endif /* !defined HAVE_SYS_WAIT_H */
+
 #ifndef HAVE_UNISTD_H
 #define HAVE_UNISTD_H		1
 #endif /* !defined HAVE_UNISTD_H */
@@ -77,6 +81,17 @@ static char	privatehid[] = "@(#)private.h	7.48";
 #if HAVE_GETTEXT - 0
 #include "libintl.h"
 #endif /* HAVE_GETTEXT - 0 */
+
+#if HAVE_SYS_WAIT_H - 0
+#include <sys/wait.h>	/* for WIFEXITED and WEXITSTATUS */
+#endif /* HAVE_SYS_WAIT_H - 0 */
+
+#ifndef WIFEXITED
+#define WIFEXITED(status)	(((status) & 0xff) == 0)
+#endif /* !defined WIFEXITED */
+#ifndef WEXITSTATUS
+#define WEXITSTATUS(status)	(((status) >> 8) & 0xff)
+#endif /* !defined WEXITSTATUS */
 
 #if HAVE_UNISTD_H - 0
 #include "unistd.h"	/* for F_OK and R_OK */

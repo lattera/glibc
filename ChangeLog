@@ -1,5 +1,17 @@
 1999-08-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* timezone/private.h: Update from tzcode1999e.
+	* timezone/zic.c: Likewise.
+
+	* timezone/africa: Update from tzdata1999e.
+	* timezone/antarctica: Likewise.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/leapseconds: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+
 	* stdio-common/vfprintf.c (process_string_arg): Correct last patch
 	and write correct number of bytes in case of %ls with precision.
 	Reported by Shinya Hanataka <hanataka@abyss.rim.or.jp>.

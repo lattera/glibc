@@ -1,4 +1,4 @@
-# @(#)europe	7.60
+# @(#)europe	7.62
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -46,7 +46,7 @@
 #	 3:00	MSK MSD	Moscow
 #
 # A reliable and entertaining source about time zones, especially in Britain,
-# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
+# Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
 
 # From Peter Ilieve <peter@memex.co.uk> (1994-12-04),
 # The original six [EU members]: Belgium, France, (West) Germany, Italy,
@@ -100,31 +100,32 @@
 # Howse writes that Britain was the first country to use standard time.
 # The railways cared most about the inconsistencies of local mean time,
 # and it was they who forced a uniform time on the country.
-# The original idea was credited to Dr. William Hyde Wollaston (1766-1828);
-# it was popularized in 1840 by Capt. Basil Hall, RN (1788-1844),
-# famed explorer and former Commissioner for Longitude.
+# The original idea was credited to Dr. William Hyde Wollaston (1766-1828)
+# and was popularized by Abraham Follett Osler (1808-1903).
 # The first railway to adopt London time was the Great Western Railway
 # in November 1840; other railways followed suit, and by 1847 most
-# (though not all) railways used London time.  On 1847 Sep 22 the
+# (though not all) railways used London time.  On 1847-09-22 the
 # Railway Clearing House, an industry standards body, recommended that GMT be
-# adopted at all stations; the January 1848 Bradshaw's lists most major
+# adopted at all stations as soon as the General Post Office permitted it.
+# The transition occurred on 12-01 for the L&NW, the Caledonian,
+# and presumably other railways; the January 1848 Bradshaw's lists many
 # railways as using GMT.  By 1855 the vast majority of public
-# clocks in Britain were set to GMT (though some, like the Great Clock
-# in Tom Tower at Christ Church, Oxford, were fitted with two minute hands,
+# clocks in Britain were set to GMT (though some, like the great clock
+# on Tom Tower at Christ Church, Oxford, were fitted with two minute hands,
 # one for local time and one for GMT).  The last major holdout was the legal
 # system, which stubbornly stuck to local time for many years, leading
 # to oddities like polls opening at 08:13 and closing at 16:13.
 # The legal system finally switched to GMT when the Statutes (Definition
-# of Time) Act took effect; it received the Royal Assent on 1880 Aug 2.
+# of Time) Act took effect; it received the Royal Assent on 1880-08-02.
 #
 # In the tables below, we condense this complicated story into a single
-# transition date for London, namely 1847 Sep 22.  We don't know as much
-# about Dublin, so we use 1880 Aug 2, the legal transition time.
+# transition date for London, namely 1847-12-01.  We don't know as much
+# about Dublin, so we use 1880-08-02, the legal transition time.
 
 # From Paul Eggert (1999-01-30):
 # Summer Time was first seriously proposed by William Willett (1857-1915),
 # a London builder and member of the Royal Astronomical Society
-# who circulated a pamphlet ``Waste of Daylight'' (1907)
+# who circulated a pamphlet ``The Waste of Daylight'' (1907)
 # that proposed advancing clocks 20 minutes on each of four Sundays in April,
 # and retarding them by the same amount on four Sundays in September.
 # A bill was drafted in 1909 and introduced in Parliament several times,
@@ -153,6 +154,8 @@
 # acronym BDST for British Double Summer Time.  Look for the published
 # time of sunrise and sunset in The Times, when BDST was in effect, and
 # if you find a zone reference it will say, "All times B.D.S.T."
+
+# Howse writes (p 157) `DBST'; let's assume this is a typo.
 
 # From Peter Ilieve <peter@aldie.co.uk> (1998-04-19):
 # The following list attempts to show the complete history of Summer Time
@@ -749,17 +752,17 @@
 
 # From Paul Eggert (1999-03-28):
 # Clive Feather (<news:859845706.26043.0@office.demon.net>, 1997-03-31)
-# reports that Cheriton Shuttle Terminal uses Concession Time (CT),
-# equivalent to French civil time.
+# reports that Folkestone (Cheriton) Shuttle Terminal uses Concession Time
+# (CT), equivalent to French civil time.
 # Julian Hill (<news:36118128.5A14@virgin.net>, 1998-09-30) reports that
-# trains between Dollands Moor (the freight facility just outside Cheriton)
+# trains between Dollands Moor (the freight facility next door)
 # and Frethun run in CT.
 # My admittedly uninformed guess is that the terminal has two authorities,
 # the French concession operators and the British civil authorities,
 # and that the time depends on who you're talking to.
 # If, say, the British police were called to the station for some reason,
 # I would expect the official police report to use GMT/BST and not CET/CEST.
-# This is a borderline case, but for now let's stick to GMT/BST for Cheriton.
+# This is a borderline case, but for now let's stick to GMT/BST.
 
 # From an anonymous contributor (1996-06-02):
 # The law governing time in Ireland is under Statutory Instrument SI 395/94,
@@ -880,7 +883,7 @@ Rule	GB-Eire 1990	1995	-	Oct	Sun>=22	1:00u	0	GMT
 # See EU for rules starting in 1996.
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Europe/London	-0:01:15 -	LMT	1847 Sep 22
+Zone	Europe/London	-0:01:15 -	LMT	1847 Dec  1
 			 0:00	GB-Eire	%s	1968 Oct 27
 			 1:00	-	BST	1971 Oct 31 2:00u
 			 0:00	GB-Eire	%s	1996
@@ -1875,13 +1878,24 @@ Zone	Europe/Warsaw	1:24:00 -	LMT	1880
 			1:00	Poland	CE%sT	1940 Jun 23 2:00
 			1:00	C-Eur	CE%sT	1944 Oct
 			1:00	Poland	CE%sT	1977 Apr  3 1:00
-			1:00	W-Eur	CE%sT
+			1:00	W-Eur	CE%sT	1999
 # IATA SSIM (1991/1996) gives EU rules, but the _The Warsaw Voice_
-# <a href="http://www.contact.waw.pl/voice/v361/NewsInBrief.shtml">
-# http://www.contact.waw.pl/voice/v361/NewsInBrief.shtml (1995-09-24)
+# <a href="http://www.warsawvoice.com.pl/v361/NewsInBrief.shtml">
+# http://www.warsawvoice.com/pl/v361/NewsInBrief.shtml (1995-09-24)
 # </a>
 # says the autumn 1995 switch was at 02:00.
 # Stick with W-Eur for now.
+#
+# From Marcin.Kasperski@softax.com.pl (1999-06-10):
+# According to my colleagues someone recently decided, that Poland would
+# follow European Union regulations, so - I think - the matter is not
+# worth further discussion.
+#
+# From Paul Eggert (1999-06-10):
+# Kasperski also writes that the government futzed with the rules in 1997
+# or 1998 but he doesn't remember the details.  Assume they switched to
+# EU rules in 1999.
+			1:00	EU	CE%sT
 
 # Portugal
 #

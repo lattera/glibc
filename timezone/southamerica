@@ -1,10 +1,10 @@
-# @(#)southamerica	7.27
+# @(#)southamerica	7.28
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
 # tz@elsie.nci.nih.gov for general use in the future).
 
-# From Paul Eggert <eggert@twinsun.com> (1996-11-22):
+# From Paul Eggert <eggert@twinsun.com> (1999-07-07):
 # A good source for time zone historical data outside the U.S. is
 # Thomas G. Shanks, The International Atlas (4th edition),
 # San Diego: ACS Publications, Inc. (1995).
@@ -18,16 +18,6 @@
 # Except where otherwise noted, Shanks is the source for entries through 1990,
 # and IATA SSIM is the source for entries after 1990.
 #
-# The following abbreviations are used in this file.
-# Corrections are welcome!
-#		std	dst
-#		LMT		Local Mean Time
-#	-2:00	FST	FDT	Fernando de Noronha
-#	-3:00	EST	EDT	Eastern Brazil
-#	-4:00	WST	WDT	Western Brazil
-#	-4:00	AST	ADT	Atlantic
-#	-5:00	AST	ADT	Acre
-#
 # Earlier editions of these tables used the North American style (e.g. ARST and
 # ARDT for Argentine Standard and Daylight Time), but the following quote
 # suggests that it's better to use European style (e.g. ART and ARST).
@@ -36,15 +26,24 @@
 #	in Europe and South America.
 #	-- E O Cutler, _New York Times_ (1937-02-14), quoted in
 #	H L Mencken, _The American Language: Supplement I_ (1960), p 466
-
-
-# From Guy Harris:
-# From Official Airline Guide - Worldwide Edition (1987).  Countries not
-# listed here do not observe DST, according to the OAG.  Time zone names
-# are pure inventions, and none are supplied for countries not observing
-# DST; updates from natives would be appreciated.  The times that DST
-# starts and ends are based on the assumption that they switch a 2AM just
-# as everybody else does.
+#
+# Earlier editions of these tables also used the North American style
+# for time zones in Brazil, but this was incorrect, as Brazilians say
+# "summer time".  Reinaldo Goulart, a Sao Paulo businessman active in
+# the railroad sector, writes (1999-07-06):
+#	The subject of time zones is currently a matter of discussion/debate in
+#	Brazil.  Let's say that "the Brasilia time" is considered the
+#	"official time" because Brasilia is the capital city.
+#	The other three time zones are called "Brasilia time "minus one" or
+#	"plus one" or "plus two".  As far as I know there is no such
+#	name/designation as "Eastern Time" or "Central Time".
+# So I invented the following (English-language) abbreviations for now.
+# Corrections are welcome!
+#		std	dst
+#	-2:00	FNT	FNST	Fernando de Noronha
+#	-3:00	BRT	BRST	Brasilia
+#	-4:00	AMT	AMST	Amazon
+#	-5:00	ACT	ACST	Acre
 
 ###############################################################################
 
@@ -253,18 +252,18 @@ Zone	America/La_Paz	-4:32:36 -	LMT	1890
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 # Decree <a href="http://pcdsh01.on.br/HV20466.htm">20,466</a> (1931-10-01)
 # Decree <a href="http://pcdsh01.on.br/HV21896.htm">21,896</a> (1932-01-10)
-Rule	Brazil	1931	only	-	Oct	 3	11:00	1:00	D
-Rule	Brazil	1932	1933	-	Apr	 1	 0:00	0	S
-Rule	Brazil	1932	only	-	Oct	 3	 0:00	1:00	D
+Rule	Brazil	1931	only	-	Oct	 3	11:00	1:00	S
+Rule	Brazil	1932	1933	-	Apr	 1	 0:00	0	-
+Rule	Brazil	1932	only	-	Oct	 3	 0:00	1:00	S
 # Decree <a href="http://pcdsh01.on.br/HV23195.htm">23,195</a> (1933-10-10)
 # revoked DST.
 # Decree <a href="http://pcdsh01.on.br/HV27496.htm">27,496</a> (1949-11-24)
 # Decree <a href="http://pcdsh01.on.br/HV27998.htm">27,998</a> (1950-04-13)
-Rule	Brazil	1949	1952	-	Dec	 1	 0:00	1:00	D
-Rule	Brazil	1950	only	-	Apr	16	 1:00	0	S
-Rule	Brazil	1951	1952	-	Apr	 1	 0:00	0	S
+Rule	Brazil	1949	1952	-	Dec	 1	 0:00	1:00	S
+Rule	Brazil	1950	only	-	Apr	16	 1:00	0	-
+Rule	Brazil	1951	1952	-	Apr	 1	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV32308.htm">32,308</a> (1953-02-24)
-Rule	Brazil	1953	only	-	Mar	 1	 0:00	0	S
+Rule	Brazil	1953	only	-	Mar	 1	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV34724.htm">34,724</a> (1953-11-30)
 # revoked DST.
 # Decree <a href="http://pcdsh01.on.br/HV52700.htm">52,700</a> (1963-10-18)
@@ -272,52 +271,52 @@ Rule	Brazil	1953	only	-	Mar	 1	 0:00	0	S
 # in SP, RJ, GB, MG, ES, due to the prolongation of the drought.
 # Decree <a href="http://pcdsh01.on.br/HV53071.htm">53,071</a> (1963-12-03)
 # extended the above decree to all of the national territory on 12-09.
-Rule	Brazil	1963	only	-	Dec	 9	 0:00	1:00	D
+Rule	Brazil	1963	only	-	Dec	 9	 0:00	1:00	S
 # Decree <a href="http://pcdsh01.on.br/HV53604.htm">53,604</a> (1964-02-25)
 # extended summer time by one day to 1964-03-01 00:00 (start of school).
-Rule	Brazil	1964	only	-	Mar	 1	 0:00	0	S
+Rule	Brazil	1964	only	-	Mar	 1	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV55639.htm">55,639</a> (1965-01-27)
-Rule	Brazil	1965	only	-	Jan	31	 0:00	1:00	D
-Rule	Brazil	1965	only	-	Mar	31	 0:00	0	S
+Rule	Brazil	1965	only	-	Jan	31	 0:00	1:00	S
+Rule	Brazil	1965	only	-	Mar	31	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV57303.htm">57,303</a> (1965-11-22)
-Rule	Brazil	1965	only	-	Dec	 1	 0:00	1:00	D
+Rule	Brazil	1965	only	-	Dec	 1	 0:00	1:00	S
 # Decree <a href="http://pcdsh01.on.br/HV57843.htm">57,843</a> (1966-02-18)
-Rule	Brazil	1966	1968	-	Mar	 1	 0:00	0	S
-Rule	Brazil	1966	1967	-	Nov	 1	 0:00	1:00	D
+Rule	Brazil	1966	1968	-	Mar	 1	 0:00	0	-
+Rule	Brazil	1966	1967	-	Nov	 1	 0:00	1:00	S
 # Decree <a href="http://pcdsh01.on.br/HV63429.htm">63,429</a> (1968-10-15)
 # revoked DST.
 # Decree <a href="http://pcdsh01.on.br/HV91698.htm">91,698</a> (1985-09-27)
-Rule	Brazil	1985	only	-	Nov	 2	 0:00	1:00	D
+Rule	Brazil	1985	only	-	Nov	 2	 0:00	1:00	S
 # Decree 92,310 (1986-01-21)
 # Decree 92,463 (1986-03-13)
-Rule	Brazil	1986	only	-	Mar	15	 0:00	0	S
+Rule	Brazil	1986	only	-	Mar	15	 0:00	0	-
 # Decree 93,316 (1986-10-01)
-Rule	Brazil	1986	only	-	Oct	25	 0:00	1:00	D
-Rule	Brazil	1987	only	-	Feb	14	 0:00	0	S
+Rule	Brazil	1986	only	-	Oct	25	 0:00	1:00	S
+Rule	Brazil	1987	only	-	Feb	14	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV94922.htm">94,922</a> (1987-09-22)
-Rule	Brazil	1987	only	-	Oct	25	 0:00	1:00	D
-Rule	Brazil	1988	only	-	Feb	 7	 0:00	0	S
+Rule	Brazil	1987	only	-	Oct	25	 0:00	1:00	S
+Rule	Brazil	1988	only	-	Feb	 7	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV96676.htm">96,676</a> (1988-09-12)
 # except for the states of AC, AM, PA, RR, RO, and AP (then a territory)
-Rule	Brazil	1988	only	-	Oct	16	 0:00	1:00	D
-Rule	Brazil	1989	only	-	Jan	29	 0:00	0	S
+Rule	Brazil	1988	only	-	Oct	16	 0:00	1:00	S
+Rule	Brazil	1989	only	-	Jan	29	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV98077.htm">98,077</a> (1989-08-21)
 # with the same exceptions
-Rule	Brazil	1989	only	-	Oct	15	 0:00	1:00	D
-Rule	Brazil	1990	only	-	Feb	11	 0:00	0	S
+Rule	Brazil	1989	only	-	Oct	15	 0:00	1:00	S
+Rule	Brazil	1990	only	-	Feb	11	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV99530.htm">99,530</a> (1990-09-17)
 # adopted by RS, SC, PR, SP, RJ, ES, MG, GO, MS, DF.
 # Decree 99,629 (1990-10-19) adds BA, MT.
-Rule	Brazil	1990	only	-	Oct	21	 0:00	1:00	D
-Rule	Brazil	1991	only	-	Feb	17	 0:00	0	S
+Rule	Brazil	1990	only	-	Oct	21	 0:00	1:00	S
+Rule	Brazil	1991	only	-	Feb	17	 0:00	0	-
 # <a href="http://pcdsh01.on.br/HV1991.htm">Unnumbered decree</a> (1991-09-25)
 # adopted by RS, SC, PR, SP, RJ, ES, MG, BA, GO, MT, MS, DF.
-Rule	Brazil	1991	only	-	Oct	20	 0:00	1:00	D
-Rule	Brazil	1992	only	-	Feb	 9	 0:00	0	S
+Rule	Brazil	1991	only	-	Oct	20	 0:00	1:00	S
+Rule	Brazil	1992	only	-	Feb	 9	 0:00	0	-
 # <a href="http://pcdsh01.on.br/HV1992.htm">Unnumbered decree</a> (1992-10-16)
 # adopted by same states.
-Rule	Brazil	1992	only	-	Oct	25	 0:00	1:00	D
-Rule	Brazil	1993	only	-	Jan	31	 0:00	0	S
+Rule	Brazil	1992	only	-	Oct	25	 0:00	1:00	S
+Rule	Brazil	1993	only	-	Jan	31	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV942.htm">942</a> (1993-09-28)
 # adopted by same states, plus AM.
 # Decree <a href="http://pcdsh01.on.br/HV1252.htm">1,252</a> (1994-09-22)
@@ -326,13 +325,13 @@ Rule	Brazil	1993	only	-	Jan	31	 0:00	0	S
 # adopted by same states, plus TO.
 # Decree <a href="http://pcdsh01.on.br/HV1674.htm">1,674</a> (1995-10-13)
 # adds AL, SE.
-Rule	Brazil	1993	1995	-	Oct	Sun>=11	 0:00	1:00	D
-Rule	Brazil	1994	1995	-	Feb	Sun>=15	 0:00	0	S
-Rule	Brazil	1996	only	-	Feb	11	 0:00	0	S
+Rule	Brazil	1993	1995	-	Oct	Sun>=11	 0:00	1:00	S
+Rule	Brazil	1994	1995	-	Feb	Sun>=15	 0:00	0	-
+Rule	Brazil	1996	only	-	Feb	11	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/HV2000.htm">2,000</a> (1996-09-04)
 # adopted by same states, minus AL, SE.
-Rule	Brazil	1996	only	-	Oct	 6	 0:00	1:00	D
-Rule	Brazil	1997	only	-	Feb	16	 0:00	0	S
+Rule	Brazil	1996	only	-	Oct	 6	 0:00	1:00	S
+Rule	Brazil	1997	only	-	Feb	16	 0:00	0	-
 # From Daniel C. Sobral <dcs@gns.com.br> (1998-02-12):
 # In 1997, the DS began on October 6. The stated reason was that
 # because international television networks ignored Brazil's policy on DS,
@@ -347,79 +346,79 @@ Rule	Brazil	1997	only	-	Feb	16	 0:00	0	S
 # Church Net UK (1997-10-02).
 #
 # Decree 2,317 (1997-09-04), adopted by same states.
-Rule	Brazil	1997	only	-	Oct	 6	 0:00	1:00	D
+Rule	Brazil	1997	only	-	Oct	 6	 0:00	1:00	S
 # Decree <a href="http://pcdsh01.on.br/figuras/HV2495.JPG">2,495</a>
 # (1998-02-10)
-Rule	Brazil	1998	only	-	Mar	 1	 0:00	0	S
+Rule	Brazil	1998	only	-	Mar	 1	 0:00	0	-
 # Decree <a href="http://pcdsh01.on.br/figuras/Hv98.jpg">2,780</a> (1998-09-11)
 # adopted by the same states as before,
 # specifies only the 1998-10-11 and 1999-02-21 transitions;
 # after that, these rules are guesses and are quite possibly wrong,
 # but they are more likely than no DST at all.
-Rule	Brazil	1998	max	-	Oct	Sun>=8	 0:00	1:00	D
-Rule	Brazil	1999	max	-	Feb	Sun>=15	 0:00	0	S
+Rule	Brazil	1998	max	-	Oct	Sun>=8	 0:00	1:00	S
+Rule	Brazil	1999	max	-	Feb	Sun>=15	 0:00	0	-
 
 
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 #
 # Fernando de Noronha
 Zone America/Noronha	-2:09:40 -	LMT	1914
-			-2:00	Brazil	F%sT	1990 Jul
-			-2:00	-	FST
+			-2:00	Brazil	FN%sT	1990 Jul
+			-2:00	-	FNT
 #
 # Amapa, east Para
 Zone America/Belem	-3:13:56 -	LMT	1914
-			-3:00	Brazil	E%sT	1988 Jul
-			-3:00	-	EST
+			-3:00	Brazil	BR%sT	1988 Jul
+			-3:00	-	BRT
 #
 # Maranhao, Piaui, Ceara, Rio Grande do Norte, Paraiba,
 # Pernambuco (except Fernando de Noronha)
 Zone America/Fortaleza	-2:34:00 -	LMT	1914
-			-3:00	Brazil	E%sT	1990 Jul
-			-3:00	-	EST
+			-3:00	Brazil	BR%sT	1990 Jul
+			-3:00	-	BRT
 #
 # Tocantins
 Zone America/Araguaina	-3:12:48 -	LMT	1914
-			-3:00	Brazil	E%sT	1990 Jul
-			-3:00	-	EST	1995 Jul
-			-3:00	Brazil	E%sT
+			-3:00	Brazil	BR%sT	1990 Jul
+			-3:00	-	BRT	1995 Jul
+			-3:00	Brazil	BR%sT
 #
 # Alagoas, Sergipe
 Zone America/Maceio	-2:22:52 -	LMT	1914
-			-3:00	Brazil	E%sT	1990 Jul
-			-3:00	-	EST	1995 Jul
-			-3:00	Brazil	E%sT	1996 Jul
-			-3:00	-	EST
+			-3:00	Brazil	BR%sT	1990 Jul
+			-3:00	-	BRT	1995 Jul
+			-3:00	Brazil	BR%sT	1996 Jul
+			-3:00	-	BRT
 #
 # Bahia, Goias, Distrito Federal, Minas Gerais, Espirito Santo, Rio de Janeiro,
 # Sao Paulo, Parana, Santa Catarina, Rio Grande do Sul
 Zone America/Sao_Paulo	-3:06:28 -	LMT	1914
-			-3:00	Brazil	E%sT	1963 Oct 23 00:00
-			-3:00	-	EDT	1964
-			-3:00	Brazil	E%sT
+			-3:00	Brazil	BR%sT	1963 Oct 23 00:00
+			-3:00	-	BRST	1964
+			-3:00	Brazil	BR%sT
 #
 # Mato Grosso, Mato Grosso do Sul
 Zone America/Cuiaba	-3:44:20 -	LMT	1914
-			-4:00	Brazil	W%sT	1990 Jul
-			-4:00	-	WST
+			-4:00	Brazil	AM%sT	1990 Jul
+			-4:00	-	AMT
 #
 # Roraima, west Para, Rondonia
 Zone America/Porto_Velho -4:15:36 -	LMT	1914
-			-4:00	Brazil	W%sT	1988 Jul
-			-4:00	-	WST
+			-4:00	Brazil	AM%sT	1988 Jul
+			-4:00	-	AMT
 #
 # Amazonas
 Zone America/Manaus	-4:00:04 -	LMT	1914
-			-4:00	Brazil	W%sT	1988 Jul
-			-4:00	-	WST	1993 Jul
-			-4:00	Brazil	W%sT	1994 Jul
-			-4:00	-	WST
+			-4:00	Brazil	AM%sT	1988 Jul
+			-4:00	-	AMT	1993 Jul
+			-4:00	Brazil	AM%sT	1994 Jul
+			-4:00	-	AMT
 #
 # Acre
 # Rio_Branco is too ambiguous, since there's a Rio Branco in Uruguay too.
 Zone America/Porto_Acre	-4:31:12 -	LMT	1914
-			-5:00	Brazil	A%sT	1988 Jul
-			-5:00	-	AST
+			-5:00	Brazil	AC%sT	1988 Jul
+			-5:00	-	ACT
 #
 # Martin Vaz and Trinidade are like America/Noronha.
 

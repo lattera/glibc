@@ -1,4 +1,4 @@
-# @(#)australasia	7.46
+# @(#)australasia	7.48
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -68,13 +68,15 @@ Zone Australia/Lindeman  9:55:56 -	LMT	1895
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	AS	1971	1985	-	Oct	lastSun	2:00s	1:00	-
 Rule	AS	1986	only	-	Oct	19	2:00s	1:00	-
-Rule	AS	1987	max	-	Oct	lastSun	2:00s	1:00	-
+Rule	AS	1987	1999	-	Oct	lastSun	2:00s	1:00	-
 Rule	AS	1972	only	-	Feb	27	2:00s	0	-
 Rule	AS	1973	1985	-	Mar	Sun>=1	2:00s	0	-
 Rule	AS	1986	1989	-	Mar	Sun>=15	2:00s	0	-
 Rule	AS	1990	1994	even	Mar	Sun>=18	2:00s	0	-
 Rule	AS	1990	1994	odd	Mar	Sun>=1	2:00s	0	-
 Rule	AS	1995	max	-	Mar	lastSun	2:00s	0	-
+Rule	AS	2000	only	-	Aug	lastSun	2:00s	1:00	-
+Rule	AS	2001	max	-	Oct	lastSun	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Adelaide	9:14:20 -	LMT	1895 Feb
 			9:00	-	CST	1899 May
@@ -113,7 +115,7 @@ Rule	AV	1986	only	-	Oct	19	2:00s	1:00	-
 Rule	AV	1987	1999	-	Oct	lastSun	2:00s	1:00	-
 Rule	AV	1991	1994	-	Mar	Sun>=1	2:00s	0	-
 Rule	AV	1995	max	-	Mar	lastSun	2:00s	0	-
-Rule	AV	2000	only	-	Aug	26	2:00s	1:00	-
+Rule	AV	2000	only	-	Aug	lastSun	2:00s	1:00	-
 Rule	AV	2001	max	-	Oct	lastSun	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Melbourne 9:39:52 -	LMT	1895 Feb
@@ -133,7 +135,7 @@ Rule	AN	1986	only	-	Oct	19	2:00s	1:00	-
 Rule	AN	1987	1999	-	Oct	lastSun	2:00s	1:00	-
 Rule	AN	1990	1995	-	Mar	Sun>=1	2:00s	0	-
 Rule	AN	1996	max	-	Mar	lastSun	2:00s	0	-
-Rule	AN	2000	only	-	Aug	26	2:00s	1:00	-
+Rule	AN	2000	only	-	Aug	lastSun	2:00s	1:00	-
 Rule	AN	2001	max	-	Oct	lastSun	2:00s	1:00	-
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Australia/Sydney	10:04:52 -	LMT	1895 Feb
@@ -388,7 +390,7 @@ Zone	Pacific/Fakaofo	-11:24:56 -	LMT	1901
 # Tonga
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Pacific/Tongatapu	12:19:20 -	LMT	1901
-			12:20	-	TOT	1968 Oct # Tonga Time
+			12:20	-	TOT	1941 # Tonga Time
 			13:00	-	TOT
 
 # Tuvalu
@@ -473,7 +475,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # I found in the UCLA library.
 #
 # A reliable and entertaining source about time zones is
-# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
+# Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
 #
 # I invented the abbreviations marked `*' in the following table;
 # the rest are from earlier versions of this file, or from other sources.
@@ -541,7 +543,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Standard Time Act 1987 (updated 1995-04-04)
 # </a>
 # ACT
-# <a href="http://www.austlii.edu.au/au/legis/act/consol_act/consol_act/stasta1972279/index.html">
+# <a href="http://www.austlii.edu.au/au/legis/act/consol_act/stasta1972279/index.html">
 # Standard Time and Summer Time Act 1972
 # </a>
 # SA
@@ -806,15 +808,23 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Prem Bob Carr announced NSW will fall into line with other E states
 # and SA and continue daylight savings to the last Sun in Mar.
 
-# From Eric Ulevik <eau@ozemail.com.au> (1997-06-12):
-# The NSW state government in Australia is talking about bringing the start
-# of daylight savings time forward in the year 2000 to cater for the Olympics.
-# This is going to take some time to be negotiated, because the plan is to do
-# this in multiple states due to soccer games (which are not just in Sydney).
+# From Eric Ulevik <eau@ozemail.com.au> (1999-05-26):
+# DST will start in NSW on the last Sunday of August, rather than the usual
+# October in 2000.  Victoria and South Australia are expected to adopt this
+# change, Queensland is unlikely.  [See: Matthew Moore,
+# <a href="http://www.smh.com.au/news/9905/26/pageone/pageone4.html">
+# Two months more daylight saving
+# </a>
+# Sydney Morning Herald (1999-05-26).]
+
+# Also see the following official NSW source:
+# <a href="http://dir.gis.nsw.gov.au/cgi-bin/genobject/document/other/daylightsaving/tigGmZ">
+# Daylight Saving in New South Wales.
+# </a>
 
 # IATA SSIM (1998-09) says that the spring 2000 change for Australian
 # Capital Territory, New South Wales except Lord Howe Island and Broken
-# Hill, and Victoria will be August 26, presumably due to the Sydney Olympics.
+# Hill, and Victoria will be August 27, presumably due to the Sydney Olympics.
 
 # Yancowinna
 
@@ -897,9 +907,9 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Fiji
 
-# Howse writes that in 1879 the British governor of Fiji
-# enacted an ordinance standardizing the islands on +12:00.
-# Perhaps it didn't take.  We go with Shanks's more precise date in 1915.
+# Howse writes (p 153) that in 1879 the British governor of Fiji
+# enacted an ordinance standardizing the islands on Antipodean Time
+# instead of the American system (which was one day behind).
 
 # From Rives McDow (1998-10-08):
 # Fiji will introduce DST effective 0200 local time, 1998-11-01
@@ -934,7 +944,7 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # N Mariana Is, Guam
 
-# Howse writes ``The Spaniards, on the other hand, reached the
+# Howse writes (p 153) ``The Spaniards, on the other hand, reached the
 # Philippines and the Ladrones from America,'' and implies that the Ladrones
 # (now called the Marianas) kept American date for quite some time.
 # Ignore this for now, as we have no hard data.  See also Asia/Manila.
@@ -950,7 +960,8 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 
 # Samoa
 
-# Howse writes that in 1879 the King of Samoa decided to change
+# Howse writes (p 153, citing p 10 of the 1883-11-18 New York Herald)
+# that in 1879 the King of Samoa decided to change
 # ``the date in his kingdom from the Antipodean to the American system,
 # ordaining -- by a masterpiece of diplomatic flattery -- that
 # the Fourth of July should be celebrated twice in that year.''
@@ -961,3 +972,38 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # Today's _Wall Street Journal_ (p 1) reports that ``Tonga has been plotting
 # to sneak ahead of [New Zealanders] by introducing daylight-saving time.''
 # Since Kiribati has moved the Date Line it's not clear what Tonga will do.
+
+# Don Mundell writes in the 1997-02-20 Tonga Chronicle
+# <a href="http://www.tongatapu.net.to/tonga/homeland/timebegins.htm">
+# How Tonga became `The Land where Time Begins'
+# </a>:
+
+# Until 1941 Tonga maintained a standard time 50 minutes ahead of NZST
+# 12 hours and 20 minutes ahead of GMT.  When New Zealand adjusted its
+# standard time in 1940s, Tonga had the choice of subtracting from its
+# local time to come on the same standard time as New Zealand or of
+# advancing its time to maintain the differential of 13 degrees
+# (approximately 50 minutes ahead of New Zealand time).
+#
+# Because His Majesty King Taufa'ahau Tupou IV, then Crown Prince
+# Tungi, preferred to ensure Tonga's title as the land where time
+# begins, the Legislative Assembly approved the latter change.
+#
+# But some of the older, more conservative members from the outer
+# islands objected. "If at midnight on Dec. 31, we move ahead 40
+# minutes, as your Royal Highness wishes, what becomes of th 40
+# minutes we have lost?"
+#
+# The Crown Prince, presented an unanswerable argument: "Remember that
+# on the World Day of Prayer, you would be the first people on Earth
+# to say your prayers in the morning."
+
+# From Paul Eggert (1999-08-12):
+# Shanks says the transition was on 1968-10-01; go with Mundell.
+
+# From Eric Ulevik (1999-05-03):
+# Tonga's director of tourism, who is also secretary of the National Millenium
+# Committee, has a plan to get Tonga back in front.
+# He has proposed a one-off move to tropical daylight saving for Tonga from
+# October to March, which has won approval in principle from the Tongan
+# Government.

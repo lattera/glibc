@@ -1,4 +1,4 @@
-# @(#)northamerica	7.44
+# @(#)northamerica	7.45
 # also includes Central America and the Caribbean
 
 # This data is by no means authoritative; if you think you know better,
@@ -7,11 +7,22 @@
 
 # From Paul Eggert <eggert@twinsun.com> (1999-03-22):
 # A reliable and entertaining source about time zones is
-# Derek Howse, Greenwich time and longitude, Antique Collectors Club (1997).
+# Derek Howse, Greenwich time and longitude, Philip Wilson Publishers (1997).
 
 ###############################################################################
 
 # United States
+
+# From Paul Eggert (1999-03-31):
+# Howse writes (pp 121-125) that time zones were invented by
+# Professor Charles Ferdinand Dowd (1825-1904),
+# Principal of Temple Grove Ladies' Seminary (Saratoga Springs, NY).
+# His pamphlet ``A System of National Time for Railroads'' (1870)
+# was the result of his proposals at the Convention of Railroad Trunk Lines
+# in New York City (1869-10).  His 1870 proposal was based on Washington, DC,
+# but in 1872-05 he moved the proposed origin to Greenwich.
+# His proposal was adopted by the railroads on 1883-11-18 at 12:00,
+# and the most of the country soon followed suit.
 
 # From Paul Eggert <eggert@twinsun.com> (1995-12-19):
 # A good source for time zone historical data in the US is
@@ -293,6 +304,11 @@ Zone America/Boise	-7:44:49 -	LMT	1883 Nov 18 12:00
 
 # Indiana
 #
+# For a map of Indiana's time zone regions, see:
+# <a href="http://www.mccsc.edu/time.html">
+# What time is it in Indiana?
+# </a> (1999-04-06)
+#
 # From Paul Eggert (1995-12-19):
 # Indiana generally observes either EST all year, or CST/CDT,
 # but areas near Cincinnati and Louisville use those cities' timekeeping
@@ -398,9 +414,10 @@ Zone America/Louisville	-5:43:02 -	LMT	1883 Nov 18 12:00
 # From Bob Devine (1988-01-28):
 # Michigan didn't observe DST from 1968 to 1973.
 #
-# From Paul Eggert (1995-12-19):
-# Shanks writes that Michigan started using standard time on 1885 Sep 18,
-# but Howse writes that Detroit kept
+# From Paul Eggert (1999-03-31):
+# Shanks writes that Michigan started using standard time on 1885-09-18,
+# but Howse writes (pp 124-125, referring to Popular Astronomy, 1901-01)
+# that Detroit kept
 #
 #	local time until 1900 when the City Council decreed that clocks should
 #	be put back twenty-eight minutes to Central Standard Time.  Half the
