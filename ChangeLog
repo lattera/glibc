@@ -1,3 +1,17 @@
+1999-08-10  H.J. Lu  <hjl@gnu.org>
+
+	* stdio-common/vfprintf.c (ORIENT): Check for the old stream.
+	(vfprintf): Likewise.
+	* stdio-common/vfscanf.c (ORIENT): Likewise.
+	* libio/genops.c (__underflow): Likewise.
+	(__uflow): Likewise.
+	* libio/iofputs.c (_IO_fputs): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+	* libio/iofwrite.c (_IO_fwrite): Likewise.
+	* libio/ioputs.c (_IO_puts): Likewise.
+	* libio/iosetbuffer.c (_IO_setbuffer): Likewise.
+	* libio/iosetvbuf.c (_IO_setvbuf): Likewise.
+
 1999-08-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv_builtin.h: Add ISO registry alias for UTF8.

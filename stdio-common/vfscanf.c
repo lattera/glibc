@@ -84,7 +84,8 @@
 #  define ISDIGIT(Ch)	  iswdigit (Ch)
 #  define ISXDIGIT(Ch)	  iswxdigit (Ch)
 #  define TOLOWER(Ch)	  towlower (Ch)
-#  define ORIENT	  if (_IO_fwide (s, 1) != 1) return EOF
+#  define ORIENT	  if (s->_vtable_offset == 0 && _IO_fwide (s, 1) != 1)\
+			    return EOF
 #  define __strtoll_internal	__wcstoll_internal
 #  define __strtoull_internal	__wcstoull_internal
 #  define __strtol_internal	__wcstol_internal

@@ -76,7 +76,8 @@
   if (width > 0)							      \
     done += _IO_padn (s, (Padchar), width)
 #  define PUTC(C, F)	_IO_putc_unlocked (C, F)
-#  define ORIENT	if (_IO_fwide (s, -1) != -1) return -1
+#  define ORIENT	if (s->_vtable_offset == 0 && _IO_fwide (s, -1) != -1)\
+			  return -1
 # else
 # include "_itowa.h"
 
@@ -1145,7 +1146,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   ARGCHECK (s, format);
 
   /* Check for correct orientation.  */
-  if (_IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
+  if (
+#ifdef USE_IN_LIBIO
+      s->_vtable_offset == 0 &&
+#endif
+      _IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
       != (sizeof (CHAR_T) == 1 ? -1 : 1))
     /* The stream is already oriented otherwise.  */
     return EOF;

@@ -282,7 +282,7 @@ int
 __underflow (fp)
      _IO_FILE *fp;
 {
-  if (_IO_fwide (fp, -1) != -1)
+  if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 
   if (_IO_in_put_mode (fp))
@@ -310,7 +310,7 @@ int
 __uflow (fp)
      _IO_FILE *fp;
 {
-  if (_IO_fwide (fp, -1) != -1)
+  if (fp->_vtable_offset == 0 && _IO_fwide (fp, -1) != -1)
     return EOF;
 
   if (_IO_in_put_mode (fp))

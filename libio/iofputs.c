@@ -36,7 +36,7 @@ _IO_fputs (str, fp)
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  if (_IO_fwide (fp, -1) == -1
+  if ((fp->_vtable_offset != 0 || _IO_fwide (fp, -1) == -1)
       && _IO_sputn (fp, str, len) == len)
     result = 1;
   _IO_funlockfile (fp);

@@ -41,7 +41,7 @@ _IO_fwrite (buf, size, count, fp)
     return count;
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  if (_IO_fwide (fp, -1) == -1)
+  if (fp->_vtable_offset != 0 || _IO_fwide (fp, -1) == -1)
     written = _IO_sputn (fp, (const char *) buf, request);
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);

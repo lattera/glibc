@@ -36,7 +36,7 @@ _IO_puts (str)
 			    _IO_stdout);
   _IO_flockfile (_IO_stdout);
 
-  if (_IO_fwide (_IO_stdout, -1) == -1
+  if (_IO_stdout->_vtable_offset != 0 || _IO_fwide (_IO_stdout, -1) == -1)
       && _IO_sputn (_IO_stdout, str, len) == len
       && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)
     result = len + 1;

@@ -38,7 +38,7 @@ _IO_ftell (fp)
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
     {
-      if (fp->_mode < 0)
+      if (fp->_vtable_offset != 0 || fp->_mode < 0)
 	pos -= fp->_IO_save_end - fp->_IO_save_base;
       else
 	/* XXX For now.  */
