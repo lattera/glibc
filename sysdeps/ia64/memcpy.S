@@ -87,7 +87,8 @@ ENTRY(memcpy)
 	.rotp	p[MEMLAT + 2]
 	mov	ret0 = in0		// return value = dest
 	mov	saved_pr = pr		// save the predicate registers
-	brp.loop.many.tk.tk.imp	.l0, .done - 16
+// brp is currently broken - reenable when it gets fixed.
+//	brp.loop.many	.l0, .done - 16
         mov 	saved_lc = ar.lc	// save the loop counter
 	or	tmp3 = in0, in1 ;;	// tmp3 = dest | src
 	or	tmp3 = tmp3, in2	// tmp3 = dest | src | len
