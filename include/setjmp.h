@@ -15,7 +15,9 @@ extern int __sigjmp_save (jmp_buf __env, int __savemask);
 
 extern void _longjmp_unwind (jmp_buf env, int val);
 
-extern void __libc_siglongjmp (sigjmp_buf __env, int __val)
+extern void __libc_siglongjmp (sigjmp_buf env, int val)
           __attribute__ ((noreturn));
+extern void __libc_longjmp (sigjmp_buf env, int val)
+     __attribute__ ((noreturn));
 
 #endif
