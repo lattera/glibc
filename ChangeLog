@@ -1,5 +1,9 @@
 1999-08-22  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add execve syscall.
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Likewise.
+	Patch by Joel Klecker.
+
 	* iconv/gconv_int.h (GCONV_AVOID_NOCONV): New definition.
 	(__gconv_find_transform): Update prototype.
 	(__gconv_open): Likewise.

@@ -5,6 +5,7 @@ s_ioctl		ioctl	ioctl		3	__syscall_ioctl
 s_ipc		msgget	ipc		5	__syscall_ipc
 s_llseek	llseek	_llseek		5	__syscall__llseek
 s_chown		chown	chown		3	__syscall_chown
+s_execve	execve	execve		3	__syscall_execve
 rt_sigaction	-	rt_sigaction	4	__syscall_rt_sigaction
 rt_sigpending	-	rt_sigpending	2	__syscall_rt_sigpending
 rt_sigprocmask	-	rt_sigprocmask	4	__syscall_rt_sigprocmask
