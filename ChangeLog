@@ -1,4 +1,12 @@
+2002-11-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* iconv/gconv_dl.c (free_mem): Clear loaded.
+	* locale/loadarchive.c (_nl_archive_subfreeres): Call locale_data's
+	cleanup if any.
+
 2002-11-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/fexecve.c: Include <stdio.h>.
 
 	* libio/ioseekoff.c: Remove INTDEF.  Define _IO_seekoff_unlocked.  Same
 	as old code without locking.  _IO_seekoff calls this function after

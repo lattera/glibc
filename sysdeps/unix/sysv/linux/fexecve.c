@@ -18,6 +18,7 @@
 
 #include <errno.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <unistd.h>
 #include <sys/stat.h>
 
