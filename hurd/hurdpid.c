@@ -49,23 +49,24 @@ _S_msg_proc_newids (mach_port_t me,
 		    task_t task,
 		    pid_t ppid, pid_t pgrp, int orphaned)
 {
+  int pgrp_changed;
+
   if (task != __mach_task_self ())
     return EPERM;
 
   __mach_port_deallocate (__mach_task_self (), task);
 
+  pgrp_changed = pgrp != _hurd_pgrp;
   _hurd_ppid = ppid;
   _hurd_pgrp = pgrp;
   _hurd_orphaned = orphaned;
 
-  /* Run things that want notification of a pgrp change.  */
-  RUN_HOOK (_hurd_pgrp_changed_hook, (_hurd_pgrp));
+  if (pgrp_changed)
+    /* Run things that want notification of a pgrp change.  */
+    RUN_HOOK (_hurd_pgrp_changed_hook, (pgrp));
 
   /* Notify any waiting user threads that the id change as been completed.  */
   ++_hurd_pids_changed_stamp;
-#ifdef noteven
-  __condition_broadcast (&_hurd_pids_changed_sync);
-#endif
 
   return 0;
 }

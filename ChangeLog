@@ -1,3 +1,8 @@
+Tue Dec 19 17:00:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/hurdpid.c (_S_msg_proc_newids): Only run the hook when the
+	pgrp changes.
+
 Mon Dec 18 13:40:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* stdio/fread.c: Don't increment __offset when it's -1.
