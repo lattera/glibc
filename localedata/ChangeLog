@@ -1,3 +1,8 @@
+2003-06-15  Petter Reinholdtsen  <pere@hungry.com>
+
+	* locales/fi_FI [LC_TIME]: Correct month names to make the dates
+	gramatically correct.  Patch from Eero Häkkinen. [PR libc/5013].
+
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/an_ES: New file.  Contributed by Jordi Mallach Péez.

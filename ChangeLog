@@ -1,5 +1,7 @@
 2003-06-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/iso-639.def: Update from current official ISO 639.
+
 	* math/tgmath.h (__TGMATH_UNARY_IMAG_ONLY): Removed.
 
 2003-06-15  Andreas Jaeger  <aj@suse.de>
