@@ -1,3 +1,8 @@
+2004-03-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-vfork1.
+	* posix/tst-vfork1.c: New file.
+
 2004-03-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/dl-machine.h: Define ARCH_FIXUP_ATTRIBUTE and use
