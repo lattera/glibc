@@ -1,3 +1,13 @@
+2000-08-08  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Add SI_KERNEL
+	define.
+	Add missing ILL_BADIADDR to enum and make ILL_BREAK match the
+	define of the kernel.
+	Add missing __SEG_PSTKOVF definition.
+	Adjust the padding of struct siginfo and struct sigevent to
+	match the fact that sigval_t is 64 bit.
+
 2000-08-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/zic.c: Update from tzcode2000f.
