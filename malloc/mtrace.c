@@ -77,11 +77,13 @@ static __ptr_t (*tr_old_realloc_hook) __P ((__ptr_t ptr,
    set "mallwatch" to the address of interest, then put a breakpoint on
    tr_break.  */
 
-void tr_break __P ((void));
+extern void tr_break __P ((void));
+libc_hidden_proto (tr_break)
 void
 tr_break ()
 {
 }
+libc_hidden_def (tr_break)
 
 static void tr_where __P ((const __ptr_t)) internal_function;
 static void

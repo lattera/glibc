@@ -27,7 +27,7 @@
 subdir := csu
 
 routines = init-first libc-start $(libc-init) sysdep version check_fds \
-	   libc-tls elf-init
+	   libc-tls elf-init dso_handle
 aux	 = errno
 elide-routines.os = libc-tls
 static-only-routines = elf-init

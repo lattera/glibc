@@ -542,6 +542,7 @@ extern void _IO_file_init __P ((struct _IO_FILE_plus *));
 extern _IO_FILE* _IO_file_attach __P ((_IO_FILE *, int));
 extern _IO_FILE* _IO_file_open __P ((_IO_FILE *, const char *, int, int,
 				     int, int));
+libc_hidden_proto (_IO_file_open)
 extern _IO_FILE* _IO_file_fopen __P ((_IO_FILE *, const char *, const char *,
 				      int));
 extern _IO_ssize_t _IO_file_write __P ((_IO_FILE *, const void *,

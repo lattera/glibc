@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,4 +25,15 @@
 #define _FORCE_INLINES
 #define __STRING_INLINE /* empty */
 
+/* This is to avoid PLT entries for the x86 version.  */
+#define __memcpy_g __memcpy_g_internal
+#define __strchr_g __strchr_g_internal
+
 #include <string.h>
+
+#ifdef __memcpy_c
+# undef __memcpy_g
+strong_alias (__memcpy_g_internal, __memcpy_g)
+# undef __strchr_g
+strong_alias (__strchr_g_internal, __strchr_g)
+#endif

@@ -248,6 +248,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
   INTUSE(_IO_link_in) ((struct _IO_FILE_plus *) fp);
   return fp;
 }
+libc_hidden_def (_IO_file_open)
 
 _IO_FILE *
 _IO_new_file_fopen (fp, filename, mode, is32not64)

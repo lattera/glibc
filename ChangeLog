@@ -1,3 +1,22 @@
+2002-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* string/string-inlines.c: Define __memcpy_g and __strchr_g macros
+	to avoid using the exported symbols.  Define aliases with the
+	original names separately.
+
+	* include/time.h: Add libc_hidden_proto for __strftime_l.
+	* include/wchar.h: Add libc_hidden_proto for __wcsftime_l.
+	* time/strftime.c: Always use libc_hidden_def if _LIBC.
+
+	* libio/libioP.h: Add libc_hidden_proto for _IO_file_open.
+	* libio/fileops.c: Add libc_hidden_def for _IO_file_open.
+
+	* malloc/mtrace.c: Add libc_hidden_proto and libc_hidden_def for
+	tr_break.
+
+	* csu/Makefile (routines): Add dso_handle.
+	* csu/dso_handle.c: New file.
+
 2002-12-31  Roland McGrath  <roland@redhat.com>
 
 	* Makerules (compile.S, COMPILE.S): Remove -DASSEMBLER here.

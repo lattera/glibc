@@ -15,6 +15,7 @@ extern __typeof (wcstod_l) __wcstod_l;
 extern __typeof (wcstof_l) __wcstof_l;
 extern __typeof (wcstold_l) __wcstold_l;
 extern __typeof (wcsftime_l) __wcsftime_l;
+libc_hidden_proto (__wcsftime_l)
 
 
 libc_hidden_proto (__wcstof_internal)
