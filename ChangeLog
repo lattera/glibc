@@ -1,4 +1,15 @@
+2002-01-16  Roger Sayle  <roger@eyesopen.com>
+
+	* stdlib/msort.c (msort_with_tmp): Replace implementation with
+	more efficient "Towers of Hanoi" mergesort.
+	(hanoi_sort, hanoi_sort_int, hanoi_sort_long): New functions,
+	for generic, sizeof(int) and sizeof(long) variants respectively.
+
 2002-01-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* manial/syslog.texi (openlog): Describe possible problems with
+	first parameter.
+	Patch by Christopher Allen Wing <wingc@engin.umich.edu>.
 
 	* nscd/nscd.c (drop_privileges): Removed.  Adjust caller.
 	* nscd/connections.c (begin_drop_privileges): New function.

@@ -146,8 +146,7 @@ The symbols referred to in this section are declared in the file
 
 @comment syslog.h
 @comment BSD
-@deftypefun void openlog (char *@var{ident}, int @var{option},
-        int @var{facility})
+@deftypefun void openlog (const char *@var{ident}, int @var{option}, int @var{facility})
 
 @code{openlog} opens or reopens a connection to Syslog in preparation
 for submitting messages.
@@ -156,6 +155,46 @@ for submitting messages.
 @code{syslog} invocations will prefix to each message.  This is intended
 to identify the source of the message, and people conventionally set it
 to the name of the program that will submit the messages.
+
+If @var{ident} is NULL, or if @code{openlog} is not called, the default
+identification string used in Syslog messages will be the program name,
+taken from argv[0].
+
+Please note that the string pointer @var{ident} will be retained
+internally by the Syslog routines.  You must not free the memory that
+@var{ident} points to.  It is also dangerous to pass a reference to an
+automatic variable since leaving the scope would mean ending the
+lifetime of the variable.  If you want to change the @var{ident} string,
+you must call @code{openlog} again; overwriting the string pointed to by
+@var{ident} is not thread-safe.
+
+You can cause the Syslog routines to drop the reference to @var{ident} and
+go back to the default string (the program name taken from argv[0]), by
+calling @code{closelog}: @xref{closelog}.
+
+In particular, if you are writing code for a shared library that might get
+loaded and then unloaded (e.g. a PAM module), and you use @code{openlog},
+you must call @code{closelog} before any point where your library might
+get unloaded, as in this example:
+
+@smallexample
+#include <syslog.h>
+
+void
+shared_library_function (void)
+@{
+  openlog ("mylibrary", option, priority);
+
+  syslog (LOG_INFO, "shared library has been invoked");
+
+  closelog ();
+@}
+@end smallexample
+
+Without the call to @code{closelog}, future invocations of @code{syslog}
+by the program using the shared library may crash, if the library gets
+unloaded and the memory containing the string @code{"mylibrary"} becomes
+unmapped.  This is a limitation of the BSD syslog interface.
 
 @code{openlog} may or may not open the @file{/dev/log} socket, depending
 on @var{option}.  If it does, it tries to open it and connect it as a
@@ -383,12 +422,21 @@ The symbols referred to in this section are declared in the file
 @deftypefun void closelog (void)
 
 @code{closelog} closes the current Syslog connection, if there is one.
-This include closing the @file{dev/log} socket, if it is open.
+This includes closing the @file{dev/log} socket, if it is open.
+@code{closelog} also sets the identification string for Syslog messages
+back to the default, if @code{openlog} was called with a non-NULL argument
+to @var{ident}.  The default identification string is the program name
+taken from argv[0].
 
-There is very little reason to use this function.  It does not flush any
-buffers; you can reopen a Syslog connection without closing it first;
-The connection gets closed automatically on exec or exit.
-@code{closelog} has primarily aesthetic value.
+If you are writing shared library code that uses @code{openlog} to
+generate custom syslog output, you should use @code{closelog} to drop the
+GNU C library's internal reference to the @var{ident} pointer when you are
+done.  Please read the section on @code{openlog} for more information:
+@xref{openlog}.
+
+@code{closelog} does not flush any buffers.  You do not have to call
+@code{closelog} before re-opening a Syslog connection with @code{initlog}.
+Syslog connections are automatically closed on exec or exit.
 
 @end deftypefun
 

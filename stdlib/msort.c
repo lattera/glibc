@@ -1,7 +1,9 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
-   Copyright (C) 1992, 1995-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
-   Written by Mike Haertel, September 1988.
+   Copyright (C) 1992, 1995-1997, 1999, 2000, 2001, 2002
+   Free Software Foundation, Inc.
+   Original Implementation by Mike Haertel, September 1988.
+   Towers of Hanoi Mergesort by Roger Sayle, January 2002.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -19,70 +21,372 @@
    02111-1307 USA.  */
 
 #include <alloca.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <memcopy.h>
 #include <errno.h>
 
-static void msort_with_tmp (void *b, size_t n, size_t s,
-			    __compar_fn_t cmp, char *t);
 
-static void
-msort_with_tmp (void *b, size_t n, size_t s, __compar_fn_t cmp,
-		char *t)
+/* Check whether pointer P is aligned for access by type T. */
+#define TYPE_ALIGNED(P,T)  (((char *) (P) - (char *) 0) % __alignof__ (T) == 0)
+
+
+static int hanoi_sort (char *b, size_t n, size_t s,
+                        __compar_fn_t cmp, char *t);
+static int hanoi_sort_int (int *b, size_t n,
+                           __compar_fn_t cmp, int *t);
+#if INT_MAX != LONG_MAX
+static int hanoi_sort_long (long int *b, size_t n,
+                            __compar_fn_t cmp, long int *t);
+#endif
+static void msort_with_tmp (void *b, size_t n, size_t s,
+			    __compar_fn_t cmp, void *t);
+
+
+/* This routine implements "Towers of Hanoi Mergesort".  The algorithm
+   sorts the n elements of size s pointed to by array b using comparison
+   function cmp.  The argument t points to a suitable temporary buffer.
+   If the return value is zero, the sorted array is returned in b, and
+   for non-zero return values the sorted array is returned in t.  */
+static int
+hanoi_sort (char *b, size_t n, size_t s, __compar_fn_t cmp, char *t)
 {
-  char *tmp;
-  char *b1, *b2;
   size_t n1, n2;
+  char *b1,*b2;
+  char *t1,*t2;
+  char *s1,*s2;
+  size_t size;
+  int result;
+  char *ptr;
 
   if (n <= 1)
-    return;
+    return 0;
 
-  n1 = n / 2;
+  if (n == 2)
+    {
+      b2 = b + s;
+      if ((*cmp) (b, b2) <= 0)
+	return 0;
+      memcpy (__mempcpy (t, b2, s), b, s);
+      return 1;
+    }
+
+  n1 = n/2;
   n2 = n - n1;
+  /* n1 < n2!  */
+
+  size = n1 * s;
   b1 = b;
-  b2 = (char *) b + (n1 * s);
+  b2 = b + size;
 
-  msort_with_tmp (b1, n1, s, cmp, t);
-  msort_with_tmp (b2, n2, s, cmp, t);
+  t1 = t;
+  t2 = t + size;
 
-  tmp = t;
-
-  if (s == OPSIZ && (b1 - (char *) 0) % OPSIZ == 0)
-    /* We are operating on aligned words.  Use direct word stores.  */
-    while (n1 > 0 && n2 > 0)
-      {
-	if ((*cmp) (b1, b2) <= 0)
-	  {
-	    --n1;
-	    *((op_t *) tmp)++ = *((op_t *) b1)++;
-	  }
-	else
-	  {
-	    --n2;
-	    *((op_t *) tmp)++ = *((op_t *) b2)++;
-	  }
-      }
+  /* Recursively call hanoi_sort to sort the two halves of the array.
+     Depending upon the return values, determine the values s1 and s2
+     the locations of the two sorted subarrays, ptr, the location to
+     contain the sorted array and result, the return value for this
+     function.  Note that "ptr = result? t : b".  */
+  if (hanoi_sort (b1, n1, s, cmp, t1))
+    {
+      if (hanoi_sort (b2, n2, s, cmp, t2))
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = b2;
+	}
+    }
   else
-    while (n1 > 0 && n2 > 0)
-      {
-	if ((*cmp) (b1, b2) <= 0)
-	  {
-	    tmp = (char *) __mempcpy (tmp, b1, s);
-	    b1 += s;
-	    --n1;
-	  }
-	else
-	  {
-	    tmp = (char *) __mempcpy (tmp, b2, s);
-	    b2 += s;
-	    --n2;
-	  }
-      }
-  if (n1 > 0)
-    memcpy (tmp, b1, n1 * s);
-  memcpy (b, t, (n - n2) * s);
+    {
+      if (hanoi_sort (b2, n2, s, cmp, t2))
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = b2;
+	}
+    }
+
+  /*  Merge the two sorted arrays s1 and s2 of n1 and n2 elements
+      respectively, placing the result in ptr.  On entry, n1 > 0
+      && n2 > 0, and with each iteration either n1 or n2 is decreased
+      until either reaches zero, and the loop terminates via return.  */
+  for (;;)
+    {
+      if ((*cmp) (s1, s2) <= 0)
+	{
+	  ptr = (char *) __mempcpy (ptr, s1, s);
+	  s1 += s;
+	  --n1;
+	  if (n1 == 0)
+            {
+              if (ptr != s2)
+                memcpy (ptr, s2, n2 * s);
+              return result;
+            }
+	}
+      else
+	{
+	  ptr = (char *) __mempcpy (ptr, s2, s);
+	  s2 += s;
+	  --n2;
+	  if (n2 == 0)
+	    {
+	      memcpy (ptr, s1, n1 * s);
+	      return result;
+	    }
+        }
+    }
+}
+
+
+/* This routine is a variant of hanoi_sort that is optimized for the
+   case where items to be sorted are the size of ints, and both b and
+   t are suitably aligned.  The parameter s in not needed as it is
+   known to be sizeof(int).  */
+static int
+hanoi_sort_int (int *b, size_t n, __compar_fn_t cmp, int *t)
+{
+  size_t n1, n2;
+  int *b1,*b2;
+  int *t1,*t2;
+  int *s1,*s2;
+  int result;
+  int *ptr;
+
+  if (n <= 1)
+    return 0;
+
+  if (n == 2)
+    {
+      if ((*cmp) (b, b + 1) <= 0)
+	return 0;
+      t[0] = b[1];
+      t[1] = b[0];
+      return 1;
+    }
+
+  n1 = n/2;
+  n2 = n - n1;
+  /* n1 < n2!  */
+
+  b1 = b;
+  b2 = b + n1;
+
+  t1 = t;
+  t2 = t + n1;
+
+  /* Recursively call hanoi_sort_int to sort the two halves.  */
+  if (hanoi_sort_int (b1, n1, cmp, t1))
+    {
+      if (hanoi_sort_int (b2, n2, cmp, t2))
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = b2;
+	}
+    }
+  else
+    {
+      if (hanoi_sort_int (b2, n2, cmp, t2))
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = b2;
+	}
+    }
+
+  /*  Merge n1 elements from s1 and n2 elements from s2 into ptr.  */
+  for (;;)
+    {
+      if ((*cmp) (s1, s2) <= 0)
+	{
+	  *ptr++ = *s1++;
+	  --n1;
+	  if (n1 == 0)
+            {
+              if (ptr != s2)
+                memcpy (ptr, s2, n2 * sizeof (int));
+              return result;
+            }
+	}
+      else
+	{
+	  *ptr++ = *s2++;
+	  --n2;
+	  if (n2 == 0)
+	    {
+	      memcpy (ptr, s1, n1 * sizeof (int));
+	      return result;
+	    }
+	}
+    }
+}
+
+
+#if INT_MAX != LONG_MAX
+/* This routine is a variant of hanoi_sort that is optimized for the
+   case where items to be sorted are the size of longs, and both b and
+   t are suitably aligned.  The parameter s in not needed as it is
+   known to be sizeof(long).  In case sizeof(int)== sizeof(long) we
+   do not need this code since it would be the same as hanoi_sort_int.  */
+static int
+hanoi_sort_long (long int *b, size_t n, __compar_fn_t cmp, long int *t)
+{
+  size_t n1, n2;
+  long int *b1,*b2;
+  long int *t1,*t2;
+  long int *s1,*s2;
+  int result;
+  long int *ptr;
+
+  if (n <= 1)
+    return 0;
+
+  if (n == 2)
+    {
+      if ((*cmp) (b, b + 1) <= 0)
+	return 0;
+      t[0] = b[1];
+      t[1] = b[0];
+      return 1;
+    }
+
+  n1 = n/2;
+  n2 = n - n1;
+  /* n1 < n2!  */
+
+  b1 = b;
+  b2 = b + n1;
+
+  t1 = t;
+  t2 = t + n1;
+
+  /* Recursively call hanoi_sort_long to sort the two halves.  */
+  if (hanoi_sort_long (b1, n1, cmp, t1))
+    {
+      if (hanoi_sort_long (b2, n2, cmp, t2))
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 0;
+	  ptr = b;
+	  s1 = t1;
+	  s2 = b2;
+	}
+    }
+  else
+    {
+      if (hanoi_sort_long (b2, n2, cmp, t2))
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = t2;
+	}
+      else
+	{
+	  result = 1;
+	  ptr = t;
+	  s1 = b1;
+	  s2 = b2;
+	}
+    }
+
+  /*  Merge n1 elements from s1 and n2 elements from s2 into ptr.  */
+  for (;;)
+    {
+      if ((*cmp) (s1, s2) <= 0)
+	{
+	  *ptr++ = *s1++;
+	  --n1;
+	  if (n1 == 0)
+            {
+              if (ptr != s2)
+                memcpy (ptr, s2, n2 * sizeof (long));
+              return result;
+            }
+	}
+      else
+	{
+	  *ptr++ = *s2++;
+	  --n2;
+	  if (n2 == 0)
+	    {
+	      memcpy (ptr, s1, n1 * sizeof (long));
+	      return result;
+	    }
+        }
+    }
+}
+#endif
+
+
+/* This routine preserves the original interface to msort_with_tmp and
+   determines which variant of hanoi_sort to call, based upon item size
+   and alignment.  */
+
+static void
+msort_with_tmp (void *b, size_t n, size_t s, __compar_fn_t cmp, void *t)
+{
+  const size_t size = n * s;
+
+  if (s == sizeof (int) && TYPE_ALIGNED (b, int))
+    {
+      if (hanoi_sort_int (b, n, cmp, t))
+        memcpy (b, t, size);
+    }
+#if INT_MAX != LONG_MAX
+  else if (s == sizeof (long int) && TYPE_ALIGNED (b, long int))
+    {
+      if (hanoi_sort_long (b, n, cmp, t))
+        memcpy (b, t, size);
+    }
+#endif
+  else
+    {
+      /* Call the generic implementation.  */
+      if (hanoi_sort (b, n, s, cmp, t))
+        memcpy (b, t, size);
+    }
 }
 
 void
@@ -93,7 +397,7 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
   if (size < 1024)
     {
       void *buf = __alloca (size);
-      
+
       /* The temporary array is small, so put it on the stack.  */
       msort_with_tmp (b, n, s, cmp, buf);
     }
@@ -130,7 +434,7 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
 	   measured in bytes.  */
 
       /* If the memory requirements are too high don't allocate memory.  */
-      if (size / pagesize > phys_pages)
+      if ((long int) (size / pagesize) > phys_pages)
 	_quicksort (b, n, s, cmp);
       else
 	{
