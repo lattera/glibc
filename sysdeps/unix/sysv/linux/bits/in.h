@@ -51,6 +51,8 @@
 #define MCAST_LEAVE_SOURCE_GROUP 47
 #define MCAST_MSFILTER 48
 
+#define MCAST_EXCLUDE   0
+#define MCAST_INCLUDE   1
 
 #define IP_ROUTER_ALERT    5	/* bool */
 #define IP_PKTINFO         8	/* bool */
