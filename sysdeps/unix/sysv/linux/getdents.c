@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <dirent.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>
@@ -66,7 +67,7 @@ struct kernel_dirent
 
 struct kernel_dirent64
   {
-    u_int64_t		d_ino;
+    uint64_t		d_ino;
     int64_t		d_off;
     unsigned short int	d_reclen;
     unsigned char	d_type;
@@ -100,13 +101,13 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
   ssize_t retval;
 
 #ifdef __NR_getdents64
-#ifndef __ASSUME_GETDENTS64_SYSCALL
+# ifndef __ASSUME_GETDENTS64_SYSCALL
   if (!__have_no_getdents64)
-#endif
+# endif
     {
-#ifndef __ASSUME_GETDENTS64_SYSCALL
+# ifndef __ASSUME_GETDENTS64_SYSCALL
       int saved_errno = errno;
-#endif
+# endif
       char *kbuf = buf;
       size_t kbytes = nbytes;
       if (offsetof (DIRENT_TYPE, d_name)
@@ -119,9 +120,9 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	}
       retval = INLINE_SYSCALL (getdents64, 3, fd, CHECK_N(kbuf, kbytes),
 			       kbytes);
-#ifndef __ASSUME_GETDENTS64_SYSCALL
+# ifndef __ASSUME_GETDENTS64_SYSCALL
       if (retval != -1 && errno != -EINVAL)
-#endif
+# endif
 	{
 	  struct kernel_dirent64 *kdp;
 	  const size_t size_diff = (offsetof (struct kernel_dirent64, d_name)
@@ -146,7 +147,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	      size_t old_reclen = kdp->d_reclen;
 	      size_t new_reclen = ((old_reclen - size_diff + alignment - 1)
 				  & ~(alignment - 1));
-	      u_int64_t d_ino = kdp->d_ino;
+	      uint64_t d_ino = kdp->d_ino;
 	      int64_t d_off = kdp->d_off;
 	      unsigned char d_type = kdp->d_type;
 
@@ -182,10 +183,10 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
 	  return (char *) dp - buf;
 	}
 
-#ifndef __ASSUME_GETDENTS64_SYSCALL
+# ifndef __ASSUME_GETDENTS64_SYSCALL
       __set_errno (saved_errno);
       __have_no_getdents64 = 1;
-#endif
+# endif
     }
 #endif
   {

@@ -1,3 +1,7 @@
+2000-09-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/getdents.c: Pretty print.
+
 2000-09-01  Jes Sorensen  <jes@linuxcare.com>
 
 	* sysdeps/unix/sysv/linux/ia64/syscalls.list: Add
