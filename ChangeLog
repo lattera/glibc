@@ -1,5 +1,8 @@
 2000-05-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/aix/linux/linux-dirent.h: New file.
+	* sysdeps/unix/sysv/aix/linux/direntconv.c: New file.
+
 	* posix/Versions: Change posix_spawnattr_getdefault and
 	posix_spawnattr_setdefault to posix_spawnattr_getsigdefault
 	and posix_spawnattr_setsigdefault respectively.
