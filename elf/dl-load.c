@@ -53,6 +53,12 @@
 # define MAP_COPY	MAP_PRIVATE
 #endif
 
+/* We want to prevent people from modifying DSOs which are currently in
+   use.  This is what MAP_DENYWRITE is for.  */
+#ifndef MAP_DENYWRITE
+# define MAP_DENYWRITE	0
+#endif
+
 /* Some systems link their relocatable objects for another base address
    than 0.  We want to know the base address for these such that we can
    subtract this address from the segment addresses during mapping.
@@ -1092,7 +1098,8 @@ cannot allocate TLS data structures for initial thread");
 
 	/* Remember which part of the address space this object uses.  */
 	l->l_map_start = (ElfW(Addr)) __mmap ((void *) mappref, maplength,
-					      c->prot, MAP_COPY | MAP_FILE,
+					      c->prot,
+					      MAP_COPY|MAP_FILE|MAP_DENYWRITE,
 					      fd, c->mapoff);
 	if (__builtin_expect ((void *) l->l_map_start == MAP_FAILED, 0))
 	  {
@@ -1141,7 +1148,8 @@ cannot allocate TLS data structures for initial thread");
 	    /* Map the segment contents from the file.  */
 	    && (__mmap ((void *) (l->l_addr + c->mapstart),
 			c->mapend - c->mapstart, c->prot,
-			MAP_FIXED | MAP_COPY | MAP_FILE, fd, c->mapoff)
+			MAP_FIXED|MAP_COPY|MAP_FILE|MAP_DENYWRITE,
+			fd, c->mapoff)
 		== MAP_FAILED))
 	  goto map_error;
 

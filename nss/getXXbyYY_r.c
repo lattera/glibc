@@ -99,15 +99,10 @@
 # define H_ERRNO_VAR_P NULL
 #endif
 
-#ifndef HAVE_TYPE
-# define TYPE_VAR_P NULL
-# define FLAGS_VAR 0
-#endif
-
 #ifdef HAVE_AF
-# define AF_VAR_P &af
+# define AF_VAL af
 #else
-# define AF_VAR_P NULL
+# define AF_VAL AF_INET
 #endif
 
 /* Type of the lookup function we need here.  */
@@ -151,8 +146,7 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 
 #ifdef HANDLE_DIGITS_DOTS
   switch (__nss_hostname_digits_dots (name, resbuf, &buffer, NULL,
-				      buflen, result, &status,
-				      TYPE_VAR_P, FLAGS_VAR, AF_VAR_P,
+				      buflen, result, &status, AF_VAL,
 				      H_ERRNO_VAR_P))
     {
     case -1:

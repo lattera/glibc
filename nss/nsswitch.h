@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-1999,2001,2002,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-1999,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -172,8 +172,8 @@ extern int __nss_hostname_digits_dots (const char *name,
 				       struct hostent *resbuf, char **buffer,
 				       size_t *buffer_size, size_t buflen,
 				       struct hostent **result,
-				       enum nss_status *status, int *typep,
-				       int flags, int *afp, int *h_errnop);
+				       enum nss_status *status, int af,
+				       int *h_errnop);
 libc_hidden_proto (__nss_hostname_digits_dots)
 
 #endif	/* nsswitch.h */

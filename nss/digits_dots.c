@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2000, 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by H.J. Lu <hjl@gnu.ai.mit.edu>, 1997.
 
@@ -37,8 +37,7 @@ int
 __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 			    char **buffer, size_t *buffer_size,
 			    size_t buflen, struct hostent **result,
-			    enum nss_status *status, int *typep,
-			    int flags, int *afp, int *h_errnop)
+			    enum nss_status *status, int af, int *h_errnop)
 {
   int save;
 
@@ -67,14 +66,6 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
       char **h_alias_ptr;
       size_t size_needed;
       int addr_size;
-      int af;
-
-      if (typep != NULL)
-	af = *typep;
-      else if (afp != NULL)
-	af = *afp;
-      else
-	af = -1;
 
       switch (af)
 	{
@@ -87,18 +78,8 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 	  break;
 
 	default:
-	  if (typep != NULL)
-	    {
-	      /* This must not happen.  */
-	      if (h_errnop != NULL)
-		*h_errnop = HOST_NOT_FOUND;
-	      goto done;
-	    }
-	  else
-	    {
-	      af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
-	      addr_size = af == AF_INET6 ? IN6ADDRSZ : INADDRSZ;
-	    }
+	  af = (_res.options & RES_USE_INET6) ? AF_INET6 : AF_INET;
+	  addr_size = af == AF_INET6 ? IN6ADDRSZ : INADDRSZ;
 	  break;
 	}
 
@@ -180,38 +161,25 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 		  (*h_addr_ptrs)[0] = (char *) host_addr;
 		  (*h_addr_ptrs)[1] = NULL;
 		  resbuf->h_addr_list = *h_addr_ptrs;
-		  if ((typep != NULL && *typep == AF_INET6)
-		      || (af == AF_INET
-			  && (_res.options & RES_USE_INET6)))
+		  if (af == AF_INET && (_res.options & RES_USE_INET6))
 		    {
-		      if (typep != NULL && (flags & AI_V4MAPPED) == 0)
-			{
-			  /* That's bad.  The user hasn't specified that she
-			     allows IPv4 numeric addresses.  */
-			  *result = NULL;
-			  *h_errnop = HOST_NOT_FOUND;
-			  goto done;
-			}
-		      else
-			{
-			  /* We need to change the IP v4 address into the
-			     IP v6 address.  */
-			  char tmp[INADDRSZ];
-			  char *p = (char *) host_addr;
-			  int i;
+		      /* We need to change the IP v4 address into the
+			 IP v6 address.  */
+		      char tmp[INADDRSZ];
+		      char *p = (char *) host_addr;
+		      int i;
 
-			  /* Save a copy of the IP v4 address. */
-			  memcpy (tmp, host_addr, INADDRSZ);
-			  /* Mark this ipv6 addr as a mapped ipv4. */
-			  for (i = 0; i < 10; i++)
-			    *p++ = 0x00;
-			  *p++ = 0xff;
-			  *p++ = 0xff;
-			  /* Copy the IP v4 address. */
-			  memcpy (p, tmp, INADDRSZ);
-			  resbuf->h_addrtype = AF_INET6;
-			  resbuf->h_length = IN6ADDRSZ;
-			}
+		      /* Save a copy of the IP v4 address. */
+		      memcpy (tmp, host_addr, INADDRSZ);
+		      /* Mark this ipv6 addr as a mapped ipv4. */
+		      for (i = 0; i < 10; i++)
+			*p++ = 0x00;
+		      *p++ = 0xff;
+		      *p++ = 0xff;
+		      /* Copy the IP v4 address. */
+		      memcpy (p, tmp, INADDRSZ);
+		      resbuf->h_addrtype = AF_INET6;
+		      resbuf->h_length = IN6ADDRSZ;
 		    }
 		  else
 		    {
@@ -242,14 +210,6 @@ __nss_hostname_digits_dots (const char *name, struct hostent *resbuf,
 	  host_addr_list_t *h_addr_ptrs;
 	  size_t size_needed;
 	  int addr_size;
-	  int af;
-
-	  if (typep != NULL)
-	    af = *typep;
-	  else if (afp != NULL)
-	    af = *afp;
-	  else
-	    af = -1;
 
 	  switch (af)
 	    {

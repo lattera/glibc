@@ -1,4 +1,4 @@
-/* Copyright (C) 1996-2001,2003 Free Software Foundation, Inc.
+/* Copyright (C) 1996-2001,2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,15 +66,10 @@
 # define H_ERRNO_VAR_P NULL
 #endif
 
-#ifndef HAVE_TYPE
-# define TYPE_VAR_P NULL
-# define FLAGS_VAR 0
-#endif
-
 #ifdef HAVE_AF
-# define AF_VAR_P &af
+# define AF_VAL af
 #else
-# define AF_VAR_P NULL
+# define AF_VAL AF_INET
 #endif
 
 /* Prototype for reentrant version we use here.  */
@@ -112,9 +107,7 @@ FUNCTION_NAME (ADD_PARAMS)
   if (buffer != NULL)
     {
       if (__nss_hostname_digits_dots (name, &resbuf, &buffer,
-				      &buffer_size,
-				      0, &result, NULL, TYPE_VAR_P,
-				      FLAGS_VAR, AF_VAR_P,
+				      &buffer_size, 0, &result, NULL, AF_VAL,
 				      H_ERRNO_VAR_P))
 	goto done;
     }

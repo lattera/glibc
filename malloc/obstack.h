@@ -171,52 +171,16 @@ struct obstack		/* control current object in current chunk */
 /* Declare the external functions we use; they are in obstack.c.  */
 
 extern void _obstack_newchunk (struct obstack *, int);
-extern void _obstack_free (struct obstack *, void *);
 extern int _obstack_begin (struct obstack *, int, int,
 			    void *(*) (long), void (*) (void *));
 extern int _obstack_begin_1 (struct obstack *, int, int,
 			     void *(*) (void *, long),
 			     void (*) (void *, void *), void *);
 extern int _obstack_memory_used (struct obstack *);
-
-/* Do the function-declarations after the structs
-   but before defining the macros.  */
-
-void obstack_init (struct obstack *obstack);
-
-void * obstack_alloc (struct obstack *obstack, int size);
-
-void * obstack_copy (struct obstack *obstack, const void *address, int size);
-void * obstack_copy0 (struct obstack *obstack, const void *address, int size);
 
 void obstack_free (struct obstack *obstack, void *block);
 
-void obstack_blank (struct obstack *obstack, int size);
-
-void obstack_grow (struct obstack *obstack, const void *data, int size);
-void obstack_grow0 (struct obstack *obstack, const void *data, int size);
-
-void obstack_1grow (struct obstack *obstack, int data_char);
-void obstack_ptr_grow (struct obstack *obstack, const void *data);
-void obstack_int_grow (struct obstack *obstack, int data);
-
-void * obstack_finish (struct obstack *obstack);
-
-int obstack_object_size (struct obstack *obstack);
-
-int obstack_room (struct obstack *obstack);
-void obstack_make_room (struct obstack *obstack, int size);
-void obstack_1grow_fast (struct obstack *obstack, int data_char);
-void obstack_ptr_grow_fast (struct obstack *obstack, const void *data);
-void obstack_int_grow_fast (struct obstack *obstack, int data);
-void obstack_blank_fast (struct obstack *obstack, int size);
-
-void * obstack_base (struct obstack *obstack);
-void * obstack_next_free (struct obstack *obstack);
-int obstack_alignment_mask (struct obstack *obstack);
-int obstack_chunk_size (struct obstack *obstack);
-int obstack_memory_used (struct obstack *obstack);
-
+
 /* Error handler called when `obstack_chunk_alloc' failed to allocate
    more memory.  This can be set to a user defined function which
    should either abort gracefully or use longjump - but shouldn't

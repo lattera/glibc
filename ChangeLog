@@ -1,3 +1,16 @@
+2004-05-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* nss/digits_dots.c (__nss_hostname_digits_dots): Remove typep and
+	flags parameter, convert afp to simple int parameter.  Adjust code.
+	typep was never != NULL and flags therefore also unused.  *afp is
+	never modified.
+	* nss/nsswitch.h: Adjust __nss_hostname_digits_dots prototype.
+	* nss/getXXbyYY.c: Remove HAVE_TYPE handling.  Adjust af parameter
+	handling for __nss_hostname_digits_dots calls.
+	* nss/getXXbyYY_r.c: Likewise.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Map DSOs with MAP_DENYWRITE.
+
 2004-05-25  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/fpu/Makefile: Make ld.so a dependency of libm.so.
