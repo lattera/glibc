@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wmglo@dent.med.uni-muenchen.de>
    and Doug Lea <dl@cs.oswego.edu>, 1996.
@@ -1579,6 +1579,24 @@ ptmalloc_unlock_all __MALLOC_P((void))
   (void)mutex_unlock(&list_lock);
 }
 
+static void
+ptmalloc_init_all __MALLOC_P((void))
+{
+  arena *ar_ptr;
+
+#if defined _LIBC || defined MALLOC_HOOKS
+  tsd_setspecific(arena_key, save_arena);
+  __malloc_hook = save_malloc_hook;
+  __free_hook = save_free_hook;
+#endif
+  for(ar_ptr = &main_arena;;) {
+    (void)mutex_init(&ar_ptr->mutex);
+    ar_ptr = ar_ptr->next;
+    if(ar_ptr == &main_arena) break;
+  }
+  (void)mutex_init(&list_lock);
+}
+
 /* Initialization routine. */
 #if defined(_LIBC)
 #if 0
@@ -1617,7 +1635,7 @@ ptmalloc_init __MALLOC_P((void))
   mutex_init(&list_lock);
   tsd_key_create(&arena_key, NULL);
   tsd_setspecific(arena_key, (Void_t *)&main_arena);
-  thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_unlock_all);
+  thread_atfork(ptmalloc_lock_all, ptmalloc_unlock_all, ptmalloc_init_all);
 #endif
 #if defined _LIBC || defined MALLOC_HOOKS
   if((s = getenv("MALLOC_TRIM_THRESHOLD_")))
@@ -1644,7 +1662,7 @@ ptmalloc_init __MALLOC_P((void))
 /* There are platforms (e.g. Hurd) with a link-time hook mechanism. */
 #ifdef thread_atfork_static
 thread_atfork_static(ptmalloc_lock_all, ptmalloc_unlock_all, \
-                     ptmalloc_unlock_all)
+                     ptmalloc_init_all)
 #endif
 
 #if defined _LIBC || defined MALLOC_HOOKS

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,6 +17,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <string.h>
 #include <termios.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
@@ -36,7 +37,6 @@ tcsetattr (fd, optional_actions, termios_p)
 {
   struct __kernel_termios k_termios;
   unsigned long int cmd;
-  size_t cnt;
 
   switch (optional_actions)
     {
@@ -65,8 +65,8 @@ tcsetattr (fd, optional_actions, termios_p)
 #ifdef _HAVE_C_OSPEED
   k_termios.c_ospeed = termios_p->c_ospeed;
 #endif
-  for (cnt = 0; cnt < __KERNEL_NCCS; ++cnt)
-    k_termios.c_cc[cnt] = termios_p->c_cc[cnt];
+  memcpy (&k_termios.c_cc[0], &termios_p->c_cc[0],
+	  __KERNEL_NCCS * sizeof (cc_t));
 
   return __ioctl (fd, cmd, &k_termios);
 }

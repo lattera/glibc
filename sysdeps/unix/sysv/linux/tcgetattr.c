@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <string.h>
 #include <termios.h>
+#include <unistd.h>
 #include <sys/ioctl.h>
 #include <sys/types.h>
 
@@ -33,7 +35,6 @@ __tcgetattr (fd, termios_p)
 {
   struct __kernel_termios k_termios;
   int retval;
-  size_t cnt;
 
   retval = __ioctl (fd, TCGETS, &k_termios);
 
@@ -48,8 +49,21 @@ __tcgetattr (fd, termios_p)
 #ifdef _HAVE_C_OSPEED
   termios_p->c_ospeed = k_termios.c_ospeed;
 #endif
-  for (cnt = 0; cnt < __KERNEL_NCCS; ++cnt)
-    termios_p->c_cc[cnt] = k_termios.c_cc[cnt];
+  if (sizeof (cc_t) == 1 || _POSIX_VDISABLE == 0
+      || (unsigned char) _POSIX_VDISABLE == (unsigned char) -1)
+    memset (__mempcpy (&termios_p->c_cc[0], &k_termios.c_cc[0],
+		       __KERNEL_NCCS * sizeof (cc_t)),
+	    _POSIX_VDISABLE, (NCCS - __KERNEL_NCCS) * sizeof (cc_t));
+  else
+    {
+      size_t cnt;
+
+      memcpy (&termios_p->c_cc[0], &k_termios.c_cc[0],
+	      __KERNEL_NCCS * sizeof (cc_t));
+
+      for (cnt = __KERNEL_NCCS; cnt < NCCS; ++cnt)
+	termios_p->c_cc[cnt] = _POSIX_VDISABLE;
+    }
 
   return retval;
 }

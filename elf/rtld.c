@@ -485,14 +485,12 @@ of this helper program; chances are you did not intend to run this program.\n\
 	 is specified (i.e., this is no dynamically linked binary.  */
       if (main_map->l_ld == NULL)
 	_exit (1);
-      if (!has_interp)
-	_exit (2);
 
       /* We allow here some platform specific code.  */
 #ifdef DISTINGUISH_LIB_VERSIONS
       DISTINGUISH_LIB_VERSIONS;
 #endif
-      _exit (0);
+      _exit (has_interp ? 0 : 2);
     }
 
   if (! paths_initialized)
@@ -645,7 +643,7 @@ of this helper program; chances are you did not intend to run this program.\n\
   if (_dl_rtld_map.l_next)
     _dl_rtld_map.l_next->l_prev = _dl_rtld_map.l_prev;
 
-  if (_dl_rtld_map.l_opencount)
+  if (_dl_rtld_map.l_opencount > 1)
     {
       /* Some DT_NEEDED entry referred to the interpreter object itself, so
 	 put it back in the list of visible objects.  We insert it into the

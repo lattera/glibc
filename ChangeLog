@@ -1,3 +1,11 @@
+1998-05-04 12:40  Ulrich Drepper  <drepper@cygnus.com>
+
+	* malloc/malloc.c (ptmalloc_init_all): New function.  Similar to
+	ptmalloc_unlock_all, but re-initializes the mutexes instead.
+	(ptmalloc_init): Use new function in thread_at_fork call.
+	(thread_atfork_static): Likewise.
+	Suggested by Wolfram Gloger and Xavier Leroy.
+
 1998-05-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* signal/signal.h: Move definitions of struct sigstack and

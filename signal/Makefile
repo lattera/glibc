@@ -22,7 +22,7 @@
 subdir	:= signal
 
 headers	:= signal.h sys/signal.h bits/signum.h bits/sigcontext.h \
-	   bits/sigaction.h bits/sigset.h bits/siginfo.h
+	   bits/sigaction.h bits/sigset.h bits/siginfo.h bits/sigstack.h
 
 routines	:= signal raise killpg \
 		   sigaction sigprocmask kill \

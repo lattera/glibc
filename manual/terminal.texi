@@ -1135,8 +1135,8 @@ The particular characters used are specified in the @code{c_cc} member
 of the @code{struct termios} structure.  This member is an array; each
 element specifies the character for a particular role.  Each element has
 a symbolic constant that stands for the index of that element---for
-example, @code{INTR} is the index of the element that specifies the INTR
-character, so storing @code{'='} in @code{@var{termios}.c_cc[INTR]}
+example, @code{VINTR} is the index of the element that specifies the INTR
+character, so storing @code{'='} in @code{@var{termios}.c_cc[VINTR]}
 specifies @samp{=} as the INTR character.
 
 @vindex _POSIX_VDISABLE

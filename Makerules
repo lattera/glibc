@@ -451,14 +451,11 @@ extra-libs-left := $(extra-libs)
 include $(patsubst %,$(..)extra-lib.mk,$(extra-libs))
 endif
 
++depfiles := $(sources:.c=.d) \
+	     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
+	     $(addsuffix .d,$(tests) $(test-srcs) $(tests-static))
 ifeq ($(build-programs),yes)
-+depfiles := $(strip $(sources:.c=.d) \
-		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
-		     $(addsuffix .d,$(others) $(tests) $(test-srcs)))
-else
-+depfiles := $(strip $(sources:.c=.d) \
-		     $(patsubst %.o,%.d,$(filter %.o,$(extra-objs:.os=.o))) \
-		     $(addsuffix .d,$(tests) $(test-srcs)))
++depfiles += $(addsuffix .d,$(others))
 endif
 +depfiles := $(addprefix $(objpfx),\
 			 $(filter-out $(addsuffix .d,$(omit-deps)),\
