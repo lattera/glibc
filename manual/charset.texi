@@ -71,7 +71,7 @@ As shown in some other part of this manual,
 there exists a completely new family of functions which can handle texts
 of this kind in memory.  The most commonly used character set for such
 internal wide character representations are Unicode and @w{ISO 10646}.
-The former is a subset of the later and used when wide characters are
+The former is a subset of the latter and used when wide characters are
 chosen to by 2 bytes (@math{= 16} bits) wide.  The standard names of the
 @cindex UCS2
 @cindex UCS4
@@ -501,6 +501,8 @@ is declared in @file{wchar.h}.
 
 Code using this function often looks similar to this:
 
+@c Fix the example to explicitly say how to generate the escape sequence
+@c to restore the initial state.
 @smallexample
 @{
   mbstate_t state;
@@ -510,11 +512,22 @@ Code using this function often looks similar to this:
   if (! mbsinit (&state))
     @{
       /* @r{Emit code to return to initial state.}  */
-      fputs ("@r{whatever needed}", fp);
+      const char empty[] = "";
+      const char **srcp = &empty;
+      wcsrtombs (outbuf, &srcp, outbuflen, &state);
     @}
   ...
 @}
 @end smallexample
+
+The code to emit the escape sequence to get back to the initial state is
+interesting.  The @code{wcsrtombs} function can be used to determine the
+necessary output code (@pxref{Converting Strings}).  Please note that on
+GNU systems it is not necessary to perform this extra action for the
+conversion from multibyte text ot wide character text since the wide
+character encoding is not stateful.  But there is nothing mentioned in
+any standard which prohibits making @code{wchar_t} using a stateful
+encoding.
 
 @node Converting a Character
 @subsection Converting Single Characters

@@ -5,6 +5,7 @@
 
 	* manual/charset.texi: More misspelling fixes.
 	Reported by Tom Tromey <tromey@cygnus.com>.
+	Improve mbsinit example.
 
 	* sysdeps/unix/sysv/linux/vfork.c: Removed.
 	* sysdeps/unix/sysv/linux/i386/vfork.S: New file.
