@@ -1,3 +1,8 @@
+2002-12-19  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/brk.c (__brk): Cast result of
+	INTERNAL_SYSCALL.
+
 2002-12-21  Andreas Schwab  <schwab@suse.de>
 
 	* elf/check-textrel.c (handle_file): Swap p_type.
