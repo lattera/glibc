@@ -1122,7 +1122,7 @@ prefix_array (dirname, array, n)
 
 
 /* We must not compile this function twice.  */
-#if !defined _LIBC || !defined glob
+#if !defined _LIBC || !defined NO_GLOB_PATTERN_P
 /* Return nonzero if PATTERN contains any metacharacters.
    Metacharacters can be quoted with backslashes if QUOTE is nonzero.  */
 int

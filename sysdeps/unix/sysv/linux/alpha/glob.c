@@ -37,6 +37,8 @@ extern void __new_globfree (glob_t *__pglob);
 
 #undef glob
 #undef globfree
+#undef glob64
+#undef globfree64
 
 default_symbol_version(__new_glob, glob, GLIBC_2.1);
 default_symbol_version(__new_globfree, globfree, GLIBC_2.1);

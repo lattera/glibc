@@ -15,4 +15,6 @@
 #undef __stat
 #define __stat(file, buf) stat64 (file, buf)
 
+#define NO_GLOB_PATTERN_P 1
+
 #include <sysdeps/generic/glob.c>

@@ -51,7 +51,7 @@
 #define	_PATH_KLOG	"/proc/kmsg"
 #define	_PATH_KMEM	"/dev/kmem"
 #define	_PATH_LASTLOG	"/var/log/lastlog"
-#define	_PATH_MAILDIR	"/var/spool/mail"
+#define	_PATH_MAILDIR	"/var/mail"
 #define	_PATH_MAN	"/usr/man"
 #define	_PATH_MEM	"/dev/mem"
 #define	_PATH_MNTTAB	"/etc/fstab"

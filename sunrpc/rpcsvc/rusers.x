@@ -145,16 +145,20 @@ program RUSERSPROG {
 %	if (xdrs->x_op != XDR_FREE)
 %	{
 %		char *ptr;
+%		unsigned int size;
 %		ptr = objp->ut_line;
-%		if (!xdr_string (xdrs, &ptr, sizeof (objp->ut_line))) {
+%		size = sizeof (objp->ut_line);
+%		if (!xdr_bytes (xdrs, &ptr, &size, size)) {
 %			return (FALSE);
 %		}
 %		ptr = objp->ut_name;
-%		if (!xdr_string (xdrs, &ptr, sizeof (objp->ut_name))) {
+%		size = sizeof (objp->ut_name);
+%		if (!xdr_bytes (xdrs, &ptr, &size, size)) {
 %			return (FALSE);
 %		}
 %		ptr = objp->ut_host;
-%		if (!xdr_string (xdrs, &ptr, sizeof (objp->ut_host))) {
+%		size = sizeof (objp->ut_host);
+%		if (!xdr_bytes (xdrs, &ptr, &size, size)) {
 %			return (FALSE);
 %		}
 %	}
