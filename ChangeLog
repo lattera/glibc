@@ -1,3 +1,86 @@
+1998-02-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/nsswitch.c (__nss_lookup): Return 1 if this was the last
+	module.
+
+	* nss/getXXent_r.c: If no more module is found don't try to call
+	setXXent functions but leave unsuccessfully.
+
+	* malloc/obstack.h: Cleanups.
+
+	* sysdeps/wordsize-32/stdint.h: New file.
+	* sysdeps/wordsize-64/stdint.h: New file.
+	* sysdeps/generic/stdint.h: New file.
+	* sysdeps/wordsize-32/inttypes.h: Adopt to use stdint.h.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* stdlib/Makefile (headers): Add stdint.h.
+
+1998-02-03  Paul Eggert  <eggert@twinsun.com>
+
+	* malloc/obstack.h (PTR_INT_TYPE): Use __PTRDIFF_TYPE__ if available.
+
+1998-02-13 17:59  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* timezone: New directory.
+	* time/README, time/africa, time/antarctica, time/asia,
+	time/australasia, time/backward, time/checktab.awk,
+	time/etcetera, time/europe, time/factory, time/ialloc.c,
+	time/iso3166.tab, time/leapseconds, time/northamerica,
+	time/pacificnew, time/private.h, time/scheck.c,
+	time/solar87, time/solar88, time/solar89, time/southamerica,
+	time/systemv, time/test-tz.c, time/tzfile.h,
+	time/tzselect.ksh, time/yearistype, time/zdump.c,
+	time/zic.c, time/zone.tab: Moved to timezone.
+	* time/tzfile.c: Include tzfile.h from timezone subdir.
+	* time/tzset.c: Likewise.
+	* time/Makefile: Cut out all code relating to timezones...
+	* timezone/Makefile: ...and paste it in here.
+	* Makefile (subdirs): Add timezone.
+
+1998-02-13 18:45  H.J. Lu  <hjl@gnu.org>
+
+	* libc.map (_sys_nerr): Added.
+
+	* sysdeps/unix/sysv/linux/errlist.c (_sys_nerr): Make it
+	versioned symbol.
+
+1998-02-15 17:16  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h: Define PF_KEY and
+	pseudo_AF_KEY instead of pseudo_PF_KEY and AF_KEY.
+	Reported by Craig Metz <cmetz@inner.net>.
+
+1998-01-22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* nss/nss_files/files-parse.c (LOOKUP_NAME_CASE): Use __strcasecmp
+	instead of strcasecmp.
+	* nss/nss_files/files-alias.c (get_next_alias): Likewise.
+
+	* wctype/wctype.h (_ISwbit): Avoid warning with gcc before 2.8.
+
+1998-02-15 16:55  Ulrich Drepper  <drepper@cygnus.com>
+
+	* socket/sys/socket.h (setsockopt): Make OPTVAL parameter const.
+	Patch by Dean Gaudet <dgaudet@arctic.org>.
+
+1998-02-15 16:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/Dist: Add getresgid.c and getresuid.c.
+
+1998-02-15 10:49  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sysdeps/unix/sysv/linux/poll.c: If compiled against a kernel
+	with no poll syscall, just include the BSD version.
+	* sysdeps/unix/sysv/linux/getresuid.c: If compiled against a
+	kernel without the syscall, include the stub version.
+	* sysdeps/unix/sysv/linux/getresgid.c: Likewise.
+	* sysdeps/generic/getresuid.c: New file.
+	* sysdeps/generic/getresgid.c: New file.
+
+1998-02-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c: Correct last change a bit.
+
 1998-02-13 17:39  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile: Don't use --version-script parameter to link ld.so
@@ -27,7 +110,6 @@
 
 	* stdlib/strfmon.c: char is unsigned, sometimes.
 
-	*sysdeps/powerpc
 	* sysdeps/powerpc/Makefile: Remove quad float support.
 	* sysdeps/powerpc/q_*.c: Remove, they will become an add-on.
 	* sysdeps/powerpc/quad_float.h: Likewise.

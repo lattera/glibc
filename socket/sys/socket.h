@@ -1,5 +1,5 @@
 /* Declarations of socket constants, types, and functions.
-   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -160,7 +160,7 @@ extern int getsockopt __P ((int __fd, int __level, int __optname,
    to *OPTVAL (which is OPTLEN bytes long).
    Returns 0 on success, -1 for errors.  */
 extern int setsockopt __P ((int __fd, int __level, int __optname,
-			    __ptr_t __optval, socklen_t __optlen));
+			    __const __ptr_t __optval, socklen_t __optlen));
 
 
 /* Prepare to accept connections on socket FD.

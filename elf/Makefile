@@ -87,6 +87,11 @@ $(objpfx)librtld.os: $(objpfx)dl-allobjs.os $(common-objpfx)libc_pic.a
 
 # Do we need a linker script?
 rtld-ldscript-in := $(firstword $(wildcard $(+sysdep_dirs:%=%/rtld-ldscript.in)))
+
+ifeq ($(versioning),yes)
+RTLD-VERSIONS = -Wl,--version-script=$(libc-map)
+endif
+
 ifneq (,$(rtld-ldscript-in))
 LDFLAGS-rtld = -T $(objpfx)rtld-ldscript
 
@@ -102,8 +107,6 @@ $(objpfx)rtld-ldscript: $(rtld-ldscript-in) $(rtld-parms)
 
 $(objpfx)ld.so: $(objpfx)librtld.os $(objpfx)rtld-ldscript
 	$(rtld-link) -Wl,-soname=$(rtld-installed-name)
-
-RTLD-VERSIONS=$(addprefix -Wl,--version-script=,$(libc-map))
 
 define rtld-link
 $(LINK.o) -nostdlib -nostartfiles -shared -o $@ \

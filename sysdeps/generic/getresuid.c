@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,30 +16,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <unistd.h>
-#include <sys/types.h>
-
-#include <linux/posix_types.h>
-
-#include <sys/syscall.h>
-#ifdef __NR_getresgid
-
-extern int __syscall_getresgid (__kernel_gid_t *rgid, __kernel_gid_t *egid,
-				__kernel_gid_t *sgid);
 
 int
-getresgid (gid_t *rgid, gid_t *egid, gid_t *sgid)
+__getresuid (euid, ruid, suid)
+    uid_t euid;
+    uid_t ruid;
+    uid_t suid;
 {
-  __kernel_gid_t k_rgid, k_egid, k_sgid;
-
-  if (__syscall_getresgid (&k_rgid, &k_egid, &k_sgid) < 0)
-    return -1;
-
-  *rgid = (gid_t) k_rgid;
-  *egid = (gid_t) k_egid;
-  *sgid = (gid_t) k_sgid;
-  return 0;
+  __set_errno (ENOSYS);
+  return -1;
 }
-#else
-# include <sysdeps/generic/getresgid.c>
-#endif
+stub_warning (getresuid)
+
+weak_alias (__getresuid, getresuid)
+#include <stub-tag.h>

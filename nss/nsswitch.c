@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -136,7 +136,8 @@ __nss_database_lookup (const char *database, const char *alternate_name,
 
 
 /* -1 == not found
-    0 == adjusted for next function */
+    0 == adjusted for next function
+    1 == finished */
 int
 __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
 {
@@ -151,7 +152,7 @@ __nss_lookup (service_user **ni, const char *fct_name, void **fctp)
       *fctp = nss_lookup_function (*ni, fct_name);
     }
 
-  return *fctp != NULL ? 0 : -1;
+  return *fctp != NULL ? 0 : (*ni)->next == NULL ? 1 : -1;
 }
 
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include "../locale/localeinfo.h"
 #include <errno.h>
 #include <limits.h>
 #include <ctype.h>
@@ -26,12 +25,13 @@
 #include <string.h>
 #include <wctype.h>
 #include <bits/libc-lock.h>
+#include <locale/localeinfo.h>
 
 #ifdef	__GNUC__
-#define	HAVE_LONGLONG
-#define	LONGLONG	long long
+# define HAVE_LONGLONG
+# define LONGLONG	long long
 #else
-#define	LONGLONG	long
+# define LONGLONG	long
 #endif
 
 /* Those are flags in the conversion format. */
@@ -459,10 +459,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       if (skip_space || (fc != '[' && fc != 'c' && fc != 'C' && fc != 'n'))
 	{
 	  /* Eat whitespace.  */
+	  int save_errno = errno;
+	  errno = 0;
 	  do
-	    if (inchar () == EOF)
+	    if (inchar () == EOF && errno == EINTR)
 	      input_error ();
 	  while (isspace (c));
+	  errno = save_errno;
 	  ungetc (c, s);
 	  skip_space = 0;
 	}
@@ -470,9 +473,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       switch (fc)
 	{
 	case '%':	/* Must match a literal '%'.  */
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
-	  c = inchar ();
 	  if (c != fc)
 	    {
 	      ungetc (c, s);
@@ -518,7 +521,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		     of 3 is also assigned to n2.  The value of d2 is not
 		     affected.  The value 3 is assigned to i.
 
-		 We go for now with the historically correct code fro ISO C,
+		 We go for now with the historically correct code from ISO C,
 		 i.e., we don't count the %n assignments.  When it ever
 		 should proof to be wrong just remove the #ifdef above.  */
 	      ++done;
@@ -536,8 +539,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		    conv_error ();
 		}
 
-	      if (c != EOF)
-		c = inchar ();
+	      c = inchar ();
 	      if (c == EOF)
 		input_error ();
 
@@ -574,9 +576,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		if (str == NULL)
 		  conv_error ();
 	      }
-
-	    if (c == EOF)
-	      input_error ();
 
 	    do
 	      {
@@ -675,8 +674,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  STRING_ARG (str, char);
 
-	  if (c != EOF)
-	    c = inchar ();
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -742,9 +740,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    int first = 1;
 	    STRING_ARG (wstr, wchar_t);
 
-	    if (c == EOF)
-	      input_error ();
-
 	    do
 	      {
 		size_t cnt = 0;
@@ -800,8 +795,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  number_signed = 1;
 
 	number:
-	  if (c != EOF)
-	    c = inchar ();
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -922,8 +916,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'G':
 	case 'a':
 	case 'A':
-	  if (c != EOF)
-	    c = inchar ();
+	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
@@ -1032,13 +1025,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (flags & LONG)
 	    {
 	      STRING_ARG (wstr, wchar_t);
+	      c = '\0';		/* This is to keep gcc quiet.  */
 	    }
 	  else
 	    {
 	      STRING_ARG (str, char);
 
-	      if (c != EOF)
-		c = inchar ();
+	      c = inchar ();
 	      if (c == EOF)
 		input_error ();
 	    }
@@ -1095,9 +1088,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      wint_t val;
 	      int first = 1;
-
-	      if (c == EOF)
-		input_error ();
 
 	      do
 		{
@@ -1168,7 +1158,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	}
     }
 
-  /* The last thing we saw in the format string was a white space.
+  /* The last thing we saw int the format string was a white space.
      Consume the last white spaces.  */
   if (skip_space)
     {

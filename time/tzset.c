@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,7 +32,7 @@ extern const unsigned short int __mon_yday[2][13];
 extern struct tm _tmbuf;
 
 #define NOID
-#include "tzfile.h"
+#include <timezone/tzfile.h>
 
 extern int __use_tzfile;
 extern void __tzfile_read __P ((const char *file));
@@ -40,7 +40,7 @@ extern int __tzfile_compute __P ((time_t timer, int use_localtime,
 				  long int *leap_correct, int *leap_hit));
 extern void __tzfile_default __P ((const char *std, const char *dst,
 				   long int stdoff, long int dstoff));
-extern char * __tzstring __P ((const char *string));
+extern char *__tzstring __P ((const char *string));
 
 char *__tzname[2] = { (char *) "GMT", (char *) "GMT" };
 int __daylight = 0;

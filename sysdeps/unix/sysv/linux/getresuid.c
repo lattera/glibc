@@ -21,6 +21,9 @@
 
 #include <linux/posix_types.h>
 
+#include <sys/syscall.h>
+#ifdef __NR_getresuid
+
 extern int __syscall_getresuid (__kernel_uid_t *ruid, __kernel_uid_t *euid,
 				__kernel_uid_t *suid);
 
@@ -37,3 +40,6 @@ getresuid (uid_t *ruid, uid_t *euid, uid_t *suid)
   *suid = (uid_t) k_suid;
   return 0;
 }
+#else
+# include <sysdeps/generic/getresuid.c>
+#endif

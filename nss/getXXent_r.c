@@ -279,7 +279,12 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
 	    if (! no_more)
 	      status = (*sfct) (STAYOPEN_TMPVAR);
 	    else
-	      status = NSS_STATUS_NOTFOUND;
+	      {
+		status = NSS_STATUS_NOTFOUND;
+		if (no_more == 1)
+		  /* There is no more module to search.  */
+		  break;
+	      }
 	  }
 	while (! no_more && status != NSS_STATUS_SUCCESS);
     }

@@ -1,5 +1,5 @@
 /* Poll system call, with emulation if it is not available.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,6 +19,9 @@
 
 #include <errno.h>
 #include <sys/poll.h>
+
+#include <sys/syscall.h>
+#ifdef __NR_poll
 
 extern int __syscall_poll __P ((struct pollfd *fds, unsigned int nfds,
 				int timeout));
@@ -58,6 +61,7 @@ poll (fds, nfds, timeout)
 
 
 /* Get the emulation code.  */
-#define poll(fds, nfds, timeout) \
+# define poll(fds, nfds, timeout) \
   static internal_function __emulate_poll (fds, nfds, timeout)
+#endif
 #include <sysdeps/unix/bsd/poll.c>

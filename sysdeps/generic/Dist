@@ -1,3 +1,5 @@
 make_siglist.c signame.c signame.h
 det_endian.c
 entry.h
+getresgid.c
+getresuid.c

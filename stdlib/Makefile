@@ -22,7 +22,7 @@
 subdir	:= stdlib
 
 headers	:= stdlib.h alloca.h monetary.h fmtmsg.h ucontext.h sys/ucontext.h    \
-	   inttypes.h
+	   inttypes.h stdint.h
 
 routines	:=							      \
 	atof atoi atol atoll						      \

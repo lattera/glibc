@@ -201,7 +201,7 @@ get_next_alias (const char *match, struct aliasent *result,
 	     lines until the next line containing the start of a new
 	     alias is found.  */
 	  ignore = (match != NULL
-		    && strcasecmp (result->alias_name, match) != 0);
+		    && __strcasecmp (result->alias_name, match) != 0);
 
 	  while (! ignore)
 	    {

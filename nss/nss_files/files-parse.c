@@ -235,7 +235,7 @@ parse_list (char *line, struct parser_data *data, size_t datalen, int *errnop)
 #define LOOKUP_NAME_CASE(nameelt, aliaselt)				      \
 {									      \
   char **ap;								      \
-  if (! strcasecmp (name, result->nameelt))				      \
+  if (! __strcasecmp (name, result->nameelt))				      \
     break;								      \
   for (ap = result->aliaselt; *ap; ++ap)				      \
     if (! strcasecmp (name, *ap))					      \

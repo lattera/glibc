@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  Linux version.
-   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -70,7 +70,7 @@ enum __socket_type
 #define	PF_DECnet	12	/* Reserved for DECnet project  */
 #define	PF_NETBEUI	13	/* Reserved for 802.2LLC project*/
 #define	PF_SECURITY	14	/* Security callback pseudo AF */
-#define	pseudo_PF_KEY	15	/* PF_KEY key management API */
+#define	PF_KEY		15	/* PF_KEY key management API */
 #define	PF_NETLINK	16
 #define	PF_ROUTE	PF_NETLINK /* Alias to emulate 4.4BSD */
 #define	PF_PACKET	17	/* Packet family                */
@@ -94,7 +94,7 @@ enum __socket_type
 #define	AF_DECnet	PF_DECnet
 #define	AF_NETBEUI	PF_NETBEUI
 #define	AF_SECURITY	PF_SECURITY
-#define	AF_KEY		pseudo_PF_KEY
+#define	pseudo_AF_KEY	PF_KEY
 #define	AF_NETLINK	PF_NETLINK
 #define	AF_ROUTE	PF_ROUTE
 #define	AF_PACKET	PF_PACKET
