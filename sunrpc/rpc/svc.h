@@ -96,6 +96,7 @@ struct SVCXPRT {
   struct opaque_auth xp_verf;	 /* raw response verifier */
   caddr_t		xp_p1;		 /* private */
   caddr_t		xp_p2;		 /* private */
+  char		xp_pad [256];	/* padding, internal use */
 };
 
 /*
