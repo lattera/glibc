@@ -1,3 +1,13 @@
+2004-08-09  Roland McGrath  <roland@frob.com>
+
+	* manual/install.texi (Supported Configurations): Replace bug-glibc
+	mention with web URL.
+	* INSTALL: Regenerated.
+	* locale/iso-3166.def: Likewise, in comment.
+	* locale/iso-4217.def: Likewise.
+	* locale/iso-639.def: Likewise.
+	* posix/cpio.h: Remove bug reporting comment.
+
 2004-08-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/bits/stdio.h (fread_unlocked): Add a couple of (size_t)
