@@ -4229,8 +4229,9 @@ _int_free(mstate av, Void_t* mem)
       if (__builtin_expect (p == av->top, 0))
 	goto double_free;
       /* Or whether the next chunk is beyond the boundaries of the arena.  */
-      if (__builtin_expect ((char *) nextchunk >= ((char *) av->top
-						   + chunksize(av->top)), 0))
+      if (__builtin_expect (contiguous (av)
+			    && (char *) nextchunk
+			       >= ((char *) av->top + chunksize(av->top)), 0))
 	goto double_free;
       /* Or whether the block is actually not marked used.  */
       if (__builtin_expect (!prev_inuse(nextchunk), 0))
