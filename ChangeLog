@@ -1,5 +1,7 @@
 2003-03-22  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/m68k/fpu/libm-test-ulps: Update.
+
 	* sysdeps/m68k/m68020/bits/atomic.h: New file.
 	* sysdeps/m68k/m68020/atomicity.h: Removed.
 
