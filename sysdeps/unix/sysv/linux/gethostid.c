@@ -21,7 +21,8 @@
 #include <unistd.h>
 #include <netdb.h>
 
-#define HOSTIDFILE "/var/adm/hostid"
+#define HOSTIDFILE "/etc/hostid"
+#define OLD_HOSTIDFILE "/etc/hostid"
 
 #ifdef SET_PROCEDURE
 int
@@ -70,6 +71,8 @@ gethostid ()
 
   /* First try to get the ID from a former invocation of sethostid.  */
   fd = __open (HOSTIDFILE, O_RDONLY);
+  if (fd < 0)
+    fd = __open (OLD_HOSTIDFILE, O_RDONLY);
   if (fd >= 0)
     {
       ssize_t n = __read (fd, &id, sizeof (id));

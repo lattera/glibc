@@ -1,5 +1,7 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/gethostid.c: Find hostid file in /etc.
+
 	* scripts/config.sub: Strip out -unknown for Linux targets.
 	Patch by Scott Bambrough <scottb@netwinder.org>.
 
@@ -15,8 +17,7 @@
 
 	* sysdeps/unix/sysv/linux/mips/syscalls.list: Add __syscall_fcntl.
 
-	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Fix calls to
-	dl_lookup.
+	* sysdeps/mips/dl-machine.h (RESOLVE_GOTSYM): Fix calls to dl_lookup.
 	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
 
 	* sysdeps/unix/sysv/linux/mips/fcntl.c: New file.
