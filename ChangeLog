@@ -1,5 +1,10 @@
 2003-04-01  Jakub Jelinek  <jakub@redhat.com>
 
+	* elf/tls-macros.h [__ia64__] (TLS_IE, TLS_LD, TLS_GD): Add gp
+	register as input to asm.
+
+2003-04-01  Jakub Jelinek  <jakub@redhat.com>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h (sigevent_t): Fix a typo.
 
 2003-04-01  Andreas Jaeger  <aj@suse.de>
@@ -10,7 +15,6 @@
 
 	* configure.in: Don't require an installed C library in the test
 	for ".set" assembler support.
-	* configure: Regenerated.
 
 2003-03-31  Roland McGrath  <roland@redhat.com>
 

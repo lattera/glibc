@@ -316,13 +316,14 @@ register void *__gp __asm__("$29");
 
 # define TLS_IE(x) \
   ({ void *__l;								      \
+     register long __gp asm ("gp");					      \
      asm (";;\n\t"							      \
 	 "addl r16=@ltoff(@tprel(" #x ")),gp\n\t"			      \
          ";;\n\t"							      \
          "ld8 r17=[r16]\n\t"						      \
          ";;\n\t"							      \
          "add %0=r13,r17\n\t"						      \
-         : "=r" (__l) : : "r16", "r17" ); __l; })
+         : "=r" (__l) : "r" (__gp) : "r16", "r17" ); __l; })
 
 # define __TLS_CALL_CLOBBERS \
   "r2", "r3", "r8", "r9", "r10", "r11", "r14", "r15", "r16", "r17",	      \
@@ -335,6 +336,7 @@ register void *__gp __asm__("$29");
 
 # define TLS_LD(x) \
   ({ void *__l;								      \
+     register long __gp asm ("gp");					      \
      asm (";;\n\t"							      \
 	 "mov loc0=gp\n\t"						      \
          "addl r16=@ltoff(@dtpmod(" #x ")),gp\n\t"			      \
@@ -345,11 +347,12 @@ register void *__gp __asm__("$29");
          ";;\n\t"							      \
          "mov gp=loc0\n\t"						      \
          "mov %0=r8\n\t"						      \
-         : "=r" (__l) : : "loc0", __TLS_CALL_CLOBBERS);			      \
+         : "=r" (__l) : "r" (__gp) : "loc0", __TLS_CALL_CLOBBERS);	      \
      __l; })
 
 # define TLS_GD(x) \
   ({ void *__l;								      \
+     register long __gp asm ("gp");					      \
      asm (";;\n\t"							      \
 	 "mov loc0=gp\n\t"						      \
          "addl r16=@ltoff(@dtpmod(" #x ")),gp\n\t"			      \
@@ -361,7 +364,7 @@ register void *__gp __asm__("$29");
          ";;\n\t"							      \
          "mov gp=loc0\n\t"						      \
          "mov %0=r8\n\t"						      \
-          : "=r" (__l) : : "loc0", __TLS_CALL_CLOBBERS);		      \
+          : "=r" (__l) : "r" (__gp) : "loc0", __TLS_CALL_CLOBBERS);	      \
      __l; })
 
 #elif defined __sparc__ && !defined __arch64__
@@ -373,7 +376,7 @@ register void *__gp __asm__("$29");
      asm ("add %%g7, %1, %0" : "=r" (__l) : "r" (__l));			      \
      __l; })
 
-# ifdef __PIC__ 
+# ifdef __PIC__
 #  define TLS_LOAD_PIC \
   ({ register long pc __asm__ ("%o7");					      \
      long got;								      \
