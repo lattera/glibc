@@ -48,7 +48,7 @@ main (void)
   for (i=0 ; i < 8 * sizeof (type); i++)				      \
     try (#fct, 1ll << i, fct (((type) 1) << i), i + 1);			      \
   for (i=0 ; i < 8 * sizeof (type) ; i++)				      \
-    try (#fct, (~0ll >> i) << i, fct ((~((type) 0) >> i) << i), i + 1);	      \
+    try (#fct, (~((type) 0) >> i) << i, fct ((~((type) 0) >> i) << i), i + 1);\
   try (#fct, 0x80008000, fct ((type) 0x80008000), 16)
 
   TEST (ffs, int);

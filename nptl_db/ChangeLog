@@ -1,5 +1,8 @@
 2004-04-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* td_ta_set_event.c (td_ta_set_event): Initialize copy to avoid
+	warnings.
+
 	* td_ta_thr_iter.c (td_ta_thr_iter): Initialize list to avoid warning.
 	* td_ta_clear_event.c (td_ta_clear_event): Initialize eventmask to
 	avoid warning.
