@@ -175,6 +175,8 @@ INTERNAL (strtol) (nptr, endptr, base, group)
       else
 	end = correctly_grouped_prefix (s, end, thousands, grouping);
     }
+  else
+    end = NULL;
 
   cutoff = ULONG_MAX / (unsigned LONG int) base;
   cutlim = ULONG_MAX % (unsigned LONG int) base;
@@ -183,7 +185,7 @@ INTERNAL (strtol) (nptr, endptr, base, group)
   i = 0;
   for (c = *s; c != '\0'; c = *++s)
     {
-      if (group && s == end)
+      if (s == end)
 	break;
       if (isdigit (c))
 	c -= '0';

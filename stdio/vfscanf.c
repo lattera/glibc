@@ -60,7 +60,7 @@ DEFUN(__vfscanf, (s, format, arg),
   int group_flag;		/* %' modifier flag.  */
 
   /* Type modifiers.  */
-  char is_short, is_long, is_long_double;
+  int is_short, is_long, is_long_double;
 #ifdef	HAVE_LONGLONG
   /* We use the `L' modifier for `long long int'.  */
 #define	is_longlong	is_long_double
@@ -108,6 +108,18 @@ DEFUN(__vfscanf, (s, format, arg),
   /* Run through the format string.  */
   while (*f != '\0')
     {
+      unsigned int argpos;
+      /* Extract the next argument, which is of type TYPE.
+	 For a %N$... spec, this is the Nth argument from the beginning;
+	 otherwise it is the next argument after the state now in ARG.  */
+#define ARG(type)	(argpos == 0 ? va_arg (arg, type) :		      \
+			 ({ unsigned int pos = argpos;			      \
+			    va_list arg = (va_list) argptr;		      \
+			    while (--pos > 0)				      \
+			      (void) va_arg (arg, void *);		      \
+			    va_arg (arg, type);				      \
+			  }))
+
       if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
@@ -145,9 +157,30 @@ DEFUN(__vfscanf, (s, format, arg),
 	  continue;
 	}
 
-      /* Check for the assignment-suppressant and the number grouping flag.  */
+      /* Initialize state of modifiers.  */
+      argpos = 0;
       do_assign = 1;
       group_flag = 0;
+      is_short = is_long = is_long_double = malloc_string = 0;
+
+      /* Check for a positional parameter specification.  */
+      if (isdigit (*f))
+	{
+	  argpos = *f++ - '0';
+	  while (isdigit (*f))
+	    argpos = argpos * 10 + (*f++ - '0');
+	  if (*f == '$')
+	    ++f;
+	  else
+	    {
+	      /* Oops; that was actually the field width.  */
+	      width = argpos;
+	      argpos = 0;
+	      goto got_width;
+	    }
+	}
+
+      /* Check for the assignment-suppressant and the number grouping flag.  */
       while (*f == '*' || *f == '\'')
 	switch (*f++)
 	  {
@@ -166,11 +199,11 @@ DEFUN(__vfscanf, (s, format, arg),
 	  width *= 10;
 	  width += *f++ - '0';
 	}
+    got_width:
       if (width == 0)
 	width = -1;
 
       /* Check for type modifiers.  */
-      is_short = is_long = is_long_double = malloc_string = 0;
       while (*f == 'h' || *f == 'l' || *f == 'L' || *f == 'a' || *f == 'q')
 	switch (*f++)
 	  {
@@ -218,13 +251,13 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	case 'n':	/* Answer number of assignments done.  */
 	  if (do_assign)
-	    *va_arg(arg, int *) = read_in;
+	    *ARG (int *) = read_in;
 	  break;
 
 	case 'c':	/* Match characters.  */
 	  if (do_assign)
 	    {
-	      str = va_arg (arg, char *);
+	      str = ARG (char *);
 	      if (str == NULL)
 		conv_error ();
 	    }
@@ -256,7 +289,7 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (malloc_string)					      \
 		{							      \
 		  /* The string is to be stored in a malloc'd buffer.  */     \
-		  strptr = va_arg (arg, char **);			      \
+		  strptr = ARG (char **);			      \
 		  if (strptr == NULL)					      \
 		    conv_error ();					      \
 		  /* Allocate an initial buffer.  */			      \
@@ -264,7 +297,7 @@ DEFUN(__vfscanf, (s, format, arg),
 		  *strptr = str = malloc (strsize);			      \
 		}							      \
 	      else							      \
-		str = va_arg (arg, char *);				      \
+		str = ARG (char *);				      \
 	      if (str == NULL)						      \
 		conv_error ();						      \
 	    }
@@ -406,16 +439,16 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	  /* Convert the number.  */
 	  *w = '\0';
-	  if (number_signed)
+	  if (is_longlong)
 	    {
-	      if (is_longlong)
+	      if (number_signed)
 		num.q = __strtoq_internal (work, &w, base, group_flag);
 	      else
 		num.uq = __strtouq_internal (work, &w, base, group_flag);
 	    }
 	  else
 	    {
-	      if (is_long_double)
+	      if (number_signed)
 		num.l = __strtol_internal (work, &w, base, group_flag);
 	      else
 		num.ul = __strtoul_internal (work, &w, base, group_flag);
@@ -428,25 +461,25 @@ DEFUN(__vfscanf, (s, format, arg),
 	      if (! number_signed)
 		{
 		  if (is_longlong)
-		    *va_arg (arg, unsigned LONGLONG int *) = num.uq;
+		    *ARG (unsigned LONGLONG int *) = num.uq;
 		  else if (is_long)
-		    *va_arg (arg, unsigned long int *) = num.ul;
+		    *ARG (unsigned long int *) = num.ul;
 		  else if (is_short)
-		    *va_arg (arg, unsigned short int *)
+		    *ARG (unsigned short int *)
 		      = (unsigned short int) num.ul;
 		  else
-		    *va_arg (arg, unsigned int *) = (unsigned int) num.ul;
+		    *ARG (unsigned int *) = (unsigned int) num.ul;
 		}
 	      else
 		{
 		  if (is_longlong)
-		    *va_arg (arg, LONGLONG int *) = num.q;
+		    *ARG (LONGLONG int *) = num.q;
 		  else if (is_long)
-		    *va_arg (arg, long int *) = num.l;
+		    *ARG (long int *) = num.l;
 		  else if (is_short)
-		    *va_arg (arg, short int *) = (short int) num.l;
+		    *ARG (short int *) = (short int) num.l;
 		  else
-		    *va_arg (arg, int *) = (int) num.l;
+		    *ARG (int *) = (int) num.l;
 		}
 	      ++done;
 	    }
@@ -505,19 +538,19 @@ DEFUN(__vfscanf, (s, format, arg),
 	    {
 	      long double d = __strtold_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
-		*va_arg (arg, long double *) = d;
+		*ARG (long double *) = d;
 	    }
 	  else if (is_long)
 	    {
 	      double d = __strtod_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
-		*va_arg (arg, double *) = d;
+		*ARG (double *) = d;
 	    }
 	  else
 	    {
 	      float d = __strtof_internal (work, &w, group_flag);
 	      if (do_assign && w != work)
-		*va_arg (arg, float *) = d;
+		*ARG (float *) = d;
 	    }
 
 	  if (w == work)

@@ -23,6 +23,7 @@ Cambridge, MA 02139, USA.  */
 #include <dirent.h>
 #include <unistd.h>
 #include <hurd.h>
+#include <hurd/fd.h>
 
 /* Close the directory stream DIRP.
    Return 0 if successful, -1 if not.  */

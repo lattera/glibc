@@ -1,3 +1,13 @@
+Sat Mar 18 14:07:08 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/vfscanf.c: Grok positional parameter specs (i.e. %3$d
+ 	means %d from 3rd arg).
+
+	* sysdeps/mach/hurd/closedir.c: Include hurd/fd.h.
+
+	* stdlib/strtol.c: If !GROUP, set END to null.  In loop, test only
+ 	END, not GROUP.
+
 Fri Mar 17 12:58:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* Makefile (subdirs): Put elf last.
