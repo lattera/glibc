@@ -1,3 +1,13 @@
+2000-11-18  Akim Demaille  <akim@epita.fr>
+
+	* malloc/obstack.h: Formatting changes.
+	(obstack_grow, obstack_grow0): Don't cast WHERE at all: it
+	prevents type checking.
+	(obstack_ptr_grow, obstack_ptr_grow_fast): When assigning, don't
+	cast the value to (void *): assigning a `foo *' to a `void *'
+	variable is valid.
+	(obstack_int_grow, obstack_int_grow_fast): Don't cast AINT to int.
+
 2000-11-17  Ulrich Drepper  <drepper@redhat.com>
 
 	* scripts/config.guess: Update from upstream maintainer.
