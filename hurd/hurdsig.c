@@ -586,7 +586,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   if (handler == SIG_IGN)
     /* Ignore the signal altogether.  */
     act = ignore;
-  if (handler != SIG_ERR)
+  else if (handler != SIG_ERR)
     /* Run the preemption-provided handler.  */
     act = handle;
   else
