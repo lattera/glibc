@@ -1,4 +1,44 @@
+1998-04-11 09:33  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (rtobjdir): New variable.
+	(rpath-link): Add rtobjdir and thread directory, if available.
+
+	* test-skeleton.c: Add support to remove temporary files.
+	Always define test_dir.  Improve message about expected signal.
+
+	* rt/Makefile (tests): Add tst-aio.
+	Add rules for tst-aio to be linked with librt and thread library.
+	* rt/aio_misc.c: Correct fundamental bugs.
+	* rt/aio_suspend.c: Correct bug in test for available request.
+	Initialize conditional variable.
+	* rt/lio_listio.c: Initialize conditional variable.
+	* rt/lio_listio64.c: Likewise.
+	* rt/tst-aio.c: New file.
+
+	* sysdeps/libm-ieee754/s_signgam.c: Undo last change.
+	* sysdeps/libm-ieee754/w_gamma.c: Likewise.  Adopt for ISO C 9x.
+	* sysdeps/libm-ieee754/w_gammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_gammal.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgamma.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgammaf.c: Likewise.
+	* sysdeps/libm-ieee754/w_lgammal.c: Likewise.
+
+1998-04-11 14:49  Mark Kettenis  <kettenis@landau.phys.uva.nl>
+
+	* posix/regex.c [_LIBC] (__re_syntax_options): Initialize to 0.
+
 1998-04-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (open_path): Use correct name for test whether
+	directory in load path exists.
+
+	* sysdeps/libm-ieee754/s_expm1.c: Remove variable one.
+	* sysdeps/libm-ieee754/e_pow.c: Fix typo.
+	Patches by Tom Rini <trini@kernel.crashing.org>.
+
+	* wcsmbs/wcstof_l.c: Declare ____wcstoull_l_internal.
+	* wcsmbs/wcstod_l.c: Likewise.
+	* wcsmbs/wcstold_l.c: Likewise.
 
 	* include/byteswap.h: New file.
 

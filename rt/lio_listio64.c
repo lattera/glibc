@@ -1,5 +1,5 @@
 /* Enqueue and list of read or write requests, 64bit offset version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -86,6 +86,9 @@ lio_listio64 (mode, list, nent, sig)
       struct waitlist waitlist[nent];
       int oldstate;
 
+      /* Initialize the conditional variable.  */
+      pthread_cond_init (&cond, NULL);
+
       total = 0;
       for (cnt = 0; cnt < nent; ++cnt)
 	if (list[cnt] != NULL && list[cnt]->aio_lio_opcode != LIO_NOP
@@ -109,6 +112,11 @@ lio_listio64 (mode, list, nent, sig)
 
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
+
+      /* Release the conditional variable.  */
+      if (pthread_cond_destroy (&cond) != 0)
+	/* This must never happen.  */
+	abort ();
     }
   else
     {

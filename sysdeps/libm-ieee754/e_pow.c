@@ -266,7 +266,7 @@ C[] = {
 	    r2 = C[8]+s2*C[9]; s24=s22*s22;
 	    r3 = C[6]+s2*C[7]; s26=s24*s22;
             r = r3*s22 + r2*s24 + r1*s26;
-#endfi
+#endif
 	    r += s_l*(s_h+s);
 	    s2  = s_h*s_h;
 	    t_h = 3.0+s2+r;

@@ -966,13 +966,13 @@ printchar (c)
 /* Set by `re_set_syntax' to the current regexp syntax to recognize.  Can
    also be assigned to arbitrarily: each pattern buffer stores its own
    syntax, so it can be changed between regex compilations.  */
-/* This has no initializer because initialized variables in Emacs
-   become read-only after dumping.  */
 #ifdef _LIBC
-reg_syntax_t __re_syntax_options;
+reg_syntax_t __re_syntax_options = 0;
 weak_alias (__re_syntax_options, re_syntax_options)
 # define re_syntax_options __re_syntax_options
 #else
+/* This has no initializer because initialized variables in Emacs
+   become read-only after dumping.  */
 reg_syntax_t re_syntax_options;
 #endif
 

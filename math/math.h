@@ -200,8 +200,14 @@ enum
 
 #ifdef	__USE_MISC
 /* Support for various different standard error handling behaviors.  */
-
-typedef enum { _IEEE_ = -1, _SVID_, _XOPEN_, _POSIX_ } _LIB_VERSION_TYPE;
+typedef enum
+{
+  _IEEE_ = -1,	/* According to IEEE 754/IEEE 854.  */
+  _SVID_,	/* According to System V, release 4.  */
+  _XOPEN_,	/* Nowadays also Unix98.  */
+  _POSIX_,
+  _ISOC_	/* Actually this is ISO C 9X.  */
+} _LIB_VERSION_TYPE;
 
 /* This variable can be changed at run-time to any of the values above to
    affect floating point error handling behavior (it may also be necessary

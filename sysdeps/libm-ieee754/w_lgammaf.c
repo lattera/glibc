@@ -20,8 +20,6 @@ static char rcsid[] = "$NetBSD: w_lgammaf.c,v 1.3 1995/05/10 20:49:30 jtc Exp $"
 #include "math.h"
 #include "math_private.h"
 
-extern int __signgam;
-
 #ifdef __STDC__
 	float __lgammaf(float x)
 #else
@@ -30,10 +28,14 @@ extern int __signgam;
 #endif
 {
 #ifdef _IEEE_LIBM
-	return __ieee754_lgammaf_r(x,&__signgam);
+	return __ieee754_lgammaf_r(x,&signgam);
 #else
         float y;
-        y = __ieee754_lgammaf_r(x,&__signgam);
+	int local_signgam;
+        y = __ieee754_lgammaf_r(x,&local_signgam);
+	if (_LIB_VERSION != _ISOC_)
+	  /* ISO C 9x does not define the global variable.  */
+	  signgam = local_signgam;
         if(_LIB_VERSION == _IEEE_) return y;
         if(!__finitef(y)&&__finitef(x)) {
             if(__floorf(x)==x&&x<=(float)0.0)

@@ -919,7 +919,8 @@ open_path (const char *name, size_t namelen, int preloaded,
 		   test whether there is any directory at all.  */
 		struct stat st;
 
-		buf[this_dir->dirnamelen + capstr[cnt].len] = '\0';
+		buf[this_dir->dirnamelen
+		    + MAX (capstr[cnt].len - 1, 0)] = '\0';
 
 		if (__xstat (_STAT_VER, buf, &st) != 0
 		    || ! S_ISDIR (st.st_mode))

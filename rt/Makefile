@@ -30,6 +30,8 @@ librt-routines := aio_cancel aio_error aio_fsync aio_misc aio_read	\
 
 librt-map := librt.map
 
+tests := tst-aio
+
 # Make sure that everything is distributed independent of configuration.
 distribute := aio_misc.h $(librt-routines:=.c) $(librt-map)
 
@@ -48,3 +50,5 @@ include ../Rules
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.
 $(objpfx)librt.so: $(common-objpfx)libc.so $(shared-thread-library)
+
+$(objpfx)tst-aio: $(objpfx)librt.so $(shared-thread-library)

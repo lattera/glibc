@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <getopt.h>
+#include <search.h>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -51,6 +52,39 @@ static int pid;
 
 /* Directory to place temporary files in.  */
 static const char *test_dir;
+
+/* List of temporary files.  */
+struct name_list
+{
+  struct qelem q;
+  const char *name;
+} *name_list;
+
+/* Add temporary files in list.  */
+void
+add_temp_file (const char *name)
+{
+  struct name_list *newp = (struct name_list *) calloc (sizeof (*newp), 1);
+  if (newp != NULL)
+    {
+      newp->name = name;
+      if (name_list == NULL)
+	name_list = (struct name_list *) &newp->q;
+      else
+	insque (newp, name_list);
+    }
+}
+
+/* Delete all temporary files.  */
+void
+delete_temp_files (void)
+{
+  while (name_list != NULL)
+    {
+      remove (name_list->name);
+      name_list = (struct name_list *) name_list->q.q_forw;
+    }
+}
 
 /* Timeout handler.  We kill the child and exit with an error.  */
 void
@@ -114,10 +148,19 @@ main (int argc, char *argv[])
 	  exit (1);
 	}
     }
+  else
+    {
+      test_dir = getenv ("TMPDIR");
+      if (test_dir == NULL || test_dir[0] == '\0')
+	test_dir = "/tmp";
+    }
 
   /* If we are not expected to fork run the function immediately.  */
   if (direct)
     return TEST_FUNCTION;
+
+  /* make sure temporary files are deleted.  */
+  atexit (delete_temp_files);
 
   /* Set up the test environment:
      - prevent core dumps
@@ -166,8 +209,12 @@ main (int argc, char *argv[])
 #endif
   if (WTERMSIG (status) != EXPECTED_SIGNAL)
     {
-      fprintf (stderr, "Incorrect signal from child: got `%s', need `%s'\n",
-	       strsignal (WTERMSIG (status)), strsignal (EXPECTED_SIGNAL));
+      if (EXPECTED_SIGNAL != 0)
+	fprintf (stderr, "Incorrect signal from child: got `%s', need `%s'\n",
+		 strsignal (WTERMSIG (status)), strsignal (EXPECTED_SIGNAL));
+      else
+	fprintf (stderr, "Incorrect signal from child: got `%s'\n",
+		 strsignal (WTERMSIG (status)));
       exit (1);
     }
 

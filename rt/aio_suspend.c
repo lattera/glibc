@@ -1,5 +1,5 @@
 /* Suspend until termination of a requests.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -40,40 +40,42 @@ aio_suspend (list, nent, timeout)
      int nent;
      const struct timespec *timeout;
 {
-  pthread_cond_t cond;
   struct waitlist waitlist[nent];
   struct requestlist *requestlist[nent];
+  pthread_cond_t cond;
   int cnt;
   int result = 0;
+  int dummy;
+  int none = 1;
 
   /* Request the mutex.  */
   pthread_mutex_lock (&__aio_requests_mutex);
 
-  /* First look whether there is already a terminated request.  */
+  /* There is not yet a finished request.  Signal the request that
+     we are working for it.  */
   for (cnt = 0; cnt < nent; ++cnt)
-    if (list[cnt] != NULL && list[cnt]->__error_code != EINPROGRESS)
-      break;
+    if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
+      {
+	requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
 
-  if (cnt == nent)
+	if (requestlist[cnt] != NULL)
+	  {
+	    waitlist[cnt].cond = &cond;
+	    waitlist[cnt].next = requestlist[cnt]->waiting;
+	    waitlist[cnt].counterp = &dummy;
+	    waitlist[cnt].sigevp = NULL;
+	    requestlist[cnt]->waiting = &waitlist[cnt];
+	    none = 0;
+	  }
+      }
+
+  /* If there is a not finished request wait for it.  */
+  if (!none)
     {
       int oldstate;
 
-      /* There is not yet a finished request.  Signal the request that
-	 we are working for it.  */
-      for (cnt = 0; cnt < nent; ++cnt)
-	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS)
-	  {
-	    requestlist[cnt] = __aio_find_req ((aiocb_union *) list[cnt]);
-
-	    if (requestlist[cnt] != NULL)
-	      {
-		waitlist[cnt].cond = &cond;
-		waitlist[cnt].next = requestlist[cnt]->waiting;
-		waitlist[cnt].counterp = NULL;
-		waitlist[cnt].sigevp = NULL;
-		requestlist[cnt]->waiting = &waitlist[cnt];
-	      }
-	  }
+      /* Initialize the conditional variable.  */
+      pthread_cond_init (&cond, NULL);
 
       /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
 	 points we must be careful.  We added entries to the waiting lists
@@ -87,7 +89,7 @@ aio_suspend (list, nent, timeout)
 					 timeout);
 
       /* Now remove the entry in the waiting list for all requests
-	 which didn't terminate  */
+	 which didn't terminate.  */
       for (cnt = 0; cnt < nent; ++cnt)
 	if (list[cnt] != NULL && list[cnt]->__error_code == EINPROGRESS
 	    && requestlist[cnt] != NULL)
@@ -106,6 +108,11 @@ aio_suspend (list, nent, timeout)
 
       /* Now it's time to restore the cancelation state.  */
       pthread_setcancelstate (oldstate, NULL);
+
+      /* Release the conditional variable.  */
+      if (pthread_cond_destroy (&cond) != 0)
+	/* This must never happen.  */
+	abort ();
 
       if (result != 0)
 	{

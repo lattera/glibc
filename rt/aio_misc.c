@@ -1,5 +1,5 @@
 /* Handle general operations.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -26,7 +26,6 @@
 #include <sys/stat.h>
 
 #include "aio_misc.h"
-
 
 /* Pool of request list entries.  */
 static struct requestlist **pool;
@@ -273,7 +272,7 @@ __aio_enqueue_request (aiocb_union *aiocbp, int operation)
       /* The current file descriptor is worked on.  It makes no sense
 	 to start another thread since this new thread would fight
 	 with the running thread for the resources.  But we also cannot
-	 say that the thread processing this desriptor shall imeediately
+	 say that the thread processing this desriptor shall immediately
 	 after finishing the current job process this request if there
 	 are other threads in the running queue which have a higher
 	 priority.  */
@@ -392,14 +391,18 @@ handle_fildes_io (void *arg)
   pthread_t self = pthread_self ();
   struct sched_param param;
   struct requestlist *runp = (struct requestlist *) arg;
-  aiocb_union *aiocbp = runp->aiocbp;
+  aiocb_union *aiocbp;
   int policy;
-  int fildes = runp->aiocbp->aiocb.aio_fildes;
+  int fildes;
 
   pthread_getschedparam (self, &policy, &param);
 
   do
     {
+      /* Update our variables.  */
+      aiocbp = runp->aiocbp;
+      fildes = aiocbp->aiocb.aio_fildes;
+
       /* Change the priority to the requested value (if necessary).  */
       if (aiocbp->aiocb.__abs_prio != param.sched_priority
 	  || aiocbp->aiocb.__policy != policy)
@@ -467,8 +470,8 @@ handle_fildes_io (void *arg)
       /* Now dequeue the current request.  */
       if (runp->next_prio == NULL)
 	{
-	  /* No outstanding request for this descriptor.  Process the
-	     runlist if necessary.  */
+	  /* No outstanding request for this descriptor.  Remove this
+	     descriptor from the list.  */
 	  if (runp->next_fd != NULL)
 	    runp->next_fd->last_fd = runp->last_fd;
 	  if (runp->last_fd != NULL)
@@ -488,15 +491,12 @@ handle_fildes_io (void *arg)
       /* Free the old element.  */
       __aio_free_request (runp);
 
-      runp = freelist;
+      runp = runlist;
       if (runp != NULL)
 	{
 	  /* We must not run requests which are not marked `running'.  */
 	  if (runp->running == yes)
-	    {
-	      freelist = runp->next_run;
-	      runp->running = allocated;
-	    }
+	    runlist = runp->next_run;
 	  else
 	    {
 	      struct requestlist *old;
@@ -516,6 +516,8 @@ handle_fildes_io (void *arg)
       /* If no request to work on we will stop the thread.  */
       if (runp == NULL)
 	--nthreads;
+      else
+	runp->running = allocated;
 
       /* Release the mutex.  */
       pthread_mutex_unlock (&__aio_requests_mutex);
