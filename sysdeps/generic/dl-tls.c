@@ -150,13 +150,6 @@ _dl_determine_tlsoffset (void)
      assuming the first byte of the TLS block is aligned according to
      p_align.
 
-     We can handle this wrong behavior because of another bug in GNU
-     ld.  The p_vaddr field of the TLS segment must be zero (according
-     to the spec) since the linker does not know the address or offset
-     where it will end up at.  Once a linker is available which
-     handles the alignment correctly it should set p_addr to zero and
-     all will automatically fall into place.
-
      The extra space which might be allocated before the first byte of
      the TLS block need not go unused.  The code below tries to use
      that memory for the next TLS block.  This can work if the total
@@ -165,11 +158,11 @@ _dl_determine_tlsoffset (void)
 
 # if TLS_TCB_AT_TP
   /* We simply start with zero.  */
-  max_align = __alignof (void *);
+  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
+  max_align = slotinfo[1].map != NULL ? slotinfo[1].map->l_tls_align : 1;
   offset = 0;
   freebytes = 0;
 
-  slotinfo = GL(dl_tls_dtv_slotinfo_list)->slotinfo;
   for (cnt = 1; slotinfo[cnt].map != NULL; ++cnt)
     {
       assert (cnt < GL(dl_tls_dtv_slotinfo_list)->len);
