@@ -38,7 +38,10 @@ modules	:= ISO8859-1 ISO8859-2 ISO8859-3 ISO8859-4 ISO8859-5		 \
 	   IBM862 IBM863 IBM864 IBM865 IBM868 IBM869 IBM875 IBM880	 \
 	   IBM918 IBM1004 IBM1026 CP1250 CP1251 CP1252 CP1253 CP1254	 \
 	   CP1255 CP1256 CP1257 ISO-2022-JP MACINTOSH IEC_P27-1 BALTIC	 \
-	   ASMO_449 ANSI_X3.110
+	   ASMO_449 ANSI_X3.110 CSN_369103 CWI DEC-MCS ECMA-CYRILLIC	 \
+	   GOST_19768-74 GREEK-CCITT GREEK7 GREEK7-OLD INIS INIS-8	 \
+	   INIS-CYRILLIC ISO_6937-2 ISO_2033 ISO_5427 ISO_5427-EXT	 \
+	   ISO_5428
 
 modules.so := $(addsuffix .so, $(modules))
 
@@ -148,6 +151,22 @@ IEC_P27-1-routines := iec_p27-1
 BALTIC-routines := baltic
 ASMO_449-routines := asmo_449
 ANSI_X3.110-routines := ansi_x3.110
+CSN_369103-routines := csn_369103
+CWI-routines := cwi
+DEC-MCS-routines := dec-mcs
+ECMA-CYRILLIC-routines := ecma-cyrillic
+GOST_19768-74-routines := gost_19768-74
+GREEK-CCITT-routines := greek-ccitt
+GREEK7-routines := greek7
+GREEK7-OLD-routines := greek7-old
+INIS-routines := inis
+INIS-8-routines := inis
+INIS-CYRILLIC-routines := inis
+ISO_6937-2-routines := iso6937-2
+ISO_2033-routines := iso_2033
+ISO_5427-routines := iso_5427
+ISO_5427-EXT-routines := iso_5427-ext
+ISO_5428-routines := iso_5428
 libJIS-routines := jis0201 jis0208 jis0212
 libKSC-routines := ksc5601
 libGB-routines := gb2312
@@ -201,7 +220,11 @@ distribute := 8bit-generic.c 8bit-gap.c gap.awk gaptab.awk gconv-modules    \
 	      cp1253.c cp1254.c cp1255.c cp1256.c cp1257.c cp874.c cp874.h  \
 	      cp737.c cp737.h cp775.c cp775.h iso-2022-jp.c iso-2022-kr.c   \
 	      gen-8bit.sh gen-8bit-gap.sh gen-8bit-gap-1.sh macintosh.c	    \
-	      iec_p27-1.c baltic.c asmo_449.c ansi_x3.110.c
+	      iec_p27-1.c baltic.c asmo_449.c ansi_x3.110.c csn_369103.c    \
+	      cwi.c dec-mcs.c ecma-cyrillic.c gost_19768-74.c greek-ccitt.c \
+	      greek7.c greek7-old.c inis.c inis-8.c inis-cyrillic.c	    \
+	      iso6937-2.c iso_2033.c iso_5427.c iso_5427-ext.c		    \
+	      iso_5428.c
 
 # We build the transformation modules only when we build shared libs.
 ifeq (yes,$(build-shared))
@@ -268,7 +291,11 @@ awk-generated-headers  := koi8-r.h latin-greek.h latin-greek-1.h	 \
 			  cp1254.h cp1255.h cp1256.h cp1257.h		 \
 			  iso8859-5.h iso8859-7.h iso8859-8.h		 \
 			  iso8859-10.h iso8859-7jp.h macintosh.h	 \
-			  iec_p27-1.h baltic.h asmo_449.h
+			  iec_p27-1.h baltic.h asmo_449.h csn_369103.h	 \
+			  cwi.h dec-mcs.h ecma-cyrillic.h gost_19768-74.h\
+			  greek-ccitt.h greek7.h greek7-old.h inis.h	 \
+			  inis-8.h inis-cyrillic.h iso_2033.h iso_5427.h \
+			  iso_5427-ext.h iso_5428.h
 
 generated = $(sed-generated-headers) $(sed-generated-headers:%.h=%.stmp) \
 	    $(awk-generated-headers) $(awk-generated-headers:%.h=%.stmp) \
@@ -473,6 +500,39 @@ $(objpfx)iec_p27-1.stmp: ../localedata/charmaps/IEC_P27-1 gen-8bit-gap.sh
 $(objpfx)baltic.stmp: ../localedata/charmaps/BALTIC gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 $(objpfx)asmo_449.stmp: ../localedata/charmaps/ASMO_449 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)csn_369103.stmp: ../localedata/charmaps/CSN_369103 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)cwi.stmp: ../localedata/charmaps/CWI gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)dec-mcs.stmp: ../localedata/charmaps/DEC-MCS gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)ecma-cyrillic.stmp: ../localedata/charmaps/ECMA-CYRILLIC \
+			     gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)gost_19768-74.stmp: ../localedata/charmaps/GOST_19768-74 \
+			     gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)greek-ccitt.stmp: ../localedata/charmaps/GREEK-CCITT gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)greek7.stmp: ../localedata/charmaps/GREEK7 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)greek7-old.stmp: ../localedata/charmaps/GREEK7-OLD gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)inis.stmp: ../localedata/charmaps/INIS gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)inis-8.stmp: ../localedata/charmaps/INIS-8 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)inis-cyrillic.stmp: ../localedata/charmaps/INIS-CYRILLIC \
+			     gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso_2033.stmp: ../localedata/charmaps/ISO_2033-1983 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso_5427.stmp: ../localedata/charmaps/ISO_5427 gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso_5427-ext.stmp: ../localedata/charmaps/ISO_5427-EXT gen-8bit-gap.sh
+	$(generate-8bit-gap-table)
+$(objpfx)iso_5428.stmp: ../localedata/charmaps/ISO_5428 gen-8bit-gap.sh
 	$(generate-8bit-gap-table)
 
 headers: $(addprefix $(objpfx),\
