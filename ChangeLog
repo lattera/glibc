@@ -1,3 +1,25 @@
+Mon Nov  4 16:57:42 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/ttyname_r.c (ttyname_r): Change prototype to
+	match POSIX.1c.
+
+	* sysdeps/stub/lockfile.c [! USE_IN_LIBIO]: Second definition of
+	__internal_funlockfile (in terms of itself) should actually be a
+	definition of __funlockfile.
+	
+	* pwd/pwd.h: Get `size_t' from <stddef.h>.
+	* grp/grp.h: Likewise.
+	* shadow/shadow.h: Likewise.
+
+	* stdlib/atexit.c (__new_exitfn): Add missing semicolons after
+	calls to __libc_lock_lock and __libc_lock_unlock.
+	* stdlib/random.c (__srandom, __initstate, __setstate, __random):
+	Likewise. 
+
+	* hurd/hurdsig.c (write_corefile): Fix typo.
+
+	* sysdeps/mach/hurd/sigwait.c: New file.
+	
 Sat Nov  2 01:48:47 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/errnos.h: Move declaration of errno
