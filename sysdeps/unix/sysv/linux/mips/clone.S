@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.ai.mit.edu>, 1996.
 
@@ -26,9 +26,9 @@
 #define _ERRNO_H	1
 #include <bits/errno.h>
 
-/* int clone(int (*fn)(), void *child_stack, int flags, int nargs, ...) */
+/* int clone(int (*fn)(), void *child_stack, int flags, void *arg) */
 
-#define FRAMESZ  4*SZREG
+#define FRAMESZ  8*SZREG
 #if _MIPS_SIM == _MIPS_SIM_ABI32
 #define MAX_REG_ARGS 4
 #else
@@ -36,14 +36,16 @@
 #endif
 
 	.text
-NESTED(__clone,4*SZREG,sp)
-#ifdef PIC
+NESTED(__clone,FRAMESZ,sp)
+#ifdef __PIC__
 	.set		noreorder
 	.cpload		$25
 	.set		reorder
-	.cprestore	16
-#endif
 	PTR_SUBIU	sp,FRAMESZ
+	.cprestore	SZREG*4
+#else
+	PTR_SUBIU	sp,FRAMESZ
+#endif
 #ifdef PROF
 	.set		noat
 	move		$1,ra
@@ -51,25 +53,20 @@ NESTED(__clone,4*SZREG,sp)
 	.set		at
 #endif
 
+	REG_S		s0,FRAMESZ-SZREG*2(sp)
+	REG_S		s1,FRAMESZ-SZREG*3(sp)
 	/* Sanity check arguments.  */
 	li		v0,EINVAL
 	beqz		a0,error	/* no NULL function pointers */
 	beqz		a1,error	/* no NULL stack pointers */
-	bltz		a3,error	/* no negative argument counts */
 
 	/* Allocate space on the new stack and copy args over */
-	move		t0,a3		# save nargs for __thread_start
-	PTR_SLL		t1,a3,PTR_SCALESHIFT
-	PTR_ADDU	t1,a3,sp
-1:	REG_L		t2,-SZREG(t1)
-	PTR_SUBIU	t1,SZREG
-	REG_S		t2,-SZREG(a1)
-	PTR_SUBIU	a3,1
-	PTR_SUBIU	a1,SZREG
-	bnez		a3,1b
+	/* Save the arg for user's function */
+	move		s0,a3		/* Save arg __thread_start.  */
+	move		s1,a0		/* Save func. pointer.  */
+
 
 	/* Do the system call */
-	move		t9,a0		# get fn ptr out of the way
 	move		a0,a2
 	li		v0,__NR_clone
 	syscall
@@ -78,11 +75,15 @@ NESTED(__clone,4*SZREG,sp)
 	beqz		v0,__thread_start
 
 	/* Successful return from the parent */
+	REG_L		s0,FRAMESZ-SZREG*2(sp)
+	REG_L		s1,FRAMESZ-SZREG*3(sp)
 	PTR_ADDIU	sp,FRAMESZ
 	ret
 
 	/* Something bad happened -- no child created */
 error:
+	REG_L		s0,FRAMESZ-SZREG*2(sp)
+	REG_L		s1,FRAMESZ-SZREG*3(sp)
 	PTR_ADDIU	sp,FRAMESZ
 #ifdef PIC
 	la		t9,__syscall_error
@@ -96,30 +97,25 @@ error:
    its own function so that we can terminate the stack trace with our
    debug info.
 
-   At this point we have t0=nargs, t9=fn, sp=&arg[0].  */
+   At this point we have s0=arg, s1=fn.  */
 
-NESTED(__thread_start,32,sp)
-	/* Stackframe has been created on entry of clone() */
-	/* Calculate address of jump into argument loading code */
-	li		t1,MAX_REG_ARGS
-	slt		t0,t1,t2       /* max MAX_REG_ARGS args in registers */
-	MOVN		(t2,t1,t0)
-	la		v0,arg0
-	PTR_SLL		t1,t0,PTR_SCALESHIFT
-	PTR_SUBU	v0,t1
-	jr		v0
+NESTED(__thread_start,FRAMESZ,sp)
+	/* The stackframe has been created on entry of clone().  */
+	/* Resort the arg for user's function.  */
+	move		a0,s0
+	move		t9,s1
 
-	/* Load the integer register arguments */
-	REG_L		a0,SZREG(sp)
-arg0:
-
-	/* Call the user's function */
+	/* Call the user's function.  */
 	jalr		t9
 
-	/* Call _exit rather than doing it inline for breakpoint purposes */
+	/* Call _exit rather than doing it inline for breakpoint purposes.  */
 	move		a0,v0
+#ifdef __PIC__
+	la		t9,_exit
+	jalr		t9
+#else
 	jal		_exit
-
+#endif
 	END(__thread_start)
 
 weak_alias(__clone, clone)
