@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995-2000,01,02 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -295,13 +295,6 @@ extern int __elf_machine_runtime_setup (struct link_map *map,
 					int lazy, int profile);
 #define elf_machine_runtime_setup __elf_machine_runtime_setup
 
-static inline void
-elf_machine_lazy_rel (struct link_map *map,
-		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
-{
-  /* elf_machine_runtime_setup handles this. */
-}
-
 /* Change the PLT entry whose reloc is 'reloc' to call the actual routine.  */
 extern Elf32_Addr __elf_machine_fixup_plt (struct link_map *map,
 					   const Elf32_Rela *reloc,
@@ -409,6 +402,13 @@ elf_machine_rela_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
 			   Elf32_Addr *const reloc_addr)
 {
   *reloc_addr = l_addr + reloc->r_addend;
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
+{
+  /* elf_machine_runtime_setup handles this. */
 }
 
 /* The SVR4 ABI specifies that the JMPREL relocs must be inside the

@@ -1,6 +1,6 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  
    PowerPC64 version.
-   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002
+   Copyright 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -452,13 +452,6 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
   return lazy;
 }
 
-static inline void
-elf_machine_lazy_rel (struct link_map *map,
-		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
-{
-  /* elf_machine_runtime_setup handles this.  */
-}
-
 /* Change the PLT entry whose reloc is 'reloc' to call the actual
    routine.  */
 static inline Elf64_Addr
@@ -745,6 +738,13 @@ elf_machine_rela (struct link_map *map,
       return;
     }
   MODIFIED_CODE_NOQUEUE (reloc_addr);
+}
+
+static inline void
+elf_machine_lazy_rel (struct link_map *map,
+		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
+{
+  /* elf_machine_runtime_setup handles this.  */
 }
 
 #endif /* RESOLVE */
