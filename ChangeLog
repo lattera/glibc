@@ -1,3 +1,7 @@
+Fri Jul 26 20:39:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* ctype/test_ctype.c: Test EOF too.
+
 Fri Jul 26 16:10:43 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* login/pututline_r.c (pututline_r): Only call getutid_r if ID has a

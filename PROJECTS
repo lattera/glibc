@@ -1,6 +1,6 @@
 Open jobs for finishing GNU libc:
 ---------------------------------
-Status: June 1996
+Status: July 1996
 
 If you have time and talent to take over any of the jobs below please
 contact <bug-glibc@prep.ai.mit.edu>
@@ -32,7 +32,7 @@ contact <bug-glibc@prep.ai.mit.edu>
      Implementation idea: use some functions from bash.
 
 
-[ 5] Write reentrent versions of crypt() et.al.
+[ 5] Write reentrant versions of crypt() et.al.
 
      Implementation idea: Define in <crypt.h>
 
@@ -51,7 +51,7 @@ contact <bug-glibc@prep.ai.mit.edu>
 	void encrypt_r (char *__block, int __edflag,
 			struct crypt_data *__data);
 
-     If possible the non-reentrent functions should use the reentrent
+     If possible the non-reentrant functions should use the reentrant
      ones.
 
      Because of the US export restrictions it might be a good idea if
@@ -108,8 +108,8 @@ contact <bug-glibc@prep.ai.mit.edu>
      contribute it to the FSF.
 
 
-[13] Write access function for ether, shadow, netmasks, bootparams,
-     netgroup, publickey, automount, aliases databases for nss_files
-     and nss_db module.
+[13] Write access function for shadow, netmasks, bootparams, netgroup,
+     publickey, automount, aliases databases for nss_files and nss_db
+     module.
      The functions should be embedded in the nss scheme.  This is not
      hard and not all services must be supported at once.
