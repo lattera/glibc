@@ -65,9 +65,7 @@
    the number of bits for character classes to 16.  When compatibility
    is not necessary anymore increase the number to 32.  */
 #define char_class_t uint16_t
-#define CHAR_CLASS_TRANS bswap_16
 #define char_class32_t uint32_t
-#define CHAR_CLASS32_TRANS bswap_32
 
 
 /* Type to describe a transliteration action.  We have a possibly
@@ -144,27 +142,19 @@ struct locale_ctype_t
   uint32_t plane_cnt;
   char_class_t *ctype_b;
   char_class32_t *ctype32_b;
-  uint32_t *names_el;
-  uint32_t *names_eb;
-  uint32_t **map_eb;
-  uint32_t **map_el;
+  uint32_t *names;
+  uint32_t **map;
   uint32_t *class_name_ptr;
   uint32_t *map_name_ptr;
   unsigned char *width;
   uint32_t mb_cur_max;
   const char *codeset_name;
-  uint32_t translit_hash_size_eb;
-  uint32_t translit_hash_size_el;
-  uint32_t translit_hash_layers_eb;
-  uint32_t translit_hash_layers_el;
-  uint32_t *translit_from_idx_eb;
-  uint32_t *translit_from_idx_el;
-  uint32_t *translit_from_tbl_eb;
-  uint32_t *translit_from_tbl_el;
-  uint32_t *translit_to_idx_eb;
-  uint32_t *translit_to_idx_el;
-  uint32_t *translit_to_tbl_eb;
-  uint32_t *translit_to_tbl_el;
+  uint32_t translit_hash_size;
+  uint32_t translit_hash_layers;
+  uint32_t *translit_from_idx;
+  uint32_t *translit_from_tbl;
+  uint32_t *translit_to_idx;
+  uint32_t *translit_to_tbl;
   size_t translit_idx_size;
   size_t translit_from_tbl_size;
   size_t translit_to_tbl_size;
@@ -740,21 +730,12 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      ctype->ctype_b,
 		      (256 + 128) * sizeof (char_class_t));
 
-	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EB,
-		      ctype->map_eb[0],
+	  CTYPE_DATA (_NL_CTYPE_TOUPPER,
+		      ctype->map[0],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EB,
-		      ctype->map_eb[1],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (uint32_t));
-
-	  CTYPE_DATA (_NL_CTYPE_TOUPPER_EL,
-		      ctype->map_el[0],
-		      (ctype->plane_size * ctype->plane_cnt + 128)
-		      * sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TOLOWER_EL,
-		      ctype->map_el[1],
+	  CTYPE_DATA (_NL_CTYPE_TOLOWER,
+		      ctype->map[1],
 		      (ctype->plane_size * ctype->plane_cnt + 128)
 		      * sizeof (uint32_t));
 
@@ -763,90 +744,34 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 		      (ctype->plane_size * ctype->plane_cnt
 		       * sizeof (char_class32_t)));
 
-	  CTYPE_DATA (_NL_CTYPE_NAMES_EB,
-		      ctype->names_eb, (ctype->plane_size * ctype->plane_cnt
-					* sizeof (uint32_t)));
-	  CTYPE_DATA (_NL_CTYPE_NAMES_EL,
-		      ctype->names_el, (ctype->plane_size * ctype->plane_cnt
-					* sizeof (uint32_t)));
+	  CTYPE_DATA (_NL_CTYPE_NAMES,
+		      ctype->names, (ctype->plane_size * ctype->plane_cnt
+				     * sizeof (uint32_t)));
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_SIZE_EB,
-		      &ctype->translit_hash_size_eb, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_SIZE_EL,
-		      &ctype->translit_hash_size_el, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_LAYERS_EB,
-		      &ctype->translit_hash_layers_eb, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_LAYERS_EL,
-		      &ctype->translit_hash_layers_el, sizeof (uint32_t));
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_SIZE,
+		      &ctype->translit_hash_size, sizeof (uint32_t));
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_HASH_LAYERS,
+		      &ctype->translit_hash_layers, sizeof (uint32_t));
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_IDX_EB,
-		      ctype->translit_from_idx_eb,
-		      ctype->translit_idx_size);
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_IDX_EL,
-		      ctype->translit_from_idx_el,
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_IDX,
+		      ctype->translit_from_idx,
 		      ctype->translit_idx_size);
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_TBL_EB,
-		      ctype->translit_from_tbl_eb,
-		      ctype->translit_from_tbl_size);
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_TBL_EL,
-		      ctype->translit_from_tbl_el,
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_FROM_TBL,
+		      ctype->translit_from_tbl,
 		      ctype->translit_from_tbl_size);
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_IDX_EB,
-		      ctype->translit_to_idx_eb,
-		      ctype->translit_idx_size);
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_IDX_EL,
-		      ctype->translit_to_idx_el,
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_IDX,
+		      ctype->translit_to_idx,
 		      ctype->translit_idx_size);
 
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL_EB,
-		      ctype->translit_to_tbl_eb, ctype->translit_to_tbl_size);
-	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL_EL,
-		      ctype->translit_to_tbl_el, ctype->translit_to_tbl_size);
+	  CTYPE_DATA (_NL_CTYPE_TRANSLIT_TO_TBL,
+		      ctype->translit_to_tbl, ctype->translit_to_tbl_size);
 
-#if __BYTE_ORDER == __BIG_ENDIAN
-	  CTYPE_DATA (_NL_CTYPE_HASH_SIZE_EB,
+	  CTYPE_DATA (_NL_CTYPE_HASH_SIZE,
 		      &ctype->plane_size, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS_EB,
+	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS,
 		      &ctype->plane_cnt, sizeof (uint32_t));
-#else
-	  case _NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE_EB):
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (sizeof (uint32_t));
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      bswap_32 (ctype->plane_size);
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    break;
-	  case _NL_ITEM_INDEX (_NL_CTYPE_HASH_LAYERS_EB):
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (sizeof (uint32_t));
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      bswap_32 (ctype->plane_cnt);
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    break;
-#endif
-#if __BYTE_ORDER == __BIG_ENDIAN
-	  CTYPE_DATA (_NL_CTYPE_HASH_SIZE_EL,
-		      &ctype->plane_size, sizeof (uint32_t));
-	  CTYPE_DATA (_NL_CTYPE_HASH_LAYERS_EL,
-		      &ctype->plane_cnt, sizeof (uint32_t));
-#else
-	  case _NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE_EL):
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (sizeof (uint32_t));
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      bswap_32 (ctype->plane_size);
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    break;
-	  case _NL_ITEM_INDEX (_NL_CTYPE_HASH_LAYERS_EL):
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (sizeof (uint32_t));
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      bswap_32 (ctype->plane_cnt);
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    break;
-#endif
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_CLASS_NAMES):
 	    /* The class name array.  */
@@ -906,34 +831,18 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    idx[elem + 1] = idx[elem] + iov[2 + elem + offset].iov_len;
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN_EB):
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN_EL):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN):
 	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    if ((elem == _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN_EB)
-		 && __BYTE_ORDER == __BIG_ENDIAN)
-		|| (elem == _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_MB_LEN_EL)
-		    && __BYTE_ORDER == __LITTLE_ENDIAN))
-	      *(uint32_t *) iov[2 + elem + offset].iov_base =
-		ctype->mbdigits_act / 10;
-	    else
-	      *(uint32_t *) iov[2 + elem + offset].iov_base =
-		bswap_32 (ctype->mbdigits_act / 10);
+	    *(uint32_t *) iov[2 + elem + offset].iov_base =
+	      ctype->mbdigits_act / 10;
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN_EB):
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN_EL):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN):
 	    iov[2 + elem + offset].iov_base = alloca (sizeof (uint32_t));
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    if ((elem == _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN_EB)
-		 && __BYTE_ORDER == __BIG_ENDIAN)
-		|| (elem == _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS_WC_LEN_EL)
-		    && __BYTE_ORDER == __LITTLE_ENDIAN))
-	      *(uint32_t *) iov[2 + elem + offset].iov_base =
-		ctype->wcdigits_act / 10;
-	    else
-	      *(uint32_t *) iov[2 + elem + offset].iov_base =
-		bswap_32 (ctype->wcdigits_act / 10);
+	    *(uint32_t *) iov[2 + elem + offset].iov_base =
+	      ctype->wcdigits_act / 10;
 	    break;
 
 	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_MB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_MB):
@@ -973,56 +882,22 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 			       ctype->mbdigits[cnt]->nbytes) = '\0';
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC_EB) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC_EB):
+	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC):
 	    total = ctype->wcdigits_act / 10;
 
 	    iov[2 + elem + offset].iov_base =
 	      (uint32_t *) alloca (total * sizeof (uint32_t));
 	    iov[2 + elem + offset].iov_len = total * sizeof (uint32_t);
 
-	    for (cnt = elem - _NL_CTYPE_INDIGITS0_WC_EB;
+	    for (cnt = elem - _NL_CTYPE_INDIGITS0_WC;
 		 cnt < ctype->wcdigits_act; cnt += 10)
 	      ((uint32_t *) iov[2 + elem + offset].iov_base)[cnt / 10]
-		= (__BYTE_ORDER == __LITTLE_ENDIAN
-		   ? bswap_32 (ctype->wcdigits[cnt]) : ctype->wcdigits[cnt]);
+		= ctype->wcdigits[cnt];
 	    break;
 
-	  case _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS0_WC_EL) ... _NL_ITEM_INDEX (_NL_CTYPE_INDIGITS9_WC_EL):
-	    total = ctype->wcdigits_act / 10;
-
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (total * sizeof (uint32_t));
-	    iov[2 + elem + offset].iov_len = total * sizeof (uint32_t);
-
-	    for (cnt = elem - _NL_CTYPE_INDIGITS0_WC_EL;
-		 cnt < ctype->wcdigits_act; cnt += 10)
-	      ((uint32_t *) iov[2 + elem + offset].iov_base)[cnt / 10]
-		= (__BYTE_ORDER == __BIG_ENDIAN
-		   ? bswap_32 (ctype->wcdigits[cnt]) : ctype->wcdigits[cnt]);
-	    break;
-
-#if __BYTE_ORDER == __BIG_ENDIAN
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC_EB) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC_EB):
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC_EB;
-#else
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC_EL) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC_EL):
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC_EL;
-#endif
+	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC):
+	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC;
 	    iov[2 + elem + offset].iov_base = &ctype->wcoutdigits[cnt];
-	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
-	    break;
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC_EB) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC_EB):
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC_EB;
-#else
-	  case _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT0_WC_EL) ... _NL_ITEM_INDEX (_NL_CTYPE_OUTDIGIT9_WC_EL):
-	    cnt = elem - _NL_CTYPE_OUTDIGIT0_WC_EL;
-#endif
-	    iov[2 + elem + offset].iov_base =
-	      (uint32_t *) alloca (sizeof (uint32_t));
-	    *(uint32_t *) iov[2 + elem + offset].iov_base =
-	      bswap_32 (ctype->wcoutdigits[cnt]);
 	    iov[2 + elem + offset].iov_len = sizeof (uint32_t);
 	    break;
 
@@ -1034,11 +909,7 @@ ctype_output (struct localedef_t *locale, struct charmap_t *charmap,
 	  /* Handle extra maps.  */
 	  size_t nr = (elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) >> 1;
 
-	  if (((elem - _NL_ITEM_INDEX (_NL_NUM_LC_CTYPE)) & 1) == 0)
-	    iov[2 + elem + offset].iov_base = ctype->map_eb[nr];
-	  else
-	    iov[2 + elem + offset].iov_base = ctype->map_el[nr];
-
+	  iov[2 + elem + offset].iov_base = ctype->map[nr];
 	  iov[2 + elem + offset].iov_len = ((ctype->plane_size
 					     * ctype->plane_cnt + 128)
 					    * sizeof (uint32_t));
@@ -2976,45 +2847,31 @@ Computing table size for character classes might take a while..."),
     fputs (_(" done\n"), stderr);
 
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define NAMES_B1 ctype->names_el
-# define NAMES_B2 ctype->names_eb
-#else
-# define NAMES_B1 ctype->names_eb
-# define NAMES_B2 ctype->names_el
-#endif
-
-  ctype->names_eb = (uint32_t *) xcalloc (ctype->plane_size
-					  * ctype->plane_cnt,
-					  sizeof (uint32_t));
-  ctype->names_el = (uint32_t *) xcalloc (ctype->plane_size
-					  * ctype->plane_cnt,
-					  sizeof (uint32_t));
+  ctype->names = (uint32_t *) xcalloc (ctype->plane_size
+				       * ctype->plane_cnt,
+				       sizeof (uint32_t));
 
   for (idx = 1; idx < 256; ++idx)
-    NAMES_B1[idx] = idx;
+    ctype->names[idx] = idx;
 
   /* Trick: change the 0th entry's name to 1 to mark the cell occupied.  */
-  NAMES_B1[0] = 1;
+  ctype->names[0] = 1;
 
   for (idx = 256; idx < ctype->charnames_act; ++idx)
     {
       size_t nr = (ctype->charnames[idx] % ctype->plane_size);
       size_t depth = 0;
 
-      while (NAMES_B1[nr + depth * ctype->plane_size])
+      while (ctype->names[nr + depth * ctype->plane_size])
 	++depth;
       assert (depth < ctype->plane_cnt);
 
-      NAMES_B1[nr + depth * ctype->plane_size] = ctype->charnames[idx];
+      ctype->names[nr + depth * ctype->plane_size] = ctype->charnames[idx];
 
       /* Now for faster access remember the index in the NAMES_B array.  */
       ctype->charnames[idx] = nr + depth * ctype->plane_size;
     }
-  NAMES_B1[0] = 0;
-
-  for (idx = 0; idx < ctype->plane_size * ctype->plane_cnt; ++idx)
-    NAMES_B2[idx] = bswap_32 (NAMES_B1[idx]);
+  ctype->names[0] = 0;
 
 
   /* You wonder about this amount of memory?  This is only because some
@@ -3028,18 +2885,9 @@ Computing table size for character classes might take a while..."),
 						 * ctype->plane_cnt,
 						 sizeof (char_class32_t));
 
-  /* Fill in the character class information.  */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define TRANS(w) CHAR_CLASS_TRANS (w)
-# define TRANS32(w) CHAR_CLASS32_TRANS (w)
-#else
-# define TRANS(w) (w)
-# define TRANS32(w) (w)
-#endif
-
-  /* This is the array accessed usig the multibyte string elements.  */
+  /* This is the array accessed using the multibyte string elements.  */
   for (idx = 0; idx < 256; ++idx)
-    ctype->ctype_b[128 + idx] = TRANS (ctype->class256_collection[idx]);
+    ctype->ctype_b[128 + idx] = ctype->class256_collection[idx];
 
   /* Mirror first 127 entries.  We must take care that entry -1 is not
      mirrored because EOF == -1.  */
@@ -3048,14 +2896,11 @@ Computing table size for character classes might take a while..."),
 
   /* The 32 bit array contains all characters.  */
   for (idx = 0; idx < ctype->class_collection_act; ++idx)
-    ctype->ctype32_b[ctype->charnames[idx]]
-      = TRANS32 (ctype->class_collection[idx]);
+    ctype->ctype32_b[ctype->charnames[idx]] = ctype->class_collection[idx];
 
   /* Room for table of mappings.  */
-  ctype->map_eb = (uint32_t **) xmalloc (ctype->map_collection_nr
-					 * sizeof (uint32_t *));
-  ctype->map_el = (uint32_t **) xmalloc (ctype->map_collection_nr
-					 * sizeof (uint32_t *));
+  ctype->map = (uint32_t **) xmalloc (ctype->map_collection_nr
+				      * sizeof (uint32_t *));
 
   /* Fill in all mappings.  */
   for (idx = 0; idx < ctype->map_collection_nr; ++idx)
@@ -3063,40 +2908,25 @@ Computing table size for character classes might take a while..."),
       unsigned int idx2;
 
       /* Allocate table.  */
-      ctype->map_eb[idx] = (uint32_t *) xmalloc ((ctype->plane_size
-						  * ctype->plane_cnt + 128)
-						 * sizeof (uint32_t));
-      ctype->map_el[idx] = (uint32_t *) xmalloc ((ctype->plane_size
-						  * ctype->plane_cnt + 128)
-						 * sizeof (uint32_t));
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define MAP_B1 ctype->map_el
-# define MAP_B2 ctype->map_eb
-#else
-# define MAP_B1 ctype->map_eb
-# define MAP_B2 ctype->map_el
-#endif
+      ctype->map[idx] = (uint32_t *) xmalloc ((ctype->plane_size
+					       * ctype->plane_cnt + 128)
+					      * sizeof (uint32_t));
 
       /* Copy default value (identity mapping).  */
-      memcpy (&MAP_B1[idx][128], NAMES_B1,
+      memcpy (&ctype->map[idx][128], ctype->names,
 	      ctype->plane_size * ctype->plane_cnt * sizeof (uint32_t));
 
       /* Copy values from collection.  */
       for (idx2 = 0; idx2 < 256; ++idx2)
-	MAP_B1[idx][128 + idx2] = ctype->map256_collection[idx][idx2];
+	ctype->map[idx][128 + idx2] = ctype->map256_collection[idx][idx2];
 
       /* Mirror first 127 entries.  We must take care not to map entry
 	 -1 because EOF == -1.  */
       for (idx2 = 0; idx2 < 127; ++idx2)
-	MAP_B1[idx][idx2] = MAP_B1[idx][256 + idx2];
+	ctype->map[idx][idx2] = ctype->map[idx][256 + idx2];
 
       /* EOF must map to EOF.  */
-      MAP_B1[idx][127] = EOF;
-
-      /* And now the other byte order.  */
-      for (idx2 = 0; idx2 < ctype->plane_size * ctype->plane_cnt + 128; ++idx2)
-	MAP_B2[idx][idx2] = bswap_32 (MAP_B1[idx][idx2]);
+      ctype->map[idx][127] = EOF;
     }
 
   /* Extra array for class and map names.  */
@@ -3126,7 +2956,7 @@ Computing table size for character classes might take a while..."),
 	      size_t nr = idx % ctype->plane_size;
 	      size_t depth = 0;
 
-	      while (NAMES_B1[nr + depth * ctype->plane_size] != nr)
+	      while (ctype->names[nr + depth * ctype->plane_size] != nr)
 		++depth;
 	      assert (depth < ctype->plane_cnt);
 
@@ -3269,33 +3099,10 @@ Computing table size for character classes might take a while..."),
 	}
 
       /* We can allocate the arrays for the results.  */
-#if BYTE_ORDER == LITTLE_ENDIAN
-# define from_idx	translit_from_idx_el
-# define from_tbl	translit_from_tbl_el
-# define to_idx	translit_to_idx_el
-# define to_tbl		translit_to_tbl_el
-# define from_idx_ob	translit_from_idx_eb
-# define from_tbl_ob	translit_from_tbl_eb
-# define to_idx_ob	translit_to_idx_eb
-# define to_tbl_ob	translit_to_tbl_eb
-#else
-# define from_idx	translit_from_idx_eb
-# define from_tbl	translit_from_tbl_eb
-# define to_idx	translit_to_idx_eb
-# define to_tbl		translit_to_tbl_eb
-# define from_idx_ob	translit_from_idx_el
-# define from_tbl_ob	translit_from_tbl_el
-# define to_idx_ob	translit_to_idx_el
-# define to_tbl_ob	translit_to_tbl_el
-#endif
-      ctype->from_idx = xmalloc (number * sizeof (uint32_t));
-      ctype->from_idx_ob = xmalloc (number * sizeof (uint32_t));
-      ctype->from_tbl = xmalloc (from_len * sizeof (uint32_t));
-      ctype->from_tbl_ob = xmalloc (from_len * sizeof (uint32_t));
-      ctype->to_idx = xmalloc (number * sizeof (uint32_t));
-      ctype->to_idx_ob = xmalloc (number * sizeof (uint32_t));
-      ctype->to_tbl = xmalloc (to_len * sizeof (uint32_t));
-      ctype->to_tbl_ob = xmalloc (to_len * sizeof (uint32_t));
+      ctype->translit_from_idx = xmalloc (number * sizeof (uint32_t));
+      ctype->translit_from_tbl = xmalloc (from_len * sizeof (uint32_t));
+      ctype->translit_to_idx = xmalloc (number * sizeof (uint32_t));
+      ctype->translit_to_tbl = xmalloc (to_len * sizeof (uint32_t));
 
       from_len = 0;
       to_len = 0;
@@ -3304,37 +3111,26 @@ Computing table size for character classes might take a while..."),
 	  size_t len;
 	  struct translit_to_t *srunp;
 
-	  ctype->from_idx[cnt] = from_len;
-	  ctype->to_idx[cnt] = to_len;
+	  ctype->translit_from_idx[cnt] = from_len;
+	  ctype->translit_to_idx[cnt] = to_len;
 
 	  len = wcslen ((const wchar_t *) sorted[cnt]->from) + 1;
-	  wmemcpy ((wchar_t *) &ctype->from_tbl[from_len],
+	  wmemcpy ((wchar_t *) &ctype->translit_from_tbl[from_len],
 		   (const wchar_t *) sorted[cnt]->from, len);
 	  from_len += len;
 
-	  ctype->to_idx[cnt] = to_len;
+	  ctype->translit_to_idx[cnt] = to_len;
 	  srunp = sorted[cnt]->to;
 	  while (srunp != NULL)
 	    {
 	      len = wcslen ((const wchar_t *) srunp->str) + 1;
-	      wmemcpy ((wchar_t *) &ctype->to_tbl[to_len],
+	      wmemcpy ((wchar_t *) &ctype->translit_to_tbl[to_len],
 		       (const wchar_t *) srunp->str, len);
 	      to_len += len;
 	      srunp = srunp->next;
 	    }
-	  ctype->to_tbl[to_len++] = L'\0';
+	  ctype->translit_to_tbl[to_len++] = L'\0';
 	}
-
-      /* Now create the tables for the other endianess.  */
-      for (cnt = 0; cnt < number; ++cnt)
-	{
-	  ctype->from_idx_ob[cnt] = bswap_32 (ctype->from_idx[cnt]);
-	  ctype->to_idx_ob[cnt] = bswap_32 (ctype->to_idx[cnt]);
-	}
-      for (cnt = 0; cnt < from_len; ++cnt)
-	ctype->from_tbl[cnt] = bswap_32 (ctype->from_tbl_ob[cnt]);
-      for (cnt = 0; cnt < to_len; ++cnt)
-	ctype->to_tbl[cnt] = bswap_32 (ctype->to_tbl_ob[cnt]);
 
       /* Store the information about the length.  */
       ctype->translit_idx_size = number * sizeof (uint32_t);
@@ -3346,12 +3142,9 @@ Computing table size for character classes might take a while..."),
       /* Provide some dummy pointers since we have nothing to write out.  */
       static uint32_t no_str = { 0 };
 
-      ctype->translit_from_idx_el = &no_str;
-      ctype->translit_from_idx_eb = &no_str;
-      ctype->translit_from_tbl_el = &no_str;
-      ctype->translit_from_tbl_eb = &no_str;
-      ctype->translit_to_tbl_el = &no_str;
-      ctype->translit_to_tbl_eb = &no_str;
+      ctype->translit_from_idx = &no_str;
+      ctype->translit_from_tbl = &no_str;
+      ctype->translit_to_tbl = &no_str;
       ctype->translit_idx_size = 0;
       ctype->translit_from_tbl_size = 0;
       ctype->translit_to_tbl_size = 0;

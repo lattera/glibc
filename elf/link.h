@@ -69,7 +69,7 @@ extern struct r_debug _r_debug;
 /* This symbol refers to the "dynamic structure" in the `.dynamic' section
    of whatever module refers to `_DYNAMIC'.  So, to find its own
    `struct r_debug', a program could do:
-     for (dyn = _DYNAMIC; dyn->d_tag != DT_NULL)
+     for (dyn = _DYNAMIC; dyn->d_tag != DT_NULL; ++dyn)
        if (dyn->d_tag == DT_DEBUG)
 	 r_debug = (struct r_debug *) dyn->d_un.d_ptr;
    */

@@ -148,7 +148,7 @@ const struct locale_data _nl_C_LC_COLLATE =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  21,
+  30,
   {
     { word: 0 },
     { string: NULL },
@@ -175,22 +175,10 @@ const struct locale_data _nl_C_LC_COLLATE =
     { string: NULL },
     { string: NULL },
     { word: 223 },
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-    { string: NULL },
-#endif
     { string: (const char *) _nl_C_LC_COLLATE_symbol_hash },
-#if __BYTE_ORDER == __BIG_ENDIAN
-    { string: NULL },
-#endif
     { string: _nl_C_LC_COLLATE_symbol_strings },
     { string: NULL },
     { string: NULL },
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-    { string: NULL },
-#endif
-    { string: (const char *) _nl_C_LC_COLLATE_symbol_classes },
-#if __BYTE_ORDER == __BIG_ENDIAN
-    { string: NULL },
-#endif
+    { string: (const char *) _nl_C_LC_COLLATE_symbol_classes }
   }
 };

@@ -45,27 +45,20 @@ const u_int32_t *__collate_symbol_classeswc = _nl_C_LC_COLLATE_symbol_classes;
 void
 _nl_postload_collate (void)
 {
-#if BYTE_ORDER == BIG_ENDIAN
-#define bo(x) x##_EB
-#elif BYTE_ORDER == LITTLE_ENDIAN
-#define bo(x) x##_EL
-#else
-#error bizarre byte order
-#endif
 #define paste(a,b) paste1(a,b)
 #define paste1(a,b) a##b
 
 #define current(x)							      \
   ((const unsigned int *) _NL_CURRENT (LC_COLLATE, paste(_NL_COLLATE_,x)))
 
-  __collate_tablewc = current (bo (TABLEWC));
-  __collate_extrawc = current (bo (EXTRAWC));
+  __collate_tablewc = current (TABLEWC);
+  __collate_extrawc = current (EXTRAWC);
 
-  __collate_element_hash = current (bo (ELEM_HASH));
+  __collate_element_hash = current (ELEM_HASH);
   __collate_element_strings = (const char *) current (ELEM_STR_POOL);
-  __collate_element_values = (const uint32_t *) current (bo (ELEM_VAL));
+  __collate_element_values = (const uint32_t *) current (ELEM_VAL);
 
-  __collate_symbol_hash = current (bo (SYMB_HASH));
+  __collate_symbol_hash = current (SYMB_HASH);
   __collate_symbol_strings = (const char *) current (SYMB_STR_POOL);
-  __collate_symbol_classeswc = current (bo (SYMB_CLASSWC));
+  __collate_symbol_classeswc = current (SYMB_CLASSWC);
 }

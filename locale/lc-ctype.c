@@ -1,5 +1,5 @@
 /* Define current locale data for LC_CTYPE category.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,13 +34,6 @@ _NL_CURRENT_DEFINE (LC_CTYPE);
 void
 _nl_postload_ctype (void)
 {
-#if BYTE_ORDER == BIG_ENDIAN
-#define bo(x) x##_EB
-#elif BYTE_ORDER == LITTLE_ENDIAN
-#define bo(x) x##_EL
-#else
-#error bizarre byte order
-#endif
 #define paste(a,b) paste1(a,b)
 #define paste1(a,b) a##b
 
@@ -52,9 +45,9 @@ _nl_postload_ctype (void)
   extern const unsigned char *__ctype_width;
 
   __ctype_b = current (uint16_t, CLASS, 128);
-  __ctype_toupper = current (uint32_t, bo (TOUPPER), 128);
-  __ctype_tolower = current (uint32_t, bo (TOLOWER), 128);
+  __ctype_toupper = current (uint32_t, TOUPPER, 128);
+  __ctype_tolower = current (uint32_t, TOLOWER, 128);
   __ctype32_b = current (uint32_t, CLASS32, 0);
-  __ctype_names = current (uint32_t, bo (NAMES), 0);
+  __ctype_names = current (uint32_t, NAMES, 0);
   __ctype_width = current (unsigned char, WIDTH, 0);
 }

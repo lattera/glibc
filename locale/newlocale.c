@@ -177,19 +177,10 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
     union locale_data_value *ctypes = result_ptr->__locales[LC_CTYPE]->values;
   result_ptr->__ctype_b = (const unsigned short int *)
     (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_CLASS)] .string);
-#if BYTE_ORDER == BIG_ENDIAN
   result_ptr->__ctype_tolower = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER_EB)].string);
+    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER)].string);
   result_ptr->__ctype_toupper = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER_EB)].string);
-#elif BYTE_ORDER == LITTLE_ENDIAN
-  result_ptr->__ctype_tolower = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER_EL)].string);
-  result_ptr->__ctype_toupper = (const int *)
-    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER_EL)].string);
-#else
-#error bizarre byte order
-#endif
+    (ctypes[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER)].string);
   }
 
   return result_ptr;

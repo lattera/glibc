@@ -37,35 +37,17 @@ cname_lookup (wint_t wc, __locale_t locale)
 
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
   extern unsigned int *__ctype_names;
-# if BYTE_ORDER == BIG_ENDIAN
-  hash_size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE_EB);
-  hash_layers = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_LAYERS_EB);
-# elif BYTE_ORDER == LITTLE_ENDIAN
-  hash_size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE_EL);
-  hash_layers = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_LAYERS_EL);
-# else
-#  error bizarre byte order
-# endif
+  hash_size = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE);
+  hash_layers = _NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_LAYERS);
 
 #else
   struct locale_data *current = locale->__locales[LC_CTYPE];
-# if BYTE_ORDER == BIG_ENDIAN
   unsigned int *__ctype_names =
-    (unsigned int *) current->values[_NL_ITEM_INDEX (_NL_CTYPE_NAMES_EB)].string;
+    (unsigned int *) current->values[_NL_ITEM_INDEX (_NL_CTYPE_NAMES)].string;
   hash_size =
-    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE_EB)].word;
+    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word;
   hash_layers =
-    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_LAYERS_EB)].word;
-# elif BYTE_ORDER == LITTLE_ENDIAN
-  unsigned int *__ctype_names =
-    (unsigned int *) current->values[_NL_ITEM_INDEX (_NL_CTYPE_NAMES_EL)].string;
-  hash_size =
-    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE_EL)].word;
-  hash_layers =
-    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_LAYERS_EL)].word;
-# else
-#  error bizarre byte order
-# endif
+    current->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_LAYERS)].word;
 #endif
 
   result = wc % hash_size;

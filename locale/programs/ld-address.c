@@ -68,7 +68,6 @@ struct locale_address_t
   const char *country_ab2;
   const char *country_ab3;
   uint32_t country_num;
-  uint32_t country_num_ob;
   const char *country_car;
   const char *country_isbn;
   const char *lang_name;
@@ -295,7 +294,6 @@ address_finish (struct localedef_t *locale, struct charmap_t *charmap)
 %s: numeric country code `%d' not valid"),
 	       "LC_ADDRESS", address->country_num);
     }
-  address->country_num_ob = bswap_32 (address->country_num);
 
   if (address->country_ab2 == NULL)
     {
@@ -373,21 +371,8 @@ address_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = strlen (iov[cnt].iov_base) + 1;
   ++cnt;
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define country_num_eb country_num_ob
-# define country_num_el country_num
-#else
-# define country_num_eb country_num
-# define country_num_el country_num_ob
-#endif
-
   idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) address->country_num_eb;
-  iov[cnt].iov_len = sizeof (uint32_t);
-  ++cnt;
-
-  idx[cnt - 2] = idx[cnt - 3] + iov[cnt - 1].iov_len;
-  iov[cnt].iov_base = (void *) address->country_num_el;
+  iov[cnt].iov_base = (void *) address->country_num;
   iov[cnt].iov_len = sizeof (uint32_t);
   ++cnt;
 

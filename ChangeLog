@@ -1,3 +1,40 @@
+1999-09-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/langinfo.h: Remove byte-order dependent names.
+	* locale/categories.def: Update after removal of byte-order dependent
+	names.
+	* locale/loadlocale.c (_nl_load_locale): Don't allow locale files
+	with magic number in other byte order.
+	* locale/newlocale.c (__newlocale): Remove byte-order dependent code.
+	* locale/C-collate.c: Remove initializers for other byte-order.
+	* locale/C-ctype.c: Likewise.
+	* locale/C-monetary.c: Likewise.
+	* locale/C-paper.c: Likewise.
+	* locale/C-time.c: Likewise.
+	* locale/lc-collate.c: Remove byte-order oriented initialization.
+	* locale/lc-ctype.c: Likewise.
+	* locale/lc-monetary.c: Likewise.
+	* locale/lc-time.c: Likewise.
+	* locale/programs/ld-address.c: Don't generate output in both
+	byte-orders.
+	* locale/programs/ld-ctype.c: Likewise.
+	* locale/programs/ld-paper.c: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* time/strftime.c (NLW): Don't use different byte-orders.
+	* wctype/cname-lookup.h (cname_lookup): Likewise.
+
+	* Makeconfig (localedir): Define using libdir, not datadir.
+	(msgcatdir): New variable.
+	* catgets/Makefile (CPPFLAGS): Define NLSPATH using msgcatdir.
+	* elf/Makefile (bash-ldd-rewrite): Replace @TEXTDOMAINDIR@ using
+	msgcatdir.
+	* intl/Makefile (install-others): Install locale.alias in msgcatdir.
+	(CPPFLAGS): Define paths using msgcatdir.
+	* locale/Makefile (CPPFLAGS): Define LOCALE_ALIAS_PATH using msgcatdir.
+	* po/Makefile (mo-installed): Define using msgcatdir.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Fix typo.
+
 1999-09-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdio-common/vfprintf.c: Remove limitation on size of precision

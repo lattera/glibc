@@ -343,29 +343,15 @@ const struct locale_data _nl_C_LC_CTYPE =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  15,
+  60,
   {
     { string: _nl_C_LC_CTYPE_class },
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { string: NULL }, { string: NULL },
-#endif
     { string: (const char *) _nl_C_LC_CTYPE_toupper },
     { string: (const char *) _nl_C_LC_CTYPE_tolower },
-#if BYTE_ORDER == BIG_ENDIAN
-    { string: NULL }, { string: NULL },
-#endif
     { string: _nl_C_LC_CTYPE_class32 },
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { string: NULL },
-#endif
     { string: (const char *) _nl_C_LC_CTYPE_names },
-#if BYTE_ORDER == BIG_ENDIAN
-    { string: NULL },
-    { word: 256 }, { word: 1 },
-#endif
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { word: 0 }, { word: 0 },
-#endif
+    { word: 256 },
+    { word: 1 },
     { string: "upper\0" "lower\0" "alpha\0" "digit\0" "xdigit\0" "space\0"
 	      "print\0" "graph\0" "blank\0" "cntrl\0" "punct\0"  "alnum\0"
 	      "left_to_right\0" "right_to_left\0" "num_terminator\0"
@@ -378,14 +364,7 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: _nl_C_LC_CTYPE_width },
     { word: 1 },
     { string: "ANSI_X3.4-1968" },
-#if BYTE_ORDER == BIG_ENDIAN
-    { word: 0 }, { word: 0 },
-    { word: 1 }, { word: 0 },
-#endif
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { word: 256 }, { word: 1 },
-    { word: 0 }, { word: 1 },
-#endif
+    { word: 1 },
     { string: "0" },
     { string: "1" },
     { string: "2" },
@@ -396,24 +375,7 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "7" },
     { string: "8" },
     { string: "9" },
-#if BYTE_ORDER == BIG_ENDIAN
-    { word: 1 }, { word: 0 },
-#endif
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { word: 0 }, { word: 1 },
-#endif
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-#endif
+    { word: 1 },
     { wstr: (uint32_t *) L"0" },
     { wstr: (uint32_t *) L"1" },
     { wstr: (uint32_t *) L"2" },
@@ -424,18 +386,6 @@ const struct locale_data _nl_C_LC_CTYPE =
     { wstr: (uint32_t *) L"7" },
     { wstr: (uint32_t *) L"8" },
     { wstr: (uint32_t *) L"9" },
-#if BYTE_ORDER == BIG_ENDIAN
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-    { wstr: (uint32_t *) L"" },
-#endif
     { string: "0" },
     { string: "1" },
     { string: "2" },
@@ -446,18 +396,6 @@ const struct locale_data _nl_C_LC_CTYPE =
     { string: "7" },
     { string: "8" },
     { string: "9" },
-#if BYTE_ORDER == LITTLE_ENDIAN
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-#endif
     { word: L'0' },
     { word: L'1' },
     { word: L'2' },
@@ -468,26 +406,8 @@ const struct locale_data _nl_C_LC_CTYPE =
     { word: L'7' },
     { word: L'8' },
     { word: L'9' },
-#if BYTE_ORDER == BIG_ENDIAN
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-    { word: L'\0' },
-#endif
     { word: 0 },
     { word: 0 },
-    { word: 0 },
-    { word: 0 },
-    { string: "" },
-    { string: "" },
-    { string: "" },
-    { string: "" },
     { string: "" },
     { string: "" },
     { string: "" },

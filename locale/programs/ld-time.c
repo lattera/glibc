@@ -55,55 +55,40 @@ struct locale_time_t
 {
   const char *abday[7];
   const uint32_t *wabday[7];
-  const uint32_t *wabday_ob[7];
   int abday_defined;
   const char *day[7];
   const uint32_t *wday[7];
-  const uint32_t *wday_ob[7];
   int day_defined;
   const char *abmon[12];
   const uint32_t *wabmon[12];
-  const uint32_t *wabmon_ob[12];
   int abmon_defined;
   const char *mon[12];
   const uint32_t *wmon[12];
-  const uint32_t *wmon_ob[12];
   int mon_defined;
   const char *am_pm[2];
   const uint32_t *wam_pm[2];
-  const uint32_t *wam_pm_ob[2];
   int am_pm_defined;
   const char *d_t_fmt;
   const uint32_t *wd_t_fmt;
-  const uint32_t *wd_t_fmt_ob;
   const char *d_fmt;
   const uint32_t *wd_fmt;
-  const uint32_t *wd_fmt_ob;
   const char *t_fmt;
   const uint32_t *wt_fmt;
-  const uint32_t *wt_fmt_ob;
   const char *t_fmt_ampm;
   const uint32_t *wt_fmt_ampm;
-  const uint32_t *wt_fmt_ampm_ob;
   const char **era;
   const uint32_t **wera;
-  const uint32_t **wera_ob;
   uint32_t num_era;
   const char *era_year;
   const uint32_t *wera_year;
-  const uint32_t *wera_year_ob;
   const char *era_d_t_fmt;
   const uint32_t *wera_d_t_fmt;
-  const uint32_t *wera_d_t_fmt_ob;
   const char *era_t_fmt;
   const uint32_t *wera_t_fmt;
-  const uint32_t *wera_t_fmt_ob;
   const char *era_d_fmt;
   const uint32_t *wera_d_fmt;
-  const uint32_t *wera_d_fmt_ob;
   const char *alt_digits[100];
   const uint32_t *walt_digits[100];
-  const uint32_t *walt_digits_ob[100];
   int alt_digits_defined;
   unsigned char week_ndays;
   uint32_t week_1stday;
@@ -115,7 +100,6 @@ struct locale_time_t
   const uint32_t *wtimezone;
 
   struct era_data *era_entries;
-  struct era_data *era_entries_ob;
 };
 
 
@@ -143,7 +127,6 @@ void
 time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
-  size_t cnt;
   int nothing = 0;
 
   /* Now resolve copying and also handle completely missing definitions.  */
@@ -183,22 +166,6 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
     {									      \
       if(! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
-    }									      \
-  else if (time->w##cat != NULL)					      \
-    {									      \
-      size_t n;								      \
-      for (n = 0; n < sizeof (time->w##cat) / sizeof (time->w##cat[0]); ++n)  \
-	{								      \
-	  size_t len = wcslen ((wchar_t *) time->w##cat[n]) + 1;	      \
-	  uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));    \
-	  do								      \
-	    {								      \
-	      --len;							      \
-	      wstr[len] = bswap_32 (time->w##cat[n][len]);		      \
-	    }								      \
-	  while (len > 0);						      \
-	  time->w##cat##_ob[n] = wstr;					      \
-	}								      \
     }
 
   TESTARR_ELEM (abday);
@@ -212,18 +179,6 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
     {									      \
       if (! be_quiet && ! nothing)					      \
 	error (0, 0, _("%s: field `%s' not defined"), "LC_TIME", #cat);	      \
-    }									      \
-  else if (time->w##cat != NULL)					      \
-    {									      \
-      size_t len = wcslen ((wchar_t *) time->w##cat) + 1;		      \
-      uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));	      \
-      do								      \
-	{								      \
-	  --len;							      \
-	  wstr[len] = bswap_32 (time->w##cat[len]);			      \
-	}								      \
-      while (len > 0);							      \
-      time->w##cat##_ob = wstr;						      \
     }
 
   TEST_ELEM (d_t_fmt);
@@ -237,20 +192,6 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
       /* Use the 24h format as default.  */
       time->t_fmt_ampm = time->t_fmt;
       time->wt_fmt_ampm = time->wt_fmt;
-      time->wt_fmt_ampm_ob = time->wt_fmt_ob;
-    }
-  else
-    {
-      /* Convert the byte order.  */
-      size_t len = wcslen ((wchar_t *) time->wt_fmt_ampm) + 1;
-      uint32_t *wstr = (uint32_t *) xmalloc (len * sizeof (uint32_t));
-      do
-	{
-	  --len;
-	  wstr[len] = bswap_32 (time->wt_fmt_ampm[len]);
-	}
-      while (len > 0);
-      time->wt_fmt_ampm_ob = wstr;
     }
 
   /* Now process the era entries.  */
@@ -499,60 +440,6 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
 	  wstr = wstr ? wcschr (wstr, L':') : NULL;	/* end name */
 	  time->era_entries[idx].wformat = (uint32_t *) wstr;
 	}
-
-      /* Construct the array for the other byte order.  */
-      time->era_entries_ob =
-	(struct era_data *) xmalloc (time->num_era * sizeof (struct era_data));
-
-      for (idx = 0; idx < time->num_era; ++idx)
-	{
-	  time->era_entries_ob[idx].direction =
-	    bswap_32 (time->era_entries[idx].direction);
-	  time->era_entries_ob[idx].offset =
-	    bswap_32 (time->era_entries[idx].offset);
-	  time->era_entries_ob[idx].start_date[0] =
-	    bswap_32 (time->era_entries[idx].start_date[0]);
-	  time->era_entries_ob[idx].start_date[1] =
-	    bswap_32 (time->era_entries[idx].start_date[1]);
-	  time->era_entries_ob[idx].start_date[2] =
-	    bswap_32 (time->era_entries[idx].stop_date[2]);
-	  time->era_entries_ob[idx].stop_date[0] =
-	    bswap_32 (time->era_entries[idx].stop_date[0]);
-	  time->era_entries_ob[idx].stop_date[1] =
-	    bswap_32 (time->era_entries[idx].stop_date[1]);
-	  time->era_entries_ob[idx].stop_date[2] =
-	    bswap_32 (time->era_entries[idx].stop_date[2]);
-	  time->era_entries_ob[idx].name =
-	    time->era_entries[idx].name;
-	  time->era_entries_ob[idx].format =
-	    time->era_entries[idx].format;
-	  if (time->era_entries[idx].wname != NULL)
-	    {
-	      size_t inner = (wcslen ((wchar_t *) time->era_entries[idx].wname)
-			      + 1);
-	      time->era_entries_ob[idx].wname = xmalloc (inner
-							 * sizeof (uint32_t));
-	      do
-		time->era_entries_ob[idx].wname[inner - 1]
-		  = bswap_32 (time->era_entries[idx].wname[inner - 1]);
-	      while (inner-- > 0);
-	    }
-	  else
-	    time->era_entries_ob[idx].wname = NULL;
-	  if (time->era_entries[idx].wformat != NULL)
-	    {
-	      size_t inner
-		= wcslen ((wchar_t *) time->era_entries[idx].wformat) + 1;
-	      time->era_entries_ob[idx].wformat = xmalloc (inner
-							   * sizeof (uint32_t));
-	      do
-		time->era_entries_ob[idx].wformat[inner - 1]
-		  = bswap_32 (time->era_entries[idx].wformat[inner - 1]);
-	      while (inner-- > 0);
-	    }
-	  else
-	    time->era_entries_ob[idx].wformat = NULL;
-	}
     }
 
   if (time->week_ndays == 0)
@@ -594,18 +481,6 @@ time_finish (struct localedef_t *locale, struct charmap_t *charmap)
      simply useless, stupid $&$!@...  */
   if (time->timezone == NULL)
     time->timezone = "";
-
-  /* Generate alt digits in other byte order.  */
-  for (cnt = 0; cnt < 100; ++cnt)
-    if (time->walt_digits[cnt] != NULL)
-      {
-	size_t len = wcslen ((wchar_t *) time->walt_digits[cnt]) + 1;
-	uint32_t *wstr = xmalloc (len * sizeof (uint32_t));
-	do
-	  wstr[len - 1] = bswap_32 (time->walt_digits[cnt][len - 1]);
-	while (len-- > 0);
-	time->walt_digits_ob[cnt] = wstr;
-      }
 }
 
 
@@ -621,8 +496,6 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   struct locale_file data;
   uint32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
   size_t cnt, last_idx, num, n;
-  uint32_t num_era_eb;
-  uint32_t num_era_el;
 
   data.magic = LIMAGIC (LC_TIME);
   data.n = _NL_ITEM_INDEX (_NL_NUM_LC_TIME);
@@ -749,66 +622,46 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   ++cnt;
 
   /* The `era' data in usable form.  */
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-  num_era_eb = bswap_32 (time->num_era);
-  num_era_el = time->num_era;
-#else
-  num_era_eb = time->num_era;
-  num_era_el = bswap_32 (time->num_era);
-#endif
-
-  iov[2 + cnt].iov_base = (void *) &num_era_eb;
+  iov[2 + cnt].iov_base = (void *) &time->num_era;
   iov[2 + cnt].iov_len = sizeof (uint32_t);
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) &num_era_el;
-  iov[2 + cnt].iov_len = sizeof (uint32_t);
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define ERA_B1 time->era_entries_ob
-# define ERA_B2 time->era_entries
-#else
-# define ERA_B1 time->era_entries
-# define ERA_B2 time->era_entries_ob
-#endif
   idx[1 + last_idx] = idx[last_idx];
   for (num = 0; num < time->num_era; ++num)
     {
       size_t l;
 
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].direction;
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].direction;
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].offset;
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].offset;
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[0];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[0];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[1];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[1];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].start_date[2];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].start_date[2];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[0];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[0];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[1];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[1];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B1[num].stop_date[2];
+      iov[2 + cnt].iov_base = (void *) &time->era_entries[num].stop_date[2];
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
 
-      l = (strchr (ERA_B1[num].format, '\0') - ERA_B1[num].name) + 1;
+      l = (strchr (time->era_entries[num].format, '\0')
+	   - time->era_entries[num].name) + 1;
       l = (l + 3) & ~3;
-      iov[2 + cnt].iov_base = (void *) ERA_B1[num].name;
+      iov[2 + cnt].iov_base = (void *) time->era_entries[num].name;
       iov[2 + cnt].iov_len = l;
       ++cnt;
 
@@ -816,137 +669,21 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
 
       assert (idx[1 + last_idx] % 4 == 0);
 
-      iov[2 + cnt].iov_base = (void *) ERA_B1[num].wname;
-      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) ERA_B1[cnt].wformat, L'\0')
-			       - (wchar_t *) ERA_B1[num].wname + 1)
+      iov[2 + cnt].iov_base = (void *) time->era_entries[num].wname;
+      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) time->era_entries[cnt].wformat, L'\0')
+			       - (wchar_t *) time->era_entries[num].wname + 1)
 			      * sizeof (uint32_t));
       ++cnt;
 
       idx[1 + last_idx] += iov[2 + cnt].iov_len;
     }
   ++last_idx;
-
-  idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < time->num_era; ++num)
-    {
-      size_t l;
-
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].direction;
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].offset;
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].start_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[0];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[1];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-      iov[2 + cnt].iov_base = (void *) &ERA_B2[num].stop_date[2];
-      iov[2 + cnt].iov_len = sizeof (int32_t);
-      ++cnt;
-
-      l = (strchr (ERA_B2[num].format, '\0') - ERA_B2[num].name) + 1;
-      l = (l + 3) & ~3;
-      iov[2 + cnt].iov_base = (void *) ERA_B2[num].name;
-      iov[2 + cnt].iov_len = l;
-      ++cnt;
-
-      idx[1 + last_idx] += 8 * sizeof (int32_t) + l;
-
-      iov[2 + cnt].iov_base = (void *) ERA_B1[num].wname;
-      iov[2 + cnt].iov_len = ((wcschr ((wchar_t *) ERA_B1[cnt].wformat, L'\0')
-			       - (wchar_t *) ERA_B1[num].wname + 1)
-			      * sizeof (uint32_t));
-      ++cnt;
-
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-    }
-  ++last_idx;
-
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define WABDAY_B1	 wabday_ob
-# define WDAY_B1	 wday_ob
-# define WABMON_B1	 wabmon_ob
-# define WMON_B1	 wmon_ob
-# define WAM_PM_B1	 wam_pm_ob
-# define WD_T_FMT_B1	 wd_t_fmt_ob
-# define WD_FMT_B1	 wd_fmt_ob
-# define WT_FMT_B1	 wt_fmt_ob
-# define WT_FMT_AMPM_B1	 wt_fmt_ampm_ob
-# define WERA_YEAR_B1	 wera_year_ob
-# define WERA_D_FMT_B1	 wera_d_fmt_ob
-# define WALT_DIGITS_B1	 walt_digits_ob
-# define WERA_D_T_FMT_B1 wera_d_t_fmt_ob
-# define WERA_T_FMT_B1	 wera_t_fmt_ob
-# define WABDAY_B2	 wabday
-# define WDAY_B2	 wday
-# define WABMON_B2	 wabmon
-# define WMON_B2	 wmon
-# define WAM_PM_B2	 wam_pm
-# define WD_T_FMT_B2	 wd_t_fmt
-# define WD_FMT_B2	 wd_fmt
-# define WT_FMT_B2	 wt_fmt
-# define WT_FMT_AMPM_B2	 wt_fmt_ampm
-# define WERA_YEAR_B2	 wera_year
-# define WERA_D_FMT_B2	 wera_d_fmt
-# define WALT_DIGITS_B2	 walt_digits
-# define WERA_D_T_FMT_B2 wera_d_t_fmt
-# define WERA_T_FMT_B2	 wera_t_fmt
-#else
-# define WABDAY_B1	wabday
-# define WDAY_B1	wday
-# define WABMON_B1	wabmon
-# define WMON_B1	wmon
-# define WAM_PM_B1	wam_pm
-# define WD_T_FMT_B1	wd_t_fmt
-# define WD_FMT_B1	wd_fmt
-# define WT_FMT_B1	wt_fmt
-# define WT_FMT_AMPM_B1	wt_fmt_ampm
-# define WERA_YEAR_B1	 wera_year
-# define WERA_D_FMT_B1	 wera_d_fmt
-# define WALT_DIGITS_B1	 walt_digits
-# define WERA_D_T_FMT_B1 wera_d_t_fmt
-# define WERA_T_FMT_B1	 wera_t_fmt
-# define WABDAY_B2	wabday_ob
-# define WDAY_B2	wday_ob
-# define WABMON_B2	wabmon_ob
-# define WMON_B2	wmon_ob
-# define WAM_PM_B2	wam_pm_ob
-# define WD_T_FMT_B2	wd_t_fmt_ob
-# define WD_FMT_B2	wd_fmt_ob
-# define WT_FMT_B2	wt_fmt_ob
-# define WT_FMT_AMPM_B2	wt_fmt_ampm_ob
-# define WERA_YEAR_B2	 wera_year_ob
-# define WERA_D_FMT_B2	 wera_d_fmt_ob
-# define WALT_DIGITS_B2	 walt_digits_ob
-# define WERA_D_T_FMT_B2 wera_d_t_fmt_ob
-# define WERA_T_FMT_B2	 wera_t_fmt_ob
-#endif
 
   /* The wide character ab'days.  */
   for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
     {
       iov[2 + cnt].iov_base =
-	(void *) (time->WABDAY_B1[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
-  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->WABDAY_B2[n] ?: empty_wstr);
+	(void *) (time->wabday[n] ?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
       idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
@@ -956,15 +693,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
     {
       iov[2 + cnt].iov_base =
-	(void *) (time->WDAY_B1[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
-  for (n = 0; n < 7; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->WDAY_B2[n] ?: empty_wstr);
+	(void *) (time->wday[n] ?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
       idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
@@ -974,15 +703,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
     {
       iov[2 + cnt].iov_base =
-	(void *) (time->WABMON_B1[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
-  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->WABMON_B2[n] ?: empty_wstr);
+	(void *) (time->wabmon[n] ?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
       idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
@@ -992,15 +713,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
     {
       iov[2 + cnt].iov_base =
-	(void *) (time->WMON_B1[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
-  for (n = 0; n < 12; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->WMON_B2[n] ?: empty_wstr);
+	(void *) (time->wmon[n] ?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
       idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
@@ -1010,84 +723,48 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   for (n = 0; n < 2; ++n, ++cnt, ++last_idx)
     {
       iov[2 + cnt].iov_base =
-	(void *) (time->WAM_PM_B1[n] ?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-    }
-  for (n = 0; n < 2; ++n, ++cnt, ++last_idx)
-    {
-      iov[2 + cnt].iov_base =
-	(void *) (time->WAM_PM_B2[n] ?: empty_wstr);
+	(void *) (time->wam_pm[n] ?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
       idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
     }
 
-  iov[2 + cnt].iov_base = (void *) (time->WD_T_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wd_t_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WD_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wd_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wt_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_AMPM_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wt_fmt_ampm ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WD_T_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wera_year ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WD_FMT_B2 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_B2 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WT_FMT_AMPM_B2 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_YEAR_B2 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_D_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wera_d_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
@@ -1097,7 +774,7 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
   idx[1 + last_idx] = idx[last_idx];
   for (num = 0; num < 100; ++num, ++cnt)
     {
-      iov[2 + cnt].iov_base = (void *) (time->WALT_DIGITS_B2[num]
+      iov[2 + cnt].iov_base = (void *) (time->walt_digits[num]
 					?: empty_wstr);
       iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			      * sizeof (uint32_t));
@@ -1105,53 +782,14 @@ time_output (struct localedef_t *locale, struct charmap_t *charmap,
     }
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WERA_D_T_FMT_B2 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wera_d_t_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
   ++last_idx;
 
-  iov[2 + cnt].iov_base = (void *) (time->WERA_T_FMT_B2 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_YEAR_B1 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_D_FMT_B1 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  idx[1 + last_idx] = idx[last_idx];
-  for (num = 0; num < 100; ++num, ++cnt)
-    {
-      iov[2 + cnt].iov_base = (void *) (time->WALT_DIGITS_B1[num]
-					?: empty_wstr);
-      iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			      * sizeof (uint32_t));
-      idx[1 + last_idx] += iov[2 + cnt].iov_len;
-    }
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_D_T_FMT_B1 ?: empty_wstr);
-  iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
-			  * sizeof (uint32_t));
-  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
-  ++cnt;
-  ++last_idx;
-
-  iov[2 + cnt].iov_base = (void *) (time->WERA_T_FMT_B1 ?: empty_wstr);
+  iov[2 + cnt].iov_base = (void *) (time->wera_t_fmt ?: empty_wstr);
   iov[2 + cnt].iov_len = ((wcslen (iov[2 + cnt].iov_base) + 1)
 			  * sizeof (uint32_t));
   idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;

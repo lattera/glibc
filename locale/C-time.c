@@ -82,7 +82,6 @@ const struct locale_data _nl_C_LC_TIME =
     { string: "" },
     { word: 0 },
     { string: "" },
-    { string: "" },
     { wstr: (const uint32_t *) L"Sun" },
     { wstr: (const uint32_t *) L"Mon" },
     { wstr: (const uint32_t *) L"Tue" },

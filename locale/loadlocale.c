@@ -18,7 +18,6 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <byteswap.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <stdlib.h>
@@ -70,15 +69,8 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   struct stat st;
   struct locale_data *newdata;
   int save_err;
-  int swap = 0;
   int mmaped = 1;
   size_t cnt;
-  inline unsigned int SWAP (const unsigned int *inw)
-    {
-      if (!swap)
-	return *inw;
-      return bswap_32 (*inw);
-    }
 
   file->decided = 1;
   file->data = NULL;
@@ -164,28 +156,18 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
     /* This cannot be a locale data file since it's too small.  */
     goto puntfd;
 
-  if (filedata->magic == LIMAGIC (category))
-    /* Good data file in our byte order.  */
-    swap = 0;
-  else
+  if (filedata->magic != LIMAGIC (category))
+    /* Bad data file in either byte order.  */
     {
-      /* Try the other byte order.  */
-      swap = 1;
-      if (SWAP (&filedata->magic) != LIMAGIC (category))
-	/* Bad data file in either byte order.  */
-	{
-	puntmap:
-	  __munmap ((caddr_t) filedata, st.st_size);
-	puntfd:
-	  __close (fd);
-	  return;
-	}
+    puntmap:
+      __munmap ((caddr_t) filedata, st.st_size);
+    puntfd:
+      __close (fd);
+      return;
     }
 
-#define W(word)	SWAP (&(word))
-
-  if (W (filedata->nstrings) < _nl_category_num_items[category] ||
-      (sizeof *filedata + W (filedata->nstrings) * sizeof (unsigned int)
+  if (filedata->nstrings < _nl_category_num_items[category] ||
+      (sizeof *filedata + filedata->nstrings * sizeof (unsigned int)
        >= (size_t) st.st_size))
     {
       /* Insufficient data.  */
@@ -207,7 +189,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
   newdata->nstrings = _nl_category_num_items[category];
   for (cnt = 0; cnt < newdata->nstrings; ++cnt)
     {
-      off_t idx = W (filedata->strindex[cnt]);
+      off_t idx = filedata->strindex[cnt];
       if (idx >= newdata->filesize)
 	{
 	  free (newdata);
@@ -215,8 +197,7 @@ _nl_load_locale (struct loaded_l10nfile *file, int category)
 	  goto puntmap;
 	}
       if (_nl_value_types[category][cnt] == word)
-	newdata->values[cnt].word = W (*((u_int32_t *) (newdata->filedata
-							+ idx)));
+	newdata->values[cnt].word = *((u_int32_t *) (newdata->filedata + idx));
       else
 	newdata->values[cnt].string = newdata->filedata + idx;
     }

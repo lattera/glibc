@@ -90,11 +90,7 @@ extern char *tzname[];
 # define CHAR_T wchar_t
 # define UCHAR_T unsigned int
 # define L_(Str) L##Str
-# if __BYTE_ORDER == __LITTLE_ENDIAN
-#  define NLW(Sym) _NL_W##Sym##_EL
-# else
-#  define NLW(Sym) _NL_W##Sym##_EB
-# endif
+# define NLW(Sym) _NL_W##Sym
 
 # define MEMCPY(d, s, n) wmemcpy (d, s, n)
 # define STRLEN(s) wcslen (s)

@@ -155,118 +155,67 @@ enum
   ERA_T_FMT,			/* Time in alternate era format.  */
 #define ERA_T_FMT		ERA_T_FMT
 
-  _NL_TIME_ERA_NUM_ENTRIES_EB,	/* Number entries in the era arrays.  */
-  _NL_TIME_ERA_NUM_ENTRIES_EL,	/* Number entries in the era arrays.  */
-  _NL_TIME_ERA_ENTRIES_EB,	/* Structure with era entries in usable form.*/
-  _NL_TIME_ERA_ENTRIES_EL,
+  _NL_TIME_ERA_NUM_ENTRIES,	/* Number entries in the era arrays.  */
+  _NL_TIME_ERA_ENTRIES,		/* Structure with era entries in usable form.*/
 
-  _NL_WABDAY_1_EB, /* Sun */
-  _NL_WABDAY_2_EB,
-  _NL_WABDAY_3_EB,
-  _NL_WABDAY_4_EB,
-  _NL_WABDAY_5_EB,
-  _NL_WABDAY_6_EB,
-  _NL_WABDAY_7_EB,
-  _NL_WABDAY_1_EL, /* Sun */
-  _NL_WABDAY_2_EL,
-  _NL_WABDAY_3_EL,
-  _NL_WABDAY_4_EL,
-  _NL_WABDAY_5_EL,
-  _NL_WABDAY_6_EL,
-  _NL_WABDAY_7_EL,
+  _NL_WABDAY_1,		/* Sun */
+  _NL_WABDAY_2,
+  _NL_WABDAY_3,
+  _NL_WABDAY_4,
+  _NL_WABDAY_5,
+  _NL_WABDAY_6,
+  _NL_WABDAY_7,
 
   /* Long-named days of the week. */
-  _NL_WDAY_1_EB,		/* Sunday */
-  _NL_WDAY_2_EB,		/* Monday */
-  _NL_WDAY_3_EB,		/* Tuesday */
-  _NL_WDAY_4_EB,		/* Wednesday */
-  _NL_WDAY_5_EB,		/* Thursday */
-  _NL_WDAY_6_EB,		/* Friday */
-  _NL_WDAY_7_EB,		/* Saturday */
-  _NL_WDAY_1_EL,		/* Sunday */
-  _NL_WDAY_2_EL,		/* Monday */
-  _NL_WDAY_3_EL,		/* Tuesday */
-  _NL_WDAY_4_EL,		/* Wednesday */
-  _NL_WDAY_5_EL,		/* Thursday */
-  _NL_WDAY_6_EL,		/* Friday */
-  _NL_WDAY_7_EL,		/* Saturday */
+  _NL_WDAY_1,		/* Sunday */
+  _NL_WDAY_2,		/* Monday */
+  _NL_WDAY_3,		/* Tuesday */
+  _NL_WDAY_4,		/* Wednesday */
+  _NL_WDAY_5,		/* Thursday */
+  _NL_WDAY_6,		/* Friday */
+  _NL_WDAY_7,		/* Saturday */
 
   /* Abbreviated month names.  */
-  _NL_WABMON_1_EB,		/* Jan */
-  _NL_WABMON_2_EB,
-  _NL_WABMON_3_EB,
-  _NL_WABMON_4_EB,
-  _NL_WABMON_5_EB,
-  _NL_WABMON_6_EB,
-  _NL_WABMON_7_EB,
-  _NL_WABMON_8_EB,
-  _NL_WABMON_9_EB,
-  _NL_WABMON_10_EB,
-  _NL_WABMON_11_EB,
-  _NL_WABMON_12_EB,
-  _NL_WABMON_1_EL,		/* Jan */
-  _NL_WABMON_2_EL,
-  _NL_WABMON_3_EL,
-  _NL_WABMON_4_EL,
-  _NL_WABMON_5_EL,
-  _NL_WABMON_6_EL,
-  _NL_WABMON_7_EL,
-  _NL_WABMON_8_EL,
-  _NL_WABMON_9_EL,
-  _NL_WABMON_10_EL,
-  _NL_WABMON_11_EL,
-  _NL_WABMON_12_EL,
+  _NL_WABMON_1,		/* Jan */
+  _NL_WABMON_2,
+  _NL_WABMON_3,
+  _NL_WABMON_4,
+  _NL_WABMON_5,
+  _NL_WABMON_6,
+  _NL_WABMON_7,
+  _NL_WABMON_8,
+  _NL_WABMON_9,
+  _NL_WABMON_10,
+  _NL_WABMON_11,
+  _NL_WABMON_12,
 
   /* Long month names.  */
-  _NL_WMON_1_EB,		/* January */
-  _NL_WMON_2_EB,
-  _NL_WMON_3_EB,
-  _NL_WMON_4_EB,
-  _NL_WMON_5_EB,
-  _NL_WMON_6_EB,
-  _NL_WMON_7_EB,
-  _NL_WMON_8_EB,
-  _NL_WMON_9_EB,
-  _NL_WMON_10_EB,
-  _NL_WMON_11_EB,
-  _NL_WMON_12_EB,
-  _NL_WMON_1_EL,		/* January */
-  _NL_WMON_2_EL,
-  _NL_WMON_3_EL,
-  _NL_WMON_4_EL,
-  _NL_WMON_5_EL,
-  _NL_WMON_6_EL,
-  _NL_WMON_7_EL,
-  _NL_WMON_8_EL,
-  _NL_WMON_9_EL,
-  _NL_WMON_10_EL,
-  _NL_WMON_11_EL,
-  _NL_WMON_12_EL,
+  _NL_WMON_1,		/* January */
+  _NL_WMON_2,
+  _NL_WMON_3,
+  _NL_WMON_4,
+  _NL_WMON_5,
+  _NL_WMON_6,
+  _NL_WMON_7,
+  _NL_WMON_8,
+  _NL_WMON_9,
+  _NL_WMON_10,
+  _NL_WMON_11,
+  _NL_WMON_12,
 
-  _NL_WAM_STR_EB,		/* Ante meridian string.  */
-  _NL_WPM_STR_EB,		/* Post meridian string.  */
-  _NL_WAM_STR_EL,		/* Ante meridian string.  */
-  _NL_WPM_STR_EL,		/* Post meridian string.  */
+  _NL_WAM_STR,		/* Ante meridian string.  */
+  _NL_WPM_STR,		/* Post meridian string.  */
 
-  _NL_WD_T_FMT_EB,		/* Date and time format for strftime.  */
-  _NL_WD_FMT_EB,		/* Date format for strftime.  */
-  _NL_WT_FMT_EB,		/* Time format for strftime.  */
-  _NL_WT_FMT_AMPM_EB,		/* 12-hour time format for strftime.  */
-  _NL_WD_T_FMT_EL,		/* Date and time format for strftime.  */
-  _NL_WD_FMT_EL,		/* Date format for strftime.  */
-  _NL_WT_FMT_EL,		/* Time format for strftime.  */
-  _NL_WT_FMT_AMPM_EL,		/* 12-hour time format for strftime.  */
+  _NL_WD_T_FMT,		/* Date and time format for strftime.  */
+  _NL_WD_FMT,		/* Date format for strftime.  */
+  _NL_WT_FMT,		/* Time format for strftime.  */
+  _NL_WT_FMT_AMPM,	/* 12-hour time format for strftime.  */
 
-  _NL_WERA_YEAR_EB,		/* Year in alternate era format.  */
-  _NL_WERA_D_FMT_EB,		/* Date in alternate era format.  */
-  _NL_WALT_DIGITS_EB,		/* Alternate symbols for digits.  */
-  _NL_WERA_D_T_FMT_EB,		/* Date and time in alternate era format.  */
-  _NL_WERA_T_FMT_EB,		/* Time in alternate era format.  */
-  _NL_WERA_YEAR_EL,		/* Year in alternate era format.  */
-  _NL_WERA_D_FMT_EL,		/* Date in alternate era format.  */
-  _NL_WALT_DIGITS_EL,		/* Alternate symbols for digits.  */
-  _NL_WERA_D_T_FMT_EL,		/* Date and time in alternate era format.  */
-  _NL_WERA_T_FMT_EL,		/* Time in alternate era format.  */
+  _NL_WERA_YEAR,	/* Year in alternate era format.  */
+  _NL_WERA_D_FMT,	/* Date in alternate era format.  */
+  _NL_WALT_DIGITS,	/* Alternate symbols for digits.  */
+  _NL_WERA_D_T_FMT,	/* Date and time in alternate era format.  */
+  _NL_WERA_T_FMT,	/* Time in alternate era format.  */
 
   _NL_TIME_WEEK_NDAYS,
   _NL_TIME_WEEK_1STDAY,
@@ -285,49 +234,35 @@ enum
   _NL_COLLATE_RULES,
   _NL_COLLATE_HASH_SIZE,
   _NL_COLLATE_HASH_LAYERS,
-  _NL_COLLATE_TABLEMB_EB,
-  _NL_COLLATE_TABLEMB_EL,
-  _NL_COLLATE_TABLEWC_EB,
-  _NL_COLLATE_TABLEWC_EL,
+  _NL_COLLATE_TABLEMB,
+  _NL_COLLATE_TABLEWC,
   _NL_COLLATE_UNDEFINED_MB,
   _NL_COLLATE_UNDEFINED_WC,
-  _NL_COLLATE_EXTRAMB_EB,
-  _NL_COLLATE_EXTRAMB_EL,
-  _NL_COLLATE_EXTRAWC_EB,
-  _NL_COLLATE_EXTRAWC_EL,
+  _NL_COLLATE_EXTRAMB,
+  _NL_COLLATE_EXTRAWC,
   _NL_COLLATE_ELEM_HASH_SIZE,
-  _NL_COLLATE_ELEM_HASH_EB,
-  _NL_COLLATE_ELEM_HASH_EL,
+  _NL_COLLATE_ELEM_HASH,
   _NL_COLLATE_ELEM_STR_POOL,
-  _NL_COLLATE_ELEM_VAL_EB,
-  _NL_COLLATE_ELEM_VAL_EL,
-  _NL_COLLATE_ELEM_VALMB_EB,
-  _NL_COLLATE_ELEM_VALMB_EL,
-  _NL_COLLATE_ELEM_VALWC_EB,
-  _NL_COLLATE_ELEM_VALWC_EL,
+  _NL_COLLATE_ELEM_VAL,
+  _NL_COLLATE_ELEM_VALMB,
+  _NL_COLLATE_ELEM_VALWC,
   _NL_COLLATE_SYMB_HASH_SIZE,
-  _NL_COLLATE_SYMB_HASH_EB,
-  _NL_COLLATE_SYMB_HASH_EL,
+  _NL_COLLATE_SYMB_HASH,
   _NL_COLLATE_SYMB_STR_POOL,
-  _NL_COLLATE_SYMB_CLASSMB_EB,
-  _NL_COLLATE_SYMB_CLASSMB_EL,
-  _NL_COLLATE_SYMB_CLASSWC_EB,
-  _NL_COLLATE_SYMB_CLASSWC_EL,
+  _NL_COLLATE_SYMB_CLASSMB,
+  _NL_COLLATE_SYMB_CLASSWC,
   _NL_NUM_LC_COLLATE,
 
   /* LC_CTYPE category: character classification.
      This information is accessed by the functions in <ctype.h>.
      These `nl_langinfo' names are used only internally.  */
   _NL_CTYPE_CLASS = _NL_ITEM (LC_CTYPE, 0),
-  _NL_CTYPE_TOUPPER_EB,
-  _NL_CTYPE_TOLOWER_EB,
-  _NL_CTYPE_TOUPPER_EL,
-  _NL_CTYPE_TOLOWER_EL,
+  _NL_CTYPE_TOUPPER,
+  _NL_CTYPE_TOLOWER,
   _NL_CTYPE_CLASS32,
-  _NL_CTYPE_NAMES_EB,
-  _NL_CTYPE_NAMES_EL,
-  _NL_CTYPE_HASH_SIZE_EB,
-  _NL_CTYPE_HASH_LAYERS_EB,
+  _NL_CTYPE_NAMES,
+  _NL_CTYPE_HASH_SIZE,
+  _NL_CTYPE_HASH_LAYERS,
   _NL_CTYPE_CLASS_NAMES,
   _NL_CTYPE_MAP_NAMES,
   _NL_CTYPE_WIDTH,
@@ -336,10 +271,7 @@ enum
 #ifdef __USE_XOPEN
   CODESET = _NL_CTYPE_CODESET_NAME,
 #endif
-  _NL_CTYPE_HASH_SIZE_EL,
-  _NL_CTYPE_HASH_LAYERS_EL,
-  _NL_CTYPE_INDIGITS_MB_LEN_EB,
-  _NL_CTYPE_INDIGITS_MB_LEN_EL,
+  _NL_CTYPE_INDIGITS_MB_LEN,
   _NL_CTYPE_INDIGITS0_MB,
   _NL_CTYPE_INDIGITS1_MB,
   _NL_CTYPE_INDIGITS2_MB,
@@ -350,28 +282,17 @@ enum
   _NL_CTYPE_INDIGITS7_MB,
   _NL_CTYPE_INDIGITS8_MB,
   _NL_CTYPE_INDIGITS9_MB,
-  _NL_CTYPE_INDIGITS_WC_LEN_EB,
-  _NL_CTYPE_INDIGITS_WC_LEN_EL,
-  _NL_CTYPE_INDIGITS0_WC_EB,
-  _NL_CTYPE_INDIGITS1_WC_EB,
-  _NL_CTYPE_INDIGITS2_WC_EB,
-  _NL_CTYPE_INDIGITS3_WC_EB,
-  _NL_CTYPE_INDIGITS4_WC_EB,
-  _NL_CTYPE_INDIGITS5_WC_EB,
-  _NL_CTYPE_INDIGITS6_WC_EB,
-  _NL_CTYPE_INDIGITS7_WC_EB,
-  _NL_CTYPE_INDIGITS8_WC_EB,
-  _NL_CTYPE_INDIGITS9_WC_EB,
-  _NL_CTYPE_INDIGITS0_WC_EL,
-  _NL_CTYPE_INDIGITS1_WC_EL,
-  _NL_CTYPE_INDIGITS2_WC_EL,
-  _NL_CTYPE_INDIGITS3_WC_EL,
-  _NL_CTYPE_INDIGITS4_WC_EL,
-  _NL_CTYPE_INDIGITS5_WC_EL,
-  _NL_CTYPE_INDIGITS6_WC_EL,
-  _NL_CTYPE_INDIGITS7_WC_EL,
-  _NL_CTYPE_INDIGITS8_WC_EL,
-  _NL_CTYPE_INDIGITS9_WC_EL,
+  _NL_CTYPE_INDIGITS_WC_LEN,
+  _NL_CTYPE_INDIGITS0_WC,
+  _NL_CTYPE_INDIGITS1_WC,
+  _NL_CTYPE_INDIGITS2_WC,
+  _NL_CTYPE_INDIGITS3_WC,
+  _NL_CTYPE_INDIGITS4_WC,
+  _NL_CTYPE_INDIGITS5_WC,
+  _NL_CTYPE_INDIGITS6_WC,
+  _NL_CTYPE_INDIGITS7_WC,
+  _NL_CTYPE_INDIGITS8_WC,
+  _NL_CTYPE_INDIGITS9_WC,
   _NL_CTYPE_OUTDIGIT0_MB,
   _NL_CTYPE_OUTDIGIT1_MB,
   _NL_CTYPE_OUTDIGIT2_MB,
@@ -382,38 +303,22 @@ enum
   _NL_CTYPE_OUTDIGIT7_MB,
   _NL_CTYPE_OUTDIGIT8_MB,
   _NL_CTYPE_OUTDIGIT9_MB,
-  _NL_CTYPE_OUTDIGIT0_WC_EB,
-  _NL_CTYPE_OUTDIGIT1_WC_EB,
-  _NL_CTYPE_OUTDIGIT2_WC_EB,
-  _NL_CTYPE_OUTDIGIT3_WC_EB,
-  _NL_CTYPE_OUTDIGIT4_WC_EB,
-  _NL_CTYPE_OUTDIGIT5_WC_EB,
-  _NL_CTYPE_OUTDIGIT6_WC_EB,
-  _NL_CTYPE_OUTDIGIT7_WC_EB,
-  _NL_CTYPE_OUTDIGIT8_WC_EB,
-  _NL_CTYPE_OUTDIGIT9_WC_EB,
-  _NL_CTYPE_OUTDIGIT0_WC_EL,
-  _NL_CTYPE_OUTDIGIT1_WC_EL,
-  _NL_CTYPE_OUTDIGIT2_WC_EL,
-  _NL_CTYPE_OUTDIGIT3_WC_EL,
-  _NL_CTYPE_OUTDIGIT4_WC_EL,
-  _NL_CTYPE_OUTDIGIT5_WC_EL,
-  _NL_CTYPE_OUTDIGIT6_WC_EL,
-  _NL_CTYPE_OUTDIGIT7_WC_EL,
-  _NL_CTYPE_OUTDIGIT8_WC_EL,
-  _NL_CTYPE_OUTDIGIT9_WC_EL,
-  _NL_CTYPE_TRANSLIT_HASH_SIZE_EB,
-  _NL_CTYPE_TRANSLIT_HASH_SIZE_EL,
-  _NL_CTYPE_TRANSLIT_HASH_LAYERS_EB,
-  _NL_CTYPE_TRANSLIT_HASH_LAYERS_EL,
-  _NL_CTYPE_TRANSLIT_FROM_IDX_EB,
-  _NL_CTYPE_TRANSLIT_FROM_IDX_EL,
-  _NL_CTYPE_TRANSLIT_FROM_TBL_EB,
-  _NL_CTYPE_TRANSLIT_FROM_TBL_EL,
-  _NL_CTYPE_TRANSLIT_TO_IDX_EB,
-  _NL_CTYPE_TRANSLIT_TO_IDX_EL,
-  _NL_CTYPE_TRANSLIT_TO_TBL_EB,
-  _NL_CTYPE_TRANSLIT_TO_TBL_EL,
+  _NL_CTYPE_OUTDIGIT0_WC,
+  _NL_CTYPE_OUTDIGIT1_WC,
+  _NL_CTYPE_OUTDIGIT2_WC,
+  _NL_CTYPE_OUTDIGIT3_WC,
+  _NL_CTYPE_OUTDIGIT4_WC,
+  _NL_CTYPE_OUTDIGIT5_WC,
+  _NL_CTYPE_OUTDIGIT6_WC,
+  _NL_CTYPE_OUTDIGIT7_WC,
+  _NL_CTYPE_OUTDIGIT8_WC,
+  _NL_CTYPE_OUTDIGIT9_WC,
+  _NL_CTYPE_TRANSLIT_HASH_SIZE,
+  _NL_CTYPE_TRANSLIT_HASH_LAYERS,
+  _NL_CTYPE_TRANSLIT_FROM_IDX,
+  _NL_CTYPE_TRANSLIT_FROM_TBL,
+  _NL_CTYPE_TRANSLIT_TO_IDX,
+  _NL_CTYPE_TRANSLIT_TO_TBL,
   _NL_NUM_LC_CTYPE,
 
   /* LC_MONETARY category: formatting of monetary quantities.
@@ -479,8 +384,7 @@ enum
   _NL_MONETARY_UNO_VALID_TO,
   _NL_MONETARY_DUO_VALID_FROM,
   _NL_MONETARY_DUO_VALID_TO,
-  _NL_MONETARY_CONVERSION_RATE_EB,
-  _NL_MONETARY_CONVERSION_RATE_EL,
+  _NL_MONETARY_CONVERSION_RATE,
   _NL_NUM_LC_MONETARY,
 
   /* LC_NUMERIC category: formatting of numbers.
@@ -511,10 +415,8 @@ enum
 #define	NOSTR			NOSTR
   _NL_NUM_LC_MESSAGES,
 
-  _NL_PAPER_HEIGHT_EB = _NL_ITEM (LC_PAPER, 0),
-  _NL_PAPER_HEIGHT_EL,
-  _NL_PAPER_WIDTH_EB,
-  _NL_PAPER_WIDTH_EL,
+  _NL_PAPER_HEIGHT = _NL_ITEM (LC_PAPER, 0),
+  _NL_PAPER_WIDTH,
   _NL_NUM_LC_PAPER,
 
   _NL_NAME_NAME_FMT = _NL_ITEM (LC_NAME, 0),
@@ -531,8 +433,7 @@ enum
   _NL_ADDRESS_COUNTRY_AB2,
   _NL_ADDRESS_COUNTRY_AB3,
   _NL_ADDRESS_COUNTRY_CAR,
-  _NL_ADDRESS_COUNTRY_NUM_EB,
-  _NL_ADDRESS_COUNTRY_NUM_EL,
+  _NL_ADDRESS_COUNTRY_NUM,
   _NL_ADDRESS_COUNTRY_ISBN,
   _NL_ADDRESS_LANG_NAME,
   _NL_ADDRESS_LANG_AB,

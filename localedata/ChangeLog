@@ -1,3 +1,7 @@
+1999-09-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/id_ID: Fix typo.
+
 1999-08-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/en_DK: Add Euro symbol to collation and characterization

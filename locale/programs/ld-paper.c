@@ -21,7 +21,6 @@
 # include <config.h>
 #endif
 
-#include <byteswap.h>
 #include <error.h>
 #include <langinfo.h>
 #include <string.h>
@@ -37,9 +36,7 @@
 struct locale_paper_t
 {
   uint32_t height;
-  uint32_t height_ob;
   uint32_t width;
-  uint32_t width_ob;
 };
 
 
@@ -104,7 +101,6 @@ paper_finish (struct localedef_t *locale, struct charmap_t *charmap)
       /* Use as default values the values from the i18n locale.  */
       paper->height = 297;
     }
-  paper->height_ob = bswap_32 (paper->height);
 
   if (paper->width == 0)
     {
@@ -113,7 +109,6 @@ paper_finish (struct localedef_t *locale, struct charmap_t *charmap)
       /* Use as default values the values from the i18n locale.  */
       paper->width = 210;
     }
-  paper->width_ob = bswap_32 (paper->width);
 }
 
 
@@ -133,39 +128,17 @@ paper_output (struct localedef_t *locale, struct charmap_t *charmap,
   iov[cnt].iov_len = sizeof (data);
   ++cnt;
 
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-# define height_eb	height_ob
-# define height_el	height
-# define width_eb	width_ob
-# define width_el	width
-#else
-# define height_eb	height
-# define height_el	height_ob
-# define width_eb	width
-# define width_el	width_ob
-#endif
-
   iov[cnt].iov_base = (void *) idx;
   iov[cnt].iov_len = sizeof (idx);
   ++cnt;
 
   idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = &paper->height_eb;
+  iov[cnt].iov_base = &paper->height;
   iov[cnt].iov_len = 4;
   ++cnt;
 
   idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = &paper->height_el;
-  iov[cnt].iov_len = 4;
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = &paper->width_eb;
-  iov[cnt].iov_len = 4;
-  ++cnt;
-
-  idx[cnt - 2] = iov[0].iov_len + iov[1].iov_len;
-  iov[cnt].iov_base = &paper->width_el;
+  iov[cnt].iov_base = &paper->width;
   iov[cnt].iov_len = 4;
   ++cnt;
 

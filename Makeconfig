@@ -205,12 +205,18 @@ zonedir = $(datadir)/zoneinfo
 endif
 inst_zonedir = $(install_root)$(zonedir)
 
-# Where to install the locale and message catalog data files (which are
-# machine-independent).
+# Where to install the locale files.
 ifndef localedir
-localedir = $(datadir)/locale
+localedir = $(libdir)/locale
 endif
 inst_localedir = $(install_root)$(localedir)
+
+# Where to install the message catalog data files (which are
+# machine-independent).
+ifndef msgcatdir
+msgcatdir = $(datadir)/locale
+endif
+inst_msgcatdir = $(install_root)$(msgcatdir)
 
 # Where to install the locale charmap source files.
 ifndef i18ndir

@@ -1,5 +1,6 @@
 escape_char  /
 comment_char  %
+repertoiremap mnemonic.ds
 
 % Indonesian language locale for Indonesia
 % Source:
@@ -10,8 +11,8 @@ comment_char  %
 % Fax:
 % Language: id
 % Territory: ID
-% Revision: 0.3
-% Date: 1999-04-10
+% Revision: 0.5
+% Date: 1999-09-08
 % Application: general
 % Users: general
 % Repertoiremap:
@@ -79,7 +80,7 @@ mon         "<J><a><n><u><a><r><i>";/
             "<A><g><u><s><t><u><s>";/
             "<S><e><p><t><e><m><b><e><r>";/
             "<O><k><t><o><b><e><r>";/
-            "<N><o><p><e><m><b><e><r>";/
+            "<N><o><v><e><m><b><e><r>";/
             "<D><e><s><e><m><b><e><r>"
 d_t_fmt     "<%><a><SP><%><d><SP><%><b><SP><%><Y><SP><%><r><SP><%><Z>"
 d_fmt       "<%><d><//><%><m><//><%><y>"

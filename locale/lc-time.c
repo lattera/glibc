@@ -64,13 +64,8 @@ _nl_get_era_entry (const struct tm *tp)
 
   if (era_initialized == 0)
     {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
       size_t new_num_eras = _NL_CURRENT_WORD (LC_TIME,
-					      _NL_TIME_ERA_NUM_ENTRIES_EL);
-#else
-      size_t new_num_eras = _NL_CURRENT_WORD (LC_TIME,
-					      _NL_TIME_ERA_NUM_ENTRIES_EB);
-#endif
+					      _NL_TIME_ERA_NUM_ENTRIES);
 
       if (eras != NULL && new_num_eras == 0)
 	{
@@ -86,11 +81,7 @@ _nl_get_era_entry (const struct tm *tp)
 	    num_eras = 0;
 	  else
 	    {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-	      const char *ptr = _NL_CURRENT (LC_TIME, _NL_TIME_ERA_ENTRIES_EL);
-#else
-	      const char *ptr = _NL_CURRENT (LC_TIME, _NL_TIME_ERA_ENTRIES_EB);
-#endif
+	      const char *ptr = _NL_CURRENT (LC_TIME, _NL_TIME_ERA_ENTRIES);
 	      num_eras = new_num_eras;
 
 	      for (cnt = 0; cnt < num_eras; ++cnt)
@@ -193,11 +184,7 @@ _nl_get_walt_digit (unsigned int number)
 
       if (walt_digits != NULL)
 	{
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-	  const wchar_t *ptr = _NL_CURRENT_WSTR (LC_TIME, _NL_WALT_DIGITS_EL);
-#else
-	  const wchar_t *ptr = _NL_CURRENT_WSTR (LC_TIME, _NL_WALT_DIGITS_EB);
-#endif
+	  const wchar_t *ptr = _NL_CURRENT_WSTR (LC_TIME, _NL_WALT_DIGITS);
 	  size_t cnt;
 
 	  for (cnt = 0; cnt < 100; ++cnt)

@@ -113,7 +113,7 @@ struct arphdr
 #define ARPHRD_HIPPI	780		/* High Performance Parallel I'face. */
 #define ARPHRD_ASH	781		/* (Nexus Electronics) Ash.  */
 #define ARPHRD_ECONET	782		/* Acorn Econet.  */
-#define ARPHRD_IRDA	783		/* Linux/IR.  */
+#define ARPHRD_IRDA	783		/* Linux-IrDA.  */
 #define ARPHRD_FCPP	784		/* Point to point fibrechanel.  */
 #define ARPHRD_FCAL	785		/* Fibrechanel arbitrated loop.  */
 #define ARPHRD_FCPL	786		/* Fibrechanel public loop.  */

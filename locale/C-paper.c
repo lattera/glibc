@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -29,11 +29,9 @@ const struct locale_data _nl_C_LC_PAPER =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  4,
+  2,
   {
     { word: 297 },
-    { word: 297 },
-    { word: 210 },
     { word: 210 }
   }
 };

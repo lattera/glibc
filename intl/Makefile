@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -25,14 +25,14 @@ routines = bindtextdom dcgettext dgettext gettext	\
 	   l10nflist explodename
 distribute = gettext.h gettextP.h hash-string.h loadinfo.h locale.alias
 
-install-others = $(inst_localedir)/locale.alias
+install-others = $(inst_msgcatdir)/locale.alias
 
 include ../Rules
 
-CPPFLAGS += -D'GNULOCALEDIR="$(localedir)"' \
-	    -D'LOCALE_ALIAS_PATH="$(localedir):$(i18ndir)"'
+CPPFLAGS += -D'GNULOCALEDIR="$(msgcatdir)"' \
+	    -D'LOCALE_ALIAS_PATH="$(msgcatdir):$(i18ndir)"'
 
-$(inst_localedir)/locale.alias: locale.alias $(+force)
+$(inst_msgcatdir)/locale.alias: locale.alias $(+force)
 	$(do-install)
 
 ifdef gettext-srcdir
