@@ -1,3 +1,11 @@
+2003-09-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/atomic.h (atomic_compare_and_exchange_val_rel,
+	atomic_compare_and_exchange_bool_rel): Swap oldval/newval arguments
+	to avoid confusion.
+
+	* sysdeps/unix/opendir.c: Include string.h.
+
 2003-09-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* timezone/zdump.c: Update from tzcode2003c.

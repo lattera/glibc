@@ -18,6 +18,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/param.h>

@@ -184,10 +184,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
     2  -  taken by more users */
 
 
-//#if defined NOT_IN_libc || defined UP
-/* According to AMD it is not necessary to play tricks with avoiding the
-   lock instruction.  */
-#if 1
+#if defined NOT_IN_libc || defined UP
 # define lll_trylock(futex) lll_mutex_trylock (futex)
 # define lll_lock(futex) lll_mutex_lock (futex)
 # define lll_unlock(futex) lll_mutex_unlock (futex)
@@ -195,14 +192,19 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 /* Special versions of the macros for use in libc itself.  They avoid
    the lock prefix when the thread library is not used.
 
+   The code sequence to avoid unnecessary lock prefixes is what the AMD
+   guys suggested.  If you do not like it, bring it up with AMD.
+
    XXX In future we might even want to avoid it on UP machines.  */
 
 # define lll_trylock(futex) \
   ({ unsigned char ret;							      \
      __asm __volatile ("cmpl $0, __libc_multiple_threads(%%rip)\n\t"	      \
 		       "je 0f\n\t"					      \
-		       "lock\n"						      \
-		       "0:\tcmpxchgl %2, %1; setne %0"			      \
+		       "lock; cmpxchgl %2, %1\n\t"			      \
+		       "jmp 1f\n"					      \
+		       "0:\tcmpxchgl %2, %1\n\t"			      \
+		       "1:setne %0"					      \
 		       : "=a" (ret), "=m" (futex)			      \
 		       : "r" (LLL_MUTEX_LOCK_INITIALIZER_LOCKED), "m" (futex),\
 			 "0" (LLL_MUTEX_LOCK_INITIALIZER)		      \
@@ -214,7 +216,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
   (void) ({ int ignore1, ignore2, ignore3;				      \
 	    __asm __volatile ("cmpl $0, __libc_multiple_threads(%%rip)\n\t"   \
 			      "je 0f\n\t"				      \
-			      "lock\n"					      \
+			      "lock; cmpxchgl %0, %2\n\t"		      \
+			      "jnz 1f\n\t"				      \
+		  	      "jmp 2f\n"				      \
 			      "0:\tcmpxchgl %0, %2\n\t"			      \
 			      "jnz 1f\n\t"				      \
 			      ".subsection 1\n"				      \
@@ -235,7 +239,9 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
   (void) ({ int ignore;							      \
             __asm __volatile ("cmpl $0, __libc_multiple_threads(%%rip)\n\t"   \
 			      "je 0f\n\t"				      \
-			      "lock\n"					      \
+			      "lock; decl %0\n\t"			      \
+			      "jne 1f\n\t"				      \
+		  	      "jmp 2f\n"				      \
 			      "0:\tdecl %0\n\t"				      \
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
