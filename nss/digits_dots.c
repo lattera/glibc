@@ -117,6 +117,7 @@
 		      break;
 		    default:
 		      assert (! "There should be no other `af' value");
+		      not_ok = 1;
 		    }
 		  if (not_ok)
 		    {

@@ -1,3 +1,7 @@
+1999-04-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/digits_dots.c: Always initialize not_ok.
+
 1999-04-30 09:02 -0400  Zack Weinberg  <zack@rabi.columbia.edu>
 
 	* string/bits/string2.h (memset): Avoid arithmetic overflow at
