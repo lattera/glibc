@@ -622,7 +622,7 @@ int __pthread_initialize_manager(void)
   mgr->p_header.data.self = mgr;
   mgr->p_header.data.multiple_threads = 1;
 #elif TLS_MULTIPLE_THREADS_IN_TCB
-  p_multiple_threads (mgr) = 1;
+  mgr->p_multiple_threads = 1;
 #endif
   mgr->p_lock = &__pthread_handles[1].h_lock;
 # ifndef HAVE___THREAD
