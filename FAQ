@@ -295,7 +295,9 @@ Binutils 2.9.1.0.16 or later is also required.
   `message catalog' files containing translated versions of system
   messages. See ftp://ftp.gnu.org/pub/gnu or better any mirror
   site.  (We distribute compiled message catalogs, but they may not be
-  updated in patches.)
+  updated in patches.)  Please note that the required minimal version
+  (0.10.35) of gettext is alpha software and available from
+  ftp://alpha.gnu.org/gnu .
 
 * Some files are built with special tools.  E.g., files ending in .gperf
   need a `gperf' program.  The GNU version (now available in a separate
