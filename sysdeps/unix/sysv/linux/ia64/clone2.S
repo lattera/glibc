@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +22,12 @@
 
 
 /* int  __clone2(int (*fn) (void *arg), void *child_stack_base, 	*/
-/* 	         size_t child_stack_size, int flags, void *arg) */
+/* 	         size_t child_stack_size, int flags, void *arg,		*/
+/*	         pid_t *child_tid, pid_t *parent_tid,			*/
+/*	         struct user_desc *tls) */
 
 ENTRY(__clone2)
-	alloc r2=ar.pfs,5,2,3,0
+	alloc r2=ar.pfs,8,2,6,0
 	cmp.eq p6,p0=0,in0
 	mov r8=EINVAL
 (p6)	br.cond.spnt.few __syscall_error
@@ -41,6 +43,9 @@ ENTRY(__clone2)
 	mov out0=in3		/* Flags are first syscall argument.	*/
 	mov out1=in1		/* Stack address.			*/
 	mov out2=in2		/* Stack size.				*/
+	mov out3=in5		/* Child TID Pointer			*/
+	mov out4=in6		/* Parent TID Pointer			*/
+ 	mov out5=in7		/* TLS pointer				*/
         DO_CALL (SYS_ify (clone2))
         cmp.eq p6,p0=-1,r10
 	;;

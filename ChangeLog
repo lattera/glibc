@@ -1,3 +1,9 @@
+2003-03-03  Ian Wienand  <ianw@gelato.unsw.edu.au>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Update to take extra clone
+	flags.
+	* include/sched.h: Update clone2 prototype.
+
 2003-03-03  Andreas Jaeger  <aj@suse.de>
 
 	* math/tgmath.h (__TGMATH_UNARY_REAL_RET_ONLY): New definition.
