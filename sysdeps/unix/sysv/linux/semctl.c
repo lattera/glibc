@@ -40,15 +40,15 @@ union semun
 int
 semctl (int semid, int semnum, int cmd, ...)
 {
-  union semun *arg;
+  union semun arg;
   va_list ap;
 
   va_start (ap, cmd);
 
-  /* Get a pointer the argument.  */
-  arg = &va_arg (ap, union semun);
+  /* Get the argument.  */
+  arg = va_arg (ap, union semun);
 
   va_end (ap);
 
-  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, arg);
+  return INLINE_SYSCALL (ipc, 5, IPCOP_semctl, semid, semnum, cmd, &arg);
 }

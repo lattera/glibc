@@ -8,7 +8,7 @@ long-double-fcts = yes
 ifeq ($(subdir),csu)
 # On i686 we must avoid generating the trampoline functions generated
 # to get the GOT pointer.
-CFLAGS-initfini.s += -march=i386
+CFLAGS-initfini.s += -march=i386 -mcpu=i386
 endif
 
 ifeq ($(subdir),db2)

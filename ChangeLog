@@ -1,3 +1,13 @@
+1999-09-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/i386/Makefile (CFLAGS-initfini.s): Add also -mcpu=i386
+	to override user settings.
+
+1999-09-17  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/semctl.c: Copy the argument instead of
+	using a pointer to it.
+
 1999-09-16  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/getdate.c (__getdate_r): Pass correct year to check_mday.
