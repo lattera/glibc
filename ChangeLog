@@ -1,5 +1,13 @@
 Mon May 13 12:03:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* time/Makefile (zonenames): Target removed.
+	(extra-objs): Remove it from here.
+	Include the z.* files directly instead of including zonenames; use
+	`-include' to not complain befre they exist.
+
+	* sysdeps/unix/Makefile: Find sysd-syscalls and s-proto.d with
+	$(common-objpfx) instead of $(objpfx).
+
 	* Makerules [install-lib-non.a]: Find these things with $(objpfx)
 	instead of $(common-objpfx).
 

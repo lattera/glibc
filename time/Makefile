@@ -23,7 +23,7 @@ subdir	:= time
 
 headers	:= time.h sys/time.h sys/timeb.h timebits.h
 distribute := tzfile.h private.h scheck.c ialloc.c yearistype
-extra-objs = scheck.o ialloc.o zonenames $(tzfiles:%=z.%)
+extra-objs = scheck.o ialloc.o $(tzfiles:%=z.%)
 
 routines	:= offtime asctime clock ctime difftime gmtime	\
 		   localtime mktime strftime time tzset tzfile	\
@@ -46,12 +46,12 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig	# Get objpfx defined so we can use it below.
 
-# zonenames uses this variable.
+# z.* use this variable.
 define nl
 
 
 endef
-include $(objpfx)zonenames
+-include $(addprefix $(objpfx)z.,$(tzfiles))
 
 # Make these absolute file names.
 installed-localtime-file := $(firstword $(filter /%,$(localtime-file)) \
@@ -85,11 +85,6 @@ $(tzfiles:%=$(objpfx)z.%): $(objpfx)z.%: % Makefile
 	 echo 'endif'							;\
 	 echo 'zonenames := $$(zonenames) $$($*-zones)'			;\
 	) > $@.new
-	mv $@.new $@
-$(objpfx)zonenames: Makefile
-	(for file in $(tzfiles); do \
-	   echo "include \$$(objpfx)z.$$file"; \
-	 done) > $@.new
 	mv $@.new $@
 
 .PHONY: echo-zonenames

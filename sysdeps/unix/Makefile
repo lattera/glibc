@@ -272,7 +272,7 @@ ifndef inhibit-unix-syscalls
 # Sysdep dirs unix/... can contain a file syscalls.list,
 # which specifies objects to be compiled as simple Unix system calls.
 
--include $(objpfx)sysd-syscalls
+-include $(common-objpfx)sysd-syscalls
 omit-deps += $(unix-syscalls)
 
 ifeq (misc,$(subdir))
@@ -282,8 +282,8 @@ endif
 export sysdirs
 export asm_CPP := $(COMPILE.S) -E -x assembler-with-cpp
 
-$(objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
-			$(wildcard $(+sysdep_dirs:%=%/syscalls.list))
+$(common-objpfx)sysd-syscalls: $(..)sysdeps/unix/make-syscalls.sh \
+			       $(wildcard $(+sysdep_dirs:%=%/syscalls.list))
 	for dir in $$sysdirs; do \
 	  test -f $(..)sysdeps/$$dir/syscalls.list && \
 	  { $(SHELL) $(dir $<)$(notdir $<) \
@@ -298,7 +298,7 @@ ifdef subdir
 ifndef no_deps
 # These deps use file names relative to a subdir, so don't
 # include them in the parent directory.
--include $(objpfx)s-proto.d
+-include $(common-objpfx)s-proto.d
 endif
 endif
 

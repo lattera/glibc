@@ -874,6 +874,10 @@ families of functions; reentrant @samp{@dots{}@code{_r}} versions of the
 several highly-optimized string functions for i@var{x}86 processors.
 
 @item
+The math functions are taken from @code{fdlibm-5.1} by Sun
+Microsystems, as modified by J.T. Conklin and Ian Lance Taylor.
+
+@item
 The Internet-related code (most of the @file{inet} subdirectory) and
 several other miscellaneous functions and header files have been
 included from 4.4 BSD with little or no modification.

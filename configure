@@ -17,7 +17,7 @@ ac_help="$ac_help
 ac_help="$ac_help
   --with-gettext=DIR	  find GNU gettext source code in DIR (not needed)"
 ac_help="$ac_help
-  --with-fp		  if using floating-point hardware"
+  --with-fp		  if using floating-point hardware default=yes"
 ac_help="$ac_help
   --with-gnu-binutils	  if using GNU binutils (as and ld)"
 ac_help="$ac_help
