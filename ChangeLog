@@ -1,3 +1,8 @@
+2005-01-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-load.c (open_path): If rtld_search_dirs is in RELRO segment,
+	avoid writing to it if none of the standard search directories exist.
+
 2005-02-07  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	[BZ #700]
