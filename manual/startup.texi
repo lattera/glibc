@@ -86,7 +86,7 @@ three elements, @code{"cat"}, @code{"foo"} and @code{"bar"}.
 In Unix systems you can define @code{main} a third way, using three arguments:
 
 @smallexample
-int main (int @var{argc}, char *@var{argv}[], char *@var{envp})
+int main (int @var{argc}, char *@var{argv}[], char *@var{envp}[])
 @end smallexample
 
 The first two arguments are just the same.  The third argument

@@ -224,23 +224,29 @@ _dl_start_user:
 	sethi	%hi(__libc_stack_end), %g2
 	or	%g2, %lo(__libc_stack_end), %g2
 	ld	[%l7 + %g2], %l1
+	sethi	%hi(_dl_skip_args), %g2
 	add	%sp, 6*4, %l2
+	or	%g2, %lo(_dl_skip_args), %g2
 	st	%l2, [%l1]
   /* See if we were run as a command with the executable file name as an
      extra leading argument.  If so, adjust the contents of the stack.  */
-	sethi	%hi(_dl_skip_args), %g2
-	or	%g2, %lo(_dl_skip_args), %g2
 	ld	[%l7+%g2], %i0
 	ld	[%i0], %i0
 	tst	%i0
 	beq	3f
 	 ld	[%sp+22*4], %i5		/* load argc */
 	/* Find out how far to shift.  */
+	sethi	%hi(_dl_argv), %l3
+	or	%l3, %lo(_dl_argv), %l3
+	ld	[%l7+%l3], %l3
 	sub	%i5, %i0, %i5
+	ld	[%l3], %l4
 	sll	%i0, 2, %i2
 	st	%i5, [%sp+22*4]
+	sub	%l4, %i2, %l4
 	add	%sp, 23*4, %i1
 	add	%i1, %i2, %i2
+	st	%l4, [%l3]
 	/* Copy down argv */
 21:	ld	[%i2], %i3
 	add	%i2, 4, %i2

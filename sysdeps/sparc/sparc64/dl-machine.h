@@ -544,38 +544,43 @@ _start:
 _dl_start_user:
    /* Load the GOT register.  */
 1:	call	11f
-	sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-11:	or	%l7,%lo(_GLOBAL_OFFSET_TABLE_-(1b-.)),%l7
-	add	%l7,%o7,%l7
-   /* Save the user entry point address in %l0.  */
-	mov	%o0,%l0
+	 sethi	%hi(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
+11:	or	%l7, %lo(_GLOBAL_OFFSET_TABLE_-(1b-.)), %l7
   /* Store the highest stack address.  */
 	sethi	%hi(__libc_stack_end), %g5
+	add	%l7, %o7, %l7
 	or	%g5, %lo(__libc_stack_end), %g5
+   /* Save the user entry point address in %l0.  */
+	mov	%o0, %l0
 	ldx	[%l7 + %g5], %l1
+	sethi	%hi(_dl_skip_args), %g5
 	add	%sp, 6*8, %l2
-	stx	%l2, [%l1]
    /* See if we were run as a command with the executable file name as an
       extra leading argument.  If so, we must shift things around since we
       must keep the stack doubleword aligned.  */
-	sethi	%hi(_dl_skip_args), %g5
 	or	%g5, %lo(_dl_skip_args), %g5
-	ldx	[%l7+%g5], %i0
+	stx	%l2, [%l1]
+	ldx	[%l7 + %g5], %i0
 	ld	[%i0], %i0
 	brz,pt	%i0, 2f
-	 ldx	[%sp+" __S(STACK_BIAS) "+22*8], %i5
+	 ldx	[%sp + " __S(STACK_BIAS) " + 22*8], %i5
 	/* Find out how far to shift.  */
+	sethi	%hi(_dl_argv), %l4
 	sub	%i5, %i0, %i5
-	sllx	%i0, 3, %i2
-	stx	%i5, [%sp+" __S(STACK_BIAS) "+22*8]
-	add	%sp, " __S(STACK_BIAS) "+23*8, %i1
-	add	%i1, %i2, %i2
+	or	%l4, %lo(_dl_argv), %l4
+	sllx	%i0, 3, %l6
+	ldx	[%l7 + %l4], %l4
+	stx	%i5, [%sp + " __S(STACK_BIAS) " + 22*8]
+	add	%sp, " __S(STACK_BIAS) " + 23*8, %i1
+	add	%i1, %l6, %i2
+	ldx	[%l4], %l5
 	/* Copy down argv.  */
 12:	ldx	[%i2], %i3
 	add	%i2, 8, %i2
 	stx	%i3, [%i1]
 	brnz,pt	%i3, 12b
 	 add	%i1, 8, %i1
+	sub	%l5, %l6, %l5
 	/* Copy down envp.  */
 13:	ldx	[%i2], %i3
 	add	%i2, 8, %i2
@@ -584,18 +589,19 @@ _dl_start_user:
 	 add	%i1, 8, %i1
 	/* Copy down auxiliary table.  */
 14:	ldx	[%i2], %i3
-	ldx	[%i2+8], %i4
+	ldx	[%i2 + 8], %i4
 	add	%i2, 16, %i2
 	stx	%i3, [%i1]
-	stx	%i4, [%i1+8]
-	brnz,pt	%i3, 13b
+	stx	%i4, [%i1 + 8]
+	brnz,pt	%i3, 14b
 	 add	%i1, 16, %i1
+	stx	%l5, [%l4]
   /* %o0 = _dl_loaded, %o1 = argc, %o2 = argv, %o3 = envp.  */
 2:	sethi	%hi(_dl_loaded), %o0
-	add	%sp, " __S(STACK_BIAS) "+23*8, %o2
+	add	%sp, " __S(STACK_BIAS) " + 23*8, %o2
 	orcc	%o0, %lo(_dl_loaded), %o0
 	sllx	%i5, 3, %o3
-	ldx	[%l7+%o0], %o0
+	ldx	[%l7 + %o0], %o0
 	add	%o3, 8, %o3
 	mov	%i5, %o1
 	add	%o2, %o3, %o3
@@ -604,7 +610,7 @@ _dl_start_user:
    /* Pass our finalizer function to the user in %g1.  */
 	sethi	%hi(_dl_fini), %g1
 	or	%g1, %lo(_dl_fini), %g1
-	ldx	[%l7+%g1], %g1
+	ldx	[%l7 + %g1], %g1
   /* Jump to the user's entry point and deallocate the extra stack we got.  */
 	jmp	%l0
 	 add	%sp, 6*8, %sp

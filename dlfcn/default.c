@@ -1,5 +1,6 @@
 #include <dlfcn.h>
 #include <stdio.h>
+#include <string.h>
 
 
 extern int test_in_mod1 (void *);
@@ -12,7 +13,22 @@ main (int argc, char *argv[])
   int (*ifp) (void);
   void *p;
   int result = 0;
-
+  Dl_info info;
+  
+  dladdr(main, &info);
+  if (info.dli_fname == NULL)
+    {
+      printf ("%s: dladdr returns NULL dli_fname\n", __FILE__);
+      result = 1;
+    }
+  else if (strcmp (info.dli_fname, argv[0]))
+    {
+      printf ("%s: dladdr returned '%s' as dli_fname\n", __FILE__, info.dli_fname);
+      result = 1;
+    }
+  else
+    printf ("%s: dladdr returned correct dli_fname\n", __FILE__);
+      
   /* Find function `main'.  */
   p = dlsym (RTLD_DEFAULT, "main");
   if (p == NULL)

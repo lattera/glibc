@@ -1,4 +1,24 @@
+2000-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* dlfcn/default.c (main): Add test for dladdr of main returning
+	argv[0] in dli_fname field.
+
+2000-11-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makeconfig (run-program-prefix): Move test-static test into the
+	variable.
+
+	* sysdeps/alpha/dl-machine.h (RTLD_START): Update _dl_argv.
+	* sysdeps/sparc/sparc32/dl-machine.h (RTLD_START): Likewise,
+	schedule instructions.
+	* sysdeps/sparc/sparc64/dl-machine.h (RTLD_START): Likewise,
+	schedule instructions, fix a bug in copying auxiliary data.
+
 2000-11-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* manual/startup.texi (Program Arguments): Fix type of main's envp
+	parameter.
+	Reported by Raúl Núñez de Arenas Coronado <dervishd@linuxfreak.com>.
 
 	* iconvdata/gconv-modules: Add CP950 alias.
 
