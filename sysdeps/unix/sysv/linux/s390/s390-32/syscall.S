@@ -37,15 +37,19 @@ ENTRY (syscall)
 	lr     %r4,%r5             /* third parameter  */
 	lr     %r5,%r6             /* fourth parameter */
 	l      %r6,192(%r15)       /* fifth parameter  */
-	basr   %r7,0
-.L0:    ex     %r1,.L1-.L0(%r7)    /* lsb of R1 is subsituted as SVC number */
 
-	l       %r15,0(0,%r15)     /* load back chain */
-	lm      %r6,15,24(%r15)    /* load registers */
+	basr   %r7,0
+0:	cl     %r1,4f-0b(%r7)      /* svc number < 256? */
+	jl     2f
+1:	svc    0
+	j      3f
+2:	ex     %r1,1b-0b(%r7)      /* lsb of R1 is subsituted as SVC number */
+3:	l      %r15,0(%r15)        /* load back chain */
+	lm     %r6,15,24(%r15)     /* load registers */
 
 	lhi    %r0,-4095
 	clr    %r2,%r0             /* check R2 for error */
 	jnl    SYSCALL_ERROR_LABEL
 	br     %r14                /* return to caller */
-.L1:    .word  0x0A00              /* opcode for SVC 0 */
+4:	.long  256
 PSEUDO_END (syscall)

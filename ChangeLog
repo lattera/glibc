@@ -1,5 +1,32 @@
 2003-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/fileops.c (_IO_new_file_fopen): Close stillborn descriptor
+	if ccs parameter isn't valid.  Reported by Andreas Schwab.
+
+2003-03-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.S (syscall): Add support
+	for system call numbers > 255.
+	* sysdeps/unix/sysv/linux/s390/s390-32/syscall.h (DO_CALL,
+	INLINE_SYSCALL, INTERNAL_SYSCALL_DIRECT, INTERNAL_SYSCALL_SVC0,
+	INTERNAL_SYSCALL): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.S (syscall): Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-64/syscall.h (DO_CALL,
+	INLINE_SYSCALL, INTERNAL_SYSCALL_DIRECT, INTERNAL_SYSCALL_SVC0,
+	INTERNAL_SYSCALL): Likewise.
+
+2003-03-03  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_deallocate_tls): Don't free the dtv
+	array if it is the initial dtv.
+
+2003-03-03  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/es.po: Update from translation team.
+	* po/fr.po: Likewise.
+	* po/sk.po: Likewise.
+	* po/sv.po: Likewise.
+
 	* sysdeps/unix/sysv/linux/syscalls.list: Add remap_file_pages entry.
 	* misc/sys/mman.h: Add prototype for remap_file_pages.
 	* sysdeps/generic/remap_file_pages.c: New file.

@@ -353,6 +353,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	      /* Something went wrong, we cannot load the conversion modules.
 		 This means we cannot proceed since the user explicitly asked
 		 for these.  */
+	      (void) INTUSE(_IO_file_close_it) (fp);
 	      __set_errno (EINVAL);
 	      return NULL;
 	    }

@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 2.3.1\n"
-"POT-Creation-Date: 2002-10-02 17:22-0700\n"
-"PO-Revision-Date: 2002-10-12 12:00-0500\n"
+"Project-Id-Version: GNU libc 2.3.2\n"
+"POT-Creation-Date: 2003-02-22 15:34-0800\n"
+"PO-Revision-Date: 2003-03-03 08:00-0500\n"
 "Last-Translator: Michel Robitaille <robitail@IRO.UMontreal.CA>\n"
 "Language-Team: French <traduc@traduc.org>\n"
 "MIME-Version: 1.0\n"
@@ -259,8 +259,8 @@ msgstr "Ne peut ouvrir le fichier de sortie"
 
 #: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversions from `%s' and to `%s' are not supported"
-msgstr "conversions de « %s » vers « %s » ne sont pas supportées"
+msgid "conversion from `%s' and to `%s' are not supported"
+msgstr "conversions de « %s » et de , vers « %s » ne sont pas supportées"
 
 #: iconv/iconv_prog.c:246
 #, c-format
@@ -285,15 +285,15 @@ msgstr "Échec de démarrage du processus de conversion"
 msgid "error while closing output file"
 msgstr "Erreur lors de la fermeture du fichier de sortie"
 
-#: iconv/iconv_prog.c:407 iconv/iconvconfig.c:355 locale/programs/locale.c:268
+#: iconv/iconv_prog.c:407 iconv/iconvconfig.c:357 locale/programs/locale.c:274
 #: locale/programs/localedef.c:372 catgets/gencat.c:233
 #: malloc/memusagestat.c:602 debug/pcprofiledump.c:199
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
 msgstr "Rapporter toutes anomalies via le script « glibcbug » à <bugs@gnu.org>.\n"
 
-#: iconv/iconv_prog.c:421 iconv/iconvconfig.c:369 locale/programs/locale.c:281
-#: locale/programs/localedef.c:386 catgets/gencat.c:246 posix/getconf.c:904
-#: nss/getent.c:74 nscd/nscd.c:279 nscd/nscd_nischeck.c:90 elf/ldconfig.c:259
+#: iconv/iconv_prog.c:421 iconv/iconvconfig.c:371 locale/programs/locale.c:287
+#: locale/programs/localedef.c:386 catgets/gencat.c:246 posix/getconf.c:910
+#: nss/getent.c:74 nscd/nscd.c:330 nscd/nscd_nischeck.c:90 elf/ldconfig.c:271
 #: elf/sprof.c:349
 #, c-format
 msgid ""
@@ -306,9 +306,9 @@ msgstr ""
 "reproduction. AUCUNE garantie n'est donnée; tant pour des raisons\n"
 "COMMERCIALES que pour RÉPONDRE À UN BESOIN PARTICULIER.\n"
 
-#: iconv/iconv_prog.c:426 iconv/iconvconfig.c:374 locale/programs/locale.c:286
-#: locale/programs/localedef.c:391 catgets/gencat.c:251 posix/getconf.c:909
-#: nss/getent.c:79 nscd/nscd.c:284 nscd/nscd_nischeck.c:95 elf/ldconfig.c:264
+#: iconv/iconv_prog.c:426 iconv/iconvconfig.c:376 locale/programs/locale.c:292
+#: locale/programs/localedef.c:391 catgets/gencat.c:251 posix/getconf.c:915
+#: nss/getent.c:79 nscd/nscd.c:335 nscd/nscd_nischeck.c:95 elf/ldconfig.c:276
 #: elf/sprof.c:355
 #, c-format
 msgid "Written by %s.\n"
@@ -360,15 +360,15 @@ msgstr "[RÉPERTOIRE...]"
 msgid "Prefix used for all file accesses"
 msgstr "Préfixe utilisé pour tous les accès fichiers"
 
-#: iconv/iconvconfig.c:325 locale/programs/localedef.c:292
+#: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
 msgid "no output file produced because warning were issued"
 msgstr "Aucun fichier de sortie généré en raison d'un avertissement déjà émis"
 
-#: iconv/iconvconfig.c:403
+#: iconv/iconvconfig.c:405
 msgid "while inserting in search tree"
 msgstr "lors d'une insertion dans un arbre de recherche"
 
-#: iconv/iconvconfig.c:1202
+#: iconv/iconvconfig.c:1204
 msgid "cannot generate output file"
 msgstr "Ne peut générer le fichier de sortie"
 
@@ -1288,7 +1288,7 @@ msgstr "Rebut à la fin du caractère du code de spécification"
 msgid "unterminated symbolic name"
 msgstr "Nom symbolique incomplet"
 
-#: locale/programs/linereader.c:537 catgets/gencat.c:1166
+#: locale/programs/linereader.c:537 catgets/gencat.c:1195
 msgid "invalid escape sequence"
 msgstr "Séquence d'échappement invalide"
 
@@ -1318,39 +1318,39 @@ msgstr "Symbole « %.*s » n'est pas dans la table des répertoires"
 msgid "trailing garbage at end of line"
 msgstr "rebut en suffixe à la fin de la ligne"
 
-#: locale/programs/locale.c:73
+#: locale/programs/locale.c:75
 msgid "System information:"
 msgstr "Information système:"
 
-#: locale/programs/locale.c:75
+#: locale/programs/locale.c:77
 msgid "Write names of available locales"
 msgstr "Écriture des noms disponibles des localisations"
 
-#: locale/programs/locale.c:77
+#: locale/programs/locale.c:79
 msgid "Write names of available charmaps"
 msgstr "Écriture des noms disponibles des tables de caractères"
 
-#: locale/programs/locale.c:78
+#: locale/programs/locale.c:80
 msgid "Modify output format:"
 msgstr "Format de sortie de modification:"
 
-#: locale/programs/locale.c:79
+#: locale/programs/locale.c:81
 msgid "Write names of selected categories"
 msgstr "Écriture des noms sélectionnés des catégories"
 
-#: locale/programs/locale.c:80
+#: locale/programs/locale.c:82
 msgid "Write names of selected keywords"
 msgstr "Écriture des noms sélectionnés des mots clés"
 
-#: locale/programs/locale.c:81
+#: locale/programs/locale.c:83
 msgid "Print more information"
 msgstr "Afficher plus informations"
 
-#: locale/programs/locale.c:86
+#: locale/programs/locale.c:88
 msgid "Get locale-specific information."
 msgstr "Trouver l'information locale spécifique"
 
-#: locale/programs/locale.c:89
+#: locale/programs/locale.c:91
 msgid ""
 "NAME\n"
 "[-a|-m]"
@@ -1358,7 +1358,7 @@ msgstr ""
 "NOM\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:488
+#: locale/programs/locale.c:512
 msgid "while preparing output"
 msgstr "lors de la préparation de la sortie"
 
@@ -1489,16 +1489,16 @@ msgstr "Ne peut ajouter une locale déjà lu « %s » une seconde fois"
 msgid "cannot create temporary file"
 msgstr "ne peut créer un fichier temporaire"
 
-#: locale/programs/locarchive.c:118 locale/programs/locarchive.c:302
+#: locale/programs/locarchive.c:118 locale/programs/locarchive.c:305
 msgid "cannot initialize archive file"
 msgstr "ne peut initialiser le fichier d'archive"
 
-#: locale/programs/locarchive.c:125 locale/programs/locarchive.c:309
+#: locale/programs/locarchive.c:125 locale/programs/locarchive.c:312
 msgid "cannot resize archive file"
 msgstr "ne peut modifier la taille du fichier d'archive"
 
-#: locale/programs/locarchive.c:134 locale/programs/locarchive.c:318
-#: locale/programs/locarchive.c:508
+#: locale/programs/locarchive.c:134 locale/programs/locarchive.c:321
+#: locale/programs/locarchive.c:511
 msgid "cannot map archive header"
 msgstr "ne peut mapper l'en-tête de l'archive"
 
@@ -1514,88 +1514,88 @@ msgstr "ne peut changer les protections de la nouvelle archive de localisation"
 msgid "cannot map locale archive file"
 msgstr "ne peut mapper l'archive de localisation"
 
-#: locale/programs/locarchive.c:326
+#: locale/programs/locarchive.c:329
 msgid "cannot lock new archive"
 msgstr "ne peut verrouiller la nouvelle archive"
 
-#: locale/programs/locarchive.c:377
+#: locale/programs/locarchive.c:380
 msgid "cannot extend locale archive file"
 msgstr "ne peut augmenter la taille du fichier de l'archive de localisation"
 
-#: locale/programs/locarchive.c:386
+#: locale/programs/locarchive.c:389
 msgid "cannot change mode of resized locale archive"
 msgstr "ne peut modifier les protections de l'archive des localisations dont la taille a changé"
 
-#: locale/programs/locarchive.c:394
+#: locale/programs/locarchive.c:397
 msgid "cannot rename new archive"
 msgstr "ne peut changer le nom de la nouvelle archive"
 
-#: locale/programs/locarchive.c:447
+#: locale/programs/locarchive.c:450
 #, c-format
 msgid "cannot open locale archive \"%s\""
 msgstr "ne peut ouvrir l'archive des localisations « %s »"
 
-#: locale/programs/locarchive.c:452
+#: locale/programs/locarchive.c:455
 #, c-format
 msgid "cannot stat locale archive \"%s\""
 msgstr "ne peut évaluer par `stat' l'archive des localisations « %s »"
 
-#: locale/programs/locarchive.c:471
+#: locale/programs/locarchive.c:474
 #, c-format
 msgid "cannot lock locale archive \"%s\""
 msgstr "ne peut verrouiller l'archive des localisations « %s »"
 
-#: locale/programs/locarchive.c:494
+#: locale/programs/locarchive.c:497
 msgid "cannot read archive header"
 msgstr "ne peut lire l'en-tête de l'archive"
 
-#: locale/programs/locarchive.c:554
+#: locale/programs/locarchive.c:557
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "localisation « %s » existe déjà"
 
-#: locale/programs/locarchive.c:784 locale/programs/locarchive.c:799
-#: locale/programs/locarchive.c:811 locale/programs/locarchive.c:823
+#: locale/programs/locarchive.c:788 locale/programs/locarchive.c:803
+#: locale/programs/locarchive.c:815 locale/programs/locarchive.c:827
 #: locale/programs/locfile.c:343
 msgid "cannot add to locale archive"
 msgstr "ne peut l'ajouter à l'archive des localisations"
 
-#: locale/programs/locarchive.c:976
+#: locale/programs/locarchive.c:982
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr "alias du fichier des localisations « %s » non trouvé"
 
-#: locale/programs/locarchive.c:1118
+#: locale/programs/locarchive.c:1126
 #, c-format
 msgid "Adding %s\n"
 msgstr "Ajout de %s\n"
 
-#: locale/programs/locarchive.c:1124
+#: locale/programs/locarchive.c:1132
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "échec d'évaluation par stat() de « %s »: %s: ignoré"
 
-#: locale/programs/locarchive.c:1130
+#: locale/programs/locarchive.c:1138
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "« %s » n'est pas un répertoire; ignoré"
 
-#: locale/programs/locarchive.c:1137
+#: locale/programs/locarchive.c:1145
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "ne peut ouvrir le répertoire « %s »: %s: ignoré"
 
-#: locale/programs/locarchive.c:1209
+#: locale/programs/locarchive.c:1217
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr "jeu incomplet de fichiers dea localisations dans « %s »"
 
-#: locale/programs/locarchive.c:1273
+#: locale/programs/locarchive.c:1281
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr "ne peut lire tous les fichiers dans « %s »: ignoré"
 
-#: locale/programs/locarchive.c:1343
+#: locale/programs/locarchive.c:1351
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr "localisation « %s » n'est pas dans l'archive"
@@ -1666,8 +1666,8 @@ msgstr ""
 "La limite supérieure de l'intervalle n'est pas plus petite\n"
 "que la limite inférieure."
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:500 malloc/obstack.c:503
-#: posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:505 malloc/obstack.c:508
+#: posix/getconf.c:1002
 msgid "memory exhausted"
 msgstr "Mémoire épuisée"
 
@@ -1693,7 +1693,7 @@ msgstr "Première chaîne pour fins de test."
 msgid "Another string for testing."
 msgstr "Une autre chaîne pour fins de test."
 
-#: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:79
+#: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:84
 msgid "NAME"
 msgstr "NOM"
 
@@ -1737,7 +1737,7 @@ msgstr "Numéro de jeu illégal"
 msgid "duplicate set definition"
 msgstr "Double définitions de jeux"
 
-#: catgets/gencat.c:446 catgets/gencat.c:619 catgets/gencat.c:648
+#: catgets/gencat.c:446 catgets/gencat.c:623 catgets/gencat.c:677
 msgid "this is the first definition"
 msgstr "Ceci est la première définition."
 
@@ -1755,44 +1755,44 @@ msgstr "Caractère de citation (quote) invalide"
 msgid "unknown directive `%s': line ignored"
 msgstr "Directive inconnue « %s »: ligne ignorée"
 
-#: catgets/gencat.c:617
+#: catgets/gencat.c:621
 msgid "duplicated message number"
 msgstr "Double messages du numéro"
 
-#: catgets/gencat.c:645
+#: catgets/gencat.c:674
 msgid "duplicated message identifier"
 msgstr "Double identificateurs de message"
 
-#: catgets/gencat.c:702
+#: catgets/gencat.c:731
 msgid "invalid character: message ignored"
 msgstr "Caractères invalide: message ignoré"
 
-#: catgets/gencat.c:745
+#: catgets/gencat.c:774
 msgid "invalid line"
 msgstr "Ligne invalide"
 
-#: catgets/gencat.c:799
+#: catgets/gencat.c:828
 msgid "malformed line ignored"
 msgstr "Ligne incorrecte ignorée"
 
-#: catgets/gencat.c:963 catgets/gencat.c:1004
+#: catgets/gencat.c:992 catgets/gencat.c:1033
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "Ne peut ouvrir le fichier de sortie « %s »"
 
-#: catgets/gencat.c:1188
+#: catgets/gencat.c:1217
 msgid "unterminated message"
 msgstr "Message incomplet"
 
-#: catgets/gencat.c:1212
+#: catgets/gencat.c:1241
 msgid "while opening old catalog file"
 msgstr "lors de l'ouverture du vieux fichier du catalogue"
 
-#: catgets/gencat.c:1303
+#: catgets/gencat.c:1332
 msgid "conversion modules not available"
 msgstr "Module de conversion 'est pas disponible"
 
-#: catgets/gencat.c:1329
+#: catgets/gencat.c:1358
 msgid "cannot determine escape character"
 msgstr "Ne peut déterminer une séquence de caractère"
 
@@ -1800,7 +1800,7 @@ msgstr "Ne peut déterminer une séquence de caractère"
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: ne sait pas comment traiter plus de 8 arguments\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:178
+#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:133
 #: nis/nis_error.c:29 nis/ypclnt.c:787 nis/ypclnt.c:861
 msgid "Success"
 msgstr "Succès"
@@ -2989,23 +2989,23 @@ msgstr "Ne peut transmettre après la fermeture du socket"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%ssignal inconnu %d.\n"
 
-#: malloc/mcheck.c:296
+#: malloc/mcheck.c:346
 msgid "memory is consistent, library is buggy\n"
 msgstr "La mémoire est consistente, la librairie est fautive.\n"
 
-#: malloc/mcheck.c:299
+#: malloc/mcheck.c:349
 msgid "memory clobbered before allocated block\n"
 msgstr "Mémoire écrasée avant le bloc alloué\n"
 
-#: malloc/mcheck.c:302
+#: malloc/mcheck.c:352
 msgid "memory clobbered past end of allocated block\n"
 msgstr "Mémoire écrasée après la fin du bloc alloué\n"
 
-#: malloc/mcheck.c:305
+#: malloc/mcheck.c:355
 msgid "block freed twice\n"
 msgstr "Bloc libéré deux fois\n"
 
-#: malloc/mcheck.c:308
+#: malloc/mcheck.c:358
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "Statut de « mcheck_status » erroné, la librarie est erronée.\n"
 
@@ -3041,6 +3041,10 @@ msgstr "Génération du graphique des données de profilage de la mémoire"
 msgid "DATAFILE [OUTFILE]"
 msgstr "DATAFILE [FICHIER_DE_SORTIE]"
 
+#: string/strerror.c:43 posix/../sysdeps/posix/gai_strerror.c:57
+msgid "Unknown error"
+msgstr "Erreur inconnue"
+
 #: string/strsignal.c:69
 #, c-format
 msgid "Real-time signal %d"
@@ -3065,7 +3069,7 @@ msgstr "ERREUR d'écriture sur la sortie standard"
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: mémoire épuisée: %s\n"
 
-#: timezone/zic.c:390 misc/error.c:120
+#: timezone/zic.c:390 misc/error.c:127 misc/error.c:155
 msgid "Unknown system error"
 msgstr "Erreur système inconnue"
 
@@ -3465,25 +3469,21 @@ msgstr "Toutes les requêtes exécutées"
 msgid "Interrupted by a signal"
 msgstr "Interrompu par un signal"
 
-#: posix/../sysdeps/posix/gai_strerror.c:57
-msgid "Unknown error"
-msgstr "Erreur inconnue"
-
-#: posix/getconf.c:883
+#: posix/getconf.c:889
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Usage: %s [-v spécification] nom_de_variable [chemin_d_accès]\n"
 
-#: posix/getconf.c:941
+#: posix/getconf.c:947
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "spécification inconnu « %s »"
 
-#: posix/getconf.c:968 posix/getconf.c:984
+#: posix/getconf.c:974 posix/getconf.c:990
 msgid "undefined"
 msgstr "indéfini"
 
-#: posix/getconf.c:1006
+#: posix/getconf.c:1012
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Variable non reconnue « %s »"
@@ -3545,71 +3545,71 @@ msgstr "%s: l'option « -W %s » est ambiguë\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: l'option « -W %s » ne permet pas d'argument\n"
 
-#: posix/regcomp.c:181
+#: posix/regcomp.c:136
 msgid "No match"
 msgstr "Pas de concordance"
 
-#: posix/regcomp.c:184
+#: posix/regcomp.c:139
 msgid "Invalid regular expression"
 msgstr "Expression régulière invalide"
 
-#: posix/regcomp.c:187
+#: posix/regcomp.c:142
 msgid "Invalid collation character"
 msgstr "Caractère de fusionnement invalide"
 
-#: posix/regcomp.c:190
+#: posix/regcomp.c:145
 msgid "Invalid character class name"
 msgstr "Nom de classe de caractères invalide"
 
-#: posix/regcomp.c:193
+#: posix/regcomp.c:148
 msgid "Trailing backslash"
 msgstr "Barre oblique inverse en suffixe"
 
-#: posix/regcomp.c:196
+#: posix/regcomp.c:151
 msgid "Invalid back reference"
 msgstr "Référence arrière invalide"
 
-#: posix/regcomp.c:199
+#: posix/regcomp.c:154
 msgid "Unmatched [ or [^"
 msgstr "Échec du pairage de [ ou de [^"
 
-#: posix/regcomp.c:202
+#: posix/regcomp.c:157
 msgid "Unmatched ( or \\("
 msgstr "Échec du pairage de ( ou de \\("
 
-#: posix/regcomp.c:205
+#: posix/regcomp.c:160
 msgid "Unmatched \\{"
 msgstr "Échec du pairage de \\{"
 
-#: posix/regcomp.c:208
+#: posix/regcomp.c:163
 msgid "Invalid content of \\{\\}"
 msgstr "Contenu invalide de \\{\\}"
 
-#: posix/regcomp.c:211
+#: posix/regcomp.c:166
 msgid "Invalid range end"
 msgstr "Fin d'intervalle invalide"
 
-#: posix/regcomp.c:214
+#: posix/regcomp.c:169
 msgid "Memory exhausted"
 msgstr "Mémoire épuisée"
 
-#: posix/regcomp.c:217
+#: posix/regcomp.c:172
 msgid "Invalid preceding regular expression"
 msgstr "Expression régulière précédente invalide"
 
-#: posix/regcomp.c:220
+#: posix/regcomp.c:175
 msgid "Premature end of regular expression"
 msgstr "Fin prématurée de l'expression régulière"
 
-#: posix/regcomp.c:223
+#: posix/regcomp.c:178
 msgid "Regular expression too big"
 msgstr "Expression régulière trop grosse"
 
-#: posix/regcomp.c:226
+#: posix/regcomp.c:181
 msgid "Unmatched ) or \\)"
 msgstr "Échec du pairage de ) ou de \\)"
 
-#: posix/regcomp.c:673
+#: posix/regcomp.c:615
 msgid "No previous regular expression"
 msgstr "Aucune expression régulière précédente"
 
@@ -3765,24 +3765,24 @@ msgstr "base de données [clé ...]"
 msgid "Service configuration to be used"
 msgstr "Configuration de service à être utilisée"
 
-#: nss/getent.c:136 nss/getent.c:305
+#: nss/getent.c:136 nss/getent.c:308
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Énumération non supportée sur %s\n"
 
-#: nss/getent.c:729
+#: nss/getent.c:732
 msgid "getent - get entries from administrative database."
 msgstr "getent() - obtenir les entrées de la base de données administratives"
 
-#: nss/getent.c:730
+#: nss/getent.c:733
 msgid "Supported databases:"
 msgstr "Base de données supportées:"
 
-#: nss/getent.c:787 nscd/nscd.c:119 nscd/nscd_nischeck.c:64
+#: nss/getent.c:790 nscd/nscd.c:124 nscd/nscd_nischeck.c:64
 msgid "wrong number of arguments"
 msgstr "Mauvais nombre d'arguments"
 
-#: nss/getent.c:797
+#: nss/getent.c:800
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Base de données inconnue: « %s »\n"
@@ -3811,68 +3811,72 @@ msgstr "Ne peut lire l'en-tête"
 msgid "invalid pointer size"
 msgstr "Taille de pointeur invalide"
 
-#: inet/rcmd.c:174 inet/rcmd.c:177
+#: inet/rcmd.c:163 inet/rcmd.c:166
+msgid "rcmd: Cannot allocate memory\n"
+msgstr "rcmd: ne peut allouer de la mémoire\n"
+
+#: inet/rcmd.c:185 inet/rcmd.c:188
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: tous les ports sont occupés\n"
 
-#: inet/rcmd.c:211
+#: inet/rcmd.c:222
 #, c-format
 msgid "connect to address %s: "
 msgstr "Connexion établie à l'adresse %s: "
 
-#: inet/rcmd.c:229
+#: inet/rcmd.c:240
 #, c-format
 msgid "Trying %s...\n"
 msgstr "On tente %s...\n"
 
-#: inet/rcmd.c:278
+#: inet/rcmd.c:289
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: écriture (configuration de stderr): %m\n"
 
-#: inet/rcmd.c:299
+#: inet/rcmd.c:310
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (configuration de stderr): %m\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:313
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: échec du protocole dans la configuration du circuit\n"
 
-#: inet/rcmd.c:346
+#: inet/rcmd.c:358
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "socket: échec de protocole dans la configuration du circuit.\n"
 
-#: inet/rcmd.c:368
+#: inet/rcmd.c:387
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: lecture écourtée"
 
-#: inet/rcmd.c:524
+#: inet/rcmd.c:549
 msgid "lstat failed"
 msgstr "Échec d'évaluation lstat()"
 
-#: inet/rcmd.c:526
+#: inet/rcmd.c:551
 msgid "not regular file"
 msgstr "N'est pas un fichier régulier"
 
-#: inet/rcmd.c:531
+#: inet/rcmd.c:556
 msgid "cannot open"
 msgstr "Ne peut ouvrir"
 
-#: inet/rcmd.c:533
+#: inet/rcmd.c:558
 msgid "fstat failed"
 msgstr "Échec d'évaluation fstat()"
 
-#: inet/rcmd.c:535
+#: inet/rcmd.c:560
 msgid "bad owner"
 msgstr "Mauvais propriétaire"
 
-#: inet/rcmd.c:537
+#: inet/rcmd.c:562
 msgid "writeable by other than owner"
 msgstr "accessible en écriture par d'autres que le propriétaire"
 
-#: inet/rcmd.c:539
+#: inet/rcmd.c:564
 msgid "hard linked somewhere"
 msgstr "lien direct rencontré"
 
@@ -4083,109 +4087,109 @@ msgstr "Problème de scrutation lors de la diffusion"
 msgid "Cannot receive reply to broadcast"
 msgstr "Ne peut recevoir l'accusé réception à la requête faite par diffusion"
 
-#: sunrpc/rpc_main.c:289
+#: sunrpc/rpc_main.c:288
 #, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: la sortie écraserait %s\n"
 
-#: sunrpc/rpc_main.c:296
+#: sunrpc/rpc_main.c:295
 #, c-format
 msgid "%s: unable to open %s: %m\n"
 msgstr "%s: incapable d'ouvrir %s: %m\n"
 
-#: sunrpc/rpc_main.c:308
+#: sunrpc/rpc_main.c:307
 #, c-format
 msgid "%s: while writing output %s: %m"
 msgstr "%s: lors de l'écriture sur la sortie %s: %m"
 
-#: sunrpc/rpc_main.c:343
+#: sunrpc/rpc_main.c:342
 #, c-format
 msgid "cannot find C preprocessor: %s \n"
 msgstr "Ne peut trouver le préprocesseur C: %s\n"
 
-#: sunrpc/rpc_main.c:351
+#: sunrpc/rpc_main.c:350
 msgid "cannot find any C preprocessor (cpp)\n"
 msgstr "Ne peut trouver un préprocesseur C (cpp)\n"
 
-#: sunrpc/rpc_main.c:420
+#: sunrpc/rpc_main.c:419
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr "%s: échec du préprocesseur C -- code de terminaison: %d\n"
 
-#: sunrpc/rpc_main.c:423
+#: sunrpc/rpc_main.c:422
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr "%s: échec du préprocesseur C -- code de terminaison: %d\n"
 
-#: sunrpc/rpc_main.c:463
+#: sunrpc/rpc_main.c:462
 #, c-format
 msgid "illegal nettype :`%s'\n"
 msgstr "« nettype » illégal :« %s »\n"
 
-#: sunrpc/rpc_main.c:1105
+#: sunrpc/rpc_main.c:1104
 msgid "rpcgen: too many defines\n"
 msgstr "rpcgen: trop de définitions\n"
 
-#: sunrpc/rpc_main.c:1117
+#: sunrpc/rpc_main.c:1116
 msgid "rpcgen: arglist coding error\n"
 msgstr "rpcgen: erreur dans la liste d'arguments de codage\n"
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
-#: sunrpc/rpc_main.c:1150
+#: sunrpc/rpc_main.c:1149
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr "Le fichier « %s » existe déjà et peut avoir été écrasé.\n"
 
-#: sunrpc/rpc_main.c:1195
+#: sunrpc/rpc_main.c:1194
 msgid "Cannot specify more than one input file!\n"
 msgstr "Ne peut spécifier plus d'un fichier d'entrée!\n"
 
-#: sunrpc/rpc_main.c:1365
+#: sunrpc/rpc_main.c:1364
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr "Cette implantation ne supporte pas le nouveau style ou le code MT-safe!\n"
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1373
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Ne utiliser le sémaphore « netid » avec le sémaphore « inetd »!\n"
 
-#: sunrpc/rpc_main.c:1386
+#: sunrpc/rpc_main.c:1385
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Ne peut utiliser le sémaphore « netid » sans « TIRPC »!\n"
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1392
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Ne peut utiliser la table des sémaphores avec « newstyle »!\n"
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1411
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "\"fichier_d_entrée\" est requis pour la génération du gabarit des indicateurs.\n"
 
-#: sunrpc/rpc_main.c:1417
+#: sunrpc/rpc_main.c:1416
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Ne peut avoir plus d'un fichier de génération de sémaphores!\n"
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "usage: %s fichier_d_entrée\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dname[=valeur]] [-i taille] [-I [-K secondes]] [-Y chemin] fichier\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o fichier_de_sortie] [fichier_d_entrée]\n"
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s type_réseau]* [-o fichier_de_sortie] [fichier_d_entrée]\n"
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n id_réseau]* [-o fichier_de_sortie] [fichier_d_entrée]\n"
@@ -5042,7 +5046,7 @@ msgstr "yp_update: ne peut obtenir l'adresse du serveur\n"
 msgid "while allocating hash table entry"
 msgstr "lors de l'allocation d'entrées dans la table de hachage"
 
-#: nscd/cache.c:150 nscd/connections.c:185
+#: nscd/cache.c:150 nscd/connections.c:187
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "Ne peut évaluer par stat() le fichier « %s »: %s"
@@ -5055,153 +5059,158 @@ msgstr "Ne peut lire le fichier de configuration; cela est fatal"
 msgid "Cannot run nscd in secure mode as unprivileged user"
 msgstr "Ne peut exécuter nscd en mode sécuritaire en tant qu'usager sans privilège"
 
-#: nscd/connections.c:199
+#: nscd/connections.c:175
+#, c-format
+msgid "while allocating cache: %s"
+msgstr "lors de l'allocation de la cache: %s"
+
+#: nscd/connections.c:200
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "Ne peut ouvrir le socket: « %s »"
 
-#: nscd/connections.c:217
+#: nscd/connections.c:218
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "Ne peut activer le socket pour accepter des connexions: %s"
 
-#: nscd/connections.c:259
+#: nscd/connections.c:260
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: requête reçue (Version = %d)"
 
-#: nscd/connections.c:265
+#: nscd/connections.c:266
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "Ne peut traiter une requête d'une vieille version %d; la version courante est %d"
 
-#: nscd/connections.c:303 nscd/connections.c:325
+#: nscd/connections.c:304 nscd/connections.c:326
 #, c-format
 msgid "cannot write result: %s"
 msgstr "Ne peut écrire les résultats: « %s »"
 
-#: nscd/connections.c:404 nscd/connections.c:498
+#: nscd/connections.c:405 nscd/connections.c:499
 #, c-format
 msgid "error getting callers id: %s"
 msgstr "erreur lors de la recherche de l'identificateur de l'appelant: %s"
 
-#: nscd/connections.c:470
+#: nscd/connections.c:471
 #, c-format
 msgid "while accepting connection: %s"
 msgstr "lors de l'acceptation de connexion: %s"
 
-#: nscd/connections.c:481
+#: nscd/connections.c:482
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "Lecture écourtée lors de la lecture de la requête: « %s »"
 
-#: nscd/connections.c:517
+#: nscd/connections.c:518
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "La longueur de la clé de la requête est trop longue: %d"
 
-#: nscd/connections.c:531
+#: nscd/connections.c:532
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "Lecture écourtée lors de la lecture de la clé de requête: %s"
 
-#: nscd/connections.c:590 nscd/connections.c:591 nscd/connections.c:610
-#: nscd/connections.c:623 nscd/connections.c:629 nscd/connections.c:636
+#: nscd/connections.c:591 nscd/connections.c:592 nscd/connections.c:611
+#: nscd/connections.c:624 nscd/connections.c:630 nscd/connections.c:637
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Échec d'exécution de nscd en tant qu'usager « %s »"
 
-#: nscd/connections.c:611
+#: nscd/connections.c:612
 msgid "getgrouplist failed"
 msgstr "échec de getgrouplist"
 
-#: nscd/connections.c:624
+#: nscd/connections.c:625
 msgid "setgroups failed"
 msgstr "échec de setgroups"
 
-#: nscd/grpcache.c:102 nscd/hstcache.c:110 nscd/pwdcache.c:108
+#: nscd/grpcache.c:103 nscd/hstcache.c:111 nscd/pwdcache.c:109
 msgid "while allocating key copy"
 msgstr "lors de l'allocation d'une copie de clé"
 
-#: nscd/grpcache.c:152 nscd/hstcache.c:167 nscd/pwdcache.c:145
+#: nscd/grpcache.c:153 nscd/hstcache.c:168 nscd/pwdcache.c:146
 msgid "while allocating cache entry"
 msgstr "lors de l'allocation d'entrée dans la cache"
 
-#: nscd/grpcache.c:195 nscd/hstcache.c:281 nscd/pwdcache.c:191
+#: nscd/grpcache.c:196 nscd/hstcache.c:282 nscd/pwdcache.c:192
 #, c-format
 msgid "short write in %s: %s"
 msgstr "Écriture écourtée dans %s: %s"
 
-#: nscd/grpcache.c:217
+#: nscd/grpcache.c:218
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "N'a pas trouvé « %s » dans la cache du groupe!"
 
-#: nscd/grpcache.c:292
+#: nscd/grpcache.c:284
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "gid numérique invalide  « %s »!"
 
-#: nscd/grpcache.c:299
+#: nscd/grpcache.c:291
 #, c-format
 msgid "Haven't found \"%d\" in group cache!"
 msgstr "N'a pas trouvé « %d » dans la cache du groupe!"
 
-#: nscd/hstcache.c:303 nscd/hstcache.c:378 nscd/hstcache.c:456
-#: nscd/hstcache.c:533
+#: nscd/hstcache.c:304 nscd/hstcache.c:370 nscd/hstcache.c:435
+#: nscd/hstcache.c:500
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "N'a pas trouvé « %s » dans la cache de la liste des hôtes!"
 
-#: nscd/nscd.c:80
+#: nscd/nscd.c:85
 msgid "Read configuration data from NAME"
 msgstr "Lire les données de configuration du NOM"
 
-#: nscd/nscd.c:82
+#: nscd/nscd.c:87
 msgid "Do not fork and display messages on the current tty"
 msgstr "Ne pas cloner le processus par fork() et ne pas afficher de message sur le tty courant"
 
-#: nscd/nscd.c:83
+#: nscd/nscd.c:88
 msgid "NUMBER"
 msgstr "NUMÉRO"
 
-#: nscd/nscd.c:83
+#: nscd/nscd.c:88
 msgid "Start NUMBER threads"
 msgstr "Démarrage du NOMBRE de « threads »"
 
-#: nscd/nscd.c:84
+#: nscd/nscd.c:89
 msgid "Shut the server down"
 msgstr "Arrêter le serveur"
 
-#: nscd/nscd.c:85
+#: nscd/nscd.c:90
 msgid "Print current configuration statistic"
 msgstr "Afficher les statistiques de la configuration courante"
 
-#: nscd/nscd.c:86
+#: nscd/nscd.c:91
 msgid "TABLE"
 msgstr "TABLE"
 
-#: nscd/nscd.c:87
+#: nscd/nscd.c:92
 msgid "Invalidate the specified cache"
 msgstr "Invalide la cache spécifiée"
 
-#: nscd/nscd.c:88
+#: nscd/nscd.c:93
 msgid "TABLE,yes"
 msgstr "TABLE,oui"
 
-#: nscd/nscd.c:88
+#: nscd/nscd.c:93
 msgid "Use separate cache for each user"
 msgstr "Utiliser une cache séparée pour chaque usager"
 
-#: nscd/nscd.c:93
+#: nscd/nscd.c:98
 msgid "Name Service Cache Daemon."
 msgstr "« Daemon » de la cache du service de noms"
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:131
 msgid "already running"
 msgstr "déjà en exécution"
 
-#: nscd/nscd.c:192 nscd/nscd.c:212 nscd/nscd.c:218
+#: nscd/nscd.c:243 nscd/nscd.c:263 nscd/nscd.c:269
 msgid "Only root is allowed to use this option!"
 msgstr "Seul ROOT est autorisé à utiliser cette option!"
 
@@ -5291,22 +5300,22 @@ msgstr ""
 "%15ld%% taux de repérage\n"
 "%15s  vérifier /etc/%s pour les changements\n"
 
-#: nscd/pwdcache.c:213
+#: nscd/pwdcache.c:214
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr "N'a pas trouvé « %s » dans la cache des mots de passe!"
 
-#: nscd/pwdcache.c:288
+#: nscd/pwdcache.c:280
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "uid numérique invalide  « %s »!"
 
-#: nscd/pwdcache.c:295
+#: nscd/pwdcache.c:287
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
 msgstr "N'a pas trouvé « %d » dans la cache des mots de passe!"
 
-#: elf/../sysdeps/generic/dl-sysdep.c:297
+#: elf/../sysdeps/generic/dl-sysdep.c:357
 msgid "cannot create capability list"
 msgstr "Ne peut créer une liste des possibilités"
 
@@ -5357,7 +5366,7 @@ msgstr "Système d'exploitation inconnu"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", ABI Système d'exploitation: %s %d.%d.%d"
 
-#: elf/cache.c:136 elf/ldconfig.c:1033
+#: elf/cache.c:136 elf/ldconfig.c:1045
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Ne peut ouvrir le fichier de la cache %s\n"
@@ -5403,15 +5412,15 @@ msgstr "ÉCHEC de modification des droits d'accès de %s à %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "ÉCHEC du changement de nom de %s vers %s"
 
-#: elf/dl-close.c:113
+#: elf/dl-close.c:128
 msgid "shared object not open"
 msgstr "Objet partagé non ouvert"
 
-#: elf/dl-close.c:357 elf/dl-open.c:436
+#: elf/dl-close.c:486 elf/dl-open.c:444
 msgid "TLS generation counter wrapped!  Please send report with the 'glibcbug' script."
 msgstr "Compteut de génération TLS a bouclé! SVP expédier un rapport avec le script 'glibcbug'"
 
-#: elf/dl-deps.c:111 elf/dl-open.c:177
+#: elf/dl-deps.c:111 elf/dl-open.c:183
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST non permis dans un programme SUID/SGID"
 
@@ -5428,181 +5437,193 @@ msgstr "ne peut charger l'auxiliaire « %s » en raison d'une chaîne dynamique de 
 msgid "cannot allocate dependency list"
 msgstr "Ne peut allouer une liste de dépendances"
 
-#: elf/dl-deps.c:492 elf/dl-deps.c:547
+#: elf/dl-deps.c:494 elf/dl-deps.c:549
 msgid "cannot allocate symbol search list"
 msgstr "Ne peut allouer la liste des symboles recherchées"
 
-#: elf/dl-deps.c:532
+#: elf/dl-deps.c:534
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filtres non supportés avec LD_TRACE_PRELINKING"
 
-#: elf/dl-error.c:73
+#: elf/dl-error.c:75
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "PROBLÈME DANS LE CHARGEUR DE LIENS DYNAMIQUES"
 
-#: elf/dl-error.c:106
+#: elf/dl-error.c:108
 msgid "error while loading shared libraries"
 msgstr "erreur lors du chargement des librairies partagées"
 
-#: elf/dl-load.c:338
+#: elf/dl-load.c:339
 msgid "cannot allocate name record"
 msgstr "Ne peut allouer une nom d'enregistrement"
 
-#: elf/dl-load.c:440 elf/dl-load.c:520 elf/dl-load.c:614 elf/dl-load.c:709
+#: elf/dl-load.c:441 elf/dl-load.c:520 elf/dl-load.c:612 elf/dl-load.c:707
 msgid "cannot create cache for search path"
 msgstr "Ne peut créer une cache pour le chemin de recherche"
 
-#: elf/dl-load.c:545
+#: elf/dl-load.c:543
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "Ne peut créer une copie RUNPATH/RPATH"
 
-#: elf/dl-load.c:600
+#: elf/dl-load.c:598
 msgid "cannot create search path array"
 msgstr "Ne peut créer un tableau des chemins de recherche"
 
-#: elf/dl-load.c:796
+#: elf/dl-load.c:794
 msgid "cannot stat shared object"
 msgstr "Échec évaluer par stat() l'objet partagé"
 
-#: elf/dl-load.c:840
+#: elf/dl-load.c:838
 msgid "cannot open zero fill device"
 msgstr "Ne peut ouvrir le fichier de périphérique rempli de zéros"
 
-#: elf/dl-load.c:849 elf/dl-load.c:1855
+#: elf/dl-load.c:847 elf/dl-load.c:1902
 msgid "cannot create shared object descriptor"
 msgstr "Ne peut créer un objet descripteur partagé"
 
-#: elf/dl-load.c:868 elf/dl-load.c:1351 elf/dl-load.c:1434
+#: elf/dl-load.c:866 elf/dl-load.c:1398 elf/dl-load.c:1481
 msgid "cannot read file data"
 msgstr "Ne peut lire le fichier de données"
 
-#: elf/dl-load.c:908
+#: elf/dl-load.c:906
 msgid "ELF load command alignment not page-aligned"
 msgstr "Commande de chargement sur une page ELF qui n'est pas alignée"
 
-#: elf/dl-load.c:915
+#: elf/dl-load.c:913
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Commande de chargement sur une adresse ELF incorrectement alignée"
 
-#: elf/dl-load.c:996
+#: elf/dl-load.c:988
+msgid "cannot allocate TLS data structures for initial thread"
+msgstr "ne peut allouer une structure de données TLS pour un thread initial"
+
+#: elf/dl-load.c:1012
+msgid "cannot handle TLS data"
+msgstr "ne peut traiter les données TLS"
+
+#: elf/dl-load.c:1047
 msgid "failed to map segment from shared object"
 msgstr "Échec d'adressage (mapping) du segement de l'objet partagé"
 
-#: elf/dl-load.c:1020
+#: elf/dl-load.c:1071
 msgid "cannot dynamically load executable"
 msgstr "Ne peut dynamiquement charger un exécutable"
 
-#: elf/dl-load.c:1081
+#: elf/dl-load.c:1132
 msgid "cannot change memory protections"
 msgstr "Ne peut modifier les protections de mémoire"
 
-#: elf/dl-load.c:1100
+#: elf/dl-load.c:1151
 msgid "cannot map zero-fill pages"
 msgstr "Ne peut adresser des pages rempliez de zéros"
 
-#: elf/dl-load.c:1118
+#: elf/dl-load.c:1169
 msgid "cannot allocate memory for program header"
 msgstr "Ne peut allouer de la mémoire pour une en-tête de programme"
 
-#: elf/dl-load.c:1149
+#: elf/dl-load.c:1200
 msgid "object file has no dynamic section"
 msgstr "Le fichier objet n'a pas de section dynamique"
 
-#: elf/dl-load.c:1193
+#: elf/dl-load.c:1240
 msgid "shared object cannot be dlopen()ed"
 msgstr "L'objet partagé ne peut pas être ouvert via dlopen()"
 
-#: elf/dl-load.c:1216
+#: elf/dl-load.c:1263
 msgid "cannot create searchlist"
 msgstr "Ne peut créer une liste de recherche"
 
-#: elf/dl-load.c:1351
+#: elf/dl-load.c:1398
 msgid "file too short"
 msgstr "Fichier trop court"
 
-#: elf/dl-load.c:1374
+#: elf/dl-load.c:1421
 msgid "invalid ELF header"
 msgstr "En-tête ELF invalide"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1430
 msgid "ELF file data encoding not big-endian"
 msgstr "Données d'encodage du fichier ELF n'est pas big-endian"
 
-#: elf/dl-load.c:1385
+#: elf/dl-load.c:1432
 msgid "ELF file data encoding not little-endian"
 msgstr "Données d'encodage du fichier ELF n'est pas little-endian"
 
-#: elf/dl-load.c:1389
+#: elf/dl-load.c:1436
 msgid "ELF file version ident does not match current one"
 msgstr "Identificateur de version du fichier ELF ne concorde pas avec la version courante"
 
-#: elf/dl-load.c:1393
+#: elf/dl-load.c:1440
 msgid "ELF file OS ABI invalid"
 msgstr "Système d'exploitation du fichier ELF ABI invalide"
 
-#: elf/dl-load.c:1395
+#: elf/dl-load.c:1442
 msgid "ELF file ABI version invalid"
 msgstr "Version du fichier ELF ABI invalide"
 
-#: elf/dl-load.c:1398
+#: elf/dl-load.c:1445
 msgid "internal error"
 msgstr "Erreur interne"
 
-#: elf/dl-load.c:1405
+#: elf/dl-load.c:1452
 msgid "ELF file version does not match current one"
 msgstr "Version du fichier ELF ne concorde pas avec la version courante"
 
-#: elf/dl-load.c:1413
+#: elf/dl-load.c:1460
 msgid "ELF file's phentsize not the expected size"
 msgstr "« Phentize » du fichier ELF ne concorde pas avec la taille prévue"
 
-#: elf/dl-load.c:1419
+#: elf/dl-load.c:1466
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "Seuls ET_DYN et ET_EXEC peuvent être chargés"
 
-#: elf/dl-load.c:1870
+#: elf/dl-load.c:1917
 msgid "cannot open shared object file"
 msgstr "Ne peut ouvrir le fichier d'objet partagé"
 
-#: elf/dl-lookup.c:248 elf/dl-lookup.c:413
+#: elf/dl-lookup.c:265 elf/dl-lookup.c:430
 msgid "relocation error"
 msgstr "erreur de relocalisation"
 
-#: elf/dl-open.c:105
+#: elf/dl-open.c:111
 msgid "cannot extend global scope"
 msgstr "Ne peut augmenter l'étendue de la plage"
 
-#: elf/dl-open.c:208
+#: elf/dl-open.c:214
 msgid "empty dynamic string token substitution"
 msgstr "La chaîne dynamique d'un jeton de substition est vide."
 
-#: elf/dl-open.c:345 elf/dl-open.c:356
+#: elf/dl-open.c:351 elf/dl-open.c:362
 msgid "cannot create scope list"
 msgstr "ne peut créer une liste d'étendue"
 
-#: elf/dl-open.c:416
+#: elf/dl-open.c:424
 msgid "cannot create TLS data structures"
 msgstr "ne peut créer les structures de données TLS"
 
-#: elf/dl-open.c:478
+#: elf/dl-open.c:486
 msgid "invalid mode for dlopen()"
 msgstr "mode invalide pour dlopen()"
 
-#: elf/dl-reloc.c:88
+#: elf/dl-reloc.c:58
+msgid "shared object cannot be dlopen()ed: static TLS memory too small"
+msgstr "l'objet partagé ne peut pas être ouvert via dlopen(): mémoire statiques TLS trop petite"
+
+#: elf/dl-reloc.c:118
 msgid "cannot make segment writable for relocation"
 msgstr "Ne peut rendre le segment inscritible lors d'une relocalisation"
 
-#: elf/dl-reloc.c:174
+#: elf/dl-reloc.c:219
 #, c-format
 msgid "%s: profiler found no PLTREL in object %s\n"
 msgstr "%s: profileur n'a repéré aucun PLTREL dans l'objet %s\n"
 
-#: elf/dl-reloc.c:186
+#: elf/dl-reloc.c:231
 #, c-format
 msgid "%s: profiler out of memory shadowing PLTREL of %s\n"
 msgstr "%s: profileur mémoire épuisée par l'ombrage PLTREL de %s\n"
 
-#: elf/dl-reloc.c:201
+#: elf/dl-reloc.c:246
 msgid "cannot restore segment prot after reloc"
 msgstr "ne peut restaurer le segment prot après reloc"
 
@@ -5658,119 +5679,119 @@ msgstr "Format à utiliser: nouveau, ancien ou compatible (par défaut)"
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Configuration dynamique des éditions de liens lors de l'exécution"
 
-#: elf/ldconfig.c:282
+#: elf/ldconfig.c:294
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Chemin « %s » donné plus d'une fois"
 
-#: elf/ldconfig.c:326
+#: elf/ldconfig.c:338
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s n'est pas un type de librairie connue"
 
-#: elf/ldconfig.c:344
+#: elf/ldconfig.c:356
 #, c-format
 msgid "Can't stat %s"
 msgstr "Ne peut évaluer par stat %s"
 
-#: elf/ldconfig.c:414
+#: elf/ldconfig.c:426
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Ne peut évaluer par stat %s\n"
 
-#: elf/ldconfig.c:424
+#: elf/ldconfig.c:436
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s n,est pas un lien symbolique\n"
 
-#: elf/ldconfig.c:443
+#: elf/ldconfig.c:455
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Ne peut enlever le lien (unlink) %s"
 
-#: elf/ldconfig.c:449
+#: elf/ldconfig.c:461
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Ne peut établir un lien entre %s et %s"
 
-#: elf/ldconfig.c:455
+#: elf/ldconfig.c:467
 msgid " (changed)\n"
 msgstr " (a été modifié)\n"
 
-#: elf/ldconfig.c:457
+#: elf/ldconfig.c:469
 msgid " (SKIPPED)\n"
 msgstr " (ESCAMOTÉ)\n"
 
-#: elf/ldconfig.c:512
+#: elf/ldconfig.c:524
 #, c-format
 msgid "Can't find %s"
 msgstr "Ne peut repérer %s"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:540
 #, c-format
 msgid "Can't lstat %s"
 msgstr "Ne peut évaluer par lstat %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:547
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Ignorer le fichier %s étant donné que ce n'est pas un fichier régulier"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:555
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Aucun lien créé étant donné qu'il n'a pas été repéré pour %s"
 
-#: elf/ldconfig.c:634
+#: elf/ldconfig.c:646
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Ne peut ouvrir le répertoire %s"
 
-#: elf/ldconfig.c:689 elf/ldconfig.c:736
+#: elf/ldconfig.c:701 elf/ldconfig.c:748
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Ne peut évaluer par lstat %s"
 
-#: elf/ldconfig.c:701
+#: elf/ldconfig.c:713
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Ne peut évaluer par stat %s"
 
-#: elf/ldconfig.c:758 elf/readlib.c:93
+#: elf/ldconfig.c:770 elf/readlib.c:93
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Fichier d'entrée %s non repéré\n"
 
-#: elf/ldconfig.c:792
+#: elf/ldconfig.c:804
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "librairie libc5 %s est dans le mauvais répertoire"
 
-#: elf/ldconfig.c:795
+#: elf/ldconfig.c:807
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "librairie libc6 %s est dans el mauvais répertoire"
 
-#: elf/ldconfig.c:798
+#: elf/ldconfig.c:810
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "librairie libc4 %s est dans le mauvais répertoire"
 
-#: elf/ldconfig.c:825
+#: elf/ldconfig.c:837
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "Les librairies %s et %s du répertoire %s ont le même nom mais sont de types différents"
 
-#: elf/ldconfig.c:928
+#: elf/ldconfig.c:940
 #, c-format
 msgid "Can't open configuration file %s"
 msgstr "Ne peut ouvrir le fichier de configuration %s"
 
-#: elf/ldconfig.c:1012
+#: elf/ldconfig.c:1024
 msgid "Can't chdir to /"
 msgstr "Ne peut se positionner (chdir) dans /"
 
-#: elf/ldconfig.c:1054
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Ne peut ouvrir le fichier de la cache des répertoires %s\n"

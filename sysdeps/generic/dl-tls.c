@@ -415,7 +415,10 @@ _dl_deallocate_tls (void *tcb, bool dealloc_tcb)
   dtv_t *dtv = GET_DTV (tcb);
 
   /* The array starts with dtv[-1].  */
-  free (dtv - 1);
+#ifdef SHARED
+  if (dtv != GL(dl_initial_dtv))
+#endif
+    free (dtv - 1);
 
   if (dealloc_tcb)
     {

@@ -133,7 +133,12 @@
  */
 
 #define DO_CALL(syscall, args)						      \
-    svc     SYS_ify (syscall)
+  .if SYS_ify (syscall) < 256;						      \
+    svc SYS_ify (syscall);						      \
+  .else;								      \
+    lhi %r1,SYS_ify (syscall);						      \
+    svc 0;								      \
+  .endif
 
 #define ret                                                                   \
     br      14
@@ -154,8 +159,8 @@
 #undef INTERNAL_SYSCALL_DECL
 #define INTERNAL_SYSCALL_DECL(err) do { } while (0)
 
-#undef INTERNAL_SYSCALL
-#define INTERNAL_SYSCALL(name, err, nr, args...)			      \
+#undef INTERNAL_SYSCALL_DIRECT
+#define INTERNAL_SYSCALL_DIRECT(name, err, nr, args...)			      \
   ({									      \
     DECLARGS_##nr(args)							      \
     register int _ret asm("2");						      \
@@ -165,6 +170,25 @@
     : "i" (__NR_##name) ASMFMT_##nr					      \
     : "memory" );							      \
     _ret; })
+
+#undef INTERNAL_SYSCALL_SVC0
+#define INTERNAL_SYSCALL_SVC0(name, err, nr, args...)			      \
+  ({									      \
+    DECLARGS_##nr(args)							      \
+    register unsigned long _nr asm("1") = (unsigned long)(__NR_##name);	      \
+    register int _ret asm("2");						      \
+    asm volatile (							      \
+    "svc    0\n\t"							      \
+    : "=d" (_ret)							      \
+    : "d" (_nr), "i" (__NR_##name) ASMFMT_##nr				      \
+    : "memory" );							      \
+    _ret; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, err, nr, args...)			      \
+  (((__NR_##name) < 256) ?						      \
+    INTERNAL_SYSCALL_DIRECT(name, err, nr, args) :			      \
+    INTERNAL_SYSCALL_SVC0(name, err,nr, args))
 
 #undef INTERNAL_SYSCALL_ERROR_P
 #define INTERNAL_SYSCALL_ERROR_P(val, err)				      \

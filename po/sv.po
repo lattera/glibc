@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
-# Copyright © 1996, 1998, 2001, 2002 Free Software Foundation, Inc.
-# Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002.
-# Revision: 1.43
+# Copyright © 1996, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
+# Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003.
+# Revision: 1.44
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 2.3.1\n"
-"POT-Creation-Date: 2002-10-02 17:22-0700\n"
-"PO-Revision-Date: 2002-10-14 21:09+0200\n"
+"Project-Id-Version: libc 2.3.2\n"
+"POT-Creation-Date: 2003-02-22 15:34-0800\n"
+"PO-Revision-Date: 2003-03-03 19:14+0100\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -260,7 +260,7 @@ msgstr "kan inte öppna utfil"
 
 #: iconv/iconv_prog.c:241
 #, c-format
-msgid "conversions from `%s' and to `%s' are not supported"
+msgid "conversion from `%s' and to `%s' are not supported"
 msgstr "konvertering från \"%s\" och till \"%s\" stöds ej"
 
 #: iconv/iconv_prog.c:246
@@ -286,7 +286,7 @@ msgstr "misslyckades att starta konverteringsprocessen"
 msgid "error while closing output file"
 msgstr "fel vid stängning av utfilen"
 
-#: iconv/iconv_prog.c:407 iconv/iconvconfig.c:355 locale/programs/locale.c:268
+#: iconv/iconv_prog.c:407 iconv/iconvconfig.c:357 locale/programs/locale.c:274
 #: locale/programs/localedef.c:372 catgets/gencat.c:233
 #: malloc/memusagestat.c:602 debug/pcprofiledump.c:199
 msgid "Report bugs using the `glibcbug' script to <bugs@gnu.org>.\n"
@@ -294,9 +294,9 @@ msgstr ""
 "Rapportera fel med programmet \"glibcbug\" till <bugs@gnu.org>.\n"
 "Rapportera fel på översättningen till <sv@li.org>.\n"
 
-#: iconv/iconv_prog.c:421 iconv/iconvconfig.c:369 locale/programs/locale.c:281
-#: locale/programs/localedef.c:386 catgets/gencat.c:246 posix/getconf.c:904
-#: nss/getent.c:74 nscd/nscd.c:279 nscd/nscd_nischeck.c:90 elf/ldconfig.c:259
+#: iconv/iconv_prog.c:421 iconv/iconvconfig.c:371 locale/programs/locale.c:287
+#: locale/programs/localedef.c:386 catgets/gencat.c:246 posix/getconf.c:910
+#: nss/getent.c:74 nscd/nscd.c:330 nscd/nscd_nischeck.c:90 elf/ldconfig.c:271
 #: elf/sprof.c:349
 #, c-format
 msgid ""
@@ -309,9 +309,9 @@ msgstr ""
 "INGEN garanti; inte ens för SÄLJBARHET eller LÄMPLIGHET FÖR NÅGOT SPECIELLT\n"
 "ÄNDAMÅL.\n"
 
-#: iconv/iconv_prog.c:426 iconv/iconvconfig.c:374 locale/programs/locale.c:286
-#: locale/programs/localedef.c:391 catgets/gencat.c:251 posix/getconf.c:909
-#: nss/getent.c:79 nscd/nscd.c:284 nscd/nscd_nischeck.c:95 elf/ldconfig.c:264
+#: iconv/iconv_prog.c:426 iconv/iconvconfig.c:376 locale/programs/locale.c:292
+#: locale/programs/localedef.c:391 catgets/gencat.c:251 posix/getconf.c:915
+#: nss/getent.c:79 nscd/nscd.c:335 nscd/nscd_nischeck.c:95 elf/ldconfig.c:276
 #: elf/sprof.c:355
 #, c-format
 msgid "Written by %s.\n"
@@ -363,15 +363,15 @@ msgstr "[KATALOG...]"
 msgid "Prefix used for all file accesses"
 msgstr "Prefix att använda för alla filåtkomster"
 
-#: iconv/iconvconfig.c:325 locale/programs/localedef.c:292
+#: iconv/iconvconfig.c:327 locale/programs/localedef.c:292
 msgid "no output file produced because warning were issued"
 msgstr "ingen utfil skapad på grund av varningar"
 
-#: iconv/iconvconfig.c:403
+#: iconv/iconvconfig.c:405
 msgid "while inserting in search tree"
 msgstr "vid insättning i sökträd"
 
-#: iconv/iconvconfig.c:1202
+#: iconv/iconvconfig.c:1204
 msgid "cannot generate output file"
 msgstr "kan inte generera utfil"
 
@@ -1283,7 +1283,7 @@ msgstr "skräp i slutet av teckenkodsspecifikation"
 msgid "unterminated symbolic name"
 msgstr "oavslutat symboliskt namn"
 
-#: locale/programs/linereader.c:537 catgets/gencat.c:1166
+#: locale/programs/linereader.c:537 catgets/gencat.c:1195
 msgid "invalid escape sequence"
 msgstr "ogiltig kontrollsekvens"
 
@@ -1313,39 +1313,39 @@ msgstr "symbol \"%.*s\" finns inte i repertoartabell"
 msgid "trailing garbage at end of line"
 msgstr "avslutande skräp vid radslutet"
 
-#: locale/programs/locale.c:73
+#: locale/programs/locale.c:75
 msgid "System information:"
 msgstr "Systeminformation:"
 
-#: locale/programs/locale.c:75
+#: locale/programs/locale.c:77
 msgid "Write names of available locales"
 msgstr "Skriv namn på tillgängliga lokaler"
 
-#: locale/programs/locale.c:77
+#: locale/programs/locale.c:79
 msgid "Write names of available charmaps"
 msgstr "Skriv namn på tillgängliga teckenuppsättningar"
 
-#: locale/programs/locale.c:78
+#: locale/programs/locale.c:80
 msgid "Modify output format:"
 msgstr "Ändra utdataformat:"
 
-#: locale/programs/locale.c:79
+#: locale/programs/locale.c:81
 msgid "Write names of selected categories"
 msgstr "Skriv namn på valda kategorier"
 
-#: locale/programs/locale.c:80
+#: locale/programs/locale.c:82
 msgid "Write names of selected keywords"
 msgstr "Skriv namn på valda nyckelord"
 
-#: locale/programs/locale.c:81
+#: locale/programs/locale.c:83
 msgid "Print more information"
 msgstr "Skriv mer information"
 
-#: locale/programs/locale.c:86
+#: locale/programs/locale.c:88
 msgid "Get locale-specific information."
 msgstr "Hämta lokal-specifik information"
 
-#: locale/programs/locale.c:89
+#: locale/programs/locale.c:91
 msgid ""
 "NAME\n"
 "[-a|-m]"
@@ -1353,7 +1353,7 @@ msgstr ""
 "NAMN\n"
 "[-a|-m]"
 
-#: locale/programs/locale.c:488
+#: locale/programs/locale.c:512
 msgid "while preparing output"
 msgstr "när utdata förbereddes"
 
@@ -1484,16 +1484,16 @@ msgstr "kan inte lägga till en redan inläst lokal \"%s\" en andra gång"
 msgid "cannot create temporary file"
 msgstr "kan inte skapa temporärfil"
 
-#: locale/programs/locarchive.c:118 locale/programs/locarchive.c:302
+#: locale/programs/locarchive.c:118 locale/programs/locarchive.c:305
 msgid "cannot initialize archive file"
 msgstr "kan inte initiera arkivfil"
 
-#: locale/programs/locarchive.c:125 locale/programs/locarchive.c:309
+#: locale/programs/locarchive.c:125 locale/programs/locarchive.c:312
 msgid "cannot resize archive file"
 msgstr "kan inte byta storlek på arkivfil"
 
-#: locale/programs/locarchive.c:134 locale/programs/locarchive.c:318
-#: locale/programs/locarchive.c:508
+#: locale/programs/locarchive.c:134 locale/programs/locarchive.c:321
+#: locale/programs/locarchive.c:511
 msgid "cannot map archive header"
 msgstr "kan inte läsa arkivhuvud med mmap"
 
@@ -1509,88 +1509,88 @@ msgstr "kan inte ändra åtkomstläge på nytt lokalarkiv"
 msgid "cannot map locale archive file"
 msgstr "kan inte öppna lokalarkivfil med mmap"
 
-#: locale/programs/locarchive.c:326
+#: locale/programs/locarchive.c:329
 msgid "cannot lock new archive"
 msgstr "kan inte låsa nytt arkiv"
 
-#: locale/programs/locarchive.c:377
+#: locale/programs/locarchive.c:380
 msgid "cannot extend locale archive file"
 msgstr "kan inte utöka lokalarkivfil"
 
-#: locale/programs/locarchive.c:386
+#: locale/programs/locarchive.c:389
 msgid "cannot change mode of resized locale archive"
 msgstr "kan inte ändra åtkomstläge på storleksändrat lokalarkiv"
 
-#: locale/programs/locarchive.c:394
+#: locale/programs/locarchive.c:397
 msgid "cannot rename new archive"
 msgstr "kan inte byta namn på nytt arkiv"
 
-#: locale/programs/locarchive.c:447
+#: locale/programs/locarchive.c:450
 #, c-format
 msgid "cannot open locale archive \"%s\""
 msgstr "kan inte öppna lokalarkiv \"%s\""
 
-#: locale/programs/locarchive.c:452
+#: locale/programs/locarchive.c:455
 #, c-format
 msgid "cannot stat locale archive \"%s\""
 msgstr "kan inte ta status på lokalarkiv \"%s\""
 
-#: locale/programs/locarchive.c:471
+#: locale/programs/locarchive.c:474
 #, c-format
 msgid "cannot lock locale archive \"%s\""
 msgstr "kan inte låsa lokalarkiv \"%s\""
 
-#: locale/programs/locarchive.c:494
+#: locale/programs/locarchive.c:497
 msgid "cannot read archive header"
 msgstr "kan inte läsa arkivhuvud"
 
-#: locale/programs/locarchive.c:554
+#: locale/programs/locarchive.c:557
 #, c-format
 msgid "locale '%s' already exists"
 msgstr "lokal \"%s\" finns redan"
 
-#: locale/programs/locarchive.c:784 locale/programs/locarchive.c:799
-#: locale/programs/locarchive.c:811 locale/programs/locarchive.c:823
+#: locale/programs/locarchive.c:788 locale/programs/locarchive.c:803
+#: locale/programs/locarchive.c:815 locale/programs/locarchive.c:827
 #: locale/programs/locfile.c:343
 msgid "cannot add to locale archive"
 msgstr "kan inte lägga till till lokalarkiv"
 
-#: locale/programs/locarchive.c:976
+#: locale/programs/locarchive.c:982
 #, c-format
 msgid "locale alias file `%s' not found"
 msgstr "fil \"%s\" för lokalalias hittas inte"
 
-#: locale/programs/locarchive.c:1118
+#: locale/programs/locarchive.c:1126
 #, c-format
 msgid "Adding %s\n"
 msgstr "Lägger till %s\n"
 
-#: locale/programs/locarchive.c:1124
+#: locale/programs/locarchive.c:1132
 #, c-format
 msgid "stat of \"%s\" failed: %s: ignored"
 msgstr "ta status på \"%s\" misslyckades: %s: ignorerad"
 
-#: locale/programs/locarchive.c:1130
+#: locale/programs/locarchive.c:1138
 #, c-format
 msgid "\"%s\" is no directory; ignored"
 msgstr "\"%s\" är inte en katalog, ignorerad"
 
-#: locale/programs/locarchive.c:1137
+#: locale/programs/locarchive.c:1145
 #, c-format
 msgid "cannot open directory \"%s\": %s: ignored"
 msgstr "kan inte öppna katalog \"%s\": %s: ignorerad"
 
-#: locale/programs/locarchive.c:1209
+#: locale/programs/locarchive.c:1217
 #, c-format
 msgid "incomplete set of locale files in \"%s\""
 msgstr "ofullständig uppsättning av lokalfiler i \"%s\""
 
-#: locale/programs/locarchive.c:1273
+#: locale/programs/locarchive.c:1281
 #, c-format
 msgid "cannot read all files in \"%s\": ignored"
 msgstr "kan inte läsa alla filer i \"%s\": ignorerad"
 
-#: locale/programs/locarchive.c:1343
+#: locale/programs/locarchive.c:1351
 #, c-format
 msgid "locale \"%s\" not in archive"
 msgstr "lokal \"%s\" finns inte i arkivet"
@@ -1659,8 +1659,8 @@ msgstr "<%s> och <%s> är ogiltiga namn för intervall"
 msgid "upper limit in range is not smaller then lower limit"
 msgstr "övre gräns i intervall är inte mindre än undre gräns"
 
-#: locale/programs/xmalloc.c:70 malloc/obstack.c:500 malloc/obstack.c:503
-#: posix/getconf.c:996
+#: locale/programs/xmalloc.c:70 malloc/obstack.c:505 malloc/obstack.c:508
+#: posix/getconf.c:1002
 msgid "memory exhausted"
 msgstr "minne slut"
 
@@ -1686,7 +1686,7 @@ msgstr "Första strängen för test."
 msgid "Another string for testing."
 msgstr "En till sträng för test."
 
-#: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:79
+#: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:84
 msgid "NAME"
 msgstr "NAMN"
 
@@ -1730,7 +1730,7 @@ msgstr "otillåtet tal för mängd"
 msgid "duplicate set definition"
 msgstr "dubblerad definition av mängd"
 
-#: catgets/gencat.c:446 catgets/gencat.c:619 catgets/gencat.c:648
+#: catgets/gencat.c:446 catgets/gencat.c:623 catgets/gencat.c:677
 msgid "this is the first definition"
 msgstr "detta är den första definitionen"
 
@@ -1748,44 +1748,44 @@ msgstr "ogiltigt citattecken"
 msgid "unknown directive `%s': line ignored"
 msgstr "okänt direktiv \"%s\": rad ignorerad"
 
-#: catgets/gencat.c:617
+#: catgets/gencat.c:621
 msgid "duplicated message number"
 msgstr "dubblerat meddelandenummer"
 
-#: catgets/gencat.c:645
+#: catgets/gencat.c:674
 msgid "duplicated message identifier"
 msgstr "dubblerad meddelandeidentifierare"
 
-#: catgets/gencat.c:702
+#: catgets/gencat.c:731
 msgid "invalid character: message ignored"
 msgstr "ogiltigt tecken: meddelandet ignorerat"
 
-#: catgets/gencat.c:745
+#: catgets/gencat.c:774
 msgid "invalid line"
 msgstr "ogiltig rad"
 
-#: catgets/gencat.c:799
+#: catgets/gencat.c:828
 msgid "malformed line ignored"
 msgstr "felaktig rad ignorerad"
 
-#: catgets/gencat.c:963 catgets/gencat.c:1004
+#: catgets/gencat.c:992 catgets/gencat.c:1033
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr "kan inte öppna utfil \"%s\""
 
-#: catgets/gencat.c:1188
+#: catgets/gencat.c:1217
 msgid "unterminated message"
 msgstr "oavslutat meddelande"
 
-#: catgets/gencat.c:1212
+#: catgets/gencat.c:1241
 msgid "while opening old catalog file"
 msgstr "när gammal katalogfil öppnades"
 
-#: catgets/gencat.c:1303
+#: catgets/gencat.c:1332
 msgid "conversion modules not available"
 msgstr "konverteringsmoduler inte tillgängliga"
 
-#: catgets/gencat.c:1329
+#: catgets/gencat.c:1358
 msgid "cannot determine escape character"
 msgstr "kan inte avgöra kontrolltecken"
 
@@ -1793,7 +1793,7 @@ msgstr "kan inte avgöra kontrolltecken"
 msgid "makecontext: does not know how to handle more than 8 arguments\n"
 msgstr "makecontext: kan inte hantera mer än 8 argument\n"
 
-#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:178
+#: stdio-common/../sysdeps/gnu/errlist.c:12 posix/regcomp.c:133
 #: nis/nis_error.c:29 nis/ypclnt.c:787 nis/ypclnt.c:861
 msgid "Success"
 msgstr "Lyckat"
@@ -2982,23 +2982,23 @@ msgstr "Kan inte skicka efter att uttaget (socket) stängts"
 msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sOkänd signal %d\n"
 
-#: malloc/mcheck.c:296
+#: malloc/mcheck.c:346
 msgid "memory is consistent, library is buggy\n"
 msgstr "minnet är konsistent, biblioteket är felaktigt\n"
 
-#: malloc/mcheck.c:299
+#: malloc/mcheck.c:349
 msgid "memory clobbered before allocated block\n"
 msgstr "minnet förstört före allokerat block\n"
 
-#: malloc/mcheck.c:302
+#: malloc/mcheck.c:352
 msgid "memory clobbered past end of allocated block\n"
 msgstr "minnet förstört efter slutet på allokerat block\n"
 
-#: malloc/mcheck.c:305
+#: malloc/mcheck.c:355
 msgid "block freed twice\n"
 msgstr "block frigjort två gånger\n"
 
-#: malloc/mcheck.c:308
+#: malloc/mcheck.c:358
 msgid "bogus mcheck_status, library is buggy\n"
 msgstr "felaktig mcheck_status, biblioteket är felaktigt\n"
 
@@ -3034,6 +3034,10 @@ msgstr "Generera grafik från data från minnesprofilering"
 msgid "DATAFILE [OUTFILE]"
 msgstr "DATAFIL [UTFIL]"
 
+#: string/strerror.c:43 posix/../sysdeps/posix/gai_strerror.c:57
+msgid "Unknown error"
+msgstr "Okänt fel"
+
 #: string/strsignal.c:69
 #, c-format
 msgid "Real-time signal %d"
@@ -3058,7 +3062,7 @@ msgstr "Fel vid skrivning till standard ut"
 msgid "%s: Memory exhausted: %s\n"
 msgstr "%s: Minnet slut: %s\n"
 
-#: timezone/zic.c:390 misc/error.c:120
+#: timezone/zic.c:390 misc/error.c:127 misc/error.c:155
 msgid "Unknown system error"
 msgstr "Okänt systemfel"
 
@@ -3451,25 +3455,21 @@ msgstr "Alla begäran utförda"
 msgid "Interrupted by a signal"
 msgstr "Avbruten av en signal"
 
-#: posix/../sysdeps/posix/gai_strerror.c:57
-msgid "Unknown error"
-msgstr "Okänt fel"
-
-#: posix/getconf.c:883
+#: posix/getconf.c:889
 #, c-format
 msgid "Usage: %s [-v specification] variable_name [pathname]\n"
 msgstr "Användning: %s [-v specifikation] variabelnamn [sökväg]\n"
 
-#: posix/getconf.c:941
+#: posix/getconf.c:947
 #, c-format
 msgid "unknown specification \"%s\""
 msgstr "okänd specifikation \"%s\""
 
-#: posix/getconf.c:968 posix/getconf.c:984
+#: posix/getconf.c:974 posix/getconf.c:990
 msgid "undefined"
 msgstr "odefinierad"
 
-#: posix/getconf.c:1006
+#: posix/getconf.c:1012
 #, c-format
 msgid "Unrecognized variable `%s'"
 msgstr "Okänd variabel \"%s\""
@@ -3531,71 +3531,71 @@ msgstr "%s: flaggan \"-W %s\" är tvetydig\n"
 msgid "%s: option `-W %s' doesn't allow an argument\n"
 msgstr "%s: flaggan \"-W %s\" tar inget argument\n"
 
-#: posix/regcomp.c:181
+#: posix/regcomp.c:136
 msgid "No match"
 msgstr "Ingen träff"
 
-#: posix/regcomp.c:184
+#: posix/regcomp.c:139
 msgid "Invalid regular expression"
 msgstr "Ogiltigt reguljärt uttryck"
 
-#: posix/regcomp.c:187
+#: posix/regcomp.c:142
 msgid "Invalid collation character"
 msgstr "Ogiltigt kollationeringstecken"
 
-#: posix/regcomp.c:190
+#: posix/regcomp.c:145
 msgid "Invalid character class name"
 msgstr "Ogiltigt teckenklassnamn"
 
-#: posix/regcomp.c:193
+#: posix/regcomp.c:148
 msgid "Trailing backslash"
 msgstr "Avslutande omvänt snedstreck"
 
-#: posix/regcomp.c:196
+#: posix/regcomp.c:151
 msgid "Invalid back reference"
 msgstr "Ogiltig bakåtreferens"
 
-#: posix/regcomp.c:199
+#: posix/regcomp.c:154
 msgid "Unmatched [ or [^"
 msgstr "Obalanserade [ eller [^"
 
-#: posix/regcomp.c:202
+#: posix/regcomp.c:157
 msgid "Unmatched ( or \\("
 msgstr "Obalanserade ( eller \\("
 
-#: posix/regcomp.c:205
+#: posix/regcomp.c:160
 msgid "Unmatched \\{"
 msgstr "Obalanserad \\{"
 
-#: posix/regcomp.c:208
+#: posix/regcomp.c:163
 msgid "Invalid content of \\{\\}"
 msgstr "Ogiltigt innehåll i \\{\\}"
 
-#: posix/regcomp.c:211
+#: posix/regcomp.c:166
 msgid "Invalid range end"
 msgstr "Ogiltigt intervallslut"
 
-#: posix/regcomp.c:214
+#: posix/regcomp.c:169
 msgid "Memory exhausted"
 msgstr "Minnet slut"
 
-#: posix/regcomp.c:217
+#: posix/regcomp.c:172
 msgid "Invalid preceding regular expression"
 msgstr "Ogiltigt föregående reguljärt uttryck"
 
-#: posix/regcomp.c:220
+#: posix/regcomp.c:175
 msgid "Premature end of regular expression"
 msgstr "För tidigt slut på reguljärt uttryck"
 
-#: posix/regcomp.c:223
+#: posix/regcomp.c:178
 msgid "Regular expression too big"
 msgstr "Reguljärt uttryck för stort"
 
-#: posix/regcomp.c:226
+#: posix/regcomp.c:181
 msgid "Unmatched ) or \\)"
 msgstr "Obalanserade ) eller \\)"
 
-#: posix/regcomp.c:673
+#: posix/regcomp.c:615
 msgid "No previous regular expression"
 msgstr "Inget föregående reguljärt uttryck"
 
@@ -3749,24 +3749,24 @@ msgstr "databas [nyckel ...]"
 msgid "Service configuration to be used"
 msgstr "Tjänstekonfiguration som ska användas"
 
-#: nss/getent.c:136 nss/getent.c:305
+#: nss/getent.c:136 nss/getent.c:308
 #, c-format
 msgid "Enumeration not supported on %s\n"
 msgstr "Uppräkning stöds inte på %s\n"
 
-#: nss/getent.c:729
+#: nss/getent.c:732
 msgid "getent - get entries from administrative database."
 msgstr "getent - hämta poster från administrativ databas"
 
-#: nss/getent.c:730
+#: nss/getent.c:733
 msgid "Supported databases:"
 msgstr "Databaser som stöds:"
 
-#: nss/getent.c:787 nscd/nscd.c:119 nscd/nscd_nischeck.c:64
+#: nss/getent.c:790 nscd/nscd.c:124 nscd/nscd_nischeck.c:64
 msgid "wrong number of arguments"
 msgstr "fel antal argument"
 
-#: nss/getent.c:797
+#: nss/getent.c:800
 #, c-format
 msgid "Unknown database: %s\n"
 msgstr "Okänd databas: %s\n"
@@ -3795,68 +3795,72 @@ msgstr "kan inte läsa huvud"
 msgid "invalid pointer size"
 msgstr "ogiltig pekarstorlek"
 
-#: inet/rcmd.c:174 inet/rcmd.c:177
+#: inet/rcmd.c:163 inet/rcmd.c:166
+msgid "rcmd: Cannot allocate memory\n"
+msgstr "rcmd: Kan inte allokera minne\n"
+
+#: inet/rcmd.c:185 inet/rcmd.c:188
 msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: uttag (socket): Alla portar används\n"
 
-#: inet/rcmd.c:211
+#: inet/rcmd.c:222
 #, c-format
 msgid "connect to address %s: "
 msgstr "anslut till adress %s: "
 
-#: inet/rcmd.c:229
+#: inet/rcmd.c:240
 #, c-format
 msgid "Trying %s...\n"
 msgstr "Provar %s...\n"
 
-#: inet/rcmd.c:278
+#: inet/rcmd.c:289
 #, c-format
 msgid "rcmd: write (setting up stderr): %m\n"
 msgstr "rcmd: write: (sätter upp standard fel): %m\n"
 
-#: inet/rcmd.c:299
+#: inet/rcmd.c:310
 #, c-format
 msgid "rcmd: poll (setting up stderr): %m\n"
 msgstr "rcmd: poll (sätter upp standard fel): %m\n"
 
-#: inet/rcmd.c:302
+#: inet/rcmd.c:313
 msgid "poll: protocol failure in circuit setup\n"
 msgstr "poll: protokollfel i förbindelseuppsättning\n"
 
-#: inet/rcmd.c:346
+#: inet/rcmd.c:358
 msgid "socket: protocol failure in circuit setup\n"
 msgstr "uttag (socket): protokollfel i förbindelseuppsättning\n"
 
-#: inet/rcmd.c:368
+#: inet/rcmd.c:387
 #, c-format
 msgid "rcmd: %s: short read"
 msgstr "rcmd: %s: läsning gav för lite data"
 
-#: inet/rcmd.c:524
+#: inet/rcmd.c:549
 msgid "lstat failed"
 msgstr "misslyckades ta status (lstat)"
 
-#: inet/rcmd.c:526
+#: inet/rcmd.c:551
 msgid "not regular file"
 msgstr "inte en normal fil"
 
-#: inet/rcmd.c:531
+#: inet/rcmd.c:556
 msgid "cannot open"
 msgstr "kan inte öppna"
 
-#: inet/rcmd.c:533
+#: inet/rcmd.c:558
 msgid "fstat failed"
 msgstr "misslyckades ta status (fstat)"
 
-#: inet/rcmd.c:535
+#: inet/rcmd.c:560
 msgid "bad owner"
 msgstr "olämplig ägare"
 
-#: inet/rcmd.c:537
+#: inet/rcmd.c:562
 msgid "writeable by other than owner"
 msgstr "skrivbar för andra än ägaren"
 
-#: inet/rcmd.c:539
+#: inet/rcmd.c:564
 msgid "hard linked somewhere"
 msgstr "hårdlänkad någonstans"
 
@@ -4067,109 +4071,109 @@ msgstr "Problem med poll vid utsändning"
 msgid "Cannot receive reply to broadcast"
 msgstr "Kan inte ta emot svar på utsändning"
 
-#: sunrpc/rpc_main.c:289
+#: sunrpc/rpc_main.c:288
 #, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: utdata skulle skriva över %s\n"
 
-#: sunrpc/rpc_main.c:296
+#: sunrpc/rpc_main.c:295
 #, c-format
 msgid "%s: unable to open %s: %m\n"
 msgstr "%s: kan inte öppna %s: %m\n"
 
-#: sunrpc/rpc_main.c:308
+#: sunrpc/rpc_main.c:307
 #, c-format
 msgid "%s: while writing output %s: %m"
 msgstr "%s: när resultatet %s skrevs: %m"
 
-#: sunrpc/rpc_main.c:343
+#: sunrpc/rpc_main.c:342
 #, c-format
 msgid "cannot find C preprocessor: %s \n"
 msgstr "kan inte hitta C preprocessor: %s \n"
 
-#: sunrpc/rpc_main.c:351
+#: sunrpc/rpc_main.c:350
 msgid "cannot find any C preprocessor (cpp)\n"
 msgstr "kan inte hitta någon C preprocessor (cpp)\n"
 
-#: sunrpc/rpc_main.c:420
+#: sunrpc/rpc_main.c:419
 #, c-format
 msgid "%s: C preprocessor failed with signal %d\n"
 msgstr "%s: C preprocessorn avslutades med signal %d\n"
 
-#: sunrpc/rpc_main.c:423
+#: sunrpc/rpc_main.c:422
 #, c-format
 msgid "%s: C preprocessor failed with exit code %d\n"
 msgstr "%s: C preprocessorn avslutades med kod %d\n"
 
-#: sunrpc/rpc_main.c:463
+#: sunrpc/rpc_main.c:462
 #, c-format
 msgid "illegal nettype :`%s'\n"
 msgstr "otillåten nättyp: \"%s\"\n"
 
-#: sunrpc/rpc_main.c:1105
+#: sunrpc/rpc_main.c:1104
 msgid "rpcgen: too many defines\n"
 msgstr "rpcgen: för många \"define\"\n"
 
-#: sunrpc/rpc_main.c:1117
+#: sunrpc/rpc_main.c:1116
 msgid "rpcgen: arglist coding error\n"
 msgstr "rpcgen: arglist kodningsfel\n"
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
-#: sunrpc/rpc_main.c:1150
+#: sunrpc/rpc_main.c:1149
 #, c-format
 msgid "file `%s' already exists and may be overwritten\n"
 msgstr "fil \"%s\" finns redan och kan bli överskriven\n"
 
-#: sunrpc/rpc_main.c:1195
+#: sunrpc/rpc_main.c:1194
 msgid "Cannot specify more than one input file!\n"
 msgstr "Kan inte ange mer än en infil!\n"
 
-#: sunrpc/rpc_main.c:1365
+#: sunrpc/rpc_main.c:1364
 msgid "This implementation doesn't support newstyle or MT-safe code!\n"
 msgstr "Denna implementation stödjer inte \"newstyle\" eller trådsäker kod!\n"
 
-#: sunrpc/rpc_main.c:1374
+#: sunrpc/rpc_main.c:1373
 msgid "Cannot use netid flag with inetd flag!\n"
 msgstr "Kan inte ange netid-flaggan tillsammans med inetd-flaggan!\n"
 
-#: sunrpc/rpc_main.c:1386
+#: sunrpc/rpc_main.c:1385
 msgid "Cannot use netid flag without TIRPC!\n"
 msgstr "Kan inte ange netid-flaggan utan TIRPC!\n"
 
-#: sunrpc/rpc_main.c:1393
+#: sunrpc/rpc_main.c:1392
 msgid "Cannot use table flags with newstyle!\n"
 msgstr "Kan inte ange tabellflaggor med ny stil\n"
 
-#: sunrpc/rpc_main.c:1412
+#: sunrpc/rpc_main.c:1411
 msgid "\"infile\" is required for template generation flags.\n"
 msgstr "\"infil\" är obligatorisk för mallgenereringsflaggor.\n"
 
-#: sunrpc/rpc_main.c:1417
+#: sunrpc/rpc_main.c:1416
 msgid "Cannot have more than one file generation flag!\n"
 msgstr "Kan inte ha mer än en filgenereringsflagga!\n"
 
-#: sunrpc/rpc_main.c:1426
+#: sunrpc/rpc_main.c:1425
 #, c-format
 msgid "usage: %s infile\n"
 msgstr "användning:  %s infil\n"
 
-#: sunrpc/rpc_main.c:1427
+#: sunrpc/rpc_main.c:1426
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dnamn[=värde]] [-i storlek] [-I [-K sekunder]] [-Y sökväg] infil\n"
 
-#: sunrpc/rpc_main.c:1429
+#: sunrpc/rpc_main.c:1428
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
 msgstr "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o utfil] [infil]\n"
 
-#: sunrpc/rpc_main.c:1431
+#: sunrpc/rpc_main.c:1430
 #, c-format
 msgid "\t%s [-s nettype]* [-o outfile] [infile]\n"
 msgstr "\t%s [-s nättyp]* [-o utfil] [infil]\n"
 
-#: sunrpc/rpc_main.c:1432
+#: sunrpc/rpc_main.c:1431
 #, c-format
 msgid "\t%s [-n netid]* [-o outfile] [infile]\n"
 msgstr "\t%s [-n nätid]* [-o utfil] [infil]\n"
@@ -5026,7 +5030,7 @@ msgstr "yp_update: kan inte hämta serveradress\n"
 msgid "while allocating hash table entry"
 msgstr "när hashtabellspost allokerades"
 
-#: nscd/cache.c:150 nscd/connections.c:185
+#: nscd/cache.c:150 nscd/connections.c:187
 #, c-format
 msgid "cannot stat() file `%s': %s"
 msgstr "kan inte ta status på fil \"%s\": %s"
@@ -5039,153 +5043,158 @@ msgstr "kan inte läsa konfigurationsdata, detta är fatalt"
 msgid "Cannot run nscd in secure mode as unprivileged user"
 msgstr "Kan inte köra nscd i säkert läge som opriviligierad användare"
 
-#: nscd/connections.c:199
+#: nscd/connections.c:175
+#, c-format
+msgid "while allocating cache: %s"
+msgstr "när cache-post allokerades: %s"
+
+#: nscd/connections.c:200
 #, c-format
 msgid "cannot open socket: %s"
 msgstr "kan inte öppna uttag (socket): %s"
 
-#: nscd/connections.c:217
+#: nscd/connections.c:218
 #, c-format
 msgid "cannot enable socket to accept connections: %s"
 msgstr "kan inte få uttag (socket) att acceptera förbindelser: %s"
 
-#: nscd/connections.c:259
+#: nscd/connections.c:260
 #, c-format
 msgid "handle_request: request received (Version = %d)"
 msgstr "handle_request: begäran mottagen (version = %d)"
 
-#: nscd/connections.c:265
+#: nscd/connections.c:266
 #, c-format
 msgid "cannot handle old request version %d; current version is %d"
 msgstr "Kan inte hantera äldre förfrågansversion %d, nuvarande version är %d"
 
-#: nscd/connections.c:303 nscd/connections.c:325
+#: nscd/connections.c:304 nscd/connections.c:326
 #, c-format
 msgid "cannot write result: %s"
 msgstr "kan inte skriva resultat: %s"
 
-#: nscd/connections.c:404 nscd/connections.c:498
+#: nscd/connections.c:405 nscd/connections.c:499
 #, c-format
 msgid "error getting callers id: %s"
 msgstr "kunde inte hämta anropandes identitet: %s"
 
-#: nscd/connections.c:470
+#: nscd/connections.c:471
 #, c-format
 msgid "while accepting connection: %s"
 msgstr "när förbindelse accepterades: %s"
 
-#: nscd/connections.c:481
+#: nscd/connections.c:482
 #, c-format
 msgid "short read while reading request: %s"
 msgstr "fattas data vid läsning av begäran: %s"
 
-#: nscd/connections.c:517
+#: nscd/connections.c:518
 #, c-format
 msgid "key length in request too long: %d"
 msgstr "nyckellängd i begäran för lång: %d"
 
-#: nscd/connections.c:531
+#: nscd/connections.c:532
 #, c-format
 msgid "short read while reading request key: %s"
 msgstr "fattas data vid läsning av begäransnyckel: %s"
 
-#: nscd/connections.c:590 nscd/connections.c:591 nscd/connections.c:610
-#: nscd/connections.c:623 nscd/connections.c:629 nscd/connections.c:636
+#: nscd/connections.c:591 nscd/connections.c:592 nscd/connections.c:611
+#: nscd/connections.c:624 nscd/connections.c:630 nscd/connections.c:637
 #, c-format
 msgid "Failed to run nscd as user '%s'"
 msgstr "Misslyckades att köra nscd som användare \"%s\""
 
-#: nscd/connections.c:611
+#: nscd/connections.c:612
 msgid "getgrouplist failed"
 msgstr "getgrouplist misslyckades"
 
-#: nscd/connections.c:624
+#: nscd/connections.c:625
 msgid "setgroups failed"
 msgstr "setgroups misslyckades"
 
-#: nscd/grpcache.c:102 nscd/hstcache.c:110 nscd/pwdcache.c:108
+#: nscd/grpcache.c:103 nscd/hstcache.c:111 nscd/pwdcache.c:109
 msgid "while allocating key copy"
 msgstr "när nyckelkopia allokerades"
 
-#: nscd/grpcache.c:152 nscd/hstcache.c:167 nscd/pwdcache.c:145
+#: nscd/grpcache.c:153 nscd/hstcache.c:168 nscd/pwdcache.c:146
 msgid "while allocating cache entry"
 msgstr "när cache-post allokerades"
 
-#: nscd/grpcache.c:195 nscd/hstcache.c:281 nscd/pwdcache.c:191
+#: nscd/grpcache.c:196 nscd/hstcache.c:282 nscd/pwdcache.c:192
 #, c-format
 msgid "short write in %s: %s"
 msgstr "ofullständig skrivning i %s: %s"
 
-#: nscd/grpcache.c:217
+#: nscd/grpcache.c:218
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
 msgstr "Hittar inte \"%s\" i gruppcache!"
 
-#: nscd/grpcache.c:292
+#: nscd/grpcache.c:284
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
 msgstr "Ogiltigt numeriskt gruppid (gid) \"%s\"!"
 
-#: nscd/grpcache.c:299
+#: nscd/grpcache.c:291
 #, c-format
 msgid "Haven't found \"%d\" in group cache!"
 msgstr "Hittar inte \"%d\" i gruppcache!"
 
-#: nscd/hstcache.c:303 nscd/hstcache.c:378 nscd/hstcache.c:456
-#: nscd/hstcache.c:533
+#: nscd/hstcache.c:304 nscd/hstcache.c:370 nscd/hstcache.c:435
+#: nscd/hstcache.c:500
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
 msgstr "Hittar inte \"%s\" i värdcache!"
 
-#: nscd/nscd.c:80
+#: nscd/nscd.c:85
 msgid "Read configuration data from NAME"
 msgstr "Läs konfigurationsdata från NAMN"
 
-#: nscd/nscd.c:82
+#: nscd/nscd.c:87
 msgid "Do not fork and display messages on the current tty"
 msgstr "Skapa inte barnprocess, visa meddelanden på nuvarande tty"
 
-#: nscd/nscd.c:83
+#: nscd/nscd.c:88
 msgid "NUMBER"
 msgstr "ANTAL"
 
-#: nscd/nscd.c:83
+#: nscd/nscd.c:88
 msgid "Start NUMBER threads"
 msgstr "Starta ANTAL trådar"
 
-#: nscd/nscd.c:84
+#: nscd/nscd.c:89
 msgid "Shut the server down"
 msgstr "Avsluta servern"
 
-#: nscd/nscd.c:85
+#: nscd/nscd.c:90
 msgid "Print current configuration statistic"
 msgstr "Skriv ut nuvarande konfigurationsstatistik"
 
-#: nscd/nscd.c:86
+#: nscd/nscd.c:91
 msgid "TABLE"
 msgstr "TABELL"
 
-#: nscd/nscd.c:87
+#: nscd/nscd.c:92
 msgid "Invalidate the specified cache"
 msgstr "Invalidera den angivna cachen"
 
-#: nscd/nscd.c:88
+#: nscd/nscd.c:93
 msgid "TABLE,yes"
 msgstr "TABELL,yes"
 
-#: nscd/nscd.c:88
+#: nscd/nscd.c:93
 msgid "Use separate cache for each user"
 msgstr "Använd separat cache för varje användare"
 
-#: nscd/nscd.c:93
+#: nscd/nscd.c:98
 msgid "Name Service Cache Daemon."
 msgstr "Namntjänst cache-demon"
 
-#: nscd/nscd.c:126
+#: nscd/nscd.c:131
 msgid "already running"
 msgstr "kör redan"
 
-#: nscd/nscd.c:192 nscd/nscd.c:212 nscd/nscd.c:218
+#: nscd/nscd.c:243 nscd/nscd.c:263 nscd/nscd.c:269
 msgid "Only root is allowed to use this option!"
 msgstr "Bara root har tillåtelse att använda denna operation!"
 
@@ -5275,22 +5284,22 @@ msgstr ""
 "%15ld%% cache träffprocent\n"
 "%15s  kontrollera /etc/%s för ändringar\n"
 
-#: nscd/pwdcache.c:213
+#: nscd/pwdcache.c:214
 #, c-format
 msgid "Haven't found \"%s\" in password cache!"
 msgstr "Hittar inte \"%s\" i lösenordscache!"
 
-#: nscd/pwdcache.c:288
+#: nscd/pwdcache.c:280
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
 msgstr "Ogiltigt numeriskt användarid (uid) \"%s\"!"
 
-#: nscd/pwdcache.c:295
+#: nscd/pwdcache.c:287
 #, c-format
 msgid "Haven't found \"%d\" in password cache!"
 msgstr "Hittar inte \"%d\" i lösenordscache!"
 
-#: elf/../sysdeps/generic/dl-sysdep.c:297
+#: elf/../sysdeps/generic/dl-sysdep.c:357
 msgid "cannot create capability list"
 msgstr "kan inte skapa egenskapslista"
 
@@ -5341,7 +5350,7 @@ msgstr "Okänt OS"
 msgid ", OS ABI: %s %d.%d.%d"
 msgstr ", OS ABI: %s %d.%d.%d"
 
-#: elf/cache.c:136 elf/ldconfig.c:1033
+#: elf/cache.c:136 elf/ldconfig.c:1045
 #, c-format
 msgid "Can't open cache file %s\n"
 msgstr "Kan inte öppna cache-fil \"%s\"\n"
@@ -5387,17 +5396,17 @@ msgstr "Misslyckades med att byta åtkomsträttigheter för %s till %#o"
 msgid "Renaming of %s to %s failed"
 msgstr "Namnbyte på %s till %s misslyckades"
 
-#: elf/dl-close.c:113
+#: elf/dl-close.c:128
 msgid "shared object not open"
 msgstr "delat objekt är inte öppnat"
 
-#: elf/dl-close.c:357 elf/dl-open.c:436
+#: elf/dl-close.c:486 elf/dl-open.c:444
 msgid "TLS generation counter wrapped!  Please send report with the 'glibcbug' script."
 msgstr ""
 "Generationsräknare för TLS slog runt!  Var snäll och skicka felrapport med\n"
 "\"glibcbug\"-skriptet"
 
-#: elf/dl-deps.c:111 elf/dl-open.c:177
+#: elf/dl-deps.c:111 elf/dl-open.c:183
 msgid "DST not allowed in SUID/SGID programs"
 msgstr "DST inte tillåten i SUID/SGID-program"
 
@@ -5416,181 +5425,193 @@ msgstr ""
 msgid "cannot allocate dependency list"
 msgstr "kan inte allokera beroendelista"
 
-#: elf/dl-deps.c:492 elf/dl-deps.c:547
+#: elf/dl-deps.c:494 elf/dl-deps.c:549
 msgid "cannot allocate symbol search list"
 msgstr "kan inte allokera söklista för symboler"
 
-#: elf/dl-deps.c:532
+#: elf/dl-deps.c:534
 msgid "Filters not supported with LD_TRACE_PRELINKING"
 msgstr "Filter stöds ej med LD_TRACE_PRELINKING"
 
-#: elf/dl-error.c:73
+#: elf/dl-error.c:75
 msgid "DYNAMIC LINKER BUG!!!"
 msgstr "FEL I DYNAMISK LÄNKARE!!!"
 
-#: elf/dl-error.c:106
+#: elf/dl-error.c:108
 msgid "error while loading shared libraries"
 msgstr "fel när delade bibliotek laddades"
 
-#: elf/dl-load.c:338
+#: elf/dl-load.c:339
 msgid "cannot allocate name record"
 msgstr "kan inte allokera namnpost"
 
-#: elf/dl-load.c:440 elf/dl-load.c:520 elf/dl-load.c:614 elf/dl-load.c:709
+#: elf/dl-load.c:441 elf/dl-load.c:520 elf/dl-load.c:612 elf/dl-load.c:707
 msgid "cannot create cache for search path"
 msgstr "kan inte skapa cache för sökväg"
 
-#: elf/dl-load.c:545
+#: elf/dl-load.c:543
 msgid "cannot create RUNPATH/RPATH copy"
 msgstr "kan inte skapa kopia av RUNPATH/RPATH"
 
-#: elf/dl-load.c:600
+#: elf/dl-load.c:598
 msgid "cannot create search path array"
 msgstr "kan inte skapa säkvägslista"
 
-#: elf/dl-load.c:796
+#: elf/dl-load.c:794
 msgid "cannot stat shared object"
 msgstr "kan inte ta status på delat objekt"
 
-#: elf/dl-load.c:840
+#: elf/dl-load.c:838
 msgid "cannot open zero fill device"
 msgstr "kan inte öppna nollfyllnadsenhet"
 
-#: elf/dl-load.c:849 elf/dl-load.c:1855
+#: elf/dl-load.c:847 elf/dl-load.c:1902
 msgid "cannot create shared object descriptor"
 msgstr "kan inte skapa delad objektdeskriptor"
 
-#: elf/dl-load.c:868 elf/dl-load.c:1351 elf/dl-load.c:1434
+#: elf/dl-load.c:866 elf/dl-load.c:1398 elf/dl-load.c:1481
 msgid "cannot read file data"
 msgstr "kan inte läsa fildata"
 
-#: elf/dl-load.c:908
+#: elf/dl-load.c:906
 msgid "ELF load command alignment not page-aligned"
 msgstr "ELF-laddkommando är inte på sidgräns"
 
-#: elf/dl-load.c:915
+#: elf/dl-load.c:913
 msgid "ELF load command address/offset not properly aligned"
 msgstr "Address/position för ELF-laddkommando är inte på rätt bytegräns"
 
-#: elf/dl-load.c:996
+#: elf/dl-load.c:988
+msgid "cannot allocate TLS data structures for initial thread"
+msgstr "kan inte skapa TLS-datastrukturer för första tråden"
+
+#: elf/dl-load.c:1012
+msgid "cannot handle TLS data"
+msgstr "kan inte hantera TLS-data"
+
+#: elf/dl-load.c:1047
 msgid "failed to map segment from shared object"
 msgstr "misslyckades att mappa segment från delat objekt"
 
-#: elf/dl-load.c:1020
+#: elf/dl-load.c:1071
 msgid "cannot dynamically load executable"
 msgstr "kan inte ladda exekverbar fil dynamiskt"
 
-#: elf/dl-load.c:1081
+#: elf/dl-load.c:1132
 msgid "cannot change memory protections"
 msgstr "kan inte ändra minnesskydd"
 
-#: elf/dl-load.c:1100
+#: elf/dl-load.c:1151
 msgid "cannot map zero-fill pages"
 msgstr "kan inte mappa nollfyllda sidor"
 
-#: elf/dl-load.c:1118
+#: elf/dl-load.c:1169
 msgid "cannot allocate memory for program header"
 msgstr "Kan inte allokera minne för programhuvud"
 
-#: elf/dl-load.c:1149
+#: elf/dl-load.c:1200
 msgid "object file has no dynamic section"
 msgstr "objektfilen har ingen dynamisk sektion"
 
-#: elf/dl-load.c:1193
+#: elf/dl-load.c:1240
 msgid "shared object cannot be dlopen()ed"
 msgstr "delat objekt kan inte göras dlopen() på"
 
-#: elf/dl-load.c:1216
+#: elf/dl-load.c:1263
 msgid "cannot create searchlist"
 msgstr "kan inte skapa söklista"
 
-#: elf/dl-load.c:1351
+#: elf/dl-load.c:1398
 msgid "file too short"
 msgstr "fil för kort"
 
-#: elf/dl-load.c:1374
+#: elf/dl-load.c:1421
 msgid "invalid ELF header"
 msgstr "ogiltigt ELF-huvud"
 
-#: elf/dl-load.c:1383
+#: elf/dl-load.c:1430
 msgid "ELF file data encoding not big-endian"
 msgstr "Kodning för ELF-fildata är inte \"big-endian\""
 
-#: elf/dl-load.c:1385
+#: elf/dl-load.c:1432
 msgid "ELF file data encoding not little-endian"
 msgstr "Kodning för ELF-fildata är inte \"little-endian\""
 
-#: elf/dl-load.c:1389
+#: elf/dl-load.c:1436
 msgid "ELF file version ident does not match current one"
 msgstr "ELF-filens versionsidentitet stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1393
+#: elf/dl-load.c:1440
 msgid "ELF file OS ABI invalid"
 msgstr "ELF-fil har felaktig version på OS-ABI"
 
-#: elf/dl-load.c:1395
+#: elf/dl-load.c:1442
 msgid "ELF file ABI version invalid"
 msgstr "ELF-fil har felaktig version på ABI"
 
-#: elf/dl-load.c:1398
+#: elf/dl-load.c:1445
 msgid "internal error"
 msgstr "internt fel"
 
-#: elf/dl-load.c:1405
+#: elf/dl-load.c:1452
 msgid "ELF file version does not match current one"
 msgstr "ELF-filens version stämmer inte med nuvarande"
 
-#: elf/dl-load.c:1413
+#: elf/dl-load.c:1460
 msgid "ELF file's phentsize not the expected size"
 msgstr "ELF-filens värde på \"phentsize\" är inte den förväntade"
 
-#: elf/dl-load.c:1419
+#: elf/dl-load.c:1466
 msgid "only ET_DYN and ET_EXEC can be loaded"
 msgstr "bara ET_DYN och ET_EXEC kan laddas"
 
-#: elf/dl-load.c:1870
+#: elf/dl-load.c:1917
 msgid "cannot open shared object file"
 msgstr "kan inte öppna delad objektfil"
 
-#: elf/dl-lookup.c:248 elf/dl-lookup.c:413
+#: elf/dl-lookup.c:265 elf/dl-lookup.c:430
 msgid "relocation error"
 msgstr "fel vid relokering"
 
-#: elf/dl-open.c:105
+#: elf/dl-open.c:111
 msgid "cannot extend global scope"
 msgstr "kan inte utöka globalt område"
 
-#: elf/dl-open.c:208
+#: elf/dl-open.c:214
 msgid "empty dynamic string token substitution"
 msgstr "substitution av \"dynamic string token\" är tom"
 
-#: elf/dl-open.c:345 elf/dl-open.c:356
+#: elf/dl-open.c:351 elf/dl-open.c:362
 msgid "cannot create scope list"
 msgstr "kan inte skapa omfångslista"
 
-#: elf/dl-open.c:416
+#: elf/dl-open.c:424
 msgid "cannot create TLS data structures"
 msgstr "kan inte skapa datastrukturer för TLS"
 
-#: elf/dl-open.c:478
+#: elf/dl-open.c:486
 msgid "invalid mode for dlopen()"
 msgstr "ogiltiga flaggor för dlopen()"
 
-#: elf/dl-reloc.c:88
+#: elf/dl-reloc.c:58
+msgid "shared object cannot be dlopen()ed: static TLS memory too small"
+msgstr "delat objekt kan inte göras dlopen() på: statiskt TLS-minne är för litet"
+
+#: elf/dl-reloc.c:118
 msgid "cannot make segment writable for relocation"
 msgstr "kan inte göra segment skrivbart för relokering"
 
-#: elf/dl-reloc.c:174
+#: elf/dl-reloc.c:219
 #, c-format
 msgid "%s: profiler found no PLTREL in object %s\n"
 msgstr "%s: profileraren hittade inga PLTREL i objekt %s\n"
 
-#: elf/dl-reloc.c:186
+#: elf/dl-reloc.c:231
 #, c-format
 msgid "%s: profiler out of memory shadowing PLTREL of %s\n"
 msgstr "%s: profileraren fick slut minne för kopiering av PLTREL i %s\n"
 
-#: elf/dl-reloc.c:201
+#: elf/dl-reloc.c:246
 msgid "cannot restore segment prot after reloc"
 msgstr "kan inte återställa segmenträttigheter efter relokering"
 
@@ -5646,119 +5667,119 @@ msgstr "Format att använda: \"new\", \"old\" eller \"compat\" (standardvärde)"
 msgid "Configure Dynamic Linker Run Time Bindings."
 msgstr "Konfigurera bindningar för den dynamiska länkaren."
 
-#: elf/ldconfig.c:282
+#: elf/ldconfig.c:294
 #, c-format
 msgid "Path `%s' given more than once"
 msgstr "Sökväg \"%s\" given mer än en gång"
 
-#: elf/ldconfig.c:326
+#: elf/ldconfig.c:338
 #, c-format
 msgid "%s is not a known library type"
 msgstr "%s är inte en känd bibliotekstyp"
 
-#: elf/ldconfig.c:344
+#: elf/ldconfig.c:356
 #, c-format
 msgid "Can't stat %s"
 msgstr "Kan inte ta status på %s"
 
-#: elf/ldconfig.c:414
+#: elf/ldconfig.c:426
 #, c-format
 msgid "Can't stat %s\n"
 msgstr "Kan inte ta status på %s\n"
 
-#: elf/ldconfig.c:424
+#: elf/ldconfig.c:436
 #, c-format
 msgid "%s is not a symbolic link\n"
 msgstr "%s är inte en symbolisk länk\n"
 
-#: elf/ldconfig.c:443
+#: elf/ldconfig.c:455
 #, c-format
 msgid "Can't unlink %s"
 msgstr "Kan inte ta bort (unlink) %s"
 
-#: elf/ldconfig.c:449
+#: elf/ldconfig.c:461
 #, c-format
 msgid "Can't link %s to %s"
 msgstr "Kan inte länka %s till %s"
 
-#: elf/ldconfig.c:455
+#: elf/ldconfig.c:467
 msgid " (changed)\n"
 msgstr " (ändrad)\n"
 
-#: elf/ldconfig.c:457
+#: elf/ldconfig.c:469
 msgid " (SKIPPED)\n"
 msgstr " (HOPPAR ÖVER)\n"
 
-#: elf/ldconfig.c:512
+#: elf/ldconfig.c:524
 #, c-format
 msgid "Can't find %s"
 msgstr "Kan inte hitta %s"
 
-#: elf/ldconfig.c:528
+#: elf/ldconfig.c:540
 #, c-format
 msgid "Can't lstat %s"
 msgstr "Kan inte ta länkstatus på %s"
 
-#: elf/ldconfig.c:535
+#: elf/ldconfig.c:547
 #, c-format
 msgid "Ignored file %s since it is not a regular file."
 msgstr "Ignorerar fil %s eftersom den inte är en vanlig fil"
 
-#: elf/ldconfig.c:543
+#: elf/ldconfig.c:555
 #, c-format
 msgid "No link created since soname could not be found for %s"
 msgstr "Ingen länk skapad eftersom \"soname\" inte hittades för %s"
 
-#: elf/ldconfig.c:634
+#: elf/ldconfig.c:646
 #, c-format
 msgid "Can't open directory %s"
 msgstr "Kan inte öppna katalog %s"
 
-#: elf/ldconfig.c:689 elf/ldconfig.c:736
+#: elf/ldconfig.c:701 elf/ldconfig.c:748
 #, c-format
 msgid "Cannot lstat %s"
 msgstr "Kan inte ta status (lstat) på %s"
 
-#: elf/ldconfig.c:701
+#: elf/ldconfig.c:713
 #, c-format
 msgid "Cannot stat %s"
 msgstr "Kan inte ta status på %s"
 
-#: elf/ldconfig.c:758 elf/readlib.c:93
+#: elf/ldconfig.c:770 elf/readlib.c:93
 #, c-format
 msgid "Input file %s not found.\n"
 msgstr "Hittar inte infil %s.\n"
 
-#: elf/ldconfig.c:792
+#: elf/ldconfig.c:804
 #, c-format
 msgid "libc5 library %s in wrong directory"
 msgstr "libc5-bibliotek %s i fel katalog"
 
-#: elf/ldconfig.c:795
+#: elf/ldconfig.c:807
 #, c-format
 msgid "libc6 library %s in wrong directory"
 msgstr "libc6-bibliotek %s i fel katalog"
 
-#: elf/ldconfig.c:798
+#: elf/ldconfig.c:810
 #, c-format
 msgid "libc4 library %s in wrong directory"
 msgstr "libc4-bibliotek %s i fel katalog"
 
-#: elf/ldconfig.c:825
+#: elf/ldconfig.c:837
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
 msgstr "bibliotek %s och %s i katalog %s har samma \"soname\" men olika typ."
 
-#: elf/ldconfig.c:928
+#: elf/ldconfig.c:940
 #, c-format
 msgid "Can't open configuration file %s"
 msgstr "Kan inte öppna konfigurationsfil \"%s\""
 
-#: elf/ldconfig.c:1012
+#: elf/ldconfig.c:1024
 msgid "Can't chdir to /"
 msgstr "Kan inte byta katalog till /"
 
-#: elf/ldconfig.c:1054
+#: elf/ldconfig.c:1066
 #, c-format
 msgid "Can't open cache file directory %s\n"
 msgstr "Kan inte läsa cache-filkatalog \"%s\"\n"
