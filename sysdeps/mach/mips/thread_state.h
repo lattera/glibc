@@ -1,4 +1,5 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Mach thread state definitions for machine-independent code.  MIPS version.
+Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +17,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Signal handlers are actually called:
-   void handler (int sig, int code, struct sigcontext *scp);  */
+/* Everything else is called `thread_state', but CMU's header file is
+   called `thread_status'.  Oh boy.  */
+#include <mach/thread_status.h>
 
-/* State of this thread when the signal was taken.  */
-struct sigcontext
-  {
-    int sc_onstack;		/* Nonzero if running on sigstack.  */
-    sigset_t sc_mask;		/* Blocked signals to restore.  */
+#define MACHINE_THREAD_STATE_FLAVOR	MIPS_THREAD_STATE
+#define MACHINE_THREAD_STATE_COUNT	MIPS_THREAD_STATE_COUNT
 
-    /* MiG reply port this thread is using.  */
-    unsigned int sc_reply_port;
+#define machine_thread_state mips_thread_state
 
-    /* Port this thread is doing an interruptible RPC on.  */
-    unsigned long int sc_intr_port;
-  
-    /* "General" registers.  */
-    int sc_gpr[32];
-  
-    int sc_sp;			/* Stack pointer.  */
-    int sc_fp;			/* Frame pointer.  */
-    int sc_pc;			/* Instruction pointer.  */
-    int sc_ps;			/* Processor status.  */
-  };
+#define PC pc
+#define SP r29

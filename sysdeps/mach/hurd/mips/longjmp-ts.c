@@ -1,4 +1,5 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Perform a `longjmp' on a Mach thread_state.  MIPS version.
+Copyright (C) 1991, 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,26 +17,29 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-/* Signal handlers are actually called:
-   void handler (int sig, int code, struct sigcontext *scp);  */
+#include <hurd/signal.h>
+#include <setjmp.h>
+#include <mach/thread_status.h>
 
-/* State of this thread when the signal was taken.  */
-struct sigcontext
-  {
-    int sc_onstack;		/* Nonzero if running on sigstack.  */
-    sigset_t sc_mask;		/* Blocked signals to restore.  */
 
-    /* MiG reply port this thread is using.  */
-    unsigned int sc_reply_port;
+/* Set up STATE to do the equivalent of `longjmp (ENV, VAL);'.  */
 
-    /* Port this thread is doing an interruptible RPC on.  */
-    unsigned long int sc_intr_port;
-  
-    /* "General" registers.  */
-    int sc_gpr[32];
-  
-    int sc_sp;			/* Stack pointer.  */
-    int sc_fp;			/* Frame pointer.  */
-    int sc_pc;			/* Instruction pointer.  */
-    int sc_ps;			/* Processor status.  */
-  };
+void
+_hurd_longjmp_thread_state (void *state, jmp_buf env, int val)
+{
+  struct mips_thread_state *ts = state;
+
+  ts->r16 = env[0].__regs[0];
+  ts->r17 = env[0].__regs[1];
+  ts->r18 = env[0].__regs[2];
+  ts->r19 = env[0].__regs[3];
+  ts->r20 = env[0].__regs[4];
+  ts->r21 = env[0].__regs[5];
+  ts->r22 = env[0].__regs[6];
+  ts->r23 = env[0].__regs[7];
+  ts->r28 = (int) env[0].__gp;
+  ts->r29 = (int) env[0].__sp;
+  ts->r30 = (int) env[0].__fp;
+  ts->pc = (int) env[0].__pc;
+  ts->r2 = val ?: 1;
+}
