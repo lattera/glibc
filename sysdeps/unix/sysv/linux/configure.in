@@ -114,9 +114,7 @@ if test "$prefix" = "/usr" -o "$prefix" = "/usr/"; then
   fi
   # Allow the user to override the path with --sysconfdir
   if test $sysconfdir = '${prefix}/etc'; then
-    libc_cv_sysconfdir=/etc
-  else
-    libc_cv_sysconfdir=$sysconfdir
+    sysconfdir=/etc
    fi
   libc_cv_rootsbindir="/sbin"
 fi

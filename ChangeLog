@@ -1,5 +1,8 @@
 2001-07-06  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/configure.in: Fix handling of
+	sysconfdir.
+
 	* manual/libc-texinfo.sh: Add note for the FDL.
 
 	* manual/argp.texi (Argp Example 4): Fix texinfo warning.
