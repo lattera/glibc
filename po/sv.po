@@ -1,13 +1,13 @@
 # GNU libc message catalog for swedish
 # Copyright © 1996, 1998, 2001, 2002, 2003 Free Software Foundation, Inc.
 # Jan Djärv <jan.h.d@swipnet.se>, 1996, 1998, 2001, 2002, 2003.
-# Revision: 1.47
+# Revision: 1.48
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libc 2.3.3\n"
 "POT-Creation-Date: 2004-08-05 09:16+0200\n"
-"PO-Revision-Date: 2004-08-05 21:22+0200\n"
+"PO-Revision-Date: 2004-08-08 09:44+0200\n"
 "Last-Translator: Jan Djärv <jan.h.d@swipnet.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -5588,7 +5588,7 @@ msgstr "kan inte hantera TLS-data"
 
 #: elf/dl-load.c:1075
 msgid "object file has no loadable segments"
-msgstr "objektfilen har ingen laddbar sektion"
+msgstr "objektfilen har inga laddbara segment"
 
 #: elf/dl-load.c:1110
 msgid "failed to map segment from shared object"
