@@ -67,6 +67,11 @@ __pthread_cond_broadcast:
 	   woken up.  */
 	mov.l	r1, @(wakeup_seq,r8)
 	mov.l	r0, @(wakeup_seq+4,r8)
+	mov.l	r1, @(woken_seq,r8)
+	mov.l	r0, @(woken_seq+4,r8)
+	mov.l	@(broadcast_seq,r8), r2
+	add	#1, r2
+	mov.l	r2, @(broadcast_seq,r8)
 
 	/* Get the address of the mutex used.  */
 	mov.l	@(dep_mutex,r8), r9

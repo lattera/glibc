@@ -48,8 +48,10 @@ addr_string (struct sockaddr *sa, char *buf, size_t size)
     case AF_UNSPEC:
       return "---";
 
+#ifdef AF_PACKET
     case AF_PACKET:
       return "<packet>";
+#endif
 
     default:
       ++failures;

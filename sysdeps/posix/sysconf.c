@@ -97,98 +97,98 @@ __sysconf (name)
 
     case _SC_REALTIME_SIGNALS:
 #ifdef	_POSIX_REALTIME_SIGNALS
-      return 1;
+      return _POSIX_REALTIME_SIGNALS;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITY_SCHEDULING:
 #ifdef	_POSIX_PRIORITY_SCHEDULING
-      return 1;
+      return _POSIX_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_TIMERS:
 #ifdef	_POSIX_TIMERS
-      return 1;
+      return _POSIX_TIMERS;
 #else
       return -1;
 #endif
 
     case _SC_ASYNCHRONOUS_IO:
 #ifdef	_POSIX_ASYNCHRONOUS_IO
-      return 1;
+      return _POSIX_ASYNCHRONOUS_IO;
 #else
       return -1;
 #endif
 
     case _SC_PRIORITIZED_IO:
 #ifdef	_POSIX_PRIORITIZED_IO
-      return 1;
+      return _POSIX_PRIORITIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_SYNCHRONIZED_IO:
 #ifdef	_POSIX_SYNCHRONIZED_IO
-      return 1;
+      return _POSIX_SYNCHRONIZED_IO;
 #else
       return -1;
 #endif
 
     case _SC_FSYNC:
 #ifdef	_POSIX_FSYNC
-      return 1;
+      return _POSIX_FSYNC;
 #else
       return -1;
 #endif
 
     case _SC_MAPPED_FILES:
 #ifdef	_POSIX_MAPPED_FILES
-      return 1;
+      return _POSIX_MAPPED_FILES;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK:
 #ifdef	_POSIX_MEMLOCK
-      return 1;
+      return _POSIX_MEMLOCK;
 #else
       return -1;
 #endif
 
     case _SC_MEMLOCK_RANGE:
 #ifdef	_POSIX_MEMLOCK_RANGE
-      return 1;
+      return _POSIX_MEMLOCK_RANGE;
 #else
       return -1;
 #endif
 
     case _SC_MEMORY_PROTECTION:
 #ifdef	_POSIX_MEMORY_PROTECTION
-      return 1;
+      return _POSIX_MEMORY_PROTECTION;
 #else
       return -1;
 #endif
 
     case _SC_MESSAGE_PASSING:
 #ifdef	_POSIX_MESSAGE_PASSING
-      return 1;
+      return _POSIX_MESSAGE_PASSING;
 #else
       return -1;
 #endif
 
     case _SC_SEMAPHORES:
 #ifdef	_POSIX_SEMAPHORES
-      return 1;
+      return _POSIX_SEMAPHORES;
 #else
       return -1;
 #endif
 
     case _SC_SHARED_MEMORY_OBJECTS:
 #ifdef	_POSIX_SHARED_MEMORY_OBJECTS
-      return 1;
+      return _POSIX_SHARED_MEMORY_OBJECTS;
 #else
       return -1;
 #endif
@@ -507,14 +507,14 @@ __sysconf (name)
       /* POSIX 1003.1c (POSIX Threads).  */
     case _SC_THREADS:
 #ifdef	_POSIX_THREADS
-      return 1;
+      return _POSIX_THREADS;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_SAFE_FUNCTIONS:
 #ifdef	_POSIX_THREAD_SAFE_FUNCTIONS
-      return 1;
+      return _POSIX_THREAD_SAFE_FUNCTIONS;
 #else
       return -1;
 #endif
@@ -569,42 +569,42 @@ __sysconf (name)
 
     case _SC_THREAD_ATTR_STACKADDR:
 #ifdef	_POSIX_THREAD_ATTR_STACKADDR
-      return 1;
+      return _POSIX_THREAD_ATTR_STACKADDR;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_ATTR_STACKSIZE:
 #ifdef	_POSIX_THREAD_ATTR_STACKSIZE
-      return 1;
+      return _POSIX_THREAD_ATTR_STACKSIZE;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIORITY_SCHEDULING:
 #ifdef	_POSIX_THREAD_PRIORITY_SCHEDULING
-      return 1;
+      return _POSIX_THREAD_PRIORITY_SCHEDULING;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_INHERIT:
 #ifdef	_POSIX_THREAD_PRIO_INHERIT
-      return 1;
+      return _POSIX_THREAD_PRIO_INHERIT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PRIO_PROTECT:
 #ifdef	_POSIX_THREAD_PRIO_PROTECT
-      return 1;
+      return _POSIX_THREAD_PRIO_PROTECT;
 #else
       return -1;
 #endif
 
     case _SC_THREAD_PROCESS_SHARED:
 #ifdef	_POSIX_THREAD_PROCESS_SHARED
-      return 1;
+      return _POSIX_THREAD_PROCESS_SHARED;
 #else
       return -1;
 #endif

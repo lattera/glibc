@@ -114,6 +114,8 @@ __pthread_cond_timedwait:
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	r0, @(4,r15)
 
 8:	
 	/* Get current time.  */
@@ -140,8 +142,10 @@ __pthread_cond_timedwait:
 	add	r1, r3
 	add	#-1, r2
 12:
+	mov	#-ETIMEDOUT, r1
+	mov.l	r1, @(12,r15)
 	cmp/pz	r2
-	bf	13f		/* Time is already up.  */
+	bf	6f		/* Time is already up.  */
 
 	/* Store relative timeout.  */
 	mov.l	r2, @(16,r15)
@@ -193,6 +197,11 @@ __pthread_cond_timedwait:
 #endif
 	bf	5f
 6:
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	@(4,r15), r1
+	cmp/eq	r0, r1
+	bf	23f
+
 	mov.l	@(woken_seq,r8), r0
 	mov.l	@(woken_seq+4,r8), r1
 
@@ -212,7 +221,7 @@ __pthread_cond_timedwait:
 	mov.l	@(12,r15),r0
 	cmp/eq	#-ETIMEDOUT, r0
 	bf	8b
-13:
+
 	mov	#1, r2
 	mov	#0, r3
 
@@ -225,6 +234,11 @@ __pthread_cond_timedwait:
 	mov.l	r1,@(wakeup_seq+4,r8)
 	mov	#ETIMEDOUT, r0
 	bra	14f
+	 mov.l	r0, @(24,r15)
+
+23:
+	mov	#0, r0
+	bra	24f
 	 mov.l	r0, @(24,r15)
 
 9:
@@ -242,6 +256,7 @@ __pthread_cond_timedwait:
 	mov.l	r0,@(woken_seq,r8)
 	mov.l	r1,@(woken_seq+4,r8)
 
+24:	
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -301,7 +316,7 @@ __pthread_cond_timedwait:
 	 nop
 
 3:
-	/* Unlock in loop requires waekup.  */
+	/* Unlock in loop requires wakeup.  */
 	mov	r8, r4
 #if cond_lock != 0
 	add	#cond_lock, r4
@@ -327,7 +342,7 @@ __pthread_cond_timedwait:
 	 nop
 
 10:
-	/* Unlock after loop requires waekup.  */
+	/* Unlock after loop requires wakeup.  */
 	mov	r8, r4
 #if cond_lock != 0
 	add	#cond_lock, r4
@@ -403,6 +418,11 @@ __condvar_tw_cleanup:
 .Lmwait5b:
 
 1:
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	@(4,r15), r1
+	cmp/eq	r0, r1
+	bf	3f
+
 	mov	#1, r2
 	mov	#0, r3
 
@@ -414,6 +434,15 @@ __condvar_tw_cleanup:
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
 
+	clrt
+	mov.l	@(woken_seq,r8),r0
+	mov.l	@(woken_seq+4,r8),r1
+	addc	r2, r0
+	addc	r3, r1
+	mov.l	r0,@(woken_seq,r8)
+	mov.l	r1,@(woken_seq+4,r8)
+
+3:
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else

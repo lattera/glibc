@@ -44,7 +44,7 @@ __sysconf (int name)
 	INTERNAL_SYSCALL_DECL (err);
 	int r;
 	r = INTERNAL_SYSCALL (clock_getres, err, 2, CLOCK_MONOTONIC, &ts);
-	return INTERNAL_SYSCALL_ERROR_P (r, err) ? -1 : 1;
+	return INTERNAL_SYSCALL_ERROR_P (r, err) ? -1 : _POSIX_VERSION;
       }
 #endif
 

@@ -108,6 +108,8 @@ __pthread_cond_wait:
 	/* Get and store current wakeup_seq value.  */
 	mov.l	@(wakeup_seq,r8), r10
 	mov.l	@(wakeup_seq+4,r8), r11
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	r0, @(4,r15)
 
 8:
 	/* Unlock.  */
@@ -152,6 +154,11 @@ __pthread_cond_wait:
 #endif
 	bf	5f
 6:
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	@(4,r15), r1
+	cmp/eq	r0, r1
+	bf	16f
+
 	mov.l	@(woken_seq,r8), r0
 	mov.l	@(woken_seq+4,r8), r1
 
@@ -179,6 +186,7 @@ __pthread_cond_wait:
 	mov.l	r0,@(woken_seq,r8)
 	mov.l	r1,@(woken_seq+4,r8)
 
+16:	
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else
@@ -330,6 +338,11 @@ __condvar_w_cleanup:
 .Lmwait3b:
 
 1:
+	mov.l	@(broadcast_seq,r8), r0
+	mov.l	@(4,r15), r1
+	cmp/eq	r0, r1
+	bf	3f
+
 	mov	#1, r2
 	mov	#0, r3
 
@@ -341,6 +354,15 @@ __condvar_w_cleanup:
 	mov.l	r0,@(wakeup_seq,r8)
 	mov.l	r1,@(wakeup_seq+4,r8)
 
+	clrt
+	mov.l	@(woken_seq,r8),r0
+	mov.l	@(woken_seq+4,r8),r1
+	addc	r2, r0
+	addc	r3, r1
+	mov.l	r0,@(woken_seq,r8)
+	mov.l	r1,@(woken_seq+4,r8)
+
+3:	
 #if cond_lock != 0
 	DEC (@(cond_lock,r8), r2)
 #else

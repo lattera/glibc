@@ -1,3 +1,20 @@
+2004-06-01  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/bits/pthreadtypes.h (pthread_cond_t):
+	Add __broadcast_seq field.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_broadcast.S: Mark
+	all waiters as woken with woken_seq and bump broadcast counter.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_wait.S: Use new
+	__broadcast_seq.  Increment __woken_seq correctly when cleanuped.
+	* sysdeps/unix/sysv/linux/sh/pthread_cond_timedwait.S: Likewise.
+	Comment typo fixes.  Avoid returning -ETIMEDOUT.
+
+2004-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S
+	(__condvar_tw_cleanup): Fix access to saved broadcast_seq value.
+	Reported by Kaz Kojima.
+
 2004-05-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/aio_misc.h: New file.

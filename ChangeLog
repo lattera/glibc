@@ -1,3 +1,38 @@
+2004-05-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/posix/sysconf.c (__sysconf) <cases _SC_REALTIME_SIGNALS,
+	_SC_PRIORITY_SCHEDULING, _SC_TIMERS, _SC_ASYNCHRONOUS_IO,
+	_SC_PRIORITIZED_IO, _SC_SYNCHRONIZED_IO, _SC_FSYNC, _SC_MAPPED_FILES,
+	_SC_MEMLOCK, _SC_MEMLOCK_RANGE, _SC_MEMORY_PROTECTION,
+	_SC_MESSAGE_PASSING, _SC_SEMAPHORES, _SC_SHARED_MEMORY_OBJECTS,
+	_SC_THREADS, _SC_THREAD_SAFE_FUNCTIONS, _SC_THREAD_ATTR_STACKADDR,
+	_SC_THREAD_ATTR_STACKSIZE, _SC_THREAD_PRIORITY_SCHEDULING,
+	_SC_THREAD_PRIO_INHERIT, _SC_THREAD_PRIO_PROTECT,
+	_SC_THREAD_PROCESS_SHARED>: Return _POSIX_* value instead of 1.
+	* sysdeps/unix/sysv/linux/sysconf.c (__sysconf)
+	<case _SC_MONOTONIC_CLOCK>: Return _POSIX_VERSION instead of 1.
+
+2004-05-07  Jeroen Dekkers  <jeroen@dekkers.cx>
+
+	* sysdeps/mach/hurd/i386/Makefile (CFLAGS-init-first.c): Add
+	-momit-leaf-frame-pointer.
+
+	* inet/test-ifaddrs.c (addr_string): Surround AF_PACKET case with
+	#ifdef AF_PACKET.
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_intern): Only realloc when
+	size is <= 0.
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Fail when addr or offset
+	isn't page aligned.
+
+	* sysdeps/mach/hurd/spawni.c (EXPAND_DTABLE): Set dtablesize to
+	new size.
+
+	* sysdeps/mach/hurd/Versions (GLIBC_PRIVATE): Add __libc_read,
+	__libc_write and __libc_lseek64.
+
 2004-05-29  Roland McGrath  <roland@redhat.com>
 
 	* elf/Makefile (shared-only-routines): Add dl-caller.

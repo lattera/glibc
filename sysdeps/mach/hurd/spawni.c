@@ -1,5 +1,5 @@
 /* spawn a new process running an executable.  Hurd version.
-   Copyright (C) 2001,02 Free Software Foundation, Inc.
+   Copyright (C) 2001,02,04 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -399,6 +399,7 @@ __spawni (pid_t *pid, const char *file,
 	      NEW_TABLE (dtable, newfd);				      \
 	      NEW_TABLE (ulink_dtable, newfd);				      \
 	      NEW_TABLE (dtable_cells, newfd);				      \
+	      dtablesize = newfd + 1;		       		       	      \
 	    }								      \
 	  ((unsigned int)newfd < dtablesize ? 0 : EMFILE);		      \
 	})
@@ -592,7 +593,7 @@ __spawni (pid_t *pid, const char *file,
 	    case ESTALE:
 	    case ENOTDIR:
 	      /* Those errors indicate the file is missing or not executable
-v		 by us, in which case we want to just try the next path
+		 by us, in which case we want to just try the next path
 		 directory.  */
 	      continue;
 

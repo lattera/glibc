@@ -4,6 +4,9 @@ libc {
     __getcwd; __mmap;
   }
   GLIBC_PRIVATE {
+    # Functions shared with the dynamic linker
+    __libc_read; __libc_write; __libc_lseek64;
+
     _dl_init_first;
   }
 }

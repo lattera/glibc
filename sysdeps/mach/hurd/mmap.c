@@ -1,4 +1,4 @@
-/* Copyright (C) 1994,1995,1996,1997,1999,2002,2003
+/* Copyright (C) 1994,1995,1996,1997,1999,2002,2003,2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -39,9 +39,12 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
   vm_prot_t vmprot;
   memory_object_t memobj;
   vm_address_t mapaddr;
-  vm_size_t pageoff;
 
   mapaddr = (vm_address_t) addr;
+
+  /* ADDR and OFFSET must be page-aligned.  */
+  if ((mapaddr & (vm_page_size - 1)) || (offset & (vm_page_size - 1)))
+    return (__ptr_t) (long int) __hurd_fail (EINVAL);
 
   if ((flags & (MAP_TYPE|MAP_INHERIT)) == MAP_ANON
       && prot == (PROT_READ|PROT_WRITE)) /* cf VM_PROT_DEFAULT */
@@ -60,20 +63,6 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	}
 
       return err ? (__ptr_t) (long int) __hurd_fail (err) : (__ptr_t) mapaddr;
-    }
-
-  pageoff = offset & (vm_page_size - 1);
-  offset &= ~(vm_page_size - 1);
-
-  if (flags & MAP_FIXED)
-    {
-      /* A specific address is requested.  It need not be page-aligned;
-	 it just needs to be congruent with the object offset.  */
-      if ((mapaddr & (vm_page_size - 1)) != pageoff)
-	return (__ptr_t) (long int) __hurd_fail (EINVAL);
-      else
-	/* We will add back PAGEOFF after mapping.  */
-	mapaddr -= pageoff;
     }
 
   vmprot = VM_PROT_NONE;
@@ -172,9 +161,6 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 
   if (err)
     return (__ptr_t) (long int) __hurd_fail (err);
-
-  /* Adjust the mapping address for the offset-within-page.  */
-  mapaddr += pageoff;
 
   return (__ptr_t) mapaddr;
 }
