@@ -1,5 +1,8 @@
 2000-05-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* inet/rcmd.c (rcmd_af): errno is not set if read returns without
+	reading anything.  Reported by Andries.Brouwer@cwi.nl.
+
 	* sysdeps/generic/memccpy.c (__memccpy): Don't use reg_char type
 	for x since promotion in comparison might leads to unexpected
 	results.  Reported by Dan Pop <Dan.Pop@cern.ch>.

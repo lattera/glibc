@@ -117,6 +117,7 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	char c;
 	int refused;
 	char num[8];
+	ssize_t n;
 
 	if (af != AF_INET && af != AF_INET6)
 	  {
@@ -265,9 +266,13 @@ rcmd_af(ahost, rport, locuser, remuser, cmd, fd2p, af)
 	(void)__write(s, locuser, strlen(locuser)+1);
 	(void)__write(s, remuser, strlen(remuser)+1);
 	(void)__write(s, cmd, strlen(cmd)+1);
-	if (__read(s, &c, 1) != 1) {
-		(void)fprintf(stderr,
-		    "rcmd: %s: %m\n", *ahost);
+	n = __read(s, &c, 1);
+	if (n != 1) {
+		if (n == 0)
+			(void)fprintf(stderr, _("rcmd: %s: short read"),
+				      *ahost);
+		else
+			(void)fprintf(stderr, "rcmd: %s: %m\n", *ahost);
 		goto bad2;
 	}
 	if (c != 0) {
