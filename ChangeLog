@@ -7,6 +7,7 @@
 	versions.
 	* libio/iofclose.c: Likewise.
 	* libio/oldiofclose.c: Likewise.
+	Patch by Roland MyGrath <roland@from.com>.
 
 2000-03-21  Jakub Jelinek  <jakub@redhat.com>
 
