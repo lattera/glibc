@@ -1,5 +1,7 @@
 2005-01-10  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/ia64/fpu/e_logl.c: File removed.
+
 	* dlfcn/dlfcn.c (init): Fix typo in attribute decl.
 
 2005-01-10  Ulrich Drepper  <drepper@redhat.com>
@@ -9,7 +11,7 @@
 
 2005-01-09  Ulrich Drepper  <drepper@redhat.com>
 
-	* elf/dl-runtime.c: Inlcude <sys/param.h>.
+	* elf/dl-runtime.c: Include <sys/param.h>.
 
 	* elf/Makefile (headers): Add bits/link.h.
 
