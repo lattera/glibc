@@ -1,3 +1,10 @@
+2001-05-20  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig (sysdep-makeconfigs): Include any Makeconfig files
+	found within $(add-ons) directories too.
+	[linuxthreads add-on]: Move variable settings for linuxthreads
+	to new file linuxthreads/Makeconfig.
+
 2001-05-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/kernel-features.h (__ASSUME_STD_AUXV):

@@ -806,13 +806,6 @@ endif
 
 endif # build-shared
 
-ifneq (,$(findstring linuxthreads,$(add-ons)))
-shared-thread-library = $(common-objpfx)linuxthreads/libpthread.so
-static-thread-library = $(common-objpfx)linuxthreads/libpthread.a
-bounded-thread-library = $(common-objpfx)linuxthreads/libpthread_b.a
-have-thread-library = yes
-rpath-dirs += linuxthreads
-endif
 
 ifeq ($(elf),yes)
 dlfcn = dlfcn
@@ -880,7 +873,9 @@ $(common-objpfx)sysd-sorted: $(..)scripts/gen-sorted.awk $(all-Depend-files) \
 endif
 
 # Let sysdeps/ subdirs contain a Makeconfig fragment for us to include here.
-sysdep-makeconfigs := $(wildcard $(full_config_sysdirs:=/Makeconfig))
+sysdep-makeconfigs := $(wildcard $(patsubst %,$(..)%/Makeconfig,\
+					    $(config-sysdirs) $(add-ons)))
+
 ifneq (,$(sysdep-makeconfigs))
 include $(sysdep-makeconfigs)
 endif
