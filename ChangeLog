@@ -1,3 +1,8 @@
+2000-12-28  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/ioctl.c (do_ioctl): Avoid double-increment after
+	__mempcpy does it for us.
+
 2000-12-28  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/dl-environ.c: Add prototype for unsetenv.
