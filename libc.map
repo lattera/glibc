@@ -20,6 +20,10 @@ GLIBC_2.0 {
     # This is for sparc only.
     .div; .mul; .rem; .udiv; .umul; .urem;
 
+    # For alpha, unfortunately in wider use.
+    _inb; _inw; _inl; _outb; _outw; _outl; _bus_base; _bus_base_sparse;
+    _hae_shift;
+
     # helper functions
     __errno_location; __libc_init_first; __h_errno_location; __libc_start_main;
 

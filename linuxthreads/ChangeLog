@@ -1,3 +1,8 @@
+1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
+
+	* spinlock.c: Correct test whether to compile
+	__pthread_compare_and_swap or not.
+
 1998-06-25 19:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* attr.c: Finish user stack support.  Change locking code to be safe

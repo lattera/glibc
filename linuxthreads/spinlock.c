@@ -116,7 +116,7 @@ again:
 int __pthread_has_cas = 0;
 #endif
 
-#ifndef HAS_COMPARE_AND_SWAP
+#if !defined HAS_COMPARE_AND_SWAP || defined TEST_FOR_COMPARE_AND_SWAP
 
 static void __pthread_acquire(int * spinlock);
 
