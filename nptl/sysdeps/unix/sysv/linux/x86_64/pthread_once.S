@@ -112,7 +112,7 @@ __pthread_once:
 	movq	$SYS_futex, %rax
 	syscall
 
-4:	addq	$4, %rsp
+4:	addq	$8, %rsp
 	xorq	%rax, %rax
 	retq
 
