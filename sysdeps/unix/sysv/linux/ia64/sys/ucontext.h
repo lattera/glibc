@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ typedef struct ucontext
 ucontext_t;
 
 #define uc_mcontext	_u._mc
-#define uc_sigmask	_u._mc.sc_sigmask
+#define uc_sigmask	_u._mc.sc_mask
 #define uc_stack	_u._mc.sc_stack
 #define uc_link		_u._uc._link
 
