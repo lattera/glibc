@@ -1,3 +1,8 @@
+2002-02-06  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Moved to ...
+	* sysdeps/generic/netinet/ip.h: ... here, replacing old file.
+
 2002-02-06  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/elf/ldsodefs.h: Make sure the right <ldsodefs.h>
