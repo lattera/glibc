@@ -667,7 +667,8 @@ extern int ttyname_r (int __fd, char *__buf, size_t __buflen) __THROW;
    with a terminal, zero if not.  */
 extern int isatty (int __fd) __THROW;
 
-#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
+#if defined __USE_BSD \
+    || (defined __USE_XOPEN_EXTENDED && !defined __USE_UNIX98)
 /* Return the index into the active-logins file (utmp) for
    the controlling terminal.  */
 extern int ttyslot (void) __THROW;
@@ -726,7 +727,7 @@ extern int setlogin (__const char *__name) __THROW;
 #endif
 
 
-#if defined __USE_BSD || defined __USE_XOPEN
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_UNIX98)
 
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
@@ -747,10 +748,6 @@ extern int sethostid (long int __id) __THROW;
    The NIS domain name is usually the empty string when not using NIS.  */
 extern int getdomainname (char *__name, size_t __len) __THROW;
 extern int setdomainname (__const char *__name, size_t __len) __THROW;
-
-
-/* Make all changes done to FD actually appear on disk.  */
-extern int fsync (int __fd) __THROW;
 
 
 /* Revoke access permissions to all processes currently communicating
@@ -776,10 +773,6 @@ extern int profil (unsigned short int *__sample_buffer, size_t __size,
    turn accounting off.  This call is restricted to the super-user.  */
 extern int acct (__const char *__name) __THROW;
 
-/* Make PATH be the root directory (the starting point for absolute paths).
-   This call is restricted to the super-user.  */
-extern int chroot (__const char *__path) __THROW;
-
 
 /* Successive calls return the shells listed in `/etc/shells'.  */
 extern char *getusershell (void) __THROW;
@@ -787,15 +780,28 @@ extern void endusershell (void) __THROW; /* Discard cached info.  */
 extern void setusershell (void) __THROW; /* Rewind and re-read the file.  */
 
 
-/* Prompt with PROMPT and read a string from the terminal without echoing.
-   Uses /dev/tty if possible; otherwise stderr and stdin.  */
-extern char *getpass (__const char *__prompt) __THROW;
-
 /* Put the program in the background, and dissociate from the controlling
    terminal.  If NOCHDIR is zero, do `chdir ("/")'.  If NOCLOSE is zero,
    redirects stdin, stdout, and stderr to /dev/null.  */
 extern int daemon (int __nochdir, int __noclose) __THROW;
 
+#endif /* Use BSD || X/Open.  */
+
+
+#if defined __USE_BSD || (defined __USE_XOPEN && !defined __USE_XOPEN2K)
+/* Make PATH be the root directory (the starting point for absolute paths).
+   This call is restricted to the super-user.  */
+extern int chroot (__const char *__path) __THROW;
+
+/* Prompt with PROMPT and read a string from the terminal without echoing.
+   Uses /dev/tty if possible; otherwise stderr and stdin.  */
+extern char *getpass (__const char *__prompt) __THROW;
+#endif /* Use BSD || X/Open.  */
+
+
+#if defined __USE_BSD || defined __USE_XOPEN
+/* Make all changes done to FD actually appear on disk.  */
+extern int fsync (int __fd) __THROW;
 #endif /* Use BSD || X/Open.  */
 
 
@@ -814,35 +820,35 @@ extern int getpagesize (void)  __THROW __attribute__ ((__const__));
 
 
 /* Truncate FILE to LENGTH bytes.  */
-#ifndef __USE_FILE_OFFSET64
+# ifndef __USE_FILE_OFFSET64
 extern int truncate (__const char *__file, __off_t __length) __THROW;
-#else
-# ifdef __REDIRECT
+# else
+#  ifdef __REDIRECT
 extern int __REDIRECT (truncate,
 		       (__const char *__file, __off64_t __length) __THROW,
 		       truncate64);
-# else
-#  define truncate truncate64
+#  else
+#   define truncate truncate64
+#  endif
 # endif
-#endif
-#ifdef __USE_LARGEFILE64
+# ifdef __USE_LARGEFILE64
 extern int truncate64 (__const char *__file, __off64_t __length) __THROW;
-#endif
+# endif
 
 /* Truncate the file FD is open on to LENGTH bytes.  */
-#ifndef __USE_FILE_OFFSET64
+# ifndef __USE_FILE_OFFSET64
 extern int ftruncate (int __fd, __off_t __length) __THROW;
-#else
-# ifdef __REDIRECT
+# else
+#  ifdef __REDIRECT
 extern int __REDIRECT (ftruncate, (int __fd, __off64_t __length) __THROW,
 		       ftruncate64);
-# else
-#  define ftruncate ftruncate64
+#  else
+#   define ftruncate ftruncate64
+#  endif
 # endif
-#endif
-#ifdef __USE_LARGEFILE64
+# ifdef __USE_LARGEFILE64
 extern int ftruncate64 (int __fd, __off64_t __length) __THROW;
-#endif
+# endif
 
 
 /* Return the maximum number of file descriptors
