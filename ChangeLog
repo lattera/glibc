@@ -1,3 +1,7 @@
+2005-01-10  Roland McGrath  <roland@redhat.com>
+
+	* dlfcn/dlfcn.c (init): Fix typo in attribute decl.
+
 2005-01-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_next_tls_modid): Fix assertion and
