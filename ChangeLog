@@ -1,3 +1,7 @@
+2001-08-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/ja.po: Update from translation team.
+
 2001-08-23  Roland McGrath  <roland@frob.com>
 
 	* libio/tst-ungetwc1.c (main): Add a const to quiet a warning.
