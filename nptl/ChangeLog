@@ -1,5 +1,22 @@
 2004-11-10  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/pthread/setxid.h: New file.
+	* sysdeps/pthread/pthread-functions.h (HAVE_PTR__NPTL_SETXID): Remove.
+	(struct xid_command): Add forward decl.
+	(struct pthread_functions): Change return type of __nptl_setxid hook
+	to int.
+	* pthreadP.h (__nptl_setxid): Change return type to int.
+	* allocatestack.c (__nptl_setxid): Call INTERNAL_SYSCALL_NCS in the
+	calling thread, return its return value and set errno on failure.
+	* descr.h (struct xid_command): Change id type to long array.
+
+	* Makefile: Add rules to build and test tst-setuid1 and
+	tst-setuid1-static.
+	* tst-setuid1.c: New test.
+	* tst-setuid1-static.c: New test.
+
+2004-11-10  Jakub Jelinek  <jakub@redhat.com>
+
 	* Makefile (tests): Add tst-exit3.
 	* tst-exit3.c: New test.
 

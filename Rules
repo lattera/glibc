@@ -104,7 +104,7 @@ endif
 
 ifeq ($(build-programs),yes)
 binaries-all = $(others) $(sysdep-others) $(tests) $(xtests) $(test-srcs)
-binaries-static = $(others-static) $(tests-static)
+binaries-static = $(others-static) $(tests-static) $(xtests-static)
 else
 binaries-all = $(tests) $(xtests) $(test-srcs)
 binaries-static =

@@ -448,6 +448,6 @@ extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer
 
 extern void __nptl_deallocate_tsd (void) attribute_hidden;
 
-extern void __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
+extern int __nptl_setxid (struct xid_command *cmdp) attribute_hidden;
 
 #endif	/* pthreadP.h */

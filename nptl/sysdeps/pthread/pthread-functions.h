@@ -24,6 +24,7 @@
 #include <setjmp.h>
 #include <internaltypes.h>
 
+struct xid_command;
 
 /* Data type shared with libc.  The libc uses it to pass on calls to
    the thread functions.  */
@@ -93,8 +94,7 @@ struct pthread_functions
   void (*ptr___pthread_unwind) (__pthread_unwind_buf_t *)
        __attribute ((noreturn)) __cleanup_fct_attribute;
   void (*ptr__nptl_deallocate_tsd) (void);
-#define HAVE_PTR__NPTL_SETXID
-  void (*ptr__nptl_setxid) (struct xid_command *);
+  int (*ptr__nptl_setxid) (struct xid_command *);
 };
 
 /* Variable in libc.so.  */

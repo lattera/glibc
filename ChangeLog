@@ -1,3 +1,37 @@
+2004-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/setreuid.c: Remove sys/syscall.h,
+	sys/types.h, linux/posix_types.h, sysdep.h and pthread-functions.h
+	includes.  Include setxid.h.  Use INLINE_SETXID_SYSCALL macro
+	instead of INLINE_SYSCALL, kill the HAVE_PTR__NPTL_SETXID guarded
+	snippets.
+	* sysdeps/unix/sysv/linux/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setegid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setreuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/seteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setreuid.c: Likewise.
+	Formatting.  Change signed int into int.
+	* sysdeps/unix/sysv/linux/alpha/setresuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setresgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/setregid.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list (setresuid, setresgid):
+	Remove.
+	* sysdeps/unix/setxid.h: New file.
+
+	* Rules (binaries-static): Add xtests-static.
+	* Makeconfig (run-program-prefix): Filter also xtests-static.
+
 2004-11-09  Paul Eggert  <eggert@cs.ucla.edu.
 
 	[BZ #535]

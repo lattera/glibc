@@ -97,7 +97,7 @@ struct pthread_unwind_buf
 struct xid_command
 {
   int syscall_no;
-  id_t id[3];
+  long id[3];
   volatile int cntr;
 };
 

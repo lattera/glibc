@@ -242,6 +242,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-backtrace1 \
 	tst-oddstacklimit \
 	tst-vfork1 tst-vfork2 tst-vfork1x tst-vfork2x
+xtests = tst-setuid1 tst-setuid1-static
 
 # Files which must not be linked with libpthread.
 tests-nolibpthread = tst-unload
@@ -342,6 +343,7 @@ link-libc-static := $(common-objpfx)libc.a $(static-gnulib) \
 
 ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2
+xtests-static += tst-setuid1-static
 endif
 # These tests are linked with libc before libpthread
 tests-reverse += tst-cancel5 tst-cancel23 tst-vfork1x tst-vfork2x
@@ -499,9 +501,10 @@ $(objpfx)libpthread.so: $(common-objpfx)libc.so \
 # Make sure we link with the thread library.
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx), \
-  $(filter-out $(tests-static) $(tests-reverse) $(tests-nolibpthread), \
-    $(tests) $(test-srcs))): $(objpfx)libpthread.so \
-			     $(objpfx)libpthread_nonshared.a
+  $(filter-out $(tests-static) $(xtests-static) $(tests-reverse) \
+    $(tests-nolibpthread), \
+    $(tests) $(xtests) $(test-srcs))): $(objpfx)libpthread.so \
+				       $(objpfx)libpthread_nonshared.a
 $(objpfx)tst-unload: $(common-objpfx)dlfcn/libdl.so
 # $(objpfx)../libc.so is used instead of $(common-objpfx)libc.so,
 # since otherwise libpthread.so comes before libc.so when linking.
@@ -509,7 +512,7 @@ $(addprefix $(objpfx), $(tests-reverse)): \
   $(objpfx)../libc.so $(objpfx)libpthread.so \
   $(objpfx)libpthread_nonshared.a
 $(objpfx)../libc.so: $(common-objpfx)libc.so ;
-$(addprefix $(objpfx),$(tests-static)): $(objpfx)libpthread.a
+$(addprefix $(objpfx),$(tests-static) $(xtests-static)): $(objpfx)libpthread.a
 
 $(objpfx)tst-atfork2.out: $(objpfx)tst-atfork2mod.so
 else

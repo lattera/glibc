@@ -66,8 +66,6 @@ sendfile64	-	sendfile64	i:iipi	sendfile64
 setfsgid	EXTRA	setfsgid	i:i	setfsgid
 setfsuid	EXTRA	setfsuid	i:i	setfsuid
 setpgid		-	setpgid		i:ii	__setpgid	setpgid
-setresuid	-	setresuid	i:iii	__setresuid	setresuid
-setresgid	-	setresgid	i:iii	__setresgid	setresgid
 sigaltstack	-	sigaltstack	i:PP	__sigaltstack	sigaltstack
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon

@@ -816,10 +816,11 @@ __find_thread_by_id (pid_t tid)
 }
 #endif
 
-void
+int
 attribute_hidden
 __nptl_setxid (struct xid_command *cmdp)
 {
+  int result;
   lll_lock (stack_cache_lock);
 
   __xidcmd = cmdp;
@@ -891,7 +892,18 @@ __nptl_setxid (struct xid_command *cmdp)
       cur = cmdp->cntr;
     }
 
+  /* This must be last, otherwise the current thread might not have
+     permissions to send SIGSETXID syscall to the other threads.  */
+  result = INTERNAL_SYSCALL_NCS (cmdp->syscall_no, err, 3,
+				 cmdp->id[0], cmdp->id[1], cmdp->id[2]);
+  if (INTERNAL_SYSCALL_ERROR_P (result, err))
+    {
+      __set_errno (INTERNAL_SYSCALL_ERRNO (result, err));
+      result = -1;
+    }
+
   lll_unlock (stack_cache_lock);
+  return result;
 }
 
 static inline void __attribute__((always_inline))
