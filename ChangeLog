@@ -1,3 +1,9 @@
+2004-12-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/clone.S: Clear the frame pointer when
+	starting a new thread.  Add support for NPTL where the PID is stored
+	at userlevel and needs to be reset when CLONE_THREAD is not used.
+
 2004-12-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/rtld.c (process_envvars): Don't consider LD_SHOW_AUXV
