@@ -57,7 +57,8 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 
   __asm__ __volatile__ ("lock; cmpxchgl %3, %1; sete %0"
 			: "=q" (ret), "=m" (*p), "=a" (readval)
-			: "r" (newval), "m" (*p), "a" (oldval));
+			: "r" (newval), "m" (*p), "a" (oldval)
+			: "memory");
   return ret;
 }
 

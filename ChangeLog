@@ -1,3 +1,21 @@
+1998-12-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/gethstbynm_r.c: Remove NEED__RES definition since we do this
+	anyway for digits_dots.c.
+	* nss/getXXbyYY.c: Initialize _res before using digits_dots.c
+	functions.
+	* nss/getXXbyYY_r.c: Likewise.
+
+1998-12-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* sunrpc/key_call.c (getkeyserv_handle): Use __fcntl instead of 
+	fcntl.
+ 
+1998-12-20  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
+ 
+	* locale/weight.h (get_weight): Extract string elements as 
+	unsigned values. 
+ 
 1998-12-06  Mark Kettenis  <kettenis@phys.uva.nl>
 
 	Reverse the change of 1998-04-22.  Providing a struct dirent with

@@ -459,9 +459,7 @@ static void pthread_exit_process(int retcode, void *arg)
 
 /* The handler for the RESTART signal just records the signal received
    in the thread descriptor, and optionally performs a siglongjmp
-   (for pthread_cond_timedwait).
-   For the thread manager thread, redirect the signal to
-   __pthread_manager_sighandler. */
+   (for pthread_cond_timedwait). */
 
 #ifndef __i386__
 static void pthread_handle_sigrestart(int sig)
@@ -474,18 +472,15 @@ static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
   asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
   self = thread_self();
 #endif
-  if (self == &__pthread_manager_thread) {
-    __pthread_manager_sighandler(sig);
-  } else {
-    THREAD_SETMEM(self, p_signal, sig);
-    if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
-      siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
-  }
+  THREAD_SETMEM(self, p_signal, sig); 
+  if (THREAD_GETMEM(self, p_signal_jmp) != NULL) 
+    siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
 }
 
 /* The handler for the CANCEL signal checks for cancellation
    (in asynchronous mode), for process-wide exit and exec requests.
-   For the thread manager thread, we ignore the signal.
+   For the thread manager thread, redirect the signal to 
+   __pthread_manager_sighandler.
    The debugging strategy is as follows:
    On reception of a REQ_DEBUG request (sent by new threads created to
    the thread manager under debugging mode), the thread manager throws
@@ -510,7 +505,10 @@ static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
 #endif
 
   if (self == &__pthread_manager_thread)
-    return;
+    {
+      __pthread_manager_sighandler(sig);
+      return;
+    }
   if (__pthread_exit_requested) {
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */

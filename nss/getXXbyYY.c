@@ -96,6 +96,16 @@ FUNCTION_NAME (ADD_PARAMS)
   if (buffer != NULL)
     {
 #ifdef HANDLE_DIGITS_DOTS
+      /* We have to test for the use of IPv6 which can only be done by
+	 examining `_res'.  */
+      if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+	{
+# ifdef NEED_H_ERRNO
+	  h_errno_tmp = NETDB_INTERNAL;
+# endif
+	  result = NULL;
+	  goto done;
+	}
 # include "digits_dots.c"
 #endif
     }

@@ -101,11 +101,9 @@ int __pthread_manager(void *arg)
   /* Set the error variable.  */
   __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
   __pthread_manager_thread.p_h_errnop = &__pthread_manager_thread.p_h_errno;
-  /* Block all signals except __pthread_sig_restart, __pthread_sig_cancel
-     and SIGTRAP */
+  /* Block all signals except __pthread_sig_cancel and SIGTRAP */
   sigfillset(&mask);
-  sigdelset(&mask, __pthread_sig_restart);
-  sigdelset(&mask, __pthread_sig_cancel); /* for debugging new threads */
+  sigdelset(&mask, __pthread_sig_cancel); /* for thread termination */
   sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
@@ -378,7 +376,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 #ifdef CLONE_PTRACE
                 CLONE_PTRACE |
 #endif
-		__pthread_sig_restart, new_thread);
+		__pthread_sig_cancel, new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {
     /* Free the stack if we allocated it */

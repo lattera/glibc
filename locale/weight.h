@@ -115,7 +115,7 @@ get_weight (const STRING_TYPE **str, weight_t *result,
 
   if (__collate_table[slot + 1] != (u_int32_t) FORWARD_CHAR)
     {
-      /* We have a simple form.  One one value for each weight.  */
+      /* We have a simple form.  One value for each weight.  */
       size_t cnt;
 
       for (cnt = 0; cnt < collate_nrules; ++cnt)
@@ -139,10 +139,10 @@ get_weight (const STRING_TYPE **str, weight_t *result,
       /* This is a comparison between a u_int32_t array (aka wchar_t) and
 	 an 8-bit string.  */
       for (idx = 0; __collate_extra[slot + 2 + idx] != 0; ++idx)
-	if (__collate_extra[slot + 2 + idx] != (u_int32_t) (*str)[idx])
+	if (__collate_extra[slot + 2 + idx] != ((USTRING_TYPE *) *str)[idx])
 	  break;
 
-      /* When the loop finished with all character of the collation
+      /* When the loop finished with all characters of the collation
 	 element used, we found the longest prefix.  */
       if (__collate_extra[slot + 2 + idx] == 0)
 	{
@@ -174,10 +174,10 @@ get_weight (const STRING_TYPE **str, weight_t *result,
    We have this strange extra macro since the functions which use the
    given locale (not the global one) cannot use the global tables.  */
 #ifndef USE_IN_EXTENDED_LOCALE_MODEL
-# define call_get_weight(strp, newp) get_weight ((strp), (newp))
+# define call_get_weight(strp, newp) get_weight (strp, newp)
 #else
 # define call_get_weight(strp, newp) \
-  get_weight ((strp), (newp), current, collate_table, collate_extra)
+  get_weight (strp, newp, current, collate_table, collate_extra)
 #endif
 
 #define get_string(str, forw, backw) \

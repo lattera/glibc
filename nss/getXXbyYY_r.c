@@ -115,6 +115,14 @@ INTERNAL (REENTRANT_NAME) (ADD_PARAMS, LOOKUP_TYPE *resbuf, char *buffer,
 #endif
 
 #ifdef HANDLE_DIGITS_DOTS
+  /* We have to test for the use of IPv6 which can only be done by
+     examining `_res'.  */
+  if ((_res.options & RES_INIT) == 0 && res_init () == -1)
+    {
+      *h_errnop = NETDB_INTERNAL;
+      *result = NULL;
+      return -1;
+    }
 # define resbuf (*resbuf)
 # include "digits_dots.c"
 # undef resbuf
