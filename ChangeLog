@@ -1,5 +1,9 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/tst-table-to.c (main): Correct cast in iconv call.
+	* iconvdata/tst-table-from.c: Include <string.h>.
+	(try): Correct cast in iconv call.
+
 	* elf/Makefile (all-rtld-routines): Evaluate $(sysdep-rtld-routines)
 	too.
 	* sysdeps/powerpc/Makefile (sysdep-rtld-routines): New variable.

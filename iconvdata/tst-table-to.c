@@ -59,7 +59,7 @@ main (int argc, char *argv[])
 	char *outbuf = (char *) buf;
 	size_t outbytesleft = sizeof (buf);
 	size_t result = iconv (cd,
-			       (char *) &inbuf, &inbytesleft,
+			       (char **) &inbuf, &inbytesleft,
 			       &outbuf, &outbytesleft);
 	if (result == (size_t)(-1))
 	  {

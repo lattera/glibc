@@ -24,6 +24,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <iconv.h>
 #include <errno.h>
 
@@ -64,7 +65,7 @@ try (iconv_t cd, unsigned char buf[], unsigned int buflen, unsigned char *out)
   char *outbuf = (char *) out;
   size_t outbytesleft = 6;
   size_t result = iconv (cd,
-			 (char *) &inbuf, &inbytesleft,
+			 (char **) &inbuf, &inbytesleft,
 			 &outbuf, &outbytesleft);
   if (result == (size_t)(-1))
     {
