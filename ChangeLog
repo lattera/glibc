@@ -1,3 +1,19 @@
+2002-11-08  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ia64/elf/configure.in: Add TLS check.
+	From Ian Wienand <ianw@cse.unsw.edu.au>.
+	* sysdeps/ia64/elf/configure: Regenerated.
+
+2002-11-07  Roland McGrath  <roland@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_overflow): Use INTUSE(_IO_do_write) in
+	place of _IO_new_do_write.
+	[_LIBC] (_IO_do_write): Define as macro for _IO_new_do_write and
+	#undef before versioned_symbol use.
+
+	* string/test-string.h (test_init): Fill BUF1 and BUF2 with nonzero
+	characters.
+
 2002-11-07  Richard Henderson  <rth@redhat.com>
 
 	* configure.in (ASM_ALPHA_NG_SYMBOL_PREFIX): Remove test.
