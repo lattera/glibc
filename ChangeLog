@@ -1,5 +1,10 @@
 2004-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/getcontext.S: Use
+	__sigprocmask not sigprocmask.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/swapcontext.S: Likewise.
+
 	* elf/elf.h: Define more ppc64 specific dynamic tags.
 
 2004-04-01  Jakub Jelinek  <jakub@redhat.com>

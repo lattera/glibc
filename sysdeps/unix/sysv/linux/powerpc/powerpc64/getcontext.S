@@ -133,7 +133,7 @@ ENTRY(__novec_getcontext)
   addi  r5,r3,UCONTEXT_SIGMASK
   li  r4,0
   li  r3,SIG_BLOCK
-  bl  JUMPTARGET(sigprocmask)
+  bl  JUMPTARGET(__sigprocmask)
   nop
 #else
   /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */
@@ -382,7 +382,7 @@ L(has_no_vec):
   addi  r5,r3,UCONTEXT_SIGMASK
   li  r4,0
   li  r3,SIG_BLOCK
-  bl  JUMPTARGET(sigprocmask)
+  bl  JUMPTARGET(__sigprocmask)
   nop
 #else
   /* If the kernel is not at least 2.4.21 then generate a ENOSYS stub.  */

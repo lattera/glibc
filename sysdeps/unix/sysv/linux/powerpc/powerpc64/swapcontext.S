@@ -134,7 +134,7 @@ ENTRY(__novec_swapcontext)
   addi  r5,r3,UCONTEXT_SIGMASK
   addi  r4,r4,UCONTEXT_SIGMASK
   li    r3,SIG_SETMASK
-  bl    JUMPTARGET(sigprocmask)
+  bl    JUMPTARGET(__sigprocmask)
   nop
   cmpdi  r3,0
   bne   L(nv_error_exit)
@@ -506,7 +506,7 @@ L(has_no_vec):
   addi  r5,r3,UCONTEXT_SIGMASK
   addi  r4,r4,UCONTEXT_SIGMASK
   li    r3,SIG_SETMASK
-  bl    JUMPTARGET(sigprocmask)
+  bl    JUMPTARGET(__sigprocmask)
   nop
   cmpdi  r3,0
   bne   L(error_exit)
