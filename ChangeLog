@@ -1,3 +1,19 @@
+2000-11-21  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/alpha/setjmp.S: Remove __setjmp entry point.
+	* sysdeps/arm/setjmp.S: Likewise.
+	* sysdeps/arm/fpu/setjmp.S: Likewise.
+	* sysdeps/i386/setjmp.S: Likewise.
+	* sysdeps/i386/elf/setjmp.S: Likewise.
+	* sysdeps/s390/setjmp.S: Likewise.
+	* sysdeps/s390/elf/setjmp.S: Likewise.
+	* sysdeps/sh/sh3/setjmp.S: Likewise.
+	* sysdeps/sh/sh4/setjmp.S: Likewise.
+	* sysdeps/sparc/sparc32/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/setjmp.S: Likewise.
+	* sysdeps/unix/sysv/linux/m68k/setjmp.c: Removed.
+
 2000-11-21  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/__longjmp.c (__longjmp): Remove obsolete
