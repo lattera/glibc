@@ -1,3 +1,9 @@
+2003-03-04  Roland McGrath  <roland@redhat.com>
+
+	* posix/confstr.c (confstr): Correct STRING_LEN values for
+	_CS_GNU_LIBC_VERSION and _CS_GNU_LIBPTHREAD_VERSION, add missing
+	break.  Reported by Alexandre Julliard <julliard@winehq.com>.
+
 2003-03-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Regenerated.
