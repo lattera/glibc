@@ -87,6 +87,13 @@ login (const struct utmp *ut)
   int found_tty;
   const char *ttyp;
   struct utmp_data data = { -1 };
+  struct utmp copy = *ut;
+
+  /* Fill in those fields we supply.  */
+#if _HAVE_UT_TYPE - 0
+  copy.ut_type = USER_PROCESS;
+#endif
+  copy.ut_pid = getpid ();
 
   /* Seek tty.  */
   found_tty = tty_name (STDIN_FILENO, &tty, sizeof (_tty));
@@ -97,39 +104,35 @@ login (const struct utmp *ut)
 
   if (found_tty >= 0)
     {
+      /* We only want to insert the name of the tty without path.  */
+      ttyp = basename (tty);
+
+      /* Position to record for this tty.  */
+      strncpy (copy.ut_line, ttyp, UT_LINESIZE);
+
       /* Tell that we want to use the UTMP file.  */
       if (utmpname (_PATH_UTMP) != 0)
 	{
-	  struct utmp tmp;
 	  struct utmp *old;
 
 	  /* Open UTMP file.  */
 	  setutent_r (&data);
 
-	  /* We only want to insert the name of the tty without path.  */
-	  ttyp = basename (tty);
-
-	  /* Position to record for this tty.  */
-#if _HAVE_UT_TYPE - 0
-	  tmp.ut_type = USER_PROCESS;
-#endif
-	  strncpy (tmp.ut_line, ttyp, UT_LINESIZE);
-
 	  /* Read the record.  */
-	  if (getutline_r (&tmp, &old, &data) >= 0)
+	  if (getutline_r (&copy, &old, &data) >= 0)
 	    {
 #if _HAVE_UT_TYPE - 0
 	      /* We have to fake the old entry because this `login'
 		 function does not fit well into the UTMP file
 		 handling scheme.  */
-	      old->ut_type = ut->ut_type;
+	      old->ut_type = copy.ut_type;
 #endif
-	      pututline_r (ut, &data);
+	      pututline_r (&copy, &data);
 	    }
 	  else if (errno == ESRCH)
 	    /* We didn't find anything.  pututline_r will add UT at the end
 	       of the file in this case.  */
-	    pututline_r (ut, &data);
+	    pututline_r (&copy, &data);
 
 	  /* Close UTMP file.  */
 	  endutent_r (&data);
@@ -153,9 +156,9 @@ login (const struct utmp *ut)
 	  /* We have to fake the old entry because this `login'
 	     function does not fit well into the UTMP file handling
 	     scheme.  */
-	  data.ubuf.ut_type = ut->ut_type;
+	  data.ubuf.ut_type = copy.ut_type;
 #endif
-	  pututline_r (ut, &data);
+	  pututline_r (&copy, &data);
 	}
 
       /* Close WTMP file.  */

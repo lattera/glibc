@@ -1,3 +1,19 @@
+Fri Jul  5 17:34:47 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/logout.c (logout): Do nothing if getutline_r returns ESRCH.
+
+	* login/pututline_r.c (pututline_r): Since we assign RESULT from
+	lseek now, check that it's >= 0, not == 0.
+
+Wed Jul  3 13:28:04 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* login/login.c (login): Make a copy of *UT, fill in various
+	fields that we supply (ut_line, ut_type, ut_pid), and use the copy
+	in place of UT.
+
+	* login/getutline_r.c (getutline_r): When we return ESRCH, mark
+	UTMP_DATA->ubuf invalid (by setting UTMP_DATA->loc_utmp to 0).
+
 Fri Jul  5 12:22:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (_hurd_internal_post_signal): In case of handled

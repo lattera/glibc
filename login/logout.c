@@ -44,7 +44,7 @@ logout (const char *line)
   strncpy (tmp.ut_line, line, sizeof tmp.ut_line);
 
   /* Read the record.  */
-  if (getutline_r (&tmp, &ut, &data) >= 0 || errno == ESRCH)
+  if (getutline_r (&tmp, &ut, &data) >= 0)
     {
       /* Clear information about who & from where.  */
       bzero (ut->ut_name, sizeof ut->ut_name);
