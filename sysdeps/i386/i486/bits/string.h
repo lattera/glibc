@@ -1,5 +1,5 @@
 /* Optimized, inlined string functions.  i486 version.
-   Copyright (C) 1997,1998,1999,2000,2001,2002,2003
+   Copyright (C) 1997,1998,1999,2000,2001,2002,2003,2004
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -1732,7 +1732,7 @@ __strspn_g (__const char *__s, __const char *__accept)
 #define strpbrk(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
 		  ? ((accept)[0] == '\0'				      \
-		     ? ((void) (s), NULL)				      \
+		     ? ((void) (s), (char *) 0)				      \
 		     : ((accept)[1] == '\0'				      \
 			? strchr ((s), (accept)[0])			      \
 			: __strpbrk_cg ((s), (accept), strlen (accept))))     \

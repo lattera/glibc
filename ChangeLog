@@ -1,3 +1,13 @@
+2004-05-05  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/atomicity.h: Remove.
+	* sysdeps/generic/atomicity.h: Remove.
+
+2004-05-05  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* sysdeps/i386/i486/bits/string.h (strpbrk): Cast return to
+	char *.
+
 2004-04-22  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/Makefile (librt-routines): Mention
