@@ -1,5 +1,8 @@
 2004-08-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/ldconfig.c (options): Mark parameter option names as
+	translatable.  [BZ #253]  Patch by Jakub Bogusz <qboosh@pld-linux.org>.
+
 	* iconv/gconv_charset.h (strip): Also allow comma which is what is
 	used to separate options.  [BZ #194]
 
