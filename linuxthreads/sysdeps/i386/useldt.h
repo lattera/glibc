@@ -83,7 +83,7 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 ({									      \
   int __gs;								      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { ({ asm ("movw %%gs, %w0" : "=q" (__gs)); __gs >> 2; }),		      \
+    { ({ asm ("movw %%gs, %w0" : "=q" (__gs)); __gs >> 3; }),		      \
       (unsigned long int) descr, sizeof (struct _pthread_descr_struct),	      \
       1, 0, 0, 0, 0, 1, 0 };						      \
   __builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry) == 0, 1)  \
