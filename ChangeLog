@@ -1,3 +1,9 @@
+2000-05-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/tst-preadwrite.c: Alloc file being used also for testing
+	pread64 and pwrite64.
+	* posix/tst-preadwrite64.c: New file.
+
 2000-05-26  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/i386/pread64.c: Removed, we can use the
