@@ -1,3 +1,9 @@
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hesiod/Versions [GLIBC_2.2]: Add _nss_hesiod_initgroups.
+	* hesiod/hesiod-grp.c: Add initgroups support.
+	Patch by Nalin Dahyabhai <nsdahya1@pobox.com>.
+
 1999-07-08  Andreas Schwab  <schwab@suse.de>
 
 	* libio/iofopncook.c (fopencookie): Set _fileno to -2.
