@@ -733,6 +733,6 @@ register void *__gp __asm__("$29");
   })
 
 #elif !defined TLS_LE || !defined TLS_IE \
-      || !defined TLS_LD || !defined TLS_GD(x)
+      || !defined TLS_LD || !defined TLS_GD
 # error "No support for this architecture so far."
 #endif
