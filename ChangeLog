@@ -1,3 +1,8 @@
+2002-10-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/system.c: Remove support for old and buggy SCO systems.
+	Optimize a bit for use in glibc.
+
 2002-10-12  Roland McGrath  <roland@redhat.com>
 
 	* stdio-common/tst-rndseek.c (TIMEOUT): Increase to 10 seconds.
