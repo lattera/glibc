@@ -1,4 +1,4 @@
-# Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+# Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ include ../Makeconfig
 
 # Rules for the test suite.
 tests = test-matherr test-fenv atest-exp atest-sincos atest-exp2 basic-test \
-	test-misc test-fpucw tst-definitions
+	test-misc test-fpucw tst-definitions test-tgmath
 # We do the `long double' tests only if this data type is available and
 # distinct from `double'.
 test-longdouble-yes = test-ldouble test-ildoubl
@@ -120,6 +120,7 @@ CFLAGS-test-ldouble.c = -fno-inline -ffloat-store
 CFLAGS-test-ifloat.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 CFLAGS-test-idouble.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
 CFLAGS-test-ildoubl.c = -U__LIBC_INTERNAL_MATH_INLINES -D__FAST_MATH__
+CFLAGS-test-tgmath.c = -fno-builtin
 
 distribute += libm-test.inc gen-libm-test.pl README.libm-test
 

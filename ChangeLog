@@ -1,5 +1,9 @@
 2001-01-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* math/Makefile (tests): Add test-tgmath.
+	(CFLAGS-test-tgmath.c): New variable.
+	* math/test-tgmath.c: New file.  Contributed by Jakub Jelinek.
+
 	* conform/conformtest.pl: Handle allow-header in secondary headers
 	correctly.
 
