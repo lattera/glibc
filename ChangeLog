@@ -1,3 +1,10 @@
+1999-09-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/programs/repertoire.c (repertoire_find_value): Abort if
+	rep parameter is NULL.
+	(repertoire_find_symbol): Likewise.
+	(repertoire_find_seq): Likewise.
+
 1999-09-20  Jean-Louis Martineau  <martinea@IRO.UMontreal.CA>
 
 	* nis/nss_compat/compat-pwd.c (getpwuid_plusgroup): Correct
