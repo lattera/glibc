@@ -28,6 +28,7 @@
 #include <mcheck.h>
 #include <search.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
@@ -121,16 +122,21 @@ static char *more_help (int key, const char *text, void *input);
 
 /* Definitions of arguments for argp functions.  */
 #define OPT_PREFIX 300
+#define OPT_NOSTDLIB 301
 static const struct argp_option options[] =
 {
   { "prefix", OPT_PREFIX, "PATH", 0, N_("Prefix used for all file accesses") },
+  { "output", 'o', "FILE", 0, N_("\
+Put output in FILE instead of installed location\
+ (--prefix does not apply to FILE)") },
+  { "nostdlib", OPT_NOSTDLIB, NULL, 0,
+    N_("Do not search standard directories, only those on the command line") },
   { NULL, 0, NULL, 0, NULL }
 };
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-
   options, parse_opt, args_doc, doc, NULL, more_help
 };
 
@@ -161,6 +167,14 @@ static int write_output (void);
 static const char *prefix = "";
 /* Its length.  */
 static size_t prefix_len;
+
+/* Directory to place output file in.  */
+static const char *output_file;
+/* Its length.  */
+static size_t output_file_len;
+
+/* If true, omit the GCONV_PATH directories and require some arguments.  */
+static bool nostdlib;
 
 /* Search tree of the modules we know.  */
 static void *modules;
@@ -270,8 +284,6 @@ main (int argc, char *argv[])
 {
   int remaining;
   int status = 0;
-  char *path;
-  char *tp;
 
   /* Enable memory use testing.  */
   /* mcheck_pedantic (NULL); */
@@ -286,6 +298,9 @@ main (int argc, char *argv[])
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
+  if (nostdlib && remaining == argc)
+    error (2, 0, _("Directory arguments required when using --nostdlib"));
+
   /* Initialize the string table.  */
   strtab = strtabinit ();
 
@@ -293,14 +308,16 @@ main (int argc, char *argv[])
   while (remaining < argc)
     status |= handle_dir (argv[remaining++]);
 
-  /* In any case also handle the standard directory.  */
-  path = strdupa (GCONV_PATH);
-  tp = strtok (path, ":");
-  while (tp != NULL)
+  if (! nostdlib)
     {
-      status |= handle_dir (tp);
+      /* In any case also handle the standard directory.  */
+      char *path = strdupa (GCONV_PATH), *tp = strsep (&path, ":");
+      while (tp != NULL)
+	{
+	  status |= handle_dir (tp);
 
-      tp = strtok (NULL, ":");
+	  tp = strsep (&path, ":");
+	}
     }
 
   /* Add the builtin transformations and aliases without overwriting
@@ -339,6 +356,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case OPT_PREFIX:
       prefix = arg;
       prefix_len = strlen (prefix);
+      break;
+    case 'o':
+      output_file = arg;
+      output_file_len = strlen (output_file);
+      break;
+    case OPT_NOSTDLIB:
+      nostdlib = true;
       break;
     default:
       return ARGP_ERR_UNKNOWN;
@@ -626,7 +650,6 @@ add_module (char *rp, const char *directory)
 static int
 handle_dir (const char *dir)
 {
-  char *infile;
   char *cp;
   FILE *fp;
   char *line = NULL;
@@ -641,7 +664,8 @@ handle_dir (const char *dir)
       newp[dirlen] = '\0';
     }
 
-  cp = infile = (char *) alloca (prefix_len + dirlen + sizeof "gconv-modules");
+  char infile[prefix_len + dirlen + sizeof "gconv-modules"];
+  cp = infile;
   if (dir[0] == '/')
     cp = mempcpy (cp, prefix, prefix_len);
   strcpy (mempcpy (cp, dir, dirlen), "gconv-modules");
@@ -1006,9 +1030,9 @@ write_output (void)
   struct iovec iov[6];
   static const gidx_t null_word;
   size_t total;
-  char tmpfname[prefix_len + sizeof (GCONV_MODULES_CACHE)
+  char finalname[prefix_len + sizeof GCONV_MODULES_CACHE];
+  char tmpfname[(output_file == NULL ? sizeof finalname : output_file_len + 1)
 		+ strlen (".XXXXXX")];
-  char finalname[prefix_len + sizeof (GCONV_MODULES_CACHE)];
 
   /* Function to insert the names.  */
   auto void
@@ -1036,14 +1060,19 @@ write_output (void)
     }
 
   /* Open the output file.  */
-  assert (GCONV_MODULES_CACHE[0] == '/');
-  strcpy (stpcpy (mempcpy (tmpfname, prefix, prefix_len), GCONV_MODULES_CACHE),
-	  ".XXXXXX");
+  if (output_file == NULL)
+    {
+      assert (GCONV_MODULES_CACHE[0] == '/');
+      strcpy (stpcpy (mempcpy (tmpfname, prefix, prefix_len),
+		      GCONV_MODULES_CACHE),
+	      ".XXXXXX");
+      strcpy (mempcpy (finalname, prefix, prefix_len), GCONV_MODULES_CACHE);
+    }
+  else
+    strcpy (mempcpy (tmpfname, output_file, output_file_len), ".XXXXXX");
   fd = mkstemp (tmpfname);
   if (fd == -1)
     return 1;
-
-  strcpy (mempcpy (finalname, prefix, prefix_len), GCONV_MODULES_CACHE);
 
   /* Create the string table.  */
   string_table = strtabfinalize (strtab, &string_table_size);
@@ -1197,7 +1226,7 @@ write_output (void)
       /* The file was created with mode 0600.  Make it world-readable.  */
       || fchmod (fd, 0644) != 0
       /* Rename the file, possibly replacing an old one.  */
-      || rename (tmpfname, finalname) != 0)
+      || rename (tmpfname, output_file ?: finalname) != 0)
     {
       int save_errno = errno;
       close (fd);
