@@ -1,3 +1,7 @@
+2004-09-21  Roland McGrath  <roland@redhat.com>
+
+	* Versions: Add comment about linuxthreads' frozen ABI.
+
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* Versions: Remove exports for pthread_set*id_np functions.
