@@ -1,3 +1,8 @@
+2003-12-28  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Do not raise
+	execptions for exp(NaN).
+
 2003-12-23  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.c (re_dfa_add_node): Initialize opt_subexp.
