@@ -302,7 +302,8 @@ _dl_start_user:\n\
 #ifdef USE_TLS
 # define elf_machine_type_class(type) \
   ((((type) == R_386_JMP_SLOT || (type) == R_386_TLS_DTPMOD32		      \
-     || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32)	      \
+     || (type) == R_386_TLS_DTPOFF32 || (type) == R_386_TLS_TPOFF32	      \
+     || (type) == R_386_TLS_TPOFF)					      \
     * ELF_RTYPE_CLASS_PLT)						      \
    | (((type) == R_386_COPY) * ELF_RTYPE_CLASS_COPY))
 #else
@@ -446,6 +447,18 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	    *reloc_addr += sym_map->l_tls_offset - sym->st_value;
 # endif
 	  break;
+	case R_386_TLS_TPOFF:
+	  /* The offset is negative, forward from the thread pointer.  */
+# ifdef RTLD_BOOTSTRAP
+	  *reloc_addr += sym->st_value - map->l_tls_offset;
+# else
+	  /* We know the offset of object the symbol is contained in.
+	     It is a negative value which will be added to the
+	     thread pointer.  */
+	  if (sym != NULL)
+	    *reloc_addr += sym->st_value - sym_map->l_tls_offset;
+# endif
+	  break;
 #endif	/* use TLS */
 
 #ifndef RTLD_BOOTSTRAP
@@ -517,31 +530,18 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 
 #ifdef USE_TLS
 	case R_386_TLS_DTPMOD32:
-# ifdef RTLD_BOOTSTRAP
-	  /* During startup the dynamic linker is always the module
-	     with index 1.
-	     XXX If this relocation is necessary move before RESOLVE
-	     call.  */
-	  *reloc_addr = 1;
-# else
 	  /* Get the information from the link map returned by the
 	     resolv function.  */
 	  if (sym_map != NULL)
 	    *reloc_addr = sym_map->l_tls_modid;
-# endif
 	  break;
 	case R_386_TLS_DTPOFF32:
-# ifndef RTLD_BOOTSTRAP
 	  /* During relocation all TLS symbols are defined and used.
 	     Therefore the offset is already correct.  */
 	  *reloc_addr = (sym == NULL ? 0 : sym->st_value) + reloc->r_addend;
-# endif
 	  break;
 	case R_386_TLS_TPOFF32:
 	  /* The offset is positive, backward from the thread pointer.  */
-# ifdef RTLD_BOOTSTRAP
-	  *reloc_addr = map->l_tls_offset - sym->st_value + reloc->r_addend;
-# else
 	  /* We know the offset of object the symbol is contained in.
 	     It is a positive value which will be subtracted from the
 	     thread pointer.  To get the variable position in the TLS
@@ -549,7 +549,15 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  *reloc_addr
 	    = (sym == NULL ? 0 : sym_map->l_tls_offset - sym->st_value)
 	      + reloc->r_addend;
-# endif
+	  break;
+	case R_386_TLS_TPOFF:
+	  /* The offset is negative, forward from the thread pointer.  */
+	  /* We know the offset of object the symbol is contained in.
+	     It is a negative value which will be added to the
+	     thread pointer.  */
+	  *reloc_addr
+	    = (sym == NULL ? 0 : sym->st_value - sym_map->l_tls_offset)
+	      + reloc->r_addend;
 	  break;
 #endif	/* use TLS */
 	default:

@@ -1,3 +1,17 @@
+2002-09-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/dl-lookup.c (_dl_debug_bindings): Print TLS lookups always.
+
+	* elf/elf.h (R_386_TLS_TPOFF, R_386_TLS_IE, R_386_TLS_GOTIE,
+	R_386_TLS_LE): Define.
+	(R_386_TLS_IE_32, R_386_TLS_LE_32, R_386_TLS_TPOFF32): Update
+	comments.
+	* sysdeps/i386/dl-machine.h (elf_machine_type_class): Return
+	ELF_RTYPE_CLASS_PLT for R_386_TLS_TPOFF.
+	(elf_machine_rel): Handle R_386_TLS_TPOFF.
+	(elf_machine_rela): Likewise.
+	Remove unnecessary RTLD_BOOTSTRAP #ifdefs.
+
 2002-09-17  Roland McGrath  <roland@redhat.com>
 
 	* malloc/Makefile ($(objpfx)memusagestat.o: sysincludes): Define

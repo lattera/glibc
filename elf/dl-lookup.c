@@ -647,9 +647,17 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 	    conflict = 1;
 	}
 
+#ifdef USE_TLS
+      if (value->s
+	  && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
+				== STT_TLS, 0)))
+	type_class = 4;
+#endif
+
       if (conflict
 	  || GL(dl_trace_prelink_map) == undef_map
-	  || GL(dl_trace_prelink_map) == NULL)
+	  || GL(dl_trace_prelink_map) == NULL
+	  || type_class == 4)
 	{
 	  _dl_printf ("%s 0x%0*Zx 0x%0*Zx -> 0x%0*Zx 0x%0*Zx ",
 		      conflict ? "conflict" : "lookup",
@@ -668,12 +676,6 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 			(int) sizeof (ElfW(Addr)) * 2,
 			(ElfW(Addr)) (val.s ? val.s->st_value : 0));
 
-#ifdef USE_TLS
-          if (value->s
-	      && (__builtin_expect (ELFW(ST_TYPE) (value->s->st_info)
-				    == STT_TLS, 0)))
-	    type_class = 4;
-#endif
 	  _dl_printf ("/%x %s\n", type_class, undef_name);
 	}
     }

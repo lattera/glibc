@@ -1073,6 +1073,13 @@ typedef struct
 #define R_386_GOTOFF	   9		/* 32 bit offset to GOT */
 #define R_386_GOTPC	   10		/* 32 bit PC relative offset to GOT */
 #define R_386_32PLT	   11
+#define R_386_TLS_TPOFF	   14		/* Offset in static TLS block */
+#define R_386_TLS_IE	   15		/* Address of GOT entry for static TLS
+					   block offset */
+#define R_386_TLS_GOTIE	   16		/* GOT entry for static TLS block
+					   offset */
+#define R_386_TLS_LE	   17		/* Offset relative to static TLS
+					   block */
 #define R_386_TLS_GD	   18		/* Direct 32 bit for GNU version of
 					   general dynamic thread local data */
 #define R_386_TLS_LDM	   19		/* Direct 32 bit for GNU version of
@@ -1095,13 +1102,13 @@ typedef struct
 					   __tls_get_addr() in LDM code */
 #define R_386_TLS_LDM_POP  31		/* Tag for popl in LDM TLS code */
 #define R_386_TLS_LDO_32   32		/* Offset relative to TLS block */
-#define R_386_TLS_IE_32	   33		/* GOT entry for static TLS block
-					   offset */
-#define R_386_TLS_LE_32	   34		/* Offset relative to static TLS
-					   block */
+#define R_386_TLS_IE_32	   33		/* GOT entry for negated static TLS
+					   block offset */
+#define R_386_TLS_LE_32	   34		/* Negated offset relative to static
+					   TLS block */
 #define R_386_TLS_DTPMOD32 35		/* ID of module containing symbol */
 #define R_386_TLS_DTPOFF32 36		/* Offset in TLS block */
-#define R_386_TLS_TPOFF32  37		/* Offset in static TLS block */
+#define R_386_TLS_TPOFF32  37		/* Negated offset in static TLS block */
 /* Keep this the last entry.  */
 #define R_386_NUM	   38
 

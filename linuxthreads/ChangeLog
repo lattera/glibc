@@ -1,3 +1,10 @@
+2002-09-17  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT, TLS_DO_SET_THREAD_AREA):
+	Set the descriptor limit to the full 4GB, so %gs:OFFSET works for any
+	offset (positive or negative) relative to the thread struct.
+	* sysdeps/i386/useldt.h (DO_MODIFY_LDT, DO_SET_THREAD_AREA): Likewise.
+
 2002-09-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/Makefile: Move...

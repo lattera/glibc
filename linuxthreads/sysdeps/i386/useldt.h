@@ -11,22 +11,22 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
    Lesser General Public License for more details.
 
    You should have received a copy of the GNU Lesser General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Boston, MA 02111-1307, USA.	*/
 
 #ifndef __ASSEMBLER__
 #include <stddef.h>	/* For offsetof.  */
-#include <stdlib.h>	/* For abort().  */
-#include <sysdep.h>	/* For INLINE_SYSCALL.  */
+#include <stdlib.h>	/* For abort().	 */
+#include <sysdep.h>	/* For INLINE_SYSCALL.	*/
 
 
-/* We don't want to include the kernel header.  So duplicate the
-   information.  */
+/* We don't want to include the kernel header.	So duplicate the
+   information.	 */
 
 /* Structure passed on `modify_ldt' call.  */
 struct modify_ldt_ldt_s
@@ -63,13 +63,13 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
 })
 
 
-/* Initialize the thread-unique value.  Two possible ways to do it.  */
+/* Initialize the thread-unique value.	Two possible ways to do it.  */
 
 #define DO_MODIFY_LDT(descr, nr)					      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { nr, (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
-      1, 0, 0, 0, 0, 1, 0 };						      \
+    { nr, (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
+      1, 0, 0, 1, 0, 1, 0 };						      \
   if (__modify_ldt (1, &ldt_entry, sizeof (ldt_entry)) != 0)		      \
     abort ();								      \
   asm ("movw %w0, %%gs" : : "q" (nr * 8 + 7));				      \
@@ -93,8 +93,8 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
       asm ("movw %%gs, %w0" : "=q" (__gs));				      \
       struct modify_ldt_ldt_s ldt_entry =				      \
 	{ (__gs & 0xffff) >> 3,						      \
-	  (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
-	  1, 0, 0, 0, 0, 1, 0 };					      \
+	  (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
+	  1, 0, 0, 1, 0, 1, 0 };					      \
       if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
 			    0) == 0)					      \
 	asm ("movw %w0, %%gs" :: "q" (__gs));				      \
@@ -105,8 +105,8 @@ extern int __modify_ldt (int, struct modify_ldt_ldt_s *, size_t);
     {									      \
       struct modify_ldt_ldt_s ldt_entry =				      \
 	{ -1,								      \
-	  (unsigned long int) descr, sizeof (struct _pthread_descr_struct),   \
-	  1, 0, 0, 0, 0, 1, 0 };					      \
+	  (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
+	  1, 0, 0, 1, 0, 1, 0 };					      \
       if (__builtin_expect (INLINE_SYSCALL (set_thread_area, 1, &ldt_entry),  \
 			    0) == 0)					      \
 	{								      \

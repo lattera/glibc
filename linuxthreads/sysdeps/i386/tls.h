@@ -99,8 +99,8 @@ typedef struct
 #  define TLS_DO_MODIFY_LDT(descr, nr)					      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { nr, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
-      1, 0, 0, 0, 0, 1, 0 };						      \
+    { nr, (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
+      1, 0, 0, 1, 0, 1, 0 };						      \
   int result;								      \
   asm volatile (TLS_LOAD_EBX						      \
 		"int $0x80\n\t"						      \
@@ -118,8 +118,8 @@ typedef struct
 #  define TLS_DO_SET_THREAD_AREA(descr, secondcall)			      \
 ({									      \
   struct modify_ldt_ldt_s ldt_entry =					      \
-    { -1, (unsigned long int) (descr), sizeof (struct _pthread_descr_struct), \
-      1, 0, 0, 0, 0, 1, 0 };						      \
+    { -1, (unsigned long int) (descr), 0xfffff /* 4GB in pages */,	      \
+      1, 0, 0, 1, 0, 1, 0 };						      \
   int result;								      \
   if (secondcall)							      \
     ldt_entry.entry_number = ({ int _gs;				      \
