@@ -1,3 +1,7 @@
+2000-11-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/bits/time.h: Removed.
+
 2000-11-01  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/TESTS: Add entries for IBM856, IBM930, IBM933, IBM935,
@@ -33,7 +37,7 @@
 	* sysdeps/unix/sysv/linux/s390/bits/time.h: Likewise.
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (CMSG_ALIGN): Cast result
-	of unary ~ to size_t.Update.
+	of unary ~ to size_t.
 
 	* stdlib/strtod.c: Make gcc shut up about SWAP use.
 
@@ -163,8 +167,8 @@
 	(locale_ctype_t): Remove translit_copy_locale, translit_copy_repertoire
 	fields, add translit_include field.
 	(ctype_read): After seeing "translit_start" in ignore_content mode,
-	skip the entire translit section, not only one line. Remove dead test
-	for tok_translit_end. Enqueue include statements into a list.
+	skip the entire translit section, not only one line.  Remove dead test
+	for tok_translit_end.  Enqueue include statements into a list.
 	Signal error if tok_eof seen before tok_translit_end.
 	(translit_flatten): New function.
 	(allocate_arrays): Call translit_flatten.
@@ -181,7 +185,7 @@
 	* intl/dcigettext.c (guess_category_value): For libc always use
 	the setlocale() method.
 
-	* intl/Makefile: Add rules to build, run and, distribute  tst-gettext2.
+	* intl/Makefile: Add rules to build, run and, distribute tst-gettext2.
 	* intl/tst-gettext2.c: New file.
 	* intl/tst-gettext2.sh: New file.
 	* intl/tstlang1.po: New file.
