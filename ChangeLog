@@ -1,5 +1,10 @@
 Tue Jul  9 06:19:29 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/direntry.h: New file from David Mosberger.
+
+	* sysdeps/unix/sysv/linux/configure.in: Check for Linux 2.0.1 headers,
+	instead of 2.0 headers.
+
 	* sysdeps/mach/hurd/Makefile (stamp-errnos): Uncomment CVS commit cmds.
 
 	* sysdeps/gnu/errlist.awk: Undo mib's bogus changes.  The
