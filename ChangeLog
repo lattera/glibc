@@ -1,5 +1,9 @@
 2003-04-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-time.c (TESTARR_ELEM): Make i unsigned.
+	(time_output): If necessary, allocate new buffer for .name string if
+	padding is required.
+
 	* sysdeps/unix/sysv/linux/ifaddrs.c (getifaddrs): Check lengths
 	before copying.  This might leave holes in the list.  Adjust
 	pointers if necessary.

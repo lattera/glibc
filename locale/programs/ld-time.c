@@ -1,4 +1,4 @@
-/* Copyright (C) 1995-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -170,7 +170,7 @@ No definition for %s category found"), "LC_TIME"));
   if (!time->cat##_defined)						      \
     {									      \
       const char *initval[] = { noparen val };				      \
-      int i;								      \
+      unsigned int i;							      \
 									      \
       if (! be_quiet && ! nothing)					      \
 	WITH_CUR_LOCALE (error (0, 0, _("%s: field `%s' not defined"),	      \
@@ -697,10 +697,13 @@ time_output (struct localedef_t *locale, const struct charmap_t *charmap,
       iov[2 + cnt].iov_len = sizeof (int32_t);
       ++cnt;
 
-      l = (strchr (time->era_entries[num].format, '\0')
+      l = ((char *) rawmemchr (time->era_entries[num].format, '\0')
 	   - time->era_entries[num].name) + 1;
       l = (l + 3) & ~3;
-      iov[2 + cnt].iov_base = (void *) time->era_entries[num].name;
+      iov[2 + cnt].iov_base = alloca (l);
+      /* This time we *really* want to use the properties of strncpy.  */
+      strncpy (iov[2 + cnt].iov_base, time->era_entries[num].name,
+	       l);
       iov[2 + cnt].iov_len = l;
       ++cnt;
 
