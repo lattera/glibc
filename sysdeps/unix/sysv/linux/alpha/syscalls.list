@@ -1,0 +1,45 @@
+# File name	Caller	Syscall name	# args	Strong name	Weak names
+
+# used to implement inb()/outb() etc.
+sethae		-	sethae		1	__sethae
+
+msgctl		-	msgctl		3	__msgctl	msgctl
+msgget		-	msgget		2	__msgget	msgget
+msgrcv		-	msgrcv		5	__msgrcv	msgrcv
+msgsnd		-	msgsnd		4	__msgsnd	msgsnd
+shmat		-	osf_shmat	3	__shmat		shmat
+shmctl		-	shmctl		3	__shmctl	shmctl
+shmdt		-	shmdt		1	__shmdt		shmdt
+shmget		-	shmget		3	__shmget	shmget
+semop		-	semop		3	__semop		semop
+semget		-	semget		3	__semget	semget
+semctl		-	semctl		4	__semctl	semctl
+
+osf_sigprocmask	-	osf_sigprocmask	2	__osf_sigprocmask
+
+getdents	-	getdents	3	__getdirentries	getdirentries
+getpeername	-	getpeername	3	__getpeername	getpeername
+getpriority	-	getpriority	2	__getpriority	getpriority
+mmap		-	mmap		6	__mmap		mmap
+
+# these are actually common with the x86:
+fstatfs		-	fstatfs		2	__fstatfs	fstatfs
+statfs		-	statfs		2	__statfs	statfs
+
+# override select.S in parent directory:
+select		-	select		5	__select	select
+accept		-	accept		3	__accept	accept
+bind		-	bind		3	__bind		bind
+connect		-	connect		3	__connect	connect
+getpeername	-	getpeername	3	__getpeername	getpeername
+getsockname	-	getsockname	3	__getsockname	getsockname
+listen		-	listen		2	__listen	listen
+recv		-	recv		4	__recv		recv
+recvfrom	-	recvfrom	6	__recvfrom	recvfrom
+recvmsg		-	recvmsg		3	__recvmsg	recvmsg
+send		-	send		4	__send		send
+sendmsg		-	sendmsg		3	__sendmsg	sendmsg
+sendto		-	sendto		6	__sendto	sendto
+setsockopt	-	setsockopt	5	__setsockopt	setsockopt
+shutdown	-	shutdown	2	__shutdown	shutdown
+socketpair	-	socketpair	4	__socketpair	socketpair
