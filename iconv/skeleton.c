@@ -223,11 +223,6 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
     }
   else
     {
-      /* This variable is used to count the number of characters we
-         actually converted.  */
-      size_t converted = 0;
-      size_t last_converted;
-
       /* We preserve the initial values of the pointer variables.  */
       const char *inptr = *inbuf;
       char *outbuf = data->outbuf;
@@ -240,13 +235,15 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 
       do
 	{
+	  /* This variable is used to count the number of characters we
+	     actually converted.  */
+	  size_t converted = 0;
+
 	  /* Remember the start value for this round.  */
 	  inptr = *inbuf;
 	  /* The outbuf buffer is empty.  */
 	  outptr = outbuf;
 
-	  /* Save the state.  */
-	  last_converted = converted;
 #ifdef SAVE_RESET_STATE
 	  SAVE_RESET_STATE (1);
 #endif
@@ -274,6 +271,10 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	    {
 	      /* Store information about how many bytes are available.  */
 	      data->outbuf = outbuf;
+
+	      /* Remember how many characters we converted.  */
+	      *written += converted;
+
 	      break;
 	    }
 
@@ -302,7 +303,6 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 		      outbuf = outptr;
 
 		      /* Reset the state.  */
-		      converted = last_converted;
 # ifdef SAVE_RESET_STATE
 		      SAVE_RESET_STATE (0);
 # endif
@@ -342,9 +342,6 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	    }
 	}
       while (status == GCONV_OK);
-
-      /* Remember how many characters we converted.  */
-      *written += converted;
 
 #ifdef END_LOOP
       END_LOOP

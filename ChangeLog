@@ -1,5 +1,8 @@
 1998-04-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/skeleton.c: Correct counting of actually converted
+	characters.
+
 	* intl/localealias.c (read_alias_file): Use unsigned char for
 	local variables.  Remove unused variable tp.
 	* intl/l10nflist.c (_nl_normalize_codeset): Use unsigned char *
