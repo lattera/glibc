@@ -618,7 +618,7 @@ the GNU system is always a multiple of eight (or sixteen on 64-bit
 systems).  If you need a block whose address is a multiple of a higher
 power of two than that, use @code{memalign}, @code{posix_memalign}, or
 @code{valloc}.  @code{memalign} is declared in @file{malloc.h} and
-@code{posix_memalign) is declared in @file{stdlib.h}.
+@code{posix_memalign} is declared in @file{stdlib.h}.
 
 With the GNU library, you can use @code{free} to free the blocks that
 @code{memalign}, @code{posix_memalign}, and @code{valloc} return.  That
