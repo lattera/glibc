@@ -1,3 +1,24 @@
+2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/do-rel.h (elf_dynamic_do_rel): If not relocating lazily, don't
+	call elf_machine_rel for the last DT_RELCOUNT relocations but instead
+	elf_machine_rel_relative.
+	* sysdeps/alpha/dl-machine.h: Define elf_machine_rel_relative.
+	Minor optimizations.
+	* sysdeps/arm/dl-machine.h: Likewise.
+	* sysdeps/cris/dl-machine.h: Likewise.
+	* sysdeps/hppa/dl-machine.h: Likewise.
+	* sysdeps/i386/dl-machine.h: Likewise.
+	* sysdeps/ia64/dl-machine.h: Likewise.
+	* sysdeps/m68k/dl-machine.h: Likewise.
+	* sysdeps/mips/dl-machine.h: Likewise.
+	* sysdeps/powerpc/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-32/dl-machine.h: Likewise.
+	* sysdeps/s390/s390-64/dl-machine.h: Likewise.
+	* sysdeps/sh/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h: Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h: Likewise.
+
 2001-08-23  Roland McGrath  <roland@frob.com>
 
 	* rt/tst-aio4.c [! SIGRTMIN] (SIGRTMIN, SIGRTMAX): Define as -1.

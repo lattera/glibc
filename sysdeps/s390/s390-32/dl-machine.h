@@ -364,20 +364,22 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		  Elf32_Addr *const reloc_addr)
 {
-  if (ELF32_R_TYPE (reloc->r_info) == R_390_RELATIVE) {
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_390_RELATIVE, 0))
+    *reloc_addr = map->l_addr + reloc->r_addend;
 #ifndef RTLD_BOOTSTRAP
-    if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+  else if (__builtin_expect (r_type == R_390_NONE, 0))
+    return;
 #endif
-      *reloc_addr = map->l_addr + reloc->r_addend;
-  }
-  else if (ELF32_R_TYPE (reloc->r_info) != R_390_NONE)
+  else
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 
-      switch (ELF32_R_TYPE (reloc->r_info))
+      switch (r_type)
 	{
 	case R_390_COPY:
 	  if (sym == NULL)
@@ -431,24 +433,30 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	case R_390_NONE:
 	  break;
 	default:
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 	}
     }
 }
 
+static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rela *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (ELF32_R_TYPE (reloc->r_info), R_390_JMP_SLOT)
-      == R_390_JMP_SLOT)
+  if (__builtin_expect (r_type == R_390_JMP_SLOT, 1)))
     *reloc_addr += l_addr;
   else
-    _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */

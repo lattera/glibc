@@ -21,7 +21,7 @@
 
 #ifndef dl_machine_h
 #define dl_machine_h
- 
+
 #define ELF_MACHINE_NAME "s390x"
 
 #include <sys/param.h>
@@ -77,7 +77,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
   extern void _dl_runtime_resolve (Elf64_Word);
   extern void _dl_runtime_profile (Elf64_Word);
 
-  if (l->l_info[DT_JMPREL] && lazy) 
+  if (l->l_info[DT_JMPREL] && lazy)
     {
       /* The GOT entries for functions in the PLT have not yet been filled
 	 in.  Their initial contents will arrange when called to push an
@@ -96,7 +96,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       if (__builtin_expect (profile, 0))
 	{
 	  got[2] = (Elf64_Addr) &_dl_runtime_profile;
-	  
+
 	  if (_dl_name_match_p (_dl_profile, l))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
@@ -203,7 +203,7 @@ _dl_runtime_profile:\n\
     .size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
     .size _dl_runtime_profile, .-_dl_runtime_profile\n\
 ");
-#endif	
+#endif
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -282,10 +282,10 @@ _dl_start_user:\n\
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
-#define elf_machine_lookup_noplt_p(type) ((type) == R_390_JMP_SLOT) 
+#define elf_machine_lookup_noplt_p(type) ((type) == R_390_JMP_SLOT)
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.  */
-#define ELF_MACHINE_JMP_SLOT	R_390_JMP_SLOT	 
+#define ELF_MACHINE_JMP_SLOT	R_390_JMP_SLOT
 
 /* The 64 bit S/390 never uses Elf64_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
@@ -318,9 +318,9 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 		       Elf64_Addr value)
 {
   return value;
-}   
+}
 
-#endif /* !dl_machine_h */ 
+#endif /* !dl_machine_h */
 
 #ifdef RESOLVE
 
@@ -332,21 +332,22 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		 const Elf64_Sym *sym, const struct r_found_version *version,
 		  Elf64_Addr *const reloc_addr)
 {
-  if (ELF64_R_TYPE (reloc->r_info) == R_390_RELATIVE) {
+  const unsigned int r_type = ELF64_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_390_RELATIVE, 0))
+    *reloc_addr = map->l_addr + reloc->r_addend;
 #ifndef RTLD_BOOTSTRAP
-    weak_extern (_dl_rtld_map);
-    if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
+  else if (__builtin_expect (r_type == R_390_NONE, 0))
+    return;
 #endif
-      *reloc_addr = map->l_addr + reloc->r_addend;
-  }
-  else if (ELF64_R_TYPE (reloc->r_info) != R_390_NONE)
+  else
     {
       const Elf64_Sym *const refsym = sym;
-      Elf64_Addr value = RESOLVE (&sym, version, ELF64_R_TYPE (reloc->r_info));
+      Elf64_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
-      
-      switch (ELF64_R_TYPE (reloc->r_info))
+
+      switch (r_type)
 	{
 	case R_390_GLOB_DAT:
 	case R_390_JMP_SLOT:
@@ -372,7 +373,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    }
 	  memcpy (reloc_addr, (void *) value, MIN (sym->st_size,
 						   refsym->st_size));
-	  break;    
+	  break;
 	case R_390_64:
 	  *reloc_addr = value + reloc->r_addend;
 	  break;
@@ -394,7 +395,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    ((int) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
 	  break;
 	case R_390_PC32:
-	  *(unsigned int *) reloc_addr = 
+	  *(unsigned int *) reloc_addr =
 	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
 	case R_390_PC16DBL:
@@ -403,7 +404,7 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	    ((short) (value + reloc->r_addend - (Elf64_Addr) reloc_addr) >> 1);
 	  break;
 	case R_390_PC16:
-	  *(unsigned short *) reloc_addr = 
+	  *(unsigned short *) reloc_addr =
 	    value + reloc->r_addend - (Elf64_Addr) reloc_addr;
 	  break;
 #endif
@@ -411,24 +412,31 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.	 */
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 #endif
 	}
     }
-} 
+}
+
+static inline void
+elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
+			  Elf64_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
 
 static inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
   Elf64_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (ELF64_R_TYPE (reloc->r_info), R_390_JMP_SLOT)
-      == R_390_JMP_SLOT)
+  if (__builtin_expect (r_type == R_390_JMP_SLOT, 1))
     *reloc_addr += l_addr;
   else
-    _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */

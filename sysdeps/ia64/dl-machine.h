@@ -520,8 +520,10 @@ elf_machine_rela (struct link_map *map,
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
-  if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_REL64LSB))
+  if (__builtin_expect (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_REL64LSB),
+			0))
     {
+      assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);
       value = *reloc_addr;
 #ifndef RTLD_BOOTSTRAP
       /* Already done in dynamic linker.  */
@@ -529,8 +531,10 @@ elf_machine_rela (struct link_map *map,
 #endif
         value += map->l_addr;
     }
+#ifndef RTLD_BOOTSTRAP
   else if (r_type == R_IA64_NONE)
     return;
+#endif
   else
     {
       struct link_map *sym_map;
@@ -575,6 +579,15 @@ elf_machine_rela (struct link_map *map,
     assert (! "unexpected dynamic reloc format");
 }
 
+static inline void
+elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
+			  Elf64_Addr *const reloc_addr)
+{
+  /* ??? Ignore MSB and Instruction format for now.  */
+  assert (ELF64_R_TYPE (reloc->r_info) == R_IA64_REL64LSB);
+
+  *reloc_addr += l_addr;
+}
 
 /* Perform a RELATIVE reloc on the .got entry that transfers to the .plt.  */
 static inline void

@@ -303,7 +303,9 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 Elf32_Addr *const reloc_addr)
 {
-  if (ELF32_R_TYPE (reloc->r_info) == R_386_RELATIVE)
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_386_RELATIVE, 0))
     {
 #ifndef RTLD_BOOTSTRAP
       /* This is defined in rtld.c, but nowhere in the static libc.a;
@@ -317,16 +319,20 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 #endif
 	*reloc_addr += map->l_addr;
     }
-  else if (ELF32_R_TYPE (reloc->r_info) != R_386_NONE)
+#ifndef RTLD_BOOTSTRAP
+  else if (__builtin_expect (r_type == R_386_NONE, 1))
+    return;
+#endif
+  else
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf32_Sym *const refsym = sym;
 #endif
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      Elf32_Addr value = RESOLVE (&sym, version, r_type);
       if (sym)
 	value += sym->st_value;
 
-      switch (ELF32_R_TYPE (reloc->r_info))
+      switch (r_type)
 	{
 	case R_386_GLOB_DAT:
 	case R_386_JMP_SLOT:
@@ -364,7 +370,7 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	default:
 	  /* We add these checks in the version to relocate ld.so only
 	     if we are still debugging.  */
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 #endif
 	}
@@ -372,16 +378,23 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 }
 
 static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr += l_addr;
+}
+
+static inline void
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rel *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (__builtin_expect (ELF32_R_TYPE (reloc->r_info), R_386_JMP_SLOT)
-      == R_386_JMP_SLOT)
+  if (__builtin_expect (r_type == R_386_JMP_SLOT, 1))
     *reloc_addr += l_addr;
   else
-    _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 1);
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */

@@ -446,6 +446,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 Elf32_Addr *const reloc_addr)
 {
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   Elf32_Addr value;
 
 #define COPY_UNALIGNED_WORD(sw, tw, align) \
@@ -469,7 +470,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
     } \
   }
 
-  if (ELF32_R_TYPE (reloc->r_info) == R_SH_RELATIVE)
+  if (__builtin_expect (r_type == R_SH_RELATIVE, 0))
     {
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself.	 */
@@ -485,7 +486,11 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
 	}
     }
-  else if (ELF32_R_TYPE (reloc->r_info) != R_SH_NONE)
+#ifndef RTLD_BOOTSTRAP
+  else if (__builtin_expect (r_type 1= R_SH_NONE, 0))
+    return;
+#endif
+  else
     {
       const Elf32_Sym *const refsym = sym;
 
@@ -550,6 +555,20 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	  break;
 	}
     }
+}
+
+static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  if (reloc->r_addend)
+    value = l_addr + reloc->r_addend;
+  else
+    {
+      COPY_UNALIGNED_WORD (*reloc_addr, value, (int) reloc_addr & 3);
+      value += l_addr;
+    }
+  COPY_UNALIGNED_WORD (value, *reloc_addr, (int) reloc_addr & 3);
 
 #undef COPY_UNALIGNED_WORD
 }

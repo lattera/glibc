@@ -64,12 +64,12 @@ elf_machine_load_address (void)
 	   : "=r"(pc), "=r"(la));
 
      return pc - *(Elf64_Addr *)(elf_pic_register + la);
-     
+
      Unfortunately as binutils tries to work around Solaris
      dynamic linker bug which resolves R_SPARC_RELATIVE as X += B + A
      instead of X = B + A this does not work any longer, since ld
      clears it.
-     
+
      The following method relies on the fact that sparcv9 ABI maximal
      page length is 1MB and all ELF segments on sparc64 are aligned
      to 1MB.  Also, it relies on _DYNAMIC coming after _GLOBAL_OFFSET_TABLE_
@@ -197,23 +197,15 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym, const struct r_found_version *version,
 		  Elf64_Addr *const reloc_addr)
 {
-#ifndef RTLD_BOOTSTRAP
-  /* This is defined in rtld.c, but nowhere in the static libc.a; make the
-     reference weak so static programs can still link.  This declaration
-     cannot be done when compiling rtld.c (i.e.  #ifdef RTLD_BOOTSTRAP)
-     because rtld.c contains the common defn for _dl_rtld_map, which is
-     incompatible with a weak decl in the same file.  */
-  weak_extern (_dl_rtld_map);
-#endif
+  const unsigned long int r_type = ELF64_R_TYPE_ID (reloc->r_info);
 
-  if (ELF64_R_TYPE_ID (reloc->r_info) == R_SPARC_RELATIVE)
-    {
+  if (__builtin_expect (r_type == R_SPARC_RELATIVE, 0))
+    *reloc_addr = map->l_addr + reloc->r_addend;
 #ifndef RTLD_BOOTSTRAP
-      if (map != &_dl_rtld_map) /* Already done in rtld itself. */
+  else if (r_type == R_SPARC_NONE) /* Who is Wilbur? */
+    return;
 #endif
-	*reloc_addr = map->l_addr + reloc->r_addend;
-    }
-  else if (ELF64_R_TYPE_ID (reloc->r_info) != R_SPARC_NONE) /* Who is Wilbur? */
+  else
     {
 #ifndef RTLD_BOOTSTRAP
       const Elf64_Sym *const refsym = sym;
@@ -224,13 +216,13 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 	value = map->l_addr;
       else
 	{
-	  value = RESOLVE (&sym, version, ELF64_R_TYPE_ID (reloc->r_info));
+	  value = RESOLVE (&sym, version, r_type);
 	  if (sym)
 	    value += sym->st_value;
 	}
       value += reloc->r_addend;	/* Assume copy relocs have zero addend.  */
 
-      switch (ELF64_R_TYPE_ID (reloc->r_info))
+      switch (r_type)
 	{
 #ifndef RTLD_BOOTSTRAP
 	case R_SPARC_COPY:
@@ -368,11 +360,18 @@ elf_machine_rela (struct link_map *map, const Elf64_Rela *reloc,
 #endif
 #if !defined RTLD_BOOTSTRAP || defined _NDEBUG
 	default:
-	  _dl_reloc_bad_type (map, ELFW(R_TYPE) (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 #endif
 	}
     }
+}
+
+static inline void
+elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
+			  Elf64_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
 }
 
 static inline void

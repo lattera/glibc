@@ -412,21 +412,27 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 		 const Elf32_Sym *sym, const struct r_found_version *version,
 		 Elf32_Addr *const reloc_addr)
 {
-  if (ELF32_R_TYPE (reloc->r_info) == R_ARM_RELATIVE)
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
+
+  if (__builtin_expect (r_type == R_ARM_RELATIVE, 0))
     {
 #ifndef RTLD_BOOTSTRAP
       if (map != &_dl_rtld_map) /* Already done in rtld itself.  */
 #endif
 	*reloc_addr += map->l_addr;
     }
-  else if (ELF32_R_TYPE (reloc->r_info) != R_ARM_NONE)
+#ifndef RTLD_BOOTSTRAP
+  else if (__builtin_expect (r_type == R_ARM_NONE, 0))
+    return;
+#endif
+  else
     {
       const Elf32_Sym *const refsym = sym;
-      Elf32_Addr value = RESOLVE (&sym, version, ELF32_R_TYPE (reloc->r_info));
+      Elf32_Addr value = RESOLVE (&sym, version, reloc->r_type);
       if (sym)
 	value += sym->st_value;
 
-      switch (ELF32_R_TYPE (reloc->r_info))
+      switch (r_type)
 	{
 	case R_ARM_COPY:
 	  if (sym == NULL)
@@ -505,10 +511,17 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	break;
 	default:
-	  _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 0);
+	  _dl_reloc_bad_type (map, r_type, 0);
 	  break;
 	}
     }
+}
+
+static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rel *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr += l_addr;
 }
 
 static inline void
@@ -516,11 +529,12 @@ elf_machine_lazy_rel (struct link_map *map,
 		      Elf32_Addr l_addr, const Elf32_Rel *reloc)
 {
   Elf32_Addr *const reloc_addr = (void *) (l_addr + reloc->r_offset);
+  const unsigned int r_type = ELF32_R_TYPE (reloc->r_info);
   /* Check for unexpected PLT reloc type.  */
-  if (ELF32_R_TYPE (reloc->r_info) == R_ARM_JUMP_SLOT)
+  if (__builtin_expect (r_type == R_ARM_JUMP_SLOT, 1))
     *reloc_addr += l_addr;
   else
-    _dl_reloc_bad_type (map, ELF32_R_TYPE (reloc->r_info), 1);
+    _dl_reloc_bad_type (map, r_type, 1);
 }
 
 #endif /* RESOLVE */

@@ -347,7 +347,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
   Elf32_Word loadbase, finaladdr;
   const int rinfo = ELF32_R_TYPE (reloc->r_info);
 
-  if (rinfo == R_PPC_NONE)
+  if (__builtin_expect (rinfo == R_PPC_NONE, 0))
     return;
 
   /* The condition on the next two lines is a hack around a bug in Solaris
@@ -393,6 +393,12 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 			    reloc_addr, finaladdr, rinfo);
 }
 
+static inline void
+elf_machine_rel_relative (Elf32_Addr l_addr, const Elf32_Rela *reloc,
+			  Elf32_Addr *const reloc_addr)
+{
+  *reloc_addr = l_addr + reloc->r_addend;
+}
 
 /* The SVR4 ABI specifies that the JMPREL relocs must be inside the
    DT_RELA table.  */

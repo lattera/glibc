@@ -480,7 +480,7 @@ elf_machine_rela (struct link_map *map,
   /* We cannot use a switch here because we cannot locate the switch
      jump table until we've self-relocated.  */
 
-  if (r_type == R_ALPHA_RELATIVE)
+  if (__builtin_expect (r_type == R_ALPHA_RELATIVE, 0))
     {
 #ifndef RTLD_BOOTSTRAP
       /* Already done in dynamic linker.  */
@@ -501,7 +501,7 @@ elf_machine_rela (struct link_map *map,
 	}
     }
 #ifndef RTLD_BOOTSTRAP
-  else if (r_type == R_ALPHA_NONE)
+  else if (__builtin_expect (r_type == R_ALPHA_NONE, 0))
     return;
 #endif
   else
@@ -545,6 +545,23 @@ elf_machine_rela (struct link_map *map,
       else
 	_dl_reloc_bad_type (map, r_type, 0);
     }
+}
+
+static inline void
+elf_machine_rel_relative (Elf64_Addr l_addr, const Elf64_Rel *reloc,
+			  Elf64_Addr *const reloc_addr)
+{
+  /* XXX Make some timings.  Maybe it's preverable to test for
+     unaligned access and only do it the complex way if necessary.  */
+  void *reloc_addr_1 = reloc_addr;
+  Elf64_Addr reloc_addr_val;
+
+  /* Load value without causing unaligned trap. */
+  memcpy (&reloc_addr_val, reloc_addr_1, 8);
+  reloc_addr_val += l_addr;
+
+  /* Store value without causing unaligned trap. */
+  memcpy (reloc_addr_1, &reloc_addr_val, 8);
 }
 
 static inline void
