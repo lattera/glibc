@@ -2,7 +2,5 @@
 
 msync		-	msync		3	msync
 poll		-	poll		3	poll
-setsid		-	setsid		0	__setsid	setsid
 sys_mmap	mmap	mmap		5	__mmap_syscall
 sys_wait4	wait4	wait4		4	__wait4_syscall
-uname		-	uname		1	uname
