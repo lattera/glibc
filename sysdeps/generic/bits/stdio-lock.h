@@ -25,7 +25,7 @@
 __libc_lock_define (typedef, _IO_lock_t)
 
 /* We need recursive (counting) mutexes.  */
-#define _IO_lock_initializer STUB_LOSER
+#define _IO_lock_initializer ...
 #error libio needs recursive mutexes for _IO_MTSAFE_IO
 
 

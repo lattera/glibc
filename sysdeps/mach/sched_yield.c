@@ -1,4 +1,4 @@
-/* Thread package specific definitions of stream lock type.  Stub version.
+/* sched_yield -- yield the processor.  Mach version.
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -17,30 +17,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_STDIO_LOCK_H
-#define _BITS_STDIO_LOCK_H 1
+#include <errno.h>
+#include <sched.h>
+#include <mach.h>
 
-#include <bits/libc-lock.h>
-
-__libc_lock_define (typedef, _IO_lock_t)
-
-/* We need recursive (counting) mutexes.  */
-#define _IO_lock_initializer ...
-#error libio needs recursive mutexes for _IO_MTSAFE_IO
-
-
-#define _IO_cleanup_region_start(_fct, _fp) \
-     __libc_cleanup_region_start (_fct, _fp)
-#define _IO_cleanup_region_end(_doit) \
-     __libc_cleanup_region_end (_doit)
-#define _IO_lock_init(_name) \
-     __libc_lock_init_recursive (_name)
-#define _IO_lock_fini(_name) \
-     __libc_lock_fini_recursive (_name)
-#define _IO_lock_lock(_name) \
-     __libc_lock_lock (_name)
-#define _IO_lock_unlock(_name) \
-     __libc_lock_unlock (_name)
-
-
-#endif /* bits/stdio-lock.h */
+/* Yield the processor.  */
+int
+__sched_yield (void)
+{
+  (void) __swtch ();
+  return 0;
+}
+weak_alias (__sched_yield, sched_yield)

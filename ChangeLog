@@ -1,10 +1,27 @@
+2000-03-17  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/mach/sched_yield.c: New file.
+
+2000-03-13  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/generic/lockfile.c: Include <stdio.h>
+	(_IO_flockfile, _IO_funlockfile, _IO_ftrylockfile): #undef these in
+	case <libio.h> defined them.
+	(__flockfile, __funlockfile, __ftrylockfile): Functions renamed
+	from __internal_*.
+	(flockfile, _IO_flockfile, funlockfile, _IO_funlockfile,
+	ftrylockfile, _IO_ftrylockfile): Fix aliases accordingly.
+
+	* sysdeps/generic/bits/stdio-lock.h (_IO_lock_initializer): Use ...
+	for more pleasing parse error.
+
 2000-03-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/lc-time.c (_nl_init_era_entries): Correct allocation of
 	memory for eras.
 	Patch by Shinya Hanataka <hanataka@abyss.rim.or.jp>.
 
-	* elf/Makefile: Add rules to compile and rune constload1 test.
+	* elf/Makefile: Add rules to compile and run constload1 test.
 	* elf/constload1.c: New file.
 	* elf/constload2.c: New file.
 	* elf/constload3.c: New file.
