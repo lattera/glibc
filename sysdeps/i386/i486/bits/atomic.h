@@ -123,33 +123,24 @@ typedef uintmax_t uatomic_max_t;
   ({ __typeof (*mem) result;						      \
      __typeof (value) addval = (value);					      \
      if (sizeof (*mem) == 1)						      \
-       {								      \
-	 __asm __volatile (LOCK "xaddb %b0, %1"				      \
-			   : "=r" (result), "=m" (*mem)			      \
-			   : "0" (addval), "1" (*mem));			      \
-	 result += addval;						      \
-       }								      \
+       __asm __volatile (LOCK "xaddb %b0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (addval), "1" (*mem));			      \
      else if (sizeof (*mem) == 2)					      \
-       {								      \
-	 __asm __volatile (LOCK "xaddw %w0, %1"				      \
-			   : "=r" (result), "=m" (*mem)			      \
-			   : "0" (addval), "1" (*mem));			      \
-	 result += addval;						      \
-       }								      \
+       __asm __volatile (LOCK "xaddw %w0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (addval), "1" (*mem));			      \
      else if (sizeof (*mem) == 4)					      \
-       {								      \
-	 __asm __volatile (LOCK "xaddl %0, %1"				      \
-			   : "=r" (result), "=m" (*mem)			      \
-			   : "0" (addval), "1" (*mem));			      \
-	 result += addval;						      \
-       }								      \
+       __asm __volatile (LOCK "xaddl %0, %1"				      \
+			 : "=r" (result), "=m" (*mem)			      \
+			 : "0" (addval), "1" (*mem));			      \
      else								      \
        {								      \
-	 __typeof (*mem) oldval;					      \
 	 __typeof (mem) memp = (mem);					      \
 	 do								      \
-	   result = (oldval = *memp) + addval;				      \
-	 while (__arch_compare_and_exchange_64_acq (memp, result, oldval));   \
+	   result = *memp;						      \
+	 while (__arch_compare_and_exchange_64_acq (memp, result + addval,    \
+						    result));		      \
        }								      \
      result; })
 
