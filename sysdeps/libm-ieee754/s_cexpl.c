@@ -1,4 +1,4 @@
-/* Return value of complex exponential function for float complex value.
+/* Return value of complex exponential function for long double complex value.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
@@ -21,17 +21,23 @@
 #include <complex.h>
 #include <math.h>
 
+#include "math_private.h"
+
 
 __complex__ long double
 __cexpl (__complex__ long double x)
 {
   __complex__ long double retval;
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
-  if (isfinite (__real__ x))
+  if (rcls >= FP_ZERO)
     {
-      if (isfinite (__imag__ x))
+      /* Real part is finite.  */
+      if (icls >= FP_ZERO)
 	{
-	  long double exp_val = __expl (__real__ x);
+	  /* Imaginary part is finite.  */
+	  long double exp_val = __ieee754_expl (__real__ x);
 
 	  if (isfinite (exp_val))
 	    {
@@ -52,14 +58,17 @@ __cexpl (__complex__ long double x)
 	  __imag__ retval = __nanl ("");
 	}
     }
-  else if (__isinfl (__real__ x))
+  else if (rcls == FP_INFINITE)
     {
-      if (isfinite (__imag__ x))
+      /* Real part is infinite.  */
+      if (icls >= FP_ZERO)
 	{
+	  /* Imaginary part is finite.  */
 	  long double value = signbit (__real__ x) ? 0.0 : HUGE_VALL;
 
-	  if (__imag__ x == 0.0)
+	  if (icls == FP_ZERO)
 	    {
+	      /* Imaginary part is 0.0.  */
 	      __real__ retval = value;
 	      __imag__ retval = __imag__ x;
 	    }
@@ -89,4 +98,4 @@ __cexpl (__complex__ long double x)
 
   return retval;
 }
-weak_alias (__cexp, cexp)
+weak_alias (__cexpl, cexpl)

@@ -881,7 +881,7 @@ strstr ("hello, world", "wo")
 
 @comment string.h
 @comment GNU
-@deftypefun {void *} memmem (const void *@var{needle}, size_t @var{needle-len},@*const void *@var{haystack}, size_t @var{haystack-len})
+@deftypefun {void *} memmem (const void *@var{haystack}, size_t @var{haystack-len},@*const void *@var{needle}, size_t @var{needle-len})
 This is like @code{strstr}, but @var{needle} and @var{haystack} are byte
 arrays rather than null-terminated strings.  @var{needle-len} is the
 length of @var{needle} and @var{haystack-len} is the length of

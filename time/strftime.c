@@ -179,7 +179,7 @@ static const char spaces[16] = "                ";
 # define memset_space(P, Len) \
   do {									      \
     int _len = (Len);							      \
-    									      \
+									      \
     do									      \
       {									      \
 	int _this = _len > 16 ? 16 : _len;				      \
@@ -190,7 +190,7 @@ static const char spaces[16] = "                ";
     while (_len > 0);							      \
   } while (0)
 #else
-# define memset_space(P, Len) memset ((P), ' ', (Len))
+# define memset_space(P, Len) (memset ((P), ' ', (Len)), (P) += (Len))
 #endif
 
 #define	add(n, f) \

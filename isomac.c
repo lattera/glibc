@@ -207,6 +207,8 @@ main (int argc, char *argv[])
   /* First get list of symbols which are defined by the compiler.  */
   ignore_list = get_null_defines ();
 
+  fputs ("Tested files:\n", stdout);
+
   for (h = 0; h < NUMBER_OF_HEADERS; ++h)
     {
       char file_name[HEADER_MAX];

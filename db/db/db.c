@@ -44,6 +44,12 @@ static char sccsid[] = "@(#)db.c	8.4 (Berkeley) 2/21/94";
 
 #include <db.h>
 
+#ifdef _LIBC
+/* In the GNU C library we must not pollute the namespace, because libdb
+   is needed by libnss_db.  */
+#define dbopen __dbopen
+#endif
+
 DB *
 dbopen(fname, flags, mode, type, openinfo)
 	const char *fname;
@@ -72,6 +78,10 @@ dbopen(fname, flags, mode, type, openinfo)
 	errno = EINVAL;
 	return (NULL);
 }
+#ifdef _LIBC
+#undef dbopen
+weak_alias (__dbopen, dbopen)
+#endif
 
 static int
 __dberr __P((void))

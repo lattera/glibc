@@ -29,7 +29,6 @@
  * to make it OSF/1 binary compatible, at least for normal binaries.
  */
 #define	_NSIG		32	/* Biggest signal number + 1.  */
-#define NSIG		_NSIG
 
 #define SIGHUP		 1
 #define SIGINT		 2
@@ -67,6 +66,4 @@
 #define SIGUSR1		30
 #define SIGUSR2		31
 
-/* Linux/SPARC does not have SIGPWR */
-#define SIGIOT          SIGABRT
 #endif	/* <signal.h> included.  */

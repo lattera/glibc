@@ -48,12 +48,7 @@ __remquof (float x, float y, int *quo)
     return (x * y) / (x * y);
 
   if (hy <= 0x7dffffff)
-    {
-      x = __ieee754_fmodf (x, 8 * y);		/* now x < 8y */
-
-      if (fabs (x) >= 4 * fabs (y))
-	cquo += 4;
-    }
+    x = __ieee754_fmodf (x, 8 * y);		/* now x < 8y */
 
   if ((hx - hy) == 0)
     {
@@ -65,14 +60,19 @@ __remquof (float x, float y, int *quo)
   y  = fabsf (y);
   cquo = 0;
 
-  if (x >= 2 * y)
+  if (x >= 4 * y)
     {
       x -= 4 * y;
+      cquo += 4;
+    }
+  if (x >= 2 * y)
+    {
+      x -= 2 * y;
       cquo += 2;
     }
   if (x >= y)
     {
-      x -= 2 * y;
+      x -= y;
       ++cquo;
     }
 
@@ -82,24 +82,30 @@ __remquof (float x, float y, int *quo)
 	{
 	  x -= y;
 	  if (x + x >= y)
-	    x -= y;
+	    {
+	      x -= y;
+	      ++cquo;
+	    }
 	}
     }
   else
     {
       float y_half = 0.5 * y;
-      if(x > y_half)
+      if (x > y_half)
 	{
 	  x -= y;
 	  if (x >= y_half)
-	    x -= y;
+	    {
+	      x -= y;
+	      ++cquo;
+	    }
 	}
     }
 
   *quo = qs ? -cquo : cquo;
 
-  GET_FLOAT_WORD (hx, x);
-  SET_FLOAT_WORD (x, hx ^ sx);
+  if (sx)
+    x = -x;
   return x;
 }
 weak_alias (__remquof, remquof)

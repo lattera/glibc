@@ -1,3 +1,281 @@
+1997-04-13 01:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* isomac.c: Improve messages.
+
+	* math/Makefile (libm-calls): Add s_nearbyint, s_catan, s_casin,
+	s_ccos, s_csin, s_ctan, s_ctanh, s_cacos, s_casinh, s_cacosh,
+	s_catanh, s_csqrt, and s_cpow.
+	* math/libm-test.c: New functions ccos_test, cacos_test, cacosh_test,
+	casin_test, casinh_test, catan_test, catanh_test, ctanh_test,
+	csqrt_test, cpow_test, rint_test.
+	* math/math.h: Include new header mathbits.h which defines some
+	more (system dependent) types and some macros.
+	(isfinite): Use __finite instead of fpclassify.
+	* sysdeps/generic/mathbits.h: New file.
+	* sysdeps/i386/fpu/mathbits.h: New file.
+	* sysdeps/i386/huge_val.h: Don't define INFINITY.
+	* sysdeps/ieee754/huge_val.h: Likewise.
+	* sysdeps/m68k/huge_val.h: Likewise.
+
+	* sysdeps/i386/fpu/fenvbits.h: Define FE_NOMASK_ENV.
+	* sysdeps/i386/fpu/fesetenv.c: Handle FE_NOMASK_ENV.
+
+	* math/complex.h (_Imaginary_I): Define correctly.  I misread the
+	standard first.
+
+	* sysdeps/libm-i387/s_finite.S: Optimized rewrite.
+	* sysdeps/libm-i387/s_finitef.S: Likewise.
+	* sysdeps/libm-i387/s_finitel.S: Likewise.
+	Provided by Joe Keane <jgk@jgk.org>.
+
+	* sysdeps/libm-i387/s_nearbyint.S: New file.
+	* sysdeps/libm-i387/s_nearbyintf.S: New file.
+	* sysdeps/libm-i387/s_nearbyintl.S: New file.
+	* sysdeps/libm-ieee754/s_nearbyint.S: New file.
+	* sysdeps/libm-ieee754/s_nearbyintf.S: New file.
+	* sysdeps/libm-ieee754/s_nearbyintl.S: New file.
+
+	* sysdeps/libm-ieee754/s_cacos.c: New file.
+	* sysdeps/libm-ieee754/s_cacosf.c: New file.
+	* sysdeps/libm-ieee754/s_cacosl.c: New file.
+	* sysdeps/libm-ieee754/s_cacosh.c: New file.
+	* sysdeps/libm-ieee754/s_cacoshf.c: New file.
+	* sysdeps/libm-ieee754/s_cacoshl.c: New file.
+	* sysdeps/libm-ieee754/s_casin.c: New file.
+	* sysdeps/libm-ieee754/s_casinf.c: New file.
+	* sysdeps/libm-ieee754/s_casinl.c: New file.
+	* sysdeps/libm-ieee754/s_casinh.c: New file.
+	* sysdeps/libm-ieee754/s_casinhf.c: New file.
+	* sysdeps/libm-ieee754/s_casinhl.c: New file.
+	* sysdeps/libm-ieee754/s_catan.c: New file.
+	* sysdeps/libm-ieee754/s_catanf.c: New file.
+	* sysdeps/libm-ieee754/s_catanl.c: New file.
+	* sysdeps/libm-ieee754/s_catanh.c: New file.
+	* sysdeps/libm-ieee754/s_catanhf.c: New file.
+	* sysdeps/libm-ieee754/s_catanhl.c: New file.
+	* sysdeps/libm-ieee754/s_ccos.c: New file.
+	* sysdeps/libm-ieee754/s_ccosf.c: New file.
+	* sysdeps/libm-ieee754/s_ccosl.c: New file.
+	* sysdeps/libm-ieee754/s_cpow.c: New file.
+	* sysdeps/libm-ieee754/s_cpowf.c: New file.
+	* sysdeps/libm-ieee754/s_cpowl.c: New file.
+	* sysdeps/libm-ieee754/s_csin.c: New file.
+	* sysdeps/libm-ieee754/s_csinf.c: New file.
+	* sysdeps/libm-ieee754/s_csinl.c: New file.
+	* sysdeps/libm-ieee754/s_csqrt.c: New file.
+	* sysdeps/libm-ieee754/s_csqrtf.c: New file.
+	* sysdeps/libm-ieee754/s_csqrtl.c: New file.
+	* sysdeps/libm-ieee754/s_ctan.c: New file.
+	* sysdeps/libm-ieee754/s_ctanf.c: New file.
+	* sysdeps/libm-ieee754/s_ctanl.c: New file.
+	* sysdeps/libm-ieee754/s_ctanh.c: New file.
+	* sysdeps/libm-ieee754/s_ctanhf.c: New file.
+	* sysdeps/libm-ieee754/s_ctanhl.c: New file.
+
+	* time/strftime.c (memset_space): Increment pointer.
+	* time/strptime.c: Interpret year number 00-59 as 2000--2059.
+	Patches by Karl Heuer <kwzh@gnu.ai.mit.edu>.
+
+1997-04-11 11:57  Miguel de Icaza <miguel@nuclecu.unam.mx>
+
+	* sysdeps/unix/sysv/linux/sparc/syscalls.list: Remove fork,
+	pipe, syscall.
+
+1997-04-05 00:57  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_remquo.c: Change algorithm, although
+	probably still wrong.
+	* sysdeps/libm-ieee754/s_remquof.c: Likewise.
+	* sysdeps/libm-ieee754/s_remquol.c: Likewise.
+
+	* math/libm-test.c (remquo_test): Corrected.
+
+1997-04-11 00:01  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__rinttol, rinttol): New inline.
+	* sysdeps/m68k/fpu/s_rinttol.c: New file.
+	* sysdeps/m68k/fpu/s_rinttoll.c: New file.
+
+	* math/libm-test.c (remquo_test): Use check_long to test the
+	quotient.
+	(cbrt_test): Add epsilons for long double.
+
+1997-04-10 18:48  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* locale/localeinfo.h: Update declaration of _nl_current.
+
+1997-04-11 11:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rellnsh-sh: Use explicitely /bin/pwd to find the external program.
+
+	* math/Makefile (headers): Add fenv.h and fenvbits.h.
+	(libm-support): Add s_rountol, s_roundtoll, fclrexcpt, fgetexcptflg,
+	fraiseexcpt, fsetexcptflg, ftestexcept, fegetround, fesetround,
+	fegetenv, feholdexcpt, fesetenv, feupdateenv.
+	(libm-calls): Add s_round.
+	* math/fenv.h: New file.
+	* math/libm-test.c: Correct tests for s_rinttol and s_rinttoll.
+	Add roundtol_check and roundtoll_check.
+	* math/math.h: Pretty printing.
+	* sysdeps/i386/fpu/fclrexcpt.c: New file.
+	* sysdeps/i386/fpu/fegetenv.c: New file.
+	* sysdeps/i386/fpu/fegetround.c: New file.
+	* sysdeps/i386/fpu/feholdexcpt.c: New file.
+	* sysdeps/i386/fpu/fenvbits.h: New file.
+	* sysdeps/i386/fpu/fesetenv.c: New file.
+	* sysdeps/i386/fpu/fesetround.c: New file.
+	* sysdeps/i386/fpu/fgetexcptflg.c: New file.
+	* sysdeps/i386/fpu/fraiseexcpt.c: New file.
+	* sysdeps/i386/fpu/fsetexcptflg.c: New file.
+	* sysdeps/i386/fpu/ftestexcept.c: New file.
+	* sysdeps/stub/fclrexcpt.c: New file.
+	* sysdeps/stub/fegetenv.c: New file.
+	* sysdeps/stub/fegetround.c: New file.
+	* sysdeps/stub/feholdexcpt.c: New file.
+	* sysdeps/stub/fenvbits.h: New file.
+	* sysdeps/stub/fesetenv.c: New file.
+	* sysdeps/stub/fesetround.c: New file.
+	* sysdeps/stub/fgetexcptflg.c: New file.
+	* sysdeps/stub/fraiseexcpt.c: New file.
+	* sysdeps/stub/fsetexcptflg.c: New file.
+	* sysdeps/stub/ftestexcept.c: New file.
+
+	* sysdeps/libm-i387/s_trunc.S: New file.
+	* sysdeps/libm-i387/s_truncf.S: New file.
+	* sysdeps/libm-i387/s_truncl.S: New file.
+
+	* sysdeps/libm-ieee754/s_round.c: New file.
+	* sysdeps/libm-ieee754/s_roundf.c: New file.
+	* sysdeps/libm-ieee754/s_roundl.c: New file.
+
+	* sysdeps/libm-ieee754/s_ccosh.c: Rewritten to use fpclassify.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexp.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+	* sysdeps/libm-ieee754/s_clog.c: Likewise.
+	* sysdeps/libm-ieee754/s_clogf.c: Likewise.
+	* sysdeps/libm-ieee754/s_clogl.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinh.c. Likewise.
+	* sysdeps/libm-ieee754/s_csinhf.c. Likewise.
+	* sysdeps/libm-ieee754/s_csinhl.c. Likewise.
+
+	* sysdeps/libm-ieee754/s_ceill.c: Corrected.  The mantissa has only
+	63 bits.
+	* sysdeps/libm-ieee754/s_floorl.c: Likewise.
+
+	* po/pl.po: Updated.
+
+	* string/swab.c: Correctly handle array of odd length.
+
+	* sysdeps/generic/memmem.c: Update copyright.
+
+1997-04-10 20:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* hurd/Makefile (sunrpc-headers): Add clnt.h.
+	Proposed by Thomas Bushnell <thomas@gnu.ai.mit.edu>.
+
+1997-04-09 14:21  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* sysdeps/sparc/dl-machine.h: Bug fix: I was not loading
+	the proper value from the GOT.  Pass argument block to
+	init function.
+
+	* sysdeps/sparc/elf/start.c: Call atexit (_fini) after calling
+	_init ().
+
+	* sysdeps/sparc/fpu_control.h: Fix the FPU constants.  I got them
+	wrong the first time.
+
+	* sysdeps/sparc/setjmp.S: PIC code was clobbering a callee saved
+	register.
+
+	* sysdeps/sparc/udiv_qrnnd.S: Add type @function.
+
+	* sysdeps/unix/sysv/linux/sparc/init-first.h: Linux/SPARC specific
+	SYSDEP_CALL_INIT.
+
+	* sysdeps/unix/sysv/linux/sparc/signum.h: Remove definition for
+	NSIG and duplicated SIGIOT.
+
+1997-04-05 00:57  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/s_remquo.c: Change algorithm, although
+	probably still wrong.
+	* sysdeps/libm-ieee754/s_remquof.c: Likewise.
+	* sysdeps/libm-ieee754/s_remquol.c: Likewise.
+
+	* math/libm-test.c (remquo_test): Corrected.
+
+1997-04-03 18:35  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makefile (parent-tests): New target to run the tests to that
+	they are executed even if some subdir tests have failed.
+	(tests): Depend on parent-tests instead of running the tests
+	directly.
+
+1997-04-03 12:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	Clean up name space pollution in libnss_*.so:
+	* nis/nss_compat/compat-pwd.c, resolv/mapv4v6addr.h,
+	resolv/nss_dns/dns-host.c: Replace bzero by memset, bcopy by
+	memcpy and bcmp by memcmp to clean up namespace.
+	* nss/nss_db/db-XXX.c (internal_setent): Use __dbopen instead of
+	dbopen.
+	* nss/nss_db/db-alias.c (internal_setent): Likewise.
+	* nss/nss_db/db-netgrp.c (_nss_db_setnetgrent): Likewise.
+	* db/db/db.c [_LIBC]: Define __dbopen instead of dbopen and make
+	the latter a weak alias.
+	* db/db.h: Declare __dbopen.
+	* db/btree/btree.h [_LIBC]: Prepend __ to all mpool functions.
+	* db/mpool/mpool.c [_LIBC]: Define all external functions with __
+	prefix and make the old names weak aliases.
+	* db/mpool.h: Declare the new internal names.
+
+1997-04-04 23:57  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/vfscanf.c: Fix scanning of hexadecimal fp number.
+	* stdio-common/tstscanf.c: Add test case for this.
+
+1997-04-04 17:26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c: Fix more typos.
+
+1997-04-03 17:15  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* math/libm-test.c (csinh_test): Fix test names.
+	(ccosh_test): Likewise.
+
+	* sysdeps/libm-ieee754/s_csinh.c: Use sinh function instead of
+	computing it directly.
+	* sysdeps/libm-ieee754/s_csinhf.c: Likewise.
+	* sysdeps/libm-ieee754/s_csinhl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_ccosh.c:  Use cosh function instead of
+	computing it directly.
+	* sysdeps/libm-ieee754/s_ccoshf.c: Likewise.
+	* sysdeps/libm-ieee754/s_ccoshl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_cexp.c: Use internal exp function instead
+	of wrapper.
+	* sysdeps/libm-ieee754/s_cexpf.c: Likewise.
+	* sysdeps/libm-ieee754/s_cexpl.c: Likewise.
+	* sysdeps/m68k/fpu/s_cexp.c: Likewise.  Correct handling of
+	special values.  Avoid use of fsincos if all that is needed is the
+	quadrant.
+
+	* sysdeps/m68k/fpu/s_ccosh.c: New file.
+	* sysdeps/m68k/fpu/s_ccoshf.c: New file.
+	* sysdeps/m68k/fpu/s_ccoshl.c: New file.
+	* sysdeps/m68k/fpu/s_csinh.c: New file.
+	* sysdeps/m68k/fpu/s_csinhl.c: New file.
+	* sysdeps/m68k/fpu/s_csinhf.c: New file.
+
+1997-04-03 10:18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/Makefile (dir-add.texi): Simplify.
+
 1997-04-09 01:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* rellns-sh: Rewrite to work also in presence of symlinks.
@@ -38,7 +316,7 @@
 
 1997-04-08 07:19  H.J. Lu  <hjl@gnu.ai.mit.edu>
 
-	* libio/genops.c (_IO_flush_all_linebuffered): don't flush on
+	* libio/genops.c (_IO_flush_all_linebuffered): Don't flush on
 	a read-only stream.
 
 1997-04-09 01:19  Ulrich Drepper  <drepper@cygnus.com>

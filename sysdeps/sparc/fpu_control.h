@@ -31,12 +31,12 @@
 #define _FPU_SINGLE   0x10000000     /* DO NOT USE */
 
 /* rounding control / Sparc */
-#define _FPU_RC_NEAREST 0x0        /* RECOMMENDED */
-#define _FPU_RC_DOWN    0x80000000
-#define _FPU_RC_UP      0xc0000000
+#define _FPU_RC_DOWN    0xc0000000
+#define _FPU_RC_UP      0x80000000
 #define _FPU_RC_ZERO    0x40000000
+#define _FPU_RC_NEAREST 0x0        /* RECOMMENDED */
 
-#define _FPU_RESERVED 0x300000  /* Reserved bits in cw */
+#define _FPU_RESERVED   0x30300000  /* Reserved bits in cw */
 
 
 /* Now two recommended cw */
@@ -45,26 +45,16 @@
      - extended precision
      - rounding to nearest
      - exceptions on overflow, zero divide and NaN */
-#define _FPU_DEFAULT  0x1f
+#define _FPU_DEFAULT  0x1e
 
 /* IEEE:  same as above, but exceptions */
 #define _FPU_IEEE     0x0
 
-/* private namespace. It should only be used by crt0.o. */
-extern unsigned short __fpu_control;
-
 /* Type of the control word.  */
-typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
+typedef unsigned int fpu_control_t;
 
 #define _FPU_GETCW(cw) __asm__ ("st %%fsr,%0" : "=m" (*&cw))
-#define _FPU_SETCW(cw) __asm__ ("ld %0,%%fsr" : "=m" (*&cw))
-
-#if 0
-/* The intel original macros */
-/* Macros for accessing the hardware control word.  */
-#define _FPU_GETCW(cw) __asm__ ("fnstcw %0" : "=m" (*&cw))
-#define _FPU_SETCW(cw) __asm__ ("fldcw %0" : : "m" (*&cw))
-#endif
+#define _FPU_SETCW(cw) __asm__ ("ld %0,%%fsr" : : "m" (*&cw))
 
 /* Default control word set at startup.  */
 extern fpu_control_t __fpu_control;

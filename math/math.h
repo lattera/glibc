@@ -115,6 +115,25 @@ extern int signgam;
 /* ISO C 9X defines some generic macros which work on any data type.  */
 #if __USE_ISOC9X
 
+/* Get the architecture specific values describing the floating-point
+   evaluation.  The following symbols will get defined:
+
+     float_t	floating-point type at least as wide as `float' used
+		to evaluate `float' expressions
+     double_t	floating-point type at least as wide as `double' used
+		to evaluate `double' expressions
+
+     FLT_EVAL_METHOD
+		Defined to
+		  0	if `float_t' is `float' and `double_t' is `double'
+		  1	if `float_t' and `double_t' are `double'
+		  2	if `float_t' and `double_t' are `long double'
+		  else	`float_t' and `double_t' are unspecified
+
+     INFINITY	representation of the infinity value of type `float_t'
+*/
+#include <mathbits.h>
+
 /* All floating-point numbers can be put in one of these categories.  */
 enum
   {
@@ -133,7 +152,7 @@ enum
 /* Return number of classification appropriate for X.  */
 #define fpclassify(x) \
      (sizeof (x) == sizeof (float) ?					      \
-        __fpclassifyf (x)							      \
+        __fpclassifyf (x)						      \
       : sizeof (x) == sizeof (double) ?					      \
         __fpclassify (x) : __fpclassifyl (x))
 
@@ -145,7 +164,11 @@ enum
         __signbit (x) : __signbitl (x))
 
 /* Return nonzero value if X is not +-Inf or NaN.  */
-#define isfinite(x) (fpclassify (x) >= FP_ZERO)
+#define isfinite(x) \
+     (sizeof (x) == sizeof (float) ?					      \
+        __finitef (x)							      \
+      : sizeof (x) == sizeof (double) ?					      \
+        __finite (x) : __finitel (x))
 
 /* Return nonzero value if X is neither zero, subnormal, Inf, nor NaN.  */
 #define isnormal(x) (fpclassify (x) == FP_NORMAL)

@@ -38,7 +38,7 @@ __BEGIN_DECLS
 /* Narrowest imaginary unit.  This depends on the floating-point
    evaluation method.
    XXX This probably has to go into a gcc related file.  */
-#define _Imaginary_I	(DBL_EPSISON * 1.0i)
+#define _Imaginary_I	(1.0iF)
 
 /* Another more descriptive name is `I'.  */
 #undef I

@@ -332,7 +332,7 @@ getpwent_next_nis_netgr (struct passwd *result, ent_t *ent, char *group,
 
   if (ent->first == TRUE)
     {
-      bzero (&ent->netgrdata, sizeof (struct __netgrent));
+      memset (&ent->netgrdata, 0, sizeof (struct __netgrent));
       __internal_setnetgrent (group, &ent->netgrdata);
       ent->first = FALSE;
     }

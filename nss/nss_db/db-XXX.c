@@ -63,7 +63,7 @@ internal_setent (int stayopen)
 
   if (db == NULL)
     {
-      db = dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
+      db = __dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
 
       if (db == NULL)
 	status = NSS_STATUS_UNAVAIL;

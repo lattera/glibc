@@ -197,8 +197,8 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
   int size, n, status;
 
   if (af == AF_INET6 && len == IN6ADDRSZ &&
-      (bcmp (uaddr, mapped, sizeof mapped) == 0
-       || bcmp (uaddr, tunnelled, sizeof tunnelled) == 0))
+      (memcmp (uaddr, mapped, sizeof mapped) == 0
+       || memcmp (uaddr, tunnelled, sizeof tunnelled) == 0))
     {
       /* Unmap. */
       addr += sizeof mapped;
@@ -260,7 +260,7 @@ _nss_dns_gethostbyaddr_r (const char *addr, int len, int af,
 
   result->h_addrtype = af;
   result->h_length = len;
-  bcopy (addr, host_data->host_addr, len);
+  memcpy (host_data->host_addr, addr, len);
   host_data->h_addr_ptrs[0] = (char *) host_data->host_addr;
   host_data->h_addr_ptrs[1] = NULL;
   if (af == AF_INET && (_res.options & RES_USE_INET6))
@@ -520,7 +520,7 @@ getanswer_r (const querybuf *answer, int anslen, const char *qname, int qtype,
 	      cp += n;
 	      continue;
 	    }
-	  bcopy (cp, *hap++ = bp, n);
+	  memcpy (*hap++ = bp, cp, n);
 	  bp += n;
 	  cp += n;
 	  linebuflen -= n;

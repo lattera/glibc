@@ -22,7 +22,8 @@ subdir		:= math
 
 # Installed header files.
 headers		:= math.h mathcalls.h __math.h huge_val.h nan.h		\
-		   fpu_control.h complex.h cmathcalls.h
+		   fpu_control.h complex.h cmathcalls.h fenv.h		\
+		   fenvbits.h
 
 # Internal header files.
 distribute	:= math_private.h machine/asm.h machine/endian.h
@@ -36,7 +37,10 @@ extra-libs	:= libm
 extra-libs-others = $(extra-libs)
 
 libm-support = k_standard s_lib_version s_matherr s_signgam		\
-	       s_rinttol s_rinttoll
+	       s_rinttol s_rinttoll s_roundtol s_roundtoll		\
+	       fclrexcpt fgetexcptflg fraiseexcpt fsetexcptflg		\
+	       ftestexcept fegetround fesetround fegetenv feholdexcpt	\
+	       fesetenv feupdateenv
 libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     e_hypot e_j0 e_j1 e_jn e_lgamma_r e_log e_log10 e_pow	\
 	     e_rem_pio2 e_remainder e_scalb e_sinh e_sqrt k_cos		\
@@ -49,8 +53,10 @@ libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\
 	     w_gamma_r w_hypot w_j0 w_j1 w_jn w_lgamma w_lgamma_r	\
 	     w_log w_log10 w_pow w_remainder w_scalb w_sinh w_sqrt	\
 	     s_signbit s_fpclassify s_fmax s_fmin s_fdim s_nan s_trunc	\
-	     s_remquo s_log2 s_exp2					\
-	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh s_clog
+	     s_remquo s_log2 s_exp2 s_round s_nearbyint			\
+	     conj cimag creal cabs carg s_cexp s_csinh s_ccosh s_clog	\
+	     s_catan s_casin s_ccos s_csin s_ctan s_ctanh s_cacos	\
+	     s_casinh s_cacosh s_catanh s_csqrt s_cpow
 libm-routines = $(libm-support) $(libm-calls) \
 		$(patsubst %_rf,%f_r,$(libm-calls:=f))	\
 		$(long-m-$(long-double-fcts))

@@ -21,49 +21,47 @@
 #include <complex.h>
 #include <math.h>
 
+#include "math_private.h"
+
 
 __complex__ long double
 __ccoshl (__complex__ long double x)
 {
   __complex__ long double retval;
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
   __real__ x = fabsl (__real__ x);
 
-  if (isfinite (__real__ x))
+  if (rcls >= FP_ZERO)
     {
-      if (isfinite (__imag__ x))
+      /* Real part is finite.  */
+      if (icls >= FP_ZERO)
 	{
-	  long double exp_val = __expl (__real__ x);
-	  long double rec_exp_val = 1.0 / exp_val;
+	  /* Imaginary part is finite.  */
+	  long double cosh_val = __ieee754_coshl (__real__ x);
 
-	  __real__ retval = (0.5 * (exp_val + rec_exp_val)
-			     * __cosl (__imag__ x));
-	  __imag__ retval = (0.5 * (exp_val + rec_exp_val)
-			     * __sinl (__imag__ x));
+	  __real__ retval = cosh_val * __cosl (__imag__ x);
+	  __imag__ retval = cosh_val * __sinl (__imag__ x);
 	}
       else
 	{
-	  if (__real__ x == 0)
-	    {
-	      __imag__ retval = 0.0;
-	      __real__ retval = __nanl ("") + __nanl ("");
-	    }
-	  else
-	    {
-	      __real__ retval = __nanl ("");
-	      __imag__ retval = __nanl ("") + __nanl ("");
-	    }
+	  __imag__ retval = __real__ x == 0.0 ? 0.0 : __nanl ("");
+	  __real__ retval = __nanl ("") + __nanl ("");
 	}
     }
-  else if (__isinfl (__real__ x))
+  else if (rcls == FP_INFINITE)
     {
-      if (__imag__ x == 0.0)
+      /* Real part is infinite.  */
+      if (icls == FP_ZERO)
 	{
+	  /* Imaginary part is 0.0.  */
 	  __real__ retval = HUGE_VALL;
 	  __imag__ retval = __imag__ x;
 	}
-      else if (isfinite (__imag__ x))
+      else if (icls > FP_ZERO)
 	{
+	  /* Imaginary part is finite.  */
 	  __real__ retval = __copysignl (HUGE_VALL, __cosl (__imag__ x));
 	  __imag__ retval = __copysignl (HUGE_VALL, __sinl (__imag__ x));
 	}
@@ -76,16 +74,8 @@ __ccoshl (__complex__ long double x)
     }
   else
     {
-      if (__imag__ x == 0.0)
-	{
-	  __real__ retval = __nanl ("");
-	  __imag__ retval = __imag__ x;
-	}
-      else
-	{
-	  __real__ retval = __nanl ("");
-	  __imag__ retval = __nanl ("");
-	}
+      __real__ retval = __nanl ("");
+      __imag__ retval = __imag__ x == 0.0 ? __imag__ x : __nanl ("");
     }
 
   return retval;

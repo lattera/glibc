@@ -23,15 +23,15 @@
 #include "math_private.h"
 
 
-static const double zero = 0.0;
+static const long double zero = 0.0;
 
 
 long double
-__remquol (long double x, long double y, int *quo)
+__remquol (long double x, long double p, int *quo)
 {
   int32_t ex,ep,hx,hp;
   u_int32_t sx,lx,lp;
-  int cquo;
+  int cquo,qs;
 
   GET_LDOUBLE_WORDS (ex, hx, lx, x);
   GET_LDOUBLE_WORDS (ep, hp, lp, p);
@@ -49,12 +49,7 @@ __remquol (long double x, long double y, int *quo)
     return (x * p) / (x * p);
 
   if (ep <= 0x7ffb)
-    {
-      x = __ieee754_fmodl (x, 8 * p);		/* now x < 8p */
-
-      if (fabsl (x) >= 4 * fabsl (p))
-	cquo += 4;
-    }
+    x = __ieee754_fmodl (x, 8 * p);		/* now x < 8p */
 
   if (((ex - ep) | (hx - hp) | (lx - lp)) == 0)
     {
@@ -66,14 +61,19 @@ __remquol (long double x, long double y, int *quo)
   p  = fabsl (p);
   cquo = 0;
 
-  if (x >= 2 * p)
+  if (x >= 4 * p)
     {
       x -= 4 * p;
+      cquo += 4;
+    }
+  if (x >= 2 * p)
+    {
+      x -= 2 * p;
       cquo += 2;
     }
   if (x >= p)
     {
-      x -= 2 * p;
+      x -= p;
       ++cquo;
     }
 
@@ -83,24 +83,30 @@ __remquol (long double x, long double y, int *quo)
 	{
 	  x -= p;
 	  if (x + x >= p)
-	    x -= p;
+	    {
+	      x -= p;
+	      ++cquo;
+	    }
 	}
     }
   else
     {
       long double p_half = 0.5 * p;
-      if(x > p_half)
+      if (x > p_half)
 	{
 	  x -= p;
 	  if (x >= p_half)
-	    x -= p;
+	    {
+	      x -= p;
+	      ++cquo;
+	    }
 	}
     }
 
   *quo = qs ? -cquo : cquo;
 
-  GET_LDOUBLE_EXP (ex, x);
-  SET_LDOUBLE_EXP (x, ex ^ sx);
+  if (sx)
+    x = -x;
   return x;
 }
 weak_alias (__remquol, remquol)

@@ -48,7 +48,7 @@ static long double huge = 1.0e4930;
 	GET_LDOUBLE_WORDS(se,i0,i1,x);
 	sx = (se>>15)&1;
 	j0 = (se&0x7fff)-0x3fff;
-	if(j0<32) {
+	if(j0<31) {
 	    if(j0<0) { 	/* raise inexact if x != 0 */
 		if(huge+x>0.0) {/* return 0*sign(x) if |x|<1 */
 		    if(sx==0) {se=0;i0=i1=0;}
@@ -56,26 +56,26 @@ static long double huge = 1.0e4930;
 			{ se=0xbfff;i0;i1=0;}
 		}
 	    } else {
-		i = (0xffffffff)>>j0;
+		i = (0x7fffffff)>>j0;
 		if(((i0&i)|i1)==0) return x; /* x is integral */
 		if(huge+x>0.0) {	/* raise inexact flag */
 		    if(sx) {
-			if (j0>0) i0 += (0x80000000)>>(j0-1);
+			if (j0>0) i0 += (0x80000000)>>j0;
 			else ++se;
 		    i0 &= (~i); i1=0;
 		}
 	    }
-	} else if (j0>63) {
+	} else if (j0>62) {
 	    if(j0==0x4000) return x+x;	/* inf or NaN */
 	    else return x;		/* x is integral */
 	} else {
-	    i = ((u_int32_t)(0xffffffff))>>(j0-32);
+	    i = ((u_int32_t)(0xffffffff))>>(j0-31);
 	    if((i1&i)==0) return x;	/* x is integral */
 	    if(huge+x>0.0) { 		/* raise inexact flag */
 		if(sx) {
-		    if(j0==32) i0+=1;
+		    if(j0==31) i0+=1;
 		    else {
-			j = i1+(1<<(64-j0));
+			j = i1+(1<<(63-j0));
 			if(j<i1) i0 +=1 ; 	/* got a carry */
 			i1=j;
 		    }

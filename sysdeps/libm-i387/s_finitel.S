@@ -1,20 +1,14 @@
 /*
- * Written by J.T. Conklin <jtc@netbsd.org>.
- * Public domain.
- *
- * Adapted for `long double' by Ulrich Drepper <drepper@cygnus.com>.
+ * Written by Joe Keane <jgk@jgk.org>.
  */
 
 #include <machine/asm.h>
 
-RCSID("$NetBSD: $")
-
 ENTRY(__finitel)
 	movl	12(%esp),%eax
-	andl	$0x7fff, %eax
-	cmpl	$0x7fff, %eax
-	setne	%al
-	andl	$0x000000ff, %eax
+	orl	$0xffff8000, %eax
+	incl	%eax
+	shrl	$31, %eax
 	ret
 END (__finitel)
 weak_alias (__finitel, finitel)

@@ -43,6 +43,18 @@
 
 #include <mpool.h>
 
+#ifdef _LIBC
+/* In the GNU C library we must not pollute the namespace because libdb is
+   needed by libnss_db.  */
+#define mpool_open __mpool_open
+#define mpool_filter __mpool_filter
+#define mpool_new __mpool_new
+#define mpool_get __mpool_get
+#define mpool_put __mpool_put
+#define mpool_sync __mpool_sync
+#define mpool_close __mpool_close
+#endif
+
 #define	DEFMINKEYPAGE	(2)		/* Minimum keys per page */
 #define	MINCACHE	(5)		/* Minimum cached pages */
 #define	MINPSIZE	(512)		/* Minimum page size */

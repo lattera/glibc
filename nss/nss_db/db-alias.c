@@ -47,7 +47,7 @@ internal_setent (int stayopen)
 
   if (db == NULL)
     {
-      db = dbopen (_PATH_VARDB "aliases.db", O_RDONLY, 0, DB_BTREE, NULL);
+      db = __dbopen (_PATH_VARDB "aliases.db", O_RDONLY, 0, DB_BTREE, NULL);
 
       if (db == NULL)
 	status = NSS_STATUS_UNAVAIL;

@@ -73,7 +73,7 @@ include ../Rules
 # from $(subdirs), and this rule arranges for the headers in question
 # to get installed.
 sunrpc-headers = netdb.h pmap_prot.h xdr.h types.h auth.h \
-	rpc_msg.h auth_unix.h
+	rpc_msg.h auth_unix.h clnt.h
 installed-sunrpc-headers = $(addprefix $(inst_includedir)/rpc/, \
 				       $(sunrpc-headers))
 install-headers-nosubdir: $(installed-sunrpc-headers)

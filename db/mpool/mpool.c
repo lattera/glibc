@@ -50,6 +50,18 @@ static char sccsid[] = "@(#)mpool.c	8.5 (Berkeley) 7/26/94";
 #define	__MPOOLINTERFACE_PRIVATE
 #include <mpool.h>
 
+#ifdef _LIBC
+/* In the GNU C library we must not pollute the namespace because libdb is
+   needed by libnss_db.  */
+#define mpool_open __mpool_open
+#define mpool_filter __mpool_filter
+#define mpool_new __mpool_new
+#define mpool_get __mpool_get
+#define mpool_put __mpool_put
+#define mpool_sync __mpool_sync
+#define mpool_close __mpool_close
+#endif
+
 static BKT *mpool_bkt __P((MPOOL *));
 static BKT *mpool_look __P((MPOOL *, pgno_t));
 static int  mpool_write __P((MPOOL *, BKT *));
@@ -300,6 +312,23 @@ mpool_sync(mp)
 	/* Sync the file descriptor. */
 	return (fsync(mp->fd) ? RET_ERROR : RET_SUCCESS);
 }
+
+#ifdef _LIBC
+#undef mpool_open
+#undef mpool_filter
+#undef mpool_new
+#undef mpool_get
+#undef mpool_put
+#undef mpool_close
+#undef mpool_sync
+weak_alias (__mpool_open, mpool_open)
+weak_alias (__mpool_filter, mpool_filter)
+weak_alias (__mpool_new, mpool_new)
+weak_alias (__mpool_get, mpool_get)
+weak_alias (__mpool_put, mpool_put)
+weak_alias (__mpool_close, mpool_close)
+weak_alias (__mpool_sync, mpool_sync)
+#endif
 
 /*
  * mpool_bkt

@@ -224,6 +224,7 @@ typedef struct {
 #endif
 
 __BEGIN_DECLS
+DB *__dbopen __P((const char *, int, int, DBTYPE, const void *));
 DB *dbopen __P((const char *, int, int, DBTYPE, const void *));
 
 #ifdef __DBINTERFACE_PRIVATE

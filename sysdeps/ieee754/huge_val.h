@@ -69,12 +69,6 @@ static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
    same as `double'.  */
 #define HUGE_VALL HUGE_VAL
 
-
-/* Expression representing positive infinity.  Here it is the same as
-   HUGE_VALF.  */
-#define INFINITY	HUGE_VALF
-
 #endif	/* __USE_ISOC9X.  */
-
 
 #endif	   /* huge_val.h */

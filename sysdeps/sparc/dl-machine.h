@@ -295,10 +295,10 @@ _start:\n\
   or    %l2,%lo(_GLOBAL_OFFSET_TABLE_-(2b-.)),%l2\n\
   or    %l3,%lo(_dl_default_scope),%l3\n\
   add   %o7,%l2,%l1\n\
-  # %l1 has the GOT. %l3 has _dl_default_scope offset\n\
-  # Now, load _dl_default_scope [2]\n\
-  add   %l3,4,%l3\n\
+  # %l1 has the GOT. %l3 has _dl_default_scope GOT offset\n\
   ld    [%l1+%l3],%l4\n\
+  # %l4 has pointer to _dl_default_scope.  Now, load _dl_default_scope [2]\n\
+  ld    [%l4+8],%l4\n\
   # %l4 has _dl_default_scope [2]\n\
   # call _dl_init_next until it returns 0, pass _dl_default_scope [2]\n\
 3:\n\
@@ -308,7 +308,8 @@ _start:\n\
   bz,a  4f\n\
    nop\n\
   call  %o0\n\
-   nop\n\
+  /* Pass pointer to argument block to this init function */\n\
+   add %sp,64,%o0\n\
   b,a   3b\n\
 4:\n\
   # Clear the _dl_starting_up variable and pass _dl_fini in %g1 as per ELF ABI.\n\

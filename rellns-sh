@@ -22,30 +22,12 @@ if test $# -ne 2; then
   exit 1
 fi
 
-# A problem with this script is that we must be able to handle symbolic
-# links somewhere in the paths of either path.  To resolve symlinks we use
-# the `pwd' program.  But some `pwd' programs are no real programs but
-# instead aliases (defined by the user) or builtins (as in bash-2).  Both
-# kinds have in common that they might not give the correct result.  E.g.,
-# the builtin in bash-2 returns the path which was used to change to the
-# directory and not the real path.
-#
-# To prevent this problem we make sure the real `pwd' somewhere in the
-# path is used.  Currently there is only support for bash-2 available.
-# If other shells also have problems we have to add more code here.
-
-if test "$BASH_VERSINFO" = "2"; then
-  unalias pwd
-  unset pwd
-  enable -n pwd
-fi
-
 # Make both paths absolute.
 if test -d $1; then
-  to=`cd $1 && pwd`
+  to=`cd $1 && /bin/pwd`
 else
   temp=`echo $1 | sed 's%/*[^/]*$%%'`
-  to=`cd $temp && pwd`
+  to=`cd $temp && /bin/pwd`
   to="$to/`echo $1 | sed 's%.*/\([^/][^/]*\)$%\1%'`"
 fi
 to=`echo $to | sed 's%^/%%'`
@@ -57,9 +39,10 @@ else
 fi
 
 if test -z "$from"; then
-  from=`pwd`;
+  from=`/bin/pwd | sed 's%^/%%'`
+else
+  from=`cd $from && /bin/pwd | sed 's%^/%%'`
 fi
-from=`cd $from && pwd | sed 's%^/%%'`
 
 while test -n "$to" && test -n "$from"; do
   preto=`echo $to | sed 's%^\([^/]*\)/.*%\1%'`

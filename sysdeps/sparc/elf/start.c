@@ -60,8 +60,8 @@ _start (void)
 #ifdef ELF_INIT_FINI
   {
     extern void _fini (void);
-    atexit (_fini);
     _init ();
+    atexit (_fini);
   }
 #endif
   exit (main (argc, argv, envp));

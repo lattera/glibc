@@ -280,10 +280,12 @@ parent_echo-distinfo:
 	      $(addprefix +nodist+,$(generated))
 
 
+.PHONY: parent-tests
+tests: parent-tests
+
 # Run a test on the header files we use.
-tests: $(objpfx)isomac
-	$(objpfx)./isomac '$(CC)' '$(+sysdep-includes)' \
-			  >$(common-objpfx)isomac.out
+parent-tests: $(objpfx)isomac
+	$(dir $<)$(notdir $<) '$(CC)' '$(+sysdep-includes)' > $<.out
 
 $(objpfx)isomac: isomac.c
 	$(native-compile)

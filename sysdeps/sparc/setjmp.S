@@ -31,15 +31,15 @@ ENTRY (__sigsetjmp)
 	call 1f
 	nop
 1:
-	sethi %hi(_GLOBAL_OFFSET_TABLE_-(2b-.)),%l7
-	or    %l7,%lo(_GLOBAL_OFFSET_TABLE_-(2b-.)),%l7
-	add   %l7,%o7,%l7
+	sethi %hi(_GLOBAL_OFFSET_TABLE_-(2b-.)),%g2
+	or    %g2,%lo(_GLOBAL_OFFSET_TABLE_-(2b-.)),%g2
+	add   %g2,%o7,%g2
 	sethi %hi(C_SYMBOL_NAME (__sigjmp_save)), %g3
 	or    %g3,%lo(C_SYMBOL_NAME (__sigjmp_save)), %g3
 	st    %sp, [%o0 + (JB_SP * 4)]
 	st    %fp, [%o0 + (JB_FP * 4)]
 	mov   %g1,%o7
-	ld    [%l7+%g3],%g1
+	ld    [%g2+%g3],%g1
 	jmp   %g1
 	st   %o7, [%o0+(JB_PC*4)]
 #else

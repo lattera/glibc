@@ -160,6 +160,12 @@ main (int argc, char **argv)
 
     if (res != 2 || a != 123 || b != 456 || n != 6)
       return 1;
+
+    res = sscanf ("0", "%lg", &a);
+    printf ("res = %d, a = %g\n", res, a);
+
+    if (res != 1 || a != 0)
+      exit (EXIT_FAILURE);
   }
 
   exit(EXIT_SUCCESS);

@@ -49,12 +49,7 @@ __remquo (double x, double y, int *quo)
     return (x * y) / (x * y);
 
   if (hy <= 0x7fbfffff)
-    {
-      x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
-
-      if (fabs (x) >= 4 * fabs (y))
-	cquo += 4;
-    }
+    x = __ieee754_fmod (x, 8 * y);		/* now x < 8y */
 
   if (((hx - hy) | (lx - ly)) == 0)
     {
@@ -66,14 +61,19 @@ __remquo (double x, double y, int *quo)
   y  = fabs (y);
   cquo = 0;
 
-  if (x >= 2 * y)
+  if (x >= 4 * y)
     {
       x -= 4 * y;
+      cquo += 4;
+    }
+  if (x >= 2 * y)
+    {
+      x -= 2 * y;
       cquo += 2;
     }
   if (x >= y)
     {
-      x -= 2 * y;
+      x -= y;
       ++cquo;
     }
 
@@ -83,24 +83,30 @@ __remquo (double x, double y, int *quo)
 	{
 	  x -= y;
 	  if (x + x >= y)
-	    x -= y;
+	    {
+	      x -= y;
+	      ++cquo;
+	    }
 	}
     }
   else
     {
       double y_half = 0.5 * y;
-      if(x > y_half)
+      if (x > y_half)
 	{
 	  x -= y;
 	  if (x >= y_half)
-	    x -= y;
+	    {
+	      x -= y;
+	      ++cquo;
+	    }
 	}
     }
 
   *quo = qs ? -cquo : cquo;
 
-  GET_HIGH_WORD (hx, x);
-  SET_HIGH_WORD (x, hx ^ sx);
+  if (sx)
+    x = -x;
   return x;
 }
 weak_alias (__remquo, remquo)

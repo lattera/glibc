@@ -58,9 +58,6 @@ contact <bug-glibc@prep.ai.mit.edu>
 
      - exp2
      - nearbyint
-     - round
-     - roundtol
-     - roundtoll
 
      each with float, double, and long double arguments.  Writing these
      functions should be possible when following the implementation of

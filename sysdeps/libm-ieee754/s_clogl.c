@@ -28,17 +28,20 @@ __complex__ long double
 __clogl (__complex__ long double x)
 {
   __complex__ long double result;
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
-  if (__real__ x == 0.0 && __imag__ x == 0.0)
+  if (rcls == FP_ZERO && icls == FP_ZERO)
     {
+      /* Real and imaginary part are 0.0.  */
       __imag__ result = signbit (__real__ x) ? M_PI : 0.0;
-      if (signbit (__imag__ x))
-	__imag__ result = __copysignl (__imag__ result, -1.0);
+      __imag__ result = __copysignl (__imag__ result, __imag__ x);
       /* Yes, the following line raises an exception.  */
       __real__ result = -1.0 / fabsl (__real__ x);
     }
-  else if (!__isnanl (__real__ x) && !__isnanl (__imag__ x))
+  else if (rcls != FP_NAN && icls != FP_NAN)
     {
+      /* Neither real nor imaginary part is NaN.  */
       __real__ result = __ieee754_logl (__ieee754_hypotl (__real__ x,
 							  __imag__ x));
       __imag__ result = __ieee754_atan2l (__imag__ x, __real__ x);
@@ -46,7 +49,8 @@ __clogl (__complex__ long double x)
   else
     {
       __imag__ result = __nanl ("");
-      if (__isinfl (__real__ x) || __isinfl (__imag__ x))
+      if (rcls == FP_INFINITE || icls == FP_INFINITE)
+	/* Real or imaginary part is infinite.  */
 	__real__ result = HUGE_VALL;
       else
 	__real__ result = __nanl ("");

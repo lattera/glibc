@@ -26,7 +26,6 @@
 ! n1		i1
 ! n0		i2
 ! d		i3
-
 #include "DEFS.h"
 #include "sysdep.h"
 #undef ret	/* Kludge for glibc */
@@ -38,6 +37,7 @@ LC1:	.double	0r2147483648
 
 	.align	4
 	.global	__udiv_qrnnd
+	.type	__udiv_qrnnd,@function
 FUNC(__udiv_qrnnd)
 	!#PROLOGUE# 0
 	save	%sp,-104,%sp

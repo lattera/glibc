@@ -615,7 +615,7 @@ DEFUN_VOID(_IO_flush_all_linebuffered)
 {
   _IO_FILE *fp;
   for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
-    if (fp->_flags & _IO_LINE_BUF)
+    if ((fp->_flags & _IO_NO_WRITES) == 0 && fp->_flags & _IO_LINE_BUF)
       _IO_OVERFLOW (fp, EOF);
 }
 

@@ -21,17 +21,23 @@
 #include <complex.h>
 #include <math.h>
 
+#include "math_private.h"
+
 
 __complex__ float
 __cexpf (__complex__ float x)
 {
   __complex__ float retval;
+  int rcls = fpclassify (__real__ x);
+  int icls = fpclassify (__imag__ x);
 
-  if (isfinite (__real__ x))
+  if (rcls >= FP_ZERO)
     {
-      if (isfinite (__imag__ x))
+      /* Real part is finite.  */
+      if (icls >= FP_ZERO)
 	{
-	  float exp_val = __expf (__real__ x);
+	  /* Imaginary part is finite.  */
+	  float exp_val = __ieee754_expf (__real__ x);
 
 	  if (isfinite (exp_val))
 	    {
@@ -52,14 +58,17 @@ __cexpf (__complex__ float x)
 	  __imag__ retval = __nanf ("");
 	}
     }
-  else if (__isinff (__real__ x))
+  else if (rcls == FP_INFINITE)
     {
-      if (isfinite (__imag__ x))
+      /* Real part is infinite.  */
+      if (icls >= FP_ZERO)
 	{
+	  /* Imaginary part is finite.  */
 	  float value = signbit (__real__ x) ? 0.0 : HUGE_VALF;
 
-	  if (__imag__ x == 0.0)
+	  if (icls == FP_ZERO)
 	    {
+	      /* Imaginary part is 0.0.  */
 	      __real__ retval = value;
 	      __imag__ retval = __imag__ x;
 	    }
@@ -82,7 +91,7 @@ __cexpf (__complex__ float x)
     }
   else
     {
-      /* If the real part is NaN the result is NaN + iNan.  */
+      /* If the real part is NaN the result is NaN + iNaN.  */
       __real__ retval = __nanf ("");
       __imag__ retval = __nanf ("");
     }

@@ -537,7 +537,7 @@ strptime_internal (buf, format, tm, decided)
 	case 'y':
 	  /* Match year within century.  */
 	  get_number (0, 99);
-	  tm->tm_year = val;
+	  tm->tm_year = val >= 50 ? val : val + 100;
 	  break;
 	case 'Y':
 	  /* Match year including century number.  */

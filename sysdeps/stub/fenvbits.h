@@ -1,0 +1,63 @@
+/* Copyright (C) 1997 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+/* This file should never be included directly.  */
+
+#ifndef _FENVBITS_H
+#define _FENVBITS_H	1
+
+/* Here should be the exception be defined:
+    FE_INVALID
+    FE_DIVBYZERO
+    FE_OVERFLOW
+    FE_UNDERFLOW
+    FE_INEXACT
+   We define no macro which signals no exception is supported.  */
+
+#define FE_ALL_EXCEPT 0
+
+
+/* Here should the rounding modes be defined:
+    FE_TONEAREST
+    FE_DOWNWARD
+    FE_UPWARD
+    FE_TOWARDSZERO
+   We define no macro which signals no rounding mode is selectable.  */
+
+
+/* Type representing exception flags.
+   XXX Probably we should also include the signal handler here.  */
+typedef struct
+  {
+    unsigned int flags;
+  }
+fexcept_t;
+
+
+/* Type representing floating-point environment.  */
+typedef struct
+  {
+    fexcept_t excepts;
+    /* XXX I don't know what else we should save.  */
+  }
+fenv_t;
+
+/* If the default argument is used we use this value.  */
+#define FE_DFL_ENV	((fenv_t *) -1l)
+
+#endif /* fenvbits.h */

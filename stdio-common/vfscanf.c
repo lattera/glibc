@@ -925,24 +925,24 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    negative = 0;
 
-	  if (c == '0' && tolower (c == inchar ()) == 'x')
+	  is_hexa = 0;
+	  exp_char = 'e';
+	  if (c == '0')
 	    {
-	      /* It is a number in hexadecimal format.  */
-	      ADDW ('0');
-	      ADDW ('x');
-
-	      is_hexa = 1;
-	      exp_char = 'p';
-
-	      /* Grouping is not allowed.  */
-	      flags &= ~GROUP;
+	      ADDW (c);
 	      c = inchar ();
-	    }
-	  else
-	    {
-	      /* It not a hexadecimal prefix.  */
-	      is_hexa = 0;
-	      exp_char = 'e';
+	      if (tolower (c) == 'x')
+		{
+		  /* It is a number in hexadecimal format.  */
+		  ADDW (c);
+
+		  is_hexa = 1;
+		  exp_char = 'p';
+
+		  /* Grouping is not allowed.  */
+		  flags &= ~GROUP;
+		  c = inchar ();
+		}
 	    }
 
 	  got_dot = got_e = 0;

@@ -49,7 +49,7 @@ _nss_db_setnetgrent (const char *group)
   /* Make sure the data base file is open.  */
   if (db == NULL)
     {
-      db = dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
+      db = __dbopen (DBFILE, O_RDONLY, 0, DB_BTREE, NULL);
 
       if (db == NULL)
 	status = errno == EAGAIN ? NSS_STATUS_TRYAGAIN : NSS_STATUS_UNAVAIL;
