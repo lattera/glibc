@@ -4,7 +4,6 @@
 	(pthread_condattr_t): Size is only an int, don't use long for
 	alignment.
 	(pthread_mutexattr_t): Likewise.
-	(pthread_barrierattr_t): Likewise.
 	* sysdeps/unix/sysv/linux/ia64/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/x86_64/bits/pthreadtypes.h: Likewise.
 	* sysdeps/unix/sysv/linux/s390/bits/pthreadtypes.h: Likewise.
