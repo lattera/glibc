@@ -40,7 +40,7 @@ pthread_join (threadid, thread_return)
   struct pthread *pd = (struct pthread *) threadid;
 
   /* Make sure the descriptor is valid.  */
-  if (DEBUGGING_P && __find_in_stack_list (pd) == NULL)
+  if ((DEBUGGING_P && __find_in_stack_list (pd) == NULL) || pd->tid <= 0)
     /* Not a valid thread handle.  */
     return ESRCH;
 
