@@ -1,5 +1,26 @@
 1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/el.po: New file.
+
+1999-02-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Replace magic constant
+	when processing DT_SYMBOLIC objects.
+
+1999-02-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): When looking for the
+	program headers without PT_PHDR only require that they are
+	contained within one of the loaded segments.  Don't use assert,
+	since that would be a bug in the object, not the dynamic linker.
+
+1999-02-08  Richard Henderson  <rth@cygnus.com>
+
+	* sysdeps/alpha/dl-machine.h (TRAMPOLINE_TEMPLATE): Save and
+	restore all call-clobbered fp regs.
+
+1999-02-08  Ulrich Drepper  <drepper@cygnus.com>
+
 	* po/cs.po: New file.
 
 	* resolv/res_hconf.c (_res_hconf_init): Don't use ENV_HOSTCONF for

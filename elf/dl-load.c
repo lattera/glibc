@@ -864,11 +864,18 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
       {
 	/* There was no PT_PHDR specified.  We need to find the phdr in the
            load image ourselves.  We assume it is in fact in the load image
-           somewhere, and that the first load command starts at the
-           beginning of the file and thus contains the ELF file header.  */
-	ElfW(Addr) bof = l->l_addr + loadcmds[0].mapstart;
-	assert (loadcmds[0].mapoff == 0);
-	l->l_phdr = (void *) (bof + ((const ElfW(Ehdr) *) bof)->e_phoff);
+           somewhere.  */
+	for (c = loadcmds; c < &loadcmds[nloadcmds]; c++)
+	  if (c->mapoff <= header->e_phoff
+	      && (c->mapend - c->mapstart + c->mapoff
+		  >= header->e_phoff + header->e_phnum * sizeof (ElfW(Phdr))))
+	    {
+	      ElfW(Addr) bof = l->l_addr + c->mapstart;
+	      l->l_phdr = (void *) (bof + header->e_phoff - c->mapoff);
+	      break;
+	    }
+	if (l->l_phdr == 0)
+	  LOSE ("program headers not contained in any loaded segment");
       }
     else
       /* Adjust the PT_PHDR value by the runtime load address.  */
@@ -948,7 +955,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 
       /* Now move the existing entries one back.  */
       memmove (&l->l_scope[1], &l->l_scope[0],
-	       3 * sizeof (struct r_scope_elem *));
+	       sizeof (l->l_scope) - sizeof (l->l_scope[0]));
 
       /* Now add the new entry.  */
       l->l_scope[0] = &l->l_symbolic_searchlist;
