@@ -1,3 +1,8 @@
+2001-09-12  Jakub Jelinek  <jakub@redhat.com>
+
+	* rt/Makefile (LDFLAGS-rt.so): Use shared thread library as librt's
+	filter.
+
 2001-09-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* config.h.in: Enforce optimization to be used.
@@ -18,7 +23,7 @@
 2001-09-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-object.c: Avoid allocating extra memory block for name.
-	* elf/dl-close.c (_dl_close): Don't free l_libname if it is no
+	* elf/dl-close.c (_dl_close): Don't free l_libname if it is not
 	allocated separately.
 	* elf/dl-load.c (_dl_map_object_from_fd): Likewise.
 

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -41,7 +41,7 @@ timer_delete (timerid)
     __set_errno (EINVAL);
   else
     {
-      if (timer->armed)
+      if (timer->armed && timer->thread != NULL)
 	{
 	  struct thread_node *thread = timer->thread;
 	  assert (thread != NULL);

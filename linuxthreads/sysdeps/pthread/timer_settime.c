@@ -1,4 +1,4 @@
-/* Copyright (C) 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -118,7 +118,8 @@ timer_settime (timerid, flags, value, ovalue)
 
       /* Only need to wake up the thread if timer is inserted
 	 at the head of the queue. */
-      need_wakeup = __timer_thread_queue_timer (thread, timer);
+      if (thread != NULL)
+	need_wakeup = __timer_thread_queue_timer (thread, timer);
       timer->armed = 1;
     }
 
