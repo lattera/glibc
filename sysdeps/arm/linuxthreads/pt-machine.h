@@ -19,6 +19,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef _PT_MACHINE_H
+#define _PT_MACHINE_H   1
 
 #ifndef PT_EI
 # define PT_EI extern inline
@@ -49,3 +51,5 @@ testandset (int *spinlock)
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
 register char * stack_pointer __asm__ ("sp");
+
+#endif /* pt-machine.h */
