@@ -1,3 +1,11 @@
+2004-11-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/fileops.c (_IO_new_file_seekoff): If mode is 0 and
+	fp->_offset == _IO_pos_BAD, just call _IO_SYSSEEK (fp, 0, dir)
+	and if successful set fp->_offset.
+	* libio/Makefile (tests): Add bug-ungetc3.
+	* libio/bug-ungetc3.c: New test.
+
 2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
 
 	* sysdeps/gnu/_G_config.h (_G_HAVE_MREMAP): Define symbol.
