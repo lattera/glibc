@@ -258,6 +258,11 @@ Tue Oct 15 02:13:21 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* crypt/md5-crypt.c (md5_crypt_r): Add cast to prevent warning.
 
+Tue Oct 15 14:37:40 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/fcntlbits.h (O_HURD): Add O_EXLOCK and
+	O_SHLOCK. 
+
 Sun Oct 13 19:16:10 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (POUND): Macro removed,
