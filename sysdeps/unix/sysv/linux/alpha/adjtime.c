@@ -126,8 +126,7 @@ weak_alias (__adjtime, adjtime);
 extern int __syscall_adjtimex_tv64 (struct timex *tx);
 
 int
-__adjtimex_tv64 (tx)
-     struct timex *tx;
+__adjtimex_tv64 (struct timex *tx)
 {
   int ret;
 

@@ -71,3 +71,6 @@ osf_utimes	-	osf_utimes	2	__utimes_tv32  __utimes@GLIBC_2.0 utimes@GLIBC_2.0
 osf_getrusage	-	osf_getrusage	2	__getrusage_tv32  __getrusage@GLIBC_2.0 getrusage@GLIBC_2.0
 osf_wait4	-	osf_wait4	2	__wait4_tv32  __wait4@GLIBC_2.0 wait4@GLIBC_2.0
 old_adjtimex	-	old_adjtimex	1	__adjtimex_tv32  __adjtimex@GLIBC_2.0 adjtimex@GLIBC_2.0
+
+# and one for timeval64 entry points
+adjtimex	adjtime	adjtimex	1	__syscall_adjtimex_tv64
