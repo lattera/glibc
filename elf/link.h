@@ -211,6 +211,10 @@ struct link_map
 
     /* Collected information about own RUNPATH directories.  */
     struct r_search_path_elem **l_runpath_dirs;
+
+    /* Number of pre-constructors.  We compute this during loading to avoid
+       duplication of this during the possibly many calls to _dl_init_next.  */
+    unsigned int l_preinitcount;
   };
 
 #endif /* link.h */

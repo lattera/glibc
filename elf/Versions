@@ -48,4 +48,7 @@ ld.so {
     # functions used in other libraries
     _dl_dst_count; _dl_dst_substitute;
   }
+  GLIBC_2.2 {
+    _dl_preinit_next;
+  }
 }

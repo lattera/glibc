@@ -229,6 +229,18 @@ _dl_start_user:\n\
 	# _dl_init_next call below.\n\
 	movl _dl_main_searchlist@GOT(%ebx), %eax\n\
 	movl (%eax), %esi\n\
+	# First run the pre-initializers.\n\
+0:	movl %esi,%eax\n\
+	# Call _dl_init_next to return the address of an initializer\n\
+	# function to run.\n\
+	call _dl_preinit_next@PLT\n\
+	# Check for zero return, when out of initializers.\n\
+	testl %eax, %eax\n\
+	jz 0f\n\
+	# Call the pre-initilizer.\n\
+	call *%eax\n\
+	# Loop to call _dl_preinit_next for the next initializer.\n\
+	jmp 0b\n\
 0:	movl %esi,%eax\n\
 	# Call _dl_init_next to return the address of an initializer\n\
 	# function to run.\n\

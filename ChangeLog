@@ -1,5 +1,12 @@
 1999-07-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/Makefile (dl-routines): Add preinit.
+	* elf/Versions [ld.so] (GLIBC_2.2): Export _dl_preinit_next.
+	* elf/link.h (struct link_map): Add new field l_preinitcount.
+	* elf/dl-preinit.c: New file.
+	* elf/dynamic-link.h: Initialize l_preinitcount.
+	* sysdeps/i386/dl-machine.h (RTLD_START): Call pre-init functions.
+
 	* elf/dl-fini.c: Handle DT_FINI_ARRAY.
 	* elf/link.h (struct link_map): Remove l_init_running.  Add l_runcount
 	and l_initcount.

@@ -118,6 +118,10 @@ elf_get_dynamic_info (struct link_map *l)
 			? (info[DT_INIT_ARRAYSZ]->d_un.d_val
 			   / sizeof (ElfW(Addr)))
 			: 0);
+  l->l_preinitcount = (info[DT_PREINIT_ARRAY]
+		       ? (info[DT_PREINIT_ARRAYSZ]->d_un.d_val
+			  / sizeof (ElfW(Addr)))
+		       : 0);
   if (info[DT_RUNPATH] != NULL)
     /* If both RUNPATH and RPATH are given, the latter is ignored.  */
     info[DT_RPATH] = NULL;
