@@ -1,6 +1,11 @@
+2000-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* grp/initgroups.c (compat_call): Use _SC_GETGR_R_SIZE_MAX instead of
+	_SC_GETPW_R_SIZE_MAX.
+
 2000-03-20  Richard Henderson  <rth@cygnus.com>
 
-	* sysdeps/unix/sysv/linux/alpha/Versions: Put pciconfig_iobase 
+	* sysdeps/unix/sysv/linux/alpha/Versions: Put pciconfig_iobase
 	in GLIBC_2.1.4.
 
 2000-03-20  Richard Henderson  <rth@cygnus.com>
