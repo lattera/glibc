@@ -1,3 +1,18 @@
+1998-02-18 17:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/Makefile: Add rules to build and install iconv program.
+	* iconv/iconv_prog.c: New file.
+
+1998-02-18 16:34  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dlsym.c (dlsym_doit): Fix scope and skip maps for
+	_dl_lookup_symbol_skip call.
+	* elf/dlvsym.c (dlvsym_doit): Likewise.
+
+1998-02-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/iovsscanf.c: Do not include errno.h.
+
 1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* elf/dl-load.c (add_name_to_object): Don't translate strings.
