@@ -25,4 +25,5 @@ __fork (void)
 {
   return kfork ();
 }
+libc_hidden_def (__fork)
 strong_alias (__fork, fork)
