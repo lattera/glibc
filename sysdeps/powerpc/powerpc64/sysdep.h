@@ -236,7 +236,7 @@ LT_LABELSUFFIX(name,_name_end): ; \
 #define ret_NOERRNO PSEUDO_RET_NOERRNO
 
 #undef	PSEUDO_END_NOERRNO
-#define	PSEUDO_END_NOERRO(name) \
+#define	PSEUDO_END_NOERRNO(name) \
   END (name)
 
 /* Label in text section.  */

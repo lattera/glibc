@@ -174,7 +174,7 @@ __local_syscall_error:						\
        asm volatile ("swi	%1	@ syscall " #name	\
 		     : "=r" (_a1)				\
 		     : "i" (SYS_ify(name)) ASM_ARGS_##nr	\
-		     : "a1", "memory");				\
+		     : "memory");				\
        _sys_result = _a1;					\
      }								\
      (int) _sys_result; })

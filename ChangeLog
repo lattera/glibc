@@ -1,3 +1,23 @@
+2003-03-24  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INTERNAL_SYSCALL):
+	Remove a1 from clobber list.
+
+2003-03-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/antarctica: Update from tzdata2003a.
+	* timezone/asia: Likewise.
+	* timezone/australasia: Likewise.
+	* timezone/europe: Likewise.
+	* timezone/iso3166.tab: Likewise.
+	* timezone/northamerica: Likewise.
+	* timezone/southamerica: Likewise.
+	* timezone/zone.tab: Likewise.
+
+2003-03-24  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/sysdep.h (PSEUDO_END_NOERRNO): Fix typo.
+
 2003-03-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sysdep.h (ret_NOERRNO): Avoid
