@@ -1,3 +1,7 @@
+1999-06-06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/i386/sigaction.c (SA_RESTORER): New #define.
+
 1999-06-06  Andi Kleen  <ak@muc.de>
 
 	* sysdeps/unix/sysv/linux/i386/sigaction.c (__sigaction): Set

@@ -32,6 +32,9 @@
    translate it here.  */
 #include <kernel_sigaction.h>
 
+/* We do not globally define the SA_RESTORER flag so do it here.  */
+#define SA_RESTORER 0x04000000
+
 
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *,
 				   struct kernel_sigaction *, size_t);
