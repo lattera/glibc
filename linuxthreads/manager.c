@@ -345,6 +345,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
       /* Allocate space for stack and thread descriptor at default address */
 #ifdef NEED_SEPARATE_REGISTER_STACK
+      void *res_addr;
+
       if (attr != NULL)
 	{
 	  guardsize = page_roundup (attr->__guardsize, granularity);
@@ -371,18 +373,26 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       /* XXX Fix for floating stacks with variable sizes.  */
 
       /* First the main stack: */
-      if (mmap((caddr_t)((char *)(new_thread + 1) - stacksize / 2),
-	       stacksize / 2, PROT_READ | PROT_WRITE | PROT_EXEC,
-	       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0)
-	  == MAP_FAILED)
-	/* Bad luck, this segment is already mapped. */
-	return -1;
-      /* Then the register stack:	*/
-      if (mmap((caddr_t)new_thread_bottom, stacksize/2,
-	       PROT_READ | PROT_WRITE | PROT_EXEC,
-	       MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0)
-	  == MAP_FAILED)
+      map_addr = (caddr_t)((char *)(new_thread + 1) - stacksize / 2);
+      res_addr = mmap(map_addr, stacksize / 2,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
+      if (res_addr != map_addr)
 	{
+	  /* Bad luck, this segment is already mapped. */
+	  if (res_addr != MAP_FAILED)
+	    munmap(res_addr, stacksize / 2);
+	  return -1;
+	}
+      /* Then the register stack:	*/
+      map_addr = (caddr_t)new_thread_bottom;
+      res_addr = mmap(map_addr, stacksize/2,
+		      PROT_READ | PROT_WRITE | PROT_EXEC,
+		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXES, -1, 0);
+      if (res_addr != map_addr)
+	{
+	  if (res_addr != MAP_FAILED)
+	    munmap(res_addr, stacksize / 2);
 	  munmap((caddr_t)((char *)(new_thread + 1) - stacksize/2),
 		 stacksize/2);
 	  return -1;
@@ -419,6 +429,8 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
       new_thread_bottom = (char *) map_addr + guardsize;
       new_thread = ((pthread_descr) (new_thread_bottom + stacksize)) - 1;
 # else /* !FLOATING_STACKS */
+      void *res_addr;
+
       if (attr != NULL)
 	{
 	  guardsize = page_roundup (attr->__guardsize, granularity);
@@ -434,13 +446,17 @@ static int pthread_allocate_stack(const pthread_attr_t *attr,
 
       new_thread = default_new_thread;
       new_thread_bottom = (char *) (new_thread + 1) - stacksize;
-      map_addr = mmap((caddr_t)((char *)(new_thread + 1) - stacksize - guardsize),
-		      stacksize + guardsize,
+      map_addr = new_thread_bottom - guardsize;
+      res_addr = mmap(map_addr, stacksize + guardsize,
 		      PROT_READ | PROT_WRITE | PROT_EXEC,
 		      MAP_PRIVATE | MAP_ANONYMOUS | MAP_FIXED, -1, 0);
-      if (map_addr == MAP_FAILED)
-        /* Bad luck, this segment is already mapped. */
-        return -1;
+      if (res_addr != map_addr)
+	{
+	  /* Bad luck, this segment is already mapped. */
+	  if (res_addr != MAP_FAILED)
+	    munmap (res_addr, stacksize + guardsize);
+	  return -1;
+	}
 
       /* We manage to get a stack.  Protect the guard area pages if
 	 necessary.  */

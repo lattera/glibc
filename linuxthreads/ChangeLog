@@ -1,3 +1,9 @@
+2000-12-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/powerpc/pspinlock.c: Don't include pt-machine.h here.
+
+	* manager.c (pthread_allocate_stack): Prepare for removal of MAP_FIXED.
+
 2000-11-15  Wolfram Gloger  <wg@malloc.de>
 
 	* manager.c (pthread_free): [!FLOATING_STACKS]: Only remap the
