@@ -72,9 +72,18 @@ _hurd_set_brk (vm_address_t addr)
   if (pagend <= pagebrk)
     {
       if (pagend < pagebrk)
-	/* Make that memory inaccessible.  */
-	__vm_protect (__mach_task_self (), pagend, pagebrk - pagend,
-		      0, VM_PROT_NONE);
+	{
+	  /* XXX wish this were atomic... */
+	  /* First deallocate the memory to release its backing space.  */
+	  __vm_deallocate (__mach_task_self (), pagend, pagebrk - pagend);
+	  /* Now reallocate it with no access allowed.  */
+	  err = __vm_map (__mach_task_self (),
+			  &pagend, _hurd_data_end - pagend,
+			  0, 0, MACH_PORT_NULL, 0, 0,
+			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
+			  VM_INHERIT_COPY);
+	  /* XXX what if error? */
+	}
       _hurd_brk = addr;
       return 0;
     }

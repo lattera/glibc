@@ -1,5 +1,9 @@
 1999-09-19  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/brk.c (_hurd_set_brk): Deallocate and reallocate
+	pages rather than just reprotecting them.  This way we don't hold on
+	to the backing space.
+
 	* hurd/hurdprio.c (_hurd_priority_which_map): Rearrange the code a bit.
 	Use __munmap instead of __vm_deallocate.
 
