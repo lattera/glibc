@@ -89,8 +89,8 @@ test_strcmp (void)
 	  int k;
 	  for (k = 0; k < 0x3f; k++)
 	    {
-	      buf1[j] = '0' ^ (k & 4);
-	      buf2[j] = '4' ^ (k & 4);
+	      buf1[k] = '0' ^ (k & 4);
+	      buf2[k] = '4' ^ (k & 4);
 	    }
 	  buf1[i] = buf1[0x3f] = 0;
 	  buf2[j] = buf2[0x3f] = 0;
