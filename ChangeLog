@@ -13,6 +13,7 @@
 	* iconvdata/utf-16.c: New file.
 	* iconv/gconv_builtin.h: Remove UTF-16 entries here.
 	* iconv/gconv_simple.c: Remove conversion functions to and from UTF-16.
+	PR libc/1580 and libc/1581.
 
 	* iconv/skeleton.c: Increment __invocation_coounter after every call
 	to the loops.
