@@ -36,7 +36,7 @@
  * of order n
  *
  * Special cases:
- *	y0(0)=y1(0)=yn(n,0) = -inf with division by zero signal;
+ *	y0(0)=y1(0)=yn(n,0) = -inf with overflow signal;
  *	y0(-ve)=y1(-ve)=yn(n,-ve) are NaN with invalid signal.
  * Note 2. About jn(n,x), yn(n,x)
  *	For n=0, j0(x) is called,
@@ -312,9 +312,9 @@ __ieee754_ynl (n, x)
   if ((ix == 0x7fff) && ((i0 & 0x7fffffff) != 0))
     return x + x;
   if ((ix | i0 | i1) == 0)
-    return -one / zero;
+    return -HUGE_VALL + x;  /* -inf and overflow exception.  */
   if (se & 0x8000)
-    return zero / zero;
+    return zero / (zero * x);
   sign = 1;
   if (n < 0)
     {

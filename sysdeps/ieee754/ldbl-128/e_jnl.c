@@ -323,9 +323,9 @@ __ieee754_ynl (n, x)
   if (x <= 0.0L)
     {
       if (x == 0.0L)
-	return -one / zero;
+	return -HUGE_VALL + x;
       if (se & 0x80000000)
-	return zero / zero;
+	return zero / (zero * x);
     }
   sign = 1;
   if (n < 0)

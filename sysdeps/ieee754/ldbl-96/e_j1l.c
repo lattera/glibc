@@ -224,11 +224,11 @@ __ieee754_y1l (x)
   ix = se & 0x7fff;
   /* if Y1(NaN) is NaN, Y1(-inf) is NaN, Y1(inf) is 0 */
   if (se & 0x8000)
-    return zero / zero;
+    return zero / (zero * x);
   if (ix >= 0x7fff)
     return one / (x + x * x);
   if ((i0 | i1) == 0)
-    return -one / zero;
+    return -HUGE_VALL + x;  /* -inf and overflow exception.  */
   if (ix >= 0x4000)
     {				/* |x| >= 2.0 */
       __sincosl (x, &s, &c);

@@ -187,8 +187,8 @@ static float zero  =  0.0000000000e+00;
 	ix = 0x7fffffff&hx;
     /* if Y(n,NaN) is NaN */
 	if(ix>0x7f800000) return x+x;
-	if(ix==0) return -one/zero;
-	if(hx<0) return zero/zero;
+	if(ix==0) return -HUGE_VALF+x;  /* -inf and overflow exception.  */
+	if(hx<0) return zero/(zero*x);
 	sign = 1;
 	if(n<0){
 		n = -n;

@@ -1,5 +1,25 @@
 2003-12-28  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/ieee754/dbl-64/e_j0.c (__ieee754_y0): Raise only
+	overflow for 0 as argument. Raise Invalid exception for negative
+	args.
+	* sysdeps/ieee754/dbl-64/e_jn.c (__ieee754_yn): Likewise.
+	* sysdeps/ieee754/dbl-64/e_j1.c (__ieee754_y0): Likewise.
+	* sysdeps/ieee754/ldb-128/e_jnl.c (__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldb-128/e_j0l.c (__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldb-128/e_j1l.c (__ieee754_y1l): Likewise.
+	* sysdeps/ieee754/ldb-96/e_jnl.c (__ieee754_ynl): Likewise.
+	* sysdeps/ieee754/ldb-96/e_j0l.c (__ieee754_y0l): Likewise.
+	* sysdeps/ieee754/ldb-96/e_j1l.c (__ieee754_y1l): Likewise.
+	* sysdeps/ieee754/flt-32/e_jnf.c (__ieee754_ynf): Likewise.
+	* sysdeps/ieee754/flt-32/e_j0f.c (__ieee754_y0f): Likewise.
+	* sysdeps/ieee754/flt-32/e_j1f.c (__ieee754_y1f): Likewise.
+
+	* math/libm-test.inc (yn_test): Expect invalid exception for
+	negative arguments.
+	(y0_test): Likewise.
+	(y1_test): Likewise.
+
 	* sysdeps/ieee754/dbl-64/e_exp.c (__ieee754_exp): Do not raise
 	execptions for exp(NaN).
 

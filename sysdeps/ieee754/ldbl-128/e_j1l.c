@@ -834,8 +834,8 @@ __ieee754_y1l (long double x)
   if (x <= 0.0L)
     {
       if (x < 0.0L)
-	return (zero / zero);
-      return -1.0L / zero;
+	return (zero / (zero * x));
+      return -HUGE_VALL + x;
     }
   xx = fabsl (x);
   if (xx <= 2.0L)
