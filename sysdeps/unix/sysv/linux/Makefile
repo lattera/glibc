@@ -53,6 +53,8 @@ endif
 
 ifeq ($(subdir),time)
 sysdep_headers += sys/timex.h
+
+sysdep_routines += ntp_adjtime ntp_gettime
 endif
 
 ifeq ($(subdir),socket)

@@ -73,6 +73,9 @@ libc {
     # c*
     capget; capset;
 
+    # n*
+    ntp_adjtime; ntp_gettime;
+
     # s*
     sendfile;
 

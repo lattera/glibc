@@ -1,5 +1,26 @@
 1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/Makefile [subdir=time] (sysdep_routines):
+	Add ntp_adjtime and ntp_gettime.
+	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.1]: Add ntp_adjtime and
+	ntp_gettime.
+
+1998-12-29  Ulrich Windl  <Ulrich.Windl@rz.uni-regensburg.de>
+
+	* manual/time.texi (Precision Time): Add documentation for
+	ntp_gettime and ntp_adjtime.
+
+1998-12-28  Ulrich Windl  <Ulrich.Windl@rz.uni-regensburg.de>
+
+	* sysdeps/unix/sysv/linux/ntp_gettime.c: Created new file
+
+	* sysdeps/unix/sysv/linux/ntp_adjtime.c: Created new file
+
+	* sysdeps/unix/sysv/linux/sys/timex.h (struct ntptimeval): Added.
+	Add prototypes for ntp_adjtime and ntp_gettime.
+
+1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/i386/bits/select.h (__FD_ZERO): Remove early clobbers
 	from c and D register output.
 

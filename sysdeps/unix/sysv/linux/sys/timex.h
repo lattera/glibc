@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,28 +24,35 @@
 
 /* These definitions from linux/timex.h as of 2.1.130.  */
 
+struct ntptimeval
+{
+  struct timeval time;	/* current time (ro) */
+  long int maxerror;	/* maximum error (us) (ro) */
+  long int esterror;	/* estimated error (us) (ro) */
+};
+
 struct timex
 {
   unsigned int modes;	/* mode selector */
-  long offset;		/* time offset (usec) */
-  long freq;		/* frequency offset (scaled ppm) */
-  long maxerror;	/* maximum error (usec) */
-  long esterror;	/* estimated error (usec) */
+  long int offset;	/* time offset (usec) */
+  long int freq;	/* frequency offset (scaled ppm) */
+  long int maxerror;	/* maximum error (usec) */
+  long int esterror;	/* estimated error (usec) */
   int status;		/* clock command/status */
-  long constant;	/* pll time constant */
-  long precision;	/* clock precision (usec) (read only) */
-  long tolerance;	/* clock frequency tolerance (ppm) (read only) */
+  long int constant;	/* pll time constant */
+  long int precision;	/* clock precision (usec) (read only) */
+  long int tolerance;	/* clock frequency tolerance (ppm) (read only) */
   struct timeval time;	/* (read only) */
-  long tick;		/* (modified) usecs between clock ticks */
+  long int tick;	/* (modified) usecs between clock ticks */
 
-  long ppsfreq;         /* pps frequency (scaled ppm) (ro) */
-  long jitter;          /* pps jitter (us) (ro) */
-  int shift;            /* interval duration (s) (shift) (ro) */
-  long stabil;          /* pps stability (scaled ppm) (ro) */
-  long jitcnt;          /* jitter limit exceeded (ro) */
-  long calcnt;          /* calibration intervals (ro) */
-  long errcnt;          /* calibration errors (ro) */
-  long stbcnt;          /* stability limit exceeded (ro) */
+  long int ppsfreq;	/* pps frequency (scaled ppm) (ro) */
+  long int jitter;	/* pps jitter (us) (ro) */
+  int shift;		/* interval duration (s) (shift) (ro) */
+  long int stabil;	/* pps stability (scaled ppm) (ro) */
+  long int jitcnt;	/* jitter limit exceeded (ro) */
+  long int calcnt;	/* calibration intervals (ro) */
+  long int errcnt;	/* calibration errors (ro) */
+  long int stbcnt;	/* stability limit exceeded (ro) */
 
   /* ??? */
   int  :32; int  :32; int  :32; int  :32;
@@ -108,6 +115,9 @@ __BEGIN_DECLS
 
 extern int __adjtimex __P ((struct timex *__ntx));
 extern int adjtimex __P ((struct timex *__ntx));
+
+extern int ntp_gettime __P ((struct ntptimeval *__ntv));
+extern int ntp_adjtime __P ((int __amode, struct timex *__tntx));
 
 __END_DECLS
 

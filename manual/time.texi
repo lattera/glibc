@@ -25,6 +25,8 @@ an Alarm}.
 @menu
 * Processor Time::              Measures processor time used by a program.
 * Calendar Time::               Manipulation of ``real'' dates and times.
+* Precision Time::              Manipulation and monitoring of high accuracy
+                                  time.
 * Setting an Alarm::            Sending a signal after a specified time.
 * Sleeping::                    Waiting for a period of time.
 * Resource Usage::		Measuring various resources used.
@@ -1799,6 +1801,169 @@ Wed Jul 31 13:02:36 1991
 Today is Wednesday, July 31.
 The time is 01:02 PM.
 @end smallexample
+
+
+@node Precision Time
+@section Precision Time
+
+@cindex time, high precision
+@pindex sys/timex.h
+The @code{net_gettime} and @code{ntp_adjtime} functions provide an
+interface to monitor and manipulate high precision time.  These
+functions are declared in @file{sys/timex.h}.
+
+@tindex struct ntptimeval
+@deftp {Data Type} {struct ntptimeval}
+This structure is used to monitor kernel time.  It contains the
+following members:
+@table @code
+@item struct timeval time
+This is the current time.  The @code{struct timeval} data type is
+described in @ref{High-Resolution Calendar}.
+
+@item long int maxerror
+This is the maximum error, measured in microseconds.  Unless updated
+via @code{ntp_adjtime} periodically, this value will reach some
+platform-specific maximum value.
+
+@item long int esterror
+This is the estimated error, measured in microseconds.  This value can
+be set by @code{ntp_adjtime} to indicate the estimated offset of the
+local clock against the true time.
+@end table
+@end deftp
+
+@comment sys/timex,h
+@comment GNU
+@deftypefun int ntp_gettime (struct ntptimeval *@var{tptr})
+The @code{ntp_gettime} function sets the structure pointed to by
+@var{tptr} to current values.  The elements of the structure afterwards
+contain the values the timer implementation in the kernel assumes.  They
+might or might not be correct.  If they are not a @code{ntp_adjtime}
+call is necessary.
+
+The return value is @code{0} on success and other values on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item TIME_ERROR
+The precision clock model is not properly set up at the moment, thus the
+clock must be considered unsynchronized, and the values should be
+treated with care.
+@end table
+@end deftypefun
+
+@tindex struct timex
+@deftp {Data Type} {struct timex}
+This structure is used to control and monitor kernel time in a greater
+level of detail.  It contains the following members:
+@table @code
+@item unsigned int mode
+This variable controls whether and which values are set.  Several
+symbolic constants have to be combined with @emph{binary or} to specify
+the effective mode.  These constants start with @code{MOD_}.
+
+@item long int offset
+This value indicates the current offset of the local clock from the true
+time.  The value is given in microseconds.  If bit @code{MOD_OFFSET} is
+set in @code{mode}, the offset (and possibly other dependent values) can
+be set.  The offset's absolute value must not exceed @code{MAXPHASE}.
+
+@item long int frequency
+This value indicates the difference in frequency between the true time
+and the local clock.  The value is expressed as scaled PPM (parts per
+million, 0.0001%).  The scaling is @code{1 << SHIFT_USEC}.  The value
+can be set with bit @code{MOD_FREQUENCY}, but the absolute value must
+not exceed @code{MAXFREQ}.
+
+@item long int maxerror
+This is the maximum error, measured in microseconds.  A new value can be
+set using bit @code{MOD_MAXERROR}.  Unless updated via
+@code{ntp_adjtime} periodically, this value will increase steadily
+and reach some platform-specific maximum value.
+
+@item long int esterror
+This is the estimated error, measured in microseconds.  This value can
+be set using bit @code{MOD_ESTERROR}.
+
+@item int status
+This valiable reflects the various states of the clock machinery.  There
+are symbolic constants for the significant bits, starting with
+@code{STA_}.  Some of these flags can be updated using the
+@code{MOD_STATUS} bit.
+
+@item long int constant
+This value represents the bandwidth or stiffness of the PLL (phase
+locked loop) implemented in the kernel.  The value can be changed using
+bit @code{MOD_TIMECONST}.
+
+@item long int precision
+This value represents the accuracy or the maximum error when reading the
+system clock.  The value is expressed in microseconds and can't be changed.
+
+@item long int tolerance
+This value represents the maximum frequency error of the system clock in
+scaled PPM.  This value is used to increase the @code{maxerror} every
+second.
+
+@item long int ppsfreq
+This is the first of a few optional variables that are present only if
+the system clock can use a PPS (pulse per second) signal to discipline
+the local clock.  The value is expressed in scaled PPM and it denotes
+the difference in frequency between the local clock and the PPS signal.
+
+@item long int jitter
+This value expresses a median filtered average of the PPS signal's
+dispersion in microseconds.
+
+@item int int shift
+This value is a binary exponent for the duration of the PPS calibration
+interval, ranging from @code{PPS_SHIFT} to @code{PPS_SHIFTMAX}.
+
+@item long int stabil
+This value represents the median filtered dispersion of the PPS
+frequency in scaled PPM.
+
+@item long int jitcnt
+This counter represents the numer of pulses where the jitter exceeded
+the allowed maximum @code{MAXTIME}.
+
+@item long int calcnt
+This counter reflects the number of successful calibration intervals.
+
+@item long int errcnt
+This counter represents the number of calibration errors (caused by
+large offsets or jitter).
+
+@item long int stbcnt
+This counter denotes the number of of calibrations where the stability
+exceeded the threshold.
+@end table
+@end deftp
+
+@comment sys/timex.h
+@comment GNU
+@deftypefun int ntp_adjtime (int @var{mode}, struct timex *@var{tptr})
+The @code{ntp_adjtime} function sets the structure specified by
+@var{tptr} to current values.  In addition, values passed in @var{tptr}
+can be used to replace existing settings.  Therefore several magic
+values can be passed in @var{mode}.  Setting @var{mode} to zero only
+reads the current state.
+
+The return value is @code{0} on success and other values on failure.  The
+following @code{errno} error conditions are defined for this function:
+
+@table @code
+@item TIME_ERROR
+The precision clock model is not properly set up at the moment, thus the
+clock must be considered unsynchronized, and the values should be
+treated with care.  Another reason could be that the specified new values
+are not allowed.
+@end table
+
+For more details see RFC1305 (Network Time Protocol, Version 3) and
+related documents.
+@end deftypefun
 
 
 @node Setting an Alarm
