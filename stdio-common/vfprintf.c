@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1431,7 +1431,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    left = 1;
 	  }
 
-	if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
+	if (width + 32 >= (int) (sizeof (work_buffer) / sizeof (work_buffer[0])))
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
 	  workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
@@ -1443,7 +1443,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
 
-      if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
+      if (width + 32 >= (int) (sizeof (work_buffer) / sizeof (work_buffer[0])))
 	/* We have to use a special buffer.  The "32" is just a safe
 	   bet for all the output which is not counted in the width.  */
 	workend = ((CHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
@@ -1475,7 +1475,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       else
 	prec = 0;
       if (prec > width
-	  && prec + 32 > sizeof (work_buffer) / sizeof (work_buffer[0]))
+	  && prec + 32 > (int)(sizeof (work_buffer) / sizeof (work_buffer[0])))
 	workend = alloca (spec + 32) + (spec + 32);
       JUMP (*f, step2_jumps);
 
@@ -1772,7 +1772,7 @@ do_positional:
 	  }
 
 	/* Maybe the buffer is too small.  */
-	if (MAX (prec, width) + 32 > sizeof (work_buffer) / sizeof (CHAR_T))
+	if (MAX (prec, width) + 32 > (int) (sizeof (work_buffer) / sizeof (CHAR_T)))
 	  workend = ((CHAR_T *) alloca ((MAX (prec, width) + 32)
 					* sizeof (CHAR_T))
 		     + (MAX (prec, width) + 32));
