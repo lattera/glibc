@@ -1,5 +1,5 @@
 /* POSIX.2 wordexp implementation.
-   Copyright (C) 1997-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1997-2002, 2003, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Tim Waugh <tim@cyberelk.demon.co.uk>.
 
@@ -810,7 +810,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 
 /* Function called by child process in exec_comm() */
 static void
-internal_function
+internal_function __attribute__ ((always_inline))
 exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
 {
   const char *args[4] = { _PATH_BSHELL, "-c", comm, NULL };
@@ -868,13 +868,14 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 	   const char *ifs_white)
 {
   int fildes[2];
-  int bufsize = 128;
+#define bufsize 128
   int buflen;
   int i;
   int status = 0;
   size_t maxnewlines = 0;
-  char *buffer;
+  char buffer[bufsize];
   pid_t pid;
+  int noexec = 0;
 
   /* Don't fork() unless necessary */
   if (!comm || !*comm)
@@ -884,32 +885,42 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     /* Bad */
     return WRDE_NOSPACE;
 
+ again:
   if ((pid = __fork ()) < 0)
     {
       /* Bad */
-      __close (fildes[0]);
-      __close (fildes[1]);
+      if (fildes[0] != -1)
+	__close (fildes[0]);
+      if (fildes[1] != -1)
+	__close (fildes[1]);
       return WRDE_NOSPACE;
     }
 
   if (pid == 0)
-    exec_comm_child (comm, fildes, flags & WRDE_SHOWERR, 0);
+    exec_comm_child (comm, fildes, noexec ? 0 : flags & WRDE_SHOWERR, noexec);
 
   /* Parent */
 
+  /* If we are just testing the syntax, only wait.  */
+  if (noexec)
+    return (TEMP_FAILURE_RETRY (__waitpid (pid, &status, 0)) == pid
+	    && status != 0) ? WRDE_SYNTAX : 0;
+
   __close (fildes[1]);
-  buffer = __alloca (bufsize);
+  fildes[1] = -1;
 
   if (!pwordexp)
     /* Quoted - no field splitting */
     {
       while (1)
 	{
-	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
+	  if ((buflen = TEMP_FAILURE_RETRY (__read (fildes[0], buffer,
+						    bufsize))) < 1)
 	    {
-	      if (__waitpid (pid, &status, WNOHANG) == 0)
+	      if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, WNOHANG)) == 0)
 		continue;
-	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
+	      if ((buflen = TEMP_FAILURE_RETRY (__read (fildes[0], buffer,
+							bufsize))) < 1)
 		break;
 	    }
 
@@ -933,11 +944,13 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
       while (1)
 	{
-	  if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
+	  if ((buflen = TEMP_FAILURE_RETRY (__read (fildes[0], buffer,
+						    bufsize))) < 1)
 	    {
-	      if (__waitpid (pid, &status, WNOHANG) == 0)
+	      if (TEMP_FAILURE_RETRY (__waitpid (pid, &status, WNOHANG)) == 0)
 		continue;
-	      if ((buflen = __read (fildes[0], buffer, bufsize)) < 1)
+	      if ((buflen = TEMP_FAILURE_RETRY (__read (fildes[0], buffer,
+							bufsize))) < 1)
 		break;
 	    }
 
@@ -1053,31 +1066,20 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
     }
 
   __close (fildes[0]);
+  fildes[0] = -1;
 
   /* Check for syntax error (re-execute but with "-n" flag) */
   if (buflen < 1 && status != 0)
     {
-      if ((pid = __fork ()) < 0)
-	{
-	  /* Bad */
-	  return WRDE_NOSPACE;
-	}
-
-      if (pid == 0)
-	{
-          fildes[0] = fildes[1] = -1;
-	  exec_comm_child (comm, fildes, 0, 1);
-	}
-
-      if (__waitpid (pid, &status, 0) == pid && status != 0)
-	return WRDE_SYNTAX;
+      noexec = 1;
+      goto again;
     }
 
   return 0;
 
 no_space:
   __kill (pid, SIGKILL);
-  __waitpid (pid, NULL, 0);
+  TEMP_FAILURE_RETRY (__waitpid (pid, NULL, 0));
   __close (fildes[0]);
   return WRDE_NOSPACE;
 }
