@@ -90,7 +90,7 @@ catch_segfault (int signal, SIGCONTEXT ctx)
   fname = getenv ("SEGFAULT_OUTPUT_NAME");
   if (fname != NULL && fname[0] != '\0')
     {
-      fd = open (fname, O_TRUNC | O_WRONLY | O_CREAT);
+      fd = open (fname, O_TRUNC | O_WRONLY | O_CREAT, 0666);
       if (fd == -1)
 	fd = 2;
     }
@@ -182,8 +182,12 @@ install_handler (void)
 
       INSTALL_FOR_SIG (SIGSEGV, "segv");
       INSTALL_FOR_SIG (SIGILL, "ill");
+#ifdef SIGBUS
       INSTALL_FOR_SIG (SIGBUS, "bus");
+#endif
+#ifdef SIGSTKFLT
       INSTALL_FOR_SIG (SIGSTKFLT, "stkflt");
+#endif
       INSTALL_FOR_SIG (SIGABRT, "abrt");
       INSTALL_FOR_SIG (SIGFPE, "fpe");
     }

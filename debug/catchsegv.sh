@@ -52,15 +52,17 @@ fi
 
 segv_output=`basename "$prog"`.segv.$$
 
+# Redirect stderr to avoid termination message from shell.
+(exec 3>&2 2>/dev/null
 LD_PRELOAD=${LD_PRELOAD:+${LD_PRELOAD}:}@SLIB@/libSegFault.so \
 SEGFAULT_USE_ALTSTACK=1 \
 SEGFAULT_OUTPUT_NAME=$segv_output \
-"$prog" ${1+"$@"}
+"$prog" ${1+"$@"} 2>&3 3>&-)
 exval=$?
 
-# Check for a segmentation error.
-if test $exval -eq 139 && test -f "$segv_output"; then
-  # We caught a segmentation error.  The output is in the file with the
+# Check for signal termination.
+if test $exval -gt 128 && test -f "$segv_output"; then
+  # The program caught a signal.  The output is in the file with the
   # name we have in SEGFAULT_OUTPUT_NAME.  In the output the names of
   # functions in shared objects are available, but names in the static
   # part of the program are not.  We use addr2line to get this information.

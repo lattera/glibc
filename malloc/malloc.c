@@ -1702,8 +1702,6 @@ malloc_hook_ini(sz) size_t sz;
 #endif
 {
   __malloc_hook = NULL;
-  __realloc_hook = NULL;
-  __memalign_hook = NULL;
   ptmalloc_init();
   return mALLOc(sz);
 }
@@ -1718,7 +1716,6 @@ realloc_hook_ini(ptr, sz, caller)
 {
   __malloc_hook = NULL;
   __realloc_hook = NULL;
-  __memalign_hook = NULL;
   ptmalloc_init();
   return rEALLOc(ptr, sz);
 }
@@ -1731,8 +1728,6 @@ memalign_hook_ini(sz, alignment, caller)
      size_t sz; size_t alignment; const __malloc_ptr_t caller;
 #endif
 {
-  __malloc_hook = NULL;
-  __realloc_hook = NULL;
   __memalign_hook = NULL;
   ptmalloc_init();
   return mEMALIGn(sz, alignment);

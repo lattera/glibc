@@ -246,5 +246,5 @@ mcheck (func)
 enum mcheck_status
 mprobe (__ptr_t ptr)
 {
-  return mcheck_used ? checkhdr (ptr) : MCHECK_DISABLED;
+  return mcheck_used ? checkhdr (((struct hdr *) ptr) - 1) : MCHECK_DISABLED;
 }

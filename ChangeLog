@@ -1,4 +1,29 @@
-Fri Aug 28 10:41:38 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-08-28 09:22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (process_envvars): Fix copy&paste error.
+
+	* malloc/malloc.c (malloc_hook_ini): Don't overwrite realloc and
+	memalign hook.
+	(realloc_hook_ini): Don't overwrite memalign hook.
+	(memalign_hook_ini): Don't overwrite malloc and memalign hooks.
+	Reported by Philippe Troin <phil@fifi.org>.
+
+	* malloc/mcheck.c (mprobe): Call checkhdr with adjusted pointer.
+	Patch by Philippe Troin <phil@fifi.org>.
+
+1998-08-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/segfault.c (install_handler): Protect the
+	non-POSIX signals with #ifdef.
+	(catch_segfault): Add missing mode parameter for open.
+	* debug/catchsegv.sh: Avoid termination message from shell.  Allow
+	other termination signals.
+
+1998-08-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* debug/Makefile (distribute): Add register-dump.h.
+
+1998-08-28 10:41  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/unix/sysv/linux/m68k/register-dump.h: New file.
 
