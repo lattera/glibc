@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999, 2000-2003, 2004 Free Software Foundation, Inc.
+# Copyright (C) 1991-1999, 2000-2003, 2004, 2005 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -138,17 +138,24 @@ CFLAGS-wait.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-waitid.c = -fexceptions
 CFLAGS-waitpid.c = -fexceptions -fasynchronous-unwind-tables
 CFLAGS-getopt.c = -fexceptions
-CFLAGS-wordexp.c = -fexceptions
+CFLAGS-wordexp.c = -fexceptions -fomit-frame-pointer
 CFLAGS-sysconf.c = -fexceptions -DGETCONF_DIR='"$(libexecdir)/getconf"'
 CFLAGS-pathconf.c = -fexceptions
 CFLAGS-fpathconf.c = -fexceptions
-CFLAGS-spawn.c = -fexceptions
-CFLAGS-spawnp.c = -fexceptions
-CFLAGS-spawni.c = -fexceptions
+CFLAGS-spawn.c = -fexceptions -fomit-frame-pointer
+CFLAGS-spawnp.c = -fexceptions -fomit-frame-pointer
+CFLAGS-spawni.c = -fexceptions -fomit-frame-pointer
 CFLAGS-pause.c = -fexceptions
 CFLAGS-glob.c = $(uses-callbacks) -fexceptions
 CFLAGS-glob64.c = $(uses-callbacks) -fexceptions
 CFLAGS-getconf.c = -DGETCONF_DIR='"$(libexecdir)/getconf"'
+CFLAGS-execve.c = -fomit-frame-pointer
+CFLAGS-fexecve.c = -fomit-frame-pointer
+CFLAGS-execv.c = -fomit-frame-pointer
+CFLAGS-execle.c = -fomit-frame-pointer
+CFLAGS-execl.c = -fomit-frame-pointer
+CFLAGS-execvp.c = -fomit-frame-pointer
+CFLAGS-execlp.c = -fomit-frame-pointer
 
 tstgetopt-ARGS = -a -b -cfoobar --required foobar --optional=bazbug \
 		--none random --col --color --colour

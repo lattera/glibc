@@ -1,3 +1,22 @@
+2005-01-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/execl.c: Do not allocate potentially large buffers on the
+	stack.
+	* posix/execle.c: Likewise.
+	* posix/execlp.c: Likewise.
+	* posix/execlp.c: Likewise.
+	(script_execute): Removed.
+	(allocate_scripts_argv): New function.  Called at most once to
+	allocate memory, not every time a script is run.  Adjust caller.
+
+	* sysdeps/generic/wordexp.c (exec_comm): Add a few
+	TEMP_FAILURE_RETRY.  Reorganize code to avoid multiple calls to
+	exec_comm_child.
+	(exec_comm_child): Can now be inlined.
+
+	* posix/Makefile: Add -fomit-frame-pointer for a few more files.
+	* stdlib/Makefile: Likewise.
+
 2005-01-19  Roland McGrath  <roland@redhat.com>
 
 	[BZ #681]

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,93,96,97,98,99,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,93,96,97,98,99,2002,2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,10 +16,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <alloca.h>
 #include <unistd.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <stackinfo.h>
@@ -30,46 +30,44 @@
 int
 execlp (const char *file, const char *arg, ...)
 {
-  size_t argv_max = 1024;
-  const char **argv = alloca (argv_max * sizeof (const char *));
-  unsigned int i;
+#define INITIAL_ARGV_MAX 1024
+  size_t argv_max = INITIAL_ARGV_MAX;
+  const char *initial_argv[INITIAL_ARGV_MAX];
+  const char **argv = initial_argv;
   va_list args;
 
   argv[0] = arg;
 
   va_start (args, arg);
-  i = 0;
+  unsigned int i = 0;
   while (argv[i++] != NULL)
     {
       if (i == argv_max)
 	{
-	  const char **nptr = alloca ((argv_max *= 2) * sizeof (const char *));
-
-#ifndef _STACK_GROWS_UP
-	  if ((char *) nptr + argv_max == (char *) argv)
+	  argv_max *= 2;
+	  const char **nptr = realloc (argv == initial_argv ? NULL : argv,
+				       argv_max * sizeof (const char *));
+	  if (nptr == NULL)
 	    {
-	      /* Stack grows down.  */
-	      argv = (const char **) memcpy (nptr, argv,
-					     i * sizeof (const char *));
-	      argv_max += i;
+	      if (argv != initial_argv)
+		free (argv);
+	      return -1;
 	    }
-	  else
-#endif
-#ifndef _STACK_GROWS_DOWN
-	    if ((char *) argv + i == (char *) nptr)
-	    /* Stack grows up.  */
-	    argv_max += i;
-	  else
-#endif
-	    /* We have a hole in the stack.  */
-	    argv = (const char **) memcpy (nptr, argv,
-					   i * sizeof (const char *));
+	  if (argv == initial_argv)
+	    /* We have to copy the already filled-in data ourselves.  */
+	    memcpy (nptr, argv, i * sizeof (const char *));
+
+	  argv = nptr;
 	}
 
       argv[i] = va_arg (args, const char *);
     }
   va_end (args);
 
-  return execvp (file, (char *const *) argv);
+  int ret = execvp (file, (char *const *) argv);
+  if (argv != initial_argv)
+    free (argv);
+
+  return ret;
 }
 libc_hidden_def (execlp)
