@@ -1,3 +1,8 @@
+2000-11-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/s390/bits/string.h (strncat): Add missing quotation
+	marks.
+
 2000-11-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
 	* sysdeps/s390/bits/string.h: Make strncat always add a \0.

@@ -1,4 +1,4 @@
-/* Optimized, inlined string functions.  s390 version.
+/* Optimized, inlined string functions.	 s390 version.
    Copyright (C) 2000 Free Software Foundation, Inc.
    Contributed by Martin Schwidefsky (schwidefsky@de.ibm.com).
    This file is part of the GNU C Library.
@@ -10,13 +10,13 @@
 
    The GNU C Library is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
    Library General Public License for more details.
 
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Boston, MA 02111-1307, USA.	*/
 
 #ifndef _STRING_H
 # error "Never use <bits/string.h> directly; include <string.h> instead."
@@ -44,13 +44,13 @@ strlen (__const char *__str)
     size_t __len;
 
     __asm__ __volatile__ ("   sr    0,0\n"
-                          "   lr    %0,%1\n"
-                          "0: srst  0,%0\n"
-                          "   jo    0b\n"
-                          "   lr    %0,0\n"
-                          "   sr    %0,%1"
-                          : "=&a" (__len) : "a" (__str)
-                          : "cc", "0" );
+			  "   lr    %0,%1\n"
+			  "0: srst  0,%0\n"
+			  "   jo    0b\n"
+			  "   lr    %0,0\n"
+			  "   sr    %0,%1"
+			  : "=&a" (__len) : "a" (__str)
+			  : "cc", "0" );
     return __len;
 }
 
@@ -62,10 +62,10 @@ strcpy (char *__dest, __const char *__src)
     char *tmp = __dest;
 
     __asm__ __volatile__ ("   sr    0,0\n"
-                          "0: mvst  %0,%1\n"
-                          "   jo    0b"
-                          : "+&a" (__dest), "+&a" (__src) :
-                          : "cc", "memory", "0" );
+			  "0: mvst  %0,%1\n"
+			  "   jo    0b"
+			  : "+&a" (__dest), "+&a" (__src) :
+			  : "cc", "memory", "0" );
     return tmp;
 }
 
@@ -76,20 +76,20 @@ strncpy (char *__dest, __const char *__src, size_t __n)
     char *tmp = __dest;
 
     if (__n <= 0)
-        return tmp;
-    __asm__ __volatile ("   slr  %0,%1\n"
-                        "0: icm  0,1,0(%1)\n"
-                        "   stc  0,0(%0,%1)\n"
-                        "   jz   2f\n"
-                        "   la   %1,1(%1)\n"
-                        "   brct %2,0b\n"
-			"   j    3f\n"
-			"1: la   %1,1(%1)\n"
-			"   stc  0,0(%0,%1)\n"
+	return tmp;
+    __asm__ __volatile ("   slr	 %0,%1\n"
+			"0: icm	 0,1,0(%1)\n"
+			"   stc	 0,0(%0,%1)\n"
+			"   jz	 2f\n"
+			"   la	 %1,1(%1)\n"
+			"   brct %2,0b\n"
+			"   j	 3f\n"
+			"1: la	 %1,1(%1)\n"
+			"   stc	 0,0(%0,%1)\n"
 			"2: brct %2,1b\n"
-                        "3:"
-                        : "+&a" (__dest), "+&a" (__src), "+&d" (__n) :
-                        : "cc", "memory", "0" );
+			"3:"
+			: "+&a" (__dest), "+&a" (__src), "+&d" (__n) :
+			: "cc", "memory", "0" );
     return tmp;
 }
 
@@ -101,18 +101,18 @@ strcat(char *__dest, const char *__src)
     char *tmp = __dest;
 
     __asm__ __volatile__ ("   sr   0,0\n"
-                          "0: srst 0,%0\n"
-                          "   jo   0b\n"
-                          "   lr   %0,0\n"
-                          "   sr   0,0\n"
-                          "1: mvst %0,%1\n"
-                          "   jo   1b"
-                          : "+&a" (__dest), "+&a" (__src) :
-                          : "cc", "memory", "0" );
+			  "0: srst 0,%0\n"
+			  "   jo   0b\n"
+			  "   lr   %0,0\n"
+			  "   sr   0,0\n"
+			  "1: mvst %0,%1\n"
+			  "   jo   1b"
+			  : "+&a" (__dest), "+&a" (__src) :
+			  : "cc", "memory", "0" );
     return tmp;
 }
 
-/* Append no more than N characters from SRC onto DEST.  */
+/* Append no more than N characters from SRC onto DEST.	 */
 #define _HAVE_STRING_ARCH_strncat 1
 __STRING_INLINE char *
 strncat (char *__dest, __const char *__src, size_t __n)
@@ -120,20 +120,22 @@ strncat (char *__dest, __const char *__src, size_t __n)
     char *tmp = __dest;
 
     if (__n <= 0)
-        return tmp;
+	return tmp;
     __asm__ __volatile__ ("   sr   0,0\n"
-                          "0: srst 0,%0\n"
-                          "   jo   0b\n"
-                          "   lr   %0,0\n"
-                          "   slr  %0,%1\n"
+			  "0: srst 0,%0\n"
+			  "   jo   0b\n"
+			  "   lr   %0,0\n"
+			  "   slr  %0,%1\n"
 			  "1: icm  0,1,0(%1)\n"
 			  "   stc  0,0(%0,%1)\n"
 			  "   jz   2f\n"
 			  "   la   %1,1(%1)\n"
 			  "   brct %2,1b\n"
+			  "   la   %0,0(%0,%1)\n"
+			  "   xc   0(1,%0),0(%0\n)"
 			  "2:"
-                          : "+&a" (__dest), "+&a" (__src), "+&d" (__n) :
-                          : "cc", "memory", "0" );
+			  : "+&a" (__dest), "+&a" (__src), "+&d" (__n) :
+			  : "cc", "memory", "0" );
     return tmp;
 }
 
