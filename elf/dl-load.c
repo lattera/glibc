@@ -1036,12 +1036,6 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     l->l_map_start = c->mapstart + l->l_addr;
     l->l_map_end = l->l_map_start + maplength;
 
-#ifdef USE_TLS
-    /* Adjust the address of the TLS initialization image.  */
-    if (l->l_tls_initimage != NULL)
-      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_addr;
-#endif
-
     while (c < &loadcmds[nloadcmds])
       {
 	if (c->mapend > c->mapstart
@@ -1134,6 +1128,12 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       /* Adjust the PT_PHDR value by the runtime load address.  */
       (ElfW(Addr)) l->l_phdr += l->l_addr;
   }
+
+#ifdef USE_TLS
+    /* Adjust the address of the TLS initialization image.  */
+    if (l->l_tls_initimage != NULL)
+      l->l_tls_initimage = (char *) l->l_tls_initimage + l->l_map_start;
+#endif
 
   /* We are done mapping in the file.  We no longer need the descriptor.  */
   __close (fd);

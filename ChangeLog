@@ -1,5 +1,11 @@
 2002-02-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/dl-tls.c (_dl_determine_tlsoffset): More changes
+	required by passing pointer to last element of the list.
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Move adjustment of
+	l_tls_initimage to a place where it actually is performed.
+
 	* sysdeps/generic/glob.c (glob): Explicitly set gl_pathc to zero
 	after globfree() calls.
 
@@ -17,7 +23,7 @@
 	* elf/Makefile: Add rules to build and run nodlopen2.
 
 	* elf/tst-tls1.c: Move TLS helper macros to...
-	* elf/tls-macros.hgg: ...here.  New file.
+	* elf/tls-macros.h: ...here.  New file.
 	* elf/tst-tls2.c: New file.
 	* elf/Makefile (tests): Add tst-tls2.
 	(distribute): Add tls-macros.h.

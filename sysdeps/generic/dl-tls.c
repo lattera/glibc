@@ -79,16 +79,16 @@ _dl_next_tls_modid (void)
 
 void
 internal_function
-_dl_determine_tlsoffset (struct link_map *firstp)
+_dl_determine_tlsoffset (struct link_map *lastp)
 {
-  struct link_map *runp = firstp;
+  struct link_map *runp;
   size_t max_align = 0;
   size_t offset;
 
-  if (GL(dl_initimage_list) == NULL)
+  if (lastp == NULL)
     {
       /* None of the objects used at startup time uses TLS.  We still
-	 have to allocate the TCB adn dtv.  */
+	 have to allocate the TCB and dtv.  */
       GL(dl_tls_static_size) = TLS_TCB_SIZE;
       GL(dl_tls_static_align) = TLS_TCB_ALIGN;
 
@@ -99,6 +99,7 @@ _dl_determine_tlsoffset (struct link_map *firstp)
   /* We simply start with zero.  */
   offset = 0;
 
+  runp = lastp->l_tls_nextimage;
   do
     {
       max_align = MAX (max_align, runp->l_tls_align);
@@ -110,7 +111,7 @@ _dl_determine_tlsoffset (struct link_map *firstp)
 	 negative offset.  */
       runp->l_tls_offset = offset;
     }
-  while ((runp = runp->l_tls_nextimage) != firstp);
+  while ((runp = runp->l_tls_nextimage) != lastp->l_tls_nextimage);
 
 #if 0
   /* The thread descriptor (pointed to by the thread pointer) has its
@@ -126,27 +127,28 @@ _dl_determine_tlsoffset (struct link_map *firstp)
 
   GL(dl_tls_static_size) = offset + TLS_TCB_SIZE;
 # elif TLS_DTV_AT_TP
-  struct link_map *lastp;
+  struct link_map *prevp;
 
   /* The first block starts right after the TCB.  */
   offset = TLS_TCB_SIZE;
   max_align = runp->l_tls_align;
+  runp = lastp->l_tls_nextimage;
   runp->l_tls_offset = offset;
-  lastp = runp;
+  prevp = runp;
 
   while ((runp = runp->l_tls_nextimage) != firstp)
     {
       max_align = MAX (max_align, runp->l_tls_align);
 
       /* Compute the offset of the next TLS block.  */
-      offset = roundup (offset + lastp->l_tls_blocksize, runp->l_tls_align);
+      offset = roundup (offset + prevp->l_tls_blocksize, runp->l_tls_align);
 
       runp->l_tls_offset = offset;
 
-      lastp = runp;
+      prevp = runp;
     }
 
-  GL(dl_tls_static_size) = offset + lastp->l_tls_blocksize;
+  GL(dl_tls_static_size) = offset + prevp->l_tls_blocksize;
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
