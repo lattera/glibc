@@ -1,5 +1,8 @@
 1999-01-07  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/i386/i686/memset.S: New file.
+	* sysdeps/i386/i686/bzero.S: New file.
+
 	* sysdeps/unix/sysv/linux/Makefile [subdir=time] (sysdep_routines):
 	Add ntp_adjtime and ntp_gettime.
 	* sysdeps/unix/sysv/linux/Versions [GLIBC_2.1]: Add ntp_adjtime and
@@ -65,7 +68,7 @@
 	* sysdeps/unix/sysv/linux/net/if_arp.h: Add new ARPHRD definitions
 	from latest (2.2.0pre4) kernel.
 
-1999-01-05 Scott Bambrough  <scottb@corelcomputer.com>
+1999-01-05  Scott Bambrough  <scottb@corelcomputer.com>
 
 	* sysdeps/unix/sysv/linux/arm/sys/user.h : New file.  Fixes problem
 	on ARM platforms with programs that include <sys/user.h> and
