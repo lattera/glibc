@@ -43,13 +43,22 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)hash.h	10.8 (Sleepycat) 4/10/98
+ *	@(#)hash.h	10.14 (Sleepycat) 10/4/98
  */
 
 /* Cursor structure definitions. */
 typedef struct cursor_t {
-	DBC		*db_cursor;
+	DBC		*dbc;
+
+	/* Per-thread information */
+	DB_LOCK hlock;			/* Metadata page lock. */
+	HASHHDR *hdr;			/* Pointer to meta-data page. */
+	PAGE *split_buf;		/* Temporary buffer for splits. */
+	struct __db_h_stat stats;	/* Hash statistics. */
+
+	/* Hash cursor information */
 	db_pgno_t	bucket;		/* Bucket we are traversing. */
+	db_pgno_t	lbucket;	/* Bucket for which we are locked. */
 	DB_LOCK		lock;		/* Lock held on the current bucket. */
 	PAGE		*pagep;		/* The current page. */
 	db_pgno_t	pgno;		/* Current page number. */
@@ -62,104 +71,83 @@ typedef struct cursor_t {
 	db_indx_t	dup_tlen;	/* Total length of duplicate entry. */
 	u_int32_t	seek_size;	/* Number of bytes we need for add. */
 	db_pgno_t	seek_found_page;/* Page on which we can insert. */
-	u_int32_t	big_keylen;	/* Length of big_key buffer. */
-	void		*big_key;	/* Temporary buffer for big keys. */
-	u_int32_t	big_datalen;	/* Length of big_data buffer. */
-	void		*big_data;	/* Temporary buffer for big data. */
-#define	H_OK		0x0001
-#define	H_NOMORE	0x0002
-#define	H_DELETED	0x0004
-#define	H_ISDUP		0x0008
-#define	H_EXPAND	0x0020
-	u_int32_t	flags;		/* Is cursor inside a dup set. */
+
+#define	H_DELETED	0x0001		/* Cursor item is deleted. */
+#define	H_DUPONLY	0x0002		/* Dups only; do not change key. */
+#define	H_EXPAND	0x0004		/* Table expanded. */
+#define	H_ISDUP		0x0008		/* Cursor is within duplicate set. */
+#define	H_NOMORE	0x0010		/* No more entries in bucket. */
+#define	H_OK		0x0020		/* Request succeeded. */
+#define H_DIRTY		0x0040		/* Meta-data page needs to be written */
+#define	H_ORIGINAL	0x0080		/* Bucket lock existed on entry. */
+	u_int32_t	flags;
 } HASH_CURSOR;
 
 #define	IS_VALID(C) ((C)->bucket != BUCKET_INVALID)
 
+#define	SAVE_CURSOR(ORIG, COPY) {					\
+	F_SET((ORIG), H_ORIGINAL);					\
+	*(COPY) = *(ORIG);						\
+}
 
-typedef struct htab {		/* Memory resident data structure. */
-	DB *dbp;		/* Pointer to parent db structure. */
-	DB_LOCK hlock;		/* Metadata page lock. */
-	HASHHDR *hdr;		/* Pointer to meta-data page. */
-	u_int32_t (*hash) __P((const void *, u_int32_t)); /* Hash Function */
-	PAGE *split_buf;	/* Temporary buffer for splits. */
-	int local_errno;	/* Error Number -- for DBM compatability */
-	u_long hash_accesses;	/* Number of accesses to this table. */
-	u_long hash_collisions;	/* Number of collisions on search. */
-	u_long hash_expansions;	/* Number of times we added a bucket. */
-	u_long hash_overflows;	/* Number of overflow pages. */
-	u_long hash_bigpages;	/* Number of big key/data pages. */
-} HTAB;
-
-/*
- * Macro used for interface functions to set the txnid in the DBP.
- */
-#define	SET_LOCKER(D, T) ((D)->txn = (T))
+#define	RESTORE_CURSOR(D, ORIG, COPY, RET) {				\
+	if ((RET) == 0) {						\
+		if ((ORIG)->dbc->txn == NULL &&				\
+		    (COPY)->lock != 0 && (ORIG)->lock != (COPY)->lock)	\
+			(void)lock_put((D)->dbenv->lk_info, (COPY)->lock); \
+	} else {							\
+		if ((ORIG)->dbc->txn == NULL &&				\
+		    (ORIG)->lock != 0 && (ORIG)->lock != (COPY)->lock)	\
+			(void)lock_put((D)->dbenv->lk_info, (ORIG)->lock); \
+		*ORIG = *COPY;						\
+	}								\
+}
 
 /*
  * More interface macros used to get/release the meta data page.
  */
-#define	GET_META(D, H) {						\
-	int _r;								\
-	if (F_ISSET(D, DB_AM_LOCKING) && !F_ISSET(D, DB_AM_RECOVER)) {	\
-		(D)->lock.pgno = BUCKET_INVALID;			\
-	    	if ((_r = lock_get((D)->dbenv->lk_info,			\
-	    	    (D)->txn == NULL ? (D)->locker : (D)->txn->txnid,	\
-		    0, &(D)->lock_dbt, DB_LOCK_READ,			\
-		    &(H)->hlock)) != 0)					\
-			return (_r < 0 ? EAGAIN : _r);			\
+#define	GET_META(D, I, R) {						\
+	if (F_ISSET(D, DB_AM_LOCKING) &&				\
+	    !F_ISSET((I)->dbc, DBC_RECOVER)) {				\
+		(I)->dbc->lock.pgno = BUCKET_INVALID;			\
+		(R) = lock_get((D)->dbenv->lk_info, (I)->dbc->locker, 	\
+		    0, &(I)->dbc->lock_dbt, DB_LOCK_READ, &(I)->hlock);	\
+		(R) = (R) < 0 ? EAGAIN : (R);				\
 	}								\
-	if ((_r = __ham_get_page(D, 0, (PAGE **)&((H)->hdr))) != 0) {	\
-		if ((H)->hlock) {					\
-			(void)lock_put((D)->dbenv->lk_info, (H)->hlock);\
-			(H)->hlock = 0;					\
-		}							\
-		return (_r);						\
+	if ((R) == 0 && 						\
+	    ((R) = __ham_get_page(D, 0, (PAGE **)&((I)->hdr))) != 0 &&  \
+	    (I)->hlock != LOCK_INVALID) {				\
+		(void)lock_put((D)->dbenv->lk_info, (I)->hlock);	\
+		(I)->hlock = LOCK_INVALID;				\
 	}								\
 }
 
-#define	RELEASE_META(D, H) {						\
-	if (!F_ISSET(D, DB_AM_RECOVER) &&				\
-	    (D)->txn == NULL && (H)->hlock)				\
-		(void)lock_put((H)->dbp->dbenv->lk_info, (H)->hlock);	\
-	(H)->hlock = 0;							\
-	if ((H)->hdr)							\
-		(void)__ham_put_page(D, (PAGE *)(H)->hdr,		\
-		    F_ISSET(D, DB_HS_DIRTYMETA) ? 1 : 0);		\
-	(H)->hdr = NULL;						\
-	F_CLR(D, DB_HS_DIRTYMETA);					\
+#define	RELEASE_META(D, I) {						\
+	if ((I)->hdr)							\
+		(void)__ham_put_page(D, (PAGE *)(I)->hdr,		\
+		    F_ISSET(I, H_DIRTY) ? 1 : 0);			\
+	(I)->hdr = NULL;						\
+	if (!F_ISSET((I)->dbc, DBC_RECOVER) &&				\
+	    (I)->dbc->txn == NULL && (I)->hlock)			\
+		(void)lock_put((D)->dbenv->lk_info, (I)->hlock);	\
+	(I)->hlock = LOCK_INVALID;					\
+	F_CLR(I, H_DIRTY);						\
 }
 
-#define	DIRTY_META(H, R) {						\
-	if (F_ISSET((H)->dbp, DB_AM_LOCKING) &&				\
-	    !F_ISSET((H)->dbp, DB_AM_RECOVER)) {			\
+#define	DIRTY_META(D, I, R) {						\
+	if (F_ISSET(D, DB_AM_LOCKING) &&				\
+	    !F_ISSET((I)->dbc, DBC_RECOVER)) {				\
 		DB_LOCK _tmp;						\
-		(H)->dbp->lock.pgno = BUCKET_INVALID;			\
-	    	if (((R) = lock_get((H)->dbp->dbenv->lk_info,		\
-	    	    (H)->dbp->txn ? (H)->dbp->txn->txnid :		\
-	    	    (H)->dbp->locker, 0, &(H)->dbp->lock_dbt,		\
+		(I)->dbc->lock.pgno = BUCKET_INVALID;			\
+	    	if (((R) = lock_get((D)->dbenv->lk_info,		\
+	    	    (I)->dbc->locker, 0, &(I)->dbc->lock_dbt,		\
 	    	    DB_LOCK_WRITE, &_tmp)) == 0)			\
-			(R) = lock_put((H)->dbp->dbenv->lk_info,	\
-			    (H)->hlock);				\
+			(R) = lock_put((D)->dbenv->lk_info, (I)->hlock);\
 		else if ((R) < 0)					\
 			(R) = EAGAIN;					\
-		(H)->hlock = _tmp;					\
+		(I)->hlock = _tmp;					\
 	}								\
-	F_SET((H)->dbp, DB_HS_DIRTYMETA);				\
-}
-
-/* Allocate and discard thread structures. */
-#define	H_GETHANDLE(dbp, dbpp, ret)					\
-	if (F_ISSET(dbp, DB_AM_THREAD))					\
-		ret = __db_gethandle(dbp, __ham_hdup, dbpp);		\
-	else {								\
-		ret = 0;						\
-		*dbpp = dbp;						\
-	}
-
-#define	H_PUTHANDLE(dbp) {						\
-	if (F_ISSET(dbp, DB_AM_THREAD))					\
-		__db_puthandle(dbp);					\
+	F_SET((I), H_DIRTY);						\
 }
 
 /* Test string. */
@@ -171,16 +159,16 @@ typedef struct htab {		/* Memory resident data structure. */
  * the table, we can allocate extra pages.  We keep track of how many pages
  * we've allocated at each point to calculate bucket to page number mapping.
  */
-#define	BUCKET_TO_PAGE(H, B) \
-	((B) + 1 + ((B) ? (H)->hdr->spares[__db_log2((B)+1)-1] : 0))
+#define	BUCKET_TO_PAGE(I, B) \
+	((B) + 1 + ((B) ? (I)->hdr->spares[__db_log2((B)+1)-1] : 0))
 
-#define	PGNO_OF(H, S, O) (BUCKET_TO_PAGE((H), (1 << (S)) - 1) + (O))
+#define	PGNO_OF(I, S, O) (BUCKET_TO_PAGE((I), (1 << (S)) - 1) + (O))
 
 /* Constraints about number of pages and how much data goes on a page. */
 
 #define	MAX_PAGES(H)	UINT32_T_MAX
 #define	MINFILL		4
-#define	ISBIG(H, N)	(((N) > ((H)->hdr->pagesize / MINFILL)) ? 1 : 0)
+#define	ISBIG(I, N)	(((N) > ((I)->hdr->pagesize / MINFILL)) ? 1 : 0)
 
 /* Shorthands for accessing structure */
 #define	NDX_INVALID	0xFFFF

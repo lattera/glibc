@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_sleep.c	10.10 (Sleepycat) 4/27/98";
+static const char sccsid[] = "@(#)os_sleep.c	10.12 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,6 +28,7 @@ static const char sccsid[] = "@(#)os_sleep.c	10.10 (Sleepycat) 4/27/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
  * __os_sleep --
@@ -44,6 +45,9 @@ __os_sleep(secs, usecs)
 	/* Don't require that the values be normalized. */
 	for (; usecs >= 1000000; ++secs, usecs -= 1000000)
 		;
+
+	if (__db_jump.j_sleep != NULL)
+		return (__db_jump.j_sleep(secs, usecs));
 
 	/*
 	 * It's important that we yield the processor here so that other

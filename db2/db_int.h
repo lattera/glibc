@@ -4,14 +4,15 @@
  * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_int.h.src	10.62 (Sleepycat) 5/23/98
+ *	@(#)db_int.h	10.77 (Sleepycat) 1/3/99
  */
 
 #ifndef _DB_INTERNAL_H_
 #define	_DB_INTERNAL_H_
 
-#include <db.h>				/* Standard DB include file. */
+#include "db.h"				/* Standard DB include file. */
 #include "queue.h"
+#include "shqueue.h"
 
 /*******************************************************
  * General purpose constants and macros.
@@ -75,27 +76,7 @@
 #define	R_ADDR(base, offset)	((void *)((u_int8_t *)((base)->addr) + offset))
 #define	R_OFFSET(base, p)	((u_int8_t *)(p) - (u_int8_t *)(base)->addr)
 
-/* Free and free-string macros that overwrite memory. */
-#ifdef DIAGNOSTIC
-#undef	FREE
-#define	FREE(p, len) {							\
-	memset(p, 0xff, len);						\
-	__db_free(p);							\
-}
-#undef	FREES
-#define	FREES(p) {							\
-	FREE(p, strlen(p));						\
-}
-#else
-#undef	FREE
-#define	FREE(p, len) {							\
-	__db_free(p);							\
-}
-#undef	FREES
-#define	FREES(p) {							\
-	__db_free(p);							\
-}
-#endif
+#define	DB_DEFAULT	0x000000	/* No flag was specified. */
 
 /* Structure used to print flag values. */
 typedef struct __fn {
@@ -111,23 +92,27 @@ typedef struct __fn {
 #define	LF_CLR(f)	(flags &= ~(f))
 #define	LF_ISSET(f)	(flags & (f))
 
+/*
+ * Panic check:
+ * All interfaces check the panic flag, if it's set, the tree is dead.
+ */
+#define	DB_PANIC_CHECK(dbp) {						\
+	if ((dbp)->dbenv != NULL && (dbp)->dbenv->db_panic != 0)	\
+		return (DB_RUNRECOVERY);				\
+}
+
 /* Display separator string. */
 #undef	DB_LINE
 #define	DB_LINE "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
-/* Global variables. */
-typedef struct __db_globals {
-	int db_mutexlocks;		/* DB_MUTEXLOCKS */
-	int db_region_anon;		/* DB_REGION_ANON, DB_REGION_NAME */
-	int db_region_init;		/* DB_REGION_INIT */
-	int db_tsl_spins;		/* DB_TSL_SPINS */
-	int db_pageyield;		/* DB_PAGEYIELD */
-} DB_GLOBALS;
-extern	DB_GLOBALS	__db_global_values;
-#define	DB_GLOBAL(v)	__db_global_values.v
-
 /* Unused, or not-used-yet variable.  "Shut that bloody compiler up!" */
 #define	COMPQUIET(n, v)	(n) = (v)
+
+/*
+ * Purify and similar run-time tools complain about unitialized reads/writes
+ * for structure fields whose only purpose is padding.
+ */
+#define	UMRW(v)		(v) = 0
 
 /*
  * Win16 needs specific syntax on callback functions.  Nobody else cares.
@@ -154,8 +139,6 @@ extern	DB_GLOBALS	__db_global_values;
  * Mutex support.
  *******************************************************/
 typedef unsigned char tsl_t;
-
-
 
 /*
  * !!!
@@ -204,21 +187,6 @@ typedef struct _db_mutex_t {
 	if (F_ISSET(dbp, DB_AM_THREAD))					\
 	    (void)__db_mutex_unlock((db_mutex_t *)(dbp)->mutexp, -1);
 
-/* Btree/recno local statistics structure. */
-struct __db_bt_lstat;	typedef struct __db_bt_lstat DB_BTREE_LSTAT;
-struct __db_bt_lstat {
-	u_int32_t bt_freed;		/* Pages freed for reuse. */
-	u_int32_t bt_pfxsaved;		/* Bytes saved by prefix compression. */
-	u_int32_t bt_split;		/* Total number of splits. */
-	u_int32_t bt_rootsplit;		/* Root page splits. */
-	u_int32_t bt_fastsplit;		/* Fast splits. */
-	u_int32_t bt_added;		/* Items added. */
-	u_int32_t bt_deleted;		/* Items deleted. */
-	u_int32_t bt_get;		/* Items retrieved. */
-	u_int32_t bt_cache_hit;		/* Hits in fast-insert code. */
-	u_int32_t bt_cache_miss;	/* Misses in fast-insert code. */
-};
-
 /*******************************************************
  * Environment.
  *******************************************************/
@@ -250,6 +218,7 @@ typedef struct _rlayout {
 	int	   majver;		/* Major version number. */
 	int	   minver;		/* Minor version number. */
 	int	   patch;		/* Patch version number. */
+	int	   panic;		/* Region is dead. */
 #define	INVALID_SEGID	-1
 	int	   segid;		/* shmget(2) ID, or Win16 segment ID. */
 
@@ -262,9 +231,9 @@ typedef struct _rlayout {
  * we don't make the underlying VM unhappy.
  */
 #define	DB_VMPAGESIZE	(4 * 1024)
-#define	DB_ROUNDOFF(i) {						\
-	(i) += DB_VMPAGESIZE - 1;					\
-	(i) -= (i) % DB_VMPAGESIZE;					\
+#define	DB_ROUNDOFF(n, round) {						\
+	(n) += (round) - 1;						\
+	(n) -= (n) % (round);						\
 }
 
 /*
@@ -292,6 +261,7 @@ struct __db_reginfo {
 					   and mmap(2) is being used to map it
 					   into our address space. */
 	int	    segid;		/* shmget(2) ID, or Win16 segment ID. */
+	void	   *wnt_handle;		/* Win/NT HANDLE. */
 
 					/* Shared flags. */
 /*				0x0001	COMMON MASK with RLAYOUT structure. */
@@ -334,8 +304,8 @@ typedef struct __dbpginfo {
 #define	IS_ZERO_LSN(LSN)	((LSN).file == 0)
 
 /* Test if we need to log a change. */
-#define	DB_LOGGING(dbp)							\
-	(F_ISSET(dbp, DB_AM_LOGGING) && !F_ISSET(dbp, DB_AM_RECOVER))
+#define	DB_LOGGING(dbc)							\
+	(F_ISSET((dbc)->dbp, DB_AM_LOGGING) && !F_ISSET(dbc, DBC_RECOVER))
 
 #ifdef DIAGNOSTIC
 /*
@@ -350,30 +320,30 @@ typedef struct __dbpginfo {
  * A data
  * F flags
  */
-#define	LOG_OP(D, T, O, K, A, F) {					\
+#define	LOG_OP(C, T, O, K, A, F) {					\
 	DB_LSN _lsn;							\
 	DBT _op;							\
-	if (DB_LOGGING((D))) {						\
+	if (DB_LOGGING((C))) {						\
 		memset(&_op, 0, sizeof(_op));				\
 		_op.data = O;						\
 		_op.size = strlen(O) + 1;				\
-		(void)__db_debug_log((D)->dbenv->lg_info,		\
-		    T, &_lsn, 0, &_op, (D)->log_fileid, K, A, F);	\
+		(void)__db_debug_log((C)->dbp->dbenv->lg_info,		\
+		    T, &_lsn, 0, &_op, (C)->dbp->log_fileid, K, A, F);	\
 	}								\
 }
 #ifdef DEBUG_ROP
-#define	DEBUG_LREAD(D, T, O, K, A, F)	LOG_OP(D, T, O, K, A, F)
+#define	DEBUG_LREAD(C, T, O, K, A, F)	LOG_OP(C, T, O, K, A, F)
 #else
-#define	DEBUG_LREAD(D, T, O, K, A, F)
+#define	DEBUG_LREAD(C, T, O, K, A, F)
 #endif
 #ifdef DEBUG_WOP
-#define	DEBUG_LWRITE(D, T, O, K, A, F)	LOG_OP(D, T, O, K, A, F)
+#define	DEBUG_LWRITE(C, T, O, K, A, F)	LOG_OP(C, T, O, K, A, F)
 #else
-#define	DEBUG_LWRITE(D, T, O, K, A, F)
+#define	DEBUG_LWRITE(C, T, O, K, A, F)
 #endif
 #else
-#define	DEBUG_LREAD(D, T, O, K, A, F)
-#define	DEBUG_LWRITE(D, T, O, K, A, F)
+#define	DEBUG_LREAD(C, T, O, K, A, F)
+#define	DEBUG_LWRITE(C, T, O, K, A, F)
 #endif /* DIAGNOSTIC */
 
 /*******************************************************
@@ -393,10 +363,45 @@ struct __db_txn {
 	DB_LSN		last_lsn;	/* Lsn of last log write. */
 	u_int32_t	txnid;		/* Unique transaction id. */
 	size_t		off;		/* Detail structure within region. */
-	TAILQ_ENTRY(__db_txn) links;
+	TAILQ_ENTRY(__db_txn) links;	/* Links transactions off manager. */
+	TAILQ_HEAD(__kids, __db_txn) kids; /* Child transactions. */
+	TAILQ_ENTRY(__db_txn) klinks;	/* Links child transactions. */
+
+#define	TXN_MALLOC	0x01		/* Structure allocated by TXN system. */
+	u_int32_t	flags;
 };
 
-#include "os_func.h"
+/*******************************************************
+ * Global variables.
+ *******************************************************/
+/*
+ * !!!
+ * Initialized in os/os_config.c, don't change this unless you change it
+ * as well.
+ */
+
+struct __rmname {
+	char *dbhome;
+	int rmid;
+	TAILQ_ENTRY(__rmname) links;
+};
+
+typedef struct __db_globals {
+	int db_mutexlocks;		/* DB_MUTEXLOCKS */
+	int db_pageyield;		/* DB_PAGEYIELD */
+	int db_region_anon;		/* DB_REGION_ANON, DB_REGION_NAME */
+	int db_region_init;		/* DB_REGION_INIT */
+	int db_tsl_spins;		/* DB_TSL_SPINS */
+					/* XA: list of opened environments. */
+	TAILQ_HEAD(__db_envq, __db_env) db_envq;
+					/* XA: list of id to dbhome mappings. */
+	TAILQ_HEAD(__db_nameq, __rmname) db_nameq;
+} DB_GLOBALS;
+
+extern	DB_GLOBALS	__db_global_values;
+#define	DB_GLOBAL(v)	__db_global_values.v
+
+#include "os.h"
 #include "os_ext.h"
 
 #endif /* !_DB_INTERNAL_H_ */

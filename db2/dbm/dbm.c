@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)dbm.c	10.16 (Sleepycat) 5/7/98";
+static const char sccsid[] = "@(#)dbm.c	10.23 (Sleepycat) 11/22/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -88,6 +88,16 @@ __db_dbm_init(file)
 	return (-1);
 }
 weak_alias (__db_dbm_init, dbminit)
+
+int
+__db_dbm_close()
+{
+	if (__cur_db != NULL) {
+		dbm_close(__cur_db);
+		__cur_db = NULL;
+	}
+	return (0);
+}
 
 datum
 __db_dbm_fetch(key)
@@ -140,16 +150,11 @@ int
 __db_dbm_delete(key)
 	datum key;
 {
-	int ret;
-
 	if (__cur_db == NULL) {
 		__db_no_open();
 		return (-1);
 	}
-	ret = dbm_delete(__cur_db, key);
-	if (ret == 0)
-		ret = (((DB *)__cur_db)->sync)((DB *)__cur_db, 0);
-	return (ret);
+	return (dbm_delete(__cur_db, key));
 }
 weak_alias (__db_dbm_delete, delete)
 
@@ -157,16 +162,11 @@ int
 __db_dbm_store(key, dat)
 	datum key, dat;
 {
-	int ret;
-
 	if (__cur_db == NULL) {
 		__db_no_open();
 		return (-1);
 	}
-	ret = dbm_store(__cur_db, key, dat, DBM_REPLACE);
-	if (ret == 0)
-		ret = (((DB *)__cur_db)->sync)((DB *)__cur_db, 0);
-	return (ret);
+	return (dbm_store(__cur_db, key, dat, DBM_REPLACE));
 }
 weak_alias (__db_dbm_store, store)
 
@@ -192,7 +192,9 @@ __db_ndbm_open(file, oflags, mode)
 	int oflags, mode;
 {
 	DB *dbp;
+	DBC *dbc;
 	DB_INFO dbinfo;
+	int sv_errno;
 	char path[MAXPATHLEN];
 
 	memset(&dbinfo, 0, sizeof(dbinfo));
@@ -215,7 +217,15 @@ __db_ndbm_open(file, oflags, mode)
 	if ((errno = db_open(path,
 	    DB_HASH, __db_oflags(oflags), mode, NULL, &dbinfo, &dbp)) != 0)
 		return (NULL);
-	return ((DBM *)dbp);
+
+	if ((errno = dbp->cursor(dbp, NULL, &dbc, 0)) != 0) {
+		sv_errno = errno;
+		(void)dbp->close(dbp, 0);
+		errno = sv_errno;
+		return (NULL);
+	}
+
+	return ((DBM *)dbc);
 }
 weak_alias (__db_ndbm_open, dbm_open)
 
@@ -224,10 +234,14 @@ weak_alias (__db_ndbm_open, dbm_open)
  *	Nothing.
  */
 void
-__db_ndbm_close(db)
-	DBM *db;
+__db_ndbm_close(dbm)
+	DBM *dbm;
 {
-	(void)db->close(db, 0);
+	DBC *dbc;
+
+	dbc = (DBC *)dbm;
+
+	(void)dbc->dbp->close(dbc->dbp, 0);
 }
 weak_alias (__db_ndbm_close, dbm_close)
 
@@ -237,25 +251,39 @@ weak_alias (__db_ndbm_close, dbm_close)
  *	NULL on failure
  */
 datum
-__db_ndbm_fetch(db, key)
-	DBM *db;
+__db_ndbm_fetch(dbm, key)
+	DBM *dbm;
 	datum key;
 {
+	DBC *dbc;
 	DBT _key, _data;
 	datum data;
 	int ret;
+
+	dbc = (DBC *)dbm;
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
 	_key.size = key.dsize;
 	_key.data = key.dptr;
-	if ((ret = db->get((DB *)db, NULL, &_key, &_data, 0)) == 0) {
+
+	/*
+	 * Note that we can't simply use the dbc we have to do a c_get/SET,
+	 * because that cursor is the one used for sequential iteration and
+	 * it has to remain stable in the face of intervening gets and puts.
+	 */
+	if ((ret = dbc->dbp->get(dbc->dbp, NULL, &_key, &_data, 0)) == 0) {
 		data.dptr = _data.data;
 		data.dsize = _data.size;
 	} else {
 		data.dptr = NULL;
 		data.dsize = 0;
-		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
+		if (ret == DB_NOTFOUND)
+			errno = ENOENT;
+		else {
+			errno = ret;
+			F_SET(dbc->dbp, DB_DBM_ERROR);
+		}
 	}
 	return (data);
 }
@@ -267,30 +295,31 @@ weak_alias (__db_ndbm_fetch, dbm_fetch)
  *	NULL on failure
  */
 datum
-__db_ndbm_firstkey(db)
-	DBM *db;
+__db_ndbm_firstkey(dbm)
+	DBM *dbm;
 {
+	DBC *dbc;
 	DBT _key, _data;
 	datum key;
 	int ret;
 
-	DBC *cp;
-
-	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
-			memset(&key, 0, sizeof(key));
-			return (key);
-		}
+	dbc = (DBC *)dbm;
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
-	if ((ret = (cp->c_get)(cp, &_key, &_data, DB_FIRST)) == 0) {
+
+	if ((ret = dbc->c_get(dbc, &_key, &_data, DB_FIRST)) == 0) {
 		key.dptr = _key.data;
 		key.dsize = _key.size;
 	} else {
 		key.dptr = NULL;
 		key.dsize = 0;
-		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
+		if (ret == DB_NOTFOUND)
+			errno = ENOENT;
+		else {
+			errno = ret;
+			F_SET(dbc->dbp, DB_DBM_ERROR);
+		}
 	}
 	return (key);
 }
@@ -302,29 +331,31 @@ weak_alias (__db_ndbm_firstkey, dbm_firstkey)
  *	NULL on failure
  */
 datum
-__db_ndbm_nextkey(db)
-	DBM *db;
+__db_ndbm_nextkey(dbm)
+	DBM *dbm;
 {
-	DBC *cp;
+	DBC *dbc;
 	DBT _key, _data;
 	datum key;
 	int ret;
 
-	if ((cp = TAILQ_FIRST(&db->curs_queue)) == NULL)
-		if ((errno = db->cursor(db, NULL, &cp)) != 0) {
-			memset(&key, 0, sizeof(key));
-			return (key);
-		}
+	dbc = (DBC *)dbm;
 
 	memset(&_key, 0, sizeof(DBT));
 	memset(&_data, 0, sizeof(DBT));
-	if ((ret = (cp->c_get)(cp, &_key, &_data, DB_NEXT)) == 0) {
+
+	if ((ret = dbc->c_get(dbc, &_key, &_data, DB_NEXT)) == 0) {
 		key.dptr = _key.data;
 		key.dsize = _key.size;
 	} else {
 		key.dptr = NULL;
 		key.dsize = 0;
-		__set_errno (ret == DB_NOTFOUND ? ENOENT : ret);
+		if (ret == DB_NOTFOUND)
+			errno = ENOENT;
+		else {
+			errno = ret;
+			F_SET(dbc->dbp, DB_DBM_ERROR);
+		}
 	}
 	return (key);
 }
@@ -336,19 +367,29 @@ weak_alias (__db_ndbm_nextkey, dbm_nextkey)
  *	<0 failure
  */
 int
-__db_ndbm_delete(db, key)
-	DBM *db;
+__db_ndbm_delete(dbm, key)
+	DBM *dbm;
 	datum key;
 {
+	DBC *dbc;
 	DBT _key;
 	int ret;
+
+	dbc = (DBC *)dbm;
 
 	memset(&_key, 0, sizeof(DBT));
 	_key.data = key.dptr;
 	_key.size = key.dsize;
-	if ((ret = (((DB *)db)->del)((DB *)db, NULL, &_key, 0)) == 0)
+
+	if ((ret = dbc->dbp->del(dbc->dbp, NULL, &_key, 0)) == 0)
 		return (0);
-	errno = ret == DB_NOTFOUND ? ENOENT : ret;
+
+	if (ret == DB_NOTFOUND)
+		errno = ENOENT;
+	else {
+		errno = ret;
+		F_SET(dbc->dbp, DB_DBM_ERROR);
+	}
 	return (-1);
 }
 weak_alias (__db_ndbm_delete, dbm_delete)
@@ -360,49 +401,59 @@ weak_alias (__db_ndbm_delete, dbm_delete)
  *	 1 if DBM_INSERT and entry exists
  */
 int
-__db_ndbm_store(db, key, data, flags)
-	DBM *db;
+__db_ndbm_store(dbm, key, data, flags)
+	DBM *dbm;
 	datum key, data;
 	int flags;
 {
+	DBC *dbc;
 	DBT _key, _data;
 	int ret;
 
+	dbc = (DBC *)dbm;
+
 	memset(&_key, 0, sizeof(DBT));
-	memset(&_data, 0, sizeof(DBT));
 	_key.data = key.dptr;
 	_key.size = key.dsize;
+
+	memset(&_data, 0, sizeof(DBT));
 	_data.data = data.dptr;
 	_data.size = data.dsize;
-	if ((ret = db->put((DB *)db, NULL,
+
+	if ((ret = dbc->dbp->put(dbc->dbp, NULL,
 	    &_key, &_data, flags == DBM_INSERT ? DB_NOOVERWRITE : 0)) == 0)
 		return (0);
+
 	if (ret == DB_KEYEXIST)
 		return (1);
+
 	errno = ret;
+	F_SET(dbc->dbp, DB_DBM_ERROR);
 	return (-1);
 }
 weak_alias (__db_ndbm_store, dbm_store)
 
 int
-__db_ndbm_error(db)
-	DBM *db;
+__db_ndbm_error(dbm)
+	DBM *dbm;
 {
-	HTAB *hp;
+	DBC *dbc;
 
-	hp = (HTAB *)db->internal;
-	return (hp->local_errno);
+	dbc = (DBC *)dbm;
+
+	return (F_ISSET(dbc->dbp, DB_DBM_ERROR));
 }
 weak_alias (__db_ndbm_error, dbm_error)
 
 int
-__db_ndbm_clearerr(db)
-	DBM *db;
+__db_ndbm_clearerr(dbm)
+	DBM *dbm;
 {
-	HTAB *hp;
+	DBC *dbc;
 
-	hp = (HTAB *)db->internal;
-	hp->local_errno = 0;
+	dbc = (DBC *)dbm;
+
+	F_CLR(dbc->dbp, DB_DBM_ERROR);
 	return (0);
 }
 weak_alias (__db_ndbm_clearerr, dbm_clearerr)
@@ -413,10 +464,14 @@ weak_alias (__db_ndbm_clearerr, dbm_clearerr)
  *	0 if not read-only
  */
 int
-__db_ndbm_rdonly(db)
-	DBM *db;
+__db_ndbm_rdonly(dbm)
+	DBM *dbm;
 {
-	return (F_ISSET((DB *)db, DB_AM_RDONLY) ? 1 : 0);
+	DBC *dbc;
+
+	dbc = (DBC *)dbm;
+
+	return (F_ISSET(dbc->dbp, DB_AM_RDONLY) ? 1 : 0);
 }
 
 /*
@@ -426,23 +481,23 @@ __db_ndbm_rdonly(db)
  * and picked one to use at random.
  */
 int
-__db_ndbm_dirfno(db)
-	DBM *db;
+__db_ndbm_dirfno(dbm)
+	DBM *dbm;
 {
-	int fd;
-
-	(void)db->fd(db, &fd);
-	return (fd);
+	return (dbm_pagfno(dbm));
 }
 weak_alias (__db_ndbm_dirfno, dbm_dirfno)
 
 int
-__db_ndbm_pagfno(db)
-	DBM *db;
+__db_ndbm_pagfno(dbm)
+	DBM *dbm;
 {
+	DBC *dbc;
 	int fd;
 
-	(void)db->fd(db, &fd);
+	dbc = (DBC *)dbm;
+
+	(void)dbc->dbp->fd(dbc->dbp, &fd);
 	return (fd);
 }
 weak_alias (__db_ndbm_pagfno, dbm_pagfno)

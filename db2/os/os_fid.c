@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_fid.c	10.11 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)os_fid.c	10.12 (Sleepycat) 7/21/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -24,13 +24,13 @@ static const char sccsid[] = "@(#)os_fid.c	10.11 (Sleepycat) 4/26/98";
 #include "common_ext.h"
 
 /*
- * __db_fileid --
+ * __os_fileid --
  *	Return a unique identifier for a file.
  *
- * PUBLIC: int __db_fileid __P((DB_ENV *, const char *, int, u_int8_t *));
+ * PUBLIC: int __os_fileid __P((DB_ENV *, const char *, int, u_int8_t *));
  */
 int
-__db_fileid(dbenv, fname, timestamp, fidp)
+__os_fileid(dbenv, fname, timestamp, fidp)
 	DB_ENV *dbenv;
 	const char *fname;
 	int timestamp;

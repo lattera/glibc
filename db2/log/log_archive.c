@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_archive.c	10.37 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)log_archive.c	10.44 (Sleepycat) 10/9/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -49,7 +49,10 @@ log_archive(dblp, listp, flags, db_malloc)
 	int array_size, n, ret;
 	char **array, **arrayp, *name, *p, *pref, buf[MAXPATHLEN];
 
+	name = NULL;
 	COMPQUIET(fnum, 0);
+
+	LOG_PANIC_CHECK(dblp);
 
 #define	OKFLAGS	(DB_ARCH_ABS | DB_ARCH_DATA | DB_ARCH_LOG)
 	if (flags != 0) {
@@ -84,7 +87,7 @@ log_archive(dblp, listp, flags, db_malloc)
 		if ((ret = log_get(dblp, &stable_lsn, &rec, DB_LAST)) != 0)
 			return (ret);
 		if (F_ISSET(dblp, DB_AM_THREAD))
-			__db_free(rec.data);
+			__os_free(rec.data, rec.size);
 		fnum = stable_lsn.file;
 		break;
 	case 0:
@@ -106,40 +109,40 @@ log_archive(dblp, listp, flags, db_malloc)
 
 #define	LIST_INCREMENT	64
 	/* Get some initial space. */
-	if ((array =
-	    (char **)__db_malloc(sizeof(char *) * (array_size = 10))) == NULL)
-		return (ENOMEM);
+	array_size = 10;
+	if ((ret = __os_malloc(sizeof(char *) * array_size, NULL, &array)) != 0)
+		return (ret);
 	array[0] = NULL;
 
 	/* Build an array of the file names. */
 	for (n = 0; fnum > 0; --fnum) {
-		if ((ret = __log_name(dblp, fnum, &name)) != 0)
+		if ((ret = __log_name(dblp, fnum, &name, NULL, 0)) != 0)
 			goto err;
-		if (__db_exists(name, NULL) != 0)
+		if (__os_exists(name, NULL) != 0) {
+			__os_freestr(name);
+			name = NULL;
 			break;
+		}
 
 		if (n >= array_size - 1) {
 			array_size += LIST_INCREMENT;
-			if ((array = (char **)__db_realloc(array,
-			    sizeof(char *) * array_size)) == NULL) {
-				ret = ENOMEM;
+			if ((ret = __os_realloc(&array,
+			    sizeof(char *) * array_size)) != 0)
 				goto err;
-			}
 		}
 
 		if (LF_ISSET(DB_ARCH_ABS)) {
 			if ((ret = __absname(pref, name, &array[n])) != 0)
 				goto err;
-			FREES(name);
+			__os_freestr(name);
 		} else if ((p = __db_rpath(name)) != NULL) {
-			if ((array[n] = (char *)__db_strdup(p + 1)) == NULL) {
-				ret = ENOMEM;
+			if ((ret = __os_strdup(p + 1, &array[n])) != 0)
 				goto err;
-			}
-			FREES(name);
+			__os_freestr(name);
 		} else
 			array[n] = name;
 
+		name = NULL;
 		array[++n] = NULL;
 	}
 
@@ -162,9 +165,11 @@ log_archive(dblp, listp, flags, db_malloc)
 
 err:	if (array != NULL) {
 		for (arrayp = array; *arrayp != NULL; ++arrayp)
-			FREES(*arrayp);
-		__db_free(array);
+			__os_freestr(*arrayp);
+		__os_free(array, sizeof(char *) * array_size);
 	}
+	if (name != NULL)
+		__os_freestr(name);
 	return (ret);
 }
 
@@ -186,9 +191,9 @@ __build_data(dblp, pref, listp, db_malloc)
 	char **array, **arrayp, *p, *real_name;
 
 	/* Get some initial space. */
-	if ((array =
-	    (char **)__db_malloc(sizeof(char *) * (array_size = 10))) == NULL)
-		return (ENOMEM);
+	array_size = 10;
+	if ((ret = __os_malloc(sizeof(char *) * array_size, NULL, &array)) != 0)
+		return (ret);
 	array[0] = NULL;
 
 	memset(&rec, 0, sizeof(rec));
@@ -205,7 +210,7 @@ __build_data(dblp, pref, listp, db_malloc)
 		memcpy(&rectype, rec.data, sizeof(rectype));
 		if (rectype != DB_log_register) {
 			if (F_ISSET(dblp, DB_AM_THREAD)) {
-				__db_free(rec.data);
+				__os_free(rec.data, rec.size);
 				rec.data = NULL;
 			}
 			continue;
@@ -219,25 +224,22 @@ __build_data(dblp, pref, listp, db_malloc)
 
 		if (n >= array_size - 1) {
 			array_size += LIST_INCREMENT;
-			if ((array = (char **)__db_realloc(array,
-			    sizeof(char *) * array_size)) == NULL) {
-				ret = ENOMEM;
+			if ((ret = __os_realloc(&array,
+			    sizeof(char *) * array_size)) != 0)
 				goto lg_free;
-			}
 		}
 
-		if ((array[n] = (char *)__db_strdup(argp->name.data)) == NULL) {
-			ret = ENOMEM;
+		if ((ret = __os_strdup(argp->name.data, &array[n])) != 0) {
 lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
-				__db_free(rec.data);
+				__os_free(rec.data, rec.size);
 			goto err1;
 		}
 
 		array[++n] = NULL;
-		__db_free(argp);
+		__os_free(argp, 0);
 
 		if (F_ISSET(dblp, DB_AM_THREAD)) {
-			__db_free(rec.data);
+			__os_free(rec.data, rec.size);
 			rec.data = NULL;
 		}
 	}
@@ -268,7 +270,7 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 		}
 		for (++nxt; nxt < n &&
 		    strcmp(array[last], array[nxt]) == 0; ++nxt) {
-			FREES(array[nxt]);
+			__os_freestr(array[nxt]);
 			array[nxt] = NULL;
 		}
 
@@ -278,25 +280,25 @@ lg_free:		if (F_ISSET(&rec, DB_DBT_MALLOC) && rec.data != NULL)
 			goto err2;
 
 		/* If the file doesn't exist, ignore it. */
-		if (__db_exists(real_name, NULL) != 0) {
-			FREES(real_name);
-			FREES(array[last]);
+		if (__os_exists(real_name, NULL) != 0) {
+			__os_freestr(real_name);
+			__os_freestr(array[last]);
 			array[last] = NULL;
 			continue;
 		}
 
 		/* Rework the name as requested by the user. */
-		FREES(array[last]);
+		__os_freestr(array[last]);
 		array[last] = NULL;
 		if (pref != NULL) {
 			ret = __absname(pref, real_name, &array[last]);
-			FREES(real_name);
+			__os_freestr(real_name);
 			if (ret != 0)
 				goto err2;
 		} else if ((p = __db_rpath(real_name)) != NULL) {
-			array[last] = (char *)__db_strdup(p + 1);
-			FREES(real_name);
-			if (array[last] == NULL)
+			ret = __os_strdup(p + 1, &array[last]);
+			__os_freestr(real_name);
+			if (ret != 0)
 				goto err2;
 		} else
 			array[last] = real_name;
@@ -320,13 +322,13 @@ err2:	/*
 	 */
 	if (array != NULL)
 		for (; nxt < n; ++nxt)
-			FREES(array[nxt]);
+			__os_freestr(array[nxt]);
 	/* FALLTHROUGH */
 
 err1:	if (array != NULL) {
 		for (arrayp = array; *arrayp != NULL; ++arrayp)
-			FREES(*arrayp);
-		__db_free(array);
+			__os_freestr(*arrayp);
+		__os_free(array, array_size * sizeof(char *));
 	}
 	return (ret);
 }
@@ -340,17 +342,17 @@ __absname(pref, name, newnamep)
 	char *pref, *name, **newnamep;
 {
 	size_t l_pref, l_name;
-	int isabspath;
+	int isabspath, ret;
 	char *newname;
 
 	l_name = strlen(name);
-	isabspath = __db_abspath(name);
+	isabspath = __os_abspath(name);
 	l_pref = isabspath ? 0 : strlen(pref);
 
 	/* Malloc space for concatenating the two. */
-	if ((*newnamep =
-	    newname = (char *)__db_malloc(l_pref + l_name + 2)) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_malloc(l_pref + l_name + 2, NULL, &newname)) != 0)
+		return (ret);
+	*newnamep = newname;
 
 	/* Build the name.  If `name' is an absolute path, ignore any prefix. */
 	if (!isabspath) {
@@ -369,11 +371,12 @@ __absname(pref, name, newnamep)
  *	If the user has their own malloc routine, use it.
  */
 static int
-__usermem(listp, cmpfunc)
+__usermem(listp, db_malloc)
 	char ***listp;
-	void *(*cmpfunc) __P((size_t));
+	void *(*db_malloc) __P((size_t));
 {
 	size_t len;
+	int ret;
 	char **array, **arrayp, **orig, *strp;
 
 	/* Find out how much space we need. */
@@ -381,18 +384,10 @@ __usermem(listp, cmpfunc)
 		len += sizeof(char *) + strlen(*orig) + 1;
 	len += sizeof(char *);
 
-	/*
-	 * Allocate it and set up the pointers.
-	 *
-	 * XXX
-	 * Don't simplify this expression, SunOS compilers don't like it.
-	 */
-	if (cmpfunc == NULL)
-		array = (char **)__db_malloc(len);
-	else
-		array = (char **)cmpfunc(len);
-	if (array == NULL)
-		return (ENOMEM);
+	/* Allocate it and set up the pointers. */
+	if ((ret = __os_malloc(len, db_malloc, &array)) != 0)
+		return (ret);
+
 	strp = (char *)(array + (orig - *listp) + 1);
 
 	/* Copy the original information into the new memory. */
@@ -402,13 +397,13 @@ __usermem(listp, cmpfunc)
 		*arrayp = strp;
 		strp += len + 1;
 
-		FREES(*orig);
+		__os_freestr(*orig);
 	}
 
 	/* NULL-terminate the list. */
 	*arrayp = NULL;
 
-	__db_free(*listp);
+	__os_free(*listp, 0);
 	*listp = array;
 
 	return (0);

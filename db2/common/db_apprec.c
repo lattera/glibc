@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_apprec.c	10.30 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)db_apprec.c	10.33 (Sleepycat) 10/5/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -44,7 +44,8 @@ __db_apprec(dbenv, flags)
 {
 	DBT data;
 	DB_LOG *lp;
-	DB_LSN ckp_lsn, first_lsn, lsn;
+	DB_LSN ckp_lsn, first_lsn, lsn, open_lsn;
+	__txn_ckp_args *ckp_args;
 	time_t now;
 	u_int32_t is_thread;
 	int ret;
@@ -65,10 +66,16 @@ __db_apprec(dbenv, flags)
 
 	/*
 	 * Recovery is done in three passes:
+	 * Pass #0:
+	 *	We need to find the position from which we will open files
+	 *	We need to open files beginning with the last to next
+	 *	checkpoint because we might have crashed after writing the
+	 * 	last checkpoint record, but before having written out all
+	 *	the open file information.
 	 * Pass #1:
-	 *	Read forward through the log from the last checkpoint to the
-	 *	end of the log, opening and closing files so that at the end
-	 *	of the log we have the "current" set of files open.
+	 *	Read forward through the log from the second to last checkpoint
+	 *	opening and closing files so that at the end of the log we have
+	 *	the "current" set of files open.
 	 * Pass #2:
 	 *	Read backward through the log undoing any uncompleted TXNs.
 	 *	If doing catastrophic recovery, we read to the beginning of
@@ -84,33 +91,50 @@ __db_apprec(dbenv, flags)
 	 */
 
 	/*
-	 * Find the last checkpoint in the log.  This is the point from which
-	 * we want to begin pass #1 (the TXN_OPENFILES pass).
+	 * Find the second to last checkpoint in the log.  This is the point
+	 * from which we want to begin pass #1 (the TXN_OPENFILES pass).
 	 */
 	memset(&data, 0, sizeof(data));
+	ckp_args = NULL;
+
 	if ((ret = log_get(lp, &ckp_lsn, &data, DB_CHECKPOINT)) != 0) {
 		/*
 		 * If we don't find a checkpoint, start from the beginning.
 		 * If that fails, we're done.  Note, we do not require that
 		 * there be log records if we're performing recovery.
 		 */
-		if ((ret = log_get(lp, &ckp_lsn, &data, DB_FIRST)) != 0) {
+first:		if ((ret = log_get(lp, &ckp_lsn, &data, DB_FIRST)) != 0) {
 			if (ret == DB_NOTFOUND)
 				ret = 0;
 			else
 				__db_err(dbenv, "First log record not found");
 			goto out;
 		}
-	}
+		open_lsn = ckp_lsn;
+	} else if ((ret = __txn_ckp_read(data.data, &ckp_args)) != 0) {
+		__db_err(dbenv, "Invalid checkpoint record at [%ld][%ld]\n",
+		    (u_long)ckp_lsn.file, (u_long)ckp_lsn.offset);
+		goto out;
+	} else if (IS_ZERO_LSN(ckp_args->last_ckp) ||
+		(ret = log_get(lp, &ckp_args->last_ckp, &data, DB_SET)) != 0)
+		goto first;
+	else
+		open_lsn = ckp_args->last_ckp;
 
 	/*
 	 * Now, ckp_lsn is either the lsn of the last checkpoint or the lsn
-	 * of the first record in the log.  Begin the TXN_OPENFILES pass from
-	 * that lsn, and proceed to the end of the log.
+	 * of the first record in the log.  Open_lsn is the second to last
+	 * checkpoint or the beinning of the log; begin the TXN_OPENFILES
+	 * pass from that lsn, and proceed to the end of the log.
 	 */
-	lsn = ckp_lsn;
+	lsn = open_lsn;
 	for (;;) {
-		ret = __db_dispatch(lp, &data, &lsn, TXN_OPENFILES, txninfo);
+		if (dbenv->tx_recover != NULL)
+			ret = dbenv->tx_recover(lp,
+			    &data, &lsn, TXN_OPENFILES, txninfo);
+		else
+			ret = __db_dispatch(lp,
+			    &data, &lsn, TXN_OPENFILES, txninfo);
 		if (ret != 0 && ret != DB_TXN_CKP)
 			goto msgerr;
 		if ((ret = log_get(lp, &lsn, &data, DB_NEXT)) != 0) {
@@ -148,8 +172,12 @@ __db_apprec(dbenv, flags)
 	for (ret = log_get(lp, &lsn, &data, DB_LAST);
 	    ret == 0 && log_compare(&lsn, &first_lsn) > 0;
 	    ret = log_get(lp, &lsn, &data, DB_PREV)) {
-		ret = __db_dispatch(lp,
-		    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
+		if (dbenv->tx_recover != NULL)
+			ret = dbenv->tx_recover(lp,
+			    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
+		else
+			ret = __db_dispatch(lp,
+			    &data, &lsn, TXN_BACKWARD_ROLL, txninfo);
 		if (ret != 0) {
 			if (ret != DB_TXN_CKP)
 				goto msgerr;
@@ -165,7 +193,12 @@ __db_apprec(dbenv, flags)
 	 */
 	for (ret = log_get(lp, &lsn, &data, DB_NEXT);
 	    ret == 0; ret = log_get(lp, &lsn, &data, DB_NEXT)) {
-		ret = __db_dispatch(lp, &data, &lsn, TXN_FORWARD_ROLL, txninfo);
+		if (dbenv->tx_recover != NULL)
+			ret = dbenv->tx_recover(lp,
+			    &data, &lsn, TXN_FORWARD_ROLL, txninfo);
+		else
+			ret = __db_dispatch(lp,
+			    &data, &lsn, TXN_FORWARD_ROLL, txninfo);
 		if (ret != 0) {
 			if (ret != DB_TXN_CKP)
 				goto msgerr;
@@ -207,6 +240,8 @@ msgerr:		__db_err(dbenv, "Recovery function for LSN %lu %lu failed",
 
 out:	F_SET(lp, is_thread);
 	__db_txnlist_end(txninfo);
+	if (ckp_args != NULL)
+		__os_free(ckp_args, sizeof(*ckp_args));
 
 	return (ret);
 }

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_compare.c	10.9 (Sleepycat) 5/6/98";
+static const char sccsid[] = "@(#)bt_compare.c	10.14 (Sleepycat) 10/9/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -64,93 +64,76 @@ static const char sccsid[] = "@(#)bt_compare.c	10.9 (Sleepycat) 5/6/98";
  * __bam_cmp --
  *	Compare a key to a given record.
  *
- * PUBLIC: int __bam_cmp __P((DB *, const DBT *, EPG *));
+ * PUBLIC: int __bam_cmp __P((DB *, const DBT *,
+ * PUBLIC:    PAGE *, u_int32_t, int (*)(const DBT *, const DBT *)));
  */
 int
-__bam_cmp(dbp, k1, e)
+__bam_cmp(dbp, dbt, h, indx, func)
 	DB *dbp;
-	const DBT *k1;
-	EPG *e;
+	const DBT *dbt;
+	PAGE *h;
+	u_int32_t indx;
+	int (*func)__P((const DBT *, const DBT *));
 {
 	BINTERNAL *bi;
 	BKEYDATA *bk;
 	BOVERFLOW *bo;
-	BTREE *t;
-	DBT k2;
-	PAGE *h;
-
-	t = dbp->internal;
+	DBT pg_dbt;
+	int ret;
 
 	/*
 	 * Returns:
-	 *	< 0 if k1 is < record
-	 *	= 0 if k1 is = record
-	 *	> 0 if k1 is > record
+	 *	< 0 if dbt is < page record
+	 *	= 0 if dbt is = page record
+	 *	> 0 if dbt is > page record
 	 *
-	 * The left-most key on internal pages, at any level of the tree, is
-	 * guaranteed, by the following code, to be less than any user key.
-	 * This saves us from having to update the leftmost key on an internal
-	 * page when the user inserts a new key in the tree smaller than
-	 * anything we've yet seen.
+	 * !!!
+	 * We do not clear the pg_dbt DBT even though it's likely to contain
+	 * random bits.  That should be okay, because the app's comparison
+	 * routine had better not be looking at fields other than data/size.
+	 * We don't clear it because we go through this path a lot and it's
+	 * expensive.
 	 */
-	h = e->page;
-	if (e->indx == 0 &&
-	    h->prev_pgno == PGNO_INVALID && TYPE(h) != P_LBTREE)
-		return (1);
-
-	bo = NULL;
-	if (TYPE(h) == P_LBTREE) {
-		bk = GET_BKEYDATA(h, e->indx);
+	if (TYPE(h) == P_LBTREE || TYPE(h) == P_DUPLICATE) {
+		bk = GET_BKEYDATA(h, indx);
 		if (B_TYPE(bk->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)bk;
 		else {
-			k2.data = bk->data;
-			k2.size = bk->len;
+			pg_dbt.data = bk->data;
+			pg_dbt.size = bk->len;
+			return (func(dbt, &pg_dbt));
 		}
 	} else {
-		bi = GET_BINTERNAL(h, e->indx);
+		/*
+		 * The following code guarantees that the left-most key on an
+		 * internal page at any level of the btree is less than any
+		 * user specified key.  This saves us from having to update the
+		 * leftmost key on an internal page when the user inserts a new
+		 * key in the tree smaller than anything we've seen before.
+		 */
+		if (indx == 0 && h->prev_pgno == PGNO_INVALID)
+			return (1);
+
+		bi = GET_BINTERNAL(h, indx);
 		if (B_TYPE(bi->type) == B_OVERFLOW)
 			bo = (BOVERFLOW *)(bi->data);
 		else {
-			k2.data = bi->data;
-			k2.size = bi->len;
+			pg_dbt.data = bi->data;
+			pg_dbt.size = bi->len;
+			return (func(dbt, &pg_dbt));
 		}
 	}
 
 	/*
+	 * Overflow.
+	 *
 	 * XXX
-	 * We ignore system errors; the only recoverable one is ENOMEM, and we
-	 * don't want to require that comparison routines handle random errors.
-	 * We don't want to return a valid comparison, either, so we stop.
+	 * We ignore __db_moff() errors, because we have no way of returning
+	 * them.
 	 */
-	if (bo != NULL) {
-		/*
-		 * If using the default comparison routine, use __db_moff(),
-		 * which compares the overflow key a page at a time.
-		 */
-		if (t->bt_compare == __bam_defcmp)
-			return (__db_moff(dbp, k1, bo->pgno));
-
-		/*
-		 * Otherwise, we need a contiguous record so we can hand it
-		 * to the user's routine.
-		 */
-		memset(&k2, 0, sizeof(k2));
-		if (__db_goff(dbp, &k2, bo->tlen,
-		    bo->pgno, &t->bt_rdata.data, &t->bt_rdata.ulen) != 0) {
-			(void)__db_panic(dbp);
-			return (0);
-		}
-	}
-
-	/*
-	 * XXX
-	 * Note, we have not cleared the k2 DBT in this path.  This should
-	 * be okay, because the user's comparison routine had better not be
-	 * looking at any fields other than the data/size.  We don't clear
-	 * it because we go through this path a lot and it's expensive.
-	 */
-	return ((*t->bt_compare)(k1, &k2));
+	(void) __db_moff(dbp,
+	    dbt, bo->pgno, bo->tlen, func == __bam_defcmp ? NULL : func, &ret);
+	return (ret);
 }
 
 /*

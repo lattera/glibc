@@ -40,7 +40,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_rec.c	10.20 (Sleepycat) 4/28/98";
+static const char sccsid[] = "@(#)log_rec.c	10.26 (Sleepycat) 10/21/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -56,8 +56,10 @@ static const char sccsid[] = "@(#)log_rec.c	10.20 (Sleepycat) 4/28/98";
 #include "db_dispatch.h"
 #include "common_ext.h"
 
-static int __log_open_file __P((DB_LOG *,
+static int __log_do_open __P((DB_LOG *,
     u_int8_t *, char *, DBTYPE, u_int32_t));
+static int __log_lid_to_fname __P((DB_LOG *, u_int32_t, FNAME **));
+static int __log_open_file __P((DB_LOG *, __log_register_args *));
 
 /*
  * PUBLIC: int __log_register_recover
@@ -80,7 +82,7 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 	COMPQUIET(info, NULL);
 	COMPQUIET(lsnp, NULL);
 
-	F_SET(logp, DB_AM_RECOVER);
+	F_SET(logp, DBC_RECOVER);
 
 	if ((ret = __log_register_read(dbtp->data, &argp)) != 0)
 		goto out;
@@ -95,13 +97,11 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 		 * If we are redoing an open or undoing a close, then we need
 		 * to open a file.
 		 */
-		ret = __log_open_file(logp,
-		    argp->uid.data, argp->name.data, argp->ftype, argp->id);
+		ret = __log_open_file(logp, argp);
 		if (ret == ENOENT) {
 			if (redo == TXN_OPENFILES)
-				__db_err(logp->dbenv,
-				    "warning: file %s not found",
-				    argp->name.data);
+				__db_err(logp->dbenv, "warning: %s: %s",
+				    argp->name.data, strerror(ENOENT));
 			ret = 0;
 		}
 	} else if (argp->opcode != LOG_CHECKPOINT) {
@@ -109,26 +109,42 @@ __log_register_recover(logp, dbtp, lsnp, redo, info)
 		 * If we are redoing a close or undoing an open, then we need
 		 * to close the file.
 		 *
-		 * If the file is deleted, then we can just ignore this close.
-		 * Otherwise, we'd better have a valid dbp that we should either
-		 * close or whose reference count should be decremented.
+  		 * If the file is deleted, then we can just ignore this close.
+ 		 * Otherwise, we should usually have a valid dbp we should
+  		 * close or whose reference count should be decremented.
+ 		 * However, if we shut down without closing a file, we
+		 * may, in fact, not have the file open, and that's OK.
 		 */
 		LOCK_LOGTHREAD(logp);
-		if (logp->dbentry[argp->id].dbp == NULL) {
-			if (!logp->dbentry[argp->id].deleted)
-				ret = EINVAL;
-		} else if (--logp->dbentry[argp->id].refcount == 0) {
-			F_SET(logp->dbentry[argp->id].dbp, DB_AM_RECOVER);
+		if (logp->dbentry[argp->id].dbp != NULL &&
+		    --logp->dbentry[argp->id].refcount == 0) {
 			ret = logp->dbentry[argp->id].dbp->close(
 			    logp->dbentry[argp->id].dbp, 0);
 			logp->dbentry[argp->id].dbp = NULL;
 		}
 		UNLOCK_LOGTHREAD(logp);
+ 	} else if (redo == TXN_UNDO &&
+ 	    (argp->id >= logp->dbentry_cnt ||
+ 	    (!logp->dbentry[argp->id].deleted &&
+ 	    logp->dbentry[argp->id].dbp == NULL))) {
+ 		/*
+ 		 * It's a checkpoint and we are rolling backward.  It
+ 		 * is possible that the system was shut down and thus
+ 		 * ended with a stable checkpoint; this file was never
+ 		 * closed and has therefore not been reopened yet.  If
+ 		 * so, we need to try to open it.
+ 		 */
+ 		ret = __log_open_file(logp, argp);
+ 		if (ret == ENOENT) {
+ 			__db_err(logp->dbenv, "warning: %s: %s",
+			    argp->name.data, strerror(ENOENT));
+ 			ret = 0;
+ 		}
 	}
 
-out:	F_CLR(logp, DB_AM_RECOVER);
+out:	F_CLR(logp, DBC_RECOVER);
 	if (argp != NULL)
-		__db_free(argp);
+		__os_free(argp, 0);
 	return (ret);
 }
 
@@ -140,7 +156,33 @@ out:	F_CLR(logp, DB_AM_RECOVER);
  * Returns 0 on success, non-zero on error.
  */
 static int
-__log_open_file(lp, uid, name, ftype, ndx)
+__log_open_file(lp, argp)
+	DB_LOG *lp;
+	__log_register_args *argp;
+{
+	LOCK_LOGTHREAD(lp);
+	if (argp->id < lp->dbentry_cnt &&
+	    (lp->dbentry[argp->id].deleted == 1 ||
+	    lp->dbentry[argp->id].dbp != NULL)) {
+		if (argp->opcode != LOG_CHECKPOINT)
+			lp->dbentry[argp->id].refcount++;
+
+		UNLOCK_LOGTHREAD(lp);
+		return (0);
+	}
+	UNLOCK_LOGTHREAD(lp);
+	return (__log_do_open(lp,
+	    argp->uid.data, argp->name.data, argp->ftype, argp->id));
+}
+
+/*
+ * __log_do_open --
+ * 	Open files referenced in the log.  This is the part of the open that
+ * is not protected by the thread mutex.
+ */
+
+static int
+__log_do_open(lp, uid, name, ftype, ndx)
 	DB_LOG *lp;
 	u_int8_t *uid;
 	char *name;
@@ -150,24 +192,13 @@ __log_open_file(lp, uid, name, ftype, ndx)
 	DB *dbp;
 	int ret;
 
-	LOCK_LOGTHREAD(lp);
-	if (ndx < lp->dbentry_cnt &&
-	    (lp->dbentry[ndx].deleted == 1 || lp->dbentry[ndx].dbp != NULL)) {
-		lp->dbentry[ndx].refcount++;
-
-		UNLOCK_LOGTHREAD(lp);
-		return (0);
-	}
-	UNLOCK_LOGTHREAD(lp);
-
-	/* Need to open file. */
 	dbp = NULL;
 	if ((ret = db_open(name, ftype, 0, 0, lp->dbenv, NULL, &dbp)) == 0) {
 		/*
 		 * Verify that we are opening the same file that we were
 		 * referring to when we wrote this log record.
 		 */
-		if (memcmp(uid, dbp->lock.fileid, DB_FILE_ID_LEN) != 0) {
+		if (memcmp(uid, dbp->fileid, DB_FILE_ID_LEN) != 0) {
 			(void)dbp->close(dbp, 0);
 			dbp = NULL;
 			ret = ENOENT;
@@ -181,10 +212,9 @@ __log_open_file(lp, uid, name, ftype, ndx)
 }
 
 /*
- * This function returns:
- *	0 SUCCESS (the entry was not previously set and is now set or the
- *		entry was previously set and we just inced the ref count.
- *	>0 on system error (returns errno value).
+ * __log_add_logid --
+ *	Adds a DB entry to the log's DB entry table.
+ *
  * PUBLIC: int __log_add_logid __P((DB_LOG *, DB *, u_int32_t));
  */
 int
@@ -193,43 +223,30 @@ __log_add_logid(logp, dbp, ndx)
 	DB *dbp;
 	u_int32_t ndx;
 {
-	DB_ENTRY *temp_entryp;
 	u_int32_t i;
 	int ret;
 
 	ret = 0;
 
 	LOCK_LOGTHREAD(logp);
+
 	/*
-	 * Check if we need to grow the table.
+	 * Check if we need to grow the table.  Note, ndx is 0-based (the
+	 * index into the DB entry table) an dbentry_cnt is 1-based, the
+	 * number of available slots.
 	 */
 	if (logp->dbentry_cnt <= ndx) {
-		if (logp->dbentry_cnt == 0) {
-			logp->dbentry = (DB_ENTRY *)
-			    __db_malloc(DB_GROW_SIZE * sizeof(DB_ENTRY));
-			if (logp->dbentry == NULL) {
-				ret = ENOMEM;
-				goto err;
-			}
-		} else {
-			temp_entryp = (DB_ENTRY *)__db_realloc(logp->dbentry,
-			    (DB_GROW_SIZE + logp->dbentry_cnt) *
-			    sizeof(DB_ENTRY));
-			if (temp_entryp == NULL) {
-				ret = ENOMEM;
-				goto err;
-			}
-			logp->dbentry = temp_entryp;
+		if ((ret = __os_realloc(&logp->dbentry,
+		    (ndx + DB_GROW_SIZE) * sizeof(DB_ENTRY))) != 0)
+			goto err;
 
-		}
 		/* Initialize the new entries. */
-		for (i = logp->dbentry_cnt;
-		    i < logp->dbentry_cnt + DB_GROW_SIZE; i++) {
+		for (i = logp->dbentry_cnt; i < ndx + DB_GROW_SIZE; i++) {
 			logp->dbentry[i].dbp = NULL;
 			logp->dbentry[i].deleted = 0;
 		}
 
-		logp->dbentry_cnt += DB_GROW_SIZE;
+		logp->dbentry_cnt = i;
 	}
 
 	if (logp->dbentry[ndx].deleted == 0 && logp->dbentry[ndx].dbp == NULL) {
@@ -257,9 +274,45 @@ __db_fileid_to_db(logp, dbpp, ndx)
 	u_int32_t ndx;
 {
 	int ret;
+	char *name;
+	FNAME *fname;
 
 	ret = 0;
 	LOCK_LOGTHREAD(logp);
+
+	/*
+	 * Under XA, a process different than the one issuing DB
+	 * operations may abort a transaction.  In this case, 
+	 * recovery routines are run by a process that does not
+	 * necessarily have the file open.  In this case, we must
+	 * open the file explicitly.
+	 */
+	if (ndx >= logp->dbentry_cnt ||
+	    (!logp->dbentry[ndx].deleted && logp->dbentry[ndx].dbp == NULL)) {
+		if (__log_lid_to_fname(logp, ndx, &fname) != 0) {
+			/* Couldn't find entry; this is a fatal error. */
+			ret = EINVAL;
+			goto err;
+		}
+		name = R_ADDR(logp, fname->name_off);
+		/*
+		 * __log_do_open is called without protection of the
+		 * log thread lock.
+		 */
+		UNLOCK_LOGTHREAD(logp);
+		/*
+		 * At this point, we are not holding the thread lock, so
+		 * exit directly instead of going through the exit code
+		 * at the bottom.  If the __log_do_open succeeded, then
+		 * we don't need to do any of the remaining error checking
+		 * at the end of this routine.
+		 */
+		if ((ret = __log_do_open(logp,
+		    fname->ufid, name, fname->s_type, ndx)) != 0)
+			return (ret);
+		*dbpp = logp->dbentry[ndx].dbp;
+		return (0);
+	}
 
 	/*
 	 * Return DB_DELETED if the file has been deleted
@@ -294,8 +347,12 @@ __log_close_files(logp)
 
 	LOCK_LOGTHREAD(logp);
 	for (i = 0; i < logp->dbentry_cnt; i++)
-		if (logp->dbentry[i].dbp)
+		if (logp->dbentry[i].dbp) {
 			logp->dbentry[i].dbp->close(logp->dbentry[i].dbp, 0);
+			logp->dbentry[i].dbp = NULL;
+			logp->dbentry[i].deleted = 0;
+		}
+	F_CLR(logp, DBC_RECOVER);
 	UNLOCK_LOGTHREAD(logp);
 }
 
@@ -313,4 +370,29 @@ __log_rem_logid(logp, ndx)
 		logp->dbentry[ndx].deleted = 0;
 	}
 	UNLOCK_LOGTHREAD(logp);
+}
+
+/*
+ * __log_lid_to_fname --
+ * 	Traverse the shared-memory region looking for the entry that
+ * matches the passed log fileid.  Returns 0 on success; -1 on error.
+ */
+static int
+__log_lid_to_fname(dblp, lid, fnamep)
+	DB_LOG *dblp;
+	u_int32_t lid;
+	FNAME **fnamep;
+{
+	FNAME *fnp;
+
+	for (fnp = SH_TAILQ_FIRST(&dblp->lp->fq, __fname);
+	    fnp != NULL; fnp = SH_TAILQ_NEXT(fnp, q, __fname)) {
+		if (fnp->ref == 0)	/* Entry not in use. */
+			continue;
+		if (fnp->id == lid) {
+			*fnamep = fnp;
+			return (0);
+		}
+	}
+	return (-1);
 }

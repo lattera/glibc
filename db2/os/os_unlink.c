@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_unlink.c	10.5 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)os_unlink.c	10.7 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,16 +19,21 @@ static const char sccsid[] = "@(#)os_unlink.c	10.5 (Sleepycat) 4/10/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
- * __db_unlink --
+ * __os_unlink --
  *	Remove a file.
  *
- * PUBLIC: int __db_unlink __P((const char *));
+ * PUBLIC: int __os_unlink __P((const char *));
  */
 int
-__db_unlink(path)
+__os_unlink(path)
 	const char *path;
 {
-	return (__os_unlink(path) == -1 ? errno : 0);
+	int ret;
+
+	ret = __db_jump.j_unlink != NULL ?
+	    __db_jump.j_unlink(path) : unlink(path);
+	return (ret == -1 ? errno : 0);
 }

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_dir.c	10.15 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)os_dir.c	10.19 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -35,6 +35,7 @@ static const char sccsid[] = "@(#)os_dir.c	10.15 (Sleepycat) 4/26/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
  * __os_dirlist --
@@ -50,8 +51,11 @@ __os_dirlist(dir, namesp, cntp)
 {
 	struct dirent *dp;
 	DIR *dirp;
-	int arraysz, cnt;
+	int arraysz, cnt, ret;
 	char **names;
+
+	if (__db_jump.j_dirlist != NULL)
+		return (__db_jump.j_dirlist(dir, namesp, cntp));
 
 	if ((dirp = opendir(dir)) == NULL)
 		return (errno);
@@ -59,13 +63,11 @@ __os_dirlist(dir, namesp, cntp)
 	for (arraysz = cnt = 0; (dp = readdir(dirp)) != NULL; ++cnt) {
 		if (cnt >= arraysz) {
 			arraysz += 100;
-			names = (char **)(names == NULL ?
-			    __db_malloc(arraysz * sizeof(names[0])) :
-			    __db_realloc(names, arraysz * sizeof(names[0])));
-			if (names == NULL)
+			if ((ret = __os_realloc(&names,
+			    arraysz * sizeof(names[0]))) != 0)
 				goto nomem;
 		}
-		if ((names[cnt] = (char *)__db_strdup(dp->d_name)) == NULL)
+		if ((ret = __os_strdup(dp->d_name, &names[cnt])) != 0)
 			goto nomem;
 	}
 	(void)closedir(dirp);
@@ -76,7 +78,7 @@ __os_dirlist(dir, namesp, cntp)
 
 nomem:	if (names != NULL)
 		__os_dirfree(names, cnt);
-	return (ENOMEM);
+	return (ret);
 }
 
 /*
@@ -90,7 +92,10 @@ __os_dirfree(names, cnt)
 	char **names;
 	int cnt;
 {
+	if (__db_jump.j_dirfree != NULL)
+		__db_jump.j_dirfree(names, cnt);
+
 	while (cnt > 0)
-		__db_free(names[--cnt]);
-	__db_free(names);
+		__os_free(names[--cnt], 0);
+	__os_free(names, 0);
 }

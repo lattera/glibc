@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_pr.c	10.29 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)db_pr.c	10.40 (Sleepycat) 11/22/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -126,11 +126,10 @@ __db_prdb(dbp)
 		{ DB_AM_MLOCAL,		"local mpool" },
 		{ DB_AM_PGDEF,		"default page size" },
 		{ DB_AM_RDONLY,		"read-only" },
-		{ DB_AM_RECOVER,	"recover" },
 		{ DB_AM_SWAP,		"needswap" },
 		{ DB_AM_THREAD,		"thread" },
-		{ DB_BT_RECNUM,		"btree:records" },
-		{ DB_HS_DIRTYMETA,	"hash:dirty-meta" },
+		{ DB_BT_RECNUM,		"btree:recnum" },
+		{ DB_DBM_ERROR,		"dbm/ndbm error" },
 		{ DB_RE_DELIMITER,	"recno:delimiter" },
 		{ DB_RE_FIXEDLEN,	"recno:fixed-length" },
 		{ DB_RE_PAD,		"recno:pad" },
@@ -178,42 +177,55 @@ __db_prbtree(dbp)
 	static const FN mfn[] = {
 		{ BTM_DUP,	"duplicates" },
 		{ BTM_RECNO,	"recno" },
-		{ BTM_RECNUM,	"btree:records" },
+		{ BTM_RECNUM,	"btree:recnum" },
 		{ BTM_FIXEDLEN,	"recno:fixed-length" },
 		{ BTM_RENUMBER,	"recno:renumber" },
 		{ 0 },
 	};
+	DBC *dbc;
 	BTMETA *mp;
 	BTREE *t;
-	EPG *epg;
 	FILE *fp;
 	PAGE *h;
 	RECNO *rp;
 	db_pgno_t i;
-	int ret;
+	int cnt, ret;
+	const char *sep;
 
 	t = dbp->internal;
 	fp = __db_prinit(NULL);
+	if ((ret = dbp->cursor(dbp, NULL, &dbc, 0)) != 0)
+		return (ret);
 
 	(void)fprintf(fp, "%s\nOn-page metadata:\n", DB_LINE);
 
 	i = PGNO_METADATA;
-	if ((ret = __bam_pget(dbp, (PAGE **)&mp, &i, 0)) != 0)
+	if ((ret = memp_fget(dbp->mpf, &i, 0, (PAGE **)&mp)) != 0) {
+		(void)dbc->c_close(dbc);
 		return (ret);
+	}
 
+	fprintf(fp, "lsn.file: %lu lsn.offset: %lu\n",
+	    (u_long)LSN(mp).file, (u_long)LSN(mp).offset);
 	(void)fprintf(fp, "magic %#lx\n", (u_long)mp->magic);
 	(void)fprintf(fp, "version %#lx\n", (u_long)mp->version);
 	(void)fprintf(fp, "pagesize %lu\n", (u_long)mp->pagesize);
 	(void)fprintf(fp, "maxkey: %lu minkey: %lu\n",
 	    (u_long)mp->maxkey, (u_long)mp->minkey);
 
-	(void)fprintf(fp, "free %lu", (u_long)mp->free);
-	for (i = mp->free; i != PGNO_INVALID;) {
-		if ((ret = __bam_pget(dbp, &h, &i, 0)) != 0)
+	(void)fprintf(fp, "free list: %lu", (u_long)mp->free);
+	for (i = mp->free, cnt = 0, sep = ", "; i != PGNO_INVALID;) {
+		if ((ret = memp_fget(dbp->mpf, &i, 0, &h)) != 0)
 			return (ret);
 		i = h->next_pgno;
 		(void)memp_fput(dbp->mpf, h, 0);
-		(void)fprintf(fp, ", %lu", (u_long)i);
+		(void)fprintf(fp, "%s%lu", sep, (u_long)i);
+		if (++cnt % 10 == 0) {
+			(void)fprintf(fp, "\n");
+			cnt = 0;
+			sep = "";
+		} else
+			sep = ", ";
 	}
 	(void)fprintf(fp, "\n");
 
@@ -227,7 +239,7 @@ __db_prbtree(dbp)
 	    (u_long)t->bt_maxkey, (u_long)t->bt_minkey);
 	(void)fprintf(fp, "bt_compare: %#lx bt_prefix: %#lx\n",
 	    (u_long)t->bt_compare, (u_long)t->bt_prefix);
-	if ((rp = t->bt_recno) != NULL) {
+	if ((rp = t->recno) != NULL) {
 		(void)fprintf(fp,
 		    "re_delim: %#lx re_pad: %#lx re_len: %lu re_source: %s\n",
 		    (u_long)rp->re_delim, (u_long)rp->re_pad,
@@ -238,13 +250,9 @@ __db_prbtree(dbp)
 		    (u_long)rp->re_cmap, (u_long)rp->re_smap,
 		    (u_long)rp->re_emap, (u_long)rp->re_msize);
 	}
-	(void)fprintf(fp, "stack:");
-	for (epg = t->bt_stack; epg < t->bt_sp; ++epg)
-		(void)fprintf(fp, " %lu", (u_long)epg->page->pgno);
-	(void)fprintf(fp, "\n");
 	(void)fprintf(fp, "ovflsize: %lu\n", (u_long)t->bt_ovflsize);
 	(void)fflush(fp);
-	return (0);
+	return (dbc->c_close(dbc));
 }
 
 /*
@@ -258,51 +266,50 @@ __db_prhash(dbp)
 	DB *dbp;
 {
 	FILE *fp;
-	HTAB *t;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	int i, put_page, ret;
 	db_pgno_t pgno;
 
-	t = dbp->internal;
-
 	fp = __db_prinit(NULL);
+	if ((ret = dbp->cursor(dbp, NULL, &dbc, 0)) != 0)
+		return (ret);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
-	fprintf(fp, "\thash_accesses    %lu\n", (u_long)t->hash_accesses);
-	fprintf(fp, "\thash_collisions  %lu\n", (u_long)t->hash_collisions);
-	fprintf(fp, "\thash_expansions  %lu\n", (u_long)t->hash_expansions);
-	fprintf(fp, "\thash_overflows 	%lu\n", (u_long)t->hash_overflows);
-	fprintf(fp, "\thash_bigpages    %lu\n", (u_long)t->hash_bigpages);
-	fprintf(fp, "\n");
-
-	if (t->hdr == NULL) {
+	/*
+	 * In this case,  hcp->hdr will never be null, if we decide
+	 * to pass dbc's to this routine instead, then it could be.
+	 */
+	if (hcp->hdr == NULL) {
 		pgno = PGNO_METADATA;
-		if ((ret = memp_fget(dbp->mpf, &pgno, 0, &t->hdr)) != 0)
+		if ((ret = memp_fget(dbp->mpf, &pgno, 0, &hcp->hdr)) != 0)
 			return (ret);
 		put_page = 1;
 	} else
 		put_page = 0;
 
-	fprintf(fp, "\tmagic      %#lx\n", (u_long)t->hdr->magic);
-	fprintf(fp, "\tversion    %lu\n", (u_long)t->hdr->version);
-	fprintf(fp, "\tpagesize   %lu\n", (u_long)t->hdr->pagesize);
-	fprintf(fp, "\tovfl_point %lu\n", (u_long)t->hdr->ovfl_point);
-	fprintf(fp, "\tlast_freed %lu\n", (u_long)t->hdr->last_freed);
-	fprintf(fp, "\tmax_bucket %lu\n", (u_long)t->hdr->max_bucket);
-	fprintf(fp, "\thigh_mask  %#lx\n", (u_long)t->hdr->high_mask);
-	fprintf(fp, "\tlow_mask   %#lx\n", (u_long)t->hdr->low_mask);
-	fprintf(fp, "\tffactor    %lu\n", (u_long)t->hdr->ffactor);
-	fprintf(fp, "\tnelem      %lu\n", (u_long)t->hdr->nelem);
-	fprintf(fp, "\th_charkey  %#lx\n", (u_long)t->hdr->h_charkey);
+	fprintf(fp, "\tmagic      %#lx\n", (u_long)hcp->hdr->magic);
+	fprintf(fp, "\tversion    %lu\n", (u_long)hcp->hdr->version);
+	fprintf(fp, "\tpagesize   %lu\n", (u_long)hcp->hdr->pagesize);
+	fprintf(fp, "\tovfl_point %lu\n", (u_long)hcp->hdr->ovfl_point);
+	fprintf(fp, "\tlast_freed %lu\n", (u_long)hcp->hdr->last_freed);
+	fprintf(fp, "\tmax_bucket %lu\n", (u_long)hcp->hdr->max_bucket);
+	fprintf(fp, "\thigh_mask  %#lx\n", (u_long)hcp->hdr->high_mask);
+	fprintf(fp, "\tlow_mask   %#lx\n", (u_long)hcp->hdr->low_mask);
+	fprintf(fp, "\tffactor    %lu\n", (u_long)hcp->hdr->ffactor);
+	fprintf(fp, "\tnelem      %lu\n", (u_long)hcp->hdr->nelem);
+	fprintf(fp, "\th_charkey  %#lx\n", (u_long)hcp->hdr->h_charkey);
 
 	for (i = 0; i < NCACHED; i++)
-		fprintf(fp, "%lu ", (u_long)t->hdr->spares[i]);
+		fprintf(fp, "%lu ", (u_long)hcp->hdr->spares[i]);
 	fprintf(fp, "\n");
 
 	(void)fflush(fp);
 	if (put_page) {
-		(void)memp_fput(dbp->mpf, (PAGE *)t->hdr, 0);
-		t->hdr = NULL;
+		(void)memp_fput(dbp->mpf, (PAGE *)hcp->hdr, 0);
+		hcp->hdr = NULL;
 	}
-	return (0);
+	return (dbc->c_close(dbc));
 }
 
 /*
@@ -318,22 +325,18 @@ __db_prtree(mpf, all)
 {
 	PAGE *h;
 	db_pgno_t i;
-	int ret, t_ret;
 
 	if (set_psize == PSIZE_BOUNDARY)
 		__db_psize(mpf);
 
-	ret = 0;
 	for (i = PGNO_ROOT;; ++i) {
-		if ((ret = memp_fget(mpf, &i, 0, &h)) != 0)
+		if (memp_fget(mpf, &i, 0, &h) != 0)
 			break;
-		if (TYPE(h) != P_INVALID)
-			if ((t_ret = __db_prpage(h, all)) != 0 && ret == 0)
-				ret = t_ret;
+		(void)__db_prpage(h, all);
 		(void)memp_fput(mpf, h, 0);
 	}
 	(void)fflush(__db_prinit(NULL));
-	return (ret);
+	return (0);
 }
 
 /*
@@ -425,8 +428,7 @@ __db_prpage(h, all)
 	    (TYPE(h) == P_LRECNO && h->pgno == PGNO_ROOT))
 		fprintf(fp, " total records: %4lu", (u_long)RE_NREC(h));
 	fprintf(fp, "\n");
-	if (TYPE(h) == P_LBTREE || TYPE(h) == P_LRECNO ||
-	    TYPE(h) == P_DUPLICATE || TYPE(h) == P_OVERFLOW)
+	if (TYPE(h) != P_IBTREE && TYPE(h) != P_IRECNO)
 		fprintf(fp, "    prev: %4lu next: %4lu",
 		    (u_long)PREV_PGNO(h), (u_long)NEXT_PGNO(h));
 	if (TYPE(h) == P_IBTREE || TYPE(h) == P_LBTREE)

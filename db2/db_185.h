@@ -65,11 +65,11 @@
 
 #ifndef	__BIT_TYPES_DEFINED__
 #define	__BIT_TYPES_DEFINED__
-
-
-
-
-
+@u_int8_decl@
+@int16_decl@
+@u_int16_decl@
+@int32_decl@
+@u_int32_decl@
 #endif
 
 /*

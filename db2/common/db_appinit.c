@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_appinit.c	10.52 (Sleepycat) 6/2/98";
+static const char sccsid[] = "@(#)db_appinit.c	10.66 (Sleepycat) 12/7/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -16,7 +16,6 @@ static const char sccsid[] = "@(#)db_appinit.c	10.52 (Sleepycat) 6/2/98";
 
 #include <ctype.h>
 #include <errno.h>
-#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -34,8 +33,20 @@ static const char sccsid[] = "@(#)db_appinit.c	10.52 (Sleepycat) 6/2/98";
 
 static int __db_home __P((DB_ENV *, const char *, u_int32_t));
 static int __db_parse __P((DB_ENV *, char *));
-static int __db_tmp_dir __P((DB_ENV *, u_int32_t));
 static int __db_tmp_open __P((DB_ENV *, u_int32_t, char *, int *));
+
+/*
+ * This conflict array is used for concurrent db access (cdb).  It
+ * uses the same locks as the db_rw_conflict array, but adds an IW
+ * mode to be used for write cursors.
+ */
+static u_int8_t const db_cdb_conflicts[] = {
+	/*		N   R   W  IW */
+	/*    N */	0,  0,  0,  0,
+	/*    R */	0,  0,  1,  0,
+	/*    W */	0,  1,  1,  1,
+	/*   IW */	0,  0,  1,  1
+};
 
 /*
  * db_version --
@@ -70,21 +81,24 @@ db_appinit(db_home, db_config, dbenv, flags)
 	char * const *p;
 	char *lp, buf[MAXPATHLEN * 2];
 
+	fp = NULL;
+
 	/* Validate arguments. */
 	if (dbenv == NULL)
 		return (EINVAL);
 
-
 #ifdef HAVE_SPINLOCKS
 #define	OKFLAGS								\
-   (DB_CREATE | DB_NOMMAP | DB_THREAD | DB_INIT_LOCK | DB_INIT_LOG |	\
-    DB_INIT_MPOOL | DB_INIT_TXN | DB_MPOOL_PRIVATE | DB_RECOVER |	\
-    DB_RECOVER_FATAL | DB_TXN_NOSYNC | DB_USE_ENVIRON | DB_USE_ENVIRON_ROOT)
+    (DB_CREATE | DB_INIT_CDB | DB_INIT_LOCK | DB_INIT_LOG |		\
+    DB_INIT_MPOOL | DB_INIT_TXN | DB_MPOOL_PRIVATE | DB_NOMMAP |	\
+    DB_RECOVER | DB_RECOVER_FATAL | DB_THREAD | DB_TXN_NOSYNC |		\
+    DB_USE_ENVIRON | DB_USE_ENVIRON_ROOT)
 #else
 #define	OKFLAGS								\
-   (DB_CREATE | DB_NOMMAP | DB_INIT_LOCK | DB_INIT_LOG |		\
-    DB_INIT_MPOOL | DB_INIT_TXN | DB_MPOOL_PRIVATE | DB_RECOVER |	\
-    DB_RECOVER_FATAL | DB_TXN_NOSYNC | DB_USE_ENVIRON | DB_USE_ENVIRON_ROOT)
+    (DB_CREATE | DB_INIT_CDB | DB_INIT_LOCK | DB_INIT_LOG |		\
+    DB_INIT_MPOOL | DB_INIT_TXN | DB_MPOOL_PRIVATE | DB_NOMMAP |	\
+    DB_RECOVER | DB_RECOVER_FATAL | DB_TXN_NOSYNC |			\
+    DB_USE_ENVIRON | DB_USE_ENVIRON_ROOT)
 #endif
 	if ((ret = __db_fchk(dbenv, "db_appinit", flags, OKFLAGS)) != 0)
 		return (ret);
@@ -96,8 +110,6 @@ db_appinit(db_home, db_config, dbenv, flags)
 	/* Convert the db_appinit(3) flags. */
 	if (LF_ISSET(DB_THREAD))
 		F_SET(dbenv, DB_ENV_THREAD);
-
-	fp = NULL;
 
 	/* Set the database home. */
 	if ((ret = __db_home(dbenv, db_home, flags)) != 0)
@@ -127,8 +139,17 @@ db_appinit(db_home, db_config, dbenv, flags)
 		(void)strcat(buf, CONFIG_NAME);
 		if ((fp = fopen(buf, "r")) != NULL) {
 			while (fgets(buf, sizeof(buf), fp) != NULL) {
-				if ((lp = strchr(buf, '\n')) != NULL)
-					*lp = '\0';
+				if ((lp = strchr(buf, '\n')) == NULL) {
+					__db_err(dbenv,
+					    "%s: line too long", CONFIG_NAME);
+					ret = EINVAL;
+					goto err;
+				}
+				*lp = '\0';
+				if (buf[0] == '\0' ||
+				    buf[0] == '#' || isspace(buf[0]))
+					continue;
+
 				if ((ret = __db_parse(dbenv, buf)) != 0)
 					goto err;
 			}
@@ -138,11 +159,14 @@ db_appinit(db_home, db_config, dbenv, flags)
 	}
 
 	/* Set up the tmp directory path. */
-	if (dbenv->db_tmp_dir == NULL &&
-	    (ret = __db_tmp_dir(dbenv, flags)) != 0)
+	if (dbenv->db_tmp_dir == NULL && (ret = __os_tmpdir(dbenv, flags)) != 0)
 		goto err;
 
-	/* Indicate that the path names have been set. */
+	/*
+	 * Flag that the structure has been initialized by the application.
+	 * Note, this must be set before calling into the subsystems as it
+	 * is used when we're doing file naming.
+	 */
 	F_SET(dbenv, DB_ENV_APPINIT);
 
 	/*
@@ -166,6 +190,18 @@ db_appinit(db_home, db_config, dbenv, flags)
 	 * Default permissions are read-write for both owner and group.
 	 */
 	mode = __db_omode("rwrw--");
+	if (LF_ISSET(DB_INIT_CDB)) {
+		if (LF_ISSET(DB_INIT_LOCK | DB_INIT_LOG | DB_INIT_TXN)) {
+			ret = EINVAL;
+			goto err;
+		}
+		F_SET(dbenv, DB_ENV_CDB);
+		dbenv->lk_conflicts = db_cdb_conflicts;
+		dbenv->lk_modes = DB_LOCK_RW_N + 1;
+		if ((ret = lock_open(NULL, LF_ISSET(DB_CREATE | DB_THREAD),
+		    mode, dbenv, &dbenv->lk_info)) != 0)
+			goto err;
+	}
 	if (LF_ISSET(DB_INIT_LOCK) && (ret = lock_open(NULL,
 	    LF_ISSET(DB_CREATE | DB_THREAD),
 	    mode, dbenv, &dbenv->lk_info)) != 0)
@@ -232,28 +268,32 @@ db_appexit(dbenv)
 	if (dbenv->tx_info && (t_ret = txn_close(dbenv->tx_info)) != 0)
 		if (ret == 0)
 			ret = t_ret;
-	if (dbenv->mp_info && (t_ret = memp_close(dbenv->mp_info)) != 0)
+	if (dbenv->lg_info && (t_ret = log_close(dbenv->lg_info)) != 0)
 		if (ret == 0)
 			ret = t_ret;
-	if (dbenv->lg_info && (t_ret = log_close(dbenv->lg_info)) != 0)
+	if (dbenv->mp_info && (t_ret = memp_close(dbenv->mp_info)) != 0)
 		if (ret == 0)
 			ret = t_ret;
 	if (dbenv->lk_info && (t_ret = lock_close(dbenv->lk_info)) != 0)
 		if (ret == 0)
 			ret = t_ret;
 
+	/* Clear initialized flag (after subsystems, it affects naming). */
+	F_CLR(dbenv, DB_ENV_APPINIT);
+
 	/* Free allocated memory. */
 	if (dbenv->db_home != NULL)
-		FREES(dbenv->db_home);
+		__os_freestr(dbenv->db_home);
 	if ((p = dbenv->db_data_dir) != NULL) {
 		for (; *p != NULL; ++p)
-			FREES(*p);
-		FREE(dbenv->db_data_dir, dbenv->data_cnt * sizeof(char **));
+			__os_freestr(*p);
+		__os_free(dbenv->db_data_dir,
+		    dbenv->data_cnt * sizeof(char **));
 	}
 	if (dbenv->db_log_dir != NULL)
-		FREES(dbenv->db_log_dir);
+		__os_freestr(dbenv->db_log_dir);
 	if (dbenv->db_tmp_dir != NULL)
-		FREES(dbenv->db_tmp_dir);
+		__os_freestr(dbenv->db_tmp_dir);
 
 	return (ret);
 }
@@ -261,7 +301,7 @@ db_appexit(dbenv)
 #define	DB_ADDSTR(str) {						\
 	if ((str) != NULL) {						\
 		/* If leading slash, start over. */			\
-		if (__db_abspath(str)) {				\
+		if (__os_abspath(str)) {				\
 			p = start;					\
 			slash = 0;					\
 		}							\
@@ -317,10 +357,9 @@ __db_appname(dbenv, appname, dir, file, tmp_oflags, fdp, namep)
 	 * path, we're done.  If the directory is, simply append the file and
 	 * return.
 	 */
-	if (file != NULL && __db_abspath(file))
-		return ((*namep =
-		    (char *)__db_strdup(file)) == NULL ? ENOMEM : 0);
-	if (dir != NULL && __db_abspath(dir)) {
+	if (file != NULL && __os_abspath(file))
+		return (__os_strdup(file, namep));
+	if (dir != NULL && __os_abspath(dir)) {
 		a = dir;
 		goto done;
 	}
@@ -417,7 +456,7 @@ retry:	switch (appname) {
 	if (0) {
 tmp:		if (dbenv == NULL || !F_ISSET(dbenv, DB_ENV_APPINIT)) {
 			memset(&etmp, 0, sizeof(etmp));
-			if ((ret = __db_tmp_dir(&etmp, DB_USE_ENVIRON)) != 0)
+			if ((ret = __os_tmpdir(&etmp, DB_USE_ENVIRON)) != 0)
 				return (ret);
 			tmp_free = 1;
 			a = etmp.db_tmp_dir;
@@ -437,12 +476,11 @@ done:	len =
 	 * name.
 	 */
 #define	DB_TRAIL	"XXXXXX"
-	if ((start =
-	    (char *)__db_malloc(len + sizeof(DB_TRAIL) + 10)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
+	if ((ret =
+	    __os_malloc(len + sizeof(DB_TRAIL) + 10, NULL, &start)) != 0) {
 		if (tmp_free)
-			FREES(etmp.db_tmp_dir);
-		return (ENOMEM);
+			__os_freestr(etmp.db_tmp_dir);
+		return (ret);
 	}
 
 	slash = 0;
@@ -452,28 +490,32 @@ done:	len =
 	DB_ADDSTR(file);
 	*p = '\0';
 
+	/* Discard any space allocated to find the temp directory. */
+	if (tmp_free) {
+		__os_freestr(etmp.db_tmp_dir);
+		tmp_free = 0;
+	}
+
 	/*
 	 * If we're opening a data file, see if it exists.  If it does,
 	 * return it, otherwise, try and find another one to open.
 	 */
-	if (data_entry != -1 && __db_exists(start, NULL) != 0) {
-		FREES(start);
+	if (data_entry != -1 && __os_exists(start, NULL) != 0) {
+		__os_freestr(start);
 		a = b = c = NULL;
 		goto retry;
 	}
 
-	/* Discard any space allocated to find the temp directory. */
-	if (tmp_free)
-		FREES(etmp.db_tmp_dir);
-
 	/* Create the file if so requested. */
 	if (tmp_create &&
 	    (ret = __db_tmp_open(dbenv, tmp_oflags, start, fdp)) != 0) {
-		FREES(start);
+		__os_freestr(start);
 		return (ret);
 	}
 
-	if (namep != NULL)
+	if (namep == NULL)
+		__os_freestr(start);
+	else
 		*namep = start;
 	return (0);
 }
@@ -511,11 +553,7 @@ __db_home(dbenv, db_home, flags)
 	if (p == NULL)
 		return (0);
 
-	if ((dbenv->db_home = (char *)__db_strdup(p)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
-	return (0);
+	return (__os_strdup(p, &dbenv->db_home));
 }
 
 /*
@@ -530,150 +568,71 @@ __db_parse(dbenv, s)
 	int ret;
 	char *local_s, *name, *value, **p, *tp;
 
-	ret = 0;
-
 	/*
 	 * We need to strdup the argument in case the caller passed us
 	 * static data.
 	 */
-	if ((local_s = (char *)__db_strdup(s)) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_strdup(s, &local_s)) != 0)
+		return (ret);
 
-	tp = local_s;
-	while ((name = strsep(&tp, " \t")) != NULL && *name == '\0')
+	/*
+	 * Name/value pairs are parsed as two white-space separated strings.
+	 * Leading and trailing white-space is trimmed from the value, but
+	 * it may contain embedded white-space.  Note: we use the isspace(3)
+	 * macro because it's more portable, but that means that you can use
+	 * characters like form-feed to separate the strings.
+	 */
+	name = local_s;
+	for (tp = name; *tp != '\0' && !isspace(*tp); ++tp)
 		;
-	if (name == NULL)
+	if (*tp == '\0' || tp == name)
 		goto illegal;
-	while ((value = strsep(&tp, " \t")) != NULL && *value == '\0')
+	*tp = '\0';
+	for (++tp; isspace(*tp); ++tp)
 		;
-	if (value == NULL) {
+	if (*tp == '\0')
+		goto illegal;
+	value = tp;
+	for (++tp; *tp != '\0'; ++tp)
+		;
+	for (--tp; isspace(*tp); --tp)
+		;
+	if (tp == value) {
 illegal:	ret = EINVAL;
 		__db_err(dbenv, "illegal name-value pair: %s", s);
 		goto err;
 	}
+	*++tp = '\0';
 
 #define	DATA_INIT_CNT	20			/* Start with 20 data slots. */
 	if (!strcmp(name, "DB_DATA_DIR")) {
 		if (dbenv->db_data_dir == NULL) {
-			if ((dbenv->db_data_dir =
-			    (char **)__db_calloc(DATA_INIT_CNT,
-			    sizeof(char **))) == NULL)
-				goto nomem;
+			if ((ret = __os_calloc(DATA_INIT_CNT,
+			    sizeof(char **), &dbenv->db_data_dir)) != 0)
+				goto err;
 			dbenv->data_cnt = DATA_INIT_CNT;
 		} else if (dbenv->data_next == dbenv->data_cnt - 1) {
 			dbenv->data_cnt *= 2;
-			if ((dbenv->db_data_dir =
-			    (char **)__db_realloc(dbenv->db_data_dir,
-			    dbenv->data_cnt * sizeof(char **))) == NULL)
-				goto nomem;
+			if ((ret = __os_realloc(&dbenv->db_data_dir,
+			    dbenv->data_cnt * sizeof(char **))) != 0)
+				goto err;
 		}
 		p = &dbenv->db_data_dir[dbenv->data_next++];
 	} else if (!strcmp(name, "DB_LOG_DIR")) {
 		if (dbenv->db_log_dir != NULL)
-			FREES(dbenv->db_log_dir);
+			__os_freestr(dbenv->db_log_dir);
 		p = &dbenv->db_log_dir;
 	} else if (!strcmp(name, "DB_TMP_DIR")) {
 		if (dbenv->db_tmp_dir != NULL)
-			FREES(dbenv->db_tmp_dir);
+			__os_freestr(dbenv->db_tmp_dir);
 		p = &dbenv->db_tmp_dir;
 	} else
 		goto err;
 
-	if ((*p = (char *)__db_strdup(value)) == NULL) {
-nomem:		ret = ENOMEM;
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-	}
+	ret = __os_strdup(value, p);
 
-err:	FREES(local_s);
+err:	__os_freestr(local_s);
 	return (ret);
-}
-
-#ifdef macintosh
-#include <TFileSpec.h>
-
-static char *sTempFolder;
-#endif
-
-/*
- * tmp --
- *	Set the temporary directory path.
- */
-static int
-__db_tmp_dir(dbenv, flags)
-	DB_ENV *dbenv;
-	u_int32_t flags;
-{
-	static const char * list[] = {	/* Ordered: see db_appinit(3). */
-		"/var/tmp",
-		"/usr/tmp",
-		"/temp",		/* WIN32. */
-		"/tmp",
-		"C:/temp",		/* WIN32. */
-		"C:/tmp",		/* WIN32. */
-		NULL
-	};
-	const char **lp, *p;
-
-	/* Use the environment if it's permitted and initialized. */
-	p = NULL;
-#ifdef HAVE_GETEUID
-	if (LF_ISSET(DB_USE_ENVIRON) ||
-	    (LF_ISSET(DB_USE_ENVIRON_ROOT) && getuid() == 0)) {
-#else
-	if (LF_ISSET(DB_USE_ENVIRON)) {
-#endif
-		if ((p = getenv("TMPDIR")) != NULL && p[0] == '\0') {
-			__db_err(dbenv, "illegal TMPDIR environment variable");
-			return (EINVAL);
-		}
-		/* WIN32 */
-		if (p == NULL && (p = getenv("TEMP")) != NULL && p[0] == '\0') {
-			__db_err(dbenv, "illegal TEMP environment variable");
-			return (EINVAL);
-		}
-		/* WIN32 */
-		if (p == NULL && (p = getenv("TMP")) != NULL && p[0] == '\0') {
-			__db_err(dbenv, "illegal TMP environment variable");
-			return (EINVAL);
-		}
-		/* Macintosh */
-		if (p == NULL &&
-		    (p = getenv("TempFolder")) != NULL && p[0] == '\0') {
-			__db_err(dbenv,
-			    "illegal TempFolder environment variable");
-			return (EINVAL);
-		}
-	}
-
-#ifdef macintosh
-	/* Get the path to the temporary folder. */
-	if (p == NULL) {
-		FSSpec spec;
-
-		if (!Special2FSSpec(kTemporaryFolderType,
-		    kOnSystemDisk, 0, &spec)) {
-			p = FSp2FullPath(&spec);
-			sTempFolder = __db_malloc(strlen(p) + 1);
-			strcpy(sTempFolder, p);
-			p = sTempFolder;
-		}
-	}
-#endif
-
-	/* Step through the list looking for a possibility. */
-	if (p == NULL)
-		for (lp = list; *lp != NULL; ++lp)
-			if (__db_exists(p = *lp, NULL) == 0)
-				break;
-
-	if (p == NULL)
-		return (0);
-
-	if ((dbenv->db_tmp_dir = (char *)__db_strdup(p)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
-	return (0);
 }
 
 /*
@@ -687,9 +646,6 @@ __db_tmp_open(dbenv, flags, path, fdp)
 	char *path;
 	int *fdp;
 {
-#ifdef HAVE_SIGFILLSET
-	sigset_t set, oset;
-#endif
 	u_long pid;
 	int mode, isdir, ret;
 	const char *p;
@@ -699,7 +655,7 @@ __db_tmp_open(dbenv, flags, path, fdp)
 	 * Check the target directory; if you have six X's and it doesn't
 	 * exist, this runs for a *very* long time.
 	 */
-	if ((ret = __db_exists(path, &isdir)) != 0) {
+	if ((ret = __os_exists(path, &isdir)) != 0) {
 		__db_err(dbenv, "%s: %s", path, strerror(ret));
 		return (ret);
 	}
@@ -738,27 +694,9 @@ __db_tmp_open(dbenv, flags, path, fdp)
 	LF_SET(DB_CREATE | DB_EXCL);
 	mode = __db_omode("rw----");
 
-	/*
-	 * Try to open a file.  We block every signal we can get our hands
-	 * on so that, if we're interrupted at the wrong time, the temporary
-	 * file isn't left around -- of course, if we drop core in-between
-	 * the calls we'll hang forever, but that's probably okay.  ;-}
-	 */
-#ifdef HAVE_SIGFILLSET
-	if (LF_ISSET(DB_TEMPORARY))
-		(void)sigfillset(&set);
-#endif
+	/* Loop, trying to open a file. */
 	for (;;) {
-#ifdef HAVE_SIGFILLSET
-		if (LF_ISSET(DB_TEMPORARY))
-			(void)sigprocmask(SIG_BLOCK, &set, &oset);
-#endif
-		ret = __db_open(path, flags, flags, mode, fdp);
-#ifdef HAVE_SIGFILLSET
-		if (LF_ISSET(DB_TEMPORARY))
-			(void)sigprocmask(SIG_SETMASK, &oset, NULL);
-#endif
-		if (ret == 0)
+		if ((ret = __db_open(path, flags, flags, mode, fdp)) == 0)
 			return (0);
 
 		/*

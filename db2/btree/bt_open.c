@@ -47,16 +47,8 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_open.c	10.27 (Sleepycat) 5/6/98";
+static const char sccsid[] = "@(#)bt_open.c	10.39 (Sleepycat) 11/21/98";
 #endif /* not lint */
-
-/*
- * Implementation of btree access method for 4.4BSD.
- *
- * The design here was originally based on that of the btree access method
- * used in the Postgres database system at UC Berkeley.  This implementation
- * is wholly independent of the Postgres code.
- */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
@@ -70,40 +62,34 @@ static const char sccsid[] = "@(#)bt_open.c	10.27 (Sleepycat) 5/6/98";
 #include "db_page.h"
 #include "btree.h"
 
-static int __bam_keyalloc __P((BTREE *));
-static int __bam_setmeta __P((DB *, BTREE *));
-
 /*
  * __bam_open --
  *	Open a btree.
  *
- * PUBLIC: int __bam_open __P((DB *, DBTYPE, DB_INFO *));
+ * PUBLIC: int __bam_open __P((DB *, DB_INFO *));
  */
 int
-__bam_open(dbp, type, dbinfo)
+__bam_open(dbp, dbinfo)
 	DB *dbp;
-	DBTYPE type;
 	DB_INFO *dbinfo;
 {
 	BTREE *t;
 	int ret;
 
-	/* Allocate the btree internal structure. */
-	if ((t = (BTREE *)__db_calloc(1, sizeof(BTREE))) == NULL)
-		return (ENOMEM);
-
-	t->bt_sp = t->bt_csp = t->bt_stack;
-	t->bt_esp = t->bt_stack + sizeof(t->bt_stack) / sizeof(t->bt_stack[0]);
-
-	if ((type == DB_RECNO || F_ISSET(dbp, DB_BT_RECNUM)) &&
-	    (ret = __bam_keyalloc(t)) != 0)
-		goto err;
+	/* Allocate and initialize the private btree structure. */
+	if ((ret = __os_calloc(1, sizeof(BTREE), &t)) != 0)
+		return (ret);
+	dbp->internal = t;
 
 	/*
 	 * Intention is to make sure all of the user's selections are okay
 	 * here and then use them without checking.
 	 */
-	if (dbinfo != NULL) {
+	if (dbinfo == NULL) {
+		t->bt_minkey = DEFMINKEYPAGE;
+		t->bt_compare = __bam_defcmp;
+		t->bt_prefix = __bam_defpfx;
+	} else {
 		/* Minimum number of keys per page. */
 		if (dbinfo->bt_minkey == 0)
 			t->bt_minkey = DEFMINKEYPAGE;
@@ -126,28 +112,76 @@ __bam_open(dbp, type, dbinfo)
 		 * If no comparison, use default comparison.  If no comparison
 		 * and no prefix, use default prefix.  (We can't default the
 		 * prefix if the user supplies a comparison routine; shortening
-		 * the keys may break their comparison algorithm.)
+		 * the keys may break their comparison algorithm.  We don't
+		 * permit the user to specify a prefix routine if they didn't
+		 * also specify a comparison routine, they can't know enough
+		 * about our comparison routine to get it right.)
 		 */
-		t->bt_compare = dbinfo->bt_compare == NULL ?
-		    __bam_defcmp : dbinfo->bt_compare;
-		t->bt_prefix = dbinfo->bt_prefix == NULL ?
-		    (dbinfo->bt_compare == NULL ?
-		    __bam_defpfx : NULL) : dbinfo->bt_prefix;
-	} else {
-		t->bt_minkey = DEFMINKEYPAGE;
-		t->bt_compare = __bam_defcmp;
-		t->bt_prefix = __bam_defpfx;
+		if ((t->bt_compare = dbinfo->bt_compare) == NULL) {
+			if (dbinfo->bt_prefix != NULL)
+				goto einval;
+			t->bt_compare = __bam_defcmp;
+			t->bt_prefix = __bam_defpfx;
+		} else
+			t->bt_prefix = dbinfo->bt_prefix;
 	}
 
-	/* Initialize the remaining fields of the DB. */
-	dbp->type = type;
-	dbp->internal = t;
-	dbp->cursor = __bam_cursor;
+	/* Initialize the remaining fields/methods of the DB. */
+	dbp->am_close = __bam_close;
 	dbp->del = __bam_delete;
-	dbp->get = __bam_get;
-	dbp->put = __bam_put;
 	dbp->stat = __bam_stat;
-	dbp->sync = __bam_sync;
+
+	/* Start up the tree. */
+	if ((ret = __bam_read_root(dbp)) != 0)
+		goto err;
+
+	/* Set the overflow page size. */
+	__bam_setovflsize(dbp);
+
+	return (0);
+
+einval:	ret = EINVAL;
+
+err:	__os_free(t, sizeof(BTREE));
+	return (ret);
+}
+
+/*
+ * __bam_close --
+ *	Close a btree.
+ *
+ * PUBLIC: int __bam_close __P((DB *));
+ */
+int
+__bam_close(dbp)
+	DB *dbp;
+{
+	__os_free(dbp->internal, sizeof(BTREE));
+	dbp->internal = NULL;
+
+	return (0);
+}
+
+/*
+ * __bam_setovflsize --
+ *
+ * PUBLIC: void __bam_setovflsize __P((DB *));
+ */
+void
+__bam_setovflsize(dbp)
+	DB *dbp;
+{
+	BTREE *t;
+
+	t = dbp->internal;
+
+	/*
+	 * !!!
+	 * Correction for recno, which doesn't know anything about minimum
+	 * keys per page.
+	 */
+	if (t->bt_minkey == 0)
+		t->bt_minkey = DEFMINKEYPAGE;
 
 	/*
 	 * The btree data structure requires that at least two key/data pairs
@@ -161,117 +195,42 @@ __bam_open(dbp, type, dbinfo)
 	 */
 	t->bt_ovflsize = (dbp->pgsize - P_OVERHEAD) / (t->bt_minkey * P_INDX)
 	    - (BKEYDATA_PSIZE(0) + ALIGN(1, 4));
-
-	/* Create a root page if new tree. */
-	if ((ret = __bam_setmeta(dbp, t)) != 0)
-		goto err;
-
-	return (0);
-
-einval:	ret = EINVAL;
-
-err:	if (t != NULL) {
-		/* If we allocated room for key/data return, discard it. */
-		if (t->bt_rkey.data != NULL)
-			__db_free(t->bt_rkey.data);
-
-		FREE(t, sizeof(BTREE));
-	}
-	return (ret);
 }
 
 /*
- * __bam_bdup --
- *	Create a BTREE handle for a threaded DB handle.
+ * __bam_read_root --
+ *	Check (and optionally create) a tree.
  *
- * PUBLIC: int __bam_bdup __P((DB *, DB *));
+ * PUBLIC: int __bam_read_root __P((DB *));
  */
 int
-__bam_bdup(orig, new)
-	DB *orig, *new;
-{
-	BTREE *t, *ot;
-	int ret;
-
-	ot = orig->internal;
-
-	if ((t = (BTREE *)__db_calloc(1, sizeof(*t))) == NULL)
-		return (ENOMEM);
-
-	/*
-	 * !!!
-	 * Ignore the cursor queue, only the first DB has attached cursors.
-	 */
-
-	t->bt_sp = t->bt_csp = t->bt_stack;
-	t->bt_esp = t->bt_stack + sizeof(t->bt_stack) / sizeof(t->bt_stack[0]);
-
-	if ((orig->type == DB_RECNO || F_ISSET(orig, DB_BT_RECNUM)) &&
-	    (ret = __bam_keyalloc(t)) != 0) {
-		FREE(t, sizeof(*t));
-		return (ret);
-	}
-
-	t->bt_maxkey = ot->bt_maxkey;
-	t->bt_minkey = ot->bt_minkey;
-	t->bt_compare = ot->bt_compare;
-	t->bt_prefix = ot->bt_prefix;
-	t->bt_ovflsize = ot->bt_ovflsize;
-
-	/*
-	 * !!!
-	 * The entire RECNO structure is shared.  If it breaks, the application
-	 * was misusing it to start with.
-	 */
-	t->bt_recno = ot->bt_recno;
-
-	new->internal = t;
-
-	return (0);
-}
-
-/*
- * __bam_keyalloc --
- *	Allocate return memory for recno keys.
- */
-static int
-__bam_keyalloc(t)
-	BTREE *t;
-{
-	/*
-	 * Recno keys are always the same size, and we don't want to have
-	 * to check for space on each return.  Allocate it now.
-	 */
-	if ((t->bt_rkey.data = (void *)__db_malloc(sizeof(db_recno_t))) == NULL)
-		return (ENOMEM);
-	t->bt_rkey.ulen = sizeof(db_recno_t);
-	return (0);
-}
-
-/*
- * __bam_setmeta --
- *	Check (and optionally create) a tree.
- */
-static int
-__bam_setmeta(dbp, t)
+__bam_read_root(dbp)
 	DB *dbp;
-	BTREE *t;
 {
 	BTMETA *meta;
-	PAGE *root;
+	BTREE *t;
+	DBC *dbc;
 	DB_LOCK metalock, rootlock;
+	PAGE *root;
 	db_pgno_t pgno;
-	int ret;
+	int ret, t_ret;
+
+	ret = 0;
+	t = dbp->internal;
+
+	/* Get a cursor. */
+	if ((ret = dbp->cursor(dbp, NULL, &dbc, 0)) != 0)
+		return (ret);
 
 	/* Get, and optionally create the metadata page. */
 	pgno = PGNO_METADATA;
 	if ((ret =
-	    __bam_lget(dbp, 0, PGNO_METADATA, DB_LOCK_WRITE, &metalock)) != 0)
-		return (ret);
+	    __bam_lget(dbc, 0, PGNO_METADATA, DB_LOCK_WRITE, &metalock)) != 0)
+		goto err;
 	if ((ret =
-	    __bam_pget(dbp, (PAGE **)&meta, &pgno, DB_MPOOL_CREATE)) != 0) {
-		(void)__BT_LPUT(dbp, metalock);
-		return (ret);
+	    memp_fget(dbp->mpf, &pgno, DB_MPOOL_CREATE, (PAGE **)&meta)) != 0) {
+		(void)__BT_LPUT(dbc, metalock);
+		goto err;
 	}
 
 	/*
@@ -284,8 +243,8 @@ __bam_setmeta(dbp, t)
 		t->bt_minkey = meta->minkey;
 
 		(void)memp_fput(dbp->mpf, (PAGE *)meta, 0);
-		(void)__BT_LPUT(dbp, metalock);
-		return (0);
+		(void)__BT_LPUT(dbc, metalock);
+		goto done;
 	}
 
 	/* Initialize the tree structure metadata information. */
@@ -308,16 +267,16 @@ __bam_setmeta(dbp, t)
 		F_SET(meta, BTM_RECNUM);
 	if (F_ISSET(dbp, DB_RE_RENUMBER))
 		F_SET(meta, BTM_RENUMBER);
-	memcpy(meta->uid, dbp->lock.fileid, DB_FILE_ID_LEN);
+	memcpy(meta->uid, dbp->fileid, DB_FILE_ID_LEN);
 
 	/* Create and initialize a root page. */
 	pgno = PGNO_ROOT;
 	if ((ret =
-	    __bam_lget(dbp, 0, PGNO_ROOT, DB_LOCK_WRITE, &rootlock)) != 0)
-		return (ret);
-	if ((ret = __bam_pget(dbp, &root, &pgno, DB_MPOOL_CREATE)) != 0) {
-		(void)__BT_LPUT(dbp, rootlock);
-		return (ret);
+	    __bam_lget(dbc, 0, PGNO_ROOT, DB_LOCK_WRITE, &rootlock)) != 0)
+		goto err;
+	if ((ret = memp_fget(dbp->mpf, &pgno, DB_MPOOL_CREATE, &root)) != 0) {
+		(void)__BT_LPUT(dbc, rootlock);
+		goto err;
 	}
 	P_INIT(root, dbp->pgsize, PGNO_ROOT, PGNO_INVALID,
 	    PGNO_INVALID, 1, dbp->type == DB_RECNO ? P_LRECNO : P_LBTREE);
@@ -325,9 +284,9 @@ __bam_setmeta(dbp, t)
 
 	/* Release the metadata and root pages. */
 	if ((ret = memp_fput(dbp->mpf, (PAGE *)meta, DB_MPOOL_DIRTY)) != 0)
-		return (ret);
+		goto err;
 	if ((ret = memp_fput(dbp->mpf, root, DB_MPOOL_DIRTY)) != 0)
-		return (ret);
+		goto err;
 
 	/*
 	 * Flush the metadata and root pages to disk -- since the user can't
@@ -341,8 +300,11 @@ __bam_setmeta(dbp, t)
 		ret = EINVAL;
 
 	/* Release the locks. */
-	(void)__BT_LPUT(dbp, metalock);
-	(void)__BT_LPUT(dbp, rootlock);
+	(void)__BT_LPUT(dbc, metalock);
+	(void)__BT_LPUT(dbc, rootlock);
 
+err:
+done:	if ((t_ret = dbc->c_close(dbc)) != 0 && ret == 0)
+		ret = t_ret;
 	return (ret);
 }

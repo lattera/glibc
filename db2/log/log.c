@@ -7,13 +7,14 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log.c	10.54 (Sleepycat) 5/31/98";
+static const char sccsid[] = "@(#)log.c	10.63 (Sleepycat) 10/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
+#include <shqueue.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -23,6 +24,7 @@ static const char sccsid[] = "@(#)log.c	10.54 (Sleepycat) 5/31/98";
 #include "shqueue.h"
 #include "log.h"
 #include "db_dispatch.h"
+#include "txn.h"
 #include "txn_auto.h"
 #include "common_ext.h"
 
@@ -54,13 +56,11 @@ log_open(path, flags, mode, dbenv, lpp)
 		return (ret);
 
 	/* Create and initialize the DB_LOG structure. */
-	if ((dblp = (DB_LOG *)__db_calloc(1, sizeof(DB_LOG))) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_calloc(1, sizeof(DB_LOG), &dblp)) != 0)
+		return (ret);
 
-	if (path != NULL && (dblp->dir = __db_strdup(path)) == NULL) {
-		ret = ENOMEM;
+	if (path != NULL && (ret = __os_strdup(path, &dblp->dir)) != 0)
 		goto err;
-	}
 
 	dblp->dbenv = dbenv;
 	dblp->lfd = -1;
@@ -80,7 +80,7 @@ log_open(path, flags, mode, dbenv, lpp)
 	if (path == NULL)
 		dblp->reginfo.path = NULL;
 	else
-		if ((dblp->reginfo.path = __db_strdup(path)) == NULL)
+		if ((ret = __os_strdup(path, &dblp->reginfo.path)) != 0)
 			goto err;
 	dblp->reginfo.file = DB_DEFAULT_LOG_FILE;
 	dblp->reginfo.mode = mode;
@@ -122,7 +122,7 @@ log_open(path, flags, mode, dbenv, lpp)
 		if ((ret = __db_shalloc(dblp->addr,
 		    sizeof(db_mutex_t), MUTEX_ALIGNMENT, &dblp->mutexp)) != 0)
 			goto err;
-		(void)__db_mutex_init(dblp->mutexp, -1);
+		(void)__db_mutex_init(dblp->mutexp, 0);
 	}
 
 	/*
@@ -148,11 +148,25 @@ err:	if (dblp->reginfo.addr != NULL) {
 	}
 
 	if (dblp->reginfo.path != NULL)
-		FREES(dblp->reginfo.path);
+		__os_freestr(dblp->reginfo.path);
 	if (dblp->dir != NULL)
-		FREES(dblp->dir);
-	FREE(dblp, sizeof(*dblp));
+		__os_freestr(dblp->dir);
+	__os_free(dblp, sizeof(*dblp));
 	return (ret);
+}
+
+/*
+ * __log_panic --
+ *	Panic a log.
+ *
+ * PUBLIC: void __log_panic __P((DB_ENV *));
+ */
+void
+__log_panic(dbenv)
+	DB_ENV *dbenv;
+{
+	if (dbenv->lg_info != NULL)
+		dbenv->lg_info->lp->rlayout.panic = 1;
 }
 
 /*
@@ -212,12 +226,12 @@ __log_recover(dblp)
 	}
 
 	/*
-	 * We know where the end of the log is.  Since that record is on disk,
-	 * it's also the last-synced LSN.
+	 * We now know where the end of the log is.  Set the first LSN that
+	 * we want to return to an application and the LSN of the last known
+	 * record on disk.
 	 */
-	lp->lsn = lsn;
+	lp->lsn = lp->s_lsn = lsn;
 	lp->lsn.offset += dblp->c_len;
-	lp->s_lsn = lp->lsn;
 
 	/* Set up the current buffer information, too. */
 	lp->len = dblp->c_len;
@@ -250,13 +264,23 @@ __log_recover(dblp)
 			}
 		}
 	}
+	/*
+	 * Reset the cursor lsn to the beginning of the log, so that an
+	 * initial call to DB_NEXT does the right thing.
+	 */
+	ZERO_LSN(dblp->c_lsn);
 
 	/* If we never find a checkpoint, that's okay, just 0 it out. */
 	if (!found_checkpoint)
 		ZERO_LSN(lp->chkpt_lsn);
 
+	/*
+	 * !!!
+	 * The test suite explicitly looks for this string -- don't change
+	 * it here unless you also change it there.
+	 */
 	__db_err(dblp->dbenv,
-	    "Recovering the log: last valid LSN: file: %lu offset %lu",
+	    "Finding last valid log LSN: file: %lu offset %lu",
 	    (u_long)lp->lsn.file, (u_long)lp->lsn.offset);
 
 	return (0);
@@ -275,14 +299,15 @@ __log_find(dblp, find_first, valp)
 	DB_LOG *dblp;
 	int find_first, *valp;
 {
-	int cnt, fcnt, logval, ret;
+	u_int32_t clv, logval;
+	int cnt, fcnt, ret;
 	const char *dir;
 	char **names, *p, *q;
 
 	*valp = 0;
 
 	/* Find the directory name. */
-	if ((ret = __log_name(dblp, 1, &p)) != 0)
+	if ((ret = __log_name(dblp, 1, &p, NULL, 0)) != 0)
 		return (ret);
 	if ((q = __db_rpath(p)) == NULL)
 		dir = PATH_DOT;
@@ -292,8 +317,8 @@ __log_find(dblp, find_first, valp)
 	}
 
 	/* Get the list of file names. */
-	ret = __db_dirlist(dir, &names, &fcnt);
-	FREES(p);
+	ret = __os_dirlist(dir, &names, &fcnt);
+	__os_freestr(p);
 	if (ret != 0) {
 		__db_err(dblp->dbenv, "%s: %s", dir, strerror(ret));
 		return (ret);
@@ -302,28 +327,30 @@ __log_find(dblp, find_first, valp)
 	/*
 	 * Search for a valid log file name, return a value of 0 on
 	 * failure.
+	 *
+	 * XXX
+	 * Assumes that atoi(3) returns a 32-bit number.
 	 */
-	for (cnt = fcnt, logval = 0; --cnt >= 0;)
-		if (strncmp(names[cnt], "log.", sizeof("log.") - 1) == 0) {
-			logval = atoi(names[cnt] + 4);
-			if (logval != 0 &&
-			    __log_valid(dblp, dblp->lp, logval) == 0)
-				break;
-		}
+	for (cnt = fcnt, clv = logval = 0; --cnt >= 0;) {
+		if (strncmp(names[cnt], LFPREFIX, sizeof(LFPREFIX) - 1) != 0)
+			continue;
+
+		clv = atoi(names[cnt] + (sizeof(LFPREFIX) - 1));
+		if (find_first) {
+			if (logval != 0 && clv > logval)
+				continue;
+		} else
+			if (logval != 0 && clv < logval)
+				continue;
+
+		if (__log_valid(dblp, clv, 1) == 0)
+			logval = clv;
+	}
+
+	*valp = logval;
 
 	/* Discard the list. */
-	__db_dirfree(names, fcnt);
-
-	/* We have a valid log file, find either the first or last one. */
-	if (find_first) {
-		for (; logval > 0; --logval)
-			if (__log_valid(dblp, dblp->lp, logval - 1) != 0)
-				break;
-	} else
-		for (; logval < MAXLFNAME; ++logval)
-			if (__log_valid(dblp, dblp->lp, logval + 1) != 0)
-				break;
-	*valp = logval;
+	__os_dirfree(names, fcnt);
 
 	return (0);
 }
@@ -332,62 +359,68 @@ __log_find(dblp, find_first, valp)
  * log_valid --
  *	Validate a log file.
  *
- * PUBLIC: int __log_valid __P((DB_LOG *, LOG *, int));
+ * PUBLIC: int __log_valid __P((DB_LOG *, u_int32_t, int));
  */
 int
-__log_valid(dblp, lp, cnt)
+__log_valid(dblp, number, set_persist)
 	DB_LOG *dblp;
-	LOG *lp;
-	int cnt;
+	u_int32_t number;
+	int set_persist;
 {
 	LOGP persist;
 	ssize_t nw;
+	char *fname;
 	int fd, ret;
-	char *p;
 
-	if ((ret = __log_name(dblp, cnt, &p)) != 0)
+	/* Try to open the log file. */
+	if ((ret = __log_name(dblp,
+	    number, &fname, &fd, DB_RDONLY | DB_SEQUENTIAL)) != 0) {
+		__os_freestr(fname);
 		return (ret);
+	}
 
-	fd = -1;
-	if ((ret = __db_open(p,
-	    DB_RDONLY | DB_SEQUENTIAL,
-	    DB_RDONLY | DB_SEQUENTIAL, 0, &fd)) != 0 ||
-	    (ret = __db_seek(fd, 0, 0, sizeof(HDR), 0, SEEK_SET)) != 0 ||
-	    (ret = __db_read(fd, &persist, sizeof(LOGP), &nw)) != 0 ||
+	/* Try to read the header. */
+	if ((ret = __os_seek(fd, 0, 0, sizeof(HDR), 0, SEEK_SET)) != 0 ||
+	    (ret = __os_read(fd, &persist, sizeof(LOGP), &nw)) != 0 ||
 	    nw != sizeof(LOGP)) {
 		if (ret == 0)
 			ret = EIO;
-		if (fd != -1) {
-			(void)__db_close(fd);
-			__db_err(dblp->dbenv,
-			    "Ignoring log file: %s: %s", p, strerror(ret));
-		}
+
+		(void)__os_close(fd);
+
+		__db_err(dblp->dbenv,
+		    "Ignoring log file: %s: %s", fname, strerror(ret));
 		goto err;
 	}
-	(void)__db_close(fd);
+	(void)__os_close(fd);
 
+	/* Validate the header. */
 	if (persist.magic != DB_LOGMAGIC) {
 		__db_err(dblp->dbenv,
 		    "Ignoring log file: %s: magic number %lx, not %lx",
-		    p, (u_long)persist.magic, (u_long)DB_LOGMAGIC);
+		    fname, (u_long)persist.magic, (u_long)DB_LOGMAGIC);
 		ret = EINVAL;
 		goto err;
 	}
 	if (persist.version < DB_LOGOLDVER || persist.version > DB_LOGVERSION) {
 		__db_err(dblp->dbenv,
 		    "Ignoring log file: %s: unsupported log version %lu",
-		    p, (u_long)persist.version);
+		    fname, (u_long)persist.version);
 		ret = EINVAL;
 		goto err;
 	}
 
-	if (lp != NULL) {
-		lp->persist.lg_max = persist.lg_max;
-		lp->persist.mode = persist.mode;
+	/*
+	 * If we're going to use this log file, set the region's persistent
+	 * information based on the headers.
+	 */
+	if (set_persist) {
+		dblp->lp->persist.lg_max = persist.lg_max;
+		dblp->lp->persist.mode = persist.mode;
 	}
 	ret = 0;
 
-err:	FREES(p);
+err:	__os_freestr(fname);
 	return (ret);
 }
 
@@ -401,6 +434,11 @@ log_close(dblp)
 {
 	int ret, t_ret;
 
+	LOG_PANIC_CHECK(dblp);
+
+	/* We may have opened files as part of XA; if so, close them. */
+	__log_close_files(dblp);
+
 	/* Discard the per-thread pointer. */
 	if (dblp->mutexp != NULL) {
 		LOCK_LOGREGION(dblp);
@@ -412,21 +450,22 @@ log_close(dblp)
 	ret = __db_rdetach(&dblp->reginfo);
 
 	/* Close open files, release allocated memory. */
-	if (dblp->lfd != -1 && (t_ret = __db_close(dblp->lfd)) != 0 && ret == 0)
+	if (dblp->lfd != -1 && (t_ret = __os_close(dblp->lfd)) != 0 && ret == 0)
 		ret = t_ret;
 	if (dblp->c_dbt.data != NULL)
-		FREE(dblp->c_dbt.data, dblp->c_dbt.ulen);
+		__os_free(dblp->c_dbt.data, dblp->c_dbt.ulen);
 	if (dblp->c_fd != -1 &&
-	    (t_ret = __db_close(dblp->c_fd)) != 0 && ret == 0)
+	    (t_ret = __os_close(dblp->c_fd)) != 0 && ret == 0)
 		ret = t_ret;
 	if (dblp->dbentry != NULL)
-		FREE(dblp->dbentry, (dblp->dbentry_cnt * sizeof(DB_ENTRY)));
+		__os_free(dblp->dbentry,
+		    (dblp->dbentry_cnt * sizeof(DB_ENTRY)));
 	if (dblp->dir != NULL)
-		FREES(dblp->dir);
+		__os_freestr(dblp->dir);
 
 	if (dblp->reginfo.path != NULL)
-		FREES(dblp->reginfo.path);
-	FREE(dblp, sizeof(*dblp));
+		__os_freestr(dblp->reginfo.path);
+	__os_free(dblp, sizeof(*dblp));
 
 	return (ret);
 }
@@ -447,12 +486,12 @@ log_unlink(path, force, dbenv)
 	memset(&reginfo, 0, sizeof(reginfo));
 	reginfo.dbenv = dbenv;
 	reginfo.appname = DB_APP_LOG;
-	if (path != NULL && (reginfo.path = __db_strdup(path)) == NULL)
-		return (ENOMEM);
+	if (path != NULL && (ret = __os_strdup(path, &reginfo.path)) != 0)
+		return (ret);
 	reginfo.file = DB_DEFAULT_LOG_FILE;
 	ret = __db_runlink(&reginfo, force);
 	if (reginfo.path != NULL)
-		FREES(reginfo.path);
+		__os_freestr(reginfo.path);
 	return (ret);
 }
 
@@ -467,14 +506,15 @@ log_stat(dblp, gspp, db_malloc)
 	void *(*db_malloc) __P((size_t));
 {
 	LOG *lp;
+	int ret;
 
 	*gspp = NULL;
 	lp = dblp->lp;
 
-	if ((*gspp = db_malloc == NULL ?
-	    (DB_LOG_STAT *)__db_malloc(sizeof(**gspp)) :
-	    (DB_LOG_STAT *)db_malloc(sizeof(**gspp))) == NULL)
-		return (ENOMEM);
+	LOG_PANIC_CHECK(dblp);
+
+	if ((ret = __os_malloc(sizeof(**gspp), db_malloc, gspp)) != 0)
+		return (ret);
 
 	/* Copy out the global statistics. */
 	LOCK_LOGREGION(dblp);

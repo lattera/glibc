@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mutex.c	10.48 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)mutex.c	10.52 (Sleepycat) 11/8/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -37,9 +37,12 @@ static const char sccsid[] = "@(#)mutex.c	10.48 (Sleepycat) 5/23/98";
 
 #if defined(HAVE_FUNC_MSEM)
 /*
- * XXX
- * Should we not use MSEM_IF_NOWAIT and let the system block for us?
- * I've no idea if this will block all threads in the process or not.
+ * !!!
+ * Do not remove the MSEM_IF_NOWAIT flag.  The problem is that if a single
+ * process makes two msem_lock() calls in a row, the second one returns an
+ * error.  We depend on the fact that we can lock against ourselves in the
+ * locking subsystem, where we set up a mutex so that we can block ourselves.
+ * Tested on OSF1 v4.0.
  */
 #define	TSL_INIT(x)	(msem_init(x, MSEM_UNLOCKED) == NULL)
 #define	TSL_INIT_ERROR	1
@@ -72,6 +75,17 @@ static const char sccsid[] = "@(#)mutex.c	10.48 (Sleepycat) 5/23/98";
 #define	TSL_INIT(x)
 #define	TSL_SET(x)	(_lock_try(x))
 #define	TSL_UNSET(x)	_lock_clear(x)
+#endif
+
+#ifdef HAVE_FUNC_VMS
+#include <builtins.h>
+#ifdef __ALPHA
+#define	TSL_SET(tsl)	(!__TESTBITSSI(tsl, 0))
+#else /* __VAX */
+#define	TSL_SET(tsl)	(!(int)_BBSSI(0, tsl))
+#endif
+#define	TSL_UNSET(tsl) 	(*(tsl) = 0)
+#define	TSL_INIT(tsl)	TSL_UNSET(tsl)
 #endif
 
 #ifdef HAVE_ASSEM_PARISC_GCC
@@ -181,7 +195,7 @@ __db_mutex_lock(mp, fd)
 #ifdef HAVE_SPINLOCKS
 	COMPQUIET(fd, 0);
 
-	for (usecs = MS(10);;) {
+	for (usecs = MS(1);;) {
 		/* Try and acquire the uncontested resource lock for N spins. */
 		for (nspins = mp->spins; nspins > 0; --nspins)
 			if (TSL_SET(&mp->tsl_resource)) {
@@ -193,19 +207,17 @@ __db_mutex_lock(mp, fd)
 				}
 				mp->pid = getpid();
 #endif
-				if (usecs == MS(10))
+				if (usecs == MS(1))
 					++mp->mutex_set_nowait;
 				else
 					++mp->mutex_set_wait;
 				return (0);
 			}
 
-		/* Yield the processor; wait 10ms initially, up to 1 second. */
-		if (__db_yield == NULL || __db_yield() != 0) {
-			(void)__db_sleep(0, usecs);
-			if ((usecs <<= 1) > SECOND)
-				usecs = SECOND;
-		}
+		/* Yield the processor; wait 1ms initially, up to 1 second. */
+		__os_yield(usecs);
+		if ((usecs <<= 1) > SECOND)
+			usecs = SECOND;
 	}
 	/* NOTREACHED */
 
@@ -218,15 +230,14 @@ __db_mutex_lock(mp, fd)
 
 	for (locked = 0, mypid = getpid();;) {
 		/*
-		 * Wait for the lock to become available; wait 10ms initially,
+		 * Wait for the lock to become available; wait 1ms initially,
 		 * up to 1 second.
 		 */
-		for (usecs = MS(10); mp->pid != 0;)
-			if (__db_yield == NULL || __db_yield() != 0) {
-				(void)__db_sleep(0, usecs);
-				if ((usecs <<= 1) > SECOND)
-					usecs = SECOND;
-			}
+		for (usecs = MS(1); mp->pid != 0;) {
+			__os_yield(usecs);
+			if ((usecs <<= 1) > SECOND)
+				usecs = SECOND;
+		}
 
 		/* Acquire an exclusive kernel lock. */
 		k_lock.l_type = F_WRLCK;

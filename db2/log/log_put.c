@@ -7,13 +7,14 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_put.c	10.35 (Sleepycat) 5/6/98";
+static const char sccsid[] = "@(#)log_put.c	10.44 (Sleepycat) 11/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
+#include <stdio.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -24,6 +25,7 @@ static const char sccsid[] = "@(#)log_put.c	10.35 (Sleepycat) 5/6/98";
 #include "db_page.h"
 #include "log.h"
 #include "hash.h"
+#include "clib_ext.h"
 #include "common_ext.h"
 
 static int __log_fill __P((DB_LOG *, DB_LSN *, void *, u_int32_t));
@@ -45,22 +47,12 @@ log_put(dblp, lsn, dbt, flags)
 {
 	int ret;
 
+	LOG_PANIC_CHECK(dblp);
+
 	/* Validate arguments. */
-#define	OKFLAGS	(DB_CHECKPOINT | DB_FLUSH | DB_CURLSN)
-	if (flags != 0) {
-		if ((ret =
-		    __db_fchk(dblp->dbenv, "log_put", flags, OKFLAGS)) != 0)
-			return (ret);
-		switch (flags) {
-		case DB_CHECKPOINT:
-		case DB_CURLSN:
-		case DB_FLUSH:
-		case 0:
-			break;
-		default:
-			return (__db_ferr(dblp->dbenv, "log_put", 1));
-		}
-	}
+	if (flags != 0 && flags != DB_CHECKPOINT &&
+	    flags != DB_CURLSN && flags != DB_FLUSH)
+		return (__db_ferr(dblp->dbenv, "log_put", 0));
 
 	LOCK_LOGREGION(dblp);
 	ret = __log_put(dblp, lsn, dbt, flags);
@@ -95,7 +87,7 @@ __log_put(dblp, lsn, dbt, flags)
 	 * the information.  Currently used by the transaction manager
 	 * to avoid writing TXN_begin records.
 	 */
-	if (LF_ISSET(DB_CURLSN)) {
+	if (flags == DB_CURLSN) {
 		lsn->file = lp->lsn.file;
 		lsn->offset = lp->lsn.offset;
 		return (0);
@@ -165,6 +157,8 @@ __log_put(dblp, lsn, dbt, flags)
 
 		for (fnp = SH_TAILQ_FIRST(&dblp->lp->fq, __fname);
 		    fnp != NULL; fnp = SH_TAILQ_NEXT(fnp, q, __fname)) {
+			if (fnp->ref == 0)	/* Entry not in use. */
+				continue;
 			memset(&t, 0, sizeof(t));
 			t.data = R_ADDR(dblp, fnp->name_off);
 			t.size = strlen(t.data) + 1;
@@ -248,6 +242,8 @@ log_flush(dblp, lsn)
 {
 	int ret;
 
+	LOG_PANIC_CHECK(dblp);
+
 	LOCK_LOGREGION(dblp);
 	ret = __log_flush(dblp, lsn);
 	UNLOCK_LOGREGION(dblp);
@@ -304,8 +300,7 @@ __log_flush(dblp, lsn)
 	 * buffer's starting LSN.
 	 */
 	current = 0;
-	if (lp->b_off != 0 &&
-	    lsn->file >= lp->f_lsn.file && lsn->offset >= lp->f_lsn.offset) {
+	if (lp->b_off != 0 && log_compare(lsn, &lp->f_lsn) >= 0) {
 		if ((ret = __log_write(dblp, lp->buf, lp->b_off)) != 0)
 			return (ret);
 
@@ -322,8 +317,10 @@ __log_flush(dblp, lsn)
 			return (ret);
 
 	/* Sync all writes to disk. */
-	if ((ret = __db_fsync(dblp->lfd)) != 0)
+	if ((ret = __os_fsync(dblp->lfd)) != 0) {
+		__db_panic(dblp->dbenv, ret);
 		return (ret);
+	}
 	++lp->stat.st_scount;
 
 	/*
@@ -331,9 +328,16 @@ __log_flush(dblp, lsn)
 	 * the current buffer was flushed, we know the LSN of the first byte
 	 * of the buffer is on disk, otherwise, we only know that the LSN of
 	 * the record before the one beginning the current buffer is on disk.
+	 *
+	 * XXX
+	 * Check to make sure that the saved lsn isn't 0 before we go making
+	 * this change.  If DB_CHECKPOINT was called before we actually wrote
+	 * something, you can end up here without ever having written anything
+	 * to a log file, and decrementing either s_lsn.file or s_lsn.offset
+	 * will cause much sadness later on.
 	 */
 	lp->s_lsn = lp->f_lsn;
-	if (!current) {
+	if (!current && lp->s_lsn.file != 0) {
 		if (lp->s_lsn.offset == 0) {
 			--lp->s_lsn.file;
 			lp->s_lsn.offset = lp->persist.lg_max;
@@ -431,10 +435,11 @@ __log_write(dblp, addr, len)
 	 * Seek to the offset in the file (someone may have written it
 	 * since we last did).
 	 */
-	if ((ret = __db_seek(dblp->lfd, 0, 0, lp->w_off, 0, SEEK_SET)) != 0)
+	if ((ret = __os_seek(dblp->lfd, 0, 0, lp->w_off, 0, SEEK_SET)) != 0 ||
+	    (ret = __os_write(dblp->lfd, addr, len, &nw)) != 0) {
+		__db_panic(dblp->dbenv, ret);
 		return (ret);
-	if ((ret = __db_write(dblp->lfd, addr, len, &nw)) != 0)
-		return (ret);
+	}
 	if (nw != (int32_t)len)
 		return (EIO);
 
@@ -467,21 +472,23 @@ log_file(dblp, lsn, namep, len)
 	size_t len;
 {
 	int ret;
-	char *p;
+	char *name;
+
+	LOG_PANIC_CHECK(dblp);
 
 	LOCK_LOGREGION(dblp);
-	ret = __log_name(dblp, lsn->file, &p);
+	ret = __log_name(dblp, lsn->file, &name, NULL, 0);
 	UNLOCK_LOGREGION(dblp);
 	if (ret != 0)
 		return (ret);
 
 	/* Check to make sure there's enough room and copy the name. */
-	if (len < strlen(p) + 1) {
+	if (len < strlen(name) + 1) {
 		*namep = '\0';
 		return (ENOMEM);
 	}
-	(void)strcpy(namep, p);
-	__db_free(p);
+	(void)strcpy(namep, name);
+	__os_freestr(name);
 
 	return (0);
 }
@@ -495,43 +502,102 @@ __log_newfd(dblp)
 	DB_LOG *dblp;
 {
 	int ret;
-	char *p;
+	char *name;
 
 	/* Close any previous file descriptor. */
 	if (dblp->lfd != -1) {
-		(void)__db_close(dblp->lfd);
+		(void)__os_close(dblp->lfd);
 		dblp->lfd = -1;
 	}
 
 	/* Get the path of the new file and open it. */
 	dblp->lfname = dblp->lp->lsn.file;
-	if ((ret = __log_name(dblp, dblp->lfname, &p)) != 0)
-		return (ret);
-	if ((ret = __db_open(p,
-	    DB_CREATE | DB_SEQUENTIAL,
-	    DB_CREATE | DB_SEQUENTIAL,
-	    dblp->lp->persist.mode, &dblp->lfd)) != 0)
-		__db_err(dblp->dbenv,
-		    "log_put: %s: %s", p, strerror(ret));
-	FREES(p);
+	if ((ret = __log_name(dblp,
+	    dblp->lfname, &name, &dblp->lfd, DB_CREATE | DB_SEQUENTIAL)) != 0)
+		__db_err(dblp->dbenv, "log_put: %s: %s", name, strerror(ret));
+
+	__os_freestr(name);
 	return (ret);
 }
 
 /*
  * __log_name --
- *	Return the log name for a particular file.
+ *	Return the log name for a particular file, and optionally open it.
  *
- * PUBLIC: int __log_name __P((DB_LOG *, int, char **));
+ * PUBLIC: int __log_name __P((DB_LOG *, u_int32_t, char **, int *, u_int32_t));
  */
 int
-__log_name(dblp, filenumber, namep)
+__log_name(dblp, filenumber, namep, fdp, flags)
 	DB_LOG *dblp;
+	u_int32_t filenumber, flags;
 	char **namep;
-	int filenumber;
+	int *fdp;
 {
-	char name[sizeof(LFNAME) + 10];
+	int ret;
+	char *oname;
+	char old[sizeof(LFPREFIX) + 5 + 20], new[sizeof(LFPREFIX) + 10 + 20];
 
-	(void)snprintf(name, sizeof(name), LFNAME, filenumber);
-	return (__db_appname(dblp->dbenv,
-	    DB_APP_LOG, dblp->dir, name, 0, NULL, namep));
+	/*
+	 * !!!
+	 * The semantics of this routine are bizarre.
+	 *
+	 * The reason for all of this is that we need a place where we can
+	 * intercept requests for log files, and, if appropriate, check for
+	 * both the old-style and new-style log file names.  The trick is
+	 * that all callers of this routine that are opening the log file
+	 * read-only want to use an old-style file name if they can't find
+	 * a match using a new-style name.  The only down-side is that some
+	 * callers may check for the old-style when they really don't need
+	 * to, but that shouldn't mess up anything, and we only check for
+	 * the old-style name when we've already failed to find a new-style
+	 * one.
+	 *
+	 * Create a new-style file name, and if we're not going to open the
+	 * file, return regardless.
+	 */
+	(void)snprintf(new, sizeof(new), LFNAME, filenumber);
+	if ((ret = __db_appname(dblp->dbenv,
+	    DB_APP_LOG, dblp->dir, new, 0, NULL, namep)) != 0 || fdp == NULL)
+		return (ret);
+
+	/* Open the new-style file -- if we succeed, we're done. */
+	if ((ret = __db_open(*namep,
+	    flags, flags, dblp->lp->persist.mode, fdp)) == 0)
+		return (0);
+
+	/*
+	 * The open failed... if the DB_RDONLY flag isn't set, we're done,
+	 * the caller isn't interested in old-style files.
+	 */
+	if (!LF_ISSET(DB_RDONLY))
+		return (ret);
+
+	/* Create an old-style file name. */
+	(void)snprintf(old, sizeof(old), LFNAME_V1, filenumber);
+	if ((ret = __db_appname(dblp->dbenv,
+	    DB_APP_LOG, dblp->dir, old, 0, NULL, &oname)) != 0)
+		goto err;
+
+	/*
+	 * Open the old-style file -- if we succeed, we're done.  Free the
+	 * space allocated for the new-style name and return the old-style
+	 * name to the caller.
+	 */
+	if ((ret = __db_open(oname,
+	    flags, flags, dblp->lp->persist.mode, fdp)) == 0) {
+		__os_freestr(*namep);
+		*namep = oname;
+		return (0);
+	}
+
+	/*
+	 * Couldn't find either style of name -- return the new-style name
+	 * for the caller's error message.  If it's an old-style name that's
+	 * actually missing we're going to confuse the user with the error
+	 * message, but that implies that not only were we looking for an
+	 * old-style name, but we expected it to exist and we weren't just
+	 * looking for any log file.  That's not a likely error.
+	 */
+err:	__os_freestr(oname);
+	return (ret);
 }

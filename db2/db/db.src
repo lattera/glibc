@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db.src	10.6 (Sleepycat) 4/28/98
+ *	@(#)db.src	10.8 (Sleepycat) 9/20/98
  */
 
 PREFIX	db
@@ -98,6 +98,7 @@ END
 /*
  * relink -- Handles relinking around a page.
  *
+ * opcode:	indicates if this is an addpage or delete page
  * pgno:	the page being changed.
  * lsn		the page's original lsn.
  * prev:	the previous page.
@@ -106,6 +107,7 @@ END
  * lsn_next:	the previous page's original lsn.
  */
 BEGIN relink
+ARG	opcode		u_int32_t	lu
 ARG	fileid		u_int32_t	lu
 ARG	pgno		db_pgno_t	lu
 POINTER	lsn		DB_LSN *	lu
@@ -147,13 +149,4 @@ ARG	fileid		u_int32_t	lu
 DBT	key		DBT		s
 DBT	data		DBT		s
 ARG	arg_flags	u_int32_t	lu
-END
-
-/*
- * noop -- do nothing, but get an LSN.
- */
-BEGIN noop
-ARG	fileid		u_int32_t	lu
-ARG	pgno		db_pgno_t	lu
-POINTER	prevlsn		DB_LSN *	lu
 END

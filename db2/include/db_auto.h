@@ -70,6 +70,7 @@ typedef struct _db_relink_args {
 	u_int32_t type;
 	DB_TXN *txnid;
 	DB_LSN prev_lsn;
+	u_int32_t	opcode;
 	u_int32_t	fileid;
 	db_pgno_t	pgno;
 	DB_LSN 	lsn;
@@ -106,17 +107,5 @@ typedef struct _db_debug_args {
 	DBT	data;
 	u_int32_t	arg_flags;
 } __db_debug_args;
-
-
-#define	DB_db_noop	(DB_db_BEGIN + 8)
-
-typedef struct _db_noop_args {
-	u_int32_t type;
-	DB_TXN *txnid;
-	DB_LSN prev_lsn;
-	u_int32_t	fileid;
-	db_pgno_t	pgno;
-	DB_LSN 	prevlsn;
-} __db_noop_args;
 
 #endif

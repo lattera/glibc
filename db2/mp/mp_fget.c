@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fget.c	10.48 (Sleepycat) 6/2/98";
+static const char sccsid[] = "@(#)mp_fget.c	10.53 (Sleepycat) 11/16/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -46,6 +46,8 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	mp = dbmp->mp;
 	mfp = dbmfp->mfp;
 
+	MP_PANIC_CHECK(dbmp);
+
 	/*
 	 * Validate arguments.
 	 *
@@ -79,12 +81,11 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 #ifdef DIAGNOSTIC
 	/*
 	 * XXX
-	 * We want to switch threads as often as possible.  Sleep every time
-	 * we get a new page to make it more likely.
+	 * We want to switch threads as often as possible.  Yield every time
+	 * we get a new page to ensure contention.
 	 */
-	if (DB_GLOBAL(db_pageyield) &&
-	    (__db_yield == NULL || __db_yield() != 0))
-		__db_sleep(0, 1);
+	if (DB_GLOBAL(db_pageyield))
+		__os_yield(1);
 #endif
 
 	/* Initialize remaining local variables. */
@@ -205,8 +206,8 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 			 * up running to the end of our CPU quantum as we will
 			 * simply be swapping between the two locks.
 			 */
-			if (!first && (__db_yield == NULL || __db_yield() != 0))
-				__db_sleep(0, 1);
+			if (!first)
+				__os_yield(1);
 
 			LOCKBUFFER(dbmp, bhp);
 			/* Wait for I/O to finish... */
@@ -240,7 +241,7 @@ memp_fget(dbmfp, pgnoaddr, flags, addrp)
 	}
 
 alloc:	/* Allocate new buffer header and data space. */
-	if ((ret = __memp_ralloc(dbmp, sizeof(BH) -
+	if ((ret = __memp_alloc(dbmp, sizeof(BH) -
 	    sizeof(u_int8_t) + mfp->stat.st_pagesize, NULL, &bhp)) != 0)
 		goto err;
 
@@ -285,7 +286,7 @@ alloc:	/* Allocate new buffer header and data space. */
 		else {
 			memset(bhp->buf, 0, mfp->clear_len);
 #ifdef DIAGNOSTIC
-			memset(bhp->buf + mfp->clear_len, 0xff,
+			memset(bhp->buf + mfp->clear_len, 0xdb,
 			    mfp->stat.st_pagesize - mfp->clear_len);
 #endif
 		}
@@ -335,11 +336,9 @@ done:	/* Update the chain search statistics. */
 		mp->stat.st_hash_examined += st_hsearch;
 	}
 
-	UNLOCKREGION(dbmp);
-
-	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	++dbmfp->pinref;
-	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
+
+	UNLOCKREGION(dbmp);
 
 	return (0);
 

@@ -43,7 +43,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)txn.c	10.58 (Sleepycat) 5/31/98";
+static const char sccsid[] = "@(#)txn.c	10.66 (Sleepycat) 1/3/99";
 #endif /* not lint */
 
 
@@ -66,12 +66,14 @@ static const char sccsid[] = "@(#)txn.c	10.58 (Sleepycat) 5/31/98";
 #include "db_am.h"
 #include "common_ext.h"
 
-static int __txn_check_running __P((const DB_TXN *));
-static int __txn_end __P((DB_TXN *, int));
-static int __txn_grow_region __P((DB_TXNMGR *));
-static int __txn_init __P((DB_TXNREGION *));
-static int __txn_undo __P((DB_TXN *));
-static int __txn_validate_region __P((DB_TXNMGR *));
+static int  __txn_begin __P((DB_TXN *));
+static int  __txn_check_running __P((const DB_TXN *, TXN_DETAIL **));
+static int  __txn_end __P((DB_TXN *, int));
+static void __txn_freekids __P((DB_TXN *));
+static int  __txn_grow_region __P((DB_TXNMGR *));
+static int  __txn_init __P((DB_TXNREGION *));
+static int  __txn_undo __P((DB_TXN *));
+static int  __txn_validate_region __P((DB_TXNMGR *));
 
 /*
  * This file contains the top level routines of the transaction library.
@@ -93,7 +95,10 @@ __txn_init(txn_region)
 	txn_region->magic = DB_TXNMAGIC;
 	txn_region->version = DB_TXNVERSION;
 	txn_region->last_txnid = TXN_MINIMUM;
-	/* XXX If we ever do more types of locking and logging, this changes. */
+	/*
+	 * XXX
+	 * If we ever do more types of locking and logging, this changes.
+	 */
 	txn_region->logtype = 0;
 	txn_region->locktype = 0;
 	txn_region->time_ckp = now;
@@ -132,10 +137,8 @@ txn_open(path, flags, mode, dbenv, mgrpp)
 	maxtxns = dbenv->tx_max != 0 ? dbenv->tx_max : 20;
 
 	/* Now, create the transaction manager structure and set its fields. */
-	if ((tmgrp = (DB_TXNMGR *)__db_calloc(1, sizeof(DB_TXNMGR))) == NULL) {
-		__db_err(dbenv, "txn_open: %s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
+	if ((ret = __os_calloc(1, sizeof(DB_TXNMGR), &tmgrp)) != 0)
+		return (ret);
 
 	/* Initialize the transaction manager structure. */
 	tmgrp->mutexp = NULL;
@@ -151,7 +154,7 @@ txn_open(path, flags, mode, dbenv, mgrpp)
 	if (path == NULL)
 		tmgrp->reginfo.path = NULL;
 	else
-		if ((tmgrp->reginfo.path = (char *)__db_strdup(path)) == NULL)
+		if ((ret = __os_strdup(path, &tmgrp->reginfo.path)) != 0)
 			goto err;
 	tmgrp->reginfo.file = DEFAULT_TXN_FILE;
 	tmgrp->reginfo.mode = mode;
@@ -207,36 +210,96 @@ err:	if (tmgrp->reginfo.addr != NULL) {
 	}
 
 	if (tmgrp->reginfo.path != NULL)
-		FREES(tmgrp->reginfo.path);
-	FREE(tmgrp, sizeof(*tmgrp));
+		__os_freestr(tmgrp->reginfo.path);
+	__os_free(tmgrp, sizeof(*tmgrp));
 	return (ret);
 }
 
 /*
- * Internally, we use TXN_DETAIL structures, but we allocate and return
- * DB_TXN structures that provide access to the transaction ID and the
- * offset in the transaction region of the TXN_DETAIL structure.
+ * __txn_panic --
+ *	Panic a transaction region.
+ *
+ * PUBLIC: void __txn_panic __P((DB_ENV *));
+ */
+void
+__txn_panic(dbenv)
+	DB_ENV *dbenv;
+{
+	if (dbenv->tx_info != NULL)
+		dbenv->tx_info->region->hdr.panic = 1;
+}
+
+/*
+ * txn_begin --
+ *	This is a wrapper to the actual begin process.  Normal txn_begin()
+ * allocates a DB_TXN structure for the caller, while txn_xa_begin() does
+ * not.  Other than that, both call into the common __txn_begin code().
+ *
+ * Internally, we use TXN_DETAIL structures, but the DB_TXN structure
+ * provides access to the transaction ID and the offset in the transaction
+ * region of the TXN_DETAIL structure.
  */
 int
 txn_begin(tmgrp, parent, txnpp)
 	DB_TXNMGR *tmgrp;
-	DB_TXN *parent;
-	DB_TXN **txnpp;
+	DB_TXN *parent, **txnpp;
+{
+	DB_TXN *txn;
+	int ret;
+
+	TXN_PANIC_CHECK(tmgrp);
+
+	if ((ret = __os_calloc(1, sizeof(DB_TXN), &txn)) != 0)
+		return (ret);
+
+	txn->parent = parent;
+	TAILQ_INIT(&txn->kids);
+	txn->mgrp = tmgrp;
+	txn->flags = TXN_MALLOC;
+	if ((ret = __txn_begin(txn)) != 0) {
+		__os_free(txn, sizeof(DB_TXN));
+		txn = NULL;
+	}
+	if (txn != NULL && parent != NULL)
+		TAILQ_INSERT_HEAD(&parent->kids, txn, klinks);
+	*txnpp = txn;
+	return (ret);
+}
+
+/*
+ * __txn_xa_begin --
+ *	XA version of txn_begin.
+ *
+ * PUBLIC: int __txn_xa_begin __P((DB_ENV *, DB_TXN *));
+ */
+int
+__txn_xa_begin(dbenv, txn)
+	DB_ENV *dbenv;
+	DB_TXN *txn;
+{
+	TXN_PANIC_CHECK(dbenv->tx_info);
+
+	memset(txn, 0, sizeof(DB_TXN));
+
+	txn->mgrp = dbenv->tx_info;
+
+	return (__txn_begin(txn));
+}
+
+/*
+ * __txn_begin --
+ *	Normal DB version of txn_begin.
+ */
+static int
+__txn_begin(txn)
+	DB_TXN *txn;
 {
 	DB_LSN begin_lsn;
-	DB_TXN *retp;
-	TXN_DETAIL *txnp;
+	DB_TXNMGR *mgr;
+	TXN_DETAIL *td;
 	size_t off;
 	u_int32_t id;
 	int ret;
-
-	txnp = NULL;
-	*txnpp = NULL;
-
-	if ((retp = (DB_TXN *)__db_malloc(sizeof(DB_TXN))) == NULL) {
-		__db_err(tmgrp->dbenv, "txn_begin : %s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
 
 	/*
 	 * We do not have to write begin records (and if we do not, then we
@@ -244,65 +307,67 @@ txn_begin(tmgrp, parent, txnpp)
 	 * we do need to find the current LSN so that we can store it in the
 	 * transaction structure, so we can know where to take checkpoints.
 	 */
-	if (tmgrp->dbenv->lg_info != NULL && (ret =
-	    log_put(tmgrp->dbenv->lg_info, &begin_lsn, NULL, DB_CURLSN)) != 0)
+	mgr = txn->mgrp;
+	if (mgr->dbenv->lg_info != NULL && (ret =
+	    log_put(mgr->dbenv->lg_info, &begin_lsn, NULL, DB_CURLSN)) != 0)
 		goto err2;
 
-	LOCK_TXNREGION(tmgrp);
+	LOCK_TXNREGION(mgr);
 
 	/* Make sure that last_txnid is not going to wrap around. */
-	if (tmgrp->region->last_txnid == TXN_INVALID) {
-		__db_err(tmgrp->dbenv, "txn_begin: %s  %s",
+	if (mgr->region->last_txnid == TXN_INVALID) {
+		__db_err(mgr->dbenv, "txn_begin: %s  %s",
 		    "Transaction ID wrapping.",
 		    "Snapshot your database and start a new log.");
 		ret = EINVAL;
 		goto err1;
 	}
 
-	if ((ret = __txn_validate_region(tmgrp)) != 0)
+	if ((ret = __txn_validate_region(mgr)) != 0)
 		goto err1;
 
 	/* Allocate a new transaction detail structure. */
-	if ((ret = __db_shalloc(tmgrp->mem, sizeof(TXN_DETAIL), 0, &txnp)) != 0
-	    && ret == ENOMEM && (ret = __txn_grow_region(tmgrp)) == 0)
-	    	ret = __db_shalloc(tmgrp->mem, sizeof(TXN_DETAIL), 0, &txnp);
+	if ((ret = __db_shalloc(mgr->mem, sizeof(TXN_DETAIL), 0, &td)) != 0
+	    && ret == ENOMEM && (ret = __txn_grow_region(mgr)) == 0)
+	    	ret = __db_shalloc(mgr->mem, sizeof(TXN_DETAIL), 0, &td);
 	if (ret != 0)
 		goto err1;
 
 	/* Place transaction on active transaction list. */
-	SH_TAILQ_INSERT_HEAD(&tmgrp->region->active_txn,
-	    txnp, links, __txn_detail);
+	SH_TAILQ_INSERT_HEAD(&mgr->region->active_txn, td, links, __txn_detail);
 
-	id = ++tmgrp->region->last_txnid;
-	tmgrp->region->nbegins++;
+	id = ++mgr->region->last_txnid;
+	++mgr->region->nbegins;
 
-	txnp->txnid = id;
-	txnp->begin_lsn = begin_lsn;
-	ZERO_LSN(txnp->last_lsn);
-	txnp->last_lock = 0;
-	txnp->status = TXN_RUNNING;
-	off = (u_int8_t *)txnp - (u_int8_t *)tmgrp->region;
-	UNLOCK_TXNREGION(tmgrp);
+	td->txnid = id;
+	td->begin_lsn = begin_lsn;
+	ZERO_LSN(td->last_lsn);
+	td->last_lock = 0;
+	td->status = TXN_RUNNING;
+	if (txn->parent != NULL)
+		td->parent = txn->parent->off;
+	else
+		td->parent = 0;
 
-	ZERO_LSN(retp->last_lsn);
-	retp->txnid = id;
-	retp->parent = parent;
-	retp->mgrp = tmgrp;
-	retp->off = off;
+	off = (u_int8_t *)td - (u_int8_t *)mgr->region;
+	UNLOCK_TXNREGION(mgr);
 
-	LOCK_TXNTHREAD(tmgrp);
-	TAILQ_INSERT_TAIL(&tmgrp->txn_chain, retp, links);
-	UNLOCK_TXNTHREAD(tmgrp);
+	ZERO_LSN(txn->last_lsn);
+	txn->txnid = id;
+	txn->off = off;
 
-	*txnpp = retp;
+	if (F_ISSET(txn, TXN_MALLOC)) {
+		LOCK_TXNTHREAD(mgr);
+		TAILQ_INSERT_TAIL(&mgr->txn_chain, txn, links);
+		UNLOCK_TXNTHREAD(mgr);
+	}
+
 	return (0);
 
-err1:	UNLOCK_TXNREGION(tmgrp);
+err1:	UNLOCK_TXNREGION(mgr);
 
-err2:	__db_free(retp);
-	return (ret);
+err2:	return (ret);
 }
-
 /*
  * txn_commit --
  *	Commit a transaction.
@@ -312,21 +377,43 @@ txn_commit(txnp)
 	DB_TXN *txnp;
 {
 	DB_LOG *logp;
+	DB_TXNMGR *mgr;
 	int ret;
 
-	if ((ret = __txn_check_running(txnp)) != 0)
+	mgr = txnp->mgrp;
+
+	TXN_PANIC_CHECK(mgr);
+	if ((ret = __txn_check_running(txnp, NULL)) != 0)
 		return (ret);
 
 	/*
 	 * If there are any log records, write a log record and sync
-	 * the log, else do no log writes.
+	 * the log, else do no log writes.  If the commit is for a child
+	 * transaction, we do not need to commit the child synchronously
+	 * since if its parent aborts, it will abort too and its parent
+	 * (or ultimate ancestor) will write synchronously.
 	 */
-	if ((logp = txnp->mgrp->dbenv->lg_info) != NULL &&
-	    !IS_ZERO_LSN(txnp->last_lsn) &&
-	    (ret = __txn_regop_log(logp, txnp, &txnp->last_lsn,
-	    F_ISSET(txnp->mgrp, DB_TXN_NOSYNC) ? 0 : DB_FLUSH,
-	    TXN_COMMIT)) != 0)
-		return (ret);
+	if ((logp = mgr->dbenv->lg_info) != NULL &&
+	    !IS_ZERO_LSN(txnp->last_lsn)) {
+		if (txnp->parent == NULL)
+	    		ret = __txn_regop_log(logp, txnp, &txnp->last_lsn,
+			    F_ISSET(mgr, DB_TXN_NOSYNC) ? 0 : DB_FLUSH,
+			    TXN_COMMIT);
+		else
+	    		ret = __txn_child_log(logp, txnp, &txnp->last_lsn, 0,
+			    TXN_COMMIT, txnp->parent->txnid);
+		if (ret != 0)
+			return (ret);
+	}
+
+	/*
+	 * If this is the senior ancestor (i.e., it has no children), then we
+	 * can release all the child transactions since everyone is committing.
+	 * Then we can release this transaction.  If this is not the ultimate
+	 * ancestor, then we can neither free it or its children.
+	 */
+	if (txnp->parent == NULL)
+		__txn_freekids(txnp);
 
 	return (__txn_end(txnp, 1));
 }
@@ -340,9 +427,16 @@ txn_abort(txnp)
 	DB_TXN *txnp;
 {
 	int ret;
+	DB_TXN *kids;
 
-	if ((ret = __txn_check_running(txnp)) != 0)
+	TXN_PANIC_CHECK(txnp->mgrp);
+	if ((ret = __txn_check_running(txnp, NULL)) != 0)
 		return (ret);
+
+	for (kids = TAILQ_FIRST(&txnp->kids);
+	    kids != NULL;
+	    kids = TAILQ_FIRST(&txnp->kids))
+		txn_abort(kids);
 
 	if ((ret = __txn_undo(txnp)) != 0) {
 		__db_err(txnp->mgrp->dbenv,
@@ -353,30 +447,45 @@ txn_abort(txnp)
 }
 
 /*
- * Flush the log so a future commit is guaranteed to succeed.
+ * txn_prepare --
+ *	Flush the log so a future commit is guaranteed to succeed.
  */
 int
 txn_prepare(txnp)
 	DB_TXN *txnp;
 {
-	TXN_DETAIL *tp;
+	DBT xid;
+	DB_ENV *dbenv;
+	TXN_DETAIL *td;
 	int ret;
 
-	if ((ret = __txn_check_running(txnp)) != 0)
+	if ((ret = __txn_check_running(txnp, &td)) != 0)
 		return (ret);
 
-	if (txnp->mgrp->dbenv->lg_info != NULL) {
-		if ((ret = log_flush(txnp->mgrp->dbenv->lg_info,
-		    &txnp->last_lsn)) != 0)
-			__db_err(txnp->mgrp->dbenv,
-			    "txn_prepare: log_flush failed %s\n",
-			    strerror(ret));
+	dbenv = txnp->mgrp->dbenv;
+	memset(&xid, 0, sizeof(xid));
+	xid.data = td->xid;
+	/*
+	 * We indicate that a transaction is an XA transaction by putting
+	 * a valid size in the xid.size fiels.  XA requires that the transaction
+	 * be either ENDED or SUSPENDED when prepare is called, so we know
+	 * that if the xa_status isn't in one of those states, but we are
+	 * calling prepare that we are not an XA transaction.
+	 */
+	xid.size =
+	    td->xa_status != TXN_XA_ENDED && td->xa_status != TXN_XA_SUSPENDED ?
+	    0 : sizeof(td->xid);
+	if (dbenv->lg_info != NULL &&
+	    (ret = __txn_xa_regop_log(dbenv->lg_info, txnp, &txnp->last_lsn,
+	    F_ISSET(txnp->mgrp, DB_TXN_NOSYNC) ? 0 : DB_FLUSH, TXN_PREPARE,
+	    &xid, td->format, td->gtrid, td->bqual, &td->begin_lsn)) != 0) {
+		__db_err(dbenv,
+		    "txn_prepare: log_write failed %s\n", strerror(ret));
 		return (ret);
 	}
 
 	LOCK_TXNTHREAD(txnp->mgrp);
-	tp = (TXN_DETAIL *)((u_int8_t *)txnp->mgrp->region + txnp->off);
-	tp->status = TXN_PREPARED;
+	td->status = TXN_PREPARED;
 	UNLOCK_TXNTHREAD(txnp->mgrp);
 	return (ret);
 }
@@ -401,6 +510,8 @@ txn_close(tmgrp)
 {
 	DB_TXN *txnp;
 	int ret, t_ret;
+
+	TXN_PANIC_CHECK(tmgrp);
 
 	ret = 0;
 
@@ -431,8 +542,8 @@ txn_close(tmgrp)
 		ret = t_ret;
 
 	if (tmgrp->reginfo.path != NULL)
-		FREES(tmgrp->reginfo.path);
-	FREE(tmgrp, sizeof(*tmgrp));
+		__os_freestr(tmgrp->reginfo.path);
+	__os_free(tmgrp, sizeof(*tmgrp));
 
 	return (ret);
 }
@@ -453,12 +564,12 @@ txn_unlink(path, force, dbenv)
 	memset(&reginfo, 0, sizeof(reginfo));
 	reginfo.dbenv = dbenv;
 	reginfo.appname = DB_APP_NONE;
-	if (path != NULL && (reginfo.path = (char *)__db_strdup(path)) == NULL)
-		return (ENOMEM);
+	if (path != NULL && (ret = __os_strdup(path, &reginfo.path)) != 0)
+		return (ret);
 	reginfo.file = DEFAULT_TXN_FILE;
 	ret = __db_runlink(&reginfo, force);
 	if (reginfo.path != NULL)
-		FREES(reginfo.path);
+		__os_freestr(reginfo.path);
 	return (ret);
 }
 
@@ -468,16 +579,23 @@ txn_unlink(path, force, dbenv)
  * Return 0 if the txnp is reasonable, otherwise returns EINVAL.
  */
 static int
-__txn_check_running(txnp)
+__txn_check_running(txnp, tdp)
 	const DB_TXN *txnp;
+	TXN_DETAIL **tdp;
 {
 	TXN_DETAIL *tp;
 
 	tp = NULL;
 	if (txnp != NULL && txnp->mgrp != NULL && txnp->mgrp->region != NULL) {
 		tp = (TXN_DETAIL *)((u_int8_t *)txnp->mgrp->region + txnp->off);
-		if (tp->status != TXN_RUNNING)
+		/*
+		 * Child transactions could be marked committed which is OK.
+		 */
+		if (tp->status != TXN_RUNNING &&
+		    tp->status != TXN_PREPARED && tp->status != TXN_COMMITTED)
 			tp = NULL;
+		if (tdp != NULL)
+			*tdp = tp;
 	}
 
 	return (tp == NULL ? EINVAL : 0);
@@ -488,25 +606,22 @@ __txn_end(txnp, is_commit)
 	DB_TXN *txnp;
 	int is_commit;
 {
+	DB_LOCKREQ request;
 	DB_TXNMGR *mgr;
 	TXN_DETAIL *tp;
-	DB_LOCKREQ request;
-	int ret;
 	u_int32_t locker;
+	int ret;
 
 	mgr = txnp->mgrp;
 
-	LOCK_TXNTHREAD(mgr);
-	TAILQ_REMOVE(&mgr->txn_chain, txnp, links);
-	UNLOCK_TXNTHREAD(mgr);
-
 	/* Release the locks. */
 	locker = txnp->txnid;
-	request.op = DB_LOCK_PUT_ALL;
+	request.op = txnp->parent == NULL ||
+	    is_commit == 0 ? DB_LOCK_PUT_ALL : DB_LOCK_INHERIT;
 
 	if (mgr->dbenv->lk_info) {
-		ret = lock_vec(mgr->dbenv->lk_info, locker, 0,
-		    &request, 1, NULL);
+		ret =
+		    lock_tvec(mgr->dbenv->lk_info, txnp, 0, &request, 1, NULL);
 		if (ret != 0 && (ret != DB_LOCK_DEADLOCK || is_commit)) {
 			__db_err(mgr->dbenv, "%s: release locks failed %s",
 			    is_commit ? "txn_commit" : "txn_abort",
@@ -517,16 +632,44 @@ __txn_end(txnp, is_commit)
 
 	/* End the transaction. */
 	LOCK_TXNREGION(mgr);
+
+	/*
+	 * Child transactions that are committing cannot be released until
+	 * the parent commits, since the parent may abort, causing the child
+	 * to abort as well.
+	 */
 	tp = (TXN_DETAIL *)((u_int8_t *)mgr->region + txnp->off);
-	SH_TAILQ_REMOVE(&mgr->region->active_txn, tp, links, __txn_detail);
-	__db_shalloc_free(mgr->mem, tp);
+	if (txnp->parent == NULL || !is_commit) {
+		SH_TAILQ_REMOVE(&mgr->region->active_txn,
+		    tp, links, __txn_detail);
+
+		__db_shalloc_free(mgr->mem, tp);
+	} else
+		tp->status = is_commit ? TXN_COMMITTED : TXN_ABORTED;
+
 	if (is_commit)
 		mgr->region->ncommits++;
 	else
 		mgr->region->naborts++;
+
 	UNLOCK_TXNREGION(mgr);
 
-	FREE(txnp, sizeof(*txnp));
+	/*
+	 * If the transaction aborted, we can remove it from its parent links.
+	 * If it committed, then we need to leave it on, since the parent can
+	 * still abort.
+	 */
+	if (txnp->parent != NULL && !is_commit)
+		TAILQ_REMOVE(&txnp->parent->kids, txnp, klinks);
+
+	/* Free the space. */
+	if (F_ISSET(txnp, TXN_MALLOC) && (txnp->parent == NULL || !is_commit)) {
+		LOCK_TXNTHREAD(mgr);
+		TAILQ_REMOVE(&mgr->txn_chain, txnp, links);
+		UNLOCK_TXNTHREAD(mgr);
+
+		__os_free(txnp, sizeof(*txnp));
+	}
 
 	return (0);
 }
@@ -571,7 +714,7 @@ __txn_undo(txnp)
 			ret =
 			    mgr->recover(logp, &rdbt, &key_lsn, TXN_UNDO, NULL);
 			if (F_ISSET(logp, DB_AM_THREAD) && rdbt.data != NULL) {
-				__db_free(rdbt.data);
+				__os_free(rdbt.data, rdbt.size);
 				rdbt.data = NULL;
 			}
 		}
@@ -597,12 +740,14 @@ txn_checkpoint(mgr, kbytes, minutes)
 	const DB_TXNMGR *mgr;
 	u_int32_t kbytes, minutes;
 {
-	TXN_DETAIL *txnp;
-	DB_LSN ckp_lsn, last_ckp;
 	DB_LOG *dblp;
-	u_int32_t kbytes_written;
+	DB_LSN ckp_lsn, sync_lsn, last_ckp;
+	TXN_DETAIL *txnp;
 	time_t last_ckp_time, now;
+	u_int32_t kbytes_written;
 	int ret;
+
+	TXN_PANIC_CHECK(mgr);
 
 	/*
 	 * Check if we need to run recovery.
@@ -672,8 +817,13 @@ do_ckp:
 	mgr->region->pending_ckp = ckp_lsn;
 	UNLOCK_TXNREGION(mgr);
 
+	/*
+	 * memp_sync may change the lsn you pass it, so don't pass it
+	 * the actual ckp_lsn, pass it a temp instead.
+	 */
+	sync_lsn = ckp_lsn;
 	if (mgr->dbenv->mp_info != NULL &&
-	    (ret = memp_sync(mgr->dbenv->mp_info, &ckp_lsn)) != 0) {
+	    (ret = memp_sync(mgr->dbenv->mp_info, &sync_lsn)) != 0) {
 		/*
 		 * ret == DB_INCOMPLETE means that there are still buffers to
 		 * flush, the checkpoint is not complete.  Wait and try again.
@@ -776,6 +926,9 @@ txn_stat(mgr, statp, db_malloc)
 	TXN_DETAIL *txnp;
 	size_t nbytes;
 	u_int32_t nactive, ndx;
+	int ret;
+
+	TXN_PANIC_CHECK(mgr);
 
 	LOCK_TXNREGION(mgr);
 	nactive = mgr->region->nbegins -
@@ -787,13 +940,8 @@ txn_stat(mgr, statp, db_malloc)
 	 * that have been created since we unlocked the region.
 	 */
 	nbytes = sizeof(DB_TXN_STAT) + sizeof(DB_TXN_ACTIVE) * (nactive + 200);
-	if (db_malloc == NULL)
-		stats = (DB_TXN_STAT *)__db_malloc(nbytes);
-	else
-		stats = (DB_TXN_STAT *)db_malloc(nbytes);
-
-	if (stats == NULL)
-		return (ENOMEM);
+	if ((ret = __os_malloc(nbytes, db_malloc, &stats)) != 0)
+		return (ret);
 
 	LOCK_TXNREGION(mgr);
 	stats->st_last_txnid = mgr->region->last_txnid;
@@ -829,5 +977,70 @@ txn_stat(mgr, statp, db_malloc)
 
 	UNLOCK_TXNREGION(mgr);
 	*statp = stats;
+	return (0);
+}
+
+static void
+__txn_freekids(txnp)
+	DB_TXN *txnp;
+{
+	DB_TXNMGR *mgr;
+	TXN_DETAIL *tp;
+	DB_TXN *kids;
+
+	mgr = txnp->mgrp;
+
+	for (kids = TAILQ_FIRST(&txnp->kids);
+	    kids != NULL;
+	    kids = TAILQ_FIRST(&txnp->kids)) {
+		/* Free any children of this transaction. */
+		__txn_freekids(kids);
+
+		/* Free the transaction detail in the region. */
+		LOCK_TXNREGION(mgr);
+		tp = (TXN_DETAIL *)((u_int8_t *)mgr->region + kids->off);
+		SH_TAILQ_REMOVE(&mgr->region->active_txn,
+		    tp, links, __txn_detail);
+
+		__db_shalloc_free(mgr->mem, tp);
+		UNLOCK_TXNREGION(mgr);
+
+		/* Now remove from its parent. */
+		TAILQ_REMOVE(&txnp->kids, kids, klinks);
+		if (F_ISSET(txnp, TXN_MALLOC)) {
+			LOCK_TXNTHREAD(mgr);
+			TAILQ_REMOVE(&mgr->txn_chain, kids, links);
+			UNLOCK_TXNTHREAD(mgr);
+			__os_free(kids, sizeof(*kids));
+		}
+	}
+}
+
+/*
+ * __txn_is_ancestor --
+ * 	Determine if a transaction is an ancestor of another transaction.
+ * This is used during lock promotion when we do not have the per-process
+ * data structures that link parents together.  Instead, we'll have to
+ * follow the links in the transaction region.
+ *
+ * PUBLIC: int __txn_is_ancestor __P((DB_TXNMGR *, size_t, size_t));
+ */
+int
+__txn_is_ancestor(mgr, hold_off, req_off)
+	DB_TXNMGR *mgr;
+	size_t hold_off, req_off;
+{
+	TXN_DETAIL *hold_tp, *req_tp;
+
+	hold_tp = (TXN_DETAIL *)((u_int8_t *)mgr->region + hold_off);
+	req_tp = (TXN_DETAIL *)((u_int8_t *)mgr->region + req_off);
+
+	while (req_tp->parent != 0) {
+		req_tp =
+		    (TXN_DETAIL *)((u_int8_t *)mgr->region + req_tp->parent);
+		if (req_tp->txnid == hold_tp->txnid)
+			return (1);
+	}
+
 	return (0);
 }

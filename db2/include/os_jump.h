@@ -4,7 +4,7 @@
  * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)os_func.h	10.8 (Sleepycat) 4/19/98
+ *	@(#)os_jump.h	10.1 (Sleepycat) 10/17/98
  */
 
 /* Calls which can be replaced by the application. */
@@ -38,32 +38,3 @@ struct __db_jumptab {
 };
 
 extern struct __db_jumptab __db_jump;
-
-/*
- * Names used by DB to call through the jump table.
- *
- * The naming scheme goes like this: if the functionality the application can
- * replace is the same as the DB functionality, e.g., malloc, or dirlist, then
- * we use the name __db_XXX, and the application is expected to replace the
- * complete functionality, which may or may not map directly to an ANSI C or
- * POSIX 1003.1 interface.  If the functionality that the aplication replaces
- * only underlies what the DB os directory exports to other parts of DB, e.g.,
- * read, then the name __os_XXX is used, and the application can only replace
- * the underlying functionality.  Under most circumstances, the os directory
- * part of DB is the only code that should use the __os_XXX names, all other
- * parts of DB should be calling __db_XXX functions.
- */
-#define	__os_close	__db_jump.j_close	/* __db_close is a wrapper. */
-#define	__db_dirfree	__db_jump.j_dirfree
-#define	__db_dirlist	__db_jump.j_dirlist
-#define	__db_exists	__db_jump.j_exists
-#define	__db_free	__db_jump.j_free
-#define	__os_fsync	__db_jump.j_fsync	/* __db_fsync is a wrapper. */
-#define	__db_ioinfo	__db_jump.j_ioinfo
-#define	__os_open	__db_jump.j_open	/* __db_open is a wrapper. */
-#define	__os_read	__db_jump.j_read	/* __db_read is a wrapper. */
-#define	__db_seek	__db_jump.j_seek
-#define	__db_sleep	__db_jump.j_sleep
-#define	__os_unlink	__db_jump.j_unlink	/* __db_unlink is a wrapper. */
-#define	__os_write	__db_jump.j_write	/* __db_write is a wrapper. */
-#define	__db_yield	__db_jump.j_yield

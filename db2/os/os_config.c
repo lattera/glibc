@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_config.c	10.26 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)os_config.c	10.30 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -18,72 +18,18 @@ static const char sccsid[] = "@(#)os_config.c	10.26 (Sleepycat) 5/23/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
-/*
- * XXX
- * We provide our own extern declarations so that we don't collide with
- * systems that get them wrong, e.g., SunOS.
- */
-#ifdef _WIN32
-#define fsync		_commit
-#define imported	__declspec(dllimport)
-#else
-#define imported
-#endif
-
-/*
- * XXX
- * HP/UX MPE doesn't have fsync, but you can build one using FCONTROL.
- */
-#ifdef __hp3000s900
-#define	fsync	__mpe_fsync
-#endif
-
-imported extern int	 close __P((int));
-imported extern void	 free __P((void *));
-imported extern int	 fsync __P((int));
-imported extern void    *malloc __P((size_t));
-imported extern int	 open __P((const char *, int, ...));
-imported extern ssize_t	 read __P((int, void *, size_t));
-imported extern void    *realloc __P((void *, size_t));
-imported extern int	 unlink __P((const char *));
-imported extern ssize_t	 write __P((int, const void *, size_t));
-
-/*
- * __db_jump --
- *	This list of interfaces that applications can replace.  In some
- *	cases, the user is permitted to replace the standard ANSI C or
- *	POSIX 1003.1 call, e.g., malloc or read.  In others, we provide
- *	a local interface to the functionality, e.g., __os_ioinfo.
- */
-struct __db_jumptab __db_jump = {
-	close,				/* DB_FUNC_CLOSE */
-	__os_dirfree,			/* DB_FUNC_DIRFREE */
-	__os_dirlist,			/* DB_FUNC_DIRLIST */
-	__os_exists,			/* DB_FUNC_EXISTS */
-	free,				/* DB_FUNC_FREE */
-	fsync,				/* DB_FUNC_FSYNC */
-	__os_ioinfo,			/* DB_FUNC_IOINFO */
-	malloc,				/* DB_FUNC_MALLOC */
-	NULL,				/* DB_FUNC_MAP */
-	open,				/* DB_FUNC_OPEN */
-	read,				/* DB_FUNC_READ */
-	realloc,			/* DB_FUNC_REALLOC */
-	NULL,				/* DB_FUNC_RUNLINK */
-	__os_seek,			/* DB_FUNC_SEEK */
-	__os_sleep,			/* DB_FUNC_SLEEP */
-	unlink,				/* DB_FUNC_UNLINK */
-	NULL,				/* DB_FUNC_UNMAP */
-	write,				/* DB_FUNC_WRITE */
-	NULL				/* DB_FUNC_YIELD */
-};
+struct __db_jumptab __db_jump;
 
 DB_GLOBALS __db_global_values = {
 	1,				/* DB_MUTEXLOCKS */
+	0,				/* DB_PAGEYIELD */
 	0,				/* DB_REGION_ANON, DB_REGION_NAME */
 	0,				/* DB_REGION_INIT */
 	0,				/* DB_TSL_SPINS */
-	0				/* DB_PAGEYIELD */
+        {NULL, &__db_global_values.db_envq.tqh_first},  /* Environemnt queue */
+	{NULL, &__db_global_values.db_nameq.tqh_first}	/* Name queue */
 };
 
 /*

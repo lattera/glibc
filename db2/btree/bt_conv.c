@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_conv.c	10.6 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)bt_conv.c	10.7 (Sleepycat) 9/20/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -89,19 +89,6 @@ __bam_mswap(pg)
 	SWAP32(p);		/* minkey */
 	SWAP32(p);		/* free */
 	SWAP32(p);		/* flags */
-
-	/* Swap the statistics. */
-	p = (u_int8_t *)&((BTMETA *)pg)->stat;
-	SWAP32(p);		/* bt_freed */
-	SWAP32(p);		/* bt_pfxsaved */
-	SWAP32(p);		/* bt_split */
-	SWAP32(p);		/* bt_rootsplit */
-	SWAP32(p);		/* bt_fastsplit */
-	SWAP32(p);		/* bt_added */
-	SWAP32(p);		/* bt_deleted */
-	SWAP32(p);		/* bt_get */
-	SWAP32(p);		/* bt_cache_hit */
-	SWAP32(p);		/* bt_cache_miss */
 
 	return (0);
 }

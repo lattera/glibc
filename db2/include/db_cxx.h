@@ -4,7 +4,7 @@
  * Copyright (c) 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)db_cxx.h	10.17 (Sleepycat) 5/2/98
+ *	@(#)db_cxx.h	10.30 (Sleepycat) 11/22/98
  */
 
 #ifndef _DB_CXX_H_
@@ -49,7 +49,8 @@
 // Forward declarations
 //
 
-#include "db.h"
+#include <iostream.h>
+#include <db.h>
 
 class Db;                                        // forward
 class Dbc;                                       // forward
@@ -65,6 +66,19 @@ class DbMpoolFile;                               // forward
 class Dbt;                                       // forward
 class DbTxn;                                     // forward
 class DbTxnMgr;                                  // forward
+
+// These classes are not defined here and should be invisible
+// to the user, but some compilers require forward references.
+// There is one for each use of the DEFINE_DB_CLASS macro.
+
+class DbLockTabImp;
+class DbLogImp;
+class DbMpoolImp;
+class DbMpoolFileImp;
+class DbImp;
+class DbTxnImp;
+class DbTxnMgrImp;
+
 
 ////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////
@@ -175,14 +189,10 @@ private:
 
 class _exported DbLock
 {
-    friend DbLockTab;
+    friend class DbLockTab;
 
 public:
-    DbLock(u_int);
     DbLock();
-
-    u_int get_lock_id();
-    void set_lock_id(u_int);
 
     int put(DbLockTab *locktab);
 
@@ -194,18 +204,21 @@ protected:
     // since its contained class is not allocated by db.
     // (see comment at top)
 
+    DbLock(DB_LOCK);
     DB_LOCK lock_;
 };
 
 class _exported DbLockTab
 {
-friend DbEnv;
+    friend class DbEnv;
+
 public:
     int close();
     int detect(u_int32_t flags, int atype);
     int get(u_int32_t locker, u_int32_t flags, const Dbt *obj,
             db_lockmode_t lock_mode, DbLock *lock);
     int id(u_int32_t *idp);
+    int stat(DB_LOCK_STAT **statp, void *(*db_malloc)(size_t));
     int vec(u_int32_t locker, u_int32_t flags, DB_LOCKREQ list[],
 	    int nlist, DB_LOCKREQ **elistp);
 
@@ -244,13 +257,14 @@ private:
 
 class _exported DbLsn : protected DB_LSN
 {
-    friend DbLog;               // friendship needed to cast to base class
-    friend DbMpool;
+    friend class DbLog;          // friendship needed to cast to base class
+    friend class DbMpool;
 };
 
 class _exported DbLog
 {
-friend DbEnv;
+    friend class DbEnv;
+
 public:
     int archive(char **list[], u_int32_t flags, void *(*db_malloc)(size_t));
     int close();
@@ -300,7 +314,8 @@ private:
 
 class _exported DbMpoolFile
 {
-friend DbEnv;
+    friend class DbEnv;
+
 public:
     int close();
     int get(db_pgno_t *pgnoaddr, u_int32_t flags, void *pagep);
@@ -337,7 +352,8 @@ private:
 
 class _exported DbMpool
 {
-friend DbEnv;
+    friend class DbEnv;
+
 public:
     int close();
 
@@ -388,7 +404,8 @@ private:
 
 class _exported DbTxnMgr
 {
-friend DbEnv;
+    friend class DbEnv;
+
 public:
     int begin(DbTxn *pid, DbTxn **tid);
     int checkpoint(u_int32_t kbyte, u_int32_t min) const;
@@ -422,7 +439,8 @@ private:
 
 class _exported DbTxn
 {
-friend DbTxnMgr;
+    friend class DbTxnMgr;
+
 public:
     int abort();
     int commit();
@@ -461,90 +479,78 @@ private:
 //
 class _exported DbInfo : protected DB_INFO
 {
-    friend DbEnv;
-    friend Db;
+    friend class DbEnv;
+    friend class Db;
 
 public:
     DbInfo();
     ~DbInfo();
 
     // Byte order.
-    int	get_lorder() const;
     void set_lorder(int);
 
     // Underlying cache size.
-    size_t get_cachesize() const;
     void set_cachesize(size_t);
 
     // Underlying page size.
-    size_t get_pagesize() const;
     void set_pagesize(size_t);
 
     // Local heap allocation.
     typedef void *(*db_malloc_fcn)(size_t);
-    db_malloc_fcn get_malloc() const;
     void set_malloc(db_malloc_fcn);
+
+    // Duplicate compare function.
+    typedef int (*dup_compare_fcn)(const DBT *, const DBT *);
+    void set_dup_compare(dup_compare_fcn);
 
     ////////////////////////////////////////////////////////////////
     // Btree access method.
 
     // Maximum keys per page.
-    int	get_bt_maxkey() const;
     void set_bt_maxkey(int);
 
     // Minimum keys per page.
-    int	get_bt_minkey() const;
     void set_bt_minkey(int);
 
     // Comparison function.
     typedef int (*bt_compare_fcn)(const DBT *, const DBT *);
-    bt_compare_fcn get_bt_compare() const;
     void set_bt_compare(bt_compare_fcn);
 
     // Prefix function.
     typedef size_t (*bt_prefix_fcn)(const DBT *, const DBT *);
-    bt_prefix_fcn get_bt_prefix() const;
     void set_bt_prefix(bt_prefix_fcn);
 
     ////////////////////////////////////////////////////////////////
     // Hash access method.
 
     // Fill factor.
-    u_int32_t get_h_ffactor() const;
     void set_h_ffactor(u_int32_t);
 
     // Number of elements.
-    u_int32_t get_h_nelem() const;
     void set_h_nelem(u_int32_t);
 
     // Hash function.
     typedef u_int32_t (*h_hash_fcn)(const void *, u_int32_t);
-    h_hash_fcn get_h_hash() const;
     void set_h_hash(h_hash_fcn);
 
     ////////////////////////////////////////////////////////////////
     // Recno access method.
 
     // Fixed-length padding byte.
-    int	get_re_pad() const;
     void set_re_pad(int);
 
     // Variable-length delimiting byte.
-    int	get_re_delim() const;
     void set_re_delim(int);
 
     // Length for fixed-length records.
-    u_int32_t get_re_len() const;
     void set_re_len(u_int32_t);
 
     // Source file name.
-    char *get_re_source() const;
     void set_re_source(char *);
 
     // Note: some flags are set as side effects of calling
     // above "set" methods.
     //
-    u_int32_t get_flags() const;
     void set_flags(u_int32_t);
 
 
@@ -570,11 +576,11 @@ private:
 //
 class _exported DbEnv : protected DB_ENV
 {
-friend DbTxnMgr;
-friend DbLog;
-friend DbLockTab;
-friend DbMpool;
-friend Db;
+    friend class DbTxnMgr;
+    friend class DbLog;
+    friend class DbLockTab;
+    friend class DbMpool;
+    friend class Db;
 
 public:
 
@@ -603,6 +609,10 @@ public:
     //
     int appexit();
 
+    // Version information.  A static method so it can be obtained anytime.
+    //
+    static char *version(int *major, int *minor, int *patch);
+
     ////////////////////////////////////////////////////////////////
     // simple get/set access methods
     //
@@ -610,53 +620,24 @@ public:
     // use the default constructor along with appinit().
 
     // Byte order.
-    int	get_lorder() const;
     void set_lorder(int);
+
+    // Panic callback.
+    typedef void (*db_paniccall_fcn)(DbEnv *, int);
+    void set_paniccall(db_paniccall_fcn);
 
     // Error message callback.
     typedef void (*db_errcall_fcn)(const char *, char *);
-    db_errcall_fcn get_errcall() const;
     void set_errcall(db_errcall_fcn);
 
     // Error message file stream.
-    FILE *get_errfile() const;
     void set_errfile(FILE *);
 
     // Error message prefix.
-    const char *get_errpfx() const;
     void set_errpfx(const char *);
 
     // Generate debugging messages.
-    int get_verbose() const;
     void set_verbose(int);
-
-    ////////////////////////////////////////////////////////////////
-    // User paths.
-
-    // Database home.
-    char *get_home() const;
-    void set_home(char *);
-
-    // Database log file directory.
-    char *get_log_dir() const;
-    void set_log_dir(char *);
-
-    // Database tmp file directory.
-    char *get_tmp_dir() const;
-    void set_tmp_dir(char *);
-
-    // Database data file directories.
-    char **get_data_dir() const;
-    void set_data_dir(char **);
-
-    // Database data file slots.
-    int get_data_cnt() const;
-    void set_data_cnt(int);
-
-    // Next Database data file slot.
-    int get_data_next() const;
-    void set_data_next(int);
-
 
     ////////////////////////////////////////////////////////////////
     // Locking.
@@ -665,19 +646,15 @@ public:
     DbLockTab *get_lk_info() const;
 
     // Two dimensional conflict matrix.
-    u_int8_t *get_lk_conflicts() const;
     void set_lk_conflicts(u_int8_t *);
 
     // Number of lock modes in table.
-    int get_lk_modes() const;
     void set_lk_modes(int);
 
     // Maximum number of locks.
-    u_int32_t get_lk_max() const;
     void set_lk_max(u_int32_t);
 
     // Deadlock detect on every conflict.
-    u_int32_t get_lk_detect() const;
     void set_lk_detect(u_int32_t);
 
 
@@ -688,7 +665,6 @@ public:
     DbLog *get_lg_info() const;
 
     // Maximum file size.
-    u_int32_t get_lg_max() const;
     void set_lg_max(u_int32_t);
 
 
@@ -699,11 +675,9 @@ public:
     DbMpool *get_mp_info() const;
 
     // Maximum file size for mmap.
-    size_t get_mp_mmapsize() const;
     void set_mp_mmapsize(size_t);
 
     // Bytes in the mpool cache.
-    size_t get_mp_size() const;
     void set_mp_size(size_t);
 
 
@@ -714,16 +688,13 @@ public:
     DbTxnMgr *get_tx_info() const;
 
     // Maximum number of transactions.
-    u_int32_t get_tx_max() const;
     void set_tx_max(u_int32_t);
 
     // Dispatch function for recovery.
     typedef int (*tx_recover_fcn)(DB_LOG *, DBT *, DB_LSN *, int, void *);
-    tx_recover_fcn get_tx_recover() const;
     void set_tx_recover(tx_recover_fcn);
 
     // Flags.
-    u_int32_t get_flags() const;
     void set_flags(u_int32_t);
 
     ////////////////////////////////////////////////////////////////
@@ -736,7 +707,6 @@ public:
     //
     enum ErrorModel { Exception, ErrorReturn };
     void set_error_model(ErrorModel);
-    ErrorModel get_error_model() const;
 
     // If an error is detected and the error call function
     // or stream is set, a message is dispatched or printed.
@@ -747,11 +717,11 @@ public:
     // call set_error_stream() to force all errors to a C++ stream.
     // It is unwise to mix these approaches.
     //
-    class ostream* get_error_stream() const;
     void set_error_stream(class ostream*);
 
     // used internally
-    static int runtime_error(const char *caller, int err, int in_destructor = 0);
+    static int runtime_error(const char *caller, int err,
+                             int in_destructor = 0, int force_throw = 0);
 
 private:
     // We can add data to this class if needed
@@ -778,23 +748,27 @@ private:
 //
 class _exported Db
 {
-    friend DbEnv;
+    friend class DbEnv;
 
 public:
     int close(u_int32_t flags);
-    int cursor(DbTxn *txnid, Dbc **cursorp);
+    int cursor(DbTxn *txnid, Dbc **cursorp, u_int32_t flags);
     int del(DbTxn *txnid, Dbt *key, u_int32_t flags);
     int fd(int *fdp);
     int get(DbTxn *txnid, Dbt *key, Dbt *data, u_int32_t flags);
+    int join(Dbc **curslist, u_int32_t flags, Dbc **dbcp);
     int put(DbTxn *txnid, Dbt *key, Dbt *data, u_int32_t flags);
     int stat(void *sp, void *(*db_malloc)(size_t), u_int32_t flags);
     int sync(u_int32_t flags);
 
+    int get_byteswapped() const;
     DBTYPE get_type() const;
 
     static int open(const char *fname, DBTYPE type, u_int32_t flags,
                     int mode, DbEnv *dbenv, DbInfo *info, Db **dbpp);
 
+    static int xa_open(const char *fname, DBTYPE type, u_int32_t flags,
+                    int mode, DbInfo *info, Db **dbpp);
 private:
     // We can add data to this class if needed
     // since it is implemented via a pointer.
@@ -817,11 +791,11 @@ private:
 //
 class _exported Dbt : private DBT
 {
-    friend Dbc;
-    friend Db;
-    friend DbLog;
-    friend DbMpoolFile;
-    friend DbLockTab;
+    friend class Dbc;
+    friend class Db;
+    friend class DbLog;
+    friend class DbMpoolFile;
+    friend class DbLockTab;
 
 public:
 
@@ -863,7 +837,7 @@ private:
 
 class _exported Dbc : protected DBC
 {
-    friend Db;
+    friend class Db;
 
 public:
     int close();

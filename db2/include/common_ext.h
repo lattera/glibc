@@ -5,26 +5,18 @@ int __db_appname __P((DB_ENV *,
    APPNAME, const char *, const char *, u_int32_t, int *, char **));
 int __db_apprec __P((DB_ENV *, u_int32_t));
 int __db_byteorder __P((DB_ENV *, int));
+int __db_fchk __P((DB_ENV *, const char *, u_int32_t, u_int32_t));
+int __db_fcchk
+   __P((DB_ENV *, const char *, u_int32_t, u_int32_t, u_int32_t));
+int __db_ferr __P((const DB_ENV *, const char *, int));
 #ifdef __STDC__
 void __db_err __P((const DB_ENV *dbenv, const char *fmt, ...));
 #else
 void __db_err();
 #endif
-int __db_panic __P((DB *));
-int __db_fchk __P((DB_ENV *, const char *, u_int32_t, u_int32_t));
-int __db_fcchk
-   __P((DB_ENV *, const char *, u_int32_t, u_int32_t, u_int32_t));
-int __db_cdelchk __P((const DB *, u_int32_t, int, int));
-int __db_cgetchk __P((const DB *, DBT *, DBT *, u_int32_t, int));
-int __db_cputchk __P((const DB *,
-   const DBT *, DBT *, u_int32_t, int, int));
-int __db_delchk __P((const DB *, DBT *, u_int32_t, int));
-int __db_getchk __P((const DB *, const DBT *, DBT *, u_int32_t));
-int __db_putchk
-   __P((const DB *, DBT *, const DBT *, u_int32_t, int, int));
-int __db_statchk __P((const DB *, u_int32_t));
-int __db_syncchk __P((const DB *, u_int32_t));
-int __db_ferr __P((const DB_ENV *, const char *, int));
+int __db_pgerr __P((DB *, db_pgno_t));
+int __db_pgfmt __P((DB *, db_pgno_t));
+int __db_panic __P((DB_ENV *, int));
 u_int32_t __db_log2 __P((u_int32_t));
 int __db_rattach __P((REGINFO *));
 int __db_rdetach __P((REGINFO *));

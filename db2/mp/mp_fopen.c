@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fopen.c	10.47 (Sleepycat) 5/4/98";
+static const char sccsid[] = "@(#)mp_fopen.c	10.60 (Sleepycat) 1/1/99";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -43,6 +43,8 @@ memp_fopen(dbmp, path, flags, mode, pagesize, finfop, retp)
 {
 	int ret;
 
+	MP_PANIC_CHECK(dbmp);
+
 	/* Validate arguments. */
 	if ((ret = __db_fchk(dbmp->dbenv,
 	    "memp_fopen", flags, DB_CREATE | DB_NOMMAP | DB_RDONLY)) != 0)
@@ -53,6 +55,8 @@ memp_fopen(dbmp, path, flags, mode, pagesize, finfop, retp)
 		__db_err(dbmp->dbenv, "memp_fopen: pagesize not specified");
 		return (EINVAL);
 	}
+	if (finfop != NULL && finfop->clear_len > pagesize)
+		return (EINVAL);
 
 	return (__memp_fopen(dbmp,
 	    NULL, path, flags, mode, pagesize, 1, finfop, retp));
@@ -80,7 +84,7 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 	DB_MPOOLFILE *dbmfp;
 	DB_MPOOL_FINFO finfo;
 	db_pgno_t last_pgno;
-	size_t size;
+	size_t maxmap;
 	u_int32_t mbytes, bytes;
 	int ret;
 	u_int8_t idbuf[DB_FILE_ID_LEN];
@@ -115,13 +119,11 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 	}
 
 	/* Allocate and initialize the per-process structure. */
-	if ((dbmfp =
-	    (DB_MPOOLFILE *)__db_calloc(1, sizeof(DB_MPOOLFILE))) == NULL) {
-		__db_err(dbenv, "memp_fopen: %s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
+	if ((ret = __os_calloc(1, sizeof(DB_MPOOLFILE), &dbmfp)) != 0)
+		return (ret);
 	dbmfp->dbmp = dbmp;
 	dbmfp->fd = -1;
+	dbmfp->ref = 1;
 	if (LF_ISSET(DB_RDONLY))
 		F_SET(dbmfp, MP_READONLY);
 
@@ -132,7 +134,6 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 			ret = EINVAL;
 			goto err;
 		}
-		size = 0;
 		last_pgno = 0;
 	} else {
 		/* Get the real name for this file and open it. */
@@ -146,21 +147,40 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 			goto err;
 		}
 
-		/* Don't permit files that aren't a multiple of the pagesize. */
-		if ((ret = __db_ioinfo(rpath,
+		/*
+		 * Don't permit files that aren't a multiple of the pagesize,
+		 * and find the number of the last page in the file, all the
+		 * time being careful not to overflow 32 bits.
+		 *
+		 * !!!
+		 * We can't use off_t's here, or in any code in the mainline
+		 * library for that matter.  (We have to use them in the os
+		 * stubs, of course, as there are system calls that take them
+		 * as arguments.)  The reason is that some customers build in
+		 * environments where an off_t is 32-bits, but still run where
+		 * offsets are 64-bits, and they pay us a lot of money.
+		 */
+		if ((ret = __os_ioinfo(rpath,
 		    dbmfp->fd, &mbytes, &bytes, NULL)) != 0) {
 			__db_err(dbenv, "%s: %s", rpath, strerror(ret));
 			goto err;
 		}
-		if (bytes % pagesize) {
+
+		/* Page sizes have to be a power-of-two, ignore mbytes. */
+		if (bytes % pagesize != 0) {
 			__db_err(dbenv,
 			    "%s: file size not a multiple of the pagesize",
 			    rpath);
 			ret = EINVAL;
 			goto err;
 		}
-		size = mbytes * MEGABYTE + bytes;
-		last_pgno = size == 0 ? 0 : (size - 1) / pagesize;
+
+		last_pgno = mbytes * (MEGABYTE / pagesize);
+		last_pgno += bytes / pagesize;
+
+		/* Correction: page numbers are zero-based, not 1-based. */
+		if (last_pgno != 0)
+			--last_pgno;
 
 		/*
 		 * Get the file id if we weren't given one.  Generated file id's
@@ -168,7 +188,7 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 		 * other process joining the party.
 		 */
 		if (finfop->fileid == NULL) {
-			if ((ret = __db_fileid(dbenv, rpath, 0, idbuf)) != 0)
+			if ((ret = __os_fileid(dbenv, rpath, 0, idbuf)) != 0)
 				goto err;
 			finfop->fileid = idbuf;
 		}
@@ -191,7 +211,7 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 	}
 	if (ret == 0 &&
 	    F_ISSET(dbmp, MP_LOCKHANDLE) && (ret =
-	    __memp_ralloc(dbmp, sizeof(db_mutex_t), NULL, &dbmfp->mutexp)) == 0)
+	    __memp_alloc(dbmp, sizeof(db_mutex_t), NULL, &dbmfp->mutexp)) == 0)
 		LOCKINIT(dbmp, dbmfp->mutexp);
 
 	if (needlock)
@@ -232,13 +252,15 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 			F_CLR(mfp, MP_CAN_MMAP);
 		if (LF_ISSET(DB_NOMMAP))
 			F_CLR(mfp, MP_CAN_MMAP);
-		if (size > (dbenv == NULL || dbenv->mp_mmapsize == 0 ?
-		    DB_MAXMMAPSIZE : dbenv->mp_mmapsize))
+		maxmap = dbenv == NULL || dbenv->mp_mmapsize == 0 ?
+		    DB_MAXMMAPSIZE : dbenv->mp_mmapsize;
+		if (mbytes > maxmap / MEGABYTE ||
+		    (mbytes == maxmap / MEGABYTE && bytes >= maxmap % MEGABYTE))
 			F_CLR(mfp, MP_CAN_MMAP);
 	}
 	dbmfp->addr = NULL;
 	if (F_ISSET(mfp, MP_CAN_MMAP)) {
-		dbmfp->len = size;
+		dbmfp->len = (size_t)mbytes * MEGABYTE + bytes;
 		if (__db_mapfile(rpath,
 		    dbmfp->fd, dbmfp->len, 1, &dbmfp->addr) != 0) {
 			dbmfp->addr = NULL;
@@ -246,7 +268,7 @@ __memp_fopen(dbmp, mfp, path, flags, mode, pagesize, needlock, finfop, retp)
 		}
 	}
 	if (rpath != NULL)
-		FREES(rpath);
+		__os_freestr(rpath);
 
 	LOCKHANDLE(dbmp, dbmp->mutexp);
 	TAILQ_INSERT_TAIL(&dbmp->dbmfq, dbmfp, q);
@@ -260,11 +282,11 @@ err:	/*
 	 * never get to here after we have successfully allocated it.
 	 */
 	if (rpath != NULL)
-		FREES(rpath);
+		__os_freestr(rpath);
 	if (dbmfp->fd != -1)
-		(void)__db_close(dbmfp->fd);
+		(void)__os_close(dbmfp->fd);
 	if (dbmfp != NULL)
-		FREE(dbmfp, sizeof(DB_MPOOLFILE));
+		__os_free(dbmfp, sizeof(DB_MPOOLFILE));
 	return (ret);
 }
 
@@ -315,7 +337,7 @@ __memp_mf_open(dbmp, path, pagesize, last_pgno, finfop, retp)
 		}
 
 	/* Allocate a new MPOOLFILE. */
-	if ((ret = __memp_ralloc(dbmp, sizeof(MPOOLFILE), NULL, &mfp)) != 0)
+	if ((ret = __memp_alloc(dbmp, sizeof(MPOOLFILE), NULL, &mfp)) != 0)
 		return (ret);
 	*retp = mfp;
 
@@ -334,21 +356,22 @@ __memp_mf_open(dbmp, path, pagesize, last_pgno, finfop, retp)
 	mfp->stat.st_pagesize = pagesize;
 	mfp->orig_last_pgno = mfp->last_pgno = last_pgno;
 
-	F_SET(mfp, MP_CAN_MMAP);
 	if (ISTEMPORARY)
 		F_SET(mfp, MP_TEMP);
 	else {
 		/* Copy the file path into shared memory. */
-		if ((ret = __memp_ralloc(dbmp,
+		if ((ret = __memp_alloc(dbmp,
 		    strlen(path) + 1, &mfp->path_off, &p)) != 0)
 			goto err;
 		memcpy(p, path, strlen(path) + 1);
 
 		/* Copy the file identification string into shared memory. */
-		if ((ret = __memp_ralloc(dbmp,
+		if ((ret = __memp_alloc(dbmp,
 		    DB_FILE_ID_LEN, &mfp->fileid_off, &p)) != 0)
 			goto err;
 		memcpy(p, finfop->fileid, DB_FILE_ID_LEN);
+
+		F_SET(mfp, MP_CAN_MMAP);
 	}
 
 	/* Copy the page cookie into shared memory. */
@@ -356,7 +379,7 @@ __memp_mf_open(dbmp, path, pagesize, last_pgno, finfop, retp)
 		mfp->pgcookie_len = 0;
 		mfp->pgcookie_off = 0;
 	} else {
-		if ((ret = __memp_ralloc(dbmp,
+		if ((ret = __memp_alloc(dbmp,
 		    finfop->pgcookie->size, &mfp->pgcookie_off, &p)) != 0)
 			goto err;
 		memcpy(p, finfop->pgcookie->data, finfop->pgcookie->size);
@@ -394,15 +417,47 @@ memp_fclose(dbmfp)
 	dbmp = dbmfp->dbmp;
 	ret = 0;
 
+	MP_PANIC_CHECK(dbmp);
+
+	for (;;) {
+		LOCKHANDLE(dbmp, dbmp->mutexp);
+
+		/*
+		 * We have to reference count DB_MPOOLFILE structures as other
+		 * threads may be using them.  The problem only happens if the
+		 * application makes a bad design choice.  Here's the path:
+		 *
+		 * Thread A opens a database.
+		 * Thread B uses thread A's DB_MPOOLFILE to write a buffer
+		 *    in order to free up memory in the mpool cache.
+		 * Thread A closes the database while thread B is using the
+		 *    DB_MPOOLFILE structure.
+		 *
+		 * By opening all databases before creating the threads, and
+		 * closing them after the threads have exited, applications
+		 * get better performance and avoid the problem path entirely.
+		 *
+		 * Regardless, holding the DB_MPOOLFILE to flush a dirty buffer
+		 * is a short-term lock, even in worst case, since we better be
+		 * the only thread of control using the DB_MPOOLFILE structure
+		 * to read pages *into* the cache.  Wait until we're the only
+		 * reference holder and remove the DB_MPOOLFILE structure from
+		 * the list, so nobody else can even find it.
+		 */
+		if (dbmfp->ref == 1) {
+			TAILQ_REMOVE(&dbmp->dbmfq, dbmfp, q);
+			break;
+		}
+		UNLOCKHANDLE(dbmp, dbmp->mutexp);
+
+		(void)__os_sleep(1, 0);
+	}
+	UNLOCKHANDLE(dbmp, dbmp->mutexp);
+
 	/* Complain if pinned blocks never returned. */
 	if (dbmfp->pinref != 0)
 		__db_err(dbmp->dbenv, "%s: close: %lu blocks left pinned",
 		    __memp_fn(dbmfp), (u_long)dbmfp->pinref);
-
-	/* Remove the DB_MPOOLFILE structure from the list. */
-	LOCKHANDLE(dbmp, dbmp->mutexp);
-	TAILQ_REMOVE(&dbmp->dbmfq, dbmfp, q);
-	UNLOCKHANDLE(dbmp, dbmp->mutexp);
 
 	/* Close the underlying MPOOLFILE. */
 	(void)__memp_mf_close(dbmp, dbmfp);
@@ -414,7 +469,7 @@ memp_fclose(dbmfp)
 		    "%s: %s", __memp_fn(dbmfp), strerror(ret));
 
 	/* Close the file; temporary files may not yet have been created. */
-	if (dbmfp->fd != -1 && (t_ret = __db_close(dbmfp->fd)) != 0) {
+	if (dbmfp->fd != -1 && (t_ret = __os_close(dbmfp->fd)) != 0) {
 		__db_err(dbmp->dbenv,
 		    "%s: %s", __memp_fn(dbmfp), strerror(t_ret));
 		if (ret != 0)
@@ -429,7 +484,7 @@ memp_fclose(dbmfp)
 	}
 
 	/* Discard the DB_MPOOLFILE structure. */
-	FREE(dbmfp, sizeof(DB_MPOOLFILE));
+	__os_free(dbmfp, sizeof(DB_MPOOLFILE));
 
 	return (ret);
 }

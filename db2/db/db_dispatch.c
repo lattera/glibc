@@ -43,13 +43,14 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_dispatch.c	10.14 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)db_dispatch.c	10.20 (Sleepycat) 10/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
+#include <shqueue.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -61,6 +62,7 @@ static const char sccsid[] = "@(#)db_dispatch.c	10.14 (Sleepycat) 5/3/98";
 #include "db_am.h"
 #include "common_ext.h"
 #include "log_auto.h"
+#include "txn.h"
 #include "txn_auto.h"
 
 /*
@@ -148,27 +150,16 @@ __db_add_recovery(dbenv, func, ndx)
 	u_int32_t ndx;
 {
 	u_int32_t i;
+	int ret;
 
-	/* Check if function is already registered. */
-	if (dispatch_table && ndx < dispatch_size &&
-	    dispatch_table[ndx] != 0 && dispatch_table[ndx] != func)
-		return (DB_REGISTERED);
+	COMPQUIET(dbenv, NULL);		/* !!!: not currently used. */
 
 	/* Check if we have to grow the table. */
 	if (ndx >= dispatch_size) {
-		if (dispatch_table == NULL)
-			dispatch_table = (int (**)
-			 __P((DB_LOG *, DBT *, DB_LSN *, int, void *)))
-			 __db_malloc(DB_user_BEGIN * sizeof(dispatch_table[0]));
-		else
-			dispatch_table = (int (**)
-			    __P((DB_LOG *, DBT *, DB_LSN *, int, void *)))
-			    __db_realloc(dispatch_table, (DB_user_BEGIN +
-			    dispatch_size) * sizeof(dispatch_table[0]));
-		if (dispatch_table == NULL) {
-			__db_err(dbenv, "%s", strerror(ENOMEM));
-			return (ENOMEM);
-		}
+		if ((ret = __os_realloc(&dispatch_table,
+		    (DB_user_BEGIN + dispatch_size) *
+		    sizeof(dispatch_table[0]))) != 0)
+			return (ret);
 		for (i = dispatch_size,
 		    dispatch_size += DB_user_BEGIN; i < dispatch_size; ++i)
 			dispatch_table[i] = NULL;
@@ -189,9 +180,10 @@ __db_txnlist_init(retp)
 	void *retp;
 {
 	DB_TXNHEAD *headp;
+	int ret;
 
-	if ((headp = (DB_TXNHEAD *)__db_malloc(sizeof(DB_TXNHEAD))) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_malloc(sizeof(DB_TXNHEAD), NULL, &headp)) != 0)
+		return (ret);
 
 	LIST_INIT(&headp->head);
 	headp->maxid = 0;
@@ -214,9 +206,10 @@ __db_txnlist_add(listp, txnid)
 {
 	DB_TXNHEAD *hp;
 	DB_TXNLIST *elp;
+	int ret;
 
-	if ((elp = (DB_TXNLIST *)__db_malloc(sizeof(DB_TXNLIST))) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_malloc(sizeof(DB_TXNLIST), NULL, &elp)) != 0)
+		return (ret);
 
 	elp->txnid = txnid;
 	hp = (DB_TXNHEAD *)listp;
@@ -269,9 +262,9 @@ __db_txnlist_end(listp)
 	hp = (DB_TXNHEAD *)listp;
 	while ((p = LIST_FIRST(&hp->head)) != LIST_END(&hp->head)) {
 		LIST_REMOVE(p, links);
-		__db_free(p);
+		__os_free(p, 0);
 	}
-	__db_free(listp);
+	__os_free(listp, sizeof(DB_TXNHEAD));
 }
 
 /*

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_checkpoint.c	10.17 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)db_checkpoint.c	10.21 (Sleepycat) 10/4/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -59,7 +59,7 @@ main(argc, argv)
 	time_t now;
 	long argval;
 	u_int32_t kbytes, minutes, seconds;
-	int ch, eval, once, verbose;
+	int ch, once, ret, verbose;
 	char *home, *logfile;
 
 	/*
@@ -70,7 +70,7 @@ main(argc, argv)
 #define	MAX_UINT32_T	2147483647
 
 	kbytes = minutes = 0;
-	once = verbose = 0;
+	once = ret = verbose = 0;
 	home = logfile = NULL;
 	while ((ch = getopt(argc, argv, "1h:k:L:p:v")) != EOF)
 		switch (ch) {
@@ -110,6 +110,7 @@ main(argc, argv)
 	}
 
 	/* Initialize the environment. */
+	siginit();
 	dbenv = db_init(home);
 
 	if (logfile != NULL && logpid(logfile, 1)) {
@@ -122,37 +123,40 @@ main(argc, argv)
 	 * to wake up when a checkpoint is necessary.  If we have a "kbytes"
 	 * field set, then we'll check every 30 seconds.
 	 */
-	eval = 0;
 	seconds = kbytes != 0 ? 30 : minutes * 60;
 	while (!interrupted) {
 		if (verbose) {
 			(void)time(&now);
-			printf("checkpoint: %s", ctime(&now));
+			warnx("checkpoint: %s", ctime(&now));
 		}
-		errno = txn_checkpoint(dbenv->tx_info, kbytes, minutes);
 
+		errno = txn_checkpoint(dbenv->tx_info, kbytes, minutes);
 		while (errno == DB_INCOMPLETE) {
 			if (verbose)
-				__db_err(dbenv,
-				    "checkpoint did not finish, retrying");
-			(void)__db_sleep(2, 0);
+				warnx("checkpoint did not finish, retrying\n");
+			(void)sleep(2);
 			errno = txn_checkpoint(dbenv->tx_info, 0, 0);
 		}
 
 		if (errno != 0) {
-			eval = 1;
-			__db_err(dbenv, "checkpoint: %s", strerror(errno));
+			ret = 1;
+			warn(NULL);
 			break;
 		}
 
 		if (once)
 			break;
 
-		(void)__db_sleep(seconds, 0);
+		(void)sleep(seconds);
 	}
 
 	if (logfile != NULL && logpid(logfile, 0))
-		eval = 1;
+		ret = 1;
+
+	if ((errno = db_appexit(dbenv)) != 0) {
+		ret = 1;
+		warn(NULL);
+	}
 
 	if (interrupted) {
 		(void)signal(interrupted, SIG_DFL);
@@ -160,7 +164,7 @@ main(argc, argv)
 		/* NOTREACHED */
 	}
 
-	return (db_appexit(dbenv) || eval ? 1 : 0);
+	return (ret);
 }
 
 /*
@@ -192,8 +196,6 @@ db_init(home)
 		errx(1,
 		    "db_appinit: failed to register access method functions");
 	}
-
-	siginit();
 
 	return (dbenv);
 }
@@ -237,14 +239,11 @@ siginit()
 	(void)signal(SIGHUP, onint);
 #endif
 	(void)signal(SIGINT, onint);
-#ifdef SIGKILL
-	(void)signal(SIGKILL, onint);
-#endif
 	(void)signal(SIGTERM, onint);
 }
 
 /*
- * oninit --
+ * onint --
  *	Interrupt signal handler.
  */
 void

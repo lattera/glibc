@@ -44,7 +44,7 @@ __db_oflags(oflags)
 	case O_RDWR:
 		break;
 	default:		/* Bogus flags value from user.  */
-	  /* XXX no way to return error from here */
+		/* XXX no way to return error from here */
 	}
 	if (oflags & O_CREAT)
 		dbflags |= DB_CREATE;

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)mp.h	10.33 (Sleepycat) 5/4/98
+ *	@(#)mp.h	10.37 (Sleepycat) 1/1/99
  */
 
 struct __bh;		typedef struct __bh BH;
@@ -16,11 +16,11 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 #define	DB_DEFAULT_MPOOL_FILE	"__db_mpool.share"
 
 /*
- * We default to 128K (16 8K pages) if the user doesn't specify, and
+ * We default to 256K (32 8K pages) if the user doesn't specify, and
  * require a minimum of 20K.
  */
 #ifndef	DB_CACHESIZE_DEF
-#define	DB_CACHESIZE_DEF	(128 * 1024)
+#define	DB_CACHESIZE_DEF	(256 * 1024)
 #endif
 #define	DB_CACHESIZE_MIN	( 20 * 1024)
 
@@ -106,6 +106,12 @@ struct __mpoolfile;	typedef struct __mpoolfile MPOOLFILE;
 	if (F_ISSET(dbmp, MP_LOCKREGION))				\
 		(void)__db_mutex_unlock(&(bhp)->mutex, (dbmp)->reginfo.fd)
 
+/* Check for region catastrophic shutdown. */
+#define	MP_PANIC_CHECK(dbmp) {						\
+	if ((dbmp)->mp->rlayout.panic)					\
+		return (DB_RUNRECOVERY);				\
+}
+
 /*
  * DB_MPOOL --
  *	Per-process memory pool structure.
@@ -158,6 +164,18 @@ struct __db_mpoolfile {
 
 	int	   fd;			/* Underlying file descriptor. */
 
+	u_int32_t ref;			/* Reference count. */
+
+	/*
+	 * !!!
+	 * This field is a special case -- it's protected by the region lock
+	 * NOT the thread lock.  The reason for this is that we always have
+	 * the region lock immediately before or after we modify the field,
+	 * and we don't want to use the structure lock to protect it because
+	 * then I/O (which is done with the structure lock held because of
+	 * the race between the seek and write of the file descriptor) will
+	 * block any other put/get calls using this DB_MPOOLFILE structure.
+	 */
 	u_int32_t pinref;		/* Pinned block reference count. */
 
 /* These fields are not protected. */

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fput.c	10.22 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)mp_fput.c	10.24 (Sleepycat) 9/27/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -40,6 +40,8 @@ memp_fput(dbmfp, pgaddr, flags)
 	dbmp = dbmfp->dbmp;
 	mp = dbmp->mp;
 
+	MP_PANIC_CHECK(dbmp);
+
 	/* Validate arguments. */
 	if (flags) {
 		if ((ret = __db_fchk(dbmp->dbenv, "memp_fput", flags,
@@ -57,15 +59,15 @@ memp_fput(dbmfp, pgaddr, flags)
 		}
 	}
 
+	LOCKREGION(dbmp);
+
 	/* Decrement the pinned reference count. */
-	LOCKHANDLE(dbmp, dbmfp->mutexp);
 	if (dbmfp->pinref == 0)
 		__db_err(dbmp->dbenv,
 		    "%s: put: more blocks returned than retrieved",
 		    __memp_fn(dbmfp));
 	else
 		--dbmfp->pinref;
-	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
 
 	/*
 	 * If we're mapping the file, there's nothing to do.  Because we can
@@ -74,13 +76,13 @@ memp_fput(dbmfp, pgaddr, flags)
 	 * region.
 	 */
 	if (dbmfp->addr != NULL && pgaddr >= dbmfp->addr &&
-	    (u_int8_t *)pgaddr <= (u_int8_t *)dbmfp->addr + dbmfp->len)
+	    (u_int8_t *)pgaddr <= (u_int8_t *)dbmfp->addr + dbmfp->len) {
+		UNLOCKREGION(dbmp);
 		return (0);
+	}
 
 	/* Convert the page address to a buffer header. */
 	bhp = (BH *)((u_int8_t *)pgaddr - SSZA(BH, buf));
-
-	LOCKREGION(dbmp);
 
 	/* Set/clear the page bits. */
 	if (LF_ISSET(DB_MPOOL_CLEAN) && F_ISSET(bhp, BH_DIRTY)) {

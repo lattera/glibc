@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_abs.c	10.8 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)os_abs.c	10.9 (Sleepycat) 7/21/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -18,13 +18,13 @@ static const char sccsid[] = "@(#)os_abs.c	10.8 (Sleepycat) 4/10/98";
 #include "db_int.h"
 
 /*
- * __db_abspath --
+ * __os_abspath --
  *	Return if a path is an absolute path.
  *
- * PUBLIC: int __db_abspath __P((const char *));
+ * PUBLIC: int __os_abspath __P((const char *));
  */
 int
-__db_abspath(path)
+__os_abspath(path)
 	const char *path;
 {
 	return (path[0] == '/');

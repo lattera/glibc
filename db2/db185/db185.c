@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db185.c	8.17 (Sleepycat) 5/7/98";
+static const char sccsid[] = "@(#)db185.c	8.21 (Sleepycat) 11/22/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,6 +28,10 @@ static const char sccsid[] = "@(#)db185.c	8.17 (Sleepycat) 5/7/98";
 #include "db185_int.h"
 #include "common_ext.h"
 
+#ifndef STDERR_FILENO
+#define	STDERR_FILENO	2
+#endif
+
 static int db185_close __P((DB185 *));
 static int db185_del __P((const DB185 *, const DBT185 *, u_int));
 static int db185_fd __P((const DB185 *));
@@ -37,7 +41,7 @@ static int db185_seq __P((const DB185 *, DBT185 *, DBT185 *, u_int));
 static int db185_sync __P((const DB185 *, u_int));
 
 DB185 *
-__dbopen(file, oflags, mode, type, openinfo)
+dbopen(file, oflags, mode, type, openinfo)
 	const char *file;
 	int oflags, mode;
 	DBTYPE type;
@@ -49,9 +53,10 @@ __dbopen(file, oflags, mode, type, openinfo)
 	DB *dbp;
 	DB185 *db185p;
 	DB_INFO dbinfo, *dbinfop;
-	int s_errno;
+	ssize_t nw;
+	int fd, s_errno;
 
-	if ((db185p = (DB185 *)__db_calloc(1, sizeof(DB185))) == NULL)
+	if ((errno = __os_calloc(1, sizeof(DB185), &db185p)) != 0)
 		return (NULL);
 	dbinfop = NULL;
 	memset(&dbinfo, 0, sizeof(dbinfo));
@@ -93,7 +98,8 @@ __dbopen(file, oflags, mode, type, openinfo)
 			dbinfop->h_ffactor = hi->ffactor;
 			dbinfop->h_nelem = hi->nelem;
 			dbinfop->db_cachesize = hi->cachesize;
-			dbinfop->h_hash = hi->hash;
+			dbinfop->h_hash = (u_int32_t (*)
+			    __P((const void *, u_int32_t)))hi->hash;
 			dbinfop->db_lorder = hi->lorder;
 		}
 
@@ -127,14 +133,15 @@ __dbopen(file, oflags, mode, type, openinfo)
 		 * that in DB 2.0, so do that cast.
 		 */
 		if (file != NULL) {
-			if (oflags & O_CREAT && __db_exists(file, NULL) != 0)
-				(void)__os_close(__os_open(file, oflags, mode));
+			if (oflags & O_CREAT && __os_exists(file, NULL) != 0)
+				if (__os_open(file, oflags, mode, &fd) == 0)
+					(void)__os_close(fd);
 			dbinfop->re_source = (char *)file;
-			file = NULL;
 
 			if (O_RDONLY)
 				oflags &= ~O_RDONLY;
 			oflags |= O_RDWR;
+			file = NULL;
 		}
 
 		if ((ri = openinfo) != NULL) {
@@ -144,7 +151,8 @@ __dbopen(file, oflags, mode, type, openinfo)
 			 */
 #define	BFMSG	"DB: DB 1.85's recno bfname field is not supported.\n"
 			if (ri->bfname != NULL) {
-				(void)__os_write(2, BFMSG, sizeof(BFMSG) - 1);
+				(void)__os_write(STDERR_FILENO,
+				    BFMSG, sizeof(BFMSG) - 1, &nw);
 				goto einval;
 			}
 
@@ -196,27 +204,26 @@ __dbopen(file, oflags, mode, type, openinfo)
 	 */
 	if ((errno = db_open(file,
 	    type, __db_oflags(oflags), mode, NULL, dbinfop, &dbp)) != 0) {
-		__db_free(db185p);
+		__os_free(db185p, sizeof(DB185));
 		return (NULL);
 	}
 
 	/* Create the cursor used for sequential ops. */
-	if ((errno = dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc)) != 0) {
+	if ((errno = dbp->cursor(dbp, NULL, &((DB185 *)db185p)->dbc, 0)) != 0) {
 		s_errno = errno;
 		(void)dbp->close(dbp, 0);
-		__db_free(db185p);
-		__set_errno(s_errno);
+		__os_free(db185p, sizeof(DB185));
+		errno = s_errno;
 		return (NULL);
 	}
 
 	db185p->internal = dbp;
 	return (db185p);
 
-einval:	__db_free(db185p);
-	__set_errno(EINVAL);
+einval:	__os_free(db185p, sizeof(DB185));
+	errno = EINVAL;
 	return (NULL);
 }
-weak_alias (__dbopen, dbopen)
 
 static int
 db185_close(db185p)
@@ -226,9 +233,9 @@ db185_close(db185p)
 
 	dbp = (DB *)db185p->internal;
 
-	__set_errno(dbp->close(dbp, 0));
+	errno = dbp->close(dbp, 0);
 
-	__db_free(db185p);
+	__os_free(db185p, sizeof(DB185));
 
 	return (errno == 0 ? 0 : -1);
 }
@@ -251,9 +258,9 @@ db185_del(db185p, key185, flags)
 	if (flags & ~R_CURSOR)
 		goto einval;
 	if (flags & R_CURSOR)
-		__set_errno(db185p->dbc->c_del(db185p->dbc, 0));
+		errno = db185p->dbc->c_del(db185p->dbc, 0);
 	else
-		__set_errno(dbp->del(dbp, NULL, &key, 0));
+		errno = dbp->del(dbp, NULL, &key, 0);
 
 	switch (errno) {
 	case 0:
@@ -263,7 +270,7 @@ db185_del(db185p, key185, flags)
 	}
 	return (-1);
 
-einval:	__set_errno(EINVAL);
+einval:	errno = EINVAL;
 	return (-1);
 }
 
@@ -276,7 +283,7 @@ db185_fd(db185p)
 
 	dbp = (DB *)db185p->internal;
 
-	return ((__set_errno(dbp->fd(dbp, &fd))) == 0 ? fd : -1);
+	return ((errno = dbp->fd(dbp, &fd)) == 0 ? fd : -1);
 }
 
 static int
@@ -301,7 +308,7 @@ db185_get(db185p, key185, data185, flags)
 	if (flags)
 		goto einval;
 
-	switch (__set_errno(dbp->get(dbp, NULL, &key, &data, 0))) {
+	switch (errno = dbp->get(dbp, NULL, &key, &data, 0)) {
 	case 0:
 		data185->data = data.data;
 		data185->size = data.size;
@@ -311,7 +318,7 @@ db185_get(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	__set_errno(EINVAL);
+einval:	errno = EINVAL;
 	return (-1);
 }
 
@@ -338,46 +345,46 @@ db185_put(db185p, key185, data185, flags)
 
 	switch (flags) {
 	case 0:
-		__set_errno(dbp->put(dbp, NULL, &key, &data, 0));
+		errno = dbp->put(dbp, NULL, &key, &data, 0);
 		break;
 	case R_CURSOR:
-		__set_errno(
-		    db185p->dbc->c_put(db185p->dbc, &key, &data, DB_CURRENT));
+		errno =
+		    db185p->dbc->c_put(db185p->dbc, &key, &data, DB_CURRENT);
 		break;
 	case R_IAFTER:
 	case R_IBEFORE:
 		if (dbp->type != DB_RECNO)
 			goto einval;
 
-		if ((__set_errno(dbp->cursor(dbp, NULL, &dbcp_put))) != 0)
+		if ((errno = dbp->cursor(dbp, NULL, &dbcp_put, 0)) != 0)
 			return (-1);
-		if ((__set_errno(
-		    dbcp_put->c_get(dbcp_put, &key, &data, DB_SET))) != 0) {
+		if ((errno =
+		    dbcp_put->c_get(dbcp_put, &key, &data, DB_SET)) != 0) {
 			s_errno = errno;
 			(void)dbcp_put->c_close(dbcp_put);
-			__set_errno(s_errno);
+			errno = s_errno;
 			return (-1);
 		}
 		memset(&data, 0, sizeof(data));
 		data.data = data185->data;
 		data.size = data185->size;
-		__set_errno(dbcp_put->c_put(dbcp_put,
-		    &key, &data, flags == R_IAFTER ? DB_AFTER : DB_BEFORE));
+		errno = dbcp_put->c_put(dbcp_put,
+		    &key, &data, flags == R_IAFTER ? DB_AFTER : DB_BEFORE);
 		s_errno = errno;
 		(void)dbcp_put->c_close(dbcp_put);
-		__set_errno(s_errno);
+		errno = s_errno;
 		break;
 	case R_NOOVERWRITE:
-		__set_errno(dbp->put(dbp, NULL, &key, &data, DB_NOOVERWRITE));
+		errno = dbp->put(dbp, NULL, &key, &data, DB_NOOVERWRITE);
 		break;
 	case R_SETCURSOR:
 		if (dbp->type != DB_BTREE && dbp->type != DB_RECNO)
 			goto einval;
 
-		if ((__set_errno(dbp->put(dbp, NULL, &key, &data, 0))) != 0)
+		if ((errno = dbp->put(dbp, NULL, &key, &data, 0)) != 0)
 			break;
-		__set_errno(db185p->dbc->c_get(db185p->dbc,
-					       &key, &data, DB_SET_RANGE));
+		errno =
+		    db185p->dbc->c_get(db185p->dbc, &key, &data, DB_SET_RANGE);
 		break;
 	default:
 		goto einval;
@@ -393,7 +400,7 @@ db185_put(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	__set_errno(EINVAL);
+einval:	errno = EINVAL;
 	return (-1);
 }
 
@@ -438,8 +445,7 @@ db185_seq(db185p, key185, data185, flags)
 	default:
 		goto einval;
 	}
-	switch (__set_errno(db185p->dbc->c_get(db185p->dbc,
-					       &key, &data, flags))) {
+	switch (errno = db185p->dbc->c_get(db185p->dbc, &key, &data, flags)) {
 	case 0:
 		key185->data = key.data;
 		key185->size = key.size;
@@ -451,7 +457,7 @@ db185_seq(db185p, key185, data185, flags)
 	}
 	return (-1);
 
-einval:	__set_errno(EINVAL);
+einval:	errno = EINVAL;
 	return (-1);
 }
 
@@ -461,6 +467,7 @@ db185_sync(db185p, flags)
 	u_int flags;
 {
 	DB *dbp;
+	ssize_t nw;
 
 	dbp = (DB *)db185p->internal;
 
@@ -473,14 +480,14 @@ db185_sync(db185p, flags)
 		 * We can't support the R_RECNOSYNC flag.
 		 */
 #define	RSMSG	"DB: DB 1.85's R_RECNOSYNC sync flag is not supported.\n"
-		(void)__os_write(2, RSMSG, sizeof(RSMSG) - 1);
+		(void)__os_write(STDERR_FILENO, RSMSG, sizeof(RSMSG) - 1, &nw);
 		goto einval;
 	default:
 		goto einval;
 	}
 
-	return ((__set_errno(dbp->sync(dbp, 0))) == 0 ? 0 : -1);
+	return ((errno = dbp->sync(dbp, 0)) == 0 ? 0 : -1);
 
-einval:	__set_errno(EINVAL);
+einval:	errno = EINVAL;
 	return (-1);
 }

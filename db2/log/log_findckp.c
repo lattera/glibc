@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_findckp.c	10.15 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)log_findckp.c	10.17 (Sleepycat) 9/17/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -28,7 +28,10 @@ static const char sccsid[] = "@(#)log_findckp.c	10.15 (Sleepycat) 4/26/98";
  * __log_findckp --
  *
  * Looks for the most recent checkpoint that occurs before the most recent
- * checkpoint LSN.  This is the point from which recovery can start and the
+ * checkpoint LSN, subject to the constraint that there must be at least two
+ * checkpoints.  The reason you need two checkpoints is that you might have
+ * crashed during the most recent one and may not have a copy of all the
+ * open files.  This is the point from which recovery can start and the
  * point up to which archival/truncation can take place.  Checkpoints in
  * the log look like:
  *
@@ -56,7 +59,7 @@ __log_findckp(lp, lsnp)
 	DB_LSN *lsnp;
 {
 	DBT data;
-	DB_LSN ckp_lsn, last_ckp, next_lsn;
+	DB_LSN ckp_lsn, final_ckp, last_ckp, next_lsn;
 	__txn_ckp_args *ckp_args;
 	int ret, verbose;
 
@@ -77,16 +80,17 @@ __log_findckp(lp, lsnp)
 			return (ret);
 	}
 
+	final_ckp = last_ckp;
 	next_lsn = last_ckp;
 	do {
 		if (F_ISSET(lp, DB_AM_THREAD))
-			__db_free(data.data);
+			__os_free(data.data, data.size);
 
 		if ((ret = log_get(lp, &next_lsn, &data, DB_SET)) != 0)
 			return (ret);
 		if ((ret = __txn_ckp_read(data.data, &ckp_args)) != 0) {
 			if (F_ISSET(lp, DB_AM_THREAD))
-				__db_free(data.data);
+				__os_free(data.data, data.size);
 			return (ret);
 		}
 		if (IS_ZERO_LSN(ckp_lsn))
@@ -103,12 +107,19 @@ __log_findckp(lp, lsnp)
 		}
 		last_ckp = next_lsn;
 		next_lsn = ckp_args->last_ckp;
-		__db_free(ckp_args);
+		__os_free(ckp_args, sizeof(*ckp_args));
+
+		/*
+		 * Keep looping until either you 1) run out of checkpoints,
+		 * 2) you've found a checkpoint before the most recent
+		 * checkpoint's LSN and you have at least 2 checkpoints.
+		 */
 	} while (!IS_ZERO_LSN(next_lsn) &&
-	    log_compare(&last_ckp, &ckp_lsn) > 0);
+	    (log_compare(&last_ckp, &ckp_lsn) > 0 ||
+	    log_compare(&final_ckp, &last_ckp) == 0));
 
 	if (F_ISSET(lp, DB_AM_THREAD))
-		__db_free(data.data);
+		__os_free(data.data, data.size);
 
 	/*
 	 * At this point, either, next_lsn is ZERO or ckp_lsn is the
@@ -117,11 +128,12 @@ __log_findckp(lp, lsnp)
 	 * next_lsn must be 0 and we need to roll forward from the
 	 * beginning of the log.
 	 */
-	if (log_compare(&last_ckp, &ckp_lsn) > 0) {
+	if (log_compare(&last_ckp, &ckp_lsn) > 0 ||
+	    log_compare(&final_ckp, &last_ckp) == 0) {
 get_first:	if ((ret = log_get(lp, &last_ckp, &data, DB_FIRST)) != 0)
 			return (ret);
 		if (F_ISSET(lp, DB_AM_THREAD))
-			__db_free(data.data);
+			__os_free(data.data, data.size);
 	}
 	*lsnp = last_ckp;
 

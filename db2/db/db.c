@@ -44,7 +44,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db.c	10.57 (Sleepycat) 5/7/98";
+static const char sccsid[] = "@(#)db.c	10.75 (Sleepycat) 12/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -67,9 +67,6 @@ static const char sccsid[] = "@(#)db.c	10.57 (Sleepycat) 5/7/98";
 #include "db_am.h"
 #include "common_ext.h"
 
-static int db_close __P((DB *, u_int32_t));
-static int db_fd __P((DB *, int *));
-
 /*
  * If the metadata page has the flag set, set the local flag.  If the page
  * does NOT have the flag set, return EINVAL if the user's dbinfo argument
@@ -86,11 +83,6 @@ static int db_fd __P((DB *, int *));
 			goto einval;					\
 		}							\
 }
-
-#ifdef _LIBC
-#define db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp) \
-  __nss_db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
-#endif
 
 /*
  * db_open --
@@ -141,9 +133,10 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 
 		/*
 		 * Specifying a cachesize to db_open(3), after creating an
-		 * environment, is a common mistake.
+		 * environment with DB_INIT_MPOOL, is a common mistake.
 		 */
-		if (dbinfo != NULL && dbinfo->db_cachesize != 0) {
+		if (dbenv->mp_info != NULL &&
+		    dbinfo != NULL && dbinfo->db_cachesize != 0) {
 			__db_err(dbenv,
 			    "cachesize will be ignored if environment exists");
 			return (EINVAL);
@@ -156,11 +149,15 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	real_name = NULL;
 
 	/* Allocate the DB structure, reference the DB_ENV structure. */
-	if ((dbp = (DB *)__db_calloc(1, sizeof(DB))) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
+	if ((ret = __os_calloc(1, sizeof(DB), &dbp)) != 0)
+		return (ret);
 	dbp->dbenv = dbenv;
+
+	/* Random initialization. */
+	TAILQ_INIT(&dbp->free_queue);
+	TAILQ_INIT(&dbp->active_queue);
+	if ((ret = __db_init_wrapper(dbp)) != 0)
+		goto err;
 
 	/* Convert the db_open(3) flags. */
 	if (LF_ISSET(DB_RDONLY))
@@ -192,21 +189,16 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	}
 
 	/*
-	 * Always set the master and initialize the queues, so we can
-	 * use these fields without checking the thread bit.
-	 */
-	dbp->master = dbp;
-	LIST_INIT(&dbp->handleq);
-	LIST_INSERT_HEAD(&dbp->handleq, dbp, links);
-	TAILQ_INIT(&dbp->curs_queue);
-
-	/*
 	 * Set based on the dbenv fields, although no logging or transactions
 	 * are possible for temporary files.
 	 */
 	if (dbenv != NULL) {
-		if (dbenv->lk_info != NULL)
-			F_SET(dbp, DB_AM_LOCKING);
+		if (dbenv->lk_info != NULL) {
+			if (F_ISSET(dbenv, DB_ENV_CDB))
+				F_SET(dbp, DB_AM_CDB);
+			else
+				F_SET(dbp, DB_AM_LOCKING);
+		}
 		if (fname != NULL && dbenv->lg_info != NULL)
 			F_SET(dbp, DB_AM_LOGGING);
 	}
@@ -215,9 +207,29 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 	if (dbinfo == NULL) {
 		dbp->pgsize = 0;
 		dbp->db_malloc = NULL;
+		dbp->dup_compare = NULL;
 	} else {
+		/*
+		 * We don't want anything that's not a power-of-2, as we rely
+		 * on that for alignment of various types on the pages.
+		 */
+		if ((dbp->pgsize = dbinfo->db_pagesize) != 0 &&
+		    (u_int32_t)1 << __db_log2(dbp->pgsize) != dbp->pgsize) {
+			__db_err(dbenv, "page sizes must be a power-of-2");
+			goto einval;
+		}
 		dbp->pgsize = dbinfo->db_pagesize;
 		dbp->db_malloc = dbinfo->db_malloc;
+		if (F_ISSET(dbinfo, DB_DUPSORT)) {
+			if (F_ISSET(dbinfo, DB_DUP))
+				dbp->dup_compare = dbinfo->dup_compare == NULL ?
+				    __bam_defcmp : dbinfo->dup_compare;
+			else {
+				__db_err(dbenv, "DB_DUPSORT requires DB_DUP");
+				goto einval;
+			}
+			F_CLR(dbinfo, DB_DUPSORT);
+		}
 	}
 
 	/* Fill in the default file mode. */
@@ -235,6 +247,7 @@ db_open(fname, type, flags, mode, dbenv, dbinfo, dbpp)
 		default:
 			goto err;
 		}
+	dbp->byteswapped = F_ISSET(dbp, DB_AM_SWAP) ? 1 : 0;
 
 	/*
 	 * If we have a file name, try and read the first page, figure out
@@ -289,7 +302,7 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 		 * sizes, we limit the default pagesize to 16K.
 		 */
 		if (dbp->pgsize == 0) {
-			if ((ret = __db_ioinfo(real_name,
+			if ((ret = __os_ioinfo(real_name,
 			    fd, NULL, NULL, &iopsize)) != 0) {
 				__db_err(dbenv,
 				    "%s: %s", real_name, strerror(ret));
@@ -299,6 +312,14 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 				iopsize = 512;
 			if (iopsize > 16 * 1024)
 				iopsize = 16 * 1024;
+
+			/*
+			 * Sheer paranoia, but we don't want anything that's
+			 * not a power-of-2, as we rely on that for alignment
+			 * of various types on the pages.
+			 */
+			DB_ROUNDOFF(iopsize, 512);
+
 			dbp->pgsize = iopsize;
 			F_SET(dbp, DB_AM_PGDEF);
 		}
@@ -308,11 +329,11 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 		 * that the meta-data for all access methods fits in 512
 		 * bytes, and that no database will be smaller than that.
 		 */
-		if ((ret = __db_read(fd, mbuf, sizeof(mbuf), &nr)) != 0)
+		if ((ret = __os_read(fd, mbuf, sizeof(mbuf), &nr)) != 0)
 			goto err;
 
 		/* The fd is no longer needed. */
-		(void)__db_close(fd);
+		(void)__os_close(fd);
 		fd = -1;
 
 		if (nr != sizeof(mbuf)) {
@@ -337,7 +358,7 @@ open_retry:	if (LF_ISSET(DB_CREATE)) {
 			 */
 			if (retry_cnt++ < 3 &&
 			    !LF_ISSET(DB_CREATE | DB_TRUNCATE)) {
-				__db_sleep(1, 0);
+				__os_sleep(1, 0);
 				goto open_retry;
 			}
 			if (type == DB_UNKNOWN) {
@@ -396,7 +417,7 @@ retry:		switch (((BTMETA *)mbuf)->magic) {
 
 			/* Copy the file's unique id. */
 			need_fileid = 0;
-			memcpy(dbp->lock.fileid, btm->uid, DB_FILE_ID_LEN);
+			memcpy(dbp->fileid, btm->uid, DB_FILE_ID_LEN);
 			break;
 		case DB_HASHMAGIC:
 			if (type != DB_HASH && type != DB_UNKNOWN)
@@ -425,7 +446,7 @@ retry:		switch (((BTMETA *)mbuf)->magic) {
 
 			/* Copy the file's unique id. */
 			need_fileid = 0;
-			memcpy(dbp->lock.fileid, hashm->uid, DB_FILE_ID_LEN);
+			memcpy(dbp->fileid, hashm->uid, DB_FILE_ID_LEN);
 			break;
 		default:
 			if (swapped) {
@@ -489,11 +510,9 @@ empty:	/*
 		F_SET(dbp, DB_AM_MLOCAL);
 
 		if (dbenv == NULL) {
-			if ((dbp->mp_dbenv =
-			    (DB_ENV *)__db_calloc(sizeof(DB_ENV), 1)) == NULL) {
-				ret = ENOMEM;
+			if ((ret = __os_calloc(1,
+			    sizeof(DB_ENV), &dbp->mp_dbenv)) != 0)
 				goto err;
-			}
 
 			envp = dbp->mp_dbenv;
 			restore = 0;
@@ -554,20 +573,20 @@ empty:	/*
 	 */
 	if (need_fileid) {
 		if (fname == NULL) {
-			memset(dbp->lock.fileid, 0, DB_FILE_ID_LEN);
+			memset(dbp->fileid, 0, DB_FILE_ID_LEN);
 			if (F_ISSET(dbp, DB_AM_LOCKING) &&
 			    (ret = lock_id(dbenv->lk_info,
-			    (u_int32_t *)dbp->lock.fileid)) != 0)
+			    (u_int32_t *)dbp->fileid)) != 0)
 				goto err;
 		} else
-			if ((ret = __db_fileid(dbenv,
-			    real_name, 1, dbp->lock.fileid)) != 0)
+			if ((ret = __os_fileid(dbenv,
+			    real_name, 1, dbp->fileid)) != 0)
 				goto err;
 	}
 
 	/* No further use for the real name. */
 	if (real_name != NULL)
-		FREES(real_name);
+		__os_freestr(real_name);
 	real_name = NULL;
 
 	/*
@@ -595,7 +614,7 @@ empty:	/*
 	memset(&finfo, 0, sizeof(finfo));
 	finfo.ftype = ftype;
 	finfo.pgcookie = &pgcookie;
-	finfo.fileid = dbp->lock.fileid;
+	finfo.fileid = dbp->fileid;
 	finfo.lsn_offset = 0;
 	finfo.clear_len = DB_PAGE_CLEAR_LEN;
 	if ((ret = memp_fopen(dbp->mp, fname,
@@ -605,30 +624,27 @@ empty:	/*
 
 	/*
 	 * XXX
-	 * Truly spectacular layering violation.  We need a per-thread mutex
-	 * that lives in shared memory (thanks, HP-UX!) and so we acquire a
-	 * pointer to the mpool one.
+	 * We need a per-thread mutex that lives in shared memory -- HP-UX
+	 * can't allocate mutexes in malloc'd memory.  Allocate it from the
+	 * shared memory region, since it's the only one that is guaranteed
+	 * to exist.
 	 */
-	if (F_ISSET(dbp, DB_AM_THREAD))
-		dbp->mutexp = dbp->mpf->mutexp;
+	if (F_ISSET(dbp, DB_AM_THREAD)) {
+		if ((ret = __memp_reg_alloc(dbp->mp,
+		    sizeof(db_mutex_t), NULL, &dbp->mutexp)) != 0)
+			goto err;
+		/*
+		 * Since we only get here if DB_THREAD was specified, we know
+		 * we have spinlocks and no file offset argument is needed.
+		 */
+		(void)__db_mutex_init(dbp->mutexp, 0);
+	}
 
 	/* Get a log file id. */
 	if (F_ISSET(dbp, DB_AM_LOGGING) &&
 	    (ret = log_register(dbenv->lg_info,
 	    dbp, fname, type, &dbp->log_fileid)) != 0)
 		goto err;
-
-	/*
-	 * Get a locker id for this DB, and build the lock cookie: the first
-	 * db_pgno_t bytes are the page number, the next N bytes are the file
-	 * id.
-	 */
-	if (F_ISSET(dbp, DB_AM_LOCKING)) {
-		if ((ret = lock_id(dbenv->lk_info, &dbp->locker)) != 0)
-			goto err;
-		dbp->lock_dbt.size = sizeof(dbp->lock);
-		dbp->lock_dbt.data = &dbp->lock;
-	}
 
 	/* Call the real open function. */
 	switch (type) {
@@ -639,7 +655,7 @@ empty:	/*
 		if (dbinfo != NULL && (ret = __db_fcchk(dbenv,
 		    "db_open", dbinfo->flags, DB_DUP, DB_RECNUM)) != 0)
 			goto err;
-		if ((ret = __bam_open(dbp, type, dbinfo)) != 0)
+		if ((ret = __bam_open(dbp, dbinfo)) != 0)
 			goto err;
 		break;
 	case DB_HASH:
@@ -655,16 +671,12 @@ empty:	/*
 		if (dbinfo != NULL && (ret = __db_fchk(dbenv,
 		    "db_open", dbinfo->flags, DB_INFO_FLAGS)) != 0)
 			goto err;
-		if ((ret = __ram_open(dbp, type, dbinfo)) != 0)
+		if ((ret = __ram_open(dbp, dbinfo)) != 0)
 			goto err;
 		break;
 	default:
 		abort();
 	}
-
-	/* Call a local close routine. */
-	dbp->close = db_close;
-	dbp->fd = db_fd;
 
 	*dbpp = dbp;
 	return (0);
@@ -672,7 +684,7 @@ empty:	/*
 einval:	ret = EINVAL;
 err:	/* Close the file descriptor. */
 	if (fd != -1)
-		(void)__db_close(fd);
+		(void)__os_close(fd);
 
 	/* Discard the log file id. */
 	if (dbp->log_fileid != 0)
@@ -688,90 +700,60 @@ err:	/* Close the file descriptor. */
 
 	/* If we allocated a DB_ENV, discard it. */
 	if (dbp->mp_dbenv != NULL)
-		FREE(dbp->mp_dbenv, sizeof(DB_ENV));
+		__os_free(dbp->mp_dbenv, sizeof(DB_ENV));
 
 	if (real_name != NULL)
-		FREES(real_name);
+		__os_freestr(real_name);
 	if (dbp != NULL)
-		FREE(dbp, sizeof(DB));
+		__os_free(dbp, sizeof(DB));
 
 	return (ret);
 }
 
-#ifdef _LIBC
-# undef db_open
-weak_alias (__nss_db_open, db_open)
-#endif
-
 /*
- * db_close --
+ * __db_close --
  *	Close a DB tree.
+ *
+ * PUBLIC: int __db_close __P((DB *, u_int32_t));
  */
-static int
-db_close(dbp, flags)
+int
+__db_close(dbp, flags)
 	DB *dbp;
 	u_int32_t flags;
 {
 	DBC *dbc;
-	DB *tdbp;
 	int ret, t_ret;
 
+	DB_PANIC_CHECK(dbp);
+
 	/* Validate arguments. */
-	if ((ret = __db_fchk(dbp->dbenv, "db_close", flags, DB_NOSYNC)) != 0)
+	if ((ret = __db_closechk(dbp, flags)) != 0)
 		return (ret);
 
 	/* Sync the underlying file. */
-	if (!LF_ISSET(DB_NOSYNC) &&
+	if (flags != DB_NOSYNC &&
 	    (t_ret = dbp->sync(dbp, 0)) != 0 && ret == 0)
 		ret = t_ret;
 
 	/*
-	 * Call the underlying access method close routine for all the
-	 * cursors and handles.
+	 * Go through the active cursors and call the cursor recycle routine,
+	 * which resolves pending operations and moves the cursors onto the
+	 * free list.  Then, walk the free list and call the cursor destroy
+	 * routine.
 	 */
-	for (tdbp = LIST_FIRST(&dbp->handleq);
-	    tdbp != NULL; tdbp = LIST_NEXT(tdbp, links)) {
-		while ((dbc = TAILQ_FIRST(&tdbp->curs_queue)) != NULL)
-			switch (tdbp->type) {
-			case DB_BTREE:
-				if ((t_ret =
-				    __bam_c_iclose(tdbp, dbc)) != 0 && ret == 0)
-					ret = t_ret;
-				break;
-			case DB_HASH:
-				if ((t_ret =
-				    __ham_c_iclose(tdbp, dbc)) != 0 && ret == 0)
-					ret = t_ret;
-				break;
-			case DB_RECNO:
-				if ((t_ret =
-				    __ram_c_iclose(tdbp, dbc)) != 0 && ret == 0)
-					ret = t_ret;
-				break;
-			default:
-				abort();
-			}
+	while ((dbc = TAILQ_FIRST(&dbp->active_queue)) != NULL)
+		if ((t_ret = dbc->c_close(dbc)) != 0 && ret == 0)
+			ret = t_ret;
+	while ((dbc = TAILQ_FIRST(&dbp->free_queue)) != NULL)
+		if ((t_ret = __db_c_destroy(dbc)) != 0 && ret == 0)
+			ret = t_ret;
 
-		switch (tdbp->type) {
-		case DB_BTREE:
-			if ((t_ret = __bam_close(tdbp)) != 0 && ret == 0)
-				ret = t_ret;
-			break;
-		case DB_HASH:
-			if ((t_ret = __ham_close(tdbp)) != 0 && ret == 0)
-				ret = t_ret;
-			break;
-		case DB_RECNO:
-			if ((t_ret = __ram_close(tdbp)) != 0 && ret == 0)
-				ret = t_ret;
-			break;
-		default:
-			abort();
-		}
-	}
+	/* Call the access specific close function. */
+	if ((t_ret = dbp->am_close(dbp)) != 0 && ret == 0)
+		ret = t_ret;
 
 	/* Sync the memory pool. */
-	if (!LF_ISSET(DB_NOSYNC) && (t_ret = memp_fsync(dbp->mpf)) != 0 &&
+	if (flags != DB_NOSYNC && (t_ret = memp_fsync(dbp->mpf)) != 0 &&
 	    t_ret != DB_INCOMPLETE && ret == 0)
 		ret = t_ret;
 
@@ -788,91 +770,12 @@ db_close(dbp, flags)
 	if (F_ISSET(dbp, DB_AM_LOGGING))
 		(void)log_unregister(dbp->dbenv->lg_info, dbp->log_fileid);
 
-	/* Discard the lock cookie for all handles. */
-	for (tdbp = LIST_FIRST(&dbp->handleq);
-	    tdbp != NULL; tdbp = LIST_NEXT(tdbp, links))
-		if (F_ISSET(tdbp, DB_AM_LOCKING)) {
-#ifdef DEBUG
-			DB_LOCKREQ request;
-
-			/*
-			 * If we're running tests, display any locks currently
-			 * held.  It's possible that some applications may hold
-			 * locks for long periods, e.g., conference room locks,
-			 * but the DB tests should never close holding locks.
-			 */
-			request.op = DB_LOCK_DUMP;
-			if ((t_ret = lock_vec(tdbp->dbenv->lk_info,
-			    tdbp->locker, 0, &request, 1, NULL)) != 0 &&
-			    ret == 0)
-				ret = EAGAIN;
-#endif
-		}
-
 	/* If we allocated a DB_ENV, discard it. */
 	if (dbp->mp_dbenv != NULL)
-		FREE(dbp->mp_dbenv, sizeof(DB_ENV));
+		__os_free(dbp->mp_dbenv, sizeof(DB_ENV));
 
-	/* Free all of the DB's. */
-	LIST_REMOVE(dbp, links);
-	while ((tdbp = LIST_FIRST(&dbp->handleq)) != NULL) {
-		LIST_REMOVE(tdbp, links);
-		FREE(tdbp, sizeof(*tdbp));
-	}
-	FREE(dbp, sizeof(*dbp));
+	/* Free the DB. */
+	__os_free(dbp, sizeof(*dbp));
 
 	return (ret);
-}
-
-/*
- * db_fd --
- *	Return a file descriptor for flock'ing.
- */
-static int
-db_fd(dbp, fdp)
-        DB *dbp;
-	int *fdp;
-{
-	/*
-	 * XXX
-	 * Truly spectacular layering violation.
-	 */
-	return (__mp_xxx_fd(dbp->mpf, fdp));
-}
-
-/*
- * __db_pgerr --
- *	Error when unable to retrieve a specified page.
- *
- * PUBLIC: int __db_pgerr __P((DB *, db_pgno_t));
- */
-int
-__db_pgerr(dbp, pgno)
-	DB *dbp;
-	db_pgno_t pgno;
-{
-	/*
-	 * Three things are certain:
-	 * Death, taxes, and lost data.
-	 * Guess which has occurred.
-	 */
-	__db_err(dbp->dbenv,
-	    "unable to create/retrieve page %lu", (u_long)pgno);
-	return (__db_panic(dbp));
-}
-
-/*
- * __db_pgfmt --
- *	Error when a page has the wrong format.
- *
- * PUBLIC: int __db_pgfmt __P((DB *, db_pgno_t));
- */
-int
-__db_pgfmt(dbp, pgno)
-	DB *dbp;
-	db_pgno_t pgno;
-{
-	__db_err(dbp->dbenv,
-	    "page %lu: illegal page type or format", (u_long)pgno);
-	return (__db_panic(dbp));
 }

@@ -47,7 +47,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_rec.c	10.19 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)hash_rec.c	10.22 (Sleepycat) 10/21/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -80,17 +80,19 @@ __ham_insdel_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_insdel_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	u_int32_t op;
 	int cmp_n, cmp_p, getmeta, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_insdel_print);
 	REC_INTRO(__ham_insdel_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
 	ret = memp_fget(mpf, &argp->pgno, 0, &pagep);
 	if (ret != 0) {
@@ -101,16 +103,15 @@ __ham_insdel_recover(logp, dbtp, lsnp, redo, info)
 			 * would not have to undo anything.  In this case,
 			 * don't bother creating a page.
 			 */
-			*lsnp = argp->prev_lsn;
-			ret = 0;
-			goto out;
+			goto done;
 		} else if ((ret = memp_fget(mpf, &argp->pgno,
 		    DB_MPOOL_CREATE, &pagep)) != 0)
 			goto out;
 	}
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, hcp, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	cmp_n = log_compare(lsnp, &LSN(pagep));
@@ -144,7 +145,7 @@ __ham_insdel_recover(logp, dbtp, lsnp, redo, info)
 			    !redo || PAIR_ISDATABIG(argp->opcode) ?
 			    H_OFFPAGE : H_KEYDATA);
 		} else
-			(void) __ham_reputpair(pagep, hashp->hdr->pagesize,
+			(void) __ham_reputpair(pagep, hcp->hdr->pagesize,
 			    argp->ndx, &argp->key, &argp->data);
 
 		LSN(pagep) = redo ? *lsnp : argp->pagelsn;
@@ -163,10 +164,11 @@ __ham_insdel_recover(logp, dbtp, lsnp, redo, info)
 			goto out;
 
 	/* Return the previous LSN. */
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -187,16 +189,18 @@ __ham_newpage_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_newpage_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	int cmp_n, cmp_p, change, getmeta, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_newpage_print);
 	REC_INTRO(__ham_newpage_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
 	ret = memp_fget(mpf, &argp->new_pgno, 0, &pagep);
 	if (ret != 0) {
@@ -214,8 +218,9 @@ __ham_newpage_recover(logp, dbtp, lsnp, redo, info)
 			goto out;
 	}
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	/*
@@ -289,11 +294,13 @@ ppage:	if (argp->prev_pgno != PGNO_INVALID) {
 		}
 
 		if (!change) {
-			if ((ret = __ham_put_page(file_dbp, (PAGE *)pagep, 0)) != 0)
+			if ((ret =
+			    __ham_put_page(file_dbp, (PAGE *)pagep, 0)) != 0)
 				goto out;
 		} else {
 			LSN(pagep) = redo ? *lsnp : argp->prevlsn;
-			if ((ret = __ham_put_page(file_dbp, (PAGE *)pagep, 1)) != 0)
+			if ((ret =
+			    __ham_put_page(file_dbp, (PAGE *)pagep, 1)) != 0)
 				goto out;
 		}
 	}
@@ -310,9 +317,7 @@ npage:	if (argp->next_pgno != PGNO_INVALID) {
 				 * so we would not have to undo anything.  In
 				 * this case, don't bother creating a page.
 				 */
-				*lsnp = argp->prev_lsn;
-				ret = 0;
-				goto out;
+				goto done;
 			} else if ((ret =
 			    memp_fget(mpf, &argp->next_pgno,
 			    DB_MPOOL_CREATE, &pagep)) != 0)
@@ -346,10 +351,11 @@ npage:	if (argp->next_pgno != PGNO_INVALID) {
 				goto out;
 		}
 	}
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -372,19 +378,21 @@ __ham_replace_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_replace_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
 	DBT dbt;
-	HTAB *hashp;
 	PAGE *pagep;
 	int32_t grow;
 	int change, cmp_n, cmp_p, getmeta, ret;
 	u_int8_t *hk;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_replace_print);
 	REC_INTRO(__ham_replace_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
 	ret = memp_fget(mpf, &argp->pgno, 0, &pagep);
 	if (ret != 0) {
@@ -395,16 +403,15 @@ __ham_replace_recover(logp, dbtp, lsnp, redo, info)
 			 * would not have to undo anything.  In this case,
 			 * don't bother creating a page.
 			 */
-			*lsnp = argp->prev_lsn;
-			ret = 0;
-			goto out;
+			goto done;
 		} else if ((ret = memp_fget(mpf, &argp->pgno,
 		    DB_MPOOL_CREATE, &pagep)) != 0)
 			goto out;
 	}
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	cmp_n = log_compare(lsnp, &LSN(pagep));
@@ -444,10 +451,11 @@ __ham_replace_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = __ham_put_page(file_dbp, pagep, change)) != 0)
 		goto out;
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -468,19 +476,22 @@ __ham_newpgno_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_newpgno_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	int change, cmp_n, cmp_p, getmeta, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_newpgno_print);
 	REC_INTRO(__ham_newpgno_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	/*
@@ -488,34 +499,34 @@ __ham_newpgno_recover(logp, dbtp, lsnp, redo, info)
 	 * to update the meta data; then we need to update the page.
 	 * We'll do the meta-data first.
 	 */
-	cmp_n = log_compare(lsnp, &hashp->hdr->lsn);
-	cmp_p = log_compare(&hashp->hdr->lsn, &argp->metalsn);
+	cmp_n = log_compare(lsnp, &hcp->hdr->lsn);
+	cmp_p = log_compare(&hcp->hdr->lsn, &argp->metalsn);
 
 	change = 0;
 	if ((cmp_p == 0 && redo && argp->opcode == ALLOCPGNO) ||
 	    (cmp_n == 0 && !redo && argp->opcode == DELPGNO)) {
 		/* Need to redo an allocation or undo a deletion. */
-		hashp->hdr->last_freed = argp->free_pgno;
+		hcp->hdr->last_freed = argp->free_pgno;
 		if (redo && argp->old_pgno != 0) /* Must be ALLOCPGNO */
-			hashp->hdr->spares[hashp->hdr->ovfl_point]++;
+			hcp->hdr->spares[hcp->hdr->ovfl_point]++;
 		change = 1;
 	} else if (cmp_p == 0 && redo && argp->opcode == DELPGNO) {
 		/* Need to redo a deletion */
-		hashp->hdr->last_freed = argp->pgno;
+		hcp->hdr->last_freed = argp->pgno;
 		change = 1;
 	} else if (cmp_n == 0 && !redo && argp->opcode == ALLOCPGNO) {
 		/* undo an allocation. */
 		if (argp->old_pgno == 0)
-			hashp->hdr->last_freed = argp->pgno;
+			hcp->hdr->last_freed = argp->pgno;
 		else {
-			hashp->hdr->spares[hashp->hdr->ovfl_point]--;
-			hashp->hdr->last_freed = 0;
+			hcp->hdr->spares[hcp->hdr->ovfl_point]--;
+			hcp->hdr->last_freed = 0;
 		}
 		change = 1;
 	}
 	if (change) {
-		hashp->hdr->lsn = redo ? *lsnp : argp->metalsn;
-		F_SET(file_dbp, DB_HS_DIRTYMETA);
+		hcp->hdr->lsn = redo ? *lsnp : argp->metalsn;
+		F_SET(hcp, H_DIRTY);
 	}
 
 
@@ -530,9 +541,7 @@ __ham_newpgno_recover(logp, dbtp, lsnp, redo, info)
 			 * would not have to undo anything.  In this case,
 			 * don't bother creating a page.
 			 */
-			*lsnp = argp->prev_lsn;
-			ret = 0;
-			goto out;
+			goto done;
 		} else if ((ret = memp_fget(mpf, &argp->pgno,
 		    DB_MPOOL_CREATE, &pagep)) != 0)
 			goto out;
@@ -565,10 +574,11 @@ __ham_newpgno_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = __ham_put_page(file_dbp, pagep, change)) != 0)
 		goto out;
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 
 }
@@ -590,19 +600,22 @@ __ham_splitmeta_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_splitmeta_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	int change, cmp_n, cmp_p, getmeta, ret;
 	u_int32_t pow;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_splitmeta_print);
 	REC_INTRO(__ham_splitmeta_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	/*
@@ -610,43 +623,45 @@ __ham_splitmeta_recover(logp, dbtp, lsnp, redo, info)
 	 * to update the meta data; then we need to update the page.
 	 * We'll do the meta-data first.
 	 */
-	cmp_n = log_compare(lsnp, &hashp->hdr->lsn);
-	cmp_p = log_compare(&hashp->hdr->lsn, &argp->metalsn);
+	cmp_n = log_compare(lsnp, &hcp->hdr->lsn);
+	cmp_p = log_compare(&hcp->hdr->lsn, &argp->metalsn);
 
 	change = 0;
 	if (cmp_p == 0 && redo) {
 		/* Need to redo the split information. */
-		hashp->hdr->max_bucket = argp->bucket + 1;
-		pow = __db_log2(hashp->hdr->max_bucket + 1);
-		if (pow > hashp->hdr->ovfl_point) {
-			hashp->hdr->spares[pow] =
-				hashp->hdr->spares[hashp->hdr->ovfl_point];
-			hashp->hdr->ovfl_point = pow;
+		hcp->hdr->max_bucket = argp->bucket + 1;
+		pow = __db_log2(hcp->hdr->max_bucket + 1);
+		if (pow > hcp->hdr->ovfl_point) {
+			hcp->hdr->spares[pow] =
+				hcp->hdr->spares[hcp->hdr->ovfl_point];
+			hcp->hdr->ovfl_point = pow;
 		}
-		if (hashp->hdr->max_bucket > hashp->hdr->high_mask) {
-			hashp->hdr->low_mask = hashp->hdr->high_mask;
-			hashp->hdr->high_mask =
-			    hashp->hdr->max_bucket | hashp->hdr->low_mask;
+		if (hcp->hdr->max_bucket > hcp->hdr->high_mask) {
+			hcp->hdr->low_mask = hcp->hdr->high_mask;
+			hcp->hdr->high_mask =
+			    hcp->hdr->max_bucket | hcp->hdr->low_mask;
 		}
 		change = 1;
 	} else if (cmp_n == 0 && !redo) {
 		/* Need to undo the split information. */
-		hashp->hdr->max_bucket = argp->bucket;
-		hashp->hdr->ovfl_point = argp->ovflpoint;
-		hashp->hdr->spares[hashp->hdr->ovfl_point] = argp->spares;
-		pow = 1 << __db_log2(hashp->hdr->max_bucket + 1);
-		hashp->hdr->high_mask = pow - 1;
-		hashp->hdr->low_mask = (pow >> 1) - 1;
+		hcp->hdr->max_bucket = argp->bucket;
+		hcp->hdr->ovfl_point = argp->ovflpoint;
+		hcp->hdr->spares[hcp->hdr->ovfl_point] = argp->spares;
+		pow = 1 << __db_log2(hcp->hdr->max_bucket + 1);
+		hcp->hdr->high_mask = pow - 1;
+		hcp->hdr->low_mask = (pow >> 1) - 1;
 		change = 1;
 	}
 	if (change) {
-		hashp->hdr->lsn = redo ? *lsnp : argp->metalsn;
-		F_SET(file_dbp, DB_HS_DIRTYMETA);
+		hcp->hdr->lsn = redo ? *lsnp : argp->metalsn;
+		F_SET(hcp, H_DIRTY);
 	}
-	*lsnp = argp->prev_lsn;
+
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -665,16 +680,18 @@ __ham_splitdata_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_splitdata_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	int change, cmp_n, cmp_p, getmeta, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_splitdata_print);
 	REC_INTRO(__ham_splitdata_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
 	ret = memp_fget(mpf, &argp->pgno, 0, &pagep);
 	if (ret != 0) {
@@ -685,16 +702,15 @@ __ham_splitdata_recover(logp, dbtp, lsnp, redo, info)
 			 * would not have to undo anything.  In this case,
 			 * don't bother creating a page.
 			 */
-			*lsnp = argp->prev_lsn;
-			ret = 0;
-			goto out;
+			goto done;
 		} else if ((ret = memp_fget(mpf, &argp->pgno,
 		    DB_MPOOL_CREATE, &pagep)) != 0)
 			goto out;
 	}
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
 	cmp_n = log_compare(lsnp, &LSN(pagep));
@@ -732,10 +748,11 @@ __ham_splitdata_recover(logp, dbtp, lsnp, redo, info)
 	if ((ret = __ham_put_page(file_dbp, pagep, change)) != 0)
 		goto out;
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -755,50 +772,52 @@ __ham_ovfl_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_ovfl_args *argp;
-	DB *mdbp, *file_dbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	db_pgno_t max_pgno, pgno;
 	int cmp_n, cmp_p, getmeta, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_ovfl_print);
 	REC_INTRO(__ham_ovfl_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 
-	cmp_n = log_compare(lsnp, &hashp->hdr->lsn);
-	cmp_p = log_compare(&hashp->hdr->lsn, &argp->metalsn);
+	cmp_n = log_compare(lsnp, &hcp->hdr->lsn);
+	cmp_p = log_compare(&hcp->hdr->lsn, &argp->metalsn);
 
 	if (cmp_p == 0 && redo) {
 		/* Redo the allocation. */
-		hashp->hdr->last_freed = argp->start_pgno;
-		hashp->hdr->spares[argp->ovflpoint] += argp->npages;
-		hashp->hdr->lsn = *lsnp;
-		F_SET(file_dbp, DB_HS_DIRTYMETA);
+		hcp->hdr->last_freed = argp->start_pgno;
+		hcp->hdr->spares[argp->ovflpoint] += argp->npages;
+		hcp->hdr->lsn = *lsnp;
+		F_SET(hcp, H_DIRTY);
 	} else if (cmp_n == 0 && !redo) {
-		hashp->hdr->last_freed = argp->free_pgno;
-		hashp->hdr->spares[argp->ovflpoint] -= argp->npages;
-		hashp->hdr->lsn = argp->metalsn;
-		F_SET(file_dbp, DB_HS_DIRTYMETA);
+		hcp->hdr->last_freed = argp->free_pgno;
+		hcp->hdr->spares[argp->ovflpoint] -= argp->npages;
+		hcp->hdr->lsn = argp->metalsn;
+		F_SET(hcp, H_DIRTY);
 	}
 
 	max_pgno = argp->start_pgno + argp->npages - 1;
 	ret = 0;
 	for (pgno = argp->start_pgno; pgno <= max_pgno; pgno++) {
-		ret = memp_fget(mpf, &pgno, 0, &pagep);
-		if (ret != 0) {
-			if (redo && (ret = memp_fget(mpf, &pgno,
-			    DB_MPOOL_CREATE, &pagep)) != 0)
-				goto out;
-			else if (!redo) {
-				(void)__ham_put_page(file_dbp, pagep, 0);
+		if ((ret = memp_fget(mpf, &pgno, 0, &pagep)) != 0) {
+			if (!redo) {
+				ret = 0;
 				continue;
 			}
+			if ((ret = memp_fget(mpf,
+			    &pgno, DB_MPOOL_CREATE, &pagep)) != 0)
+				goto out;
 		}
 		if (redo && log_compare((const DB_LSN *)lsnp,
 		    (const DB_LSN *)&LSN(pagep)) > 0) {
@@ -816,9 +835,11 @@ __ham_ovfl_recover(logp, dbtp, lsnp, redo, info)
 			goto out;
 	}
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
+
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }
 
@@ -838,19 +859,22 @@ __ham_copypage_recover(logp, dbtp, lsnp, redo, info)
 	void *info;
 {
 	__ham_copypage_args *argp;
-	DB *file_dbp, *mdbp;
+	DB *file_dbp;
+	DBC *dbc;
+	HASH_CURSOR *hcp;
 	DB_MPOOLFILE *mpf;
-	HTAB *hashp;
 	PAGE *pagep;
 	int cmp_n, cmp_p, getmeta, modified, ret;
 
 	getmeta = 0;
-	hashp = NULL;				/* XXX: shut the compiler up. */
+	hcp = NULL;
 	REC_PRINT(__ham_copypage_print);
 	REC_INTRO(__ham_copypage_read);
+	hcp = (HASH_CURSOR *)dbc->internal;
 
-	hashp = (HTAB *)file_dbp->internal;
-	GET_META(file_dbp, hashp);
+	GET_META(file_dbp, (HASH_CURSOR *)dbc->internal, ret);
+	if (ret != 0)
+		goto out;
 	getmeta = 1;
 	modified = 0;
 
@@ -881,7 +905,7 @@ __ham_copypage_recover(logp, dbtp, lsnp, redo, info)
 		modified = 1;
 	} else if (cmp_n == 0 && !redo) {
 		/* Need to undo update described. */
-		P_INIT(pagep, hashp->hdr->pagesize, argp->pgno, PGNO_INVALID,
+		P_INIT(pagep, hcp->hdr->pagesize, argp->pgno, PGNO_INVALID,
 		    argp->next_pgno, 0, P_HASH);
 		LSN(pagep) = argp->pagelsn;
 		modified = 1;
@@ -918,10 +942,8 @@ donext:	ret = memp_fget(mpf, &argp->next_pgno, 0, &pagep);
 		goto out;
 
 	/* Now fix up the next's next page. */
-do_nn:	if (argp->nnext_pgno == PGNO_INVALID) {
-		*lsnp = argp->prev_lsn;
-		goto out;
-	}
+do_nn:	if (argp->nnext_pgno == PGNO_INVALID)
+		goto done;
 
 	ret = memp_fget(mpf, &argp->nnext_pgno, 0, &pagep);
 	if (ret != 0) {
@@ -932,9 +954,7 @@ do_nn:	if (argp->nnext_pgno == PGNO_INVALID) {
 			 * would not have to undo anything.  In this case,
 			 * don't bother creating a page.
 			 */
-			ret = 0;
-			*lsnp = argp->prev_lsn;
-			goto out;
+			goto done;
 		} else if ((ret = memp_fget(mpf, &argp->nnext_pgno,
 		    DB_MPOOL_CREATE, &pagep)) != 0)
 			goto out;
@@ -957,9 +977,10 @@ do_nn:	if (argp->nnext_pgno == PGNO_INVALID) {
 	if ((ret = memp_fput(mpf, pagep, modified ? DB_MPOOL_DIRTY : 0)) != 0)
 		goto out;
 
-	*lsnp = argp->prev_lsn;
+done:	*lsnp = argp->prev_lsn;
+	ret = 0;
 
 out:	if (getmeta)
-		RELEASE_META(file_dbp, hashp);
+		RELEASE_META(file_dbp, hcp);
 	REC_CLOSE;
 }

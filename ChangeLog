@@ -1,5 +1,8 @@
 1999-06-13  Ulrich Drepper  <drepper@cygnus.com>
 
+	* db2/Makefile (distribute): Remove files which do not exist
+	anymore.
+
 	* sysdeps/i386/fpu/bits/mathinline.h: Add __extension__ to signbit
 	definitions to calm down gcc.
 

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_printlog.c	10.12 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)db_printlog.c	10.17 (Sleepycat) 11/1/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,6 +19,7 @@ static const char sccsid[] = "@(#)db_printlog.c	10.12 (Sleepycat) 4/10/98";
 
 #include <errno.h>
 #include <signal.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -37,6 +38,7 @@ static const char sccsid[] = "@(#)db_printlog.c	10.12 (Sleepycat) 4/10/98";
 DB_ENV *db_init __P((char *));
 int	main __P((int, char *[]));
 void	onint __P((int));
+void	siginit __P((void));
 void	usage __P((void));
 
 int	 interrupted;
@@ -53,14 +55,18 @@ main(argc, argv)
 	DB_ENV *dbenv;
 	DBT data;
 	DB_LSN key;
-	int ch, eval;
+	int ch, ret;
 	char *home;
 
+	ret = 0;
 	home = NULL;
-	while ((ch = getopt(argc, argv, "h:")) != EOF)
+	while ((ch = getopt(argc, argv, "h:N")) != EOF)
 		switch (ch) {
 		case 'h':
 			home = optarg;
+			break;
+		case 'N':
+			(void)db_value_set(0, DB_MUTEXLOCKS);
 			break;
 		case '?':
 		default:
@@ -69,27 +75,22 @@ main(argc, argv)
 	argc -= optind;
 	argv += optind;
 
-	if ((home != NULL && argc > 0) || argc > 1)
+	if (argc > 0)
 		usage();
 
-	/* XXX: backward compatibility, first argument is home. */
-	if (argc == 1)
-		home = argv[0];
-
+	/* Initialize the environment. */
+	siginit();
 	dbenv = db_init(home);
 
-	eval = 0;
 	if ((errno = __bam_init_print(dbenv)) != 0 ||
 	    (errno = __db_init_print(dbenv)) != 0 ||
 	    (errno = __ham_init_print(dbenv)) != 0 ||
 	    (errno = __log_init_print(dbenv)) != 0 ||
 	    (errno = __txn_init_print(dbenv)) != 0) {
 		warn("initialization");
-		eval = 1;
 		(void)db_appexit(dbenv);
+		return (1);
 	}
-
-	(void)signal(SIGINT, onint);
 
 	memset(&data, 0, sizeof(data));
 	while (!interrupted) {
@@ -97,26 +98,39 @@ main(argc, argv)
 		    log_get(dbenv->lg_info, &key, &data, DB_NEXT)) != 0) {
 			if (errno == DB_NOTFOUND)
 				break;
-			eval = 1;
 			warn("log_get");
-			break;
+			goto err;
 		}
-		if ((errno =
-		    __db_dispatch(dbenv->lg_info, &data, &key, 0, NULL)) != 0) {
-			eval = 1;
+		if (dbenv->tx_recover != NULL)
+			errno = dbenv->tx_recover(dbenv->lg_info,
+			    &data, &key, 0, NULL);
+		else
+			errno = __db_dispatch(dbenv->lg_info,
+			    &data, &key, 0, NULL);
+
+		fflush(stdout);
+		if (errno != 0) {
 			warn("dispatch");
-			break;
+			goto err;
 		}
 	}
 
-	(void)db_appexit(dbenv);
+	if (0) {
+err:		ret = 1;
+	}
+
+	if (dbenv != NULL && (errno = db_appexit(dbenv)) != 0) {
+		ret = 1;
+		warn(NULL);
+	}
 
 	if (interrupted) {
-		(void)signal(SIGINT, SIG_DFL);
-		(void)raise(SIGINT);
+		(void)signal(interrupted, SIG_DFL);
+		(void)raise(interrupted);
 		/* NOTREACHED */
 	}
-	return (eval);
+
+	return (ret);
 }
 
 /*
@@ -143,21 +157,36 @@ db_init(home)
 }
 
 /*
- * oninit --
+ * siginit --
+ *	Initialize the set of signals for which we want to clean up.
+ *	Generally, we try not to leave the shared regions locked if
+ *	we can.
+ */
+void
+siginit()
+{
+#ifdef SIGHUP
+	(void)signal(SIGHUP, onint);
+#endif
+	(void)signal(SIGINT, onint);
+	(void)signal(SIGTERM, onint);
+}
+
+/*
+ * onint --
  *	Interrupt signal handler.
  */
 void
 onint(signo)
 	int signo;
 {
-	COMPQUIET(signo, 0);
-
-	interrupted = 1;
+	if ((interrupted = signo) == 0)
+		interrupted = SIGINT;
 }
 
 void
 usage()
 {
-	fprintf(stderr, "usage: db_printlog [-h home]\n");
+	fprintf(stderr, "usage: db_printlog [-N] [-h home]\n");
 	exit (1);
 }

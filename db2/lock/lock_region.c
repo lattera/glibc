@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock_region.c	10.15 (Sleepycat) 6/2/98";
+static const char sccsid[] = "@(#)lock_region.c	10.21 (Sleepycat) 10/19/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -29,7 +29,8 @@ static u_int32_t __lock_count_locks __P((DB_LOCKREGION *));
 static u_int32_t __lock_count_objs __P((DB_LOCKREGION *));
 static void	 __lock_dump_locker __P((DB_LOCKTAB *, DB_LOCKOBJ *, FILE *));
 static void	 __lock_dump_object __P((DB_LOCKTAB *, DB_LOCKOBJ *, FILE *));
-static const char *__lock_dump_status __P((db_status_t));
+static const char *
+		 __lock_dump_status __P((db_status_t));
 static void	 __lock_reset_region __P((DB_LOCKTAB *));
 static int	 __lock_tabinit __P((DB_ENV *, DB_LOCKREGION *));
 
@@ -55,10 +56,8 @@ lock_open(path, flags, mode, dbenv, ltp)
 		return (ret);
 
 	/* Create the lock table structure. */
-	if ((lt = (DB_LOCKTAB *)__db_calloc(1, sizeof(DB_LOCKTAB))) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		return (ENOMEM);
-	}
+	if ((ret = __os_calloc(1, sizeof(DB_LOCKTAB), &lt)) != 0)
+		return (ret);
 	lt->dbenv = dbenv;
 
 	/* Grab the values that we need to compute the region size. */
@@ -82,7 +81,7 @@ lock_open(path, flags, mode, dbenv, ltp)
 	if (path == NULL)
 		lt->reginfo.path = NULL;
 	else
-		if ((lt->reginfo.path = (char *)__db_strdup(path)) == NULL)
+		if ((ret = __os_strdup(path, &lt->reginfo.path)) != 0)
 			goto err;
 	lt->reginfo.file = DB_DEFAULT_LOCK_FILE;
 	lt->reginfo.mode = mode;
@@ -147,10 +146,25 @@ err:	if (lt->reginfo.addr != NULL) {
 	}
 
 	if (lt->reginfo.path != NULL)
-		FREES(lt->reginfo.path);
-	FREE(lt, sizeof(*lt));
+		__os_freestr(lt->reginfo.path);
+	__os_free(lt, sizeof(*lt));
 	return (ret);
 }
+
+/*
+ * __lock_panic --
+ *	Panic a lock region.
+ *
+ * PUBLIC: void __lock_panic __P((DB_ENV *));
+ */
+void
+__lock_panic(dbenv)
+	DB_ENV *dbenv;
+{
+	if (dbenv->lk_info != NULL)
+		dbenv->lk_info->region->hdr.panic = 1;
+}
+
 
 /*
  * __lock_tabinit --
@@ -254,12 +268,14 @@ lock_close(lt)
 {
 	int ret;
 
+	LOCK_PANIC_CHECK(lt);
+
 	if ((ret = __db_rdetach(&lt->reginfo)) != 0)
 		return (ret);
 
 	if (lt->reginfo.path != NULL)
-		FREES(lt->reginfo.path);
-	FREE(lt, sizeof(*lt));
+		__os_freestr(lt->reginfo.path);
+	__os_free(lt, sizeof(*lt));
 
 	return (0);
 }
@@ -276,12 +292,12 @@ lock_unlink(path, force, dbenv)
 	memset(&reginfo, 0, sizeof(reginfo));
 	reginfo.dbenv = dbenv;
 	reginfo.appname = DB_APP_NONE;
-	if (path != NULL && (reginfo.path = (char *)__db_strdup(path)) == NULL)
-		return (ENOMEM);
+	if (path != NULL && (ret = __os_strdup(path, &reginfo.path)) != 0)
+		return (ret);
 	reginfo.file = DB_DEFAULT_LOCK_FILE;
 	ret = __db_runlink(&reginfo, force);
 	if (reginfo.path != NULL)
-		FREES(reginfo.path);
+		__os_freestr(reginfo.path);
 	return (ret);
 }
 
@@ -463,13 +479,14 @@ lock_stat(lt, gspp, db_malloc)
 	void *(*db_malloc) __P((size_t));
 {
 	DB_LOCKREGION *rp;
+	int ret;
 
 	*gspp = NULL;
 
-	if ((*gspp = db_malloc == NULL ?
-	    (DB_LOCK_STAT *)__db_malloc(sizeof(**gspp)) :
-	    (DB_LOCK_STAT *)db_malloc(sizeof(**gspp))) == NULL)
-		return (ENOMEM);
+	LOCK_PANIC_CHECK(lt);
+
+	if ((ret = __os_malloc(sizeof(**gspp), db_malloc, gspp)) != 0)
+		return (ret);
 
 	/* Copy out the global statistics. */
 	LOCK_LOCKREGION(lt);
@@ -632,15 +649,15 @@ __lock_dump_region(lt, area, fp)
 		for (lp = SH_TAILQ_FIRST(&lrp->free_locks, __db_lock);
 		    lp != NULL;
 		    lp = SH_TAILQ_NEXT(lp, links, __db_lock))
-			fprintf(fp, "0x%x: %lu\t%lu\t%s\t0x%x\n", (u_int)lp,
+			fprintf(fp, "0x%lx: %lu\t%lu\t%s\t0x%lx\n", (u_long)lp,
 			    (u_long)lp->holder, (u_long)lp->mode,
-			    __lock_dump_status(lp->status), (u_int)lp->obj);
+			    __lock_dump_status(lp->status), (u_long)lp->obj);
 
 		fprintf(fp, "%s\nObject free list\n", DB_LINE);
 		for (op = SH_TAILQ_FIRST(&lrp->free_objs, __db_lockobj);
 		    op != NULL;
 		    op = SH_TAILQ_NEXT(op, links, __db_lockobj))
-			fprintf(fp, "0x%x\n", (u_int)op);
+			fprintf(fp, "0x%lx\n", (u_long)op);
 	}
 
 	if (LF_ISSET(LOCK_DUMP_MEM))

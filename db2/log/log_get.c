@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)log_get.c	10.32 (Sleepycat) 5/6/98";
+static const char sccsid[] = "@(#)log_get.c	10.38 (Sleepycat) 10/3/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -38,26 +38,16 @@ log_get(dblp, alsn, dbt, flags)
 {
 	int ret;
 
+	LOG_PANIC_CHECK(dblp);
+
 	/* Validate arguments. */
-#define	OKFLAGS	(DB_CHECKPOINT | \
-    DB_CURRENT | DB_FIRST | DB_LAST | DB_NEXT | DB_PREV | DB_SET)
-	if ((ret = __db_fchk(dblp->dbenv, "log_get", flags, OKFLAGS)) != 0)
-		return (ret);
-	switch (flags) {
-	case DB_CHECKPOINT:
-	case DB_CURRENT:
-	case DB_FIRST:
-	case DB_LAST:
-	case DB_NEXT:
-	case DB_PREV:
-	case DB_SET:
-		break;
-	default:
+	if (flags != DB_CHECKPOINT && flags != DB_CURRENT &&
+	    flags != DB_FIRST && flags != DB_LAST &&
+	    flags != DB_NEXT && flags != DB_PREV && flags != DB_SET)
 		return (__db_ferr(dblp->dbenv, "log_get", 1));
-	}
 
 	if (F_ISSET(dblp, DB_AM_THREAD)) {
-		if (LF_ISSET(DB_NEXT | DB_PREV | DB_CURRENT))
+		if (flags == DB_NEXT || flags == DB_PREV || flags == DB_CURRENT)
 			return (__db_ferr(dblp->dbenv, "log_get", 1));
 		if (!F_ISSET(dbt, DB_DBT_USERMEM | DB_DBT_MALLOC))
 			return (__db_ferr(dblp->dbenv, "threaded data", 1));
@@ -156,7 +146,7 @@ __log_get(dblp, alsn, dbt, flags, silent)
 			/* If at start-of-file, move to the previous file. */
 			if (nlsn.offset == 0) {
 				if (nlsn.file == 1 ||
-				    __log_valid(dblp, NULL, nlsn.file - 1) != 0)
+				    __log_valid(dblp, nlsn.file - 1, 0) != 0)
 					return (DB_NOTFOUND);
 
 				--nlsn.file;
@@ -183,7 +173,7 @@ retry:
 
 	/* If we've switched files, discard the current fd. */
 	if (dblp->c_lsn.file != nlsn.file && dblp->c_fd != -1) {
-		(void)__db_close(dblp->c_fd);
+		(void)__os_close(dblp->c_fd);
 		dblp->c_fd = -1;
 	}
 
@@ -203,24 +193,22 @@ retry:
 
 	/* Acquire a file descriptor. */
 	if (dblp->c_fd == -1) {
-		if ((ret = __log_name(dblp, nlsn.file, &np)) != 0)
-			goto err1;
-		if ((ret = __db_open(np, DB_RDONLY | DB_SEQUENTIAL,
-		    DB_RDONLY | DB_SEQUENTIAL, 0, &dblp->c_fd)) != 0) {
+		if ((ret = __log_name(dblp, nlsn.file,
+		    &np, &dblp->c_fd, DB_RDONLY | DB_SEQUENTIAL)) != 0) {
 			fail = np;
 			goto err1;
 		}
-		__db_free(np);
+		__os_freestr(np);
 		np = NULL;
 	}
 
 	/* Seek to the header offset and read the header. */
 	if ((ret =
-	    __db_seek(dblp->c_fd, 0, 0, nlsn.offset, 0, SEEK_SET)) != 0) {
+	    __os_seek(dblp->c_fd, 0, 0, nlsn.offset, 0, SEEK_SET)) != 0) {
 		fail = "seek";
 		goto err1;
 	}
-	if ((ret = __db_read(dblp->c_fd, &hdr, sizeof(HDR), &nr)) != 0) {
+	if ((ret = __os_read(dblp->c_fd, &hdr, sizeof(HDR), &nr)) != 0) {
 		fail = "read";
 		goto err1;
 	}
@@ -276,10 +264,8 @@ retry:
 	 * We're calling malloc(3) with a region locked.  This isn't
 	 * a good idea.
 	 */
-	if ((tbuf = (char *)__db_malloc(len)) == NULL) {
-		ret = ENOMEM;
+	if ((ret = __os_malloc(len, NULL, &tbuf)) != 0)
 		goto err1;
-	}
 
 	/*
 	 * Read the record into the buffer.  If read returns a short count,
@@ -287,7 +273,7 @@ retry:
 	 * buffer.  Note, the information may be garbage if we're in recovery,
 	 * so don't read past the end of the buffer's memory.
 	 */
-	if ((ret = __db_read(dblp->c_fd, tbuf, len, &nr)) != 0) {
+	if ((ret = __os_read(dblp->c_fd, tbuf, len, &nr)) != 0) {
 		fail = "read";
 		goto err1;
 	}
@@ -305,7 +291,7 @@ retry:
 	if ((ret = __db_retcopy(dbt, tbuf, len,
 	    &dblp->c_dbt.data, &dblp->c_dbt.ulen, NULL)) != 0)
 		goto err1;
-	__db_free(tbuf);
+	__os_free(tbuf, 0);
 	tbuf = NULL;
 
 cksum:	if (hdr.cksum != __ham_func4(dbt->data, dbt->size)) {
@@ -329,7 +315,7 @@ corrupt:/*
 	ret = EIO;
 	fail = "read";
 
- err1:	if (!silent) {
+err1:	if (!silent) {
 		if (fail == NULL)
 			__db_err(dblp->dbenv, "log_get: %s", strerror(ret));
 		else
@@ -337,8 +323,8 @@ corrupt:/*
 			    "log_get: %s: %s", fail, strerror(ret));
 	}
 err2:	if (np != NULL)
-		__db_free(np);
+		__os_freestr(np);
 	if (tbuf != NULL)
-		__db_free(tbuf);
+		__os_free(tbuf, 0);
 	return (ret);
 }

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_stat.c	10.15 (Sleepycat) 4/27/98";
+static const char sccsid[] = "@(#)os_stat.c	10.18 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,6 +19,7 @@ static const char sccsid[] = "@(#)os_stat.c	10.15 (Sleepycat) 4/27/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
  * __os_exists --
@@ -32,6 +33,9 @@ __os_exists(path, isdirp)
 	int *isdirp;
 {
 	struct stat sb;
+
+	if (__db_jump.j_exists != NULL)
+		return (__db_jump.j_exists(path, isdirp));
 
 	if (stat(path, &sb) != 0)
 		return (errno);
@@ -65,7 +69,8 @@ __os_ioinfo(path, fd, mbytesp, bytesp, iosizep)
 {
 	struct stat sb;
 
-	COMPQUIET(path, NULL);
+	if (__db_jump.j_ioinfo != NULL)
+		return (__db_jump.j_ioinfo(path, fd, mbytesp, bytesp, iosizep));
 
 	if (fstat(fd, &sb) == -1)
 		return (errno);
@@ -80,7 +85,7 @@ __os_ioinfo(path, fd, mbytesp, bytesp, iosizep)
 	 * Return the underlying filesystem blocksize, if available.
 	 *
 	 * XXX
-	 * Check for a 0 size -- HP's MPE architecture has st_blksize,
+	 * Check for a 0 size -- the HP MPE/iX architecture has st_blksize,
 	 * but it's always 0.
 	 */
 #ifdef HAVE_ST_BLKSIZE

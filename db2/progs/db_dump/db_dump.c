@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_dump.c	10.19 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)db_dump.c	10.24 (Sleepycat) 11/22/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -25,13 +25,13 @@ static const char sccsid[] = "@(#)db_dump.c	10.19 (Sleepycat) 5/23/98";
 #include <unistd.h>
 #endif
 
+#undef stat
+
 #include "db_int.h"
 #include "db_page.h"
 #include "btree.h"
 #include "hash.h"
 #include "clib_ext.h"
-
-#undef stat
 
 void	configure __P((char *));
 DB_ENV *db_init __P((char *));
@@ -58,7 +58,7 @@ main(argc, argv)
 
 	home = NULL;
 	checkprint = dflag = 0;
-	while ((ch = getopt(argc, argv, "df:h:p")) != EOF)
+	while ((ch = getopt(argc, argv, "df:h:Np")) != EOF)
 		switch (ch) {
 		case 'd':
 			dflag = 1;
@@ -69,6 +69,9 @@ main(argc, argv)
 			break;
 		case 'h':
 			home = optarg;
+			break;
+		case 'N':
+			(void)db_value_set(0, DB_MUTEXLOCKS);
 			break;
 		case 'p':
 			checkprint = 1;
@@ -83,16 +86,11 @@ main(argc, argv)
 	if (argc != 1)
 		usage();
 
-	if (dflag) {
-		if (home != NULL)
-			errx(1,
-			    "the -d and -h options may not both be specified");
-		if (checkprint)
-			errx(1,
-			    "the -d and -p options may not both be specified");
-	}
+	if (dflag && checkprint)
+		errx(1, "the -d and -p options may not both be specified");
+
 	/* Initialize the environment. */
-	dbenv = dflag ? NULL : db_init(home);
+	dbenv = db_init(home);
 
 	/* Open the DB file. */
 	if ((errno =
@@ -108,7 +106,7 @@ main(argc, argv)
 	}
 
 	/* Get a cursor and step through the database. */
-	if ((errno = dbp->cursor(dbp, NULL, &dbcp)) != 0) {
+	if ((errno = dbp->cursor(dbp, NULL, &dbcp, 0)) != 0) {
 		(void)dbp->close(dbp, 0);
 		err(1, "cursor");
 	}
@@ -145,16 +143,35 @@ db_init(home)
 {
 	DB_ENV *dbenv;
 
-	if ((dbenv = (DB_ENV *)calloc(sizeof(DB_ENV), 1)) == NULL) {
+	if ((dbenv = (DB_ENV *)calloc(1, sizeof(DB_ENV))) == NULL) {
 		errno = ENOMEM;
 		err(1, NULL);
 	}
+
+	/*
+	 * Try and use the shared mpool region so that we get pages that
+	 * haven't been flushed to disk (mostly useful for debugging).
+	 * If that fails, try again, without the DB_INIT_MPOOL flag.
+	 *
+	 * If it works, set the error output options so that future errors
+	 * are correctly reported.
+	 */
+	if ((errno = db_appinit(home,
+	    NULL, dbenv, DB_USE_ENVIRON | DB_INIT_MPOOL)) == 0) {
+		dbenv->db_errfile = stderr;
+		dbenv->db_errpfx = progname;
+		return (dbenv);
+	}
+
+	/* Set the error output options -- this time we want a message. */
+	memset(dbenv, 0, sizeof(*dbenv));
 	dbenv->db_errfile = stderr;
 	dbenv->db_errpfx = progname;
 
-	if ((errno =
-	    db_appinit(home, NULL, dbenv, DB_CREATE | DB_USE_ENVIRON)) != 0)
+	/* Try again, and it's fatal if we fail. */
+	if ((errno = db_appinit(home, NULL, dbenv, DB_USE_ENVIRON)) != 0)
 		err(1, "db_appinit");
+
 	return (dbenv);
 }
 
@@ -167,10 +184,10 @@ pheader(dbp, pflag)
 	DB *dbp;
 	int pflag;
 {
+	DBC *dbc;
 	DB_BTREE_STAT *btsp;
-	HTAB *hashp;
-	HASHHDR *hdr;
-	db_pgno_t pgno;
+	HASH_CURSOR *hcp;
+	int ret;
 
 	printf("format=%s\n", pflag ? "print" : "bytevalue");
 	switch (dbp->type) {
@@ -187,18 +204,25 @@ pheader(dbp, pflag)
 		break;
 	case DB_HASH:
 		printf("type=hash\n");
-		hashp = dbp->internal;
-		pgno = PGNO_METADATA;
-		if (memp_fget(dbp->mpf, &pgno, 0, &hdr) == 0) {
-			if (hdr->ffactor != 0)
-				printf("h_ffactor=%lu\n", (u_long)hdr->ffactor);
-			if (hdr->nelem != 0)
-				printf("h_nelem=%lu\n", (u_long)hdr->nelem);
-			(void)memp_fput(dbp->mpf, hdr, 0);
+		if ((ret = dbp->cursor(dbp, NULL, &dbc, 0)) != 0)
+			break;
+		hcp = (HASH_CURSOR *)dbc->internal;
+		GET_META(dbp, hcp, ret);
+		if (ret == 0) {
+			if (hcp->hdr->ffactor != 0)
+				printf("h_ffactor=%lu\n",
+				    (u_long)hcp->hdr->ffactor);
+			if (hcp->hdr->nelem != 0)
+				printf("h_nelem=%lu\n",
+				    (u_long)hcp->hdr->nelem);
+			RELEASE_META(dbp, hcp);
 		}
+		(void)dbc->c_close(dbc);
 		break;
 	case DB_RECNO:
 		printf("type=recno\n");
+		if ((errno = dbp->stat(dbp, &btsp, NULL, 0)) != 0)
+			err(1, "dbp->stat");
 		if (F_ISSET(dbp, DB_RE_RENUMBER))
 			printf("renumber=1\n");
 		if (F_ISSET(dbp, DB_RE_FIXEDLEN))
@@ -231,6 +255,6 @@ void
 usage()
 {
 	(void)fprintf(stderr,
-	    "usage: db_dump [-dp] [-f file] [-h home] db_file\n");
+	    "usage: db_dump [-dNp] [-f file] [-h home] db_file\n");
 	exit(1);
 }

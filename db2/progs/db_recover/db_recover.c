@@ -11,13 +11,14 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_recover.c	10.19 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)db_recover.c	10.23 (Sleepycat) 10/5/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
 #include <sys/types.h>
 
 #include <errno.h>
+#include <signal.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
@@ -31,6 +32,7 @@ static const char sccsid[] = "@(#)db_recover.c	10.19 (Sleepycat) 4/10/98";
 
 DB_ENV	*db_init __P((char *, u_int32_t, int));
 int	 main __P((int, char *[]));
+void	 nosig __P((void));
 void	 usage __P((void));
 
 const char
@@ -72,10 +74,15 @@ main(argc, argv)
 	if (argc != 0)
 		usage();
 
+	/*
+	 * Ignore signals -- we don't want to be interrupted because we're
+	 * spending all of our time in the DB library.
+	 */
+	nosig();
 	dbenv = db_init(home, flags, verbose);
 	if (verbose) {
 		__db_err(dbenv, "Recovery complete at %.24s", ctime(&now));
-		__db_err(dbenv, "%s %lu %s [%lu][%lu]",
+		__db_err(dbenv, "%s %lx %s [%lu][%lu]",
 		    "Maximum transaction id",
 		    (u_long)dbenv->tx_info->region->last_txnid,
 		    "Recovery checkpoint",
@@ -116,6 +123,20 @@ db_init(home, flags, verbose)
 		err(1, "appinit failed");
 
 	return (dbenv);
+}
+
+/*
+ * nosig --
+ *	We don't want to be interrupted.
+ */
+void
+nosig()
+{
+#ifdef SIGHUP
+	(void)signal(SIGHUP, SIG_IGN);
+#endif
+	(void)signal(SIGINT, SIG_IGN);
+	(void)signal(SIGTERM, SIG_IGN);
 }
 
 void

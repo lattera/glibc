@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_archive.c	10.17 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)db_archive.c	10.20 (Sleepycat) 10/3/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -33,12 +33,10 @@ static const char sccsid[] = "@(#)db_archive.c	10.17 (Sleepycat) 4/10/98";
 #include "common_ext.h"
 
 DB_ENV	*db_init __P((char *, int));
-void	 onint __P((int));
 int	 main __P((int, char *[]));
-void	 siginit __P((void));
+void	 nosig __P((void));
 void	 usage __P((void));
 
-int	 interrupted;
 const char
 	*progname = "db_archive";			/* Program name. */
 
@@ -83,13 +81,18 @@ main(argc, argv)
 	if (argc != 0)
 		usage();
 
-	/* Initialize the environment. */
+	/*
+	 * Ignore signals -- we don't want to be interrupted because we're
+	 * spending all of our time in the DB library.
+	 */
+	nosig();
 	dbenv = db_init(home, verbose);
 
 	/* Get the list of names. */
 	if ((errno = log_archive(dbenv->lg_info, &list, flags, NULL)) != 0) {
+		warn(NULL);
 		(void)db_appexit(dbenv);
-		err(1, "log_archive");
+		return (1);
 	}
 
 	/* Print the names. */
@@ -97,7 +100,12 @@ main(argc, argv)
 		for (; *list != NULL; ++list)
 			printf("%s\n", *list);
 
-	return (db_appexit(dbenv) ? 1 : 0);
+	if ((errno = db_appexit(dbenv)) != 0) {
+		warn(NULL);
+		return (1);
+	}
+
+	return (0);
 }
 
 /*
@@ -123,40 +131,21 @@ db_init(home, verbose)
 	    DB_CREATE | DB_INIT_LOG | DB_INIT_TXN | DB_USE_ENVIRON)) != 0)
 		err(1, "db_appinit");
 
-	siginit();
-
 	return (dbenv);
 }
 
 /*
- * siginit --
- *	Initialize the set of signals for which we want to clean up.
- *	Generally, we try not to leave the shared regions locked if
- *	we can.
+ * nosig --
+ *	We don't want to be interrupted.
  */
 void
-siginit()
+nosig()
 {
 #ifdef SIGHUP
-	(void)signal(SIGHUP, onint);
+	(void)signal(SIGHUP, SIG_IGN);
 #endif
-	(void)signal(SIGINT, onint);
-#ifdef SIGKILL
-	(void)signal(SIGKILL, onint);
-#endif
-	(void)signal(SIGTERM, onint);
-}
-
-/*
- * oninit --
- *	Interrupt signal handler.
- */
-void
-onint(signo)
-	int signo;
-{
-	if ((interrupted = signo) == 0)
-		interrupted = SIGINT;
+	(void)signal(SIGINT, SIG_IGN);
+	(void)signal(SIGTERM, SIG_IGN);
 }
 
 void

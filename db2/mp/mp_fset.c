@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_fset.c	10.15 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)mp_fset.c	10.16 (Sleepycat) 9/27/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -39,6 +39,8 @@ memp_fset(dbmfp, pgaddr, flags)
 
 	dbmp = dbmfp->dbmp;
 	mp = dbmp->mp;
+
+	MP_PANIC_CHECK(dbmp);
 
 	/* Validate arguments. */
 	if (flags == 0)

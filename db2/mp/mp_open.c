@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_open.c	10.23 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)mp_open.c	10.27 (Sleepycat) 10/1/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -52,8 +52,8 @@ memp_open(path, flags, mode, dbenv, retp)
 	cachesize = dbenv == NULL ? 0 : dbenv->mp_size;
 
 	/* Create and initialize the DB_MPOOL structure. */
-	if ((dbmp = (DB_MPOOL *)__db_calloc(1, sizeof(DB_MPOOL))) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_calloc(1, sizeof(DB_MPOOL), &dbmp)) != 0)
+		return (ret);
 	LIST_INIT(&dbmp->dbregq);
 	TAILQ_INIT(&dbmp->dbmfq);
 
@@ -83,7 +83,7 @@ memp_open(path, flags, mode, dbenv, retp)
 	if (LF_ISSET(DB_THREAD)) {
 		F_SET(dbmp, MP_LOCKHANDLE | MP_LOCKREGION);
 		LOCKREGION(dbmp);
-		ret = __memp_ralloc(dbmp,
+		ret = __memp_alloc(dbmp,
 		    sizeof(db_mutex_t), NULL, &dbmp->mutexp);
 		UNLOCKREGION(dbmp);
 		if (ret != 0) {
@@ -97,7 +97,7 @@ memp_open(path, flags, mode, dbenv, retp)
 	return (0);
 
 err:	if (dbmp != NULL)
-		FREE(dbmp, sizeof(DB_MPOOL));
+		__os_free(dbmp, sizeof(DB_MPOOL));
 	return (ret);
 }
 
@@ -115,10 +115,12 @@ memp_close(dbmp)
 
 	ret = 0;
 
+	MP_PANIC_CHECK(dbmp);
+
 	/* Discard DB_MPREGs. */
 	while ((mpreg = LIST_FIRST(&dbmp->dbregq)) != NULL) {
 		LIST_REMOVE(mpreg, q);
-		FREE(mpreg, sizeof(DB_MPREG));
+		__os_free(mpreg, sizeof(DB_MPREG));
 	}
 
 	/* Discard DB_MPOOLFILEs. */
@@ -138,10 +140,24 @@ memp_close(dbmp)
 		ret = t_ret;
 
 	if (dbmp->reginfo.path != NULL)
-		FREES(dbmp->reginfo.path);
-	FREE(dbmp, sizeof(DB_MPOOL));
+		__os_freestr(dbmp->reginfo.path);
+	__os_free(dbmp, sizeof(DB_MPOOL));
 
 	return (ret);
+}
+
+/*
+ * __memp_panic --
+ *	Panic a memory pool.
+ *
+ * PUBLIC: void __memp_panic __P((DB_ENV *));
+ */
+void
+__memp_panic(dbenv)
+	DB_ENV *dbenv;
+{
+	if (dbenv->mp_info != NULL)
+		dbenv->mp_info->mp->rlayout.panic = 1;
 }
 
 /*
@@ -160,12 +176,12 @@ memp_unlink(path, force, dbenv)
 	memset(&reginfo, 0, sizeof(reginfo));
 	reginfo.dbenv = dbenv;
 	reginfo.appname = DB_APP_NONE;
-	if (path != NULL && (reginfo.path = __db_strdup(path)) == NULL)
-		return (ENOMEM);
+	if (path != NULL && (ret = __os_strdup(path, &reginfo.path)) != 0)
+		return (ret);
 	reginfo.file = DB_DEFAULT_MPOOL_FILE;
 	ret = __db_runlink(&reginfo, force);
 	if (reginfo.path != NULL)
-		FREES(reginfo.path);
+		__os_freestr(reginfo.path);
 	return (ret);
 }
 
@@ -181,9 +197,12 @@ memp_register(dbmp, ftype, pgin, pgout)
 	int (*pgout) __P((db_pgno_t, void *, DBT *));
 {
 	DB_MPREG *mpr;
+	int ret;
 
-	if ((mpr = (DB_MPREG *)__db_malloc(sizeof(DB_MPREG))) == NULL)
-		return (ENOMEM);
+	MP_PANIC_CHECK(dbmp);
+
+	if ((ret = __os_malloc(sizeof(DB_MPREG), NULL, &mpr)) != 0)
+		return (ret);
 
 	mpr->ftype = ftype;
 	mpr->pgin = pgin;

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)bt_stat.c	10.17 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)bt_stat.c	10.27 (Sleepycat) 11/25/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -22,8 +22,6 @@ static const char sccsid[] = "@(#)bt_stat.c	10.17 (Sleepycat) 4/26/98";
 #include "db_page.h"
 #include "btree.h"
 
-static void __bam_add_rstat __P((DB_BTREE_LSTAT *, DB_BTREE_STAT *));
-
 /*
  * __bam_stat --
  *	Gather/print the btree statistics
@@ -31,62 +29,62 @@ static void __bam_add_rstat __P((DB_BTREE_LSTAT *, DB_BTREE_STAT *));
  * PUBLIC: int __bam_stat __P((DB *, void *, void *(*)(size_t), u_int32_t));
  */
 int
-__bam_stat(argdbp, spp, db_malloc, flags)
-	DB *argdbp;
+__bam_stat(dbp, spp, db_malloc, flags)
+	DB *dbp;
 	void *spp;
 	void *(*db_malloc) __P((size_t));
 	u_int32_t flags;
 {
 	BTMETA *meta;
 	BTREE *t;
-	DB *dbp;
+	DBC *dbc;
 	DB_BTREE_STAT *sp;
 	DB_LOCK lock;
 	PAGE *h;
 	db_pgno_t lastpgno, pgno;
-	int ret;
+	int ret, t_ret;
 
-	DEBUG_LWRITE(argdbp, NULL, "bam_stat", NULL, NULL, flags);
+	DB_PANIC_CHECK(dbp);
 
 	/* Check for invalid flags. */
-	if ((ret = __db_statchk(argdbp, flags)) != 0)
+	if ((ret = __db_statchk(dbp, flags)) != 0)
 		return (ret);
+
+	if ((ret = dbp->cursor(dbp, NULL, &dbc, 0)) != 0)
+		return (ret);
+
+	DEBUG_LWRITE(dbc, NULL, "bam_stat", NULL, NULL, flags);
+
+	t = dbp->internal;
 
 	if (spp == NULL)
 		return (0);
 
-	GETHANDLE(argdbp, NULL, &dbp, ret);
-	t = dbp->internal;
-
 	/* Allocate and clear the structure. */
-	if ((sp = db_malloc == NULL ?
-	    (DB_BTREE_STAT *)__db_malloc(sizeof(*sp)) :
-	    (DB_BTREE_STAT *)db_malloc(sizeof(*sp))) == NULL) {
-		ret = ENOMEM;
+	if ((ret = __os_malloc(sizeof(*sp), db_malloc, &sp)) != 0)
 		goto err;
-	}
 	memset(sp, 0, sizeof(*sp));
 
 	/* If the app just wants the record count, make it fast. */
-	if (LF_ISSET(DB_RECORDCOUNT)) {
+	if (flags == DB_RECORDCOUNT) {
 		pgno = PGNO_ROOT;
-		if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_READ, &lock)) != 0)
+		if ((ret = __bam_lget(dbc, 0, pgno, DB_LOCK_READ, &lock)) != 0)
 			goto err;
-		if ((ret = __bam_pget(dbp, (PAGE **)&h, &pgno, 0)) != 0)
+		if ((ret = memp_fget(dbp->mpf, &pgno, 0, (PAGE **)&h)) != 0)
 			goto err;
 
 		sp->bt_nrecs = RE_NREC(h);
 
 		(void)memp_fput(dbp->mpf, h, 0);
-		(void)__BT_LPUT(dbp, lock);
+		(void)__BT_LPUT(dbc, lock);
 		goto done;
 	}
 
 	/* Get the meta-data page. */
 	pgno = PGNO_METADATA;
-	if ((ret = __bam_lget(dbp, 0, pgno, DB_LOCK_READ, &lock)) != 0)
+	if ((ret = __bam_lget(dbc, 0, pgno, DB_LOCK_READ, &lock)) != 0)
 		goto err;
-	if ((ret = __bam_pget(dbp, (PAGE **)&meta, &pgno, 0)) != 0)
+	if ((ret = memp_fget(dbp->mpf, &pgno, 0, (PAGE **)&meta)) != 0)
 		goto err;
 
 	/* Translate the metadata flags. */
@@ -110,24 +108,13 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 	/* Get the page size from the DB. */
 	sp->bt_pagesize = dbp->pgsize;
 
-	/* Initialize counters with the meta-data page information. */
-	__bam_add_rstat(&meta->stat, sp);
-
-	/*
-	 * Add in the local information from this handle.
-	 *
-	 * !!!
-	 * This is a bit odd, but it gets us closer to the truth.
-	 */
-	__bam_add_rstat(&t->lstat, sp);
-
 	/* Walk the free list, counting pages. */
 	for (sp->bt_free = 0, pgno = meta->free; pgno != PGNO_INVALID;) {
 		++sp->bt_free;
 
-		if ((ret = __bam_pget(dbp, &h, &pgno, 0)) != 0) {
+		if ((ret = memp_fget(dbp->mpf, &pgno, 0, &h)) != 0) {
 			(void)memp_fput(dbp->mpf, meta, 0);
-			(void)__BT_TLPUT(dbp, lock);
+			(void)__BT_TLPUT(dbc, lock);
 			goto err;
 		}
 		pgno = h->next_pgno;
@@ -136,7 +123,7 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 
 	/* Discard the meta-data page. */
 	(void)memp_fput(dbp->mpf, meta, 0);
-	(void)__BT_TLPUT(dbp, lock);
+	(void)__BT_TLPUT(dbc, lock);
 
 	/* Determine the last page of the database. */
 	if ((ret = memp_fget(dbp->mpf, &lastpgno, DB_MPOOL_LAST, &h)) != 0)
@@ -145,10 +132,10 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 
 	/* Get the root page. */
 	pgno = PGNO_ROOT;
-	if ((ret = __bam_lget(dbp, 0, PGNO_ROOT, DB_LOCK_READ, &lock)) != 0)
+	if ((ret = __bam_lget(dbc, 0, PGNO_ROOT, DB_LOCK_READ, &lock)) != 0)
 		goto err;
-	if ((ret = __bam_pget(dbp, &h, &pgno, 0)) != 0) {
-		(void)__BT_LPUT(dbp, lock);
+	if ((ret = memp_fget(dbp->mpf, &pgno, 0, &h)) != 0) {
+		(void)__BT_LPUT(dbc, lock);
 		goto err;
 	}
 
@@ -185,19 +172,19 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 			break;
 		default:
 			(void)memp_fput(dbp->mpf, h, 0);
-			(void)__BT_LPUT(dbp, lock);
+			(void)__BT_LPUT(dbc, lock);
 			return (__db_pgfmt(dbp, pgno));
 		}
 
 		(void)memp_fput(dbp->mpf, h, 0);
-		(void)__BT_LPUT(dbp, lock);
+		(void)__BT_LPUT(dbc, lock);
 
 		if (++pgno > lastpgno)
 			break;
-		if (__bam_lget(dbp, 0, pgno, DB_LOCK_READ, &lock))
+		if (__bam_lget(dbc, 0, pgno, DB_LOCK_READ, &lock))
 			break;
 		if (memp_fget(dbp->mpf, &pgno, 0, &h) != 0) {
-			(void)__BT_LPUT(dbp, lock);
+			(void)__BT_LPUT(dbc, lock);
 			break;
 		}
 	}
@@ -205,50 +192,7 @@ __bam_stat(argdbp, spp, db_malloc, flags)
 done:	*(DB_BTREE_STAT **)spp = sp;
 	ret = 0;
 
-err:	PUTHANDLE(dbp);
+err:	if ((t_ret = dbc->c_close(dbc)) != 0 && ret == 0)
+		ret = t_ret;
 	return (ret);
-}
-
-/*
- * __bam_add_mstat --
- *	Add the local statistics to the meta-data page statistics.
- *
- * PUBLIC: void __bam_add_mstat __P((DB_BTREE_LSTAT *, DB_BTREE_LSTAT *));
- */
-void
-__bam_add_mstat(from, to)
-	DB_BTREE_LSTAT *from;
-	DB_BTREE_LSTAT *to;
-{
-	to->bt_freed += from->bt_freed;
-	to->bt_pfxsaved += from->bt_pfxsaved;
-	to->bt_split += from->bt_split;
-	to->bt_rootsplit += from->bt_rootsplit;
-	to->bt_fastsplit += from->bt_fastsplit;
-	to->bt_added += from->bt_added;
-	to->bt_deleted += from->bt_deleted;
-	to->bt_get += from->bt_get;
-	to->bt_cache_hit += from->bt_cache_hit;
-	to->bt_cache_miss += from->bt_cache_miss;
-}
-
-/*
- * __bam_add_rstat --
- *	Add the local statistics to the returned statistics.
- */
-static void
-__bam_add_rstat(from, to)
-	DB_BTREE_LSTAT *from;
-	DB_BTREE_STAT *to;
-{
-	to->bt_freed += from->bt_freed;
-	to->bt_pfxsaved += from->bt_pfxsaved;
-	to->bt_split += from->bt_split;
-	to->bt_rootsplit += from->bt_rootsplit;
-	to->bt_fastsplit += from->bt_fastsplit;
-	to->bt_added += from->bt_added;
-	to->bt_deleted += from->bt_deleted;
-	to->bt_get += from->bt_get;
-	to->bt_cache_hit += from->bt_cache_hit;
-	to->bt_cache_miss += from->bt_cache_miss;
 }

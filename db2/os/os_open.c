@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_open.c	10.26 (Sleepycat) 5/4/98";
+static const char sccsid[] = "@(#)os_open.c	10.33 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -16,10 +16,12 @@ static const char sccsid[] = "@(#)os_open.c	10.26 (Sleepycat) 5/4/98";
 
 #include <errno.h>
 #include <fcntl.h>
+#include <signal.h>
 #include <unistd.h>
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
  * __db_open --
@@ -33,7 +35,10 @@ __db_open(name, arg_flags, ok_flags, mode, fdp)
 	u_int32_t arg_flags, ok_flags;
 	int mode, *fdp;
 {
-	int fd, flags;
+#if !defined(_WIN32) && defined(HAVE_SIGFILLSET)
+	sigset_t set, oset;
+#endif
+	int flags, ret;
 
 	if (arg_flags & ~ok_flags)
 		return (EINVAL);
@@ -71,41 +76,77 @@ __db_open(name, arg_flags, ok_flags, mode, fdp)
 	if (arg_flags & DB_TRUNCATE)
 		flags |= O_TRUNC;
 
-	/* Open the file. */
-	if ((fd = __os_open(name, flags, mode)) == -1)
-		return (errno);
-
-#ifndef _WIN32
-	/* Delete any temporary file; done for Win32 by _O_TEMPORARY. */
-	if (arg_flags & DB_TEMPORARY)
-		(void)__os_unlink(name);
+#if !defined(_WIN32) && defined(HAVE_SIGFILLSET)
+	/*
+	 * We block every signal we can get our hands on so that the temporary
+	 * file isn't left around if we're interrupted at the wrong time.  Of
+	 * course, if we drop core in-between the calls we'll hang forever, but
+	 * that's probably okay.  ;-)
+	 */
+	if (arg_flags & DB_TEMPORARY) {
+		(void)sigfillset(&set);
+		(void)sigprocmask(SIG_BLOCK, &set, &oset);
+	}
 #endif
 
-#if !defined(_WIN32) && !defined(WIN16)
-	/*
-	 * Deny access to any child process; done for Win32 by O_NOINHERIT,
-	 * MacOS has neither child processes nor fd inheritance.
-	 */
-	if (fcntl(fd, F_SETFD, 1) == -1) {
-		int ret = errno;
+	/* Open the file. */
+	if ((ret = __os_open(name, flags, mode, fdp)) != 0)
+		return (ret);
 
-		(void)__os_close(fd);
+#if !defined(_WIN32)
+	/* Delete any temporary file; done for Win32 by _O_TEMPORARY. */
+	if (arg_flags & DB_TEMPORARY) {
+		(void)__os_unlink(name);
+#if defined(HAVE_SIGFILLSET)
+		(void)sigprocmask(SIG_SETMASK, &oset, NULL);
+#endif
+	}
+#endif
+
+#if !defined(_WIN32) && !defined(WIN16) && !defined(VMS)
+	/*
+	 * Deny access to any child process.
+	 *	VMS: does not have fd inheritance.
+	 *	Win32: done by O_NOINHERIT.
+	 */
+	if (fcntl(*fdp, F_SETFD, 1) == -1) {
+		ret = errno;
+
+		(void)__os_close(*fdp);
 		return (ret);
 	}
 #endif
-	*fdp = fd;
 	return (0);
 }
 
 /*
- * __db_close --
- *	Close a file descriptor.
+ * __os_open --
+ *	Open a file.
  *
- * PUBLIC: int __db_close __P((int));
+ * PUBLIC: int __os_open __P((const char *, int, int, int *));
  */
 int
-__db_close(fd)
+__os_open(name, flags, mode, fdp)
+	const char *name;
+	int flags, mode, *fdp;
+{
+	*fdp = __db_jump.j_open != NULL ?
+	    __db_jump.j_open(name, flags, mode) : open(name, flags, mode);
+	return (*fdp == -1 ? errno : 0);
+}
+
+/*
+ * __os_close --
+ *	Close a file descriptor.
+ *
+ * PUBLIC: int __os_close __P((int));
+ */
+int
+__os_close(fd)
 	int fd;
 {
-	return (__os_close(fd) ? errno : 0);
+	int ret;
+
+	ret = __db_jump.j_close != NULL ? __db_jump.j_close(fd) : close(fd);
+	return (ret == 0 ? 0 : errno);
 }

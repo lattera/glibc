@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_salloc.c	10.13 (Sleepycat) 5/10/98";
+static const char sccsid[] = "@(#)db_salloc.c	10.14 (Sleepycat) 11/16/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -170,7 +170,7 @@ __db_shalloc_free(regionp, ptr)
 
 	/* Trash the returned memory. */
 #ifdef DIAGNOSTIC
-	memset(ptr, 0xff, free_size);
+	memset(ptr, 0xdb, free_size);
 #endif
 
 	/*

@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_seek.c	10.9 (Sleepycat) 4/19/98";
+static const char sccsid[] = "@(#)os_seek.c	10.11 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,6 +19,7 @@ static const char sccsid[] = "@(#)os_seek.c	10.9 (Sleepycat) 4/19/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 
 /*
  * __os_seek --
@@ -35,10 +36,17 @@ __os_seek(fd, pgsize, pageno, relative, isrewind, whence)
 	int isrewind, whence;
 {
 	off_t offset;
+	int ret;
 
-	offset = (off_t)pgsize * pageno + relative;
-	if (isrewind)
-		offset = -offset;
+	if (__db_jump.j_seek != NULL)
+		ret = __db_jump.j_seek(fd,
+		    pgsize, pageno, relative, isrewind, whence);
+	else {
+		offset = (off_t)pgsize * pageno + relative;
+		if (isrewind)
+			offset = -offset;
 
-	return (lseek(fd, offset, whence) == -1 ? errno : 0);
+		ret = lseek(fd, offset, whence);
+	}
+	return (ret == -1 ? errno : 0);
 }

@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_bh.c	10.38 (Sleepycat) 5/20/98";
+static const char sccsid[] = "@(#)mp_bh.c	10.45 (Sleepycat) 11/25/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -42,11 +42,13 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 {
 	DB_MPOOLFILE *dbmfp;
 	DB_MPREG *mpreg;
+	int incremented, ret;
 
 	if (restartp != NULL)
 		*restartp = 0;
 	if (wrotep != NULL)
 		*wrotep = 0;
+	incremented = 0;
 
 	/*
 	 * Walk the process' DB_MPOOLFILE list and find a file descriptor for
@@ -63,6 +65,13 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 				UNLOCKHANDLE(dbmp, dbmp->mutexp);
 				return (0);
 			}
+
+			/*
+			 * Increment the reference count -- see the comment in
+			 * memp_fclose().
+			 */
+			++dbmfp->ref;
+			incremented = 1;
 			break;
 		}
 	UNLOCKHANDLE(dbmp, dbmp->mutexp);
@@ -117,7 +126,15 @@ __memp_bhwrite(dbmp, mfp, bhp, restartp, wrotep)
 	    0, 0, mfp->stat.st_pagesize, 0, NULL, &dbmfp) != 0)
 		return (0);
 
-found:	return (__memp_pgwrite(dbmfp, bhp, restartp, wrotep));
+found:	ret = __memp_pgwrite(dbmfp, bhp, restartp, wrotep);
+
+	if (incremented) {
+		LOCKHANDLE(dbmp, dbmp->mutexp);
+		--dbmfp->ref;
+		UNLOCKHANDLE(dbmp, dbmp->mutexp);
+	}
+
+	return (ret);
 }
 
 /*
@@ -132,11 +149,12 @@ __memp_pgread(dbmfp, bhp, can_create)
 	BH *bhp;
 	int can_create;
 {
+	DB_IO db_io;
 	DB_MPOOL *dbmp;
 	MPOOLFILE *mfp;
-	size_t pagesize;
+	size_t len, pagesize;
 	ssize_t nr;
-	int ret;
+	int created, ret;
 
 	dbmp = dbmfp->dbmp;
 	mfp = dbmfp->mfp;
@@ -147,70 +165,63 @@ __memp_pgread(dbmfp, bhp, can_create)
 	UNLOCKREGION(dbmp);
 
 	/*
-	 * Temporary files may not yet have been created.
-	 *
-	 * Seek to the page location.
+	 * Temporary files may not yet have been created.  We don't create
+	 * them now, we create them when the pages have to be flushed.
 	 */
-	ret = 0;
-	LOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (dbmfp->fd == -1 || (ret =
-	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, 0, SEEK_SET)) != 0) {
-		if (!can_create) {
-			if (dbmfp->fd == -1)
-				ret = EINVAL;
-			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
+	nr = 0;
+	if (dbmfp->fd == -1)
+		ret = 0;
+	else {
+		/*
+		 * Ignore read errors if we have permission to create the page.
+		 * Assume that the page doesn't exist, and that we'll create it
+		 * when we write it out.
+		 */
+		db_io.fd_io = dbmfp->fd;
+		db_io.fd_lock = dbmp->reginfo.fd;
+		db_io.mutexp =
+		    F_ISSET(dbmp, MP_LOCKHANDLE) ? dbmfp->mutexp : NULL;
+		db_io.pagesize = db_io.bytes = pagesize;
+		db_io.pgno = bhp->pgno;
+		db_io.buf = bhp->buf;
+
+		ret = __os_io(&db_io, DB_IO_READ, &nr);
+	}
+
+	created = 0;
+	if (nr < (ssize_t)pagesize) {
+		if (can_create)
+			created = 1;
+		else {
+			/* If we had a short read, ret may be 0. */
+			if (ret == 0)
+				ret = EIO;
 			__db_err(dbmp->dbenv,
 			    "%s: page %lu doesn't exist, create flag not set",
 			    __memp_fn(dbmfp), (u_long)bhp->pgno);
 			goto err;
 		}
-		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-
-		/* Clear the created page. */
-		if (mfp->clear_len == 0)
-			memset(bhp->buf, 0, pagesize);
-		else {
-			memset(bhp->buf, 0, mfp->clear_len);
-#ifdef DIAGNOSTIC
-			memset(bhp->buf + mfp->clear_len,
-			    0xff, pagesize - mfp->clear_len);
-#endif
-		}
-
-		goto pgin;
 	}
 
 	/*
-	 * Read the page; short reads are treated like creates, although
-	 * any valid data is preserved.
+	 * Clear any bytes we didn't read that need to be cleared.  If we're
+	 * running in diagnostic mode, smash any bytes on the page that are
+	 * unknown quantities for the caller.
 	 */
-	ret = __db_read(dbmfp->fd, bhp->buf, pagesize, &nr);
-	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (ret != 0)
-		goto err;
-
-	if (nr == (ssize_t)pagesize)
-		can_create = 0;
-	else {
-		if (!can_create) {
-			ret = EINVAL;
-			goto err;
-		}
-
-		/*
-		 * If we didn't fail until we tried the read, don't clear the
-		 * whole page, it wouldn't be insane for a filesystem to just
-		 * always behave that way.  Else, clear any uninitialized data.
-		 */
-		if (nr == 0)
-			memset(bhp->buf, 0,
-			    mfp->clear_len == 0 ? pagesize : mfp->clear_len);
-		else
-			memset(bhp->buf + nr, 0, pagesize - nr);
+	if (nr != (ssize_t)pagesize) {
+		len = mfp->clear_len == 0 ? pagesize : mfp->clear_len;
+		if (nr < (ssize_t)len)
+			memset(bhp->buf + nr, 0, len - nr);
+#ifdef DIAGNOSTIC
+		if (nr > (ssize_t)len)
+			len = nr;
+		if (len < pagesize)
+			memset(bhp->buf + len, 0xdb, pagesize - len);
+#endif
 	}
 
 	/* Call any pgin function. */
-pgin:	ret = mfp->ftype == 0 ? 0 : __memp_pg(dbmfp, bhp, 1);
+	ret = mfp->ftype == 0 ? 0 : __memp_pg(dbmfp, bhp, 1);
 
 	/* Unlock the buffer and reacquire the region lock. */
 err:	UNLOCKBUFFER(dbmp, bhp);
@@ -225,7 +236,7 @@ err:	UNLOCKBUFFER(dbmp, bhp);
 		F_CLR(bhp, BH_TRASH);
 
 		/* Update the statistics. */
-		if (can_create) {
+		if (created) {
 			++dbmp->mp->stat.st_page_create;
 			++mfp->stat.st_page_create;
 		} else {
@@ -250,12 +261,12 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	int *restartp, *wrotep;
 {
 	DB_ENV *dbenv;
+	DB_IO db_io;
 	DB_LOG *lg_info;
 	DB_LSN lsn;
 	DB_MPOOL *dbmp;
 	MPOOL *mp;
 	MPOOLFILE *mfp;
-	size_t pagesize;
 	ssize_t nw;
 	int callpgin, ret, syncfail;
 	const char *fail;
@@ -270,7 +281,6 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	if (wrotep != NULL)
 		*wrotep = 0;
 	callpgin = 0;
-	pagesize = mfp->stat.st_pagesize;
 
 	/*
 	 * Check the dirty bit -- this buffer may have been written since we
@@ -326,34 +336,32 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	}
 
 	/* Temporary files may not yet have been created. */
-	LOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (dbmfp->fd == -1 &&
-	    ((ret = __db_appname(dbenv, DB_APP_TMP, NULL, NULL,
-	    DB_CREATE | DB_EXCL | DB_TEMPORARY, &dbmfp->fd, NULL)) != 0 ||
-	    dbmfp->fd == -1)) {
+	if (dbmfp->fd == -1) {
+		LOCKHANDLE(dbmp, dbmfp->mutexp);
+		if (dbmfp->fd == -1 && ((ret = __db_appname(dbenv,
+		    DB_APP_TMP, NULL, NULL, DB_CREATE | DB_EXCL | DB_TEMPORARY,
+		    &dbmfp->fd, NULL)) != 0 || dbmfp->fd == -1)) {
+			UNLOCKHANDLE(dbmp, dbmfp->mutexp);
+			__db_err(dbenv,
+			    "unable to create temporary backing file");
+			goto err;
+		}
 		UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-		__db_err(dbenv, "unable to create temporary backing file");
-		goto err;
 	}
 
-	/*
-	 * Write the page out.
-	 *
-	 * XXX
-	 * Shut the compiler up; it doesn't understand the correlation between
-	 * the failing clauses to __db_lseek and __db_write and this ret != 0.
-	 */
-	COMPQUIET(fail, NULL);
-	if ((ret =
-	    __db_seek(dbmfp->fd, pagesize, bhp->pgno, 0, 0, SEEK_SET)) != 0)
-		fail = "seek";
-	else if ((ret = __db_write(dbmfp->fd, bhp->buf, pagesize, &nw)) != 0)
+	/* Write the page. */
+	db_io.fd_io = dbmfp->fd;
+	db_io.fd_lock = dbmp->reginfo.fd;
+	db_io.mutexp = F_ISSET(dbmp, MP_LOCKHANDLE) ? dbmfp->mutexp : NULL;
+	db_io.pagesize = db_io.bytes = mfp->stat.st_pagesize;
+	db_io.pgno = bhp->pgno;
+	db_io.buf = bhp->buf;
+	if ((ret = __os_io(&db_io, DB_IO_WRITE, &nw)) != 0) {
+		__db_panic(dbenv, ret);
 		fail = "write";
-	UNLOCKHANDLE(dbmp, dbmfp->mutexp);
-	if (ret != 0)
 		goto syserr;
-
-	if (nw != (ssize_t)pagesize) {
+	}
+	if (nw != (ssize_t)mfp->stat.st_pagesize) {
 		ret = EIO;
 		fail = "write";
 		goto syserr;
@@ -394,7 +402,7 @@ __memp_pgwrite(dbmfp, bhp, restartp, wrotep)
 	if (F_ISSET(bhp, BH_WRITE)) {
 		if (mfp->lsn_cnt == 1) {
 			UNLOCKREGION(dbmp);
-			syncfail = __db_fsync(dbmfp->fd) != 0;
+			syncfail = __os_fsync(dbmfp->fd) != 0;
 			LOCKREGION(dbmp);
 			if (syncfail)
 				F_SET(mp, MP_LSN_RETRY);
@@ -574,11 +582,11 @@ __memp_upgrade(dbmp, dbmfp, mfp)
 		ret = 1;
 	} else {
 		/* Swap the descriptors and set the upgrade flag. */
-		(void)__db_close(dbmfp->fd);
+		(void)__os_close(dbmfp->fd);
 		dbmfp->fd = fd;
 		F_SET(dbmfp, MP_UPGRADE);
 		ret = 0;
 	}
-	FREES(rpath);
+	__os_freestr(rpath);
 	return (ret);
 }

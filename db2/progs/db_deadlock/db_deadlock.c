@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_deadlock.c	10.19 (Sleepycat) 4/10/98";
+static const char sccsid[] = "@(#)db_deadlock.c	10.23 (Sleepycat) 10/4/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -55,14 +55,14 @@ main(argc, argv)
 	time_t now;
 	long usecs;
 	u_int32_t flags;
-	int ch, verbose;
+	int ch, ret, verbose;
 	char *home, *logfile;
 
 	atype = DB_LOCK_DEFAULT;
 	home = logfile = NULL;
 	usecs = 0;
 	flags = 0;
-	verbose = 0;
+	ret = verbose = 0;
 	while ((ch = getopt(argc, argv, "a:h:L:t:vw")) != EOF)
 		switch (ch) {
 		case 'a':
@@ -119,6 +119,7 @@ main(argc, argv)
 		usecs = 100000;
 
 	/* Initialize the deadlock detector by opening the lock manager. */
+	siginit();
 	dbenv = db_init(home, verbose);
 
 	if (logfile != NULL && logpid(logfile, 1)) {
@@ -129,18 +130,26 @@ main(argc, argv)
 	while (!interrupted) {
 		if (dbenv->db_verbose != 0) {
 			time(&now);
-			__db_err(dbenv, "Running at %.24s", ctime(&now));
+			warnx("Running at %.24s", ctime(&now));
 		}
 
-		if ((errno = lock_detect(dbenv->lk_info, flags, atype)) != 0)
+		if ((errno = lock_detect(dbenv->lk_info, flags, atype)) != 0) {
+			ret = 1;
+			warnx(NULL);
 			break;
+		}
 
 		/* Make a pass every "usecs" usecs. */
-		(void)__db_sleep(0, usecs);
+		(void)usleep(usecs);
 	}
 
-	if (logfile != NULL)
-		(void)logpid(logfile, 0);
+	if (logfile != NULL && logpid(logfile, 0))
+		ret = 1;
+
+	if ((errno = db_appexit(dbenv)) != 0) {
+		ret = 1;
+		warn(NULL);
+	}
 
 	if (interrupted) {
 		(void)signal(interrupted, SIG_DFL);
@@ -148,7 +157,7 @@ main(argc, argv)
 		/* NOTREACHED */
 	}
 
-	return (db_appexit(dbenv));
+	return (ret);
 }
 
 DB_ENV *
@@ -169,8 +178,6 @@ db_init(home, verbose)
 	if ((errno = db_appinit(home,
 	    NULL, dbenv, DB_INIT_LOCK | DB_USE_ENVIRON)) != 0)
 		err(1, "db_appinit");
-
-	siginit();
 
 	return (dbenv);
 }
@@ -214,14 +221,11 @@ siginit()
 	(void)signal(SIGHUP, onint);
 #endif
 	(void)signal(SIGINT, onint);
-#ifdef SIGKILL
-	(void)signal(SIGKILL, onint);
-#endif
 	(void)signal(SIGTERM, onint);
 }
 
 /*
- * oninit --
+ * onint --
  *	Interrupt signal handler.
  */
 void

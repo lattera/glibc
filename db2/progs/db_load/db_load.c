@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_load.c	10.20 (Sleepycat) 6/2/98";
+static const char sccsid[] = "@(#)db_load.c	10.23 (Sleepycat) 10/4/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -19,6 +19,7 @@ static const char sccsid[] = "@(#)db_load.c	10.20 (Sleepycat) 6/2/98";
 
 #include <errno.h>
 #include <limits.h>
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,9 +38,12 @@ int	dbt_rdump __P((DBT *));
 int	dbt_rprint __P((DBT *));
 int	digitize __P((int));
 int	main __P((int, char *[]));
+void	onint __P((int));
 void	rheader __P((DBTYPE *, int *, DB_INFO *));
+void	siginit __P((void));
 void	usage __P((void));
 
+int	 interrupted;
 const char
 	*progname = "db_load";				/* Program name. */
 
@@ -57,16 +61,17 @@ main(argc, argv)
 	DB_INFO dbinfo;
 	db_recno_t recno;
 	u_int32_t db_nooverwrite;
-	int ch, checkprint, existed, no_header;
+	int ch, checkprint, existed, no_header, ret;
 	char **clist, **clp, *home;
 
 	/* Allocate enough room for configuration arguments. */
 	if ((clp = clist = (char **)calloc(argc + 1, sizeof(char *))) == NULL)
 		err(1, NULL);
 
+	dbp = NULL;
 	home = NULL;
 	db_nooverwrite = 0;
-	existed = checkprint = no_header = 0;
+	checkprint = existed = no_header = ret = 0;
 	argtype = dbtype = DB_UNKNOWN;
 	while ((ch = getopt(argc, argv, "c:f:h:nTt:")) != EOF)
 		switch (ch) {
@@ -111,9 +116,6 @@ main(argc, argv)
 	if (argc != 1)
 		usage();
 
-	/* Initialize the environment if the user specified one. */
-	dbenv = home == NULL ? NULL : db_init(home);
-
 	/*
 	 * Read the header.  If there isn't any header, we're expecting flat
 	 * text, set the checkprint flag appropriately.
@@ -128,20 +130,16 @@ main(argc, argv)
 			if ((dbtype == DB_RECNO && argtype != DB_RECNO) ||
 			    (argtype == DB_RECNO && dbtype != DB_RECNO))
 				errx(1,
-			    "databases of type recno may not be converted");
+				"databases of type recno may not be converted");
 			dbtype = argtype;
 		}
 	}
+
 	if (dbtype == DB_UNKNOWN)
 		errx(1, "no database type specified");
 
 	/* Apply command-line configuration changes. */
 	configure(&dbinfo, clist);
-
-	/* Open the DB file. */
-	if ((errno = db_open(argv[0], dbtype, DB_CREATE,
-	    __db_omode("rwrwrw"), dbenv, &dbinfo, &dbp)) != 0)
-		err(1, "%s", argv[0]);
 
 	/* Initialize the key/data pair. */
 	memset(&key, 0, sizeof(DBT));
@@ -159,9 +157,20 @@ main(argc, argv)
 		err(1, NULL);
 	}
 
+	/* Initialize the environment if the user specified one. */
+	siginit();
+	dbenv = home == NULL ? NULL : db_init(home);
+
+	/* Open the DB file. */
+	if ((errno = db_open(argv[0], dbtype, DB_CREATE,
+	    __db_omode("rwrwrw"), dbenv, &dbinfo, &dbp)) != 0) {
+		warn("%s", argv[0]);
+		goto err;
+	}
+
 	/* Get each key/data pair and add them to the database. */
-	for (recno = 1;; ++recno) {
-		if (dbtype == DB_RECNO) {
+	for (recno = 1; !interrupted; ++recno) {
+		if (dbtype == DB_RECNO)
 			if (checkprint) {
 				if (dbt_rprint(&data))
 					break;
@@ -169,7 +178,7 @@ main(argc, argv)
 				if (dbt_rdump(&data))
 					break;
 			}
-		} else
+		else
 			if (checkprint) {
 				if (dbt_rprint(&key))
 					break;
@@ -178,8 +187,10 @@ main(argc, argv)
 			} else {
 				if (dbt_rdump(&key))
 					break;
-				if (dbt_rdump(&data))
-fmt:					err(1, "odd number of key/data pairs");
+				if (dbt_rdump(&data)) {
+fmt:					warnx("odd number of key/data pairs");
+					goto err;
+				}
 			}
 		switch (errno =
 		    dbp->put(dbp, NULL, &key, &data, db_nooverwrite)) {
@@ -190,17 +201,36 @@ fmt:					err(1, "odd number of key/data pairs");
 			warnx("%s: line %d: key already exists, not loaded:",
 			    argv[0],
 			    dbtype == DB_RECNO ? recno : recno * 2 - 1);
+
 			(void)__db_prdbt(&key, checkprint, stderr);
 			break;
 		default:
-			err(1, "%s", argv[0]);
-			/* NOTREACHED */
+			warn(NULL);
+			goto err;
 		}
 	}
 
-	if ((errno = dbp->close(dbp, 0)) != 0)
-		err(1, "%s", argv[0]);
-	return (existed ? 1 : 0);
+	if (0) {
+err:		ret = 1;
+	}
+	if (dbp != NULL && (errno = dbp->close(dbp, 0)) != 0) {
+		ret = 1;
+		warn(NULL);
+	}
+
+	if (dbenv != NULL && (errno = db_appexit(dbenv)) != 0) {
+		ret = 1;
+		warn(NULL);
+	}
+
+	if (interrupted) {
+		(void)signal(interrupted, SIG_DFL);
+		(void)raise(interrupted);
+		/* NOTREACHED */
+	}
+
+	/* Return 0 on success, 1 if keys existed already, and 2 on failure. */
+	return (ret == 0 ? (existed == 0 ? 0 : 1) : 2);
 }
 
 /*
@@ -496,6 +526,34 @@ void
 badnum()
 {
 	err(1, "boolean name=value pairs require a value of 0 or 1");
+}
+
+/*
+ * siginit --
+ *	Initialize the set of signals for which we want to clean up.
+ *	Generally, we try not to leave the shared regions locked if
+ *	we can.
+ */
+void
+siginit()
+{
+#ifdef SIGHUP
+	(void)signal(SIGHUP, onint);
+#endif
+	(void)signal(SIGINT, onint);
+	(void)signal(SIGTERM, onint);
+}
+
+/*
+ * onint --
+ *	Interrupt signal handler.
+ */
+void
+onint(signo)
+	int signo;
+{
+	if ((interrupted = signo) == 0)
+		interrupted = SIGINT;
 }
 
 /*

@@ -4,7 +4,7 @@
  * Copyright (c) 1996, 1997, 1998
  *	Sleepycat Software.  All rights reserved.
  *
- *	@(#)log.h	10.25 (Sleepycat) 4/10/98
+ *	@(#)log.h	10.30 (Sleepycat) 10/11/98
  */
 
 #ifndef _LOG_H_
@@ -16,8 +16,10 @@ struct __log;		typedef struct __log LOG;
 struct __log_persist;	typedef struct __log_persist LOGP;
 
 #ifndef MAXLFNAME
-#define	MAXLFNAME	99999		/* Maximum log file name. */
-#define	LFNAME		"log.%05d"	/* Log file name template. */
+#define	LFPREFIX	"log."		/* Log file name prefix. */
+#define	LFNAME		"log.%010d"	/* Log file name template. */
+#define	LFNAME_V1	"log.%05d"	/* Log file name template, rev 1. */
+#define	MAXLFNAME	2000000000	/* Maximum log file name. */
 #endif
 					/* Default log name. */
 #define DB_DEFAULT_LOG_FILE	"__db_log.share"
@@ -37,6 +39,12 @@ struct __log_persist;	typedef struct __log_persist LOGP;
 #define	UNLOCK_LOGREGION(dblp)						\
 	(void)__db_mutex_unlock(&((RLAYOUT *)(dblp)->lp)->lock,		\
 	    (dblp)->reginfo.fd)
+
+/* Check for region catastrophic shutdown. */
+#define	LOG_PANIC_CHECK(dblp) {						\
+	if ((dblp)->lp->rlayout.panic)					\
+		return (DB_RUNRECOVERY);				\
+}
 
 /*
  * The per-process table that maps log file-id's to DB structures.
@@ -84,7 +92,28 @@ struct __db_log {
 
 	char	 *dir;			/* Directory argument. */
 
-	u_int32_t flags;		/* Support the DB_AM_XXX flags. */
+/*
+ * These fields are used by XA; since XA forbids threaded execution, these
+ * do not have to be protected.
+ */
+	void 	*xa_info;		/* Committed transaction list that
+					 * has to be carried between calls
+					 * to xa_recover. */
+	DB_LSN	xa_lsn;			/* Position of an XA recovery scan. */
+	DB_LSN	xa_first;		/* LSN to which we need to roll back
+					   for this XA recovery scan. */
+
+	/*
+	 * !!!
+	 * Currently used to hold:
+	 *	DB_AM_THREAD	(a DB flag)
+	 *	DBC_RECOVER	(a DBC flag)
+	 * If they are ever the same bits, we're in serious trouble.
+	 */
+#if DB_AM_THREAD == DBC_RECOVER
+	DB_AM_THREAD, DBC_RECOVER, FLAG MISMATCH
+#endif
+	u_int32_t flags;
 };
 
 /*

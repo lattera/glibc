@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_pr.c	10.26 (Sleepycat) 5/23/98";
+static const char sccsid[] = "@(#)mp_pr.c	10.30 (Sleepycat) 10/1/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -44,16 +44,17 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 	DB_MPOOL_FSTAT **tfsp;
 	MPOOLFILE *mfp;
 	size_t len, nlen;
+	int ret;
 	char *name;
+
+	MP_PANIC_CHECK(dbmp);
 
 	/* Allocate space for the global statistics. */
 	if (gspp != NULL) {
 		*gspp = NULL;
 
-		if ((*gspp = db_malloc == NULL ?
-		    (DB_MPOOL_STAT *)__db_malloc(sizeof(**gspp)) :
-		    (DB_MPOOL_STAT *)db_malloc(sizeof(**gspp))) == NULL)
-			return (ENOMEM);
+		if ((ret = __os_malloc(sizeof(**gspp), db_malloc, gspp)) != 0)
+			return (ret);
 
 		LOCKREGION(dbmp);
 
@@ -89,10 +90,8 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 
 		/* Allocate space for the pointers. */
 		len = (len + 1) * sizeof(DB_MPOOL_FSTAT *);
-		if ((*fspp = db_malloc == NULL ?
-		    (DB_MPOOL_FSTAT **)__db_malloc(len) :
-		    (DB_MPOOL_FSTAT **)db_malloc(len)) == NULL)
-			return (ENOMEM);
+		if ((ret = __os_malloc(len, db_malloc, fspp)) != 0)
+			return (ret);
 
 		LOCKREGION(dbmp);
 
@@ -104,10 +103,8 @@ memp_stat(dbmp, gspp, fspp, db_malloc)
 			name = __memp_fns(dbmp, mfp);
 			nlen = strlen(name);
 			len = sizeof(DB_MPOOL_FSTAT) + nlen + 1;
-			if ((*tfsp = db_malloc == NULL ?
-			    (DB_MPOOL_FSTAT *)__db_malloc(len) :
-			    (DB_MPOOL_FSTAT *)db_malloc(len)) == NULL)
-				return (ENOMEM);
+			if ((ret = __os_malloc(len, db_malloc, tfsp)) != 0)
+				return (ret);
 			**tfsp = mfp->stat;
 			(*tfsp)->file_name = (char *)
 			    (u_int8_t *)*tfsp + sizeof(DB_MPOOL_FSTAT);
@@ -212,8 +209,9 @@ __memp_dump_region(dbmp, area, fp)
 	cnt = 0;
 	for (mfp = SH_TAILQ_FIRST(&dbmp->mp->mpfq, __mpoolfile);
 	    mfp != NULL; mfp = SH_TAILQ_NEXT(mfp, q, __mpoolfile), ++cnt) {
-		(void)fprintf(fp, "file #%d: %s: %lu references: %s\n",
+		(void)fprintf(fp, "file #%d: %s: refs %lu, type %ld, %s\n",
 		    cnt + 1, __memp_fns(dbmp, mfp), (u_long)mfp->ref,
+		    (long)mfp->ftype,
 		    F_ISSET(mfp, MP_CAN_MMAP) ? "mmap" : "read/write");
 		    if (cnt < FMAP_ENTRIES)
 			fmap[cnt] = R_OFFSET(dbmp, mfp);

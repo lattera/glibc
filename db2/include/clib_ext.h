@@ -37,12 +37,6 @@ void *memcpy __P((void *, const void *, size_t));
 #ifndef HAVE_MEMMOVE
 void *memmove __P((void *, const void *, size_t));
 #endif
-#ifndef HAVE_MEMCPY
-void *memcpy __P((void *, const void *, size_t));
-#endif
-#ifndef HAVE_MEMMOVE
-void *memmove __P((void *, const void *, size_t));
-#endif
 #ifndef HAVE_RAISE
 int raise __P((int));
 #endif

@@ -11,7 +11,7 @@
 static const char copyright[] =
 "@(#) Copyright (c) 1996, 1997, 1998\n\
 	Sleepycat Software Inc.  All rights reserved.\n";
-static const char sccsid[] = "@(#)db_stat.c	8.38 (Sleepycat) 5/30/98";
+static const char sccsid[] = "@(#)db_stat.c	8.41 (Sleepycat) 10/3/98";
 #endif
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -26,14 +26,14 @@ static const char sccsid[] = "@(#)db_stat.c	8.38 (Sleepycat) 5/30/98";
 #include <unistd.h>
 #endif
 
+#undef stat
+
 #include "db_int.h"
 #include "shqueue.h"
 #include "db_shash.h"
 #include "lock.h"
 #include "mp.h"
 #include "clib_ext.h"
-
-#undef stat
 
 typedef enum { T_NOTSET, T_DB, T_LOCK, T_LOG, T_MPOOL, T_TXN } test_t;
 
@@ -48,13 +48,12 @@ void	log_stats __P((DB_ENV *));
 int	main __P((int, char *[]));
 int	mpool_ok __P((char *));
 void	mpool_stats __P((DB_ENV *));
-void	onint __P((int));
+void	nosig __P((void));
 void	prflags __P((u_int32_t, const FN *));
 int	txn_compare __P((const void *, const void *));
 void	txn_stats __P((DB_ENV *));
 void	usage __P((void));
 
-int	 interrupted;
 char	*internal;
 const char
 	*progname = "db_stat";				/* Program name. */
@@ -118,15 +117,20 @@ main(argc, argv)
 	if (argc != 0 || ttype == T_NOTSET)
 		usage();
 
+	/*
+	 * Ignore signals -- we don't want to be interrupted because we're
+	 * spending all of our time in the DB library.
+	 */
+	nosig();
 	dbenv = db_init(home, ttype);
-
-	(void)signal(SIGINT, onint);
 
 	switch (ttype) {
 	case T_DB:
 		if ((errno = db_open(db, DB_UNKNOWN,
-		    DB_RDONLY, 0, dbenv, NULL, &dbp)) != 0)
+		    DB_RDONLY, 0, dbenv, NULL, &dbp)) != 0) {
+			warn("%s", db);
 			return (1);
+		}
 		switch (dbp->type) {
 		case DB_BTREE:
 		case DB_RECNO:
@@ -158,12 +162,9 @@ main(argc, argv)
 		/* NOTREACHED */
 	}
 
-	(void)db_appexit(dbenv);
-
-	if (interrupted) {
-		(void)signal(SIGINT, SIG_DFL);
-		(void)raise(SIGINT);
-		/* NOTREACHED */
+	if ((errno = db_appexit(dbenv)) != 0) {
+		warn(NULL);
+		return (1);
 	}
 	return (0);
 }
@@ -218,7 +219,6 @@ btree_stats(dbp)
 	dl("Number of tree duplicate pages.\n", (u_long)sp->bt_dup_pg);
 	dl("Number of tree overflow pages.\n", (u_long)sp->bt_over_pg);
 	dl("Number of pages on the free list.\n", (u_long)sp->bt_free);
-	dl("Number of pages freed for reuse.\n", (u_long)sp->bt_freed);
 	dl("Number of bytes free in tree internal pages",
 	    (u_long)sp->bt_int_pgfree);
 	printf(" (%.0f%% ff).\n", PCT(sp->bt_int_pgfree, sp->bt_int_pg));
@@ -231,17 +231,6 @@ btree_stats(dbp)
 	dl("Number of bytes free in tree overflow pages",
 	    (u_long)sp->bt_over_pgfree);
 	printf(" (%.0f%% ff).\n", PCT(sp->bt_over_pgfree, sp->bt_over_pg));
-	dl("Number of bytes saved by prefix compression.\n",
-	    (u_long)sp->bt_pfxsaved);
-	dl("Total number of tree page splits.\n", (u_long)sp->bt_split);
-	dl("Number of root page splits.\n", (u_long)sp->bt_rootsplit);
-	dl("Number of fast splits.\n", (u_long)sp->bt_fastsplit);
-	dl("Number of hits in tree fast-insert code.\n",
-	    (u_long)sp->bt_cache_hit);
-	dl("Number of misses in tree fast-insert code.\n",
-	    (u_long)sp->bt_cache_miss);
-	dl("Number of keys added.\n", (u_long)sp->bt_added);
-	dl("Number of keys deleted.\n", (u_long)sp->bt_deleted);
 }
 
 /*
@@ -610,16 +599,17 @@ argcheck(arg, ok_args)
 }
 
 /*
- * oninit --
- *	Interrupt signal handler.
+ * nosig --
+ *	We don't want to be interrupted.
  */
 void
-onint(signo)
-	int signo;
+nosig()
 {
-	COMPQUIET(signo, 0);
-
-	interrupted = 1;
+#ifdef SIGHUP
+	(void)signal(SIGHUP, SIG_IGN);
+#endif
+	(void)signal(SIGINT, SIG_IGN);
+	(void)signal(SIGTERM, SIG_IGN);
 }
 
 void

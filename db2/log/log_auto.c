@@ -10,7 +10,6 @@
 #endif
 
 #include "db_int.h"
-#include "shqueue.h"
 #include "db_page.h"
 #include "db_dispatch.h"
 #include "log.h"
@@ -43,8 +42,7 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	rectype = DB_log_register;
 	txn_num = txnid == NULL ? 0 : txnid->txnid;
 	if (txnid == NULL) {
-		null_lsn.file = 0;
-		null_lsn.offset = 0;
+		ZERO_LSN(null_lsn);
 		lsnp = &null_lsn;
 	} else
 		lsnp = &txnid->last_lsn;
@@ -54,8 +52,8 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	    + sizeof(u_int32_t) + (uid == NULL ? 0 : uid->size)
 	    + sizeof(id)
 	    + sizeof(ftype);
-	if ((logrec.data = (void *)__db_malloc(logrec.size)) == NULL)
-		return (ENOMEM);
+	if ((ret = __os_malloc(logrec.size, NULL, &logrec.data)) != 0)
+		return (ret);
 
 	bp = logrec.data;
 	memcpy(bp, &rectype, sizeof(rectype));
@@ -97,7 +95,7 @@ int __log_register_log(logp, txnid, ret_lsnp, flags,
 	ret = __log_put(logp, ret_lsnp, (DBT *)&logrec, flags);
 	if (txnid != NULL)
 		txnid->last_lsn = *ret_lsnp;
-	__db_free(logrec.data);
+	__os_free(logrec.data, 0);
 	return (ret);
 }
 
@@ -155,7 +153,7 @@ __log_register_print(notused1, dbtp, lsnp, notused2, notused3)
 	printf("\tid: %lu\n", (u_long)argp->id);
 	printf("\tftype: 0x%lx\n", (u_long)argp->ftype);
 	printf("\n");
-	__db_free(argp);
+	__os_free(argp, 0);
 	return (0);
 }
 
@@ -169,11 +167,12 @@ __log_register_read(recbuf, argpp)
 {
 	__log_register_args *argp;
 	u_int8_t *bp;
+	int ret;
 
-	argp = (__log_register_args *)__db_malloc(sizeof(__log_register_args) +
-	    sizeof(DB_TXN));
-	if (argp == NULL)
-		return (ENOMEM);
+	ret = __os_malloc(sizeof(__log_register_args) +
+	    sizeof(DB_TXN), NULL, &argp);
+	if (ret != 0)
+		return (ret);
 	argp->txnid = (DB_TXN *)&argp[1];
 	bp = recbuf;
 	memcpy(&argp->type, bp, sizeof(argp->type));

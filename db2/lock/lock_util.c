@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock_util.c	10.9 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)lock_util.c	10.10 (Sleepycat) 9/20/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -75,7 +75,7 @@ __lock_locker_cmp(locker, lock_obj)
  * fast path the case where we think we are doing a hash on a DB page/fileid
  * pair.  If the size is right, then we do the fast hash.
  *
- * We know that DB uses struct __db_ilocks for its lock objects.  The first
+ * We know that DB uses DB_LOCK_ILOCK types for its lock objects.  The first
  * four bytes are the 4-byte page number and the next DB_FILE_ID_LEN bytes
  * are a unique file id, where the first 4 bytes on UNIX systems are the file
  * inode number, and the first 4 bytes on Windows systems are the FileIndexLow
@@ -107,7 +107,7 @@ u_int32_t
 __lock_ohash(dbt)
 	const DBT *dbt;
 {
-	if (dbt->size == sizeof(struct __db_ilock))
+	if (dbt->size == sizeof(DB_LOCK_ILOCK))
 		FAST_HASH(dbt->data);
 
 	return (__ham_func5(dbt->data, dbt->size));
@@ -131,7 +131,7 @@ __lock_lhash(lock_obj)
 		return (tmp);
 	}
 
-	if (lock_obj->lockobj.size == sizeof(struct __db_ilock))
+	if (lock_obj->lockobj.size == sizeof(DB_LOCK_ILOCK))
 		FAST_HASH(obj_data);
 
 	return (__ham_func5(obj_data, lock_obj->lockobj.size));

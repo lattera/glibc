@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)lock_deadlock.c	10.32 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)lock_deadlock.c	10.37 (Sleepycat) 10/4/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -68,6 +68,8 @@ lock_detect(lt, flags, atype)
 	locker_info *idmap;
 	u_int32_t *bitmap, *deadlock, i, killid, nentries, nlockers;
 	int do_pass, ret;
+
+	LOCK_PANIC_CHECK(lt);
 
 	/* Validate arguments. */
 	if ((ret =
@@ -176,8 +178,8 @@ lock_detect(lt, flags, atype)
 			    "warning: unable to abort locker %lx",
 			    (u_long)idmap[killid].id);
 	}
-	__db_free(bitmap);
-	__db_free(idmap);
+	__os_free(bitmap, 0);
+	__os_free(idmap, 0);
 
 	return (ret);
 }
@@ -198,7 +200,7 @@ __dd_build(dbenv, bmp, nlockers, idmap)
 	u_int8_t *pptr;
 	locker_info *id_array;
 	u_int32_t *bitmap, count, *entryp, i, id, nentries, *tmpmap;
-	int is_first;
+	int is_first, ret;
 
 	lt = dbenv->lk_info;
 
@@ -230,25 +232,20 @@ retry:	count = lt->region->nlockers;
 	 * We can probably save the malloc's between iterations just
 	 * reallocing if necessary because count grew by too much.
 	 */
-	if ((bitmap = (u_int32_t *)__db_calloc((size_t)count,
-	    sizeof(u_int32_t) * nentries)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		return (ENOMEM);
+	if ((ret = __os_calloc((size_t)count,
+	    sizeof(u_int32_t) * nentries, &bitmap)) != 0)
+		return (ret);
+
+	if ((ret = __os_calloc(sizeof(u_int32_t), nentries, &tmpmap)) != 0) {
+		__os_free(bitmap, sizeof(u_int32_t) * nentries);
+		return (ret);
 	}
 
-	if ((tmpmap =
-	    (u_int32_t *)__db_calloc(sizeof(u_int32_t), nentries)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		__db_free(bitmap);
-		return (ENOMEM);
-	}
-
-	if ((id_array = (locker_info *)__db_calloc((size_t)count,
-	    sizeof(locker_info))) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
-		__db_free(bitmap);
-		__db_free(tmpmap);
-		return (ENOMEM);
+	if ((ret =
+	    __os_calloc((size_t)count, sizeof(locker_info), &id_array)) != 0) {
+		__os_free(bitmap, count * sizeof(u_int32_t) * nentries);
+		__os_free(tmpmap, sizeof(u_int32_t) * nentries);
+		return (ret);
 	}
 
 	/*
@@ -256,9 +253,9 @@ retry:	count = lt->region->nlockers;
 	 */
 	LOCK_LOCKREGION(lt);
 	if (lt->region->nlockers > count) {
-		__db_free(bitmap);
-		__db_free(tmpmap);
-		__db_free(id_array);
+		__os_free(bitmap, count * sizeof(u_int32_t) * nentries);
+		__os_free(tmpmap, sizeof(u_int32_t) * nentries);
+		__os_free(id_array, count * sizeof(locker_info));
 		goto retry;
 	}
 
@@ -383,7 +380,7 @@ retry:	count = lt->region->nlockers;
 	*nlockers = id;
 	*idmap = id_array;
 	*bmp = bitmap;
-	__db_free(tmpmap);
+	__os_free(tmpmap, sizeof(u_int32_t) * nentries);
 	return (0);
 }
 
@@ -434,8 +431,21 @@ __dd_abort(dbenv, info)
 		goto out;
 
 	lockp = SH_LIST_FIRST(&lockerp->heldby, __db_lock);
-	if (LOCK_TO_OFFSET(lt, lockp) != info->last_lock ||
-	    lockp == NULL || lockp->status != DB_LSTAT_WAITING)
+
+	/*
+	 * It's possible that this locker was already aborted.
+	 * If that's the case, make sure that we remove its
+	 * locker from the hash table.
+	 */
+	if (lockp == NULL) {
+		HASHREMOVE_EL(lt->hashtab, __db_lockobj,
+		    links, lockerp, lt->region->table_size, __lock_lhash);
+		SH_TAILQ_INSERT_HEAD(&lt->region->free_objs,
+		    lockerp, links, __db_lockobj);
+		lt->region->nlockers--;
+		goto out;
+	} else if (LOCK_TO_OFFSET(lt, lockp) != info->last_lock ||
+	    lockp->status != DB_LSTAT_WAITING)
 		goto out;
 
 	/* Abort lock, take it off list, and wake up this lock. */
@@ -460,17 +470,17 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 	u_int32_t *bitmap, nlockers;
 {
 	u_int32_t i, j, *mymap, nentries;
+	int ret;
 	char *msgbuf;
 
 	__db_err(dbenv, "Waitsfor array");
 	__db_err(dbenv, "waiter\twaiting on");
-	/*
-	 * Allocate space to print 10 bytes per item waited on.
-	 */
-	if ((msgbuf = (char *)__db_malloc((nlockers + 1) * 10 + 64)) == NULL) {
-		__db_err(dbenv, "%s", strerror(ENOMEM));
+
+	/* Allocate space to print 10 bytes per item waited on. */
+#undef	MSGBUF_LEN
+#define	MSGBUF_LEN ((nlockers + 1) * 10 + 64)
+	if ((ret = __os_malloc(MSGBUF_LEN, NULL, &msgbuf)) != 0)
 		return;
-	}
 
 	nentries = ALIGN(nlockers, 32) / 32;
 	for (mymap = bitmap, i = 0; i < nlockers; i++, mymap += nentries) {
@@ -487,6 +497,6 @@ __dd_debug(dbenv, idmap, bitmap, nlockers)
 		__db_err(dbenv, msgbuf);
 	}
 
-	__db_free(msgbuf);
+	__os_free(msgbuf, MSGBUF_LEN);
 }
 #endif

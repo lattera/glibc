@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)hash_stat.c	10.8 (Sleepycat) 4/26/98";
+static const char sccsid[] = "@(#)hash_stat.c	10.12 (Sleepycat) 12/19/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -23,35 +23,22 @@ static const char sccsid[] = "@(#)hash_stat.c	10.8 (Sleepycat) 4/26/98";
 
 /*
  * __ham_stat --
- *	Gather/print the hash statistics.
+ *	Gather/print the hash statistics
  *
- * PUBLIC: int __ham_stat __P((DB *, FILE *));
+ * PUBLIC: int __ham_stat __P((DB *, void *, void *(*)(size_t), u_int32_t));
  */
 int
-__ham_stat(dbp, fp)
+__ham_stat(dbp, spp, db_malloc, flags)
 	DB *dbp;
-	FILE *fp;
+	void *spp;
+	void *(*db_malloc) __P((size_t));
+	u_int32_t flags;
 {
-	HTAB *hashp;
-	int i;
+	COMPQUIET(spp, NULL);
+	COMPQUIET(db_malloc, NULL);
+	COMPQUIET(flags, 0);
 
-	hashp = (HTAB *)dbp->internal;
+	DB_PANIC_CHECK(dbp);
 
-	fprintf(fp, "hash: accesses %lu collisions %lu\n",
-	    hashp->hash_accesses, hashp->hash_collisions);
-	fprintf(fp, "hash: expansions %lu\n", hashp->hash_expansions);
-	fprintf(fp, "hash: overflows %lu\n", hashp->hash_overflows);
-	fprintf(fp, "hash: big key/data pages %lu\n", hashp->hash_bigpages);
-
-	SET_LOCKER(dbp, NULL);
-	GET_META(dbp, hashp);
-	fprintf(fp, "keys %lu maxp %lu\n",
-	    (u_long)hashp->hdr->nelem, (u_long)hashp->hdr->max_bucket);
-
-	for (i = 0; i < NCACHED; i++)
-		fprintf(fp,
-		    "spares[%d] = %lu\n", i, (u_long)hashp->hdr->spares[i]);
-
-	RELEASE_META(dbp, hashp);
-	return (0);
+	return (__db_eopnotsup(dbp->dbenv));
 }

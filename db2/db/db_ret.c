@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_ret.c	10.13 (Sleepycat) 5/7/98";
+static const char sccsid[] = "@(#)db_ret.c	10.16 (Sleepycat) 10/4/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -93,6 +93,8 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	u_int32_t *memsize;
 	void *(*db_malloc) __P((size_t));
 {
+	int ret;
+
 	/* If returning a partial record, reset the length. */
 	if (F_ISSET(dbt, DB_DBT_PARTIAL)) {
 		data = (u_int8_t *)data + dbt->doff;
@@ -120,9 +122,6 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	 * guarantees consistency, i.e., the application can always free memory
 	 * without concern as to how many bytes of the record were requested.
 	 *
-	 * XXX
-	 * Never allocate 0 bytes, it's known to make malloc/realloc unhappy.
-	 *
 	 * Use the memory specified by the application: DB_DBT_USERMEM.
 	 *
 	 * !!!
@@ -130,11 +129,8 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 	 * memory pointer is allowed to be NULL.
 	 */
 	if (F_ISSET(dbt, DB_DBT_MALLOC)) {
-		dbt->data = db_malloc == NULL ?
-		    (void *)__db_malloc(len) :
-		    (void *)db_malloc(len + 1);
-		if (dbt->data == NULL)
-			return (ENOMEM);
+		if ((ret = __os_malloc(len, db_malloc, &dbt->data)) != 0)
+			return (ret);
 	} else if (F_ISSET(dbt, DB_DBT_USERMEM)) {
 		if (len != 0 && (dbt->data == NULL || dbt->ulen < len))
 			return (ENOMEM);
@@ -142,12 +138,9 @@ __db_retcopy(dbt, data, len, memp, memsize, db_malloc)
 		return (EINVAL);
 	} else {
 		if (len != 0 && (*memsize == 0 || *memsize < len)) {
-			*memp = *memp == NULL ?
-			    (void *)__db_malloc(len) :
-			    (void *)__db_realloc(*memp, len);
-			if (*memp == NULL) {
+			if ((ret = __os_realloc(memp, len)) != 0) {
 				*memsize = 0;
-				return (ENOMEM);
+				return (ret);
 			}
 			*memsize = len;
 		}

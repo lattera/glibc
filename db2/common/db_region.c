@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)db_region.c	10.46 (Sleepycat) 5/26/98";
+static const char sccsid[] = "@(#)db_region.c	10.53 (Sleepycat) 11/10/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -46,7 +46,7 @@ __db_rattach(infop)
 	ret = retry_cnt = 0;
 
 	/* Round off the requested size to the next page boundary. */
-	DB_ROUNDOFF(infop->size);
+	DB_ROUNDOFF(infop->size, DB_VMPAGESIZE);
 
 	/* Some architectures have hard limits on the maximum region size. */
 #ifdef DB_REGIONSIZE_MAX
@@ -61,7 +61,7 @@ loop:	infop->addr = NULL;
 	infop->fd = -1;
 	infop->segid = INVALID_SEGID;
 	if (infop->name != NULL) {
-		FREES(infop->name);
+		__os_freestr(infop->name);
 		infop->name = NULL;
 	}
 	F_CLR(infop, REGION_CANGROW | REGION_CREATED);
@@ -74,6 +74,11 @@ loop:	infop->addr = NULL;
 	 * (Theoretically, we could probably get a file descriptor to lock
 	 * other types of shared regions, but I don't see any reason to
 	 * bother.)
+	 *
+	 * Since we may be using shared memory regions, e.g., shmget(2),
+	 * and not mmap of regular files, the backing file may be only a
+	 * few tens of bytes in length.  So, this depends on the ability
+	 * to fcntl lock file offsets much larger than the physical file.
 	 */
 	malloc_possible = 0;
 #endif
@@ -91,15 +96,16 @@ loop:	infop->addr = NULL;
 	 * than either anonymous memory or a shared file.
 	 */
 	if (malloc_possible && F_ISSET(infop, REGION_PRIVATE)) {
-		if ((infop->addr = __db_malloc(infop->size)) == NULL)
-			return (ENOMEM);
+		if ((ret = __os_malloc(infop->size, NULL, &infop->addr)) != 0)
+			return (ret);
 
 		/*
-		 * It's sometimes significantly faster to page-fault in all
-		 * of the region's pages before we run the application, as
-		 * we can see fairly nasty side-effects when we page-fault
-		 * while holding various locks, i.e., the lock takes a long
-		 * time, and other threads convoy behind the lock holder.
+		 * It's sometimes significantly faster to page-fault in all of
+		 * the region's pages before we run the application, as we see
+		 * nasty side-effects when we page-fault while holding various
+		 * locks, i.e., the lock takes a long time to acquire because
+		 * of the underlying page fault, and the other threads convoy
+		 * behind the lock holder.
 		 */
 		if (DB_GLOBAL(db_region_init))
 			for (p = infop->addr;
@@ -159,7 +165,7 @@ loop:	infop->addr = NULL;
 	 *    3. Memory backed by a regular file (mmap(2)).
 	 *
 	 * We instantiate a backing file in all cases, which contains at least
-	 * the RLAYOUT structure, and in case #4, contains the actual region.
+	 * the RLAYOUT structure, and in case #3, contains the actual region.
 	 * This is necessary for a couple of reasons:
 	 *
 	 * First, the mpool region uses temporary files to name regions, and
@@ -218,7 +224,7 @@ loop:	infop->addr = NULL;
 		 * And yes, this makes me want to take somebody and kill them,
 		 * but I can't think of any other solution.
 		 */
-		if ((ret = __db_ioinfo(infop->name,
+		if ((ret = __os_ioinfo(infop->name,
 		    infop->fd, &mbytes, &bytes, NULL)) != 0)
 			goto errmsg;
 		size = mbytes * MEGABYTE + bytes;
@@ -233,7 +239,7 @@ loop:	infop->addr = NULL;
 			if (size < sizeof(RLAYOUT))
 				goto retry;
 			if ((ret =
-			    __db_read(infop->fd, &rl, sizeof(rl), &nr)) != 0)
+			    __os_read(infop->fd, &rl, sizeof(rl), &nr)) != 0)
 				goto retry;
 			if (rl.valid != DB_REGIONMAGIC)
 				goto retry;
@@ -284,6 +290,7 @@ loop:	infop->addr = NULL;
 		} else
 			goto err;
 	}
+
 region_init:
 	/*
 	 * Initialize the common region information.
@@ -321,6 +328,7 @@ region_init:
 		rlp->refcnt = 1;
 		rlp->size = infop->size;
 		db_version(&rlp->majver, &rlp->minver, &rlp->patch);
+		rlp->panic = 0;
 		rlp->segid = infop->segid;
 		rlp->flags = 0;
 		if (F_ISSET(infop, REGION_ANONYMOUS))
@@ -347,13 +355,19 @@ region_init:
 		 * the file.
 		 */
 		if (F_ISSET(infop, REGION_ANONYMOUS)) {
-			if ((ret = __db_seek(infop->fd, 0, 0, 0, 0, 0)) != 0)
+			if ((ret = __os_seek(infop->fd, 0, 0, 0, 0, 0)) != 0)
 				goto err;
 			if ((ret =
-			    __db_write(infop->fd, rlp, sizeof(*rlp), &nw)) != 0)
+			    __os_write(infop->fd, rlp, sizeof(*rlp), &nw)) != 0)
 				goto err;
 		}
 	} else {
+		/* Check to see if the region has had catastrophic failure. */
+		if (rlp->panic) {
+			ret = DB_RUNRECOVERY;
+			goto err;
+		}
+
 		/*
 		 * Check the valid flag to ensure the region is initialized.
 		 * If the valid flag has not been set, the mutex may not have
@@ -377,18 +391,6 @@ region_init:
 		if (rlp->valid != DB_REGIONMAGIC) {
 			(void)__db_mutex_unlock(&rlp->lock, infop->fd);
 			goto retry;
-		}
-
-		/*
-		 * Problem #2: We want a bigger region than has previously been
-		 * created.  Detected by checking if the region is smaller than
-		 * our caller requested.  If it is, we grow the region, (which
-		 * does the detach and re-attach for us).
-		 */
-		if (grow_region != 0 &&
-		    (ret = __db_rgrow(infop, grow_region)) != 0) {
-			(void)__db_mutex_unlock(&rlp->lock, infop->fd);
-			goto err;
 		}
 
 		/*
@@ -419,16 +421,16 @@ retry:		/* Discard the region. */
 
 		/* Discard the backing file. */
 		if (infop->fd != -1) {
-			(void)__db_close(infop->fd);
+			(void)__os_close(infop->fd);
 			infop->fd = -1;
 
 			if (F_ISSET(infop, REGION_CREATED))
-				(void)__db_unlink(infop->name);
+				(void)__os_unlink(infop->name);
 		}
 
 		/* Discard the name. */
 		if (infop->name != NULL) {
-			FREES(infop->name);
+			__os_freestr(infop->name);
 			infop->name = NULL;
 		}
 
@@ -438,7 +440,7 @@ retry:		/* Discard the region. */
 		 */
 		if (ret == 0) {
 			if (++retry_cnt <= 3) {
-				__db_sleep(retry_cnt * 2, 0);
+				__os_sleep(retry_cnt * 2, 0);
 				goto loop;
 			}
 			ret = EAGAIN;
@@ -481,10 +483,11 @@ retry:		/* Discard the region. */
 			F_SET(infop, REGION_REMOVED);
 			F_CLR(infop, REGION_CANGROW);
 
-			(void)__db_close(infop->fd);
-			(void)__db_unlink(infop->name);
+			(void)__os_close(infop->fd);
+			(void)__os_unlink(infop->name);
 		}
 	}
+
 	return (ret);
 }
 
@@ -514,7 +517,7 @@ __db_rdetach(infop)
 	 * action required is freeing the memory.
 	 */
 	if (F_ISSET(infop, REGION_MALLOC)) {
-		__db_free(infop->addr);
+		__os_free(infop->addr, 0);
 		goto done;
 	}
 
@@ -549,7 +552,7 @@ __db_rdetach(infop)
 	(void)__db_mutex_unlock(&rlp->lock, infop->fd);
 
 	/* Close the backing file descriptor. */
-	(void)__db_close(infop->fd);
+	(void)__os_close(infop->fd);
 	infop->fd = -1;
 
 	/* Discard our mapping of the region. */
@@ -561,13 +564,13 @@ __db_rdetach(infop)
 		if ((t_ret =
 		    __db_unlinkregion(infop->name, infop) != 0) && ret == 0)
 			ret = t_ret;
-		if ((t_ret = __db_unlink(infop->name) != 0) && ret == 0)
+		if ((t_ret = __os_unlink(infop->name) != 0) && ret == 0)
 			ret = t_ret;
 	}
 
 done:	/* Discard the name. */
 	if (infop->name != NULL) {
-		FREES(infop->name);
+		__os_freestr(infop->name);
 		infop->name = NULL;
 	}
 
@@ -629,8 +632,8 @@ __db_runlink(infop, force)
 	 * (REGION_PRIVATE) ones, regardless of whether or not it's used to
 	 * back the region.  If that file doesn't exist, we're done.
 	 */
-	if (__db_exists(name, NULL) != 0) {
-		FREES(name);
+	if (__os_exists(name, NULL) != 0) {
+		__os_freestr(name);
 		return (0);
 	}
 
@@ -641,12 +644,12 @@ __db_runlink(infop, force)
 	 */
 	if ((ret = __db_open(name, DB_RDONLY, DB_RDONLY, 0, &fd)) != 0)
 		goto errmsg;
-	if ((ret = __db_ioinfo(name, fd, &mbytes, &bytes, NULL)) != 0)
+	if ((ret = __os_ioinfo(name, fd, &mbytes, &bytes, NULL)) != 0)
 		goto errmsg;
 	size = mbytes * MEGABYTE + bytes;
 
 	if (size <= sizeof(RLAYOUT)) {
-		if ((ret = __db_read(fd, &rl, sizeof(rl), &nr)) != 0)
+		if ((ret = __os_read(fd, &rl, sizeof(rl), &nr)) != 0)
 			goto errmsg;
 		if (rl.valid != DB_REGIONMAGIC) {
 			__db_err(infop->dbenv,
@@ -673,16 +676,16 @@ __db_runlink(infop, force)
 	 * because some architectures (e.g., Win32) won't unlink a file if
 	 * open file descriptors remain.
 	 */
-	(void)__db_close(fd);
-	if ((t_ret = __db_unlink(name)) != 0 && ret == 0)
+	(void)__os_close(fd);
+	if ((t_ret = __os_unlink(name)) != 0 && ret == 0)
 		ret = t_ret;
 
 	if (0) {
 errmsg:		__db_err(infop->dbenv, "%s: %s", name, strerror(ret));
-err:		(void)__db_close(fd);
+err:		(void)__os_close(fd);
 	}
 
-	FREES(name);
+	__os_freestr(name);
 	return (ret);
 }
 
@@ -715,7 +718,7 @@ __db_rgrow(infop, new_size)
 	 * determine the additional space required.
 	 */
 	rlp = (RLAYOUT *)infop->addr;
-	DB_ROUNDOFF(new_size);
+	DB_ROUNDOFF(new_size, DB_VMPAGESIZE);
 	increment = new_size - rlp->size;
 
 	if ((ret = __db_growregion(infop, increment)) != 0)
@@ -745,7 +748,7 @@ __db_growregion(infop, increment)
 	char buf[DB_VMPAGESIZE];
 
 	/* Seek to the end of the region. */
-	if ((ret = __db_seek(infop->fd, 0, 0, 0, 0, SEEK_END)) != 0)
+	if ((ret = __os_seek(infop->fd, 0, 0, 0, 0, SEEK_END)) != 0)
 		goto err;
 
 	/* Write nuls to the new bytes. */
@@ -760,7 +763,7 @@ __db_growregion(infop, increment)
 		/* Extend the region by writing each new page. */
 		for (i = 0; i < increment; i += DB_VMPAGESIZE) {
 			if ((ret =
-			    __db_write(infop->fd, buf, sizeof(buf), &nw)) != 0)
+			    __os_write(infop->fd, buf, sizeof(buf), &nw)) != 0)
 				goto err;
 			if (nw != sizeof(buf))
 				goto eio;
@@ -776,36 +779,44 @@ __db_growregion(infop, increment)
 		 */
 		pages = (increment - DB_VMPAGESIZE) / MEGABYTE;
 		relative = (increment - DB_VMPAGESIZE) % MEGABYTE;
-		if ((ret = __db_seek(infop->fd,
+		if ((ret = __os_seek(infop->fd,
 		    MEGABYTE, pages, relative, 0, SEEK_CUR)) != 0)
 			goto err;
-		if ((ret = __db_write(infop->fd, buf, sizeof(buf), &nw)) != 0)
+		if ((ret = __os_write(infop->fd, buf, sizeof(buf), &nw)) != 0)
 			goto err;
 		if (nw != sizeof(buf))
 			goto eio;
 
 		/*
-		 * It's sometimes significantly faster to page-fault in all
-		 * of the region's pages before we run the application, as
-		 * we can see fairly nasty side-effects when we page-fault
-		 * while holding various locks, i.e., the lock takes a long
-		 * time, and other threads convoy behind the lock holder.
+		 * It's sometimes significantly faster to page-fault in all of
+		 * the region's pages before we run the application, as we see
+		 * nasty side-effects when we page-fault while holding various
+		 * locks, i.e., the lock takes a long time to acquire because
+		 * of the underlying page fault, and the other threads convoy
+		 * behind the lock holder.
+		 *
+		 * We also use REGION_INIT to guarantee that there is enough
+		 * disk space for the region, so we also write a byte to each
+		 * page.  Reading the byte is insufficient as some systems
+		 * (e.g., Solaris) do not instantiate disk pages to satisfy
+		 * a read, and so we don't know if there is enough disk space
+		 * or not.
 		 */
 		if (DB_GLOBAL(db_region_init)) {
 			pages = increment / MEGABYTE;
 			relative = increment % MEGABYTE;
-			if ((ret = __db_seek(infop->fd,
+			if ((ret = __os_seek(infop->fd,
 			    MEGABYTE, pages, relative, 1, SEEK_END)) != 0)
 				goto err;
 
-			/* Read a byte from each page. */
+			/* Write a byte to each page. */
 			for (i = 0; i < increment; i += DB_VMPAGESIZE) {
 				if ((ret =
-				    __db_read(infop->fd, buf, 1, &nr)) != 0)
+				    __os_write(infop->fd, buf, 1, &nr)) != 0)
 					goto err;
 				if (nr != 1)
 					goto eio;
-				if ((ret = __db_seek(infop->fd,
+				if ((ret = __os_seek(infop->fd,
 				    0, 0, DB_VMPAGESIZE - 1, 0, SEEK_CUR)) != 0)
 					goto err;
 			}

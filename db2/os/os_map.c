@@ -8,7 +8,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)os_map.c	10.19 (Sleepycat) 5/3/98";
+static const char sccsid[] = "@(#)os_map.c	10.24 (Sleepycat) 10/12/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -27,13 +27,14 @@ static const char sccsid[] = "@(#)os_map.c	10.19 (Sleepycat) 5/3/98";
 #endif
 
 #include "db_int.h"
+#include "os_jump.h"
 #include "common_ext.h"
 
 #ifdef HAVE_MMAP
 static int __os_map __P((char *, int, size_t, int, int, int, void **));
 #endif
 #ifdef HAVE_SHMGET
-static int __os_shmget __P((char *, REGINFO *));
+static int __os_shmget __P((REGINFO *));
 #endif
 
 /*
@@ -165,7 +166,7 @@ __db_mapregion(path, infop)
 #ifdef HAVE_SHMGET
 		if (!called) {
 			called = 1;
-			ret = __os_shmget(path, infop);
+			ret = __os_shmget(infop);
 		}
 #endif
 #ifdef HAVE_MMAP
@@ -207,7 +208,7 @@ __db_mapregion(path, infop)
 #ifdef HAVE_SHMGET
 		if (!called) {
 			called = 1;
-			ret = __os_shmget(path, infop);
+			ret = __os_shmget(infop);
 		}
 #endif
 	}
@@ -271,10 +272,9 @@ __db_unlinkregion(name, infop)
 		called = 1;
 		ret = shmctl(infop->segid, IPC_RMID, NULL) ? errno : 0;
 	}
-#else
-	COMPQUIET(infop, NULL);
 #endif
 #ifdef HAVE_MMAP
+	COMPQUIET(infop, NULL);
 	if (!called) {
 		called = 1;
 		ret = 0;
@@ -388,6 +388,23 @@ __os_map(path, fd, len, is_region, is_anonymous, is_rdonly, addr)
 
 	prot = PROT_READ | (is_rdonly ? 0 : PROT_WRITE);
 
+/*
+ * XXX
+ * Work around a bug in the VMS V7.1 mmap() implementation.  To map a file
+ * into memory on VMS it needs to be opened in a certain way, originally.
+ * To get the file opened in that certain way, the VMS mmap() closes the
+ * file and re-opens it.  When it does this, it doesn't flush any caches
+ * out to disk before closing.  The problem this causes us is that when the
+ * memory cache doesn't get written out, the file isn't big enough to match
+ * the memory chunk and the mmap() call fails.  This call to fsync() fixes
+ * the problem.  DEC thinks this isn't a bug because of language in XPG5
+ * discussing user responsibility for on-disk and in-memory synchronization.
+ */
+#ifdef VMS
+	if (__os_fsync(fd) == -1)
+		return(errno);
+#endif
+
 	/* MAP_FAILED was not defined in early mmap implementations. */
 #ifndef MAP_FAILED
 #define	MAP_FAILED	-1
@@ -407,47 +424,12 @@ __os_map(path, fd, len, is_region, is_anonymous, is_rdonly, addr)
  *	Call the shmget(2) family of functions.
  */
 static int
-__os_shmget(path, infop)
+__os_shmget(infop)
 	REGINFO *infop;
-	char *path;
 {
-	key_t key;
-	int shmflg;
-
-	if (F_ISSET(infop, REGION_CREATED)) {
-		/*
-		 * The return key from ftok(3) is not guaranteed to be unique.
-		 * The nice thing about the shmget(2) interface is that it
-		 * allows you to name anonymous pieces of memory.  The evil
-		 * thing about it is that the name space is separate from the
-		 * filesystem.
-		 */
-#ifdef __hp3000s900
-		{char mpe_path[MAXPATHLEN];
-		/*
-		 * MPE ftok() is broken as of 5.5pp4.  If the file path does
-		 * not start with '/' or '.', then ftok() tries to interpret
-		 * the file path in MPE syntax instead of POSIX HFS syntax.
-		 * The workaround is to prepend "./" to these paths.  See HP
-		 * SR 5003416081 for details.
-		 */
-		if (*path != '/' && *path != '.') {
-			if (strlen(path) + strlen("./") + 1 > sizeof(mpe_path))
-				return (ENAMETOOLONG);
-			mpe_path[0] = '.';
-			mpe_path[1] = '/';
-			(void)strcpy(mpe_path + 2, path);
-			path = mpe_path;
-		}
-		}
-#endif
-		if ((key = ftok(path, 1)) == (key_t)-1)
-			return (errno);
-
-		shmflg = IPC_CREAT | 0600;
-		if ((infop->segid = shmget(key, infop->size, shmflg)) == -1)
-			return (errno);
-	}
+	if (F_ISSET(infop, REGION_CREATED) &&
+	   (infop->segid = shmget(0, infop->size, IPC_PRIVATE | 0600)) == -1)
+		return (errno);
 
 	if ((infop->addr = shmat(infop->segid, NULL, 0)) == (void *)-1) {
 		/*

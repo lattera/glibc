@@ -7,7 +7,7 @@
 #include "config.h"
 
 #ifndef lint
-static const char sccsid[] = "@(#)mp_region.c	10.30 (Sleepycat) 5/31/98";
+static const char sccsid[] = "@(#)mp_region.c	10.35 (Sleepycat) 12/11/98";
 #endif /* not lint */
 
 #ifndef NO_SYSTEM_INCLUDES
@@ -24,13 +24,33 @@ static const char sccsid[] = "@(#)mp_region.c	10.30 (Sleepycat) 5/31/98";
 #include "common_ext.h"
 
 /*
- * __memp_ralloc --
- *	Allocate some space in the mpool region.
+ * __memp_reg_alloc --
+ *	Allocate some space in the mpool region, with locking.
  *
- * PUBLIC: int __memp_ralloc __P((DB_MPOOL *, size_t, size_t *, void *));
+ * PUBLIC: int __memp_reg_alloc __P((DB_MPOOL *, size_t, size_t *, void *));
  */
 int
-__memp_ralloc(dbmp, len, offsetp, retp)
+__memp_reg_alloc(dbmp, len, offsetp, retp)
+	DB_MPOOL *dbmp;
+	size_t len, *offsetp;
+	void *retp;
+{
+	int ret;
+
+	LOCKREGION(dbmp);
+	ret = __memp_alloc(dbmp, len, offsetp, retp);
+	UNLOCKREGION(dbmp);
+	return (ret);
+}
+
+/*
+ * __memp_alloc --
+ *	Allocate some space in the mpool region.
+ *
+ * PUBLIC: int __memp_alloc __P((DB_MPOOL *, size_t, size_t *, void *));
+ */
+int
+__memp_alloc(dbmp, len, offsetp, retp)
 	DB_MPOOL *dbmp;
 	size_t len, *offsetp;
 	void *retp;
@@ -52,7 +72,9 @@ alloc:	if ((ret = __db_shalloc(dbmp->addr, len, MUTEX_ALIGNMENT, &p)) == 0) {
 		return (0);
 	}
 	if (nomore) {
-		__db_err(dbmp->dbenv, "%s", strerror(ret));
+		__db_err(dbmp->dbenv,
+	    "Unable to allocate %lu bytes from mpool shared region: %s\n",
+		    (u_long)len, strerror(ret));
 		return (ret);
 	}
 
@@ -91,7 +113,7 @@ alloc:	if ((ret = __db_shalloc(dbmp->addr, len, MUTEX_ALIGNMENT, &p)) == 0) {
 	}
 
 retry:	/* Find a buffer we can flush; pure LRU. */
-	total = 0;
+	restart = total = 0;
 	for (bhp =
 	    SH_TAILQ_FIRST(&mp->bhq, __bh); bhp != NULL; bhp = nbhp) {
 		nbhp = SH_TAILQ_NEXT(bhp, q, __bh);
@@ -222,8 +244,8 @@ __memp_ropen(dbmp, path, cachesize, mode, is_private, flags)
 	if (path == NULL)
 		dbmp->reginfo.path = NULL;
 	else
-		if ((dbmp->reginfo.path = __db_strdup(path)) == NULL)
-			return (ENOMEM);
+		if ((ret = __os_strdup(path, &dbmp->reginfo.path)) != 0)
+			return (ret);
 	dbmp->reginfo.file = DB_DEFAULT_MPOOL_FILE;
 	dbmp->reginfo.mode = mode;
 	dbmp->reginfo.size = rlen;
@@ -244,7 +266,7 @@ __memp_ropen(dbmp, path, cachesize, mode, is_private, flags)
 
 	if ((ret = __db_rattach(&dbmp->reginfo)) != 0) {
 		if (dbmp->reginfo.path != NULL)
-			FREES(dbmp->reginfo.path);
+			__os_freestr(dbmp->reginfo.path);
 		return (ret);
 	}
 
@@ -303,6 +325,6 @@ err:	UNLOCKREGION(dbmp);
 		(void)memp_unlink(path, 1, dbmp->dbenv);
 
 	if (dbmp->reginfo.path != NULL)
-		FREES(dbmp->reginfo.path);
+		__os_freestr(dbmp->reginfo.path);
 	return (ret);
 }
