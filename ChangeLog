@@ -14,7 +14,7 @@
 	* nscd/connections.c: Make socket nonblocking so that threads
 	don't get stuck on accept.  Fix locking.
 
-	* nscd/grpcache.c (cache_addgr): Use cope of original key in hash
+	* nscd/grpcache.c (cache_addgr): Use copy of original key in hash
 	entry with alternative key.
 	* nscd/pwdcache.c (cache_addpw): Likewise.
 
