@@ -346,7 +346,7 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
   else
     {
       /* Look up user name in database to get home directory */
-      char *user = __strndup (&words[1 + *offset], i - (1 + *offset));
+      char *user = strndupa (&words[1 + *offset], i - (1 + *offset));
       struct passwd pwd, *tpwd;
       int buflen = 1000;
       char* buffer = __alloca (buflen);
@@ -370,7 +370,6 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
 	}
 
       *offset = i - 1;
-      free (user);
     }
   return *word ? 0 : WRDE_NOSPACE;
 }

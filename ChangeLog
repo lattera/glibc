@@ -1,3 +1,9 @@
+2001-06-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/wordexp.c: Undo last patch.  Use strndupa instead.
+
+	* po/sk.po: Update from translation team.
+
 2001-06-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/shm_open.c (where_is_shmfs): Recognize
