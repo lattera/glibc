@@ -1,3 +1,10 @@
+2004-09-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sunrpc/rpc_parse.c (get_type): Use "quad_t" for TOK_HYPER.
+	Otherwise isvectordef will loop infinitely if typedef hyper int64_t
+	is seen.
+	(unsigned_dec): Use "u_quad_t" for similar reasons.
+
 2004-09-27  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/bits/waitstatus.h (__WIFSIGNALED): Simplify bit
