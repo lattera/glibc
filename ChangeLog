@@ -1,4 +1,18 @@
+2004-10-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* include/resolv.h (_res_opcodes): New extern.
+	Add libresolv_hidden_proto.
+	* resolv/res_debug.c (_res_opcodes): Remove.
+	(__p_class_syms, __p_type_syms): Add libresolv_hidden_proto
+	and libresolv_hidden_data_def.  Remove attribute_hidden.
+	* resolv/res_mkquery (_res_opcodes): Remove.
+	* resolv/res_data.c (_res_opcodes): Remove attribute_hidden.
+	Add libresolv_hidden_data_def.
+
 2004-10-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-open.c (_dl_open): Don't allow explicitly opening a DSO
+	into an empty namespace.
 
 	* elf/dl-fini.c (_dl_fini): Fix search for map in maps array.
 	Reverse order of namespaces.

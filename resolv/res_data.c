@@ -39,7 +39,7 @@ static const char rcsid[] = "$BINDId: res_data.c,v 8.17 1999/10/13 17:11:31 vixi
 #include <string.h>
 #include <unistd.h>
 
-const char *_res_opcodes[] attribute_hidden = {
+const char *_res_opcodes[] = {
 	"QUERY",
 	"IQUERY",
 	"CQUERYM",
@@ -57,6 +57,7 @@ const char *_res_opcodes[] attribute_hidden = {
 	"ZONEINIT",
 	"ZONEREF",
 };
+libresolv_hidden_data_def (_res_opcodes)
 
 #ifdef BIND_UPDATE
 const char *_res_sectioncodes[] attribute_hidden = {

@@ -88,8 +88,6 @@ static const char rcsid[] = "$BINDId: res_mkquery.c,v 8.12 1999/10/13 16:39:40 v
 # endif
 #endif
 
-extern const char *_res_opcodes[];
-
 /*
  * Form all types of queries.
  * Returns the size of the result or -1.

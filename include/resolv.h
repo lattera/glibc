@@ -98,6 +98,9 @@ libresolv_hidden_proto (__ns_name_unpack)
 libresolv_hidden_proto (__ns_get16)
 libresolv_hidden_proto (__ns_get32)
 
+extern const char *_res_opcodes[];
+libresolv_hidden_proto (_res_opcodes)
+
 #endif
 
 #endif

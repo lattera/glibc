@@ -118,7 +118,6 @@ static const char rcsid[] = "$BINDId: res_debug.c,v 8.34 2000/02/29 05:30:55 vix
 # define SPRINTF(x) sprintf x
 #endif
 
-extern const char *_res_opcodes[] attribute_hidden;
 extern const char *_res_sectioncodes[] attribute_hidden;
 
 /*
@@ -349,7 +348,9 @@ p_fqname(const u_char *cp, const u_char *msg, FILE *file) {
  * that C_ANY is a qclass but not a class.  (You can ask for records of class
  * C_ANY, but you can't have any records of that class in the database.)
  */
-const struct res_sym __p_class_syms[] attribute_hidden = {
+extern const struct res_sym __p_class_syms[];
+libresolv_hidden_proto (__p_class_syms)
+const struct res_sym __p_class_syms[] = {
 	{C_IN,		"IN"},
 	{C_CHAOS,	"CHAOS"},
 	{C_HS,		"HS"},
@@ -358,6 +359,7 @@ const struct res_sym __p_class_syms[] attribute_hidden = {
 	{C_NONE,	"NONE"},
 	{C_IN, 		(char *)0}
 };
+libresolv_hidden_data_def (__p_class_syms)
 
 /*
  * Names of message sections.
@@ -401,7 +403,9 @@ const struct res_sym __p_cert_syms[] attribute_hidden = {
  * that T_ANY is a qtype but not a type.  (You can ask for records of type
  * T_ANY, but you can't have any records of that type in the database.)
  */
-const struct res_sym __p_type_syms[] attribute_hidden = {
+extern const struct res_sym __p_type_syms[];
+libresolv_hidden_proto (__p_type_syms)
+const struct res_sym __p_type_syms[] = {
 	{ns_t_a,	"A",		"address"},
 	{ns_t_ns,	"NS",		"name server"},
 	{ns_t_md,	"MD",		"mail destination (deprecated)"},
@@ -448,6 +452,7 @@ const struct res_sym __p_type_syms[] attribute_hidden = {
 	{ns_t_any,	"ANY",		"\"any\""},
 	{0, 		NULL,		NULL}
 };
+libresolv_hidden_data_def (__p_type_syms)
 
 /*
  * Names of DNS rcodes.

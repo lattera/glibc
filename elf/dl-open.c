@@ -570,6 +570,12 @@ _dl_open (const char *file, int mode, const void *caller_dlopen, Lmid_t nsid)
 no more namespaces available for dlmopen()"));
 	}
     }
+  /* Never allow loading a DSO in a namespace which is empty.  Such
+     direct placements is only causing problems.  */
+  else if (nsid != LM_ID_BASE && nsid != __LM_ID_CALLER
+	   && GL(dl_ns)[nsid]._ns_nloaded == 0)
+    GLRO(dl_signal_error) (EINVAL, file, NULL,
+			   N_("invalid target namespace in dlmopen()"));
 
   args.file = file;
   args.mode = mode;
