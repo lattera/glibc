@@ -56,54 +56,59 @@ extern int __lll_mutex_unlock_wait (int *__futex)
   ({ unsigned char ret;							      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (1), "1" (futex), "0" (0));		      \
+		       : "r" (1), "1" (futex), "0" (0)			      \
+		       : "memory");					      \
      ret; })
 
 
 #define lll_mutex_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
-	    __asm (LOCK_INSTR "xaddl %0, %2\n\t"			      \
-		   "testl %0, %0\n\t"					      \
-		   "jne 1f\n\t"						      \
-		   ".subsection 1\n"					      \
-		   "1:\tleal %2, %%ecx\n\t"				      \
-		   "call __lll_mutex_lock_wait\n\t"			      \
-		   "jmp 2f\n\t"						      \
-		   ".previous\n"					      \
-		   "2:"							      \
-		   : "=a" (ignore1), "=&c" (ignore2), "=m" (futex)	      \
-		   : "0" (1), "2" (futex)); })
+	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
+			      "testl %0, %0\n\t"			      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "call __lll_mutex_lock_wait\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
+			      : "0" (1), "2" (futex)			      \
+			      : "memory"); })
 
 
 #define lll_mutex_timedlock(futex, timeout) \
   ({ int result, ignore1, ignore2;					      \
-     __asm (LOCK_INSTR "xaddl %0, %3\n\t"				      \
-	    "testl %0, %0\n\t"						      \
-	    "jne 1f\n\t"						      \
-	    ".subsection 1\n"						      \
-	    "1:\tleal %3, %%ecx\n\t"					      \
-	    "movl %6, %%edx\n\t"					      \
-	    "call __lll_mutex_timedlock_wait\n\t"			      \
-	    "jmp 2f\n\t"						      \
-	    ".previous\n"						      \
-	    "2:"							      \
-	    : "=a" (result), "=&c" (ignore1), "=&d" (ignore2), "=m" (futex)   \
-	    : "0" (1), "3" (futex), "m" (timeout));			      \
+     __asm __volatile (LOCK_INSTR "xaddl %0, %3\n\t"			      \
+		       "testl %0, %0\n\t"				      \
+		       "jne 1f\n\t"					      \
+		       ".subsection 1\n"				      \
+		       "1:\tleal %3, %%ecx\n\t"				      \
+		       "movl %6, %%edx\n\t"				      \
+		       "call __lll_mutex_timedlock_wait\n\t"		      \
+		       "jmp 2f\n\t"					      \
+		       ".previous\n"					      \
+		       "2:"						      \
+		       : "=a" (result), "=&c" (ignore1), "=&d" (ignore2),     \
+			 "=m" (futex)					      \
+		       : "0" (1), "3" (futex), "m" (timeout)		      \
+		       : "memory");					      \
      result; })
 
 
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm (LOCK_INSTR "decl %0\n\t"				      \
-		   "jne 1f\n\t"						      \
-		   ".subsection 1\n"					      \
-		   "1:\tleal %0, %%eax\n\t"				      \
-		   "call __lll_mutex_unlock_wake\n\t"			      \
-		   "jmp 2f\n\t"						      \
-		   ".previous\n"					      \
-		   "2:"							      \
-		   : "=m" (futex), "=&a" (ignore)			      \
-		   : "0" (futex)); })
+            __asm __volatile (LOCK_INSTR "decl %0\n\t"			      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %0, %%eax\n\t"			      \
+			      "call __lll_mutex_unlock_wake\n\t"	      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=m" (futex), "=&a" (ignore)		      \
+			      : "0" (futex)				      \
+			      : "memory"); })
 
 
 #define lll_mutex_islocked(futex) \
@@ -138,36 +143,39 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
   ({ unsigned char ret;							      \
      __asm __volatile (LOCK_INSTR "cmpxchgl %2, %1; setne %0"		      \
 		       : "=a" (ret), "=m" (futex)			      \
-		       : "r" (0), "1" (futex), "0" (1));		      \
+		       : "r" (0), "1" (futex), "0" (1)			      \
+		       : "memory");					      \
      ret; })
 
 
 #define lll_lock(futex) \
   (void) ({ int ignore1, ignore2;					      \
-	    __asm (LOCK_INSTR "xaddl %0, %2\n\t"			      \
-		   "jne 1f\n\t"						      \
-		   ".subsection 1\n"					      \
-		   "1:\tleal %2, %%ecx\n\t"				      \
-		   "call __lll_lock_wait\n\t"				      \
-		   "jmp 2f\n\t"						      \
-		   ".previous\n"					      \
-		   "2:"							      \
-		   : "=a" (ignore1), "=&c" (ignore2), "=m" (futex)	      \
-		   : "0" (-1), "2" (futex)); })
+	    __asm __volatile (LOCK_INSTR "xaddl %0, %2\n\t"		      \
+			      "jne 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %2, %%ecx\n\t"			      \
+			      "call __lll_lock_wait\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=a" (ignore1), "=&c" (ignore2), "=m" (futex) \
+			      : "0" (-1), "2" (futex)			      \
+			      : "memory"); })
 
 
 #define lll_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm (LOCK_INSTR "incl %0\n\t"				      \
-		   "jng 1f\n\t"						      \
-		   ".subsection 1\n"					      \
-		   "1:\tleal %0, %%eax\n\t"				      \
-		   "call __lll_unlock_wake\n\t"				      \
-		   "jmp 2f\n\t"						      \
-		   ".previous\n"					      \
-		   "2:"							      \
-		   : "=m" (futex), "=&a" (ignore)			      \
-		   : "0" (futex)); })
+            __asm __volatile (LOCK_INSTR "incl %0\n\t"			      \
+			      "jng 1f\n\t"				      \
+			      ".subsection 1\n"				      \
+			      "1:\tleal %0, %%eax\n\t"			      \
+			      "call __lll_unlock_wake\n\t"		      \
+			      "jmp 2f\n\t"				      \
+			      ".previous\n"				      \
+			      "2:"					      \
+			      : "=m" (futex), "=&a" (ignore)		      \
+			      : "0" (futex)				      \
+			      : "memory"); })
 
 
 #define lll_islocked(futex) \

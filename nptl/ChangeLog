@@ -1,3 +1,8 @@
+2002-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Mark asms as
+	volatile and add memory clobbers to lock operations.
+
 2002-12-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/i686/bits/atomic.h: Use i486 version.

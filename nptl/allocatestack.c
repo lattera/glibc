@@ -105,7 +105,7 @@ get_cached_stack (size_t *sizep, void **memp)
     {
       struct pthread *curr;
 
-      curr = list_entry(entry, struct pthread, header.data.list);
+      curr = list_entry (entry, struct pthread, header.data.list);
       if (FREE_P (curr) && curr->stackblock_size >= size)
 	{
 	  if (curr->stackblock_size == size)
