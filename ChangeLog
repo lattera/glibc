@@ -1,3 +1,10 @@
+2004-11-03  Marcus Brinkmann  <marcus@gnu.org>
+
+	* sysdeps/gnu/_G_config.h (_G_HAVE_MREMAP): Define symbol.
+	* sysdeps/mach/hurd/_G_config.h: New file.
+	* libio/fileops.c (mmap_remap_check) [__linux__]: Replaced with
+	[_G_HAVE_MREMAP].
+
 2004-11-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regcomp.c (utf8_sb_map): Define.
