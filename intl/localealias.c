@@ -236,8 +236,10 @@ read_alias_file (fname, fname_len)
 	 a) we are only interested in the first two fields
 	 b) these fields must be usable as file names and so must not
 	    be that long
-       */
-      char buf[BUFSIZ];
+	 We avoid a multi-kilobyte buffer here since this would use up
+	 stack space which we might not have if the program ran out of
+	 memory.  */
+      char buf[400];
       char *alias;
       char *value;
       char *cp;
@@ -245,19 +247,6 @@ read_alias_file (fname, fname_len)
       if (FGETS (buf, sizeof buf, fp) == NULL)
 	/* EOF reached.  */
 	break;
-
-      /* Possibly not the whole line fits into the buffer.  Ignore
-	 the rest of the line.  */
-      if (strchr (buf, '\n') == NULL)
-	{
-	  char altbuf[BUFSIZ];
-	  do
-	    if (FGETS (altbuf, sizeof altbuf, fp) == NULL)
-	      /* Make sure the inner loop will be left.  The outer loop
-		 will exit at the `feof' test.  */
-	      break;
-	  while (strchr (altbuf, '\n') == NULL);
-	}
 
       cp = buf;
       /* Ignore leading white space.  */
@@ -342,6 +331,14 @@ read_alias_file (fname, fname_len)
 	      ++added;
 	    }
 	}
+
+      /* Possibly not the whole line fits into the buffer.  Ignore
+	 the rest of the line.  */
+      while (strchr (buf, '\n') == NULL)
+	if (FGETS (buf, sizeof buf, fp) == NULL)
+	  /* Make sure the inner loop will be left.  The outer loop
+	     will exit at the `feof' test.  */
+	  break;
     }
 
   /* Should we test for ferror()?  I think we have to silently ignore
