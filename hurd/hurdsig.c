@@ -250,7 +250,8 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
 
   return portloc;
 }
-
+
+#include "intr-msg.h"
 
 /* SS->thread is suspended.
 
@@ -274,7 +275,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     mach_msg_type_name_t reply_port_type,
 		     int untraced)
 {
-  extern const void _hurd_intr_rpc_msg_do_trap, _hurd_intr_rpc_msg_in_trap;
+  extern const void _hurd_intr_rpc_msg_in_trap;
   mach_port_t rcv_port = MACH_PORT_NULL;
   mach_port_t intr_port;
 
@@ -294,6 +295,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
       /* The thread is about to do the RPC, but hasn't yet entered
 	 mach_msg.  Mutate the thread's state so it knows not to try
 	 the RPC.  */
+      INTR_MSG_BACK_OUT (&state->basic);
       MACHINE_THREAD_STATE_SET_PC (&state->basic,
 				   &_hurd_intr_rpc_msg_in_trap);
       state->basic.SYSRETURN = MACH_SEND_INTERRUPTED;

@@ -29,11 +29,7 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Things that want to be locked while forking.  */
-struct
-  {
-    size_t n;
-    struct mutex *locks[0];
-  } _hurd_fork_locks;
+symbol_set_declare (_hurd_fork_locks)
 
 
 /* Things that want to be called before we fork, to prepare the parent for
@@ -62,7 +58,6 @@ __fork (void)
   pid_t pid;
   size_t i;
   error_t err;
-  thread_t thread_self = __mach_thread_self ();
   struct hurd_sigstate *volatile ss;
 
   ss = _hurd_self_sigstate ();
@@ -87,14 +82,32 @@ __fork (void)
       mach_msg_type_number_t nporttypes = 0;
       thread_t *threads = NULL;
       mach_msg_type_number_t nthreads = 0;
-      int ports_locked = 0;
+      int ports_locked = 0, stopped = 0;
+
+      void resume_threads (void)
+	{
+	  if (! stopped)
+	    return;
+
+	  assert (threads);
+
+	  for (i = 0; i < nthreads; ++i)
+	    if (threads[i] != ss->thread)
+	      __thread_resume (threads[i]);
+	  stopped = 0;
+	}
 
       /* Run things that prepare for forking before we create the task.  */
       RUN_HOOK (_hurd_fork_prepare_hook, ());
 
       /* Lock things that want to be locked before we fork.  */
-      for (i = 0; i < _hurd_fork_locks.n; ++i)
-	__mutex_lock (_hurd_fork_locks.locks[i]);
+      {
+	void *const *p;
+	for (p = symbol_set_first_element (_hurd_fork_locks);
+	     ! symbol_set_end_p (_hurd_fork_locks, p);
+	     ++p)
+	  __mutex_lock (*p);
+      }
       __mutex_lock (&_hurd_siglock);
       
       newtask = MACH_PORT_NULL;
@@ -108,8 +121,16 @@ __fork (void)
 	__spin_lock (&_hurd_ports[i].lock);
       ports_locked = 1;
 
-      /* Create the child task.  It will inherit a copy of our memory.  */
-      err = __task_create (__mach_task_self (), 1, &newtask);
+      /* Stop all other threads while copying the address space,
+	 so nothing changes.  */
+      err = __proc_dostop (_hurd_ports[INIT_PORT_PROC].port, ss->thread);
+      if (!err)
+        {
+          stopped = 1;
+
+	  /* Create the child task.  It will inherit a copy of our memory.  */
+	  err = __task_create (__mach_task_self (), 1, &newtask);
+        }
 
       /* Unlock the global signal state lock, so we do not
 	 block the signal thread any longer than necessary.  */
@@ -263,7 +284,7 @@ __fork (void)
 		  if (err = __proc_task2proc (portnames[i], newtask, &insert))
 		    LOSE;
 		}
-	      else if (portnames[i] == thread_self)
+	      else if (portnames[i] == ss->thread)
 		{
 		  /* For the name we use for our own thread port, we will
 		     insert the thread port for the child main user thread
@@ -372,6 +393,10 @@ __fork (void)
 	__spin_unlock (&_hurd_ports[i].lock);
       ports_locked = 0;
 
+      /* All state has now been copied from the parent.  It is safe to
+         resume other parent threads.  */
+      resume_threads ();
+
       /* Create the child main user thread and signal thread.  */
       if ((err = __thread_create (newtask, &thread)) ||
 	  (err = __thread_create (newtask, &sigthread)))
@@ -381,8 +406,8 @@ __fork (void)
          dead name rights with the names we want to give the thread ports
          in the child as placeholders.  Now deallocate them so we can use
          the names.  */
-      if ((err = __mach_port_deallocate (newtask, thread_self)) ||
-	  (err = __mach_port_insert_right (newtask, thread_self,
+      if ((err = __mach_port_deallocate (newtask, ss->thread)) ||
+	  (err = __mach_port_insert_right (newtask, ss->thread,
 					   thread, MACH_MSG_TYPE_COPY_SEND)))
 	LOSE;
       /* We have one extra user reference created at the beginning of this
@@ -390,9 +415,9 @@ __fork (void)
 	 accounted for in the child below).  This extra right gets consumed
 	 in the child by the store into _hurd_sigthread in the child fork.  */
       if (thread_refs > 1 &&
-	  (err = __mach_port_mod_refs (newtask, thread_self,
+	  (err = __mach_port_mod_refs (newtask, ss->thread,
 				       MACH_PORT_RIGHT_SEND,
-				       thread_refs - 1)))
+				       thread_refs)))
 	LOSE;
       if ((_hurd_msgport_thread != MACH_PORT_NULL) /* Let user have none.  */
 	  && ((err = __mach_port_deallocate (newtask, _hurd_msgport_thread)) ||
@@ -474,6 +499,8 @@ __fork (void)
 	for (i = 0; i < _hurd_nports; ++i)
 	  __spin_unlock (&_hurd_ports[i].lock);
 
+      resume_threads ();
+
       if (newtask != MACH_PORT_NULL)
 	{
 	  if (err)
@@ -486,8 +513,6 @@ __fork (void)
 	__mach_port_deallocate (__mach_task_self (), sigthread);
       if (newproc != MACH_PORT_NULL)
 	__mach_port_deallocate (__mach_task_self (), newproc);
-      if (thread_self != MACH_PORT_NULL)
-	__mach_port_deallocate (__mach_task_self (), thread_self);
 
       if (portnames)
 	__vm_deallocate (__mach_task_self (),
@@ -525,7 +550,7 @@ __fork (void)
 
       /* We are the only thread in this new task, so we will
 	 take the task-global signals.  */
-      _hurd_sigthread = thread_self;
+      _hurd_sigthread = ss->thread;
 
       /* Unchain the sigstate structures for threads that existed in the
 	 parent task but don't exist in this task (the child process).
@@ -575,8 +600,13 @@ __fork (void)
 
   /* Unlock things we locked before creating the child task.
      They are locked in both the parent and child tasks.  */
-  for (i = 0; i < _hurd_fork_locks.n; ++i)
-    __mutex_unlock (_hurd_fork_locks.locks[i]);
+  {
+    void *const *p;
+    for (p = symbol_set_first_element (_hurd_fork_locks);
+	 ! symbol_set_end_p (_hurd_fork_locks, p);
+	 ++p)
+      __mutex_unlock (*p);
+  }
 
   _hurd_critical_section_unlock (ss);
 

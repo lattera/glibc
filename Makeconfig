@@ -267,10 +267,17 @@ endif
 
 # Command for linking programs with the C library.
 ifndef +link
-+link = $(CC) -nostdlib $(LDFLAGS) -o $@ \
++link = $(CC) -nostdlib -nostartfiles $(LDFLAGS) -o $@ \
 	$(addprefix $(csu-objpfx),start.o $(+preinit)) \
-	$(^:lib=$(common-objpfx)libc.a) $(gnulib) $(common-objpfx)libc.a \
+	$(^:$(common-objpfx)libc.a=$(link-libc)) \
 	$(addprefix $(csu-objpfx),$(+postinit))
+endif
+ifndef link-libc
+ifeq (yes,$(build-shared))
+link-libc = -L$(common-objdir) -lc $(gnulib)
+else
+link-libc = $(common-objpfx)libc.a $(gnulib) $(common-objpfx)libc.a
+endif
 endif
 ifndef gnulib
 gnulib := -lgcc

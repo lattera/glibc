@@ -45,6 +45,9 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 			struct machine_thread_all_state *state)
 {
   __label__ trampoline, rpc_wait_trampoline, firewall;
+  extern const void _hurd_intr_rpc_msg_in_trap;
+  extern const void _hurd_intr_rpc_msg_cx_sp;
+  extern const void _hurd_intr_rpc_msg_sp_restored;
   void *volatile sigsp;
   struct sigcontext *scp;
   struct 
@@ -80,6 +83,11 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
   if (! machine_get_basic_state (ss->thread, state))
     return NULL;
 
+  /* Save the original SP in the gratuitous `esp' slot.
+     We may need to reset the SP (the `uesp' slot) to avoid clobbering an
+     interrupted RPC frame.  */
+  state->basic.esp = state->basic.uesp;
+
   if ((ss->actions[signo].sa_flags & SA_ONSTACK) &&
       !(ss->sigaltstack.ss_flags & (SA_DISABLE|SA_ONSTACK)))
     {
@@ -88,6 +96,24 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       /* XXX need to set up base of new stack for
 	 per-thread variables, cthreads.  */
     }
+  /* This code has intimate knowledge of the special mach_msg system call
+     done in intr-msg.c; that code does: 
+					movl %esp, %ecx
+					leal ARGS, %esp
+	_hurd_intr_rpc_msg_cx_sp:	movl $-25, %eax
+	_hurd_intr_rpc_msg_do_trap:	lcall $7, $0
+	_hurd_intr_rpc_msg_in_trap:	movl %ecx, %esp
+        _hurd_intr_rpc_msg_sp_restored:
+     We must check for the window during which %esp points at the
+     mach_msg arguments.  The space below until %ecx is used by
+     the _hurd_intr_rpc_mach_msg frame, and must not be clobbered.  */
+  else if (state->basic.eip >= (int) &_hurd_intr_rpc_msg_cx_sp && 
+	   state->basic.eip < (int) &_hurd_intr_rpc_msg_sp_restored)
+    /* The SP now points at the mach_msg args, but there is more stack
+       space used below it.  The real SP is saved in %ecx; we must push the
+       new frame below there, and restore that value as the SP on
+       sigreturn.  */
+    sigsp = (char *) (state->basic.uesp = state->basic.ecx);
   else
     sigsp = (char *) state->basic.uesp;
 
@@ -166,7 +192,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
 	 message reception, since the request message has already been
 	 sent.  */
 
-      struct mach_msg_trap_args *args = (void *) state->basic.uesp;
+      struct mach_msg_trap_args *args = (void *) state->basic.esp;
 
       if (_hurdsig_catch_fault (SIGSEGV))
 	{
@@ -192,6 +218,7 @@ _hurd_setup_sighandler (struct hurd_sigstate *ss, __sighandler_t handler,
       state->basic.eip = (int) &&rpc_wait_trampoline;
       /* The reply-receiving trampoline code runs initially on the original
 	 user stack.  We pass it the signal stack pointer in %ebx.  */
+      state->basic.uesp = state->basic.esp; /* Restore mach_msg syscall SP.  */
       state->basic.ebx = (int) sigsp;
       /* After doing the message receive, the trampoline code will need to
 	 update the %eax value to be restored by sigreturn.  To simplify

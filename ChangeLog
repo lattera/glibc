@@ -1,3 +1,25 @@
+Thu Aug 17 16:18:38 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/intr-msg.c: Use INTR_MSG_TRAP macro from machine-dependent
+ 	"intr-msg.h" for special syscall code, instead of i386-specific asm.
+	* hurd/hurdsig.c: Use INTR_MSG_BACK_OUT macro from
+ 	machine-dependent "intr-msg.h" before mutating thread state to
+ 	skip RPC.
+
+	* sysdeps/mach/hurd/i386/trampoline.c: If PC is inside
+ 	_hurd_intr_rpc_mach_msg special syscall code, use real SP saved in
+	%ecx.
+
+	* Makeconfig (link-libc): New variable; use shared library if
+ 	available.
+	(+link): Use it.
+
+	* sysdeps/mach/hurd/fork.c (_hurd_fork_locks): Variable removed.
+  	Instead, declare with `symbol_set_declare'.
+	(fork): Use symbol_set_* macros for _hurd_fork_locks.  
+	Use SS->thread instead of __mach_thread_self ().  Suspend all
+ 	other threads during task_create and port copying.
+
 Wed Aug 16 17:04:26 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* hurd/intr-msg.c: Fixed calculation of syscall %esp.

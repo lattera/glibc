@@ -21,6 +21,9 @@ Cambridge, MA 02139, USA.  */
 #include <mach/mig_errors.h>
 #include <hurd/signal.h>
 
+#include "intr-msg.h"
+
+
 error_t
 _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
 			 mach_msg_option_t option,
@@ -56,17 +59,8 @@ _hurd_intr_rpc_mach_msg (mach_msg_header_t *msg,
       ss->cancel = 0;
     }
   else 
-  /*       err = intr_msg_trap (msg, option, send_size,
-	   rcv_size, rcv_name, timeout, notify);
-	   */
-    asm (".globl _hurd_intr_rpc_msg_do_trap\n" 
-	 ".globl _hurd_intr_rpc_msg_in_trap\n"
-	 "				movl %%esp, %%ecx\n"
-	 "				leal %1, %%esp\n"
-	 "				movl $-25, %%eax\n"
-	 "_hurd_intr_rpc_msg_do_trap:	lcall $7, $0 # status in %0\n"
-	 "_hurd_intr_rpc_msg_in_trap:	movl %%ecx, %%esp"
-	 : "=a" (err) : "m" ((&msg)[-1]) : "%ecx");
+    err = INTR_MSG_TRAP (msg, option, send_size,
+			 rcv_size, rcv_name, timeout, notify);
 
   switch (err)
     {
