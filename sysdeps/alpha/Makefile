@@ -91,4 +91,4 @@ $(divrem:%=$(sysdep_dir)/alpha/%.S): $(sysdep_dir)/alpha/divrem.m4 $(sysdep_dir)
 # Make it unwritable so noone will edit it by mistake.
 	-chmod a-w $@-tmp
 	mv -f $@-tmp $@
-	test -d CVS && cvs commit -m'Regenerated from $<' $@
+	test ! -d CVS || cvs commit -m'Regenerated from $<' $@
