@@ -24,7 +24,10 @@
 
 #define GET_PC(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_pc : ctx.v21.arm_pc))
-#define GET_FRAME(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
+#define GET_FRAME(ctx)	\
+	ADVANCE_STACK_FRAME((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_fp : ctx.v21.arm_fp))
 #define GET_STACK(ctx)	((void *)((ctx.v20.magic == SIGCONTEXT_2_0_MAGIC) ? \
 			 ctx.v20.reg.ARM_sp : ctx.v21.arm_sp))
+#define ADVANCE_STACK_FRAME(frm)	\
+			((struct layout *)frm - 1)
