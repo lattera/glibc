@@ -1,9 +1,4 @@
-/* Extensions for GNU date that are still missing here:
-   -
-   _
-*/
-
-/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -94,6 +89,8 @@ static unsigned int week __P((const struct tm *const, int));
 #define	fmt(n, args)	add((n), sprintf args; if (strlen (p) != (n)) return 0)
 #endif
 
+
+
 /* Return the week in the year specified by TP,
    with weeks starting on STARTING_DAY.  */
 #ifdef	__GNUC__
@@ -175,6 +172,10 @@ strftime (s, maxsize, format, tp)
   register size_t i = 0;
   register char *p = s;
   register const char *f;
+  char number_fmt[5];
+
+  /* Initialize the buffer we will use for the sprintf format for numbers.  */
+  number_fmt[0] = '%';
 
   zone = 0;
 #if HAVE_TM_ZONE
@@ -196,6 +197,9 @@ strftime (s, maxsize, format, tp)
 
   for (f = format; *f != '\0'; ++f)
     {
+      enum { pad_zero, pad_space, pad_none } pad; /* Padding for number.  */
+      unsigned int maxdigits;	/* Max digits for numeric format.  */
+      unsigned int number_value; /* Numeric value to be printed.  */
       const char *subfmt;
 
 #if HAVE_MBLEN
@@ -217,7 +221,24 @@ strftime (s, maxsize, format, tp)
 	  continue;
 	}
 
+      /* Check for flags that can modify a number format.  */
       ++f;
+      switch (*f)
+	{
+	case '_':
+	  pad = pad_space;
+	  ++f;
+	  break;
+	case '-':
+	  pad = pad_none;
+	  ++f;
+	  break;
+	default:
+	  pad = pad_zero;
+	  break;
+	}
+
+      /* Now do the specified format.  */
       switch (*f)
 	{
 	case '\0':
@@ -257,9 +278,13 @@ strftime (s, maxsize, format, tp)
 	  }
 	  break;
 
+#define DO_NUMBER(digits, value) \
+	  maxdigits = digits; number_value = value; goto do_number
+#define DO_NUMBER_NOPAD(digits, value) \
+	  maxdigits = digits; number_value = value; goto do_number_nopad
+
 	case 'C':
-	  fmt (2, (p, "%02d", (1900 + tp->tm_year) / 100));
-	  break;
+	  DO_NUMBER (2, (1900 + tp->tm_year) / 100);
 
 	case 'x':
 #ifdef _NL_CURRENT
@@ -272,40 +297,67 @@ strftime (s, maxsize, format, tp)
 	  goto subformat;
 
 	case 'd':
-	  fmt(2, (p, "%02d", tp->tm_mday));
-	  break;
+	  DO_NUMBER (2, tp->tm_mday);
 
 	case 'e':		/* GNU extension: %d, but blank-padded.  */
-	  fmt(2, (p, "%2d", tp->tm_mday));
-	  break;
+	  DO_NUMBER_NOPAD (2, tp->tm_mday);
+
+	  /* All numeric formats set MAXDIGITS and NUMBER_VALUE and then
+	     jump to one of these two labels.  */
+
+	do_number_nopad:
+	  /* Force `-' flag.  */
+	  pad = pad_none;
+
+	do_number:
+	  {
+	    /* Format the number according to the PAD flag.  */
+
+	    register char *nf = &number_fmt[1];
+	    int printed;
+
+	    switch (pad)
+	      {
+	      case pad_zero:
+		*nf++ = '0';
+	      case pad_space:
+		*nf++ = '0' + maxdigits;
+	      case pad_none:
+		*nf++ = 'u';
+		*nf = '\0';
+	      }
+
+#ifdef _LIBC
+	    add (maxdigits, printed = sprintf (p, number_fmt, number_value));
+#else
+	    add (sprintf (p, number_fmt, number_value);
+		 printed = strlen (p));
+#endif
+
+	    break;
+	  }
+
 
 	case 'H':
-	  fmt(2, (p, "%02d", tp->tm_hour));
-	  break;
+	  DO_NUMBER (2, tp->tm_hour);
 
 	case 'I':
-	  fmt(2, (p, "%02d", hour12));
-	  break;
+	  DO_NUMBER (2, hour12);
 
 	case 'k':		/* GNU extension.  */
-	  fmt(2, (p, "%2d", tp->tm_hour));
-	  break;
+	  DO_NUMBER_NOPAD (2, tp->tm_hour);
 
 	case 'l':		/* GNU extension.  */
-	  fmt(2, (p, "%2d", hour12));
-	  break;
+	  DO_NUMBER_NOPAD (2, hour12);
 
 	case 'j':
-	  fmt(3, (p, "%03d", 1 + tp->tm_yday));
-	  break;
+	  DO_NUMBER (3, 1 + tp->tm_yday);
 
 	case 'M':
-	  fmt(2, (p, "%02d", tp->tm_min));
-	  break;
+	  DO_NUMBER (2, tp->tm_min);
 
 	case 'm':
-	  fmt(2, (p, "%02d", tp->tm_mon + 1));
-	  break;
+	  DO_NUMBER (2, tp->tm_mon + 1);
 
 	case 'n':		/* GNU extension.  */
 	  add (1, *p = '\n');
@@ -324,8 +376,7 @@ strftime (s, maxsize, format, tp)
 	  goto subformat;
 
 	case 'S':
-	  fmt(2, (p, "%02d", tp->tm_sec));
-	  break;
+	  DO_NUMBER (2, tp->tm_sec);
 
 	case 'X':
 #ifdef _NL_CURRENT
@@ -342,24 +393,19 @@ strftime (s, maxsize, format, tp)
 	  break;
 
 	case 'U':
-	  fmt(2, (p, "%02u", y_week0));
-	  break;
+	  DO_NUMBER (2, y_week0);
 
 	case 'W':
-	  fmt(2, (p, "%02u", y_week1));
-	  break;
+	  DO_NUMBER (2, y_week1);
 
 	case 'w':
-	  fmt(2, (p, "%02d", tp->tm_wday));
-	  break;
+	  DO_NUMBER (2, tp->tm_wday);
 
 	case 'Y':
-	  fmt(4, (p, "%04d", 1900 + tp->tm_year));
-	  break;
+	  DO_NUMBER (4, 1900 + tp->tm_year);
 
 	case 'y':
-	  fmt(2, (p, "%02d", tp->tm_year % 100));
-	  break;
+	  DO_NUMBER (2, tp->tm_year % 100);
 
 	case 'Z':
 	  cpy(zonelen, zone);

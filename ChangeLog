@@ -1,3 +1,9 @@
+Tue Feb 27 12:14:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* time/strftime.c: Support - and _ flags to affect number padding.
+
+	* sysdeps/unix/common/tcsendbrk.c: New file.
+
 Mon Feb 26 10:22:30 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* sysdeps/unix/dirstream.h: Rewritten.
