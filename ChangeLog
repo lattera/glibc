@@ -1,3 +1,36 @@
+Mon Jul 29 20:33:42 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/netinet/in.h (ntohl, ntohs, htonl,
+	htons) [__BIG_ENDIAN]: #undef them before defining to avoid
+	redefinition warning.
+
+Mon Jul 29 20:28:27 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/time.h: Don't optimize tzset() to __tzset() which bypasses
+	the __tzset_lock.
+
+Tue Jul 30 15:14:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sunrpc/rpc/pmap_clnt.h: Fix botched patch for multiple inclusion
+	protection.
+
+Tue Jul 30 02:48:28 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/loadlocale.c (_nl_load_locale): Change cast to `size_t'
+	to be 64-bit clean.
+	Reported by Richard Henderson <rth@tamu.edu>.
+
+Tue Jul 30 15:04:50 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* locale/programs/ld-collate.c (collate_output): Fix typo reported by
+	David Miller.
+
+Tue Jul 30 13:23:13 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/setlocale.c (setlocale): Don't try to free C locale
+	data.
+	Reported by Matthias Urlichs.
+
 Tue Jul 30 14:35:17 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/dl-sysdep.c	(__open): Use open_file.

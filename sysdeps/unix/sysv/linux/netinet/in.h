@@ -93,9 +93,13 @@ extern unsigned short int htons __P ((unsigned short int));
 #if __BYTE_ORDER == __BIG_ENDIAN
 /* The host byte order is the same as network byte order,
    so these functions are all just identity.  */
+#undef ntohl
 #define	ntohl(x)	(x)
+#undef ntohs
 #define	ntohs(x)	(x)
+#undef htonl
 #define	htonl(x)	(x)
+#undef htons
 #define	htons(x)	(x)
 #endif
 
