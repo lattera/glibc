@@ -1,5 +1,8 @@
 2001-07-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconv/iconv_prog.c (main): Don't unconditionally define
+	variables only use if _POSIX_MAPPED_FILES is defined.
+
 	* sysdeps/unix/sysv/aix/sendmsg.c (sendmsg): Fix return type.
 	* sysdeps/unix/sysv/aix/recvmsg.c (recvmsg): Likewise.
 

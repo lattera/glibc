@@ -246,8 +246,10 @@ main (int argc, char *argv[])
       else
 	do
 	  {
+#ifdef _POSIX_MAPPED_FILES
 	    struct stat st;
 	    char *addr;
+#endif
 	    int fd;
 
 	    if (verbose)
