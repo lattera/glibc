@@ -106,7 +106,3 @@ endif
 ifeq ($(subdir),nis)
 CFLAGS-ypclnt.c = -DUSE_BINDINGDIR=1
 endif
-
-ifeq ($(subdir),resource)
-sysdep_routines += oldgetrlimit64 oldsetrlimit64
-endif

@@ -1,5 +1,13 @@
 1999-12-09  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/i386/Makefile: Add rules for
+	oldgetrlimit and oldsetrlimit.
+	* sysdeps/unix/sysv/linux/i386/syscalls.list: Add oldgetrlimit and
+	oldsetrlimit.
+	* sysdeps/unix/sysv/linux/Makefile: Move oldgetrlimit and
+	oldsetrlimit rules into 32-bit arch subdirs.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+
 	* locale/programs/ld-collate.c (insert_value): If this is the
 	first symbol the cursor can be the same as the next pointer.
 

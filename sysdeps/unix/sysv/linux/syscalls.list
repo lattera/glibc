@@ -33,8 +33,6 @@ munlock		EXTRA	munlock		2	__munlock	munlock
 munlockall	EXTRA	munlockall	0	__munlockall	munlockall
 nanosleep	-	nanosleep	2	__libc_nanosleep	__nanosleep nanosleep
 nfsservctl	EXTRA	nfsservctl	3	nfsservctl
-oldgetrlimit	EXTRA	getrlimit	2	__old_getrlimit	getrlimit@GLIBC_2.0
-oldsetrlimit	EXTRA	setrlimit	2	__old_setrlimit	setrlimit@GLIBC_2.0
 pause		-	pause		0	__libc_pause	pause
 personality	init-first personality	1	__personality	personality
 pipe		-	pipe		1	__pipe		pipe
