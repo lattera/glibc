@@ -1,6 +1,6 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -56,15 +56,21 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
       if (start == NULL)
         {
           start = malloc (sizeof (struct response));
+	  if (start == NULL)
+	    return YP_FALSE;
           next = start;
         }
       else
         {
           next->next = malloc (sizeof (struct response));
+	  if (next->next == NULL)
+	    return YP_FALSE;
           next = next->next;
         }
       next->next = NULL;
       next->val = malloc (invallen + 1);
+      if (next->val == NULL)
+	return YP_FALSE;
       strncpy (next->val, inval, invallen);
       next->val[invallen] = '\0';
     }

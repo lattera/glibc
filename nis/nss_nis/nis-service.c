@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -65,15 +65,21 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
       if (intern->start == NULL)
         {
           intern->start = malloc (sizeof (struct response_t));
+	  if (intern->start == NULL)
+	    return YP_FALSE; /* We have no error code for out of memory */
           intern->next = intern->start;
         }
       else
         {
           intern->next->next = malloc (sizeof (struct response_t));
+	  if (intern->next->next == NULL)
+	    return YP_FALSE; /* We have no error code for out of memory */
           intern->next = intern->next->next;
         }
       intern->next->next = NULL;
       intern->next->val = malloc (invallen + 1);
+      if (intern->next->val == NULL)
+	return YP_FALSE; /* We have no error code for out of memory */
       strncpy (intern->next->val, inval, invallen);
       intern->next->val[invallen] = '\0';
     }

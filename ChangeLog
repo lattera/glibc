@@ -1,7 +1,18 @@
+2000-03-16  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nss_nis/nis-ethers.c: Return with error if malloc fails.
+	* nis/nss_compat/compat-initgroups.c: Likewise.
+	* nis/nss_nis/nis-initgroups.c: Likewise.
+	* nis/nss_nis/nis-netgrp.c: Likewise.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+	* nis/ypclnt.c: Likewise.
+	
 2000-03-16  Andreas Jaeger  <aj@suse.de>
 
 	* manual/Makefile: MAKEINFO is set to `:' from configure if it
-	doesn't exist, correct checks. Fixes PR libc/1649.
+	doesn't exist, correct checks.  Fixes PR libc/1649.
 
 2000-03-16  Thorsten Kukuk  <kukuk@suse.de>
 

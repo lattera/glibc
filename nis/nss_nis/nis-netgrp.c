@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@suse.de>, 1996.
 
@@ -74,9 +74,8 @@ _nss_nis_setnetgrent (char *group)
 				&result, &len));
   if (status == NSS_STATUS_SUCCESS)
     {
-      if (len > 0)
+      if (len > 0 && (data = malloc (len + 1)) != NULL)
 	{
-	  data = malloc (len + 1);
 	  data_size = len;
 	  cursor = strncpy (data, result, len + 1);
 	  data[len] = '\0';
