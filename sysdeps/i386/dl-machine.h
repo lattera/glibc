@@ -206,7 +206,9 @@ _dl_runtime_resolve:
 .globl _start\n\
 .globl _dl_start_user\n\
 _start:\n\
+	pushl %esp\n\
 	call _dl_start\n\
+	popl %ebx\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\

@@ -1,3 +1,29 @@
+Tue Jun 11 19:13:04 1996  Richard Henderson  <rth@tamu.edu>
+
+	* elf/dl-close.c: Include <string.h> for memcpy.
+	* elf/dl-lookup.c: Same.
+
+	* elf/elf.h: Add Elfxx_Symndx for symbol indices.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Use it.
+	(_dl_setup_hash): Use it.
+	* elf/link.h (struct link_map): Use it.
+
+	* elf/rtld.c (_dl_start): Don't rely on pointer-to-first-arg hack
+	for getting the argc/argv/envp block.  Instead, make it the argument.
+	sysdeps/i386/dl-machine.h (RTLD_START): Do that.
+	sysdeps/m68k/dl-machine.h (RTLD_START): Same.
+
+	* shlib-versions: Add version numbers for alpha-linux.  To avoid
+	user confusion, make them the same as i386-linux.
+
+	* sysdeps/alpha/Makefile [subdir elf]: Add -mno-fp-regs to
+	sysdep-CFLAGS so that _dl_runtime_resolve doesn't have to save them.
+	Add -mbuild-constants to CFLAGS-rtld.c to that we can bootstrap
+	without using literal data.
+
+	* sysdeps/generic/dl-sysdep.c: Include <string.h> for memcpy.
+	Finish Elf32 -> ElfW migration.
+
 Tue Jun 11 15:09:15 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (elfobjdir): Use $(objdir) if set, even in elf subdir.

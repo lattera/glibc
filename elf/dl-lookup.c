@@ -20,6 +20,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <link.h>
 #include <assert.h>
+#include <string.h>
 
 
 /* This is the hashing function specified by the ELF ABI.  */
@@ -70,7 +71,7 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
       {
 	const ElfW(Sym) *symtab;
 	const char *strtab;
-	ElfW(Word) symidx;
+	ElfW(Symndx) symidx;
 
 	map = (*scope)->l_searchlist[i];
 
@@ -149,8 +150,8 @@ _dl_lookup_symbol (const char *undef_name, const ElfW(Sym) **ref,
 void
 _dl_setup_hash (struct link_map *map)
 {
-  ElfW(Word) *hash = (void *) map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr;
-  ElfW(Word) nchain;
+  ElfW(Symndx) *hash = (void *)(map->l_addr + map->l_info[DT_HASH]->d_un.d_ptr);
+  ElfW(Symndx) nchain;
   map->l_nbuckets = *hash++;
   nchain = *hash++;
   map->l_buckets = hash;

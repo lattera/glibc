@@ -54,6 +54,10 @@ typedef unsigned int Elf64_Off     __attribute__ ((mode (DI)));
 typedef unsigned int Elf32_Section __attribute__ ((mode (HI)));
 typedef unsigned int Elf64_Section __attribute__ ((mode (HI)));
 
+/* Type of symbol indices.  */
+typedef unsigned int Elf32_Symndx  __attribute__ ((mode (SI)));
+typedef unsigned int Elf64_Symndx  __attribute__ ((mode (DI)));
+
 
 /* The ELF file header.  This appears at the start of every ELF file.  */
 

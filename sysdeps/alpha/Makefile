@@ -28,4 +28,12 @@ ifeq ($(subdir),gnulib)
 routines = $(divrem)
 endif	# gnulib
 
+ifeq ($(subdir),elf)
+# The ld.so code cannot use literals until it self-relocates.
+CFLAGS-rtld.c = -mbuild-constants
+# The rest of ld.so shouldn't use FP regs for block moves so
+# that the lazy link trampoline doesn't have to save them.
+sysdep-CFLAGS += -mno-fp-regs
+endif
+
 divrem := divl divlu divq divqu reml remlu remq remqu

@@ -22,6 +22,9 @@ Cambridge, MA 02139, USA.  */
 #include <fcntl.h>
 #include <link.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include <string.h>
+
 
 extern int _dl_argc;
 extern char **_dl_argv;
@@ -29,21 +32,21 @@ extern char **_environ;
 extern void _start (void);
 extern int _dl_secure;
 
-Elf32_Addr
+ElfW(Addr)
 _dl_sysdep_start (void **start_argptr,
-		  void (*dl_main) (const Elf32_Phdr *phdr, Elf32_Word phnum,
-				   Elf32_Addr *user_entry))
+		  void (*dl_main) (const ElfW(Phdr) *phdr, ElfW(Word) phnum,
+				   ElfW(Addr) *user_entry))
 {
-  const Elf32_Phdr *phdr;
-  Elf32_Word phnum;
-  Elf32_Addr user_entry;
-  Elf32_auxv_t *av;
+  const ElfW(Phdr) *phdr;
+  ElfW(Word) phnum;
+  ElfW(Addr) user_entry;
+  ElfW(auxv_t) *av;
   uid_t uid, euid;
   gid_t gid, egid;
   unsigned int seen;
 
-  user_entry = (Elf32_Addr) &_start;
-  _dl_argc = *(int *) start_argptr;
+  user_entry = (ElfW(Addr)) &_start;
+  _dl_argc = *(long *) start_argptr;
   _dl_argv = (char **) start_argptr + 1;
   _environ = &_dl_argv[_dl_argc + 1];
   start_argptr = (void **) _environ;
@@ -111,8 +114,6 @@ _dl_sysdep_open_zero_fill (void)
 {
   return __open ("/dev/zero", O_RDONLY);
 }
-
-#include <stdarg.h>
 
 void
 _dl_sysdep_fatal (const char *msg, ...)

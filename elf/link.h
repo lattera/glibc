@@ -110,8 +110,8 @@ struct link_map
     struct link_map *l_loader;
 
     /* Symbol hash table.  */
-    ElfW(Word) l_nbuckets;
-    const ElfW(Word) *l_buckets, *l_chain;
+    ElfW(Symndx) l_nbuckets;
+    const ElfW(Symndx) *l_buckets, *l_chain;
 
     unsigned int l_opencount;	/* Reference count for dlopen/dlclose.  */
     enum			/* Where this object came from.  */

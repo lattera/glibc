@@ -234,7 +234,9 @@ _dl_runtime_resolve:
 .globl _start
 .globl _dl_start_user
 _start:
+	move.l %sp, -(%sp)
 	jbsr _dl_start
+	addq.l #4, %sp
 _dl_start_user:
 	| Save the user entry point address in %a4.
 	move.l %d0, %a4

@@ -101,7 +101,7 @@ _dl_start (void *arg)
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user
      entry point on the same stack we entered on.  */
-  return _dl_sysdep_start (&arg, &dl_main);
+  return _dl_sysdep_start (arg, &dl_main);
 }
 
 
