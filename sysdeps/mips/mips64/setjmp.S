@@ -37,5 +37,8 @@ ENTRY (__sigsetjmp)
 	nop
 #endif	
 	RESTORE_GP64
+#if _MIPS_SIM != _MIPS_SIM_ABI32
+	move a4, gp
+#endif
 	jr t9
 	.end __sigsetjmp

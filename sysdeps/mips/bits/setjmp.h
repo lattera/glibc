@@ -24,6 +24,7 @@
 
 typedef struct
   {
+#if _MIPS_SIM == _MIPS_SIM_ABI32
     /* Program counter.  */
     __ptr_t __pc;
 
@@ -31,17 +32,29 @@ typedef struct
     __ptr_t __sp;
 
     /* Callee-saved registers s0 through s7.  */
-#if _MIPS_SIM == _MIPS_SIM_ABI32
     int __regs[8];
-#else
-    __extension__ long long __regs[8];
-#endif
 
     /* The frame pointer.  */
     __ptr_t __fp;
 
     /* The global pointer.  */
     __ptr_t __gp;
+#else
+    /* Program counter.  */
+    __extension__ long long __pc;
+
+    /* Stack pointer.  */
+    __extension__ long long __sp;
+
+    /* Callee-saved registers s0 through s7.  */
+    __extension__ long long __regs[8];
+
+    /* The frame pointer.  */
+    __extension__ long long __fp;
+
+    /* The global pointer.  */
+    __extension__ long long __gp;
+#endif
 
     /* Floating point status register.  */
     int __fpc_csr;
