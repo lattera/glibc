@@ -76,7 +76,6 @@ include ../Makeconfig
 
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
-# Disable the tests for now - first the locales have to be generated
 locale_test_suite := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp \
 		     tst_wctrans tst_iswalpha tst_iswpunct tst_wcschr	 \
 		     tst_wcspbrk tst_wctype tst_iswcntrl tst_iswspace	 \
@@ -85,7 +84,10 @@ locale_test_suite := tst_iswalnum tst_iswprint tst_towctrans tst_wcsncmp \
 		     tst_wcscspn tst_wcswidth tst_iswlower tst_swscanf	 \
 		     tst_wcslen tst_wctob tst_iswctype tst_towlower	 \
 		     tst_wcscat tst_towupper tst_wcscmp tst_wcsncat	 \
-		     tst_wcsncpy tst_wcsxfrm tst_wcwidth tst_mbrlen
+		     tst_wcsncpy tst_wcsxfrm tst_wcwidth tst_mbrlen	 \
+		     tst_mblen tst_strcoll tst_strxfrm tst_mbtowc 	 \
+		     tst_wctomb
+
 tests = $(locale_test_suite)
 endif
 endif
@@ -149,6 +151,7 @@ install-locales:
 			$(inst_localedir)/$$locale; \
 	done < SUPPORTED
 
+# The mbwc-tests need some environment setup to find the locale data files
 TEST_MBWC_ENV:= LOCPATH=$(common-objpfx)localedata
 tst_iswalnum-ENV = $(TEST_MBWC_ENV)
 tst_iswalpha-ENV = $(TEST_MBWC_ENV)
@@ -162,7 +165,11 @@ tst_iswpunct-ENV = $(TEST_MBWC_ENV)
 tst_iswspace-ENV = $(TEST_MBWC_ENV)
 tst_iswupper-ENV = $(TEST_MBWC_ENV)
 tst_iswxdigit-ENV = $(TEST_MBWC_ENV)
+tst_mblen-ENV = $(TEST_MBWC_ENV)
 tst_mbrlen-ENV = $(TEST_MBWC_ENV)
+tst_mbtowc-ENV = $(TEST_MBWC_ENV)
+tst_strcoll-ENV = $(TEST_MBWC_ENV)
+tst_strxfrm-ENV = $(TEST_MBWC_ENV)
 tst_swscanf-ENV = $(TEST_MBWC_ENV)
 tst_towctrans-ENV = $(TEST_MBWC_ENV)
 tst_towlower-ENV = $(TEST_MBWC_ENV)
@@ -183,6 +190,7 @@ tst_wcsstr-ENV = $(TEST_MBWC_ENV)
 tst_wcswidth-ENV = $(TEST_MBWC_ENV)
 tst_wcsxfrm-ENV = $(TEST_MBWC_ENV)
 tst_wctob-ENV = $(TEST_MBWC_ENV)
+tst_wctomb-ENV = $(TEST_MBWC_ENV)
 tst_wctrans-ENV = $(TEST_MBWC_ENV)
 tst_wctype-ENV = $(TEST_MBWC_ENV)
 tst_wcwidth-ENV = $(TEST_MBWC_ENV)
