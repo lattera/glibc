@@ -25,6 +25,20 @@
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread || defined IS_IN_librt
 
+# ifdef IS_IN_librt
+#  define PSEUDO_NLOCAL		6
+#  define PSEUDO_SAVE_GP	mov loc5 = gp
+#  define PSEUDO_RESTORE_GP	mov gp = loc5
+#  define PSEUDO_SAVE_GP_1
+#  define PSEUDO_RESTORE_GP_1	mov gp = loc5
+# else
+#  define PSEUDO_NLOCAL		5
+#  define PSEUDO_SAVE_GP
+#  define PSEUDO_RESTORE_GP
+#  define PSEUDO_SAVE_GP_1	mov loc4 = gp;;
+#  define PSEUDO_RESTORE_GP_1	mov gp = loc4
+# endif
+
 # undef PSEUDO
 # define PSEUDO(name, syscall_name, args)				      \
 .text;									      \
@@ -45,13 +59,15 @@ ENTRY (name)								      \
 __GC_##name:								      \
 .Lpseudo_cancel:							      \
      .prologue;								      \
-     .regstk args, 5, args, 0;						      \
+     .regstk args, PSEUDO_NLOCAL, args, 0;				      \
      .save ar.pfs, loc0;						      \
-     alloc loc0 = ar.pfs, args, 5, args, 0;				      \
+     alloc loc0 = ar.pfs, args, PSEUDO_NLOCAL, args, 0;			      \
      .save rp, loc1;							      \
-     mov loc1 = rp;;							      \
+     mov loc1 = rp;							      \
+     PSEUDO_SAVE_GP;;							      \
      .body;								      \
      CENABLE;;								      \
+     PSEUDO_RESTORE_GP;							      \
      mov loc2 = r8;							      \
      COPY_ARGS_##args							      \
      mov r15 = SYS_ify(syscall_name);					      \
@@ -60,6 +76,7 @@ __GC_##name:								      \
      mov loc4 = r10;							      \
      mov out0 = loc2;							      \
      CDISABLE;;								      \
+     PSEUDO_RESTORE_GP;							      \
      cmp.eq p6,p0=-1,loc4;						      \
 (p6) br.cond.spnt.few __syscall_error_##args;				      \
      mov r8 = loc3;							      \
@@ -76,14 +93,14 @@ __GC_##name:								      \
      .size __syscall_error_##args, 64;					      \
 __syscall_error_##args:							      \
      .prologue;								      \
-     .regstk args, 5, args, 0;						      \
+     .regstk args, PSEUDO_NLOCAL, args, 0;				      \
      .save ar.pfs, loc0;						      \
      .save rp, loc1;							      \
      .body;								      \
-     mov loc4 = r1;;							      \
+     PSEUDO_SAVE_GP_1;							      \
      br.call.sptk.many b0 = __errno_location;;				      \
      st4 [r8] = loc3;							      \
-     mov r1 = loc4;							      \
+     PSEUDO_RESTORE_GP_1;						      \
      mov rp = loc1;							      \
      mov r8 = -1;							      \
      mov ar.pfs = loc0
