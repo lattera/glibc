@@ -9,6 +9,13 @@ ifeq ($(subdir),misc)
 sysdep_routines += dl-open dl-sym dl-close
 endif
 
+ifeq ($(subdir),login)
+sysdep_routines += setutxent getutxent endutxent getutxid getutxline \
+                   pututxline utmpxname
+
+sysdep_headers += utmpx.h bits/utmpx.h
+endif
+
 # Don't compile the ctype glue code, since there is no old non-GNU C library.
 inhibit-glue = yes
 

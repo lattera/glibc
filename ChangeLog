@@ -1,3 +1,25 @@
+2000-12-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* configure.in: Define HAVE_ASM_GLOBAL_DOT_NAME for AIX.
+	* config.h.in: Add HAVE_ASM_GLOBAL_DOT_NAME.
+	* include/libc-symbols.h (strong_alias): Define special version
+	for HAVE_ASM_GLOBAL_DOT_NAME.
+	(weak_alias): Likewise.
+	* sysdeps/powerpc/bsd-setjmp.S: Use strong_alias not .set.
+	* sysdeps/unix/sysv/aix/Makefile [$(subdir)==login]
+	(sysdep_routines): Add setutxent, getutxent, endutxent, getutxid,
+	getutxline, pututxline, and utmpxname.
+	* sysdeps/unix/sysv/aix/fchdir.c: Define __fchdir.
+	* sysdeps/unix/sysv/aix/lseek.c: Define __libc_lseek alias.
+	* sysdeps/unix/sysv/aix/open.c: Define __libc_open alias.
+	* sysdeps/unix/sysv/aix/pread.c: Define pread alias.
+	* sysdeps/unix/sysv/aix/pread64.c: Define pread64 alias.
+	* sysdeps/unix/sysv/aix/sysdep.h (JUMPTARGET): Use C_TEXT.
+	* sysdeps/unix/sysv/aix/bits/types.h: Define __clockid_t and __timer_t.
+	* sysdeps/unix/sysv/aix/bits/utmp.h: Cleanup.  Add comments.
+	* sysdeps/unix/sysv/linux/sys/param.h (MAXHOSTNAMELEN): Define.
+	Patches by Michael Keezer <mkeezer@redhat.com>.
+
 2000-12-04  H.J. Lu  <hjl@gnu.org>
 
 	* configure.in: Change --with-oldest-abi=ABI to

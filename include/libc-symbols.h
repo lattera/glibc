@@ -124,9 +124,17 @@
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   .set C_SYMBOL_NAME (alias),C_SYMBOL_NAME (original)
 # else
-#  define strong_alias(original, alias)		\
+#  ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#   define strong_alias(original, alias)	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP	\
+  ASM_GLOBAL_DIRECTIVE C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP	\
+  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
+#  else
+#   define strong_alias(original, alias)	\
   ASM_GLOBAL_DIRECTIVE C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+#  endif
 # endif
 
 # ifdef HAVE_WEAK_SYMBOLS
@@ -138,9 +146,17 @@
 
 #  else /* ! HAVE_ASM_WEAKEXT_DIRECTIVE */
 
-#   define weak_alias(original, alias)	\
+#   ifdef HAVE_ASM_GLOBAL_DOT_NAME
+#    define weak_alias(original, alias)	\
+  .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP			\
+  C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original) ASM_LINE_SEP	\
+  .weak C_SYMBOL_DOT_NAME (alias) ASM_LINE_SEP			\
+  C_SYMBOL_DOT_NAME (alias) = C_SYMBOL_DOT_NAME (original)
+#   else
+#    define weak_alias(original, alias)	\
   .weak C_SYMBOL_NAME (alias) ASM_LINE_SEP	\
   C_SYMBOL_NAME (alias) = C_SYMBOL_NAME (original)
+#   endif
 
 #   define weak_extern(symbol)	\
   .weak C_SYMBOL_NAME (symbol)

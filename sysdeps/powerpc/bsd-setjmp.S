@@ -26,8 +26,7 @@
 
 ENTRY (BP_SYM (__setjmp))
 	li r4,1			/* Set second argument to 1.  */
-	b JUMPTARGET(BP_SYM (__sigsetjmp))
+	b JUMPTARGET (BP_SYM (__sigsetjmp))
 END (BP_SYM (__setjmp))
 
-	.globl BP_SYM (setjmp)
-	.set BP_SYM (setjmp), BP_SYM (__setjmp)
+strong_alias (__setjmp, setjmp)

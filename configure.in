@@ -807,6 +807,12 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
+# The Aix ld uses global .symbol_names instead of symbol_names.
+case "$os" in
+aix4.3*)
+  AC_DEFINE(HAVE_ASM_GLOBAL_DOT_NAME)
+esac
+
 AC_CACHE_CHECK(for .symver assembler directive, libc_cv_asm_symver_directive,
 [cat > conftest.s <<EOF
 ${libc_cv_dot_text}

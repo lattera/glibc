@@ -1,5 +1,5 @@
 /* The `struct utmp' type, describing entries in the utmp file.  AIX.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,12 +21,9 @@
 # error "Never include <bits/utmp.h> directly; use <utmp.h> instead."
 #endif
 
-
-#include <time.h>
-
-#define _PATH_UTMP      "/etc/utmp"
-#define _PATH_WTMP      "/var/adm/wtmp"
-#define _PATH_LASTLOG   "/var/adm/lastlog"
+#include <paths.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 
 #define UT_LINESIZE	12
@@ -52,22 +49,25 @@ struct utmp
   };
 
 
+/* Values for the `ut_type' field of a `struct utmp'.  */
+#define EMPTY		0	/* No valid user accounting information.  */
+
+#define RUN_LVL		1	/* The system's runlevel.  */
+#define BOOT_TIME	2	/* Time of system boot.  */
+#define OLD_TIME	3	/* Time when system clock changed.  */
+#define NEW_TIME	4	/* Time after system clock changed.  */
+
+#define INIT_PROCESS	5	/* Process spawned by the init process.  */
+#define LOGIN_PROCESS	6	/* Session leader of a logged in user.  */
+#define USER_PROCESS	7	/* Normal process.  */
+#define DEAD_PROCESS	8	/* Terminated process.  */
+
+#define ACCOUNTING	9
+
+
 /* Tell the user that we have a modern system with UT_HOST, UT_TYPE, and
    UT_ID fields.  */
 #define _HAVE_UT_TYPE	1
 #define _HAVE_UT_PID	1
 #define _HAVE_UT_ID	1
 #define _HAVE_UT_HOST	1
-
-
-/* Values for the `ut_type' field of a `struct utmp'.  */
-#define EMPTY		0
-#define RUN_LVL		1
-#define BOOT_TIME	2
-#define OLD_TIME	3
-#define NEW_TIME	4
-#define INIT_PROCESS	5
-#define LOGIN_PROCESS	6
-#define USER_PROCESS	7
-#define DEAD_PROCESS	8
-#define ACCOUNTING	9

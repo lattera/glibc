@@ -87,6 +87,12 @@ typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 
 typedef int __clock_t;
 
+/* Clock ID used in clock and timer functions.  */
+typedef int __clockid_t;
+
+/* Timer ID returned by `timer_create'.  */
+typedef int __timer_t;
+
 /* One element in the file descriptor mask array.  */
 typedef unsigned long int __fd_mask;
 

@@ -1,4 +1,5 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Round floating-point to integer.  AIX/PowerPC version.
+   Copyright (C) 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <unistd.h>
+#include <sysdeps/powerpc/fpu/s_lrint.c>
 
-extern int kpread (int fd, void *buf, size_t len, long long int off);
-
-ssize_t
-__pread (int fd, void *buf, size_t len, off_t off)
-{
-  return kpread (fd, buf, len, off);
-}
-weak_alias (__pread, pread)
+/* This code will also work for a 'float' argument.  */
+asm ("\
+        .globl .__lrintf
+        .globl .lrintf
+        .weak .lrintf
+        .set .__lrintf,.__lrint
+        .set .lrintf,.__lrint
+");
