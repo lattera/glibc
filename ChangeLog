@@ -1,3 +1,8 @@
+2002-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regexec.c (sift_states_bkref): Remove ret variable.  Use
+	err instead.
+
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
 	* test-skeleton.c (timeout_handler): Use WUNTRACED flag in waitpid.
@@ -9,7 +14,7 @@
 
 	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): The return value
 	semantics for sigtimedwait is different.  Rework the return value
-	handling and don't pass in an siginfo variable.
+	handling and don't pass in a siginfo variable.
 
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
@@ -38,7 +43,7 @@
 
 2002-09-29  Ulrich Drepper  <drepper@redhat.com>
 
-	* nss/Makefile: Move bug-erage from tests to xtests.
+	* nss/Makefile: Move bug-erange from tests to xtests.
 
 2002-09-29  Jakub Jelinek  <jakub@redhat.com>
 
