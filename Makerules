@@ -289,8 +289,6 @@ endef
 ifneq (,$(objpfx))
 # Continuation lines here are dangerous because they introduce spaces!
 define sed-remove-objpfx
--e 's@ $(subst .,\.,$(subst @,\@,$(objpfx)))@ $$(objpfx)@g' \
--e 's@^$(subst .,\.,$(subst @,\@,$(objpfx)))@$$(objpfx)@g' \
 -e 's@ $(subst .,\.,$(subst @,\@,$(common-objpfx)))@ $$(common-objpfx)@g' \
 -e 's@^$(subst .,\.,$(subst @,\@,$(common-objpfx)))@$$(common-objpfx)@g'
 endef
@@ -735,7 +733,7 @@ cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration definitions.
-BUILD_CFLAGS = -include $(..)config.h
+BUILD_CFLAGS = -include $(common-objpfx)config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check
@@ -777,6 +775,7 @@ endef
 # Also remove the dependencies and generated source files.
 common-clean: common-mostlyclean
 	-rm -f $(addprefix $(objpfx),$(generated)) $(+depfiles)
+	-rm -f $(addprefix $(common-objpfx),$(common-generated))
 	-rm -f $(common-objpfx)distinfo-$(subdir)
 
 # Produce a file `stub-$(subdir)' which contains `#define __stub_FUNCTION'

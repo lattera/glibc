@@ -44,10 +44,11 @@ ifeq (,$(filter mach hurd,$(subdir)))
 hurd-objpfx = $(common-objpfx)hurd/
 
 # These are all the generated headers that <hurd.h> includes.
-before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,io fs process)
-$(patsubst %,$(hurd-objpfx)hurd/%.%,io fs process):
+before-compile += $(patsubst %,$(hurd-objpfx)hurd/%.h,auth io fs process)
+$(patsubst %,$(hurd-objpfx)hurd/%.%,auth io fs process):
 	$(MAKE) -C $(..)hurd generated no_deps=t
 endif
+
 
 # Generate errnos.h from the section of the manual that lists all the errno
 # codes.
@@ -86,7 +87,8 @@ $(common-objpfx)stamp-errnos: $(hurd)/errnos.awk $(errno.texinfo) \
 	test ! -d CVS || \
 	  (cd $(hurd); cvs commit -m'Regenerated from $^' errnos.h)
 	touch $@
-generated += errnos.d stamp-errnos
+
+common-generated += errnos.d stamp-errnos
 
 # We install the real libc.a as libcrt.a and as libc.a we install a linker
 # script which does -( -lcrt -lmachuser -lhurduser -).
@@ -103,7 +105,7 @@ endif
 rpcuserlibs := $(common-objpfx)mach/libmachuser.so \
 	       $(common-objpfx)hurd/libhurduser.so
 $(common-objpfx)libc.so: $(rpcuserlibs)
-rpath-link += $(common-objpfx)mach:$(common-objpfx)hurd
+rpath-link := $(rpath-link):$(common-objpfx)mach:$(common-objpfx)hurd
 
 # The RPC stubs from these libraries are needed in building the dynamic
 # linker, too.  It must be self-contained, so we link the needed PIC

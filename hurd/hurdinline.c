@@ -5,6 +5,7 @@
 #undef _EXTERN_INLINE
 #define _EXTERN_INLINE /* Define the real function. */
 
+#include "hurd.h"
 #include "hurd/fd.h"
 #include "hurd/signal.h"
 #include "hurd/userlink.h"

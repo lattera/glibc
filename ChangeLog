@@ -1,3 +1,26 @@
+Fri Aug 30 13:39:21 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* Makerules (BUILD_CFLAGS): Use @(common-objpfx) for config.h, not
+ 	$(..).  Some rules (like sysdeps/posix/Makefile for mk-stdiolim)
+ 	do `cd' commands.
+	(sed-remove-objpfx): Don't substitute for $(objpfx) anymore;
+ 	$(common-objpfx) is good enough.
+	* Rules (common-generated): Provide default (empty) value.
+	(dummy.o, dummy.c, empty.o, empty.c): Put these in
+ 	$(common-generated), not $(generated), and without $(..).
+	(subdir_echo-distinfo): Treat $(common-generated) just like
+ 	$(generated).
+	(generated): Depend on the (suitably mutated) $(common-generated)
+ 	files too.
+	* Makerules (common-clean): Remove common-generated files too.
+	* sysdeps/mach/hurd/Makefile (generated): Don't put errnos.d and
+ 	stamp-errnos here.
+	(common-generated): Do put errnos.d and stamp-errnos here.
+	(rpath-link): Don't use +=; $(rpath-link) is a colon separated list.
+
+	* sysdeps/mach/hurd/Makefile (before-compile): Add auth; also add
+ 	auth to following rule to get it built.
+
 Fri Aug 30 01:26:44 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/Dist: Add close.S.
@@ -46,7 +69,7 @@ Tue Aug 27 10:06:22 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.
 	* Rules (dep-dummy-lib): Use $(common-objpfx) to avoid creating to
 	more than once.
 	($(objpfx)dummy.c, $(objpfx)empty.c): Change target name to use
-	$(common-objfpx).  All uses in dependency lists changed.
+	$(common-objpfx).  All uses in dependency lists changed.
 	(generated): Prepend $(..) to names.
 	* bare/Makefile ($(objpfx)lib$(config-vendor).a): Remove $(objpfx)
 	from $@.

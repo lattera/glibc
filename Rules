@@ -49,6 +49,10 @@ ifneq	"$(findstring env,$(origin generated))" ""
 generated :=
 endif
 
+ifneq	"$(findstring env,$(origin common-generated))" ""
+common-generated :=
+endif
+
 ifeq "$(strip $(headers))" ""
 ifneq "$(wildcard $(subdir).h)" ""
 override headers := $(subdir).h
@@ -71,7 +75,7 @@ $(common-objpfx)dummy.c:
 	echo 'void __dummy__ () { }' > $@
 $(common-objpfx)empty.c:
 	cp -f /dev/null $@
-generated := $(generated) $(..)dummy.o $(..)dummy.c $(..)empty.c $(..)empty.o
+common-generated := $(common-generated) dummy.o dummy.c empty.c empty.o
 
 # This makes all the auxilliary and test programs.
 
@@ -117,7 +121,7 @@ subdir_echo-headers: echo-headers
 .PHONY: subdir_echo-distinfo
 subdir_echo-distinfo:
 	@echo $(addprefix +header+,$(headers)) \
-	      $(addprefix +nodist+,$(generated) $(dont_distribute))
+	      $(addprefix +nodist+,$(generated) $(common-generated) $(dont_distribute))
 
 # We want to install everything except the library itself, but update all
 # our portions of the library because the parent make will install it later
@@ -131,7 +135,8 @@ subdir_dist: dist
 
 # Convenient target to update all the generated source files.
 .PHONY: generated
-generated: $(addprefix $(objpfx),$(generated))
+generated: $(addprefix $(objpfx),$(generated)) 
+generated: $(addprefix $(common-objpfx),$(common-generated))
 
 ifndef libc.so-version
 # Undefine this because it can't work when we libc.so is unversioned.
