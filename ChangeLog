@@ -1,3 +1,9 @@
+2003-01-15  Roland McGrath  <roland@redhat.com>
+
+	* Makerules: Use -include for tls.make, suppresses warning.
+	Move gen-as-const-headers rules up so before-compile is set in time.
+	(sed-remove-dotdot): Fix to work right for subdirs or top dir.
+
 2003-01-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/nscd.c (main): Make code to close all file descriptors
