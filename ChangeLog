@@ -1,3 +1,54 @@
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Clean-up: define family to hold
+	target family.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Loosen protocol check to ease raw
+	socket creation.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Ensure to fill ai_socktype and
+	ai_protocol by internal table if service was not given.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Don't raise an error even if
+	numerical port was specified with protocol without socktype.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Ensure to check if protocol is ok.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* inet/getnameinfo.c: getnameinfo() NI_xxx flag validation.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* sysdeps/posix/getaddrinfo.c: Ensure not to fill garbage value in
+	sin6_scope_id field.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* inet/getnameinfo.c: Repair getnameinfo() sin6_socpe_id support.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* inet/getnameinfo.c: Repair NI_NOFQDN flag support.
+
+2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
+
+	* inet/getnameinfo.c: Wake-up sin6_scope_id support in
+	getnameinfo(): check for whether sin6_socpe_id exist was wrong.
+
+2000-11-09  Martin Schwidefsky  <mschwide@nc.boeblingen.de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/mmap.S: Use mmap2 if it is present.
+	* sysdeps/unix/sysv/linux/s390/mmap64.S: New file.
+
 2000-11-09  H.J. Lu  <hjl@gnu.org>
 
 	* io/Versions (GLIBC_2.1.1): Remove lockf64.

@@ -175,25 +175,28 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   struct hostent th;
   int ok = 0;
 
+  if (flags & ~(NI_NUMERICHOST|NI_NUMERICSERV|NI_NOFQDN|NI_NAMEREQD|NI_DGRAM))
+    return EAI_BADFLAGS;
+
   if (sa == NULL || addrlen < sizeof (sa_family_t))
-    return -1;
+    return EAI_FAMILY;
 
   switch (sa->sa_family)
     {
     case AF_LOCAL:
       if (addrlen < (socklen_t) (((struct sockaddr_un *) NULL)->sun_path))
-	return -1;
+	return EAI_FAMILY;
       break;
     case AF_INET:
       if (addrlen < sizeof (struct sockaddr_in))
-	return -1;
+	return EAI_FAMILY;
       break;
     case AF_INET6:
       if (addrlen < sizeof (struct sockaddr_in6))
-	return -1;
+	return EAI_FAMILY;
       break;
     default:
-      return -1;
+      return EAI_FAMILY;
     }
 
   if (host != NULL && hostlen > 0)
@@ -224,7 +227,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 			      {
 				__set_h_errno (herrno);
 				__set_errno (serrno);
-				return -1;
+				return EAI_SYSTEM;
 			      }
 			  }
 			else
@@ -255,26 +258,23 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 
 	    if (h)
 	      {
-		if (flags & NI_NOFQDN)
+		char *c;
+		if ((flags & NI_NOFQDN) == 0
+		    && (c = nrl_domainname ())
+		    && (c = strstr (h->h_name, c))
+		    && (c != h->h_name) && (*(--c) == '.'))
 		  {
-		    char *c;
-		    if ((c = nrl_domainname ()) && (c = strstr(h->h_name, c))
-			&& (c != h->h_name) && (*(--c) == '.'))
-		      {
-			strncpy (host, h->h_name,
-				 min(hostlen, (size_t) (c - h->h_name)));
-			host[min(hostlen - 1, (size_t) (c - h->h_name))]
-			  = '\0';
-			ok = 1;
-		      }
-		    else
-		      {
-			strncpy (host, h->h_name, hostlen);
-			ok = 1;
-		      }
+		    strncpy (host, h->h_name,
+			     min(hostlen, (size_t) (c - h->h_name)));
+		    host[min(hostlen - 1, (size_t) (c - h->h_name))]
+		      = '\0';
+		    ok = 1;
 		  }
-		strncpy (host, h->h_name, hostlen);
-		ok = 1;
+		else
+		  {
+		    strncpy (host, h->h_name, hostlen);
+		    ok = 1;
+		  }
 	      }
 	  }
 
@@ -283,7 +283,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	    if (flags & NI_NAMEREQD)
 	      {
 		__set_errno (serrno);
-		return -1;
+		return EAI_NONAME;
 	      }
 	    else
 	      {
@@ -295,40 +295,43 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 
 		    c = inet_ntop (AF_INET6,
 				   (void *) &sin6p->sin6_addr, host, hostlen);
-		    if (addrlen > sizeof (struct sockaddr_in6)
-			&& (scopeid = sin6p->sin6_scope_id))
+		    scopeid = sin6p->sin6_scope_id;
+		    if (scopeid != 0)
 		      {
 			/* Buffer is >= IFNAMSIZ+1.  */
 			char scopebuf[IFNAMSIZ + 1];
+			char *scopeptr;
 			int ni_numericscope = 0;
+			size_t real_hostlen = __strnlen (host, hostlen);
+			size_t scopelen = 0;
+
+			scopebuf[0] = SCOPE_DELIMITER;
+			scopebuf[1] = '\0';
+			scopeptr = &scopebuf[1];
 
 			if (IN6_IS_ADDR_LINKLOCAL (&sin6p->sin6_addr)
 			    || IN6_IS_ADDR_MC_LINKLOCAL (&sin6p->sin6_addr))
 			  {
 			    if (if_indextoname (scopeid, scopebuf) == NULL)
 			      ++ni_numericscope;
+			    else
+			      scopelen = strlen (scopebuf);
 			  }
 			else
 			  ++ni_numericscope;
 
 			if (ni_numericscope)
-			  {
-			    char *scopeptr = &scopebuf[1];
-			    size_t real_hostlen;
-			    size_t scopelen;
+			  scopelen = 1 + __snprintf (scopeptr,
+						     (scopebuf
+						      + sizeof scopebuf
+						      - scopeptr),
+						     "%u", scopeid);
 
-			    scopebuf[0] = SCOPE_DELIMITER;
-			    scopelen = 1 + __snprintf (scopeptr,
-						       (scopebuf
-							+ sizeof scopebuf
-							- scopeptr),
-						       "%u", scopeid);
-
-			    real_hostlen = __strnlen (host, hostlen);
-			    if (real_hostlen + scopelen + 1 > hostlen)
-			      return -1;
-			    memcpy (host + real_hostlen, scopebuf, scopelen);
-			  }
+			if (real_hostlen + scopelen + 1 > hostlen)
+			  /* XXX We should not fail here.  Simply enlarge
+			     the buffer or return with out of memory.  */
+			  return EAI_SYSTEM;
+			memcpy (host + real_hostlen, scopebuf, scopelen + 1);
 		      }
 		  }
 		else
@@ -338,7 +341,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		if (c == NULL)
 		  {
 		    __set_errno (serrno);
-		    return -1;
+		    return EAI_SYSTEM;
 		  }
 	      }
 	    ok = 1;
@@ -360,14 +363,14 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 	if (flags & NI_NAMEREQD)
 	   {
 	    __set_errno (serrno);
-	    return -1;
+	    return EAI_NONAME;
 	  }
 
 	strncpy (host, "localhost", hostlen);
 	break;
 
       default:
-        return -1;
+        return EAI_FAMILY;
     }
 
   if (serv && (servlen > 0))
@@ -392,7 +395,7 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 		    else
 		      {
 			__set_errno (serrno);
-			return -1;
+			return EAI_SYSTEM;
 		      }
 		  }
 		else

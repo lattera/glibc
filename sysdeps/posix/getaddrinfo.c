@@ -99,13 +99,14 @@ struct gaih_typeproto
 
 /* Values for `protoflag'.  */
 #define GAI_PROTO_NOSERVICE	1
+#define GAI_PROTO_PROTOANY	2
 
 static struct gaih_typeproto gaih_inet_typeproto[] =
 {
   { 0, 0, NULL, 0 },
   { SOCK_STREAM, IPPROTO_TCP, (char *) "tcp", 0 },
   { SOCK_DGRAM, IPPROTO_UDP, (char *) "udp", 0 },
-  { SOCK_RAW, IPPROTO_RAW, (char *) "raw", GAI_PROTO_NOSERVICE },
+  { SOCK_RAW, 0, (char *) "raw", GAI_PROTO_PROTOANY|GAI_PROTO_NOSERVICE },
   { 0, 0, NULL, 0 }
 };
 
@@ -150,6 +151,7 @@ gaih_local (const char *name, const struct gaih_service *service,
 	     && ((tp->protoflag & GAI_PROTO_NOSERVICE) != 0
 		 || (req->ai_socktype != 0 && req->ai_socktype != tp->socktype)
 		 || (req->ai_protocol != 0
+		     && !(tp->protoflag & GAI_PROTO_PROTOANY)
 		     && req->ai_protocol != tp->protocol)))
 	++tp;
 
@@ -229,7 +231,7 @@ gaih_local (const char *name, const struct gaih_service *service,
 
 static int
 gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
-	       struct gaih_servtuple *st)
+	       const struct addrinfo *req, struct gaih_servtuple *st)
 {
   struct servent *s;
   size_t tmpbuflen = 1024;
@@ -255,7 +257,8 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
 
   st->next = NULL;
   st->socktype = tp->socktype;
-  st->protocol = tp->protocol;
+  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+		  ? req->ai_protocol : tp->protocol);
   st->port = s->s_port;
 
   return 0;
@@ -291,8 +294,10 @@ gaih_inet_serv (const char *servicename, struct gaih_typeproto *tp,
     {								\
       for (i = 0; h->h_addr_list[i]; i++)			\
 	{							\
-	  if (*pat == NULL)					\
+	  if (*pat == NULL) {					\
 	    *pat = __alloca (sizeof(struct gaih_addrtuple));	\
+	    (*pat)->scopeid = 0;				\
+	  }							\
 	  (*pat)->next = NULL;					\
 	  (*pat)->family = _family;				\
 	  memcpy ((*pat)->addr, h->h_addr_list[i],		\
@@ -319,6 +324,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
       while (tp->name != NULL
 	     && ((req->ai_socktype != 0 && req->ai_socktype != tp->socktype)
 		 || (req->ai_protocol != 0
+		     && !(tp->protoflag & GAI_PROTO_PROTOANY)
 		     && req->ai_protocol != tp->protocol)))
 	++tp;
 
@@ -343,7 +349,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      st = (struct gaih_servtuple *)
 		__alloca (sizeof (struct gaih_servtuple));
 
-	      if ((rc = gaih_inet_serv (service->name, tp, st)))
+	      if ((rc = gaih_inet_serv (service->name, tp, req, st)))
 		return rc;
 	    }
 	  else
@@ -359,11 +365,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 		  if (req->ai_socktype != 0
 		      && req->ai_socktype != tp->socktype)
 		    continue;
+		  if (req->ai_protocol != 0
+		      && !(tp->protoflag & GAI_PROTO_PROTOANY)
+		      && req->ai_protocol != tp->protocol)
+		    continue;
 
 		  newp = (struct gaih_servtuple *)
 		    __alloca (sizeof (struct gaih_servtuple));
 
-		  if ((rc = gaih_inet_serv (service->name, tp, newp)))
+		  if ((rc = gaih_inet_serv (service->name, tp, req, newp)))
 		    {
 		      if (rc & GAIH_OKIFUNSPEC)
 			continue;
@@ -382,7 +392,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  st = __alloca (sizeof (struct gaih_servtuple));
 	  st->next = NULL;
 	  st->socktype = tp->socktype;
-	  st->protocol = tp->protocol;
+	  st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+			  ? req->ai_protocol : tp->protocol);
 	  st->port = htons (service->num);
 	}
     }
@@ -390,8 +401,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
     {
       st = __alloca (sizeof (struct gaih_servtuple));
       st->next = NULL;
-      st->socktype = req->ai_socktype;
-      st->protocol = req->ai_protocol;
+      st->socktype = tp->socktype;
+      st->protocol = ((tp->protoflag & GAI_PROTO_PROTOANY)
+		      ? req->ai_protocol : tp->protocol);
       st->port = 0;
     }
   else
@@ -542,6 +554,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
     struct gaih_servtuple *st2;
     struct gaih_addrtuple *at2 = at;
     size_t socklen, namelen;
+    sa_family_t family;
 
     /*
       buffer is the size of an unformatted IPv6 address in printable format.
@@ -597,9 +610,15 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	  namelen = 0;
 
 	if (at2->family == AF_INET6)
-	  socklen = sizeof (struct sockaddr_in6);
+	  {
+	    family = AF_INET6;
+	    socklen = sizeof (struct sockaddr_in6);
+	  }
 	else
-	  socklen = sizeof (struct sockaddr_in);
+	  {
+	    family = AF_INET;
+	    socklen = sizeof (struct sockaddr_in);
+	  }
 
 	for (st2 = st; st2 != NULL; st2 = st2->next)
 	  {
@@ -608,7 +627,7 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      return -EAI_MEMORY;
 
 	    (*pai)->ai_flags = req->ai_flags;
-	    (*pai)->ai_family = at2->family;
+	    (*pai)->ai_family = family;
 	    (*pai)->ai_socktype = st2->socktype;
 	    (*pai)->ai_protocol = st2->protocol;
 	    (*pai)->ai_addrlen = socklen;
@@ -616,9 +635,9 @@ gaih_inet (const char *name, const struct gaih_service *service,
 #if SALEN
 	    (*pai)->ai_addr->sa_len = socklen;
 #endif /* SALEN */
-	    (*pai)->ai_addr->sa_family = at2->family;
+	    (*pai)->ai_addr->sa_family = family;
 
-	    if (at2->family == AF_INET6)
+	    if (family == AF_INET6)
 	      {
 		struct sockaddr_in6 *sin6p =
 		  (struct sockaddr_in6 *) (*pai)->ai_addr;
@@ -703,7 +722,7 @@ getaddrinfo (const char *name, const char *service,
       else
 	/* Can't specify a numerical socket unless a protocol family was
 	   given. */
-        if (hints->ai_socktype == 0)
+        if (hints->ai_socktype == 0 && hints->ai_protocol == 0)
           return EAI_SERVICE;
       pservice = &gaih_service;
     }
