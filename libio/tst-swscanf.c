@@ -26,18 +26,19 @@ static const struct
   const wchar_t *fmt;
   const wchar_t *wfmt;
   const wchar_t *arg;
+  int retval;
   const char *res;
   const wchar_t *wres;
   int only_C_locale;
 } tests[] =
   {
-    { L"%[abc]", L"%l[abc]", L"aabbccddaabb", "aabbcc", L"aabbcc", 0 },
-    { L"%[^def]", L"%l[^def]", L"aabbccddaabb", "aabbcc", L"aabbcc", 0 },
-    { L"%[^abc]", L"%l[^abc]", L"aabbccddaabb", "", L"", 0 },
-    { L"%[a-c]", L"%l[a-c]", L"aabbccddaabb", "aabbcc", L"aabbcc", 1 },
-    { L"%[^d-f]", L"%l[^d-f]", L"aabbccddaabb", "aabbcc", L"aabbcc", 1 },
-    { L"%[^a-c]", L"%l[^a-c]", L"aabbccddaabb", "", L"", 1 },
-    { L"%[^a-c]", L"%l[^a-c]", L"bbccddaabb", "", L"", 1 }
+    { L"%[abc]", L"%l[abc]", L"aabbccddaabb", 1 ,"aabbcc", L"aabbcc", 0 },
+    { L"%[^def]", L"%l[^def]", L"aabbccddaabb", 1, "aabbcc", L"aabbcc", 0 },
+    { L"%[^abc]", L"%l[^abc]", L"aabbccddaabb", 0, "", L"", 0 },
+    { L"%[a-c]", L"%l[a-c]", L"aabbccddaabb", 1, "aabbcc", L"aabbcc", 1 },
+    { L"%[^d-f]", L"%l[^d-f]", L"aabbccddaabb", 1, "aabbcc", L"aabbcc", 1 },
+    { L"%[^a-c]", L"%l[^a-c]", L"aabbccddaabb", 0, "", L"", 1 },
+    { L"%[^a-c]", L"%l[^a-c]", L"bbccddaabb", 0, "", L"", 1 }
   };
 
 
@@ -63,13 +64,13 @@ do_test (const char *loc)
       if (tests[n].only_C_locale && strcmp (loc, "C") != 0)
 	continue;
 
-      if (swscanf (tests[n].arg, tests[n].fmt, buf) != 1)
+      if (swscanf (tests[n].arg, tests[n].fmt, buf) != tests[n].retval)
 	{
 	  printf ("swscanf (\"%S\", \"%S\", ...) failed\n",
 		  tests[n].arg, tests[n].fmt);
 	  result = 1;
 	}
-      else if (strcmp (buf, tests[n].res) != 0)
+      else if (tests[n].retval != 0 && strcmp (buf, tests[n].res) != 0)
 	{
 	  printf ("swscanf (\"%S\", \"%S\", ...) return \"%s\", expected \"%s\"\n",
 		  tests[n].arg, tests[n].fmt, buf, tests[n].res);
@@ -79,13 +80,13 @@ do_test (const char *loc)
 	printf ("swscanf (\"%S\", \"%S\", ...) OK\n",
 		tests[n].arg, tests[n].fmt);
 
-      if (swscanf (tests[n].arg, tests[n].wfmt, wbuf) != 1)
+      if (swscanf (tests[n].arg, tests[n].wfmt, wbuf) != tests[n].retval)
 	{
 	  printf ("swscanf (\"%S\", \"%S\", ...) failed\n",
 		  tests[n].arg, tests[n].wfmt);
 	  result = 1;
 	}
-      else if (wcscmp (wbuf, tests[n].wres) != 0)
+      else if (tests[n].retval != 0 && wcscmp (wbuf, tests[n].wres) != 0)
 	{
 	  printf ("swscanf (\"%S\", \"%S\", ...) return \"%S\", expected \"%S\"\n",
 		  tests[n].arg, tests[n].wfmt, wbuf, tests[n].wres);

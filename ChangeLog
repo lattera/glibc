@@ -1,3 +1,11 @@
+2002-02-26  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/vfscanf.c (_IO_vfwscanf): Always use ungetc, never
+	ungetwc.  It's a macro.
+	* libio/tst-swscanf.c (do_test): Adjust for now fixed wscanf
+	implementation.
+	Reported by Jason Merrill <jason@redhat.com>.
+
 2002-02-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* libio/iofopen.c (__fopen_maybe_mmap): Set the initial
