@@ -1,3 +1,12 @@
+2003-11-10  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* io/ftwtest-sh: Fix nested sed commands.
+
+2003-11-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.h (re_string_char_size_at): Don't look beyond
+	valid_len wide chars.
+
 2003-11-09  Roland McGrath  <roland@redhat.com>
 
 	* manual/examples/dir2.c (one): Add const to argument type.
