@@ -1,4 +1,4 @@
-/* Copyright (C) 1989, 91, 93, 1996-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1989,91,93,1996-1999,2000,01 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -158,21 +158,21 @@ initgroups (user, group)
   /* Start is one, because we have the first group as parameter.  */
   long int start = 1;
   long int size;
-  long int limit;
   gid_t *groups;
   int result;
-#ifdef NGROUPS_MAX
-  size = NGROUPS_MAX;
-  limit = -1;
-#else
+
+  /* We always use sysconf even if NGROUPS_MAX is defined.  That way, the
+     limit can be raised in the kernel configuration without having to
+     recompile libc.  */
   long int limit = __sysconf (_SC_NGROUPS_MAX);
 
   if (limit > 0)
     size = limit;
   else
-    /* No fixed limit on groups.  Pick a starting buffer size.  */
-    size = 16;
-#endif
+    {
+      /* No fixed limit on groups.  Pick a starting buffer size.  */
+      size = 16;
+    }
 
   groups = (gid_t *) malloc (size * sizeof (gid_t));
   if (__builtin_expect (groups == NULL, 0))

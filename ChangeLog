@@ -1,3 +1,12 @@
+2001-04-16  Roland McGrath  <roland@frob.com>
+
+	* grp/initgroups.c (initgroups) [NGROUPS_MAX != 0]: Always use sysconf
+	instead of the constant NGROUPS_MAX.  That way, the limit can be
+	raised in the kernel configuration without having to recompile libc.
+
+	* sysdeps/posix/euidaccess.c: Don't #include <limits.h> or try to
+	define NGROUPS_MAX; we don't use it here.
+
 2001-04-16  Andreas Jaeger  <aj@suse.de>
 
 	* math/libm-test.inc (atan2_test): Add more testcases.
