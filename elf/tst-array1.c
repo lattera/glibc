@@ -35,7 +35,7 @@ preinit_2 (void)
 }
 
 void (*const preinit_array []) (void)
-     __attribute__ ((section (".preinit_array"))) =
+     __attribute__ ((section (".preinit_array"), aligned (sizeof (void *)))) =
 {
   &preinit_0,
   &preinit_1,
@@ -60,7 +60,8 @@ init_2 (void)
   write (STDOUT_FILENO, "init array 2\n", 13);
 }
 
-void (*const init_array []) (void) __attribute__ ((section (".init_array"))) =
+void (*const init_array []) (void)
+     __attribute__ ((section (".init_array"), aligned (sizeof (void *)))) =
 {
   &init_0,
   &init_1,
@@ -85,7 +86,8 @@ fini_2 (void)
   write (STDOUT_FILENO, "fini array 2\n", 13);
 }
 
-void (*const fini_array []) (void) __attribute__ ((section (".fini_array"))) =
+void (*const fini_array []) (void)
+     __attribute__ ((section (".fini_array"), aligned (sizeof (void *)))) =
 {
   &fini_0,
   &fini_1,
