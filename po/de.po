@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.1.3\n"
 "POT-Creation-Date: 2000-02-16 10:39-0800\n"
-"PO-Revision-Date: 2000-02-20 09:38+01:00\n"
+"PO-Revision-Date: 2000-02-23 05:03+01:00\n"
 "Last-Translator: Jochen Hein <jochen@jochen.org>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -1610,7 +1610,7 @@ msgstr "Ungültiges Objekt für diese Operation"
 #. TRANS or an incomplete sequence of bytes or the given wide character is invalid.
 #: stdio-common/../sysdeps/gnu/errlist.c:597
 msgid "Invalid or incomplete multibyte or wide character"
-msgstr "Ungültiges oder unvollständiges Multi-Byte oder Wide-Zeichen"
+msgstr "Ungültiges oder unvollständiges Multi-Byte- oder Wide-Zeichen"
 
 #: posix/regex.c:1055
 msgid "Invalid preceding regular expression"
@@ -1815,7 +1815,7 @@ msgstr "NIS"
 
 #: nis/ypclnt.c:801
 msgid "NIS client/server version mismatch - can't supply service"
-msgstr "NIS Client/Server Versionen passen nicht zusammen - kein Service möglich"
+msgstr "NIS-Client/Server-Versionen passen nicht zusammen - kein Service möglich"
 
 #: nis/ypclnt.c:799
 msgid "NIS map database is bad"
@@ -1823,11 +1823,11 @@ msgstr "Die Datenbank mit der NIS-Map ist ungültig"
 
 #: nis/nis_error.c:68
 msgid "NIS+ operation failed"
-msgstr "NIS+ Operation fehlgeschlagen"
+msgstr "NIS+-Operation fehlgeschlagen"
 
 #: nis/nis_error.c:33
 msgid "NIS+ servers unreachable"
-msgstr "Die NIS+ Server sind nicht erreichbar"
+msgstr "Die NIS+-Server sind nicht erreichbar"
 
 #: nis/nis_error.c:69
 msgid "NIS+ service is unavailable or not installed"
@@ -1846,6 +1846,7 @@ msgstr "NUMMER"
 msgid "Name : `%s'\n"
 msgstr "Name : »%s«\n"
 
+# das sollte wohl gar nicht markiert sein? -ke-
 #: nscd/nscd.c:94
 msgid "Name Service Cache Daemon."
 msgstr "Name Service Cache Daemon."
@@ -2030,7 +2031,7 @@ msgstr "Kein passender Prozeß gefunden"
 
 #: nis/nis_error.c:60
 msgid "Non NIS+ namespace encountered"
-msgstr "Kein NIS+ Namespace gefunden"
+msgstr "Kein NIS+-Namespace gefunden"
 
 #: posix/../sysdeps/posix/gai_strerror.c:33
 msgid "Non-recoverable failure in name resolution"
@@ -2070,7 +2071,7 @@ msgstr "Nicht verfügbar"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:41
 msgid "Not enough space"
-msgstr "Nicht genugend (Speicher-) Platz"
+msgstr "Nicht genugend (Speicher-)Platz"
 
 #: nis/nis_error.c:30
 msgid "Not found"
@@ -2203,7 +2204,7 @@ msgstr "Die Operation wird nicht unterstützt"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:151
 msgid "Operation not supported on transport endpoint"
-msgstr "Die Operation wird am Transporkt-Endpunkt nicht unterstützt"
+msgstr "Die Operation wird am Transport-Endpunkt nicht unterstützt"
 
 #. TRANS An operation that cannot complete immediately was initiated on an object
 #. TRANS that has non-blocking mode selected.  Some functions that must always
@@ -2291,11 +2292,11 @@ msgstr "Unerwartetes Ende des regulären Ausdruckes"
 
 #: db2/makedb.c:63
 msgid "Print content of database file, one entry a line"
-msgstr "Drucke den Inhalt der Datenbank-Datei, je Eintrag eine Zeile"
+msgstr "Gibt den Inhalt der Datenbank-Datei aus, je Eintrag eine Zeile"
 
 #: nscd/nscd.c:86
 msgid "Print current configuration statistic"
-msgstr "Drucke die aktuelle Konfigurationsstatistik"
+msgstr "Gibt die aktuelle Konfigurationsstatistik aus"
 
 #: locale/programs/localedef.c:104
 msgid "Print more messages"
@@ -2481,13 +2482,14 @@ msgstr "RSA (%d Bits)\n"
 msgid "RTLD_NEXT used in code not dynamically loaded"
 msgstr "»RTLD_NEXT« wird in Code verwendet, der nicht dynamisch geladen ist"
 
+# Ist das als Anweisung oder als Beschreibung einer Tätigkeit gedacht?
 #: elf/sprof.c:84
 msgid "Read and display shared object profiling data"
-msgstr "Lese und gib die Profiling-Informationen von Shared Objects aus."
+msgstr "Lies und gib die Profiling-Informationen von Shared Objects aus."
 
 #: nscd/nscd.c:81
 msgid "Read configuration data from NAME"
-msgstr "Lese die Konfiguration aus NAME"
+msgstr "Lies die Konfiguration aus NAME"
 
 #. TRANS An attempt was made to modify something on a read-only file system.
 #: stdio-common/../sysdeps/gnu/errlist.c:218
@@ -2507,12 +2509,12 @@ msgstr "Der reguläre Ausdruck ist zu groß"
 #: stdio-common/../sysdeps/gnu/errlist.c:828
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:169
 msgid "Remote I/O error"
-msgstr "Ein-/Ausgabefehler des entfernten Systems"
+msgstr "Ein-/Ausgabefehler der Gegenstelle (remote)"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:784
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:111
 msgid "Remote address changed"
-msgstr "Die entfernte Adresse hat sich geändert"
+msgstr "Die Adresse der Gegenstelle hat sich geändert"
 
 #: inet/ruserpass.c:177
 msgid "Remove password or make file unreadable by others."
@@ -2547,7 +2549,7 @@ msgstr "Reserviert für eine zukünftige Verwendung"
 
 #: resolv/herror.c:73
 msgid "Resolver Error 0 (no error)"
-msgstr "Fehler 0 des Resolvers (Kein Fehler)"
+msgstr "Fehler 0 des Resolvers (kein Fehler)"
 
 #: resolv/herror.c:117
 msgid "Resolver internal error"
@@ -2608,10 +2610,12 @@ msgstr "Das Ergebnis ist zu groß"
 msgid "Results sent to callback proc"
 msgstr "Ergebnisse an die Callback-Prozedur gesendet"
 
+# Nicht in den Quellen markieren
 #: elf/sprof.c:87
 msgid "SHOBJ [PROFDATA]"
 msgstr "SHOBJ [PROFDATA]"
 
+# Nicht in den Quellen markieren
 #: nis/nis_print.c:33
 msgid "SUNYP"
 msgstr "SUNYP"
@@ -2621,6 +2625,7 @@ msgstr "SUNYP"
 msgid "Search Path         : %s\n"
 msgstr "Suchpfad            : %s\n"
 
+# Alternativ: Fehler beim Speicherzugriff
 #: stdio-common/../sysdeps/unix/siglist.c:36 sysdeps/generic/siglist.h:38
 #: sysdeps/gnu/siglist.h:32
 msgid "Segmentation fault"
@@ -2676,9 +2681,17 @@ msgstr "Socket-Typ wird nicht unterstützt"
 msgid "Software caused connection abort"
 msgstr "Das Programm verursachte den Abbruch der Verbindung"
 
+# Alternativ (s.u., gerade noch unter 80 Zeichen):
+#
+# Sorry, diese Funktion kann nur vom Systemverwalter »root« durchgeführt werden.\n
+#
+# Oder etwas kürzer:
+#
+# Sorry, diese Funktion ist dem Systemverwalter »root« vorbehalten.\n
+#
 #: sunrpc/rpcinfo.c:658
 msgid "Sorry. You are not root\n"
-msgstr "Sorry, diese Funktion kann nur vom Systemverwalter durchgeführt werden.\n"
+msgstr "Sorry, diese Funktion kann nur vom Systemverwalter »root« durchgeführt werden.\n"
 
 #: locale/programs/localedef.c:94
 msgid "Source definitions are found in FILE"
@@ -2832,8 +2845,8 @@ msgstr ""
 "und TO Paramter konvertiert werden kann.  Eine Zeichensatzkodierung kann\n"
 "unter verschiedenen Namen aufgeführt sein (sog. Aliasnamen).\n"
 "\n"
-"Einige Namen sind keine normalen Zeichenketten sondern Reguläre Ausdrücke\n"
-"und diese passen zu einer Reihe von Namen, die als Parameter angegeben\n"
+"Einige Namen sind keine normalen Zeichenketten, sondern Reguläre Ausdrücke;\n"
+"diese passen zu einer Reihe von Namen, die als Parameter angegeben\n"
 "werden können.\n"
 "\n"
 "  "
@@ -2909,6 +2922,7 @@ msgstr "Zu viele Benutzer"
 msgid "Trace/breakpoint trap"
 msgstr "Trace/Breakpoint ausgelöst"
 
+# Gegen- oder Rückstrich ? -ke-
 #: posix/regex.c:1031
 msgid "Trailing backslash"
 msgstr "Angehängter Backslash (»\\«)"
@@ -3107,21 +3121,24 @@ msgstr "Wildes Ergebnis aus der Kommandoausführung"
 msgid "Window changed"
 msgstr "Die Fenstergröße wurde verändert"
 
+# Im Folgenden Aufforderungen verwenden: "Gib ..." (oder weiter unter anstelle
+# von "Schreibe" besser "Schreibt"?
 #: locale/programs/locale.c:67
 msgid "Write names of available charmaps"
 msgstr "Gibt die Namen der verfügbaren »charmaps« aus"
 
+# locale = "Standorte" ?
 #: locale/programs/locale.c:65
 msgid "Write names of available locales"
 msgstr "Gibt die Namen der verfügbaren Lokalen aus"
 
 #: locale/programs/locale.c:69
 msgid "Write names of selected categories"
-msgstr "Gibt die Namen von ausgewählten Kategorien aus"
+msgstr "Gibt die Namen der ausgewählten Kategorien aus"
 
 #: locale/programs/locale.c:70
 msgid "Write names of selected keywords"
-msgstr "Gibt die Namen von ausgewählten Schlüsselwörtern aus"
+msgstr "Gibt die Namen der ausgewählten Schlüsselwörter aus"
 
 #: catgets/gencat.c:111 db2/makedb.c:59
 msgid "Write output to file NAME"
@@ -3139,6 +3156,7 @@ msgstr "Implementiert von %s.\n"
 msgid "Wrong medium type"
 msgstr "Falscher Medien-Typ"
 
+# Sollte nicht merkiert werden
 #: nis/nis_print.c:39
 msgid "X500"
 msgstr "X500"
