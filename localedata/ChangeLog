@@ -1,3 +1,13 @@
+2001-01-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/cs_CZ (yesexpr, noexpr): Add caret prefix.
+	Patch by Petr Cech <cech@atrey.karlin.mff.cuni.cz>.
+
+2001-01-23  Andreas Schwab  <schwab@suse.de>
+
+	* locales/el_GR: Add missing quotes around multicharacter strings.
+	* locales/ru_RU: Likewise.
+
 2001-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (LOCALES): Add fr_FR.ISO-8859-1.
