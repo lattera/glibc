@@ -1,5 +1,5 @@
 /* Functions to access FILE structure internals.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,7 +79,7 @@ extern size_t __fpending (FILE *__fp);
 extern void _flushlbf (void);
 
 
-/* Set locking statis of stream FP to TYPE.  */
+/* Set locking status of stream FP to TYPE.  */
 extern int __fsetlocking (FILE *__fp, int __type);
 
 __END_DECLS
