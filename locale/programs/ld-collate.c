@@ -3505,7 +3505,7 @@ error while adding equivalent collating symbol"));
 	  else
 	    {
 	      lr_error (ldfile, _("%s: bad symbol <%.*s>"), "LC_COLLATE",
-			ldfile->token.val.str.lenmb,
+			(int) ldfile->token.val.str.lenmb,
 			ldfile->token.val.str.startmb);
 	      break;
 	    }

@@ -45,8 +45,9 @@
 #include "simple-hash.h"
 #include "localedef.h"
 
+extern const char *output_prefix;
 
-static const char archivefname[] = LOCALEDIR "/locale-archive";
+#define ARCHIVE_NAME LOCALEDIR "/locale-archive"
 
 static const char *locnames[] =
   {
@@ -65,13 +66,15 @@ static const char *locnames[] =
 
 
 static void
-create_archive (struct locarhandle *ah)
+create_archive (const char *archivefname, struct locarhandle *ah)
 {
   int fd;
-  char fname[] = LOCALEDIR "/locale-archive.XXXXXX";
+  char fname[strlen (archivefname) + sizeof (".XXXXXX")];
   struct locarhead head;
   void *p;
   size_t total;
+
+  strcpy (stpcpy (fname, archivefname), ".XXXXXX");
 
   /* Create a temporary file in the correct directory.  */
   fd = mkstemp (fname);
@@ -169,7 +172,6 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
 {
   struct stat64 st;
   int fd;
-  char fname[] = LOCALEDIR "/locale-archive.XXXXXX";
   struct locarhead newhead;
   size_t total;
   void *p;
@@ -177,6 +179,14 @@ enlarge_archive (struct locarhandle *ah, const struct locarhead *head)
   struct namehashent *oldnamehashtab;
   struct locrecent *oldlocrectab;
   struct locarhandle new_ah;
+  size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
+  char archivefname[prefix_len + sizeof (ARCHIVE_NAME)];
+  char fname[prefix_len + sizeof (ARCHIVE_NAME) + sizeof (".XXXXXX") - 1];
+
+  if (output_prefix)
+    memcpy (archivefname, output_prefix, prefix_len);
+  strcpy (archivefname + prefix_len, ARCHIVE_NAME);
+  strcpy (stpcpy (fname, archivefname), ".XXXXXX");
 
   /* Not all of the old file has to be mapped.  Change this now this
      we will have to access the whole content.  */
@@ -331,6 +341,12 @@ open_archive (struct locarhandle *ah)
   int fd;
   struct locarhead head;
   int retry = 0;
+  size_t prefix_len = output_prefix ? strlen (output_prefix) : 0;
+  char archivefname[prefix_len + sizeof (ARCHIVE_NAME)];
+
+  if (output_prefix)
+    memcpy (archivefname, output_prefix, prefix_len);
+  strcpy (archivefname + prefix_len, ARCHIVE_NAME);
 
  again:
   /* Open the archive.  We must have exclusive write access.  */
@@ -340,7 +356,7 @@ open_archive (struct locarhandle *ah)
       /* Maybe the file does not yet exist.  */
       if (errno == ENOENT)
 	{
-	  create_archive (ah);
+	  create_archive (archivefname, ah);
 	  return;
 	}
       else
@@ -711,11 +727,8 @@ add_locales_to_archive (nlist, list, replace)
 			     directory and it therefore must contain a
 			     regular file with the same name except a
 			     "SYS_" prefix.  */
-			  strcpy (stpcpy (stpcpy (stpcpy (stpcpy (fullname,
-								  fname),
-							  "/"),
-						  d->d_name),
-					  "/SYS_"),
+			  char *t = stpcpy (stpcpy (fullname, fname), "/");
+			  strcpy (stpcpy (stpcpy (t, d->d_name), "/SYS_"),
 				  d->d_name);
 
 			  if (stat64 (fullname, &st) == -1)
@@ -765,11 +778,10 @@ add_locales_to_archive (nlist, list, replace)
 
 	    if (S_ISDIR (st.st_mode))
 	      {
+		char *t;
 		close (fd);
-		strcpy (stpcpy (stpcpy (stpcpy (stpcpy (fullname, fname),
-						"/"),
-					locnames[cnt]),
-				"/SYS_"),
+		t = stpcpy (stpcpy (fullname, fname), "/");
+		strcpy (stpcpy (stpcpy (t, locnames[cnt]), "/SYS_"),
 			locnames[cnt]);
 
 		fd = open64 (fullname, O_RDONLY);

@@ -57,6 +57,5 @@ DCNGETTEXT (domainname, msgid1, msgid2, n, category)
 
 #ifdef _LIBC
 /* Alias for function name in GNU C Library.  */
-INTDEF(__dcngettext)
 weak_alias (__dcngettext, dcngettext);
 #endif

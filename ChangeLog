@@ -1,3 +1,27 @@
+2002-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (create_archive): Add archivefname
+	argument, create fname from it.
+	(enlarge_archive): Honour output_prefix.
+	(open_archive): Likewise.
+
+2002-04-30  Jakub Jelinek  <jakub@redhat.com>
+
+	* locale/programs/locarchive.c (add_locales_to_archive): Don't nest
+	too many stpcpy macros.
+
+2002-04-26  Bruno Haible  <bruno@clisp.org>
+
+	* locale/programs/ld-collate.c (collate_read): Cast first argument
+	for "%.*s" to int.
+
+2002-04-26  Bruno Haible  <bruno@clisp.org>
+
+	* include/libintl.h (__ngettext, __dngettext, __dcngettext,
+	__dcngettext_internal): New declarations.
+	(__gettext, __dgettext, __dcgettext, __dcgettext_internal): Add
+	attribute declarations.
+
 2002-04-30  Roland McGrath  <roland@frob.com>
 
 	Removed old GNU stdio implementation; GNU libio is now the only option.
