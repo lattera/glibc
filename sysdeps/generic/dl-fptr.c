@@ -1,5 +1,5 @@
 /* Manage function descriptors.  Generic version.
-   Copyright (C) 1999,2000,2001,2002,2003 Free Software Foundation, Inc.
+   Copyright (C) 1999,2000,2001,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -80,12 +80,12 @@ new_fdesc_table (struct local *l, size_t *size)
   if (! COMPARE_AND_SWAP (&l->npages, old_npages, new_npages))
     return (struct fdesc_table *) NULL;
 
-  *size = old_npages * GL(dl_pagesize);
+  *size = old_npages * GLRO(dl_pagesize);
   new_table = __mmap (NULL, *size,
 		      PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (new_table == MAP_FAILED)
-    INTUSE(_dl_signal_error) (errno, NULL, NULL,
-			      N_("cannot map pages for fdesc table"));
+    _dl_signal_error (errno, NULL, NULL,
+		      N_("cannot map pages for fdesc table"));
 
   new_table->len
     = (*size - sizeof (*new_table)) / sizeof (struct fdesc);
@@ -178,8 +178,8 @@ make_fptr_table (struct link_map *map)
      afterwards...  */
   len = ((strtab - (char *) symtab)
 	 / map->l_info[DT_SYMENT]->d_un.d_val);
-  size = ((len * sizeof (fptr_table[0]) + GL(dl_pagesize) - 1)
-	  & -GL(dl_pagesize));
+  size = ((len * sizeof (fptr_table[0]) + GLRO(dl_pagesize) - 1)
+	  & -GLRO(dl_pagesize));
   /* XXX We don't support here in the moment systems without MAP_ANON.
      There probably are none for IA-64.  In case this is proven wrong
      we will have to open /dev/null here and use the file descriptor
@@ -188,8 +188,8 @@ make_fptr_table (struct link_map *map)
 		       PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE,
 		       -1, 0);
   if (fptr_table == MAP_FAILED)
-    INTUSE(_dl_signal_error) (errno, NULL, NULL,
-			      N_("cannot map pages for fptr table"));
+    _dl_signal_error (errno, NULL, NULL,
+		      N_("cannot map pages for fptr table"));
 
   if (COMPARE_AND_SWAP ((ElfW(Addr) *) &map->l_mach.fptr_table,
 			(ElfW(Addr)) NULL, (ElfW(Addr)) fptr_table))
@@ -217,8 +217,8 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
   symidx = sym - symtab;
 
   if (symidx >= map->l_mach.fptr_table_len)
-    INTUSE(_dl_signal_error) (0, NULL, NULL, N_("\
-internal error: symidx out of range of fptr table"));
+    _dl_signal_error (0, NULL, NULL,
+		      N_("internal error: symidx out of range of fptr table"));
 
   while (ftab[symidx] == 0)
     {

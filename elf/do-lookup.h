@@ -61,9 +61,9 @@ FCT (const char *undef_name, unsigned long int hash, const ElfW(Sym) *ref,
 
       /* Print some debugging info if wanted.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_SYMBOLS, 0))
-	INTUSE(_dl_debug_printf) ("symbol=%s;  lookup in file=%s\n",
-				  undef_name, (map->l_name[0]
-					       ? map->l_name : rtld_progname));
+	_dl_debug_printf ("symbol=%s;  lookup in file=%s\n",
+			  undef_name,
+			  map->l_name[0] ? map->l_name : rtld_progname);
 
       symtab = (const void *) D_PTR (map, l_info[DT_SYMTAB]);
       strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);

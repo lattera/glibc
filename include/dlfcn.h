@@ -64,10 +64,6 @@ extern int _dl_catch_error (const char **objname, const char **errstring,
 			    void (*operate) (void *),
 			    void *args)
      internal_function;
-extern int _dl_catch_error_internal (const char **objname,
-				     const char **errstring,
-				     void (*operate) (void *), void *args)
-     internal_function;
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
    _dl_catch_error.  Returns zero for success, nonzero for failure; and

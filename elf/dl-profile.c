@@ -450,7 +450,6 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   /* Turn on profiling.  */
   running = 1;
 }
-INTDEF (_dl_start_profile)
 
 
 void

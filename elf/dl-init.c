@@ -52,8 +52,8 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 
   /* Print a debug message if wanted.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-    INTUSE(_dl_debug_printf) ("\ncalling init: %s\n\n",
-			      l->l_name[0] ? l->l_name : rtld_progname);
+    _dl_debug_printf ("\ncalling init: %s\n\n",
+		      l->l_name[0] ? l->l_name : rtld_progname);
 
   /* Now run the local constructors.  There are two forms of them:
      - the one named by DT_INIT
@@ -109,9 +109,9 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
       unsigned int cnt;
 
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-	INTUSE(_dl_debug_printf) ("\ncalling preinit: %s\n\n",
-				  main_map->l_name[0]
-				  ? main_map->l_name : rtld_progname);
+	_dl_debug_printf ("\ncalling preinit: %s\n\n",
+			  main_map->l_name[0]
+			  ? main_map->l_name : rtld_progname);
 
       addrs = (ElfW(Addr) *) (preinit_array->d_un.d_ptr + main_map->l_addr);
       for (cnt = 0; cnt < i; ++cnt)
@@ -123,7 +123,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
      not been used before.  */
   r = _dl_debug_initialize (0);
   r->r_state = RT_ADD;
-  INTUSE(_dl_debug_state) ();
+  _dl_debug_state ();
 
   /* Stupid users forced the ELF specification to be changed.  It now
      says that the dynamic loader is responsible for determining the
@@ -141,7 +141,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 
   /* Notify the debugger all new objects are now ready to go.  */
   r->r_state = RT_CONSISTENT;
-  INTUSE(_dl_debug_state) ();
+  _dl_debug_state ();
 
   /* Finished starting up.  */
   INTUSE(_dl_starting_up) = 0;

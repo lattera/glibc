@@ -279,7 +279,6 @@ _dl_debug_printf (const char *fmt, ...)
   _dl_debug_vdprintf (GLRO(dl_debug_fd), 1, fmt, arg);
   va_end (arg);
 }
-INTDEF(_dl_debug_printf)
 
 
 /* Write to debug file but don't start with a tag.  */

@@ -54,7 +54,7 @@ _dl_allocate_static_tls (struct link_map *map)
   if (map->l_tls_align > GL(dl_tls_static_align))
     {
     fail:
-      INTUSE(_dl_signal_error) (0, map->l_name, NULL, N_("\
+      _dl_signal_error (0, map->l_name, NULL, N_("\
 cannot allocate memory in static TLS block"));
     }
 
@@ -147,9 +147,9 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
     lazy = 0;
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_RELOC, 0))
-    INTUSE(_dl_debug_printf) ("\nrelocation processing: %s%s\n",
-			      l->l_name[0] ? l->l_name : rtld_progname,
-			      lazy ? " (lazy)" : "");
+    _dl_debug_printf ("\nrelocation processing: %s%s\n",
+		      l->l_name[0] ? l->l_name : rtld_progname,
+		      lazy ? " (lazy)" : "");
 
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
      But we rewrite the DT_FLAGS entry to a DT_TEXTREL entry to make
@@ -175,7 +175,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	      {
 		errstring = N_("cannot make segment writable for relocation");
 	      call_error:
-		INTUSE(_dl_signal_error) (errno, l->l_name, NULL, errstring);
+		_dl_signal_error (errno, l->l_name, NULL, errstring);
 	      }
 
 #if (PF_R | PF_W | PF_X) == 7 && (PROT_READ | PROT_WRITE | PROT_EXEC) == 7
@@ -214,13 +214,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
-		    ? INTUSE(_dl_lookup_versioned_symbol) (strtab	      \
-							   + (*ref)->st_name, \
-							   l, (ref), scope,   \
-							   (version), _tc, 0) \
-		    : INTUSE(_dl_lookup_symbol) (strtab + (*ref)->st_name, l, \
-					         (ref), scope, _tc,	      \
-						 DL_LOOKUP_ADD_DEPENDENCY));  \
+		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
+						   l, (ref), scope, (version),\
+						   _tc, 0)		      \
+		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
+					 scope, _tc,			      \
+					 DL_LOOKUP_ADD_DEPENDENCY));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l)
@@ -236,13 +235,12 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 	     l->l_lookup_cache.type_class = _tc;			      \
 	     l->l_lookup_cache.sym = (*ref);				      \
 	     _lr = ((version) != NULL && (version)->hash != 0		      \
-		    ? INTUSE(_dl_lookup_versioned_symbol) (strtab	      \
-							   + (*ref)->st_name, \
-							   l, (ref), scope,   \
-							   (version), _tc, 0) \
-		    : INTUSE(_dl_lookup_symbol) (strtab + (*ref)->st_name, l, \
-					      	 (ref), scope, _tc,	      \
-						 DL_LOOKUP_ADD_DEPENDENCY));  \
+		    ? _dl_lookup_versioned_symbol (strtab + (*ref)->st_name,  \
+						   l, (ref), scope,	      \
+						   (version), _tc, 0)	      \
+		    : _dl_lookup_symbol (strtab + (*ref)->st_name, l, (ref),  \
+					 scope, _tc,			      \
+					 DL_LOOKUP_ADD_DEPENDENCY));	      \
 	     l->l_lookup_cache.ret = (*ref);				      \
 	     l->l_lookup_cache.value = _lr; }))				      \
      : l->l_addr)
@@ -313,7 +311,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   if (l->l_relro_size != 0)
     _dl_protect_relro (l);
 }
-INTDEF (_dl_relocate_object)
+
 
 void internal_function
 _dl_protect_relro (struct link_map *l)
@@ -326,9 +324,9 @@ _dl_protect_relro (struct link_map *l)
   if (start != end
       && __mprotect ((void *) start, end - start, PROT_READ) < 0)
     {
-      const char *errstring = N_("\
+      static const char errstring[] = N_("\
 cannot apply additional memory protection after relocation");
-      INTUSE(_dl_signal_error) (errno, l->l_name, NULL, errstring);
+      _dl_signal_error (errno, l->l_name, NULL, errstring);
     }
 }
 
@@ -365,5 +363,5 @@ _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
   *cp++ = DIGIT (type);
   *cp = '\0';
 
-  INTUSE(_dl_signal_error) (0, map->l_name, NULL, msgbuf);
+  _dl_signal_error (0, map->l_name, NULL, msgbuf);
 }

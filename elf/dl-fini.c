@@ -147,9 +147,8 @@ _dl_fini (void)
 
 	  /* When debugging print a message first.  */
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-	    INTUSE(_dl_debug_printf) ("\ncalling fini: %s\n\n",
-				      l->l_name[0]
-				      ? l->l_name : rtld_progname);
+	    _dl_debug_printf ("\ncalling fini: %s\n\n",
+			      l->l_name[0] ? l->l_name : rtld_progname);
 
 	  /* First see whether an array is given.  */
 	  if (l->l_info[DT_FINI_ARRAY] != NULL)
@@ -176,12 +175,12 @@ _dl_fini (void)
 
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
     {
-      INTUSE(_dl_debug_printf) ("\nruntime linker statistics:\n");
-      INTUSE(_dl_debug_printf) ("\
+      _dl_debug_printf ("\nruntime linker statistics:\n");
+      _dl_debug_printf ("\
            final number of relocations: %lu\n",
-				GL(dl_num_relocations));
-      INTUSE(_dl_debug_printf) ("\
+			GL(dl_num_relocations));
+      _dl_debug_printf ("\
 final number of relocations from cache: %lu\n",
-				GL(dl_num_cache_relocations));
+			GL(dl_num_cache_relocations));
     }
 }

@@ -174,7 +174,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
   /* Call the initializer of the program, if any.  */
 #ifdef SHARED
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-    _dl_debug_printf ("\ninitialize program: %s\n\n", argv[0]);
+    GLRO(dl_debug_printf) ("\ninitialize program: %s\n\n", argv[0]);
 #endif
   if (init)
     (*init) (
@@ -185,7 +185,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 
 #ifdef SHARED
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-    _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
+    GLRO(dl_debug_printf) ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
 #ifdef HAVE_CLEANUP_JMP_BUF

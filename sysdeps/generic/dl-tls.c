@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  Generic version.
-   Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -505,32 +505,6 @@ rtld_hidden_def (_dl_deallocate_tls)
 #  ifndef GET_ADDR_OFFSET
 #   define GET_ADDR_OFFSET ti->ti_offset
 #  endif
-/* Systems which do not have tls_index also probably have to define
-   DONT_USE_TLS_INDEX.  */
-
-#  ifndef __TLS_GET_ADDR
-#   define __TLS_GET_ADDR __tls_get_addr
-#  endif
-
-
-/* Return the symbol address given the map of the module it is in and
-   the symbol record.  This is used in dl-sym.c.  */
-void *
-internal_function
-_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
-{
-#  ifndef DONT_USE_TLS_INDEX
-  tls_index tmp =
-    {
-      .ti_module = map->l_tls_modid,
-      .ti_offset = ref->st_value
-    };
-
-  return __TLS_GET_ADDR (&tmp);
-#  else
-  return __TLS_GET_ADDR (map->l_tls_modid, ref->st_value);
-#  endif
-}
 
 
 static void *

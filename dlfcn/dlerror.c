@@ -1,6 +1,5 @@
 /* Return error detail for failing <dlfcn.h> functions.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2002,2003
-	Free Software Foundation, Inc.
+   Copyright (C) 1995-2000,2002,2003,2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,6 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bits/libc-lock.h>
+#include <ldsodefs.h>
 
 /* Type for storing results of dynamic loading actions.  */
 struct dl_action_result
@@ -141,8 +141,8 @@ _dlerror_run (void (*operate) (void *), void *args)
       result->errstring = NULL;
     }
 
-  result->errcode = _dl_catch_error (&result->objname, &result->errstring,
-				     operate, args);
+  result->errcode = GLRO(dl_catch_error) (&result->objname, &result->errstring,
+					  operate, args);
 
   /* If no error we mark that no error string is available.  */
   result->returned = result->errstring == NULL;

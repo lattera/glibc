@@ -24,6 +24,37 @@
 #include <dlfcn.h>
 #include <ldsodefs.h>
 #include <dl-hash.h>
+#include <dl-tls.h>
+
+
+#if defined USE_TLS && defined SHARED
+/* Systems which do not have tls_index also probably have to define
+   DONT_USE_TLS_INDEX.  */
+
+# ifndef __TLS_GET_ADDR
+#  define __TLS_GET_ADDR __tls_get_addr
+# endif
+
+/* Return the symbol address given the map of the module it is in and
+   the symbol record.  This is used in dl-sym.c.  */
+static void *
+internal_function
+_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
+{
+# ifndef DONT_USE_TLS_INDEX
+  tls_index tmp =
+    {
+      .ti_module = map->l_tls_modid,
+      .ti_offset = ref->st_value
+    };
+
+  return __TLS_GET_ADDR (&tmp);
+# else
+  return __TLS_GET_ADDR (map->l_tls_modid, ref->st_value);
+# endif
+}
+#endif
+
 
 void *
 internal_function
@@ -51,9 +82,9 @@ _dl_sym (void *handle, const char *name, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope as seen in the caller object.  */
-    result = _dl_lookup_symbol (name, match, &ref, match->l_scope, 0,
-				DL_LOOKUP_RETURN_NEWEST
-				| DL_LOOKUP_ADD_DEPENDENCY);
+    result = GLRO(dl_lookup_symbol) (name, match, &ref, match->l_scope, 0,
+				     DL_LOOKUP_RETURN_NEWEST
+				     | DL_LOOKUP_ADD_DEPENDENCY);
   else
     {
       if (handle != RTLD_NEXT)
@@ -61,8 +92,9 @@ _dl_sym (void *handle, const char *name, void *who)
 	  /* Search the scope of the given object.  */
 	  struct link_map *map = handle;
 
-	  result = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
-				      0, DL_LOOKUP_RETURN_NEWEST);
+	  result = GLRO(dl_lookup_symbol) (name, match, &ref,
+					   map->l_local_scope, 0,
+					   DL_LOOKUP_RETURN_NEWEST);
 	}
       else
 	{
@@ -71,7 +103,7 @@ _dl_sym (void *handle, const char *name, void *who)
 	      if (! GL(dl_loaded)
 		  || caller < GL(dl_loaded)->l_map_start
 		  || caller >= GL(dl_loaded)->l_map_end)
-	        _dl_signal_error (0, NULL, NULL, N_("\
+	        GLRO(dl_signal_error) (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	    }
 
@@ -79,8 +111,8 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  while (l->l_loader != NULL)
 	    l = l->l_loader;
 
-	  result = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
-					   match);
+	  result = GLRO(dl_lookup_symbol_skip) (name, l, &ref,
+						l->l_local_scope, match);
 	}
     }
 
@@ -133,8 +165,9 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    result = _dl_lookup_versioned_symbol (name, match, &ref, match->l_scope,
-					  &vers, 0, DL_LOOKUP_ADD_DEPENDENCY);
+    result = GLRO(dl_lookup_versioned_symbol) (name, match, &ref,
+					       match->l_scope, &vers, 0,
+					       DL_LOOKUP_ADD_DEPENDENCY);
   else if (handle == RTLD_NEXT)
     {
       if (__builtin_expect (match == GL(dl_loaded), 0))
@@ -142,7 +175,7 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 	  if (! GL(dl_loaded)
 	      || caller < GL(dl_loaded)->l_map_start
 	      || caller >= GL(dl_loaded)->l_map_end)
-	    _dl_signal_error (0, NULL, NULL, N_("\
+	    GLRO(dl_signal_error) (0, NULL, NULL, N_("\
 RTLD_NEXT used in code not dynamically loaded"));
 	}
 
@@ -150,16 +183,17 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader != NULL)
 	l = l->l_loader;
 
-      result = _dl_lookup_versioned_symbol_skip (name, l, &ref,
-						 l->l_local_scope,
-						 &vers, match);
+      result = GLRO(dl_lookup_versioned_symbol_skip) (name, l, &ref,
+						      l->l_local_scope,
+						      &vers, match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
-      result = _dl_lookup_versioned_symbol (name, map, &ref,
-					    map->l_local_scope, &vers, 0, 0);
+      result = GLRO(dl_lookup_versioned_symbol) (name, map, &ref,
+						 map->l_local_scope, &vers,
+						 0, 0);
     }
 
   if (ref != NULL)

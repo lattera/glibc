@@ -1,5 +1,40 @@
 2004-03-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/Versions: Remove functions which are not exported anymore.
+	* dlfcn/dlerror.c: Call ld.so functions through GLSO.
+	* dlfcn/dlinfo.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-libc.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-sym.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* elf/dl-debug.c: Remove *_internal definition.  Don't use INTUSE for
+	functions which are not exported anymore.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-dst.h: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-misc.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-profstub.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* elf/do-lookup.h: Likewise.
+	* include/dlfcn.h: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/dl-fptr.c: Likewise.
+	* sysdeps/generic/dl-origin.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* sysdeps/generic/dl-tls.c: Likewise.
+	* sysdeps/generic/ldsodefs.h: Likewise.
+	* sysdeps/i386/dl-tls.h: Likewise.
+	* sysdeps/unix/sysv/linux/dl-origin.c: Likewise.
+	* elf/rtld.c: Likewise.  Export function though _rtld_global_ro.
+
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Move
 	dl_debug_fd to rtld_global_ro.
 	* elf/rtld.c: Use GLRO instead of GL for dl_debug_fd.
@@ -79,6 +114,12 @@
 	* sysdeps/ia64/dl-machine.h: Likewise.
 	* sysdeps/arm/dl-machine.h: Likewise.
 	* sysdeps/alpha/dl-machine.h: Likewise.
+	* generic/dl-fptr.c: Likewise.
+	* mach/hurd/dl-sysdep.c: Likewise.
+	* unix/sysv/linux/ia64/dl-static.c: Likewise.
+	* unix/sysv/linux/ia64/getpagesize.c: Likewise.
+	* unix/sysv/linux/m68k/getpagesize.c: Likewise.
+	* unix/sysv/linux/sparc/sparc32/getpagesize.c: Likewise.
 
 2004-03-04  Ulrich Drepper  <drepper@redhat.com>
 

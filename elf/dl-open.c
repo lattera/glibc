@@ -111,8 +111,8 @@ add_to_global (struct link_map *new)
 	{
 	  GL(dl_global_scope_alloc) = 0;
 	nomem:
-	  _dl_signal_error (ENOMEM, new->l_libname->name, NULL,
-			    N_("cannot extend global scope"));
+	  GLRO(dl_signal_error) (ENOMEM, new->l_libname->name, NULL,
+				 N_("cannot extend global scope"));
 	  return 1;
 	}
 
@@ -235,7 +235,7 @@ dl_open_worker (void *a)
 #ifdef SHARED
   /* Check whether _dl_open() has been called from a valid DSO.  */
   if (check_libc_caller (args->caller_dl_open) != 0)
-    _dl_signal_error (0, "dlopen", NULL, N_("invalid caller"));
+    GLRO(dl_signal_error) (0, "dlopen", NULL, N_("invalid caller"));
 #endif
 
   /* Maybe we have to expand a DST.  */
@@ -251,8 +251,8 @@ dl_open_worker (void *a)
       /* DSTs must not appear in SUID/SGID programs.  */
       if (__libc_enable_secure)
 	/* This is an error.  */
-	_dl_signal_error (0, "dlopen", NULL,
-			  N_("DST not allowed in SUID/SGID programs"));
+	GLRO(dl_signal_error) (0, "dlopen", NULL,
+			       N_("DST not allowed in SUID/SGID programs"));
 
       /* We have to find out from which object the caller is calling.  */
       call_map = NULL;
@@ -282,15 +282,15 @@ dl_open_worker (void *a)
 
       /* If the substitution failed don't try to load.  */
       if (*new_file == '\0')
-	_dl_signal_error (0, "dlopen", NULL,
-			  N_("empty dynamic string token substitution"));
+	GLRO(dl_signal_error) (0, "dlopen", NULL,
+			       N_("empty dynamic string token substitution"));
 
       /* Now we have a new file name.  */
       file = new_file;
     }
 
   /* Load the named object.  */
-  args->map = new = _dl_map_object (NULL, file, 0, lt_loaded, 0, mode);
+  args->map = new = GLRO(dl_map_object) (NULL, file, 0, lt_loaded, 0, mode);
 
   /* If the pointer returned is NULL this means the RTLD_NOLOAD flag is
      set and the object is not already loaded.  */
@@ -309,8 +309,8 @@ dl_open_worker (void *a)
     {
       /* Let the user know about the opencount.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	_dl_debug_printf ("opening file=%s; opencount == %u\n\n",
-			  new->l_name, new->l_opencount);
+	GLRO(dl_debug_printf) ("opening file=%s; opencount == %u\n\n",
+			       new->l_name, new->l_opencount);
 
       /* If the user requested the object to be in the global namespace
 	 but it is not so far, add it now.  */
@@ -324,12 +324,12 @@ dl_open_worker (void *a)
     }
 
   /* Load that object's dependencies.  */
-  _dl_map_object_deps (new, NULL, 0, 0, mode & __RTLD_DLOPEN);
+  GLRO(dl_map_object_deps) (new, NULL, 0, 0, mode & __RTLD_DLOPEN);
 
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)
     if (new->l_searchlist.r_list[i]->l_versions == NULL)
-      (void) _dl_check_map_versions (new->l_searchlist.r_list[i], 0, 0);
+      (void) GLRO(dl_check_map_versions) (new->l_searchlist.r_list[i], 0, 0);
 
 #ifdef SCOPE_DEBUG
   show_scope (new);
@@ -358,16 +358,16 @@ dl_open_worker (void *a)
 		 start the profiling.  */
 	      struct link_map *old_profile_map = GL(dl_profile_map);
 
-	      _dl_relocate_object (l, l->l_scope, 1, 1);
+	      GLRO(dl_relocate_object) (l, l->l_scope, 1, 1);
 
 	      if (old_profile_map == NULL && GL(dl_profile_map) != NULL)
 		/* We must prepare the profiling.  */
-		_dl_start_profile (GL(dl_profile_map),
-				   GLRO(dl_profile_output));
+		GLRO(dl_start_profile) (GL(dl_profile_map),
+					GLRO(dl_profile_output));
 	    }
 	  else
 #endif
-	    _dl_relocate_object (l, l->l_scope, lazy, 0);
+	    GLRO(dl_relocate_object) (l, l->l_scope, lazy, 0);
 	}
 
       if (l == new)
@@ -430,8 +430,8 @@ dl_open_worker (void *a)
 		newp = (struct r_scope_elem **)
 		  malloc (new_size * sizeof (struct r_scope_elem *));
 		if (newp == NULL)
-		  _dl_signal_error (ENOMEM, "dlopen", NULL,
-				    N_("cannot create scope list"));
+		  GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
+					 N_("cannot create scope list"));
 		imap->l_scope = memcpy (newp, imap->l_scope,
 					cnt * sizeof (imap->l_scope[0]));
 	      }
@@ -441,8 +441,8 @@ dl_open_worker (void *a)
 		  realloc (imap->l_scope,
 			   new_size * sizeof (struct r_scope_elem *));
 		if (newp == NULL)
-		  _dl_signal_error (ENOMEM, "dlopen", NULL,
-				    N_("cannot create scope list"));
+		  GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL,
+					 N_("cannot create scope list"));
 		imap->l_scope = newp;
 	      }
 
@@ -503,8 +503,8 @@ dl_open_worker (void *a)
 		   generation.  */
 		++GL(dl_tls_generation);
 
-		_dl_signal_error (ENOMEM, "dlopen", NULL,
-				  N_("cannot create TLS data structures"));
+		GLRO(dl_signal_error) (ENOMEM, "dlopen", NULL, N_("\
+cannot create TLS data structures"));
 	      }
 
 	    listp->len = TLS_SLOTINFO_SURPLUS;
@@ -528,7 +528,7 @@ dl_open_worker (void *a)
 #endif
 
   /* Run the initializer functions of new objects.  */
-  _dl_init (new, __libc_argc, __libc_argv, __environ);
+  GLRO(dl_init) (new, __libc_argc, __libc_argv, __environ);
 
   /* Now we can make the new map available in the global scope.  */
   if (mode & RTLD_GLOBAL)
@@ -550,8 +550,8 @@ dl_open_worker (void *a)
 
   /* Let the user know about the opencount.  */
   if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-    _dl_debug_printf ("opening file=%s; opencount == %u\n\n",
-		      new->l_name, new->l_opencount);
+    GLRO(dl_debug_printf) ("opening file=%s; opencount == %u\n\n",
+			   new->l_name, new->l_opencount);
 }
 
 
@@ -566,7 +566,8 @@ _dl_open (const char *file, int mode, const void *caller_dlopen)
 
   if ((mode & RTLD_BINDING_MASK) == 0)
     /* One of the flags must be set.  */
-    _dl_signal_error (EINVAL, file, NULL, N_("invalid mode for dlopen()"));
+    GLRO(dl_signal_error) (EINVAL, file, NULL,
+			   N_("invalid mode for dlopen()"));
 
   /* Make sure we are alone.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
@@ -576,11 +577,11 @@ _dl_open (const char *file, int mode, const void *caller_dlopen)
   args.caller_dlopen = caller_dlopen;
   args.caller_dl_open = RETURN_ADDRESS (0);
   args.map = NULL;
-  errcode = _dl_catch_error (&objname, &errstring, dl_open_worker, &args);
+  errcode = GLRO(dl_catch_error) (&objname, &errstring, dl_open_worker, &args);
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */
-  _dl_unload_cache ();
+  GLRO(dl_unload_cache) ();
 #endif
 
   /* Release the lock.  */
@@ -636,7 +637,7 @@ _dl_open (const char *file, int mode, const void *caller_dlopen)
 	free ((char *) errstring);
 
       /* Reraise the error.  */
-      _dl_signal_error (errcode, objname, NULL, local_errstring);
+      GLRO(dl_signal_error) (errcode, objname, NULL, local_errstring);
     }
 
 #ifndef SHARED

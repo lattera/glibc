@@ -447,14 +447,74 @@ struct rtld_global_ro
 #endif
 
 #ifdef SHARED
+  /* We add a function table to _rtld_global which is then used to
+     call the function instead of going through the PLT.  The result
+     is that we can avoid exporting the functions and we do not jump
+     PLT relocations in libc.so.  */
+  const char *(*_dl_get_origin) (void);
+  size_t (*_dl_dst_count) (const char *, int);
+  char *(*_dl_dst_substitute) (struct link_map *, const char *, char *, int);
+  struct link_map *(internal_function *_dl_map_object) (struct link_map *,
+							const char *, int,
+							int, int, int);
+  void (internal_function *_dl_map_object_deps) (struct link_map *,
+						 struct link_map **,
+						 unsigned int, int, int);
+  void (*_dl_relocate_object) (struct link_map *, struct r_scope_elem *[],
+			       int, int);
+  int (internal_function *_dl_check_map_versions) (struct link_map *, int,
+						   int);
+  void (internal_function *_dl_init) (struct link_map *, int, char **,
+					char **);
+  void (*_dl_debug_state) (void);
+#ifndef MAP_COPY
+  void (*_dl_unload_cache) (void);
+#endif
+  void (*_dl_debug_printf) (const char *, ...)
+       __attribute__ ((__format__ (__printf__, 1, 2)));
+  int (internal_function *_dl_catch_error) (const char **, const char **,
+					    void (*) (void *), void *);
+  void (internal_function *_dl_signal_error) (int, const char *, const char *,
+					      const char *);
+  void (internal_function *_dl_start_profile) (struct link_map *,
+					       const char *);
+  void (*_dl_mcount) (ElfW(Addr) frompc, ElfW(Addr) selfpc);
+  lookup_t (internal_function *_dl_lookup_symbol) (const char *,
+						   struct link_map *,
+						   const ElfW(Sym) **,
+						   struct r_scope_elem *[],
+						   int, int);
+  lookup_t (internal_function *_dl_lookup_versioned_symbol) (const char *,
+							     struct link_map *,
+							     const ElfW(Sym) **,
+							     struct r_scope_elem *[],
+							     const struct r_found_version *,
+							     int, int);
+  lookup_t (internal_function *_dl_lookup_symbol_skip) (const char *,
+							struct link_map *,
+							const ElfW(Sym) **,
+							struct r_scope_elem *[],
+							struct link_map *);
+  lookup_t (internal_function *_dl_lookup_versioned_symbol_skip) (const char *,
+								  struct link_map *,
+								  const ElfW(Sym) **,
+								  struct r_scope_elem *[],
+								  const struct r_found_version *,
+								  struct link_map *);
+
 };
 # define __rtld_global_attribute__
 # ifdef IS_IN_rtld
 extern struct rtld_global_ro _rtld_local_ro
     attribute_relro __rtld_local_attribute__;
-# endif
 extern struct rtld_global_ro _rtld_global_ro
     attribute_relro __rtld_global_attribute__;
+# else
+/* We cheat a bit here.  We declare the variable as as const even
+   though it is at startup.  */
+extern const struct rtld_global_ro _rtld_global_ro
+    attribute_relro __rtld_global_attribute__;
+# endif
 #endif
 #undef EXTERN
 
@@ -518,10 +578,7 @@ extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
    interpreted as for a `printf' call.  All the lines start with a
    tag showing the PID.  */
 extern void _dl_debug_printf (const char *fmt, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)));
-extern void _dl_debug_printf_internal (const char *fmt, ...)
-     __attribute__ ((__format__ (__printf__, 1, 2)))
-     attribute_hidden;
+     __attribute__ ((__format__ (__printf__, 1, 2))) attribute_hidden;
 
 /* Write message on the debug file descriptor.  The parameters are
    interpreted as for a `printf' call.  All the lines buf the first
@@ -564,11 +621,6 @@ extern void _dl_dprintf (int fd, const char *fmt, ...)
    problem.  */
 extern void _dl_signal_error (int errcode, const char *object,
 			      const char *occurred, const char *errstring)
-     internal_function
-     __attribute__ ((__noreturn__));
-extern void _dl_signal_error_internal (int errcode, const char *object,
-				       const char *occurred,
-				       const char *errstring)
      internal_function __attribute__ ((__noreturn__)) attribute_hidden;
 
 /* Like _dl_signal_error, but may return when called in the context of
@@ -594,12 +646,6 @@ extern void _dl_receive_error (receiver_fct fct, void (*operate) (void *),
 extern struct link_map *_dl_map_object (struct link_map *loader,
 					const char *name, int preloaded,
 					int type, int trace_mode, int mode)
-     internal_function;
-extern struct link_map *_dl_map_object_internal (struct link_map *loader,
-						 const char *name,
-						 int preloaded,
-						 int type, int trace_mode,
-						 int mode)
      internal_function attribute_hidden;
 
 /* Call _dl_map_object on the dependencies of MAP, and set up
@@ -610,11 +656,6 @@ extern void _dl_map_object_deps (struct link_map *map,
 				 struct link_map **preloads,
 				 unsigned int npreloads, int trace_mode,
 				 int open_mode)
-     internal_function;
-extern void _dl_map_object_deps_internal (struct link_map *map,
-					  struct link_map **preloads,
-					  unsigned int npreloads,
-					  int trace_mode, int open_mode)
      internal_function attribute_hidden;
 
 /* Cache the locations of MAP's hash table.  */
@@ -646,12 +687,6 @@ extern lookup_t _dl_lookup_symbol (const char *undef,
 				   const ElfW(Sym) **sym,
 				   struct r_scope_elem *symbol_scope[],
 				   int type_class, int flags)
-     internal_function;
-extern lookup_t _dl_lookup_symbol_internal (const char *undef,
-					    struct link_map *undef_map,
-					    const ElfW(Sym) **sym,
-					    struct r_scope_elem *symbolscope[],
-					    int type_class, int flags)
      internal_function attribute_hidden;
 
 enum
@@ -670,14 +705,6 @@ extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
 					     struct r_scope_elem *symbol_scope[],
 					     const struct r_found_version *version,
 					     int type_class, int explicit)
-     internal_function;
-extern lookup_t _dl_lookup_versioned_symbol_internal (const char *undef,
-						      struct link_map *undef_map,
-						      const ElfW(Sym) **sym,
-						      struct r_scope_elem *symbol_scope[],
-						      const struct r_found_version *version,
-						      int type_class,
-						      int explicit)
      internal_function attribute_hidden;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
@@ -713,10 +740,7 @@ extern struct link_map *_dl_new_object (char *realname, const char *libname,
    If LAZY is nonzero, don't relocate its PLT.  */
 extern void _dl_relocate_object (struct link_map *map,
 				 struct r_scope_elem *scope[],
-				 int lazy, int consider_profiling);
-extern void _dl_relocate_object_internal (struct link_map *map,
-					  struct r_scope_elem *scope[],
-					  int lazy, int consider_profiling)
+				 int lazy, int consider_profiling)
      attribute_hidden;
 
 /* Protect PT_GNU_RELRO area.  */
@@ -750,7 +774,7 @@ extern int _dl_check_map_versions (struct link_map *map, int verbose,
 /* Initialize the object in SCOPE by calling the constructors with
    ARGC, ARGV, and ENV as the parameters.  */
 extern void _dl_init (struct link_map *main_map, int argc, char **argv,
-		      char **env) internal_function;
+		      char **env) internal_function attribute_hidden;
 
 /* Call the finalizer functions of all shared objects whose
    initializer functions have completed.  */
@@ -760,8 +784,7 @@ extern void _dl_fini (void) internal_function;
    any shared object mappings.  The `r_state' member of `struct r_debug'
    says what change is taking place.  This function's address is
    the value of the `r_brk' member.  */
-extern void _dl_debug_state (void);
-extern void _dl_debug_state_internal (void) attribute_hidden;
+extern void _dl_debug_state (void) attribute_hidden;
 
 /* Initialize `struct r_debug' if it has not already been done.  The
    argument is the run-time load address of the dynamic linker, to be put
@@ -775,9 +798,6 @@ extern void _dl_init_paths (const char *library_path) internal_function;
 /* Gather the information needed to install the profiling tables and start
    the timers.  */
 extern void _dl_start_profile (struct link_map *map, const char *output_dir)
-     internal_function;
-extern void _dl_start_profile_internal (struct link_map *map,
-					const char *output_dir)
      internal_function attribute_hidden;
 
 /* The actual functions used to keep book on the calls.  */
@@ -813,8 +833,7 @@ extern const char *_dl_load_cache_lookup (const char *name)
    all the time since this would create problems when the file is replaced.
    Therefore we provide this function to close the file and open it again
    once needed.  */
-extern void _dl_unload_cache (void);
-extern void _dl_unload_cache_internal (void) attribute_hidden;
+extern void _dl_unload_cache (void) attribute_hidden;
 
 /* System-dependent function to read a file's whole contents in the
    most convenient manner available.  *SIZEP gets the size of the
@@ -871,14 +890,19 @@ rtld_hidden_proto (_dl_allocate_tls_init)
 extern void _dl_deallocate_tls (void *tcb, bool dealloc_tcb) internal_function;
 rtld_hidden_proto (_dl_deallocate_tls)
 
-/* Return the symbol address given the map of the module it is in and
-   the symbol record.  */
-extern void *_dl_tls_symaddr (struct link_map *map, const ElfW(Sym) *ref)
-     internal_function;
-
 #if defined USE_TLS
 extern void _dl_nothread_init_static_tls (struct link_map *) attribute_hidden;
 #endif
+
+/* Find origin of the executable.  */
+extern const char *_dl_get_origin (void) attribute_hidden;
+
+/* Count DSTs.  */
+extern size_t _dl_dst_count (const char *name, int is_path) attribute_hidden;
+
+/* Substitute DST values.  */
+extern char *_dl_dst_substitute (struct link_map *l, const char *name,
+				 char *result, int is_path) attribute_hidden;
 
 __END_DECLS
 

@@ -1,5 +1,5 @@
 /* dlinfo -- Get information from the dynamic linker.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,7 @@ dlinfo_doit (void *argsblock)
 	  break;
 
       if (l == NULL)
-	_dl_signal_error (0, NULL, NULL, N_("\
+	GLRO(dl_signal_error) (0, NULL, NULL, N_("\
 RTLD_SELF used in code not dynamically loaded"));
     }
 #endif
@@ -58,7 +58,7 @@ RTLD_SELF used in code not dynamically loaded"));
     case RTLD_DI_LMID:
     case RTLD_DI_CONFIGADDR:
     default:
-      _dl_signal_error (0, NULL, NULL, N_("unsupported dlinfo request"));
+      GLRO(dl_signal_error) (0, NULL, NULL, N_("unsupported dlinfo request"));
       break;
 
     case RTLD_DI_LINKMAP:

@@ -416,8 +416,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 #ifndef USE_TLS
     no_memory:
 #endif
-      INTUSE(_dl_signal_error) (ENOMEM, NULL, NULL,
-				N_("cannot create capability list"));
+      _dl_signal_error (ENOMEM, NULL, NULL,
+			N_("cannot create capability list"));
     }
 
   if (cnt == 1)

@@ -46,17 +46,13 @@ ld {
   GLIBC_PRIVATE {
     # Those are in the dynamic linker, but used by libc.so.
     __libc_enable_secure;
-    _dl_argv; _dl_catch_error; _dl_check_map_versions;
-    _dl_debug_printf; _dl_debug_state; _dl_dst_count;
-    _dl_dst_substitute; _dl_init; _dl_lookup_symbol; _dl_lookup_symbol_skip;
-    _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
-    _dl_map_object; _dl_map_object_deps; _dl_out_of_memory;
-    _dl_relocate_object; _dl_signal_error; _dl_start_profile; _dl_starting_up;
-    _dl_unload_cache;
+    _dl_argv;
+    _dl_out_of_memory;
+    _dl_starting_up;
     _rtld_global; _rtld_global_ro;
-    _dl_tls_symaddr; _dl_allocate_tls; _dl_deallocate_tls;
+    _dl_allocate_tls; _dl_deallocate_tls;
     _dl_get_tls_static_info; _dl_allocate_tls_init;
-    _dl_get_origin; _dl_tls_setup; _dl_rtld_di_serinfo;
+    _dl_tls_setup; _dl_rtld_di_serinfo;
     _dl_make_stack_executable;
   }
 }

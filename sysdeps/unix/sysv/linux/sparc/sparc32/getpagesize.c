@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,12 +31,12 @@
 int
 __getpagesize ()
 {
-  if (GL(dl_pagesize) == 0)
+  if (GLRO(dl_pagesize) == 0)
     {
       INTERNAL_SYSCALL_DECL (err);
-      GL(dl_pagesize) = INTERNAL_SYSCALL (getpagesize, err, 0);
+      GLRO(dl_pagesize) = INTERNAL_SYSCALL (getpagesize, err, 0);
     }
-  return GL(dl_pagesize);
+  return GLRO(dl_pagesize);
 }
 libc_hidden_def (__getpagesize)
 weak_alias (__getpagesize, getpagesize)

@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <dlfcn.h>
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -121,6 +122,27 @@ struct rtld_global_ro _rtld_global_ro attribute_relro =
     ._dl_hwcap_mask = HWCAP_IMPORTANT,
     ._dl_lazy = 1,
     ._dl_fpu_control = _FPU_DEFAULT,
+
+    /* Function pointers.  */
+    ._dl_get_origin = _dl_get_origin,
+    ._dl_dst_count = _dl_dst_count,
+    ._dl_dst_substitute = _dl_dst_substitute,
+    ._dl_map_object = _dl_map_object,
+    ._dl_map_object_deps = _dl_map_object_deps,
+    ._dl_relocate_object = _dl_relocate_object,
+    ._dl_check_map_versions = _dl_check_map_versions,
+    ._dl_init = _dl_init,
+    ._dl_debug_state = _dl_debug_state,
+    ._dl_unload_cache = _dl_unload_cache,
+    ._dl_debug_printf = _dl_debug_printf,
+    ._dl_catch_error = _dl_catch_error,
+    ._dl_signal_error = _dl_signal_error,
+    ._dl_start_profile = _dl_start_profile,
+    ._dl_mcount = _dl_mcount_internal,
+    ._dl_lookup_symbol = _dl_lookup_symbol,
+    ._dl_lookup_versioned_symbol = _dl_lookup_versioned_symbol,
+    ._dl_lookup_symbol_skip = _dl_lookup_symbol_skip,
+    ._dl_lookup_versioned_symbol_skip = _dl_lookup_versioned_symbol_skip,
   };
 /* If we would use strong_alias here the compiler would see a
    non-hidden definition.  This would undo the effect of the previous
@@ -551,16 +573,15 @@ relocate_doit (void *a)
 {
   struct relocate_args *args = (struct relocate_args *) a;
 
-  INTUSE(_dl_relocate_object) (args->l, args->l->l_scope, args->lazy, 0);
+  _dl_relocate_object (args->l, args->l->l_scope, args->lazy, 0);
 }
 
 static void
 map_doit (void *a)
 {
   struct map_args *args = (struct map_args *) a;
-  args->map = INTUSE(_dl_map_object) (args->loader, args->str,
-				      args->is_preloaded, lt_library, 0,
-				      args->mode);
+  args->map = _dl_map_object (args->loader, args->str,
+			      args->is_preloaded, lt_library, 0, args->mode);
 }
 
 static void
@@ -823,7 +844,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 	  args.loader = NULL;
 	  args.is_preloaded = 0;
 	  args.mode = __RTLD_OPENEXEC;
-	  (void) INTUSE(_dl_catch_error) (&objname, &err_str, map_doit, &args);
+	  (void) _dl_catch_error (&objname, &err_str, map_doit, &args);
 	  if (__builtin_expect (err_str != NULL, 0))
 	    /* We don't free the returned string, the programs stops
 	       anyway.  */
@@ -832,8 +853,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  HP_TIMING_NOW (start);
-	  INTUSE(_dl_map_object) (NULL, rtld_progname, 0, lt_library, 0,
-				  __RTLD_OPENEXEC);
+	  _dl_map_object (NULL, rtld_progname, 0, lt_library, 0,
+			  __RTLD_OPENEXEC);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);
@@ -1094,10 +1115,8 @@ of this helper program; chances are you did not intend to run this program.\n\
 	    && (__builtin_expect (! INTUSE(__libc_enable_secure), 1)
 		|| strchr (p, '/') == NULL))
 	  {
-	    struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded),
-							       p, 1,
-							       lt_library,
-							       0, 0);
+	    struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
+						       lt_library, 0, 0);
 	    if (++new_map->l_opencount == 1)
 	      /* It is no duplicate.  */
 	      ++npreloads;
@@ -1174,8 +1193,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 		args.is_preloaded = 1;
 		args.mode = 0;
 
-		(void) INTUSE(_dl_catch_error) (&objname, &err_str, map_doit,
-						&args);
+		(void) _dl_catch_error (&objname, &err_str, map_doit, &args);
 		if (__builtin_expect (err_str != NULL, 0))
 		  {
 		    _dl_error_printf ("\
@@ -1193,9 +1211,8 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
       if (problem != NULL)
 	{
 	  char *p = strndupa (problem, file_size - (problem - file));
-	  struct link_map *new_map = INTUSE(_dl_map_object) (GL(dl_loaded), p,
-							     1, lt_library,
-							     0, 0);
+	  struct link_map *new_map = _dl_map_object (GL(dl_loaded), p, 1,
+						     lt_library, 0, 0);
 	  if (++new_map->l_opencount == 1)
 	    /* It is no duplicate.  */
 	    ++npreloads;
@@ -1294,8 +1311,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
      specified some libraries to load, these are inserted before the actual
      dependencies in the executable's searchlist for symbol resolution.  */
   HP_TIMING_NOW (start);
-  INTUSE(_dl_map_object_deps) (GL(dl_loaded), preloads, npreloads,
-			       mode == trace, 0);
+  _dl_map_object_deps (GL(dl_loaded), preloads, npreloads, mode == trace, 0);
   HP_TIMING_NOW (stop);
   HP_TIMING_DIFF (diff, start, stop);
   HP_TIMING_ACCUM_NT (load_time, diff);
@@ -1505,10 +1521,9 @@ cannot allocate TLS data structures for initial thread");
 	    ElfW(Addr) loadbase;
 	    lookup_t result;
 
-	    result = INTUSE(_dl_lookup_symbol) (INTUSE(_dl_argv)[i],
-						GL(dl_loaded),
-						&ref, GL(dl_loaded)->l_scope,
-						ELF_RTYPE_CLASS_PLT, 1);
+	    result = _dl_lookup_symbol (INTUSE(_dl_argv)[i], GL(dl_loaded),
+					&ref, GL(dl_loaded)->l_scope,
+					ELF_RTYPE_CLASS_PLT, 1);
 
 	    loadbase = LOOKUP_VALUE_ADDRESS (result);
 
@@ -1545,8 +1560,8 @@ cannot allocate TLS data structures for initial thread");
 
 	      if ((GLRO(dl_debug_mask) & DL_DEBUG_PRELINK)
 		  && GL(dl_rtld_map).l_opencount > 1)
-		INTUSE(_dl_relocate_object) (&GL(dl_rtld_map),
-					     GL(dl_loaded)->l_scope, 0, 0);
+		_dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
+				     0, 0);
 	    }
 
 #define VERNEEDTAG (DT_NUM + DT_THISPROCNUM + DT_VERSIONTAGIDX (DT_VERNEED))
@@ -1783,8 +1798,8 @@ cannot allocate TLS data structures for initial thread");
 	    }
 
 	  if (l != &GL(dl_rtld_map))
-	    INTUSE(_dl_relocate_object) (l, l->l_scope, GLRO(dl_lazy),
-					 consider_profiling);
+	    _dl_relocate_object (l, l->l_scope, GLRO(dl_lazy),
+				 consider_profiling);
 
 	  l = l->l_prev;
 	}
@@ -1806,16 +1821,14 @@ cannot allocate TLS data structures for initial thread");
 	 needs to have _dl_profile_map set up by the relocator.  */
       if (__builtin_expect (GL(dl_profile_map) != NULL, 0))
 	/* We must prepare the profiling.  */
-	INTUSE(_dl_start_profile) (GL(dl_profile_map),
-				   GLRO(dl_profile_output));
+	_dl_start_profile (GL(dl_profile_map), GLRO(dl_profile_output));
 
       if (GL(dl_rtld_map).l_opencount > 1)
 	{
 	  /* There was an explicit ref to the dynamic linker as a shared lib.
 	     Re-relocate ourselves with user-controlled symbol definitions.  */
 	  HP_TIMING_NOW (start);
-	  INTUSE(_dl_relocate_object) (&GL(dl_rtld_map), GL(dl_loaded)->l_scope,
-				       0, 0);
+	  _dl_relocate_object (&GL(dl_rtld_map), GL(dl_loaded)->l_scope, 0, 0);
 	  HP_TIMING_NOW (stop);
 	  HP_TIMING_DIFF (add, start, stop);
 	  HP_TIMING_ACCUM_NT (relocate_time, add);
@@ -1854,11 +1867,11 @@ cannot allocate TLS data structures for initial thread");
 
   /* Notify the debugger that all objects are now mapped in.  */
   r->r_state = RT_ADD;
-  INTUSE(_dl_debug_state) ();
+  _dl_debug_state ();
 
 #ifndef MAP_COPY
   /* We must munmap() the cache file.  */
-  INTUSE(_dl_unload_cache) ();
+  _dl_unload_cache ();
 #endif
 
   /* Once we return, _dl_sysdep_start will invoke
@@ -2211,9 +2224,8 @@ print_statistics (hp_timing_t *rtld_total_timep)
   if (HP_TIMING_AVAIL)
     {
       HP_TIMING_PRINT (buf, sizeof (buf), *rtld_total_timep);
-      INTUSE(_dl_debug_printf) ("\nruntime linker statistics:\n"
-				"  total startup time in dynamic loader: %s\n",
-				buf);
+      _dl_debug_printf ("\nruntime linker statistics:\n"
+			"  total startup time in dynamic loader: %s\n", buf);
 
       /* Print relocation statistics.  */
       char pbuf[30];
@@ -2232,9 +2244,8 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      INTUSE(_dl_debug_printf) ("\
-            time needed for relocation: %s (%s%%)\n",
-				buf, pbuf);
+      _dl_debug_printf ("\
+            time needed for relocation: %s (%s%%)\n", buf, pbuf);
     }
 #endif
 
@@ -2255,12 +2266,12 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	num_relative_relocations += l->l_info[VERSYMIDX (DT_RELACOUNT)]->d_un.d_val;
     }
 
-  INTUSE(_dl_debug_printf) ("                 number of relocations: %lu\n",
-			    GL(dl_num_relocations));
-  INTUSE(_dl_debug_printf) ("      number of relocations from cache: %lu\n",
-			    GL(dl_num_cache_relocations));
-  INTUSE(_dl_debug_printf) ("        number of relative relocations: %lu\n",
-			    num_relative_relocations);
+  _dl_debug_printf ("                 number of relocations: %lu\n",
+		    GL(dl_num_relocations));
+  _dl_debug_printf ("      number of relocations from cache: %lu\n",
+		    GL(dl_num_cache_relocations));
+  _dl_debug_printf ("        number of relative relocations: %lu\n",
+		    num_relative_relocations);
 
 #ifndef HP_TIMING_NONAVAIL
   /* Time spend while loading the object and the dependencies.  */
@@ -2282,7 +2293,7 @@ print_statistics (hp_timing_t *rtld_total_timep)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      INTUSE(_dl_debug_printf) ("\
+      _dl_debug_printf ("\
            time needed to load objects: %s (%s%%)\n",
 				buf, pbuf);
     }

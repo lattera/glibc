@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003
+   Copyright (C) 1995,1996,1997,1998,1999,2000,2001,2002,2003,2004
 	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -252,7 +252,7 @@ unfmh();			/* XXX */
   __mach_init ();
 
   /* Initialize frequently used global variable.  */
-  GL(dl_pagesize) = __getpagesize ();
+  GLRO(dl_pagesize) = __getpagesize ();
 
 #if HP_TIMING_AVAIL
   HP_TIMING_NOW (_dl_cpuclock_offset);

@@ -84,19 +84,17 @@ fixup (
 
 	    if (version->hash != 0)
 	      {
-		result = INTUSE(_dl_lookup_versioned_symbol) (strtab
-							      + sym->st_name,
-							      l, &sym, l->l_scope,
-							      version,
-							      ELF_RTYPE_CLASS_PLT,
-							      0);
+		result = _dl_lookup_versioned_symbol (strtab + sym->st_name,
+						      l, &sym, l->l_scope,
+						      version,
+						      ELF_RTYPE_CLASS_PLT, 0);
 		break;
 	      }
 	  }
 	case 0:
-	  result = INTUSE(_dl_lookup_symbol) (strtab + sym->st_name, l, &sym,
-					      l->l_scope, ELF_RTYPE_CLASS_PLT,
-					      DL_LOOKUP_ADD_DEPENDENCY);
+	  result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+				      l->l_scope, ELF_RTYPE_CLASS_PLT,
+				      DL_LOOKUP_ADD_DEPENDENCY);
 	}
 
       /* Currently result contains the base load address (or link map)
@@ -174,21 +172,19 @@ profile_fixup (
 
 		if (version->hash != 0)
 		  {
-		    result = INTUSE(_dl_lookup_versioned_symbol) (strtab
-								  + sym->st_name,
-								  l, &sym,
-								  l->l_scope,
-								  version,
-								  ELF_RTYPE_CLASS_PLT,
-								  0);
+		    result = _dl_lookup_versioned_symbol (strtab
+							  + sym->st_name,
+							  l, &sym, l->l_scope,
+							  version,
+							  ELF_RTYPE_CLASS_PLT,
+							  0);
 		    break;
 		  }
 	      }
 	    case 0:
-	      result = INTUSE(_dl_lookup_symbol) (strtab + sym->st_name, l,
-						  &sym, l->l_scope,
-						  ELF_RTYPE_CLASS_PLT,
-						  DL_LOOKUP_ADD_DEPENDENCY);
+	      result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+					  l->l_scope, ELF_RTYPE_CLASS_PLT,
+					  DL_LOOKUP_ADD_DEPENDENCY);
 	    }
 
 	  /* Currently result contains the base load address (or link map)

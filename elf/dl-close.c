@@ -125,7 +125,7 @@ _dl_close (void *_map)
     return;
 
   if (__builtin_expect (map->l_opencount, 1) == 0)
-    _dl_signal_error (0, map->l_name, NULL, N_("shared object not open"));
+    GLRO(dl_signal_error) (0, map->l_name, NULL, N_("shared object not open"));
 
   /* Acquire the lock.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
@@ -135,8 +135,8 @@ _dl_close (void *_map)
     {
       /* There are still references to this object.  Do nothing more.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	_dl_debug_printf ("\nclosing file=%s; opencount == %u\n",
-			  map->l_name, map->l_opencount);
+	GLRO(dl_debug_printf) ("\nclosing file=%s; opencount == %u\n",
+				map->l_name, map->l_opencount);
 
       /* Decrement the object's reference counter, not the dependencies'.  */
       --map->l_opencount;
@@ -225,7 +225,7 @@ _dl_close (void *_map)
 	{
 	  /* When debugging print a message first.  */
 	  if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_IMPCALLS, 0))
-	    _dl_debug_printf ("\ncalling fini: %s\n\n", imap->l_name);
+	    GLRO(dl_debug_printf) ("\ncalling fini: %s\n\n", imap->l_name);
 
 	  /* Call its termination function.  Do not do it for
 	     half-cooked objects.  */
@@ -318,7 +318,7 @@ _dl_close (void *_map)
 
   /* Notify the debugger we are about to remove some loaded objects.  */
   _r_debug.r_state = RT_DELETE;
-  _dl_debug_state ();
+  GLRO(dl_debug_state) ();
 
 #ifdef USE_TLS
   size_t tls_free_start;
@@ -537,7 +537,7 @@ _dl_close (void *_map)
 
   /* Notify the debugger those objects are finalized and gone.  */
   _r_debug.r_state = RT_CONSISTENT;
-  _dl_debug_state ();
+  GLRO(dl_debug_state) ();
 
   /* Now we can perhaps also remove the modules for which we had
      dependencies because of symbol lookup.  */

@@ -191,11 +191,11 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 
       /* Display information if we are debugging.  */
       if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_FILES, 0))
-	INTUSE(_dl_debug_printf) ("\
+	_dl_debug_printf ("\
 \nfile=%s;  needed by %s (relocation dependency)\n\n",
-				  map->l_name[0] ? map->l_name : rtld_progname,
-				  undef_map->l_name[0]
-				  ? undef_map->l_name : rtld_progname);
+			  map->l_name[0] ? map->l_name : rtld_progname,
+			  undef_map->l_name[0]
+			  ? undef_map->l_name : rtld_progname);
     }
   else
     /* Whoa, that was bad luck.  We have to search again.  */
@@ -312,8 +312,8 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return INTUSE(_dl_lookup_symbol) (undef_name, undef_map, ref,
-					symbol_scope, type_class, flags);
+      return _dl_lookup_symbol (undef_name, undef_map, ref, symbol_scope,
+				type_class, flags);
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
@@ -323,7 +323,6 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
   *ref = current_value.s;
   return LOOKUP_VALUE (current_value.m);
 }
-INTDEF (_dl_lookup_symbol)
 
 
 /* This function is nearly the same as `_dl_lookup_symbol' but it
@@ -400,8 +399,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 
 
 /* This function works like _dl_lookup_symbol but it takes an
-   additional arguement with the version number of the requested
-   symbol.
+   additional argument with the version number of the requested symbol.
 
    XXX We'll see whether we need this separate function.  */
 lookup_t
@@ -518,9 +516,9 @@ _dl_lookup_versioned_symbol (const char *undef_name,
       && add_dependency (undef_map, current_value.m) < 0)
       /* Something went wrong.  Perhaps the object we tried to reference
 	 was just removed.  Try finding another definition.  */
-      return INTUSE(_dl_lookup_versioned_symbol) (undef_name, undef_map,
-						  ref, symbol_scope,
-						  version, type_class, flags);
+      return _dl_lookup_versioned_symbol (undef_name, undef_map, ref,
+					  symbol_scope, version, type_class,
+					  flags);
 
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& (DL_DEBUG_BINDINGS|DL_DEBUG_PRELINK), 0))
@@ -530,7 +528,6 @@ _dl_lookup_versioned_symbol (const char *undef_name,
   *ref = current_value.s;
   return LOOKUP_VALUE (current_value.m);
 }
-INTDEF (_dl_lookup_versioned_symbol)
 
 
 /* Similar to _dl_lookup_symbol_skip but takes an additional argument
@@ -652,14 +649,12 @@ _dl_debug_bindings (const char *undef_name, struct link_map *undef_map,
 
   if (GLRO(dl_debug_mask) & DL_DEBUG_BINDINGS)
     {
-      INTUSE(_dl_debug_printf) ("binding file %s to %s: %s symbol `%s'",
-				(reference_name[0]
-				 ? reference_name
-				 : (rtld_progname ?: "<main program>")),
-				value->m->l_name[0]
-				? value->m->l_name : rtld_progname,
-				protected ? "protected" : "normal",
-				undef_name);
+      _dl_debug_printf ("binding file %s to %s: %s symbol `%s'",
+			(reference_name[0]
+			 ? reference_name
+			 : (rtld_progname ?: "<main program>")),
+			value->m->l_name[0] ? value->m->l_name : rtld_progname,
+			protected ? "protected" : "normal", undef_name);
       if (version)
 	_dl_debug_printf_c (" [%s]\n", version->name);
       else

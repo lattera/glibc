@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -39,7 +39,7 @@ dlerror_run (void (*operate) (void *), void *args)
   const char *last_errstring = NULL;
   int result;
 
-  (void) _dl_catch_error (&objname, &last_errstring, operate, args);
+  (void) GLRO(dl_catch_error) (&objname, &last_errstring, operate, args);
 
   result = last_errstring != NULL;
   if (result && last_errstring != _dl_out_of_memory)
@@ -85,9 +85,9 @@ do_dlsym (void *ptr)
 {
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
-  args->loadbase = _dl_lookup_symbol (args->name, args->map, &args->ref,
-				      args->map->l_local_scope, 0,
-				      DL_LOOKUP_RETURN_NEWEST);
+  args->loadbase = GLRO(dl_lookup_symbol) (args->name, args->map, &args->ref,
+					   args->map->l_local_scope, 0,
+					   DL_LOOKUP_RETURN_NEWEST);
 }
 
 static void
@@ -126,9 +126,9 @@ do_dlsym_private (void *ptr)
 
   struct do_dlsym_args *args = (struct do_dlsym_args *) ptr;
   args->ref = NULL;
-  l = _dl_lookup_versioned_symbol (args->name, args->map,
-				   &args->ref, args->map->l_scope,
-				   &vers, 0, 0);
+  l = GLRO(dl_lookup_versioned_symbol) (args->name, args->map,
+					&args->ref, args->map->l_scope,
+					&vers, 0, 0);
   args->loadbase = l;
 }
 

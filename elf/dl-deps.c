@@ -60,10 +60,10 @@ openaux (void *a)
 {
   struct openaux_args *args = (struct openaux_args *) a;
 
-  args->aux = INTUSE(_dl_map_object) (args->map, args->name, 0,
-				      (args->map->l_type == lt_executable
-				       ? lt_library : args->map->l_type),
-				      args->trace_mode, args->open_mode);
+  args->aux = _dl_map_object (args->map, args->name, 0,
+			      (args->map->l_type == lt_executable
+			       ? lt_library : args->map->l_type),
+			      args->trace_mode, args->open_mode);
 }
 
 static ptrdiff_t
@@ -108,26 +108,26 @@ struct list
 									      \
 	/* DST must not appear in SUID/SGID programs.  */		      \
 	if (INTUSE(__libc_enable_secure))				      \
-	  INTUSE(_dl_signal_error) (0, __str, NULL, N_("\
+	  _dl_signal_error (0, __str, NULL, N_("\
 DST not allowed in SUID/SGID programs"));				      \
 									      \
 	__newp = (char *) alloca (DL_DST_REQUIRED (l, __str, strlen (__str),  \
 						   __cnt));		      \
 									      \
-	__result = INTUSE(_dl_dst_substitute) (l, __str, __newp, 0);	      \
+	__result = _dl_dst_substitute (l, __str, __newp, 0);	      \
 									      \
 	if (*__result == '\0')						      \
 	  {								      \
 	    /* The replacement for the DST is not known.  We can't	      \
 	       processed.  */						      \
 	    if (fatal)							      \
-	      INTUSE(_dl_signal_error) (0, __str, NULL, N_("\
+	      _dl_signal_error (0, __str, NULL, N_("\
 empty dynamics string token substitution"));				      \
 	    else							      \
 	      {								      \
 		/* This is for DT_AUXILIARY.  */			      \
 		if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS, 0))\
-		  INTUSE(_dl_debug_printf) (N_("\
+		  _dl_debug_printf (N_("\
 cannot load auxiliary `%s' because of empty dynamic string token "	      \
 					    "substitution\n"), __str);	      \
 		continue;						      \
@@ -241,8 +241,7 @@ _dl_map_object_deps (struct link_map *map,
 		/* Store the tag in the argument structure.  */
 		args.name = name;
 
-		err = INTUSE(_dl_catch_error) (&objname, &errstring, openaux,
-					       &args);
+		err = _dl_catch_error (&objname, &errstring, openaux, &args);
 		if (__builtin_expect (errstring != NULL, 0))
 		  {
 		    if (err)
@@ -293,16 +292,16 @@ _dl_map_object_deps (struct link_map *map,
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
-		      INTUSE(_dl_debug_printf) ("load auxiliary object=%s"
-						" requested by file=%s\n",
-						name,
-						l->l_name[0]
-						? l->l_name : rtld_progname);
+		      _dl_debug_printf ("load auxiliary object=%s"
+					" requested by file=%s\n",
+					name,
+					l->l_name[0]
+					? l->l_name : rtld_progname);
 
 		    /* We must be prepared that the addressed shared
 		       object is not available.  */
-		    err = INTUSE(_dl_catch_error) (&objname, &errstring,
-						   openaux, &args);
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			/* We are not interested in the error message.  */
@@ -321,15 +320,15 @@ _dl_map_object_deps (struct link_map *map,
 		    /* Say that we are about to load an auxiliary library.  */
 		    if (__builtin_expect (GLRO(dl_debug_mask) & DL_DEBUG_LIBS,
 					  0))
-		      INTUSE(_dl_debug_printf) ("load filtered object=%s"
-						" requested by file=%s\n",
-						name,
-						l->l_name[0]
-						? l->l_name : rtld_progname);
+		      _dl_debug_printf ("load filtered object=%s"
+					" requested by file=%s\n",
+					name,
+					l->l_name[0]
+					? l->l_name : rtld_progname);
 
 		    /* For filter objects the dependency must be available.  */
-		    err = INTUSE(_dl_catch_error) (&objname, &errstring,
-						   openaux, &args);
+		    err = _dl_catch_error (&objname, &errstring, openaux,
+					   &args);
 		    if (__builtin_expect (errstring != NULL, 0))
 		      {
 			if (err)
@@ -457,8 +456,8 @@ _dl_map_object_deps (struct link_map *map,
 	  l->l_initfini = (struct link_map **)
 	    malloc ((2 * nneeded + 1) * sizeof needed[0]);
 	  if (l->l_initfini == NULL)
-	    INTUSE(_dl_signal_error) (ENOMEM, map->l_name, NULL,
-				      N_("cannot allocate dependency list"));
+	    _dl_signal_error (ENOMEM, map->l_name, NULL,
+			      N_("cannot allocate dependency list"));
 	  l->l_initfini[0] = l;
 	  memcpy (&l->l_initfini[1], needed, nneeded * sizeof needed[0]);
 	  memcpy (&l->l_initfini[nneeded + 1], l->l_initfini,
@@ -490,8 +489,8 @@ _dl_map_object_deps (struct link_map *map,
     (struct link_map **) malloc ((2 * nlist + 1)
 				 * sizeof (struct link_map *));
   if (map->l_initfini == NULL)
-    INTUSE(_dl_signal_error) (ENOMEM, map->l_name, NULL,
-			      N_("cannot allocate symbol search list"));
+    _dl_signal_error (ENOMEM, map->l_name, NULL,
+		      N_("cannot allocate symbol search list"));
 
 
   map->l_searchlist.r_list = &map->l_initfini[nlist + 1];
@@ -531,7 +530,7 @@ _dl_map_object_deps (struct link_map *map,
 	      /* As current DT_AUXILIARY/DT_FILTER implementation needs to be
 		 rewritten, no need to bother with prelinking the old
 		 implementation.  */
-	      INTUSE(_dl_signal_error) (EINVAL, l->l_name, NULL, N_("\
+	      _dl_signal_error (EINVAL, l->l_name, NULL, N_("\
 Filters not supported with LD_TRACE_PRELINKING"));
 	    }
 
@@ -545,8 +544,8 @@ Filters not supported with LD_TRACE_PRELINKING"));
 					    + (cnt
 					       * sizeof (struct link_map *)));
 	  if (l->l_local_scope[0] == NULL)
-	    INTUSE(_dl_signal_error) (ENOMEM, map->l_name, NULL,
-				      N_("cannot allocate symbol search list"));
+	    _dl_signal_error (ENOMEM, map->l_name, NULL,
+			      N_("cannot allocate symbol search list"));
 	  l->l_local_scope[0]->r_nlist = cnt;
 	  l->l_local_scope[0]->r_list =
 	    (struct link_map **) (l->l_local_scope[0] + 1);
@@ -629,7 +628,6 @@ Filters not supported with LD_TRACE_PRELINKING"));
   map->l_initfini[nlist] = NULL;
 
   if (errno_reason)
-    INTUSE(_dl_signal_error) (errno_reason == -1 ? 0 : errno_reason, objname,
-			   NULL, errstring);
+    _dl_signal_error (errno_reason == -1 ? 0 : errno_reason, objname,
+		      NULL, errstring);
 }
-INTDEF (_dl_map_object_deps)

@@ -1,5 +1,5 @@
 /* Communicate dynamic linker state to the debugger at runtime.
-   Copyright (C) 1996, 1998, 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998, 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,7 +40,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase)
       _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
       _r_debug.r_ldbase = ldbase;
       _r_debug.r_map = GL(dl_loaded);
-      _r_debug.r_brk = (ElfW(Addr)) &INTUSE(_dl_debug_state);
+      _r_debug.r_brk = (ElfW(Addr)) &_dl_debug_state;
     }
 
   return &_r_debug;
@@ -55,4 +55,3 @@ void
 _dl_debug_state (void)
 {
 }
-INTDEF (_dl_debug_state)

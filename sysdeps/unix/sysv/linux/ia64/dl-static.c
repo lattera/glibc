@@ -1,5 +1,5 @@
 /* Variable initialization.  IA-64 version.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,8 +31,8 @@ _dl_var_init (void *array[])
       DL_CLKTCK
     };
 
-  GL(dl_pagesize) = *((size_t *) array[DL_PAGESIZE]);
-  GL(dl_clktck) = *((int *) array[DL_CLKTCK]);
+  GLRO(dl_pagesize) = *((size_t *) array[DL_PAGESIZE]);
+  GLRO(dl_clktck) = *((int *) array[DL_CLKTCK]);
 }
 
 #else
@@ -42,8 +42,8 @@ __libc_lock_define_initialized_recursive (static, _dl_static_lock)
 
 static void *variables[] =
 {
-  &GL(dl_pagesize),
-  &GL(dl_clktck)
+  &GLRO(dl_pagesize),
+  &GLRO(dl_clktck)
 };
 
 void

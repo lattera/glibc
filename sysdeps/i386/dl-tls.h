@@ -1,5 +1,5 @@
 /* Thread-local storage handling in the ELF dynamic linker.  i386 version.
-   Copyright (C) 2002 Free Software Foundation, Inc.
+   Copyright (C) 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,6 +33,7 @@ extern void *___tls_get_addr (tls_index *ti)
 extern void *___tls_get_addr_internal (tls_index *ti)
      __attribute__ ((__regparm__ (1))) attribute_hidden;
 
+# ifdef IS_IN_rtld
 /* The special thing about the x86 TLS ABI is that we have two
    variants of the __tls_get_addr function with different calling
    conventions.  The GNU version, which we are mostly concerned here,
@@ -50,5 +51,10 @@ __tls_get_addr (tls_index *ti)
    version of this file.  */
 # define __tls_get_addr __attribute__ ((__regparm__ (1))) ___tls_get_addr
 strong_alias (___tls_get_addr, ___tls_get_addr_internal)
-# define __TLS_GET_ADDR ___tls_get_addr_internal
+#else
+
+/* Users should get the better interface.  */
+# define __tls_get_addr ___tls_get_addr
+
+# endif
 #endif

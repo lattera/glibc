@@ -113,7 +113,6 @@ _dl_signal_error (int errcode, const char *objname, const char *occation,
 			 : ""));
     }
 }
-INTDEF (_dl_signal_error)
 
 
 void
@@ -123,8 +122,8 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
 {
   if (__builtin_expect (GLRO(dl_debug_mask)
 			& ~(DL_DEBUG_STATISTICS|DL_DEBUG_PRELINK), 0))
-    INTUSE(_dl_debug_printf) ("%s: error: %s: %s (%s)\n", objname, occation,
-			      errstring, receiver ? "continued" : "fatal");
+    _dl_debug_printf ("%s: error: %s: %s (%s)\n", objname, occation,
+		      errstring, receiver ? "continued" : "fatal");
 
   if (receiver)
     {
@@ -134,7 +133,7 @@ _dl_signal_cerror (int errcode, const char *objname, const char *occation,
       (*receiver) (errcode, objname, errstring);
     }
   else
-    INTUSE(_dl_signal_error) (errcode, objname, occation, errstring);
+    _dl_signal_error (errcode, objname, occation, errstring);
 }
 
 
@@ -172,7 +171,6 @@ _dl_catch_error (const char **objname, const char **errstring,
   *errstring = c.errstring;
   return errcode == -1 ? 0 : errcode;
 }
-INTDEF (_dl_catch_error)
 
 
 void

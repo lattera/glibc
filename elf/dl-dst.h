@@ -25,13 +25,12 @@
     const char *__sf = strchr (name, '$');				      \
 									      \
     if (__builtin_expect (__sf != NULL, 0))				      \
-      __cnt = INTUSE(_dl_dst_count) (__sf, is_path);			      \
+      __cnt = _dl_dst_count (__sf, is_path);			      \
 									      \
     __cnt; })
-
-/* Prototype for used function.  */
-extern size_t _dl_dst_count (const char *name, int is_path);
-extern size_t _dl_dst_count_internal (const char *name, int is_path);
+#ifndef IS_IN_rtld
+# define _dl_dst_count GLRO(dl_dst_count)
+#endif
 
 
 /* Guess from the number of DSTs the length of the result string.  */
@@ -67,16 +66,7 @@ extern size_t _dl_dst_count_internal (const char *name, int is_path);
 									      \
     __len; })
 
-/* Find origin of the executable.  */
-extern const char *_dl_get_origin (void);
-extern const char *_dl_get_origin_internal (void);
-
-#ifdef IS_IN_rtld
-# define _dl_get_origin INTUSE(_dl_get_origin)
+#ifndef IS_IN_rtld
+# define _dl_get_origin GLRO(dl_get_origin)
+# define _dl_dst_substitute GLRO(dl_dst_substitute)
 #endif
-
-/* Prototype for used function.  */
-extern char *_dl_dst_substitute (struct link_map *l, const char *name,
-				 char *result, int is_path);
-extern char *_dl_dst_substitute_internal (struct link_map *l, const char *name,
-					  char *result, int is_path);
