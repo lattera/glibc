@@ -1,3 +1,7 @@
+2000-02-28  Andreas Jaeger  <aj@suse.de>
+
+	* rwlock.c: Fix typo.
+
 2000-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* rwlock.c: Define __* variants of the functions and make old names

@@ -16,6 +16,8 @@
 	* sysdeps/powerpc/gprsave0.S: New file.
 	* sysdeps/powerpc/gprrest1.S: New file.
 	* sysdeps/powerpc/gprsave1.S: New file.
+	* sysdeps/powerpc/Versions: Export _savegpr* and _restgpr*
+	functions.
 
 	* sysdeps/mach/hurd/bits/statfs.h: Define _STATFS_F_NAMELEN.
 	* sysdeps/unix/sysv/linux/bits/statfs.h: Likewise.
