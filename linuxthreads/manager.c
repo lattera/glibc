@@ -177,7 +177,7 @@ int __pthread_manager(void *arg)
 	     __on_exit handler, which in turn will send REQ_PROCESS_EXIT
 	     to the thread manager. In case you are wondering how the
 	     manager terminates from its loop here. */
-	}	      
+	}
         break;
       case REQ_POST:
         __new_sem_post(request.req_args.post);
@@ -207,7 +207,7 @@ int __pthread_manager_event(void *arg)
   /* Get the lock the manager will free once all is correctly set up.  */
   __pthread_lock (THREAD_GETMEM((&__pthread_manager_thread), p_lock), NULL);
   /* Free it immediately.  */
-  __pthread_spin_unlock (THREAD_GETMEM((&__pthread_manager_thread), p_lock));
+  __pthread_unlock (THREAD_GETMEM((&__pthread_manager_thread), p_lock));
 
   return __pthread_manager(arg);
 }
@@ -273,7 +273,7 @@ static int pthread_start_thread_event(void *arg)
   /* Get the lock the manager will free once all is correctly set up.  */
   __pthread_lock (THREAD_GETMEM(self, p_lock), NULL);
   /* Free it immediately.  */
-  __pthread_spin_unlock (THREAD_GETMEM(self, p_lock));
+  __pthread_unlock (THREAD_GETMEM(self, p_lock));
 
   /* Continue with the real function.  */
   return pthread_start_thread (arg);
@@ -474,7 +474,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	      __linuxthreads_create_event ();
 
 	      /* Now restart the thread.  */
-	      __pthread_spin_unlock(new_thread->p_lock);
+	      __pthread_unlock(new_thread->p_lock);
 	    }
 	}
     }
@@ -523,7 +523,7 @@ static void pthread_free(pthread_descr th)
   __pthread_lock(&handle->h_lock, NULL);
   handle->h_descr = NULL;
   handle->h_bottom = (char *)(-1L);
-  __pthread_spin_unlock(&handle->h_lock);
+  __pthread_unlock(&handle->h_lock);
 #ifdef FREE_THREAD
   FREE_THREAD(th, th->p_nr);
 #endif
@@ -594,7 +594,7 @@ static void pthread_exited(pid_t pid)
 	    }
 	}
       detached = th->p_detached;
-      __pthread_spin_unlock(th->p_lock);
+      __pthread_unlock(th->p_lock);
       if (detached)
 	pthread_free(th);
       break;
@@ -637,19 +637,19 @@ static void pthread_handle_free(pthread_t th_id)
   if (invalid_handle(handle, th_id)) {
     /* pthread_reap_children has deallocated the thread already,
        nothing needs to be done */
-    __pthread_spin_unlock(&handle->h_lock);
+    __pthread_unlock(&handle->h_lock);
     return;
   }
   th = handle->h_descr;
   if (th->p_exited) {
-    __pthread_spin_unlock(&handle->h_lock);
+    __pthread_unlock(&handle->h_lock);
     pthread_free(th);
   } else {
     /* The Unix process of the thread is still running.
        Mark the thread as detached so that the thread manager will
        deallocate its resources when the Unix process exits. */
     th->p_detached = 1;
-    __pthread_spin_unlock(&handle->h_lock);
+    __pthread_unlock(&handle->h_lock);
   }
 }
 

@@ -36,7 +36,7 @@
    This is safe because there are no concurrent __pthread_unlock
    operations -- only the thread that locked the mutex can unlock it. */
 
-void internal_function __pthread_lock(pthread_spinlock_t * lock,
+void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 				      pthread_descr self)
 {
   long oldstatus, newstatus;
@@ -83,14 +83,8 @@ void internal_function __pthread_lock(pthread_spinlock_t * lock,
   while (spurious_wakeup_count--)
     restart(self);
 }
-int __pthread_spin_lock(pthread_spinlock_t * lock)
-{
-  __pthread_lock (lock, NULL);
-  return 0;
-}
-weak_alias (__pthread_spin_lock, pthread_spin_lock)
 
-int __pthread_spin_unlock(pthread_spinlock_t * lock)
+int __pthread_unlock(struct _pthread_fastlock * lock)
 {
   long oldstatus;
   pthread_descr thr, * ptr, * maxptr;
@@ -151,31 +145,7 @@ again:
 
   return 0;
 }
-weak_alias (__pthread_spin_unlock, pthread_spin_unlock)
 
-
-int __pthread_spin_trylock (pthread_spinlock_t *lock)
-{
-  return __pthread_trylock (lock);
-}
-weak_alias (__pthread_spin_trylock, pthread_spin_trylock)
-
-int __pthread_spin_init(pthread_spinlock_t *lock, int pshared)
-{
-  if (pshared != 0)
-    return ENOSYS;
-
-  __pthread_init_lock (lock);
-  return 0;
-}
-weak_alias (__pthread_spin_init, pthread_spin_init)
-
-int __pthread_spin_destroy(pthread_spinlock_t *lock)
-{
-  /* Nothing to do.  */
-  return 0;
-}
-weak_alias (__pthread_spin_destroy, pthread_spin_destroy)
 
 /* Compare-and-swap emulation with a spinlock */
 

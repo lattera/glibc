@@ -305,7 +305,8 @@ __inline_mathcode (__pow2, __x, \
      : "=t" (__value) : "0" (__value), "u" (__exponent));		      \
   return __value)
 
-#define __sincos_code \
+#ifdef __USE_GNU
+# define __sincos_code \
   register long double __cosr;						      \
   register long double __sinr;						      \
   __asm __volatile__							      \
@@ -344,6 +345,7 @@ __sincosl (long double __x, long double *__sinx, long double *__cosx)
 {
   __sincos_code;
 }
+#endif
 
 
 /* Optimized inline implementation, sometimes with reduced precision

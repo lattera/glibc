@@ -1,3 +1,8 @@
+2000-05-23  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (__sincos, __sincosf,
+	__sincosl): Guard with __USE_GNU.
+
 2000-05-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* csu/Makefile (routines): Add check_fds.

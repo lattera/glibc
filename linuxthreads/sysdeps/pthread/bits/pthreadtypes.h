@@ -23,11 +23,11 @@
 #include <bits/sched.h>
 
 /* Fast locks (not abstract because mutexes and conditions aren't abstract). */
-typedef struct
+struct _pthread_fastlock
 {
   long int __status;            /* "Free" or "taken" or head of waiting list */
   int __spinlock;               /* For compare-and-swap emulation */
-} pthread_spinlock_t;
+};
 
 #ifndef _PTHREAD_DESCR_DEFINED
 /* Thread descriptors */
@@ -54,7 +54,7 @@ typedef struct
 /* Conditions (not abstract because of PTHREAD_COND_INITIALIZER */
 typedef struct
 {
-  pthread_spinlock_t __c_lock; /* Protect against concurrent access */
+  struct _pthread_fastlock __c_lock; /* Protect against concurrent access */
   _pthread_descr __c_waiting;        /* Threads waiting on this condition */
 } pthread_cond_t;
 
@@ -78,7 +78,7 @@ typedef struct
   int __m_count;                  /* Depth of recursive locking */
   _pthread_descr __m_owner;       /* Owner thread (if recursive or errcheck) */
   int __m_kind;                   /* Mutex kind: fast, recursive or errcheck */
-  pthread_spinlock_t __m_lock;    /* Underlying fast lock */
+  struct _pthread_fastlock __m_lock; /* Underlying fast lock */
 } pthread_mutex_t;
 
 
@@ -97,7 +97,7 @@ typedef int pthread_once_t;
 /* Read-write locks.  */
 typedef struct _pthread_rwlock_t
 {
-  pthread_spinlock_t __rw_lock;       /* Lock to guarantee mutual exclusion */
+  struct _pthread_fastlock __rw_lock; /* Lock to guarantee mutual exclusion */
   int __rw_readers;                   /* Number of readers */
   _pthread_descr __rw_writer;         /* Identity of writer, or NULL if none */
   _pthread_descr __rw_read_waiting;   /* Threads waiting for reading */
@@ -113,6 +113,11 @@ typedef struct
   int __lockkind;
   int __pshared;
 } pthread_rwlockattr_t;
+#endif
+
+#ifdef __USE_XOPEN2K
+/* POSIX spinlock data type.  */
+typedef volatile int pthread_spinlock_t;
 #endif
 
 

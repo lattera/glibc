@@ -50,17 +50,17 @@ static inline int compare_and_swap(long * ptr, long oldval, long newval,
 
 /* Internal locks */
 
-extern void internal_function __pthread_lock(pthread_spinlock_t * lock,
+extern void internal_function __pthread_lock(struct _pthread_fastlock * lock,
 					     pthread_descr self);
-extern int __pthread_spin_unlock(pthread_spinlock_t *lock);
+extern int __pthread_unlock(struct _pthread_fastlock *lock);
 
-static inline void __pthread_init_lock(pthread_spinlock_t * lock)
+static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 {
   lock->__status = 0;
   lock->__spinlock = 0;
 }
 
-static inline int __pthread_trylock (pthread_spinlock_t * lock)
+static inline int __pthread_trylock (struct _pthread_fastlock * lock)
 {
   long oldstatus;
 
