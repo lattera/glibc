@@ -1523,6 +1523,9 @@ typedef Elf32_Addr Elf32_Conflict;
 #define EF_ARM_APCS_26     0x08
 #define EF_ARM_APCS_FLOAT  0x10
 #define EF_ARM_PIC         0x20
+#define EF_ALIGN8          0x40		/* 8-bit structure alignment is in use */
+#define EF_NEW_ABI         0x80
+#define EF_OLD_ABI         0x100
 
 /* Additional symbol types for Thumb */
 #define STT_ARM_TFUNC      0xd
@@ -1541,17 +1544,19 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_PC24		1	/* PC relative 26 bit branch */
 #define R_ARM_ABS32		2	/* Direct 32 bit  */
 #define R_ARM_REL32		3	/* PC relative 32 bit */
-#define R_ARM_ABS8		4	/* Direct 8 bit */
+#define R_ARM_PC13		4
 #define R_ARM_ABS16		5	/* Direct 16 bit */
 #define R_ARM_ABS12		6	/* Direct 12 bit */
 #define R_ARM_THM_ABS5		7
-#define R_ARM_THM_PC22		8
+#define R_ARM_ABS8		8	/* Direct 8 bit */
 #define R_ARM_SBREL32		9
-#define R_ARM_AMP_VCALL9	10
-#define R_ARM_THM_PC11		11	/* Thumb unconditional branch */
-#define R_ARM_THM_PC9		12	/* Thumb conditional branch */
-#define R_ARM_GNU_VTINHERIT	13
-#define R_ARM_GNU_VTENTRY	14
+#define R_ARM_THM_PC22		10
+#define R_ARM_THM_PC8		11
+#define R_ARM_AMP_VCALL9	12
+#define R_ARM_SWI24		13
+#define R_ARM_THM_SWI8		14
+#define R_ARM_XPC25		15
+#define R_ARM_THM_XPC22		16
 #define R_ARM_COPY		20	/* Copy symbol at runtime */
 #define R_ARM_GLOB_DAT		21	/* Create GOT entry */
 #define R_ARM_JUMP_SLOT		22	/* Create PLT entry */
@@ -1560,6 +1565,11 @@ typedef Elf32_Addr Elf32_Conflict;
 #define R_ARM_GOTPC		25	/* 32 bit PC relative offset to GOT */
 #define R_ARM_GOT32		26	/* 32 bit GOT entry */
 #define R_ARM_PLT32		27	/* 32 bit PLT address */
+#define R_ARM_GNU_VTENTRY	100
+#define R_ARM_GNU_VTINHERIT	101
+#define R_ARM_THM_PC11		102	/* thumb unconditional branch */
+#define R_ARM_THM_PC9		103	/* thumb conditional branch */
+#define R_ARM_RXPC25		249
 #define R_ARM_RSBREL32		250
 #define R_ARM_THM_RPC22		251
 #define R_ARM_RREL32		252

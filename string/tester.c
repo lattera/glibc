@@ -1,5 +1,5 @@
 /* Tester for string functions.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -119,6 +119,7 @@ test_strcmp (void)
 void
 test_strcpy (void)
 {
+  int i;
   it = "strcpy";
   check (strcpy (one, "abcd") == one, 1); /* Returned value. */
   equal (one, "abcd", 2);		/* Basic test. */
@@ -134,6 +135,14 @@ test_strcpy (void)
 
   (void) strcpy (one, "");
   equal (one, "", 7);			/* Boundary condition. */
+
+  for (i = 0; i < 16; i++)
+    {
+      (void) strcpy (one + i, "hi there");	/* Unaligned destination. */
+      equal (one + i, "hi there", 8 + (i * 2));
+      (void) strcpy (two, one + i);		/* Unaligned source. */
+      equal (two, "hi there", 9 + (i * 2));
+    }
 }
 
 void

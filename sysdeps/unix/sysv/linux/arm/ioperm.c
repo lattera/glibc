@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell, based on the Alpha version by
    David Mosberger.
@@ -214,9 +214,6 @@ _iopl (unsigned int level)
 void
 _outb (unsigned char b, unsigned long int port)
 {
-  if (port >= MAX_PORT)
-    return;
-
   *((volatile unsigned char *)(IO_ADDR (port))) = b;
 }
 
@@ -224,9 +221,6 @@ _outb (unsigned char b, unsigned long int port)
 void
 _outw (unsigned short b, unsigned long int port)
 {
-  if (port >= MAX_PORT)
-    return;
-
   *((volatile unsigned short *)(IO_ADDR (port))) = b;
 }
 
@@ -234,9 +228,6 @@ _outw (unsigned short b, unsigned long int port)
 void
 _outl (unsigned int b, unsigned long int port)
 {
-  if (port >= MAX_PORT)
-    return;
-
   *((volatile unsigned long *)(IO_ADDR (port))) = b;
 }
 

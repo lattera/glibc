@@ -1,3 +1,28 @@
+1999-04-12  Philip Blundell  <philb@gnu.org>
+
+	* elf/elf.h: Update ARM definitions to match current gas2.
+
+	* sysdeps/arm/bits/endian.h: Support big endian operation.
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (_outw, _outb, _outl):
+	Don't bother range checking the port number.
+
+	* sysdeps/unix/sysv/linux/arm/vfork.S: New file.
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (INLINE_SYSCALL): Include
+	the syscall name in assembler output for ease of debugging.
+
+	* sysdeps/unix/sysv/linux/arm/sigaction.c: Don't rely on undefined
+	compiler behaviour.
+	* sysdeps/unix/sysv/linux/arm/sigrestorer.S: New file.
+	* sysdeps/unix/sysv/linux/arm/Makefile [$(subdir) = signal]
+	(sysdep_routines): Add sigrestorer.
+
+	* string/tester.c (test_strcpy): Add new tests for unaligned
+	arguments.
+	* sysdeps/arm/bits/string.h: Delete inline implementations of
+	strcpy and stpcpy.
+
 1999-04-11  Ulrich Drepper  <drepper@cygnus.com>
 
 	* libio/Makefile (CPPFLAGS-.o): Don't define IO_DEBUG.

@@ -1,5 +1,4 @@
-/* Optimized, inlined string functions.  ARM version.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,11 +16,18 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _STRING_H
-# error "Never use <bits/string.h> directly; include <string.h> instead."
-#endif
+#include <sysdep.h>
 
-/* We must defeat the generic optimized versions of these functions in
-   <bits/string2.h> since they don't work on the ARM.  */
-#define _HAVE_STRING_ARCH_strcpy 1
-#define _HAVE_STRING_ARCH_stpcpy 1
+/* If no SA_RESTORER function was specified by the application we use
+   one of these.  This avoids the need for the kernel to synthesise a return
+   instruction on the stack, which would involve expensive cache flushes. */
+
+ENTRY(__default_sa_restorer)
+	swi	SYS_ify(sigreturn)
+
+#ifdef __NR_rt_sigreturn
+
+ENTRY(__default_rt_sa_restorer)
+	swi	SYS_ify(rt_sigreturn)
+
+#endif
