@@ -29,16 +29,15 @@ int
 timer_getoverrun (timerid)
      timer_t timerid;
 {
+  struct timer_node *timer;
   int retval = -1;
 
   pthread_mutex_lock (&__timer_mutex);
 
-  if (timer_id2ptr (timerid) == NULL)
+  if ((timer = timer_id2ptr (timerid)) == NULL || !timer->inuse)
     errno = EINVAL;
   else
-    {
-      retval = 0; /* TODO: overrun counting not supported */
-    }
+    retval = 0; /* TODO: overrun counting not supported */
 
   pthread_mutex_lock (&__timer_mutex);
 

@@ -1,3 +1,37 @@
+2000-06-13  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	A few optimizations.  Got rid of unnecessary wakeups of timer threads,
+	tightened up some critical regions and micro-optimized some list
+	manipulation code.
+
+	* sysdeps/pthread/timer_routines.c (__timer_thread_queue_timer):
+	Returns int value now to indicate whether timer was queued at head.
+	* sysdeps/pthread/posix-timer.h: Likewise.
+	* sysdeps/pthread/timer_settime.c (timer_settime): Takes advantage of
+	new return value from __timer_thread_queue_timer to avoid waking
+	up timer thread unnecessarily.
+
+	* sysdeps/pthread/posix-timer.h (timer_id2ptr): No longer checks
+	inuse flag, because this requires mutex to be held.  Callers updated
+	to do the check when they have the mutex.
+	* sysdeps/pthread/timer_getoverr.c: Add check for inuse here.
+
+	* sysdeps/pthread/timer_settime.c (timer_settime): Tighter critical
+	regions: avoids making system calls while holding timer mutex, and
+	a few computations were moved outside of the mutex as well.
+	* sysdeps/pthread/timer_gettime.c (timer_gettime): Likewise.
+
+	* sysdeps/pthread/posix-timer.h (list_unlink_ip): Function name changed
+	to list_unlink_ip, meaning idempotent.  Pointer manipulation
+	changed to get better better code out of gcc.
+	* sysdeps/pthread/timer_routines.c (list_unlink): Non-idempotent
+	version of list_unlink added here.
+	* sysdeps/pthread/timer_delete.c: Use appropriate list unlink
+	function in all places: idempotent one for timers, non-idempotent
+	one for thread nodes.
+	* sysdeps/pthread/timer_settime: Likewise.
+	* sysdeps/pthread/timer_routines.c: Likewise.
+
 2000-06-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h (_POSIX_TIMERS): Define.

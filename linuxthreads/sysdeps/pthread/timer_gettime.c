@@ -37,7 +37,7 @@ timer_gettime (timerid, value)
   pthread_mutex_lock (&__timer_mutex);
 
   timer = timer_id2ptr (timerid);
-  if (timer == NULL)
+  if (timer == NULL && !timer->inuse)
     /* Invalid timer ID or the timer is not in use.  */
     errno = EINVAL;
   else
@@ -46,7 +46,9 @@ timer_gettime (timerid, value)
 
       if (timer->armed)
 	{
+	  pthread_mutex_unlock (&__timer_mutex);
 	  clock_gettime (timer->clock, &now);
+	  pthread_mutex_lock (&__timer_mutex);
 	  timespec_sub (&value->it_value, &timer->expirytime, &now);
 	}
       else

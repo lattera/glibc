@@ -35,10 +35,8 @@ timer_settime (timerid, flags, value, ovalue)
   struct timer_node *timer;
   struct thread_node *thread = NULL;
   struct timespec now;
-  int have_now = 0;
+  int have_now = 0, need_wakeup = 0;
   int retval = -1;
-
-  pthread_mutex_lock (&__timer_mutex);
 
   timer = timer_id2ptr (timerid);
   if (timer == NULL)
@@ -56,14 +54,40 @@ timer_settime (timerid, flags, value, ovalue)
       goto bail;
     }
 
+  /* Will need to know current time since this is a relative timer;
+     might as well make the system call outside of the lock now! */
+
+  if ((flags & TIMER_ABSTIME) == 0)
+    {
+      clock_gettime (timer->clock, &now);
+      have_now = 1;
+    }
+
+  pthread_mutex_lock (&__timer_mutex);
+
+  /* One final check of timer validity; this one is possible only
+     until we have the mutex, which guards the inuse flag. */
+
+  if (!timer->inuse)
+    {
+      errno = EINVAL;
+      goto unlock_bail;
+    }
+
   if (ovalue != NULL)
     {
       ovalue->it_interval = timer->value.it_interval;
 
       if (timer->armed)
 	{
-	  clock_gettime (timer->clock, &now);
-	  have_now = 1;
+	  if (! have_now)
+	    {
+	      pthread_mutex_unlock (&__timer_mutex);
+	      clock_gettime (timer->clock, &now);
+	      have_now = 1;
+	      pthread_mutex_lock (&__timer_mutex);
+	    }
+
 	  timespec_sub (&ovalue->it_value, &timer->expirytime, &now);
 	}
       else
@@ -75,11 +99,12 @@ timer_settime (timerid, flags, value, ovalue)
 
   timer->value = *value;
 
-  list_unlink (&timer->links);
+  list_unlink_ip (&timer->links);
   timer->armed = 0;
 
   thread = timer->thread;
 
+  /* A value of { 0, 0 } causes the timer to be stopped. */
   if (value->it_value.tv_sec != 0
       || __builtin_expect (value->it_value.tv_nsec != 0, 1))
     {
@@ -87,25 +112,21 @@ timer_settime (timerid, flags, value, ovalue)
 	/* The user specified the expiration time.  */
 	timer->expirytime = value->it_value;
       else
-	{
-	  if (! have_now)
-	    clock_gettime (timer->clock, &now);
+	timespec_add (&timer->expirytime, &now, &value->it_value);
 
-	  timespec_add (&timer->expirytime, &now, &value->it_value);
-        }
-
-      __timer_thread_queue_timer (thread, timer);
+      /* Only need to wake up the thread if timer is inserted
+	 at the head of the queue. */
+      need_wakeup = __timer_thread_queue_timer (thread, timer);
       timer->armed = 1;
     }
 
   retval = 0;
 
-bail:
+unlock_bail:
   pthread_mutex_unlock (&__timer_mutex);
 
-  /* TODO: optimize this. Only need to wake up the thread if inserting
-     a new timer at the head of the queue.  */
-  if (thread != NULL)
+bail:
+  if (thread != NULL && need_wakeup)
     __timer_thread_wakeup (thread);
 
   return retval;

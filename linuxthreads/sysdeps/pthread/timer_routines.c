@@ -90,6 +90,20 @@ list_insbefore (struct list_links *list, struct list_links *newp)
   list_append (list, newp);
 }
 
+/*
+ * Like list_unlink_ip, except that calling it on a node that
+ * is already unlinked is disastrous rather than a noop.
+ */
+
+static inline void
+list_unlink (struct list_links *list)
+{
+  struct list_links *lnext = list->next, *lprev = list->prev;
+
+  lnext->prev = lprev;
+  lprev->next = lnext;
+}
+
 static inline struct list_links *
 list_first (struct list_links *list)
 {
@@ -279,10 +293,7 @@ thread_cleanup (void *val)
       thread->current_timer = 0;
 
       if (list_isempty (&thread->timer_queue))
-	{
-	  list_unlink (&thread->links);
 	  __timer_thread_dealloc (thread);
-	}
       else
 	(void) __timer_thread_start (thread);
 
@@ -394,7 +405,7 @@ thread_func (void *arg)
 	      if (timespec_compare (&now, &timer->expirytime) < 0)
 		break;
 
-	      list_unlink (first);
+	      list_unlink_ip (first);
 
 	      if (__builtin_expect (timer->value.it_interval.tv_sec, 0) != 0
 		  || timer->value.it_interval.tv_nsec != 0)
@@ -432,12 +443,16 @@ thread_func (void *arg)
 }
 
 
-/* Enqueue a timer in wakeup order in the thread's timer queue.  */
-void
+/* Enqueue a timer in wakeup order in the thread's timer queue. 
+   Returns 1 if the timer was inserted at the head of the queue,
+   causing the queue's next wakeup time to change. */
+
+int
 __timer_thread_queue_timer (struct thread_node *thread,
 			    struct timer_node *insert)
 {
   struct list_links *iter;
+  int athead = 1;
 
   for (iter = list_first (&thread->timer_queue);
        iter != list_null (&thread->timer_queue);
@@ -447,9 +462,11 @@ __timer_thread_queue_timer (struct thread_node *thread,
 
       if (timespec_compare (&insert->expirytime, &timer->expirytime) < 0)
 	  break;
+      athead = 0;
     }
 
   list_insbefore (iter, &insert->links);
+  return athead;
 }
 
 
@@ -533,7 +550,7 @@ __timer_alloc (void)
   if (node != list_null (&timer_free_list))
     {
       struct timer_node *timer = timer_links2ptr (node);
-      list_unlink (node);
+      list_unlink_ip (node);
       timer->inuse = 1;
       return timer;
     }

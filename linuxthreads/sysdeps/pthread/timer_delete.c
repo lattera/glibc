@@ -36,7 +36,7 @@ timer_delete (timerid)
   pthread_mutex_lock (&__timer_mutex);
 
   timer = timer_id2ptr (timerid);
-  if (timer == NULL)
+  if (timer == NULL || !timer->inuse)
     /* Invalid timer ID or the timer is not in use.  */
     errno = EINVAL;
   else
@@ -58,7 +58,7 @@ timer_delete (timerid)
         }
 
       /* Remove timer from whatever queue it may be on and deallocate it.  */
-      list_unlink (&timer->links);
+      list_unlink_ip (&timer->links);
       __timer_dealloc (timer);
       retval = 0;
     }

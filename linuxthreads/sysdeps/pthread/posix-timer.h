@@ -93,7 +93,7 @@ extern struct thread_node __timer_signal_thread_tclk;
 static inline struct timer_node *
 timer_id2ptr (timer_t timerid)
 {
-  if (timerid >= 0 && timerid < TIMER_MAX && __timer_array[timerid].inuse)
+  if (timerid >= 0 && timerid < TIMER_MAX)
     return &__timer_array[timerid];
 
   return NULL;
@@ -155,10 +155,17 @@ timespec_sub (struct timespec *diff, const struct timespec *left,
 
 /* We need one of the list functions in the other modules.  */
 static inline void
-list_unlink (struct list_links *list)
+list_unlink_ip (struct list_links *list)
 {
-  list->next->prev = list->prev;
-  list->prev->next = list->next;
+  struct list_links *lnext = list->next, *lprev = list->prev;
+
+  lnext->prev = lprev;
+  lprev->next = lnext;
+
+  /* The suffix ip means idempotent; list_unlink_ip can be called
+   * two or more times on the same node.
+   */
+
   list->next = list;
   list->prev = list;
 }
@@ -173,6 +180,6 @@ extern struct thread_node *__timer_thread_find_matching (const pthread_attr_t *d
 extern struct thread_node *__timer_thread_alloc (const pthread_attr_t *desired_attr, clockid_t);
 extern void __timer_dealloc (struct timer_node *timer);
 extern void __timer_thread_dealloc (struct thread_node *thread);
-extern void __timer_thread_queue_timer (struct thread_node *thread,
+extern int __timer_thread_queue_timer (struct thread_node *thread,
 				       struct timer_node *insert);
 extern void __timer_thread_wakeup (struct thread_node *thread);
