@@ -1,5 +1,7 @@
 2000-04-17  Ulrich Drepper  <drepper@redhat.com>
 
+	* manual/sysinfo.texi: Document that umount2 is not widely available.
+
 	* sysdeps/generic/hp-timing.h (HP_TIMING_NONAVAIL): Define to
 	signal timing is not really implemented.
 

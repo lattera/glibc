@@ -200,7 +200,7 @@ and how to change what is mounted.
 
 The classic filesystem is the contents of a disk drive.  The concept is
 considerably more abstract, though, and lots of things other than disk
-drives can be mounted.  
+drives can be mounted.
 
 Some block devices don't correspond to traditional devices like disk
 drives.  For example, a loop device is a block device whose driver uses
@@ -650,11 +650,12 @@ should maintain and use these separately.  @xref{Mount Information}.
 The symbols in this section are declared in @file{sys/mount.h}.
 
 @comment sys/mount.h
+@comment SVID, BSD
 @deftypefun {int} mount (const char *@var{special_file}, const char *@var{dir}, const char *@var{fstype}, unsigned long int @var{options}, const void *@var{data})
 
-@code{mount} mounts or remounts a filesystem.  The two operations are 
+@code{mount} mounts or remounts a filesystem.  The two operations are
 quite different and are merged rather unnnaturally into this one function.
-The @code{MS_REMOUNT} option, explained below, determines whether 
+The @code{MS_REMOUNT} option, explained below, determines whether
 @code{mount} mounts or remounts.
 
 For a mount, the filesystem on the block device represented by the
@@ -714,7 +715,7 @@ This bit on means to remount the filesystem.  Off means to mount it.
 
 @item MS_RDONLY
 This bit on specifies that no writing to the filesystem shall be allowed
-while it is mounted.  This cannot be overridden by @code{ioctl}.  This 
+while it is mounted.  This cannot be overridden by @code{ioctl}.  This
 option is available on nearly all filesystems.
 
 @item S_IMMUTABLE
@@ -740,12 +741,12 @@ This bit on specifies that no files in the filesystem shall be executed
 while the filesystem is mounted.
 
 @item MS_NODEV
-This bit on specifies that no device special files in the filesystem 
+This bit on specifies that no device special files in the filesystem
 shall be accessible while the filesystem is mounted.
 
 @item MS_SYNCHRONOUS
-This bit on specifies that all writes to the filesystem while it is 
-mounted shall be synchronous; i.e. data shall be synced before each 
+This bit on specifies that all writes to the filesystem while it is
+mounted shall be synchronous; i.e. data shall be synced before each
 write completes rather than held in the buffer cache.
 
 @item MS_MANDLOCK
@@ -788,7 +789,7 @@ Appropriate arguments for @code{mount} are conventionally recorded in
 the @file{fstab} table.  @xref{Mount Information}.
 
 The return value is zero if the mount or remount is successful.  Otherwise,
-it is @code{-1} and @code{errno} is set appropriately.  The values of 
+it is @code{-1} and @code{errno} is set appropriately.  The values of
 @code{errno} are filesystem dependent, but here is a general list:
 
 @table @code
@@ -802,7 +803,7 @@ The file @var{dev} is not a block device special file.
 
 @itemize
 
-@item 
+@item
 The device is already mounted.
 
 @item
@@ -820,7 +821,7 @@ The request is to remount read-only, but there are files open for write.
 A remount was attempted, but there is no filesystem mounted over the
 specified mount point.
 
-@item 
+@item
 The supposed filesystem has an invalid superblock.
 
 @end itemize
@@ -829,7 +830,7 @@ The supposed filesystem has an invalid superblock.
 @itemize
 
 @item
-The filesystem is inherently read-only (possibly due to a switch on the 
+The filesystem is inherently read-only (possibly due to a switch on the
 device) and the process attempted to mount it read/write (by setting the
 @code{MS_RDONLY} bit off).
 
@@ -853,6 +854,7 @@ not one that uses a device.
 
 
 @comment sys/mount.h
+@comment GNU
 @deftypefun {int} umount2 (const char *@var{file}, int @var{flags})
 
 @code{umount2} unmounts a filesystem.
@@ -861,7 +863,7 @@ You can identify the filesystem to unmount either by the device special
 file that contains the filesystem or by the mount point.  The effect is
 the same.  Specify either as the string @var{file}.
 
-@var{flags} contains the one-bit field identified by the following 
+@var{flags} contains the one-bit field identified by the following
 mask macro:
 
 @table @code
@@ -908,17 +910,20 @@ process has open.  With some filesystems in some cases, you can avoid
 this failure with the @code{MNT_FORCE} option.
 
 @item EINVAL
-@var{file} validly refers to a file, but that file is neither a mount 
+@var{file} validly refers to a file, but that file is neither a mount
 point nor a device special file of a currently mounted filesystem.
 
 @end table
+
+This function is not available on all systems.
 @end deftypefun
 
 @comment sys/mount.h
+@comment SVID, GNU
 @deftypefun {int} umount (const char *@var{file})
 
-@code{umount} does the same thing as @code{umount2} with @var{flags}
-set to zeroes.  It exists for compatibility.
-
-
+@code{umount} does the same thing as @code{umount2} with @var{flags} set
+to zeroes.  It is more widely available than @code{umount2} but since it
+lacks the possibility to forcefully unmount a filesystem is deprecated
+when @code{umount2} is also available.
 @end deftypefun

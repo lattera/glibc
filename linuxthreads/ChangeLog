@@ -1,3 +1,9 @@
+2000-04-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/getcpuclockid.c
+	(pthread_getcpuclockid): Don't compare thread_id with thread_self,
+	use thread_handle().
+
 2000-04-16  Ulrich Drepper  <drepper@redhat.com>
 
 	* condvar.c (pthread_cond_timedwait_relative): Don't test for owner

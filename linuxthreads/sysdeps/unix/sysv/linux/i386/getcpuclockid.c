@@ -27,7 +27,7 @@ int
 pthread_getcpuclockid (pthread_t thread_id, clockid_t *clock_id)
 {
   /* We don't allow any process ID but our own.  */
-  if (thread_id != thread_self ())
+  if (thread_handle (thread_id) != thread_self ())
     return EPERM;
 
   /* Store the number.  */
