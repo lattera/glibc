@@ -59,11 +59,15 @@ libc {
   GLIBC_2.1.1 {
     # extern inline functions used by <bits/string2.h>
     __mempcpy_small; __stpcpy_small; __strcspn_c1; __strcspn_c2; __strcspn_c3;
-    __strcpy_small; __strspn_c1; __strspn_c2; __strspn_c3; __strpbrk_c2; 
-    __strpbrk_c3; __strsep_1c; __strsep_2c; __strsep_3c; __strsep_g; 
-    __strtok_r_1c; 
+    __strcpy_small; __strspn_c1; __strspn_c2; __strspn_c3; __strpbrk_c2;
+    __strpbrk_c3; __strsep_1c; __strsep_2c; __strsep_3c; __strsep_g;
+    __strtok_r_1c;
 
     # s*
     strchrnul; __strverscmp;
+  }
+  GLIBC_2.2 {
+    # m*
+    memrchr;
   }
 }
