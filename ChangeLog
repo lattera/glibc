@@ -1,5 +1,14 @@
 2002-08-04  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/libc-tls.c (__libc_setup_tls): Make the phdr loop
+	actually iterate over the elements.  Fix typo p_type -> p_vaddr.
+
+	* include/pthread.h: Don't declare __pthread_initialize_minimal as
+	weak here; we declare it weak or strong in the one place we use it.
+	* sysdeps/generic/libc-start.c: ... which is here.
+	Don't make the decl weak if [USE_TLS], since static programs need TLS
+	setup even when single-threaded.
+
 	* stdlib/isomac.c (fmt): Add -DNOT_IN_libc to the compiler command.
 
 	* elf/Makefile (test-srcs): Add $(modules-names) to it.

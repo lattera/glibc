@@ -57,14 +57,12 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
   size_t max_align = tcbalign;
   size_t loadaddr = ~0ul;
   size_t tcb_offset;
+  ElfW(Phdr) *phdr;
 
   /* Look through the TLS segment if there is any.  */
   if (_dl_phdr != NULL)
-    {
-      ElfW(Phdr) *phdr = _dl_phdr;
-      size_t phnum = _dl_phnum;
-
-      while (phnum-- > 0)
+    for (phdr = _dl_phdr; phdr < &_dl_phdr[_dl_phnum]; ++phdr)
+      {
 	if (phdr->p_type == PT_TLS)
 	  {
 	    /* Remember the values we need.  */
@@ -80,7 +78,7 @@ __libc_setup_tls (size_t tcbsize, size_t tcbalign)
 	    /* We have to find the load address which is not easy.
 	       Look for the load segment with the lowest address.  */
 	    if (phdr->p_vaddr < loadaddr)
-	      loadaddr = phdr->p_type;
+	      loadaddr = phdr->p_vaddr;
 	  }
     }
 

@@ -30,7 +30,12 @@ extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
 #ifndef SHARED
-extern void __pthread_initialize_minimal (void) __attribute__ ((weak));
+# include <tls.h>
+extern void __pthread_initialize_minimal (void)
+# if !(USE_TLS - 0)
+     __attribute__ ((weak))
+# endif
+     ;
 #endif
 
 
@@ -91,7 +96,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
      we need to setup errno.  If there is no thread library and we
      handle TLS the function is defined in the libc to initialized the
      TLS handling.  */
-# ifndef TLS
+# if !(USE_TLS - 0)
   if (__pthread_initialize_minimal)
 # endif
     __pthread_initialize_minimal ();
