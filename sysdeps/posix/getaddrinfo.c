@@ -930,7 +930,7 @@ getaddrinfo (const char *name, const char *service,
 	 XXX We are using getifaddrs here which is more costly than
 	 it is really necessary.  Once things are stable we will have
 	 a special function which performs the task with less overhead.  */
-      struct ifaddrs* ifa = NULL;
+      struct ifaddrs *ifa = NULL;
 
       if (getifaddrs (&ifa) != 0)
 	/* Cannot get the interface list, very bad.  */
@@ -939,14 +939,15 @@ getaddrinfo (const char *name, const char *service,
       bool seen_ipv4 = false;
       bool seen_ipv6 = false;
 
-      while (ifa != NULL)
+      struct ifaddrs *runp = ifa;
+      while (runp != NULL)
 	{
-	  if (ifa->ifa_addr->sa_family == PF_INET)
+	  if (runp->ifa_addr->sa_family == PF_INET)
 	    seen_ipv4 = true;
-	  else if (ifa->ifa_addr->sa_family == PF_INET6)
+	  else if (runp->ifa_addr->sa_family == PF_INET6)
 	    seen_ipv6 = true;
 
-	  ifa = ifa->ifa_next;
+	  runp = runp->ifa_next;
 	}
 
       (void) freeifaddrs (ifa);

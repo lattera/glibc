@@ -116,12 +116,7 @@ __pthread_cond_signal:
 	jmp	2b
 
 	/* Unlock in loop requires wakeup.  */
-5:
-#if cond_lock == 0
-	movl	%edi, %eax
-#else
-	leal	cond_lock(%edi), %eax
-#endif
+5:	movl	%edi, %eax
 	call	__lll_mutex_unlock_wake
 	jmp	6b
 
