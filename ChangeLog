@@ -1,5 +1,7 @@
 2000-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/tst-tables.sh: Enable EUC-KR test.
+
 	* elf/dl-load.c (lose): Decrement _nl_loaded.
 	(_dl_map_object_from_fd): Don't try to dlopen executables.
 

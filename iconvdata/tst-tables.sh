@@ -184,7 +184,7 @@ cat <<EOF |
   # Multibyte encodings come here
   #
   SJIS
-  #EUC-KR                               Charmap contains extraneous entries
+  EUC-KR
   CP949
   #JOHAB                                No charmap exists
   BIG5
