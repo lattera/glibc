@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -24,10 +23,10 @@ Cambridge, MA 02139, USA.  */
    greater than zero if S1 is lexiographically less than,
    equal to or greater than S2.  */
 int
-DEFUN(strcasecmp, (s1, s2), CONST char *s1 AND CONST char *s2)
+__strcasecmp (const char *s1, const char *s2)
 {
-  register CONST unsigned char *p1 = (CONST unsigned char *) s1;
-  register CONST unsigned char *p2 = (CONST unsigned char *) s2;
+  register const unsigned char *p1 = (const unsigned char *) s1;
+  register const unsigned char *p2 = (const unsigned char *) s2;
   unsigned char c1, c2;
 
   if (p1 == p2)
@@ -44,3 +43,4 @@ DEFUN(strcasecmp, (s1, s2), CONST char *s1 AND CONST char *s2)
 
   return c1 - c2;
 }
+weak_alias (__strcasecmp, strcasecmp)

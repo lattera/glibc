@@ -1,5 +1,20 @@
 Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/getcwd.c (__getcwd): Renamed from getcwd.
+	(getcwd): Define as weak alias.
+	* sysdeps/posix/getcwd.c: Likewise.
+	* sysdeps/stub/getcwd.c: Likewise.
+	* posix/unistd.h: Declare __getcwd.
+
+	* string/string.h: Declare __strcasecmp.
+	* sysdeps/generic/strcasecmp.c (__strcasecmp): Renamed from
+	strcasecmp.
+	(strcasecmp): Define as weak alias.
+
+	* string/string.h: Declare __stpcpy.
+	* sysdeps/generic/stpcpy.c (__stpcpy): Renamed from stpcpy.
+	(stpcpy): Define as weak alias.
+
 	* sysdeps/unix/sysv/linux/Implies: Add unix/common.
 
 	* sysdeps/unix/i386/sysdep.h [HAVE_ELF] (ASM_TYPE_DIRECTIVE):

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -16,16 +16,14 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <string.h>
-
 
 /* Copy SRC to DEST, returning the address of the terminating '\0' in DEST.  */
 char *
-DEFUN(stpcpy, (dest, src), char *dest AND CONST char *src)
+__stpcpy (char *dest, const char *src)
 {
   register char *d = dest;
-  register CONST char *s = src;
+  register const char *s = src;
 
   do
     *d++ = *s;
@@ -33,3 +31,4 @@ DEFUN(stpcpy, (dest, src), char *dest AND CONST char *src)
   
   return d - 1;
 }
+weak_alias (__stpcpy, stpcpy)

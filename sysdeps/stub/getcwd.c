@@ -16,7 +16,6 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
 #include <errno.h>
 #include <unistd.h>
 #include <stddef.h>
@@ -29,11 +28,12 @@ Cambridge, MA 02139, USA.  */
    bytes long, unless SIZE <= 0, in which case it is as
    big as necessary.  */
 char *
-DEFUN(getcwd, (buf, size), char *buf AND size_t size)
+__getcwd (char *buf, size_t size)
 {
   errno = ENOSYS;
   return NULL;
 }
+weak_alias (__getcwd, getcwd)
 
-
+stub_warning (__getcwd)
 stub_warning (getcwd)

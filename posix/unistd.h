@@ -216,6 +216,7 @@ extern int fchdir __P ((int __fd));
    an array is allocated with `malloc'; the array is SIZE
    bytes long, unless SIZE <= 0, in which case it is as
    big as necessary.  */
+extern char *__getcwd __P ((char *__buf, size_t __size));
 extern char *getcwd __P ((char *__buf, size_t __size));
 
 #ifdef	__USE_GNU

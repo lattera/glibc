@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -180,6 +180,10 @@ extern char *alloca ();
 #define	__lstat	stat
 #endif
 
+#ifndef _LIBC
+#define __getcwd getcwd
+#endif
+
 /* Get the pathname of the current working directory, and put it in SIZE
    bytes of BUF.  Returns NULL if the directory couldn't be determined or
    SIZE was too small.  If successful, returns BUF.  In GNU, if BUF is
@@ -187,7 +191,7 @@ extern char *alloca ();
    unless SIZE <= 0, in which case it is as big as necessary.  */
 
 char *
-getcwd (buf, size)
+__getcwd (buf, size)
      char *buf;
      size_t size;
 {
@@ -364,3 +368,7 @@ getcwd (buf, size)
     free ((__ptr_t) dotlist);
   return NULL;
 }
+
+#ifdef _LIBC
+weak_alias (__getcwd, getcwd)
+#endif

@@ -153,13 +153,13 @@ ifndef zonedir
 zonedir = $(datadir)/zoneinfo
 endif
 
-# Where to install the locale data files (which are machine-independent).
+# Where to install the locale and message catalog data files (which are
+# machine-independent).
 ifndef localedir
 localedir = $(datadir)/locale
 endif
 
-# Where to install the locale charmap and message catalog files (which are
-# machine-independent).
+# Where to install the locale charmap source files.
 ifndef nlsdir
 nlsdir = $(datadir)/nls
 endif
