@@ -187,7 +187,8 @@ next:
 				(void) fclose(cfile);
 				return (0);
 			}
-			while ((c=getc(cfile)) != EOF && c == ' ' || c == '\t');
+			while ((c=getc_unlocked(cfile)) != EOF && c == ' '
+			       || c == '\t');
 			if (c == EOF || c == '\n') {
 				printf("Missing macdef name argument.\n");
 				goto bad;
@@ -198,7 +199,7 @@ next:
 			}
 			tmp = macros[macnum].mac_name;
 			*tmp++ = c;
-			for (i=0; i < 8 && (c=getc(cfile)) != EOF &&
+			for (i=0; i < 8 && (c=getc_unlocked(cfile)) != EOF &&
 			    !isspace(c); ++i) {
 				*tmp++ = c;
 			}
@@ -208,7 +209,8 @@ next:
 			}
 			*tmp = '\0';
 			if (c != '\n') {
-				while ((c=getc(cfile)) != EOF && c != '\n');
+				while ((c=getc_unlocked(cfile)) != EOF
+				       && c != '\n');
 			}
 			if (c == EOF) {
 				printf("Macro definition missing null line terminator.\n");
@@ -222,7 +224,7 @@ next:
 			}
 			tmp = macros[macnum].mac_start;
 			while (tmp != macbuf + 4096) {
-				if ((c=getc(cfile)) == EOF) {
+				if ((c=getc_unlocked(cfile)) == EOF) {
 				printf("Macro definition missing null line terminator.\n");
 					goto bad;
 				}
@@ -265,24 +267,24 @@ token()
 
 	if (feof(cfile) || ferror(cfile))
 		return (0);
-	while ((c = getc(cfile)) != EOF &&
+	while ((c = getc_unlocked(cfile)) != EOF &&
 	    (c == '\n' || c == '\t' || c == ' ' || c == ','))
 		continue;
 	if (c == EOF)
 		return (0);
 	cp = tokval;
 	if (c == '"') {
-		while ((c = getc(cfile)) != EOF && c != '"') {
+		while ((c = getc_unlocked(cfile)) != EOF && c != '"') {
 			if (c == '\\')
-				c = getc(cfile);
+				c = getc_unlocked(cfile);
 			*cp++ = c;
 		}
 	} else {
 		*cp++ = c;
-		while ((c = getc(cfile)) != EOF
+		while ((c = getc_unlocked(cfile)) != EOF
 		    && c != '\n' && c != '\t' && c != ' ' && c != ',') {
 			if (c == '\\')
-				c = getc(cfile);
+				c = getc_unlocked(cfile);
 			*cp++ = c;
 		}
 	}

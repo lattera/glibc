@@ -71,12 +71,13 @@ getttyent()
 
 	if (!tf && !setttyent())
 		return (NULL);
+	flockfile (tf);
 	for (;;) {
 		if (!fgets(p = line, sizeof(line), tf))
 			return (NULL);
 		/* skip lines that are too big */
 		if (!index(p, '\n')) {
-			while ((c = getc(tf)) != '\n' && c != EOF)
+			while ((c = getc_unlocked(tf)) != '\n' && c != EOF)
 				;
 			continue;
 		}
@@ -85,6 +86,7 @@ getttyent()
 		if (*p && *p != '#')
 			break;
 	}
+	funlockfile(tf);
 
 	zapchar = 0;
 	tty.ty_name = p;
