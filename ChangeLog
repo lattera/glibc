@@ -1,5 +1,8 @@
 1999-02-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* time/mktime.c: Use ISO C form for function definitions and
+	remove unnecessary prototypes.
+
 	* sysdeps/posix/getaddrinfo.c (getaddrinfo): Fix typo in last change.
 
 	* time/time.h: Avoid unneccesary #ifdef.

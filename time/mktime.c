@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Paul Eggert (eggert@twinsun.com).
 
@@ -106,14 +106,6 @@ const unsigned short int __mon_yday[2][13] =
     { 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 }
   };
 
-static struct tm *ranged_convert __P ((struct tm *(*) __P ((const time_t *,
-							    struct tm *)),
-				       time_t *, struct tm *));
-static time_t ydhms_tm_diff __P ((int, int, int, int, int, const struct tm *));
-time_t __mktime_internal __P ((struct tm *,
-			       struct tm *(*) (const time_t *, struct tm *),
-			       time_t *));
-
 
 #ifdef _LIBC
 # define my_mktime_localtime_r __localtime_r
@@ -121,11 +113,8 @@ time_t __mktime_internal __P ((struct tm *,
 /* If we're a mktime substitute in a GNU program, then prefer
    localtime to localtime_r, since many localtime_r implementations
    are buggy.  */
-static struct tm *my_mktime_localtime_r __P ((const time_t *, struct tm *));
 static struct tm *
-my_mktime_localtime_r (t, tp)
-     const time_t *t;
-     struct tm *tp;
+my_mktime_localtime_r (const time_t *t, struct tm *tp)
 {
   struct tm *l = localtime (t);
   if (! l)
@@ -143,9 +132,8 @@ my_mktime_localtime_r (t, tp)
    If TP is null, return a nonzero value.
    If overflow occurs, yield the low order bits of the correct answer.  */
 static time_t
-ydhms_tm_diff (year, yday, hour, min, sec, tp)
-     int year, yday, hour, min, sec;
-     const struct tm *tp;
+ydhms_tm_diff (int year, int yday, int hour, int min, int sec,
+	       const struct tm *tp)
 {
   if (!tp)
     return 1;
@@ -172,32 +160,12 @@ ydhms_tm_diff (year, yday, hour, min, sec, tp)
     }
 }
 
-
-static time_t localtime_offset;
-
-/* Convert *TP to a time_t value.  */
-time_t
-mktime (tp)
-     struct tm *tp;
-{
-#ifdef _LIBC
-  /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
-     time zone names contained in the external variable `tzname' shall
-     be set as if the tzset() function had been called.  */
-  __tzset ();
-#endif
-
-  return __mktime_internal (tp, my_mktime_localtime_r, &localtime_offset);
-}
-
 /* Use CONVERT to convert *T to a broken down time in *TP.
    If *T is out of range for conversion, adjust it so that
    it is the nearest in-range value and then convert that.  */
 static struct tm *
-ranged_convert (convert, t, tp)
-     struct tm *(*convert) __P ((const time_t *, struct tm *));
-     time_t *t;
-     struct tm *tp;
+ranged_convert (struct tm *(*convert) (const time_t *, struct tm *),
+		time_t *t, struct tm *tp)
 {
   struct tm *r;
 
@@ -244,10 +212,9 @@ ranged_convert (convert, t, tp)
    compared to what the result would be for UTC without leap seconds.
    If *OFFSET's guess is correct, only one CONVERT call is needed.  */
 time_t
-__mktime_internal (tp, convert, offset)
-     struct tm *tp;
-     struct tm *(*convert) __P ((const time_t *, struct tm *));
-     time_t *offset;
+__mktime_internal (struct tm *tp,
+		   struct tm *(*convert) (const time_t *, struct tm *),
+		   time_t *offset)
 {
   time_t t, dt, t0, t1, t2;
   struct tm tm;
@@ -391,6 +358,24 @@ __mktime_internal (tp, convert, offset)
 
   *tp = tm;
   return t;
+}
+
+
+static time_t localtime_offset;
+
+/* Convert *TP to a time_t value.  */
+time_t
+mktime (tp)
+     struct tm *tp;
+{
+#ifdef _LIBC
+  /* POSIX.1 8.1.1 requires that whenever mktime() is called, the
+     time zone names contained in the external variable `tzname' shall
+     be set as if the tzset() function had been called.  */
+  __tzset ();
+#endif
+
+  return __mktime_internal (tp, my_mktime_localtime_r, &localtime_offset);
 }
 
 #ifdef weak_alias
