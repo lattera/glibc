@@ -43,14 +43,14 @@
 
 #define LEAF(name, framesize)			\
   .globl name;					\
-  .align 3;					\
+  .align 4;					\
   .ent name, 0;					\
   __LABEL(name)					\
   .frame sp, framesize, ra
 
 #define ENTRY(name)				\
   .globl name;					\
-  .align 3;					\
+  .align 4;					\
   .ent name, 0;					\
   __LABEL(name)					\
   .frame sp, 0, ra
