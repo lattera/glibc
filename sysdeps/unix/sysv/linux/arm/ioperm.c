@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Phil Blundell, based on the Alpha version by
    David Mosberger.
@@ -166,7 +166,7 @@ init_iosys (void)
     }
 
   /* systype is not a known platform name... */
-  __set_errno (EINVAL);
+  __set_errno (ENODEV);
   return -1;
 }
 
@@ -194,8 +194,8 @@ _ioperm (unsigned long int from, unsigned long int num, int turn_on)
 	    return -1;
 
 	  io.base =
-	    (unsigned long int) __mmap (0, MAX_PORT << io.shift, 
-					PROT_READ | PROT_WRITE, 
+	    (unsigned long int) __mmap (0, MAX_PORT << io.shift,
+					PROT_READ | PROT_WRITE,
 					MAP_SHARED, fd, io.io_base);
 	  close (fd);
 	  if ((long) io.base == -1)

@@ -1,3 +1,2 @@
 clone.S
-kernel_stat.h
 ucontext_i.h

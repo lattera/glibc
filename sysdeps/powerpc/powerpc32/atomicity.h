@@ -22,13 +22,7 @@
 
 #include <inttypes.h>
 
-#if BROKEN_PPC_ASM_CR0
-# define __ATOMICITY_INLINE /* nothing */
-#else
-# define __ATOMICITY_INLINE inline
-#endif
-
-static __ATOMICITY_INLINE int
+static inline int
 __attribute__ ((unused))
 exchange_and_add (volatile uint32_t *mem, int val)
 {
@@ -42,7 +36,7 @@ exchange_and_add (volatile uint32_t *mem, int val)
   return result;
 }
 
-static __ATOMICITY_INLINE void
+static inline void
 __attribute__ ((unused))
 atomic_add (volatile uint32_t *mem, int val)
 {
@@ -55,7 +49,7 @@ atomic_add (volatile uint32_t *mem, int val)
 " : "=&b"(tmp) : "r" (mem), "Ir"(val) : "cr0", "memory");
 }
 
-static __ATOMICITY_INLINE int
+static inline int
 __attribute__ ((unused))
 compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
@@ -72,7 +66,7 @@ compare_and_swap (volatile long int *p, long int oldval, long int newval)
   return result >> 5;
 }
 
-static __ATOMICITY_INLINE long int
+static inline long int
 __attribute__ ((unused))
 always_swap (volatile long int *p, long int newval)
 {
@@ -85,7 +79,7 @@ always_swap (volatile long int *p, long int newval)
   return result;
 }
 
-static __ATOMICITY_INLINE int
+static inline int
 __attribute__ ((unused))
 test_and_set (volatile long int *p, long int newval)
 {

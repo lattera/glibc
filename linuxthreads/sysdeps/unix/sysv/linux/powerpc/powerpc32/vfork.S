@@ -36,15 +36,14 @@ ENTRY (__vfork)
 	mtlr	9
 	lwz	10,__libc_pthread_functions@got(10)
 	lwz	10,0(10)
-	cmpwi	10,0
-	bne-	HIDDEN_JUMPTARGET(__fork)
 # else
 	.weak	pthread_create
-	lis	9,pthread_create@ha
-	la	9,pthread_create@l(9)
-	cmpwi	9,0
-	bne-	.Lhidden_fork
+	lis	10,pthread_create@ha
+	la	10,pthread_create@l(10)
 # endif
+
+	cmpwi	10,0
+	bne-	.Lhidden_fork
 
 	DO_CALL (SYS_ify (vfork));
 
@@ -54,28 +53,24 @@ ENTRY (__vfork)
 	bnslr+
 	/* Check if vfork syscall is known at all.  */
 	cmpwi	r3,ENOSYS
-#  ifdef SHARED
-	bne	JUMPTARGET(__syscall_error)
-#  else
-	bne	.Lsyscall_error
-#  endif
+	bne-	.Lsyscall_error
 
 # endif
+
+.Lhidden_fork:
+	b	HIDDEN_JUMPTARGET(__fork)
+
 #endif
 
 #ifndef __ASSUME_VFORK_SYSCALL
 	/* If we don't have vfork, fork is close enough.  */
 
 	DO_CALL (SYS_ify (fork));
-	PSEUDO_RET
-#endif
+	bnslr+
 
-# ifndef SHARED
-.Lhidden_fork:
-	b	HIDDEN_JUMPTARGET(__fork)
 .Lsyscall_error:
 	b	JUMPTARGET(__syscall_error)
-# endif
+#endif
 
 PSEUDO_END (__vfork)
 libc_hidden_def (__vfork)

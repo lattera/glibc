@@ -38,7 +38,7 @@ ENTRY (__vfork)
 	bnslr+
 	/* Check if vfork syscall is known at all.  */
 	cmpwi	r3,ENOSYS
-	bne	JUMPTARGET(__syscall_error)
+	bne-	.Lsyscall_error
 
 # endif
 #endif
@@ -47,7 +47,10 @@ ENTRY (__vfork)
 	/* If we don't have vfork, fork is close enough.  */
 
 	DO_CALL (SYS_ify (fork))
-	PSEUDO_RET
+	bnslr+
+
+.Lsyscall_error:
+	b	JUMPTARGET(__syscall_error)
 #endif
 
 PSEUDO_END (__vfork)

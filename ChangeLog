@@ -1,3 +1,25 @@
+2002-07-24  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/arm/ioperm.c (init_iosys): Yield ENODEV
+	on unknown systems.
+
+2003-02-20  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/powerpc32/atomicity.h: Remove compiler workaround.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_NEW_PRCTL_SYSCALL): Defined for ppc32 too.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/fe_nomask.c: Use prctl
+	if possible.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: Avoid short
+	interprocedure branches.
+	* sysdeps/powerpc/soft-fp/Dist (sim-full.c, fenv_const.c): Move to...
+	* sysdeps/powerpc/nofpu/Dist: ...here.
+	* sysdeps/unix/sysv/linux/powerpc/Dist (fe_nomask.c): Move to...
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/Dist: ...here.
+	* sysdeps/unix/sysv/linux/s390/s390-64/Dist (kernel_stat.h): Delete.
+	* sysdeps/unix/sysv/linux/sparc/Dist (bits/utmpx.h): Delete.
+	* sysdeps/unix/sysv/linux/x86_64/Dist (bits/utmpx.h): Delete.
+
 2003-02-18  Alan Modra  <amodra@bigpond.net.au>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (HIDDEN_JUMPTARGET): Redefine.
