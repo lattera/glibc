@@ -1,5 +1,10 @@
 2003-03-10  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_trylock): Fix
+	register loading.
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h (lll_trylock): Undo
+	last changed.  D'oh.
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: New file.
 
 	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Remove declaration
