@@ -1,3 +1,8 @@
+2003-01-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-reloc.c (allocate_static_tls): Avoid arithmetic
+	wrap-around in test.
+
 2003-01-26  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/wordsize-32/divdi3.c: Export the functions only as

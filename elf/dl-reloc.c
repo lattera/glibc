@@ -1,5 +1,5 @@
 /* Relocate a shared object and resolve its references to other loaded objects.
-   Copyright (C) 1995,96,97,98,99,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -45,15 +45,15 @@ static bool
 allocate_static_tls (struct link_map *map)
 {
   size_t offset = roundup (GL(dl_tls_static_used), map->l_tls_align);
-  if (offset + map->l_tls_blocksize > (GL(dl_tls_static_size)
+  if (offset + map->l_tls_blocksize
 # if TLS_TCB_AT_TP
-				       - TLS_TCB_SIZE
+      + TLS_TCB_SIZE
 # elif TLS_DTV_AT_TP
   /* dl_tls_static_used includes the TCB at the beginning.  */
 # else
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
-				       ))
+      > GL(dl_tls_static_size))
     return false;
   map->l_tls_offset = offset;
   GL(dl_tls_static_used) = offset + map->l_tls_blocksize;
