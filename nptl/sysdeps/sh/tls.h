@@ -59,9 +59,6 @@ typedef struct
 /* Get system call information.  */
 # include <sysdep.h>
 
-/* Get the thread descriptor definition.  */
-# include <nptl/descr.h>
-
 /* This is the size of the initial TCB.  */
 # define TLS_INIT_TCB_SIZE sizeof (tcbhead_t)
 
@@ -80,11 +77,13 @@ typedef struct
 /* The TLS blocks start right after the TCB.  */
 # define TLS_DTV_AT_TP	1
 
+/* Get the thread descriptor definition.  */
+# include <nptl/descr.h>
 
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(tcbp, dtvp) \
-  ((tcbhead_t *) (tcbp))->dtv = dtvp + 1
+  ((tcbhead_t *) (tcbp))->dtv = (dtvp) + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
@@ -119,18 +118,18 @@ typedef struct
      __self - 1;})
 
 /* Read member of the thread descriptor directly.  */
-# define THREAD_GETMEM(descr, member) ((THREAD_SELF)->member)
+# define THREAD_GETMEM(descr, member) (descr->member)
 
 /* Same as THREAD_GETMEM, but the member offset can be non-constant.  */
-# define THREAD_GETMEM_NC(descr, member, idx) ((THREAD_SELF)->member[idx])
+# define THREAD_GETMEM_NC(descr, member, idx) (descr->member[idx])
 
 /* Set member of the thread descriptor directly.  */
 # define THREAD_SETMEM(descr, member, value) \
-    (THREAD_SELF)->member = (value)
+    descr->member = (value)
 
 /* Same as THREAD_SETMEM, but the member offset can be non-constant.  */
 # define THREAD_SETMEM_NC(descr, member, idx, value) \
-    (THREAD_SELF)->member[idx] = (value)
+    descr->member[idx] = (value)
 
 #endif /* __ASSEMBLER__ */
 
