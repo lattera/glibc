@@ -1,3 +1,21 @@
+2005-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/Makefile (tests): Add tst-execvp1, tst-execvp2, tst-execlp1,
+	tst-execlp2, tst-execv1, tst-execv2, tst-execl1, tst-execl2,
+	tst-execve1, tst-execve2, tst-execle1, and tst-execle2.
+	* posix/tst-execl1.c: New file.
+	* posix/tst-execl2.c: New file.
+	* posix/tst-execle1.c: New file.
+	* posix/tst-execle2.c: New file.
+	* posix/tst-execlp1.c: New file.
+	* posix/tst-execlp2.c: New file.
+	* posix/tst-execv1.c: New file.
+	* posix/tst-execv2.c: New file.
+	* posix/tst-execve1.c: New file.
+	* posix/tst-execve2.c: New file.
+	* posix/tst-execvp1.c: New file.
+	* posix/tst-execvp2.c: New file.
+
 2005-02-22  Roland McGrath  <roland@redhat.com>
 
 	* include/signal.h: Revert last change.
