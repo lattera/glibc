@@ -204,6 +204,8 @@ extern int _dl_debug_mask;
 #define DL_DEBUG_RELOC      (1 << 5)
 #define DL_DEBUG_FILES      (1 << 6)
 #define DL_DEBUG_STATISTICS (1 << 7)
+/* This one is used only internally.  */
+#define DL_DEBUG_HELP       (1 << 8)
 
 /* Expect cache ID.  */
 extern int _dl_correct_cache_id;
