@@ -57,7 +57,7 @@ envz_entry (const char *envz, size_t envz_len, const char *name)
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
-const char *
+char *
 envz_get (const char *envz, size_t envz_len, const char *name)
 {
   const char *entry = envz_entry (envz, envz_len, name);
