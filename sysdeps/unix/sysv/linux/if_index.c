@@ -16,6 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <errno.h>
 #include <string.h>
 #include <stdio.h>
@@ -118,17 +119,21 @@ if_nameindex (void)
     rq_len = RQ_IFS * sizeof (struct ifreq);
 
   /* Read all the interfaces out of the kernel.  */
-  do
+  ifc.ifc_buf = alloca (rq_len);
+  ifc.ifc_len = rq_len;
+  while (1)
     {
-      ifc.ifc_buf = alloca (ifc.ifc_len = rq_len);
-      if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0)
+        if (__ioctl (fd, SIOCGIFCONF, &ifc) < 0)
 	{
 	  close_not_cancel_no_status (fd);
 	  return NULL;
 	}
-      rq_len *= 2;
+      if (ifc.ifc_len < rq_len || ! old_siocgifconf)
+	break;
+
+      ifc.ifc_buf = extend_alloca (ifc.ifc_buf, rq_len, 2 * rq_len);
+      ifc.ifc_len = rq_len;
     }
-  while (ifc.ifc_len == rq_len && old_siocgifconf);
 
   nifs = ifc.ifc_len / sizeof (struct ifreq);
 
