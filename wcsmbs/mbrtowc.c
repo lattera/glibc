@@ -1,6 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -17,50 +17,115 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.  */
 
+#include <errno.h>
 #include <wchar.h>
+
+#ifndef EILSEQ
+#define EILSEQ EINVAL
+#endif
 
 
 static mbstate_t internal;
 
 size_t
-mbrtowc (pwc, s, n, ps)
-     wchar_t *pwc;
-     const char *s;
-     size_t n;
-     mbstate_t *ps;
+mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
   wchar_t to_wide;
+  size_t used = 0;
 
   if (ps == NULL)
     ps = &internal;
 
-  /*************************************************************\
-  |* This is no complete implementation.  While the multi-byte *|
-  |* character handling is not finished this will do.	       *|
-  \*************************************************************/
-
   if (s == NULL)
     {
+      /* See first paragraph of description in 7.16.6.3.2.  */
       pwc = NULL;
       s = "";
       n = 1;
     }
 
-  if (n == 0)
-    return (size_t) -2;
-
-  /* For now.  */
-  to_wide = (wchar_t) *s;
-
-  if (pwc != NULL)
-    *pwc = to_wide;
-
-  if (pwc == L'\0')
+  if (n > 0)
     {
-      *ps = 0;		/* This is required.  */
-      return 0;
+      if (ps->count == 0)
+	{
+	  unsigned char byte = (unsigned char) *s++;
+	  ++used;
+
+	  /* We must look for a possible first byte of a UTF8 sequence.  */
+	  if (byte < 0x80)
+	    {
+	      /* One byte sequence.  */
+	      if (pwc != NULL)
+		*pwc = (wchar_t) byte;
+	      return byte ? used : 0;
+	    }
+
+	  if ((byte & 0xc0) == 0x80 || (byte & 0xfe) == 0xfe)
+	    {
+	      /* Oh, oh.  An encoding error.  */
+	      errno = EILSEQ;
+	      return (size_t) -1;
+	    }
+
+	  if ((byte & 0xe0) == 0xc0)
+	    {
+	      /* We expect two bytes.  */
+	      ps->count = 1;
+	      ps->value = byte & 0x1f;
+	    }
+	  else if ((byte & 0xf0) == 0xe0)
+	    {
+	      /* We expect three bytes.  */
+	      ps->count = 2;
+	      ps->value = byte & 0x0f;
+	    }
+	  else if ((byte & 0xf8) == 0xf0)
+	    {
+	      /* We expect four bytes.  */
+	      ps->count = 3;
+	      ps->value = byte & 0x07;
+	    }
+	  else if ((byte & 0xfc) == 0xf8)
+	    {
+	      /* We expect five bytes.  */
+	      ps->count = 4;
+	      ps->value = byte & 0x03;
+	    }
+	  else
+	    {
+	      /* We expect six bytes.  */
+	      ps->count = 5;
+	      ps->value = byte & 0x01;
+	    }
+	}
+
+      /* We know we have to handle a multibyte character and there are
+	 some more bytes to read.  */
+      while (used < n)
+	{
+	  /* The second to sixths byte must be of the form 10xxxxxx.  */
+	  unsigned char byte = (unsigned char) *s++;
+	  ++used;
+
+	  if ((byte & 0xc0) != 0x80)
+	    {
+	      /* Oh, oh.  An encoding error.  */
+	      errno = EILSEQ;
+	      return (size_t) -1;
+	    }
+
+	  ps->value <<= 6;
+	  ps->value |= byte & 0x3f;
+
+	  if (--ps->count == 0)
+	    {
+	      /* The character is finished.  */
+	      if (pwc != NULL)
+		*pwc = (wchar_t) ps->value;
+	      return ps->value ? used : 0;
+	    }
+	}
     }
 
-  /* Return code (size_t)-1 cannot happend for now.  */
-  return 1;
+  return (size_t) -2;
 }

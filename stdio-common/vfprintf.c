@@ -735,16 +735,14 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	else								      \
 	  {								      \
 	    const wchar_t *s2 = (const wchar_t *) string;		      \
-	    mbstate_t mbstate = 0;					      \
+	    mbstate_t mbstate;						      \
 									      \
-	    len = wcsrtombs (NULL, &s2, prec != -1 ? prec : UINT_MAX,	      \
-			     &mbstate);					      \
+	    len = wcsrtombs (NULL, &s2, 0, &mbstate);			      \
 	    if (len == (size_t) -1)					      \
 	      /* Illegal wide-character string.  */			      \
 	      return -1;						      \
 									      \
 	    s2 = (const wchar_t *) string;				      \
-	    mbstate = 0;						      \
 	    string = alloca (len + 1);					      \
 	    (void) wcsrtombs (string, &s2, prec != -1 ? prec : UINT_MAX,      \
 			      &mbstate);				      \
@@ -841,7 +839,6 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   /* Initialize local variables.  */
   done = 0;
   grouping = (const char *) -1;
-  mbstate = 0;
   ap_save = ap;
   nspecs_done = 0;
 

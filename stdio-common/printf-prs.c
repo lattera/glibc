@@ -81,7 +81,6 @@ parse_printf_format (fmt, n, argtypes)
 
   nargs = 0;
   max_ref_arg = 0;
-  mbstate = 0;
 
   /* Search for format specifications.  */
   for (fmt = find_spec (fmt, &mbstate); *fmt != '\0'; fmt = spec.next_fmt)
@@ -90,14 +89,14 @@ parse_printf_format (fmt, n, argtypes)
       nargs += parse_one_spec (fmt, nargs, &spec, &max_ref_arg, &mbstate);
 
       /* If the width is determined by an argument this is an int.  */
-      if (spec.width_arg != -1 && spec.width_arg < n)
+      if (spec.width_arg != -1 && (size_t) spec.width_arg < n)
 	argtypes[spec.width_arg] = PA_INT;
 
       /* If the precision is determined by an argument this is an int.  */
-      if (spec.prec_arg != -1 && spec.prec_arg < n)
+      if (spec.prec_arg != -1 && (size_t) spec.prec_arg < n)
 	argtypes[spec.prec_arg] = PA_INT;
 
-      if (spec.data_arg < n)
+      if ((size_t) spec.data_arg < n)
 	switch (spec.ndata_args)
 	  {
 	  case 0:		/* No arguments.  */

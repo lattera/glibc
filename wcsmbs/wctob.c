@@ -21,14 +21,11 @@ Boston, MA 02111-1307, USA.  */
 #include <wchar.h>
 
 
+/* We use UTF8 encoding for multibyte strings and therefore a valid
+   one byte multibyte string only can have a value from 0 to 0x7f.  */
 int
 wctob (c)
      wint_t c;
 {
-  /*************************************************************\
-  |* This is no complete implementation.  While the multi-byte *|
-  |* character handling is not finished this will do.	       *|
-  \*************************************************************/
-
-  return (c & ~0xff) == 0 ? c : EOF;
+  return (c >= 0 && c <= 0x7f) ? c : EOF;
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 
 /* Send N bytes of BUF to socket FD.  Returns the number sent or -1.  */
 int
-DEFUN(send, (fd, buf, n, flags),
+DEFUN(__send, (fd, buf, n, flags),
       int fd AND PTR buf AND size_t n AND int flags)
 {
   error_t err;
@@ -38,3 +38,4 @@ DEFUN(send, (fd, buf, n, flags),
 
   return err ? __hurd_dfail (fd, err) : wrote;
 }
+weak_alias (__send, send)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
    and the only address from which to accept transmissions.
    Return 0 on success, -1 for errors.  */
 int
-DEFUN(connect, (fd, addr, len),
+DEFUN(__connect, (fd, addr, len),
       int fd AND const struct sockaddr_un *addr AND size_t len)
 {
   error_t err;
@@ -72,3 +72,4 @@ DEFUN(connect, (fd, addr, len),
 
   return err ? __hurd_dfail (fd, err) : 0;
 }
+weak_alias (__connect, connect)

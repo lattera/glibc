@@ -1,6 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -24,24 +24,27 @@ Boston, MA 02111-1307, USA.  */
 #define EILSEQ EINVAL
 #endif
 
+static const wchar_t encoding_mask[] =
+{
+  ~0x7ff, ~0xffff, ~0x1fffff, ~0x3ffffff
+};
 
+static const unsigned char encoding_byte[] =
+{
+  0xc0, 0xe0, 0xf0, 0xf8, 0xfc
+};
+
+/* The state is for this UTF8 encoding not used.  */
 static mbstate_t internal;
 
 size_t
-wcrtomb (s, wc, ps)
-     char *s;
-     wchar_t wc;
-     mbstate_t *ps;
+wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
   char fake[1];
+  size_t written = 0;
 
   if (ps == NULL)
     ps = &internal;
-
-  /*************************************************************\
-  |* This is no complete implementation.  While the multi-byte *|
-  |* character handling is not finished this will do.	       *|
-  \*************************************************************/
 
   if (s == NULL)
     {
@@ -49,21 +52,40 @@ wcrtomb (s, wc, ps)
       wc = L'\0';
     }
 
-  if (wc == L'\0')
+  /* Store the UTF8 representation of WC.  */
+  if (wc < 0 || wc > 0x7fffffff)
     {
-      /* FIXME Write any shift sequence to get to *PS == NULL.  */
-      *ps = 0;
-      *s = '\0';
-      return 1;
-    }
-
-  /* FIXME For now we don't handle real multi-byte encodings.  */
-  if ((wc & ~0xff) != 0)
-    {
+      /* This is no correct ISO 10646 character.  */
       errno = EILSEQ;
       return (size_t) -1;
     }
 
-  *s = (char) wc;
-  return 1;
+  if (wc < 0x80)
+    {
+      /* It's a one byte sequence.  */
+      if (s != NULL)
+	*s = (char) wc;
+      return 1;
+    }
+
+  for (written = 2; written < 6; ++written)
+    if ((wc & encoding_mask[written - 2]) == 0)
+      break;
+
+  if (s != NULL)
+    {
+      size_t cnt = written;
+      s[0] = encoding_byte[cnt - 2];
+
+      --cnt;
+      do
+	{
+	  s[cnt] = 0x80 | (wc & 0x3f);
+	  wc >>= 6;
+	}
+      while (--cnt > 0);
+      s[0] |= wc;
+    }
+
+  return written;
 }

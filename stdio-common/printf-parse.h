@@ -97,6 +97,8 @@ find_spec (const char *format, mbstate_t *ps)
     {
       int len;
 
+      /* Remove any hints of a wrong encoding.  */
+      ps->count = 0;
       if (isascii (*format) || (len = mbrlen (format, MB_CUR_MAX, ps)) <= 0)
 	++format;
       else

@@ -1,6 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-COntributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>.
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as

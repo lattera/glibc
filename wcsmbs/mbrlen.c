@@ -26,10 +26,11 @@ static mbstate_t internal;
 
 
 size_t
-mbrlen (s, n, ps)
+__mbrlen (s, n, ps)
      const char *s;
      size_t n;
      mbstate_t *ps;
 {
   return mbrtowc (NULL, s, n, ps ?: &internal);
 }
+weak_alias (__mbrlen, mbrlen)

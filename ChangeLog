@@ -1,5 +1,24 @@
 Tue Jul  9 09:37:55 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* posix/glob.h (__glob_opendir_hook, __glob_readdir_hook,
+	__glob_closedir_hook): Remove decls.
+
+	* sysdeps/generic/machine-gmon.h: Declare mcount_internal.
+
+	* sysdeps/unix/inet/syscalls.list: Define __ names with weak aliases
+ 	for send and connect syscalls.
+
+	* socket/sys/socket.h: New file, taken from non-sysdep parts of
+	linux/sys/socket.h; break sysdeps parts out into socketbits.h.
+	Declare __ names for send and connect.
+	* sysdeps/generic/socketbits.h: New file.
+	* sysdeps/unix/sysv/linux/socketbits.h: New file.
+	* sysdeps/unix/sysv/linux/sys/socket.h: File removed.
+	* sysdeps/generic/sys/socket.h: File removed.
+
+	* sysdeps/mach/hurd/connect.c: Define __ name and weak alias.
+	* sysdeps/mach/hurd/send.c: Likewise.
+
 	* sysdeps/mach/libc-lock.h: New file.
 	* sysdeps/unix/readdir.c: Do locking.
 	* sysdeps/unix/seekdir.c: Likewise.

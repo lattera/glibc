@@ -1,6 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
-Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
+Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -20,15 +20,17 @@ Boston, MA 02111-1307, USA.  */
 #include <string.h>
 #include <wchar.h>
 
-
+/* In GNU libc the conversion functions only can convert between the
+   fixed wide character representation and the multibyte
+   representation of the same character set.  Since we use ISO 10646
+   in UCS4 encoding for wide characters the best solution for
+   multibyte characters is the UTF8 encoding.  I.e., the only state
+   information is a counter of the processed bytes so far and the
+   value collected so far.  Especially, we don't have different shift
+   states.  */
 int
 mbsinit (ps)
      const mbstate_t *ps;
 {
-  /*************************************************************\
-  |* This is no complete implementation.  While the multi-byte *|
-  |* character handling is not finished this will do.	       *|
-  \*************************************************************/
-
-  return ps == NULL || *ps == 0;
+  return ps == NULL || ps->count == 0;
 }

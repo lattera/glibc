@@ -48,7 +48,11 @@ typedef unsigned int wint_t;
 
 
 /* Conversion state information.  */
-typedef int mbstate_t; /* FIXME */
+typedef struct
+{
+  int count;		/* Number of bytes needed for the current character. */
+  wint_t value;		/* Value so far.  */
+} mbstate_t;
 
 #define WCHAR_MIN ((wchar_t) 0)
 #define WCHAR_MAX (~WCHAR_MIN)
@@ -145,9 +149,6 @@ extern int wctob __P ((wint_t __c));
    state.  */
 extern int mbsinit __P ((__const mbstate_t *__ps));
 
-/* Return number of bytes in multibyte character pointed to by S.  */
-extern size_t mbrlen __P ((__const char *__s, size_t __n, mbstate_t *ps));
-
 /* Write wide character representation of multibyte character pointed
    to by S to PWC.  */
 extern size_t mbrtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n,
@@ -155,6 +156,17 @@ extern size_t mbrtowc __P ((wchar_t *__pwc, __const char *__s, size_t __n,
 
 /* Write multibyte representation of wide character WC to S.  */
 extern size_t wcrtomb __P ((char *__s, wchar_t __wc, mbstate_t *__ps));
+
+/* Return number of bytes in multibyte character pointed to by S.  */
+extern size_t __mbrlen __P ((__const char *__s, size_t __n, mbstate_t *__ps));
+extern size_t mbrlen __P ((__const char *__s, size_t __n, mbstate_t *__ps));
+
+#if defined (__OPTIMIZE__) \
+    && (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7))
+/* Define inline function as optimization.  */
+extern __inline size_t mbrlen (__const char *s, size_t n, mbstate_t *ps)
+{ return ps != NULL ? mbrtowc (NULL, s, n, ps) : __mbrlen (s, n, NULL); }
+#endif
 
 /* Write wide character representation of multibyte chracter string SRC
    to DST.  */
