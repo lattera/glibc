@@ -1,3 +1,8 @@
+2000-01-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/argz-stringify.c: Handle case of missing \0 at the end of
+	the given argz.
+
 2000-01-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nscd/hstcache.c: Don't count in mapped IPv6 addresses in total
