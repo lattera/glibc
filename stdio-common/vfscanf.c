@@ -16,6 +16,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <limits.h>
 #include <ctype.h>
@@ -69,13 +70,56 @@
 
 # undef va_list
 # define va_list	_IO_va_list
-# define ungetc(c, s)	((void) ((int) c == EOF				      \
+
+# ifdef COMPILE_WPRINTF
+#  define ungetc(c, s)	((void) ((int) c == WEOF			      \
+				 || (--read_in,				      \
+				     _IO_sputbackwc (s, (unsigned char) c))))
+#  define inchar()	(c == EOF ? EOF					      \
+			 : ((c = _IO_getwc_unlocked (s)),		      \
+			    (void) (c != EOF && ++read_in), c))
+
+#  define MEMCPY(d, s, n) wmemcpy (d, s, n)
+#  define ISSPACE(Ch)	  iswspace (Ch)
+#  define ISDIGIT(Ch)	  iswdigit (Ch)
+#  define ISXDIGIT(Ch)	  iswxdigit (Ch)
+#  define UNGETC(Ch, S)   ungetwc (Ch, S)
+#  define TOLOWER(Ch)	  towlower (Ch)
+#  define ORIENT	  if (_IO_fwide (s, 1) != 1) return EOF
+#  define __strtoll_internal	__wcstoll_internal
+#  define __strtoull_internal	__wcstoull_internal
+#  define __strtol_internal	__wcstol_internal
+#  define __strtoul_internal	__wcstoul_internal
+#  define __strtold_internal	__wcstold_internal
+#  define __strtod_internal	__wcstod_internal
+#  define __strtof_internal	__wcstof_internal
+
+#  define L_(Str)	  L##Str
+#  define CHAR_T	  wchar_t
+#  define UCHAR_T	  unsigned int
+#  define WINT_T	  wint_t
+# else
+#  define ungetc(c, s)	((void) ((int) c == EOF				      \
 				 || (--read_in,				      \
 				     _IO_sputbackc (s, (unsigned char) c))))
-# define inchar()	(c == EOF ? EOF					      \
+#  define inchar()	(c == EOF ? EOF					      \
 			 : ((c = _IO_getc_unlocked (s)),		      \
 			    (void) (c != EOF && ++read_in), c))
-# define encode_error()	do {						      \
+#  define MEMCPY(d, s, n) memcpy (d, s, n)
+#  define ISSPACE(Ch)	  isspace (Ch)
+#  define ISDIGIT(Ch)	  isdigit (Ch)
+#  define ISXDIGIT(Ch)	  isxdigit (Ch)
+#  define UNGETC(Ch, S)   ungetc (Ch, S)
+#  define TOLOWER(Ch)	  tolower (Ch)
+#  define ORIENT	  if (_IO_fwide (s, -1) != -1) return EOF
+
+#  define L_(Str)	  Str
+#  define CHAR_T	  char
+#  define UCHAR_T	  unsigned char
+#  define WINT_T	  int
+# endif
+
+# define encode_error() do {						      \
 			  if (errp != NULL) *errp |= 4;			      \
 			  _IO_funlockfile (s);				      \
 			  __libc_cleanup_end (0);			      \
@@ -94,7 +138,7 @@
 			  __libc_cleanup_end (0);			      \
 			  return done ?: EOF;				      \
 			} while (0)
-# define memory_error()	do {						      \
+# define memory_error() do {						      \
 			  _IO_funlockfile (s);				      \
 			  __set_errno (ENOMEM);				      \
 			  __libc_cleanup_end (0);			      \
@@ -180,30 +224,39 @@
    FORMAT, using the argument list in ARG.
    Return the number of assignments made, or -1 for an input error.  */
 #ifdef USE_IN_LIBIO
+# ifdef COMPILE_WPRINTF
+int
+_IO_vfwscanf (s, format, argptr, errp)
+     _IO_FILE *s;
+     const wchar_t *format;
+     _IO_va_list argptr;
+     int *errp;
+# else
 int
 _IO_vfscanf (s, format, argptr, errp)
      _IO_FILE *s;
      const char *format;
      _IO_va_list argptr;
      int *errp;
+# endif
 #else
 int
 __vfscanf (FILE *s, const char *format, va_list argptr)
 #endif
 {
   va_list arg;
-  register const char *f = format;
-  register unsigned char fc;	/* Current character of the format.  */
+  register const CHAR_T *f = format;
+  register UCHAR_T fc;	/* Current character of the format.  */
   register size_t done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
-  register int c = 0;		/* Last char read.  */
+  register WINT_T c = 0;	/* Last char read.  */
   register int width;		/* Maximum field width.  */
   register int flags;		/* Modifiers for current format element.  */
 
   /* Status for reading F-P nums.  */
   char got_dot, got_e, negative;
   /* If a [...] is a [^...].  */
-  char not_in;
+  CHAR_T not_in;
 #define exp_char not_in
   /* Base for integral numbers.  */
   int base;
@@ -236,8 +289,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   /* Nonzero if we are reading a pointer.  */
   int read_pointer;
   /* Workspace.  */
-  char *tw;			/* Temporary pointer.  */
-  char *wp = NULL;		/* Workspace.  */
+  CHAR_T *tw;			/* Temporary pointer.  */
+  CHAR_T *wp = NULL;		/* Workspace.  */
   size_t wpmax = 0;		/* Maximal size of workspace.  */
   size_t wpsize;		/* Currently used bytes in workspace.  */
 #define ADDW(Ch)							    \
@@ -245,11 +298,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
     {									    \
       if (wpsize == wpmax)						    \
 	{								    \
-	  char *old = wp;						    \
+	  CHAR_T *old = wp;						    \
 	  wpmax = UCHAR_MAX > 2 * wpmax ? UCHAR_MAX : 2 * wpmax;	    \
-	  wp = (char *) alloca (wpmax);					    \
+	  wp = (CHAR_T *) alloca (wpmax * sizeof (wchar_t));		    \
 	  if (old != NULL)						    \
-	    memcpy (wp, old, wpsize);					    \
+	    MEMCPY (wp, old, wpsize);					    \
 	}								    \
       wp[wpsize++] = (Ch);						    \
     }									    \
@@ -259,6 +312,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   __va_copy (arg, argptr);
 #else
   arg = (va_list) argptr;
+#endif
+
+#ifdef ORIENT
+  ORIENT;
 #endif
 
   ARGCHECK (s, format);
@@ -280,8 +337,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   LOCK_STREAM (s);
 
 
+#ifndef COMPILE_WPRINTF
   /* From now on we use `state' to convert the format string.  */
   memset (&state, '\0', sizeof (state));
+#endif
 
   /* Run through the format string.  */
   while (*f != '\0')
@@ -320,6 +379,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 # endif
 #endif
 
+#ifndef COMPILE_WPRINTF
       if (!isascii (*f))
 	{
 	  /* Non-ASCII, may be a multibyte.  */
@@ -341,12 +401,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      continue;
 	    }
 	}
+#endif
 
       fc = *f++;
       if (fc != '%')
 	{
 	  /* Remember to skip spaces.  */
-	  if (isspace (fc))
+	  if (ISSPACE (fc))
 	    {
 	      skip_space = 1;
 	      continue;
@@ -363,7 +424,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	     string.  Now it's time to skip all leading white space.  */
 	  if (skip_space)
 	    {
-	      while (isspace (c))
+	      while (ISSPACE (c))
 		if (inchar () == EOF && errno == EINTR)
 		  conv_error ();
 	      skip_space = 0;
@@ -371,7 +432,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  if (c != fc)
 	    {
-	      ungetc (c, s);
+	      UNGETC (c, s);
 	      conv_error ();
 	    }
 
@@ -391,12 +452,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       wpsize = 0;
 
       /* Check for a positional parameter specification.  */
-      if (isdigit (*f))
+      if (ISDIGIT (*f))
 	{
-	  argpos = *f++ - '0';
-	  while (isdigit (*f))
-	    argpos = argpos * 10 + (*f++ - '0');
-	  if (*f == '$')
+	  argpos = *f++ - L_('0');
+	  while (ISDIGIT (*f))
+	    argpos = argpos * 10 + (*f++ - L_('0'));
+	  if (*f == L_('$'))
 	    ++f;
 	  else
 	    {
@@ -409,27 +470,27 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	}
 
       /* Check for the assignment-suppressing and the number grouping flag.  */
-      while (*f == '*' || *f == '\'')
+      while (*f == L_('*') || *f == L_('\''))
 	switch (*f++)
 	  {
-	  case '*':
+	  case L_('*'):
 	    flags |= SUPPRESS;
 	    break;
-	  case '\'':
+	  case L_('\''):
 	    flags |= GROUP;
 	    break;
 	  }
 
       /* We have seen width. */
-      if (isdigit (*f))
+      if (ISDIGIT (*f))
 	flags |= WIDTH;
 
       /* Find the maximum field width.  */
       width = 0;
-      while (isdigit (*f))
+      while (ISDIGIT (*f))
 	{
 	  width *= 10;
-	  width += *f++ - '0';
+	  width += *f++ - L_('0');
 	}
     got_width:
       if (width == 0)
@@ -438,9 +499,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
       /* Check for type modifiers.  */
       switch (*f++)
 	{
-	case 'h':
+	case L_('h'):
 	  /* ints are short ints or chars.  */
-	  if (*f == 'h')
+	  if (*f == L_('h'))
 	    {
 	      ++f;
 	      flags |= CHAR;
@@ -448,8 +509,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    flags |= SHORT;
 	  break;
-	case 'l':
-	  if (*f == 'l')
+	case L_('l'):
+	  if (*f == L_('l'))
 	    {
 	      /* A double `l' is equivalent to an `L'.  */
 	      ++f;
@@ -459,15 +520,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    /* ints are long ints.  */
 	    flags |= LONG;
 	  break;
-	case 'q':
-	case 'L':
+	case L_('q'):
+	case L_('L'):
 	  /* doubles are long doubles, and ints are long long ints.  */
 	  flags |= LONGDBL | LONG;
 	  break;
-	case 'a':
+	case L_('a'):
 	  /* The `a' is used as a flag only if followed by `s', `S' or
 	     `['.  */
-	  if (*f != 's' && *f != 'S' && *f != '[')
+	  if (*f != L_('s') && *f != L_('S') && *f != L_('['))
 	    {
 	      --f;
 	      break;
@@ -476,19 +537,19 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	     arg and fill it in with a malloc'd pointer.  */
 	  flags |= MALLOC;
 	  break;
-	case 'z':
+	case L_('z'):
 	  if (need_longlong && sizeof (size_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (size_t) > sizeof (unsigned int))
 	    flags |= LONG;
 	  break;
-	case 'j':
+	case L_('j'):
 	  if (need_longlong && sizeof (uintmax_t) > sizeof (unsigned long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (uintmax_t) > sizeof (unsigned int))
 	    flags |= LONG;
 	  break;
-	case 't':
+	case L_('t'):
 	  if (need_longlong && sizeof (ptrdiff_t) > sizeof (long int))
 	    flags |= LONGDBL;
 	  else if (sizeof (ptrdiff_t) > sizeof (int))
@@ -501,12 +562,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	}
 
       /* End of the format string?  */
-      if (*f == '\0')
+      if (*f == L_('\0'))
 	conv_error ();
 
       /* Find the conversion specifier.  */
       fc = *f++;
-      if (skip_space || (fc != '[' && fc != 'c' && fc != 'C' && fc != 'n'))
+      if (skip_space || (fc != L_('[') && fc != L_('c')
+			 && fc != L_('C') && fc != L_('n')))
 	{
 	  /* Eat whitespace.  */
 	  int save_errno = errno;
@@ -514,15 +576,15 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  do
 	    if (inchar () == EOF && errno == EINTR)
 	      input_error ();
-	  while (isspace (c));
+	  while (ISSPACE (c));
 	  errno = save_errno;
-	  ungetc (c, s);
+	  UNGETC (c, s);
 	  skip_space = 0;
 	}
 
       switch (fc)
 	{
-	case '%':	/* Must match a literal '%'.  */
+	case L_('%'):	/* Must match a literal '%'.  */
 	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
@@ -533,7 +595,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  break;
 
-	case 'n':	/* Answer number of assignments done.  */
+	case L_('n'):	/* Answer number of assignments done.  */
 	  /* Corrigendum 1 to ISO C 1990 describes the allowed flags
 	     with the 'n' conversion specifier.  */
 	  if (!(flags & SUPPRESS))
@@ -581,7 +643,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  break;
 
-	case 'c':	/* Match characters.  */
+	case L_('c'):	/* Match characters.  */
 	  if ((flags & LONG) == 0)
 	    {
 	      if (!(flags & SUPPRESS))
@@ -598,6 +660,26 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (width == -1)
 		width = 1;
 
+#ifdef COMPILE_WPRINTF
+	      /* We have to convert the wide character(s) into multibyte
+		 characters and store the result.  */
+	      memset (&state, '\0', sizeof (state));
+
+	      do
+		{
+		  size_t n;
+
+		  n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		  if (n == (size_t) -1)
+		    /* No valid wide character.  */
+		    input_error ();
+
+		  /* Increment the output pointer.  Even if we don't
+		     write anything.  */
+		  str += n;
+		}
+	      while (--width > 0 && inchar () != EOF);
+#else
 	      if (!(flags & SUPPRESS))
 		{
 		  do
@@ -606,6 +688,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      else
 		while (--width > 0 && inchar () != EOF);
+#endif
 
 	      if (!(flags & SUPPRESS))
 		++done;
@@ -613,238 +696,448 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      break;
 	    }
 	  /* FALLTHROUGH */
-	case 'C':
-	  /* Get UTF-8 encoded wide character.  Here we assume (as in
-	     other parts of the libc) that we only have to handle
-	     UTF-8.  */
-	  {
-	    wint_t val;
-	    size_t cnt = 0;
-	    int first = 1;
-
-	    if (!(flags & SUPPRESS))
-	      {
-		wstr = ARG (wchar_t *);
-		if (str == NULL)
-		  conv_error ();
-	      }
-
-	    do
-	      {
-#define NEXT_WIDE_CHAR(First)						      \
-		c = inchar ();						      \
-		if (c == EOF)						      \
-		  {							      \
-		    /* EOF is only an error for the first character.  */      \
-		    if (First)						      \
-		      input_error ();					      \
-		    else						      \
-		      break;						      \
-		  }							      \
-		val = c;						      \
-		if (val >= 0x80)					      \
-		  {							      \
-		    if ((c & 0xc0) == 0x80 || (c & 0xfe) == 0xfe)	      \
-		      encode_error ();					      \
-		    if ((c & 0xe0) == 0xc0)				      \
-		      {							      \
-			/* We expect two bytes.  */			      \
-			cnt = 1;					      \
-			val &= 0x1f;					      \
-		      }							      \
-		    else if ((c & 0xf0) == 0xe0)			      \
-		      {							      \
-			/* We expect three bytes.  */			      \
-			cnt = 2;					      \
-			val &= 0x0f;					      \
-		      }							      \
-		    else if ((c & 0xf8) == 0xf0)			      \
-		      {							      \
-			/* We expect four bytes.  */			      \
-			cnt = 3;					      \
-			val &= 0x07;					      \
-		      }							      \
-		    else if ((c & 0xfc) == 0xf8)			      \
-		      {							      \
-			/* We expect five bytes.  */			      \
-			cnt = 4;					      \
-			val &= 0x03;					      \
-		      }							      \
-		    else						      \
-		      {							      \
-			/* We expect six bytes.  */			      \
-			cnt = 5;					      \
-			val &= 0x01;					      \
-		      }							      \
-		    							      \
-		    do							      \
-		      {							      \
-			c = inchar ();					      \
-			if (c == EOF					      \
-			    || (c & 0xc0) == 0x80 || (c & 0xfe) == 0xfe)      \
-			  encode_error ();				      \
-			val <<= 6;					      \
-			val |= c & 0x3f;				      \
-		      }							      \
-		    while (--cnt > 0);					      \
-		  }							      \
-									      \
-		if (!(flags & SUPPRESS))				      \
-		  *wstr++ = val;					      \
-		First = 0
-
-		NEXT_WIDE_CHAR (first);
-	      }
-	    while (--width > 0);
-
-	    if (!(flags & SUPPRESS))
-	      ++done;
-	  }
-	  break;
-
-	case 's':		/* Read a string.  */
-	  if (flags & LONG)
-	    /* We have to process a wide character string.  */
-	    goto wide_char_string;
-
-#define STRING_ARG(Str, Type)						      \
-	  if (!(flags & SUPPRESS))					      \
-	    {								      \
-	      if (flags & MALLOC)					      \
-		{							      \
-		  /* The string is to be stored in a malloc'd buffer.  */     \
-		  strptr = ARG (char **);				      \
-		  if (strptr == NULL)					      \
-		    conv_error ();					      \
-		  /* Allocate an initial buffer.  */			      \
-		  strsize = 100;					      \
-		  *strptr = malloc (strsize * sizeof (Type));		      \
-		  Str = (Type *) *strptr;				      \
-		}							      \
-	      else							      \
-		Str = ARG (Type *);					      \
-	      if (Str == NULL)						      \
-		conv_error ();						      \
+	case L_('C'):
+	  if (!(flags & SUPPRESS))
+	    {
+	      wstr = ARG (wchar_t *);
+	      if (str == NULL)
+		conv_error ();
 	    }
-	  STRING_ARG (str, char);
 
 	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
-	  do
-	    {
-	      if (isspace (c))
-		{
-		  ungetc (c, s);
-		  break;
-		}
-#define	STRING_ADD_CHAR(Str, c, Type)					      \
-	      if (!(flags & SUPPRESS))					      \
-		{							      \
-		  *Str++ = c;						      \
-		  if ((flags & MALLOC) && (char *) Str == *strptr + strsize)  \
-		    {							      \
-		      /* Enlarge the buffer.  */			      \
-		      Str = realloc (*strptr, strsize * 2 * sizeof (Type));   \
-		      if (Str == NULL)					      \
-			{						      \
-			  /* Can't allocate that much.  Last-ditch effort.  */\
-			  Str = realloc (*strptr,			      \
-					 (strsize + 1) * sizeof (Type));      \
-			  if (Str == NULL)				      \
-			    {						      \
-			      /* We lose.  Oh well.			      \
-				 Terminate the string and stop converting,    \
-				 so at least we don't skip any input.  */     \
-			      ((Type *) (*strptr))[strsize] = '\0';	      \
-			      ++done;					      \
-			      conv_error ();				      \
-			    }						      \
-			  else						      \
-			    {						      \
-			      *strptr = (char *) Str;			      \
-			      Str = ((Type *) *strptr) + strsize;	      \
-			      ++strsize;				      \
-			    }						      \
-			}						      \
-		      else						      \
-			{						      \
-			  *strptr = (char *) Str;			      \
-			  Str = ((Type *) *strptr) + strsize;		      \
-			  strsize *= 2;					      \
-			}						      \
-		    }							      \
-		}
-	      STRING_ADD_CHAR (str, c, char);
-	    } while ((width <= 0 || --width > 0) && inchar () != EOF);
-
+#ifdef COMPILE_WPRINTF
+	  /* Just store the incoming wide characters.  */
 	  if (!(flags & SUPPRESS))
 	    {
-	      *str = '\0';
-	      ++done;
+	      do
+		*wstr++ = c;
+	      while (--width > 0 && inchar () != EOF);
 	    }
-	  break;
-
-	case 'S':
-	  /* Wide character string.  */
-	wide_char_string:
+	  else
+	    while (--width > 0 && inchar () != EOF);
+#else
 	  {
-	    wint_t val;
-	    int first = 1;
-	    STRING_ARG (wstr, wchar_t);
+	    /* We have to convert the multibyte input sequence to wide
+	       characters.  */
+	    char buf[MB_LEN_MAX];
+	    mbstate_t cstate;
+
+	    memset (&cstate, '\0', sizeof (cstate));
 
 	    do
 	      {
-		size_t cnt = 0;
-		NEXT_WIDE_CHAR (first);
+		size_t cnt;
 
-		if (__iswspace (val))
+		/* This is what we present the mbrtowc function first.  */
+		buf[0] = c;
+		cnt = 1;
+
+		while (1)
 		  {
-		    /* XXX We would have to push back the whole wide char
-		       with possibly many bytes.  But since scanf does
-		       not make a difference for white space characters
-		       we can simply push back a simple <SP> which is
-		       guaranteed to be in the [:space:] class.  */
-		    ungetc (' ', s);
+		    size_t n;
+
+		    n = __mbrtowc (!(flags & SUPPRESS) ? wstr : NULL,
+				   buf, cnt, &cstate);
+
+		    if (n == (size_t) -2)
+		      {
+			/* Possibly correct character, just not enough
+			   input.  */
+			assert (cnt < MB_CUR_MAX);
+
+			if (inchar () == EOF)
+			  encode_error ();
+
+			buf[cnt++] = c;
+			continue;
+		      }
+
+		    if (n != cnt)
+		      encode_error ();
+
+		    /* We have a match.  */
 		    break;
 		  }
 
-		STRING_ADD_CHAR (wstr, val, wchar_t);
-		first = 0;
+		/* Advance the result pointer.  */
+		++wstr;
 	      }
-	    while (width <= 0 || --width > 0);
+	    while (--width > 0 && inchar () != EOF);
+	  }
+#endif
+
+	  if (!(flags & SUPPRESS))
+	    ++done;
+
+	  break;
+
+	case L_('s'):		/* Read a string.  */
+	  if (!(flags & LONG))
+	    {
+#define STRING_ARG(Str, Type)						      \
+	      do if (!(flags & SUPPRESS))				      \
+		{							      \
+		  if (flags & MALLOC)					      \
+		    {							      \
+		      /* The string is to be stored in a malloc'd buffer.  */ \
+		      strptr = ARG (char **);				      \
+		      if (strptr == NULL)				      \
+			conv_error ();					      \
+		      /* Allocate an initial buffer.  */		      \
+		      strsize = 100;					      \
+		      *strptr = (char *) malloc (strsize * sizeof (Type));    \
+		      Str = (Type *) *strptr;				      \
+		    }							      \
+		  else							      \
+		    Str = ARG (Type *);					      \
+		  if (Str == NULL)					      \
+		    conv_error ();					      \
+		} while (0)
+	      STRING_ARG (str, char);
+
+	      c = inchar ();
+	      if (c == EOF)
+		input_error ();
+
+#ifdef COMPILE_WPRINTF
+	      memset (&state, '\0', sizeof (state));
+#endif
+
+	      do
+		{
+		  if (ISSPACE (c))
+		    {
+		      UNGETC (c, s);
+		      break;
+		    }
+
+#ifdef COMPILE_WPRINTF
+		  /* This is quite complicated.  We have to convert the
+		     wide characters into multibyte characters and then
+		     store them.  */
+		  {
+		    size_t n;
+
+		    if (!(flags & SUPPRESS) && (flags & MALLOC)
+			&& str + MB_CUR_MAX >= *strptr + strsize)
+		      {
+			/* We have to enlarge the buffer if the `a' flag
+			   was given.  */
+			str = (char *) realloc (*strptr, strsize * 2);
+			if (str == NULL)
+			  {
+			    /* Can't allocate that much.  Last-ditch
+			       effort.  */
+			    str = (char *) realloc (*strptr, strsize + 1);
+			    if (str == NULL)
+			      {
+				/* We lose.  Oh well.  Terminate the
+				   string and stop converting,
+				   so at least we don't skip any input.  */
+				((char *) (*strptr))[strsize - 1] = '\0';
+				++done;
+				conv_error ();
+			      }
+			    else
+			      {
+				*strptr = (char *) str;
+				str += strsize;
+				++strsize;
+			      }
+			  }
+			else
+			  {
+			    *strptr = (char *) str;
+			    str += strsize;
+			    strsize *= 2;
+			  }
+		      }
+
+		    n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		    if (n == (size_t) -1)
+		      encode_error ();
+
+		    assert (n <= MB_CUR_MAX);
+		    str += n;
+		  }
+#else
+		  /* This is easy.  */
+		  if (!(flags & SUPPRESS))
+		    {
+		      *str++ = c;
+		      if ((flags & MALLOC)
+			  && (char *) str == *strptr + strsize)
+			{
+			  /* Enlarge the buffer.  */
+			  str = (char *) realloc (*strptr, 2 * strsize);
+			  if (str == NULL)
+			    {
+			      /* Can't allocate that much.  Last-ditch
+				 effort.  */
+			      str = (char *) realloc (*strptr, strsize + 1);
+			      if (str == NULL)
+				{
+				  /* We lose.  Oh well.  Terminate the
+				     string and stop converting,
+				     so at least we don't skip any input.  */
+				  ((char *) (*strptr))[strsize - 1] = '\0';
+				  ++done;
+				  conv_error ();
+				}
+			      else
+				{
+				  *strptr = (char *) str;
+				  str += strsize;
+				  ++strsize;
+				}
+			    }
+			  else
+			    {
+			      *strptr = (char *) str;
+			      str += strsize;
+			      strsize *= 2;
+			    }
+			}
+		    }
+#endif
+		}
+	      while ((width <= 0 || --width > 0) && inchar () != EOF);
+
+	      if (!(flags & SUPPRESS))
+		{
+#ifdef COMPILE_WPRINTF
+		  /* We have to emit the code to get into the intial
+		     state.  */
+		  char buf[MB_LEN_MAX];
+		  size_t n = wcrtomb (buf, L'\0', &state);
+		  if (n > 0 && (flags & MALLOC)
+		      && str + n >= *strptr + strsize)
+		    {
+		      /* Enlarge the buffer.  */
+		      str = (char *) realloc (*strptr,
+					      (str + n + 1) - *strptr);
+		      if (str == NULL)
+			{
+			  /* We lose.  Oh well.  Terminate the string
+			     and stop converting, so at least we don't
+			     skip any input.  */
+			  ((char *) (*strptr))[strsize - 1] = '\0';
+			  ++done;
+			  conv_error ();
+			}
+		      else
+			{
+			  *strptr = (char *) str;
+			  str = ((char *) *strptr) + strsize;
+			  strsize = (str + n + 1) - *strptr;
+			}
+		    }
+
+		  str = __mempcpy (str, buf, n);
+#endif
+		  *str = '\0';
+
+		  if ((flags & MALLOC) && str - *strptr != strsize)
+		    {
+		      char *cp = (char *) realloc (*strptr, str - *strptr);
+		      if (cp != NULL)
+			*strptr = cp;
+		    }
+
+		  ++done;
+		}
+	      break;
+	    }
+	  /* FALLTHROUGH */
+
+	case L_('S'):
+	  {
+#ifndef COMPILE_WPRINTF
+	    mbstate_t cstate;
+#endif
+
+	    /* Wide character string.  */
+	    STRING_ARG (wstr, wchar_t);
+
+	    c = inchar ();
+	    if (c == EOF)
+	      input_error ();
+
+#ifndef COMPILE_WPRINTF
+	    memset (&cstate, '\0', sizeof (cstate));
+#endif
+
+	    do
+	      {
+		if (ISSPACE (c))
+		  {
+		    UNGETC (c, s);
+		    break;
+		  }
+
+#ifdef COMPILE_WPRINTF
+		/* This is easy.  */
+		if (!(flags & SUPPRESS))
+		  {
+		    *wstr++ = c;
+		    if ((flags & MALLOC)
+			&& wstr == (wchar_t *) *strptr + strsize)
+		      {
+			/* Enlarge the buffer.  */
+			wstr = (wchar_t *) realloc (*strptr,
+						    (2 * strsize)
+						    * sizeof (wchar_t));
+			if (wstr == NULL)
+			  {
+			    /* Can't allocate that much.  Last-ditch
+                               effort.  */
+			    wstr = (wchar_t *) realloc (*strptr,
+							(strsize
+							 + sizeof (wchar_t)));
+			    if (wstr == NULL)
+			      {
+				/* We lose.  Oh well.  Terminate the string
+				   and stop converting, so at least we don't
+				   skip any input.  */
+				((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				++done;
+				conv_error ();
+			      }
+			    else
+			      {
+				*strptr = (char *) wstr;
+				wstr += strsize;
+				++strsize;
+			      }
+			  }
+			else
+			  {
+			    *strptr = (char *) wstr;
+			    wstr += strsize;
+			    strsize *= 2;
+			  }
+		      }
+		  }
+#else
+		{
+		  char buf[MB_LEN_MAX];
+		  size_t cnt;
+
+		  buf[0] = c;
+		  cnt = 1;
+
+		  while (1)
+		    {
+		      size_t n;
+
+		      n = __mbrtowc (!(flags & SUPPRESS) ? wstr : NULL,
+				     buf, cnt, &cstate);
+
+		      if (n == (size_t) -2)
+			{
+			  /* Possibly correct character, just not enough
+			     input.  */
+			  assert (cnt < MB_CUR_MAX);
+
+			  if (inchar () == EOF)
+			    encode_error ();
+
+			  buf[cnt++] = c;
+			  continue;
+			}
+
+		      if (n != cnt)
+			encode_error ();
+
+		      /* We have a match.  */
+		      break;
+		    }
+
+		  if (!(flags & SUPPRESS) && (flags & MALLOC)
+		      && wstr == (wchar_t *) *strptr + strsize)
+		    {
+		      /* Enlarge the buffer.  */
+		      wstr = (wchar_t *) realloc (*strptr,
+						  (2 * strsize
+						   * sizeof (wchar_t)));
+		      if (wstr == NULL)
+			{
+			  /* Can't allocate that much.  Last-ditch effort.  */
+			  wstr = (wchar_t *) realloc (*strptr,
+						      ((strsize + 1)
+						       * sizeof (wchar_t)));
+			  if (wstr == NULL)
+			    {
+			      /* We lose.  Oh well.  Terminate the
+				 string and stop converting, so at
+				 least we don't skip any input.  */
+			      ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+			      ++done;
+			      conv_error ();
+			    }
+			  else
+			    {
+			      *strptr = (char *) wstr;
+			      wstr += strsize;
+			      ++strsize;
+			    }
+			}
+		      else
+			{
+			  *strptr = (char *) wstr;
+			  wstr += strsize;
+			  strsize *= 2;
+			}
+		    }
+		}
+#endif
+	      }
+	    while ((width <= 0 || --width > 0) && inchar () != EOF);
 
 	    if (!(flags & SUPPRESS))
 	      {
-		*wstr = L'\0';
+		*wstr++ = L'\0';
+
+		if ((flags & MALLOC) && wstr - (wchar_t *) *strptr != strsize)
+		  {
+		    wchar_t *cp = (wchar_t *) realloc (*strptr,
+						       ((wstr
+							 - (wchar_t *) *strptr)
+							* sizeof(wchar_t)));
+		    if (cp != NULL)
+		      *strptr = (char *) cp;
+		  }
+
 		++done;
 	      }
 	  }
 	  break;
 
-	case 'x':	/* Hexadecimal integer.  */
-	case 'X':	/* Ditto.  */
+	case L_('x'):	/* Hexadecimal integer.  */
+	case L_('X'):	/* Ditto.  */
 	  base = 16;
 	  number_signed = 0;
 	  goto number;
 
-	case 'o':	/* Octal integer.  */
+	case L_('o'):	/* Octal integer.  */
 	  base = 8;
 	  number_signed = 0;
 	  goto number;
 
-	case 'u':	/* Unsigned decimal integer.  */
+	case L_('u'):	/* Unsigned decimal integer.  */
 	  base = 10;
 	  number_signed = 0;
 	  goto number;
 
-	case 'd':	/* Signed decimal integer.  */
+	case L_('d'):	/* Signed decimal integer.  */
 	  base = 10;
 	  number_signed = 1;
 	  goto number;
 
-	case 'i':	/* Generic number.  */
+	case L_('i'):	/* Generic number.  */
 	  base = 0;
 	  number_signed = 1;
 
@@ -854,7 +1147,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    input_error ();
 
 	  /* Check for a sign.  */
-	  if (c == '-' || c == '+')
+	  if (c == L_('-') || c == L_('+'))
 	    {
 	      ADDW (c);
 	      if (width > 0)
@@ -863,7 +1156,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 
 	  /* Look for a leading indication of base.  */
-	  if (width != 0 && c == '0')
+	  if (width != 0 && c == L_('0'))
 	    {
 	      if (width > 0)
 		--width;
@@ -871,7 +1164,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      ADDW (c);
 	      c = inchar ();
 
-	      if (width != 0 && _tolower (c) == 'x')
+	      if (width != 0 && TOLOWER (c) == L_('x'))
 		{
 		  if (base == 0)
 		    base = 16;
@@ -892,8 +1185,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  /* Read the number into workspace.  */
 	  while (c != EOF && width != 0)
 	    {
-	      if (base == 16 ? !isxdigit (c) :
-		  ((!isdigit (c) || c - '0' >= base) &&
+	      if (base == 16 ? !ISXDIGIT (c) :
+		  ((!ISDIGIT (c) || c - L_('0') >= base) &&
 		   !((flags & GROUP) && base == 10 && c == thousands)))
 		break;
 	      ADDW (c);
@@ -904,34 +1197,34 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 
 	  if (wpsize == 0 ||
-	      (wpsize == 1 && (wp[0] == '+' || wp[0] == '-')))
+	      (wpsize == 1 && (wp[0] == L_('+') || wp[0] == L_('-'))))
 	    {
 	      /* There was no number.  If we are supposed to read a pointer
 		 we must recognize "(nil)" as well.  */
 	      if (wpsize == 0 && read_pointer && (width < 0 || width >= 0)
 		  && c == '('
-		  && _tolower (inchar ()) == 'n'
-		  && _tolower (inchar ()) == 'i'
-		  && _tolower (inchar ()) == 'l'
-		  && inchar () == ')')
+		  && TOLOWER (inchar ()) == L_('n')
+		  && TOLOWER (inchar ()) == L_('i')
+		  && TOLOWER (inchar ()) == L_('l')
+		  && inchar () == L_(')'))
 		/* We must produce the value of a NULL pointer.  A single
 		   '0' digit is enough.  */
-		ADDW ('0');
+		ADDW (L_('0'));
 	      else
 		{
 		  /* The last read character is not part of the number
 		     anymore.  */
-		  ungetc (c, s);
+		  UNGETC (c, s);
 
 		  conv_error ();
 		}
 	    }
 	  else
 	    /* The just read character is not part of the number anymore.  */
-	    ungetc (c, s);
+	    UNGETC (c, s);
 
 	  /* Convert the number.  */
-	  ADDW ('\0');
+	  ADDW (L_('\0'));
 	  if (need_longlong && (flags & LONGDBL))
 	    {
 	      if (number_signed)
@@ -982,28 +1275,28 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    }
 	  break;
 
-	case 'e':	/* Floating-point numbers.  */
-	case 'E':
-	case 'f':
-	case 'g':
-	case 'G':
-	case 'a':
-	case 'A':
+	case L_('e'):	/* Floating-point numbers.  */
+	case L_('E'):
+	case L_('f'):
+	case L_('g'):
+	case L_('G'):
+	case L_('a'):
+	case L_('A'):
 	  c = inchar ();
 	  if (c == EOF)
 	    input_error ();
 
 	  /* Check for a sign.  */
-	  if (c == '-' || c == '+')
+	  if (c == L_('-') || c == L_('+'))
 	    {
-	      negative = c == '-';
+	      negative = c == L_('-');
 	      if (inchar () == EOF)
 		/* EOF is only an input error before we read any chars.  */
 		conv_error ();
-	      if (! isdigit (c) && c != decimal)
+	      if (! ISDIGIT (c) && c != decimal)
 		{
 		  /* This is no valid number.  */
-		  ungetc (c, s);
+		  UNGETC (c, s);
 		  input_error ();
 		}
 	      if (width > 0)
@@ -1013,69 +1306,69 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    negative = 0;
 
 	  /* Take care for the special arguments "nan" and "inf".  */
-	  if (_tolower (c) == 'n')
+	  if (TOLOWER (c) == L_('n'))
 	    {
 	      /* Maybe "nan".  */
 	      ADDW (c);
-	      if (inchar () == EOF || _tolower (c) != 'a')
+	      if (inchar () == EOF || TOLOWER (c) != L_('a'))
 		input_error ();
 	      ADDW (c);
-	      if (inchar () == EOF || _tolower (c) != 'n')
+	      if (inchar () == EOF || TOLOWER (c) != L_('n'))
 		input_error ();
 	      ADDW (c);
 	      /* It is "nan".  */
 	      goto scan_float;
 	    }
-	  else if (_tolower (c) == 'i')
+	  else if (TOLOWER (c) == L_('i'))
 	    {
 	      /* Maybe "inf" or "infinity".  */
 	      ADDW (c);
-	      if (inchar () == EOF || _tolower (c) != 'n')
+	      if (inchar () == EOF || TOLOWER (c) != L_('n'))
 		input_error ();
 	      ADDW (c);
-	      if (inchar () == EOF || _tolower (c) != 'f')
+	      if (inchar () == EOF || TOLOWER (c) != L_('f'))
 		input_error ();
 	      ADDW (c);
 	      /* It is as least "inf".  */
 	      if (inchar () != EOF)
 		{
-		  if (_tolower (c) == 'i')
+		  if (TOLOWER (c) == L_('i'))
 		    {
 		      /* Now we have to read the rest as well.  */
 		      ADDW (c);
-		      if (inchar () == EOF || _tolower (c) != 'n')
+		      if (inchar () == EOF || TOLOWER (c) != L_('n'))
 			input_error ();
 		      ADDW (c);
-		      if (inchar () == EOF || _tolower (c) != 'i')
+		      if (inchar () == EOF || TOLOWER (c) != L_('i'))
 			input_error ();
 		      ADDW (c);
-		      if (inchar () == EOF || _tolower (c) != 't')
+		      if (inchar () == EOF || TOLOWER (c) != L_('t'))
 			input_error ();
 		      ADDW (c);
-		      if (inchar () == EOF || _tolower (c) != 'y')
+		      if (inchar () == EOF || TOLOWER (c) != L_('y'))
 			input_error ();
 		      ADDW (c);
 		    }
 		  else
 		    /* Never mind.  */
-		    ungetc (c, s);
+		    UNGETC (c, s);
 		}
 	      goto scan_float;
 	    }
 
 	  is_hexa = 0;
-	  exp_char = 'e';
-	  if (c == '0')
+	  exp_char = L_('e');
+	  if (c == L_('0'))
 	    {
 	      ADDW (c);
 	      c = inchar ();
-	      if (_tolower (c) == 'x')
+	      if (TOLOWER (c) == L_('x'))
 		{
 		  /* It is a number in hexadecimal format.  */
 		  ADDW (c);
 
 		  is_hexa = 1;
-		  exp_char = 'p';
+		  exp_char = L_('p');
 
 		  /* Grouping is not allowed.  */
 		  flags &= ~GROUP;
@@ -1086,14 +1379,14 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  got_dot = got_e = 0;
 	  do
 	    {
-	      if (isdigit (c))
+	      if (ISDIGIT (c))
 		ADDW (c);
-	      else if (!got_e && is_hexa && isxdigit (c))
+	      else if (!got_e && is_hexa && ISXDIGIT (c))
 		ADDW (c);
 	      else if (got_e && wp[wpsize - 1] == exp_char
-		       && (c == '-' || c == '+'))
+		       && (c == L_('-') || c == L_('+')))
 		ADDW (c);
-	      else if (wpsize > 0 && !got_e && _tolower (c) == exp_char)
+	      else if (wpsize > 0 && !got_e && TOLOWER (c) == exp_char)
 		{
 		  ADDW (exp_char);
 		  got_e = got_dot = 1;
@@ -1109,7 +1402,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		{
 		  /* The last read character is not part of the number
 		     anymore.  */
-		  ungetc (c, s);
+		  UNGETC (c, s);
 		  break;
 		}
 	      if (width > 0)
@@ -1125,7 +1418,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	scan_float:
 	  /* Convert the number.  */
-	  ADDW ('\0');
+	  ADDW (L_('\0'));
 	  if (flags & LONGDBL)
 	    {
 	      long double d = __strtold_internal (wp, &tw, flags & GROUP);
@@ -1152,22 +1445,13 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    ++done;
 	  break;
 
-	case '[':	/* Character class.  */
+	case L_('['):	/* Character class.  */
 	  if (flags & LONG)
-	    {
-	      STRING_ARG (wstr, wchar_t);
-	      c = '\0';		/* This is to keep gcc quiet.  */
-	    }
+	    STRING_ARG (wstr, wchar_t);
 	  else
-	    {
-	      STRING_ARG (str, char);
+	    STRING_ARG (str, char);
 
-	      c = inchar ();
-	      if (c == EOF)
-		input_error ();
-	    }
-
-	  if (*f == '^')
+	  if (*f == L_('^'))
 	    {
 	      ++f;
 	      not_in = 1;
@@ -1175,6 +1459,29 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    not_in = 0;
 
+	  if (width < 0)
+	    /* There is no width given so there is also no limit on the
+	       number of characters we read.  Therefore we set width to
+	       a very high value to make the algorithm easier.  */
+	    width = INT_MAX;
+
+#ifdef COMPILE_WPRINTF
+	  /* Find the beginning and the end of the scanlist.  We are not
+	     creating a lookup table since it would have to be too large.
+	     Instead we search each time through the string.  This is not
+	     a constant lookup time but who uses this feature deserves to
+	     be punished.  */
+	  tw = (wchar_t *) f;	/* Marks the beginning.  */
+
+	  if (*f == ']' || *f == '-')
+	    ++f;
+
+	  while ((fc = *f++) != L'\0' && fc != L']');
+
+	  if (fc == L'\0')
+	    conv_error ();
+	  wp = (wchar_t *) f - 1;
+#else
 	  /* Fill WP with byte flags indexed by character.
 	     We will use this flag map for matching input characters.  */
 	  if (wpmax < UCHAR_MAX)
@@ -1182,7 +1489,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      wpmax = UCHAR_MAX;
 	      wp = (char *) alloca (wpmax);
 	    }
-	  memset (wp, 0, UCHAR_MAX);
+	  memset (wp, '\0', UCHAR_MAX);
 
 	  fc = *f;
 	  if (fc == ']' || fc == '-')
@@ -1194,85 +1501,433 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      ++f;
 	    }
 
+	  tw = (char *) f;
 	  while ((fc = *f++) != '\0' && fc != ']')
-	    {
-	      if (fc == '-' && *f != '\0' && *f != ']' &&
-		  (unsigned char) f[-2] <= (unsigned char) *f)
-		{
-		  /* Add all characters from the one before the '-'
-		     up to (but not including) the next format char.  */
-		  for (fc = f[-2]; fc < *f; ++fc)
-		    wp[fc] = 1;
-		}
-	      else
-		/* Add the character to the flag map.  */
-		wp[fc] = 1;
-	    }
+	    if (fc == '-' && *f != '\0' && *f != ']' && f - 2 != tw
+		&& (unsigned char) f[-2] <= (unsigned char) *f)
+	      {
+		/* Add all characters from the one before the '-'
+		   up to (but not including) the next format char.  */
+		for (fc = f[-2]; fc < *f; ++fc)
+		  wp[fc] = 1;
+	      }
+	    else
+	      /* Add the character to the flag map.  */
+	      wp[fc] = 1;
+
 	  if (fc == '\0')
-	    {
-	      if (!(flags & LONG))
-		ungetc (c, s);
-	      conv_error();
-	    }
+	    conv_error();
+#endif
 
 	  if (flags & LONG)
 	    {
-	      wint_t val;
-	      int first = 1;
-
+	      size_t now = read_in;
+#ifdef COMPILE_WPRINTF
 	      do
 		{
-		  size_t cnt = 0;
-		  NEXT_WIDE_CHAR (first);
-		  if (val <= 255 && wp[val] == not_in)
+		  wchar_t *runp;
+
+		  if (inchar () == WEOF)
+		    break;
+
+		  /* Test whether it's in the scanlist.  */
+		  runp = tw;
+		  while (runp < wp)
 		    {
-		      ungetc (val, s);
-		      break;
+		      if (runp[0] == L'-' && runp[1] != '\0' && runp[1] != ']'
+			  && runp != tw
+			  && (unsigned int) runp[-1] <= (unsigned int) runp[1])
+			{
+			  /* Match against all characters in between the
+			     first and last character of the sequence.  */
+			  wchar_t wc;
+
+			  for (wc = runp[-1] + 1; wc < runp[1]; ++wc)
+			    if (wc == c)
+			      break;
+
+			  if (wc == runp[1] && !not_in)
+			    break;
+			  if (wc == runp[1] && not_in)
+			    {
+			      /* The current character is not in the
+                                 scanset.  */
+			      ungetwc (c, s);
+			      goto out;
+			    }
+			}
+		      else
+			{
+			  if (*runp == runp[1] && !not_in)
+			    break;
+			  if (*runp != runp[1] && not_in)
+			    {
+			      ungetwc (c ,s);
+			      goto out;
+			    }
+			}
+
+		      ++runp;
 		    }
-		  STRING_ADD_CHAR (wstr, val, wchar_t);
-		  if (width > 0)
-		    --width;
-		  first = 0;
-		}
-	      while (width != 0);
 
-	      if (first)
-		conv_error ();
+		  if (!(flags & SUPPRESS))
+		    {
+		      *wstr++ = c;
 
-	      if (!(flags & SUPPRESS))
-		{
-		  *wstr = L'\0';
-		  ++done;
+		      if ((flags & MALLOC)
+			  && wstr == (wchar_t *) *strptr + strsize)
+			{
+			  /* Enlarge the buffer.  */
+			  wstr = (wchar_t *) realloc (*strptr,
+						      (2 * strsize)
+						      * sizeof (wchar_t));
+			  if (wstr == NULL)
+			    {
+			      /* Can't allocate that much.  Last-ditch
+				 effort.  */
+			      wstr = (wchar_t *)
+				realloc (*strptr, (strsize
+						   + sizeof (wchar_t)));
+			      if (wstr == NULL)
+				{
+				  /* We lose.  Oh well.  Terminate the string
+				     and stop converting, so at least we don't
+				     skip any input.  */
+				  ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				  ++done;
+				  conv_error ();
+				}
+			      else
+				{
+				  *strptr = (char *) wstr;
+				  wstr += strsize;
+				  ++strsize;
+				}
+			    }
+			  else
+			    {
+			      *strptr = (char *) wstr;
+			      wstr += strsize;
+			      strsize *= 2;
+			    }
+			}
+		    }
 		}
-	    }
-	  else
-	    {
-	      num.ul = read_in - 1; /* -1 because we already read one char.  */
+	      while (--width > 0);
+	    out:
+#else
+	      char buf[MB_LEN_MAX];
+	      size_t cnt = 0;
+	      mbstate_t cstate;
+
+	      memset (&cstate, '\0', sizeof (cstate));
+
 	      do
 		{
+		again:
+		  if (inchar () == EOF)
+		    break;
+
 		  if (wp[c] == not_in)
 		    {
 		      ungetc (c, s);
 		      break;
 		    }
-		  STRING_ADD_CHAR (str, c, char);
-		  if (width > 0)
-		    --width;
-		}
-	      while (width != 0 && inchar () != EOF);
 
-	      if (read_in == num.ul)
+		  /* This is easy.  */
+		  if (!(flags & SUPPRESS))
+		    {
+		      size_t n;
+
+		      /* Convert it into a wide character.  */
+		      n = __mbrtowc (wstr, buf, cnt, &cstate);
+
+		      if (n == (size_t) -2)
+			{
+			  /* Possibly correct character, just not enough
+			     input.  */
+			  assert (cnt < MB_CUR_MAX);
+			  goto again;
+			}
+
+		      if (n != cnt)
+			encode_error ();
+
+		      ++wstr;
+		      if ((flags & MALLOC)
+			  && wstr == (wchar_t *) *strptr + strsize)
+			{
+			  /* Enlarge the buffer.  */
+			  wstr = (wchar_t *) realloc (*strptr,
+						      (2 * strsize
+						       * sizeof (wchar_t)));
+			  if (wstr == NULL)
+			    {
+			      /* Can't allocate that much.  Last-ditch
+				 effort.  */
+			      wstr = (wchar_t *)
+				realloc (*strptr, ((strsize + 1)
+						   * sizeof (wchar_t)));
+			      if (wstr == NULL)
+				{
+				  /* We lose.  Oh well.  Terminate the
+				     string and stop converting,
+				     so at least we don't skip any input.  */
+				  ((wchar_t *) (*strptr))[strsize - 1] = L'\0';
+				  ++done;
+				  conv_error ();
+				}
+			      else
+				{
+				  *strptr = (char *) wstr;
+				  wstr += strsize;
+				  ++strsize;
+				}
+			    }
+			  else
+			    {
+			      *strptr = (char *) wstr;
+			      wstr += strsize;
+			      strsize *= 2;
+			    }
+			}
+		    }
+		}
+	      while (--width > 0);
+
+	      if (cnt != 0)
+		/* We stopped in the middle of recognizing another
+		   character.  That's a problem.  */
+		encode_error ();
+#endif
+
+	      if (now == read_in)
+		/* We haven't succesfully read any character.  */
 		conv_error ();
 
 	      if (!(flags & SUPPRESS))
 		{
+		  *wstr++ = L'\0';
+
+		  if ((flags & MALLOC)
+		      && wstr - (wchar_t *) *strptr != strsize)
+		    {
+		      wchar_t *cp = (wchar_t *)
+			realloc (*strptr, ((wstr - (wchar_t *) *strptr)
+					   * sizeof(wchar_t)));
+		      if (cp != NULL)
+			*strptr = (char *) cp;
+		    }
+
+		  ++done;
+		}
+	    }
+	  else
+	    {
+	      size_t now = read_in;
+#ifdef COMPILE_WPRINTF
+
+	      memset (&state, '\0', sizeof (state));
+
+	      do
+		{
+		  wchar_t *runp;
+		  size_t n;
+
+		  if (inchar () == WEOF)
+		    break;
+
+		  /* Test whether it's in the scanlist.  */
+		  runp = tw;
+		  while (runp < wp)
+		    {
+		      if (runp[0] == L'-' && runp[1] != '\0' && runp[1] != ']'
+			  && runp != tw
+			  && (unsigned int) runp[-1] <= (unsigned int) runp[1])
+			{
+			  /* Match against all characters in between the
+			     first and last character of the sequence.  */
+			  wchar_t wc;
+
+			  for (wc = runp[-1] + 1; wc < runp[1]; ++wc)
+			    if (wc == c)
+			      break;
+
+			  if (wc == runp[1] && !not_in)
+			    break;
+			  if (wc == runp[1] && not_in)
+			    {
+			      /* The current character is not in the
+                                 scanset.  */
+			      ungetwc (c, s);
+			      goto out2;
+			    }
+			}
+		      else
+			{
+			  if (*runp == runp[1] && !not_in)
+			    break;
+			  if (*runp != runp[1] && not_in)
+			    {
+			      ungetwc (c ,s);
+			      goto out2;
+			    }
+			}
+
+		      ++runp;
+		    }
+
+		  if (!(flags & SUPPRESS))
+		    {
+		      if ((flags & MALLOC)
+			  && str + MB_CUR_MAX >= *strptr + strsize)
+			{
+			  /* Enlarge the buffer.  */
+			  str = (char *) realloc (*strptr, 2 * strsize);
+			  if (str == NULL)
+			    {
+			      /* Can't allocate that much.  Last-ditch
+				 effort.  */
+			      str = (char *) realloc (*strptr, strsize + 1);
+			      if (str == NULL)
+				{
+				  /* We lose.  Oh well.  Terminate the string
+				     and stop converting, so at least we don't
+				     skip any input.  */
+				  (*strptr)[strsize - 1] = '\0';
+				  ++done;
+				  conv_error ();
+				}
+			      else
+				{
+				  *strptr = str;
+				  str += strsize;
+				  ++strsize;
+				}
+			    }
+			  else
+			    {
+			      *strptr = str;
+			      str += strsize;
+			      strsize *= 2;
+			    }
+			}
+		    }
+
+		  n = wcrtomb (!(flags & SUPPRESS) ? str : NULL, c, &state);
+		  if (n == (size_t) -1)
+		    encode_error ();
+
+		  assert (n <= MB_CUR_MAX);
+		  str += n;
+		}
+	      while (--width > 0);
+	    out2:
+#else
+	      do
+		{
+		  if (inchar () == EOF)
+		    break;
+
+		  if (wp[c] == not_in)
+		    {
+		      ungetc (c, s);
+		      break;
+		    }
+
+		  /* This is easy.  */
+		  if (!(flags & SUPPRESS))
+		    {
+		      *str++ = c;
+		      if ((flags & MALLOC)
+			  && (char *) str == *strptr + strsize)
+			{
+			  /* Enlarge the buffer.  */
+			  str = (char *) realloc (*strptr, 2 * strsize);
+			  if (str == NULL)
+			    {
+			      /* Can't allocate that much.  Last-ditch
+				 effort.  */
+			      str = (char *) realloc (*strptr, strsize + 1);
+			      if (str == NULL)
+				{
+				  /* We lose.  Oh well.  Terminate the
+				     string and stop converting,
+				     so at least we don't skip any input.  */
+				  ((char *) (*strptr))[strsize - 1] = '\0';
+				  ++done;
+				  conv_error ();
+				}
+			      else
+				{
+				  *strptr = (char *) str;
+				  str += strsize;
+				  ++strsize;
+				}
+			    }
+			  else
+			    {
+			      *strptr = (char *) str;
+			      str += strsize;
+			      strsize *= 2;
+			    }
+			}
+		    }
+		}
+	      while (--width > 0);
+#endif
+
+	      if (now == read_in)
+		/* We haven't succesfully read any character.  */
+		conv_error ();
+
+	      if (!(flags & SUPPRESS))
+		{
+#ifdef COMPILE_WPRINTF
+		  /* We have to emit the code to get into the intial
+		     state.  */
+		  char buf[MB_LEN_MAX];
+		  size_t n = wcrtomb (buf, L'\0', &state);
+		  if (n > 0 && (flags & MALLOC)
+		      && str + n >= *strptr + strsize)
+		    {
+		      /* Enlarge the buffer.  */
+		      str = (char *) realloc (*strptr,
+					      (str + n + 1) - *strptr);
+		      if (str == NULL)
+			{
+			  /* We lose.  Oh well.  Terminate the string
+			     and stop converting, so at least we don't
+			     skip any input.  */
+			  ((char *) (*strptr))[strsize - 1] = '\0';
+			  ++done;
+			  conv_error ();
+			}
+		      else
+			{
+			  *strptr = (char *) str;
+			  str = ((char *) *strptr) + strsize;
+			  strsize = (str + n + 1) - *strptr;
+			}
+		    }
+
+		  str = __mempcpy (str, buf, n);
+#endif
 		  *str = '\0';
+
+		  if ((flags & MALLOC) && str - *strptr != strsize)
+		    {
+		      char *cp = (char *) realloc (*strptr, str - *strptr);
+		      if (cp != NULL)
+			*strptr = cp;
+		    }
+
 		  ++done;
 		}
 	    }
 	  break;
 
-	case 'p':	/* Generic pointer.  */
+	case L_('p'):	/* Generic pointer.  */
 	  base = 16;
 	  /* A PTR must be the same size as a `long int'.  */
 	  flags &= ~(SHORT|LONGDBL);
@@ -1305,11 +1960,23 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 }
 
 #ifdef USE_IN_LIBIO
+# ifdef COMPILE_WPRINTF
+int
+__vfwscanf (FILE *s, const wchar_t *format, va_list argptr)
+{
+  return _IO_vfwscanf (s, format, argptr, NULL);
+}
+# else
 int
 __vfscanf (FILE *s, const char *format, va_list argptr)
 {
   return _IO_vfscanf (s, format, argptr, NULL);
 }
+# endif
 #endif
 
+#ifdef COMPILE_WPRINTF
+weak_alias (__vfwscanf, vfwscanf)
+#else
 weak_alias (__vfscanf, vfscanf)
+#endif

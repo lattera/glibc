@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 #include <errno.h>
 
 int
-_IO_fsetpos (fp, posp)
+_IO_new_fsetpos (fp, posp)
      _IO_FILE *fp;
      const _IO_fpos_t *posp;
 {
@@ -35,7 +35,7 @@ _IO_fsetpos (fp, posp)
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
-  if (_IO_seekpos (fp, *posp, _IOS_INPUT|_IOS_OUTPUT) == _IO_pos_BAD)
+  if (_IO_seekpos (fp, posp->__pos, _IOS_INPUT|_IOS_OUTPUT) == _IO_pos_BAD)
     {
       /* ANSI explicitly requires setting errno to a positive value on
 	 failure.  */
@@ -46,12 +46,20 @@ _IO_fsetpos (fp, posp)
       result = EOF;
     }
   else
-    result = 0;
+    {
+      result = 0;
+      if (fp->_mode > 0
+	  && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
+	/* This is a stateful encoding, restore the state.  */
+	fp->_wide_data->_IO_state = posp->__state;
+    }
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   return result;
 }
 
 #ifdef weak_alias
-weak_alias (_IO_fsetpos, fsetpos)
+default_symbol_version (_IO_new_fsetpos, _IO_fsetpos, GLIBC_2.2);
+strong_alias (_IO_new_fsetpos, __new_fsetpos)
+default_symbol_version (__new_fsetpos, fsetpos, GLIBC_2.2);
 #endif

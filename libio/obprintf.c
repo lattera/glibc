@@ -127,11 +127,11 @@ _IO_obstack_vprintf (struct obstack *obstack, const char *format, va_list args)
   new_f.ofile.file.file._lock = &new_f.lock;
 #endif
 
-  _IO_init (&new_f.ofile.file.file, 0);
-  _IO_JUMPS (&new_f.ofile.file.file) = &_IO_obstack_jumps;
+  _IO_no_init (&new_f.ofile.file.file, 0, -1, NULL, NULL);
+  _IO_JUMPS (&new_f.ofile.file) = &_IO_obstack_jumps;
   _IO_str_init_static (&new_f.ofile.file.file, obstack_base (obstack),
-		       obstack_object_size (obstack) + obstack_room (obstack),
-		       obstack_next_free (obstack));
+		       (obstack_object_size (obstack) +
+			obstack_room (obstack)), obstack_next_free (obstack));
   /* Now allocate the rest of the current chunk.  */
   obstack_blank_fast (obstack,
 		      (new_f.ofile.file.file._IO_write_end

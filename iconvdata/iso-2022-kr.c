@@ -44,12 +44,13 @@
 #define MAX_NEEDED_TO		4
 #define PREPARE_LOOP \
   int save_set;								      \
-  int *setp = &data->statep->count;					      \
-  if (!FROM_DIRECTION && !data->internal_use && data->invocation_counter == 0)\
+  int *setp = &data->__statep->count;					      \
+  if (!FROM_DIRECTION && !data->__internal_use				      \
+      && data->__invocation_counter == 0)				      \
     {									      \
       /* Emit the designator sequence.  */				      \
       if (outbuf + 4 > outend)						      \
-	return GCONV_FULL_OUTPUT;					      \
+	return __GCONV_FULL_OUTPUT;					      \
 									      \
       *outbuf++ = ESC;							      \
       *outbuf++ = '$';							      \
@@ -72,27 +73,27 @@ enum
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->statep->count != ASCII_set)					      \
+  if (data->__statep->count != ASCII_set)				      \
     {									      \
       if (FROM_DIRECTION)						      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  */					      \
-	data->statep->count = ASCII_set;				      \
+	data->__statep->count = ASCII_set;				      \
       else								      \
 	{								      \
-	  unsigned char *outbuf = data->outbuf;				      \
+	  unsigned char *outbuf = data->__outbuf;			      \
 	  								      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit `SI'.  */						      \
-	  if (outbuf == data->outbufend)				      \
+	  if (outbuf == data->__outbufend)				      \
 	    /* We don't have enough room in the output buffer.  */	      \
-	    status = GCONV_FULL_OUTPUT;					      \
+	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = SI;						      \
-	      data->outbuf = outbuf;					      \
-	      data->statep->count = ASCII_set;				      \
+	      data->__outbuf = outbuf;					      \
+	      data->__statep->count = ASCII_set;			      \
 	    }								      \
 	}								      \
     }
@@ -119,7 +120,7 @@ enum
     /* This is a 7bit character set, disallow all 8bit characters.  */	      \
     if (ch > 0x7f)							      \
       {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -136,7 +137,7 @@ enum
 		    || (inptr[2] == ')' && inptr + 3 > inend))))	      \
 									      \
 	  {								      \
-	    result = GCONV_EMPTY_INPUT;					      \
+	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
 	if (inptr[1] == '$' && inptr[2] == ')' && inptr[3] == 'C')	      \
@@ -165,7 +166,7 @@ enum
       {									      \
 	if (ch >= 0x80)							      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	/* Almost done, just advance the input pointer.  */		      \
@@ -181,12 +182,12 @@ enum
 									      \
 	if (NEED_LENGTH_TEST && ch == 0)				      \
 	  {								      \
-	    result = GCONV_EMPTY_INPUT;					      \
+	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (ch == UNKNOWN_10646_CHAR)				      \
+	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -221,7 +222,7 @@ enum
 	    set = ASCII_set;						      \
 	    if (NEED_LENGTH_TEST && outptr == outend)			      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
@@ -235,10 +236,10 @@ enum
 									      \
 	written = ucs4_to_ksc5601 (ch, buf, 2);				      \
 									      \
-	if (written == UNKNOWN_10646_CHAR)				      \
+	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	assert (written == 2);						      \
@@ -252,7 +253,7 @@ enum
 									      \
 	if (NEED_LENGTH_TEST && outptr + 2 > outend)			      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \

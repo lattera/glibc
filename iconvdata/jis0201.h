@@ -1,5 +1,5 @@
 /* Access functions for JISX0201 conversion.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -31,7 +31,7 @@ jisx0201_to_ucs4 (char ch)
   uint32_t val = __jisx0201_to_ucs4[(unsigned char) ch];
 
   if (val == 0 && ch != '\0')
-    val = UNKNOWN_10646_CHAR;
+    val = __UNKNOWN_10646_CHAR;
 
   return val;
 }
@@ -51,7 +51,7 @@ ucs4_to_jisx0201 (uint32_t wch, char *s)
   else if (wch >= 0xff61 && wch <= 0xff9f)
     ch = wch - 0xfec0;
   else
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   s[0] = ch;
   return 1;

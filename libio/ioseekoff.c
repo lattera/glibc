@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -24,27 +24,27 @@
    General Public License.  */
 
 #include <libioP.h>
-#include <errno.h> 
-#ifndef errno 
-extern int errno; 
-#endif 
-#ifndef __set_errno 
-# define __set_errno(Val) errno = (Val)  
-#endif 
+#include <errno.h>
+#ifndef errno
+extern int errno;
+#endif
+#ifndef __set_errno
+# define __set_errno(Val) errno = (Val)
+#endif
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_fpos64_t retval;
+  _IO_off64_t retval;
 
-  if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end) 
-    { 
-      __set_errno (EINVAL); 
-      return EOF; 
+  if (dir != _IO_seek_cur && dir != _IO_seek_set && dir != _IO_seek_end)
+    {
+      __set_errno (EINVAL);
+      return EOF;
     }
 
   /* If we have a backup buffer, get rid of it, since the __seekoff

@@ -41,7 +41,7 @@ struct gconv_alias
 /* Structure describing one loaded shared object.  This normally are
    objects to perform conversation but as a special case the db shared
    object is also handled.  */
-struct gconv_loaded_object
+struct __gconv_loaded_object
 {
   /* Name of the object.  */
   const char *name;
@@ -54,9 +54,9 @@ struct gconv_loaded_object
   struct link_map *handle;
 
   /* Pointer to the functions the module defines.  */
-  gconv_fct fct;
-  gconv_init_fct init_fct;
-  gconv_end_fct end_fct;
+  __gconv_fct fct;
+  __gconv_init_fct init_fct;
+  __gconv_end_fct end_fct;
 };
 
 
@@ -95,18 +95,18 @@ extern struct gconv_module *__gconv_modules_db;
 
 /* Return in *HANDLE decriptor for transformation from FROMSET to TOSET.  */
 extern int __gconv_open (const char *__toset, const char *__fromset,
-			 gconv_t *__handle)
+			 __gconv_t *__handle)
      internal_function;
 
 /* Free resources associated with transformation descriptor CD.  */
-extern int __gconv_close (gconv_t cd)
+extern int __gconv_close (__gconv_t cd)
      internal_function;
 
 /* Transform at most *INBYTESLEFT bytes from buffer starting at *INBUF
    according to rules described by CD and place up to *OUTBYTESLEFT
    bytes in buffer starting at *OUTBUF.  Return number of written
    characters in *CONVERTED if this pointer is not null.  */
-extern int __gconv (gconv_t __cd, const unsigned char **__inbuf,
+extern int __gconv (__gconv_t __cd, const unsigned char **__inbuf,
 		    const unsigned char *inbufend, unsigned char **__outbuf,
 		    unsigned char *outbufend, size_t *converted)
      internal_function;
@@ -114,7 +114,7 @@ extern int __gconv (gconv_t __cd, const unsigned char **__inbuf,
 /* Return in *HANDLE a pointer to an array with *NSTEPS elements describing
    the single steps necessary for transformation from FROMSET to TOSET.  */
 extern int __gconv_find_transform (const char *__toset, const char *__fromset,
-				   struct gconv_step **__handle,
+				   struct __gconv_step **__handle,
 				   size_t *__nsteps)
      internal_function;
 
@@ -126,13 +126,13 @@ extern int __gconv_alias_compare (const void *__p1, const void *__p2);
 
 /* Clear reference to transformation step implementations which might
    cause the code to be unloaded.  */
-extern int __gconv_close_transform (struct gconv_step *__steps,
+extern int __gconv_close_transform (struct __gconv_step *__steps,
 				    size_t __nsteps)
      internal_function;
 
 /* Load shared object named by NAME.  If already loaded increment reference
    count.  */
-extern struct gconv_loaded_object *__gconv_find_shlib (const char *__name)
+extern struct __gconv_loaded_object *__gconv_find_shlib (const char *__name)
      internal_function;
 
 /* Find function named NAME in shared object referenced by HANDLE.  */
@@ -141,12 +141,12 @@ void *__gconv_find_func (void *handle, const char *name)
 
 /* Release shared object.  If no further reference is available unload
    the object.  */
-extern int __gconv_release_shlib (struct gconv_loaded_object *__handle)
+extern int __gconv_release_shlib (struct __gconv_loaded_object *__handle)
      internal_function;
 
 /* Fill STEP with information about builtin module with NAME.  */
 extern void __gconv_get_builtin_trans (const char *__name,
-				       struct gconv_step *__step)
+				       struct __gconv_step *__step)
      internal_function;
 
 
@@ -154,7 +154,8 @@ extern void __gconv_get_builtin_trans (const char *__name,
 /* Builtin transformations.  */
 #ifdef _LIBC
 # define __BUILTIN_TRANS(Name) \
-  extern int Name (struct gconv_step *__step, struct gconv_step_data *__data, \
+  extern int Name (struct __gconv_step *__step,				      \
+		   struct __gconv_step_data *__data,			      \
 		   const unsigned char **__inbuf,			      \
 		   const unsigned char *__inbufend, size_t *__written,	      \
 		   int __do_flush)

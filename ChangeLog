@@ -1,5 +1,237 @@
 1999-06-16  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Versions.def: Add GLIBC_2.2 for libc.
+
+	* iconv/gconv.h: Make header suitable for inclusion in public header
+	by protecting all names with __.
+	* iconv/gconv.c: Adapt for symbol name changes.
+	* iconv/gconv.h: Likewise.
+	* iconv/gconv_builtin.c: Likewise.
+	* iconv/gconv_close.c: Likewise.
+	* iconv/gconv_db.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* iconv/gconv_int.h: Likewise.
+	* iconv/gconv_open.c: Likewise.
+	* iconv/gconv_simple.c: Likewise.
+	* iconv/iconv.c: Likewise.
+	* iconv/iconv_close.c: Likewise.
+	* iconv/iconv_open.c: Likewise.
+	* iconv/loop.c: Likewise.
+	* iconv/skeleton.c: Likewise.
+	* iconvdata/8bit-gap.c: Likewise.
+	* iconvdata/8bit-generic.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Likewise.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/cns11643.h: Likewise.
+	* iconvdata/cns11643l1.h: Likewise.
+	* iconvdata/euc-cn.c: Likewise.
+	* iconvdata/euc-jp.c: Likewise.
+	* iconvdata/euc-kr.c: Likewise.
+	* iconvdata/euc-tw.c: Likewise.
+	* iconvdata/gb2312.h: Likewise.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/iso646.c: Likewise.
+	* iconvdata/iso8859-1.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/jis0201.h: Likewise.
+	* iconvdata/jis0208.h: Likewise.
+	* iconvdata/jis0212.h: Likewise.
+	* iconvdata/johab.c: Likewise.
+	* iconvdata/ksc5601.h: Likewise.
+	* iconvdata/sjis.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/uhc.c: Likewise.
+	* stdlib/mblen.c: Likewise.
+	* stdlib/mbtowc.c: Likewise.
+	* stdlib/wctomb.c: Likewise.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsmbsload.c: Likewise.
+	* wcsmbs/wcsmbsload.h: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
+	* include/limits.h (MB_LEN_MAX): Increase to 16.
+
+	* sysdeps/generic/_G_config.h: Define _G_fpos_t as struct.  Define
+	_G_iconv_t.
+	* sysdeps/unix/sysv/linux/_G_config.h: Likewise.
+	* include/wchar.h: Change mbstate_t to __mbstate_t.
+
+	* libio/Makefile (routines): Add wfiledoalloc, oldiofgetpos,
+	oldiofgetpos64, oldiofsetpos, oldiofsetpos64, fputwc, fputwc_u,
+	getwc, getwc_u, getwchar, getwchar_u, iofgetws, iofgetws_u,
+	iofputws, iofputws_u, iogetwline, iowpadn, ioungetwc, putwc, putwc_u,
+	putchar, putchar_u, swprintf, vwprintf, wprintf, wscanf, fwscanf,
+	vwscanf, vswprintf, iovswscanf, swscanf, wgenops, wstrops, wfileops,
+	and iofwide.
+	(tests): Add tst_swprintf, tst_wprintf, tst_swscanf, and tst_wscanf.
+	* libio/Versions: Add _IO_fgetpos, _IO_fgetpos64, _IO_fsetpos,
+	_IO_fsetpos64, fgetpos, fgetpos64, fgetwc, fgetwc_unlocked, fgetws,
+	fgetws_unlocked, fputwc, fputwc_unlocked, fputws, fputws_unlocked,
+	fsetpos, fsetpos64, fwide, fwprintf, fwscanf, getwc, getwc_unlocked,
+	getwchar, getwchar_unlocked, putwc, putwc_unlocked, putwchar,
+	putwchar_unlocked, swprintf, swscanf, ungetwc, vfwprintf, vswprintf,
+	vwprintf, vfwscanf, vswscanf, vwscanf, wprintf, and wscanf to
+	GLIBC_2.2 for libc.
+	* libio/libio.h: Define codecvt struct.  Define _IO_wide_data.
+	Extend _IO_file contain pointer to codecvt, widedata and mode.
+	(_IO_getwc_unlocked): New macro.
+	(_IO_putwc_unlocked): New macro.
+	(_IO_fwide): New macro.
+	* libio/libioP.h: Add new prototypes and adjust existing declarations.
+	* libio/fileops.c (_IO_new_file_close_it): Reset normal or widedata
+	buffers based on mode.
+	(new_do_write): Set _IO_write_end to _IO_buf_end if stream is wide
+	oriented.
+	(_IO_new_file_overflow): Don't depend only on _IO_CURRENTLY_PUTTING
+	flag to be enough to signal unallocated buffer.  For wide oriented
+	stream don't make it linebuffered.  Don't use _IO_do_flush, use
+	_IO_new_do_write directly.
+	(_IO_new_file_seekoff): Change return value type to _IO_off64_t.
+	(_IO_file_seek): Likewise.
+	* libio/genops.c (_IO_least_marker): Make global.
+	(__underflow): Orient stream if not already done.
+	(__uflow): Likewise.
+	(_IO_default_seekpos): Change to type _IO_off64_t.
+	(_IO_default_seekoff): Likewise.
+	(_IO_default_seek): Likewise.
+	(_IO_no_init): New function.  Similar to _IO_init but allows to orient
+	in initialization.
+	* libio/iolibio.h: Add prototype for _IO_vswprintf.  Change _IO_pos_BAD
+	to use _IO_off64_t.
+	* libio/ftello.c: Use _IO_off_t.  For now abort when use with wide
+	char stream.
+	* libio/ftello64.c: Likewise.
+	* libio/ioftell.c: Likewise.
+	* libio/iofopncook.c: Likewise.
+	* libio/ioseekoff.c: Likewise.
+	* libio/ioseekpos.c: Likewise.
+	* libio/oldfileops.c: Likewise.
+	* libio/iofgetpos.c: Store state of conversion if necessary.
+	* libio/iofgetpos64.c: Likewise.
+	* libio/iofsetpos.c: Restore conversion state if necessary.
+	* libio/iofsetpos64.c: Likewise.
+	* libio/iofdopen.c: Initialize so that stream can be wide oriented.
+	* libio/iofopen.c: Likewise.
+	* libio/iofopen64.c: Likewise.
+	* libio/iopopen.c: Likewise.
+	* libio/iovdprintf.c: Likewise.
+	* libio/iovsprintf.c: Likewise.
+	* libio/iovsscanf.c: Likewise.
+	* libio/memstream.c: Likewise.
+	* libio/obprintf.c: Likewise.
+	* libio/iofputs.c: Orient stream if not already happened.
+	* libio/iofputs_u.c: Likewise.
+	* libio/iofwrite.c: Likewise.
+	* libio/iofwrite_u.c: Likewise.
+	* libio/ioputs.c: Likewise.
+	* libio/iosetbuffer.c: Handle not yet oriented stream.
+	* libio/iosetvbuf.c: Likewise.
+	* libio/oldstdfiles.c: Adjust FILEBUF_LITERAL call.
+	* libio/stdfiles.c: Likewise.
+	* libio/strops.c (_IO_str_overflow): Correctly free buffer after
+	failed allocation.
+	(_IO_str_seekoff): Use _IO_off64_t.
+	* libio/vasprintf.c: Pre-orient stream.
+	* libio/vsnprintf.c: Likewise.
+	* libio/fputwc.c: New file.
+	* libio/fputwc_u.c: New file.
+	* libio/fwprintf.c: New file.
+	* libio/fwscanf.c: New file.
+	* libio/getwc.c: New file.
+	* libio/getwc_u.c: New file.
+	* libio/getwchar.c: New file.
+	* libio/getwchar_u.c: New file.
+	* libio/iofgetws.c: New file.
+	* libio/iofgetws_u.c: New file.
+	* libio/iofputws.c: New file.
+	* libio/iofputws_u.c: New file.
+	* libio/iofwide.c: New file.
+	* libio/iogetwline.c: New file.
+	* libio/ioungetwc.c: New file.
+	* libio/iovswscanf.c: New file.
+	* libio/iowpadn.c: New file.
+	* libio/oldiofgetpos.c: New file.
+	* libio/oldiofgetpos64.c: New file.
+	* libio/oldiofsetpos.c: New file.
+	* libio/oldiofsetpos64.c: New file.
+	* libio/putwc.c: New file.
+	* libio/putwc_u.c: New file.
+	* libio/putwchar.c: New file.
+	* libio/putwchar_u.c: New file.
+	* libio/swprintf.c: New file.
+	* libio/swscanf.c: New file.
+	* libio/tst_swprintf.c: New file.
+	* libio/tst_swscanf.c: New file.
+	* libio/tst_wprintf.c: New file.
+	* libio/tst_wscanf.c: New file.
+	* libio/tst_wscanf.input: New file.
+	* libio/vswprintf.c: New file.
+	* libio/vwprintf.c: New file.
+	* libio/vwscanf.c: New file.
+	* libio/wfiledoalloc.c: New file.
+	* libio/wfileops.c: New file.
+	* libio/wgenops.c: New file.
+	* libio/wprintf.c: New file.
+	* libio/wscanf.c: New file.
+	* libio/wstrops.c: New file.
+	* stdio-common/Makefile (routines): Add _itowa, itowa-digits,
+	vfwprintf, and vfwscanf.
+	* stdio-common/_itoa.c (base_table): Rename to _IO_base_table and
+	make global.
+	* stdio-common/_itowa.c: New file.
+	* stdio-common/_itowa.h: New file.
+	* stdio-common/itoa-digits.c: Minimal optimization.
+	* stdio-common/itowa-digits.c: New file.
+	* stdio-common/printf-parse.h: Allow use in wide character context.
+	* stdio-common/printf-prs.c: Define ISASCII and MBRLEN.
+	* stdio-common/printf.h (printf_info): Add wide bit.
+	* stdio-common/printf_fp.c: Determine from wide bit whether stream
+	is wide oriented or not.
+	* stdio-common/printf_size.c: Likewise.
+	* sysdeps/generic/printf_fphex.c: Likewise.
+	* stdlib/strfmon.c: Call __printf_fp with wide bit cleared.
+	* stdio-common/vfprintf.c: Rewrite to allow use in wide character
+	context.
+	* stdio-common/vfscand.c: Likewise.
+	* stdio-common/vfwprintf.c: New file.
+	* stdio-common/vfwscanf.c: New file.
+
+	* time/Makefile (routines): Add wcsftime.
+	(tests): Add tst_wcsftime.
+	* time/Versions: Add wcsftime to GLIBC_2.2 for libc.
+	* time/strftime.c: Make usable as wcsftime.
+	* time/wcsftime.c: New file.
+	* time/tst_wcsftime.c: New file.
+
+	* wcsmbs/Makefile (routines): Add wmempcpy and wcschrnul.
+	* wcsmbs/Versions: Add wmempcpy and wcschrnul to GLIBC_2.2 for libc.
+	* wcsmbs/wcschrnul.c: New file.
+	* wcsmbs/wmemcpy.c: New file.
+	* wcsmbs/wmemcpy.c: Rename to __wmemcpy and make wmemcpy weak alias.
+	* wcsmbs/wmemmove.c: Likewise for wmemmove.
+
+	* manual/stdio.texi: Document is_char and wide element if printf_info.
+
+	* manual/time.texi: Document wcsftime.
+
+	* include/wchar.h: Add prototypes for __wmemcpy, __wmempcpy,
+	__wmemmove, __wcschrnul, and __vfwscanf.
+
+	* locale/langinfo.h: Add new LC_TIME entries for wchar_t data.
+	* locale/C-time.c: Adapt for above change.
+	* locale/categories.def: Likewise.
+	* locale/localeinfo.h: Likewise.
+	* localedata/Makefile: Don't run tests for now.
+
 	* manual/errno.texi: Fix typos.
 	* manual/memory.texi: Likewise.
 	* manual/ctype.texi: Likewise.

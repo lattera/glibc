@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper, <drepper@gnu.ai.mit.edu>
 
@@ -22,10 +22,11 @@
 
 
 wchar_t *
-wmemmove (s1, s2, n)
+__wmemmove (s1, s2, n)
      wchar_t *s1;
      const wchar_t *s2;
      size_t n;
 {
   return (wchar_t *) memmove ((char *) s1, (char *) s2, n * sizeof (wchar_t));
 }
+weak_alias (__wmemmove, wmemmove)

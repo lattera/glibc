@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -25,8 +25,8 @@
 /* Contains pointers to the used functions in the `gconv' modules.  */
 struct gconv_fcts
   {
-    struct gconv_step *towc;
-    struct gconv_step *tomb;
+    struct __gconv_step *towc;
+    struct __gconv_step *tomb;
   };
 
 /* Set of currently active conversion functions.  */
@@ -39,6 +39,10 @@ extern const struct locale_data *__wcsmbs_last_locale;
 
 /* Load conversion functions for the currently selected locale.  */
 extern void __wcsmbs_load_conv (const struct locale_data *new_category)
+     internal_function;
+
+/* Clone the current `__wcsmbs_load_conv' value.  */
+extern void __wcsmbs_clone_conv (struct gconv_fcts *copy)
      internal_function;
 
 

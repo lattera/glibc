@@ -35,7 +35,7 @@ size_t
 __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 {
   wchar_t buf[1];
-  struct gconv_step_data data;
+  struct __gconv_step_data data;
   int status;
   size_t result;
   size_t dummy;
@@ -43,18 +43,18 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   char *outbuf = (char *) (pwc ?: buf);
 
   /* Tell where we want the result.  */
-  data.outbuf = outbuf;
-  data.outbufend = outbuf + sizeof (wchar_t);
-  data.invocation_counter = 0;
-  data.internal_use = 1;
-  data.is_last = 1;
-  data.statep = ps ?: &state;
+  data.__outbuf = outbuf;
+  data.__outbufend = outbuf + sizeof (wchar_t);
+  data.__invocation_counter = 0;
+  data.__internal_use = 1;
+  data.__is_last = 1;
+  data.__statep = ps ?: &state;
 
   /* A first special case is if S is NULL.  This means put PS in the
      initial state.  */
   if (s == NULL)
     {
-      data.outbuf = (char *) buf;
+      data.__outbuf = (char *) buf;
       s = "";
       n = 1;
     }
@@ -64,27 +64,27 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
 
   /* Do a normal conversion.  */
   inbuf = (const unsigned char *) s;
-  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-					     &data, &inbuf, inbuf + n,
-					     &dummy, 0);
+  status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc,
+					       &data, &inbuf, inbuf + n,
+					       &dummy, 0);
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the
      definition of MB_CUR_MAX is not correct.  All the other possible
      errors also must not happen.  */
-  assert (status == GCONV_OK || status == GCONV_EMPTY_INPUT
-	  || status == GCONV_ILLEGAL_INPUT
-	  || status == GCONV_INCOMPLETE_INPUT
-	  || status == GCONV_FULL_OUTPUT);
+  assert (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
+	  || status == __GCONV_ILLEGAL_INPUT
+	  || status == __GCONV_INCOMPLETE_INPUT
+	  || status == __GCONV_FULL_OUTPUT);
 
-  if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
-      || status == GCONV_FULL_OUTPUT)
+  if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
+      || status == __GCONV_FULL_OUTPUT)
     {
-      if (data.outbuf != (unsigned char *) outbuf
+      if (data.__outbuf != (unsigned char *) outbuf
 	  && *(wchar_t *) outbuf == L'\0')
 	{
 	  /* The converted character is the NUL character.  */
-	  assert (__mbsinit (data.statep));
+	  assert (__mbsinit (data.__statep));
 	  result = 0;
 	}
       else
@@ -92,7 +92,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
     }
   else
     {
-      result = status == GCONV_INCOMPLETE_INPUT ? (size_t) -2 : (size_t) -1;
+      result = status == __GCONV_INCOMPLETE_INPUT ? (size_t) -2 : (size_t) -1;
       __set_errno (EILSEQ);
     }
 

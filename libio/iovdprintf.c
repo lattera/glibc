@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -36,12 +36,13 @@ _IO_vdprintf (d, format, arg)
 #ifdef _IO_MTSAFE_IO
   _IO_lock_t lock;
 #endif
+  struct _IO_wide_data wd;
   int done;
 
 #ifdef _IO_MTSAFE_IO
   tmpfil.file._lock = &lock;
 #endif
-  _IO_init (&tmpfil.file, 0);
+  _IO_no_init (&tmpfil.file, 0, 0, &wd, &_IO_wfile_jumps);
   _IO_JUMPS (&tmpfil.file) = &_IO_file_jumps;
   _IO_file_init (&tmpfil.file);
 #if  !_IO_UNIFIED_JUMPTABLES

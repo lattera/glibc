@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -49,7 +49,7 @@ _IO_vasprintf (result_ptr, format, args)
 #ifdef _IO_MTSAFE_IO
   sf._sbf._f._lock = &lock;
 #endif
-  _IO_init ((_IO_FILE *) &sf, 0);
+  _IO_no_init ((_IO_FILE *) &sf, 0, -1, NULL, NULL);
   _IO_JUMPS ((_IO_FILE *) &sf) = &_IO_str_jumps;
   _IO_str_init_static ((_IO_FILE *) &sf, string, init_string_size, string);
   sf._sbf._f._flags &= ~_IO_USER_BUF;

@@ -20,9 +20,19 @@
 # define _WINT_T
 typedef unsigned int wint_t;
 #endif
+#define __need_mbstate_t
+#include <wchar.h>
 #define _G_size_t	size_t
-#define _G_fpos_t	__off_t
-#define _G_fpos64_t	__off64_t
+typedef struct
+{
+  __off_t __pos;
+  __mbstate_t __state;
+} _G_fpos_t;
+typedef struct
+{
+  __off64_t __pos;
+  __mbstate_t __state;
+} _G_fpos64_t;
 #define _G_ssize_t	__ssize_t
 #define _G_off_t	__off_t
 #define _G_off64_t	__off64_t
@@ -31,6 +41,16 @@ typedef unsigned int wint_t;
 #define _G_wchar_t	wchar_t
 #define _G_wint_t	wint_t
 #define _G_stat64	stat64
+#include <gconv.h>
+typedef union
+{
+  struct __gconv_info __cd;
+  struct
+  {
+    struct __gconv_info __cd;
+    struct __gconv_step_data __data;
+  } __combined;
+} _G_iconv_t;
 
 typedef int _G_int16_t __attribute__ ((__mode__ (__HI__)));
 typedef int _G_int32_t __attribute__ ((__mode__ (__SI__)));

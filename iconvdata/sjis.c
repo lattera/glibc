@@ -1,5 +1,5 @@
 /* Mapping tables for SJIS handling.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -4291,7 +4291,7 @@ static const char from_ucs4_extra[0x100][2] =
   [0x0055] = "\x82\x95", [0x0056] = "\x82\x96", [0x0057] = "\x82\x97",
   [0x0058] = "\x82\x98", [0x0059] = "\x82\x99", [0x005a] = "\x82\x9a",
   [0x005b] = "\x81\x6f", [0x005c] = "\x81\x62", [0x005d] = "\x81\x70",
-  [0x005e] = "\x00\x00", [0x005f] = "\x00\x00", 
+  [0x005e] = "\x00\x00", [0x005f] = "\x00\x00",
   [0x0060] = "\x00\x00", [0x0061] = "\xa1\x00", [0x0062] = "\xa2\x00",
   [0x0063] = "\xa3\x00", [0x0064] = "\xa4\x00", [0x0065] = "\xa5\x00",
   [0x0066] = "\xa6\x00", [0x0067] = "\xa7\x00", [0x0068] = "\xa8\x00",
@@ -4357,7 +4357,7 @@ static const char from_ucs4_extra[0x100][2] =
     else if (ch > 0xea || ch == 0xa0 || ch == 0x7f || ch == 0x80)	      \
       {									      \
 	/* These are illegal.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -4371,7 +4371,7 @@ static const char from_ucs4_extra[0x100][2] =
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -4382,7 +4382,7 @@ static const char from_ucs4_extra[0x100][2] =
 	    || (idx > 0x9ffc && idx < 0xe040) || idx > 0xeaa4)		      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else								      \
@@ -4405,7 +4405,7 @@ static const char from_ucs4_extra[0x100][2] =
 	if (ch == 0)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -4436,7 +4436,7 @@ static const char from_ucs4_extra[0x100][2] =
 	else								      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -4446,7 +4446,7 @@ static const char from_ucs4_extra[0x100][2] =
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -4457,7 +4457,7 @@ static const char from_ucs4_extra[0x100][2] =
 	if (NEED_LENGTH_TEST && outptr >= outend)			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 	*outptr++ = cp[1];						      \

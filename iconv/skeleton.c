@@ -95,7 +95,7 @@ static int from_object;
 static int to_object;
 
 # ifndef FROM_DIRECTION
-#  define FROM_DIRECTION (step->data == &from_object)
+#  define FROM_DIRECTION (step->__data == &from_object)
 # endif
 #else
 # ifndef FROM_DIRECTION
@@ -140,37 +140,37 @@ static int to_object;
 # endif
 
 int
-gconv_init (struct gconv_step *step)
+gconv_init (struct __gconv_step *step)
 {
   /* Determine which direction.  */
-  if (strcmp (step->from_name, CHARSET_NAME) == 0)
+  if (strcmp (step->__from_name, CHARSET_NAME) == 0)
     {
-      step->data = &from_object;
+      step->__data = &from_object;
 
-      step->min_needed_from = MIN_NEEDED_FROM;
-      step->max_needed_from = MAX_NEEDED_FROM;
-      step->min_needed_to = MIN_NEEDED_TO;
-      step->max_needed_to = MAX_NEEDED_TO;
+      step->__min_needed_from = MIN_NEEDED_FROM;
+      step->__max_needed_from = MAX_NEEDED_FROM;
+      step->__min_needed_to = MIN_NEEDED_TO;
+      step->__max_needed_to = MAX_NEEDED_TO;
     }
-  else if (strcmp (step->to_name, CHARSET_NAME) == 0)
+  else if (strcmp (step->__to_name, CHARSET_NAME) == 0)
     {
-      step->data = &to_object;
+      step->__data = &to_object;
 
-      step->min_needed_from = MIN_NEEDED_TO;
-      step->max_needed_from = MAX_NEEDED_TO;
-      step->min_needed_to = MIN_NEEDED_FROM;
-      step->max_needed_to = MAX_NEEDED_FROM;
+      step->__min_needed_from = MIN_NEEDED_TO;
+      step->__max_needed_from = MAX_NEEDED_TO;
+      step->__min_needed_to = MIN_NEEDED_FROM;
+      step->__max_needed_to = MAX_NEEDED_FROM;
     }
   else
-    return GCONV_NOCONV;
+    return __GCONV_NOCONV;
 
 #ifdef RESET_STATE
-  step->stateful = 1;
+  step->__stateful = 1;
 #else
-  step->stateful = 0;
+  step->__stateful = 0;
 #endif
 
-  return GCONV_OK;
+  return __GCONV_OK;
 }
 #endif
 
@@ -195,13 +195,13 @@ gconv_init (struct gconv_step *step)
 #endif
 
 int
-FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
+FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	       const unsigned char **inbuf, const unsigned char *inbufend,
 	       size_t *written, int do_flush)
 {
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
+  struct __gconv_step *next_step = step + 1;
+  struct __gconv_step_data *next_data = data + 1;
+  __gconv_fct fct = next_step->__fct;
   int status;
 
   /* If the function is called with no input this means we have to reset
@@ -209,7 +209,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
      dropped.  */
   if (do_flush)
     {
-      status = GCONV_OK;
+      status = __GCONV_OK;
 
 #ifdef EMIT_SHIFT_TO_INIT
       /* Emit the escape sequence to reset the state.  */
@@ -217,7 +217,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 #endif
       /* Call the steps down the chain if there are any but only if we
          successfully emitted the escape sequence.  */
-      if (status == GCONV_OK && ! data->is_last)
+      if (status == __GCONV_OK && ! data->__is_last)
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
 				    written, 1));
     }
@@ -225,8 +225,8 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
     {
       /* We preserve the initial values of the pointer variables.  */
       const unsigned char *inptr = *inbuf;
-      unsigned char *outbuf = data->outbuf;
-      unsigned char *outend = data->outbufend;
+      unsigned char *outbuf = data->__outbuf;
+      unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
 
       /* This variable is used to count the number of characters we
@@ -251,20 +251,20 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  if (FROM_DIRECTION)
 	    /* Run the conversion loop.  */
 	    status = FROM_LOOP (inbuf, inbufend, &outbuf, outend,
-				data->statep, step->data, &converted
+				data->__statep, step->__data, &converted
 				EXTRA_LOOP_ARGS);
 	  else
 	    /* Run the conversion loop.  */
 	    status = TO_LOOP (inbuf, inbufend, &outbuf, outend,
-			      data->statep, step->data, &converted
+			      data->__statep, step->__data, &converted
 			      EXTRA_LOOP_ARGS);
 
 	  /* If this is the last step leave the loop, there is nothing
              we can do.  */
-	  if (data->is_last)
+	  if (data->__is_last)
 	    {
 	      /* Store information about how many bytes are available.  */
-	      data->outbuf = outbuf;
+	      data->__outbuf = outbuf;
 
 	      /* Remember how many characters we converted.  */
 	      *written += converted;
@@ -275,13 +275,13 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	  /* Write out all output which was produced.  */
 	  if (outbuf > outstart)
 	    {
-	      const unsigned char *outerr = data->outbuf;
+	      const unsigned char *outerr = data->__outbuf;
 	      int result;
 
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
 					  outbuf, written, 0));
 
-	      if (result != GCONV_EMPTY_INPUT)
+	      if (result != __GCONV_EMPTY_INPUT)
 		{
 		  if (outerr != outbuf)
 		    {
@@ -307,7 +307,7 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 					     (const unsigned char *) inbufend,
 					     (unsigned char **) &outbuf,
 					     (unsigned char *) outerr,
-					     data->statep, step->data,
+					     data->__statep, step->__data,
 					     &converted EXTRA_LOOP_ARGS);
 		      else
 			/* Run the conversion loop.  */
@@ -315,13 +315,13 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 					   (const unsigned char *) inbufend,
 					   (unsigned char **) &outbuf,
 					   (unsigned char *) outerr,
-					   data->statep, step->data,
+					   data->__statep, step->__data,
 					   &converted EXTRA_LOOP_ARGS);
 
 		      /* We must run out of output buffer space in this
 			 rerun.  */
 		      assert (outbuf == outerr);
-		      assert (nstatus == GCONV_FULL_OUTPUT);
+		      assert (nstatus == __GCONV_FULL_OUTPUT);
 #endif	/* reset input buffer */
 		    }
 
@@ -331,18 +331,18 @@ FUNCTION_NAME (struct gconv_step *step, struct gconv_step_data *data,
 	      else
 		/* All the output is consumed, we can make another run
 		   if everything was ok.  */
-		if (status == GCONV_FULL_OUTPUT)
-		  status = GCONV_OK;
+		if (status == __GCONV_FULL_OUTPUT)
+		  status = __GCONV_OK;
 	    }
 	}
-      while (status == GCONV_OK);
+      while (status == __GCONV_OK);
 
 #ifdef END_LOOP
       END_LOOP
 #endif
 
       /* We finished one use of this step.  */
-      ++data->invocation_counter;
+      ++data->__invocation_counter;
     }
 
   return status;

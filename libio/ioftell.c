@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -31,13 +31,19 @@ long int
 _IO_ftell (fp)
      _IO_FILE *fp;
 {
-  _IO_pos_t pos;
+  _IO_off_t pos;
   CHECK_FILE (fp, -1L);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
   pos = _IO_seekoff (fp, 0, _IO_seek_cur, 0);
   if (_IO_in_backup (fp))
-    pos -= fp->_IO_save_end - fp->_IO_save_base;
+    {
+      if (fp->_mode < 0)
+	pos -= fp->_IO_save_end - fp->_IO_save_base;
+      else
+	/* XXX For now.  */
+	abort ();
+    }
   _IO_funlockfile (fp);
   _IO_cleanup_region_end (0);
   if (pos == _IO_pos_BAD)
@@ -48,7 +54,7 @@ _IO_ftell (fp)
 #endif
       return -1L;
     }
-  return _IO_pos_as_off (pos);
+  return pos;
 }
 
 #ifdef weak_alias

@@ -25,11 +25,16 @@ headers	:= stdio.h libio.h _G_config.h bits/stdio.h
 
 routines	:=							      \
 	filedoalloc iofclose iofdopen iofflush iofgetpos iofgets iofopen      \
-	iofopncook iofputs iofread iofsetpos ioftell			      \
+	iofopncook iofputs iofread iofsetpos ioftell wfiledoalloc	      \
 	iofwrite iogetdelim iogetline iogets iopadn iopopen ioputs	      \
 	ioseekoff ioseekpos iosetbuffer iosetvbuf iosprintf ioungetc	      \
 	iovsprintf iovsscanf						      \
 	iofgetpos64 iofopen64 iofsetpos64				      \
+	oldiofgetpos oldiofgetpos64 oldiofsetpos oldiofsetpos64		      \
+	fputwc fputwc_u getwc getwc_u getwchar getwchar_u iofgetws iofgetws_u \
+	iofputws iofputws_u iogetwline iowpadn ioungetwc putwc putwc_u	      \
+	putchar putchar_u swprintf vwprintf wprintf wscanf fwscanf vwscanf    \
+	vswprintf iovswscanf swscanf wgenops wstrops wfileops iofwide	      \
 									      \
 	clearerr feof ferror fileno fputc freopen fseek getc getchar	      \
 	memstream pclose putc putchar rewind setbuf setlinebuf vasprintf      \
@@ -37,6 +42,8 @@ routines	:=							      \
 	freopen64 fseeko64 ftello64					      \
 									      \
 	libc_fatal
+
+tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf
 
 all: # Make this the default target; it will be defined in Rules.
 

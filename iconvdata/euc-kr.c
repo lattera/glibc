@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-KR handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -28,7 +28,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 {
   if (ch > 0x7f)
     {
-      if (ucs4_to_ksc5601 (ch, cp, 2) != UNKNOWN_10646_CHAR)
+      if (ucs4_to_ksc5601 (ch, cp, 2) != __UNKNOWN_10646_CHAR)
 	{
 	  cp[0] |= 0x80;
 	  cp[1] |= 0x80;
@@ -79,7 +79,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     else if (ch <= 0xa0 || ch > 0xfe || ch == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -91,13 +91,13 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	if (NEED_LENGTH_TEST && ch == 0)				      \
 	  {								      \
 	    /* The second character is not available.  */		      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (ch == UNKNOWN_10646_CHAR)					      \
+	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -124,7 +124,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -136,7 +136,7 @@ euckr_from_ucs4 (uint32_t ch, unsigned char *cp)
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 	*outptr++ = cp[1];						      \

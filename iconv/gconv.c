@@ -27,43 +27,45 @@
 
 int
 internal_function
-__gconv (gconv_t cd, const unsigned char **inbuf, const unsigned char *inbufend,
-	 unsigned char **outbuf, unsigned char *outbufend, size_t *converted)
+__gconv (__gconv_t cd, const unsigned char **inbuf,
+	 const unsigned char *inbufend, unsigned char **outbuf,
+	 unsigned char *outbufend, size_t *converted)
 {
-  size_t last_step = cd->nsteps - 1;
+  size_t last_step = cd->__nsteps - 1;
   int result;
 
-  if (cd == (gconv_t) -1L)
-    return GCONV_ILLEGAL_DESCRIPTOR;
+  if (cd == (__gconv_t) -1L)
+    return __GCONV_ILLEGAL_DESCRIPTOR;
 
   assert (converted != NULL);
   *converted = 0;
 
   if (inbuf == NULL || *inbuf == NULL)
     /* We just flush.  */
-    result = _CALL_DL_FCT (cd->steps->fct,
-			   (cd->steps, cd->data, NULL, NULL, converted, 1));
+    result = _CALL_DL_FCT (cd->__steps->__fct,
+			   (cd->__steps, cd->__data, NULL, NULL,
+			    converted, 1));
   else
     {
       const unsigned char *last_start;
 
       assert (outbuf != NULL && *outbuf != NULL);
-      cd->data[last_step].outbuf = *outbuf;
-      cd->data[last_step].outbufend = outbufend;
+      cd->__data[last_step].__outbuf = *outbuf;
+      cd->__data[last_step].__outbufend = outbufend;
 
       do
 	{
 	  last_start = *inbuf;
-	  result = _CALL_DL_FCT (cd->steps->fct,
-				 (cd->steps, cd->data, inbuf, inbufend,
+	  result = _CALL_DL_FCT (cd->__steps->__fct,
+				 (cd->__steps, cd->__data, inbuf, inbufend,
 				  converted, 0));
 	}
-      while (result == GCONV_EMPTY_INPUT && last_start != *inbuf
-	     && *inbuf + cd->steps->min_needed_from <= inbufend);
+      while (result == __GCONV_EMPTY_INPUT && last_start != *inbuf
+	     && *inbuf + cd->__steps->__min_needed_from <= inbufend);
     }
 
   if (outbuf != NULL && *outbuf != NULL)
-    *outbuf = cd->data[last_step].outbuf;
+    *outbuf = cd->__data[last_step].__outbuf;
 
   return result;
 }

@@ -1,5 +1,5 @@
 /* Mapping tables for Big5 handling.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -8441,7 +8441,7 @@ static const char from_ucs4_tab13[][2] =
 	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
 	  {								      \
 	    /* The second character is not available.  */		      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -8455,7 +8455,7 @@ static const char from_ucs4_tab13[][2] =
 	else								      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -8466,7 +8466,7 @@ static const char from_ucs4_tab13[][2] =
 	if (ch == 0 && *inptr != '\0')					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -8566,7 +8566,7 @@ static const char from_ucs4_tab13[][2] =
     if (cp[0] == '\0' && ch != 0)					      \
       {									      \
 	/* Illegal character.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -8574,7 +8574,7 @@ static const char from_ucs4_tab13[][2] =
     if (NEED_LENGTH_TEST && cp[1] != '\0' && outptr + 1 >= outend)	      \
       {									      \
 	/* We have not enough room.  */					      \
-	result = GCONV_FULL_OUTPUT;					      \
+	result = __GCONV_FULL_OUTPUT;					      \
 	break;								      \
       }									      \
 									      \

@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-JP handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -49,7 +49,7 @@
     else if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e && ch != 0x8f)	      \
       {									      \
 	/* This is illegal.  */						      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -62,7 +62,7 @@
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -72,7 +72,7 @@
 	if (ch2 < 0xa1)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -108,13 +108,13 @@
 	    if (NEED_LENGTH_TEST && ch == 0)				      \
 	      {								      \
 		/* Not enough input available.  */			      \
-		result = GCONV_INCOMPLETE_INPUT;			      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
-	    if (ch == UNKNOWN_10646_CHAR)				      \
+	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal character.  */				      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 	    inptr = endp;						      \
@@ -152,12 +152,12 @@
 	/* See whether we have room for at least two characters.  */	      \
 	if (NEED_LENGTH_TEST && outptr + 1 >= outend)			      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
 	found = ucs4_to_jisx0201 (ch, outptr + 1);			      \
-	if (found != UNKNOWN_10646_CHAR)				      \
+	if (found != __UNKNOWN_10646_CHAR)				      \
 	  {								      \
 	    /* Yes, it's a JIS 0201 character.  Store the shift byte.  */     \
 	    *outptr = 0x8e;						      \
@@ -168,7 +168,7 @@
 	    /* No JIS 0201 character.  */				      \
 	    found = ucs4_to_jisx0208 (ch, outptr, 2);			      \
 	    /* Please note that we always have enough room for the output. */ \
-	    if (found != UNKNOWN_10646_CHAR)				      \
+	    if (found != __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* It's a JIS 0208 character, adjust it for EUC-JP.  */	      \
 		*outptr++ += 0x80;					      \
@@ -184,10 +184,10 @@
 		if (found == 0)						      \
 		  {							      \
 		    /* We ran out of space.  */				      \
-		    result = GCONV_FULL_OUTPUT;				      \
+		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
 		  }							      \
-		else if (found != UNKNOWN_10646_CHAR)			      \
+		else if (found != __UNKNOWN_10646_CHAR)			      \
 		  {							      \
 		    /* It's a JIS 0212 character, adjust it for EUC-JP.  */   \
 		    *outptr++ = 0x8f;					      \
@@ -197,7 +197,7 @@
 		else							      \
 		  {							      \
 		    /* Illegal character.  */				      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 	      }								      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -30,16 +30,17 @@ int
 _IO_puts (str)
      const char *str;
 {
-  int result;
+  int result = EOF;
   _IO_size_t len = strlen (str);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile,
 			    _IO_stdout);
   _IO_flockfile (_IO_stdout);
-  if (_IO_sputn (_IO_stdout, str, len) == len
+
+  if (_IO_fwide (_IO_stdout, -1) == -1
+      && _IO_sputn (_IO_stdout, str, len) == len
       && _IO_putc_unlocked ('\n', _IO_stdout) != EOF)
     result = len + 1;
-  else
-    result = EOF;
+
   _IO_funlockfile (_IO_stdout);
   _IO_cleanup_region_end (0);
   return result;

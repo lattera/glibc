@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -147,10 +147,10 @@ _IO_str_overflow (fp, c)
 	      /*	  __ferror(fp) = 1; */
 	      return EOF;
 	    }
-	  if (fp->_IO_buf_base)
+	  if (old_buf)
 	    {
 	      memcpy (new_buf, old_buf, _IO_blen (fp));
-	      (*((_IO_strfile *) fp)->_s._free_buffer) (fp->_IO_buf_base);
+	      (*((_IO_strfile *) fp)->_s._free_buffer) (old_buf);
 	      /* Make sure _IO_setb won't try to delete _IO_buf_base. */
 	      fp->_IO_buf_base = NULL;
 	    }
@@ -205,14 +205,14 @@ _IO_str_count (fp)
 	  - fp->_IO_read_base);
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_str_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_fpos64_t new_pos;
+  _IO_off64_t new_pos;
 
   if (mode == 0 && (fp->_flags & _IO_TIED_PUT_GET))
     mode = (fp->_flags & _IO_CURRENTLY_PUTTING ? _IOS_OUTPUT : _IOS_INPUT);

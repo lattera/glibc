@@ -28,9 +28,9 @@ routines := offtime asctime clock ctime ctime_r difftime \
 	    gettimeofday settimeofday adjtime tzset	 \
 	    tzfile getitimer setitimer			 \
 	    stime dysize timegm ftime			 \
-	    strptime getdate
+	    strptime getdate wcsftime
 
-tests	:= test_time clocktest tst-posixtz tst-strptime
+tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime
 
 include ../Rules
 

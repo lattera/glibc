@@ -69,7 +69,7 @@ iconv_open (const char *tocode, const char *fromcode)
   char *fromcode_conv;
   size_t tocode_len;
   size_t fromcode_len;
-  gconv_t cd;
+  __gconv_t cd;
   int res;
 
   /* Normalize the name.  We remove all characters beside alpha-numeric,
@@ -87,10 +87,10 @@ iconv_open (const char *tocode, const char *fromcode)
 
   res = __gconv_open (tocode, fromcode, &cd);
 
-  if (res != GCONV_OK)
+  if (res != __GCONV_OK)
     {
       /* We must set the error number according to the specs.  */
-      if (res == GCONV_NOCONV || res == GCONV_NODB)
+      if (res == __GCONV_NOCONV || res == __GCONV_NODB)
 	__set_errno (EINVAL);
 
       return (iconv_t) -1;

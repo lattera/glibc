@@ -1,5 +1,5 @@
 /* Access functions for JISX0208 conversion.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -50,22 +50,22 @@ jisx0208_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   int idx;
 
   if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0xea)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
   if (ch2 < offset || (ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
   if (idx >= 0x1e80)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   (*s) += 2;
 
-  return __jis0208_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
+  return __jis0208_to_ucs[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
 }
 
 
@@ -87,17 +87,17 @@ ucs4_to_jisx0208 (uint32_t wch, char *s, size_t avail)
       const struct jisx0208_ucs_idx *rp = __jisx0208_from_ucs_idx;
 
       if (ch >= 0xffff)
-	return UNKNOWN_10646_CHAR;
+	return __UNKNOWN_10646_CHAR;
       while (ch > rp->end)
 	++rp;
       if (ch >= rp->start)
 	cp = __jisx0208_from_ucs_tab[rp->idx + ch - rp->start];
       else
-	return UNKNOWN_10646_CHAR;
+	return __UNKNOWN_10646_CHAR;
     }
 
   if (cp[0] == '\0')
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   s[0] = cp[0];
   s[1] = cp[1];

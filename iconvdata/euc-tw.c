@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-TW handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -48,7 +48,7 @@
     else if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -61,7 +61,7 @@
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -71,7 +71,7 @@
 	if (ch2 < 0xa1 || ch2 == 0xff)					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -85,10 +85,10 @@
 				   0x80);				      \
 	    /* Please note that we need not test for the missing input	      \
 	       characters here anymore.  */				      \
-	    if (ch == UNKNOWN_10646_CHAR)				      \
+	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal input.  */					      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -104,10 +104,10 @@
 				     0x80);				      \
 	    /* Please note that we need not test for the missing input	      \
 	       characters here anymore.  */				      \
-	    if (ch == UNKNOWN_10646_CHAR)				      \
+	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal input.  */					      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -142,10 +142,10 @@
 	if (NEED_LENGTH_TEST && found == 0)				      \
 	  {								      \
 	    /* We ran out of space.  */					      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
-	if (found != UNKNOWN_10646_CHAR)				      \
+	if (found != __UNKNOWN_10646_CHAR)				      \
 	  {								      \
 	    /* It's a CNS 11643, plane 1 character, adjust it for EUC-TW.  */ \
 	    *outptr++ += 0x80;						      \
@@ -161,13 +161,13 @@
 	    if (NEED_LENGTH_TEST && found == 0)				      \
 	      {								      \
 		/* We ran out of space.  */				      \
-		result = GCONV_INCOMPLETE_INPUT;			      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
-	    if (found == UNKNOWN_10646_CHAR)				      \
+	    if (found == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* No legal input.  */					      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \

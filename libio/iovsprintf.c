@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -41,7 +41,7 @@ _IO_vsprintf (string, format, args)
 #ifdef _IO_MTSAFE_IO
   sf._sbf._f._lock = &lock;
 #endif
-  _IO_init (&sf._sbf._f, 0);
+  _IO_no_init (&sf._sbf._f, 0, -1, NULL, NULL);
   _IO_JUMPS (&sf._sbf._f) = &_IO_str_jumps;
   _IO_str_init_static (&sf._sbf._f, string, -1, string);
   ret = _IO_vfprintf (&sf._sbf._f, format, args);

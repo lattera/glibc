@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@ _IO_new_fdopen (fd, mode)
 #ifdef _IO_MTSAFE_IO
     _IO_lock_t lock;
 #endif
+    struct _IO_wide_data wd;
   } *new_f;
   int fd_flags;
 
@@ -112,7 +113,7 @@ _IO_new_fdopen (fd, mode)
 #ifdef _IO_MTSAFE_IO
   new_f->fp.file._lock = &new_f->lock;
 #endif
-  _IO_init (&new_f->fp.file, 0);
+  _IO_no_init (&new_f->fp.file, 0, 0, &new_f->wd, &_IO_wfile_jumps);
   _IO_JUMPS (&new_f->fp) = &_IO_file_jumps;
   _IO_file_init (&new_f->fp.file);
 #if  !_IO_UNIFIED_JUMPTABLES

@@ -1,5 +1,5 @@
 /* Mapping tables for UHC handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>, 1998.
 
@@ -3066,7 +3066,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
     else if (ch <= 0x80 || ch >= 0xfe || ch == 0xc9)			      \
       {									      \
 	/* This is illegal.  */						      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -3079,7 +3079,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	  {								      \
 	    /* The second character is not available.  Store		      \
 	       the intermediate result.  */				      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -3109,7 +3109,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 		|| (ch2 > 0x7a && ch2 < 0x81) || (ch == 0xc6 && ch2 > 0x52))  \
 	      {								      \
 		/* This is not legal.  */				      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -3122,7 +3122,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	    if (ch == 0)						      \
 	      {								      \
 		/* This is an illegal character.  */			      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -3131,10 +3131,10 @@ static const char uhc_hangul_from_ucs[11172][2] =
 	else								      \
 	  {								      \
 	    ch = ksc5601_to_ucs4 (&inptr, 2, 0x80);			      \
-	    if (ch == UNKNOWN_10646_CHAR)				      \
+	    if (ch == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal.  */						      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 	  }								      \
@@ -3163,7 +3163,7 @@ static const char uhc_hangul_from_ucs[11172][2] =
 									      \
 	if (NEED_LENGTH_TEST && outptr + 2 > outend)			      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -3178,12 +3178,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
 									      \
 	if (NEED_LENGTH_TEST && written == 0)				      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	if (written == UNKNOWN_10646_CHAR)				      \
+	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -3202,12 +3202,12 @@ static const char uhc_hangul_from_ucs[11172][2] =
 									      \
 	if (NEED_LENGTH_TEST && written == 0)				      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	if (written == UNKNOWN_10646_CHAR)				      \
+	if (written == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \

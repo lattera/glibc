@@ -1,5 +1,5 @@
 /* Generic conversion to and from T.61.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -392,7 +392,7 @@ static const char from_ucs4[][2] =
 	if (NEED_LENGTH_TEST && inptr + 1 >= inend)			      \
 	  {								      \
 	    /* The second character is not available.  */		      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -401,7 +401,7 @@ static const char from_ucs4[][2] =
 	if (ch2 < 0x20 || ch2 >= 0x80)					      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -418,7 +418,7 @@ static const char from_ucs4[][2] =
     if (ch == 0 && *inptr != '\0')					      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -447,7 +447,7 @@ static const char from_ucs4[][2] =
 	else if (ch < 0x2d8 || ch > 0x2dd || ch == 0x02dc)		      \
 	  {								      \
 	    /* Illegal characters.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else								      \
@@ -466,7 +466,7 @@ static const char from_ucs4[][2] =
 	if (cp[0] == '\0' && ch != 0)					      \
 	  {								      \
 	    /* Illegal.  */						      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -479,7 +479,7 @@ static const char from_ucs4[][2] =
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
 	    --outptr;							      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \

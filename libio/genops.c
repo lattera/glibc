@@ -80,9 +80,9 @@ _IO_link_in (fp)
 
 /* Return minimum _pos markers
    Assumes the current get area is the main get area. */
-static _IO_ssize_t _IO_least_marker __P ((_IO_FILE *fp, char *end_p));
+_IO_ssize_t _IO_least_marker __P ((_IO_FILE *fp, char *end_p));
 
-static _IO_ssize_t
+_IO_ssize_t
 _IO_least_marker (fp, end_p)
      _IO_FILE *fp;
      char *end_p;
@@ -282,6 +282,9 @@ int
 __underflow (fp)
      _IO_FILE *fp;
 {
+  if (_IO_fwide (fp, -1) != -1)
+    return EOF;
+
   if (_IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp) == EOF)
       return EOF;
@@ -307,6 +310,9 @@ int
 __uflow (fp)
      _IO_FILE *fp;
 {
+  if (_IO_fwide (fp, -1) != -1)
+    return EOF;
+
   if (_IO_in_put_mode (fp))
     if (_IO_switch_to_get_mode (fp) == EOF)
       return EOF;
@@ -508,13 +514,13 @@ _IO_default_setbuf (fp, p, len)
     return fp;
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_default_seekpos (fp, pos, mode)
      _IO_FILE *fp;
-     _IO_fpos64_t pos;
+     _IO_off64_t pos;
      int mode;
 {
-  return _IO_SEEKOFF (fp, _IO_pos_as_off (pos), 0, mode);
+  return _IO_SEEKOFF (fp, pos, 0, mode);
 }
 
 int
@@ -532,6 +538,17 @@ void
 _IO_init (fp, flags)
      _IO_FILE *fp;
      int flags;
+{
+  _IO_no_init (fp, flags, -1, NULL, NULL);
+}
+
+void
+_IO_no_init (fp, flags, orientation, wd, jmp)
+     _IO_FILE *fp;
+     int flags;
+     int orientation;
+     struct _IO_wide_data *wd;
+     struct _IO_jump_t *jmp;
 {
   fp->_flags = _IO_MAGIC|flags;
   fp->_IO_buf_base = NULL;
@@ -555,6 +572,24 @@ _IO_init (fp, flags)
 #ifdef _IO_MTSAFE_IO
   _IO_lock_init (*fp->_lock);
 #endif
+  fp->_mode = orientation;
+  if (orientation >= 0)
+    {
+      fp->_wide_data = wd;
+      fp->_wide_data->_IO_buf_base = NULL;
+      fp->_wide_data->_IO_buf_end = NULL;
+      fp->_wide_data->_IO_read_base = NULL;
+      fp->_wide_data->_IO_read_ptr = NULL;
+      fp->_wide_data->_IO_read_end = NULL;
+      fp->_wide_data->_IO_write_base = NULL;
+      fp->_wide_data->_IO_write_ptr = NULL;
+      fp->_wide_data->_IO_write_end = NULL;
+      fp->_wide_data->_IO_save_base = NULL;
+      fp->_wide_data->_IO_backup_base = NULL;
+      fp->_wide_data->_IO_save_end = NULL;
+
+      fp->_wide_data->_wide_vtable = jmp;
+    }
 }
 
 int
@@ -595,7 +630,7 @@ _IO_default_finish (fp, dummy)
   _IO_un_link (fp);
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_default_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
@@ -706,7 +741,9 @@ _IO_flush_all ()
   int result = 0;
   _IO_FILE *fp;
   for (fp = _IO_list_all; fp != NULL; fp = fp->_chain)
-    if (fp->_IO_write_ptr > fp->_IO_write_base
+    if (((fp->_mode < 0 && fp->_IO_write_ptr > fp->_IO_write_base)
+	 || (fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr
+			       > fp->_wide_data->_IO_write_base)))
 	&& _IO_OVERFLOW (fp, EOF) == EOF)
       result = EOF;
   return result;
@@ -941,7 +978,7 @@ _IO_default_pbackfail (fp, c)
   return (unsigned char) c;
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_default_seek (fp, offset, dir)
      _IO_FILE *fp;
      _IO_off64_t offset;

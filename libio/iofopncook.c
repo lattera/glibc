@@ -33,8 +33,8 @@ static _IO_ssize_t _IO_cookie_read __P ((register _IO_FILE* fp, void* buf,
 					 _IO_ssize_t size));
 static _IO_ssize_t _IO_cookie_write __P ((register _IO_FILE* fp,
 					  const void* buf, _IO_ssize_t size));
-static _IO_fpos64_t _IO_cookie_seek __P ((_IO_FILE *fp, _IO_off64_t offset,
-					  int dir));
+static _IO_off64_t _IO_cookie_seek __P ((_IO_FILE *fp, _IO_off64_t offset,
+					 int dir));
 static int _IO_cookie_close __P ((_IO_FILE* fp));
 
 
@@ -66,7 +66,7 @@ _IO_cookie_write (fp, buf, size)
   return cfile->__io_functions.write (cfile->__cookie, buf, size);
 }
 
-static _IO_fpos64_t
+static _IO_off64_t
 _IO_cookie_seek (fp, offset, dir)
      _IO_FILE *fp;
      _IO_off64_t offset;

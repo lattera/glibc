@@ -37,24 +37,24 @@ size_t
 __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
 {
   char buf[MB_CUR_MAX];
-  struct gconv_step_data data;
+  struct __gconv_step_data data;
   int status;
   size_t result;
   size_t dummy;
 
   /* Tell where we want the result.  */
-  data.outbuf = s;
-  data.outbufend = s + MB_CUR_MAX;
-  data.invocation_counter = 0;
-  data.internal_use = 1;
-  data.is_last = 1;
-  data.statep = ps ?: &state;
+  data.__outbuf = s;
+  data.__outbufend = s + MB_CUR_MAX;
+  data.__invocation_counter = 0;
+  data.__internal_use = 1;
+  data.__is_last = 1;
+  data.__statep = ps ?: &state;
 
   /* A first special case is if S is NULL.  This means put PS in the
      initial state.  */
   if (s == NULL)
     {
-      data.outbuf = buf;
+      data.__outbuf = buf;
       wc = L'\0';
     }
 
@@ -66,35 +66,36 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
      by a NUL byte.  */
   if (wc == L'\0')
     {
-      status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, NULL, NULL, &dummy, 1);
+      status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
+						   &data, NULL, NULL,
+						   &dummy, 1);
 
-      if (status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	*data.outbuf++ = '\0';
+      if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
+	*data.__outbuf++ = '\0';
     }
   else
     {
       /* Do a normal conversion.  */
       const unsigned char *inbuf = (const unsigned char *) &wc;
 
-      status = (*__wcsmbs_gconv_fcts.tomb->fct) (__wcsmbs_gconv_fcts.tomb,
-						 &data, &inbuf,
-						 inbuf + sizeof (wchar_t),
-						 &dummy, 0);
+      status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
+						   &data, &inbuf,
+						   inbuf + sizeof (wchar_t),
+						   &dummy, 0);
     }
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the
      definition of MB_CUR_MAX is not correct.  All the other possible
      errors also must not happen.  */
-  assert (status == GCONV_OK || status == GCONV_EMPTY_INPUT
-	  || status == GCONV_ILLEGAL_INPUT
-	  || status == GCONV_INCOMPLETE_INPUT
-	  || status == GCONV_FULL_OUTPUT);
+  assert (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
+	  || status == __GCONV_ILLEGAL_INPUT
+	  || status == __GCONV_INCOMPLETE_INPUT
+	  || status == __GCONV_FULL_OUTPUT);
 
-  if (status == GCONV_OK || status == GCONV_EMPTY_INPUT
-      || status == GCONV_FULL_OUTPUT)
-    result = data.outbuf - (unsigned char *) s;
+  if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT
+      || status == __GCONV_FULL_OUTPUT)
+    result = data.__outbuf - (unsigned char *) s;
   else
     {
       result = (size_t) -1;

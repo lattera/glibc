@@ -30,7 +30,7 @@ __btowc (c)
      int c;
 {
   wchar_t result;
-  struct gconv_step_data data;
+  struct __gconv_step_data data;
   unsigned char inbuf[1];
   const unsigned char *inptr = inbuf;
   size_t dummy;
@@ -42,12 +42,12 @@ __btowc (c)
     return WEOF;
 
   /* Tell where we want the result.  */
-  data.outbuf = (unsigned char *) &result;
-  data.outbufend = data.outbuf + sizeof (wchar_t);
-  data.invocation_counter = 0;
-  data.internal_use = 1;
-  data.is_last = 1;
-  data.statep = &data.__state;
+  data.__outbuf = (unsigned char *) &result;
+  data.__outbufend = data.__outbuf + sizeof (wchar_t);
+  data.__invocation_counter = 0;
+  data.__internal_use = 1;
+  data.__is_last = 1;
+  data.__statep = &data.__state;
 
   /* Make sure we start in the initial state.  */
   memset (&data.__state, '\0', sizeof (mbstate_t));
@@ -58,11 +58,11 @@ __btowc (c)
   /* Create the input string.  */
   inbuf[0] = c;
 
-  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc, &data,
-					     &inptr, inptr + 1, &dummy, 0);
+  status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
+					       &inptr, inptr + 1, &dummy, 0);
   /* The conversion failed.  */
-  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
-      && status != GCONV_EMPTY_INPUT)
+  if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
+      && status != __GCONV_EMPTY_INPUT)
     result = WEOF;
 
   return result;

@@ -41,13 +41,15 @@ extern int _IO_sprintf __P((char *, const char*, ...));
 extern int _IO_ungetc __P((int, _IO_FILE*));
 extern int _IO_vsscanf __P((const char *, const char *, _IO_va_list));
 extern int _IO_vsprintf __P((char*, const char*, _IO_va_list));
+extern int _IO_vswprintf __P((wchar_t*, _IO_size_t, const wchar_t*,
+			      _IO_va_list));
 
 struct obstack;
 extern int _IO_obstack_vprintf __P ((struct obstack *, const char *,
 				     _IO_va_list));
 extern int _IO_obstack_printf __P ((struct obstack *, const char *, ...));
 #ifndef _IO_pos_BAD
-#define _IO_pos_BAD ((_IO_fpos64_t)(-1))
+#define _IO_pos_BAD ((_IO_off64_t)(-1))
 #endif
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -25,13 +25,13 @@
 
 #include <libioP.h>
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_seekpos (fp, pos, mode)
      _IO_FILE *fp;
-     _IO_fpos64_t pos;
+     _IO_off64_t pos;
      int mode;
 {
-  _IO_fpos64_t retval;
+  _IO_off64_t retval;
 
   /* If we have a backup buffer, get rid of it, since the __seekoff
      callback may not know to do the right thing about it.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -27,12 +27,12 @@
 #include <errno.h>
 
 int
-_IO_fgetpos64 (fp, posp)
+_IO_new_fgetpos64 (fp, posp)
      _IO_FILE *fp;
      _IO_fpos64_t *posp;
 {
 #ifdef _G_LSEEK64
-  _IO_fpos64_t pos;
+  _IO_off64_t pos;
   CHECK_FILE (fp, EOF);
   _IO_cleanup_region_start ((void (*) __P ((void *))) _IO_funlockfile, fp);
   _IO_flockfile (fp);
@@ -45,13 +45,17 @@ _IO_fgetpos64 (fp, posp)
     {
       /* ANSI explicitly requires setting errno to a positive value on
 	 failure.  */
-#ifdef EIO
+# ifdef EIO
       if (errno == 0)
 	__set_errno (EIO);
-#endif
+# endif
       return EOF;
     }
-  *posp = pos;
+  posp->__pos = pos;
+  if (fp->_mode > 0
+      && (*fp->_codecvt->__codecvt_do_encoding) (fp->_codecvt) < 0)
+    /* This is a stateful encoding, safe the state.  */
+    posp->__state = fp->_wide_data->_IO_state;
   return 0;
 #else
   __set_errno (ENOSYS);
@@ -60,5 +64,7 @@ _IO_fgetpos64 (fp, posp)
 }
 
 #ifdef weak_alias
-weak_alias (_IO_fgetpos64, fgetpos64)
+default_symbol_version (_IO_new_fgetpos64, _IO_fgetpos64, GLIBC_2.2);
+strong_alias (_IO_new_fgetpos64, __new_fgetpos64)
+default_symbol_version (__new_fgetpos64, fgetpos64, GLIBC_2.2);
 #endif

@@ -53,10 +53,10 @@ struct gap
 #define MAX_NEEDED_TO		4
 #define FROM_DIRECTION		(dir == from_iso2022jp)
 #define PREPARE_LOOP \
-  enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
-  enum variant var = ((struct iso2022jp_data *) step->data)->var;	      \
+  enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;	      \
+  enum variant var = ((struct iso2022jp_data *) step->__data)->var;	      \
   int save_set;								      \
-  int *setp = &data->statep->count;
+  int *setp = &data->__statep->count;
 #define EXTRA_LOOP_ARGS		, var, setp
 
 
@@ -109,7 +109,7 @@ enum
 
 
 int
-gconv_init (struct gconv_step *step)
+gconv_init (struct __gconv_step *step)
 {
   /* Determine which direction.  */
   struct iso2022jp_data *new_data;
@@ -117,59 +117,59 @@ gconv_init (struct gconv_step *step)
   enum variant var = illegal_var;
   int result;
 
-  if (__strcasecmp (step->from_name, "ISO-2022-JP//") == 0)
+  if (__strcasecmp (step->__from_name, "ISO-2022-JP//") == 0)
     {
       dir = from_iso2022jp;
       var = iso2022jp;
     }
-  else if (__strcasecmp (step->to_name, "ISO-2022-JP//") == 0)
+  else if (__strcasecmp (step->__to_name, "ISO-2022-JP//") == 0)
     {
       dir = to_iso2022jp;
       var = iso2022jp;
     }
-  else if (__strcasecmp (step->from_name, "ISO-2022-JP-2//") == 0)
+  else if (__strcasecmp (step->__from_name, "ISO-2022-JP-2//") == 0)
     {
       dir = from_iso2022jp;
       var = iso2022jp2;
     }
-  else if (__strcasecmp (step->to_name, "ISO-2022-JP-2//") == 0)
+  else if (__strcasecmp (step->__to_name, "ISO-2022-JP-2//") == 0)
     {
       dir = to_iso2022jp;
       var = iso2022jp2;
     }
 
-  result = GCONV_NOCONV;
+  result = __GCONV_NOCONV;
   if (dir != illegal_dir)
     {
       new_data
 	= (struct iso2022jp_data *) malloc (sizeof (struct iso2022jp_data));
 
-      result = GCONV_NOMEM;
+      result = __GCONV_NOMEM;
       if (new_data != NULL)
 	{
 	  new_data->dir = dir;
 	  new_data->var = var;
-	  step->data = new_data;
+	  step->__data = new_data;
 
 	  if (dir == from_iso2022jp)
 	    {
-	      step->min_needed_from = MIN_NEEDED_FROM;
-	      step->max_needed_from = MAX_NEEDED_FROM;
-	      step->min_needed_to = MIN_NEEDED_TO;
-	      step->max_needed_to = MAX_NEEDED_TO;
+	      step->__min_needed_from = MIN_NEEDED_FROM;
+	      step->__max_needed_from = MAX_NEEDED_FROM;
+	      step->__min_needed_to = MIN_NEEDED_TO;
+	      step->__max_needed_to = MAX_NEEDED_TO;
 	    }
 	  else
 	    {
-	      step->min_needed_from = MIN_NEEDED_TO;
-	      step->max_needed_from = MAX_NEEDED_TO;
-	      step->min_needed_to = MIN_NEEDED_FROM;
-	      step->max_needed_to = MAX_NEEDED_FROM + 2;
+	      step->__min_needed_from = MIN_NEEDED_TO;
+	      step->__max_needed_from = MAX_NEEDED_TO;
+	      step->__min_needed_to = MIN_NEEDED_FROM;
+	      step->__max_needed_to = MAX_NEEDED_FROM + 2;
 	    }
 
 	  /* Yes, this is a stateful encoding.  */
-	  step->stateful = 1;
+	  step->__stateful = 1;
 
-	  result = GCONV_OK;
+	  result = __GCONV_OK;
 	}
     }
 
@@ -178,9 +178,9 @@ gconv_init (struct gconv_step *step)
 
 
 void
-gconv_end (struct gconv_step *data)
+gconv_end (struct __gconv_step *data)
 {
-  free (data->data);
+  free (data->__data);
 }
 
 
@@ -188,33 +188,33 @@ gconv_end (struct gconv_step *data)
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->statep->count != ASCII_set)					      \
+  if (data->__statep->count != ASCII_set)				      \
     {									      \
-      enum direction dir = ((struct iso2022jp_data *) step->data)->dir;	      \
+      enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;     \
 									      \
       if (dir == from_iso2022jp)					      \
 	/* It's easy, we don't have to emit anything, we just reset the	      \
 	   state for the input.  Note that this also clears the G2	      \
 	   designation.  */						      \
-	data->statep->count = ASCII_set;				      \
+	data->__statep->count = ASCII_set;				      \
       else								      \
 	{								      \
-	  unsigned char *outbuf = data->outbuf;				      \
+	  unsigned char *outbuf = data->__outbuf;			      \
 									      \
 	  /* We are not in the initial state.  To switch back we have	      \
 	     to emit the sequence `Esc ( B'.  */			      \
-	  if (outbuf + 3 > data->outbufend)				      \
+	  if (outbuf + 3 > data->__outbufend)				      \
 	    /* We don't have enough room in the output buffer.  */	      \
-	    status = GCONV_FULL_OUTPUT;					      \
+	    status = __GCONV_FULL_OUTPUT;				      \
 	  else								      \
 	    {								      \
 	      /* Write out the shift sequence.  */			      \
 	      *outbuf++ = ESC;						      \
 	      *outbuf++ = '(';						      \
 	      *outbuf++ = 'B';						      \
-	      data->outbuf = outbuf;					      \
+	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
-	      data->statep->count = ASCII_set;				      \
+	      data->__statep->count = ASCII_set;			      \
 	    }								      \
 	}								      \
     }
@@ -251,7 +251,7 @@ gconv_end (struct gconv_step *data)
 		&& inptr + 3 >= inend))					      \
 	  {								      \
 	    /* Not enough input available.  */				      \
-	    result = GCONV_EMPTY_INPUT;					      \
+	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -354,20 +354,20 @@ gconv_end (struct gconv_step *data)
 	    /* We use the table from the ISO 8859-7 module.  */		      \
 	    if (inptr[2] < 0x20 || inptr[2] > 0x80)			      \
 	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 	    ch = iso88597_to_ucs4[inptr[2] - 0x20];			      \
 	    if (ch == 0)						      \
 	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 	    inptr += 3;							      \
 	  }								      \
 	else								      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -378,9 +378,9 @@ gconv_end (struct gconv_step *data)
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch);					      \
-	if (ch == UNKNOWN_10646_CHAR)					      \
+	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	++inptr;							      \
@@ -389,9 +389,9 @@ gconv_end (struct gconv_step *data)
       {									      \
 	/* Use the JIS X 0201 table.  */				      \
 	ch = jisx0201_to_ucs4 (ch + 0x80);				      \
-	if (ch == UNKNOWN_10646_CHAR)					      \
+	if (ch == __UNKNOWN_10646_CHAR)					      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	++inptr;							      \
@@ -424,12 +424,12 @@ gconv_end (struct gconv_step *data)
 									      \
 	if (NEED_LENGTH_TEST && ch == 0)				      \
 	  {								      \
-	    result = GCONV_EMPTY_INPUT;					      \
+	    result = __GCONV_EMPTY_INPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (ch == UNKNOWN_10646_CHAR)				      \
+	else if (ch == __UNKNOWN_10646_CHAR)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
@@ -474,25 +474,27 @@ gconv_end (struct gconv_step *data)
       {									      \
 	unsigned char buf[2];						      \
 	written = ucs4_to_jisx0201 (ch, buf);				      \
-	if (written != UNKNOWN_10646_CHAR && buf[0] > 0x20 && buf[0] < 0x80)  \
+	if (written != __UNKNOWN_10646_CHAR && buf[0] > 0x20		      \
+	    && buf[0] < 0x80)						      \
 	  {								      \
 	    *outptr++ = buf[0];						      \
 	    written = 1;						      \
 	  }								      \
 	else								      \
-	  written = UNKNOWN_10646_CHAR;					      \
+	  written = __UNKNOWN_10646_CHAR;				      \
       }									      \
     else if (set == JISX0201_Kana_set)					      \
       {									      \
 	unsigned char buf[2];						      \
 	written = ucs4_to_jisx0201 (ch, buf);				      \
-	if (written != UNKNOWN_10646_CHAR && buf[0] > 0xa0 && buf[0] < 0xe0)  \
+	if (written != __UNKNOWN_10646_CHAR && buf[0] > 0xa0		      \
+	    && buf[0] < 0xe0)						      \
 	  {								      \
 	    *outptr++ = buf[0] - 0x80;					      \
 	    written = 1;						      \
 	  }								      \
 	else								      \
-	  written = UNKNOWN_10646_CHAR;					      \
+	  written = __UNKNOWN_10646_CHAR;				      \
       }									      \
     else								      \
       {									      \
@@ -518,14 +520,14 @@ gconv_end (struct gconv_step *data)
 									      \
 	if (NEED_LENGTH_TEST && written == 0)				      \
 	  {								      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
-	else if (written != UNKNOWN_10646_CHAR)				      \
+	else if (written != __UNKNOWN_10646_CHAR)			      \
 	  outptr += written;						      \
       }									      \
 									      \
-    if (written == UNKNOWN_10646_CHAR || written == 0)			      \
+    if (written == __UNKNOWN_10646_CHAR || written == 0)		      \
       {									      \
 	if (set2 == ISO88591_set)					      \
 	  {								      \
@@ -557,7 +559,7 @@ gconv_end (struct gconv_step *data)
 	  }								      \
       }									      \
 									      \
-    if (written == UNKNOWN_10646_CHAR || written == 0)			      \
+    if (written == __UNKNOWN_10646_CHAR || written == 0)		      \
       {									      \
 	/* Either this is an unknown character or we have to switch	      \
 	   the currently selected character set.  The character sets	      \
@@ -576,7 +578,7 @@ gconv_end (struct gconv_step *data)
 	       escape sequence.  */					      \
 	    if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -600,12 +602,12 @@ gconv_end (struct gconv_step *data)
 	    unsigned char buf[2];					      \
 									      \
 	    written = ucs4_to_jisx0201 (ch, buf);			      \
-	    if (written != UNKNOWN_10646_CHAR && buf[0] < 0x80)		      \
+	    if (written != __UNKNOWN_10646_CHAR && buf[0] < 0x80)	      \
 	      {								      \
 		/* We use JIS X 0201.  */				      \
 		if (NEED_LENGTH_TEST && outptr + 4 > outend)		      \
 		  {							      \
-		    result = GCONV_FULL_OUTPUT;				      \
+		    result = __GCONV_FULL_OUTPUT;			      \
 		    break;						      \
 		  }							      \
 									      \
@@ -618,12 +620,12 @@ gconv_end (struct gconv_step *data)
 	    else							      \
 	      {								      \
 		written = ucs4_to_jisx0208 (ch, buf, 2);		      \
-		if (written != UNKNOWN_10646_CHAR)			      \
+		if (written != __UNKNOWN_10646_CHAR)			      \
 		  {							      \
 		    /* We use JIS X 0208.  */				      \
 		    if (NEED_LENGTH_TEST && outptr + 5 > outend)	      \
 		      {							      \
-			result = GCONV_FULL_OUTPUT;			      \
+			result = __GCONV_FULL_OUTPUT;			      \
 			break;						      \
 		      }							      \
 									      \
@@ -637,18 +639,18 @@ gconv_end (struct gconv_step *data)
 		else if (var == iso2022jp)				      \
 		  {							      \
 		    /* We have no other choice.  */			      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 		else							      \
 		  {							      \
 		    written = ucs4_to_jisx0212 (ch, buf, 2);		      \
-		    if (written != UNKNOWN_10646_CHAR)			      \
+		    if (written != __UNKNOWN_10646_CHAR)		      \
 		      {							      \
 			/* We use JIS X 0212.  */			      \
 			if (NEED_LENGTH_TEST && outptr + 6 > outend)	      \
 			  {						      \
-			    result = GCONV_FULL_OUTPUT;			      \
+			    result = __GCONV_FULL_OUTPUT;		      \
 			    break;					      \
 			  }						      \
 			*outptr++ = ESC;				      \
@@ -662,12 +664,13 @@ gconv_end (struct gconv_step *data)
 		    else						      \
 		      {							      \
 			written = ucs4_to_jisx0201 (ch, buf);		      \
-			if (written != UNKNOWN_10646_CHAR && buf[0] >= 0x80)  \
+			if (written != __UNKNOWN_10646_CHAR		      \
+			    && buf[0] >= 0x80)				      \
 			  {						      \
 			    /* We use JIS X 0201.  */			      \
 			    if (NEED_LENGTH_TEST && outptr + 4 > outend)      \
 			      {						      \
-			        result = GCONV_FULL_OUTPUT;		      \
+			        result = __GCONV_FULL_OUTPUT;		      \
 			        break;					      \
 			      }						      \
 									      \
@@ -682,7 +685,7 @@ gconv_end (struct gconv_step *data)
 			    /* ISO 8859-1 upper half.   */		      \
 			    if (NEED_LENGTH_TEST && outptr + 6 > outend)      \
 			      {						      \
-				result = GCONV_FULL_OUTPUT;		      \
+				result = __GCONV_FULL_OUTPUT;		      \
 				break;					      \
 			      }						      \
 									      \
@@ -697,12 +700,12 @@ gconv_end (struct gconv_step *data)
 			else						      \
 			  {						      \
 			    written = ucs4_to_gb2312 (ch, buf, 2);	      \
-			    if (written != UNKNOWN_10646_CHAR)		      \
+			    if (written != __UNKNOWN_10646_CHAR)	      \
 			      {						      \
 				/* We use GB 2312.  */			      \
 				if (NEED_LENGTH_TEST && outptr + 5 > outend)  \
 				  {					      \
-				    result = GCONV_FULL_OUTPUT;		      \
+				    result = __GCONV_FULL_OUTPUT;	      \
 				    break;				      \
 				  }					      \
 									      \
@@ -716,13 +719,13 @@ gconv_end (struct gconv_step *data)
 			    else					      \
 			      {						      \
 				written = ucs4_to_ksc5601 (ch, buf, 2);	      \
-				if (written != UNKNOWN_10646_CHAR)	      \
+				if (written != __UNKNOWN_10646_CHAR)	      \
 				  {					      \
 				    /* We use KSC 5601.  */		      \
 				    if (NEED_LENGTH_TEST		      \
 					&& outptr + 6 > outend)		      \
 				      {					      \
-					result = GCONV_FULL_OUTPUT;	      \
+					result = __GCONV_FULL_OUTPUT;	      \
 					break;				      \
 				      }					      \
 				    *outptr++ = ESC;			      \
@@ -752,7 +755,7 @@ gconv_end (struct gconv_step *data)
 					if (NEED_LENGTH_TEST		      \
 					    && outptr + 6 > outend)	      \
 					  {				      \
-					    result = GCONV_FULL_OUTPUT;	      \
+					    result = __GCONV_FULL_OUTPUT;     \
 					    break;			      \
 					  }				      \
 					*outptr++ = ESC;		      \
@@ -765,7 +768,7 @@ gconv_end (struct gconv_step *data)
 				      }					      \
 				    else				      \
 				      {					      \
-					result = GCONV_ILLEGAL_INPUT;	      \
+					result = __GCONV_ILLEGAL_INPUT;	      \
 					break;				      \
 				      }					      \
 				  }					      \

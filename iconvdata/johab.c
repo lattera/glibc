@@ -1,5 +1,5 @@
 /* Mapping tables for JOHAB handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jungshik Shin <jshin@pantheon.yale.edu>
    and Ulrich Drepper <drepper@cygnus.com>, 1998.
@@ -183,7 +183,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	    || (ch > 0xd3 && ch < 0xd9))				      \
 	  {								      \
 	    /* These are illegal.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	else								      \
@@ -197,7 +197,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	      {								      \
 		/* The second character is not available.  Store the	      \
 		   intermediate result.  */				      \
-		result = GCONV_INCOMPLETE_INPUT;			      \
+		result = __GCONV_INCOMPLETE_INPUT;			      \
 		break;							      \
 	      }								      \
 									      \
@@ -215,7 +215,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (i == -1 || m == -1 || f == -1)			      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 		else if (i > 0 && m > 0)				      \
@@ -229,7 +229,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		else							      \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 	      }								      \
@@ -238,14 +238,14 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 		if (ch2 < 0x31 || (ch2 > 0x7e && ch2 < 0x91) || ch2 == 0xff)  \
 		  {							      \
 		    /* This is illegal.  */				      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 		else if (ch == 0xda && ch2 > 0xa0 && ch2 < 0xd4)	      \
 		  {							      \
 		    /* This is illegal.  Modern Hangul Jaso is defined	      \
 		       elsewhere in Johab */				      \
-		    result = GCONV_ILLEGAL_INPUT;			      \
+		    result = __GCONV_ILLEGAL_INPUT;			      \
 		    break;						      \
 		  }							      \
 		else							      \
@@ -267,7 +267,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 	if (ch == 0)							      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -315,7 +315,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -330,7 +330,7 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 									      \
 	    if (NEED_LENGTH_TEST && outptr + 2 > outend)		      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -346,12 +346,12 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 					      ? outend - outptr : 2));	      \
 	    if (NEED_LENGTH_TEST && written == 0)			      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (written == UNKNOWN_10646_CHAR)				      \
+	    if (written == __UNKNOWN_10646_CHAR)			      \
 	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -375,12 +375,12 @@ johab_sym_hanja_to_ucs (uint_fast32_t idx, uint_fast32_t c1, uint_fast32_t c2)
 					    ? outend - outptr : 2));	      \
 	    if (NEED_LENGTH_TEST && written == 0)			      \
 	      {								      \
-		result = GCONV_FULL_OUTPUT;				      \
+		result = __GCONV_FULL_OUTPUT;				      \
 		break;							      \
 	      }								      \
-	    if (written == UNKNOWN_10646_CHAR)				      \
+	    if (written == __UNKNOWN_10646_CHAR)			      \
 	      {								      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \

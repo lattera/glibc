@@ -38,11 +38,12 @@
 #ifdef USE_IN_LIBIO
 # include <libioP.h>
 # define PUT(f, s, n) _IO_sputn (f, s, n)
-# define PAD(f, c, n) _IO_padn (f, c, n)
+# define PAD(f, c, n) (wide  ? _IO_wpadn (f, c, n) : _IO_padn (f, c, n))
 /* We use this file GNU C library and GNU I/O library.	So make
    names equal.	 */
 # undef putc
-# define putc(c, f) _IO_putc_unlocked (c, f)
+# define putc(c, f) (wide \
+		     ? _IO_putwc_unlocked (c, f) : _IO_putc_unlocked (c, f))
 # define size_t     _IO_size_t
 # define FILE	     _IO_FILE
 #else	/* ! USE_IN_LIBIO */
@@ -131,6 +132,9 @@ __printf_fphex (FILE *fp,
 
   /* Number of characters written.  */
   int done = 0;
+
+  /* Nonzero if this is output on a wide character stream.  */
+  int wide = info->wide;
 
 
   /* Figure out the decimal point character.  */

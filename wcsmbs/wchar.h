@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,19 +22,24 @@
  */
 
 #ifndef _WCHAR_H
-#define _WCHAR_H 1
 
-#include <features.h>
+#ifndef __need_mbstate_t
+# define _WCHAR_H 1
+# include <features.h>
+#endif
 
+#ifdef _WCHAR_H
 /* Get FILE definition.  */
-#define __need_FILE
-#include <stdio.h>
+# define __need_FILE
+# include <stdio.h>
+# include <stdarg.h>
 
 /* Get size_t, wchar_t, wint_t and NULL from <stddef.h>.  */
-#define __need_size_t
-#define __need_wchar_t
+# define __need_size_t
+# define __need_wchar_t
+# define __need_NULL
+#endif
 #define __need_wint_t
-#define __need_NULL
 #include <stddef.h>
 
 /* We try to get wint_t from <stddef.h>, but not all GCC versions define it
@@ -49,12 +54,24 @@ typedef unsigned int wint_t;
 #endif
 
 
+#ifndef __mbstate_t_defined
+# define __mbstate_t_defined	1
 /* Conversion state information.  */
 typedef struct
 {
   int count;		/* Number of bytes needed for the current character. */
   wint_t value;		/* Value so far.  */
-} mbstate_t;
+} __mbstate_t;
+#endif
+#undef __need_mbstate_t
+
+
+/* The rest of the file is only used if used if __need_mbstate_t is not
+   defined.  */
+#ifdef _WCHAR_H
+
+/* Public type.  */
+typedef __mbstate_t mbstate_t;
 
 #ifndef WCHAR_MIN
 /* These constants might also be defined in <inttypes.h>.  */
@@ -150,6 +167,12 @@ extern wchar_t *wcschr __P ((__const wchar_t *__wcs, wchar_t __wc));
 /* Find the last occurrence of WC in WCS.  */
 extern wchar_t *wcsrchr __P ((__const wchar_t *__wcs, wchar_t __wc));
 
+#ifdef __USE_GNU
+/* This funciton is similar to `wcschr'.  But it returns a pointer to
+   the closing NUL wide character in case C is not found in S.  */
+extern wchar_t *wcschrnul __P ((__const wchar_t *__s, wchar_t __wc));
+#endif
+
 /* Return the length of the initial segmet of WCS which
    consists entirely of wide characters not in REJECT.  */
 extern size_t wcscspn __P ((__const wchar_t *__wcs,
@@ -203,6 +226,13 @@ extern wchar_t *wmemmove __P ((wchar_t *__s1, __const wchar_t *__s2,
 
 /* Set N wide characters of S to C.  */
 extern wchar_t *wmemset __P ((wchar_t *__s, wchar_t __c, size_t __n));
+
+#ifdef __USE_GNU
+/* Copy N wide characters of SRC to DEST and return pointer to following
+   wide character.  */
+extern wchar_t *wmempcpy __P ((wchar_t *__restrict __s1,
+			       __const wchar_t *__restrict __s2, size_t __n));
+#endif
 
 
 /* Determine whether C constitutes a valid (one-byte) multibyte
@@ -488,6 +518,137 @@ extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 #endif	/* use GNU */
 
 
+/* Wide character I/O functions.  */
+
+/* Select orientation for stream.  */
+extern int fwide __P ((FILE *__fp, int __mode));
+
+
+/* Write formatted output to STREAM.  */
+extern int fwprintf __P ((FILE *__restrict __stream,
+			  __const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wprintf__, 2, 3))) */;
+/* Write formatted output to stdout.  */
+extern int wprintf __P ((__const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wprintf__, 1, 2))) */;
+/* Write formatted output of at most N characters to S.  */
+extern int swprintf __P ((wchar_t *__restrict __s, size_t __n,
+			  __const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wprintf__, 3, 4))) */;
+
+/* Write formatted output to S from argument list ARG.  */
+extern int vfwprintf __P ((FILE *__restrict __s,
+			   __const wchar_t *__restrict __format,
+			   va_list __arg))
+     /* __attribute__ ((__format__ (__wprintf__, 2, 0))) */;
+/* Write formatted output to stdout from argument list ARG.  */
+extern int vwprintf __P ((__const wchar_t *__restrict __format,
+			  va_list __arg))
+     /* __attribute__ ((__format__ (__wprintf__, 1, 0))) */;
+/* Write formatted output of at most N character to S from argument
+   list ARG.  */
+extern int vswprintf __P ((wchar_t *__restrict __s, size_t __n,
+			   __const wchar_t *__restrict __format,
+			   va_list __arg))
+     /* __attribute__ ((__format__ (__wprintf__, 3, 0))) */;
+
+
+/* Read formatted input from STREAM.  */
+extern int fwscanf __P ((FILE *__restrict __stream,
+			 __const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+/* Read formatted input from stdin.  */
+extern int wscanf __P ((__const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wscanf__, 1, 2))) */;
+/* Read formatted input from S.  */
+extern int swscanf __P ((__const wchar_t *__restrict __s,
+			 __const wchar_t *__restrict __format, ...))
+     /* __attribute__ ((__format__ (__wscanf__, 2, 3))) */;
+
+/* Read formatted input from S into argument list ARG.  */
+extern int vfwscanf __P ((FILE *__restrict __s,
+			  __const wchar_t *__restrict __format, va_list __arg))
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+/* Read formatted input from stdin into argument list ARG.  */
+extern int vwscanf __P ((__const wchar_t *__restrict __format, va_list __arg))
+     /* __attribute__ ((__format__ (__wscanf__, 1, 0))) */;
+/* Read formatted input from S into argument list ARG.  */
+extern int vswscanf __P ((__const wchar_t *__restrict __s,
+			  __const wchar_t *__restrict __format, va_list __arg))
+     /* __attribute__ ((__format__ (__wscanf__, 2, 0))) */;
+
+
+/* Read a character from STREAM.  */
+extern wint_t fgetwc __P ((FILE *__stream));
+extern wint_t getwc __P ((FILE *__stream));
+
+/* Read a character from stdin.  */
+extern wint_t getwchar __P ((void));
+
+#ifdef __USE_GNU
+/* These are defined to be equivalent to the `char' functions defined
+   in POSIX.1:1996.  */
+extern wint_t getwc_unlocked __P ((FILE *__stream));
+extern wint_t getwchar_unlocked __P ((void));
+
+/* This is the wide character version of a GNU extension.  */
+extern wint_t fgetwc_unlocked __P ((FILE *__stream));
+#endif /* Use POSIX or MISC.  */
+
+
+/* Write a character to STREAM.  */
+extern wint_t fputwc __P ((wint_t __wc, FILE *__stream));
+extern wint_t putwc __P ((wint_t __wc, FILE *__stream));
+
+/* Write a character to stdout.  */
+extern wint_t putwchar __P ((wint_t __wc));
+
+#ifdef __USE_GNU
+/* Faster version when locking is not necessary.  */
+extern wint_t fputwc_unlocked __P ((wint_t __wc, FILE *__stream));
+
+/* These are defined to be equivalent to the `char' functions defined
+   in POSIX.1:1996.  */
+extern wint_t putwc_unlocked __P ((wint_t __wc, FILE *__stream));
+extern wint_t putwchar_unlocked __P ((wint_t __wc));
+#endif
+
+
+/* Get a newline-terminated wide character string of finite length
+   from STREAM.  */
+extern wchar_t *fgetws __P ((wchar_t *__restrict __ws, int __n,
+			     FILE *__restrict __stream));
+
+#ifdef __USE_GNU
+/* This function does the same as `fgetws' but does not lock the stream.  */
+extern wchar_t *fgetws_unlocked __P ((wchar_t *__restrict __ws, int __n,
+				      FILE *__restrict __stream));
+#endif
+
+
+/* Write a string to STREAM.  */
+extern int fputws __P ((__const wchar_t *__restrict __ws,
+			FILE *__restrict __stream));
+
+#ifdef __USE_GNU
+/* This function does the same as `fputws' but does not lock the stream.  */
+extern int fputws_unlocked __P ((__const wchar_t *__restrict __ws,
+				 FILE *__restrict __stream));
+#endif
+
+
+/* Push a character back onto the input buffer of STREAM.  */
+extern wint_t ungetwc __P ((wint_t __wc, FILE *__stream));
+
+
+/* Format TP into S according to FORMAT.
+   Write no more than MAXSIZE wide characters and return the number
+   of wide characters written, or 0 if it would exceed MAXSIZE.  */
+extern size_t wcsftime __P ((wchar_t *__restrict __s, size_t __maxsize,
+			     __const wchar_t *__restrict __format,
+			     __const struct tm *__restrict __tp));
+
+
 /* The X/Open standard demands that most of the functions defined in
    the <wctype.h> header must also appear here.  This is probably
    because some X/Open members wrote their implementation before the
@@ -500,5 +661,7 @@ extern wchar_t *wcpncpy __P ((wchar_t *__dest, __const wchar_t *__src,
 #endif
 
 __END_DECLS
+
+#endif	/* _WCHAR_H defined */
 
 #endif /* wchar.h  */

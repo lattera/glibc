@@ -2170,6 +2170,9 @@ type modifier was specified.  For integer conversions, this indicates
 @code{long long int}, as opposed to @code{long double} for floating
 point conversions.
 
+@item unsigned int is_char
+This is a boolean that is true if the @samp{hh} type modifier was specified.
+
 @item unsigned int is_short
 This is a boolean that is true if the @samp{h} type modifier was specified.
 
@@ -2196,6 +2199,9 @@ This flag has a special meaning depending on the context.  It could
 be used freely by the user-defined handlers but when called from
 the @code{printf} function this variable always contains the value
 @code{0}.
+
+@item unsigned int wide
+This flag is set if the stream is wide oriented.
 
 @item wchar_t pad
 This is the character to use for padding the output to the minimum field

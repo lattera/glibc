@@ -1,5 +1,5 @@
 /* Access functions for CNS 11643, plane 1 handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -33,22 +33,22 @@ cns11643l1_to_ucs4 (const char **s, size_t avail, unsigned char offset)
   int idx;
 
   if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0x7d)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
   if ((ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
   if (idx > 0x2196)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   (*s) += 2;
 
-  return __cns11643l1_to_ucs4_tab[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
+  return __cns11643l1_to_ucs4_tab[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
 }
 
 
@@ -163,11 +163,11 @@ ucs4_to_cns11643l1 (uint32_t wch, char *s, size_t avail)
       cp = "\x22\x64";
       break;
     default:
-      return UNKNOWN_10646_CHAR;
+      return __UNKNOWN_10646_CHAR;
     }
 
   if (cp[0] == '\0')
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;

@@ -26,31 +26,32 @@
 
 int
 internal_function
-__gconv_open (const char *toset, const char *fromset, gconv_t *handle)
+__gconv_open (const char *toset, const char *fromset, __gconv_t *handle)
 {
-  struct gconv_step *steps;
+  struct __gconv_step *steps;
   size_t nsteps;
-  gconv_t result = NULL;
+  __gconv_t result = NULL;
   size_t cnt = 0;
   int res;
 
   res = __gconv_find_transform (toset, fromset, &steps, &nsteps);
-  if (res == GCONV_OK)
+  if (res == __GCONV_OK)
     {
       /* Allocate room for handle.  */
-      result = (gconv_t) malloc (sizeof (struct gconv_info)
-				 + nsteps * sizeof (struct gconv_step_data));
+      result = (__gconv_t) malloc (sizeof (struct __gconv_info)
+				   + (nsteps
+				      * sizeof (struct __gconv_step_data)));
       if (result == NULL)
-	res = GCONV_NOMEM;
+	res = __GCONV_NOMEM;
       else
 	{
 	  /* Remember the list of steps.  */
-	  result->steps = steps;
-	  result->nsteps = nsteps;
+	  result->__steps = steps;
+	  result->__nsteps = nsteps;
 
 	  /* Clear the array for the step data.  */
-	  memset (result->data, '\0',
-		  nsteps * sizeof (struct gconv_step_data));
+	  memset (result->__data, '\0',
+		  nsteps * sizeof (struct __gconv_step_data));
 
 	  /* Call all initialization functions for the transformation
 	     step implemenations.  */
@@ -58,37 +59,37 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
 	    {
 	      /* If this is the last step we must not allocate an
 		 output buffer.  */
-	      result->data[cnt].is_last = cnt == nsteps - 1;
+	      result->__data[cnt].__is_last = cnt == nsteps - 1;
 
 	      /* Reset the counter.  */
-	      result->data[cnt].invocation_counter = 0;
+	      result->__data[cnt].__invocation_counter = 0;
 
 	      /* It's a regular use.  */
-	      result->data[cnt].internal_use = 0;
+	      result->__data[cnt].__internal_use = 0;
 
 	      /* We use the `mbstate_t' member in DATA.  */
-	      result->data[cnt].statep = &result->data[cnt].__state;
+	      result->__data[cnt].__statep = &result->__data[cnt].__state;
 
 	      /* Allocate the buffer.  */
-	      if (!result->data[cnt].is_last)
+	      if (!result->__data[cnt].__is_last)
 		{
 		  size_t size = (GCONV_NCHAR_GOAL
-				 * steps[cnt].max_needed_to);
+				 * steps[cnt].__max_needed_to);
 
-		  result->data[cnt].outbuf = (char *) malloc (size);
-		  if (result->data[cnt].outbuf == NULL)
+		  result->__data[cnt].__outbuf = (char *) malloc (size);
+		  if (result->__data[cnt].__outbuf == NULL)
 		    {
-		      res = GCONV_NOMEM;
+		      res = __GCONV_NOMEM;
 		      break;
 		    }
-		  result->data[cnt].outbufend = (result->data[cnt].outbuf
-						 + size);
+		  result->__data[cnt].__outbufend =
+		    result->__data[cnt].__outbuf + size;
 		}
 	    }
 	}
     }
 
-  if (res != GCONV_OK)
+  if (res != __GCONV_OK)
     {
       /* Something went wrong.  Free all the resources.  */
       int serrno = errno;
@@ -96,7 +97,7 @@ __gconv_open (const char *toset, const char *fromset, gconv_t *handle)
       if (result != NULL)
 	{
 	  while (cnt-- > 0)
-	    free (result->data[cnt].outbuf);
+	    free (result->__data[cnt].__outbuf);
 
 	  free (result);
 	  result = NULL;

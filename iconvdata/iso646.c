@@ -1,5 +1,5 @@
 /* Conversion to and from the various ISO 646 CCS.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -45,8 +45,8 @@
 #define MIN_NEEDED_TO		4
 #define FROM_DIRECTION		(dir == from_iso646)
 #define PREPARE_LOOP \
-  enum direction dir = ((struct iso646_data *) step->data)->dir;	      \
-  enum variant var = ((struct iso646_data *) step->data)->var;
+  enum direction dir = ((struct iso646_data *) step->__data)->dir;	      \
+  enum variant var = ((struct iso646_data *) step->__data)->var;
 #define EXTRA_LOOP_ARGS		, var
 
 
@@ -124,7 +124,7 @@ struct iso646_data
 
 
 int
-gconv_init (struct gconv_step *step)
+gconv_init (struct __gconv_step *step)
 {
   /* Determine which direction.  */
   struct iso646_data *new_data;
@@ -133,47 +133,47 @@ gconv_init (struct gconv_step *step)
   int result;
 
   for (var = sizeof (names) / sizeof (names[0]) - 1; var > illegal_var; --var)
-    if (__strcasecmp (step->from_name, names[var]) == 0)
+    if (__strcasecmp (step->__from_name, names[var]) == 0)
       {
 	dir = from_iso646;
 	break;
       }
-    else if (__strcasecmp (step->to_name, names[var]) == 0)
+    else if (__strcasecmp (step->__to_name, names[var]) == 0)
       {
 	dir = to_iso646;
 	break;
       }
 
-  result = GCONV_NOCONV;
+  result = __GCONV_NOCONV;
   if (dir != illegal_dir)
     {
       new_data = (struct iso646_data *) malloc (sizeof (struct iso646_data));
 
-      result = GCONV_NOMEM;
+      result = __GCONV_NOMEM;
       if (new_data != NULL)
 	{
 	  new_data->dir = dir;
 	  new_data->var = var;
-	  step->data = new_data;
+	  step->__data = new_data;
 
 	  if (var == from_iso646)
 	    {
-	      step->min_needed_from = MIN_NEEDED_FROM;
-	      step->max_needed_from = MIN_NEEDED_FROM;
-	      step->min_needed_to = MIN_NEEDED_TO;
-	      step->max_needed_to = MIN_NEEDED_TO;
+	      step->__min_needed_from = MIN_NEEDED_FROM;
+	      step->__max_needed_from = MIN_NEEDED_FROM;
+	      step->__min_needed_to = MIN_NEEDED_TO;
+	      step->__max_needed_to = MIN_NEEDED_TO;
 	    }
 	  else
 	    {
-	      step->min_needed_from = MIN_NEEDED_TO;
-	      step->max_needed_from = MIN_NEEDED_TO;
-	      step->min_needed_to = MIN_NEEDED_FROM;
-	      step->max_needed_to = MIN_NEEDED_FROM;
+	      step->__min_needed_from = MIN_NEEDED_TO;
+	      step->__max_needed_from = MIN_NEEDED_TO;
+	      step->__min_needed_to = MIN_NEEDED_FROM;
+	      step->__max_needed_to = MIN_NEEDED_FROM;
 	    }
 
-	  step->stateful = 0;
+	  step->__stateful = 0;
 
-	  result = GCONV_OK;
+	  result = __GCONV_OK;
 	}
     }
 
@@ -182,9 +182,9 @@ gconv_init (struct gconv_step *step)
 
 
 void
-gconv_end (struct gconv_step *data)
+gconv_end (struct __gconv_step *data)
 {
-  free (data->data);
+  free (data->__data);
 }
 
 
@@ -195,7 +195,7 @@ gconv_end (struct gconv_step *data)
 #define BODY \
   {									      \
     uint32_t ch;							      \
-    int failure = GCONV_OK;						      \
+    int failure = __GCONV_OK;						      \
 									      \
     ch = *inptr;							      \
     switch (ch)								      \
@@ -308,7 +308,7 @@ gconv_end (struct gconv_step *data)
 	  ch = 0xf9;							      \
 	else if (var == JP_OCR_B)					      \
 	  /* Illegal character.  */					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	else if (var == YU)						      \
 	  ch = 0x17e;							      \
 	else if (var == HU)						      \
@@ -382,7 +382,7 @@ gconv_end (struct gconv_step *data)
 	  ch = 0xec;							      \
 	else if (var == JP_OCR_B)					      \
 	  /* Illegal character.  */					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	else if (var == YU)						      \
 	  ch = 0x10d;							      \
 	else if (var == HU)						      \
@@ -398,13 +398,13 @@ gconv_end (struct gconv_step *data)
 	break;								      \
       case 0x80 ... 0xff:						      \
 	/* Illegal character.  */					      \
-	failure = GCONV_ILLEGAL_INPUT;					      \
+	failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       }									      \
 									      \
     /* Hopefully gcc can recognize that the following `if' is only true	      \
        when we reach the default case in the `switch' statement.  */	      \
-    if (failure == GCONV_ILLEGAL_INPUT)					      \
+    if (failure == __GCONV_ILLEGAL_INPUT)				      \
       {									      \
 	/* Exit the loop with an error.  */				      \
 	result = failure;						      \
@@ -424,7 +424,7 @@ gconv_end (struct gconv_step *data)
 #define BODY \
   {									      \
     unsigned char ch;							      \
-    int failure = GCONV_OK;						      \
+    int failure = __GCONV_OK;						      \
 									      \
     ch = *((uint32_t *) inptr);						      \
     switch (*((uint32_t *) inptr))					      \
@@ -432,17 +432,17 @@ gconv_end (struct gconv_step *data)
       case 0x23:							      \
 	if (var == GB || var == ES || var == IT || var == FR || var == FR1    \
 	    || var == NO2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x24:							      \
 	if (var == CN || var == HU || var == CU || var == SE || var == SE2)   \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x40:							      \
 	if (var == CA || var == CA2 || var == DE || var == ES || var == ES2   \
 	    || var == IT || var == YU || var == HU || var == FR || var == FR1 \
 	    || var == PT || var == PT2 || var == SE2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x5b:							      \
 	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
@@ -450,7 +450,7 @@ gconv_end (struct gconv_step *data)
 	    || var == HU || var == FR || var == FR1 || var == NO	      \
 	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
 	    || var == SE2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	else if (var == CU)						      \
 	  ch = 0x7d;							      \
 	break;								      \
@@ -460,7 +460,7 @@ gconv_end (struct gconv_step *data)
 	    || var == YU || var == KR || var == HU || var == CU || var == FR  \
 	    || var == FR1 || var == NO || var == NO2 || var == PT	      \
 	    || var == PT2 || var == SE || var == SE2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x5d:							      \
 	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
@@ -468,17 +468,17 @@ gconv_end (struct gconv_step *data)
 	    || var == HU || var == FR || var == FR1 || var == NO	      \
 	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
 	    || var == SE2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x5e:							      \
 	if (var == CA || var == CA2 || var == ES2 || var == YU || var == CU   \
 	    || var == SE2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x60:							      \
 	if (var == CA || var == CA2 || var == IT || var == JP_OCR_B	      \
 	    || var == YU || var == HU || var == FR || var == SE2)	      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x7b:							      \
 	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
@@ -486,14 +486,14 @@ gconv_end (struct gconv_step *data)
 	    || var == CU || var == FR || var == FR1 || var == NO	      \
 	    || var == NO2 || var == PT || var == PT2 || var == SE	      \
 	    || var == SE2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x7c:							      \
 	if (var == CA || var == CA2 || var == DE || var == DK || var == ES    \
 	    || var == ES2 || var == IT || var == YU || var == HU || var == CU \
 	    || var == FR || var == FR1 || var == NO || var == PT	      \
 	    || var == PT2 || var == SE || var == SE2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	else if (var == NO2)						      \
 	  ch = 0x7e;							      \
 	break;								      \
@@ -502,7 +502,7 @@ gconv_end (struct gconv_step *data)
 	    || var == ES2 || var == IT || var == YU || var == HU || var == CU \
 	    || var == FR || var == FR1 || var == NO || var == NO2	      \
 	    || var == PT || var == PT2 || var == SE || var == SE2)	      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x7e:							      \
 	if (var == GB || var == CA || var == CA2 || var == DE || var == ES2   \
@@ -510,21 +510,21 @@ gconv_end (struct gconv_step *data)
 	    || var == YU || var == HU || var == CU || var == FR || var == FR1 \
 	    || var == NO || var == NO2 || var == PT || var == SE	      \
 	    || var == SE2)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xa1:							      \
 	if (var != ES && var != ES2 && var != CU)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0xa3:							      \
 	if (var != GB && var != ES && var != IT && var != FR && var != FR1)   \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x23;							      \
 	break;								      \
       case 0xa4:							      \
 	if (var != HU && var != CU && var != SE && var != SE2)		      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x24;							      \
 	break;								      \
       case 0xa5:							      \
@@ -533,7 +533,7 @@ gconv_end (struct gconv_step *data)
 	else if (var == JP || var == JP_OCR_B)				      \
 	  ch = 0x5c;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xa7:							      \
 	if (var == DE || var == ES || var == IT || var == PT)		      \
@@ -543,11 +543,11 @@ gconv_end (struct gconv_step *data)
 	else if (var == NO2)						      \
 	  ch = 0x23;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xa8:							      \
 	if (var != ES2 && var != CU && var != FR && var != FR1)		      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0xb0:							      \
@@ -558,7 +558,7 @@ gconv_end (struct gconv_step *data)
 	else if (var == PT)						      \
 	  ch = 0x7e;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xb4:							      \
 	if (var == ES2 || var == CU)					      \
@@ -566,11 +566,11 @@ gconv_end (struct gconv_step *data)
 	else if (var == PT2)						      \
 	  ch = 0x40;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xb5:							      \
 	if (var != FR)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x60;							      \
 	break;								      \
       case 0xbf:							      \
@@ -579,31 +579,31 @@ gconv_end (struct gconv_step *data)
 	else if (var == ES2 || var == CU)				      \
 	  ch = 0x5e;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xc1:							      \
 	if (var != HU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x40;							      \
 	break;								      \
       case 0xc3:							      \
 	if (var != PT && var != PT2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0xc4:							      \
 	if (var != DE && var != SE && var != SE2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0xc5:							      \
 	if (var != DK && var != NO && var != NO2 && var != SE && var != SE2)  \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5d;							      \
 	break;								      \
       case 0xc6:							      \
 	if (var != DK && var != NO && var != NO2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0xc7:							      \
@@ -612,7 +612,7 @@ gconv_end (struct gconv_step *data)
 	else if (var == PT || var == PT2)				      \
 	  ch = 0x5c;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xc9:							      \
 	if (var == CA2)							      \
@@ -622,26 +622,26 @@ gconv_end (struct gconv_step *data)
 	else if (var == SE2)						      \
 	  ch = 0x40;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xd1:							      \
 	if (var != ES && var != ES2 && var != CU)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5c;							      \
 	break;								      \
       case 0xd5:							      \
 	if (var != PT && var != PT2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5d;							      \
 	break;								      \
       case 0xd6:							      \
 	if (var != DE && var != HU && var != SE && var != SE2)		      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5c;							      \
 	break;								      \
       case 0xd8:							      \
 	if (var != DK && var != NO && var != NO2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5c;							      \
 	break;								      \
       case 0xdc:							      \
@@ -650,11 +650,11 @@ gconv_end (struct gconv_step *data)
 	else if (var == SE2)						      \
 	  ch = 0x5e;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xdf:							      \
 	if (var != DE)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0xe0:							      \
@@ -663,36 +663,36 @@ gconv_end (struct gconv_step *data)
 	else if (var == IT)						      \
 	  ch = 0x7b;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xe1:							      \
 	if (var != HU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x60;							      \
 	break;								      \
       case 0xe2:							      \
 	if (var != CA && var != CA2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0xe3:							      \
 	if (var != PT && var != PT2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7b;							      \
 	break;								      \
       case 0xe4:							      \
 	if (var != DE && var != SE && var != SE2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7b;							      \
 	break;								      \
       case 0xe5:							      \
 	if (var != DK && var != NO && var != NO2 && var != SE && var != SE2)  \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7d;							      \
 	break;								      \
       case 0xe6:							      \
 	if (var != DK && var != NO && var != NO2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7b;							      \
 	break;								      \
       case 0xe7:							      \
@@ -703,11 +703,11 @@ gconv_end (struct gconv_step *data)
 	else if (var == PT || var == PT2)				      \
 	  ch = 0x7c;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xe8:							      \
 	if (var != CA && var != CA2 && var != IT && var != FR && var != FR1)  \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7d;							      \
 	break;								      \
       case 0xe9:							      \
@@ -718,51 +718,51 @@ gconv_end (struct gconv_step *data)
 	else if (var == SE2)						      \
 	  ch = 0x60;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xea:							      \
 	if (var != CA && var != CA2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5d;							      \
 	break;								      \
       case 0xec:							      \
 	if (var != IT)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0xee:							      \
 	if (var != CA)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5e;							      \
 	break;								      \
       case 0xf1:							      \
 	if (var != ES && var != ES2 && var != CU)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7c;							      \
 	break;								      \
       case 0xf2:							      \
 	if (var != IT)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7c;							      \
 	break;								      \
       case 0xf4:							      \
 	if (var != CA && var != CA2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x60;							      \
 	break;								      \
       case 0xf5:							      \
 	if (var != PT && var != PT2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7d;							      \
 	break;								      \
       case 0xf6:							      \
 	if (var != DE && var != HU && var != SE && var != SE2)		      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7c;							      \
 	break;								      \
       case 0xf8:							      \
 	if (var != DK && var != NO && var != NO2)			      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7c;							      \
 	break;								      \
       case 0xf9:							      \
@@ -771,11 +771,11 @@ gconv_end (struct gconv_step *data)
 	else if (var == IT)						      \
 	  ch = 0x60;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0xfb:							      \
 	if (var != CA && var != CA2)					      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0xfc:							      \
@@ -784,95 +784,95 @@ gconv_end (struct gconv_step *data)
 	else if (var == SE2)						      \
 	  ch = 0x7e;							      \
 	else								      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       case 0x160:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0x106:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5d;							      \
 	break;								      \
       case 0x107:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7d;							      \
 	break;								      \
       case 0x10c:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5e;							      \
 	break;								      \
       case 0x10d:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0x110:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5c;							      \
 	break;								      \
       case 0x111:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7c;							      \
 	break;								      \
       case 0x161:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7b;							      \
 	break;								      \
       case 0x17d:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x40;							      \
 	break;								      \
       case 0x17e:							      \
 	if (var != YU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x60;							      \
 	break;								      \
       case 0x2dd:							      \
 	if (var != HU)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0x2022:							      \
 	if (var != ES2)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x40;							      \
 	break;								      \
       case 0x203e:							      \
 	if (var != GB && var != CN && var != JP && var != NO && var != SE)    \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x7e;							      \
 	break;								      \
       case 0x20a9:							      \
 	if (var != KR)							      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5c;							      \
 	break;								      \
       case 0x2329:							      \
 	if (var != JP_OCR_B)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5b;							      \
 	break;								      \
       case 0x232a:							      \
 	if (var != JP_OCR_B)						      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	ch = 0x5d;							      \
 	break;								      \
       default:								      \
 	if (*((uint32_t *) inptr) > 0x7f)				      \
-	  failure = GCONV_ILLEGAL_INPUT;				      \
+	  failure = __GCONV_ILLEGAL_INPUT;				      \
 	break;								      \
       }									      \
 									      \
-    if (failure == GCONV_ILLEGAL_INPUT)					      \
+    if (failure == __GCONV_ILLEGAL_INPUT)				      \
       {									      \
 	/* Exit the loop with an error.  */				      \
 	result = failure;						      \

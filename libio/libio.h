@@ -37,10 +37,12 @@
 #define _IO_off64_t _G_off64_t
 #define _IO_pid_t _G_pid_t
 #define _IO_uid_t _G_uid_t
+#define _IO_iconv_t _G_iconv_t
 #define _IO_HAVE_SYS_WAIT _G_HAVE_SYS_WAIT
 #define _IO_HAVE_ST_BLKSIZE _G_HAVE_ST_BLKSIZE
 #define _IO_BUFSIZ _G_BUFSIZ
 #define _IO_va_list _G_va_list
+#define _IO_wint_t _G_wint_t
 
 #ifdef _G_NEED_STDARG_H
 /* This define avoids name pollution if we're using GNU stdarg.h */
@@ -186,6 +188,70 @@ struct _IO_marker {
 #endif
 };
 
+/* This is the structure from the libstdc++ codecvt class.  */
+enum __codecvt_result
+{
+  __codecvt_ok,
+  __codecvt_partial,
+  __codecvt_error,
+  __codecvt_noconv
+};
+
+/* The order of the elements in the following struct must match the order
+   of the virtual functions in the libstdc++ codecvt class.  */
+struct _IO_codecvt
+{
+  void (*__codecvt_destr) __P ((struct _IO_codecvt *));
+  enum __codecvt_result (*__codecvt_do_out) __P ((struct _IO_codecvt *,
+						  __mbstate_t *,
+						  const wchar_t *,
+						  const wchar_t *,
+						  const wchar_t **, char *,
+						  char *, char **));
+  enum __codecvt_result (*__codecvt_do_unshift) __P ((struct _IO_codecvt *,
+						      __mbstate_t *, char *,
+						      char *, char **));
+  enum __codecvt_result (*__codecvt_do_in) __P ((struct _IO_codecvt *,
+						 __mbstate_t *,
+						 const char *, const char *,
+						 const char **, wchar_t *,
+						 wchar_t *, wchar_t **));
+  int (*__codecvt_do_encoding) __P ((struct _IO_codecvt *));
+  int (*__codecvt_do_always_noconv) __P ((struct _IO_codecvt *));
+  int (*__codecvt_do_length) __P ((struct _IO_codecvt *, __mbstate_t *,
+				   const char *, const char *, _IO_size_t));
+  int (*__codecvt_do_max_length) __P ((struct _IO_codecvt *));
+
+  _IO_iconv_t __cd_in;
+  _IO_iconv_t __cd_out;
+};
+
+/* Extra data for wide character streams.  */
+struct _IO_wide_data
+{
+  wchar_t *_IO_read_ptr;	/* Current read pointer */
+  wchar_t *_IO_read_end;	/* End of get area. */
+  wchar_t *_IO_read_base;	/* Start of putback+get area. */
+  wchar_t *_IO_write_base;	/* Start of put area. */
+  wchar_t *_IO_write_ptr;	/* Current put pointer. */
+  wchar_t *_IO_write_end;	/* End of put area. */
+  wchar_t *_IO_buf_base;	/* Start of reserve area. */
+  wchar_t *_IO_buf_end;		/* End of reserve area. */
+  /* The following fields are used to support backing up and undo. */
+  wchar_t *_IO_save_base;	/* Pointer to start of non-current get area. */
+  wchar_t *_IO_backup_base;	/* Pointer to first valid character of
+				   backup area */
+  wchar_t *_IO_save_end;	/* Pointer to end of non-current get area. */
+
+  __mbstate_t _IO_state;
+  __mbstate_t _IO_last_state;
+  struct _IO_codecvt _codecvt;
+
+  wchar_t _shortbuf[1];
+
+  struct _IO_jump_t *_wide_vtable;
+};
+
 struct _IO_FILE {
   int _flags;		/* High-order word is _IO_MAGIC; rest is flags. */
 #define _IO_file_flags _flags
@@ -231,8 +297,12 @@ struct _IO_FILE_complete
 #endif
 #if defined _G_IO_IO_FILE_VERSION && _G_IO_IO_FILE_VERSION == 0x20001
   _IO_off64_t _offset;
+  /* Wide character stream stuff.  */
+  struct _IO_codecvt *_codecvt;
+  struct _IO_wide_data *_wide_data;
+  int _mode;
   /* Make sure we don't get into trouble again.  */
-  int _unused2[16];
+  char _unused2[15 * sizeof (int) - 2 * sizeof (void *)];
 #endif
 };
 
@@ -318,6 +388,9 @@ extern "C" {
 extern int __underflow __P ((_IO_FILE *));
 extern int __uflow __P ((_IO_FILE *));
 extern int __overflow __P ((_IO_FILE *, int));
+extern _IO_wint_t __wunderflow __P ((_IO_FILE *));
+extern _IO_wint_t __wuflow __P ((_IO_FILE *));
+extern _IO_wint_t __woverflow __P ((_IO_FILE *, _IO_wint_t));
 
 #define _IO_getc_unlocked(_fp) \
        ((_fp)->_IO_read_ptr >= (_fp)->_IO_read_end ? __uflow (_fp) \
@@ -331,15 +404,43 @@ extern int __overflow __P ((_IO_FILE *, int));
     ? __overflow (_fp, (unsigned char) (_ch)) \
     : (unsigned char) (*(_fp)->_IO_write_ptr++ = (_ch)))
 
+#define _IO_getwc_unlocked(_fp) \
+  ((_fp)->_wide_data->_IO_read_ptr >= (_fp)->_wide_data->_IO_read_end \
+   ? __wuflow (_fp) : (_IO_wint_t) *(_fp)->_wide_data->_IO_read_ptr++)
+#define _IO_putwc_unlocked(_wch, _fp) \
+  ((_fp)->_wide_data->_IO_write_ptr >= (_fp)->_wide_data->_IO_write_end \
+   ? __woverflow (_fp, _wch) \
+   : (_IO_wint_t) (*(_fp)->_wide_data->_IO_write_ptr++ = (_wch)))
+
 #define _IO_feof_unlocked(__fp) (((__fp)->_flags & _IO_EOF_SEEN) != 0)
 #define _IO_ferror_unlocked(__fp) (((__fp)->_flags & _IO_ERR_SEEN) != 0)
 
 extern int _IO_getc __P ((_IO_FILE *__fp));
 extern int _IO_putc __P ((int __c, _IO_FILE *__fp));
+extern _IO_wint_t _IO_getwc __P ((_IO_FILE *__fp));
+extern _IO_wint_t _IO_putwc __P ((_IO_wint_t __wc, _IO_FILE *__fp));
 extern int _IO_feof __P ((_IO_FILE *__fp));
 extern int _IO_ferror __P ((_IO_FILE *__fp));
 
 extern int _IO_peekc_locked __P ((_IO_FILE *__fp));
+
+extern int _IO_fwide __P ((_IO_FILE *__fp, int __mode));
+#if __GNUC__ >= 2
+/* A special optimized version of the function above.  It optimizes the
+   case of initializing an unoriented byte stream.  */
+# define _IO_fwide(__fp, __mode) \
+  ({ int __result = (__mode);						      \
+     if (__result < 0)							      \
+       {								      \
+	 if ((__fp)->_mode == 0)					      \
+	   /* We know that all we have to do is to set the flag.  */	      \
+	   (__fp)->_mode = -1;						      \
+	 __result = (__fp)->_mode;					      \
+       }								      \
+     else								      \
+       __result = _IO_fwide (__fp, __result);				      \
+     __result; })
+#endif
 
 /* This one is for Emacs. */
 #define _IO_PENDING_OUTPUT_COUNT(_fp)	\
@@ -362,15 +463,22 @@ extern int _IO_ftrylockfile __P ((_IO_FILE *));
 
 extern int _IO_vfscanf __P ((_IO_FILE * __restrict, const char * __restrict,
 			     _IO_va_list, int *__restrict));
+extern int _IO_vfwscanf __P ((_IO_FILE * __restrict,
+			      const wchar_t * __restrict,
+			      _IO_va_list, int *__restrict));
 extern int _IO_vfprintf __P ((_IO_FILE *__restrict, const char *__restrict,
 			      _IO_va_list));
+extern int _IO_vfwprintf __P ((_IO_FILE *__restrict, const wchar_t *__restrict,
+			       _IO_va_list));
 extern _IO_ssize_t _IO_padn __P ((_IO_FILE *, int, _IO_ssize_t));
+extern _IO_ssize_t _IO_wpadn __P ((_IO_FILE *, wint_t, _IO_ssize_t));
 extern _IO_size_t _IO_sgetn __P ((_IO_FILE *, void *, _IO_size_t));
 
-extern _IO_fpos64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
-extern _IO_fpos64_t _IO_seekpos __P ((_IO_FILE *, _IO_fpos64_t, int));
+extern _IO_off64_t _IO_seekoff __P ((_IO_FILE *, _IO_off64_t, int, int));
+extern _IO_off64_t _IO_seekpos __P ((_IO_FILE *, _IO_off64_t, int));
 
 extern void _IO_free_backup_area __P ((_IO_FILE *));
+extern void _IO_free_wbackup_area __P ((_IO_FILE *));
 
 #ifdef __cplusplus
 }

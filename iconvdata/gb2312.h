@@ -1,5 +1,5 @@
 /* Access functions for GB2312 conversion.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -37,22 +37,22 @@ gb2312_to_ucs4 (const unsigned char **s, size_t avail, unsigned char offset)
   int idx;
 
   if (ch < offset || (ch - offset) <= 0x20 || (ch - offset) > 0x77)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   if (avail < 2)
     return 0;
 
   ch2 = (*s)[1];
   if ((ch2 - offset) <= 0x20 || (ch2 - offset) >= 0x7f)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   idx = (ch - 0x21 - offset) * 94 + (ch2 - 0x21 - offset);
   if (idx > 0x1ff1)
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   (*s) += 2;
 
-  return __gb2312_to_ucs[idx] ?: ((*s) -= 2, UNKNOWN_10646_CHAR);
+  return __gb2312_to_ucs[idx] ?: ((*s) -= 2, __UNKNOWN_10646_CHAR);
 }
 
 
@@ -210,11 +210,11 @@ ucs4_to_gb2312 (uint32_t wch, unsigned char *s, size_t avail)
       cp = "\x23\x24";
       break;
     default:
-      return UNKNOWN_10646_CHAR;
+      return __UNKNOWN_10646_CHAR;
     }
 
   if (cp[0] == '\0')
-    return UNKNOWN_10646_CHAR;
+    return __UNKNOWN_10646_CHAR;
 
   assert (cp[1] != '\0');
 

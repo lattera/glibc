@@ -31,7 +31,7 @@ size_t
 iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
        size_t *outbytesleft)
 {
-  gconv_t gcd = (gconv_t) cd;
+  __gconv_t gcd = (__gconv_t) cd;
   char *outstart = outbuf ? *outbuf : NULL;
   size_t converted;
   int result;
@@ -59,28 +59,28 @@ iconv (iconv_t cd, const char **inbuf, size_t *inbytesleft, char **outbuf,
 
   switch (result)
     {
-    case GCONV_ILLEGAL_DESCRIPTOR:
+    case __GCONV_ILLEGAL_DESCRIPTOR:
       __set_errno (EBADF);
       converted = (size_t) -1L;
       break;
 
-    case GCONV_ILLEGAL_INPUT:
+    case __GCONV_ILLEGAL_INPUT:
       __set_errno (EILSEQ);
       converted = (size_t) -1L;
       break;
 
-    case GCONV_FULL_OUTPUT:
+    case __GCONV_FULL_OUTPUT:
       __set_errno (E2BIG);
       converted = (size_t) -1L;
       break;
 
-    case GCONV_INCOMPLETE_INPUT:
+    case __GCONV_INCOMPLETE_INPUT:
       __set_errno (EINVAL);
       converted = (size_t) -1L;
       break;
 
-    case GCONV_EMPTY_INPUT:
-    case GCONV_OK:
+    case __GCONV_EMPTY_INPUT:
+    case __GCONV_OK:
       /* Nothing.  */
       break;
 

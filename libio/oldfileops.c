@@ -285,7 +285,7 @@ old_do_write (fp, data, to_do)
     fp->_old_offset = _IO_pos_BAD;
   else if (fp->_IO_read_end != fp->_IO_write_base)
     {
-      _IO_pos_t new_pos
+      _IO_off_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
 	return 0;
@@ -449,14 +449,14 @@ _IO_old_file_sync (fp)
   return retval;
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_old_file_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_pos_t result;
+  _IO_off_t result;
   _IO_off64_t delta, new_offset;
   long count;
   /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
@@ -500,7 +500,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
       if (fp->_old_offset == _IO_pos_BAD)
 	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
-      offset += _IO_pos_as_off (fp->_old_offset);
+      offset += fp->_old_offset;
 
       dir = _IO_seek_set;
       break;
@@ -529,7 +529,7 @@ _IO_old_file_seekoff (fp, offset, dir, mode)
       && !_IO_in_backup (fp))
     {
       /* Offset relative to start of main get area. */
-      _IO_pos_t rel_offset = (offset - fp->_old_offset
+      _IO_off_t rel_offset = (offset - fp->_old_offset
 			      + (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{

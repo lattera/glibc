@@ -1,5 +1,5 @@
 /* Generic conversion to and from ISO 6937-2.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -409,7 +409,7 @@ static const char from_ucs4[][2] =
 	  {								      \
 	    /* The second character is not available.  Store the	      \
 	       intermediate result.  */					      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -418,7 +418,7 @@ static const char from_ucs4[][2] =
 	if (ch2 < 0x20 || ch2 >= 0x80)					      \
 	  {								      \
 	    /* This is illegal.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -427,7 +427,7 @@ static const char from_ucs4[][2] =
 	if (ch == 0)							      \
 	  {								      \
 	    /* Illegal character.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -440,7 +440,7 @@ static const char from_ucs4[][2] =
 	if (ch == 0 && *inptr != '\0')					      \
 	  {								      \
 	    /* This is an illegal character.  */			      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 	++inptr;							      \
@@ -542,14 +542,14 @@ static const char from_ucs4[][2] =
 	if (fail)							      \
 	  {								      \
 	    /* Illegal characters.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \
     else if (from_ucs4[ch][0] == '\0' && ch != 0)			      \
       {									      \
 	/* Illegal characters.  */					      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     else								      \
@@ -562,7 +562,7 @@ static const char from_ucs4[][2] =
 	if (NEED_LENGTH_TEST && outptr >= outend)			      \
 	  {								      \
 	    /* The result does not fit into the buffer.  */		      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 	*outptr++ = cp[1];						      \

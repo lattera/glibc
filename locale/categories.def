@@ -1,5 +1,5 @@
 /* Definition of all available locale categories and their items.  -*- C -*-
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -147,6 +147,21 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (_NL_TIME_ERA_NUM_ENTRIES, "time-era-num-entries", opt, word)
   DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EB,  "time-era-entries-eb", opt, string)
   DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EL,  "time-era-entries-el", opt, string)
+  DEFINE_ELEMENT (_NL_WABDAY_1,     "wide-abday",       std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WDAY_1,       "wide-day",         std, stringarray,  7,  7)
+  DEFINE_ELEMENT (_NL_WABMON_1,     "wide-abmon",       std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WMON_1,       "wide-mon",         std, stringarray, 12, 12)
+  DEFINE_ELEMENT (_NL_WAM_STR,      "wide-am_pm",       std, stringarray,  2,  2)
+  DEFINE_ELEMENT (_NL_WD_T_FMT,     "wide-d_t_fmt",     std, string)
+  DEFINE_ELEMENT (_NL_WD_FMT,       "wide-d_fmt",       std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT,       "wide-t_fmt",       std, string)
+  DEFINE_ELEMENT (_NL_WT_FMT_AMPM,  "wide-t_fmt_ampm",  std, string)
+  DEFINE_ELEMENT (_NL_WERA,         "wide-era",         opt, stringarray)
+  DEFINE_ELEMENT (_NL_WERA_YEAR,    "wide-era_year",    opt, string)
+  DEFINE_ELEMENT (_NL_WERA_D_FMT,   "wide-era_d_fmt",   opt, string)
+  DEFINE_ELEMENT (_NL_WALT_DIGITS,  "wide-alt_digits",  opt, stringarray,  0, 100)
+  DEFINE_ELEMENT (_NL_WERA_D_T_FMT, "wide-era_d_t_fmt", opt, string)
+  DEFINE_ELEMENT (_NL_WERA_T_FMT,   "wide-era_t_fmt",   opt, string)
   ), _nl_postload_time, NULL, NULL, NULL)
 
 

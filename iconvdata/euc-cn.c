@@ -1,5 +1,5 @@
 /* Mapping tables for EUC-CN handling.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -47,7 +47,7 @@
       if ((ch <= 0xa0 || ch > 0xfe) && ch != 0x8e && ch != 0x8f)	      \
 	{								      \
 	  /* This is illegal.  */					      \
-	  result = GCONV_ILLEGAL_INPUT;					      \
+	  result = __GCONV_ILLEGAL_INPUT;				      \
 	  break;							      \
 	}								      \
       else								      \
@@ -60,7 +60,7 @@
 	    {								      \
 	      /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
-	      result = GCONV_INCOMPLETE_INPUT;				      \
+	      result = __GCONV_INCOMPLETE_INPUT;			      \
 	      break;							      \
 	    }								      \
 									      \
@@ -70,7 +70,7 @@
 	  if (ch < 0xa1)						      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = GCONV_ILLEGAL_INPUT;				      \
+	      result = __GCONV_ILLEGAL_INPUT;				      \
 	      break;							      \
 	    }								      \
 									      \
@@ -78,10 +78,10 @@
 	  endp = inptr;							      \
 									      \
 	  ch = gb2312_to_ucs4 (&endp, 2, 0x80);				      \
-	  if (ch == UNKNOWN_10646_CHAR)					      \
+	  if (ch == __UNKNOWN_10646_CHAR)				      \
 	    {								      \
 	      /* This is an illegal character.  */			      \
-	      result = GCONV_ILLEGAL_INPUT;				      \
+	      result = __GCONV_ILLEGAL_INPUT;				      \
 	      break;							      \
 	    }								      \
 									      \
@@ -114,10 +114,10 @@
 				 ? outend - outptr : MAX_NEEDED_OUTPUT));     \
 	if (!NEED_LENGTH_TEST || found != 0)				      \
 	  {								      \
-	    if (found == UNKNOWN_10646_CHAR)				      \
+	    if (found == __UNKNOWN_10646_CHAR)				      \
 	      {								      \
 		/* Illegal character.  */				      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -128,7 +128,7 @@
 	else								      \
 	  {								      \
 	    /* We ran out of space.  */					      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
       }									      \

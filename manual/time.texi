@@ -1005,6 +1005,31 @@ is examined before any output is produced.
 For an example of @code{strftime}, see @ref{Time Functions Example}.
 @end deftypefun
 
+@comment time.h
+@comment ISO/Amend1
+@deftypefun size_t wcsftime (wchar_t *@var{s}, size_t @var{size}, const wchar_t *@var{template}, const struct tm *@var{brokentime})
+The @code{wcsftime} function is equivalent to the @code{strftime}
+function with the difference that it operates one wide character
+strings.  The buffer where the result is stored, pointed to by @var{s},
+must be an array of wide characters.  The parameter @var{size} which
+specifies the size of the output buffer gives the number of wide
+character, not the number of bytes.
+
+Also the format string @var{template} is a wide character string.  Since
+all characters needed to specify the format string are in the basic
+characater set it is portably possible to write format strings in the C
+source code using the @code{L"..."} notation.  The parameter
+@var{brokentime} has the same meaning as in the @code{strftime} call.
+
+The @code{wcsftime} function supports the same flags, modifiers, and
+format specifiers as the @code{strftime} function.
+
+The return value of @code{wcsftime} is the number of wide characters
+stored in @code{s}.  When more characters would have to be written than
+can be placed in the buffer @var{s} the return value is zero, with the
+same problems indicated in the @code{strftime} documentation.
+@end deftypefun
+
 @node Parsing Date and Time
 @subsection Convert textual time and date information back
 

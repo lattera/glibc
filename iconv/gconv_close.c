@@ -25,23 +25,23 @@
 
 int
 internal_function
-__gconv_close (gconv_t cd)
+__gconv_close (__gconv_t cd)
 {
-  struct gconv_step *srunp;
-  struct gconv_step_data *drunp;
+  struct __gconv_step *srunp;
+  struct __gconv_step_data *drunp;
   size_t nsteps;
 
   /* Free all resources by calling destructor functions and release
      the implementations.  */
-  srunp = cd->steps;
-  nsteps = cd->nsteps;
-  drunp = cd->data;
+  srunp = cd->__steps;
+  nsteps = cd->__nsteps;
+  drunp = cd->__data;
   do
     {
-      if (!drunp->is_last && drunp->outbuf != NULL)
-	free (drunp->outbuf);
+      if (!drunp->__is_last && drunp->__outbuf != NULL)
+	free (drunp->__outbuf);
     }
-  while (!(drunp++)->is_last);
+  while (!(drunp++)->__is_last);
 
   /* Free the data allocated for the descriptor.  */
   free (cd);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
    Written by Per Bothner <bothner@cygnus.com>.
 
@@ -136,9 +136,18 @@ _IO_new_file_close_it (fp)
   close_status = _IO_SYSCLOSE (fp);
 
   /* Free buffer. */
-  _IO_setb (fp, NULL, NULL, 0);
-  _IO_setg (fp, NULL, NULL, NULL);
-  _IO_setp (fp, NULL, NULL);
+  if (fp->_mode <= 0)
+    {
+      _IO_setb (fp, NULL, NULL, 0);
+      _IO_setg (fp, NULL, NULL, NULL);
+      _IO_setp (fp, NULL, NULL);
+    }
+  else
+    {
+      _IO_wsetb (fp, NULL, NULL, 0);
+      _IO_wsetg (fp, NULL, NULL, NULL);
+      _IO_wsetp (fp, NULL, NULL);
+    }
 
   _IO_un_link (fp);
   fp->_flags = _IO_MAGIC|CLOSED_FILEBUF_FLAGS;
@@ -277,14 +286,14 @@ _IO_new_file_setbuf (fp, p, len)
      char *p;
      _IO_ssize_t len;
 {
-    if (_IO_default_setbuf (fp, p, len) == NULL)
-      return NULL;
+  if (_IO_default_setbuf (fp, p, len) == NULL)
+    return NULL;
 
-    fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end
-      = fp->_IO_buf_base;
-    _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
+  fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_write_end
+    = fp->_IO_buf_base;
+  _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
 
-    return fp;
+  return fp;
 }
 
 static int new_do_write __P ((_IO_FILE *, const char *, _IO_size_t));
@@ -319,7 +328,7 @@ new_do_write (fp, data, to_do)
     fp->_offset = _IO_pos_BAD;
   else if (fp->_IO_read_end != fp->_IO_write_base)
     {
-      _IO_fpos64_t new_pos
+      _IO_off64_t new_pos
 	= _IO_SYSSEEK (fp, fp->_IO_write_base - fp->_IO_read_end, 1);
       if (new_pos == _IO_pos_BAD)
 	return 0;
@@ -330,7 +339,8 @@ new_do_write (fp, data, to_do)
     fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, count) + 1;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_buf_base;
-  fp->_IO_write_end = ((fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
+  fp->_IO_write_end = (fp->_mode < 0
+		       && (fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 		       ? fp->_IO_buf_base : fp->_IO_buf_end);
   return count;
 }
@@ -410,7 +420,7 @@ _IO_new_file_overflow (f, ch)
       return EOF;
     }
   /* If currently reading or no buffer allocated. */
-  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0)
+  if ((f->_flags & _IO_CURRENTLY_PUTTING) == 0 || f->_IO_write_base == 0)
     {
       /* Allocate a buffer if needed. */
       if (f->_IO_write_base == 0)
@@ -433,18 +443,20 @@ _IO_new_file_overflow (f, ch)
       f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
 
       f->_flags |= _IO_CURRENTLY_PUTTING;
-      if (f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
+      if (f->_mode < 0 && f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 	f->_IO_write_end = f->_IO_write_ptr;
     }
   if (ch == EOF)
-    return _IO_do_flush (f);
+    return _IO_new_do_write(f, f->_IO_write_base,
+			    f->_IO_write_ptr - f->_IO_write_base);
   if (f->_IO_write_ptr == f->_IO_buf_end ) /* Buffer is really full */
     if (_IO_do_flush (f) == EOF)
       return EOF;
   *f->_IO_write_ptr++ = ch;
   if ((f->_flags & _IO_UNBUFFERED)
       || ((f->_flags & _IO_LINE_BUF) && ch == '\n'))
-    if (_IO_do_flush (f) == EOF)
+    if (_IO_new_do_write(f, f->_IO_write_base,
+			 f->_IO_write_ptr - f->_IO_write_base) == EOF)
       return EOF;
   return (unsigned char) ch;
 }
@@ -483,14 +495,14 @@ _IO_new_file_sync (fp)
   return retval;
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_new_file_seekoff (fp, offset, dir, mode)
      _IO_FILE *fp;
      _IO_off64_t offset;
      int dir;
      int mode;
 {
-  _IO_fpos64_t result;
+  _IO_off64_t result;
   _IO_off64_t delta, new_offset;
   long count;
   /* POSIX.1 8.2.3.7 says that after a call the fflush() the file
@@ -534,7 +546,7 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       if (fp->_offset == _IO_pos_BAD)
 	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
-      offset += _IO_pos_as_off (fp->_offset);
+      offset += fp->_offset;
 
       dir = _IO_seek_set;
       break;
@@ -563,8 +575,8 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
       && !_IO_in_backup (fp))
     {
       /* Offset relative to start of main get area. */
-      _IO_fpos64_t rel_offset = (offset - fp->_offset
-				 + (fp->_IO_read_end - fp->_IO_read_base));
+      _IO_off64_t rel_offset = (offset - fp->_offset
+				+ (fp->_IO_read_end - fp->_IO_read_base));
       if (rel_offset >= 0)
 	{
 #if 0
@@ -678,7 +690,7 @@ _IO_file_read (fp, buf, size)
   return read (fp->_fileno, buf, size);
 }
 
-_IO_fpos64_t
+_IO_off64_t
 _IO_file_seek (fp, offset, dir)
      _IO_FILE *fp;
      _IO_off64_t offset;
@@ -720,7 +732,7 @@ _IO_new_file_write (f, data, n)
   while (to_do > 0)
     {
       _IO_ssize_t count = write (f->_fileno, data, to_do);
-      if (count == EOF)
+      if (count < 0)
 	{
 	  f->_flags |= _IO_ERR_SEEN;
 	  break;
@@ -740,7 +752,7 @@ _IO_new_file_xsputn (f, data, n)
      const void *data;
      _IO_size_t n;
 {
-  register const char *s = (char *) data;
+  register const char *s = (const char *) data;
   _IO_size_t to_do = n;
   int must_flush = 0;
   _IO_size_t count;

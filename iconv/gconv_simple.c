@@ -90,11 +90,11 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 
   /* Determine the status.  */
   if (*outptrp == outend)
-    result = GCONV_FULL_OUTPUT;
+    result = __GCONV_FULL_OUTPUT;
   else if (*inptrp == inend)
-    result = GCONV_EMPTY_INPUT;
+    result = __GCONV_EMPTY_INPUT;
   else
-    result = GCONV_INCOMPLETE_INPUT;
+    result = __GCONV_INCOMPLETE_INPUT;
 
   if (converted != NULL)
     converted += n_convert;
@@ -123,7 +123,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
     if (*inptr > '\x7f')						      \
       {									      \
 	/* This is no correct ANSI_X3.4-1968 character.  */		      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -152,7 +152,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
     if (*((uint32_t *) inptr) > 0x7f)					      \
       {									      \
 	/* This is no correct ANSI_X3.4-1968 character.  */		      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -200,7 +200,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (outptr + step >= outend)					      \
 	  {								      \
 	    /* Too long.  */						      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -287,14 +287,14 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	else								      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
 	if (NEED_LENGTH_TEST && inptr + cnt > inend)			      \
 	  {								      \
 	    /* We don't have enough input.  */				      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -306,7 +306,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	    if ((byte & 0xc0) != 0x80)					      \
 	      {								      \
 		/* This is an illegal encoding.  */			      \
-		result = GCONV_ILLEGAL_INPUT;				      \
+		result = __GCONV_ILLEGAL_INPUT;				      \
 		break;							      \
 	      }								      \
 									      \
@@ -366,7 +366,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     /* Please note that we use the `uint32_t' from-pointer as an `uint16_t'   \
@@ -379,7 +379,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
@@ -432,7 +432,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     *((uint16_t *) outptr)++ = *((uint32_t *) inptr)++;			      \
@@ -442,7 +442,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
   {									      \
     if (*((uint32_t *) inptr) >= 0x10000)				      \
       {									      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     *((uint16_t *) outptr)++ = bswap_16 (((uint16_t *) inptr)[1]);	      \
@@ -475,7 +475,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
       {									      \
 	if (*((uint32_t *) inptr) >= 0x110000)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -483,7 +483,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (NEED_LENGTH_TEST && outptr + 4 > outend)			      \
 	  {								      \
 	    /* Overflow in the output buffer.  */			      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -506,7 +506,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
       {									      \
 	if (*((uint32_t *) inptr) >= 0x110000)				      \
 	  {								      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -514,7 +514,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (NEED_LENGTH_TEST && outptr + 4 > outend)			      \
 	  {								      \
 	    /* Overflow in the output buffer.  */			      \
-	    result = GCONV_FULL_OUTPUT;					      \
+	    result = __GCONV_FULL_OUTPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -565,7 +565,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  {								      \
 	    /* We don't have enough input for another complete input	      \
 	       character.  */						      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -573,7 +573,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	  {								      \
 	    /* This is no valid second word for a surrogate.  */	      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -602,7 +602,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	  {								      \
 	    /* We don't have enough input for another complete input	      \
 	       character.  */						      \
-	    result = GCONV_INCOMPLETE_INPUT;				      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \
@@ -610,7 +610,7 @@ internal_ucs4_loop (const unsigned char **inptrp, const unsigned char *inend,
 	if (u2 < 0xdc00 || u2 >= 0xdfff)				      \
 	  {								      \
 	    /* This is no valid second word for a surrogate.  */	      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
+	    result = __GCONV_ILLEGAL_INPUT;				      \
 	    break;							      \
 	  }								      \
 									      \

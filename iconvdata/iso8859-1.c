@@ -1,5 +1,5 @@
 /* Conversion to and from ISO 8859-1.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -48,7 +48,7 @@
     if (ch > 0xff)							      \
       {									      \
 	/* We have an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     *outptr++ = (unsigned char) ch;					      \

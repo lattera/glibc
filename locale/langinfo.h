@@ -161,6 +161,66 @@ enum
   _NL_TIME_ERA_ENTRIES_EB,	/* Structure with era entries in usable form.*/
   _NL_TIME_ERA_ENTRIES_EL,
 
+  _NL_WABDAY_1, /* Sun */
+  _NL_WABDAY_2,
+  _NL_WABDAY_3,
+  _NL_WABDAY_4,
+  _NL_WABDAY_5,
+  _NL_WABDAY_6,
+  _NL_WABDAY_7,
+
+  /* Long-named days of the week. */
+  _NL_WDAY_1,			/* Sunday */
+  _NL_WDAY_2,			/* Monday */
+  _NL_WDAY_3,			/* Tuesday */
+  _NL_WDAY_4,			/* Wednesday */
+  _NL_WDAY_5,			/* Thursday */
+  _NL_WDAY_6,			/* Friday */
+  _NL_WDAY_7,			/* Saturday */
+
+  /* Abbreviated month names.  */
+  _NL_WABMON_1,			/* Jan */
+  _NL_WABMON_2,
+  _NL_WABMON_3,
+  _NL_WABMON_4,
+  _NL_WABMON_5,
+  _NL_WABMON_6,
+  _NL_WABMON_7,
+  _NL_WABMON_8,
+  _NL_WABMON_9,
+  _NL_WABMON_10,
+  _NL_WABMON_11,
+  _NL_WABMON_12,
+
+  /* Long month names.  */
+  _NL_WMON_1,			/* January */
+  _NL_WMON_2,
+  _NL_WMON_3,
+  _NL_WMON_4,
+  _NL_WMON_5,
+  _NL_WMON_6,
+  _NL_WMON_7,
+  _NL_WMON_8,
+  _NL_WMON_9,
+  _NL_WMON_10,
+  _NL_WMON_11,
+  _NL_WMON_12,
+
+  _NL_WAM_STR,			/* Ante meridian string.  */
+  _NL_WPM_STR,			/* Post meridian string.  */
+
+  _NL_WD_T_FMT,			/* Date and time format for strftime.  */
+  _NL_WD_FMT,			/* Date format for strftime.  */
+  _NL_WT_FMT,			/* Time format for strftime.  */
+  _NL_WT_FMT_AMPM,		/* 12-hour time format for strftime.  */
+
+  _NL_WERA,			/* Alternate era.  */
+  _NL_WERA_YEAR,		/* Year in alternate era format.  */
+  _NL_WERA_D_FMT,		/* Date in alternate era format.  */
+  _NL_WALT_DIGITS,		/* Alternate symbols for digits.  */
+  _NL_WERA_D_T_FMT,		/* Date and time in alternate era format.  */
+  _NL_WERA_T_FMT,		/* Time in alternate era format.  */
+
   _NL_NUM_LC_TIME,		/* Number of indices in LC_TIME category.  */
 
   /* LC_COLLATE category: text sorting.

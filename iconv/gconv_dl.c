@@ -50,10 +50,10 @@ static void *loaded;
 static int
 known_compare (const void *p1, const void *p2)
 {
-  const struct gconv_loaded_object *s1 =
-    (const struct gconv_loaded_object *) p1;
-  const struct gconv_loaded_object *s2 =
-    (const struct gconv_loaded_object *) p2;
+  const struct __gconv_loaded_object *s1 =
+    (const struct __gconv_loaded_object *) p1;
+  const struct __gconv_loaded_object *s2 =
+    (const struct __gconv_loaded_object *) p2;
 
   return (intptr_t) s1->handle - (intptr_t) s2->handle;
 }
@@ -62,7 +62,7 @@ known_compare (const void *p1, const void *p2)
 static void
 do_open (void *a)
 {
-  struct gconv_loaded_object *args = (struct gconv_loaded_object *) a;
+  struct __gconv_loaded_object *args = (struct __gconv_loaded_object *) a;
   /* Open and relocate the shared object.  */
   args->handle = _dl_open (args->name, RTLD_LAZY, NULL);
 }
@@ -124,11 +124,11 @@ __gconv_find_func (void *handle, const char *name)
 
 /* Open the gconv database if necessary.  A non-negative return value
    means success.  */
-struct gconv_loaded_object *
+struct __gconv_loaded_object *
 internal_function
 __gconv_find_shlib (const char *name)
 {
-  struct gconv_loaded_object *found;
+  struct __gconv_loaded_object *found;
   void *keyp;
 
   /* Search the tree of shared objects previously requested.  Data in
@@ -144,7 +144,7 @@ __gconv_find_shlib (const char *name)
   if (keyp == NULL)
     {
       /* This name was not known before.  */
-      found = malloc (sizeof (struct gconv_loaded_object));
+      found = malloc (sizeof (struct __gconv_loaded_object));
       if (found != NULL)
 	{
 	  /* Point the tree node at this new structure.  */
@@ -161,7 +161,7 @@ __gconv_find_shlib (const char *name)
 	}
     }
   else
-    found = *(struct gconv_loaded_object **) keyp;
+    found = *(struct __gconv_loaded_object **) keyp;
 
   /* Try to load the shared object if the usage count is 0.  This
      implies that if the shared object is not loadable, the handle is
@@ -206,12 +206,12 @@ __gconv_find_shlib (const char *name)
 /* This is very ugly but the tsearch functions provide no way to pass
    information to the walker function.  So we use a global variable.
    It is MT safe since we use a lock.  */
-static struct gconv_loaded_object *release_handle;
+static struct __gconv_loaded_object *release_handle;
 
 static void
 do_release_shlib (const void *nodep, VISIT value, int level)
 {
-  struct gconv_loaded_object *obj = *(struct gconv_loaded_object **) nodep;
+  struct __gconv_loaded_object *obj = *(struct __gconv_loaded_object **) nodep;
 
   if (value != preorder && value != leaf)
     return;
@@ -238,7 +238,7 @@ do_release_shlib (const void *nodep, VISIT value, int level)
 /* Notify system that a shared object is not longer needed.  */
 int
 internal_function
-__gconv_release_shlib (struct gconv_loaded_object *handle)
+__gconv_release_shlib (struct __gconv_loaded_object *handle)
 {
   /* Urgh, this is ugly but we have no other possibility.  */
   release_handle = handle;
@@ -248,7 +248,7 @@ __gconv_release_shlib (struct gconv_loaded_object *handle)
      if necessary.  */
   __twalk (loaded, do_release_shlib);
 
-  return GCONV_OK;
+  return __GCONV_OK;
 }
 
 
@@ -256,7 +256,7 @@ __gconv_release_shlib (struct gconv_loaded_object *handle)
 static void
 do_release_all (void *nodep)
 {
-  struct gconv_loaded_object *obj = (struct gconv_loaded_object *) nodep;
+  struct __gconv_loaded_object *obj = (struct __gconv_loaded_object *) nodep;
 
   /* Unload the shared object.  We don't use the trick to
      catch errors since in the case an error is signalled

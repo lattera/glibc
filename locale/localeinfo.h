@@ -112,9 +112,14 @@ extern struct locale_data * *const _nl_current[LC_ALL + 1];
 extern const char _nl_C_name[];
 extern const char _nl_POSIX_name[];
 
+/* XXX Temporily until the locale data has everything.  */
+extern struct locale_data _nl_C_LC_TIME;
+
 /* Extract the current CATEGORY locale's string for ITEM.  */
 #define _NL_CURRENT(category, item) \
-  (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)
+  ((item) < _NL_WABDAY_1 || (item) > _NL_WALT_DIGITS			      \
+   ? (_nl_current_##category->values[_NL_ITEM_INDEX (item)].string)	      \
+   : _nl_C_LC_TIME.values[_NL_ITEM_INDEX (item)].string)
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \

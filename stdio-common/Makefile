@@ -25,11 +25,12 @@ headers	:= printf.h
 
 routines	:=							      \
 	ctermid cuserid							      \
-	_itoa itoa-digits						      \
+	_itoa _itowa itoa-digits itowa-digits				      \
 	vfprintf vprintf printf_fp reg-printf printf-prs printf_fphex	      \
 	printf_size fprintf printf snprintf sprintf asprintf dprintf	      \
 	vfscanf 							      \
 	fscanf scanf sscanf						      \
+	vfwprintf vfwscanf						      \
 	perror psignal							      \
 	tmpfile tmpfile64 tmpnam tmpnam_r tempnam tempname		      \
 	getline getw putw						      \

@@ -1,5 +1,5 @@
 /* Print size value using units for orders of magnitude.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
    Based on a proposal by Larry McVoy <lm@sgi.com>.
@@ -212,6 +212,7 @@ printf_size (FILE *fp, const struct printf_info *info, const void *const *args)
   fp_info.group = info->group;
   fp_info.extra = info->extra;
   fp_info.pad = info->pad;
+  fp_info.wide = 0;
 
   if (fp_info.left && fp_info.pad == L' ')
     {

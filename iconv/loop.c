@@ -1,5 +1,5 @@
 /* Conversion loop frame work.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -51,6 +51,7 @@
 */
 
 #include <gconv.h>
+#include <wchar.h>
 #include <sys/param.h>		/* For MIN.  */
 #define __need_size_t
 #include <stddef.h>
@@ -124,7 +125,7 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	 unsigned char **outptrp, unsigned char *outend, mbstate_t *state,
 	 void *data, size_t *converted EXTRA_LOOP_DECLS)
 {
-  int result = GCONV_OK;
+  int result = __GCONV_OK;
   const unsigned char *inptr = *inptrp;
   unsigned char *outptr = *outptrp;
 #ifndef COUNT_CONVERTED
@@ -157,7 +158,7 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 #endif
     }
 
-  if (result == GCONV_OK)
+  if (result == __GCONV_OK)
     {
 #if MIN_NEEDED_INPUT == MAX_NEEDED_INPUT \
     && MIN_NEEDED_OUTPUT == MAX_NEEDED_OUTPUT
@@ -166,16 +167,16 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	 to be determined is the status.  */
       if (inptr == inend)
 	/* No more input.  */
-	result = GCONV_EMPTY_INPUT;
+	result = __GCONV_EMPTY_INPUT;
       else if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
 	       || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
 	/* Overflow in the output buffer.  */
-	result = GCONV_FULL_OUTPUT;
+	result = __GCONV_FULL_OUTPUT;
       else
 	/* We have something left in the input buffer.  */
-	result = GCONV_INCOMPLETE_INPUT;
+	result = __GCONV_INCOMPLETE_INPUT;
 #else
-      result = GCONV_EMPTY_INPUT;
+      result = __GCONV_EMPTY_INPUT;
 
 # undef NEED_LENGTH_TEST
 # define NEED_LENGTH_TEST	1
@@ -188,14 +189,14 @@ LOOPFCT (const unsigned char **inptrp, const unsigned char *inend,
 	      || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
 	    {
 	      /* Overflow in the output buffer.  */
-	      result = GCONV_FULL_OUTPUT;
+	      result = __GCONV_FULL_OUTPUT;
 	      break;
 	    }
 	  if (MIN_NEEDED_INPUT > 1 && inptr + MIN_NEEDED_INPUT > inend)
 	    {
 	      /* We don't have enough input for another complete input
 		 character.  */
-	      result = GCONV_INCOMPLETE_INPUT;
+	      result = __GCONV_INCOMPLETE_INPUT;
 	      break;
 	    }
 

@@ -78,7 +78,7 @@ struct base_table_t
 
 
 /* Local variables.  */
-static const struct base_table_t base_table[] =
+const struct base_table_t _itoa_base_table[] =
 {
 #if BITS_PER_MP_LIMB == 64
   /*  2 */ {SEL1(0ul) 1, 1},
@@ -171,7 +171,7 @@ _itoa (value, buflim, base, upper_case)
 {
   const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
   char *bp = buflim;
-  const struct base_table_t *brec = &base_table[base - 2];
+  const struct base_table_t *brec = &_itoa_base_table[base - 2];
 
   switch (base)
     {

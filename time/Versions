@@ -46,4 +46,8 @@ libc {
     # g*
     getdate; getdate_r; getitimer;
   }
+  GLIBC_2.2 {
+    # w*
+    wcsftime;
+  }
 }

@@ -82,7 +82,7 @@ struct known_derivation
 {
   const char *from;
   const char *to;
-  struct gconv_step *steps;
+  struct __gconv_step *steps;
   size_t nsteps;
 };
 
@@ -107,7 +107,7 @@ static void *known_derivations;
 static int
 internal_function
 derivation_lookup (const char *fromset, const char *toset,
-		   struct gconv_step **handle, size_t *nsteps)
+		   struct __gconv_step **handle, size_t *nsteps)
 {
   struct known_derivation key = { fromset, toset, NULL, 0 };
   struct known_derivation **result;
@@ -115,21 +115,21 @@ derivation_lookup (const char *fromset, const char *toset,
   result = __tfind (&key, &known_derivations, derivation_compare);
 
   if (result == NULL)
-    return GCONV_NOCONV;
+    return __GCONV_NOCONV;
 
   *handle = (*result)->steps;
   *nsteps = (*result)->nsteps;
 
   /* Please note that we return GCONV_OK even if the last search for
      this transformation was unsuccessful.  */
-  return GCONV_OK;
+  return __GCONV_OK;
 }
 
 /* Add new derivation to list of known ones.  */
 static void
 internal_function
 add_derivation (const char *fromset, const char *toset,
-		struct gconv_step *handle, size_t nsteps)
+		struct __gconv_step *handle, size_t nsteps)
 {
   struct known_derivation *new_deriv;
   size_t fromset_len = strlen (fromset) + 1;
@@ -163,14 +163,14 @@ free_derivation (void *p)
   size_t cnt;
 
   for (cnt = 0; cnt < deriv->nsteps; ++cnt)
-    if (deriv->steps[cnt].end_fct)
-      _CALL_DL_FCT (deriv->steps[cnt].end_fct, (&deriv->steps[cnt]));
+    if (deriv->steps[cnt].__end_fct)
+      _CALL_DL_FCT (deriv->steps[cnt].__end_fct, (&deriv->steps[cnt]));
 
   /* Free the name strings.  */
-  free ((char *) deriv->steps[0].from_name);
-  free ((char *) deriv->steps[deriv->nsteps - 1].to_name);
+  free ((char *) deriv->steps[0].__from_name);
+  free ((char *) deriv->steps[deriv->nsteps - 1].__to_name);
 
-  free ((struct gconv_step *) deriv->steps);
+  free ((struct __gconv_step *) deriv->steps);
   free (deriv);
 }
 
@@ -178,40 +178,40 @@ free_derivation (void *p)
 static int
 internal_function
 gen_steps (struct derivation_step *best, const char *toset,
-	   const char *fromset, struct gconv_step **handle, size_t *nsteps)
+	   const char *fromset, struct __gconv_step **handle, size_t *nsteps)
 {
   size_t step_cnt = 0;
-  struct gconv_step *result;
+  struct __gconv_step *result;
   struct derivation_step *current;
-  int status = GCONV_NOMEM;
+  int status = __GCONV_NOMEM;
 
   /* First determine number of steps.  */
   for (current = best; current->last != NULL; current = current->last)
     ++step_cnt;
 
-  result = (struct gconv_step *) malloc (sizeof (struct gconv_step)
-					 * step_cnt);
+  result = (struct __gconv_step *) malloc (sizeof (struct __gconv_step)
+					   * step_cnt);
   if (result != NULL)
     {
       int failed = 0;
 
-      status = GCONV_OK;
+      status = __GCONV_OK;
       *nsteps = step_cnt;
       current = best;
       while (step_cnt-- > 0)
 	{
-	  result[step_cnt].from_name = (step_cnt == 0
-					? __strdup (fromset)
-					: current->last->result_set);
-	  result[step_cnt].to_name = (step_cnt + 1 == *nsteps
-				      ? __strdup (current->result_set)
-				      : result[step_cnt + 1].from_name);
+	  result[step_cnt].__from_name = (step_cnt == 0
+					  ? __strdup (fromset)
+					  : current->last->result_set);
+	  result[step_cnt].__to_name = (step_cnt + 1 == *nsteps
+					? __strdup (current->result_set)
+					: result[step_cnt + 1].__from_name);
 
 #ifndef STATIC_GCONV
 	  if (current->code->module_name[0] == '/')
 	    {
 	      /* Load the module, return handle for it.  */
-	      struct gconv_loaded_object *shlib_handle =
+	      struct __gconv_loaded_object *shlib_handle =
 		__gconv_find_shlib (current->code->module_name);
 
 	      if (shlib_handle == NULL)
@@ -220,12 +220,12 @@ gen_steps (struct derivation_step *best, const char *toset,
 		  break;
 		}
 
-	      result[step_cnt].shlib_handle = shlib_handle;
-	      result[step_cnt].modname = shlib_handle->name;
-	      result[step_cnt].counter = 0;
-	      result[step_cnt].fct = shlib_handle->fct;
-	      result[step_cnt].init_fct = shlib_handle->init_fct;
-	      result[step_cnt].end_fct = shlib_handle->end_fct;
+	      result[step_cnt].__shlib_handle = shlib_handle;
+	      result[step_cnt].__modname = shlib_handle->name;
+	      result[step_cnt].__counter = 0;
+	      result[step_cnt].__fct = shlib_handle->fct;
+	      result[step_cnt].__init_fct = shlib_handle->init_fct;
+	      result[step_cnt].__end_fct = shlib_handle->end_fct;
 	    }
 	  else
 #endif
@@ -234,12 +234,12 @@ gen_steps (struct derivation_step *best, const char *toset,
 				       &result[step_cnt]);
 
 	  /* Call the init function.  */
-	  if (result[step_cnt].init_fct != NULL)
+	  if (result[step_cnt].__init_fct != NULL)
 	     {
-	       status = _CALL_DL_FCT (result[step_cnt].init_fct,
+	       status = _CALL_DL_FCT (result[step_cnt].__init_fct,
 				      (&result[step_cnt]));
 
-	       if (status != GCONV_OK)
+	       if (status != __GCONV_OK)
 		 {
 		   failed = 1;
 		   /* Make sure we unload this modules.  */
@@ -256,17 +256,17 @@ gen_steps (struct derivation_step *best, const char *toset,
 	  /* Something went wrong while initializing the modules.  */
 	  while (++step_cnt < *nsteps)
 	    {
-	      if (result[step_cnt].end_fct != NULL)
-		_CALL_DL_FCT (result[step_cnt].end_fct, (&result[step_cnt]));
+	      if (result[step_cnt].__end_fct != NULL)
+		_CALL_DL_FCT (result[step_cnt].__end_fct, (&result[step_cnt]));
 #ifndef STATIC_GCONV
-	      __gconv_release_shlib (result[step_cnt].shlib_handle);
+	      __gconv_release_shlib (result[step_cnt].__shlib_handle);
 #endif
 	    }
 	  free (result);
 	  *nsteps = 0;
 	  *handle = NULL;
-	  if (status == GCONV_OK)
-	    status = GCONV_NOCONV;
+	  if (status == __GCONV_OK)
+	    status = __GCONV_NOCONV;
 	}
       else
 	*handle = result;
@@ -287,7 +287,7 @@ static int
 internal_function
 find_derivation (const char *toset, const char *toset_expand,
 		 const char *fromset, const char *fromset_expand,
-		 struct gconv_step **handle, size_t *nsteps)
+		 struct __gconv_step **handle, size_t *nsteps)
 {
   __libc_lock_define_initialized (static, lock)
   struct derivation_step *first, *current, **lastp, *solution = NULL;
@@ -297,7 +297,7 @@ find_derivation (const char *toset, const char *toset_expand,
 
   result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
 			      handle, nsteps);
-  if (result == GCONV_OK)
+  if (result == __GCONV_OK)
     return result;
 
   __libc_lock_lock (lock);
@@ -307,7 +307,7 @@ find_derivation (const char *toset, const char *toset_expand,
      find it but at the same time another thread looked for this derivation. */
   result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
 			      handle, nsteps);
-  if (result == GCONV_OK)
+  if (result == __GCONV_OK)
     {
       __libc_lock_unlock (lock);
       return result;
@@ -613,7 +613,7 @@ find_derivation (const char *toset, const char *toset_expand,
 int
 internal_function
 __gconv_find_transform (const char *toset, const char *fromset,
-			struct gconv_step **handle, size_t *nsteps)
+			struct __gconv_step **handle, size_t *nsteps)
 {
   __libc_once_define (static, once);
   const char *fromset_expand = NULL;
@@ -630,7 +630,7 @@ __gconv_find_transform (const char *toset, const char *fromset,
   if (__gconv_modules_db == NULL)
     {
       __libc_lock_unlock (lock);
-      return GCONV_NOCONV;
+      return __GCONV_NOCONV;
     }
 
   /* See whether the names are aliases.  */
@@ -653,23 +653,23 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
 #ifndef STATIC_GCONV
   /* Increment the user counter.  */
-  if (result == GCONV_OK)
+  if (result == __GCONV_OK)
     {
       size_t cnt = *nsteps;
-      struct gconv_step *steps = *handle;
+      struct __gconv_step *steps = *handle;
 
       while (cnt > 0)
-	if (steps[--cnt].counter++ == 0)
+	if (steps[--cnt].__counter++ == 0)
 	  {
-	    steps[cnt].shlib_handle =
-	      __gconv_find_shlib (steps[cnt].modname);
-	    if (steps[cnt].shlib_handle == NULL)
+	    steps[cnt].__shlib_handle =
+	      __gconv_find_shlib (steps[cnt].__modname);
+	    if (steps[cnt].__shlib_handle == NULL)
 	      {
 		/* Oops, this is the second time we use this module (after
 		   unloading) and this time loading failed!?  */
 		while (++cnt < *nsteps)
-		  __gconv_release_shlib (steps[cnt].shlib_handle);
-		result = GCONV_NOCONV;
+		  __gconv_release_shlib (steps[cnt].__shlib_handle);
+		result = __GCONV_NOCONV;
 		break;
 	      }
 	  }
@@ -682,8 +682,8 @@ __gconv_find_transform (const char *toset, const char *fromset,
   /* The following code is necessary since `find_derivation' will return
      GCONV_OK even when no derivation was found but the same request
      was processed before.  I.e., negative results will also be cached.  */
-  return (result == GCONV_OK
-	  ? (*handle == NULL ? GCONV_NOCONV : GCONV_OK)
+  return (result == __GCONV_OK
+	  ? (*handle == NULL ? __GCONV_NOCONV : __GCONV_OK)
 	  : result);
 }
 
@@ -691,22 +691,22 @@ __gconv_find_transform (const char *toset, const char *fromset,
 /* Release the entries of the modules list.  */
 int
 internal_function
-__gconv_close_transform (struct gconv_step *steps, size_t nsteps)
+__gconv_close_transform (struct __gconv_step *steps, size_t nsteps)
 {
-  int result = GCONV_OK;
+  int result = __GCONV_OK;
 
 #ifndef STATIC_GCONV
   /* Acquire the lock.  */
   __libc_lock_lock (lock);
 
   while (nsteps-- > 0)
-    if (steps[nsteps].shlib_handle != NULL
-	&& --steps[nsteps].counter == 0)
+    if (steps[nsteps].__shlib_handle != NULL
+	&& --steps[nsteps].__counter == 0)
       {
-	result = __gconv_release_shlib (steps[nsteps].shlib_handle);
-	if (result != GCONV_OK)
+	result = __gconv_release_shlib (steps[nsteps].__shlib_handle);
+	if (result != __GCONV_OK)
 	  break;
-	steps[nsteps].shlib_handle = NULL;
+	steps[nsteps].__shlib_handle = NULL;
       }
 
   /* Release the lock.  */

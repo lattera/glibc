@@ -45,15 +45,16 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
      mbstate_t *ps;
 {
   const unsigned char *srcend;
-  struct gconv_step_data data;
+  struct __gconv_step_data data;
   size_t result = 0;
   int status;
+  struct __gconv_step *towc;
 
   /* Tell where we want the result.  */
-  data.invocation_counter = 0;
-  data.internal_use = 1;
-  data.is_last = 1;
-  data.statep = ps ?: &state;
+  data.__invocation_counter = 0;
+  data.__internal_use = 1;
+  data.__is_last = 1;
+  data.__statep = ps ?: &state;
 
   if (nmc == 0)
     return 0;
@@ -62,25 +63,27 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
   /* Make sure we use the correct function.  */
   update_conversion_ptrs ();
 
+  /* Get the structure with the function pointers.  */
+  towc = __wcsmbs_gconv_fcts.towc;
+
   /* We have to handle DST == NULL special.  */
   if (dst == NULL)
     {
       wchar_t buf[64];		/* Just an arbitrary size.  */
       const unsigned char *inbuf = *src;
 
-      data.outbufend = (char *) buf + sizeof (buf);
+      data.__outbufend = (char *) buf + sizeof (buf);
       do
 	{
-	  data.outbuf = (char *) buf;
+	  data.__outbuf = (char *) buf;
 
-	  status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						     &data, &inbuf, srcend,
-						     &result, 0);
+	  status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data, &inbuf,
+				   srcend, &result, 0);
 	}
-      while (status == GCONV_FULL_OUTPUT);
+      while (status == __GCONV_FULL_OUTPUT);
 
-      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
-	  && ((wchar_t *) data.outbuf)[-1] == L'\0')
+      if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
+	  && ((wchar_t *) data.__outbuf)[-1] == L'\0')
 	/* Don't count the NUL character in.  */
 	--result;
     }
@@ -89,21 +92,20 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      data.outbuf = (unsigned char *) dst;
-      data.outbufend = data.outbuf + len * sizeof (wchar_t);
+      data.__outbuf = (unsigned char *) dst;
+      data.__outbufend = data.__outbuf + len * sizeof (wchar_t);
 
-      status = (*__wcsmbs_gconv_fcts.towc->fct) (__wcsmbs_gconv_fcts.towc,
-						 &data,
-						 (const unsigned char **) src,
-						 srcend, &result, 0);
+      status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
+			       (const unsigned char **) src, srcend,
+			       &result, 0);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */
-      if ((status == GCONV_OK || status == GCONV_EMPTY_INPUT)
+      if ((status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
 	  && ((wchar_t *) dst)[result - 1] == L'\0')
 	{
 	  assert (result > 0);
-	  assert (__mbsinit (data.statep));
+	  assert (__mbsinit (data.__statep));
 	  *src = NULL;
 	  --result;
 	}
@@ -111,12 +113,13 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
   /* There must not be any problems with the conversion but illegal input
      characters.  */
-  assert (status == GCONV_OK || status != GCONV_EMPTY_INPUT
-	  || status == GCONV_ILLEGAL_INPUT
-	  || status == GCONV_INCOMPLETE_INPUT || status == GCONV_FULL_OUTPUT);
+  assert (status == __GCONV_OK || status != __GCONV_EMPTY_INPUT
+	  || status == __GCONV_ILLEGAL_INPUT
+	  || status == __GCONV_INCOMPLETE_INPUT
+	  || status == __GCONV_FULL_OUTPUT);
 
-  if (status != GCONV_OK && status != GCONV_FULL_OUTPUT
-      && status != GCONV_EMPTY_INPUT)
+  if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
+      && status != __GCONV_EMPTY_INPUT)
     {
       result = (size_t) -1;
       __set_errno (EILSEQ);

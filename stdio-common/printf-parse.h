@@ -35,7 +35,7 @@ struct printf_spec
 
     /* Pointers into the format string for the end of this format
        spec and the next (or to the end of the string if no more).  */
-    const char *end_of_fmt, *next_fmt;
+    const UCHAR_T *end_of_fmt, *next_fmt;
 
     /* Position of arguments for precision and width, or -1 if `info' has
        the constant value.  */
@@ -90,21 +90,29 @@ read_int (const UCHAR_T * *pstr)
 
 /* Find the next spec in FORMAT, or the end of the string.  Returns
    a pointer into FORMAT, to a '%' or a '\0'.  */
-static inline const char *
-find_spec (const char *format, mbstate_t *ps)
+static inline const UCHAR_T *
+#ifdef COMPILE_WPRINTF
+find_spec (const UCHAR_T *format)
+#else
+find_spec (const UCHAR_T *format, mbstate_t *ps)
+#endif
 {
-  while (*format != '\0' && *format != '%')
+#ifdef COMPILE_WPRINTF
+  return (const UCHAR_T *) __wcschrnul ((const CHAR_T *) format, L'%');
+#else
+  while (*format != L_('\0') && *format != L_('%'))
     {
       int len;
 
       /* Remove any hints of a wrong encoding.  */
       ps->count = 0;
-      if (isascii (*format) || (len = mbrlen (format, MB_CUR_MAX, ps)) <= 0)
-	++format;
-      else
+      if (! ISASCII (*format) && (len = MBRLEN (format, MB_CUR_MAX, ps)) > 0)
 	format += len;
+      else
+	++format;
     }
   return format;
+#endif
 }
 
 
@@ -119,8 +127,13 @@ extern printf_function **__printf_function_table;
    the number of args consumed by this spec; *MAX_REF_ARG is updated so it
    remains the highest argument index used.  */
 static inline size_t
+#ifdef COMPILE_WPRINTF
+parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
+		size_t *max_ref_arg)
+#else
 parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 		size_t *max_ref_arg, mbstate_t *ps)
+#endif
 {
   unsigned int n;
   size_t nargs = 0;
@@ -342,12 +355,12 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 
       switch (spec->info.spec)
 	{
-	case L'i':
-	case L'd':
-	case L'u':
-	case L'o':
-	case L'X':
-	case L'x':
+	case L_('i'):
+	case L_('d'):
+	case L_('u'):
+	case L_('o'):
+	case L_('X'):
+	case L_('x'):
 #if LONG_MAX != LONG_LONG_MAX
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_INT|PA_FLAG_LONG_LONG;
@@ -362,38 +375,38 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	    else
 	      spec->data_arg_type = PA_INT;
 	  break;
-	case L'e':
-	case L'E':
-	case L'f':
-	case L'g':
-	case L'G':
-	case L'a':
-	case L'A':
+	case L_('e'):
+	case L_('E'):
+	case L_('f'):
+	case L_('g'):
+	case L_('G'):
+	case L_('a'):
+	case L_('A'):
 	  if (spec->info.is_long_double)
 	    spec->data_arg_type = PA_DOUBLE|PA_FLAG_LONG_DOUBLE;
 	  else
 	    spec->data_arg_type = PA_DOUBLE;
 	  break;
-	case L'c':
+	case L_('c'):
 	  spec->data_arg_type = PA_CHAR;
 	  break;
-	case L'C':
+	case L_('C'):
 	  spec->data_arg_type = PA_WCHAR;
 	  break;
-	case L's':
+	case L_('s'):
 	  spec->data_arg_type = PA_STRING;
 	  break;
-	case L'S':
+	case L_('S'):
 	  spec->data_arg_type = PA_WSTRING;
 	  break;
-	case L'p':
+	case L_('p'):
 	  spec->data_arg_type = PA_POINTER;
 	  break;
-	case L'n':
+	case L_('n'):
 	  spec->data_arg_type = PA_INT|PA_FLAG_PTR;
 	  break;
 
-	case L'm':
+	case L_('m'):
 	default:
 	  /* An unknown spec will consume no args.  */
 	  spec->ndata_args = 0;
@@ -416,7 +429,11 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
     {
       /* Find the next format spec.  */
       spec->end_of_fmt = format;
+#ifdef COMPILE_WPRINTF
+      spec->next_fmt = find_spec (format);
+#else
       spec->next_fmt = find_spec (format, ps);
+#endif
     }
 
   return nargs;

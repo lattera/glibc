@@ -1,5 +1,5 @@
 /* Table for builtin transformation mapping.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -29,9 +29,9 @@
 static struct builtin_map
 {
   const char *name;
-  gconv_fct fct;
-  gconv_init_fct init;
-  gconv_end_fct end;
+  __gconv_fct fct;
+  __gconv_init_fct init;
+  __gconv_end_fct end;
 
   int min_needed_from;
   int max_needed_from;
@@ -43,15 +43,15 @@ static struct builtin_map
 #define BUILTIN_TRANSFORMATION(From, ConstPfx, ConstLen, To, Cost, Name, \
 			       Fct, Init, End, MinF, MaxF, MinT, MaxT) \
   {									      \
-    name: Name,								      \
-    fct: Fct,								      \
-    init: Init,								      \
-    end: End,								      \
+    .name = Name,							      \
+    .fct = Fct,								      \
+    .init = Init,							      \
+    .end = End,								      \
 									      \
-    min_needed_from: MinF,						      \
-    max_needed_from: MaxF,						      \
-    min_needed_to: MinT,						      \
-    max_needed_to: MaxT							      \
+    .min_needed_from = MinF,						      \
+    .max_needed_from = MaxF,						      \
+    .min_needed_to = MinT,						      \
+    .max_needed_to = MaxT						      \
   },
 #define BUILTIN_ALIAS(From, To)
 
@@ -61,7 +61,7 @@ static struct builtin_map
 
 void
 internal_function
-__gconv_get_builtin_trans (const char *name, struct gconv_step *step)
+__gconv_get_builtin_trans (const char *name, struct __gconv_step *step)
 {
   size_t cnt;
 
@@ -71,17 +71,17 @@ __gconv_get_builtin_trans (const char *name, struct gconv_step *step)
 
   assert (cnt < sizeof (map) / sizeof (map[0]));
 
-  step->fct = map[cnt].fct;
-  step->init_fct = map[cnt].init;
-  step->end_fct = map[cnt].end;
-  step->counter = INT_MAX;
-  step->shlib_handle = NULL;
+  step->__fct = map[cnt].fct;
+  step->__init_fct = map[cnt].init;
+  step->__end_fct = map[cnt].end;
+  step->__counter = INT_MAX;
+  step->__shlib_handle = NULL;
 
-  step->min_needed_from = map[cnt].min_needed_from;
-  step->max_needed_from = map[cnt].max_needed_from;
-  step->min_needed_to = map[cnt].min_needed_to;
-  step->max_needed_to = map[cnt].max_needed_to;
+  step->__min_needed_from = map[cnt].min_needed_from;
+  step->__max_needed_from = map[cnt].max_needed_from;
+  step->__min_needed_to = map[cnt].min_needed_to;
+  step->__max_needed_to = map[cnt].max_needed_to;
 
   /* None of the builtin converters handles stateful encoding.  */
-  step->stateful = 0;
+  step->__stateful = 0;
 }

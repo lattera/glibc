@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,10 @@ distribute := wcwidth.h wcsmbsload.h
 
 routines := wcscat wcschr wcscmp wcscpy wcscspn wcsdup wcslen wcsncat \
 	    wcsncmp wcsncpy wcspbrk wcsrchr wcsspn wcstok wcsstr wmemchr \
-	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy \
+	    wmemcmp wmemcpy wmemmove wmemset wcpcpy wcpncpy wmempcpy \
 	    btowc wctob mbsinit \
 	    mbrlen mbrtowc wcrtomb mbsrtowcs wcsrtombs \
-	    mbsnrtowcs wcsnrtombs wcsnlen \
+	    mbsnrtowcs wcsnrtombs wcsnlen wcschrnul \
 	    wcstol wcstoul wcstoll wcstoull wcstod wcstold wcstof \
 	    wcstol_l wcstoul_l wcstoll_l wcstoull_l \
 	    wcstod_l wcstold_l wcstof_l \

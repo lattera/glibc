@@ -1,6 +1,6 @@
 /* Generic conversion to and from 8bit charsets,
    converting from UCS using gaps.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -51,7 +51,7 @@ struct gap
     if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -74,7 +74,7 @@ struct gap
     if (ch >= 0xffff)							      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
     while (ch > rp->end)						      \
@@ -82,7 +82,7 @@ struct gap
     if (ch < rp->start)							      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -90,7 +90,7 @@ struct gap
     if (ch != 0 && res == '\0')						      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \

@@ -1,5 +1,5 @@
 /* Generic conversion to and from 8bit charsets.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -37,7 +37,7 @@
     if (HAS_HOLES && ch == L'\0' && *inptr != '\0')			      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \
@@ -59,7 +59,7 @@
 	|| (ch != 0 && from_ucs4[ch] == '\0'))				      \
       {									      \
 	/* This is an illegal character.  */				      \
-	result = GCONV_ILLEGAL_INPUT;					      \
+	result = __GCONV_ILLEGAL_INPUT;					      \
 	break;								      \
       }									      \
 									      \

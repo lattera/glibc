@@ -100,4 +100,31 @@ libc {
     # p*
     pclose; popen;
   }
+  GLIBC_2.2 {
+    # functions used in libstdc++
+    _IO_fgetpos; _IO_fgetpos64; _IO_fsetpos; _IO_fsetpos64;
+
+    # f*
+    fgetpos; fgetpos64; fgetwc; fgetwc_unlocked; fgetws; fgetws_unlocked;
+    fputwc; fputwc_unlocked; fputws; fputws_unlocked; fsetpos; fsetpos64;
+    fwide; fwprintf; fwscanf;
+
+    # g*
+    getwc; getwc_unlocked; getwchar; getwchar_unlocked;
+
+    # p*
+    putwc; putwc_unlocked; putwchar; putwchar_unlocked;
+
+    # s*
+    swprintf; swscanf;
+
+    # u*
+    ungetwc;
+
+    # v*
+    vfwprintf; vswprintf; vwprintf; vfwscanf; vswscanf; vwscanf;
+
+    # w*
+    wprintf; wscanf;
+  }
 }

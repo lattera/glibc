@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU IO Library.
 
    This library is free software; you can redistribute it and/or
@@ -35,12 +35,18 @@
 #ifdef _IO_MTSAFE_IO
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
   static _IO_lock_t _IO_stdfile_##FD##_lock = _IO_lock_initializer; \
+  static struct _IO_wide_data _IO_wide_data_##FD \
+    = { ._wide_vtable = &_IO_wfile_jumps }; \
   struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps};
+    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, &_IO_wide_data_##FD), \
+       &_IO_file_jumps};
 #else
 #define DEF_STDFILE(NAME, FD, CHAIN, FLAGS) \
+  static struct _IO_wide_data _IO_wide_data_##FD \
+    = { ._wide_vtable = &_IO_wfile_jumps }; \
   struct _IO_FILE_plus NAME \
-    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD), &_IO_file_jumps};
+    = {FILEBUF_LITERAL(CHAIN, FLAGS, FD, &_IO_wide_data_##FD), \
+       &_IO_file_jumps};
 #endif
 
 DEF_STDFILE(_IO_2_1_stdin_, 0, 0, _IO_NO_WRITES);

@@ -36,74 +36,16 @@
    Beside this it is also shared between the normal and wide character
    implementation as defined in ISO/IEC 9899:1990/Amendment 1:1995.  */
 
-#ifndef COMPILE_WPRINTF
-# define CHAR_T		char
-# define UCHAR_T	unsigned char
-# define INT_T		int
-# define L_(Str)	Str
-# define ISDIGIT(Ch)	isdigit (Ch)
-
-# ifdef USE_IN_LIBIO
-#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
-#  define PAD(Padchar)							      \
-  if (width > 0)							      \
-    done += _IO_padn (s, (Padchar), width)
-# else
-#  define PUTC(C, F)	putc (C, F)
-ssize_t __printf_pad __P ((FILE *, char pad, size_t n));
-# define PAD(Padchar)							      \
-  if (width > 0)							      \
-    { ssize_t __res = __printf_pad (s, (Padchar), width);		      \
-      if (__res == -1)							      \
-	{								      \
-	  done = -1;							      \
-	  goto all_done;						      \
-	}								      \
-      done += __res; }
-# endif
-#else
-# define vfprintf	vfwprintf
-# define CHAR_T		wchar_t
-# define UCHAR_T	uwchar_t
-# define INT_T		wint_t
-# define L_(Str)	L##Str
-# define ISDIGIT(Ch)	iswdigit (Ch)
-
-# ifdef USE_IN_LIBIO
-#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
-#  define PAD(Padchar)							      \
-  if (width > 0)							      \
-    done += _IO_wpadn (s, (Padchar), width)
-# else
-#  define PUTC(C, F)	wputc (C, F)
-ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
-#  define PAD(Padchar)							      \
-  if (width > 0)							      \
-    { ssize_t __res = __wprintf_pad (s, (Padchar), width);		      \
-      if (__res == -1)							      \
-	{								      \
-	  done = -1;							      \
-	  goto all_done;						      \
-	}								      \
-      done += __res; }
-# endif
-#endif
-
-/* Include the shared code for parsing the format string.  */
-#include "printf-parse.h"
-
 
 #ifdef USE_IN_LIBIO
 /* This code is for use in libio.  */
 # include <libioP.h>
-# define PUTC(C, F)	_IO_putc_unlocked (C, F)
-# define vfprintf	_IO_vfprintf
 # define FILE		_IO_FILE
 # undef va_list
 # define va_list	_IO_va_list
-# undef	BUFSIZ
+# undef BUFSIZ
 # define BUFSIZ		_IO_BUFSIZ
-# define ARGCHECK(S, Format)						      \
+# define ARGCHECK(S, Format) \
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
@@ -120,11 +62,54 @@ ssize_t __wprintf_pad __P ((FILE *, wchar_t pad, size_t n));
 	}								      \
     } while (0)
 # define UNBUFFERED_P(S) ((S)->_IO_file_flags & _IO_UNBUFFERED)
+
+# ifndef COMPILE_WPRINTF
+#  define vfprintf	_IO_vfprintf
+#  define CHAR_T	char
+#  define UCHAR_T	unsigned char
+#  define INT_T		int
+#  define L_(Str)	Str
+#  define ISDIGIT(Ch)	isdigit (Ch)
+#  define ISASCII(Ch)	isascii (Ch)
+#  define MBRLEN(Cp, L, St) mbrlen (Cp, L, St)
+
+#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
+#  define PAD(Padchar) \
+  if (width > 0)							      \
+    done += _IO_padn (s, (Padchar), width)
+#  define PUTC(C, F)	_IO_putc_unlocked (C, F)
+#  define ORIENT	if (_IO_fwide (s, -1) != -1) return -1
+# else
+# include "_itowa.h"
+
+#  define vfprintf	_IO_vfwprintf
+#  define CHAR_T	wchar_t
+/* This is a hack!!!  There should be a type uwchar_t.  */
+#  define UCHAR_T	unsigned int /* uwchar_t */
+#  define INT_T		wint_t
+#  define L_(Str)	L##Str
+#  define ISDIGIT(Ch)	iswdigit (Ch)
+#  define ISASCII(Ch)	(((unsigned int) (Ch) & ~0x7f) == 0)
+#  define MBRLEN(Cp, L, St) wcslen ((const wchar_t *) (Cp))
+
+#  define PUT(F, S, N)	_IO_sputn ((F), (S), (N))
+#  define PAD(Padchar) \
+  if (width > 0)							      \
+    done += _IO_wpadn (s, (Padchar), width)
+#  define PUTC(C, F)	_IO_putwc_unlocked (C, F)
+#  define ORIENT	if (_IO_fwide (s, 1) != 1) return -1
+
+#  define _itoa(Val, Buf, Base, Case) _itowa (Val, (wchar_t *) Buf, Base, Case)
+#  define _itoa_word(Val, Buf, Base, Case) _itowa_word (Val, (wchar_t *) Buf, \
+							Base, Case)
+#  undef EOF
+#  define EOF WEOF
+# endif
 #else /* ! USE_IN_LIBIO */
 /* This code is for use in the GNU C library.  */
 # include <stdio.h>
 # define PUT(F, S, N)	fwrite (S, 1, N, F)
-# define ARGCHECK(S, Format)						      \
+# define ARGCHECK(S, Format) \
   do									      \
     {									      \
       /* Check file argument for consistence.  */			      \
@@ -153,11 +138,14 @@ extern void __flockfile (FILE *);
 extern void __funlockfile (FILE *);
 #endif /* USE_IN_LIBIO */
 
+/* Include the shared code for parsing the format string.  */
+#include "printf-parse.h"
+
 
 #define	outchar(Ch)							      \
   do									      \
     {									      \
-      register const int outc = (Ch);					      \
+      register const INT_T outc = (Ch);					      \
       if (PUTC (outc, s) == EOF)					      \
 	{								      \
 	  done = -1;							      \
@@ -199,7 +187,7 @@ extern void __funlockfile (FILE *);
 
 
 /* Global variables.  */
-static const char null[] = "(null)";
+static const CHAR_T null[] = L_("(null)");
 
 
 /* Helper function to provide temporary buffering for unbuffered streams.  */
@@ -211,7 +199,8 @@ static int printf_unknown __P ((FILE *, const struct printf_info *,
 				const void *const *));
 
 /* Group digits of number string.  */
-static char *group_number __P ((CHAR_T *, CHAR_T *, const CHAR_T *, wchar_t))
+static UCHAR_T *group_number __P ((UCHAR_T *, UCHAR_T *, const char *,
+				   wchar_t))
      internal_function;
 
 
@@ -238,11 +227,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
   const UCHAR_T *end_of_spec;
 
   /* Buffer intermediate results.  */
-  char work_buffer[1000];
-  char *workend;
+  UCHAR_T work_buffer[1000];
+  UCHAR_T *workend;
 
   /* State for restartable multibyte character handling functions.  */
+#ifndef COMPILE_WPRINTF
   mbstate_t mbstate;
+#endif
 
   /* We have to save the original argument pointer.  */
   va_list ap_save;
@@ -505,7 +496,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	 now process the wanted format specifier.  */			      \
     LABEL (form_percent):						      \
       /* Write a literal "%".  */					      \
-      outchar ('%');							      \
+      outchar (L_('%'));						      \
       break;								      \
 									      \
     LABEL (form_integer):						      \
@@ -588,7 +579,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    /* We have to take care for the '0' flag.  If a precision	      \
 	       is given it must be ignored.  */				      \
-	    pad = ' ';							      \
+	    pad = L_(' ');						      \
 									      \
 	  /* If the precision is 0 and the number is 0 nothing has to	      \
 	     be written for the number, except for the 'o' format in	      \
@@ -597,13 +588,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      string = workend;						      \
 	      if (base == 8 && alt)					      \
-		*string-- = '0';					      \
+		*string-- = L_('0');					      \
 	    }								      \
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = _itoa (number.longlong, workend + 1, base,	      \
-			      spec == 'X');				      \
+	      string = (UCHAR_T *) _itoa (number.longlong, workend + 1, base, \
+					  spec == L_('X'));		      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -642,7 +633,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  else								      \
 	    /* We have to take care for the '0' flag.  If a precision	      \
 	       is given it must be ignored.  */				      \
-	    pad = ' ';							      \
+	    pad = L_(' ');						      \
 									      \
 	  /* If the precision is 0 and the number is 0 nothing has to	      \
 	     be written for the number, except for the 'o' format in	      \
@@ -651,13 +642,13 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    {								      \
 	      string = workend;						      \
 	      if (base == 8 && alt)					      \
-		*string-- = '0';					      \
+		*string-- = L_('0');					      \
 	    }								      \
 	  else								      \
 	    {								      \
 	      /* Put the number in WORK.  */				      \
-	      string = _itoa_word (number.word, workend + 1, base,	      \
-				   spec == 'X');			      \
+	      string = (UCHAR_T *) _itoa_word (number.word, workend + 1,      \
+					       base, spec == L_('X'));	      \
 	      string -= 1;						      \
 	      if (group && grouping)					      \
 		string = group_number (string, workend, grouping,	      \
@@ -670,10 +661,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       if (prec > 0)							      \
 	/* Add zeros to the precision.  */				      \
 	while (prec-- > 0)						      \
-	  *string-- = '0';						      \
+	  *string-- = L_('0');						      \
       else if (number.word != 0 && alt && base == 8)			      \
 	/* Add octal marker.  */					      \
-	*string-- = '0';						      \
+	*string-- = L_('0');						      \
 									      \
       if (!left)							      \
 	{								      \
@@ -686,41 +677,41 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (is_negative || showsign || space)				      \
 	    --width;							      \
 									      \
-	  if (pad == '0')						      \
+	  if (pad == L_('0'))						      \
 	    {								      \
 	      while (width-- > 0)					      \
-		*string-- = '0';					      \
+		*string-- = L_('0');					      \
 									      \
 	      if (number.word != 0 && alt && base == 16)		      \
 		{							      \
 		  *string-- = spec;					      \
-		  *string-- = '0';					      \
+		  *string-- = L_('0');					      \
 		}							      \
 									      \
 	      if (is_negative)						      \
-		*string-- = '-';					      \
+		*string-- = L_('-');					      \
 	      else if (showsign)					      \
-		*string-- = '+';					      \
+		*string-- = L_('+');					      \
 	      else if (space)						      \
-		*string-- = ' ';					      \
+		*string-- = L_(' ');					      \
 	    }								      \
 	  else								      \
 	    {								      \
 	      if (number.word != 0 && alt && base == 16)		      \
 		{							      \
 		  *string-- = spec;					      \
-		  *string-- = '0';					      \
+		  *string-- = L_('0');					      \
 		}							      \
 									      \
 	      if (is_negative)						      \
-		*string-- = '-';					      \
+		*string-- = L_('-');					      \
 	      else if (showsign)					      \
-		*string-- = '+';					      \
+		*string-- = L_('+');					      \
 	      else if (space)						      \
-		*string-- = ' ';					      \
+		*string-- = L_(' ');					      \
 									      \
 	      while (width-- > 0)					      \
-		*string-- = ' ';					      \
+		*string-- = L_(' ');					      \
 	    }								      \
 									      \
 	  outstring (string + 1, workend - string);			      \
@@ -732,20 +723,20 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	  if (number.word != 0 && alt && base == 16)			      \
 	    {								      \
 	      *string-- = spec;						      \
-	      *string-- = '0';						      \
+	      *string-- = L_('0');					      \
 	    }								      \
 									      \
 	  if (is_negative)						      \
-	    *string-- = '-';						      \
+	    *string-- = L_('-');					      \
 	  else if (showsign)						      \
-	    *string-- = '+';						      \
+	    *string-- = L_('+');					      \
 	  else if (space)						      \
-	    *string-- = ' ';						      \
+	    *string-- = L_(' ');					      \
 									      \
 	  width -= workend - string;					      \
 	  outstring (string + 1, workend - string);			      \
 									      \
-	  PAD (' ');							      \
+	  PAD (L_(' '));						      \
 	  break;							      \
 	}								      \
 									      \
@@ -771,7 +762,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 					showsign: showsign,		      \
 					group: group,			      \
 					pad: pad,			      \
-					extra: 0 };			      \
+					extra: 0,			      \
+					wide: sizeof (CHAR_T) != 1 };	      \
 									      \
 	    if (is_long_double)						      \
 	      the_arg.pa_long_double = va_arg (ap, long double);	      \
@@ -821,7 +813,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 					showsign: showsign,		      \
 					group: group,			      \
 					pad: pad,			      \
-					extra: 0 };			      \
+					extra: 0,			      \
+					wide: sizeof (CHAR_T) != 1 };	      \
 									      \
 	    if (is_long_double)						      \
 	      the_arg.pa_long_double = va_arg (ap, long double);	      \
@@ -849,6 +842,178 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       }									      \
       break;								      \
 									      \
+    LABEL (form_pointer):						      \
+      /* Generic pointer.  */						      \
+      {									      \
+	const void *ptr;						      \
+	if (fspec == NULL)						      \
+	  ptr = va_arg (ap, void *);					      \
+	else								      \
+	  ptr = args_value[fspec->data_arg].pa_pointer;			      \
+	if (ptr != NULL)						      \
+	  {								      \
+	    /* If the pointer is not NULL, write it as a %#x spec.  */	      \
+	    base = 16;							      \
+	    number.word = (unsigned long int) ptr;			      \
+	    is_negative = 0;						      \
+	    alt = 1;							      \
+	    group = 0;							      \
+	    spec = 'x';							      \
+	    goto LABEL (number);					      \
+	  }								      \
+	else								      \
+	  {								      \
+	    /* Write "(nil)" for a nil pointer.  */			      \
+	    string = (UCHAR_T *) L_("(nil)");				      \
+	    /* Make sure the full string "(nil)" is printed.  */	      \
+	    if (prec < 5)						      \
+	      prec = 5;							      \
+	    is_long = 0;	/* This is no wide-char string.  */	      \
+	    goto LABEL (print_string);					      \
+	  }								      \
+      }									      \
+      /* NOTREACHED */							      \
+									      \
+    LABEL (form_number):						      \
+      /* Answer the count of characters written.  */			      \
+      if (fspec == NULL)						      \
+	{								      \
+	  if (is_longlong)						      \
+	    *(long long int *) va_arg (ap, void *) = done;		      \
+	  else if (is_long_num)						      \
+	    *(long int *) va_arg (ap, void *) = done;			      \
+	  else if (!is_short)						      \
+	    *(int *) va_arg (ap, void *) = done;			      \
+	  else								      \
+	    *(short int *) va_arg (ap, void *) = done;			      \
+	}								      \
+      else								      \
+	if (is_longlong)						      \
+	  *(long long int *) args_value[fspec->data_arg].pa_pointer = done;   \
+	else if (is_long_num)						      \
+	  *(long int *) args_value[fspec->data_arg].pa_pointer = done;	      \
+	else if (!is_short)						      \
+	  *(int *) args_value[fspec->data_arg].pa_pointer = done;	      \
+	else								      \
+	  *(short int *) args_value[fspec->data_arg].pa_pointer = done;	      \
+      break;								      \
+									      \
+    LABEL (form_strerror):						      \
+      /* Print description of error ERRNO.  */				      \
+      string =								      \
+	(UCHAR_T *) __strerror_r (save_errno, (char *) work_buffer,	      \
+				  sizeof work_buffer);			      \
+      is_long = 0;		/* This is no wide-char string.  */	      \
+      goto LABEL (print_string)
+
+#ifdef COMPILE_WPRINTF
+# define process_string_arg(fspec) \
+    LABEL (form_character):						      \
+      /* Character.  */							      \
+      if (is_long)							      \
+	goto LABEL (form_wcharacter);					      \
+      --width;	/* Account for the character itself.  */		      \
+      if (!left)							      \
+	PAD (L' ');							      \
+      if (fspec == NULL)						      \
+	outchar (btowc ((unsigned char) va_arg (ap, int))); /* Promoted.  */  \
+      else								      \
+	outchar (btowc ((unsigned char) args_value[fspec->data_arg].pa_char));\
+      if (left)								      \
+	PAD (L' ');							      \
+      break;								      \
+									      \
+    LABEL (form_wcharacter):						      \
+      {									      \
+	/* Wide character.  */						      \
+	--width;							      \
+	if (!left)							      \
+	  PAD (L' ');							      \
+        if (fspec == NULL)						      \
+	  outchar (va_arg (ap, wint_t));				      \
+	else								      \
+	  outchar (args_value[fspec->data_arg].pa_wchar);		      \
+	if (left)							      \
+	  PAD (L' ');							      \
+      }									      \
+      break;								      \
+									      \
+    LABEL (form_string):						      \
+      {									      \
+	size_t len;							      \
+									      \
+	/* The string argument could in fact be `char *' or `wchar_t *'.      \
+	   But this should not make a difference here.  */		      \
+	if (fspec == NULL)						      \
+	  string = (UCHAR_T *) va_arg (ap, const wchar_t *);		      \
+	else								      \
+	  string = (UCHAR_T *) args_value[fspec->data_arg].pa_wstring;	      \
+									      \
+	/* Entry point for printing other strings.  */			      \
+      LABEL (print_string):						      \
+									      \
+	if (string == NULL)						      \
+	  {								      \
+	    /* Write "(null)" if there's space.  */			      \
+	    if (prec == -1						      \
+		|| prec >= (int) (sizeof (null) / sizeof (null[0])) - 1)      \
+	      {								      \
+		string = (UCHAR_T *) null;				      \
+		len = (sizeof (null) / sizeof (null[0])) - 1;		      \
+	      }								      \
+	    else							      \
+	      {								      \
+		string = (UCHAR_T *) L"";				      \
+		len = 0;						      \
+	      }								      \
+	  }								      \
+	else if (!is_long && spec != L_('S'))				      \
+	  {								      \
+	    /* This is complicated.  We have to transform the multibyte	      \
+	       string into a wide character string.  */			      \
+	    const char *mbs = (const char *) string;			      \
+	    mbstate_t mbstate;						      \
+									      \
+	    len = prec == -1 ? strnlen (mbs, prec) : strlen (mbs);	      \
+									      \
+	    /* Allocate dynamically an array which definitely is long	      \
+	       enough for the wide character version.  */		      \
+	    string = (UCHAR_T *) alloca ((len + 1) * sizeof (wchar_t));	      \
+									      \
+	    memset (&mbstate, '\0', sizeof (mbstate_t));		      \
+	    len = __mbsrtowcs ((wchar_t *) string, &mbs, len + 1, &mbstate);  \
+	    if (len == (size_t) -1)					      \
+	      {								      \
+		/* Illegal multibyte character.  */			      \
+		done = -1;						      \
+		goto all_done;						      \
+	      }								      \
+	  }								      \
+	else								      \
+	  {								      \
+	    if (prec != -1)						      \
+	      /* Search for the end of the string, but don't search past      \
+		 the length specified by the precision.  */		      \
+	      len = __wcsnlen ((wchar_t *) string, prec);		      \
+	    else							      \
+	      len = __wcslen ((wchar_t *) string);			      \
+	  }								      \
+									      \
+	if ((width -= len) < 0)						      \
+	  {								      \
+	    outstring (string, len);					      \
+	    break;							      \
+	  }								      \
+									      \
+	if (!left)							      \
+	  PAD (L' ');							      \
+	outstring (string, len);					      \
+	if (left)							      \
+	  PAD (L' ');							      \
+      }									      \
+      break;
+#else
+# define process_string_arg(fspec) \
     LABEL (form_character):						      \
       /* Character.  */							      \
       if (is_long)							      \
@@ -917,7 +1082,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    if (prec != -1)						      \
 	      /* Search for the end of the string, but don't search past      \
 		 the length specified by the precision.  */		      \
-	      len = strnlen (string, prec);				      \
+	      len = __strnlen (string, prec);				      \
 	    else							      \
 	      len = strlen (string);					      \
 	  }								      \
@@ -939,7 +1104,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    s2 = (const wchar_t *) string;				      \
 	    string = alloca (len + 1);					      \
 	    (void) __wcsrtombs (string, &s2, len + 1, &mbstate);	      \
-	    if (prec < len)						      \
+	    if (prec > 0 && prec < len)					      \
 	      len = prec;						      \
 	  }								      \
 									      \
@@ -955,74 +1120,22 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	if (left)							      \
 	  PAD (' ');							      \
       }									      \
-      break;								      \
-									      \
-    LABEL (form_pointer):						      \
-      /* Generic pointer.  */						      \
-      {									      \
-	const void *ptr;						      \
-	if (fspec == NULL)						      \
-	  ptr = va_arg (ap, void *);					      \
-	else								      \
-	  ptr = args_value[fspec->data_arg].pa_pointer;			      \
-	if (ptr != NULL)						      \
-	  {								      \
-	    /* If the pointer is not NULL, write it as a %#x spec.  */	      \
-	    base = 16;							      \
-	    number.word = (unsigned long int) ptr;			      \
-	    is_negative = 0;						      \
-	    alt = 1;							      \
-	    group = 0;							      \
-	    spec = 'x';							      \
-	    goto LABEL (number);					      \
-	  }								      \
-	else								      \
-	  {								      \
-	    /* Write "(nil)" for a nil pointer.  */			      \
-	    string = (char *) "(nil)";					      \
-	    /* Make sure the full string "(nil)" is printed.  */	      \
-	    if (prec < 5)						      \
-	      prec = 5;							      \
-	    is_long = 0;	/* This is no wide-char string.  */	      \
-	    goto LABEL (print_string);					      \
-	  }								      \
-      }									      \
-      /* NOTREACHED */							      \
-									      \
-    LABEL (form_number):						      \
-      /* Answer the count of characters written.  */			      \
-      if (fspec == NULL)						      \
-	{								      \
-	  if (is_longlong)						      \
-	    *(long long int *) va_arg (ap, void *) = done;		      \
-	  else if (is_long_num)						      \
-	    *(long int *) va_arg (ap, void *) = done;			      \
-	  else if (!is_short)						      \
-	    *(int *) va_arg (ap, void *) = done;			      \
-	  else								      \
-	    *(short int *) va_arg (ap, void *) = done;			      \
-	}								      \
-      else								      \
-	if (is_longlong)						      \
-	  *(long long int *) args_value[fspec->data_arg].pa_pointer = done;   \
-	else if (is_long_num)						      \
-	  *(long int *) args_value[fspec->data_arg].pa_pointer = done;	      \
-	else if (!is_short)						      \
-	  *(int *) args_value[fspec->data_arg].pa_pointer = done;	      \
-	else								      \
-	  *(short int *) args_value[fspec->data_arg].pa_pointer = done;	      \
-      break;								      \
-									      \
-    LABEL (form_strerror):						      \
-      /* Print description of error ERRNO.  */				      \
-      string =								      \
-	(char *) __strerror_r (save_errno, work_buffer, sizeof work_buffer);  \
-      is_long = 0;		/* This is no wide-char string.  */	      \
-      goto LABEL (print_string)
+      break;
+#endif
 
+  /* Orient the stream.  */
+#ifdef ORIENT
+  ORIENT;
+#endif
 
   /* Sanity check of arguments.  */
   ARGCHECK (s, format);
+
+  /* Check for correct orientation.  */
+  if (_IO_fwide (s, sizeof (CHAR_T) == 1 ? -1 : 1)
+      != (sizeof (CHAR_T) == 1 ? -1 : 1))
+    /* The stream is already oriented otherwise.  */
+    return EOF;
 
   if (UNBUFFERED_P (s))
     /* Use a helper function which will allocate a local temporary buffer
@@ -1041,11 +1154,16 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 #endif
   nspecs_done = 0;
 
+#ifdef COMPILE_WPRINTF
+  /* Find the first format specifier.  */
+  f = lead_str_end = find_spec ((const UCHAR_T *) format);
+#else
   /* Put state for processing format string in initial state.  */
   memset (&mbstate, '\0', sizeof (mbstate_t));
 
   /* Find the first format specifier.  */
   f = lead_str_end = find_spec (format, &mbstate);
+#endif
 
   /* Lock stream.  */
 #ifdef USE_IN_LIBIO
@@ -1081,7 +1199,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       } number;
       int base;
       union printf_arg the_arg;
-      char *string;	/* Pointer to argument string.  */
+      UCHAR_T *string;	/* Pointer to argument string.  */
       int alt = 0;	/* Alternate format.  */
       int space = 0;	/* Use space prefix if no sign is needed.  */
       int left = 0;	/* Left-justify output.  */
@@ -1093,10 +1211,10 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       int is_char = 0;	/* Argument is promoted (unsigned) char.  */
       int width = 0;	/* Width of output; 0 means none specified.  */
       int prec = -1;	/* Precision of output; -1 means none specified.  */
-      char pad = ' ';	/* Padding character.  */
+      UCHAR_T pad = L_(' ');/* Padding character.  */
       CHAR_T spec;
 
-      workend = &work_buffer[sizeof (work_buffer) - 1];
+      workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T) - 1];
 
       /* Get current character in format string.  */
       JUMP (*++f, step0_jumps);
@@ -1172,10 +1290,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	    left = 1;
 	  }
 
-	if (width + 32 >= sizeof (work_buffer))
+	if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
 	  /* We have to use a special buffer.  The "32" is just a safe
 	     bet for all the output which is not counted in the width.  */
-	  workend = alloca (width + 32) + (width + 31);
+	  workend = ((UCHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+		     + (width + 31));
       }
       JUMP (*f, step1_jumps);
 
@@ -1183,10 +1302,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     LABEL (width):
       width = read_int (&f);
 
-      if (width + 32 >= sizeof (work_buffer))
+      if (width + 32 >= sizeof (work_buffer) / sizeof (work_buffer[0]))
 	/* We have to use a special buffer.  The "32" is just a safe
 	   bet for all the output which is not counted in the width.  */
-	workend = alloca (width + 32) + (width + 31);
+	workend = ((UCHAR_T *) alloca ((width + 32) * sizeof (CHAR_T))
+		   + (width + 31));
       if (*f == L_('$'))
 	/* Oh, oh.  The argument comes from a positional parameter.  */
 	goto do_positional;
@@ -1213,7 +1333,8 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
 	prec = read_int (&f);
       else
 	prec = 0;
-      if (prec > width && prec + 32 > sizeof (work_buffer))
+      if (prec > width
+	  && prec + 32 > sizeof (work_buffer) / sizeof (work_buffer[0]))
 	workend = alloca (spec + 32) + (spec + 31);
       JUMP (*f, step2_jumps);
 
@@ -1258,6 +1379,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       while (1)
 	{
 	  process_arg (((struct printf_spec *) NULL));
+	  process_string_arg (((struct printf_spec *) NULL));
 
 	LABEL (form_unknown):
 	  if (spec == L_('\0'))
@@ -1276,7 +1398,11 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       ++nspecs_done;
 
       /* Look for next format specifier.  */
+#ifdef COMPILE_WPRINTF
+      f = find_spec ((end_of_spec = ++f));
+#else
       f = find_spec ((end_of_spec = ++f), &mbstate);
+#endif
 
       /* Write the following constant string.  */
       outstring (end_of_spec, f - end_of_spec);
@@ -1301,7 +1427,7 @@ do_positional:
        attributes.  */
     size_t nargs = 0;
     int *args_type;
-    union printf_arg *args_value;
+    union printf_arg *args_value = NULL;
 
     /* Positional parameters refer to arguments directly.  This could
        also determine the maximum number of arguments.  Track the
@@ -1329,7 +1455,7 @@ do_positional:
 	  grouping = NULL;
       }
 
-    for (f = lead_str_end; *f != '\0'; f = specs[nspecs++].next_fmt)
+    for (f = lead_str_end; *f != L_('\0'); f = specs[nspecs++].next_fmt)
       {
 	if (nspecs >= nspecs_max)
 	  {
@@ -1356,8 +1482,12 @@ do_positional:
 	  }
 
 	/* Parse the format specifier.  */
+#ifdef COMPILE_WPRINTF
+	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg);
+#else
 	nargs += parse_one_spec (f, nargs, &specs[nspecs], &max_ref_arg,
 				 &mbstate);
+#endif
       }
 
     /* Determine the number of arguments the format string consumes.  */
@@ -1449,7 +1579,7 @@ do_positional:
 	} number;
 	int base;
 	union printf_arg the_arg;
-	char *string;	/* Pointer to argument string.  */
+	UCHAR_T *string;	/* Pointer to argument string.  */
 
 	/* Fill variables from values in struct.  */
 	int alt = specs[nspecs_done].info.alt;
@@ -1498,8 +1628,10 @@ do_positional:
 	  }
 
 	/* Maybe the buffer is too small.  */
-	if (MAX (prec, width) + 32 > sizeof (work_buffer))
-	  workend = alloca (MAX (prec, width) + 32) + (MAX (prec, width) + 31);
+	if (MAX (prec, width) + 32 > sizeof (work_buffer) / sizeof (UCHAR_T))
+	  workend = ((UCHAR_T *) alloca ((MAX (prec, width) + 32)
+					 * sizeof (UCHAR_T))
+		     + (MAX (prec, width) + 31));
 
 	/* Process format specifiers.  */
 	while (1)
@@ -1507,6 +1639,7 @@ do_positional:
 	    JUMP (spec, step4_jumps);
 
 	    process_arg ((&specs[nspecs_done]));
+	    process_string_arg ((&specs[nspecs_done]));
 
 	  LABEL (form_unknown):
 	    {
@@ -1564,21 +1697,6 @@ all_done:
 
   return done;
 }
-
-#ifdef USE_IN_LIBIO
-# undef vfprintf
-# ifdef strong_alias
-/* This is for glibc.  */
-strong_alias (_IO_vfprintf, vfprintf);
-# else
-#  if defined __ELF__ || defined __GNU_LIBRARY__
-#   include <gnu-stabs.h>
-#   ifdef weak_alias
-weak_alias (_IO_vfprintf, vfprintf);
-#   endif
-#  endif
-# endif
-#endif
 
 /* Handle an unknown format specifier.  This prints out a canonicalized
    representation of the format spec itself.  */
@@ -1588,24 +1706,25 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 {
   int done = 0;
-  char work_buffer[MAX (info->width, info->spec) + 32];
-  char *const workend = &work_buffer[sizeof (work_buffer) - 1];
-  register char *w;
+  CHAR_T work_buffer[MAX (info->width, info->spec) + 32];
+  CHAR_T *const workend = &work_buffer[sizeof (work_buffer) / sizeof (CHAR_T)
+				      - 1];
+  register CHAR_T *w;
 
-  outchar ('%');
+  outchar (L_('%'));
 
   if (info->alt)
-    outchar ('#');
+    outchar (L_('#'));
   if (info->group)
-    outchar ('\'');
+    outchar (L_('\''));
   if (info->showsign)
-    outchar ('+');
+    outchar (L_('+'));
   else if (info->space)
-    outchar (' ');
+    outchar (L_(' '));
   if (info->left)
-    outchar ('-');
+    outchar (L_('-'));
   if (info->pad == '0')
-    outchar ('0');
+    outchar (L_('0'));
 
   if (info->width != 0)
     {
@@ -1622,7 +1741,7 @@ printf_unknown (FILE *s, const struct printf_info *info,
 	outchar (*w++);
     }
 
-  if (info->spec != '\0')
+  if (info->spec != L_('\0'))
     outchar (info->spec);
 
  all_done:
@@ -1631,13 +1750,13 @@ printf_unknown (FILE *s, const struct printf_info *info,
 
 /* Group the digits according to the grouping rules of the current locale.
    The interpretation of GROUPING is as in `struct lconv' from <locale.h>.  */
-static char *
+static UCHAR_T *
 internal_function
-group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
+group_number (UCHAR_T *w, UCHAR_T *rear_ptr, const char *grouping,
 	      wchar_t thousands_sep)
 {
   int len;
-  char *src, *s;
+  UCHAR_T *src, *s;
 
   /* We treat all negative values like CHAR_MAX.  */
 
@@ -1648,8 +1767,9 @@ group_number (CHAR_T *w, CHAR_T *rear_ptr, const CHAR_T *grouping,
   len = *grouping;
 
   /* Copy existing string so that nothing gets overwritten.  */
-  src = (char *) alloca (rear_ptr - w);
-  s = (char *) __mempcpy (src, w + 1, rear_ptr - w) - 1;
+  src = (UCHAR_T *) alloca ((rear_ptr - w) * sizeof (UCHAR_T));
+  s = (UCHAR_T *) __mempcpy (src, w + 1,
+			     (rear_ptr - w) * sizeof (UCHAR_T)) - 1;
   w = rear_ptr;
 
   /* Process all characters in the string.  */
@@ -1699,12 +1819,22 @@ static int
 _IO_helper_overflow (_IO_FILE *s, int c)
 {
   _IO_FILE *target = ((struct helper_file*) s)->_put_stream;
+#ifdef COMPILE_WPRINTF
+  int used = s->_wide_data->_IO_write_ptr - s->_wide_data->_IO_write_base;
+  if (used)
+    {
+      _IO_size_t written = _IO_sputn (target, s->_wide_data->_IO_write_base,
+				      used);
+      s->_wide_data->_IO_write_ptr -= written;
+    }
+#else
   int used = s->_IO_write_ptr - s->_IO_write_base;
   if (used)
     {
       _IO_size_t written = _IO_sputn (target, s->_IO_write_base, used);
       s->_IO_write_ptr -= written;
     }
+#endif
   return PUTC (c, s);
 }
 
@@ -1735,16 +1865,18 @@ internal_function
 buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
 		   _IO_va_list args)
 {
-  char buf[_IO_BUFSIZ];
+  CHAR_T buf[_IO_BUFSIZ];
   struct helper_file helper;
   register _IO_FILE *hp = (_IO_FILE *) &helper;
   int result, to_flush;
 
   /* Initialize helper.  */
   helper._put_stream = s;
-  hp->_IO_write_base = buf;
-  hp->_IO_write_ptr = buf;
-  hp->_IO_write_end = buf + sizeof buf;
+#ifdef COMPILE_WPRINTF
+  _IO_wsetp (hp, buf, buf + sizeof buf / sizeof (CHAR_T));
+#else
+  _IO_setp (hp, buf, buf + sizeof buf);
+#endif
   hp->_IO_file_flags = _IO_MAGIC|_IO_NO_READS;
 #if _IO_JUMPS_OFFSET
   hp->_vtable_offset = 0;
@@ -1756,14 +1888,24 @@ buffered_vfprintf (register _IO_FILE *s, const CHAR_T *format,
   _IO_JUMPS (hp) = (struct _IO_jump_t *) &_IO_helper_jumps;
 
   /* Now print to helper instead.  */
-  result = _IO_vfprintf (hp, format, args);
+  result = vfprintf (hp, format, args);
 
   /* Now flush anything from the helper to the S. */
+#ifdef COMPILE_WPRINTF
+  if ((to_flush = (hp->_wide_data->_IO_write_ptr
+		   - hp->_wide_data->_IO_write_base)) > 0)
+    {
+      if ((int) _IO_sputn (s, hp->_wide_data->_IO_write_base, to_flush)
+	  != to_flush)
+	return -1;
+    }
+#else
   if ((to_flush = hp->_IO_write_ptr - hp->_IO_write_base) > 0)
     {
       if ((int) _IO_sputn (s, hp->_IO_write_base, to_flush) != to_flush)
 	return -1;
     }
+#endif
 
   return result;
 }
@@ -1826,3 +1968,26 @@ __wprintf_pad (FILE *s, wchar_t pad, size_t count)
 }
 #undef PADSIZE
 #endif /* USE_IN_LIBIO */
+
+#ifdef USE_IN_LIBIO
+# undef vfprintf
+# ifdef strong_alias
+/* This is for glibc.  */
+#  ifdef COMPILE_WPRINTF
+strong_alias (_IO_vfwprintf, vfwprintf);
+#  else
+strong_alias (_IO_vfprintf, vfprintf);
+#  endif
+# else
+#  if defined __ELF__ || defined __GNU_LIBRARY__
+#   include <gnu-stabs.h>
+#   ifdef weak_alias
+#    ifdef COMPILE_WPRINTF
+weak_alias (_IO_vfwprintf, vfwprintf);
+#    else
+weak_alias (_IO_vfprintf, vfprintf);
+#    endif
+#   endif
+#  endif
+# endif
+#endif

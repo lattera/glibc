@@ -1,5 +1,5 @@
 /* Release any resource associated with given conversion descriptor.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,5 +33,5 @@ iconv_close (iconv_t cd)
       return -1;
     }
 
-  return __gconv_close ((gconv_t) cd) ? -1 : 0;
+  return __gconv_close ((__gconv_t) cd) ? -1 : 0;
 }

@@ -20,4 +20,8 @@ libc {
     wcscasecmp; wcsncasecmp; wcsnlen; wcstoll;
     wcstoimax; wcstoumax; wcstoull; wcswcs; wmemrtombs; wmemrtowcs;
   }
+  GLIBC_2.2 {
+    # w*
+    wcschrnul; wmempcpy;
+  }
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1995, 1996, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,8 @@
 # define INT_T		int
 # define L_(Str)	Str
 # define ISDIGIT(Ch)	isdigit (Ch)
+# define ISASCII(Ch)	isascii (Ch)
+# define MBRLEN(Cp, L, St) mbrlen (Cp, L, St)
 
 # ifdef USE_IN_LIBIO
 #  define PUT(F, S, N)	_IO_sputn (F, S, N)
