@@ -1,3 +1,11 @@
+2003-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/unregister-atfork.c
+	(__unregister_atfork): Don't free memory not allocated dynamically.
+
+	* semaphore.h: Remove __THROW marker from cancellation points.
+	* nptl/sysdeps/pthread/pthread.h: Likewise.
+
 2003-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/pthread.h: Don't mark pthread_testcancel,

@@ -1,3 +1,8 @@
+2003-04-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_PRINT): Change type of
+	__len to size_t to avoid warnings.
+
 2003-04-18  Jes Sorensen  <jes@wildopensource.com>
 
 	* libc/sysdeps/unix/sysv/linux/ia64/bits/fcntl.h: Sync with Linux

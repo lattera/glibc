@@ -1,5 +1,5 @@
 /* High precision, low overhead timing functions.  i686 version.
-   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -149,7 +149,7 @@ typedef unsigned long long int hp_timing_t;
   do {									      \
     char __buf[20];							      \
     char *__cp = _itoa (Val, __buf + sizeof (__buf), 10, 0);		      \
-    int __len = (Len);							      \
+    size_t __len = (Len);						      \
     char *__dest = (Buf);						      \
     while (__len-- > 0 && __cp < __buf + sizeof (__buf))		      \
       *__dest++ = *__cp++;						      \
