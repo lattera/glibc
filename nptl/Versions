@@ -164,7 +164,7 @@ libpthread {
 
     pthread_barrier_init; pthread_barrier_destroy; pthread_barrier_wait;
     pthread_barrierattr_destroy; pthread_barrierattr_init;
-    pthread_barrierattr_getpshared; pthread_barrierattr_setpshared;
+    pthread_barrierattr_setpshared;
 
     sem_timedwait;
 
@@ -200,15 +200,17 @@ libpthread {
     pthread_cond_init; pthread_cond_destroy;
     pthread_cond_wait; pthread_cond_timedwait;
     pthread_cond_signal; pthread_cond_broadcast;
-
-    # Proposed API extensions.
-    # XXX Adjust number for final release.
-    pthread_tryjoin_np; pthread_timedjoin_np;
   }
 
   GLIBC_2.3.3 {
+    # 1003.1-2001 function accidentally left out in 2.2.
+    pthread_barrierattr_getpshared;
+
     # Unix CS option.
     pthread_condattr_getclock; pthread_condattr_setclock;
+
+    # Proposed API extensions.
+    pthread_tryjoin_np; pthread_timedjoin_np;
   }
 
   GLIBC_PRIVATE {
