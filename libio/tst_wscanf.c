@@ -21,7 +21,7 @@ main (int argc, char *argv[])
       || c3 != '!' || wc4 != L'!' || d != 42)
     {
       printf ("*** FAILED, n = %d, buf1 = \"%s\", wbuf2 = L\"%S\", c3 = '%c', wc4 = L'%C', d = %d\n",
-	      n, buf1, wbuf2, c3, wc4, d);
+	      n, buf1, wbuf2, c3, (wint_t) wc4, d);
       result = 1;
     }
 

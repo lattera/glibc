@@ -1,3 +1,8 @@
+2001-02-09  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/pthread/pt-initfini.c (call_initialize_minimal): Add
+	__pthread_initialize_minimal prototype.
+
 2001-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/pt-initfini.c: New file.

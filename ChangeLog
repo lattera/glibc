@@ -1,3 +1,8 @@
+2001-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/tst_wscanf.c (main): Add cast to avoid warning.
+	* libio/tst_swscanf.c (main): Likewise..
+
 2001-02-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/setenv.c (unsetenv): Remove const from len.

@@ -1,3 +1,7 @@
+2001-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* locales/en_HK: At newline at the end of the file.
+
 2001-02-08  Andreas Jaeger  <aj@suse.de>
 
 	* localedata/SUPPORTED: Add some entries for new locales.

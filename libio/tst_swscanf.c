@@ -31,7 +31,7 @@ main (int argc, char *argv[])
       || strcmp (buf3, "three") != 0 || c4 != '!' || wc5 != L'!')
     {
       printf ("*** FAILED, n = %Zu, buf1 = \"%s\", wbuf2 = L\"%S\", buf3 = \"%s\", c4 = '%c', wc5 = L'%C'\n",
-	      n, buf1, wbuf2, buf3, c4, wc5);
+	      n, buf1, wbuf2, buf3, c4, (wint_t) wc5);
       result = 1;
     }
 
