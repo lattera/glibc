@@ -47,7 +47,7 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
       if (debug_flg)
 	{
 	  fprintf (stdout, "tst_wcsxfrm() : REC = %d\n", rec + 1);
-	  fprintf (stdout, "tst_wcsxfrm() : 1st ret = %d\n", ret);
+	  fprintf (stdout, "tst_wcsxfrm() : 1st ret = %zu\n", ret);
 	}
 
       if (ret == -1 || ret >= n1 || errno_save != 0)
@@ -78,7 +78,7 @@ tst_wcsxfrm (FILE * fp, int debug_flg)
 
       if (debug_flg)
 	{
-	  fprintf (stdout, "tst_wcsxfrm() : 2nd ret = %d\n", ret);
+	  fprintf (stdout, "tst_wcsxfrm() : 2nd ret = %zu\n", ret);
 	}
 
       /* wcscoll() */
