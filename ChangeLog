@@ -1,3 +1,8 @@
+2001-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iopopen.c: Add lock for proc_file_chain access.
+	Reported by Padraig Brady <Padraig@linux.ie>.
+
 2001-07-31  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/poll.h (NPOLLFILE): Removed.
