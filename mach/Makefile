@@ -71,10 +71,8 @@ generated =
 mach-machine = $(patsubst powerpc,ppc,$(base-machine))
 
 # Define mach-syscalls and sysno-*.
-ifndef no_deps
 ifndef inhibit_mach_syscalls
 -include $(objpfx)mach-syscalls.mk
-endif
 endif
 $(objpfx)mach-syscalls.mk: syscalls.awk Makefile
 # Go kludges!!!
@@ -172,3 +170,6 @@ $(objpfx)errsystems.c: errsystems.awk err_*.sub \
 .PHONY: generated
 generated: $(addprefix $(common-objpfx),$(common-generated)) \
 	   $(addprefix $(objpfx),$(generated))
+
+.PHONY: mach-before-compile
+mach-before-compile: $(mach-before-compile)

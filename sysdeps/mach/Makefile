@@ -1,4 +1,4 @@
-# Copyright (C) 1993,94,96,97,2002 Free Software Foundation, Inc.
+# Copyright (C) 1993,1994,1996,1997,2002,2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,6 +27,9 @@ ifneq (mach,$(subdir))
 # So make sure we get a chance to run in mach/ to make them before all else.
 
 mach-objpfx = $(common-objpfx)mach/
+else
+mach-objpfx = $(objpfx)
+endif
 
 # These are all the generated files that <mach.h> includes.
 # Actually, it's only some of them.  We omit mach_interface.h
@@ -37,10 +40,11 @@ mach-before-compile := $(mach-objpfx)mach-shortcuts.h \
 		       $(patsubst %,$(mach-objpfx)mach/mach_%.h,\
 				  port host)
 
+ifneq (mach,$(subdir))
 # This patsubst generates patterns like `m%h-shortcuts.h', which are damn
 # likely to match just the corresponding particular file we want.
 $(patsubst mach%,m\%h%,$(mach-before-compile)): # Run only if doesn't exist.
-	$(MAKE) -C $(..)mach generated no_deps=t
+	$(MAKE) -C $(..)mach mach-before-compile no_deps=t generating=t
 
 before-compile += $(mach-before-compile)
 endif
