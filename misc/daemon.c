@@ -44,7 +44,7 @@ daemon(nochdir, noclose)
 {
 	int fd;
 
-	switch (fork()) {
+	switch (__fork()) {
 	case -1:
 		return (-1);
 	case 0:

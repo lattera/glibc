@@ -126,7 +126,7 @@
 		     255.255.255.255?  The test below will succeed
 		     spuriously... ???  */
 		  if (af == AF_INET)
-		    ok = inet_aton (name, (struct in_addr *) host_addr);
+		    ok = __inet_aton (name, (struct in_addr *) host_addr);
 		  else
 		    {
 		      assert (af == AF_INET6);

@@ -1,5 +1,16 @@
 2000-10-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c (gettext): Use correct translation domain for glibc.
+
+	* argp/argp-parse.c: Use __dcgettext instead of dcgettext for glibc.
+	* argp/argp-help.c: Likewise.
+	* inet/getnameinfo.c (getnameinfo): Use __snprintf instead of snprintf.
+	* inet/rexec.c (rexec_af): Use __snprintf instead of snprintf.
+	* misc/regexp.c (__step): Use __regexec instead of regexec.
+	(__advance): Likewise.
+	* nss/digits_dots.c: Use __inet_aton instead of inet_aton.
+	* misc/daemon.c (daemon): Use __fork instead of fork.
+
 	* stdlib/fmtmsg.c (fmtmsg): Change output format slightly to make
 	it look better and bring it closer to SysV behavior.
 	* stdlib/Makefile (distribute): Add tst-fmtmsg.sh.

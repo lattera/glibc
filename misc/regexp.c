@@ -1,5 +1,5 @@
 /* Define function and variables for the obsolete <regexp.h> interface.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -41,7 +41,7 @@ __step (const char *string, const char *expbuf)
   expbuf += __alignof (regex_t *);
   expbuf -= (expbuf - ((const char *) 0)) % __alignof__ (regex_t *);
 
-  if (regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+  if (__regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
       == REG_NOMATCH)
     return 0;
 
@@ -63,7 +63,7 @@ __advance (const char *string, const char *expbuf)
   expbuf += __alignof__ (regex_t *);
   expbuf -= (expbuf - ((const char *) 0)) % __alignof__ (regex_t *);
 
-  if (regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
+  if (__regexec ((regex_t *) expbuf, string, 1, &match, REG_NOTEOL)
       == REG_NOMATCH
       /* We have to check whether the check is at the beginning of the
 	 buffer.  */

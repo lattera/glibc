@@ -318,11 +318,11 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
 			    size_t scopelen;
 
 			    scopebuf[0] = SCOPE_DELIMITER;
-			    scopelen = 1 + snprintf (scopeptr,
-						     (scopebuf
-						      + sizeof scopebuf
-						      - scopeptr),
-						     "%u", scopeid);
+			    scopelen = 1 + __snprintf (scopeptr,
+						       (scopebuf
+							+ sizeof scopebuf
+							- scopeptr),
+						       "%u", scopeid);
 
 			    real_hostlen = __strnlen (host, hostlen);
 			    if (real_hostlen + scopelen + 1 > hostlen)
