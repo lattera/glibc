@@ -1,3 +1,8 @@
+2004-03-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/swapcontext.S
+	(__novec_swapcontext): Branch to novec_* labels.
+
 2004-03-10  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getopt.c (_): Don't define here for glibc.

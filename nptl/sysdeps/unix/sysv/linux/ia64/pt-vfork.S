@@ -20,6 +20,7 @@
 #include <sysdep.h>
 #define _SIGNAL_H
 #include <bits/signum.h>
+#include <tcb-offsets.h>
 
 /* The following are defined in linux/sched.h, which unfortunately	*/
 /* is not safe for inclusion in an assembly file.			*/
@@ -34,7 +35,7 @@ ENTRY(__vfork)
 	.body		// first .prologue is not at the beginning of proc.
 	alloc r2=ar.pfs,0,0,2,0
 	adds r14=PID,r13
-	;; 
+	;;
 	ld4 r16=[r14]
 	;;
 	sub r15=0,r16

@@ -1,5 +1,18 @@
 2004-03-10  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/unix/sysv/linux/s390/s390-32/vfork.S (__vfork): Add
+	libc_hidden_def.
+	* sysdeps/unix/sysv/linux/s390/s390-64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S (__vfork):
+	Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S (__vfork): Likewise.
+	* sysdeps/unix/sysv/linux/ia64/pt-vfork.S: Include tcb-offsets.h.
+	* sysdeps/unix/sysv/linux/ia64/vfork.S (__vfork): Use DO_CALL instead
+	of DO_CALL_VIA_BREAK.  Work around a gas problem.
+
 	* sysdeps/unix/sysv/linux/powerpc/pt-vfork.S: Remove.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/vfork.S: New file.
 	* sysdeps/unix/sysv/linux/powerpc/powerpc32/pt-vfork.S: New file.

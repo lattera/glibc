@@ -55,5 +55,5 @@ ENTRY (__vfork)
 	/* Normal return.  */
 	br	%r14
 PSEUDO_END(__vfork)
-
+libc_hidden_def (__vfork)
 weak_alias (__vfork, vfork)

@@ -31,6 +31,8 @@
 /* Implemented as __clone_syscall(CLONE_VFORK | CLONE_VM | SIGCHLD, 0)	*/
 
 ENTRY(__vfork)
+	.prologue	// work around a GAS bug which triggers if
+	.body		// first .prologue is not at the beginning of proc.
 	alloc r2=ar.pfs,0,0,2,0
 	adds r14=PID,r13
 	;;
@@ -44,7 +46,7 @@ ENTRY(__vfork)
 	mov out1=0		/* Standard sp value.			*/
 	;;
 	st4 [r14]=r15
-	DO_CALL_VIA_BREAK (SYS_ify (clone))
+	DO_CALL (SYS_ify (clone))
 	cmp.eq p6,p0=0,r8
 	adds r14=PID,r13
 (p6)	br.cond.dptk 1f
@@ -64,5 +66,4 @@ ENTRY(__vfork)
 	ret
 PSEUDO_END(__vfork)
 libc_hidden_def (__vfork)
-
 weak_alias (__vfork, vfork)

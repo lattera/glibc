@@ -573,7 +573,7 @@ ENTRY(__novec_swapcontext)
 	li	r3,SIG_SETMASK
 	bl	JUMPTARGET(sigprocmask)
 	cmpwi	r3,0
-	bne	L(error_exit)
+	bne	L(novec_error_exit)
 
 	/*
 	 * If the new ucontext refers to the point where we were interrupted
@@ -590,7 +590,7 @@ ENTRY(__novec_swapcontext)
 	lwz	r31,_UC_REGS_PTR(r31)
 	lwz	r0,_UC_GREGS+(PT_MSR*4)(r31)
 	cmpwi	r0,0
-	bne	L(do_sigret)
+	bne	L(novec_do_sigret)
 
 	/* Restore the floating-point registers */
 	lfd	fp31,_UC_FREGS+(32*8)(r31)
