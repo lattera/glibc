@@ -27,6 +27,7 @@
 #include <sys/param.h>
 #include <sys/time.h>
 #include <sys/wait.h>           /* for waitpid macros */
+#include <locale.h>		/* for __uselocale */
 
 #include <ldsodefs.h>
 #include "pthread.h"
@@ -301,6 +302,11 @@ pthread_start_thread(void *arg)
       __sched_setscheduler(THREAD_GETMEM(self, p_pid),
                            SCHED_OTHER, &default_params);
     }
+#if !(USE_TLS && HAVE___THREAD) && defined SHARED
+  /* Initialize thread-locale current locale to point to the global one.
+     With __thread support, the variable's initializer takes care of this.  */
+  __uselocale (LC_GLOBAL_LOCALE);
+#endif
   /* Make gdb aware of new thread */
   if (__pthread_threads_debug && __pthread_sig_debug > 0) {
     request.req_thread = self;

@@ -32,6 +32,7 @@
 #include "restart.h"
 #include <ldsodefs.h>
 #include <tls.h>
+#include <locale.h>		/* for __uselocale */
 
 /* Sanity check.  */
 #if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
@@ -459,6 +460,12 @@ __pthread_initialize_minimal(void)
 # else
   __pthread_initial_thread.p_cpuclock_offset = GL(dl_cpuclock_offset);
 # endif
+#endif
+
+#if !(USE_TLS && HAVE___THREAD) && defined SHARED
+  /* Initialize thread-locale current locale to point to the global one.
+     With __thread support, the variable's initializer takes care of this.  */
+  __uselocale (LC_GLOBAL_LOCALE);
 #endif
 }
 
