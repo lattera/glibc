@@ -1,4 +1,14 @@
+2003-03-14  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* allocatestack.c (__stack_user): Use hidden_data_def.
+	* pthread_create.c (__pthread_keys): Likewise.
+
+	* init.c [__powerpc__] (__NR_set_tid_address): Define it.
+
 2003-03-14  Roland McGrath  <roland@redhat.com>
+
+	* tst-fork4.c: New file.
+	* Makefile (tests): Add it.
 
 	* descr.h (struct pthread): Move the union out of [!TLS_DTV_AT_TP], so
 	we always define the padding space.

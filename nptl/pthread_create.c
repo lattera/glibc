@@ -59,7 +59,7 @@ unsigned int __nptl_nthreads = 1;
 /* Table of the key information.  */
 struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
   __attribute__ ((nocommon));
-hidden_def (__pthread_keys)
+hidden_data_def (__pthread_keys)
 
 /* This is for libthread_db only.  */
 const int __pthread_pthread_sizeof_descr = sizeof (struct pthread);

@@ -44,7 +44,9 @@
 # define __NR_set_tid_address	258
 #elif defined __x86_64__
 # define __NR_set_tid_address	218
-#eli
+#elif defined __powerpc__
+# define __NR_set_tid_address	232
+#elif
 # error "define __NR_set_tid_address"
 #endif
 #endif

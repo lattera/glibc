@@ -102,7 +102,7 @@ static LIST_HEAD (stack_used);
 /* List of the threads with user provided stacks in use.  No need to
    initialize this, since it's done in __pthread_initialize_minimal.  */
 list_t __stack_user __attribute__ ((nocommon));
-hidden_def (__stack_user)
+hidden_data_def (__stack_user)
 
 #if COLORING_INCREMENT != 0
 /* Number of threads created.  */
