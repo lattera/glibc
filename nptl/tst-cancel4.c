@@ -21,6 +21,7 @@
    exit to be called more than once.  */
 
 #include <errno.h>
+#include <fcntl.h>
 #include <limits.h>
 #include <pthread.h>
 #include <stddef.h>
@@ -28,6 +29,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <sys/mman.h>
 #include <sys/poll.h>
 #include <sys/select.h>
 #include <sys/socket.h>
@@ -41,10 +43,9 @@
 /* The following interfaces are defined to be cancellation points but
    tests are not yet implemented:
 
-     aio_suspend()         clock_nanosleep()  close()
-     connect()             creat()            fsync()
-     msgrcv()              msgsnd()           msync()
-     open()                pread()            pwrite()
+     aio_suspend()         clock_nanosleep()
+     connect()             creat()
+     msgrcv()              msgsnd()
      sendmsg()             sendto()
      tcdrain()
 
@@ -1296,6 +1297,257 @@ tf_recvmsg (void *arg)
 }
 
 
+static void *
+tf_open (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which open()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  open ("Makefile", O_RDONLY);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: open returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_close (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which close()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  char fname[] = "/tmp/tst-cancel-fd-XXXXXX";
+  tempfd = mkstemp (fname);
+  if (tempfd == -1)
+    {
+      printf ("%s: mkstemp failed\n", __FUNCTION__);
+      exit (1);
+    }
+  unlink (fname);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  close (tempfd);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: close returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_pread (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which pread()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempfd = open ("Makefile", O_RDONLY);
+  if (tempfd == -1)
+    {
+      printf ("%s: cannot open Makefile\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[10];
+  pread (tempfd, mem, sizeof (mem), 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: pread returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_pwrite (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which pwrite()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  char fname[] = "/tmp/tst-cancel4-fd-XXXXXX";
+  tempfd = mkstemp (fname);
+  if (tempfd == -1)
+    {
+      printf ("%s: mkstemp failed\n", __FUNCTION__);
+      exit (1);
+    }
+  unlink (fname);
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  char mem[10];
+  pwrite (tempfd, mem, sizeof (mem), 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: pwrite returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_fsync (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which fsync()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempfd = open ("Makefile", O_RDONLY);
+  if (tempfd == -1)
+    {
+      printf ("%s: cannot open Makefile\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  fsync (tempfd);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: fsync returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
+static void *
+tf_msync (void *arg)
+{
+  if (arg == NULL)
+    // XXX If somebody can provide a portable test case in which msync()
+    // blocks we can enable this test to run in both rounds.
+    abort ();
+
+  tempfd = open ("Makefile", O_RDONLY);
+  if (tempfd == -1)
+    {
+      printf ("%s: cannot open Makefile\n", __FUNCTION__);
+      exit (1);
+    }
+  void *p = mmap (NULL, 10, PROT_READ, MAP_SHARED, tempfd, 0);
+  if (p == MAP_FAILED)
+    {
+      printf ("%s: mmap failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  int r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  r = pthread_barrier_wait (&b2);
+  if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
+    {
+      printf ("%s: 2nd barrier_wait failed\n", __FUNCTION__);
+      exit (1);
+    }
+
+  pthread_cleanup_push (cl, NULL);
+
+  msync (p, 10, 0);
+
+  pthread_cleanup_pop (0);
+
+  printf ("%s: msync returned\n", __FUNCTION__);
+
+  exit (1);
+}
+
+
 static struct
 {
   const char *name;
@@ -1329,6 +1581,12 @@ static struct
   ADD_TEST (recv, 2, 0),
   ADD_TEST (recvfrom, 2, 0),
   ADD_TEST (recvmsg, 2, 0),
+  ADD_TEST (open, 2, 1),
+  ADD_TEST (close, 2, 1),
+  ADD_TEST (pread, 2, 1),
+  ADD_TEST (pwrite, 2, 1),
+  ADD_TEST (fsync, 2, 1),
+  ADD_TEST (msync, 2, 1),
 };
 #define ntest_tf (sizeof (tests) / sizeof (tests[0]))
 

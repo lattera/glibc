@@ -1,3 +1,7 @@
+2003-06-17  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cancel4.c: Test open, close, pread, pwrite, fsync, and msync.
+
 2003-06-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/createthread.c (create_thread): Set
