@@ -1575,6 +1575,27 @@ fi
 
 echo "$ac_t""$libc_cv_ld_no_whole_archive" 1>&6
 
+echo $ac_n "checking for gcc -fno-exceptions""... $ac_c" 1>&6
+if eval "test \"`echo '$''{'libc_cv_gcc_no_exceptions'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.c <<\EOF
+_start () {}
+int __eh_pc;
+__throw () {}
+EOF
+if { ac_try='${CC-cc} $CFLAGS
+			    -nostdlib -nostartfiles -fno-exceptions
+			    -o conftest conftest.c'; { (eval echo configure:1590: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+  libc_cv_gcc_no_exceptions=yes
+else
+  libc_cv_gcc_no_exceptions=no
+fi
+rm -f conftest*
+fi
+
+echo "$ac_t""$libc_cv_gcc_no_exceptions" 1>&6
+
 ### End of automated tests.
 ### Now run sysdeps configure fragments.
 
@@ -1841,6 +1862,7 @@ s%@AR@%$AR%g
 s%@RANLIB@%$RANLIB%g
 s%@libc_cv_have_initfini@%$libc_cv_have_initfini%g
 s%@libc_cv_ld_no_whole_archive@%$libc_cv_ld_no_whole_archive%g
+s%@libc_cv_gcc_exceptions@%$libc_cv_gcc_exceptions%g
 s%@uname_sysname@%$uname_sysname%g
 s%@uname_release@%$uname_release%g
 s%@uname_version@%$uname_version%g
