@@ -269,7 +269,7 @@ init_syntax_once ()
 
 # endif /* not SYNTAX_TABLE */
 
-# define SYNTAX(c) re_syntax_table[(unsigned char) c]
+# define SYNTAX(c) re_syntax_table[(unsigned char) (c)]
 
 #endif /* emacs */
 
