@@ -225,45 +225,45 @@ extern struct r_search_path_elem *_dl_init_all_dirs;
 /* OS-dependent function to open the zero-fill device.  */
 extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
 
-/* OS-dependent function to write a message on the specified
-   descriptor FD.  All arguments are `const char *'; args until a null
-   pointer are concatenated to form the message to print.  */
-extern void _dl_sysdep_output (int fd, const char *string, ...);
 
-/* OS-dependent function to write a debug message on the specified
-   descriptor for this.  All arguments are `const char *'; args until
-   a null pointer are concatenated to form the message to print.  If
-   NEW_LINE is nonzero it is assumed that the message starts on a new
-   line.  */
-extern void _dl_debug_message (int new_line, const char *string, ...);
+/* Write message on the debug file descriptor.  The parameters are
+   interpreted as for a `printf' call.  All the lines start with a
+   tag showing the PID.  */
+extern void _dl_debug_printf (const char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
-/* OS-dependent function to write a message on the standard output.
-   All arguments are `const char *'; args until a null pointer
-   are concatenated to form the message to print.  */
-#define _dl_sysdep_message(string, args...) \
-  _dl_sysdep_output (STDOUT_FILENO, string, ##args)
+/* Write message on the debug file descriptor.  The parameters are
+   interpreted as for a `printf' call.  All the lines buf the first
+   start with a tag showing the PID.  */
+extern void _dl_debug_printf_c (const char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 1, 2)));
 
-/* OS-dependent function to write a message on the standard error.
-   All arguments are `const char *'; args until a null pointer
-   are concatenated to form the message to print.  */
-#define _dl_sysdep_error(string, args...) \
-  _dl_sysdep_output (STDERR_FILENO, string, ##args)
 
-/* OS-dependent function to give a fatal error message and exit
-   when the dynamic linker fails before the program is fully linked.
-   All arguments are `const char *'; args until a null pointer
-   are concatenated to form the message to print.  */
-#define _dl_sysdep_fatal(string, args...) \
+/* Write a message on the specified descriptor FD.  The parameters are
+   interpreted as for a `printf' call.  */
+extern void _dl_dprintf (int fd, const char *fmt, ...)
+     __attribute__ ((__format__ (__printf__, 2, 3)));
+
+/* Write a message on the specified descriptor standard output.  The
+   parameters are interpreted as for a `printf' call.  */
+#define _dl_printf(fmt, args...) \
+  _dl_dprintf (STDOUT_FILENO, fmt, ##args)
+
+/* Write a message on the specified descriptor standard error.  The
+   parameters are interpreted as for a `printf' call.  */
+#define _dl_error_printf(fmt, args...) \
+  _dl_dprintf (STDERR_FILENO, fmt, ##args)
+
+/* Write a message on the specified descriptor standard error and exit
+   the program.  The parameters are interpreted as for a `printf' call.  */
+#define _dl_fatal_printf(fmt, args...) \
   do									      \
     {									      \
-      _dl_sysdep_output (STDERR_FILENO, string, ##args);		      \
+      _dl_dprintf (STDERR_FILENO, fmt, ##args);				      \
       _exit (127);							      \
     }									      \
   while (1)
 
-/* Nonzero if the program should be "secure" (i.e. it's setuid or somesuch).
-   This tells the dynamic linker to ignore environment variables.  */
-extern int _dl_secure;
 
 /* This function is called by all the internal dynamic linker functions
    when they encounter an error.  ERRCODE is either an `errno' code or

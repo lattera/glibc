@@ -30,7 +30,6 @@ ld {
     _dl_sysdep_start; _r_debug;
     _dl_global_scope; _dl_lookup_symbol_skip;
     _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
-    _dl_debug_message;
 
     # Function from libc.so which must be shared with libc.
     calloc; free; malloc; realloc;
@@ -62,6 +61,6 @@ ld {
     _dl_clktck; _dl_pagesize;
   }
   GLIBC_2.2.3 {
-    _dl_debug_mask;
+    _dl_debug_mask; _dl_debug_printf;
   }
 }

@@ -35,7 +35,10 @@ endif
 libdl-shared-only-routines += eval
 
 ifeq (yes,$(build-shared))
-tests = glrefmain failtest tst-dladdr default errmsg1 tstatexit tstcxaatexit
+tests = glrefmain failtest tst-dladdr default errmsg1 tstcxaatexit
+ifeq (yes,$(have-protected))
+tests += tstatexit
+endif
 endif
 modules-names = glreflib1 glreflib2 failtestmod defaultmod1 defaultmod2 \
 		errmsg1mod modatexit modcxaatexit

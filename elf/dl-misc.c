@@ -1,5 +1,5 @@
 /* Miscellaneous support functions for dynamic linker
-   Copyright (C) 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,16 @@
 #include <assert.h>
 #include <fcntl.h>
 #include <ldsodefs.h>
+#include <limits.h>
 #include <link.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/param.h>
 #include <sys/stat.h>
+#include <sys/uio.h>
 #include <stdio-common/_itoa.h>
 
 #ifndef MAP_ANON
@@ -82,71 +86,190 @@ _dl_sysdep_read_whole_file (const char *file, size_t *sizep, int prot)
 int _dl_debug_fd = 2;
 
 
-void
-_dl_sysdep_output (int fd, const char *msg, ...)
+/* Bare-bone printf implementation.  This function only knows about
+   the formats and flags needed and can handle only up to 64 stripes in
+   the output.  */
+static void
+_dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 {
-  va_list ap;
+  const int niovmax = 64;
+  struct iovec iov[niovmax];
+  int niov = 0;
+  pid_t pid = 0;
+  char pidbuf[7];
 
-  va_start (ap, msg);
-  do
+  while (*fmt != '\0')
     {
-      size_t len = strlen (msg);
-      __libc_write (fd, msg, len);
-      msg = va_arg (ap, const char *);
+      const char *startp = fmt;
+
+      if (tag_p > 0)
+	{
+	  /* Generate the tag line once.  It consists of the PID and a
+	     colon followed by a tab.  */
+	  if (pid == 0)
+	    {
+	      char *p;
+	      pid = __getpid ();
+	      assert (pid >= 0 && pid < 100000);
+	      p = _itoa_word (pid, &pidbuf[5], 10, 0);
+	      while (p > pidbuf)
+		*--p = '0';
+	      pidbuf[5] = ':';
+	      pidbuf[6] = '\t';
+	    }
+
+	  /* Append to the output.  */
+	  assert (niov < niovmax);
+	  iov[niov].iov_len = 7;
+	  iov[niov++].iov_base = pidbuf;
+
+	  /* No more tags until we see the next newline.  */
+	  tag_p = -1;
+	}
+
+      /* Skip everything except % and \n (if tags are needed).  */
+      while (*fmt != '\0' && *fmt != '%' && (! tag_p || *fmt != '\n'))
+	++fmt;
+
+      /* Append constant string.  */
+      assert (niov < niovmax);
+      if ((iov[niov].iov_len = fmt - startp) != 0)
+	iov[niov++].iov_base = (char *) startp;
+
+      if (*fmt == '%')
+	{
+	  /* It is a format specifier.  */
+	  char fill = ' ';
+	  int width = -1;
+#if LONG_MAX != INT_MAX
+	  int long_mod = 0;
+#endif
+
+	  /* Recognize zero-digit fill flag.  */
+	  if (*++fmt == '0')
+	    {
+	      fill = '0';
+	      ++fmt;
+	    }
+
+	  /* See whether with comes from a parameter.  Note that no other
+	     way to specify the width is implemented.  */
+	  if (*fmt == '*')
+	    {
+	      width = va_arg (arg, int);
+	      ++fmt;
+	    }
+
+	  /* Recognize the l modifier.  It is only important on some
+	     platforms where long and int have a different size.  We
+	     can use the same code for size_t.  */
+	  if (*fmt == 'l' || *fmt == 'Z')
+	    {
+#if LONG_MAX != INT_MAX
+	      long_mod = 1;
+#endif
+	      ++fmt;
+	    }
+
+	  switch (*fmt)
+	    {
+	      /* Integer formatting.  */
+	    case 'u':
+	    case 'x':
+	      {
+		/* We have to make a difference if long and int have a
+		   different size.  */
+#if LONG_MAX != INT_MAX
+		unsigned long int num = (long_mod
+					 ? va_arg (arg, unsigned long int);
+					 : va_arg (arg, unsigned int));
+#else
+		unsigned long int num = va_arg (arg, unsigned int);
+#endif
+		/* We use alloca() to allocate the buffer with the most
+		   pessimistic guess for the size.  Using alloca() allows
+		   having more than one integer formatting in a call.  */
+		char *buf = (char *) alloca (3 * sizeof (unsigned long int));
+		char *endp = &buf[3 * sizeof (unsigned long int)];
+		char *cp = _itoa_word (num, endp, *fmt == 'x' ? 16 : 10, 0);
+
+		/* Pad to the width the user specified.  */
+		if (width != -1)
+		  while (endp - cp < width)
+		    *--cp = fill;
+
+		iov[niov].iov_base = cp;
+		iov[niov].iov_len = endp - cp;
+		++niov;
+	      }
+	      break;
+
+	    case 's':
+	      /* Get the string argument.  */
+	      iov[niov].iov_base = va_arg (arg, char *);
+	      iov[niov].iov_len = strlen (iov[niov].iov_base);
+	      ++niov;
+	      break;
+
+	    default:
+	      assert (! "invalid format specifier");
+	    }
+	  ++fmt;
+	}
+      else if (*fmt == '\n')
+	{
+	  /* See whether we have to print a single newline character.  */
+	  if (fmt == startp)
+	    {
+	      iov[niov].iov_base = (char *) startp;
+	      iov[niov++].iov_len = 1;
+	    }
+	  else
+	    /* No, just add it to the rest of the string.  */
+	    ++iov[niov - 1].iov_len;
+
+	  /* Next line, print a tag again.  */
+	  tag_p = 1;
+	  ++fmt;
+	}
     }
-  while (msg != NULL);
-  va_end (ap);
+
+  /* Finally write the result.  */
+  __writev (fd, iov, niov);
 }
 
 
+/* Write to debug file.  */
 void
-_dl_debug_message (int new_line, const char *msg, ...)
+_dl_debug_printf (const char *fmt, ...)
 {
-  /* We print the strings we get passed one after the other but start all
-     lines using the current PID.  */
-  int pid = 0;
-  va_list ap;
+  va_list arg;
 
-  va_start (ap, msg);
-  do
-    if (msg[0] == '\0')
-      /* Get the next argument.  */
-      msg = va_arg (ap, const char *);
-    else
-      {
-	const char *endp;
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (_dl_debug_fd, 1, fmt, arg);
+  va_end (arg);
+}
 
-	/* We actually will print something in this line.  So print the
-	   PID now if needed.  */
-	if (new_line)
-	  {
-	    char buf[7];
-	    char *p;
-	    if (pid == 0)
-	      pid = __getpid ();
-	    assert (pid >= 0 && pid < 100000);
-	    p = _itoa_word (pid, &buf[5], 10, 0);
-	    while (p > buf)
-	      *--p = '0';
-	    buf[5] = ':';
-	    buf[6] = '\t';
-	    __libc_write (_dl_debug_fd, buf, 7);
-	    new_line = 0;
-	  }
 
-	endp = msg + strcspn (msg, "\n");
-	if (*endp == '\0')
-	  {
-	    __libc_write (_dl_debug_fd, msg, endp - msg);
-	    msg = va_arg (ap, const char *);
-	  }
-	else
-	  {
-	    __libc_write (_dl_debug_fd, msg, endp - msg + 1);
-	    msg = endp + 1;
-	    new_line = 1;
-	  }
-      }
-  while (msg != NULL);
-  va_end (ap);
+/* Write to debug file but don't start with a tag.  */
+void
+_dl_debug_printf_c (const char *fmt, ...)
+{
+  va_list arg;
+
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (_dl_debug_fd, -1, fmt, arg);
+  va_end (arg);
+}
+
+
+/* Write the given file descriptor.  */
+void
+_dl_dprintf (int fd, const char *fmt, ...)
+{
+  va_list arg;
+
+  va_start (arg, fmt);
+  _dl_debug_vdprintf (fd, 0, fmt, arg);
+  va_end (arg);
 }
