@@ -1,5 +1,5 @@
 /* Test and measure string and memory functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -49,6 +49,7 @@ extern impl_t __start_impls[], __stop_impls[];
 #include <errno.h>
 #include <time.h>
 #define GL(x) _##x
+#define GLRO(x) _##x
 #include <hp-timing.h>
 
 
