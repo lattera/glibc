@@ -1,4 +1,4 @@
-/* Copyright (C) 1993-1995,1997,2000,2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 1993-1995,1997,2000,2002-2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,45 +16,141 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
+#include <fcntl.h>
+#include <paths.h>
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <errno.h>
-#include <sysdep.h>
 #include <string.h>
-#include <abort-instr.h>
+#include <sysdep.h>
+#include <unistd.h>
+#include <sys/syslog.h>
 #ifndef ABORT_INSTRUCTION
 /* No such instruction is available.  */
 # define ABORT_INSTRUCTION
 #endif
 
 /* Abort with an error message.  */
+#include <not-cancel.h>
+
+#ifdef FATAL_PREPARE_INCLUDE
+#include FATAL_PREPARE_INCLUDE
+#endif
+
+struct str_list
+{
+  const char *str;
+  size_t len;
+  struct str_list *next;
+};
+
+
+/* Abort with an error message.  */
+void
+__libc_message (int do_abort, const char *fmt, ...)
+{
+  va_list ap;
+  va_list ap_copy;
+  int fd = -1;
+
+  va_start (ap, fmt);
+  va_copy (ap_copy, ap);
+
+#ifdef FATAL_PREPARE
+  FATAL_PREPARE;
+#endif
+
+  /* Open a descriptor for /dev/tty unless the user explicitly
+     requests errors on standard error.  */
+  const char *on_2 = __secure_getenv ("LIBC_FATAL_STDERR_");
+  if (on_2 == NULL || *on_2 == '\0')
+    fd = open_not_cancel_2 (_PATH_TTY, O_RDWR | O_NOCTTY | O_NDELAY);
+
+  if (fd == -1)
+    fd = STDERR_FILENO;
+
+  struct str_list *list = NULL;
+  int nlist = 0;
+
+  const char *cp = fmt;
+  while (*cp != '\0')
+    {
+      /* Find the next "%s" or the end of the string.  */
+      const char *next = cp;
+      while (next[0] != '%' || next[1] != 's')
+	{
+	  next = __strchrnul (next + 1, '%');
+
+	  if (next[0] == '\0')
+	    break;
+	}
+
+      /* Determine what to print.  */
+      const char *str;
+      size_t len;
+      if (cp[0] == '%' && cp[1] == 's')
+	{
+	  str = va_arg (ap, const char *);
+	  len = strlen (str);
+	  cp += 2;
+	}
+      else
+	{
+	  str = cp;
+	  len = next - cp;
+	  cp = next;
+	}
+
+      struct str_list *newp = alloca (sizeof (struct str_list));
+      newp->str = str;
+      newp->len = len;
+      newp->next = list;
+      list = newp;
+      ++nlist;
+    }
+
+  bool written = false;
+  if (nlist > 0)
+    {
+      struct iovec *iov = alloca (nlist * sizeof (struct iovec));
+      ssize_t total = 0;
+
+      for (int cnt = nlist - 1; cnt >= 0; --cnt)
+	{
+	  iov[cnt].iov_base = (void *) list->str;
+	  iov[cnt].iov_len = list->len;
+	  total += list->len;
+	  list = list->next;
+	}
+
+      INTERNAL_SYSCALL_DECL (err);
+      ssize_t cnt;
+      do
+	cnt = INTERNAL_SYSCALL (writev, err, 3, fd, iov, nlist);
+      while (INTERNAL_SYSCALL_ERROR_P (cnt, err)
+	     && INTERNAL_SYSCALL_ERRNO (cnt, err) == EINTR);
+
+      if (cnt == total)
+	written = true;
+    }
+
+  va_end (ap);
+
+  /* If we  had no success writing the message, use syslog.  */
+  if (! written)
+    vsyslog (LOG_ERR, fmt, ap_copy);
+
+  if (do_abort)
+    /* Terminate the process.  */
+    abort ();
+}
+
+
 void
 __libc_fatal (message)
      const char *message;
 {
-  size_t len = strlen (message);
-
-  while (len > 0)
-    {
-      INTERNAL_SYSCALL_DECL (err);
-      ssize_t count = INTERNAL_SYSCALL (write, err, 3, STDERR_FILENO,
-					message, len);
-      if (! INTERNAL_SYSCALL_ERROR_P (count, err))
-	{
-	  message += count;
-	  len -= count;
-	}
-      else if (INTERNAL_SYSCALL_ERRNO (count, err) != EINTR)
-	break;
-    }
-
-  /* Terminate the process.  */
-  _exit (127);
-
-  /* The previous call should never have returned.  */
-  while (1)
-    /* Try for ever and ever.  */
-    ABORT_INSTRUCTION;
+  __libc_message (1, "%s", message);
 }
 libc_hidden_def (__libc_fatal)
