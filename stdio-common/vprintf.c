@@ -22,10 +22,6 @@ Cambridge, MA 02139, USA.  */
 
 #undef	vprintf
 
-#ifdef USE_IN_LIBIO
-# define vfprintf _IO_vfprintf
-#endif
-
 /* Write formatted output to stdout according to the
    format string FORMAT, using the argument list in ARG.  */
 int

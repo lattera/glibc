@@ -35,4 +35,5 @@ DEFUN(_IO_vsscanf, (string, format, args),
   _IO_str_init_static ((_IO_FILE*)&sf, (char*)string, 0, NULL);
   return _IO_vfscanf((_IO_FILE*)&sf, format, args, NULL);
 }
+weak_alias (_IO_vsscanf, __vsscanf)
 weak_alias (_IO_vsscanf, vsscanf)

@@ -19,10 +19,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef USE_IN_LIBIO
-# define __vsscanf _IO_vsscanf
-#endif
-
 /* Read formatted input from S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int

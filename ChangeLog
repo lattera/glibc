@@ -1,3 +1,25 @@
+Wed Nov 29 12:30:50 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* libio/vsnprintf.c (__vsnprintf): Define as alias.
+	* libio/iovsscanf.c (__vsscanf): Define as alias.
+	* asprintf.c: Remove libio adaptation code added by drepper.
+	* dprintf.c: Likewise.
+	* printf.c: Likewise.
+	* scanf.c: Likewise.
+	* snprintf.c: Likewise.
+	* sprintf.c: Likewise.
+	* sscanf.c: Likewise.
+	* vprintf.c: Likewise.
+	* stdio-common/vfscanf.c [USE_IN_LIBIO] (__vfscanf): New wrapper
+	function.
+	(vfscanf): Define unconditionally.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): If SYM is null, use
+	zero for value.
+
+	* misc/getpass.c: Write a newline after reading the unechoed
+	password.
+
 Mon Nov 27 19:24:18 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/Makefile (routines): Add getsid.

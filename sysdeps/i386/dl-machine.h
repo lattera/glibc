@@ -77,7 +77,7 @@ elf_machine_rel (struct link_map *map,
 		 Elf32_Addr sym_loadaddr, const Elf32_Sym *sym)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
-  const Elf32_Addr sym_value = sym_loadaddr + sym->st_value;
+  const Elf32_Addr sym_value = sym ? sym_loadaddr + sym->st_value : 0;
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {

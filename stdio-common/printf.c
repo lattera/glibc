@@ -19,10 +19,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef USE_IN_LIBIO
-# define vprintf _IO_vprintf
-#endif
-
 /* Write formatted output to stdout from the format string FORMAT.  */
 /* VARARGS1 */
 int

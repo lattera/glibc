@@ -41,4 +41,5 @@ _IO_vsnprintf (string, maxlen, format, args)
   *((_IO_FILE *) &sf)->_IO_write_ptr = '\0';
   return ret;
 }
+weak_alias (_IO_vsnprintf, __vsnprintf)
 weak_alias (_IO_vsnprintf, vsnprintf)

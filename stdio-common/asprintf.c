@@ -19,10 +19,6 @@ Cambridge, MA 02139, USA.  */
 #include <stdarg.h>
 #include <stdio.h>
 
-#ifdef USE_IN_LIBIO
-# define vasprintf _IO_vasprintf
-#endif
-
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */

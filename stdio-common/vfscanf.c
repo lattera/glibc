@@ -724,6 +724,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   return ((c == EOF || ungetc (c, s)), done);
 }
 
-#ifndef USE_IN_LIBIO
-weak_alias (__vfscanf, vfscanf)
+#ifdef USE_IN_LIBIO
+int
+__vfscanf (FILE *s, const char *format, va_list argptr)
+{
+  return _IO_vfscanf (s, format, argptr, NULL);
+}
 #endif
+
+weak_alias (__vfscanf, vfscanf)
