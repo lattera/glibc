@@ -1,12 +1,17 @@
-1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* stdio-common/tst-tmpnam.c (main): Use void as parameter to avoid  
-	warnings about unused args.  Fix comment. 
- 
-1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de> 
- 
-	* sysdeps/posix/tempname.c (__path_search): Correct last patch. 
- 
+1998-12-15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/tempname.c (__path_search): Add second part of the
+	patch by Andreas Jaeger.
+
+1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio-common/tst-tmpnam.c (main): Use void as parameter to avoid
+	warnings about unused args.  Fix comment.
+
+1998-12-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/posix/tempname.c (__path_search): Correct last patch.
+
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sunrpc/rpc/xdr.h (IXDR_GET_INT32): Case pointer before reading from
@@ -14,14 +19,14 @@
 	(IXDR_PUT_INT32): Likewise for writing.
 	Patch by Bruce Elliott <bde@nwlink.com>.
 
-1998-12-08  H.J. Lu  <hjl@gnu.org> 
- 
-	* sysdeps/unix/sysv/linux/speed.c (cfsetospeed): Don't clear 
-	the IBAUD0 bit in c_iflag. 
- 
-	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Clear the 
-	the IBAUD0 bit in c_iflag. 
- 
+1998-12-08  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/speed.c (cfsetospeed): Don't clear
+	the IBAUD0 bit in c_iflag.
+
+	* sysdeps/unix/sysv/linux/tcsetattr.c (tcsetattr): Clear the
+	the IBAUD0 bit in c_iflag.
+
 1998-12-14  Ulrich Drepper  <drepper@cygnus.com>
 
 	* time/Makefile (tests): Add tst-strptime.

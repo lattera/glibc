@@ -68,6 +68,8 @@ __path_search (char *tmpl, size_t tmpl_len, const char *dir, const char *pfx,
 	dir = d;
       else if (dir != NULL && direxists (dir))
 	/* nothing */ ;
+      else
+	dir = NULL;
     }
   if (dir != NULL)
     {
