@@ -376,7 +376,7 @@ as far as the system follows the Unix standards.
 @end menu
 
 @node The Lame Way to Locale Data, The Elegant and Fast Way, ,Locale Information
-@subsection @code{localeconv}: It's portable but @dots{}
+@subsection @code{localeconv}: It is portable but @dots{}
 
 Together with the @code{setlocale} function the @w{ISO C} people
 invented @code{localeconv} function.  It is a masterpiece of misdesign.

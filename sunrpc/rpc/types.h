@@ -29,6 +29,7 @@
  */
 /*      @(#)types.h 1.18 87/07/24 SMI      */
 
+/* fixincludes should not add extern "C" to this file */
 /*
  * Rpc additions to <sys/types.h>
  */

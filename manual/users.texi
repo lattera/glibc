@@ -1882,6 +1882,7 @@ selected and then one can iterate over all entries in this netgroup.
 These functions are declared in @file{netdb.h}.
 
 @comment netdb.h
+@comment BSD
 @deftypefun int setnetgrent (const char *@var{netgroup})
 A call to this function initializes the internal state of the library to
 allow following calls of the @code{getnetgrent} iterate over all entries
@@ -1906,6 +1907,7 @@ the @code{innetgr} function and parts of the implementation of the
 @code{compat} service part of the NSS implementation.
 
 @comment netdb.h
+@comment BSD
 @deftypefun int getnetgrent (char **@var{hostp}, char **@var{userp}, char **@var{domainp})
 This function returns the next unprocessed entry of the currently
 selected netgroup.  The string pointers, which addresses are passed in
@@ -1920,6 +1922,7 @@ value of @code{0} means no further entries exist or internal errors occurred.
 @end deftypefun
 
 @comment netdb.h
+@comment GNU
 @deftypefun int getnetgrent_r (char **@var{hostp}, char **@var{userp}, char **@var{domainp}, char *@var{buffer}, int @var{buflen})
 This function is similar to @code{getnetgrent} with only one exception:
 the strings the three string pointers @var{hostp}, @var{userp}, and
@@ -1937,6 +1940,7 @@ SunOS libc does not provide this function.
 @end deftypefun
 
 @comment netdb.h
+@comment BSD
 @deftypefun void endnetgrent (void)
 This function free all buffers which were allocated to process the last
 selected netgroup.  As a result all string pointers returned by calls
@@ -1951,6 +1955,7 @@ only interesting question is whether a given entry is part of the
 selected netgroup.
 
 @comment netdb.h
+@comment BSD
 @deftypefun int innetgr (const char *@var{netgroup}, const char *@var{host}, const char *@var{user}, const char *@var{domain})
 This function tests whether the triple specified by the parameters
 @var{hostp}, @var{userp}, and @var{domainp} is part of the netgroup

@@ -151,7 +151,7 @@ individual service.
 Assume the service @var{name} shall be used for a lookup.  The code for
 this service is implemented in a module called @file{libnss_@var{name}}.
 On a system supporting shared libraries this is in fact a shared library
-with the name (for example) @file{libnss_@var{name}.so.1}.  The number
+with the name (for example) @file{libnss_@var{name}.so.2}.  The number
 at the end is the currently used version of the interface which will not
 change frequently.  Normally the user should not have to be cognizant of
 these files since they should be placed in a directory where they are
@@ -337,7 +337,7 @@ the function
 in the module
 
 @smallexample
-       libnss_files.so.1
+       libnss_files.so.2
 @end smallexample
 
 @noindent
@@ -358,8 +358,8 @@ access them.  If a function is not available it is simply treated as if
 the function would return @code{unavail}
 (@pxref{Actions in the NSS configuration}).
 
-The file name @file{libnss_files.so.1} would be on a @w{Solaris 2}
-system @file{nss_files.so.1}.  This is the difference mentioned above.
+The file name @file{libnss_files.so.2} would be on a @w{Solaris 2}
+system @file{nss_files.so.2}.  This is the difference mentioned above.
 Sun's NSS modules are usable as modules which get indirectly loaded
 only.
 
@@ -398,7 +398,7 @@ The actual prototype of the function in the NSS modules in this case is
 enum nss_status _nss_files_gethostbyname_r (const char *name,
                                             struct hostent *result_buf,
                                             char *buf, size_t buflen,
-                                            int *h_errnop)
+                                            int *errnop, int *h_errnop)
 @end smallexample
 
 I.e., the interface function is in fact the reentrant function with the
@@ -511,10 +511,10 @@ sources and its development.  The links between the C library and the
 new service module consists solely of the interface functions.
 
 Each module is designed following a specific interface specification.
-For now the version is 1 and this manifests in the version number of the
-shared library object of the NSS modules: they have the extension
-@code{.1}.  If the interface ever changes in an incompatible way,
-this number will be increased---hopefully this will never be necessary.
+For now the version is 2 (the interface in version 1 was not adequate)
+and this manifests in the version number of the shared library object of
+the NSS modules: they have the extension @code{.2}.  If the interface
+changes again in an incompatible way, this number will be increased.
 Modules using the old interface will still be usable.
 
 Developers of a new service will have to make sure that their module is
@@ -524,7 +524,7 @@ Object Name) must also have this number.  Building a module from a bunch
 of object files on an ELF system using GNU CC could be done like this:
 
 @smallexample
-gcc -shared -o libnss_NAME.so.1 -Wl,-soname,libnss_NAME.so.1 OBJECTS
+gcc -shared -o libnss_NAME.so.2 -Wl,-soname,libnss_NAME.so.2 OBJECTS
 @end smallexample
 
 @noindent
@@ -581,7 +581,7 @@ a simple noop.
 
 There normally is no return value different to @var{NSS_STATUS_SUCCESS}.
 
-@item enum nss_status _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, size_t buflen)
+@item enum nss_status _nss_@var{database}_get@var{db}ent_r (@var{STRUCTURE} *result, char *buffer, size_t buflen, int *errnop)
 Since this function will be called several times in a row to retrieve
 one entry after the other it must keep some kind of state.  But this
 also means the functions are not really reentrant.  They are reentrant
@@ -598,6 +598,11 @@ guaranteed that the same buffer will be passed for the next call of this
 function.  Therefore one must not misuse this buffer to save some state
 information from one call to another.
 
+Before the function returns the implementation should store the value of
+the local @var{errno} variable in the variable pointed to be
+@var{errnop}.  This is important to guarantee the module working in
+statically linked programs.
+
 As explained above this function could also have an additional last
 argument.  This depends on the database used; it happens only for
 @code{host} and @code{networks}.
@@ -610,7 +615,7 @@ returned.  When the service was not formerly initialized by a call to
 @code{_nss_@var{DATABASE}_set@var{db}ent} all return value allowed for
 this function can also be returned here.
 
-@item enum nss_status _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, size_t buflen)
+@item enum nss_status _nss_@var{DATABASE}_get@var{db}by@var{XX}_r (@var{PARAMS}, @var{STRUCTURE} *result, char *buffer, size_t buflen, int *errnop)
 This function shall return the entry from the database which is
 addressed by the @var{PARAMS}.  The type and number of these arguments
 vary.  It must be individually determined by looking to the user-level
@@ -625,6 +630,11 @@ to non-constant global data.
 
 The implementation of this function should honour the @var{stayopen}
 flag set by the @code{set@var{DB}ent} function whenever this makes sense.
+
+Before the function returns the implementation should store the value of
+the local @var{errno} variable in the variable pointed to be
+@var{errnop}.  This is important to guarantee the module working in
+statically linked programs.
 
 Again, this function takes an additional last argument for the
 @code{host} and @code{networks} database.

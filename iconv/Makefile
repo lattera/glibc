@@ -31,6 +31,7 @@ ifeq ($(elf),yes)
 routines	+= gconv_dl
 else
 CFLAGS-gconv_db.c = -DSTATIC_GCONV
+CFLAGS-gconv_simple.c = -DSTATIC_GCONV
 endif
 
 distribute	= gconv_builtin.h gconv_int.h loop.c skeleton.c

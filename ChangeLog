@@ -1,3 +1,20 @@
+1998-10-16 10:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/Makefile [! elf]: Define CFLAGS-gconv_simple.c to
+	-DSTATIC_GCONV.
+	* iconv/skeleton.c: Include ELF header only of STATIC?GCONV is not
+	defined.  Avoid using DL_CLL_FCT if it is not defined.
+
+1998-10-16 10:40 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* resolv/arpa/nameser.h: Include sys/types.h unconditionally.
+	Include endian.h unconditionally.  Remove portability goop
+	depending on #ifdef linux, #ifdef BSD, #ifdef machine-type.
+
+1998-10-16 11:39 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* sunrpc/rpc/types.h: Mark file so fixincludes won't modify it.
+
 1998-10-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Remove __kernel_termios
@@ -6,16 +23,16 @@
 	* sysdeps/unix/sysv/linux/arm/Dist: Add bits/armsigctx.h.
 
 1998-10-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
- 
+
 	* string/bits/string2.h (strcmp): Don't cache the result of
 	__builtin_constant_p in variables, otherwise constant folding
 	can fail in big functions.
- 
+
 1998-10-14  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
- 
+
 	* string/bits/string2.h: Add prototypes for the new inline
 	functions.
- 
+
 1998-10-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/ioctls.h: Include termios.h to
@@ -47,10 +64,10 @@
 	here instead of including kernel_termios.h.
 
 1998-10-14  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
- 
+
 	* sysdeps/unix/opendir.c (__opendir): Remove label lose2 which is
 	unnecessary after the changes of 1998-10-12.
- 
+
 1998-10-13  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/alpha/ioperm.c (inline_outb): Fix output
