@@ -126,7 +126,7 @@ __GETDENTS (int fd, char *buf, size_t nbytes)
       retval = INLINE_SYSCALL (getdents64, 3, fd, CHECK_N(kbuf, kbytes),
 			       kbytes);
 # ifndef __ASSUME_GETDENTS64_SYSCALL
-      if (retval != -1 && errno != -EINVAL)
+      if (retval != -1 || errno != EINVAL)
 # endif
 	{
 	  const size_t size_diff = (offsetof (struct kernel_dirent64, d_name)
