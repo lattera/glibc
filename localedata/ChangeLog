@@ -1,3 +1,7 @@
+2000-06-28  Andreas Jaeger  <aj@suse.de>
+
+	* tests-mbwc/tgn_locdef.h (TST_LOC_de_UTF8): Added.
+
 2000-06-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* tests-mbwc/dat_iswcntrl.c: U0000 is not in class cntrl.
