@@ -57,8 +57,10 @@ __BEGIN_DECLS
 	(defined(_TIME_H) || defined(__need_clock_t))
 #define	__clock_t_defined	1
 
+#include <gnu/types.h>
+
 /* Returned by `clock'.  */
-typedef long int clock_t;
+typedef __clock_t clock_t;
 
 #endif /* clock_t not defined and <time.h> or need clock_t.  */
 #undef	__need_clock_t

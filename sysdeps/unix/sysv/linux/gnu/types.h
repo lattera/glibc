@@ -43,6 +43,7 @@ typedef struct
   __u_long val[2];
 } __u_quad_t;
 #endif
+
 typedef __kernel_dev_t __dev_t;		/* Type of device numbers.  */
 typedef __kernel_uid_t __uid_t;		/* Type of user identifications.  */
 typedef __kernel_gid_t __gid_t;		/* Type of group identifications.  */
@@ -52,13 +53,7 @@ typedef __kernel_nlink_t __nlink_t; 	/* Type of file link counts.  */
 typedef __kernel_off_t __off_t;		/* Type of file sizes and offsets.  */
 typedef __kernel_pid_t __pid_t;		/* Type of process identifications.  */
 typedef __kernel_ssize_t __ssize_t;	/* Type of a byte count, or error.  */
-#ifdef __GNUC__
-typedef long long int __fsid_t;		/* Type of file system IDs.  */
-#else
-typedef struct {			/* Type of file system IDs.  */
-  long    val[2];
-} __fsid_t;
-#endif
+typedef __kernel_fsid_t __fsid_t;	/* Type of file system IDs.  */
 
 /* Everythin' else.  */
 typedef __kernel_daddr_t __daddr_t;	/* The type of a disk address.  */
@@ -68,5 +63,6 @@ typedef long int __swblk_t;		/* Type of a swap block maybe?  */
 
 /* fd_set for select.  */
 typedef __kernel_fd_set __fd_set;
+typedef __kernel_clock_t __clock_t;
 
 #endif /* gnu/types.h */

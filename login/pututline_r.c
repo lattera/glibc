@@ -63,7 +63,7 @@ pututline_r (const struct utmp *id, struct utmp_data *utmp_data)
   if (utmp_data->ubuf.ut_type != id->ut_type)
     {
       /* We must not overwrite the data in UTMP_DATA.  */
-      struct utmp_data *data_tmp = alloca (sizeof (utmp_data));
+      struct utmp_data *data_tmp = alloca (sizeof (*data_tmp));
       struct utmp *dummy;
 
       *data_tmp = *utmp_data;

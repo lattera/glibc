@@ -1,4 +1,15 @@
+Sun Jun  2 14:56:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* login/pututline_r.c: Fix typo in sizeof for DATA_TMP alloca.
+
+	* sysdeps/generic/gnu/types.h (__clock_t): New type.
+
 Wed May 29 00:57:37 1996  David Mosberger-Tang  <davidm@azstarnet.com>
+
+	* sysdeps/unix/sysv/linux/gnu/types.h (__clock_t, __fsid_t): Define
+	using kernel types.
+	* time/time.h (clock_t): Include <gnu/types.h> and define using
+	__clock_t.
 
 	* time/Makefile (tests): Add test-tz.
 

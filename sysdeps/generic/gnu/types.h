@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1994, 1995 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 94, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -50,6 +50,7 @@ typedef long int __off_t;	/* Type of file sizes and offsets.  */
 typedef int __pid_t;		/* Type of process identifications.  */
 typedef int __ssize_t;		/* Type of a byte count, or error.  */
 typedef __u_quad_t __fsid_t;	/* Type of file system IDs.  */
+typedef long int __clock_t;	/* Type of CPU usage counts.  */
 
 /* Everythin' else.  */
 typedef long int __daddr_t;	/* The type of a disk address.  */

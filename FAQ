@@ -207,12 +207,12 @@ incompatibilities:
 
        syscall name:	wrapper name:	declaring header file:
        -------------	-------------	----------------------
-       bdflush		bdflush		???
+       bdflush		bdflush		<sys/kdaemon.h>
        create_module	create_module	<sys/module.h>
        delete_module	delete_module	<sys/module.h>
        get_kernel_syms	get_kernel_syms	<sys/module.h>
        init_module	init_module	<sys/module.h>
-       syslog		ksyslog_ctl	???
+       syslog		ksyslog_ctl	<sys/klog.h>
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
 
