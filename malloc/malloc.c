@@ -1872,8 +1872,6 @@ mmap_chunk(size) size_t size;
   size_t page_mask = malloc_getpagesize - 1;
   mchunkptr p;
 
-  if(n_mmaps >= n_mmaps_max) return 0; /* too many regions */
-
   /* For mmapped chunks, the overhead is one SIZE_SZ unit larger, because
    * there is no following chunk whose prev_size field could be used.
    */
@@ -2930,8 +2928,10 @@ chunk_alloc(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
   {
 
 #if HAVE_MMAP
-    /* If big and would otherwise need to extend, try to use mmap instead */
+    /* If the request is big and there are not yet too many regions,
+       and we would otherwise need to extend, try to use mmap instead.  */
     if ((unsigned long)nb >= (unsigned long)mmap_threshold &&
+        n_mmaps < n_mmaps_max &&
         (victim = mmap_chunk(nb)) != 0)
       return victim;
 #endif
@@ -2939,7 +2939,15 @@ chunk_alloc(ar_ptr, nb) arena *ar_ptr; INTERNAL_SIZE_T nb;
     /* Try to extend */
     malloc_extend_top(ar_ptr, nb);
     if ((remainder_size = chunksize(top(ar_ptr)) - nb) < (long)MINSIZE)
+    {
+#if HAVE_MMAP
+      /* A last attempt:  when we are out of address space in the arena,
+         try mmap anyway, disregarding n_mmaps_max.  */
+      if((victim = mmap_chunk(nb)) != 0)
+        return victim;
+#endif
       return 0; /* propagate failure */
+    }
   }
 
   victim = top(ar_ptr);

@@ -1,3 +1,9 @@
+2000-06-28  Wolfram Gloger  <wg@malloc.de>
+
+	* malloc/malloc.c (chunk_alloc): If extension of the linear heap
+	fails, try mmap_chunk() as a last resort even though n_mmaps_max
+	may have been reached.
+
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-collate.c (insert_weights): Handle <Uxxxx>

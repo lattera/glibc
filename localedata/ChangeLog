@@ -1,5 +1,8 @@
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/cs_CZ: Updated for new format.
+	Patch by Jakub Jelinek <jakub@redhat.com>.
+
 	* tests-mbwc/dat_mbrlen.c: Correct some tests.  Remove old WAIVER
 	comments.
 	* tests-mbwc/tst_mbrlen.c: Enable code to respect t_ini.  Also clear
