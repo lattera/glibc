@@ -5,17 +5,76 @@
 
 #define __GNU_EXEC_MACROS__
 
+/*
+ * OSF/1 ECOFF header structs.  ECOFF files consist of:
+ *      - a file header (struct filehdr),
+ *      - an a.out header (struct aouthdr),
+ *      - one or more section headers (struct scnhdr).
+ *        The filhdr's "f_nscns" field contains the
+ *        number of section headers.
+ */
+
+struct filehdr
+{
+  /* OSF/1 "file" header */
+  unsigned short f_magic, f_nscns;
+  unsigned int   f_timdat;
+  unsigned long  f_symptr;
+  unsigned int   f_nsyms;
+  unsigned short f_opthdr, f_flags;
+};
+
+struct aouthdr
+{
+  unsigned long info;		/* After that it looks quite normal..  */
+  unsigned long tsize;
+  unsigned long dsize;
+  unsigned long bsize;
+  unsigned long entry;
+  unsigned long text_start;	/* With a few additions that actually make sense.  */
+  unsigned long data_start;
+  unsigned long bss_start;
+  unsigned int  gprmask, fprmask; /* Bitmask of general & floating point regs used in binary.  */
+  unsigned long gpvalue;
+};
+
+struct scnhdr
+{
+  char           s_name[8];
+  unsigned long  s_paddr;
+  unsigned long  s_vaddr;
+  unsigned long  s_size;
+  unsigned long  s_scnptr;
+  unsigned long  s_relptr;
+  unsigned long  s_lnnoptr;
+  unsigned short s_nreloc;
+  unsigned short s_nlnno;
+  unsigned int   s_flags;
+};
+
 struct exec
 {
-  unsigned long a_info;	/* Use macros N_MAGIC, etc for access.  */
-  unsigned int a_text;	/* Length of text, in bytes.  */
-  unsigned int a_data;	/* Length of data, in bytes.  */
-  unsigned int a_bss;	/* Length of uninitialized data area for file, in bytes.  */
-  unsigned int a_syms;	/* Length of symbol table data in file, in bytes.  */
-  unsigned int a_entry;	/* Start address.  */
-  unsigned int a_trsize;/* Length of relocation info for text, in bytes.  */
-  unsigned int a_drsize;/* Length of relocation info for data, in bytes.  */
+  /* OSF/1 "file" header */
+  struct filehdr fh;
+  struct aouthdr ah;
 };
+
+#define a_info		ah.info
+#define a_text		ah.tsize
+#define a_data		ah.dsize
+#define a_bss		ah.bsize
+#define a_entry		ah.entry
+#define a_textstart	ah.text_start
+#define a_datastart	ah.data_start
+#define a_bssstart	ah.bss_start
+#define a_gprmask	ah.gprmask
+#define a_fprmask	ah.fprmask
+#define a_gpvalue	ah.gpvalue
+
+
+#define AOUTHSZ		sizeof(struct aouthdr)
+#define SCNHSZ		sizeof(struct scnhdr)
+#define SCNROUND	16
 
 enum machine_type
 {
@@ -50,22 +109,24 @@ enum machine_type
 #define NMAGIC 0410
 /* Code indicating demand-paged executable.  */
 #define ZMAGIC 0413
-/* This indicates a demand-paged executable with the header in the text. 
+/* This indicates a demand-paged executable with the header in the text.
    The first page is unmapped to help trap NULL pointer references.  */
 #define QMAGIC 0314
 /* Code indicating core file.  */
 #define CMAGIC 0421
 
-#define N_TRSIZE(a)	((a).a_trsize)
-#define N_DRSIZE(a)	((a).a_drsize)
-#define N_SYMSIZE(a)	((a).a_syms)
+#define N_TRSIZE(x)	0
+#define N_DRSIZE(x)	0
+#define N_SYMSIZE(x)	0
 #define N_BADMAG(x) \
   (N_MAGIC(x) != OMAGIC	&& N_MAGIC(x) != NMAGIC				\
    && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
 #define _N_HDROFF(x)	(1024 - sizeof (struct exec))
 #define N_TXTOFF(x) \
-  (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec) :	\
-   (N_MAGIC(x) == QMAGIC ? 0 : sizeof (struct exec)))
+  ((long) N_MAGIC(x) == ZMAGIC ? 0 :					\
+   (sizeof (struct exec) + (x).fh.f_nscns * SCNHSZ + SCNROUND - 1)	\
+   & ~(SCNROUND - 1))
+
 #define N_DATOFF(x)	(N_TXTOFF(x) + (x).a_text)
 #define N_TRELOFF(x)	(N_DATOFF(x) + (x).a_data)
 #define N_DRELOFF(x)	(N_TRELOFF(x) + N_TRSIZE(x))
@@ -73,7 +134,7 @@ enum machine_type
 #define N_STROFF(x)	(N_SYMOFF(x) + N_SYMSIZE(x))
 
 /* Address of text segment in memory after it is loaded.  */
-#define N_TXTADDR(x)	(N_MAGIC(x) == QMAGIC ? 4096 : 0)
+#define N_TXTADDR(x)	((x).a_textstart)
 
 /* Address of data segment in memory after it is loaded.  */
 #define SEGMENT_SIZE	1024
@@ -81,10 +142,8 @@ enum machine_type
 #define _N_SEGMENT_ROUND(x) (((x) + SEGMENT_SIZE - 1) & ~(SEGMENT_SIZE - 1))
 #define _N_TXTENDADDR(x) (N_TXTADDR(x)+(x).a_text)
 
-#define N_DATADDR(x) \
-  (N_MAGIC(x)==OMAGIC? (_N_TXTENDADDR(x))				\
-   : (_N_SEGMENT_ROUND (_N_TXTENDADDR(x))))
-#define N_BSSADDR(x) (N_DATADDR(x) + (x).a_data)
+#define N_DATADDR(x)	((x).a_datastart)
+#define N_BSSADDR(x)	((x).a_bssstart)
 
 #if !defined (N_NLIST_DECLARED)
 struct nlist

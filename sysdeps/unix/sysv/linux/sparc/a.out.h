@@ -7,14 +7,17 @@
 
 struct exec
 {
-  unsigned long a_info;	/* Use macros N_MAGIC, etc for access.  */
-  unsigned int a_text;	/* Length of text, in bytes.  */
-  unsigned int a_data;	/* Length of data, in bytes.  */
-  unsigned int a_bss;	/* Length of uninitialized data area for file, in bytes.  */
-  unsigned int a_syms;	/* Length of symbol table data in file, in bytes.  */
-  unsigned int a_entry;	/* Start address.  */
-  unsigned int a_trsize;/* Length of relocation info for text, in bytes.  */
-  unsigned int a_drsize;/* Length of relocation info for data, in bytes.  */
+  unsigned char a_dynamic:1;	/* A __DYNAMIC is in this image.  */
+  unsigned char a_toolversion:7;
+  unsigned char a_machtype;
+  unsigned short a_info;
+  unsigned int a_text;		/* Length of text, in bytes.  */
+  unsigned int a_data;		/* Length of data, in bytes.  */
+  unsigned int a_bss;		/* Length of bss, in bytes.  */
+  unsigned int a_syms;		/* Length of symbol table, in bytes.  */
+  unsigned int a_entry;		/* Where program begins.  */
+  unsigned int a_trsize;
+  unsigned int a_drsize;
 };
 
 enum machine_type
@@ -64,26 +67,31 @@ enum machine_type
    && N_MAGIC(x) != ZMAGIC && N_MAGIC(x) != QMAGIC)
 #define _N_HDROFF(x)	(1024 - sizeof (struct exec))
 #define N_TXTOFF(x) \
-  (N_MAGIC(x) == ZMAGIC ? _N_HDROFF((x)) + sizeof (struct exec) :	\
-   (N_MAGIC(x) == QMAGIC ? 0 : sizeof (struct exec)))
+  (N_MAGIC(x) == ZMAGIC ? 0 : sizeof (struct exec))
 #define N_DATOFF(x)	(N_TXTOFF(x) + (x).a_text)
 #define N_TRELOFF(x)	(N_DATOFF(x) + (x).a_data)
 #define N_DRELOFF(x)	(N_TRELOFF(x) + N_TRSIZE(x))
-#define N_SYMOFF(x)	(N_DRELOFF(x) + N_DRSIZE(x))
+#define N_SYMOFF(x) \
+  (N_TXTOFF(x) + (x).a_text + (x).a_data + (x).a_trsize + (x).a_drsize)
 #define N_STROFF(x)	(N_SYMOFF(x) + N_SYMSIZE(x))
 
+#define SPARC_PGSIZE	0x2000
+
 /* Address of text segment in memory after it is loaded.  */
-#define N_TXTADDR(x)	(N_MAGIC(x) == QMAGIC ? 4096 : 0)
+#define N_TXTADDR(x) \
+ (unsigned long)(((N_MAGIC(x) == ZMAGIC) && ((x).a_entry < SPARC_PGSIZE)) \
+		 ? 0 : SPARC_PGSIZE)
 
 /* Address of data segment in memory after it is loaded.  */
-#define SEGMENT_SIZE	1024
+#define SEGMENT_SIZE	SPARC_PGSIZE
 
 #define _N_SEGMENT_ROUND(x) (((x) + SEGMENT_SIZE - 1) & ~(SEGMENT_SIZE - 1))
 #define _N_TXTENDADDR(x) (N_TXTADDR(x)+(x).a_text)
 
 #define N_DATADDR(x) \
-  (N_MAGIC(x)==OMAGIC? (_N_TXTENDADDR(x))				\
-   : (_N_SEGMENT_ROUND (_N_TXTENDADDR(x))))
+  (N_MAGIC(x)==OMAGIC							\
+   ? (N_TXTADDR(x) + (x).a_text)					\
+   : (unsigned long)(_N_SEGMENT_ROUND (_N_TXTENDADDR(x))))
 #define N_BSSADDR(x) (N_DATADDR(x) + (x).a_data)
 
 #if !defined (N_NLIST_DECLARED)
@@ -119,6 +127,34 @@ struct nlist
 #define N_SETV	0x1C	/* Pointer to set vector in data area.  */
 
 #if !defined (N_RELOCATION_INFO_DECLARED)
+enum reloc_type
+{
+  RELOC_8,
+  RELOC_16,
+  RELOC_32,
+  RELOC_DISP8,
+  RELOC_DISP16,
+  RELOC_DISP32,
+  RELOC_WDISP30,
+  RELOC_WDISP22,
+  RELOC_HI22,
+  RELOC_22,
+  RELOC_13,
+  RELOC_LO10,
+  RELOC_SFA_BASE,
+  RELOC_SFA_OFF13,
+  RELOC_BASE10,
+  RELOC_BASE13,
+  RELOC_BASE22,
+  RELOC_PC10,
+  RELOC_PC22,
+  RELOC_JMP_TBL,
+  RELOC_SEGOFF16,
+  RELOC_GLOB_DAT,
+  RELOC_JMP_SLOT,
+  RELOC_RELATIVE
+};
+
 /* This structure describes a single relocation to be performed.
    The text-relocation section of the file is a vector of these structures,
    all of which apply to the text section.
@@ -126,12 +162,12 @@ struct nlist
 
 struct relocation_info
 {
-  int r_address;
-  unsigned int r_symbolnum:24;
-  unsigned int r_pcrel:1;
-  unsigned int r_length:2;
+  unsigned int r_address;
+  unsigned int r_index:24;
   unsigned int r_extern:1;
-  unsigned int r_pad:4;
+  int r_pad:2;
+  enum reloc_type r_type:5;
+  int r_addend;
 };
 #endif /* no N_RELOCATION_INFO_DECLARED.  */
 

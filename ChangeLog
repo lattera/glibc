@@ -1,3 +1,18 @@
+2003-07-25  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/a.out.h: Replace with i386 version.
+	Include bits/a.out.h.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_headers): Add
+	bits/a.out.h.
+	* sysdeps/unix/sysv/linux/bits/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/i386/bits/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/bits/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/x86_64/bits/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/alpha/bits/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/a.out.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/bits/a.out.h: New file.
+
 2003-07-24  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/pthread/aio_cancel.c (aio_cancel): Return AIO_ALLDONE
