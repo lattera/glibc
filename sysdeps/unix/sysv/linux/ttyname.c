@@ -30,15 +30,17 @@
 
 char *__ttyname;
 
-static char * getttyname (const char *dev, dev_t mydev,
-			  ino_t myino, int save, int *dostat)
+static char *getttyname (const char *dev, dev_t mydev,
+			 ino_t myino, int save, int *dostat)
      internal_function;
+
+
+static char *getttyname_name;
 
 static char *
 internal_function
 getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
 {
-  static char *name;
   static size_t namelen;
   struct stat st;
   DIR *dirstream;
@@ -61,20 +63,20 @@ getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
 	size_t dlen = _D_ALLOC_NAMLEN (d);
 	if (devlen + dlen > namelen)
 	  {
-	    free (name);
+	    free (getttyname_name);
 	    namelen = 2 * (devlen + dlen); /* Big enough.  */
-	    name = malloc (namelen);
-	    if (! name)
+	    getttyname_name = malloc (namelen);
+	    if (! getttyname_name)
 	      {
 		*dostat = -1;
 		/* Perhaps it helps to free the directory stream buffer.  */
 		(void) __closedir (dirstream);
 		return NULL;
 	      }
-	    *((char *) __mempcpy (name, dev, devlen - 1)) = '/';
+	    *((char *) __mempcpy (getttyname_name, dev, devlen - 1)) = '/';
 	  }
-	memcpy (&name[devlen], d->d_name, dlen);
-	if (__xstat (_STAT_VER, name, &st) == 0
+	memcpy (&getttyname_name[devlen], d->d_name, dlen);
+	if (__xstat (_STAT_VER, getttyname_name, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
@@ -83,9 +85,9 @@ getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
 	   )
 	  {
 	    (void) __closedir (dirstream);
-	    __ttyname = name;
+	    __ttyname = getttyname_name;
 	    __set_errno (save);
-	    return name;
+	    return getttyname_name;
 	  }
       }
 
@@ -94,12 +96,16 @@ getttyname (const char *dev, dev_t mydev, ino_t myino, int save, int *dostat)
   return NULL;
 }
 
+
+/* Static buffer in `ttyname'.  */
+static char *ttyname_buf;
+
+
 /* Return the pathname of the terminal FD is open on, or NULL on errors.
    The returned storage is good only until the next call to this function.  */
 char *
 ttyname (int fd)
 {
-  static char *buf;
   static size_t buflen;
   char procname[30];
   struct stat st, st1;
@@ -117,24 +123,24 @@ ttyname (int fd)
   if (buflen == 0)
     {
       buflen = 4095;
-      buf = (char *) malloc (buflen + 1);
-      if (buf == NULL)
+      ttyname_buf = (char *) malloc (buflen + 1);
+      if (ttyname_buf == NULL)
 	{
 	  buflen = 0;
 	  return NULL;
 	}
     }
 
-  len = __readlink (procname, buf, buflen);
+  len = __readlink (procname, ttyname_buf, buflen);
   if (len != -1
       /* This is for Linux 2.0.  */
-      && buf[0] != '[')
+      && ttyname_buf[0] != '[')
     {
       if (len >= buflen)
 	return NULL;
       /* readlink need not terminate the string.  */
-      buf[len] = '\0';
-      return buf;
+      ttyname_buf[len] = '\0';
+      return ttyname_buf;
     }
 
   if (__fxstat (_STAT_VER, fd, &st) < 0)
@@ -175,3 +181,12 @@ ttyname (int fd)
 
   return name;
 }
+
+
+static void
+free_mem (void)
+{
+  free (ttyname_buf);
+  free (getttyname_name);
+}
+text_set_element (__libc_subfreeres, free_mem);

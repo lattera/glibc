@@ -234,14 +234,15 @@ __md5_crypt_r (key, salt, buffer, buflen)
 }
 
 
+static char *buffer;
+
 char *
 __md5_crypt (const char *key, const char *salt)
 {
   /* We don't want to have an arbitrary limit in the size of the
      password.  We can compute the size of the result in advance and
      so we can prepare the buffer we pass to `md5_crypt_r'.  */
-  static char *buffer = NULL;
-  static int buflen = 0;
+  static int buflen;
   int needed = 3 + strlen (salt) + 1 + 26 + 1;
 
   if (buflen < needed)
@@ -252,4 +253,12 @@ __md5_crypt (const char *key, const char *salt)
     }
 
   return __md5_crypt_r (key, salt, buffer, buflen);
+}
+
+
+static void
+__attribute__ ((__constructor__))
+free_mem (void)
+{
+  free (buffer);
 }

@@ -1,5 +1,18 @@
 2000-08-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/ttyname.c: Make name variable from getttyname function
+	global (with file scope).  Add __libc_subfreeres function to free the
+	string.
+	* sysdeps/unix/sysv/linux/ttyname.c: Likewise.  Also for buf variable
+	in ttyname function.
+
+	* sysdeps/generic/strtok.c: Remove initializer for olds variable.
+
+	* crypt/md5-crypt.c: Let destructor deallocate static buffer.
+
+	* iconvdata/sjis.c (from_ucs4_lat1): Handle U005C and U007E by
+	mapping them to /x5c and /x7e respectively.
+
 	* locale/programs/ld-ctype.c: Add support for more definitions after
 	copy statement.
 

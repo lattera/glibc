@@ -1891,6 +1891,11 @@ static const uint16_t cjk_block4[2021] =
 
    The only problem is that the shiftjis.txt file does not contain the
    mapping for the characters 0x00 to 0x1f.  We add them ourself.
+
+   A much bigger problem is that mapping of the tilde and the backslash
+   character.  There are no such characters in SJIS.  The proposed
+   handling is to simply map the two input values to the corresponding
+   byte values of ASCII.  Things fall more or less in place this way.
 */
 static const char from_ucs4_lat1[0xf8][2] =
 {
@@ -1924,7 +1929,7 @@ static const char from_ucs4_lat1[0xf8][2] =
   [0x0051] = "\x51\x00", [0x0052] = "\x52\x00", [0x0053] = "\x53\x00",
   [0x0054] = "\x54\x00", [0x0055] = "\x55\x00", [0x0056] = "\x56\x00",
   [0x0057] = "\x57\x00", [0x0058] = "\x58\x00", [0x0059] = "\x59\x00",
-  [0x005a] = "\x5a\x00", [0x005b] = "\x5b\x00", [0x005c] = "\x81\x5c",
+  [0x005a] = "\x5a\x00", [0x005b] = "\x5b\x00", [0x005c] = "\x5c\x00",
   [0x005d] = "\x5d\x00", [0x005e] = "\x5e\x00", [0x005f] = "\x5f\x00",
   [0x0060] = "\x60\x00", [0x0061] = "\x61\x00", [0x0062] = "\x62\x00",
   [0x0063] = "\x63\x00", [0x0064] = "\x64\x00", [0x0065] = "\x65\x00",
@@ -1936,7 +1941,7 @@ static const char from_ucs4_lat1[0xf8][2] =
   [0x0075] = "\x75\x00", [0x0076] = "\x76\x00", [0x0077] = "\x77\x00",
   [0x0078] = "\x78\x00", [0x0079] = "\x79\x00", [0x007a] = "\x7a\x00",
   [0x007b] = "\x7b\x00", [0x007c] = "\x7c\x00", [0x007d] = "\x7d\x00",
-  [0x007e] = "\x00\x00",
+  [0x007e] = "\x7e\x00",
   [0x00a2] = "\x81\x91", [0x00a3] = "\x81\x92", [0x00a5] = "\x5c\x00",
   [0x00a7] = "\x81\x98", [0x00a8] = "\x81\x4e", [0x00ac] = "\x81\xca",
   [0x00b0] = "\x81\x8b", [0x00b1] = "\x81\x7d", [0x00b4] = "\x81\x4c",
@@ -4388,8 +4393,7 @@ static const char from_ucs4_extra[0x100][2] =
 									      \
 	ch2 = inptr[1];							      \
 	idx = ch * 256 + ch2;						      \
-	if (__builtin_expect (ch < 0x81, 0)				      \
-	    || __builtin_expect (ch2 < 0x40, 0)				      \
+	if (__builtin_expect (ch2 < 0x40, 0)				      \
 	    || (__builtin_expect (idx, 0x8140) > 0x84be && idx < 0x889f)      \
 	    || (__builtin_expect (idx, 0x8140) > 0x88fc && idx < 0x8940)      \
 	    || (__builtin_expect (idx, 0x8140) > 0x9ffc && idx < 0xe040)      \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 96, 97, 98, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,10 +26,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-char *__ttyname = NULL;
+char *__ttyname;
 
-static char * getttyname __P ((int fd, dev_t mydev, ino_t myino,
-			       int save, int *dostat)) internal_function;
+static char *getttyname (int fd, dev_t mydev, ino_t myino,
+			 int save, int *dostat) internal_function;
+
+
+static char *getttyname_name;
 
 static char *
 internal_function
@@ -41,8 +44,7 @@ getttyname (fd, mydev, myino, save, dostat)
      int *dostat;
 {
   static const char dev[] = "/dev";
-  static char *name;
-  static size_t namelen = 0;
+  static size_t namelen;
   struct stat st;
   DIR *dirstream;
   struct dirent *d;
@@ -63,20 +65,21 @@ getttyname (fd, mydev, myino, save, dostat)
 	size_t dlen = _D_ALLOC_NAMLEN (d);
 	if (sizeof (dev) + dlen > namelen)
 	  {
-	    free (name);
+	    free (getttyname_name);
 	    namelen = 2 * (sizeof (dev) + dlen); /* Big enough.  */
-	    name = malloc (namelen);
-	    if (! name)
+	    getttyname_name = malloc (namelen);
+	    if (! getttyname_name)
 	      {
 		*dostat = -1;
 		/* Perhaps it helps to free the directory stream buffer.  */
 		(void) __closedir (dirstream);
 		return NULL;
 	      }
-	    *((char *) __mempcpy (name, dev, sizeof (dev) - 1)) = '/';
+	    *((char *) __mempcpy (getttyname_name, dev, sizeof (dev) - 1))
+	      = '/';
 	  }
-	(void) __mempcpy (&name[sizeof (dev)], d->d_name, dlen);
-	if (stat (name, &st) == 0
+	(void) __mempcpy (&getttyname_name[sizeof (dev)], d->d_name, dlen);
+	if (stat (getttyname_name, &st) == 0
 #ifdef _STATBUF_ST_RDEV
 	    && S_ISCHR (st.st_mode) && st.st_rdev == mydev
 #else
@@ -85,9 +88,9 @@ getttyname (fd, mydev, myino, save, dostat)
 	   )
 	  {
 	    (void) __closedir (dirstream);
-	    __ttyname = name;
+	    __ttyname = getttyname_name;
 	    __set_errno (save);
-	    return name;
+	    return getttyname_name;
 	  }
       }
 
@@ -131,3 +134,11 @@ ttyname (fd)
 
   return name;
 }
+
+
+static void
+free_mem (void)
+{
+  free (getttyname_name);
+}
+text_set_element (__libc_subfreeres, free_mem);
