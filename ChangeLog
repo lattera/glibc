@@ -1,3 +1,8 @@
+2001-01-03  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* resolv/Versions: Fix bracing.
+	* sysdeps/powerpc/soft-fp/Versions: Likewise.
+
 2001-01-02  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/powerpc/dl-machine.c (__process_machine_rela): Fix typo.
