@@ -1,11 +1,18 @@
+2001-06-09  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/gconv-modules (BIG5HKSCS): New alias BIG5-HKSCS.
+	(ISO-8859-14): New aliases ISO_8859-14 and ISO-CELTIC.
+	* iconvdata/tst-tables.sh: For BIG5HKSCS, use BIG5-HKSCS charmap.
+
+2001-05-26  Bruno Haible  <haible@clisp.cons.org>
+
+	* iconvdata/tst-tables.sh: For SJIS module, use SHIFT_JIS charmap.
+	* manual/charset.texi: Write Shift_JIS, not Shift-JIS.
+
 2001-06-17  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/pthread/aio_misc.h (LIO_DSYNC): Define to LIO_NOP + 1,
 	not LIO_READ + 1 (which is the value of LIO_WRITE!).
-
-	* sysdeps/unix/sysv/linux/i386/sigaction.c (restore, restore_rt):
-	Declare these without `static', to avoid warning that we haven't
-	defined them.
 
 	* Makerules (build-module-helper-objlist): New variable,
 	broken out of build-module.  Insert --whole-archive/--no-whole-archive

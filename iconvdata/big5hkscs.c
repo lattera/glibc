@@ -35,7 +35,7 @@
 
    Using the charmap:
 
-   sed 's|^<U\(....\)> *.x\(..\)/x\(..\).*|0x\2\3 \1|p;d' BIG5HKSCS |
+   sed 's|^<U\(....\)> *.x\(..\)/x\(..\).*|0x\2\3 \1|p;d' BIG5-HKSCS |
    perl big5.pl
 
    where big5.pl is:
@@ -4600,7 +4600,7 @@ static const uint16_t big5hkscs_to_ucs[] =
 /* The mapping from Unicode to Big5 is not easy since we have several
    separate blocks.
 
-   sort BIG5HKSCS | sed 's|^<U\(....\)> ./x\(..\)/x\(..\).*|\1 \2\3|p;d' |
+   sort BIG5-HKSCS | sed 's|^<U\(....\)> ./x\(..\)/x\(..\).*|\1 \2\3|p;d' |
    perl big5.pl
 
    where big5.pl is:
