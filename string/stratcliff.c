@@ -1,5 +1,5 @@
 /* Test for string function add boundaries of usable memory.
-   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -306,6 +306,43 @@ main (int argc, char *argv[])
 		      outer, inner);
 	      result = 1;
 	    }
+
+      /* memccpy test */
+      memset (adr, '\0', size);
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+	for (inner = 0; inner < size - outer; ++inner)
+	  if (memccpy (dest, &adr[outer], '\1', inner) != NULL)
+	    {
+	      printf ("memccpy flunked full copy for outer = %d, inner = %d\n",
+		      outer, inner);
+	      result = 1;
+	    }
+      for (outer = size - 1; outer >= MAX (0, size - 128); --outer)
+	for (middle = 0; middle < size - outer; ++middle)
+	  {
+	    memset (dest, '\2', middle + 1);
+	    for (inner = 0; inner < middle; ++inner)
+	      {
+		adr[outer + inner] = '\1';
+
+		if (memccpy (dest, &adr[outer], '\1', middle + 128)
+		    !=  dest + inner + 1)
+		  {
+		    printf ("\
+memccpy flunked partial copy for outer = %d, middle = %d, inner = %d\n",
+			    outer, middle, inner);
+		    result = 1;
+		  }
+		else if (dest[inner + 1] != '\2')
+		  {
+		    printf ("\
+memccpy copied too much for outer = %d, middle = %d, inner = %d\n",
+			    outer, middle, inner);
+		    result = 1;
+		  }
+		adr[outer + inner] = '\0';
+	      }
+	  }
     }
 
   return result;
