@@ -428,7 +428,7 @@ nss_parse_file (const char *fname)
   size_t len;
 
   /* Open the configuration file.  */
-  fp = fopen (fname, "r");
+  fp = fopen (fname, "rc");
   if (fp == NULL)
     return NULL;
 

@@ -138,6 +138,7 @@
 #define _IO_USER_LOCK 0x8000
 
 #define _IO_FLAGS2_MMAP 1
+#define _IO_FLAGS2_NOTCANCEL 2
 
 /* These are "formatting flags" matching the iostream fmtflags enum values. */
 #define _IO_SKIPWS 01

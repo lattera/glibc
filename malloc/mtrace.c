@@ -280,7 +280,7 @@ mtrace ()
       if (mtb == NULL)
 	return;
 
-      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "w");
+      mallstream = fopen (mallfile != NULL ? mallfile : "/dev/null", "wc");
       if (mallstream != NULL)
 	{
 	  /* Make sure we close the file descriptor on exec.  */

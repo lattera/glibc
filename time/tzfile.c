@@ -148,7 +148,9 @@ __tzfile_read (const char *file, size_t extra, char **extrap)
       file = new;
     }
 
-  f = fopen (file, "r");
+  /* Note the file is opened with cancellation in the I/O functions
+     disabled.  */
+  f = fopen (file, "rc");
   if (f == NULL)
     return;
 

@@ -100,7 +100,7 @@ initshells()
 	if (strings != NULL)
 		free(strings);
 	strings = NULL;
-	if ((fp = fopen(_PATH_SHELLS, "r")) == NULL)
+	if ((fp = fopen(_PATH_SHELLS, "rc")) == NULL)
 		return (char **) okshells;
 	if (fstat64(fileno(fp), &statb) == -1) {
 		(void)fclose(fp);

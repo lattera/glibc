@@ -114,7 +114,7 @@ ruserpass(host, aname, apass)
 	buf = alloca (strlen (hdir) + 8);
 
 	__stpcpy (__stpcpy (buf, hdir), "/.netrc");
-	cfile = fopen(buf, "r");
+	cfile = fopen(buf, "rc");
 	if (cfile == NULL) {
 		if (errno != ENOENT)
 			warn("%s", buf);

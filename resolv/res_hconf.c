@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995-2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995-2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger (davidm@azstarnet.com).
 
@@ -425,7 +425,7 @@ do_init (void)
   if (hconf_name == NULL)
     hconf_name = _PATH_HOSTCONF;
 
-  fp = fopen (hconf_name, "r");
+  fp = fopen (hconf_name, "rc");
   if (!fp)
     /* make up something reasonable: */
     _res_hconf.service[_res_hconf.num_services++] = SERVICE_BIND;

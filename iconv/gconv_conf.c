@@ -357,7 +357,9 @@ internal_function
 read_conf_file (const char *filename, const char *directory, size_t dir_len,
 		void **modules, size_t *nmodules)
 {
-  FILE *fp = fopen (filename, "r");
+  /* Note the file is opened with cancellation in the I/O functions
+     disabled.  */
+  FILE *fp = fopen (filename, "rc");
   char *line = NULL;
   size_t line_len = 0;
   static int modcounter;

@@ -1,5 +1,5 @@
 /* Convert a string representation of time to a time value.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,1998,1999,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -129,7 +129,7 @@ __getdate_r (const char *string, struct tm *tp)
     return 2;
 
   /* Open the template file.  */
-  fp = fopen (datemsk, "r");
+  fp = fopen (datemsk, "rc");
   if (fp == NULL)
     return 2;
 

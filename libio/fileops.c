@@ -59,7 +59,6 @@ extern int errno;
 
 #ifdef _LIBC
 # define open(Name, Flags, Prot) __open (Name, Flags, Prot)
-# define close(FD) __close (FD)
 # define lseek(FD, Offset, Whence) __lseek (FD, Offset, Whence)
 # define read(FD, Buf, NBytes) __read (FD, Buf, NBytes)
 # define write(FD, Buf, NBytes) __write (FD, Buf, NBytes)
@@ -226,10 +225,12 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
      int is32not64;
 {
   int fdesc;
-#ifdef _G_OPEN64
-  fdesc = (is32not64
-	   ? open (filename, posix_mode, prot)
-	   : _G_OPEN64 (filename, posix_mode, prot));
+#ifdef _LIBC
+  if (fp->_flags2 & _IO_FLAGS2_NOTCANCEL)
+    fdesc = open_not_cancel (filename,
+			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
+  else
+    fdesc = open (filename, posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
 #else
   fdesc = open (filename, posix_mode, prot);
 #endif
@@ -318,6 +319,9 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 	case 'm':
 	  fp->_flags2 |= _IO_FLAGS2_MMAP;
 	  continue;
+	case 'c':
+	  fp->_flags2 |= _IO_FLAGS2_NOTCANCEL;
+	  break;
 	default:
 	  /* Ignore.  */
 	  continue;
@@ -1200,7 +1204,9 @@ _IO_file_read (fp, buf, size)
      void *buf;
      _IO_ssize_t size;
 {
-  return read (fp->_fileno, buf, size);
+  return ((fp->_flags2 & _IO_FLAGS2_NOTCANCEL)
+	  ? read_not_cancel (fp->_fileno, buf, size)
+	  : read (fp->_fileno, buf, size));
 }
 INTDEF(_IO_file_read)
 
@@ -1262,7 +1268,9 @@ _IO_new_file_write (f, data, n)
   _IO_ssize_t to_do = n;
   while (to_do > 0)
     {
-      _IO_ssize_t count = write (f->_fileno, data, to_do);
+      _IO_ssize_t count = ((f->_flags2 & _IO_FLAGS2_NOTCANCEL)
+			   ? write_not_cancel (f->_fileno, data, to_do)
+			   : write (f->_fileno, data, to_do));
       if (count < 0)
 	{
 	  f->_flags |= _IO_ERR_SEEN;

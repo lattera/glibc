@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995-2000, 2001, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,12 @@
 FILE *
 __setmntent (const char *file, const char *mode)
 {
-  FILE *result = fopen (file, mode);
+  /* Extend the mode parameter with "c" to disable cancellation in the
+     I/O functions.  */
+  size_t modelen = strlen (mode);
+  char newmode[modelen + 2];
+  memcpy (mempcpy (newmode, mode, modelen), "c", 2);
+  FILE *result = fopen (file, newmode);
 
   if (result != NULL)
     /* We do the locking ourselves.  */

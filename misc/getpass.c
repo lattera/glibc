@@ -56,7 +56,7 @@ getpass (prompt)
   /* Try to write to and read from the terminal if we can.
      If we can't open the terminal, use stderr and stdin.  */
 
-  in = fopen ("/dev/tty", "w+");
+  in = fopen ("/dev/tty", "w+c");
   if (in == NULL)
     {
       in = stdin;

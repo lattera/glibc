@@ -219,7 +219,9 @@ read_alias_file (fname, fname_len)
   memcpy (&full_fname[fname_len], aliasfile, sizeof aliasfile);
 #endif
 
-  fp = fopen (full_fname, "r");
+  /* Note the file is opened with cancellation in the I/O functions
+     disabled.  */
+  fp = fopen (full_fname, "rc");
   freea (full_fname);
   if (fp == NULL)
     return 0;

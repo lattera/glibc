@@ -154,7 +154,7 @@ __get_nprocs ()
       /* The /proc/stat format is more uniform, use it by default.  */
       __stpcpy (__stpcpy (proc_fname, proc_path), "/stat");
 
-      fp = fopen (proc_fname, "r");
+      fp = fopen (proc_fname, "rc");
       if (fp != NULL)
 	{
 	  /* No threads use this stream.  */
@@ -171,7 +171,7 @@ __get_nprocs ()
 	{
 	  __stpcpy (__stpcpy (proc_fname, proc_path), "/cpuinfo");
 
-	  fp = fopen (proc_fname, "r");
+	  fp = fopen (proc_fname, "rc");
 	  if (fp != NULL)
 	    {
 	      /* No threads use this stream.  */
@@ -209,7 +209,7 @@ __get_nprocs_conf ()
       char *proc_cpuinfo = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
       __stpcpy (__stpcpy (proc_cpuinfo, proc_path), "/cpuinfo");
 
-      fp = fopen (proc_cpuinfo, "r");
+      fp = fopen (proc_cpuinfo, "rc");
       if (fp != NULL)
 	{
 	  /* No threads use this stream.  */
@@ -249,7 +249,7 @@ phys_pages_info (const char *format)
       char *proc_meminfo = alloca (strlen (proc_path) + sizeof ("/meminfo"));
       __stpcpy (__stpcpy (proc_meminfo, proc_path), "/meminfo");
 
-      fp = fopen (proc_meminfo, "r");
+      fp = fopen (proc_meminfo, "rc");
       if (fp != NULL)
 	{
 	  /* No threads use this stream.  */

@@ -1,8 +1,37 @@
-22003-09-04  Jakub Jelinek  <jakub@redhat.com>
+2003-09-04  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/libio.h: Define _IO_FLAGS2_NOTCANCEL.
+	* libio/fileops.c [_LIBC]: Remove close macro.
+	(_IO_file_open): If _IO_FLAGS2_NOTCANCEL is set, use open_not_cancel.
+	(_IO_new_file_open): Recognize 'c' flag in mode string.
+	(_IO_file_read): If _IO_FLAGS2_NOTCANCEL is set use read_not_cancel.
+	(_IO_new_file_write): If _IO_FLAGS2_NOTCANCEL is set use
+	write_not_cancel.
+	* iconv/gconv_conf.c: Use fopen with 'c' mode flag.
+	* inet/rcmd.c: Likewise.
+	* inet/ruserpass.c: Likewise.
+	* intl/localealias.c: Likewise.
+	* malloc/mtrace.c: Likewise.
+	* misc/getpass.c: Likewise.
+	* misc/getttyent.c: Likewise.
+	* misc/mntent_r.c: Likewise.
+	* misc/getusershell.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* resolv/res_hconf.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	* sysdeps/unix/sysv/linux/getsysstats.c: Likewise.
+	* time/getdate.c: Likewise.
+	* time/tzfile.c: Likewise.
+	* misc/fstab.h: Undo last change.
+	* misc/mntent.h: Likewise.
+	* misc/Makefile: Remove CFLAGS-mntent_r.c, CFLAGS-mntent.c, and
+	CFLAGS-fstab.c definition.
+
+2003-09-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/unwind.h (_Unwind_GetBSP): Add prototype.
 
-003-09-03  Ulrich Drepper  <drepper@redhat.com>
+2003-09-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (INTERNAL): Explicitly set errno and avoid
 	returning ERANGE if this wasn't intended.
