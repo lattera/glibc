@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -66,6 +66,11 @@ struct stat
 #define	__S_IFBLK	0060000	/* Block device.  */
 #define	__S_IFREG	0100000	/* Regular file.  */
 #define	__S_IFIFO	0010000	/* FIFO.  */
+
+/* POSIX.1b objects.  */
+#define __S_TYPEISMQ(buf) 0
+#define __S_TYPEISSEM(buf) 0
+#define __S_TYPEISSHM(buf) 0
 
 /* Protection bits.  */
 

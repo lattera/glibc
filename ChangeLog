@@ -1,3 +1,22 @@
+2000-06-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* io/sys/stat.h: Define S_TYPEISMQ, S_TYPEISSEM, and S_TYPEISSHM.
+	* sysdeps/generic/bits/stat.h: Define __S_TYPEISMQ, __S_TYPEISSEM,
+	and __S_TYPEISSHM.
+	* sysdeps/mach/hurd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/bits/stat.h: Likewise.
+	* sysdeps/unix/bsd/osf/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/irix4/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/hpux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/i386/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/solaris2/bits/stat.h: Likewise.
+	* sysdeps/unix/sysv/aix/bits/stat.h: Likewise.
+
 2000-06-22  Andreas Jaeger  <aj@suse.de>
 
 	* elf/dl-reloc.c (_dl_relocate_object): Fix typos.

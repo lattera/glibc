@@ -89,10 +89,13 @@ struct stat64
 #define	__S_IFBLK	0060000	/* Block device.  */
 #define	__S_IFREG	0100000	/* Regular file.  */
 #define	__S_IFIFO	0010000	/* FIFO.  */
-
-/* These don't actually exist on System V, but having them doesn't hurt.  */
 #define	__S_IFLNK	0120000	/* Symbolic link.  */
 #define	__S_IFSOCK	0140000	/* Socket.  */
+
+/* POSIX.1b objects.  */
+#define __S_TYPEISMQ(buf) (0)
+#define __S_TYPEISSEM(buf) (0)
+#define __S_TYPEISSHM(buf) (0)
 
 /* Protection bits.  */
 
