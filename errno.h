@@ -37,6 +37,7 @@ __BEGIN_DECLS
 #undef	__need_Emath
 
 #ifdef	_ERRNO_H
+
 /* Declare the `errno' variable, unless it's defined as a macro by
    errnos.h.  This is the case in GNU, where it is a per-thread variable.
    This redeclaration using the macro still works, but it will be a
@@ -59,9 +60,10 @@ typedef int error_t;
    invoked.  These variables are set up automatically at startup based on
    the value of ARGV[0] (this works only if you use GNU ld).  */
 extern char *program_invocation_name, *program_invocation_short_name;
-#endif
+#endif	/* Use GNU.  */
+
+#endif	/* errno.h included */
 
 __END_DECLS
-#endif
 
-#endif /* errno.h	*/
+#endif /* errno.h */

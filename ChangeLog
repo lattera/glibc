@@ -1,5 +1,11 @@
 Tue Jun  4 02:25:44 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
+	* elf/Makefile (subdir_lib): Change this target to lib-noranlib.
+	(lib-noranlib): Depend on on $(extra-objs).
+
+	* errno.h: Move __END_DECLS out of #ifdef's so it matches
+	__BEGIN_DECLS.
+
 	* stdio-common/vfprintf.c [USE_IN_LIBIO] (size_t): Don't define as
 	macro.  _IO_size_t is just an alias for the real size_t anyway.
 
