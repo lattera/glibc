@@ -1,3 +1,8 @@
+2004-08-04  Roland McGrath  <roland@redhat.com>
+
+	* posix/tst-waitid.c (do_test): Kill the child process when bailing
+	out early on some failure.
+
 2004-08-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/connections.c (handle_request): Print more descriptive
