@@ -91,7 +91,7 @@ This data type is used as the base type for wide character strings.
 I.e., arrays of objects of this type are the equivalent of @code{char[]}
 for multibyte character strings.  The type is defined in @file{stddef.h}.
 
-The @w{ISO C89} standard, where this type was introduced, does not say
+The @w{ISO C90} standard, where this type was introduced, does not say
 anything specific about the representation.  It only requires that this
 type is capable to store all elements of the basic character set.
 Therefore it would be legitimate to define @code{wchar_t} and
@@ -120,7 +120,7 @@ defined as @code{char} the type @code{wint_t} must be defined as
 
 @pindex wchar.h
 This type is defined in @file{wchar.h} and got introduced in the second
-amendment to @w{ISO C89}.
+amendment to @w{ISO C90}.
 @end deftp
 
 As there are for the @code{char} data type there also exist macros
@@ -133,7 +133,7 @@ type @code{wchar_t}.
 The macro @code{WCHAR_MIN} evaluates to the minimum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in the second amendment to @w{ISO C89}.
+This macro got introduced in the second amendment to @w{ISO C90}.
 @end deftypevr
 
 @comment wchar.h
@@ -142,7 +142,7 @@ This macro got introduced in the second amendment to @w{ISO C89}.
 The macro @code{WCHAR_MIN} evaluates to the maximum value representable
 by an object of type @code{wint_t}.
 
-This macro got introduced in the second amendment to @w{ISO C89}.
+This macro got introduced in the second amendment to @w{ISO C90}.
 @end deftypevr
 
 Another special wide character value is the equivalent to @code{EOF}.
@@ -180,7 +180,7 @@ are used.
 @end smallexample
 
 @pindex wchar.h
-This macro was introduced in the second amendment to @w{ISO C89} and is
+This macro was introduced in the second amendment to @w{ISO C90} and is
 defined in @file{wchar.h}.
 @end deftypevr
 
@@ -316,7 +316,7 @@ families to handle character set conversion.  The one function family
 is specified in the @w{ISO C} standard and therefore is portable even
 beyond the Unix world.
 
-The most commonly known set of functions, coming from the @w{ISO C89}
+The most commonly known set of functions, coming from the @w{ISO C90}
 standard, is unfortunately the least useful one.  In fact, these
 functions should be avoided whenever possible, especially when
 developing libraries (as opposed to applications).
@@ -325,7 +325,7 @@ The second family of functions got introduced in the early Unix standards
 (XPG2) and is still part of the latest and greatest Unix standard:
 @w{Unix 98}.  It is also the most powerful and useful set of functions.
 But we will start with the functions defined in the second amendment to
-@w{ISO C89}.
+@w{ISO C90}.
 
 @node Restartable multibyte conversion
 @section Restartable Multibyte Conversion Functions
@@ -408,7 +408,7 @@ fact, in the GNU C library it is not.
 @code{MB_CUR_MAX} is defined in @file{stdlib.h}.
 @end deftypevr
 
-Two different macros are necessary since strictly @w{ISO C89} compilers
+Two different macros are necessary since strictly @w{ISO C90} compilers
 do not allow variable length array definitions but still it is desirable
 to avoid dynamic allocation.  This incomplete piece of code shows the
 problem:
@@ -457,7 +457,7 @@ function to another.
 
 @pindex wchar.h
 This type is defined in @file{wchar.h}.  It got introduced in the second
-amendment to @w{ISO C89}.
+amendment to @w{ISO C90}.
 @end deftp
 
 To use objects of this type the programmer has to define such objects
@@ -495,7 +495,7 @@ object is in the initial state the return value is nonzero.  Otherwise
 it is zero.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C89} and
+This function was introduced in the second amendment to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -512,8 +512,8 @@ Code using this function often looks similar to this:
   if (! mbsinit (&state))
     @{
       /* @r{Emit code to return to initial state.}  */
-      const char empty[] = "";
-      const char **srcp = &empty;
+      const wchar_t empty[] = L"";
+      const wchar_t *srcp = empty;
       wcsrtombs (outbuf, &srcp, outbuflen, &state);
     @}
   ...
@@ -559,7 +559,7 @@ which the state information is taken and the function also does not use
 any static state.
 
 @pindex wchar.h
-This function was introduced in the second amendment of @w{ISO C89} and
+This function was introduced in the second amendment of @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -608,7 +608,7 @@ value of this function is this character.  Otherwise the return value is
 @code{EOF}.
 
 @pindex wchar.h
-This function was introduced in the second amendment of @w{ISO C89} and
+This function was introduced in the second amendment of @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -655,7 +655,7 @@ a valid multibyte character also no value is stored, the global variable
 @code{(size_t) -1}.  The conversion state is afterwards undefined.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C89} and
+This function was introduced in the second amendment to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -733,7 +733,7 @@ object pointer to by @var{ps}.  If @var{ps} is a null pointer an state
 object local to @code{mbrlen} is used.
 
 @pindex wchar.h
-This function was introduced in the second amendment to @w{ISO C89} and
+This function was introduced in the second amendment to @w{ISO C90} and
 is declared in @file{wchar.h}.
 @end deftypefun
 
@@ -850,7 +850,7 @@ demonstrate the use and some problems.
 
 @smallexample
 char *
-mbscatwc (char *s, size_t len, const wchar_t *ws)
+mbscatwcs (char *s, size_t len, const wchar_t *ws)
 @{
   mbstate_t state;
   /* @r{Find the end of the existing string.}  */
@@ -1232,13 +1232,13 @@ file_mbsrtowcs (int input, int output)
 @section Non-reentrant Conversion Function
 
 The functions described in the last chapter are defined in the second
-amendment to @w{ISO C89}.  But the original @w{ISO C89} standard also
+amendment to @w{ISO C90}.  But the original @w{ISO C90} standard also
 contained functions for character set conversion.  The reason that they
 are not described in the first place is that they are almost entirely
 useless.
 
 The problem is that all the functions for conversion defined in @w{ISO
-C89} use a local state.  This implies that multiple conversions at the
+C90} use a local state.  This implies that multiple conversions at the
 same time (not only when using threads) cannot be done, and that you
 cannot first convert single characters and then strings since you cannot
 tell the conversion functions which state to use.
@@ -1367,10 +1367,10 @@ The function @code{mblen} is declared in @file{stdlib.h}.
 @node Non-reentrant String Conversion
 @subsection Non-reentrant Conversion of Strings
 
-For convenience reasons the @w{ISO C89} standard defines also functions
+For convenience reasons the @w{ISO C90} standard defines also functions
 to convert entire strings instead of single characters.  These functions
 suffer from the same problems as their reentrant counterparts from the
-second amendment to @w{ISO C89}; see @ref{Converting Strings}.
+second amendment to @w{ISO C90}; see @ref{Converting Strings}.
 
 @comment stdlib.h
 @comment ISO
@@ -2245,7 +2245,7 @@ type definitions like this in @file{gconv.h}.
 
 @comment gconv.h
 @comment GNU
-@deftp {Data type} {struct gconv_step}
+@deftp {Data type} {struct __gconv_step}
 This data structure describes one conversion a module can perform.  For
 each function in a loaded module with conversion functions there is
 exactly one object of this type.  This object is shared by all users of
@@ -2254,47 +2254,47 @@ corresponding to an actual conversion.  It only describes the conversion
 itself.
 
 @table @code
-@item struct gconv_loaded_object *shlib_handle
-@itemx const char *modname
-@itemx int counter
+@item struct __gconv_loaded_object *__shlib_handle
+@itemx const char *__modname
+@itemx int __counter
 All these elements of the structure are used internally in the C library
 to coordinate loading and unloading the shared.  One must not expect any
 of the other elements be available or initialized.
 
-@item const char *from_name
-@itemx const char *to_name
-@code{from_name} and @code{to_name} contain the names of the source and
+@item const char *__from_name
+@itemx const char *__to_name
+@code{__from_name} and @code{__to_name} contain the names of the source and
 destination character sets.  They can be used to identify the actual
 conversion to be carried out since one module might implement
 conversions for more than one character set and/or direction.
 
-@item gconv_fct fct
-@itemx gconv_init_fct init_fct
-@itemx gconv_end_fct end_fct
+@item gconv_fct __fct
+@itemx gconv_init_fct __init_fct
+@itemx gconv_end_fct __end_fct
 These elements contain pointers to the functions in the loadable module.
 The interface will be explained below.
 
-@item int min_needed_from
-@itemx int max_needed_from
-@itemx int min_needed_to
-@itemx int max_needed_to;
-These values have to be filled in the init function of the module.
-The @code{min_needed_from} value specifies how many bytes a character of
-the source character set at least needs.  The @code{max_needed_from}
+@item int __min_needed_from
+@itemx int __max_needed_from
+@itemx int __min_needed_to
+@itemx int __max_needed_to;
+These values have to be filled in the init function of the module.  The
+@code{__min_needed_from} value specifies how many bytes a character of
+the source character set at least needs.  The @code{__max_needed_from}
 specifies the maximum value which also includes possible shift
 sequences.
 
-The @code{min_needed_to} and @code{max_needed_to} values serve the same
-purpose but this time for the destination character set.
+The @code{__min_needed_to} and @code{__max_needed_to} values serve the
+same purpose but this time for the destination character set.
 
 It is crucial that these values are accurate since otherwise the
 conversion functions will have problems or not work at all.
 
-@item int stateful
+@item int __stateful
 This element must also be initialized by the init function.  It is
 nonzero if the source character set is stateful.  Otherwise it is zero.
 
-@item void *data
+@item void *__data
 This element can be used freely by the conversion functions in the
 module.  It can be used to communicate extra information from one call
 to another.  It need not be initialized if not needed at all.  If this
@@ -2304,7 +2304,7 @@ function deallocates the memory.  Otherwise the application will leak
 memory.
 
 It is important to be aware that this data structure is shared by all
-users of this specification conversion and therefore the @code{data}
+users of this specification conversion and therefore the @code{__data}
 element must not contain data specific to one specific use of the
 conversion function.
 @end table
@@ -2312,40 +2312,40 @@ conversion function.
 
 @comment gconv.h
 @comment GNU
-@deftp {Data type} {struct gconv_step_data}
+@deftp {Data type} {struct __gconv_step_data}
 This is the data structure which contains the information specific to
 each use of the conversion functions.
 
 @table @code
-@item char *outbuf
-@itemx char *outbufend
+@item char *__outbuf
+@itemx char *__outbufend
 These elements specify the output buffer for the conversion step.  The
-@code{outbuf} element points to the beginning of the buffer and
-@code{outbufend} points to the byte following the last byte in the
+@code{__outbuf} element points to the beginning of the buffer and
+@code{__outbufend} points to the byte following the last byte in the
 buffer.  The conversion function must not assume anything about the size
 of the buffer but it can be safely assumed the there is room for at
 least one complete character in the output buffer.
 
 Once the conversion is finished and the conversion is the last step the
-@code{outbuf} element must be modified to point after last last byte
+@code{__outbuf} element must be modified to point after last last byte
 written into the buffer to signal how much output is available.  If this
 conversion step is not the last one the element must not be modified.
-The @code{outbufend} element must not be modified.
+The @code{__outbufend} element must not be modified.
 
-@item int is_last
+@item int __is_last
 This element is nonzero if this conversion step is the last one.  This
 information is necessary for the recursion.  See the description of the
 conversion function internals below.  This element must never be
 modified.
 
-@item int invocation_counter
+@item int __invocation_counter
 The conversion function can use this element to see how many calls of
 the conversion function already happened.  Some character sets require
 when generating output a certain prolog and by comparing this value with
 zero one can find out whether it is the first call and therefore the
 prolog should be emitted or not.  This element must never be modified.
 
-@item int internal_use
+@item int __internal_use
 This element is another one rarely used but needed in certain
 situations.  It got assigned a nonzero value in case the conversion
 functions are used to implement @code{mbsrtowcs} et.al.  I.e., the
@@ -2366,23 +2366,24 @@ possibility to find this out.  The situation is different for sequences
 of @code{iconv} calls since the handle allows to access the needed
 information.
 
-This element is mostly used together with @code{invocation_counter} in a
-way like this:
+This element is mostly used together with @code{__invocation_counter} in
+a way like this:
 
 @smallexample
-if (!data->internal_use && data->invocation_counter == 0)
+if (!data->__internal_use
+     && data->__invocation_counter == 0)
   /* @r{Emit prolog.}  */
   ...
 @end smallexample
 
 This element must never be modified.
 
-@item mbstate_t *statep
-The @code{statep} element points to an object of type @code{mbstate_t}
+@item mbstate_t *__statep
+The @code{__statep} element points to an object of type @code{mbstate_t}
 (@pxref{Keeping the state}).  The conversion of an stateful character
 set must use the object pointed to by this element to store information
-about the conversion state.  The @code{statep} element itself must never
-be modified.
+about the conversion state.  The @code{__statep} element itself must
+never be modified.
 
 @item mbstate_t __state
 This element @emph{never} must be used directly.  It is only part of
@@ -2442,35 +2443,35 @@ function and these define the interface.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} int (*gconv_init_fct) (struct gconv_step *)
+@deftypevr {Data type} int (*__gconv_init_fct) (struct __gconv_step *)
 This specifies the interface of the initialization function of the
 module.  It is called exactly once for each conversion the module
 implements.
 
-As explained int the description of the @code{struct gconv_step} data
+As explained int the description of the @code{struct __gconv_step} data
 structure above the initialization function has to initialize parts of
 it.
 
 @table @code
-@item min_needed_from
-@itemx max_needed_from
-@itemx min_needed_to
-@itemx max_needed_to
+@item __min_needed_from
+@itemx __max_needed_from
+@itemx __min_needed_to
+@itemx __max_needed_to
 These elements must be initialized to the exact numbers of the minimum
 and maximum number of bytes used by one character in the source and
 destination character set respectively.  If the characters all have the
 same size the minimum and maximum values are the same.
 
-@item stateful
+@item __stateful
 This element must be initialized to an nonzero value if the source
 character set is stateful.  Otherwise it must be zero.
 @end table
 
 If the initialization function needs to communication some information
-to the conversion function this can happen using the @code{data} element
-of the @code{gconv_step} structure.  But since this data is shared by
-all the conversion is must not be modified by the conversion function.
-How this can be used is shown in the example below.
+to the conversion function this can happen using the @code{__data}
+element of the @code{__gconv_step} structure.  But since this data is
+shared by all the conversion is must not be modified by the conversion
+function.  How this can be used is shown in the example below.
 
 @smallexample
 #define MIN_NEEDED_FROM         1
@@ -2479,7 +2480,7 @@ How this can be used is shown in the example below.
 #define MAX_NEEDED_TO           4
 
 int
-gconv_init (struct gconv_step *step)
+gconv_init (struct __gconv_step *step)
 @{
   /* @r{Determine which direction.}  */
   struct iso2022jp_data *new_data;
@@ -2487,59 +2488,59 @@ gconv_init (struct gconv_step *step)
   enum variant var = illegal_var;
   int result;
 
-  if (__strcasecmp (step->from_name, "ISO-2022-JP//") == 0)
+  if (__strcasecmp (step->__from_name, "ISO-2022-JP//") == 0)
     @{
       dir = from_iso2022jp;
       var = iso2022jp;
     @}
-  else if (__strcasecmp (step->to_name, "ISO-2022-JP//") == 0)
+  else if (__strcasecmp (step->__to_name, "ISO-2022-JP//") == 0)
     @{
       dir = to_iso2022jp;
       var = iso2022jp;
     @}
-  else if (__strcasecmp (step->from_name, "ISO-2022-JP-2//") == 0)
+  else if (__strcasecmp (step->__from_name, "ISO-2022-JP-2//") == 0)
     @{
       dir = from_iso2022jp;
       var = iso2022jp2;
     @}
-  else if (__strcasecmp (step->to_name, "ISO-2022-JP-2//") == 0)
+  else if (__strcasecmp (step->__to_name, "ISO-2022-JP-2//") == 0)
     @{
       dir = to_iso2022jp;
       var = iso2022jp2;
     @}
 
-  result = GCONV_NOCONV;
+  result = __GCONV_NOCONV;
   if (dir != illegal_dir)
     @{
       new_data = (struct iso2022jp_data *)
         malloc (sizeof (struct iso2022jp_data));
 
-      result = GCONV_NOMEM;
+      result = __GCONV_NOMEM;
       if (new_data != NULL)
         @{
           new_data->dir = dir;
           new_data->var = var;
-          step->data = new_data;
+          step->__data = new_data;
 
           if (dir == from_iso2022jp)
 	    @{
-              step->min_needed_from = MIN_NEEDED_FROM;
-              step->max_needed_from = MAX_NEEDED_FROM;
-              step->min_needed_to = MIN_NEEDED_TO;
-              step->max_needed_to = MAX_NEEDED_TO;
+              step->__min_needed_from = MIN_NEEDED_FROM;
+              step->__max_needed_from = MAX_NEEDED_FROM;
+              step->__min_needed_to = MIN_NEEDED_TO;
+              step->__max_needed_to = MAX_NEEDED_TO;
 	    @}
           else
             @{
-              step->min_needed_from = MIN_NEEDED_TO;
-              step->max_needed_from = MAX_NEEDED_TO;
-              step->min_needed_to = MIN_NEEDED_FROM;
-              step->max_needed_to = MAX_NEEDED_FROM + 2;
+              step->__min_needed_from = MIN_NEEDED_TO;
+              step->__max_needed_from = MAX_NEEDED_TO;
+              step->__min_needed_to = MIN_NEEDED_FROM;
+              step->__max_needed_to = MAX_NEEDED_FROM + 2;
             @}
 
           /* @r{Yes, this is a stateful encoding.}  */
-          step->stateful = 1;
+          step->__stateful = 1;
 
-          result = GCONV_OK;
+          result = __GCONV_OK;
         @}
     @}
 
@@ -2558,15 +2559,15 @@ information about which conversion is selected.  The data structure
 this data is not used at all.  Please note that if all four conversions
 this modules supports are requested there are four data blocks.
 
-One interesting thing is the initialization of the @code{min_} and
-@code{max_} elements of the step data object.  A single ISO-2022-JP
+One interesting thing is the initialization of the @code{__min_} and
+@code{__max_} elements of the step data object.  A single ISO-2022-JP
 character can consist of one to four bytes.  Therefore the
 @code{MIN_NEEDED_FROM} and @code{MAX_NEEDED_FROM} macros are defined
 this way.  The output is always the @code{INTERNAL} character set (aka
 UCS4) and therefore each character consists of exactly four bytes.  For
 the conversion from @code{INTERNAL} to ISO-2022-JP we have to take into
 account that escape sequences might be necessary to switch the character
-sets.  Therefore the @code{max_needed_to} element for this direction
+sets.  Therefore the @code{__max_needed_to} element for this direction
 gets assigned @code{MAX_NEEDED_FROM + 2}.  This takes into account the
 two bytes needed for the escape sequences to single the switching.  The
 asymmetry in the maximum values for the two directions can be explained
@@ -2582,12 +2583,12 @@ Therefore one needs more room then only for the character itself.
 The possible return values of the initialization function are:
 
 @table @code
-@item GCONV_OK
+@item __GCONV_OK
 The initialization succeeded
-@item GCONV_NOCONV
+@item __GCONV_NOCONV
 The requested conversion is not supported in the module.  This can
 happen if the @file{gconv-modules} file has errors.
-@item GCONV_NOMEM
+@item __GCONV_NOMEM
 Memory required to store additional information could not be allocated.
 @end table
 @end deftypevr
@@ -2598,18 +2599,18 @@ out completely.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} void (*gconv_end_fct) (struct gconv_step *)
+@deftypevr {Data type} void (*__gconv_end_fct) (struct gconv_step *)
 The task of this function is it to free all resources allocated in the
-initialization function.  Therefore only the @code{data} element of the
-object pointed to by the argument is of interest.  Continuing the
+initialization function.  Therefore only the @code{__data} element of
+the object pointed to by the argument is of interest.  Continuing the
 example from the initialization function, the finalization function
 looks like this:
 
 @smallexample
 void
-gconv_end (struct gconv_step *data)
+gconv_end (struct __gconv_step *data)
 @{
-  free (data->data);
+  free (data->__data);
 @}
 @end smallexample
 @end deftypevr
@@ -2621,7 +2622,7 @@ conversion function.
 
 @comment gconv.h
 @comment GNU
-@deftypevr {Data type} int (*gconv_fct) (struct gconv_step *, struct gconv_step_data *, const char **, const char *, size_t *, int)
+@deftypevr {Data type} int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *, const char **, const char *, size_t *, int)
 The conversion function can be called for two basic reason: to convert
 text or to reset the state.  From the description of the @code{iconv}
 function it can be seen why the flushing mode is necessary.  What mode
@@ -2631,7 +2632,7 @@ nonzero it means that flushing is selected.
 Common to both mode is where the output buffer can be found.  The
 information about this buffer is stored in the conversion step data.  A
 pointer to this is passed as the second argument to this function.  The
-description of the @code{struct gconv_step_data} structure has more
+description of the @code{struct __gconv_step_data} structure has more
 information on this.
 
 @cindex stateful
@@ -2640,7 +2641,7 @@ If it is not stateful nothing has to be done.  Otherwise the function
 has to emit a byte sequence to bring the state object in the initial
 state.  Once this all happened the other conversion modules in the chain
 of conversions have to get the same chance.  Whether another step
-follows can be determined from the @code{is_last} element of the step
+follows can be determined from the @code{__is_last} element of the step
 data structure to which the first parameter points.
 
 The more interesting mode is when actually text has to be converted.
@@ -2653,7 +2654,7 @@ in the buffer.
 
 The conversion has to be performed according to the current state if the
 character set is stateful.  The state is stored in an object pointed to
-by the @code{statep} element of the step data (second argument).  Once
+by the @code{__statep} element of the step data (second argument).  Once
 either the input buffer is empty or the output buffer is full the
 conversion stops.  At this point the pointer variable referenced by the
 third parameter must point to the byte following the last processed
@@ -2662,7 +2663,7 @@ parameter have the same value.
 
 What now happens depends on whether this step is the last one or not.
 If it is the last step the only thing which has to be done is to update
-the @code{outbuf} element of the step data structure to point after the
+the @code{__outbuf} element of the step data structure to point after the
 last written byte.  This gives the caller the information on how much
 text is available in the output buffer.  Beside this the variable
 pointed to by the fifth parameter, which is of type @code{size_t}, must
@@ -2678,12 +2679,12 @@ element in both cases can be found by simple pointer arithmetic:
 
 @smallexample
 int
-gconv (struct gconv_step *step, struct gconv_step_data *data,
+gconv (struct __gconv_step *step, struct __gconv_step_data *data,
        const char **inbuf, const char *inbufend, size_t *written,
        int do_flush)
 @{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
+  struct __gconv_step *next_step = step + 1;
+  struct __gconv_step_data *next_data = data + 1;
   ...
 @end smallexample
 
@@ -2692,15 +2693,16 @@ The @code{next_step} pointer references the next step information and
 therefore will look similar to this:
 
 @smallexample
-  next_step->fct (next_step, next_data, &outerr, outbuf, written, 0)
+  next_step->__fct (next_step, next_data, &outerr, outbuf,
+                    written, 0)
 @end smallexample
 
 But this is not yet all.  Once the function call returns the conversion
 function might have some more to do.  If the return value of the
-function is @code{GCONV_EMPTY_INPUT} this means there is more room in
+function is @code{__GCONV_EMPTY_INPUT} this means there is more room in
 the output buffer.  Unless the input buffer is empty the conversion
 functions start all over again and processes the rest of the input
-buffer.  If the return value is not @code{GCONV_EMPTY_INPUT} something
+buffer.  If the return value is not @code{__GCONV_EMPTY_INPUT} something
 went wrong and we have to recover from this.
 
 A requirement for the conversion function is that the input buffer
@@ -2729,21 +2731,21 @@ function can return.
 One final thing should be mentioned.  If it is necessary for the
 conversion to know whether it is the first invocation (in case a prolog
 has to be emitted) the conversion function should just before returning
-to the caller increment the @code{invocation_counter} element of the
+to the caller increment the @code{__invocation_counter} element of the
 step data structure.  See the description of the @code{struct
-gconv_step_data} structure above for more information on how this can be
-used.
+__gconv_step_data} structure above for more information on how this can
+be used.
 
 The return value must be one of the following values:
 
 @table @code
-@item GCONV_EMPTY_INPUT
+@item __GCONV_EMPTY_INPUT
 All input was consumed and there is room left in the output buffer.
-@item GCONV_OUTPUT_FULL
+@item __GCONV_OUTPUT_FULL
 No more room in the output buffer.  In case this is not the last step
 this value is propagated down from the call of the next conversion
 function in the chain.
-@item GCONV_INCOMPLETE_INPUT
+@item __GCONV_INCOMPLETE_INPUT
 The input buffer is not entirely empty since it contains an incomplete
 character sequence.
 @end table
@@ -2754,13 +2756,13 @@ implementation have to be filled and that is it.
 
 @smallexample
 int
-gconv (struct gconv_step *step, struct gconv_step_data *data,
+gconv (struct __gconv_step *step, struct __gconv_step_data *data,
        const char **inbuf, const char *inbufend, size_t *written,
        int do_flush)
 @{
-  struct gconv_step *next_step = step + 1;
-  struct gconv_step_data *next_data = data + 1;
-  gconv_fct fct = next_step->fct;
+  struct __gconv_step *next_step = step + 1;
+  struct __gconv_step_data *next_data = data + 1;
+  gconv_fct fct = next_step->__fct;
   int status;
 
   /* @r{If the function is called with no input this means we have}
@@ -2768,14 +2770,14 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
      @r{converted input is dropped.}  */
   if (do_flush)
     @{
-      status = GCONV_OK;
+      status = __GCONV_OK;
 
       /* @r{Possible emit a byte sequence which put the state object}
          @r{into the initial state.}  */
 
       /* @r{Call the steps down the chain if there are any but only}
          @r{if we successfully emitted the escape sequence.}  */
-      if (status == GCONV_OK && ! data->is_last)
+      if (status == __GCONV_OK && ! data->__is_last)
         status = fct (next_step, next_data, NULL, NULL,
                       written, 1);
     @}
@@ -2783,8 +2785,8 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
     @{
       /* @r{We preserve the initial values of the pointer variables.}  */
       const char *inptr = *inbuf;
-      char *outbuf = data->outbuf;
-      char *outend = data->outbufend;
+      char *outbuf = data->__outbuf;
+      char *outend = data->__outbufend;
       char *outptr;
 
       /* @r{This variable is used to count the number of characters}
@@ -2805,11 +2807,11 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
 
           /* @r{If this is the last step leave the loop, there is}
              @r{nothing we can do.}  */
-          if (data->is_last)
+          if (data->__is_last)
             @{
               /* @r{Store information about how many bytes are}
                  @r{available.}  */
-              data->outbuf = outbuf;
+              data->__outbuf = outbuf;
 
              /* @r{Remember how many characters we converted.}  */
              *written += converted;
@@ -2820,13 +2822,13 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
           /* @r{Write out all output which was produced.}  */
           if (outbuf > outptr)
             @{
-              const char *outerr = data->outbuf;
+              const char *outerr = data->__outbuf;
               int result;
 
               result = fct (next_step, next_data, &outerr,
                             outbuf, written, 0);
 
-              if (result != GCONV_EMPTY_INPUT)
+              if (result != __GCONV_EMPTY_INPUT)
                 @{
                   if (outerr != outbuf)
                     @{
@@ -2851,14 +2853,14 @@ gconv (struct gconv_step *step, struct gconv_step_data *data,
               else
                 /* @r{All the output is consumed, we can make}
                    @r{ another run if everything was ok.}  */
-                if (status == GCONV_FULL_OUTPUT)
-                  status = GCONV_OK;
+                if (status == __GCONV_FULL_OUTPUT)
+                  status = __GCONV_OK;
            @}
         @}
-      while (status == GCONV_OK);
+      while (status == __GCONV_OK);
 
       /* @r{We finished one use of this step.}  */
-      ++data->invocation_counter;
+      ++data->__invocation_counter;
     @}
 
   return status;

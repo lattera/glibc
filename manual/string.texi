@@ -266,7 +266,7 @@ memcpy (new, old, arraysize * sizeof (struct foo));
 The @code{mempcpy} function is nearly identical to the @code{memcpy}
 function.  It copies @var{size} bytes from the object beginning at
 @code{from} into the object pointed to by @var{to}.  But instead of
-returning the value of @code{to} it returns a pointer to the byte
+returning the value of @var{to} it returns a pointer to the byte
 following the last written byte in the object beginning at @var{to}.
 I.e., the value is @code{((void *) ((char *) @var{to} + @var{size}))}.
 
@@ -424,7 +424,7 @@ Its behaviour is undefined if the strings overlap.
 @comment string.h
 @comment GNU
 @deftypefn {Macro} {char *} strdupa (const char *@var{s})
-This function is similar to @code{strdup} but allocates the new string
+This macro is similar to @code{strdup} but allocates the new string
 using @code{alloca} instead of @code{malloc} (@pxref{Variable Size
 Automatic}).  This means of course the returned string has the same
 limitations as any block of memory allocated using @code{alloca}.
@@ -1041,7 +1041,7 @@ sort_strings_fast (char **array, int nstrings)
 @end smallexample
 
 @strong{Compatibility Note:}  The string collation functions are a new
-feature of @w{ISO C89}.  Older C dialects have no equivalent feature.
+feature of @w{ISO C90}.  Older C dialects have no equivalent feature.
 
 @node Search Functions
 @section Search Functions
@@ -1284,6 +1284,9 @@ modified it, and it would not have the expected value.
 The string that you are operating on might even be a constant.  Then
 when @code{strtok} tries to modify it, your program will get a fatal
 signal for writing in read-only memory.  @xref{Program Error Signals}.
+Even if the operation of @code{strtok} would not require a modification
+of the string (e.g., if there is exactly one token) the string can (and
+in the GNU libc case will) be modified.
 
 This is a special case of a general principle: if a part of a program
 does not have as its purpose the modification of a certain data
@@ -1332,7 +1335,7 @@ pointer to a string pointer.  Calling @code{strtok_r} with a null
 pointer for @var{newstring} and leaving @var{save_ptr} between the calls
 unchanged does the job without hindering reentrancy.
 
-This function is defined in POSIX-1 and can be found on many systems
+This function is defined in POSIX.1 and can be found on many systems
 which support multi-threading.
 @end deftypefun
 
