@@ -6,3 +6,4 @@ setresgid.c
 setfsuid.c
 setfsgid.c
 sys/reg.h
+sys/procfs.h
