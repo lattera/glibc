@@ -3,6 +3,11 @@
 	* resolv/res_send.c (send_dg): Combine write and read to socket
 	into one loop.
 
+2004-10-22  Roland McGrath  <roland@frob.com>
+
+	* Makefile (%.bz2, %.gz): Move these pattern rules ...
+	* Makerules: ... to here.
+
 2001-10-31  Alexandre Oliva  <aoliva@redhat.com>
 
 	* elf/elf.h: Add R_MN10300_* relocation numbers.
