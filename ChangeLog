@@ -1,6 +1,8 @@
 1999-06-09  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sysdeps/vax/bcopy.s: Remove advertising clause of copyright.
+	* misc/sysexits.h: Remove advertising clause of copyright.
+	* resolv/getnetnamadr.c: Likewise.
+	* sysdeps/vax/bcopy.s: Likewise.
 	* sysdeps/vax/bzero.s: Likewise.
 	* sysdeps/vax/ffs.s: Likewise.
 	* sysdeps/vax/memchr.s: Likewise.
