@@ -143,12 +143,13 @@ confstr (name, buf, len)
 
     case _CS_GNU_LIBC_VERSION:
       string = "glibc " VERSION;
-      string_len = strlen (string);
+      string_len = sizeof ("glibc " VERSION);
+      break;
 
     case _CS_GNU_LIBPTHREAD_VERSION:
 #ifdef LIBPTHREAD_VERSION
       string = LIBPTHREAD_VERSION;
-      string_len = strlen (string);
+      string_len = sizeof LIBPTHREAD_VERSION;
       break;
 #else
       /* No thread library.  */
