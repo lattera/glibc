@@ -21,7 +21,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include "../kernel-features.h"
 
@@ -33,21 +33,11 @@ extern int __syscall_fcntl64 (int __fd, int __cmd, ...);
 #if __ASSUME_FCNTL64 == 0
 /* This variable is shared with all files that check for fcntl64.  */
 int __have_no_fcntl64;
-#endif
+
 
 int
 __libc_fcntl (int fd, int cmd, ...)
 {
-  va_list ap;
-  void *arg;
-
-  va_start (ap, cmd);
-  arg = va_arg (ap, void *);
-  va_end (ap);
-
-#if __ASSUME_FCNTL64 > 0
-  return INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
-#else
 # ifdef __NR_fcntl64
   if (! __have_no_fcntl64)
     {
@@ -128,7 +118,39 @@ __libc_fcntl (int fd, int cmd, ...)
       return INLINE_SYSCALL (fcntl, 3, fd, cmd, arg);
     }
   return -1;
+}
 #endif  /* __ASSUME_FCNTL64  */
+
+
+int
+__libc_fcntl (int fd, int cmd, ...)
+{
+  va_list ap;
+  void *arg;
+
+  va_start (ap, cmd);
+  arg = va_arg (ap, void *);
+  va_end (ap);
+
+#if __ASSUME_FCNTL64 > 0
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (fcntl64, 3, fd, cmd, arg);
+#else
+  if (SINGLE_THREAD_P)
+    return do_fcntl (fd, cmd, arg);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_fcntl (fd, cmd, arg);
+#endif
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__libc_fcntl)
 

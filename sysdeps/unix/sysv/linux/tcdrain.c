@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,14 +16,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <termios.h>
 #include <sys/ioctl.h>
+#include <sysdep-cancel.h>
 
 /* Wait for pending output to be written on FD.  */
 int
 __libc_tcdrain (int fd)
 {
+  if (SINGLE_THREAD_P)
+    /* With an argument of 1, TCSBRK for output to be drain.  */
+    return INLINE_SYSCALL (ioctl, 3, fd, TCSBRK, 1);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
   /* With an argument of 1, TCSBRK for output to be drain.  */
-  return __ioctl (fd, TCSBRK, 1);
+  int result = INLINE_SYSCALL (ioctl, 3, fd, TCSBRK, 1);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__libc_tcdrain, tcdrain)

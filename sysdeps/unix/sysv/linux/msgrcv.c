@@ -21,7 +21,7 @@
 #include <sys/msg.h>
 #include <ipc_priv.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
 #include <bp-checks.h>
@@ -50,6 +50,17 @@ __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg)
   tmp.msgp = CHECK_N (msgp, msgsz);
   tmp.msgtyp = msgtyp;
 
-  return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg, __ptrvalue (&tmp));
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
+			   __ptrvalue (&tmp));
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (ipc, 5, IPCOP_msgrcv, msqid, msgsz, msgflg,
+			       __ptrvalue (&tmp));
+
+   LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__libc_msgrcv, msgrcv)

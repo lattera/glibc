@@ -22,7 +22,7 @@
 #include <sys/param.h>
 #include <sys/uio.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -39,8 +39,8 @@ static ssize_t __atomic_readv_replacement (int, __const struct iovec *,
 
 /* We should deal with kernel which have a smaller UIO_FASTIOV as well
    as a very big count.  */
-ssize_t
-__libc_readv (fd, vector, count)
+static ssize_t
+do_readv (fd, vector, count)
      int fd;
      const struct iovec *vector;
      int count;
@@ -53,6 +53,25 @@ __libc_readv (fd, vector, count)
     return bytes_read;
 
   return __atomic_readv_replacement (fd, vector, count);
+}
+
+
+ssize_t
+__libc_readv (fd, vector, count)
+     int fd;
+     const struct iovec *vector;
+     int count;
+{
+  if (SINGLE_THREAD_P)
+    return do_readv (fd, vector, count);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_readv (fd, vector, count);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 strong_alias (__libc_readv, __readv)
 weak_alias (__libc_readv, readv)

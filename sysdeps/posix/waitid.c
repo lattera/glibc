@@ -18,21 +18,18 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <assert.h>
 #include <errno.h>
 #include <signal.h>
 #define __need_NULL
 #include <stddef.h>
 #include <sys/wait.h>
 #include <sys/types.h>
+#include <sysdep-cancel.h>
 
-#include <assert.h>
 
-int
-__waitid (idtype, id, infop, options)
-     idtype_t idtype;
-     id_t id;
-     siginfo_t *infop;
-     int options;
+static int
+do_waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
   pid_t pid, child;
   int status;
@@ -117,6 +114,26 @@ __waitid (idtype, id, infop, options)
     assert (! "What?");
 
   return 0;
+}
+
+
+int
+__waitid (idtype, id, infop, options)
+     idtype_t idtype;
+     id_t id;
+     siginfo_t *infop;
+     int options;
+{
+  if (SINGLE_THREAD_P)
+    return do_waitid (idtype, id, infop, options);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_waitid (idtype, id, infop, options);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__waitid, waitid)
 strong_alias (__waitid, __libc_waitid)

@@ -22,6 +22,7 @@
 #include <stddef.h>	/* For NULL.  */
 #include <sys/time.h>
 #include <sys/select.h>
+#include <sysdep-cancel.h>
 
 /* Check the first NFDS descriptors each in READFDS (if not NULL) for read
    readiness, in WRITEFDS (if not NULL) for write readiness, and in EXCEPTFDS
@@ -29,14 +30,9 @@
    after waiting the interval specified therein.  Additionally set the sigmask
    SIGMASK for this call.  Returns the number of ready descriptors, or -1 for
    errors.  */
-int
-__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
-     int nfds;
-     fd_set *readfds;
-     fd_set *writefds;
-     fd_set *exceptfds;
-     const struct timespec *timeout;
-     const sigset_t *sigmask;
+static int
+do_pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
+	    const struct timespec *timeout, const sigset_t *sigmask)
 {
   struct timeval tval;
   int retval;
@@ -61,6 +57,29 @@ __pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
     __sigprocmask (SIG_SETMASK, &savemask, NULL);
 
   return retval;
+}
+
+
+int
+__pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask)
+     int nfds;
+     fd_set *readfds;
+     fd_set *writefds;
+     fd_set *exceptfds;
+     const struct timespec *timeout;
+     const sigset_t *sigmask;
+{
+  if (SINGLE_THREAD_P)
+    return do_pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_pselect (nfds, readfds, writefds, exceptfds, timeout,
+			   sigmask);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__pselect, pselect)
 strong_alias (__pselect, __libc_pselect)

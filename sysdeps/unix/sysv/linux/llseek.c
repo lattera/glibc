@@ -1,5 +1,5 @@
 /* Long-long seek operation.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <sys/types.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 
 extern int __syscall__llseek (int fd, off_t offset_hi, off_t offset_lo,
@@ -32,11 +32,22 @@ extern loff_t __llseek (int fd, loff_t offset, int whence);
 loff_t
 __llseek (int fd, loff_t offset, int whence)
 {
-  loff_t result;
+  loff_t retval;
 
-  return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
-				   (off_t) (offset & 0xffffffff),
-				   __ptrvalue (&result), whence) ?: result);
+  if (SINGLE_THREAD_P)
+    return (loff_t) (INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
+				     (off_t) (offset & 0xffffffff),
+				     __ptrvalue (&retval), whence) ?: retval);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = (loff_t) INLINE_SYSCALL (_llseek, 5, fd, (off_t) (offset >> 32),
+					(off_t) (offset & 0xffffffff),
+					__ptrvalue (&retval), whence);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return (loff_t) result ?: retval;
 }
 weak_alias (__llseek, llseek)
 strong_alias (__llseek, __libc_lseek64)

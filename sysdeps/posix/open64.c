@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <stdarg.h>
 #include <bp-sym.h>
+#include <sysdep-cancel.h>
 
 /* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
    a third argument is the file protection.  */
@@ -35,7 +36,16 @@ __libc_open64 (const char *file, int oflag, ...)
       va_end (arg);
     }
 
-  return __libc_open (file, oflag | O_LARGEFILE, mode);
+  if (SINGLE_THREAD_P)
+    return __libc_open (file, oflag | O_LARGEFILE, mode);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = __libc_open (file, oflag | O_LARGEFILE, mode);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__libc_open64, BP_SYM (__open64))
 libc_hidden_weak (BP_SYM (__open64))

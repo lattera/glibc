@@ -20,7 +20,7 @@
 #include <errno.h>
 #include <sys/poll.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -36,20 +36,19 @@ static int __emulate_poll (struct pollfd *fds, nfds_t nfds,
 			   int timeout) internal_function;
 # endif
 
-/* The real implementation.  */
-int
-__poll (fds, nfds, timeout)
-     struct pollfd *fds;
-     nfds_t nfds;
-     int timeout;
-{
+
 # if __ASSUME_POLL_SYSCALL == 0
+/* For loser kernels.  */
+static int
+loser_poll (struct pollfd *fds, nfds_t nfds, int timeout)
+{
   static int must_emulate;
 
   if (!must_emulate)
     {
       int errno_saved = errno;
-      int retval = INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
+      int retval = INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds,
+				   timeout);
 
       if (retval >= 0 || errno != ENOSYS)
 	return retval;
@@ -59,8 +58,39 @@ __poll (fds, nfds, timeout)
     }
 
   return __emulate_poll (fds, nfds, timeout);
+}
+# endif
+
+
+/* The real implementation.  */
+int
+__poll (fds, nfds, timeout)
+     struct pollfd *fds;
+     nfds_t nfds;
+     int timeout;
+{
+# if __ASSUME_POLL_SYSCALL == 0
+  if (SINGLE_THREAD_P)
+    return loser_poll (CHECK_N (fds, nfds), nfds, timeout);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = loser_poll (CHECK_N (fds, nfds), nfds, timeout);
+
+   LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 # else
-  return INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (poll, 3, CHECK_N (fds, nfds), nfds, timeout);
+
+   LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 # endif
 }
 libc_hidden_def (__poll)

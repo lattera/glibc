@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,8 +16,9 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <socketcall.h>
+#include <tls.h>
 
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
@@ -32,15 +33,19 @@
    The .S files for the other calls just #define socket and #include this.  */
 
 #ifndef __socket
-#ifndef NO_WEAK_ALIAS
-#define __socket P(__,socket)
-#else
-#define __socket socket
-#endif
+# ifndef NO_WEAK_ALIAS
+#  define __socket P(__,socket)
+# else
+#  define __socket socket
+# endif
 #endif
 
 .globl __socket
 ENTRY (__socket)
+#if defined NEED_CANCELLATION && defined CENABLE
+	cmpl $0, %gs:MULTIPLE_THREADS_OFFSET
+	jne 1f
+#endif
 
 	/* Save registers.  */
 	movl %ebx, %edx
@@ -65,6 +70,43 @@ ENTRY (__socket)
 L(pseudo_end):
 	ret
 
+
+#if defined NEED_CANCELLATION && defined CENABLE
+	/* We need one more register.  */
+1:	pushl %esi
+
+	/* Enable asynchronous cancellation.  */
+	call __libc_enable_asynccancel	/* No @plt */
+	movl %eax, %esi
+
+	/* Save registers.  */
+	movl %ebx, %edx
+
+	movl $SYS_ify(socketcall), %eax	/* System call number in %eax.  */
+
+	/* Use ## so `socket' is a separate token that might be #define'd.  */
+	movl $P(SOCKOP_,socket), %ebx	/* Subcode is first arg to syscall.  */
+	lea 8(%esp), %ecx		/* Address of args is 2nd arg.  */
+
+        /* Do the system call trap.  */
+	int $0x80
+
+	/* Restore the cancellation.  */
+	xchgl %esi, %eax
+	call __libc_disable_asynccancel	/* No @plt */
+
+	/* Restore registers.  */
+	movl %esi, %eax
+	movl %edx, %ebx
+	popl %esi
+
+	/* %eax is < 0 if there was an error.  */
+	cmpl $-125, %eax
+	jae SYSCALL_ERROR_LABEL
+
+	/* Successful; return the syscall's value.  */
+	ret
+#endif
 PSEUDO_END (__socket)
 
 #ifndef NO_WEAK_ALIAS

@@ -1,3 +1,9 @@
+2002-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Define
+	SINGLE_THREAD_P.  If in libc or libpthread examine multiple_thread
+	member of thread decriptor, otherwise return unconditionally 1.
+
 2002-12-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/pt-socket.S: Changes folded into the

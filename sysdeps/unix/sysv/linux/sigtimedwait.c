@@ -19,7 +19,7 @@
 #include <errno.h>
 #include <signal.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -35,10 +35,22 @@ __sigtimedwait (set, info, timeout)
      siginfo_t *info;
      const struct timespec *timeout;
 {
+  if (SINGLE_THREAD_P)
+    /* XXX The size argument hopefully will have to be changed to the
+       real size of the user-level sigset_t.  */
+    return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			   CHECK_1 (info), timeout, _NSIG / 8);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			 CHECK_1 (info), timeout, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			       CHECK_1 (info), timeout, _NSIG / 8);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigtimedwait)
 weak_alias (__sigtimedwait, sigtimedwait)

@@ -20,7 +20,7 @@
 #include <signal.h>
 #include <unistd.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -30,20 +30,15 @@ extern int __syscall_sigsuspend (int, unsigned long int, unsigned long int);
 extern int __syscall_rt_sigsuspend (const sigset_t *__unbounded, size_t);
 
 
+#if !__ASSUME_REALTIME_SIGNALS
 /* The variable is shared between all wrappers around signal handling
    functions which have RT equivalents.  The definition is in sigaction.c.  */
 extern int __libc_missing_rt_sigs;
 
 
-/* Change the set of blocked signals to SET,
-   wait until a signal arrives, and restore the set of blocked signals.  */
-int
-__sigsuspend (set)
-     const sigset_t *set;
+static int
+do_sigsuspend (const sigset_t *set)
 {
-#if __ASSUME_REALTIME_SIGNALS
-  return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
-#else
 # ifdef __NR_rt_sigsuspend
   /* First try the RT signals.  */
   if (!__libc_missing_rt_sigs)
@@ -62,6 +57,38 @@ __sigsuspend (set)
 # endif
 
   return INLINE_SYSCALL (sigsuspend, 3, 0, 0, set->__val[0]);
+}
+#endif
+
+/* Change the set of blocked signals to SET,
+   wait until a signal arrives, and restore the set of blocked signals.  */
+int
+__sigsuspend (set)
+     const sigset_t *set;
+{
+#if __ASSUME_REALTIME_SIGNALS
+  if (SINGLE_THREAD_P)
+    return INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set), _NSIG / 8);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = INLINE_SYSCALL (rt_sigsuspend, 2, CHECK_SIGSET (set),
+			       _NSIG / 8);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
+#else
+  if (SINGLE_THREAD_P)
+    return do_sigsuspend (set);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_sigsuspend (set);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 #endif
 }
 libc_hidden_def (__sigsuspend)

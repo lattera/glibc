@@ -22,7 +22,7 @@
 #include <endian.h>
 #include <unistd.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -47,12 +47,8 @@ static ssize_t __emulate_pread (int fd, void *buf, size_t count,
 # endif
 
 
-ssize_t
-__libc_pread (fd, buf, count, offset)
-     int fd;
-     void *buf;
-     size_t count;
-     off_t offset;
+static ssize_t
+do_pread (int fd, void *buf, size_t count, off_t offset)
 {
   ssize_t result;
 
@@ -65,6 +61,26 @@ __libc_pread (fd, buf, count, offset)
     /* No system call available.  Use the emulation.  */
     result = __emulate_pread (fd, buf, count, offset);
 # endif
+
+  return result;
+}
+
+
+ssize_t
+__libc_pread (fd, buf, count, offset)
+     int fd;
+     void *buf;
+     size_t count;
+     off_t offset;
+{
+  if (SINGLE_THREAD_P)
+    return do_pread (fd, buf, count, offset);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  ssize_t result = do_pread (fd, buf, count, offset);
+
+  LIBC_CANCEL_RESET (oldtype);
 
   return result;
 }

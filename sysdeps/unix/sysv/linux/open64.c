@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,95,96,97,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995-1997,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,26 +17,37 @@
    02111-1307 USA.  */
 
 #include <errno.h>
+#include <fcntl.h>
+#include <stdarg.h>
+#include <bp-sym.h>
 #include <sysdep-cancel.h>
-#include <stdlib.h>
-#include <sys/wait.h>
-#include <nptl/pthreadP.h>
-#include <tls.h>
 
-__pid_t
-__libc_waitpid (__pid_t pid, int *stat_loc, int options)
+/* Open FILE with access OFLAG.  If OFLAG includes O_CREAT,
+   a third argument is the file protection.  */
+int
+__libc_open64 (const char *file, int oflag, ...)
 {
+  int mode = 0;
+
+  if (oflag & O_CREAT)
+    {
+      va_list arg;
+      va_start (arg, oflag);
+      mode = va_arg (arg, int);
+      va_end (arg);
+    }
+
   if (SINGLE_THREAD_P)
-    return INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL);
+    return INLINE_SYSCALL (open, 3, file, oflag | O_LARGEFILE, mode);
 
   int oldtype = LIBC_CANCEL_ASYNC ();
 
-  int result = INLINE_SYSCALL (wait4, 4, pid, stat_loc, options, NULL);
+  int result = INLINE_SYSCALL (open, 3, file, oflag | O_LARGEFILE, mode);
 
   LIBC_CANCEL_RESET (oldtype);
 
   return result;
 }
-weak_alias (__libc_waitpid, __waitpid)
-libc_hidden_weak (__waitpid)
-weak_alias (__libc_waitpid, waitpid)
+weak_alias (__libc_open64, BP_SYM (__open64))
+libc_hidden_weak (BP_SYM (__open64))
+weak_alias (__libc_open64, BP_SYM (open64))

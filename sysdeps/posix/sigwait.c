@@ -1,5 +1,5 @@
 /* Implementation of sigwait function from POSIX.1c.
-   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -21,6 +21,7 @@
 #include <errno.h>
 #include <signal.h>
 #include <stddef.h>		/* For NULL.  */
+#include <sysdep-cancel.h>
 
 /* This is our dummy signal handler we use here.  */
 static void ignore_signal (int sig);
@@ -31,8 +32,8 @@ static void ignore_signal (int sig);
 static int was_sig;
 
 
-int
-__sigwait (const sigset_t *set, int *sig)
+static int
+do_sigwait (const sigset_t *set, int *sig)
 {
   sigset_t tmp_mask;
   struct sigaction saved[NSIG];
@@ -79,6 +80,22 @@ __sigwait (const sigset_t *set, int *sig)
   /* Store the result and return.  */
   *sig = was_sig;
   return was_sig == -1 ? -1 : 0;
+}
+
+
+int
+__sigwait (const sigset_t *set, int *sig)
+{
+  if (SINGLE_THREAD_P)
+    return do_sigwait (set, sig);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_sigwait (set, sig);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)

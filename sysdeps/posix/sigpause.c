@@ -19,13 +19,14 @@
 #include <errno.h>
 #include <signal.h>
 #include <stddef.h>		/* For NULL.  */
+#include <sysdep-cancel.h>
 
 #include <sigset-cvt-mask.h>
 
 /* Set the mask of blocked signals to MASK,
    wait for a signal to arrive, and then restore the mask.  */
-int
-__sigpause (int sig_or_mask, int is_sig)
+static int
+do_sigpause (int sig_or_mask, int is_sig)
 {
   sigset_t set;
 
@@ -41,6 +42,21 @@ __sigpause (int sig_or_mask, int is_sig)
     return -1;
 
   return __sigsuspend (&set);
+}
+
+int
+__sigpause (int sig_or_mask, int is_sig)
+{
+  if (SINGLE_THREAD_P)
+    return do_sigpause (sig_or_mask, is_sig);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_sigpause (sig_or_mask, is_sig);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigpause)
 

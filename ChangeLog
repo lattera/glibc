@@ -1,3 +1,44 @@
+2002-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/sysdep-cancel.h: Add dummy definitions for
+	SINGLE_THREAD_P, LIBC_CANCEL_ASYNC, and LIBC_CANCEL_RESET.
+
+	* sysdeps/unix/sysv/linux/open64.c: New file.
+
+	* sysdeps/generic/pselect.c: Add support for cancellation handling.
+	* sysdeps/posix/open64.c: Likewise.
+	* sysdeps/posix/sigpause.c: Likewise.
+	* sysdeps/posix/sigwait.c: Likewise.
+	* sysdeps/posix/system.c: Likewise.
+	* sysdeps/posix/waitid.c: Likewise.
+	* sysdeps/unix/sysv/linux/accept.S: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Likewise.
+	* sysdeps/unix/sysv/linux/llseek.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgrcv.c: Likewise.
+	* sysdeps/unix/sysv/linux/msgsnd.c: Likewise.
+	* sysdeps/unix/sysv/linux/poll.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread.c: Likewise.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+	* sysdeps/unix/sysv/linux/readv.c: Likewise.
+	* sysdeps/unix/sysv/linux/recv.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvfrom.S: Likewise.
+	* sysdeps/unix/sysv/linux/recvmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/send.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendmsg.S: Likewise.
+	* sysdeps/unix/sysv/linux/sendto.S: Likewise.
+	* sysdeps/unix/sysv/linux/sigsuspend.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigtimedwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwait.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigwaitinfo.c: Likewise.
+	* sysdeps/unix/sysv/linux/tcdrain.c: Likewise.
+	* sysdeps/unix/sysv/linux/wait.c: Likewise.
+	* sysdeps/unix/sysv/linux/waitpid.c: Likewise.
+	* sysdeps/unix/sysv/linux/writev.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/socket.S: Likewise.
+
 2002-12-14  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/sysdep-cancel.h: New file.

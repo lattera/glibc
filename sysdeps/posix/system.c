@@ -24,6 +24,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <bits/libc-lock.h>
+#include <sysdep-cancel.h>
 
 
 #ifndef	HAVE_GNU_LD
@@ -185,6 +186,15 @@ __libc_system (const char *line)
        not be available after a chroot(), for example.  */
     return do_system ("exit 0") == 0;
 
-  return do_system (line);
+  if (SINGLE_THREAD_P)
+    return do_system (line);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_system (line);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 weak_alias (__libc_system, system)

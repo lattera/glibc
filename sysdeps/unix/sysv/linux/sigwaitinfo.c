@@ -21,7 +21,7 @@
 #define __need_NULL
 #include <stddef.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -36,10 +36,22 @@ __sigwaitinfo (set, info)
      const sigset_t *set;
      siginfo_t *info;
 {
+  if (SINGLE_THREAD_P)
+    /* XXX The size argument hopefully will have to be changed to the
+       real size of the user-level sigset_t.  */
+    return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			   CHECK_1 (info), NULL, _NSIG / 8);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
   /* XXX The size argument hopefully will have to be changed to the
      real size of the user-level sigset_t.  */
-  return INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
-			 CHECK_1 (info), NULL, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, CHECK_SIGSET (set),
+			       CHECK_1 (info), NULL, _NSIG / 8);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigwaitinfo)
 weak_alias (__sigwaitinfo, sigwaitinfo)

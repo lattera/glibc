@@ -21,7 +21,7 @@
 #define __need_NULL
 #include <stddef.h>
 
-#include <sysdep.h>
+#include <sysdep-cancel.h>
 #include <sys/syscall.h>
 #include <bp-checks.h>
 
@@ -31,10 +31,8 @@ extern int __syscall_rt_sigtimedwait (const sigset_t *__unbounded, siginfo_t *__
 
 
 /* Return any pending signal or wait for one for the given time.  */
-int
-__sigwait (set, sig)
-     const sigset_t *set;
-     int *sig;
+static int
+do_sigwait (const sigset_t *set, int *sig)
 {
   int ret;
 
@@ -63,6 +61,23 @@ __sigwait (set, sig)
 #endif
 
   return ret;
+}
+
+int
+__sigwait (set, sig)
+     const sigset_t *set;
+     int *sig;
+{
+  if (SINGLE_THREAD_P)
+    return do_sigwait (set, sig);
+
+  int oldtype = LIBC_CANCEL_ASYNC ();
+
+  int result = do_sigwait (set, sig);
+
+  LIBC_CANCEL_RESET (oldtype);
+
+  return result;
 }
 libc_hidden_def (__sigwait)
 weak_alias (__sigwait, sigwait)

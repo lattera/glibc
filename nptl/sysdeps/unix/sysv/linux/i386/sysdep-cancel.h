@@ -19,11 +19,14 @@
 
 #include <sysdep.h>
 #include <tls.h>
+#ifndef ASSEMBLER
+# include <nptl/pthreadP.h>
+#endif
 
 #if !defined NOT_IN_libc || defined IS_IN_libpthread
 
-#undef PSEUDO
-#define PSEUDO(name, syscall_name, args)				      \
+# undef PSEUDO
+# define PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
     cmpl $0, %gs:MULTIPLE_THREADS_OFFSET;				      \
@@ -33,7 +36,7 @@
     jae SYSCALL_ERROR_LABEL;						      \
     ret;								      \
   L(pseudo_cancel):							      \
-    call __libc_enable_asynccancel;					      \
+    CENABLE								      \
     SAVE_OLDTYPE_##args							      \
     PUSHARGS_##args							      \
     DOCARGS_##args							      \
@@ -45,26 +48,41 @@
     jae SYSCALL_ERROR_LABEL;						      \
   L(pseudo_end):
 
-#define SAVE_OLDTYPE_0	movl %eax, %ecx;
-#define SAVE_OLDTYPE_1	SAVE_OLDTYPE_0
-#define SAVE_OLDTYPE_2	pushl %eax;
-#define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
-#define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
-#define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_0	movl %eax, %edx;
+# define SAVE_OLDTYPE_1	SAVE_OLDTYPE_0
+# define SAVE_OLDTYPE_2	pushl %eax;
+# define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
+# define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
 
-#define DOCARGS_0	DOARGS_0
-#define DOCARGS_1	DOARGS_1
-#define DOCARGS_2	_DOARGS_2 (12)
-#define DOCARGS_3	_DOARGS_3 (20)
-#define DOCARGS_4	_DOARGS_4 (28)
-#define DOCARGS_5	_DOARGS_5 (36)
+# define DOCARGS_0	DOARGS_0
+# define DOCARGS_1	DOARGS_1
+# define DOCARGS_2	_DOARGS_2 (12)
+# define DOCARGS_3	_DOARGS_3 (20)
+# define DOCARGS_4	_DOARGS_4 (28)
+# define DOCARGS_5	_DOARGS_5 (36)
 
-#define DISABLE		call __libc_disable_asynccancel
-#define POPCARGS_0	pushl %eax; movl %ecx, %eax; DISABLE; popl %eax;
-#define POPCARGS_1	POPCARGS_0
-#define POPCARGS_2	xchgl (%esp), %eax; DISABLE; popl %eax;
-#define POPCARGS_3	POPCARGS_2
-#define POPCARGS_4	POPCARGS_2
-#define POPCARGS_5	POPCARGS_2
+# ifdef IS_IN_libpthread
+#  define CENABLE	call __pthread_enable_asynccancel;
+#  define CDISABLE	call __pthread_disable_asynccancel
+# else
+#  define CENABLE	call __libc_enable_asynccancel;
+#  define CDISABLE	call __libc_disable_asynccancel
+# endif
+# define POPCARGS_0	pushl %eax; movl %ecx, %eax; CDISABLE; popl %eax;
+# define POPCARGS_1	POPCARGS_0
+# define POPCARGS_2	xchgl (%esp), %eax; CDISABLE; popl %eax;
+# define POPCARGS_3	POPCARGS_2
+# define POPCARGS_4	POPCARGS_2
+# define POPCARGS_5	POPCARGS_2
+
+# define SINGLE_THREAD_P \
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				      \
+				   header.data.multiple_threads) == 0, 1)
+
+#else
+
+/* This code should never be used but we define it anyhow.  */
+# define SINGLE_THREAD_P (1)
 
 #endif
