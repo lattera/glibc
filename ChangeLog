@@ -1,3 +1,7 @@
+2003-03-28  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/configure: Rebuilt.
+
 2003-03-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Remove libmd5script goal.
