@@ -155,26 +155,15 @@ struct here_fromstruct
   };
 
 static uint16_t *tos;
-static size_t tossize;
 
 static struct here_fromstruct *froms;
-static size_t fromssize;
 static size_t fromlimit;
 static size_t fromidx;
 
 static uintptr_t lowpc;
-static uintptr_t highpc;
 static size_t textsize;
 static unsigned int hashfraction;
 static unsigned int log_hashfraction;
-
-/* This is the information about the mmaped memory.  */
-static struct gmon_hdr *addr;
-static off_t expected_size;
-
-/* See profil(2) where this is described.  */
-static int s_scale;
-#define SCALE_1_TO_1	0x10000L
 
 
 
@@ -194,6 +183,14 @@ _dl_start_profile (struct link_map *map, const char *output_dir)
   struct gmon_hist_hdr hist_hdr;
   char *hist, *cp;
   size_t idx;
+  size_t tossize;
+  size_t fromssize;
+  uintptr_t highpc;
+  struct gmon_hdr *addr = NULL;
+  off_t expected_size;
+  /* See profil(2) where this is described.  */
+  int s_scale;
+#define SCALE_1_TO_1	0x10000L
 
   /* Compute the size of the sections which contain program code.  */
   for (ph = map->l_phdr; ph < &map->l_phdr[map->l_phnum]; ++ph)
