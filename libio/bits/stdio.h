@@ -148,12 +148,13 @@ ferror_unlocked (FILE *__stream) __THROW
 		      || (__builtin_constant_p (n) && (size_t) (n) == 0))     \
 			/* Evaluate all parameters once.  */		      \
 		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
-			(void) (n), 0)					      \
+			(void) (n), (size_t) 0)				      \
 		     : fread_unlocked (ptr, size, n, stream))))
 
 # define fwrite_unlocked(ptr, size, n, stream) \
   (__extension__ ((__builtin_constant_p (size) && __builtin_constant_p (n)    \
-		   && (size_t) ((size) * (n)) <= 8 && (size_t) (size) != 0)   \
+		   && (size_t) (size) * (size_t) (n) <= 8		      \
+		   && (size_t) (size) != 0)				      \
 		  ? ({ const char *__ptr = (const char *) (ptr);	      \
 		       FILE *__stream = (stream);			      \
 		       size_t __cnt;					      \
@@ -167,7 +168,7 @@ ferror_unlocked (FILE *__stream) __THROW
 		      || (__builtin_constant_p (n) && (size_t) (n) == 0))     \
 			/* Evaluate all parameters once.  */		      \
 		     ? ((void) (ptr), (void) (stream), (void) (size),	      \
-			(size_t) n)					      \
+			(void) (n), (size_t) 0)				      \
 		     : fwrite_unlocked (ptr, size, n, stream))))
 #endif
 

@@ -1,3 +1,13 @@
+2004-08-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/bits/stdio.h (fread_unlocked): Cast 0 to (size_t).
+	(fwrite_unlocked): When checking if size * n is <= 8, cast each
+	argument to size_t individually.  Cast n to (void) instead of
+	(size_t), surround with (), return (size_t) 0 if one of n or size
+	is 0.  [BZ #316]
+	* stdio-common/Makefile (tests): Add tst-unlockedio.
+	* stdio-common/tst-unlockedio.c: New test.
+
 2004-08-09  Roland McGrath  <roland@frob.com>
 
 	* manual/install.texi (Supported Configurations): Replace bug-glibc
