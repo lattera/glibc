@@ -97,7 +97,7 @@ gconv_init (struct __gconv_step *step)
   enum direction dir = illegal_dir;
   int result;
 
-  if (__strcasecmp (step->__from_name, "UNICODE") == 0)
+  if (strcmp (step->__from_name, "UNICODE//") == 0)
     dir = from_unicode;
   else
     dir = to_unicode;
