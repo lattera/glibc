@@ -1,4 +1,4 @@
-/* Definitions for POSIX timer implementation on top of LinuxThreads.
+/* Definitions for POSIX timer implementation on top of NPTL.
    Copyright (C) 2000, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.

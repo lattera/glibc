@@ -509,8 +509,8 @@ __timer_thread_wakeup (struct thread_node *thread)
 
 
 /* Compare two pthread_attr_t thread attributes for exact equality.
-   Returns 1 if they are equal, otherwise zero if they are not equal or
-   contain illegal values.  This version is LinuxThreads-specific for
+   Returns 1 if they are equal, otherwise zero if they are not equal
+   or contain illegal values.  This version is NPTL-specific for
    performance reason.  One could use the access functions to get the
    values of all the fields of the attribute structure.  */
 static int
