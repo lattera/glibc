@@ -73,6 +73,9 @@ _hurd_setup_sighandler (int flags,
   scp->sc_gpr[28] = ts->r28;
   scp->sc_gpr[31] = ts->r31;
   
+  scp->sc_mdlo = ts->mdlo;
+  scp->sc_mdhi = ts->mdhi;
+
   scp->sc_pc = ts->pc;
   scp->sc_sp = ts->r29;
   scp->sc_fp = ts->r30;
