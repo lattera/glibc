@@ -902,13 +902,12 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	start = outptr;							      \
 	*outptr = (unsigned char) (~0xff >> step);			      \
 	outptr += step;							      \
-	--step;								      \
 	do								      \
 	  {								      \
-	    start[step] = 0x80 | (wc & 0x3f);				      \
+	    start[--step] = 0x80 | (wc & 0x3f);				      \
 	    wc >>= 6;							      \
 	  }								      \
-	while (--step > 0);						      \
+	while (step > 1);						      \
 	start[0] |= wc;							      \
       }									      \
     else								      \
@@ -990,18 +989,17 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	  }								      \
 	else								      \
 	  {								      \
-	    int skipped;						      \
-									      \
 	    /* Search the end of this ill-formed UTF-8 character.  This	      \
 	       is the next byte with (x & 0xc0) != 0x80.  */		      \
-	    skipped = 0;						      \
+	    i = 0;							      \
 	    do								      \
-	      ++skipped;						      \
-	    while (inptr + skipped < inend				      \
-		   && (*(inptr + skipped) & 0xc0) == 0x80		      \
-		   && skipped < 5);					      \
+	      ++i;							      \
+	    while (inptr + i < inend					      \
+		   && (*(inptr + i) & 0xc0) == 0x80			      \
+		   && i < 5);						      \
 									      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (skipped);			      \
+	  errout:							      \
+	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
 	  }								      \
 									      \
 	if (__builtin_expect (inptr + cnt > inend, 0))			      \
@@ -1018,7 +1016,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 		break;							      \
 	      }								      \
 									      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
+	    goto errout;						      \
 	  }								      \
 									      \
 	/* Read the possible remaining bytes.  */			      \
@@ -1040,7 +1038,7 @@ ucs4le_internal_loop_single (struct __gconv_step *step,
 	if (i < cnt || (cnt > 2 && (ch >> (5 * cnt - 4)) == 0))		      \
 	  {								      \
 	    /* This is an illegal encoding.  */				      \
-	    STANDARD_FROM_LOOP_ERR_HANDLER (i);				      \
+	    goto errout;						      \
 	  }								      \
 									      \
 	inptr += cnt;							      \
