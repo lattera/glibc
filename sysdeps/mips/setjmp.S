@@ -23,6 +23,6 @@ Cambridge, MA 02139, USA.  */
    extra arguments.  */
 ENTRY (__setjmp)
 	move a1, sp
-	move a2, fp
+	move a2, $fp
 	j __setjmp_aux
 
