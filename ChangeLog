@@ -1,5 +1,8 @@
 2002-02-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (free_slotinfo): Check for end of list and return
+	true in this case.
+
 	* locale/iso-639.def: Add language codes for Walloon.
 
 	* elf/dl-fini.c (_dl_fini): Print some final statistics on the

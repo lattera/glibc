@@ -386,7 +386,11 @@ free_slotinfo (struct dtv_slotinfo_list *elemp)
 {
   size_t cnt;
 
-  if (elemp->next != NULL && !free_slotinfo (elemp->next))
+  if (elemp == NULL)
+    /* Nothing here, all is removed (or there never was anything).  */
+    return true;
+
+  if (!free_slotinfo (elemp->next))
     /* We cannot free the entry.  */
     return false;
 
