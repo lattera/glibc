@@ -1,3 +1,8 @@
+2001-06-17  Alan Modra  <amodra@bigpond.net.au>
+
+	* sysdeps/hppa/dl-machine.h (elf_machine_rela): handle relocs
+	at unaligned address.
+
 2001-06-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/regex.c: Reorganize code to build code twice, once for single
