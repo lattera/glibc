@@ -1,3 +1,10 @@
+Sat Mar  2 16:35:40 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/m68k/profil-counter.h: File removed.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/profil-counter.h: File
+	removed.
+	* sysdeps/generic/profil-counter.h: New file.
+
 Fri Mar  1 17:11:59 1996  Brendan Kehoe  <brendan@zen.org>
 
 	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sigcontext.h: New file,
