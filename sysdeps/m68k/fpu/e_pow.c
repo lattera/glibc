@@ -36,29 +36,33 @@ s(__ieee754_pow) (float_type x, float_type y)
 {
   float_type z;
   float_type ax;
+  unsigned long x_cond, y_cond;
 
-  if (y == 0.0)
+  y_cond = __m81_test (y);
+  if (y_cond & __M81_COND_ZERO)
     return 1.0;
-  if (x != x || y != y)
+
+  x_cond = __m81_test (x);
+  if ((x_cond | y_cond) & __M81_COND_NAN)
     return x + y;
 
-  if (m81(__isinf) (y))
+  if (y_cond & __M81_COND_INF)
     {
       ax = s(fabs) (x);
       if (ax == 1)
-	return 0.0/0.0;
+	return y - y;
       if (ax > 1)
-	return y > 0 ? y : 0;
+	return y_cond & __M81_COND_NEG ? 0 : y;
       else
-	return y < 0 ? -y : 0;
+	return y_cond & __M81_COND_NEG ? -y : 0;
     }
 
   if (s(fabs) (y) == 1)
-    return y > 0 ? x : 1 / x;
+    return y_cond & __M81_COND_NEG ? 1 / x : x;
 
   if (y == 2)
     return x * x;
-  if (y == 0.5 && x >= 0)
+  if (y == 0.5 && !(x_cond & __M81_COND_NEG))
     return m81(__ieee754_sqrt) (x);
 
   if (x == 10.0)
@@ -73,17 +77,17 @@ s(__ieee754_pow) (float_type x, float_type y)
     }
 
   ax = s(fabs) (x);
-  if (m81(__isinf) (x) || x == 0 || ax == 1)
+  if (x_cond & (__M81_COND_INF | __M81_COND_ZERO) || ax == 1)
     {
       z = ax;
-      if (y < 0)
+      if (y_cond & __M81_COND_NEG)
 	z = 1 / z;
-      if (m81(__signbit) (x))
+      if (x_cond & __M81_COND_NEG)
 	{
 	  if (y != m81(__rint) (y))
 	    {
 	      if (x == -1)
-		z = 0.0/0.0;
+		z = (z - z) / (z - z);
 	    }
 	  else
 	    goto maybe_negate;
@@ -91,7 +95,7 @@ s(__ieee754_pow) (float_type x, float_type y)
       return z;
     }
 
-  if (x < 0.0)
+  if (x_cond & __M81_COND_NEG)
     {
       if (y == m81(__rint) (y))
 	{
@@ -112,7 +116,7 @@ s(__ieee754_pow) (float_type x, float_type y)
 	  }
 	}
       else
-	z = 0.0/0.0;
+	z = (y - y) / (y - y);
     }
   else
     z = m81(__ieee754_exp) (y * m81(__ieee754_log) (x));
