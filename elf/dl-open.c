@@ -403,9 +403,9 @@ _dl_open (const char *file, int mode, const void *caller)
       len_errstring = strlen (errstring) + 1;
       if (objname == errstring + len_errstring)
 	{
-	  len_errstring += strlen (objname) + 1;
-	  local_errstring = alloca (len_errstring);
-	  memcpy (local_errstring, errstring, len_errstring);
+	  size_t total_len = len_errstring + strlen (objname) + 1;
+	  local_errstring = alloca (total_len);
+	  memcpy (local_errstring, errstring, total_len);
 	  objname = local_errstring + len_errstring;
 	}
       else

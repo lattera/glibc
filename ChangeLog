@@ -1,3 +1,9 @@
+2000-12-27  Ben Collins  <bcollins@debian.org>
+
+	* elf/dl-open.c (_dl_open): Correctly set the new objname pointer
+	when reallocating the error strings.
+	Reported by Kalle Olavi Niemitalo <kon@iki.fi>
+
 2000-12-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* dlfcn/Makefile (tests): Add errmsg1.
