@@ -3,11 +3,13 @@
 	* manual/argp.texi: Fixing language and typos.
 	* manual/conf.texi: Likewise.
 	* manual/contrib.texi: Likewise.
+	* manual/ctype.texi: Likewise.
 	* manual/filesys.texi: Likewise.
 	* manual/install.texi: Likewise.
 	* manual/job.texi: Likewise.
 	* manual/lang.texi: Likewise.
 	* manual/llio.texi: Likewise.
+	* manual/locale.texi: Likewise.
 	* manual/math.texi: Likewise.
 	* manual/nss.texi: Likewise.
 	* manual/pipe.texi: Likewise.

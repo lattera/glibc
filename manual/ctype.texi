@@ -266,34 +266,34 @@ with the SVID.
 @section Character class determination for wide characters
 
 The second amendment to @w{ISO C89} defines functions to classify wide
-characters.  The original @w{ISO C89} standard defined the type
-@code{wchar_t} but failed to define any functions to operate on wide
-characters.
+characters.  Although the original @w{ISO C89} standard already defined
+the type @code{wchar_t}, no functions operating on them were defined.
 
 The general design of the classification functions for wide characters
-is more general.  It allows extending the set of available
-classifications beyond the set which is always available.  The POSIX
-standard specifies how the extension can be done and this is already
+is more general.  It allows extensions to the set of available
+classifications, beyond those which are always available.  The POSIX
+standard specifies how extensions can be made, and this is already
 implemented in the GNU C library implementation of the @code{localedef}
 program.
 
-The character class functions are normally implemented using bitsets.
-I.e., for the character in question the appropriate bitset is read from
-a table and a test is performed to determine whether a certain bit is
-set in this bitset.  Which bit is tested for is determined by the class.
+The character class functions are normally implemented with bitsets,
+with a bitset per character.  For a given character, the appropriate
+bitset is read from a table and a test is performed as to whether a
+certain bit is set.  Which bit is tested for is determined by the
+class.
 
 For the wide character classification functions this is made visible.
-There is a type representing the classification, a function to retrieve
-this value for a specific class, and a function to test using the
-classification value whether a given character is in this class.  On top
-of this the normal character classification functions as used for
+There is a type classification type defined, a function to retrieve this
+value for a given class, and a function to test whether a given
+character is in this class, using the classification value.  On top of
+this the normal character classification functions as used for
 @code{char} objects can be defined.
 
 @comment wctype.h
 @comment ISO
 @deftp {Data type} wctype_t
 The @code{wctype_t} can hold a value which represents a character class.
-The ony defined way to generate such a value is by using the
+The only defined way to generate such a value is by using the
 @code{wctype} function.
 
 @pindex wctype.h
@@ -306,8 +306,8 @@ This type is defined in @file{wctype.h}.
 The @code{wctype} returns a value representing a class of wide
 characters which is identified by the string @var{property}.  Beside
 some standard properties each locale can define its own ones.  In case
-no property with the given name is known for the current locale for the
-@code{LC_CTYPE} category the function returns zero.
+no property with the given name is known for the current locale
+selected for the @code{LC_CTYPE} category, the function returns zero.
 
 @noindent
 The properties known in every locale are:
@@ -339,11 +339,11 @@ by a successful call to @code{wctype}.
 This function is declared in @file{wctype.h}.
 @end deftypefun
 
-This makes it easier to use the commonly-used classification functions
-that are defined in the C library.  There is no need to use
+To make it easier to use the commonly-used classification functions,
+they are defined in the C library.  There is no need to use
 @code{wctype} if the property string is one of the known character
 classes.  In some situations it is desirable to construct the property
-string and then it becomes important that @code{wctype} can also handle the
+strings, and then it is important that @code{wctype} can also handle the
 standard classes.
 
 @cindex alphanumeric character
@@ -420,7 +420,7 @@ wide characters:
 
 @smallexample
 n = 0;
-while (iswctype (*wc))
+while (iswdigit (*wc))
   @{
     n *= 10;
     n += *wc++ - L'0';
@@ -604,11 +604,11 @@ This function is a GNU extension.  It is declared in @file{wchar.h}.
 @node Using Wide Char Classes, Wide Character Case Conversion, Classification of Wide Characters, Character Handling
 @section Notes on using the wide character classes
 
-The first note is probably nothing astonishing but still occasionally a
+The first note is probably not astonishing but still occasionally a
 cause of problems.  The @code{isw@var{XXX}} functions can be implemented
 using macros and in fact, the GNU C library does this.  They are still
 available as real functions but when the @file{wctype.h} header is
-included the macros will be used.  This is nothing new compared to the
+included the macros will be used.  This is the same as the
 @code{char} type versions of these functions.
 
 The second note covers something new.  It can be best illustrated by a
@@ -630,8 +630,8 @@ is_in_class (int c, const char *class)
 @}
 @end smallexample
 
-Now with the @code{wctype} and @code{iswctype} one could avoid the
-@code{if} cascades.  But rewriting the code as follows is wrong:
+Now, with the @code{wctype} and @code{iswctype} you can avoid the
+@code{if} cascades, but rewriting the code as follows is wrong:
 
 @smallexample
 int
@@ -644,7 +644,7 @@ is_in_class (int c, const char *class)
 
 The problem is that it is not guaranteed that the wide character
 representation of a single-byte character can be found using casting.
-In fact, usually this fails miserably.  The correct solution for this
+In fact, usually this fails miserably.  The correct solution to this
 problem is to write the code as follows:
 
 @smallexample
@@ -657,10 +657,10 @@ is_in_class (int c, const char *class)
 @end smallexample
 
 @xref{Converting a Character}, for more information on @code{btowc}.
-Please note that this change probably does not improve the performance
+Note that this change probably does not improve the performance
 of the program a lot since the @code{wctype} function still has to make
-the string comparisons.  But it gets really interesting if the
-@code{is_in_class} function would be called more than once using the
+the string comparisons.  It gets really interesting if the
+@code{is_in_class} function is called more than once for the
 same class name.  In this case the variable @var{desc} could be computed
 once and reused for all the calls.  Therefore the above form of the
 function is probably not the final one.
@@ -669,18 +669,17 @@ function is probably not the final one.
 @node Wide Character Case Conversion, , Using Wide Char Classes, Character Handling
 @section Mapping of wide characters.
 
-As for the classification functions, the @w{ISO C} standard also
-generalizes the mapping functions.  Instead of only allowing the two
-standard mappings, the locale can contain others.  Again, the
-@code{localedef} program already supports generating such locale data
-files.
+The classification functions are also generalized by the @w{ISO C}
+standard.  Instead of just allowing the two standard mappings, a
+locale can contain others.  Again, the @code{localedef} program
+already supports generating such locale data files.
 
 @comment wctype.h
 @comment ISO
 @deftp {Data Type} wctrans_t
 This data type is defined as a scalar type which can hold a value
 representing the locale-dependent character mapping.  There is no way to
-construct such a value except using the return value of the
+construct such a value apar from using the return value of the
 @code{wctrans} function.
 
 @pindex wctype.h
@@ -693,8 +692,8 @@ This type is defined in @file{wctype.h}.
 @deftypefun wctrans_t wctrans (const char *@var{property})
 The @code{wctrans} function has to be used to find out whether a named
 mapping is defined in the current locale selected for the
-@code{LC_CTYPE} category.  If the returned value is non-zero it can
-afterwards be used in calls to @code{towctrans}.  If the return value is
+@code{LC_CTYPE} category.  If the returned value is non-zero, you can use
+it afterwards in calls to @code{towctrans}.  If the return value is
 zero no such mapping is known in the current locale.
 
 Beside locale-specific mappings there are two mappings which are
@@ -707,15 +706,15 @@ guaranteed to be available in every locale:
 
 @pindex wctype.h
 @noindent
-This function is declared in @file{wctype.h}.
+These functions are declared in @file{wctype.h}.
 @end deftypefun
 
 @comment wctype.h
 @comment ISO
 @deftypefun wint_t towctrans (wint_t @var{wc}, wctrans_t @var{desc})
-The @code{towctrans} function maps the input character @var{wc}
-according to the rules of the mapping for which @var{desc} is an
-descriptor and returns the value so found.  The @var{desc} value must be
+@code{towctrans} maps the input character @var{wc}
+according to the rules of the mapping for which @var{desc} is a
+descriptor, and returns the value it finds.  @var{desc} must be
 obtained by a successful call to @code{wctrans}.
 
 @pindex wctype.h
@@ -723,8 +722,8 @@ obtained by a successful call to @code{wctrans}.
 This function is declared in @file{wctype.h}.
 @end deftypefun
 
-The @w{ISO C} standard also defines for the generally available mappings
-convenient shortcuts so that it is not necesary to call @code{wctrans}
+For the generally available mappings, the @w{ISO C} standard defines
+convenient shortcuts so that it is not necessary to call @code{wctrans}
 for them.
 
 @comment wctype.h
@@ -765,6 +764,6 @@ This function is declared in @file{wctype.h}.
 @end deftypefun
 
 The same warnings given in the last section for the use of the wide
-character classification function applies here.  It is not possible to
+character classification functions apply here.  It is not possible to
 simply cast a @code{char} type value to a @code{wint_t} and use it as an
-argument for @code{towctrans} calls.
+argument to @code{towctrans} calls.
