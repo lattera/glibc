@@ -62,8 +62,8 @@ $aligned:
 	ornot	t0, t3, t0	# .. e1 :
 	cmpbge	zero, t1, t7	# e0    : bits set iff null found
 	beq	a2, $eoc	# .. e1 : check end of count
-	unop			#       :
-	bne	t7, $eos	# e1    :
+	subq	a2, 1, a2	# e0    :
+	bne	t7, $eos	# .. e1 :
 
 	/* Aligned compare main loop.
 	   On entry to this basic block:
@@ -73,8 +73,8 @@ $aligned:
 $a_loop:
 	xor	t0, t1, t2	# e0	:
 	bne	t2, $wordcmp	# .. e1 (zdb)
-	ldq_u	t1, 0(a1)	# e0    :
-	ldq_u	t0, 0(a0)	# .. e1 :
+	ldq_u	t1, 8(a1)	# e0    :
+	ldq_u	t0, 8(a0)	# .. e1 :
 	addq	a1, 8, a1	# e0    :
 	addq	a0, 8, a0	# .. e1 :
 	cmpbge	zero, t1, t7	# e0    :
