@@ -24,6 +24,7 @@
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <errno.h>
+#include <stddef.h>
 
 /* Return the canonical absolute name of file NAME.  A canonical name
    does not contain any `.', `..' components nor any repeated path

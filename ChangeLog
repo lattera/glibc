@@ -1,3 +1,7 @@
+2000-02-28  Andreas Jaeger  <aj@suse.de>
+
+	* stdlib/canonicalize.c: Include <stddef.h> for ptrdiff_t.
+
 2000-02-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* conform/conformtest.pl (@headers): Add wordexp.h, wctype.h, wchar.h,
