@@ -1,3 +1,24 @@
+2002-07-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* locale/hashval.h: Make more self-containedby defining LONG_BITS.
+	* locale/programs/simple-hash.c: Remove LONG_BITS definition.
+
+	* locale/programs/locarchive.c (add_locale_to_archive): Correct
+	test to detect duplicate locales.
+
+	* libio/fileops.c (_IO_new_file_seekoff): Fail if relative
+	position would be before beginning of file.
+	(_IO_file_seekoff_mmap): Likewise.
+	* libio/Makefile (tests): Add bug-fseek.
+	* libio/bug-fseek.c: New file.
+
+	* intl/explodename.c: Remove support for CEN-style locale variables.
+	It was never used and shouldn't be since it's not portable.
+	* intl/finddomain.c: Likewise.
+	* intl/l10nflist.c: Likewise.
+	* intl/loadinfo.h: Likewise.
+	* locale/findlocale.c: Likewise.
+
 2002-07-24  Roland McGrath  <roland@frob.com>
 
 	* libio/fileops.c (_IO_file_seekoff_mmap): When just examining the

@@ -778,6 +778,11 @@ _IO_new_file_seekoff (fp, offset, dir, mode)
 	goto dumb;
       /* Make offset absolute, assuming current pointer is file_ptr(). */
       offset += fp->_offset;
+      if (offset < 0)
+	{
+	  __set_errno (EINVAL);
+	  return EOF;
+	}
 
       dir = _IO_seek_set;
       break;
@@ -934,6 +939,11 @@ _IO_file_seekoff_mmap (fp, offset, dir, mode)
     case _IO_seek_cur:
       /* Adjust for read-ahead (bytes is buffer). */
       offset += fp->_IO_read_ptr - fp->_IO_read_base;
+      if (offset < 0)
+	{
+	  __set_errno (EINVAL);
+	  return EOF;
+	}
       break;
     case _IO_seek_set:
       break;

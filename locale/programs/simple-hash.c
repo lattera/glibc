@@ -46,10 +46,6 @@
 # define BITSPERBYTE 8
 #endif
 
-#ifndef	LONGBITS
-# define LONGBITS (sizeof (long) * BITSPERBYTE)
-#endif
-
 #ifndef bcopy
 # define bcopy(s, d, n)	memcpy ((d), (s), (n))
 #endif

@@ -531,7 +531,7 @@ add_locale_to_archive (ah, name, data, replace)
 		     (char *) ah->addr + namehashtab[idx].name_offset) == 0)
 	{
 	  /* Found the entry.  */
-	  if (! replace)
+	  if (namehashtab[idx].locrec_offset != 0 && ! replace)
 	    {
 	      if (! be_quiet)
 		error (0, 0, _("locale '%s' already exists"), name);

@@ -50,7 +50,7 @@ tests = tst_swprintf tst_wprintf tst_swscanf tst_wscanf tst_getwc tst_putwc   \
 	tst_wprintf2 tst-widetext test-fmemopen tst-ext tst-fopenloc	      \
 	tst-fgetws tst-ungetwc1 tst-ungetwc2 tst-swscanf tst-sscanf	      \
 	tst-mmap-setvbuf bug-ungetwc1 bug-ungetwc2 tst-atime tst-eof          \
-	tst-freopen bug-rewind bug-ungetc
+	tst-freopen bug-rewind bug-ungetc bug-fseek
 test-srcs = test-freopen
 
 all: # Make this the default target; it will be defined in Rules.

@@ -18,7 +18,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-unsigned long
+#ifndef	LONGBITS
+# define LONGBITS (sizeof (long int) * BITSPERBYTE)
+#endif
+
+unsigned long int compute_hashval (const void *key, size_t keylen);
+
+unsigned long int
 compute_hashval (key, keylen)
      const void *key;
      size_t keylen;
@@ -37,5 +43,5 @@ compute_hashval (key, keylen)
       hval = (hval << 9) | (hval >> (LONGBITS - 9));
       hval += (unsigned long int) *(((char *) key) + cnt++);
     }
-  return hval != 0 ? hval : ~((unsigned long) 0);
+  return hval != 0 ? hval : ~((unsigned long int) 0);
 }
