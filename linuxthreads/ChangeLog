@@ -1,3 +1,9 @@
+2003-12-10  Andreas Jaeger  <aj@suse.de>
+	    Ruediger Oertel  <ro@suse.de>
+
+	* sysdeps/alpha/elf/pt-initfini.c (__asm__): Remove extra
+	.prologue.
+
 2003-11-30  Andreas Jaeger  <aj@suse.de>
 
 	* Makefile (CFLAGS-pt-initfini.s): Add $(fno_unit_at_a_time).
