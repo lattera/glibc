@@ -1,7 +1,10 @@
-2002-08-10  Ulrich Drepper  <drepper@redhat.com>
+2002-08-10  Roland McGrath  <roland@redhat.com>
 
-	* wctype/wcfuncs.c (iswalpha, iswdigit, iswlower, iswspace,
-	iswxdigit, iswtolower, iswtoupper): Add libc_hidden_def.
+	* locale/loadarchive.c (_nl_archive_subfreeres): New function.
+	* locale/localeinfo.h: Declare it.
+	* locale/setlocale.c (free_mem): Don't call _nl_unload_locale on the
+	current locale if it's not in the file list.
+	Call _nl_archive_subfreeres.
 
 2002-08-10  Andreas Jaeger  <aj@suse.de>
 
@@ -27,6 +30,11 @@
 
 2002-08-09  Jakub Jelinek  <jakub@redhat.com>
 
+	* include/wctype.h (iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
+	towlower, towupper): Add prototypes here too.  Add libc_hidden_proto.
+	* wctype/wcfuncs.c (iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
+	towlower, towupper): Add libc_hidden_weak.
+
 	* include/bits/dlfcn.h: New file.
 	* elf/dl-profstub.c (_dl_mcount_wrapper_check): Add libc_hidden_def.
 
@@ -41,11 +49,6 @@
 	(LINE_PARSER): Use it.
 	* nss/nsswitch.h (__nss_hostname_digits_dots): Add libc_hidden_proto.
 	* nss/digits_dots.c (__nss_hostname_digits_dots): Add libc_hidden_def.
-
-	* include/wctype.h (iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
-	towlower, towupper): Add prototypes here too.  Add libc_hidden_proto.
-	* wctype/wcfuncs ((iswalpha, iswdigit, iswlower, iswspace, iswxdigit,
-	towlower, towupper): Add libc_hidden_weak.
 
 	* libio/oldiopopen.c: Move #if SHLIB_COMPAT after _IO_HAVE_SYS_WAIT
 	#endif.

@@ -445,3 +445,44 @@ _nl_load_locale_from_archive (int category, const char **namep)
   *namep = lia->name;
   return lia->data[category];
 }
+
+void
+_nl_archive_subfreeres (void)
+{
+  struct locale_in_archive *lia;
+  struct archmapped *am;
+
+  /* Toss out our cached locales.  */
+  lia = archloaded;
+  while (lia != NULL)
+    {
+      int category;
+      struct locale_in_archive *dead = lia;
+      lia = lia->next;
+
+      for (category = 0; category < __LC_LAST; ++category)
+	if (category != LC_ALL)
+	  /* _nl_unload_locale just does this free for the archive case.  */
+	  free (dead->data[category]);
+      free (dead);
+    }
+  archloaded = NULL;
+
+  if (archmapped != NULL)
+    {
+      /* Now toss all the mapping windows, which we know nothing is using any
+	 more because we just tossed all the locales that point into them.  */
+
+      assert (archmapped == &headmap);
+      archmapped = NULL;
+      (void) munmap (headmap.ptr, headmap.len);
+      am = headmap.next;
+      while (am != NULL)
+	{
+	  struct archmapped *dead = am;
+	  am = am->next;
+	  (void) munmap (dead->ptr, dead->len);
+	  free (dead);
+	}
+    }
+}

@@ -458,12 +458,10 @@ free_mem (void)
 	/* If this category is already "C" don't do anything.  */
 	if (here != _nl_C[category])
 	  {
-	    /* We have to be prepared that sometime later me still
+	    /* We have to be prepared that sometime later we still
 	       might need the locale information.  */
 	    setdata (category, _nl_C[category]);
 	    setname (category, _nl_C_name);
-
-	    _nl_unload_locale (here);
 	  }
 
 	while (runp != NULL)
@@ -471,7 +469,7 @@ free_mem (void)
 	    struct loaded_l10nfile *curr = runp;
 	    struct locale_data *data = (struct locale_data *) runp->data;
 
-	    if (data != NULL && data != here && data != _nl_C[category])
+	    if (data != NULL && data != _nl_C[category])
 	      _nl_unload_locale (data);
 	    runp = runp->next;
 	    free ((char *) curr->filename);
@@ -480,5 +478,10 @@ free_mem (void)
       }
 
   setname (LC_ALL, _nl_C_name);
+
+  /* This frees the data structures associated with the locale archive.
+     The locales from the archive are not in the file list, so we have
+     not called _nl_unload_locale on them above.  */
+  _nl_archive_subfreeres ();
 }
 text_set_element (__libc_subfreeres, free_mem);
