@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
@@ -17,16 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
-
-#ifdef __NR_vfork
-PSEUDO (__vfork, vfork, 0)
-#else
-PSEUDO (__vfork, fork, 0)
-#endif
-	sub	%o1, 1, %o1
-	retl
-	 and	%o0, %o1, %o0
-
-PSEUDO_END (__vfork)
-weak_alias (__vfork, vfork)
+#define SIGCONTEXT __siginfo_t *
+#define GET_PC(ctx)	((void *) ctx->si_regs.pc)
+#define ADVANCE_STACK_FRAME(next) \
+	((void *)&((struct reg_window *) (next)->ins[6]))
+#define GET_STACK(ctx)	((void *) ctx->si_regs.u_regs[14])
+#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME (GET_STACK(ctx))

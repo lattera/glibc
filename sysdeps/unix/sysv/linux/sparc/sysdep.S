@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
+   Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,16 +17,14 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
 
-#ifdef __NR_vfork
-PSEUDO (__vfork, vfork, 0)
-#else
-PSEUDO (__vfork, fork, 0)
-#endif
-	sub	%o1, 1, %o1
-	retl
-	 and	%o0, %o1, %o0
+/* Define errno */
 
-PSEUDO_END (__vfork)
-weak_alias (__vfork, vfork)
+	.section .bss
+	.globl errno
+	.align 4
+errno:	.space 4
+	.type errno, @object
+	.size errno, 4
+
+weak_alias (errno, _errno)

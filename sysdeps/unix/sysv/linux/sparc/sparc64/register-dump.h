@@ -1,0 +1,266 @@
+/* Dump registers.
+   Copyright (C) 1999 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
+
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
+
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
+
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
+
+#include <sys/uio.h>
+#include <stdio-common/_itoa.h>
+#include <bits/sigcontext.h>
+
+/* We will print the register dump in this format:
+
+ TSTATE: XXXXXXXXXXXXXXXX TPC: XXXXXXXXXXXXXXXX TNPC: XXXXXXXXXXXXXXXX
+ Y: XXXXXXXX
+ g0: 0000000000000000  g1: XXXXXXXXXXXXXXXX  g2: XXXXXXXXXXXXXXXX
+ g3: XXXXXXXXXXXXXXXX  g4: XXXXXXXXXXXXXXXX  g5: XXXXXXXXXXXXXXXX
+ g6: XXXXXXXXXXXXXXXX  g7: XXXXXXXXXXXXXXXX
+ o0: XXXXXXXXXXXXXXXX  o1: XXXXXXXXXXXXXXXX  o2: XXXXXXXXXXXXXXXX
+ o3: XXXXXXXXXXXXXXXX  o4: XXXXXXXXXXXXXXXX  o5: XXXXXXXXXXXXXXXX
+ sp: XXXXXXXXXXXXXXXX  o7: XXXXXXXXXXXXXXXX
+ l0: XXXXXXXXXXXXXXXX  l1: XXXXXXXXXXXXXXXX  l2: XXXXXXXXXXXXXXXX
+ l3: XXXXXXXXXXXXXXXX  l4: XXXXXXXXXXXXXXXX  l5: XXXXXXXXXXXXXXXX
+ l6: XXXXXXXXXXXXXXXX  l7: XXXXXXXXXXXXXXXX
+ i0: XXXXXXXXXXXXXXXX  i1: XXXXXXXXXXXXXXXX  i2: XXXXXXXXXXXXXXXX
+ i3: XXXXXXXXXXXXXXXX  i4: XXXXXXXXXXXXXXXX  i5: XXXXXXXXXXXXXXXX
+ fp: XXXXXXXXXXXXXXXX  i7: XXXXXXXXXXXXXXXX
+
+ Old mask: XXXXXXXX XFSR: XXXXXXXXXXXXXXXX GSR: XX FPRS: X
+  f0: XXXXXXXXXXXXXXXX   f2: XXXXXXXXXXXXXXXX   f4: XXXXXXXXXXXXXXXX
+  f6: XXXXXXXXXXXXXXXX   f8: XXXXXXXXXXXXXXXX  f10: XXXXXXXXXXXXXXXX
+ f12: XXXXXXXXXXXXXXXX  f14: XXXXXXXXXXXXXXXX  f16: XXXXXXXXXXXXXXXX
+ f18: XXXXXXXXXXXXXXXX  f20: XXXXXXXXXXXXXXXX  f22: XXXXXXXXXXXXXXXX
+ f24: XXXXXXXXXXXXXXXX  f26: XXXXXXXXXXXXXXXX  f28: XXXXXXXXXXXXXXXX
+ f30: XXXXXXXXXXXXXXXX  f32: XXXXXXXXXXXXXXXX  f34: XXXXXXXXXXXXXXXX
+ f36: XXXXXXXXXXXXXXXX  f38: XXXXXXXXXXXXXXXX  f40: XXXXXXXXXXXXXXXX
+ f42: XXXXXXXXXXXXXXXX  f44: XXXXXXXXXXXXXXXX  f46: XXXXXXXXXXXXXXXX
+ f48: XXXXXXXXXXXXXXXX  f50: XXXXXXXXXXXXXXXX  f52: XXXXXXXXXXXXXXXX
+ f54: XXXXXXXXXXXXXXXX  f56: XXXXXXXXXXXXXXXX  f58: XXXXXXXXXXXXXXXX
+ f60: XXXXXXXXXXXXXXXX  f62: XXXXXXXXXXXXXXXX
+
+ */
+
+static void
+hexvalue (unsigned long int value, char *buf, size_t len)
+{
+  char *cp = _itoa_word (value, buf + len, 16, 0);
+  while (cp > buf)
+    *--cp = '0';
+}
+
+struct __siginfo_sparc64_fpu
+{
+  unsigned long si_float_regs[32];
+  unsigned long si_xfsr;
+  unsigned long si_gsr;
+  unsigned long si_fprs;
+};
+
+static void
+register_dump (int fd, SIGCONTEXT ctx)
+{
+  char regs[36][16];
+  char fregs[35][8];
+  struct iovec iov[150];
+  size_t nr = 0;
+  int i;
+  struct reg_window *r = (struct reg_window *)
+    ctx->si_regs.u_regs[14];
+  struct __siginfo_sparc64_fpu *f;
+
+#define ADD_STRING(str) \
+  iov[nr].iov_base = (char *) str;					      \
+  iov[nr].iov_len = strlen (str);					      \
+  ++nr
+#define ADD_MEM(str, len) \
+  iov[nr].iov_base = str;						      \
+  iov[nr].iov_len = len;						      \
+  ++nr
+
+  /* Generate strings of register contents.  */
+  hexvalue (ctx->si_regs.tstate,	regs[0], 16);
+  hexvalue (ctx->si_regs.tpc,		regs[1], 16);
+  hexvalue (ctx->si_regs.tnpc,		regs[2], 16);
+  hexvalue (ctx->si_regs.y,		regs[3], 8);
+  for (i = 1; i <= 15; i++)
+    hexvalue (ctx->si_regs.u_regs[i], 	regs[3+i], 16);
+  for (i = 0; i <= 15; i++)
+    hexvalue (r->locals[i],		regs[19+i], 16);
+  hexvalue (ctx->si_mask,		regs[35], 8);
+
+  /* Generate the output.  */
+  ADD_STRING ("Register dump:\n\n TSTATE: ");
+  ADD_MEM (regs[0], 16);
+  ADD_STRING (" TPC: ");
+  ADD_MEM (regs[1], 16);
+  ADD_STRING (" TNPC: ");
+  ADD_MEM (regs[2], 16);
+  ADD_STRING ("\n Y: ");
+  ADD_MEM (regs[3], 8);
+  ADD_STRING ("\n  g0: 0000000000000000   g1: ");
+  ADD_MEM (regs[4], 16);
+  ADD_STRING ("  g2: ");
+  ADD_MEM (regs[5], 16);
+  ADD_STRING ("\n g3: ");
+  ADD_MEM (regs[6], 16);
+  ADD_STRING ("  g4: ");
+  ADD_MEM (regs[7], 16);
+  ADD_STRING ("  g5: ");
+  ADD_MEM (regs[8], 16);
+  ADD_STRING ("\n g6: ");
+  ADD_MEM (regs[9], 16);
+  ADD_STRING ("  g7: ");
+  ADD_MEM (regs[10], 16);
+  ADD_STRING ("\n o0: ");
+  ADD_MEM (regs[11], 16);
+  ADD_STRING ("  o1: ");
+  ADD_MEM (regs[12], 16);
+  ADD_STRING ("  o2: ");
+  ADD_MEM (regs[13], 16);
+  ADD_STRING ("\n o3: ");
+  ADD_MEM (regs[14], 16);
+  ADD_STRING ("  o4: ");
+  ADD_MEM (regs[15], 16);
+  ADD_STRING ("  o5: ");
+  ADD_MEM (regs[16], 16);
+  ADD_STRING ("\n sp: ");
+  ADD_MEM (regs[17], 16);
+  ADD_STRING ("  o7: ");
+  ADD_MEM (regs[18], 16);
+  ADD_STRING ("\n l0: ");
+  ADD_MEM (regs[19], 16);
+  ADD_STRING ("  l1: ");
+  ADD_MEM (regs[20], 16);
+  ADD_STRING ("  l2: ");
+  ADD_MEM (regs[21], 16);
+  ADD_STRING ("\n l3: ");
+  ADD_MEM (regs[22], 16);
+  ADD_STRING ("  l4: ");
+  ADD_MEM (regs[23], 16);
+  ADD_STRING ("  l5: ");
+  ADD_MEM (regs[24], 16);
+  ADD_STRING ("\n l6: ");
+  ADD_MEM (regs[25], 16);
+  ADD_STRING ("  l7: ");
+  ADD_MEM (regs[26], 16);
+  ADD_STRING ("\n i0: ");
+  ADD_MEM (regs[27], 16);
+  ADD_STRING ("  i1: ");
+  ADD_MEM (regs[28], 16);
+  ADD_STRING ("  i2: ");
+  ADD_MEM (regs[29], 16);
+  ADD_STRING ("\n i3: ");
+  ADD_MEM (regs[30], 16);
+  ADD_STRING ("  i4: ");
+  ADD_MEM (regs[31], 16);
+  ADD_STRING ("  i5: ");
+  ADD_MEM (regs[32], 16);
+  ADD_STRING ("\n fp: ");
+  ADD_MEM (regs[33], 16);
+  ADD_STRING ("  i7: ");
+  ADD_MEM (regs[34], 16);
+  ADD_STRING ("\n\n Old mask: ");
+  ADD_MEM (regs[35], 8);
+
+  f = *(struct __siginfo_sparc64_fpu **)(ctx + 1);
+  if (f != NULL)
+    {
+      for (i = 0; i < 32; i++)
+	hexvalue (f->si_float_regs[i], fregs[i], 16);
+      hexvalue (f->si_xfsr, fregs[32], 16);
+      hexvalue (f->si_gsr, fregs[33], 2);
+      hexvalue (f->si_fprs, fregs[34], 1);
+    ADD_STRING (" XFSR: ");
+    ADD_MEM (fregs[32], 16);
+    ADD_STRING (" GSR: ");
+    ADD_MEM (fregs[33], 2);
+    ADD_STRING (" FPRS: ");
+    ADD_MEM (fregs[34], 1);
+    ADD_STRING ("\n  f0: ");
+    ADD_MEM (fregs[0], 16);
+    ADD_STRING ("   f2: ");
+    ADD_MEM (fregs[1], 16);
+    ADD_STRING ("   f4: ");
+    ADD_MEM (fregs[2], 16);
+    ADD_STRING ("\n  f6: ");
+    ADD_MEM (fregs[3], 16);
+    ADD_STRING ("   f8: ");
+    ADD_MEM (fregs[4], 16);
+    ADD_STRING ("  f10: ");
+    ADD_MEM (fregs[5], 16);
+    ADD_STRING ("\n f12: ");
+    ADD_MEM (fregs[6], 16);
+    ADD_STRING ("  f14: ");
+    ADD_MEM (fregs[7], 16);
+    ADD_STRING ("  f16: ");
+    ADD_MEM (fregs[8], 16);
+    ADD_STRING ("\n f18: ");
+    ADD_MEM (fregs[9], 16);
+    ADD_STRING ("  f20: ");
+    ADD_MEM (fregs[10], 16);
+    ADD_STRING ("  f22: ");
+    ADD_MEM (fregs[11], 16);
+    ADD_STRING ("\n f24: ");
+    ADD_MEM (fregs[12], 16);
+    ADD_STRING ("  f26: ");
+    ADD_MEM (fregs[13], 16);
+    ADD_STRING ("  f28: ");
+    ADD_MEM (fregs[14], 16);
+    ADD_STRING ("\n f30: ");
+    ADD_MEM (fregs[15], 16);
+    ADD_STRING ("  f32: ");
+    ADD_MEM (fregs[16], 16);
+    ADD_STRING ("  f34: ");
+    ADD_MEM (fregs[17], 16);
+    ADD_STRING ("\n f36: ");
+    ADD_MEM (fregs[18], 16);
+    ADD_STRING ("  f38: ");
+    ADD_MEM (fregs[19], 16);
+    ADD_STRING ("  f40: ");
+    ADD_MEM (fregs[20], 16);
+    ADD_STRING ("\n f42: ");
+    ADD_MEM (fregs[21], 16);
+    ADD_STRING ("  f44: ");
+    ADD_MEM (fregs[22], 16);
+    ADD_STRING ("  f46: ");
+    ADD_MEM (fregs[23], 16);
+    ADD_STRING ("\n f48: ");
+    ADD_MEM (fregs[24], 16);
+    ADD_STRING ("  f50: ");
+    ADD_MEM (fregs[25], 16);
+    ADD_STRING ("  f52: ");
+    ADD_MEM (fregs[26], 16);
+    ADD_STRING ("\n f54: ");
+    ADD_MEM (fregs[27], 16);
+    ADD_STRING ("  f56: ");
+    ADD_MEM (fregs[28], 16);
+    ADD_STRING ("  f58: ");
+    ADD_MEM (fregs[29], 16);
+    ADD_STRING ("\n f60: ");
+    ADD_MEM (fregs[30], 16);
+    ADD_STRING ("  f62: ");
+    ADD_MEM (fregs[31], 16);
+  }
+
+  ADD_STRING ("\n");
+
+  /* Write the stuff out.  */
+  writev (fd, iov, nr);
+}
+
+
+#define REGISTER_DUMP register_dump (fd, ctx)

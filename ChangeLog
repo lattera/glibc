@@ -1,3 +1,34 @@
+1999-02-03  Jakub Jelinek  <jj@ultra.linux.cz>
+
+	* sysdeps/generic/segfault.c: Add ADVANCE_STACK_FRAME
+	macro, so that architectures which need to add some special
+	offset to stack pointer can share this file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/register-dump.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sigcontextinfo.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/register-dump.h: New file.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/bits/mman.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/mman.h: Remove.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: New file - common
+	between sparc32 and sparc64.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/vfork.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/vfork.S: New file - common
+	between sparc32 and sparc64.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/fork.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/fork.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/fork.S: New file - common
+	between sparc32 and sparc64.
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.S: Remove.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.S: New file - common
+	between sparc32 and sparc64.
+
 1999-02-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Versions.def: New version GLIBC_2.1.1 for libc.

@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Miguel de Icaza <miguel@gnu.ai.mit.edu>, 1997.
+   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -19,11 +19,10 @@
 
 #include <sysdep.h>
 
-PSEUDO (__libc_fork, fork, 0)
-	sub %o1, 1, %o1
+PSEUDO (__vfork, vfork, 0)
+	sub	%o1, 1, %o1
 	retl
-	 and %o0, %o1, %o0
+	 and	%o0, %o1, %o0
 
-PSEUDO_END (__libc_fork)
-weak_alias (__libc_fork, __fork)
-weak_alias (__libc_fork, fork)
+PSEUDO_END (__vfork)
+weak_alias (__vfork, vfork)

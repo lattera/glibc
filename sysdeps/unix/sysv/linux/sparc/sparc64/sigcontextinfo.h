@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
+   Contributed by Jakub Jelinek <jj@ultra.linux.cz>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,17 +17,13 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-
-/* Define errno */
-
-	.section .bss
-	.globl errno
-	.align 2
-errno:	.space 4
-	.type errno, @object
-	.size errno, 4
-
-	.globl __errno
-__errno = errno
-
-weak_alias (errno, _errno)
+#ifndef STACK_BIAS
+#define STACK_BIAS 2047
+#endif
+#define SIGCONTEXT __siginfo_t *
+#define GET_PC(ctx)	((void *) ctx->si_regs.tpc)
+#define ADVANCE_STACK_FRAME(next) \
+	((void *) &((struct reg_window *) (((unsigned long int) next)	      \
+					   + STACK_BIAS))->ins[6])
+#define GET_STACK(ctx)	((void *) ctx->si_regs.u_regs[14])
+#define GET_FRAME(ctx)	ADVANCE_STACK_FRAME (GET_STACK (ctx))
