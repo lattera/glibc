@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ralf Baechle <ralf@gnu.org>.
 
@@ -28,6 +28,8 @@
 #define _MIPS_ISA_MIPS3 3
 #define _MIPS_ISA_MIPS4 4
 #define _MIPS_ISA_MIPS5 5
+#define _MIPS_ISA_MIPS32 6
+#define _MIPS_ISA_MIPS64 7
 
 /*
  * Subprogram calling convention

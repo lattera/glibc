@@ -12,7 +12,7 @@ struct old_kernel_sigaction {
 
 	/* Abi says here follows reserved int[2] */
 	void		(*sa_restorer)(void);
-#if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
+#if (_MIPS_SZPTR < 64)
 	/*
 	 * For 32 bit code we have to pad struct sigaction to get
 	 * constant size for the ABI

@@ -230,7 +230,8 @@ symbol		=	value
  * MIPS IV implementations are free to treat this as a nop.  The R5000
  * is one of them.  So we should have an option not to use this instruction.
  */
-#if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5)
+#if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) || \
+    (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
 # define PREF(hint,addr)                                 \
 		pref	hint,addr
 # define PREFX(hint,addr)                                \
@@ -275,7 +276,8 @@ symbol		=	value
 		.set	pop;				\
 9:
 #endif /* (_MIPS_ISA == _MIPS_ISA_MIPS2) || (_MIPS_ISA == _MIPS_ISA_MIPS3) */
-#if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5)
+#if (_MIPS_ISA == _MIPS_ISA_MIPS4) || (_MIPS_ISA == _MIPS_ISA_MIPS5) || \
+    (_MIPS_ISA == _MIPS_ISA_MIPS32) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
 # define MOVN(rd,rs,rt)					\
 		movn	rd,rs,rt
 # define MOVZ(rd,rs,rt)					\
@@ -285,20 +287,18 @@ symbol		=	value
 /*
  * Stack alignment
  */
-#if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
-# define ALSZ	7
-# define ALMASK	~7
-#endif
-#if (_MIPS_ISA == _MIPS_ISA_MIPS3) || (_MIPS_ISA == _MIPS_ISA_MIPS4) || \
-    (_MIPS_ISA == _MIPS_ISA_MIPS5)
+#if (_MIPS_SIM == _MIPS_SIM_ABI64) || (_MIPS_SIM == _MIPS_SIM_NABI32)
 # define ALSZ	15
 # define ALMASK	~15
+#else
+# define ALSZ	7
+# define ALMASK	~7
 #endif
 
 /*
  * Size of a register
  */
-#ifdef __mips64
+#if (_MIPS_SIM == _MIPS_SIM_ABI64) || (_MIPS_SIM == _MIPS_SIM_NABI32)
 # define SZREG	8
 #else
 # define SZREG	4
@@ -308,7 +308,7 @@ symbol		=	value
  * Use the following macros in assemblercode to load/store registers,
  * pointers etc.
  */
-#if (_MIPS_SIM == _MIPS_SIM_ABI32)
+#if (SZREG == 4)
 # define REG_S sw
 # define REG_L lw
 #else
@@ -389,7 +389,7 @@ symbol		=	value
 /*
  * How to add/sub/load/store/shift pointers.
  */
-#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZLONG == 32)
+#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZPTR == 32)
 # define PTR_ADD	add
 # define PTR_ADDI	addi
 # define PTR_ADDU	addu
@@ -433,7 +433,7 @@ symbol		=	value
 # define PTR_SCALESHIFT	2
 #endif
 
-#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZLONG == 64) \
+#if (_MIPS_SIM == _MIPS_SIM_ABI32 && _MIPS_SZPTR == 64 /* o64??? */) \
     || _MIPS_SIM == _MIPS_SIM_ABI64
 # define PTR_ADD	dadd
 # define PTR_ADDI	daddi
@@ -459,12 +459,13 @@ symbol		=	value
 /*
  * Some cp0 registers were extended to 64bit for MIPS III.
  */
-#if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2)
+#if (_MIPS_ISA == _MIPS_ISA_MIPS1) || (_MIPS_ISA == _MIPS_ISA_MIPS2) || \
+    (_MIPS_ISA == _MIPS_ISA_MIPS32)
 # define MFC0	mfc0
 # define MTC0	mtc0
 #endif
 #if (_MIPS_ISA == _MIPS_ISA_MIPS3) || (_MIPS_ISA == _MIPS_ISA_MIPS4) || \
-    (_MIPS_ISA == _MIPS_ISA_MIPS5)
+    (_MIPS_ISA == _MIPS_ISA_MIPS5) || (_MIPS_ISA == _MIPS_ISA_MIPS64)
 # define MFC0	dmfc0
 # define MTC0	dmtc0
 #endif
