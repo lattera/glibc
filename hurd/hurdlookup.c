@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 93, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,12 +55,10 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   error_t err;
   enum retry_type doretry;
   char retryname[1024];		/* XXX string_t LOSES! */
+  int startport;
 
   error_t lookup_op (mach_port_t startdir)
     {
-      while (file_name[0] == '/')
-	file_name++;
-
       return lookup_error ((*lookup) (startdir, file_name, flags, mode,
 				      &doretry, retryname, result));
     }
@@ -68,13 +66,40 @@ __hurd_file_name_lookup (error_t (*use_init_port)
   if (! lookup)
     lookup = __dir_lookup;
 
-  err = (*use_init_port) (file_name[0] == '/'
-			  ? INIT_PORT_CRDIR : INIT_PORT_CWDIR,
-			  &lookup_op);
+  startport = (file_name[0] == '/') ? INIT_PORT_CRDIR : INIT_PORT_CWDIR;
+  while (file_name[0] == '/')
+    file_name++;
+
+#if 0				/* ?? XXX Linux 2.2.1 does this. */
+  if ((flags & (O_CREAT|O_EXCL)) == (O_CREAT|O_EXCL))
+    flags |= O_NOFOLLOW;
+#endif
+  if (flags & O_NOFOLLOW)	/* See comments below about O_NOFOLLOW.  */
+    flags |= O_NOTRANS;
+
+  if (flags & O_DIRECTORY)
+    {
+      /* The caller wants to require that the file we look up is a directory.
+	 We can do this without an extra RPC by appending a trailing slash
+	 to the file name we look up.  */
+      size_t len = strlen (file_name);
+      if (len == 0)
+	file_name = "/";
+      else if (file_name[len - 1] != '/')
+	{
+	  char *n = alloca (len + 2);
+	  memcpy (n, file_name, len);
+	  n[len] = '/';
+	  n[len + 1] = '\0';
+	  file_name = n;
+	}
+    }
+
+  err = (*use_init_port) (startport, &lookup_op);
   if (! err)
-    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port, lookup,
-					 doretry, retryname, flags, mode,
-					 result);
+    err = __hurd_file_name_lookup_retry (use_init_port, get_dtable_port,
+					 lookup, doretry, retryname,
+					 flags, mode, result);
 
   return err;
 }
@@ -85,7 +110,8 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 			         (int which, error_t (*operate) (file_t)),
 			       file_t (*get_dtable_port) (int fd),
 			       error_t (*lookup)
-			         (file_t dir, char *name, int flags, mode_t mode,
+			         (file_t dir, char *name,
+				  int flags, mode_t mode,
 				  retry_type *do_retry, string_t retry_name,
 				  mach_port_t *result),
 			       enum retry_type doretry,
@@ -152,9 +178,38 @@ __hurd_file_name_lookup_retry (error_t (*use_init_port)
 		 translator a chance to make a new port for us.  */
 	      doretry == FS_RETRY_NORMAL)
 	    {
+	      if (flags & O_NOFOLLOW)
+		{
+		  /* In Linux, O_NOFOLLOW means to reject symlinks.  If we
+		     did an O_NOLINK lookup above and io_stat here to check
+		     for S_IFLNK, a translator like firmlink could easily
+		     spoof this check by not showing S_IFLNK, but in fact
+		     redirecting the lookup to some other name
+		     (i.e. opening the very same holes a symlink would).
+
+		     Instead we do an O_NOTRANS lookup above, and stat the
+		     underlying node: if it has a translator set, and its
+		     owner is not root (st_uid 0) then we reject it.
+		     Since the motivation for this feature is security, and
+		     that security presumes we trust the containing
+		     directory, this check approximates the security of
+		     refusing symlinks while accepting mount points.
+		     Note that we actually permit something Linux doesn't:
+		     we follow root-owned symlinks; if that is deemed
+		     undesireable, we can add a final check for that
+		     one exception to our general translator-based rule.  */
+		  struct stat st;
+		  err = __io_stat (*result, &st);
+		  if (!err
+		      && st.st_uid != 0
+		      && (st.st_mode & (S_IPTRANS|S_IATRANS)))
+		    err = ENOENT;
+		}
+
 	      /* We got a successful translation.  Now apply any open-time
 		 action flags we were passed.  */
-	      if (flags & O_TRUNC)
+
+	      if (!err && (flags & O_TRUNC)) /* Asked to truncate the file.  */
 		err = __file_set_size (*result, 0);
 
 	      if (err)

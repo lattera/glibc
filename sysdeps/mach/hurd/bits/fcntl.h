@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-   Copyright (C) 1993, 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1993,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -52,6 +52,9 @@
 #ifdef __USE_GNU
 # define O_NOLINK	0x0040	/* No name mappings on final component.  */
 # define O_NOTRANS	0x0080	/* No translator on final component. */
+
+# define O_NOFOLLOW	0x00100000 /* Produce ENOENT if file is a symlink.  */
+# define O_DIRECTORY	0x00200000 /* Produce ENOTDIR if not a directory.  */
 #endif
 
 
