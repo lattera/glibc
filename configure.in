@@ -337,31 +337,6 @@ if test $libc_cv_need_minus_P = yes; then
 asm-CPPFLAGS = -P # The assembler can't grok cpp's # line directives."
 fi
 
-AC_MSG_CHECKING(for .set assembler directive)
-AC_CACHE_VAL(libc_cv_asm_set_directive, [dnl
-cat > conftest.s <<\EOF
-.text
-foo: .long 0
-.set glibc_conftest_frobozz,foo
-EOF
-# The alpha-dec-osf1 assembler gives only a warning for `.set'
-# (but it doesn't work), so we must do a linking check to be sure.
-cat > conftest1.c <<\EOF
-extern int glibc_conftest_frobozz;
-main () { printf ("%d\n", glibc_conftest_frobozz); }
-EOF
-if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
-	    conftest.s conftest1.c 1>&AC_FD_CC 2>&AC_FD_CC; then
-  libc_cv_asm_set_directive=yes
-else
-  libc_cv_asm_set_directive=no
-fi
-rm -f conftest*])
-AC_MSG_RESULT($libc_cv_asm_set_directive)
-if test $libc_cv_asm_set_directive = yes; then
-  AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
-fi
-
 AC_MSG_CHECKING(for assembler global-symbol directive)
 AC_CACHE_VAL(libc_cv_asm_global_directive, [dnl
 libc_cv_asm_global_directive=UNKNOWN
@@ -382,6 +357,32 @@ if test $libc_cv_asm_global_directive = UNKNOWN; then
   AC_MSG_ERROR(cannot determine asm global directive)
 else
   AC_DEFINE_UNQUOTED(ASM_GLOBAL_DIRECTIVE, ${libc_cv_asm_global_directive})
+fi
+
+AC_MSG_CHECKING(for .set assembler directive)
+AC_CACHE_VAL(libc_cv_asm_set_directive, [dnl
+cat > conftest.s <<EOF
+.text
+foo: .long 0
+.set glibc_conftest_frobozz,foo
+$libc_cv_asm_global_directive glibc_conftest_frobozz
+EOF
+# The alpha-dec-osf1 assembler gives only a warning for `.set'
+# (but it doesn't work), so we must do a linking check to be sure.
+cat > conftest1.c <<\EOF
+extern int glibc_conftest_frobozz;
+main () { printf ("%d\n", glibc_conftest_frobozz); }
+EOF
+if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    conftest.s conftest1.c 1>&AC_FD_CC 2>&AC_FD_CC; then
+  libc_cv_asm_set_directive=yes
+else
+  libc_cv_asm_set_directive=no
+fi
+rm -f conftest*])
+AC_MSG_RESULT($libc_cv_asm_set_directive)
+if test $libc_cv_asm_set_directive = yes; then
+  AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
 
