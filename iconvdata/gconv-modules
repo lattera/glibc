@@ -1,7 +1,6 @@
 # GNU libc iconv configuration.
 # Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
-# Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 #
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -1503,3 +1502,10 @@ module	INTERNAL		MAC-SAMI//		MAC-SAMI	1
 #	from			to			module		cost
 module	ARMSCII-8//		INTERNAL		ARMSCII-8	1
 module	INTERNAL		ARMSCII-8//		ARMSCII-8	1
+
+#	from			to			module		cost
+alias	TCVN//			TCVN5712-1//
+alias	TCVN-5712//		TCVN5712-1//
+alias	TCVN5712-1:1993//	TCVN5712-1//
+module	TCVN5712-1//		INTERNAL		TCVN5712-1	1
+module	INTERNAL		TCVN5712-1//		TCVN5712-1	1
