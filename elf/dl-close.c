@@ -228,6 +228,11 @@ _dl_close (void *_map)
 	      listp->slotinfo[idx].map = NULL;
 
 	      any_tls = true;
+
+	      if (imap->l_tls_modid == GL(dl_tls_max_dtv_idx))
+		--GL(dl_tls_max_dtv_idx);
+	      else
+		GL(dl_tls_dtv_gaps) = true;
 	    }
 #endif
 
@@ -307,7 +312,8 @@ _dl_close (void *_map)
 #ifdef USE_TLS
   /* If we removed any object which uses TLS bumnp the generation
      counter.  */
-  ++GL(dl_tls_generation);
+  if (any_tls)
+    ++GL(dl_tls_generation);
 #endif
 
   /* Notify the debugger those objects are finalized and gone.  */

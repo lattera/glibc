@@ -1,5 +1,12 @@
 2002-02-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-close.c (_dl_close): When closing an object using TLS
+	either decrement dl_tls_max_dtv_idx or set dl_tls_dtv_gaps to
+	true.  Increment dl_tls_generation only if we closed any TLS-using
+	object.
+	* elf/tst-tls6.c: New file.
+	* elf/Makefile: Add rules to build and run tst-tls6.
+
 	* po/da.po: Update from translation team.
 
 	* locale/categories.def: Fix typo [PR libc/2948].

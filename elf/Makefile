@@ -119,7 +119,7 @@ tests = loadtest restest1 preloadtest loadfail multiload origtest resolvfail \
 	$(tests-nodlopen-$(have-z-nodlopen)) neededtest neededtest2 \
 	neededtest3 neededtest4 unload2 lateglobal initfirst global \
 	restest2 next dblload dblunload reldep5 reldep6 tst-tls1 tst-tls2 \
-	tst-tls3 tst-tls4 tst-tls5
+	tst-tls3 tst-tls4 tst-tls5 tst-tls6
 test-srcs = tst-pathopt
 tests-vis-yes = vismain
 tests-nodelete-yes = nodelete
@@ -448,3 +448,6 @@ $(objpfx)tst-tls4.out: $(objpfx)tst-tlsmod2.so
 
 $(objpfx)tst-tls5: $(libdl)
 $(objpfx)tst-tls5.out: $(objpfx)tst-tlsmod2.so
+
+$(objpfx)tst-tls6: $(libdl)
+$(objpfx)tst-tls6.out: $(objpfx)tst-tlsmod2.so
