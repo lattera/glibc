@@ -313,7 +313,6 @@ closelog_internal()
   __close (LogFile);
   LogFile = -1;
   connected = 0;
-  LogTag = NULL;
 }
 
 void
@@ -325,6 +324,7 @@ closelog ()
   __libc_lock_lock (syslog_lock);
 
   closelog_internal ();
+  LogTag = NULL;
 
   /* Free the lock.  */
   __libc_cleanup_region_end (1);

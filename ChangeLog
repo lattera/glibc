@@ -1,3 +1,9 @@
+1999-04-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* misc/syslog.c (closelog_internal): Do not reset LogTag here.
+	(closelog): But instead here.
+	Patch by Alan Curry <pacman@cqc.com> [PR libc/1061].
+
 1999-04-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* elf/Makefile (CFLAGS-multiload.c): Change to allow building in
