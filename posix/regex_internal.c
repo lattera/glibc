@@ -562,14 +562,8 @@ re_string_context_at (input, idx, eflags, newline_anchor)
 	return ((eflags & REG_NOTEOL) ? CONTEXT_ENDBUF
 		: CONTEXT_NEWLINE | CONTEXT_ENDBUF);
     }
-  if (MB_CUR_MAX == 1)
-    {
-      c = re_string_byte_at (input, idx);
-      if (IS_WORD_CHAR (c))
-	return CONTEXT_WORD;
-      return (newline_anchor && IS_NEWLINE (c)) ? CONTEXT_NEWLINE : 0;
-    }
-  else
+#ifdef RE_ENABLE_I18N
+  if (MB_CUR_MAX > 1)
     {
       wint_t wc;
       int wc_idx = idx;
@@ -587,6 +581,14 @@ re_string_context_at (input, idx, eflags, newline_anchor)
       if (IS_WIDE_WORD_CHAR (wc))
 	return CONTEXT_WORD;
       return (newline_anchor && IS_WIDE_NEWLINE (wc)) ? CONTEXT_NEWLINE : 0;
+    }
+  else
+#endif
+    {
+      c = re_string_byte_at (input, idx);
+      if (IS_WORD_CHAR (c))
+	return CONTEXT_WORD;
+      return (newline_anchor && IS_NEWLINE (c)) ? CONTEXT_NEWLINE : 0;
     }
 }
 
