@@ -119,6 +119,7 @@ __getcwd (char *buf, size_t size)
       unsigned int dirdatasize;
       int direntry, nentries;
 
+
       /* Look at the parent directory.  */
       newp = __file_name_lookup_under (parent, "..", O_READ, 0);
       if (newp == MACH_PORT_NULL)
@@ -187,6 +188,11 @@ __getcwd (char *buf, size_t size)
 		    break;
 		}
 	    }
+
+	  if (offset < dirdatasize)
+	    /* We got a match; avoid doing another dir_readdir, which will
+               hose NENTRIES.  */
+	    break;
 	}
 
       if (err)
