@@ -1,3 +1,9 @@
+2003-07-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/bits/posix1_lim.h (_POSIX_NGROUPS_MAX): Define to 8 or 0
+	depending on selected standard.
+	(NGROUPS_MAX): Define to 8 if not defined.
+
 2003-07-02  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/epoll.h: New file.
