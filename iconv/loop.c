@@ -111,7 +111,7 @@
 #  define put16(addr, val) \
      ({ uint16_t __val = (val);						      \
 	((unsigned char *) (addr))[1] = __val;				      \
-	((unsigned char *) (addr))[2] = __val >> 8;			      \
+	((unsigned char *) (addr))[0] = __val >> 8;			      \
 	(void) 0; })
 #  define put32(addr, val) \
      ({ uint32_t __val = (val);						      \
