@@ -1,3 +1,8 @@
+2004-07-19  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile (CFLAGS-pt-initfini.s):
+	Remove redundant override that missed -g0.
+
 2004-07-14  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h
