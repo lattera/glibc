@@ -389,13 +389,13 @@ static void pthread_initialize(void)
   /* Register an exit function to kill all other threads. */
   /* Do it early so that user-registered atexit functions are called
      before pthread_exit_process. */
-  if (__dso_handle)
+  if (&__dso_handle != NULL)
     /* The cast is a bit unclean.  The function expects two arguments but
        we can only pass one.  Fortunately this is not a problem since the
        second argument of `pthread_exit_process' is simply ignored.  */
     __cxa_atexit((void (*) (void *)) pthread_exit_process, NULL, __dso_handle);
   else
-    on_exit (pthread_exit_process, NULL);
+    __on_exit (pthread_exit_process, NULL);
 }
 
 void __pthread_initialize(void)
