@@ -1,5 +1,5 @@
 /* Access to locale-dependent parameters.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -263,7 +263,7 @@ enum
 #define THOUSANDS_SEP		THOUSANDS_SEP
 #ifdef __USE_XOPEN
   THOUSEP = THOUSANDS_SEP,
-#define THOUSANDS_SEP		THOUSANDS_SEP
+#define THOUSEP			THOUSEP
 #endif
   GROUPING,
 #define GROUPING		GROUPING
