@@ -1,9 +1,16 @@
+2000-08-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdlib/random_r.c: Cleanups.
+	* stdlib/tst-random.c: New file.
+	* stdlib/Makefile (tests): Add tst-random.
+	Patches by Michael Fischer <fischer-michael@cs.yale.edu>.
+
 2000-08-21  Martin Schwidefsky  <schwidefsky@de.ibm.com>
 
-        * sysdeps/unix/sysv/linux/s390/getmsg.c: Remove.
-        * sysdeps/unix/sysv/linux/s390/getpmsg.c: Remove.
-        * sysdeps/unix/sysv/linux/s390/putmsg.c: Remove.
-        * sysdeps/unix/sysv/linux/s390/putpmsg.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/getmsg.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/getpmsg.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/putmsg.c: Remove.
+	* sysdeps/unix/sysv/linux/s390/putpmsg.c: Remove.
 
 2000-08-22  Jakub Jelinek  <jakub@redhat.com>
 

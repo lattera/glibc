@@ -52,7 +52,7 @@ routines	:=							      \
 distribute	:= exit.h grouping.h abort-instr.h isomac.c
 tests		:= tst-strtol tst-strtod testmb testrand testsort testdiv \
 		   test-canon test-canon2 tst-strtoll tst-environ	  \
-		   tst-xpg-basename
+		   tst-xpg-basename tst-random
 
 
 # Several mpn functions from GNU MP are used by the strtod function.

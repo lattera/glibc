@@ -268,7 +268,7 @@ __setstate_r (arg_state, buf)
      char *arg_state;
      struct random_data *buf;
 {
-  int32_t *new_state = (int32_t *) arg_state;
+  int32_t *new_state = 1 + (int32_t *) arg_state;
   int type;
   int old_type;
   int32_t *old_state;
@@ -285,7 +285,7 @@ __setstate_r (arg_state, buf)
   else
     old_state[-1] = (MAX_TYPES * (buf->rptr - old_state)) + old_type;
 
-  type = new_state[0] % MAX_TYPES;
+  type = new_state[-1] % MAX_TYPES;
   if (type < TYPE_0 || type > TYPE_4)
     goto fail;
 
@@ -295,13 +295,13 @@ __setstate_r (arg_state, buf)
 
   if (type != TYPE_0)
     {
-      int rear = new_state[0] / MAX_TYPES;
-      buf->rptr = &new_state[1 + rear];
-      buf->fptr = &new_state[1 + (rear + separation) % degree];
+      int rear = new_state[-1] / MAX_TYPES;
+      buf->rptr = &new_state[rear];
+      buf->fptr = &new_state[(rear + separation) % degree];
     }
-  buf->state = &new_state[1];
+  buf->state = new_state;
   /* Set end_ptr too.  */
-  buf->end_ptr = &new_state[1 + degree];
+  buf->end_ptr = &new_state[degree];
 
   return 0;
 
