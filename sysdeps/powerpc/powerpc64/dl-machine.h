@@ -334,7 +334,8 @@ elf_machine_runtime_setup (struct link_map *map, int lazy, int profile)
 
 	  resolve_fd = (Elf64_FuncDesc *) (profile ? _dl_profile_resolve
 					   : _dl_runtime_resolve);
-	  if (profile && _dl_name_match_p (GLRO(dl_profile), map))
+	  if (profile && GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), map))
 	    /* This is the object we are looking for.  Say that we really
 	       want profiling and the timers are started.  */
 	    GL(dl_profile_map) = map;

@@ -1,5 +1,14 @@
 2005-01-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/powerpc/powerpc64/dl-machine.h
+	(elf_machine_runtime_setup): If profile != 0 does not anymore mean
+	GLRO(dl_profile) != NULL.
+	* sysdeps/powerpc/powerpc64/bits/link.h (struct la_ppc64_regs): Add
+	padding.
+	* sysdeps/powerpc/powerpc64/dl-trampoline.S: (_dl_profile_resolve):
+	Extend _dl_prof_resolve to add pass extra parameters to
+	_dl_profile_fixup and set up structure with register content.
+
 	* sysdeps/powerpc/powerpc32/dl-machine.c (__elf_machine_runtime_setup):
 	If profile != 0 does not anymore mean GLRO(dl_profile) != NULL.
 	* sysdeps/powerpc/powerpc32/dl-trampoline.S (_dl_prof_resolve):

@@ -70,6 +70,7 @@ typedef struct La_ppc64_regs
 {
   uint64_t lr_reg[8];
   double lr_fp[13];
+  uint64_t __padding;
   uint32_t lr_vreg[12][4];
   uint64_t lr_r1;
   uint64_t lr_lr;
