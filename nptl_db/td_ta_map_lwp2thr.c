@@ -20,6 +20,7 @@
 
 #include "thread_dbP.h"
 #include <tls.h>
+#include <sys/reg.h>
 
 
 td_err_e
@@ -31,8 +32,12 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
   if (! ta_ok (ta))
     return TD_BADTA;
 
+  prgregset_t regs;
+  if (ps_lgetregs (ta->ph, lwpid, regs) != PS_OK)
+    return TD_ERR;
+
   /* Get the thread area for the addressed thread.  */
-  if (ps_get_thread_area (ta->ph, lwpid, TLS_GET_GS () >> 3, &th->th_unique)
+  if (ps_get_thread_area (ta->ph, lwpid, regs[GS] >> 3, &th->th_unique)
       != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 

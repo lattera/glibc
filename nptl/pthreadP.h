@@ -42,7 +42,8 @@ extern size_t __static_tls_size attribute_hidden;
 extern size_t __static_tls_align attribute_hidden;
 
 /* Thread descriptor handling.  */
-extern list_t __stack_user attribute_hidden;
+extern list_t __stack_user;
+hidden_proto (__stack_user)
 
 /* Attribute handling.  */
 extern struct pthread_attr *__attr_list attribute_hidden;
@@ -57,8 +58,8 @@ extern int __current_sigrtmax attribute_hidden;
 extern int __concurrency_level attribute_hidden;
 
 /* Thread-local data key handling.  */
-extern struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
-     attribute_hidden;
+extern struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX];
+hidden_proto (__pthread_keys)
 
 /* The library can run in debugging mode where it performs a lot more
    tests.  */
@@ -134,8 +135,10 @@ extern int __pthread_attr_init_2_0 (pthread_attr_t *attr);
 
 
 /* Event handlers for libthread_db interface.  */
-extern void __nptl_create_event (void) attribute_hidden;
-extern void __nptl_death_event (void) attribute_hidden;
+extern void __nptl_create_event (void);
+extern void __nptl_death_event (void);
+hidden_proto (__nptl_create_event)
+hidden_proto (__nptl_death_event)
 
 
 /* Namespace save aliases.  */

@@ -1,3 +1,15 @@
+2002-11-28  Roland McGrath  <roland@redhat.com>
+
+	* tst-context.c: #define IS_IN_libpthread around #include <tls.h>
+	before other headers, so FLOATING_STACKS is not defined wrongly.
+
+	* sysdeps/i386/tls.h [!IS_IN_libpthread]: Enable TLS support
+	even if [! FLOATING_STACKS].
+	(TLS_DO_MODIFY_LDT_KERNEL_CHECK): New macro.
+	If not under [__ASSUME_LDT_WORKS > 0], then do a runtime check of
+	dl_osversion >= 2.3.99 and fatal if not.
+	(TLS_DO_MODIFY_LDT): Use it.
+
 2002-11-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define macros which
@@ -6,7 +18,7 @@
 
 2002-11-19  Ulrich Drepper  <drepper@redhat.com>
 
-	* Versions (libc:GLIBC_2.0): Remove names of functions which are
+	* Versions (libc: GLIBC_2.0): Remove names of functions which are
 	not defined in libc.
 	* Makefile (shared-only-routines): Add weaks.
 	* weaks.c: Remove functions which are not exported from libc.so.

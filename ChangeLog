@@ -1,3 +1,8 @@
+2002-12-02  Carlos O'Donell  <carlos@baldric.uwo.ca>
+
+	* sysdeps/hppa/fpu/fesetround.c (fesetround): Use ~FE_DOWNWARD so both
+	bits of RM are cleared.
+
 2002-12-02  Roland McGrath  <roland@redhat.com>
 
 	* elf/tst-tls4.c: Define an unused TLS variable here, so that no lazy

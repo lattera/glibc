@@ -38,10 +38,10 @@ static int start_thread_debug (void *arg);
 int __pthread_debug;
 
 /* Globally enabled events.  */
-td_thr_events_t __nptl_threads_events attribute_hidden;
+static td_thr_events_t __nptl_threads_events;
 
 /* Pointer to descriptor with the last event.  */
-struct pthread *__nptl_last_event attribute_hidden;
+static struct pthread *__nptl_last_event;
 
 
 /* Code to allocate and deallocate a stack.  */
@@ -53,8 +53,12 @@ struct pthread *__nptl_last_event attribute_hidden;
 
 
 /* Table of the key information.  */
-struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX];
+struct pthread_key_struct __pthread_keys[PTHREAD_KEYS_MAX]
+  __attribute__ ((section (".bss")));
+hidden_def (__pthread_keys)
 
+/* This is for libthread_db only.  */
+const int __pthread_pthread_sizeof_descr = sizeof (struct pthread);
 
 struct pthread *
 __find_in_stack_list (pd)

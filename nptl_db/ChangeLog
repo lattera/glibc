@@ -1,0 +1,6 @@
+2002-12-02  Roland McGrath  <roland@redhat.com>
+
+	* td_symbol_list.c (symbol_list_arr): pthread_keys -> __pthread_keys
+
+	* td_ta_map_lwp2thr.c (td_ta_map_lwp2thr): Fetch inferior registers to
+	see its %gs value, not our own.

@@ -1,3 +1,17 @@
+2002-12-02  Roland McGrath  <roland@redhat.com>
+
+	* pthreadP.h (__stack_user, __nptl_create_event, __nptl_death_event):
+	Declare using hidden_proto instead of attribute_hidden, so there are
+	non-.hidden static symbols for gdb to find.
+	(__pthread_keys): Likewise.
+	* events.c (__nptl_create_event, __nptl_death_event): Add hidden_def.
+	* allocatestack.c (__stack_user): Likewise.
+	* pthread_create.c (__pthread_keys): Likewise.
+	(__nptl_threads_events, __nptl_last_event): Make these static instead
+	of hidden.
+	* pthread_key_create.c (__pthread_pthread_keys_max,
+	__pthread_pthread_key_2ndlevel_size): Renamed from __linuxthreads_*.
+
 2002-12-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread_cond_timedwait.c: Include <stdlib.h>.

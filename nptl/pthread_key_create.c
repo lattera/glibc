@@ -21,13 +21,13 @@
 #include "pthreadP.h"
 
 
-/* Internal mutex for __pthread_kyes table handling.  */
+/* Internal mutex for __pthread_keys table handling.  */
 lll_lock_t __pthread_keys_lock = LLL_LOCK_INITIALIZER;
 
 
 /* For debugging purposes put the maximum number of keys in a variable.  */
-const int __linuxthreads_pthread_keys_max = PTHREAD_KEYS_MAX;
-const int __linuxthreads_pthread_key_2ndlevel_size = PTHREAD_KEY_2NDLEVEL_SIZE;
+const int __pthread_pthread_keys_max = PTHREAD_KEYS_MAX;
+const int __pthread_pthread_key_2ndlevel_size = PTHREAD_KEY_2NDLEVEL_SIZE;
 
 
 int

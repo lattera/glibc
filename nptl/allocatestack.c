@@ -70,6 +70,7 @@ static LIST_HEAD (stack_used);
 
 /* List of the threads with user provided stacks in use.  */
 LIST_HEAD (__stack_user);
+hidden_def (__stack_user)
 
 /* Number of threads running.  */
 static unsigned int nptl_nthreads = 1;
