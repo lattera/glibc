@@ -1,5 +1,5 @@
 /* System-dependent timing definitions.  Generic version.
-   Copyright (C) 1996,1997,1999,2000,2001,2002 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1999-2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,6 +44,8 @@ extern long int __sysconf (int);
 #  ifdef __USE_POSIX199309
 /* Identifier for system-wide realtime clock.  */
 #   define CLOCK_REALTIME		0
+/* Monotonic system-wide clock.  */
+#   define CLOCK_MONOTONIC		1
 /* High-resolution timer from the CPU.  */
 #   define CLOCK_PROCESS_CPUTIME_ID	2
 /* Thread-specific CPU-time clock.  */
