@@ -1,3 +1,9 @@
+2004-09-25  Roland McGrath  <roland@redhat.com>
+
+	[BZ #406]
+	* sysdeps/i386/i686/pt-machine.h: Don't #include "../useldt.h" if
+	[_TLS_H], since sysdeps/i386/tls.h includes it after including us.
+
 2004-09-24  Roland McGrath  <roland@redhat.com>
 
 	[BZ #406]
