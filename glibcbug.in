@@ -36,12 +36,7 @@ if test $? -ne 0; then
   chmod 600 $TEMPx
 fi
 
-if test "$RELEASE" = "stable"; then
-  BUGGLIBC="bugs@gnu.org"
-else
-  BUGGLIBC="libc-alpha@sourceware.cygnus.com"
-fi
-
+BUGGLIBC="glibc-bug-reports-${RELEASE}@gnu.org"
 BUGADDR=${1-$BUGGLIBC}
 
 : ${EDITOR=emacs}
