@@ -1,5 +1,13 @@
 2000-08-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/vfprintf.c: Handle %F format.
+	* stdio-common/printf-parse.h (parse_one_spec): Likewise.
+	Reported by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+	* stdio-common/tstdiomisc.c: Add test for %F printf format.
+
+	* po/zh.po: New file.
+
 	* iconvdata/sjis.c: In conversion from UCS4, correct test for
 	enough room in target buffer.
 	Patch by KUSANO Takayuki <AE5T-KSN@asahi-net.or.jp> [PR libc/1865].

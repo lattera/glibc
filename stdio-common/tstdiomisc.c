@@ -1,4 +1,8 @@
+#include <float.h>
+#include <math.h>
 #include <stdio.h>
+#include <string.h>
+#include <wchar.h>
 
 int
 t1 (void)
@@ -43,12 +47,43 @@ t2 (void)
 }
 
 int
+F (void)
+{
+  char buf[20];
+  wchar_t wbuf[10];
+  int result;
+
+  snprintf (buf, sizeof buf, "%f %F", DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX,
+	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX);
+  result = strcmp (buf, "nan NAN") != 0;
+  printf ("expected \"nan NAN\", got \"%s\"\n", buf);
+
+  snprintf (buf, sizeof buf, "%f %F", DBL_MAX * DBL_MAX, DBL_MAX * DBL_MAX);
+  result |= strcmp (buf, "inf INF") != 0;
+  printf ("expected \"inf INF\", got \"%s\"\n", buf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F",
+	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX,
+	    DBL_MAX * DBL_MAX - DBL_MAX * DBL_MAX);
+  result |= wcscmp (wbuf, L"nan NAN") != 0;
+  printf ("expected L\"nan NAN\", got L\"%S\"\n", wbuf);
+
+  swprintf (wbuf, sizeof wbuf / sizeof (wbuf[0]), L"%f %F",
+	    DBL_MAX * DBL_MAX, DBL_MAX * DBL_MAX);
+  result |= wcscmp (wbuf, L"inf INF") != 0;
+  printf ("expected L\"inf INF\", got L\"%S\"\n", wbuf);
+
+  return result;
+}
+
+int
 main (int argc, char *argv[])
 {
   int result = 0;
 
   result |= t1 ();
   result |= t2 ();
+  result |= F ();
 
   result |= fflush (stdout) == EOF;
 

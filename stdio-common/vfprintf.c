@@ -284,7 +284,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
     /* '8' */  8, /* '9' */  8,            0,            0,
 	       0,            0,            0,            0,
 	       0, /* 'A' */ 26,            0, /* 'C' */ 25,
-	       0, /* 'E' */ 19,            0, /* 'G' */ 19,
+	       0, /* 'E' */ 19, /* F */   19, /* 'G' */ 19,
 	       0, /* 'I' */ 29,            0,            0,
     /* 'L' */ 12,            0,            0,            0,
 	       0,            0,            0, /* 'S' */ 21,
@@ -354,7 +354,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_float),		/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
       REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
@@ -388,7 +388,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_float),		/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
       REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
@@ -422,7 +422,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_float),		/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
       REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
@@ -456,7 +456,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_unknown),	/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_unknown),	/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_unknown),	/* for 'c' */				      \
       REF (form_unknown),	/* for 's', 'S' */			      \
       REF (form_unknown),	/* for 'p' */				      \
@@ -490,7 +490,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_float),		/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
       REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \
@@ -526,7 +526,7 @@ vfprintf (FILE *s, const CHAR_T *format, va_list ap)
       REF (form_unsigned),	/* for 'u' */				      \
       REF (form_octal),		/* for 'o' */				      \
       REF (form_hexa),		/* for 'X', 'x' */			      \
-      REF (form_float),		/* for 'E', 'e', 'f', 'G', 'g' */	      \
+      REF (form_float),		/* for 'E', 'e', 'F', 'f', 'G', 'g' */	      \
       REF (form_character),	/* for 'c' */				      \
       REF (form_string),	/* for 's', 'S' */			      \
       REF (form_pointer),	/* for 'p' */				      \

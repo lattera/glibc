@@ -390,6 +390,7 @@ parse_one_spec (const UCHAR_T *format, size_t posn, struct printf_spec *spec,
 	case L'e':
 	case L'E':
 	case L'f':
+	case L'F':
 	case L'g':
 	case L'G':
 	case L'a':
