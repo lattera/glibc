@@ -19,6 +19,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdio_ext.h>
+#include <string.h>
 #include <rpcsvc/ypclnt.h>
 
 #include "nss-nis.h"
