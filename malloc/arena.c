@@ -1,5 +1,5 @@
 /* Malloc implementation for multiple threads without lock contention.
-   Copyright (C) 2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Wolfram Gloger <wg@malloc.de>, 2001.
 
@@ -134,15 +134,14 @@ int __malloc_initialized = -1;
 
 /* atfork support.  */
 
-static __malloc_ptr_t (*save_malloc_hook) __MALLOC_P ((size_t __size,
-						       __const __malloc_ptr_t));
+static __malloc_ptr_t (*save_malloc_hook) (size_t __size,
+					   __const __malloc_ptr_t);
 # if !defined _LIBC || !defined USE_TLS || (defined SHARED && !USE___THREAD)
-static __malloc_ptr_t (*save_memalign_hook) __MALLOC_P ((size_t __align,
-							 size_t __size,
-						       __const __malloc_ptr_t));
+static __malloc_ptr_t (*save_memalign_hook) (size_t __align, size_t __size,
+					     __const __malloc_ptr_t);
 # endif
-static void           (*save_free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
-						     __const __malloc_ptr_t));
+static void           (*save_free_hook) (__malloc_ptr_t __ptr,
+					 __const __malloc_ptr_t);
 static Void_t*        save_arena;
 
 /* Magic value for the thread-specific arena pointer when
@@ -216,7 +215,7 @@ free_atfork(Void_t* mem, const Void_t *caller)
    malloc/free internally (e.g. in LinuxThreads). */
 
 static void
-ptmalloc_lock_all __MALLOC_P((void))
+ptmalloc_lock_all (void)
 {
   mstate ar_ptr;
 
@@ -238,7 +237,7 @@ ptmalloc_lock_all __MALLOC_P((void))
 }
 
 static void
-ptmalloc_unlock_all __MALLOC_P((void))
+ptmalloc_unlock_all (void)
 {
   mstate ar_ptr;
 
@@ -263,7 +262,7 @@ ptmalloc_unlock_all __MALLOC_P((void))
    installed for the child. */
 
 static void
-ptmalloc_unlock_all2 __MALLOC_P((void))
+ptmalloc_unlock_all2 (void)
 {
   mstate ar_ptr;
 
@@ -329,7 +328,7 @@ next_env_entry (char ***position)
 
 /* Set up basic state so that _int_malloc et al can work.  */
 static void
-ptmalloc_init_minimal __MALLOC_P((void))
+ptmalloc_init_minimal (void)
 {
 #if DEFAULT_TOP_PAD != 0
   mp_.top_pad        = DEFAULT_TOP_PAD;
@@ -373,7 +372,7 @@ __libc_malloc_pthread_startup (bool first_time)
 #endif
 
 static void
-ptmalloc_init __MALLOC_P((void))
+ptmalloc_init (void)
 {
 #if __STD_C
   const char* s;

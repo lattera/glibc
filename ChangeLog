@@ -1,3 +1,11 @@
+2004-09-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* malloc/arena.c: Remove __MALLOC_P uses.
+	* malloc/malloc.c: Likewise.
+
+	* malloc/mtrace.c: Remove __P uses.
+	* malloc/mcheck-init.c: Likewise.
+
 2004-09-07  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/configure.in: New file.

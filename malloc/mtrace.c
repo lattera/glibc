@@ -1,5 +1,5 @@
 /* More debugging hooks for `malloc'.
-   Copyright (C) 1991-1994,1996-2001,2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1991-1994,1996-2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 		 Written April 2, 1991 by John Gilmore of Cygnus Support.
 		 Based on mcheck.c by Mike Haertel.
@@ -65,15 +65,13 @@ int _mtrace_line;
 #endif
 
 /* Old hook values.  */
-static void (*tr_old_free_hook) __P ((__ptr_t ptr, const __ptr_t));
-static __ptr_t (*tr_old_malloc_hook) __P ((__malloc_size_t size,
-					   const __ptr_t));
-static __ptr_t (*tr_old_realloc_hook) __P ((__ptr_t ptr,
-					    __malloc_size_t size,
-					    const __ptr_t));
-static __ptr_t (*tr_old_memalign_hook) __P ((__malloc_size_t __alignment,
-					     __malloc_size_t __size,
-					     __const __ptr_t));
+static void (*tr_old_free_hook) (__ptr_t ptr, const __ptr_t);
+static __ptr_t (*tr_old_malloc_hook) (__malloc_size_t size, const __ptr_t);
+static __ptr_t (*tr_old_realloc_hook) (__ptr_t ptr, __malloc_size_t size,
+				       const __ptr_t);
+static __ptr_t (*tr_old_memalign_hook) (__malloc_size_t __alignment,
+					__malloc_size_t __size,
+					__const __ptr_t);
 
 /* This function is called when the block being alloc'd, realloc'd, or
    freed has an address matching the variable "mallwatch".  In a debugger,

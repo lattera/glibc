@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1994, 1995, 1996, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,9 +23,9 @@
 #include <mcheck.h>
 
 static void
-turn_on_mcheck __P ((void))
+turn_on_mcheck (void)
 {
   mcheck (NULL);
 }
 
-void (*__malloc_initialize_hook) __P ((void)) = turn_on_mcheck;
+void (*__malloc_initialize_hook) (void) = turn_on_mcheck;

@@ -2320,18 +2320,18 @@ static Void_t* realloc_hook_ini __MALLOC_P ((Void_t* ptr, size_t sz,
 static Void_t* memalign_hook_ini __MALLOC_P ((size_t alignment, size_t sz,
 					      const __malloc_ptr_t caller));
 
-void weak_variable (*__malloc_initialize_hook) __MALLOC_P ((void)) = NULL;
-void weak_variable (*__free_hook) __MALLOC_P ((__malloc_ptr_t __ptr,
-					       const __malloc_ptr_t)) = NULL;
+void weak_variable (*__malloc_initialize_hook) (void) = NULL;
+void weak_variable (*__free_hook) (__malloc_ptr_t __ptr,
+				   const __malloc_ptr_t) = NULL;
 __malloc_ptr_t weak_variable (*__malloc_hook)
- __MALLOC_P ((size_t __size, const __malloc_ptr_t)) = malloc_hook_ini;
+     (size_t __size, const __malloc_ptr_t) = malloc_hook_ini;
 __malloc_ptr_t weak_variable (*__realloc_hook)
- __MALLOC_P ((__malloc_ptr_t __ptr, size_t __size, const __malloc_ptr_t))
+     (__malloc_ptr_t __ptr, size_t __size, const __malloc_ptr_t)
      = realloc_hook_ini;
 __malloc_ptr_t weak_variable (*__memalign_hook)
- __MALLOC_P ((size_t __alignment, size_t __size, const __malloc_ptr_t))
+     (size_t __alignment, size_t __size, const __malloc_ptr_t)
      = memalign_hook_ini;
-void weak_variable (*__after_morecore_hook) __MALLOC_P ((void)) = NULL;
+void weak_variable (*__after_morecore_hook) (void) = NULL;
 
 
 /* ---------------- Error behavior ------------------------------------ */
@@ -3313,8 +3313,7 @@ public_mALLOc(size_t bytes)
   mstate ar_ptr;
   Void_t *victim;
 
-  __malloc_ptr_t (*hook) __MALLOC_P ((size_t, __const __malloc_ptr_t)) =
-    __malloc_hook;
+  __malloc_ptr_t (*hook) (size_t, __const __malloc_ptr_t) = __malloc_hook;
   if (hook != NULL)
     return (*hook)(bytes, RETURN_ADDRESS (0));
 
@@ -3356,8 +3355,7 @@ public_fREe(Void_t* mem)
   mstate ar_ptr;
   mchunkptr p;                          /* chunk corresponding to mem */
 
-  void (*hook) __MALLOC_P ((__malloc_ptr_t, __const __malloc_ptr_t)) =
-    __free_hook;
+  void (*hook) (__malloc_ptr_t, __const __malloc_ptr_t) = __free_hook;
   if (hook != NULL) {
     (*hook)(mem, RETURN_ADDRESS (0));
     return;
@@ -3405,8 +3403,7 @@ public_rEALLOc(Void_t* oldmem, size_t bytes)
 
   Void_t* newp;             /* chunk to return */
 
-  __malloc_ptr_t (*hook) __MALLOC_P ((__malloc_ptr_t, size_t,
-				      __const __malloc_ptr_t)) =
+  __malloc_ptr_t (*hook) (__malloc_ptr_t, size_t, __const __malloc_ptr_t) =
     __realloc_hook;
   if (hook != NULL)
     return (*hook)(oldmem, bytes, RETURN_ADDRESS (0));
