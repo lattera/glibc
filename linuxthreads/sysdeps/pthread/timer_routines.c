@@ -439,12 +439,9 @@ thread_func (void *arg)
 	pthread_cond_wait (&self->cond, &__timer_mutex);
     }
   /* These statements will never be executed since the while loop
-     loops forever:
-  pthread_mutex_unlock (&__timer_mutex);
+     loops forever - but we have to add them for proper nesting.  */
   pthread_cleanup_pop (1);
 
-  return NULL;
-  */
 }
 
 
