@@ -51,6 +51,9 @@
 
 2002-11-06  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/mips/configure.in: File removed.
+	* sysdeps/unix/sysv/linux/mips/configure: Likewise.
+
 	* configure.in: Add checks on as and ld for binutils 2.13 or later.
 	* configure: Regenerated.
 
