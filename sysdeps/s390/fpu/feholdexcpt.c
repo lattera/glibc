@@ -1,4 +1,4 @@
-/* Set current rounding direction.
+/* Store current floating-point environment and clear exceptions.
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
@@ -16,22 +16,19 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Boston, MA 02111-1307, USA. */
 
 #include <fenv_libc.h>
 #include <fpu_control.h>
 
-int
-fesetround (int round)
+int feholdexcept (fenv_t *envp)
 {
-  if ((round|FPC_RM_MASK) != FPC_RM_MASK)
-    {
-      /* ROUND is not a valid rounding mode.  */
-      return 1;
-    }
-  __asm__ volatile ("srnm 0(%0)"
-		    :
-		    : "a" (round));
-
+  /* Store the environment.  */
+  fegetenv (envp);
+  /* Clear the current sticky bits as more than one exception
+     may be generated.  */
+  envp->fpc &= ~(FPC_FLAGS_MASK | FPC_DXC_MASK);
+  /* Hold from generating fpu exceptions temporarily.  */
+  _FPU_SETCW ((envp->fpc & ~(FE_ALL_EXCEPT << FPC_EXCEPTION_MASK_SHIFT)));
   return 0;
 }

@@ -1,7 +1,7 @@
 /* Store current representation for exceptions.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -16,31 +16,21 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  
+   Boston, MA 02111-1307, USA. */
 
-   Contributed by:
-   Denis Joseph Barrow (djbarrow@de.ibm.com,barrow_dj@yahoo.com)
-*/
-
-#include <fenv.h>
+#include <fenv_libc.h>
 #include <fpu_control.h>
 
-int fegetexceptflag (fexcept_t *flagp, int excepts)
+int
+fegetexceptflag (fexcept_t *flagp, int excepts)
 {
-	fexcept_t temp,newexcepts;
-	
-	/* Get the current exceptions.  */
-	_FPU_GETCW(temp);
-	newexcepts=((excepts<<FPC_DXC_SHIFT)|(excepts<<FPC_FLAGS_SHIFT));
-	*flagp = temp & newexcepts;
+  fexcept_t temp, newexcepts;
 
-	/* Success.  */
-	return 0;
+  /* Get the current exceptions.  */
+  _FPU_GETCW (temp);
+  newexcepts = (excepts << FPC_DXC_SHIFT) | (excepts << FPC_FLAGS_SHIFT);
+  *flagp = temp & newexcepts;
+
+  /* Success.  */
+  return 0;
 }
-
-
-
-
-
-
-

@@ -1,4 +1,4 @@
-/* Set current rounding direction.
+/* Install given floating-point environment.
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
@@ -16,22 +16,41 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Boston, MA 02111-1307, USA. */
 
 #include <fenv_libc.h>
 #include <fpu_control.h>
+#include <stddef.h>
+#include <asm/ptrace.h>
+#include <sys/ptrace.h>
+#include <unistd.h>
 
 int
-fesetround (int round)
+fesetenv (const fenv_t *envp)
 {
-  if ((round|FPC_RM_MASK) != FPC_RM_MASK)
-    {
-      /* ROUND is not a valid rounding mode.  */
-      return 1;
-    }
-  __asm__ volatile ("srnm 0(%0)"
-		    :
-		    : "a" (round));
+  fenv_t env;
 
+  if (envp == FE_DFL_ENV)
+    {
+      env.fpc = _FPU_DEFAULT;
+      env.ieee_instruction_pointer = 0;
+    }
+  else if (envp == FE_NOMASK_ENV)
+    {
+      env.fpc = FPC_EXCEPTION_MASK;
+      env.ieee_instruction_pointer = 0;
+    }
+  else
+    env = (*envp);
+
+  /* The S/390 IEEE fpu doesn't have a register for the ieee
+     instruction pointer. The operating system is required to keep an
+     instruction pointer on a per process base. We read and write this
+     value with the ptrace interface.  */
+  _FPU_SETCW (env.fpc);
+  ptrace (PTRACE_POKEUSER, getpid (), PT_IEEE_IP,
+	  env.ieee_instruction_pointer);
+
+  /* Success.  */
   return 0;
 }

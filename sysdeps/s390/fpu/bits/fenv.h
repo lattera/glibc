@@ -15,9 +15,7 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.
-
- */
+   Boston, MA 02111-1307, USA.  */
 
 #ifndef _FENV_H
 # error "Never use <bits/fenv.h> directly; include <fenv.h> instead."
@@ -61,11 +59,6 @@ enum
     FE_TOWARDZERO = 0x1
 #define FE_TOWARDZERO	FE_TOWARDZERO
   };
-
-#define FPC_EXCEPTION_MASK_SHIFT  24
-#define FPC_FLAGS_SHIFT           16
-#define FPC_DXC_SHIFT             8
-#define FPC_NOT_FPU_EXCEPTION     0x300
 
 
 /* Type representing exception flags.  */

@@ -29,8 +29,6 @@
 void
 __longjmp (__jmp_buf env, int val)
 {
-   unsigned int result;
-
    /* Restore registers and jump back */
    asm volatile("lr   %%r2,%0\n\t"        /* put val in grp 2 */
                 "lm   %%r6,%%r15,%1\n\t"

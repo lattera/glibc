@@ -1,4 +1,4 @@
-/* Set current rounding direction.
+/* Set floating-point environment exception handling.
    Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Denis Joseph Barrow (djbarrow@de.ibm.com).
@@ -16,22 +16,31 @@
    You should have received a copy of the GNU Library General Public
    License along with the GNU C Library; see the file COPYING.LIB.  If not,
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   Boston, MA 02111-1307, USA. */
 
 #include <fenv_libc.h>
+#include <math.h>
 #include <fpu_control.h>
 
 int
-fesetround (int round)
+fesetexceptflag (const fexcept_t *flagp, int excepts)
 {
-  if ((round|FPC_RM_MASK) != FPC_RM_MASK)
-    {
-      /* ROUND is not a valid rounding mode.  */
-      return 1;
-    }
-  __asm__ volatile ("srnm 0(%0)"
-		    :
-		    : "a" (round));
+  fexcept_t temp,newexcepts;
 
+  /* Get the current environment.  We have to do this since we cannot
+     separately set the status word.  */
+  _FPU_GETCW (temp);
+  /* Install the new exception bits in the Accrued Exception Byte.  */
+  excepts = excepts & FE_ALL_EXCEPT;
+  newexcepts = (excepts << FPC_DXC_SHIFT) | (excepts << FPC_FLAGS_SHIFT);
+  temp &= ~newexcepts;
+  temp |= *flagp & newexcepts;
+
+  /* Store the new status word (along with the rest of the environment.
+     Possibly new exceptions are set but they won't get executed unless
+     the next floating-point instruction.  */
+  _FPU_SETCW (temp);
+
+  /* Success.  */
   return 0;
 }

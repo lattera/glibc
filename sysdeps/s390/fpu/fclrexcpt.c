@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <fenv.h>
+#include <fenv_libc.h>
 #include <fpu_control.h>
 
 int
@@ -28,12 +28,12 @@ feclearexcept (int excepts)
   /* Mask out unsupported bits/exceptions.  */
   excepts &= FE_ALL_EXCEPT;
 
-  _FPU_GETCW(temp);
+  _FPU_GETCW (temp);
   /* Clear the relevant bits.  */
-  temp &= ~((excepts<<FPC_DXC_SHIFT)|(excepts<<FPC_FLAGS_SHIFT));
+  temp &= ~((excepts << FPC_DXC_SHIFT)|(excepts << FPC_FLAGS_SHIFT));
 
   /* Put the new data in effect.  */
-  _FPU_SETCW(temp);
+  _FPU_SETCW (temp);
 
   /* Success.  */
   return 0;
