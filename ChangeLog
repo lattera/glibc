@@ -1,9 +1,17 @@
 2005-04-05  Roland McGrath  <roland@redhat.com>
 
+	* intl/tst-codeset.sh: Use mkdir -p.  Put msgfmt output in temporary
+	file and mv it into place.
+	* intl/tst-gettext3.sh: Likewise.
+
+	* Makefile (glibc-%.tar rule): Use make -q to ensure configure scripts
+	are up to date in srcdir.  Touch all configure scripts after export.
+
 	* iconv/gconv_int.h: Include <ctype.h> and <string.h>.
 
 2005-04-05  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #592]
 	* sysdeps/ia64/fpu/e_acosh.S: Update from Intel libm 2005-04-05
 	(comment changes only).
 	* sysdeps/ia64/fpu/e_acoshl.S: Likewise.
@@ -110,11 +118,13 @@
 
 2005-04-04  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #825]
 	* timezone/scheck.c: Update from tzcode2005h.
 	* timezone/tzfile.h: Likewise.
 	* timezone/zdump.c: Likewise.
 	* timezone/zic.c: Likewise.
 
+	[BZ #825]
 	* timezone/antarctica: Update from tzdata2005h.
 	* timezone/asia: Likewise.
 	* timezone/australasia: Likewise.
@@ -127,6 +137,7 @@
 
 2005-03-31  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #592]
 	* sysdeps/ia64/fpu/libm_cpu_defs.h: Update copyright.
 
 2005-04-01  Ulrich Drepper  <drepper@redhat.com>
@@ -158,6 +169,7 @@
 
 2005-03-30  H.J. Lu  <hongjiu.lu@intel.com>
 
+	[BZ #592]
 	* sysdeps/ia64/fpu/e_acosf.S: Update from Intel libm 2005-03-21.
 	* sysdeps/ia64/fpu/e_acoshf.S: Likewise.
 	* sysdeps/ia64/fpu/e_acoshl.S: Likewise.
@@ -292,9 +304,11 @@
 	* sysdeps/ia64/fpu/w_tgammal.S: Likewise.
 	* sysdeps/ia64/fpu/w_tgamma.S: Likewise.
 
+	[BZ #592]
 	* sysdeps/ia64/fpu/libm_cpu_defs.h: New file.
 	* sysdeps/ia64/fpu/libm_error_codes.h: New file.
 
+	[BZ #592]
 	* sysdeps/ia64/fpu/gen_import_file_list: Updated for Intel libm
 	2005-03-21.
 	* sysdeps/ia64/fpu/import_file.awk: Likewise.
@@ -438,6 +452,7 @@
 
 2005-03-23  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #822]
 	* nis/ypclnt.c (yp_2_yperr): Revert 2004-11-30 patch.
 	(ypprot_err): Use yp_2_yperr table also for YP_NODOM .. YP_NOMORE.
 
@@ -522,9 +537,11 @@
 	* inet/test-ifaddrs.c: Use test-skeleton.
 	* inet/test_ifindex.c: Likewise.
 
+	[BZ #821]
 	* elf/dl-lookup.c (add_dependency): Always search l_initfini if
 	the list exists.
 
+	[BZ #821]
 	* elf/Makefile: Add rules to build and run order2.
 	* elf/order2.c: New file.
 	* elf/order2mod1.c: New file.
@@ -534,11 +551,13 @@
 
 2005-03-19  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #821]
 	* elf/dl-open.c (dl_open_worker): Print exact l_direct_opencount value,
 	it has been incremented before.
 
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #821]
 	* elf/dl-fini.c (_dl_fini): Split sorting of the maps in separate
 	function _dl_sort_fini.
 	(_dl_sort_fini): New function.
@@ -618,6 +637,7 @@
 
 2005-03-18  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #821]
 	* include/link.h (struct link_map): Remove l_opencount.  Add l_removed.
 	Change type of l_idx to int.
 	* elf/dl-close.c: Basically rewrite.  Do not use l_opencount to
@@ -643,15 +663,16 @@
 	* elf/unload2.c: Likewise.
 	* elf/loadtest.c: Likewise.
 
+	[BZ #821]
 	* elf/rtld.c: Preloading errors are now never fatal.
 
 2005-03-08  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #821]
 	* elf/Makefile: Add rules to build and run unload5 test.
 	* elf/unload5.c: New file.
 
-2005-03-08  Jakub Jelinek  <jakub@redhat.com>
-
+	[BZ #821]
 	* elf/Makefile: Add rules to build and run unload4 test.
 	* elf/unload4.c: New file.
 	* elf/unload4mod1.c: New file.
@@ -843,6 +864,7 @@
 
 	* elf/dl-addr.c (_dl_addr): Add a cast.
 
+	[BZ #821]
 	* elf/unload3mod4.c: Declare foo.
 	* elf/testobj2.c: Include <stdio.h>.
 
@@ -880,6 +902,7 @@
 
 2005-03-03  Ulrich Drepper  <drepper@redhat.com>
 
+	[BZ #821]
 	* elf/dl-close.c (_dl_close): Don't try to set up new searchpath if the
 	loader is closed.  Fixes unload3.
 	* elf/tst-global1.c: New file.
@@ -888,6 +911,7 @@
 
 2005-03-03  Jakub Jelinek  <jakub@redhat.com>
 
+	[BZ #821]
 	* elf/Makefile: Add rules to build and run unload3 test.
 	* elf/unload3.c: New test.
 	* elf/unload3mod1.c: New file.
