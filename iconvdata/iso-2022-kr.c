@@ -65,7 +65,7 @@
 enum
 {
   ASCII_set = 0,
-  KSC5601_set
+  KSC5601_set = 8
 };
 
 
@@ -76,9 +76,12 @@ enum
   if (data->__statep->__count != ASCII_set)				      \
     {									      \
       if (FROM_DIRECTION)						      \
-	/* It's easy, we don't have to emit anything, we just reset the	      \
-	   state for the input.  */					      \
-	data->__statep->__count = ASCII_set;				      \
+	{								      \
+	  /* It's easy, we don't have to emit anything, we just reset the     \
+	     state for the input.  */					      \
+	  data->__statep->__count &= 7;					      \
+	  data->__statep->__count |= ASCII_set;				      \
+	}								      \
       else								      \
 	{								      \
 	  unsigned char *outbuf = data->__outbuf;			      \

@@ -192,11 +192,11 @@ static int to_object;
    (outbuf - outerr) is always divisible by MIN_NEEDED_TO.  */
 #  define RESET_INPUT_BUFFER \
   if (MIN_NEEDED_FROM % MIN_NEEDED_TO == 0)				      \
-    *inbuf -= (outbuf - outerr) * (MIN_NEEDED_FROM / MIN_NEEDED_TO);	      \
+    *inptrp -= (outbuf - outerr) * (MIN_NEEDED_FROM / MIN_NEEDED_TO);	      \
   else if (MIN_NEEDED_TO % MIN_NEEDED_FROM == 0)			      \
-    *inbuf -= (outbuf - outerr) / (MIN_NEEDED_TO / MIN_NEEDED_FROM);	      \
+    *inptrp -= (outbuf - outerr) / (MIN_NEEDED_TO / MIN_NEEDED_FROM);	      \
   else									      \
-    *inbuf -= ((outbuf - outerr) / MIN_NEEDED_TO) * MIN_NEEDED_FROM
+    *inptrp -= ((outbuf - outerr) / MIN_NEEDED_TO) * MIN_NEEDED_FROM
 # endif
 #endif
 
@@ -263,10 +263,15 @@ gconv_init (struct __gconv_step *step)
 # define FUNCTION_NAME	gconv
 #endif
 
+/* The macros are used to access the function to convert single characters.  */
+#define SINGLE(fct) SINGLE2 (fct)
+#define SINGLE2(fct) fct##_single
+
+
 int
 FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
-	       const unsigned char **inbuf, const unsigned char *inbufend,
-	       size_t *written, int do_flush)
+	       const unsigned char **inptrp, const unsigned char *inend,
+	       size_t *written, int do_flush, int consume_incomplete)
 {
   struct __gconv_step *next_step = step + 1;
   struct __gconv_step_data *next_data = data + 1;
@@ -288,12 +293,12 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
          successfully emitted the escape sequence.  */
       if (status == __GCONV_OK && ! data->__is_last)
 	status = DL_CALL_FCT (fct, (next_step, next_data, NULL, NULL,
-				    written, 1));
+				    written, 1, consume_incomplete));
     }
   else
     {
       /* We preserve the initial values of the pointer variables.  */
-      const unsigned char *inptr = *inbuf;
+      const unsigned char *inptr = *inptrp;
       unsigned char *outbuf = data->__outbuf;
       unsigned char *outend = data->__outbufend;
       unsigned char *outstart;
@@ -312,6 +317,36 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 #ifdef PREPARE_LOOP
       PREPARE_LOOP
+#endif
+
+#if MAX_NEEDED_FROM > 1 || MAX_NEEDED_TO > 1
+      /* If the function is used to implement the mb*towc*() or wc*tomb*()
+	 functions we must test whether any bytes from the last call are
+	 stored in the `state' object.  */
+      if (((MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
+	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
+	  && consume_incomplete && (data->__statep->__count & 7) != 0)
+	{
+	  /* Yep, we have some bytes left over.  Process them now.  */
+
+# if MAX_NEEDED_FROM > 1
+	  if (MAX_NEEDED_TO == 1 || FROM_DIRECTION)
+	    status = SINGLE(FROM_LOOP) (inptrp, inend, &outbuf, outend,
+					data->__statep, step->__data,
+					&converted EXTRA_LOOP_ARGS);
+# endif
+# if MAX_NEEDED_FROM > 1 && MAX_NEEDED_TO > 1 && !ONE_DIRECTION
+	  else
+# endif
+# if MAX_NEEDED_TO > 1 && !ONE_DIRECTION
+	    status = SINGLE(TO_LOOP) (inptrp, inend, &outbuf, outend,
+				      data->__statep, step->__data,
+				      &converted EXTRA_LOOP_ARGS);
+# endif
+
+	  if (status != __GCONV_OK)
+	    return status;
+	}
 #endif
 
 #if !defined _STRING_ARCH_unaligned \
@@ -335,7 +370,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
       do
 	{
 	  /* Remember the start value for this round.  */
-	  inptr = *inbuf;
+	  inptr = *inptrp;
 	  /* The outbuf buffer is empty.  */
 	  outstart = outbuf;
 
@@ -347,12 +382,12 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	    {
 	      if (FROM_DIRECTION)
 		/* Run the conversion loop.  */
-		status = FROM_LOOP (inbuf, inbufend, &outbuf, outend,
+		status = FROM_LOOP (inptrp, inend, &outbuf, outend,
 				    data->__statep, step->__data, &converted
 				    EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
-		status = TO_LOOP (inbuf, inbufend, &outbuf, outend,
+		status = TO_LOOP (inptrp, inend, &outbuf, outend,
 				  data->__statep, step->__data, &converted
 				  EXTRA_LOOP_ARGS);
 	    }
@@ -363,13 +398,13 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	    {
 	      if (FROM_DIRECTION)
 		/* Run the conversion loop.  */
-		status = GEN_unaligned (FROM_LOOP) (inbuf, inbufend, &outbuf,
+		status = GEN_unaligned (FROM_LOOP) (inptrp, inend, &outbuf,
 						    outend, data->__statep,
 						    step->__data, &converted
 						    EXTRA_LOOP_ARGS);
 	      else
 		/* Run the conversion loop.  */
-		status = GEN_unaligned (TO_LOOP) (inbuf, inbufend, &outbuf,
+		status = GEN_unaligned (TO_LOOP) (inptrp, inend, &outbuf,
 						  outend, data->__statep,
 						  step->__data, &converted
 						  EXTRA_LOOP_ARGS);
@@ -399,7 +434,8 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 	      int result;
 
 	      result = DL_CALL_FCT (fct, (next_step, next_data, &outerr,
-					  outbuf, written, 0));
+					  outbuf, written, 0,
+					  consume_incomplete));
 
 	      if (result != __GCONV_EMPTY_INPUT)
 		{
@@ -413,7 +449,7 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 		      size_t nstatus;
 
 		      /* Reload the pointers.  */
-		      *inbuf = inptr;
+		      *inptrp = inptr;
 		      outbuf = outstart;
 
 		      /* Reset the state.  */
@@ -423,16 +459,16 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 
 		      if (FROM_DIRECTION)
 			/* Run the conversion loop.  */
-			nstatus = FROM_LOOP ((const unsigned char **) inbuf,
-					     (const unsigned char *) inbufend,
+			nstatus = FROM_LOOP ((const unsigned char **) inptrp,
+					     (const unsigned char *) inend,
 					     (unsigned char **) &outbuf,
 					     (unsigned char *) outerr,
 					     data->__statep, step->__data,
 					     &converted EXTRA_LOOP_ARGS);
 		      else
 			/* Run the conversion loop.  */
-			nstatus = TO_LOOP ((const unsigned char **) inbuf,
-					   (const unsigned char *) inbufend,
+			nstatus = TO_LOOP ((const unsigned char **) inptrp,
+					   (const unsigned char *) inend,
 					   (unsigned char **) &outbuf,
 					   (unsigned char *) outerr,
 					   data->__statep, step->__data,
@@ -465,6 +501,32 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #ifdef END_LOOP
       END_LOOP
 #endif
+
+      /* If we are supposed to consume all character store now all of the
+	 remaining characters in the `state' object.  */
+#if MAX_NEEDED_FROM > 1 || MAX_NEEDED_TO > 1
+      if (((MAX_NEEDED_FROM > 1 && FROM_DIRECTION)
+	   || (MAX_NEEDED_TO > 1 && !FROM_DIRECTION))
+	  && consume_incomplete && status == __GCONV_INCOMPLETE_INPUT)
+	{
+# ifdef STORE_REST
+	  mbstate_t *state = data->__statep;
+
+	  STORE_REST
+# else
+	  size_t cnt;
+
+	  /* Make sure the remaining bytes fit into the state objects
+             buffer.  */
+	  assert (inend - *inptrp < 4);
+
+	  for (cnt = 0; *inptrp < inend; ++cnt)
+	    data->__statep->__value.__wchb[cnt] = *(*inptrp)++;
+	  data->__statep->__count &= ~7;
+	  data->__statep->__count |= cnt;
+# endif
+	}
+#endif
     }
 
   return status;
@@ -487,3 +549,5 @@ FUNCTION_NAME (struct __gconv_step *step, struct __gconv_step_data *data,
 #undef FUNCTION_NAME
 #undef PREPARE_LOOP
 #undef END_LOOP
+#undef ONE_DIRECTION
+#undef STORE_REST

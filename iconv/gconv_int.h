@@ -161,7 +161,7 @@ extern void __gconv_get_builtin_trans (const char *__name,
 		   struct __gconv_step_data *__data,			      \
 		   const unsigned char **__inbuf,			      \
 		   const unsigned char *__inbufend, size_t *__written,	      \
-		   int __do_flush)
+		   int __do_flush, int __consume_incomplete)
 
 __BUILTIN_TRANS (__gconv_transform_ascii_internal);
 __BUILTIN_TRANS (__gconv_transform_internal_ascii);

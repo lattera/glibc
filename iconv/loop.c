@@ -45,6 +45,7 @@
      UPDATE_PARAMS	code to store result in params.
 */
 
+#include <assert.h>
 #include <endian.h>
 #include <gconv.h>
 #include <stdint.h>
@@ -261,20 +262,106 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 }
 
 
-#undef get16
-#undef get32
-#undef put16
-#undef put32
-#undef unaligned
-
 /* Include the file a second time to define the function to define the
    function to handle unaligned access.  */
 #if !defined DEFINE_UNALIGNED && !defined _STRING_ARCH_unaligned \
     && MIN_NEEDED_FROM != 1 && MAX_NEEDED_FROM % MIN_NEEDED_FROM == 0 \
     && MIN_NEEDED_TO != 1 && MAX_NEEDED_TO % MIN_NEEDED_TO == 0
+# undef get16
+# undef get32
+# undef put16
+# undef put32
+# undef unaligned
+
 # define DEFINE_UNALIGNED
 # include "loop.c"
 # undef DEFINE_UNALIGNED
+#endif
+
+
+#if MAX_NEEDED_INPUT > 1
+# define SINGLE(fct) SINGLE2 (fct)
+# define SINGLE2(fct) fct##_single
+static inline int
+SINGLE(LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
+		 unsigned char **outptrp, unsigned char *outend,
+		 mbstate_t *state, void *data, size_t *converted
+		 EXTRA_LOOP_DECLS)
+{
+  int result = __GCONV_OK;
+  unsigned char bytebuf[MAX_NEEDED_INPUT];
+  const unsigned char *inptr = *inptrp;
+  unsigned char *outptr = *outptrp;
+  size_t inlen;
+
+#ifdef INIT_PARAMS
+  INIT_PARAMS;
+#endif
+
+#ifdef UNPACK_BYTES
+  UNPACK_BYTES
+#else
+  /* Add the bytes from the state to the input buffer.  */
+  for (inlen = 0; inlen < (state->__count & 7); ++ inlen)
+    bytebuf[inlen] = state->__value.__wchb[inlen];
+#endif
+
+  /* Are there enough bytes in the input buffer?  */
+  if (inptr + (MAX_NEEDED_INPUT - inlen) > inend)
+    {
+#ifdef STORE_REST
+      *inptrp = inend;
+      inptr = bytebuf;
+      inptrp = &inptr;
+      inend = &bytebuf[inlen];
+
+      STORE_REST
+#else
+      /* We don't have enough input for another complete input
+	 character.  */
+      while (inptr < inend)
+	state->__value.__wchb[inlen++] = *inptr++;
+#endif
+
+      return __GCONV_INCOMPLETE_INPUT;
+    }
+
+  /* Enough space in output buffer.  */
+  if ((MIN_NEEDED_OUTPUT != 1 && outptr + MIN_NEEDED_OUTPUT > outend)
+      || (MIN_NEEDED_OUTPUT == 1 && outptr >= outend))
+    /* Overflow in the output buffer.  */
+    return __GCONV_FULL_OUTPUT;
+
+  /*  Now add characters from the normal input buffer.  */
+  do
+    bytebuf[inlen++] = *inptr++;
+  while (inlen < MAX_NEEDED_INPUT);
+
+  inptr = bytebuf;
+  inend = &inptr[MAX_NEEDED_INPUT];
+  do
+    {
+      BODY
+    }
+  while (0);
+
+  if (result == __GCONV_OK)
+    {
+      /* We successfully converted the character (maybe even more).
+	 Update the pointers passed in.  */
+      assert (inptr - bytebuf > (state->__count & 7));
+
+      *inptrp += inptr - bytebuf - (state->__count & 7);
+      *outptrp = outptr;
+
+      /* Clear the state buffer.  */
+      state->__count &= ~7;
+    }
+
+  return result;
+}
+# undef SINGLE
+# undef SINGLE2
 #endif
 
 
@@ -290,3 +377,9 @@ FCTNAME (LOOPFCT) (const unsigned char **inptrp, const unsigned char *inend,
 #undef EXTRA_LOOP_DECLS
 #undef INIT_PARAMS
 #undef UPDATE_PARAMS
+#undef get16
+#undef get32
+#undef put16
+#undef put32
+#undef unaligned
+#undef UNPACK_BYTES

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -78,7 +78,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 	  data.__outbuf = (char *) buf;
 
 	  status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data, &inbuf,
-				   srcend, &result, 0);
+				   srcend, &result, 0, 1);
 	}
       while (status == __GCONV_FULL_OUTPUT);
 
@@ -97,7 +97,7 @@ __mbsnrtowcs (dst, src, nmc, len, ps)
 
       status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
 			       (const unsigned char **) src, srcend,
-			       &result, 0);
+			       &result, 0, 1);
 
       /* We have to determine whether the last character converted
 	 is the NUL character.  */

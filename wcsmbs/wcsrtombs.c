@@ -78,7 +78,8 @@ __wcsrtombs (dst, src, len, ps)
 
 	  status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
 				   (const unsigned char **) &inbuf,
-				   (const unsigned char *) srcend, &dummy, 0);
+				   (const unsigned char *) srcend, &dummy,
+				   0, 1);
 
 	  /* Count the number of bytes.  */
 	  result += data.__outbuf - buf;
@@ -106,7 +107,7 @@ __wcsrtombs (dst, src, len, ps)
 
       status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
 			       (const unsigned char **) src,
-			       (const unsigned char *) srcend, &dummy, 0);
+			       (const unsigned char *) srcend, &dummy, 0, 1);
 
       /* Count the number of bytes.  */
       result = data.__outbuf - (unsigned char *) dst;

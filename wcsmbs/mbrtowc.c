@@ -69,7 +69,7 @@ __mbrtowc (wchar_t *pwc, const char *s, size_t n, mbstate_t *ps)
   inbuf = (const unsigned char *) s;
   status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc,
 					       &data, &inbuf, inbuf + n,
-					       &dummy, 0);
+					       &dummy, 0, 1);
 
   /* There must not be any problems with the conversion but illegal input
      characters.  The output buffer must be large enough, otherwise the

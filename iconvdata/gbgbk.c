@@ -1,5 +1,5 @@
 /* Mapping tables from GBK to GB2312 and vice versa.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
@@ -38,6 +38,7 @@
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_OUTPUT	MAX_NEEDED_TO
 #define LOOPFCT			FROM_LOOP
 #define BODY \
   {									      \
@@ -117,6 +118,7 @@
 
 /* Next, define the other direction.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_TO
+#define MAX_NEEDED_INPUT	MAX_NEEDED_TO
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_OUTPUT	MAX_NEEDED_FROM
 #define LOOPFCT			TO_LOOP
@@ -133,8 +135,8 @@
 	  {								      \
 	    /* The second character is not available.  Store		      \
 		 the intermediate result.  */				      \
-	      result = __GCONV_INCOMPLETE_INPUT;			      \
-	      break;							      \
+	    result = __GCONV_INCOMPLETE_INPUT;				      \
+	    break;							      \
 	  }								      \
 									      \
 	if (NEED_LENGTH_TEST && outend - outptr < 2)			      \

@@ -1,3 +1,55 @@
+2000-04-09  Ulrich Drepper  <drepper@redhat.com>
+
+	Implement handling of restartable conversion functions according to
+	ISO C.
+	* iconv/gconv.h (__gconv_fct): Add additional parameter.
+	* iconv/gconv_int.h (__BUILTIN_TRANS): Likewise.
+	* iconv/gconv.c: Pass additional parameter to conversion function.
+	* iconv/gconv_simple.c (internal_ucs4_loop_single): New function.
+	(internal_ucs4le_loop_single): New function.
+	(__gconv_transform_ascii_internal): Define ONE_DIRECTION.
+	(__gconv_transform_internal_ascii): Likewise.
+	(__gconv_transform_internal_utf8): Likewise.
+	(__gconv_transform_utf8_internal): Likewise.
+	(__gconv_transform_ucs2_internal): Likewise.
+	(__gconv_transform_internal_ucs2): Likewise.
+	(__gconv_transform_ucs2reverse_internal): Likewise.
+	(__gconv_transform_internal_ucs2reverse): Likewise.
+	(internal_ucs4le_loop_unaligned): Before return
+	__GCONV_INCOMPLETE_INPUT check that the remaining bytes really form
+	a valid character.  Otherwise return __GCONV_ILLEGAL_INPUT.
+	(__gconv_transform_utf8_internal): Define STORE_REST and UNPACK_BYTES.
+	* iconv/loop.c: Fit in definition of function to convert one character
+	for processing of left-over bytes from the state object.
+	* iconv/skeleton.c (gconv): Rename inbuf to inptrp and inbufend to
+	inend to match names in loop functions.
+	(RESET_INPUT_BUFFER): Change apprpriately.
+	(gconv): If needed, call function to process bytes from the state
+	object.  Similar at the end: store left over bytes if input is
+	incomplete.
+	Take extra argument and add new argument to all calls of the
+	conversion function.
+	* iconvdata/iso-2022-cn.c: Adjust numeric values used to store
+	information in the state object to not conflict with length count.
+	* iconvdata/iso-2022-jp.c: Likewise.
+	* iconvdata/iso-2022-kr.c: Likewise.
+	* iconvdata/unicode.c: Adjust for change change in parameters of
+	skeleton function.
+	* iconvdata/utf-16.c: Likewise.
+	* libio/iofwide.c: Add new parameter to all calls of conversion
+	function.
+	* wcsmbs/btowc.c: Likewise.
+	* wcsmbs/mbrtowc.c: Likewise.
+	* wcsmbs/mbsnrtowcs.c: Likewise.
+	* wcsmbs/mbsrtowcs.c: Likewise.
+	* wcsmbs/wcrtomb.c: Likewise.
+	* wcsmbs/wcsnrtombs.c: Likewise.
+	* wcsmbs/wcsrtombs.c: Likewise.
+	* wcsmbs/wctob.c: Likewise.
+
+	* iconvdata/gbgbk.c: Always define MAX_NEEDED_OUTPUT and
+	MAX_NEEDED_INPUT.
+
 2000-04-07  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/mips/kernel_sigaction.h: Updated for

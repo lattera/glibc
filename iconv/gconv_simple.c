@@ -145,6 +145,45 @@ internal_ucs4_loop_unaligned (const unsigned char **inptrp,
 }
 #endif
 
+
+static inline int
+internal_ucs4_loop_single (const unsigned char **inptrp,
+			   const unsigned char *inend,
+			   unsigned char **outptrp, unsigned char *outend,
+			   mbstate_t *state, void *data, size_t *converted)
+{
+  size_t cnt = state->__count & 7;
+
+  while (*inptrp < inend && cnt < 4)
+    state->__value.__wchb[cnt++] = *(*inptrp)++;
+
+  if (cnt < 4)
+    {
+      /* Still not enough bytes.  Store the ones in the input buffer.  */
+      state->__count &= ~7;
+      state->__count |= cnt;
+
+      return __GCONV_INCOMPLETE_INPUT;
+    }
+
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+  (*outptrp)[0] = state->__value.__wchb[3];
+  (*outptrp)[1] = state->__value.__wchb[2];
+  (*outptrp)[2] = state->__value.__wchb[1];
+  (*outptrp)[3] = state->__value.__wchb[0];
+#elif __BYTE_ORDER == __BIG_ENDIAN
+  /* XXX unaligned */
+  *(*((uint32_t **) outptrp)++) = state->__value.__wch;
+#else
+# error "This endianess is not supported."
+#endif
+
+  /* Clear the state buffer.  */
+  state->__count &= ~7;
+
+  return __GCONV_OK;
+}
+
 #include <iconv/skeleton.c>
 
 
@@ -244,6 +283,43 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 }
 #endif
 
+
+static inline int
+internal_ucs4le_loop_single (const unsigned char **inptrp,
+			     const unsigned char *inend,
+			     unsigned char **outptrp, unsigned char *outend,
+			     mbstate_t *state, void *data, size_t *converted)
+{
+  size_t cnt = state->__count & 7;
+
+  while (*inptrp < inend && cnt < 4)
+    state->__value.__wchb[cnt++] = *(*inptrp)++;
+
+  if (cnt < 4)
+    {
+      /* Still not enough bytes.  Store the ones in the input buffer.  */
+      state->__count &= ~7;
+      state->__count |= cnt;
+
+      return __GCONV_INCOMPLETE_INPUT;
+    }
+
+#if __BYTE_ORDER == __BIG_ENDIAN
+  (*outptrp)[0] = state->__value.__wchb[3];
+  (*outptrp)[1] = state->__value.__wchb[2];
+  (*outptrp)[2] = state->__value.__wchb[1];
+  (*outptrp)[3] = state->__value.__wchb[0];
+#else
+  /* XXX unaligned */
+  *(*((uint32_t **) outptrp)++) = state->__value.__wch;
+#endif
+
+  /* Clear the state buffer.  */
+  state->__count &= ~7;
+
+  return __GCONV_OK;
+}
+
 #include <iconv/skeleton.c>
 
 
@@ -256,6 +332,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		ascii_internal_loop
 #define TO_LOOP			ascii_internal_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_ascii_internal
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -270,6 +347,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
       }									      \
 									      \
     /* It's an one byte sequence.  */					      \
+    /* XXX unaligned.  */						      \
     *((uint32_t *) outptr)++ = *inptr++;				      \
   }
 #include <iconv/loop.c>
@@ -285,6 +363,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		internal_ascii_loop
 #define TO_LOOP			internal_ascii_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_internal_ascii
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -315,6 +394,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		internal_utf8_loop
 #define TO_LOOP			internal_utf8_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_internal_utf8
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -375,6 +455,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		utf8_internal_loop
 #define TO_LOOP			utf8_internal_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_utf8_internal
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
@@ -438,8 +519,13 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 									      \
 	if (NEED_LENGTH_TEST && inptr + cnt > inend)			      \
 	  {								      \
-	    /* We don't have enough input.  */				      \
-	    result = __GCONV_INCOMPLETE_INPUT;				      \
+	    /* We don't have enough input.  But before we report that check   \
+	       that all the bytes are correct.  */			      \
+	    for (i = 1; inptr + i < inend; ++i)				      \
+	      if ((inptr[i] & 0xc0) != 0x80)				      \
+		break;							      \
+	    result = (inptr + i == inend				      \
+		      ? __GCONV_INCOMPLETE_INPUT : __GCONV_ILLEGAL_INPUT);    \
 	    break;							      \
 	  }								      \
 									      \
@@ -472,6 +558,89 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
     /* Now adjust the pointers and store the result.  */		      \
     *((uint32_t *) outptr)++ = ch;					      \
   }
+
+#define STORE_REST \
+  {									      \
+    /* We store the remaining bytes while converting them into the UCS4	      \
+       format.  We can assume that the first byte in the buffer is	      \
+       correct and that it requires a larger number of bytes than there	      \
+       are in the input buffer.  */					      \
+    wint_t ch = **inptrp;						      \
+    size_t cnt;								      \
+									      \
+    state->__count = inend - *inptrp;					      \
+									      \
+    if (ch >= 0xc2 && ch < 0xe0)					      \
+      {									      \
+	/* We expect two bytes.  The first byte cannot be 0xc0 or	      \
+	   0xc1, otherwise the wide character could have been		      \
+	   represented using a single byte.  */				      \
+	cnt = 2;							      \
+	ch &= 0x1f;							      \
+      }									      \
+    else if ((ch & 0xf0) == 0xe0)					      \
+      {									      \
+	/* We expect three bytes.  */					      \
+	cnt = 3;							      \
+	ch &= 0x0f;							      \
+      }									      \
+    else if ((ch & 0xf8) == 0xf0)					      \
+      {									      \
+	/* We expect four bytes.  */					      \
+	cnt = 4;							      \
+	ch &= 0x07;							      \
+      }									      \
+    else if ((ch & 0xfc) == 0xf8)					      \
+      {									      \
+	/* We expect five bytes.  */					      \
+	cnt = 5;							      \
+	ch &= 0x03;							      \
+      }									      \
+    else								      \
+      {									      \
+	/* We expect six bytes.  */					      \
+	cnt = 6;							      \
+	ch &= 0x01;							      \
+      }									      \
+									      \
+    /* The first byte is already consumed.  */				      \
+    --cnt;								      \
+    while (++(*inptrp) < inend)						      \
+      {									      \
+	ch <<= 6;							      \
+	ch |= **inptrp & 0x3f;						      \
+	--cnt;								      \
+      }									      \
+									      \
+    /* Shift for the so far missing bytes.  */				      \
+    ch <<= cnt * 6;							      \
+									      \
+    /* Store the value.  */						      \
+    state->__value.__wch = ch;						      \
+  }
+
+#define UNPACK_BYTES \
+  {									      \
+    wint_t wch = state->__value.__wch;					      \
+    inlen = state->__count;						      \
+									      \
+    if (state->__value.__wch <= 0x7ff)					      \
+      bytebuf[0] = 0xc0;						      \
+    else if (state->__value.__wch <= 0xffff)				      \
+      bytebuf[0] = 0xe0;						      \
+    else if (state->__value.__wch <= 0x1fffff)				      \
+      bytebuf[0] = 0xf0;						      \
+    else if (state->__value.__wch <= 0x3ffffff)				      \
+      bytebuf[0] = 0xf8;						      \
+    else								      \
+      bytebuf[0] = 0xfc;						      \
+									      \
+    while (inlen-- > 1)							      \
+      bytebuf[inlen] = 0x80 | (wch & 0x3f);				      \
+									      \
+    bytebuf[0] |= wch;							      \
+  }
+
 #include <iconv/loop.c>
 #include <iconv/skeleton.c>
 
@@ -485,6 +654,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		ucs2_internal_loop
 #define TO_LOOP			ucs2_internal_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_ucs2_internal
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -504,6 +674,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		internal_ucs2_loop
 #define TO_LOOP			internal_ucs2_loop /* This is not used.  */
 #define FUNCTION_NAME		__gconv_transform_internal_ucs2
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -530,6 +701,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		ucs2reverse_internal_loop
 #define TO_LOOP			ucs2reverse_internal_loop/* This is not used.*/
 #define FUNCTION_NAME		__gconv_transform_ucs2reverse_internal
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -550,6 +722,7 @@ internal_ucs4le_loop_unaligned (const unsigned char **inptrp,
 #define FROM_LOOP		internal_ucs2reverse_loop
 #define TO_LOOP			internal_ucs2reverse_loop/* This is not used.*/
 #define FUNCTION_NAME		__gconv_transform_internal_ucs2reverse
+#define ONE_DIRECTION		1
 
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO

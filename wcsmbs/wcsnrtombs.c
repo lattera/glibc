@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999   Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -81,7 +81,8 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 
 	  status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
 				   (const unsigned char **) &inbuf,
-				   (const unsigned char *) srcend, &dummy, 0);
+				   (const unsigned char *) srcend, &dummy,
+				   0, 1);
 
 	  /* Count the number of bytes.  */
 	  result += data.__outbuf - buf;
@@ -105,7 +106,7 @@ __wcsnrtombs (dst, src, nwc, len, ps)
 
       status = (*tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
 			       (const unsigned char **) src,
-			       (const unsigned char *) srcend, &dummy, 0);
+			       (const unsigned char *) srcend, &dummy, 0, 1);
 
       /* Count the number of bytes.  */
       result = data.__outbuf - (unsigned char *) dst;

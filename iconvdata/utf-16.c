@@ -49,7 +49,7 @@
       if (data->__invocation_counter == 0)				      \
 	{								      \
 	  /* We have to find out which byte order the file is encoded in.  */ \
-	  if (inptr + 2 > inbufend)					      \
+	  if (inptr + 2 > inend)					      \
 	    return __GCONV_EMPTY_INPUT;					      \
 									      \
 	  if (get16u (inptr) == BOM)					      \

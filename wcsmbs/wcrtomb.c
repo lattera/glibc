@@ -71,7 +71,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
     {
       status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
 						   &data, NULL, NULL,
-						   &dummy, 1);
+						   &dummy, 1, 1);
 
       if (status == __GCONV_OK || status == __GCONV_EMPTY_INPUT)
 	*data.__outbuf++ = '\0';
@@ -84,7 +84,7 @@ __wcrtomb (char *s, wchar_t wc, mbstate_t *ps)
       status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb,
 						   &data, &inbuf,
 						   inbuf + sizeof (wchar_t),
-						   &dummy, 0);
+						   &dummy, 0, 1);
     }
 
   /* There must not be any problems with the conversion but illegal input

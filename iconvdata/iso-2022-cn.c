@@ -59,13 +59,14 @@
 enum
 {
   ASCII_set = 0,
-  GB2312_set,
-  CNS11643_1_set,
-  CNS11643_2_set,
-  CURRENT_MASK = 3,
-  GB2312_ann = 4,
-  CNS11643_1_ann = 8,
-  CNS11643_2_ann = 16
+  GB2312_set = 8,
+  CNS11643_1_set = 16,
+  CNS11643_2_set = 24,
+  CURRENT_SEL_MASK = 24,
+  GB2312_ann = 32,
+  CNS11643_1_ann = 64,
+  CNS11643_2_ann = 128,
+  CURRENT_ANN_MASK = 224
 };
 
 
@@ -225,8 +226,8 @@ enum
     outptr += 4;							      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
-#define INIT_PARAMS		int set = *setp & CURRENT_MASK; \
-				int ann = *setp & ~CURRENT_MASK
+#define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK; \
+				int ann = *setp & CURRENT_ANN_MASK
 #define UPDATE_PARAMS		*setp = set | ann
 #include <iconv/loop.c>
 
@@ -389,8 +390,8 @@ enum
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, int *setp
-#define INIT_PARAMS		int set = *setp & CURRENT_MASK; \
-				int ann = *setp & ~CURRENT_MASK
+#define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK; \
+				int ann = *setp & CURRENT_ANN_MASK
 #define UPDATE_PARAMS		*setp = set | ann
 #include <iconv/loop.c>
 

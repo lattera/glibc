@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1996.
 
@@ -55,7 +55,7 @@ wctob (c)
   status = (*__wcsmbs_gconv_fcts.tomb->__fct) (__wcsmbs_gconv_fcts.tomb, &data,
 					       (const unsigned char **) &inptr,
 					       (const unsigned char *) &inbuf[1],
-					       &dummy, 0);
+					       &dummy, 0, 1);
   /* The conversion failed or the output is too long.  */
   if ((status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
        && status != __GCONV_EMPTY_INPUT)

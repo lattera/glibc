@@ -173,7 +173,7 @@ do_out (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_out.__cd.__data[0].__statep = statep;
 
   status = (*gs->__fct) (gs, codecvt->__cd_out.__cd.__data, &from_start_copy,
-			 (const unsigned char *) from_end, &written, 0);
+			 (const unsigned char *) from_end, &written, 0, 0);
 
   *from_stop = (wchar_t *) from_start_copy;
   *to_stop = codecvt->__cd_out.__cd.__data[0].__outbuf;
@@ -219,7 +219,7 @@ do_unshift (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_out.__cd.__data[0].__statep = statep;
 
   status = (*gs->__fct) (gs, codecvt->__cd_out.__cd.__data, NULL, NULL,
-			 &written, 1);
+			 &written, 1, 0);
 
   *to_stop = codecvt->__cd_out.__cd.__data[0].__outbuf;
 
@@ -266,7 +266,7 @@ do_in (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.__cd.__data[0].__statep = statep;
 
   status = (*gs->__fct) (gs, codecvt->__cd_in.__cd.__data, &from_start_copy,
-			 from_end, &written, 0);
+			 from_end, &written, 0, 0);
 
   *from_stop = from_start_copy;
   *to_stop = (wchar_t *) codecvt->__cd_in.__cd.__data[0].__outbuf;
@@ -342,7 +342,7 @@ do_length (struct _IO_codecvt *codecvt, __mbstate_t *statep,
   codecvt->__cd_in.__cd.__data[0].__statep = statep;
 
   status = (*gs->__fct) (gs, codecvt->__cd_in.__cd.__data, &cp, from_end,
-			 &written, 0);
+			 &written, 0, 0);
 
   result = cp - (const unsigned char *) from_start;
 #else

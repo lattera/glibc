@@ -59,7 +59,7 @@ struct __gconv_loaded_object;
 /* Type of a conversion function.  */
 typedef int (*__gconv_fct) (struct __gconv_step *, struct __gconv_step_data *,
 			    __const unsigned char **, __const unsigned char *,
-			    size_t *, int);
+			    size_t *, int, int);
 
 /* Constructor and destructor for local data for conversion step.  */
 typedef int (*__gconv_init_fct) (struct __gconv_step *);

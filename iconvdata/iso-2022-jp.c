@@ -89,13 +89,14 @@ struct iso2022jp_data
 enum
 {
   ASCII_set = 0,
-  JISX0208_1978_set,
-  JISX0208_1983_set,
-  JISX0201_Roman_set,
-  JISX0201_Kana_set,
-  GB2312_set,
-  KSC5601_set,
-  JISX0212_set
+  JISX0208_1978_set = 8,
+  JISX0208_1983_set = 16,
+  JISX0201_Roman_set = 24,
+  JISX0201_Kana_set = 32,
+  GB2312_set = 40,
+  KSC5601_set = 48,
+  JISX0212_set = 56,
+  CURRENT_SEL_MASK = 56
 };
 
 /* The second value stored is the designation of the G2 set.  The following
@@ -103,8 +104,9 @@ enum
 enum
 {
   UNSPECIFIED_set = 0,
-  ISO88591_set,
-  ISO88597_set
+  ISO88591_set = 64,
+  ISO88597_set = 128,
+  CURRENT_ASSIGN_MASK = 192
 };
 
 
@@ -188,15 +190,18 @@ gconv_end (struct __gconv_step *data)
    the output state to the initial state.  This has to be done during the
    flushing.  */
 #define EMIT_SHIFT_TO_INIT \
-  if (data->__statep->__count != ASCII_set)				      \
+  if ((data->__statep->__count & ~7) != ASCII_set)			      \
     {									      \
       enum direction dir = ((struct iso2022jp_data *) step->__data)->dir;     \
 									      \
       if (dir == from_iso2022jp)					      \
-	/* It's easy, we don't have to emit anything, we just reset the	      \
-	   state for the input.  Note that this also clears the G2	      \
-	   designation.  */						      \
-	data->__statep->__count = ASCII_set;				      \
+	{								      \
+	  /* It's easy, we don't have to emit anything, we just reset the     \
+	     state for the input.  Note that this also clears the G2	      \
+	     designation.  */						      \
+	  data->__statep->__count &= 7;					      \
+	  data->__statep->__count |= ASCII_set;				      \
+	}								      \
       else								      \
 	{								      \
 	  unsigned char *outbuf = data->__outbuf;			      \
@@ -216,7 +221,8 @@ gconv_end (struct __gconv_step *data)
 	        *written += 3;						      \
 	      data->__outbuf = outbuf;					      \
 	      /* Note that this also clears the G2 designation.  */	      \
-	      data->__statep->__count = ASCII_set;			      \
+	      data->__statep->__count &= ~7;				      \
+	      data->__statep->__count |= ASCII_set;			      \
 	    }								      \
 	}								      \
     }
@@ -440,8 +446,9 @@ gconv_end (struct __gconv_step *data)
     outptr += 4;							      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
-#define INIT_PARAMS		int set = *setp % 0x100, set2 = *setp / 0x100
-#define UPDATE_PARAMS		*setp = (set2 << 8) + set
+#define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
+				int set2 = *setp & CURRENT_ASSIGN_MASK
+#define UPDATE_PARAMS		*setp = set | set2
 #include <iconv/loop.c>
 
 
@@ -848,8 +855,9 @@ gconv_end (struct __gconv_step *data)
     inptr += 4;								      \
   }
 #define EXTRA_LOOP_DECLS	, enum variant var, int *setp
-#define INIT_PARAMS		int set = *setp % 0x100, set2 = *setp / 0x100
-#define UPDATE_PARAMS		*setp = (set2 << 8) + set
+#define INIT_PARAMS		int set = *setp & CURRENT_SEL_MASK;	      \
+				int set2 = *setp & CURRENT_ASSIGN_MASK
+#define UPDATE_PARAMS		*setp = set | set2
 #include <iconv/loop.c>
 
 

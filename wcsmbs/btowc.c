@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1996.
 
@@ -59,7 +59,8 @@ __btowc (c)
   inbuf[0] = c;
 
   status = (*__wcsmbs_gconv_fcts.towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
-					       &inptr, inptr + 1, &dummy, 0);
+					       &inptr, inptr + 1, &dummy,
+					       0, 1);
   /* The conversion failed.  */
   if (status != __GCONV_OK && status != __GCONV_FULL_OUTPUT
       && status != __GCONV_EMPTY_INPUT)

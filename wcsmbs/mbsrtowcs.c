@@ -77,7 +77,7 @@ __mbsrtowcs (dst, src, len, ps)
 	  data.__outbuf = (char *) buf;
 
 	  status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data, &inbuf,
-				   srcend, &non_reversible, 0);
+				   srcend, &non_reversible, 0, 1);
 
 	  result += (wchar_t *) data.__outbuf - buf;
 	}
@@ -107,7 +107,7 @@ __mbsrtowcs (dst, src, len, ps)
 
       status = (*towc->__fct) (__wcsmbs_gconv_fcts.towc, &data,
 			       (const unsigned char **) src, srcend,
-			       &non_reversible, 0);
+			       &non_reversible, 0, 1);
 
       result = (wchar_t *) data.__outbuf - dst;
 
