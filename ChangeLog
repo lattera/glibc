@@ -1,5 +1,14 @@
 2000-07-21  Greg McGary  <greg@mcgary.org>
 
+	* malloc/malloc.c (next_chunk, prev_chunk, inuse_bit_at_offset,
+	set_inuse_bit_at_offset, clear_inuse_bit_at_offset, set_foot):
+	Define in terms of chunk_at_offset.
+	(inuse, set_inuse, clear_inuse): Define in terms of next_chunk.
+	(next_bin, prev_bin): offset by size of real array elements.
+	(chunk_align): Make `m' a scalar, since that's how it's used.
+
+2000-07-21  Greg McGary  <greg@mcgary.org>
+
 	* sysdeps/powerpc/bp-asm.h (DISCARD_BOUNDS): Rename from UNCHECK_BOUNDS.
 	* sysdeps/powerpc/bits/setjmp.h (JB_SIZE): New constant.
 	* sysdeps/powerpc/elf/libc-start.c (__libc_start_main):

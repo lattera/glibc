@@ -1330,11 +1330,11 @@ static void      free_atfork();
 
 /* Ptr to next physical malloc_chunk. */
 
-#define next_chunk(p) ((mchunkptr)( ((char*)(p)) + ((p)->size & ~PREV_INUSE) ))
+#define next_chunk(p) chunk_at_offset((p), (p)->size & ~PREV_INUSE)
 
 /* Ptr to previous physical malloc_chunk */
 
-#define prev_chunk(p) ((mchunkptr)( ((char*)(p)) - ((p)->prev_size) ))
+#define prev_chunk(p) chunk_at_offset((p), -(p)->prev_size)
 
 
 /* Treat space at ptr + offset as a chunk */
@@ -1350,8 +1350,7 @@ static void      free_atfork();
 
 /* extract p's inuse bit */
 
-#define inuse(p) \
- ((((mchunkptr)(((char*)(p))+((p)->size & ~PREV_INUSE)))->size) & PREV_INUSE)
+#define inuse(p) (next_chunk(p)->size & PREV_INUSE)
 
 /* extract inuse bit of previous chunk */
 
@@ -1363,22 +1362,20 @@ static void      free_atfork();
 
 /* set/clear chunk as in use without otherwise disturbing */
 
-#define set_inuse(p) \
- ((mchunkptr)(((char*)(p)) + ((p)->size & ~PREV_INUSE)))->size |= PREV_INUSE
+#define set_inuse(p) (next_chunk(p)->size |= PREV_INUSE)
 
-#define clear_inuse(p) \
- ((mchunkptr)(((char*)(p)) + ((p)->size & ~PREV_INUSE)))->size &= ~(PREV_INUSE)
+#define clear_inuse(p) (next_chunk(p)->size &= ~PREV_INUSE)
 
 /* check/set/clear inuse bits in known places */
 
-#define inuse_bit_at_offset(p, s)\
- (((mchunkptr)(((char*)(p)) + (s)))->size & PREV_INUSE)
+#define inuse_bit_at_offset(p, s) \
+  (chunk_at_offset((p), (s))->size & PREV_INUSE)
 
-#define set_inuse_bit_at_offset(p, s)\
- (((mchunkptr)(((char*)(p)) + (s)))->size |= PREV_INUSE)
+#define set_inuse_bit_at_offset(p, s) \
+  (chunk_at_offset((p), (s))->size |= PREV_INUSE)
 
-#define clear_inuse_bit_at_offset(p, s)\
- (((mchunkptr)(((char*)(p)) + (s)))->size &= ~(PREV_INUSE))
+#define clear_inuse_bit_at_offset(p, s) \
+  (chunk_at_offset((p), (s))->size &= ~(PREV_INUSE))
 
 
 
@@ -1401,7 +1398,7 @@ static void      free_atfork();
 
 /* Set size at footer (only when chunk is not in use) */
 
-#define set_foot(p, s)   (((mchunkptr)((char*)(p) + (s)))->prev_size = (s))
+#define set_foot(p, s)   (chunk_at_offset(p, s)->prev_size = (s))
 
 
 
@@ -1409,10 +1406,10 @@ static void      free_atfork();
 
 /* access macros */
 
-#define bin_at(a, i)   ((mbinptr)((char*)&(((a)->av)[2*(i) + 2]) - 2*SIZE_SZ))
-#define init_bin(a, i) ((a)->av[2*i+2] = (a)->av[2*i+3] = bin_at((a), i))
-#define next_bin(b)    ((mbinptr)((char*)(b) + 2 * sizeof(mbinptr)))
-#define prev_bin(b)    ((mbinptr)((char*)(b) - 2 * sizeof(mbinptr)))
+#define bin_at(a, i)   ((mbinptr)((char*)&(((a)->av)[2*(i)+2]) - 2*SIZE_SZ))
+#define init_bin(a, i) ((a)->av[2*(i)+2] = (a)->av[2*(i)+3] = bin_at((a), (i)))
+#define next_bin(b)    ((mbinptr)((char*)(b) + 2 * sizeof(((arena*)0)->av[0])))
+#define prev_bin(b)    ((mbinptr)((char*)(b) - 2 * sizeof(((arena*)0)->av[0])))
 
 /*
    The first 2 bins are never indexed. The corresponding av cells are instead
@@ -3531,7 +3528,7 @@ chunk_align(ar_ptr, nb, alignment)
 arena* ar_ptr; INTERNAL_SIZE_T nb; size_t alignment;
 #endif
 {
-  char*     m;                /* memory returned by malloc call */
+  unsigned long m;            /* memory returned by malloc call */
   mchunkptr p;                /* corresponding chunk */
   char*     brk;              /* alignment point within p */
   mchunkptr newp;             /* chunk to return */
@@ -3545,9 +3542,9 @@ arena* ar_ptr; INTERNAL_SIZE_T nb; size_t alignment;
   if (p == 0)
     return 0; /* propagate failure */
 
-  m = (char*)chunk2mem(p);
+  m = (unsigned long)chunk2mem(p);
 
-  if ((((unsigned long)(m)) % alignment) == 0) /* aligned */
+  if ((m % alignment) == 0) /* aligned */
   {
 #if HAVE_MMAP
     if(chunk_is_mmapped(p)) {
@@ -3566,8 +3563,7 @@ arena* ar_ptr; INTERNAL_SIZE_T nb; size_t alignment;
       this is always possible.
     */
 
-    brk = (char*)mem2chunk(((unsigned long)(m + alignment - 1)) &
-                           -(long)alignment);
+    brk = (char*)mem2chunk(((m + alignment - 1)) & -(long)alignment);
     if ((long)(brk - (char*)(p)) < (long)MINSIZE) brk += alignment;
 
     newp = (mchunkptr)brk;
