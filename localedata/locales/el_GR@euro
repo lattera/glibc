@@ -1,0 +1,92 @@
+escape_char /
+comment_char %
+
+LC_IDENTIFICATION
+title      "Greek locale for Greece with Euro"
+source     "Free Software Foundation, Inc."
+address    "59 Temple Place - Suite 330, Boston, MA 02111-1307, USA"
+contact    ""
+email      "bug-glibc@gnu.org"
+tel        ""
+fax        ""
+language   "Greek"
+territory  "Greece"
+revision   "1.0"
+date       "2000-06-24"
+%
+category  "el_GR@euro:2000";LC_IDENTIFICATION
+category  "el_GR@euro:2000";LC_CTYPE
+category  "el_GR@euro:2000";LC_COLLATE
+category  "el_GR@euro:2000";LC_TIME
+category  "el_GR@euro:2000";LC_NUMERIC
+category  "el_GR@euro:2000";LC_MONETARY
+category  "el_GR@euro:2000";LC_MESSAGES
+category  "el_GR@euro:2000";LC_PAPER
+category  "el_GR@euro:2000";LC_NAME
+category  "el_GR@euro:2000";LC_ADDRESS
+category  "el_GR@euro:2000";LC_TELEPHONE
+
+END LC_IDENTIFICATION
+
+LC_CTYPE
+copy "el_GR"
+END LC_CTYPE
+
+LC_COLLATE
+
+% Copy the template from ISO/IEC 14651
+copy "iso14651_t1"
+
+END LC_COLLATE
+
+LC_MONETARY
+int_curr_symbol       "<U0045><U0055><U0052><U0020>"
+currency_symbol       "<U20AC>"
+mon_decimal_point     "<U002C>"
+mon_thousands_sep     "<U002E>"
+mon_grouping          3
+positive_sign         ""
+negative_sign         "<U002D>"
+int_frac_digits       4
+frac_digits           4
+p_cs_precedes         0
+p_sep_by_space        0
+n_cs_precedes         1
+n_sep_by_space        0
+p_sign_posn           1
+n_sign_posn           1
+%
+END LC_MONETARY
+
+LC_NUMERIC
+copy "el_GR"
+END LC_NUMERIC
+
+LC_TIME
+copy "el_GR"
+END LC_TIME
+
+LC_MESSAGES
+copy "el_GR"
+END LC_MESSAGES
+
+LC_PAPER
+copy "el_GR"
+END LC_PAPER
+
+LC_NAME
+copy "el_GR"
+END LC_NAME
+
+
+LC_ADDRESS
+copy "el_GR"
+END LC_ADDRESS
+
+LC_TELEPHONE
+copy "el_GR"
+END LC_TELEPHONE
+
+LC_MEASUREMENT
+copy "el_GR"
+END LC_MEASUREMENT
