@@ -1,3 +1,13 @@
+2001-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/i686/strtok.S: Continue to return NULL after the
+	first time this happened.
+
+2001-02-21  Andreas Jaeger  <aj@suse.de>
+
+	* string/tst-strtok.c: New testcase, reported by
+	Andrew Church <achurch@achurch.org>.
+
 2001-02-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/iofwide.c: Remove fwide alias.

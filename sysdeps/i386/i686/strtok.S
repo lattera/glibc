@@ -1,6 +1,6 @@
 /* strtok (str, delim) -- Return next DELIM separated token from STR.
    For Intel 80686.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -123,6 +123,8 @@ ENTRY (BP_SYM (FUNCTION))
 	   the last run.  */
 	cmpl $0, %edx
 	cmove %eax, %edx
+	testl %edx, %edx
+	jz L(returnNULL)
 #if __BOUNDED_POINTERS__
 # ifdef USE_AS_STRTOK_R
 	movl SAVE(%esp), %ecx	/* borrow %ecx for a moment */
