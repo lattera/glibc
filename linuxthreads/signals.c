@@ -34,9 +34,13 @@ int pthread_sigmask(int how, const sigset_t * newmask, sigset_t * oldmask)
     case SIG_SETMASK:
       sigaddset(&mask, __pthread_sig_restart);
       sigdelset(&mask, __pthread_sig_cancel);
+      if (__pthread_sig_debug > 0)
+	sigdelset(&mask, __pthread_sig_debug);
       break;
     case SIG_BLOCK:
       sigdelset(&mask, __pthread_sig_cancel);
+      if (__pthread_sig_debug > 0)
+	sigdelset(&mask, __pthread_sig_debug);
       break;
     case SIG_UNBLOCK:
       sigdelset(&mask, __pthread_sig_restart);

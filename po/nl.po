@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libc 2.3.2\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2003-02-22 15:34-0800\n"
-"PO-Revision-Date: 2004-03-09 21:36+0100\n"
+"PO-Revision-Date: 2004-04-08 00:11+0200\n"
 "Last-Translator: Elros Cyriatan <cyriatan@fastmail.fm>\n"
 "Language-Team: Dutch <vertaling@nl.linux.org>\n"
 "MIME-Version: 1.0\n"
@@ -698,7 +698,7 @@ msgstr "%s: niet genoeg sorteerregels"
 #: locale/programs/ld-collate.c:759
 #, c-format
 msgid "%s: empty weight string not allowed"
-msgstr "%s: lege gewichtsstring niet toegestaan"
+msgstr "%s: lege gewichtstekenreeks niet toegestaan"
 
 #: locale/programs/ld-collate.c:854
 #, c-format
@@ -955,12 +955,12 @@ msgstr "niet alle tekens gebruikt in `outdigit' zijn beschikbaar in het repertoi
 #: locale/programs/ld-ctype.c:1235
 #, c-format
 msgid "character class `%s' already defined"
-msgstr "teken klasse `%s' reeds gedefinieerd"
+msgstr "tekenklasse `%s' reeds gedefinieerd"
 
 #: locale/programs/ld-ctype.c:1241
 #, c-format
 msgid "implementation limit: no more than %Zd character classes allowed"
-msgstr "implementatie grens: niet meer dan %Zd teken klasses toegestaan"
+msgstr "implementatie grens: niet meer dan %Zd tekenklasses toegestaan"
 
 #: locale/programs/ld-ctype.c:1267
 #, c-format
@@ -1132,7 +1132,7 @@ msgstr "%s: veld `%s' ongedefinieerd"
 #: locale/programs/ld-messages.c:122 locale/programs/ld-messages.c:156
 #, c-format
 msgid "%s: value for field `%s' must not be an empty string"
-msgstr "%s: waarde voor veld `%s' mag geen lege string zijn"
+msgstr "%s: waarde voor veld `%s' mag geen lege tekenreeks zijn"
 
 #: locale/programs/ld-messages.c:138 locale/programs/ld-messages.c:172
 #, c-format
@@ -1152,7 +1152,7 @@ msgstr "%s: waarde van veld `int_curr_symbol' komt niet overeen met een geldige 
 #: locale/programs/ld-monetary.c:250 locale/programs/ld-numeric.c:119
 #, c-format
 msgid "%s: value for field `%s' must not be the empty string"
-msgstr "%s: waarde voor veld `%s' mag geen lege string zijn"
+msgstr "%s: waarde voor veld `%s' mag geen lege tekenreeks zijn"
 
 #: locale/programs/ld-monetary.c:278 locale/programs/ld-monetary.c:308
 #, c-format
@@ -1187,62 +1187,62 @@ msgstr "%s: ongeldige stuurcode in veld `%s'"
 #: locale/programs/ld-time.c:248
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not '+' nor '-'"
-msgstr "%s: richtingsaanduiding in string %Zd in `era' veld is niet '+' of '-'"
+msgstr "%s: richtingsaanduiding in tekenreeks %Zd in `era' veld is niet '+' of '-'"
 
 #: locale/programs/ld-time.c:259
 #, c-format
 msgid "%s: direction flag in string %Zd in `era' field is not a single character"
-msgstr "%s: richtingsaanduiding in string %Zd in `era' veld is niet een enkel teken"
+msgstr "%s: richtingsaanduiding in tekenreeks %Zd in `era' veld is niet een enkel teken"
 
 #: locale/programs/ld-time.c:272
 #, c-format
 msgid "%s: invalid number for offset in string %Zd in `era' field"
-msgstr "%s: ongeldig getal voor verplaatsing in string %Zd in `era' veld"
+msgstr "%s: ongeldig getal voor verplaatsing in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:280
 #, c-format
 msgid "%s: garbage at end of offset value in string %Zd in `era' field"
-msgstr "%s: troep aan einde van verplaatsingswaarde in string %Zd in `era' veld"
+msgstr "%s: troep aan einde van verplaatsingswaarde in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:331
 #, c-format
 msgid "%s: invalid starting date in string %Zd in `era' field"
-msgstr "%s: ongeldige begindatum in string %Zd in `era' veld"
+msgstr "%s: ongeldige begindatum in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:340
 #, c-format
 msgid "%s: garbage at end of starting date in string %Zd in `era' field "
-msgstr "%s: troep aan einde van begindatum in string %Zd in `era' veld"
+msgstr "%s: troep aan einde van begindatum in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:359
 #, c-format
 msgid "%s: starting date is invalid in string %Zd in `era' field"
-msgstr "%s: begindatum is ongeldig in string %Zd in `era' veld"
+msgstr "%s: begindatum is ongeldig in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:408
 #, c-format
 msgid "%s: invalid stopping date in string %Zd in `era' field"
-msgstr "%s: ongeldige einddatum in string %Zd in `era' veld"
+msgstr "%s: ongeldige einddatum in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:417
 #, c-format
 msgid "%s: garbage at end of stopping date in string %Zd in `era' field"
-msgstr "%s: troep aan einde van einddatum in string %Zd in `era' veld"
+msgstr "%s: troep aan einde van einddatum in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:436
 #, c-format
 msgid "%s: stopping date is invalid in string %Zd in `era' field"
-msgstr "%s: einddatum is ongeldig in string %Zd in `era' veld"
+msgstr "%s: einddatum is ongeldig in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:445
 #, c-format
 msgid "%s: missing era name in string %Zd in `era' field"
-msgstr "%s: ontbrekende tijdperknaam in string %Zd in `era' veld"
+msgstr "%s: ontbrekende tijdperknaam in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:457
 #, c-format
 msgid "%s: missing era format in string %Zd in `era' field"
-msgstr "%s: ontbrekend tijdperkformaat in string %Zd in `era' veld"
+msgstr "%s: ontbrekend tijdperkformaat in tekenreeks %Zd in `era' veld"
 
 #: locale/programs/ld-time.c:486
 #, c-format
@@ -1291,11 +1291,11 @@ msgstr "ongeldige stuurcode"
 
 #: locale/programs/linereader.c:600
 msgid "illegal escape sequence at end of string"
-msgstr "ongeldige stuurcode aan einde van string"
+msgstr "ongeldige stuurcode aan einde van tekenreeks"
 
 #: locale/programs/linereader.c:604 locale/programs/linereader.c:832
 msgid "unterminated string"
-msgstr "onafgesloten string"
+msgstr "onafgesloten tekenreeks"
 
 #: locale/programs/linereader.c:646
 msgid "non-symbolic character value should not be used"
@@ -1497,7 +1497,7 @@ msgstr "kan grootte van archiefbestand niet aanpassen"
 #: locale/programs/locarchive.c:134 locale/programs/locarchive.c:321
 #: locale/programs/locarchive.c:511
 msgid "cannot map archive header"
-msgstr ""
+msgstr "kan archiekop niet afbeelden"
 
 #: locale/programs/locarchive.c:156
 msgid "failed to create new locale archive"
@@ -1509,7 +1509,7 @@ msgstr "kan modus van nieuwe locale-archief niet wijzigen"
 
 #: locale/programs/locarchive.c:253
 msgid "cannot map locale archive file"
-msgstr ""
+msgstr "kan lokaal archiefbestand niet afbeelden"
 
 #: locale/programs/locarchive.c:329
 msgid "cannot lock new archive"
@@ -1623,7 +1623,7 @@ msgstr "kan uitvoerbestand `%s' niet maken voor categorie `%s'"
 
 #: locale/programs/locfile.h:59
 msgid "expect string argument for `copy'"
-msgstr "verwacht string-argument voor `copy'"
+msgstr "verwacht tekenreeks-argument voor `copy'"
 
 #: locale/programs/locfile.h:63
 msgid "locale name should consist only of portable characters"
@@ -1674,7 +1674,7 @@ msgstr "%s%s%s:%u: %s%sOnverwachte fout: %s.\n"
 #: assert/assert.c:56
 #, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
-msgstr ""
+msgstr "%s%s%s:%u: %s%sBewering `%s' mislukt.\n"
 
 #: intl/tst-codeset.c:40 intl/tst-codeset.c:50
 msgid "cheese"
@@ -1682,11 +1682,11 @@ msgstr "kaas"
 
 #: intl/tst-gettext2.c:37
 msgid "First string for testing."
-msgstr "Eerste string om te testen."
+msgstr "Eerste tekenreeks om te testen."
 
 #: intl/tst-gettext2.c:38
 msgid "Another string for testing."
-msgstr "Een andere string om te testen."
+msgstr "Een andere tekenreeks om te testen."
 
 #: catgets/gencat.c:111 catgets/gencat.c:115 nscd/nscd.c:84
 msgid "NAME"
@@ -2331,7 +2331,7 @@ msgstr "Schijfquota overschreden"
 #: stdio-common/../sysdeps/gnu/errlist.c:779
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:181
 msgid "Stale NFS file handle"
-msgstr ""
+msgstr "Achterhaald NFS-bestandshandvat"
 
 #. TRANS An attempt was made to NFS-mount a remote file system with a file name that
 #. TRANS already specifies an NFS-mounted file.
@@ -2439,8 +2439,9 @@ msgstr "Ongepaste bewerking voor achtergrondproces"
 #. TRANS translated by a program and the translator program dies while starting
 #. TRANS up, before it has connected to the file.
 #: stdio-common/../sysdeps/gnu/errlist.c:947
+#, fuzzy
 msgid "Translator died"
-msgstr ""
+msgstr "Vertaler is overleden"
 
 #. TRANS The experienced user will know what is wrong.
 #. TRANS @c This error code is a joke.  Its perror text is part of the joke.
@@ -2476,7 +2477,7 @@ msgstr "Identificeerder verwijderd"
 #: stdio-common/../sysdeps/gnu/errlist.c:1009
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:104
 msgid "Multihop attempted"
-msgstr ""
+msgstr "Multihop geprobeerd"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1017
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:91
@@ -2583,7 +2584,7 @@ msgstr "Uitwisseling vol"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1189
 msgid "No anode"
-msgstr ""
+msgstr "Geen anode"
 
 #: stdio-common/../sysdeps/gnu/errlist.c:1197
 msgid "Invalid request code"
@@ -2710,7 +2711,7 @@ msgstr "Signaal 0"
 
 #: stdio-common/../sysdeps/unix/siglist.c:32
 msgid "IOT trap"
-msgstr ""
+msgstr "IOT-val"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:30
 msgid "Error 0"
@@ -2763,7 +2764,7 @@ msgstr "Situatie van totale blokkering gedetecteerd/omzeild"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:76
 msgid "No record locks available"
-msgstr ""
+msgstr "Geen recordblokkeringen beschikbaar"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:79
 msgid "Disc quota exceeded"
@@ -2783,7 +2784,7 @@ msgstr "Berichttabellen vol"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:83
 msgid "Anode table overflow"
-msgstr ""
+msgstr "Anode-tabel overloop"
 
 #: stdio-common/../sysdeps/unix/sysv/sysv4/solaris2/sparc/errlist.c:84
 msgid "Bad request code"
@@ -3012,7 +3013,7 @@ msgstr "Naam uitvoerbestand"
 
 #: malloc/memusagestat.c:54
 msgid "Title string used in output graphic"
-msgstr "Titeltekst gebruikt in grafische uitvoer"
+msgstr "Titeltekenreeks gebruikt in grafische uitvoer"
 
 #: malloc/memusagestat.c:55
 msgid "Generate output linear to time (default is linear to number of function calls)"
@@ -3138,7 +3139,7 @@ msgstr "dezelfde regelnaam in meerdere bestanden"
 
 #: timezone/zic.c:794
 msgid "unruly zone"
-msgstr ""
+msgstr "onhandelbare zone"
 
 #: timezone/zic.c:801
 #, c-format
@@ -3267,7 +3268,7 @@ msgstr "ongeldig CORRECTION (correctie) veld op Leap (schrikkel) regel"
 
 #: timezone/zic.c:1199
 msgid "illegal Rolling/Stationary field on Leap line"
-msgstr ""
+msgstr "ongeldig Rolling/Stationary (Rollend/Stationair) veld op Leap (schrikkel) regel"
 
 #: timezone/zic.c:1214
 msgid "wrong number of fields on Link line"
@@ -3275,11 +3276,11 @@ msgstr "verkeerd aantal velden op Link regel"
 
 #: timezone/zic.c:1218
 msgid "blank FROM field on Link line"
-msgstr ""
+msgstr "leeg FROM-veld op Link-regel"
 
 #: timezone/zic.c:1222
 msgid "blank TO field on Link line"
-msgstr ""
+msgstr "leeg TO-veld op Link-regel"
 
 #: timezone/zic.c:1299
 msgid "invalid starting year"
@@ -3429,7 +3430,7 @@ msgstr "Naam of dienst niet bekend"
 
 #: posix/../sysdeps/posix/gai_strerror.c:39
 msgid "Servname not supported for ai_socktype"
-msgstr ""
+msgstr "Servnaam niet ondersteund voor ai_socktype"
 
 #: posix/../sysdeps/posix/gai_strerror.c:40
 msgid "ai_socktype not supported"
@@ -3783,7 +3784,7 @@ msgstr "Uitvoer niet bufferen"
 
 #: debug/pcprofiledump.c:57
 msgid "Dump information generated by PC profiling."
-msgstr ""
+msgstr "Door PC-profilering gegenereerde informatie weergeven."
 
 #: debug/pcprofiledump.c:60
 msgid "[FILE]"
@@ -3840,7 +3841,7 @@ msgstr "socket: protocolmislukking bij opzetten schakeling\n"
 #: inet/rcmd.c:387
 #, c-format
 msgid "rcmd: %s: short read"
-msgstr ""
+msgstr "rcmd: %s: te weinig gelezen"
 
 #: inet/rcmd.c:549
 msgid "lstat failed"
@@ -3971,7 +3972,7 @@ msgstr "RPC: Onbekend protocol"
 
 #: sunrpc/clnt_perr.c:236
 msgid "RPC: Port mapper failure"
-msgstr ""
+msgstr "RPC: Portvertaler (portmapper) mislukking"
 
 #: sunrpc/clnt_perr.c:240
 msgid "RPC: Program not registered"
@@ -3991,27 +3992,27 @@ msgstr "Authentificatie gelukt"
 
 #: sunrpc/clnt_perr.c:360
 msgid "Invalid client credential"
-msgstr ""
+msgstr "Ongeldige client-identificatiegegevens"
 
 #: sunrpc/clnt_perr.c:364
 msgid "Server rejected credential"
-msgstr ""
+msgstr "Server verwierp identificatiegegevens"
 
 #: sunrpc/clnt_perr.c:368
 msgid "Invalid client verifier"
-msgstr ""
+msgstr "Ongeldige client-verifieerder"
 
 #: sunrpc/clnt_perr.c:372
 msgid "Server rejected verifier"
-msgstr ""
+msgstr "Server verwierp verifieerder"
 
 #: sunrpc/clnt_perr.c:376
 msgid "Client credential too weak"
-msgstr ""
+msgstr "Client-identificatiegegevens te zwak"
 
 #: sunrpc/clnt_perr.c:380
 msgid "Invalid server verifier"
-msgstr ""
+msgstr "Ongeldige server-verifieerder"
 
 #: sunrpc/clnt_perr.c:384
 msgid "Failed (unspecified error)"
@@ -4059,11 +4060,11 @@ msgstr "broadcast: ioctl (interface opties opvragen)"
 
 #: sunrpc/pmap_rmt.c:269
 msgid "Cannot create socket for broadcast rpc"
-msgstr ""
+msgstr "Kan socket voor uitzend-rpc niet aanmaken"
 
 #: sunrpc/pmap_rmt.c:276
 msgid "Cannot set socket option SO_BROADCAST"
-msgstr ""
+msgstr "Kan socket-optie SO_BROADCAST niet instellen"
 
 #: sunrpc/pmap_rmt.c:328
 msgid "Cannot send broadcast packet"
@@ -4071,7 +4072,7 @@ msgstr "Kan broadcasting pakket niet verzenden"
 
 #: sunrpc/pmap_rmt.c:353
 msgid "Broadcast poll problem"
-msgstr ""
+msgstr "Uitzend-polsen probleem"
 
 #: sunrpc/pmap_rmt.c:366
 msgid "Cannot receive reply to broadcast"
@@ -4122,7 +4123,7 @@ msgstr "rpcgen: teveel definities\n"
 
 #: sunrpc/rpc_main.c:1116
 msgid "rpcgen: arglist coding error\n"
-msgstr ""
+msgstr "rpcgen: fout codering argumentenlijst\n"
 
 #. TRANS: the file will not be removed; this is an
 #. TRANS: informative message.
@@ -4194,11 +4195,11 @@ msgstr "ongeldig teken in bestand: "
 
 #: sunrpc/rpc_scan.c:351 sunrpc/rpc_scan.c:377
 msgid "unterminated string constant"
-msgstr "onbepaalde stringconstante"
+msgstr "onbepaalde tekenreeksconstante"
 
 #: sunrpc/rpc_scan.c:383
 msgid "empty char string"
-msgstr "lege string"
+msgstr "lege tekenreeks"
 
 #: sunrpc/rpc_scan.c:525 sunrpc/rpc_scan.c:535
 msgid "preprocessor error"
@@ -4223,15 +4224,15 @@ msgstr "programma %lu versie %lu is gereed en wacht\n"
 
 #: sunrpc/rpcinfo.c:556 sunrpc/rpcinfo.c:563
 msgid "rpcinfo: can't contact portmapper"
-msgstr ""
+msgstr "rpcinfo: kan geen contact maken met poortvertaler (portmapper)"
 
 #: sunrpc/rpcinfo.c:570
 msgid "No remote programs registered.\n"
-msgstr ""
+msgstr "Geen programma's-op-afstand geregistreerd.\n"
 
 #: sunrpc/rpcinfo.c:574
 msgid "   program vers proto   port\n"
-msgstr ""
+msgstr "   programma versie protocol poort\n"
 
 #: sunrpc/rpcinfo.c:613
 msgid "(unknown)"
@@ -4240,7 +4241,7 @@ msgstr "(onbekend)"
 #: sunrpc/rpcinfo.c:637
 #, c-format
 msgid "rpcinfo: broadcast failed: %s\n"
-msgstr ""
+msgstr "rpcinfo: uitzenden mislukt: %s\n"
 
 #: sunrpc/rpcinfo.c:658
 msgid "Sorry. You are not root\n"
@@ -4283,7 +4284,7 @@ msgstr "rpcinfo: %s is onbekende host\n"
 
 #: sunrpc/svc_run.c:76
 msgid "svc_run: - poll failed"
-msgstr ""
+msgstr "svc_run: - polsen mislukt"
 
 #: sunrpc/svc_simple.c:87
 #, c-format
@@ -4319,7 +4320,7 @@ msgstr "svc_tcp.c - probleem bij aanmaken TCP socket"
 
 #: sunrpc/svc_tcp.c:170
 msgid "svc_tcp.c - cannot getsockname or listen"
-msgstr ""
+msgstr "svc_tcp.c - kan niet getsockname() of listen()"
 
 #: sunrpc/svc_tcp.c:181 sunrpc/svc_tcp.c:184
 msgid "svctcp_create: out of memory\n"
@@ -4379,7 +4380,7 @@ msgstr "svc_unix.c - probleem bij aanmaken AF_UNIX socket"
 
 #: sunrpc/svc_unix.c:166
 msgid "svc_unix.c - cannot getsockname or listen"
-msgstr ""
+msgstr "svc_unix.c - kan niet getsockname() of listen()"
 
 #: sunrpc/svc_unix.c:178 sunrpc/svc_unix.c:181
 msgid "svcunix_create: out of memory\n"
@@ -4475,11 +4476,11 @@ msgstr "Misvormde of ongeldige naam"
 
 #: nis/nis_error.c:47
 msgid "Unable to create callback"
-msgstr ""
+msgstr "Kan geen terugaanroep aanmaken"
 
 #: nis/nis_error.c:48
 msgid "Results sent to callback proc"
-msgstr ""
+msgstr "Resultaten verzonden aan terugaanroep proces"
 
 #: nis/nis_error.c:49
 msgid "Not found, no such name"
@@ -4523,11 +4524,11 @@ msgstr "Ontbrekend of misvormd kenmerk"
 
 #: nis/nis_error.c:59
 msgid "Named object is not searchable"
-msgstr ""
+msgstr "Genaamd objekt is niet doorzoekbaar"
 
 #: nis/nis_error.c:60
 msgid "Error while talking to callback proc"
-msgstr ""
+msgstr "Fout bij praten met terugaanroep proces"
 
 #: nis/nis_error.c:61
 msgid "Non NIS+ namespace encountered"
@@ -4559,7 +4560,7 @@ msgstr "Fout bij toegang tot NIS+ koude-start bestand.  Is NIS+ wel geïnstallee
 
 #: nis/nis_error.c:68
 msgid "Full resync required for directory"
-msgstr ""
+msgstr "Volledige hersynchronisatie vereist voor map"
 
 #: nis/nis_error.c:69
 msgid "NIS+ operation failed"
@@ -4591,12 +4592,12 @@ msgstr "Kan niet proces aanmaken op server"
 
 #: nis/nis_error.c:76
 msgid "Master server busy, full dump rescheduled."
-msgstr ""
+msgstr "Hoofdserver bezig, volledig ophalen uitgesteld."
 
 #: nis/nis_local_names.c:126
 #, c-format
 msgid "LOCAL entry for UID %d in directory %s not unique\n"
-msgstr ""
+msgstr "LOCAL-ingang voor UID %d in map %s is niet uniek\n"
 
 #: nis/nis_print.c:51
 msgid "UNKNOWN"
@@ -4695,7 +4696,7 @@ msgstr "\tUniversele adressen (%u)\n"
 
 #: nis/nis_print.c:227
 msgid "Time to live : "
-msgstr ""
+msgstr "Levenstijd : "
 
 #: nis/nis_print.c:229
 msgid "Default Access rights :\n"
@@ -4735,7 +4736,7 @@ msgstr "Aantal kolommen     : %d\n"
 #: nis/nis_print.c:268
 #, c-format
 msgid "Character Separator : %c\n"
-msgstr ""
+msgstr "Teken-scheidingsteken : %c\n"
 
 #: nis/nis_print.c:269
 #, c-format
@@ -4771,7 +4772,7 @@ msgstr "Gekoppeld aan : %s\n"
 #: nis/nis_print.c:297
 #, c-format
 msgid "\tEntry data of type %s\n"
-msgstr ""
+msgstr "\tIngangsgegevens van soort %s\n"
 
 #: nis/nis_print.c:300
 #, c-format
@@ -4826,7 +4827,7 @@ msgstr "Aanmaaktijd : %s"
 #: nis/nis_print.c:331
 #, c-format
 msgid "Mod. Time     : %s"
-msgstr ""
+msgstr "Wijzigingstijd : %s"
 
 #: nis/nis_print.c:332
 msgid "Object Type   : "
@@ -4845,7 +4846,7 @@ msgstr "Status            : %s\n"
 #: nis/nis_print.c:366
 #, c-format
 msgid "Number of objects : %u\n"
-msgstr ""
+msgstr "Aantal objekten : %u\n"
 
 #: nis/nis_print.c:370
 #, c-format
@@ -4905,12 +4906,12 @@ msgstr "    Niet-recursieve niet-leden\n"
 #: nis/nss_nisplus/nisplus-publickey.c:172
 #, c-format
 msgid "DES entry for netname %s not unique\n"
-msgstr ""
+msgstr "DES-ingang voor netnaam %s is niet uniek\n"
 
 #: nis/nss_nisplus/nisplus-publickey.c:208
 #, c-format
 msgid "netname2user: missing group id list in `%s'."
-msgstr ""
+msgstr "netname2user: ontbrekende groep-ID-lijst in `%s'."
 
 #: nis/nss_nisplus/nisplus-publickey.c:285
 #: nis/nss_nisplus/nisplus-publickey.c:291
@@ -4918,26 +4919,26 @@ msgstr ""
 #: nis/nss_nisplus/nisplus-publickey.c:359
 #, c-format
 msgid "netname2user: (nis+ lookup): %s\n"
-msgstr ""
+msgstr "netname2user: (nis+ opzoeken): %s\n"
 
 #: nis/nss_nisplus/nisplus-publickey.c:304
 #, c-format
 msgid "netname2user: DES entry for %s in directory %s not unique"
-msgstr ""
+msgstr "netname2user: DES-ingang voor %s in map %s is niet uniek"
 
 #: nis/nss_nisplus/nisplus-publickey.c:322
 #, c-format
 msgid "netname2user: principal name `%s' too long"
-msgstr ""
+msgstr "netname2user: hoofdnaam `%s' is te lang"
 
 #: nis/nss_nisplus/nisplus-publickey.c:372
 #, c-format
 msgid "netname2user: LOCAL entry for %s in directory %s not unique"
-msgstr ""
+msgstr "netname2user: LOCAL-ingang voor %s in map %s is niet uniek"
 
 #: nis/nss_nisplus/nisplus-publickey.c:379
 msgid "netname2user: should not have uid 0"
-msgstr ""
+msgstr "netname2user: mag niet UID 0 hebben"
 
 #: nis/ypclnt.c:174
 #, c-format
@@ -4958,11 +4959,11 @@ msgstr "Kan niet binden aan de server die dit domein aanbiedt"
 
 #: nis/ypclnt.c:795
 msgid "No such map in server's domain"
-msgstr ""
+msgstr "Geen dergelijke afbeelding in domein van server"
 
 #: nis/ypclnt.c:797
 msgid "No such key in map"
-msgstr ""
+msgstr "Geen dergelijke sleutel in afbeelding"
 
 #: nis/ypclnt.c:799
 msgid "Internal NIS error"
@@ -4974,19 +4975,19 @@ msgstr "Toewijzingsfout lokale bron"
 
 #: nis/ypclnt.c:803
 msgid "No more records in map database"
-msgstr ""
+msgstr "Niet meer records in afbeeldingengegevensbank"
 
 #: nis/ypclnt.c:805
 msgid "Can't communicate with portmapper"
-msgstr ""
+msgstr "Kan niet communiceren met poortvertaler"
 
 #: nis/ypclnt.c:807
 msgid "Can't communicate with ypbind"
-msgstr ""
+msgstr "Kan niet communiceren met ypbind"
 
 #: nis/ypclnt.c:809
 msgid "Can't communicate with ypserv"
-msgstr ""
+msgstr "Kan niet communiceren met ypserv"
 
 #: nis/ypclnt.c:811
 msgid "Local domain name not set"
@@ -4994,7 +4995,7 @@ msgstr "Lokaal domein niet ingesteld"
 
 #: nis/ypclnt.c:813
 msgid "NIS map database is bad"
-msgstr ""
+msgstr "NIS-afbeeldingengegevensbank is slecht"
 
 #: nis/ypclnt.c:815
 msgid "NIS client/server version mismatch - can't supply service"
@@ -5026,15 +5027,15 @@ msgstr "Onbekende ypbind-fout"
 
 #: nis/ypclnt.c:908
 msgid "yp_update: cannot convert host to netname\n"
-msgstr ""
+msgstr "yp_update: kan host niet converteren naar netnaam\n"
 
 #: nis/ypclnt.c:920
 msgid "yp_update: cannot get server address\n"
-msgstr ""
+msgstr "yp_update: kan server-adres niet opvragen\n"
 
 #: nscd/cache.c:88
 msgid "while allocating hash table entry"
-msgstr ""
+msgstr "bij het toewijzen van een hash-tabel ingang"
 
 #: nscd/cache.c:150 nscd/connections.c:187
 #, c-format
@@ -5082,7 +5083,7 @@ msgstr "kan resultaat niet schrijven: %s"
 #: nscd/connections.c:405 nscd/connections.c:499
 #, c-format
 msgid "error getting callers id: %s"
-msgstr ""
+msgstr "fout bij opvragen ID van aanroeper: %s"
 
 #: nscd/connections.c:471
 #, c-format
@@ -5092,7 +5093,7 @@ msgstr "bij accepteren verbinding: %s"
 #: nscd/connections.c:482
 #, c-format
 msgid "short read while reading request: %s"
-msgstr ""
+msgstr "te weinig gelezen bij lezen van verzoek: %s"
 
 #: nscd/connections.c:518
 #, c-format
@@ -5102,7 +5103,7 @@ msgstr "sleutellengte in verzoek te lang: %d"
 #: nscd/connections.c:532
 #, c-format
 msgid "short read while reading request key: %s"
-msgstr ""
+msgstr "te weinig gelezen bij lezen van verzoeksleutel: %s"
 
 #: nscd/connections.c:591 nscd/connections.c:592 nscd/connections.c:611
 #: nscd/connections.c:624 nscd/connections.c:630 nscd/connections.c:637
@@ -5129,28 +5130,28 @@ msgstr "bij toewijzen bufferingang"
 #: nscd/grpcache.c:196 nscd/hstcache.c:282 nscd/pwdcache.c:192
 #, c-format
 msgid "short write in %s: %s"
-msgstr ""
+msgstr "te weinig geschreven in %s: %s"
 
 #: nscd/grpcache.c:218
 #, c-format
 msgid "Haven't found \"%s\" in group cache!"
-msgstr ""
+msgstr "Kon \"%s\" niet vinden in groepbuffer!"
 
 #: nscd/grpcache.c:284
 #, c-format
 msgid "Invalid numeric gid \"%s\"!"
-msgstr ""
+msgstr "Ongeldige numerieke GID \"%s\"!"
 
 #: nscd/grpcache.c:291
 #, c-format
 msgid "Haven't found \"%d\" in group cache!"
-msgstr ""
+msgstr "Kon \"%d\" niet vinden in groepbuffer!"
 
 #: nscd/hstcache.c:304 nscd/hstcache.c:370 nscd/hstcache.c:435
 #: nscd/hstcache.c:500
 #, c-format
 msgid "Haven't found \"%s\" in hosts cache!"
-msgstr ""
+msgstr "Kon \"%s\" niet vinden in hostsbuffer!"
 
 #: nscd/nscd.c:85
 msgid "Read configuration data from NAME"
@@ -5158,7 +5159,7 @@ msgstr "Configuratiegegevens lezen uit NAAM"
 
 #: nscd/nscd.c:87
 msgid "Do not fork and display messages on the current tty"
-msgstr ""
+msgstr "Niet vertakken en berichten op de huidige TTY weergeven"
 
 #: nscd/nscd.c:88
 msgid "NUMBER"
@@ -5174,7 +5175,7 @@ msgstr "De server afsluiten"
 
 #: nscd/nscd.c:90
 msgid "Print current configuration statistic"
-msgstr ""
+msgstr "Huidige configuratiestatistiek weergeven"
 
 #: nscd/nscd.c:91
 msgid "TABLE"
@@ -5194,7 +5195,7 @@ msgstr "Gescheiden buffer gebruiken voor elke gebruiker"
 
 #: nscd/nscd.c:98
 msgid "Name Service Cache Daemon."
-msgstr ""
+msgstr "Naamdienst Bufferdaemon."
 
 #: nscd/nscd.c:131
 msgid "already running"
@@ -5247,6 +5248,9 @@ msgid ""
 "\n"
 "%15d  server debug level\n"
 msgstr ""
+"nscd configuratie:\n"
+"\n"
+"%15d  server debugniveau\n"
 
 #: nscd/nscd_stat.c:146 nscd/nscd_stat.c:148
 msgid "      no"
@@ -5273,6 +5277,19 @@ msgid ""
 "%15ld%% cache hit rate\n"
 "%15s  check /etc/%s for changes\n"
 msgstr ""
+"\n"
+"%s buffer:\n"
+"\n"
+"%15s  buffer staat aan\n"
+"%15Zd  voorgestelde grootte\n"
+"%15ld  seconden levenstijd voor positieve ingangen\n"
+"%15ld  seconden levenstijd voor negatieve ingangen\n"
+"%15ld  buffertreffers op positieve ingangen\n"
+"%15ld  buffertreffers op negatieve ingangen\n"
+"%15ld  buffermissers op positieve ingangen\n"
+"%15ld  buffermissers op negatieve ingangen\n"
+"%15ld%% aantal buffertreffers\n"
+"%15s  controleer /etc/%s voor wijzigingen\n"
 
 #: nscd/pwdcache.c:214
 #, c-format
@@ -5282,7 +5299,7 @@ msgstr "Kon \"%s\" niet vinden in wachtwoordenbuffer!"
 #: nscd/pwdcache.c:280
 #, c-format
 msgid "Invalid numeric uid \"%s\"!"
-msgstr ""
+msgstr "Ongeldige numerieke UID \"%s\"!"
 
 #: nscd/pwdcache.c:287
 #, c-format
@@ -5392,20 +5409,20 @@ msgstr "gedeeld objekt niet open"
 
 #: elf/dl-close.c:486 elf/dl-open.c:444
 msgid "TLS generation counter wrapped!  Please send report with the 'glibcbug' script."
-msgstr ""
+msgstr "De teller bij het TLS genereren is weer opnieuw begonnen!  Rapporteer deze softwarefout alstublieft met het 'glibcbug' script."
 
 #: elf/dl-deps.c:111 elf/dl-open.c:183
 msgid "DST not allowed in SUID/SGID programs"
-msgstr ""
+msgstr "DST niet toegestaan in SUID/SGID-programma's"
 
 #: elf/dl-deps.c:124
 msgid "empty dynamics string token substitution"
-msgstr ""
+msgstr "lege dynamische vervanging van tekenreeks-token"
 
 #: elf/dl-deps.c:130
 #, c-format
 msgid "cannot load auxiliary `%s' because of empty dynamic string token substitution\n"
-msgstr ""
+msgstr "kan helper `%s' niet laden vanwege lege dynamische vervanging van tekenreeks-token\n"
 
 #: elf/dl-deps.c:461
 msgid "cannot allocate dependency list"
@@ -5429,7 +5446,7 @@ msgstr "fout bij laden gedeelde bibliotheken"
 
 #: elf/dl-load.c:339
 msgid "cannot allocate name record"
-msgstr ""
+msgstr "kan naamrecord niet toewijzen"
 
 #: elf/dl-load.c:441 elf/dl-load.c:520 elf/dl-load.c:612 elf/dl-load.c:707
 msgid "cannot create cache for search path"
@@ -5441,19 +5458,19 @@ msgstr "kan geen kopie maken van RUNPATH/RPATH"
 
 #: elf/dl-load.c:598
 msgid "cannot create search path array"
-msgstr ""
+msgstr "kan zoekpad array niet aanmaken"
 
 #: elf/dl-load.c:794
 msgid "cannot stat shared object"
-msgstr ""
+msgstr "kan gedeeld objekt niet vinden"
 
 #: elf/dl-load.c:838
 msgid "cannot open zero fill device"
-msgstr ""
+msgstr "kan nul-opvul apparaat niet openen"
 
 #: elf/dl-load.c:847 elf/dl-load.c:1902
 msgid "cannot create shared object descriptor"
-msgstr ""
+msgstr "kan gedeeld objekt beschrijver niet aanmaken"
 
 #: elf/dl-load.c:866 elf/dl-load.c:1398 elf/dl-load.c:1481
 msgid "cannot read file data"
@@ -5461,35 +5478,35 @@ msgstr "kan bestandsgegevens niet lezen"
 
 #: elf/dl-load.c:906
 msgid "ELF load command alignment not page-aligned"
-msgstr ""
+msgstr "uitlijning van ELF-laadopdracht niet pagina-uitgelijnd"
 
 #: elf/dl-load.c:913
 msgid "ELF load command address/offset not properly aligned"
-msgstr ""
+msgstr "ELF-laadopdracht adres/positie niet juist uitgelijnd"
 
 #: elf/dl-load.c:988
 msgid "cannot allocate TLS data structures for initial thread"
-msgstr ""
+msgstr "kan TLS-gegevensstructuren niet toewijzen voor initiële thread"
 
 #: elf/dl-load.c:1012
 msgid "cannot handle TLS data"
-msgstr ""
+msgstr "kan TLS-gegevens niet verwerken"
 
 #: elf/dl-load.c:1047
 msgid "failed to map segment from shared object"
-msgstr ""
+msgstr "afbeelden van segment van gedeeld objekt mislukt"
 
 #: elf/dl-load.c:1071
 msgid "cannot dynamically load executable"
-msgstr ""
+msgstr "kan uitvoerbaar bestand niet dynamisch laden"
 
 #: elf/dl-load.c:1132
 msgid "cannot change memory protections"
-msgstr ""
+msgstr "kan geheugenbeschermingen niet veranderen"
 
 #: elf/dl-load.c:1151
 msgid "cannot map zero-fill pages"
-msgstr ""
+msgstr "kan nul-gevulde pagina's niet afbeelden"
 
 #: elf/dl-load.c:1169
 msgid "cannot allocate memory for program header"
@@ -5501,7 +5518,7 @@ msgstr "objektbestand heeft geen dynamische sectie"
 
 #: elf/dl-load.c:1240
 msgid "shared object cannot be dlopen()ed"
-msgstr ""
+msgstr "gedeeld objekt kan niet ge-dlopen()d worden"
 
 #: elf/dl-load.c:1263
 msgid "cannot create searchlist"
@@ -5545,15 +5562,15 @@ msgstr "ELF-bestand versie komt niet overeen met huidige"
 
 #: elf/dl-load.c:1460
 msgid "ELF file's phentsize not the expected size"
-msgstr ""
+msgstr "phentsize van ELF-bestand niet de verwachte grootte"
 
 #: elf/dl-load.c:1466
 msgid "only ET_DYN and ET_EXEC can be loaded"
-msgstr ""
+msgstr "slechts ET_DYN en ET_EXEC kunnen worden geladen"
 
 #: elf/dl-load.c:1917
 msgid "cannot open shared object file"
-msgstr ""
+msgstr "kan gedeeld objektbestand niet openen"
 
 #: elf/dl-lookup.c:265 elf/dl-lookup.c:430
 msgid "relocation error"
@@ -5561,31 +5578,31 @@ msgstr "verhuisfout"
 
 #: elf/dl-open.c:111
 msgid "cannot extend global scope"
-msgstr ""
+msgstr "kan globaal bereik niet uitbreiden"
 
 #: elf/dl-open.c:214
 msgid "empty dynamic string token substitution"
-msgstr ""
+msgstr "lege dynamische vervanging van tekenreeks-token"
 
 #: elf/dl-open.c:351 elf/dl-open.c:362
 msgid "cannot create scope list"
-msgstr ""
+msgstr "kan bereiklijst niet aanmaken"
 
 #: elf/dl-open.c:424
 msgid "cannot create TLS data structures"
-msgstr ""
+msgstr "kan TLS-gegevensstructuren niet aanmaken"
 
 #: elf/dl-open.c:486
 msgid "invalid mode for dlopen()"
-msgstr ""
+msgstr "ongeldige modus voor dlopen()"
 
 #: elf/dl-reloc.c:58
 msgid "shared object cannot be dlopen()ed: static TLS memory too small"
-msgstr ""
+msgstr "gedeeld objekt kan niet ge-dlopen()d worden: statisch TLS-geheugen te klein"
 
 #: elf/dl-reloc.c:118
 msgid "cannot make segment writable for relocation"
-msgstr ""
+msgstr "kan segment niet schrijfbaar maken voor verhuizing"
 
 #: elf/dl-reloc.c:219
 #, c-format
@@ -5595,15 +5612,15 @@ msgstr "%s: profileerder heeft geen PLTREL in objekt gevonden %s\n"
 #: elf/dl-reloc.c:231
 #, c-format
 msgid "%s: profiler out of memory shadowing PLTREL of %s\n"
-msgstr ""
+msgstr "%s: profileerder heeft geheugentekort bij schaduwen van PLTREL van %s\n"
 
 #: elf/dl-reloc.c:246
 msgid "cannot restore segment prot after reloc"
-msgstr ""
+msgstr "kan segmentbescherming niet herstellen na verhuizing"
 
 #: elf/dl-sym.c:74 elf/dl-sym.c:145
 msgid "RTLD_NEXT used in code not dynamically loaded"
-msgstr ""
+msgstr "RTLD_NEXT gebruikt in code niet dynamisch geladen"
 
 #: elf/dl-version.c:302
 msgid "cannot allocate version reference table"
@@ -5615,7 +5632,7 @@ msgstr "Buffer weergeven"
 
 #: elf/ldconfig.c:123
 msgid "Generate verbose messages"
-msgstr ""
+msgstr "Breedsprakige berichten genereren"
 
 #: elf/ldconfig.c:124
 msgid "Don't build cache"
@@ -5627,7 +5644,7 @@ msgstr "Geen koppelingen genereren"
 
 #: elf/ldconfig.c:126
 msgid "Change to and use ROOT as root directory"
-msgstr ""
+msgstr "Gaan naar en ROOT gebruiken als root-map"
 
 #: elf/ldconfig.c:127
 msgid "Use CACHE as cache file"
@@ -5647,11 +5664,11 @@ msgstr "Handmatig losse bibliotheken koppelen."
 
 #: elf/ldconfig.c:131
 msgid "Format to use: new, old or compat (default)"
-msgstr ""
+msgstr "Formaat om te gebruiken: nieuw, oud of compatibiliteit (standaard)"
 
 #: elf/ldconfig.c:136
 msgid "Configure Dynamic Linker Run Time Bindings."
-msgstr ""
+msgstr "Dynamische koppelaar uitvoer-tijd bindingen configureren."
 
 #: elf/ldconfig.c:294
 #, c-format
@@ -5666,12 +5683,12 @@ msgstr "%s is geen bekende bibliotheeksoort"
 #: elf/ldconfig.c:356
 #, c-format
 msgid "Can't stat %s"
-msgstr ""
+msgstr "Kan %s niet vinden"
 
 #: elf/ldconfig.c:426
 #, c-format
 msgid "Can't stat %s\n"
-msgstr ""
+msgstr "Kan %s niet vinden\n"
 
 #: elf/ldconfig.c:436
 #, c-format
@@ -5681,12 +5698,12 @@ msgstr "%s is geen symbolische koppeling\n"
 #: elf/ldconfig.c:455
 #, c-format
 msgid "Can't unlink %s"
-msgstr ""
+msgstr "Kan %s niet ontkoppelen"
 
 #: elf/ldconfig.c:461
 #, c-format
 msgid "Can't link %s to %s"
-msgstr ""
+msgstr "Kan %s niet met %s koppelen"
 
 #: elf/ldconfig.c:467
 msgid " (changed)\n"
@@ -5704,7 +5721,7 @@ msgstr "Kan %s niet vinden"
 #: elf/ldconfig.c:540
 #, c-format
 msgid "Can't lstat %s"
-msgstr ""
+msgstr "Kan %s niet vinden (met lstat)"
 
 #: elf/ldconfig.c:547
 #, c-format
@@ -5714,7 +5731,7 @@ msgstr "Bestand %s genegeerd omdat het geen gewoon bestand is."
 #: elf/ldconfig.c:555
 #, c-format
 msgid "No link created since soname could not be found for %s"
-msgstr ""
+msgstr "Geen koppeling aangemaakt omdat soname (gedeeld-objekt naam) niet kon worden gevonden voor %s"
 
 #: elf/ldconfig.c:646
 #, c-format
@@ -5724,12 +5741,12 @@ msgstr "Kan map %s niet openen"
 #: elf/ldconfig.c:701 elf/ldconfig.c:748
 #, c-format
 msgid "Cannot lstat %s"
-msgstr ""
+msgstr "Kan %s niet vinden (met lstat)"
 
 #: elf/ldconfig.c:713
 #, c-format
 msgid "Cannot stat %s"
-msgstr ""
+msgstr "Kan %s niet vinden"
 
 #: elf/ldconfig.c:770 elf/readlib.c:93
 #, c-format
@@ -5754,7 +5771,7 @@ msgstr "libc4-bibliotheek %s in verkeerde map"
 #: elf/ldconfig.c:837
 #, c-format
 msgid "libraries %s and %s in directory %s have same soname but different type."
-msgstr ""
+msgstr "bibliotheken %s en %s in map %s hebben dezelfde soname (gedeeld-objekt naam) maar een verschillende soort."
 
 #: elf/ldconfig.c:940
 #, c-format
@@ -5763,7 +5780,7 @@ msgstr "Kan configuratiebestand %s niet openen"
 
 #: elf/ldconfig.c:1024
 msgid "Can't chdir to /"
-msgstr ""
+msgstr "Kan niet verplaatsen naar map /"
 
 #: elf/ldconfig.c:1066
 #, c-format
@@ -5773,7 +5790,7 @@ msgstr "Kan bufferbestandmap %s niet openen\n"
 #: elf/readlib.c:99
 #, c-format
 msgid "Cannot fstat file %s.\n"
-msgstr ""
+msgstr "Kan bestand %s niet vinden (met fstat).\n"
 
 #: elf/readlib.c:109
 #, c-format
@@ -5783,7 +5800,7 @@ msgstr "Bestand %s is te klein, niet gecontroleerd."
 #: elf/readlib.c:118
 #, c-format
 msgid "Cannot mmap file %s.\n"
-msgstr ""
+msgstr "In geheugen afbeelden van %s mislukt.\n"
 
 #: elf/readlib.c:158
 #, c-format
@@ -5812,7 +5829,7 @@ msgstr "Profileergegevens van gedeeld objekt lezen en weergeven"
 
 #: elf/sprof.c:87
 msgid "SHOBJ [PROFDATA]"
-msgstr ""
+msgstr "GEDEELD_OBJEKT [PROFILEERGEGEVENS]"
 
 #: elf/sprof.c:398
 #, c-format
@@ -5830,11 +5847,11 @@ msgstr "Opnieuw openen van gedeelde objekt `%s' mislukt"
 
 #: elf/sprof.c:534
 msgid "mapping of section headers failed"
-msgstr ""
+msgstr "afbeelden van sectiekoppen mislukt"
 
 #: elf/sprof.c:544
 msgid "mapping of section header string table failed"
-msgstr ""
+msgstr "afbeelden van sectiekoppen tekenreekstabel mislukt"
 
 #: elf/sprof.c:564
 #, c-format
@@ -5851,7 +5868,7 @@ msgstr "kan profileergegevens niet laden"
 
 #: elf/sprof.c:673
 msgid "while stat'ing profiling data file"
-msgstr ""
+msgstr "bij vinden profileergegevensbestand"
 
 #: elf/sprof.c:681
 #, c-format
@@ -5860,7 +5877,7 @@ msgstr "profileergegevens bestand `%s' komt niet overeen met gedeeld objekt `%s'
 
 #: elf/sprof.c:692
 msgid "failed to mmap the profiling data file"
-msgstr ""
+msgstr "afbeelden in geheugen van profileergegevensbestand mislukt"
 
 #: elf/sprof.c:700
 msgid "error while closing the profiling data file"
