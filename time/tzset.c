@@ -490,9 +490,12 @@ DEFUN(__tz_compute, (timer, tm),
 __libc_lock_define (, __tzset_lock)
 
 /* Reinterpret the TZ environment variable and set `tzname'.  */
+#undef tzset
 
-weak_symbol (tzset)
 void
+#ifdef weak_function
+weak_function
+#endif
 tzset (void)
 {
   __libc_lock_lock (__tzset_lock);

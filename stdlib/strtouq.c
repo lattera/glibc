@@ -21,4 +21,4 @@ Cambridge, MA 02139, USA.  */
 
 #include <strtoul.c>
 
-weak_alias (strtouq, strotull)
+weak_alias (strtouq, strtoull)

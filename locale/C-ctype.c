@@ -898,7 +898,7 @@ const struct locale_data _nl_C_LC_CTYPE =
 {
   _nl_C_name,
   NULL, 0, /* no file mapped */
-  14,
+  15,
   {
     { string: _nl_C_LC_CTYPE_class },
 #if BYTE_ORDER == LITTLE_ENDIAN

@@ -1,3 +1,33 @@
+Thu Jul 25 00:53:06 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/configure.in (LIBC_LINUX_VERSION): New
+	macro, now put the needed Linux version just once, here; update to
+	needing linux-2.0.3 headers.
+	(libc_cv_linuxVER): New macro derived from that.
+	(kernel header check): Use those macros and some m4 magic to replace
+	hard-coded `201' and `2.0.1' in several places.
+
+	* Makerules ($(libdir)/libc.so): Fix typos in generated comment.
+
+Wed Jul 24 17:02:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/localtime.c: Move lock variable declaration to end of
+	variable declarations since if is a dummy macro the ; at the
+	end terminates the variable section of the function.
+
+	* time/tzset.c: Undefine `tzset' before function declaration.
+	Use `weak_function' macro instead of `weak_symbol'.
+
+Wed Jul 24 18:57:33 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtouq.c: Additional weak alias is `strtoull', not
+	`strotull'.
+
+Wed Jul 24 18:26:23 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/C-ctype.c: Increment number of fields after change
+	from Wed Jun 19 03:24:58 1996.
+
 Tue Jul 23 18:13:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/Makefile (rpcuserlibs): New variable.

@@ -40,13 +40,13 @@ __localtime_r (timer, tp)
   /* This lock is defined in tzset.c and locks all the data defined there
      and in tzfile.c; the internal functions do no locking themselves.
      This lock is only taken here and in `tzset'.  */
-  __libc_lock_define (extern, __tzset_lock);
   extern int __tzset_run, __use_tzfile;
   extern int __tz_compute __P ((time_t timer, struct tm *tp));
   extern int __tzfile_compute __P ((time_t timer,
 				    long int *leap_correct, int *leap_hit));
   long int leap_correction;
   int leap_extra_secs;
+  __libc_lock_define (extern, __tzset_lock);
 
   if (timer == NULL)
     {
