@@ -1099,7 +1099,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
       /* We are not supposed to load this object.  Free all resources.  */
       __munmap ((void *) l->l_map_start, l->l_map_end - l->l_map_start);
 
-      free (l->l_libname);
+      if (!l->l_libname->dont_free)
+	free (l->l_libname);
 
       if (l->l_phdr_allocated)
 	free ((void *) l->l_phdr);

@@ -254,7 +254,8 @@ _dl_close (void *_map)
 	    {
 	      struct libname_list *this = lnp;
 	      lnp = lnp->next;
-	      free (this);
+	      if (!this->dont_free)
+		free (this);
 	    }
 	  while (lnp != NULL);
 
