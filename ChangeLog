@@ -1,3 +1,10 @@
+2001-04-29  Ralf Baechle  <ralf@gnu.org>
+
+	* sysdeps/unix/sysv/linux/mips/bits/sem.h: Make structure
+	definitions match the kernel definitions.
+	* sysdeps/unix/sysv/linux/mips/bits/ipc.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/shm.h: Likewise.
+
 2001-04-29  Ben Collins  <bcollins@debian.org>
 
 	* sysdeps/sparc/sparc64/dl-machine.h: Fix multiline strings

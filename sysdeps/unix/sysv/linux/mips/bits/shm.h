@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,7 +20,7 @@
 # error "Never include <bits/shm.h> directly; use <sys/shm.h> instead."
 #endif
 
-#include <sys/types.h>
+#include <bits/types.h>
 
 /* Permission flag for shmget.  */
 #define SHM_R		0400		/* or S_IRUGO from <linux/stat.h> */
@@ -35,50 +35,55 @@
 #define SHM_LOCK	11		/* lock segment (root only) */
 #define SHM_UNLOCK	12		/* unlock segment (root only) */
 
+/* Type to count number of attaches.  */
+typedef unsigned long int shmatt_t;
 
 /* Data structure describing a set of semaphores.  */
 struct shmid_ds
   {
     struct ipc_perm shm_perm;		/* operation permission struct */
-    int shm_segsz;			/* size of segment in bytes */
+    size_t shm_segsz;			/* size of segment in bytes */
     __time_t shm_atime;			/* time of last shmat() */
     __time_t shm_dtime;			/* time of last shmdt() */
     __time_t shm_ctime;			/* time of last change by shmctl() */
-    long int shm_cpid;			/* pid of creator */
-    long int shm_lpid;			/* pid of last shmop */
-    unsigned short int shm_nattch;	/* number of current attaches */
-    unsigned short int __shm_npages;	/* size of segment (pages) */
-    unsigned long int *__unbounded __shm_pages;	/* array of ptrs to frames -> SHMMAX */
-    struct vm_area_struct *__unbounded __attaches; /* descriptors for attaches */
+    __pid_t shm_cpid;			/* pid of creator */
+    __pid_t shm_lpid;			/* pid of last shmop */
+    shmatt_t shm_nattch;		/* number of current attaches */
+    unsigned long int __unused1;
+    unsigned long int __unused2;
   };
 
 #ifdef __USE_MISC
 
 /* ipcs ctl commands */
-# define SHM_STAT 	13
-# define SHM_INFO 	14
+# define SHM_STAT	13
+# define SHM_INFO	14
 
 /* shm_mode upper byte flags */
 # define SHM_DEST	01000	/* segment will be destroyed on last detach */
 # define SHM_LOCKED	02000   /* segment will not be swapped */
 
-struct	shminfo
+struct shminfo
   {
-    int shmmax;
-    int shmmin;
-    int shmmni;
-    int shmseg;
-    int shmall;
+    unsigned long int shmmax;
+    unsigned long int shmmin;
+    unsigned long int shmmni;
+    unsigned long int shmseg;
+    unsigned long int shmall;
+    unsigned long int __unused1;
+    unsigned long int __unused2;
+    unsigned long int __unused3;
+    unsigned long int __unused4;
   };
 
 struct shm_info
   {
-    int   used_ids;
-    ulong shm_tot;	/* total allocated shm */
-    ulong shm_rss;	/* total resident shm */
-    ulong shm_swp;	/* total swapped shm */
-    ulong swap_attempts;
-    ulong swap_successes;
+    int used_ids;
+    unsigned long int shm_tot;  /* total allocated shm */
+    unsigned long int shm_rss;  /* total resident shm */
+    unsigned long int shm_swp;  /* total swapped shm */
+    unsigned long int swap_attempts;
+    unsigned long int swap_successes;
   };
 
 #endif /* __USE_MISC */
