@@ -60,7 +60,7 @@
 	boundary for SSE/SSE-2 alignment.
 
 	* posix/Makefile ($(objpfx)annexc.out): Also pass sysincludes to
-	isomac.
+	annexc.
 
 2001-02-03  Ulrich Drepper  <drepper@redhat.com>
 
