@@ -41,9 +41,14 @@ getpriority (enum __priority_which which, int who)
 	{
 	  int *oldpi = pi;
 	  unsigned int oldpisize = pisize;
+	  char *tw = 0;
+	  size_t twsz = 0;
 	  onerr = __USEPORT (PROC, __proc_getprocinfo (port, pid,
 						       PI_FETCH_TASKINFO,
-						       &pi, &pisize));
+						       &pi, &pisize,
+						       &tw, &twsz));
+	  if (twsz)
+	    __vm_deallocate (__mach_task_self (), tw, twsz);
 	  if (pi != oldpi && oldpi != pibuf)
 	    /* Old buffer from last call was not reused; free it.  */
 	    __vm_deallocate (__mach_task_self (),

@@ -1,3 +1,16 @@
+Fri Nov  3 17:27:49 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/sendto.c: Don't pass BINDING arg to
+	socket_create_address.
+	* sysdeps/mach/hurd/connect.c: Likewise.
+	* sysdeps/mach/hurd/bind.c: Likewise.
+
+	* hurd/hurdprio.c (_hurd_priority_which_map): Pass threadwaits
+	args to proc_getprocinfo.
+	* sysdeps/mach/hurd/getpriority.c: Likewise.
+
+	* hurd/hurdmsg.c (_S_msg_report_wait): New stub function.
+
 Thu Nov  2 19:24:37 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.S (errno): Define as common.

@@ -96,7 +96,7 @@ DEFUN(bind, (fd, addr, len),
 			    err = __socket_create_address (port,
 							   addr->sa_family,
 							   (char *) addr, len,
-							   &aport, 1);
+							   &aport);
 			  if (! err)
 			    {
 			      err = __socket_bind (port, aport);

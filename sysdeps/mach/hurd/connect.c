@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1992, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -61,7 +61,7 @@ DEFUN(connect, (fd, addr, len),
 			    err = __socket_create_address (port,
 							   addr->sa_family,
 							   (char *) addr, len,
-							   &aport, 0);
+							   &aport);
 			  if (! err)
 			    {
 			      err = __socket_connect (port, aport);

@@ -59,10 +59,16 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 	  /* Get procinfo to check the owner.  */
 	  int *oldpi = pi;
 	  mach_msg_type_number_t oldpisize = pisize;
+	  char *tw = 0;
+	  size_t twsz = 0;
 	  if (err = __USEPORT (PROC, __proc_getprocinfo (port, pids[i],
 							 pi_flags,
-							 &pi, &pisize)))
+							 &pi, &pisize,
+							 &tw, &twsz)))
 	    continue;
+	  if (twsz)
+	    /* Gratuitous.  */
+	    __vm_deallocate (__mach_task_self (), tw, twsz);
 	  if (pi != oldpi && oldpi != pibuf)
 	    /* Old buffer from last call was not reused; free it.  */
 	    __vm_deallocate (__mach_task_self (),

@@ -32,8 +32,8 @@ Cambridge, MA 02139, USA.  */
 /* Snarfing and frobbing the init ports.  */
 
 kern_return_t
-_S_msg_get_init_port (mach_port_t msgport, mach_port_t auth, int which,
-		  mach_port_t *result, mach_msg_type_name_t *result_type)
+  _S_msg_get_init_port (mach_port_t msgport, mach_port_t auth, int which,
+			mach_port_t *result, mach_msg_type_name_t *result_type)
 {
   AUTHCHECK;
   *result_type = MACH_MSG_TYPE_MOVE_SEND;
@@ -44,7 +44,7 @@ _S_msg_get_init_port (mach_port_t msgport, mach_port_t auth, int which,
 
 kern_return_t
 _S_msg_set_init_port (mach_port_t msgport, mach_port_t auth,
-		  int which, mach_port_t port)
+		      int which, mach_port_t port)
 {
   error_t err;
 
@@ -59,9 +59,9 @@ _S_msg_set_init_port (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_init_ports (mach_port_t msgport, mach_port_t auth,
-		   mach_port_t **ports,
-		   mach_msg_type_name_t *ports_type,
-		   mach_msg_type_number_t *nports)
+		       mach_port_t **ports,
+		       mach_msg_type_name_t *ports_type,
+		       mach_msg_type_number_t *nports)
 {
   mach_msg_type_number_t i;
   error_t err;
@@ -93,7 +93,7 @@ _S_msg_get_init_ports (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_set_init_ports (mach_port_t msgport, mach_port_t auth,
-		   mach_port_t *ports, mach_msg_type_number_t nports)
+		       mach_port_t *ports, mach_msg_type_number_t nports)
 {
   mach_msg_type_number_t i;
   error_t err;
@@ -158,7 +158,7 @@ get_int (int which, int *value)
 
 kern_return_t
 _S_msg_get_init_int (mach_port_t msgport, mach_port_t auth,
-		 int which, int *value)
+		     int which, int *value)
 {
   AUTHCHECK;
 
@@ -167,7 +167,7 @@ _S_msg_get_init_int (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_init_ints (mach_port_t msgport, mach_port_t auth,
-		  int **values, mach_msg_type_number_t *nvalues)
+		      int **values, mach_msg_type_number_t *nvalues)
 {
   error_t err;
   mach_msg_type_number_t i;
@@ -246,7 +246,7 @@ set_int (int which, int value)
 
 kern_return_t
 _S_msg_set_init_int (mach_port_t msgport, mach_port_t auth,
-		 int which, int value)
+		     int which, int value)
 {
   AUTHCHECK;
 
@@ -255,7 +255,7 @@ _S_msg_set_init_int (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_set_init_ints (mach_port_t msgport, mach_port_t auth,
-		  int *values, mach_msg_type_number_t nvalues)
+		      int *values, mach_msg_type_number_t nvalues)
 {
   error_t err;
   mach_msg_type_number_t i;
@@ -278,8 +278,8 @@ _S_msg_set_init_ints (mach_port_t msgport, mach_port_t auth,
 
 
 kern_return_t
-_S_msg_get_fd (mach_port_t msgport, mach_port_t auth,
-	   int which, mach_port_t *result, mach_msg_type_name_t *result_type)
+_S_msg_get_fd (mach_port_t msgport, mach_port_t auth, int which,
+	       mach_port_t *result, mach_msg_type_name_t *result_type)
 {
   AUTHCHECK;
 
@@ -295,7 +295,7 @@ _S_msg_get_fd (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
-	   int which, mach_port_t port)
+	       int which, mach_port_t port)
 {
   AUTHCHECK;
 
@@ -307,8 +307,8 @@ _S_msg_set_fd (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_env_variable (mach_port_t msgport,
-		     char *variable,
-		     char **data, mach_msg_type_number_t *datalen)
+			 char *variable,
+			 char **data, mach_msg_type_number_t *datalen)
 {
   const char *value = getenv (variable);
 
@@ -324,9 +324,9 @@ _S_msg_get_env_variable (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_env_variable (mach_port_t msgport, mach_port_t auth,
-		     char *variable,
-		     char *value,
-		     int replace)
+			 char *variable,
+			 char *value,
+			 int replace)
 {
   AUTHCHECK;
 
@@ -337,7 +337,7 @@ _S_msg_set_env_variable (mach_port_t msgport, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_environment (mach_port_t msgport,
-		    char **data, mach_msg_type_number_t *datalen)
+			char **data, mach_msg_type_number_t *datalen)
 {
   /* Pack the environment into an array with nulls separating elements.  */
   if (__environ != NULL)
@@ -369,7 +369,7 @@ _S_msg_get_environment (mach_port_t msgport,
 
 kern_return_t
 _S_msg_set_environment (mach_port_t msgport, mach_port_t auth,
-		    char *data, mach_msg_type_number_t datalen)
+			char *data, mach_msg_type_number_t datalen)
 {
   int _hurd_split_args (char *, mach_msg_type_number_t, char **);
   int envc;
@@ -433,19 +433,26 @@ _S_msg_clear_some_exec_flags (mach_port_t process, mach_port_t auth,
 
 kern_return_t
 _S_msg_get_dtable (mach_port_t process,
-	       mach_port_t refport,
-	       portarray_t *dtable,
-	       mach_msg_type_name_t *dtablePoly,
-	       mach_msg_type_number_t *dtableCnt)
+		   mach_port_t refport,
+		   portarray_t *dtable,
+		   mach_msg_type_name_t *dtablePoly,
+		   mach_msg_type_number_t *dtableCnt)
 { return EOPNOTSUPP; }
 
 kern_return_t
 _S_msg_set_dtable (mach_port_t process,
-	       mach_port_t refport,
-	       portarray_t dtable,
-	       mach_msg_type_number_t dtableCnt)
+		   mach_port_t refport,
+		   portarray_t dtable,
+		   mach_msg_type_number_t dtableCnt)
 { return EOPNOTSUPP; }
 
 kern_return_t
 _S_msg_startup_dosync (mach_port_t process)
+{ return EOPNOTSUPP; }
+
+kern_return_t
+_S_msg_report_wait (mach_port_t process,
+		    mach_port_t thread,
+		    string_t wait_desc,
+		    int *wait_rpc)
 { return EOPNOTSUPP; }
