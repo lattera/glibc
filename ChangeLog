@@ -1,3 +1,10 @@
+2004-11-04  Roland McGrath  <roland@frob.com>
+
+	* Makeconfig (link-libc, rpath-dirs): Remove AIX cruft definitions.
+	(LDFLAGS-rpath-ORIGIN, LDFLAGS-soname-fname): Likewise.
+	(LDFLAGS-rdynamic, LDFLAGS-Bsymbolic): Likewise.
+	($(common-objpfx)gnu/lib-names.stmp): Likewise.
+
 2004-11-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/sys/procfs.h [__WORDSIZE == 32]

@@ -452,12 +452,6 @@ link-libc = -Wl,-rpath-link=$(rpath-link) \
 	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
 # This is how to find at build-time things that will be installed there.
 rpath-dirs = math elf dlfcn nss nis rt resolv crypt
-else
-ifneq (,$(filter aix aix%,$(config-os)))
-link-libc = $(common-objpfx)libc.a \
-	    $(common-objpfx)$(patsubst %,$(libtype.oS),c) $(gnulib)
-rpath-dirs = math dlfcn nss nis rt resolv crypt
-endif
 endif
 rpath-link = \
 $(common-objdir):$(subst $(empty) ,:,$(patsubst ../$(subdir),.,$(rpath-dirs:%=$(common-objpfx)%)))
@@ -475,13 +469,6 @@ LDFLAGS-rpath-ORIGIN = -Wl,-rpath,'$$ORIGIN'
 LDFLAGS-soname-fname = -Wl,-soname,$(@F)
 LDFLAGS-rdynamic = -rdynamic
 LDFLAGS-Bsymbolic = -Bsymbolic
-else
-ifneq (,$(filter aix aix%,$(config-os)))
-LDFLAGS-rpath-ORIGIN =
-LDFLAGS-soname-fname =
-LDFLAGS-rdynamic = -Wl,-bdynamic
-LDFLAGS-Bsymbolic = -Wl,-bsymbolic
-endif
 endif
 
 # Choose the default search path for the dynamic linker based on
@@ -835,13 +822,6 @@ postclean-generated += soversions.mk soversions.i \
 before-compile += $(common-objpfx)gnu/lib-names.h
 ifeq ($(soversions.mk-done),t)
 $(common-objpfx)gnu/lib-names.h: $(common-objpfx)gnu/lib-names.stmp; @:
-ifneq (,$(findstring aix,$(config-os)))
-$(common-objpfx)gnu/lib-names.stmp: $(..)sysdeps/unix/sysv/aix/gnu/lib-names.h
-	$(make-target-directory)
-	@rm -f ${@:stmp=T} $@
-	@cp $(..)sysdeps/unix/sysv/aix/gnu/lib-names.h $(common-objpfx)gnu
-	touch $@
-else
 $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	$(make-target-directory)
 	@rm -f ${@:stmp=T} $@
@@ -869,7 +849,6 @@ $(common-objpfx)gnu/lib-names.stmp: $(common-objpfx)soversions.mk
 	 echo '#endif	/* gnu/lib-names.h */';) > ${@:stmp=T}
 	$(move-if-change) ${@:stmp=T} ${@:stmp=h}
 	touch $@
-endif
 endif
 
 common-generated += gnu/lib-names.h gnu/lib-names.stmp
