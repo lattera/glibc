@@ -342,26 +342,29 @@ check_duplicate (struct linereader *ldfile, struct locale_collate_t *collate,
 
   if (find_entry (&charmap->char_table, symbol, symbol_len, &ignore) == 0)
     {
-      lr_error (ldfile, _("`%s' already defined in charmap"), symbol);
+      lr_error (ldfile, _("`%.*s' already defined in charmap"),
+		(int) symbol_len, symbol);
       return 1;
     }
 
   if (find_entry (&repertoire->char_table, symbol, symbol_len, &ignore) == 0)
     {
-      lr_error (ldfile, _("`%s' already defined in repertoire"), symbol);
+      lr_error (ldfile, _("`%.*s' already defined in repertoire"),
+		(int) symbol_len, symbol);
       return 1;
     }
 
   if (find_entry (&collate->sym_table, symbol, symbol_len, &ignore) == 0)
     {
-      lr_error (ldfile, _("`%s' already defined as collating symbol"), symbol);
+      lr_error (ldfile, _("`%.*s' already defined as collating symbol"),
+		(int) symbol_len, symbol);
       return 1;
     }
 
   if (find_entry (&collate->elem_table, symbol, symbol_len, &ignore) == 0)
     {
-      lr_error (ldfile, _("`%s' already defined as collating element"),
-		symbol);
+      lr_error (ldfile, _("`%.*s' already defined as collating element"),
+		(int) symbol_len, symbol);
       return 1;
     }
 
@@ -2881,57 +2884,52 @@ error while adding collating symbol"));
 	      symname = arg->val.str.startmb;
 	      symname_len = arg->val.str.lenmb;
 
-	      if (!ignore_content)
+	      if (newname == NULL)
 		{
-		  if (newname == NULL)
-		    {
-		      lr_error (ldfile, _("\
+		  lr_error (ldfile, _("\
 %s: unknown character in equivalent definition name"),
-				"LC_COLLATE");
-		      goto sym_equiv_free;
-		    }
-		  if (symname == NULL)
-		    {
-		      lr_error (ldfile, _("\
-%s: unknown character in equivalent definition value"),
-				"LC_COLLATE");
-		      goto sym_equiv_free;
-		    }
-		  /* The name is already defined.  */
-		  if (check_duplicate (ldfile, collate, charmap,
-				       repertoire, symname, symname_len))
-		    goto col_sym_free;
+			    "LC_COLLATE");
 
-		  /* See whether the symbol name is already defined.  */
-		  if (find_entry (&collate->sym_table, symname, symname_len,
-				  (void **) &symval) != 0)
-		    {
-		      lr_error (ldfile, _("\
-%s: unknown symbol `%s' in equivalent definition"),
-				"LC_COLLATE", symname);
-		      goto col_sym_free;
-		    }
-
-		  if (insert_entry (&collate->sym_table,
-				    newname, newname_len, symval) < 0)
-		    {
-		      lr_error (ldfile, _("\
-error while adding equivalent collating symbol"));
-		      goto sym_equiv_free;
-		    }
-
-		  free ((char *) symname);
-		}
-	      else
-		{
 		sym_equiv_free:
 		  if (newname != NULL)
 		    free ((char *) newname);
 		  if (symname != NULL)
 		    free ((char *) symname);
+		  break;
 		}
-	      lr_ignore_rest (ldfile, 1);
+	      if (symname == NULL)
+		{
+		  lr_error (ldfile, _("\
+%s: unknown character in equivalent definition value"),
+			    "LC_COLLATE");
+		  goto sym_equiv_free;
+		}
+	      /* The name is already defined.  */
+	      if (check_duplicate (ldfile, collate, charmap,
+				   repertoire, symname, symname_len))
+		goto col_sym_free;
+
+	      /* See whether the symbol name is already defined.  */
+	      if (find_entry (&collate->sym_table, symname, symname_len,
+			      (void **) &symval) != 0)
+		{
+		  lr_error (ldfile, _("\
+%s: unknown symbol `%s' in equivalent definition"),
+			    "LC_COLLATE", symname);
+		  goto col_sym_free;
+		}
+
+	      if (insert_entry (&collate->sym_table,
+				newname, newname_len, symval) < 0)
+		{
+		  lr_error (ldfile, _("\
+error while adding equivalent collating symbol"));
+		  goto sym_equiv_free;
+		}
+
+	      free ((char *) symname);
 	    }
+	  lr_ignore_rest (ldfile, 1);
 	  break;
 
 	case tok_order_start:
