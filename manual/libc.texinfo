@@ -43,6 +43,8 @@ derived work is distributed under the terms of a permission notice
 identical to this one.
 
 Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that the text of the translation of the section entitled ``GNU
 Library General Public License'' must be approved for accuracy by the
 Foundation.
 @end ifinfo

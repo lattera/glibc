@@ -38,7 +38,7 @@ unsetenv (name)
   __set_errno (ENOSYS);
 }
 
-stub_warning (unseenv)
+stub_warning (unsetenv)
 
 
 int

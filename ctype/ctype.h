@@ -78,8 +78,8 @@ extern __const int *__ctype_toupper; /* Case conversions.  */
 #define	__isctype(c, type) \
   (__ctype_b[(int) (c)] & (unsigned short int) type)
 
-#define	__isascii(c)	(((c) & (1 << 7)) == 0)	/* If high bit is set.  */
-#define	__toascii(c)	((c) & 0x7f) /* Mask off high bit.  */
+#define	__isascii(c)	(((c) & ~0x7f) == 0)	/* If C is a 7 bit value.  */
+#define	__toascii(c)	((c) & 0x7f)		/* Mask off high bits.  */
 
 #define	__tolower(c)	((int) __ctype_tolower[(int) (c)])
 #define	__toupper(c)	((int) __ctype_toupper[(int) (c)])
@@ -126,7 +126,7 @@ extern int toascii __P ((int __c));
 
 #endif /* Use SVID or use misc.  */
 
-#if defined(__USE_SVID) || defined(__USE_XOPEN)
+#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN)
 /* These are the same as `toupper' and `tolower'.  */
 __exctype (_toupper);
 __exctype (_tolower);
@@ -152,7 +152,7 @@ __exctype (_tolower);
 #define	tolower(c)	__tolower(c)
 #define	toupper(c)	__toupper(c)
 
-#if defined(__USE_SVID) || defined(__USE_MISC)
+#if defined(__USE_SVID) || defined(__USE_MISC) || defined(__USE_XOPEN)
 #define	isascii(c)	__isascii(c)
 #define	toascii(c)	__toascii(c)
 #endif

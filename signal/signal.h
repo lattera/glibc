@@ -100,6 +100,10 @@ extern int __sigpause __P ((int __mask));
 extern int sigblock __P ((int __mask));
 extern int sigsetmask __P ((int __mask));
 extern int sigpause __P ((int __mask));
+
+/* This function is here only for compatibility.
+   Use `sigprocmask' instead.  */
+extern int siggetmask __P ((void));
 #endif /* Use BSD.  */
 
 

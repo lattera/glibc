@@ -1,3 +1,96 @@
+Sun Nov 10 02:37:15 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/gethstent_r.c: Update copyright.
+	* nss/getXXbyYY_r.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+	* nss/getXXent_r.c: Likewise.
+	* nss/nss_files/files-XXX.c: Likewise.
+	* nss/nss_files/files-netgroup.c: Likewise.
+	* nss/nss_files/files-parse.c: Likewise.
+
+	* nss/getXXent_r.c: Change implementation.  It's not necessary to
+	call all setXXent functions.  Just find first available and
+	when necessary let getXXent_r call the others.
+
+	* nss/nss_files/files-XXX.c: Make really reentrant.  Now calls
+	of getXXent and getXXbyYY can be mixed.  The cursor for traversing
+	the database with getXXent will be remembered.
+
+	* stdlib/test-canon.c (cwd): Change size to PATH_MAX.
+
+Sat Nov  9 15:34:48 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/Dist: Add sys/mtio.h.
+	* sysdeps/unix/sysv/linux/sys/mtio.h: New file.
+
+	* signal/signal.h [__USE_BSD]: Add prototype for siggetmask.
+
+Fri Nov  8 13:29:30 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* ctype/ctype.h (__isascii): Don't test for seventh bit not to be
+	set.  Instead for none beside the first seven bits to be set.
+	X/Open allows the argument to be an `int' value.
+	Reported by Alain Williams <addw@phcomp.co.uk>.
+	(toascii, isascii): Define macro also when __USE_XOPEN.
+
+	* sysdeps/posix/fpathconf.c: Use fstatfs to compute NAME_MAX, not
+	PATH_MAX.
+
+Thu Nov  7 03:04:29 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nss/getXXXent_r.c (SETFUNC_NAME): Reset `nip' after loop to
+	NULL so that GETFUNC will see first entry.
+	(ENDFUNC_NAME): Likewise.
+
+	Rewrite Netgroups implementation to avoid global data.
+	* inet/netgroup.h: Add definition of name_list and struct
+	__netgrent.
+	Add prototypes for internal netgroup functions.
+	* nss/nss_files/files-netgroup.c (_nss_files_setnetgrent): Take
+	extra argument and use the included data instead of global vars.
+	(_nss_files_endnetgrent): Likewise.
+	(_nss_netgroup_parseline): Change to be static and use data
+	included in the RESULT structure.
+	* inet/getnetgrent_r.c (startp): Move into setup function.
+	(known_groups, needed_groups): new part of the __netgrent sruct.
+	(freememory): Take extra argument and use included data.
+	(__internal_endnetgrent): Likewise.
+	(internal_setnetgrent): Renamed to __internal_setnetgrent_reuse
+	and take extra argument.
+	(__internal_setnetgrent): New function.  Call
+	__internal_setnetgrent_reuse after calling free_memory.
+	(setnetgrent): Only call __internal_setnetgrent.
+	(__getnetgrent_r): Split into two functions.  __getnetgrent_r
+	calls __internal_getnetgrent after locking.
+	(innetgr): Use dynamic data only.  I.e., innetgr now is fully
+	reentrant.
+
+Thu Nov  7 00:15:14 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/setenv.c: Correct typo: unseenv -> unsetenv.
+	Reported by Joshua Cowan <jcowan@jcowan.reslife.okstate.edu>.
+
+Wed Nov  6 13:13:37 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/creature.texi: Document that _GNU_SOURCE is no longer the
+	default when no *_SOURCE macro is given.
+	Reported by Karsten Weiss <karsten@addx.au.s.shuttle.de>.
+	* NOTES: remade from manual/creature.texi.
+	* manual/libc.texinfo: Add back line about GPL translation which
+	somehow got lost.
+
+	* Make-dist (dist.tar): Depend on README being updated.
+
+	* rellns-sh: Correct thinko in removing leading /.
+	Reported by Andreas Jaeger <aj@arthur.pfalz.de>.
+
+	* pwd/fgetpwent_r.c: Recognize lines containing only names starting
+	with `+' or `-' in parser.
+	* grp/fgetgrent_r.c: Likewise.
+	* shadow/sgetspent_r.c: Likewise.
+	* nss/nss_files/files-spwd.c: Don't accept entries starting with
+	`+' or `-'.
+
 Wed Nov  6 04:30:26 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/syscalls.list: Add weak alias llseek for
@@ -19,6 +112,7 @@ Tue Nov  5 23:38:28 1996  Ulrich Drepper  <drepper@cygnus.com>
 	if __USE_XOPEN_EXTENDED is defined.
 
 	* io/Makefile (routines): Add lchown.
+	* sysdeps/stub/lchown.c: New file.
 
 	* io/sys/poll.h: Add definition of POLLWRNORM.
 

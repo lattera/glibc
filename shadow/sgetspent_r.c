@@ -36,33 +36,48 @@ struct spent_data {};
 LINE_PARSER
 (,
  STRING_FIELD (result->sp_namp, ISCOLON, 0);
- STRING_FIELD (result->sp_pwdp, ISCOLON, 0);
- INT_FIELD (result->sp_lstchg, ISCOLON, 0, 10, (long int));
- INT_FIELD (result->sp_min, ISCOLON, 0, 10, (long int));
- INT_FIELD (result->sp_max, ISCOLON, 0, 10, (long int));
- while (isspace (*line))
-   ++line;
- if (*line == '\0')
+ if (line[0] == '\0'
+     && (result->sp_namp[0] == '+' || result->sp_namp[0] == '-'))
    {
-     /* The old form.  */
-     result->sp_warn = (long int) -1;
-     result->sp_inact = (long int) -1;
-     result->sp_expire = (long int) -1;
+     result->sp_pwdp = NULL;
+     result->sp_lstchg = 0;
+     result->sp_min = 0;
+     result->sp_max = 0;
+     result->sp_warn = -1l;
+     result->sp_inact = -1l;
+     result->sp_expire = -1l;
      result->sp_flag = ~0ul;
    }
  else
    {
-     INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (long int),
-			   (long int) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (long int),
-			   (long int) -1);
-     INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (long int),
-			   (long int) -1);
-     if (*line != '\0')
-       INT_FIELD_MAYBE_NULL (result->sp_flag, FALSE, 0, 10,
-			     (unsigned long int), ~0ul)
+     STRING_FIELD (result->sp_pwdp, ISCOLON, 0);
+     INT_FIELD (result->sp_lstchg, ISCOLON, 0, 10, (long int));
+     INT_FIELD (result->sp_min, ISCOLON, 0, 10, (long int));
+     INT_FIELD (result->sp_max, ISCOLON, 0, 10, (long int));
+     while (isspace (*line))
+       ++line;
+     if (*line == '\0')
+       {
+	 /* The old form.  */
+	 result->sp_warn = -1l;
+	 result->sp_inact = -1l;
+	 result->sp_expire = -1l;
+	 result->sp_flag = ~0ul;
+       }
      else
-       result->sp_flag = ~0ul;
+       {
+	 INT_FIELD_MAYBE_NULL (result->sp_warn, ISCOLON, 0, 10, (long int),
+			       (long int) -1);
+	 INT_FIELD_MAYBE_NULL (result->sp_inact, ISCOLON, 0, 10, (long int),
+			       (long int) -1);
+	 INT_FIELD_MAYBE_NULL (result->sp_expire, ISCOLON, 0, 10, (long int),
+			       (long int) -1);
+	 if (*line != '\0')
+	   INT_FIELD_MAYBE_NULL (result->sp_flag, FALSE, 0, 10,
+				 (unsigned long int), ~0ul)
+	 else
+	   result->sp_flag = ~0ul;
+       }
    }
  )
 

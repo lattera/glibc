@@ -16,17 +16,17 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <netdb.h>
+#ifndef _SYS_MTIO_H
+#define _SYS_MTIO_H	1
 
+/* Get necessary definitions from system and kernel headers.  */
+#include <sys/types.h>
+#include <sys/ioctl.h>
+#include <linux/mtio.h>
 
-#define LOOKUP_TYPE	struct hostent
-#define SETFUNC_NAME	sethostent
-#define	GETFUNC_NAME	gethostent
-#define	ENDFUNC_NAME	endhostent
-#define DATABASE_NAME	hosts
-#define STAYOPEN	int stayopen
-#define STAYOPEN_VAR	stayopen
-#define NEED_H_ERRNO	1
-#define NEED__RES	1
+/* Specifiy default tape device.  */
+#ifndef DEFTAPE
+# define DEFTAPE	"/dev/tape"
+#endif
 
-#include "../nss/getXXent_r.c"
+#endif /* mtio.h */

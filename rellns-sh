@@ -29,14 +29,14 @@ case $1 in
 
   if test -d $2; then
     fromname=.
-    from=`echo $2 | sed 's%/$%%' | sed 's%^/%%'`
+    from=`echo $2 | sed 's%/$%%'`
   else
     fromname=`echo $2 | sed 's%.*/\([^/]*\)$%\1%'`
-    from=`echo $2 | sed "s%/*$fromname$%%" | sed 's%^/%%'`
+    from=`echo $2 | sed "s%/*$fromname$%%"`
   fi
 
   case $from in
-  /*) ;;
+  /*) from=`echo $from | sed 's%^/%%'` ;;
   ?*) from=`cd $from && pwd | sed 's%^/%%'` ;;
   *) from=`pwd | sed 's%^/%%'` ;;
   esac

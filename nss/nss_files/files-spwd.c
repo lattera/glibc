@@ -32,6 +32,7 @@ struct spent_data {};
 
 DB_LOOKUP (spnam, 1 + strlen (name), (".%s", name),
 	   {
-	     if (! strcmp (name, result->sp_namp))
+	     if (name[0] != '+' && name[0] != '-'
+		 && ! strcmp (name, result->sp_namp))
 	       break;
 	   }, const char *name)

@@ -1,26 +1,25 @@
 /* Netgroup file parser in nss_files modules.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <ctype.h>
 #include <errno.h>
-#include <libc-lock.h>
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,47 +30,33 @@ Boston, MA 02111-1307, USA.  */
 #define DATAFILE	"/etc/netgroup"
 
 
-/* Locks the static variables in this file.  */
-__libc_lock_define_initialized (static, lock)
-
-/* We share a single place where we store the data for the current
-   netgroup.  This buffer is allocated by `setnetgrent' and freed on
-   the next call of this function or when calling `endnetgrent'.  */
-static char *data;
-static size_t data_size;
-static char *cursor;
-static int first;
-
-
 #define EXPAND(needed)							      \
   do									      \
     {									      \
-      size_t old_cursor = cursor - data;				      \
+      size_t old_cursor = result->cursor - result->data;		      \
 									      \
-      data_size += 512 > 2 * needed ? 512 : 2 * needed;			      \
-      data = realloc (data, data_size);					      \
+      result->data_size += 512 > 2 * needed ? 512 : 2 * needed;		      \
+      result->data = realloc (result->data, result->data_size);		      \
 									      \
-      if (data == NULL)							      \
+      if (result->data == NULL)						      \
 	{								      \
 	  status = NSS_STATUS_UNAVAIL;					      \
 	  goto the_end;							      \
 	}								      \
       									      \
-      cursor = data + old_cursor;					      \
+      result->cursor = result->data + old_cursor;			      \
     }									      \
   while (0)
 
 
 enum nss_status
-_nss_files_setnetgrent (const char *group)
+_nss_files_setnetgrent (const char *group, struct __netgrent *result)
 {
   FILE *fp;
   enum nss_status status;
 
   if (group[0] == '\0')
     return NSS_STATUS_UNAVAIL;
-
-  __libc_lock_lock (lock);
 
   /* Find the netgroups file and open it.  */
   fp = fopen (DATAFILE, "r");
@@ -86,7 +71,7 @@ _nss_files_setnetgrent (const char *group)
       const ssize_t group_len = strlen (group);
 
       status = NSS_STATUS_NOTFOUND;
-      cursor = data;
+      result->cursor = result->data;
 
       while (!feof (fp))
 	{
@@ -108,8 +93,9 @@ _nss_files_setnetgrent (const char *group)
 	    {
 	      /* Store the data from the first line.  */
 	      EXPAND (curlen - group_len);
-	      memcpy (cursor, &line[group_len + 1], curlen - group_len);
-	      cursor += (curlen - group_len) - 1;
+	      memcpy (result->cursor, &line[group_len + 1],
+		      curlen - group_len);
+	      result->cursor += (curlen - group_len) - 1;
 	    }
 
 	  while (line[curlen - 1] == '\n' && line[curlen - 2] == '\\')
@@ -117,7 +103,7 @@ _nss_files_setnetgrent (const char *group)
 	      /* Yes, we have a continuation line.  */
 	      if (found)
 		/* Remove these characters from the stored line.  */
-		cursor -= 2;
+		result->cursor -= 2;
 
 	      /* Get netxt line.  */
 	      curlen = getline (&line, &line_len, fp);
@@ -130,11 +116,11 @@ _nss_files_setnetgrent (const char *group)
 		  EXPAND (1 + curlen + 1);
 
 		  /* Add separator in case next line starts immediately.  */
-		  *cursor++ = ' ';
+		  *result->cursor++ = ' ';
 
 		  /* Copy new line.  */
-		  memcpy (cursor, line, curlen + 1);
-		  cursor += curlen;
+		  memcpy (result->cursor, line, curlen + 1);
+		  result->cursor += curlen;
 		}
 	    }
 
@@ -142,8 +128,8 @@ _nss_files_setnetgrent (const char *group)
 	    {
 	      /* Now we have read the line.  */
 	      status = NSS_STATUS_SUCCESS;
-	      cursor = data;
-	      first = 1;
+	      result->cursor = result->data;
+	      result->first = 1;
 	      break;
 	    }
 	}
@@ -154,33 +140,27 @@ _nss_files_setnetgrent (const char *group)
       fclose (fp);
     }
 
-  __libc_lock_unlock (lock);
-
   return status;
 }
 
 
 int
-_nss_files_endnetgrent (void)
+_nss_files_endnetgrent (struct __netgrent *result)
 {
-  __libc_lock_lock (lock);
-
   /* Free allocated memory for data if some is present.  */
-  if (data != NULL)
+  if (result->data != NULL)
     {
-      free (data);
-      data = NULL;
-      data_size = 0;
-      cursor = NULL;
+      free (result->data);
+      result->data = NULL;
+      result->data_size = 0;
+      result->cursor = NULL;
     }
-
-  __libc_lock_unlock (lock);
 
   return NSS_STATUS_SUCCESS;
 }
 
 
-enum nss_status
+static enum nss_status
 _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 			 char *buffer, int buflen)
 {
@@ -216,31 +196,31 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
 	  if (! last)
 	    ++cp;
 	  *cursor = cp;
-	  first = 0;
+	  result->first = 0;
 
 	  return NSS_STATUS_SUCCESS;
 	}
 
-      return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+      return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
     }
 
   /* Match host name.  */
   host = ++cp;
   while (*cp != ',')
     if (*cp++ == '\0')
-      return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+      return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
 
   /* Match user name.  */
   user = ++cp;
   while (*cp != ',')
     if (*cp++ == '\0')
-      return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+      return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
 
   /* Match domain name.  */
   domain = ++cp;
   while (*cp != ')')
     if (*cp++ == '\0')
-      return first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
+      return result->first ? NSS_STATUS_NOTFOUND : NSS_STATUS_RETURN;
   ++cp;
 
 
@@ -271,7 +251,7 @@ _nss_netgroup_parseline (char **cursor, struct __netgrent *result,
       /* Rememember where we stopped reading.  */
       *cursor = cp;
 
-      first = 0;
+      result->first = 0;
     }
 
   return status;
@@ -283,11 +263,7 @@ _nss_files_getnetgrent_r (struct __netgrent *result, char *buffer, int buflen)
 {
   enum nss_status status;
 
-  __libc_lock_lock (lock);
-
-  status = _nss_netgroup_parseline (&cursor, result, buffer, buflen);
-
-  __libc_lock_unlock (lock);
+  status = _nss_netgroup_parseline (&result->cursor, result, buffer, buflen);
 
   return status;
 }

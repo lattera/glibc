@@ -1,21 +1,21 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
-Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
+   This file is part of the GNU C Library.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <libc-lock.h>
 
@@ -48,17 +48,17 @@ Boston, MA 02111-1307, USA.  */
 
 /* To make the real sources a bit prettier.  */
 #define REENTRANT_GETNAME APPEND_R (GETFUNC_NAME)
-#define APPEND_R(name) APPEND_R1 (name)
-#define APPEND_R1(name) name##_r
-#define INTERNAL(name) INTERNAL1 (name)
-#define INTERNAL1(name) __##name
+#define APPEND_R(Name) CONCAT2_2 (Name, _r)
+#define INTERNAL(Name) CONCAT2_2 (__, Name)
+#define CONCAT2_1(Pre, Post) CONCAT2_2 (Pre, Post)
+#define CONCAT2_2(Pre, Post) Pre##Post
 
 #define SETFUNC_NAME_STRING STRINGIZE (SETFUNC_NAME)
 #define GETFUNC_NAME_STRING STRINGIZE (REENTRANT_GETNAME)
 #define ENDFUNC_NAME_STRING STRINGIZE (ENDFUNC_NAME)
 #define DATABASE_NAME_STRING STRINGIZE (DATABASE_NAME)
-#define STRINGIZE(name) STRINGIZE1 (name)
-#define STRINGIZE1(name) #name
+#define STRINGIZE(Name) STRINGIZE1 (Name)
+#define STRINGIZE1(Name) #Name
 
 #define DB_LOOKUP_FCT CONCAT3_1 (__nss_, DATABASE_NAME, _lookup)
 #define CONCAT3_1(Pre, Name, Post) CONCAT3_2 (Pre, Name, Post)
@@ -74,9 +74,13 @@ Boston, MA 02111-1307, USA.  */
 #endif
 
 /* Some databases take the `stayopen' flag.  */
-#ifndef STAYOPEN
-#define STAYOPEN void
-#define STAYOPEN_VAR
+#ifdef STAYOPEN
+# define STAYOPEN_TMP CONCAT2_1 (STAYOPEN, _tmp)
+# define STAYOPEN_TMPVAR CONCAT2_1 (STAYOPEN_VAR, _tmp)
+#else
+# define STAYOPEN void
+# define STAYOPEN_VAR
+# define STAYOPEN_TMPVAR
 #endif
 
 /* Prototype for the setXXXent functions we use here.  */
@@ -94,6 +98,13 @@ typedef int (*get_function) (LOOKUP_TYPE *, char *, int H_ERRNO_PARM);
 static service_user *nip;
 /* Remember the first service_entry, it's always the same.  */
 static service_user *startp;
+
+#ifdef STAYOPEN_TMP
+/* We need to remember the last `stayopen' flag given by the user
+   since the `setent' function is only called for the first available
+   service.  */
+static STAYOPEN_TMP;
+#endif
 
 /* Protect above variable against multiple uses at the same time.  */
 __libc_lock_define_initialized (static, lock)
@@ -143,15 +154,21 @@ SETFUNC_NAME (STAYOPEN)
 
   __libc_lock_lock (lock);
 
-  /* Cycle through all the services and run their setXXent functions.  */
+  /* Cycle through the services and run their `setXXent' functions until
+     we find an available service.  */
   no_more = setup ((void **) &fct, SETFUNC_NAME_STRING, 1);
   while (! no_more)
     {
-      /* Ignore status, we force check in __NSS_NEXT.  */
-      (void) (*fct) (STAYOPEN_VAR);
+      enum nss_status status = (*fct) (STAYOPEN_VAR);
 
-      no_more = __nss_next (&nip, SETFUNC_NAME_STRING, (void **) &fct, 0, 1);
+      no_more = __nss_next (&nip, SETFUNC_NAME_STRING, (void **) &fct,
+			    status, 1);
     }
+  nip = NULL;
+
+#ifdef STAYOPEN_TMP
+  STAYOPEN_TMPVAR = STAYOPEN_VAR;
+#endif
 
   __libc_lock_unlock (lock);
 }
@@ -182,6 +199,7 @@ ENDFUNC_NAME (void)
 
       no_more = __nss_next (&nip, ENDFUNC_NAME_STRING, (void **) &fct, 0, 1);
     }
+  nip = NULL;
 
   __libc_lock_unlock (lock);
 }
@@ -214,10 +232,26 @@ INTERNAL (REENTRANT_GETNAME) (LOOKUP_TYPE *resbuf, char *buffer, size_t buflen,
   no_more = setup ((void **) &fct, GETFUNC_NAME_STRING, 0);
   while (! no_more)
     {
+      service_user *current_nip = nip;
+
       status = (*fct) (resbuf, buffer, buflen H_ERRNO_VAR);
 
       no_more = __nss_next (&nip, GETFUNC_NAME_STRING, (void **) &fct,
 			    status, 0);
+
+      if (! no_more && current_nip != nip)
+	/* Call the `setXXent' function.  This wasn't done before.  */
+	do
+	  {
+	    set_function *sfct;
+
+	    no_more = __nss_lookup (&nip, SETFUNC_NAME_STRING,
+				    (void **) &sfct);
+
+	    if (! no_more)
+	      status = (*sfct) (STAYOPEN_TMPVAR);
+	  }
+	while (! no_more && status != NSS_STATUS_SUCCESS);
     }
 
   __libc_lock_unlock (lock);

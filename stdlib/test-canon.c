@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
 #include <unistd.h>
 #include <sys/param.h>
 
-static char	cwd[1024];
+static char	cwd[PATH_MAX];
 static size_t	cwd_len;
 
 struct {

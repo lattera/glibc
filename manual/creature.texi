@@ -124,8 +124,10 @@ it must have been specified to compile as thread safe.
 @end defvr
 
 We recommend you use @code{_GNU_SOURCE} in new programs.  If you don't
-specify the @samp{-ansi} option to GCC and don't define any of these macros
-explicitly, the effect is the same as defining @code{_GNU_SOURCE}.
+specify the @samp{-ansi} option to GCC and don't define any of these
+macros explicitly, the effect is the same as defining
+@code{_POSIX_C_SOURCE} to 2 and @code{_POSIX_SOURCE},
+@code{_SVID_SOURCE}, and @code{_BSD_SOURCE} to 1.
 
 When you define a feature test macro to request a larger class of features,
 it is harmless to define in addition a feature test macro for a subset of

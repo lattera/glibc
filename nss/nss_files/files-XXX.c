@@ -1,21 +1,21 @@
 /* Common code for file-based databases in nss_files module.
-Copyright (C) 1996 Free Software Foundation, Inc.
-This file is part of the GNU C Library.
+   Copyright (C) 1996 Free Software Foundation, Inc.
+   This file is part of the GNU C Library.
 
-The GNU C Library is free software; you can redistribute it and/or
-modify it under the terms of the GNU Library General Public License as
-published by the Free Software Foundation; either version 2 of the
-License, or (at your option) any later version.
+   The GNU C Library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Library General Public License as
+   published by the Free Software Foundation; either version 2 of the
+   License, or (at your option) any later version.
 
-The GNU C Library is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-Library General Public License for more details.
+   The GNU C Library is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Library General Public License for more details.
 
-You should have received a copy of the GNU Library General Public
-License along with the GNU C Library; see the file COPYING.LIB.  If
-not, write to the Free Software Foundation, Inc., 675 Mass Ave,
-Cambridge, MA 02139, USA.  */
+   You should have received a copy of the GNU Library General Public
+   License along with the GNU C Library; see the file COPYING.LIB.  If not,
+   write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+   Boston, MA 02111-1307, USA.  */
 
 #include <stdio.h>
 #include <ctype.h>
@@ -54,6 +54,8 @@ __libc_lock_define_initialized (static, lock)
 /* Maintenance of the shared stream open on the database file.  */
 
 static FILE *stream;
+static fpos_t position;
+static enum { none, getent, getby } last_use;
 static int keep_stream;
 
 /* Open database file if not already opened.  */
@@ -89,6 +91,15 @@ CONCAT(_nss_files_set,ENTNAME) (int stayopen)
   __libc_lock_lock (lock);
 
   status = internal_setent (stayopen);
+
+  if (status == NSS_STATUS_SUCCESS && fgetpos (stream, &position) < 0)
+    {
+      fclose (stream);
+      stream = NULL;
+      status = NSS_STATUS_UNAVAIL;
+    }
+
+  last_use = getent;
 
   __libc_lock_unlock (lock);
 
@@ -182,11 +193,25 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result,
 				  char *buffer, int buflen H_ERRNO_PROTO)
 {
   /* Return next entry in host file.  */
-  int status;
+  int status = NSS_STATUS_SUCCESS;
 
   __libc_lock_lock (lock);
 
-  status = internal_getent (result, buffer, buflen H_ERRNO_ARG);
+  /* If the last use was not by the getent function we need the
+     position the stream.  */
+  if (last_use != getent)
+    if (fsetpos (stream, &position) < 0)
+      status = NSS_STATUS_UNAVAIL;
+    else
+      last_use = getent;
+
+  if (status == NSS_STATUS_SUCCESS)
+    {
+      status = internal_getent (result, buffer, buflen H_ERRNO_ARG);
+
+      /* Remember this position.  */
+      fgetpos (stream, &position);
+    }
 
   __libc_lock_unlock (lock);
 
@@ -217,6 +242,9 @@ _nss_files_get##name##_r (proto,					      \
 									      \
   /* Reset file pointer to beginning or open file.  */			      \
   internal_setent (keep_stream);					      \
+									      \
+  /* Tell getent function that we have repositioned the file pointer.  */     \
+  last_use = getby;							      \
 									      \
   while ((status = internal_getent (result, buffer, buflen H_ERRNO_ARG))      \
 	 == NSS_STATUS_SUCCESS)						      \

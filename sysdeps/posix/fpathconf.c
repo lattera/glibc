@@ -67,7 +67,14 @@ __fpathconf (fd, name)
 
     case _PC_NAME_MAX:
 #ifdef	NAME_MAX
-      return NAME_MAX;
+      {
+	struct statfs buf;
+
+	if (__fstatfs (fd, &buf) < 0)
+	  return errno == ENOSYS ? NAME_MAX : -1;
+	else
+	  return buf.f_namelen;
+      }
 #else
       __set_errno (ENOSYS);
       return -1;
@@ -75,14 +82,7 @@ __fpathconf (fd, name)
 
     case _PC_PATH_MAX:
 #ifdef	PATH_MAX
-      {
-	struct statfs buf;
-
-	if (__fstatfs (fd, &buf) < 0)
-	  return errno == ENOSYS ? PATH_MAX : -1;
-	else
-	  return buf.f_namelen;
-      }
+      return PATH_MAX;
 #else
       __set_errno (ENOSYS);
       return -1;

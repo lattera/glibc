@@ -191,7 +191,7 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 dist: $(tardir).tar.gz
 
 subdir_dist: dist.tar
-dist.tar: $(tardir) $(+tsrcs)
+dist.tar: README $(tardir) $(+tsrcs)
 	tar chvf $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 $(tardir).tar: dist.tar subdir_dist

@@ -20,6 +20,16 @@ Boston, MA 02111-1307, USA.  */
 #ifndef _NETGROUP_H
 #define _NETGROUP_H	1
 
+/* A netgroup can consist of names of other netgroups.  We have to
+   track which netgroups were read and which still have to be read.  */
+struct name_list
+{
+  const char *name;
+  struct name_list *next;
+};
+
+
+/* Dataset for iterating netgroups.  */
 struct __netgrent
 {
   enum { triple_val, group_val } type;
@@ -36,6 +46,25 @@ struct __netgrent
 
     const char *group;
   } val;
+
+  /* Room for the data kept between the calls to the netgroup
+     functions.  We must avoid global variables.  */
+  char *data;
+  size_t data_size;
+  char *cursor;
+  int first;
+
+  struct name_list *known_groups;
+  struct name_list *needed_groups;
 };
+
+
+/* The internal netgroup handling functions might be called from outside.  */
+extern int __internal_setnetgrent (const char *group,
+				   struct __netgrent *datap);
+extern void __internal_endnetgrent (struct __netgrent *datap);
+extern int __internal_getnetgrent_r (char **hostp, char **userp,
+				     char **domainp, struct __netgrent *datap,
+				     char *buffer, size_t buflen);
 
 #endif /* netgroup.h */
