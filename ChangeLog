@@ -1,3 +1,9 @@
+2000-08-16  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/fpu/fegetexcept.c: New file.
+	* sysdeps/m68k/fpu/fedisblxcpt.c: New file.
+	* sysdeps/m68k/fpu/feenablxcpt.c: New file.
+
 2000-08-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/ldsodefs.h: Declare _nl_nloaded.
