@@ -169,6 +169,7 @@ typedef struct
 #define EM_88K		 5		/* Motorola m88k family */
 #define EM_860		 7		/* Intel 80860 */
 #define EM_MIPS		 8		/* MIPS R3000 big-endian */
+#define EM_S370		 9		/* IBM System/370 */
 #define EM_MIPS_RS3_LE	10		/* MIPS R3000 little-endian */
 
 #define EM_PARISC	15		/* HPPA */
@@ -205,7 +206,8 @@ typedef struct
 #define EM_ME16		59		/* Toyota ME16 processor */
 #define EM_ST100	60		/* STMicroelectronic ST100 processor */
 #define EM_TINYJ	61		/* Advanced Logic Corp. Tinyj emb.fam*/
-#define EM_X8664	62		/* AMD x86-64 */
+#define EM_X86_64	62		/* AMD x86-64 architecture */
+#define EM_PDSP		63		/* Sony DSP Processor */
 
 #define EM_FX66		66		/* Siemens FX66 microcontroller */
 #define EM_ST9PLUS	67		/* STMicroelectronics ST9+ 8/16 mc */
@@ -217,7 +219,23 @@ typedef struct
 #define EM_SVX		73		/* Silicon Graphics SVx */
 #define EM_AT19		74		/* STMicroelectronics ST19 8 bit mc */
 #define EM_VAX		75		/* Digital VAX */
-#define EM_NUM		76
+#define EM_CRIS		76		/* Axis Communications 32-bit embedded processor */
+#define EM_JAVELIN	77		/* Infineon Technologies 32-bit embedded processor */
+#define EM_FIREPATH	78		/* Element 14 64-bit DSP Processor */
+#define EM_ZSP		79		/* LSI Logic 16-bit DSP Processor */
+#define EM_MMIX		80		/* Donald Knuth's educational 64-bit processor */
+#define EM_HUANY	81		/* Harvard University machine-independent object files */
+#define EM_PRISM	82		/* SiTera Prism */
+#define EM_AVR		83		/* Atmel AVR 8-bit microcontroller */
+#define EM_FR30		84		/* Fujitsu FR30 */
+#define EM_D10V		85		/* Mitsubishi D10V */
+#define EM_D30V		86		/* Mitsubishi D30V */
+#define EM_V850		87		/* NEC v850 */
+#define EM_M32R		88		/* Mitsubishi M32R */
+#define EM_MN10300	89		/* Matsushita MN10300 */
+#define EM_MN10200	90		/* Matsushita MN10200 */
+#define EM_PJ		91		/* picoJava */
+#define EM_NUM		92
 
 /* If it is necessary to assign new unofficial EM_* values, please
    pick large random numbers (0x8523, 0xa7f2, etc.) to minimize the
