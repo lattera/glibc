@@ -198,7 +198,7 @@ int sigwait(const sigset_t * set, int * sig)
         s != __pthread_sig_cancel &&
         s != __pthread_sig_debug) {
       sigdelset(&mask, s);
-      if (sighandler[s].old == NULL ||
+      if (sighandler[s].old == (arch_sighandler_t) SIG_ERR ||
           sighandler[s].old == (arch_sighandler_t) SIG_DFL ||
           sighandler[s].old == (arch_sighandler_t) SIG_IGN) {
         sa.sa_handler = pthread_null_sighandler;
