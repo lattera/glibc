@@ -1,3 +1,8 @@
+2000-12-28  Joseph S. Myers  <jsm28@cam.ac.uk>
+
+	* misc/sys/cdefs.h (__attribute_format_strfmon__): Define.
+	* stdlib/monetary.h: Add strfmon format attributes.
+
 2000-12-28  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/ioctl.c (do_ioctl): Avoid double-increment after
