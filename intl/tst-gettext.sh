@@ -39,7 +39,7 @@ test -d ${objpfx}domaindir/existing-locale/LC_TIME || mkdir ${objpfx}domaindir/e
 # Create the locale directories.
 test -d ${objpfx}localedir/existing-locale || {
   mkdir ${objpfx}localedir/existing-locale
-  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMEIRC PAPER TELEPHONE TIME; do
+  for f in ADDRESS COLLATE CTYPE IDENTIFICATION MEASUREMENT MONETARY NAME NUMERIC PAPER TELEPHONE TIME; do
     cp ${common_objpfx}localedata/de_DE.ISO-8859-1/LC_$f \
        ${objpfx}localedir/existing-locale
   done

@@ -2135,6 +2135,19 @@ END LC_COLLATE
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+
+include "translit_combining";""
+
+% Danish.
+% LATIN CAPITAL LETTER A WITH RING ABOVE.
+<U00C5> "<U0041><U030A>";"<U0041><U0041>"
+% LATIN SMALL LETTER A WITH RING ABOVE.
+<U00E5> "<U0061><U030A>";"<U0061><U0061>"
+
+translit_end
+
 END LC_CTYPE
 
 LC_MONETARY

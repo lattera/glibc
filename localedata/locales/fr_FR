@@ -48,6 +48,14 @@ END LC_IDENTIFICATION
 
 LC_CTYPE
 copy "i18n"
+
+translit_start
+
+% In France, accents are simply omitted if they cannot be represented.
+include "translit_combining";""
+
+translit_end
+
 END LC_CTYPE
 
 LC_COLLATE

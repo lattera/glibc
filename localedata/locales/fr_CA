@@ -47,7 +47,7 @@ category  "fr_CA:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "fr_FR"
 END LC_CTYPE
 
 LC_COLLATE

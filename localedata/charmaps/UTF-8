@@ -55682,6 +55682,8 @@ END CHARMAP
 %   "grep '^[^;]*;[^;]*;[^;]*;[^;]*;NSM;' UnicodeData.txt"
 % - Format control characters have width 0; generated from
 %   "grep '^[^;]*;[^;]*;Cf;' UnicodeData.txt"
+% - Zero width characters have width 0; generated from
+%   "grep '^[^;]*;ZERO WIDTH ' UnicodeData.txt"
 WIDTH
 <U0300>...<U034E>	0
 <U0360>...<U0362>	0
@@ -55773,7 +55775,7 @@ WIDTH
 <U17C9>...<U17D3>	0
 <U180B>...<U180E>	0
 <U18A9>			0
-<U200C>...<U200F>	0
+<U200B>...<U200F>	0
 <U202A>...<U202E>	0
 <U206A>...<U206F>	0
 <U20D0>...<U20E3>	0

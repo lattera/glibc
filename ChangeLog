@@ -1,5 +1,37 @@
 2000-10-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/runtests.c (main): Don't use exit() to avoid warning with
+	broken compilers.
+
+	* string/bug-strncat1.c: Undefine __USE_STRING_INLINES before
+	defining it again to avoid warning.
+	* string/bug-strpbrk1.c: Likewise.
+	* string/bug-strspn1.c: Likewise.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-translit.h.in: Include more rules from translit_neutral.
+	Remove a few German and Danish specific rules.
+	* locale/gen-translit.pl: Avoid an error when printing a string
+	containing a '%' character.
+	* locale/C-translit.h: Regenerated.
+	* intl/translit.po: Choose different translations.
+	* intl/tst-translit.c: Update.
+
+2000-10-29  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/programs/ld-ctype.c (translit_include_t): New type.
+	(locale_ctype_t): Remove translit_copy_locale, translit_copy_repertoire
+	fields, add translit_include field.
+	(ctype_read): After seeing "translit_start" in ignore_content mode,
+	skip the entire translit section, not only one line. Remove dead test
+	for tok_translit_end. Enqueue include statements into a list.
+	Signal error if tok_eof seen before tok_translit_end.
+	(translit_flatten): New function.
+	(allocate_arrays): Call translit_flatten.
+
+2000-10-30  Ulrich Drepper  <drepper@redhat.com>
+
 	* locale/findlocale.c (free_mem): We can remove NODELETE marked
 	data, just not the C locale data.
 

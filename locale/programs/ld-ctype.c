@@ -106,6 +106,16 @@ struct translit_ignore_t
 };
 
 
+/* Type to describe a transliteration include statement.  */
+struct translit_include_t 
+{
+  const char *copy_locale;
+  const char *copy_repertoire;
+
+  struct translit_include_t *next;
+};
+
+
 /* The real definition of the struct for the LC_CTYPE locale.  */
 struct locale_ctype_t
 {
@@ -155,8 +165,7 @@ struct locale_ctype_t
   uint32_t map_offset;
 
   /* Transliteration information.  */
-  const char *translit_copy_locale;
-  const char *translit_copy_repertoire;
+  struct translit_include_t *translit_include;
   struct translit_t *translit;
   struct translit_ignore_t *translit_ignore;
   uint32_t ntranslit_ignore;
@@ -2609,11 +2618,22 @@ with character code range values one must use the absolute ellipsis `...'"));
 	  break;
 
 	case tok_translit_start:
-	  /* Ignore the rest of the line if we don't need the input of
-	     this line.  */
+	  /* Ignore the entire translit section with its peculiar syntax
+	     if we don't need the input.  */
 	  if (ignore_content)
 	    {
-	      lr_ignore_rest (ldfile, 0);
+	      do
+		{
+		  lr_ignore_rest (ldfile, 0);
+		  now = lr_token (ldfile, charmap, NULL);
+		}
+	      while (now->tok != tok_translit_end && now->tok != tok_eof);
+
+	      if (now->tok == tok_eof)
+		lr_error (ldfile, _(\
+"%s: `translit_start' section does not end with `translit_end'"),
+			  "LC_CTYPE");
+
 	      break;
 	    }
 
@@ -2635,17 +2655,12 @@ with character code range values one must use the absolute ellipsis `...'"));
 		/* Ignore empty lines.  */
 		continue;
 
-	      if (now->tok == tok_translit_end)
-		{
-		  lr_ignore_rest (ldfile, 0);
-		  break;
-		}
-
 	      if (now->tok == tok_include)
 		{
 		  /* We have to include locale.  */
 		  const char *locale_name;
 		  const char *repertoire_name;
+		  struct translit_include_t *include_stmt, **include_ptr;
 
 		  now = lr_token (ldfile, charmap, NULL);
 		  /* This should be a string or an identifier.  In any
@@ -2671,24 +2686,24 @@ with character code range values one must use the absolute ellipsis `...'"));
 		    goto translit_syntax;
 		  repertoire_name = now->val.str.startmb;
 
-		  /* We must not have more than one `include'.  */
-		  if (ctype->translit_copy_locale != NULL)
-		    {
-		      lr_error (ldfile, _("\
-%s: only one `include' instruction allowed"), "LC_CTYPE");
-		      lr_ignore_rest (ldfile, 0);
-		      continue;
-		    }
+		  /* Save the include statement for later processing.  */
+		  include_stmt = (struct translit_include_t *)
+		    xmalloc (sizeof (struct translit_include_t));
+		  include_stmt->copy_locale = locale_name;
+		  include_stmt->copy_repertoire = repertoire_name;
+		  include_stmt->next = NULL;
 
-		  ctype->translit_copy_locale = locale_name;
-		  ctype->translit_copy_repertoire = repertoire_name;
+		  include_ptr = &ctype->translit_include;
+		  while (*include_ptr != NULL)
+		    include_ptr = &(*include_ptr)->next;
+		  *include_ptr = include_stmt;
 
 		  /* The rest of the line must be empty.  */
 		  lr_ignore_rest (ldfile, 1);
 
 		  /* Make sure the locale is read.  */
-		  add_to_readlist (LC_CTYPE, ctype->translit_copy_locale,
-				   repertoire_name, 1, NULL);
+		  add_to_readlist (LC_CTYPE, locale_name, repertoire_name,
+				   1, NULL);
 		  continue;
 		}
 	      else if (now->tok == tok_default_missing)
@@ -2753,6 +2768,12 @@ previous definition was here"));
 	      read_translit_entry (ldfile, ctype, now, charmap, repertoire);
 	    }
 	  ldfile->return_widestr = 0;
+
+	  if (now->tok == tok_eof)
+	    lr_error (ldfile, _(\
+"%s: `translit_start' section does not end with `translit_end'"),
+		      "LC_CTYPE");
+
 	  break;
 
 	case tok_ident:
@@ -3591,6 +3612,62 @@ wctrans_table_add (struct wctrans_table *t, uint32_t wc, uint32_t mapped_wc)
 }
 
 
+/* Flattens the included transliterations into a translit list.
+   Inserts them in the list at `cursor', and returns the new cursor.  */
+static struct translit_t **
+translit_flatten (struct locale_ctype_t *ctype, struct charmap_t *charmap,
+		  struct translit_t **cursor)
+{
+  while (ctype->translit_include != NULL)
+    {
+      const char *copy_locale = ctype->translit_include->copy_locale;
+      const char *copy_repertoire = ctype->translit_include->copy_repertoire;
+      struct localedef_t *other;
+
+      /* Unchain the include statement.  During the depth-first traversal
+	 we don't want to visit any locale more than once.  */
+      ctype->translit_include = ctype->translit_include->next;
+
+      other = find_locale (LC_CTYPE, copy_locale, copy_repertoire, charmap);
+
+      if (other == NULL)
+	{
+	  error (0, 0, _("\
+%s: transliteration data from locale `%s' not available"),
+		 "LC_CTYPE", copy_locale);
+	}
+      else
+	{
+	  struct locale_ctype_t *other_ctype =
+	    other->categories[LC_CTYPE].ctype;
+
+	  cursor = translit_flatten (other_ctype, charmap, cursor);
+	  assert (other_ctype->translit_include == NULL);
+
+	  if (other_ctype->translit != NULL)
+	    {
+	      /* Insert the other_ctype->translit list at *cursor.  */
+	      struct translit_t *endp = other_ctype->translit;
+	      while (endp->next != NULL)
+		endp = endp->next;
+
+	      endp->next = *cursor;
+	      *cursor = other_ctype->translit;
+
+	      /* Avoid any risk of circular lists.  */
+	      other_ctype->translit = NULL;
+
+	      cursor = &endp->next;
+	    }
+
+	  if (ctype->default_missing == NULL)
+	    ctype->default_missing = other_ctype->default_missing;
+	}
+    }
+
+  return cursor;
+}
+
 static void
 allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 		 struct repertoire_t *repertoire)
@@ -3867,41 +3944,10 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
      complicated algorithm which uses a hash table to locate the entries.
      For now I'll use a simple array which can be searching using binary
      search.  */
-  if (ctype->translit_copy_locale != NULL)
-    {
-      /* Fold in the transliteration information from the locale mentioned
-	 in the `include' statement.  */
-      struct locale_ctype_t *here = ctype;
-
-      do
-	{
-	  struct localedef_t *other = find_locale (LC_CTYPE,
-						   here->translit_copy_locale,
-						   repertoire->name, charmap);
-
-	  if (other == NULL)
-	    {
-	      error (0, 0, _("\
-%s: transliteration data from locale `%s' not available"),
-		     "LC_CTYPE", here->translit_copy_locale);
-	      break;
-	    }
-
-	  here = other->categories[LC_CTYPE].ctype;
-
-	  /* Enqueue the information if necessary.  */
-	  if (here->translit != NULL)
-	    {
-	      struct translit_t *endp = here->translit;
-	      while (endp->next != NULL)
-		endp = endp->next;
-
-	      endp->next = ctype->translit;
-	      ctype->translit = here->translit;
-	    }
-	}
-      while (here->translit_copy_locale != NULL);
-    }
+  if (ctype->translit_include != NULL)
+    /* Traverse the locales mentioned in the `include' statements in a
+       depth-first way and fold in their transliteration information.  */
+    translit_flatten (ctype, charmap, &ctype->translit);
 
   if (ctype->translit != NULL)
     {

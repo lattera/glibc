@@ -1,3 +1,8 @@
+2000-10-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* Examples/ex4.c (main): Don't use exit() to avoid warning with
+	broken compilers.
+
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* attr.c (__pthread_attr_setguardsize): Don't round guardsize

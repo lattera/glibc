@@ -1,4 +1,5 @@
 /* Test case by Joseph S. Myers <jsm28@cam.ac.uk>.  */
+#undef __USE_STRING_INLINES
 #define __USE_STRING_INLINES
 #include <stdio.h>
 #include <stdlib.h>

@@ -45,7 +45,7 @@ category  "de_AT@euro:2000";LC_TELEPHONE
 END LC_IDENTIFICATION
 
 LC_CTYPE
-copy "i18n"
+copy "de_AT"
 END LC_CTYPE
 
 LC_COLLATE
