@@ -81,6 +81,9 @@ COLUMNS=${COLUMNS:-80}
 # If `TERM' is not set, set it to `xterm'.
 TERM=${TERM:-xterm}
 
+# The data file to process, if any.
+data=
+
 # Process arguments.  But stop as soon as the program name is found.
 while test $# -gt 0; do
   case "$1" in
@@ -93,6 +96,12 @@ while test $# -gt 0; do
     ;;
   --d=* | --da=* | --dat=* | --data=*)
     data=${1##*=}
+    ;;
+  -? | --h | --he | --hel | --help)
+    do_help
+    ;;
+  --v | --ve | --ver | --vers | --versi | --versio | --version)
+    do_version
     ;;
   --)
     # Stop processing arguments.
@@ -133,9 +142,9 @@ fi
 printf "%-20s  %-*s  %6s\n" Function $(expr $COLUMNS - 30) File Line
 for i in $(seq 1 $COLUMNS); do echo -n -; done; echo
 if test -n "$data"; then
-  eval $pcprofiledump $data |
+  $pcprofiledump "$data" |
   sed 's/this = \([^,]*\).*/\1/' |
-  addr2line -fC -e $program |
+  addr2line -fC -e "$program" |
   while read fct; do
     read file
     if test "$fct" != '??' -a "$file" != '??:0'; then
@@ -146,9 +155,9 @@ else
   fifo=$(mktemp -u ${TMPDIR:-/tmp}/xprof.XXXXXX)
   mkfifo -m 0600 $fifo || exit 1
   # Now start the program and let it write to the FIFO.
-  eval $TERM -T "'xtrace - $program $*'" -e /bin/sh -c "'LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read $fifo'" &
+  $TERM -T "xtrace - $program $*" -e /bin/sh -c "LD_PRELOAD=$pcprofileso PCPROFILE_OUTPUT=$fifo $program $*; read $fifo" &
   termpid=$!
-  eval $pcprofiledump $fifo |
+  $pcprofiledump $fifo |
   sed 's/this = \([^,]*\).*/\1/' |
   addr2line -fC -e $program |
   while read fct; do

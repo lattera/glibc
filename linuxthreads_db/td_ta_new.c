@@ -21,6 +21,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <gnu/lib-names.h>
 
 #include "thread_dbP.h"
 
@@ -33,7 +34,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   LOG (__FUNCTION__);
 
   /* See whether the library contains the necessary symbols.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0", "__pthread_threads_debug",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_threads_debug",
 		         &addr) != PS_OK)
     return TD_LIBTHREAD;
 
@@ -47,7 +48,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   (*ta)->ph = ps;
 
   /* See whether the library contains the necessary symbols.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0", "__pthread_handles",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "__pthread_handles",
 		         &addr) != PS_OK)
     {
     free_return:
@@ -58,7 +59,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   (*ta)->handles = (struct pthread_handle_struct *) addr;
 
 
-  if (ps_pglobal_lookup (ps, "libpthread.so.0", "pthread_keys",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO, "pthread_keys",
 		         &addr) != PS_OK)
     goto free_return;
 
@@ -68,7 +69,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
   /* Find out about the maximum number of threads.  Old implementations
      don't provide this information.  In this case we assume that the
      debug  library is compiled with the same values.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
 			 "__linuxthreads_pthread_threads_max", &addr) != PS_OK)
     (*ta)->pthread_threads_max = PTHREAD_THREADS_MAX;
   else
@@ -79,7 +80,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
     }
 
   /* Similar for the maximum number of thread local data keys.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
 			 "__linuxthreads_pthread_keys_max", &addr) != PS_OK)
     (*ta)->pthread_keys_max = PTHREAD_KEYS_MAX;
   else
@@ -90,7 +91,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
     }
 
   /* And for the size of the second level arrays for the keys.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
 			 "__linuxthreads_pthread_sizeof_descr", &addr)
       != PS_OK)
     (*ta)->sizeof_descr = offsetof (struct _pthread_descr_struct, p_startfct);
@@ -101,7 +102,7 @@ td_ta_new (struct ps_prochandle *ps, td_thragent_t **ta)
     }
 
   /* Similar for the maximum number of thread local data keys.  */
-  if (ps_pglobal_lookup (ps, "libpthread.so.0",
+  if (ps_pglobal_lookup (ps, LIBPTHREAD_SO,
 			 "__linuxthreads_pthread_keys_max", &addr) != PS_OK)
     (*ta)->pthread_keys_max = PTHREAD_KEYS_MAX;
   else

@@ -291,7 +291,7 @@ extern td_err_e td_init (void);
 /* Historical relict.  Should not be used anymore.  */
 extern td_err_e td_log (void);
 
-/* Generate new thread debu librarz handle for process PS.  */
+/* Generate new thread debug library handle for process PS.  */
 extern td_err_e td_ta_new (struct ps_prochandle *__ps, td_thragent_t **__ta);
 
 /* Free resources allocated for TA.  */
@@ -316,7 +316,7 @@ extern td_err_e td_ta_map_lwp2thr (const td_thragent_t *__ta, lwpid_t __lwpid,
 				   td_thrhandle_t *__th);
 
 
-/* Call for each thread is process associated with TA the callback function
+/* Call for each thread in a process associated with TA the callback function
    CALLBACK.  */
 extern td_err_e td_ta_thr_iter (const td_thragent_t *__ta,
 				td_thr_iter_f *__callback, void *__cbdata_p,
@@ -344,7 +344,7 @@ extern td_err_e td_ta_enable_stats (const td_thragent_t *__ta, int __enable);
 /* Reset statistics.  */
 extern td_err_e td_ta_reset_stats (const td_thragent_t *__ta);
 
-/* Retrieve statitics from process associated with TA.  */
+/* Retrieve statistics from process associated with TA.  */
 extern td_err_e td_ta_get_stats (const td_thragent_t *__ta,
 				 td_ta_stats_t *__statsp);
 

@@ -1,3 +1,32 @@
+1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_spent): Fix
+	handling of empty entries.
+	Patch by Thorsten Kukuk <kukuk@suse.de>.
+
+1999-10-08  Andreas Schwab  <schwab@suse.de>
+
+	* debug/xtrace.sh: Fix quoting bugs.  Implement --help and --version.
+
+1999-10-08  Andreas Schwab  <schwab@suse.de>
+
+	* debug/pcprofiledump.c: Fix typos.
+
+1999-10-07  Andreas Jaeger  <aj@suse.de>
+
+	* math/Makefile (tests): Added basic-tests.
+
+	* math/basic-test.c: New file.  Contains function basic_tests from
+	libm-test.
+
+1999-10-07  Andreas Schwab  <schwab@suse.de>
+
+	* malloc/memprof.sh: Fix quoting bugs.
+
+1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* timezone/europe: Update from tzdata1999h.
+
 1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/elf.h: Update from last gABI draft.

@@ -1,4 +1,4 @@
-# @(#)europe	7.64
+# @(#)europe	7.65
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -723,6 +723,23 @@
 # clear whether the islands were using GMT or local time then.  The
 # changes in Alderney and Guernsey were at the same 2am GMT time as
 # for Great Britain; the order for Jersey is more interesting.
+#
+# From Paul Eggert (1999-10-06):
+# Mark Brader kindly translated the 1916 Jersey order from the French.
+# It says that the 1916 transitions were 05-20 and 09-30 at midnight.
+# Presumably this was 24:00, two hours earlier than Great Britain.
+# It also says that after 1916 they'll sync with Great Britain.
+
+# From Joseph S. Myers (1999-09-28):
+# I have the 1918 orders for Guernsey, Alderney (both changing on same
+# dates as UK, 2am GMT) and Sark (same dates; start and end at 2am,
+# start "temps de Greenwich" (not specified as "temps moyen de
+# Greenwich" which was used in the other orders) and end in an
+# unspecified zone).  For Jersey the same file (Public Record Office: HO
+# 45/10892/357138) includes letters to the effect that in 1918 and 1919
+# the States of Jersey agreed the same start and end dates as the UK
+# (times unspecified, and it was the 1916 Jersey order that specified
+# change at midnight of an unspecified zone).
 
 # From Joseph S. Myers <jsm28@hermes.cam.ac.uk> (1998-01-06):
 #
@@ -1304,6 +1321,15 @@ Zone America/Thule	-4:35:08 -	LMT	1916 Jul 28 # Pituffik
 # for their standard and summer times. He says no, they use "suveaeg"
 # (summer time) and "talveaeg" (winter time).
 
+# From <a href="http://www.baltictimes.com/">The Baltic Times</a> (1999-09-09)
+# via Steffen Thorsen:
+# This year will mark the last time Estonia shifts to summer time,
+# a council of the ruling coalition announced Sept. 6....
+# But what this could mean for Estonia's chances of joining the European
+# Union are still unclear.  In 1994, the EU declared summer time compulsory
+# for all member states until 2001.  Brussels has yet to decide what to do
+# after that. 
+
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Tallinn	1:39:00	-	LMT	1880
 			1:39:00	-	TMT	1918 Feb # Tallinn Mean Time
@@ -1315,7 +1341,8 @@ Zone	Europe/Tallinn	1:39:00	-	LMT	1880
 			3:00	Russia	MSK/MSD	1989 Mar 26 2:00s
 			2:00	1:00	EEST	1989 Sep 24 2:00s
 			2:00	C-Eur	EE%sT	1998 Sep 22
-			2:00	EU	EE%sT
+			2:00	EU	EE%sT	2000
+			2:00	-	EET
 
 # Finland
 #
@@ -1715,6 +1742,24 @@ Zone	Europe/Vaduz	0:38:04 -	LMT	1894 Jun
 			1:00	EU	CE%sT
 
 # Lithuania
+
+# From Paul Eggert (1996-11-22):
+# IATA SSIM (1992/1996) says Lithuania uses W-Eur rules, but since it is
+# known to be wrong about Estonia and Latvia, assume it's wrong here too.
+
+# From Marius Gedminas <mgedmin@pub.osf.lt> (1998-08-07):
+# I would like to inform that in this year Lithuanian time zone
+# (Europe/Vilnius) was changed.
+
+# From <a href="http://www.elta.lt/">ELTA</a> No. 972 (2582) (1999-09-29),
+# via Steffen Thorsen:
+# Lithuania has shifted back to the second time zone (GMT plus two hours)
+# to be valid here starting from October 31,
+# as decided by the national government on Wednesday....
+# The Lithuanian government also announced plans to consider a
+# motion to give up shifting to summer time in spring, as it was
+# already done by Estonia. 
+
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			1:24:00	-	WMT	1917	    # Warsaw Mean Time
@@ -1728,14 +1773,8 @@ Zone	Europe/Vilnius	1:41:16	-	LMT	1880
 			2:00	1:00	EEST	1991 Sep 29 2:00s
 			2:00	C-Eur	EE%sT	1998
 			2:00	-	EET	1998 Mar 29 1:00u
-			1:00	EU	CE%sT
-# From Paul Eggert (1996-11-22):
-# IATA SSIM (1992/1996) says Lithuania uses W-Eur rules, but since it is
-# known to be wrong about Estonia and Latvia, assume it's wrong here too.
-
-# From Marius Gedminas <mgedmin@pub.osf.lt> (1998-08-07):
-# I would like to inform that in this year Lithuanian time zone
-# (Europe/Vilnius) was changed.
+			1:00	EU	CE%sT	1999 Oct 31 1:00u
+			2:00	EU	EE%sT
 
 # Luxembourg
 # Whitman disagrees with most of these dates in minor ways; go with Shanks.

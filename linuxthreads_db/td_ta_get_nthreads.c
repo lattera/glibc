@@ -19,7 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include "thread_dbP.h"
-
+#include <gnu/lib-names.h>
 
 td_err_e
 td_ta_get_nthreads (const td_thragent_t *ta, int *np)
@@ -29,7 +29,7 @@ td_ta_get_nthreads (const td_thragent_t *ta, int *np)
   LOG (__FUNCTION__);
 
   /* Access the variable `__pthread_handles_num'.  */
-  if (ps_pglobal_lookup (ta->ph, "libpthread.so.0", "__pthread_handles_num",
+  if (ps_pglobal_lookup (ta->ph, LIBPTHREAD_SO, "__pthread_handles_num",
 		         &addr) != PS_OK)
      return TD_ERR;	/* XXX Other error value?  */
 

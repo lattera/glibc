@@ -201,6 +201,7 @@ fi
 add_env="LD_PRELOAD=$memprofso"
 
 # Generate data file name.
+datafile=
 if test -n "$data"; then
   datafile="$data"
 elif test -n "$png"; then
@@ -229,21 +230,22 @@ if test -n "$notimer"; then
 fi
 
 # Execute the program itself.
-eval $add_env $*
+eval $add_env '"$@"'
 result=$?
 
-# Generate the PNG data file is wanted and there is something to generate
+# Generate the PNG data file if wanted and there is something to generate
 # it from.
-if test -n "$png" -a -s "$datafile"; then
+if test -n "$png" -a -n "$datafile" -a -s "$datafile"; then
   # Append extension .png if it isn't already there.
-  if test $png = ${png%*.png}; then
-    png="$png.png"
-  fi
-  eval $memprofstat $memprofstat_args $datafile $png
+  case $png in
+  *.png) ;;
+  *) png="$png.png" ;;
+  esac
+  $memprofstat $memprofstat_args "$datafile" "$png"
 fi
 
-if test -z "$data" -a -n $datafile; then
-  rm -f $datafile
+if test -z "$data" -a -n "$datafile"; then
+  rm -f "$datafile"
 fi
 
 exit $result

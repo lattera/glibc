@@ -1,3 +1,7 @@
+1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* shlib-versions: New file.
+
 1999-10-07  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makefile: New file.

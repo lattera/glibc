@@ -307,7 +307,8 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
   first_unused += (len + 1);
 
   sp->sp_lstchg = sp->sp_min = sp->sp_max = sp->sp_warn = sp->sp_inact =
-    sp->sp_expire = sp->sp_flag = -1;
+    sp->sp_expire = -1;
+  sp->sp_flag = ~0ul;
 
   if (NISENTRYLEN (0, 7, result) > 0)
     {
@@ -316,49 +317,56 @@ _nss_nisplus_parse_spent (nis_result *result, struct spwd *sp,
       line = NISENTRYVAL (0, 7, result);
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_lstchg = atol (line);
+      if (*line)
+	sp->sp_lstchg = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_min = atol (line);
+      if (*line)
+	sp->sp_min = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_max = atol (line);
+      if (*line)
+	sp->sp_max = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_warn = atol (line);
+      if (*line)
+	sp->sp_warn = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_inact = atol (line);
+      if (*line)
+	sp->sp_inact = atol (line);
 
       line = cp;
       cp = strchr (line, ':');
       if (cp == NULL)
-	return 0;
+	return 1;
       *cp++ = '\0';
-      sp->sp_expire = atol (line);
+      if (*line)
+	sp->sp_expire = atol (line);
 
       line = cp;
       if (line == NULL)
-	return 0;
-      sp->sp_flag = atol (line);
+	return 1;
+      if (*line)
+	sp->sp_flag = atol (line);
     }
 
   return 1;
