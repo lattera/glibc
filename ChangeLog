@@ -1,3 +1,8 @@
+1999-01-31  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/libm-test.c (fdim_test): Fix typo in message.
+	Patch by Paul Kimoto <kimoto@spacenet.tn.cornell.edu>.
+
 1999-01-31  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc32/vfork.S: If the kernel

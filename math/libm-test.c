@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -2178,7 +2178,7 @@ fdim_test (void)
   check ("fdim (+0, +0) = +0", FUNC(fdim) (0, 0), 0);
   check ("fdim (9, 0) = 9", FUNC(fdim) (9, 0), 9);
   check ("fdim (0, 9) = 0", FUNC(fdim) (0, 9), 0);
-  check ("fdim (-9, 0) = 9", FUNC(fdim) (-9, 0), 0);
+  check ("fdim (-9, 0) = 0", FUNC(fdim) (-9, 0), 0);
   check ("fdim (0, -9) = 9", FUNC(fdim) (0, -9), 9);
 
   check_isinfp ("fdim (+inf, 9) = +inf", FUNC(fdim) (plus_infty, 9));
