@@ -1,3 +1,15 @@
+2001-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (CFLAGS-pthread.c): Pass -DHAVE_Z_NODELETE if ld supports
+	-z nodelete.
+	* pthread.c (pthread_exit_process): Rename to...
+	(pthread_onexit_process): ...this.
+	(pthread_atexit_process, pthread_atexit_retcode): New.
+	(pthread_initialize): Call __cxa_atexit instead of __cxa_on_exit
+	and only if HAVE_Z_NODELETE is not defined.
+	(__pthread_initialize_manager): Register pthread_atexit_retcode
+	with __cxa_atexit.
+
 2001-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* pthread.c (pthread_initialize): Use __cxs_on_exit not __cxa_atexit.

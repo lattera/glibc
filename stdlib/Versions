@@ -94,8 +94,4 @@ libc {
     # used by new G++ ABI
     __cxa_atexit; __cxa_finalize;
   }
-  GLIBC_2.2.1 {
-    # used in the thread library
-    __cxa_on_exit;
-  }
 }

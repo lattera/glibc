@@ -216,7 +216,11 @@ const int __linuxthread_pthread_sizeof_descr
 
 /* Forward declarations */
 
-static void pthread_exit_process(int retcode, void *arg);
+static void pthread_onexit_process(int retcode, void *arg);
+#ifndef HAVE_Z_NODELETE
+static void pthread_atexit_process(void *arg, int retcode);
+static void pthread_atexit_retcode(void *arg, int retcode);
+#endif
 static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
 static void pthread_handle_sigdebug(int sig);
@@ -433,12 +437,14 @@ static void pthread_initialize(void)
   sigprocmask(SIG_BLOCK, &mask, NULL);
   /* Register an exit function to kill all other threads. */
   /* Do it early so that user-registered atexit functions are called
-     before pthread_exit_process. */
+     before pthread_*exit_process. */
+#ifndef HAVE_Z_NODELETE
   if (__builtin_expect (&__dso_handle != NULL, 1))
-    __cxa_on_exit((void (*) (void *)) pthread_exit_process, NULL,
+    __cxa_atexit ((void (*) (void *)) pthread_atexit_process, NULL,
 		  __dso_handle);
   else
-    __on_exit (pthread_exit_process, NULL);
+#endif
+    __on_exit (pthread_onexit_process, NULL);
   /* How many processors.  */
   __pthread_smp_kernel = is_smp_system ();
 }
@@ -455,6 +461,12 @@ int __pthread_initialize_manager(void)
   struct pthread_request request;
   struct rlimit limit;
   int max_stack;
+
+#ifndef HAVE_Z_NODELETE
+  if (__builtin_expect (&__dso_handle != NULL, 1))
+    __cxa_atexit ((void (*) (void *)) pthread_atexit_retcode, NULL,
+		  __dso_handle);
+#endif
 
   getrlimit(RLIMIT_STACK, &limit);
 #ifdef FLOATING_STACKS
@@ -723,7 +735,7 @@ weak_alias (__pthread_yield, pthread_yield)
 
 /* Process-wide exit() request */
 
-static void pthread_exit_process(int retcode, void *arg)
+static void pthread_onexit_process(int retcode, void *arg)
 {
   if (__builtin_expect (__pthread_manager_request, 0) >= 0) {
     struct pthread_request request;
@@ -744,6 +756,20 @@ static void pthread_exit_process(int retcode, void *arg)
       }
   }
 }
+
+#ifndef HAVE_Z_NODELETE
+static int __pthread_atexit_retcode;
+
+static void pthread_atexit_process(void *arg, int retcode)
+{
+  pthread_onexit_process (retcode ?: __pthread_atexit_retcode, arg);
+}
+
+static void pthread_atexit_retcode(void *arg, int retcode)
+{
+  __pthread_atexit_retcode = retcode;
+}
+#endif
 
 /* The handler for the RESTART signal just records the signal received
    in the thread descriptor, and optionally performs a siglongjmp
@@ -851,7 +877,7 @@ void __pthread_kill_other_threads_np(void)
 {
   struct sigaction sa;
   /* Terminate all other threads and thread manager */
-  pthread_exit_process(0, NULL);
+  pthread_onexit_process(0, NULL);
   /* Make current thread the main thread in case the calling thread
      changes its mind, does not exec(), and creates new threads instead. */
   __pthread_reset_main_thread();

@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,6 +39,6 @@ __cxa_finalize (void *d)
 	if (d == f->func.cxa.dso_handle
 	    /* We don't want to run this cleanup more than once.  */
 	    && compare_and_swap (&f->flavor, ef_cxa, ef_free))
-	  (*f->func.cxa.fn) (f->func.cxa.arg);
+	  (*f->func.cxa.fn) (f->func.cxa.arg, 0);
     }
 }

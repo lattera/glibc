@@ -1,4 +1,4 @@
-/* Copyright (C) 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,7 +31,7 @@ __cxa_atexit (void (*func) (void *), void *arg, void *d)
     return -1;
 
   new->flavor = ef_cxa;
-  new->func.cxa.fn = func;
+  new->func.cxa.fn = (void (*) (void *, int)) func;
   new->func.cxa.arg = arg;
   new->func.cxa.dso_handle = d;
   return 0;

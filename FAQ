@@ -827,7 +827,7 @@ you got with your distribution.
 	glibc 2.x?
 
 {AJ} There's only correct support for glibc 2.0.x in gcc 2.7.2.3 or later.
-But you should get at least gcc 2.95.2 (or later versions) instead.
+But you should get at least gcc 2.95.2.1 (or later versions) instead.
 
 
 2.10.	The `gencat' utility cannot process the catalog sources which
@@ -1245,10 +1245,9 @@ http://clisp.cons.org/~haible/gccinclude-glibc-2.2-compat.diff
 
 2.35.	When recompiling GCC, I get compilation errors in libio.
 
-{BH} You are trying to recompile gcc 2.95.2?  After upgrading to glibc 2.2,
-you need to apply a patch to the gcc sources, because the fpos_t type and
-a few libio internals have changed in glibc 2.2. T he patch is at
-http://clisp.cons.org/~haible/gcc-glibc-2.2-compat.diff
+{BH} You are trying to recompile gcc 2.95.2?  Use gcc 2.95.2.1 instead.
+This version is needed because the fpos_t type and a few libio internals
+have changed in glibc 2.2, and gcc 2.95.2.1 contains a corresponding patch.
 
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 

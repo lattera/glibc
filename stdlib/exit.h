@@ -26,8 +26,7 @@ enum
   ef_us,
   ef_on,
   ef_at,
-  ef_cxa,
-  ef_cxa2
+  ef_cxa
 };
 
 struct exit_function
@@ -45,16 +44,10 @@ struct exit_function
 	  } on;
 	struct
 	  {
-	    void (*fn) (void *arg);
+	    void (*fn) (void *arg, int status);
 	    void *arg;
 	    void *dso_handle;
 	  } cxa;
-	struct
-	  {
-	    void (*fn) (int status, void *arg);
-	    void *arg;
-	    void *dso_handle;
-	  } cxa2;
       } func;
   };
 struct exit_function_list

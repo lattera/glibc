@@ -54,9 +54,10 @@ endif
 
 include ../Rules
 
+znodelete-yes = -DHAVE_Z_NODELETE
 CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-specific.c += -D__NO_WEAK_PTHREAD_ALIASES
-CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES $(znodelete-$(have-z-nodelete))
 CFLAGS-ptfork.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES
 CFLAGS-unload.c += -DPREFIX=\"$(objpfx)\"

@@ -1,3 +1,16 @@
+2001-01-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* stdlib/cxa_atexit.c (__cxa_atexit): Cast to (void *, int) func.
+	* stdlib/cxa_finalize.c (__cxa_finalize): Add hidden second argument.
+	* stdlib/cxa_on_exit.c: Remove.
+	* stdlib/Makefile: Revert last patch.
+	* stdlib/Versions: Likewise.
+	* include/stdlib.h: Likewise.
+	* stdlib/exit.h: Revert last patch.
+	(struct exit_function): Add second argument to cxa fn.
+	* stdlib/exit.c: Revert last patch.
+	(exit): Add hidden second argument.
+
 2001-01-11  H.J. Lu  <hjl@gnu.org>
 
 	* elf/dl-libc.c (do_dlopen): Move DL_STATIC_INIT to ...
