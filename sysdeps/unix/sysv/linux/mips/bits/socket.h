@@ -32,7 +32,10 @@
 #include <sys/types.h>
 
 /* Type for length arguments in socket calls.  */
-typedef unsigned int socklen_t;
+#ifndef __socklen_t_defined
+typedef __socklen_t socklen_t;
+# define __socklen_t_defined
+#endif
 
 /* Types of sockets.  */
 enum __socket_type
