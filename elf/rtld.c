@@ -787,7 +787,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       else
 	{
 	  HP_TIMING_NOW (start);
-	  INTUSE(_dl_map_object) (NULL, rtld_progname, 0, lt_library, 0, 0);
+	  INTUSE(_dl_map_object) (NULL, rtld_progname, 0, lt_library, 0,
+				  __RTLD_OPENEXEC);
 	  HP_TIMING_NOW (stop);
 
 	  HP_TIMING_DIFF (load_time, start, stop);

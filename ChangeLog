@@ -1,13 +1,19 @@
 2003-10-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/dlfcn.h (__RTLD_OPENEXEC): Define.
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't allow loading
+	executables unless __RTLD_OPENEXEC flag is present.
+	* elf/rtld.c (dl_main): Pass __RTLD_OPENEXEC flag to
+	_dl_map_object when loading the executable.
+
 	* sysdeps/generic/glob.c (glob): Handle GLOB_BRACE and escaping
 	correctly.
 	* posix/globtest.sh: Add tests for GLOB_BRACE and escaping.
 
 	* resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Default
-	reverse lookup format for IPv6 addresses is using bitfields and
+	reverse lookup format for IPv6 addresses is using bitstring and
 	.ip6.arpa suffix.
-	* resolv/ns_name.c: Implement encoding and decoding bitfields in
+	* resolv/ns_name.c: Implement encoding and decoding bitstring in
 	hex format.
 
 2003-10-23  Jakub Jelinek  <jakub@redhat.com>

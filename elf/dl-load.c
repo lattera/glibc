@@ -1129,7 +1129,7 @@ cannot allocate TLS data structures for initial thread");
       {
 	/* This object is loaded at a fixed address.  This must never
            happen for objects loaded with dlopen().  */
-	if (__builtin_expect (mode & __RTLD_DLOPEN, 0))
+	if (__builtin_expect ((mode & __RTLD_OPENEXEC) == 0, 0))
 	  {
 	    errstring = N_("cannot dynamically load executable");
 	    goto call_lose;

@@ -5,6 +5,7 @@
 /* Internally used flag.  */
 #define __RTLD_DLOPEN	0x80000000
 #define __RTLD_SPROF	0x40000000
+#define __RTLD_OPENEXEC	0x20000000
 
 /* Now define the internal interfaces.  */
 extern void *__dlvsym (void *__handle, __const char *__name,

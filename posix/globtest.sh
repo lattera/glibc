@@ -687,6 +687,25 @@ if test $failed -ne 0; then
   result=1
 fi
 
+# Test [[:punct:]] not matching leading period.
+failed=0
+${elf_objpfx}${rtld_installed_name} --library-path ${library_path} \
+${common_objpfx}posix/globtest -c "$testdir" "[[:punct:]]*" |
+sort > $testout
+cat <<"EOF" | $CMP - $testout >> $logfile || failed=1
+`*file6'
+`-file3'
+`\file9b\'
+`\{file8\}'
+`\{file9\,file9b\}'
+`{file7,}'
+`~file4'
+EOF
+if test $failed -ne 0; then
+  echo "Punct test failed" >> $logfile
+  result=1
+fi
+
 if test $result -eq 0; then
     chmod 777 $testdir/noread
     rm -fr $testdir $testout
