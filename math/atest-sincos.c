@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Geoffrey Keating <Geoff.Keating@anu.edu.au>, 1997.
 
@@ -188,8 +188,8 @@ main (void)
       s3s = mpn_bitsize (s3, SZ);
       c2s = mpn_bitsize (c2, SZ);
       c3s = mpn_bitsize (c3, SZ);
-      if (s3s >= 0 && s2s - s3s < 54
-	  || c3s >= 0 && c2s - c3s < 54
+      if ((s3s >= 0 && s2s - s3s < 54)
+	  || (c3s >= 0 && c2s - c3s < 54)
 	  || 0)
 	{
 #if PRINT_ERRORS
@@ -239,9 +239,9 @@ main (void)
    memset (c2, 0, sizeof (mp1));
    for (i = 0; i < 100 && i < FRAC / 4; i++)
      {
-       s2[(FRAC - i * 4 - 4) / mpbpl] |= (strchr (hexdig, sin1[i]) - hexdig
+       s2[(FRAC - i * 4 - 4) / mpbpl] |= ((strchr (hexdig, sin1[i]) - hexdig)
 					  << (FRAC - i * 4 - 4) % mpbpl);
-       c2[(FRAC - i * 4 - 4) / mpbpl] |= (strchr (hexdig, cos1[i]) - hexdig
+       c2[(FRAC - i * 4 - 4) / mpbpl] |= ((strchr (hexdig, cos1[i]) - hexdig)
 					  << (FRAC - i * 4 - 4) % mpbpl);
      }
 

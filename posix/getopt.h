@@ -1,5 +1,5 @@
 /* Declarations for getopt.
-   Copyright (C) 1989,90,91,92,93,94,96,97 Free Software Foundation, Inc.
+   Copyright (C) 1989,90,91,92,93,94,96,97,98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -55,6 +55,7 @@ extern int opterr;
 
 extern int optopt;
 
+#ifdef _GNU_SOURCE
 /* Describe the long-named options requested by the application.
    The LONG_OPTIONS argument to getopt_long or getopt_long_only is a vector
    of `struct option' terminated by an element containing a name which is
@@ -78,11 +79,11 @@ extern int optopt;
 
 struct option
 {
-#if defined (__STDC__) && __STDC__
+# if defined __STDC__ && __STDC__
   const char *name;
-#else
+# else
   char *name;
-#endif
+# endif
   /* has_arg can't be an enum because some compilers complain about
      type mismatches in all the code that assumes it is an int.  */
   int has_arg;
@@ -92,19 +93,23 @@ struct option
 
 /* Names for the values of the `has_arg' field of `struct option'.  */
 
-#define	no_argument		0
-#define required_argument	1
-#define optional_argument	2
+# define no_argument		0
+# define required_argument	1
+# define optional_argument	2
+#endif	/* GNU source */
 
-#if defined (__STDC__) && __STDC__
-#ifdef __GNU_LIBRARY__
+
+#if defined __STDC__ && __STDC__
+# ifdef __GNU_LIBRARY__
 /* Many other libraries have conflicting prototypes for getopt, with
    differences in the consts, in stdlib.h.  To avoid compilation
    errors, only prototype getopt for the GNU C library.  */
 extern int getopt (int argc, char *const *argv, const char *shortopts);
-#else /* not __GNU_LIBRARY__ */
+# else /* not __GNU_LIBRARY__ */
 extern int getopt ();
-#endif /* __GNU_LIBRARY__ */
+# endif /* __GNU_LIBRARY__ */
+
+# ifdef _GNU_SOURCE
 extern int getopt_long (int argc, char *const *argv, const char *shortopts,
 		        const struct option *longopts, int *longind);
 extern int getopt_long_only (int argc, char *const *argv,
@@ -116,12 +121,15 @@ extern int _getopt_internal (int argc, char *const *argv,
 			     const char *shortopts,
 		             const struct option *longopts, int *longind,
 			     int long_only);
+# endif
 #else /* not __STDC__ */
 extern int getopt ();
+# ifdef _GNU_SOURCE
 extern int getopt_long ();
 extern int getopt_long_only ();
 
 extern int _getopt_internal ();
+# endif
 #endif /* __STDC__ */
 
 #ifdef	__cplusplus

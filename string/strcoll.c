@@ -172,31 +172,28 @@ STRCOLL (s1, s2, l)
 	    return w1 < w2 ? -1 : 1;
 
 	  /* We have to increment the index counters.  */
-	  if ((forward && ++s1idx >= s1run->data[pass].number)
-	      || (!forward && --s1idx < 0))
+	  if (forward)
 	    {
-	      if (forward)
+	      if (++s1idx >= s1run->data[pass].number)
 		{
 		  s1run = s1run->next;
 		  s1idx = 0;
 		}
-	      else
+	      if (++s2idx >= s2run->data[pass].number)
+		{
+		  s2run = s2run->next;
+		  s2idx = 0;
+		}
+	    }
+	  else
+	    {
+	      if (--s1idx < 0)
 		{
 		  s1run = s1run->prev;
 		  if (s1run != NULL)
 		    s1idx = s1run->data[pass].number - 1;
 		}
-	    }
-
-	  if ((forward && ++s2idx >= s2run->data[pass].number)
-	      || (!forward && --s2idx < 0))
-	    {
-	      if (forward)
-		{
-		  s2run = s2run->next;
-		  s2idx = 0;
-		}
-	      else
+	      if (--s2idx < 0)
 		{
 		  s2run = s2run->prev;
 		  if (s2run != NULL)

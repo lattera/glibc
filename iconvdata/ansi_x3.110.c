@@ -1,7 +1,7 @@
-/* Generic conversion to and from T.61.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Generic conversion to and from ANSI_X3.110-1983.
+   Copyright (C) 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -36,24 +36,24 @@ static const uint32_t to_ucs4[256] =
   /* 0x40 */ 0x0040, 0x0041, 0x0042, 0x0043, 0x0044, 0x0045, 0x0046, 0x0047,
   /* 0x48 */ 0x0048, 0x0049, 0x004a, 0x004b, 0x004c, 0x004d, 0x004e, 0x004f,
   /* 0x50 */ 0x0050, 0x0051, 0x0052, 0x0053, 0x0054, 0x0055, 0x0056, 0x0057,
-  /* 0x58 */ 0x0058, 0x0059, 0x005a, 0x005b, 0x0000, 0x005d, 0x0000, 0x005f,
-  /* 0x60 */ 0x0000, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
+  /* 0x58 */ 0x0058, 0x0059, 0x005a, 0x005b, 0x005c, 0x005d, 0x005e, 0x005f,
+  /* 0x60 */ 0x0060, 0x0061, 0x0062, 0x0063, 0x0064, 0x0065, 0x0066, 0x0067,
   /* 0x68 */ 0x0068, 0x0069, 0x006a, 0x006b, 0x006c, 0x006d, 0x006e, 0x006f,
   /* 0x70 */ 0x0070, 0x0071, 0x0072, 0x0073, 0x0074, 0x0075, 0x0076, 0x0077,
-  /* 0x78 */ 0x0078, 0x0079, 0x007a, 0x0000, 0x007c, 0x0000, 0x0000, 0x007f,
+  /* 0x78 */ 0x0078, 0x0079, 0x007a, 0x007b, 0x007c, 0x007d, 0x007e, 0x007f,
   /* 0x80 */ 0x0080, 0x0081, 0x0082, 0x0083, 0x0084, 0x0085, 0x0086, 0x0087,
   /* 0x88 */ 0x0088, 0x0089, 0x008a, 0x008b, 0x008c, 0x008d, 0x008e, 0x008f,
   /* 0x90 */ 0x0090, 0x0091, 0x0092, 0x0093, 0x0094, 0x0095, 0x0096, 0x0097,
   /* 0x98 */ 0x0098, 0x0099, 0x009a, 0x009b, 0x009c, 0x009d, 0x009e, 0x009f,
-  /* 0xa0 */ 0x0000, 0x00a1, 0x00a2, 0x00a3, 0x00a4, 0x00a5, 0x00a6, 0x00a7,
-  /* 0xa8 */ 0x00a8, 0x0000, 0x0000, 0x00ab, 0x0000, 0x0000, 0x0000, 0x0000,
-  /* 0xb0 */ 0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00b4, 0x00b5, 0x00b6, 0x00b7,
-  /* 0xb8 */ 0x00b8, 0x0000, 0x0000, 0x00bb, 0x00bc, 0x00bd, 0x00be, 0x00bf,
+  /* 0xa0 */ 0x0000, 0x00a1, 0x00a2, 0x00a3, 0x0024, 0x00a5, 0x0023, 0x00a7,
+  /* 0xa8 */ 0x00a4, 0x2018, 0x201c, 0x00ab, 0x2190, 0x2191, 0x2192, 0x2193,
+  /* 0xb0 */ 0x00b0, 0x00b1, 0x00b2, 0x00b3, 0x00d7, 0x00b5, 0x00b6, 0x00b7,
+  /* 0xb8 */ 0x00f7, 0x2019, 0x201d, 0x00bb, 0x00bc, 0x00bd, 0x00be, 0x00bf,
   /* 0xc0 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
   /* 0xc8 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-  /* 0xd0 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-  /* 0xd8 */ 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-  /* 0xe0 */ 0x2126, 0x00c6, 0x00d0, 0x00aa, 0x0126, 0x0000, 0x0132, 0x013f,
+  /* 0xd0 */ 0x2014, 0x00b9, 0x00ae, 0x00a9, 0x2122, 0x266a, 0x2500, 0x2502,
+  /* 0xd8 */ 0x2571, 0x2572, 0x25e2, 0x25e3, 0x215b, 0x215c, 0x215d, 0x215e,
+  /* 0xe0 */ 0x2126, 0x00c6, 0x00d0, 0x00aa, 0x0126, 0x253c, 0x0132, 0x013f,
   /* 0xe8 */ 0x0141, 0x00d8, 0x0152, 0x00ba, 0x00de, 0x0166, 0x014a, 0x0149,
   /* 0xf0 */ 0x0138, 0x00e6, 0x0111, 0x00f0, 0x0127, 0x0131, 0x0133, 0x0140,
   /* 0xf8 */ 0x0142, 0x00f8, 0x0153, 0x00df, 0x00fe, 0x0167, 0x014b, 0x0000
@@ -289,26 +289,26 @@ static const char from_ucs4[][2] =
   /* 0x004b */ "\x4b\x00", "\x4c\x00", "\x4d\x00", "\x4e\x00", "\x4f\x00",
   /* 0x0050 */ "\x50\x00", "\x51\x00", "\x52\x00", "\x53\x00", "\x54\x00",
   /* 0x0055 */ "\x55\x00", "\x56\x00", "\x57\x00", "\x58\x00", "\x59\x00",
-  /* 0x005a */ "\x5a\x00", "\x5b\x00", "\x00\x00", "\x5d\x00", "\x00\x00",
-  /* 0x005f */ "\x5f\x00", "\x00\x00", "\x61\x00", "\x62\x00", "\x63\x00",
+  /* 0x005a */ "\x5a\x00", "\x5b\x00", "\x5c\x00", "\x5d\x00", "\x5e\x00",
+  /* 0x005f */ "\x5f\x00", "\x60\x00", "\x61\x00", "\x62\x00", "\x63\x00",
   /* 0x0064 */ "\x64\x00", "\x65\x00", "\x66\x00", "\x67\x00", "\x68\x00",
   /* 0x0069 */ "\x69\x00", "\x6a\x00", "\x6b\x00", "\x6c\x00", "\x6d\x00",
   /* 0x006e */ "\x6e\x00", "\x6f\x00", "\x70\x00", "\x71\x00", "\x72\x00",
   /* 0x0073 */ "\x73\x00", "\x74\x00", "\x75\x00", "\x76\x00", "\x77\x00",
-  /* 0x0078 */ "\x78\x00", "\x79\x00", "\x7a\x00", "\x00\x00", "\x7c\x00",
-  /* 0x007d */ "\x00\x00", "\x00\x00", "\x7f\x00", "\x80\x00", "\x81\x00",
+  /* 0x0078 */ "\x78\x00", "\x79\x00", "\x7a\x00", "\x7b\x00", "\x7c\x00",
+  /* 0x007d */ "\x7d\x00", "\x7e\x00", "\x7f\x00", "\x80\x00", "\x81\x00",
   /* 0x0082 */ "\x82\x00", "\x83\x00", "\x84\x00", "\x85\x00", "\x86\x00",
   /* 0x0087 */ "\x87\x00", "\x88\x00", "\x89\x00", "\x8a\x00", "\x8b\x00",
   /* 0x008c */ "\x8c\x00", "\x8d\x00", "\x8e\x00", "\x8f\x00", "\x90\x00",
   /* 0x0091 */ "\x91\x00", "\x92\x00", "\x93\x00", "\x94\x00", "\x95\x00",
   /* 0x0096 */ "\x96\x00", "\x97\x00", "\x98\x00", "\x99\x00", "\x9a\x00",
   /* 0x009b */ "\x9b\x00", "\x9c\x00", "\x9d\x00", "\x9e\x00", "\x9f\x00",
-  /* 0x00a0 */ "\x00\x00", "\xa1\x00", "\xa2\x00", "\xa3\x00", "\xa4\x00",
-  /* 0x00a5 */ "\xa5\x00", "\x00\x00", "\xa7\x00", "\xc8\x20", "\x00\x00",
-  /* 0x00aa */ "\xe3\x00", "\xab\x00", "\x00\x00", "\x00\x00", "\x00\x00",
+  /* 0x00a0 */ "\x00\x00", "\xa1\x00", "\xa2\x00", "\xa3\x00", "\xa8\x00",
+  /* 0x00a5 */ "\xa5\x00", "\x00\x00", "\xa7\x00", "\xc8\x20", "\xd3\x00",
+  /* 0x00aa */ "\xe3\x00", "\xab\x00", "\x00\x00", "\x00\x00", "\xd2\x00",
   /* 0x00af */ "\xc5\x20", "\xb0\x00", "\xb1\x00", "\xb2\x00", "\xb3\x00",
   /* 0x00b4 */ "\xc2\x20", "\xb5\x00", "\xb6\x00", "\xb7\x00", "\xcb\x20",
-  /* 0x00b9 */ "\x00\x00", "\xeb\x00", "\x00\x00", "\xbc\x00", "\xbd\x00",
+  /* 0x00b9 */ "\xd1\x00", "\xeb\x00", "\xbb\x00", "\xbc\x00", "\xbd\x00",
   /* 0x00be */ "\xbe\x00", "\xbf\x00", "\xc1\x41", "\xc2\x41", "\xc3\x41",
   /* 0x00c3 */ "\xc4\x41", "\xc8\x41", "\xca\x41", "\xe1\x00", "\xcb\x43",
   /* 0x00c8 */ "\xc1\x45", "\xc2\x45", "\xc3\x45", "\xc8\x45", "\xc1\x49",
@@ -356,7 +356,24 @@ static const char from_ucs4[][2] =
      0x02d8    "\xc6\x20", "\xc7\x20", "\xca\x20", "\xce\x20", "\x00\x00",
      0x02dd    "\xcd\x20",
      ...
-     0x2126    "\xe0\x00"
+     0x2014    "\xd0\x00", "\x00\x00", "\x00\x00", "\x00\x00", "\xa9\x00",
+     0x2019    "\xb9\x00", "\x00\x00", "\x00\x00", "\xaa\x00", "\xba\x00",
+     0x201e    "\x00\x00", "\x00\x00", "\x00\x00", "\x00\x00", "\xd4\x00",
+     0x2023    "\x00\x00", "\x00\x00", "\x00\x00", "\xe0\x00",
+     ...
+     0x215b    "\xdc\x00", "\xdd\x00", "\xde\x00", "\xdf\x00",
+     ...
+     0x2190    "\xac\x00", "\xad\x00", "\xae\x00", "\xaf\x00",
+     ...
+     0x2500    "\xd6\x00", "\x00\x00", "\xd7\x00",
+     ...
+     0x253c    "\xe5\x00",
+     ...
+     0x2571    "\xd8\x00", "\xd9\x00",
+     ...
+     0x25e2    "\xda\x00", "\xdb\x00",
+     ...
+     0x266a    "\xd5\x00",
 
    These would blow up the table and are therefore handled specially in
    the code.
@@ -365,16 +382,16 @@ static const char from_ucs4[][2] =
 
 
 /* Definitions used in the body of the `gconv' function.  */
-#define CHARSET_NAME		"T.61//"
-#define FROM_LOOP		from_t_61
-#define TO_LOOP			to_t_61
+#define CHARSET_NAME		"ANSI_X3.110//"
+#define FROM_LOOP		from_ansi_x3_110
+#define TO_LOOP			to_ansi_x3_110
 #define DEFINE_INIT		1
 #define DEFINE_FINI		1
 #define MIN_NEEDED_FROM		1
 #define MAX_NEEDED_FROM		2
 #define MIN_NEEDED_TO		4
 
-/* First define the conversion function from T.61 to UCS4.  */
+/* First define the conversion function from ANSI_X3.110 to UCS4.  */
 #define MIN_NEEDED_INPUT	MIN_NEEDED_FROM
 #define MAX_NEEDED_INPUT	MAX_NEEDED_FROM
 #define MIN_NEEDED_OUTPUT	MIN_NEEDED_TO
@@ -440,23 +457,69 @@ static const char from_ucs4[][2] =
 									      \
     if (ch >= sizeof (from_ucs4) / sizeof (from_ucs4[0]))		      \
       {									      \
-	if (ch == 0x2126)						      \
-	  cp = "\xe0";							      \
-	else if (ch == 0x2c7)						      \
+	if (ch == 0x2c7)						      \
 	  cp = "\xcf\x20";						      \
-	else if (ch < 0x2d8 || ch > 0x2dd || ch == 0x02dc)		      \
-	  {								      \
-	    /* Illegal characters.  */					      \
-	    result = GCONV_ILLEGAL_INPUT;				      \
-	    break;							      \
-	  }								      \
-	else								      \
+	else if (ch >= 0x2d8 && ch <= 0x2dd && ch != 0x2dc)		      \
 	  {								      \
 	    static const char map[6] = "\xc6\xc7\xca\xce\x00\xcd";	      \
 									      \
 	    tmp[0] = map[ch - 0x2d8];					      \
 	    tmp[1] = ' ';						      \
 	    cp = tmp;							      \
+	  }								      \
+	else if (ch >= 0x2014 && ch <= 0x2026)				      \
+	  {								      \
+	    static const char map[19] =					      \
+	      "\xd0\x00\x00\x00\xa9\xb9\x00\x00\xaa\xba\x00\x00\x00\x00"      \
+	      "\xd4\x00\x00\x00\xe0";					      \
+									      \
+	    tmp[0] = map[ch - 0x2014];					      \
+	    if (tmp[0] == '\0')						      \
+	      {								      \
+		/* Illegal characters.  */				      \
+		result = GCONV_ILLEGAL_INPUT;				      \
+		break;							      \
+	      }								      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch >= 0x215b && ch <= 0x215e)				      \
+	  {								      \
+	    tmp[0] = 0xdc + ch - 0x215b;				      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch >= 0x2190 && ch <= 0x2193)				      \
+	  {								      \
+	    tmp[0] = 0xac + ch - 0x2190;				      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch == 0x2500)						      \
+	  cp = "\xd6";							      \
+	else if (ch == 0x2502)						      \
+	  cp = "\xd7";							      \
+	else if (ch == 0x253c)						      \
+	  cp = "\xe5";							      \
+	else if (ch >= 0x2571 && ch <= 0x2572) 				      \
+	  {								      \
+	    tmp[0] = 0xd8 + ch - 0x2571;				      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch >= 0x25e2 && ch <= 0x25e3) 				      \
+	  {								      \
+	    tmp[0] = 0xda + ch - 0x25e2;				      \
+	    tmp[1] = '\0';						      \
+	    cp = tmp;							      \
+	  }								      \
+	else if (ch == 0x266a)						      \
+	  cp = "\xd5";							      \
+	else								      \
+	  {								      \
+	    /* Illegal characters.  */					      \
+	    result = GCONV_ILLEGAL_INPUT;				      \
+	    break;							      \
 	  }								      \
       }									      \
     else								      \

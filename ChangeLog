@@ -1,3 +1,36 @@
+1998-09-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* resolv/res_init.c (res_init): Handle resolv.conf file with only
+	one nameserver correctly.  Patch by HJ Lu.
+
+	* iconvdata/Makefile (modules): Add IEC_P27-1, BALTIC, ASMO_449,
+	and ANSI_X3.110.
+	Define *-routines variables for new modules.
+	(distribute): Add .c files for new modules.
+	(awk-generated-headers): Add iec_p27-1.h, baltic.h, and asmo_449.h.
+	Add rules for hedaer generation.
+	* iconvdata/gconv-modules: Add entries for new modules.  Pretty print.
+	* iconvdata/ansi_x3.110.c: New file.
+	* iconvdata/asmo_449.c: New file.
+	* iconvdata/baltic.c: New file.
+	* iconvdata/iec_p27-1.c: New file.
+
+	* iconvdata/t61.c (from_ucs4): Correct 0x23, 0x24, 0x80, and 0x81
+	entries.
+	Convert U02dc correctly.
+
+	* math/atest-exp.c: Add parentheses to avoid gcc warnings.
+	* math/atest-exp2.c: Likewise.
+	* math/atest-sincos.c: Likewise.
+
+	* posix/getopt.h: Don't define non-POSIX stuff unless _GNU_SOURCE
+	is defined.
+
+1998-09-11 10:51  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/strcoll.c: Optimize a few expressions.
+	* string/strxfrm.c: Likewise.
+
 1998-09-02  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/locale.texi: Fix typos.

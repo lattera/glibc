@@ -240,10 +240,12 @@ CONCAT(_nss_files_get,ENTNAME_r) (struct STRUCTURE *result, char *buffer,
       /* If the last use was not by the getent function we need the
 	 position the stream.  */
       if (last_use != getent)
-	if (fsetpos (stream, &position) < 0)
-	  status = NSS_STATUS_UNAVAIL;
-	else
-	  last_use = getent;
+	{
+	  if (fsetpos (stream, &position) < 0)
+	    status = NSS_STATUS_UNAVAIL;
+	  else
+	    last_use = getent;
+	}
 
       if (status == NSS_STATUS_SUCCESS)
 	{

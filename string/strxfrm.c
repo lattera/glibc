@@ -249,15 +249,17 @@ STRXFRM (STRING_TYPE *dest, const STRING_TYPE *src, size_t n, __locale_t l)
 	    written = print_val (w, dest, n, written);
 
 	  /* We have to increment the index counters.  */
-	  if ((forward && ++idx >= run->data[pass].number)
-	      || (!forward && --idx < 0))
+	  if (forward)
 	    {
-	      if (forward)
+	      if (++idx >= run->data[pass].number)
 		{
 		  run = run->next;
 		  idx = 0;
 		}
-	      else
+	    }
+	  else
+	    {
+	      if (--idx < 0)
 		{
 		  run = run->prev;
 		  if (run != NULL)
