@@ -18,13 +18,15 @@
    02111-1307 USA.  */
 
 #include <ctype.h>
+#include <errno.h>
+#include <libintl.h>
 #include <malloc.h>
 #include <pwd.h>
 #include <stdio.h>
 #include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libintl.h>
+#include <unistd.h>
 #include <sys/param.h>
 #include <sys/types.h>
 
@@ -191,7 +193,7 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
         }
       else if (strcmp (entry, "stat-user") == 0)
         {
-          if (!arg1)
+          if (arg1 == NULL)
             dbg_log (_("Must specify user name for stat-user option"));
           else
 	    {
@@ -245,10 +247,40 @@ nscd_parse_file (const char *fname, struct database_dyn dbs[lastdb])
 		dbg_log (_("invalid value for 'reload-count': %u"), count);
 	    }
 	}
+      else if (strcmp (entry, "paranoia") == 0)
+	{
+	  if (strcmp (arg1, "no") == 0)
+	    paranoia = 0;
+	  else if (strcmp (arg1, "yes") == 0)
+	    paranoia = 1;
+	}
+      else if (strcmp (entry, "restart-interval") == 0)
+	{
+	  if (arg1 != NULL)
+	    restart_interval = atol (arg1);
+	  else
+            dbg_log (_("Must specify value for restart-interval option"));
+	}
       else
 	dbg_log (_("Unknown option: %s %s %s"), entry, arg1, arg2);
     }
   while (!feof_unlocked (fp));
+
+  if (paranoia)
+    {
+      restart_time = time (NULL) + restart_interval;
+
+      /* Save the old current workding directory if we are in paranoia
+	 mode.  We have to change back to it.  */
+      oldcwd = get_current_dir_name ();
+      if (oldcwd == NULL)
+	{
+	  dbg_log (_("\
+cannot get current working directory: %s; disabling paranoia mode"),
+		   strerror (errno));
+	  paranoia = 0;
+	}
+    }
 
   /* Free the buffer.  */
   free (line);

@@ -143,6 +143,8 @@ receive_print_stats (void)
   int fd;
   int i;
   uid_t uid = getuid ();
+  const char *yesstr = _("     yes");
+  const char *nostr = _("      no");
 
   /* Find out whether there is another user but root allowed to
      request statistics.  */
@@ -223,8 +225,11 @@ receive_print_stats (void)
   else
     printf (_("            %2lus  server runtime\n"), diff);
 
-  printf (_("%15lu  number of times clients had to wait\n"),
-	  data.client_queued);
+  printf (_("%15lu  number of times clients had to wait\n"
+	    "%15s  paranoia mode enabled\n"
+	    "%15lu  restart internal\n"),
+	  data.client_queued, paranoia ? yesstr : nostr,
+	  (unsigned long int) restart_interval);
 
   for (i = 0; i < lastdb; ++i)
     {
@@ -241,13 +246,13 @@ receive_print_stats (void)
 	/* The locale does not provide this information so we have to
 	   translate it ourself.  Since we should avoid short translation
 	   terms we artifically increase the length.  */
-	enabled = data.dbs[i].enabled ? _("     yes") : _("      no");
+	enabled = data.dbs[i].enabled ? yesstr : nostr;
       if (check_file[0] == '\0')
-	check_file = data.dbs[i].check_file ? _("     yes") : _("      no");
+	check_file = data.dbs[i].check_file ? yesstr : nostr;
       if (shared[0] == '\0')
-	shared = data.dbs[i].shared ? _("     yes") : _("      no");
+	shared = data.dbs[i].shared ? yesstr : nostr;
       if (persistent[0] == '\0')
-	persistent = data.dbs[i].persistent ? _("     yes") : _("      no");
+	persistent = data.dbs[i].persistent ? yesstr : nostr;
 
       if (all == 0)
 	/* If nothing happened so far report a 0% hit rate.  */

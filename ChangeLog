@@ -1,5 +1,25 @@
 2004-10-03  Ulrich Drepper  <drepper@redhat.com>
 
+	Implement paranoia mode.
+	* nscd/connections.c (nscd_init): Mark database and socket descriptors
+	as close on exec.
+	(restart): New function.
+	(restart_p): New function.
+	(nscd_run): Add missing descrement of nready in case readylist is
+	empty.
+	(main_loop_poll): Call restart_p and restart.
+	(main_loop_epoll): Likewise.
+	(begin_drop_privileges): Save original UID and GID.
+	* nscd/nscd.c: Define new variables paranoia, restart_time,
+	restart_interval, oldcwd, old_gid, old_uid.
+	(main): Disable paranoia mode if we are not forking.
+	(check_pid): When re-execing, the PID file contains the same PID as
+	the current process.  Do not fail in this case.
+	* nscd/nscd.conf: Add paranoia and restart-interval entries.
+	* nscd/nscd.h: Define RESTART_INTERVAL.  Declare new variables.
+	* nscd/nscd_conf.c: Parse paranoia and restart-internal configurations.
+	* nscd/nscd_stat.c: Print paranoia and restart-internal values.
+
 	* nscd/connections.c: Implement alternative loop for main thread
 	which uses epoll.
 	* sysdeps/unix/sysv/linux/Makefile [subdir=nscd]

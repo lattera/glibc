@@ -18,6 +18,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <alloca.h>
 #include <assert.h>
 #include <atomic.h>
 #include <error.h>
@@ -437,6 +438,18 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
 	      }
 	  }
 
+	if (paranoia
+	    && ((dbs[cnt].wr_fd != -1
+		 && fcntl (dbs[cnt].wr_fd, F_SETFD, FD_CLOEXEC) == -1)
+		|| (dbs[cnt].ro_fd != -1
+		    && fcntl (dbs[cnt].ro_fd, F_SETFD, FD_CLOEXEC) == -1)))
+	  {
+	    dbg_log (_("\
+cannot set socket to close on exec: %s; disabling paranoia mode"),
+		     strerror (errno));
+	    paranoia = 0;
+	  }
+
 	if (dbs[cnt].head == NULL)
 	  {
 	    /* We do not use the persistent database.  Just
@@ -493,11 +506,22 @@ cannot create read-only descriptor for \"%s\"; no mmap"),
       exit (1);
     }
 
-  /* We don't wait for data otherwise races between threads can get
-     them stuck on accept.  */
+  /* We don't want to get stuck on accept.  */
   int fl = fcntl (sock, F_GETFL);
-  if (fl != -1)
-    fcntl (sock, F_SETFL, fl | O_NONBLOCK);
+  if (fl == -1 || fcntl (sock, F_SETFL, fl | O_NONBLOCK) == -1)
+    {
+      dbg_log (_("cannot change socket to nonblocking mode: %s"),
+	       strerror (errno));
+      exit (1);
+    }
+
+  /* The descriptor needs to be closed on exec.  */
+  if (paranoia && fcntl (sock, F_SETFD, FD_CLOEXEC) == -1)
+    {
+      dbg_log (_("cannot set socket to close on exec: %s"),
+	       strerror (errno));
+      exit (1);
+    }
 
   /* Set permissions for the socket.  */
   chmod (_PATH_NSCDSOCKET, DEFFILEMODE);
@@ -788,6 +812,138 @@ cannot handle old request version %d; current version is %d"),
 }
 
 
+/* Restart the process.  */
+static void
+restart (void)
+{
+  /* First determine the parameters.  We do not use the parameters
+     passed to main() since in case nscd is started by running the
+     dynamic linker this will not work.  Yes, this is not the usual
+     case but nscd is part of glibc and we occasionally do this.  */
+  size_t buflen = 1024;
+  char *buf = alloca (buflen);
+  size_t readlen = 0;
+  int fd = open ("/proc/self/cmdline", O_RDONLY);
+  if (fd == -1)
+    {
+      dbg_log (_("\
+cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+	       strerror (errno));
+
+      paranoia = 0;
+      return;
+    }
+
+  while (1)
+    {
+      ssize_t n = TEMP_FAILURE_RETRY (read (fd, buf + readlen,
+					    buflen - readlen));
+      if (n == -1)
+	{
+	  dbg_log (_("\
+cannot open /proc/self/cmdline: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  close (fd);
+	  paranoia = 0;
+	  return;
+	}
+
+      readlen += n;
+
+      if (readlen < buflen)
+	break;
+
+      /* We might have to extend the buffer.  */
+      size_t old_buflen = buflen;
+      char *newp = extend_alloca (buf, buflen, 2 * buflen);
+      buf = memmove (newp, buf, old_buflen);
+    }
+
+  close (fd);
+
+  /* Parse the command line.  Worst case scenario: every two
+     characters form one parameter (one character plus NUL).  */
+  char **argv = alloca ((readlen / 2 + 1) * sizeof (argv[0]));
+  int argc = 0;
+
+  char *cp = buf;
+  while (cp < buf + readlen)
+    {
+      argv[argc++] = cp;
+      cp = (char *) rawmemchr (cp, '\0') + 1;
+    }
+  argv[argc] = NULL;
+
+  /* Second, change back to the old user if we changed it.  */
+  if (server_user != NULL)
+    {
+      if (setuid (old_uid) != 0)
+	{
+	  dbg_log (_("\
+cannot change to old UID: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  paranoia = 0;
+	  return;
+	}
+
+      if (setgid (old_gid) != 0)
+	{
+	  dbg_log (_("\
+cannot change to old GID: %s; disabling paranoia mode"),
+		   strerror (errno));
+
+	  setuid (server_uid);
+	  paranoia = 0;
+	  return;
+	}
+    }
+
+  /* Next change back to the old working directory.  */
+  if (chdir (oldcwd) == -1)
+    {
+      dbg_log (_("\
+cannot change to old working directory: %s; disabling paranoia mode"),
+	       strerror (errno));
+
+      if (server_user != NULL)
+	{
+	  setuid (server_uid);
+	  setgid (server_gid);
+	}
+      paranoia = 0;
+      return;
+    }
+
+  /* Synchronize memory.  */
+  for (int cnt = 0; cnt < lastdb; ++cnt)
+    {
+      /* Make sure nobody keeps using the database.  */
+      dbs[cnt].head->timestamp = 0;
+
+      if (dbs[cnt].persistent)
+	// XXX async OK?
+	msync (dbs[cnt].head, dbs[cnt].memsize, MS_ASYNC);
+    }
+
+  /* The preparations are done.  */
+  execv ("/proc/self/exe", argv);
+
+  /* If we come here, we will never be able to re-exec.  */
+  dbg_log (_("re-exec failed: %s; disabling paranoia mode"),
+	   strerror (errno));
+
+  if (server_user != NULL)
+    {
+      setuid (server_uid);
+      setgid (server_gid);
+    }
+  chdir ("/");
+  paranoia = 0;
+}
+
+
 /* List of file descriptors.  */
 struct fdlist
 {
@@ -859,6 +1015,7 @@ nscd_run (void *p)
 		 just start pruning.  */
 	      if (readylist == NULL && to == ETIMEDOUT)
 		{
+		  --nready;
 		  pthread_mutex_unlock (&readylist_lock);
 		  goto only_prune;
 		}
@@ -1059,7 +1216,16 @@ fd_ready (int fd)
 }
 
 
-/* Time a connection was accepted.  */
+/* Check whether restarting should happen.  */
+static inline int
+restart_p (time_t now)
+{
+  return (paranoia && readylist == NULL && nready == nthreads
+	  && now >= restart_time);
+}
+
+
+/* Array for times a connection was accepted.  */
 static time_t *starttime;
 
 
@@ -1160,6 +1326,9 @@ main_loop_poll (void)
 		while (conns[nused - 1].fd == -1);
 	    }
 	}
+
+      if (restart_p (now))
+	restart ();
     }
 }
 
@@ -1252,6 +1421,9 @@ main_loop_epoll (int efd)
 	  }
 	else if (cnt != sock && starttime[cnt] == 0 && cnt == highest)
 	  --highest;
+
+      if (restart_p (now))
+	restart ();
     }
 }
 #endif
@@ -1346,6 +1518,13 @@ begin_drop_privileges (void)
 
   server_uid = pwd->pw_uid;
   server_gid = pwd->pw_gid;
+
+  /* Save the old UID/GID if we have to change back.  */
+  if (paranoia)
+    {
+      old_uid = getuid ();
+      old_gid = getgid ();
+    }
 
   if (getgrouplist (server_user, server_gid, NULL, &server_ngroups) == 0)
     {

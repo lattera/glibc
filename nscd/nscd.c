@@ -79,6 +79,13 @@ time_t start_time;
 
 uintptr_t pagesize_m1;
 
+int paranoia;
+time_t restart_time;
+time_t restart_interval = RESTART_INTERVAL;
+const char *oldcwd;
+uid_t old_uid;
+gid_t old_gid;
+
 static int check_pid (const char *file);
 static int write_pid (const char *file);
 
@@ -248,6 +255,9 @@ main (int argc, char **argv)
       signal (SIGTTIN, SIG_IGN);
       signal (SIGTSTP, SIG_IGN);
     }
+  else
+    /* In foreground mode we are not paranoid.  */
+    paranoia = 0;
 
   /* Start the SELinux AVC.  */
   if (selinux_enabled)
@@ -414,6 +424,7 @@ nscd_open_socket (void)
   return sock;
 }
 
+
 /* Cleanup.  */
 void
 termination_handler (int signum)
@@ -461,7 +472,11 @@ check_pid (const char *file)
       n = fscanf (fp, "%d", &pid);
       fclose (fp);
 
-      if (n != 1 || kill (pid, 0) == 0)
+      /* If we cannot parse the file default to assuming nscd runs.
+	 If the PID is alive, assume it is running.  That all unless
+	 the PID is the same as the current process' since tha latter
+	 can mean we re-exec.  */
+      if ((n != 1 || kill (pid, 0) == 0) && pid != getpid ())
         return 1;
     }
 
