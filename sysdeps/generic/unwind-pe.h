@@ -52,25 +52,24 @@
 #define DW_EH_PE_indirect	0x80
 
 
-#ifdef _LIBC
+#if defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE)
 /* Prototypes.  */
 extern unsigned int size_of_encoded_value (unsigned char encoding);
 extern const unsigned char *read_encoded_value_with_base
   (unsigned char encoding, _Unwind_Ptr base,
    const unsigned char *p, _Unwind_Ptr *val);
-#endif
 
-
+#else
 
 /* Given an encoding, return the number of bytes the format occupies.
    This is only defined for fixed-size encodings, and so does not
    include leb128.  */
 
-static unsigned int
+# ifndef _LIBC
+static
+# endif
+unsigned int
 size_of_encoded_value (unsigned char encoding)
-#if defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE)
-;
-#else
 {
   if (encoding == DW_EH_PE_omit)
     return 0;
@@ -173,16 +172,17 @@ read_sleb128 (const unsigned char *p, _Unwind_Sword *val)
   return p;
 }
 
+#if !(defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE))
 /* Load an encoded value from memory at P.  The value is returned in VAL;
    The function returns P incremented past the value.  BASE is as given
    by base_of_encoded_value for this encoding in the appropriate context.  */
 
-static const unsigned char *
+# ifndef _LIBC
+static
+# endif
+const unsigned char *
 read_encoded_value_with_base (unsigned char encoding, _Unwind_Ptr base,
 			      const unsigned char *p, _Unwind_Ptr *val)
-#if defined(_LIBC) && !defined(NO_BASE_OF_ENCODED_VALUE)
-;
-#else
 {
   union unaligned
     {
