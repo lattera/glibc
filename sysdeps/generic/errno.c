@@ -22,24 +22,32 @@
 #include <dl-sysdep.h>
 #undef errno
 
-#if USE___THREAD
+#if RTLD_PRIVATE_ERRNO
+
+/* Code compiled for rtld refers only to this name.  */
+int rtld_errno attribute_hidden;
+
+#elif USE___THREAD
+
 __thread int errno;
 extern __thread int __libc_errno __attribute__ ((alias ("errno")))
   attribute_hidden;
+
 #else
+
 /* This differs from plain `int errno;' in that it doesn't create
    a common definition, but a plain symbol that resides in .bss,
    which can have an alias.  */
-int errno __attribute__ ((section (".bss")));
+int errno __attribute__ ((nocommon));
 strong_alias (errno, _errno)
 
 /* We declare these with compat_symbol so that they are not visible at
    link time.  Programs must use the accessor functions.  RTLD is special,
    since it's not exported from there at any time.  */
-# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING \
-     && !RTLD_PRIVATE_ERRNO
+# if defined HAVE_ELF && defined SHARED && defined DO_VERSIONING
 #  include <shlib-compat.h>
 compat_symbol (libc, errno, errno, GLIBC_2_0);
 compat_symbol (libc, _errno, _errno, GLIBC_2_0);
 # endif
+
 #endif
