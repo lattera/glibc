@@ -75,6 +75,13 @@ static int eval_expr (char *expr, long int *result) internal_function;
 #define W_CHUNK	(100)
 
 static inline char *
+w_newword (size_t *actlen, size_t *maxlen)
+{
+  *actlen = *maxlen = 0;
+  return NULL;
+}
+
+static inline char *
 w_addchar (char *buffer, size_t *actlen, size_t *maxlen, char ch)
      /* (lengths exclude trailing zero) */
 {
@@ -337,6 +344,64 @@ parse_tilde (char **word, size_t *word_length, size_t *max_length,
   return *word ? 0 : WRDE_NOSPACE;
 }
 
+
+static int
+internal_function
+do_parse_glob (const char *glob_word, char **word, size_t *word_length,
+	       size_t *max_length, wordexp_t *pwordexp, const char *ifs,
+	       const char *ifs_white)
+{
+  int error;
+  int match;
+  glob_t globbuf;
+
+  error = glob (glob_word, GLOB_NOCHECK, NULL, &globbuf);
+
+  if (error != 0)
+    {
+      /* We can only run into memory problems.  */
+      assert (error == GLOB_NOSPACE);
+      return WRDE_NOSPACE;
+    }
+
+  if (ifs && !*ifs)
+    {
+      /* No field splitting allowed. */
+      assert (globbuf.gl_pathv[0] != NULL);
+      *word = w_addstr (*word, word_length, max_length, globbuf.gl_pathv[0]);
+      for (match = 1; match < globbuf.gl_pathc && *word != NULL; ++match)
+	{
+	  *word = w_addchar (*word, word_length, max_length, ' ');
+	  if (*word != NULL)
+	    *word = w_addstr (*word, word_length, max_length,
+			      globbuf.gl_pathv[match]);
+	}
+
+      globfree (&globbuf);
+      return *word ? 0 : WRDE_NOSPACE;
+    }
+
+  assert (ifs == NULL || *ifs != '\0');
+  if (*word != NULL)
+    {
+      free (*word);
+      *word = w_newword (word_length, max_length);
+    }
+
+  for (match = 0; match < globbuf.gl_pathc; ++match)
+    {
+      char *matching_word = __strdup (globbuf.gl_pathv[match]);
+      if (matching_word == NULL || w_addword (pwordexp, matching_word))
+	{
+	  globfree (&globbuf);
+	  return WRDE_NOSPACE;
+	}
+    }
+
+  globfree (&globbuf);
+  return 0;
+}
+
 static int
 internal_function
 parse_glob (char **word, size_t *word_length, size_t *max_length,
@@ -344,13 +409,15 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
 	    wordexp_t *pwordexp, const char *ifs, const char *ifs_white)
 {
   /* We are poised just after a '*', a '[' or a '?'. */
-  int error;
-  glob_t globbuf;
-  int match;
-  char *matching_word;
+  int error = WRDE_NOSPACE;
   int quoted = 0; /* 1 if singly-quoted, 2 if doubly */
+  int i;
+  wordexp_t glob_list; /* List of words to glob */
 
-  for (; words[*offset]; (*offset)++)
+  glob_list.we_wordc = 0;
+  glob_list.we_wordv = NULL;
+  glob_list.we_offs = 0;
+  for (; words[*offset] != '\0'; ++*offset)
     {
       if ((ifs && strchr (ifs, words[*offset])) ||
 	  (!ifs && strchr (" \t\n", words[*offset])))
@@ -384,103 +451,48 @@ parse_glob (char **word, size_t *word_length, size_t *max_length,
       /* Sort out other special characters */
       if (quoted != 1 && words[*offset] == '$')
 	{
-	  error = parse_dollars (word, word_length, max_length, words, offset,
-				 flags, pwordexp, ifs, ifs_white, quoted == 2);
+	  error = parse_dollars (word, word_length, max_length, words,
+				 offset, flags, &glob_list, ifs, ifs_white,
+				 quoted == 2);
 	  if (error)
-	    return error;
+	    goto tidy_up;
 
 	  continue;
 	}
       else if (words[*offset] == '\\')
 	{
 	  if (quoted)
-	    error = parse_qtd_backslash (word, word_length, max_length, words,
-					 offset);
+	    error = parse_qtd_backslash (word, word_length, max_length,
+					 words, offset);
 	  else
-	    error = parse_backslash (word, word_length, max_length, words,
-				     offset);
+	    error = parse_backslash (word, word_length, max_length,
+				     words, offset);
 
 	  if (error)
-	    return error;
+	    goto tidy_up;
 
 	  continue;
 	}
 
       *word = w_addchar (*word, word_length, max_length, words[*offset]);
       if (*word == NULL)
-	return WRDE_NOSPACE;
+	goto tidy_up;
     }
 
-  error = glob (*word, GLOB_NOCHECK, NULL, &globbuf);
+  /* Don't forget to re-parse the character we stopped at. */
+  --*offset;
 
-  if (error != 0)
-    {
-      /* We can only run into memory problems.  */
-      assert (error == GLOB_NOSPACE);
+  /* Glob the words */
+  error = w_addword (&glob_list, *word);
+  *word = w_newword (word_length, max_length);
+  for (i = 0; error == 0 && i < glob_list.we_wordc; i++)
+    error = do_parse_glob (glob_list.we_wordv[i], word, word_length,
+			   max_length, pwordexp, ifs, ifs_white);
 
-      return WRDE_NOSPACE;
-    }
-
-  if (ifs && !*ifs)
-    {
-      /* No field splitting allowed */
-      size_t length = strlen (globbuf.gl_pathv[0]);
-      char *old_word = *word;
-      *word = realloc (*word, length + 1);
-      if (*word == NULL)
-	{
-	  free (old_word);
-	  goto no_space;
-	}
-
-      memcpy (*word, globbuf.gl_pathv[0], length + 1);
-      *word_length = length;
-
-      for (match = 1; match < globbuf.gl_pathc && *word != NULL; ++match)
-	{
-	  *word = w_addchar (*word, word_length, max_length, ' ');
-	  if (*word != NULL)
-	    *word = w_addstr (*word, word_length, max_length,
-			      globbuf.gl_pathv[match]);
-	}
-
-      /* Re-parse white space on return */
-      globfree (&globbuf);
-      --(*offset);
-      return *word ? 0 : WRDE_NOSPACE;
-    }
-
-  /* here ifs != "" */
-  free (*word);
-  *word = NULL;
-  *word_length = 0;
-
-  matching_word = __strdup (globbuf.gl_pathv[0]);
-  if (matching_word == NULL)
-    goto no_space;
-
-  if (w_addword (pwordexp, matching_word) == WRDE_NOSPACE)
-    goto no_space;
-
-  for (match = 1; match < globbuf.gl_pathc; ++match)
-    {
-      matching_word = __strdup (globbuf.gl_pathv[match]);
-      if (matching_word == NULL)
-	goto no_space;
-
-      if (w_addword (pwordexp, matching_word) == WRDE_NOSPACE)
-	goto no_space;
-    }
-
-  globfree (&globbuf);
-
-  /* Re-parse white space on return */
-  --(*offset);
-  return 0;
-
-no_space:
-  globfree (&globbuf);
-  return WRDE_NOSPACE;
+  /* Now tidy up */
+tidy_up:
+  wordfree (&glob_list);
+  return error;
 }
 
 static int
@@ -638,10 +650,11 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
   /* We are poised just after "$((" or "$[" */
   int error;
   int paren_depth = 1;
-  size_t expr_length = 0;
-  size_t expr_maxlen = 0;
-  char *expr = NULL;
+  size_t expr_length;
+  size_t expr_maxlen;
+  char *expr;
 
+  expr = w_newword (&expr_length, &expr_maxlen);
   for (; words[*offset]; ++(*offset))
     {
       switch (words[*offset])
@@ -934,9 +947,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		      return WRDE_NOSPACE;
 		    }
 
-		  *word = NULL;
-		  *word_length = 0;
-		  *max_length = 0;
+		  *word = w_newword (word_length, max_length);
 		  /* fall back round the loop.. */
 		}
 	      else
@@ -974,10 +985,10 @@ parse_comm (char **word, size_t *word_length, size_t *max_length,
   /* We are poised just after "$(" */
   int paren_depth = 1;
   int error = 0;
-  size_t comm_length = 0;
-  size_t comm_maxlen = 0;
-  char *comm = NULL;
   int quoted = 0; /* 1 for singly-quoted, 2 for doubly-quoted */
+  size_t comm_length;
+  size_t comm_maxlen;
+  char *comm = w_newword (&comm_length, &comm_maxlen);
 
   for (; words[*offset]; ++(*offset))
     {
@@ -1052,13 +1063,13 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
     ACT_NONNULL_SUBST = '+',
     ACT_NULL_ASSIGN = '='
   };
-  size_t env_length = 0;
-  size_t env_maxlen = 0;
-  size_t pat_length = 0;
-  size_t pat_maxlen = 0;
+  size_t env_length;
+  size_t env_maxlen;
+  size_t pat_length;
+  size_t pat_maxlen;
   size_t start = *offset;
-  char *env = NULL;
-  char *pattern = NULL;
+  char *env;
+  char *pattern;
   char *value = NULL;
   enum action action = ACT_NONE;
   int depth = 0;
@@ -1070,6 +1081,9 @@ parse_param (char **word, size_t *word_length, size_t *max_length,
   int special = 0;
   char buffer[21];
   int brace = words[*offset] == '{';
+
+  env = w_newword (&env_length, &env_maxlen);
+  pattern = w_newword (&pat_length, &pat_maxlen);
 
   if (brace)
     ++*offset;
@@ -1247,7 +1261,7 @@ envsubst:
 	  return *word ? 0 : WRDE_NOSPACE;
 	}
     }
-  /* Is it a numberic parameter? */
+  /* Is it a numeric parameter? */
   else if (isdigit (env[0]))
     {
       int n = atoi (env);
@@ -1345,8 +1359,7 @@ envsubst:
 		}
 
 	      /* Start a new word with the last parameter. */
-	      *word = NULL;
-	      *max_length = *word_length = 0;
+	      *word = w_newword (word_length, max_length);
 	      value = __strdup (__libc_argv[p]);
 	      if (value == NULL)
 		goto no_space;
@@ -1690,8 +1703,7 @@ envsubst:
 		  return WRDE_NOSPACE;
 		}
 
-	      *word = NULL;
-	      *word_length = *max_length = 0;
+	      *word = w_newword (word_length, max_length);
 	    }
 
 	  /* Skip IFS whitespace before the field */
@@ -1825,10 +1837,10 @@ parse_backtick (char **word, size_t *word_length, size_t *max_length,
 {
   /* We are poised just after "`" */
   int error;
-  size_t comm_length = 0;
-  size_t comm_maxlen = 0;
-  char *comm = NULL;
   int squoting = 0;
+  size_t comm_length;
+  size_t comm_maxlen;
+  char *comm = w_newword (&comm_length, &comm_maxlen);
 
   for (; words[*offset]; ++(*offset))
     {
@@ -1974,9 +1986,9 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 {
   size_t wordv_offset;
   size_t words_offset;
-  size_t word_length = 0;
-  size_t max_length = 0;
-  char *word = NULL;
+  size_t word_length;
+  size_t max_length;
+  char *word = w_newword (&word_length, &max_length);
   int error;
   char *ifs;
   char ifs_white[4];
@@ -2169,17 +2181,13 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 		goto do_error;
 	      }
 
-	    word = NULL;
-	    word_length = 0;
-	    max_length = 0;
+	    word = w_newword (&word_length, &max_length);
 	    break;
 	  }
 
 	/* It's a non-whitespace IFS char */
 
-	/* Multiple non-whitespace IFS chars are treated as one;
-	 * IS THIS CORRECT?
-	 */
+	/* Multiple non-whitespace IFS chars are treated as one.  */
 	if (word != NULL)
 	  {
 	    if (w_addword (pwordexp, word) == WRDE_NOSPACE)
@@ -2189,9 +2197,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
 	      }
 	  }
 
-	word = NULL;
-	word_length = 0;
-	max_length = 0;
+	word = w_newword (&word_length, &max_length);
       }
 
   /* End of string */

@@ -115,6 +115,8 @@ struct test_case_struct
     { 0, NULL, "${var=one two} \"$var\"", 0, 3, { "one", "two", "one two", } },
     { 0, "1", "$(( $(echo 3)+$var ))", 0, 1, { "4", } },
     { 0, NULL, "\"$(echo \"*\")\"", 0, 1, { "*", } },
+    { 0, "foo", "*$var*", 0, 1, { "*foo*", } },
+    { 0, "o thr", "*$var*", 0, 2, { "two", "three" } },
 
     /* Other things that should succeed */
     { 0, NULL, "\\*\"|&;<>\"\\(\\)\\{\\}", 0, 1, { "*|&;<>(){}", } },

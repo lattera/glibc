@@ -1,3 +1,26 @@
+1998-03-25 00:00  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp.c (w_newword): New function.
+	(do_parse_glob): New function.
+	(parse_glob): Use do_parse_glob.  Now handles the case where a
+	variable expansion causes a field-split.
+	(wordexp): Use w_newword.
+	(parse_arith): Likewise.
+	(exec_comm): Likewise.
+	(parse_comm): Likewise.
+	(parse_param): Likewise.
+	(parse_backtick): Likewise.
+
+1998-03-24 19:36  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-tst.sh: Another test.
+
+	* posix/wordexp-test.c: Two new tests.
+
+	* posix/wordexp.c (parse_glob): Use w_addstr instead of realloc
+	directly (the code using realloc was buggy).
+	(parse_param): Fix typo in comment.
+
 1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-close.c (_dl_close): Replace questionable memcpy by loop.

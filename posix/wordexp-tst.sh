@@ -19,7 +19,6 @@ IFS=" 	\
 "
 export IFS
 
-
 ${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
 ${common_objpfx}posix/wordexp-test '$*' > ${testout}1
 cat <<"EOF" | cmp - ${testout}1 || failed=1
@@ -90,6 +89,20 @@ wordexp returned 0
 we_wordv[0] = "a "a $@ b""
 we_wordv[1] = "c"
 we_wordv[2] = "d b"
+EOF
+
+${elf_objpfx}${rtld_installed_name} --library-path ${common_objpfx} \
+${common_objpfx}posix/wordexp-test '${#@} ${#2} *$**' two 3 4 > ${testout}10
+cat <<"EOF" | cmp - ${testout}10 || failed=1
+wordexp returned 0
+we_wordv[0] = "4"
+we_wordv[1] = "3"
+we_wordv[2] = "*${#@}"
+we_wordv[3] = "${#2}"
+we_wordv[4] = "*$**"
+we_wordv[5] = "two"
+we_wordv[6] = "3"
+we_wordv[7] = "4*"
 EOF
 
 exit $failed
