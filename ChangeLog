@@ -1,3 +1,11 @@
+2002-03-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/bits/sigcontext.h (struct
+	_fpstate): Add separate struct for x86-64.
+
+	* sysdeps/unix/sysv/linux/x86_64/sys/user.h (struct
+	user_fpregs_struct): Change member names to follow kernel.
+
 2002-03-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/ypclnt.c (yp_all): Remove the hack introduced on 1998-09-29.

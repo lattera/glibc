@@ -29,17 +29,17 @@
 
 struct user_fpregs_struct
 {
-  unsigned short int cwd;
-  unsigned short int swd;
-  unsigned short int twd;
-  unsigned short int fop;
-  unsigned long int frip;
-  unsigned long int frdp;
-  unsigned int mxcsr;
-  unsigned int reserved;
-  unsigned int st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
-  unsigned int xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
-  unsigned int padding[24];
+  __uint16_t		cwd;
+  __uint16_t		swd;
+  __uint16_t		twd;
+  __uint16_t		fop;
+  __uint64_t		rip;
+  __uint64_t		rdp;
+  __uint32_t		mxcsr;
+  __uint32_t		mxcr_mask;
+  __uint32_t		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
+  __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
+  __uint32_t		padding[24];
 };
 
 struct user_regs_struct
@@ -70,7 +70,7 @@ struct user_regs_struct
   unsigned long ds;
   unsigned long es;
   unsigned long fs;
-  unsigned long gs;  
+  unsigned long gs;
 };
 
 struct user
