@@ -17,7 +17,7 @@
 # Boston, MA 02111-1307, USA.
 
 subdir		:= dlfcn
-headers		:= dlfcn.h
+headers		:= bits/dlfcn.h dlfcn.h
 extra-libs	:= libdl
 libdl-routines	:= dlopen dlclose dlsym dlvsym dlerror dladdr
 distribute	:= dlopenold.c

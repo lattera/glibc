@@ -1,3 +1,9 @@
+1999-07-09  Andreas Schwab  <schwab@suse.de>
+
+	* elf/Makefile (headers): Remove bits/dlfcn.h and dlfcn.h.
+
+	* dlfcn/Makefile (headers): Add bits/dlfcn.h.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* hesiod/Versions [GLIBC_2.2]: Add _nss_hesiod_initgroups.

@@ -1,3 +1,8 @@
+1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manager.c (pthread_handle_create): Free mmap region after stack
+	if clone failed.  Patch by Kaz Kylheku <kaz@ashi.FootPrints.net>.
+
 1999-05-23  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* man/pthread_cond_init.man: Correct example.

@@ -379,10 +379,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
     /* Free the stack if we allocated it */
     if (attr == NULL || !attr->__stackaddr_set)
       {
-	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
-	       INITIAL_STACK_SIZE);
 	if (new_thread->p_guardsize != 0)
 	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
+	munmap((caddr_t)((char *)(new_thread+1) - INITIAL_STACK_SIZE),
+	       INITIAL_STACK_SIZE);
       }
     __pthread_handles[sseg].h_descr = NULL;
     __pthread_handles[sseg].h_bottom = NULL;
