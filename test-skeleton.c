@@ -225,6 +225,7 @@ main (int argc, char *argv[])
   atexit (delete_temp_files);
 
   /* Correct for the possible parameters.  */
+  argv[optind - 1] = argv[0];
   argv += optind - 1;
   argc -= optind - 1;
 

@@ -1,5 +1,8 @@
 2002-12-19  Ulrich Drepper  <drepper@redhat.com>
 
+	* test-skeleton.c (main): Make sure correct value is seen as
+	argv[0] after adjustment of argv, and argc.
+
 	* elf/rtld.c: Don't initialize _dl_dynamic_weak to 1 if
 	RTLD_CORRECT_DYNAMIC_WEAK is defined.
 
