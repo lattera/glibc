@@ -1,5 +1,8 @@
 1999-06-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* nscd/connections.c (handle_request): Use correct type for optlen
+	variable.
+
 	* misc/tst-efgcvt.c (ecvt_tests): Test 92.0 with ndigits == 16.
 	* misc/efgcvt_r.c (ecvt_r): Limit ndigits before passing it to fcvt_r.
 

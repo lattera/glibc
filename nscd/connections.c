@@ -324,7 +324,7 @@ cannot handle old request version %d; current version is %d"),
       else
 	{
 	  struct ucred caller;
-	  int optlen = sizeof (caller);
+	  socklen_t optlen = sizeof (caller);
 
 	  if (getsockopt (fd, SOL_SOCKET, SO_PEERCRED, &caller, &optlen) < 0)
 	    {
