@@ -33,8 +33,8 @@ static const long double
 #else
 static long double
 #endif
-two63   =  4.50359962737049600000e+15,
-twom63  =  1.08420217248550443400e-19,
+two64   =  1.8446744073709551616e19L,
+twom64  =  5.421010862427522170037e-20L,
 huge   = 1.0e+4900L,
 tiny   = 1.0e-4900L;
 
@@ -50,9 +50,9 @@ tiny   = 1.0e-4900L;
         k = es&0x7fff;				/* extract exponent */
         if (k==0) {				/* 0 or subnormal x */
             if ((lx|(hx&0x7fffffff))==0) return x; /* +-0 */
-	    x *= two63;
-	    GET_LDOUBLE_EXP(es,x);
-	    k = (hx&0x7fff) - 63;
+	    x *= two64;
+	    GET_LDOUBLE_EXP(hx,x);
+	    k = (hx&0x7fff) - 64;
 	    }
         if (k==0x7fff) return x+x;		/* NaN or Inf */
         k = k+n;
@@ -62,10 +62,10 @@ tiny   = 1.0e-4900L;
 	  return tiny*__copysignl(tiny,x);
         if (k > 0) 				/* normal result */
 	    {SET_LDOUBLE_EXP(x,(es&0x8000)|k); return x;}
-        if (k <= -63)
+        if (k <= -64)
 	    return tiny*__copysignl(tiny,x); 	/*underflow*/
-        k += 63;				/* subnormal result */
+        k += 64;				/* subnormal result */
 	SET_LDOUBLE_EXP(x,(es&0x8000)|k);
-        return x*twom63;
+        return x*twom64;
 }
 weak_alias (__scalbnl, scalbnl)

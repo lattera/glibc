@@ -31,9 +31,10 @@ ENTRY (BP_SYM (__remquof))
 	andl	$4, %ecx
 	andl	$3, %eax
 	orl	%eax, %ecx
-	movl	$0xef2960, %eax
+	leal	(%ecx,%ecx,2),%ecx
+	movl	$0xef2a60, %eax
 	shrl	%cl, %eax
-	andl	$3, %eax
+	andl	$7, %eax
 	movl	QUOP(%esp), %ecx
 	CHECK_BOUNDS_BOTH_WIDE (%ecx, QUOP(%esp), $4)
 	movl	DVDND(%esp), %edx

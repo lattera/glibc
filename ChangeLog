@@ -1,3 +1,17 @@
+2002-06-13  Stephen L Moshier  <steve@moshier.net>
+
+	* sysdeps/ieee754/ldbl-96/s_scalbnl.c: Fix cases in which
+	argument or result is subnormal.
+
+2002-06-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/fpu/s_remquo.S: Fix three mistakes in computing the
+	quotient.
+	* sysdeps/i386/fpu/s_remquof.S: Likewise.
+	* sysdeps/i386/fpu/s_remquol.S: Likewise.
+
+	* sysdeps/hppa/dl-machine.h: Don't use multi-line string literals.
+
 2002-06-17  David Mosberger  <davidm@hpl.hp.com>
 
 	* sysdeps/unix/sysv/linux/ia64/sys/ucontext.h (uc_sigmask): Fix
@@ -142,10 +156,10 @@
 
 2002-06-07  Jakub Jelinek  <jakub@redhat.com>
 
-	* sysdeps/unix/sysv/linux/alpha/sendfile64.c: New.
-	* sysdeps/unix/sysv/linux/ia64/sendfile64.c: New.
-	* sysdeps/unix/sysv/linux/sparc/sparc64/sendfile64.c: New.
-	* sysdeps/unix/sysv/linux/x86_64/sendfile64.c: New.
+	* sysdeps/unix/sysv/linux/alpha/sendfile64.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/sendfile64.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sendfile64.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/sendfile64.c: New file.
 	* sysdeps/unix/sysv/linux/syscalls.list (sendfile): Remove EXTRA.
 	(sendfile64): Likewise.
 	* sysdeps/unix/sysv/linux/alpha/syscalls.list (sendfile): Likewise.
