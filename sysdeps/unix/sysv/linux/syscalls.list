@@ -2,11 +2,8 @@
 
 adjtimex	adjtime	adjtimex	i:p	__adjtimex	adjtimex ntp_adjtime
 bdflush		EXTRA	bdflush		i:ii	bdflush
-capget		EXTRA	capget		2	capget
-capset		EXTRA	capset		2	capset
-clock_getres	-	clock_getres	2	clock_getres
-clock_gettime	-	clock_gettime	2	clock_gettime
-clock_settime	-	clock_settime	2	clock_settime
+capget		EXTRA	capget		i:pp	capget
+capset		EXTRA	capset		i:pp	capset
 create_module	EXTRA	create_module	3	create_module
 delete_module	EXTRA	delete_module	3	delete_module
 fdatasync	-	fdatasync	i:i	fdatasync
@@ -60,10 +57,5 @@ sigaltstack	-	sigaltstack	i:pp	__sigaltstack	sigaltstack
 sysinfo		EXTRA	sysinfo		i:p	sysinfo
 swapon		-	swapon		i:si	__swapon	swapon
 swapoff		-	swapoff		i:s	__swapoff	swapoff
-timer_create	-	timer_create	3	timer_create
-timer_delete	-	timer_delete	1	timer_delete
-timer_getoverr	-	timer_getoverrun	1	timer_getoverrun
-timer_gettime	-	timer_gettime	2	timer_gettime
-timer_settime	-	timer_settime	4	timer_settime
 uselib		EXTRA	uselib		i:s	uselib
 wait4		-	wait4		i:ipip	__wait4		wait4
