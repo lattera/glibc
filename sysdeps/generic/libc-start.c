@@ -51,12 +51,17 @@ extern void __pthread_initialize_minimal (void)
 # define LIBC_START_MAIN BP_SYM (__libc_start_main)
 #endif
 
-STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
 #ifdef MAIN_AUXVEC_ARG
-					 , void *
+/* main gets passed a pointer to the auxiliary.  */
+# define MAIN_AUXVEC_DECL	, void *
+# define MAIN_AUXVEC_PARAM	, auxvec
+#else
+# define MAIN_AUXVEC_DECL
+# define MAIN_AUXVEC_PARAM
 #endif
 
-					 ),
+STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
+					 MAIN_AUXVEC_DECL),
 			    int argc,
 			    char *__unbounded *__unbounded ubp_av,
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
@@ -73,11 +78,7 @@ STATIC int LIBC_START_MAIN (int (*main) (int, char **, char **
      __attribute__ ((noreturn));
 
 STATIC int
-LIBC_START_MAIN (int (*main) (int, char **, char **
-#ifdef MAIN_AUXVEC_ARG
-			      , void *
-#endif
-			      ),
+LIBC_START_MAIN (int (*main) (int, char **, char ** MAIN_AUXVEC_DECL),
 		 int argc, char *__unbounded *__unbounded ubp_av,
 #ifdef LIBC_START_MAIN_AUXVEC_ARG
 		 ElfW(auxv_t) *__unbounded auxvec,
@@ -172,10 +173,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char **
   if (init)
     (*init) (
 #ifdef INIT_MAIN_ARGS
-	     argc, argv, __environ
-# ifdef MAIN_AUXVEC_ARG
-	     , auxvec
-# endif
+	     argc, argv, __environ MAIN_AUXVEC_PARAM
 #endif
 	     );
 
@@ -184,38 +182,45 @@ LIBC_START_MAIN (int (*main) (int, char **, char **
     _dl_debug_printf ("\ntransferring control: %s\n\n", argv[0]);
 #endif
 
-#ifdef HAVE_CANCELBUF
-  if (setjmp (THREAD_SELF->cancelbuf) == 0)
-#endif
+#ifdef HAVE_CLEANUP_JMP_BUF
+  /* Memory for the cancellation buffer.  */
+  struct pthread_unwind_buf unwind_buf;
+
+  int not_first_call;
+  not_first_call = setjmp ((struct __jmp_buf_tag *) unwind_buf.cancel_jmp_buf);
+  if (__builtin_expect (! not_first_call, 1))
     {
-      /* XXX This is where the try/finally handling must be used.  */
+      struct pthread *self = THREAD_SELF;
 
-      result = main (argc, argv, __environ
-#ifdef MAIN_AUXVEC_ARG
-		     , auxvec
-#endif
+      /* Store old info.  */
+      unwind_buf.priv.data.prev = THREAD_GETMEM (self, cleanup_jmp_buf);
+      unwind_buf.priv.data.cleanup = THREAD_GETMEM (self, cleanup);
 
-		     );
+      /* Store the new cleanup handler info.  */
+      THREAD_SETMEM (self, cleanup_jmp_buf, &unwind_buf);
+
+      /* Run the program.  */
+      result = main (argc, argv, __environ MAIN_AUXVEC_PARAM);
     }
-#ifdef HAVE_CANCELBUF
   else
     {
-# ifdef HAVE_PTR_NTHREADS
       /* One less thread.  Decrement the counter.  If it is zero we
 	 terminate the entire process.  */
       result = 0;
-#  ifdef SHARED
+# ifdef SHARED
       int *const ptr = __libc_pthread_functions.ptr_nthreads;
-#  else
+# else
       extern int __nptl_nthreads __attribute ((weak));
       int *const ptr = &__nptl_nthreads;
-#  endif
+# endif
 
       if (! atomic_decrement_and_test (ptr))
-# endif
 	/* Not much left to do but to exit the thread, not the process.  */
 	__exit_thread (0);
     }
+#else
+  /* Nothing fancy, just call the function.  */
+  result = main (argc, argv, __environ MAIN_AUXVEC_PARAM);
 #endif
 
   exit (result);

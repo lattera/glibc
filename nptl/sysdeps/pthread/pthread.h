@@ -26,6 +26,7 @@
 #define __need_sigset_t
 #include <signal.h>
 #include <bits/pthreadtypes.h>
+#include <bits/setjmp.h>
 
 
 /* Detach state.  */
@@ -380,6 +381,24 @@ extern int pthread_cancel (pthread_t __th) __THROW;
 extern void pthread_testcancel (void) __THROW;
 
 
+/* Cancellation handling with integration into exception handling.  */
+
+typedef struct
+{
+  void *__pad[16];
+  struct
+  {
+    __jmp_buf __cancel_jmp_buf;
+    int __mask_was_saved;
+  } __cancel_jmp_buf[1];
+} __pthread_unwind_buf_t __attribute__ ((__aligned__));
+
+/* No special attributes by default.  */
+#ifndef __cleanup_fct_attribute
+# define __cleanup_fct_attribute
+#endif
+
+
 /* Install a cleanup handler: ROUTINE will be called with arguments ARG
    when the thread is cancelled or calls pthread_exit.  ROUTINE will also
    be called with arguments ARG when the matching pthread_cleanup_pop
@@ -387,43 +406,83 @@ extern void pthread_testcancel (void) __THROW;
 
    pthread_cleanup_push and pthread_cleanup_pop are macros and must always
    be used in matching pairs at the same nesting level of braces.  */
-#define pthread_cleanup_push(routine,arg) \
-  { struct _pthread_cleanup_buffer _buffer;				      \
-    _pthread_cleanup_push (&_buffer, (routine), (arg));
-
-extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *__buffer,
-				   void (*__routine) (void *), void *__arg)
-     __THROW;
+#define pthread_cleanup_push(routine, arg) \
+  do {									      \
+    __pthread_unwind_buf_t __cancel_buf;				      \
+    void (*__cancel_routine) (void *) = (routine);			      \
+    void *__cancel_arg = (arg);						      \
+    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *)		      \
+				      __cancel_buf.__cancel_jmp_buf, 0);      \
+    if (__builtin_expect (not_first_call, 0))				      \
+      {									      \
+	__cancel_routine (__cancel_arg);				      \
+	__pthread_unwind_next (&__cancel_buf);				      \
+	/* NOTREACHED */						      \
+      }									      \
+									      \
+    __pthread_register_cancel (&__cancel_buf);				      \
+    do {
+extern void __pthread_register_cancel (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute;
 
 /* Remove a cleanup handler installed by the matching pthread_cleanup_push.
    If EXECUTE is non-zero, the handler function is called. */
 #define pthread_cleanup_pop(execute) \
-    _pthread_cleanup_pop (&_buffer, (execute)); }
-
-extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *__buffer,
-				  int __execute) __THROW;
+    } while (0);							      \
+    __pthread_unregister_cancel (&__cancel_buf);			      \
+    if (execute)							      \
+      __cancel_routine (__cancel_arg);					      \
+  } while (0)
+extern void __pthread_unregister_cancel (__pthread_unwind_buf_t *__buf)
+  __cleanup_fct_attribute;
 
 #ifdef __USE_GNU
 /* Install a cleanup handler as pthread_cleanup_push does, but also
    saves the current cancellation type and sets it to deferred
    cancellation.  */
-# define pthread_cleanup_push_defer_np(routine,arg) \
-  { struct _pthread_cleanup_buffer _buffer;				      \
-    _pthread_cleanup_push_defer (&_buffer, (routine), (arg));
-
-extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *__buffer,
-					 void (*__routine) (void *),
-					 void *__arg) __THROW;
+# define pthread_cleanup_push_defer(routine, arg) \
+  do {									      \
+    __pthread_unwind_buf_t __cancel_buf;				      \
+    void (*__cancel_routine) (void *) = (routine);			      \
+    void *__cancel_arg = (arg);						      \
+    int not_first_call = __sigsetjmp ((struct __jmp_buf_tag *)		      \
+				      __cancel_buf.__cancel_jmp_buf, 0);      \
+    if (__builtin_expect (not_first_call, 0))				      \
+      {									      \
+	__cancel_routine (__cancel_arg);				      \
+	__pthread_unwind_next (&__cancel_buf);				      \
+	/* NOTREACHED */						      \
+      }									      \
+									      \
+    __pthread_register_cancel_defer (&__cancel_buf);			      \
+    do {
+extern void __pthread_register_cancel_defer (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute;
 
 /* Remove a cleanup handler as pthread_cleanup_pop does, but also
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called.  */
-# define pthread_cleanup_pop_restore_np(execute) \
-  _pthread_cleanup_pop_restore (&_buffer, (execute)); }
-
-extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *__buffer,
-					  int __execute) __THROW;
+# define pthread_cleanup_pop_cleanup(execute) \
+    } while (0);							      \
+    __pthread_unregister_cancel_restore (&__cancel_buf);		      \
+    if (execute)							      \
+      __cancel_routine (__cancel_arg);					      \
+  } while (0)
+extern void __pthread_unregister_cancel_restore (__pthread_unwind_buf_t *__buf)
+  __cleanup_fct_attribute;
 #endif
+
+/* Internal interface to initiate cleanup.  */
+extern void __pthread_unwind_next (__pthread_unwind_buf_t *__buf)
+     __cleanup_fct_attribute __attribute ((__noreturn__))
+#ifndef SHARED
+     __attribute ((__weak__))
+#endif
+     ;
+
+/* Function used in the macros.  */
+struct __jmp_buf_tag;
+extern int __sigsetjmp (struct __jmp_buf_tag __env[1], int __savemask) __THROW;
 
 
 /* Mutex handling.  */

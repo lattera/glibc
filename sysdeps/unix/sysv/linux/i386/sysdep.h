@@ -164,7 +164,7 @@ __i686.get_pc_thunk.reg:						      \
 # else
 /* Store (- %eax) into errno through the GOT.  */
 #  define SYSCALL_ERROR_HANDLER						      \
-0:SETUP_PIC_REG(cx);						      \
+0:SETUP_PIC_REG(cx);							      \
   addl $_GLOBAL_OFFSET_TABLE_, %ecx;					      \
   xorl %edx, %edx;							      \
   subl %eax, %edx;							      \
@@ -250,9 +250,9 @@ __i686.get_pc_thunk.reg:						      \
 #define PUSHARGS_1	movl %ebx, %edx; PUSHARGS_0
 #define	DOARGS_1	_DOARGS_1 (4)
 #define	POPARGS_1	POPARGS_0; movl %edx, %ebx
-#define	_PUSHARGS_1	pushl %ebx; _PUSHARGS_0
+#define	_PUSHARGS_1	pushl %ebx; L(PUSHBX1): _PUSHARGS_0
 #define _DOARGS_1(n)	movl n(%esp), %ebx; _DOARGS_0(n-4)
-#define	_POPARGS_1	_POPARGS_0; popl %ebx
+#define	_POPARGS_1	_POPARGS_0; popl %ebx; L(POPBX1):
 
 #define PUSHARGS_2	PUSHARGS_1
 #define	DOARGS_2	_DOARGS_2 (8)
@@ -271,16 +271,16 @@ __i686.get_pc_thunk.reg:						      \
 #define PUSHARGS_4	_PUSHARGS_4
 #define DOARGS_4	_DOARGS_4 (24)
 #define POPARGS_4	_POPARGS_4
-#define _PUSHARGS_4	pushl %esi; _PUSHARGS_3
+#define _PUSHARGS_4	pushl %esi; L(PUSHSI1): _PUSHARGS_3
 #define _DOARGS_4(n)	movl n(%esp), %esi; _DOARGS_3 (n-4)
-#define _POPARGS_4	_POPARGS_3; popl %esi
+#define _POPARGS_4	_POPARGS_3; popl %esi; L(POPSI1):
 
 #define PUSHARGS_5	_PUSHARGS_5
 #define DOARGS_5	_DOARGS_5 (32)
 #define POPARGS_5	_POPARGS_5
-#define _PUSHARGS_5	pushl %edi; _PUSHARGS_4
+#define _PUSHARGS_5	pushl %edi; L(PUSHDI1): _PUSHARGS_4
 #define _DOARGS_5(n)	movl n(%esp), %edi; _DOARGS_4 (n-4)
-#define _POPARGS_5	_POPARGS_4; popl %edi
+#define _POPARGS_5	_POPARGS_4; popl %edi; L(POPDI1):
 
 #else	/* !__ASSEMBLER__ */
 

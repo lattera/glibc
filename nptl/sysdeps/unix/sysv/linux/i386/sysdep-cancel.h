@@ -29,6 +29,7 @@
 # define PSEUDO(name, syscall_name, args)				      \
   .text;								      \
   ENTRY (name)								      \
+  L(name##START):							      \
     cmpl $0, %gs:MULTIPLE_THREADS_OFFSET;				      \
     jne L(pseudo_cancel);						      \
     DO_CALL (syscall_name, args);					      \
@@ -38,29 +39,262 @@
   L(pseudo_cancel):							      \
     CENABLE								      \
     SAVE_OLDTYPE_##args							      \
-    PUSHARGS_##args							      \
+    PUSHCARGS_##args							      \
     DOCARGS_##args							      \
     movl $SYS_ify (syscall_name), %eax;					      \
-    ENTER_KERNEL							      \
-    POPARGS_##args;							      \
-    POPCARGS_##args							      \
+    /* Until we can handle unwinding from the sysenter page the kernel	      \
+       provides we cannot use ENTER_KERNEL here.  */			      \
+    int $0x80;								      \
+    POPCARGS_##args;							      \
+    POPSTATE_##args							      \
     cmpl $-4095, %eax;							      \
     jae SYSCALL_ERROR_LABEL;						      \
-  L(pseudo_end):
+  L(pseudo_end):							      \
+									      \
+  /* Create unwinding information for the syscall wrapper.  */		      \
+  .section .eh_frame,"a",@progbits;					      \
+  L(STARTFRAME):							      \
+    /* Length of the CIE.  */						      \
+    .long L(ENDCIE)-L(STARTCIE);					      \
+  L(STARTCIE):								      \
+    /* CIE ID.  */							      \
+    .long 0;								      \
+    /* Version number.  */						      \
+    .byte 1;								      \
+    /* NUL-terminated augmentation string.  Note "z" means there is an	      \
+       augmentation value later on.  */					      \
+    .string "zR";							      \
+    /* Code alignment factor.  */					      \
+    .uleb128 1;								      \
+    /* Data alignment factor.  */					      \
+    .sleb128 -4;							      \
+    /* Return address register column.  */				      \
+    .byte 8;								      \
+    /* Augmentation value length.  */					      \
+    .uleb128 1;								      \
+    /* Encoding: DW_EH_PE_pcrel + DW_EH_PE_sdata4.  */			      \
+    .byte 0x1b;								      \
+    /* Start of the table initialization.  */				      \
+    .byte 0xc;								      \
+    .uleb128 4;								      \
+    .uleb128 4;								      \
+    .byte 0x88;								      \
+    .uleb128 1;								      \
+    .align 4;								      \
+  L(ENDCIE):								      \
+    /* Length of the FDE.  */						      \
+    .long L(ENDFDE)-L(STARTFDE);					      \
+  L(STARTFDE):								      \
+    /* CIE pointer.  */							      \
+    .long L(STARTFDE)-L(STARTFRAME);					      \
+    /* PC-relative start address of the code.  */			      \
+    .long L(name##START)-.;						      \
+    /* Length of the code.  */						      \
+    .long L(name##END)-L(name##START);					      \
+    /* No augmentation data.  */					      \
+    .uleb128 0;								      \
+    /* The rest of the code depends on the number of parameters the syscall   \
+       takes.  */							      \
+    EH_FRAME_##args(name);						      \
+    .align 4;								      \
+  L(ENDFDE):								      \
+  .previous
+
+/* Callframe description for syscalls without parameters.  This is very
+   simple.  The only place the stack pointer is changed is when the old
+   cancellation state value is saved.  */
+# define EH_FRAME_0(name) \
+    .byte 4;								      \
+    .long L(PUSHSTATE)-name;						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPSTATE)-L(PUSHSTATE);					      \
+    .byte 14;								      \
+    .uleb128 4
+
+/* For syscalls with one and two parameters the code is the same as for
+   those which take no parameter.  */
+# define EH_FRAME_1(name) EH_FRAME_0 (name)
+# define EH_FRAME_2(name) EH_FRAME_1 (name)
+
+/* For syscalls with three parameters the stack pointer is changed
+   also to save the content of the %ebx register.  */
+# define EH_FRAME_3(name) \
+    .byte 4;								      \
+    .long L(PUSHBX1)-name;						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPBX1)-L(PUSHBX1);						      \
+    .byte 14;								      \
+    .uleb128 4;								      \
+    .byte 4;								      \
+    .long L(PUSHSTATE)-L(POPBX1);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(PUSHBX2)-L(PUSHSTATE);					      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(POPBX2)-L(PUSHBX2);						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPSTATE)-L(POPBX2);					      \
+    .byte 14;								      \
+    .uleb128 4
+
+/* With four parameters the syscall wrappers have to save %ebx and %esi.  */
+# define EH_FRAME_4(name) \
+    .byte 4;								      \
+    .long L(PUSHSI1)-name;						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(PUSHBX1)-L(PUSHSI1);					      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(POPBX1)-L(PUSHBX1);						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPSI1)-L(POPBX1);						      \
+    .byte 14;								      \
+    .uleb128 4;								      \
+    .byte 4;								      \
+    .long L(PUSHSTATE)-L(POPSI1);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(PUSHSI2)-L(PUSHSTATE);					      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(PUSHBX2)-L(PUSHSI2);					      \
+    .byte 14;								      \
+    .uleb128 16;							      \
+    .byte 4;								      \
+    .long L(POPBX2)-L(PUSHBX2);						      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(POPSI2)-L(POPBX2);						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPSTATE)-L(POPSI2);					      \
+    .byte 14;								      \
+    .uleb128 4
+
+/* With five parameters the syscall wrappers have to save %ebx, %esi,
+   and %edi.  */
+# define EH_FRAME_5(name) \
+    .byte 4;								      \
+    .long L(PUSHDI1)-name;						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(PUSHSI1)-L(PUSHDI1);					      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(PUSHBX1)-L(PUSHSI1);					      \
+    .byte 14;								      \
+    .uleb128 16;							      \
+    .byte 4;								      \
+    .long L(POPBX1)-L(PUSHBX1);						      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(POPSI1)-L(POPBX1);						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPDI1)-L(POPSI1);						      \
+    .byte 14;								      \
+    .uleb128 4;								      \
+    .byte 4;								      \
+    .long L(PUSHSTATE)-L(POPDI1);					      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(PUSHDI2)-L(PUSHSTATE);					      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(PUSHSI2)-L(PUSHDI2);					      \
+    .byte 14;								      \
+    .uleb128 16;							      \
+    .byte 4;								      \
+    .long L(PUSHBX2)-L(PUSHSI2);					      \
+    .byte 14;								      \
+    .uleb128 20;							      \
+    .byte 4;								      \
+    .long L(POPBX2)-L(PUSHBX2);						      \
+    .byte 14;								      \
+    .uleb128 16;							      \
+    .byte 4;								      \
+    .long L(POPSI2)-L(POPBX2);						      \
+    .byte 14;								      \
+    .uleb128 12;							      \
+    .byte 4;								      \
+    .long L(POPDI2)-L(POPSI2);						      \
+    .byte 14;								      \
+    .uleb128 8;								      \
+    .byte 4;								      \
+    .long L(POPSTATE)-L(POPDI2);					      \
+    .byte 14;								      \
+    .uleb128 4
+
+
+# undef ASM_SIZE_DIRECTIVE
+# define ASM_SIZE_DIRECTIVE(name) L(name##END): .size name,.-name;
 
 # define SAVE_OLDTYPE_0	movl %eax, %edx;
 # define SAVE_OLDTYPE_1	SAVE_OLDTYPE_0
-# define SAVE_OLDTYPE_2	pushl %eax;
+# define SAVE_OLDTYPE_2	pushl %eax; L(PUSHSTATE):
 # define SAVE_OLDTYPE_3	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_4	SAVE_OLDTYPE_2
 # define SAVE_OLDTYPE_5	SAVE_OLDTYPE_2
 
-# define DOCARGS_0	DOARGS_0
-# define DOCARGS_1	DOARGS_1
+# define PUSHCARGS_0	/* No arguments to push.  */
+# define DOCARGS_0	/* No arguments to frob.  */
+# define POPCARGS_0	/* No arguments to pop.  */
+# define _PUSHCARGS_0	/* No arguments to push.  */
+# define _POPCARGS_0	/* No arguments to pop.  */
+
+# define PUSHCARGS_1	movl %ebx, %edx; PUSHCARGS_0
+# define DOCARGS_1	_DOARGS_1 (4)
+# define POPCARGS_1	POPCARGS_0; movl %edx, %ebx
+# define _PUSHCARGS_1	pushl %ebx; L(PUSHBX2): _PUSHCARGS_0
+# define _POPCARGS_1	_POPCARGS_0; popl %ebx; L(POPBX2):
+
+# define PUSHCARGS_2	PUSHCARGS_1
 # define DOCARGS_2	_DOARGS_2 (12)
+# define POPCARGS_2	POPCARGS_1
+# define _PUSHCARGS_2	_PUSHCARGS_1
+# define _POPCARGS_2	_POPCARGS_1
+
+# define PUSHCARGS_3	_PUSHCARGS_2
 # define DOCARGS_3	_DOARGS_3 (20)
+# define POPCARGS_3	_POPCARGS_3
+# define _PUSHCARGS_3	_PUSHCARGS_2
+# define _POPCARGS_3	_POPCARGS_2
+
+# define PUSHCARGS_4	_PUSHCARGS_4
 # define DOCARGS_4	_DOARGS_4 (28)
+# define POPCARGS_4	_POPCARGS_4
+# define _PUSHCARGS_4	pushl %esi; L(PUSHSI2): _PUSHCARGS_3
+# define _POPCARGS_4	_POPCARGS_3; popl %esi; L(POPSI2):
+
+# define PUSHCARGS_5	_PUSHCARGS_5
 # define DOCARGS_5	_DOARGS_5 (36)
+# define POPCARGS_5	_POPCARGS_5
+# define _PUSHCARGS_5	pushl %edi; L(PUSHDI2): _PUSHCARGS_4
+# define _POPCARGS_5	_POPCARGS_4; popl %edi; L(POPDI2):
 
 # ifdef IS_IN_libpthread
 #  define CENABLE	call __pthread_enable_asynccancel;
@@ -69,12 +303,13 @@
 #  define CENABLE	call __libc_enable_asynccancel;
 #  define CDISABLE	call __libc_disable_asynccancel
 # endif
-# define POPCARGS_0	pushl %eax; movl %ecx, %eax; CDISABLE; popl %eax;
-# define POPCARGS_1	POPCARGS_0
-# define POPCARGS_2	xchgl (%esp), %eax; CDISABLE; popl %eax;
-# define POPCARGS_3	POPCARGS_2
-# define POPCARGS_4	POPCARGS_2
-# define POPCARGS_5	POPCARGS_2
+# define POPSTATE_0 \
+ pushl %eax; L(PUSHSTATE): movl %ecx, %eax; CDISABLE; popl %eax; L(POPSTATE):
+# define POPSTATE_1	POPSTATE_0
+# define POPSTATE_2	xchgl (%esp), %eax; CDISABLE; popl %eax; L(POPSTATE):
+# define POPSTATE_3	POPSTATE_2
+# define POPSTATE_4	POPSTATE_3
+# define POPSTATE_5	POPSTATE_4
 
 # ifndef __ASSEMBLER__
 #  define SINGLE_THREAD_P \

@@ -1,5 +1,5 @@
 /* Define the machine-dependent type `jmp_buf'.  Linux/IA-64 version.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -18,7 +18,10 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _SETJMP_H
+#ifndef _BITS_SETJMP_H
+#define _BITS_SETJMP_H  1
+
+#if !defined _SETJMP_H && !defined _PTHREAD_H
 # error "Never include <bits/setjmp.h> directly; use <setjmp.h> instead."
 #endif
 
@@ -33,3 +36,5 @@ typedef long __jmp_buf[_JBLEN] __attribute__ ((aligned (16))); /* guarantees 128
    variable at ADDRESS.  */
 #define _JMPBUF_UNWINDS(_jmpbuf, _address)		\
      ((void *)(_address) < (void *)(((long *)_jmpbuf)[0]))
+
+#endif  /* bits/setjmp.h */

@@ -85,6 +85,8 @@ struct pthread_functions
 					    int);
 #define HAVE_PTR_NTHREADS
   int *ptr_nthreads;
+  void (*ptr___pthread_unwind) (__pthread_unwind_buf_t *)
+       __attribute ((noreturn)) __cleanup_fct_attribute;
 };
 
 /* Variable in libc.so.  */

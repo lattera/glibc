@@ -1,3 +1,45 @@
+2003-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.h: Define new data structure for cleanup buffer.  Declare
+	new cleanup handler interfaces.
+	* descr.h: Include <unwind.h> if necessary.  Define pthread_unwind_buf.
+	(struct pthread): Add cleanup_jmp_buf pointer.  Define
+	HAVE_CLEANUP_JMP_BUF and not HAVE_CANCELBUF.
+	* pthreadP.h: Declare __pthread_unwind.  Define __do_cancel to use
+	it.  Declare old cleanup handler installation functions.
+	* cleanup.c: Rewrite.  Install handler for unwind-based cleanup
+	handling.
+	* cleanup_defer.c: Likewise.
+	* cleanup_compat.c: New file.  Old cleanup code.
+	* cleanup_def_compat.c: New file.  Old cleanup code.
+	* pthread_create.c (start_thread): Initialize cleanup_jmp_buf element
+	if own thread descriptor.
+	* unwind.c: New file.
+	* forward.c: Add __pthread_unwind.
+	* init.c (pthread_functions): Add __pthread_unwind.
+	* sysdeps/pthread/pthread-functions.s (struct pthread_functions):
+	Add ptr___pthread_unwind.
+	* Versions [GLIBC_2.3.3] (libpthread): Export new cleanup handling
+	and unwind function.
+	* Makefile (libpthread-routines): Add cleanup_compat,
+	cleanup_def_compat, and unwind.  Define CFLAGS to enable unwind
+	table generation if necessary.
+	* version.c: Record whether unwind support is compiled in.
+	* sysdeps/pthread/configure.in: Add checks for unwind unterfaces.
+	* sysdeps/pthread/bits/libc-lock.h: Add prototypes of the old cleanup
+	handler interfaces.
+	* sysdeps/unix/sysv/linux/i386/sysdep-cancel.h: Add quite a bit of
+	complication to generate unwind information for syscall wrappers.
+	* sysdeps/unix/sysv/linux/i386/bits/pthreadtypes.h: Define
+	__cleanup_fct_attribute.
+
+	* Makefile: Add rules to build and run tst-cleanup0.
+	* tst-cleanup0.c: New file.
+	* tst-cleanup0.expect: New file.
+
+	* pthread_create.c (deallocate_tsd): Don't take parameter.  Adjust
+	caller.  Optimize to avoid often unecessary local variable.
+
 2003-04-11  Roland McGrath  <roland@redhat.com>
 
 	* Makefile ($(objpfx)multidir.mk): New target, generated makefile that

@@ -211,6 +211,11 @@ libpthread {
 
     # Proposed API extensions.
     pthread_tryjoin_np; pthread_timedjoin_np;
+
+    # New cancellation cleanup handling.
+    __pthread_register_cancel; __pthread_unregister_cancel;
+    __pthread_register_cancel_defer; __pthread_unregister_cancel_restore;
+    __pthread_unwind_next;
   }
 
   GLIBC_PRIVATE {

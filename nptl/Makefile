@@ -98,7 +98,8 @@ libpthread-routines = init events version \
 		      sem_open sem_close sem_unlink \
 		      sem_getvalue \
 		      sem_wait sem_trywait sem_timedwait sem_post \
-		      cleanup cleanup_defer \
+		      cleanup cleanup_defer cleanup_compat \
+		      cleanup_defer_compat unwind \
 		      pt-longjmp \
 		      cancellation \
 		      lowlevellock lowlevelmutex \
@@ -122,6 +123,10 @@ libpthread-static-only-routines = pthread_atfork
 libpthread-nonshared = pthread_atfork
 
 CFLAGS-pthread_atfork.c = -DNOT_IN_libc
+CFLAGS-init.c = -fexceptions -fasynchronous-unwind-tables
+CFLAGS-unwind.c = -fexceptions
+CFLAGS-cancellation.c = -fasynchronous-unwind-tables
+CFLAGS-libc-cancellation.c = -fasynchronous-unwind-tables
 
 # Don't generate deps for calls with no sources.  See sysdeps/unix/Makefile.
 omit-deps = $(unix-syscalls:%=ptw-%)
@@ -153,7 +158,7 @@ tests = tst-attr1 tst-attr2 \
 	tst-cancel1 tst-cancel2 tst-cancel3 tst-cancel4 tst-cancel5 \
 	tst-cancel6 tst-cancel7 tst-cancel8 tst-cancel9 tst-cancel10 \
 	tst-cancel11 \
-	tst-cleanup1 tst-cleanup2 tst-cleanup3 \
+	tst-cleanup0 tst-cleanup1 tst-cleanup2 tst-cleanup3 \
 	tst-flock1 tst-flock2 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
 	tst-exec1 tst-exec2 tst-exec3 \
@@ -208,6 +213,9 @@ CFLAGS-flockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-ftrylockfile.c = -D_IO_MTSAFE_IO
 CFLAGS-funlockfile.c = -D_IO_MTSAFE_IO
 
+# Ugly, ugly.  We have to link with libgcc_eh but how?
+link-libc-static := $(common-objpfx)libc.a $(gnulib) -lgcc_eh $(common-objpfx)libc.a
+
 ifeq ($(build-static),yes)
 tests-static += tst-locale1 tst-locale2
 endif
@@ -220,7 +228,6 @@ ifeq (yes,$(build-shared))
 # Make sure these things are built in the `make lib' pass so they can be used
 # to run programs during the `make others' pass.
 lib-noranlib: $(addprefix $(objpfx),$(extra-objs))
-endif
 
 # What we install as libpthread.so for programs to link against is in fact a
 # link script.  It contains references for the various libraries we need.
@@ -229,6 +236,7 @@ endif
 # We need to use absolute paths since otherwise local copies (if they exist)
 # of the files are taken by the linker.
 install: $(inst_libdir)/libpthread.so
+
 $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 			      $(objpfx)libpthread.so$(libpthread.so-version) \
 			      $(inst_libdir)/$(patsubst %,$(libtype.oS),\
@@ -245,6 +253,8 @@ $(inst_libdir)/libpthread.so: $(common-objpfx)format.lds \
 	mv -f $@.new $@
 $(inst_libdir)/libpthread_nonshared.a: $(objpfx)libpthread_nonshared.a
 	$(do-install)
+endif
+
 
 # 'pthread_self' is a simple memory or register load.  Setting up the
 # stack frame is more work than the actual operation.  Disable the
@@ -312,6 +322,9 @@ vpath pt-initfini.c $(full_config_sysdirs)
 $(objpfx)pt-initfini.s: pt-initfini.c
 	$(compile.c) -S $(CFLAGS-pt-initfini.s) -finhibit-size-directive \
 		$(patsubst -f%,-fno-%,$(exceptions)) -o $@
+
+$(objpfx)tst-cleanup0.out: /dev/null $(objpfx)tst-cleanup0
+	$(make-test-out) 2>&1 | cmp - tst-cleanup0.expect >& $@
 
 # We only have one kind of startup code files.  Static binaries and
 # shared libraries are build using the PIC version.

@@ -149,4 +149,7 @@ typedef union
 #endif
 
 
+/* Extra attributes for the cleanup functions.  */
+#define __cleanup_fct_attribute __attribute ((regparm (1)))
+
 #endif	/* bits/pthreadtypes.h */

@@ -26,7 +26,11 @@ static const char banner[] =
 "Copyright (C) 2003 Free Software Foundation, Inc.\n\
 This is free software; see the source for copying conditions.\n\
 There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n\
-PARTICULAR PURPOSE.\n";
+PARTICULAR PURPOSE.\n"
+#ifdef HAVE_FORCED_UNWIND
+"Forced unwind support included.\n"
+#endif
+;
 
 
 extern void __nptl_main (void) __attribute__ ((noreturn));

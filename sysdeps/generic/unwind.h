@@ -1,25 +1,35 @@
 /* Exception handling and frame unwind runtime interface routines.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2003 Free Software Foundation, Inc.
 
-   This file is part of GNU CC.
+   This file is part of GCC.
 
-   GNU CC is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
+   GCC is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
-   GNU CC is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+   GCC is distributed in the hope that it will be useful, but WITHOUT
+   ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+   or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
+   License for more details.
 
    You should have received a copy of the GNU General Public License
-   along with GNU CC; see the file COPYING.  If not, write to
-   the Free Software Foundation, 59 Temple Place - Suite 330,
-   Boston, MA 02111-1307, USA.  */
+   along with GCC; see the file COPYING.  If not, write to the Free
+   Software Foundation, 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
+
+/* As a special exception, if you include this header file into source
+   files compiled by GCC, this header file does not by itself cause
+   the resulting executable to be covered by the GNU General Public
+   License.  This exception does not however invalidate any other
+   reasons why the executable file might be covered by the GNU General
+   Public License.  */
 
 /* This is derived from the C++ ABI for IA-64.  Where we diverge
    for cross-architecture compatibility are noted with "@@@".  */
+
+#ifndef _UNWIND_H
+#define _UNWIND_H	1
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,7 +41,12 @@ extern "C" {
    inefficient for 32-bit and smaller machines.  */
 typedef unsigned _Unwind_Word __attribute__((__mode__(__word__)));
 typedef signed _Unwind_Sword __attribute__((__mode__(__word__)));
+#if defined(__ia64__) && defined(__hpux__)
+typedef unsigned _Unwind_Ptr __attribute__((__mode__(__word__)));
+#else
 typedef unsigned _Unwind_Ptr __attribute__((__mode__(__pointer__)));
+#endif
+typedef unsigned _Unwind_Internal_Ptr __attribute__((__mode__(__pointer__)));
 
 /* @@@ The IA-64 ABI uses a 64-bit word to identify the producer and
    consumer of an exception.  We'll go along with this for now even on
@@ -87,6 +102,7 @@ typedef int _Unwind_Action;
 #define _UA_CLEANUP_PHASE	2
 #define _UA_HANDLER_FRAME	4
 #define _UA_FORCE_UNWIND	8
+#define _UA_END_OF_STACK	16
 
 /* This is an opaque type used to refer to a system-specific data
    structure used by the system unwinder. This context is created and
@@ -125,6 +141,9 @@ extern void _Unwind_SetGR (struct _Unwind_Context *, int, _Unwind_Word);
 extern _Unwind_Ptr _Unwind_GetIP (struct _Unwind_Context *);
 extern void _Unwind_SetIP (struct _Unwind_Context *, _Unwind_Ptr);
 
+/* @@@ Retrieve the CFA of the given context.  */
+extern _Unwind_Word _Unwind_GetCFA (struct _Unwind_Context *);
+
 extern void *_Unwind_GetLanguageSpecificData (struct _Unwind_Context *);
 
 extern _Unwind_Ptr _Unwind_GetRegionStart (struct _Unwind_Context *);
@@ -135,15 +154,15 @@ extern _Unwind_Ptr _Unwind_GetRegionStart (struct _Unwind_Context *);
    library and language-specific exception handling semantics.  It is
    specific to the code fragment described by an unwind info block, and
    it is always referenced via the pointer in the unwind info block, and
-   hence it has no ABI-specified name. 
+   hence it has no ABI-specified name.
 
    Note that this implies that two different C++ implementations can
    use different names, and have different contents in the language
-   specific data area.  Moreover, that the language specific data 
+   specific data area.  Moreover, that the language specific data
    area contains no version info because name of the function invoked
    provides more effective versioning by detecting at link time the
    lack of code to handle the different data format.  */
-   
+
 typedef _Unwind_Reason_Code (*_Unwind_Personality_Fn)
      (int, _Unwind_Action, _Unwind_Exception_Class,
       struct _Unwind_Exception *, struct _Unwind_Context *);
@@ -186,6 +205,12 @@ extern _Unwind_Ptr _Unwind_GetDataRelBase (struct _Unwind_Context *);
 extern _Unwind_Ptr _Unwind_GetTextRelBase (struct _Unwind_Context *);
 #endif
 
+/* @@@ Given an address, return the entry point of the function that
+   contains it.  */
+extern void * _Unwind_FindEnclosingFunction (void *pc);
+
 #ifdef __cplusplus
 }
 #endif
+
+#endif	/* unwind.h */

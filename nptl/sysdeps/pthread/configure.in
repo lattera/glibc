@@ -4,3 +4,16 @@ GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 if test "x$libc_cv_gcc___thread" != xyes; then
   AC_MSG_ERROR(compiler support for __thread is required)
 fi
+
+dnl Iff <unwind.h> is available, make sure it is the right one and it
+dnl contains struct _Unwind_Exception.
+AC_CACHE_CHECK(dnl
+for forced unwind support, libc_cv_forced_unwind, [dnl
+AC_TRY_LINK([#include <unwind.h>], [
+struct _Unwind_Exception exc;
+struct _Unwind_Context *context;
+_Unwind_GetCFA (context)],
+libc_cv_forced_unwind=yes, libc_cv_forced_unwind=no)])
+if test $libc_cv_forced_unwind = yes; then
+  AC_DEFINE(HAVE_FORCED_UNWIND)
+fi

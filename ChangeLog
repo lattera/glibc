@@ -1,3 +1,18 @@
+2003-04-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/libc-start.c: Cleanup MAIN_AUXVEC_ARG handling.
+	Remove HAVE_CANCELBUF code.  Replace with code using the new
+	initializers for unwind-based cleanup handling.
+	* sysdeps/generic/unwind.h: Update from latest gcc version.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Define labels in a few
+	places to allow unwind data generation.
+	* sysdeps/i386/bits/setjmp.h: Allow file to be included multiple times.
+	* sysdeps/x86_64/bits/setjmp.h: Likewise.
+	* sysdeps/sh/bits/setjmp.h: Likewise.
+	* sysdeps/powerpc/bits/setjmp.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/setjmp.h: Likewise.
+	* sysdeps/alpha/bits/setjmp.h: Likewise.
+
 2003-04-11  Roland McGrath  <roland@redhat.com>
 
 	* csu/tst-empty.c: New file.

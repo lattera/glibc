@@ -345,6 +345,19 @@ typedef pthread_key_t __libc_key_t;
   } while (0)
 
 
+/* Note that for I/O cleanup handling we are using the old-style
+   cancel handling.  It does not have to be integrated with C++ snce
+   no C++ code is called in the middle.  The old-style handling is
+   faster and the support is not going away.  */
+extern void _pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,
+                                   void (*routine) (void *), void *arg);
+extern void _pthread_cleanup_pop (struct _pthread_cleanup_buffer *buffer,
+                                  int execute);
+extern void _pthread_cleanup_push_defer (struct _pthread_cleanup_buffer *buffer,
+                                         void (*routine) (void *), void *arg);
+extern void _pthread_cleanup_pop_restore (struct _pthread_cleanup_buffer *buffer,
+                                          int execute);
+
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG) \
   { struct _pthread_cleanup_buffer _buffer;				      \
