@@ -5,3 +5,9 @@ libc {
     __remls; __divl; __reml; __divq; __remq; __divqu; __remqu;
   }
 }
+libm {
+  GLIBC_2.0 {
+    # used in inline functions.
+    __atan2;
+  }
+}

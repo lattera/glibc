@@ -1,5 +1,7 @@
 1999-01-20  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/alpha/Versions: Add __atan2 for libm and GLIBC_2.0.
+
 	* elf/Makefile (tests): Add preloadtest.  Add rules to build more test
 	modules and the preloadtest binary.
 	* elf/loadtest.c (TEST_ROUNDS): Increase to 1000.
