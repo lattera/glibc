@@ -1,3 +1,8 @@
+2004-05-23  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/m68020/bits/atomic.h: Use "+m" constraint instead
+	of separate "m" constraints.
+
 2004-05-15  Chris Demetriou  <cgd@broadcom.com>
 
 	* sysdeps/mips/dl-machine.h (ELF_DL_FRAME_SIZE)
