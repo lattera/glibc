@@ -40,8 +40,11 @@
    dynamically loaded.  This can only work if there is enough surplus in
    the static TLS area already allocated for each running thread.  If this
    object's TLS segment is too big to fit, we fail.  If it fits,
-   we set MAP->l_tls_offset and return.  */
-int
+   we set MAP->l_tls_offset and return.
+   This function intentionally does not return any value but signals error
+   directly, as static TLS should be rare and code handling it should
+   not be inlined as much as possible.  */
+void
 internal_function __attribute_noinline__
 _dl_allocate_static_tls (struct link_map *map)
 {
@@ -54,14 +57,18 @@ _dl_allocate_static_tls (struct link_map *map)
 
   /* If the alignment requirements are too high fail.  */
   if (map->l_tls_align > GL(dl_tls_static_align))
-    return 1;
+    {
+    fail:
+      INTUSE(_dl_signal_error) (0, map->l_name, NULL, N_("\
+cannot allocate memory in static TLS block"));
+    }
 
 # if TLS_TCB_AT_TP
   freebytes = GL(dl_tls_static_size) - GL(dl_tls_static_used) - TLS_TCB_SIZE;
 
   blsize = map->l_tls_blocksize + map->l_tls_firstbyte_offset;
   if (freebytes < blsize)
-    return 1;
+    goto fail;
 
   n = (freebytes - blsize) / map->l_tls_align;
 
@@ -76,11 +83,7 @@ _dl_allocate_static_tls (struct link_map *map)
   /* dl_tls_static_used includes the TCB at the beginning.  */
 
   if (check > GL(dl_tls_static_size))
-    {
-      const char *errstring = N_("\
-shared object cannot be dlopen()ed: static TLS memory too small");
-      INTUSE(_dl_signal_error) (0, (map)->l_name, NULL, errstring);
-    }
+    goto fail;
 
   map->l_tls_offset = offset;
   GL(dl_tls_static_used) = used;
@@ -88,7 +91,32 @@ shared object cannot be dlopen()ed: static TLS memory too small");
 #  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
 # endif
 
-  return 0;
+  if (map->l_relocated)
+    GL(dl_init_static_tls) (map);
+  else
+    map->l_need_tls_init = 1;
+}
+
+/* Initialize static TLS area and DTV for current (only) thread.
+   libpthread implementations should provide their own hook
+   to handle all threads.  */
+void
+_dl_nothread_init_static_tls (struct link_map *map)
+{
+# if TLS_TCB_AT_TP
+  void *dest = (char *) THREAD_SELF - map->l_tls_offset;
+# elif TLS_DTV_AT_TP
+  void *dest = (char *) THREAD_SELF + map->l_tls_offset + TLS_PRE_TCB_SIZE;
+# else
+#  error "Either TLS_TCB_AT_TP or TLS_DTV_AT_TP must be defined"
+# endif
+
+  /* Fill in the DTV slot so that a later LD/GD access will find it.  */
+  THREAD_DTV ()[map->l_tls_modid].pointer = dest;
+
+  /* Initialize the memory.  */
+  memset (__mempcpy (dest, map->l_tls_initimage, map->l_tls_initimage_size),
+	  '\0', map->l_tls_blocksize - map->l_tls_initimage_size);
 }
 #endif
 
@@ -229,9 +257,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 #define CHECK_STATIC_TLS(map, sym_map)					      \
     do {								      \
       if (__builtin_expect ((sym_map)->l_tls_offset == NO_TLS_OFFSET, 0))     \
-	if (_dl_allocate_static_tls (sym_map) != 0)			      \
- 	  INTUSE(_dl_signal_error) (0, sym_map->l_name, NULL, N_("\
-cannot allocate memory in static TLS block"));				      \
+	_dl_allocate_static_tls (sym_map);				      \
     } while (0)
 
 #include "dynamic-link.h"
