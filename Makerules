@@ -189,9 +189,11 @@ endif
 $(common-objpfx)%.h $(common-objpfx)%.h.d: $(..)scripts/gen-as-const.awk \
 					   %.sym $(common-before-compile)
 	$(AWK) -f $< $(filter %.sym,$^) \
-	| $(CC) -S -o - $(CFLAGS) $(CPPFLAGS) -x c - \
-		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)' \
-	| sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' > $(@:.h.d=.h)T
+	| $(CC) -S -o $(@:.h.d=.h)T3 $(CFLAGS) $(CPPFLAGS) -x c - \
+		-MD -MP -MF $(@:.h=.h.d)T -MT '$(@:.h=.h.d) $(@:.h.d=.h)'
+	sed -n 's/^.*@@@name@@@\([^@]*\)@@@value@@@[^0-9Xxa-fA-F-]*\([0-9Xxa-fA-F-][0-9Xxa-fA-F-]*\).*@@@end@@@.*$$/#define \1 \2/p' \
+		$(@:.h.d=.h)T3 > $(@:.h.d=.h)T
+	rm -f $(@:.h.d=.h)T3
 	sed $(sed-remove-objpfx) $(sed-remove-dotdot) \
 	    $(@:.h=.h.d)T > $(@:.h=.h.d)T2
 	rm -f $(@:.h=.h.d)T
