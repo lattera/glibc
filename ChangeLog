@@ -1,3 +1,8 @@
+2000-05-08  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/unix/sysv/linux/m68k/getpagesize.c: New file.  Use
+	getpagesize syscall if available.
+
 2000-05-08  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/lockf64.c (lockf64): Return -1 for overflow and
