@@ -97,7 +97,7 @@ __new_semctl (int semid, int semnum, int cmd, ...)
 
     __set_errno(save_errno);
     buf = arg.buf;
-    arg.buf = (struct semid_ds *)&old;
+    arg.buf = (void *)&old;
     if (cmd == IPC_SET)
       {
 	old.sem_perm.uid = buf->sem_perm.uid;

@@ -30,6 +30,7 @@
          ? __syscall_rt_sigaction(args)         \
          : INLINE_SYSCALL1(name, nr, args))
 
+struct kernel_sigaction;
 extern int __syscall_rt_sigaction (int, const struct kernel_sigaction *__unbounded,
 				   struct kernel_sigaction *__unbounded, size_t);
 

@@ -205,7 +205,7 @@ __LABEL(name)						\
    output.  We don't do this unconditionally to allow compilation with
    older compilers.  */
 
-#ifdef USE_TLS
+#ifdef HAVE___THREAD
 #define inline_syscall_r0_asm
 #define inline_syscall_r0_out_constraint	"=v"
 #else

@@ -1,5 +1,33 @@
 2004-01-13  Richard Henderson  <rth@redhat.com>
 
+	* sysdeps/alpha/bits/atomic.h (__arch_compare_and_exchange_xxx_8_int):
+	Cast old up to uint64_t before back down to inner width.
+	(__arch_compare_and_exchange_xxx_16_int): Likewise.
+	(__arch_compare_and_exchange_xxx_32_int): Likewise.
+	(__arch_compare_and_exchange_xxx_64_int): Likewise.
+	(__arch_compare_and_exchange_val_8_int): Cast result to
+	the type of the memory.
+	(__arch_compare_and_exchange_val_16_int): Likewise.
+	(__arch_compare_and_exchange_val_32_int): Likewise.
+	(__arch_compare_and_exchange_val_64_int): Likewise.
+	(atomic_compare_and_exchange_bool_acq): Use __atomic_bool_bysize.
+	(atomic_compare_and_exchange_bool_rel): Likewise.
+
+	* sysdeps/unix/alpha/sysdep.h: Select inline_syscall_r0_asm
+	based on HAVE___THREAD instead of USE_TLS.
+
+	* sysdeps/unix/sysv/linux/alpha/adjtime.c (ADJTIMEX32): New.
+	(__adjtimex_tv64): Use it.
+
+	* sysdeps/unix/sysv/linux/alpha/semctl.c (__new_semctl): Cast
+	to void* rather than directly to the compatibility structure type.
+	* sysdeps/unix/sysv/linux/alpha/shmctl.c (__new_shmctl): Likewise.
+
+	* sysdeps/unix/sysv/linux/alpha/sigaction.c (struct kernel_sigaction):
+	Forward declare.
+
+2004-01-13  Richard Henderson  <rth@redhat.com>
+
 	* Versions.def (libm): Add GLIBC_2.3.3.
 	* sysdeps/alpha/fpu/Versions: Add __c1_c*f and c*f to GLIBC_2.3.3.
 	* sysdeps/alpha/fpu/cabsf.c, sysdeps/alpha/fpu/cargf.c,
@@ -582,7 +610,7 @@
 	with non-GCC compilers by hiding attributes.
 
 2003-12-16  Jakub Jelinek  <jakub@redhat.com>
-            Paolo Bonzini  <bonzini@gnu.org>
+	    Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regexec.c (group_nodes_into_DFAstates): Never produce
 	dests_ch items that are empty.
@@ -601,7 +629,7 @@
 2003-12-14  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regex_internal.c (re_acquire_state_context):
-        Compare the node sets after all the other comparisons.
+	Compare the node sets after all the other comparisons.
 
 2003-12-13  Paolo Bonzini  <bonzini@gnu.org>
 
@@ -1885,7 +1913,7 @@
 2003-10-02  Jeroen Dekkers  <jeroen@dekkers.cx>
 
 	* sysdeps/mach/hurd/malloc-machine.h: Copy the tsd code from
-        the old thread-m.h header too.
+	the old thread-m.h header too.
 
 2003-10-02  Ulrich Drepper  <drepper@redhat.com>
 
