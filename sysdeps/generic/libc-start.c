@@ -29,6 +29,10 @@ weak_extern (_dl_starting_up)
 extern int __libc_multiple_libcs;
 extern void *__libc_stack_end;
 
+#ifndef SHARED
+extern void __pthread_initialize_minimal (void) __attribute__ ((weak));
+#endif
+
 /* Prototype for local function.  */
 extern void __libc_check_standard_fds (void);
 
@@ -62,6 +66,12 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
   __libc_stack_end = stack_end;
 
 #ifndef SHARED
+  /* Initialize the thread library at least a bit since the libgcc
+     functions are using thread functions if these are available and
+     we need to setup errno.  */
+  if (__pthread_initialize_minimal)
+    __pthread_initialize_minimal ();
+
   /* Some security at this point.  Prevent starting a SUID binary where
      the standard file descriptors are not opened.  We have to do this
      only for statically linked applications since otherwise the dynamic
