@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Guido Guenther <agx@sigxcpu.org>, 2003.
 
@@ -118,16 +118,14 @@
 #  define CENABLE	la t9, __pthread_enable_asynccancel; jalr t9;
 #  define CDISABLE	la t9, __pthread_disable_asynccancel; jalr t9;
 #  define __local_multiple_threads __pthread_multiple_threads
+# elif defined IS_IN_librt
+#  define CENABLE	la t9, __librt_enable_asynccancel; jalr t9;
+#  define CDISABLE	la t9, __librt_disable_asynccancel; jalr t9;
+#  define __local_multiple_threads __librt_multiple_threads
 # else
 #  define CENABLE	la t9, __libc_enable_asynccancel; jalr t9;
 #  define CDISABLE	la t9, __libc_disable_asynccancel; jalr t9;
 #  define __local_multiple_threads __libc_multiple_threads
-# endif
-
-# if !defined NOT_IN_libc
-#  define __local_multiple_threads __libc_multiple_threads
-# else
-#  define __local_multiple_threads __pthread_multiple_threads
 # endif
 
 # ifndef __ASSEMBLER__

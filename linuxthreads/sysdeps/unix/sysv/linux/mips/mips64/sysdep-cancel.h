@@ -1,5 +1,5 @@
 /* system call stubs with cancellation handling.  Linux/MIPS version.
-   Copyright (C) 2003 Free Software Foundation, Inc.
+   Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Chris Demetriou of Broadcom Corporation,
    based on work by Guido Guenther <agx@sigxcpu.org>.
@@ -119,16 +119,14 @@
 #  define CENABLE	PTR_LA t9, __pthread_enable_asynccancel; jalr t9;
 #  define CDISABLE	PTR_LA t9, __pthread_disable_asynccancel; jalr t9;
 #  define __local_multiple_threads __pthread_multiple_threads
+# elif defined IS_IN_librt
+#  define CENABLE	PTR_LA t9, __librt_enable_asynccancel; jalr t9;
+#  define CDISABLE	PTR_LA t9, __librt_disable_asynccancel; jalr t9;
+#  define __local_multiple_threads __librt_multiple_threads
 # else
 #  define CENABLE	PTR_LA t9, __libc_enable_asynccancel; jalr t9;
 #  define CDISABLE	PTR_LA t9, __libc_disable_asynccancel; jalr t9;
 #  define __local_multiple_threads __libc_multiple_threads
-# endif
-
-# if !defined NOT_IN_libc
-#  define __local_multiple_threads __libc_multiple_threads
-# else
-#  define __local_multiple_threads __pthread_multiple_threads
 # endif
 
 # ifndef __ASSEMBLER__
