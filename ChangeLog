@@ -1,3 +1,17 @@
+Fri Apr 26 01:55:07 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* malloc/mcheck.c (mabort): Use __libc_fatal only #ifdef _LIBC.
+
+Wed Apr 24 00:22:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* stdio/internals.c (seek_to_target): Set errno if seek function
+	returns the wrong offset.
+
+	* wcsmbs/wcsrtombs.c [! EILSEQ] (EILSEQ): Define to EINVAL.
+	* wcsmbs/wcrtomb.c: Likewise.
+
+	* stdio-common/vfprintf.c: Include errno.h.
+
 Tue Apr 23 21:09:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* hurd/hurdsig.c (signal_allowed): For SIGIO/SIGURG, add a new
