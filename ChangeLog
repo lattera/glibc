@@ -1,3 +1,11 @@
+2003-01-06  Andreas Schwab  <schwab@suse.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_runtime_setup): Make
+	sure this is always inlined.
+	(elf_machine_rela): Likewise.
+
+	* sysdeps/m68k/Makefile (sysdep-CFLAGS): Increase inline limit.
+
 2003-01-04  Roland McGrath  <roland@redhat.com>
 
 	* Makeconfig (+mkdep): Add -MP flag.
