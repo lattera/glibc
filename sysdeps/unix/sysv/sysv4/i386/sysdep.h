@@ -21,7 +21,9 @@ Cambridge, MA 02139, USA.  */
 /* In SVR4 some system calls can fail with the error ERESTART,
    and this means the call should be retried.  */
 
+#ifndef _ERRNO_H
 #define _ERRNO_H
+#endif
 #include <errnos.h>
 
 #undef	PSEUDO
