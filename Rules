@@ -88,7 +88,10 @@ endif
 ifeq ($(cross-compiling),yes)
 tests: $(addprefix $(objpfx),$(tests) $(test-srcs))
 else
-tests: $(tests:%=$(objpfx)%.out)
+ifeq ($(build-bounded),yes)
+tests-bp.out = $(tests:%=$(objpfx)%-bp.out)
+endif
+tests: $(tests:%=$(objpfx)%.out) $(tests-bp.out)
 endif
 
 ifeq ($(build-programs),yes)
@@ -113,6 +116,14 @@ $(addprefix $(objpfx),$(binaries-static)): %: %.o \
   $(sort $(filter $(common-objpfx)lib%,$(link-libc-static))) \
   $(addprefix $(csu-objpfx),start.o) $(+preinit) $(+postinit)
 	$(+link-static)
+endif
+
+ifeq ($(build-bounded),yes)
+binaries-bounded = $(addsuffix -bp,$(tests) $(test-srcs))
+$(addprefix $(objpfx),$(binaries-bounded)): %-bp: %.ob \
+  $(sort $(filter $(common-objpfx)lib%,$(link-libc-bounded))) \
+  $(addprefix $(csu-objpfx),start.ob) $(+preinit) $(+postinit)
+	$(+link-bounded)
 endif
 
 ifneq "$(strip $(tests) $(test-srcs))" ""

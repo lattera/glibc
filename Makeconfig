@@ -400,6 +400,18 @@ ifndef +link-static
 			   $(common-objpfx)libc% $(+postinit),$^) \
 	      $(link-extra-libs-static) $(link-libc-static) $(+postctor) $(+postinit)
 endif
+# Command for statically linking bounded-pointer programs with the C library.
+ifndef +link-bounded
++link-bounded = $(CC) -nostdlib -nostartfiles -static -fbounded-pointers -o $@ \
+	      $(sysdep-LDFLAGS) $(LDFLAGS)  \
+	      $(addprefix $(csu-objpfx),b$(static-start-installed-name)) \
+	      $(+preinit) $(+prector) \
+	      $(filter-out $(addprefix $(csu-objpfx),start.o \
+						     $(start-installed-name))\
+			   $(+preinit) $(link-extra-libs-bounded) \
+			   $(common-objpfx)libc% $(+postinit),$^) \
+	      $(link-extra-libs-bounded) $(link-libc-bounded) $(+postctor) $(+postinit)
+endif
 ifndef config-LDFLAGS
 ifeq (yes,$(build-shared))
 config-LDFLAGS = -Wl,-dynamic-linker=$(slibdir)/$(rtld-installed-name)
@@ -458,6 +470,8 @@ link-libc-static = $(gnulib) $(common-objpfx)libc_pic.a
 link-extra-libs-static = $(link-extra-libs)
 endif
 endif
+link-libc-bounded = $(common-objpfx)libc_b.a $(gnulib) $(common-objpfx)libc_b.a
+link-extra-libs-bounded = $(foreach lib,$(LDLIBS-$(@F)),$(common-objpfx)$(lib)_b.a)
 
 ifndef gnulib
 gnulib := -lgcc
@@ -486,7 +500,10 @@ run-program-prefix = $(elf-objpfx)$(rtld-installed-name) \
 else
 run-program-prefix =
 endif
-built-program-cmd = $(run-program-prefix) $(built-program-file)
+# Never use $(run-program-prefix) for the statically-linked %-bp test programs
+built-program-cmd = $(patsubst %,$(run-program-prefix),\
+			$(filter-out %-bp,$(built-program-file))) \
+		    $(built-program-file)
 
 ifndef LD
 LD := ld -X

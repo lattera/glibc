@@ -948,7 +948,8 @@ clean: common-clean
 mostlyclean: common-mostlyclean
 
 do-tests-clean:
-	-rm -f $(patsubst %,$(objpfx)%.out,$(tests) $(test-srcs))
+	-rm -f $(addprefix $(objpfx),$(addsuffix .out,$(tests) $(test-srcs)) \
+				     $(addsuffix -bp.out,$(tests) $(test-srcs)))
 
 # Remove the object files.
 common-mostlyclean:
@@ -957,7 +958,9 @@ common-mostlyclean:
 				     $(addsuffix .o,$(tests) $(test-srcs) \
 						    $(others) \
 						    $(sysdep-others)) \
-				     $(addsuffix .out,$(tests) $(test-srcs)))
+				     $(addsuffix -bp,$(tests) $(test-srcs)) \
+				     $(addsuffix .out,$(tests) $(test-srcs)) \
+				     $(addsuffix -bp.out,$(tests) $(test-srcs)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))

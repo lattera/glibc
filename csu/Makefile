@@ -34,10 +34,6 @@ extra-objs = start.o gmon-start.o \
 omit-deps = $(patsubst %.o,%,$(start-installed-name) g$(start-installed-name) \
 			      b$(start-installed-name) $(csu-dummies))
 install-lib = $(start-installed-name) g$(start-installed-name) $(csu-dummies)
-ifeq (yes,$(build-bounded))
-extra-objs += b$(start-installed-name)
-install-lib += b$(start-installed-name)
-endif
 distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
 	     abi-note.S init.c munch-tmpl.c
 generated = version-info.h
@@ -46,6 +42,11 @@ before-compile = $(objpfx)version-info.h
 all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig
+
+ifeq (yes,$(build-bounded))
+extra-objs += b$(start-installed-name)
+install-lib += b$(start-installed-name)
+endif
 
 ifeq (yes,$(elf))
 before-compile += $(objpfx)abi-tag.h
