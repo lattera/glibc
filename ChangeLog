@@ -1,3 +1,8 @@
+2002-02-09  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/dl-tls.c (_dl_allocate_tls): Correctly terminate
+	loop to initial TLS block.
+
 2002-02-08  Richard Henderson  <rth@twiddle.net>
 
 	* sysdeps/generic/ldsodefs.h (struct rtld_global): Also include
@@ -27,7 +32,7 @@
 
 	* configure.in: Test for __builtin_memset more realistically.
 
-	* csu/version.c (banner): If TLS support available say so.
+	* csu/version.c (banner): If TLS support is available say so.
 
 2002-02-04  H.J. Lu  <hjl@gnu.org>
 

@@ -217,7 +217,8 @@ _dl_allocate_tls (void)
 		      '\0',
 		      runp->l_tls_blocksize - runp->l_tls_initimage_size);
 	    }
-	  while ((runp = runp->l_tls_nextimage) != NULL);
+	  while ((runp = runp->l_tls_nextimage)
+		 !=  GL(dl_initimage_list)->l_tls_nextimage);
 	}
 
       /* Add the dtv to the thread data structures.  */
