@@ -48,10 +48,9 @@ ENTRY(__setcontext)
 	movl	oFPREGS(%eax), %ecx
 	fldenv	(%ecx)
 
-	/* Restore the FS and GS segment registers.  */
-	movl	oGS(%eax), %edx
+	/* Restore the FS segment register.  We don't touch the GS register
+	   since it is used for threads.  */
 	movl	oFS(%eax), %ecx
-	movw	%dx, %gs
 	movw	%cx, %fs
 
 	/* Load the new stack pointer.  */

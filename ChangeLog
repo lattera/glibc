@@ -1,5 +1,10 @@
 2001-07-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/getcontext.S: Don't touch the %gs
+	register so that contexts can be used in different threads.
+	* sysdeps/unix/sysv/linux/i386/setcontext.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/swapcontext.S: Likewise.
+
 	* sysdeps/unix/sysv/linux/cmsg_nxthdr.c (__cmsg_nxthdr): Correct
 	test for cmsg struct size.
 	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Likewise.

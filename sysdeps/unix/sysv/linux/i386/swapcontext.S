@@ -43,13 +43,10 @@ ENTRY(__swapcontext)
 	movl	%ecx, oESP(%eax)
 	movl	%ebx, oEBX(%eax)
 
-	/* Save the FS and GS segment register.  */
+	/* Save the FS segment register.  */
 	xorl	%edx, %edx
-	xorl	%ecx, %ecx
-	movw	%gs, %dx
-	movw	%fs, %cx
-	movl	%edx, oGS(%eax)
-	movl	%ecx, oFS(%eax)
+	movw	%fs, %dx
+	movl	%edx, oFS(%eax)
 
 	/* We have separate floating-point register content memory on the
 	   stack.  We use the __fpregs_mem block in the context.  Set the
@@ -81,11 +78,9 @@ ENTRY(__swapcontext)
 	movl	oFPREGS(%eax), %ecx
 	fldenv	(%ecx)
 
-	/* Restore the FS and GS segment registers.  */
-	movl	oGS(%eax), %edx
-	movl	oFS(%eax), %ecx
-	movw	%dx, %gs
-	movw	%cx, %fs
+	/* Restore the FS segment registers.  */
+	movl	oFS(%eax), %edx
+	movw	%dx, %fs
 
 	/* Load the new stack pointer.  */
 	movl	oESP(%eax), %ecx
