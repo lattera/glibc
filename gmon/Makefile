@@ -1,4 +1,4 @@
-# Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+# Copyright (C) 1995, 1996, 1997, 2001 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,9 @@ subdir	:= gmon
 
 headers	:= sys/gmon.h sys/gmon_out.h
 distribute := machine-gmon.h profil-counter.h
-routines := gmon mcount profil bb_init_func bb_exit_func prof-freq
+routines := gmon mcount profil sprofil bb_init_func bb_exit_func prof-freq
+
+tests	:= tst-sprofil
 
 include ../Rules
 
@@ -37,7 +39,7 @@ CFLAGS-mcount.c := -fno-omit-frame-pointer
 
 noprof := mcount
 ifeq (,$(filter profil,$(unix-syscalls)))
-noprof += profil
+noprof += profil sprofil
 endif
 
 $(noprof:%=$(objpfx)%.op): %.op: %.o

@@ -16,4 +16,7 @@ libc {
     # m*
     moncontrol;
   }
+  GLIBC_2.2.3 {
+    sprofil;
+  }
 }

@@ -1,3 +1,17 @@
+2001-03-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* gmon/Makefile (routines): Add sprofil.
+	(tests): Add tst-sprofil.
+	(noprof): Add sprofil.
+	* gmon/Versions [libc] (GLIBC_2.2.3): Add sprofil.
+
+2001-03-20  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/generic/sprofil.c: New file.
+	* sysdeps/posix/sprofil.c: New file.
+	* gmon/tst-sprofil.c: New file.
+	* gmon/sys/profil.h: New file.
+
 2001-03-20  Andreas Schwab  <schwab@suse.de>
 
 	* include/unistd.h: Adjust prototype of __gethostname.
