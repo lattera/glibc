@@ -69,7 +69,8 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
     }
 
   /* Next see whether there is an array with initialization functions.  */
-  if (l->l_info[DT_INIT_ARRAY] != NULL)
+  ElfW(Dyn) *init_array = l->l_info[DT_INIT_ARRAY];
+  if (init_array != NULL)
     {
       unsigned int j;
       unsigned int jm;
@@ -77,8 +78,7 @@ call_init (struct link_map *l, int argc, char **argv, char **env)
 
       jm = l->l_info[DT_INIT_ARRAYSZ]->d_un.d_val / sizeof (ElfW(Addr));
 
-      addrs = (ElfW(Addr) *) (l->l_info[DT_INIT_ARRAY]->d_un.d_ptr
-			      + l->l_addr);
+      addrs = (ElfW(Addr) *) (init_array->d_un.d_ptr + l->l_addr);
       for (j = 0; j < jm; ++j)
 	((init_t) addrs[j]) (argc, argv, env);
     }
@@ -90,6 +90,7 @@ internal_function
 _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 {
   ElfW(Dyn) *preinit_array = main_map->l_info[DT_PREINIT_ARRAY];
+  ElfW(Dyn) *preinit_array_size = main_map->l_info[DT_PREINIT_ARRAYSZ];
   struct r_debug *r;
   unsigned int i;
 
@@ -101,7 +102,8 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 
   /* Don't do anything if there is no preinit array.  */
   if (__builtin_expect (preinit_array != NULL, 0)
-      && (i = preinit_array->d_un.d_val / sizeof (ElfW(Addr))) > 0)
+      && preinit_array_size != NULL
+      && (i = preinit_array_size->d_un.d_val / sizeof (ElfW(Addr))) > 0)
     {
       ElfW(Addr) *addrs;
       unsigned int cnt;
@@ -111,8 +113,7 @@ _dl_init (struct link_map *main_map, int argc, char **argv, char **env)
 				  main_map->l_name[0]
 				  ? main_map->l_name : rtld_progname);
 
-      addrs = (ElfW(Addr) *) (main_map->l_info[DT_PREINIT_ARRAY]->d_un.d_ptr
-			      + main_map->l_addr);
+      addrs = (ElfW(Addr) *) (preinit_array->d_un.d_ptr + main_map->l_addr);
       for (cnt = 0; cnt < i; ++cnt)
 	((init_t) addrs[cnt]) (argc, argv, env);
     }
