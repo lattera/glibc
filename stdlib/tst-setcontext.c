@@ -1,4 +1,4 @@
-/* Copyright (C) 2001,02 Free Software Foundation, Inc.
+/* Copyright (C) 2001,02, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ static ucontext_t ctx[3];
 static int was_in_f1;
 static int was_in_f2;
 
-static char st2[8192];
+static char st2[32768];
 
 static void
 f1 (long a0, long a1, long a2, long a3)
@@ -72,8 +72,8 @@ f2 (void)
   was_in_f2 = 1;
 }
 
-void 
-test_stack(volatile int a, volatile int b, 
+void
+test_stack(volatile int a, volatile int b,
            volatile int c, volatile int d)
 {
   volatile int e = 5;
@@ -83,25 +83,25 @@ test_stack(volatile int a, volatile int b,
   /* Test for cases where getcontext is clobbering the callers
      stack, including parameters.  */
   getcontext(&uc);
-	
+
   if (a != 1)
     {
       printf ("%s: getcontext clobbers parm a\n", __FUNCTION__);
       exit (1);
     }
-	
+
   if (b != 2)
     {
       printf ("%s: getcontext clobbers parm b\n", __FUNCTION__);
       exit (1);
     }
-	
+
   if (c != 3)
     {
       printf ("%s: getcontext clobbers parm c\n", __FUNCTION__);
       exit (1);
     }
-	
+
   if (d != 4)
     {
       printf ("%s: getcontext clobbers parm d\n", __FUNCTION__);
@@ -113,7 +113,7 @@ test_stack(volatile int a, volatile int b,
       printf ("%s: getcontext clobbers varible e\n", __FUNCTION__);
       exit (1);
     }
-	
+
   if (f != 6)
     {
       printf ("%s: getcontext clobbers variable f\n", __FUNCTION__);
@@ -126,7 +126,7 @@ volatile int global;
 int
 main (void)
 {
-  char st1[8192];
+  char st1[32768];
 
   puts ("making contexts");
   if (getcontext (&ctx[1]) != 0)
@@ -137,7 +137,7 @@ main (void)
       printf ("%s: getcontext: %m\n", __FUNCTION__);
       exit (1);
     }
-  
+
   test_stack (1, 2, 3, 4);
 
   /* Play some tricks with this context.  */
