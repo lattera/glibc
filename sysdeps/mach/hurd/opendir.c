@@ -29,6 +29,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include "dirstream.h"
 
 
 /* Open a directory stream on NAME.  */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,7 @@ Cambridge, MA 02139, USA.  */
 #include <stdio.h>
 
 #include "direct.h"		/* This file defines `struct direct'.  */
+#include "dirstream.h"
 
 /* Open a directory stream on NAME.  */
 DIR *

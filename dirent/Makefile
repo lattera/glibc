@@ -21,11 +21,11 @@
 #
 subdir		:= dirent
 
-headers		:= dirent.h dirstream.h
+headers		:= dirent.h
 routines	:= opendir closedir readdir rewinddir \
 		   seekdir telldir scandir alphasort \
 		   getdents dirfd
-distribute := direct.h
+distribute := direct.h dirstream.h
 
 tests	   := list tst-seekdir
 

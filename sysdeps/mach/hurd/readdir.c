@@ -26,6 +26,7 @@ Cambridge, MA 02139, USA.  */
 #include <sys/types.h>
 #include <hurd.h>
 #include <hurd/fd.h>
+#include "dirstream.h"
 
 
 /* Read a directory entry from DIRP.  */

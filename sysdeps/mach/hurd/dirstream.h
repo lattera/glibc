@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
    The Hurd directory format is the same as `struct dirent', so `readdir'
    returns a pointer into the buffer we read directory data into.  */
 
-typedef struct
+struct __dirstream
   {
     void *__fd;			/* `struct hurd_fd' pointer for descriptor.  */
     char *__data;		/* Directory block.  */
@@ -34,6 +34,6 @@ typedef struct
     int __entry_ptr;		/* Entry number `__ptr' corresponds to.  */
     unsigned long int __allocation; /* Space allocated for the block.  */
     unsigned long int __size;	/* Total valid data in the block.  */
-  } DIR;
+  };
 
 #endif	/* dirstream.h */

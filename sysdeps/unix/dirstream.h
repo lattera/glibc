@@ -28,7 +28,7 @@ Cambridge, MA 02139, USA.  */
    The miscellaneous Unix `readdir' implementations read directory data
    into a buffer and fill in a `struct dirent' copy in the `DIR' object. */
 
-typedef struct
+struct __dirstream
   {
     int __fd;			/* File descriptor.  */
 
@@ -38,7 +38,7 @@ typedef struct
     size_t __size;		/* Total valid data in the block.  */
 
     struct dirent __entry;	/* Returned by `readdir'.  */
-  } DIR;
+  };
 
 #define _DIR_dirfd(dirp)	((dirp)->__fd)
 

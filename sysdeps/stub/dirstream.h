@@ -1,4 +1,4 @@
-/* Copyright (C) 1993 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -21,10 +21,10 @@ Cambridge, MA 02139, USA.  */
 #define	_DIRSTREAM_H	1
 
 
-/* This file should define a typedef `DIR', the data type of directory
-   stream objects returned by `opendir'.  */
+/* This file should define a type `struct __dirstream', the data type of
+   directory stream objects returned by `opendir'.  */
 
-#error "No system-dependent definition of `DIR'."
+#error "No system-dependent definition of `struct __dirstream'."
 
 
 #endif	/* dirstream.h */

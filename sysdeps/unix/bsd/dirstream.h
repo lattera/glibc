@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -29,7 +29,7 @@ Cambridge, MA 02139, USA.  */
    The BSD directory format is the same as `struct dirent', so `readdir'
    returns a pointer into the buffer we read directory data into.  */
 
-typedef struct
+struct __dirstream
   {
     int __fd;			/* File descriptor.  */
 
@@ -38,11 +38,6 @@ typedef struct
     size_t __offset;		/* Current offset into the block.  */
     size_t __size;		/* Total valid data in the block.  */
     __off_t __pos;		/* Position in directory of this block.  */
-  } DIR;
-
-#ifdef __USE_BSD
-/* Macro to return the file descriptor used for an open directory.  */
-#define dirfd(DIR)	((DIR)->__fd)
-#endif
+  };
 
 #endif	/* dirstream.h */

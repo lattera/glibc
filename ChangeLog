@@ -1,5 +1,26 @@
 Fri Aug 25 12:12:42 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/mach/hurd/dirstream.h: Define `struct __dirstream'
+	instead of `DIR'.
+	* sysdeps/unix/bsd/dirstream.h: Likewise.
+	* sysdeps/stub/dirstream.h: Likewise.
+	* sysdeps/unix/dirstream.h: Likewise.
+	* sysdeps/mach/hurd/telldir.c: Include "dirstream.h".
+	* sysdeps/mach/hurd/seekdir.c: Likewise.
+	* sysdeps/mach/hurd/opendir.c: Likewise.
+	* sysdeps/mach/hurd/closedir.c: Likewise.
+	* sysdeps/mach/hurd/readdir.c: Likewise.
+	* sysdeps/unix/telldir.c: Likewise.
+	* sysdeps/unix/seekdir.c: Likewise.
+	* sysdeps/unix/rewinddir.c: Likewise.
+	* sysdeps/unix/readdir.c: Likewise.
+	* sysdeps/unix/opendir.c: Likewise.
+	* sysdeps/unix/closedir.c: Likewise.
+	* sysdeps/unix/bsd/telldir.c: Likewise.
+	* sysdeps/unix/bsd/readdir.c: Likewise.
+	* dirent/Makefile (headers): Remove dirstream.h.
+	(distribute): Put it here instead.
+
 	* sysdeps/mach/hurd/mmap.c: Fix inverted test of MAP_FIXED.
 
 	* stdio/vfscanf.c (number): Allow field width to inhibit first
