@@ -28,6 +28,7 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+#include <not-cancel.h>
 
 #include "nscd-client.h"
 #include "nscd_proto.h"
@@ -53,12 +54,12 @@ int
 __nscd_getgrgid_r (gid_t gid, struct group *resultbuf, char *buffer,
 		   size_t buflen, struct group **result)
 {
-  char buf[12];
-  size_t n;
+  char buf[3 * sizeof (gid_t)];
+  buf[sizeof (buf) - 1] = '\0';
+  char *cp = _itoa_word (gid, buf + sizeof (buf) - 1, 10, 0);
 
-  n = __snprintf (buf, sizeof (buf), "%d", gid) + 1;
-
-  return nscd_getgr_r (buf, n, GETGRBYGID, resultbuf, buffer, buflen, result);
+  return nscd_getgr_r (cp, buf + sizeof (buf) - cp, GETGRBYGID, resultbuf,
+		       buffer, buflen, result);
 }
 
 
@@ -68,13 +69,9 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 	      struct group *resultbuf, char *buffer, size_t buflen,
 	      struct group **result)
 {
-  int sock = __nscd_open_socket ();
-  request_header req;
   gr_response_header gr_resp;
-  ssize_t nbytes;
-  struct iovec vec[2];
-  int retval = -1;
-
+  int sock = __nscd_open_socket (key, keylen, type, &gr_resp,
+				 sizeof (gr_resp));
   if (sock == -1)
     {
       __nss_not_use_nscd_group = 1;
@@ -82,25 +79,8 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
     }
 
   /* No value found so far.  */
+  int retval = -1;
   *result = NULL;
-
-  req.version = NSCD_VERSION;
-  req.type = type;
-  req.key_len = keylen;
-
-  vec[0].iov_base = &req;
-  vec[0].iov_len = sizeof (request_header);
-  vec[1].iov_base = (void *) key;
-  vec[1].iov_len = keylen;
-
-  nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-  if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
-    goto out;
-
-  nbytes = TEMP_FAILURE_RETRY (__read (sock, &gr_resp,
-				       sizeof (gr_response_header)));
-  if (nbytes != (ssize_t) sizeof (gr_response_header))
-    goto out;
 
   if (gr_resp.found == -1)
     {
@@ -111,6 +91,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
 
   if (gr_resp.found == 1)
     {
+      struct iovec vec[2];
       uint32_t *len;
       char *p = buffer;
       size_t total_len;
@@ -196,7 +177,7 @@ nscd_getgr_r (const char *key, size_t keylen, request_type type,
     }
 
  out:
-  __close (sock);
+  close_not_cancel_no_status (sock);
 
   return retval;
 }

@@ -29,6 +29,7 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+#include <not-cancel.h>
 
 #include "nscd-client.h"
 #include "nscd_proto.h"
@@ -90,7 +91,8 @@ __nscd_gethostbyaddr_r (const void *addr, socklen_t len, int type,
 
 /* Create a socket connected to a name. */
 int
-__nscd_open_socket (void)
+__nscd_open_socket (const char *key, size_t keylen, request_type type,
+		    void *response, size_t responselen)
 {
   struct sockaddr_un addr;
   int sock;
@@ -107,9 +109,33 @@ __nscd_open_socket (void)
   strcpy (addr.sun_path, _PATH_NSCDSOCKET);
   if (__connect (sock, (struct sockaddr *) &addr, sizeof (addr)) < 0)
     {
-      __close (sock);
       __set_errno (saved_errno);
-      return -1;
+      goto out;
+    }
+
+  request_header req;
+  req.version = NSCD_VERSION;
+  req.type = type;
+  req.key_len = keylen;
+
+  struct iovec vec[2];
+  vec[0].iov_base = &req;
+  vec[0].iov_len = sizeof (request_header);
+  vec[1].iov_base = (void *) key;
+  vec[1].iov_len = keylen;
+
+  ssize_t nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
+  if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
+    {
+    out:
+      close_not_cancel_no_status (sock);
+      sock = -1;
+    }
+  else
+    {
+      nbytes = TEMP_FAILURE_RETRY (__read (sock, response, responselen));
+      if (nbytes != (ssize_t) responselen)
+	goto out;
     }
 
   return sock;
@@ -122,13 +148,9 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 	       struct hostent *resultbuf, char *buffer, size_t buflen,
 	       struct hostent **result, int *h_errnop)
 {
-  int sock = __nscd_open_socket ();
   hst_response_header hst_resp;
-  request_header req;
-  ssize_t nbytes;
-  struct iovec vec[4];
-  int retval = -1;
-
+  int sock = __nscd_open_socket (key, keylen, type, &hst_resp,
+				 sizeof (hst_resp));
   if (sock == -1)
     {
       __nss_not_use_nscd_hosts = 1;
@@ -136,25 +158,8 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
     }
 
   /* No value found so far.  */
+  int retval = -1;
   *result = NULL;
-
-  req.version = NSCD_VERSION;
-  req.type = type;
-  req.key_len = keylen;
-
-  vec[0].iov_base = &req;
-  vec[0].iov_len = sizeof (request_header);
-  vec[1].iov_base = (void *) key;
-  vec[1].iov_len = req.key_len;
-
-  nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-  if ((size_t) nbytes != sizeof (request_header) + req.key_len)
-    goto out;
-
-  nbytes = TEMP_FAILURE_RETRY (__read (sock, &hst_resp,
-				       sizeof (hst_response_header)));
-  if (__builtin_expect (nbytes != sizeof (hst_response_header), 0))
-    goto out;
 
   if (hst_resp.found == -1)
     {
@@ -165,6 +170,7 @@ nscd_gethst_r (const char *key, size_t keylen, request_type type,
 
   if (hst_resp.found == 1)
     {
+      struct iovec vec[4];
       uint32_t *aliases_len;
       char *cp = buffer;
       uintptr_t align1;

@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003
+   Copyright (C) 1994, 1995, 1996, 1999, 2000, 2002, 2003, 2004
    Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
@@ -163,6 +163,42 @@ extern const char _itoa_lower_digits_internal[] attribute_hidden;
 /* Upper-case digits.  */
 extern const char _itoa_upper_digits[];
 extern const char _itoa_upper_digits_internal[] attribute_hidden;
+
+
+char *
+_itoa_word (unsigned long value, char *buflim,
+	    unsigned int base, int upper_case)
+{
+  const char *digits = (upper_case
+#if !defined NOT_IN_libc || defined IS_IN_rtld
+			? INTUSE(_itoa_upper_digits)
+			: INTUSE(_itoa_lower_digits)
+#else
+			? _itoa_upper_digits
+			: _itoa_lower_digits
+#endif
+		       );
+
+  switch (base)
+    {
+#define SPECIAL(Base)							      \
+    case Base:								      \
+      do								      \
+	*--buflim = digits[value % Base];				      \
+      while ((value /= Base) != 0);					      \
+      break
+
+      SPECIAL (10);
+      SPECIAL (16);
+      SPECIAL (8);
+    default:
+      do
+	*--buflim = digits[value % base];
+      while ((value /= base) != 0);
+    }
+  return buflim;
+}
+#undef SPECIAL
 
 
 char *

@@ -27,6 +27,8 @@
 #include <sys/socket.h>
 #include <sys/uio.h>
 #include <sys/un.h>
+#include <not-cancel.h>
+#include <stdio-common/_itoa.h>
 
 #include "nscd-client.h"
 #include "nscd_proto.h"
@@ -53,12 +55,12 @@ int
 __nscd_getpwuid_r (uid_t uid, struct passwd *resultbuf, char *buffer,
 		   size_t buflen, struct passwd **result)
 {
-  char buf[12];
-  size_t n;
+  char buf[3 * sizeof (uid_t)];
+  buf[sizeof (buf) - 1] = '\0';
+  char *cp = _itoa_word (uid, buf + sizeof (buf) - 1, 10, 0);
 
-  n = __snprintf (buf, sizeof (buf), "%d", uid) + 1;
-
-  return nscd_getpw_r (buf, n, GETPWBYUID, resultbuf, buffer, buflen, result);
+  return nscd_getpw_r (cp, buf + sizeof (buf) - cp, GETPWBYUID, resultbuf,
+		       buffer, buflen, result);
 }
 
 
@@ -68,13 +70,9 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
 	      struct passwd *resultbuf, char *buffer, size_t buflen,
 	      struct passwd **result)
 {
-  int sock = __nscd_open_socket ();
-  request_header req;
   pw_response_header pw_resp;
-  ssize_t nbytes;
-  struct iovec vec[2];
-  int retval = -1;
-
+  int sock = __nscd_open_socket (key, keylen, type, &pw_resp,
+				 sizeof (pw_resp));
   if (sock == -1)
     {
       __nss_not_use_nscd_passwd = 1;
@@ -82,25 +80,8 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
     }
 
   /* No value found so far.  */
+  int retval = -1;
   *result = NULL;
-
-  req.version = NSCD_VERSION;
-  req.type = type;
-  req.key_len = keylen;
-
-  vec[0].iov_base = &req;
-  vec[0].iov_len = sizeof (request_header);
-  vec[1].iov_base = (void *) key;
-  vec[1].iov_len = keylen;
-
-  nbytes = TEMP_FAILURE_RETRY (__writev (sock, vec, 2));
-  if (nbytes != (ssize_t) (sizeof (request_header) + keylen))
-    goto out;
-
-  nbytes = TEMP_FAILURE_RETRY (__read (sock, &pw_resp,
-				       sizeof (pw_response_header)));
-  if (nbytes != (ssize_t) sizeof (pw_response_header))
-    goto out;
 
   if (__builtin_expect (pw_resp.found == -1, 0))
     {
@@ -142,7 +123,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
       /* get pw_pshell */
       resultbuf->pw_shell = p;
 
-      nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
+      ssize_t nbytes = TEMP_FAILURE_RETRY (__read (sock, buffer, total));
 
       if (nbytes == (ssize_t) total)
 	{
@@ -159,7 +140,7 @@ nscd_getpw_r (const char *key, size_t keylen, request_type type,
     }
 
  out:
-  __close (sock);
+  close_not_cancel_no_status (sock);
 
   return retval;
 }

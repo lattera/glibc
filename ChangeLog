@@ -1,3 +1,15 @@
+2004-06-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* stdio-common/_itoa.h: Don't expand _itoa inline for libc.
+	* stdio-common/_itoa.c: Add _itoa implementation.
+
+	* nscd/nscd_gethst_r.c (__nscd_open_socket): Change implementation
+	to also send request.  Add parameter to allow this.
+	Change callers.
+	* nscd/nscd_getgr_r.c: Change __nscd_open_socket caller.
+	* nscd/nscd_getpw_r.c: Likewise.
+	* nscd/nscd-client.h: Change __nscd_open_socket prototype.
+
 2004-06-05  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/x86_64/makecontext.c (__makecontext):
