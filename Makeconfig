@@ -683,7 +683,7 @@ $(common-objpfx)soversions.i: $(..)shlib-versions $(..)Makeconfig \
 			      $(common-objpfx)config.make
 	sed -e 's/#.*$$//;s/^[ 	]*%/#/' \
 	    $(filter-out $(..)Makeconfig $(common-objpfx)config.make,$^) \
-	| $(CC) -include $(common-objpfx)config.h -E -x c - \
+	| $(CC) -E -undef -include $(common-objpfx)config.h -x c - \
 	| while read conf version setname; do \
 	    test -n "$$version" && \
 	    test `expr '$(config-machine)-$(config-vendor)-$(config-os)' \
