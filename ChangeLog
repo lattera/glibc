@@ -1,3 +1,9 @@
+2002-10-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* Make-dist (dist): Cleanup a bit.  We are not interested in the
+	14 char filename limit anymore.  Remove intermediate files and
+	symlinks.
+
 2002-10-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* po/sk.po: Update from translation team.

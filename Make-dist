@@ -207,16 +207,16 @@ configure: configure.in aclocal.m4; $(autoconf-it)
 %/configure: %/configure.in aclocal.m4; $(autoconf-it)
 
 dist: $(tardir).tar.bz2
+	rm $(tardir).tar
 
 subdir_dist: dist.tar
 dist.tar: README $(tardir) $(+tsrcs)
 	tar chvf $@ $(addprefix $(tardir)/,$(filter-out $(tardir),$^))
 
 $(tardir).tar: dist.tar subdir_dist
-	@echo Files listed here have names exceeding 14 chars.
-	tar xfv $< -C $${TMPDIR-/tmp} | sed -n '/[^/]\{15,\}/p'
 	tar covf $@ -C $${TMPDIR-/tmp} $(tardir)
 	-rm -fr $${TMPDIR-/tmp}/$(tardir) dist.tar &
+	rm $(tardir)
 
 %.Z: %
 	compress -c $< > $@
