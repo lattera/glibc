@@ -37,25 +37,6 @@ contact <bug-glibc@gnu.org>.
      for the current status (of course better use a mirror of ftp.gnu.org).
 
 
-[ 6] Write `long double' versions of the math functions.
-
-     The libm is in fact fdlibm (not the same as in Linux libc 5).
-
-**** Partly done.  But we need someone with numerical experiences for
-     the rest.
-
-
-[ 7] Several math functions have to be written:
-
-     - exp2
-
-     with long double arguments.
-
-     Beside this most of the complex math functions which are new in
-     ISO C99 should be improved.  Writing some of them in assembler is
-     useful to exploit the parallelism which often is available.
-
-
 [ 8] If you enjoy assembler programming (as I do --drepper :-) you might
      be interested in writing optimized versions for some functions.
      Especially the string handling functions can be optimized a lot.
@@ -156,9 +137,6 @@ contact <bug-glibc@gnu.org>.
        the currently implemented methods.
 
 
-[22] Done.
-
-
 [23] The `strptime' function needs to be completed.  This includes among
      other things that it must get teached about timezones.  The solution
      envisioned is to extract the timezones from the ADO timezone
@@ -179,9 +157,6 @@ contact <bug-glibc@gnu.org>.
      Factors should be number of uses (of course), influenced by aging.
      Just imagine a computer used by several people.  The IDs of the current
      user should be preferred even if the last user spent more time.
-
-
-[26] ...done
 
 
 [27] We need a second test suite with tests which cannot run during a normal
