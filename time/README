@@ -3,7 +3,7 @@ The source files
 	`zdump.c'
 	`tzselect.ksh'
 	`checktab.awk'
-come from the tzcode1997a package by Arthur David Olsen et.al.
+come from the tzcode1997f package by Arthur David Olsen et.al.
 
 The files
 	`africa'
@@ -25,4 +25,4 @@ The files
 	`zone.tab'
 	`leapseconds'
 	`yearistype'
-come from the tzdata1997a package by Arthur David Olsen et.al.
+come from the tzdata1997g package by Arthur David Olsen et.al.

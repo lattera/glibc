@@ -1,3 +1,49 @@
+1997-07-19 22:53  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/africa: Update from tzdata1997g.
+	* time/asia: Likewise.
+	* time/australia: Likewise.
+	* time/europe: Likewise.
+	* time/iso3166.tab: Likewise.
+	* time/zone.tab: Likewise.
+	* time/private.h: Update from tzcode1997f.
+	* time/scheck.c: Likewise.
+
+	* libio/stdio.h: Declare snprint and vsnprintf for __USE_ISOC9X.
+
+	* math/math.h: Correct comments.  Include <bits/mathinline.h>
+	always when optimizing.
+
+1997-07-19 10:23  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* time/getdate.c (__getdate_r):
+	Report failure if string was not completely parsed.
+	(getdate): Set getdate_err on failure.
+
+1997-07-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* include/gnu-versions.h (_GNU_OBSTACK_INTERFACE_VERSION):
+	Synchronize with malloc/obstack.c.
+
+1997-07-16  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/mmap.c (__mmap): Check for !MAP_SHARED rather
+	than MAP_COPY|MAP_PRIVATE, since those values are defined wierdly.
+	Return EACCES rather than EGRATUITOUS if a R/W request isn't writable.
+
+1997-07-15  Marcus G. Daniels  <marcus@cathcart.sysc.pdx.edu>
+
+	* manual/Makefile (INSTALL_INFO): Introduce variable to override
+	path to install-info for systems like Debian that have an
+	install-info with a different command line interface from the
+	canonical GNU texinfo version.
+
+1997-07-15  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/posix/ttyname_r.c (__ttyname_r): Correct comment.
+	* posix/unistd.h: Likewise.
+	* sysdeps/stub/ttyname_r.c: Likewise.
+
 1997-07-14 23:37  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getnameinfo.c: Pretty print.
@@ -28,7 +74,7 @@
 
 	* sysdeps/unix/sysv/linux/Makefile: Make sure bits/syscall.h is
 	installed.
-	* sysdeps/unix/sysv/linux/sys/syscal.h: Pretty print.
+	* sysdeps/unix/sysv/linux/sys/syscall.h: Pretty print.
 
 1997-07-14 00:25  Ulrich Drepper  <drepper@cygnus.com>
 

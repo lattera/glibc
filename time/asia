@@ -1,4 +1,4 @@
-# @(#)asia	7.29
+# @(#)asia	7.30
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -214,28 +214,6 @@ Zone	Asia/Kashgar	5:03:56	-	LMT	1928
 			5:30	-	KAST	1940	 # Kashgar Time
 			5:00	-	KAST	1980 May
 			8:00	PRC	C%sT
-
-###############################################################################
-
-# Republic of China
-
-# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
-Rule	Taiwan	1945	1951	-	May	1	0:00	1:00	D
-Rule	Taiwan	1945	1951	-	Oct	1	0:00	0	S
-Rule	Taiwan	1952	only	-	Mar	1	0:00	1:00	D
-Rule	Taiwan	1952	1954	-	Nov	1	0:00	0	S
-Rule	Taiwan	1953	1959	-	Apr	1	0:00	1:00	D
-Rule	Taiwan	1955	1961	-	Oct	1	0:00	0	S
-Rule	Taiwan	1960	1961	-	Jun	1	0:00	1:00	D
-Rule	Taiwan	1974	1975	-	Apr	1	0:00	1:00	D
-Rule	Taiwan	1974	1975	-	Oct	1	0:00	0	S
-Rule	Taiwan	1980	only	-	Jun	30	0:00	1:00	D
-Rule	Taiwan	1980	only	-	Sep	30	0:00	0	S
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone	Asia/Taipei	8:06:00 -	LMT	1896
-			8:00	Taiwan	C%sT
-
-###############################################################################
 # Hong Kong
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
 Rule	HK	1946	only	-	Apr	20	3:30	1:00	S
@@ -257,6 +235,27 @@ Rule	HK	1979	1980	-	Oct	Sun>=16	3:30	0	-
 Zone	Asia/Hong_Kong	7:36:36 -	LMT	1904 Oct 30
 			8:00	HK	HK%sT	1997 Jul  1 # return to China
 			8:00	PRC	C%sT
+
+
+###############################################################################
+
+# Republic of China
+
+# Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S
+Rule	Taiwan	1945	1951	-	May	1	0:00	1:00	D
+Rule	Taiwan	1945	1951	-	Oct	1	0:00	0	S
+Rule	Taiwan	1952	only	-	Mar	1	0:00	1:00	D
+Rule	Taiwan	1952	1954	-	Nov	1	0:00	0	S
+Rule	Taiwan	1953	1959	-	Apr	1	0:00	1:00	D
+Rule	Taiwan	1955	1961	-	Oct	1	0:00	0	S
+Rule	Taiwan	1960	1961	-	Jun	1	0:00	1:00	D
+Rule	Taiwan	1974	1975	-	Apr	1	0:00	1:00	D
+Rule	Taiwan	1974	1975	-	Oct	1	0:00	0	S
+Rule	Taiwan	1980	only	-	Jun	30	0:00	1:00	D
+Rule	Taiwan	1980	only	-	Sep	30	0:00	0	S
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone	Asia/Taipei	8:06:00 -	LMT	1896
+			8:00	Taiwan	C%sT
 
 # Macao
 # Rule	NAME	FROM	TO	TYPE	IN	ON	AT	SAVE	LETTER/S

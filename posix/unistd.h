@@ -565,7 +565,7 @@ extern __pid_t vfork __P ((void));
 extern char *ttyname __P ((int __fd));
 
 /* Store at most BUFLEN characters of the pathname of the terminal FD is
-   open on in BUF.  Return 0 on success, -1 otherwise.  */
+   open on in BUF.  Return 0 on success, otherwise an error number.  */
 extern int __ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 

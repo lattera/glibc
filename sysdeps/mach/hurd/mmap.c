@@ -98,7 +98,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		__mach_port_deallocate (__mach_task_self (), memobj);
 	      }
 	    else if (wobj == MACH_PORT_NULL && /* Not writable by mapping.  */
-		     (flags & (MAP_COPY|MAP_PRIVATE)))
+		     !(flags & MAP_SHARED))
 	      /* The file can only be mapped for reading.  Since we are
 		 making a private mapping, we will never try to write the
 		 object anyway, so we don't care.  */
@@ -106,8 +106,7 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
-		return ((caddr_t) (long int)
-			__hurd_fail (EGRATUITOUS)); /* XXX */
+		return (caddr_t) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
 	  }

@@ -1,4 +1,4 @@
-# @(#)africa	7.17
+# @(#)africa	7.18
 
 # This data is by no means authoritative; if you think you know better,
 # go ahead and edit the file (and please send any changes to
@@ -218,7 +218,14 @@ Zone	Africa/Ndjamena	1:00:12 -	LMT	1912
 Zone	Indian/Comoro	2:53:04 -	LMT	1911 Jul   # Moroni, Gran Comoro
 			3:00	-	EAT
 
-# Congo
+# Democratic Republic of Congo
+# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
+Zone Africa/Kinshasa	1:01:12 -	LMT	1897 Nov 9
+			1:00	-	CAT
+Zone Africa/Lubumbashi	1:49:52 -	LMT	1897 Nov 9
+			2:00	-	SAT
+
+# Republic of the Congo
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
 Zone Africa/Brazzaville	1:01:08 -	LMT	1912
 			1:00	-	CAT
@@ -655,13 +662,6 @@ Zone	Africa/Kampala	2:09:40 -	LMT	1928 Jul
 			2:30	-	BEAT	1948
 			2:45	-	BEAT	1957
 			3:00	-	EAT
-
-# Zaire
-# Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]
-Zone Africa/Kinshasa	1:01:12 -	LMT	1897 Nov 9
-			1:00	-	CAT
-Zone Africa/Lubumbashi	1:49:52 -	LMT	1897 Nov 9
-			2:00	-	SAT
 
 # Zambia
 # Zone	NAME		GMTOFF	RULES	FORMAT	[UNTIL]

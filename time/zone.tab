@@ -101,6 +101,8 @@ CA	+4916-12307	America/Vancouver	Pacific Time - west British Columbia
 CA	+6043-13503	America/Whitehorse	Pacific Time - south Yukon
 CA	+6404-13925	America/Dawson	Pacific Time - north Yukon
 CC	-1210+09655	Indian/Cocos
+CD	-0418+01518	Africa/Kinshasa	west Dem. Rep. of Congo
+CD	-1140+02728	Africa/Lubumbashi	east Dem. Rep. of Congo
 CF	+0422+01835	Africa/Bangui
 CG	-0416+01517	Africa/Brazzaville
 CH	+4723+00832	Europe/Zurich
@@ -111,6 +113,7 @@ CL	-2710-10927	Pacific/Easter	Easter Island
 CM	+0403+00942	Africa/Douala
 CN	+4545+12641	Asia/Harbin	north Manchuria
 CN	+3114+12128	Asia/Shanghai	China coast
+CN	+2217+11409	Asia/Hong_Kong	Hong Kong
 CN	+2934+10635	Asia/Chungking	China mountains
 CN	+4348+08735	Asia/Urumqi	Tibet & Xinjiang
 CN	+3929+07559	Asia/Kashgar	Eastern Turkestan
@@ -167,7 +170,6 @@ GT	+1438-09031	America/Guatemala
 GU	+1328+14445	Pacific/Guam
 GW	+1151-01535	Africa/Bissau
 GY	+0648-05810	America/Guyana
-HK	+2217+11409	Asia/Hong_Kong
 HN	+1406-08713	America/Tegucigalpa
 HR	+4548+01558	Europe/Zagreb
 HT	+1832-07220	America/Port-au-Prince
@@ -366,6 +368,4 @@ YT	-1247+04514	Indian/Mayotte
 YU	+4450+02030	Europe/Belgrade
 ZA	-2615+02800	Africa/Johannesburg
 ZM	-1525+02817	Africa/Lusaka
-ZR	-0418+01518	Africa/Kinshasa	west Zaire
-ZR	-1140+02728	Africa/Lubumbashi	east Zaire
 ZW	-1750+03103	Africa/Harare

@@ -298,8 +298,7 @@ extern int matherr __P ((struct exception *__exc));
 
 
 /* Get machine-dependent inline versions (if there are any).  */
-#if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
-    || defined __LIBC_M81_MATH_INLINES
+#ifdef __OPTIMIZE__
 # include <bits/mathinline.h>
 #endif
 
@@ -307,8 +306,9 @@ extern int matherr __P ((struct exception *__exc));
 #if __USE_ISOC9X
 /* ISO C 9X defines some macros to compare number while taking care
    for unordered numbers.  Since many FPUs provide special
-   instructions to support these and these tests are defined in
-   <bits/mathinline.h>, we define the macros at this late point.  */
+   instructions to support these operations and these tests are
+   defined in <bits/mathinline.h>, we define the generic macros at
+   this late point.  */
 
 /* Return nonzero value if X is greater than Y.  */
 # ifndef isgreater

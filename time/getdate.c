@@ -160,7 +160,7 @@ __getdate_r (const char *string, struct tm *tp)
   /* Close template file.  */
   fclose (fp);
 
-  if (result == NULL)
+  if (result == NULL || *result != '\0')
     return 7;
 
   /* Get current time.  */
@@ -243,5 +243,11 @@ getdate (const char *string)
   static struct tm tmbuf;
   int errval = __getdate_r (string, &tmbuf);
 
-  return errval == 0 ? &tmbuf : NULL;
+  if (errval != 0)
+    {
+      getdate_err = errval;
+      return NULL;
+    }
+
+  return &tmbuf;
 }

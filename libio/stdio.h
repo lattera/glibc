@@ -242,7 +242,7 @@ vprintf (const char *__restrict __fmt, _G_va_list __arg)
 }
 #endif /* Optimizing.  */
 
-#ifdef	__USE_GNU
+#if defined __USE_GNU || defined __USE_ISOC9X
 /* Maximum chars of output to write in MAXLEN.  */
 extern int __snprintf __P ((char *__s, size_t __maxlen,
 			    __const char *__format, ...));
@@ -253,7 +253,9 @@ extern int __vsnprintf __P ((char *__s, size_t __maxlen,
 			     __const char *__format, _G_va_list __arg));
 extern int vsnprintf __P ((char *__s, size_t __maxlen,
 			   __const char *__format, _G_va_list __arg));
+#endif
 
+#ifdef __USE_GNU
 /* Write formatted output to a string dynamically allocated with `malloc'.
    Store the address of the string in *PTR.  */
 extern int vasprintf __P ((char **__ptr, __const char *__f,

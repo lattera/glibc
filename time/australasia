@@ -1,4 +1,4 @@
-# @(#)australasia	7.33
+# @(#)australasia	7.34
 # This file also includes Pacific islands.
 
 # Notes are at the end of this file
@@ -767,6 +767,12 @@ Zone	Pacific/Wallis	12:15:20 -	LMT	1901
 # From Bradley White (1995-05-20):
 # Prem Bob Carr announced NSW will fall into line with other E states
 # and SA and continue daylight savings to the last Sun in Mar.
+
+# From Eric Ulevik <eau@ozemail.com.au> (1997-06-12):
+# The NSW state government in Australia is talking about bringing the start
+# of daylight savings time forward in the year 2000 to cater for the Olympics.
+# This is going to take some time to be negotiated, because the plan is to do
+# this in multiple states due to soccer games (which are not just in Sydney).
 
 # Yancowinna
 

@@ -23,6 +23,8 @@ export subdir := $(subdir)
 
 # We need GNU awk for the xtract-typefun script.
 GAWK = gawk
+# Allow override
+INSTALL_INFO = install-info
 
 .PHONY: all dvi info
 all: dvi info
@@ -142,10 +144,10 @@ realclean: distclean
 .PHONY: install subdir_install installdirs install-data
 install-data subdir_install: install
 install: $(inst_infodir)/libc.info dir-add.info
-	@if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	@if $(SHELL) -c '$(INSTALL_INFO) --version' >/dev/null 2>&1; then \
 	  test -f $(inst_infodir)/dir || cp dir $(inst_infodir);\
-	  install-info --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
-	  install-info --info-dir=$(inst_infodir) dir-add.info;\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) $(inst_infodir)/libc.info;\
+	 $(INSTALL_INFO) --info-dir=$(inst_infodir) dir-add.info;\
 	else : ; fi
 # Catchall implicit rule for other installation targets from the parent.
 install-%: ;
