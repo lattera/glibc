@@ -158,12 +158,11 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
       /* One less thread.  Decrement the counter.  If it is zero we
 	 terminate the entire process.  */
       result = 0;
-      int *const ptr;
 #  ifdef SHARED
-      ptr = __libc_pthread_functions.ptr_nthreads;
+      int *const ptr = __libc_pthread_functions.ptr_nthreads;
 #  else
       extern int __nptl_nthreads __attribute ((weak));
-      ptr = &__nptl_nthreads;
+      int *const ptr = &__nptl_nthreads;
 #  endif
 
       if (! atomic_decrement_and_test (ptr))

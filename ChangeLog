@@ -1,5 +1,8 @@
 2003-03-02  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/libc-start.c (__libc_start_main): Don't assign const
+	variable.
+
 	* sysdeps/powerpc/powerpc64/dl-machine.h (elf_machine_fixup_plt):
 	Don't use weak_extern for dl_rtld_map.  Instead check only if [SHARED].
 	(elf_machine_rela): Clean up.

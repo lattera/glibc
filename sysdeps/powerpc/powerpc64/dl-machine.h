@@ -610,14 +610,14 @@ elf_machine_rela (struct link_map *map,
 # endif
       return;
 
-    case R_PPC_DTPREL64:
+    case R_PPC64_DTPREL64:
       /* During relocation all TLS symbols are defined and used.
 	 Therefore the offset is already correct.  */
 # ifndef RTLD_BOOTSTRAP
       *reloc_addr = TLS_DTPREL_VALUE (sym, reloc);
 # endif
       break;
-    case R_PPC_TPREL64:
+    case R_PPC64_TPREL64:
 # ifndef RTLD_BOOTSTRAP
       if (sym_map)
 	{
