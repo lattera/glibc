@@ -243,7 +243,8 @@ _dl_start_user:
 	/* Jump to the user's entry point.  */
 	mov	$9, $27
 	jmp	($9)
-	.end _dl_start_user");
+	.end _dl_start_user
+.previous");
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */

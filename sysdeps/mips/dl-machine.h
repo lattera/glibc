@@ -423,6 +423,7 @@ _dl_runtime_resolve:\n							      \
 	move	$25, $2\n						      \
 	jr	$25\n							      \
 	.end	_dl_runtime_resolve\n					      \
+	.previous\n							      \
 ");
 
 /* Mask identifying addresses reserved for the user program,
@@ -519,6 +520,7 @@ _dl_start_user:\n\
 	lw $7, 12($29)\n\
 	jr $25\n"\
 _RTLD_EPILOGUE(ENTRY_POINT)\
+	"\n.previous"\
 );
 
 /* The MIPS never uses Elfxx_Rela relocations.  */

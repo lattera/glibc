@@ -56,20 +56,11 @@ static inline Elf32_Addr
 elf_machine_load_address (void)
 {
   Elf32_Addr addr;
-  asm (".Lhere:	lea .Lhere(%%pc), %0\n"
-       "	sub.l %#.Lhere, %0"
+  asm ("1: lea 1b(%%pc), %0\n"
+       "   sub.l 1b@GOTPC(%%pc), %0"
        : "=a" (addr));
   return addr;
 }
-
-/* The `subl' insn above will contain an R_68K_RELATIVE relocation
-   entry intended to insert the run-time address of the label `.Lhere'.
-   This will be the first relocation in the text of the dynamic
-   linker; we skip it to avoid trying to modify read-only text in this
-   early stage.  */
-#define ELF_MACHINE_BEFORE_RTLD_RELOC(dynamic_info) \
-  ((dynamic_info)[DT_RELA]->d_un.d_ptr += sizeof (Elf32_Rela), \
-   (dynamic_info)[DT_RELASZ]->d_un.d_val -= sizeof (Elf32_Rela))
 
 
 /* Set up the loaded object described by L so its unrelocated PLT
@@ -157,13 +148,16 @@ asm (TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup) \
    its return value is the user program's entry point.  */
 
 #define RTLD_START asm ("\
-.text
-.globl _start
-.globl _dl_start_user
+	.text
+	.globl _start
+	.type _start,@function
 _start:
 	move.l %sp, -(%sp)
 	jbsr _dl_start
 	addq.l #4, %sp
+
+	.globl _dl_start_user
+	.type _dl_start_user,@function
 _dl_start_user:
 	| Save the user entry point address in %a4.
 	move.l %d0, %a4
@@ -209,7 +203,9 @@ _dl_start_user:
 	| Initialize %fp with the stack pointer.
 	move.l %sp, %fp
 	| Jump to the user's entry point.
-	jmp (%a4)");
+	jmp (%a4)
+	.size _dl_start_user, . - _dl_start_user
+	.previous");
 
 /* Nonzero iff TYPE describes a relocation that should
    skip the executable when looking up the symbol value.  */
