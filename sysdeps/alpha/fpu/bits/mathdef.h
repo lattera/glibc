@@ -61,10 +61,34 @@ typedef double double_t;
 # define FP_ILOGB0     (-2147483647)
 # define FP_ILOGBNAN   (2147483647)
 
-#endif	/* ISO C99 */
+#endif	/* ISO C99 && MATH_H */
 
 #ifndef __NO_LONG_DOUBLE_MATH
 /* Signal that we do not really have a `long double'.  The disables the
    declaration of all the `long double' function variants.  */
 # define __NO_LONG_DOUBLE_MATH	1
 #endif
+
+#if defined _COMPLEX_H && !defined _COMPLEX_H_MATHDEF
+# define _COMPLEX_H_MATHDEF 1
+# if defined(__GNUC__) && !__GNUC_PREREQ(3,4)
+
+/* Due to an ABI change, we need to remap the complex float symbols.  */
+#  define _Mdouble_		float
+#  define __MATHCALL(function, args) \
+    __MATHDECL (_Complex float, function, args)
+#  define __MATHDECL(type, function, args) \
+    __MATHDECL_1(type, function##f, args, __c1_##function##f); \
+    __MATHDECL_1(type, __##function##f, args, __c1_##function##f)
+#  define __MATHDECL_1(type, function, args, alias) \
+    extern type function args __asm__(#alias) __THROW
+
+#  include <bits/cmathcalls.h>
+
+#  undef _Mdouble_
+#  undef __MATHCALL
+#  undef __MATHDECL
+#  undef __MATHDECL_1
+
+# endif /* GNUC before 3.4 */
+#endif /* COMPLEX_H */

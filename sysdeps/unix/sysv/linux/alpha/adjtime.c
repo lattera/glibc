@@ -60,6 +60,7 @@ struct timex32 {
 #define TIMEX		timex32
 #define ADJTIME		__adjtime_tv32
 #define ADJTIMEX(x)	INLINE_SYSCALL (old_adjtimex, 1, x)
+#define ADJTIMEX32(x)	INLINE_SYSCALL (old_adjtimex, 1, x)
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
 #define LINKAGE
 #else
@@ -180,7 +181,7 @@ __adjtimex_tv64 (struct timex *tx)
       tx32.errcnt = tx->errcnt;
       tx32.stbcnt = tx->stbcnt;
 
-      ret = __adjtimex_tv32 (&tx32);
+      ret = ADJTIMEX32 (&tx32);
       if (ret == 0)
 	{
 	  tx->modes = tx32.modes;

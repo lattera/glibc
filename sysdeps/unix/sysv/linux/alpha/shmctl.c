@@ -116,7 +116,7 @@ __new_shmctl (int shmid, int cmd, struct shmid_ds *buf)
       }
     else if (result != -1 && cmd == IPC_INFO)
       {
-	struct __old_shminfo *oldi = (struct __old_shminfo *)&old;
+	struct __old_shminfo *oldi = (void *)&old;
 	struct shminfo *i = (struct shminfo *)buf;
 
 	memset(i, 0, sizeof(*i));

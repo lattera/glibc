@@ -78,7 +78,7 @@ typedef uintmax_t uatomic_max_t;
 	  [__cmp] "=&r" (__cmp),					\
 	  [__addr64] "=&r" (__addr64)					\
 	: [__addr8] "r" (mem),						\
-	  [__old] "Ir" ((uint64_t)(uint8_t)(old)),			\
+	  [__old] "Ir" ((uint64_t)(uint8_t)(uint64_t)(old)),		\
 	  [__new] "r" (new)						\
 	: "memory");							\
 })
@@ -106,7 +106,7 @@ typedef uintmax_t uatomic_max_t;
 	  [__cmp] "=&r" (__cmp),					\
 	  [__addr64] "=&r" (__addr64)					\
 	: [__addr16] "r" (mem),						\
-	  [__old] "Ir" ((uint64_t)(uint16_t)(old)),			\
+	  [__old] "Ir" ((uint64_t)(uint16_t)(uint64_t)(old)),		\
 	  [__new] "r" (new)						\
 	: "memory");							\
 })
@@ -126,7 +126,7 @@ typedef uintmax_t uatomic_max_t;
 	: [__prev] "=&r" (__prev),					\
 	  [__cmp] "=&r" (__cmp)						\
 	: [__mem] "m" (*(mem)),						\
-	  [__old] "Ir" ((uint64_t)(atomic32_t)(old)),			\
+	  [__old] "Ir" ((uint64_t)(atomic32_t)(uint64_t)(old)),		\
 	  [__new] "Ir" (new)						\
 	: "memory");							\
 })
@@ -146,7 +146,7 @@ typedef uintmax_t uatomic_max_t;
 	: [__prev] "=&r" (__prev),					\
 	  [__cmp] "=&r" (__cmp)						\
 	: [__mem] "m" (*(mem)),						\
-	  [__old] "Ir" (old),						\
+	  [__old] "Ir" ((uint64_t)(old)),				\
 	  [__new] "Ir" (new)						\
 	: "memory");							\
 })
@@ -179,28 +179,28 @@ typedef uintmax_t uatomic_max_t;
 #define __arch_compare_and_exchange_val_8_int(mem, new, old, mb1, mb2)	\
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_8_int(mem, new, old, mb1, mb2);	\
-   __prev; })
+   (typeof (*mem))__prev; })
 
 #define __arch_compare_and_exchange_val_16_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_16_int(mem, new, old, mb1, mb2);	\
-   __prev; })
+   (typeof (*mem))__prev; })
 
 #define __arch_compare_and_exchange_val_32_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_32_int(mem, new, old, mb1, mb2);	\
-   __prev; })
+   (typeof (*mem))__prev; })
 
 #define __arch_compare_and_exchange_val_64_int(mem, new, old, mb1, mb2) \
 ({ unsigned long __prev; int __cmp;					\
    __arch_compare_and_exchange_xxx_64_int(mem, new, old, mb1, mb2);	\
-   __prev; })
+   (typeof (*mem))__prev; })
 
 /* Compare and exchange with "acquire" semantics, ie barrier after.  */
 
 #define atomic_compare_and_exchange_bool_acq(mem, new, old)	\
-  __atomic_val_bysize (__arch_compare_and_exchange_bool, int,	\
-		       mem, new, old, "", __MB)
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
+		        mem, new, old, "", __MB)
 
 #define atomic_compare_and_exchange_val_acq(mem, new, old)	\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
@@ -209,8 +209,8 @@ typedef uintmax_t uatomic_max_t;
 /* Compare and exchange with "release" semantics, ie barrier before.  */
 
 #define atomic_compare_and_exchange_bool_rel(mem, new, old)	\
-  __atomic_val_bysize (__arch_compare_and_exchange_bool, int,	\
-		       mem, new, old, __MB, "")
+  __atomic_bool_bysize (__arch_compare_and_exchange_bool, int,	\
+		        mem, new, old, __MB, "")
 
 #define atomic_compare_and_exchange_val_rel(mem, new, old)	\
   __atomic_val_bysize (__arch_compare_and_exchange_val, int,	\
