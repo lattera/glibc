@@ -347,7 +347,9 @@ check_duplicate (struct linereader *ldfile, struct locale_collate_t *collate,
       return 1;
     }
 
-  if (find_entry (&repertoire->char_table, symbol, symbol_len, &ignore) == 0)
+  if (repertoire != NULL
+      && (find_entry (&repertoire->char_table, symbol, symbol_len, &ignore)
+	  == 0))
     {
       lr_error (ldfile, _("`%.*s' already defined in repertoire"),
 		(int) symbol_len, symbol);

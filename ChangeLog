@@ -1,5 +1,8 @@
 2000-04-01  Ulrich Drepper  <drepper@redhat.com>
 
+	* locale/programs/ld-collate.c (check_duplicate): Allow repertoire
+	to be missing.
+
 	* sysdeps/unix/sysv/linux/init-first.c (init): Add code from
 	former init-first.h.  Initialize __libc_multiple_libcs.
 
