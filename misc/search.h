@@ -51,7 +51,7 @@ extern void remque __P ((void *__elem));
 /* For use with hsearch(3).  */
 #ifndef __COMPAR_FN_T
 # define __COMPAR_FN_T
-typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
+typedef int (*__compar_fn_t) __PMT ((__const __ptr_t, __const __ptr_t));
 
 # ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
@@ -147,9 +147,9 @@ extern void *tdelete __PMT ((__const void *__key, void **__rootp,
 
 #ifndef __ACTION_FN_T
 # define __ACTION_FN_T
-typedef void (*__action_fn_t) __P ((__const void *__nodep,
-				    VISIT __value,
-				    int __level));
+typedef void (*__action_fn_t) __PMT ((__const void *__nodep,
+				      VISIT __value,
+				      int __level));
 #endif
 
 /* Walk through the whole tree and call the ACTION callback for every node

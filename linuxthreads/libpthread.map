@@ -8,11 +8,13 @@ GLIBC_2.0 {
     __libc_internal_tsd_get; __libc_internal_tsd_set;
 
     # Overwritten libc functions.
-    close; connect; fcntl; fork; fsync; lseek; msync; nanosleep; open;
-    pause; raise; read; recv; recvfrom; recvmsg; send; sendmsg; sendto;
-    system; tcdrain; wait; waitpid; write;
+    accept; close; connect; fcntl; fork; fsync; longjmp; lseek; msync;
+    nanosleep; open; pause; raise; read; recv; recvfrom; recvmsg; send;
+    sendmsg; sendto; sigaction; siglongjmp; system; tcdrain; wait;
+    waitpid; write;
     __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
     __write;
+    _IO_flockfile; _IO_ftrylockfile; _IO_funlockfile;
 
     # POSIX.1c extensions to libc.
     flockfile; funlockfile; ftrylockfile;
@@ -43,11 +45,11 @@ GLIBC_2.0 {
     sigwait;
 
     # Protected names for functions used in other shared objects.
-    __pthread_getspecific; __pthread_initialize; __pthread_mutex_destroy;
-    __pthread_mutex_init; __pthread_mutex_lock; __pthread_mutex_trylock;
-    __pthread_mutex_unlock; __pthread_mutexattr_destroy;
-    __pthread_mutexattr_init; __pthread_mutexattr_setkind_np;
-    __pthread_setspecific;
+    __pthread_atfork; __pthread_initialize; __pthread_getspecific;
+    __pthread_key_create; __pthread_mutex_destroy; __pthread_mutex_init;
+    __pthread_mutex_lock; __pthread_mutex_trylock; __pthread_mutex_unlock;
+    __pthread_mutexattr_destroy; __pthread_mutexattr_init;
+    __pthread_mutexattr_setkind_np; __pthread_once; __pthread_setspecific;
 
     # The error functions.
     __errno_location; __h_errno_location;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Mark Kettenis <kettenis@phys.uva.nl>, 1997.
 
@@ -28,6 +28,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <string.h>
+#include <sys/param.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
@@ -270,6 +271,7 @@ void handle_requests (void)
   fd_set read_fd_set;
   fd_set write_fd_set;
   int fd;
+  int maxfd;  /* Highest used fd to optimize select/loop.  */
 
   /* Initialize the set of active sockets.  */
   FD_ZERO (&active_read_fd_set);
@@ -277,16 +279,18 @@ void handle_requests (void)
   FD_SET (rw_sock, &active_read_fd_set);
   FD_SET (ro_sock, &active_read_fd_set);
 
+  maxfd = MAX (rw_sock, ro_sock);
+
   while (1)
     {
       /* Block until input arrives on one or more active sockets.  */
       read_fd_set = active_read_fd_set;
       write_fd_set = active_write_fd_set;
-      if (select (FD_SETSIZE, &read_fd_set, &write_fd_set, NULL, NULL) < 0)
+      if (select (maxfd + 1, &read_fd_set, &write_fd_set, NULL, NULL) < 0)
 	error (EXIT_FAILURE, errno, _("cannot get input on sockets"));
 
       /* Service all the sockets with input pending.  */
-      for (fd = 0; fd < FD_SETSIZE; fd++)
+      for (fd = 0; fd <= maxfd; ++fd)
 	{
 	  if (FD_ISSET (fd, &read_fd_set))
 	    {
@@ -299,6 +303,7 @@ void handle_requests (void)
 		    error (0, errno, _("cannot accept connection"));
 
 		  FD_SET (connection->sock, &active_read_fd_set);
+		  maxfd = MAX (maxfd, connection->sock);
 		}
 	      else
 		{
@@ -334,6 +339,14 @@ void handle_requests (void)
 	      if (connection->write_ptr == connection->write_base)
 		FD_CLR (fd, &active_write_fd_set);
 	    }
+	}
+
+      /* Check if maxfd can be lowered.  */
+      for (; maxfd >= 0; --maxfd)
+	{
+	  if (FD_ISSET (maxfd, &active_read_fd_set)
+	      || FD_ISSET (maxfd, &active_write_fd_set))
+	    break;
 	}
     }
 }

@@ -56,13 +56,13 @@ struct gconv_loaded_object;
 
 
 /* Type of a conversion function.  */
-typedef int (*gconv_fct) __P ((struct gconv_step *,
-			       struct gconv_step_data *, __const char **,
-			       __const char *, size_t *, int));
+typedef int (*gconv_fct) __PMT ((struct gconv_step *,
+				 struct gconv_step_data *, __const char **,
+				 __const char *, size_t *, int));
 
 /* Constructor and destructor for local data for conversion step.  */
-typedef int (*gconv_init_fct) __P ((struct gconv_step *));
-typedef void (*gconv_end_fct) __P ((struct gconv_step *));
+typedef int (*gconv_init_fct) __PMT ((struct gconv_step *));
+typedef void (*gconv_end_fct) __PMT ((struct gconv_step *));
 
 
 /* Description of a conversion step.  */

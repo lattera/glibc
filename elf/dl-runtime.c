@@ -64,7 +64,11 @@ _dl_object_relocation_scope (struct link_map *l)
 	 dependency tree that first caused this object to be loaded.  */
       while (l->l_loader)
 	l = l->l_loader;
-      *_dl_global_scope_end = l;
+      /* There is no point in searching the same list twice.  This isn't
+	 guaranteed to always find all duplicates if new objects are added
+	 to the global scope, but is good enough most of the time.  */
+      if (_dl_global_scope[2] != l)
+	*_dl_global_scope_end = l;
       return &_dl_global_scope[2];
     }
 }

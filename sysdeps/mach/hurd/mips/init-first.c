@@ -1,5 +1,5 @@
 /* Initialization code run first thing by the ELF startup code.  For Mips/Hurd.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,9 +38,6 @@ int __libc_multiple_libcs = 1;
 
 int __libc_argc;
 char **__libc_argv;
-
-/* We often need the PID.  Cache this value.  */
-pid_t __libc_pid;
 
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));

@@ -100,19 +100,25 @@ typedef struct
 enum
 {
   PTHREAD_CREATE_JOINABLE,
+#define PTHREAD_CREATE_JOINABLE	PTHREAD_CREATE_JOINABLE
   PTHREAD_CREATE_DETACHED
+#define PTHREAD_CREATE_DETACHED	PTHREAD_CREATE_DETACHED
 };
 
 enum
 {
   PTHREAD_INHERIT_SCHED,
+#define PTHREAD_INHERIT_SCHED	PTHREAD_INHERIT_SCHED
   PTHREAD_EXPLICIT_SCHED
+#define PTHREAD_EXPLICIT_SCHED	PTHREAD_EXPLICIT_SCHED
 };
 
 enum
 {
   PTHREAD_SCOPE_SYSTEM,
+#define PTHREAD_SCOPE_SYSTEM	PTHREAD_SCOPE_SYSTEM
   PTHREAD_SCOPE_PROCESS
+#define PTHREAD_SCOPE_PROCESS	PTHREAD_SCOPE_PROCESS
 };
 
 typedef struct
@@ -156,7 +162,9 @@ typedef struct
 enum
 {
   PTHREAD_PROCESS_PRIVATE,
+# define PTHREAD_PROCESS_PRIVATE	PTHREAD_PROCESS_PRIVATE
   PTHREAD_PROCESS_SHARED
+# define PTHREAD_PROCESS_SHARED		PTHREAD_PROCESS_SHARED
 };
 
 enum
@@ -187,7 +195,7 @@ typedef int pthread_once_t;
 
 struct _pthread_cleanup_buffer
 {
-  void (*routine) __P ((void *));	/* Function to call.  */
+  void (*routine) __PMT ((void *));	/* Function to call.  */
   void *arg;				/* Its argument.  */
   int canceltype;			/* Saved cancellation type. */
   struct _pthread_cleanup_buffer *prev;	/* Chaining of cleanup functions.  */
@@ -195,8 +203,20 @@ struct _pthread_cleanup_buffer
 
 /* Cancellation */
 
-enum { PTHREAD_CANCEL_ENABLE, PTHREAD_CANCEL_DISABLE };
-enum { PTHREAD_CANCEL_DEFERRED, PTHREAD_CANCEL_ASYNCHRONOUS };
+enum
+{
+  PTHREAD_CANCEL_ENABLE,
+#define PTHREAD_CANCEL_ENABLE	PTHREAD_CANCEL_ENABLE
+  PTHREAD_CANCEL_DISABLE
+#define PTHREAD_CANCEL_DISABLE	PTHREAD_CANCEL_DISABLE
+};
+enum
+{
+  PTHREAD_CANCEL_DEFERRED,
+#define PTHREAD_CANCEL_DEFERRED	PTHREAD_CANCEL_DEFERRED
+  PTHREAD_CANCEL_ASYNCHRONOUS
+#define PTHREAD_CANCEL_ASYNCHRONOUS	PTHREAD_CANCEL_ASYNCHRONOUS
+};
 #define PTHREAD_CANCELED ((void *) -1)
 
 

@@ -41,9 +41,6 @@ int __libc_multiple_libcs = 1;
 extern int __libc_argc;
 extern char **__libc_argv;
 
-/* We often need the PID.  Cache this value.  */
-pid_t __libc_pid = 0xf00baa;
-
 void *(*_cthread_init_routine) (void); /* Returns new SP to use.  */
 void (*_cthread_exit_routine) (int status) __attribute__ ((__noreturn__));
 

@@ -86,7 +86,7 @@ struct _pthread_descr_struct {
   struct pthread_start_args p_start_args; /* arguments for thread creation */
   void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE]; /* thread-specific data */
   void * p_libc_specific[_LIBC_TSD_KEY_N]; /* thread-specific data for libc */
-  int p_userstack;		/* nonzero if the user provided the thread */
+  int p_userstack;		/* nonzero if the user provided the stack */
   void *p_guardaddr;		/* address of guard area or NULL */
   size_t p_guardsize;		/* size of guard area */
 };
@@ -117,7 +117,7 @@ struct pthread_request {
       sigset_t mask;            /*   signal mask */
     } create;
     struct {                    /* For REQ_FREE: */
-      pthread_descr thread;     /*   descriptor of thread to free */
+      pthread_t thread_id;      /*   identifier of thread to free */
     } free;
     struct {                    /* For REQ_PROCESS_EXIT: */
       int code;                 /*   exit status */
@@ -171,7 +171,7 @@ extern char *__pthread_initial_thread_bos;
 extern int __pthread_nonstandard_stacks;
 
 /* File descriptor for sending requests to the thread manager.
-   Initially -1, meaning that pthread_initialize must be called. */
+   Initially -1, meaning that __pthread_initialize_manager must be called. */
 
 extern int __pthread_manager_request;
 

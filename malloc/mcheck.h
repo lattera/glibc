@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -39,7 +39,7 @@ enum mcheck_status
    before `malloc' is ever called.  ABORTFUNC is called with an error code
    (see enum above) when an inconsistency is detected.  If ABORTFUNC is
    null, the standard function prints on stderr and then calls `abort'.  */
-extern int mcheck __P ((void (*__abortfunc) __P ((enum mcheck_status))));
+extern int mcheck __P ((void (*__abortfunc) (enum mcheck_status)));
 
 /* Check for aberrations in a particular malloc'd block.  You must have
    called `mcheck' already.  These are the same checks that `mcheck' does

@@ -26,6 +26,7 @@ extern "C" {
 #if defined __cplusplus || (defined __STDC__ && __STDC__) || defined WINDOWS32
 # undef	__P
 # define __P(protos)	protos
+# define __PMT(protos)	protos
 # define __ptr_t	void *
 # if !defined __GNUC__ || __GNUC__ < 2
 #  undef __const
@@ -34,6 +35,7 @@ extern "C" {
 #else /* Not C++ or ANSI C.  */
 # undef	__P
 # define __P(protos)	()
+# define __PMT(protos)	()
 # undef	__const
 # define __const
 # define __ptr_t	char *
@@ -99,11 +101,11 @@ typedef struct
 
     /* If the GLOB_ALTDIRFUNC flag is set, the following functions
        are used instead of the normal file access functions.  */
-    void (*gl_closedir) __P ((void *));
-    struct dirent *(*gl_readdir) __P ((void *));
-    __ptr_t (*gl_opendir) __P ((__const char *));
-    int (*gl_lstat) __P ((__const char *, struct stat *));
-    int (*gl_stat) __P ((__const char *, struct stat *));
+    void (*gl_closedir) __PMT ((void *));
+    struct dirent *(*gl_readdir) __PMT ((void *));
+    __ptr_t (*gl_opendir) __PMT ((__const char *));
+    int (*gl_lstat) __PMT ((__const char *, struct stat *));
+    int (*gl_stat) __PMT ((__const char *, struct stat *));
   } glob_t;
 
 /* Do glob searching for PATTERN, placing results in PGLOB.

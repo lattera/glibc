@@ -41,13 +41,10 @@ __aio_sigqueue (sig, val)
   info.si_errno = 0;
   info.si_code = SI_ASYNCIO;
 
-  if (__libc_pid ==0xf00baa)
-    __libc_pid = __getpid ();
-  info.si_pid = __libc_pid;
-
+  info.si_pid = getpid ();
   info.si_uid = getuid ();
 
   info.si_value = val;
 
-  return __syscall_rt_sigqueueinfo (__libc_pid, sig, &info);
+  return __syscall_rt_sigqueueinfo (info.si_pid, sig, &info);
 }

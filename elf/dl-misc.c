@@ -106,11 +106,8 @@ _dl_debug_message (int new_line, const char *msg, ...)
 {
   /* We print the strings we get passed one after the other but start all
      lines using the current PID.  */
-  static int pid;
+  int pid = 0;
   va_list ap;
-
-  if (pid == 0)
-    pid = __getpid ();
 
   va_start (ap, msg);
   do
@@ -127,6 +124,8 @@ _dl_debug_message (int new_line, const char *msg, ...)
 	  {
 	    char buf[7];
 	    char *p;
+	    if (pid == 0)
+	      pid = __getpid ();
 	    assert (pid >= 0 && pid < 100000);
 	    p = _itoa_word (pid, &buf[5], 10, 0);
 	    while (p > buf)

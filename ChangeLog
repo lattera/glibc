@@ -1,3 +1,60 @@
+1998-06-29 12:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* argp/argp.h: Use __PMT instead of __P for function pointer.
+	* iconv/gconv.h: Likewise.
+	* io/fts.h: Likewise.
+	* io/ftw.h: Likewise.
+	* libio/libio.h: Likewise.
+	* malloc/mcheck.h: Likewise.
+	* misc/search.h: Likewise.
+	* posix/glob.h: Likewise.
+	* resolv/resolv.h: Likewise.
+	* signal/signal.h: Likewise.
+	* stdlib/stdlib.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/siginfo.h: Likewise.
+
+1998-06-26  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig (CPPFLAGS): Use $($(subdir)-CPPFLAGS) only once.
+
+1998-06-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* posix/wordexp.c (parse_param): Fix memory leak.
+
+1998-06-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libc.map: Export _IO_ftrylockfile.
+
+1998-06-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Use get[pu]id instead of
+	__get[pu]id.
+
+1998-06-28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-misc.c (_dl_debug_message): Don't cache the pid.
+
+	* elf/dl-runtime.c (_dl_object_relocation_scope): Avoid adding the
+	same search list twice.
+
+1998-06-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* login/programs/utmpd.c (handle_requests): Set and use maximal fd
+	used to optimize loop/select.
+
+1998-06-24  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/init-first.c: Don't define __libc_pid.
+	* sysdeps/unix/sysv/linux/init-first.c: Likewise.
+	* sysdeps/mach/hurd/i386/init-first.c: Likewise.
+	* sysdeps/mach/hurd/mips/init-first.c: Likewise.
+	* sysdeps/arm/init-first.c: Likewise.
+	* posix/getopt_init.c: Don't use __libc_pid.
+	* sysdeps/unix/sysv/linux/aio_sigqueue.c: Likewise.
+	* sysdeps/unix/sysv/linux/sigqueue.c: Likewise.
+	* libc.map: Remove __libc_uid and __libc_pid.
+
 1998-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* sunrpc/rtime.c (rtime): Use poll instead of select.

@@ -39,9 +39,15 @@ typedef int error_t;
 
 #ifndef __P
 # if (defined __STDC__ && __STDC__) || defined __cplusplus
-#  define __P(args)	args
+#  if defined __GNUC__ && defined __cplusplus && __GNUC_MINOR__ >= 8
+#   define __P(args)	args throw ()
+#  else
+#   define __P(args)	args
+#  endif
+#  define __PMT(args)	args
 # else
 #  define __P(args)	()
+#  define __PMT(args)	()
 # endif
 #endif
 
@@ -124,7 +130,8 @@ struct argp_state;		/* " */
 struct argp_child;		/* " */
 
 /* The type of a pointer to an argp parsing function.  */
-typedef error_t (*argp_parser_t)(int key, char *arg, struct argp_state *state);
+typedef error_t (*argp_parser_t) __PMT ((int key, char *arg,
+					 struct argp_state *state));
 
 /* What to return for unrecognized keys.  For special ARGP_KEY_ keys, such
    returns will simply be ignored.  For user keys, this error will be turned
@@ -237,7 +244,8 @@ struct argp
      has been done, so if any of the replacement text also needs translation,
      that should be done by the filter function.  INPUT is either the input
      supplied to argp_parse, or NULL, if argp_help was called directly.  */
-  char *(*help_filter)(int __key, __const char *__text, void *__input);
+  char *(*help_filter) __PMT ((int __key, __const char *__text,
+			       void *__input));
 
   /* If non-zero the strings used in the argp library are translated using
      the domain described by this string.  Otherwise the currently installed
@@ -400,8 +408,8 @@ extern __const char *argp_program_version;
    calls this function with a stream to print the version to and a pointer to
    the current parsing state, and then exits (unless the ARGP_NO_EXIT flag is
    used).  This variable takes precedent over ARGP_PROGRAM_VERSION.  */
-extern void (*argp_program_version_hook) __P ((FILE *__stream,
-					       struct argp_state *__state));
+extern void (*argp_program_version_hook) __PMT ((FILE *__stream,
+						 struct argp_state *__state));
 
 /* If defined or set by the user program, it should point to string that is
    the bug-reporting address for the program.  It will be printed by

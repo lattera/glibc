@@ -86,21 +86,22 @@ struct FTW
 
 
 /* Convenient types for callback functions.  */
-typedef int (*__ftw_func_t) __P ((__const char *__filename,
-				  __const struct stat *__status, int __flag));
-#ifdef __USE_LARGEFILE64
-typedef int (*__ftw64_func_t) __P ((__const char *__filename,
-				    __const struct stat64 *__status,
+typedef int (*__ftw_func_t) __PMT ((__const char *__filename,
+				    __const struct stat *__status,
 				    int __flag));
+#ifdef __USE_LARGEFILE64
+typedef int (*__ftw64_func_t) __PMT ((__const char *__filename,
+				      __const struct stat64 *__status,
+				      int __flag));
 #endif
 #ifdef __USE_XOPEN_EXTENDED
-typedef int (*__nftw_func_t) __P ((__const char *__filename,
-				   __const struct stat *__status, int __flag,
-				   struct FTW *__info));
+typedef int (*__nftw_func_t) __PMT ((__const char *__filename,
+				     __const struct stat *__status, int __flag,
+				     struct FTW *__info));
 # ifdef __USE_LARGEFILE64
-typedef int (*__nftw64_func_t) __P ((__const char *__filename,
-				     __const struct stat64 *__status,
-				     int __flag, struct FTW *__info));
+typedef int (*__nftw64_func_t) __PMT ((__const char *__filename,
+				       __const struct stat64 *__status,
+				       int __flag, struct FTW *__info));
 # endif
 #endif
 

@@ -5,7 +5,7 @@ and using glibc.  Please make sure you read this before sending questions or
 bug reports to the maintainers.
 
 The GNU C library is very complex.  The installation process has not been
-completely automated; there are too many variables. You can do substantial
+completely automated; there are too many variables.  You can do substantial
 damage to your system by installing the library incorrectly.  Make sure you
 understand what you are undertaking before you begin.
 
@@ -251,10 +251,10 @@ any other link path.
 ??	What's the problem with configure --enable-omitfp?
 
 {AJ} When --enable-omitfp is set the libraries are built without frame
-pointers. Some compilers produce buggy code for this model and therefore we
+pointers.  Some compilers produce buggy code for this model and therefore we
 don't advise using it at the moment.
 
-If you use --enable-omitfp, you're on your own. If you encounter problems
+If you use --enable-omitfp, you're on your own.  If you encounter problems
 with a library that was build this way, we advise you to rebuild the library
 without --enable-omitfp.  If the problem vanishes consider tracking the
 problem down and report it as compiler failure.
@@ -859,11 +859,11 @@ siginterrupt().
 	functions.  Why?
 
 {AJ} glibc 2.1 has special string functions that are faster than the normal
-library functions. Some of the functions are additionally implemented as
+library functions.  Some of the functions are additionally implemented as
 inline functions and others as macros.
 
 The optimized string functions are only used when compiling with
-optimizations (-O1 or higher). The behavior can be changed with two feature
+optimizations (-O1 or higher).  The behavior can be changed with two feature
 macros:
 
 * __NO_STRING_INLINES: Don't do any string optimizations.
@@ -872,7 +872,7 @@ macros:
 
 Since some of these string functions are now additionally defined as macros,
 code like "char *strncpy();" doesn't work anymore (and is unnecessary, since
-<string.h> has the necessary declarations). Either change your code or
+<string.h> has the necessary declarations).  Either change your code or
 define __NO_STRING_INLINES.
 
 {UD} Another problem in this area is that gcc still has problems on machines
@@ -896,22 +896,37 @@ This disables the optimization for that specific call.
 {RM,AJ} Constructs like:
 static FILE *InPtr = stdin;
 
-lead to this message. This is correct behaviour with glibc since stdin is
-not a constant expression. Please note that a strict reading of ISO C does
+lead to this message.  This is correct behaviour with glibc since stdin is
+not a constant expression.  Please note that a strict reading of ISO C does
 not allow above constructs.
 
 One of the advantages of this is that you can assign to stdin, stdout, and
 stderr just like any other global variable (e.g. `stdout = my_stream;'),
 which can be very useful with custom streams that you can write with libio
-(but beware this is not necessarily portable). The reason to implement it
+(but beware this is not necessarily portable).  The reason to implement it
 this way were versioning problems with the size of the FILE structure.
+
+To fix those programs you've got to initialize the variable at run time.
+This can be done, e.g. in main, like:
+
+static FILE *InPtr;
+int main(void) 
+{
+  InPtr = stdin;
+}
+
+or by constructors (beware this is gcc specific):
+
+static FILE *InPtr;
+static void inPtr_construct (void) __attribute__((constructor));
+static void inPtr_construct (void) { InPtr = stdin; }
 
 
 ??	I can't compile with gcc -traditional (or
 	-traditional-cpp). Why?
 
 {AJ} glibc2 does break -traditional and -traditonal-cpp - and will continue
-to do so. For example constructs of the form:
+to do so.  For example constructs of the form:
 
 enum {foo
 #define foo foo
@@ -925,7 +940,7 @@ check with #ifdef).
 
 {AJ} The GNU C library is compatible with the ANSI/ISO C standard.  If
 you're using `gcc -ansi', the glibc includes which are specified in the
-standard follow the standard. The ANSI/ISO C standard defines what has to be
+standard follow the standard.  The ANSI/ISO C standard defines what has to be
 in the include files - and also states that nothing else should be in the
 include files (btw. you can still enable additional standards with feature
 flags).
@@ -990,6 +1005,19 @@ have to worry.
 So, please avoid sending bug reports about time related problems if you use
 the POSIX method and you have not verified something is really broken by
 reading the POSIX standards.
+
+??	What other sources of documentation about glibc are available?
+
+{AJ} The FSF has a page about the GNU C library at
+<http://www.gnu.org/software/libc/>.  The problem data base of open and
+solved bugs in GNU libc is available at
+<http://www-gnats.gnu.org:8080/cgi-bin/wwwgnats.pl>.  Eric Green has written
+a HowTo for converting from Linux libc5 to glibc2.  The HowTo is accessable
+via the FSF page and at <http://www.imaxx.net/~thrytis/glibc>.  Frodo
+Looijaard describes a different way installing glibc2 as secondary libc at
+<http://huizen.dds.nl/~frodol/glibc>.
+
+Please note that this is not a complete list.
 
 
 Answers were given by:

@@ -43,9 +43,6 @@ int __libc_multiple_libcs = 1;
 int __libc_argc;
 char **__libc_argv;
 
-/* We often need the UID and PID.  Cache these values.  */
-pid_t __libc_pid = 0xf00baa;
-
 
 static void
 init (int argc, char **argv, char **envp)

@@ -99,7 +99,7 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
   if (__pthread_manager_request >= 0) {
     request.req_thread = self;
     request.req_kind = REQ_FREE;
-    request.req_args.free.thread = th;
+    request.req_args.free.thread_id = thread_id;
     __libc_write(__pthread_manager_request,
 		 (char *) &request, sizeof(request));
   }
@@ -137,7 +137,7 @@ int pthread_detach(pthread_t thread_id)
   if (terminated && __pthread_manager_request >= 0) {
     request.req_thread = thread_self();
     request.req_kind = REQ_FREE;
-    request.req_args.free.thread = th;
+    request.req_args.free.thread_id = thread_id;
     __libc_write(__pthread_manager_request,
 		 (char *) &request, sizeof(request));
   }

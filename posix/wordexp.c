@@ -1343,7 +1343,7 @@ envsubst:
 
 	      /* Start a new word with the last parameter. */
 	      *word = w_newword (word_length, max_length);
-	      value = __strdup (__libc_argv[p]);
+	      value = __libc_argv[p];
 	    }
 	  else
 	    {

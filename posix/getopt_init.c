@@ -32,8 +32,6 @@
 /* Variable to synchronize work.  */
 char *__getopt_nonoption_flags;
 
-extern pid_t __libc_pid;
-
 
 /* Remove the environment variable "_<PID>_GNU_nonoption_argv_flags_" if
    it is still available.  If the getopt functions are also used in the
@@ -51,15 +49,11 @@ __getopt_clean_environment (char **env)
   char *cp, **ep;
   size_t len;
 
-  /* Generate name of the environment variable.  We must know the PID
-     and we must not use `sprintf'.  */
-  if (__libc_pid == 0xf00baa)
-    __libc_pid = __getpid ();
-
-  /* Construct "_<PID>_GNU_nonoption_argv_flags_=" string.  */
+  /* Construct the "_<PID>_GNU_nonoption_argv_flags_=" string.  We must
+     not use `sprintf'.  */
   cp = memcpy (&var[sizeof (var) - sizeof (envvar_tail)], envvar_tail,
 	       sizeof (envvar_tail));
-  cp = _itoa_word (__libc_pid, cp, 10, 0);
+  cp = _itoa_word (__getpid (), cp, 10, 0);
   *--cp = '_';
   len = (var + sizeof (var) - 1) - cp;
 

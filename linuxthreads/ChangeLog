@@ -1,3 +1,30 @@
+1998-06-29 12:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/pthread.h: Use __PMT not __P for function pointers.
+
+	* sysdeps/pthread/pthread.h: Define various PTHREAD_* symbols also
+	as macros as demanded in POSIX.1, Annex C.
+
+1998-06-29 12:29  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h (struct pthread_request): For free use pthread_t
+	instead of pthread_descr.
+	* join.c (pthread_join): Pass thread_id, not th to manager.
+	(pthread_detach): Likewise.
+	* manager.c (__pthread_manager): Except thread ID in FREE_REQ case.
+	(pthread_exited): Remove detached queue code.
+	(pthread_handle_free): Expect thread ID parameter and use it to
+	validate the thread decsriptor.  Don't use detached queue.
+	Patches by Xavier Leroy.
+
+1998-06-27  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* libpthread.map: Export accept, longjmp, sigaction, siglongjmp,
+	_IO_flockfile, _IO_ftrylockfile, _IO_funlockfile,
+	__pthread_atfork, __pthread_key_create, __pthread_once.
+	* internals.h: Doc fix.
+	* pthread.c (__pthread_initialize): Define again.
+
 1998-06-26  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_exited): If thread is not detached put it on

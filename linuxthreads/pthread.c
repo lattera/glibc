@@ -215,6 +215,11 @@ static void pthread_initialize(void)
   __on_exit(pthread_exit_process, NULL);
 }
 
+void __pthread_initialize(void)
+{
+  pthread_initialize();
+}
+
 int __pthread_initialize_manager(void)
 {
   int manager_pipe[2];

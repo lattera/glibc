@@ -48,7 +48,7 @@ typedef struct {
 	int fts_rfd;			/* fd for root */
 	int fts_pathlen;		/* sizeof(path) */
 	int fts_nitems;			/* elements in the sort array */
-	int (*fts_compar) __P((const void *, const void *)); /* compare fn */
+	int (*fts_compar) __PMT((const void *, const void *)); /* compare fn */
 
 #define	FTS_COMFOLLOW	0x0001		/* follow command line symlinks */
 #define	FTS_LOGICAL	0x0002		/* logical walk */

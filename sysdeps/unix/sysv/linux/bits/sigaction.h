@@ -1,5 +1,5 @@
 /* The proper definitions for Linux's sigaction.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,7 @@ struct sigaction
 	/* Used if SA_SIGINFO is not set.  */
 	__sighandler_t sa_handler;
 	/* Used if SA_SIGINFO is set.  */
-	void (*sa_sigaction) __P ((int, siginfo_t *, void *));
+	void (*sa_sigaction) __PMT ((int, siginfo_t *, void *));
       }
     __sigaction_handler;
 #define sa_handler	__sigaction_handler.sa_handler
@@ -43,7 +43,7 @@ struct sigaction
     int sa_flags;
 
     /* Restore handler.  */
-    void (*sa_restorer) __P ((void));
+    void (*sa_restorer) __PMT ((void));
   };
 
 /* Bits in `sa_flags'.  */

@@ -15,8 +15,6 @@ GLIBC_2.0 {
 
     _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
 
-    __libc_pid;
-
     # This is for sparc only.
     .div; .mul; .rem; .udiv; .umul; .urem;
 
@@ -106,8 +104,8 @@ GLIBC_2.0 {
     _IO_file_write; _IO_file_xsputn; _IO_fileno; _IO_flockfile;
     _IO_flush_all; _IO_flush_all_linebuffered; _IO_fopen; _IO_fprintf;
     _IO_fputs; _IO_fread; _IO_free_backup_area; _IO_freopen;
-    _IO_fscanf; _IO_fseek; _IO_fsetpos; _IO_ftell; _IO_funlockfile;
-    _IO_fwrite; _IO_getc; _IO_getline; _IO_gets;
+    _IO_fscanf; _IO_fseek; _IO_fsetpos; _IO_ftell; _IO_ftrylockfile;
+    _IO_funlockfile; _IO_fwrite; _IO_getc; _IO_getline; _IO_gets;
     _IO_init; _IO_init_marker; _IO_link_in; _IO_marker_delta;
     _IO_marker_difference; _IO_padn; _IO_pclose; _IO_peekc_locked;
     _IO_perror; _IO_popen; _IO_printf; _IO_proc_close; _IO_proc_open;

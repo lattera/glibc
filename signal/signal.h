@@ -51,7 +51,7 @@ typedef __sig_atomic_t sig_atomic_t;
 #include <bits/signum.h>
 
 /* Type of a signal handler.  */
-typedef void (*__sighandler_t) __P ((int));
+typedef void (*__sighandler_t) __PMT ((int));
 
 /* The X/Open definition of `signal' specifies the SVID semantic.  Use
    the additional function `sysv_signal' when X/Open compatibility is

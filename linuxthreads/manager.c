@@ -37,12 +37,6 @@
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
 { { LOCK_INITIALIZER, &__pthread_initial_thread, 0}, /* All NULLs */ };
 
-/* This is a list of terminated, but not detached threads.  This can happen
-   when pthread_join() is called and the pthread_reap_children() function
-   removes the thread from the live list before processing the FREE_REQ
-   request.  */
-static pthread_descr non_detached;
-
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
 int __pthread_nonstandard_stacks = 0;
@@ -83,7 +77,7 @@ static pthread_t pthread_threads_counter = 0;
 static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
                                  void * (*start_routine)(void *), void *arg,
                                  sigset_t *mask, int father_pid);
-static void pthread_handle_free(pthread_descr th);
+static void pthread_handle_free(pthread_t th_id);
 static void pthread_handle_exit(pthread_descr issuing_thread, int exitcode);
 static void pthread_reap_children(void);
 static void pthread_kill_all_threads(int sig, int main_thread_also);
@@ -149,7 +143,7 @@ int __pthread_manager(void *arg)
         restart(request.req_thread);
         break;
       case REQ_FREE:
-        pthread_handle_free(request.req_args.free.thread);
+	pthread_handle_free(request.req_args.free.thread_id);
         break;
       case REQ_PROCESS_EXIT:
         pthread_handle_exit(request.req_thread,
@@ -406,14 +400,6 @@ static void pthread_exited(pid_t pid)
       __pthread_unlock(th->p_lock);
       if (detached)
 	pthread_free(th);
-      else {
-	/* Enqueue in the detached list.  */
-	th->p_nextlive = non_detached;
-	if (non_detached != NULL)
-	  non_detached->p_prevlive = th;
-	th->p_prevlive = NULL;
-	non_detached = th;
-      }
       break;
     }
   }
@@ -445,49 +431,28 @@ static void pthread_reap_children(void)
 /* Try to free the resources of a thread when requested by pthread_join
    or pthread_detach on a terminated thread. */
 
-static void pthread_handle_free(pthread_descr th)
+static void pthread_handle_free(pthread_t th_id)
 {
-  pthread_descr t;
-  /* Check that the thread th is still there -- pthread_reap_children
-     might have deallocated it already */
-  t = __pthread_main_thread;
-  do {
-    if (t == th) break;
-    t = t->p_nextlive;
-  } while (t != __pthread_main_thread);
-  if (t != th) {
-    /* Hum, it might be that the thread already was dequeued but
-       wasn't detached.  In the case the thread is already detached
-       and we cannot find it this is a user bug but we must be
-       gracious.  */
-    t = non_detached;
-    while (t != NULL) {
-      if (t == th) break;
-      t = t->p_nextlive;
-    }
-    if (t == th) {
-      if (th->p_prevlive == NULL)
-	non_detached = th->p_nextlive;
-      else
-	th->p_prevlive->p_nextlive = th->p_nextlive;
-      if (th->p_nextlive != NULL)
-	th->p_nextlive->p_prevlive = th->p_prevlive;
+  pthread_handle handle = thread_handle(th_id);
+  pthread_descr th;
 
-      /* Finally free it.  */
-      pthread_free (th);
-    }
+  __pthread_lock(&handle->h_lock);
+  if (invalid_handle(handle, th_id)) {
+    /* pthread_reap_children has deallocated the thread already,
+       nothing needs to be done */
+    __pthread_unlock(&handle->h_lock);
     return;
   }
-  __pthread_lock(th->p_lock);
+  th = handle->h_descr;
   if (th->p_exited) {
-    __pthread_unlock(th->p_lock);
+    __pthread_unlock(&handle->h_lock);
     pthread_free(th);
   } else {
     /* The Unix process of the thread is still running.
        Mark the thread as detached so that the thread manager will
        deallocate its resources when the Unix process exits. */
     th->p_detached = 1;
-    __pthread_unlock(th->p_lock);
+    __pthread_unlock(&handle->h_lock);
   }
 }
 

@@ -595,7 +595,7 @@ extern char *realpath __P ((__const char *__name, char *__resolved));
 /* Shorthand for type of comparison functions.  */
 #ifndef __COMPAR_FN_T
 # define __COMPAR_FN_T
-typedef int (*__compar_fn_t) __P ((__const __ptr_t, __const __ptr_t));
+typedef int (*__compar_fn_t) __PMT ((__const __ptr_t, __const __ptr_t));
 
 # ifdef	__USE_GNU
 typedef __compar_fn_t comparison_fn_t;
