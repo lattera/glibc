@@ -1,3 +1,45 @@
+2003-07-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/dl-support.c (_dl_hwcap): New variable.
+	(_dl_aux_init): Initialize GL(dl_hwcap) for static binaries.
+
+	* sysdeps/i386/fpu/fclrexcpt.c: Include <unistd.h>, <ldsodefs.h>
+	and <dl-procinfo.h>.
+	(__feclearexcept): Clear MXCSR if needed.
+	* sysdeps/i386/fpu/fsetexcptflg.c: Likewise.
+
+	* sysdeps/i386/fpu_control.h (_FPU_GETCW, _FPU_SETCW): Document
+	that newer hardware needs more than these macros.
+
+	* sysdeps/i386/setfpucw.c: New file.
+
+2003-07-22  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/Makefile (CFLAGS-ldconfig.c): Define IS_IN_ldconfig.
+	* elf/ldconfig.c: Include dl-procinfo.c.
+	(PROCINFO_CLASS): Define.
+	* sysdeps/generic/ldsodefs.h (PROCINFO_CLASS): Define.
+	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.c: New file.
+	* sysdeps/unix/sysv/linux/x86_64/dl-procinfo.h: New file.
+	* sysdeps/unix/sysv/linux/i386/dl-procinfo.c (PROCINFO_CLASS):
+	Define if not yet defined.  Use it instead of EXTERN.  Undefine
+	at the end of the file.
+	* sysdeps/unix/sysv/linux/arm/dl-procinfo.c (PROCINFO_CLASS):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/dl-procinfo.c
+	(PROCINFO_CLASS): Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/dl-procinfo.c
+	(PROCINFO_CLASS): Likewise.
+
+2003-07-22  H.J. Lu  <hongjiu.lu@intel.com>
+
+	* elf/ldconfig.c (main): Issue a fatal error if relative path
+	is used to build cache.
+
+2003-07-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/readlib.c (process_file): Avoid possible overflow in assignment.
+
 2003-07-21  Art Haas  <ahaas@airmail.net>
 
 	* manual/charset.texi (Converting a Character): Fix example code so a

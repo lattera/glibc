@@ -343,6 +343,7 @@ struct rtld_global
 
   /* Get architecture specific definitions.  */
 #define PROCINFO_DECL
+#define PROCINFO_CLASS EXTERN
 #include <dl-procinfo.c>
 
   /* Structure describing the dynamic linker itself.  */

@@ -123,6 +123,7 @@ int _dl_correct_cache_id = _DL_CACHE_DEFAULT_ID;
 
 struct ElfW(Phdr) *_dl_phdr;
 size_t _dl_phnum;
+unsigned long int _dl_hwcap;
 
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
@@ -166,6 +167,9 @@ _dl_aux_init (ElfW(auxv_t) *av)
 	break;
       case AT_PHNUM:
 	GL(dl_phnum) = av->a_un.a_val;
+	break;
+      case AT_HWCAP:
+	GL(dl_hwcap) = av->a_un.a_val;
 	break;
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:

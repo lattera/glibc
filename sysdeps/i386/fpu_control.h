@@ -1,5 +1,5 @@
 /* FPU control word bits.  i387 version.
-   Copyright (C) 1993,1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1993,1995-1998,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -88,7 +88,11 @@
 /* Type of the control word.  */
 typedef unsigned int fpu_control_t __attribute__ ((__mode__ (__HI__)));
 
-/* Macros for accessing the hardware control word.  */
+/* Macros for accessing the hardware control word.
+
+   Note that the use of these macros is no sufficient anymore with
+   recent hardware.  Some floating point operations are executed in
+   the SSE/SSE2 engines which have their own control and status register.  */
 #define _FPU_GETCW(cw) __asm__ ("fnstcw %0" : "=m" (*&cw))
 #define _FPU_SETCW(cw) __asm__ ("fldcw %0" : : "m" (*&cw))
 

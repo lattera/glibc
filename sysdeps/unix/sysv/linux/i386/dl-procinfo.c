@@ -40,13 +40,14 @@
        needed.
   */
 
-#ifdef PROCINFO_DECL
-EXTERN
+#ifndef PROCINFO_CLASS
+#define PROCINFO_CLASS
 #endif
+
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_cap_flags
 #else
-const char _dl_x86_cap_flags[32][8]
+PROCINFO_CLASS const char _dl_x86_cap_flags[32][8]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -62,13 +63,10 @@ const char _dl_x86_cap_flags[32][8]
 ,
 #endif
 
-#ifdef PROCINFO_DECL
-EXTERN
-#endif
 #if !defined PROCINFO_DECL && defined SHARED
   ._dl_x86_platforms
 #else
-const char _dl_x86_platforms[4][5]
+PROCINFO_CLASS const char _dl_x86_platforms[4][5]
 #endif
 #ifndef PROCINFO_DECL
 = {
@@ -82,3 +80,4 @@ const char _dl_x86_platforms[4][5]
 #endif
 
 #undef PROCINFO_DECL
+#undef PROCINFO_CLASS

@@ -19,6 +19,9 @@
    02111-1307 USA.  */
 
 #include <fenv.h>
+#include <unistd.h>
+#include <ldsodefs.h>
+#include <dl-procinfo.h>
 
 int
 __feclearexcept (int excepts)
@@ -37,6 +40,21 @@ __feclearexcept (int excepts)
 
   /* Put the new data in effect.  */
   __asm__ ("fldenv %0" : : "m" (*&temp));
+
+  /* If the CPU supports SSE, we clear the MXCSR as well.  */
+  if ((GL(dl_hwcap) & HWCAP_I386_XMM) != 0)
+    {
+      unsigned int xnew_exc;
+
+      /* Get the current MXCSR.  */
+      __asm__ ("stmxcsr %0" : "=m" (*&xnew_exc));
+      
+      /* Clear the relevant bits.  */
+      xnew_exc &= excepts ^ FE_ALL_EXCEPT;
+      
+      /* Put the new data in effect.  */
+      __asm__ ("ldmxcsr %0" : : "m" (*&xnew_exc));
+    }
 
   /* Success.  */
   return 0;

@@ -132,6 +132,9 @@ static const struct argp_option options[] =
   { NULL, 0, NULL, 0, NULL, 0 }
 };
 
+#define PROCINFO_CLASS static
+#include <dl-procinfo.c>
+
 /* Short description of program.  */
 static const char doc[] = N_("Configure Dynamic Linker Run Time Bindings.");
 
@@ -1009,13 +1012,18 @@ main (int argc, char **argv)
   /* Parse and process arguments.  */
   argp_parse (&argp, argc, argv, 0, &remaining, NULL);
 
-  /* Remaining arguments are additional libraries if opt_manual_link
+  /* Remaining arguments are additional directories if opt_manual_link
      is not set.  */
   if (remaining != argc && !opt_manual_link)
     {
       int i;
       for (i = remaining; i < argc; ++i)
-	add_dir (argv[i]);
+	if (opt_build_cache && argv[i][0] != '/')
+	  error (EXIT_FAILURE, 0,
+		 _("relative path `%s' used to build cache"),
+		 argv[i]);
+	else
+	  add_dir (argv[i]);
     }
 
   set_hwcap ();
