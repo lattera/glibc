@@ -19,8 +19,8 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 
 ENTRY (syscall)
-	moveal sp@+, a0		/* Pop return address into A0.  */
+	movel sp@+, a0		/* Pop return address into A0.  */
 	DO_CALL (sp@, 0)	/* Do system call.  */
 	jmp a0@			/* Return to A0.  */
-error:	moveal a0, sp@-		/* Error; push return address */
+error:	movel a0, sp@-		/* Error; push return address */
 	jmp syscall_error	/* and jump to error handler.  */

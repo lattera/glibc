@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -140,7 +140,7 @@ __m81_u(modf)(double __value, double *__iptr)
   return __value - __modf_int;
 }
 
-extern __inline int
+extern __inline __CONSTVALUE int
 __m81_u(__isinf)(double __value)
 {
   /* There is no branch-condition for infinity,
@@ -151,7 +151,7 @@ __m81_u(__isinf)(double __value)
   return (__fpsr & (2 << (3 * 8))) ? (__value < 0 ? -1 : 1) : 0;
 }
 
-extern __inline int
+extern __inline __CONSTVALUE int
 __m81_u(__isnan)(double __value)
 {
   char __result;
