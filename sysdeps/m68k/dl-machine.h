@@ -272,7 +272,7 @@ elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
 	       found.  */
 	    break;
 	  if (sym->st_size > refsym->st_size
-	      || (_dl_verbose && sym->st_size < refsym->st_size))
+	      || (sym->st_size < refsym->st_size && _dl_verbose))
 	    {
 	      extern char **_dl_argv;
 	      const char *strtab;
