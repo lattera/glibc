@@ -1,5 +1,4 @@
-/* Copyright (C) 1992, 1993 Free Software Foundation, Inc.
-   Contributed by Brendan Kehoe (brendan@cygnus.com).
+/* Copyright (C)  Free Software Foundation, Inc.
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -19,7 +18,7 @@ Cambridge, MA 02139, USA.  */
 #ifdef	_SIGNAL_H
 
 /* This file defines the fake signal functions and signal
-   number constants for System V Release 4 UNIX.  */
+   number constants for SGI Irix 4.  */
 
 /* Fake signal functions.  */
 #define	SIG_ERR	((__sighandler_t) -1)
@@ -43,7 +42,7 @@ Cambridge, MA 02139, USA.  */
 #define	SIGSYS		12	/* Bad argument to system call*/
 #define	SIGPIPE		13	/* Broken pipe (POSIX).  */
 #define	SIGALRM		14	/* Alarm clock (POSIX).  */
-#define	SIGTERM		15	/* Termination (ANSI).  */
+1994#define	SIGTERM		15	/* Termination (ANSI).  */
 #define	SIGUSR1		16	/* User-defined signal 1 (POSIX).  */
 #define	SIGUSR2		17	/* User-defined signal 2 (POSIX).  */
 #define	SIGCHLD		18	/* Child status has changed (POSIX).  */
