@@ -1,3 +1,9 @@
+1999-03-11  David S. Miller  <davem@redhat.com>
+
+	* sysdeps/sparc/sparc32/fpu/fpu_control.h: Add missing trap enable
+	masks.
+	* sysdeps/sparc/sparc64/fpu/fpu_control.h: Likewise.
+
 1999-03-15  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconv/gconv.h (gconv_fct): Change parameter from `char' to

@@ -1,5 +1,5 @@
 /* FPU control word bits.  SPARC v9 version.
-   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Miguel de Icaza
 
@@ -23,6 +23,13 @@
 
 
 #include <features.h>
+
+/* masking of interrupts */
+#define _FPU_MASK_IM  0x08000000
+#define _FPU_MASK_OM  0x04000000
+#define _FPU_MASK_UM  0x02000000
+#define _FPU_MASK_ZM  0x01000000
+#define _FPU_MASK_PM  0x00800000
 
 /* precision control */
 #define _FPU_EXTENDED 0x00000000     /* RECOMMENDED */
