@@ -166,6 +166,11 @@ struct sockaddr_in
 #define	IP_RECVRETOPTS	6	/* bool; Receive IP options for response.  */
 #define	IP_RECVDSTADDR	7	/* bool; Receive IP dst addr w/datagram.  */
 #define	IP_RETOPTS	8	/* ip_opts; Set/get IP per-packet options.  */
+#define IP_MULTICAST_TTL 9	/* int; TTL for multicast packets */
+#define IP_MULTICAST_LOOP 10	/* bool; Use loopback for multicast */
+#define IP_MULTICAST_IF 11	/* not used; intended to specify interface */
+#define IP_ADD_MEMBERSHIP 12	/* int; join multicast group */
+#define IP_DROP_MEMBERSHIP 13	/* int; leave multicast group */
 
 /* Structure used to describe IP options for IP_OPTIONS and IP_RETOPTS.
    The `ip_dst' field is used for the first-hop gateway when using a
