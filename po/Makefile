@@ -32,7 +32,7 @@ LINGUAS = $(ALL_LINGUAS)
 endif
 
 # Text domain name to install under; must match ../locale/SYS_libc.c string.
-domainname = SYS_GNU_libc-$(version)
+domainname = libc
 
 # Get $(version) defined.
 include ../Makeconfig
@@ -45,7 +45,7 @@ mo-installed = $(localedir)/%/LC_MESSAGES/$(domainname).mo
 install-others = $(LINGUAS:%=$(mo-installed))
 
 # Files to distribute: all the source and compiled binary translation files.
-distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo) SYS_libc.pot
+distribute = $(ALL_LINGUAS:=.po) $(ALL_LINGUAS:=.mo) libc.pot
 
 
 include ../Rules
@@ -58,7 +58,7 @@ include ../Rules
 %.mo: %.po
 	$(MSGFMT) -o $@ $<
 
-# Install the message object files as SYS_libc.po in the language directory.
+# Install the message object files as libc.po in the language directory.
 $(mo-installed): %.mo; $(do-install)
 
 .PHONY: linguas linguas.mo

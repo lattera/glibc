@@ -166,7 +166,7 @@ $P/subdirs.pot: $(subdirs:%=$P/%.pot)
 include $(common-objpfx)version.mk
 
 # Combine all the messages into the final sorted template translation file.
-$P/SYS_libc.pot: $(all-pot)
+$P/libc.pot: $(all-pot)
 	@rm -f $@.new
 	sed -e 's/VERSION/$(version)/' -e "s/DATE/`date +'%Y-%m-%d %k:%M'`/" \
 	    po/header.pot > $@.new

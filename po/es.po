@@ -1,48 +1,124 @@
-# Mensajes en español para GNU libc
+# Mensajes en español para GNU libc.
 # Copyright (C) 1996 Free Software Foundation, Inc.
 # Enrique Melero Gómez <b182@mail.fh-wuerzburg.de>, 1996.
 #
 # 5 Abril 96, Comienzo con 1.10.1 , tendré que coger los fuentes de esta
 #             versión. Muchas cosas han cambiado
+#
 # 19 Abril 96 Terminado y dejado para revisión , crash de mi placa,
 #             aplico las ideas de SV en su mensaje del 14 Abril
 #
 # 21-23 Abril 96 Jugamos un poco al ping-pong sv y yo, termino ganando
-#             yo como siempre, y se deja el fichero en ftp para revision.  
+#             yo, como siempre :-), y se deja el archivo en ftp para revisión.
 #             Aplico algunas ideas vistas en glibc-1.10.0.de.po
-# 27 Abril 96 Quito los mensajes antiguos y la envio definitivamente a Pinard.
-#             Nadie mas la revisó, ademas de Santiago, esto es una pena.
-
 #
+# 27 Abril 96 Quito los mensajes antiguos y la envío definitivamente a Pinard.
+#             Nadie más la revisó, además de Santiago, esto es una pena.
 #
+# 5  Junio 96 Me manda Santiago Vila la 1.90 , fundida con las traducciones
+#             de la 1.10.0, gracias otra vez Santiago.
+#
+# 8  Junio 96 al volver de Praga me pongo con ella, y la dejo lista para revisar.
+#
+# 13 Junio 96 Me manda Santiago la 1.92 (cuyo .pot coincidía con el de la 1.90)
+#             para que revise con cuidado todos los `fuzzy's
+#
+# 20 Junio 96 Me pongo con el 1.92 a las 10 am
+#
+# ## [ 22 de Junio: Ánimo que sólo te quedan 10 "fuzzy"s ]
+# ## Cambio el PO-Revision-Date, con tu permiso.
+# ## El día 23 me decido a acabar con esta versión, son las 23:00 , a ver
+#    si puedo dormir un poco hoy ;)
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: GNU libc 1.10.1\n"
-"PO-Revision-Date: 1996-04-27 10:28 MET\n"
+"Project-Id-Version: GNU glibc 1.92\n"
+"POT-Creation-Date: 1996-05-29 14:03\n"
+"PO-Revision-Date: 1996-07-23 18:00+0200 (MET DST)\n"
 "Last-Translator: Enrique Melero Gómez <b182@mail.fh-wuerzburg.de>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: sunrpc/rpc_main.c:77
+#: sunrpc/rpc_main.c:80
+#, c-format
 msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
 msgstr "       %s [-c | -h | -l | -m] [-o archivo_salida] [archivo_entrada]\n"
 
-#: sunrpc/rpc_main.c:80
+#: sunrpc/rpc_main.c:83
+#, c-format
 msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
 msgstr "       %s [-s udp|tcp]* [-o archivo_salida] [archivo_entrada]\n"
 
-# La traduccion de Jochen es exactamente esta: Zusicherung %s nicht erf"ullt 
-#   que viene a decir algo asi que las promesas no se han cumplido, o que
+# ## Si vas a traducir númprog por numprog, sé consistente. sv
+# ## lo dejo todo como numprog em
+#: sunrpc/rpcinfo.c:612
+msgid "       rpcinfo -b númprog versnum\n"
+msgstr "       rpcinfo -b númprog versnum\n"
+
+#: sunrpc/rpcinfo.c:613
+msgid "       rpcinfo -d númprog versnum\n"
+msgstr "       rpcinfo -d númprog versnum\n"
+
+#: sunrpc/rpcinfo.c:611
+msgid "       rpcinfo -p [ host ]\n"
+msgstr "        rpcinfo -p [ host ]\n"
+
+#: sunrpc/rpcinfo.c:610
+msgid "       rpcinfo [ -n portnum ] -t host númprog [ versnum ]\n"
+msgstr "       rpcinfo [ -n numpuerto ] -t host númprog [ versnum ]\n"
+
+# ## Añado un espacio. sv
+# Sugerencia: port -> puerto. sv
+# Ok em+
+#: sunrpc/rpcinfo.c:517
+msgid "   program vers proto   port\n"
+msgstr "   programa vers proto   puerto\n"
+
+#: time/zic.c:423
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr " (regla desde \"%s\", línea %d)"
+
+# ## Borro un "fuzzy" que había. sv
+#: time/zic.c:420
+#, c-format
+msgid "\"%s\", line %d: %s"
+msgstr "\"%s\", línea %d: %s"
+
+# ## Cambio "Zona" por "Zone". sv
+# ## Corrijo el nombre de la opción. sv
+#: time/zic.c:908
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr "la línea \"Zone %s\" y la opción -l son mutuamente excluyentes"
+
+#: time/zic.c:916
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr "la línea \"Zone %s\" y la opción -p son mutuamente excluyentes"
+
+#: time/zic.c:721
+#, c-format
+msgid "%s in ruleless zone"
+msgstr "%s en una zona sin reglas"
+
+# La traducción de Jochen es exactamente esta: Zusicherung %s nicht erfüllt
+#   que viene a decir algo así que las promesas no se han cumplido, o que
 #   las afirmaciones hechas no son ciertas.
 # ??? %s%s's correctos ?
 #: assert/assert.c:48
+#, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sLa declaración `%s' no se cumple.\n"
 
+# ## ¿Qué tiene de malo "inesperado"? sv
+# ## Parece el nombre de película de los '50 em
+# ## ... y antes de que digas nada, a mí me encantan
+# ## las películas de los 50 em+
 #: assert/assert-perr.c:46
+#, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sError no esperado: %s.\n"
 
@@ -52,73 +128,264 @@ msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sSeñal desconocida %d\n"
 
 #: sunrpc/rpc_util.c:258
+#, c-format
 msgid "%s, line %d: "
 msgstr "%s, línea %d: "
 
-#: posix/getopt.c:673
+#: time/zic.c:2035
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr "%s: %d no extendió el signo correctamente\n"
+
+#: time/zic.c:1339
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr "%s: No se puede crear %s: %s\n"
+
+#: time/zic.c:2014
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr "%s; No se puede crear el directorio %s: %s\n"
+
+# Sugerencia: hacer -> crear. sv
+# Aceptada em+
+#: time/zic.c:600
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr "%s: No se pudo crearr un enlace desde %s a %s: %s\n"
+
+#: time/zic.c:746
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr "%s: No se puede abrir %s: %s\n"
+
+#: time/zic.c:814
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr "%s: Error al cerrar %s: %s\n"
+
+#: time/zic.c:808
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr "%s: Error al leer %s\n"
+
+#: time/zic.c:1404
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr "%s: Error al escribir %s\n"
+
+#: time/zdump.c:257
+#, c-format
+msgid "%s: Error writing standard output "
+msgstr "%s: Error al escribir en la salida estándar "
+
+# ¿¿ cómo se dirá eso ?? , pregunto en spanglish
+#
+# diría que la porción "de años bisiestos" sobra. sv
+#
+# Mejor dejarlo bien clarito. Despues de haberme enterado de
+# qué diablos era eso ;)
+#
+# En ningún sitio dice que la línea de ajuste sea "de años bisiestos"
+# Si pones algo que no viene en el original puedes acabar cambiando
+# el sentido.
+# O quitas lo de "de años bisiestos" o miras el código fuente
+# a ver si de verdad es un ajuste de años bisiestos o más bien de segundos
+# intercalares. En cualquier caso me parece que queda más largo añadiendo
+# eso. sv
+#
+# Otra cosa: "en un archivo que no es el de" -> "en un archivo que no es de"
+# (sin "el"). Si no, da a entender que sólo puede haber uno,
+# y el original no da a entender eso. sv
+#
+# Varias cosas, según he entendido los ajustes en segundo se llaman
+# indiferentemente 'segundos itercalares' o 'segundos bisiestos'
+# el ajuste en sí es un ajuste de años bisiestos ( no son exáctamente
+# un día ) . Por lo tanto Leap ( año bisiesto ) line , son las líneas
+# que caracterizan al leap seconds file, que podríamos llamarlo fichero
+# de ajuste de años bisiestos, archivo intercalar o incluso bisiestifile
+# De todas maneras creo que lo cambio, este mensaje, si alguna vez tengo
+# la mala suerte de que me aparezca, me acoxonaría, tal y como está
+# redactado
+# Segundo, según he visto en la documentación , solo existe un fichero
+# de leap lines , por eso pongo 'el'... em+
+#
+#: time/zic.c:793
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr ""
+"%s: Línea de segundos intercalares en un archivo que no es el de\n"
+"ajuste de años bisiestos %s\n"
+
+#: time/zic.c:360
+#, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr "%s: Memoria agotada: %s\n"
+
+# Sugerencia: se especificó -> se ha especificado. sv
+# Aceptada em+
+#: time/zic.c:515
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr "%s: La opción -L se ha especificado más de una vez\n"
+
+# Lo mismo. sv
+# idem em+
+#: time/zic.c:475
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr "%s: La opción -d se ha especificado más de una vez\n"
+
+# Lo mismo. sv
+# jo em+
+#: time/zic.c:485
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr "%s: La opción -l se ha especificado más de una vez\n"
+
+# Lo mismo. sv
+# cachi en la mar em+
+#: time/zic.c:495
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr "%s: La opción -p se ha especificado más de una vez\n"
+
+# Lo mismo. sv
+# ahora mismo hago un search-replace em+
+# solo quedaba este ;(
+#: time/zic.c:505
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr "%s: La opción -y se ha especidicado más de una vez\n"
+
+# ## FUZZY. Este te dejo que se lo quites tú. sv
+# :) em+
+#: posix/getconf.c:149
+msgid "%s: Unrecognized variable `%s'\n"
+msgstr "%s: Variable desconocida `%s'\n"
+
+#: time/zic.c:1741
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr "%s: la orden fue '%s', el resultado fue %d\n"
+
+#: posix/getopt.c:686
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: opción no permitida -- %c\n"
 
-#: posix/getopt.c:676
+# ¿Qué tiene de malo "inválida"? sv
+# Jope, y que tiene de malo no válida ?
+# usuario inválido tiene un doble sentido claro
+# ya que uso usuario no válido me parece bien usar
+# tambien opción no válida, aunque solo sea de vez
+# en cuando em+
+#: posix/getopt.c:689
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: opción no válida -- %c\n"
 
-#: posix/getopt.c:597
+# ## he cambiado esto de acuerdo con gettext y diffutils. sv
+#: posix/getopt.c:610
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
-msgstr "%s: la opción `%c%s' no admite argumentos\n"
+msgstr "%s: la opción `%c%s' no admite ningún argumento\n"
 
-#: posix/getopt.c:568
+#: posix/getopt.c:581
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: la opción `%s' es ambigua\n"
 
-#: posix/getopt.c:614
+#: posix/getopt.c:627
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: la opción `%s' requiere un argumento\n"
 
-#: posix/getopt.c:592
+# ## lo mismo de antes. sv
+#: posix/getopt.c:605
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
-msgstr "%s: la opción `--%s' no admite argumentos\n"
+msgstr "%s: la opción `--%s' no admite ningún argumento\n"
 
-#: posix/getopt.c:712
+#: posix/getopt.c:725
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: la opción requiere un argumento --%c\n"
 
-#: sunrpc/rpc_main.c:143
+#: sunrpc/rpc_main.c:146
+#, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: la salida sobreescribiría %s\n"
 
-#: sunrpc/rpc_main.c:149
+# ## posibles traducciones de l_value: l_valor ó valor_l.
+# ## posiblemente la segunda aparezca en el K & R en español. sv
+#: time/zic.c:800 zic.c:1212 zic.c:1232
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr "%s: grave: valor_l no válido %d\n"
+
+#: sunrpc/rpc_main.c:152
+#, c-format
 msgid "%s: unable to open "
 msgstr "%s: no se pudo abrir "
 
-#: posix/getopt.c:647
+#: posix/getopt.c:660
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: opción desconocida `%c%s'\n"
 
-#: posix/getopt.c:643
+#: posix/getopt.c:656
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: opción desconocida `--%s'\n"
 
+# ## Añado unos espacios donde decía "archivo ... " sv
+#: time/zic.c:432
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d "
+"directory ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+"%s: el modo de empleo es %s [ -s ] [ -v ] [ -l hora_local ] [ -p reglasposix "
+"]\n"
+"\t[ -d directorio ] [ -L segundos_intercalares ] [ -y tipoaño ] [ "
+"archivo ... ]\n"
+
+#: time/zdump.c:165
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr "%s: el modo de empleo es %s [ -v ] [-c cutoff ] nombrezona ...\n"
+
 #: sunrpc/clnt_perr.c:125
+#, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(error de autentificación desconocido - %d)"
 
+# FUZZY. sv
+# Sugerencia: Borrar "señal". sv
+# Sugerencia: Asegurarse de que a lo que se refiere es femenino. sv
+# Según los antiguos fuentes esto era una señal ( lo comprobé entonces )
+# de todas maneras queda pendiente de revisar con la versión alemana
+# no quites el fuzzy em+
+#: sunrpc/rpcinfo.c:555
+#, fuzzy
+msgid "(unknown)"
+msgstr "(señal desconocida)"
+
+#: catgets/gencat.c:242
+msgid "*standard input*"
+msgstr "*entrada estándar*"
+
+# Sugerencia: Añadir (fstat) después de información. sv
 #: inet/rcmd.c:325
 msgid ".rhosts fstat failed"
-msgstr "No se pudo obtener información del archivo .rhosts"
+msgstr "No se pudo obtener información (fstat) del archivo .rhosts"
 
+# Lo mismo con lstat. sv
 #: inet/rcmd.c:321
 msgid ".rhosts lstat failed"
-msgstr "No se pudo obtener información del archivo .rhosts"
+msgstr "No se pudo obtener información (lstat) del archivo .rhosts"
 
 #  lo de regular no me gusta, pero ?
 #: inet/rcmd.c:323
@@ -130,6 +397,7 @@ msgid ".rhosts writeable by other than owner"
 msgstr ".rhosts puede ser modificado por otros además del propietario"
 
 #: clnt_perr.c:133 sunrpc/clnt_perr.c:112
+#, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; versión menor = %lu, versión mayor = %lu"
 
@@ -137,23 +405,22 @@ msgstr "; versión menor = %lu, versión mayor = %lu"
 msgid "; why = "
 msgstr "; causa ="
 
-#: sysdeps/mach/hurd/errlist.c:112
+# ## ¿? ATENCIÓN.
+# ## Informar de esto a Ulrich Drepper. Debe haber en algún lugar
+# ## una cadena que permita "¿".
+# ## Solucionado: Con suerte desaparecerá en la próxima versión.
 msgid "?"
 msgstr "?"
 
-#: sysdeps/mach/hurd/errlist.c:58
 msgid "Address already in use"
 msgstr "La dirección ya se está usando"
 
-#: sysdeps/mach/hurd/errlist.c:57
 msgid "Address family not supported by protocol family"
 msgstr "Esta familia de direcciones no está soportada por el protocolo"
 
-#: i486-linux/siglist.c:22
 msgid "Alarm clock"
 msgstr "Temporizador"
 
-#: sysdeps/mach/hurd/errlist.c:17
 msgid "Argument list too long"
 msgstr "La lista de argumentos es demasiado larga"
 
@@ -161,141 +428,138 @@ msgstr "La lista de argumentos es demasiado larga"
 msgid "Authentication OK"
 msgstr "Autentificación válida"
 
-#: sysdeps/mach/hurd/errlist.c:90
 msgid "Authentication error"
 msgstr "Error de autentificación"
 
-#: sysdeps/mach/hurd/errlist.c:24
 msgid "Bad address"
 msgstr "Dirección incorrecta"
 
-#: sysdeps/mach/hurd/errlist.c:19
 msgid "Bad file descriptor"
 msgstr "Descriptor de archivo erróneo"
 
-# Ya estamos ...
+# ## Ya estamos ...
 # ¿ Dispositivo de bloques ? , ¿ cómo se le puede llamar a esto ?
-# al principio puse , 'se precisa de' pero me sonó mal
-#: sysdeps/mach/hurd/errlist.c:25
+# ## al principio puse , 'se precisa de' pero me sonó mal
+# ## Pongo doble almohadilla a lo anterior, para que a nadie más se le ocurra... sv
+#
+# Creo que se pueden borrar los apóstrofos.
+# Parece que hay dos tipos de dispositivos:
+# Dispositivos de bloques y dispositivos de caracteres.
+# Supongo que así se llamarán en español. sv
+# yo los llamo así, desde luego em+
 msgid "Block device required"
-msgstr "Se requiere un dispositivo de `bloques'"
+msgstr "Se requiere un dispositivo de bloques"
 
 #  ??? sinceramente creo , broadcast no habría que traducirlo
 #  pero si hubiese , que ?
-#  después de ver los fuentes no consigo llegar a otra solución, solo
+#  después de ver los fuentes no consigo llegar a otra solución, sólo
 #  mensaje ( packet ?  ) broadcast , que creo que refleja bien
 #  los errores que describen estos mensajes.
+#  Sugerencia: `broadcast'. sv
+#  Creo que este mensaje está mal traducido ...
+#  habrá que echar mano a las fuentes em+
 #: sunrpc/pmap_rmt.c:336
 msgid "Broadcast select problem"
 msgstr "Problema en la selección del broadcast"
 
 #  Vi traducido pipe como tubo en un libro sobre pc/dos , y me horrorizó
-#  menos mal que venía siempre la palabra `pipe' al lado estrcomillada
-#: i486-linux/siglist.c:21 sysdeps/mach/hurd/errlist.c:42
+#  menos mal que venía siempre la palabra `pipe' al lado entrecomillada
 msgid "Broken pipe"
 msgstr "Tubería (pipe) rota"
 
-#: i486-linux/siglist.c:15
 msgid "Bus error"
 msgstr "Error del bus"
 
-#: i486-linux/siglist.c:32
 msgid "CPU time limit exceeded"
 msgstr "Rebasado el límite de tiempo de CPU"
 
-#: sysdeps/mach/hurd/errlist.c:59
 msgid "Can't assign requested address"
 msgstr "No se puede asignar la dirección solicitada"
 
-#: sysdeps/mach/hurd/errlist.c:68
 msgid "Can't send after socket shutdown"
 msgstr "No se puede enviar tras la destrucción del `socket'"
 
-#: sysdeps/mach/hurd/errlist.c:22
 msgid "Cannot allocate memory"
 msgstr "No se pudo asignar memoria"
 
-# ???
+# He intentado mejorarlo un poco ...
+#
+# Por favor, pon `broadcast' en lugar de broadcast.
+# Si vamos a usar términos ingleses a lo bestia, reconozcamos al menos que
+# no son términos españoles. sv
 #: sunrpc/pmap_rmt.c:254
 msgid "Cannot create socket for broadcast rpc"
-msgstr "No se puedo crear `socket' para un broadcast rpc"
+msgstr "No se puede crear `socket' para enviar un mensaje `broadcast' del rpc"
 
 # ???
+# ¿Qué tal "... recibir la respuesta al `broadcast'"?
+# Mucho mejor em+
 #: sunrpc/pmap_rmt.c:348
 msgid "Cannot receive reply to broadcast"
-msgstr "No se puede recibir respuesta al mensaje broadcast"
+msgstr "No se puede recibir respuesta al `broadcast'"
 
 #: sunrpc/pmap_clnt.c:79
 msgid "Cannot register service"
 msgstr "No se pudo registrar el servicio"
 
 # ???
+# En todo caso. mandar -> enviar. sv
 #: sunrpc/pmap_rmt.c:312
 msgid "Cannot send broadcast packet"
-msgstr "No se pudo mandar el mensaje broadcast"
+msgstr "No se pudo enviar el mensaje `broadcast'"
 
-# ¿Y qué te parecería cambiar el orden? Así:
-# "No se pudo especificar la opción SO_BROADCAST para el `socket'" sv
-#
+# ## ¿Y qué te parecería cambiar el orden? Así:
+# ## "No se pudo especificar la opción SO_BROADCAST para el `socket'" sv
+# ## Gracias.
 #: sunrpc/pmap_rmt.c:260
 msgid "Cannot set socket option SO_BROADCAST"
-msgstr "No se pudo especificar la opción para el `socket' SO_BROADCAST"
+msgstr "No se pudo especificar la opción SO_BROADCAST para el `socket'"
 
-#: i486-linux/siglist.c:25
 msgid "Child exited"
 msgstr "El proceso hijo terminó"
 
 #: sunrpc/clnt_perr.c:286
 msgid "Client credential too weak"
-msgstr "Credenciales del cliente poco fiables"
+msgstr "Las credenciales del cliente son poco fiables"
 
 #  ¿ qué diablos es esto ? , esperemos a tener las fuentes
 #  estupendo , este error parece mostrarse en dos ocasiones
 # - Macro: int EIEIO
 #     Go home and have a glass of warm, dairy-fresh milk.
 #  Jochen tambien lo traduce asi.  em
-#: sysdeps/mach/hurd/errlist.c:114
 msgid "Computer bought the farm"
 msgstr "El ordenador ha comprado la granja"
 
-#: sysdeps/mach/hurd/errlist.c:71
 msgid "Connection refused"
 msgstr "Conexión rehusada"
 
 # Se aceptan sugerencias alternativas para "peer"
-#: sysdeps/mach/hurd/errlist.c:64
 msgid "Connection reset by peer"
 msgstr "Conexión reinicializada por la máquina remota"
 
-#: sysdeps/mach/hurd/errlist.c:70
 msgid "Connection timed out"
 msgstr "Expiró el tiempo de conexión"
 
-#: i486-linux/siglist.c:26
 msgid "Continued"
 msgstr "Continúa"
 
-#: sysdeps/mach/hurd/errlist.c:49
 msgid "Destination address required"
 msgstr "Se debe especificar la dirección de destino"
 
-#: sysdeps/mach/hurd/errlist.c:26
 msgid "Device busy"
 msgstr "Dispositivo ocupado"
 
-#: sysdeps/mach/hurd/errlist.c:16
 msgid "Device not configured"
 msgstr "Dispositivo no configurado"
 
-#: sysdeps/mach/hurd/errlist.c:76
 msgid "Directory not empty"
 msgstr "El directorio no está vacio"
 
-#: sysdeps/mach/hurd/errlist.c:79
 msgid "Disc quota exceeded"
 msgstr "Se ha excedido la cuota de disco"
 
 #: sunrpc/clnt_perr.c:254
+#, c-format
 msgid "Error %d"
 msgstr "Error %d"
 
@@ -303,7 +567,6 @@ msgstr "Error %d"
 msgid "Error in unknown error system: "
 msgstr "Error de sistema desconocido: "
 
-#: sysdeps/mach/hurd/errlist.c:18
 msgid "Exec format error"
 msgstr "Formato de ejecutable incorrecto"
 
@@ -311,24 +574,20 @@ msgstr "Formato de ejecutable incorrecto"
 msgid "Failed (unspecified error)"
 msgstr "Falló (error no especificado)"
 
-#: sysdeps/mach/hurd/errlist.c:27
 msgid "File exists"
 msgstr "El archivo existe"
 
-#: sysdeps/mach/hurd/errlist.c:73
 msgid "File name too long"
 msgstr "Nombre de archivo demasiado largo"
 
-#: i486-linux/siglist.c:33
 msgid "File size limit exceeded"
 msgstr "Superado el límite de tamaño de archivo"
 
-#: sysdeps/mach/hurd/errlist.c:37
 msgid "File too large"
 msgstr "Archivo demasiado grande"
 
-# ???
-#: i486-linux/siglist.c:16
+# ## ???
+# ## Con permiso, le pongo doble almohadilla. sv
 msgid "Floating point exception"
 msgstr "Excepción de coma flotante"
 
@@ -341,18 +600,15 @@ msgstr "Excepción de coma flotante"
 # funciona no tienes a quien quejarte.
 # En cambio no implementada es que no está implementada. sv
 # Ok, me has convencido em
-#: sysdeps/mach/hurd/errlist.c:88
 msgid "Function not implemented"
 msgstr "Función no implementada"
 
-#: sysdeps/mach/hurd/errlist.c:115
 msgid "Gratuitous error"
 msgstr "Error injustificado"
 
 #  Habrá que mirar esto
 #  Mirado, efectivamente esto es una señal que habrá
 #  que dejarla con su nombre original ( entre paréntesis )
-#: i486-linux/siglist.c:9
 msgid "Hangup"
 msgstr "Colgar ( hangup )"
 
@@ -370,7 +626,14 @@ msgstr "Colgar ( hangup )"
 # Como te parezca, ¿Le ponemos apóstrofos ... ? `host'  sv
 #
 # No creo que haga falta em
-#: sysdeps/mach/hurd/errlist.c:74
+#
+# Pues yo sí. No se deberían usar palabras inglesas alegremente, como
+# si fueran españolas. sv
+#
+# A esto no me has contestado todavía. sv
+#
+# Ni te lo voy a contestar, habrá que aceptar que el español
+# sigue Enrique-ciendose con nuevas palabras em+
 msgid "Host is down"
 msgstr "El host no está operativo"
 
@@ -378,52 +641,56 @@ msgstr "El host no está operativo"
 msgid "Host name lookup failure"
 msgstr "Nombre de host no encontrado"
 
-#: i486-linux/siglist.c:37
 msgid "I/O possible"
 msgstr "Operación de entrada/salida permitida"
 
 #  ??? , siempre lo he usado como trap, nunca encontramos la palabra
 #  y es una señal estándar Unix , así que no creo conveniente tracucirla
-#: i486-linux/siglist.c:14
 msgid "IOT trap"
 msgstr "`trap' de IOT"
 
 # Se trata de una instrucción ilegal en el juego de instrucciones del 486
 # que provoca una "excepción".
-#: i486-linux/siglist.c:12
 msgid "Illegal Instruction"
 msgstr "Instrucción ilegal"
 
-#: sysdeps/mach/hurd/errlist.c:39
+# ¿"seek" no era "desplazamiento"? sv
+# Según el contexto no se puede saber a que se refiere
+# cambio ... por no permitida em+
 msgid "Illegal seek"
-msgstr "Búsqueda incorrecta"
+msgstr "Búsqueda no permitida"
 
-#: sysdeps/mach/hurd/errlist.c:89
 msgid "Inappropriate file type or format"
 msgstr "Formato o tipo de archivo no apropiado"
 
-#: sysdeps/mach/hurd/errlist.c:35
 msgid "Inappropriate ioctl for device"
 msgstr "Función ioctl no apropiada para el dispositivo"
 
-#  Habrá que ver a que se refiere
-#: sysdeps/mach/hurd/errlist.c:110
+#  Habrá que ver a qué se refiere.
+#
+# Si le pones el "es", ponle el "La" al principio.
+# O no le pongas ninguno de los dos, si no es realmente necesario.
+# Creo que no es malo que una oración no tenga verbo, pero si lo tiene
+# debe ser una oración completa. Me explico:
+# 1 "operación no válida" sería admisible.
+# 2 "operación no es válida" suena completamente a indio (inadmisible).
+# 3 "la operación no es válida" es mucho mejor que 2, pero no siempre
+# es mejor que 1. sv
+#
+# En este caso, creo que sobran el "La" y el "es". Por eso le he quitado
+# el "es". sv
 msgid "Inappropriate operation for background process"
-msgstr "Operación no válida para el proceso en segundo plano"
+msgstr "Operación no válida para un proceso en segundo plano"
 
-#: sysdeps/mach/hurd/errlist.c:15
 msgid "Input/output error"
 msgstr "Error de entrada/salida"
 
-#: i486-linux/siglist.c:10
 msgid "Interrupt"
 msgstr "Interrupción"
 
-#: sysdeps/mach/hurd/errlist.c:14
 msgid "Interrupted system call"
 msgstr "Llamada al sistema interrumpida"
 
-#: sysdeps/mach/hurd/errlist.c:32
 msgid "Invalid argument"
 msgstr "Argumento no válido"
 
@@ -452,13 +719,12 @@ msgid "Invalid content of \\{\\}"
 msgstr "Contenido de \\{\\} inválido"
 
 #  ??? ver esto.
-#: sysdeps/mach/hurd/errlist.c:28
 msgid "Invalid cross-device link"
-msgstr "Enlace entre dispositivos no permitido"
+msgstr "Enlace de un dispositivo a otro no permitido"
 
 #: posix/regex.c:953
 msgid "Invalid preceding regular expression"
-msgstr "Expresión regular precedente inválida"
+msgstr "La expresión regular precedente es inválida"
 
 #: posix/regex.c:951
 msgid "Invalid range end"
@@ -472,13 +738,11 @@ msgstr "La expresión regular es errónea"
 msgid "Invalid server verifier"
 msgstr "Verificación del servidor no válido"
 
-#: sysdeps/mach/hurd/errlist.c:31
 msgid "Is a directory"
 msgstr "Es un directorio"
 
 #  A quien se le ocurra `matar' un proceso, que especifique con qué señal.
 #  En todo caso ` Terminado ( KILL ) ' sería apropiado. Ver fuentes
-#: i486-linux/siglist.c:17
 msgid "Killed"
 msgstr "Terminado (killed)"
 
@@ -486,39 +750,41 @@ msgstr "Terminado (killed)"
 msgid "Memory exhausted"
 msgstr "Memoria agotada"
 
-#: sysdeps/mach/hurd/errlist.c:50
 msgid "Message too long"
 msgstr "Mensaje demasiado largo"
 
-#: sysdeps/mach/hurd/errlist.c:91
 msgid "Need authenticator"
 msgstr "Se necesita un autentificador"
 
-#: sysdeps/mach/hurd/errlist.c:62
 msgid "Network dropped connection on reset"
 msgstr "La conexión de red se perdió al reinicializar"
 
-#: sysdeps/mach/hurd/errlist.c:60
 msgid "Network is down"
 msgstr "La red no está activa"
 
-#: sysdeps/mach/hurd/errlist.c:61
+# Este no me gusta. Preferiría poner "la red es inaccesible", o al menos
+# añadirle un "es": "Es imposible conectar con la red". sv
+# En muchos mensajes he puesto el 'Es' al principio, terminaremos hablando
+# como indios si no. em
+#
+# Mira un mensaje que he puesto más arriba a ver si estás de acuerdo con
+# mi definición de "indio". sv
 msgid "Network is unreachable"
-msgstr "Imposible conectar con la red"
+msgstr "Es imposible conectar con la red"
 
+# Bueno, pero entonces pon "ninguna" en vez de "una", ¿no? sv
 #: resolv/herror.c:76
 msgid "No address associated with name"
-msgstr "No existe dirección asociada al nombre"
+msgstr "No existe una dirección asociada al nombre"
 
 # Memoria intermedia me parece una traducción óptima.
 # Desgraciadamente no tengo ningún diccionario de Castellano
 # Enrique, creo que en español existe "búfer", míralo si puedes. sv
-#  ¿ Buffer ? memoria intermedia
-#: sysdeps/mach/hurd/errlist.c:65
+#  ¿ Buffer ? memoria intermedia.
+# A ver qué dice Iñaky... sv
 msgid "No buffer space available"
 msgstr "No queda espacio para memoria intermedia"
 
-#: sysdeps/mach/hurd/errlist.c:20
 msgid "No child processes"
 msgstr "Ningún proceso hijo"
 
@@ -528,17 +794,19 @@ msgstr "Ningún proceso hijo"
 # Efectivamente puede que tengas razón , pero ...
 #  los dispositivos en UNIX son siempre archivos /dev :)  em
 #
-# Lo sé, lo sé, pero: ¿Cuando bloqueas /dev/cua3, dices que estás bloqueando un
+# Lo sé, lo sé, pero: Cuando bloqueas /dev/cua3, ¿dices que estás bloqueando un
 # archivo o que estás bloqueando el módem, que es un dispositivo? sv
-#
 # Decir archivos podría traer equívocos, por más que formalmente todos
 # lo sean. sv
-# 
-# Y que se te ocurre, poner bloquear archivos/dispositivos ? , no 
-#  quedan bloqueos me parece que no colabora a entender nada. 
-#  Miro la version alemana.
-#  ??? ¿ locks ? ¿ como diablos ?
-#: sysdeps/mach/hurd/errlist.c:87
+#
+# ¿Y qué se te ocurre?, ¿poner bloquear archivos/dispositivos? em
+#
+# ( Pues mira, no estaría mal. sv )
+# A esto no me has contestado. sv
+#
+#  no quedan bloqueos me parece que no colabora a entender nada. em
+#  Miro la versión alemana.
+#  ??? ¿ locks ? ¿ cómo diablos ?
 msgid "No locks available"
 msgstr "No se pueden bloquear más archivos"
 
@@ -546,64 +814,80 @@ msgstr "No se pueden bloquear más archivos"
 msgid "No match"
 msgstr "Ninguna coincidencia"
 
-#: posix/regex.c:5197
+#: posix/regex.c:5200
 msgid "No previous regular expression"
 msgstr "No existe una expresión regular anterior"
 
-#: sysdeps/mach/hurd/errlist.c:75
+# No me gusta "programa rpc". El rpc debería sobrar por el contexto. sv
+# A ver que te parece esto em+
+#: sunrpc/rpcinfo.c:515
+#, fuzzy
+msgid "No remote programs registered.\n"
+msgstr "No existe ningún procedimiento rpc registrado en la máquina remota.\n"
+
+# Sugerencia: ninguna ruta. sv
+# Doppel verneinung , o doble negación , tambien
+# lo hacen en Bayern , bueno aquí es peor, porque
+# tienen la drei Fach Verneinung ( osea, tres veces ) em+
 msgid "No route to host"
 msgstr "No existe ruta hasta el host"
 
-#: sysdeps/mach/hurd/errlist.c:38
 msgid "No space left on device"
 msgstr "No queda más espacio en el dispositivo"
 
-#: sysdeps/mach/hurd/errlist.c:12
 msgid "No such file or directory"
 msgstr "No existe el archivo o el directorio"
 
-#: sysdeps/mach/hurd/errlist.c:13
+# Sugerencia: No existe el proceso. sv
+# ¿ Porqué ?
+# Porque si "No such file or directory" se ha traducido por
+# "no existe el archivo o el directorio", está claro que si le dices un
+# proceso y te dice "no existe el proceso" se refiere al que
+# tú le has dicho y no a otro. sv
+#
 msgid "No such process"
 msgstr "No existe tal proceso"
 
-#: sysdeps/mach/hurd/errlist.c:30
 msgid "Not a directory"
 msgstr "No es un directorio"
 
 #  fuentes
-#: sysdeps/mach/hurd/errlist.c:43
+# Sugerencia: Argumento numérico. sv
+#
 msgid "Numerical argument out of domain"
-msgstr "Argumento fuera del dominio de la función"
+msgstr "Argumento numérico fuera del dominio de la función"
 
-#: sysdeps/mach/hurd/errlist.c:44
 msgid "Numerical result out of range"
 msgstr "Resultado numérico fuera de rango"
 
-#: sysdeps/mach/hurd/errlist.c:47
+#: time/zic.c:1835
+msgid "Odd number of quotation marks"
+msgstr "Número impar de comillas"
+
+# Vale, pero muy poco más abajo has puesto "en curso", que me parece mejor. sv
+# Creo que prefiero dejar uno de cada. Se me ocurre si no cambiar el
+# de abajo también. em
 msgid "Operation already in progress"
 msgstr "La operación ya se está llevando a cabo"
 
-#: sysdeps/mach/hurd/errlist.c:11
+# No te pases. Aquí se podría poner
+# "Operación no permitida" y no quedaría mal. sv
+# em+
 msgid "Operation not permitted"
-msgstr "La operación no está permitida"
+msgstr "Pperación no permitida"
 
-#: sysdeps/mach/hurd/errlist.c:55
 msgid "Operation not supported"
 msgstr "La operación no está soportada"
 
-#: sysdeps/mach/hurd/errlist.c:29
 msgid "Operation not supported by device"
 msgstr "La operación no está soportada por el dispositivo"
 
-#: sysdeps/mach/hurd/errlist.c:46
 msgid "Operation now in progress"
 msgstr "Operación en curso"
 
-#: sysdeps/mach/hurd/errlist.c:23
 msgid "Permission denied"
 msgstr "Permiso denegado"
 
-#: i486-linux/siglist.c:38
 msgid "Power failure"
 msgstr "Fallo de alimentación"
 
@@ -619,50 +903,41 @@ msgstr "Fin no esperado de la expresión regular"
 # "Profiling" es ejecutar un programa midiendo qué partes de él consumen
 # más tiempo. Creo recordar que esto tenía nombre en español, pero no
 # me acuerdo de cuál. sv
-# Gracias por la explicaci'on, se que era algo referente
+# Gracias por la explicación, sé que era algo referente
 #  al trace o debug de un programa. Miro a la alemana.
-#: i486-linux/siglist.c:35
 msgid "Profiling timer expired"
 msgstr "El tiempo de CPU expiró"
 
-#: sysdeps/mach/hurd/errlist.c:56
 msgid "Protocol family not supported"
 msgstr "Familia de protocolos no soportada"
 
-#: sysdeps/mach/hurd/errlist.c:52
 msgid "Protocol not available"
 msgstr "Protocolo no disponible"
 
-#: sysdeps/mach/hurd/errlist.c:53
 msgid "Protocol not supported"
 msgstr "Protocolo no soportado"
 
-#: sysdeps/mach/hurd/errlist.c:51
 msgid "Protocol wrong type for socket"
 msgstr "Tipo de protocolo incorrecto para el `socket'"
 
-#: i486-linux/siglist.c:11
 msgid "Quit"
 msgstr "Abandona"
 
 #  qué horror
-#: sysdeps/mach/hurd/errlist.c:86
+# Pues mira, quizá añadiendo dos puntos después del RPC mejoraría algo:
+# "RPC: procedimiento erróneo..." sv
 msgid "RPC bad procedure for program"
-msgstr "RPC procedimiento erróneo para el programa"
+msgstr "RPC: procedimiento erróneo para el programa"
 
-#: sysdeps/mach/hurd/errlist.c:84
 msgid "RPC program not available"
 msgstr "Programa RPC no disponible"
 
-#: sysdeps/mach/hurd/errlist.c:85
 msgid "RPC program version wrong"
 msgstr "Versión del programa RPC incorrecta"
 
-#: sysdeps/mach/hurd/errlist.c:82
 msgid "RPC struct is bad"
 msgstr "la estructura RPC es incorrecta"
 
-#: sysdeps/mach/hurd/errlist.c:83
 msgid "RPC version wrong"
 msgstr "versión de RPC incorrecta"
 
@@ -688,8 +963,8 @@ msgstr "RPC: No se pudo descodificar la respuesta"
 msgid "RPC: Can't encode arguments"
 msgstr "RPC: No se pudieron codificar los argumentos"
 
-#: sunrpc/clnt_perr.c:199
 #  ??? Falló, fracasó , pinchó ;-)
+#: sunrpc/clnt_perr.c:199
 msgid "RPC: Failed (unspecified error)"
 msgstr "RPC: Falló (error no especificado)"
 
@@ -697,15 +972,30 @@ msgstr "RPC: Falló (error no especificado)"
 msgid "RPC: Incompatible versions of RPC"
 msgstr "RPC: Versión incompatible de RPC"
 
+# Apuesto a que existe algo mejor que "mapeador". sv
+# Propón que yo dispondré em+
 #: sunrpc/clnt_perr.c:195
 msgid "RPC: Port mapper failure"
 msgstr "RPC: Fallo del mapeador de puertos"
 
-#: sunrpc/clnt_perr.c:185
 #  ??? prefiero añadir rpc otra vez,
 #  parece que queda más claro cual es el error y son solo tres letras
+#
+# No sé lo que es el RPC, pero igual es un disparate "procedimiento rpc"
+# En estos casos, preferiría no añadir nada y no "arriesgar". sv
+#
+# Está bien, por homogeneizar todo un poco lo quitaré. Pero que conste que
+# procedimiento rpc es perfectamente válido ( rcp: remote procedure call )
+# em
+#
+# Incluyo una cita de César Ballardini a ver qué te parece:
+# "no es necesario explicar la terminología obvia dentro de su contexto"
+# Creo que no hace falta poner rpc dos veces. El primero ya te avisa "de qué
+# va el rollo". sv
+# em+
+#: sunrpc/clnt_perr.c:185
 msgid "RPC: Procedure unavailable"
-msgstr "RPC: Procedimiento rpc no disponible"
+msgstr "RPC: Procedimiento rpc disponible"
 
 #: sunrpc/clnt_perr.c:197
 msgid "RPC: Program not registered"
@@ -738,10 +1028,12 @@ msgstr "RPC: El tiempo expiró"
 # Me parece que incapaz expresa mejor lo que pasa. Intenta
 #  recibir , pero no puede. De la otra forma (no se puede recibir)
 #  da la impresión de que ni siquiera se intenta
+# A lo mejor es que ni siquiera puede intentarlo ... sv
 #: sunrpc/clnt_perr.c:173
 msgid "RPC: Unable to receive"
 msgstr "RPC: Incapaz de recibir"
 
+# Sugerencia: No se puede enviar. (?) (no estoy muy seguro) sv
 #: sunrpc/clnt_perr.c:171
 msgid "RPC: Unable to send"
 msgstr "RPC: Incapaz de enviar"
@@ -754,7 +1046,6 @@ msgstr "RPC: Host desconocido"
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Protocolo desconocido"
 
-#: sysdeps/mach/hurd/errlist.c:40
 msgid "Read-only file system"
 msgstr "Sistema de archivos de sólo lectura"
 
@@ -762,79 +1053,62 @@ msgstr "Sistema de archivos de sólo lectura"
 msgid "Regular expression too big"
 msgstr "La expresión regular es demasiado grande"
 
-#: sysdeps/mach/hurd/errlist.c:92
 msgid "Reserved error 82"
 msgstr "Error reservado 82"
 
-#: sysdeps/mach/hurd/errlist.c:93
 msgid "Reserved error 83"
 msgstr "Error reservado 83"
 
-#: sysdeps/mach/hurd/errlist.c:94
 msgid "Reserved error 84"
 msgstr "Error reservado 84"
 
-#: sysdeps/mach/hurd/errlist.c:95
 msgid "Reserved error 85"
 msgstr "Error reservado 85"
 
-#: sysdeps/mach/hurd/errlist.c:96
 msgid "Reserved error 86"
 msgstr "Error reservado 86"
 
-#: sysdeps/mach/hurd/errlist.c:97
 msgid "Reserved error 87"
 msgstr "Error reservado 87"
 
-#: sysdeps/mach/hurd/errlist.c:98
 msgid "Reserved error 88"
 msgstr "Error reservado 88"
 
-#: sysdeps/mach/hurd/errlist.c:99
 msgid "Reserved error 89"
 msgstr "Error reservado 89"
 
-#: sysdeps/mach/hurd/errlist.c:100
 msgid "Reserved error 90"
 msgstr "Error reservado 90"
 
-#: sysdeps/mach/hurd/errlist.c:101
 msgid "Reserved error 91"
 msgstr "Error reservado 91"
 
-#: sysdeps/mach/hurd/errlist.c:102
 msgid "Reserved error 92"
 msgstr "Error reservado 92"
 
-#: sysdeps/mach/hurd/errlist.c:103
 msgid "Reserved error 93"
 msgstr "Error reservado 93"
 
-#: sysdeps/mach/hurd/errlist.c:104
 msgid "Reserved error 94"
 msgstr "Error reservado 94"
 
-#: sysdeps/mach/hurd/errlist.c:105
 msgid "Reserved error 95"
 msgstr "Error reservado 95"
 
-#: sysdeps/mach/hurd/errlist.c:106
 msgid "Reserved error 96"
 msgstr "Error reservado 96"
 
-#: sysdeps/mach/hurd/errlist.c:107
 msgid "Reserved error 97"
 msgstr "Error reservado 97"
 
-#: sysdeps/mach/hurd/errlist.c:108
 msgid "Reserved error 98"
 msgstr "Error reservado 98"
 
-#: sysdeps/mach/hurd/errlist.c:109
 msgid "Reserved error 99"
 msgstr "Error reservado 99"
 
 #  ??? resolvedor , determinador , investigador , solucionador  ?
+# Me suena que quizá exista resolvedor. Habría que enterarse. sv
 #: resolv/herror.c:72
 msgid "Resolver Error 0 (no error)"
 msgstr "Error del determinador de nombres 0 (ningún error)"
@@ -842,16 +1116,14 @@ msgstr "Error del determinador de nombres 0 (ningún error)"
 #  ??? lo mismo que arriba
 #: resolv/herror.c:114
 msgid "Resolver internal error"
-msgstr "error interno del determinador de nombres"
+msgstr "Error interno del determinador de nombres"
 
 # ¿ Sugerencias ? em
 # ¿Evitado? sv
 # Esperemos a ver la opinión de otro. em
-#: sysdeps/mach/hurd/errlist.c:21
 msgid "Resource deadlock avoided"
 msgstr "Esquivado el bloqueo para el recurso"
 
-#: sysdeps/mach/hurd/errlist.c:45
 msgid "Resource temporarily unavailable"
 msgstr "Recurso no disponible temporalmente"
 
@@ -860,10 +1132,9 @@ msgstr "Recurso no disponible temporalmente"
 #  segmentada, y se intentó acceder a un segmento
 #  que no pertenece al programa. em
 # ¿Entonces dirías que está mal el original inglés? sv
-#  No, en ingl'es siempre se ha dicho asi. Siempre he traducido
-#  Segmentation fault como violacion de segmento. Consultemoslo ,
+#  No, en inglés siempre se ha dicho así. Siempre he traducido
+#  Segmentation fault como violación de segmento. Consultémoslo ,
 #  es un mensaje que se ve demasiado a menudo em
-#: i486-linux/siglist.c:19
 msgid "Segmentation fault"
 msgstr "Violación de segmento"
 
@@ -875,23 +1146,18 @@ msgstr "El servidor rechazó la credencial"
 msgid "Server rejected verifier"
 msgstr "El servidor rechazó el verificador"
 
-#: sysdeps/mach/hurd/errlist.c:66
 msgid "Socket is already connected"
-msgstr "El `socket' está ya activo"
+msgstr "El `socket' ya está activo"
 
-#: sysdeps/mach/hurd/errlist.c:67
 msgid "Socket is not connected"
 msgstr "El `socket' no está activo"
 
-#: sysdeps/mach/hurd/errlist.c:48
 msgid "Socket operation on non-socket"
 msgstr "Operación de `socket' en un `no-socket'"
 
-#: sysdeps/mach/hurd/errlist.c:54
 msgid "Socket type not supported"
 msgstr "Tipo de `socket' no soportado"
 
-#: sysdeps/mach/hurd/errlist.c:63
 msgid "Software caused connection abort"
 msgstr "El programa provocó el fin de la conexión"
 
@@ -900,32 +1166,27 @@ msgstr "El programa provocó el fin de la conexión"
 # No veo porqué. em
 # ¿No puede un archivo tener varios `handles'
 # y que unos estén bloqueados y otros no? sv
-#  En efecto la traducci'on es incorrecta, el uso de file handle
-#  en vez de file descriptor, debe de ser porque nos referimos a ficheros 
+#  En efecto la traducción es incorrecta, el uso de file handle
+#  en vez de file descriptor, debe de ser porque nos referimos a archivos
 #  compartidos con NFS. Al igual que no se bloquean, sino que se stalan :)
-#  
-#: sysdeps/mach/hurd/errlist.c:80
+#
 msgid "Stale NFS file handle"
 msgstr "Archivo NFS bloqueado"
 
-#: i486-linux/siglist.c:28
 msgid "Stopped"
 msgstr "Parado"
 
-#: i486-linux/siglist.c:27
 msgid "Stopped (signal)"
 msgstr "Parado (por una señal)"
 
 # Perdonad que sea tan largo, pero es algo que nunca esta de más
 # Creo que mejora al original ;)
-#: i486-linux/siglist.c:29
 msgid "Stopped (tty input)"
 msgstr "Parado (requiere entrada de terminal)"
 
 # Perdonad que sea tan largo, pero es algo que nunca esta de más
 # Creo que mejora al original ;)
 #
-#: i486-linux/siglist.c:30
 msgid "Stopped (tty output)"
 msgstr "Parado (requiere salida por terminal)"
 
@@ -933,15 +1194,13 @@ msgstr "Parado (requiere salida por terminal)"
 # me gustaría que hubiera otra palabra mejor. SV
 # Siempre me han gustado F&C ;-)
 # A mí también :-) sv
-#: posix/regex.c:940 sysdeps/mach/hurd/errlist.c:10
+#: posix/regex.c:940
 msgid "Success"
 msgstr "Conseguido"
 
-#: i486-linux/siglist.c:23
 msgid "Terminated"
 msgstr "Terminado"
 
-#: sysdeps/mach/hurd/errlist.c:36
 msgid "Text file busy"
 msgstr "El archivo de texto está ocupado"
 
@@ -949,41 +1208,32 @@ msgstr "El archivo de texto está ocupado"
 # como "ruta de búsqueda" sv
 # por cierto: ¿qué son los niveles de "remote"? sv
 # Niveles de profundidad ? , ver fuentes em ??
-#: sysdeps/mach/hurd/errlist.c:81
 msgid "Too many levels of remote in path"
 msgstr "Demasiados niveles en el `path'"
 
-#: sysdeps/mach/hurd/errlist.c:72
 msgid "Too many levels of symbolic links"
 msgstr "Demasiados niveles de enlaces simbólicos"
 
-#: sysdeps/mach/hurd/errlist.c:41
 msgid "Too many links"
 msgstr "Demasiados enlaces (links)"
 
-#: sysdeps/mach/hurd/errlist.c:34
 msgid "Too many open files"
 msgstr "Demasiados archivos abiertos"
 
-#: sysdeps/mach/hurd/errlist.c:33
 msgid "Too many open files in system"
 msgstr "Demasiados archivos abiertos en el sistema"
 
-#: sysdeps/mach/hurd/errlist.c:77
 msgid "Too many processes"
 msgstr "Demasiados procesos"
 
 # No se me ocurre traducir splice , bueno , es que no sé lo que es
-# Esperemos que alguien más lo vea.
-#: sysdeps/mach/hurd/errlist.c:69
+# Esperemos que alguien más lo vea. <ver>
 msgid "Too many references: can't splice"
 msgstr "Demasiadas llamadas indirectas:"
 
-#: sysdeps/mach/hurd/errlist.c:78
 msgid "Too many users"
 msgstr "Demasiados usuarios"
 
-#: i486-linux/siglist.c:13
 msgid "Trace/breakpoint trap"
 msgstr "`trap' para punto de parada/seguimiento"
 
@@ -998,11 +1248,19 @@ msgstr "Barra invertida extra al final `\\'"
 # Tengo que mirar los fuentes, de esto y de muchas otras cosas
 #  todo esta en mi disco duro en mi ordenador roto. em
 #
-#: sysdeps/mach/hurd/errlist.c:111
 msgid "Translator died"
 msgstr "Murió el traductor"
 
+# ## Siguiendo los estándares de Spanish-GNU, he cambiado Intente por Pruebe.
+# ## Y si me dices que no, tengo ya a casi todo el equipo convencido :-) sv
+#: catgets/gencat.c:201
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr "Pruebe `%s --help' para más información.\n"
+
+# ## Sin embargo este no tiene nada que ver con el anterior. sv
 #: inet/rcmd.c:118
+#, c-format
 msgid "Trying %s...\n"
 msgstr "Intentando %s...\n"
 
@@ -1049,25 +1307,70 @@ msgid "Unmatched \\{"
 msgstr "\\{ desemparejado"
 
 #  ?? sigo pensando en una traducción para condición
-#: i486-linux/siglist.c:31
 msgid "Urgent I/O condition"
 msgstr "Condición urgente de entrada/saluda"
 
-# ¿"user defined" no sería "definida por el usuario"? sv
-#  Si , puede que sea mejor, lo cambio em
-#: i486-linux/siglist.c:18
+#: catgets/gencat.c:204
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
+"       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -H, --header        create C header file containing symbol definitions\n"
+"  -h, --help          display this help and exit\n"
+"      --new           do not use existing catalog, force new output file\n"
+"  -o, --output=NAME   write output to file NAME\n"
+"  -V, --version       output version information and exit\n"
+"If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+"Modo de empleo: %s [OPCIÓN]... -o ARCHIVO-SALIDA [ARCHIVO-ENTRADA]...\n"
+"                %s [OPCIÓN]... [ARCHIVO-SALIDA [ARCHIVO-ENTRADA]...]\n"
+"Los argumentos obligatorios para las opciones largas son también "
+"obligatorios\n"
+"para las opciones cortas.\n"
+"   -H, --header         Crea un archivo de cabecera C con las definiciones "
+"de\n"
+"                        los símbolos\n"
+"   -h, --help           Muestra esta ayuda y finaliza\n"
+"       --new            no usa el catálogo existente, crea un nuevo archivo\n"
+"                        de salida\n"
+"   -o, --output=ARCHIVO escribe el resultado en el archivo ARCHIVO\n"
+"   -V, --version        informa de la versión y finaliza\n"
+"Si ARCHIVO-ENTRADA es -, la entrada se lee de la entrada estándar.\n"
+"Si ARCHIVO-SALIDA es - , el resultado se escribe en la salida estándar.\n"
+
+#: posix/getconf.c:81
+#, c-format
+msgid "Usage: %s variable_name [pathname]\n"
+msgstr "Modo de empleo: %s nombre_de_variable [ruta]\n"
+
+# ## Sugerencia: programa -> numprog
+# Sugerencia: numprogr -> numprog. sv
+# Sugerencia: numpuerto -> númpuerto. sv
+# Sugerencia: numprog -> númprog. sv
+# OK, lo he cambiado en todo
+#: sunrpc/rpcinfo.c:609
+msgid "Usage: rpcinfo [ -n portnum ] -u host númprog [ versnum ]\n"
+msgstr ""
+"Modo de empleo: rpcinfo [ -n numpuerto ] -u host progrnum [ numversión ]\n"
+
+# ## ¿"user defined" no sería "definida por el usuario"? sv
+# ## Si , puede que sea mejor, lo cambio em
 msgid "User defined signal 1"
 msgstr "Señal definida por el usuario 1"
 
-#: i486-linux/siglist.c:20
 msgid "User defined signal 2"
 msgstr "Señal definida por el usuario 2"
 
-#: i486-linux/siglist.c:34
 msgid "Virtual timer expired"
 msgstr "El temporizador virtual llegó al final"
 
-#: i486-linux/siglist.c:36
+# # Otra opción, resultado incongruente al ejecutar la orden em
+#: time/zic.c:1740
+msgid "Wild result from command execution"
+msgstr "Resultado salvaje en la ejecución de la orden"
+
 msgid "Window changed"
 msgstr "Ventana cambiada"
 
@@ -1078,15 +1381,24 @@ msgstr "Ventana cambiada"
 # Sin fuentes no se puede hacer. Cogeré la traducción de Ulrich Drepper
 # al alemán, no sé cómo no se me había ocurrido antes. em
 # Muy buena idea. Suerte que tenemos un coordinador que sabe alemán :-) sv
-#  El problema es que la 1.10.1 no esta disponible todavia. Le he mandado un 
-#  mail para que me envie lo que tenga hecho. em
+#  El problema es que la 1.10.1 no esta disponible todavía. Le he mandado un
+#  mail para que me envíe lo que tenga hecho. em
 # Ok, traducido exactamente igual que lo tiene Jochen. Es ist keine Schuld
-#   von mir wenn es gar nicht stimmt. 
-#: sysdeps/mach/hurd/errlist.c:113
+#   von mir wenn es gar nicht stimmt.
+#
+# Sugerencia: "Ahora sí que te lo has cargado".
+# (Preguntar a nuestros amigos americanos si se entiende).
+# (No sé pero me suena que "blew" no es muy fino). sv
 msgid "You really blew it this time"
 msgstr "Esta vez si que lo has roto"
 
-#: sunrpc/rpc_parse.c:326
+# VER
+#: time/zic.c:1013
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr ""
+"La línea de continuación de la zona no esta después del tiempo de final\n"
+"de la línea anterior"
+
 # A los "arrays" les digo matrices. Igual en América se dice de otra forma.
 # Creo que habría que consultarlo. SV.
 # Echando mano de los fuentes, está claro que se refiere a un array de
@@ -1094,13 +1406,14 @@ msgstr "Esta vez si que lo has roto"
 # Pues no, puede ser ambas cosas, o un array de caracteres, o una cadena.
 # ¿por qué te comes la palabra "declaración"?
 # ¿Qué tal "esperada una declaración de `array'"? sv
-# Una declaraci'on de array es> "char *a" por ejemplo. Lo que espera
-#   es algo asi>"pepe" , escrito en un fichero de texto, con toda
-#   seguridad ( consulte los fuentes ) em
+# Una declaración de array es> "char *a" por ejemplo. Lo que espera
+#   es algo así>"pepe" , escrito en un archivo de texto, con toda
+#   seguridad ( consulté los fuentes ) em
 # Creí que una declaración y una constante eran cosas distintas. sv
 # ¿Está mal el original inglés? sv
-#  Desde luego que esta mal, o poco claro al menos. Estoy convencido 
-#  de que la traducci'on mejora una vez m'as al original. em 
+#  Desde luego que esta mal, o poco claro al menos. Estoy convencido
+#  de que la traducción mejora una vez más al original. em
+#: sunrpc/rpc_parse.c:326
 msgid "array declaration expected"
 msgstr "esperado un array"
 
@@ -1111,14 +1424,22 @@ msgstr "auth_none.c - Problema muy grave con autorización marshall"
 
 #: inet/rcmd.c:327
 msgid "bad .rhosts owner"
-msgstr "El propietario de .rhosts no es válido"
+msgstr "El propietario del archivo .rhosts no es válido"
+
+#: time/zic.c:1136
+msgid "blank FROM field on Link line"
+msgstr "Campo FROM vacío en la línea `Link'"
+
+#: time/zic.c:1140
+msgid "blank TO field on Link line"
+msgstr "Campo TO vacío en la línea `Link'"
 
 #: malloc/mcheck.c:174
 msgid "block freed twice"
 msgstr "bloque liberado dos veces"
 
-#: malloc/mcheck.c:177
 # Revisar lo de bogus. creo que es eso.
+#: malloc/mcheck.c:177
 msgid "bogus mcheck_status, library is buggy"
 msgstr "Valor de mcheck_status incorrecto, la biblioteca tiene un bug"
 
@@ -1136,14 +1457,26 @@ msgid "cache_set: victim not found"
 msgstr "cache_set: no se encontró el objetivo"
 
 #: sunrpc/svc_simple.c:64
+#, c-format
 msgid "can't reassign procedure number %d\n"
 msgstr "no se puede reasignar el procedimiento número %d\n"
+
+#: catgets/gencat.c:248
+#, c-format
+msgid "cannot open input file `%s'"
+msgstr "no se puede abrir el archivo de entrada `%s'"
+
+#: catgets/gencat.c:753 gencat.c:794
+#, c-format
+msgid "cannot open output file `%s'"
+msgstr "no se puede abrir el archivo de salida `%s'"
 
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Error grave en la secuencia de cabecera"
 
 #: inet/rcmd.c:112
+#, c-format
 msgid "connect to address %s: "
 msgstr "conexión a la dirección %s: "
 
@@ -1155,13 +1488,45 @@ msgstr "esperada una constante o un identificador"
 msgid "couldn't create an rpc server\n"
 msgstr "no se pudo crear un servidor rpc\n"
 
+# ## Antes decía: no se pudo crear un servidor rpc
+# ## Lo he cambiado por lo que ves. sv
+# ## Borro el "fuzzy". sv
+#: sunrpc/portmap.c:122
+msgid "couldn't do tcp_create\n"
+msgstr "no se ha podido ejecutar tcp_create\n"
+
+# ## Borro el fuzzy. sv
+#: sunrpc/portmap.c:100
+msgid "couldn't do udp_create\n"
+msgstr "no se pudo ejecutar udp_create\n"
+
 #: sunrpc/svc_simple.c:77
+#, c-format
 msgid "couldn't register prog %d vers %d\n"
 msgstr "no se pudo registrar el programa %d versión %d\n"
 
 #: sunrpc/rpc_parse.c:77
 msgid "definition keyword expected"
 msgstr "esperada una palabra clave"
+
+# ¿No será "definición de conjunto duplicada"? sv
+# Esto no lo has visto todavía. sv
+#: catgets/gencat.c:367
+msgid "duplicate set definition"
+msgstr "definición `set' duplicada"
+
+#: time/zic.c:928
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr "nombre de zona %s duplicado (archivo \"%s\", línea %d)"
+
+#: catgets/gencat.c:530
+msgid "duplicated message identifier"
+msgstr "identificador de mensaje duplicado"
+
+#: catgets/gencat.c:503
+msgid "duplicated message number"
+msgstr "número de mensaje duplicado"
 
 #: sunrpc/svc_udp.c:344
 msgid "enablecache: cache already enabled"
@@ -1183,17 +1548,28 @@ msgstr "enablecache: no se pudo crear espacio para los datos del caché"
 msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: no se pudo crear espacio para la pila del caché"
 
+# Sugerencia: se esperaba `%s'. sv
 #: sunrpc/rpc_util.c:300
+#, c-format
 msgid "expected '%s'"
 msgstr "`%s' esperado"
 
+# Sugerencia: Lo mismo de antes. sv
 #: sunrpc/rpc_util.c:312
+#, c-format
 msgid "expected '%s' or '%s'"
 msgstr "`%s' o `%s' esperado"
 
+# Lo mismo. sv
 #: sunrpc/rpc_util.c:325
+#, c-format
 msgid "expected '%s', '%s' or '%s'"
 msgstr "`%s', `%s' o `%s' esperado"
+
+# Sugerencia: La línea de continuación *esperada*. sv
+#: time/zic.c:819
+msgid "expected continuation line not found"
+msgstr "La línea de continuación no se encuentra"
 
 #: sunrpc/rpc_parse.c:384
 msgid "expected type specifier"
@@ -1203,6 +1579,14 @@ msgstr "esperado especificador de tipo"
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (lee la configuración del interfaz)"
 
+#: time/zic.c:1113
+msgid "illegal CORRECTION field on Leap line"
+msgstr "El campo CORRECTION en la línea de año bisiesto no es válido"
+
+#: time/zic.c:1117
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr "Campo Rolling/Stationary no válido en la línea de año bisiesto"
+
 #: sunrpc/rpc_scan.c:281
 msgid "illegal character in file: "
 msgstr "carácter no válido en el archivo: "
@@ -1211,11 +1595,80 @@ msgstr "carácter no válido en el archivo: "
 msgid "illegal result type"
 msgstr "tipo resultante no válido"
 
+# ## Borro el fuzzy. sv
+#: catgets/gencat.c:340 gencat.c:417
+msgid "illegal set number"
+msgstr "número de conjunto inválido"
+
+#: time/zic.c:777
+msgid "input line of unknown type"
+msgstr "línea de entrada de tipo desconocido"
+
+#: time/zic.c:984
+msgid "invalid GMT offset"
+msgstr "desplazamiento GMT no válido"
+
+# ¿No será "abreviatura"? sv
+# ¿? A esto no me has contestado. sv
+#: time/zic.c:987
+msgid "invalid abbreviation format"
+msgstr "formato de abreviación incorrecto"
+
+#: time/zic.c:1078 zic.c:1277 zic.c:1291
+#, fuzzy
+msgid "invalid day of month"
+msgstr "día del mes no válido"
+
+#: time/zic.c:1236
+#, fuzzy
+msgid "invalid ending year"
+msgstr "año de final no válido"
+
+#: time/zic.c:1050
+#, fuzzy
+msgid "invalid leaping year"
+msgstr "año bisiesto inválido"
+
+#: time/zic.c:1065 zic.c:1168
+msgid "invalid month name"
+msgstr "nombre de mes incorrecto"
+
+#: time/zic.c:883
+#, fuzzy
+msgid "invalid saved time"
+msgstr "la hora almacenada no es válida"
+
+#: time/zic.c:1216
+#, fuzzy
+msgid "invalid starting year"
+msgstr "año de comienzo no válido"
+
+#: time/zic.c:1094 zic.c:1196
+#, fuzzy
+msgid "invalid time of day"
+msgstr "hora del día no válida"
+
+# ## Antes tenías "nombre de la semana incorrecto" sv
+# ## Mandeeee ? em
+# ## Te lo prometo... sv
+#: time/zic.c:1282
+msgid "invalid weekday name"
+msgstr "nombre del día de la semana incorrecto"
+
+# ## Borro un fuzzy que había. sv
+#: time/zic.c:757
+msgid "line too long"
+msgstr "línea demasiado larga"
+
+#: catgets/gencat.c:598
+msgid "malformed line ignored"
+msgstr "línea incorrecta se ignoró"
+
 #  ??? y bien ? , alguna sugerencia ? , alborotada , retorcida, descolocada,
 #  enrollada :)
 # ¿estropeada?       ¿alterada? <- votaría por ésta. sv
-#  Pues despues de ver la traduccion de Jochen estoy perdido
-#   le voy a consultar a el directamente. em
+#  Pues después de ver la traducción de Jochen estoy perdido
+#   le voy a consultar a él directamente. em
 #: malloc/mcheck.c:168
 msgid "memory clobbered before allocated block"
 msgstr "memoria alterada antes del comienzo del bloque de memoria asignado"
@@ -1227,12 +1680,17 @@ msgstr "memoria alterada antes del comienzo del bloque de memoria asignado"
 msgid "memory clobbered past end of allocated block"
 msgstr "memoria alterada pasado el final del bloque de memoria asignado"
 
-#: malloc/mcheck.c:165
 # biblioteca está recogida en la lista de pifias de Ángel Álvarez.
+#: malloc/mcheck.c:165
 msgid "memory is consistent, library is buggy"
 msgstr "no hay problemas con la memoria, la biblioteca tiene un bug"
 
+#: time/zic.c:878
+msgid "nameless rule"
+msgstr "regla sin nombre"
+
 #: sunrpc/svc_simple.c:140
+#, c-format
 msgid "never registered prog %d\n"
 msgstr "el programa %d no fue registrado nunca\n"
 
@@ -1240,11 +1698,54 @@ msgstr "el programa %d no fue registrado nunca\n"
 msgid "no array-of-pointer declarations -- use typedef"
 msgstr "no existe ninguna declaración de array-of-pointer -- usar typedef"
 
+# ## Antes tenías: "no hay día en la regla de coincidencia de mes" sv
+# Esto debe tener algo que ver con la función menopausie() em
+# No se me había ocurrido... ¿Se te ocurre algo mejor, ahora que ya
+# sabemos lo que quiere decir? sv
+#: time/zic.c:1955
+msgid "no day in month matches rule"
+msgstr "ningún día del mes coincide con la regla"
+
+#: sunrpc/portmap.c:452
+msgid "portmap CALLIT: cannot fork.\n"
+msgstr "portmap CALLIT: llamada a fork() sin éxito\n"
+
+# mapeador es *horroroso* sv
+#: portmap.c:117 sunrpc/portmap.c:95
+msgid "portmap cannot bind"
+msgstr "falló la llamada a bind() del mapeador de puertos `portmap' "
+
+#: portmap.c:113 sunrpc/portmap.c:87
+msgid "portmap cannot create socket"
+msgstr "el mapeador de puertos `portmap' no ha podido crear el `socket'"
+
 #: rpc_scan.c:464 sunrpc/rpc_scan.c:456
 msgid "preprocessor error"
 msgstr "error del preprocesador"
 
+# ## Borro un fuzzy que había. sv
+#: rpcinfo.c:350 sunrpc/rpcinfo.c:222
+#, c-format
+msgid "program %lu is not available\n"
+msgstr "el programa %lu no está disponible\n"
+
+# ## Borro un "fuzzy" que había. sv
+#: rpcinfo.c:282 rpcinfo.c:371 rpcinfo.c:408 rpcinfo.c:429
+#: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:462
+#, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr "el programa %lu versión %lu no está disponible\n"
+
+# ## por similitud con los mensajes anteriores, añado verbo (y por tanto
+# ## "el" inicial a la frase. sv
+# Sugerencia: esperando -> a la espera. sv
+#: sunrpc/rpcinfo.c:466
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr "el programa %lu versión %lu está listo y esperando\n"
+
 #: inet/rcmd.c:154
+#, c-format
 msgid "rcmd: select (setting up stderr): %s\n"
 msgstr "rcmd: select (activando la salida de error estándar): %s\n"
 
@@ -1253,6 +1754,7 @@ msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: socket: Todos los puertos están siendo usados\n"
 
 #: inet/rcmd.c:141
+#, c-format
 msgid "rcmd: write (setting up stderr): %s\n"
 msgstr "rcmd: write (activando la salida de error estándar): %s\n"
 
@@ -1260,16 +1762,69 @@ msgstr "rcmd: write (activando la salida de error estándar): %s\n"
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: memoria agotada\n"
 
-#  ??? en la configuración del servicio ? , del circuito ? , o dejarlo asi ?
+#: time/zic.c:1690
+msgid "repeated leap second moment"
+msgstr "segundo intercalar repetido"
+
+#: sunrpc/rpcinfo.c:659
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr "rpcinfo: el host %s es desconocido\n"
+
+#: sunrpc/rpcinfo.c:626
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr "rpcinfo: el servicio `%s' es desconocido\n"
+
+# FUZZY. Se podría añadir rpcinfo: al principio. sv
+#: sunrpc/rpcinfo.c:600
+#, fuzzy, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr "no se pudo borrar el registro para el programa %s versión %s\n"
+
+# Sugerencia: broadcast -> `broadcast'. sv
+#: sunrpc/rpcinfo.c:576
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr "rpcinfo: el broadcast no tuvo éxito: %s\n"
+
+# ¡Necesitamos ayuda para "mapeador"!
+#: sunrpc/rpcinfo.c:505
+msgid "rpcinfo: can't contact portmapper"
+msgstr ""
+"rpcinfo: no se puede comunicar con el mapeador de puertos (`portmapper')"
+
+#: sunrpc/rpcinfo.c:510
+msgid "rpcinfo: can't contact portmapper: "
+msgstr ""
+"rpcinfo: no se puede comunicar con el mapeador de puertos (`portmapper'): "
+
+#: sunrpc/portmap.c:138
+msgid "run_svc returned unexpectedly\n"
+msgstr "run_svc terminó inesperadamente\n"
+
+#  ¿en la configuración del servicio? , ¿del circuito? , ¿o dejarlo así?
 #  Es de locos, estuve viendo las/los fuentes, preferí dejarlo así. em
 #: inet/rcmd.c:158
 msgid "select: protocol failure in circuit setup\n"
 msgstr "select: fallo de protocolo.\n"
 
-#: inet/rcmd.c:176
 #  ??? lo mismo que arriba
+#: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
 msgstr "socket: fallo de protocolo.\n"
+
+#: time/zic.c:742
+msgid "standard input"
+msgstr "entrada estándar"
+
+#: time/zdump.c:259
+msgid "standard output"
+msgstr "salida estándar"
+
+#: time/zic.c:1240
+msgid "starting year greater than ending year"
+msgstr "año de comienzo mayor que año de final"
 
 #: sunrpc/svc_tcp.c:199 svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
@@ -1277,7 +1832,7 @@ msgstr "svc_tcp: makefd_xprt: memoria agotada\n"
 
 #: sunrpc/svc_tcp.c:147
 msgid "svctcp_.c - cannot getsockname or listen"
-msgstr "svctcp_.c - fallo en la ejecución de `getsockname' o `listen'"
+msgstr "svctcp_.c - fallo en la ejecución de `getsockname()' o `listen()'"
 
 #: sunrpc/svc_tcp.c:134
 msgid "svctcp_.c - udp socket creation problem"
@@ -1295,17 +1850,81 @@ msgstr "svcudp_create - fallo en la ejecución de `getsockname'"
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: problemas para crear el `socket'"
 
+#: catgets/gencat.c:369 gencat.c:505 gencat.c:532
+msgid "this is the first definition"
+msgstr "esta es la primera vez que aparece la definición"
+
+#: time/zic.c:1083
+msgid "time before zero"
+msgstr "hora antes de cero"
+
+# Sugerencia: Desbordamiento de fecha. (?) sv
+#: time/zic.c:1091 zic.c:1855 zic.c:1874
+msgid "time overflow"
+msgstr "desbordamiento horario"
+
 #: sunrpc/rpc_util.c:285
 msgid "too many files!\n"
 msgstr "¡demasiados archivos!\n"
 
+# ## Borro un "fuzzy" que había. sv
+#: time/zic.c:1684
+msgid "too many leap seconds"
+msgstr "demasiados segundos intercalares"
+
+# ## Borro un "fuzzy" que había. sv
+#: time/zic.c:1656
+msgid "too many local time types"
+msgstr "demasiados tipos de hora local"
+
+# ## Borro el "fuzzy" que había. sv
+#: time/zic.c:1622
+msgid "too many transitions?!"
+msgstr "¡¿demasiadas transiciones?!"
+
+# Sugerencia: abreviaturas. sv
+#: time/zic.c:1978
+msgid "too many, or too long, time zone abbreviations"
+msgstr "demasiadas o demasiado largas abreviaciones de zona horaria"
+
 #: sunrpc/svc_simple.c:132
+#, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "dificultades para responder al programa %d\n"
 
-#: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
+#: time/zic.c:1247
+msgid "typed single year"
+msgstr "tecleado un único año"
+
+# descartada (?) sv
+#: catgets/gencat.c:466
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr "directiva desconocida '%s': línea ignorada"
+
+# ## En el libro de Infovía traducen host por "anfitrión"
+# ## El comentario anterior sobra, procede de la "fuzzyness".
+# ## Set podría ser conjunto. Mirarlo. sv
+# ## Borro el "fuzzy" que había. sv
+#: catgets/gencat.c:445
+#, c-format
+msgid "unknown set `%s'"
+msgstr "conjunto `%s' desconocido"
+
 msgid "unknown signal"
 msgstr "señal desconocida"
+
+# ## Me gustó la traducción de ingobernable, no se me ocurría otra
+# ## ¿"zona sin reglas"? sv
+# ## Jolines, pues sí, claro. Mucho mejor que eso desde luego em
+#: time/zic.c:714
+msgid "unruly zone"
+msgstr "zona sin reglas"
+
+# ## Borro el "fuzzy" que había. sv
+#: catgets/gencat.c:950
+msgid "unterminated message"
+msgstr "mensaje sin terminar"
 
 #: sunrpc/rpc_scan.c:319
 msgid "unterminated string constant"
@@ -1315,212 +1934,77 @@ msgstr "cadena de caracteres sin terminar"
 # En recode ya se puso "Modo de empleo"
 # me suena a prospecto de crecepelo EM
 #
-#: sunrpc/rpc_main.c:75
+#: sunrpc/rpc_main.c:78
+#, c-format
 msgid "usage: %s infile\n"
 msgstr "Modo de empleo: %s archivo_de_entrada\n"
 
-#: sunrpc/rpc_parse.c:330
+# A lo mejor si pones "veintinueve de febrero" o "29 de febrero"
+# se entiende mejor. no sé. sv
+# Si, estas pensando lo mismo que yo, 29 de febrero puede confundir, porque
+# en el fichero pondrá 2/29  em
+#
+# Sugerencia: "uso de 2/29 ..." (usando sería "using") sv
+#: time/zic.c:1921
+msgid "use of 2/29 in non leap-year"
+msgstr "usando 2/29 en un año no bisiesto"
+
 # "array" es "array"?
 # Lo miro con cuidado , los archivos rpc_*.c de la libc son especialmente
 # complicados. Sí , creo que se refiere a los aliases de servicios rpc, y
 # efectivamente es un array de longitud variable. No se me ocurriría
 # traducirlo de otra forma, yo no lo entendería mejor que así.
 # otra vez está ausente la "declaración", ¿no habría que ponerla ? sv
-# rpc_parse contiene las funciones para 'parsear' un fichero de config. em
+# rpc_parse contiene las funciones para 'parsear' un archivo de config. em
 # Habrá que inventar algo para 'parsear' ... sv
+# Los alemanes dicen parsen , habe geparst  em , quizá comprobar
+# sintaxis o interpretar ? ( parsear es ambas cosas juntas, no ? ) em
+# Creo que "examinar" podría valer, al menos para empezar. sv
+#
+# Sugerencia: "esperado un..." -> "se esperaba un..." sv
+#: sunrpc/rpc_parse.c:330
 msgid "variable-length array declaration expected"
 msgstr "esperado un array de longitud variable"
 
 #: sunrpc/rpc_parse.c:370
 msgid "voids allowed only inside union and program definitions"
-msgstr "voids sólo se permiten dentro de las definiciones de uniones y de programa"
+msgstr ""
+"voids sólo se permiten dentro de las definiciones de uniones y de programa"
 
-# msgid "%s:%Zd: illegal use of `...'"
-# msgstr "%s:%Zd: uso no permitido de `...'"
+#: login/setutent_r.c:47
+msgid "while opening UTMP file"
+msgstr "al abrir el archivo UTMP"
+
+#: catgets/gencat.c:977
+msgid "while opening old catalog file"
+msgstr "al abrir el archivo de catálogo antiguo"
+
+# En todas estas, yo pondría "número incorrecto de campos",
+# "número incorrecto de argumentos", etc.
+# creo que quedaría mucho mejor. sv
+# La mitad como tú dices, y la mitad como yo em
 #
-# msgid "character `%s' not defined while needed as default value"
-# msgstr "el carácter `%s' no esta definido cuando se necesita como valor por defecto"
-#
-# msgid "%s: `END CHARMAP' is missing"
-# msgstr "%s: `END CHARMAP' no encontrado"
-#
-# msgid "%s:%Zd: category item `%s' already defined"
-# msgstr "%s:%Zd: elemento de categoría `%s' ya fue definido"
-#
-# msgid "%s:%Zd: invalid locale `%s' in copy statement"
-# msgstr "%s:%Zd: el local `%s' en la orden copy es inválido"
-#
-# msgid "%s:%Zd: duplicate definiton of item `%s' in category `LC_CTYPE'"
-# msgstr "%s:%Zd: definición duplicada del elemento `%s' en la categoría `LC_CTYPE'"
-#
-# msgid "%s:%Zd: locale category start expected"
-# msgstr "%s:%Zd: esperado el comienzo de una categoría local"
-#
-# msgid "%s:%Zd: unterminated string at end of line"
-# msgstr "%s:%Zd: cadena de caracteres sin terminar al final de la línea"
-#
-# msgid "%s:%u: character encoding must be given in 8-bit bytes"
-# msgstr "%s:%u: el juego de caracteres debe de especificarse con bytes de 8-bits"
-#
-# msgid "%s: unexpected end of file in charmap"
-# msgstr "%s: final de archivo no esperado"
-#
-# msgid "%s:%Zd: category `%s' does not end with `END %s'"
-# msgstr "%s:%Zd: la categoría `%s' no termina con `END %s'"
-#
-# msgid "value for item `%s' in category `%s' must be in range %d...%d"
-# msgstr "el valor para el elemento `%s' en la categoría `%s' debe de estar en un rango de %d...%d"
-#
-# msgid "program limitation: for now only upto %Zu bytes per character are allowed"
-# msgstr "limitación del programa: por ahora solamente están permitidos %Zu bytes por carácter"
-#
-# msgid "%s:%Zd: comment does not start in column 1"
-# msgstr "%s:%Zd: el comentario no comienza en la primera columna"
-#
-# msgid "%s:%u: illegal value for mb_cur_min: %d"
-# msgstr "%s:%u: valor no permitido para mb_cur_min: %d"
-#
-#  ??? 'item' no sé como traducirlo. En la 1.0.9 no existe este archivo
-# msgid "%s:%Zd: too few elements for item `%s'"
-# msgstr "%s:%Zd: insuficientes elementos para el item `%s'"
-#
-# msgid "cannot copy locale definition file `%s'"
-# msgstr "no se pudo copiar el archivo de definiciones locales `%s'"
-#
-# msgid "%s:%u: duplicate definition of mb_cur_max"
-# msgstr "%s:%u: definición duplicada de mb_cur_max"
-#
-# msgid "category `%s' not defined"
-# msgstr "la categoría `%s' no está definida"
-#
-# msgid "computing character table size: this may take a while"
-# msgstr "calculando el tamaño de la tabla de caracteres: por favor espere"
-#
-# msgid "%s:%Zd: multiple definition of locale category %s"
-# msgstr "%s:%Zd: definición repetida de la categoría local %s"
-#
-# msgid "%s:%u: line too long;  use `getconf LINE_MAX' to get the current maximum linelength"
-# msgstr "%s:%u: línea demasiado larga; debe usar `getconf LINE_MAX' para obtener el máximo de línea actual"
-#
-# msgid "%s:%Zd: directives `forward' and `backward' are mutually exclusive"
-# msgstr "%s:%Zd: las órdenes `forward' y `backward' son mutuamente excluyentes"
-#
-# msgid "cannot read locale directory `%s'"
-# msgstr "no se pudo leer el directorio de locales `%s'"
-#
-# msgid "%s:%Zd: duplicate definition of item `%s' in category `LC_CTYPE'"
-# msgstr "%s:%Zd: definición duplicada del elemento `%s' en la categoría `LC_CTYPE'"
-#
-# msgid "%s:%Zd: line too long;  use `getconf LINE_MAX' to get the current maximum line length"
-# msgstr "%s:%Zd: línea demasiado larga; debe usar `getconf LINE_MAX' para obtener la actual longitud máxima de línea"
-#
-# msgid "%s:%Zd: lower bound of ellipsis not smaller"
-# msgstr "%s:%Zd: la conexión inferior de las elipses no es menor"
-#
-# msgid "item `%s' of category `%s' has wrong length"
-# msgstr "el elemento `%s' de la categoría `%s' tiene un tamaño incorrecto"
-#
-# msgid "<SP> character must not be in class `%s'"
-# msgstr "el carácter <SP> no debe de estar en la clase `%s'"
-#
-# msgid "%s: unexpected end of file in locale defintion file"
-# msgstr "%s: final de archivo no esperado en el archivo de definición de locales"
-#
-# ??? debo de decir basura ? arrastar basura ?
-# msgid "%s:%Zd: trailing garbage at end of line"
-# msgstr "%s:%Zd: incongruencias al final de la línea"
-#
-# msgid "%s:%Zd: symbolic name must not be duplicate name in charmap"
-# msgstr "%s:%Zd: el nombre del símbolo no debe de estar repetido en el mapa de caracteres"
-#
-# msgid "cannot write output file `%s': %m"
-# msgstr "no se pudo escribir en el archivo de destino `%s': %m"
-#
-# msgid "character <SP> not defined in character map"
-# msgstr "el carácter <SP> no esta definido en el mapa de caracteres"
-#
-# msgid "no correct regular expression for item `%s' in category `%s': %s"
-# msgstr "expresión regular incorrecta para el elemento `%s' en la categoría `%s': %s"
-#
-#  ¿Por qué no "debe estar" en vez de "debe de estar"?
-#  Me suena igual. Lo pongo como dices
-# msgid "character '\\%o' in class `%s' must be in class `%s'"
-# msgstr "el carácter '\\%o' en la clase `%s' debe estar en la clase `%s'"
-#
-# msgid "item `%s' of category `%s' undefined"
-# msgstr "no está definido el elemento `%s' de la categoría `%s'"
-#
-# msgid "%s:%Zd: symbolic name must not duplicate name in charmap"
-# msgstr "%s:%Zd: el nombre del símbolo no debe de estar repetido en el mapa de caracteres"
-#
-# msgid "input file `%s' not found"
-# msgstr "no se encontró el archivo de entrada `%s'"
-#
-# msgid "<SP> character not in class `%s'"
-# msgstr "el carácter <SP> no está en la clase `%s'"
-#
-# msgid "%s:%Zd: syntax error in locale definition file"
-# msgstr "%s:%Zd: error de sintaxis en el archivo de definición de locales"
-#
-# msgid "item `%s' in category `%s' must not be empty"
-# msgstr "el elemento `%s' en la categoría `%s' no debe de estar vacío"
-#
-# msgid "%s:%Zd: character `%s' not defined"
-# msgstr "%s:%Zd: el carácter `%s' no está definido"
-#
-# msgid "%s:%Zd: end of line in character symbol"
-# msgstr "%s:%Zd: final de línea en símbolo de carácter"
-#
-# msgid "%s:%u: byte constant has less than two digits"
-# msgstr "%s:%u: constante 'byte' tiene menos de dos dígitos"
-#
-# ??? idem que arriba
-# msgid "%s:%Zd: too many elements for item `%s`"
-# msgstr "%s:%Zd: demasiados elementos para el item `%s'"
-#
-# msgid "item `%s' does not correspond to any valid name in ISO-4217"
-# msgstr "el elemento `%s' no se corresponde con ningún nombre válido en ISO-4217"
-#
-# lo mismo
-# msgid "character '\\%o' inc class `%s' must not be in class `%s'"
-# msgstr "el carácter '\\%o' en la clase `%s' no debe estar en la clase `%s'"
-#
-# msgid "Internal error in %s, line %u"
-# msgstr "Error interno en %s, línea %u"
-#
-# msgid "%s:%u: illegal value for mb_cur_max: %d"
-# msgstr "%s:%u: valor no permitido para mb_cur_max: %d"
-#
-# Especificación repetida del nombre del conjunto de caracteres. ? Santiago Vila
-# msgid "%s:%u: duplicate code set name specification"
-# msgstr "%s:%u: especificación repetida del conjunto de caracteres"
-#
-# msgid "%s:%Zd: number expected"
-# msgstr "%s:%Zd: esperado un número"
-#
-# msgid "%s:%Zd: `copy' must be sole rule"
-# msgstr "%s:%Zd: `copy' debe ser inequívoco"
-#
-# msgid "cannot open output file `%s': %m"
-# msgstr "no se pudo abrir el archivo de destino `%s': %m"
-#
-# msgid "%s:%u: duplicate entry"
-# msgstr "%s:%u: entrada repetida"
-#
-# msgid "%s:%u: duplicate definition of mb_cur_min"
-# msgstr "%s:%u: definición duplicada de mb_cur_min"
-#
-# msgid "%s:%u: number of bytes in character definition exceeds `mb_cur_max'"
-# msgstr "%s:%u: el número de bytes en la definición del carácter es mayor que `mb_cur_max'"
-#
-# msgid "%s:%Zd: invalid number"
-# msgstr "%s:%Zd: número no válido"
-#
-# msgid "internal error in %s, line %u"
-# msgstr "error interno en %s, línea %u"
-#
-# msgid "%s:%Zd: line too long;  use `getconf LINE_MAX' to get the maximum line length"
-# msgstr "%s:%Zd: línea demasiado larga; debe usar `getconf LINE_MAX' para obtener la actual longitud máxima de línea"
-#
-# msgid "%s:%u: starting character is bigger than last"
-# msgstr "%s:%u: el carácter del comienzo es mayor que el último"
+# Eso es que te da igual...
+# O es mejor como digo, o no es mejor.
+# Si es mejor, ponlo en todos los sitios. Y si no, en ninguno.
+# Yo creo que es mucho mejor poner "número incorrecto ..."
+# Si no, queda como "al revés". sv
+#: time/zic.c:1041
+msgid "wrong number of fields on Leap line"
+msgstr "número incorrecto de campos en la línea de bisiesto ( Leap )"
+
+#: time/zic.c:1132
+msgid "wrong number of fields on Link line"
+msgstr "número incorrecto de campos en la línea de enlace ( Link )"
+
+#: time/zic.c:874
+msgid "wrong number of fields on Rule line"
+msgstr "número incorrecto de argumentos en la línea de regla ( Rule )"
+
+#: time/zic.c:944
+msgid "wrong number of fields on Zone continuation line"
+msgstr "número de campos incorrecto en la línea de continuación de zona (Zone)"
+
+#: time/zic.c:902
+msgid "wrong number of fields on Zone line"
+msgstr "número de campos incorrecto en la línea de zona ( Zone )"

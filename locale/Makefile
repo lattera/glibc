@@ -25,6 +25,7 @@ headers		= locale.h langinfo.h
 distribute	= localeinfo.h categories.def iso-4217.def weight.h \
 		  strlen-hash.h \
 		  $(addprefix programs/, \
+			      locale.c localedef.c \
 			      $(localedef-modules:=.c) $(locale-modules:=.c) \
 			      $(lib-modules:=.c) config.h simple-hash.h \
 			      charmap-kw.gperf charmap-kw.h locfile-token.h \

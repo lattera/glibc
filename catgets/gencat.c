@@ -166,7 +166,7 @@ main (int argc, char *argv[])
   if (do_version)
     {
       fprintf (stderr, "%s - GNU %s %s\n", program_invocation_name,
-	       "libc", VERSION);
+	       PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 
@@ -213,7 +213,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -V, --version       output version information and exit\n\
 If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n\
 is -, output is written to standard output.\n\
-Report bugs to <bug-glibc@gnu.ai.mit.edu>.\n"),
+Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
 	   program_invocation_name, program_invocation_name);
 
   exit (status);

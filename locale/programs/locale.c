@@ -183,7 +183,7 @@ main (int argc, char *argv[])
   /* Version information is requested.  */
   if (do_version)
     {
-      fprintf (stderr, "%s - GNU %s %s\n", __progname, "libc", VERSION);
+      fprintf (stderr, "%s - GNU %s %s\n", __progname, PACKAGE, VERSION);
       exit (EXIT_SUCCESS);
     }
 
@@ -245,7 +245,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
   -c, --category-name   write names of selected categories\n\
   -k, --keyword-name    write names of selected keywords\n\
-Report bugs to <bug-glibc@gnu.ai.mit.edu>."),
+Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
 	    __progname);
 
   exit (status);

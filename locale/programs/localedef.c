@@ -174,7 +174,7 @@ main (int argc, char *argv[])
   if (do_version)
     {
       fprintf (stderr, "%s - GNU %s %s\n", program_invocation_short_name,
-	       "libc", VERSION);
+	       PACKAGE, VERSION);
       exit (0);
     }
 
@@ -397,7 +397,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
 \n\
 System's directory for character maps: %s\n\
                        locale files  : %s\n\
-Report bugs to <bug-glibc@gnu.ai.mit.edu>."),
+Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
 	    program_invocation_name, CHARMAP_PATH, LOCALE_PATH);
 
   exit (status);

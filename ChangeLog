@@ -1,3 +1,26 @@
+Sun Sep  8 02:36:02 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/SYS_libc.c (_libc_intl_domainname): Change value to "libc".
+	This is consistent with all other GNU packages.  We shouldn't
+	take care for a possible clash.  Somebody will name the domain
+	of a package libc if it is not the libc itself.
+	* MakeTAGS ($P/SYS_libc.pot): Rename to $P/libc.pot.
+	* po/Makefile (domainname): Change to libc.
+	(distribute): Now ship libc.pot.
+	* catgets/gencat.c (usage): Use `PACKAGE' for package name in
+	version information banner.
+	Change bug report address to bug-glibc@prep not @gnu.
+	* db/makedb.c (PACKAGE): New macro.  Set to _libc_intl_domain.
+	(main): Use `PACKAGE' for package name in version information
+	banner.
+	Change bug report address to bug-glibc@prep not @gnu.
+	* locale/programs/locale.c (main): Use `PACKAGE' for package name
+ 	in version information banner.
+	Change bug report address to bug-glibc@prep not @gnu.
+	* locale/programs/localedef.c (main): Likewise.
+
+	* version.h (VERSION): Bump to 1.94.
+
 Sat Sep  7 14:00:33 1996  David Mosberger-Tang  <davidm@azstarnet.com>
 
 	* catgets/catgets.c (catopen): Allocate sizeof(*result) bytes
@@ -19,7 +42,7 @@ Sat Sep  7 19:39:19 1996  Ulrich Drepper  <drepper@cygnus.com>
 
 Sat Sep  7 05:15:45 1996  Ulrich Drepper  <drepper@cygnus.com>
 
- 	* libio/iofdopen: Initialize _lock field only if _IO_MTSAFE_IO.
+	* libio/iofdopen: Initialize _lock field only if _IO_MTSAFE_IO.
 	* libio/iofopen: Likewise.
 	* libio/iofopncook.c: Likewise.
 	* libio/iopopen.c: Likewise.

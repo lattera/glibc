@@ -7,26 +7,76 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU glibc 1.10\n"
 "PO-Revision-Date: 1996-04-20 12:20 MET\n"
+"POT-Creation-Date: 1996-05-29 14:03\n"
 "Last-Translator: Jochen Hein <hein@informatik.tu-clausthal.de>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=ISO-8859-1\n"
 "Content-Transfer-Encoding: 8-bit\n"
 
-#: sunrpc/rpc_main.c:77
+#: sunrpc/rpc_main.c:80
+#, c-format
 msgid "       %s [-c | -h | -l | -m] [-o outfile] [infile]\n"
 msgstr "       %s [-c | -h | -l | -m] [-o Ausgabedatei] [Eingabedatei]\n"
 
-#: sunrpc/rpc_main.c:80
+#: sunrpc/rpc_main.c:83
+#, c-format
 msgid "       %s [-s udp|tcp]* [-o outfile] [infile]\n"
 msgstr "       %s [-s udp|tcp]* [-o Ausgabedatei] [Eingabedatei]\n"
 
+#: sunrpc/rpcinfo.c:612
+msgid "       rpcinfo -b prognum versnum\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:613
+msgid "       rpcinfo -d prognum versnum\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:611
+msgid "       rpcinfo -p [ host ]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:610
+msgid "       rpcinfo [ -n portnum ] -t host prognum [ versnum ]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:517
+msgid "   program vers proto   port\n"
+msgstr ""
+
+#: time/zic.c:423
+#, c-format
+msgid " (rule from \"%s\", line %d)"
+msgstr ""
+
+#: time/zic.c:420
+#, fuzzy, c-format
+msgid "\"%s\", line %d: %s"
+msgstr "%s, Zeile %d: "
+
+#: time/zic.c:908
+#, c-format
+msgid "\"Zone %s\" line and -l option are mutually exclusive"
+msgstr ""
+
+#: time/zic.c:916
+#, c-format
+msgid "\"Zone %s\" line and -p option are mutually exclusive"
+msgstr ""
+
+#: time/zic.c:721
+#, c-format
+msgid "%s in ruleless zone"
+msgstr ""
+
 # ### Checkit! format specifiers OK?
 #: assert/assert.c:48
+#, c-format
 msgid "%s%s%s:%u: %s%sAssertion `%s' failed.\n"
 msgstr "%s%s%s:%u: %s%sZusicherung `%s' nicht erfüllt.\n"
 
 #: assert/assert-perr.c:46
+#, c-format
 msgid "%s%s%s:%u: %s%sUnexpected error: %s.\n"
 msgstr "%s%s%s:%u: %s%sNicht erwarteter Fehler: %s.\n"
 
@@ -36,48 +86,145 @@ msgid "%s%sUnknown signal %d\n"
 msgstr "%s%sUnbekanntes Signal %d\n"
 
 #: sunrpc/rpc_util.c:258
+#, c-format
 msgid "%s, line %d: "
 msgstr "%s, Zeile %d: "
 
-#: posix/getopt.c:673
+#: time/zic.c:2035
+#, c-format
+msgid "%s: %d did not sign extend correctly\n"
+msgstr ""
+
+#: time/zic.c:1339
+#, c-format
+msgid "%s: Can't create %s: %s\n"
+msgstr ""
+
+#: time/zic.c:2014
+#, c-format
+msgid "%s: Can't create directory %s: %s\n"
+msgstr ""
+
+#: time/zic.c:600
+#, c-format
+msgid "%s: Can't link from %s to %s: %s\n"
+msgstr ""
+
+#: time/zic.c:746
+#, c-format
+msgid "%s: Can't open %s: %s\n"
+msgstr ""
+
+#: time/zic.c:814
+#, c-format
+msgid "%s: Error closing %s: %s\n"
+msgstr ""
+
+#: time/zic.c:808
+#, c-format
+msgid "%s: Error reading %s\n"
+msgstr ""
+
+#: time/zic.c:1404
+#, c-format
+msgid "%s: Error writing %s\n"
+msgstr ""
+
+#: time/zdump.c:257
+#, c-format
+msgid "%s: Error writing standard output "
+msgstr ""
+
+#: time/zic.c:793
+#, c-format
+msgid "%s: Leap line in non leap seconds file %s\n"
+msgstr ""
+
+#: time/zic.c:360
+#, fuzzy, c-format
+msgid "%s: Memory exhausted: %s\n"
+msgstr "Kein Hauptspeicher mehr verfügbar"
+
+#: time/zic.c:515
+#, c-format
+msgid "%s: More than one -L option specified\n"
+msgstr ""
+
+#: time/zic.c:475
+#, c-format
+msgid "%s: More than one -d option specified\n"
+msgstr ""
+
+#: time/zic.c:485
+#, c-format
+msgid "%s: More than one -l option specified\n"
+msgstr ""
+
+#: time/zic.c:495
+#, c-format
+msgid "%s: More than one -p option specified\n"
+msgstr ""
+
+#: time/zic.c:505
+#, c-format
+msgid "%s: More than one -y option specified\n"
+msgstr ""
+
+#: posix/getconf.c:149
+#, fuzzy, c-format
+msgid "%s: Unrecognized variable `%s'\n"
+msgstr "%s: Unbekannte Option `%c%s'\n"
+
+#: time/zic.c:1741
+#, c-format
+msgid "%s: command was '%s', result was %d\n"
+msgstr ""
+
+#: posix/getopt.c:686
 #, c-format
 msgid "%s: illegal option -- %c\n"
 msgstr "%s: Die Option ist nicht erlaubt -- %c\n"
 
-#: posix/getopt.c:676
+#: posix/getopt.c:689
 #, c-format
 msgid "%s: invalid option -- %c\n"
 msgstr "%s: Ungültige option -- %c\n"
 
-#: posix/getopt.c:597
+#: posix/getopt.c:610
 #, c-format
 msgid "%s: option `%c%s' doesn't allow an argument\n"
 msgstr "%s: Die Option `%c%s' erlaubt keine Argumente\n"
 
-#: posix/getopt.c:568
+#: posix/getopt.c:581
 #, c-format
 msgid "%s: option `%s' is ambiguous\n"
 msgstr "%s: Die Option `%s' ist nicht eindeutig\n"
 
-#: posix/getopt.c:614
+#: posix/getopt.c:627
 #, c-format
 msgid "%s: option `%s' requires an argument\n"
 msgstr "%s: Die Option `%s' erfordert ein Argument\n"
 
-#: posix/getopt.c:592
+#: posix/getopt.c:605
 #, c-format
 msgid "%s: option `--%s' doesn't allow an argument\n"
 msgstr "%s: Die Option `--%s' erlaubt kein Argument\n"
 
-#: posix/getopt.c:712
+#: posix/getopt.c:725
 #, c-format
 msgid "%s: option requires an argument -- %c\n"
 msgstr "%s: Die Option benötigt ein Argument -- %c\n"
 
 # Mit Quotes?
-#: sunrpc/rpc_main.c:143
+#: sunrpc/rpc_main.c:146
+#, c-format
 msgid "%s: output would overwrite %s\n"
 msgstr "%s: Die Ausgabe würde %s überschreiben\n"
+
+#: time/zic.c:800 zic.c:1212 zic.c:1232
+#, c-format
+msgid "%s: panic: Invalid l_value %d\n"
+msgstr ""
 
 # Wenn der Doppelpunkt verwendet wird, dann müsste infinitivisch
 # konstruiert werden:
@@ -85,23 +232,46 @@ msgstr "%s: Die Ausgabe würde %s überschreiben\n"
 #     "%s: nicht zu öffnen "
 #
 # Oder ohne Doppelpunkt. ke
-#: sunrpc/rpc_main.c:149
+#: sunrpc/rpc_main.c:152
+#, c-format
 msgid "%s: unable to open "
 msgstr "%s: kann nicht geöffnet werden "
 
-#: posix/getopt.c:647
+#: posix/getopt.c:660
 #, c-format
 msgid "%s: unrecognized option `%c%s'\n"
 msgstr "%s: Unbekannte Option `%c%s'\n"
 
-#: posix/getopt.c:643
+#: posix/getopt.c:656
 #, c-format
 msgid "%s: unrecognized option `--%s'\n"
 msgstr "%s: Unbekannte Option `--%s'\n"
 
+#: time/zic.c:432
+#, c-format
+msgid ""
+"%s: usage is %s [ -s ] [ -v ] [ -l localtime ] [ -p posixrules ] [ -d directory ]\n"
+"\t[ -L leapseconds ] [ -y yearistype ] [ filename ... ]\n"
+msgstr ""
+
+#: time/zdump.c:165
+#, c-format
+msgid "%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"
+msgstr ""
+
 #: sunrpc/clnt_perr.c:125
+#, c-format
 msgid "(unknown authentication error - %d)"
 msgstr "(unbekannter Fehler bei der Authentifizierung - %d)"
+
+#: sunrpc/rpcinfo.c:555
+#, fuzzy
+msgid "(unknown)"
+msgstr "Unbekanntes Signal"
+
+#: catgets/gencat.c:242
+msgid "*standard input*"
+msgstr ""
 
 #: inet/rcmd.c:325
 msgid ".rhosts fstat failed"
@@ -120,6 +290,7 @@ msgid ".rhosts writeable by other than owner"
 msgstr "`.rhosts' ist auch für andere Benutzer als den Dateieigentümer beschreibbar"
 
 #: clnt_perr.c:133 sunrpc/clnt_perr.c:112
+#, c-format
 msgid "; low version = %lu, high version = %lu"
 msgstr "; untere Version = %lu, obere Version = %lu"
 
@@ -127,23 +298,18 @@ msgstr "; untere Version = %lu, obere Version = %lu"
 msgid "; why = "
 msgstr "; Ursache = "
 
-#: sysdeps/mach/hurd/errlist.c:112
 msgid "?"
 msgstr "?"
 
-#: sysdeps/mach/hurd/errlist.c:58
 msgid "Address already in use"
 msgstr "Die Adresse wird bereits verwendet"
 
-#: sysdeps/mach/hurd/errlist.c:57
 msgid "Address family not supported by protocol family"
 msgstr "Die Adress-Familie wird von der Protokoll-Familie nicht unterstützt"
 
-#: i486-linux/siglist.c:22
 msgid "Alarm clock"
 msgstr "Der Wecker klingelt"
 
-#: sysdeps/mach/hurd/errlist.c:17
 msgid "Argument list too long"
 msgstr "Die Argumentliste ist zu lang"
 
@@ -151,19 +317,15 @@ msgstr "Die Argumentliste ist zu lang"
 msgid "Authentication OK"
 msgstr "Authentifizierung OK"
 
-#: sysdeps/mach/hurd/errlist.c:90
 msgid "Authentication error"
 msgstr "Fehler bei der Authentifizierung"
 
-#: sysdeps/mach/hurd/errlist.c:24
 msgid "Bad address"
 msgstr "Ungültige Adresse"
 
-#: sysdeps/mach/hurd/errlist.c:19
 msgid "Bad file descriptor"
 msgstr "Ungültiger Datei-Deskriptor"
 
-#: sysdeps/mach/hurd/errlist.c:25
 msgid "Block device required"
 msgstr "Es ist ein Block-Device notwendig"
 
@@ -171,27 +333,21 @@ msgstr "Es ist ein Block-Device notwendig"
 msgid "Broadcast select problem"
 msgstr "Select-Problem beim Broadcast"
 
-#: i486-linux/siglist.c:21 sysdeps/mach/hurd/errlist.c:42
 msgid "Broken pipe"
 msgstr "Datenübergabe unterbrochen (broken pipe)"
 
-#: i486-linux/siglist.c:15
 msgid "Bus error"
 msgstr "Bus-Zugriffsfehler"
 
-#: i486-linux/siglist.c:32
 msgid "CPU time limit exceeded"
 msgstr "Rechenzeitbegrenzung überschritten"
 
-#: sysdeps/mach/hurd/errlist.c:59
 msgid "Can't assign requested address"
 msgstr "Die angeforderte Adresse kann nicht zugewiesen werden"
 
-#: sysdeps/mach/hurd/errlist.c:68
 msgid "Can't send after socket shutdown"
 msgstr "Ein Senden nach dem Beenden des Sockets ist nicht möglich"
 
-#: sysdeps/mach/hurd/errlist.c:22
 msgid "Cannot allocate memory"
 msgstr "Nicht genügend Hauptspeicher verfügbar"
 
@@ -215,7 +371,6 @@ msgstr "Kann das Broadcast-Paket nicht senden"
 msgid "Cannot set socket option SO_BROADCAST"
 msgstr "Kann die Option SO_BROADCAST nicht beim Socket setzen"
 
-#: i486-linux/siglist.c:25
 msgid "Child exited"
 msgstr "Der Kind-Prozeß ist beendet"
 
@@ -223,47 +378,38 @@ msgstr "Der Kind-Prozeß ist beendet"
 msgid "Client credential too weak"
 msgstr "Die Bestätigung des Clients ist zu unsicher"
 
-#: sysdeps/mach/hurd/errlist.c:114
 msgid "Computer bought the farm"
 msgstr "Der Computer hat den Bauernhof erworben"
 
-#: sysdeps/mach/hurd/errlist.c:71
 msgid "Connection refused"
 msgstr "Verbindungsaufbau abgelehnt"
 
-#: sysdeps/mach/hurd/errlist.c:64
 msgid "Connection reset by peer"
 msgstr "Die Verbindung wurde vom Kommunikationspartner zurückgesetzt"
 
-#: sysdeps/mach/hurd/errlist.c:70
 msgid "Connection timed out"
 msgstr "Die Wartezeit beim Verbindungsaufbau ist abgelaufen"
 
-#: i486-linux/siglist.c:26
 msgid "Continued"
 msgstr "Fortgesetzt"
 
-#: sysdeps/mach/hurd/errlist.c:49
 msgid "Destination address required"
 msgstr "Es ist eine Zieladresse notwendig"
 
-#: sysdeps/mach/hurd/errlist.c:26
 msgid "Device busy"
 msgstr "Das Gerät ist bereits belegt"
 
-#: sysdeps/mach/hurd/errlist.c:16
 msgid "Device not configured"
 msgstr "Das Gerät ist nicht konfiguriert"
 
-#: sysdeps/mach/hurd/errlist.c:76
 msgid "Directory not empty"
 msgstr "Das Verzeichnis ist nicht leer"
 
-#: sysdeps/mach/hurd/errlist.c:79
 msgid "Disc quota exceeded"
 msgstr "Der zugewiesene Plattenplatz (Quota) ist überschritten"
 
 #: sunrpc/clnt_perr.c:254
+#, c-format
 msgid "Error %d"
 msgstr "Fehler %d"
 
@@ -271,7 +417,6 @@ msgstr "Fehler %d"
 msgid "Error in unknown error system: "
 msgstr "Fehler in unbekanntem Fehler-System: "
 
-#: sysdeps/mach/hurd/errlist.c:18
 msgid "Exec format error"
 msgstr "Fehler im Format der Programmdatei"
 
@@ -279,40 +424,31 @@ msgstr "Fehler im Format der Programmdatei"
 msgid "Failed (unspecified error)"
 msgstr "Fehlgeschlagen (Fehler nicht genau zu spezifizieren)"
 
-#: sysdeps/mach/hurd/errlist.c:27
 msgid "File exists"
 msgstr "Die Datei existiert bereits"
 
-#: sysdeps/mach/hurd/errlist.c:73
 msgid "File name too long"
 msgstr "Der Dateiname ist zu lang"
 
-#: i486-linux/siglist.c:33
 msgid "File size limit exceeded"
 msgstr "Die maximale Länge eines Dateinamens ist überschritten"
 
-#: sysdeps/mach/hurd/errlist.c:37
 msgid "File too large"
 msgstr "Die Datei ist zu groß"
 
-#: i486-linux/siglist.c:16
 msgid "Floating point exception"
 msgstr "Gleitkomma-Ausnahme"
 
-#: sysdeps/mach/hurd/errlist.c:88
 msgid "Function not implemented"
 msgstr "Die angeforderte Funktion ist nicht implementiert"
 
 # ???
-#: sysdeps/mach/hurd/errlist.c:115
 msgid "Gratuitous error"
 msgstr "Irgendein Fehler"
 
-#: i486-linux/siglist.c:9
 msgid "Hangup"
 msgstr "Aufgelegt"
 
-#: sysdeps/mach/hurd/errlist.c:74
 msgid "Host is down"
 msgstr "Der Rechner ist nicht aktiv"
 
@@ -320,47 +456,36 @@ msgstr "Der Rechner ist nicht aktiv"
 msgid "Host name lookup failure"
 msgstr "Fehler beim Auflösen des Hostnamens"
 
-#: i486-linux/siglist.c:37
 msgid "I/O possible"
 msgstr "Ein-/Ausgabe ist möglich"
 
-#: i486-linux/siglist.c:14
 msgid "IOT trap"
 msgstr "Ein-/Ausgabe-Trap (IOT)"
 
-#: i486-linux/siglist.c:12
 msgid "Illegal Instruction"
 msgstr "Ungültiger Maschinenbefehl"
 
-#: sysdeps/mach/hurd/errlist.c:39
 msgid "Illegal seek"
 msgstr "Nicht erlaubter Seek"
 
-#: sysdeps/mach/hurd/errlist.c:89
 msgid "Inappropriate file type or format"
 msgstr "Unpassender Dateityp oder unpassendes Dateiformat"
 
-#: sysdeps/mach/hurd/errlist.c:35
 msgid "Inappropriate ioctl for device"
 msgstr "Unpassender IOCTL (I/O-Control) für das Gerät"
 
-#: sysdeps/mach/hurd/errlist.c:110
 msgid "Inappropriate operation for background process"
 msgstr "Unpassende Operation für den Hintergrundprozeß"
 
-#: sysdeps/mach/hurd/errlist.c:15
 msgid "Input/output error"
 msgstr "Eingabe-/Ausgabe-Fehler"
 
-#: i486-linux/siglist.c:10
 msgid "Interrupt"
 msgstr "Unterbrechung"
 
-#: sysdeps/mach/hurd/errlist.c:14
 msgid "Interrupted system call"
 msgstr "Unterbrechung während Betriebssystemaufruf"
 
-#: sysdeps/mach/hurd/errlist.c:32
 msgid "Invalid argument"
 msgstr "Das Argument ist ungültig"
 
@@ -389,7 +514,6 @@ msgstr "Ungültiges Sortierzeichen"
 msgid "Invalid content of \\{\\}"
 msgstr "Ungültiger Inhalt von \\{\\}"
 
-#: sysdeps/mach/hurd/errlist.c:28
 msgid "Invalid cross-device link"
 msgstr "Ungültiger Link über Gerätegrenzen hinweg"
 
@@ -409,11 +533,9 @@ msgstr "Ungültiger regulärer Ausdruck"
 msgid "Invalid server verifier"
 msgstr "Ungültige Überprüfung des Servers"
 
-#: sysdeps/mach/hurd/errlist.c:31
 msgid "Is a directory"
 msgstr "Ist ein Verzeichnis"
 
-#: i486-linux/siglist.c:17
 msgid "Killed"
 msgstr "Getötet"
 
@@ -421,23 +543,18 @@ msgstr "Getötet"
 msgid "Memory exhausted"
 msgstr "Kein Hauptspeicher mehr verfügbar"
 
-#: sysdeps/mach/hurd/errlist.c:50
 msgid "Message too long"
 msgstr "Die Nachricht ist zu lang"
 
-#: sysdeps/mach/hurd/errlist.c:91
 msgid "Need authenticator"
 msgstr "Authentikator benötigt"
 
-#: sysdeps/mach/hurd/errlist.c:62
 msgid "Network dropped connection on reset"
 msgstr "Das Netzwerk hat die Verbindung nach einem Reset verloren"
 
-#: sysdeps/mach/hurd/errlist.c:60
 msgid "Network is down"
 msgstr "Das Netzwerk ist nicht aktiv"
 
-#: sysdeps/mach/hurd/errlist.c:61
 msgid "Network is unreachable"
 msgstr "Das netzwerk ist nicht erreichbar"
 
@@ -445,15 +562,12 @@ msgstr "Das netzwerk ist nicht erreichbar"
 msgid "No address associated with name"
 msgstr "Zu diesem Namen gehört keine Adresse"
 
-#: sysdeps/mach/hurd/errlist.c:65
 msgid "No buffer space available"
 msgstr "Kein Hauptspeicher für den Puffer verfügbar"
 
-#: sysdeps/mach/hurd/errlist.c:20
 msgid "No child processes"
 msgstr "Kein Kind-Prozeß"
 
-#: sysdeps/mach/hurd/errlist.c:87
 msgid "No locks available"
 msgstr "Keine Sperren verfügbar"
 
@@ -461,63 +575,58 @@ msgstr "Keine Sperren verfügbar"
 msgid "No match"
 msgstr "Keine Übereinstimmung gefunden"
 
-#: posix/regex.c:5197
+#: posix/regex.c:5200
 msgid "No previous regular expression"
 msgstr "Es wurde bisher noch kein regulärer Ausdruck definiert"
 
-#: sysdeps/mach/hurd/errlist.c:75
+#: sunrpc/rpcinfo.c:515
+#, fuzzy
+msgid "No remote programs registered.\n"
+msgstr "RPC: Programm nicht registriert"
+
 msgid "No route to host"
 msgstr "Keine Route zum entfernten Rechner"
 
-#: sysdeps/mach/hurd/errlist.c:38
 msgid "No space left on device"
 msgstr "Auf dem Gerät ist kein Speicherplatz mehr verfügbar"
 
-#: sysdeps/mach/hurd/errlist.c:12
 msgid "No such file or directory"
 msgstr "Datei oder Verzeichnis nicht gefunden"
 
-#: sysdeps/mach/hurd/errlist.c:13
 msgid "No such process"
 msgstr "Kein passender Prozeß gefunden"
 
-#: sysdeps/mach/hurd/errlist.c:30
 msgid "Not a directory"
 msgstr "Ist kein Verzeichnis"
 
-#: sysdeps/mach/hurd/errlist.c:43
 msgid "Numerical argument out of domain"
 msgstr "Das numerische Argument ist außerhalb des Definitionsbereiches"
 
-#: sysdeps/mach/hurd/errlist.c:44
 msgid "Numerical result out of range"
 msgstr "Das numerische Ergebnis ist außerhalb des gültigen Bereiches"
 
-#: sysdeps/mach/hurd/errlist.c:47
+#: time/zic.c:1835
+msgid "Odd number of quotation marks"
+msgstr ""
+
 msgid "Operation already in progress"
 msgstr "Die Operation wird bereits ausgeführt"
 
-#: sysdeps/mach/hurd/errlist.c:11
 msgid "Operation not permitted"
 msgstr "Die Operation ist nicht erlaubt"
 
-#: sysdeps/mach/hurd/errlist.c:55
 msgid "Operation not supported"
 msgstr "Die Operation wird nicht unterstützt"
 
-#: sysdeps/mach/hurd/errlist.c:29
 msgid "Operation not supported by device"
 msgstr "Die Operation wird von dem Gerät nicht unterstützt"
 
-#: sysdeps/mach/hurd/errlist.c:46
 msgid "Operation now in progress"
 msgstr "Die Operation ist jetzt in Bearbeitung"
 
-#: sysdeps/mach/hurd/errlist.c:23
 msgid "Permission denied"
 msgstr "Keine Berechtigung"
 
-#: i486-linux/siglist.c:38
 msgid "Power failure"
 msgstr "Fehler in der Stromversorgung"
 
@@ -525,47 +634,36 @@ msgstr "Fehler in der Stromversorgung"
 msgid "Premature end of regular expression"
 msgstr "Unerwartetes Ende des regulären Ausdruckes"
 
-#: i486-linux/siglist.c:35
 msgid "Profiling timer expired"
 msgstr "Zeitnehmer zur Laufzeitbestimmung ist abgelaufen"
 
-#: sysdeps/mach/hurd/errlist.c:56
 msgid "Protocol family not supported"
 msgstr "Die Protokollfamilie wird nicht unterstützt"
 
-#: sysdeps/mach/hurd/errlist.c:52
 msgid "Protocol not available"
 msgstr "Das Protokoll ist nicht verfügbar"
 
-#: sysdeps/mach/hurd/errlist.c:53
 msgid "Protocol not supported"
 msgstr "Das Protokoll wird nicht unterstützt"
 
-#: sysdeps/mach/hurd/errlist.c:51
 msgid "Protocol wrong type for socket"
 msgstr "Das Protokoll paßt nicht zu dem Socket"
 
-#: i486-linux/siglist.c:11
 msgid "Quit"
 msgstr "Verlassen"
 
-#: sysdeps/mach/hurd/errlist.c:86
 msgid "RPC bad procedure for program"
 msgstr "RPC: ungültige Prozedur für das Programm"
 
-#: sysdeps/mach/hurd/errlist.c:84
 msgid "RPC program not available"
 msgstr "RPC: Programm nicht verfügbar"
 
-#: sysdeps/mach/hurd/errlist.c:85
 msgid "RPC program version wrong"
 msgstr "RPC: Programm-Version nicht passend"
 
-#: sysdeps/mach/hurd/errlist.c:82
 msgid "RPC struct is bad"
 msgstr "RPC: Die Struktur ist ungültig"
 
-#: sysdeps/mach/hurd/errlist.c:83
 msgid "RPC version wrong"
 msgstr "RPC: falsche Version"
 
@@ -648,7 +746,6 @@ msgstr "RPC: Unbekannter Rechner"
 msgid "RPC: Unknown protocol"
 msgstr "RPC: Unbekanntes Protokoll"
 
-#: sysdeps/mach/hurd/errlist.c:40
 msgid "Read-only file system"
 msgstr "Das Dateisystem ist nur lesbar"
 
@@ -656,75 +753,57 @@ msgstr "Das Dateisystem ist nur lesbar"
 msgid "Regular expression too big"
 msgstr "Der reguläre Ausdruck ist zu groß"
 
-#: sysdeps/mach/hurd/errlist.c:92
 msgid "Reserved error 82"
 msgstr "Revervierter Fehlercode 82"
 
-#: sysdeps/mach/hurd/errlist.c:93
 msgid "Reserved error 83"
 msgstr "Revervierter Fehlercode 83"
 
-#: sysdeps/mach/hurd/errlist.c:94
 msgid "Reserved error 84"
 msgstr "Revervierter Fehlercode 85"
 
-#: sysdeps/mach/hurd/errlist.c:95
 msgid "Reserved error 85"
 msgstr "Revervierter Fehlercode 85"
 
-#: sysdeps/mach/hurd/errlist.c:96
 msgid "Reserved error 86"
 msgstr "Revervierter Fehlercode 86"
 
-#: sysdeps/mach/hurd/errlist.c:97
 msgid "Reserved error 87"
 msgstr "Revervierter Fehlercode 87"
 
-#: sysdeps/mach/hurd/errlist.c:98
 msgid "Reserved error 88"
 msgstr "Revervierter Fehlercode 88"
 
-#: sysdeps/mach/hurd/errlist.c:99
 msgid "Reserved error 89"
 msgstr "Revervierter Fehlercode 89"
 
-#: sysdeps/mach/hurd/errlist.c:100
 msgid "Reserved error 90"
 msgstr "Revervierter Fehlercode 90"
 
-#: sysdeps/mach/hurd/errlist.c:101
 msgid "Reserved error 91"
 msgstr "Revervierter Fehlercode 91"
 
-#: sysdeps/mach/hurd/errlist.c:102
 msgid "Reserved error 92"
 msgstr "Revervierter Fehlercode 92"
 
-#: sysdeps/mach/hurd/errlist.c:103
 msgid "Reserved error 93"
 msgstr "Revervierter Fehlercode 93"
 
-#: sysdeps/mach/hurd/errlist.c:104
 msgid "Reserved error 94"
 msgstr "Revervierter Fehlercode 94"
 
-#: sysdeps/mach/hurd/errlist.c:105
 msgid "Reserved error 95"
 msgstr "Revervierter Fehlercode 95"
 
-#: sysdeps/mach/hurd/errlist.c:106
 msgid "Reserved error 96"
 msgstr "Revervierter Fehlercode 96"
 
-#: sysdeps/mach/hurd/errlist.c:107
 msgid "Reserved error 97"
 msgstr "Revervierter Fehlercode 97"
 
-#: sysdeps/mach/hurd/errlist.c:108
 msgid "Reserved error 98"
 msgstr "Revervierter Fehlercode 98"
 
-#: sysdeps/mach/hurd/errlist.c:109
 msgid "Reserved error 99"
 msgstr "Revervierter Fehlercode 99"
 
@@ -736,15 +815,12 @@ msgstr "Fehler des Resolvers 0 (Kein Fehler)"
 msgid "Resolver internal error"
 msgstr "Interner Fehler des Resolvers"
 
-#: sysdeps/mach/hurd/errlist.c:21
 msgid "Resource deadlock avoided"
 msgstr "Verklemmung beim Zugriff auf eine Resource vermieden"
 
-#: sysdeps/mach/hurd/errlist.c:45
 msgid "Resource temporarily unavailable"
 msgstr "Das Programm ist zur Zeit nicht verfügbar"
 
-#: i486-linux/siglist.c:19
 msgid "Segmentation fault"
 msgstr "Speicherzugriffsfehler"
 
@@ -756,92 +832,71 @@ msgstr "Der Server hat die Bestätigung zurückgewiesen"
 msgid "Server rejected verifier"
 msgstr "Der Server hat die Überprüfung zurückgewiesen"
 
-#: sysdeps/mach/hurd/errlist.c:66
 msgid "Socket is already connected"
 msgstr "Der Socket ist bereits verbunden"
 
-#: sysdeps/mach/hurd/errlist.c:67
 msgid "Socket is not connected"
 msgstr "Der Socket ist nicht verbunden"
 
-#: sysdeps/mach/hurd/errlist.c:48
 msgid "Socket operation on non-socket"
 msgstr "Socket-Operation an einem nicht-Socket"
 
-#: sysdeps/mach/hurd/errlist.c:54
 msgid "Socket type not supported"
 msgstr "Socket-Typ wird nicht unterstützt"
 
-#: sysdeps/mach/hurd/errlist.c:63
 msgid "Software caused connection abort"
 msgstr "Das Programm verursacht den Abbruch der Verbindung"
 
-#: sysdeps/mach/hurd/errlist.c:80
 msgid "Stale NFS file handle"
 msgstr "Ungültige NFS-Dateizugriffsnummer"
 
-#: i486-linux/siglist.c:28
 msgid "Stopped"
 msgstr "Angehalten"
 
-#: i486-linux/siglist.c:27
 msgid "Stopped (signal)"
 msgstr "Angehalten (Signal)"
 
-#: i486-linux/siglist.c:29
 msgid "Stopped (tty input)"
 msgstr "Angehalten (tty-Eingabe)"
 
-#: i486-linux/siglist.c:30
 msgid "Stopped (tty output)"
 msgstr "Angehalten (tty-Ausgabe)"
 
-#: posix/regex.c:940 sysdeps/mach/hurd/errlist.c:10
+#: posix/regex.c:940
 msgid "Success"
 msgstr "Erfolg"
 
-#: i486-linux/siglist.c:23
 msgid "Terminated"
 msgstr "Beendet"
 
-#: sysdeps/mach/hurd/errlist.c:36
 msgid "Text file busy"
 msgstr "Das Programm kann nicht verändert werden (busy)"
 
-#: sysdeps/mach/hurd/errlist.c:81
 msgid "Too many levels of remote in path"
 msgstr "Zu viele \"entfernte\" Ebenen im Pfad"
 
-#: sysdeps/mach/hurd/errlist.c:72
 msgid "Too many levels of symbolic links"
 msgstr "Zu viele Ebenen aus symbolischen Links"
 
-#: sysdeps/mach/hurd/errlist.c:41
 msgid "Too many links"
 msgstr "Zu viele Links"
 
-#: sysdeps/mach/hurd/errlist.c:34
 msgid "Too many open files"
 msgstr "Zu viele offene Dateien"
 
-#: sysdeps/mach/hurd/errlist.c:33
 msgid "Too many open files in system"
 msgstr "Zu viele offene Dateien im System"
 
-#: sysdeps/mach/hurd/errlist.c:77
 msgid "Too many processes"
 msgstr "Zu viele Prozesse"
 
 # ???
-#: sysdeps/mach/hurd/errlist.c:69
 msgid "Too many references: can't splice"
 msgstr "Zu viele Referenzen: can't splice"
 
-#: sysdeps/mach/hurd/errlist.c:78
 msgid "Too many users"
 msgstr "Zu viele Benutzer"
 
-#: i486-linux/siglist.c:13
 msgid "Trace/breakpoint trap"
 msgstr "Trace/Breakpoint ausgelöst"
 
@@ -849,11 +904,16 @@ msgstr "Trace/Breakpoint ausgelöst"
 msgid "Trailing backslash"
 msgstr "Angehängter \"Backslash\""
 
-#: sysdeps/mach/hurd/errlist.c:111
 msgid "Translator died"
 msgstr "Der Übersetzer ist gestorben"
 
+#: catgets/gencat.c:201
+#, c-format
+msgid "Try `%s --help' for more information.\n"
+msgstr ""
+
 #: inet/rcmd.c:118
+#, c-format
 msgid "Trying %s...\n"
 msgstr "Versuche %s...\n"
 
@@ -899,29 +959,55 @@ msgstr "[ oder [^ ohne schließende Klammer"
 msgid "Unmatched \\{"
 msgstr "\\{ ohne schließende Klammer"
 
-#: i486-linux/siglist.c:31
 msgid "Urgent I/O condition"
 msgstr "Dringende Ein-/Ausgabe-Bedingung"
 
-#: i486-linux/siglist.c:18
+#: catgets/gencat.c:204
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... -o OUTPUT-FILE [INPUT-FILE]...\n"
+"       %s [OPTION]... [OUTPUT-FILE [INPUT-FILE]...]\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -H, --header        create C header file containing symbol definitions\n"
+"  -h, --help          display this help and exit\n"
+"      --new           do not use existing catalog, force new output file\n"
+"  -o, --output=NAME   write output to file NAME\n"
+"  -V, --version       output version information and exit\n"
+"If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
+"is -, output is written to standard output.\n"
+msgstr ""
+
+#: posix/getconf.c:81
+#, c-format
+msgid "Usage: %s variable_name [pathname]\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:609
+msgid "Usage: rpcinfo [ -n portnum ] -u host prognum [ versnum ]\n"
+msgstr ""
+
 msgid "User defined signal 1"
 msgstr "Benutzerdefiniertes Signal 1"
 
-#: i486-linux/siglist.c:20
 msgid "User defined signal 2"
 msgstr "Benutzerdefiniertes Signal 2"
 
-#: i486-linux/siglist.c:34
 msgid "Virtual timer expired"
 msgstr "Der virtuelle Zeitnehmer ist abgelaufen"
 
-#: i486-linux/siglist.c:36
+#: time/zic.c:1740
+msgid "Wild result from command execution"
+msgstr ""
+
 msgid "Window changed"
 msgstr "Die Fenstergröße wurde verändert"
 
-#: sysdeps/mach/hurd/errlist.c:113
 msgid "You really blew it this time"
 msgstr "Diesmal hast Du es wirklich kaputtgemacht"
+
+#: time/zic.c:1013
+msgid "Zone continuation line end time is not after end time of previous line"
+msgstr ""
 
 #: sunrpc/rpc_parse.c:326
 msgid "array declaration expected"
@@ -934,6 +1020,14 @@ msgstr "auth_none.c - Fatales \"marshalling\"-Problem"
 #: inet/rcmd.c:327
 msgid "bad .rhosts owner"
 msgstr "Ungültiger Eigentümer der Datei `.rhosts'"
+
+#: time/zic.c:1136
+msgid "blank FROM field on Link line"
+msgstr ""
+
+#: time/zic.c:1140
+msgid "blank TO field on Link line"
+msgstr ""
 
 #: malloc/mcheck.c:174
 msgid "block freed twice"
@@ -958,14 +1052,26 @@ msgid "cache_set: victim not found"
 msgstr "cache_set: Das Opfer wurde nicht gefunden"
 
 #: sunrpc/svc_simple.c:64
+#, c-format
 msgid "can't reassign procedure number %d\n"
 msgstr "Kann die Prozedurnummer %d nicht erneut zuweisen\n"
+
+#: catgets/gencat.c:248
+#, fuzzy, c-format
+msgid "cannot open input file `%s'"
+msgstr "Kann die Ausgabedatei `%s' nicht öffnen: %m"
+
+#: catgets/gencat.c:753 gencat.c:794
+#, fuzzy, c-format
+msgid "cannot open output file `%s'"
+msgstr "Kann die Ausgabedatei `%s' nicht öffnen: %m"
 
 #: sunrpc/clnt_raw.c:106
 msgid "clnt_raw.c - Fatal header serialization error."
 msgstr "clnt_raw.c - Fataler Fehler bei der Header-Serialisierung."
 
 #: inet/rcmd.c:112
+#, c-format
 msgid "connect to address %s: "
 msgstr "Verbindungsaufbau zur Adresse %s: "
 
@@ -977,13 +1083,42 @@ msgstr "Konstante oder Bezeichner erwartet"
 msgid "couldn't create an rpc server\n"
 msgstr "Kann keinen RPC-Server erzeugen\n"
 
+#: sunrpc/portmap.c:122
+#, fuzzy
+msgid "couldn't do tcp_create\n"
+msgstr "Kann keinen RPC-Server erzeugen\n"
+
+#: sunrpc/portmap.c:100
+#, fuzzy
+msgid "couldn't do udp_create\n"
+msgstr "Kann keinen RPC-Server erzeugen\n"
+
 #: sunrpc/svc_simple.c:77
+#, c-format
 msgid "couldn't register prog %d vers %d\n"
 msgstr "Kann das Programm %d Version %d nicht registrieren\n"
 
 #: sunrpc/rpc_parse.c:77
 msgid "definition keyword expected"
 msgstr "Keyword-Definition erwartet"
+
+#: catgets/gencat.c:367
+#, fuzzy
+msgid "duplicate set definition"
+msgstr "%s:%u: Doppelte Spezifikation des Zeichensatz-Namens"
+
+#: time/zic.c:928
+#, c-format
+msgid "duplicate zone name %s (file \"%s\", line %d)"
+msgstr ""
+
+#: catgets/gencat.c:530
+msgid "duplicated message identifier"
+msgstr ""
+
+#: catgets/gencat.c:503
+msgid "duplicated message number"
+msgstr ""
 
 #: sunrpc/svc_udp.c:344
 msgid "enablecache: cache already enabled"
@@ -1002,16 +1137,23 @@ msgid "enablecache: could not allocate cache fifo"
 msgstr "enablecache: Kann keinen FIFO-Cache anlegen"
 
 #: sunrpc/rpc_util.c:300
+#, c-format
 msgid "expected '%s'"
 msgstr "'%s' erwartet"
 
 #: sunrpc/rpc_util.c:312
+#, c-format
 msgid "expected '%s' or '%s'"
 msgstr "'%s' oder '%s' erwartet"
 
 #: sunrpc/rpc_util.c:325
+#, c-format
 msgid "expected '%s', '%s' or '%s'"
 msgstr "'%s', '%s' oder '%s' erwartet"
+
+#: time/zic.c:819
+msgid "expected continuation line not found"
+msgstr ""
 
 #: sunrpc/rpc_parse.c:384
 msgid "expected type specifier"
@@ -1021,6 +1163,14 @@ msgstr "Type-Bezeichner erwartet"
 msgid "get_myaddress: ioctl (get interface configuration)"
 msgstr "get_myaddress: ioctl (Holen der Konfiguration der Schnittstelle)"
 
+#: time/zic.c:1113
+msgid "illegal CORRECTION field on Leap line"
+msgstr ""
+
+#: time/zic.c:1117
+msgid "illegal Rolling/Stationary field on Leap line"
+msgstr ""
+
 #: sunrpc/rpc_scan.c:281
 msgid "illegal character in file: "
 msgstr "Nicht erlaubtes Zeichen in der Datei: "
@@ -1028,6 +1178,70 @@ msgstr "Nicht erlaubtes Zeichen in der Datei: "
 #: sunrpc/rpc_parse.c:146
 msgid "illegal result type"
 msgstr "Nicht erlaubter Ergebnistyp"
+
+#: catgets/gencat.c:340 gencat.c:417
+#, fuzzy
+msgid "illegal set number"
+msgstr "Nicht erlaubter Seek"
+
+#: time/zic.c:777
+msgid "input line of unknown type"
+msgstr ""
+
+#: time/zic.c:984
+msgid "invalid GMT offset"
+msgstr ""
+
+#: time/zic.c:987
+msgid "invalid abbreviation format"
+msgstr ""
+
+#: time/zic.c:1078 zic.c:1277 zic.c:1291
+#, fuzzy
+msgid "invalid day of month"
+msgstr "Das Argument ist ungültig"
+
+#: time/zic.c:1236
+#, fuzzy
+msgid "invalid ending year"
+msgstr "Das Ende des angegebenen Intervalls ist nicht gültig"
+
+#: time/zic.c:1050
+#, fuzzy
+msgid "invalid leaping year"
+msgstr "Das Ende des angegebenen Intervalls ist nicht gültig"
+
+#: time/zic.c:1065 zic.c:1168
+msgid "invalid month name"
+msgstr ""
+
+#: time/zic.c:883
+#, fuzzy
+msgid "invalid saved time"
+msgstr "Ungültige Überprüfung des Servers"
+
+#: time/zic.c:1216
+#, fuzzy
+msgid "invalid starting year"
+msgstr "Das Ende des angegebenen Intervalls ist nicht gültig"
+
+#: time/zic.c:1094 zic.c:1196
+#, fuzzy
+msgid "invalid time of day"
+msgstr "Ungültiger Inhalt von \\{\\}"
+
+#: time/zic.c:1282
+msgid "invalid weekday name"
+msgstr ""
+
+#: time/zic.c:757
+#, fuzzy
+msgid "line too long"
+msgstr "Der Dateiname ist zu lang"
+
+#: catgets/gencat.c:598
+msgid "malformed line ignored"
+msgstr ""
 
 #: malloc/mcheck.c:168
 msgid "memory clobbered before allocated block"
@@ -1041,7 +1255,12 @@ msgstr "Der Zeicher nach dem Ende des allozierten Block wurde überschrieben"
 msgid "memory is consistent, library is buggy"
 msgstr "Die Speicherverwaltung ist konsistent, die Bibliothek enthält Fehler"
 
+#: time/zic.c:878
+msgid "nameless rule"
+msgstr ""
+
 #: sunrpc/svc_simple.c:140
+#, c-format
 msgid "never registered prog %d\n"
 msgstr "Das Programm %d wurde nie registriert\n"
 
@@ -1049,11 +1268,44 @@ msgstr "Das Programm %d wurde nie registriert\n"
 msgid "no array-of-pointer declarations -- use typedef"
 msgstr "Kein Definition einer Tabelle von \"Zeigern\" -- Verwenden Sie \"typedef\""
 
+#: time/zic.c:1955
+msgid "no day in month matches rule"
+msgstr ""
+
+#: sunrpc/portmap.c:452
+msgid "portmap CALLIT: cannot fork.\n"
+msgstr ""
+
+#: portmap.c:117 sunrpc/portmap.c:95
+msgid "portmap cannot bind"
+msgstr ""
+
+#: portmap.c:113 sunrpc/portmap.c:87
+msgid "portmap cannot create socket"
+msgstr ""
+
 #: rpc_scan.c:464 sunrpc/rpc_scan.c:456
 msgid "preprocessor error"
 msgstr "Fehler des Präprozessors"
 
+#: rpcinfo.c:350 sunrpc/rpcinfo.c:222
+#, fuzzy, c-format
+msgid "program %lu is not available\n"
+msgstr "RPC: Programm nicht verfügbar"
+
+#: rpcinfo.c:282 rpcinfo.c:371 rpcinfo.c:408 rpcinfo.c:429
+#: sunrpc/rpcinfo.c:245 sunrpc/rpcinfo.c:462
+#, fuzzy, c-format
+msgid "program %lu version %lu is not available\n"
+msgstr "RPC: Programm nicht verfügbar"
+
+#: sunrpc/rpcinfo.c:466
+#, c-format
+msgid "program %lu version %lu ready and waiting\n"
+msgstr ""
+
 #: inet/rcmd.c:154
+#, c-format
 msgid "rcmd: select (setting up stderr): %s\n"
 msgstr "rcmd: Select (Einrichten der Standardfehlerausgabe): %s\n"
 
@@ -1062,12 +1314,49 @@ msgid "rcmd: socket: All ports in use\n"
 msgstr "rcmd: Socket: Alle Ports sind zur Zeit belegt\n"
 
 #: inet/rcmd.c:141
+#, c-format
 msgid "rcmd: write (setting up stderr): %s\n"
 msgstr "rcmd: Write (Einrichten der Standardfehlerausgabe): %s\n"
 
 #: sunrpc/svc_simple.c:83
 msgid "registerrpc: out of memory\n"
 msgstr "registerrpc: Hauptspeicher erschöpft\n"
+
+#: time/zic.c:1690
+msgid "repeated leap second moment"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:659
+#, c-format
+msgid "rpcinfo: %s is unknown host\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:626
+#, c-format
+msgid "rpcinfo: %s is unknown service\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:600
+#, fuzzy, c-format
+msgid "rpcinfo: Could not delete registration for prog %s version %s\n"
+msgstr "Kann das Programm %d Version %d nicht registrieren\n"
+
+#: sunrpc/rpcinfo.c:576
+#, c-format
+msgid "rpcinfo: broadcast failed: %s\n"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:505
+msgid "rpcinfo: can't contact portmapper"
+msgstr ""
+
+#: sunrpc/rpcinfo.c:510
+msgid "rpcinfo: can't contact portmapper: "
+msgstr ""
+
+#: sunrpc/portmap.c:138
+msgid "run_svc returned unexpectedly\n"
+msgstr ""
 
 #: inet/rcmd.c:158
 msgid "select: protocol failure in circuit setup\n"
@@ -1076,6 +1365,18 @@ msgstr "Select: Protokollfehler im Kreislauf-Setup\n"
 #: inet/rcmd.c:176
 msgid "socket: protocol failure in circuit setup.\n"
 msgstr "Socket: Protokollfehler im Kreislauf-Setup.\n"
+
+#: time/zic.c:742
+msgid "standard input"
+msgstr ""
+
+#: time/zdump.c:259
+msgid "standard output"
+msgstr ""
+
+#: time/zic.c:1240
+msgid "starting year greater than ending year"
+msgstr ""
 
 #: sunrpc/svc_tcp.c:199 svc_tcp.c:204
 msgid "svc_tcp: makefd_xprt: out of memory\n"
@@ -1101,25 +1402,84 @@ msgstr "svcudp_create - `getsockname' fehlgeschlagen"
 msgid "svcudp_create: socket creation problem"
 msgstr "svcudp_create: Problem bei der Erstellung des Sockets"
 
+#: catgets/gencat.c:369 gencat.c:505 gencat.c:532
+msgid "this is the first definition"
+msgstr ""
+
+#: time/zic.c:1083
+msgid "time before zero"
+msgstr ""
+
+#: time/zic.c:1091 zic.c:1855 zic.c:1874
+msgid "time overflow"
+msgstr ""
+
 #: sunrpc/rpc_util.c:285
 msgid "too many files!\n"
 msgstr "Zu viele Dateien!\n"
 
+#: time/zic.c:1684
+#, fuzzy
+msgid "too many leap seconds"
+msgstr "Zu viele Dateien!\n"
+
+#: time/zic.c:1656
+#, fuzzy
+msgid "too many local time types"
+msgstr "Zu viele Prozesse"
+
+#: time/zic.c:1622
+#, fuzzy
+msgid "too many transitions?!"
+msgstr "Zu viele Dateien!\n"
+
+#: time/zic.c:1978
+msgid "too many, or too long, time zone abbreviations"
+msgstr ""
+
 #: sunrpc/svc_simple.c:132
+#, c-format
 msgid "trouble replying to prog %d\n"
 msgstr "Schwierigkeiten bei der Antwort an das Programm %d\n"
 
-#: i486-linux/siglist.c:8 i486-linux/siglist.c:24 i486-linux/siglist.c:39
+#: time/zic.c:1247
+msgid "typed single year"
+msgstr ""
+
+#: catgets/gencat.c:466
+#, c-format
+msgid "unknown directive `%s': line ignored"
+msgstr ""
+
+#: catgets/gencat.c:445
+#, fuzzy, c-format
+msgid "unknown set `%s'"
+msgstr "Unbekannter Rechner"
+
 msgid "unknown signal"
 msgstr "Unbekanntes Signal"
+
+#: time/zic.c:714
+msgid "unruly zone"
+msgstr ""
+
+#: catgets/gencat.c:950
+#, fuzzy
+msgid "unterminated message"
+msgstr "Zeichenkette wird nicht beendet"
 
 #: sunrpc/rpc_scan.c:319
 msgid "unterminated string constant"
 msgstr "Zeichenkette wird nicht beendet"
 
-#: sunrpc/rpc_main.c:75
+#: sunrpc/rpc_main.c:78
+#, c-format
 msgid "usage: %s infile\n"
 msgstr "Aufruf: %s Eingabedatei\n"
+
+#: time/zic.c:1921
+msgid "use of 2/29 in non leap-year"
+msgstr ""
 
 # Das kommt mir komisch vor... ke
 #: sunrpc/rpc_parse.c:330
@@ -1129,6 +1489,34 @@ msgstr "Deklaration einer variabel langen Tabelle erwartet"
 #: sunrpc/rpc_parse.c:370
 msgid "voids allowed only inside union and program definitions"
 msgstr "`void' ist nur innerhalb von `union'- oder `program'-Definitionen erlaubt"
+
+#: login/setutent_r.c:47
+msgid "while opening UTMP file"
+msgstr ""
+
+#: catgets/gencat.c:977
+msgid "while opening old catalog file"
+msgstr ""
+
+#: time/zic.c:1041
+msgid "wrong number of fields on Leap line"
+msgstr ""
+
+#: time/zic.c:1132
+msgid "wrong number of fields on Link line"
+msgstr ""
+
+#: time/zic.c:874
+msgid "wrong number of fields on Rule line"
+msgstr ""
+
+#: time/zic.c:944
+msgid "wrong number of fields on Zone continuation line"
+msgstr ""
+
+#: time/zic.c:902
+msgid "wrong number of fields on Zone line"
+msgstr ""
 
 #~ msgid "%s: `END CHARMAP' is missing"
 #~ msgstr "%s: `END CHARMAP' fehlt"
@@ -1160,7 +1548,6 @@ msgstr "`void' ist nur innerhalb von `union'- oder `program'-Definitionen erlaub
 #~ msgid "%s:%Zd: duplicate definition of item `%s' in category `LC_CTYPE'"
 #~ msgstr "%s:%Zd: Mehrfache Definition des Eintrages `%s' in der Kategorie `LC_CTYPE'"
 
-#~ # Das ist doch bestimmt ein Typo im Original?
 #~ msgid "%s:%Zd: duplicate definiton of item `%s' in category `LC_CTYPE'"
 #~ msgstr "%s:%Zd: Mehrfache Definition des Eintrages `%s' in der Kategorie `LC_CTYPE'"
 
@@ -1221,9 +1608,6 @@ msgstr "`void' ist nur innerhalb von `union'- oder `program'-Definitionen erlaub
 #~ msgid "%s:%u: character encoding must be given in 8-bit bytes"
 #~ msgstr "%s:%u: Die Kodierung des Zeichens muß in 8-Bit Bytes angegeben werden"
 
-#~ msgid "%s:%u: duplicate code set name specification"
-#~ msgstr "%s:%u: Doppelte Spezifikation des Zeichensatz-Namens"
-
 #~ msgid "%s:%u: duplicate definition of mb_cur_max"
 #~ msgstr "%s:%u: Mehrfache Definition des Eintrages mb_cur_max"
 
@@ -1259,9 +1643,6 @@ msgstr "`void' ist nur innerhalb von `union'- oder `program'-Definitionen erlaub
 
 #~ msgid "cannot copy locale definition file `%s'"
 #~ msgstr "Kann die Lokale-Definitionsdatei `%s' nicht kopieren"
-
-#~ msgid "cannot open output file `%s': %m"
-#~ msgstr "Kann die Ausgabedatei `%s' nicht öffnen: %m"
 
 #~ msgid "cannot write output file `%s': %m"
 #~ msgstr "Kann die Ausgabedatei `%s' nicht schreiben: %m"

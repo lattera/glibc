@@ -32,6 +32,7 @@ Boston, MA 02111-1307, USA.  */
 /* Get libc version number.  */
 #include "../version.h"
 
+#define PACKAGE _libc_intl_domainname
 
 /* Long options.  */
 static const struct option long_options[] =
@@ -112,7 +113,7 @@ main (argc, argv)
 
   /* Version information is requested.  */
   if (do_version)
-    printf ("%s - GNU %s %s\n", program_invocation_name, "libc", VERSION);
+    printf ("%s - GNU %s %s\n", program_invocation_name, PACKAGE, VERSION);
 
   /* Help is requested.  */
   if (do_help)
@@ -208,7 +209,7 @@ Mandatory arguments to long options are mandatory for short options too.\n\
   -u, --undo          print content of database file, one entry a line\n\
   -V, --version       output version information and exit\n\
 If INPUT-FILE is -, input is read from standard input.\n\
-Report bugs to <bug-glibc@gnu.ai.mit.edu>.\n"),
+Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"),
 	    program_invocation_name, program_invocation_name,
 	    program_invocation_name);
 

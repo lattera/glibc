@@ -5,8 +5,8 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: libc 1.93\n"
-"POT-Creation-Date: 1996-08-29  1:37\n"
+"Project-Id-Version: libc 1.94\n"
+"POT-Creation-Date: 1996-09-08  3:45\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+DIST\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -275,7 +275,7 @@ msgstr ""
 msgid "(unknown)"
 msgstr ""
 
-#: catgets/gencat.c:243
+#: catgets/gencat.c:244
 msgid "*standard input*"
 msgstr ""
 
@@ -566,6 +566,10 @@ msgstr ""
 #. TRANS @code{exec} functions; see @ref{Executing a File}.
 #: stdio-common/../sysdeps/gnu/errlist.c:63
 msgid "Exec format error"
+msgstr ""
+
+#: locale/programs/localedef.c:207
+msgid "FATAL: system does not define `_POSIX2_LOCALEDEF'"
 msgstr ""
 
 #: sunrpc/clnt_perr.c:290
@@ -1403,7 +1407,8 @@ msgstr ""
 msgid "Transport endpoint is not connected"
 msgstr ""
 
-#: catgets/gencat.c:202 db/makedb.c:196
+#: catgets/gencat.c:202 db/makedb.c:197 locale/programs/locale.c:234
+#: locale/programs/localedef.c:383
 #, c-format
 msgid "Try `%s --help' for more information.\n"
 msgstr ""
@@ -1481,9 +1486,10 @@ msgid ""
 "  -V, --version       output version information and exit\n"
 "If INPUT-FILE is -, input is read from standard input.  If OUTPUT-FILE\n"
 "is -, output is written to standard output.\n"
+"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 
-#: db/makedb.c:199
+#: db/makedb.c:200
 #, c-format
 msgid ""
 "Usage: %s [OPTION]... INPUT-FILE OUTPUT-FILE\n"
@@ -1497,6 +1503,43 @@ msgid ""
 "  -u, --undo          print content of database file, one entry a line\n"
 "  -V, --version       output version information and exit\n"
 "If INPUT-FILE is -, input is read from standard input.\n"
+"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
+msgstr ""
+
+#: locale/programs/localedef.c:386
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... name\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -c, --force               create output even if warning messages were "
+"issued\n"
+"  -h, --help                display this help and exit\n"
+"  -f, --charmap=FILE        symbolic character names defined in FILE\n"
+"  -i, --inputfile=FILE      source definitions are found in FILE\n"
+"  -u, --code-set-name=NAME  specify code set for mapping ISO 10646 elements\n"
+"  -v, --verbose             print more messages\n"
+"  -V, --version             output version information and exit\n"
+"      --posix               be strictly POSIX conform\n"
+"\n"
+"System's directory for character maps: %s\n"
+"                       locale files  : %s\n"
+"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
+msgstr ""
+
+#: locale/programs/locale.c:237
+#, c-format
+msgid ""
+"Usage: %s [OPTION]... name\n"
+"Mandatory arguments to long options are mandatory for short options too.\n"
+"  -h, --help            display this help and exit\n"
+"  -V, --version         output version information and exit\n"
+"\n"
+"  -a, --all-locales     write names of available locales\n"
+"  -m, --charmaps        write names of available charmaps\n"
+"\n"
+"  -c, --category-name   write names of selected categories\n"
+"  -k, --keyword-name    write names of selected keywords\n"
+"Report bugs to <bug-glibc@prep.ai.mit.edu>.\n"
 msgstr ""
 
 #: posix/getconf.c:131
@@ -1623,6 +1666,11 @@ msgstr ""
 msgid "can't reassign procedure number %d\n"
 msgstr ""
 
+#: locale/programs/localedef.c:281
+#, c-format
+msgid "cannot `stat' locale file `%s'"
+msgstr ""
+
 #: locale/programs/ld-collate.c:1313
 #, c-format
 msgid "cannot insert collation element `%.*s'"
@@ -1637,17 +1685,22 @@ msgstr ""
 msgid "cannot insert new collating symbol definition: %s"
 msgstr ""
 
-#: db/makedb.c:148
+#: db/makedb.c:149
 #, c-format
 msgid "cannot open database file `%s': %s"
 msgstr ""
 
-#: catgets/gencat.c:249 db/makedb.c:167
+#: catgets/gencat.c:250 db/makedb.c:168
 #, c-format
 msgid "cannot open input file `%s'"
 msgstr ""
 
-#: catgets/gencat.c:754 catgets/gencat.c:795 db/makedb.c:176
+#: locale/programs/localedef.c:215
+#, c-format
+msgid "cannot open locale definition file `%s'"
+msgstr ""
+
+#: catgets/gencat.c:755 catgets/gencat.c:796 db/makedb.c:177
 #, c-format
 msgid "cannot open output file `%s'"
 msgstr ""
@@ -1659,6 +1712,30 @@ msgstr ""
 
 #: locale/programs/ld-collate.c:1359
 msgid "cannot process order specification"
+msgstr ""
+
+#: locale/programs/locale.c:293
+#, c-format
+msgid "cannot read character map directory `%s'"
+msgstr ""
+
+#: locale/programs/locale.c:268
+#, c-format
+msgid "cannot read locale directory `%s'"
+msgstr ""
+
+#: locale/programs/localedef.c:303
+#, c-format
+msgid "cannot read locale file `%s'"
+msgstr ""
+
+#: locale/programs/localedef.c:328
+#, c-format
+msgid "cannot write output files to `%s'"
+msgstr ""
+
+#: locale/programs/localedef.c:371
+msgid "category data requested more than once: should not happen"
 msgstr ""
 
 #: locale/programs/ld-ctype.c:264
@@ -1772,11 +1849,11 @@ msgstr ""
 msgid "duplicate definition for character `%.*s'"
 msgstr ""
 
-#: db/makedb.c:293
+#: db/makedb.c:295
 msgid "duplicate key"
 msgstr ""
 
-#: catgets/gencat.c:368
+#: catgets/gencat.c:369
 msgid "duplicate set definition"
 msgstr ""
 
@@ -1785,11 +1862,11 @@ msgstr ""
 msgid "duplicate zone name %s (file \"%s\", line %d)"
 msgstr ""
 
-#: catgets/gencat.c:531
+#: catgets/gencat.c:532
 msgid "duplicated message identifier"
 msgstr ""
 
-#: catgets/gencat.c:504
+#: catgets/gencat.c:505
 msgid "duplicated message number"
 msgstr ""
 
@@ -1923,7 +2000,7 @@ msgstr ""
 msgid "illegal result type"
 msgstr ""
 
-#: catgets/gencat.c:341 catgets/gencat.c:418
+#: catgets/gencat.c:342 catgets/gencat.c:419
 msgid "illegal set number"
 msgstr ""
 
@@ -1937,7 +2014,7 @@ msgstr ""
 msgid "implementation limit: no more than %d character maps allowed"
 msgstr ""
 
-#: db/makedb.c:150
+#: db/makedb.c:151
 msgid "incorrectly formatted file"
 msgstr ""
 
@@ -2014,7 +2091,12 @@ msgstr ""
 msgid "line too long"
 msgstr ""
 
-#: catgets/gencat.c:599
+#: locale/programs/localedef.c:275
+#, c-format
+msgid "locale file `%s', used in `copy' statement, not found"
+msgstr ""
+
+#: catgets/gencat.c:600
 msgid "malformed line ignored"
 msgstr ""
 
@@ -2067,6 +2149,10 @@ msgstr ""
 msgid "no other keyword shall be specified when `copy' is used"
 msgstr ""
 
+#: locale/programs/localedef.c:334
+msgid "no output file produced because warning were issued"
+msgstr ""
+
 #: locale/programs/charmap.c:315 locale/programs/charmap.c:466
 #: locale/programs/charmap.c:545
 msgid "no symbolic name given"
@@ -2102,7 +2188,7 @@ msgstr ""
 msgid "preprocessor error"
 msgstr ""
 
-#: db/makedb.c:309
+#: db/makedb.c:311
 #, c-format
 msgid "problems while reading `%s'"
 msgstr ""
@@ -2338,7 +2424,7 @@ msgstr ""
 msgid "syntax error: not inside a locale definition section"
 msgstr ""
 
-#: catgets/gencat.c:370 catgets/gencat.c:506 catgets/gencat.c:533
+#: catgets/gencat.c:371 catgets/gencat.c:507 catgets/gencat.c:534
 msgid "this is the first definition"
 msgstr ""
 
@@ -2418,12 +2504,12 @@ msgstr ""
 msgid "unknown collation directive"
 msgstr ""
 
-#: catgets/gencat.c:467
+#: catgets/gencat.c:468
 #, c-format
 msgid "unknown directive `%s': line ignored"
 msgstr ""
 
-#: catgets/gencat.c:446
+#: catgets/gencat.c:447
 #, c-format
 msgid "unknown set `%s'"
 msgstr ""
@@ -2441,7 +2527,7 @@ msgstr ""
 msgid "unruly zone"
 msgstr ""
 
-#: catgets/gencat.c:951
+#: catgets/gencat.c:952
 msgid "unterminated message"
 msgstr ""
 
@@ -2526,19 +2612,19 @@ msgstr ""
 msgid "while opening UTMP file"
 msgstr ""
 
-#: catgets/gencat.c:978
+#: catgets/gencat.c:979
 msgid "while opening old catalog file"
 msgstr ""
 
-#: db/makedb.c:336
+#: db/makedb.c:338
 msgid "while reading database"
 msgstr ""
 
-#: db/makedb.c:298
+#: db/makedb.c:300
 msgid "while writing data base file"
 msgstr ""
 
-#: db/makedb.c:129
+#: db/makedb.c:130
 msgid "wrong number of arguments"
 msgstr ""
 
