@@ -28,6 +28,23 @@ Cambridge, MA 02139, USA.  */
 #include "dynamic-link.h"
 
 
+/* On some systems, no flag bits are given to specify file mapping.  */
+#ifndef MAP_FILE
+#define MAP_FILE	0
+#endif
+
+/* The right way to map in the shared library files is MAP_COPY, which
+   makes a virtual copy of the data at the time of the mmap call; this
+   guarantees the mapped pages will be consistent even if the file is
+   overwritten.  Some losing VM systems like Linux's lack MAP_COPY.  All we
+   get is MAP_PRIVATE, which copies each page when it is modified; this
+   means if the file is overwritten, we may at some point get some pages
+   from the new version after starting with pages from the old version.  */
+#ifndef MAP_COPY
+#define MAP_COPY	MAP_PRIVATE
+#endif
+
+
 #include <endian.h>
 #if BYTE_ORDER == BIG_ENDIAN
 #define byteorder ELFDATA2MSB
@@ -182,7 +199,7 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 			      int prot, int fixed, off_t offset)
     {
       caddr_t mapat = mmap ((caddr_t) mapstart, len, prot,
-			    fixed|MAP_COPY|MAP_FILE|MAP_INHERIT,
+			    fixed|MAP_COPY|MAP_FILE,
 			    fd, offset);
       if (mapat == (caddr_t) -1)
 	lose (errno, "failed to map segment from shared object");
@@ -390,16 +407,19 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname)
 		/* Map the remaining zero pages in from the zero fill FD.  */
 		caddr_t mapat;
 		mapat = mmap ((caddr_t) zeropage, zeroend - zeropage, c->prot,
-			      MAP_ANON|MAP_PRIVATE|MAP_FIXED|MAP_INHERIT,
+			      MAP_ANON|MAP_PRIVATE|MAP_FIXED,
 			      _dl_zerofd, 0);
 		if (mapat == (caddr_t) -1)
-		  lose (errno, "cannot map zero pages");
+		  lose (errno, "cannot map zero-fill pages");
 	      }
 	  }
 
 	++c;
       }
   }
+
+  if (type == ET_EXEC)
+    l->l_type = lt_executable;
 
   if (l->l_ld == 0)
     {
