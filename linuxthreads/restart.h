@@ -25,3 +25,9 @@ static inline void suspend(pthread_descr self)
 {
   __pthread_suspend(self); /* see pthread.c */
 }
+
+static inline int timedsuspend(pthread_descr self, 
+		const struct timespec *abstime)
+{
+   return __pthread_timedsuspend(self, abstime); /* see pthread.c */
+}

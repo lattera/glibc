@@ -1,5 +1,21 @@
 2000-04-15  Ulrich Drepper  <drepper@redhat.com>
 
+	* condvar.c: Remove all the special code to handle cond_timedwait.
+	Use timedsuspend instead.
+	* internals.h: Declare __pthread_timedsuspend_old,
+	__pthread_timedsuspend_new, and __pthread_timedsuspend.
+	Remove declaration of __pthread_init_condvar.
+	* pthread.c: Define __pthread_timedsuspend variable.
+	(__pthread_timedsuspend_old): New function.  Timed suspension
+	implementation for old Linux kernels.
+	(__pthread_timedsuspend_new): New function.  Timed suspension
+	implementation for new Linux kernels.
+	* restart.h (timedsuspend): New function.  Call appropriate
+	suspension function through __pthread_timedsuspend.
+	* semaphore.c (sem_timedwait): Use timedsuspend, don't duplicate
+	the code.
+	Patch by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 	* internals.h (WRITE_MEMORY_BARRIER): Define as MEMORY_BARRIER if
 	undefined.
 	* spinlock.c: Use WRITE_MEMORY_BARRIER instead of MEMORY_BARRIER

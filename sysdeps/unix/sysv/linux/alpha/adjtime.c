@@ -68,7 +68,7 @@ extern int ADJTIMEX (struct TIMEX *);
 #include <sysdeps/unix/sysv/linux/adjtime.c>
 
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
-compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2.0);
+compat_symbol (libc, __adjtime_tv32, adjtime, GLIBC_2_0);
 #endif
 
 #undef TIMEVAL

@@ -166,6 +166,7 @@ int __pthread_exit_code = 0;
 
 void (*__pthread_restart)(pthread_descr) = __pthread_restart_old;
 void (*__pthread_suspend)(pthread_descr) = __pthread_suspend_old;
+int (*__pthread_timedsuspend)(pthread_descr, const struct timespec *) = __pthread_timedsuspend_old;
 
 /* Communicate relevant LinuxThreads constants to gdb */
 
@@ -238,7 +239,6 @@ init_rtsigs (void)
       __pthread_sig_cancel = SIGUSR2;
       __pthread_sig_debug = 0;
 #endif
-      __pthread_init_condvar(0);
     }
   else
     {
@@ -246,10 +246,9 @@ init_rtsigs (void)
       current_rtmin = __SIGRTMIN + 3;
       __pthread_restart = __pthread_restart_new;
       __pthread_suspend = __pthread_wait_for_restart_signal;
-      __pthread_init_condvar(1);
+      __pthread_timedsuspend = __pthread_timedsuspend_new;
 #else
       current_rtmin = __SIGRTMIN;
-      __pthread_init_condvar(0);
 #endif
 
       current_rtmax = __SIGRTMAX;
@@ -826,7 +825,8 @@ void __pthread_wait_for_restart_signal(pthread_descr self)
   } while (self->p_signal !=__pthread_sig_restart );
 }
 
-/* The _old variants are for 2.0 and early 2.1 kernels which don't have RT signals.
+/* The _old variants are for 2.0 and early 2.1 kernels which don't have RT
+   signals.
    On these kernels, we use SIGUSR1 and SIGUSR2 for restart and cancellation.
    Since the restart signal does not queue, we use an atomic counter to create
    queuing semantics. This is needed to resolve a rare race condition in
@@ -844,6 +844,83 @@ void __pthread_suspend_old(pthread_descr self)
     __pthread_wait_for_restart_signal(self);
 }
 
+int 
+__pthread_timedsuspend_old(pthread_descr self, const struct timespec *abstime)
+{
+  sigset_t unblock, initial_mask;
+  int was_signalled = 0;
+  sigjmp_buf jmpbuf;
+
+  if (atomic_decrement(&self->p_resume_count) == 0) {
+    /* Set up a longjmp handler for the restart signal, unblock
+       the signal and sleep. */
+
+    if (sigsetjmp(jmpbuf, 1) == 0) {
+      THREAD_SETMEM(self, p_signal_jmp, &jmpbuf);
+      THREAD_SETMEM(self, p_signal, 0);
+      /* Unblock the restart signal */
+      sigemptyset(&unblock);
+      sigaddset(&unblock, __pthread_sig_restart);
+      sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
+
+      while (1) {
+	struct timeval now;
+	struct timespec reltime;
+
+	/* Compute a time offset relative to now.  */
+	__gettimeofday (&now, NULL);
+	reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+	reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+	if (reltime.tv_nsec < 0) {
+	  reltime.tv_nsec += 1000000000;
+	  reltime.tv_sec -= 1;
+	}
+
+	/* Sleep for the required duration. If woken by a signal,
+	   resume waiting as required by Single Unix Specification.  */
+	if (reltime.tv_sec < 0 || __libc_nanosleep(&reltime, NULL) == 0)
+	  break;
+      }
+
+      /* Block the restart signal again */
+      sigprocmask(SIG_SETMASK, &initial_mask, NULL);
+      was_signalled = 0;
+    } else {
+      was_signalled = 1;
+    }
+    THREAD_SETMEM(self, p_signal_jmp, NULL);
+  }
+
+  /* Now was_signalled is true if we exited the above code
+     due to the delivery of a restart signal.  In that case,
+     we know we have been dequeued and resumed and that the
+     resume count is balanced.  Otherwise, there are some
+     cases to consider. First, try to bump up the resume count
+     back to zero. If it goes to 1, it means restart() was
+     invoked on this thread. The signal must be consumed
+     and the count bumped down and everything is cool. We
+     can return a 1 to the caller.
+     Otherwise, no restart was delivered yet, so a potential
+     race exists; we return a 0 to the caller which must deal
+     with this race in an appropriate way; for example by
+     atomically removing the thread from consideration for a 
+     wakeup---if such a thing fails, it means a restart is
+     being delivered. */
+
+  if (!was_signalled) {
+    if (atomic_increment(&self->p_resume_count) != -1) {
+      __pthread_wait_for_restart_signal(self);
+      atomic_decrement(&self->p_resume_count); /* should be zero now! */
+      /* woke spontaneously and consumed restart signal */
+      return 1;
+    }
+    /* woke spontaneously but did not consume restart---caller must resolve */
+    return 0;
+  }
+  /* woken due to restart signal */
+  return 1;
+}
+
 void __pthread_restart_new(pthread_descr th)
 {
     kill(th->p_pid, __pthread_sig_restart);
@@ -851,6 +928,62 @@ void __pthread_restart_new(pthread_descr th)
 
 /* There is no __pthread_suspend_new because it would just
    be a wasteful wrapper for __pthread_wait_for_restart_signal */
+
+int 
+__pthread_timedsuspend_new(pthread_descr self, const struct timespec *abstime)
+{
+  sigset_t unblock, initial_mask;
+  int was_signalled = 0;
+  sigjmp_buf jmpbuf;
+
+  if (sigsetjmp(jmpbuf, 1) == 0) {
+    THREAD_SETMEM(self, p_signal_jmp, &jmpbuf);
+    THREAD_SETMEM(self, p_signal, 0);
+    /* Unblock the restart signal */
+    sigemptyset(&unblock);
+    sigaddset(&unblock, __pthread_sig_restart);
+    sigprocmask(SIG_UNBLOCK, &unblock, &initial_mask);
+
+    while (1) {
+      struct timeval now;
+      struct timespec reltime;
+
+      /* Compute a time offset relative to now.  */
+      __gettimeofday (&now, NULL);
+      reltime.tv_nsec = abstime->tv_nsec - now.tv_usec * 1000;
+      reltime.tv_sec = abstime->tv_sec - now.tv_sec;
+      if (reltime.tv_nsec < 0) {
+	reltime.tv_nsec += 1000000000;
+	reltime.tv_sec -= 1;
+      }
+
+      /* Sleep for the required duration. If woken by a signal,
+	 resume waiting as required by Single Unix Specification.  */
+      if (reltime.tv_sec < 0 || __libc_nanosleep(&reltime, NULL) == 0)
+	break;
+    }
+
+    /* Block the restart signal again */
+    sigprocmask(SIG_SETMASK, &initial_mask, NULL);
+    was_signalled = 0;
+  } else {
+    was_signalled = 1;
+  }
+  THREAD_SETMEM(self, p_signal_jmp, NULL);
+
+  /* Now was_signalled is true if we exited the above code
+     due to the delivery of a restart signal.  In that case,
+     everything is cool. We have been removed from whatever
+     we were waiting on by the other thread, and consumed its signal.
+
+     Otherwise we this thread woke up spontaneously, or due to a signal other
+     than restart. This is an ambiguous case  that must be resolved by
+     the caller; the thread is still eligible for a restart wakeup
+     so there is a race. */
+
+  return was_signalled;
+}
+
 
 /* Debugging aid */
 

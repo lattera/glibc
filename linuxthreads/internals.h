@@ -431,18 +431,19 @@ extern void __pthread_kill_other_threads_np (void);
 
 void __pthread_restart_old(pthread_descr th);
 void __pthread_suspend_old(pthread_descr self);
+int __pthread_timedsuspend_old(pthread_descr self, const struct timespec *abs);
 
 void __pthread_restart_new(pthread_descr th);
 void __pthread_suspend_new(pthread_descr self);
+int __pthread_timedsuspend_new(pthread_descr self, const struct timespec *abs);
 
 void __pthread_wait_for_restart_signal(pthread_descr self);
-
-void __pthread_init_condvar(int rt_sig_available);
 
 /* Global pointers to old or new suspend functions */
 
 extern void (*__pthread_restart)(pthread_descr);
 extern void (*__pthread_suspend)(pthread_descr);
+extern int (*__pthread_timedsuspend)(pthread_descr, const struct timespec *);
 
 /* Prototypes for the function without cancelation support when the
    normal version has it.  */
