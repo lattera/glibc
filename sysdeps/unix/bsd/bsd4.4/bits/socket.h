@@ -1,5 +1,5 @@
 /* System-specific socket constants and types.  4.4 BSD version.
-   Copyright (C) 1991,92,1994-1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,1994-1999,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -255,10 +255,30 @@ enum
 #define SCM_RIGHTS SCM_RIGHTS
     SCM_TIMESTAMP = 0x02,	/* Timestamp (struct timeval).  */
 #define SCM_TIMESTAMP SCM_TIMESTAMP
-    SCM_CREDS = 0x03		/* Process creds (strcm cmsgcred).  */
+    SCM_CREDS = 0x03		/* Process creds (struct cmsgcred).  */
 #define SCM_CREDS SCM_CREDS
   };
 
+/* Unfortunately, BSD practice dictates this structure be of fixed size.
+   If there are more than CMGROUP_MAX groups, the list is truncated.
+   (On GNU systems, the `cmcred_euid' field is just the first in the
+   list of effective UIDs.)  */
+#define CMGROUP_MAX	16
+
+/* Structure delivered by SCM_CREDS.  This describes the identity of the
+   sender of the data simultaneously received on the socket.  By BSD
+   convention, this is included only when a sender on a AF_LOCAL socket
+   sends cmsg data of this type and size; the sender's structure is
+   ignored, and the system fills in the various IDs of the sender process.  */
+struct cmsgcred
+  {
+    __pid_t cmcred_pid;
+    __uid_t cmcred_uid;
+    __uid_t cmcred_euid;
+    __gid_t cmcred_gid;
+    int cmcred_ngroups;
+    __gid_t cmcred_groups[CMGROUP_MAX];
+  };
 
 /* Protocol number used to manipulate socket-level options
    with `getsockopt' and `setsockopt'.  */

@@ -1,3 +1,8 @@
+2002-03-18  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/unix/bsd/bsd4.4/bits/socket.h (struct cmsgcred): New type.
+	(CMGROUP_MAX): New macro.
+
 2002-03-23  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/posix/shm_open.c (SHMDIR): /var/run/shm -> /dev/shm
