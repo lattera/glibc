@@ -1028,6 +1028,50 @@ _IO_default_imbue (fp, locale)
 {
 }
 
+_IO_ITER
+_IO_iter_begin()
+{
+  return _IO_list_all;
+}
+
+_IO_ITER
+_IO_iter_end()
+{
+	return NULL;
+}
+
+_IO_ITER
+_IO_iter_next(iter)
+    _IO_ITER iter;
+{
+  return iter->_chain;
+}
+
+_IO_FILE *
+_IO_iter_file(iter)
+    _IO_ITER iter;
+{
+  return iter;
+}
+
+void
+_IO_list_lock()
+{
+  _IO_lock_lock (list_all_lock);
+}
+
+void
+_IO_list_unlock()
+{
+    _IO_lock_unlock (list_all_lock);
+}
+
+void
+_IO_list_resetlock()
+{
+  _IO_lock_init (list_all_lock);
+}
+
 
 #ifdef TODO
 #if defined(linux)

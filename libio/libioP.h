@@ -313,6 +313,10 @@ struct _IO_FILE_plus
   const struct _IO_jump_t *vtable;
 };
 
+/* Iterator type for walking global linked list of _IO_FILE objects. */
+
+typedef _IO_FILE *_IO_ITER;
+
 /* Generic functions */
 
 extern void _IO_switch_to_main_get_area __P ((_IO_FILE *));
@@ -350,6 +354,17 @@ extern int _IO_marker_delta __P ((struct _IO_marker *));
 extern int _IO_wmarker_delta __P ((struct _IO_marker *));
 extern int _IO_seekmark __P ((_IO_FILE *, struct _IO_marker *, int));
 extern int _IO_seekwmark __P ((_IO_FILE *, struct _IO_marker *, int));
+
+/* Functions for iterating global list and dealing with
+   its lock */
+
+extern _IO_ITER _IO_iter_begin __P ((void));
+extern _IO_ITER _IO_iter_end __P ((void));
+extern _IO_ITER _IO_iter_next __P ((_IO_ITER));
+extern _IO_FILE *_IO_iter_file __P ((_IO_ITER));
+extern void _IO_list_lock __P ((void));
+extern void _IO_list_unlock __P ((void));
+extern void _IO_list_resetlock __P ((void));
 
 /* Default jumptable functions. */
 

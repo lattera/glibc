@@ -104,6 +104,10 @@ libc {
     # functions used in libstdc++
     _IO_fgetpos; _IO_fgetpos64; _IO_fsetpos; _IO_fsetpos64;
 
+    # LinuxThreads uses this protected interface
+    _IO_iter_begin; _IO_iter_end; _IO_iter_next; _IO_iter_file;
+    _IO_list_lock; _IO_list_unlock; _IO_list_resetlock;
+
     # f*
     fgetpos; fgetpos64; fgetwc; fgetwc_unlocked; fgetws; fgetws_unlocked;
     fputwc; fputwc_unlocked; fputws; fputws_unlocked; fsetpos; fsetpos64;

@@ -1,3 +1,18 @@
+2000-06-04  Kaz Kylheku  <kaz@ashi.footprints.net>
+
+	Lock for stdio stream list becomes global, for use in LinuxThreads.
+
+	* libio/genops.c (_IO_iter_begin, _IO_iter_end,
+	_IO_iter_next, _IO_iter_file, _IO_list_lock, _IO_list_unlock,
+	_IO_list_resetlock): New interface for iterating global list of
+	streams without accessing the _IO_list_all global variable,
+	and for manipulating the lock which protects this list.
+	* libio/libioP.h: Likewise.
+	* libio/Version: Add entries for the new functions.
+
+	* libio/libioP.h (_IO_ITER): New typedef, just an alias for
+	pointer to _IO_FILE.
+
 2000-06-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/ld-ctype.c (set_class_defaults): Several uses of
