@@ -74,8 +74,8 @@
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
 #define CALL_MCOUNT			\
-	str	lr,[sp, #-4]!		\
-	bl	PLTJMP(mcount)		\
+	str	lr,[sp, #-4]!	;	\
+	bl	PLTJMP(mcount)	;	\
 	ldr	lr, [sp], #4
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
