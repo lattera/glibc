@@ -1,3 +1,7 @@
+2003-08-17  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/i386/posix_fadvise64.S: Fix typo.
+
 2003-08-16  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/powerpc/powerpc32/sysdep.h (PSEUDO_ERRVAL,

@@ -110,7 +110,7 @@ ENTRY (BP_SYM (__posix_fadvise64_l64))
 L(overflow):
 	movl	$EOVERFLOW, %eax
 	ret
-#elif
+#else
 	movl	$ENOSYS, %eax
 	ret
 #endif
