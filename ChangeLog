@@ -1,5 +1,7 @@
 2000-02-01  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/mips/syscalls.list: Remove duplicates.
+
 	* sysdeps/unix/sysv/linux/mips/lxstat.c: Removed, we can use the
 	generic function.
 	* sysdeps/unix/sysv/linux/mips/fxstat.c: Likewise.
