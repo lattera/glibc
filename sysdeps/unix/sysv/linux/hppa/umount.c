@@ -20,7 +20,7 @@
 /* Since we don't have an oldumount system call, do what the kernel
    does down here.  */
 
-extern log int __umount2 (char * name, int flags);
+extern long int __umount2 (char *name, int flags);
 
 long int
 __umount (const char *name)
