@@ -2560,6 +2560,8 @@ build_range_exp (sbcset, start_elem, end_elem)
 		? __btowc (start_ch) : start_elem->opr.wch);
     end_wc = ((end_elem->type == SB_CHAR || end_elem->type == COLL_SYM)
 	      ? __btowc (end_ch) : end_elem->opr.wch);
+    if (start_wc == WEOF || end_wc == WEOF)
+      return REG_ECOLLATE;
     cmp_buf[0] = start_wc;
     cmp_buf[4] = end_wc;
     if (wcscoll (cmp_buf, cmp_buf + 4) > 0)
