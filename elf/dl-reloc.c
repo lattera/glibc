@@ -43,7 +43,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
 		       l->l_name[0] ? l->l_name : _dl_argv[0],
 		       lazy ? " (lazy)\n" : "\n", NULL);
 
-  if (l->l_info[DT_TEXTREL])
+  if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
     {
       /* Bletch.  We must make read-only segments writable
 	 long enough to relocate them.  */
@@ -101,7 +101,7 @@ _dl_relocate_object (struct link_map *l, struct r_scope_elem *scope[],
   /* DT_TEXTREL is now in level 2 and might phase out at some time.
      But we rewrite the DT_FLAGS entry to make testing easier and
      therefore it will be available at all time.  */
-  if (l->l_info[DT_TEXTREL])
+  if (__builtin_expect (l->l_info[DT_TEXTREL] != NULL, 0))
     {
       /* Undo the protection change we made before relocating.  */
       const ElfW(Phdr) *ph;
