@@ -8,13 +8,13 @@ BEGIN {
 	{
 	    while ((getline < input[s]) > 0)
 	    {
-		if ($1 == "@include") 
+		if ($1 == "@include")
 		{
 		    input[++s] = $2;
 		    print $2, "\\";
 		}
 	    }
-	    close(input[stackptr]);
+	    close(input[s]);
 	}
     }
     print "";
