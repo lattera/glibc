@@ -1,6 +1,7 @@
 #include <locale.h>
 #include <stdio.h>
 #include <wchar.h>
+#include <sys/types.h>
 
 
 static int
@@ -27,7 +28,7 @@ do_test (void)
 
   rewind (fp);
 
-  wchar_t *cp;
+  const wchar_t *cp;
   unsigned int cnt;
   for (cp = L"hello", cnt = 1; *cp != L'\0'; ++cp, ++cnt)
     {
