@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: GNU libc 2.1\n"
 "POT-Creation-Date: 1998-11-28 09:29-0800\n"
-"PO-Revision-Date: 1998-12-06 20:47+0100\n"
+"PO-Revision-Date: 1998-12-12 21:19+0100\n"
 "Last-Translator: Santiago Vila Doncel <sanvila@unex.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -22,11 +22,13 @@ msgstr "\t\tDerechos de Acceso : "
 msgid "\t\tAttributes    : "
 msgstr "\t\tAtributos     : "
 
+# Este mensaje tal vez habría que cortarlo por algún lado. sv
 #: sunrpc/rpc_main.c:1416
 #, c-format
 msgid "\t%s [-abkCLNTM][-Dname[=value]] [-i size] [-I [-K seconds]] [-Y path] infile\n"
 msgstr "\t%s [-abkCLNTM][-Dnombre[=valor]] [-i tamaño] [-I [-K segundos]] [-Y camino] fichero_de_entrada\n"
 
+# Y este también. sv
 #: sunrpc/rpc_main.c:1418
 #, c-format
 msgid "\t%s [-c | -h | -l | -m | -t | -Sc | -Ss | -Sm] [-o outfile] [infile]\n"
@@ -2715,7 +2717,7 @@ msgstr "Error de tubería de `streams'"
 msgid "Structure needs cleaning"
 msgstr "La estructura necesita una limpieza"
 
-# "¡conseguido!" me recuerda a los "sketches" de Faemimo y Cansado...
+# "¡conseguido!" me recuerda a los "sketches" de Faemino y Cansado...
 # me gustaría que hubiera otra palabra mejor. SV
 # Siempre me han gustado F&C ;-)
 # A mí también :-) sv
@@ -3501,7 +3503,7 @@ msgstr "el carácter `%s' no está definido cuando se necesitó como valor por defe
 #: locale/programs/ld-ctype.c:825
 #, c-format
 msgid "character class `%s' already defined"
-msgstr "la clase de carácter  `%s' ya fue definida"
+msgstr "la clase de carácter `%s' ya fue definida"
 
 #: locale/programs/ld-ctype.c:857
 #, c-format
@@ -3985,7 +3987,9 @@ msgstr "la línea de después de la elipsis tiene que contener una definición de c
 
 #: locale/programs/ld-collate.c:1401
 msgid "line before ellipsis does not contain definition for character constant"
-msgstr "la línea posterior a la elipsis no contiene una definición para una constante de carácter"
+msgstr ""
+"la línea posterior a la elipsis no contiene una definición para una constante\n"
+"de caracteres"
 
 #: timezone/zic.c:805
 msgid "line too long"
@@ -4535,7 +4539,7 @@ msgstr "error de sintaxis en la definición de local para la hora"
 
 #: locale/programs/locfile.c:385
 msgid "syntax error: not inside a locale definition section"
-msgstr "error de sintaxis: no está dentro de una seción de definición para un local"
+msgstr "error de sintaxis: no está dentro de una sección de definición para un local"
 
 #: iconv/iconv_prog.c:137
 msgid "target encoding not specified using `-t'"
