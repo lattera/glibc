@@ -1,7 +1,16 @@
 2003-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftwtest-sh: Add test case for relative path with /. at the end.
+
+2003-01-12  Jim Meyering  <jim@meyering.net>
+
+	* io/ftw.c (ftw_startup): When trying to stat the starting directory,
+	use the basename if we've already chdir'd into its parent directory.
+
+2003-01-12  Ulrich Drepper  <drepper@redhat.com>
+
 	* io/ftw.c (process_entry): Use relative path when using chdir()
-	to change direcoty after call to ftw_dir.
+	to change directory after call to ftw_dir.
 	* io/ftwtest-sh: Add test for relative path argument to nftw()
 	with FTW_CHDIR option.
 

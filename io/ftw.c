@@ -358,7 +358,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 			}
 		      else
 			if (__chdir ("..") < 0)
-			  result = 1;
+			  result = -1;
 		    }
 		}
 	    }
@@ -584,9 +584,13 @@ ftw_startup (const char *dir, int is_nftw, void *func, int descriptors,
   /* Get stat info for start directory.  */
   if (result == 0)
     {
+      const char *name = ((data.flags & FTW_CHDIR)
+			  ? data.dirbuf + data.ftw.base
+			  : data.dirbuf);
+
       if (((flags & FTW_PHYS)
-	   ? LXSTAT (_STAT_VER, data.dirbuf, &st)
-	   : XSTAT (_STAT_VER, data.dirbuf, &st)) < 0)
+	   ? LXSTAT (_STAT_VER, name, &st)
+	   : XSTAT (_STAT_VER, name, &st)) < 0)
 	{
 	  if (!(flags & FTW_PHYS)
 	      && errno == ENOENT
