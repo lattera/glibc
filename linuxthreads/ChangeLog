@@ -1,3 +1,13 @@
+2000-06-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread.c (__pthread_create_2_1): Optimize a bit.
+
+	* internals.h (invalid_handle): Also test for p_terminated != 0.
+	(nonexisting_handle): New function.  Same as old invalid_handle.
+	* join.c (pthread_join): Use nonexisting_handle instead of
+	invalid_handle to test for acceptable thread handle.
+	Reported by Permaine Cheung <pcheung@cygnus.com>.
+
 2000-06-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/pthread/timer_routines.c (__timer_thread_queue_timer):

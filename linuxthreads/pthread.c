@@ -500,6 +500,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
 {
   pthread_descr self = thread_self();
   struct pthread_request request;
+  int retval;
   if (__pthread_manager_request < 0) {
     if (__pthread_initialize_manager() < 0) return EAGAIN;
   }
@@ -512,9 +513,10 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
               &request.req_args.create.mask);
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
   suspend(self);
-  if (THREAD_GETMEM(self, p_retcode) == 0)
+  retval = THREAD_GETMEM(self, p_retcode;
+  if (retval == 0)
     *thread = (pthread_t) THREAD_GETMEM(self, p_retval);
-  return THREAD_GETMEM(self, p_retcode);
+  return retval;
 }
 
 versioned_symbol (libpthread, __pthread_create_2_1, pthread_create, GLIBC_2_1);

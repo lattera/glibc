@@ -298,6 +298,11 @@ static inline pthread_handle thread_handle(pthread_t id)
 
 static inline int invalid_handle(pthread_handle h, pthread_t id)
 {
+  return h->h_descr == NULL || h->h_descr->p_tid != id || h->h_descr->p_terminated;
+}
+
+static inline int nonexisting_handle(pthread_handle h, pthread_t id)
+{
   return h->h_descr == NULL || h->h_descr->p_tid != id;
 }
 
