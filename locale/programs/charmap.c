@@ -898,6 +898,7 @@ hexadecimal range format should use only capital characters"));
       char *name_end;
       obstack_printf (ob, decimal_ellipsis ? "%.*s%0*d" : "%.*s%0*X",
 		      prefix_len, from, len1 - prefix_len, cnt);
+      obstack_1grow (ob, '\0');
       name_end = obstack_finish (ob);
 
       newp = (struct charseq *) obstack_alloc (ob, sizeof (*newp) + nbytes);
