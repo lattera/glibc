@@ -1,7 +1,7 @@
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
-| GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
+| GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  pthread_attr_init F
@@ -12,7 +12,7 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  sem_post F
  sem_trywait F
  sem_wait F
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _IO_flockfile F
@@ -121,33 +121,33 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  wait F
  waitpid F
  write F
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
-| GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
+| GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  pthread_cond_broadcast F
  pthread_cond_destroy F
  pthread_cond_init F
  pthread_cond_signal F
  pthread_cond_timedwait F
  pthread_cond_wait F
-GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.1.1 A
-GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  sem_close F
  sem_open F
  sem_unlink F
-GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.1.2 A
-GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1.2 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __vfork F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __libc_allocate_rtsig F
@@ -176,15 +176,15 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
  pthread_rwlockattr_setkind_np F
  pthread_rwlockattr_setpshared F
  pthread_setconcurrency F
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.3 A
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  pthread_getattr_np F
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
 GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  __open64 F
  __pread64 F
  __pthread_rwlock_destroy F
@@ -225,10 +225,10 @@ GLIBC_2.2.5 x86_64-.*-linux.*
  pwrite F
  pwrite64 F
  sem_timedwait F
-GLIBC_2.2.6 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.2.6 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.2.6 A
  __nanosleep F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2 A
-GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.2 A

@@ -1,23 +1,23 @@
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
-| GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  dlopen F
-GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  dladdr F
  dlclose F
  dlerror F
  dlsym F
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  dlvsym F
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
-GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
+GLIBC_2.3.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.* x86_64-.*-linux.*
  GLIBC_2.3.3 A
  dladdr1 F
  dlinfo F

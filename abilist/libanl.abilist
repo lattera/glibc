@@ -1,6 +1,6 @@
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2.3 A
-GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2.3 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
  gai_cancel F
  gai_error F

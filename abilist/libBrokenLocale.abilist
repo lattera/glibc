@@ -1,6 +1,6 @@
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __ctype_get_mb_cur_max F

@@ -1,6 +1,6 @@
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.0 A
-GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  _LIB_VERSION D 0x4
@@ -159,9 +159,9 @@ GLIBC_2.0 i.86-.*-linux.* powerpc-.*-linux.*
  yn F
  ynf F
  ynl F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
  GLIBC_2.1 A
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
  feclearexcept F
@@ -171,7 +171,7 @@ GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
  fesetenv F
  fesetexceptflag F
  feupdateenv F
-GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.*
+GLIBC_2.1 i.86-.*-linux.* powerpc-.*-linux.* s390-.*-linux.*
 | GLIBC_2.2.5 x86_64-.*-linux.*
 | GLIBC_2.2 ia64-.*-linux.* sh[34].*-.*-linux.*
  __clog10 F
@@ -337,12 +337,12 @@ GLIBC_2.2.3 ia64-.*-linux.*
 GLIBC_2.2.5 x86_64-.*-linux.*
  GLIBC_2.2.5 A
 GLIBC_2.2.5 x86_64-.*-linux.*
-| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+| GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  fedisableexcept F
  feenableexcept F
  fegetexcept F
 GLIBC_2.2 i.86-.*-linux.*
  __expl F
  __expm1l F
-GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* sh[34].*-.*-linux.*
+GLIBC_2.2 i.86-.*-linux.* ia64-.*-linux.* powerpc-.*-linux.* s390-.*-linux.* sh[34].*-.*-linux.*
  GLIBC_2.2 A
