@@ -1,3 +1,10 @@
+2001-07-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* locales/es_PR (LC_PAPER): Change to Letter.
+	(LC_MEASUREMENT): Change to 2.
+	* locales/es_US (LC_PAPER): Change to Letter.
+	(LC_MEASUREMENT): Change to 2.
+
 2001-07-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile: Add dependencies to locale files for all tests in $(tests).

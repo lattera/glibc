@@ -441,20 +441,6 @@ This function returns a nonzero value if @var{x} is finite or a ``not a
 number'' value, and zero otherwise.
 @end deftypefun
 
-@comment math.h
-@comment BSD
-@deftypefun double infnan (int @var{error})
-This function is provided for compatibility with BSD.  Its argument is
-an error code, @code{EDOM} or @code{ERANGE}; @code{infnan} returns the
-value that a math function would return if it set @code{errno} to that
-value.  @xref{Math Error Reporting}.  @code{-ERANGE} is also acceptable
-as an argument, and corresponds to @code{-HUGE_VAL} as a value.
-
-In the BSD library, on certain machines, @code{infnan} raises a fatal
-signal in all cases.  The GNU library does not do likewise, because that
-does not fit the @w{ISO C} specification.
-@end deftypefun
-
 @strong{Portability Note:} The functions listed in this section are BSD
 extensions.
 

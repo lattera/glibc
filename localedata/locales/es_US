@@ -2200,10 +2200,8 @@ date_fmt	"<U0025><U0061><U0020><U0025><U0062><U0020><U0025><U0065>/
 END LC_TIME
 
 LC_PAPER
-% FIXME
-height   297
-% FIXME
-width    210
+height   279
+width    216
 END LC_PAPER
 
 LC_TELEPHONE
@@ -2213,8 +2211,7 @@ int_prefix     "<U0031>"
 END LC_TELEPHONE
 
 LC_MEASUREMENT
-% FIXME
-measurement    1
+measurement    2
 END LC_MEASUREMENT
 
 LC_NAME
