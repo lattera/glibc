@@ -1,3 +1,12 @@
+2002-08-21  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/x86_64/sysdep.h (CALL_MCOUNT): Fix it.
+
+	* sysdeps/x86_64/Makefile (sysdep_routines): Add _mcount.
+
+	* sysdeps/x86_64/machine-gmon.h: New.
+	* sysdeps/x86_64/_mcount.S: New.
+
 2002-08-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/rtld.c (_dl_start): Pass zero to TLS_INIT_TP.  Set

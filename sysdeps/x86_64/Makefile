@@ -5,3 +5,7 @@ ifeq ($(subdir),csu)
 sysdep_routines += hp-timing
 static-only-routines += hp-timing
 endif
+
+ifeq ($(subdir),gmon)
+sysdep_routines += _mcount
+endif

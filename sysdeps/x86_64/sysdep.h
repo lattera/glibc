@@ -1,5 +1,5 @@
 /* Assembler macros for x86-64.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -58,11 +58,10 @@
 
 /* If compiled for profiling, call `mcount' at the start of each function.  */
 #ifdef	PROF
-/* XXX this does not work yet!  */
 /* The mcount code relies on a normal frame pointer being on the stack
    to locate our caller, so push one just for its benefit.  */
 #define CALL_MCOUNT \
-  pushl %ebp; movl %esp, %ebp; call JUMPTARGET(mcount); popl %ebp;
+  pushq %rbp; movq %rsp, %rbp; call JUMPTARGET(mcount); popq %rbp;
 #else
 #define CALL_MCOUNT		/* Do nothing.  */
 #endif
