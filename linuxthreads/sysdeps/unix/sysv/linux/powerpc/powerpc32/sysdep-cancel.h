@@ -18,6 +18,7 @@
    02111-1307 USA.  */
 
 #include <sysdep.h>
+#include <tls.h>
 #ifndef __ASSEMBLER__
 # include <linuxthreads/internals.h>
 #endif
@@ -77,32 +78,19 @@
 # ifdef IS_IN_libpthread
 #  define CENABLE	bl JUMPTARGET(__pthread_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__pthread_disable_asynccancel)
-#  define __local_multiple_threads __pthread_multiple_threads
 # else
 #  define CENABLE	bl JUMPTARGET(__libc_enable_asynccancel)
 #  define CDISABLE	bl JUMPTARGET(__libc_disable_asynccancel)
-#  define __local_multiple_threads __libc_multiple_threads
 # endif
 
 # ifndef __ASSEMBLER__
-extern int __local_multiple_threads attribute_hidden;
-#  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
+#  define SINGLE_THREAD_P						\
+  __builtin_expect (THREAD_GETMEM (THREAD_SELF,				\
+				     p_header.data.multiple_threads) == 0, 1)
 # else
-#  if !defined PIC
-#   define SINGLE_THREAD_P						\
-  lis 10,__local_multiple_threads@ha;					\
-  lwz 10,__local_multiple_threads@l(10);				\
+#  define SINGLE_THREAD_P						\
+  lwz 10,MULTIPLE_THREADS_OFFSET(2);					\
   cmpwi 10,0
-#  else
-#   define SINGLE_THREAD_P						\
-  mflr 9;								\
-  bl _GLOBAL_OFFSET_TABLE_@local-4;					\
-  mflr 10;								\
-  mtlr 9;								\
-  lwz 10,__local_multiple_threads@got(10);				\
-  lwz 10,0(10);								\
-  cmpwi 10,0
-#  endif
 # endif
 
 #elif !defined __ASSEMBLER__

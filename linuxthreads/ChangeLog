@@ -1,3 +1,21 @@
+2003-02-17  Kevin B. Hendricks  <kevin.hendricks@sympatico.ca>
+	    Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/Makefile: Handle tcb-offsets.sym.
+	* sysdeps/powerpc/tcb-offsets.sym: New file.
+	* sysdeps/powerpc/tls.h: New file.
+	* sysdeps/powerpc/powerpc32/pt-machine.h (FLOATING_STACKS): Define.
+	(ARCH_STACK_MAX_SIZE): Define.
+	(THREAD_SELF): Define.
+	(INIT_THREAD_SELF): Define.
+	(THREAD_GETMEM): Define.
+	(THREAD_GETMEM_NC): Define.
+	(THREAD_SETMEM): Define.
+	(THREAD_SETMEM_NC): Define.
+	(__thread_self): Declare.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep-cancel.h: Adjust
+	for thread register.
+
 2003-02-14  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/vfork.S (__vfork):

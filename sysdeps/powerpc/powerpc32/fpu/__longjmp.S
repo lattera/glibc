@@ -28,7 +28,6 @@ ENTRY (BP_SYM (__longjmp))
 	CHECK_BOUNDS_BOTH_WIDE_LIT (r3, r8, r9, JB_SIZE)
 
 	lwz r1,(JB_GPR1*4)(r3)
-	lwz r2,(JB_GPR2*4)(r3)
 	lwz r0,(JB_LR*4)(r3)
 	lwz r14,((JB_GPRS+0)*4)(r3)
 	lfd fp14,((JB_FPRS+0*2)*4)(r3)

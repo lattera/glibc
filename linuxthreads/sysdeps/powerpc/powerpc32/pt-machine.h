@@ -36,10 +36,36 @@ extern int __compare_and_swap (long int *p, long int oldval, long int newval);
    need to make sure that the compiler has flushed everything to memory.  */
 #define MEMORY_BARRIER() __asm__ __volatile__ ("sync" : : : "memory")
 
+/* We want the OS to assign stack addresses.  */
+#define FLOATING_STACKS 1
+
+/* Maximum size of the stack if the rlimit is unlimited.  */
+#define ARCH_STACK_MAX_SIZE     8*1024*1024
+
 /* Get some notion of the current stack.  Need not be exactly the top
    of the stack, just something somewhere in the current frame.  */
 #define CURRENT_STACK_FRAME  stack_pointer
 register char * stack_pointer __asm__ ("r1");
+
+/* Register r2 (tp) is reserved by the ABI as "thread pointer". */
+struct _pthread_descr_struct;
+register struct _pthread_descr_struct *__thread_self __asm__("r2");
+
+/* Return the thread descriptor for the current thread.  */
+#define THREAD_SELF  __thread_self
+
+/* Initialize the thread-unique value.  */
+#define INIT_THREAD_SELF(descr, nr)  (__thread_self = (descr))
+
+/* Access to data in the thread descriptor is easy.  */
+#define THREAD_GETMEM(descr, member) \
+  ((void) (descr), THREAD_SELF->member)
+#define THREAD_GETMEM_NC(descr, member) \
+  ((void) (descr), THREAD_SELF->member)
+#define THREAD_SETMEM(descr, member, value) \
+  ((void) (descr), THREAD_SELF->member = (value))
+#define THREAD_SETMEM_NC(descr, member, value) \
+  ((void) (descr), THREAD_SELF->member = (value))
 
 /* Compare-and-swap for semaphores. */
 /* note that test-and-set(x) is the same as !compare-and-swap(x, 0, 1) */

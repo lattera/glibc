@@ -1,3 +1,12 @@
+2003-02-17  Kevin B. Hendricks  <kevin.hendricks@sympatico.ca>
+	    Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/powerpc/elf/libc-start.c: Handle NONTLS_INIT_TP.
+	* sysdeps/powerpc/powerpc32/__longjmp.S: Remove R2 handling.
+	* sysdeps/powerpc/powerpc32/setjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/__longjmp.S: Likewise.
+	* sysdeps/powerpc/powerpc32/fpu/setjmp.S: Likewise.
+
 2003-02-17  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/ftruncate64.c: Delete.

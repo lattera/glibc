@@ -29,7 +29,6 @@ ENTRY (BP_SYM (__sigsetjmp))
 
 	stw  r1,(JB_GPR1*4)(3)
 	mflr r0
-	stw  r2,(JB_GPR2*4)(3)
 	stw  r14,((JB_GPRS+0)*4)(3)
 	stw  r0,(JB_LR*4)(3)
 	stw  r15,((JB_GPRS+1)*4)(3)
