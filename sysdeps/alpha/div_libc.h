@@ -71,7 +71,7 @@
 
 /* In order to make the below work, all top-level divide routines must
    use the same frame size.  */
-#define FRAME	48
+#define FRAME	64
 
 /* Code fragment to generate an integer divide-by-zero fault.  When
    building libc.so, we arrange for there to be one copy of this code

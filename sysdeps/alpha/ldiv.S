@@ -53,6 +53,8 @@ ldiv:
 #endif
 
 	beq	Y, $divbyzero
+	excb
+	mf_fpcr	$f10
 
 	_ITOFT2	X, $f0, 0, Y, $f1, 8
 
@@ -71,6 +73,8 @@ ldiv:
 	/* If we get here, we're expecting exact results from the division.
 	   Do nothing else besides convert and clean up.  */
 	cvttq/c	$f0, $f0
+	excb
+	mt_fpcr	$f10
 	_FTOIT	$f0, $0, 0
 
 $egress:
@@ -107,9 +111,10 @@ $fix_sign_in_ret1:
 	cvttq/c	$f0, $f0
 
 	_FTOIT	$f0, Q, 8
-	.align	3
 $fix_sign_in_ret2:
 	mulq	Q, Y, QY
+	excb
+	mt_fpcr	$f10
 
 	.align	4
 	subq	QY, X, R

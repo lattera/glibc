@@ -1,3 +1,11 @@
+2004-09-05  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/div.S: Save and restore FPCR around fp operations.
+	* sysdeps/alpha/divl.S, sysdeps/alpha/divq.S, sysdeps/alpha/divqu.S,
+	sysdeps/alpha/ldiv.S, sysdeps/alpha/reml.S, sysdeps/alpha/remq.S,
+	sysdeps/alpha/remqu.S: Likewise.
+	* sysdeps/alpha/div_libc.h (FRAME): Increase to 64.
+
 2004-09-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* nscd/cache.c (cache_add): Correctly log GETHOSTBYADDR and

@@ -33,7 +33,12 @@
    When the dividend is outside the range for which we can compute exact
    results, we use the fp quotent as an estimate from which we begin refining
    an exact integral value.  This reduces the number of iterations in the
-   shift-and-subtract loop significantly.  */
+   shift-and-subtract loop significantly.
+
+   The FPCR save/restore is due to the fact that the EV6 _will_ set FPCR_INE
+   for cvttq/c even without /sui being set.  It will not, however, properly
+   raise the exception, so we don't have to worry about FPCR_INED being clear
+   and so dying by SIGFPE.  */
 
 	.text
 	.align	4
@@ -53,10 +58,15 @@ __divq:
 	   ready -- all the time in the world to figure out how we're
 	   going to use the results.  */
 	stt	$f0, 0(sp)
-	stt	$f1, 8(sp)
+	excb
 	beq	Y, DIVBYZERO
+
+	stt	$f1, 8(sp)
+	stt	$f3, 48(sp)
 	cfi_rel_offset ($f0, 0)
 	cfi_rel_offset ($f1, 8)
+	cfi_rel_offset ($f3, 48)
+	mf_fpcr	$f3
 
 	_ITOFT2	X, $f0, 16, Y, $f1, 24
 	cvtqt	$f0, $f0
@@ -73,12 +83,16 @@ __divq:
 	/* If we get here, we're expecting exact results from the division.
 	   Do nothing else besides convert and clean up.  */
 	cvttq/c	$f0, $f0
+	excb
+	mt_fpcr	$f3
 	_FTOIT	$f0, RV, 16
 
 	ldt	$f0, 0(sp)
+	ldt	$f3, 48(sp)
 	cfi_restore ($f1)
 	cfi_remember_state
 	cfi_restore ($f0)
+	cfi_restore ($f3)
 	cfi_def_cfa_offset (0)
 	lda	sp, FRAME(sp)
 	ret	$31, (RA), 1
@@ -121,9 +135,9 @@ $fix_sign_in_ret2:
 	cfi_rel_offset (t3, 0)
 
 	mulq	Q, Y, QY
-	unop
+	excb
 	stq	t4, 8(sp)
-	unop
+	mt_fpcr	$f3
 	cfi_rel_offset (t4, 8)
 
 	subq	QY, X, R
@@ -147,6 +161,7 @@ $fix_sign_out_ret:
 	ldq	t3, 0(sp)
 	ldq	t4, 8(sp)
 	ldq	t5, 40(sp)
+	ldt	$f3, 48(sp)
 	lda	sp, FRAME(sp)
 	cfi_remember_state
 	cfi_restore (t0)
@@ -155,6 +170,7 @@ $fix_sign_out_ret:
 	cfi_restore (t3)
 	cfi_restore (t4)
 	cfi_restore (t5)
+	cfi_restore ($f3)
 	cfi_def_cfa_offset (0)
 	ret	$31, (RA), 1
 
