@@ -21,6 +21,7 @@
 #include <sysdep.h>
 #define _ERRNO_H
 #include <bits/errno.h>
+#include <sys/asm.h>
 
 #ifdef _LIBC_REENTRANT
 
