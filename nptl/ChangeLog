@@ -1,5 +1,8 @@
 2003-01-04  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cancel7.
+	(tst-cancel7-ARGS): New variable.
+
 	* old_pthread_cond_broadcast.c: Optimize initialization a bit to work
 	around gcc defficiencies.
 	* old_pthread_cond_signal.c: Likewise.
