@@ -28,7 +28,7 @@
 #include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <asm/user.h>
+#include <sys/user.h>
 #include <asm/elf.h>
 
 __BEGIN_DECLS

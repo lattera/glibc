@@ -1458,5 +1458,5 @@ Computing table size for character classes might take a while..."),
   /* We need the name of the currently used 8-bit character set to
      make correct conversion between this 8-bit representation and the
      ISO 10646 character set used internally for wide characters.  */
-  ctype->codeset_name = charset->code_set_name;
+  ctype->codeset_name = charset->code_set_name ? : "";
 }

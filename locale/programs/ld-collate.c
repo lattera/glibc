@@ -812,6 +812,8 @@ Computing table size for collation information might take a while..."),
 		  lastp = firstp;
 		  while (lastp->next != NULL && wcscmp (name, lastp->name))
 		    lastp = lastp->next;
+		  if (lastp->ordering == NULL)
+		    lastp = &collate->undefined;
 		}
 
 	      weights = lastp->ordering;

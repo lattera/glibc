@@ -1,3 +1,31 @@
+1998-12-09  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/unix/sysv/linux/sys/procfs.h: Use sys/user.h not
+	asm/user.h.
+	* sysdeps/unix/sysv/linux/mips/sys/procfs.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/powerpc/sys/procfs.h: New file,
+	like linux/sys/procfs.h but uses uid_t and gid_t.
+	* sysdeps/unix/sysv/linux/powerpc/sys/user.h: New file,
+	don't include <linux/ptrace.h>.
+
+1998-12-08  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* posix/runptests.c (main): Check that regcomp did not succeed
+	unexpectedly.
+	* posix/runtests.c (run_a_test): Likewise.  Return appropriate
+	exit code.
+	* posix/TESTS: Regexp "a[b-a]" should not compile.
+	* posix/PTESTS: Comment out bogus tests GA113(2), GA145(2) and
+	GA147(2).
+
+1998-12-09  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* locale/programs/ld-ctype.c (allocate_arrays): Don't crash if
+	there is no codeset name.
+	* locale/programs/ld-collate.c (collate_output): Don't crash if a
+	character has no weight.
+
 1998-12-10  Ulrich Drepper  <drepper@cygnus.com>
 
 	* inet/getnetgrent_r.c (innetgr): Check host and domain name with

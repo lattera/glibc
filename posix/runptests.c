@@ -63,8 +63,8 @@ main (int argc, char *argv[])
 	err = regcomp (&re, tests[cnt].reg, tests[cnt].options);
 	if (err != 0)
 	  {
-	    if (tests[cnt].start == -1)
-	      puts ("failed, OK");
+	    if (tests[cnt].start == -2)
+	      puts ("compiling failed, OK");
 	    else
 	      {
 		char buf[100];
@@ -73,6 +73,12 @@ main (int argc, char *argv[])
 		++errors;
 	      }
 
+	    continue;
+	  }
+	else if (tests[cnt].start == -2)
+	  {
+	    puts ("compiling suceeds, FAIL");
+	    errors++;
 	    continue;
 	  }
 

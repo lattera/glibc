@@ -65,7 +65,7 @@ run_a_test (int id, const struct a_test * t)
       err = regcomp (&r, t->pattern, REG_EXTENDED);
       if (err)
 	{
-	  if (t->expected)
+	  if (t->expected == 2)
 	    {
 	      puts (" OK.");
 	      return 0;
@@ -73,6 +73,13 @@ run_a_test (int id, const struct a_test * t)
 	  regerror (err, &r, errmsg, 100);
 	  printf ("test %d\n", id);
 	  puts (errmsg);
+	  return 1;
+	}
+      else if (t->expected == 2)
+	{
+	  printf ("test %d\n", id);
+	  printf ("pattern \"%s\" successfull compilation not expected\n",
+		  t->pattern);
 	  return 1;
 	}
     }
@@ -124,9 +131,7 @@ main (int argc, char * argv[])
       printf ("#%d:", x);
       res |= run_a_test (x, &the_tests[x]);
     }
-  {
-    exit (0);
-  }
+  exit (res != 0);
 }
 
 
