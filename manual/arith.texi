@@ -2101,6 +2101,10 @@ are whitespace is determined by the @code{isspace} function
 @item
 An optional plus or minus sign (@samp{+} or @samp{-}).
 
+@item A floating point number in decimal or hexadecimal format.  The
+decimal format is:
+@itemize @minus
+
 @item
 A nonempty sequence of digits optionally containing a decimal-point
 character---normally @samp{.}, but it depends on the locale
@@ -2109,6 +2113,22 @@ character---normally @samp{.}, but it depends on the locale
 @item
 An optional exponent part, consisting of a character @samp{e} or
 @samp{E}, an optional sign, and a sequence of digits.
+
+@end itemize
+
+The hexadecimal format is as follows:
+@itemize @minus
+
+@item
+A 0x or 0X followed by a nonempty sequence of hexadecimal digits
+optionally containing a decimal-point character---normally @samp{.}, but
+it depends on the locale (@pxref{General Numeric}).
+
+@item
+An optional binary-exponent part, consisting of a character @samp{p} or
+@samp{P}, an optional sign, and a sequence of digits.
+
+@end itemize
 
 @item
 Any remaining characters in the string.  If @var{tailptr} is not a null
@@ -2146,10 +2166,10 @@ examining @var{errno} and @var{tailptr}.
 @end deftypefun
 
 @comment stdlib.h
-@comment GNU
+@comment ISO C
 @deftypefun float strtof (const char *@var{string}, char **@var{tailptr})
 @comment stdlib.h
-@comment GNU
+@comment ISO C
 @deftypefunx {long double} strtold (const char *@var{string}, char **@var{tailptr})
 These functions are analogous to @code{strtod}, but return @code{float}
 and @code{long double} values respectively.  They report errors in the
@@ -2158,7 +2178,7 @@ than @code{strtod}, but has less precision; conversely, @code{strtold}
 can be much slower but has more precision (on systems where @code{long
 double} is a separate type).
 
-These functions are GNU extensions.
+These functions have been GNU extensions and are new to @w{ISO C 9x}.
 @end deftypefun
 
 @comment stdlib.h

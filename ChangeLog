@@ -1,3 +1,17 @@
+1999-10-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/time.texi (Formatting Date and Time): Revise comments about
+	origins of the formats with ISO C99 references.
+
+1999-10-30  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/ifreq.h: New file.
+
+1999-10-29  Andreas Jaeger  <aj@suse.de>
+
+	* manual/arith.texi (Parsing of Floats): Document the hexadecimal
+	input format; mention that strtof and strtold are part of ISO C99.
+
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/math.texi (Errors in Math Functions): New section.
