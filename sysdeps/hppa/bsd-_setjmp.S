@@ -1,4 +1,5 @@
-/* Copyright (C) 1995, 1996, 1998, 2001 Free Software Foundation, Inc.
+/* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  HPPA version.
+   Copyright (C) 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,4 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-/* HPPA implements syscall() in 'C'; see sysdep.c.  */
+/* This just does a tail-call to `__sigsetjmp (ARG, 1)'.
+   We cannot do it in C because it must be a tail-call, so frame-unwinding
+   in setjmp doesn't clobber the state restored by longjmp.  */
+
+	.text
+	.align 4
+	.globl _setjmp
+	.export _setjmp, code
+	.level 2.0
+	.proc
+	.callinfo
+	.import __sigsetjmp
+_setjmp:
+	b	__sigsetjmp
+	ldi	0, %r25
+
+	.procend
