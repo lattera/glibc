@@ -57,7 +57,7 @@ sparc.*-.*-linux.*	ld=ld-linux.so.2
 alpha.*-.*-linux.*	ld=ld-linux.so.2
 arm.*-.*-linux.*	ld=ld-linux.so.2
 sh.*-.*-linux.*		ld=ld-linux.so.2	GLIBC_2.2
-ia64-.*-linux.*		ld=ld-linux-ia64.so.1	GLIBC_2.2
+ia64-.*-linux.*		ld=ld-linux-ia64.so.2	GLIBC_2.2
 mips.*-.*-linux.*	ld=ld.so.1		GLIBC_2.0 GLIBC_2.2
 # We use the ELF ABI standard name for the default.
 .*-.*-.*		ld=ld.so.1

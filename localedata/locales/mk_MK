@@ -5,11 +5,11 @@ escape_char /
 % Address: 
 % Contact: Damjan Georgievski
 % Email: gdamjan@freemail.org.mk 
-% Tel: 
+% Tel: none 
 % Fax: none
 % Language: mk
 % Territory: MK
-% Revision: 0.2
+% Revision: 0.4 (2000-06-28)
 % Date: 1999-12-22
 % Application: general
 % Users: general
@@ -20,7 +20,8 @@ escape_char /
 %
 % Based on the rusian locale, 
 % sligtly changed to reflect macedonian language.
-% To compile: localedef -i mk_MK -f ISO-8859-5 mk_MK
+% To compile: localedef -i mk_MK.src -u mnemonic.ds -f ISO-8859-5 mk_MK
+% Or, optional: localedef -i mk_MK.src -u mnemonic.ds -f CP1251 mk_MK.cp1251
 
 LC_COLLATE
 % Base collation scheme: 1994-03-22
@@ -3015,12 +3016,12 @@ toupper (<a>,<A>);(<a!>,<A!>);/
 END LC_CTYPE
 
 LC_TIME
-abday	"<N=><e=><d=>";"<P=><o=><n=>";"<V=><t=><o=>";"<S=><r=><e=>";"<C%><e=><t=>";"<P=><e=><t=>";"<S=><a=><b=>"
-day	"<N=><e=><d=><e=><l=><a=>";"<P=><o=><n=><e=><d=><e=><l=><n=><i=><k=>";"<V=><t=><o=><r=><n=><i=><k=>";"<S=><r=><e=><d=><a=>";"<C%><e=><t=><v=><r=><t=><o=><k=>";"<P=><e=><t=><o=><k=>";"<S=><a=><b=><o=><t=><a=>"
-abmon	"<J%><a=><n=>";"<F=><e=><b=>";"<M=><a=><r=>";"<A=><p=><r=>";"<M=><a=><j%>";"<J%><u=><n=>";"<J%><u=><l=>";"<A=><v=><g=>";"<S=><e=><p=>";"<O=><k=><t=>";"<N=><o=><v=>";"<D=><e=><k=>"
-mon	"<J%><a=><n=><u=><a=><r=><i=>";"<F=><e=><b=><r=><u=><a=><r=><i=>";"<M=><a=><r=><t=>";"<A=><p=><r=><i=><l=>";"<M=><a=><j%>";"<J%><u=><n=><i=>";"<J%><u=><l=><i=>";"<A=><v=><g=><u=><s=><t=>";"<S=><e=><p=><t=><e=><m=><v=><r=><i=>";"<O=><k=><t=><o=><m=><v=><r=><i=>";"<N=><o=><e=><m=><v=><r=><i=>";"<D=><e=><k=><e=><m=><v=><r=><i=>"
+abday	"<n=><e=><d=>";"<p=><o=><n=>";"<v=><t=><o=>";"<s=><r=><e=>";"<c%><e=><t=>";"<p=><e=><t=>";"<s=><a=><b=>" 
+day	"<n=><e=><d=><e=><l=><a=>";"<p=><o=><n=><e=><d=><e=><l=><n=><i=><k=>";"<v=><t=><o=><r=><n=><i=><k=>";"<s=><r=><e=><d=><a=>";"<c%><e=><t=><v=><r=><t=><o=><k=>";"<p=><e=><t=><o=><k=>";"<s=><a=><b=><o=><t=><a=>"
+abmon	"<j%><a=><n=>";"<f=><e=><v=>";"<m=><a=><r=>";"<a=><p=><r=>";"<m=><a=><j%>";"<j%><u=><n=>";"<j%><u=><l=>";"<a=><v=><g=>";"<s=><e=><p=>";"<o=><k=><t=>";"<n=><o=><e=>";"<d=><e=><k=>"
+mon	"<j%><a=><n=><u=><a=><r=><i=>";"<f=><e=><v=><r=><u=><a=><r=><i=>";"<m=><a=><r=><t=>";"<a=><p=><r=><i=><l=>";"<m=><a=><j%>";"<j%><u=><n=><i=>";"<j%><u=><l=><i=>";"<a=><v=><g=><u=><s=><t=>";"<s=><e=><p=><t=><e=><m=><v=><r=><i=>";"<o=><k=><t=><o=><m=><v=><r=><i=>";"<n=><o=><e=><m=><v=><r=><i=>";"<d=><e=><k=><e=><m=><v=><r=><i=>"
 d_t_fmt "<%><a><comma><SP><%><d><SP><%><b><SP><%><Y><SP><%><T><SP><%><Z>"
-d_fmt   "<%><d><-><%><m><-><%><Y>"
+d_fmt   "<%><d><period><%><m><period><%><Y>"
 t_fmt   "<%><T>"
 am_pm   "";""
 t_fmt_ampm ""
@@ -3030,7 +3031,7 @@ LC_MONETARY
 int_curr_symbol           "<M><K><D><SP>"
 currency_symbol           "<d=><e=><n=>"
 mon_decimal_point         "<,>"
-mon_thousands_sep         "<.>"
+mon_thousands_sep         "<SP>"
 mon_grouping              3;3
 positive_sign             ""
 negative_sign             "<->"
@@ -3046,12 +3047,14 @@ END LC_MONETARY
 
 LC_NUMERIC
 decimal_point             "<,>"
-thousands_sep             "<.>"
+thousands_sep             "<SP>"
 grouping                  3;3
 END LC_NUMERIC
 
 LC_MESSAGES
 yesexpr "<<(><D=><d=><D><d><Y><y><1><)/>><.><*>"
 noexpr  "<<(><N=><n=><N><n><0><)/>><.><*>"
+yesstr  "<d=><a=>"
+nostr   "<n=><e=>"
 END LC_MESSAGES
 

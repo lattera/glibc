@@ -1,5 +1,7 @@
 2000-06-28  Ulrich Drepper  <drepper@redhat.com>
 
+	* locales/th_TH: Update copyright notice.
+
 	* locales/cs_CZ: Updated for new format.
 	Patch by Jakub Jelinek <jakub@redhat.com>.
 

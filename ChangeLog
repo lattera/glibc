@@ -1,3 +1,17 @@
+2000-06-28  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/bits/elfclass.h: Deleted.  Hash
+	table entries are 32 bit on the ia64 (as specified by the ABI),
+	not 64 bit as on the Alpha.
+
+	* shlib-versions: Bump ia64 soname to ld-linux-ia64.so.2 to mark
+	change of objects to use 32 bit hash table indices (see above).
+
+2000-06-28  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ieee754/dbl-64/e_exp.c: Add include stdlib.h to get
+	prototype for abs().
+
 2000-06-28  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (chunk_alloc): If extension of the linear heap
