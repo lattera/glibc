@@ -93,3 +93,4 @@ pmap_getport (address, program, version, protocol)
   address->sin_port = 0;
   return port;
 }
+libc_hidden_def (pmap_getport)

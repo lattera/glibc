@@ -1,6 +1,9 @@
 #ifndef _RPC_SVC_H
 #include <sunrpc/rpc/svc.h>
 
+libc_hidden_proto (xprt_register)
+libc_hidden_proto (xprt_unregister)
+
 /* Now define the internal interfaces.  */
 extern int registerrpc (u_long prognum, u_long versnum, u_long procnum,
 			char *(*progname) (char *), xdrproc_t inproc,

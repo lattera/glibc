@@ -115,6 +115,7 @@ xprt_register (SVCXPRT *xprt)
 					       POLLRDNORM | POLLRDBAND);
     }
 }
+libc_hidden_def (xprt_register)
 
 /* De-activate a transport handle. */
 void
@@ -135,6 +136,7 @@ xprt_unregister (SVCXPRT *xprt)
 	  svc_pollfd[i].fd = -1;
     }
 }
+libc_hidden_def (xprt_unregister)
 
 
 /* ********************** CALLOUT list related stuff ************* */

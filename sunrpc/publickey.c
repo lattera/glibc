@@ -72,6 +72,7 @@ getpublickey (const char *name, char *key)
 
   return status == NSS_STATUS_SUCCESS;
 }
+libc_hidden_def (getpublickey)
 
 
 int

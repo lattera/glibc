@@ -2,6 +2,8 @@
 
 #include <sunrpc/rpc/auth_des.h>
 
+libc_hidden_proto (getpublickey)
+
 extern bool_t xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred);
 extern bool_t xdr_authdes_verf (register XDR *xdrs,
 				register struct authdes_verf *verf);
