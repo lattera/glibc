@@ -147,12 +147,8 @@ enum __rusage_who
 #define RUSAGE_SELF RUSAGE_SELF
 
   /* All of its terminated child processes.  */
-  RUSAGE_CHILDREN = -1,
+  RUSAGE_CHILDREN = -1
 #define RUSAGE_CHILDREN RUSAGE_CHILDREN
-
-  /* Both.  */
-  __RUSAGE_BOTH = -2
-#define RUSAGE_BOTH __RUSAGE_BOTH
 };
 
 #define __need_timeval
