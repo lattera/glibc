@@ -1,6 +1,6 @@
 #! /usr/bin/perl -w
 
-# Copyright (C) 1997 Free Software Foundation, Inc.
+# Copyright (C) 1997, 1998 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Andreas Jaeger <aj@arthur.rhein-neckar.de>, 1997.
 
@@ -56,7 +56,7 @@ arglist: while (@ARGV) {
       $ARGV[0] eq "--vers" || $ARGV[0] eq "--versi" ||
       $ARGV[0] eq "--versio" || $ARGV[0] eq "--version") {
     print "test-installation (GNU $PACKAGE)\n";
-    print "Copyright (C) 1997 Free Software Foundation, Inc.\n";
+    print "Copyright (C) 1997, 1998 Free Software Foundation, Inc.\n";
     print "This is free software; see the source for copying conditions.  There is NO\n";
     print "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
     print "Written by Andreas Jaeger <aj\@arthur.rhein-neckar.de>\n";
@@ -101,7 +101,10 @@ while (<SOVERSIONS>) {
   chop;
   if (/^lib/) {
     ($name, $version)= /^lib(.*)\.so-version=\.(.*)$/;
-    if ($name ne "nss_ldap") {
+    # Filter out some libraries we don't want to link:
+    # - nss_ldap since it's not yet available
+    # - libdb1 since it conflicts with libdb
+    if ($name ne "nss_ldap" && $name ne "db1") {
       $link_libs .= " -l$name";
       $versions{$name} = $version;
     }
