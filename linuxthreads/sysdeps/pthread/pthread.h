@@ -573,9 +573,12 @@ extern void *pthread_getspecific (pthread_key_t __key) __THROW;
 /* Guarantee that the initialization function INIT_ROUTINE will be called
    only once, even if pthread_once is executed several times with the
    same ONCE_CONTROL argument. ONCE_CONTROL must point to a static or
-   extern variable initialized to PTHREAD_ONCE_INIT.  */
+   extern variable initialized to PTHREAD_ONCE_INIT.
+
+   The initialization functions might throw exception which is why
+   this function is not marked with __THROW.  */
 extern int pthread_once (pthread_once_t *__once_control,
-			 void (*__init_routine) (void)) __THROW;
+			 void (*__init_routine) (void));
 
 
 /* Functions for handling cancellation.  */

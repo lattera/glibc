@@ -1,5 +1,10 @@
+2004-09-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread.h (pthread_once): Remove __THROW since
+	the initialization function might throw.
+
 2005-09-05  Richard Henderson  <rth@redhat.com>
-	                                                                        
+
 	* sysdeps/unix/sysv/linux/alpha/sysdep-cancel.h (SINGLE_THREAD_P):
 	Move definition inside libpthread, libc, librt check.  Provide
 	definition for rtld.
