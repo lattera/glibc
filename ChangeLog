@@ -1,5 +1,7 @@
 2005-03-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/bits/unistd.h (pread): Fix typo in __USE_FILE_OFFSET64 code.
+
 	* debug/recv_chk.c (__recv_chk): Always fail if request could
 	overflow the buffer.
 	* debug/recvfrom_chk.c (__recvfrom_chk): Likewise.
