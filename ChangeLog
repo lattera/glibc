@@ -1,5 +1,10 @@
 2000-08-25  Andreas Jaeger  <aj@suse.de>
 
+	* iconvdata/Makefile ($(objpfx)bug-iconv1.out): Depend on
+	gconv-modules.
+
+2000-08-25  Andreas Jaeger  <aj@suse.de>
+
 	* manual/arith.texi (Control Functions): Clarify possible
 	arguments.  Closes PR libc/1856.
 

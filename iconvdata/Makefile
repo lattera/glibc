@@ -248,6 +248,8 @@ tests: $(objpfx)iconv-test.out
 endif
 endif
 
+$(objpfx)bug-iconv1.out: $(objpfx)gconv-modules
+
 $(objpfx)iconv-test.out: run-iconv-test.sh $(objpfx)gconv-modules \
 			 $(addprefix $(objpfx),$(modules.so)) \
 			 $(common-objdir)/iconv/iconv_prog TESTS
