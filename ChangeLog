@@ -1,5 +1,8 @@
 2004-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* misc/syslog.c (openlog_internal): Always try both UDP and TCP.
+	[BZ #108]  Patch mainly by Bjorn Andersson <bjorn@iki.fi>.
+
 	* configure.in: Also recognize i786. [BZ #106]
 	Patch by <pluto@pld-linux.org>.
 

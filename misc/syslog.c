@@ -323,7 +323,8 @@ openlog_internal(const char *ident, int logstat, int logfac)
 	if (logfac != 0 && (logfac &~ LOG_FACMASK) == 0)
 		LogFacility = logfac;
 
-	while (1) {
+	int retry = 0;
+	while (retry < 2) {
 		if (LogFile == -1) {
 			SyslogAddr.sa_family = AF_UNIX;
 			(void)strncpy(SyslogAddr.sa_data, _PATH_LOG,
@@ -345,12 +346,13 @@ openlog_internal(const char *ident, int logstat, int logfac)
 				int fd = LogFile;
 				LogFile = -1;
 				(void)__close(fd);
-				if (LogType == SOCK_DGRAM
-				    && saved_errno == EPROTOTYPE)
+				__set_errno (old_errno);
+				if (saved_errno == EPROTOTYPE)
 				{
-					/* retry with next SOCK_STREAM: */
-					LogType = SOCK_STREAM;
-					__set_errno (old_errno);
+					/* retry with the other type: */
+					LogType = (LogType == SOCK_DGRAM
+						   ? SOCK_STREAM : SOCK_DGRAM);
+					++retry;
 					continue;
 				}
 			} else
