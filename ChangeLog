@@ -1,3 +1,8 @@
+2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
+
+	* sysdeps/unix/sysv/linux/mips/sys/tas.h (_test_and_set): Don't
+	.set mips2 on new abis.
+
 2003-03-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/getconf.c: Recognize POSIX2_SYMLINKS.
@@ -16,8 +21,6 @@
 	* include/gmp.h: Include/gmp-mparam.h.
 	* stdlib/strtod.c: Include gmp-mparam.h before gmp.h and
 	gmp-impl.h.
-
-2003-03-14  Alexandre Oliva  <aoliva@redhat.com>
 
 	* elf/dl-conflict.c: Don't compile _dl_resolve_conflicts if
 	ELF_MACHINE_NO_RELA is set.
