@@ -1,3 +1,7 @@
+2001-05-30  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/da.po: Update from translation team.
+
 2001-05-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/ieee754/ldbl-128/e_acosl.c: New file, contributed by
