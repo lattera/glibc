@@ -71,7 +71,7 @@ static struct region default_overflow_region =
 
 static struct prof_info prof_info;
 
-static inline unsigned long int
+static unsigned long int
 pc_to_index (size_t pc, size_t offset, unsigned int scale, int prof_uint)
 {
   size_t i = (pc - offset) / (prof_uint ? sizeof (int) : sizeof (short));

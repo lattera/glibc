@@ -1,3 +1,7 @@
+2003-09-23  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/posix/sprofil.c (pc_to_index): Remove inline marker.
+
 2003-09-20  Alfred M. Szmidt  <ams@kemisten.nu>
 
 	* sysdeps/generic/utmp_file.c (setutent_file, LOCK_FILE,
