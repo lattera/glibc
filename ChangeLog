@@ -1,3 +1,13 @@
+1998-10-29  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sysdeps/unix/sysv/linux/bits/sem.h,
+	sysdeps/unix/sysv/linux/bits/ipc.h,
+	sysdeps/unix/sysv/linux/bits/shm.h,
+	sysdeps/unix/sysv/linux/bits/msq.h: Moved to ...
+	* sysdeps/gnu/bits/sem.h, sysdeps/gnu/bits/ipc.h,
+	sysdeps/gnu/bits/shm.h, sysdeps/gnu/bits/msq.h: ... here,
+	so the same bits will be used for the Hurd.
+
 1998-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sigaction.c (__sigaction): Allow
