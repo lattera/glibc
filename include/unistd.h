@@ -140,6 +140,7 @@ libc_hidden_proto (__sbrk)
    and some functions contained in the C library ignore various
    environment variables that normally affect them.  */
 extern int __libc_enable_secure;
+extern int __libc_enable_secure_decided;
 #ifdef IS_IN_rtld
 /* XXX The #ifdef should go.  */
 extern int __libc_enable_secure_internal attribute_hidden;

@@ -1,5 +1,14 @@
 2003-05-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/enbl-secure.c (__libc_enable_secure_decided): New
+	variable.
+	(__libc_init_secure): Don't do anything if __libc_enable_secure_decided
+	is nonzero.
+	* include/unistd.h: Declare __libc_enable_secure_decided.
+	* elf/dl-support.c (_dl_aux_init): Recognize AT_UID, AT_EUID, AT_GID,
+	and AT_EGID.  If all found, set __libc_enable_secure and
+	__libc_enable_secure_decided.
+
 	* sysdeps/generic/libc-start.c [!SHARED]: Call
 	__libc_check_standard_fds after __libc_init_first.
 
