@@ -106,6 +106,10 @@ distribute := gconv-modules extra-module.mk gap.awk gaptab.awk		    \
 	      EUC-JP.irreversible ISIRI-3342.irreversible SJIS.irreversible \
 	      EUC-KR.irreversible BIG5HKSCS.irreversible BIG5.irreversible  \
 	      CP1255.irreversible CP1258.irreversible EUC-TW.irreversible   \
+	      IBM856.irreversible IBM922.irreversible IBM1132.irreversible  \
+	      IBM1133.irreversible IBM1160.irreversible IBM1161.irreversible\
+	      IBM1163.irreversible IBM1164.irreversible			    \
+	      ARMSCII-8.irreversible TCVN5712-1.precomposed		    \
 	      8bit-generic.c 8bit-gap.c					    \
 	      ansi_x3.110.c asmo_449.c big5.c cp737.c cp737.h		    \
 	      cp775.c cp775.h ibm874.c cns11643.c cns11643.h		    \

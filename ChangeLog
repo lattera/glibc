@@ -1,3 +1,34 @@
+2002-04-15  Bruno Haible  <bruno@clisp.org>
+
+	* iconvdata/armscii-8.c (BODY for FROM_LOOP): Fix array access.
+	(BODY for TO_LOOP): Likewise.
+	* iconvdata/tcvn5712-1.c (from_ucs4): Map U+0309 to 0xB1.
+	* iconvdata/tst-table.sh: Add support for encodings which contain
+	precomposed Unicode characters, known to the iconv converter in both
+	directions but not listed in the charmap.
+	* iconvdata/IBM856.irreversible: New file.
+	* iconvdata/IBM922.irreversible: New file.
+	* iconvdata/IBM1132.irreversible: New file.
+	* iconvdata/IBM1133.irreversible: New file.
+	* iconvdata/IBM1160.irreversible: New file.
+	* iconvdata/IBM1161.irreversible: New file.
+	* iconvdata/IBM1163.irreversible: New file.
+	* iconvdata/IBM1164.irreversible: New file.
+	* iconvdata/ARMSCII-8.irreversible: New file.
+	* iconvdata/TCVN5712-1.precomposed: New file.
+	* iconvdata/tst-tables.sh: Add IBM856, IBM922, IBM1124, IBM1129,
+	IBM1160, IBM1161, IBM1132, IBM1133, IBM1162, IBM1163, IBM1164,
+	ARMSCII-8, TCVN5712-1.
+	* iconvdata/Makefile (distribute): Add IBM856.irreversible,
+	IBM922.irreversible, IBM1132.irreversible, IBM1133.irreversible,
+	IBM1160.irreversible, IBM1161.irreversible, IBM1163.irreversible,
+	IBM1164.irreversible, ARMSCII-8.irreversible, TCVN5712-1.precomposed.
+
+2002-04-17  Jakub Jelinek  <jakub@redhat.com>
+
+	* time/tst-mktime.c: Include <stdlib.h>.  Use %d, not %ld format
+	for EVENING69.  Include offsets in TZ environment variable.
+
 2002-04-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c (RESET_INPUT_BUFFER): Replace ifs with #ifs to

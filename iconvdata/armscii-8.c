@@ -1,5 +1,5 @@
-/* Conversion to and from ISO 8859-1.
-   Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Conversion to and from ARMSCII-8
+   Copyright (C) 1997-1999, 2000-2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -61,7 +61,7 @@ static const uint16_t map_from_armscii_8[0xfe - 0xa2 + 1] =
       *((uint32_t *) outptr)++ = ch;					      \
     else if (ch >= 0xa2 && ch <= 0xfe)					      \
       /* Use the table.  */						      \
-      *((uint32_t *) outptr)++ = map_from_armscii_8[ch];		      \
+      *((uint32_t *) outptr)++ = map_from_armscii_8[ch - 0xa2];		      \
     else								      \
       {									      \
 	/* This is an illegal character.  */				      \
@@ -114,7 +114,7 @@ static const unsigned char map_to_armscii_8[0x58a - 0x531 + 1] =
       *outptr = 0xa6;							      \
     else if (ch >= 0x531 && ch <= 0x58a)				      \
       {									      \
-	unsigned char oc = map_to_armscii_8[ch];			      \
+	unsigned char oc = map_to_armscii_8[ch - 0x531];		      \
 									      \
 	if (oc == 0)							      \
 	  /* No valid mapping.  */					      \

@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -39,7 +39,10 @@ ${SHELL} tst-table-charmap.sh ${charmap:-$charset} \
   < ../localedata/charmaps/${charmap:-$charset} \
   > ${objpfx}tst-${charset}.charmap.table
 
-# Precompute expected differences between the two iconv directions.
+# Precomputed expexted differences between the charmap and iconv forward.
+precomposed=${charset}.precomposed
+
+# Precompute expected differences between the charmap and iconv backward.
 if test ${charset} = EUC-TW; then
   irreversible=${objpfx}tst-${charset}.irreversible
   (grep '^0x8EA1' ${objpfx}tst-${charset}.charmap.table
@@ -59,29 +62,37 @@ ${common_objpfx}elf/ld.so --library-path $common_objpfx \
 ${objpfx}tst-table-to ${charset} | sort \
   > ${objpfx}tst-${charset}.inverse.table
 
-# Difference between the two iconv directions.
-diff ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table | \
+# Difference between the charmap and iconv backward.
+diff ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.inverse.table | \
   grep '^[<>]' | sed -e 's,^. ,,' > ${objpfx}tst-${charset}.irreversible.table
 
-# Check 1: charmap and iconv forward should be identical.
+# Check 1: charmap and iconv forward should be identical, except for
+# precomposed characters.
 if test ${charset} = GB18030; then
   grep '0x....$' < ${objpfx}tst-${charset}.charmap.table \
     > ${objpfx}tst-${charset}.truncated.table
   cmp -s ${objpfx}tst-${charset}.truncated.table ${objpfx}tst-${charset}.table ||
   exit 1
 else
-  cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
-  exit 1
+  if test -f ${precomposed}; then
+    cat ${objpfx}tst-${charset}.table ${precomposed} | sort | uniq -u \
+      > ${objpfx}tst-${charset}.tmp.table
+    cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.tmp.table ||
+    exit 1
+  else
+    cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.table ||
+    exit 1
+  fi
 fi
 
-# Check 2: the difference between the two iconv directions.
+# Check 2: the difference between the charmap and iconv backward.
 if test -f ${irreversible}; then
   cat ${objpfx}tst-${charset}.charmap.table ${irreversible} | sort | uniq -u \
     > ${objpfx}tst-${charset}.tmp.table
   cmp -s ${objpfx}tst-${charset}.tmp.table ${objpfx}tst-${charset}.inverse.table ||
   exit 1
 else
-  cmp -s ${objpfx}tst-${charset}.table ${objpfx}tst-${charset}.inverse.table ||
+  cmp -s ${objpfx}tst-${charset}.charmap.table ${objpfx}tst-${charset}.inverse.table ||
   exit 1
 fi
 

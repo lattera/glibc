@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
@@ -30,7 +31,7 @@ main (void)
       result = strcmp (daybuf, "Wednesday") != 0;
     }
 
-  setenv ("TZ", "EST", 1);
+  setenv ("TZ", "EST+5", 1);
 #define EVENING69 1 * 60 * 60 + 2 * 60 + 29
   t = EVENING69;
   tm = localtime (&t);
@@ -45,14 +46,14 @@ main (void)
       t = mktime (&time_str);
       if (t != EVENING69)
         {
-          printf ("mktime returned %ld, expected %ld\n",
+          printf ("mktime returned %ld, expected %d\n",
 		  (long) t, EVENING69);
 	  result = 1;
         }
       else
         (void) puts ("Dec 31 1969 EST test passed");
 
-      setenv ("TZ", "CET", 1);
+      setenv ("TZ", "CET-1", 1);
       t = mktime (&time_str);
       if (t != (time_t) -1)
         {

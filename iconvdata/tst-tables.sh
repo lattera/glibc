@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+# Copyright (C) 2000, 2001, 2002 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 # Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 #
@@ -76,7 +76,6 @@ cat <<EOF |
   #ISO_6937-2        ISO-IR-90          Handling of combining marks is broken
   KOI-8
   KOI8-R
-  KOI8-T
   LATIN-GREEK
   LATIN-GREEK-1
   HP-ROMAN8
@@ -119,6 +118,7 @@ cat <<EOF |
   IBM851
   IBM852
   IBM855
+  IBM856
   IBM857
   IBM860
   IBM861
@@ -138,9 +138,20 @@ cat <<EOF |
   IBM904
   IBM905
   IBM918
+  IBM922
   IBM1004
   IBM1026
+  #IBM1046                              Differs from the AIX and JDK converters
   IBM1047
+  IBM1124
+  IBM1129
+  IBM1160
+  IBM1161
+  IBM1132
+  IBM1133
+  IBM1162
+  IBM1163
+  IBM1164
   CP1250
   CP1251
   CP1252
@@ -180,18 +191,23 @@ cat <<EOF |
   NATS-SEFI
   WIN-SAMI-2        SAMI-WS2
   ISO-IR-197
-  ISO-IR-209
-  MAC-SAMI
   TIS-620
   KOI8-U
+  #ISIRI-3342                         This charset concept is completely broken
   VISCII
+  KOI8-T
   GEORGIAN-PS
   GEORGIAN-ACADEMY
-  #ISIRI-3342                         This charset concept is completely broken
+  ISO-IR-209
+  MAC-SAMI
+  ARMSCII-8
+  TCVN5712-1
   #
   # Multibyte encodings come here
   #
   SJIS              SHIFT_JIS
+  #IBM932                               This converter looks quite strange
+  #IBM943                               This converter looks quite strange
   EUC-KR
   CP949
   JOHAB
@@ -205,6 +221,11 @@ cat <<EOF |
   #
   # Stateful encodings not testable this way
   #
+  #IBM930
+  #IBM933
+  #IBM935
+  #IBM937
+  #IBM939
   #ISO-2022-JP
   #ISO-2022-JP-2
   #ISO-2022-KR

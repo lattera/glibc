@@ -461,7 +461,7 @@ construct_output_path (char *path)
 
   errno = 0;
 
-  if (euidaccess (result, W_OK) == -1)
+  if (no_archive && euidaccess (result, W_OK) == -1)
     /* Perhaps the directory does not exist now.  Try to create it.  */
     if (errno == ENOENT)
       {
