@@ -1,5 +1,8 @@
 1999-02-03  Ulrich Drepper  <drepper@cygnus.com>
 
+	* version.h (VERSION): Bump to 2.1.
+	(RELEASE): Change to stable.
+
 	* elf/dlsym.c (dlsym_doit): If no symbol for RTLD_NEXT is found
 	initialize ref element of args object so that dlsym does not dump
 	a core.
