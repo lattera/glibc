@@ -130,7 +130,11 @@ elf_machine_load_address (void)
 }
 
 /* The MSB of got[1] of a gnu object is set to identify gnu objects.  */
-#define ELF_MIPS_GNU_GOT1_MASK	0x80000000
+#ifdef _ABI64 && _MIPS_SIM == _ABI64
+# define ELF_MIPS_GNU_GOT1_MASK	0x8000000000000000L
+#else
+# define ELF_MIPS_GNU_GOT1_MASK	0x80000000L
+#endif
 
 /* We can't rely on elf_machine_got_rel because _dl_object_relocation_scope
    fiddles with global data.  */
@@ -530,7 +534,10 @@ static inline void
 #endif
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
-		 ElfW(Addr) *const reloc_addr)
+		 /* We use void* because the location to be relocated
+		    is not required to be properly aligned for a
+		    ELFW(Addr).  */
+		 void /* ElfW(Addr) */ *const reloc_addr)
 {
   const unsigned long int r_type = ELFW(R_TYPE) (reloc->r_info);
 
@@ -565,7 +572,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 	    const ElfW(Word) gotsym
 	      = (const ElfW(Word)) map->l_info[DT_MIPS (GOTSYM)]->d_un.d_val;
 
-	    if (symidx < gotsym)
+	    if ((ElfW(Word))symidx < gotsym)
 	      {
 		/* This wouldn't work for a symbol imported from other
 		   libraries for which there's no GOT entry, but MIPS
@@ -633,7 +640,7 @@ elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 
 static inline void
 elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
-			  ElfW(Addr) *const reloc_addr)
+			  void /* ElfW(Addr) */ *const reloc_addr)
 {
   /* XXX Nothing to do.  There is no relative relocation, right?  */
 }
@@ -758,7 +765,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 	 of got[1] of a gnu object is set to identify gnu objects.
 	 Where we can store l for non gnu objects? XXX  */
       if ((got[1] & ELF_MIPS_GNU_GOT1_MASK) != 0)
-	got[1] = (ElfW(Addr)) ((unsigned) l | ELF_MIPS_GNU_GOT1_MASK);
+	got[1] = ((ElfW(Addr)) l | ELF_MIPS_GNU_GOT1_MASK);
       else
 	_dl_mips_gnu_objects = 0;
     }
