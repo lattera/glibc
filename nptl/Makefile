@@ -227,7 +227,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-signal1 tst-signal2 tst-signal3 tst-signal4 tst-signal5 \
 	tst-signal6 \
 	tst-exec1 tst-exec2 tst-exec3 tst-exec4 \
-	tst-exit1 \
+	tst-exit1 tst-exit2 \
 	tst-stdio1 tst-stdio2 \
 	tst-stack1 tst-stack2 tst-stack3 \
 	tst-unload \
