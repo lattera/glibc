@@ -1,3 +1,8 @@
+2004-05-18  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Use the end address of
+	the first segment for mprotect, not l_text_end.
+
 2004-07-05  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-profile.c (_dl_start_profile): Compact error handling.
