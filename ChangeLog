@@ -1,3 +1,8 @@
+2002-02-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* libio/fileops.c (_IO_file_underflow_mmap): Cast to unsigned char
+	pointer before dereferencing.
+
 2002-02-18  Roland McGrath  <roland@frob.com>
 
 	* sysdeps/mach/hurd/times.c: Fix typo in last change.

@@ -579,7 +579,7 @@ _IO_file_underflow_mmap (_IO_FILE *fp)
 
       fp->_offset = fp->_IO_buf_end - fp->_IO_buf_base;
       fp->_IO_read_end = fp->_IO_buf_end;
-      return *fp->_IO_read_ptr;
+      return *(unsigned char *) fp->_IO_read_ptr;
     }
 
   fp->_flags |= _IO_EOF_SEEN;
