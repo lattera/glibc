@@ -1,3 +1,52 @@
+2003-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/Makefile (CFLAGS-oldtmpfile.c): Add -fexceptions.
+	* sysdeps/generic/tmpfile.c (tmpfile): Use __unlink instead of remove.
+	* libio/oldtmpfile.c (__old_tmpfile): Likewise.
+
+	* misc/Makefile (CFLAGS-getusershell.c): Add -fexceptions.
+
+	* io/Makefile (CFLAGS-statfs.c): Add -fexceptions.
+	(CFLAGS-fstatfs.c): Likewise.
+	(CFLAGS-statvfs.c): Likewise.
+	(CFLAGS-fstatvfs.c): Likewise.
+
+2003-09-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/Makefile (CFLAGS-getsysstats.c): Add -fexceptions.
+	* posix/unistd.h: Remove __THROW from pathconf, fpathconf,
+	sysconf.
+	* posix/Makefile (CFLAGS-sysconf.c): Add -fexceptions.
+
+	* misc/Makefile (CFLAGS-fstab.c): Add -fexceptions.
+	* misc/fstab.h: Remove all __THROW.
+	* misc/Makefile (CFLAGS-mntent.c): Add -fexceptions.
+	(CFLAGS-mntent_r.c): Likewise.
+	* misc/mntent.h: Remove most __THROW.
+
+	* misc/Makefile (CFLAGS-mkstemp.c): Add -fexceptions.
+	(CFLAGS-mkstemp64.c): Likewise.
+
+	* sysdeps/generic/wordexp.c (parse_comm): Disable cancellation
+	around call to exec_comm.
+	* posix/wordexp.h: Remove __THROW from wordexp.
+	* posix/Makefile (CFLAGS-wordexp.c): Add -fexceptions.
+
+	* sysdeps/unix/sysv/linux/getloadavg.c (getloadavg): Use
+	not-cancelable functions.
+
+	* libio/Makefile (CFLAGS-oldiofopen.c): Add -fexceptions.
+	(CFLAGS-iofopen.c): Likewise.
+	(CFLAGS-iofopen64.c): Likewise.
+
+	* stdlib/fmtmsg.c (fmtmsg): Disable cancellation around output
+	functions.
+	* stdlib/Makefile (CFLAGS-fmtmsg.c): Add -fexceptions.
+	* stdlib/fmtmsg.h: Remove __THROW from fmtmsg.
+
+	* stdlib/stdlib.h: Remove __THROW from posix_openpt and getpt.
+	* login/Makefile (CFLAGS-getpt.c): Add -fexceptions.
+
 2003-09-01  Thorsten Kukuk  <kukuk@suse.de>
 
 	* nis/nss_compat/compat-spwd.c (getspnam_plususer): Return

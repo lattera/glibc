@@ -1,3 +1,8 @@
+2003-09-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* barrier.c (pthread_barrierattr_setpshared): We don't handle
+	inter-process barriers.
+
 2003-09-01  Jakub Jelinek  <jakub@redhat.com>
 
 	* Makefile (tests): Add tst-tls1.
