@@ -277,7 +277,13 @@ _dl_start_final (void *arg, struct dl_start_final_info *info)
 #endif
 
   if (__builtin_expect (GL(dl_debug_mask) & DL_DEBUG_STATISTICS, 0))
-    print_statistics (&rtld_total_time);
+    {
+#ifndef HP_TIMING_NONAVAIL
+      print_statistics (&rtld_total_time);
+#else
+      print_statistics (NULL);
+#endif
+    }
 
   return start_addr;
 }
