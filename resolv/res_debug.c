@@ -309,6 +309,7 @@ __fp_nquery(msg, len, file)
 			ntohs(hp->id));
 		putc('\n', file);
 	}
+	if ((!_res.pfcode) || (_res.pfcode & RES_PRF_HEADX))
 	putc(';', file);
 	if ((!_res.pfcode) || (_res.pfcode & RES_PRF_HEAD2)) {
 		fprintf(file, "; flags:");
@@ -340,9 +341,21 @@ __fp_nquery(msg, len, file)
 		if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
 			fprintf(file, ";; QUESTIONS:\n");
 		while (--n >= 0) {
+			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
 			fprintf(file, ";;\t");
 			TruncTest(cp);
+			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
 			cp = p_cdnname(cp, msg, len, file);
+			else {
+				int n;
+				char name[MAXDNAME];
+
+				if ((n = dn_expand(msg, msg+len, cp, name,
+						sizeof name)) < 0)
+					cp = NULL;
+				else
+					cp += n;
+			}
 			ErrorTest(cp);
 			TruncTest(cp);
 			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
@@ -354,6 +367,7 @@ __fp_nquery(msg, len, file)
 				fprintf(file, ", class = %s\n",
 					__p_class(_getshort((u_char*)cp)));
 			cp += INT16SZ;
+			if ((!_res.pfcode) || (_res.pfcode & RES_PRF_QUES))
 			putc('\n', file);
 		}
 	}

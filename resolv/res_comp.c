@@ -116,7 +116,7 @@ dn_expand(msg, eomorig, comp_dn, exp_dn, length)
 				return (-1);
 			checked += n + 1;
 			while (--n >= 0) {
-				if ((c = *cp++) == '.') {
+				if (((c = *cp++) == '.') || (c == '\\')) {
 					if (dn + n + 2 >= eom)
 						return (-1);
 					*dn++ = '\\';
