@@ -1,5 +1,7 @@
 2001-07-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* stdio-common/printf.h: Fix typo in comment.
+
 	* iconv/gconv_cache.c (__gconv_lookup_cache): Handle encoding from
 	and to INTERNAL.
 	* iconv/iconvconfig.c: Create a special record for the INTERNAL

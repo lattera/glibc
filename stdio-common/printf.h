@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993, 1995-1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -67,7 +67,7 @@ typedef int printf_function (FILE *__stream,
 
 /* Type of a printf specifier-arginfo function.
    INFO gives information about the format specification.
-   N, ARGTYPES, and return value are as for printf_parse_format.  */
+   N, ARGTYPES, and return value are as for parse_printf_format.  */
 
 typedef int printf_arginfo_function (__const struct printf_info *__info,
 				     size_t __n, int *__argtypes);
