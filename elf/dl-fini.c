@@ -43,22 +43,24 @@ _dl_fini (void)
      dependencies to be taken into account.  Therefore we have to start
      determining the order of the modules once again from the beginning.  */
   unsigned int i;
+  unsigned int nloaded;
   struct link_map *l;
   struct link_map **maps;
 
   /* Protect against concurrent loads and unloads.  */
   __rtld_lock_lock_recursive (GL(dl_load_lock));
 
+  nloaded = GL(dl_nloaded);
+
   /* XXX Could it be (in static binaries) that there is no object loaded?  */
-  assert (GL(dl_nloaded) > 0);
+  assert (nloaded > 0);
 
   /* Now we can allocate an array to hold all the pointers and copy
      the pointers in.  */
-  maps = (struct link_map **) alloca (GL(dl_nloaded)
-				      * sizeof (struct link_map *));
+  maps = (struct link_map **) alloca (nloaded * sizeof (struct link_map *));
   for (l = GL(dl_loaded), i = 0; l != NULL; l = l->l_next)
     {
-      assert (i < GL(dl_nloaded));
+      assert (i < nloaded);
 
       maps[i++] = l;
 
@@ -66,7 +68,7 @@ _dl_fini (void)
 	 from underneath us.  */
       ++l->l_opencount;
     }
-  assert (i == GL(dl_nloaded));
+  assert (i == nloaded);
 
   /* Now we have to do the sorting.  */
   for (l = GL(dl_loaded)->l_next; l != NULL; l = l->l_next)
@@ -80,7 +82,7 @@ _dl_fini (void)
 
       /* Find all object for which the current one is a dependency and
 	 move the found object (if necessary) in front.  */
-      for (k = j + 1; k < GL(dl_nloaded); ++k)
+      for (k = j + 1; k < nloaded; ++k)
 	{
 	  struct link_map **runp = maps[k]->l_initfini;
 	  if (runp != NULL)
@@ -136,7 +138,7 @@ _dl_fini (void)
 
   /* 'maps' now contains the objects in the right order.  Now call the
      destructors.  We have to process this array from the front.  */
-  for (i = 0; i < GL(dl_nloaded); ++i)
+  for (i = 0; i < nloaded; ++i)
     {
       l = maps[i];
 
