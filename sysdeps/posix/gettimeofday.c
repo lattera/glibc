@@ -56,7 +56,7 @@ __gettimeofday (tv, tz)
       save_tzname[0] = __tzname[0];
       save_tzname[1] = __tzname[1];
 
-      tmp = localtime (&timer, &tm);
+      tmp = localtime_r (&timer, &tm);
 
       tz->tz_minuteswest = __timezone / 60;
       tz->tz_dsttime = __daylight;

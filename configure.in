@@ -167,6 +167,11 @@ o=`echo $tail | sed 's/[0-9]*$//'`
 if test $o != $tail; then
   ostry="$ostry /$o"
 fi
+# For linux-gnu, try linux-gnu, then linux.
+o=`echo $tail | sed 's/-.*$//'`
+if test $o != $tail; then
+  ostry="$ostry /$o"
+fi
 
 # For unix/sysv/sysv4, try unix/sysv/sysv4, then unix/sysv, then unix.
 base=

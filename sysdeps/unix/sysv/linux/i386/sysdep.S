@@ -16,6 +16,8 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#include <sysdep.h>
+
 /* Because the Linux version is in fact i386/ELF and the start.? file
    for this system (sysdeps/i386/elf/start.S) is also used by The Hurd
    and therefore this files must not contain the definition of the
@@ -43,9 +45,7 @@ _errno = errno	/* This name is expected by hj libc.so.5 startup code.  */
    The code for Linux is almost identical to the canonical Unix/i386
    code, except that the error number in %eax is negated.  */
 
-	.globl	__syscall_error
-	.type	__syscall_error,@function
-__syscall_error:
+ENTRY (__syscall_error)
 	negl %eax
 
 #define __syscall_error __syscall_error_1
@@ -54,10 +54,7 @@ __syscall_error:
 #endif	/* !PIC */
 
 
-#ifdef	_LIBC_REENTRANT
-	.globl	__errno_location
-	.type	__errno_location,@function
-__errno_location:
+ENTRY (__errno_location)
 #ifdef PIC
 	call .L2
 .L2:	popl %ecx
@@ -69,4 +66,3 @@ __errno_location:
 	ret
 .Lfe1:
 	.size	__errno_location, .Lfe1-__errno_location
-#endif

@@ -133,11 +133,19 @@ ydhms_tm_diff (year, yday, hour, min, sec, tp)
      int year, yday, hour, min, sec;
      const struct tm *tp;
 {
-  time_t ay = year + (time_t) (TM_YEAR_BASE - 1);
-  time_t by = tp->tm_year + (time_t) (TM_YEAR_BASE - 1);
-  time_t intervening_leap_days =
-    (ay/4 - by/4) - (ay/100 - by/100) + (ay/400 - by/400);
-  time_t years = ay - by;
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid int overflow.  time_t overflow is OK, since
+     only the low order bits of the correct time_t answer are needed.
+     Don't convert to time_t until after all divisions are done, since
+     time_t might be unsigned.  */
+  int a4 = (year >> 2) + (TM_YEAR_BASE >> 2) - ! (year & 3);
+  int b4 = (tp->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (tp->tm_year & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  time_t years = year - (time_t) tp->tm_year;
   time_t days = (365 * years + intervening_leap_days
 		 + (yday - tp->tm_yday));
   return (60 * (60 * (24 * days + (hour - tp->tm_hour))

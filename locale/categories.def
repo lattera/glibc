@@ -137,12 +137,15 @@ DEFINE_CATEGORY
   DEFINE_ELEMENT (D_FMT,       "d_fmt",       std, string)
   DEFINE_ELEMENT (T_FMT,       "t_fmt",       std, string)
   DEFINE_ELEMENT (T_FMT_AMPM,  "t_fmt_ampm",  std, string)
-  DEFINE_ELEMENT (ERA,         "era",         opt, string)
+  DEFINE_ELEMENT (ERA,         "era",         opt, stringarray,  0, 100)/*XXX*/
   DEFINE_ELEMENT (ERA_YEAR,    "era_year",    opt, string)
   DEFINE_ELEMENT (ERA_D_FMT,   "era_d_fmt",   opt, string)
   DEFINE_ELEMENT (ALT_DIGITS,  "alt_digits",  opt, stringarray,  0, 100)
   DEFINE_ELEMENT (ERA_D_T_FMT, "era_d_t_fmt", opt, string)
   DEFINE_ELEMENT (ERA_T_FMT,   "era_t_fmt",   opt, string)
+  DEFINE_ELEMENT (_NL_TIME_ERA_NUM_ENTRIES, "time-era-num-entries", opt, word)
+  DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EB, "time-era-entries-eb", opt, string)
+  DEFINE_ELEMENT (_NL_TIME_ERA_ENTRIES_EL, "time-era-entries-el", opt, string)
   ), NO_POSTLOAD, NULL, NULL, NULL)
 
 

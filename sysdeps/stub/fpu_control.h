@@ -43,4 +43,4 @@ extern void __setfpucw __P ((fpu_control_t));
 
 __END_DECLS
 
-#endif /* _M68K_FPU_CONTROL_H */
+#endif /* _FPU_CONTROL_H */

@@ -8,7 +8,7 @@ main ()
 
   n = -1;
   ret = sscanf ("1000", "%lld", &n);
-  printf ("%%lld: ret: %d, n: %Ld, c: %c\n", ret, n);
+  printf ("%%lld: ret: %d, n: %Ld\n", ret, n);
   if (ret != 1 || n != 1000L)
     abort ();
 

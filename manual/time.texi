@@ -465,33 +465,34 @@ contains at least the following members, which can appear in any order:
 @table @code
 @item int tm_sec
 This is the number of seconds after the minute, normally in the range
-@code{0} to @code{59}.  (The actual upper limit is @code{60}, to allow
+@code{0} through @code{59}.  (The actual upper limit is @code{60}, to allow
 for leap seconds if leap second support is available.)
 @cindex leap second
 
 @item int tm_min
-This is the number of minutes after the hour, in the range @code{0} to
+This is the number of minutes after the hour, in the range @code{0} through
 @code{59}.
 
 @item int tm_hour
-This is the number of hours past midnight, in the range @code{0} to
+This is the number of hours past midnight, in the range @code{0} through
 @code{23}.
 
 @item int tm_mday
-This is the day of the month, in the range @code{1} to @code{31}.
+This is the day of the month, in the range @code{1} through @code{31}.
 
 @item int tm_mon
-This is the number of months since January, in the range @code{0} to
+This is the number of months since January, in the range @code{0} through
 @code{11}.
 
 @item int tm_year
 This is the number of years since @code{1900}.
 
 @item int tm_wday
-This is the number of days since Sunday, in the range @code{0} to @code{6}.
+This is the number of days since Sunday, in the range @code{0} through
+@code{6}.
 
 @item int tm_yday
-This is the number of days since January 1, in the range @code{0} to
+This is the number of days since January 1, in the range @code{0} through
 @code{365}.
 
 @item int tm_isdst
@@ -617,6 +618,7 @@ does so.  @xref{Time Zone Functions}.
 
 @comment time.h
 @comment ANSI
+@comment POSIX.2
 @deftypefun size_t strftime (char *@var{s}, size_t @var{size}, const char *@var{template}, const struct tm *@var{brokentime})
 This function is similar to the @code{sprintf} function (@pxref{Formatted
 Input}), but the conversion specifications that can appear in the format
@@ -626,9 +628,9 @@ time conversion (@pxref{Locales}).
 
 Ordinary characters appearing in the @var{template} are copied to the
 output string @var{s}; this can include multibyte character sequences.
-Conversion specifiers are introduced by a @samp{%} character.  Now can
-follow an optional flag which can be one of the following.  These flags
-only affect the output of numbers:
+Conversion specifiers are introduced by a @samp{%} character, followed
+by an optional flag which can be one of the following.  These flags,
+which are GNU extensions, affect only the output of numbers:
 
 @table @code
 @item _
@@ -638,9 +640,31 @@ The number is padded with spaces.
 The number is not padded at all.
 @end table
 
-The default action is to pad the number with zeros.  Following to the
-flag comes the format specifier.  The whole @samp{%} sequence is
-replaced in the output string as follows:
+The default action is to pad the number with zeros to keep it a constant
+width.  Numbers that do not have a range indicated below are never
+padded, since there is no natural width for them.
+
+An optional modifier can follow the optional flag.  The modifiers, which
+are POSIX.2 extensions, are:
+
+@table @code
+@item E
+Use the locale's alternate representation for date and time.  This
+modifier applies to the @code{%c}, @code{%C}, @code{%x}, @code{%X},
+@code{%y} and @code{%Y} format specifiers.  In a Japanese locale, for
+example, @code{%Ex} might yield a date format based on the Japanese
+Emperors' reigns.
+
+@item O
+Use the locale's alternate numeric symbols for numbers.  This modifier
+applies only to numeric format specifiers.
+@end table
+
+A modifier is ignored if no alternate representation is available.
+
+The conversion specifier ends with a format specifier taken from the
+following list.  The whole @samp{%} sequence is replaced in the output
+string as follows:
 
 @table @code
 @item %a
@@ -659,19 +683,38 @@ The full month name according to the current locale.
 The preferred date and time representation for the current locale.
 
 @item %C
-The century of the year.
+The century of the year.  This is equivalent to the greatest integer not
+greater than the year divided by 100.
+
+This format is a POSIX.2 extension.
 
 @item %d
-The day of the month as a decimal number (range @code{01} to @code{31}).
+The day of the month as a decimal number (range @code{01} through @code{31}).
 
 @item %D
 The date using the format @code{%m/%d/%y}.
 
+This format is a POSIX.2 extension.
+
+@item %e
+The day of the month like with @code{%d}, but padded with blank (range
+@code{ 1} through @code{31}).
+
+This format is a POSIX.2 extension.
+
+@item %g
+The year corresponding to the ISO week number, but without the century
+(range @code{00} through @code{99}).  This has the same format and value
+as @code{%y}, except that if the ISO week number (see @code{%V}) belongs
+to the previous or next year, that year is used instead.
+
 This format is a GNU extension.
 
-@item %d
-The day of the month like with @code{%d}, but padded with blank (range
-@code{ 1} to @code{31}).
+@item %G
+The year corresponding to the ISO week number.  This has the same format
+and value as @code{%Y}, except that if the ISO week number (see
+@code{%V}) belongs to the previous or next year, that year is used
+instead.
 
 This format is a GNU extension.
 
@@ -679,50 +722,51 @@ This format is a GNU extension.
 The abbreviated month name according to the current locale.  The action
 is the same as for @code{%b}.
 
-This format is a GNU extension.
+This format is a POSIX.2 extension.
 
 @item %H
-The hour as a decimal number, using a 24-hour clock (range @code{00} to
+The hour as a decimal number, using a 24-hour clock (range @code{00} through
 @code{23}).
 
 @item %I
-The hour as a decimal number, using a 12-hour clock (range @code{01} to
+The hour as a decimal number, using a 12-hour clock (range @code{01} through
 @code{12}).
 
 @item %j
-The day of the year as a decimal number (range @code{001} to @code{366}).
+The day of the year as a decimal number (range @code{001} through @code{366}).
 
 @item %k
 The hour as a decimal number, using a 24-hour clock like @code{%H}, but
-padded with blank (range @code{ 0} to @code{23}).
+padded with blank (range @code{ 0} through @code{23}).
 
 This format is a GNU extension.
 
 @item %l
 The hour as a decimal number, using a 12-hour clock like @code{%I}, but
-padded with blank (range @code{ 0} to @code{12}).
+padded with blank (range @code{ 1} through @code{12}).
 
 This format is a GNU extension.
 
 @item %m
-The month as a decimal number (range @code{01} to @code{12}).
+The month as a decimal number (range @code{01} through @code{12}).
 
 @item %M
-The minute as a decimal number.
+The minute as a decimal number (range @code{00} through @code{59}).
 
 @item %n
 A single @samp{\n} (newline) character.
 
-This format is a GNU extension.
+This format is a POSIX.2 extension.
 
 @item %p
-Either @samp{am} or @samp{pm}, according to the given time value; or the
-corresponding strings for the current locale.
+Either @samp{AM} or @samp{PM}, according to the given time value; or the
+corresponding strings for the current locale.  Noon is treated as
+@samp{PM} and midnight as @samp{AM}.
 
 @item %r
-The time in decinal numbers using the format @code{%I:%M:%S %p}.
+The complete time using the AM/PM format of the current locale.
 
-This format is a GNU extension.
+This format is a POSIX.2 extension.
 
 @item %R
 The hour and minute in decimal numbers using the format @code{%H:%M}.
@@ -730,47 +774,58 @@ The hour and minute in decimal numbers using the format @code{%H:%M}.
 This format is a GNU extension.
 
 @item %s
-The seconds since the epoch, i.e., 1970-01-01 00:00:00 UTC.  Note
-that this value is the number of seconds between the epoch and the
-current date as defined by the @code{localtime} system call.
+The number of seconds since the epoch, i.e., since 1970-01-01 00:00:00 UTC.
+Leap seconds are not counted unless leap second support is available.
 
 This format is a GNU extension.
 
 @item %S
-The second as a decimal number.
+The second as a decimal number (range @code{00} through @code{60}).
 
 @item %t
 A single @samp{\t} (tabulator) character.
 
-This format is a GNU extension.
+This format is a POSIX.2 extension.
 
 @item %T
 The time using decimal numbers using the format @code{%H:%M:%S}.
 
-This format is a GNU extension.
+This format is a POSIX.2 extension.
+
+@item %u
+The day of the week as a decimal number (range @code{1} through
+@code{7}), Monday being @code{1}.
+
+This format is a POSIX.2 extension.
 
 @item %U
-The week number of the current year as a decimal number, starting with
-the first Sunday as the first day of the first week.  All days preceding
-the first Sunday in the year are considered to be in week @code{0}.
+The week number of the current year as a decimal number (range @code{00}
+through @code{53}), starting with the first Sunday as the first day of
+the first week.  Days preceding the first Sunday in the year are
+considered to be in week @code{00}.
 
 @item %V
-The @w{ISO 8601:1988} week number as a decimal number (range @code{00}
-to @code{53}).  ISO weeks start with Monday and end with Sunday.  Week
-01 of a year is the first week which has the majority of its days in
-that year; this is equivalent to the week containing the year's first
-Thursday, and it is also equivalent to the week containing January 4.
-Week 01 of a year can contain days from the previous year.  The week
-before week 01 of a year is the last week (52 or 53) of the previous
-year even if it contains days from the new year.
+The @w{ISO 8601:1988} week number as a decimal number (range @code{01}
+through @code{53}).  ISO weeks start with Monday and end with Sunday.
+Week @code{01} of a year is the first week which has the majority of its
+days in that year; this is equivalent to the week containing the year's
+first Thursday, and it is also equivalent to the week containing January
+4.  Week @code{01} of a year can contain days from the previous year.
+The week before week @code{01} of a year is the last week (@code{52} or
+@code{53}) of the previous year even if it contains days from the new
+year.
+
+This format is a POSIX.2 extension.
 
 @item %w
-The day of the week as a decimal number, Sunday being @code{0}.
+The day of the week as a decimal number (range @code{0} through
+@code{6}), Sunday being @code{0}.
 
 @item %W
-The week number of the current year as a decimal number, starting with
-the first Monday as the first day of the first week.  All days preceding
-the first Monday in the year are considered to be in week @code{0}.
+The week number of the current year as a decimal number (range @code{00}
+through @code{53}), starting with the first Monday as the first day of
+the first week.  All days preceding the first Monday in the year are
+considered to be in week @code{00}.
 
 @item %x
 The preferred date representation for the current locale, but without the
@@ -780,20 +835,22 @@ time.
 The preferred time representation for the current locale, but with no date.
 
 @item %y
-The year as a decimal number, but without a century (range @code{00} to
-@code{99}).
+The year without a century as a decimal number (range @code{00} through
+@code{99}).  This is equivalent to the year modulo 100.
 
 @item %Y
-The year as a decimal number, including the century.
+The year as a decimal number, using the Gregorian calendar.  Years
+before the year @code{1} are numbered @code{0}, @code{-1}, and so on.
 
 @item %z
 @w{RFC 822}/@w{ISO 8601:1988} style numeric time zone (e.g.,
 @code{-0600} or @code{+0100}), or nothing if no time zone is
 determinable.
 
+This format is a GNU extension.
+
 @item %Z
-The time zone or name or abbreviation (empty if the time zone can't be
-determined).
+The time zone abbreviation (empty if the time zone can't be determined).
 
 @item %%
 A literal @samp{%} character.

@@ -58,10 +58,8 @@ DEFUN_VOID(main)
   rstatus = pclose (input);
   printf ("reading pclose returned %d\n", rstatus);
 
+  remove ("/tmp/tstpopen.tmp");
+
   puts (wstatus | rstatus  ? "Test FAILED!" : "Test succeeded.");
   exit (wstatus | rstatus);
 }
-
-  
-
-  

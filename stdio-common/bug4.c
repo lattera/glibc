@@ -14,6 +14,7 @@ DEFUN(main, (argc, argv),
   FILE *f;
   int i;
   char buffer[31];
+  const char filename[] = "/tmp/bugtest";
 
   while ((i = getopt (argc, argv, "rw")) != EOF)
     switch (i)
@@ -26,7 +27,7 @@ DEFUN(main, (argc, argv),
 	break;
       }
 
-  f = fopen("/tmp/bugtest", "w+");
+  f = fopen(filename, "w+");
   for (i=0; i<9000; i++) {
     putc('x', f);
   }
@@ -36,6 +37,7 @@ DEFUN(main, (argc, argv),
   fread(buffer, 1, 31, f);
   fwrite(buffer, 1, 31, stdout);
   fclose(f);
+  remove(filename);
 
   if (!memcmp (buffer, "Where does this text come from?", 31))
     {

@@ -47,10 +47,3 @@ alpha-*-linux*		libc=6
 
 # We use libdb.so.2 for the interface in version 1.85 of the Berkeley DB code.
 *-*-*			libdb=2
-
-# So far libcrypt.so.0 specifies the interface of the traditional `crypt'
-# function.  The libc distribution installs the stub `nocrypt' library
-# with this interface.  The separate crypt distribution (which cannot be
-# legally exported from the USA) provides real DES encryption in a shared
-# library libcrypt.so.0 with the same interface.
-*-*-*			libcrypt=0

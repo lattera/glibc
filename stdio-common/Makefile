@@ -50,3 +50,9 @@ include ../Rules
 
 CFLAGS-_itoa.c = -Wno-unused
 CFLAGS-tst-printf.c = -Wno-format
+
+ifeq ($(stdio),libio)
+ifneq (,$(filter %REENTRANT, $(defines)))
+CPPFLAGS += -D_IO_MTSAFE_IO
+endif
+endif

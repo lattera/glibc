@@ -32,7 +32,7 @@ aux		:= fpu_control setfpucw
 # Build the -lm library.
 
 extra-libs	:= libm
-extra-libs-others = $(extra-libc)
+extra-libs-others = $(extra-libs)
 
 libm-support = k_standard s_lib_version s_matherr s_signgam
 libm-calls = e_acos e_acosh e_asin e_atan2 e_atanh e_cosh e_exp e_fmod	\

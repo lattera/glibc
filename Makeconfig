@@ -527,8 +527,8 @@ $(common-objpfx)soversions.mk: $(..)shlib-versions $(..)Makeconfig \
 			       $(wildcard $(patsubst %, $(..)%/shlib-versions,\
 							$(add-ons))) \
 			       $(common-objpfx)config.make
-	(file="$(..)shlib-versions \
-	       $(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons)))"; \
+	(file="$(wildcard $(patsubst %,$(..)%/shlib-versions,$(add-ons))) \
+	       $(..)shlib-versions"; \
 	 for f in $$file; do \
 	 sed 's/#.*$$//' $$f | while read conf versions; do \
 	   test -n "$$versions" || continue; \

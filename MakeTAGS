@@ -166,9 +166,12 @@ $P/subdirs.pot: $(subdirs:%=$P/%.pot)
 include $(common-objpfx)version.mk
 
 # Combine all the messages into the final sorted template translation file.
+# The following code requires GNU date.
 $P/libc.pot: $(all-pot)
 	@rm -f $@.new
-	sed -e 's/VERSION/$(version)/' -e "s/DATE/`date +'%Y-%m-%d %k:%M'`/" \
+	disp='set `date -R`; echo $$6'; \
+	sed -e 's/VERSION/$(version)/' \
+	    -e "s/DATE/`date +'%Y-%m-%d %I:%M'$$disp/" \
 	    po/header.pot > $@.new
 	$(XGETTEXT) -d - --omit-header -n -s $^ >> $@.new
 	mv -f $@.new $@

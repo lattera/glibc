@@ -101,6 +101,10 @@ typedef enum
   ERA_D_T_FMT,			/* Date and time in alternate era format.  */
   ERA_T_FMT,			/* Time in alternate era format.  */
 
+  _NL_TIME_ERA_NUM_ENTRIES,	/* Number entries in the era arrays.  */
+  _NL_TIME_ERA_ENTRIES_EB,	/* Structure with era entries in usable form.*/
+  _NL_TIME_ERA_ENTRIES_EL,
+
   _NL_NUM_LC_TIME,		/* Number of indices in LC_TIME category.  */
 
   /* LC_COLLATE category: text sorting.

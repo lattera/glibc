@@ -34,6 +34,7 @@ Boston, MA 02111-1307, USA.  */
 
 
 void *xmalloc (size_t __n);
+void *xrealloc (void *__p, size_t __n);
 
 
 /* The real definition of the struct for the LC_TIME locale.  */
@@ -53,7 +54,8 @@ struct locale_time_t
   const char *d_fmt;
   const char *t_fmt;
   const char *t_fmt_ampm;
-  const char *era;
+  const char **era;
+  size_t era_num;
   const char *era_year;
   const char *era_d_t_fmt;
   const char *era_t_fmt;
@@ -115,6 +117,7 @@ time_output (struct localedef_t *locale, const char *output_path)
 {
   struct locale_time_t *time = locale->categories[LC_TIME].time;
   struct iovec iov[2 + _NL_ITEM_INDEX (_NL_NUM_LC_TIME)
+		  + (time->era_num > 0 ? time->era_num - 1 : 0)
 		  + time->cur_num_alt_digits];
   struct locale_file data;
   u_int32_t idx[_NL_ITEM_INDEX (_NL_NUM_LC_TIME)];
@@ -203,22 +206,27 @@ time_output (struct localedef_t *locale, const char *output_path)
   iov[2 + cnt].iov_base = (void *) (time->t_fmt_ampm ?: "");
   iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
   idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  last_idx = ++cnt;
 
-  iov[2 + cnt].iov_base = (void *) (time->era ?: "");
-  iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  ++cnt;
+  idx[1 + last_idx] = idx[last_idx];
+  for (num = 0; num < time->era_num; ++num, ++cnt)
+    {
+      iov[2 + cnt].iov_base = (void *) time->era[num];
+      iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
+    }
+  ++last_idx;
 
   iov[2 + cnt].iov_base = (void *) (time->era_year ?: "");
   iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
   ++cnt;
+  ++last_idx;
 
   iov[2 + cnt].iov_base = (void *) (time->era_d_fmt ?: "");
   iov[2 + cnt].iov_len = strlen (iov[2 + cnt].iov_base) + 1;
-  idx[1 + cnt] = idx[cnt] + iov[2 + cnt].iov_len;
-  last_idx = ++cnt;
+  idx[1 + last_idx] = idx[last_idx] + iov[2 + cnt].iov_len;
+  ++cnt;
+  ++last_idx;
 
   idx[1 + last_idx] = idx[last_idx];
   for (num = 0; num < time->cur_num_alt_digits; ++num, ++cnt)
@@ -267,8 +275,7 @@ too many values for field `%s' in category `LC_TIME'"),			      \
 	  time->cat[time->cur_num_##cat++] = "";			      \
 	}								      \
       else								      \
-	time->cat[time->cur_num_##cat++]				      \
-	  = code->val.str.start;					      \
+	time->cat[time->cur_num_##cat++] = code->val.str.start;		      \
       break
 
     STRARR_ELEM (abday, 7);
@@ -277,6 +284,18 @@ too many values for field `%s' in category `LC_TIME'"),			      \
     STRARR_ELEM (mon, 12);
     STRARR_ELEM (am_pm, 2);
     STRARR_ELEM (alt_digits, 100);
+
+    case tok_era:
+      if (code->val.str.start == NULL)
+	lr_error (lr, _("unknown character in field `%s' of category `%s'"),
+		  "era", "LC_TIME");
+      else
+	{
+	  ++time->era_num;
+	  time->era = xrealloc (time->era, time->era_num * sizeof (char *));
+	  time->era[time->era_num - 1] = code->val.str.start;
+	}
+      break;
 
 #define STR_ELEM(cat)							      \
     case tok_##cat:							      \
@@ -298,7 +317,6 @@ field `%s' in category `%s' declared more than once"),			      \
     STR_ELEM (d_fmt);
     STR_ELEM (t_fmt);
     STR_ELEM (t_fmt_ampm);
-    STR_ELEM (era);
     STR_ELEM (era_year);
     STR_ELEM (era_d_t_fmt);
     STR_ELEM (era_d_fmt);

@@ -53,7 +53,6 @@ G =  3.57142857142857150787e-01L; /* 5/14 */
 	long double x;
 #endif
 {
-	int32_t	hx;
 	long double r,s,t=0.0,w;
 	u_int32_t sign, se, x0, x1;
 

@@ -31,9 +31,244 @@ Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 	__funlockfile can't be protected the way the use of __flockfile
 	can be. 
 	
+Thu Sep 19 21:50:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/gettimeofday.c (__gettimeofday): Use localtime_r
+	instead of localtime.
+	Reported by Matthias Urlichs.
+
+	* shlib-versions: Remove version number for libcrypt.
+	* features.h: Define __USE_REENTRANT if _REENTRANT or _THREAD_SAFE.
+	* libc-symbols.h: Define _REENTRANT while compiling libc.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (__errno_location):
+	Define even if !_LIBC_REENTRANT.
+	* sysdeps/unix/sysv/linux/i386/sysdep.S (__errno_location):
+	Likewise.
+
+	* sysdeps/posix/cuserid.h: Remove prototype for geteuid().
+	De-ANSI-fy.
+
+	* MakeTAGS ($P/libc.pot): Generate correctly formed header.
+	* po/header.pot: Correct title line.
+	* po/nl.po: Update.
+
+Thu Sep 19 18:59:55 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (soversions.mk): Prefer shared lib version numbers
+	is add ons over version in libc itself.
+
+	* sysdeps/unix/sysv/linux/i386/sysdep.S: Include <sysdep.h>.
+	* sysdeps/unix/sysv/linux/i386/sysdep.h: Prevent multiple
+	inclusion.
+
+	* libio/iofgets.c: Use __flockfile and __funlockfile instead of
+ 	_IO_flockfile and _IO_funlockfile resp.
+
+	* locale/categories.def: Partly support for correct `era' handling
+	in LC_TIME category.
+	* locale/langinfo.h: Likewise.
+	* locale/programs/ld-time.c: Likewise.
+	* locale/localeinfo.h: Change comment a bit.
+
+	* malloc/memalign.c: Don't use goto, not necessary anymore.
+
+1996-09-18  Paul Eggert  <eggert@twinsun.com>
+
+	* time/mktime.c (ydhms_tm_diff):  Work correctly even if year
+	is negative, or if time_t is unsigned.
+	* time/strftime.c (tm_diff): Work correctly even if tm_year
+	is near INT_MIN.
+
+Tue Sep 17 16:14:34 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__inline_mathop): Changed to generate
+ 	all three versions of the math function.
+	(__inline_mathopf, __inline_mathopl): Removed.
+	(__inline_functions): New temporary definition containing all
+ 	non-trivial inline functions.
+
+Wed Sep 18 00:25:41 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* time/strftime.c (strftime): The T_FMT_AMPM string may be empty.
+
+Tue Sep 17 20:27:18 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* math/Makefile (extra-libs-others): Use $(extra-libs) instead
+	of $(extra-libc).
+
+Tue Sep 17 17:09:44 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/stub/fpu_control.h: Correct end of file comment.
+
+Tue Sep 17 05:39:18 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/bug3.c, stdio-common/bug4.c, stdio-common/bug5.c,
+	stdio-common/test-popen.c: Remove temporary files after test.
+	* stdio-common/bug5.c: Use `system' instead of `execlp'.
+	Patches by Andreas Jaeger.
+
+	* stdio-common/bug5.c: Create string for `system' argument to
+	make sure the input and output file names are really correct.
+
+Sun Sep 15 12:46:44 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in: If $os contains a hyphen add the part before the
+	hyphen to $ostry.
+
+Sun Sep 15 18:14:02 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__ieee754_pow, __ieee754_powf,
+	__ieee754_powl): Rename local variable i to __i.
+	(__ieee754_atan2, __ieee754_atan2f, __ieee754_atan2l): New inline
+	functions.
+	* sysdeps/m68k/fpu/e_atan2.c, sysdeps/m68k/fpu/e_atan2f.c,
+	sysdeps/m68k/fpu/e_atan2l.c: New files.
+
+1996-09-15  Paul Eggert  <eggert@twinsun.com>
+
+	* manual/time.texi: Change `range X to Y' to `range X through
+	Y', to avoid ambiguity in English.
+
+	(strftime): Numbers that do not have a range indicated are not padded.
+	Describe E and O modifiers.
+	%g, %G, %u: New formats.
+	%C, %y, %Y: Describe behavior on negative years.
+	%e: Fix typo (was labeled %d).
+	%l, %V: Fix typo in range.
+	%M, %S, %U, %w, %W: Give ranges.
+	%p: Clarify how noon and midnight are handled for AM and PM.
+	%s: Clarify leap second handling.
+	%r: Now locale-defined.
+	%C, %D, %e, %h, %n, %r, %t, %T: Say that they are POSIX.2 extensions.
+	%z: Say that it is a GNU extension.
+	%Z: Wording fix.
+
+	* time/strftime.c: (strftime):
+		%V: Fix mishandling of week numbers near year boundaries.
+		%g, %G: New formats (suggested by Arthur David Olson).
+		%U, %W: Use inline expression instead of `week' function.
+		%C, %y: Handle negative years portably.
+		%C, %Y: Use width 1, since values can be arbitrarily wide.
+		%r: Use T_FMT_AMPM format if _NL_CURRENT is defined.
+		%u: New Posix.2 format.
+		%w: Width is 1, not 2.
+	(iso_week_days): New function, for %V, %G, %g.
+	(week): Remove; it didn't handle %V correctly.
+	(__isleap): New macro.
+	(mbsinit): Use arg, to pacify GCC -Wall.
+
+1996-09-13  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime):
+	If using the GNU C library, do not bother to check for
+	multibyte encodings, since they're safe in formats.  Otherwise:
+	  - Check for multibyte encodings when encountering any character that
+	  is not in the basic execution character set of the C Standard.
+	  - Use mbrlen (if available) instead of mblen, to avoid modifying
+	  mblen's internal state.
+	  - Do not assume that '%' cannot appear as the first character of a
+	  multibyte character sequence, since this is possible when not in the
+	  initial shift state.
+	(HAVE_MBRLEN, MULTIBYTE_IS_FORMAT_SAFE): Define if _LIBC is defined.
+	(DO_MULTIBYTE): New macro.
+	(<ctype.h>): Do not include.
+	(<wchar.h>): Include if HAVE_MBRLEN.
+	(mbstate_t, mbrlen, mbsinit): Define if ! HAVE_MBRLEN.
+	(mbstate_zero): New constant.
+
+1996-09-12  Paul Eggert  <eggert@twinsun.com>
+
+	* time/strftime.c (strftime):
+	Use an empty zone if it can't be determined; POSIX.2 requires this.
+	Use plain `int' for pad and modifier (which now contain char value).
+	Use plain `int' for number_value, to print negative values correctly.
+	Use plain `int' for digits; there was no need to make it unsigned.
+	Initialize subfmt consistently.
+	Remove incorrect code for %EC and %Ey; they aren't implemented yet.
+	For %O, if there is no alternate digit, output Ascii instead of "".
+	Output the `%' of an unknown format; this is most likely the right
+	thing to do if a multibyte string has been misparsed.
+
+Thu Sep 12 23:23:13 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdio-common/scanf7.c (main): Remove extra conversion from
+	printf format string.
+
+Thu Sep 12 23:01:16 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* stdlib/test-canon.c (tests): Rename structure member from errno
+	to error, all uses changed.
+
+Thu Sep 12 20:08:06 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/__math.h (__ldexp, __ldexpf, __ldexpl):
+	Removed.
+	* sysdeps/m68k/fpu/s_ldexp.c, sysdeps/m68k/fpu/s_ldexpf.c,
+	sysdeps/m68k/fpu/s_ldexpl.c: Removed, use generic implementation
+	instead.
+	* sysdeps/m68k/fpu/s_scalbn.c, sysdeps/m68k/fpu/s_scalbnf.c,
+	sysdeps/m68k/fpu/s_scalbnl.c: Replaced with old contents of
+	s_ldexp.c, s_ldexpf.c and s_ldexpl.c, resp., suitably adpted.
+
+	* sysdeps/m68k/fpu/__math.h (__frexp, __frexpf, __frexpl):
+	Return value must be in [0.5, 1), not [1, 2).  Reported by Chris
+	Lawrence.
+	(__ilogb, __ilogbf, __ilogbl): Check for argument being zero.
+	(__scalbn, __scalbnf, __scalbnl): Use second argument directly.
+
+Thu Sep 12 19:59:24 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_acoshl.c: Fix typos.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Remove unused variable.
+
+Thu Sep 12 19:59:24 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/libm-ieee754/e_acoshl.c: Fix typos.
+	* sysdeps/libm-ieee754/s_cbrtl.c: Remove unused variable.
+
+Thu Sep 12 19:56:07 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* inet/herrno.c (__h_errno_location): Fix return type.
+
+Tue Sep 17 10:51:58 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* malloc/memalign.c (memalign): Only acquire __libc_malloc_lock
+	for actual modifications to global state.
+
+Fri Sep 13 01:21:36 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/Makefile (includes): Add -I$(common-objpfx)mach/.
+	* sysdeps/mach/hurd/Makefile (includes): Add
+	-I$(common-objpfx)hurd/.  Reported by Marcus Daniels.
+
+	* sysdeps/generic/schedbits.h (struct sched_param): Renamed from
+	struct sched_params.
+	* sysdeps/stub/sched_setp.c (__sched_setparam): struct
+	sched_params -> struct sched_param.
+	* sysdeps/stub/sched_getp.c (__sched_getparam): Likewise.
+	* sysdeps/stub/sched_sets.c (__sched_setscheduler): Likewise.
+
+Thu Sep 12 23:58:25 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): Fix
+	syntax error.
+
+	* stdio-common/Makefile: Put lockfile in routines
+	unconditionally.
+	Define _MT_SAFE_IO if using for libio and compiling reentrant
+	libc.
+
+	* stdio-common/vfprintf.c (__flockfile, __funlockfile): Declare
+	this always, not just if _LIBC_REENTRANT.
+	(__funlockfile): Don't use weak_extern for this one;
+	__libc_cleanup_region_end might be defined and the use of
+	__funlockfile can't be protected the way the use of __flockfile
+	can be.
+
 Fri Sep 13 04:33:08 1996  Ulrich Drepper  <drepper@cygnus.com>
 
-	* sched.h: New file.  helper to access posix/sched.h.
+	* sched.h: New file.  Helper to access posix/sched.h.
 	* posix/sched.h: Change `sched_params' to `sched_param' to follow
 	POSIX.4.
 
@@ -61,6 +296,20 @@ Thu Sep 12 14:03:29 1996  Ulrich Drepper  <drepper@cygnus.com>
 	* sysdeps/mach/hurd/Makefile (rpath-link): Don't use += because
 	old and new value must be glued using `:'.
 	Reported by Marcus Daniels.
+
+Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/dl-cache.c: Delete second copy of file
+	accidentally added on.
+
+	* sysdeps/stub/intr-msg.h: New file.
+
+	* stdio-common/vfprintf.c: Include <libc-lock.h>.
+	* stdio-common/vfscanf.c: Include <libc-lock.h>.
+
+	* sysdeps/mach/libc-lock.h (__libc_cleanup_region_start): New
+	macro.
+	(__libc_cleanup_region_end): New macro.
 
 Thu Sep 12 12:33:52 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 

@@ -23,8 +23,10 @@ Cambridge, MA 02139, USA.  */
 #ifdef _LIBC
 # define HAVE_LIMITS_H 1
 # define HAVE_MBLEN 1
+# define HAVE_MBRLEN 1
 # define HAVE_TM_GMTOFF 1
 # define HAVE_TM_ZONE 1
+# define MULTIBYTE_IS_FORMAT_SAFE 1
 # define STDC_HEADERS 1
 # include <ansidecl.h>
 # include "../locale/localeinfo.h"
@@ -43,8 +45,24 @@ Cambridge, MA 02139, USA.  */
 # endif
 #endif
 
-#if HAVE_MBLEN
-# include <ctype.h>
+/* Do multibyte processing if multibytes are supported, unless
+   multibyte sequences are safe in formats.  Multibyte sequences are
+   safe if they cannot contain byte sequences that look like format
+   conversion specifications.  The GNU C Library uses UTF8 multibyte
+   encoding, which is safe for formats, but strftime.c can be used
+   with other C libraries that use unsafe encodings.  */
+#define DO_MULTIBYTE (HAVE_MBLEN && ! MULTIBYTE_IS_FORMAT_SAFE)
+
+#if DO_MULTIBYTE
+# if HAVE_MBRLEN
+#  include <wchar.h>
+# else
+   /* Simulate mbrlen with mblen as best we can.  */
+#  define mbstate_t int
+#  define mbrlen(s, n, ps) mblen (s, n)
+#  define mbsinit(ps) (*(ps) == 0)
+# endif
+  static const mbstate_t mbstate_zero;
 #endif
 
 #if HAVE_LIMITS_H
@@ -91,6 +109,13 @@ Cambridge, MA 02139, USA.  */
 
 #define TM_YEAR_BASE 1900
 
+#ifndef __isleap
+/* Nonzero if YEAR is a leap year (every 4 years,
+   except every 100th isn't, and every 400th is).  */
+#define __isleap(year)	\
+  ((year) % 4 == 0 && ((year) % 100 != 0 || (year) % 400 == 0))
+#endif
+
 
 #ifdef _LIBC
 # define gmtime_r __gmtime_r
@@ -132,9 +157,6 @@ localtime_r (t, tp)
 #endif /* ! defined (_LIBC) */
 
 
-static unsigned int week __P ((const struct tm *const, int, int));
-
-
 #define	add(n, f)							      \
   do									      \
     {									      \
@@ -159,14 +181,17 @@ tm_diff (a, b)
      const struct tm *a;
      const struct tm *b;
 {
-  int ay = a->tm_year + TM_YEAR_BASE - 1;
-  int by = b->tm_year + TM_YEAR_BASE - 1;
-  /* Divide years by 100, rounding towards minus infinity.  */
-  int ac = ay / 100 - (ay % 100 < 0);
-  int bc = by / 100 - (by % 100 < 0);
-  int intervening_leap_days =
-    ((ay >> 2) - (by >> 2)) - (ac - bc) + ((ac >> 2) - (bc >> 2));
-  int years = ay - by;
+  /* Compute intervening leap days correctly even if year is negative.
+     Take care to avoid int overflow in leap day calculations,
+     but it's OK to assume that A and B are close to each other.  */
+  int a4 = (a->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (a->tm_year & 3);
+  int b4 = (b->tm_year >> 2) + (TM_YEAR_BASE >> 2) - ! (b->tm_year & 3);
+  int a100 = a4 / 25 - (a4 % 25 < 0);
+  int b100 = b4 / 25 - (b4 % 25 < 0);
+  int a400 = a100 >> 2;
+  int b400 = b100 >> 2;
+  int intervening_leap_days = (a4 - b4) - (a100 - b100) + (a400 - b400);
+  int years = a->tm_year - b->tm_year;
   int days = (365 * years + intervening_leap_days
 	      + (a->tm_yday - b->tm_yday));
   return (60 * (60 * (24 * days + (a->tm_hour - b->tm_hour))
@@ -177,44 +202,29 @@ tm_diff (a, b)
 
 
 
-/* Return the week in the year specified by TP,
-   with weeks starting on STARTING_DAY.  */
-#ifdef	__GNUC__
+/* The number of days from the first day of the first ISO week of this
+   year to the year day YDAY with week day WDAY.  ISO weeks start on
+   Monday; the first ISO week has the year's first Thursday.  YDAY may
+   be as small as YDAY_MINIMUM.  */
+#define ISO_WEEK_START_WDAY 1 /* Monday */
+#define ISO_WEEK1_WDAY 4 /* Thursday */
+#define YDAY_MINIMUM (-366)
+static int iso_week_days __P ((int, int));
+#ifdef __GNUC__
 inline
 #endif
-static unsigned int
-week (tp, starting_day, max_preceding)
-      const struct tm *const tp;
-      int starting_day;
-      int max_preceding;
+static int
+iso_week_days (yday, wday)
+     int yday;
+     int wday;
 {
-  int wday, dl, base;
-
-  wday = tp->tm_wday - starting_day;
-  if (wday < 0)
-    wday += 7;
-
-  /* Set DL to the day in the year of the first day of the week
-     containing the day specified in TP.  */
-  dl = tp->tm_yday - wday;
-
-  /* For the computation following ISO 8601:1988 we set the number of
-     the week containing January 1st to 1 if this week has more than
-     MAX_PRECEDING days in the new year.  For ISO 8601 this number is
-     3, for the other representation it is 7 (i.e., not to be
-     fulfilled).  */
-  base = ((dl + 7) % 7) > max_preceding ? 1 : 0;
-
-  /* If DL is negative we compute the result as 0 unless we have to
-     compute it according ISO 8601.  In this case we have to return 53
-     or 1 if the week containing January 1st has less than 4 days in
-     the new year or not.  If DL is not negative we calculate the
-     number of complete weeks for our week (DL / 7) plus 1 (because
-     only for DL < 0 we are in week 0/53 and plus the number of the
-     first week computed in the last step.  */
-  return dl < 0 ? (dl < -max_preceding ? 53 : base)
-		: base + 1 + dl / 7;
+  /* Add enough to the first operand of % to make it nonnegative.  */
+  int big_enough_multiple_of_7 = (-YDAY_MINIMUM / 7 + 2) * 7;
+  return (yday
+	  - (yday - wday + ISO_WEEK1_WDAY + big_enough_multiple_of_7) % 7
+	  + ISO_WEEK1_WDAY - ISO_WEEK_START_WDAY);
 }
+
 
 #ifndef _NL_CURRENT
 static char const weekday_name[][10] =
@@ -254,8 +264,8 @@ strftime (s, maxsize, format, tp)
   size_t am_len = strlen(a_month);
   size_t ap_len = strlen (ampm);
 
-  const char * const*alt_digits = &_NL_CURRENT (LC_TIME, ALT_DIGITS);
-  int nr_alt_digits = (_NL_CURRENT (LC_TIME, ALT_DIGITS + 1) - *alt_digits);
+  const char *alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS);
+  const char *end_alt_digits = _NL_CURRENT (LC_TIME, ALT_DIGITS + 1);
 #else
   const char *const f_wkday = weekday_name[tp->tm_wday];
   const char *const f_month = month_name[tp->tm_mon];
@@ -268,9 +278,6 @@ strftime (s, maxsize, format, tp)
 #endif
   size_t wkday_len = strlen (f_wkday);
   size_t month_len = strlen (f_month);
-  const unsigned int y_week0 = week (tp, 0, 7);
-  const unsigned int y_week1 = week (tp, 1, 7);
-  const unsigned int y_week2 = week (tp, 1, 3);
   const char *zone;
   size_t zonelen;
   register size_t i = 0;
@@ -285,8 +292,8 @@ strftime (s, maxsize, format, tp)
   if (!(zone && *zone) && tp->tm_isdst >= 0)
     zone = tzname[tp->tm_isdst];
 #endif
-  if (!(zone && *zone))
-    zone = "???";
+  if (! zone)
+    zone = "";		/* POSIX.2 requires the empty string here.  */
 
   zonelen = strlen (zone);
 
@@ -297,50 +304,101 @@ strftime (s, maxsize, format, tp)
 
   for (f = format; *f != '\0'; ++f)
     {
-      enum { pad_zero, pad_space, pad_none } pad; /* Padding for number.  */
-      unsigned int digits;	/* Max digits for numeric format.  */
-      unsigned int number_value; /* Numeric value to be printed.  */
+      int pad;			/* Padding for number ('-', '_', or 0).  */
+      int modifier;		/* Field modifier ('E', 'O', or 0).  */
+      int digits;		/* Max digits for numeric format.  */
+      int number_value; 	/* Numeric value to be printed.  */
       int negative_number;	/* 1 if the number is negative.  */
-      const char *subfmt = "";
-      enum { none, alternate, era } modifier;
+      const char *subfmt;
       char *bufp;
       char buf[1 + (sizeof (int) < sizeof (time_t)
 		    ? INT_STRLEN_BOUND (time_t)
 		    : INT_STRLEN_BOUND (int))];
 
-#if HAVE_MBLEN
-      if (!isascii (*f))
-	{
-	  /* Non-ASCII, may be a multibyte.  */
-	  int len = mblen (f, strlen (f));
-	  if (len > 0)
-	    {
-	      cpy(len, f);
-	      continue;
-	    }
-	}
-#endif
+#if DO_MULTIBYTE
 
+       switch (*f)
+	{
+	case '%':
+	  break;
+
+	case '\a': case '\b': case '\t': case '\n':
+	case '\v': case '\f': case '\r':
+	case ' ': case '!': case '"': case '#': case '&': case'\'':
+	case '(': case ')': case '*': case '+': case ',': case '-':
+	case '.': case '/': case '0': case '1': case '2': case '3':
+	case '4': case '5': case '6': case '7': case '8': case '9':
+	case ':': case ';': case '<': case '=': case '>': case '?':
+	case 'A': case 'B': case 'C': case 'D': case 'E': case 'F':
+	case 'G': case 'H': case 'I': case 'J': case 'K': case 'L':
+	case 'M': case 'N': case 'O': case 'P': case 'Q': case 'R':
+	case 'S': case 'T': case 'U': case 'V': case 'W': case 'X':
+	case 'Y': case 'Z': case '[': case'\\': case ']': case '^':
+	case '_': case 'a': case 'b': case 'c': case 'd': case 'e':
+	case 'f': case 'g': case 'h': case 'i': case 'j': case 'k':
+	case 'l': case 'm': case 'n': case 'o': case 'p': case 'q':
+	case 'r': case 's': case 't': case 'u': case 'v': case 'w':
+	case 'x': case 'y': case 'z': case '{': case '|': case '}':
+	case '~':
+	  /* The C Standard requires these 98 characters (plus '%') to
+	     be in the basic execution character set.  None of these
+	     characters can start a multibyte sequence, so they need
+	     not be analyzed further.  */
+	  add (1, *p = *f);
+	  continue;
+
+	default:
+	  /* Copy this multibyte sequence until we reach its end, find
+	     an error, or come back to the initial shift state.  */
+	  {
+	    mbstate_t mbstate = mbstate_zero;
+	    size_t len = 0;
+
+	    do
+	      {
+		size_t bytes = mbrlen (f + len, (size_t) -1, &mbstate);
+
+		if (bytes == 0)
+		  break;
+
+		if (bytes == (size_t) -2 || bytes == (size_t) -1)
+		  {
+		    len++;
+		    break;
+		  }
+
+		len += bytes;
+	      }
+	    while (! mbsinit (&mbstate));
+
+	    cpy (len, f);
+	    continue;
+	  }
+	}
+
+#else /* ! DO_MULTIBYTE */
+
+      /* Either multibyte encodings are not supported, or they are
+	 safe for formats, so any non-'%' byte can be copied through.  */
       if (*f != '%')
 	{
 	  add (1, *p = *f);
 	  continue;
 	}
 
+#endif /* ! DO_MULTIBYTE */
+
       /* Check for flags that can modify a number format.  */
       ++f;
       switch (*f)
 	{
 	case '_':
-	  pad = pad_space;
-	  ++f;
-	  break;
 	case '-':
-	  pad = pad_none;
-	  ++f;
+	  pad = *f++;
 	  break;
+
 	default:
-	  pad = pad_zero;
+	  pad = 0;
 	  break;
 	}
 
@@ -348,15 +406,12 @@ strftime (s, maxsize, format, tp)
       switch (*f)
 	{
 	case 'E':
-	  ++f;
-	  modifier = era;
-	  break;
 	case 'O':
-	  ++f;
-	  modifier = alternate;
+	  modifier = *f++;
 	  break;
+
 	default:
-	  modifier = none;
+	  modifier = 0;
 	  break;
 	}
 
@@ -372,43 +427,42 @@ strftime (s, maxsize, format, tp)
 	    --f;
 	    /* Fall through.  */
 	case '%':
-	  if (modifier != none)
+	  if (modifier != 0)
 	    goto bad_format;
 	  add (1, *p = *f);
 	  break;
 
 	case 'a':
-	  if (modifier != none)
+	  if (modifier != 0)
 	    goto bad_format;
 	  cpy (aw_len, a_wkday);
 	  break;
 
 	case 'A':
-	  if (modifier != none)
+	  if (modifier != 0)
 	    goto bad_format;
 	  cpy (wkday_len, f_wkday);
 	  break;
 
 	case 'b':
-	case 'h':		/* GNU extension.  */
-	  if (modifier != none)
+	case 'h':		/* POSIX.2 extension.  */
+	  if (modifier != 0)
 	    goto bad_format;
 	  cpy (am_len, a_month);
 	  break;
 
 	case 'B':
-	  if (modifier != none)
+	  if (modifier != 0)
 	    goto bad_format;
 	  cpy (month_len, f_month);
 	  break;
 
 	case 'c':
-	  if (modifier == alternate)
+	  if (modifier == 'O')
 	    goto bad_format;
 #ifdef _NL_CURRENT
-	  if (modifier == era)
-	    subfmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT);
-	  if (*subfmt == '\0')
+	  if (! (modifier == 'E'
+		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_D_T_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, D_T_FMT);
 #else
 	  subfmt = "%a %b %e %H:%M:%S %Z %Y";
@@ -423,40 +477,41 @@ strftime (s, maxsize, format, tp)
 	  }
 	  break;
 
-	case 'C':
-	  if (modifier == alternate)
+	case 'C':		/* POSIX.2 extension.  */
+	  if (modifier == 'O')
 	    goto bad_format;
 #ifdef _NL_CURRENT
-	  /* XXX I'm not sure about this.  --drepper@gnu */
-	  if (modifier == era &&
-	      *(subfmt = _NL_CURRENT (LC_TIME, ERA)) != '\0')
-	    goto subformat;
+	  /* XXX %EC is not implemented yet.  */
 #endif
-	  DO_NUMBER (2, (1900 + tp->tm_year) / 100);
+	  {
+	    int year = tp->tm_year + TM_YEAR_BASE;
+	    DO_NUMBER (1, year / 100 - (year % 100 < 0));
+	  }
 
 	case 'x':
-	  if (modifier == alternate)
+	  if (modifier == 'O')
 	    goto bad_format;
 #ifdef _NL_CURRENT
-	  if (modifier == era)
-	    subfmt = _NL_CURRENT (LC_TIME, ERA_D_FMT);
-	  if (*subfmt == '\0')
+	  if (! (modifier == 'E'
+		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_D_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, D_FMT);
 	  goto subformat;
 #endif
 	  /* Fall through.  */
-	case 'D':		/* GNU extension.  */
+	case 'D':		/* POSIX.2 extension.  */
+	  if (modifier != 0)
+	    goto bad_format;
 	  subfmt = "%m/%d/%y";
 	  goto subformat;
 
 	case 'd':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_mday);
 
-	case 'e':		/* GNU extension: %d, but blank-padded.  */
-	  if (modifier == era)
+	case 'e':		/* POSIX.2 extension.  */
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER_SPACEPAD (2, tp->tm_mday);
@@ -466,22 +521,33 @@ strftime (s, maxsize, format, tp)
 
 	do_number_spacepad:
 	  /* Force `_' flag.  */
-	  pad = pad_space;
+	  pad = '_';
 
 	do_number:
 	  /* Format the number according to the MODIFIER flag.  */
 
 #ifdef _NL_CURRENT
-	  if (modifier == alternate && 0 <= number_value
-	      && number_value < (unsigned int) nr_alt_digits)
+	  if (modifier == 'O' && 0 <= number_value)
 	    {
 	      /* ALT_DIGITS is the first entry in an array with
-		 alternative digit symbols.  */
-	      size_t digitlen = strlen (*(alt_digits + number_value));
-	      if (digitlen == 0)
-		break;
-	      cpy (digitlen, *(alt_digits + number_value));
-	      goto done_with_number;
+		 alternative digit symbols.  We have to find string
+		 number NUMBER_VALUE, but must not look beyond
+		 END_ALT_DIGITS.  */
+	      int run = number_value;
+	      const char *cp = alt_digits;
+
+	      while (run-- > 0 && cp < end_alt_digits)
+		cp = strchr (cp, '\0') + 1;
+
+	      if (cp < end_alt_digits)
+		{
+		  size_t digitlen = strlen (cp);
+		  if (digitlen != 0)
+		    {
+		      cpy (digitlen, cp);
+		      break;
+		    }
+		}
 	    }
 #endif
 	  {
@@ -502,11 +568,11 @@ strftime (s, maxsize, format, tp)
 	  if (negative_number)
 	    *--bufp = '-';
 
-	  if (pad != pad_none)
+	  if (pad != '-')
 	    {
 	      int padding = digits - (buf + sizeof (buf) - bufp);
 
-	      if (pad == pad_space)
+	      if (pad == '_')
 		{
 		  while (0 < padding--)
 		    *--bufp = ' ';
@@ -522,56 +588,52 @@ strftime (s, maxsize, format, tp)
 	    }
 
 	  cpy (buf + sizeof (buf) - bufp, bufp);
-
-#ifdef _NL_CURRENT
-	done_with_number:
-#endif
 	  break;
 
 
 	case 'H':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_hour);
 
 	case 'I':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (2, hour12);
 
 	case 'k':		/* GNU extension.  */
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER_SPACEPAD (2, tp->tm_hour);
 
 	case 'l':		/* GNU extension.  */
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER_SPACEPAD (2, hour12);
 
 	case 'j':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (3, 1 + tp->tm_yday);
 
 	case 'M':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_min);
 
 	case 'm':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_mon + 1);
 
-	case 'n':		/* GNU extension.  */
+	case 'n':		/* POSIX.2 extension.  */
 	  add (1, *p = '\n');
 	  break;
 
@@ -583,13 +645,16 @@ strftime (s, maxsize, format, tp)
 	  subfmt = "%H:%M";
 	  goto subformat;
 
-	case 'r':		/* GNU extension.  */
-	  subfmt = "%I:%M:%S %p";
+	case 'r':		/* POSIX.2 extension.  */
+#ifdef _NL_CURRENT
+	  if (*(subfmt = _NL_CURRENT (LC_TIME, T_FMT_AMPM)) == '\0')
+#endif
+	    subfmt = "%I:%M:%S %p";
 	  goto subformat;
 
 	case 'S':
-	  if (modifier == era)
-	    return 0;
+	  if (modifier == 'E')
+	    goto bad_format;
 
 	  DO_NUMBER (2, tp->tm_sec);
 
@@ -630,67 +695,101 @@ strftime (s, maxsize, format, tp)
 	  }
 
 	case 'X':
-	  if (modifier == alternate)
+	  if (modifier == 'O')
 	    goto bad_format;
 #ifdef _NL_CURRENT
-	  if (modifier == era)
-	    subfmt = _NL_CURRENT (LC_TIME, ERA_T_FMT);
-	  if (*subfmt == '\0')
+	  if (! (modifier == 'E'
+		 && *(subfmt = _NL_CURRENT (LC_TIME, ERA_T_FMT)) != '\0'))
 	    subfmt = _NL_CURRENT (LC_TIME, T_FMT);
 	  goto subformat;
 #endif
 	  /* Fall through.  */
-	case 'T':		/* GNU extension.  */
+	case 'T':		/* POSIX.2 extension.  */
 	  subfmt = "%H:%M:%S";
 	  goto subformat;
 
-	case 't':		/* GNU extension.  */
+	case 't':		/* POSIX.2 extension.  */
 	  add (1, *p = '\t');
 	  break;
 
+	case 'u':		/* POSIX.2 extension.  */
+	  DO_NUMBER (1, (tp->tm_wday - 1 + 7) % 7 + 1);
+
 	case 'U':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
-	  DO_NUMBER (2, y_week0);
+	  DO_NUMBER (2, (tp->tm_yday - tp->tm_wday + 7) / 7);
 
 	case 'V':
-	  if (modifier == era)
+	case 'g':		/* GNU extension.  */
+	case 'G':		/* GNU extension.  */
+	  if (modifier == 'E')
 	    goto bad_format;
+	  {
+	    int year = tp->tm_year + TM_YEAR_BASE;
+	    int days = iso_week_days (tp->tm_yday, tp->tm_wday);
 
-	  DO_NUMBER (2, y_week2);
+	    if (days < 0)
+	      {
+		/* This ISO week belongs to the previous year.  */
+		year--;
+		days = iso_week_days (tp->tm_yday + (365 + __isleap (year)),
+				      tp->tm_wday);
+	      }
+	    else
+	      {
+		int d = iso_week_days (tp->tm_yday - (365 + __isleap (year)),
+				       tp->tm_wday);
+		if (0 <= d)
+		  {
+		    /* This ISO week belongs to the next year.  */
+		    year++;
+		    days = d;
+		  }
+	      }
+
+	    switch (*f)
+	      {
+	      case 'g':
+		DO_NUMBER (2, (year % 100 + 100) % 100);
+
+	      case 'G':
+		DO_NUMBER (1, year);
+
+	      default:
+		DO_NUMBER (2, days / 7 + 1);
+	      }
+	  }
 
 	case 'W':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
-	  DO_NUMBER (2, y_week1);
+	  DO_NUMBER (2, (tp->tm_yday - (tp->tm_wday - 1 + 7) % 7 + 7) / 7);
 
 	case 'w':
-	  if (modifier == era)
+	  if (modifier == 'E')
 	    goto bad_format;
 
-	  DO_NUMBER (2, tp->tm_wday);
+	  DO_NUMBER (1, tp->tm_wday);
 
 	case 'Y':
 #ifdef _NL_CURRENT
-	  if (modifier == era
+	  if (modifier == 'E'
 	      && *(subfmt = _NL_CURRENT (LC_TIME, ERA_YEAR)) != '\0')
 	    goto subformat;
-	  else
 #endif
-	    if (modifier == alternate)
-	      goto bad_format;
-	    else
-	      DO_NUMBER (4, 1900 + tp->tm_year);
+	  if (modifier == 'O')
+	    goto bad_format;
+	  else
+	    DO_NUMBER (1, tp->tm_year + TM_YEAR_BASE);
 
 	case 'y':
 #ifdef _NL_CURRENT
-	  if (modifier == era
-	      && *(subfmt = _NL_CURRENT (LC_TIME, ERA_YEAR)) != '\0')
-	    goto subformat;
+	  /* XXX %Ey is not implemented yet.  */
 #endif
-	  DO_NUMBER (2, tp->tm_year % 100);
+	  DO_NUMBER (2, (tp->tm_year % 100 + 100) % 100);
 
 	case 'Z':
 	  cpy(zonelen, zone);
@@ -740,26 +839,21 @@ strftime (s, maxsize, format, tp)
 	    else
 	      add (1, *p = '+');
 
-	    pad = pad_zero;
-
 	    diff /= 60;
 	    DO_NUMBER (4, (diff / 60) * 100 + diff % 60);
 	  }
 
 	default:
-	  /* Bad format.  */
+	  /* Unknown format; output the format, including the '%',
+	     since this is most likely the right thing to do if a
+	     multibyte string has been misparsed.  */
 	bad_format:
-	  if (pad == pad_space)
-	    add (1, *p = '_');
-	  else if (pad == pad_zero)
-	    add (1, *p = '0');
-
-	  if (modifier == era)
-	    add (1, *p = 'E');
-	  else if (modifier == alternate)
-	    add (1, *p = 'O');
-
-	  add (1, *p = *f);
+	  {
+	    int flen;
+	    for (flen = 2; f[1 - flen] != '%'; flen++)
+	      continue;
+	    cpy (flen, &f[1 - flen]);
+	  }
 	  break;
 	}
     }

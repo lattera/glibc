@@ -45,7 +45,7 @@ struct {
 
 struct {
   const char * in, * out, * resolved;
-  int errno;
+  int error;
 } tests[] = {
   /*  0 */
   {"/",					"/"},
@@ -145,10 +145,10 @@ main (int argc, char ** argv)
 	  continue;
 	}
 
-      if (!tests[i].out && errno != tests[i].errno)
+      if (!tests[i].out && errno != tests[i].error)
 	{
 	  printf ("%s: flunked test %d (expected errno %d, got %d)\n",
-		  argv[0], i, tests[i].errno, errno);
+		  argv[0], i, tests[i].errno, error);
 	  ++errors;
 	  continue;
 	}

@@ -7,8 +7,9 @@ DEFUN_VOID(main)
 {
   FILE *f;
   int i;
+  const char filename[] = "/tmp/bugtest";
 
-  f = fopen("/tmp/bugtest", "w+");
+  f = fopen(filename, "w+");
   for (i=0; i<9000; i++)
     putc ('x', f);
   fseek (f, 8180L, 0);
@@ -45,6 +46,7 @@ DEFUN_VOID(main)
     }
 
   fclose(f);
+  remove(filename);
 
   puts ("Test succeeded.");
 

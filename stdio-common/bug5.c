@@ -17,7 +17,8 @@ DEFUN_VOID(main)
   FILE *out;
   static char inname[] = "/tmp/bug5.in";
   static char outname[] = "/tmp/bug5.out";
-  int i;
+  char *printbuf;
+  int i, result;
 
   /* Create a test file.  */
   in = fopen (inname, "w+");
@@ -54,7 +55,11 @@ DEFUN_VOID(main)
 
   puts ("There should be no further output from this test.");
   fflush (stdout);
-  execlp ("cmp", "cmp", inname, outname, (char *) NULL);
-  perror ("execlp: cmp");
-  exit (1);
+
+  asprintf (&printbuf, "cmp %s %s", inname, outname);
+  result = system (printbuf);
+  remove (inname);
+  remove (outname);
+
+  exit ((result != 0));
 }

@@ -62,7 +62,6 @@ __syscall_error:
 	.size	__syscall_error, . - __syscall_error
 #endif /* PIC */
 
-#ifdef	_LIBC_REENTRANT
 	.globl	__errno_location
 	.type	__errno_location, @function
 __errno_location:
@@ -73,4 +72,3 @@ __errno_location:
 #endif
 	rts
 	.size	__errno_location, . - __errno_location
-#endif

@@ -17,6 +17,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#ifndef _LINUX_I386_SYSDEP_H
+#define _LINUX_I386_SYSDEP_H 1
+
 /* There is some commonality.  */
 #include <sysdeps/unix/i386/sysdep.h>
 
@@ -179,3 +182,5 @@ syscall_error:								      \
 #define _POPARGS_5	_POPARGS_4; popl %edi
 
 #endif	/* ASSEMBLER */
+
+#endif /* linux/i386/sysdep.h */

@@ -29,6 +29,8 @@ Cambridge, MA 02139, USA.  */
    _BSD_SOURCE		ANSI, POSIX, and 4.3BSD things.
    _SVID_SOURCE		ANSI, POSIX, and SVID things.
    _GNU_SOURCE		All of the above, plus GNU extensions.
+   _REENTRANT		Select additionally reentrant object.
+   _THREAD_SAFE		Same as _REENTRANT, often used by other systems.
 
    The `-ansi' switch to the GNU C compiler defines __STRICT_ANSI__.
    If none of these are defined, the default is all but _GNU_SOURCE.
@@ -137,7 +139,7 @@ Cambridge, MA 02139, USA.  */
 #define	__USE_GNU	1
 #endif
 
-#if defined (__USE_GNU) || defined (__USE_MISC)
+#if defined (_REENTRANT) || defined (_THREAD_SAFE)
 #define __USE_REENTRANT	1
 #endif
 

@@ -25,7 +25,7 @@ strong_alias (__h_errno, h_errno)
 
 /* When threaded, h_errno may be a per-process variable.  */
 #ifdef __USE_REENTRANT
-int
+int *
 weak_const_function
 __h_errno_location (void)
 {
