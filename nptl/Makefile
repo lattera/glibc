@@ -234,7 +234,7 @@ tests = tst-attr1 tst-attr2 tst-attr3 \
 	tst-context1 \
 	tst-sched1
 
-distribute = eintr.c
+distribute = eintr.c tst-cleanup4aux.c
 
 gen-as-const-headers = pthread-errnos.sym
 

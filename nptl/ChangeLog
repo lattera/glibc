@@ -1,4 +1,14 @@
+2003-11-21  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (distribute): Add tst-cleanup4aux.c.
+
+	* tst-cond12.c (prepare): Add prototype.  Move after test-skeleton.c
+	include.
+
 2003-11-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* tst-cond12.c (do_test): If USE_COND_SIGNAL is defined, use
+	pthread_cond_signal.
 
 	* sysdeps/pthread/pthread_cond_wait.c (__pthread_cond_wait): Don't
 	store mutex address if the current value is ~0l.

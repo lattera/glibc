@@ -152,12 +152,21 @@ do_test (void)
 
       p->var = 0;
 
+#ifndef USE_COND_SIGNAL
       if (pthread_cond_broadcast (&p->c) != 0)
 	{
 	  puts ("child: cond_broadcast failed");
 	  kill (getppid (), SIGKILL);
 	  exit (1);
 	}
+#else
+      if (pthread_cond_signal (&p->c) != 0)
+	{
+	  puts ("child: cond_signal failed");
+	  kill (getppid (), SIGKILL);
+	  exit (1);
+	}
+#endif
 
       if (pthread_mutex_unlock (&p->m) != 0)
 	{
