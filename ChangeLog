@@ -1,3 +1,10 @@
+2001-05-19  Roland McGrath  <roland@frob.com>
+
+	* hurd/hurdlookup.c (__hurd_file_name_lookup_retry): Don't leak the
+	result port when failing with ELOOP.  Do the ELOOP check when
+	following an absolute symlink target as well as relative.
+	Remove #ifdef SYMLOOP_MAX conditional--it should always be defined.
+
 2001-05-18  Andreas Jaeger  <aj@suse.de>
 
 	* po/fr.po: Free software is "logiciel libre".
