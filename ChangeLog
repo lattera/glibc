@@ -1,3 +1,16 @@
+Sun Nov 19 18:23:07 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* Makeconfig (+includes): Add $($(stdio)-include).
+	(libio-include): New variable.
+
+	* stdlib/strtod.c: Put weak_symbol after function defn.
+	* stdlib/strtol.c: Likewise.
+
+	* configure.in (--enable-libio): If not present, set $stdio to
+	"default".  Move stdio/libio check to end, so sysdeps fragments
+	can affect it.  Reset $stdio to "stdio" if it's "default".
+	* sysdeps/unix/sysv/linux/configure: New file.
+
 Sat Nov 18 16:46:01 1995  Ulrich Drepper  <drepper@gnu.ai.mit.edu>
 
 	* libio/Makefile, libio/cleanup.c, libio/clearerr.c, libio/feof.c,
