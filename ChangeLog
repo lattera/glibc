@@ -1,3 +1,177 @@
+1997-12-13  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* libc-work/nis/ypclnt.c (do_ypcall): Don't free dom_binding twice.
+
+1997-12-05 20:19  H.J. Lu  <hjl@gnu.org>
+
+	* iconvdata/Makefile: Fix a typo.
+
+	* sysdeps/unix/sysv/linux/Makefile (stdio-common): Add
+	oldsiglist for shared library.
+	(signal): Add rt_sigreturn and rt_sigpending.
+
+	* sysdeps/unix/sysv/linux/siglist.c (_sys_siglist, sys_siglist,
+	sys_sigabbrev): Make them as the default version GLIBC_2.1.
+
+	* sysdeps/unix/sysv/linux/oldsiglist.c (_sys_siglist,
+	sys_siglist, sys_sigabbrev): New file. Make them as the old
+	version GLIBC_2.0.
+
+	* libc.map (_sys_siglist, sys_siglist, sys_sigabbrev): Added
+	to GLIBC_2.1.
+
+1997-11-20 18:02  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libio/iofgets.c (_IO_fgets): Return an error only if there
+	is a new error.
+	* libio/iogets.c (_IO_gets): Ditto.
+
+1997-11-20 07:26  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libc.map (_IO_fdopen): Add support for GLIBC_2.0.
+
+	* libio/Makefile (routines, shared-only-routines): Add
+	oldiofdopen.
+
+	* libio/fileops.c: Don't use _IO_FILE_complete.
+	* libio/iofdopen.c: Ditto.
+	* libio/iofopen.c: Ditto.
+	* libio/iofopen64.c: Ditto.
+	* libio/iopopen.c: Ditto.
+	* libio/iovdprintf.c: Ditto.
+
+	* libio/genops.c (_IO_init): Set _vtable_offset to 0.
+
+	* libio/iofdopen.c (_IO_new_fdopen): Changed from _IO_fdopen
+	and make it for _IO_fdopen/fdopen version GLIBC_2.1.
+
+	* libio/iolibio.h (_IO_old_fclose, _IO_new_fclose,
+	_IO_old_fdopen, _IO_new_fdopen): New declaration.
+
+	* libio/libio.h (_IO_FILE): Add more fields.
+	(_IO_FILE_complete): Defined and make _IO_FILE be the old
+	one if _IO_USE_OLD_IO_FILE is defined
+	(_IO_2_1_stdin_, _IO_2_1_stdout_, _IO_2_1_stderr_): Make
+	them _IO_FILE_complete.
+
+	* libio/libioP.h (_IO_JUMPS_FUNC): New, use _vtable_offset
+	to adjust vtable.
+	(JUMP0, JUMP1, JUMP2, JUMP3): Use _IO_JUMPS_FUNC instead of
+	_IO_JUMPS.
+	(_IO_FILE_complete): Commented out.
+
+	* libio/oldfileops.c: Define _IO_USE_OLD_IO_FILE.
+	* libio/oldiofclose.c: Ditto.
+	* libio/oldiofopen.c: Ditto.
+	* libio/oldstdfiles.c: Ditto.
+
+	* libio/oldfileops.c (_IO_old_file_init): Set _vtable_offset
+	for the old _IO_FILE.
+
+	* libio/oldstdfiles.c (DEF_STDFILE): Remove INAME.
+	(_IO_check_libio): Set _vtable_offset for old stdin, stdout
+	and stderr.
+
+	* libio/stdfiles.c (DEF_STDFILE): Don't use _IO_FILE_complete
+	and remove INAME.
+
+	* libio/stdio.c (stdin, stdout, stdin): Don't use
+	_IO_FILE_complete.
+
+	* libio/oldiofdopen.c: New.
+
+	* stdio-common/vfprintf.c (buffered_vfprintf): Set
+	hp->_vtable_offset to 0.
+
+1997-11-18 08:03  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libc.map (_IO_file_open): Added.
+
+	* libio/libioP.h (_IO_file_open): Declared.
+
+	* libio/fileops.c (_IO_file_open): New.
+	(_IO_file_fopen): Call _IO_file_open ().
+
+	* sysdeps/generic/_G_config.h
+	* sysdeps/unix/sysv/linux/_G_config.h: Define
+	_G_HAVE_IO_FILE_OPEN.
+
+1997-12-07  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* signal/signal.h: Fix selection of signal semantics to match
+	comment.
+
+1997-12-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sigreturn.c: Stub out.
+	* sysdeps/unix/sysv/linux/syscalls.list: Remove sigreturn and
+	rt_sigreturn.
+	* sysdeps/unix/sysv/linux/Makefile (sysdep_routines)
+	[$(subdir)=signal]: Remove rt_sigreturn.
+	* sysdeps/unix/sysv/linux/powerpc/syscall.S: Deleted.
+	* sysdeps/unix/sysv/linux/m68k/sigreturn.S: Deleted.
+	* sysdeps/unix/sysv/linux/rt_sigreturn.c: Deleted.
+
+1997-12-11  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/sigaction.c: Include <errno.h>.  Fix
+	declarations.
+
+1997-12-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* iconvdata/extra-module.mk: Expand extra-objs now.
+
+1997-12-09  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/mathinline.h: Protect declarations of
+	inline functions by feature tests to avoid warning about missing
+	prototype declarations.
+
+1997-12-09 15:08  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* nis/nss_compat/compat-grp.c: Reset the blacklist correct, fix
+	return code for non existent +name entries.
+	* nis/nss_compat/compat-pwd.c: Likewise.
+	* nis/nss_compat/compat-spwd.c: Likewise.
+
+1997-12-10 13:52  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/standalone/arm/bits/errno.h (EAGAIN): Added.
+	(EIO): Likewise.
+	(ENOSPC): Likewise.
+	(EEXIST): Likewise.
+	(__errno_location): Likewise.
+
+	* sysdeps/generic/sys/param.h (MAXPATHLEN): Added.
+
+	* sysdeps/generic/sigqueue.c: Include <sys/types.h> for pid_t.
+
+1997-12-09 08:10  Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* sunrpc/publickey.c: Use new NSS interface.
+
+1997-12-09 03:08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/malloc.texi: Document mtrace/muntrace and the concept.
+
+1997-12-04  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/fpu/bits/fenv.h (fenv_t): Add member to hold fpiar
+	value, to match spirit of the standard.
+	* sysdeps/m68k/fpu/fegetenv.c: Save/restore fpiar.
+	* sysdeps/m68k/fpu/feholdexcpt.c: Likewise.
+	* sysdeps/m68k/fpu/fesetenv.c: Likewise.
+
+1997-12-02  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* manual/signal.texi (Signal Stack): Remove spurious @item.
+
+1997-12-08  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* rt/aio.h: Remove double semicolon.
+
+	* rt/librt.map: Add aio_init.
+
 1997-12-08 03:24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Define $(rt) to rt if linuxthreads is available.

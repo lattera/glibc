@@ -91,13 +91,14 @@ GLIBC_2.0 {
     _IO_str_underflow; _IO_str_init_static; _IO_str_init_readonly;
     _IO_str_seekoff; _IO_str_pbackfail; _IO_file_jumps;
     _IO_peekc_locked; _IO_flockfile; _IO_funlockfile;
-    _IO_fopen; _IO_fclose;
+    _IO_fopen; _IO_fclose; _IO_file_open;
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;
+    __register_frame_new; __register_frame_table_new; __deregister_frame_new;
     __frame_state_for;
 
     # variables in normal name space
@@ -430,12 +431,14 @@ GLIBC_2.1 {
     _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
 
     # functions used in other libraries
-    _IO_fclose; _IO_fopen;
+    _IO_fclose; _IO_fopen; _IO_fdopen;
 
     # functions in normal name space
-    fopen; fclose;
+    fopen; fclose; fdopen;
 
     # New RT signal functions.
     sigqueue; sigtimedwait; sigwaitinfo;
+    # Since we have new signals this structure changed.
+    _sys_siglist; sys_siglist; sys_sigabbrev;
 
 } GLIBC_2.0;
