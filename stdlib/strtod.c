@@ -882,7 +882,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   if (dig_no == int_no && dig_no > 0 && exponent < 0)
     do
       {
-	while (expp[-1] < L_('0') || expp[-1] > L_('9'))
+	while (! (base == 16 ? ISXDIGIT (expp[-1]) : ISDIGIT (expp[-1])))
 	  --expp;
 
 	if (expp[-1] != L_('0'))
