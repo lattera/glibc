@@ -64,6 +64,13 @@ routines += clearerr_u feof_u ferror_u fputc_u getc_u getchar_u		      \
 CPPFLAGS += -D_IO_MTSAFE_IO
 endif
 
+# Support for exception handling.
+CFLAGS-genops.c = $(exceptions)
+CFLAGS-wgenops.c = $(exceptions)
+CFLAGS-fileops.c = $(exceptions)
+CFLAGS-wfileops.c = $(exceptions)
+# XXX Do we need filedoalloc and wfiledoalloc?  Others?
+
 CFLAGS-tst_putwc.c = -DOBJPFX=\"$(objpfx)\"
 
 tst_wprintf2-ARGS = "Some Text"
