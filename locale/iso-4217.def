@@ -70,7 +70,7 @@ DEFINE_INT_CURR("HUF ")		/* Hungary  */
 DEFINE_INT_CURR("IDR ")		/* Indonesia  */
 DEFINE_INT_CURR("IEP ")		/* Ireland  */
 DEFINE_INT_CURR("ILS ")		/* Israel  */
-DEFINE_INT_CURR("INR ")		/* Bhutan  */
+DEFINE_INT_CURR("INR ")		/* India, Bhutan  */
 DEFINE_INT_CURR("IQD ")		/* Iraq  */
 DEFINE_INT_CURR("IRR ")		/* Iran  */
 DEFINE_INT_CURR("ISK ")		/* Iceland  */

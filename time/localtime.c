@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1993, 1995 Free Software Foundation, Inc.
+/* localtime -- convert `time_t' to `struct tm' in local time zone
+Copyright (C) 1991, 92, 93, 95, 96 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +19,7 @@ Cambridge, MA 02139, USA.  */
 
 #include <errno.h>
 #include <time.h>
+#include <libc-lock.h>
 
 /* The C Standard says that localtime and gmtime return the same pointer.  */
 struct tm _tmbuf;
@@ -35,7 +37,11 @@ __localtime_r (timer, tp)
      const time_t *timer;
      struct tm *tp;
 {
-  extern int __use_tzfile;
+  /* This lock is defined in tzset.c and locks all the data defined there
+     and in tzfile.c; the internal functions do no locking themselves.
+     This lock is only taken here and in `tzset'.  */
+  __libc_lock_define (extern, __tzset_lock);
+  extern int __tzset_run, __use_tzfile;
   extern int __tz_compute __P ((time_t timer, struct tm *tp));
   extern int __tzfile_compute __P ((time_t timer,
 				    long int *leap_correct, int *leap_hit));
@@ -48,36 +54,37 @@ __localtime_r (timer, tp)
       return NULL;
     }
 
-  {
-    /* Make sure the database is initialized.  */
-    extern int __tzset_run;
-    if (! __tzset_run)
-      __tzset ();
-  }
+  __libc_lock_lock (__tzset_lock);
+
+  /* Make sure the database is initialized.  */
+  if (! __tzset_run)
+    __tzset ();
 
   if (__use_tzfile)
     {
       if (! __tzfile_compute (*timer, &leap_correction, &leap_extra_secs))
-	return NULL;
+	tp = NULL;
     }
   else
     {
-      struct tm *gmtp = __gmtime_r (timer, tp);
-      if (gmtp == NULL)
-	return NULL;
-
-      if (! __tz_compute (*timer, gmtp))
-	return NULL;
-
+      tp = __gmtime_r (timer, tp);
+      if (tp && ! __tz_compute (*timer, tp))
+	tp = NULL;
       leap_correction = 0L;
       leap_extra_secs = 0;
     }
 
-  __offtime (timer, __timezone - leap_correction, tp);
-  tp->tm_sec += leap_extra_secs;
-  tp->tm_isdst = __daylight;
-  tp->tm_gmtoff = __timezone;
-  tp->tm_zone = __tzname[__daylight];
+  if (tp)
+    {
+      __offtime (timer, __timezone - leap_correction, tp);
+      tp->tm_sec += leap_extra_secs;
+      tp->tm_isdst = __daylight;
+      tp->tm_gmtoff = __timezone;
+      tp->tm_zone = __tzname[__daylight];
+    }
+
+  __libc_lock_unlock (__tzset_lock);
+
   return tp;
 }
 weak_alias (__localtime_r, localtime_r)

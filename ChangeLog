@@ -1,4 +1,21 @@
+Tue Jul 23 02:49:58 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locale/iso-4217.def: Add India to comment for symbol "INR ".
+	Reported by Raja R Harinath  <harinath@cs.umn.edu>.
+
+Sat Jul 20 14:03:45 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela): Remove bogus
+	#undef RESOLVE.
+
 Sun Jul 21 06:48:38 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/tzset.c: Include <libc-lock.h>.
+	(__tzset_lock): New lock variable.
+	(tzset): New function (weak defn), no longer weak alias for __tzset.
+	Call __tzset while holding __tzset_lock.
+	* time/localtime.c: Include <libc-lock.h>.
+	(__localtime_r): Hold __tzset_lock while doing the work.
 
 	* sysdeps/generic/setenv.c (__environ): Change conditional for #define
 	from [!HAVE_GNU_LD] to [!_LIBC].
