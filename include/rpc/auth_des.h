@@ -2,6 +2,15 @@
 
 #include <sunrpc/rpc/auth_des.h>
 
+extern bool_t xdr_authdes_cred (XDR *xdrs, struct authdes_cred *cred);
+extern bool_t xdr_authdes_verf (register XDR *xdrs,
+				register struct authdes_verf *verf);
+struct svc_req;
+struct rpc_msg;
+extern enum auth_stat _svcauth_des (register struct svc_req *rqst,
+				    register struct rpc_msg *msg);
+
+
 #define DECLARE_NSS_PROTOTYPES(service)					\
 extern enum nss_status _nss_ ## service ## _getpublickey		\
                        (const char *netname, char *pkey, int *errnop);	\

@@ -1,5 +1,21 @@
 2000-12-31  Andreas Jaeger  <aj@suse.de>
 
+	* posix/bsd-getpgrp.c: Add prototype to avoid warning.
+
+	* sunrpc/svc_unix.c: Include <rpc/svc.h> for prototypes.
+
+	* sunrpc/create_xid.c: Include <rpc/svc.h> for prototypes.
+
+	* include/rpc/rpc_msg.h: Add prototypes for some functions.
+	* include/rpc/auth.h: Likewise.
+	* include/rpc/auth_des.h: Likewise.
+	* include/rpc/clnt.h: Likewise.
+	* include/rpc/rpc.h: Likewise.
+	* include/rpc/svc.h: Likewise.
+	* include/rpc/svc_auth.h: Likewise.
+
+	* include/rpc/des_crypt.h: New file.
+
 	* malloc/memusagestat.c (main): Use return instead of exit to
 	avoid warning.
 	* io/pwd.c (main): Likewise.
