@@ -1,3 +1,13 @@
+2003-01-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/i486/bits/string.h (memset): Add parens around macro
+	arguments.
+	(memcpy, memrchr, strcpy, __stpcpy, strncpy, strcat): Likewise.
+	(strcmp, strncat, strncmp, strchr, __strchrnul, strchrnul): Likewise.
+	(index, strrchr, rindex, strcspn, strspn, strpbrk, strstr): Likewise.
+
+	* string/tester.c (test_strcpy): Add test with `void *' arguments.
+
 2003-01-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/i386/fpu/s_significandl.c (__significandl): Really
@@ -7,7 +17,7 @@
 	* elf/dl-misc.c (_dl_debug_vdprintf): Help PPC port by explcitly
 	taking address of iov in INTERNAL_SYSCALL call.  Patch by Franz Sirl.
 
-	* malloc/malloc.c: Makr all _int_* functions as static.
+	* malloc/malloc.c: Mark all _int_* functions as static.
 
 2003-01-06  Jakub Jelinek  <jakub@redhat.com>
 
