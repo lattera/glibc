@@ -1,3 +1,11 @@
+2000-05-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* elf/soinit.c (__libc_global_ctors): Move
+	__pthread_initialize_minimal call out of HAVE_DWARF2_* defines.
+	* resolv/resolv.h (__res_state): Added __attribute__((const)).
+	(_res): If __RES_PTHREAD_INTERNAL is defined, declare it as
+	variable, don't define it to __res_state call.
+
 2000-05-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (PF_PPPOX): New, from
