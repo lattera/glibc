@@ -37,24 +37,39 @@
 /*
  * HISTORY
  * $Log$
- * Revision 1.10  1995/02/13 22:04:34  roland
- * (malloc_init): Add self reference to avoid not only the `defined but not
- * used' warning, but also to avoid GCC optimizing out the entire function
- * (!).
+ * Revision 1.11  1996/06/06 15:13:47  miles
+ * Changes to bring in line with the hurd libthreads/malloc.c:
+ *   (more_memory): Use assert_perror instead of MACH_CALL.
+ *   "cthread_internals.h": Include removed.
+ *   (realloc): Use LOG2_MIN_SIZE.
+ *   (LOG2_MIN_SIZE): New macro.
+ *   (realloc): Don't bother allocating a new block if the
+ *     new size request fits in the old one and doesn't waste any space.
+ *     Only free the old block if we successfully got a new one.
+ *   [MCHECK] (struct header): New type.
+ *   (union header): Only define if !MCHECK.
+ *   (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
+ *   [MCHECK] (MIN_SIZE): Add correct definition for this case.
+ *   (more_memory, malloc, free, realloc): Use above macros, and add appropiate
+ *     checks & frobs in MCHECK case.
  *
- * Revision 1.9  1995/02/13  16:36:08  roland
- * Include string.h; #define bcopy using memcpy.
+ * Revision 1.6  1996/03/07 21:13:08  miles
+ * (realloc):
+ *   Use LOG2_MIN_SIZE.
+ *   Don't bother allocating a new block if the new size request fits in the old
+ *     one and doesn't waste any space.
+ *   Only free the old block if we successfully got a new one.
+ * (LOG2_MIN_SIZE): New macro.
  *
- * Revision 1.8  1995/02/03  01:54:21  roland
- * Remove bogus bcopy decl.
+ * Revision 1.5  1996/03/06 23:51:04  miles
+ * [MCHECK] (struct header): New type.
+ * (union header): Only define if !MCHECK.
+ * (HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
+ * [MCHECK] (MIN_SIZE): Add correct definition for this case.
+ * (more_memory, malloc, free, realloc):
+ *   Use above macros, and add appropiate checks & frobs in MCHECK case.
  *
- * Revision 1.7  1995/01/26  04:22:02  roland
- * Don't include gnu-stabs.h.
- *
- * Revision 1.6  1994/12/07  19:41:26  roland
- * (vm_allocate, vm_page_size): #define these to __ names at top.
- *
- * Revision 1.5  1994/06/04  01:48:44  roland
+ * Revision 1.4  1994/05/05 11:21:42  roland
  * entered into RCS
  *
  * Revision 2.7  91/05/14  17:57:34  mrt
@@ -99,9 +114,11 @@
  */
 
 
-#include <cthreads.h>
-#include "cthread_internals.h"
+#include <assert.h>
 
+#include <cthreads.h>
+
+#define MCHECK
 
 /*
  * Structure of memory block header.
@@ -109,12 +126,41 @@
  * When allocated, fl points to free list.
  * Size of header is 4 bytes, so minimum usable block size is 8 bytes.
  */
+
+#define CHECK_BUSY  0x8a3c743e
+#define CHECK_FREE  0x66688b92
+
+#ifdef MCHECK
+
+typedef struct header {
+  long check;
+  union {
+    struct header *next;
+    struct free_list *fl;
+  } u;
+} *header_t;
+
+#define HEADER_SIZE sizeof (struct header)
+#define HEADER_NEXT(h) ((h)->u.next)
+#define HEADER_FREE(h) ((h)->u.fl)
+#define HEADER_CHECK(h) ((h)->check)
+#define MIN_SIZE	16
+#define LOG2_MIN_SIZE	4
+
+#else /* ! MCHECK */
+
 typedef union header {
 	union header *next;
 	struct free_list *fl;
 } *header_t;
 
+#define HEADER_SIZE sizeof (union header)
+#define HEADER_NEXT(h) ((h)->next)
+#define HEADER_FREE(h) ((h)->fl)
 #define MIN_SIZE	8	/* minimum block size */
+#define LOG2_MIN_SIZE	3
+
+#endif /* MCHECK */
 
 typedef struct free_list {
 	spin_lock_t lock;	/* spin lock for mutual exclusion */
@@ -125,10 +171,10 @@ typedef struct free_list {
 } *free_list_t;
 
 /*
- * Free list with index i contains blocks of size 2^(i+3) including header.
- * Smallest block size is 8, with 4 bytes available to user.
- * Size argument to malloc is a signed integer for sanity checking,
- * so largest block size is 2^31.
+ * Free list with index i contains blocks of size 2 ^ (i + LOG2_MIN_SIZE)
+ * including header.  Smallest block size is MIN_SIZE, with MIN_SIZE -
+ * HEADER_SIZE bytes available to user.  Size argument to malloc is a signed
+ * integer for sanity checking, so largest block size is 2^31.
  */
 #define NBUCKETS	29
 
@@ -173,18 +219,23 @@ more_memory(size, fl)
 	if (size <= vm_page_size) {
 		amount = vm_page_size;
 		n = vm_page_size / size;
-		/*
-		 * We lose vm_page_size - n*size bytes here.  */
+		/* We lose vm_page_size - n*size bytes here.  */
 	} else {
 		amount = size;
 		n = 1;
 	}
-	MACH_CALL(vm_allocate(mach_task_self(), &where, (vm_size_t) amount, TRUE), r);
+
+	r = vm_allocate(mach_task_self(), &where, (vm_size_t) amount, TRUE);
+	assert_perror (r);
+
 	h = (header_t) where;
 	do {
-	  h->next = fl->head;
-	  fl->head = h;
-	  h = (header_t) ((char *) h + size);
+		HEADER_NEXT (h) = fl->head;
+#ifdef MCHECK
+		HEADER_CHECK (h) = CHECK_FREE;
+#endif
+		fl->head = h;
+		h = (header_t) ((char *) h + size);
 	} while (--n != 0);
 }
 
@@ -199,7 +250,7 @@ malloc(size)
 
 	if ((int) size < 0)		/* sanity check */
 		return 0;
-	size += sizeof(union header);
+	size += HEADER_SIZE;
 	/*
 	 * Find smallest power-of-two block size
 	 * big enough to hold requested size plus header.
@@ -232,7 +283,13 @@ malloc(size)
 	/*
 	 * Pop block from free list.
 	 */
-	fl->head = h->next;
+	fl->head = HEADER_NEXT (h);
+
+#ifdef MCHECK
+	assert (HEADER_CHECK (h) == CHECK_FREE);
+	HEADER_CHECK (h) = CHECK_BUSY;
+#endif
+
 #ifdef	DEBUG
 	fl->in_use += 1;
 #endif	DEBUG
@@ -242,11 +299,11 @@ malloc(size)
 	 * so we can figure out where it goes
 	 * at free() time.
 	 */
-	h->fl = fl;
+	HEADER_FREE (h) = fl;
 	/*
 	 * Return pointer past the block header.
 	 */
-	return ((char *) h) + sizeof(union header);
+	return ((char *) h) + HEADER_SIZE;
 }
 
 /* Declaration changed to standard one for GNU.  */
@@ -263,8 +320,13 @@ free(base)
 	/*
 	 * Find free list for block.
 	 */
-	h = (header_t) (base - sizeof(union header));
-	fl = h->fl;
+	h = (header_t) (base - HEADER_SIZE);
+
+#ifdef MCHECK
+	assert (HEADER_CHECK (h) == CHECK_BUSY);
+#endif	
+
+	fl = HEADER_FREE (h);
 	i = fl - malloc_free_list;
 	/*
 	 * Sanity checks.
@@ -281,7 +343,10 @@ free(base)
 	 * Push block on free list.
 	 */
 	spin_lock(&fl->lock);
-	h->next = fl->head;
+	HEADER_NEXT (h) = fl->head;
+#ifdef MCHECK
+	HEADER_CHECK (h) = CHECK_FREE;
+#endif	
 	fl->head = h;
 #ifdef	DEBUG
 	fl->in_use -= 1;
@@ -308,8 +373,11 @@ realloc(old_base, new_size)
 	/*
 	 * Find size of old block.
 	 */
-	h = (header_t) (old_base - sizeof(union header));
-	fl = h->fl;
+	h = (header_t) (old_base - HEADER_SIZE);
+#ifdef MCHECK
+	assert (HEADER_CHECK (h) == CHECK_BUSY);
+#endif
+	fl = HEADER_FREE (h);
 	i = fl - malloc_free_list;
 	/*
 	 * Sanity checks.
@@ -323,16 +391,29 @@ realloc(old_base, new_size)
 		return 0;
 	}
 	/*
-	 * Free list with index i contains blocks of size 2^(i+3) including header.
+	 * Free list with index i contains blocks of size
+	 * 2 ^ (i + * LOG2_MIN_SIZE) including header.
 	 */
-	old_size = (1 << (i+3)) - sizeof(union header);
+	old_size = (1 << (i + LOG2_MIN_SIZE)) - HEADER_SIZE;
+
+	if (new_size <= old_size
+	    && new_size > (((old_size + HEADER_SIZE) >> 1) - HEADER_SIZE))
+	  /* The new size still fits in the same block, and wouldn't fit in
+	     the next smaller block!  */
+	  return old_base;
+
 	/*
 	 * Allocate new block, copy old bytes, and free old block.
 	 */
 	new_base = malloc(new_size);
-	if (new_base != 0)
-		bcopy(old_base, new_base, (int) (old_size < new_size ? old_size : new_size));
-	free(old_base);
+	if (new_base)
+	  bcopy(old_base, new_base,
+		(int) (old_size < new_size ? old_size : new_size));
+
+	if (new_base || new_size == 0)
+	  /* Free OLD_BASE, but only if the malloc didn't fail.  */
+	  free (old_base);
+
 	return new_base;
 }
 
@@ -354,7 +435,7 @@ print_malloc_free_list()
 		spin_lock(&fl->lock);
 		if (fl->in_use != 0 || fl->head != 0) {
 			total_used += fl->in_use * size;
-			for (n = 0, h = fl->head; h != 0; h = h->next, n += 1)
+			for (n = 0, h = fl->head; h != 0; h = HEADER_NEXT (h), n += 1)
 				;
 			total_free += n * size;
 			fprintf(stderr, "%10d %10d %10d %10d\n",

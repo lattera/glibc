@@ -65,6 +65,8 @@ static char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <netdb.h>
 #include <resolv.h>
 #include <ctype.h>
@@ -823,7 +825,7 @@ _gethtent()
 }
 
 struct hstorage {
-	char	name[MAXHOSTNAMELEN + 1];	/* canonical name */
+	char	*name;				/* canonical name */
 	char **	alp;				/* address list pointer */
 	char *	abp;				/* address buffer pointer */
 	char *	addr_list[MAXADDRS + 1];	/* address list storage */
@@ -891,20 +893,53 @@ _gethtbyname2(name, af)
 		 * interface changes to make these functions
 		 * reentrant.
 		 */
-		static char * aliases[2];
-		static char alias[MAXHOSTNAMELEN + 1];
-		static struct hstorage self, target;
+		static char *aliases[2] = {0};
+		static struct hstorage self = {0}, target = {0};
+		static size_t self_name_size = 0; /* Allocated in self.name. */
 		static struct hostent ht;
 		int found;
 
+		if (aliases[0])
+			free (aliases[0]);	/* Malloced in a prev call.  */
 		aliases[0] = aliases[1] = 0;
 
-		gethostname(self.name, sizeof(self.name));
+		/* Get current host name in a large enough buffer.  */
+		do {
+			   errno = 0;
+
+			   if (self.name)
+			   {
+				   self_name_size += self_name_size;
+				   self.name =
+					   realloc (self.name, self_name_size);
+			   } else {
+				   self_name_size = 128; /* Initial guess */
+				   self.name = malloc (self_name_size);
+			   }
+
+			   if (! self.name)
+			   {
+				   errno = ENOMEM;
+				   return 0;
+			   }
+		   } while ((gethostname(self.name, self_name_size) == 0
+			     && !memchr (self.name, '\0', self_name_size))
+			    || errno == ENAMETOOLONG);
+		
+		if (errno)
+			/* gethostname failed, abort.  */
+		{
+			free (self.name);
+			self.name = 0;
+		}
+
 		self.alp = self.addr_list;
 		self.abp = self.addr_buf;
 
-		strncpy(target.name, name, MAXHOSTNAMELEN);
-		target.name[MAXHOSTNAMELEN] = '\0';
+		if (target.name)
+			free (target.name);
+		target.name = strdup (name);
+
 		target.alp = target.addr_list;
 		target.abp = target.addr_buf;
 
@@ -920,13 +955,10 @@ _gethtbyname2(name, af)
 					if (strcasecmp(*cp, name) == 0) {
 						found = 1;
 						if (!aliases[0]) {
-							strcpy(target.name,
-							       p->h_name);
-							strncpy(alias, name,
-								MAXHOSTNAMELEN);
-							alias[MAXHOSTNAMELEN]
-								= '\0';
-							aliases[0] = alias;
+							aliases[0] =
+							  target.name;
+							target.name =
+							  strdup (p->h_name);
 						}
 						break;
 					}

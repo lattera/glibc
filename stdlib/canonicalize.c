@@ -47,7 +47,7 @@ canonicalize (const char *name, char *resolved)
 #ifdef PATH_MAX
       path_max = PATH_MAX;
 #else
-      path_max = sysconf (_SC_PATH_MAX);
+      path_max = pathconf (name, _PC_PATH_MAX);
       if (path_max <= 0)
 	path_max = 1024;
 #endif

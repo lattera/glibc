@@ -1,3 +1,43 @@
+Thu Jun  6 07:32:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* resolv/gethnamaddr.c (struct hstorage): Make NAME field a pointer.
+	(_gethtbyname2): Remove ALIAS variable.
+	Initialize NAME field of SELF and TARGET to 0.
+	Add SELF_NAME_SIZE static variable.
+	Add loop to call gethostname until the space we allocated is enough.
+	Use malloced strings instead of fixed size buffers.
+	<stdlib.h>, <unistd.h>: New includes.
+	* sysdeps/generic/sys/socket.h (PF_INET6, AF_INET6): New macros.
+
+	* sysdeps/mach/hurd/errlist.c (_sys_errlist): Add EILSEQ.
+	(_sys_nerr): Initialize to 107.
+	Update _HURD_ERRNOS consistency check.
+
+	* stdlib/canonicalize.c (canonicalize): Use pathconf for PATH_MAX,
+	not sysconf.
+
+	* login/login.c [!PATH_MAX] (PATH_MAX): Define to be 1024 if not
+	already defined.
+
+	* sysdeps/mach/hurd/setitimer.c (timer_thread): Supply SIGCODE
+	argument to __msg_sig_post_request.
+
+	* hurd/hurdmalloc.c: Changes to bring in line with the hurd
+	libthreads/malloc.c:
+	(more_memory): Use assert_perror instead of MACH_CALL.
+	"cthread_internals.h": Include removed.
+	(realloc): Use LOG2_MIN_SIZE.
+	(LOG2_MIN_SIZE): New macro.
+	(realloc): Don't bother allocating a new block if the
+ 	new size request fits in the old one and doesn't waste any space.
+  	Only free the old block if we successfully got a new one.
+	[MCHECK] (struct header): New type.
+	(union header): Only define if !MCHECK.
+	(HEADER_SIZE, HEADER_NEXT, HEADER_FREE, HEADER_CHECK): New macros.
+	[MCHECK] (MIN_SIZE): Add correct definition for this case.
+	(more_memory, malloc, free, realloc): Use above macros, and add
+	appropiate checks & frobs in MCHECK case.
+
 Thu Jun  6 02:00:42 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* Makerules (distinfo-vars): Don't write constant line to frob sources.

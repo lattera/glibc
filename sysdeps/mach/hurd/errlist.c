@@ -113,12 +113,13 @@ const char *_sys_errlist[] =
     "You really blew it this time",     /* 103 = EGREGIOUS */
     "Computer bought the farm",         /* 104 = EIEIO */
     "Gratuitous error",                 /* 105 = EGRATUITOUS */
+    "Invalid or incomplete multibyte or wide character", /* 106 = EILSEQ */
   };
 
 #include <errno.h>
-#if _HURD_ERRNOS != 106
+#if _HURD_ERRNOS != 107
 #error errlist/errnos generation bug
 #endif
-const int _sys_nerr = 106;
+const int _sys_nerr = 107;
 weak_alias (_sys_errlist, sys_errlist)
 weak_alias (_sys_nerr, sys_nerr)

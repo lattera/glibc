@@ -88,7 +88,7 @@ timer_thread (void)
 	  __msg_sig_post_request (_hurd_msgport,
 				  _hurd_itimer_port,
 				  MACH_MSG_TYPE_MAKE_SEND_ONCE,
-				  SIGALRM, __mach_task_self ());
+				  SIGALRM, 0, __mach_task_self ());
 	  break;
 
 	case MACH_RCV_INTERRUPTED:

@@ -23,6 +23,10 @@ Boston, MA 02111-1307, USA.  */
 #include <unistd.h>
 #include <utmp.h>
 
+/* XXX used for tty name array in login.  */
+#ifndef PATH_MAX
+#define PATH_MAX 1024
+#endif
 
 void
 login (const struct utmp *ut)
