@@ -34,6 +34,8 @@ Cambridge, MA 02139, USA.  */
      asm volatile ("mov %0,$30; jmp $31, %1; ldgp $29, 0(%1)" \
 		   : : "r" (__sp), "r" (__fn)); })
 
+#define ENTRY(name) LEAF(name, ***loser no arg count***)
+
 #define STACK_GROWTH_DOWN
 
 #include_next <sysdep.h>
