@@ -1,0 +1,10 @@
+libnss_hesiod {
+  GLIBC_2.1 {
+    _nss_hesiod_setpwent; _nss_hesiod_endpwent;
+    _nss_hesiod_getpwnam_r; _nss_hesiod_getpwuid;
+    _nss_hesiod_setgrent; _nss_hesiod_endgrent;
+    _nss_hesiod_getgrnam_r; _nss_hesiod_getgrgid;
+    _nss_hesiod_setservent; _nss_hesiod_endservent;
+    _nss_hesiod_getservbyname_r;
+  }
+}

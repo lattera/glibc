@@ -1,0 +1,76 @@
+libc {
+  GLIBC_2.0 {
+    # functions used in inline functions or macros
+    __cmsg_nxthdr;
+
+    # functions used in other libraries
+    __clone;
+
+    # b*
+    bdflush;
+
+    # c*
+    clone; create_module;
+
+    # d*
+    delete_module;
+
+    # g*
+    get_kernel_syms; getresgid; getresuid;
+
+    # i*
+    init_module;
+
+    # k*
+    klogctl;
+
+    # l*
+    llseek;
+
+    # m*
+    mremap;
+
+    # n*
+    nfsservctl;
+
+    # p*
+    personality; prctl;
+
+    # q*
+    query_module; quotactl;
+
+    # r*
+    reboot;
+
+    # s*
+    setfsgid; setfsuid;
+
+    # s*
+    setresgid; setresuid; shutdown; swapoff; swapon; sysctl;
+
+    # u*
+    umount; uselib;
+  }
+  GLIBC_2.1 {
+    # functions used in inline functions or macros
+    __libc_sa_len;
+
+    # functions used in other libraries
+    __syscall_rt_sigqueueinfo;
+
+    # Since we have new signals this structure changed.
+    _sys_siglist; sys_siglist; sys_sigabbrev;
+
+    # New errlist.
+    _sys_errlist; sys_errlist; _sys_nerr; sys_nerr;
+
+    # chown interface change.
+    chown;
+
+    # Change in pthread_attr_t.
+    pthread_attr_init;
+
+    # c*
+    capget; capset;
+  }
+}

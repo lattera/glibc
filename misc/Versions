@@ -1,0 +1,102 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    ___brk_addr; __curbrk; __progname; __progname_full;
+
+    # functions which have an additional interface since they are
+    # are cancelable.
+    __libc_fsync; __libc_msync;
+
+    # interface of malloc functions
+    __sbrk; __getpagesize;
+
+    # functions used in other libraries
+    __select;
+
+    # variables in normal name space
+    error_message_count; error_one_per_line; error_print_progname;
+
+    # variables in normal name space
+    loc1; loc2; locs;
+    program_invocation_name; program_invocation_short_name;
+
+    # a*
+    acct; addmntent; advance;
+
+    # c*
+    chflags; chroot; closelog;
+
+    # d*
+    daemon; dirname;
+
+    # e*
+    ecvt; ecvt_r; endfsent; endmntent; endttyent; endusershell;
+
+    # e*
+    err; error; error_at_line; errx;
+
+    # f*
+    fchflags; fcvt; fcvt_r; fdatasync; fsync; ftruncate;
+
+    # g*
+    gcvt; get_avphys_pages; get_nprocs; get_nprocs_conf; get_phys_pages;
+    getfsent; getfsfile; getfsspec; gethostid; gethostname; getmntent;
+    getmntent_r; getpagesize; getpass; getttyent; getttynam; getusershell;
+    gtty;
+
+    # h*
+    hasmntopt; hcreate; hcreate_r; hdestroy; hdestroy_r; hsearch; hsearch_r;
+
+    # i*
+    insque; ioctl;
+
+    # j*
+    jrand48; jrand48_r; lfind; lsearch;
+
+    # m*
+    madvise; mkstemp; mktemp; mlock; mlockall; mmap; mount; mprotect; msync;
+    munlock; munlockall; munmap;
+
+    # o*
+    openlog;
+
+    # p*
+    ptrace;
+
+    # q*
+    qecvt; qecvt_r; qfcvt; qfcvt_r; qgcvt;
+
+    # r*
+    readv; remque; revoke;
+
+    # s*
+    select; setdomainname; setfsent; sethostent; sethostid; sethostname;
+    setlogmask; setmntent; setregid; setreuid; setttyent; setusershell; sstk;
+    stty; sync; syscall; syslog;
+
+    # t*
+    tdelete; tfind; truncate; tsearch; ttyslot; twalk;
+
+    # u*
+    ualarm; usleep; ustat; utimes;
+
+    # v*
+    verr; verrx; vhangup; vsyslog; vwarn; vwarnx;
+
+    # w*
+    warn; warnx;
+
+    # w*
+    writev;
+  }
+  GLIBC_2.1 {
+    # f*
+    ftruncate64;
+
+    # m*
+    mmap64;
+
+    # t*
+    tdestroy; truncate64;
+  }
+}

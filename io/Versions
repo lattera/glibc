@@ -1,0 +1,83 @@
+libc {
+  GLIBC_2.0 {
+    # functions which have an additional interface since they are
+    # are cancelable.
+    __libc_open; __libc_close; __libc_read; __libc_write;
+    __libc_lseek; __libc_fcntl;
+
+    # functions used in inline functions or macros
+    __xstat; __fxstat; __lxstat; __xmknod; __write; __close; __fcntl;
+    __lseek; __open; __read;
+
+    # a*
+    access;
+
+    # c*
+    chdir; chmod; chown; close; creat;
+
+    # d*
+    dup; dup2;
+
+    # e*
+    euidaccess;
+
+    # f*
+    fchdir; fchmod; fchown; fcntl; flock; fstatfs; fts_children; fts_close;
+    fts_open; fts_read; fts_set; ftw;
+
+    # g*
+    get_current_dir_name; getcwd; getwd;
+
+    # i*
+    isatty;
+
+    # l*
+    lchown; link; lockf; lseek;
+
+    # m*
+    mkdir; mkfifo;
+
+    # o*
+    open;
+
+    # p*
+    pipe; poll;
+
+    # r*
+    read; readlink; rmdir;
+
+    # s*
+    statfs; symlink;
+
+    # t*
+    ttyname; ttyname_r;
+
+    # u*
+    umask; unlink; utime;
+
+    # w*
+    write;
+  }
+  GLIBC_2.1 {
+    # functions used in other libraries
+    __xstat64; __fxstat64; __lxstat64; __poll;
+
+    # c*
+    creat64;
+
+    # f*
+    fstatfs64; fstatvfs; fstatvfs64; ftw64;
+
+    # l*
+    lockf64; lseek64;
+
+    # n*
+    nftw; nftw64;
+
+    # o*
+    open64;
+
+    # s*
+    statfs64; statvfs; statvfs64;
+  }
+}

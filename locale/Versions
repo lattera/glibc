@@ -1,0 +1,29 @@
+libBrokenLocale {
+  GLIBC_2.0 {
+    __ctype_get_mb_cur_max;
+  }
+}
+
+libc {
+  GLIBC_2.0 {
+    # global variables
+    __collate_element_hash; __collate_element_strings;
+    __collate_symbol_classes; __collate_symbol_hash; __collate_symbol_strings;
+    _libc_intl_domainname; _nl_current_LC_COLLATE; _nl_current_LC_CTYPE;
+
+    # functions from the experimental locale implementation
+    __*_l; __newlocale; __duplocale; __freelocale;
+
+    # functions used in inline functions or macros
+    __ctype_get_mb_cur_max;
+
+    # l*
+    localeconv;
+
+    # n*
+    nl_langinfo;
+
+    # s*
+    setlocale;
+  }
+}

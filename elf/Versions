@@ -1,0 +1,35 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    _dl_debug_impcalls; _dl_debug_fd;
+
+    # functions used in other libraries
+    _dl_open; _dl_close; _dl_addr; _dl_sysdep_output; _dl_debug_message;
+
+    # Those are in the dynamic linker, but used by libc.so.
+    __libc_enable_secure; _dl_catch_error; _dl_check_all_versions;
+    _dl_debug_initialize; _dl_debug_state; _dl_default_scope;
+    _dl_global_scope_end; _dl_init_next; _dl_lookup_symbol;
+    _dl_map_object; _dl_map_object_deps; _dl_object_relocation_scope;
+    _dl_relocate_object; _dl_signal_error; _dl_starting_up;
+    _dl_sysdep_start; _r_debug;
+    _dl_global_scope; _dl_lookup_symbol_skip;
+    _dl_lookup_versioned_symbol; _dl_lookup_versioned_symbol_skip;
+  }
+  GLIBC_2.1 {
+    # global variables
+    _dl_profile; _dl_profile_map; _dl_profile_output; _dl_start_profile;
+
+    # functions used in other libraries
+    _dl_mcount; _dl_mcount_wrapper;
+  }
+}
+
+libdl {
+  GLIBC_2.0 {
+    dladdr; dlclose; dlerror; dlopen; dlsym;
+  }
+  GLIBC_2.1 {
+    dlvsym;
+  }
+}

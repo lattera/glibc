@@ -1,0 +1,52 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    __timezone; __daylight; __tzname;
+
+    # functions with special/multiple interfaces
+    __adjtimex;
+
+    # functions used in other libraries
+    __gmtime_r; __gettimeofday;
+
+    # variables in normal name space
+    daylight; timezone; tzname;
+
+    # a*
+    adjtime; adjtimex; asctime; asctime_r;
+
+    # c*
+    clock; ctime; ctime_r;
+
+    # d*
+    difftime; dysize;
+
+    # f*
+    ftime;
+
+    # g*
+    getitimer; gettimeofday; gmtime; gmtime_r;
+
+    # l*
+    localtime; localtime_r;
+
+    # m*
+    mktime;
+
+    # s*
+    setitimer; settimeofday; stime; strftime; strptime;
+
+    # t*
+    time; timegm; timelocal; tzset;
+  }
+  GLIBC_2.1 {
+    # variables in normal name space
+    getdate_err;
+
+    # g*
+    getdate; getdate_r; getitimer;
+
+    # s*
+    strfxtime;
+  }
+}

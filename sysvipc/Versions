@@ -1,0 +1,12 @@
+libc {
+  GLIBC_2.0 {
+    # f*
+    ftok;
+
+    # m*
+    msgctl; msgget; msgrcv; msgsnd;
+
+    # s*
+    semctl; semget; semop; shmat; shmctl; shmdt; shmget;
+  }
+}

@@ -1,0 +1,49 @@
+libc {
+  GLIBC_2.0 {
+    # Unfortunately in wider use.
+    _inb; _inw; _inl; _outb; _outw; _outl; _bus_base; _bus_base_sparse;
+    _hae_shift;
+
+    # b*
+    bus_base; bus_base_sparse;
+
+    # h*
+    hae_shift;
+
+    # i*
+    inb; inl; inw; ioperm; iopl;
+
+    # o*
+    outb; outl; outw;
+
+    # p*
+    pciconfig_read; pciconfig_write; sethae;
+  }
+  GLIBC_2.1 {
+    # Linux/Alpha 64-bit timeval functions.
+    __select; select;
+    adjtime; adjtimex; __adjtimex;
+    __gettimeofday;
+
+    # glob interface change
+    glob; globfree;
+
+    # limit type change
+    getrusage;
+
+    # time type change
+    gettimeofday;
+
+    # i*
+    ieee_get_fp_control; ieee_set_fp_control;
+
+    # s*
+    setitimer; settimeofday;
+
+    # u*
+    utimes;
+
+    # w*
+    wait4;
+  }
+}

@@ -1,0 +1,53 @@
+libc {
+  GLIBC_2.0 {
+    # functions with required interface outside normal name space
+    __argz_count; __argz_stringify; __argz_next;
+
+    # functions used in inline functions or macros
+    __bzero; __strtok_r;
+
+    # functions used in other libraries
+    __stpncpy; __stpcpy; __strdup; __mempcpy; __strcasecmp; __strerror_r;
+    __ffs;
+
+    # a*
+    argz_add; argz_add_sep; argz_append; argz_count; argz_create;
+    argz_create_sep; argz_delete; argz_extract; argz_insert; argz_next;
+    argz_replace; argz_stringify;
+
+    # b*
+    basename; bcmp; bcopy; bzero;
+
+    # e*
+    envz_add; envz_entry; envz_get; envz_merge; envz_remove;
+    envz_strip;
+
+    # f*
+    ffs;
+
+    # i*
+    index;
+
+    # m*
+    memccpy; memchr; memcmp; memcpy; memfrob; memmem; memmove; memset;
+
+    # r*
+    rindex;
+
+    # s*
+    stpcpy; stpncpy; strcasecmp; strcat; strchr; strcmp; strcoll; strcpy;
+    strcspn; strdup; strerror; strerror_r; strfry; strlen; strncasecmp;
+    strncat; strncmp; strncpy; strndup; strnlen; strpbrk; strrchr; strsep;
+    strsignal; strspn; strstr; strtok; strtok_r; strxfrm; swab;
+  }
+  GLIBC_2.1 {
+    # functions used in other libraries
+    __strcasestr;
+
+    # m*
+    mempcpy;
+
+    # s*
+    strcasestr; strverscmp;
+  }
+}

@@ -66,7 +66,7 @@ libmd5crypt: $(objpfx)libmd5crypt.so
 # drop in replacement.
 LDFLAGS-md5crypt.so = -Wl,-soname=lib$(libprefix)crypt.so$(libcrypt.so-version)
 # We also use the same version script.
-libmd5crypt-map := libcrypt.map
+libmd5crypt-map := $(common-objpfx)libcrypt.map
 endif
 
 define o-iterator-doit

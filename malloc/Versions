@@ -1,0 +1,47 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    _obstack;
+
+    # interface of malloc functions
+    __libc_calloc; __libc_free; __libc_mallinfo; __libc_malloc;
+    __libc_mallopt; __libc_memalign; __libc_pvalloc; __libc_realloc;
+    __libc_valloc;
+    __malloc_initialize_hook; __free_hook; __malloc_hook; __realloc_hook;
+    __memalign_hook; __after_morecore_hook;
+    __malloc_initialized; __default_morecore; __morecore;
+
+    # functions used in inline functions or macros
+    _obstack_allocated_p; _obstack_begin; _obstack_begin_1;
+    _obstack_free; _obstack_memory_used; _obstack_newchunk;
+
+    # variables in normal name space
+    mallwatch; obstack_alloc_failed_handler; obstack_exit_failure;
+
+    # c*
+    calloc; cfree;
+
+    # f*
+    free;
+
+    # m*
+    mallinfo; malloc; malloc_get_state; malloc_set_state; malloc_stats;
+    malloc_trim; malloc_usable_size; mallopt; memalign; mprobe; mtrace;
+    muntrace;
+
+    # o*
+    obstack_free;
+
+    # p*
+    pvalloc;
+
+    # r*
+    realloc;
+
+    # t*
+    tr_break;
+
+    # v*
+    valloc;
+  }
+}

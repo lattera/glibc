@@ -1,0 +1,35 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    _itoa_lower_digits; _itoa_upper_digits; _sys_errlist; _sys_nerr;
+    _sys_siglist;
+
+    # functions used in other libraries
+    __printf_fp; __vfscanf;
+
+    # variables in normal name space
+    sys_errlist; sys_nerr; sys_sigabbrev; sys_siglist;
+
+    # c*
+    ctermid; cuserid;
+
+    # p*
+    parse_printf_format; perror;
+
+    # r*
+    register_printf_function; remove; rename;
+
+    # t*
+    tempnam; tmpfile; tmpnam; tmpnam_r;
+
+    # v*
+    vfprintf; vfscanf;
+  }
+  GLIBC_2.1 {
+    # p*
+    printf_size; printf_size_info;
+
+    # t*
+    tmpfile64;
+  }
+}

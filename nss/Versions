@@ -1,0 +1,105 @@
+libc {
+  GLIBC_2.0 {
+     # functions used in other libraries
+    __nss_passwd_lookup; __nss_group_lookup; __nss_next;
+    _nss_files_parse_grent; _nss_files_parse_pwent; _nss_files_parse_spent;
+    __nss_database_lookup; __nss_configure_lookup;
+  }
+}
+
+libnss_db {
+  GLIBC_2.0 {
+    _nss_db_endaliasent; _nss_db_endetherent; _nss_db_endgrent;
+    _nss_db_endnetgrent; _nss_db_endprotoent; _nss_db_endpwent;
+    _nss_db_endrpcent; _nss_db_endservent; _nss_db_endspent;
+    _nss_db_getaliasbyname_r; _nss_db_getaliasent_r; _nss_db_getetherent_r;
+    _nss_db_getgrent_r; _nss_db_getgrgid_r; _nss_db_getgrnam_r;
+    _nss_db_gethostton_r; _nss_db_getnetgrent_r; _nss_db_getntohost_r;
+    _nss_db_getprotobyname_r; _nss_db_getprotobynumber_r;
+    _nss_db_getprotoent_r; _nss_db_getpwent_r; _nss_db_getpwnam_r;
+    _nss_db_getpwuid_r; _nss_db_getrpcbyname_r; _nss_db_getrpcbynumber_r;
+    _nss_db_getrpcent_r; _nss_db_getservbyname_r; _nss_db_getservbyport_r;
+    _nss_db_getservent_r; _nss_db_getspent_r; _nss_db_getspnam_r;
+    _nss_db_setaliasent; _nss_db_setetherent; _nss_db_setgrent;
+    _nss_db_setnetgrent; _nss_db_setprotoent; _nss_db_setpwent;
+    _nss_db_setrpcent; _nss_db_setservent; _nss_db_setspent;
+  }
+}
+
+libnss_files {
+  GLIBC_2.0 {
+    _nss_files_setaliasent;
+    _nss_files_endaliasent;
+    _nss_files_getaliasbyname_r;
+    _nss_files_getaliasent_r;
+
+    _nss_files_setetherent;
+    _nss_files_endetherent;
+    _nss_files_getetherent_r;
+    _nss_files_parse_etherent;
+
+    _nss_files_setgrent;
+    _nss_files_endgrent;
+    _nss_files_getgrent_r;
+    _nss_files_getgrgid_r;
+    _nss_files_getgrnam_r;
+
+    _nss_files_sethostent;
+    _nss_files_endhostent;
+    _nss_files_gethostbyaddr_r;
+    _nss_files_gethostbyname2_r;
+    _nss_files_gethostbyname_r;
+    _nss_files_gethostent_r;
+    _nss_files_gethostton_r;
+
+    _nss_files_setnetent;
+    _nss_files_endnetent;
+    _nss_files_getnetbyaddr_r;
+    _nss_files_getnetbyname_r;
+    _nss_files_getnetent_r;
+    _nss_files_getntohost_r;
+    _nss_files_parse_netent;
+
+    _nss_files_setnetgrent;
+    _nss_files_endnetgrent;
+    _nss_files_getnetgrent_r;
+
+    _nss_files_setprotoent;
+    _nss_files_endprotoent;
+    _nss_files_getprotobyname_r;
+    _nss_files_getprotobynumber_r;
+    _nss_files_getprotoent_r;
+    _nss_files_parse_protoent;
+
+    _nss_files_setpwent;
+    _nss_files_endpwent;
+    _nss_files_getpwent_r;
+    _nss_files_getpwnam_r;
+    _nss_files_getpwuid_r;
+
+    _nss_files_setrpcent;
+    _nss_files_endrpcent;
+    _nss_files_getrpcbyname_r;
+    _nss_files_getrpcbynumber_r;
+    _nss_files_getrpcent_r;
+    _nss_files_parse_rpcent;
+
+    _nss_files_setservent;
+    _nss_files_endservent;
+    _nss_files_getservbyname_r;
+    _nss_files_getservbyport_r;
+    _nss_files_getservent_r;
+    _nss_files_parse_servent;
+
+    _nss_files_setspent;
+    _nss_files_endspent;
+    _nss_files_getspent_r;
+    _nss_files_getspnam_r;
+
+    _nss_netgroup_parseline;
+  }
+  GLIBC_2.1 {
+    _nss_files_getpublickey;
+    _nss_files_getsecretkey;
+  }
+}

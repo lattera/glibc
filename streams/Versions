@@ -1,0 +1,15 @@
+libc {
+  GLIBC_2.1 {
+    # f*
+    fattach; fdetach;
+
+    # g*
+    getmsg; getpmsg;
+
+    # i*
+    isastream;
+
+    # p*
+    putmsg; putpmsg;
+  }
+}

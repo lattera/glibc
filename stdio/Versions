@@ -1,0 +1,6 @@
+libc {
+  GLIBC_2.0 {
+    # more or less standard functions
+    __fillbf; __flshfp;
+  }
+}

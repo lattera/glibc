@@ -1,0 +1,15 @@
+libc {
+  GLIBC_2.0 {
+    # functions with special/multiple interfaces
+    _mcount;
+
+    # Profiling support
+    __monstartup; _mcleanup; __profile_frequency;
+
+    # m*
+    moncontrol; monstartup;
+
+    # p*
+    profil; profil_counter;
+  }
+}

@@ -1,0 +1,44 @@
+libc {
+  GLIBC_2.0 {
+    # functions with special/multiple interfaces
+    __sigaddset; __sigdelset; __sigismember; __sysv_signal;
+
+    # functions used in inline functions or macros
+    __sigpause;
+
+    # functions used in other libraries
+     __sigaction;
+
+    # b*
+    bsd_signal;
+
+    # g*
+    gsignal;
+
+    # k*
+    kill; killpg;
+
+    # p*
+    psignal;
+
+    # r*
+    raise;
+
+    # s*
+    sigaction; sigaddset; sigaltstack; sigandset; sigblock; sigdelset;
+    sigemptyset; sigfillset; siggetmask; siginterrupt; sigisemptyset;
+    sigismember; siglongjmp; signal; sigorset; sigpause; sigpending;
+    sigprocmask; sigreturn; sigsetmask; sigstack; sigsuspend; sigvec;
+    sigwait; ssignal;
+  }
+  GLIBC_2.1 {
+    # helper functions
+    __libc_current_sigrtmin; __libc_current_sigrtmax; __libc_allocate_rtsig;
+
+    # s*
+    sighold; sigrelse; sigignore; sigset; sysv_signal;
+
+    # New RT signal functions.
+    sigqueue; sigtimedwait; sigwaitinfo;
+  }
+}

@@ -53,8 +53,8 @@ __backtrace_symbols (array, size)
 	   "<fct-name>(<sym-name>)[+offset].  */
 	total += (strlen (info[cnt].dli_fname ?: "")
 		  + (info[cnt].dli_sname
-		     ? strlen (info[cnt].dli_sname) + 2
-		     : 0)
+		     ? strlen (info[cnt].dli_sname) + 3
+		     : 1)
 		  + WORD_WIDTH + 6);
       else
 	total += 6 + WORD_WIDTH;

@@ -325,8 +325,8 @@ ifeq (yes,$(build-shared))
 # Reference map file only when versioning is selected and a map file name
 # is given.
 ifeq ($(versioning),yes)
-map-file = $(firstword $(wildcard \
-		$($(@F:.so=-map)) $(@F:.so=.map) $(..)$(@F:.so=.map)))
+map-file = $(firstword $(wildcard $($(@F:.so=-map)) \
+				  $(common-objpfx)$(@F:.so=.map)))
 load-map-file = $(map-file:%=-Wl,--version-script=%)
 endif
 
@@ -345,7 +345,7 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  $(LDFLAGS.so) $(LDFLAGS-$(@F:lib%.so=%).so) \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive \
-	  $(filter-out $(map-file) $(+preinit) $(+postinit),$^) \
+	  $(filter-out $(map-file) $(@F:.so=.map) $(+preinit) $(+postinit),$^) \
 	  $(no-whole-archive) $(LDLIBS-$(@F:lib%.so=%).so)
 endef
 
@@ -386,7 +386,7 @@ $(common-objpfx)libc.so: $(elfobjdir)/soinit.os \
 			 $(common-objpfx)libc_pic.os \
 			 $(elfobjdir)/sofini.os \
 			 $(elfobjdir)/interp.os $(elfobjdir)/ld.so \
-			 $(..)libc.map
+			 $(common-objpfx)libc.map
 	$(build-shlib)
 common-generated += libc.so libc_pic.os
 ifdef libc.so-version

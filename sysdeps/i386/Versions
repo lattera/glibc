@@ -1,0 +1,6 @@
+libc {
+  GLIBC_2.1 {
+    # global variable
+    _fp_hw;
+  }
+}

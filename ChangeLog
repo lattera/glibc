@@ -1,4 +1,105 @@
+1998-07-02 21:51  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig: Define list of subdirs as all-subdirs and make subdirs
+	a copy.
+	* Makefile: Add rules to generate map files.
+	(distribute): Remove libc.map, add Versions.def and versions.awk.
+	* Makerules: Change rules to find map files on common-objpfx.
+	* elf/Makefile: Likewise.
+	* md5-crypt/Makefile: Likewise.
+	* nis/Makefile (libnsl-map): Remove.
+	* Versions.def: New file.
+	* versions.awk: New file.
+	* argp/Versions: New file.
+	* assert/Versions: New file.
+	* catgets/Versions: New file.
+	* csu/Versions: New file.
+	* ctype/Versions: New file.
+	* db/Versions: New file.
+	* debug/Versions: New file.
+	* dirent/Versions: New file.
+	* elf/Versions: New file.
+	* gmon/Versions: New file.
+	* grp/Versions: New file.
+	* hesiod/Versions: New file.
+	* hurd/Versions: New file.
+	* iconv/Versions: New file.
+	* inet/Versions: New file.
+	* intl/Versions: New file.
+	* io/Versions: New file.
+	* libio/Versions: New file.
+	* linuxthreads/Versions: New file.
+	* locale/Versions: New file.
+	* login/Versions: New file.
+	* malloc/Versions: New file.
+	* math/Versions: New file.
+	* md5-crypt/Versions: New file.
+	* misc/Versions: New file.
+	* nis/Versions: New file.
+	* nss/Versions: New file.
+	* posix/Versions: New file.
+	* pwd/Versions: New file.
+	* resolv/Versions: New file.
+	* resource/Versions: New file.
+	* rt/Versions: New file.
+	* setjmp/Versions: New file.
+	* shadow/Versions: New file.
+	* signal/Versions: New file.
+	* socket/Versions: New file.
+	* stdio/Versions: New file.
+	* stdio-common/Versions: New file.
+	* stdlib/Versions: New file.
+	* streams/Versions: New file.
+	* string/Versions: New file.
+	* sunrpc/Versions: New file.
+	* sysdeps/alpha/Versions: New file.
+	* sysdeps/alpha/fpu/Versions: New file.
+	* sysdeps/i386/Versions: New file.
+	* sysdeps/sparc/Versions: New file.
+	* sysdeps/unix/sysv/Versions: New file.
+	* sysdeps/unix/sysv/linux/Versions: New file.
+	* sysdeps/unix/sysv/linux/alpha/Versions: New file.
+	* sysdeps/unix/sysv/linux/i386/Versions: New file.
+	* sysdeps/unix/sysv/linux/mips/Versions: New file.
+	* sysvipc/Versions: New file.
+	* termios/Versions: New file.
+	* time/Versions: New file.
+	* wcsmbs/Versions: New file.
+	* wctype/Versions: New file.
+	* libc.map: Removed.
+	* db/libdb.map: Removed.
+	* elf/libdl.map: Removed.
+	* hesiod/libnss_hesiod.map: Removed.
+	* hurd/libhurduser.map: Removed.
+	* hurd/libmachuser.map: Removed.
+	* linuxthreads/libpthread.map: Removed.
+	* locale/libBrokenLocale.map: Removed.
+	* login/libutil.map: Removed.
+	* math/libm.map: Removed.
+	* md5-crypt/libcrypt.map: Removed.
+	* nis/libnsl.map: Removed.
+	* nis/libnsl_compat.map: Removed.
+	* nis/libnss_nis.map: Removed.
+	* nis/libnss_nisplus.map: Removed.
+	* nss/libnss_db.map: Removed.
+	* nss/libnss_files.map: Removed.
+	* resolv/libnss_dns.map: Removed.
+	* resolv/libresolv.map: Removed.
+	* rt/librt.map: Removed.
+
+	* elf/dl-load.c (fillin_rpath): Fix test for trusted directory.
+	Fix typos.
+
+	* elf/rtld.c (process_dl_debug): Recognize 'all'.
+	(process_envvars): LD_BIND_NOW must be followed by y, Y, or 1.
+
+	* sysdeps/generic/elf/backtracesyms.c: Allocate string memory of
+	correct size.
+
 1998-07-01  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (get_proc_path): Fix typo
+	in comment.
 
 	* nscd/nscd.c: Include unistd.h.
 

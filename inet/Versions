@@ -1,0 +1,58 @@
+libc {
+  GLIBC_2.0 {
+    # functions with required interface outside normal name space
+    __ivaliduser; __check_rhosts_file; __rcmd_errstr;
+
+    # functions used in other libraries
+    __internal_endnetgrent; __internal_getnetgrent_r;
+    __internal_setnetgrent;
+
+    # variables in normal name space
+    rexecoptions;
+
+    # e*
+    endaliasent; endhostent; endnetent; endnetgrent; endprotoent; endrpcent;
+    endservent;
+
+    # e*
+    ether_aton; ether_aton_r; ether_hostton; ether_line; ether_ntoa;
+    ether_ntoa_r; ether_ntohost;
+
+    # g*
+    getaliasbyname; getaliasbyname_r; getaliasent; getaliasent_r;
+    getdomainname; gethostbyaddr; gethostbyaddr_r; gethostbyname;
+    gethostbyname2; gethostbyname2_r; gethostbyname_r; gethostent;
+    gethostent_r; getnetbyaddr; getnetbyaddr_r; getnetbyname;
+    getnetbyname_r; getnetent; getnetent_r; getnetgrent; getnetgrent_r;
+    getprotobyname; getprotobyname_r; getprotobynumber;
+    getprotobynumber_r; getprotoent; getprotoent_r; getrpcbyname;
+    getrpcbyname_r; getrpcbynumber; getrpcbynumber_r; getrpcent; getrpcent_r;
+    getrpcport; getservbyname; getservbyname_r; getservbyport;
+    getservbyport_r; getservent; getservent_r;
+
+    # h*
+    htonl; htons;
+
+    # i*
+    inet_addr; inet_aton; inet_lnaof; inet_makeaddr; inet_netof; inet_network;
+    inet_nsap_addr; inet_nsap_ntoa; inet_ntoa; inet_ntop; inet_pton; innetgr;
+    iruserok;
+
+    # n*
+    ntohl; ntohs;
+
+    # r*
+    rcmd; rexec; rresvport; ruserok; ruserpass;
+
+    # s*
+    setaliasent; setnetent; setnetgrent; setprotoent; setrpcent; setservent;
+  }
+  GLIBC_2.1 {
+    # variables in normal name space
+    in6addr_any; in6addr_loopback;
+
+    # i*
+    if_freenameindex; if_indextoname; if_nameindex; if_nametoindex;
+    inet6_isipv4mapped;
+  }
+}

@@ -1,0 +1,80 @@
+libc {
+  GLIBC_2.0 {
+    # functions with special/multiple interfaces
+    __bsd_getpgrp; __setpgid; __getpgid;
+
+    # functions which have an additional interface since they are
+    # are cancelable.
+    __libc_wait; __libc_waitpid; __libc_pause; __libc_nanosleep;
+
+    # functions with required interface outside normal name space
+    _exit;
+
+    # functions used in other libraries
+    __sched_get_priority_max; __sched_get_priority_min;
+    __sched_getparam; __sched_getscheduler; __sched_setscheduler;
+    __sched_yield; __fork; __getpid; __wait;
+
+    # variables in normal name space
+    optarg; opterr; optind; optopt; re_max_failures; re_syntax_options;
+
+    # a*
+    alarm;
+
+    # c*
+    confstr;
+
+    # e*
+    execl; execle; execlp; execv; execve; execvp; fexecve;
+
+    # f*
+    fnmatch; fork; fpathconf; freeaddrinfo;
+
+    # g*
+    getaddrinfo; getdtablesize; getegid; geteuid; getgid; getopt; getopt_long;
+    getopt_long_only; getpgid; getpgrp; getpid; getppid; getsid; getuid; glob;
+    glob_pattern_p; globfree; group_member;
+
+    # n*
+    nanosleep;
+
+    # p*
+    pathconf; pause; pselect;
+
+    # r*
+    re_comp; re_compile_fastmap; re_compile_pattern; re_exec; re_match;
+    re_match_2; re_search; re_search_2; re_set_registers; re_set_syntax;
+    regcomp; regerror; regexec; regfree;
+
+    # s*
+    sched_get_priority_max; sched_get_priority_min; sched_getparam;
+    sched_getscheduler; sched_rr_get_interval; sched_setparam;
+    sched_setscheduler; sched_yield; setegid; seteuid; setgid; setlogin;
+    setpgid; setpgrp; setsid; setuid; sleep; sysconf;
+
+    # t*
+    times;
+
+    # u*
+    uname;
+
+    # v*
+    vfork;
+
+    # w*
+    wait; wait3; wait4; waitpid;
+  }
+  GLIBC_2.1 {
+    # functions used in other libraries
+    __pread64; __pwrite64;
+
+    # g*
+    gai_strerror; getnameinfo;
+
+    # p*
+    pread; pread64; pwrite; pwrite64;
+
+    # w*
+    waitid; wordexp; wordfree;
+  }
+}

@@ -1,0 +1,35 @@
+libc {
+  GLIBC_2.0 {
+    # functions which have an additional interface since they are
+    # are cancelable.
+    __libc_accept; __libc_send; __libc_recvfrom;
+    __libc_recvmsg; __libc_sendmsg; __libc_recv; __libc_sendto; __libc_connect;
+
+    # functions used in other libraries
+    __connect; __send;
+
+    # a*
+    accept;
+
+    # b*
+    bind;
+
+    # c*
+    connect;
+
+    # g*
+    getpeername; getsockname; getsockopt;
+
+    # i*
+    isfdtype;
+
+    # l*
+    listen;
+
+    # r*
+    recv; recvfrom; recvmsg;
+
+    # s*
+    send; sendmsg; sendto; setsockopt; socket; socketpair;
+  }
+}

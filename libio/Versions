@@ -1,0 +1,103 @@
+libc {
+  GLIBC_2.0 {
+    # global variables
+    _IO_list_all; _IO_stderr_; _IO_stdin_; _IO_stdout_;
+
+    # functions used in inline functions or macros
+    __getdelim;
+
+    # functions used in inline functions or macros
+    _IO_getc; _IO_peekc_unlocked; _IO_putc; _IO_feof; _IO_ferror;
+    __uflow; __underflow; __overflow;
+
+    # functions used in other libraries
+    __vsscanf; __vsnprintf;
+
+    # libio
+    _IO_adjust_column; _IO_clearerr; _IO_default_doallocate;
+    _IO_default_finish; _IO_default_pbackfail; _IO_default_uflow;
+    _IO_default_xsgetn; _IO_default_xsputn; _IO_do_write;
+    _IO_doallocbuf; _IO_fclose; _IO_fdopen; _IO_feof; _IO_ferror;
+    _IO_fflush; _IO_fgetc; _IO_fgetpos; _IO_fgets; _IO_file_attach;
+    _IO_file_close; _IO_file_close_it; _IO_file_doallocate;
+    _IO_file_fopen; _IO_file_init; _IO_file_jumps; _IO_file_open;
+    _IO_file_overflow; _IO_file_read; _IO_file_seek; _IO_file_seekoff;
+    _IO_file_setbuf; _IO_file_stat; _IO_file_sync; _IO_file_underflow;
+    _IO_file_write; _IO_file_xsputn; _IO_fileno; _IO_flockfile;
+    _IO_flush_all; _IO_flush_all_linebuffered; _IO_fopen; _IO_fprintf;
+    _IO_fputs; _IO_fread; _IO_free_backup_area; _IO_freopen;
+    _IO_fscanf; _IO_fseek; _IO_fsetpos; _IO_ftell; _IO_ftrylockfile;
+    _IO_funlockfile; _IO_fwrite; _IO_getc; _IO_getline; _IO_gets;
+    _IO_init; _IO_init_marker; _IO_link_in; _IO_marker_delta;
+    _IO_marker_difference; _IO_padn; _IO_pclose; _IO_peekc_locked;
+    _IO_perror; _IO_popen; _IO_printf; _IO_proc_close; _IO_proc_open;
+    _IO_putc; _IO_puts; _IO_remove_marker; _IO_rewind; _IO_scanf;
+    _IO_seekmark; _IO_seekoff; _IO_seekpos; _IO_setb; _IO_setbuf;
+    _IO_setbuffer; _IO_setlinebuf; _IO_setvbuf; _IO_sgetn;
+    _IO_sprintf; _IO_sputbackc; _IO_sscanf; _IO_str_init_readonly;
+    _IO_str_init_static; _IO_str_overflow; _IO_str_pbackfail;
+    _IO_str_seekoff; _IO_str_underflow; _IO_sungetc;
+    _IO_switch_to_get_mode; _IO_un_link; _IO_ungetc;
+    _IO_unsave_markers; _IO_vfprintf; _IO_vfscanf; _IO_vsprintf;
+
+    # variables in normal name space
+    stderr; stdin; stdout;
+
+    # a*
+    asprintf;
+
+    # c*
+    clearerr; clearerr_unlocked;
+
+    # d*
+    dprintf;
+
+    # f*
+    fclose; fcloseall; fdopen; feof; feof_locked; feof_unlocked; ferror;
+    ferror_locked; ferror_unlocked; fflush; fflush_locked; fflush_unlocked;
+    fgetc; fgetpos; fgets; fileno; fileno_locked; fileno_unlocked; flockfile;
+    fopen; fopencookie; fprintf; fputc; fputc_locked; fputc_unlocked; fputs;
+    fread; freopen; fscanf; fseek; fsetpos; ftell; ftrylockfile; funlockfile;
+    fwrite;
+
+    # g*
+    getc; getc_locked; getc_unlocked; getchar; getchar_unlocked; getdelim;
+    getline; gets; getw;
+
+    # o*
+    obstack_printf; obstack_vprintf; open_memstream;
+
+    # p*
+    pclose; popen; printf; putc; putc_locked; putc_unlocked; putchar;
+    putchar_unlocked; puts;
+
+    # p*
+    putw; rewind;
+
+    # s*
+    scanf; setbuf; setbuffer; setlinebuf;
+
+    # s*
+    setvbuf; snprintf; sprintf; sscanf;
+
+    # u*
+    ungetc;
+
+    # v*
+    vasprintf; vdprintf; vprintf; vscanf; vsnprintf; vsprintf; vsscanf;
+  }
+  GLIBC_2.1 {
+    # global variables
+    _IO_2_1_stdin_; _IO_2_1_stdout_; _IO_2_1_stderr_;
+
+    # functions used in other libraries
+    _IO_fclose; _IO_fopen; _IO_fdopen; __asprintf;
+
+    # Changed getline function in libio.
+    _IO_getline_info;
+
+    # f*
+    fgetpos64; fopen64; freopen64; fseeko; fseeko64; fsetpos64; ftello;
+    ftello64; fopen; fclose; fdopen;
+  }
+}

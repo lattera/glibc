@@ -1,9 +1,0 @@
-GLIBC_2.0 {
-  global:
-    _nss_dns_gethostbyaddr_r; _nss_dns_gethostbyname2_r;
-    _nss_dns_gethostbyname_r; _nss_dns_getnetbyaddr_r;
-    _nss_dns_getnetbyname_r;
-
-  local:
-    *;
-};

@@ -204,13 +204,14 @@ fillin_rpath (char *rpath, struct r_search_path_elem **result, const char *sep,
 	{
 	  const char **trun = trusted;
 
-	  /* All trusted directory must be complete name.  */
+	  /* All trusted directories must be complete names.  */
 	  if (cp[0] != '/')
 	    continue;
 
 	  while (*trun != NULL
 		 && (memcmp (*trun, cp, len) != 0
-		     || ((*trun)[len] != '/' && (*trun)[len + 1] != '\0')))
+		     || (*trun)[len] != '/'
+		     || (*trun)[len + 1] != '\0'))
 	    ++trun;
 
 	  if (*trun == NULL)
@@ -392,7 +393,7 @@ _dl_init_paths (const char *llp)
   if (rtld_search_dirs[0] == NULL)
     _dl_signal_error (ENOMEM, NULL, "cannot create cache for search path");
 
-  pelem = all_dirs= rtld_search_dirs[0];
+  pelem = all_dirs = rtld_search_dirs[0];
   for (strp = system_dirs; *strp != NULL; ++strp, pelem += round_size)
     {
       size_t cnt;
@@ -904,12 +905,13 @@ open_path (const char *name, size_t namelen, int preloaded,
       return -1;
     }
 
-  buf = __alloca (max_dirnamelen + max_capstrlen + namelen + 1);
+  buf = __alloca (max_dirnamelen + max_capstrlen + namelen);
   do
     {
       struct r_search_path_elem *this_dir = *dirs;
       size_t buflen = 0;
       size_t cnt;
+      char *edp;
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
@@ -919,6 +921,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	  print_search_path (dirs, current_what, this_dir->where);
 	}
 
+      edp = (char *) __mempcpy (buf, this_dir->dirname, this_dir->dirnamelen);
       for (cnt = 0; fd == -1 && cnt < ncapstr; ++cnt)
 	{
 	  /* Skip this directory if we know it does not exist.  */
@@ -926,8 +929,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	    continue;
 
 	  buflen =
-	    ((char *) __mempcpy (__mempcpy (__mempcpy (buf, this_dir->dirname,
-						       this_dir->dirnamelen),
+	    ((char *) __mempcpy (__mempcpy (edp,
 					    capstr[cnt].str, capstr[cnt].len),
 				 name, namelen)
 	     - buf);
@@ -946,12 +948,11 @@ open_path (const char *name, size_t namelen, int preloaded,
 		   test whether there is any directory at all.  */
 		struct stat st;
 
-		buf[this_dir->dirnamelen
-		    + MAX (capstr[cnt].len - 1, 0)] = '\0';
+		buf[buflen - namelen - 1] = '\0';
 
 		if (__xstat (_STAT_VER, buf, &st) != 0
 		    || ! S_ISDIR (st.st_mode))
-		  /* The directory does not exist ot it is no directory.  */
+		  /* The directory does not exist or it is no directory.  */
 		  this_dir->status[cnt] = nonexisting;
 		else
 		  this_dir->status[cnt] = existing;

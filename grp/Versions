@@ -1,0 +1,19 @@
+libc {
+  GLIBC_2.0 {
+    # e*
+    endgrent;
+
+    # f*
+    fgetgrent; fgetgrent_r;
+
+    # g*
+    getgrent; getgrent_r; getgrgid; getgrgid_r; getgrnam; getgrnam_r;
+    getgroups;
+
+    # i*
+    initgroups;
+
+    # s*
+    setgrent; setgroups;
+  }
+}

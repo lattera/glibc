@@ -968,6 +968,22 @@ process_dl_debug (const char *dl_debug)
 
 	  switch (len)
 	    {
+	    case 3:
+	      /* This option is not documented since it is not generally
+		 useful.  */
+	      if (memcmp (dl_debug, "all", 3) == 0)
+		{
+		  _dl_debug_libs = 1;
+		  _dl_debug_impcalls = 1;
+		  _dl_debug_reloc = 1;
+		  _dl_debug_files = 1;
+		  _dl_debug_symbols = 1;
+		  _dl_debug_bindings = 1;
+		  _dl_debug_versions = 1;
+		  any_debug = 1;
+		}
+	      break;
+
 	    case 4:
 	      if (memcmp (dl_debug, "help", 4) == 0)
 		{
@@ -1117,7 +1133,9 @@ process_envvars (enum mode *modep, int *lazyp)
 
 	case 8:
 	  /* Do we bind early?  */
-	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0)
+	  if (memcmp (&envline[3], "BIND_NOW", 8) == 0
+	      && (envline[12] == '1' || envline[12] == 'y'
+		  || envline[12] == 'Y'))
 	    bind_now = 1;
 	  break;
 

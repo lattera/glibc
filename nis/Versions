@@ -1,0 +1,121 @@
+libnsl {
+  GLIBC_2.0 {
+    # Many programs expect this, but every user program should
+    # have it's own version, since the interface is different on
+    # various platforms.
+    xdr_domainname;       xdr_keydat;          xdr_mapname;
+    xdr_peername;         xdr_valdat;          xdr_yp_buf;
+    xdr_ypbind_binding;   xdr_ypbind_resp;     xdr_ypbind_resptype;
+    xdr_ypbind_setdom;    xdr_ypdelete_args;   xdr_ypmap_parms;
+    xdr_ypmaplist;        xdr_yppush_status;   xdr_yppushresp_xfr;
+    xdr_ypreq_key;        xdr_ypreq_nokey;     xdr_ypreq_xfr;
+    xdr_ypresp_all;       xdr_ypresp_key_val;  xdr_ypresp_maplist;
+    xdr_ypresp_master;    xdr_ypresp_order;    xdr_ypresp_val;
+    xdr_ypresp_xfr;       xdr_ypstat;          xdr_ypupdate_args;
+    xdr_ypxfrstat;
+
+    __yp_check;
+    yp_all;               yp_bind;             yp_first;
+    yp_get_default_domain; yp_maplist;         yp_master;
+    yp_match;             yp_next;             yp_order;
+    yp_unbind;            yp_update;           ypbinderr_string;
+    yperr_string;         ypprot_err;
+  }
+  GLIBC_2.1 {
+    nis_add;              nis_add_entry;       nis_addmember;
+    nis_checkpoint;       nis_clone_directory; nis_clone_object;
+    nis_clone_result;     nis_creategroup;     nis_destroy_object;
+    nis_destroygroup;     nis_dir_cmp;         nis_domain_of;
+    nis_domain_of_r;      nis_first_entry;     nis_free_directory;
+    nis_free_object;      nis_free_request;    nis_freenames;
+    nis_freeresult;       nis_freeservlist;    nis_freetags;
+    nis_getnames;         nis_getservlist;     nis_ismember;
+    nis_leaf_of;          nis_leaf_of_r;       nis_lerror;
+    nis_list;             nis_local_directory; nis_local_group;
+    nis_local_host;       nis_local_principal; nis_lookup;
+    nis_mkdir;            nis_modify;          nis_modify_entry;
+    nis_name_of;          nis_name_of_r;       nis_next_entry;
+    nis_perror;           nis_ping;            nis_print_directory;
+    nis_print_entry;      nis_print_group;     nis_print_group_entry;
+    nis_print_link;       nis_print_object;    nis_print_result;
+    nis_print_rights;     nis_print_table;     nis_read_obj;
+    nis_remove;           nis_remove_entry;    nis_removemember;
+    nis_rmdir;            nis_servstate;       nis_sperrno;
+    nis_sperror;          nis_sperror_r;       nis_stats;
+    nis_verifygroup;      nis_write_obj;
+
+    xdr_cback_data;       xdr_obj_p;
+
+    # This functions are needed by the NIS+ tools and rpc.nisd,
+    # they should never be used in a normal user program !
+    __do_niscall2;        __free_fdresult;     __nis_default_access;
+    __nis_default_group;  __nis_default_owner; __nis_default_ttl;
+    __nis_finddirectory;  __nis_hash;
+    readColdStartFile;    writeColdStartFile;
+  }
+}
+
+libnss_compat {
+  GLIBC_2.0 {
+    _nss_compat_endgrent; _nss_compat_endpwent; _nss_compat_endspent;
+    _nss_compat_getgrent_r; _nss_compat_getgrgid_r; _nss_compat_getgrnam_r;
+    _nss_compat_getpwent_r; _nss_compat_getpwnam_r; _nss_compat_getpwuid_r;
+    _nss_compat_getspent_r; _nss_compat_getspnam_r; _nss_compat_initgroups;
+    _nss_compat_setgrent; _nss_compat_setpwent; _nss_compat_setspent;
+  }
+}
+
+libnss_nis {
+  GLIBC_2.0 {
+    _nss_nis_endaliasent; _nss_nis_endetherent; _nss_nis_endgrent;
+    _nss_nis_endhostent; _nss_nis_endnetent; _nss_nis_endnetgrent;
+    _nss_nis_endprotoent; _nss_nis_endpwent; _nss_nis_endrpcent;
+    _nss_nis_endservent; _nss_nis_endspent; _nss_nis_getaliasbyname_r;
+    _nss_nis_getaliasent_r; _nss_nis_getetherent_r; _nss_nis_getgrent_r;
+    _nss_nis_getgrgid_r; _nss_nis_getgrnam_r; _nss_nis_gethostbyaddr_r;
+    _nss_nis_gethostbyname2_r; _nss_nis_gethostbyname_r; _nss_nis_gethostent_r;
+    _nss_nis_gethostton_r; _nss_nis_getnetbyaddr_r; _nss_nis_getnetbyname_r;
+    _nss_nis_getnetent_r; _nss_nis_getnetgrent_r; _nss_nis_getntohost_r;
+    _nss_nis_getprotobyname_r; _nss_nis_getprotobynumber_r;
+    _nss_nis_getprotoent_r; _nss_nis_getpublickey; _nss_nis_getpwent_r;
+    _nss_nis_getpwnam_r; _nss_nis_getpwuid_r; _nss_nis_getrpcbyname_r;
+    _nss_nis_getrpcbynumber_r; _nss_nis_getrpcent_r; _nss_nis_getsecretkey;
+    _nss_nis_getservbyname_r; _nss_nis_getservbyport_r; _nss_nis_getservent_r;
+    _nss_nis_getspent_r; _nss_nis_getspnam_r; _nss_nis_initgroups;
+    _nss_nis_netname2user; _nss_nis_setaliasent; _nss_nis_setetherent;
+    _nss_nis_setgrent; _nss_nis_sethostent; _nss_nis_setnetent;
+    _nss_nis_setnetgrent; _nss_nis_setprotoent; _nss_nis_setpwent;
+    _nss_nis_setrpcent; _nss_nis_setservent; _nss_nis_setspent;
+  }
+}
+
+libnss_nisplus {
+  GLIBC_2.1 {
+    _nss_nisplus_endaliasent; _nss_nisplus_endetherent; _nss_nisplus_endgrent;
+    _nss_nisplus_endhostent; _nss_nisplus_endnetent; _nss_nisplus_endnetgrent;
+    _nss_nisplus_endprotoent; _nss_nisplus_endpwent; _nss_nisplus_endrpcent;
+    _nss_nisplus_endservent; _nss_nisplus_endspent;
+    _nss_nisplus_getaliasbyname_r; _nss_nisplus_getaliasent_r;
+    _nss_nisplus_getetherent_r; _nss_nisplus_getgrent_r;
+    _nss_nisplus_getgrgid_r; _nss_nisplus_getgrnam_r;
+    _nss_nisplus_gethostbyaddr_r; _nss_nisplus_gethostbyname2_r;
+    _nss_nisplus_gethostbyname_r; _nss_nisplus_gethostent_r;
+    _nss_nisplus_gethostton_r; _nss_nisplus_getnetbyaddr_r;
+    _nss_nisplus_getnetbyname_r; _nss_nisplus_getnetent_r;
+    _nss_nisplus_getnetgrent_r; _nss_nisplus_getntohost_r;
+    _nss_nisplus_getprotobyname_r; _nss_nisplus_getprotobynumber_r;
+    _nss_nisplus_getprotoent_r; _nss_nisplus_getpublickey;
+    _nss_nisplus_getpwent_r; _nss_nisplus_getpwnam_r; _nss_nisplus_getpwuid_r;
+    _nss_nisplus_getrpcbyname_r; _nss_nisplus_getrpcbynumber_r;
+    _nss_nisplus_getrpcent_r; _nss_nisplus_getsecretkey;
+    _nss_nisplus_getservbyname_r; _nss_nisplus_getservbynumber_r;
+    _nss_nisplus_getservent_r; _nss_nisplus_getspent_r;
+    _nss_nisplus_getspnam_r; _nss_nisplus_netname2user;
+    _nss_nisplus_parse_grent; _nss_nisplus_parse_pwent;
+    _nss_nisplus_parse_spent; _nss_nisplus_setaliasent;
+    _nss_nisplus_setetherent; _nss_nisplus_setgrent; _nss_nisplus_sethostent;
+    _nss_nisplus_setnetent; _nss_nisplus_setnetgrent; _nss_nisplus_setprotoent;
+    _nss_nisplus_setpwent; _nss_nisplus_setrpcent; _nss_nisplus_setservent;
+    _nss_nisplus_setspent;
+  }
+}

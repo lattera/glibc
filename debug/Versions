@@ -1,0 +1,9 @@
+libc {
+  GLIBC_2.1 {
+    # functions used in other libraries
+    __backtrace; __backtrace_symbols;
+
+    # b*
+    backtrace; backtrace_symbols;
+  }
+}

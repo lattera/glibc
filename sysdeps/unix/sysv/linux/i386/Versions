@@ -1,0 +1,7 @@
+libc {
+  GLIBC_2.0 {
+    ioperm; iopl;
+
+    vm86;
+  }
+}

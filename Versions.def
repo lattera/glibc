@@ -1,0 +1,66 @@
+libBrokenLocale {
+  GLIBC_2.0
+}
+libc {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libcrypt {
+  GLIBC_2.0
+}
+libdb {
+  GLIBC_2.0
+}
+libdl {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libhurduser {
+  GLIBC_2.0
+}
+libm {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libmachuser {
+  GLIBC_2.0
+}
+libnsl {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libnss_compat {
+  GLIBC_2.0
+}
+libnss_db {
+  GLIBC_2.0
+}
+libnss_dns {
+  GLIBC_2.0
+}
+libnss_files {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libnss_hesiod {
+  GLIBC_2.1
+}
+libnss_nis {
+  GLIBC_2.0
+}
+libnss_nisplus {
+  GLIBC_2.0
+}
+libpthread {
+  GLIBC_2.0
+  GLIBC_2.1 GLIBC_2.0
+}
+libresolv {
+  GLIBC_2.0
+}
+librt {
+  GLIBC_2.1
+}
+libutil {
+  GLIBC_2.0
+}

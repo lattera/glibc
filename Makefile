@@ -77,6 +77,10 @@ ifeq (yes,$(build-shared))
 install-others += $(inst_includedir)/gnu/lib-names.h
 endif
 
+ifeq ($(versioning),yes)
+lib-noranlib: $(common-objpfx)sysd-versions
+endif
+
 include Makerules
 
 ifeq ($(build-programs),yes)
@@ -241,12 +245,12 @@ parent_echo-distinfo:
 distribute  :=	README README.libm INSTALL FAQ FAQ.in NOTES NEWS BUGS	\
 		PROJECTS COPYING.LIB COPYING ChangeLog ChangeLog.[0-9]	\
 		Makefile Makeconfig Makerules Rules Make-dist MakeTAGS	\
-		extra-lib.mk o-iterator.mk libc.map configure		\
-		configure.in aclocal.m4 config.h.in config.make.in	\
-		config-name.in Makefile.in sysdep.h set-hooks.h		\
-		libc-symbols.h version.h shlib-versions rpm/Makefile	\
-		rpm/template rpm/rpmrc glibcbug.in abi-tags stub-tag.h	\
-		test-skeleton.c include/des.h				\
+		extra-lib.mk o-iterator.mk configure configure.in	\
+		aclocal.m4 config.h.in config.make.in config-name.in	\
+		Makefile.in sysdep.h set-hooks.h libc-symbols.h		\
+		version.h shlib-versions rpm/Makefile rpm/template	\
+		rpm/rpmrc glibcbug.in abi-tags stub-tag.h		\
+		test-skeleton.c include/des.h Versions.def versions.awk \
 		$(addprefix scripts/,					\
 			    rellns-sh config.sub config.guess		\
 			    mkinstalldirs move-if-change install-sh	\
@@ -311,3 +315,13 @@ headers2_0 := 	__math.h bytesex.h confname.h direntry.h elfclass.h  	\
 .PHONY: remove-old-headers
 remove-old-headers:
 	rm -f $(addprefix $(inst_includedir)/, $(headers2_0))
+
+# Generate version maps.
+ifeq ($(versioning),yes)
+$(common-objpfx)sysd-versions: versions.awk \
+			       $(wildcard $(all-subdirs:%=%/Versions)) \
+			       $(wildcard $(+sysdep_dirs:%=%/Versions))
+	$(AWK) -v 'buildroot=$(common-objpfx)' -f $^
+	rm -f $@
+	echo > $@
+endif

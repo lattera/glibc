@@ -1,0 +1,16 @@
+libc {
+  GLIBC_2.0 {
+    # functions with special/multiple interfaces
+    _longjmp; __sigsetjmp; _setjmp;
+
+    # l*
+    longjmp;
+
+    # s*
+    setjmp;
+  }
+  GLIBC_2.1 {
+    # helper functions
+    __libc_longjmp; __libc_siglongjmp;
+  }
+}

@@ -1,0 +1,15 @@
+libc {
+  GLIBC_2.0 {
+    # e*
+    endpwent;
+
+    # f*
+    fgetpwent; fgetpwent_r;
+
+    # g*
+    getpw; getpwent; getpwent_r; getpwnam; getpwnam_r; getpwuid; getpwuid_r;
+
+    # p*
+    putpwent; setpwent;
+  }
+}

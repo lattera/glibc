@@ -1,7 +1,0 @@
-GLIBC_2.0 {
-  global:
-    crypt; crypt_r; encrypt; encrypt_r; fcrypt; setkey; setkey_r;
-
-  local:
-    *;
-};

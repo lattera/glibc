@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -62,7 +62,7 @@ get_proc_path (char *buffer, size_t bufsize)
    series to add this, though.
 
    One possibility to implement it for systems using Linux 2.0 is to
-   examine the pseudo file /proc/meminfo.  Here we have one entry for
+   examine the pseudo file /proc/cpuinfo.  Here we have one entry for
    each processor.
 
    But not all systems have support for the /proc filesystem.  If it
