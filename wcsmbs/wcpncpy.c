@@ -31,8 +31,6 @@ __wcpncpy (dest, src, n)
   wint_t c;
   wchar_t *const s = dest;
 
-  --dest;
-
   if (n >= 4)
     {
       size_t n4 = n >> 2;
@@ -40,19 +38,19 @@ __wcpncpy (dest, src, n)
       for (;;)
 	{
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == L'\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == L'\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == L'\0')
 	    break;
 	  c = *src++;
-	  *++dest = c;
+	  *dest++ = c;
 	  if (c == L'\0')
 	    break;
 	  if (--n4 == 0)
