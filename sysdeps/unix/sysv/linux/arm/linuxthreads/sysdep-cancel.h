@@ -110,7 +110,7 @@ extern int __local_multiple_threads attribute_hidden;
   ldr reg, 2b;								\
 3:									\
   add ip, pc, ip;							\
-  ldr ip, [ip, lr];							\
+  ldr ip, [ip, reg];							\
   teq ip, #0;
 #   define SINGLE_THREAD_P_INT						\
   str lr, [sp, $-4]!;							\
