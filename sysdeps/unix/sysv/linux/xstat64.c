@@ -37,7 +37,7 @@ extern int __syscall_stat64 (const char *, struct stat64 *);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.
    This is the definition.  */
-int have_no_stat64;
+int __have_no_stat64;
 # endif
 #endif
 
@@ -52,7 +52,7 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
   struct kernel_stat kbuf;
   int result;
 # if defined __NR_stat64
-  if (! have_no_stat64)
+  if (! __have_no_stat64)
     {
       int saved_errno = errno;
       result = INLINE_SYSCALL (stat64, 2, name, buf);
@@ -61,7 +61,7 @@ __xstat64 (int vers, const char *name, struct stat64 *buf)
 	return result;
 
       __set_errno (saved_errno);
-      have_no_stat64 = 1;
+      __have_no_stat64 = 1;
     }
 # endif
 

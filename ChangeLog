@@ -1,5 +1,10 @@
 1999-12-26  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/fxstat64.c: Rename have_no_stat64 to
+	__have_no_stat64.
+	* sysdeps/unix/sysv/linux/lxstat64.c: Likewise.
+	* sysdeps/unix/sysv/linux/xstat64.c: Likewise.
+
 	* sysdeps/unix/sysv/linux/mips/bits/resource.h: Remove inclusion
 	of <asm/resource.h>.
 

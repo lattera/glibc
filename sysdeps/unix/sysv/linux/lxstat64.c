@@ -36,7 +36,7 @@ extern int __syscall_lstat (const char *, struct kernel_stat *);
 extern int __syscall_lstat64 (const char *, struct stat64 *);
 # if  __ASSUME_STAT64_SYSCALL == 0
 /* The variable is shared between all wrappers around *stat64 calls.  */
-extern int have_no_stat64;
+extern int __have_no_stat64;
 # endif
 #endif
 
@@ -50,7 +50,7 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
   struct kernel_stat kbuf;
   int result;
 # ifdef __NR_lstat64
-  if (! have_no_stat64)
+  if (! __have_no_stat64)
     {
       int saved_errno = errno;
       result = INLINE_SYSCALL (lstat64, 2, name, buf);
@@ -59,7 +59,7 @@ __lxstat64 (int vers, const char *name, struct stat64 *buf)
 	return result;
 
       __set_errno (saved_errno);
-      have_no_stat64 = 1;
+      __have_no_stat64 = 1;
     }
 # endif
   result = INLINE_SYSCALL (lstat, 2, name, &kbuf);
