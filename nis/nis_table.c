@@ -1,6 +1,6 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -34,6 +34,9 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   char *cptr;
   size_t size = 0;
 
+  if (ibreq == NULL)
+    return NULL;
+
   ibreq->ibr_flags = flags;
 
   cptr = strcpy (buf, name);
@@ -48,7 +51,11 @@ __create_ib_request (const_nis_name name, unsigned int flags)
   /* "[key=value,...],foo" format */
   ibreq->ibr_name = strchr (cptr, ']');
   if (ibreq->ibr_name == NULL || ibreq->ibr_name[1] != ',')
-    return NULL;
+    {
+      ibreq->ibr_name = NULL; /* Or the xdr_* functions will dump */
+      nis_free_request (ibreq);
+      return NULL;
+    }
 
   /* Check if we have an entry of "[key=value,],bar". If, remove the "," */
   if (ibreq->ibr_name[-1] == ',')
@@ -88,6 +95,9 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       search_val[search_len].zattr_ndx = strdup (key);
       if ((search_val[search_len].zattr_ndx) == NULL)
         {
+	  /* Let nis_free_request do the job for freeing search_val */
+	  ibreq->ibr_srch.ibr_srch_val = search_val;
+	  ibreq->ibr_srch.ibr_srch_len = search_len;
 	  nis_free_request (ibreq);
 	  return NULL;
         }
@@ -95,6 +105,10 @@ __create_ib_request (const_nis_name name, unsigned int flags)
       search_val[search_len].zattr_val.zattr_val_val = strdup (val);
       if (search_val[search_len].zattr_val.zattr_val_val == NULL)
         {
+	  /* Let nis_free_request do the job for freeing search_val */
+	  search_val[search_len].zattr_val.zattr_val_len = 0;
+	  ibreq->ibr_srch.ibr_srch_val = search_val;
+	  ibreq->ibr_srch.ibr_srch_len = search_len + 1;
 	  nis_free_request (ibreq);
           return NULL;
         }
@@ -148,7 +162,7 @@ nis_list (const_nis_name name, unsigned int flags,
 			   const void *userdata),
 	  const void *userdata)
 {
-  nis_result *res = NULL;
+  nis_result *res = calloc (1, sizeof (nis_result));
   ib_request *ibreq;
   int status;
   enum clnt_stat clnt_status;
@@ -162,7 +176,6 @@ nis_list (const_nis_name name, unsigned int flags,
   int have_tablepath = 0;
   int first_try = 0; /* Do we try the old binding at first ? */
 
-  res = calloc (1, sizeof (nis_result));
   if (res == NULL)
     return NULL;
 
@@ -186,6 +199,7 @@ nis_list (const_nis_name name, unsigned int flags,
       ibreq->ibr_name = NULL;
       if (names == NULL)
 	{
+	  nis_free_request (ibreq);
 	  NIS_RES_STATUS (res) = NIS_BADNAME;
 	  return res;
 	}
@@ -209,6 +223,7 @@ nis_list (const_nis_name name, unsigned int flags,
       status = __nisfind_server (ibreq->ibr_name, &dir);
       if (status != NIS_SUCCESS)
         {
+	  nis_free_request (ibreq);
           NIS_RES_STATUS (res) = status;
           return res;
         }
@@ -217,6 +232,7 @@ nis_list (const_nis_name name, unsigned int flags,
                                  dir->do_servers.do_servers_len, flags);
       if (status != NIS_SUCCESS)
         {
+	  nis_free_request (ibreq);
           NIS_RES_STATUS (res) = status;
           nis_free_directory (dir);
           return res;
@@ -227,6 +243,7 @@ nis_list (const_nis_name name, unsigned int flags,
 	  {
 	    __nisbind_destroy (&bptr);
 	    nis_free_directory (dir);
+	    nis_free_request (ibreq);
 	    NIS_RES_STATUS (res) = NIS_NAMEUNREACHABLE;
 	    return res;
 	  }
@@ -256,6 +273,7 @@ nis_list (const_nis_name name, unsigned int flags,
 		flags & FOLLOW_LINKS)		/* We are following links.  */
 	      {
 		free (ibreq->ibr_name);
+		ibreq->ibr_name = NULL;
 		/* If we hit the link limit, bail.  */
 		if (count_links > NIS_MAXLINKS)
 		  {
@@ -313,8 +331,11 @@ nis_list (const_nis_name name, unsigned int flags,
 		    ibreq->ibr_name = strdup (ibreq->ibr_name);
 		    nis_freeresult (res);
 		    res = calloc (1, sizeof (nis_result));
-		    if (res == NULL)
+		    if (res == NULL || ibreq->ibr_name == NULL)
 		      {
+			if (res)
+			  free (res);
+			nis_free_request (ibreq);
 			if (have_tablepath)
 			  free (tablepath);
 			__nisbind_destroy (&bptr);
@@ -471,6 +492,7 @@ nis_add_entry (const_nis_name name, const nis_object *obj2, unsigned int flags)
   ibreq->ibr_obj.ibr_obj_val = nis_clone_object (&obj, NULL);
   if (ibreq->ibr_obj.ibr_obj_val == NULL)
     {
+      nis_free_request (ibreq);
       NIS_RES_STATUS (res) = NIS_NOMEMORY;
       return res;
     }
@@ -526,6 +548,7 @@ nis_modify_entry (const_nis_name name, const nis_object *obj2,
   ibreq->ibr_obj.ibr_obj_val = nis_clone_object (&obj, NULL);
   if (ibreq->ibr_obj.ibr_obj_val == NULL)
     {
+      nis_free_request (ibreq);
       NIS_RES_STATUS (res) = NIS_NOMEMORY;
       return res;
     }
@@ -571,6 +594,7 @@ nis_remove_entry (const_nis_name name, const nis_object *obj,
       ibreq->ibr_obj.ibr_obj_val = nis_clone_object (obj, NULL);
       if (ibreq->ibr_obj.ibr_obj_val == NULL)
 	{
+	  nis_free_request (ibreq);
 	  NIS_RES_STATUS (res) = NIS_NOMEMORY;
 	  return res;
 	}

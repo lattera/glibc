@@ -1,3 +1,10 @@
+1999-05-05  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nis_file.c (readColdStartFile): Allocate memory only after
+	the file is opened successfully.
+
+	* nis/nis_table.c: Fix some memory leaks.
+
 1999-05-04  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/dl-load.c (expand_dynamic_string_token): Rewrite to loose st

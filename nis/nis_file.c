@@ -1,4 +1,4 @@
-/* Copyright (c) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (c) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
 
@@ -30,27 +30,31 @@ readColdStartFile (void)
 {
   XDR xdrs;
   FILE *in;
-  bool_t status;
-  directory_obj *obj = calloc (1, sizeof (directory_obj));
-
-  if (obj == NULL)
-    return NULL;
+  bool_t status = TRUE;
+  directory_obj *obj;
 
   in = fopen (cold_start_file, "rb");
   if (in == NULL)
     return NULL;
-  xdrstdio_create (&xdrs, in, XDR_DECODE);
-  status = _xdr_directory_obj (&xdrs, obj);
-  xdr_destroy (&xdrs);
+
+  obj = calloc (1, sizeof (directory_obj));
+
+  if (obj != NULL)
+    {
+      xdrstdio_create (&xdrs, in, XDR_DECODE);
+      status = _xdr_directory_obj (&xdrs, obj);
+      xdr_destroy (&xdrs);
+
+      if (!status)
+	{
+	  nis_free_directory (obj);
+	  obj = NULL;
+	}
+    }
+
   fclose (in);
 
-  if (status)
-    return obj;
-  else
-    {
-      nis_free_directory (obj);
-      return NULL;
-    }
+  return obj;
 }
 
 bool_t
