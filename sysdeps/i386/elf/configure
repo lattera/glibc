@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
  # Local configure fragment for sysdeps/i386/elf.
 
 if test "$usetls" != no; then

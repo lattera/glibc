@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
 
 # GNU libc on the Hurd is always reentrant.
 DEFINES="$DEFINES -D_LIBC_REENTRANT"
@@ -29,22 +27,16 @@ case "$machine" in
     ;;
 esac
 
+
 echo "$as_me:$LINENO: checking Hurd header version" >&5
 echo $ECHO_N "checking Hurd header version... $ECHO_C" >&6
 if test "${libc_cv_hurd_version+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-
-cat >conftest.$ac_ext <<_ACEOF
+  cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <hurd/version.h>
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {

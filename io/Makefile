@@ -33,7 +33,7 @@ routines :=							      \
 	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64	      \
 	statfs fstatfs statfs64 fstatfs64			      \
 	statvfs fstatvfs statvfs64 fstatvfs64			      \
-	umask chmod fchmod mkdir				      \
+	umask chmod fchmod lchmod mkdir				      \
 	open open64 close read write lseek lseek64 access euidaccess  \
 	fcntl flock lockf lockf64				      \
 	dup dup2 pipe						      \

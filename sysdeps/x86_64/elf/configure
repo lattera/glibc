@@ -1,11 +1,12 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/x86_64/elf.
 
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and linker.
-echo $ac_n "checking for x86-64 TLS support""... $ac_c" 1>&6
-echo "configure:7: checking for x86-64 TLS support" >&5
-if eval "test \"`echo '$''{'libc_cv_x86_64_tls'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
+echo "$as_me:$LINENO: checking for x86-64 TLS support" >&5
+echo $ECHO_N "checking for x86-64 TLS support... $ECHO_C" >&6
+if test "${libc_cv_x86_64_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
@@ -20,24 +21,29 @@ baz:	leaq	bar@TLSLD(%rip), %rdi
 	addq	foo@GOTTPOFF(%rip), %rax
 	movq	$bar@TPOFF, %rdx
 EOF
-if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:24: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   libc_cv_x86_64_tls=yes
 else
   libc_cv_x86_64_tls=no
 fi
 rm -f conftest*
 fi
-
-echo "$ac_t""$libc_cv_x86_64_tls" 1>&6
+echo "$as_me:$LINENO: result: $libc_cv_x86_64_tls" >&5
+echo "${ECHO_T}$libc_cv_x86_64_tls" >&6
 if test $libc_cv_x86_64_tls = yes; then
-  cat >> confdefs.h <<\EOF
+  cat >>confdefs.h <<\_ACEOF
 #define HAVE_TLS_SUPPORT 1
-EOF
+_ACEOF
 
 fi
 fi
 
-cat >> confdefs.h <<\EOF
+cat >>confdefs.h <<\_ACEOF
 #define PI_STATIC_AND_HIDDEN 1
-EOF
+_ACEOF
 

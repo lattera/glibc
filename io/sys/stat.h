@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 92, 1995-1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1992,1995-1999,2000,2001,2002
+   	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -244,9 +245,15 @@ extern int lstat64 (__const char *__restrict __file,
 #endif
 
 /* Set file access permissions for FILE to MODE.
-   This takes an `int' MODE argument because that
-   is what `mode_t's get widened to.  */
+   If FILE is a symbolic link, this affects its target instead.  */
 extern int chmod (__const char *__file, __mode_t __mode) __THROW;
+
+#ifdef __USE_BSD
+/* Set file access permissions for FILE to MODE.
+   If FILE is a symbolic link, this affects the link itself
+   rather than its target.  */
+extern int lchmod (__const char *__file, __mode_t __mode) __THROW;
+#endif
 
 /* Set file access permissions of the file FD is open on to MODE.  */
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED

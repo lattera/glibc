@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
  # Local configure fragment for sysdeps/unix.
 
 if test -z "$inhibit_glue"; then
@@ -30,12 +28,6 @@ extern "C"
 char $ac_func ();
 char (*f) ();
 
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {

@@ -281,6 +281,13 @@ if test "$machine" = rs6000; then
   machine="powerpc"
 fi
 
+# Braindead PowerPC box with absolutely no FPU.
+case "$machine-$host_os" in
+  powerpc*-*soft)
+    with_fp=no
+    ;;
+esac
+
 ###
 ### I put this here to prevent those annoying emails from people who cannot
 ### read and try to compile glibc on unsupported platforms.  --drepper
@@ -304,15 +311,6 @@ if test -z "$enable_hacker_mode"; then
     ;;
   esac
 fi
-
-# Brain dead PowerPC box with absolutely no FPU.
-case "$machine-$host_os" in
-  powerpc*-*soft)
-    with_fp=no
-    completely_soft=yes
-    AC_SUBST(completely_soft)
-    ;;
-esac
 
 dnl We need to use [ and ] for other purposes for a while now.
 changequote(,)dnl
@@ -428,6 +426,8 @@ while m=`echo $tail | sed 's@^\(.*\)/\([^/]*\)$@& \1@'`; test -n "$m"; do
   # Prepend the machine's FPU directory unless --without-fp.
   if test "$with_fp" = yes; then
     mach="$mach /$1/fpu"
+  else
+    mach="$mach /$1/nofpu"
   fi
   mach="$mach /$1"
   tail="$2"

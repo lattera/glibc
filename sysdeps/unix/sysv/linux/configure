@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
  # Local configure fragment for sysdeps/unix/sysv/linux.
 
 # The Linux kernel headers can be found in
@@ -21,14 +19,29 @@ if test -n "$sysheaders"; then
   OLD_CPPFLAGS=$CPPFLAGS
   CPPFLAGS="$CPPFLAGS $SYSINCLUDES"
 fi
+
+
+echo "$as_me:$LINENO: checking for egrep" >&5
+echo $ECHO_N "checking for egrep... $ECHO_C" >&6
+if test "${ac_cv_prog_egrep+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  if echo a | (grep -E '(a|b)') >/dev/null 2>&1
+    then ac_cv_prog_egrep='grep -E'
+    else ac_cv_prog_egrep='egrep'
+    fi
+fi
+echo "$as_me:$LINENO: result: $ac_cv_prog_egrep" >&5
+echo "${ECHO_T}$ac_cv_prog_egrep" >&6
+ EGREP=$ac_cv_prog_egrep
+
+
 echo "$as_me:$LINENO: checking installed Linux kernel header files" >&5
 echo $ECHO_N "checking installed Linux kernel header files... $ECHO_C" >&6
 if test "${libc_cv_linux2010+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-
-
-cat >conftest.$ac_ext <<_ACEOF
+  cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <linux/version.h>
@@ -37,7 +50,7 @@ eat flaming death
 #endif
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "eat flaming death" >/dev/null 2>&1; then
+  $EGREP "eat flaming death" >/dev/null 2>&1; then
   libc_cv_linux2010='TOO OLD!'
 else
   libc_cv_linux2010='2.0.10 or later'
@@ -157,7 +170,7 @@ eat flaming death
 #endif
 _ACEOF
 if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
-  egrep "eat flaming death" >/dev/null 2>&1; then
+  $EGREP "eat flaming death" >/dev/null 2>&1; then
   libc_minimum_kernel='too old!'
 else
   libc_minimum_kernel=ok

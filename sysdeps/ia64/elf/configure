@@ -1,6 +1,7 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/ia64/elf.
 
-cat >> confdefs.h <<\EOF
+cat >>confdefs.h <<\_ACEOF
 #define PI_STATIC_AND_HIDDEN 1
-EOF
+_ACEOF
 

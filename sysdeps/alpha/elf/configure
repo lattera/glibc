@@ -1,12 +1,13 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
  # Local configure fragment for sysdeps/alpha/elf.
 
 if test "$usetls" != no; then
 # Check for support of thread-local storage handling in assembler and
 # linker.
-echo $ac_n "checking for Alpha TLS support""... $ac_c" 1>&6
-echo "configure:8: checking for Alpha TLS support" >&5
-if eval "test \"`echo '$''{'libc_cv_alpha_tls'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
+echo "$as_me:$LINENO: checking for Alpha TLS support" >&5
+echo $ECHO_N "checking for Alpha TLS support... $ECHO_C" >&6
+if test "${libc_cv_alpha_tls+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.s <<\EOF
 	.section ".tdata", "awT", @progbits
@@ -42,27 +43,32 @@ baz:
 	lda	$16, m($16)			!tprello
 	lda	$16, n($31)			!tprel
 EOF
-if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'; { (eval echo configure:46: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -c $CFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   libc_cv_alpha_tls=yes
 else
   libc_cv_alpha_tls=no
 fi
 rm -f conftest*
 fi
-
-echo "$ac_t""$libc_cv_alpha_tls" 1>&6
+echo "$as_me:$LINENO: result: $libc_cv_alpha_tls" >&5
+echo "${ECHO_T}$libc_cv_alpha_tls" >&6
 if test $libc_cv_alpha_tls = yes; then
-  cat >> confdefs.h <<\EOF
+  cat >>confdefs.h <<\_ACEOF
 #define HAVE_TLS_SUPPORT 1
-EOF
+_ACEOF
 
 fi
 fi
 
-echo $ac_n "checking for GP relative module local relocs""... $ac_c" 1>&6
-echo "configure:64: checking for GP relative module local relocs" >&5
-if eval "test \"`echo '$''{'libc_cv_alpha_hidden_gprel'+set}'`\" = set"; then
-  echo $ac_n "(cached) $ac_c" 1>&6
+echo "$as_me:$LINENO: checking for GP relative module local relocs" >&5
+echo $ECHO_N "checking for GP relative module local relocs... $ECHO_C" >&6
+if test "${libc_cv_alpha_hidden_gprel+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<\EOF
 static int bar;
@@ -75,7 +81,12 @@ int foo (void)
 EOF
 
 libc_cv_alpha_hidden_gprel=no
-if { ac_try='${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&5'; { (eval echo configure:79: \"$ac_try\") 1>&5; (eval $ac_try) 2>&5; }; }; then
+if { ac_try='${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
   if grep -q 'bar.*!gprel' conftest.s \
      && grep -q 'baz.*!gprel' conftest.s \
      && ! grep -q 'bar.*!literal' conftest.s \
@@ -85,11 +96,11 @@ if { ac_try='${CC-cc} -S $CFLAGS -O2 -fpic conftest.c 1>&5'; { (eval echo config
 fi
 rm -f conftest*
 fi
-
-echo "$ac_t""$libc_cv_alpha_hidden_gprel" 1>&6
+echo "$as_me:$LINENO: result: $libc_cv_alpha_hidden_gprel" >&5
+echo "${ECHO_T}$libc_cv_alpha_hidden_gprel" >&6
 if test $libc_cv_alpha_hidden_gprel = yes; then
-  cat >> confdefs.h <<\EOF
+  cat >>confdefs.h <<\_ACEOF
 #define PI_STATIC_AND_HIDDEN 1
-EOF
+_ACEOF
 
 fi

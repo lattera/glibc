@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
 
 if test -z "$inhibit_glue"; then
 
@@ -15,12 +13,6 @@ else
 #line $LINENO "configure"
 #include "confdefs.h"
 
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {
@@ -68,12 +60,6 @@ else
 #line $LINENO "configure"
 #include "confdefs.h"
 
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {
@@ -125,12 +111,6 @@ cat >conftest.$ac_ext <<_ACEOF
 #line $LINENO "configure"
 #include "confdefs.h"
 #include <ctype.h>
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {

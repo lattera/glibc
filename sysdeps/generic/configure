@@ -1,6 +1,4 @@
-#! /bin/sh
 # This file is generated from configure.in by Autoconf.  DO NOT EDIT!
-
 
 if test -z "$inhibit_glue"; then
 # For signame.c, used in make_siglist.
@@ -29,12 +27,6 @@ extern "C"
 char $ac_func ();
 char (*f) ();
 
-#ifdef F77_DUMMY_MAIN
-#  ifdef __cplusplus
-     extern "C"
-#  endif
-   int F77_DUMMY_MAIN() { return 1; }
-#endif
 int
 main ()
 {

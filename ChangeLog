@@ -1,3 +1,75 @@
+2002-10-19  Roland McGrath  <roland@redhat.com>
+
+	* configure: Regenerated (using Autoconf 2.54).
+	* sysdeps/alpha/elf/configure: Likewise.
+	* sysdeps/generic/configure: Likewise.
+	* sysdeps/i386/elf/configure: Likewise.
+	* sysdeps/ia64/elf/configure: Likewise.
+	* sysdeps/mach/hurd/configure: Likewise.
+	* sysdeps/mach/configure: Likewise.
+	* sysdeps/unix/configure: Likewise.
+	* sysdeps/unix/common/configure: Likewise.
+	* sysdeps/unix/sysv/aix/configure: Likewise.
+	* sysdeps/unix/sysv/linux/configure: Likewise.
+	* sysdeps/unix/sysv/linux/mips/configure: Likewise.
+	* sysdeps/x86_64/elf/configure: Likewise.
+
+	* config.make.in: Nix completely-soft nonsense.
+	* configure.in: Likewise.  Under --without-fp, use nofpu subdirectory
+	of machine directories instead of fpu subdirectory.
+	* sysdeps/powerpc/soft-fp/Makefile: Remove cruft added in last change.
+	* sysdeps/powerpc/nofpu/Makefile: Put it in this new file instead.
+	* sysdeps/powerpc/soft-fp/sim-full.c: Moved to ...
+	* sysdeps/powerpc/nofpu/sim-full.c: ... here.
+	* sysdeps/powerpc/soft-fp/fraiseexcpt.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fraiseexcpt.c: ... here.
+	* sysdeps/powerpc/soft-fp/fegetexcept.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fegetexcept.c: ... here.
+	* sysdeps/powerpc/soft-fp/fclrexcpt.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fclrexcpt.c: ... here.
+	* sysdeps/powerpc/soft-fp/ftestexcept.c: Moved to ...
+	* sysdeps/powerpc/nofpu/ftestexcept.c: ... here.
+	* sysdeps/powerpc/soft-fp/fgetexcptflg.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fgetexcptflg.c: ... here.
+	* sysdeps/powerpc/soft-fp/fsetexcptflg.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fsetexcptflg.c: ... here.
+	* sysdeps/powerpc/soft-fp/fedisblxcpt.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fedisblxcpt.c: ... here.
+	* sysdeps/powerpc/soft-fp/feenablxcpt.c: Moved to ...
+	* sysdeps/powerpc/nofpu/feenablxcpt.c: ... here.
+	* sysdeps/powerpc/soft-fp/fegetenv.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fegetenv.c: ... here.
+	* sysdeps/powerpc/soft-fp/fesetenv.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fesetenv.c: ... here.
+	* sysdeps/powerpc/soft-fp/fegetround.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fegetround.c: ... here.
+	* sysdeps/powerpc/soft-fp/fesetround.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fesetround.c: ... here.
+	* sysdeps/powerpc/soft-fp/feupdateenv.c: Moved to ...
+	* sysdeps/powerpc/nofpu/feupdateenv.c: ... here.
+	* sysdeps/powerpc/soft-fp/feholdexcpt.c: Moved to ...
+	* sysdeps/powerpc/nofpu/feholdexcpt.c: ... here.
+	* sysdeps/powerpc/soft-fp/fenv_const.c: Moved to ...
+	* sysdeps/powerpc/nofpu/fenv_const.c: ... here.
+	* sysdeps/powerpc/soft-fp/libm-test-ulps: Moved to ...
+	* sysdeps/powerpc/nofpu/libm-test-ulps: ... here.
+	* sysdeps/powerpc/soft-fp/soft-supp.h: Moved to ...
+	* sysdeps/powerpc/nofpu/soft-supp.h: ... here.
+	* sysdeps/powerpc/soft-fp/Versions (libc: GLIBC_2.3.2): Moved to ...
+	* sysdeps/powerpc/nofpu/Versions: ... here, new file.
+
+2002-10-19  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/unix/bsd/bsd4.4/freebsd/sys/sysmacros.h: New file.
+
+2002-10-18  Roland McGrath  <roland@redhat.com>
+
+	* io/Makefile (routines): Add lchmod.
+	* io/sys/stat.h [__USE_BSD] (lchmod): Declare it.
+	* sysdeps/generic/lchmod.c: New file.
+	* sysdeps/mach/hurd/lchmod.c: New file.
+	* io/Versions (libc: GLIBC_2.3.2): New set, add lchmod.
+
 2002-10-18  Art Haas  <ahaas@neosoft.com>
 
 	* configure.in: Remove remaining AC_FD_CC macros, and replace
