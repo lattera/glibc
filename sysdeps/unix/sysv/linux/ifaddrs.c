@@ -566,7 +566,7 @@ getifaddrs (struct ifaddrs **ifap)
 				if (IN6_IS_ADDR_LINKLOCAL (rta_data)
 				    || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
 				  ((struct sockaddr_in6 *) sa)->sin6_scope_id
-				    = ifam->ifa_scope;
+				    = ifam->ifa_index;
 			      }
 			    break;
 
@@ -613,7 +613,7 @@ getifaddrs (struct ifaddrs **ifap)
 			      if (IN6_IS_ADDR_LINKLOCAL (rta_data) ||
 				  IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
 				ifas[ifa_index].addr.s6.sin6_scope_id =
-				  ifam->ifa_scope;
+				  ifam->ifa_index;
 			    }
 			  break;
 
@@ -654,7 +654,7 @@ getifaddrs (struct ifaddrs **ifap)
 			      if (IN6_IS_ADDR_LINKLOCAL (rta_data)
 				  || IN6_IS_ADDR_MC_LINKLOCAL (rta_data))
 				ifas[ifa_index].broadaddr.s6.sin6_scope_id
-				  = ifam->ifa_scope;
+				  = ifam->ifa_index;
 			    }
 			  break;
 
