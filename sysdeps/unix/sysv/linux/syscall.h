@@ -25,34 +25,10 @@ Cambridge, MA 02139, USA.  */
 #include <asm/unistd.h>
 
 /* Among the system calls defined there are
-	_dup2	
-	_mkdir	
-	_rmdir	
-	_readlink	
-	_symlink	
-	_rename		
-	_swapon		
-	_access		
-	_select		
-	_getgroups	
-	_setgroups	
-	_getitimer	
-	_setitimer	
 	_setdomainname	
-	_getrlimit	
-	_setrlimit	
-	_getrusage	
-	_getpriority	
-	_setpriority	
-	_truncate	
-	_ftruncate	
-	_setpgid	
-	_fchmod	
 	_fchdir	
-	_fchown	
-	_setregid	
-	_setreuid	
-	_vhangup	
+	_readv	
+	_writev	
    (This is a hack for the autoconf mechanism.  Don't change a single
     character, esp white spaces, unless you know what you are doing!)  */
 

@@ -22,7 +22,8 @@ Cambridge, MA 02139, USA.  */
 #define P(a, b) P2(a, b)
 #define P2(a, b) a##b
 
-.globl syscall_error
+	.text
+	SYSCALL_ERROR_HANDLER
 
 /* The socket-oriented system calls are handled unusally in Linux.
    They are all gated through the single `socketcall' system call number.

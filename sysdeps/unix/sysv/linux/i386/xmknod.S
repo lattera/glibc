@@ -19,21 +19,20 @@ Cambridge, MA 02139, USA.  */
 #include <sysdep.h>
 #include <errnos.h>
 
-.globl syscall_error
+	.text
+	SYSCALL_ERROR_HANDLER	/* Error handler for PIC.  */
 ENTRY (__xmknod)
 	popl %ecx		/* Pop return address into %eax.  */
 	popl %edx		/* Pop version number into %edx.  */
 	pushl %ecx		/* Push back the return address.  */
 
-	movl $SYS_ify(mknod), %eax
-			/* Load syscall number for prev_stat in %eax.  */
 	cmpl $1, %edx		/* Version 1 xstat call?  */
 	je .L1			/* Yes, do syscall.  */
 
 	movl $-EINVAL, %eax	/* Load error code into %eax.  */
 	jmp .L2
 
-.L1:	DO_CALL (3)		/* Do the syscall.   */
+.L1:	DO_CALL (3, mknod)	/* Do the syscall.   */
 
 	movl (%esp), %ecx
 	testl %eax, %eax	/* Check for error.  */

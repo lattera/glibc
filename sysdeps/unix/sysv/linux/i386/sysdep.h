@@ -44,8 +44,7 @@ Cambridge, MA 02139, USA.  */
   .text;								      \
   SYSCALL_ERROR_HANDLER							      \
   ENTRY (name)								      \
-    movl $SYS_ify (syscall_name), %eax;					      \
-    DO_CALL (args);							      \
+    DO_CALL (args, syscall_name);					      \
     testl %eax, %eax;							      \
     jl syscall_error;
 
@@ -62,7 +61,7 @@ syscall_error:								      \
   movl errno@GOT(%ecx), %ecx;						      \
   movl %eax, (%ecx);							      \
   movl $-1, %eax;							      \
-  ret
+  ret;
 #endif
 
 /* We define our own ENTRY macro because the alignment should be 16 for
@@ -119,9 +118,10 @@ syscall_error:								      \
    i386 and i486 processors though.  */
 
 #undef	DO_CALL
-#define DO_CALL(args)					      		      \
+#define DO_CALL(args, syscall_name)			      		      \
     PUSHARGS_##args							      \
     DOARGS_##args							      \
+    movl $SYS_ify (syscall_name), %eax;					      \
     int $0x80								      \
     POPARGS_##args
 

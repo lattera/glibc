@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 .globl C_SYMBOL_NAME(__curbrk)
 
 .text
-.globl C_SYMBOL_NAME(syscall_error)
+	SYSCALL_ERROR_HANDLER
 
 ENTRY (__sbrk)
 
@@ -53,7 +53,7 @@ ENTRY (__sbrk)
 	movl C_SYMBOL_NAME(__curbrk), %ebx
 	movl %ebx, %eax
 #endif
-	
+
 	addl 4(%esp), %ebx
 	cmpl %ebx, %eax
 	je .L2

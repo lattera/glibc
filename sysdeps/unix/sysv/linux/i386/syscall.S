@@ -18,14 +18,14 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globl syscall_error
+	.text
+	SYSCALL_ERROR_HANDLER	/* Define error handler for PIC.  */
 ENTRY (syscall)
-	popl %ecx		/* Pop return address into %ecx.  */
-	popl %eax		/* Pop syscall number into %eax.  */
-	pushl %ecx		/* Push back return address.  */
-	DO_CALL (5)		/* Frob the args and do the system call.  */
-	movl (%esp), %ecx
-	pushl %ecx
+	PUSHARGS_5		/* Save register contents.  */
+	_DOARGS_5(36)		/* Load arguments.  */
+	movl 16(%esp), %eax	/* Load syscall number into %eax.  */
+	int $0x80		/* Do the system call.  */
+	POPARGS_5		/* Restore register contents.  */
 	testl %eax, %eax	/* Check %eax for error.  */
 	jl JUMPTARGET(syscall_error) /* Jump to error handler if negative.  */
 	ret			/* Return to caller.  */

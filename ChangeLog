@@ -1,6 +1,13 @@
 Wed Oct 25 14:23:35 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* hurd/hurdstartup.c (_hurd_startup): Use new
+	exec_startup_get_info RPC from exec_startup.defs
+	in place of old exec_startup from exec.defs.  Remove kludge to
+	guess user entry and phdr locations, since the new RPC gives us
+	that info.
+
 	* stdio/stdio.h (sys_errlist, _sys_errlist): Declare const.
+	* sysdeps/generic/_strerror.c: Undo last change.
 
 	* sysdeps/unix/sysv/linux/stat.c: New file.
 	* sysdeps/unix/sysv/linux/fstat.c: New file.

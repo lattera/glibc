@@ -32,8 +32,8 @@ C_LABEL(__curbrk)
 #endif
 
 .text
-.globl C_SYMBOL_NAME(syscall_error)
 
+	SYSCALL_ERROR_HANDLER
 ENTRY (__brk)
 	movl %ebx, %edx
 	movl $SYS_ify(brk), %eax

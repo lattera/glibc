@@ -31,9 +31,6 @@ _strerror_internal (errnum, buf, buflen)
      char *buf;
      size_t buflen;
 {
-  extern const char *const _sys_errlist[];
-  extern const int _sys_nerr;
-
   if (errnum < 0 || errnum > _sys_nerr)
     {
       int len = __snprintf (buf, buflen, _("Unknown error %d"), errnum);

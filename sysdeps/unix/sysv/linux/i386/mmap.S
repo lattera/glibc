@@ -18,7 +18,8 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-.globl syscall_error
+	.text
+	SYSCALL_ERROR_HANDLER
 
 ENTRY (__mmap)
 
