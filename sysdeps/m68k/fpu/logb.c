@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,15 +25,15 @@ Cambridge, MA 02139, USA.  */
 double
 DEFUN(__logb, (x), double x)
 {
-  if (__isnan(x))
+  if (__isnan (x))
     return x;
-  if (__isinf(x))
-    return fabs(x);
+  if (__isinf (x))
+    return fabs (x);
 
   if (x == 0.0)
-    asm("flog2%.x %0" : "=f" (x) : "0" (x));
+    asm ("flog2%.x %0, %0" : "=f" (x) : "0" (x));
   else
-    asm("fgetexp%.x %0" : "=f" (x) : "0" (x));
+    asm ("fgetexp%.x %0, %0" : "=f" (x) : "0" (x));
 
   return x;
 }
