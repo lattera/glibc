@@ -224,7 +224,7 @@ FCT (pattern, string, no_leading_period, flags)
 		      /* Invalid character class name.  */
 		      return FNM_NOMATCH;
 
-		    if (__iswctype (__btowc ((UCHAR) *n), wt))
+		    if (ISWCTYPE (BTOWC ((UCHAR) *n), wt))
 		      goto matched;
 # else
 		    if ((STREQ (str, L("alnum")) && ISALNUM ((UCHAR) *n))
@@ -325,6 +325,7 @@ FCT (pattern, string, no_leading_period, flags)
     return 0;
 
   return FNM_NOMATCH;
+}
 
 #undef FOLD
 #undef CHAR
@@ -333,4 +334,4 @@ FCT (pattern, string, no_leading_period, flags)
 #undef STRCHR
 #undef STRCHRNUL
 #undef L
-}
+#undef BTOWC

@@ -106,6 +106,12 @@
 #   define IS_CHAR_CLASS(string) wctype (string)
 #  endif
 
+#  ifdef _LIBC
+#   define ISWCTYPE(WC, WT)	__iswctype (WC, WT)
+#  else
+#   define ISWCTYPE(WC, WT)	iswctype (WC, WT)
+#  endif
+
 #  if (HAVE_MBSTATE_T && HAVE_MBSRTOWCS) || _LIBC
 /* In this case we are implementing the multibyte character handling.  */
 #   define HANDLE_MULTIBYTE	1
@@ -149,6 +155,19 @@ __strchrnul (s, c)
 }
 # endif
 
+# if HANDLE_MULTIBYTE && !defined HAVE___STRCHRNUL && !defined _LIBC
+static wchar_t *
+__wcschrnul (s, c)
+     const wchar_t *s;
+     wint_t c;
+{
+  wchar_t *result = wcschr (s, c);
+  if (result == NULL)
+    result = wcschr (s, '\0');
+  return result;
+}
+# endif
+
 # ifndef internal_function
 /* Inside GNU libc we mark some function in a special way.  In other
    environments simply ignore the marking.  */
@@ -165,6 +184,11 @@ __strchrnul (s, c)
 # define UCHAR	unsigned char
 # define FCT	internal_fnmatch
 # define L(CS)	CS
+# ifdef _LIBC
+#  define BTOWC(C)	__btowc (C)
+# else
+#  define BTOWC(C)	btowc (C)
+# endif
 # define STRCHR(S, C)	strchr (S, C)
 # define STRCHRNUL(S, C) __strchrnul (S, C)
 # include "fnmatch_loop.c"
@@ -181,7 +205,7 @@ __strchrnul (s, c)
 #  define UCHAR	wint_t
 #  define FCT	internal_fnwmatch
 #  define L(CS)	L##CS
-#  define __btowc(wc)	wc
+#  define BTOWC(C)	(C)
 #  define STRCHR(S, C)	wcschr (S, C)
 #  define STRCHRNUL(S, C) __wcschrnul (S, C)
 
@@ -214,22 +238,25 @@ is_char_class (const wchar_t *wcs)
 static wctype_t
 is_char_class (const wchar_t *wcs)
 {
-  mstate_t ps;
+  mbstate_t ps;
+  const wchar_t *pwc;
   char *s;
   size_t n;
 
   memset (&ps, '\0', sizeof (ps));
 
-  n = wcsrtombs (NULL, wcs, 0, &ps);
+  pwc = wcs;
+  n = wcsrtombs (NULL, &pwc, 0, &ps);
   if (n == (size_t) -1)
     /* Something went wrong.  */
     return 0;
 
   s = alloca (n + 1);
   assert (mbsinit (&ps));
-  (void) wcsrtombs (s, wcs, n + 1, &ps);
+  pwc = wcs;
+  (void) wcsrtombs (s, &pwc, n + 1, &ps);
 
-  return __wctype (s);
+  return wctype (s);
 }
 #  endif
 #  define IS_CHAR_CLASS(string) is_char_class (string)

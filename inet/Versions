@@ -67,5 +67,9 @@ libc {
     freehostent;
     # g*
     getipnodebyaddr;
+    # i*
+    iruserok_af;
+    # r*
+    rcmd_af; rexec_af; rrsesvport_af; ruserok_af;
   }
 }
