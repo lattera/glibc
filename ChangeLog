@@ -12,6 +12,10 @@
 	gprsave1 , and gprrest1.
 	Don't pass special flags to compiler for init and gmon-start if
 	this is no ELF platform.
+	* sysdeps/powerpc/gprrest0.S: New file.
+	* sysdeps/powerpc/gprsave0.S: New file.
+	* sysdeps/powerpc/gprrest1.S: New file.
+	* sysdeps/powerpc/gprsave1.S: New file.
 
 	* sysdeps/mach/hurd/bits/statfs.h: Define _STATFS_F_NAMELEN.
 	* sysdeps/unix/sysv/linux/bits/statfs.h: Likewise.
