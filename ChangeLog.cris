@@ -1,0 +1,10 @@
+2004-10-25  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/cris/configure.in: New file, with test moved out of main
+	libc configure.in file.
+	* sysdeps/cris/configure: New generated file.
+
+2004-10-23  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/cris, sysdeps/unix/sysv/linux/cris: Moved here from main
+	libc source tree.
