@@ -23,7 +23,7 @@ Cambridge, MA 02139, USA.  */
    extra arguments.  */
 ENTRY (__sigsetjmp)
 	lda $27, __sigsetjmp_aux/* Load address to jump to.  */
-	bis $15, $15, $17	/* Pass FP as 2nd arg.  */
-	bis $30, $30, $18	/* Pass SP as 3nd arg.  */
+	bis $15, $15, $18	/* Pass FP as 3rd arg.  */
+	bis $30, $30, $19	/* Pass SP as 4th arg.  */
 	jmp $31, ($27), __sigsetjmp_aux /* Call __sigsetjmp_aux.  */
 	.end __sigsetjmp
