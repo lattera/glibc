@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -30,7 +30,8 @@
 __BEGIN_DECLS
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
-extern int bcmp (__const void *__s1, __const void *__s2, size_t __n) __THROW;
+extern int bcmp (__const void *__s1, __const void *__s2, size_t __n)
+     __THROW __attribute_pure__;
 
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy (__const void *__src, void *__dest, size_t __n) __THROW;
@@ -40,20 +41,21 @@ extern void bzero (void *__s, size_t __n) __THROW;
 
 /* Return the position of the first bit set in I, or 0 if none are set.
    The least-significant bit is position 1, the most-significant 32.  */
-extern int ffs (int __i) __THROW;
+extern int ffs (int __i) __THROW __attribute__ ((const));
 
 /* Find the first occurrence of C in S (same as strchr).  */
-extern char *index (__const char *__s, int __c) __THROW;
+extern char *index (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Find the last occurrence of C in S (same as strrchr).  */
-extern char *rindex (__const char *__s, int __c) __THROW;
+extern char *rindex (__const char *__s, int __c) __THROW __attribute_pure__;
 
 /* Compare S1 and S2, ignoring case.  */
-extern int strcasecmp (__const char *__s1, __const char *__s2) __THROW;
+extern int strcasecmp (__const char *__s1, __const char *__s2)
+     __THROW __attribute_pure__;
 
 /* Compare no more than N chars of S1 and S2, ignoring case.  */
 extern int strncasecmp (__const char *__s1, __const char *__s2, size_t __n)
-     __THROW;
+     __THROW __attribute_pure__;
 
 __END_DECLS
 

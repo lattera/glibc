@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated environment vectors
-   Copyright (C) 1995, 1996, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 98, 99, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -31,12 +31,14 @@ __BEGIN_DECLS
 
 /* Returns a pointer to the entry in ENVZ for NAME, or 0 if there is none.  */
 extern char *envz_entry (__const char *__restrict __envz, size_t __envz_len,
-			 __const char *__restrict __name) __THROW;
+			 __const char *__restrict __name)
+     __THROW __attribute_pure__;
 
 /* Returns a pointer to the value portion of the entry in ENVZ for NAME, or 0
    if there is none.  */
 extern char *envz_get (__const char *__restrict __envz, size_t __envz_len,
-		       __const char *__restrict __name) __THROW;
+		       __const char *__restrict __name)
+     __THROW __attribute_pure__;
 
 /* Adds an entry for NAME with value VALUE to ENVZ & ENVZ_LEN.  If an entry
    with the same name already exists in ENVZ, it is removed.  If VALUE is

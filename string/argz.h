@@ -1,5 +1,5 @@
 /* Routines for dealing with '\0' separated arg vectors.
-   Copyright (C) 1995, 96, 97, 98, 99 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -56,8 +56,10 @@ extern error_t argz_create_sep (__const char *__restrict __string,
 				size_t *__restrict __len) __THROW;
 
 /* Returns the number of strings in ARGZ.  */
-extern size_t __argz_count (__const char *__argz, size_t __len) __THROW;
-extern size_t argz_count (__const char *__argz, size_t __len) __THROW;
+extern size_t __argz_count (__const char *__argz, size_t __len)
+     __THROW __attribute_pure__;
+extern size_t argz_count (__const char *__argz, size_t __len)
+     __THROW __attribute_pure__;
 
 /* Puts pointers to each string in ARGZ into ARGV, which must be large enough
    to hold them all.  */

@@ -1,3 +1,11 @@
+2000-05-17  Andreas Jaeger  <aj@suse.de>
+
+	* string/envz.h: Add pure attributes if possible.
+
+	* string/argz.h: argz_count is a pure function.
+
+	* string/strings.h: Add pure and const attributes if possible.
+
 2000-05-17  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/dl-cache.h (_DL_CACHE_DEFAULT_ID): Only define if
@@ -12,13 +20,9 @@
 	since the description is wrong.
 	Closes PR libc/1691, reported by Geoff Clare <gwc@unisoft.com>.
 
-2000-05-17  Andreas Jaeger  <aj@suse.de>
-
 	* scripts/config.sub: New version.
 	* scripts/config.guess: Likewise.
 	* manual/texinfo.tex: Likewise.
-
-2000-05-17  Andreas Jaeger  <aj@suse.de>
 
 	* time/test_time.args: Removed.
 	* time/Makefile (test_time-ARGS): Added contents here instead.

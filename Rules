@@ -1,4 +1,4 @@
-# Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
+# Copyright (C) 1991,92,93,94,95,96,97,98,99,2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -118,14 +118,10 @@ endif
 ifneq "$(strip $(tests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
-$(objpfx)%.out: %.args $(objpfx)% %.input
-	$($*-ENV) $(built-program-cmd) `cat $(word 1,$^)` < $(word 3,$^) > $@
-$(objpfx)%.out: %.args $(objpfx)%
-	$($*-ENV) $(built-program-cmd) `cat $(word 1,$^)` > $@
 $(objpfx)%.out: %.input $(objpfx)%
-	$($*-ENV) $(built-program-cmd) < $(word 1,$^) > $@
+	$($*-ENV) $(built-program-cmd) $($*-ARGS) < $(word 1,$^) > $@
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	$($*-ENV) $(built-program-cmd) > $@
+	$($*-ENV) $(built-program-cmd) $($*-ARGS) > $@
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
