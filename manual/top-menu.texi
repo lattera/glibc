@@ -1150,8 +1150,10 @@ Floating Type Macros
 Installation
 
 * Configuring and compiling::   How to compile and test GNU libc.
+* Running make install::        How to install it once you've got it compiled.
 * Tools for Compilation::       You'll need these first.
 * Supported Configurations::    What it runs on, what it doesn't.
+* Linux::                       Specific advice for Linux systems.
 * Reporting Bugs::              So they'll get fixed.
 
 Maintenance

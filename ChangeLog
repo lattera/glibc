@@ -1,3 +1,71 @@
+1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* inet/netinet/in.h: Add a few more IPPROTO_* macros.
+
+	* libio/Makefile (headers): Add bits/stdio.h.
+	* libio/iofread_u.c: Undefine fread_unlocked before definition.
+	* libio/iofwrite_u.c: Undefine fwrite_unlocked before definition.
+	* libio/stdio.h: Move optimizations into ...
+	* libio/bits/stdio.h: ...here.  New file.
+
+	* libio/iofread.c: Pretty print.
+
+1998-11-12  Mark Kettenis  <kettenis@phys.uva.nl>
+
+	* sysdeps/gnu/bits/utmpx.h: Protect members of struct
+	__exit_status with `__'.  Rename pad member of struct utmpx to
+	__unused.
+	(RUN_LVL): Define unconditionally.
+	* sysdeps/gnu/bits/utmp.h: Rename pad member of struct utmpx to
+	__unused.
+
+1998-11-12  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/netlink/netlink.h: New file, support for
+	Linux AF_NETLINK sockets (needed since the kernel version is
+	unusable).
+	* sysdeps/unix/sysv/linux/Makefile: Install it.
+	* sysdeps/unix/sysv/linux/Dist: Distribute it.
+
+1998-11-12  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* timezone/tst-timezone.c (tests): Add entry for America/Chicago
+	to test for bug in PR libc/863.
+
+1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Cleanup comment.
+
+	* elf/dynamic-link.h (_ELF_DYNAMIC_DO_RELOC): Rename macro
+	parameter lazy to do_lazy to avoid clashing with struct member name.
+	Reported by Ralf Baechle <ralf@uni-koblenz.de>.
+
+1998-11-10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine NR_OPEN
+	if it is defined in <linux/limits.h>.
+
+1998-11-09 13:07 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* include/protocols/routed.h: Include the real header with
+	a full path from the top of the source tree.
+	* include/protocols/rwhod.h: Likewise.
+	* include/protocols/talkd.h: Likewise.
+	* include/protocols/timed.h: Likewise.
+
+	* timezone/Makefile: Don't include z.ZONE files if no_deps
+	is set, not if avoid-generated is set.
+
+1998-11-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* signal/signal.h: Undo last change.  Get definition of timespec
+	if __USE_POSIX199309.
+
+	* string/bits/string2.h (__strpbrk_c2): Add intermediate cast to
+	size_t to prevent gcc warning when using -Wqual-cast.
+	(__strpbrk_c3): Likewise.
+	Suggested by Alan Curry <pacman@cqc.com>.
+
 1998-11-11  Roland McGrath  <roland@baalperazim.frob.com>
 
 	* hurd/hurdsig.c (_hurdsig_init): Add assertion that no pending,

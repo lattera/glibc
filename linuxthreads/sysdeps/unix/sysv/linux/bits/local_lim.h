@@ -17,8 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* The kernel header pollutes the namespace with the NR_OPEN symbol.
+   Remove this after including the header if necessary.  */
+#ifndef NR_OPEN
+# define __undef_NR_OPEN
+#endif
+
 /* The kernel sources contain a file with all the needed information.  */
 #include <linux/limits.h>
+
+/* Have to remove NR_OPEN?  */
+#ifdef __undef_NR_OPEN
+# undef NR_OPEN
+# undef __undef_NR_OPEN
+#endif
 
 /* The number of data keys per process.  */
 #define _POSIX_THREAD_KEYS_MAX	128

@@ -822,7 +822,7 @@ __strpbrk_c2 (__const char *__s, char __accept1, char __accept2)
   /* Please note that __accept1 and __accept2 never can be '\0'.  */
   while (*__s != '\0' && *__s != __accept1 && *__s != __accept2)
     ++__s;
-  return *__s == '\0' ? NULL : (char *) __s;
+  return *__s == '\0' ? NULL : (char *) (size_t) __s;
 }
 
 __STRING_INLINE char *__strpbrk_c3 (__const char *__s, char __accept1,
@@ -835,7 +835,7 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
   while (*__s != '\0' && *__s != __accept1 && *__s != __accept2
 	 && *__s != __accept3)
     ++__s;
-  return *__s == '\0' ? NULL : (char *) __s;
+  return *__s == '\0' ? NULL : (char *) (size_t) __s;
 }
 #endif
 
@@ -845,7 +845,7 @@ __strpbrk_c3 (__const char *__s, char __accept1, char __accept2,
 # define strstr(haystack, needle) \
   (__extension__ (__builtin_constant_p (needle) && __string2_1bptr_p (needle) \
 		  ? (((__const char *) (needle))[0] == '\0'		      \
-		     ? (char *) (haystack)				      \
+		     ? (char *) (size_t) (haystack)			      \
 		     : (((__const char *) (needle))[1] == '\0'		      \
 			? strchr (haystack,				      \
 				  ((__const char *) (needle))[0]) 	      \
@@ -1011,7 +1011,7 @@ __strsep_g (char **__s, __const char *__reject)
 #endif
 
 /* We need the memory allocation functions for inline strdup().
-   Referring to stdlib.h (even minimally) is not allowed 
+   Referring to stdlib.h (even minimally) is not allowed
    in any of the tight standards compliant modes.  */
 #ifdef __USE_MISC
 

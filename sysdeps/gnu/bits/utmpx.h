@@ -40,8 +40,8 @@
    type is used in `struct utmpx' below.  */
 struct __exit_status
   {
-    short int e_termination;	/* Process termination status.  */
-    short int e_exit;		/* Process exit status.  */
+    short int __e_termination;	/* Process termination status.  */
+    short int __e_exit;		/* Process exit status.  */
   };
 
 
@@ -59,16 +59,14 @@ struct utmpx
   long int ut_session;		/* Session ID, used for windowing.  */
   struct timeval ut_tv;		/* Time entry was made.  */
   __int32_t ut_addr_v6[4];	/* Internet address of remote host.  */
-  char pad[20];			/* Reserved for future use.  */
+  char __unused[20];		/* Reserved for future use.  */
 };
 
 
 /* Values for the `ut_type' field of a `struct utmpx'.  */
 #define EMPTY		0	/* No valid user accounting information.  */
 
-#ifdef __USE_GNU
-# define RUN_LVL	1	/* The system's runlevel.  */
-#endif
+#define RUN_LVL		1	/* The system's runlevel.  */
 #define BOOT_TIME	2	/* Time of system boot.  */
 #define NEW_TIME	3	/* Time after system clock changed.  */
 #define OLD_TIME	4	/* Time when system clock changed.  */

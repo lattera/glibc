@@ -1,3 +1,8 @@
+1998-11-10  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/unix/sysv/linux/bits/local_lim.h: Undefine NR_OPEN
+	if it is defined in <linux/limits.h>.
+
 1998-10-29 14:28  Ulrich Drepper  <drepper@cygnus.com>
 
 	* spinlock.h (__pthread_trylock): Define inline.

@@ -1,5 +1,5 @@
 /* Minimum guaranteed maximum values for system limits.  Linux version.
-   Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,20 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+/* The kernel header pollutes the namespace with the NR_OPEN symbol.
+   Remove this after including the header if necessary.  */
+#ifndef NR_OPEN
+# define __undef_NR_OPEN
+#endif
+
 /* The kernel sources contain a file with all the needed information.  */
 #include <linux/limits.h>
+
+/* Have to remove NR_OPEN?  */
+#ifdef __undef_NR_OPEN
+# undef NR_OPEN
+# undef __undef_NR_OPEN
+#endif
 
 /* Maximum amount by which a process can descrease its asynchronous I/O
    priority level.  */
