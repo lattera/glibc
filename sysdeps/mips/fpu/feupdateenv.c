@@ -1,5 +1,5 @@
 /* Install given floating-point environment and raise exceptions.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1998.
 
@@ -20,10 +20,9 @@
 
 #include <fenv.h>
 #include <fpu_control.h>
-#include <shlib-compat.h>
 
 int
-__feupdateenv (const fenv_t *envp)
+feupdateenv (const fenv_t *envp)
 {
   int temp;
 
@@ -42,8 +41,3 @@ __feupdateenv (const fenv_t *envp)
   /* Success.  */
   return 0;
 }
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feupdateenv, __old_feupdateenv)
-compat_symbol (libm, __old_feupdateenv, feupdateenv, GLIBC_2_1);
-#endif
-versioned_symbol (libm, __feupdateenv, feupdateenv, GLIBC_2_2);

@@ -21,10 +21,9 @@
 #include <fenv.h>
 #include <fenv_libc.h>
 #include <fpu_control.h>
-#include <shlib-compat.h>
 
 int
-__feclearexcept (int excepts)
+feclearexcept (int excepts)
 {
   int cw;
 
@@ -35,8 +34,8 @@ __feclearexcept (int excepts)
   _FPU_GETCW (cw);
 
   /* Clear exception flag bits and cause bits. If the cause bit is not
-     cleared, the next CTC instruction (just below) will re-generate
-     the exception.  */
+     cleared, the next CTC instruction (just below) will re-generate the
+     exception.  */
 
   cw &= ~(excepts | (excepts << CAUSE_SHIFT));
 
@@ -46,9 +45,3 @@ __feclearexcept (int excepts)
   /* Success.  */
   return 0;
 }
-
-#if SHLIB_COMPAT (libm, GLIBC_2_1, GLIBC_2_2)
-strong_alias (__feclearexcept, __old_feclearexcept)
-compat_symbol (libm, __old_feclearexcept, feclearexcept, GLIBC_2_1);
-#endif
-versioned_symbol (libm, __feclearexcept, feclearexcept, GLIBC_2_2);

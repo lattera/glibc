@@ -1,3 +1,20 @@
+2002-09-10  Hartvig Ekner  <hartvige@mips.com>
+
+	* sysdeps/mips/memcpy.S: New file.
+	* sysdeps/mips/memset.S: New file.
+	* sysdeps/mips/fpu/e_sqrt.c:  New file.
+	* sysdeps/mips/fpu/e_sqrtf.c: New file.
+
+	* fpu/fclrexcpt.c: Cleaned up the FPU exception stuff - was not
+	functional before. Also removed all SHLIB_COMPAT stuff.
+	* fpu/fegetenv.c: Likewise.
+	* fpu/fesetenv.c:: Likewise.
+	* fpu/feupdateenv.c: Likewise.
+	* fpu/fgetexcptflg.c: Likewise.
+	* fpu/fraiseexcpt.c: Likewise.
+
+	* sysdeps/mips/fpu/fsetexcptflg.c: New file.
+
 2002-09-09  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/math.h (__finite_internal, __finitef_internal,
