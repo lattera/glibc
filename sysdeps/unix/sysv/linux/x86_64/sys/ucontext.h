@@ -33,7 +33,7 @@
 typedef long int greg_t;
 
 /* Number of general registers.  */
-#define NGREG	21
+#define NGREG	23
 
 /* Container for all general registers.  */
 typedef greg_t gregset_t[NGREG];
@@ -82,8 +82,12 @@ enum
 # define REG_CSGSFS	REG_CSGSFS
   REG_ERR,
 # define REG_ERR	REG_ERR
-  REG_TRAPNO
+  REG_TRAPNO,
 # define REG_TRAPNO	REG_TRAPNO
+  REG_OLDMASK,
+# define REG_OLDMASK	REG_OLDMASK
+  REG_CR2
+# define REG_CR2	REG_CR2
 };
 #endif
 
