@@ -1,3 +1,44 @@
+2004-01-13  Richard Henderson  <rth@redhat.com>
+
+	* Versions.def (libm): Add GLIBC_2.3.3.
+	* sysdeps/alpha/fpu/Versions: Add __c1_c*f and c*f to GLIBC_2.3.3.
+	* sysdeps/alpha/fpu/cabsf.c, sysdeps/alpha/fpu/cargf.c,
+	sysdeps/alpha/fpu/cfloat-compat.h, sysdeps/alpha/fpu/cimagf.c,
+	sysdeps/alpha/fpu/conjf.c, sysdeps/alpha/fpu/crealf.c,
+	sysdeps/alpha/fpu/s_cacosf.c, sysdeps/alpha/fpu/s_cacoshf.c,
+	sysdeps/alpha/fpu/s_casinf.c, sysdeps/alpha/fpu/s_casinhf.c,
+	sysdeps/alpha/fpu/s_catanf.c, sysdeps/alpha/fpu/s_catanhf.c,
+	sysdeps/alpha/fpu/s_ccosf.c, sysdeps/alpha/fpu/s_ccoshf.c,
+	sysdeps/alpha/fpu/s_cexpf.c, sysdeps/alpha/fpu/s_clog10f.c,
+	sysdeps/alpha/fpu/s_clogf.c, sysdeps/alpha/fpu/s_cpowf.c,
+	sysdeps/alpha/fpu/s_cprojf.c, sysdeps/alpha/fpu/s_csinf.c,
+	sysdeps/alpha/fpu/s_csinhf.c, sysdeps/alpha/fpu/s_csqrtf.c,
+	sysdeps/alpha/fpu/s_ctanf.c, sysdeps/alpha/fpu/s_ctanhf.c: New files.
+	* sysdeps/alpha/fpu/bits/mathdef.h: Rename complex float
+	functions for gcc 3.3.
+
+	* sysdeps/generic/s_cacosf.c, sysdeps/generic/s_cacoshf.c,
+	sysdeps/generic/s_casinf.c, sysdeps/generic/s_casinhf.c,
+	sysdeps/generic/s_catanf.c, sysdeps/generic/s_catanhf.c,
+	sysdeps/generic/s_ccosf.c, sysdeps/generic/s_ccoshf.c,
+	sysdeps/generic/s_cexpf.c, sysdeps/generic/s_clog10f.c,
+	sysdeps/generic/s_clogf.c, sysdeps/generic/s_cpowf.c,
+	sysdeps/generic/s_cprojf.c, sysdeps/generic/s_csinf.c,
+	sysdeps/generic/s_csinhf.c, sysdeps/generic/s_csqrtf.c,
+	sysdeps/generic/s_ctanf.c, sysdeps/generic/s_ctanhf.c: Don't
+	weak_alias if the function name has been #defined.
+
+	* math/cabsf.c: Move ...
+	* sysdeps/generic/cabsf.c: ... here.
+	* math/cargf.c: Move ...
+	* sysdeps/generic/cargf.c: ... here.
+	* math/cimagf.c: Move ...
+	* sysdeps/generic/cimagf.c: ... here.
+	* math/conjf.c: Move ...
+	* sysdeps/generic/conjf.c: ... here.
+	* math/crealf.c: Move ...
+	* sysdeps/generic/crealf.c: ... here.
+
 2004-01-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig: Define relro-LDFLAGS if have-z-relro==yes.  Add it to

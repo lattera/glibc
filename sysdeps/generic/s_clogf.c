@@ -58,4 +58,6 @@ __clogf (__complex__ float x)
 
   return result;
 }
+#ifndef __clogf
 weak_alias (__clogf, clogf)
+#endif

@@ -1,7 +1,6 @@
-/* Return cosine of complex float value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Return the complex absolute value of float complex value.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,22 +17,26 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __cabsf __cabsf_not_defined
+#define cabsf cabsf_not_defined
+
 #include <complex.h>
 #include <math.h>
+#include "cfloat-compat.h"
 
-__complex__ float
-__cacosf (__complex__ float x)
+#undef __cabsf
+#undef cabsf
+
+float
+__c1_cabsf (c1_cfloat_decl (z))
 {
-  __complex__ float y;
-  __complex__ float res;
-
-  y = __casinf (x);
-
-  __real__ res = (float) M_PI_2 - __real__ y;
-  __imag__ res = -__imag__ y;
-
-  return res;
+  return __hypotf (c1_cfloat_real (z), c1_cfloat_imag (z));
 }
-#ifndef __cacosf
-weak_alias (__cacosf, cacosf)
-#endif
+
+float
+__c2_cabsf (c2_cfloat_decl (z))
+{
+  return __hypotf (c2_cfloat_real (z), c2_cfloat_imag (z));
+}
+
+cfloat_versions (cabsf);

@@ -27,4 +27,6 @@ __cpowf (__complex__ float x, __complex__ float c)
 {
   return __cexpf (c * __clogf (x));
 }
+#ifndef __cpowf
 weak_alias (__cpowf, cpowf)
+#endif

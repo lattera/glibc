@@ -44,4 +44,6 @@ __cprojf (__complex__ float x)
 
   return res;
 }
+#ifndef __cprojf
 weak_alias (__cprojf, cprojf)
+#endif

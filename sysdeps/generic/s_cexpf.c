@@ -120,4 +120,6 @@ __cexpf (__complex__ float x)
 
   return retval;
 }
+#ifndef __cexpf
 weak_alias (__cexpf, cexpf)
+#endif

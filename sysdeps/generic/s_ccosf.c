@@ -73,4 +73,6 @@ __ccosf (__complex__ float x)
 
   return res;
 }
+#ifndef __ccosf
 weak_alias (__ccosf, ccosf)
+#endif

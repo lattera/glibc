@@ -124,4 +124,6 @@ __csinf (__complex__ float x)
 
   return retval;
 }
+#ifndef __csinf
 weak_alias (__csinf, csinf)
+#endif

@@ -96,4 +96,6 @@ __cacoshf (__complex__ float x)
 
   return res;
 }
+#ifndef __cacoshf
 weak_alias (__cacoshf, cacoshf)
+#endif

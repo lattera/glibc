@@ -77,4 +77,6 @@ __casinhf (__complex__ float x)
 
   return res;
 }
+#ifndef __casinhf
 weak_alias (__casinhf, casinhf)
+#endif

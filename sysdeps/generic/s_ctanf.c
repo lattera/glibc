@@ -67,4 +67,6 @@ __ctanf (__complex__ float x)
 
   return res;
 }
+#ifndef __ctanf
 weak_alias (__ctanf, ctanf)
+#endif

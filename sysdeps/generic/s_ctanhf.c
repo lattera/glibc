@@ -67,4 +67,6 @@ __ctanhf (__complex__ float x)
 
   return res;
 }
+#ifndef __ctanhf
 weak_alias (__ctanhf, ctanhf)
+#endif

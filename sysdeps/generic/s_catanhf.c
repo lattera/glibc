@@ -77,4 +77,6 @@ __catanhf (__complex__ float x)
 
   return res;
 }
+#ifndef __catanhf
 weak_alias (__catanhf, catanhf)
+#endif

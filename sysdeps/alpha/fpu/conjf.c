@@ -1,7 +1,6 @@
-/* Return cosine of complex float value.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+/* Return complex conjugate of complex float value.
+   Copyright (C) 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Lesser General Public
@@ -18,22 +17,27 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#define __conjf __conjf_not_defined
+#define conjf conjf_not_defined
+
 #include <complex.h>
-#include <math.h>
+#include "cfloat-compat.h"
 
-__complex__ float
-__cacosf (__complex__ float x)
+#undef __conjf
+#undef conjf
+
+c1_cfloat_rettype
+__c1_conjf (c1_cfloat_decl (z))
 {
-  __complex__ float y;
-  __complex__ float res;
-
-  y = __casinf (x);
-
-  __real__ res = (float) M_PI_2 - __real__ y;
-  __imag__ res = -__imag__ y;
-
-  return res;
+  _Complex float r = ~ c1_cfloat_value (z);
+  return c1_cfloat_return (r);
 }
-#ifndef __cacosf
-weak_alias (__cacosf, cacosf)
-#endif
+
+c2_cfloat_rettype
+__c2_conjf (c2_cfloat_decl (z))
+{
+  _Complex float r = ~ c2_cfloat_value (z);
+  return c2_cfloat_return (r);
+}
+
+cfloat_versions (conjf);

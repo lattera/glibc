@@ -59,4 +59,6 @@ __casinf (__complex__ float x)
 
   return res;
 }
+#ifndef __casinf
 weak_alias (__casinf, casinf)
+#endif

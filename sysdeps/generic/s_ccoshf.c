@@ -98,4 +98,6 @@ __ccoshf (__complex__ float x)
 
   return retval;
 }
+#ifndef __ccoshf
 weak_alias (__ccoshf, ccoshf)
+#endif

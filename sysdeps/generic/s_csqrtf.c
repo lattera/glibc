@@ -107,4 +107,6 @@ __csqrtf (__complex__ float x)
 
   return res;
 }
+#ifndef __csqrtf
 weak_alias (__csqrtf, csqrtf)
+#endif

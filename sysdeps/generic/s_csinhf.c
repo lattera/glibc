@@ -119,4 +119,6 @@ __csinhf (__complex__ float x)
 
   return retval;
 }
+#ifndef __csinhf
 weak_alias (__csinhf, csinhf)
+#endif

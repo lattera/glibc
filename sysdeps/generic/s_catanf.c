@@ -82,4 +82,6 @@ __catanf (__complex__ float x)
 
   return res;
 }
+#ifndef __catanf
 weak_alias (__catanf, catanf)
+#endif
