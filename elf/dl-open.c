@@ -305,7 +305,7 @@ dl_open_worker (void *a)
 
   /* Load that object's dependencies.  */
   _dl_map_object_deps (new, NULL, 0, 0,
-		       mode & (__RTLD_DLOPEN | RTLD_DEEPBIND));
+		       mode & (__RTLD_DLOPEN | RTLD_DEEPBIND | __RTLD_AUDIT));
 
   /* So far, so good.  Now check the versions.  */
   for (i = 0; i < new->l_searchlist.r_nlist; ++i)

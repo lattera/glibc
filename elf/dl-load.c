@@ -1359,14 +1359,14 @@ cannot allocate TLS data structures for initial thread");
 	 protection of the variable which contains the flags used in
 	 the mprotect calls.  */
 #ifdef HAVE_Z_RELRO
-      if (mode & __RTLD_DLOPEN)
+      if ((mode & (__RTLD_DLOPEN | __RTLD_AUDIT)) == __RTLD_DLOPEN)
 	{
 	  uintptr_t p = ((uintptr_t) &__stack_prot) & ~(GLRO(dl_pagesize) - 1);
 	  size_t s = (uintptr_t) &__stack_prot - p + sizeof (int);
 
 	  __mprotect ((void *) p, s, PROT_READ|PROT_WRITE);
 	  if (__builtin_expect (__check_caller (RETURN_ADDRESS (0),
-						allow_ldso|allow_libc) == 0,
+						allow_ldso) == 0,
 				0))
 	    __stack_prot |= PROT_EXEC;
 	  __mprotect ((void *) p, s, PROT_READ);

@@ -1,5 +1,15 @@
 2005-01-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (_dl_map_object_from_fd): We don't have to allow
+	callers from libc anymore.
+
+	* elf/dl-open.c (dl_open_worker): Pass __RTLD_AUDIT flag from caller
+	to _dl_map_object_deps.
+	* elf/dl-load.c (_dl_map_object_from_fd): Don't change memory
+	protections when loading auditing modules.
+
+	* dlfcn/dlopen.c (dlopen_doit): Catch invalid mode arguments and fail.
+
 	* posix/getconf.c: Update copyright year.
 	* nss/getent.c: Likewise.
 	* nscd/nscd_nischeck.c: Likewise.
