@@ -36,28 +36,33 @@ routines = $(mach-syscalls) $(mach-shortcuts) \
 	   mig-alloc mig-dealloc mig-reply \
 	   msg-destroy msgserver \
 	   mach_error errstring error_compat errsystems \
-	   devstream bootprivport setup-thread $(lock)
+	   devstream setup-thread $(lock)
+
 # The RPC interfaces go in a separate library.
 interface-library := libmachuser
-user-interfaces := $(addprefix mach/,mach_interface mach_port mach_host	\
-				     memory_object_user			\
-				     memory_object_default		\
-				     exc mach4				\
-				     default_pager			\
-	            )\
-		   $(addprefix device/,device device_request)
+
 # We produce mach_interface.h from mach.defs because there is already a
 # <mach/mach.h> that is not the interface header (thanks CMU).
+mach-interface-list := $(patsubst mach,mach_interface,$(mach-interface-list))
 mach/mach_interface.defs = mach/mach.defs
+
 # Similarly for memory_object_user vs. memory_object
+mach-interface-list := $(patsubst memory_object,memory_object_user,\
+				  $(mach-interface-list))
 mach/memory_object_user.defs = mach/memory_object.defs
+
+user-interfaces := $(addprefix mach/,$(mach-interface-list)	\
+			       	     mach_port mach_host exc	\
+	            )\
+		   $(addprefix device/,device device_request)
+
 server-interfaces := mach/exc
+
 # It is important that we do not use the wildcard function to expand
 # `err_*.sub'.  Leaving the wildcard allows Make-dist to find all matching
 # files in all sysdep directories.
 distribute += Machrules syscalls.awk shortcut.awk \
 	      errorlib.h err_*.sub errsystems.awk
-
 
 # Clear any environment	value.
 generated =
@@ -103,7 +108,7 @@ ifndef mach-shortcuts
 # Forget about mach_interface.defs for this run.  On the next run,
 # $(mach-shortcuts) will be set, and that will change how
 # mach_interface.defs is processed: it will get the -D flags below.
-user-interfaces := $(filter-out mach/mach_interface \
+user-interfaces := $(filter-out $(mach-interface-list:%=mach/%) \
 				mach/mach_port mach/mach_host mach/mach4 \
 				device/device_request,\
 				$(user-interfaces))
@@ -114,7 +119,8 @@ MIGFLAGS-mach/mach4=-DMACH_PCSAMPLE
 
 # Make the MiG stubs for $(mach-shortcuts) be CALL_rpc.
 migdefines += $(foreach call,$(mach-shortcuts),-D$(call)=$(call)_rpc)
-mach/mach_interface.uh mach/mach_host.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
+$(mach-interface-list:%=mach/%.uh) \
+  mach/mach_host.uh mach/mach_port.uh: $(objpfx)mach-syscalls.mk
 
 ifdef mach-shortcuts
 $(mach-shortcuts:%=$(objpfx)%.c): $(objpfx)%.c: shortcut.awk \
@@ -127,7 +133,7 @@ endif	# mach-shortcuts
 
 # Generate mach-shortcuts.h, which will contain the prototypes for the
 # shortcutted kernel RPC functions.
-$(objpfx)mach-shortcuts.h: $(objpfx)mach/mach_interface.h \
+$(objpfx)mach-shortcuts.h: $(mach-interface-list:%=$(objpfx)mach/%.h) \
 			   $(objpfx)mach/mach_host.h \
 			   $(objpfx)mach/mach_port.h
 # The first line gets us one paragraph per line, with @s separating real lines.
