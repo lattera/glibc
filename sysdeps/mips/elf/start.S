@@ -72,9 +72,6 @@ ENTRY_POINT:
 #endif
 	move $31, $0
 
-#if (__mips64)
-# define la dla
-#endif
 	la $4, main		/* main */
 	lw $5, 0($29)		/* argc */
 	addu $6, $29, 4		/* argv  */
