@@ -279,6 +279,14 @@ $(addprefix $(inst_gconvdir)/, $(modules.so)): \
 	$(do-install-program)
 $(inst_gconvdir)/gconv-modules: gconv-modules $(+force)
 	$(do-install)
+# Update the $(prefix)/lib/gconv/gconv-modules.cache file. This is necessary
+# if this libc has more gconv modules than the previously installed one.
+	if test -f "$(inst_gconvdir)/gconv-modules.cache"; then \
+	   LC_ALL=C LANGUAGE=C \
+	   $(common-objpfx)elf/ld.so --library-path $(rpath-link) \
+	   $(common-objpfx)iconv/iconvconfig \
+	     $(addprefix --prefix=,$(install_root)); \
+	fi
 
 endif # build-shared = yes
 

@@ -1,5 +1,9 @@
 2002-06-30  Ulrich Drepper  <drepper@redhat.com>
 
+	* iconvdata/Makefile: Recreate gconv-modules.cache file in taret
+	directory if it existed before.
+	* iconv/iconvconfig.c: Implement --prefix option.
+
 	* math/libm-test.inc (cexp_test): Add missing L suffix for
 	expected result.  Reported by 	Stephen L Moshier <steve@moshier.net>.
 	* sysdeps/i386/fpu/libm-test-ulps: Adjust error for cexp (0.75 +

@@ -113,13 +113,25 @@ Create fastloading iconv module configuration file.");
 /* Strings for arguments in help texts.  */
 static const char args_doc[] = N_("[DIR...]");
 
+/* Prototype for option handler.  */
+static error_t parse_opt (int key, char *arg, struct argp_state *state);
+
 /* Function to print some extra text in the help message.  */
 static char *more_help (int key, const char *text, void *input);
+
+/* Definitions of arguments for argp functions.  */
+#define OPT_PREFIX 300
+static const struct argp_option options[] =
+{
+  { "prefix", OPT_PREFIX, "PATH", 0, N_("Prefix used for all file accesses") },
+  { NULL, 0, NULL, 0, NULL }
+};
 
 /* Data structure to communicate with argp functions.  */
 static struct argp argp =
 {
-  NULL, NULL, args_doc, doc, NULL, more_help
+
+  options, parse_opt, args_doc, doc, NULL, more_help
 };
 
 
@@ -144,6 +156,11 @@ static void generate_name_info (void);
 /* Write the output file.  */
 static int write_output (void);
 
+
+/* Prefix to be used for all file accesses.  */
+static const char *prefix = "";
+/* Its length.  */
+static size_t prefix_len;
 
 /* Search tree of the modules we know.  */
 static void *modules;
@@ -308,6 +325,23 @@ main (int argc, char *argv[])
     error (1, 0, _("no output file produced because warning were issued"));
 
   return status;
+}
+
+
+/* Handle program arguments.  */
+static error_t
+parse_opt (int key, char *arg, struct argp_state *state)
+{
+  switch (key)
+    {
+    case OPT_PREFIX:
+      prefix = arg;
+      prefix_len = strlen (prefix);
+      break;
+    default:
+      return ARGP_ERR_UNKNOWN;
+    }
+  return 0;
 }
 
 
@@ -590,6 +624,7 @@ static int
 handle_dir (const char *dir)
 {
   char *infile;
+  char *cp;
   FILE *fp;
   char *line = NULL;
   size_t linelen = 0;
@@ -603,8 +638,10 @@ handle_dir (const char *dir)
       newp[dirlen] = '\0';
     }
 
-  infile = (char *) alloca (dirlen + sizeof "gconv-modules");
-  strcpy (mempcpy (infile, dir, dirlen), "gconv-modules");
+  cp = infile = (char *) alloca (prefix_len + dirlen + sizeof "gconv-modules");
+  if (dir[0] == '/')
+    cp = mempcpy (cp, prefix, prefix_len);
+  strcpy (mempcpy (cp, dir, dirlen), "gconv-modules");
 
   fp = fopen (infile, "r");
   if (fp == NULL)
@@ -966,7 +1003,9 @@ write_output (void)
   struct iovec iov[6];
   static const gidx_t null_word;
   size_t total;
-  char tmpfname[sizeof (GCONV_MODULES_CACHE) + strlen (".XXXXXX")];
+  char tmpfname[prefix_len + sizeof (GCONV_MODULES_CACHE)
+		+ strlen (".XXXXXX")];
+  char finalname[prefix_len + sizeof (GCONV_MODULES_CACHE)];
 
   /* Function to insert the names.  */
   static void name_insert (const void *nodep, VISIT value, int level)
@@ -993,10 +1032,14 @@ write_output (void)
     }
 
   /* Open the output file.  */
-  strcpy (stpcpy (tmpfname, GCONV_MODULES_CACHE), ".XXXXXX");
+  assert (GCONV_MODULES_CACHE[0] == '/');
+  strcpy (stpcpy (mempcpy (tmpfname, prefix, prefix_len), GCONV_MODULES_CACHE),
+	  ".XXXXXX");
   fd = mkstemp (tmpfname);
   if (fd == -1)
     return 1;
+
+  strcpy (mempcpy (finalname, prefix, prefix_len), GCONV_MODULES_CACHE);
 
   /* Create the string table.  */
   string_table = strtabfinalize (strtab, &string_table_size);
@@ -1150,7 +1193,7 @@ write_output (void)
       /* The file was created with mode 0600.  Make it world-readable.  */
       || fchmod (fd, 0644) != 0
       /* Rename the file, possibly replacing an old one.  */
-      || rename (tmpfname, GCONV_MODULES_CACHE) != 0)
+      || rename (tmpfname, finalname) != 0)
     {
       int save_errno = errno;
       close (fd);
