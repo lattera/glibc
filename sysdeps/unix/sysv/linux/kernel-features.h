@@ -112,7 +112,8 @@
 
 /* Linux 2.3.39 introduced 32bit UID/GIDs and IPC64.  Some platforms had 32
    bit type all along.  */
-#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ || defined __mips__
+#if __LINUX_KERNEL_VERSION >= 131879 || defined __powerpc__ \
+    || defined __mips__ || defined __hppa__
 # define __ASSUME_32BITUIDS		1
 # ifndef __powerpc__
 #  define __ASSUME_IPC64		1
