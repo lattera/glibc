@@ -307,10 +307,8 @@ _dl_runtime_resolve:
 	/* Set up the arguments for _dl_runtime_resolve. */
 	/* $16 = link_map out of plt0 */
 	ldq	$16, 8($27)
-	/* $17 = (($28 - 4) - ($27 + 16)) / 12 * sizeof(Elf_Rela) */
-	subq	$28, $27, $28
-	subq	$28, 20, $28
-	addq	$28, $28, $17
+	/* $17 = offset of reloc entry */
+	mov	$28, $17
 	/* Do the fixup */
 	bsr	$26, fixup..ng
 	/* Move the destination address to a safe place.  */
