@@ -46,7 +46,7 @@ ENTRY (__vfork)
 		
 	swi	__NR_vfork
 	cmn	a1, #4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 
 #ifndef __ASSUME_VFORK_SYSCALL
 	/* Check if vfork syscall is known at all.  */
@@ -60,7 +60,7 @@ ENTRY (__vfork)
 	/* If we don't have vfork, fork is close enough.  */
 	swi	__NR_fork
 	cmn	a1, #4096
-	RETINSTR(movcc, pc, lr)
+	RETINSTR(cc, lr)
 #elif !defined __NR_vfork
 # error "__NR_vfork not available and __ASSUME_VFORK_SYSCALL defined"
 #endif
