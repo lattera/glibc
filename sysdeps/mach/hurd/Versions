@@ -1,12 +1,5 @@
 libc {
   GLIBC_2.0 {
-    # variables used for detecting cthreads
-    _cthread_exit_routine; _cthread_init_routine;
-
-    # cthreads functions with stubs in libc
-    cthread_keycreate; cthread_getspecific; cthread_setspecific;
-    __libc_getspecific;
-
     # functions with a weak definition in the dynamic linker
     __getcwd; __mmap;
   }
@@ -27,6 +20,6 @@ ld.so {
     __close; __fxstat; __getcwd; __getpid; __libc_read; __libc_write;
     __lseek; __mmap; __open; __xstat;
     _exit; _hurd_intr_rpc_mach_msg;
-    abort; 
+    abort;
   }
 }
