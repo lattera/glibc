@@ -1,4 +1,5 @@
-/* Copyright (C) 1991, 1992, 1994 Free Software Foundation, Inc.
+/* __sig_atomic_t, __sigset_t, and related definitions.  SVR4 version.
+Copyright (C) 1994 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -38,16 +39,19 @@ typedef struct
 extern __inline int
 __sigemptyset (__sigset_t *__set)
 {
-  __set->__sigbits[0] = __set->__sigbits[1] = 0L;
-  __set->__sigbits[2] = __set->__sigbits[3] = 0L;
+  __set->__sigbits[0] = __set->__sigbits[1] =
+    __set->__sigbits[2] = __set->__sigbits[3] = 0L;
   return 0;
 }
 
 extern __inline int
 __sigfillset (__sigset_t *__set)
 {
-  __set->__sigbits[0] = 0x7fffffffL;
-  __set->__sigbits[1] = __set->__sigbits[2] = __set->__sigbits[3] = 0L;
+  /* SVR4 has a system call for `sigfillset' (!), and it only sets the bits
+     for signals [1,31].  Setting bits for unimplemented signals seems
+     harmless (and we will find out if it really is).  */
+  __set->__sigbits[0] = __set->__sigbits[1] =
+    __set->__sigbits[2] = __set->__sigbits[3] = -1;
   return 0;
 }
 
