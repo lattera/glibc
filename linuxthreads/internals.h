@@ -63,7 +63,7 @@ struct _pthread_descr_struct {
   pthread_t p_tid;              /* Thread identifier */
   int p_pid;                    /* PID of Unix process */
   int p_priority;               /* Thread priority (== 0 if not realtime) */
-  int * p_spinlock;             /* Spinlock for synchronized accesses */
+  struct _pthread_fastlock * p_lock; /* Spinlock for synchronized accesses */
   int p_signal;                 /* last signal received */
   sigjmp_buf * p_signal_jmp;    /* where to siglongjmp on a signal or NULL */
   sigjmp_buf * p_cancel_jmp;    /* where to siglongjmp on a cancel or NULL */
@@ -81,6 +81,8 @@ struct _pthread_descr_struct {
   int p_errno;                  /* error returned by last system call */
   int * p_h_errnop;             /* pointer to used h_errno variable */
   int p_h_errno;                /* error returned by last netdb function */
+  char * p_in_sighandler;       /* stack address of sighandler, or NULL */
+  char p_sigwaiting;            /* true if a sigwait() is in progress */
   struct pthread_start_args p_start_args; /* arguments for thread creation */
   void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE]; /* thread-specific data */
   void * p_libc_specific[_LIBC_TSD_KEY_N]; /* thread-specific data for libc */
@@ -94,8 +96,9 @@ struct _pthread_descr_struct {
 typedef struct pthread_handle_struct * pthread_handle;
 
 struct pthread_handle_struct {
-  int h_spinlock;               /* Spinlock for sychronized access */
+  struct _pthread_fastlock h_lock; /* Fast lock for sychronized access */
   pthread_descr h_descr;        /* Thread descriptor or NULL if invalid */
+  char * h_bottom;              /* Lowest address in the stack thread */
 };
 
 /* The type of messages sent to the thread manager thread */
@@ -103,7 +106,8 @@ struct pthread_handle_struct {
 struct pthread_request {
   pthread_descr req_thread;     /* Thread doing the request */
   enum {                        /* Request kind */
-    REQ_CREATE, REQ_FREE, REQ_PROCESS_EXIT, REQ_MAIN_THREAD_EXIT
+    REQ_CREATE, REQ_FREE, REQ_PROCESS_EXIT, REQ_MAIN_THREAD_EXIT,
+    REQ_POST, REQ_DEBUG
   } req_kind;
   union {                       /* Arguments for request */
     struct {                    /* For REQ_CREATE: */
@@ -118,6 +122,7 @@ struct pthread_request {
     struct {                    /* For REQ_PROCESS_EXIT: */
       int code;                 /*   exit status */
     } exit;
+    void * post;                /* For REQ_POST: the semaphore */
   } req_args;
 };
 
@@ -160,6 +165,11 @@ extern pthread_descr __pthread_main_thread;
 
 extern char *__pthread_initial_thread_bos;
 
+/* Indicate whether at least one thread has a user-defined stack (if 1),
+   or all threads have stacks supplied by LinuxThreads (if 0). */
+
+extern int __pthread_nonstandard_stacks;
+
 /* File descriptor for sending requests to the thread manager.
    Initially -1, meaning that pthread_initialize must be called. */
 
@@ -177,6 +187,10 @@ extern char *__pthread_manager_thread_tos;
 /* Pending request for a process-wide exit */
 
 extern int __pthread_exit_requested, __pthread_exit_code;
+
+/* Set to 1 by gdb if we're debugging */
+
+extern volatile int __pthread_threads_debug;
 
 /* Return the handle corresponding to a thread id */
 
@@ -233,6 +247,8 @@ static inline int invalid_handle(pthread_handle h, pthread_t id)
 
 /* Recover thread descriptor for the current thread */
 
+extern pthread_descr __pthread_find_self (void) __attribute__ ((const));
+
 static inline pthread_descr thread_self (void) __attribute__ ((const));
 static inline pthread_descr thread_self (void)
 {
@@ -245,6 +261,8 @@ static inline pthread_descr thread_self (void)
   else if (sp >= __pthread_manager_thread_bos
 	   && sp < __pthread_manager_thread_tos)
     return &__pthread_manager_thread;
+  else if (__pthread_nonstandard_stacks)
+    return __pthread_find_self();
   else
     return (pthread_descr)(((unsigned long)sp | (STACK_SIZE-1))+1) - 1;
 #endif
@@ -282,8 +300,8 @@ static inline pthread_descr thread_self (void)
 
 void __pthread_destroy_specifics(void);
 void __pthread_perform_cleanup(void);
-void __pthread_sighandler(int sig);
-void __pthread_message(char * fmt, long arg, ...);
+int __pthread_initialize_manager(void);
+void __pthread_message(char * fmt, ...);
 int __pthread_manager(void *reqfd);
 void __pthread_manager_sighandler(int sig);
 void __pthread_reset_main_thread(void);

@@ -19,7 +19,6 @@
 #include "pthread.h"
 #include "internals.h"
 
-
 int __pthread_attr_init_2_1(pthread_attr_t *attr)
 {
   size_t ps = __getpagesize ();
@@ -185,11 +184,8 @@ weak_alias (__pthread_attr_getstackaddr, pthread_attr_getstackaddr)
 
 int __pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize)
 {
-  size_t ps = __getpagesize ();
-
-  /* We don't accept value smaller than PTHREAD_STACK_MIN or bigger than
-     2MB - pagesize.  */
-  if (stacksize < PTHREAD_STACK_MIN || stacksize > STACK_SIZE - ps)
+  /* We don't accept value smaller than PTHREAD_STACK_MIN.  */
+  if (stacksize < PTHREAD_STACK_MIN)
     return EINVAL;
 
   attr->stacksize = stacksize;

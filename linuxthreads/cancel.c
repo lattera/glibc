@@ -53,14 +53,14 @@ int pthread_cancel(pthread_t thread)
   pthread_handle handle = thread_handle(thread);
   int pid;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   handle->h_descr->p_canceled = 1;
   pid = handle->h_descr->p_pid;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   kill(pid, PTHREAD_SIG_CANCEL);
   return 0;
 }

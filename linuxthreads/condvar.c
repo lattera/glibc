@@ -25,42 +25,36 @@
 #include "queue.h"
 #include "restart.h"
 
-static void remove_from_queue(pthread_queue * q, pthread_descr th);
-
 int pthread_cond_init(pthread_cond_t *cond,
                       const pthread_condattr_t *cond_attr)
 {
-  cond->c_spinlock = 0;
-  queue_init(&cond->c_waiting);
+  __pthread_init_lock(&cond->c_lock);
+  cond->c_waiting = NULL;
   return 0;
 }
 
 int pthread_cond_destroy(pthread_cond_t *cond)
 {
-  pthread_descr head;
-
-  acquire(&cond->c_spinlock);
-  head = cond->c_waiting.head;
-  release(&cond->c_spinlock);
-  if (head != NULL) return EBUSY;
+  if (cond->c_waiting != NULL) return EBUSY;
   return 0;
 }
 
 int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
 {
   volatile pthread_descr self = thread_self();
-  acquire(&cond->c_spinlock);
+
+  __pthread_lock(&cond->c_lock);
   enqueue(&cond->c_waiting, self);
-  release(&cond->c_spinlock);
+  __pthread_unlock(&cond->c_lock);
   pthread_mutex_unlock(mutex);
   suspend_with_cancellation(self);
   pthread_mutex_lock(mutex);
   /* This is a cancellation point */
   if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
     /* Remove ourselves from the waiting queue if we're still on it */
-    acquire(&cond->c_spinlock);
+    __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
-    release(&cond->c_spinlock);
+    __pthread_unlock(&cond->c_lock);
     pthread_exit(PTHREAD_CANCELED);
   }
   return 0;
@@ -77,15 +71,14 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   sigjmp_buf jmpbuf;
 
   /* Wait on the condition */
-  acquire(&cond->c_spinlock);
+  __pthread_lock(&cond->c_lock);
   enqueue(&cond->c_waiting, self);
-  release(&cond->c_spinlock);
+  __pthread_unlock(&cond->c_lock);
   pthread_mutex_unlock(mutex);
-  /* Set up a longjmp handler for the restart signal */
-  /* No need to save the signal mask, since PTHREAD_SIG_RESTART will be
-     blocked when doing the siglongjmp, and we'll just leave it blocked. */
-  if (sigsetjmp(jmpbuf, 0) == 0) {
+  /* Set up a longjmp handler for the restart and cancel signals */
+  if (sigsetjmp(jmpbuf, 1) == 0) {
     self->p_signal_jmp = &jmpbuf;
+    self->p_cancel_jmp = &jmpbuf;
     self->p_signal = 0;
     /* Check for cancellation */
     if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
@@ -104,28 +97,28 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     retsleep = -1;
   }
   self->p_signal_jmp = NULL;
+  self->p_cancel_jmp = NULL;
   /* Here, either the condition was signaled (self->p_signal != 0)
                    or we got canceled (self->p_canceled != 0)
                    or the timeout occurred (retsleep == 0)
                    or another interrupt occurred (retsleep == -1) */
-  /* Re-acquire the spinlock */
-  acquire(&cond->c_spinlock);
   /* This is a cancellation point */
   if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+    __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
-    release(&cond->c_spinlock);
+    __pthread_unlock(&cond->c_lock);
     pthread_mutex_lock(mutex);
     pthread_exit(PTHREAD_CANCELED);
   }
   /* If not signaled: also remove ourselves and return an error code */
   if (self->p_signal == 0) {
+    __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
-    release(&cond->c_spinlock);
+    __pthread_unlock(&cond->c_lock);
     pthread_mutex_lock(mutex);
     return retsleep == 0 ? ETIMEDOUT : EINTR;
   }
   /* Otherwise, return normally */
-  release(&cond->c_spinlock);
   pthread_mutex_lock(mutex);
   return 0;
 }
@@ -151,23 +144,22 @@ int pthread_cond_signal(pthread_cond_t *cond)
 {
   pthread_descr th;
 
-  acquire(&cond->c_spinlock);
+  __pthread_lock(&cond->c_lock);
   th = dequeue(&cond->c_waiting);
-  release(&cond->c_spinlock);
+  __pthread_unlock(&cond->c_lock);
   if (th != NULL) restart(th);
   return 0;
 }
 
 int pthread_cond_broadcast(pthread_cond_t *cond)
 {
-  pthread_queue tosignal;
-  pthread_descr th;
+  pthread_descr tosignal, th;
 
-  acquire(&cond->c_spinlock);
+  __pthread_lock(&cond->c_lock);
   /* Copy the current state of the waiting queue and empty it */
   tosignal = cond->c_waiting;
-  queue_init(&cond->c_waiting);
-  release(&cond->c_spinlock);
+  cond->c_waiting = NULL;
+  __pthread_unlock(&cond->c_lock);
   /* Now signal each process in the queue */
   while ((th = dequeue(&tosignal)) != NULL) restart(th);
   return 0;
@@ -181,27 +173,4 @@ int pthread_condattr_init(pthread_condattr_t *attr)
 int pthread_condattr_destroy(pthread_condattr_t *attr)
 {
   return 0;
-}
-
-/* Auxiliary function on queues */
-
-static void remove_from_queue(pthread_queue * q, pthread_descr th)
-{
-  pthread_descr t;
-
-  if (q->head == NULL) return;
-  if (q->head == th) {
-    q->head = th->p_nextwaiting;
-    if (q->head == NULL) q->tail = NULL;
-    th->p_nextwaiting = NULL;
-    return;
-  }
-  for (t = q->head; t->p_nextwaiting != NULL; t = t->p_nextwaiting) {
-    if (t->p_nextwaiting == th) {
-      t->p_nextwaiting = th->p_nextwaiting;
-      if (th->p_nextwaiting == NULL) q->tail = t;
-      th->p_nextwaiting = NULL;
-      return;
-    }
-  }
 }

@@ -1,3 +1,32 @@
+1998-06-25 19:27  Ulrich Drepper  <drepper@cygnus.com>
+
+	* attr.c: Finish user stack support.  Change locking code to be safe
+	in situations with different priorities.
+	* cancel.c: Likewise.
+	* condvar.c: Likewise.
+	* internals.h: Likewise.
+	* join.c: Likewise.
+	* manager.c: Likewise.
+	* mutex.c: Likewise.
+	* pthread.c: Likewise.
+	* ptlongjmp.c: Likewise.
+	* queue.h: Likewise.
+	* rwlock.c: Likewise.
+	* semaphore.c: Likewise.
+	* semaphore.h: Likewise.
+	* signals.c: Likewise.
+	* spinlock.c: Likewise.
+	* spinlock.h: Likewise.
+	Patches by Xavier leroy.
+
+1998-06-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/pthread/pthread.h: Make [sg]et_stacksize and
+	[sg]et_stackaddr prototypes always available.
+
+	* sysdeps/unix/sysv/linux/bits/posix_opt.h: Define
+	_POSIX_THREAD_ATTR_STACKSIZE and _POSIX_THREAD_ATTR_STACKADDR.
+
 1998-06-24  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manager.c (pthread_free): Undo patch from 980430.

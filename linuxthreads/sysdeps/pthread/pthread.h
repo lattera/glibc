@@ -43,21 +43,24 @@ typedef unsigned long int pthread_t;
 /* Thread descriptors */
 typedef struct _pthread_descr_struct *_pthread_descr;
 
-/* Waiting queues (not abstract because mutexes and conditions aren't).  */
-struct _pthread_queue
+/* Fast locks (not abstract because mutexes and conditions aren't abstract). */
+struct _pthread_fastlock
 {
-  _pthread_descr head;		/* First element, or NULL if queue empty.  */
-  _pthread_descr tail;		/* Last element, or NULL if queue empty.  */
+  long status;                  /* "Free" or "taken" or head of waiting list */
+  int spinlock;                 /* For compare-and-swap emulation */
 };
 
 /* Mutexes (not abstract because of PTHREAD_MUTEX_INITIALIZER).  */
+/* (The layout is unnatural to maintain binary compatibility
+    with earlier releases of LinuxThreads.) */
+
 typedef struct
 {
-  int m_spinlock;		/* Spin lock to guarantee mutual exclusion.  */
-  int m_count;			/* 0 if free, > 0 if taken.  */
-  _pthread_descr m_owner;	/* Owner of mutex (for recursive mutexes) */
-  int m_kind;			/* Kind of mutex */
-  struct _pthread_queue m_waiting; /* Threads waiting on this mutex.  */
+  int m_reserved;               /* Reserved for future use */
+  int m_count;                  /* Depth of recursive locking */
+  _pthread_descr m_owner;       /* Owner thread (if recursive or errcheck) */
+  int m_kind;                   /* Mutex kind: fast, recursive or errcheck */
+  struct _pthread_fastlock m_lock; /* Underlying fast lock */
 } pthread_mutex_t;
 
 #define PTHREAD_MUTEX_INITIALIZER \
@@ -68,21 +71,21 @@ typedef struct
 /* Conditions (not abstract because of PTHREAD_COND_INITIALIZER */
 typedef struct
 {
-  int c_spinlock;                  /* Spin lock to protect the queue.  */
-  struct _pthread_queue c_waiting; /* Threads waiting on this condition.  */
+  struct _pthread_fastlock c_lock; /* Protect against concurrent access */
+  _pthread_descr c_waiting;        /* Threads waiting on this condition */
 } pthread_cond_t;
 
-#define PTHREAD_COND_INITIALIZER {0, {0, 0}}
+#define PTHREAD_COND_INITIALIZER {{0, 0}, 0}
 
 #ifdef __USE_UNIX98
 /* Read-write locks.  */
 typedef struct
 {
-  int rw_spinlock;              /* Spin lock to guarantee mutual exclusion */
+  struct _pthread_fastlock rw_lock; /* Lock to guarantee mutual exclusion */
   int rw_readers;               /* Number of readers */
   _pthread_descr rw_writer;     /* Identity of writer, or NULL if none */
-  struct _pthread_queue rw_read_waiting; /* Threads waiting for reading */
-  struct _pthread_queue rw_write_waiting; /* Threads waiting for writing */
+  _pthread_descr rw_read_waiting; /* Threads waiting for reading */
+  _pthread_descr rw_write_waiting; /* Threads waiting for writing */
   int rw_kind;                  /* Reader/Writer preference selection */
   int rw_pshared;               /* Shared between processes or not */
 } pthread_rwlock_t;
@@ -231,7 +234,8 @@ extern int pthread_detach __P ((pthread_t __th));
 /* Functions for handling attributes.  */
 
 /* Initialize thread attribute *ATTR with default attributes
-   (detachstate is PTHREAD_JOINABLE, scheduling policy is SCHED_OTHER).  */
+   (detachstate is PTHREAD_JOINABLE, scheduling policy is SCHED_OTHER,
+    no user-provided stack).  */
 extern int pthread_attr_init __P ((pthread_attr_t *__attr));
 
 /* Destroy thread attribute *ATTR.  */
@@ -288,6 +292,7 @@ extern int __pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
 					     size_t *__guardsize));
 extern int pthread_attr_getguardsize __P ((__const pthread_attr_t *__attr,
 					   size_t *__guardsize));
+#endif
 
 /* Set the starting address of the stack of the thread to be created.
    Depending on whether the stack grows up or doen the value must either
@@ -317,7 +322,6 @@ extern int __pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
 					     size_t *__stacksize));
 extern int pthread_attr_getstacksize __P ((__const pthread_attr_t *__attr,
 					   size_t *__stacksize));
-#endif
 
 /* Functions for scheduling control. */
 

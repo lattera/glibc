@@ -35,7 +35,7 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   PTHREAD_THREADS_MAX,        /* pthread_t p_tid */
   0,                          /* int p_pid */
   0,                          /* int p_priority */
-  &__pthread_handles[0].h_spinlock, /* int * p_spinlock */
+  &__pthread_handles[0].h_lock, /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
@@ -53,6 +53,8 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
   0,                          /* int p_h_errno */
+  NULL,                       /* char * p_in_sighandler */
+  0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
   {NULL}                      /* void * p_specific[PTHREAD_KEYS_MAX] */
 };
@@ -68,7 +70,7 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_tid */
   0,                          /* int p_pid */
   0,                          /* int p_priority */
-  NULL,                       /* int * p_spinlock */
+  NULL,                       /* struct _pthread_fastlock * p_lock */
   0,                          /* int p_signal */
   NULL,                       /* sigjmp_buf * p_signal_buf */
   NULL,                       /* sigjmp_buf * p_cancel_buf */
@@ -86,6 +88,8 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
   0,                          /* int p_h_errno */
+  NULL,                       /* char * p_in_sighandler */
+  0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
   {NULL}                      /* void * p_specific[PTHREAD_KEYS_MAX] */
 };
@@ -119,6 +123,15 @@ char *__pthread_manager_thread_tos = NULL;
 int __pthread_exit_requested = 0;
 int __pthread_exit_code = 0;
 
+/* Communicate relevant LinuxThreads constants to gdb */
+
+const int __pthread_threads_max = PTHREAD_THREADS_MAX;
+const int __pthread_sizeof_handle = sizeof(struct pthread_handle_struct);
+const int __pthread_offsetof_descr = offsetof(struct pthread_handle_struct,
+                                              h_descr);
+const int __pthread_offsetof_pid = offsetof(struct _pthread_descr_struct,
+                                            p_pid);
+
 /* Signal numbers used for the communication.  */
 int __pthread_sig_restart;
 int __pthread_sig_cancel;
@@ -131,6 +144,7 @@ extern int _h_errno;
 
 static void pthread_exit_process(int retcode, void *arg);
 static void pthread_handle_sigcancel(int sig);
+static void pthread_handle_sigrestart(int sig);
 
 /* Initialize the pthread library.
    Initialization is split in two functions:
@@ -148,6 +162,10 @@ static void pthread_initialize(void)
 
   /* If already done (e.g. by a constructor called earlier!), bail out */
   if (__pthread_initial_thread_bos != NULL) return;
+#ifdef TEST_FOR_COMPARE_AND_SWAP
+  /* Test if compare-and-swap is available */
+  __pthread_has_cas = compare_and_swap_is_available();
+#endif
   /* For the initial stack, reserve at least STACK_SIZE bytes of stack
      below the current stack address, and align that on a
      STACK_SIZE boundary. */
@@ -178,14 +196,14 @@ static void pthread_initialize(void)
   /* Setup signal handlers for the initial thread.
      Since signal handlers are shared between threads, these settings
      will be inherited by all other threads. */
-  sa.sa_handler = __pthread_sighandler;
+  sa.sa_handler = pthread_handle_sigrestart;
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = SA_RESTART; /* does not matter for regular threads, but
                                better for the thread manager */
-  sigaction(PTHREAD_SIG_RESTART, &sa, NULL);
+  __sigaction(PTHREAD_SIG_RESTART, &sa, NULL);
   sa.sa_handler = pthread_handle_sigcancel;
   sa.sa_flags = 0;
-  sigaction(PTHREAD_SIG_CANCEL, &sa, NULL);
+  __sigaction(PTHREAD_SIG_CANCEL, &sa, NULL);
 
   /* Initially, block PTHREAD_SIG_RESTART. Will be unblocked on demand. */
   sigemptyset(&mask);
@@ -197,10 +215,11 @@ static void pthread_initialize(void)
   __on_exit(pthread_exit_process, NULL);
 }
 
-static int pthread_initialize_manager(void)
+int __pthread_initialize_manager(void)
 {
   int manager_pipe[2];
   int pid;
+  struct pthread_request request;
 
   /* If basic initialization not done yet (e.g. we're called from a
      constructor run before our constructor), do it now */
@@ -228,6 +247,11 @@ static int pthread_initialize_manager(void)
   __pthread_manager_request = manager_pipe[1]; /* writing end */
   __pthread_manager_reader = manager_pipe[0]; /* reading end */
   __pthread_manager_thread.p_pid = pid;
+  /* Make gdb aware of new thread manager */
+  if (__pthread_threads_debug) raise(PTHREAD_SIG_CANCEL);
+  /* Synchronize debugging of the thread manager */
+  request.req_kind = REQ_DEBUG;
+  __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
   return 0;
 }
 
@@ -239,7 +263,7 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
   pthread_descr self = thread_self();
   struct pthread_request request;
   if (__pthread_manager_request < 0) {
-    if (pthread_initialize_manager() < 0) return EAGAIN;
+    if (__pthread_initialize_manager() < 0) return EAGAIN;
   }
   request.req_thread = self;
   request.req_kind = REQ_CREATE;
@@ -296,6 +320,24 @@ int pthread_equal(pthread_t thread1, pthread_t thread2)
   return thread1 == thread2;
 }
 
+/* Helper function for thread_self in the case of user-provided stacks */
+
+#ifndef THREAD_SELF
+
+pthread_descr __pthread_find_self()
+{
+  char * sp = CURRENT_STACK_FRAME;
+  pthread_handle h;
+
+  /* __pthread_handles[0] is the initial thread, handled specially in
+     thread_self(), so start at 1 */
+  h = __pthread_handles + 1;
+  while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom)) h++;
+  return h->h_descr;
+}
+
+#endif
+
 /* Thread scheduling */
 
 int pthread_setschedparam(pthread_t thread, int policy,
@@ -304,18 +346,18 @@ int pthread_setschedparam(pthread_t thread, int policy,
   pthread_handle handle = thread_handle(thread);
   pthread_descr th;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   if (__sched_setscheduler(th->p_pid, policy, param) == -1) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return errno;
   }
   th->p_priority = policy == SCHED_OTHER ? 0 : param->sched_priority;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   if (__pthread_manager_request >= 0)
     __pthread_manager_adjust_prio(th->p_priority);
   return 0;
@@ -327,13 +369,13 @@ int pthread_getschedparam(pthread_t thread, int *policy,
   pthread_handle handle = thread_handle(thread);
   int pid, pol;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   pid = handle->h_descr->p_pid;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   pol = __sched_getscheduler(pid);
   if (pol == -1) return errno;
   if (__sched_getparam(pid, param) == -1) return errno;
@@ -364,11 +406,11 @@ static void pthread_exit_process(int retcode, void *arg)
 
 /* The handler for the RESTART signal just records the signal received
    in the thread descriptor, and optionally performs a siglongjmp
-   (for pthread_cond_timedwait). Also used in sigwait.
+   (for pthread_cond_timedwait).
    For the thread manager thread, redirect the signal to
    __pthread_manager_sighandler. */
 
-void __pthread_sighandler(int sig)
+static void pthread_handle_sigrestart(int sig)
 {
   pthread_descr self = thread_self();
   if (self == &__pthread_manager_thread) {
@@ -380,13 +422,24 @@ void __pthread_sighandler(int sig)
 }
 
 /* The handler for the CANCEL signal checks for cancellation
-   (in asynchronous mode) and for process-wide exit and exec requests. */
+   (in asynchronous mode), for process-wide exit and exec requests.
+   For the thread manager thread, we ignore the signal.
+   The debugging strategy is as follows:
+   On reception of a REQ_DEBUG request (sent by new threads created to
+   the thread manager under debugging mode), the thread manager throws
+   PTHREAD_SIG_CANCEL to itself. The debugger (if active) intercepts
+   this signal, takes into account new threads and continue execution
+   of the thread manager by propagating the signal because it doesn't
+   know what it is specifically done for. In the current implementation,
+   the thread manager simply discards it. */
 
 static void pthread_handle_sigcancel(int sig)
 {
   pthread_descr self = thread_self();
   sigjmp_buf * jmpbuf;
 
+  if (self == &__pthread_manager_thread)
+    return;
   if (__pthread_exit_requested) {
     /* Main thread should accumulate times for thread manager and its
        children, so that timings for main thread account for all threads. */
@@ -469,7 +522,7 @@ weak_alias (__pthread_getconcurrency, pthread_getconcurrency)
 #ifdef DEBUG
 #include <stdarg.h>
 
-void __pthread_message(char * fmt, long arg)
+void __pthread_message(char * fmt, ...)
 {
   char buffer[1024];
   va_list args;

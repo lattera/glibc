@@ -37,6 +37,8 @@ static void pthread_cleanup_upto(__jmp_buf target)
        c = c->prev)
     c->routine(c->arg);
   self->p_cleanup = c;
+  if (self->p_in_sighandler && _JMPBUF_UNWINDS(target, self->p_in_sighandler))
+    self->p_in_sighandler = NULL;
 }
 
 void siglongjmp(sigjmp_buf env, int val)

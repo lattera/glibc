@@ -35,13 +35,13 @@ void pthread_exit(void * retval)
   __pthread_perform_cleanup();
   __pthread_destroy_specifics();
   /* Store return value */
-  acquire(self->p_spinlock);
+  __pthread_lock(self->p_lock);
   self->p_retval = retval;
   /* Say that we've terminated */
   self->p_terminated = 1;
   /* See if someone is joining on us */
   joining = self->p_joining;
-  release(self->p_spinlock);
+  __pthread_unlock(self->p_lock);
   /* Restart joining thread if any */
   if (joining != NULL) restart(joining);
   /* If this is the initial thread, block until all threads have terminated.
@@ -65,36 +65,36 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
   pthread_handle handle = thread_handle(thread_id);
   pthread_descr th;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread_id)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   if (th == self) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return EDEADLK;
   }
   /* If detached or already joined, error */
   if (th->p_detached || th->p_joining != NULL) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return EINVAL;
   }
   /* If not terminated yet, suspend ourselves. */
   if (! th->p_terminated) {
     th->p_joining = self;
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     suspend_with_cancellation(self);
     /* This is a cancellation point */
     if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
       th->p_joining = NULL;
       pthread_exit(PTHREAD_CANCELED);
     }
-    acquire(&handle->h_spinlock);
+    __pthread_lock(&handle->h_lock);
   }
   /* Get return value */
   if (thread_return != NULL) *thread_return = th->p_retval;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   /* Send notification to thread manager */
   if (__pthread_manager_request >= 0) {
     request.req_thread = self;
@@ -113,26 +113,26 @@ int pthread_detach(pthread_t thread_id)
   pthread_handle handle = thread_handle(thread_id);
   pthread_descr th;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread_id)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   th = handle->h_descr;
   /* If already detached, error */
   if (th->p_detached) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return EINVAL;
   }
   /* If already joining, don't do anything. */
   if (th->p_joining != NULL) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return 0;
   }
   /* Mark as detached */
   th->p_detached = 1;
   terminated = th->p_terminated;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   /* If already terminated, notify thread manager to reclaim resources */
   if (terminated && __pthread_manager_request >= 0) {
     request.req_thread = thread_self();

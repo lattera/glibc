@@ -31,15 +31,22 @@
 #include "internals.h"
 #include "spinlock.h"
 #include "restart.h"
+#include "semaphore.h"
 
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
-
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
-{ { 0, &__pthread_initial_thread, 0}, /* All NULLs */ };
+{ { LOCK_INITIALIZER, &__pthread_initial_thread, 0}, /* All NULLs */ };
 
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
-int __pthread_nonstandard_stacks;
+int __pthread_nonstandard_stacks = 0;
+
+/* Number of active entries in __pthread_handles (used by gdb) */
+volatile int __pthread_handles_num = 1;
+
+/* Whether to use debugger additional actions for thread creation
+   (set to 1 by gdb) */
+volatile int __pthread_threads_debug = 0;
 
 /* Mapping from stack segment to thread descriptor. */
 /* Stack segment numbers are also indices into the __pthread_handles array. */
@@ -93,12 +100,18 @@ int __pthread_manager(void *arg)
   /* Set the error variable.  */
   __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
   __pthread_manager_thread.p_h_errnop = &__pthread_manager_thread.p_h_errno;
-  /* Block all signals except PTHREAD_SIG_RESTART */
+  /* Block all signals except PTHREAD_SIG_RESTART, PTHREAD_SIG_CANCEL
+     and SIGTRAP */
   sigfillset(&mask);
   sigdelset(&mask, PTHREAD_SIG_RESTART);
+  sigdelset(&mask, PTHREAD_SIG_CANCEL); /* for debugging new threads */
+  sigdelset(&mask, SIGTRAP);            /* for debugging purposes */
   sigprocmask(SIG_SETMASK, &mask, NULL);
   /* Raise our priority to match that of main thread */
   __pthread_manager_adjust_prio(__pthread_main_thread->p_priority);
+  /* Synchronize debugging of the thread manager */
+  n = __libc_read(reqfd, (char *)&request, sizeof(request));
+  ASSERT(n == sizeof(request) && request.req_kind == REQ_DEBUG);
   /* Enter server loop */
   while(1) {
     FD_ZERO(&readfds);
@@ -146,6 +159,14 @@ int __pthread_manager(void *arg)
           return 0;
         }
         break;
+      case REQ_POST:
+        sem_post(request.req_args.post);
+        break;
+      case REQ_DEBUG:
+        /* Make gdb aware of new thread */
+        if (__pthread_threads_debug) raise(PTHREAD_SIG_CANCEL);
+        restart(request.req_thread);
+        break;
       }
     }
   }
@@ -156,6 +177,7 @@ int __pthread_manager(void *arg)
 static int pthread_start_thread(void *arg)
 {
   pthread_descr self = (pthread_descr) arg;
+  struct pthread_request request;
   void * outcome;
   /* Initialize special thread_self processing, if any.  */
 #ifdef INIT_THREAD_SELF
@@ -171,6 +193,14 @@ static int pthread_start_thread(void *arg)
   if (self->p_start_args.schedpolicy >= 0)
     __sched_setscheduler(self->p_pid, self->p_start_args.schedpolicy,
                          &self->p_start_args.schedparam);
+  /* Make gdb aware of new thread */
+  if (__pthread_threads_debug) {
+    request.req_thread = self;
+    request.req_kind = REQ_DEBUG;
+    __libc_write(__pthread_manager_request,
+                 (char *) &request, sizeof(request));
+    suspend(self);
+  }
   /* Run the thread code */
   outcome = self->p_start_args.start_routine(self->p_start_args.arg);
   /* Exit with the given return value */
@@ -188,6 +218,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   char * new_thread_bottom;
   pthread_t new_thread_id;
   void *guardaddr = NULL;
+  size_t guardsize = 0;
 
   /* Find a free stack segment for the current stack */
   for (sseg = 1; ; sseg++)
@@ -211,13 +242,16 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 		 and allocate it if necessary.  */
 	      if (attr == NULL || attr->guardsize != 0)
 		{
+		  guardsize = attr ? attr->guardsize : __getpagesize ();
 		  guardaddr = mmap ((caddr_t)((char *)(new_thread+1)
 					      - STACK_SIZE),
-				    attr ? attr->guardsize : __getpagesize (),
-				    0, MAP_FIXED, -1, 0);
+				    guardsize, 0, MAP_FIXED, -1, 0);
 		  if (guardaddr == MAP_FAILED)
-		    /* We don't make this an error.  */
-		    guardaddr = NULL;
+		    {
+		      /* We don't make this an error.  */
+		      guardaddr = NULL;
+		      guardsize = 0;
+		    }
 		}
 	      break;
 	    }
@@ -238,7 +272,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_nextwaiting = NULL;
   new_thread->p_tid = new_thread_id;
   new_thread->p_priority = 0;
-  new_thread->p_spinlock = &(__pthread_handles[sseg].h_spinlock);
+  new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
   new_thread->p_signal = 0;
   new_thread->p_signal_jmp = NULL;
   new_thread->p_cancel_jmp = NULL;
@@ -255,16 +289,15 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_errno = 0;
   new_thread->p_h_errnop = &new_thread->p_h_errno;
   new_thread->p_h_errno = 0;
+  new_thread->p_in_sighandler = NULL;
+  new_thread->p_sigwaiting = 0;
   new_thread->p_guardaddr = guardaddr;
-  new_thread->p_guardsize = (guardaddr == NULL
-			     ? 0
-			     : (attr == NULL
-				? __getpagesize () : attr->guardsize));
+  new_thread->p_guardsize = guardsize;
   new_thread->p_userstack = attr != NULL && attr->stackaddr_set;
   memset (new_thread->p_specific, '\0',
 	  PTHREAD_KEY_1STLEVEL_SIZE * sizeof (new_thread->p_specific[0]));
   /* Initialize the thread handle */
-  __pthread_handles[sseg].h_spinlock = 0; /* should already be 0 */
+  __pthread_init_lock(&__pthread_handles[sseg].h_lock);
   __pthread_handles[sseg].h_descr = new_thread;
   __pthread_handles[sseg].h_bottom = new_thread_bottom;
   /* Determine scheduling parameters for the thread */
@@ -305,6 +338,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
 	  munmap(new_thread->p_guardaddr, new_thread->p_guardsize);
       }
     __pthread_handles[sseg].h_descr = NULL;
+    __pthread_handles[sseg].h_bottom = NULL;
+    __pthread_handles_num--;
     return errno;
   }
   /* Insert new thread in doubly linked list of active threads */
@@ -330,10 +365,12 @@ static void pthread_free(pthread_descr th)
   ASSERT(th->p_exited);
   /* Make the handle invalid */
   handle =  thread_handle(th->p_tid);
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   handle->h_descr = NULL;
   handle->h_bottom = (char *)(-1L);
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
+  /* One fewer threads in __pthread_handles */
+  __pthread_handles_num--;
   /* If initial thread, nothing to free */
   if (th == &__pthread_initial_thread) return;
   if (!th->p_userstack)
@@ -360,10 +397,10 @@ static void pthread_exited(pid_t pid)
       th->p_nextlive->p_prevlive = th->p_prevlive;
       th->p_prevlive->p_nextlive = th->p_nextlive;
       /* Mark thread as exited, and if detached, free its resources */
-      acquire(th->p_spinlock);
+      __pthread_lock(th->p_lock);
       th->p_exited = 1;
       detached = th->p_detached;
-      release(th->p_spinlock);
+      __pthread_unlock(th->p_lock);
       if (detached) pthread_free(th);
       break;
     }
@@ -409,16 +446,16 @@ static void pthread_handle_free(pthread_descr th)
   } while (t != __pthread_main_thread);
   if (t != th) return;
 
-  acquire(th->p_spinlock);
+  __pthread_lock(th->p_lock);
   if (th->p_exited) {
-    release(th->p_spinlock);
+    __pthread_unlock(th->p_lock);
     pthread_free(th);
   } else {
     /* The Unix process of the thread is still running.
        Mark the thread as detached so that the thread manager will
        deallocate its resources when the Unix process exits. */
     th->p_detached = 1;
-    release(th->p_spinlock);
+    __pthread_unlock(th->p_lock);
   }
 }
 

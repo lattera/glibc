@@ -21,8 +21,11 @@
 
 #define SEM_VALUE_MAX INT_MAX
 
-/* Get the semaphore structure definition.  */
-#include <bits/semaphore.h>
+typedef struct {
+  struct { long status; int spinlock; } sem_lock;
+  int sem_value;
+  _pthread_descr sem_waiting;
+} sem_t;
 
 __BEGIN_DECLS
 

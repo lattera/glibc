@@ -1,5 +1,5 @@
 /* Define POSIX options for Linux.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -81,6 +81,12 @@
 
 /* We provide priority scheduling for threads.  */
 #define	_POSIX_THREAD_PRIORITY_SCHEDULING	1
+
+/* We support user-defined stack sizes.  */
+#define _POSIX_THREAD_ATTR_STACKSIZE	1
+
+/* We support user-defined stacks.  */
+#define _POSIX_THREAD_ATTR_STACKADDR	1
 
 /* We support POSIX.1b semaphores, but only the non-shared form for now.  */
 /*#define _POSIX_SEMAPHORES	1	XXX We are not quite there now.  */

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    i386 version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -45,7 +45,9 @@ register char * stack_pointer __asm__ ("%esp");
    We test dynamically whether it's available or not. */
 
 #define HAS_COMPARE_AND_SWAP
-#define TEST_FOR_COMPARE_AND_SWAP
+#ifndef __i686__
+# define TEST_FOR_COMPARE_AND_SWAP
+#endif
 
 extern inline int
 __compare_and_swap (long int *p, long int oldval, long int newval)

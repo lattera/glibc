@@ -87,7 +87,8 @@ GLIBC_2.0 {
     __ffs;
     __close; __connect; __fcntl; __lseek; __open; __read; __send; __wait;
     __ieee_get_fp_control; __ieee_set_fp_control;
-    __dgettext;
+    __dgettext; __sigaction;
+
     # libio
     _IO_adjust_column; _IO_clearerr; _IO_default_doallocate;
     _IO_default_finish; _IO_default_pbackfail; _IO_default_uflow;

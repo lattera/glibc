@@ -1,7 +1,6 @@
 /* Linuxthreads - a simple clone()-based implementation of Posix        */
 /* threads for Linux.                                                   */
-/* Copyright (C) 1996 Xavier Leroy (Xavier.Leroy@inria.fr) and          */
-/* Richard Henderson (rth@tamu.edu)                                     */
+/* Copyright (C) 1998 Xavier Leroy (Xavier.Leroy@inria.fr)              */
 /*                                                                      */
 /* This program is free software; you can redistribute it and/or        */
 /* modify it under the terms of the GNU Library General Public License  */
@@ -13,20 +12,52 @@
 /* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the        */
 /* GNU Library General Public License for more details.                 */
 
-/* Spin locks */
+/* Internal locks */
 
-extern void __pthread_acquire(int * spinlock);
+extern void __pthread_lock(struct _pthread_fastlock * lock);
+extern int __pthread_trylock(struct _pthread_fastlock * lock);
+extern void __pthread_unlock(struct _pthread_fastlock * lock);
 
-static inline void acquire(int * spinlock)
+static inline void __pthread_init_lock(struct _pthread_fastlock * lock)
 {
-  if (testandset(spinlock)) __pthread_acquire(spinlock);
+  lock->status = 0;
+  lock->spinlock = 0;
 }
 
-static inline void release(int * spinlock)
+#define LOCK_INITIALIZER {0, 0}
+
+#if defined(TEST_FOR_COMPARE_AND_SWAP)
+
+extern int __pthread_has_cas;
+extern int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
+                                      int * spinlock);
+
+static inline int compare_and_swap(long * ptr, long oldval, long newval,
+                                   int * spinlock)
 {
-#ifndef RELEASE
-  *spinlock = 0;
+  if (__pthread_has_cas)
+    return __compare_and_swap(ptr, oldval, newval);
+  else
+    return __pthread_compare_and_swap(ptr, oldval, newval, spinlock);
+}
+
+#elif defined(HAS_COMPARE_AND_SWAP)
+
+static inline int compare_and_swap(long * ptr, long oldval, long newval,
+                                   int * spinlock)
+{
+  return __compare_and_swap(ptr, oldval, newval);
+}
+
 #else
-  RELEASE(spinlock);
-#endif
+
+extern int __pthread_compare_and_swap(long * ptr, long oldval, long newval,
+                                      int * spinlock);
+
+static inline int compare_and_swap(long * ptr, long oldval, long newval,
+                                   int * spinlock)
+{
+  return __pthread_compare_and_swap(ptr, oldval, newval, spinlock);
 }
+
+#endif

@@ -14,49 +14,42 @@
 
 /* Waiting queues */
 
-typedef struct _pthread_queue pthread_queue;
+/* Waiting queues are represented by lists of thread descriptors
+   linked through their p_nextwaiting field.  The lists are kept
+   sorted by decreasing priority, and then decreasing waiting time. */
 
-static inline void queue_init(pthread_queue * q)
+static inline void enqueue(pthread_descr * q, pthread_descr th)
 {
-  q->head = q->tail = NULL;
-}
-
-static inline void enqueue(pthread_queue * q, pthread_descr th)
-{
-  int prio;
-  pthread_descr * elt;
-
+  int prio = th->p_priority;
   ASSERT(th->p_nextwaiting == NULL);
-  if (q->tail == NULL) {
-    q->head = th;
-    q->tail = th;
-    return;
-  }
-  prio = th->p_priority;
-  if (prio > 0) {
-    /* Insert in queue according to priority order */
-    for (elt = &(q->head); *elt != NULL; elt = &((*elt)->p_nextwaiting)) {
-      if (prio > (*elt)->p_priority) {
-        th->p_nextwaiting = *elt;
-        *elt = th;
-        return;
-      }
+  for (; *q != NULL; q = &((*q)->p_nextwaiting)) {
+    if (prio > (*q)->p_priority) {
+      th->p_nextwaiting = *q;
+      *q = th;
+      return;
     }
   }
-  /* Priority is no greater than any thread in the queue.
-     Insert at end of queue */
-  q->tail->p_nextwaiting = th;
-  q->tail = th;
+  *q = th;
 }
 
-static inline pthread_descr dequeue(pthread_queue * q)
+static inline pthread_descr dequeue(pthread_descr * q)
 {
   pthread_descr th;
-  th = q->head;
+  th = *q;
   if (th != NULL) {
-    q->head = th->p_nextwaiting;
-    if (q->head == NULL) q->tail = NULL;
+    *q = th->p_nextwaiting;
     th->p_nextwaiting = NULL;
   }
   return th;
+}
+
+static inline void remove_from_queue(pthread_descr * q, pthread_descr th)
+{
+  for (; *q != NULL; q = &((*q)->p_nextwaiting)) {
+    if (*q == th) {
+      *q = th->p_nextwaiting;
+      th->p_nextwaiting = NULL;
+      return;
+    }
+  }
 }

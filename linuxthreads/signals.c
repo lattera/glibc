@@ -53,83 +53,88 @@ int pthread_kill(pthread_t thread, int signo)
   pthread_handle handle = thread_handle(thread);
   int pid;
 
-  acquire(&handle->h_spinlock);
+  __pthread_lock(&handle->h_lock);
   if (invalid_handle(handle, thread)) {
-    release(&handle->h_spinlock);
+    __pthread_unlock(&handle->h_lock);
     return ESRCH;
   }
   pid = handle->h_descr->p_pid;
-  release(&handle->h_spinlock);
+  __pthread_unlock(&handle->h_lock);
   if (kill(pid, signo) == -1)
     return errno;
   else
     return 0;
 }
 
-/* The set of signals on which some thread is doing a sigwait */
-static sigset_t sigwaited;
-static pthread_mutex_t sigwaited_mut = PTHREAD_MUTEX_INITIALIZER;
-static pthread_cond_t sigwaited_changed = PTHREAD_COND_INITIALIZER;
+/* User-provided signal handlers */
+static __sighandler_t sighandler[NSIG];
+
+/* The wrapper around user-provided signal handlers */
+static void pthread_sighandler(int signo)
+{
+  pthread_descr self = thread_self();
+  char * in_sighandler;
+  /* If we're in a sigwait operation, just record the signal received
+     and return without calling the user's handler */
+  if (self->p_sigwaiting) {
+    self->p_sigwaiting = 0;
+    self->p_signal = signo;
+    return;
+  }
+  /* Record that we're in a signal handler and call the user's
+     handler function */
+  in_sighandler = self->p_in_sighandler;
+  if (in_sighandler == NULL) self->p_in_sighandler = CURRENT_STACK_FRAME;
+  sighandler[signo](signo);
+  if (in_sighandler == NULL) self->p_in_sighandler = NULL;
+}
+
+int sigaction(int sig, const struct sigaction * act,
+              struct sigaction * oact)
+{
+  struct sigaction newact;
+
+  if (sig == PTHREAD_SIG_RESTART || sig == PTHREAD_SIG_CANCEL)
+    return EINVAL;
+  newact = *act;
+  if (act->sa_handler != SIG_IGN && act->sa_handler != SIG_DFL)
+    newact.sa_handler = pthread_sighandler;
+  if (__sigaction(sig, &newact, oact) == -1)
+    return -1;
+  if (oact != NULL) oact->sa_handler = sighandler[sig];
+  sighandler[sig] = act->sa_handler;
+  return 0;
+}
 
 int sigwait(const sigset_t * set, int * sig)
 {
   volatile pthread_descr self = thread_self();
   sigset_t mask;
   int s;
-  struct sigaction action, saved_signals[NSIG];
   sigjmp_buf jmpbuf;
 
-  pthread_mutex_lock(&sigwaited_mut);
-  /* Make sure no other thread is waiting on our signals */
-test_again:
-  for (s = 1; s < NSIG; s++) {
-    if (sigismember(set, s) && sigismember(&sigwaited, s)) {
-      pthread_cond_wait(&sigwaited_changed, &sigwaited_mut);
-      goto test_again;
-    }
-  }
   /* Get ready to block all signals except those in set
      and the cancellation signal */
   sigfillset(&mask);
   sigdelset(&mask, PTHREAD_SIG_CANCEL);
-  /* Signals in set are assumed blocked on entrance */
-  /* Install our signal handler on all signals in set,
-     and unblock them in mask.
-     Also mark those signals as being sigwaited on */
-  for (s = 1; s < NSIG; s++) {
-    if (sigismember(set, s) && s != PTHREAD_SIG_CANCEL) {
+  for (s = 1; s <= NSIG; s++) {
+    if (sigismember(set, s) && s != PTHREAD_SIG_CANCEL)
       sigdelset(&mask, s);
-      action.sa_handler = __pthread_sighandler;
-      sigemptyset(&action.sa_mask);
-      action.sa_flags = 0;
-      sigaction(s, &action, &(saved_signals[s]));
-      sigaddset(&sigwaited, s);
-    }
   }
-  pthread_mutex_unlock(&sigwaited_mut);
-
   /* Test for cancellation */
   if (sigsetjmp(jmpbuf, 1) == 0) {
     self->p_cancel_jmp = &jmpbuf;
     if (! (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE)) {
       /* Reset the signal count */
       self->p_signal = 0;
+      /* Say we're in sigwait */
+      self->p_sigwaiting = 1;
       /* Unblock the signals and wait for them */
       sigsuspend(&mask);
     }
   }
   self->p_cancel_jmp = NULL;
-  /* The signals are now reblocked. Restore the sighandlers. */
-  pthread_mutex_lock(&sigwaited_mut);
-  for (s = 1; s < NSIG; s++) {
-    if (sigismember(set, s) && s != PTHREAD_SIG_CANCEL) {
-      sigaction(s, &(saved_signals[s]), NULL);
-      sigdelset(&sigwaited, s);
-    }
-  }
-  pthread_cond_broadcast(&sigwaited_changed);
-  pthread_mutex_unlock(&sigwaited_mut);
-  /* Check for cancellation */
+  /* The signals are now reblocked.  Check for cancellation */
   pthread_testcancel();
   /* We should have self->p_signal != 0 and equal to the signal received */
   *sig = self->p_signal;
