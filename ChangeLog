@@ -1,3 +1,24 @@
+Fri Mar  6 10:40:30 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/add_n.S: Use ENTRY and END macros.
+	* sysdeps/m68k/lshift.S: Likewise.
+	* sysdeps/m68k/rshift.S: Likewise.
+	* sysdeps/m68k/sub_n.S: Likewise.
+	* sysdeps/m68k/m68020/addmul_1.S: Likewise.
+	* sysdeps/m68k/m68020/mul_1.S: Likewise.
+	* sysdeps/m68k/m68020/submul_1.S: Likewise.
+
+	* sysdeps/unix/sysv/linux/m68k/sysdep.S: Use ENTRY macro.
+	[_LIBC_REENTRANT]: Don't store into global errno.
+
+	* sysdeps/m68k/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/m68k/sysdep.h: Use it.  Use the macros
+	ENTRY, CALL_MCOUNT, JUMPTARGET and syscall_error from there.
+	(DO_CALL): Change to expect syscall name as argument.
+	(PSEUDO): Pass syscall_name to DO_CALL.
+	(SYSCALL_ERROR_HANDLER) [_LIBC_REENTRANT]: Don't store into global
+	errno.
+
 1998-03-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/rtld.c: Speed up processing of environment variables.  Do

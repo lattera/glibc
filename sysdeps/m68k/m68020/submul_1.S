@@ -1,7 +1,7 @@
 /* mc68020 __mpn_submul_1 -- Multiply a limb vector with a limb and subtract
    the result from a second limb vector.
 
-Copyright (C) 1992, 1994, 1996 Free Software Foundation, Inc.
+Copyright (C) 1992, 1994, 1996, 1998 Free Software Foundation, Inc.
 
 This file is part of the GNU MP Library.
 
@@ -32,11 +32,7 @@ MA 02111-1307, USA. */
 #include "asm-syntax.h"
 
 	TEXT
-	ALIGN
-	GLOBL	C_SYMBOL_NAME(__mpn_submul_1)
-
-C_SYMBOL_NAME(__mpn_submul_1:)
-PROLOG(__mpn_submul_1)
+ENTRY(__mpn_submul_1)
 
 #define res_ptr a0
 #define s1_ptr a1
@@ -81,4 +77,4 @@ L(L1:)	movel	MEM_POSTINC(s1_ptr),R(d3)
 	moveml	MEM_POSTINC(sp),R(d2)-R(d5)
 
 	rts
-EPILOG(__mpn_submul_1)
+END(__mpn_submul_1)
