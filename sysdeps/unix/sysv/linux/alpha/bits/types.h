@@ -25,6 +25,9 @@
 
 #include <features.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 /* Convenience types.  */
 typedef unsigned char __u_char;
 typedef unsigned short int __u_short;
