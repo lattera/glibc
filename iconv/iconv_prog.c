@@ -160,14 +160,16 @@ main (int argc, char *argv[])
 	  if (*errhand == '/')
 	    {
 	      --nslash;
-	      ++errhand;
+	      errhand = strchr (errhand, '\0');
 	    }
 	}
 
-      newp = (char *) alloca (errhand - to_code + nslash + 6 + 1);
+      newp = (char *) alloca (errhand - to_code + nslash + 7 + 1);
       cp = mempcpy (newp, to_code, errhand - to_code);
       while (nslash-- > 0)
 	*cp++ = '/';
+      if (cp[-1] != '/')
+	*cp++ = ',';
       memcpy (cp, "IGNORE", sizeof ("IGNORE"));
 
       to_code = newp;
@@ -496,8 +498,9 @@ conversion stopped due to problem in writing the output"));
 	  switch (errno)
 	    {
 	    case EILSEQ:
-	      error (0, 0, _("illegal input sequence at position %ld"),
-		     (long) (addr - start));
+	      if (! omit_invalid)
+		error (0, 0, _("illegal input sequence at position %ld"),
+		       (long int) (addr - start));
 	      break;
 	    case EINVAL:
 	      error (0, 0, _("\
