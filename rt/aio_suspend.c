@@ -42,7 +42,7 @@ aio_suspend (list, nent, timeout)
 {
   struct waitlist waitlist[nent];
   struct requestlist *requestlist[nent];
-  pthread_cond_t cond;
+  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
   int cnt;
   int result = 0;
   int dummy;
@@ -73,9 +73,6 @@ aio_suspend (list, nent, timeout)
   if (!none)
     {
       int oldstate;
-
-      /* Initialize the conditional variable.  */
-      pthread_cond_init (&cond, NULL);
 
       /* Since `pthread_cond_wait'/`pthread_cond_timedwait' are cancelation
 	 points we must be careful.  We added entries to the waiting lists

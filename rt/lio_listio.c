@@ -82,12 +82,9 @@ lio_listio (mode, list, nent, sig)
     }
   else if (mode == LIO_WAIT)
     {
-      pthread_cond_t cond;
+      pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
       struct waitlist waitlist[nent];
       int oldstate;
-
-      /* Initialize the conditional variable.  */
-      pthread_cond_init (&cond, NULL);
 
       total = 0;
       for (cnt = 0; cnt < nent; ++cnt)

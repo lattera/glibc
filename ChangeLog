@@ -1,3 +1,12 @@
+1998-04-11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* rt/aio_suspend.c (aio_suspend): Use PTHREAD_COND_INITIALIZER
+	instead of call to pthread_cond_init.
+	* rt/lio_listio.c (lio_listio): Likewise.
+	* rt/lio_listio64.c (lio_listio64): Likewise.
+
+	* nis/nis_findserv.c: Include sys/socket.h.
+
 1998-04-11 09:33  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig (rtobjdir): New variable.
