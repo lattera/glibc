@@ -1,5 +1,5 @@
 /* Machine-dependent details of interruptible RPC messaging.  i386 version.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,6 +18,9 @@
    Boston, MA 02111-1307, USA.  */
 
 
+/* Note that we must mark OPTION and TIMEOUT as outputs of this operation,
+   to indicate that the signal thread might mutate them as part
+   of sending us to a signal handler.  */
 #define INTR_MSG_TRAP(msg, option, send_size, rcv_size, rcv_name, timeout, notify) \
 ({									      \
   error_t err;								      \
@@ -26,12 +29,14 @@
        ".globl _hurd_intr_rpc_msg_cx_sp\n"				      \
        ".globl _hurd_intr_rpc_msg_sp_restored\n"			      \
        "				movl %%esp, %%ecx\n"		      \
-       "				leal %1, %%esp\n"		      \
+       "				leal %3, %%esp\n"		      \
        "_hurd_intr_rpc_msg_cx_sp:	movl $-25, %%eax\n"		      \
        "_hurd_intr_rpc_msg_do_trap:	lcall $7, $0 # status in %0\n"	      \
        "_hurd_intr_rpc_msg_in_trap:	movl %%ecx, %%esp\n"		      \
        "_hurd_intr_rpc_msg_sp_restored:"				      \
-       : "=a" (err) : "m" ((&msg)[-1]) : "%ecx");			      \
+       : "=a" (err), "=m" (option), "=m" (timeout)			      \
+       : "m" ((&msg)[-1]), "1" (option), "2" (timeout)			      \
+       : "%ecx");							      \
   err;									      \
 })
 
