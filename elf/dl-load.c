@@ -902,7 +902,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
     /* Length of the sections to be loaded.  */
     maplength = loadcmds[nloadcmds - 1].allocend - c->mapstart;
 
-    if (type == ET_DYN || type == ET_REL)
+    if (__builtin_expect (type, ET_DYN) == ET_DYN)
       {
 	/* This is a position-independent shared object.  We can let the
 	   kernel map it anywhere it likes, but we must have space for all
@@ -1279,10 +1279,10 @@ open_verify (const char *name, struct filebuf *fbp)
 	  /* XXX We should be able so set system specific versions which are
 	     allowed here.  */
 	  if (!VALID_ELF_OSABI (ehdr->e_ident[EI_OSABI]))
-	    lose (0, fd, name, NULL, NULL, N_("ELF file OS ABI invalid."));
+	    lose (0, fd, name, NULL, NULL, N_("ELF file OS ABI invalid"));
 	  if (!VALID_ELF_ABIVERSION (ehdr->e_ident[EI_ABIVERSION]))
 	    lose (0, fd, name, NULL, NULL,
-		  N_("ELF file ABI version invalid."));
+		  N_("ELF file ABI version invalid"));
 	  lose (0, fd, name, NULL, NULL, N_("internal error"));
 	}
 
@@ -1300,6 +1300,10 @@ open_verify (const char *name, struct filebuf *fbp)
 	       != sizeof (ElfW(Phdr)))
 	lose (0, fd, name, NULL, NULL,
 	      N_("ELF file's phentsize not the expected size"));
+      else if (__builtin_expect (ehdr->e_type, ET_DYN) != ET_DYN
+	       && __builtin_expect (ehdr->e_type, ET_EXEC) != ET_EXEC)
+	lose (0, fd, name, NULL, NULL,
+	      N_("only ET_DYN and ET_EXEC can be loaded"));
     }
 
   return fd;
