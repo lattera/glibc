@@ -1,3 +1,9 @@
+2000-12-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/generic/bits/byteswap.h (__bswap_64): Handle constant
+	argument case separately.
+	* sysdeps/i386/bits/byteswap.h (__bswap_64): Likewise.
+
 2000-12-27  Andreas Jaeger  <aj@suse.de>
 
 	* include/sys/wait.h: Add some prototypes.
