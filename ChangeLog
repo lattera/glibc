@@ -1,5 +1,11 @@
 2002-06-15  Roland McGrath  <roland@frob.com>
 
+	* sysdeps/mach/hurd/mmap.c (__mmap): Add a dead case that quiets a
+	warning.
+
+	* sysdeps/mach/hurd/getcwd.c
+	(_hurd_canonicalize_directory_name_internal): unsigned int -> size_t
+
 	* sysdeps/unix/sysv/linux/bits/ustat.h: Moved to ...
 	* sysdeps/generic/bits/ustat.h: ... here (was almost identical).
 

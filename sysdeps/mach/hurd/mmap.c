@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1995, 1996, 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1994,95,96,97,99,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -129,6 +129,8 @@ __mmap (__ptr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		return (__ptr_t) (long int) __hurd_fail (EACCES);
 	      }
 	    break;
+	  default:		/* impossible */
+	    return 0;
 	  }
 	break;
 	/* XXX handle MAP_NOEXTEND */

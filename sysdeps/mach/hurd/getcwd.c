@@ -118,7 +118,7 @@ _hurd_canonicalize_directory_name_internal (file_t thisdir,
       int mount_point;
       file_t newp;
       char *dirdata;
-      unsigned int dirdatasize;
+      size_t dirdatasize;
       int direntry, nentries;
 
 
