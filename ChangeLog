@@ -1,5 +1,11 @@
 2004-12-19  Roland McGrath  <roland@frob.com>
 
+	* version.h (VERSION): 2.3.4.
+	* README.template: Various updates.
+	* README: Regenerated.
+	* NEWS: Mention ports.
+	* README-alpha: File removed.
+
 	[BZ #416]
 	* locale/langinfo.h: Comment fixes.
 

@@ -1,4 +1,4 @@
-GNU C Library NEWS -- history of user-visible changes.  2004-10-19
+GNU C Library NEWS -- history of user-visible changes.  2004-12-19
 Copyright (C) 1992-2002,2003,2004 Free Software Foundation, Inc.
 See the end for copying conditions.
 
@@ -40,7 +40,13 @@ Version 2.3.4
 * Low-overhead boundary checking variants of string and some stdio functions
   were added.  These are to be used in conjunction with a gcc patch by
   Jakub Jelinek which adds calls to these functions if possible.
-  Patch by Jakub Jelinek and Ulrich Drepper.
+  Implemented by Jakub Jelinek and Ulrich Drepper.
+
+* Old code for several operating systems and machine architectures that
+  have not been in working condition in a long time have been removed from
+  the main source tree maintained by the GNU C Library's maintainers.
+  These files are now reside in the separate `ports' source module
+  that is usable as an add-on when building the library.
 
 Version 2.3.3
 

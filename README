@@ -1,4 +1,4 @@
-This directory contains the version 2.3.3 release of the GNU C Library.
+This directory contains the version 2.3.4 release of the GNU C Library.
 Many bugs have been fixed since the last release.
 Some bugs surely remain.
 
@@ -21,39 +21,12 @@ configurations:
 		s390-*-linux-gnu	Linux-2.x on IBM S/390
 		s390x-*-linux-gnu	Linux-2.4+ on IBM S/390 64-bit
 		sh-*-linux-gnu		Linux-2.x on Super Hitachi
-		cris-*-linux-gnu	Linux-2.4+ on CRIS
 		x86-64-*-linux-gnu	Linux-2.4+ on x86-64
 
-Former releases of this library (version 1.09.1 and perhaps earlier
-versions) used to run on the following configurations:
-
-		alpha-dec-osf1
-		i[3456]86-*-bsd4.3
-		i[3456]86-*-isc2.2
-		i[3456]86-*-isc3
-		i[3456]86-*-sco3.2
-		i[3456]86-*-sco3.2v4
-		i[3456]86-*-sysv
-		i[3456]86-*-sysv4
-		i[3456]86-force_cpu386-none
-		i[3456]86-sequent-bsd
-		i960-nindy960-none
-		m68k-hp-bsd4.3
-		m68k-mvme135-none
-		m68k-mvme136-none
-		m68k-sony-newsos3
-		m68k-sony-newsos4
-		m68k-sun-sunos4
-		mips-dec-ultrix4
-		mips-sgi-irix4
-		sparc-sun-solaris2
-		sparc-sun-sunos4
-
-Since no one has volunteered to test and fix the above configurations,
-these are not supported at the moment.  It's expected that these don't
-work anymore.  Porting the library is not hard.  If you are interested
-in doing a port, please contact the glibc maintainers by sending
-electronic mail to <bug-glibc@gnu.org>.
+Past releases of this library ran on a variety of configurations that are
+no longer supported.  Porting the library is not hard.  If you are
+interested in doing a port, please contact the glibc maintainers;
+see http://www.gnu.org/software/libc/ for more information.
 
 There are some add-ons which can be used together with GNU libc.  They
 are designed in a way to ease the installation by integrating them in
@@ -76,11 +49,9 @@ The file NOTES contains a description of the feature-test macros used
 in the GNU C library, explaining how you can tell the library what
 facilities you want it to make available.
 
-We prefer to get bug reports sent using the `glibcbug' shell script which
-is installed together with the rest of the GNU libc to <bugs@gnu.org>.
-Simply run this shell script and fill in the information.  Nevertheless
-you can still send bug reports to <bug-glibc@gnu.org> as normal electronic
-mails.
+Please see http://www.gnu.org/software/libc/bugs.html for bug reporting
+information.  We are now using the Bugzilla system to track all bug reports.
+This web page gives detailed information on how to report bugs properly.
 
 The GNU C Library is free software.  See the file COPYING.LIB for copying
 conditions, and LICENSES for notices about a few contributions that require
