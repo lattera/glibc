@@ -702,7 +702,7 @@ re_string_char_size_at (pstr, idx)
   int byte_idx;
   if (MB_CUR_MAX == 1)
     return 1;
-  for (byte_idx = 1; idx + byte_idx < pstr->len; ++byte_idx)
+  for (byte_idx = 1; idx + byte_idx < pstr->valid_len; ++byte_idx)
     if (pstr->wcs[idx + byte_idx] != WEOF)
       break;
   return byte_idx;
