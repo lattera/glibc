@@ -747,7 +747,7 @@ extern char *canonicalize_file_name (__const char *__name)
    ENAMETOOLONG; if the name fits in fewer than PATH_MAX chars, returns the
    name in RESOLVED.  */
 extern char *realpath (__const char *__restrict __name,
-		       char *__restrict __resolved) __THROW __nonnull ((1));
+		       char *__restrict __resolved) __THROW;
 #endif
 
 
