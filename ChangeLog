@@ -1,5 +1,10 @@
 2000-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/sh/dl-machine.h (FGR_SAVE): Protect using HAVE_FPU macro
+	instead of KERNEL_MATH_EMULATION.
+	* sysdeps/sh/sh4/dl-machine.h: Define HAVE_FPU not
+	KERNEL_MATH_EMULATION.
+
 	* sysdeps/sh/Dist: Removed.  There is no ieee754.h file.
 	* sysdeps/sh/sh3/dl-machine.h: Moved to...
 	* sysdeps/sh/dl-machine.h: ...here.  New file.

@@ -135,7 +135,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define GOTJMP(x)	#x
 #endif
 
-#if defined (KERNEL_MATH_EMULATION)
+#ifdef HAVE_FPU
 #define FGR_SAVE	"\
 	sts.l	fpscr, @-r15
 	mov	#8,r3

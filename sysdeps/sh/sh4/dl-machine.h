@@ -1,2 +1,2 @@
-#define KERNEL_MATH_EMULATION
+#define HAVE_FPU
 #include <sysdeps/sh/dl-machine.h>
