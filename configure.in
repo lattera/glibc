@@ -977,9 +977,10 @@ EOF
 # (but it doesn't work), so we must do a linking check to be sure.
 cat > conftest1.c <<\EOF
 extern int glibc_conftest_frobozz;
-main () { printf ("%d\n", glibc_conftest_frobozz); }
+void _start() { glibc_conftest_frobozz = 1; }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    -nostartfiles -nostdlib \
 	    -o conftest conftest.s conftest1.c 1>&AS_MESSAGE_LOG_FD 2>&AS_MESSAGE_LOG_FD; then
   libc_cv_asm_set_directive=yes
 else

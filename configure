@@ -4488,9 +4488,10 @@ EOF
 # (but it doesn't work), so we must do a linking check to be sure.
 cat > conftest1.c <<\EOF
 extern int glibc_conftest_frobozz;
-main () { printf ("%d\n", glibc_conftest_frobozz); }
+void _start() { glibc_conftest_frobozz = 1; }
 EOF
 if ${CC-cc} $CFLAGS $CPPFLAGS $LDFLAGS \
+	    -nostartfiles -nostdlib \
 	    -o conftest conftest.s conftest1.c 1>&5 2>&5; then
   libc_cv_asm_set_directive=yes
 else
@@ -5195,7 +5196,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5198 "configure"
+#line 5199 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5521,7 +5522,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5524 "configure"
+#line 5525 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5621,7 +5622,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5624 "configure"
+#line 5625 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5689,7 +5690,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5692 "configure"
+#line 5693 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };

@@ -1,3 +1,14 @@
+2003-03-31  Daniel Jacobowitz  <drow@mvista.com>
+
+	* configure.in: Don't require an installed C library in the test
+	for ".set" assembler support.
+	* configure: Regenerated.
+
+2003-03-31  Roland McGrath  <roland@redhat.com>
+
+	* signal/tst-sigset.c: New file.
+	* signal/Makefile (tests): Add it.
+
 2003-03-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/alpha/bits/signum.h (_NSIG): Define to 65.
