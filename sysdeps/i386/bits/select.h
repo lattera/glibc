@@ -58,8 +58,9 @@
 # define __FD_ZERO(set)  \
   do {									      \
     unsigned int __i;							      \
+    __fd_mask *__arr = (set);						      \
     for (__i = 0; __i < sizeof (__fd_set) / sizeof (__fd_mask); ++__i)	      \
-      ((__fd_mask *) set)[__i] = 0;					      \
+      __arr->fds_bits[__i] = 0;						      \
   } while (0)
 # define __FD_SET(d, set)	((set)->fds_bits[__FDELT (d)] |= __FDMASK (d))
 # define __FD_CLR(d, set)	((set)->fds_bits[__FDELT (d)] &= ~__FDMASK (d))

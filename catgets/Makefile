@@ -26,10 +26,9 @@ distribute	= catgetsinfo.h config.h
 routines	= catgets open_catalog
 others		= gencat
 install-bin	= gencat
+extra-objs	= $(gencat-modules:=.o)
 
 gencat-modules	= xmalloc
-
-generated += xmalloc.o
 
 # To find xmalloc.c
 vpath %.c ../locale/programs

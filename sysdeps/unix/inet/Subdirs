@@ -1,4 +1,5 @@
 inet
 resolv
+hesiod
 sunrpc
 nis

@@ -135,16 +135,64 @@ main (void)
 
   /* A closely related function is stpcpy.  */
   it = "stpcpy";
-  check ((stpcpy (one, "abcde") - one) == 5, 1);
-  equal (one, "abcde", 2);
+  check ((stpcpy (one, "a") - one) == 1, 1);
+  equal (one, "a", 2);
 
-  check ((stpcpy (one, "x") - one) == 1, 3);
-  equal (one, "x", 4);			/* Writeover. */
-  equal (one+2, "cde", 5);		/* Wrote too much? */
+  check ((stpcpy (one, "ab") - one) == 2, 3);
+  equal (one, "ab", 4);
 
-  check ((stpcpy (stpcpy (stpcpy (one, "a"), "b"), "c") - one) == 3, 6);
-  equal (one, "abc", 7);
-  equal (one + 4, "e", 8);
+  check ((stpcpy (one, "abc") - one) == 3, 5);
+  equal (one, "abc", 6);
+
+  check ((stpcpy (one, "abcd") - one) == 4, 7);
+  equal (one, "abcd", 8);
+
+  check ((stpcpy (one, "abcde") - one) == 5, 9);
+  equal (one, "abcde", 10);
+
+  check ((stpcpy (one, "abcdef") - one) == 6, 11);
+  equal (one, "abcdef", 12);
+
+  check ((stpcpy (one, "abcdefg") - one) == 7, 13);
+  equal (one, "abcdefg", 14);
+
+  check ((stpcpy (one, "abcdefgh") - one) == 8, 15);
+  equal (one, "abcdefgh", 16);
+
+  check ((stpcpy (one, "abcdefghi") - one) == 9, 17);
+  equal (one, "abcdefghi", 18);
+
+  check ((stpcpy (one, "x") - one) == 1, 19);
+  equal (one, "x", 20);			/* Writeover. */
+  equal (one+2, "cdefghi", 21);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xx") - one) == 2, 22);
+  equal (one, "xx", 23);		/* Writeover. */
+  equal (one+3, "defghi", 24);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xxx") - one) == 3, 25);
+  equal (one, "xxx", 26);		/* Writeover. */
+  equal (one+4, "efghi", 27);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xxxx") - one) == 4, 28);
+  equal (one, "xxxx", 29);		/* Writeover. */
+  equal (one+5, "fghi", 30);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xxxxx") - one) == 5, 31);
+  equal (one, "xxxxx", 32);		/* Writeover. */
+  equal (one+6, "ghi", 33);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xxxxxx") - one) == 6, 34);
+  equal (one, "xxxxxx", 35);		/* Writeover. */
+  equal (one+7, "hi", 36);		/* Wrote too much? */
+
+  check ((stpcpy (one, "xxxxxxx") - one) == 7, 37);
+  equal (one, "xxxxxxx", 38);		/* Writeover. */
+  equal (one+8, "i", 39);		/* Wrote too much? */
+
+  check ((stpcpy (stpcpy (stpcpy (one, "a"), "b"), "c") - one) == 3, 40);
+  equal (one, "abc", 41);
+  equal (one + 4, "xxx", 42);
 
   /* stpncpy.  */
   it = "stpncpy";

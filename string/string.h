@@ -200,12 +200,15 @@ extern char *__strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 extern char *strerror_r __P ((int __errnum, char *__buf, size_t __buflen));
 #endif
 
+/* We define this function always since `bzero' is sometimes needed when
+   the namespace rules does not allow this.  */
+extern void __bzero __P ((__ptr_t __s, size_t __n));
+
 #if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Copy N bytes of SRC to DEST (like memmove, but args reversed).  */
 extern void bcopy __P ((__const __ptr_t __src, __ptr_t __dest, size_t __n));
 
 /* Set N bytes of S to 0.  */
-extern void __bzero __P ((__ptr_t __s, size_t __n));
 extern void bzero __P ((__ptr_t __s, size_t __n));
 
 /* Compare N bytes of S1 and S2 (same as memcmp).  */
@@ -296,12 +299,12 @@ extern char *basename __P ((__const char *__filename));
      code size significantly and which optimize mainly situations
      where one or more arguments are compile-time constants.
      These optimizations are used always when the compiler is
-     taught to optimized.  */
+     taught to optimized.
 
-/* Get the machine-dependent optimizations if wanted.  */
-# ifdef __USE_STRING_INLINES
-#  include <bits/string.h>
-# endif
+   One can inhibit all optimizations by defining __NO_STRING_INLINES.  */
+
+/* Get the machine-dependent optimizations (if any).  */
+# include <bits/string.h>
 
 /* These are generic optimizations which do not add too much inline code.  */
 # include <bits/string2.h>

@@ -28,10 +28,10 @@
 
 /* Read N bytes into BUF from COOKIE.  */
 int
-__stdio_read (void *cookie, char *buf, size_t n;)
+__stdio_read (void *cookie, char *buf, size_t n)
 {
   const int fd = (int) cookie;
-#if	defined (EINTR) && defined (EINTR_REPEAT)
+#if defined EINTR && defined EINTR_REPEAT
   int save = errno;
   int nread;
 
@@ -70,7 +70,7 @@ __stdio_write (void *cookie, const char *buf, size_t n)
 	  n -= count;
 	}
       else if (count < 0
-#if	defined (EINTR) && defined (EINTR_REPEAT)
+#if defined EINTR && defined EINTR_REPEAT
 	       && errno != EINTR
 #endif
 	       )

@@ -22,6 +22,9 @@
 
 #include <string.h>
 
+#undef __stpcpy
+#undef stpcpy
+
 #ifndef weak_alias
 # define __stpcpy stpcpy
 #endif

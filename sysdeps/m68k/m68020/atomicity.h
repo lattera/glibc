@@ -1,5 +1,7 @@
-/* Low-level functions for atomic operations.  ix86 version, x >= 4.
+/* Low-level functions for atomic operations.  m680x0 version, x >= 2.
    Copyright (C) 1997 Free Software Foundation, Inc.
+   Contributed by Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>.
+
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +29,14 @@ static inline int
 __attribute__ ((unused))
 exchange_and_add (volatile uint32_t *mem, int val)
 {
-  register int result;
-  __asm__ __volatile__ ("lock; xaddl %0,%1"
-			: "=r" (result) : "0" (val), "m" (*mem) : "memory");
+  register int result = *mem;
+  register int temp;
+  __asm__ __volatile__ ("1: move%.l %0,%1;"
+			"   add%.l %2,%1;"
+			"   cas%.l %0,%1,%3;"
+			"   jbne 1b"
+			: "=d" (result), "=&d" (temp)
+			: "d" (val), "m" (*mem), "0" (result) : "memory");
   return result;
 }
 
@@ -37,20 +44,21 @@ static inline void
 __attribute__ ((unused))
 atomic_add (volatile uint32_t *mem, int val)
 {
-  __asm__ __volatile__ ("lock; addl %0,%1"
+  /* XXX Use cas here as well?  */
+  __asm__ __volatile__ ("add%.l %0,%1"
 			: : "ir" (val), "m" (*mem) : "memory");
 }
 
-static inline char
+static inline int
 __attribute__ ((unused))
 compare_and_swap (volatile long int *p, long int oldval, long int newval)
 {
   char ret;
   long int readval;
 
-  __asm__ __volatile__ ("lock; cmpxchgl %3, %1; sete %0"
-                        : "=q" (ret), "=m" (*p), "=a" (readval)
-                        : "r" (newval), "m" (*p), "a" (oldval));
+  __asm__ __volatile__ ("cas%.l %2,%3,%1; seq %0"
+                        : "=dm" (ret), "=m" (*p), "=d" (readval)
+                        : "d" (newval), "m" (*p), "2" (oldval));
   return ret;
 }
 

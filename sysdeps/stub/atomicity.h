@@ -1,4 +1,4 @@
-/* Low-level functions for atomitc operations.  ix86 version, x >= 4.
+/* Low-level functions for atomitc operations.  Stub version.
    Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 

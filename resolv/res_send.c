@@ -498,7 +498,7 @@ read_len:
 			struct timeval timeout;
 			fd_set dsmask;
 			struct sockaddr_in from;
-			size_t fromlen;
+			socklen_t fromlen;
 
 			if ((s < 0) || vc) {
 				if (vc)

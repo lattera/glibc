@@ -18,8 +18,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_MATHINLINE_H
-#define _BITS_MATHINLINE_H	1
+#ifndef _MATH_H
+# error "Never use <bits/mathinline.h> directly; include <math.h> instead."
+#endif
 
 
 #if defined __USE_ISOC9X && defined __GNUC__ && __GNUC__ >= 2
@@ -518,7 +519,7 @@ __finite (double __x)
     ("orl	$0x800fffff, %0\n\t"
      "incl	%0\n\t"
      "shrl	$31, %0"
-     : "=q" (__result) : "0" (((int *) &__x)[1]) : "cc");
+     : "=r" (__result) : "0" (((int *) &__x)[1]) : "cc");
   return __result;
 }
 
@@ -542,5 +543,3 @@ __inline_mathcode (__acosh1p, __x, \
 #endif /* Not gcc <= 2.7.  */
 #endif /* __NO_MATH_INLINES  */
 #endif /* __GNUC__  */
-
-#endif /* _BITS_MATHINLINE_H  */

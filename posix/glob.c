@@ -21,12 +21,12 @@
 #endif
 
 #ifdef	HAVE_CONFIG_H
-#include <config.h>
+# include <config.h>
 #endif
 
 /* Enable GNU extensions in glob.h.  */
 #ifndef _GNU_SOURCE
-#define	_GNU_SOURCE	1
+# define _GNU_SOURCE	1
 #endif
 
 #include <errno.h>
@@ -49,45 +49,45 @@
    it is simpler to just do this in the source for each such file.  */
 
 #define GLOB_INTERFACE_VERSION 1
-#if !defined (_LIBC) && defined (__GNU_LIBRARY__) && __GNU_LIBRARY__ > 1
-#include <gnu-versions.h>
-#if _GNU_GLOB_INTERFACE_VERSION == GLOB_INTERFACE_VERSION
-#define ELIDE_CODE
-#endif
+#if !defined _LIBC && defined __GNU_LIBRARY__ && __GNU_LIBRARY__ > 1
+# include <gnu-versions.h>
+# if _GNU_GLOB_INTERFACE_VERSION == GLOB_INTERFACE_VERSION
+#  define ELIDE_CODE
+# endif
 #endif
 
 #ifndef ELIDE_CODE
 
-#if defined(STDC_HEADERS) || defined(__GNU_LIBRARY__)
-#include <stddef.h>
+#if defined STDC_HEADERS || defined __GNU_LIBRARY__
+# include <stddef.h>
 #endif
 
 #if defined HAVE_UNISTD_H || defined _LIBC
-#include <unistd.h>
-#ifndef POSIX
-#ifdef	_POSIX_VERSION
-#define	POSIX
-#endif
-#endif
-#endif
-
-#if !defined (_AMIGA) && !defined (VMS) && !defined(WINDOWS32)
-#include <pwd.h>
+# include <unistd.h>
+# ifndef POSIX
+#  ifdef _POSIX_VERSION
+#   define POSIX
+#  endif
+# endif
 #endif
 
-#if !defined(__GNU_LIBRARY__) && !defined(STDC_HEADERS)
+#if !defined _AMIGA && !defined VMS && !defined WINDOWS32
+# include <pwd.h>
+#endif
+
+#if !defined __GNU_LIBRARY__ && !defined STDC_HEADERS
 extern int errno;
 #endif
 #ifndef __set_errno
-#define __set_errno(val) errno = (val)
+# define __set_errno(val) errno = (val)
 #endif
 
 #ifndef	NULL
-#define	NULL	0
+# define NULL	0
 #endif
 
 
-#if defined (HAVE_DIRENT_H) || defined (__GNU_LIBRARY__)
+#if defined HAVE_DIRENT_H || defined __GNU_LIBRARY__
 # include <dirent.h>
 # define NAMLEN(dirent) strlen((dirent)->d_name)
 #else
@@ -110,36 +110,36 @@ extern int errno;
 
 /* In GNU systems, <dirent.h> defines this macro for us.  */
 #ifdef _D_NAMLEN
-#undef NAMLEN
-#define NAMLEN(d) _D_NAMLEN(d)
+# undef NAMLEN
+# define NAMLEN(d) _D_NAMLEN(d)
 #endif
 
 
-#if (defined (POSIX) || defined (WINDOWS32)) && !defined (__GNU_LIBRARY__)
+#if (defined POSIX || defined WINDOWS32) && !defined __GNU_LIBRARY__
 /* Posix does not require that the d_ino field be present, and some
    systems do not provide it. */
-#define REAL_DIR_ENTRY(dp) 1
+# define REAL_DIR_ENTRY(dp) 1
 #else
-#define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
+# define REAL_DIR_ENTRY(dp) (dp->d_ino != 0)
 #endif /* POSIX */
 
-#if	(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
-#include <stdlib.h>
-#include <string.h>
-#define	ANSI_STRING
+#if defined STDC_HEADERS || defined __GNU_LIBRARY__
+# include <stdlib.h>
+# include <string.h>
+# define	ANSI_STRING
 #else	/* No standard headers.  */
 
 extern char *getenv ();
 
-#ifdef HAVE_STRING_H
-#include <string.h>
-#define	ANSI_STRING
-#else
-#include <strings.h>
-#endif
-#ifdef	HAVE_MEMORY_H
-#include <memory.h>
-#endif
+# ifdef HAVE_STRING_H
+#  include <string.h>
+#  define ANSI_STRING
+# else
+#  include <strings.h>
+# endif
+# ifdef	HAVE_MEMORY_H
+#  include <memory.h>
+# endif
 
 extern char *malloc (), *realloc ();
 extern void free ();
@@ -151,35 +151,35 @@ extern void abort (), exit ();
 
 #ifndef	ANSI_STRING
 
-#ifndef	bzero
+# ifndef bzero
 extern void bzero ();
-#endif
-#ifndef	bcopy
+# endif
+# ifndef bcopy
 extern void bcopy ();
-#endif
+# endif
 
-#define	memcpy(d, s, n)	bcopy ((s), (d), (n))
-#define	strrchr	rindex
+# define memcpy(d, s, n)	bcopy ((s), (d), (n))
+# define strrchr	rindex
 /* memset is only used for zero here, but let's be paranoid.  */
-#define	memset(s, better_be_zero, n) \
+# define memset(s, better_be_zero, n) \
   ((void) ((better_be_zero) == 0 ? (bzero((s), (n)), 0) : (abort(), 0)))
 #endif	/* Not ANSI_STRING.  */
 
 #if !defined HAVE_STRCOLL && !defined _LIBC
-#define	strcoll	strcmp
+# define strcoll	strcmp
 #endif
 
 
 #ifndef	__GNU_LIBRARY__
-#ifdef	__GNUC__
+# ifdef	__GNUC__
 __inline
-#endif
-#ifndef __SASC
-#ifdef WINDOWS32
+# endif
+# ifndef __SASC
+#  ifdef WINDOWS32
 static void *
-#else
+#  else
 static char *
-#endif
+# endif
 my_realloc (p, n)
      char *p;
      unsigned int n;
@@ -190,47 +190,47 @@ my_realloc (p, n)
     return (char *) malloc (n);
   return (char *) realloc (p, n);
 }
-#define	realloc	my_realloc
-#endif /* __SASC */
+# define	realloc	my_realloc
+# endif /* __SASC */
 #endif /* __GNU_LIBRARY__ */
 
 
-#if	!defined(__alloca) && !defined(__GNU_LIBRARY__)
+#if !defined __alloca && !defined __GNU_LIBRARY__
 
-#ifdef	__GNUC__
-#undef	alloca
-#define	alloca(n)	__builtin_alloca (n)
-#else	/* Not GCC.  */
-#ifdef HAVE_ALLOCA_H
-#include <alloca.h>
-#else	/* Not HAVE_ALLOCA_H.  */
-#ifndef	_AIX
-#ifdef WINDOWS32
-#include <malloc.h>
-#else
+# ifdef	__GNUC__
+#  undef alloca
+#  define alloca(n)	__builtin_alloca (n)
+# else	/* Not GCC.  */
+#  ifdef HAVE_ALLOCA_H
+#   include <alloca.h>
+#  else	/* Not HAVE_ALLOCA_H.  */
+#   ifndef _AIX
+#    ifdef WINDOWS32
+#     include <malloc.h>
+#    else
 extern char *alloca ();
-#endif /* WINDOWS32 */
-#endif	/* Not _AIX.  */
-#endif	/* sparc or HAVE_ALLOCA_H.  */
-#endif	/* GCC.  */
+#    endif /* WINDOWS32 */
+#   endif /* Not _AIX.  */
+#  endif /* sparc or HAVE_ALLOCA_H.  */
+# endif	/* GCC.  */
 
-#define	__alloca	alloca
+# define __alloca	alloca
 
 #endif
 
 #ifndef __GNU_LIBRARY__
-#define __stat stat
-#ifdef STAT_MACROS_BROKEN
-#undef S_ISDIR
-#endif
-#ifndef S_ISDIR
-#define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
-#endif
+# define __stat stat
+# ifdef STAT_MACROS_BROKEN
+#  undef S_ISDIR
+# endif
+# ifndef S_ISDIR
+#  define S_ISDIR(mode) (((mode) & S_IFMT) == S_IFDIR)
+# endif
 #endif
 
-#if !(defined (STDC_HEADERS) || defined (__GNU_LIBRARY__))
-#undef	size_t
-#define	size_t	unsigned int
+#if !(defined STDC_HEADERS || defined __GNU_LIBRARY__)
+# undef	size_t
+# define size_t	unsigned int
 #endif
 
 /* Some system header files erroneously define these.
@@ -508,18 +508,18 @@ glob (pattern, flags, errfunc, pglob)
 	{
 	  /* Look up home directory.  */
 	  char *home_dir = getenv ("HOME");
-#ifdef _AMIGA
+# ifdef _AMIGA
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    home_dir = "SYS:";
-#else
-#ifdef WINDOWS32
+# else
+#  ifdef WINDOWS32
 	  if (home_dir == NULL || home_dir[0] == '\0')
             home_dir = "c:/users/default"; /* poor default */
-#else
+#  else
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    {
 	      int success;
-#if defined HAVE_GETLOGIN_R || defined _LIBC
+#   if defined HAVE_GETLOGIN_R || defined _LIBC
 	      extern int getlogin_r __P ((char *, size_t));
 	      size_t buflen = sysconf (_SC_LOGIN_NAME_MAX) + 1;
 	      char *name;
@@ -531,15 +531,15 @@ glob (pattern, flags, errfunc, pglob)
 	      name = (char *) __alloca (buflen);
 
 	      success = getlogin_r (name, buflen) >= 0;
-#else
+#   else
 	      extern char *getlogin __P ((void));
 	      char *name;
 
 	      success = (name = getlogin ()) != NULL;
-#endif
+#   endif
 	      if (success)
 		{
-#if defined HAVE_GETPWNAM_R || defined _LIBC
+#   if defined HAVE_GETPWNAM_R || defined _LIBC
 		  size_t pwbuflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 		  char *pwtmpbuf;
 		  struct passwd pwbuf, *p;
@@ -548,18 +548,18 @@ glob (pattern, flags, errfunc, pglob)
 
 		  success = (__getpwnam_r (name, &pwbuf, pwtmpbuf,
 					   pwbuflen, &p) >= 0);
-#else
+#   else
 		  struct passwd *p = getpwnam (name);
 		  success = p != NULL;
-#endif
+#   endif
 		  if (success)
 		    home_dir = p->pw_dir;
 		}
 	    }
 	  if (home_dir == NULL || home_dir[0] == '\0')
 	    home_dir = (char *) "~"; /* No luck.  */
-#endif /* WINDOWS32 */
-#endif
+#  endif /* WINDOWS32 */
+# endif
 	  /* Now construct the full directory.  */
 	  if (dirname[1] == '\0')
 	    dirname = home_dir;
@@ -573,7 +573,7 @@ glob (pattern, flags, errfunc, pglob)
 	      dirname = newp;
 	    }
 	}
-#if !defined _AMIGA && !defined WINDOWS32
+# if !defined _AMIGA && !defined WINDOWS32
       else
 	{
 	  char *end_name = strchr (dirname, '/');
@@ -591,7 +591,7 @@ glob (pattern, flags, errfunc, pglob)
 
 	  /* Look up specific user's home directory.  */
 	  {
-#if defined HAVE_GETPWNAM_R || defined _LIBC
+#  if defined HAVE_GETPWNAM_R || defined _LIBC
 	    size_t buflen = sysconf (_SC_GETPW_R_SIZE_MAX);
 	    char *pwtmpbuf = (char *) __alloca (buflen);
 	    struct passwd pwbuf, *p;
@@ -599,13 +599,13 @@ glob (pattern, flags, errfunc, pglob)
 	      home_dir = p->pw_dir;
 	    else
 	      home_dir = NULL;
-#else
+#  else
 	    struct passwd *p = getpwnam (user_name);
 	    if (p != NULL)
 	      home_dir = p->pw_dir;
 	    else
 	      home_dir = NULL;
-#endif
+#  endif
 	  }
 	  /* If we found a home directory use this.  */
 	  if (home_dir != NULL)
@@ -620,7 +620,7 @@ glob (pattern, flags, errfunc, pglob)
 	      dirname = newp;
 	    }
 	}
-#endif	/* Not Amiga && not WINDOWS32.  */
+# endif	/* Not Amiga && not WINDOWS32.  */
     }
 #endif	/* Not VMS.  */
 
@@ -912,8 +912,42 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
   if (!__glob_pattern_p (pattern, !(flags & GLOB_NOESCAPE)))
     {
-      stream = NULL;
-      flags |= GLOB_NOCHECK;
+      /* We must check whether the file in this directory exists.  */
+      stream = ((flags & GLOB_ALTDIRFUNC) ?
+		(*pglob->gl_opendir) (directory) :
+		(__ptr_t) opendir (directory));
+      if (stream == NULL)
+	{
+	  if ((errfunc != NULL && (*errfunc) (directory, errno)) ||
+	      (flags & GLOB_ERR))
+	    return GLOB_ABORTED;
+	}
+      else
+	while (1)
+	  {
+	    struct dirent *d = ((flags & GLOB_ALTDIRFUNC) ?
+				(*pglob->gl_readdir) (stream) :
+				readdir ((DIR *) stream));
+	    if (d == NULL)
+	      break;
+	    if (! REAL_DIR_ENTRY (d))
+	      continue;
+
+	    if (strcmp (pattern, d->d_name) == 0)
+	      {
+		size_t len = NAMLEN (d);
+		names =
+		  (struct globlink *) __alloca (sizeof (struct globlink));
+		names->name = (char *) malloc (len + 1);
+		if (names->name == NULL)
+		  goto memory_error;
+		memcpy ((__ptr_t) names->name, pattern, len);
+		names->name[len] = '\0';
+		names->next = NULL;
+		nfound = 1;
+		break;
+	      }
+	  }
     }
   else
     {
@@ -984,24 +1018,27 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
       names->name[len] = '\0';
     }
 
-  pglob->gl_pathv
-    = (char **) realloc (pglob->gl_pathv,
-			 (pglob->gl_pathc +
-			  ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
-			  nfound + 1) *
-			 sizeof (char *));
-  if (pglob->gl_pathv == NULL)
-    goto memory_error;
+  if (nfound != 0)
+    {
+      pglob->gl_pathv
+	= (char **) realloc (pglob->gl_pathv,
+			     (pglob->gl_pathc +
+			      ((flags & GLOB_DOOFFS) ? pglob->gl_offs : 0) +
+			      nfound + 1) *
+			     sizeof (char *));
+      if (pglob->gl_pathv == NULL)
+	goto memory_error;
 
-  if (flags & GLOB_DOOFFS)
-    while (pglob->gl_pathc < pglob->gl_offs)
-      pglob->gl_pathv[pglob->gl_pathc++] = NULL;
+      if (flags & GLOB_DOOFFS)
+	while (pglob->gl_pathc < pglob->gl_offs)
+	  pglob->gl_pathv[pglob->gl_pathc++] = NULL;
 
-  for (; names != NULL; names = names->next)
-    pglob->gl_pathv[pglob->gl_pathc++] = names->name;
-  pglob->gl_pathv[pglob->gl_pathc] = NULL;
+      for (; names != NULL; names = names->next)
+	pglob->gl_pathv[pglob->gl_pathc++] = names->name;
+      pglob->gl_pathv[pglob->gl_pathc] = NULL;
 
-  pglob->gl_flags = flags;
+      pglob->gl_flags = flags;
+    }
 
   if (stream != NULL)
     {

@@ -26,7 +26,7 @@
 #ifdef	__GNUC__
 
 void
-bzero (dstpp, len)
+__bzero (dstpp, len)
      void *dstpp;
      size_t len;
 {
@@ -75,6 +75,7 @@ bzero (dstpp, len)
 		"0" (dstp), "c" (len), "a" (x) :
 		"cx");
 }
+weak_alias (__bzero, bzero)
 
 #else
 #include <sysdeps/generic/bzero.c>

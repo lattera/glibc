@@ -321,21 +321,6 @@ dl_main (const ElfW(Phdr) *phdr,
 	 pay attention to its PT_INTERP command (we are the interpreter
 	 ourselves).  This is an easy way to test a new ld.so before
 	 installing it.  */
-      if (_dl_argc < 2)
-	_dl_sysdep_fatal ("\
-Usage: ld.so [--list|--verify] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
-You have invoked `ld.so', the helper program for shared library executables.\n\
-This program usually lives in the file `/lib/ld.so', and special directives\n\
-in executable files using ELF shared libraries tell the system's program\n\
-loader to load the helper program from this file.  This helper program loads\n\
-the shared libraries needed by the program executable, prepares the program\n\
-to run, and runs it.  You may invoke this helper program directly from the\n\
-command line to load and run an ELF executable file; this is like executing\n\
-that file itself, but always uses this helper program from the file you\n\
-specified, instead of the helper program file specified in the executable\n\
-file you run.  This is mostly of use for maintainers to test new versions\n\
-of this helper program; chances are you did not intend to run this program.\n",
-			  NULL);
 
       /* Note the place where the dynamic linker actually came from.  */
       _dl_rtld_map.l_name = _dl_argv[0];
@@ -360,6 +345,24 @@ of this helper program; chances are you did not intend to run this program.\n",
 	  }
 	else
 	  break;
+
+      /* If we have no further argument the program was called incorrectly.
+	 Grant the user some education.  */
+      if (_dl_argc < 2)
+	_dl_sysdep_fatal ("\
+Usage: ld.so [--list|--verify] EXECUTABLE-FILE [ARGS-FOR-PROGRAM...]\n\
+You have invoked `ld.so', the helper program for shared library executables.\n\
+This program usually lives in the file `/lib/ld.so', and special directives\n\
+in executable files using ELF shared libraries tell the system's program\n\
+loader to load the helper program from this file.  This helper program loads\n\
+the shared libraries needed by the program executable, prepares the program\n\
+to run, and runs it.  You may invoke this helper program directly from the\n\
+command line to load and run an ELF executable file; this is like executing\n\
+that file itself, but always uses this helper program from the file you\n\
+specified, instead of the helper program file specified in the executable\n\
+file you run.  This is mostly of use for maintainers to test new versions\n\
+of this helper program; chances are you did not intend to run this program.\n",
+			  NULL);
 
       ++_dl_skip_args;
       --_dl_argc;

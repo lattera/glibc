@@ -28,7 +28,8 @@ headers	:= sys/utsname.h sys/times.h sys/wait.h sys/types.h unistd.h	      \
 	   bits/waitflags.h bits/waitstatus.h sys/unistd.h sched.h	      \
 	   bits/sched.h re_comp.h wait.h
 
-distribute := confstr.h TESTS TESTS2C.sed testcases.h
+distribute := confstr.h TESTS TESTS2C.sed testcases.h \
+	      globtest.c globtest.sh
 
 routines :=								      \
 	uname								      \
@@ -59,6 +60,11 @@ gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 before-compile	:= testcases.h
 
 include ../Rules
+
+ifeq (no,$(cross-compiling))
+tests: $(objpfx)globtest
+	$(SHELL) -e globtest.sh $(common-objpfx)
+endif
 
 CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
 CFLAGS-getaddrinfo.c = -DRESOLVER

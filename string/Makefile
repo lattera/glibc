@@ -40,8 +40,8 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 		   envz basename					\
 		   strcoll_l strxfrm_l
 
-tests		:= tester inl-tester testcopy test-ffs tst-strlen	\
-		   stratcliff tst-svc
+tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
+		   tst-strlen stratcliff tst-svc
 distribute	:= memcopy.h pagecopy.h tst-svc.expect
 
 

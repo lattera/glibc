@@ -1,3 +1,126 @@
+1997-09-16 02:14  Ulrich Drepper  <drepper@cygnus.com>
+
+	Implementation of Hesiod NSS module by Mark Kettenis.
+	* hesiod/Makefile: New file.
+	* hesiod/hesiod.c: New file.
+	* hesiod/hesiod.h: New file.
+	* hesiod/hesiod_p.h: New file.
+	* hesiod/libnss_hesiod.map: New file.
+	* hesiod/nss_hesiod/hesiod-grp.c: New file.
+	* hesiod/nss_hesiod/hesiod-pwd.c: New file.
+	* hesiod/nss_hesiod/hesiod-service.c: New file.
+	* sysdeps/unix/inet/Subdirs: Add hesiod.
+
+	* shlib-versions: Add version number for libnss_hesiod.
+
+	* libio/iolibio.h: Remove definition of _IO_* macros.
+	* libio/fileops.c: Define close, fstat, lseek, read, and write as
+	macros to use __ protected versions.  Use those functions instead
+	of _IO_* functions.
+	* libio/iopopen.c: Define _IO_close to close.
+
+	* manual/math.texi: Explain the use of the optimizing inline
+	functions.
+	Describe rand_r function and tell about SysV RNGs in introduction.
+
+	* resolv/res_send.c (res_send): Use socklen_t type for `fromlen'
+	variable.
+
+	* string/Makefile (tests): Add noinl-tester.
+	* string/noinl-tester.c: New file.
+	* string/tester.c: Add more stpcpy tests for constant arguments for
+	all short lengths.
+
+	* string/string.h: Always declare __bzero.
+	Describe __NO_STRING_INLINES.
+	Always include <bits/string.h>.
+	* string/bits/string2.h: Add warning about direct use.
+	Change __strcpy_small and __stpcpy_small implementation to use
+	macros and provide alternative for platforms which cannot do
+	unaligned stores.
+	* sysdeps/i386/bits/string.h: Don't define anything is
+	__NO_STRING_INLINES is defined.
+	* sysdeps/i386/i486/bits/string.h: Change __strcpy_small and
+	__stpcpy_small implementation to use macros and provide
+	alternative for platforms which cannot do unaligned stores.
+	* sysdeps/alpha/bzero.S: Define bzero as weak alias of __bzero.
+	* sysdeps/generic/bzero.c: Likewise.
+	* sysdeps/i386/bzero.c: Likewise.
+	* sysdeps/i386/i586/bzero.S: Likewise.
+	* sysdeps/vax/bzero.s: Likewise.
+
+	* sysdeps/generic/bits/select.h: Don't use ugly casts to access array.
+	* sysdeps/i386/bits/select.h: Likewise.
+
+	* sysdeps/i386/fpu/bits/mathinline.c (__finite): Relax register
+	constraints a bit.
+	Don't define and test for _BITS_MATHINLINE_H.  Emit warning if used
+	directly and not through math.h.
+
+	* sysdeps/i386/i486/atomicity.h: Change return type of compare_and_swap
+	to char to get better code.  Fix typo.
+	* sysdeps/stub/atomicity.h: Fix typo.
+
+1997-09-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/stpcpy.c: #undef stpcpy and __stpcpy.
+
+1997-09-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h: Add prototypes to avoid warning.
+
+1997-09-14  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* string/bits/string2.h (strsep): Fix handling of empty REJECT.
+	(__strsep_1c): Handle NULL and empty string.
+	(__strsep_g): Likewise.
+
+1997-09-13  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* catgets/Makefile (extra-objs): Set this instead of generated.
+
+	* md5-crypt/Makefile (extra-objs): Add all object file variants of
+	onlymd5-entry.
+
+1997-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/generic/sysd-stdio.c (__stdio_read): Fix typo in last
+	change.
+
+1997-09-12  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/m68k/m68020/atomicity.h: New file.
+
+1997-09-15 05:11  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/Makefile (distribute): Add globtest.c and globtest.sh.
+	Compile and run globtest if not cross-compiling.
+	* posix/globtest.c: New file.
+	* posix/globtest.sh: New file.
+	* posix/glob.c: Pretty print preprocessor stuff.
+	(glob_in_dir): If PATTERN is not really a pattern still check
+	whether it is a real file in the current directory and return
+	error if not.
+	Reported by Eugene Mamchits <eugin@ips.ras.ru>.
+
+	* libio/fileops.c (_IO_file_sync): Acquire lock before doing the work.
+	* libio/ioseekoff.c (_IO_seekoff): Likewise.
+	* libio/ioseekpos.c (_IO_seekpos): Likewise.
+
+1997-09-13 18:06  Ulrich Drepper  <drepper@cygnus.com>
+
+	* configure.in: Prevent configuration for unsupported platforms.
+
+1997-09-13 04:07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Make sure we always have a file argument by
+	testing for < 2 arguments after recognizing the options.
+
+1997-09-12 11:47  Fila Kolodny  <fila@ibi.com>
+
+	* string/bits/string2.h (__strsep_1c): Cast out const from __retval.
+	(__strsep_g): Likewise.
+
 1997-09-11 17:32  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Define O_ASYNC.

@@ -63,6 +63,7 @@ alpha-.*-linux.*	libnss_compat=1.1
 alpha-.*-linux.*	libnss_nis=1.1
 alpha-.*-linux.*	libnss_nisplus=1.1
 alpha-.*-linux.*	libnss_ldap=1.1
+alpha-.*-linux.*	libnss_hesiod=1.1
 .*-.*-.*		libnss_files=1
 .*-.*-.*		libnss_dns=1
 .*-.*-.*		libnss_db=1
@@ -70,6 +71,7 @@ alpha-.*-linux.*	libnss_ldap=1.1
 .*-.*-.*		libnss_nis=1
 .*-.*-.*		libnss_nisplus=1
 .*-.*-.*		libnss_ldap=1
+.*-.*-.*		libnss_hesiod=1
 
 # Version for libnsl with YP and NIS+ functions.
 alpha-.*-linux.*	libnsl=1.1

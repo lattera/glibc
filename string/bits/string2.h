@@ -18,8 +18,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _BITS_STRING2_H
-#define _BITS_STRING2_H	1
+#ifndef _STRING_H
+# error "Never use <bits/string2.h> directly; include <string.h> instead."
+#endif
+
+#ifdef __NO_STRING_INLINES
 
 /* Unlike the definitions in the header <bits/string.h> the
    definitions contained here are not optimizing down to assembler
@@ -30,7 +33,7 @@
    trick is to use GNU CC's `__builtin_constant_p' function.
 
    Every function XXX which has a defined version in
-   <bits/string.h> must be accompanied by a have _HAVE_STRING_ARCH_XXX
+   <bits/string.h> must be accompanied by a symbol _HAVE_STRING_ARCH_XXX
    to make sure we don't get redefinitions.
 
    We must use here macros instead of inline functions since the
@@ -42,55 +45,158 @@
 # define __STRING_INLINE extern __inline
 #endif
 
-/* We need some more types.  */
-#include <bits/types.h>
+#if _STRING_ARCH_unaligned
+/* If we can do unaligned memory accesses we must know the endianess.  */
+# include <endian.h>
+# include <bits/types.h>
+
+# if __BYTE_ORDER == __LITTLE_ENDIAN
+#  define __STRING2_SMALL_GET16(src, idx) \
+     (((src)[idx + 1] << 8) | (src)[idx])
+#  define __STRING2_SMALL_GET32(src, idx) \
+     ((((src)[idx + 3] << 8 | (src)[idx + 2]) << 8			      \
+       | (src)[idx + 1]) << 8 | (src)[idx])
+# else
+#  define __STRING2_SMALL_GET16(src, idx) \
+     (((src)[idx] << 8) | (src)[idx + 1])
+#  define __STRING2_SMALL_GET32(src, idx) \
+     ((((src)[idx] << 8 | (src)[idx + 1]) << 8				      \
+       | (src)[idx + 2]) << 8 | (src)[idx + 3])
+# endif
+#else
+/* These are a few types we need for the optimizations if we cannot
+   use unaligned memory accesses.  */
+# define __STRING2_COPY_TYPE(N) \
+  typedef struct { char __arr[N]; }					      \
+    __STRING2_COPY_ARR##N __attribute__ ((packed))
+__STRING2_COPY_TYPE (2);
+__STRING2_COPY_TYPE (3);
+__STRING2_COPY_TYPE (4);
+__STRING2_COPY_TYPE (5);
+__STRING2_COPY_TYPE (6);
+__STRING2_COPY_TYPE (7);
+__STRING2_COPY_TYPE (8);
+# undef __STRING2_COPY_TYPE
+#endif
+
+
+/* Set N bytes of S to C.  */
+#ifndef _HAVE_STRING_ARCH_memset
+# define memset(s, c, n) \
+  (__extension__ (__builtin_constant_p (c) && (c) == '\0'		      \
+		  ? ({ void *__s = (s); __bzero (__s, n); __s; })	      \
+		  : memset (s, c, n)))
+#endif
 
 
 /* Copy SRC to DEST.  */
 #ifndef _HAVE_STRING_ARCH_strcpy
 # define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? (strlen (src) + 1 <= 8				      \
+		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
 		     ? __strcpy_small (dest, src, strlen (src) + 1)	      \
 		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
 		  : strcpy (dest, src)))
 
-__STRING_INLINE char *
-__strcpy_small (char *__dest, __const char *__src, size_t __srclen)
-{
-  register char *__tmp = __dest;
-  switch (__srclen)
-    {
-    case 7:
-      *((__uint16_t *) __tmp)++ = *((__uint16_t *) __src)++;
-    case 5:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-      *((unsigned char *) __tmp) = '\0';
-      break;
-
-    case 8:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-    case 4:
-      *((__uint32_t *) __tmp) = *((__uint32_t *) __src);
-      break;
-
-    case 6:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-    case 2:
-      *((__uint16_t *) __tmp) = *((__uint16_t *) __src);
-      break;
-
-    case 3:
-      *((__uint16_t *) __tmp)++ = *((__uint16_t *) __src)++;
-    case 1:
-      *((unsigned char *) __tmp) = '\0';
-      break;
-
-    default:
-      break;
-    }
-  return __dest;
-}
+# if _STRING_ARCH_unaligned
+#  define __strcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__retval = (dest);				      \
+		    char *__cp = __retval;				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			break;						      \
+		      case 3:						      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 4:						      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			break;						      \
+		      case 5:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 6:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			break;						      \
+		      case 7:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 8:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING2_SMALL_GET32 (src, 4);		      \
+			break;						      \
+		      }							      \
+		    __retval; }))
+# else
+#  define __strcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__cp = (dest);				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__STRING2_COPY_ARR2 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR2) { { (src)[0], '\0' } });     \
+			break;						      \
+		      case 3:						      \
+			*((__STRING2_COPY_ARR3 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR3) { { (src)[0], (src)[1],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 4:						      \
+			*((__STRING2_COPY_ARR4 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR4) { { (src)[0], (src)[1],      \
+						     (src)[2], '\0' } });     \
+			break;						      \
+		      case 5:						      \
+			*((__STRING2_COPY_ARR5 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR5) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 6:						      \
+			*((__STRING2_COPY_ARR6 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR6) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], '\0' } });     \
+			break;						      \
+		      case 7:						      \
+			*((__STRING2_COPY_ARR7 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR7) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], (src)[5],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 8:						      \
+			*((__STRING2_COPY_ARR8 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR8) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], (src)[5],      \
+						     (src)[6], '\0' } });     \
+			break;						      \
+		    }							      \
+		  __cp; }))
+# endif
 #endif
 
 
@@ -99,7 +205,7 @@ __strcpy_small (char *__dest, __const char *__src, size_t __srclen)
 # ifndef _HAVE_STRING_ARCH_stpcpy
 #  define __stpcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? (strlen (src) + 1 <= 8				      \
+		  ? (sizeof ((src)[0]) == 1 && strlen (src) + 1 <= 8	      \
 		     ? __stpcpy_small (dest, src, strlen (src) + 1)	      \
 		     : ((char *) __mempcpy (dest, src, strlen (src) + 1) - 1))\
 		  : __stpcpy (dest, src)))
@@ -107,43 +213,108 @@ __strcpy_small (char *__dest, __const char *__src, size_t __srclen)
    we have to use the name `__stpcpy'.  */
 #  define stpcpy(dest, src) __stpcpy (dest, src)
 
-__STRING_INLINE char *
-__stpcpy_small (char *__dest, __const char *__src, size_t __srclen)
-{
-  register char *__tmp = __dest;
-  switch (__srclen)
-    {
-    case 7:
-      *((__uint16_t *) __tmp)++ = *((__uint16_t *) __src)++;
-    case 5:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-      *((unsigned char *) __tmp) = '\0';
-      return __tmp;
-
-    case 8:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-    case 4:
-      *((__uint32_t *) __tmp) = *((__uint32_t *) __src);
-      return __tmp + 3;
-
-    case 6:
-      *((__uint32_t *) __tmp)++ = *((__uint32_t *) __src)++;
-    case 2:
-      *((__uint16_t *) __tmp) = *((__uint16_t *) __src);
-      return __tmp + 1;
-
-    case 3:
-      *((__uint16_t *) __tmp)++ = *((__uint16_t *) __src)++;
-    case 1:
-      *((unsigned char *) __tmp) = '\0';
-      return __tmp;
-
-    default:
-      break;
-    }
-  /* This should never happen.  */
-  return NULL;
-}
+#  if _STRING_ARCH_unaligned
+#   define __stpcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__cp = (dest);				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			++__cp;						      \
+			break;						      \
+		      case 3:						      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 4:						      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			__cp += 3;					      \
+			break;						      \
+		      case 5:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 6:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			++__cp;						      \
+			break;						      \
+		      case 7:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 8:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING2_SMALL_GET32 (src, 4);		      \
+			__cp += 3;					      \
+			break;						      \
+		      }							      \
+		    __cp; }))
+#  else
+#   define __stpcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__cp = (dest);				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__STRING2_COPY_ARR2 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR2) { { (src)[0], '\0' } });     \
+			break;						      \
+		      case 3:						      \
+			*((__STRING2_COPY_ARR3 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR3) { { (src)[0], (src)[1],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 4:						      \
+			*((__STRING2_COPY_ARR4 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR4) { { (src)[0], (src)[1],      \
+						     (src)[2], '\0' } });     \
+			break;						      \
+		      case 5:						      \
+			*((__STRING2_COPY_ARR5 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR5) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 6:						      \
+			*((__STRING2_COPY_ARR6 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR6) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], '\0' } });     \
+			break;						      \
+		      case 7:						      \
+			*((__STRING2_COPY_ARR7 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR7) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], (src)[5],      \
+						     '\0' } });		      \
+			break;						      \
+		      case 8:						      \
+			*((__STRING2_COPY_ARR8 *) __cp) =		      \
+			  ((__STRING2_COPY_ARR8) { { (src)[0], (src)[1],      \
+						     (src)[2], (src)[3],      \
+						     (src)[4], (src)[5],      \
+						     (src)[6], '\0' } });     \
+			break;						      \
+		    }							      \
+		  __cp + ((srclen) - 1); }))
+#  endif
 # endif
 #endif
 
@@ -157,7 +328,7 @@ __stpcpy_small (char *__dest, __const char *__src, size_t __srclen)
 		     ? (char *) memcpy (dest, src, n)			      \
 		     : (memset (__mempcpy (dest, src, strlen (src)), '\0',    \
 				n - strlen (src)),			      \
-			dest))						      \
+			(char *) dest))					      \
 		  : strncpy (dest, src, n)))
 # else
 #  define strncpy(dest, src, n) \
@@ -177,7 +348,7 @@ __stpcpy_small (char *__dest, __const char *__src, size_t __srclen)
   (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
 		  ? (strlen (src) < ((size_t) (n))			      \
 		     ? strcat (dest, src)				      \
-		     : (memcpy (strchr (dest, '\0'), src, n), dest))	      \
+		     : (memcpy (strchr (dest, '\0'), src, n), (char *) dest)) \
 		  : strncat (dest, src, n)))
 # else
 #  define strncat(dest, src, n) \
@@ -205,15 +376,15 @@ __stpcpy_small (char *__dest, __const char *__src, size_t __srclen)
    consists entirely of characters not in REJECT.  */
 #ifndef _HAVE_STRING_ARCH_strcspn
 # define strcspn(s, reject) \
-  (__extension__ (__builtin_constant_p (reject)				      \
-		  ? (((const char *) (reject))[0] == '\0'		      \
+  (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
+		  ? ((reject)[0] == '\0'				      \
 		     ? strlen (s)					      \
-		     : (((const char *) (reject))[1] == '\0'		      \
-			? __strcspn_c1 (s, ((((const char *) (reject))[0]     \
-					     & 0xff) << 8))		      \
-			: strcspn (s, reject)))	      \
+		     : ((reject)[1] == '\0'				      \
+			? __strcspn_c1 (s, (reject)[0])			      \
+			: strcspn (s, reject)))				      \
 		  : strcspn (s, reject)))
 
+__STRING_INLINE size_t __strcspn_c1 (__const char *__s, char __reject);
 __STRING_INLINE size_t
 __strcspn_c1 (__const char *__s, char __reject)
 {
@@ -229,14 +400,15 @@ __strcspn_c1 (__const char *__s, char __reject)
    consists entirely of characters in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strspn
 # define strspn(s, accept) \
-  (__extension__ (__builtin_constant_p (accept)				      \
-		  ? (((const char *) (accept))[0] == '\0'		      \
+  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+		  ? ((accept)[0] == '\0'				      \
 		     ? 0						      \
-		     : (((const char *) (accept))[1] == '\0'		      \
-			? __strspn_c1 (s, ((const char *) (accept))[0])	      \
+		     : ((accept)[1] == '\0'				      \
+			? __strspn_c1 (s, (accept)[0])			      \
 			: strspn (s, accept)))				      \
 		  : strspn (s, accept)))
 
+__STRING_INLINE size_t __strspn_c1 (__const char *__s, char __accept);
 __STRING_INLINE size_t
 __strspn_c1 (__const char *__s, char __accept)
 {
@@ -252,11 +424,11 @@ __strspn_c1 (__const char *__s, char __accept)
 /* Find the first occurrence in S of any character in ACCEPT.  */
 #ifndef _HAVE_STRING_ARCH_strpbrk
 # define strpbrk(s, accept) \
-  (__extension__ (__builtin_constant_p (accept)				      \
-		  ? (((const char *) (accept))[0] == '\0'		      \
+  (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
+		  ? ((accept)[0] == '\0'				      \
 		     ? NULL						      \
-		     : (((const char *) (accept))[1] == '\0'		      \
-			? strchr (s, ((const char *) (accept))[0])	      \
+		     : ((accept)[1] == '\0'				      \
+			? strchr (s, (accept)[0])			      \
 			: strpbrk (s, accept)))				      \
 		  : strpbrk (s, accept)))
 #endif
@@ -265,11 +437,11 @@ __strspn_c1 (__const char *__s, char __accept)
 /* Find the first occurrence of NEEDLE in HAYSTACK.  */
 #ifndef _HAVE_STRING_ARCH_strstr
 # define strstr(haystack, needle) \
-  (__extension__ (__builtin_constant_p (needle)				      \
-		  ? (((const char *) (needle))[0] == '\0'		      \
+  (__extension__ (__builtin_constant_p (needle) && sizeof ((needle)[0]) == 1  \
+		  ? ((needle)[0] == '\0'				      \
 		     ? haystack						      \
-		     : (((const char *) (needle))[1] == '\0'		      \
-			? strchr (haystack, ((const char *) (needle))[0])     \
+		     : ((needle)[1] == '\0'				      \
+			? strchr (haystack, (needle)[0])		      \
 			: strstr (haystack, needle)))			      \
 		  : strstr (haystack, needle)))
 #endif
@@ -277,7 +449,8 @@ __strspn_c1 (__const char *__s, char __accept)
 
 #ifdef __USE_GNU
 # ifndef _HAVE_STRING_ARCH_strnlen
-extern __inline size_t
+__STRING_INLINE size_t strnlen (__const char *__string, size_t __maxlen);
+__STRING_INLINE size_t
 strnlen (__const char *__string, size_t __maxlen)
 {
   __const char *__end = (__const char *) memchr (__string, '\0', __maxlen);
@@ -287,6 +460,45 @@ strnlen (__const char *__string, size_t __maxlen)
 #endif
 
 
+#ifdef __USE_BSD
+# ifndef _HAVE_STRING_ARCH_strsep
+
+#  define strsep(s, reject) \
+  (__extension__ (__builtin_constant_p (reject) && sizeof ((reject)[0]) == 1  \
+		  ? ((reject)[0] != '\0' && (reject)[1] == '\0'		      \
+		     ? __strsep_1c (s, (reject)[0])			      \
+		     : __strsep_g (s, reject))				      \
+		  : __strsep_g (s, reject)))
+
+__STRING_INLINE char *__strsep_1c (char **__s, char __reject);
+__STRING_INLINE char *
+__strsep_1c (char **__s, char __reject)
+{
+  register __const char *__retval = *__s;
+  if (__retval == NULL || *__retval == '\0')
+    return NULL;
+  while (*__retval == __reject)
+    ++__retval;
+  if ((*__s = strchr (__retval, __reject)) != NULL)
+    *(*__s)++ = '\0';
+  return (char *) __retval;
+}
+
+__STRING_INLINE char *__strsep_g (char **__s, __const char *__reject);
+__STRING_INLINE char *
+__strsep_g (char **__s, __const char *__reject)
+{
+  register __const char *__retval = *__s;
+  if (__retval == NULL || *__retval == '\0')
+    return NULL;
+  if ((*__s = strpbrk (__retval, __reject)) != NULL)
+    *(*__s)++ = '\0';
+  return (char *) __retval;
+}
+# endif
+#endif
+
+
 #undef __STRING_INLINE
 
-#endif /* bits/string2.h */
+#endif /* No string inlines.  */

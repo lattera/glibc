@@ -18,17 +18,30 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _STRING_H
-#error "Never use <bits/string.h> directly; include <string.h> instead."
+# error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* We only provide optimizations for the GNU CC.  */
-#if defined __GNUC__ && __GNUC__ >= 2
+/* The ix86 processors can access unaligned multi-byte variables.  */
+#define _STRING_ARCH_unaligned	1
+
+
+/* We only provide optimizations if the user selects them and if
+   GNU CC is used.  */
+#if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
+    && defined __GNUC__ && __GNUC__ >= 2
 
 #ifdef __cplusplus
 # define __STRING_INLINE inline
 #else
 # define __STRING_INLINE extern __inline
 #endif
+
+/* The macros are used in some of the optimized implementations below.  */
+#define __STRING_SMALL_GET16(src, idx) \
+  (((src)[idx + 1] << 8) | (src)[idx])
+#define __STRING_SMALL_GET32(src, idx) \
+  ((((src)[idx + 3] << 8 | (src)[idx + 2]) << 8				      \
+    | (src)[idx + 1]) << 8 | (src)[idx])
 
 
 /* Copy N bytes of SRC to DEST.  */
@@ -355,8 +368,58 @@ __strlen_g (__const char *__str)
 #define _HAVE_STRING_ARCH_strcpy 1
 #define strcpy(dest, src) \
   (__extension__ (__builtin_constant_p (src)				      \
-		  ? (char *) memcpy (dest, src, strlen (src) + 1)	      \
+		  ? (sizeof (src[0]) == 1 && strlen (src) + 1 <= 8	      \
+		     ? __strcpy_small (dest, src, strlen (src) + 1)	      \
+		     : (char *) memcpy (dest, src, strlen (src) + 1))	      \
 		  : __strcpy_g (dest, src)))
+
+# define __strcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__retval = (dest);				      \
+		    char *__cp = __retval;				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING_SMALL_GET16 (src, 0);		      \
+			break;						      \
+		      case 3:						      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET16 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 4:						      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			break;						      \
+		      case 5:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 6:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING_SMALL_GET16 (src, 4);		      \
+			break;						      \
+		      case 7:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET16 (src, 4);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 8:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING_SMALL_GET32 (src, 4);		      \
+			break;						      \
+		      }							      \
+		    __retval; }))
 
 __STRING_INLINE char *
 __strcpy_g (char *__dest, __const char *__src)
@@ -398,43 +461,56 @@ __strcpy_g (char *__dest, __const char *__src)
 /* In glibc itself we use this symbol for namespace reasons.  */
 # define stpcpy(dest, src) __stpcpy (dest, src)
 
-__STRING_INLINE char *
-__stpcpy_small (char *__dest, __const char __src[], size_t __srclen)
-{
-  register char *__tmp = __dest;
-  switch (__srclen)
-    {
-    case 7:
-      *((unsigned short int *) __tmp)++ = *((unsigned short int *) __src)++;
-    case 5:
-      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
-      *((unsigned char *) __tmp) = '\0';
-      return __tmp;
-
-    case 8:
-      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
-    case 4:
-      *((unsigned int *) __tmp) = *((unsigned int *) __src);
-      return __tmp + 3;
-
-    case 6:
-      *((unsigned int *) __tmp)++ = *((unsigned int *) __src)++;
-    case 2:
-      *((unsigned short int *) __tmp) = *((unsigned short int *) __src);
-      return __tmp + 1;
-
-    case 3:
-      *((unsigned short int *) __tmp)++ = *((unsigned short int *) __src)++;
-    case 1:
-      *((unsigned char *) __tmp) = '\0';
-      return __tmp;
-
-    default:
-      break;
-    }
-  /* This should never happen.  */
-  return NULL;
-}
+# define __stpcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__cp = (dest);				      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 2:						      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING_SMALL_GET16 (src, 0);		      \
+			++cp;						      \
+			break;						      \
+		      case 3:						      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET16 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 4:						      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			cp += 3;					      \
+			break;						      \
+		      case 5:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 6:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp) =			      \
+			  __STRING_SMALL_GET16 (src, 4);		      \
+			++cp;						      \
+			break;						      \
+		      case 7:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET16 (src, 4);		      \
+			*((unsigned char *) __cp) = '\0';		      \
+			break;						      \
+		      case 8:						      \
+			*((__uint32_t *) __cp)++ =			      \
+			  __STRING_SMALL_GET32 (src, 0);		      \
+			*((__uint32_t *) __cp) =			      \
+			  __STRING_SMALL_GET32 (src, 4);		      \
+			cp += 3;					      \
+			break;						      \
+		      }							      \
+		    __cp; }))
 
 __STRING_INLINE char *
 __mempcpy_by4 (char *__dest, __const char *__src, size_t __srclen)
@@ -1458,4 +1534,4 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 
 #undef __STRING_INLINE
 
-#endif	/* GNU CC */
+#endif	/* use string inlines && GNU CC */

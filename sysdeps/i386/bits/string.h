@@ -18,11 +18,17 @@
    Boston, MA 02111-1307, USA.  */
 
 #ifndef _STRING_H
-#error "Never use <bits/string.h> directly; include <string.h> instead."
+# error "Never use <bits/string.h> directly; include <string.h> instead."
 #endif
 
-/* We only provide optimizations for the GNU CC.  */
-#if defined __GNUC__ && __GNUC__ >= 2
+/* The ix86 processors can access unaligned multi-byte variables.  */
+#define _STRING_ARCH_unaligned	1
+
+
+/* We only provide optimizations if the user selects them and if
+   GNU CC is used.  */
+#if !defined __NO_STRING_INLINES && defined __USE_STRING_INLINES \
+    && defined __GNUC__ && __GNUC__ >= 2
 
 #ifdef __cplusplus
 # define __STRING_INLINE inline
@@ -741,4 +747,4 @@ strstr (__const char *__haystack, __const char *__needle)
 
 #undef __STRING_INLINE
 
-#endif	/* GNU CC */
+#endif	/* use string inlines && GNU CC */

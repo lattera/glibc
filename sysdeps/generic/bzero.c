@@ -22,7 +22,7 @@
 
 /* Set N bytes of S to 0.  */
 void
-bzero (s, len)
+__bzero (s, len)
      void *s;
      size_t len;
 {
@@ -78,3 +78,4 @@ bzero (s, len)
       len -= 1;
     }
 }
+weak_alias (__bzero, bzero)

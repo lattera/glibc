@@ -54,6 +54,7 @@ in case of double using @code{double} is a good compromise.
                                   constant.
 * FP Comparison Functions::      Special functions to compare floating-point
                                   numbers.
+* FP Function Optimizations::    Fast code or small code.
 * Trig Functions::               Sine, cosine, and tangent.
 * Inverse Trig Functions::       Arc sine, arc cosine, and arc tangent.
 * Exponents and Logarithms::     Also includes square root.
@@ -702,6 +703,35 @@ operators unless it is necessary to use unordered comparisons.
 These macros are not necessary since the @w{IEEE 754} standard requires
 that the comparison for equality and unequality do @emph{not} throw an
 exception if one of the arguments is an unordered value.
+
+
+@node FP Function Optimizations
+@section Is Fast Code or Small Code preferred?
+@cindex Optimization
+
+If an application uses many floating point function it is often the case
+that the costs for the function calls itseld are not neglectable.
+Modern processor implementation often can execute the operation itself
+very fast but the call means a disturbance of the control flow.
+
+For this reason the GNU C Library provides optimizations for many of the
+frequently used math functions.  When the GNU CC is used and the user
+activates the optimizer several new inline functions and macros get
+defined.  These new functions and macros have the same names as the
+library function and so get used instead of the later.  In case of
+inline functions the compiler will decide whether it is reasonable to
+use the inline function and this decision is usually correct.
+
+For the generated code this means that no calls to the library functions
+are necessary.  This increases the speed significantly.  But the
+drawback is that the code size increases and this increase is not always
+neglectable.
+
+In cases where the inline functions and macros are not wanted the symbol
+@code{__NO_MATH_INLINES} should be defined before any system header is
+included.  This will make sure only library functions are used.  Of
+course it can be determined for each single file in the project whether
+giving this option is preferred or not.
 
 
 @node Trig Functions
@@ -1430,8 +1460,14 @@ the same seed, used in different C libraries or on different CPU types,
 will give you different random numbers.
 
 The GNU library supports the standard @w{ISO C} random number functions
-plus another set derived from BSD.  We recommend you use the standard
-ones, @code{rand} and @code{srand}.
+plus two other sets derived from BSD and SVID.  We recommend you use the
+standard ones, @code{rand} and @code{srand} if only a small number of
+random bits are required.  The SVID functions provide an interface which
+allows better randon number generator algorithms and they return up to
+48 random bits in one calls and they also return random floating-point
+numbers if wanted.  The SVID function might not be available on some BSD
+derived systems but since they are required in the XPG they are
+available on all Unix-conformant systems.
 
 @menu
 * ISO Random::       @code{rand} and friends.
@@ -1477,6 +1513,30 @@ seed.
 To produce truly random numbers (not just pseudo-random), do @code{srand
 (time (0))}.
 @end deftypefun
+
+A completely broken interface was designed by the POSIX.1 committee to
+support reproducible random numbers in multi-threaded programs.
+
+@comment stdlib.h
+@comment POSIX.1
+@deftypefun int rand_r (unsigned int *@var{seed})
+This function returns a random number in the range 0 to @code{RAND_MAX}
+just as @code{rand} does.  But this function does not keep an internal
+state for the RNG.  Instead the @code{unsigned int} variable pointed to
+by the argument @var{seed} is the only state.  Before the value is
+returned the state will be updated so that the next call will return a
+new number.
+
+I.e., the state of the RNG can only have as much bits as the type
+@code{unsigned int} has.  This is far too few to provide a good RNG.
+This interface is broken by design.
+
+If the program requires reproducible random numbers in multi-threaded
+programs the reentrant SVID functions are probably a better choice.  But
+these functions are GNU extensions and therefore @code{rand_r}, as being
+standardized in POSIX.1, should always be kept as a default method.
+@end deftypefun
+
 
 @node BSD Random
 @subsection BSD Random Number Functions
