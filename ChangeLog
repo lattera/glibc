@@ -1,3 +1,7 @@
+2001-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* po/fr.po: Update from translation team.
+
 2001-08-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/machine-gmon.h (MCOUNT): Don't use delay slot for
