@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -51,6 +51,8 @@ install-lib	:= libposix.a
 gpl2lgpl := getopt.c getopt1.c getopt.h	regex.c regex.h
 
 include ../Rules
+
+CFLAGS-regex.c = -Wno-unused -Wno-strict-prototypes
 
 $(objpfx)libposix.a: $(dep-dummy-lib); $(make-dummy-lib)
 lib: $(objpfx)libposix.a

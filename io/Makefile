@@ -48,3 +48,5 @@ others		:= pwd
 tests		:= test-utime
 
 include ../Rules
+
+CFLAGS-fts.c = -Wno-write-strings

@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 1993, 1994, 1995 Free Software Foundation, Inc.
+# Copyright (C) 1992, 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,11 @@
 ifeq	($(subdir),math)
 ifndef	math-twiddled
 
-elided-routines := $(elided-routines) acos asin cos sin hypot
-sysdep_routines := $(sysdep_routines) sincos asincos exp__E log__L
+sysdep_routines += sincos asincos exp__E log__L
+elided-routines += acos asin cos sin
 
 math-twiddled := t
+override +gccwarn := -w
 endif
 
 endif

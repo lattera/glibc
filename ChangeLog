@@ -1,3 +1,74 @@
+Wed Jan 24 04:18:36 1996  Paul Eggert  <eggert@twinsun.com>
+
+	* strftime.c (strftime):
+	When invoking self, check whether the subsidiary invocation failed.
+	Use "???" (not "") to denote unknown time zone information.
+
+	Make this source file portable to standalone contexts (e.g. GNU Emacs).
+	<config.h>: Include if HAVE_CONFIG_H is defined.
+	(HAVE_LIMITS_H, HAVE_MBLEN, HAVE_TM_ZONE, STDC_HEADERS): New symbols,
+	defined if _LIBC or if <config.h> defines them.
+	<ansidecl.h>, "../locale/localeinfo.h": Include only if _LIBC.
+	<sys/types.h>: New include; some hosts require it for `time_t'.
+	<ctype.h>: Include only if HAVE_MBLEN (since it's only needed then).
+	<limits.h>: Include only if HAVE_LIMITS_H.
+	<stddef.h, stdlib.h, string.h>: Include only if STDC_HEADERS.
+	(memcpy): Define in terms of bcopy if !STDC_HEADERS.
+	(__P, PTR): Define if not already defined.
+	(__tzname, __daylight, __timezone): Remove macros; no longer needed.
+	(add, strftime): Don't use NULL, for portability to some weird hosts.
+	(fmt): If !_LIBC, don't assume sprintf returns a count.
+	(week, strftime): Use old-style function declarations.
+	(weekday_name, month_name): New constants.
+	(strftime): Use traditional C values if locale support isn't available.
+	Use `const' instead of CONST.  For time zones, use tm_zone if
+	possible, then fall back on tzname.  Don't check for multibyte
+	characters unless mblen is supported.  Use formats like %02d instead
+	of %.2d, for portability to older hosts.
+
+Wed Jan 24 00:07:52 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio-common/vfscanf.c (GROUP, MALLOC): New flag macros.
+	(__vfscanf): Eliminate flag vars that were redundant with FLAGS bits.
+	Fix bug in recognition of %ll flag for long long.
+	Fix overeager checks for conflicting type modifiers.
+	With ' flag, match thousands separators for decimal numbers.
+
+Tue Jan 23 22:02:40 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* locale/Makefile (CFLAGS-locfile-lex.c): New variable.
+
+	* resolv/Makefile (CFLAGS): Disable some warnings.
+
+	* sysdeps/generic/Makefile (elided-routines): Removed hypot.
+	(+gccwarn): Set with override.
+
+	* stdio-common/Makefile (CFLAGS-tst-printf.c): New variable.
+
+	* posix/Makefile (CFLAGS-regex.c): New variable.
+
+	* malloc/Makefile (CFLAGS-obstack.c): New variable.
+
+	* io/Makefile (CFLAGS-fts.c): New variable.
+	* io/fts.c (fts_open): Use prototypes for COMPAR decl.
+
+Tue Jan 23 21:35:32 1996  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/bind.c (bind): Ensure NAME for the AF_LOCAL
+	case is '\0'-terminated.
+
+Tue Jan 23 19:49:54 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main): Support additional args in --list mode for
+	debugging: look them up as symbol names and print values.
+
+	* misc/getttyent.c (skip, value): Declare with prototypes in file
+	scope.
+
+	* csu/initfini.c (_init): Explicitly set a variable that is
+ 	pointer to volatile with the address of __gmon_start__, to avoid
+ 	the test being optimized out.
+
 Mon Jan 22 10:40:40 1996  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/posix/getcwd.c [__GNU_LIBRARY__]: Include unistd.h.

@@ -35,13 +35,15 @@ Cambridge, MA 02139, USA.  */
 #endif
 
 /* Those are flags in the conversion format. */
-# define LONG		0x01	/* l: long or double */
-# define LONGDBL	0x02	/* L: long long or long double */
-# define SHORT		0x04	/* h: short */
-# define SUPPRESS	0x08	/* suppress assignment */
-# define POINTER	0x10	/* weird %p pointer (`fake hex') */
-# define NOSKIP		0x20	/* do not skip blanks */
-# define WIDTH		0x40	/* width */
+# define LONG		0x001	/* l: long or double */
+# define LONGDBL	0x002	/* L: long long or long double */
+# define SHORT		0x004	/* h: short */
+# define SUPPRESS	0x008	/* *: suppress assignment */
+# define POINTER	0x010	/* weird %p pointer (`fake hex') */
+# define NOSKIP		0x020	/* do not skip blanks */
+# define WIDTH		0x040	/* width was given */
+# define GROUP		0x080	/* ': group numbers */
+# define MALLOC		0x100	/* a: malloc strings */
 
 
 #ifdef USE_IN_LIBIO
@@ -108,20 +110,9 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   register size_t done = 0;	/* Assignments done.  */
   register size_t read_in = 0;	/* Chars read in.  */
   register int c;		/* Last char read.  */
-  register int do_assign;	/* Whether to do an assignment.  */
   register int width;		/* Maximum field width.  */
-  int group_flag;		/* %' modifier flag.  */
-  int flags;			/* Trace flags for current format element.  */
+  register int flags;		/* Modifiers for current format element.  */
 
-  /* Type modifiers.  */
-  int is_short, is_long, is_long_double;
-#ifdef	HAVE_LONGLONG
-  /* We use the `L' modifier for `long long int'.  */
-# define is_longlong	is_long_double
-#else
-# define is_longlong	0
-#endif
-  int malloc_string;		/* Args are char ** to be filled in.  */
   /* Status for reading F-P nums.  */
   char got_dot, got_e;
   /* If a [...] is a [^...].  */
@@ -132,6 +123,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   int number_signed;
   /* Decimal point character.  */
   wchar_t decimal;
+  /* The thousands character of the current locale.  */
+  wchar_t thousands;
   /* Integral holding variables.  */
   union
     {
@@ -173,6 +166,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
   if (mbtowc (&decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),
 	      strlen (_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT))) <= 0)
     decimal = (wchar_t) *_NL_CURRENT (LC_NUMERIC, DECIMAL_POINT);
+  /* Figure out the thousands separator character.  */
+  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
+	      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
+    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
 
   c = inchar ();
 
@@ -255,9 +252,6 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
       /* Initialize state of modifiers.  */
       argpos = 0;
-      do_assign = 1;
-      group_flag = 0;
-      is_short = is_long = is_long_double = malloc_string = 0;
 
       /* Prepare temporary buffer.  */
       wpsize = 0;
@@ -274,6 +268,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	    {
 	      /* Oops; that was actually the field width.  */
 	      width = argpos;
+	      flags |= WIDTH;
 	      argpos = 0;
 	      goto got_width;
 	    }
@@ -284,11 +279,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	switch (*f++)
 	  {
 	  case '*':
-	    flags = SUPPRESS;
-	    do_assign = 0;
+	    flags |= SUPPRESS;
 	    break;
 	  case '\'':
-	    group_flag = 1;
+	    flags |= GROUP;
 	    break;
 	  }
 
@@ -313,42 +307,36 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  {
 	  case 'h':
 	    /* int's are short int's.  */
-	    if (flags & ~(SUPPRESS | WIDTH))
+	    if (flags & (LONG|LONGDBL))
 	      /* Signal illegal format element.  */
 	      conv_error ();
 	    flags |= SHORT;
-	    is_short = 1;
 	    break;
 	  case 'l':
-	    if (is_long)
+	    if (flags & SHORT)
+	      conv_error ();
+	    else if (flags & LONG)
 	      {
 		/* A double `l' is equivalent to an `L'.  */
-		if ((flags & ~(SUPPRESS | WIDTH)))
-		  conv_error ();
 		flags &= ~LONG;
 		flags |= LONGDBL;
-		is_longlong = 1;
 	      }
 	    else
-	      {
-		/* int's are long int's.  */
-		flags |= LONG;
-		is_long = 1;
-	      }
+	      /* int's are long int's.  */
+	      flags |= LONG;
 	    break;
 	  case 'q':
 	  case 'L':
 	    /* double's are long double's, and int's are long long int's.  */
-	    if (flags & ~(SUPPRESS | WIDTH))
+	    if (flags & (LONG|SHORT))
 	      /* Signal illegal format element.  */
 	      conv_error ();
 	    flags |= LONGDBL;
-	    is_long_double = 1;
 	    break;
 	  case 'a':
 	    /* String conversions (%s, %[) take a `char **'
 	       arg and fill it in with a malloc'd pointer.  */
-	    malloc_string = 1;
+	    flags |= MALLOC;
 	    break;
 	  }
 
@@ -375,12 +363,12 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  break;
 
 	case 'n':	/* Answer number of assignments done.  */
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    *ARG (int *) = read_in - 1;	/* Don't count the read-ahead.  */
 	  break;
 
 	case 'c':	/* Match characters.  */
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    {
 	      str = ARG (char *);
 	      if (str == NULL)
@@ -393,7 +381,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (width == -1)
 	    width = 1;
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    {
 	      do
 		*str++ = c;
@@ -402,16 +390,16 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  else
 	    while (inchar () != EOF && --width > 0);
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    ++done;
 
 	  break;
 
 	case 's':		/* Read a string.  */
 #define STRING_ARG							      \
-	  if (do_assign)						      \
+	  if (!(flags & SUPPRESS))					      \
 	    {								      \
-	      if (malloc_string)					      \
+	      if (flags & MALLOC)					      \
 		{							      \
 		  /* The string is to be stored in a malloc'd buffer.  */     \
 		  strptr = ARG (char **);				      \
@@ -436,10 +424,10 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      if (isspace (c))
 		break;
 #define	STRING_ADD_CHAR(c)						      \
-	      if (do_assign)						      \
+	      if (!(flags & SUPPRESS))					      \
 		{							      \
 		  *str++ = c;						      \
-		  if (malloc_string && str == *strptr + strsize)	      \
+		  if ((flags & MALLOC) && str == *strptr + strsize)	      \
 		    {							      \
 		      /* Enlarge the buffer.  */			      \
 		      str = realloc (*strptr, strsize * 2);		      \
@@ -474,7 +462,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	      STRING_ADD_CHAR (c);
 	    } while (inchar () != EOF && (width <= 0 || --width > 0));
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    {
 	      *str = '\0';
 	      ++done;
@@ -550,7 +538,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  while (c != EOF && width != 0)
 	    {
 	      if (base == 16 ? !isxdigit (c) :
-		  (!isdigit (c) || c - '0' >= base))
+		  ((!isdigit (c) || c - '0' >= base) &&
+		   !((flags & GROUP) && base == 10 && c == thousands)))
 		break;
 	      ADDW (c);
 	      if (width > 0)
@@ -566,32 +555,32 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  /* Convert the number.  */
 	  ADDW ('\0');
-	  if (is_longlong)
+	  if (flags & LONGDBL)
 	    {
 	      if (number_signed)
-		num.q = __strtoq_internal (wp, &tw, base, group_flag);
+		num.q = __strtoq_internal (wp, &tw, base, flags & GROUP);
 	      else
-		num.uq = __strtouq_internal (wp, &tw, base, group_flag);
+		num.uq = __strtouq_internal (wp, &tw, base, flags & GROUP);
 	    }
 	  else
 	    {
 	      if (number_signed)
-		num.l = __strtol_internal (wp, &tw, base, group_flag);
+		num.l = __strtol_internal (wp, &tw, base, flags & GROUP);
 	      else
-		num.ul = __strtoul_internal (wp, &tw, base, group_flag);
+		num.ul = __strtoul_internal (wp, &tw, base, flags & GROUP);
 	    }
 	  if (wp == tw)
 	    conv_error ();
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    {
 	      if (! number_signed)
 		{
-		  if (is_longlong)
+		  if (flags & LONGDBL)
 		    *ARG (unsigned LONGLONG int *) = num.uq;
-		  else if (is_long)
+		  else if (flags & LONG)
 		    *ARG (unsigned long int *) = num.ul;
-		  else if (is_short)
+		  else if (flags & SHORT)
 		    *ARG (unsigned short int *)
 		      = (unsigned short int) num.ul;
 		  else
@@ -599,11 +588,11 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		}
 	      else
 		{
-		  if (is_longlong)
+		  if (flags & LONGDBL)
 		    *ARG (LONGLONG int *) = num.q;
-		  else if (is_long)
+		  else if (flags & LONG)
 		    *ARG (long int *) = num.l;
-		  else if (is_short)
+		  else if (flags & SHORT)
 		    *ARG (short int *) = (short int) num.l;
 		  else
 		    *ARG (int *) = (int) num.l;
@@ -649,6 +638,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 		  ADDW (c);
 		  got_dot = 1;
 		}
+	      else if ((flags & GROUP) && c == thousands && !got_dot)
+		ADDW (c);
 	      else
 		break;
 	      if (width > 0)
@@ -663,29 +654,29 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  /* Convert the number.  */
 	  ADDW ('\0');
-	  if (is_long_double)
+	  if (flags & LONGDBL)
 	    {
-	      long double d = __strtold_internal (wp, &tw, group_flag);
-	      if (do_assign && tw != wp)
+	      long double d = __strtold_internal (wp, &tw, flags & GROUP);
+	      if (!(flags & SUPPRESS) && tw != wp)
 		*ARG (long double *) = d;
 	    }
-	  else if (is_long)
+	  else if (flags & LONG)
 	    {
-	      double d = __strtod_internal (wp, &tw, group_flag);
-	      if (do_assign && tw != wp)
+	      double d = __strtod_internal (wp, &tw, flags & GROUP);
+	      if (!(flags & SUPPRESS) && tw != wp)
 		*ARG (double *) = d;
 	    }
 	  else
 	    {
-	      float d = __strtof_internal (wp, &tw, group_flag);
-	      if (do_assign && tw != wp)
+	      float d = __strtof_internal (wp, &tw, flags & GROUP);
+	      if (!(flags & SUPPRESS) && tw != wp)
 		*ARG (float *) = d;
 	    }
 
 	  if (tw == wp)
 	    conv_error ();
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    ++done;
 	  break;
 
@@ -751,7 +742,7 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	  if (read_in == num.ul)
 	    conv_error ();
 
-	  if (do_assign)
+	  if (!(flags & SUPPRESS))
 	    {
 	      *str = '\0';
 	      ++done;
@@ -761,7 +752,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 	case 'p':	/* Generic pointer.  */
 	  base = 16;
 	  /* A PTR must be the same size as a `long int'.  */
-	  is_long = 1;
+	  flags &= ~(SHORT|LONGDBL);
+	  flags |= LONG;
 	  number_signed = 0;
 	  goto number;
 	}

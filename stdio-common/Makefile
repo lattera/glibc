@@ -44,3 +44,5 @@ tests := tst-printf tstscanf test_rdwr test-popen tstgetln test-fseek \
 
 
 include ../Rules
+
+CFLAGS-tst-printf.c = -Wno-format

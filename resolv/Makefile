@@ -29,3 +29,5 @@ routines := gethnamaddr getnetbyaddr getnetbyname getnetent getnetnamadr \
 	    res_query res_send sethostent inet_addr
 
 include ../Rules
+
+CFLAGS += -Wno-strict-prototypes -Wno-comment -Wno-write-strings

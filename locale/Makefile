@@ -54,3 +54,5 @@ $(objpfx)locale: $(locale-modules:%=$(objpfx)%.o)
 $(objpfx)localedef $(objpfx)locale: $(lib-modules:%=$(objpfx)%.o)
 
 CPPFLAGS += -DLOCALE_PATH='"$(localedir)"' -DCHARMAP_PATH='"$(nlsdir)/charmap"'
+
+CFLAGS-locfile-lex.c = -Wno-write-strings
