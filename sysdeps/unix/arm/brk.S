@@ -35,8 +35,8 @@ C_LABEL(__curbrk)
 SYSCALL__ (brk, 1)
 #ifdef PIC
 	ldr r1, 1f
-	add r1, r1, pc
-2:	ldr r2, _cb_addr
+	ldr r2, _cb_addr
+2:	add r1, pc, r1
 	add r1, r1, r2
 #else
 	ldr r1, _cb_addr
@@ -45,7 +45,7 @@ SYSCALL__ (brk, 1)
 	mov r0, $0
 	RETINSTR(mov, pc, r14)
 #ifdef PIC
-1:	.long _GLOBAL_OFFSET_TABLE_ - 2b - 4
+1:	.long _GLOBAL_OFFSET_TABLE_ - 2b - 8
 _cb_addr:
 	.long C_SYMBOL_NAME(__curbrk)(GOTOFF)
 #else
