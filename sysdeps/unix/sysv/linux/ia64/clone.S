@@ -68,6 +68,7 @@ ENTRY(__clone)
 	mov	ar.pfs = loc0
 	mov	gp = loc1
 	mov	r32 = r8		// exit value
+	;;
 	br.call.sptk	b0 = _exit	// we're out of here
 
 PSEUDO_END(__clone)

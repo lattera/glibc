@@ -19,6 +19,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <sysdeps/unix/sysdep.h>
+#include <sysdeps/ia64/sysdep.h>
 
 /* For Linux we can use the system call table in the header file
 	/usr/include/asm/unistd.h

@@ -1,3 +1,27 @@
+2000-07-31  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/elf/initfini.c: Kill dummy section since align and
+	endp statements have already been added.
+
+2000-04-18  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/unix/sysv/linux/ia64/sysdep.h: Include
+	<sysdeps/ia64/sysdep.h>.
+
+	* sysdeps/ia64/_mcount.S: New file.
+
+	* sysdeps/ia64/elf/initfini.c (_init): Preserve gp around call to
+	__gmon_start__.  Fix up extraneous whitespace.
+
+2000-01-12  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/elf/initfini.c: New file.
+
+2000-07-31  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone.S: Add stop bit to avoid WAW
+	dependency between branch and ar.pfs write.
+
 2000-07-31  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/generic/printf_fphex.c (__printf_fphex): Correctly
