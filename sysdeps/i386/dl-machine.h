@@ -117,68 +117,68 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
    and then redirect to the address it returns.  */
 #if !defined PROF && !__BOUNDED_POINTERS__
 # define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text
-	.globl _dl_runtime_resolve
-	.type _dl_runtime_resolve, @function
-	.align 16
-_dl_runtime_resolve:
-	pushl %eax		# Preserve registers otherwise clobbered.
-	pushl %ecx
-	pushl %edx
-	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note
-	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.
-	call fixup		# Call resolver.
-	popl %edx		# Get register content back.
-	popl %ecx
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.
-	ret $8			# Jump to function address.
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-
-	.globl _dl_runtime_profile
-	.type _dl_runtime_profile, @function
-	.align 16
-_dl_runtime_profile:
-	pushl %eax		# Preserve registers otherwise clobbered.
-	pushl %ecx
-	pushl %edx
-	movl 20(%esp), %ecx	# Load return address
-	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note
-	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.
-	call profile_fixup	# Call resolver.
-	popl %edx		# Get register content back.
-	popl %ecx
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.
-	ret $8			# Jump to function address.
-	.size _dl_runtime_profile, .-_dl_runtime_profile
-	.previous
+	.text\n\
+	.globl _dl_runtime_resolve\n\
+	.type _dl_runtime_resolve, @function\n\
+	.align 16\n\
+_dl_runtime_resolve:\n\
+	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	pushl %ecx\n\
+	pushl %edx\n\
+	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
+	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
+	call fixup		# Call resolver.\n\
+	popl %edx		# Get register content back.\n\
+	popl %ecx\n\
+	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
+	ret $8			# Jump to function address.\n\
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
+\n\
+	.globl _dl_runtime_profile\n\
+	.type _dl_runtime_profile, @function\n\
+	.align 16\n\
+_dl_runtime_profile:\n\
+	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	pushl %ecx\n\
+	pushl %edx\n\
+	movl 20(%esp), %ecx	# Load return address\n\
+	movl 16(%esp), %edx	# Copy args pushed by PLT in register.  Note\n\
+	movl 12(%esp), %eax	# that `fixup' takes its parameters in regs.\n\
+	call profile_fixup	# Call resolver.\n\
+	popl %edx		# Get register content back.\n\
+	popl %ecx\n\
+	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
+	ret $8			# Jump to function address.\n\
+	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
+	.previous\n\
 ");
 #else
-# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\
-	.text
-	.globl _dl_runtime_resolve
-	.globl _dl_runtime_profile
-	.type _dl_runtime_resolve, @function
-	.type _dl_runtime_profile, @function
-	.align 16
-_dl_runtime_resolve:
-_dl_runtime_profile:
-	pushl %eax		# Preserve registers otherwise clobbered.
-	pushl %ecx
-	pushl %edx
-	movl 16(%esp), %edx	# Push the arguments for `fixup'
-	movl 12(%esp), %eax
-	pushl %edx
-	pushl %eax
-	call fixup		# Call resolver.
-	popl %edx		# Pop the parameters
-	popl %ecx
-	popl %edx		# Get register content back.
-	popl %ecx
-	xchgl %eax, (%esp)	# Get %eax contents end store function address.
-	ret $8			# Jump to function address.
-	.size _dl_runtime_resolve, .-_dl_runtime_resolve
-	.size _dl_runtime_profile, .-_dl_runtime_profile
-	.previous
+# define ELF_MACHINE_RUNTIME_TRAMPOLINE asm ("\n\
+	.text\n\
+	.globl _dl_runtime_resolve\n\
+	.globl _dl_runtime_profile\n\
+	.type _dl_runtime_resolve, @function\n\
+	.type _dl_runtime_profile, @function\n\
+	.align 16\n\
+_dl_runtime_resolve:\n\
+_dl_runtime_profile:\n\
+	pushl %eax		# Preserve registers otherwise clobbered.\n\
+	pushl %ecx\n\
+	pushl %edx\n\
+	movl 16(%esp), %edx	# Push the arguments for `fixup'\n\
+	movl 12(%esp), %eax\n\
+	pushl %edx\n\
+	pushl %eax\n\
+	call fixup		# Call resolver.\n\
+	popl %edx		# Pop the parameters\n\
+	popl %ecx\n\
+	popl %edx		# Get register content back.\n\
+	popl %ecx\n\
+	xchgl %eax, (%esp)	# Get %eax contents end store function address.\n\
+	ret $8			# Jump to function address.\n\
+	.size _dl_runtime_resolve, .-_dl_runtime_resolve\n\
+	.size _dl_runtime_profile, .-_dl_runtime_profile\n\
+	.previous\n\
 ");
 #endif
 
@@ -190,8 +190,8 @@ _dl_runtime_profile:
    The C function `_dl_start' is the real entry point;
    its return value is the user program's entry point.  */
 
-#define RTLD_START asm ("\
-.text\n\
+#define RTLD_START asm ("\n\
+	.text\n\
 	.align 16\n\
 0:	movl (%esp), %ebx\n\
 	ret\n\
@@ -205,7 +205,7 @@ _start:\n\
 _dl_start_user:\n\
 	# Save the user entry point address in %edi.\n\
 	movl %eax, %edi\n\
-	# Point %ebx at the GOT.
+	# Point %ebx at the GOT.\n\
 	call 0b\n\
 	addl $_GLOBAL_OFFSET_TABLE_, %ebx\n\
 	# Store the highest stack address\n\
@@ -240,7 +240,7 @@ _dl_start_user:\n\
 	movl _dl_fini@GOT(%ebx), %edx\n\
 	# Jump to the user's entry point.\n\
 	jmp *%edi\n\
-.previous\n\
+	.previous\n\
 ");
 
 #ifndef RTLD_START_SPECIAL_INIT

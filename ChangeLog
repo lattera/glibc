@@ -1,5 +1,9 @@
 2001-04-02  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/dl-machine.h (RTLD_START): Don't use multi-line
+	strings.
+	(ELF_MACHINE_RUNTIME_TRAMPOLINE): Likewise.
+
 	* sysdeps/ieee754/dbl-64/uroot.h: Add missing braces arount
 	initializers.
 	* sysdeps/ieee754/dbl-64/e_sqrt.c (__ieee754_sqrt): Likewise.
