@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1994, 1995, 1996, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,6 +49,11 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.6  2001/04/09 21:23:38  roland
+ * 2001-04-07  Roland McGrath  <roland@frob.com>
+ *
+ * 	* mach/msgserver.c (__mach_msg_server_timeout): Add an assert.
+ *
  * Revision 1.5  1996/12/20 01:32:35  drepper
  * Update from main archive 961219
  *
@@ -83,6 +88,7 @@
 #include <mach.h>
 #include <mach/mig_errors.h>
 #include <stdlib.h>		/* For malloc and free.  */
+#include <assert.h>
 
 mach_msg_return_t
 __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
@@ -116,6 +122,7 @@ __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
 	     Pass it to DEMUX for processing.  */
 
 	  (void) (*demux) (&request->Head, &reply->Head);
+	  assert (reply->Head.msgh_size <= max_size);
 
 	  switch (reply->RetCode)
 	    {
