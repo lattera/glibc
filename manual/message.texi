@@ -160,10 +160,10 @@ does this just like it works for @code{printf}.
 @end table
 
 
-Using @code{NLSPATH} allows to specify arbitrary directories to be
-searched for message catalogs while still allowing different languages
-to be used.  If the @code{NLSPATH} environment variable is not set the
-default value is
+Using @code{NLSPATH} allows arbitrary directories to be searched for
+message catalogs while still allowing different languages to be used.
+If the @code{NLSPATH} environment variable is not set, the default value
+is
 
 @smallexample
 @var{prefix}/share/locale/%L/%N:@var{prefix}/share/locale/%L/LC_MESSAGES/%N
@@ -453,7 +453,7 @@ these source files to learn about the file format.
 
 @cindex gencat
 The @code{gencat} program is specified in the X/Open standard and the
-GNU implementation follows this specification and so allows to process
+GNU implementation follows this specification and so processes
 all correctly formed input files.  Additionally some extension are
 implemented which help to work in a more reasonable way with the
 @code{catgets} functions.
@@ -1525,13 +1525,13 @@ complete @var{dir_name} is:
 @end smallexample
 
 We can use @file{/usr/share} since the @file{.mo} files containing the
-message catalogs are system independent, all systems can use the same
+message catalogs are system independent, so all systems can use the same
 files.  If the program executed the @code{bindtextdomain} function for
-the message domain that is currently handled the @code{dir_name}
-component is the exactly the value which was given to the function as
-the second parameter.  I.e., @code{bindtextdomain} allows to overwrite
+the message domain that is currently handled, the @code{dir_name}
+component is exactly the value which was given to the function as
+the second parameter.  I.e., @code{bindtextdomain} allows overwriting
 the only system dependent and fixed value to make it possible to
-address file everywhere in the filesystem.
+address files anywhere in the filesystem.
 
 The @var{category} is the name of the locale category which was selected
 in the program code.  For @code{gettext} and @code{dgettext} this is

@@ -519,7 +519,7 @@ choices for @var{param}, as defined in @file{malloc.h}, are:
 
 @table @code
 @item M_TRIM_THRESHOLD
-This is the minimum size (in bytes) of the top-most, releaseable chunk
+This is the minimum size (in bytes) of the top-most, releasable chunk
 that will cause @code{sbrk} to be called with a negative argument in
 order to return memory to the system.
 @item M_TOP_PAD
@@ -691,7 +691,7 @@ void *@var{function} (void *@var{ptr}, size_t @var{size}, void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
-the @code{realloc} function was called.  This value allows to trace the
+the @code{realloc} function was called.  This value allows you to trace the
 memory consumption of the program.
 @end defvar
 
@@ -707,7 +707,7 @@ void @var{function} (void *@var{ptr}, void *@var{caller})
 @end smallexample
 
 The value of @var{caller} is the return address found on the stack when
-the @code{free} function was called.  This value allows to trace the
+the @code{free} function was called.  This value allows you to trace the
 memory consumption of the program.
 @end defvar
 
@@ -887,7 +887,7 @@ This is the total size of memory occupied by chunks handed out by
 This is the total size of memory occupied by free (not in use) chunks.
 
 @item int keepcost
-This is the size of the top-most releaseable chunk that normally
+This is the size of the top-most releasable chunk that normally
 borders the end of the heap (i.e. the ``brk'' of the process).
 
 @end table
@@ -994,12 +994,12 @@ nothing is done.  The behaviour of @code{malloc} etc. is not changed.
 For obvious reasons this also happens if the application is installed
 with the SUID or SGID bit set.
 
-If the named file is successfully opened @code{mtrace} installs special
+If the named file is successfully opened, @code{mtrace} installs special
 handlers for the functions @code{malloc}, @code{realloc}, and
-@code{free} (@pxref{Hooks for Malloc}).  From now on all uses of these
+@code{free} (@pxref{Hooks for Malloc}).  From then on, all uses of these
 functions are traced and protocolled into the file.  There is now of
 course a speed penalty for all calls to the traced functions so tracing
-should not be enabled during their normal use.
+should not be enabled during normal use.
 
 This function is a GNU extension and generally not available on other
 systems.  The prototype can be found in @file{mcheck.h}.

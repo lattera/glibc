@@ -865,7 +865,7 @@ Note that I have at this point no information about any other platform.
 {AJ} This is at first a kernel issue.  The kernel defines limits with
 OPEN_MAX the number of simultaneous open files and with FD_SETSIZE the
 number of used file descriptors.  You need to change these values in your
-kernel and recompile the kernel so that the kernel allows to use more open
+kernel and recompile the kernel so that the kernel allows more open
 files.  You don't necessarily need to recompile the GNU C library since the
 only place where OPEN_MAX and FD_SETSIZE is really needed in the library
 itself is the size of fd_set which is used by select.

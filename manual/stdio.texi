@@ -972,10 +972,10 @@ initial @samp{%} character followed in sequence by:
 @itemize @bullet
 @item
 An optional specification of the parameter used for this format.
-Normally the parameters to the @code{printf} function a assigned to the
+Normally the parameters to the @code{printf} function are assigned to the
 formats in the order of appearance in the format string.  But in some
 situations (such as message translation) this is not desirable and this
-extension allows to specify and explicit parameter to be used.
+extension allows an explicit parameter to be specified.
 
 The @var{param-no} part of the format must be an integer in the range of
 1 to the maximum number of arguments present to the function call.  Some

@@ -454,7 +454,7 @@ of this helper program; chances are you did not intend to run this program.\n\
 \n\
   --list                list all dependencies and how they are resolved\n\
   --verify              verify that given object really is a dynamically linked\n\
-                        object we get handle\n\
+                        object we can handle\n\
   --library-path PATH   use given PATH instead of content of the environment\n\
                         variable LD_LIBRARY_PATH\n\
   --inhibit-rpath LIST  ignore RUNPATH and RPATH information in object names\n\

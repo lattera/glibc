@@ -52,9 +52,9 @@ GNU Make, and possibly others.  @xref{Tools for Compilation}, below.
 GNU libc can be compiled in the source directory, but we strongly advise to
 build it in a separate build directory.  For example, if you have unpacked
 the glibc sources in @file{/src/gnu/glibc-2.1.0}, create a directory
-@file{/src/gnu/glibc-build} to put the object files in.  This allows to
-remove the whole build directory in case an error occurs which is the
-safest way to get a clean way and should always be done.
+@file{/src/gnu/glibc-build} to put the object files in.  This allows
+removing the whole build directory in case an error occurs, which is the
+safest way to get a fresh start and should always be done.
 
 From your object directory, run the shell script @file{configure} found
 at the top level of the source tree.  In the scenario above, you'd type

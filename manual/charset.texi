@@ -2369,7 +2369,7 @@ which must appear exactly once for an entire text.  If a number of
 must add the prolog.  But since there is no communication between the
 different calls of @code{mbsrtowcs} the conversion functions have no
 possibility to find this out.  The situation is different for sequences
-of @code{iconv} calls since the handle allows to access the needed
+of @code{iconv} calls since the handle allows access to the needed
 information.
 
 This element is mostly used together with @code{__invocation_counter} in

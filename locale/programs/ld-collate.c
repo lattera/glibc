@@ -2012,8 +2012,8 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
       {
 	/* The entries in the list are sorted by length and then
            alphabetically.  This is the order in which we will add the
-           elements to the collation table.  This allows to simply
-           walk the table in sequence and stop at the first matching
+           elements to the collation table.  This allows simply walking
+	   the table in sequence and stopping at the first matching
            entry.  Since the longer sequences are coming first in the
            list they have the possibility to match first, just as it
            has to be.  In the worst case we are walking to the end of

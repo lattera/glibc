@@ -80,7 +80,7 @@
 /* Linux specific: minimum supported kernel version.  */
 #undef	__LINUX_KERNEL_VERSION
 
-/* An extension in gcc 2.96 and up allows to substract the values of two
+/* An extension in gcc 2.96 and up allows the subtraction of two
    local labels.  */
 #undef	HAVE_SUBTRACT_LOCAL_LABELS
 

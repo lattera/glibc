@@ -359,8 +359,8 @@ find_derivation (const char *toset, const char *toset_expand,
          one with the lower costs.  Otherwise add the new charset at the
          end.
 
-	 The module database is organized in a tree form which allows to
-	 search for prefixes.  So we search for the first entry with a
+	 The module database is organized in a tree form which allows
+	 searching for prefixes.  So we search for the first entry with a
 	 matching prefix and any other matching entry can be found from
 	 this place.  */
       struct gconv_module *node = __gconv_modules_db;

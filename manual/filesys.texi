@@ -91,19 +91,18 @@ using only the standard behavior of @code{getcwd}:
 
 @smallexample
 char *
-gnu_getcwd ()
+gnu_getcwd (size_t size)
 @{
-  int size = 100;
-  char *buffer = (char *) xmalloc (size);
-
   while (1)
     @{
+      char *buffer = (char *) xmalloc (size);
       char *value = getcwd (buffer, size);
-      if (value != 0)
-        return buffer;
-      size *= 2;
+      if (value == buffer)
+        return value;
       free (buffer);
-      buffer = (char *) xmalloc (size);
+      if (errno != ERANGE)
+        return value;
+      size *= 2;
     @}
 @}
 @end smallexample
@@ -2558,8 +2557,8 @@ The operation was interrupted by a signal.
 @deftypefun int truncate64 (const char *@var{name}, off64_t @var{length})
 This function is similar to the @code{truncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
-bits machines which allows to handle file with a size up to @math{2^63}
-bytes.
+bits machines, which allows the handling of files with sizes up to 
+@math{2^63} bytes.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name
@@ -2635,8 +2634,8 @@ The operation was interrupted by a signal.
 @deftypefun int ftruncate64 (int @var{id}, off64_t @var{length})
 This function is similar to the @code{ftruncate} function.  The
 difference is that the @var{length} argument is 64 bits wide even on 32
-bits machines which allows to handle file with a size up to @math{2^63}
-bytes.
+bits machines which allows the handling of files with sizes up to
+@math{2^63} bytes.
 
 When the source file is compiled with @code{_FILE_OFFSET_BITS == 64} on a
 32 bits machine this function is actually available under the name

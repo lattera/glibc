@@ -358,8 +358,8 @@ _dl_important_hwcaps (const char *platform, size_t platform_len, size_t *sz,
 	      #1: 0, 1, 3	        1101
 	      #2: 0, 2, 3	        1011
 	      #3: 0, 3		        1001
-     This allows to represent all possible combinations of capability
-     names in the string.  First generate the strings.  */
+     This allows the representation of all possible combinations of
+     capability names in the string.  First generate the strings.  */
   result[1].str = result[0].str = cp = (char *) (result + *sz);
 #define add(idx) \
       cp = __mempcpy (__mempcpy (cp, temp[idx].str, temp[idx].len), "/", 1);

@@ -358,7 +358,7 @@ The @code{hcreate_r} function initializes the object pointed to by
 So this function is equivalent to the @code{hcreate} function except
 that the initialized data structure is controlled by the user.
 
-This allows to have more than once hashing table at one time.  The
+This allows having more than one hashing table at one time.  The
 memory necessary for the @code{struct hsearch_data} object can be
 allocated dynamically.
 
@@ -499,8 +499,8 @@ X/Open specifications.
 @end deftypefun
 
 In addition to the function to create and destroy the tree data
-structure there is another function which allows to apply a function on
-all elements of the tree.  The function must have this type:
+structure, there is another function which allows you to apply a
+function to all elements of the tree.  The function must have this type:
 
 @smallexample
 void __action_fn_t (const void *nodep, VISIT value, int level);
