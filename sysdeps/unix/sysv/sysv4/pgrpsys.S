@@ -18,5 +18,5 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-SYSCALL__ (pgrpsys)
+SYSCALL__ (pgrpsys, 3)
 	ret
