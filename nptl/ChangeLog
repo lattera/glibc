@@ -1,3 +1,14 @@
+2004-11-09  Roland McGrath  <roland@redhat.com>
+
+	[BZ #530]
+	* sysdeps/pthread/createthread.c (do_clone): Increment __nptl_nthreads
+	here, before calling clone.
+	* pthread_create.c (start_thread): Don't do it here.
+
+2004-11-04  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pthread_getcpuclockid.c: New file.
+
 2004-11-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/smp.h: Include <errno.h>.
