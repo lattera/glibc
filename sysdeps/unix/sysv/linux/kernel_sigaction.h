@@ -6,7 +6,7 @@ struct old_kernel_sigaction {
 	__sighandler_t k_sa_handler;
 	unsigned long sa_mask;
 	unsigned long sa_flags;
-	void (*sa_restorer) __P ((void));
+	void (*sa_restorer) __PMT ((void));
 };
 
 /* This is the sigaction structure from the Linux 2.1.68 kernel.  */
@@ -14,6 +14,6 @@ struct old_kernel_sigaction {
 struct kernel_sigaction {
 	__sighandler_t k_sa_handler;
 	unsigned long sa_flags;
-	void (*sa_restorer) __P ((void));
+	void (*sa_restorer) __PMT ((void));
 	sigset_t sa_mask;
 };

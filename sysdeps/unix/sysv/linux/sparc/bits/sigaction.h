@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/SPARC sigaction.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ struct sigaction
     unsigned long sa_flags;
 
     /* Not used by Linux/Sparc yet.  */
-    void (*sa_restorer) __P ((void));
+    void (*sa_restorer) __PMT ((void));
   };
 
 

@@ -74,8 +74,8 @@ typedef struct
 
 /* Read NBYTES bytes from COOKIE into a buffer pointed to by BUF.
    Return number of bytes read.  */
-typedef __ssize_t __io_read_fn __P ((__ptr_t __cookie, char *__buf,
-				     size_t __nbytes));
+typedef __ssize_t __io_read_fn __PMT ((__ptr_t __cookie, char *__buf,
+				       size_t __nbytes));
 
 /* Write N bytes pointed to by BUF to COOKIE.  Write all N bytes
    unless there is an error.  Return number of bytes written, or -1 if
@@ -83,7 +83,7 @@ typedef __ssize_t __io_read_fn __P ((__ptr_t __cookie, char *__buf,
    opened for append (__mode.__append set), then set the file pointer
    to the end of the file and then do the write; if not, just write at
    the current file pointer.  */
-typedef __ssize_t __io_write_fn __P ((__ptr_t __cookie, __const char *__buf,
+typedef __ssize_t __io_write_fn __PMT ((__ptr_t __cookie, __const char *__buf,
 				      size_t __n));
 
 /* Move COOKIE's file position to *POS bytes from the
@@ -92,14 +92,14 @@ typedef __ssize_t __io_write_fn __P ((__ptr_t __cookie, __const char *__buf,
    or the end of the file (if W is SEEK_END).
    Set *POS to the new file position.
    Returns zero if successful, nonzero if not.  */
-typedef int __io_seek_fn __P ((__ptr_t __cookie, fpos_t *__pos, int __w));
+typedef int __io_seek_fn __PMT ((__ptr_t __cookie, fpos_t *__pos, int __w));
 
 /* Close COOKIE.  */
-typedef int __io_close_fn __P ((__ptr_t __cookie));
+typedef int __io_close_fn __PMT ((__ptr_t __cookie));
 
 /* Return the file descriptor associated with COOKIE,
    or -1 on error.  There need not be any associated file descriptor.  */
-typedef int __io_fileno_fn __P ((__ptr_t __cookie));
+typedef int __io_fileno_fn __PMT ((__ptr_t __cookie));
 
 #ifdef __USE_GNU
 /* User-visible names for the above.  */
@@ -139,9 +139,9 @@ typedef struct
 typedef struct
 {
   /* Make room in the input buffer.  */
-  int (*__input) __P ((FILE *__stream));
+  int (*__input) __PMT ((FILE *__stream));
   /* Make room in the output buffer.  */
-  void (*__output) __P ((FILE *__stream, int __c));
+  void (*__output) __PMT ((FILE *__stream, int __c));
 } __room_functions;
 
 extern __const __io_functions __default_io_functions;

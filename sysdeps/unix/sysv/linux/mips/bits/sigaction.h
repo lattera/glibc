@@ -1,5 +1,5 @@
 /* The proper definitions for Linux/MIPS's sigaction.
-   Copyright (C) 1993, 1994, 1995, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ struct sigaction
 
     /* The ABI says here are two unused ints following. */
     /* Restore handler.  */
-    void (*sa_restorer) __P ((void));
+    void (*sa_restorer) __PMT ((void));
 
 #if _MIPS_ISA == _MIPS_ISA_MIPS1 || _MIPS_ISA == _MIPS_ISA_MIPS2
     int sa_resv[1];

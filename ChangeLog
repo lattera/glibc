@@ -1,3 +1,13 @@
+1998-10-22  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* stdio/stdio.h: Use __PMT instead of __P in typedefs.
+
+	* sysdeps/unix/sysv/linux/mips/bits/sigaction.h: Use __PMT instead
+	of __P for sa_restorer.
+	* sysdeps/unix/sysv/linux/sparc/bits/sigaction.h: Likewise.
+	* sysdeps/unix/sysv/linux/kernel_sigaction.h (struct
+	kernel_sigaction, old_kernel_sigaction): Likewise.
+
 1998-10-22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/powerpc/syscalls.list: Add __syscall_pread
