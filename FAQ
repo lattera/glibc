@@ -142,20 +142,23 @@ please let me know.
 	unresolved symbols, like `_dl_initial_searchlist' and can not
 	execute any binaries.  What went wrong?
 
-4. Miscellaneous
+4. bonnie reports that char i/o with glibc 2 is much slower than with
 
-4.1.	After I changed configure.in I get `Autoconf version X.Y.
+
+5. Miscellaneous
+
+5.1.	After I changed configure.in I get `Autoconf version X.Y.
 	or higher is required for this script'.  What can I do?
-4.2.	When I try to compile code which uses IPv6 headers and
+5.2.	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
-4.3.	When I set the timezone by setting the TZ environment variable
+5.3.	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
-4.4.	What other sources of documentation about glibc are available?
-4.5.	The timezone string for Sydney/Australia is wrong since even when
+5.4.	What other sources of documentation about glibc are available?
+5.5.	The timezone string for Sydney/Australia is wrong since even when
 	daylight saving time is in effect the timezone string is EST.
-4.6.	I've build make 3.77 against glibc 2.1 and now make gets
+5.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 
 
@@ -225,7 +228,7 @@ We recommend version GNU make version 3.75 or 3.77.  Versions before 3.75
 have bugs and/or are missing features.  Version 3.76 has bugs which
 appear when building big projects like GNU libc. 3.76.1 appears to work but
 some people have reported problems.  If you build GNU make 3.77 from source,
-please read question 4.6 first.
+please read question 5.6 first.
 
 
 1.4.	Do I need a special linker or assembler?
@@ -1191,7 +1194,7 @@ defined).
 
 Instead GNU libc contains zone database support and compatibility code for
 POSIX TZ environment variable handling.  For former is very much preferred
-(see question 4.3).
+(see question 5.3).
 
 
 3.4.	The prototypes for `connect', `accept', `getsockopt',
@@ -1488,16 +1491,21 @@ correct paths to the compiler (option -I with gcc) and linker (options
 
 . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
 
-4. Miscellaneous
+4. bonnie reports that char i/o with glibc 2 is much slower than with
 
-4.1.	After I changed configure.in I get `Autoconf version X.Y.
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 
+
+5. Miscellaneous
+
+5.1.	After I changed configure.in I get `Autoconf version X.Y.
 	or higher is required for this script'.  What can I do?
 
 {UD} You have to get the specified autoconf version (or a later one)
 from your favorite mirror of ftp.gnu.org.
 
 
-4.2.	When I try to compile code which uses IPv6 headers and
+5.2.	When I try to compile code which uses IPv6 headers and
 	definitions on my Linux 2.x.y system I am in trouble.
 	Nothing seems to work.
 
@@ -1521,7 +1529,7 @@ Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
 functions are not implemented.
 
 
-4.3.	When I set the timezone by setting the TZ environment variable
+5.3.	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time
 	from this information.
 
@@ -1546,7 +1554,7 @@ the POSIX method and you have not verified something is really broken by
 reading the POSIX standards.
 
 
-4.4.	What other sources of documentation about glibc are available?
+5.4.	What other sources of documentation about glibc are available?
 
 {AJ} The FSF has a page about the GNU C library at
 <http://www.gnu.org/software/libc/>.  The problem data base of open and
@@ -1560,7 +1568,7 @@ Looijaard describes a different way installing glibc2 as secondary libc at
 Please note that this is not a complete list.
 
 
-4.5.	The timezone string for Sydney/Australia is wrong since even when
+5.5.	The timezone string for Sydney/Australia is wrong since even when
 	daylight saving time is in effect the timezone string is EST.
 
 {UD} The problem for some timezones is that the local authorities decided
@@ -1575,7 +1583,7 @@ Great!  To get this bug fixed convince the authorities to change the laws
 and regulations of the country this effects.  glibc behaves correctly.
 
 
-4.6.	I've build make 3.77 against glibc 2.1 and now make gets
+5.6.	I've build make 3.77 against glibc 2.1 and now make gets
 	segmentation faults.
 
 {AJ} GNU make 3.77 has support for 64 bit filesystems which is slightly

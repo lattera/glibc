@@ -1278,6 +1278,15 @@ When compiling new programs against glibc 2.1, you've got to specify the
 correct paths to the compiler (option -I with gcc) and linker (options
 --dynamic-linker, -L and --rpath).
 
+?	bonnie reports that char i/o with glibc 2 is much slower than with
+	libc5.  What can be done?
+
+{AJ} The GNU C library uses thread safe functions by default and libc5 used
+non thread safe versions.  The non thread safe functions have in glibc the
+suffix `_unlocked', for details check <stdio.h>.  Using `putc_unlocked' etc.
+instead of `putc' should give nearly the same speed with bonnie (bonnie is a
+benchmark program for measuring disk access).
+
 
 ? Miscellaneous
 

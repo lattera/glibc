@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -110,7 +110,7 @@ typedef struct
 typedef struct ucontext
   {
     unsigned long int uc_flags;
-    struct ucontext *uc_links;
+    struct ucontext *uc_link;
     __sigset_t uc_sigmask;
     stack_t uc_stack;
     mcontext_t uc_mcontext;

@@ -1,3 +1,15 @@
+1999-03-01  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/i386/sys/ucontext.h (ucontext): Rename field uc_links to
+	uc_link which is the right name according to Unix98.
+	Reported by Craig Metz [PR libc/1001].
+	* sysdeps/arm/sys/ucontext.h (ucontext): Likewise.
+	* sysdeps/m68k/sys/ucontext.h (ucontext): Likewise.
+	* sysdeps/mips/sys/ucontext.h (ucontext): Likewise.
+	* sysdeps/unix/sysv/linux/alpha/sys/ucontext.h (ucontext): Likewise.
+	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h (ucontext): Likewise
+	* sysdeps/unix/sysv/linux/powerpc/sys/ucontext.h (ucontext): Likewise.
+
 1999-02-25  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* manual/libc.texinfo: Wrap @top node inside @ifnottex instead of
