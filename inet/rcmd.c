@@ -848,15 +848,6 @@ __validuser2_sa(hostf, ra, ralen, luser, ruser, rhost)
 	    continue;
 	}
 
-	/* Skip lines that are too long. */
-	if (strchr (p, '\n') == NULL) {
-	    int ch = getc_unlocked (hostf);
-
-	    while (ch != '\n' && ch != EOF)
-		ch = getc_unlocked (hostf);
-	    continue;
-	}
-
 	for (;*p && !isspace(*p); ++p) {
 	    *p = _tolower (*p);
 	}
