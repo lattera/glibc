@@ -32,13 +32,14 @@ static void pthread_cleanup_upto(__jmp_buf target)
   pthread_descr self = thread_self();
   struct _pthread_cleanup_buffer * c;
 
-  for (c = self->p_cleanup;
+  for (c = THREAD_GETMEM(self, p_cleanup);
        c != NULL && _JMPBUF_UNWINDS(target, c);
        c = c->prev)
     c->routine(c->arg);
-  self->p_cleanup = c;
-  if (self->p_in_sighandler && _JMPBUF_UNWINDS(target, self->p_in_sighandler))
-    self->p_in_sighandler = NULL;
+  THREAD_SETMEM(self, p_cleanup, c);
+  if (THREAD_GETMEM(self, p_in_sighandler)
+      && _JMPBUF_UNWINDS(target, THREAD_GETMEM(self, p_in_sighandler)))
+    THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
 
 void siglongjmp(sigjmp_buf env, int val)

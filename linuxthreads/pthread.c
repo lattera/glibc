@@ -58,7 +58,13 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
-  {NULL}                      /* void * p_specific[PTHREAD_KEYS_MAX] */
+  {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
+  {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
+  0,                          /* int p_userstack */
+  NULL,                       /* void * p_guardaddr */
+  0,                          /* size_t p_guardsize */
+  &__pthread_initial_thread,  /* pthread_descr p_self */
+  0                           /* Always index 0 */
 };
 
 /* Descriptor of the manager thread; none of this is used but the error
@@ -86,14 +92,20 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  NULL,                       /* int *p_errnop */
+  &__pthread_manager_thread.p_errno, /* int *p_errnop */
   0,                          /* int p_errno */
   NULL,                       /* int *p_h_errnop */
   0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER, /* struct pthread_start_args p_start_args */
-  {NULL}                      /* void * p_specific[PTHREAD_KEYS_MAX] */
+  {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
+  {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
+  0,                          /* int p_userstack */
+  NULL,                       /* void * p_guardaddr */
+  0,                          /* size_t p_guardsize */
+  &__pthread_manager_thread,  /* pthread_descr p_self */
+  1                           /* Always index 1 */
 };
 
 /* Pointer to the main thread (the father of the thread manager thread) */
@@ -145,8 +157,13 @@ extern int _h_errno;
 /* Forward declarations */
 
 static void pthread_exit_process(int retcode, void *arg);
+#ifndef __i386__
 static void pthread_handle_sigcancel(int sig);
 static void pthread_handle_sigrestart(int sig);
+#else
+static void pthread_handle_sigcancel(int sig, struct sigcontext ctx);
+static void pthread_handle_sigrestart(int sig, struct sigcontext ctx);
+#endif
 
 /* Initialize the pthread library.
    Initialization is split in two functions:
@@ -189,7 +206,7 @@ static void pthread_initialize(void)
   /* If we have special thread_self processing, initialize that for the
      main thread now.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(&__pthread_initial_thread);
+  INIT_THREAD_SELF(&__pthread_initial_thread, 0);
 #endif
   /* The errno/h_errno variable of the main thread are the global ones.  */
   __pthread_initial_thread.p_errnop = &_errno;
@@ -209,12 +226,20 @@ static void pthread_initialize(void)
   /* Setup signal handlers for the initial thread.
      Since signal handlers are shared between threads, these settings
      will be inherited by all other threads. */
+#ifndef __i386__
   sa.sa_handler = pthread_handle_sigrestart;
+#else
+  sa.sa_handler = (__sighandler_t) pthread_handle_sigrestart;
+#endif
   sigemptyset(&sa.sa_mask);
   sa.sa_flags = SA_RESTART; /* does not matter for regular threads, but
                                better for the thread manager */
   __sigaction(__pthread_sig_restart, &sa, NULL);
+#ifndef __i386__
   sa.sa_handler = pthread_handle_sigcancel;
+#else
+  sa.sa_handler = (__sighandler_t) pthread_handle_sigcancel;
+#endif
   sa.sa_flags = 0;
   __sigaction(__pthread_sig_cancel, &sa, NULL);
 
@@ -254,8 +279,11 @@ int __pthread_initialize_manager(void)
   }
   /* Start the thread manager */
   pid = __clone(__pthread_manager, (void **) __pthread_manager_thread_tos,
-                CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND,
-                (void *)(long)manager_pipe[0]);
+                CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND
+#ifdef CLONE_PTRACE
+		| CLONE_PTRACE
+#endif
+		, (void *)(long)manager_pipe[0]);
   if (pid == -1) {
     free(__pthread_manager_thread_bos);
     __libc_close(manager_pipe[0]);
@@ -292,8 +320,9 @@ int __pthread_create_2_1(pthread_t *thread, const pthread_attr_t *attr,
               &request.req_args.create.mask);
   __libc_write(__pthread_manager_request, (char *) &request, sizeof(request));
   suspend(self);
-  if (self->p_retcode == 0) *thread = (pthread_t) self->p_retval;
-  return self->p_retcode;
+  if (THREAD_GETMEM(self, p_retcode) == 0)
+    *thread = (pthread_t) THREAD_GETMEM(self, p_retval);
+  return THREAD_GETMEM(self, p_retcode);
 }
 
 #if defined HAVE_ELF && defined PIC && defined DO_VERSIONING
@@ -330,7 +359,7 @@ strong_alias (__pthread_create_2_1, pthread_create)
 pthread_t pthread_self(void)
 {
   pthread_descr self = thread_self();
-  return self->p_tid;
+  return THREAD_GETMEM(self, p_tid);
 }
 
 int pthread_equal(pthread_t thread1, pthread_t thread2)
@@ -347,9 +376,9 @@ pthread_descr __pthread_find_self()
   char * sp = CURRENT_STACK_FRAME;
   pthread_handle h;
 
-  /* __pthread_handles[0] is the initial thread, handled specially in
-     thread_self(), so start at 1 */
-  h = __pthread_handles + 1;
+  /* __pthread_handles[0] is the initial thread, __pthread_handles[1] is
+     the manager threads handled specially in thread_self(), so start at 2 */
+  h = __pthread_handles + 2;
   while (! (sp <= (char *) h->h_descr && sp >= h->h_bottom)) h++;
   return h->h_descr;
 }
@@ -428,14 +457,23 @@ static void pthread_exit_process(int retcode, void *arg)
    For the thread manager thread, redirect the signal to
    __pthread_manager_sighandler. */
 
+#ifndef __i386__
 static void pthread_handle_sigrestart(int sig)
 {
   pthread_descr self = thread_self();
+#else
+static void pthread_handle_sigrestart(int sig, struct sigcontext ctx)
+{
+  pthread_descr self;
+  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
+  self = thread_self();
+#endif
   if (self == &__pthread_manager_thread) {
     __pthread_manager_sighandler(sig);
   } else {
-    self->p_signal = sig;
-    if (self->p_signal_jmp != NULL) siglongjmp(*self->p_signal_jmp, 1);
+    THREAD_SETMEM(self, p_signal, sig);
+    if (THREAD_GETMEM(self, p_signal_jmp) != NULL)
+      siglongjmp(*THREAD_GETMEM(self, p_signal_jmp), 1);
   }
 }
 
@@ -451,10 +489,19 @@ static void pthread_handle_sigrestart(int sig)
    know what it is specifically done for. In the current implementation,
    the thread manager simply discards it. */
 
+#ifndef __i386__
 static void pthread_handle_sigcancel(int sig)
 {
   pthread_descr self = thread_self();
   sigjmp_buf * jmpbuf;
+#else
+static void pthread_handle_sigcancel(int sig, struct sigcontext ctx)
+{
+  pthread_descr self;
+  sigjmp_buf * jmpbuf;
+  asm volatile ("movw %w0,%%gs" : : "r" (ctx.gs));
+  self = thread_self();
+#endif
 
   if (self == &__pthread_manager_thread)
     return;
@@ -465,12 +512,13 @@ static void pthread_handle_sigcancel(int sig)
       waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
     _exit(__pthread_exit_code);
   }
-  if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
-    if (self->p_canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
+  if (THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
+    if (THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
       pthread_exit(PTHREAD_CANCELED);
-    jmpbuf = self->p_cancel_jmp;
+    jmpbuf = THREAD_GETMEM(self, p_cancel_jmp);
     if (jmpbuf != NULL) {
-      self->p_cancel_jmp = NULL;
+      THREAD_SETMEM(self, p_cancel_jmp, NULL);
       siglongjmp(*jmpbuf, 1);
     }
   }
@@ -496,14 +544,14 @@ void __pthread_reset_main_thread()
     __pthread_manager_request = __pthread_manager_reader = -1;
   }
   /* Update the pid of the main thread */
-  self->p_pid = __getpid();
+  THREAD_SETMEM(self, p_pid, __getpid());
   /* Make the forked thread the main thread */
   __pthread_main_thread = self;
-  self->p_nextlive = self;
-  self->p_prevlive = self;
+  THREAD_SETMEM(self, p_nextlive, self);
+  THREAD_SETMEM(self, p_prevlive, self);
   /* Now this thread modifies the global variables.  */
-  self->p_errnop = &_errno;
-  self->p_h_errnop = &_h_errno;
+  THREAD_SETMEM(self, p_errnop, &_errno);
+  THREAD_SETMEM(self, p_h_errnop, &_h_errno);
 }
 
 /* Process-wide exec() request */

@@ -25,6 +25,13 @@
 
 #include "pt-machine.h"
 
+#ifndef THREAD_GETMEM
+# define THREAD_GETMEM(descr, member) descr->member
+#endif
+#ifndef THREAD_SETMEM
+# define THREAD_SETMEM(descr, member, value) descr->member = (value)
+#endif
+
 /* Arguments passed to thread creation routine */
 
 struct pthread_start_args {
@@ -90,6 +97,8 @@ struct _pthread_descr_struct {
   int p_userstack;		/* nonzero if the user provided the stack */
   void *p_guardaddr;		/* address of guard area or NULL */
   size_t p_guardsize;		/* size of guard area */
+  pthread_descr p_self;		/* Pointer to this structure */
+  int p_nr;                     /* Index of descriptor in __pthread_handles */
 };
 
 /* The type of thread handles. */

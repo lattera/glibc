@@ -76,17 +76,19 @@ static void pthread_sighandler(int signo)
   char * in_sighandler;
   /* If we're in a sigwait operation, just record the signal received
      and return without calling the user's handler */
-  if (self->p_sigwaiting) {
-    self->p_sigwaiting = 0;
-    self->p_signal = signo;
+  if (THREAD_GETMEM(self, p_sigwaiting)) {
+    THREAD_SETMEM(self, p_sigwaiting, 0);
+    THREAD_SETMEM(self, p_signal, signo);
     return;
   }
   /* Record that we're in a signal handler and call the user's
      handler function */
-  in_sighandler = self->p_in_sighandler;
-  if (in_sighandler == NULL) self->p_in_sighandler = CURRENT_STACK_FRAME;
+  in_sighandler = THREAD_GETMEM(self, p_in_sighandler);
+  if (in_sighandler == NULL)
+    THREAD_SETMEM(self, p_in_sighandler, CURRENT_STACK_FRAME);
   sighandler[signo](signo);
-  if (in_sighandler == NULL) self->p_in_sighandler = NULL;
+  if (in_sighandler == NULL)
+    THREAD_SETMEM(self, p_in_sighandler, NULL);
 }
 
 int sigaction(int sig, const struct sigaction * act,
@@ -131,21 +133,22 @@ int sigwait(const sigset_t * set, int * sig)
   }
   /* Test for cancellation */
   if (sigsetjmp(jmpbuf, 1) == 0) {
-    self->p_cancel_jmp = &jmpbuf;
-    if (! (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE)) {
+    THREAD_SETMEM(self, p_cancel_jmp, &jmpbuf);
+    if (! (THREAD_GETMEM(self, p_canceled)
+	   && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)) {
       /* Reset the signal count */
-      self->p_signal = 0;
+      THREAD_SETMEM(self, p_signal, 0);
       /* Say we're in sigwait */
-      self->p_sigwaiting = 1;
+      THREAD_SETMEM(self, p_sigwaiting, 1);
       /* Unblock the signals and wait for them */
       sigsuspend(&mask);
     }
   }
-  self->p_cancel_jmp = NULL;
+  THREAD_SETMEM(self, p_cancel_jmp, NULL);
   /* The signals are now reblocked.  Check for cancellation */
   pthread_testcancel();
   /* We should have self->p_signal != 0 and equal to the signal received */
-  *sig = self->p_signal;
+  *sig = THREAD_GETMEM(self, p_signal);
   return 0;
 }
 

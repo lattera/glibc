@@ -36,14 +36,15 @@
 
 /* Array of active threads. Entry 0 is reserved for the initial thread. */
 struct pthread_handle_struct __pthread_handles[PTHREAD_THREADS_MAX] =
-{ { LOCK_INITIALIZER, &__pthread_initial_thread, 0}, /* All NULLs */ };
+{ { LOCK_INITIALIZER, &__pthread_initial_thread, 0},
+  { LOCK_INITIALIZER, &__pthread_manager_thread, 0}, /* All NULLs */ };
 
 /* Indicate whether at least one thread has a user-defined stack (if 1),
    or if all threads have stacks supplied by LinuxThreads (if 0). */
 int __pthread_nonstandard_stacks = 0;
 
 /* Number of active entries in __pthread_handles (used by gdb) */
-volatile int __pthread_handles_num = 1;
+volatile int __pthread_handles_num = 2;
 
 /* Whether to use debugger additional actions for thread creation
    (set to 1 by gdb) */
@@ -95,7 +96,7 @@ int __pthread_manager(void *arg)
 
   /* If we have special thread_self processing, initialize it.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(&__pthread_manager_thread);
+  INIT_THREAD_SELF(&__pthread_manager_thread, 1);
 #endif
   /* Set the error variable.  */
   __pthread_manager_thread.p_errnop = &__pthread_manager_thread.p_errno;
@@ -179,17 +180,18 @@ static int pthread_start_thread(void *arg)
   void * outcome;
   /* Initialize special thread_self processing, if any.  */
 #ifdef INIT_THREAD_SELF
-  INIT_THREAD_SELF(self);
+  INIT_THREAD_SELF(self, self->p_nr);
 #endif
   /* Make sure our pid field is initialized, just in case we get there
      before our father has initialized it. */
-  self->p_pid = __getpid();
+  THREAD_SETMEM(self, p_pid, __getpid());
   /* Initial signal mask is that of the creating thread. (Otherwise,
      we'd just inherit the mask of the thread manager.) */
   sigprocmask(SIG_SETMASK, &self->p_start_args.mask, NULL);
   /* Set the scheduling policy and priority for the new thread, if needed */
-  if (self->p_start_args.schedpolicy >= 0)
-    __sched_setscheduler(self->p_pid, self->p_start_args.schedpolicy,
+  if (THREAD_GETMEM(self, p_start_args.schedpolicy) >= 0)
+    __sched_setscheduler(THREAD_GETMEM(self, p_pid),
+			 THREAD_GETMEM(self, p_start_args.schedpolicy),
                          &self->p_start_args.schedparam);
   /* Make gdb aware of new thread */
   if (__pthread_threads_debug) {
@@ -200,7 +202,8 @@ static int pthread_start_thread(void *arg)
     suspend(self);
   }
   /* Run the thread code */
-  outcome = self->p_start_args.start_routine(self->p_start_args.arg);
+  outcome = self->p_start_args.start_routine(THREAD_GETMEM(self,
+							   p_start_args.arg));
   /* Exit with the given return value */
   pthread_exit(outcome);
   return 0;
@@ -298,7 +301,7 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   if (attr != NULL && attr->schedpolicy != SCHED_OTHER && geteuid () != 0)
     return EPERM;
   /* Find a free segment for the thread, and allocate a stack if needed */
-  for (sseg = 1; ; sseg++)
+  for (sseg = 2; ; sseg++)
     {
       if (sseg >= PTHREAD_THREADS_MAX)
 	return EAGAIN;
@@ -340,6 +343,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_userstack = attr != NULL && attr->stackaddr_set;
   memset (new_thread->p_specific, '\0',
 	  PTHREAD_KEY_1STLEVEL_SIZE * sizeof (new_thread->p_specific[0]));
+  new_thread->p_self = new_thread;
+  new_thread->p_nr = sseg;
   /* Initialize the thread handle */
   __pthread_init_lock(&__pthread_handles[sseg].h_lock);
   __pthread_handles[sseg].h_descr = new_thread;
@@ -370,8 +375,10 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   /* Do the cloning */
   pid = __clone(pthread_start_thread, (void **) new_thread,
                 CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND |
-                __pthread_sig_restart,
-                new_thread);
+#ifdef CLONE_PTRACE
+                CLONE_PTRACE |
+#endif
+		__pthread_sig_restart, new_thread);
   /* Check if cloning succeeded */
   if (pid == -1) {
     /* Free the stack if we allocated it */
@@ -414,6 +421,9 @@ static void pthread_free(pthread_descr th)
   handle->h_descr = NULL;
   handle->h_bottom = (char *)(-1L);
   __pthread_unlock(&handle->h_lock);
+#ifdef FREE_THREAD_SELF
+  FREE_THREAD_SELF(th, th->p_nr);
+#endif
   /* One fewer threads in __pthread_handles */
   __pthread_handles_num--;
   /* If initial thread, nothing to free */

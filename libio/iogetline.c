@@ -59,7 +59,7 @@ _IO_getline_info (fp, buf, n, delim, extract_delim, eof)
   char *ptr = buf;
   if (eof != NULL)
     *eof = 0;
-  while (n != 0);
+  while (n != 0)
     {
       _IO_ssize_t len = fp->_IO_read_end - fp->_IO_read_ptr;
       if (len <= 0)

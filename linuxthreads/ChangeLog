@@ -1,3 +1,43 @@
+1998-08-26 15:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h: Define THREAD_GETMEM and THREAD_SETMEM to default if
+	not already defined.
+	(struct _pthread_descr_struct): Add p_self and p_nr field.
+	* manager.c (__pthread_handles): Define second element to point
+	to manager thread.
+	(__pthread_handles_num): Initialize to 2.
+	(__pthread_manager): Use INIT_THREAD_SELF with two arguments.
+	(pthread_start_thread): Likewise.
+	(pthread_handle_create): Start search for free slot at entry 2.
+	Initialize new fields p_self and p_nr.
+	Call __clone with CLONE_PTRACE if available.
+	(pthread_free): Call FREE_THREAD_SELF if available.
+	* pthread.c (__pthread_initial_thread): Initialize new fields.
+	(__pthread_manager_thread): Likewise.
+	(__pthread_initialize_manager): Call __clone with CLONE_PTRACE.
+
+	* cancel.c: Use THREAD_GETMEM and THREAD_SETMEM to access the
+	elements of the thread descriptor.
+	* condvar.c: Likewise.
+	* errno.c: Likewise.
+	* join.c: Likewise.
+	* manager.c: Likewise.
+	* pthread.c: Likewise.
+	* ptlongjmp.c: Likewise.
+	* semaphore.c: Likewise.
+	* signals.c: Likewise.
+	* specific.c: Likewise.
+	* spinlock.c: Likewise.
+
+	* sysdeps/alpha/pt-machine.h (INIT_THREAD_SELF): Add extra parameter.
+
+	* sysdeps/i386/useldt.h: New file.
+	* sysdeps/i386/i686/pt-machine.h: Show how to use this file.
+
+	* sysdeps/sparc/sparc32/pt-machine.h: Define THREAD_GETMEM and
+	THREAD_SETMEM using __thread_self.
+	* sysdeps/sparc/sparc64/pt-machine.h: Likewise.
+
 1998-08-24  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* spinlock.c (__pthread_lock): Reset p_nextwaiting to NULL if it

@@ -22,11 +22,11 @@
 int * __errno_location()
 {
   pthread_descr self = thread_self();
-  return self->p_errnop;
+  return THREAD_GETMEM (self, p_errnop);
 }
 
 int * __h_errno_location()
 {
   pthread_descr self = thread_self();
-  return self->p_h_errnop;
+  return THREAD_GETMEM (self, p_h_errnop);
 }

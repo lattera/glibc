@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Alpha version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -70,7 +70,7 @@ register char *stack_pointer __asm__("$30");
 })
 
 /* Initialize the thread-unique value.  */
-#define INIT_THREAD_SELF(descr) \
+#define INIT_THREAD_SELF(descr, nr) \
 {									      \
   register pthread_descr __self __asm__("$16") = (descr);		      \
   __asm__ __volatile__ ("call_pal %1" : : "r"(__self), "i"(PAL_wruniq));      \

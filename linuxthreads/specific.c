@@ -99,13 +99,13 @@ int __pthread_setspecific(pthread_key_t key, const void * pointer)
     return EINVAL;
   idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
   idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
-  if (self->p_specific[idx1st] == NULL) {
-    self->p_specific[idx1st] =
-      calloc(PTHREAD_KEY_2NDLEVEL_SIZE, sizeof (void *));
-    if (self->p_specific[idx1st] == NULL)
+  if (THREAD_GETMEM(self, p_specific[idx1st]) == NULL) {
+    THREAD_SETMEM(self, p_specific[idx1st],
+		  calloc(PTHREAD_KEY_2NDLEVEL_SIZE, sizeof (void *)));
+    if (THREAD_GETMEM(self, p_specific[idx1st]) == NULL)
       return ENOMEM;
   }
-  self->p_specific[idx1st][idx2nd] = (void *) pointer;
+  THREAD_GETMEM(self, p_specific[idx1st])[idx2nd] = (void *) pointer;
   return 0;
 }
 weak_alias (__pthread_setspecific, pthread_setspecific)
@@ -121,9 +121,10 @@ void * __pthread_getspecific(pthread_key_t key)
     return NULL;
   idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
   idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
-  if (self->p_specific[idx1st] == NULL || !pthread_keys[key].in_use)
+  if (THREAD_GETMEM(self, p_specific[idx1st]) == NULL
+      || !pthread_keys[key].in_use)
     return NULL;
-  return self->p_specific[idx1st][idx2nd];
+  return THREAD_GETMEM(self, p_specific[idx1st])[idx2nd];
 }
 weak_alias (__pthread_getspecific, pthread_getspecific)
 
@@ -141,19 +142,20 @@ void __pthread_destroy_specifics()
        round++) {
     found_nonzero = 0;
     for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++)
-      if (self->p_specific[i] != NULL)
+      if (THREAD_GETMEM(self, p_specific[i]) != NULL)
         for (j = 0; j < PTHREAD_KEY_2NDLEVEL_SIZE; j++) {
           destr = pthread_keys[i * PTHREAD_KEY_2NDLEVEL_SIZE + j].destr;
-          data = self->p_specific[i][j];
+          data = THREAD_GETMEM(self, p_specific[i])[j];
           if (destr != NULL && data != NULL) {
-            self->p_specific[i][j] = NULL;
+            THREAD_GETMEM(self, p_specific[i])[j] = NULL;
             destr(data);
             found_nonzero = 1;
           }
         }
   }
   for (i = 0; i < PTHREAD_KEY_1STLEVEL_SIZE; i++) {
-    if (self->p_specific[i] != NULL) free(self->p_specific[i]);
+    if (THREAD_GETMEM(self, p_specific[i]) != NULL)
+      free(THREAD_GETMEM(self, p_specific[i]));
   }
 }
 
@@ -163,7 +165,7 @@ int __libc_internal_tsd_set(enum __libc_tsd_key_t key, const void * pointer)
 {
   pthread_descr self = thread_self();
 
-  self->p_libc_specific[key] = (void *) pointer;
+  THREAD_SETMEM(self, p_libc_specific[key], (void *) pointer);
   return 0;
 }
 
@@ -171,5 +173,5 @@ void * __libc_internal_tsd_get(enum __libc_tsd_key_t key)
 {
   pthread_descr self = thread_self();
 
-  return self->p_libc_specific[key];
+  return THREAD_GETMEM(self, p_libc_specific[key]);
 }

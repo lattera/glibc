@@ -70,3 +70,7 @@ set_eflags (int newflags)
 {
   __asm__ __volatile__ ("pushl %0; popfl" : : "r" (newflags) : "cc");
 }
+
+
+/* Use the LDT implementation only if the kernel is fixed.  */
+//#include "../useldt.h"

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    Sparc v9 version.
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -65,3 +65,7 @@ __compare_and_swap (long int *p, long int oldval, long int newval)
 
   return readval == newval;
 }
+
+/* Access to data in the thread descriptor is easy.  */
+#define THREAD_GETMEM(descr, member) __thread_self->member
+#define THREAD_SETMEM(descr, member, value) __thread_self->member = (value)

@@ -1,6 +1,6 @@
 /* Machine-dependent pthreads configuration and inline functions.
    sparc version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -53,3 +53,7 @@ register struct _pthread_descr_struct *__thread_self __asm__("%g6");
 
 /* Initialize the thread-unique value.  */
 #define INIT_THREAD_SELF(descr)  (__thread_self = (descr))
+
+/* Access to data in the thread descriptor is easy.  */
+#define THREAD_GETMEM(descr, member) __thread_self->member
+#define THREAD_SETMEM(descr, member, value) __thread_self->member = (value)

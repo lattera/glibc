@@ -54,7 +54,8 @@ int sem_wait(sem_t * sem)
   __pthread_unlock((struct _pthread_fastlock *) &sem->sem_lock);
   suspend_with_cancellation(self);
   /* This is a cancellation point */
-  if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+  if (THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     /* Remove ourselves from the waiting list if we're still on it */
     __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
     remove_from_queue(&sem->sem_waiting, self);
@@ -86,7 +87,7 @@ int sem_post(sem_t * sem)
   pthread_descr th;
   struct pthread_request request;
 
-  if (self->p_in_sighandler == NULL) {
+  if (THREAD_GETMEM(self, p_in_sighandler) == NULL) {
     __pthread_lock((struct _pthread_fastlock *) &sem->sem_lock);
     if (sem->sem_waiting == NULL) {
       if (sem->sem_value >= SEM_VALUE_MAX) {

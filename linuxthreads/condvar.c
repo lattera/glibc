@@ -50,7 +50,8 @@ int pthread_cond_wait(pthread_cond_t *cond, pthread_mutex_t *mutex)
   suspend_with_cancellation(self);
   pthread_mutex_lock(mutex);
   /* This is a cancellation point */
-  if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+  if (THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     /* Remove ourselves from the waiting queue if we're still on it */
     __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
@@ -77,11 +78,12 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   pthread_mutex_unlock(mutex);
   /* Set up a longjmp handler for the restart and cancel signals */
   if (sigsetjmp(jmpbuf, 1) == 0) {
-    self->p_signal_jmp = &jmpbuf;
-    self->p_cancel_jmp = &jmpbuf;
-    self->p_signal = 0;
+    THREAD_SETMEM(self, p_signal_jmp, &jmpbuf);
+    THREAD_SETMEM(self, p_cancel_jmp, &jmpbuf);
+    THREAD_SETMEM(self, p_signal, 0);
     /* Check for cancellation */
-    if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+    if (THREAD_GETMEM(self, p_canceled)
+	&& THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
       retsleep = -1;
     } else {
       /* Unblock the restart signal */
@@ -96,14 +98,15 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
   } else {
     retsleep = -1;
   }
-  self->p_signal_jmp = NULL;
-  self->p_cancel_jmp = NULL;
+  THREAD_SETMEM(self, p_signal_jmp, NULL);
+  THREAD_SETMEM(self, p_cancel_jmp, NULL);
   /* Here, either the condition was signaled (self->p_signal != 0)
                    or we got canceled (self->p_canceled != 0)
                    or the timeout occurred (retsleep == 0)
                    or another interrupt occurred (retsleep == -1) */
   /* This is a cancellation point */
-  if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+  if (THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
     __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
     __pthread_unlock(&cond->c_lock);
@@ -111,7 +114,7 @@ pthread_cond_timedwait_relative(pthread_cond_t *cond,
     pthread_exit(PTHREAD_CANCELED);
   }
   /* If not signaled: also remove ourselves and return an error code */
-  if (self->p_signal == 0) {
+  if (THREAD_GETMEM(self, p_signal) == 0) {
     __pthread_lock(&cond->c_lock);
     remove_from_queue(&cond->c_waiting, self);
     __pthread_unlock(&cond->c_lock);

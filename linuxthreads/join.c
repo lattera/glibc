@@ -30,18 +30,18 @@ void pthread_exit(void * retval)
 
   /* Reset the cancellation flag to avoid looping if the cleanup handlers
      contain cancellation points */
-  self->p_canceled = 0;
+  THREAD_SETMEM(self, p_canceled, 0);
   /* Call cleanup functions and destroy the thread-specific data */
   __pthread_perform_cleanup();
   __pthread_destroy_specifics();
   /* Store return value */
-  __pthread_lock(self->p_lock);
-  self->p_retval = retval;
+  __pthread_lock(THREAD_GETMEM(self, p_lock));
+  THREAD_SETMEM(self, p_retval, retval);
   /* Say that we've terminated */
-  self->p_terminated = 1;
+  THREAD_SETMEM(self, p_terminated, 1);
   /* See if someone is joining on us */
-  joining = self->p_joining;
-  __pthread_unlock(self->p_lock);
+  joining = THREAD_GETMEM(self, p_joining);
+  __pthread_unlock(THREAD_GETMEM(self, p_lock));
   /* Restart joining thread if any */
   if (joining != NULL) restart(joining);
   /* If this is the initial thread, block until all threads have terminated.
@@ -86,7 +86,8 @@ int pthread_join(pthread_t thread_id, void ** thread_return)
     __pthread_unlock(&handle->h_lock);
     suspend_with_cancellation(self);
     /* This is a cancellation point */
-    if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE) {
+    if (THREAD_GETMEM(self, p_canceled)
+	&& THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE) {
       th->p_joining = NULL;
       pthread_exit(PTHREAD_CANCELED);
     }

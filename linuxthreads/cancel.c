@@ -25,11 +25,11 @@ int pthread_setcancelstate(int state, int * oldstate)
   pthread_descr self = thread_self();
   if (state < PTHREAD_CANCEL_ENABLE || state > PTHREAD_CANCEL_DISABLE)
     return EINVAL;
-  if (oldstate != NULL) *oldstate = self->p_cancelstate;
-  self->p_cancelstate = state;
-  if (self->p_canceled &&
-      self->p_cancelstate == PTHREAD_CANCEL_ENABLE &&
-      self->p_canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
+  if (oldstate != NULL) *oldstate = THREAD_GETMEM(self, p_cancelstate);
+  THREAD_SETMEM(self, p_cancelstate, state);
+  if (THREAD_GETMEM(self, p_canceled) &&
+      THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
+      THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
     pthread_exit(PTHREAD_CANCELED);
   return 0;
 }
@@ -39,11 +39,11 @@ int pthread_setcanceltype(int type, int * oldtype)
   pthread_descr self = thread_self();
   if (type < PTHREAD_CANCEL_DEFERRED || type > PTHREAD_CANCEL_ASYNCHRONOUS)
     return EINVAL;
-  if (oldtype != NULL) *oldtype = self->p_canceltype;
-  self->p_canceltype = type;
-  if (self->p_canceled &&
-      self->p_cancelstate == PTHREAD_CANCEL_ENABLE &&
-      self->p_canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
+  if (oldtype != NULL) *oldtype = THREAD_GETMEM(self, p_canceltype);
+  THREAD_SETMEM(self, p_canceltype, type);
+  if (THREAD_GETMEM(self, p_canceled) &&
+      THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
+      THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
     pthread_exit(PTHREAD_CANCELED);
   return 0;
 }
@@ -68,7 +68,8 @@ int pthread_cancel(pthread_t thread)
 void pthread_testcancel(void)
 {
   pthread_descr self = thread_self();
-  if (self->p_canceled && self->p_cancelstate == PTHREAD_CANCEL_ENABLE)
+  if (THREAD_GETMEM(self, p_canceled)
+      && THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE)
     pthread_exit(PTHREAD_CANCELED);
 }
 
@@ -78,8 +79,8 @@ void _pthread_cleanup_push(struct _pthread_cleanup_buffer * buffer,
   pthread_descr self = thread_self();
   buffer->routine = routine;
   buffer->arg = arg;
-  buffer->prev = self->p_cleanup;
-  self->p_cleanup = buffer;
+  buffer->prev = THREAD_GETMEM(self, p_cleanup);
+  THREAD_SETMEM(self, p_cleanup, buffer);
 }
 
 void _pthread_cleanup_pop(struct _pthread_cleanup_buffer * buffer,
@@ -87,7 +88,7 @@ void _pthread_cleanup_pop(struct _pthread_cleanup_buffer * buffer,
 {
   pthread_descr self = thread_self();
   if (execute) buffer->routine(buffer->arg);
-  self->p_cleanup = buffer->prev;
+  THREAD_SETMEM(self, p_cleanup, buffer->prev);
 }
 
 void _pthread_cleanup_push_defer(struct _pthread_cleanup_buffer * buffer,
@@ -96,10 +97,10 @@ void _pthread_cleanup_push_defer(struct _pthread_cleanup_buffer * buffer,
   pthread_descr self = thread_self();
   buffer->routine = routine;
   buffer->arg = arg;
-  buffer->canceltype = self->p_canceltype;
-  buffer->prev = self->p_cleanup;
-  self->p_canceltype = PTHREAD_CANCEL_DEFERRED;
-  self->p_cleanup = buffer;
+  buffer->canceltype = THREAD_GETMEM(self, p_canceltype);
+  buffer->prev = THREAD_GETMEM(self, p_cleanup);
+  THREAD_SETMEM(self, p_canceltype, PTHREAD_CANCEL_DEFERRED);
+  THREAD_SETMEM(self, p_cleanup, buffer);
 }
 
 void _pthread_cleanup_pop_restore(struct _pthread_cleanup_buffer * buffer,
@@ -107,11 +108,11 @@ void _pthread_cleanup_pop_restore(struct _pthread_cleanup_buffer * buffer,
 {
   pthread_descr self = thread_self();
   if (execute) buffer->routine(buffer->arg);
-  self->p_cleanup = buffer->prev;
-  self->p_canceltype = buffer->canceltype;
-  if (self->p_canceled &&
-      self->p_cancelstate == PTHREAD_CANCEL_ENABLE &&
-      self->p_canceltype == PTHREAD_CANCEL_ASYNCHRONOUS)
+  THREAD_SETMEM(self, p_cleanup, buffer->prev);
+  THREAD_SETMEM(self, p_canceltype, buffer->canceltype);
+  if (THREAD_GETMEM(self, p_canceled) &&
+      THREAD_GETMEM(self, p_cancelstate) == PTHREAD_CANCEL_ENABLE &&
+      THREAD_GETMEM(self, p_canceltype) == PTHREAD_CANCEL_ASYNCHRONOUS)
     pthread_exit(PTHREAD_CANCELED);
 }
 
@@ -119,7 +120,8 @@ void __pthread_perform_cleanup(void)
 {
   pthread_descr self = thread_self();
   struct _pthread_cleanup_buffer * c;
-  for (c = self->p_cleanup; c != NULL; c = c->prev) c->routine(c->arg);
+  for (c = THREAD_GETMEM(self, p_cleanup); c != NULL; c = c->prev)
+    c->routine(c->arg);
 }
 
 #ifndef PIC
