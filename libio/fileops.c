@@ -358,6 +358,7 @@ _IO_new_file_underflow (fp)
 
   if (fp->_flags & _IO_NO_READS)
     {
+      fp->_flags |= _IO_ERR_SEEN;
       __set_errno (EBADF);
       return EOF;
     }

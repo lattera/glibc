@@ -1,5 +1,12 @@
 1999-07-21  Andreas Schwab  <schwab@suse.de>
 
+	* libio/fileops.c (_IO_new_file_underflow): Set error indicator
+	when reading from write-only stream.
+	* libio/oldfileops.c (_IO_old_file_underflow): Likewise.
+	* libio/wfileops.c (_IO_wfile_underflow): Likewise.
+
+1999-07-21  Andreas Schwab  <schwab@suse.de>
+
 	* nss/test-netdb.c (output_hostent): Don't crash if h_aliases is
 	NULL.
 
