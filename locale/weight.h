@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Ulrich Drepper, <drepper@cygnus.com>.
 
@@ -23,6 +23,7 @@ findidx (const unsigned char **cpp)
 {
   int_fast32_t i = table[*(*cpp)++];
   const unsigned char *cp;
+  const unsigned char *usrc;
 
   if (i >= 0)
     /* This is an index into the weight table.  Cool.  */
@@ -31,10 +32,10 @@ findidx (const unsigned char **cpp)
   /* Oh well, more than one sequence starting with this byte.
      Search for the correct one.  */
   cp = &extra[-i];
+  usrc = *cpp;
   while (1)
     {
       size_t nhere;
-      const unsigned char *usrc = *cpp;
 
       /* The first thing is the index.  */
       i = *((int32_t *) cp);
@@ -113,7 +114,7 @@ findidx (const unsigned char **cpp)
 	    }
 
 	  *cpp += nhere;
-	  return offset;
+	  return indirect[-i + offset];
 	}
     }
 

@@ -108,6 +108,7 @@ struct element_t
 
   /* Next element in multibyte output list.  */
   struct element_t *mbnext;
+  struct element_t *mblast;
 
   /* Next element in wide character output list.  */
   struct element_t *wcnext;
@@ -209,7 +210,6 @@ static const unsigned char encoding_byte[] =
 static inline int
 utf8_encode (char *buf, int val)
 {
-  char *startp = buf;
   int retval;
 
   if (val < 0x80)
@@ -237,7 +237,7 @@ utf8_encode (char *buf, int val)
       *buf |= val;
     }
 
-  return buf - startp;
+  return retval;
 }
 
 
@@ -309,6 +309,7 @@ new_element (struct locale_collate_t *collate, const char *mbs, size_t mbslen,
   newp->next = NULL;
 
   newp->mbnext = NULL;
+  newp->mblast = NULL;
 
   return newp;
 }
@@ -800,7 +801,10 @@ insert_weights (struct linereader *ldfile, struct element_t *elem,
 	{
 	  elem->weights[weight_cnt].w = (struct element_t **)
 	    obstack_alloc (&collate->mempool, sizeof (struct element_t *));
-	  elem->weights[weight_cnt].w[0] = elem;
+	  if (ellipsis == tok_none)
+	    elem->weights[weight_cnt].w[0] = elem;
+	  else
+	    elem->weights[weight_cnt].w[0] = ELEMENT_ELLIPSIS2;
 	  elem->weights[weight_cnt].cnt = 1;
 	}
       while (++weight_cnt < nrules);
@@ -1047,13 +1051,13 @@ sequence is not lower than that of the last character"), "LC_COLLATE");
 		  struct element_t *elem;
 		  size_t namelen;
 
-		  if (seq->ucs4 == UNINITIALIZED_CHAR_VALUE)
-		    seq->ucs4 = repertoire_find_value (repertoire, seq->name,
-						       strlen (seq->name));
-
 		  /* I don't this this can ever happen.  */
 		  assert (seq->name != NULL);
 		  namelen = strlen (seq->name);
+
+		  if (seq->ucs4 == UNINITIALIZED_CHAR_VALUE)
+		    seq->ucs4 = repertoire_find_value (repertoire, seq->name,
+						       namelen);
 
 		  /* Now we are ready to insert the new value in the
 		     sequence.  Find out whether the element is
@@ -1089,7 +1093,7 @@ order for `%.*s' already defined at %s:%zu"),
 
 		  /* Enqueue the new element.  */
 		  elem->last = collate->cursor;
-		  if (collate->cursor != NULL)
+		  if (collate->cursor == NULL)
 		    elem->next = NULL;
 		  else
 		    {
@@ -1123,7 +1127,7 @@ order for `%.*s' already defined at %s:%zu"),
 		      }
 		    else
 		      {
-			/* Simly use the weight from `ellipsis_weight'.  */
+			/* Simply use the weight from `ellipsis_weight'.  */
 			elem->weights[cnt].w =
 			  collate->ellipsis_weight.weights[cnt].w;
 			elem->weights[cnt].cnt =
@@ -1496,6 +1500,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
       if (runp->mbs != NULL)
 	{
 	  struct element_t **eptr;
+	  struct element_t *lastp = NULL;
 
 	  /* Find the point where to insert in the list.  */
 	  eptr = &collate->mbheads[((unsigned char *) runp->mbs)[0]];
@@ -1526,11 +1531,15 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 		}
 
 	      /* To the next entry.  */
+	      lastp = *eptr;
 	      eptr = &(*eptr)->mbnext;
 	    }
 
 	  /* Set the pointers.  */
 	  runp->mbnext = *eptr;
+	  runp->mblast = lastp;
+	  if (*eptr != NULL)
+	    (*eptr)->mblast = runp;
 	  *eptr = runp;
 	dont_insert:
 	}
@@ -2019,20 +2028,19 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 	    int32_t weightidx;
 	    int added;
 
-	    /* Output the weight info.  */
-	    weightidx = output_weight (&weightpool, collate, runp);
-
 	    /* Find out wether this is a single entry or we have more than
 	       one consecutive entry.  */
 	    if (runp->mbnext != NULL
 		&& runp->nmbs == runp->mbnext->nmbs
 		&& memcmp (runp->mbs, runp->mbnext->mbs, runp->nmbs - 1) == 0
-		&& (runp->mbs[runp->nmbs - 1] + 1
-		    == runp->mbnext->mbs[runp->nmbs - 1]))
+		&& (runp->mbs[runp->nmbs - 1]
+		    == runp->mbnext->mbs[runp->nmbs - 1] + 1))
 	      {
 		int i;
+		struct element_t *series_startp = runp;
+		struct element_t *curp;
 
-		/* Now add first the initial byte sequence.  */
+		/* Compute how much space we will need.  */
 		added = ((sizeof (int32_t) + 1 + 2 * (runp->nmbs - 1)
 			  + __alignof__ (int32_t) - 1)
 			 & ~(__alignof__ (int32_t) - 1));
@@ -2042,50 +2050,58 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		   a negative index into the indirect table.  */
 		if (sizeof (int32_t) == sizeof (int))
 		  obstack_int_grow_fast (&extrapool,
-					 obstack_object_size (&indirectpool)
-					 / sizeof (int32_t));
+					 -(obstack_object_size (&indirectpool)
+					   / sizeof (int32_t)));
 		else
 		  {
-		    int32_t i = (obstack_object_size (&indirectpool)
-				 / sizeof (int32_t));
+		    int32_t i = -(obstack_object_size (&indirectpool)
+				  / sizeof (int32_t));
 		    obstack_grow (&extrapool, &i, sizeof (int32_t));
 		  }
-		obstack_1grow_fast (&extrapool, runp->nmbs - 1);
-		for (i = 1; i < runp->nmbs; ++i)
-		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
+
+		/* Now search first the end of the series.  */
+		do
+		  runp = runp->mbnext;
+		while (runp->mbnext != NULL
+		       && runp->nmbs == runp->mbnext->nmbs
+		       && memcmp (runp->mbs, runp->mbnext->mbs,
+				  runp->nmbs - 1) == 0
+		       && (runp->mbs[runp->nmbs - 1]
+			   == runp->mbnext->mbs[runp->nmbs - 1] + 1));
+
+		/* Now walk backward from here to the beginning.  */
+		curp = runp;
+
+		obstack_1grow_fast (&extrapool, curp->nmbs - 1);
+		for (i = 1; i < curp->nmbs; ++i)
+		  obstack_1grow_fast (&extrapool, curp->mbs[i]);
 
 		/* Now find the end of the consecutive sequence and
                    add all the indeces in the indirect pool.  */
-		while (1)
+		do
 		  {
+		    weightidx = output_weight (&weightpool, collate, curp);
 		    if (sizeof (int32_t) == sizeof (int))
-		      obstack_int_grow (&extrapool, weightidx);
+		      obstack_int_grow (&indirectpool, weightidx);
 		    else
-		      obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		      obstack_grow (&indirectpool, &weightidx,
+				    sizeof (int32_t));
 
-		    runp = runp->next;
-		    if (runp->mbnext == NULL
-			|| runp->nmbs != runp->mbnext->nmbs
-			|| memcmp (runp->mbs, runp->mbnext->mbs,
-				   runp->nmbs - 1) != 0
-			|| (runp->mbs[runp->nmbs - 1] + 1
-			    != runp->mbnext->mbs[runp->nmbs - 1]))
-		      break;
-
-		    /* Insert the weight.  */
-		    weightidx = output_weight (&weightpool, collate, runp);
+		    curp = curp->mblast;
 		  }
+		while (curp != series_startp);
+
+		/* Add the final weight.  */
+		weightidx = output_weight (&weightpool, collate, curp);
+		if (sizeof (int32_t) == sizeof (int))
+		  obstack_int_grow (&indirectpool, weightidx);
+		else
+		  obstack_grow (&indirectpool, &weightidx, sizeof (int32_t));
 
 		/* And add the end byte sequence.  Without length this
                    time.  */
-		for (i = 1; i < runp->nmbs; ++i)
-		  obstack_1grow_fast (&extrapool, runp->mbs[i]);
-
-		weightidx = output_weight (&weightpool, collate, runp);
-		if (sizeof (int32_t) == sizeof (int))
-		  obstack_int_grow (&extrapool, weightidx);
-		else
-		  obstack_grow (&extrapool, &weightidx, sizeof (int32_t));
+		for (i = 1; i < curp->nmbs; ++i)
+		  obstack_1grow_fast (&extrapool, curp->mbs[i]);
 	      }
 	    else
 	      {
@@ -2093,6 +2109,9 @@ collate_output (struct localedef_t *locale, struct charmap_t *charmap,
 		   string (except for the first character which is already
 		   tested for).  */
 		int i;
+
+		/* Output the weight info.  */
+		weightidx = output_weight (&weightpool, collate, runp);
 
 		added = ((sizeof (int32_t) + 1 + runp->nmbs - 1
 			  + __alignof__ (int32_t) - 1)
