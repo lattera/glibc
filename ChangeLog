@@ -1,5 +1,7 @@
 1998-07-21  Ulrich Drepper  <drepper@cygnus.com>
 
+	* configure.in: Correct expression to match gcc version.
+
 	* configure.in: Move test for available port after machine
 	variable is defined.
 
