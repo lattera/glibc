@@ -102,6 +102,9 @@
 /* Define if the assembler supported .protected.  */
 #undef	HAVE_PROTECTED
 
+/* Define if the assembler supported .hidden.  */
+#undef	HAVE_HIDDEN
+
 /* Define if the compiler supports __attribute__ ((visibility (...))).  */
 #undef	HAVE_VISIBILITY_ATTRIBUTE
 
