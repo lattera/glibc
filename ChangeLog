@@ -1,3 +1,9 @@
+2004-08-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* nis/nss_compat/compat-initgroups.c (getgrent_next_nss):
+	Initialize mysize with limits only if latter is >= 0.  Use mysize
+	in malloc call.
+
 2004-08-19  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Cast canon to (char *)

@@ -242,8 +242,8 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
   if (nss_initgroups_dyn && nss_getgrgid_r)
     {
       long int mystart = 0;
-      long int mysize = limit;
-      gid_t *mygroupsp = malloc (limit * sizeof (gid_t));
+      long int mysize = limit <= 0 ? *size : limit;
+      gid_t *mygroupsp = malloc (mysize * sizeof (gid_t));
 
       if (mygroupsp == NULL)
 	return NSS_STATUS_TRYAGAIN;
@@ -258,7 +258,7 @@ getgrent_next_nss (ent_t *ent, char *buffer, size_t buflen, const char *user,
       if (nss_initgroups_dyn (user, group, &mystart, &mysize, &mygroupsp,
 			      limit, errnop) == NSS_STATUS_SUCCESS)
 	{
-	  /* A temporary buffer. We use the normal buffer, until we found
+	  /* A temporary buffer. We use the normal buffer, until we find
 	     an entry, for which this buffer is to small.  In this case, we
 	     overwrite the pointer with one to a bigger buffer.  */
 	  char *tmpbuf = buffer;
