@@ -1,3 +1,8 @@
+2003-01-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* io/sys/stat.h: Include time.h with __need_timespec even if
+	__USE_MISC is defined but __USE_XOPEN is not.
+
 2003-01-01  Andreas Jaeger  <aj@suse.de>
 
         * resolv/nss_dns/dns-host.c (_nss_dns_gethostbyaddr_r): Use union
