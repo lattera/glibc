@@ -1,6 +1,10 @@
 2003-06-09  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S
+	(__pthread_cond_signal): Use correct futex pointer in
+	__lll_mutex_lock_wait call.
+
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S
 	(__pthread_cond_signal): Some more tweaks to handle cond_lock!=0.
 
 2003-06-08  Ulrich Drepper  <drepper@redhat.com>

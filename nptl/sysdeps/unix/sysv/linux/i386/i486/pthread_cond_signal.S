@@ -108,9 +108,9 @@ __pthread_cond_signal:
 	/* Initial locking failed.  */
 1:
 #if cond_lock == 0
-	movl	%ebx, %ecx
+	movl	%edi, %ecx
 #else
-	leal	cond_lock(%ebx), %ecx
+	leal	cond_lock(%edi), %ecx
 #endif
 	call	__lll_mutex_lock_wait
 	jmp	2b
