@@ -76,9 +76,6 @@ _IO_new_fclose (fp)
       __gconv_release_step (cc->__cd_in.__cd.__steps);
       __gconv_release_step (cc->__cd_out.__cd.__steps);
 #endif
-
-      if (_IO_have_wbackup (fp))
-	INTUSE(_IO_free_wbackup_area) (fp);
     }
   else
     {
