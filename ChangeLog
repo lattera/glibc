@@ -1,3 +1,9 @@
+1999-06-29  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* pwd/Makefile (tests): Add rules for tst-getpw.
+
+	* pwd/tst-getpw.c: New program to test getpw.
+
 1999-06-28  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* inet/rcmd.c (__icheckhost): Test for gethostbyname_r result
