@@ -1,3 +1,7 @@
+1999-05-25  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/posix/getcwd.c (__getcwd): Fix potential memory leaks.
+
 1999-05-26  Jakub Jelinek   <jj@ultra.linux.cz>
 
 	* stdlib/longlong.h (add_ssaaaa, sub_ddmmss, umul_ppmm):

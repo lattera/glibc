@@ -1,5 +1,5 @@
 /* longlong.h -- definitions for mixed size 32/64 bit arithmetic.
-   Copyright (C) 1991, 92, 93, 94, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,94,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -1173,6 +1173,71 @@ extern USItype __udiv_qrnnd __P ((USItype *, USItype, USItype, USItype));
 #define UDIV_TIME 140
 #endif /* udiv_qrnnd */
 #endif /* __sparc__ */
+
+#if (defined (__sparc_v9__) || (defined (__sparc__) && defined (__arch64__)) \
+    || defined (__sparcv9)) && W_TYPE_SIZE == 64
+#define add_ssaaaa(sh, sl, ah, al, bh, bl)				\
+  __asm__ ("addcc %4,%5,%1
+  	    add %2,%3,%0
+  	    bcs,a,pn %%xcc, 1f
+  	    add %0, 1, %0
+  	    1:"								\
+	   : "=r" ((UDItype)(sh)),				      	\
+	     "=&r" ((UDItype)(sl))				      	\
+	   : "r" ((UDItype)(ah)),				     	\
+	     "r" ((UDItype)(bh)),				      	\
+	     "r" ((UDItype)(al)),				     	\
+	     "r" ((UDItype)(bl))				       	\
+	   : "cc")
+
+#define sub_ddmmss(sh, sl, ah, al, bh, bl) 				\
+  __asm__ ("subcc %4,%5,%1
+  	    sub %2,%3,%0
+  	    bcs,a,pn %%xcc, 1f
+  	    sub %0, 1, %0
+  	    1:"								\
+	   : "=r" ((UDItype)(sh)),				      	\
+	     "=&r" ((UDItype)(sl))				      	\
+	   : "r" ((UDItype)(ah)),				     	\
+	     "r" ((UDItype)(bh)),				      	\
+	     "r" ((UDItype)(al)),				     	\
+	     "r" ((UDItype)(bl))				       	\
+	   : "cc")
+
+#define umul_ppmm(wh, wl, u, v)						\
+  do {									\
+	  UDItype tmp1, tmp2, tmp3, tmp4;				\
+	  __asm__ __volatile__ (					\
+		   "srl %7,0,%3
+		    mulx %3,%6,%1
+		    srlx %6,32,%2
+		    mulx %2,%3,%4
+		    sllx %4,32,%5
+		    srl %6,0,%3
+		    sub %1,%5,%5
+		    srlx %5,32,%5
+		    addcc %4,%5,%4
+		    srlx %7,32,%5
+		    mulx %3,%5,%3
+		    mulx %2,%5,%5
+		    sethi 0x80000000,%2
+		    addcc %4,%3,%4
+		    srlx %4,32,%4
+		    add %2,%2,%2
+		    movcc %%xcc,%%g0,%2
+		    addcc %5,%4,%5
+		    sllx %3,32,%3
+		    add %1,%3,%1
+		    add %5,%2,%0"					\
+	   : "=r" ((UDItype)(wh)),					\
+	     "=&r" ((UDItype)(wl)),					\
+	     "=&r" (tmp1), "=&r" (tmp2), "=&r" (tmp3), "=&r" (tmp4)	\
+	   : "r" ((UDItype)(u)),					\
+	     "r" ((UDItype)(v))						\
+	   : "cc");							\
+  } while (0)
+#define UMUL_TIME 96
+#endif /* __sparc_v9__ */
 
 #if defined (__vax__) && W_TYPE_SIZE == 32
 #define add_ssaaaa(sh, sl, ah, al, bh, bl) \

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -211,8 +211,9 @@ __getcwd (buf, size)
     = "../../../../../../../../../../../../../../../../../../../../../../../\
 ../../../../../../../../../../../../../../../../../../../../../../../../../../\
 ../../../../../../../../../../../../../../../../../../../../../../../../../..";
-  const char *dotp, *dotlist;
-  size_t dotsize;
+  const char *dotp = &dots[sizeof (dots)];
+  const char *dotlist = dots;
+  size_t dotsize = sizeof (dots) - 1;
   dev_t rootdev, thisdev;
   ino_t rootino, thisino;
   char *path;
@@ -244,18 +245,15 @@ __getcwd (buf, size)
   *--pathp = '\0';
 
   if (__lstat (".", &st) < 0)
-    return NULL;
+    goto lose2;
   thisdev = st.st_dev;
   thisino = st.st_ino;
 
   if (__lstat ("/", &st) < 0)
-    return NULL;
+    goto lose2;
   rootdev = st.st_dev;
   rootino = st.st_ino;
 
-  dotsize = sizeof (dots) - 1;
-  dotp = &dots[sizeof (dots)];
-  dotlist = dots;
   while (!(thisdev == rootdev && thisino == rootino))
     {
       register DIR *dirstream;
@@ -273,7 +271,7 @@ __getcwd (buf, size)
 	    {
 	      new = malloc (dotsize * 2 + 1);
 	      if (new == NULL)
-		return NULL;
+		goto lose;
 #ifdef HAVE_MEMPCPY
 	      dotp = mempcpy (new, dots, dotsize);
 #else
@@ -375,7 +373,6 @@ __getcwd (buf, size)
 		  if (tmp == NULL)
 		    {
 		      (void) __closedir (dirstream);
-		      free (path);
 		      __set_errno (ENOMEM);/* closedir might have changed it.*/
 		      goto lose;
 		    }
@@ -412,6 +409,9 @@ __getcwd (buf, size)
  lose:
   if (dotlist != dots)
     free ((__ptr_t) dotlist);
+ lose2:
+  if (buf == NULL)
+    free (path);
   return NULL;
 }
 
