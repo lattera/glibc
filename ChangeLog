@@ -1,3 +1,9 @@
+2002-12-11  Roland McGrath  <roland@redhat.com>
+
+	* csu/Makefile ($(objpfx)elf-init.oS): Remove target, braino.
+	(CPPFLAGS-elf-init.oS, CFLAGS-elf-init.oS): New variables.
+	Turn off PIC for compiling this file.
+
 2002-12-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* malloc/thread-m.h: Remove thread_id type and MUTEX_INITIALIZER
