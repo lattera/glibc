@@ -80,6 +80,11 @@ ifeq ($(have-initfini),yes)
 
 CPPFLAGS += -DHAVE_INITFINI
 
+# We don't want this compiled with PIC.
+# It's never included in shared libraries, unlike the rest of libc_nonshared.a.
+CPPFLAGS-elf-init.oS = $(patsubst %,-UPIC,$(pic-ccflag))
+CFLAGS-elf-init.oS = $(patsubst -f%,-fno-%,$(pic-ccflag))
+
 # These are the special initializer/finalizer files.  They are always the
 # first and last file in the link.  crti.o ... crtn.o define the global
 # "functions" _init and _fini to run the .init and .fini sections.
@@ -138,11 +143,6 @@ subdir_lib: $(extra-objs:%=$(objpfx)%)
 define link-relocatable
 $(CC) -nostdlib -nostartfiles -r -o $@ $^
 endef
-
-# We don't want this compiled with PIC.  
-# It's never included in shared libraries, unlike the rest of libc_nonshared.a.
-$(objpfx)elf-init.oS: $(objpfx)elf-init.o
-	ln -f $< $@
 
 ifndef start-installed-name-rule
 ifeq (yes,$(elf))
