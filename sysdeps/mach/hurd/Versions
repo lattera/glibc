@@ -16,12 +16,15 @@ ld {
     __hurd_threadvar_stack_mask;  __hurd_threadvar_stack_offset;
 
     # functions that must be shared with libc
-    __close; __fxstat64; __getcwd; __getpid; __libc_read; __libc_write;
-    __libc_lseek64; __mmap; __open; __xstat64; __fxstat64;
+    __close; __getcwd; __getpid;
+    __mmap; __open; __xstat64; __fxstat64;
     _exit; _hurd_intr_rpc_mach_msg;
     abort;
   }
   GLIBC_PRIVATE {
     _dl_init_first;
+
+    # functions that must be shared with libc
+    __libc_read; __libc_write; __libc_lseek64;
   }
 }

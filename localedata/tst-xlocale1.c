@@ -23,7 +23,7 @@ static struct
 int
 main (void)
 {
-  int cnt;
+  size_t cnt;
   int result = 0;
   locale_t loc = newlocale (1 << LC_ALL, "C", NULL);
 

@@ -72,7 +72,7 @@ main (void)
   size_t inplinelen = 0;
   char *resline = NULL;
   size_t reslinelen = 0;
-  int n;
+  size_t n;
   const unsigned short int *__ctype_b;
 
   setlocale (LC_ALL, "");

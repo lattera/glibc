@@ -1,3 +1,8 @@
+2002-09-24  Roland McGrath  <roland@redhat.com>
+
+	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Fetch just the
+	individual members we need, not the whole structures.
+
 2002-09-24  Ulrich Drepper  <drepper@redhat.com>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Change second

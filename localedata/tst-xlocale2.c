@@ -46,7 +46,7 @@ static int
 do_test (locale_t l)
 {
   int result = 0;
-  int n;
+size_t n;
 
 #define DO_TEST(TEST, RES) \
   for (n = 0; n < sizeof (str) - 1; ++n)				      \

@@ -33,25 +33,25 @@ td_thr_tls_get_addr (const td_thrhandle_t *th __attribute__ ((unused)),
 		     void **address __attribute__ ((unused)))
 {
 #if USE_TLS
-  struct _pthread_descr_struct pds;
   size_t modid;
-  struct link_map map;
-  union dtv pdtv;
+  union dtv pdtv, *dtvp;
 
   LOG ("td_thr_tls_get_addr");
 
-  /* Get the thread descriptor.  */
-  if (ps_pdread (th->th_ta_p->ph, th->th_unique, &pds,
-		 th->th_ta_p->sizeof_descr) != PS_OK)
+  /* Get the DTV pointer from the thread descriptor.  */
+  if (ps_pdread (th->th_ta_p->ph,
+		 &((struct _pthread_descr_struct *) th->th_unique)->dtv,
+		 &dtvp, sizeof dtvp) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
-  /* Get the link_map, so we gan get the module ID.  */
-  if (ps_pdread (th->th_ta_p->ph, map_address, &map,
-		 sizeof (struct link_map)) != PS_OK)
+  /* Read the module ID from the link_map.  */
+  if (ps_pdread (th->th_ta_p->ph,
+		 &((struct link_map *) map_address)->l_tls_modid,
+		 &modid, sizeof modid) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
   /* Get the corresponding entry in the DTV.  */
-  if (ps_pdread (th->th_ta_p->ph, pds.p_header.data.dtvp + map.l_tls_modid,
+  if (ps_pdread (th->th_ta_p->ph, dtvp + modid,
 		 &pdtv, sizeof (union dtv)) != PS_OK)
     return TD_ERR;	/* XXX Other error value?  */
 
