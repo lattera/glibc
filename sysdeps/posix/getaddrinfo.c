@@ -556,6 +556,14 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	    }
 	  else
 	    return -EAI_ADDRFAMILY;
+
+	dupname:
+	  if (req->ai_flags & AI_CANONNAME)
+	    {
+	      canon = strdup (name);
+	      if (canon == NULL)
+		return -EAI_MEMORY;
+	    }
 	}
 
       if (at->family == AF_UNSPEC)
@@ -603,6 +611,8 @@ gaih_inet (const char *name, const struct gaih_service *service,
 			return GAIH_OKIFUNSPEC | -EAI_NONAME;
 		    }
 		}
+
+	      goto dupname;
 	    }
 	}
 
