@@ -34,7 +34,7 @@ error_t
 _hurd_setauth (auth_t new)
 {
   error_t err;
-  int d;
+  unsigned int d;
   mach_port_t newport, ref;
 
   /* Give the new send right a user reference.

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -32,9 +32,9 @@ error_t (*_hurd_ports_getters[INIT_PORT_MAX]) (mach_port_t *result) =
   };
 
 error_t
-_hurd_ports_get (int which, mach_port_t *result)
+_hurd_ports_get (unsigned int which, mach_port_t *result)
 {
-  if (which < 0 || which >= _hurd_nports)
+  if (which >= _hurd_nports)
     return EINVAL;
   if (which >= INIT_PORT_MAX || _hurd_ports_getters[which] == NULL)
     return HURD_PORT_USE (&_hurd_ports[which],

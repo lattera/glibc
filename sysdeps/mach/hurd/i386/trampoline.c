@@ -254,7 +254,7 @@ _hurdsig_rcv_interrupted_p (struct machine_thread_all_state *state,
 
   if (_hurdsig_catch_fault (SIGSEGV))
     assert (_hurdsig_fault_sigcode >= (long int) pc &&
-	    _hurdsig_fault_sigcode < (long int) pc + sizeof syscall);
+	    _hurdsig_fault_sigcode < (long int) (pc + sizeof syscall));
   else
     {
       int rcving = (state->basic.eax == MACH_RCV_INTERRUPTED &&

@@ -103,7 +103,7 @@ _hurd_socket_server (int domain, int dead)
 static void
 init (void)
 {
-  size_t i;
+  int i;
 
   __mutex_init (&lock);
 

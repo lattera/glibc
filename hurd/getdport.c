@@ -37,7 +37,7 @@ __getdport (int fd)
     /* Never had a descriptor table.  */
     return EBADF;
 
-  if (fd < 0 || fd > _hurd_init_dtablesize ||
+  if (fd < 0 || (unsigned int) fd > _hurd_init_dtablesize ||
       _hurd_init_dtable[fd] == MACH_PORT_NULL)
     {
       errno = EBADF;

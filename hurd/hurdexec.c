@@ -40,10 +40,9 @@ _hurd_exec (task_t task, file_t file,
   mach_port_t ports[_hurd_nports];
   struct hurd_userlink ulink_ports[_hurd_nports];
   file_t *dtable;
-  int dtablesize;
+  unsigned int dtablesize, i;
   struct hurd_port **dtable_cells;
   struct hurd_userlink *ulink_dtable;
-  int i;
   char *const *p;
   struct hurd_sigstate *ss;
   mach_port_t *please_dealloc, *pdp;

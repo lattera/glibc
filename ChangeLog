@@ -1,4 +1,15 @@
+Mon Mar 20 03:19:23 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* stdio/vfscanf.c (%n): Use READ_IN - 1, so as not to count the
+ 	read-ahead character.
+
 Sat Mar 18 14:07:08 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* hurd/dtable.c, hurd/getdport.c, hurd/hurd.h, hurd/hurdexec.c,
+	  hurd/hurdinit.c, hurd/hurdprio.c, hurd/hurdsock.c,
+	  hurd/ports-get.c, hurd/ports-set.c, hurd/setauth.c,
+	  hurd/setuids.c, sysdeps/mach/hurd/i386/trampoline.c:
+	Get anal with unsigned to pacify compiler.
 
 	* stdio/vfscanf.c: Grok positional parameter specs (i.e. %3$d
  	means %d from 3rd arg).

@@ -109,8 +109,8 @@ extern int _hurd_set_brk (vm_address_t newbrk);
 
 /* Calls to get and set basic ports.  */
 
-extern error_t _hurd_ports_get (int which, mach_port_t *result);
-extern error_t _hurd_ports_set (int which, mach_port_t newport);
+extern error_t _hurd_ports_get (unsigned int which, mach_port_t *result);
+extern error_t _hurd_ports_set (unsigned int which, mach_port_t newport);
 
 extern process_t getproc (void);
 extern file_t getcwdir (void), getcrdir (void);

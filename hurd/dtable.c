@@ -41,7 +41,7 @@ DEFINE_HOOK (_hurd_fd_subinit, (void));
 static void
 init_dtable (void)
 {
-  register size_t i;
+  int i;
 
   __mutex_init (&_hurd_dtable_lock);
 
@@ -55,7 +55,7 @@ init_dtable (void)
     __libc_fatal ("hurd: Can't allocate file descriptor table\n");
 
   /* Initialize the descriptor table.  */
-  for (i = 0; i < _hurd_init_dtablesize; ++i)
+  for (i = 0; (unsigned int) i < _hurd_init_dtablesize; ++i)
     {
       if (_hurd_init_dtable[i] == MACH_PORT_NULL)
 	/* An unused descriptor is marked by a null pointer.  */

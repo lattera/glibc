@@ -1,4 +1,4 @@
-/* Copyright (C) 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -40,10 +40,10 @@ error_t (*_hurd_ports_setters[INIT_PORT_MAX]) (mach_port_t newport) =
 
 
 error_t
-_hurd_ports_set (int which, mach_port_t newport)
+_hurd_ports_set (unsigned int which, mach_port_t newport)
 {
   error_t err;
-  if (which < 0 || which >= _hurd_nports)
+  if (which >= _hurd_nports)
     return EINVAL;
   if (err = __mach_port_mod_refs (__mach_task_self (), newport,
 				  MACH_PORT_RIGHT_SEND, 1))

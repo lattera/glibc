@@ -251,7 +251,7 @@ DEFUN(__vfscanf, (s, format, arg),
 
 	case 'n':	/* Answer number of assignments done.  */
 	  if (do_assign)
-	    *ARG (int *) = read_in;
+	    *ARG (int *) = read_in - 1;	/* Don't count the read-ahead.  */
 	  break;
 
 	case 'c':	/* Match characters.  */

@@ -45,7 +45,7 @@ _hurd_init (int flags, char **argv,
 	    mach_port_t *portarray, size_t portarraysize,
 	    int *intarray, size_t intarraysize)
 {
-  int i;
+  size_t i;
 
   _hurd_exec_flags = flags;
 

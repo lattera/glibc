@@ -25,7 +25,7 @@ setuids (int n, const uid_t *uids)
 {
   error_t err;
   auth_t newauth;
-  size_t i;
+  int i;
   gid_t new[n];
 
   /* Fault before taking locks.  */

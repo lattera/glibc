@@ -67,7 +67,7 @@ _hurd_priority_which_map (enum __priority_which which, int who,
 			     (vm_address_t) oldpi, oldpisize * sizeof pi[0]);
 
 	  pip = (struct procinfo *) pi;
-	  if (pip->owner != who)
+	  if (pip->owner != (uid_t) who)
 	    continue;
 	}
       else
