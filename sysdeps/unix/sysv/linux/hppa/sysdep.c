@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -32,3 +32,28 @@ __syscall_error (int err_no)
 #undef errno
 int errno = 0;
 weak_alias (errno, _errno)
+
+
+/* HPPA implements syscall() in 'C'; the assembler version would
+   typically be in syscall.S.  */
+
+int
+syscall (int sysnum, int arg0, int arg1, int arg2, int arg3, int arg4, int arg5)
+{
+  long __sys_res;
+  {
+    register unsigned long __res asm("r28");
+    LOAD_ARGS_6(arg0, arg1, arg2, arg3, arg4, arg5)
+      asm volatile ("ble  0x100(%%sr2, %%r0)\n\t"
+		    "copy %1, %%r20"
+		    : "=r" (__res)
+		    : "r" (sysnum) ASM_ARGS_6);
+    __sys_res = __res;
+  }
+  if ((unsigned long) __sys_res >= (unsigned long)-4095)
+    {
+    __set_errno(-__sys_res);
+    __sys_res = -1;
+  }
+  return __sys_res;
+}
