@@ -2848,8 +2848,7 @@ character `%s' not defined while needed as default value"),
 
       for (cnt = 0; cnt < 256; ++cnt)
 	if (ctype->map256_collection[0][cnt] != 0)
-	  ctype->map_collection[1][ctype->map_collection[0][cnt]]
-	    = ctype->charnames[cnt];
+	  ctype->map256_collection[1][ctype->map256_collection[0][cnt]] = cnt;
     }
 
   if (ctype->outdigits_act == 0)

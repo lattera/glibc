@@ -1,5 +1,9 @@
 1999-12-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* locale/programs/ld-ctype.c (set_class_defaults): Correctly
+	determine tolower mapping for 8bit table if the tolower keyword is
+	not given.
+
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Don't fail if host has
 	only IPv6 address.  Reported by Artur Frysiak <wiget@pld.org.pl>.
 
