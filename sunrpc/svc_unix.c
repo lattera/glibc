@@ -280,6 +280,7 @@ svcunix_destroy (SVCXPRT *xprt)
   mem_free ((caddr_t) xprt, sizeof (SVCXPRT));
 }
 
+#ifdef SCM_CREDENTIALS
 struct cmessage {
   struct cmsghdr cmsg;
   struct ucred cmcred;
@@ -289,6 +290,7 @@ struct cmessage {
    and the rpcgen generated *_svc functions for the daemon are also not
    thread safe and uses static global variables, it doesn't matter. */
 static struct cmessage cm;
+#endif
 
 static int
 __msgread (int sock, void *buf, size_t cnt)
@@ -303,8 +305,10 @@ __msgread (int sock, void *buf, size_t cnt)
   msg.msg_iovlen = 1;
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
+#ifdef SCM_CREDENTIALS
   msg.msg_control = (caddr_t) &cm;
   msg.msg_controllen = sizeof (struct cmessage);
+#endif
   msg.msg_flags = 0;
 
 #ifdef SO_PASSCRED
@@ -443,8 +447,10 @@ svcunix_recv (SVCXPRT *xprt, struct rpc_msg *msg)
       cd->x_id = msg->rm_xid;
       /* set up verifiers */
       msg->rm_call.cb_verf.oa_flavor = AUTH_UNIX;
+#ifdef SCM_CREDENTIALS
       msg->rm_call.cb_verf.oa_base = (caddr_t) &cm;
       msg->rm_call.cb_verf.oa_length = sizeof (cm);
+#endif
       return TRUE;
     }
   cd->strm_stat = XPRT_DIED;	/* XXXX */

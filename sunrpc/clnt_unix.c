@@ -434,17 +434,21 @@ clntunix_destroy (CLIENT *h)
   mem_free ((caddr_t) h, sizeof (CLIENT));
 }
 
+#ifdef SCM_CREDENTIALS
 struct cmessage {
   struct cmsghdr cmsg;
   struct ucred cmcred;
 };
+#endif
 
 static int
 __msgread (int sock, void *buf, size_t cnt)
 {
   struct iovec iov[1];
   struct msghdr msg;
+#ifdef SCM_CREDENTIALS
   struct cmessage cm;
+#endif
 
   iov[0].iov_base = buf;
   iov[0].iov_len = cnt;
@@ -453,8 +457,10 @@ __msgread (int sock, void *buf, size_t cnt)
   msg.msg_iovlen = 1;
   msg.msg_name = NULL;
   msg.msg_namelen = 0;
+#ifdef SCM_CREDENTIALS
   msg.msg_control = (caddr_t)&cm;
   msg.msg_controllen = sizeof(struct cmessage);
+#endif
   msg.msg_flags = 0;
 
 #ifdef SO_PASSCRED

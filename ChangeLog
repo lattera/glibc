@@ -1,3 +1,13 @@
+1998-12-20  Roland McGrath  <roland@baalperazim.frob.com>
+
+	* sunrpc/svc_unix.c, sunrpc/clnt_unix.c: Avoid using `struct cmsghdr'
+	and `struct ucred' #ifndef SCM_CREDENTIALS.
+
+	* sunrpc/publickey.c (getsecretkey): Use `&errno' instead of
+	`__errno_location ()'; means the same, works for Hurd.
+
+	* sysdeps/mach/hurd/Makefile (subdirs): Don't elide sunrpc.
+
 1998-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/sysv4/solaris2/bits/types.h: Include
