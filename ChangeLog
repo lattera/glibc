@@ -1,5 +1,7 @@
 2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
 
+	* Makefile (install): Correct passing -r parameter to ldconfig.
+
 	* iconvdata/gconv-modules: Add aliases ISO-IR-199 and ISO-IR-203.
 	Reported by Bruno Haible <haible@ilog.fr>.
 

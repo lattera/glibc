@@ -1,3 +1,20 @@
+2000-01-12  Ulrich Drepper  <drepper@cygnus.com>
+
+	* internals.h (pthread_readlock_info): New structure.
+	(_pthread_descr_struct): Add p_readlock_list, p_readlock_free, and
+	p_untracked_readlock_count.
+	* pthread.c (__pthread_initial_thread, pthread_manager_thread):
+	Add initializers for new fields.
+	* manager.c (pthread_free): Free read/write lock lists.
+	* queue.h (queue_is_empty): New function.
+	* rwlock.c: Implement requirements about when readers should get
+	locks assigned.
+	* sysdeps/pthread/pthread.h
+	(PTHREAD_RWLOCK_PREFER_WRITER_NONRECURSIVE_NP): New definition.
+	* sysdeps/pthread/bits/pthreadtypes.h (struct _pthread_rwlock_t):
+	Define this name as well.
+	Patches by Kaz Kylheku <kaz@ashi.footprints.net>.
+
 2000-01-05  Ulrich Drepper  <drepper@cygnus.com>
 
 	* pthread.c (__pthread_initial_thread, pthread_manager_thread):
