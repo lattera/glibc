@@ -17,6 +17,7 @@
 
 /* This file contains only wrappers around the real glob functions.  It
    became necessary since the glob_t structure changed.  */
+#include <sys/types.h>
 #include <glob.h>
 
 #if defined PIC && DO_VERSIONING
@@ -74,7 +75,7 @@ __old_glob (const char *pattern, int flags,
 
   return result;
 }
-symbol_version(__old_glob, glob, GLIBC_2.0)
+symbol_version(__old_glob, glob, GLIBC_2.0);
 
 
 /* Free storage allocated in PGLOB by a previous `glob' call.  */
@@ -89,6 +90,6 @@ __old_globfree (old_glob_t *pglob)
 
   globfree (&correct);
 }
-symbol_version(__old_globfree, globfree, GLIBC_2.0)
+symbol_version(__old_globfree, globfree, GLIBC_2.0);
 
 #endif
