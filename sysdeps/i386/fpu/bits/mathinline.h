@@ -110,6 +110,9 @@
 	__result; })
 # endif	/* __i686__ */
 
+/* The gcc, version 2.7 or below, has problems with all this inlining
+   code.  So disable it for this version of the compiler.  */
+# if (__GNUC__ > 2 || (__GNUC__ == 2 && __GNUC_MINOR__ > 7))
 /* Test for negative number.  Used in the signbit() macro.  */
 __MATH_INLINE int
 __signbitf (float __x)
@@ -129,6 +132,7 @@ __signbitl (long double __x)
   __extension__ union { long double __l; int __i[3]; } __u = { __l: __x };
   return (__u.__i[2] & 0x8000) != 0;
 }
+# endif
 #endif
 
 
