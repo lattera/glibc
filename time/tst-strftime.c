@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
 
@@ -65,6 +66,42 @@ do_test (void)
 	printf ("%Zu: %s: size == %Zu: OK\n", cnt, tests[cnt].fmt, size);
 
       free (buf);
+    }
+
+  struct tm ttm =
+    {
+      /* Initialize the fields which are needed in the tests.  */
+      .tm_mday = 1,
+      .tm_hour = 2
+    };
+  const struct
+  {
+    const char *fmt;
+    const char *exp;
+    size_t n;
+  } ftests[] =
+    {
+      { "%-e", "1", 1 },
+      { "%-k", "2", 1 },
+      { "%-l", "2", 1 },
+    };
+#define nftests (sizeof (ftests) / sizeof (ftests[0]))
+  for (cnt = 0; cnt < nftests; ++cnt)
+    {
+      char buf[100];
+      size_t r = strftime (buf, sizeof (buf), ftests[cnt].fmt, &ttm);
+      if (r != ftests[cnt].n)
+	{
+	  printf ("strftime(\"%s\") returned %zu not %zu\n",
+		  ftests[cnt].fmt, r, ftests[cnt].n);
+	  result = 1;
+	}
+      if (strcmp (buf, ftests[cnt].exp) != 0)
+	{
+	  printf ("strftime(\"%s\") produced \"%s\" not \"%s\"\n",
+		  ftests[cnt].fmt, buf, ftests[cnt].exp);
+	  result = 1;
+	}
     }
 
   return result;
