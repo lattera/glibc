@@ -519,9 +519,9 @@ $(common-objpfx)shlib.lds: $(common-objpfx)config.make
 	      -e '/^=========/,/^=========/!d;/^=========/d' \
 	      -e 's/^.*\.hash[ 	]*:.*$$/  .note.ABI-tag : { *(.note.ABI-tag) } &/' \
 	      -e 's/^.*\*(\.dynbss).*$$/& \
-		 PROVIDE(__start___libc_freeres_ptrs = .); \
+		 __start___libc_freeres_ptrs = .; \
 		 *(__libc_freeres_ptrs) \
-		 PROVIDE(__stop___libc_freeres_ptrs = .);/'
+		 __stop___libc_freeres_ptrs = .;/'
 	mv -f $@T $@
 common-generated += shlib.lds
 

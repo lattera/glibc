@@ -1,3 +1,8 @@
+2003-04-27  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makerules ($(common-objpfx)shlib.lds): Don't use PROVIDE to
+	define __start_libc_freeres_ptrs and __stop___libc_freeres_ptrs.
+
 2003-04-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-close.c [USE_TLS && TLS_TCB_AT_TP] (_dl_close): Reimplement
