@@ -1,3 +1,16 @@
+Tue Oct 24 15:22:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/configure.in: Check for fchdir syscall.
+	Improve sed script to allow / on rhs without / on lhs.
+
+Thu Oct 19 03:47:32 1995  Ulrich Drepper  <drepper@ipd.info.uni-karlsruhe.de>
+
+	* sysdeps/unix/sysv/linux/termbits.h: Don't define speed constants.
+
+	* elf/rtld.c: Include _itoa.h from stdio-common instead of stdio.
+
+	* sysdeps/unix/sysv/linux/select.S: New file.
+
 Wed Oct 18 03:33:22 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* sysdeps/unix/sysv/linux/i386/sysdep.h (PSEUDO): Use

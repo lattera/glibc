@@ -107,31 +107,6 @@ struct termios
 #define CBAUDEX	0x00010000	/* Mask for extended speed from c_cflag.  */
 #endif
 
-  /* Input and output baud rates.  These are encoded in c_cflag.  */
-#define B0      0x000000000
-#define B50     0x000000001
-#define B75     0x000000002
-#define B110    0x000000003
-#define B134    0x000000004
-#define B150    0x000000005
-#define B200    0x000000006
-#define B300    0x000000007
-#define B600    0x000000008
-#define B1200   0x000000009
-#define B1800   0x00000000a
-#define B2400   0x00000000b
-#define B4800   0x00000000c
-#define B9600   0x00000000d
-#define B19200  0x00000000e
-#define B38400  0x00000000f
-#ifdef __USE_BSD
-#define EXTA    0x00000000e
-#define EXTB    0x00000000f
-#endif
-#define B57600	0x000010001
-#define B115200	0x000010002
-#define B230400	0x000010003
-
   /* Local modes.  */
   tcflag_t c_lflag;
 #ifdef	__USE_BSD

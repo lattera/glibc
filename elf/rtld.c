@@ -22,7 +22,7 @@ Cambridge, MA 02139, USA.  */
 #include <stddef.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "../stdio/_itoa.h"
+#include "../stdio-common/_itoa.h"
 
 
 #ifdef RTLD_START
@@ -330,8 +330,6 @@ _dl_r_debug_state (void)
 /* Define (weakly) our own assert failure function which doesn't use stdio.
    If we are linked into the user program (-ldl), the normal __assert_fail
    defn can override this one.  */
-
-#include "../stdio/_itoa.h"
 
 void
 __assert_fail (const char *assertion,
