@@ -21,6 +21,17 @@
 #if defined __GNUC__ && !defined _SOFT_FLOAT
 
 #ifdef __USE_ISOC99
+#if __GNUC_PREREQ (2,96)
+
+#define isgreater(x, y) __builtin_isgreater (x, y)
+#define isgreaterequal(x, y) __builtin_isgreaterequal (x, y)
+#define isless(x, y) __builtin_isless (x, y)
+#define islessequal(x, y) __builtin_islessequal (x, y)
+#define islessgreater(x, y) __builtin_islessgreater (x, y)
+#define isunordered(x, y) __builtin_isunordered (x, y)
+
+#else
+
 # define __unordered_cmp(x, y) \
   (__extension__							      \
    ({ __typeof__(x) __x = (x); __typeof__(y) __y = (y);			      \
@@ -35,7 +46,9 @@
 # define islessequal(x, y) ((__unordered_cmp (x, y) & 0xA) != 0)
 # define islessgreater(x, y) ((__unordered_cmp (x, y) & 0xC) != 0)
 # define isunordered(x, y) (__unordered_cmp (x, y) & 1)
-#endif /* __USE_ISOC99 && !_SOFT_FLOAT */
+
+#endif /* __GNUC_PREREQ (2,97) */
+#endif /* __USE_ISOC99 */
 
 #if !defined __NO_MATH_INLINES && defined __OPTIMIZE__
 
