@@ -353,7 +353,7 @@ Check the FAQ for any special compiler issues on particular platforms.
 GNU @code{binutils} 2.13 or later
 
 You must use GNU @code{binutils} (as and ld) to build the GNU C library.
-No other assembler and linker has the necessary functionality in the
+No other assembler or linker has the necessary functionality at the
 moment.
 
 @item
