@@ -22,6 +22,9 @@ libc {
     # functions used in inline functions or macros
     __dcngettext;
 
+    # b*
+    bind_textdomain_codeset;
+
     # d*
     dcngettext; dngettext;
 
