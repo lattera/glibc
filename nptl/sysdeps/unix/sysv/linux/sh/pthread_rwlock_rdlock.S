@@ -19,14 +19,12 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <tcb-offsets.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-
-#define EAGAIN		11
-#define EDEADLK		35
 
 
 	.text
@@ -207,7 +205,7 @@ __pthread_rwlock_rdlock:
 	.long	__lll_mutex_lock_wait-.Lwait0b
 .Lwake0:
 	.long	__lll_mutex_unlock_wake-.Lwake0b
-.Lwait1:	
+.Lwait1:
 	.long	__lll_mutex_lock_wait-.Lwait1b
 .Lwake1:
 	.long	__lll_mutex_unlock_wake-.Lwake1b

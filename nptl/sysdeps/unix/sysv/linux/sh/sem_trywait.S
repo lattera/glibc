@@ -18,6 +18,7 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
 
 
@@ -25,12 +26,6 @@
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-
-#define EINTR			4
-#define EAGAIN			11
-#define EWOULDBLOCK		EAGAIN
-#define EINVAL			22
-#define ETIMEDOUT		110
 
 	.text
 

@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <pthread-errnos.h>
 
 #ifndef UP
 # define LOCK lock
@@ -29,10 +30,6 @@
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
 #define FUTEX_WAKE		1
-
-#define EWOULDBLOCK		11
-#define EINVAL			22
-#define ETIMEDOUT		110
 
 
 	.text

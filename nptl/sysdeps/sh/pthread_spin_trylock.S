@@ -16,7 +16,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define EBUSY	16
+#include <pthread-errnos.h>
 
 	.globl	pthread_spin_trylock
 	.type	pthread_spin_trylock,@function
@@ -24,7 +24,7 @@
 pthread_spin_trylock:
 	tas.b	@r4
 	bf/s	1f
-	 mov	#EBUSY, r0
+	mov	#EBUSY, r0
 	mov	#0, r0
 1:
 	rts

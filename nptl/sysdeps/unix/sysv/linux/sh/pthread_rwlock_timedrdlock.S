@@ -19,16 +19,13 @@
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
 #include <tcb-offsets.h>
+#include <pthread-errnos.h>
 #include "lowlevel-atomic.h"
 
 #define SYS_gettimeofday	__NR_gettimeofday
 #define SYS_futex		240
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-
-#define EAGAIN		11
-#define EDEADLK		35
-#define ETIMEDOUT	110
 
 
 	.text
@@ -263,11 +260,11 @@ pthread_rwlock_timedrdlock:
 .Ltcboff:
 	.word	TLS_PRE_TCB_SIZE
 	.align	2
-.Lwait2:	
+.Lwait2:
 	.long	__lll_mutex_lock_wait-.Lwait2b
 .Lwake2:
 	.long	__lll_mutex_unlock_wake-.Lwake2b
-.Lwait3:	
+.Lwait3:
 	.long	__lll_mutex_lock_wait-.Lwait3b
 .Lwake3:
 	.long	__lll_mutex_unlock_wake-.Lwake3b

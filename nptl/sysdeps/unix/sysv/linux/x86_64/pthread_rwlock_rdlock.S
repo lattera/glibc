@@ -19,14 +19,12 @@
 
 #include <sysdep.h>
 #include <lowlevelrwlock.h>
+#include <pthread-errnos.h>
 
 
 #define SYS_futex		202
 #define FUTEX_WAIT		0
 #define FUTEX_WAKE		1
-
-#define EAGAIN		11
-#define EDEADLK		35
 
 #ifndef UP
 # define LOCK lock

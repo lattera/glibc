@@ -19,6 +19,7 @@
 
 #include <sysdep.h>
 #include <shlib-compat.h>
+#include <pthread-errnos.h>
 
 #ifndef UP
 # define LOCK lock
@@ -27,8 +28,6 @@
 #endif
 
 #define SYS_futex		202
-
-#define EWOULDBLOCK		11
 
 
 	.text
