@@ -18,7 +18,12 @@ Cambridge, MA 02139, USA.  */
 
 #include <sysdep.h>
 
-PSEUDO (__sigaction_syscall, sigaction, 3)
+.globl C_SYMBOL_NAME(__sigreturn)
+
+ENTRY (__sigaction_syscall)
+	movel $C_SYMBOL_NAME(__sigreturn), %edx
+	DO_CALL (sigaction, 3)
+	jb syscall_error
 	ret
 
 PSEUDO (__context_syscall, context, 2)
