@@ -1,3 +1,15 @@
+2000-11-07  Akim Demaille  <akim@epita.fr>
+
+	* malloc/obstack.c (obstack_grow, obstack_grow0): Rename the second
+	argument `data' for consistency with the prototypes.
+	Qualify it `const'.
+	(obstack_copy, obstack_copy0): Rename the second argument as
+	`address' for consistency.  Qualify it `const'.
+	* malloc/obstack.h (obstack_copy, obstack_copy0, obstack_grow)
+	(obstack_grow0, obstack_ptr_grow, obstack_ptr_grow_fast): Qualify
+	`const' their input argument (`data' or `address').
+	Adjust the corresponding macros to include `const' in casts.
+
 2000-11-06  Hideaki YOSHIFUJI  <yoshfuji@linux-ipv6.org>
 
 	* sysdeps/posix/getaddrinfo.c: Clean-up: define family to hold
