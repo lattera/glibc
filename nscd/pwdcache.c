@@ -1,5 +1,5 @@
 /* Cache handling for passwd lookup.
-   Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -183,7 +183,7 @@ cache_addpw (struct database *db, int fd, request_header *req, void *key,
       pthread_rwlock_unlock (&db->lock);
     }
 
-  if (written != total)
+  if (written != total && debug_level > 0)
     {
       char buf[256];
       dbg_log (_("short write in %s: %s"),  __FUNCTION__,

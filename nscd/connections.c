@@ -222,9 +222,10 @@ handle_request (int fd, request_header *req, void *key, uid_t uid)
 
   if (req->version != NSCD_VERSION)
     {
-      dbg_log (_("\
+      if (debug_level > 0)
+	dbg_log (_("\
 cannot handle old request version %d; current version is %d"),
-	       req->version, NSCD_VERSION);
+		 req->version, NSCD_VERSION);
       return;
     }
 
@@ -254,7 +255,8 @@ cannot handle old request version %d; current version is %d"),
 	  /* No, sent the prepared record.  */
 	  if (TEMP_FAILURE_RETRY (write (fd, db->disabled_iov->iov_base,
 					 db->disabled_iov->iov_len))
-	      != db->disabled_iov->iov_len)
+	      != db->disabled_iov->iov_len
+	      && debug_level > 0)
 	    {
 	      /* We have problems sending the result.  */
 	      char buf[256];
@@ -275,7 +277,8 @@ cannot handle old request version %d; current version is %d"),
 	{
 	  /* Hurray it's in the cache.  */
 	  if (TEMP_FAILURE_RETRY (write (fd, cached->packet, cached->total))
-	      != cached->total)
+	      != cached->total
+	      && debug_level > 0)
 	    {
 	      /* We have problems sending the result.  */
 	      char buf[256];
@@ -433,8 +436,9 @@ nscd_run (void *p)
 	  if (TEMP_FAILURE_RETRY (read (fd, &req, sizeof (req)))
 	      != sizeof (req))
 	    {
-	      dbg_log (_("short read while reading request: %s"),
-		       strerror_r (errno, buf, sizeof (buf)));
+	      if (debug_level > 0)
+		dbg_log (_("short read while reading request: %s"),
+			 strerror_r (errno, buf, sizeof (buf)));
 	      close (fd);
 	      continue;
 	    }
@@ -467,7 +471,8 @@ nscd_run (void *p)
 	     to 1kb.  */
 	  if (req.key_len < 0 || req.key_len > 1024)
 	    {
-	      dbg_log (_("key length in request too long: %d"), req.key_len);
+	      if (debug_level > 0)
+		dbg_log (_("key length in request too long: %d"), req.key_len);
 	      close (fd);
 	      continue;
 	    }
@@ -479,8 +484,9 @@ nscd_run (void *p)
 	      if (TEMP_FAILURE_RETRY (read (fd, keybuf, req.key_len))
 		  != req.key_len)
 		{
-		  dbg_log (_("short read while reading request key: %s"),
-			   strerror_r (errno, buf, sizeof (buf)));
+		  if (debug_level > 0)
+		    dbg_log (_("short read while reading request key: %s"),
+			     strerror_r (errno, buf, sizeof (buf)));
 		  close (fd);
 		  continue;
 		}

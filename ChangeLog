@@ -1,3 +1,11 @@
+2001-07-16  Ulrich Drepper  <drepper@redhat.com>
+
+	* nscd/connections.c: Print messages caused by user application
+	only if debug_level > 0.
+	* nscd/grpcache.c: Likewise.
+	* nscd/hstcache.c: Likewise.
+	* nscd/pwdcache.c: Likewise.
+
 2001-07-13  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/mips/dl-machine.h (MAP_BASE_ADDR): Removed.
