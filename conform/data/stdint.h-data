@@ -97,13 +97,18 @@ constant WCHAR_MAX >= 127
 constant WINT_MIN <= -127
 constant WINT_MAX >= 127
 
-allow INT8_C
-allow INT16_C
-allow INT32_C
-allow INT64_C
-allow UINT8_C
-allow UINT16_C
-allow UINT32_C
-allow UINT64_C
-allow INTMAX_C
-allow UINTMAX_C
+macro INT8_C
+macro INT16_C
+macro INT32_C
+macro INT64_C
+macro UINT8_C
+macro UINT16_C
+macro UINT32_C
+macro UINT64_C
+macro INTMAX_C
+macro UINTMAX_C
+
+// The following expressions are not entirely correct but the current
+// fnamtch implementation doesn't grok the right form.
+allow INT*
+allow UINT*

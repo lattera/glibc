@@ -9,6 +9,133 @@ type uint64_t
 type intptr_t
 type uintptr_t
 
+type imaxdiv_t
+element imaxdiv_t intmax_t rem
+element imaxdiv_t intmax_t quot
+
+function intmax_t imaxabs (intmax_t)
+function imaxdiv_t imaxdiv (intmax_t, intmax_t)
+function intmax_t strtoimax (const char*, char**, int)
+function uintmax_t strtoumax (const char*, char**, int)
+function intmax_t wcstoimax (const wchar_t*, wchar_t**, int)
+function uintmax_t wcstoumax (const wchar_t*, wchar_t**, int)
+
 allow PRI*
 allow SCN*
 allow *_t
+
+// Now the content of <stdint.h>.  Update this whenever <stdint.h> changed.
+type int8_t
+type int16_t
+type int32_t
+type int64_t
+type uint8_t
+type uint16_t
+type uint32_t
+type uint64_t
+
+type int_least8_t
+type int_least16_t
+type int_least32_t
+type int_least64_t
+type uint_least8_t
+type uint_least16_t
+type uint_least32_t
+type uint_least64_t
+
+type int_fast8_t
+type int_fast16_t
+type int_fast32_t
+type int_fast64_t
+type uint_fast8_t
+type uint_fast16_t
+type uint_fast32_t
+type uint_fast64_t
+
+type intptr_t
+type uintptr_t
+
+type intmax_t
+type uintmax_t
+
+constant INT8_MIN == -128
+constant INT8_MAX == 127
+constant INT16_MIN == -32768
+constant INT16_MAX == 32767
+constant INT32_MIN == -2147483647-1
+constant INT32_MAX == 2147483647
+constant INT64_MIN == -9223372036854775807LL-1
+constant INT64_MAX == 9223372036854775807LL
+
+constant UINT8_MAX == 255
+constant UINT16_MAX == 65535
+constant UINT32_MAX == 4294967295U
+constant UINT64_MAX == 18446744073709551615ULL
+
+constant INT_LEAST8_MIN <= -128
+constant INT_LEAST8_MAX >= 127
+constant INT_LEAST16_MIN <= -32768
+constant INT_LEAST16_MAX >= 32767
+constant INT_LEAST32_MIN <= -2147483647-1
+constant INT_LEAST32_MAX >= 2147483647
+constant INT_LEAST64_MIN <= -9223372036854775807LL-1
+constant INT_LEAST64_MAX >= 9223372036854775807LL
+
+constant UINT_LEAST8_MAX >= 255
+constant UINT_LEAST16_MAX >= 65535
+constant UINT_LEAST32_MAX >= 4294967295U
+constant UINT_LEAST64_MAX >= 18446744073709551615ULL
+
+constant INT_FAST8_MIN <= -128
+constant INT_FAST8_MAX >= 127
+constant INT_FAST16_MIN <= -32768
+constant INT_FAST16_MAX >= 32767
+constant INT_FAST32_MIN <= -2147483647-1
+constant INT_FAST32_MAX >= 2147483647
+constant INT_FAST64_MIN <= -9223372036854775807LL-1
+constant INT_FAST64_MAX >= 9223372036854775807LL
+
+constant UINT_FAST8_MAX >= 255
+constant UINT_FAST16_MAX >= 65535
+constant UINT_FAST32_MAX >= 4294967295U
+constant UINT_FAST64_MAX >= 18446744073709551615ULL
+
+constant INTPTR_MIN <= -32768
+constant INTPTR_MAX >= 32767
+
+constant UINTPTR_MAX >= 65535
+
+constant INTMAX_MIN <= -9223372036854775807LL-1
+constant INTMAX_MAX >= 9223372036854775807LL
+
+constant UINTMAX_MAX >= 18446744073709551615ULL
+
+constant PTRDIFF_MIN <= -65535
+constant PTRDIFF_MAX >= 65535
+
+constant SIG_ATOMIC_MIN <= -127
+constant SIG_ATOMIC_MAX >= 127
+
+constant SIZE_MAX >= 65535
+
+constant WCHAR_MIN <= -127
+constant WCHAR_MAX >= 127
+
+constant WINT_MIN <= -127
+constant WINT_MAX >= 127
+
+macro INT8_C
+macro INT16_C
+macro INT32_C
+macro INT64_C
+macro UINT8_C
+macro UINT16_C
+macro UINT32_C
+macro UINT64_C
+macro INTMAX_C
+macro UINTMAX_C
+
+// The following expressions are not entirely correct but the current
+// fnamtch implementation doesn't grok the right form.
+allow INT*
+allow UINT*
