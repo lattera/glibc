@@ -1,4 +1,20 @@
+Fri Mar  1 10:09:46 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* posix/glob.c: Use canonical code from autoconf manual for dirent
+ 	include.
+	[_D_NAMLEN]: Redefine NAMLEN using this.
+	(glob_in_dir): Use NAMLEN macro.
+
+	* sysdeps/posix/profil.c: New file.
+
+Thu Feb 29 20:55:57 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/sysv/linux/m68k/profil-counter.h: New file.
+
 Tue Feb 27 12:14:59 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* libc-symbols.h [GCC >= 2.8] (strong_alias, weak_alias): Remove
+	`extern' keyword.
 
 	* time/strftime.c: Support - and _ flags to affect number padding.
 
@@ -60,7 +76,7 @@ Sun Feb 25 12:29:23 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 	* config.h.in [_LIBC] (HAVE_STRERROR): Define it.
 	Protect 2nd page of #undef's for generator programs with #ifndef _LIBC.
 
-	* time/zic.c, time/zdump.c, time/private.h: Updated from ADO's latest.
+	* time/zic.c, time/zdump.c, time/private.h: Updated from ADO 96e.
 
 Fri Feb  9 12:40:19 1996  Brendan Kehoe  <brendan@lisa.cygnus.com>
 

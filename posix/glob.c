@@ -76,26 +76,30 @@ extern int errno;
 #endif
 
 
-#if	defined (POSIX) || defined (HAVE_DIRENT_H) || defined (__GNU_LIBRARY__)
-#include <dirent.h>
-#ifndef	__GNU_LIBRARY__
-#define D_NAMLEN(d) strlen((d)->d_name)
-#else	/* GNU C library.  */
-#define D_NAMLEN(d) ((d)->d_namlen)
-#endif	/* Not GNU C library.  */
-#else	/* Not POSIX or HAVE_DIRENT_H.  */
-#define direct dirent
-#define D_NAMLEN(d) ((d)->d_namlen)
-#ifdef	HAVE_SYS_NDIR_H
-#include <sys/ndir.h>
-#endif	/* HAVE_SYS_NDIR_H */
-#ifdef	HAVE_SYS_DIR_H
-#include <sys/dir.h>
-#endif	/* HAVE_SYS_DIR_H */
-#ifdef HAVE_NDIR_H
-#include <ndir.h>
-#endif	/* HAVE_NDIR_H */
-#endif	/* POSIX or HAVE_DIRENT_H or __GNU_LIBRARY__.  */
+#if defined (HAVE_DIRENT_H) || defined (__GNU_LIBRARY__)
+# include <dirent.h>
+# define NAMLEN(dirent) strlen((dirent)->d_name)
+#else
+# define dirent direct
+# define NAMLEN(dirent) (dirent)->d_namlen
+# ifdef HAVE_SYS_NDIR_H
+#  include <sys/ndir.h>
+# endif
+# ifdef HAVE_SYS_DIR_H
+#  include <sys/dir.h>
+# endif
+# ifdef HAVE_NDIR_H
+#  include <ndir.h>
+# endif
+#endif
+
+
+/* In GNU systems, <dirent.h> defines this macro for us.  */
+#ifdef _D_NAMLEN
+#undef NAMLEN
+#define NAMLEN(d) _D_NAMLEN(d)
+#endif
+
 
 #if defined (POSIX) && !defined (__GNU_LIBRARY__)
 /* Posix does not require that the d_ino field be present, and some
@@ -692,12 +696,8 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      break;
 	    if (! REAL_DIR_ENTRY (d))
 	      continue;
+
 	    name = d->d_name;
-#ifdef	HAVE_D_NAMLEN
-	    len = d->d_namlen;
-#else
-	    len = 0;
-#endif
 
 	    if (fnmatch (pattern, name,
 			 (!(flags & GLOB_PERIOD) ? FNM_PERIOD : 0) |
@@ -705,8 +705,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 	      {
 		struct globlink *new
 		  = (struct globlink *) __alloca (sizeof (struct globlink));
-		if (len == 0)
-		  len = strlen (name);
+		len = NAMLEN (d);
 		new->name
 		  = (char *) malloc (len + 1);
 		if (new->name == NULL)
