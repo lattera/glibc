@@ -179,35 +179,15 @@ write_corefile (int signo, long int sigcode, int sigerror)
 }
 
 
-/* Send a sig_post reply message if it hasn't already been sent.  */
-static inline void
-post_reply (mach_port_t *reply_port, mach_msg_type_name_t reply_port_type,
-	    int untraced,
-	    error_t result)
-{
-  error_t err;
-  if (reply_port == NULL || *reply_port == MACH_PORT_NULL)
-    return;
-  err = (untraced ? __msg_sig_post_untraced_reply : __msg_sig_post_reply)
-    (*reply_port, reply_port_type, result);
-  *reply_port = MACH_PORT_NULL;
-  if (err != MACH_SEND_INVALID_DEST) /* Ignore dead reply port.  */
-    assert_perror (err);
-}
-
-
 /* The lowest-numbered thread state flavor value is 1,
    so we use bit 0 in machine_thread_all_state.set to
    record whether we have done thread_abort.  */
 #define THREAD_ABORTED 1
 
-/* SS->thread is suspended.  Abort the thread and get its basic state.  If
-   REPLY_PORT is not NULL, send a reply on *REPLY_PORT after aborting the
-   thread.  */
+/* SS->thread is suspended.  Abort the thread and get its basic state.  */
 static void
 abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
-	      mach_port_t *reply_port, mach_msg_type_name_t reply_port_type,
-	      int untraced)
+	      void (*reply) (void))
 {
   if (!(state->set & THREAD_ABORTED))
     {
@@ -218,8 +198,8 @@ abort_thread (struct hurd_sigstate *ss, struct machine_thread_all_state *state,
       state->set = THREAD_ABORTED;
     }
 
-  if (reply_port)
-    post_reply (reply_port, reply_port_type, untraced, 0);
+  if (reply)
+    (*reply) ();
 
   machine_get_basic_state (ss->thread, state);
 }
@@ -274,9 +254,7 @@ interrupted_reply_port_location (struct machine_thread_all_state *thread_state,
 mach_port_t
 _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 		     struct machine_thread_all_state *state, int *state_change,
-		     mach_port_t *reply_port,
-		     mach_msg_type_name_t reply_port_type,
-		     int untraced)
+		     void (*reply) (void))
 {
   extern const void _hurd_intr_rpc_msg_in_trap;
   mach_port_t rcv_port = MACH_PORT_NULL;
@@ -291,7 +269,7 @@ _hurdsig_abort_rpcs (struct hurd_sigstate *ss, int signo, int sigthread,
 
   /* Abort the thread's kernel context, so any pending message send or
      receive completes immediately or aborts.  */
-  abort_thread (ss, state, reply_port, reply_port_type, untraced);
+  abort_thread (ss, state, reply);
 
   if (state->basic.PC < (natural_t) &_hurd_intr_rpc_msg_in_trap)
     {
@@ -396,7 +374,7 @@ abort_all_rpcs (int signo, struct machine_thread_all_state *state, int live)
 	   We will wait for all the replies below.  */
 	reply_ports[nthreads++] = _hurdsig_abort_rpcs (ss, signo, 1,
 						       state, &state_changed,
-						       NULL, 0, 0);
+						       NULL);
 	if (state_changed && live)
 	  /* Aborting the RPC needed to change this thread's state,
 	     and it might ever run again.  So write back its state.  */
@@ -452,9 +430,17 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
   int ss_suspended;
 
   /* Reply to this sig_post message.  */
-  inline void reply (void)
+  __typeof (__msg_sig_post_reply) *reply_rpc
+    = (untraced ? __msg_sig_post_untraced_reply : __msg_sig_post_reply);
+  void reply (void)
     {
-      post_reply (&reply_port, reply_port_type, untraced, 0);
+      error_t err;
+      if (reply_port == MACH_PORT_NULL)
+	return;
+      err = (*reply_rpc) (reply_port, reply_port_type, 0);
+      reply_port = MACH_PORT_NULL;
+      if (err != MACH_SEND_INVALID_DEST) /* Ignore dead reply port.  */
+	assert_perror (err);
     }
 
   /* Mark the signal as pending.  */
@@ -746,7 +732,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	   RPC is in progress, abort_rpcs will do this.  But we must always
 	   do it before fetching the thread's state, because
 	   thread_get_state is never kosher before thread_abort.  */
-	abort_thread (ss, &thread_state, NULL, 0, 0);
+	abort_thread (ss, &thread_state, NULL);
 
 	if (ss->context)
 	  {
@@ -793,7 +779,7 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	    wait_for_reply
 	      = (_hurdsig_abort_rpcs (ss, signo, 1,
 				      &thread_state, &state_changed,
-				      &reply_port, reply_port_type, untraced)
+				      &reply)
 		 != MACH_PORT_NULL);
 
 	    if (ss->critical_section)

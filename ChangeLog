@@ -1,3 +1,20 @@
+Tue Nov 21 14:12:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* malloc/malloc.c (align): Don't check contiguity and call abort.
+
+	* hurd/hurdsig.c (post_reply): Function removed.
+	(abort_thread, abort_all_rpcs, _hurdsig_abort_rpcs): Don't call it.
+	Take single callback fn arg instead of reply port and type.
+	(_hurd_internal_post_signal): Callers changed.
+	Cache reply stub fn ptr in local var before UNTRACED might be changed.
+
+	* sysdeps/mach/hurd/mmap.c: Cope with a null write memobj for
+	PROT_READ|PROT_WRITE copy mapping.  Pass a proper vm_inherit_t to
+	vm_map.
+
+	* elf/rtld.c (_dl_start): For --list, do output and exit before
+	relocating.
+
 Mon Nov 20 16:19:15 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* intl/Makefile [gettext-srcdir]: Rewrote copying rules to only

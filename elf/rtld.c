@@ -130,7 +130,6 @@ dl_main (const Elf32_Phdr *phdr,
       const char *interpreter_name;
       int lazy;
       int list_only = 0;
-      __typeof (_exit) *volatile exitfn;
 
       if (*user_entry == (Elf32_Addr) &_start)
 	{
@@ -294,12 +293,35 @@ of this helper program; chances are you did not intend to run this program.\n",
 	    rtld_map.l_next->l_prev = &rtld_map;
 	}
 
-      lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+      if (list_only)
+	{
+	  /* We were run just to list the shared libraries.  It is
+	     important that we do this before real relocation, because the
+	     functions we call below for output may no longer work properly
+	     after relocation.  */
 
-      /* Fetch this value now, before real relocation.  For --list, it will
-	 be called below, and the finally-linked version is not the right
-	 one.  */
-      exitfn = &_exit;
+	  if (! _dl_loaded->l_info[DT_NEEDED])
+	    {
+	      _dl_sysdep_message (_dl_loaded->l_name, ": statically linked\n",
+				  NULL);
+	      _exit (1);
+	    }
+
+	  for (l = _dl_loaded->l_next; l; l = l->l_next)
+	    {
+	      char buf[20], *bp;
+	      buf[sizeof buf - 1] = '\0';
+	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
+	      while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
+		*--bp = '0';
+	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
+				  " (0x", bp, ")\n", NULL);
+	    }
+
+	  _exit (0);
+	}
+
+      lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
       /* Do any necessary cleanups for the startup OS interface code.
 	 We do these now so that no calls are made after real relocation
@@ -323,29 +345,6 @@ of this helper program; chances are you did not intend to run this program.\n",
       dl_r_debug.r_ldbase = rtld_map.l_addr; /* Record our load address.  */
       dl_r_debug.r_map = _dl_loaded;
       dl_r_debug.r_brk = (Elf32_Addr) &_dl_r_debug_state;
-
-      if (list_only)
-	{
-	  if (! _dl_loaded->l_info[DT_NEEDED])
-	    {
-	      _dl_sysdep_message (_dl_loaded->l_name, ": statically linked\n",
-				  NULL);
-	      (*exitfn) (1);
-	    }
-
-	  for (l = _dl_loaded->l_next; l; l = l->l_next)
-	    {
-	      char buf[20], *bp;
-	      buf[sizeof buf - 1] = '\0';
-	      bp = _itoa (l->l_addr, &buf[sizeof buf - 1], 16, 0);
-	      while (&buf[sizeof buf - 1] - bp < sizeof l->l_addr * 2)
-		*--bp = '0';
-	      _dl_sysdep_message ("\t", l->l_libname, " => ", l->l_name,
-				  " (0x", bp, ")\n", NULL);
-	    }
-
-	  (*exitfn) (0);
-	}
 
       if (rtld_map.l_info[DT_INIT])
 	{

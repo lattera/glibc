@@ -66,16 +66,27 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 	  {
 	  case PROT_READ:
 	    memobj = robj;
-	    __mach_port_deallocate (__mach_task_self (), wobj);
+	    if (wobj != MACH_PORT_NULL)
+	      __mach_port_deallocate (__mach_task_self (), wobj);
 	    break;
 	  case PROT_WRITE:
 	    memobj = wobj;
-	    __mach_port_deallocate (__mach_task_self (), robj);
+	    if (robj != MACH_PORT_NULL)
+	      __mach_port_deallocate (__mach_task_self (), robj);
 	    break;
 	  case PROT_READ|PROT_WRITE:
-	    __mach_port_deallocate (__mach_task_self (), robj);
 	    if (robj == wobj)
-	      memobj = wobj;
+	      {
+		memobj = wobj;
+		/* Remove extra reference.  */
+		__mach_port_deallocate (__mach_task_self (), memobj);
+	      }
+	    else if (wobj == MACH_PORT_NULL && /* Not writable by mapping.  */
+		     (flags & (MAP_COPY|MAP_PRIVATE)))
+	      /* The file can only be mapped for reading.  Since we are
+		 making a private mapping, we will never try to write the
+		 object anyway, so we don't care.  */
+	      memobj = robj;
 	    else
 	      {
 		__mach_port_deallocate (__mach_task_self (), wobj);
@@ -96,7 +107,9 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 		  memobj, (vm_offset_t) offset,
 		  flags & (MAP_COPY|MAP_PRIVATE),
 		  vmprot, VM_PROT_ALL,
-		  flags & MAP_INHERIT);
+		  (flags & MAP_INHERIT) == 0 ? VM_INHERIT_NONE :
+		  (flags & (MAP_COPY|MAP_PRIVATE)) ? VM_INHERIT_COPY :
+		  VM_INHERIT_SHARE);
 
   if (memobj != MACH_PORT_NULL)
     __mach_port_deallocate (__mach_task_self (), memobj);
@@ -105,4 +118,4 @@ __mmap (caddr_t addr, size_t len, int prot, int flags, int fd, off_t offset)
 }
 
 weak_alias (__mmap, mmap)
-	
+
