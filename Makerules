@@ -610,7 +610,8 @@ cd $(@D); $(BUILD_CC) $(BUILD_CFLAGS) $(<:$(common-objpfx)%=%) -o $(@F)
 endef
 
 # We always want to use configuration definitions.
-BUILD_CFLAGS = -include $(common-objpfx)config.h
+# This is always used in $(common-objdir), so we use no directory name.
+BUILD_CFLAGS = -include config.h
 
 # Support the GNU standard name for this target.
 .PHONY: check

@@ -451,7 +451,7 @@ cat > conftest.s <<EOF
 ${libc_cv_asm_global_directive} foo
 foo: .long 0
 .weakext foo
-.weak bar, foo
+.weakext bar, foo
 EOF
   if ${CC-cc} $CFLAGS -c conftest.s 2>/dev/null; then
     libc_cv_asm_weakext_directive=yes
@@ -463,9 +463,9 @@ EOF
   fi # no .weak
 fi # not ELF
 
-if test $libc_cv_asm_weak_directive; then
+if test $libc_cv_asm_weak_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAK_DIRECTIVE)
-elif test $libc_cv_asm_weakext_directive; then
+elif test $libc_cv_asm_weakext_directive = yes; then
   AC_DEFINE(HAVE_ASM_WEAKEXT_DIRECTIVE)
 fi
 

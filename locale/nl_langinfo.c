@@ -1,5 +1,5 @@
 /* nl_langinfo -- User interface for extracting locale-dependent parameters.
-Copyright (C) 1995 Free Software Foundation, Inc.
+Copyright (C) 1995, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -62,5 +62,5 @@ nl_langinfo (item)
     }
 
   /* Return the string for the specified item.  */
-  return (char *) data->strings[index];
+  return (char *) data->values[index].string;
 }

@@ -1,3 +1,14 @@
+Thu Mar 28 03:00:43 1996  Roland McGrath  <roland@whiz-bang.gnu.ai.mit.edu>
+
+	* locale/nl_langinfo.c (nl_langinfo): Use DATA->values instead of
+	DATA->strings.
+
+	* Makerules (BUILD_CFLAGS): Remove $(common-objpfx) from config.h.
+
+	* configure.in (.weakext check): Fix asm code to use .weakext instead
+	of .weak!  Fix bogus test calls.
+	* configure: Regenerated.
+
 Thu Mar 28 03:25:10 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 	* locale/programs/xmalloc.c: Test _LIBC as well as STDC_HEADERS.
