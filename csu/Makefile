@@ -42,7 +42,8 @@ distribute = initfini.c gmon-start.c start.c defs.awk munch.awk \
 generated = version-info.h
 before-compile = $(objpfx)version-info.h
 
-tests := tst-atomic tst-atomic-long
+tests := tst-empty tst-atomic tst-atomic-long
+tests-static := tst-empty
 
 all: # Make this the default target; it will be defined in Rules.
 
