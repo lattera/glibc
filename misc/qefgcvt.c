@@ -1,5 +1,5 @@
 /* Compatibility functions for floating point formatting, long double version.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,6 +26,7 @@
    we don't have log10 available in the preprocessor.  Since we cannot
    assume anything on the used `long double' format be generous.  */
 #define MAXDIG (NDIGIT_MAX + 12)
+#define FCVT_MAXDIG (LDBL_MAX_10_EXP + MAXDIG)
 #if LDBL_MANT_DIG == 64
 # define NDIGIT_MAX 21
 #elif LDBL_MANT_DIG == 53

@@ -1,5 +1,5 @@
 /* dirname - return directory part of PATH.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -31,17 +31,20 @@ dirname (char *path)
   /* Find last '/'.  */
   last_slash = path != NULL ? strrchr (path, '/') : NULL;
 
-  if (last_slash == path)
-    /* The last slash is the first character in the string.  We have to
-       return "/".  */
-    ++last_slash;
-  else if (last_slash != NULL && last_slash[1] == '\0')
+  if (last_slash != NULL && last_slash != path && last_slash[1] == '\0')
     /* The '/' is the last character, we have to look further.  */
-    last_slash = memchr (path, last_slash - path, '/');
+    last_slash = __memrchr (path, '/', last_slash - path);
 
   if (last_slash != NULL)
-    /* Terminate the path.  */
-    last_slash[0] = '\0';
+    {
+      /* Terminate the path.  */
+      if (last_slash == path)
+	/* The last slash is the first character in the string.  We have to
+	   return "/".  */
+	++last_slash;
+
+      last_slash[0] = '\0';
+    }
   else
     /* This assignment is ill-designed but the XPG specs require to
        return a string containing "." in any case no directory part is

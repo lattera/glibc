@@ -31,6 +31,7 @@
 /* Actually we have to write (DBL_DIG + log10 (DBL_MAX_10_EXP)) but we
    don't have log10 available in the preprocessor.  */
 # define MAXDIG (NDIGIT_MAX + 3)
+# define FCVT_MAXDIG (DBL_MAX_10_EXP + MAXDIG)
 # if DBL_MANT_DIG == 53
 #  define NDIGIT_MAX 17
 # elif DBL_MANT_DIG == 24
@@ -50,22 +51,34 @@
 
 
 #define FCVT_BUFFER APPEND (FUNC_PREFIX, fcvt_buffer)
+#define FCVT_BUFPTR APPEND (FUNC_PREFIX, fcvt_bufptr)
 #define ECVT_BUFFER APPEND (FUNC_PREFIX, ecvt_buffer)
 
 
 static char FCVT_BUFFER[MAXDIG];
 static char ECVT_BUFFER[MAXDIG];
-
+static char *FCVT_BUFPTR;
 
 char *
 APPEND (FUNC_PREFIX, fcvt) (value, ndigit, decpt, sign)
      FLOAT_TYPE value;
      int ndigit, *decpt, *sign;
 {
-  (void) APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
-				       FCVT_BUFFER, MAXDIG);
+  if (FCVT_BUFPTR == NULL)
+    {
+      if (APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
+					FCVT_BUFFER, MAXDIG) != -1)
+	return FCVT_BUFFER;
 
-  return FCVT_BUFFER;
+      FCVT_BUFPTR = (char *) malloc (FCVT_MAXDIG);
+      if (FCVT_BUFPTR == NULL)
+	return FCVT_BUFFER;
+    }
+
+  (void) APPEND (FUNC_PREFIX, fcvt_r) (value, ndigit, decpt, sign,
+				       FCVT_BUFPTR, FCVT_MAXDIG);
+
+  return FCVT_BUFPTR;
 }
 
 
@@ -89,3 +102,13 @@ APPEND (FUNC_PREFIX, gcvt) (value, ndigit, buf)
   sprintf (buf, "%.*" FLOAT_FMT_FLAG "g", MIN (ndigit, NDIGIT_MAX), value);
   return buf;
 }
+
+/* Free all resources if necessary.  */
+static void __attribute__ ((unused))
+free_mem (void)
+{
+  if (FCVT_BUFPTR != NULL)
+    free (FCVT_BUFPTR);
+}                  
+
+text_set_element (__libc_subfreeres, free_mem);

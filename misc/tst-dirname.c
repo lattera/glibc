@@ -24,7 +24,7 @@
 #include <string.h>
 
 
-int
+static int
 test (const char *input, const char *result)
 {
   int retval;
@@ -45,11 +45,15 @@ main (void)
 
   /* These are the examples given in XPG4.2.  */
   result |= test ("/usr/lib", "/usr");
-  result |= test ("/usr", "/");
+  result |= test ("/usr/", "/");
   result |= test ("usr", ".");
   result |= test ("/", "/");
   result |= test (".", ".");
   result |= test ("..", ".");
+
+  /* Some more tests.   */
+  result |= test ("/usr/lib/", "/usr");
+  result |= test ("/usr", "/");
 
   return result != 0;
 }

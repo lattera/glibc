@@ -1,3 +1,23 @@
+2000-12-13  Jakub Jelinek  <jakub@redhat.com>
+
+	* misc/efgcvt.c (FCVT_MAXDIG): Define.
+	(FCVT_BUFPTR): New variable.
+	(fcvt): If fcvt_r returns -1 on the static short buffer,
+	try to malloc a sufficiently large one and retry.
+	(free_mem): New function.
+	* misc/qefgcvt.c (FCVT_MAXDIG): Define.
+	* misc/tst-efgcvt.c (fcvt_tests): Add new test.
+
+2000-12-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/dirname.c (dirname): Fix search for second to last slash.
+
+2000-12-13  Andreas Jaeger  <aj@suse.de>
+
+	* misc/tst-dirname.c (main): Fix typo in test to really use
+	the examples from Unix98.
+	Reported by Michael Kerrisk <mtk16@ext.canterbury.ac.nz>.
+
 2000-12-09  H.J. Lu  <hjl@gnu.org>
 
 	* sysdeps/ia64/fpu/s_fabs.S: New file.
