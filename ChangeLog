@@ -1,5 +1,12 @@
 2000-09-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/bits/time.h (CLOCKS_PER_SEC): Make a long int
+	constant since this is what clock_t is.
+	* sysdeps/unix/sysv/linux/alpha/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/ia64/bits/time.h: Likewise.
+	* sysdeps/unix/sysv/linux/s390/bits/time.h: Likewise.
+
 	* time/time.h: Don't defined clockid_t and timer_t unless POSIX
 	definitions are requested.
 

@@ -1,4 +1,4 @@
-/* System-dependent timing definitions.  Linux version.
+/* System-dependent timing definitions.  Linux/x86 version.
    Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -31,7 +31,7 @@
 /* CAE XSH, Issue 4, Version 2: <time.h>
    The value of CLOCKS_PER_SEC is required to be 1 million on all
    XSI-conformant systems. */
-#  define CLOCKS_PER_SEC  1000000
+#  define CLOCKS_PER_SEC  1000000l
 
 #  ifndef __STRICT_ANSI__
 /* Even though CLOCKS_PER_SEC has such a strange value CLK_TCK
