@@ -5,7 +5,7 @@
 	Actually use state parameter to distingusih at least a few states.
 
 	* td_thr_get_info.c: Handle manager thread special.  Fill in ti_lid,
-	ti_state fields, and ti_startfunc fields.
+	ti_state, and ti_startfunc fields.
 
 1999-10-12  Andreas Jaeger  <aj@suse.de>
 

@@ -1,12 +1,3 @@
-1999-10-13  Ulrich Drepper  <drepper@cygnus.com>
-
-	* td_ta_thr_iter.c: Use size of descriptor from *TA.
-	Don't return manager thread before it's actually running.
-	Actually use state parameter to distingusih at least a few states.
-
-	* td_thr_get_info.c: Handle manager thread special.  Fill in ti_lid,
-	ti_state fields, and ti_startfunc fields.
-
 1999-10-12  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/i386/sys/ucontext.h: Don't define
