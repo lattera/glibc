@@ -264,7 +264,6 @@ dl_main (const ElfW(Phdr) *phdr,
   size_t file_size;
   char *file;
   int has_interp = 0;
-  const char *library_path = NULL; /* Overwrites LD_LIBRARY_PATH if given.  */
 
   /* Test whether we want to see the content of the auxiliary array passed
      up from the kernel.  */
@@ -323,6 +322,9 @@ dl_main (const ElfW(Phdr) *phdr,
 	 ourselves).  This is an easy way to test a new ld.so before
 	 installing it.  */
 
+      /* Overwrites LD_LIBRARY_PATH if given.  */
+      const char *library_path = NULL;
+
       /* Note the place where the dynamic linker actually came from.  */
       _dl_rtld_map.l_name = _dl_argv[0];
 
@@ -378,6 +380,10 @@ of this helper program; chances are you did not intend to run this program.\n",
       --_dl_argc;
       ++_dl_argv;
 
+      /* Initialize the data structures for the search paths for shared
+	 objects.  */
+      _dl_init_paths (library_path);
+
       if (mode == verify)
 	{
 	  char *err_str = NULL;
@@ -412,12 +418,20 @@ of this helper program; chances are you did not intend to run this program.\n",
       main_map->l_phnum = phent;
       main_map->l_entry = *user_entry;
       main_map->l_opencount = 1;
+
+      /* Initialize the data structures for the search paths for shared
+	 objects.  */
+      _dl_init_paths (NULL);
     }
 
   /* Scan the program header table for the dynamic section.  */
   for (ph = phdr; ph < &phdr[phent]; ++ph)
     switch (ph->p_type)
       {
+      case PT_PHDR:
+	/* Find out the load address.  */
+	main_map->l_addr = (ElfW(Addr)) phdr - ph->p_vaddr;
+	break;
       case PT_DYNAMIC:
 	/* This tells us where to find the dynamic section,
 	   which tells us everything we need to do.  */
@@ -491,10 +505,6 @@ of this helper program; chances are you did not intend to run this program.\n",
      be used when security is enabled.  */
   preloads = NULL;
   npreloads = 0;
-
-  /* Initialize the data structures for the search paths for shared
-     objects.  */
-  _dl_init_paths (library_path);
 
   preloadlist = getenv ("LD_PRELOAD");
   if (preloadlist)

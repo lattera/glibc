@@ -1,4 +1,45 @@
-Wed Feb 18 10:28:58 1998  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-load.c (add_name_to_object): Don't translate strings.
+	* elf/dl-minimal.c (_strerror_internal): Define it here to avoid
+	pulling in the whole error list.
+	(__dcgettext, dcgettext): Removed.
+	* libc.map: Export _strerror_internal.
+
+1998-02-18 10:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/i386/fpu/t_exp.c: New file.
+
+1998-02-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* nis/libnss_nisplus.map: NIS+ support is new in glibc 2.1, add
+	everything with version GLIBC_2.1.
+	* hesiod/libnss_hesiod.map: Likewise.
+
+1998-02-18  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* manual/arith.texi (Old-style number conversion): This node is a
+	section, not a subsection.
+
+1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/dl-lookup.c (make_string): Use __stpcpy instead of stpcpy.
+
+1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (dl_main): Make sure that the library search paths
+	have been initialized before the first call to _dl_map_object.
+
+1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (common-generated): Add libc_pic.os.
+
+1998-02-17  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* elf/rtld.c (dl_main): Use PT_PHDR to figure out the load address
+	of the executable.
+
+1998-02-18 10:28  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
 	* sysdeps/m68k/fpu/t_exp.c: New file.
 

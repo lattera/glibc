@@ -24,6 +24,7 @@
 #include <string.h>
 #include <link.h>
 #include <stdio-common/_itoa.h>
+#include <errno.h>
 
 /* Minimal `malloc' allocator for use while loading shared libraries.
    Only small blocks are allocated, and none are ever freed.  */
@@ -123,15 +124,47 @@ longjmp (jmp_buf env, int val)
   __longjmp (env[0].__jmpbuf, val);
 }
 
-/* Define our own stub for the localization function used by strerror.
-   English-only in the dynamic linker keeps it smaller.  */
+/* Define our own version of the internal function used by strerror.  We
+   only provide the messages for some common errors.  This avoids pulling
+   in the whole error list.  */
 
 char * weak_function
-__dcgettext (const char *domainname, const char *msgid, int category)
+_strerror_internal (int errnum, char *buf, size_t buflen)
 {
-  return (char *) msgid;
+  char *msg;
+
+  switch (errnum)
+    {
+    case ENOMEM:
+      msg = (char *) "Cannot allocate memory";
+      break;
+    case EINVAL:
+      msg = (char *) "Invalid argument";
+      break;
+    case ENOENT:
+      msg = (char *) "No such file or directory";
+      break;
+    case EPERM:
+      msg = (char *) "Operation not permitted";
+      break;
+    case EIO:
+      msg = (char *) "Input/output error";
+      break;
+    case EACCES:
+      msg = (char *) "Permission denied";
+      break;
+    default:
+      /* No need to check buffer size, all calls in the dynamic linker
+	 provide enough space.  */
+      buf[buflen - 1] = '\0';
+      msg = _itoa_word (errnum, buf + buflen - 1, 10, 0);
+      msg = memcpy (msg - (sizeof ("Error ") - 1), "Error ",
+		    sizeof ("Error ") - 1);
+      break;
+    }
+
+  return msg;
 }
-weak_alias (__dcgettext, dcgettext)
 
 #ifndef NDEBUG
 

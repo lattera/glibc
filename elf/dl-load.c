@@ -123,11 +123,11 @@ add_name_to_object (struct link_map *l, char *name)
   struct libname_list *newname;
 
   if (name == NULL)
-  {
-    /* No more memory.  */
-    _dl_signal_error (ENOMEM, NULL, _("could not allocate name string"));
-    return 0;
-  }
+    {
+      /* No more memory.  */
+      _dl_signal_error (ENOMEM, NULL, "could not allocate name string");
+      return 0;
+    }
 
   lastp = NULL;
   for (lnp = l->l_libname; lnp != NULL; lastp = lnp, lnp = lnp->next)
@@ -139,12 +139,12 @@ add_name_to_object (struct link_map *l, char *name)
 
   newname = malloc (sizeof *newname);
   if (newname == NULL)
-  {
-    /* No more memory.  */
-    _dl_signal_error (ENOMEM, name, _("cannot allocate name record"));
-    free(name);
-    return 0;
-  }
+    {
+      /* No more memory.  */
+      _dl_signal_error (ENOMEM, name, "cannot allocate name record");
+      free (name);
+      return 0;
+    }
   /* The object should have a libname set from _dl_new_object.  */
   assert (lastp != NULL);
 

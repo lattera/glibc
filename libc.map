@@ -100,7 +100,7 @@ GLIBC_2.0 {
     __vsscanf; __vfscanf; __vsnprintf;
     _rpc_dtablesize; _null_auth; _seterr_reply;
     __res_randomid; __syscall_rt_sigqueueinfo; __getpid; __pread64; __pwrite64;
-    __strcasecmp; __write;
+    __strcasecmp; __write; _strerror_internal;
 
     # Exception handling support functions from libgcc
     __register_frame; __register_frame_table; __deregister_frame;

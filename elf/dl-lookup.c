@@ -1,5 +1,5 @@
 /* Look up a symbol in the loaded objects.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -51,7 +51,7 @@ struct sym_val
 									      \
     cp = result = alloca (len);						      \
     for (cnt = 0; cnt < sizeof (all) / sizeof (all[0]); ++cnt)		      \
-      cp = stpcpy (cp, all[cnt]);					      \
+      cp = __stpcpy (cp, all[cnt]);					      \
 									      \
     result;								      \
   })

@@ -1328,7 +1328,7 @@ is provided mostly for compatibility with existing code; using
 
 
 @node Old-style number conversion
-@subsection Old-style way of converting numbers to strings
+@section Old-style way of converting numbers to strings
 
 The @w{System V} library provided three functions to convert numbers to
 strings which have a unusual and hard-to-be-used semantic.  The GNU C

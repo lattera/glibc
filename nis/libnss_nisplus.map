@@ -1,4 +1,4 @@
-GLIBC_2.0 {
+GLIBC_2.1 {
   global:
     _nss_nisplus_endaliasent; _nss_nisplus_endetherent; _nss_nisplus_endgrent;
     _nss_nisplus_endhostent; _nss_nisplus_endnetent; _nss_nisplus_endnetgrent;
