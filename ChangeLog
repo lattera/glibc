@@ -1,3 +1,7 @@
+2000-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconv/gconv_builtin.h: Add WCHAR_T alias.
+
 2000-07-25  Mark Kettenis  <kettenis@gnu.org>
 
 	* hurd/thread-cancel.c (hurd_thread_cancel): When cancelling the
