@@ -1,3 +1,14 @@
+2003-03-26  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/make-syscalls.sh: When an undefined syscall has
+	SOURCE=-, append its symbol names to make variable unix-stub-syscalls.
+	* sysdeps/unix/Makefile [$(subdir) = misc] [unix-stub-syscalls]
+	(sysdep_routines): Add stub-syscalls.
+	($(objpfx)stub-syscalls.c): New target.
+	(generated): Add stub-syscalls.c.
+
+	* tls.make.c: Also define use-tls according to USE_TLS macro.
+
 2003-03-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* abilist/librt.abilist: Add new timer interfaces for 64-bit archs.
