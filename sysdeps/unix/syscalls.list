@@ -57,7 +57,7 @@ sync		-	sync		i:	sync
 sys_fstat	fxstat	fstat		i:ip	__syscall_fstat
 sys_mknod	xmknod	mknod		i:sii	__syscall_mknod
 sys_stat	xstat	stat		i:sp	__syscall_stat
-umask		-	umask		i:i	__umask		umask
+umask		-	umask		Ei:i	__umask		umask
 uname		-	uname		i:p	__uname		uname
 unlink		-	unlink		i:s	__unlink	unlink
 utimes		-	utimes		i:sp	__utimes	utimes
