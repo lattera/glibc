@@ -1,3 +1,7 @@
+1999-02-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/elf.h: Add 32bit HPPA definitions.
+
 1999-02-23  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* malloc/malloc.c (mALLOC_SET_STATe): Handle the case where a

@@ -1,5 +1,5 @@
 /* This file defines standard ELF types, structures, and macros.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ian Lance Taylor <ian@cygnus.com>.
 
@@ -1323,6 +1323,18 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* HPPA specific definitions.  */
 
+/* Legal values for e_flags field of Elf32_Ehdr.  */
+
+#define EF_PARISC_TRAPNL	1	/* Trap nil pointer dereference.  */
+#define EF_PARISC_EXT		2	/* Program uses arch. extensions.  */
+#define EF_PARISC_ARCH		0xffff0000 /* Architecture version.  */
+/* Defined values are:
+				0x020b	PA-RISC 1.0 big-endian
+				0x0210	PA-RISC 1.1 big-endian
+				0x028b	PA-RISC 1.0 little-endian
+				0x0290	PA-RISC 1.1 little-endian
+*/
+
 /* Legal values for sh_type field of Elf32_Shdr.  */
 
 #define SHT_PARISC_GOT		0x70000000 /* GOT for external data.  */
@@ -1338,12 +1350,39 @@ typedef Elf32_Addr Elf32_Conflict;
 
 /* Legal values for sh_flags field of Elf32_Shdr.  */
 
+#define SHF_PARISC_GLOBAL	0x10000000 /* Section defines dp.  */
 #define SHF_PARISC_SHORT	0x20000000 /* Section with short addressing. */
 
 /* Legal values for ST_TYPE subfield of st_info (symbol type).  */
 
 #define STT_PARISC_MILLICODE	13	/* Millicode function entry point.  */
 
+/* HPPA relocs.  */
+
+#define R_PARISC_NONE		0	/* No reloc.  */
+#define R_PARISC_DIR32		1	/* Direct 32-bit reference.  */
+#define R_PARISC_DIR21L		2	/* Left 21 bits of eff. address.  */
+#define R_PARISC_DIR17R		3	/* Right 17 bits of eff. address.  */
+#define R_PARISC_DIR14R		4	/* Right 14 bits of eff. address.  */
+#define R_PARISC_PCREL21L	5	/* PC-relative, left 21 bits.  */
+#define R_PARISC_PCREL14R	6	/* PC-relative, right 14 bits.  */
+#define R_PARISC_PCREL17C	7	/* Conditional PC-relative, ignore
+					   if displacement > 17bits.  */
+#define R_PARISC_PCREL17F	8	/* Conditional PC-relative, must
+					   fit in 17bits.  */
+#define R_PARISC_DPREL21L	9	/* DP-relative, left 21 bits.  */
+#define R_PARISC_DPREL14R	10	/* DP-relative, right 14 bits.  */
+#define R_PARISC_DPREL14F	11	/* DP-relative, must bit in 14 bits. */
+#define R_PARISC_DLTREL21L	12	/* DLT-relative, left 21 bits.  */
+#define R_PARISC_DLTREL14R	13	/* DLT-relative, right 14 bits.  */
+#define R_PARISC_DLTREL14F	14	/* DLT-relative, must fit in 14 bits.*/
+#define R_PARISC_DLTIND21L	15	/* DLT-relative indirect, left
+					   21 bits.  */
+#define R_PARISC_DLTIND14R	16	/* DLT-relative indirect, right
+					   14 bits.  */
+#define R_PARISC_DLTIND14F	17	/* DLT-relative indirect, must fit
+					   int 14 bits.  */
+#define R_PARISC_PLABEL32	18	/* Direct 32-bit reference to proc.  */
 
 /* Alpha specific definitions.  */
 
