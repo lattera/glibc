@@ -57,7 +57,7 @@ __get_myaddress (struct sockaddr_in *addr)
 {
   struct ifaddrs *ifa;
 
-  if (getifaddrs (&ifa) == 0)
+  if (getifaddrs (&ifa) != 0)
     {
       perror ("get_myaddress: getifaddrs");
       exit (1);
