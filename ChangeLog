@@ -1,3 +1,7 @@
+1997-04-21 07:50  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* libgen.h: New file.
+
 1997-04-21 16:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* stdlib/drand48.c: Cleanup namespace.
