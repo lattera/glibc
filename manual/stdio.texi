@@ -3265,8 +3265,8 @@ from a matching error.
 If you are trying to read input that doesn't match a single, fixed
 pattern, you may be better off using a tool such as Flex to generate a
 lexical scanner, or Bison to generate a parser, rather than using
-@code{scanf}.  For more information about these tools, see @ref{, , ,
-flex.info, Flex: The Lexical Scanner Generator}, and @ref{, , ,
+@code{scanf}.  For more information about these tools, see @ref{Top, , ,
+flex.info, Flex: The Lexical Scanner Generator}, and @ref{Top, , ,
 bison.info, The Bison Reference Manual}.
 
 @node Input Conversion Syntax
