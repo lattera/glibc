@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2001, 2002, 2004 Free Software Foundation, Inc.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,13 +72,13 @@
 LEAF(setjmp)
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=1
-	br.cond.sptk.many __sigsetjmp
+	br.cond.sptk.many _GI___sigsetjmp
 END(setjmp)
 
 LEAF(_setjmp)
 	alloc r8=ar.pfs,2,0,0,0
 	mov in1=0
-	br.cond.sptk.many __sigsetjmp
+	br.cond.sptk.many _GI___sigsetjmp
 END(_setjmp)
 libc_hidden_def (_setjmp)
 
@@ -177,6 +177,7 @@ ENTRY(__sigsetjmp)
 	mov r8=0
 	ret
 END(__sigsetjmp)
+strong_alias(__sigsetjmp, _GI___sigsetjmp)
 
 weak_extern(_setjmp)
 weak_extern(setjmp)

@@ -2,7 +2,7 @@
 
 // Copyright (C) 2000, 2001, Intel Corporation
 // All rights reserved.
-// 
+//
 // Contributed 2/2/2000 by John Harrison, Ted Kubaska, Bob Norin, Shane Story,
 // and Ping Tak Peter Tang of the Computational Software Lab, Intel Corporation.
 //
@@ -21,20 +21,20 @@
 // products derived from this software without specific prior written
 // permission.
 //
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS 
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT 
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS 
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL INTEL OR ITS
 // CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
-// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, 
-// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR 
-// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY 
+// EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+// PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+// PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY OR TORT (INCLUDING
-// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
-// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
-// 
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+// SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
 // Intel Corporation is the author of this code, and requests that all
-// problem reports or change requests be submitted to it directly at 
+// problem reports or change requests be submitted to it directly at
 // http://developer.intel.com/opensource.
 //
 // History
@@ -63,7 +63,7 @@
 // Registers used
 //==============================================================
 //
-// general registers: 
+// general registers:
 // r14  exponent bias for x negative
 // r15  exponent bias for x positive
 // r16  signexp of x
@@ -96,7 +96,7 @@
 .proc  __libm_frexp_4l#
 .align 32
 
-__libm_frexp_4l: 
+__libm_frexp_4l:
 
 // Set signexp for significand result for x>0
 // If x is a NaN, zero, or infinity, return it.
@@ -113,7 +113,7 @@ __libm_frexp_4l:
 // The normalization also sets fault flags and takes faults if necessary
 { .mfi
 (p0)    mov         r20 = 0x1003f
-(p0)    fnorm       f9 = f8 
+(p0)    fnorm       f9 = f8
         nop.i 999 ;;
 }
 
@@ -157,12 +157,12 @@ __libm_frexp_4l:
 }
 
 // true exponent stored to int pointer
-// the bias is treated as 0xfffe instead of 
+// the bias is treated as 0xfffe instead of
 // normal 0xffff because we want the significand
 // to be in the range <=0.5 sig < 1.0
 // Store the value of the exponent at the pointer in r34
 
-// If x>0 form significand result 
+// If x>0 form significand result
 { .mfi
         nop.m 999
 (p8)    fmerge.se   f8 = f10,f9
@@ -170,7 +170,7 @@ __libm_frexp_4l:
 }
 
 // Get signexp of normalized x
-// If x<0 form significand result 
+// If x<0 form significand result
 { .mfi
 (p0)    getf.exp    r16 = f9
 (p7)    fmerge.se   f8 = f11,f9
@@ -195,3 +195,4 @@ __libm_frexp_4l:
 
 .endp __libm_frexp_4l
 ASM_SIZE_DIRECTIVE(__libm_frexp_4l)
+strong_alias(__libm_frexp_4l, _GI___libm_frexp_4l)

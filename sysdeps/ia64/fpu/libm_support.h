@@ -53,10 +53,13 @@
 #include <math.h>
 
 float __libm_frexp_4f( float x, int*  exp);
+float _GI___libm_frexp_4f( float x, int*  exp);
 float __libm_frexp_8f( float x, int*  exp);
 double __libm_frexp_4( double x, int*  exp);
+double _GI___libm_frexp_4( double x, int*  exp);
 double __libm_frexp_8( double x, int*  exp);
 long double __libm_frexp_4l( long double x, int*  exp);
+long double _GI___libm_frexp_4l( long double x, int*  exp);
 long double __libm_frexp_8l( long double x, int*  exp);
 void __libm_sincos_pi4(double,double*,double*,int);
 void __libm_y0y1(double , double *, double *);

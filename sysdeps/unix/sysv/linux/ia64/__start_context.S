@@ -1,4 +1,4 @@
-/* Copyright (C) 2001 Free Software Foundation, Inc.
+/* Copyright (C) 2001, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by David Mosberger-Tang <davidm@hpl.hp.com>.
 
@@ -46,7 +46,7 @@ ENTRY(__start_context)
 (p6)	br.call.sptk rp = __setcontext
 .Lexit:
 	mov out0 = 0
-	br.call.sptk rp = exit
+	br.call.sptk rp = HIDDEN_JUMPTARGET(exit)
 
 1:	br.cond.sptk .Lexit
 END(__start_context)

@@ -1,3 +1,24 @@
+2004-04-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/setjmp.S: Define _GI___sigsetjmp
+	and use it internally instead of __sigsetjmp.
+	* sysdeps/ia64/fpu/s_frexpf.c (frexpf): Use _GI___libm_frexp_4f.
+	* sysdeps/ia64/fpu/s_frexpl.c (frexpl): Use _GI___libm_frexp_4l.
+	* sysdeps/ia64/fpu/libm_frexp4.S: Define _GI___libm_frexp_4.
+	* sysdeps/ia64/fpu/libm_frexp4f.S: Define _GI___libm_frexp_4f.
+	* sysdeps/ia64/fpu/libm_frexp4l.S: Define _GI___libm_frexp_4l.
+	* sysdeps/ia64/fpu/s_frexp.c (frexp): Use _GI___libm_frexp_4.
+	* sysdeps/ia64/fpu/libm_support.h: Declare _GI___libm_frexp_4,
+	_GI___libm_frexp_4f, _GI___libm_frexp_4l.
+	* sysdeps/ia64/fpu/bits/mathinline.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/__start_context.S: Use
+	HIDDEN_JUMPTARGET for exit call.
+	* sysdeps/unix/sysv/linux/ia64/clone2.S: Use HIDDEN_JUMPTARGET for
+	_exit call.
+	* sysdeps/ia64/bcopy.S: Use HIDDEN_JUMPTARGET for memmove call.
+	* sysdeps/ia64/strcat.S: Use HIDDEN_JUMPTARGET for strlen and
+	strcpy calls.
+
 2004-04-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* posix/tst-chmod.c (do_test): Fix a typo.

@@ -1,4 +1,4 @@
-/* Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -72,8 +72,9 @@ ENTRY(__clone2)
 	br.call.dptk.many rp=b6	/* Call fn(arg) in the child 	*/
 	;;
 	mov out0=r8		/* Argument to _exit		*/
-	.globl _exit
-	br.call.dpnt.many rp=_exit /* call _exit with result from fn.	*/
+	.globl HIDDEN_JUMPTARGET(_exit)
+	br.call.dpnt.many rp=HIDDEN_JUMPTARGET(_exit)
+				/* call _exit with result from fn.	*/
 	ret			/* Not reached.		*/
 PSEUDO_END(__clone2)
 
