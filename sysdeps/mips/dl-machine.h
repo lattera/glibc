@@ -37,13 +37,13 @@
 #define OFFSET_GP_GOT 0x7ff0
 
 #ifndef _RTLD_PROLOGUE
-# define _RTLD_PROLOGUE(entry) "\n\t.globl " #entry \
-			       "\n\t.ent " #entry \
-			       "\n\t" #entry ":\n\t"
+# define _RTLD_PROLOGUE(entry) "\n\t.globl " __STRING(entry)	\
+			       "\n\t.ent " __STRING(entry)	\
+			       "\n\t" __STRING(entry) ":\n\t"
 #endif
 
 #ifndef _RTLD_EPILOGUE
-# define _RTLD_EPILOGUE(entry) "\t.end " #entry "\n"
+# define _RTLD_EPILOGUE(entry) "\t.end " __STRING(entry) "\n"
 #endif
 
 /* A reloc type used for ld.so cmdline arg lookups to reject PLT entries.
