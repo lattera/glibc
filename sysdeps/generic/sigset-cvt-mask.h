@@ -1,6 +1,6 @@
 /* Convert between lowlevel sigmask and libc representation of sigset_t.
    Generic version.
-   Copyright (C) 1998 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Joe Keane <jgk@jgk.org>.
 
@@ -19,6 +19,46 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#define sigset_set_old_mask(set, mask) (*(set) = (unsigned long int) (mask))
+/* Convert between an old-style 32-bit signal mask and a POSIX sigset_t.  */
 
-#define sigset_get_old_mask(set, mask) ((mask) = (unsigned int) *(set))
+/* Perform *SET = MASK.  Unused bits of *SET are set to 0.
+   Returns zero for success or -1 for errors (from sigaddset/sigemptyset).  */
+static inline int __attribute__ ((unused))
+sigset_set_old_mask (sigset_t *set, int mask)
+{
+  if (sizeof (__sigset_t) == sizeof (unsigned int))
+    *set = (unsigned int) (mask);
+  else
+    {
+      register unsigned int __sig;
+
+      if (__sigemptyset (set) < 0)
+	return -1;
+
+      for (__sig = 1; __sig < NSIG && __sig <= sizeof (mask) * 8; __sig++)
+	if (mask & sigmask (__sig))
+	  if (__sigaddset (set, __sig) < 0)
+	    return -1;
+    }
+  return 0;
+}
+
+/* Return the sigmask corresponding to *SET.
+   Unused bits of *SET are thrown away.  */
+static inline int __attribute__ ((unused))
+sigset_get_old_mask (const sigset_t *set)
+{
+  if (sizeof (sigset_t) == sizeof (unsigned int))
+    return (unsigned int) *set;
+  else
+    {
+      unsigned int mask = 0;
+      register unsigned int sig;
+
+      for (sig = 1; sig < NSIG && sig <= sizeof (mask) * 8; sig++)
+	if (__sigismember (set, sig))
+	  mask |= sigmask (sig);
+
+      return mask;
+    }
+}

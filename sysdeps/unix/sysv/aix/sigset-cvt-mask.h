@@ -1,6 +1,6 @@
 /* Convert between lowlevel sigmask and libc representation of sigset_t.
    AIX version.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998,2000,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -19,10 +19,7 @@
    02111-1307 USA.  */
 
 #define sigset_set_old_mask(set, mask) \
-  do {									      \
-    (set)->__losigs = (unsigned int) mask;				      \
-    (set)->__hisigs = 0;    						      \
-  } while (0)
+  ((set)->__losigs = (unsigned int) (mask), (set)->__hisigs = 0, 0)
 
 #define sigset_get_old_mask(set, mask) \
-  ((mask) = (unsigned int) (set)->__losigs)
+  ((unsigned int) (set)->__losigs)

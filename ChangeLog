@@ -1,5 +1,28 @@
 2002-08-26  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/sigset-cvt-mask.h (sigset_set_old_mask): Replace
+	macro with inline function.
+	(sigset_get_old_mask): Likewise.
+	* sysdeps/posix/sigblock.c (__sigblock): Update callers.
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Likewise.
+	* sysdeps/posix/sigpause.c (__sigpause): Likewise.
+	* sysdeps/posix/sigvec.c (__sigvec, sigvec_wrapper_handler): Likewise.
+	* sysdeps/unix/sysv/aix/sigset-cvt-mask.h
+	(sigset_set_old_mask, sigset_get_old_mask): Make these macros return
+	values.
+	* sysdeps/unix/sysv/linux/sigset-cvt-mask.h: Likewise.
+	* sysdeps/unix/sysv/sysv4/sigset-cvt-mask.h: Likewise.
+
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/generic/sigset-cvt-mask.h (sigset_set_old_mask,
+	sigset_get_old_mask): Make it work with larger sigset_t.
+	* sysdeps/posix/sigblock.c (__sigblock): Use those macros.
+	* sysdeps/posix/sigsetmask.c (__sigsetmask): Likewise.
+	* sysdeps/posix/sigpause.c (__sigpause): Likewise.
+
+2002-08-26  Roland McGrath  <roland@redhat.com>
+
 	* time/sys/time.h [__USE_BSD] (lutimes, futimes): Declare them.
 	* manual/filesys.texi (File Times): Document lutimes and futimes.
 	* misc/Makefile (routines): Add them.

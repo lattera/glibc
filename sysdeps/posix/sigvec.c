@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,7 +21,7 @@
 #include <stddef.h>
 
 /* Include macros to convert between `sigset_t' and old-style mask. */
-#include "sigset-cvt-mask.h"
+#include <sigset-cvt-mask.h>
 
 /* We use a wrapper handler to support SV_RESETHAND.  */
 struct sigvec_wrapper_data
@@ -80,7 +80,8 @@ __sigvec (sig, vec, ovec)
 #endif
 	  n = &new;
 	  new.sa_handler = handler;
-	  sigset_set_old_mask (&new.sa_mask, mask);
+	  if (sigset_set_old_mask (&new.sa_mask, mask) < 0)
+	    return -1;
 	  new.sa_flags = sa_flags;
 	}
 
@@ -122,7 +123,7 @@ __sigvec (sig, vec, ovec)
 	  /* should we use data->sw_mask?? */
 	  sv_flags |= SV_RESETHAND;
 	}
-      sigset_get_old_mask (&old.sa_mask, mask);
+      mask = sigset_get_old_mask (&old.sa_mask);
 #ifdef SA_ONSTACK
      if (sa_flags & SA_ONSTACK)
 	sv_flags |= SV_ONSTACK;
@@ -147,19 +148,18 @@ sigvec_wrapper_handler (sig)
      int sig;
 {
   struct sigvec_wrapper_data *data;
-  unsigned int mask;
   struct sigaction act;
   int save;
   __sighandler_t handler;
 
   data = &sigvec_wrapper_data[sig];
-  mask = data->sw_mask;
   act.sa_handler = SIG_DFL;
-  sigset_set_old_mask (&act.sa_mask, mask);
   act.sa_flags = 0;
-  save = errno;
+  sigset_set_old_mask (&act.sa_mask, data->sw_mask);
   handler = data->sw_handler;
+  save = errno;
   (void) __sigaction (sig, &act, (struct sigaction *) NULL);
   __set_errno (save);
+
   (*handler) (sig);
 }
