@@ -1,1 +1,3 @@
 setjmp_aux.c
+rtld-ldscript.in
+rtld-parms
