@@ -1,3 +1,9 @@
+1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_thr_get_info.c: Make sure ti_lid is never zero.
+
+	* proc_service.h: Add ps_getpid prototype.
+
 1999-11-03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* thread_dbP.h (ta_ok): New function.

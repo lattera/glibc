@@ -398,6 +398,7 @@ int __pthread_initialize_manager(void)
   }
   __pthread_manager_request = manager_pipe[1]; /* writing end */
   __pthread_manager_reader = manager_pipe[0]; /* reading end */
+  __pthread_manager_thread.p_tid = 2* PTHREAD_THREADS_MAX + 1;
   __pthread_manager_thread.p_pid = pid;
   /* Make gdb aware of new thread manager */
   if (__pthread_threads_debug && __pthread_sig_debug > 0)

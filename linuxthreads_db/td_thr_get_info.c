@@ -64,7 +64,7 @@ td_thr_get_info (const td_thrhandle_t *th, td_thrinfo_t *infop)
     }
 
   /* Initialization which are the same in both cases.  */
-  infop->ti_lid = pds.p_pid;
+  infop->ti_lid = pds.p_pid ?: ps_getpid (th->th_ta_p->ph);
   infop->ti_ta_p = th->th_ta_p;
   infop->ti_startfunc = pds.p_start_args.start_routine;
   memcpy (&infop->ti_events, &pds.p_eventbuf.eventmask,

@@ -1,3 +1,8 @@
+1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
+
+	* pthread.c (__pthread_initialize_manager): Initialize
+	__pthread_manager_thread.p_tid.
+
 1999-11-02  Ulrich Drepper  <drepper@cygnus.com>
 
 	* internals.h: Declare __pthread_last_event.
