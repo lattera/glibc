@@ -1,3 +1,10 @@
+1998-08-07  Geoff Keating  <geoffk@ozemail.com.au>
+
+	* sysdeps/powerpc/bits/setjmp.h: Use word to save condition
+	registers.
+	* sysdeps/powerpc/setjmp.S: Save condition registers.
+	* sysdeps/powerpc/__longjmp.S: Restore condition registers.
+
 1998-08-09 09:40  Ulrich Drepper  <drepper@cygnus.com>
 
 	* nss/nss_files/files-XXX.c (internal_getent): In case of an read
