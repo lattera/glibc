@@ -23,7 +23,7 @@
 #include "double.h"
 
 double
-_Ots_ConvertFloatXT (long al, long ah, long _round)
+_OtsConvertFloatXT (long al, long ah, long _round)
 {
   FP_DECL_EX;
   FP_DECL_Q(A);
