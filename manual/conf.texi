@@ -1442,6 +1442,13 @@ guaranteed to support.
 
 @comment limits.h
 @comment POSIX.2
+@deftypevr Macro int BC_DIM_MAX
+The largest number of elements in one array that the @code{bc} utility
+is guaranteed to support.
+@end deftypevr
+
+@comment limits.h
+@comment POSIX.2
 @deftypevr Macro int BC_SCALE_MAX
 The largest value of @code{scale} that the @code{bc} utility is
 guaranteed to support.
@@ -1449,23 +1456,9 @@ guaranteed to support.
 
 @comment limits.h
 @comment POSIX.2
-@deftypevr Macro int BC_DIM_MAX
-The largest number of elements in one array that the @code{bc} utility
-is guaranteed to support.
-@end deftypevr
-
-@comment limits.h
-@comment POSIX.2
 @deftypevr Macro int BC_STRING_MAX
 The largest number of characters in one string constant that the
 @code{bc} utility is guaranteed to support.
-@end deftypevr
-
-@comment limits.h
-@comment POSIX.2
-@deftypevr Macro int BC_DIM_MAX
-The largest number of elements in one array that the @code{bc} utility
-is guaranteed to support.
 @end deftypevr
 
 @comment limits.h

@@ -1,3 +1,8 @@
+1999-04-19  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/conf.texi (Utility Limits): Remove duplicate description
+	of BC_DIM_MAX.
+
 1999-04-19  Ulrich Drepper  <drepper@cygnus.com>
 
 	* wcsmbs/mbsnrtowcs.c (__mbsnrtowcs): Correctly initialize
