@@ -1051,7 +1051,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 		  numsize += size;
 		  if (cy == 0)
 		    --numsize;
-		  SWAP (psrc, pdest);
+		  (void) SWAP (psrc, pdest);
 		}
 	      expbit <<= 1;
 	      ++ttab;
@@ -1214,7 +1214,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
 		densize += ttab->arraysize - _FPIO_CONST_OFFSET;
 		if (cy == 0)
 		  --densize;
-		SWAP (psrc, pdest);
+		(void) SWAP (psrc, pdest);
 	      }
 	  }
 	expbit <<= 1;
