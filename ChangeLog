@@ -1,5 +1,8 @@
 2004-03-14  Ulrich Drepper  <drepper@redhat.com>
 
+	* wcsmbs/mbsrtowcs.c: Just a wrapper around __mbsrtowcs_l.
+	* wcsmbs/mbsrtowcs_l.c (__mbsrtowcs_l): Add real implementation here.
+
 	Make the non-_l functions wrappers around the _l functions.
 	* include/monetary.h: Declare __vstrmon_l.
 	* include/string.h: Add libc_hidden_proto for __strcoll_l and
