@@ -27,15 +27,12 @@
 int
 sigsuspend (const sigset_t *set)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigsuspend, 2, set, _NSIG / 8);
 #else
-  result = __sigsuspend (set);
+  int result = __sigsuspend (set);
 #endif
 
   CANCEL_RESET (oldtype);

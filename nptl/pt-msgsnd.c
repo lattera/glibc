@@ -28,16 +28,13 @@
 int
 msgsnd (int msqid, const void *msgp, size_t msgsz, int msgflg)
 {
-  int result;
-  int oldtype;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-#ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
-			   msgflg, (void *) msgp);
+#if defined INLINE_SYSCALL && defined __NR_ipc
+  int result = INLINE_SYSCALL (ipc, 5, IPCOP_msgsnd, msqid, msgsz,
+			       msgflg, (void *) msgp);
 #else
-  result = __libc_msgsnd (msqid, msgp, msgsz, msgflg);
+  int result = __libc_msgsnd (msqid, msgp, msgsz, msgflg);
 #endif
 
   CANCEL_RESET (oldtype);

@@ -1,5 +1,8 @@
 2002-12-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* scripts/output-format.sed: Fix bug in one of the s expressions
+	which used / for one too many things.
+
 	* include/unistd.h: Declare __libc_close.
 
 2002-12-07  Ulrich Drepper  <drepper@redhat.com>

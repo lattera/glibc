@@ -190,12 +190,12 @@ libpthread {
   }
 
   # XXX Adjust number for final release.
-  GLIBC_2.3.1 {
+  GLIBC_2.3.2 {
     # Proposed API extensions.
     pthread_tryjoin_np; pthread_timedjoin_np;
 
     creat; poll; pselect; readv; select; sigpause; sigsuspend; sigwait;
-    sigwaitinfo; waitid; writev;
+    sigwaitinfo; waitid; writev;  __xpg_sigpause;
   }
 
   GLIBC_PRIVATE {

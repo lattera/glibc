@@ -27,15 +27,12 @@
 int
 __nanosleep (const struct timespec *requested_time, struct timespec *remaining)
 {
-  int oldtype;
-  int result;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (nanosleep, 2, requested_time, remaining);
+  int result = INLINE_SYSCALL (nanosleep, 2, requested_time, remaining);
 #else
-  result = __libc_nanosleep (requested_time, remaining);
+  int result = __libc_nanosleep (requested_time, remaining);
 #endif
 
   CANCEL_RESET (oldtype);

@@ -27,12 +27,9 @@
 off64_t
 lseek64 (int fd, off64_t offset, int whence)
 {
-  int oldtype;
-  off64_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_lseek64 (fd, offset, whence);
+  off64_t result = __libc_lseek64 (fd, offset, whence);
 
   CANCEL_RESET (oldtype);
 

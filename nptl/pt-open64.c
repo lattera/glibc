@@ -29,20 +29,18 @@
 int
 __open64 (const char *pathname, int flags, ...)
 {
-  int oldtype;
-  int result;
   va_list ap;
 
   va_start (ap, flags);
 
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #if defined INLINE_SYSCALL && defined O_LARGEFILE
-  result = INLINE_SYSCALL (open, 3, pathname, flags | O_LARGEFILE,
-			   va_arg (ap, __typeof ((mode_t) 0 + 0)));
+  int result = INLINE_SYSCALL (open, 3, pathname, flags | O_LARGEFILE,
+			       va_arg (ap, __typeof ((mode_t) 0 + 0)));
 #else
-  result = __libc_open64 (pathname, flags,
-			  va_arg (ap, __typeof ((mode_t) 0 + 0)));
+  int result = __libc_open64 (pathname, flags,
+			      va_arg (ap, __typeof ((mode_t) 0 + 0)));
 #endif
 
   CANCEL_RESET (oldtype);

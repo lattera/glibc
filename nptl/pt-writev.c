@@ -26,7 +26,8 @@
 
 /* Not all versions of the kernel support the large number of records.  */
 #ifndef UIO_FASTIOV
-# define UIO_FASTIOV	8	/* 8 is a safe number.  */
+/* 1024 is what the kernels with NPTL support use.  */
+# define UIO_FASTIOV	1024
 #endif
 
 
@@ -36,21 +37,29 @@ writev (fd, vector, count)
      const struct iovec *vector;
      int count;
 {
-  int oldtype;
+  int oldtype = CANCEL_ASYNC ();
+
   ssize_t result;
-
-  CANCEL_ASYNC (oldtype);
-
 #ifdef INTERNAL_SYSCALL
   result = INTERNAL_SYSCALL (writev, 3, fd, vector, count);
-  if (INTERNAL_SYSCALL_ERROR_P (result)
-      && __builtin_expect (count > UIO_FASTIOV, 0))
-#elif defined INLINE_SYSCALL
+  if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (result), 0))
+    {
+      if (count <= UIO_FASTIOV)
+	{
+	  __set_errno (INTERNAL_SYSCALL_ERRNO (result));
+	  result = -1;
+	}
+      else
+	result = __libc_writev (fd, vector, count);
+    }
+#else
+# if defined INLINE_SYSCALL
   result = INLINE_SYSCALL (writev, 3, fd, vector, count);
   if (result < 0 && errno == EINVAL
       && __builtin_expect (count > UIO_FASTIOV, 0))
-#endif
+# endif
     result = __libc_writev (fd, vector, count);
+#endif
 
   CANCEL_RESET (oldtype);
 

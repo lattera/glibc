@@ -27,12 +27,9 @@
 ssize_t
 recv (int fd, __ptr_t buf, size_t n, int flags)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_recv (fd, buf, n, flags);
+  ssize_t result = __libc_recv (fd, buf, n, flags);
 
   CANCEL_RESET (oldtype);
 

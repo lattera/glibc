@@ -28,12 +28,10 @@ int
 pselect (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	 const struct timespec *timeout, const sigset_t *sigmask)
 {
-  int result;
-  int oldtype;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __pselect (nfds, readfds, writefds, exceptfds, timeout, sigmask);
+  int result = __pselect (nfds, readfds, writefds, exceptfds, timeout,
+			  sigmask);
 
   CANCEL_RESET (oldtype);
 

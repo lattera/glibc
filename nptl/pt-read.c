@@ -27,15 +27,12 @@
 ssize_t
 __read (int fd, void *buf, size_t count)
 {
-  int oldtype;
-  ssize_t result;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (read, 3, fd, buf, count);
+  ssize_t result = INLINE_SYSCALL (read, 3, fd, buf, count);
 #else
-  result = __libc_read (fd, buf, count);
+  ssize_t result = __libc_read (fd, buf, count);
 #endif
 
   CANCEL_RESET (oldtype);

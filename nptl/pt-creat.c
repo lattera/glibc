@@ -28,15 +28,12 @@
 int
 creat (const char *pathname, mode_t mode)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #if defined INLINE_SYSCALL && defined __NR_creat
-  result = INLINE_SYSCALL (creat, 2, pathname, mode);
+  int result = INLINE_SYSCALL (creat, 2, pathname, mode);
 #else
-  result = __libc_open (pathname, O_WRONLY|O_CREAT|O_TRUNC, mode);
+  int result = __libc_open (pathname, O_WRONLY|O_CREAT|O_TRUNC, mode);
 #endif
 
   CANCEL_RESET (oldtype);

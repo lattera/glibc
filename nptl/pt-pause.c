@@ -27,12 +27,9 @@
 int
 pause (void)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_pause ();
+  int result = __libc_pause ();
 
   CANCEL_RESET (oldtype);
 

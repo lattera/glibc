@@ -27,15 +27,12 @@
 int
 fsync (int fd)
 {
-  int oldtype;
-  int result;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (fsync, 1, fd);
+  int result = INLINE_SYSCALL (fsync, 1, fd);
 #else
-  result = __libc_fsync (fd);
+  int result = __libc_fsync (fd);
 #endif
 
   CANCEL_RESET (oldtype);

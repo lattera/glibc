@@ -28,12 +28,9 @@ ssize_t
 recvfrom (int fd, __ptr_t buf, size_t n, int flags, __SOCKADDR_ARG addr,
 	  socklen_t *addr_len)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_recvfrom (fd, buf, n, flags, addr, addr_len);
+  ssize_t result = __libc_recvfrom (fd, buf, n, flags, addr, addr_len);
 
   CANCEL_RESET (oldtype);
 

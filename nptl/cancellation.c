@@ -20,6 +20,7 @@
 #include <setjmp.h>
 #include <stdlib.h>
 #include "pthreadP.h"
+#include "atomic.h"
 
 
 /* This function is responsible for calling all registered cleanup
@@ -88,5 +89,66 @@ __cleanup_thread (struct pthread *self, char *currentframe)
 	  if (FRAME_LEFT (last, cleanups))
 	    break;
 	}
+    }
+}
+
+
+/* The next two functions are similar to pthread_setcanceltype() but
+   more specialized for the use in the cancelable functions like write().
+   They do not need to check parameters etc.  */
+int
+attribute_hidden
+__pthread_enable_asynccancel (void)
+{
+  struct pthread *self = THREAD_SELF;
+  int oldval;
+
+  while (1)
+    {
+      oldval = THREAD_GETMEM (self, cancelhandling);
+      int newval = oldval | CANCELTYPE_BITMASK;
+
+      if (newval == oldval)
+	break;
+
+      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
+					   oldval) == 0)
+	{
+	  if (CANCEL_ENABLED_AND_CANCELED_AND_ASYNCHRONOUS (newval))
+	    {
+	      THREAD_SETMEM (self, result, PTHREAD_CANCELED);
+	      __do_cancel (CURRENT_STACK_FRAME);
+	    }
+
+	  break;
+	}
+    }
+
+  return oldval;
+}
+
+
+void
+attribute_hidden
+__pthread_disable_asynccancel (int oldtype)
+{
+  /* If asynchronous cancellation was enabled before we do not have
+     anything to do.  */
+  if (oldtype & CANCELTYPE_BITMASK)
+    return;
+
+  struct pthread *self = THREAD_SELF;
+
+  while (1)
+    {
+      int oldval = THREAD_GETMEM (self, cancelhandling);
+      int newval = oldval & ~CANCELTYPE_BITMASK;
+
+      if (newval == oldval)
+	break;
+
+      if (atomic_compare_and_exchange_acq (&self->cancelhandling, newval,
+					   oldval) == 0)
+	break;
     }
 }

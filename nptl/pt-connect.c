@@ -27,12 +27,9 @@
 int
 __connect (int fd, __CONST_SOCKADDR_ARG addr, socklen_t addr_len)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_connect (fd, addr, addr_len);
+  int result = __libc_connect (fd, addr, addr_len);
 
   CANCEL_RESET (oldtype);
 

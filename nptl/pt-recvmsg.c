@@ -27,12 +27,9 @@
 ssize_t
 recvmsg (int fd, struct msghdr *message, int flags)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_recvmsg (fd, message, flags);
+  ssize_t result = __libc_recvmsg (fd, message, flags);
 
   CANCEL_RESET (oldtype);
 

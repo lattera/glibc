@@ -30,18 +30,17 @@ int
 __fcntl (int fd, int cmd, ...)
 {
   int oldtype;
-  int result;
   va_list ap;
 
   if (cmd == F_SETLKW)
-    CANCEL_ASYNC (oldtype);
+    oldtype = CANCEL_ASYNC ();
 
   va_start (ap, cmd);
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (fcntl, 3, fd, cmd, va_arg (ap, long int));
+  int result = INLINE_SYSCALL (fcntl, 3, fd, cmd, va_arg (ap, long int));
 #else
-  result = __libc_fcntl (fd, cmd, va_arg (ap, long int));
+  int result = __libc_fcntl (fd, cmd, va_arg (ap, long int));
 #endif
 
   va_end (ap);

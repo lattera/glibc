@@ -27,15 +27,12 @@
 int
 poll (struct pollfd *fds, nfds_t nfds, int timeout)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype =CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
+  int result = INLINE_SYSCALL (poll, 3, fds, nfds, timeout);
 #else
-  result = __poll (fds, nfds, timeout);
+  int result = __poll (fds, nfds, timeout);
 #endif
 
   CANCEL_RESET (oldtype);

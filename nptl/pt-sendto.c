@@ -28,12 +28,9 @@ ssize_t
 sendto (int fd, const __ptr_t buf, size_t n, int flags,
 	__CONST_SOCKADDR_ARG addr, socklen_t addr_len)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_sendto (fd, buf, n, flags, addr, addr_len);
+  ssize_t result = __libc_sendto (fd, buf, n, flags, addr, addr_len);
 
   CANCEL_RESET (oldtype);
 

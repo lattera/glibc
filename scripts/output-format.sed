@@ -18,7 +18,7 @@ G
 s/\n//
 s/^\([^,]*\),\([^,]*\),B/OUTPUT_FORMAT(\1)/p
 s/^\([^,]*\),\([^,]*\),L/OUTPUT_FORMAT(\2)/p
-/,/s/^/*** BUG in libc/scripts/output-format.sed *** /p
+/,/s|^|*** BUG in libc/scripts/output-format.sed *** |p
 q
 : q
 s/"//g

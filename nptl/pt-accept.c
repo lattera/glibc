@@ -27,12 +27,9 @@
 int
 accept (int fd, __SOCKADDR_ARG addr, socklen_t *addr_len)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_accept (fd, addr, addr_len);
+  int result = __libc_accept (fd, addr, addr_len);
 
   CANCEL_RESET (oldtype);
 

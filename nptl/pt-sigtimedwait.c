@@ -28,15 +28,13 @@ int
 sigtimedwait (const sigset_t *set, siginfo_t *info,
 	      const struct timespec *timeout)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, timeout, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, timeout,
+			       _NSIG / 8);
 #else
-  result = __sigtimedwait (set, info, timeout);
+  int result = __sigtimedwait (set, info, timeout);
 #endif
 
   CANCEL_RESET (oldtype);

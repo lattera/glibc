@@ -1,3 +1,58 @@
+2002-12-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthreadP.h: Declare __pthread_enable_asynccancel and
+	__pthread_disable_asynccancel.
+	(CANCEL_ASYNC): Use __pthread_enable_asynccancel.
+	(CANCEL_RESET): Use __pthread_disable_asynccancel.
+	* cancellation.c (__pthread_enable_asynccancel): New function.
+	(__pthread_disable_asynccancel): New function.
+	* pt-accept.c: Adjust for CANCEL_ASYNC and CANCEL_RESET change.
+	* pt-close.c: Likewise.
+	* pt-connect.c: Likewise.
+	* pt-creat.c: Likewise.
+	* pt-fcntl.c: Likewise.
+	* pt-fsync.c: Likewise.
+	* pt-lseek.c: Likewise.
+	* pt-lseek64.c: Likewise.
+	* pt-msgrcv.c: Likewise.
+	* pt-msgsnd.c: Likewise.
+	* pt-msync.c: Likewise.
+	* pt-nanosleep.c: Likewise.
+	* pt-open.c: Likewise.
+	* pt-open64.c: Likewise.
+	* pt-pause.c: Likewise.
+	* pt-poll.c: Likewise.
+	* pt-pread.c: Likewise.
+	* pt-pread64.c: Likewise.
+	* pt-pselect.c: Likewise.
+	* pt-pwrite.c: Likewise.
+	* pt-pwrite64.c: Likewise.
+	* pt-read.c: Likewise.
+	* pt-readv.c: Likewise.
+	* pt-recv.c: Likewise.
+	* pt-recvfrom.c: Likewise.
+	* pt-recvmsg.c: Likewise.
+	* pt-select.c: Likewise.
+	* pt-send.c: Likewise.
+	* pt-sendmsg.c: Likewise.
+	* pt-sendto.c: Likewise.
+	* pt-sigpause.c: Likewise.
+	* pt-sigsuspend.c: Likewise.
+	* pt-sigtimedwait.c: Likewise.
+	* pt-sigwait.c: Likewise.
+	* pt-sigwaitinfo.c: Likewise.
+	* pt-system.c: Likewise.
+	* pt-tcdrain.c: Likewise.
+	* pt-wait.c: Likewise.
+	* pt-waitid.c: Likewise.
+	* pt-waitpid.c: Likewise.
+	* pt-write.c: Likewise.
+	* pt-writev.c: Likewise.
+
+	* pt-sigpause.c (sigsuspend): Call __sigsuspend.
+	(__xpg_sigpause): New function.
+	* Versions (libpthread:GLIBC_2.3.2): Add __xpg_sigpause.
+
 2002-12-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (CFLAGS-ftrylockfile.c): Add -D_IO_MTSAFE_IO.

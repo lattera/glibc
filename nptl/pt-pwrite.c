@@ -27,12 +27,9 @@
 ssize_t
 pwrite (int fd, const void *buf, size_t count, off_t offset)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_pwrite (fd, buf, count, offset);
+  ssize_t result = __libc_pwrite (fd, buf, count, offset);
 
   CANCEL_RESET (oldtype);
 

@@ -27,15 +27,12 @@
 int
 sigwaitinfo (const sigset_t *set, siginfo_t *info)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, NULL, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, info, NULL, _NSIG / 8);
 #else
-  result = __sigwaitinfo (set, info);
+  int result = __sigwaitinfo (set, info);
 #endif
 
   CANCEL_RESET (oldtype);

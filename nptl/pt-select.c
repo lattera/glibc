@@ -28,16 +28,13 @@ int
 select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 	struct timeval *timeout)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #if defined INLINE_SYSCALL && defined __NR__newselect
-  result = INLINE_SYSCALL (_newselect, 5, nfds, readfds, writefds, exceptfds,
-			   timeout);
+  int result = INLINE_SYSCALL (_newselect, 5, nfds, readfds, writefds,
+			       exceptfds, timeout);
 #else
-  result = __select (nfds, readfds, writefds, exceptfds, timeout);
+  int result = __select (nfds, readfds, writefds, exceptfds, timeout);
 #endif
 
   CANCEL_RESET (oldtype);

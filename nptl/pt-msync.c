@@ -27,15 +27,12 @@
 int
 msync (void *addr, size_t length, int flags)
 {
-  int oldtype;
-  int result;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (msync, 3, addr, length, flags);
+  int result = INLINE_SYSCALL (msync, 3, addr, length, flags);
 #else
-  result = __libc_msync (addr, length, flags);
+  int result = __libc_msync (addr, length, flags);
 #endif
 
   CANCEL_RESET (oldtype);

@@ -27,15 +27,12 @@
 off_t
 __lseek (int fd, off_t offset, int whence)
 {
-  int oldtype;
-  off_t result;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INLINE_SYSCALL
-  result = INLINE_SYSCALL (lseek, 3, fd, offset, whence);
+  off_t result = INLINE_SYSCALL (lseek, 3, fd, offset, whence);
 #else
-  result = __libc_lseek (fd, offset, whence);
+  off_t result = __libc_lseek (fd, offset, whence);
 #endif
 
   CANCEL_RESET (oldtype);

@@ -27,13 +27,11 @@
 int
 sigwait (const sigset_t *set, int *sig)
 {
-  int result;
-  int oldtype;
-
-  CANCEL_ASYNC (oldtype);
+  int oldtype = CANCEL_ASYNC ();
 
 #ifdef INTERNAL_SYSCALL
-  result = INTERNAL_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL, _NSIG / 8);
+  int result = INTERNAL_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL,
+				 _NSIG / 8);
   if (! INTERNAL_SYSCALL_ERROR_P (result))
     {
       *sig = result;
@@ -42,7 +40,7 @@ sigwait (const sigset_t *set, int *sig)
   else
     result = INTERNAL_SYSCALL_ERRNO (result);
 #elif defined INLINE_SYSCALL
-  result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL, _NSIG / 8);
+  int result = INLINE_SYSCALL (rt_sigtimedwait, 4, set, NULL, NULL, _NSIG / 8);
   if (result != -1)
     {
       *sig = result;
@@ -51,7 +49,7 @@ sigwait (const sigset_t *set, int *sig)
   else
     result = errno;
 #else
-  result = __sigwait (set, sig);
+  int result = __sigwait (set, sig);
 #endif
 
   CANCEL_RESET (oldtype);

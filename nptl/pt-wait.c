@@ -27,12 +27,9 @@
 pid_t
 __wait (__WAIT_STATUS_DEFN stat_loc)
 {
-  int oldtype;
-  pid_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_wait (stat_loc);
+  pid_t result = __libc_wait (stat_loc);
 
   CANCEL_RESET (oldtype);
 

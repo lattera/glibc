@@ -27,12 +27,9 @@
 ssize_t
 pread (int fd, void *buf, size_t count, off_t offset)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_pread (fd, buf, count, offset);
+  ssize_t result = __libc_pread (fd, buf, count, offset);
 
   CANCEL_RESET (oldtype);
 

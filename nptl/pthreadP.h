@@ -79,11 +79,11 @@ extern int __pthread_debug attribute_hidden;
   } while (0)
 
 /* Set cancellation mode to asynchronous.  */
-#define CANCEL_ASYNC(oldtype) \
-  __pthread_setcanceltype (PTHREAD_CANCEL_ASYNCHRONOUS, &oldtype)
+#define CANCEL_ASYNC() \
+  __pthread_enable_asynccancel ()
 /* Reset to previous cancellation mode.  */
 #define CANCEL_RESET(oldtype) \
-  __pthread_setcanceltype (oldtype, NULL)
+  __pthread_disable_asynccancel (oldtype)
 
 /* Function performing the cancellation.  */
 extern void __do_cancel (char *currentframe)
@@ -187,6 +187,8 @@ extern int __pthread_atfork (void (*prepare) (void), void (*parent) (void),
 			     void (*child) (void));
 extern int __pthread_kill (pthread_t threadid, int signo);
 extern int __pthread_setcanceltype (int type, int *oldtype);
+extern int __pthread_enable_asynccancel (void) attribute_hidden;
+extern void __pthread_disable_asynccancel (int oldtype) attribute_hidden;
 
 /* Special versions which use non-exported functions.  */
 extern void _GI_pthread_cleanup_push (struct _pthread_cleanup_buffer *buffer,

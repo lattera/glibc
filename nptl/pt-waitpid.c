@@ -27,12 +27,9 @@
 pid_t
 waitpid (pid_t pid, int *stat_loc, int options)
 {
-  int oldtype;
-  pid_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_waitpid (pid, stat_loc, options);
+  pid_t result = __libc_waitpid (pid, stat_loc, options);
 
   CANCEL_RESET (oldtype);
 

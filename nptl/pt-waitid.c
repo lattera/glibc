@@ -27,12 +27,9 @@
 int
 waitid (idtype_t idtype, id_t id, siginfo_t *infop, int options)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __waitid (idtype, id, infop, options);
+  int result = __waitid (idtype, id, infop, options);
 
   CANCEL_RESET (oldtype);
 

@@ -28,12 +28,22 @@
 int
 sigpause (int mask)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
+  int result = __sigpause (mask, 0);
 
-  result = sigpause (mask);
+  CANCEL_RESET (oldtype);
+
+  return result;
+}
+
+
+int
+__xpg_sigpause (int sig)
+{
+  int oldtype = CANCEL_ASYNC ();
+
+  int result = __sigpause (sig, 1);
 
   CANCEL_RESET (oldtype);
 

@@ -27,12 +27,9 @@
 int
 tcdrain (int fd)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_tcdrain (fd);
+  int result = __libc_tcdrain (fd);
 
   CANCEL_RESET (oldtype);
 

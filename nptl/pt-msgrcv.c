@@ -27,12 +27,9 @@
 int
 msgrcv (int msqid, void *msgp, size_t msgsz, long int msgtyp, int msgflg)
 {
-  int oldtype;
-  int result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg);
+  int result = __libc_msgrcv (msqid, msgp, msgsz, msgtyp, msgflg);
 
   CANCEL_RESET (oldtype);
 

@@ -27,12 +27,9 @@
 ssize_t
 sendmsg (int fd, const struct msghdr *message, int flags)
 {
-  int oldtype;
-  ssize_t result;
+  int oldtype = CANCEL_ASYNC ();
 
-  CANCEL_ASYNC (oldtype);
-
-  result = __libc_sendmsg (fd, message, flags);
+  ssize_t result = __libc_sendmsg (fd, message, flags);
 
   CANCEL_RESET (oldtype);
 
