@@ -1,3 +1,7 @@
+2001-02-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/i386/elf/start.S (_fp_hw): Actually define label.
+
 2001-02-22  Andreas Jaeger  <aj@suse.de>
 
 	* string/tst-strtok.c (main): Fix error messages.
@@ -21,7 +25,7 @@
 
 	* sysdeps/generic/ftime.c: Include <time.h>.
 
-	* configure.in: Don't check for libgd if user set --without-gd.
+	* configure.in: Don't check for libgd if user passed --without-gd.
 	Patch by Achim Gottinger <achim@gentoo.org>.
 
 	* sysdeps/i386/i686/strtok.S: Continue to return NULL after the
