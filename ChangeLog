@@ -1,3 +1,9 @@
+2002-09-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sigwait.c (__sigwait): The return value
+	semantics for sigtimedwait is different.  Rework the return value
+	handling and don't pass in an siginfo variable.
+
 2002-09-29  Roland McGrath  <roland@redhat.com>
 
 	* malloc/malloc.c [! MALLOC_DEBUG] (assert): #undef before defining.
