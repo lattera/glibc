@@ -27,7 +27,7 @@
 #include <elf/dynamic-link.h>
 #include <dl-machine.h>
 #ifdef _LIBC_REENTRANT
-# include <pt-machine.h>
+# include <ia64intrin.h>
 # include <signal.h>
 # include <time.h>
 #endif
@@ -73,7 +73,7 @@ local =
   if (!__sigismember (&(l)->full_sigset, SIGINT))		\
     __sigfillset (&(l)->full_sigset);				\
 								\
-  while (testandset ((int *) &(l)->lock))			\
+  while (__sync_lock_test_and_set (&(l)->lock, 1))		\
     {								\
       struct timespec ts;					\
       if (i > 0)						\
@@ -88,7 +88,7 @@ local =
   __sigprocmask (SIG_BLOCK, &(l)->full_sigset, &_saved_set);
 # define unlock(l)						\
   __sigprocmask (SIG_SETMASK, &_saved_set, NULL);		\
-  (l)->lock = 0;						\
+  __sync_lock_release (&(l)->lock);				\
 }
 #else
 # define lock(l)

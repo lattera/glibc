@@ -1,3 +1,11 @@
+2002-11-12  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/ia64/dl-fptr.c [_LIBC_REENTRANT]: Include <ia64intrin.h>
+	instead of <pt-machine.h>.
+	[_LIBC_REENTRANT] (lock, unlock): Use __sync_lock_* macros instead of
+	testandset.
+	From Ian Wienand <ianw@gelato.unsw.edu.au>.
+
 2002-11-10  Roland McGrath  <roland@redhat.com>
 
 	* libio/bug-wfflush.c (do_test): Call rewind instead of fsetpos.
