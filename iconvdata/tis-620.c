@@ -1,7 +1,7 @@
-/* Conversion from and to ASMO_449.
-   Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Conversion from and to TIS-620.
+   Copyright (C) 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1999.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -21,9 +21,9 @@
 #include <stdint.h>
 
 /* Get the conversion table.  */
-#define TABLES <asmo_449.h>
+#define TABLES <tis-620.h>
 
-#define CHARSET_NAME	"ASMO_449//"
+#define CHARSET_NAME	"TIS-620//"
 #define HAS_HOLES	1	/* Not all 256 character are defined.  */
 
 #include <8bit-gap.c>

@@ -1,3 +1,8 @@
+1999-04-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* charmaps/TIS-620: New file.
+	Contributed by Theppitak Karoonboonyanan <thep@links.nectec.or.th>.
+
 1999-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
 	* locales/en_ZA: New file.  Contributed by nic@sig.co.za.

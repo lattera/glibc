@@ -1129,3 +1129,12 @@ module	INTERNAL		WIN-SAMI-2//		SAMI-WS2	1
 #	from			to			module		cost
 module	ISO-IR-197//		INTERNAL		ISO-IR-197	1
 module	INTERNAL		ISO-IR-197//		ISO-IR-197	1
+
+#	from			to			module		cost
+alias	TIS620//		TIS-620//
+alias	TIS620-0//		TIS-620//
+alias	TIS620.2529-1//		TIS-620//
+alias	TIS620.2533-0//		TIS-620//
+alias	ISO-IR-166//		TIS-620//
+module	TIS-620//		INTERNAL		TIS-620		1
+module	INTERNAL		TIS-620//		TIS-620		1

@@ -1,3 +1,13 @@
+1999-04-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconvdata/Makefile (modules): Add TIS-620.
+	(distribute): Add tis-620.c.
+	(gen-8bit-gap-modules): tis-620.
+	* iconvdata/tis-620.c: New file.
+	* iconvdata/gconv-modules: Add TIS-620 entries.
+
+	* iconvdata/asmo_449.c: Correct comment.
+
 1999-04-10  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* manual/install.texi (Configuring and compiling): Comment out
