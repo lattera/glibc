@@ -42,7 +42,7 @@
 #define O_ASYNC		020000
 
 /* For now Linux has synchronisity options for data and read operations.
-   We define the symbols here but let them do the same as O_SYNS since
+   We define the symbols here but let them do the same as O_SYNC since
    this is a superset.  */
 #if defined __USE_POSIX199309 || defined __USE_UNIX98
 # define O_DSYNC	O_SYNC	/* Synchronize data.  */
