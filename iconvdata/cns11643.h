@@ -107,7 +107,7 @@ ucs4_to_cns11643 (uint32_t wch, char *s, size_t avail)
   unsigned int ch = (unsigned int) wch;
   char buf[2];
   const char *cp = buf;
-  int needed = 2;
+  size_t needed = 2;
 
   switch (ch)
     {

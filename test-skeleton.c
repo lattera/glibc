@@ -89,6 +89,7 @@ delete_temp_files (void)
 
 /* Timeout handler.  We kill the child and exit with an error.  */
 static void
+__attribute__ ((noreturn))
 timeout_handler (int sig __attribute__ ((unused)))
 {
   int killed;

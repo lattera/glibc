@@ -127,8 +127,8 @@ static int to_object;
    loops we have other definitions which allow optimized access.  */
 #ifdef _STRING_ARCH_unaligned
 /* We can handle unaligned memory access.  */
-# define get16u(addr) *((uint16_t *) (addr))
-# define get32u(addr) *((uint32_t *) (addr))
+# define get16u(addr) *((__const uint16_t *) (addr))
+# define get32u(addr) *((__const uint32_t *) (addr))
 
 /* We need no special support for writing values either.  */
 # define put16u(addr, val) *((uint16_t *) (addr)) = (val)

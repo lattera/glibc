@@ -411,7 +411,7 @@ enum
     uint32_t ch;							      \
     size_t written = 0;							      \
 									      \
-    ch = *((uint32_t *) inptr);						      \
+    ch = *((const uint32_t *) inptr);					      \
 									      \
     /* First see whether we can write the character using the currently	      \
        selected character set.  */					      \

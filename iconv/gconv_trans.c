@@ -366,8 +366,8 @@ __gconv_translit_find (struct trans_struct *trans)
 	  memset (newp, '\0', sizeof (struct known_trans));
 
 	  /* Store a copy of the module name.  */
-	  newp->info.name = (char *) (newp + 1);
-	  cp = __mempcpy ((char *) newp->info.name, trans->name, name_len);
+	  newp->info.name = cp = (char *) (newp + 1);
+	  cp = __mempcpy (cp, trans->name, name_len);
 
 	  newp->fname = cp;
 

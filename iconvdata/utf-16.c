@@ -100,6 +100,7 @@ struct utf16_data
 };
 
 
+extern int gconv_init (struct __gconv_step *step);
 int
 gconv_init (struct __gconv_step *step)
 {
@@ -180,6 +181,7 @@ gconv_init (struct __gconv_step *step)
 }
 
 
+extern void gconv_end (struct __gconv_step *data);
 void
 gconv_end (struct __gconv_step *data)
 {

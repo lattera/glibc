@@ -8484,7 +8484,7 @@ static const char from_ucs4_tab15[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if (__builtin_expect (ch, 0)					      \
+    if ((size_t) __builtin_expect (ch, 0)				      \
 	>= sizeof (from_ucs4_tab1) / sizeof (from_ucs4_tab1[0]))	      \
       switch (ch)							      \
 	{								      \

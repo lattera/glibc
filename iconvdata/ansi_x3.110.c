@@ -474,7 +474,7 @@ static const char from_ucs4[][2] =
     uint32_t ch = get32 (inptr);					      \
     const char *cp;							      \
 									      \
-    if (__builtin_expect (ch, 0)					      \
+    if ((size_t) __builtin_expect (ch, 0)				      \
 	>= sizeof (from_ucs4) / sizeof (from_ucs4[0]))			      \
       {									      \
 	if (ch == 0x2c7)						      \

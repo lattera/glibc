@@ -11756,7 +11756,9 @@ static struct
     const char *cp = "";						      \
     int i;								      \
     									      \
-    for (i = 0; i < sizeof (from_ucs4_idx) / sizeof (from_ucs4_idx[0]); ++i)  \
+    for (i = 0;								      \
+	 i < (int) (sizeof (from_ucs4_idx) / sizeof (from_ucs4_idx[0]));      \
+	 ++i)								      \
       {									      \
 	if (ch < from_ucs4_idx[i].from)					      \
 	  break;							      \

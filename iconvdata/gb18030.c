@@ -41825,7 +41825,7 @@ static const char __ucs_to_gb18030_tab63[][2] =
 #define LOOPFCT			TO_LOOP
 #define BODY \
   {									      \
-    uint32_t ch = *((uint32_t *) inptr);				      \
+    uint32_t ch = *((const uint32_t *) inptr);				      \
     unsigned char buf[4];						      \
     const unsigned char *cp = buf;					      \
     int len = 2;	/* This is the most often case.  */		      \

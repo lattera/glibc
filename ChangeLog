@@ -1,5 +1,23 @@
 2000-11-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* test-skeleton.c: Mark timeout_handler with noreturn.
+	* iconv/skeleton.c (get16u): Add const to cast.
+	(get32u): Likewise.
+	* iconvdata/gb18030.c: Likewise.
+	* iconvdata/iso-2022-cn-ext.c: Likewise.
+	* iconvdata/ansi_x3.110.c: Add cast to avoid warning.
+	* iconvdata/big5.c: Likewise.
+	* iconvdata/big5hkscs.c: Likewise.
+	* iconvdata/iso_6937.c: Likewise.
+	* iconvdata/iso_6937-2.c: Likewise.
+	* iconvdata/t.61.c: Likewise.
+	* iconvdata/iso646.c: Add prototypes for gconv_init and gconv_env.
+	* iconvdata/unicode.c: Likewise.
+	* iconvdata/utf-16.c: Likewise.
+	* iconvdata/cns11643.h (ucs4_to_cns11643): Define needed as size_t.
+	* iconv/gconv_trans.c (__gconv_translit_find): Avoid one warning
+	with little code shuffling.
+
 	* sysdeps/powerpc/Makefile (CFLAGS-initfini.s): Add -O1 to avoid
 	the problems introduced when the user selects -O3.
 
