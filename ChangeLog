@@ -1,5 +1,8 @@
 2001-12-10  Roland McGrath  <roland@frob.com>
 
+	* shlib-versions [USE_IN_LIBIO] (.*-.*-gnu-gnu.*): Set default
+	set to GLIBC_2.2.5, not GLIBC_2.2.4.
+
 	* sysdeps/mach/hurd/configure.in (libc_cv_gcc_unwind_find_fde):
 	Fix conditionals so this is set by default for stdio and not for libio.
 	* sysdeps/mach/hurd/configure: Regenerated.
