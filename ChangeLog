@@ -1,3 +1,17 @@
+2003-11-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (re_compile_fastmap_iter): Handle RE_ICASE
+	with MB_CUR_MAX > 1 locales in the fastmap.
+
+2003-11-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regex_internal.c (build_wcs_buffer): Fix comment typo.
+	(build_wcs_upper_buffer): Likewise.  Use towupper for wchar_t instead
+	of toupper.
+	* posix/Makefile (tests): Add bug-regex17 and bug-regex18.
+	(bug-regex17-ENV, bug-regex18-ENV): Add LOCPATH.
+	* posix/bug-regex18.c: New test.
+
 2003-10-08  Thorsten Kukuk  <kukuk@suse.de>
 
 	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h (pread, pwrite):

@@ -319,7 +319,29 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
       re_token_type_t type = dfa->nodes[node].type;
 
       if (type == CHARACTER)
-	re_set_fastmap (fastmap, icase, dfa->nodes[node].opr.c);
+	{
+	  re_set_fastmap (fastmap, icase, dfa->nodes[node].opr.c);
+#ifdef RE_ENABLE_I18N
+	  if ((bufp->syntax & RE_ICASE) && !icase)
+	    {
+	      unsigned char *buf = alloca (MB_CUR_MAX), *p;
+	      wchar_t wc;
+	      mbstate_t state;
+
+	      p = buf;
+	      *p++ = dfa->nodes[node].opr.c;
+	      while (++node < dfa->nodes_len
+		     &&	dfa->nodes[node].type == CHARACTER
+		     && dfa->nodes[node].mb_partial)
+		*p++ = dfa->nodes[node].opr.c;
+	      memset (&state, 0, sizeof (state));
+	      if (mbrtowc (&wc, (const char *) buf, p - buf,
+			   &state) == p - buf
+		  && __wcrtomb ((char *) buf, towlower (wc), &state) > 0)
+		re_set_fastmap (fastmap, 0, buf[0]);
+	    }
+#endif
+	}
       else if (type == SIMPLE_BRACKET)
 	{
 	  int i, j, ch;
@@ -367,6 +389,11 @@ re_compile_fastmap_iter (bufp, init_state, fastmap)
 	      memset (&state, '\0', sizeof (state));
 	      __wcrtomb (buf, cset->mbchars[i], &state);
 	      re_set_fastmap (fastmap, icase, *(unsigned char *) buf);
+	      if ((bufp->syntax & RE_ICASE) && !icase)
+		{
+		  __wcrtomb (buf, towlower (cset->mbchars[i]), &state);
+		  re_set_fastmap (fastmap, 0, *(unsigned char *) buf);
+		}
 	    }
 	}
 #endif /* RE_ENABLE_I18N */

@@ -220,7 +220,7 @@ build_wcs_buffer (pstr)
 	  pstr->cur_state = prev_st;
 	}
 
-      /* Apply the translateion if we need.  */
+      /* Apply the translation if we need.  */
       if (pstr->trans != NULL && mbclen == 1)
 	{
 	  int ch = pstr->trans[pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx]];
@@ -264,13 +264,13 @@ build_wcs_upper_buffer (pstr)
 	{
 	  /* In case of a singlebyte character.  */
 	  int ch = pstr->raw_mbs[pstr->raw_mbs_idx + byte_idx];
-	  /* Apply the translateion if we need.  */
+	  /* Apply the translation if we need.  */
 	  if (pstr->trans != NULL && mbclen == 1)
 	    {
 	      ch = pstr->trans[ch];
 	      pstr->mbs_case[byte_idx] = ch;
 	    }
-	  pstr->wcs[byte_idx] = iswlower (wc) ? toupper (wc) : wc;
+	  pstr->wcs[byte_idx] = iswlower (wc) ? towupper (wc) : wc;
 	  pstr->mbs[byte_idx++] = islower (ch) ? toupper (ch) : ch;
 	  if (BE (mbclen == (size_t) -1, 0))
 	    pstr->cur_state = prev_st;
@@ -282,7 +282,7 @@ build_wcs_upper_buffer (pstr)
 	  else
 	    memcpy (pstr->mbs + byte_idx,
 		    pstr->raw_mbs + pstr->raw_mbs_idx + byte_idx, mbclen);
-	  pstr->wcs[byte_idx++] = iswlower (wc) ? toupper (wc) : wc;
+	  pstr->wcs[byte_idx++] = iswlower (wc) ? towupper (wc) : wc;
 	  /* Write paddings.  */
 	  for (remain_len = byte_idx + mbclen - 1; byte_idx < remain_len ;)
 	    pstr->wcs[byte_idx++] = WEOF;
@@ -342,7 +342,7 @@ build_upper_buffer (pstr)
       int ch = pstr->raw_mbs[pstr->raw_mbs_idx + char_idx];
       if (pstr->trans != NULL)
 	{
-	  ch =  pstr->trans[ch];
+	  ch = pstr->trans[ch];
 	  pstr->mbs_case[char_idx] = ch;
 	}
       if (islower (ch))

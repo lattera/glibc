@@ -1,3 +1,7 @@
+2003-11-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* Makefile (LOCALES): Add tr_TR.UTF-8.
+
 2003-11-08  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/ne_NP: New file.
