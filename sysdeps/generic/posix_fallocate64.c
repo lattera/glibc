@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,16 +17,15 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <sys/statfs.h>
+#include <fcntl.h>
 
-/* Return information about the filesystem on which FD resides.  */
+/* Reserve storage for the data of the file associated with FD.  */
+
 int
-__fstatfs64 (int fd, struct statfs64 *buf)
+posix_fallocate64 (int fd, __off64_t offset, size_t len)
 {
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (__fstatfs64, fstatfs64)
-
-stub_warning (fstatfs64)
+stub_warning (posix_fallocate64)
 #include <stub-tag.h>

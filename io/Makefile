@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+# Copyright (C) 1992-1999, 2000 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,9 @@ routines :=							      \
 	ttyname ttyname_r isatty				      \
 	link symlink readlink					      \
 	unlink rmdir						      \
-	ftw ftw64 fts poll
+	ftw ftw64 fts poll					      \
+	posix_fadvise posix_fadvise64				      \
+	posix_fallocate posix_fallocate64
 
 # These routines will be omitted from the libc shared object.
 # Instead the static object files will be included in a special archive

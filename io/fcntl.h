@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,6 +122,45 @@ extern int __REDIRECT (lockf, (int __fd, int __cmd, __off64_t __len) __THROW,
 # endif
 # ifdef __USE_LARGEFILE64
 extern int lockf64 (int __fd, int __cmd, __off64_t __len) __THROW;
+# endif
+#endif
+
+#ifdef __USE_XOPEN2K
+/* Advice the system about the expected behaviour of the application with
+   respect to the file associated with FD.  */
+# ifndef __USE_FILE_OFFSET64
+extern int posix_fadvise (int __fd, __off_t __offset, size_t __len,
+			  int __advise) __THROW;
+# else
+# ifdef __REDIRECT
+extern int __REDIRECT (posix_fadvise, (int __fd, __off64_t __offset,
+				       size_t __len, int __advise) __THROW,
+		       posix_fadvise64);
+# else
+#  define posix_fadvise posix_fadvise64
+# endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int posix_fadvise64 (int __fd, __off64_t __offset, size_t __len,
+			    int __advise) __THROW;
+# endif
+
+
+/* Reserve storage for the data of the file associated with FD.  */
+# ifndef __USE_FILE_OFFSET64
+extern int posix_fallocate (int __fd, __off_t __offset, size_t __len) __THROW;
+# else
+# ifdef __REDIRECT
+extern int __REDIRECT (posix_fallocate, (int __fd, __off64_t __offset,
+					 size_t __len) __THROW,
+		       posix_fallocate64);
+# else
+#  define posix_fallocate posix_fallocate64
+# endif
+# endif
+# ifdef __USE_LARGEFILE64
+extern int posix_fallocate64 (int __fd, __off64_t __offset, size_t __len)
+     __THROW;
 # endif
 #endif
 

@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for stub configuration.
-   Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1992, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -83,3 +83,13 @@ struct flock
 #define	F_RDLCK	1	/* Read lock.  */
 #define	F_WRLCK	2	/* Write lock.  */
 #define	F_UNLCK	3	/* Remove lock.  */
+
+/* Advise to `posix_fadvise'.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_FADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_FADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_FADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
+# define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
+#endif

@@ -1,3 +1,38 @@
+2000-04-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/sys/statfs.h: Add prototypes for __statfs64 and __fstatfs64.
+	* sysdeps/generic/fstatfs64.c (__fstatfs64): Renamed to fstatfs64.
+	Make old name weak alias.
+	* sysdeps/unix/sysv/linux/fstatfs64.c: Likewise.
+	* sysdeps/generic/statfs64.c (__statfs64): Renamed to statfs64.
+	Make old name weak alias.
+	* sysdeps/unix/sysv/linux/statfs64.c: Likewise.
+
+	* io/Makefile (routines): Add posix_fadvise, posix_fadvise64,
+	posix_fallocate, and posix_fallocate64.
+	* io/Versions [libc] (GLIBC_2.2): Add posix_fadvise, posix_fadvise64,
+	posix_fallocate, and posix_fallocate64.
+	* io/fcntl.h: Declare posix_fadvise, posix_fadvise64,
+	posix_fallocate, and posix_fallocate64.
+	* sysdeps/generic/fadvise.c: New file.
+	* sysdeps/generic/fadvise64.c: New file.
+	* sysdeps/generic/fallocate.c: New file.
+	* sysdeps/generic/fallocate64.c: New file.
+	* sysdeps/posix/fallocate.c: New file.
+	* sysdeps/posix/fallocate64.c: New file.
+	* sysdeps/generic/bits/fcntl.h: Define POSIX_FADV_NORMAL,
+	POSIX_FADV_RANDOM, POSIX_FADV_SEQUENTIAL, POSIX_FADV_WILLNEED,
+	POSIX_FADV_DONTNEED, and POSIX_FADV_NOREUSE.
+	* sysdeps/mach/hurd/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/alpha/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/fcntl.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/fcntl.h: Likewise.
+
+	* sysdeps/generic/madvise.c (__madvise): Renamed to posix_madvise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/Versions [libc] (GLIBC_2.2): Add posix_madvice.

@@ -17,8 +17,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _FCNTLBITS_H
-#define _FCNTLBITS_H	1
+#ifndef _FCNTL_H
+# error "Never use <bits/fcntl.h> directly; include <fcntl.h> instead."
+#endif
 
 #include <sys/types.h>
 #include <bits/wordsize.h>
@@ -150,4 +151,12 @@ struct flock64
 # define FNDELAY	O_NDELAY
 #endif /* Use BSD.  */
 
+/* Advise to `posix_fadvise'.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_FADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_FADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_FADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_FADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_FADV_DONTNEED	4 /* Don't need these pages.  */
+# define POSIX_FADV_NOREUSE	5 /* Data will be accessed once.  */
 #endif
