@@ -1,3 +1,17 @@
+2000-04-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* misc/Versions [libc] (GLIBC_2.2): Add posix_madvice.
+	* misc/sys/mman.h (posix_madvise): Add prototype.
+	* sysdeps/generic/madvise.c (madvise): Renamed to __madvise.  Make
+	old name and posix_madvise weak aliases.
+	* sysdeps/unix/sysv/linux/syscalls.list: Likewise.
+	* sysdeps/generic/bits/mman.h: Add POSIX_MADV_* constants.
+	* sysdeps/unix/sysv/linux/alpha/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/arm/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/bits/mman.h: Likewise.
+
 2000-04-13  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/mips/dl-machine.h (__dl_runtime_resolve): Handle symbol
@@ -21,7 +35,7 @@
 	* sysdeps/mips/setjmp.S: Likewise.
 
 	* sysdeps/unix/sysv/linux/mips/pipe.S: New file.
-	
+
 2000-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* posix/globtest.sh: Work around inconsistency with expanding ~/

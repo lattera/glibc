@@ -91,6 +91,10 @@ extern int msync (void *__addr, size_t __len, int __flags) __THROW;
    for the region starting at ADDR and extending LEN bytes.  */
 extern int madvise (void *__addr, size_t __len, int __advice) __THROW;
 #endif
+#ifdef __USE_XOPEN2K
+/* This is the POSIX name for this function.  */
+extern int posix_madvise (void *__addr, size_t __len, int __advice) __THROW;
+#endif
 
 /* Guarantee all whole pages mapped by the range [ADDR,ADDR+LEN) to
    be memory resident.  */

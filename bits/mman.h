@@ -1,5 +1,5 @@
 /* Definitions for BSD-style memory management.
-   Copyright (C) 1994, 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1994-1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -21,8 +21,9 @@
    (such as GNU) where these facilities are not system services but can be
    emulated in the C library, these are the definitions we emulate.  */
 
-#ifndef	_BITS_MMAN_H
-#define	_BITS_MMAN_H	1
+#ifndef _SYS_MMAN_H
+# error "Never use <bits/mman.h> directly; include <sys/mman.h> instead."
+#endif
 
 /* Protections are chosen from these bits, OR'd together.  The
    implementation does not necessarily support PROT_EXEC or PROT_WRITE
@@ -70,4 +71,11 @@
 # define MADV_DONTNEED	 4	/* Don't need these pages.  */
 #endif
 
-#endif /* bits/mman.h */
+/* The POSIX people had to invent similar names for the same things.  */
+#ifdef __USE_XOPEN2K
+# define POSIX_MADV_NORMAL	0 /* No further special treatment.  */
+# define POSIX_MADV_RANDOM	1 /* Expect random page references.  */
+# define POSIX_MADV_SEQUENTIAL	2 /* Expect sequential page references.  */
+# define POSIX_MADV_WILLNEED	3 /* Will need these pages.  */
+# define POSIX_MADV_DONTNEED	4 /* Don't need these pages.  */
+#endif
