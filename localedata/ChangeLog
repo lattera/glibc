@@ -1,3 +1,8 @@
+2000-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* SUPPORTED: Add nn_NO.ISO-8859-1.
+	* locales/nn_NO: New file.
+
 2000-08-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* charmaps/BIG5HKSCS: Regenerated from official data file.

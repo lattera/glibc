@@ -1,5 +1,9 @@
 2000-08-31  Ulrich Drepper  <drepper@redhat.com>
 
+	* intl/locale.alias: Add aliases for bomal and nynorsk.
+
+	* locale/iso-639.def: Fix 639-1 code for Bokmal.
+
 	* stdio-common/itoa-digits.c: Move upper digits to...
 	* stdio-common/itoa-udigits.c: ...here.  New file.
 	* stdio-common/Makefile (routines): Add itoa-udigits.
