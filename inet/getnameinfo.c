@@ -172,8 +172,20 @@ getnameinfo (const struct sockaddr *sa, socklen_t addrlen, char *host,
   int herrno;
   char *tmpbuf = alloca (tmpbuflen);
   struct hostent th;
+  socklen_t min_addrlen = 0;
 
-  if (sa == NULL)
+  if (sa == NULL || addrlen < sizeof (sa_family_t))
+    return -1;
+
+  switch (sa->sa_family)
+    {
+    case AF_LOCAL:
+      min_addrlen = (socklen_t) (((struct sockaddr_un *) NULL)->sun_path);
+      break;
+    default:
+      min_addrlen = __libc_sa_len (sa->sa_family);
+    }
+  if (addrlen < min_addrlen)
     return -1;
 
   if (host != NULL && hostlen > 0)

@@ -1,3 +1,13 @@
+2000-03-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/getnameinfo.c (getnameinfo): Check that addrlen value is
+	large enough.  Patch by YOSHIFUJI Hideaki <yoshfuji@v6.linux.or.jp>.
+
+2000-03-22  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/powerpc/bits/mman.h (MADV_*): Add flags
+	from latest Linux kernel.
+
 2000-03-21  Andreas Jaeger  <aj@suse.de>
 
 	* Versions.def: Add version 2.1.4.
