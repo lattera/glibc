@@ -167,7 +167,7 @@ as of 2001-01-10, and relates to i686-linux; older GCC may lead to
 more problems in the headers.
 
 Note that the _t suffix is reserved by POSIX, but not by pure ISO C.
-Update.Also, the Single Unix Specification generally requires more types to
+Also, the Single Unix Specification generally requires more types to
 be included in headers (if _XOPEN_SOURCE is defined appropriately)
 than ISO C permits.
 

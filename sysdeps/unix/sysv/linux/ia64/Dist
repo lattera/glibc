@@ -1,5 +1,6 @@
 clone.S
 clone2.S
+dl-static.c
 ioperm.c
 net/route.h
 sys/procfs.h

@@ -1,3 +1,14 @@
+2001-01-10  H.J. Lu  <hjl@gnu.org>
+
+	* elf/dl-libc.c (do_dlopen): Call DL_STATIC_INIT for static binaries.
+	* sysdeps/unix/sysv/linux/ia64/Makefile (sysdep-dl-routines): Add
+	dl-static.
+	* sysdeps/unix/sysv/linux/ia64/Versions (ld): Add _dl_var_init.
+	* sysdeps/generic/ldsodefs.h (DL_STATIC_INIT): Defined if not defined.
+	* sysdeps/unix/sysv/linux/ia64/ldsodefs.h: New file.
+	* sysdeps/unix/sysv/linux/ia64/dl-static.c: New file.
+	* sysdeps/unix/sysv/linux/ia64/Dist: Add dl-static.c.
+
 2001-01-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* libio/stdio.h: Remove definition of off_t.

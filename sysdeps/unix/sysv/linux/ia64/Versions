@@ -3,6 +3,9 @@ ld {
     # global variables needed in the libc.
     _dl_pagesize;
   }
+  GLIBC_2.2.1 {
+    _dl_var_init;
+  }
 }
 libc {
   GLIBC_2.2 {

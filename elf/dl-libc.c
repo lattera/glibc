@@ -1,5 +1,5 @@
 /* Handle loading and unloading shared objects for internal libc purposes.
-   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.columbia.edu>, 1999.
 
@@ -76,6 +76,10 @@ do_dlopen (void *ptr)
   struct do_dlopen_args *args = (struct do_dlopen_args *) ptr;
   /* Open and relocate the shared object.  */
   args->map = _dl_open (args->name, RTLD_LAZY, NULL);
+
+#ifndef SHARED
+  DL_STATIC_INIT (args->map);
+#endif
 }
 
 static void

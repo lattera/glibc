@@ -1,5 +1,5 @@
 /* Run-time dynamic linker data structures for loaded ELF shared objects.
-   Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1995-1999, 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -79,6 +79,12 @@ typedef ElfW(Addr) lookup_t;
 # define DL_UNMAP(map) \
  __munmap ((void *) (map)->l_map_start,					      \
 	   (map)->l_map_end - (map)->l_map_start)
+#endif
+
+/* By default we do not need special support to initialize DSOs loaded
+   by statically linked binaries.  */
+#ifndef DL_STATIC_INIT
+# define DL_STATIC_INIT(map)
 #endif
 
 /* For the version handling we need an array with only names and their
