@@ -1,12 +1,10 @@
-<code_set_name>ISO-IR-197
+<code_set_name> ISO-IR-197
 <comment_char> %
 <escape_char> /
 % source:  http://www.itek.norut.no/project/barent/barsek/ip/197t.html
 % author:  Petter Reinholdtsen <pere@td.org.uit.no>
 % date:    1998-08-31
-% comment: Proposed nothern sami charset.  Superseeded by WS2
-
-% alias none
+% comment: Proposed nothern sami charset.  Superseded by WS2
 
 CHARMAP
 <U0000>     /x00         NULL (NUL)

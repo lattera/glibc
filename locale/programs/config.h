@@ -1,5 +1,5 @@
 /* Configuration for localedef program.
-   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -28,7 +28,7 @@
 #include "../../version.h"
 #endif
 
-#define DEFAULT_CHARMAP "POSIX"
+#define DEFAULT_CHARMAP "ANSI_X3.4-1968" /* ASCII */
 
 #ifndef PARAMS
 # if __STDC__

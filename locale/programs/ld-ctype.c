@@ -1309,6 +1309,10 @@ find_idx (struct locale_ctype_t *ctype, uint32_t **table, size_t *max,
     /* We have done everything we are asked to do.  */
     return NULL;
 
+  if (max == NULL)
+    /* The caller does not want to extend the table.  */
+    return (cnt >= *act ? NULL : &(*table)[cnt]);
+
   if (cnt >= *act)
     {
       if (cnt >= *max)
@@ -3732,8 +3736,13 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
   ctype->class_offset = _NL_ITEM_INDEX (_NL_CTYPE_EXTRA_MAP_1);
   ctype->map_offset = ctype->class_offset + ctype->nr_charclass;
 
-  /* Array for width information.  Because the expected width are very
-     small we use only one single byte.  This saves space.  */
+  /* Array for width information.  Because the expected widths are very
+     small (never larger than 2) we use only one single byte.  This
+     saves space.
+     We put only printable characters in the table.  wcwidth is specified
+     to return -1 for non-printable characters.  Doing the check here
+     saves a run-time check.
+     But we put L'\0' in the table.  This again saves a run-time check.  */
   {
     struct wcwidth_table t;
 
@@ -3741,7 +3750,8 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
     t.q = 9;
     wcwidth_table_init (&t);
 
-    /* First set all the characters of the character set to the default width.  */
+    /* First set all the printable characters of the character set to
+       the default width.  */
     curs = NULL;
     while (iterate_table (&charmap->char_table, &curs, &key, &len, &vdata) == 0)
       {
@@ -3752,7 +3762,14 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 					      data->name, len);
 
 	if (data->ucs4 != ILLEGAL_CHAR_VALUE)
-	  wcwidth_table_add (&t, data->ucs4, charmap->width_default);
+	  {
+	    uint32_t *class_bits =
+	      find_idx (ctype, &ctype->class_collection, NULL,
+			&ctype->class_collection_act, data->ucs4);
+
+	    if (class_bits != NULL && (*class_bits & BITw (tok_print)))
+	      wcwidth_table_add (&t, data->ucs4, charmap->width_default);
+	  }
       }
 
     /* Now add the explicitly specified widths.  */
@@ -3792,8 +3809,16 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 					       strlen (seq->name));
 
 		if (wch != ILLEGAL_CHAR_VALUE)
-		  /* Store the value.  */
-		  wcwidth_table_add (&t, wch, charmap->width_rules[cnt].width);
+		  {
+		    /* Store the value.  */
+		    uint32_t *class_bits =
+		      find_idx (ctype, &ctype->class_collection, NULL,
+				&ctype->class_collection_act, wch);
+
+		    if (class_bits != NULL && (*class_bits & BITw (tok_print)))
+		      wcwidth_table_add (&t, wch,
+					 charmap->width_rules[cnt].width);
+		  }
 
 		/* "Increment" the bytes sequence.  */
 		inner = nbytes - 1;
@@ -3819,6 +3844,9 @@ allocate_arrays (struct locale_ctype_t *ctype, struct charmap_t *charmap,
 	      }
 	  }
       }
+
+    /* Set the width of L'\0' to 0.  */
+    wcwidth_table_add (&t, 0, 0);
 
     wcwidth_table_finalize (&t);
 

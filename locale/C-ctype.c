@@ -504,18 +504,27 @@ const struct
 {
   uint32_t header[5];
   uint32_t level1[1];
-  uint32_t level2[1];
-  uint8_t level3[1];
+  uint32_t level2[8];
+  int8_t level3[33];
 }
 _nl_C_LC_CTYPE_width =
 {
-  { 7, 1, 0, 0, 0 },
+  { 7, 1, 4, 7, 15 },
   /* 1st-level table */
   { 6 * sizeof (uint32_t) },
   /* 2nd-level table */
-  { 7 * sizeof (uint32_t) },
+  {
+    14 * sizeof (uint32_t) +  0, 0,
+    14 * sizeof (uint32_t) + 16, 14 * sizeof (uint32_t) + 16,
+    14 * sizeof (uint32_t) + 16, 14 * sizeof (uint32_t) + 16,
+    14 * sizeof (uint32_t) + 16, 14 * sizeof (uint32_t) + 17
+  },
   /* 3rd-level table */
-  { 1 }
+  {
+     0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+     1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+     -1
+  }
 };
 
 /* Number of fields with fixed meanings, starting at 0.  */

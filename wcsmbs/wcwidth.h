@@ -22,9 +22,6 @@
 #include <wctype.h>
 #include "../wctype/wchar-lookup.h"
 
-/* Tables containing character property information.  */
-extern const char *__ctype32_wctype[12];
-
 /* Table containing width information.  */
 extern const char *__ctype32_width;
 
@@ -33,12 +30,10 @@ internal_wcwidth (wint_t wc)
 {
   unsigned char res;
 
-  if (wc == L'\0')
-    return 0;
-
-  if (wctype_table_lookup (__ctype32_wctype[__ISwprint], wc) == 0)
-    return -1;
-
+  /* The tables have been prepared in such a way that
+     1. wc == L'\0' yields res = 0,
+     2. !iswprint (wc) implies res = '\xff'.  */
   res = wcwidth_table_lookup (__ctype32_width, wc);
+
   return res == (unsigned char) '\xff' ? -1 : (int) res;
 }

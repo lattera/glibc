@@ -120,7 +120,7 @@ charmap_read (const char *filename)
 	}
     }
 
-  if (result == NULL)
+  if (result == NULL && filename != NULL)
     {
       /* OK, one more try.  We also accept the names given to the
 	 character sets in the files.  Sometimes they differ from the
@@ -155,12 +155,9 @@ charmap_read (const char *filename)
 			char junk[BUFSIZ];
 
 			if (fscanf (fp, " <code_set_name> %as", &name) == 1
-			    || (fscanf (fp, " <code_set_name> \"%as\"", &name)
-				== 1)
 			    || fscanf (fp, "%% alias %as", &name) == 1)
 			  {
-			    if (filename != NULL
-				&& strcasecmp (name, filename) == 0)
+			    if (strcasecmp (name, filename) == 0)
 			      break;
 
 			    free (name);
@@ -188,9 +185,6 @@ charmap_read (const char *filename)
 			cmfile = lr_open (buf, charmap_hash);
 			result = (cmfile == NULL
 				  ? NULL : parse_charmap (cmfile));
-
-			if (result)
-			  return result;
 
 			break;
 		      }
