@@ -38,6 +38,9 @@ extern int __lcong48_r (unsigned short int __param[7],
 extern int __drand48_iterate (unsigned short int __xsubi[3],
 			      struct drand48_data *__buffer);
 
+/* Global state for non-reentrant functions.  Defined in drand48-iter.c.  */
+extern struct drand48_data __libc_drand48_data attribute_hidden;
+
 extern int __setenv (__const char *__name, __const char *__value,
 		     int __replace);
 extern int __unsetenv (__const char *__name);

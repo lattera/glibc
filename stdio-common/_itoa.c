@@ -78,7 +78,7 @@ struct base_table_t
 
 
 /* Local variables.  */
-const struct base_table_t _itoa_base_table[] =
+const struct base_table_t _itoa_base_table[] attribute_hidden =
 {
 #if BITS_PER_MP_LIMB == 64
   /*  2 */ {SEL1(0ul) 1, 1},
@@ -158,8 +158,10 @@ const struct base_table_t _itoa_base_table[] =
 
 /* Lower-case digits.  */
 extern const char _itoa_lower_digits[];
+extern const char _itoa_lower_digits_internal[] attribute_hidden;
 /* Upper-case digits.  */
 extern const char _itoa_upper_digits[];
+extern const char _itoa_upper_digits_internal[] attribute_hidden;
 
 
 char *
@@ -169,7 +171,9 @@ _itoa (value, buflim, base, upper_case)
      unsigned int base;
      int upper_case;
 {
-  const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
+  const char *digits = (upper_case
+			? INTUSE(_itoa_upper_digits)
+			: INTUSE(_itoa_lower_digits));
   const struct base_table_t *brec = &_itoa_base_table[base - 2];
 
   switch (base)

@@ -1,5 +1,5 @@
 /* Digits.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,3 +20,4 @@
 /* Upper-case digits.  */
 const char _itoa_upper_digits[36]
 	= "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+INTVARDEF(_itoa_upper_digits)

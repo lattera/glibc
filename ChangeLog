@@ -1,5 +1,53 @@
 2002-03-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* include/stdlib.h (__libc_drand48_data): Declare as hidden.
+	* stdlib/drand48.c: Remove declaration of __libc_drand48_data here.
+	* stdlib/erand48.c: Likewise.
+	* stdlib/jrand48.c: Likewise.
+	* stdlib/lcong48.c: Likewise.
+	* stdlib/lrand48.c: Likewise.
+	* stdlib/mrand48.c: Likewise.
+	* stdlib/nrand48.c: Likewise.
+	* stdlib/seed48.c: Likewise.
+	* stdlib/srand48.c: Likewise.
+
+	* stdio-common/_itoa.c (_itoa_base_table): Declare as hidden.
+	(_itoa_lower_digits_internal): New declaration.
+	(_itoa_upper_digits_internal): New declaration.
+	(_itoa): Use INTUSE to acces _itoa_upper_digits and _itoa_lower_digits.
+	* stdio-common.h (_itoa_lower_digits_internal): New declaration.
+	(_itoa_upper_digits_internal): New declaration.
+	(_itoa_word): Use INTUSE to acces _itoa_upper_digits and
+	_itoa_lower_digits.
+	* stdio-common/itoa-digits.c: Use INTVARDEF with _itoa_lower_digits.
+	* stdio-common/itoa-udigits.c: Use INTVARDEF with _itoa_upper_digits.
+
+	* elf/dl-minimal.c (_itoa): Declare _itoa_lower_digits as hidden.
+	* elf/dl-reloc.c (_dl_reloc_bad_type): Likewise.
+
+	* stdio-common/_itowa.c (_itoa_base_table): Declare as hidden.
+	(_itowa_lower_digits): Likewise.
+	(_itowa_upper_digits): Likewise.
+	* stdio-common/_itowa.h (_itowa_lower_digits): Likewise.
+	(_itowa_upper_digits): Likewise.
+
+	* intl/plural-exp.h (attribute_hidden): Define as empty macro if
+	not already defined.
+	(GERMANIC_PLURAL): Declare as hidden.
+
+	* posix/getopt.c (__getopt_initialized): Declare as hidden.
+	(attribute_hidden): Define as empty macro if not already defined.
+
+	* iconv/gconv_int.h (__gconv_path_elem): Declare hidden.
+	(__gconv_max_path_elem_len): Likewise.
+	(__gconv_path_envvar): Likewise.
+
+	* math/Makefile (gmp-objs): Remove mp_clz_tab.
+	* stdlib/Makefile (aux): Remove mp_clz_tab.
+	* stdlib/mp_clz_tab.c: Removed.  Not needed anywhere.
+
+	* stdlib/exit.h (__exit_funcs): Declare as hidden.
+
 	* posix/bug-regex5.c (main): Use nl_langinfo instead of _NL_CURRENT.
 
 	* locale/localeinfo.h: Add attribute_hidden to _nl_current_LC_XXX,

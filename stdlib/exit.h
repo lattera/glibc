@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1996, 1997, 1999, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1996,1997,1999,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -56,7 +56,7 @@ struct exit_function_list
     size_t idx;
     struct exit_function fns[32];
   };
-extern struct exit_function_list *__exit_funcs;
+extern struct exit_function_list *__exit_funcs attribute_hidden;
 
 extern struct exit_function *__new_exitfn (void);
 

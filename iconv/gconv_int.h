@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998, 1999, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1997,1998,1999,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1997.
 
@@ -33,9 +33,9 @@ struct path_elem
 };
 
 /* Variable with search path for `gconv' implementation.  */
-extern struct path_elem *__gconv_path_elem;
+extern struct path_elem *__gconv_path_elem attribute_hidden;
 /* Maximum length of a single path element.  */
-extern size_t __gconv_max_path_elem_len;
+extern size_t __gconv_max_path_elem_len attribute_hidden;
 
 
 /* Structure for alias definition.  Simply two strings.  */
@@ -121,7 +121,7 @@ extern size_t __gconv_nmodules;
 extern struct gconv_module *__gconv_modules_db;
 
 /* Value of the GCONV_PATH environment variable.  */
-extern const char *__gconv_path_envvar;
+extern const char *__gconv_path_envvar attribute_hidden;
 
 
 /* The gconv functions expects the name to be in upper case and complete,

@@ -29,12 +29,18 @@
 extern char *_itoa (unsigned long long int value, char *buflim,
 		    unsigned int base, int upper_case);
 
+extern const char _itoa_upper_digits[];
+extern const char _itoa_upper_digits_internal[] attribute_hidden;
+extern const char _itoa_lower_digits[];
+extern const char _itoa_lower_digits_internal[] attribute_hidden;
+
 static inline char * __attribute__ ((unused))
 _itoa_word (unsigned long value, char *buflim,
 	    unsigned int base, int upper_case)
 {
-  extern const char _itoa_upper_digits[], _itoa_lower_digits[];
-  const char *digits = upper_case ? _itoa_upper_digits : _itoa_lower_digits;
+  const char *digits = (upper_case
+			? INTUSE(_itoa_upper_digits)
+			: INTUSE(_itoa_lower_digits));
 
   switch (base)
     {

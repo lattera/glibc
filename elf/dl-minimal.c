@@ -290,7 +290,7 @@ _itoa (value, buflim, base, upper_case)
      unsigned int base;
      int upper_case;
 {
-  extern const char _itoa_lower_digits[];
+  extern const char _itoa_lower_digits[] attribute_hidden;
 
   assert (! upper_case);
 

@@ -35,7 +35,8 @@ __attribute__ ((unused))
 _itowa_word (unsigned long value, wchar_t *buflim,
 	     unsigned int base, int upper_case)
 {
-  extern const wchar_t _itowa_upper_digits[], _itowa_lower_digits[];
+  extern const wchar_t _itowa_upper_digits[] attribute_hidden;
+  extern const wchar_t _itowa_lower_digits[] attribute_hidden;
   const wchar_t *digits = (upper_case
 			   ? _itowa_upper_digits : _itowa_lower_digits);
   wchar_t *bp = buflim;

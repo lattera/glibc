@@ -210,7 +210,7 @@ void
 internal_function
 _dl_reloc_bad_type (struct link_map *map, unsigned int type, int plt)
 {
-  extern const char _itoa_lower_digits[];
+  extern const char _itoa_lower_digits[] attribute_hidden;
 #define DIGIT(b)	_itoa_lower_digits[(b) & 0xf];
 
   /* XXX We cannot translate these messages.  */

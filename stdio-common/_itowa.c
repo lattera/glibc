@@ -1,5 +1,5 @@
 /* Internal function for converting integers to ASCII.
-   Copyright (C) 1994, 1995, 1996, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994,1995,1996,1999,2000,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund <tege@matematik.su.se>
    and Ulrich Drepper <drepper@gnu.org>.
@@ -77,12 +77,12 @@ struct base_table_t
 #endif
 
 /* Factor table for the different bases.  */
-extern const struct base_table_t _itoa_base_table[];
+extern const struct base_table_t _itoa_base_table[] attribute_hidden;
 
 /* Lower-case digits.  */
-extern const wchar_t _itowa_lower_digits[];
+extern const wchar_t _itowa_lower_digits[] attribute_hidden;
 /* Upper-case digits.  */
-extern const wchar_t _itowa_upper_digits[];
+extern const wchar_t _itowa_upper_digits[] attribute_hidden;
 
 
 wchar_t *

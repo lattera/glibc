@@ -2,7 +2,7 @@
    NOTE: getopt is now part of the C library, so if you don't know what
    "Keep this file name-space clean" means, talk to drepper@gnu.org
    before changing it!
-   Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001
+   Copyright (C) 1987,88,89,90,91,92,93,94,95,96,98,99,2000,2001,2002
    	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
@@ -91,6 +91,10 @@
 # endif
 #endif
 
+#ifndef attribute_hidden
+# define attribute_hidden
+#endif
+
 /* This version of `getopt' appears to the caller like standard Unix `getopt'
    but it behaves differently for the user, since it allows the user
    to intersperse the options with the other arguments.
@@ -134,7 +138,7 @@ int optind = 1;
    causes problems with re-calling getopt as programs generally don't
    know that. */
 
-int __getopt_initialized;
+int __getopt_initialized attribute_hidden;
 
 /* The next char to be scanned in the option-element
    in which the last option character we returned was found.
