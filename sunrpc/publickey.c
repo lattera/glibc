@@ -102,7 +102,7 @@ getsecretkey (const char *name, char *key, const char *passwd)
 
   while (! no_more)
     {
-      status = (*fct) (name, key, passwd, __errno_location ());
+      status = (*fct) (name, key, passwd, &errno);
 
       no_more = __nss_next (&nip, "getsecretkey", (void **) &fct, status, 0);
     }
