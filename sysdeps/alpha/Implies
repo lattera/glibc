@@ -1,2 +1,3 @@
+wordsize-64
 # Alpha uses IEEE 754 floating point.
 ieee754
