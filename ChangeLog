@@ -1,3 +1,16 @@
+2003-06-26  Roland McGrath  <roland@redhat.com>
+
+	* elf/elf.h (AT_SECURE): New macro.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Grok it,
+	set __libc_enable_secure.
+	(_dl_show_auxv): Add AT_SECURE to name table.
+	* elf/dl-support.c (_dl_aux_init): Grok AT_SECURE, set
+	__libc_enable_secure and __libc_enable_secure_decided.
+	* sysdeps/unix/sysv/linux/ldsodefs.h
+	[__ASSUME_AT_SECURE] (HAVE_AUX_SECURE): Define it.
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	[__LINUX_KERNEL_VERSION >= 132425] (__ASSUME_AT_SECURE): Define it.
+
 2003-06-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* io/test-utime.c: If _STATBUF_ST_NSEC is defined, adjust lower
