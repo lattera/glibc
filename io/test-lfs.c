@@ -50,6 +50,7 @@ void
 do_prepare (int argc, char *argv[])
 {
   char name_len;
+  struct rlimit64 rlim;
 
   name_len = strlen (test_dir);
   name = malloc (name_len + sizeof ("/lfsXXXXXX"));
@@ -58,24 +59,33 @@ do_prepare (int argc, char *argv[])
   add_temp_file (name);
 
   /* Open our test file.   */
-  if (mktemp (name) == NULL)
-    error (EXIT_FAILURE, errno, "cannot create temporary file name");
-
-  fd = open64 (name, O_CREAT|O_TRUNC|O_RDWR, 0666);
-  if (fd == -1 && errno == ENOSYS)
+  fd = mkstemp64 (name);
+  if (fd == -1)
     {
-      /* Fail silently.  */
-      error (0, errno, "open64 is not supported");
-      exit (EXIT_SUCCESS);
+      if (errno == ENOSYS)
+	{
+	  /* Fail silently.  */
+	  error (0, errno, "open64 is not supported");
+	  exit (EXIT_SUCCESS);
+	}
+      else
+	error (EXIT_FAILURE, errno, "cannot create temporary file");
     }
 
-  if (fd == -1)
-    error (EXIT_FAILURE, errno, "cannot open test file `%s'", name);
-
-  if (setrlimit64 (RLIMIT_FSIZE, &((const struct rlimit64)
-                                   { RLIM_INFINITY, RLIM_INFINITY }))
-      == -1)
-    error (EXIT_FAILURE, errno, "cannot reset file size limits");
+  if (getrlimit64 (RLIMIT_FSIZE, &rlim) != 0)
+    {
+      error (0, errno, "cannot get resource limit");
+      exit (0);
+    }
+  if (rlim.rlim_cur < TWO_GB + 200)
+    {
+      rlim.rlim_cur = TWO_GB + 200;
+      if (setrlimit64 (RLIMIT_FSIZE, &rlim) != 0)
+	{
+	  error (0, errno, "cannot reset file size limits");
+	  exit (0);
+	}
+    }
 }
 
 int

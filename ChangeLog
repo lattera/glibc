@@ -1,5 +1,8 @@
 2000-10-25  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/test-lfs.c (do_prepare): Rewrite so it doesn't fail on systems
+	without LFS support.
+
 	* sysdeps/ieee754/dbl-64/e_jn.c: Use __ieee754_sqrt instead of __sqrt.
 	* sysdeps/ieee754/dbl-64/e_j1.c: Likewise.
 	* sysdeps/ieee754/dbl-64/e_j0.c: Likewise.
