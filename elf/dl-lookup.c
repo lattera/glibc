@@ -77,6 +77,9 @@ do_lookup (const char *undef_name, unsigned long int hash,
       const char *strtab;
       const ElfW(Half) *verstab;
       ElfW(Symndx) symidx;
+      int num_versions = 0;
+      const ElfW(Sym) *sym;
+      const ElfW(Sym) *versioned_sym;
 
       map = list[i];
 
@@ -114,7 +117,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	   symidx != STN_UNDEF;
 	   symidx = map->l_chain[symidx])
 	{
-	  const ElfW(Sym) *sym = &symtab[symidx];
+	  sym = &symtab[symidx];
 
 	  if (sym->st_value == 0 || /* No value.  */
 	      (elf_machine_lookup_noplt_p (reloc_type) /* Reject PLT entry.  */
@@ -134,13 +137,20 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	    {
 	      /* No specific version is selected.  When the object
 		 file also does not define a version we have a match.
-		 Otherwise we only accept the default version, i.e.,
-		 the version which name is "".  */
+		 Otherwise we accept the default version, or in case
+		 there is only one version defined, this one version.  */
 	      if (verstab != NULL)
 		{
 		  ElfW(Half) ndx = verstab[symidx] & 0x7fff;
 		  if (ndx > 2) /* map->l_versions[ndx].hash != 0) */
-		    continue;
+		    {
+		      /* Don't accept hidden symbols.  */
+		      if ((verstab[symidx] & 0x8000) == 0
+			  && num_versions++ == 0)
+			/* No version so far.  */
+			versioned_sym = sym;
+		      continue;
+		    }
 		}
 	    }
 	  else
@@ -170,6 +180,19 @@ do_lookup (const char *undef_name, unsigned long int hash,
 		}
 	    }
 
+	  /* There cannot be another entry for this symbol so stop here.  */
+	  goto found_it;
+	}
+
+      /* If we have seem exactly one versioned symbol while we are
+	 looking for an unversioned symbol and the version is not the
+	 default version we still accept this symbol since there are
+	 no possible ambiguities.  */
+      sym = num_versions == 1 ? versioned_sym : NULL;
+
+      if (sym != NULL)
+	{
+	found_it:
 	  switch (ELFW(ST_BIND) (sym->st_info))
 	    {
 	    case STB_GLOBAL:
@@ -178,8 +201,7 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      result->m = map;
 	      return 1;
 	    case STB_WEAK:
-	      /* Weak definition.  Use this value if we don't find
-		 another.  */
+	      /* Weak definition.  Use this value if we don't find another.  */
 	      if (! result->s)
 		{
 		  result->s = sym;
@@ -190,9 +212,6 @@ do_lookup (const char *undef_name, unsigned long int hash,
 	      /* Local symbols are ignored.  */
 	      break;
 	    }
-
-	  /* There cannot be another entry for this symbol so stop here.  */
-	  break;
 	}
 
       /* If this current map is the one mentioned in the verneed entry

@@ -1,5 +1,11 @@
 1998-12-23  Ulrich Drepper  <drepper@cygnus.com>
 
+	* elf/dl-lookup.c (do_lookup): If looking up an unversioned symbol
+	but the object file only contains versioned definitions than
+	accept the definition if there is exactly one even if the version
+	number is not the default version.  This helps dlsym() to find
+	newly introduced symbols.
+
 	* locale/programs/ld-collate.c: Unify messages and correct typos.
 	* locale/programs/ld-monetary.c: Likewise.
 	* locale/programs/ld-numeric.c: Likewise.
