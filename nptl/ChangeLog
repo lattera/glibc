@@ -1,5 +1,8 @@
 2003-01-03  Ulrich Drepper  <drepper@redhat.com>
 
+	* Makefile (tests): Add tst-cond7.
+	* tst-cond7.c: New file.
+
 	* sysdeps/unix/sysv/linux/i386/i486/lowlevelcond.S
 	(condvar_cleanup): Get condvar address from the right place.
 
