@@ -1,3 +1,10 @@
+2003-06-12  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/powerpc64/dl-machine.h (RTLD_START): Replace
+	@got notation with @toc.
+	* sysdeps/powerpc/powerpc64/sysdep.h (CALL_MCOUNT): Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/brk.S (__brk): Likewise.
+
 2003-06-12  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set no_inet6_date alse
