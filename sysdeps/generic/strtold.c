@@ -30,4 +30,3 @@ strtold (const char *nptr, char **endptr)
 {
   return __strtod_internal (nptr, endptr, 0);
 }
-#endif

@@ -1,4 +1,5 @@
 #include <dlfcn.h>
+#include <stdio.h>
 
 static const char obj[] = "testobj1.so";
 
@@ -18,6 +19,11 @@ main (void)
     if (dlsym (d, "does not exist") != NULL)
       {
 	puts ("dlsym() did not fail");
+	return 1;
+      }
+    else if (dlerror () == NULL)
+      {
+	puts ("dlerror() didn't return a string");
 	return 1;
       }
 

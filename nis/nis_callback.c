@@ -1,6 +1,6 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1997.
+   Contributed by Thorsten Kukuk <kukuk@suse.de>, 1997.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -27,6 +27,7 @@
 #include <string.h>
 #include <memory.h>
 #include <syslog.h>
+#include <sys/poll.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -195,29 +196,29 @@ static nis_error
 internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 			  struct nis_cb *cb)
 {
-  /* Default timeout can be changed using clnt_control() */
-  static struct timeval TIMEOUT = {25, 0};
-#ifdef FD_SETSIZE
-  fd_set readfds;
-#else
-  int readfds;
-#endif /* def FD_SETSIZE */
-  struct timeval tv;
+  struct timeval TIMEOUT = {25, 0};
   bool_t cb_is_running = FALSE;
 
   data = cb;
 
   for (;;)
     {
-#ifdef FD_SETSIZE
-      readfds = svc_fdset;
-#else
-      readfds = svc_fds;
-#endif /* def FD_SETSIZE */
-      tv.tv_sec = 25;
-      tv.tv_usec = 0;
-      switch (select (_rpc_dtablesize (), &readfds, NULL, NULL, &tv))
-	{
+      struct pollfd *my_pollfd;
+      int i;
+
+      if (svc_max_pollfd == 0 && svc_pollfd == NULL)
+        return NIS_CBERROR;
+
+      my_pollfd = malloc (sizeof (struct pollfd) * svc_max_pollfd);
+      for (i = 0; i < svc_max_pollfd; ++i)
+        {
+          my_pollfd[i].fd = svc_pollfd[i].fd;
+          my_pollfd[i].events = svc_pollfd[i].events;
+          my_pollfd[i].revents = 0;
+        }
+
+      switch (i = __poll (my_pollfd, svc_max_pollfd, 25*1000))
+        {
 	case -1:
 	  if (errno == EINTR)
 	    continue;
@@ -237,7 +238,7 @@ internal_nis_do_callback (struct dir_binding *bptr, netobj *cookie,
 	    }
 	  break;
 	default:
-	  svc_getreqset (&readfds);
+	  svc_getreq_poll (my_pollfd, i);
 	  if (data->nomore)
 	    return data->result;
 	}

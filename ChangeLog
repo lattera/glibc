@@ -1,3 +1,23 @@
+1999-08-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* nis/nis_callback.c (internal_nis_do_callback) use poll()
+	instead of select().
+
+1999-08-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/s_nextafter.c: Define __nexttoward and
+	nexttoward so something else so that aliasing works.
+
+1999-08-02  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/generic/math_ldbl.h: Fix typo.
+	* sysdeps/generic/strtold.c: Remove unbalanced #endif.
+	* sysdeps/alpha/fpu/e_sqrt.c: Use new path for e_sqrt.c.
+
+1999-08-02  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/resolvfail.c: Include stdio.h.  Also test dlerror.
+
 1999-08-01  Ulrich Drepper  <drepper@cygnus.com>
 
 	* elf/Makefile (tests): Add resolvfail.  Add rules to build the
