@@ -1,5 +1,7 @@
 1999-06-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconv/gconv_open.c: Inlcude string.h for memset prototype.
+
 	* libio/libioP.h (FILEBUF_LITERAL): Add missing parameter to macro
 	definitions.
 
