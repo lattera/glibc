@@ -560,8 +560,9 @@ AC_SUBST(libc_cv_have_ksh)
 AC_PROG_AWK
 AC_PATH_PROG(PERL, perl, no)
 AC_SUBST(PERL)
-AC_PATH_PROG(INSTALL_INFO, install-info, no, dnl
-/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin)
+dnl This works around a bug in autoconf.
+install_info_path=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+AC_PATH_PROG(INSTALL_INFO, install-info, no, $install_info_path)
 AC_SUBST(INSTALL_INFO)
 if test "$INSTALL_INFO" != "no"; then
 AC_CACHE_CHECK(for old Debian install-info, libc_cv_old_debian_install_info,

@@ -1,4 +1,4 @@
-/* Copyright (C) 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -25,13 +25,16 @@
 
 #include <features.h>
 
+/* Get general and ISO C 9X specific information.  */
+#include <bits/mathdef.h>
+
 __BEGIN_DECLS
 
 /* We might need to add support for more compilers here.  But once ISO
    C 9X is out hopefully all maintained compilers will provide the data
    types `float complex' and `double complex'.  */
 #if (__GNUC__ == 2 && __GNUC_MINOR__ >= 7) || __GNUC__ > 2
-# define complex __complex__
+# define _Complex __complex__
 #endif
 
 
@@ -74,13 +77,13 @@ __BEGIN_DECLS
 
 /* Now the float versions.  */
 #ifndef _Mfloat_
-#define _Mfloat_		float
+# define _Mfloat_		float
 #endif
 #define _Mdouble_ 		_Mfloat_
 #ifdef __STDC__
-#define __MATH_PRECNAME(name)	name##f
+# define __MATH_PRECNAME(name)	name##f
 #else
-#define __MATH_PRECNAME(name)	name/**/f
+# define __MATH_PRECNAME(name)	name/**/f
 #endif
 #include <bits/cmathcalls.h>
 #undef	_Mdouble_
@@ -88,16 +91,18 @@ __BEGIN_DECLS
 
 /* And the long double versions.  It is non-critical to define them
    here unconditionally since `long double' is required in ISO C 9X.  */
-#ifndef _Mlong_double_
-#define _Mlong_double_		long double
+#if __STDC__ - 0 || __GNUC__ - 0 && !defined __NO_LONG_DOUBLE_MATH
+# ifndef _Mlong_double_
+#  define _Mlong_double_	long double
+# endif
+# define _Mdouble_ 		_Mlong_double_
+# ifdef __STDC__
+#  define __MATH_PRECNAME(name)	name##l
+# else
+#  define __MATH_PRECNAME(name)	name/**/l
+# endif
+# include <bits/cmathcalls.h>
 #endif
-#define _Mdouble_ 		_Mlong_double_
-#ifdef __STDC__
-#define __MATH_PRECNAME(name)	name##l
-#else
-#define __MATH_PRECNAME(name)	name/**/l
-#endif
-#include <bits/cmathcalls.h>
 #undef	_Mdouble_
 #undef	__MATH_PRECNAME
 #undef	__MATHDECL_1

@@ -82,7 +82,7 @@ stamp-summary: summary.awk $(filter-out summary.texi, $(texis))
 # access to the documentation of the function, variables, and other
 # definitions.
 dir-add.info: xtract-typefun.awk $(texis)
-	(echo "INFO-DIR-SECTION GNU C library functions:";		\
+	(echo "INFO-DIR-SECTION GNU C library functions";		\
 	 echo "START-INFO-DIR-ENTRY";					\
 	 $(AWK) -f $^ | sort;						\
 	 echo "END-INFO-DIR-ENTRY") > $@.new

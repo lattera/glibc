@@ -1,52 +1,71 @@
-1998-10-28  H.J. Lu  <hjl@gnu.org> 
- 
-	* posix/getopt.h: Add "__" to arguments in prototypes. 
- 
-1998-11-05  H.J. Lu  <hjl@gnu.org> 
- 
-	* libio/iofgets.c (_IO_fgets): Don't report error 
-	if something was read in and errno is set to 
-	EAGAIN. 
-	* libio/iofgets_u.c (fgets_unlocked): Likewise. 
- 
-1998-11-05  Philip Blundell  <philb@gnu.org> 
- 
-	* sysdeps/unix/sysv/linux/net/if_packet.h: Don't include kernel 
-	header; it defines too much.  Provide a local definition of struct 
-	sockaddr_pkt and a comment advising against its use. 
- 
-1998-11-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* extra-lib.mk: Avoid empty include list. 
- 
-1998-11-04  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de> 
- 
-	* extra-lib.mk: Add support for $(lib)-shared-only-routines. 
- 
-	* elf/Makefile (libdl-routines): Add dlopenold only if doing 
-	versioning. 
-	(libdl-shared-only-routines): New variable. 
- 
-1998-11-06  Paul Eggert  <eggert@twinsun.com> 
- 
-	Don't invoke localtime_r or gmtime_r unless it's the GNU C 
-	library's localtime_r and gmtime_r; there are too many buggy 
-	implementations of localtime_r and gmtime_r out there, and 
-	it's not worth keeping track of all the different bugs. 
+1998-11-09 18:16  Ulrich Drepper  <drepper@cygnus.com>
 
-	* time/mktime.c (__EXTENSIONS__): Remove. 
-	(<unistd.h>): No need to include. 
+	* math/complex.h: Include bits/mathdef.h to get __NO_LONG_DOUBLE_MATH
+	is needed.
+	Don't define long double functions if __NO_LONG_DOUBLE_MATH is defined.
+	Don't define `complex' but instead `_Complex'.  The later is the
+	reserved keyword.
+	* math/bits/cmathcalls.c: Define _Mdouble_complex_ using _Complex,
+	not complex.
+
+1998-11-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* manual/libc.texinfo: Remove colon from category name.
+	* manual/Makefile (dir-add.info): Likewise.
+
+1998-11-07  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* configure.in: Avoid autoconf bug.
+
+1998-10-28  H.J. Lu  <hjl@gnu.org>
+
+	* posix/getopt.h: Add "__" to arguments in prototypes.
+
+1998-11-05  H.J. Lu  <hjl@gnu.org>
+
+	* libio/iofgets.c (_IO_fgets): Don't report error
+	if something was read in and errno is set to
+	EAGAIN.
+	* libio/iofgets_u.c (fgets_unlocked): Likewise.
+
+1998-11-05  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/unix/sysv/linux/net/if_packet.h: Don't include kernel
+	header; it defines too much.  Provide a local definition of struct
+	sockaddr_pkt and a comment advising against its use.
+
+1998-11-06  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* extra-lib.mk: Avoid empty include list.
+
+1998-11-04  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
+
+	* extra-lib.mk: Add support for $(lib)-shared-only-routines.
+
+	* elf/Makefile (libdl-routines): Add dlopenold only if doing
+	versioning.
+	(libdl-shared-only-routines): New variable.
+
+1998-11-06  Paul Eggert  <eggert@twinsun.com>
+
+	Don't invoke localtime_r or gmtime_r unless it's the GNU C
+	library's localtime_r and gmtime_r; there are too many buggy
+	implementations of localtime_r and gmtime_r out there, and
+	it's not worth keeping track of all the different bugs.
+
+	* time/mktime.c (__EXTENSIONS__): Remove.
+	(<unistd.h>): No need to include.
 	* time/strftime.c: Likewise.
 
 	* time/mktime.c (_POSIX_THREAD_SAFE_FUNCTIONS, HAVE_LOCALTIME_R):
-	Remove. 
-	(my_mktime_localtime_r): Renamed from localtime_r; all uses changed. 
-	Base it on localtime unless _LIBC. 
+	Remove.
+	(my_mktime_localtime_r): Renamed from localtime_r; all uses changed.
+	Base it on localtime unless _LIBC.
 
-	* time/strftime.c (my_strftime_gmtime_r): Renamed from gmtime_r; 
-	all uses changed. 
-	(my_strftime_localtime_r): Renamed from localtime_r; all uses changed. 
-	Base them on localtime/gmtime if not _LIBC. 
+	* time/strftime.c (my_strftime_gmtime_r): Renamed from gmtime_r;
+	all uses changed.
+	(my_strftime_localtime_r): Renamed from localtime_r; all uses changed.
+	Base them on localtime/gmtime if not _LIBC.
 
 1998-11-07  Ulrich Drepper  <drepper@cygnus.com>
 

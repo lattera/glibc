@@ -5,7 +5,7 @@
 @setchapternewpage odd
 
 @comment Tell install-info what to do.
-@dircategory GNU libraries:
+@dircategory GNU libraries
 @direntry
 * Libc: (libc).                 C library.
 @end direntry
