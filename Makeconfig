@@ -182,7 +182,7 @@ endif
 
 # Where to install the header files.
 ifndef includedir
-includedir = $(exec_prefix)/include
+includedir = $(prefix)/include
 endif
 inst_includedir = $(install_root)$(includedir)
 
