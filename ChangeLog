@@ -1,3 +1,7 @@
+2000-11-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gconv-modules: Add CP936 as alias for GBK.
+
 2000-11-14  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/generic/dl-cache.c (HWCAP_CHECK): Fix access to
