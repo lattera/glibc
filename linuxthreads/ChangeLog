@@ -1,3 +1,8 @@
+2001-03-09  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+        * sysdeps/unix/sysv/linux/s390/pt-initfini.c: Use 0x07 padding for
+	code alignment.
+
 2001-02-20  Hans Boehm  <hans_boehm@hp.com>
 
 	* manager.c (manager_mask): Removed static vesion.  Now always local

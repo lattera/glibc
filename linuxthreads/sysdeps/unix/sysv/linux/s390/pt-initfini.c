@@ -87,7 +87,7 @@ _init:
 	BASR  14,1
 .L22:
 #APP
-	ALIGN
+	.align 4,0x07
 	END_INIT
 
 /*@_init_PROLOG_ENDS*/
@@ -132,7 +132,7 @@ _fini:
 	L	12,.LC17-.LT2_0(13)
 	AR	12,13
 #APP
-	ALIGN
+	.align 4,0x07
 	END_FINI
 
 /*@_fini_PROLOG_ENDS*/
