@@ -28,12 +28,9 @@
 locale_t
 __uselocale (locale_t newloc)
 {
-  if (newloc == NULL)
-    {
-      locale_t loc = __libc_tsd_get (LOCALE);
-      return loc == &_nl_global_locale ? LC_GLOBAL_LOCALE : loc;
-    }
-  else
+  locale_t oldloc = __libc_tsd_get (LOCALE);
+
+  if (newloc != NULL)
     {
       const locale_t locobj
 	= newloc == LC_GLOBAL_LOCALE ? &_nl_global_locale : newloc;
@@ -65,6 +62,6 @@ __uselocale (locale_t newloc)
 #endif
     }
 
-  return newloc;
+  return oldloc == &_nl_global_locale ? LC_GLOBAL_LOCALE : oldloc;
 }
 weak_alias (__uselocale, uselocale)

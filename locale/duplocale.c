@@ -56,8 +56,8 @@ __duplocale (__locale_t dataset)
 	      if (result->__names[cnt] == NULL)
 		{
 		  while (cnt-- > 0)
-		    if (dataset->__names[cnt] != _nl_C_name)
-		      free ((char *) dataset->__names[cnt]);
+		    if (result->__names[cnt] != _nl_C_name)
+		      free ((char *) result->__names[cnt]);
 		  free (result);
 		  result = NULL;
 		  break;
