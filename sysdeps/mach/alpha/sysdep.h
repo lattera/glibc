@@ -21,16 +21,16 @@ Cambridge, MA 02139, USA.  */
 #define LOSE asm volatile ("call_pal 0") /* halt */
 
 #define START_MACHDEP \
-  asm ("_start:	mov	$30, $16\n" /* Put initial SP in a0.  */
-       "	br	$27, 1f\n" /* Load GP from PC.  */
-       "1:	ldgp	$29, 0($27)\n"
+  asm ("_start:	mov	$30, $16\n" /* Put initial SP in a0.  */	      \
+       "	br	$27, 1f\n" /* Load GP from PC.  */		      \
+       "1:	ldgp	$29, 0($27)\n"					      \
        "	jmp	$26, _start0");	/* Jump to _start0; don't return.  */
 #define START_ARGS	char **sparg
 #define SNARF_ARGS(argc, argv, envp) \
   (envp = &(argv = &sparg[1])[(argc = *(int *) sparg) + 1])
 
 #define CALL_WITH_SP(fn, sp) \
-  ({ register long int __fn = fn, __sp = (long int) sp; \
+  ({ register long int __fn = (long int) fn, __sp = (long int) sp; \
      asm volatile ("mov %0,$30; jmp $31, %1; ldgp $29, 0(%1)" \
 		   : : "r" (__sp), "r" (__fn)); })
 
