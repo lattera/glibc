@@ -96,7 +96,7 @@ _dl_sysdep_start (void **start_argptr,
   SEE (EGID, egid);
 
 
-  _dl_secure = uid != euid || gid != egid;
+  __libc_enable_secure = uid != euid || gid != egid;
 
 #ifdef DL_SYSDEP_INIT
   DL_SYSDEP_INIT;

@@ -776,6 +776,14 @@ extern int lockf __P ((int __fd, int __cmd, __off_t __len));
        while (__result == -1L && errno == EINTR);			      \
        __result; }))							      \
 
+
+/* This variable is set nonzero at startup if the process's effective IDs
+   differ from its real IDs, or it is otherwise indicated that extra
+   security should be used.  When this is set the dynamic linker ignores
+   the various environment variables that normally affect it.  */
+
+extern int __libc_enable_secure;
+
 #endif
 
 #ifdef __USE_POSIX

@@ -107,7 +107,7 @@ _dl_sysdep_start (void **start_argptr,
       else
 	_dl_hurd_data = (void *) p;
 
-      _dl_secure = _dl_hurd_data->flags & EXEC_SECURE;
+      __libc_enable_secure = _dl_hurd_data->flags & EXEC_SECURE;
 
       if (_dl_hurd_data->flags & EXEC_STACK_ARGS &&
 	  _dl_hurd_data->user_entry == 0)

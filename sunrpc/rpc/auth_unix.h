@@ -49,12 +49,6 @@
 
 __BEGIN_DECLS
 
-#ifndef _RPC_AUTH_UNIX_H
-
-#define _RPC_AUTH_UNIX_H	1
-#include <features.h>
-
-
 /* The machine name is part of a credential; it may not exceed 255 bytes */
 #define MAX_MACHINE_NAME 255
 

@@ -21,14 +21,15 @@
 subdir		:= elf
 
 headers		= elf.h elfclass.h link.h dlfcn.h
-routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support
+routines	= $(dl-routines) dl-open dl-close dl-symbol dl-support \
+		  enbl-secure
 
 # The core dynamic linking functions are in libc for the static and
 # profiled libraries.
 dl-routines	= $(addprefix dl-,load cache lookup object reloc deps \
 			          runtime error init fini debug)
 # But they are absent from the shared libc, because that code is in ld.so.
-elide-routines.so = $(dl-routines) dl-support
+elide-routines.so = $(dl-routines) dl-support enbl-secure
 
 # ld.so uses those routines, plus some special stuff for being the program
 # interpreter and operating independent of libc.

@@ -47,10 +47,7 @@ struct rmtcallargs {
 	xdrproc_t xdr_args;
 };
 
-bool_t xdr_rmtcallres __P ((XDR *__xdrs, struct rmtcallres *__crp));
-
-
-#endif /* rpc/pmap_rmt.h */
+bool_t xdr_rmtcall_args __P ((XDR *__xdrs, struct rmtcallargs *__crp));
 
 struct rmtcallres {
 	u_long *port_ptr;

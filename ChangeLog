@@ -1,3 +1,29 @@
+Sat Jul 27 13:02:09 1996  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/rtld.c (dl_main): Ignore arguments when environment variable
+ 	LD_TRACE_LOADED_OBJECTS is set.
+
+Sun Jul 28 19:42:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_start): Initialize
+	__libc_enable_secure instead of _dl_secure.
+	* sysdeps/mach/hurd/dl-sysdep.c (_dl_sysdep_start): Likewise.
+	* elf/dl-load.c (_dl_map_object): Check __libc_enable_secure instead
+	of _dl_secure.
+	* elf/Makefile (routines): Add enbl-secure.
+	(elide-routines.so): Here too.
+	* sysdeps/generic/enbl-secure.c: New file.
+	* posix/unistd.h [__USE_GNU]: Declare `__libc_enable_secure' flag.
+	* elf/dl-support.c (_dl_secure): Variable removed.
+	* elf/rtld.c: Likewise.  Replace all uses with __libc_enable_secure.
+
+Sun Jul 28 19:26:40 1996  David S. Miller  <dm@neteng.engr.sgi.com>
+
+	* sysdeps/mips/dl-machine.h (ELF_MACHINE_RUNTIME_TRAMPOLINE):
+	Declare _dl_runtime_resolve with __attribute__ ((unused)) so the
+	compiler doesn't elide it.
+	(elf_machine_rel): Follow Jul 14 change in sysdeps/i386/dl-machine.h.
+
 Sat Jul 27 02:58:49 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
 
 	* elf/rtld.c (dl_main): Take new option --verify when run directly.

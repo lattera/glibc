@@ -87,11 +87,6 @@ struct opaque_auth {
 	u_int	oa_length;		/* not to exceed MAX_AUTH_BYTES */
 };
 
-#ifndef _RPC_AUTH_H
-
-#define _RPC_AUTH_H	1
-#include <features.h>
-
 /*
  * Auth handle, interface to client side authenticators.
  */

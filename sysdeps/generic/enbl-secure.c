@@ -1,4 +1,4 @@
-/* Support for dynamic linking code in static libc.
+/* Define and initialize the `__libc_enable_secure' flag.  Generic version.
 Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
@@ -17,32 +17,18 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <assert.h>
-#include <fcntl.h>
+/* This file is used in the static libc.  For the shared library,
+   dl-sysdep.c defines and initializes __libc_enable_secure.  */
+
 #include <unistd.h>
 
-/* This file defines some things that for the dynamic linker are defined in
-   rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
-extern char *__progname;
-char **_dl_argv = &__progname;	/* This is checked for some error messages.  */
+/* Safest assumption, if somehow the initializer isn't run.  */
+int __libc_enable_secure = 1;
 
-/* This defines the default search path for libraries.
-   For the dynamic linker it is set by -rpath when linking.  */
-const char *_dl_rpath = DEFAULT_RPATH;
-
-/* This is the only dl-sysdep.c function that is actually needed at run-time
-   by _dl_map_object.  */
-
-int
-_dl_sysdep_open_zero_fill (void)
+static void __attribute__ ((unused, constructor))
+init_secure (void)
 {
-  return __open ("/dev/zero", O_RDONLY);
-}
-
-/* This should never be called.  */
-void
-_dl_sysdep_fatal (void)
-{
-  assert (! "_dl_sysdep_fatal called");
+  __libc_enable_secure = (__geteuid () != __getuid () ||
+			  __getegid () != __getgid ());
 }

@@ -30,7 +30,7 @@ Cambridge, MA 02139, USA.  */
 
 /* System-specific function to do initial startup for the dynamic linker.
    After this, file access calls and getenv must work.  This is responsible
-   for setting _dl_secure if we need to be secure (e.g. setuid),
+   for setting __libc_enable_secure if we need to be secure (e.g. setuid),
    and for setting _dl_argc and _dl_argv, and then calling _dl_main.  */
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 				    void (*dl_main) (const ElfW(Phdr) *phdr,
@@ -38,7 +38,6 @@ extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,
 						     ElfW(Addr) *user_entry));
 extern void _dl_sysdep_start_cleanup (void);
 
-int _dl_secure;
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
@@ -269,7 +268,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   preloads = NULL;
   npreloads = 0;
-  if (! _dl_secure)
+  if (! __libc_enable_secure)
     {
       const char *preloadlist = getenv ("LD_PRELOAD");
       if (preloadlist)
@@ -340,10 +339,7 @@ of this helper program; chances are you did not intend to run this program.\n",
 	}
     }
 
-  if (mode == normal && getenv ("LD_TRACE_LOADED_OBJECTS") != NULL)
-    mode = list;
-
-  if (mode != normal)
+  if (mode != normal || getenv ("LD_TRACE_LOADED_OBJECTS") != NULL)
     {
       /* We were run just to list the shared libraries.  It is
 	 important that we do this before real relocation, because the
@@ -366,29 +362,30 @@ of this helper program; chances are you did not intend to run this program.\n",
 				" (0x", bp, ")\n", NULL);
 	  }
 
-      for (i = 1; i < _dl_argc; ++i)
-	{
-	  const ElfW(Sym) *ref = NULL;
-	  ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
-						   &_dl_default_scope[2],
-						   "argument", 0, 0);
-	  char buf[20], *bp;
-	  buf[sizeof buf - 1] = '\0';
-	  bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
-	  while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
-	    *--bp = '0';
-	  _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
-	  buf[sizeof buf - 1] = '\0';
-	  bp = _itoa (loadbase, &buf[sizeof buf - 1], 16, 0);
-	  while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
-	    *--bp = '0';
-	  _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
-	}
+      if (mode != normal)
+	for (i = 1; i < _dl_argc; ++i)
+	  {
+	    const ElfW(Sym) *ref = NULL;
+	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], &ref,
+						     &_dl_default_scope[2],
+						     "argument", 0, 0);
+	    char buf[20], *bp;
+	    buf[sizeof buf - 1] = '\0';
+	    bp = _itoa (ref->st_value, &buf[sizeof buf - 1], 16, 0);
+	    while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+	      *--bp = '0';
+	    _dl_sysdep_message (_dl_argv[i], " found at 0x", bp, NULL);
+	    buf[sizeof buf - 1] = '\0';
+	    bp = _itoa (loadbase, &buf[sizeof buf - 1], 16, 0);
+	    while (&buf[sizeof buf - 1] - bp < sizeof loadbase * 2)
+	      *--bp = '0';
+	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
+	  }
 
       _exit (0);
     }
 
-  lazy = !_dl_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
+  lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
   {
     /* Now we have all the objects loaded.  Relocate them all except for

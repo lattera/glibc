@@ -511,7 +511,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type)
 				 l->l_info[DT_STRTAB]->d_un.d_ptr +
 				 l->l_info[DT_RPATH]->d_un.d_val));
       /* Try an environment variable (unless setuid).  */
-      if (fd == -1 && ! _dl_secure)
+      if (fd == -1 && ! __libc_enable_secure)
 	trypath (getenv ("LD_LIBRARY_PATH"));
       if (fd == -1)
 	{
