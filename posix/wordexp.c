@@ -74,6 +74,7 @@ static int eval_expr (char *expr, long int *result) internal_function;
 
 #define W_CHUNK	(100)
 
+/* Result of w_newword will be ignored if it the last word. */
 static inline char *
 w_newword (size_t *actlen, size_t *maxlen)
 {
@@ -135,6 +136,20 @@ w_addmem (char *buffer, size_t *actlen, size_t *maxlen, const char *str,
   return buffer;
 }
 
+
+/* Result of w_emptyword will not be ignored even if it is the last. */
+static inline char *
+w_emptyword (size_t *actlen, size_t *maxlen)
+{
+  char *word = malloc (1 + W_CHUNK);
+  *maxlen = W_CHUNK;
+  *actlen = 0;
+
+  if (word)
+    *word = '\0';
+
+  return word;
+}
 
 static char *
 internal_function
@@ -811,6 +826,7 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
   int i;
   char *buffer;
   pid_t pid;
+  int keep_empty_word = 0;
 
   /* Don't fork() unless necessary */
   if (!comm || !*comm)
@@ -911,6 +927,11 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		  if (strchr (ifs_white, buffer[i]) == NULL)
 		    {
 		      /* Current character is IFS but not whitespace */
+
+		      /* After this delimiter, another field must result.
+		       * Make a note. */
+		      keep_empty_word = 1;
+
 		      if (copying == 2)
 			{
 			  /*            current character
@@ -935,25 +956,12 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		      if (copying != 1)
 			continue;
 
-		      /* End of field (search for non-IFS afterwards) */
+		      /* End of field (search for non-ws IFS afterwards) */
 		      copying = 2;
 		    }
 
 		  /* First IFS white space, or IFS non-whitespace.
-		   * Delimit the field. */
-		  if (!*word)
-		    {
-		      /* This field is null, so make it an empty string */
-		      *word = w_addchar (*word, word_length, max_length, 0);
-		      if (*word == NULL)
-			{
-			  __kill (pid, SIGKILL);
-			  __waitpid (pid, NULL, 0);
-			  __close (fildes[0]);
-			  return WRDE_NOSPACE;
-			}
-		    }
-
+		   * Delimit the field.  Nulls are converted by w_addword. */
 		  if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		    {
 		      __kill (pid, SIGKILL);
@@ -962,13 +970,20 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 		      return WRDE_NOSPACE;
 		    }
 
-		  *word = w_newword (word_length, max_length);
+		  if (keep_empty_word)
+		    *word = w_emptyword (word_length, max_length);
+		  else
+		    *word = w_newword (word_length, max_length);
 		  /* fall back round the loop.. */
 		}
 	      else
 		{
 		  /* Not IFS character */
 		  copying = 1;
+
+		  if (buffer[i] != '\n')
+		    keep_empty_word = 0;
+
 		  *word = w_addchar (*word, word_length, max_length,
 				     buffer[i]);
 		  if (*word == NULL)
@@ -985,7 +1000,18 @@ exec_comm (char *comm, char **word, size_t *word_length, size_t *max_length,
 
   /* Bash chops off trailing newlines, which seems sensible.  */
   while (*word_length > 0 && (*word)[*word_length - 1] == '\n')
-    (*word)[--*word_length] = '\0';
+    {
+      (*word)[--*word_length] = '\0';
+
+      /* If the last word was entirely newlines, and the previous word
+       * wasn't delimited with IFS non-whitespace, turn it into a new word
+       * which can be ignored if there's nothing following it. */
+      if (!keep_empty_word && *word_length == 0)
+	{
+	  free (*word);
+	  *word = w_newword (word_length, max_length);
+	}
+    }
 
   __close (fildes[0]);
   return 0;
@@ -1723,7 +1749,7 @@ envsubst:
 	free (value);
 
       if (value_copy == NULL)
-	return WRDE_NOSPACE;
+	goto no_space;
 
       do
 	{
@@ -1736,10 +1762,10 @@ envsubst:
 	      if (w_addword (pwordexp, *word) == WRDE_NOSPACE)
 		{
 		  free (value_copy);
-		  return WRDE_NOSPACE;
+		  goto no_space;
 		}
 
-	      *word = w_newword (word_length, max_length);
+	      *word = w_emptyword (word_length, max_length);
 	    }
 
 	  /* Skip IFS whitespace before the field */
@@ -1773,7 +1799,7 @@ envsubst:
 	  if (*word == NULL && *field_begin != '\0')
 	    {
 	      free (value_copy);
-	      return WRDE_NOSPACE;
+	      goto no_space;
 	    }
 
 	  field_begin = next_field;
@@ -2217,7 +2243,7 @@ wordexp (const char *words, wordexp_t *pwordexp, int flags)
   /* End of string */
 
   /* There was a word separator at the end */
-  if (word == NULL)
+  if (word == NULL) /* i.e. w_newword */
     return 0;
 
   /* There was no field separator at the end */

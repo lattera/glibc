@@ -51,8 +51,19 @@ struct test_case_struct
     { 0, "two three", "one $var", 0, 3, { "one", "two", "three", }, IFS },
     { 0, "two three", "one \"$var\"", 0, 2, { "one", "two three", }, "" },
     { 0, "two three", "one $var", 0, 2, { "one", "two three", }, "" },
-    { 0, ":abc:", "$var", 0, 2, { "", "abc", }, ":" }, /* cf. bash */
+    { 0, ":abc:", "$var", 0, 3, { "", "abc", "", }, ":" },
+    { 0, NULL, "$(echo :abc:)", 0, 3, { "", "abc", "", }, ":" },
+    { 0, NULL, "$(echo :abc:\\ )", 0, 3, { "", "abc", "", }, ": " },
+    { 0, NULL, "$(echo :abc\\ )", 0, 2, { "", "abc", }, ": " },
+    { 0, ":abc:", "$(echo $var)", 0, 3, { "", "abc", "", }, ":" },
     { 0, NULL, ":abc:", 0, 1, { " abc ", }, ":" },
+    { 0, NULL, "$(echo :abc:)def", 0, 3, { "", "abc", "def", }, ":" },
+    { 0, NULL, "$(echo abc:de)f", 0, 2, { "abc", "def", }, ":" },
+    { 0, NULL, "$(echo abc:de)f:ghi", 0, 2, { "abc", "def ghi", }, ":" },
+    { 0, "abc:", "$var$(echo def:ghi)", 0, 3, { "abc", "def", "ghi", }, ":" },
+    { 0, "abc:d", "$var$(echo ef:ghi)", 0, 3, { "abc", "def", "ghi", }, ":" },
+    { 0, "def:ghi", "$(echo abc:)$var", 0, 3, { "abc", "def", "ghi", }, ":" },
+    { 0, "ef:ghi", "$(echo abc:d)$var", 0, 3, { "abc", "def", "ghi", }, ":" },
 
     /* Simple parameter expansion */
     { 0, "foo", "${var}", 0, 1, { "foo", }, IFS },

@@ -1,3 +1,15 @@
+1998-09-13 14:53  Tim Waugh  <tim@cyberelk.demon.co.uk>
+
+	* posix/wordexp-test.c: Field-splitting ':abc:' with IFS=: should
+	yield three fields, not two.  Test both parameter expansion and
+	command substitution for correct field-splitting behaviour.
+
+	* posix/wordexp.c (w_emptyword): New function.
+	(parse_param): Use it.
+	(exec_comm): Likewise, for consistency with the way parse_param
+	splits fields.
+	(parse_param): Fix some memory leaks.
+
 1998-09-13 18:04  Geoff Keating  <geoffk@ozemail.com.au>
 
 	* sysdeps/powerpc/dl-machine.c (PPC_DCBST,PPC_SYNC,PPC_ISYNC,PPC_ICBI):
