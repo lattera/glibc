@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
+#include <limits.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -202,3 +203,129 @@ __assert_perror_fail (int errnum,
 }
 
 #endif
+
+/* This function is only used in eval.c.  */
+long int
+weak_function
+__strtol_internal (const char *nptr, char **endptr, int base, int group)
+{
+  long int result = 0;
+  long int sign = 1;
+
+  while (*nptr == ' ' || *nptr == '\t')
+    ++nptr;
+
+  if (*nptr == '-')
+    {
+      sign = -1;
+      ++nptr;
+    }
+  else if (*nptr == '+')
+    ++nptr;
+
+  if (*nptr < '0' || *nptr > '9')
+    {
+      if (endptr != NULL)
+	*endptr = (char *) nptr;
+      return 0L;
+    }
+
+  assert (base == 0);
+  if (*nptr == '0')
+    {
+      if (nptr[1] == 'x' || nptr[1] == 'X')
+	{
+	  base = 16;
+	  nptr += 2;
+	}
+      else
+	base = 8;
+    }
+  else
+    base = 10;
+
+  while (*nptr >= '0' && *nptr <= '9')
+    {
+      long int digval = *nptr - '0';
+      if (result > LONG_MAX / 10
+	  || (result == (sign ? LONG_MAX : LONG_MAX + 1) / 10
+	      && digval > (sign ? LONG_MAX : LONG_MAX + 1) % 10))
+	{
+	  errno = ERANGE;
+	  return LONG_MAX * sign;
+	}
+      result *= 10;
+      result += digval;
+    }
+
+  return result * sign;
+}
+
+long int
+weak_function
+strtol (const char *nptr, char **endptr, int base)
+{
+  return __strtol_internal (nptr, endptr, base, 0);
+}
+
+unsigned long int
+weak_function
+__strtoul_internal (const char *nptr, char **endptr, int base, int group)
+{
+  long int result = 0;
+  long int sign = 1;
+
+  while (*nptr == ' ' || *nptr == '\t')
+    ++nptr;
+
+  if (*nptr == '-')
+    {
+      sign = -1;
+      ++nptr;
+    }
+  else if (*nptr == '+')
+    ++nptr;
+
+  if (*nptr < '0' || *nptr > '9')
+    {
+      if (endptr != NULL)
+	*endptr = (char *) nptr;
+      return 0UL;
+    }
+
+  assert (base == 0);
+  if (*nptr == '0')
+    {
+      if (nptr[1] == 'x' || nptr[1] == 'X')
+	{
+	  base = 16;
+	  nptr += 2;
+	}
+      else
+	base = 8;
+    }
+  else
+    base = 10;
+
+  while (*nptr >= '0' && *nptr <= '9')
+    {
+      long int digval = *nptr - '0';
+      if (result > LONG_MAX / 10
+	  || (result == ULONG_MAX / 10 && digval > ULONG_MAX % 10))
+	{
+	  errno = ERANGE;
+	  return ULONG_MAX;
+	}
+      result *= 10;
+      result += digval;
+    }
+
+  return result * sign;
+}
+
+unsigned long int
+weak_function
+strtoul (const char *nptr, char **endptr, int base)
+{
+  return (unsigned long int) __strtoul_internal (nptr, endptr, base, 0);
+}

@@ -128,13 +128,13 @@ fixup (
 	  {
 	    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
 						&sym, scope, l->l_name,
-						version, DL_LOOKUP_NOPLT);
+						version, ELF_MACHINE_JMP_SLOT);
 	    break;
 	  }
       }
     case 0:
       value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
-				 l->l_name, DL_LOOKUP_NOPLT);
+				 l->l_name, ELF_MACHINE_JMP_SLOT);
     }
 
   /* Currently value contains the base load address of the object
@@ -205,13 +205,13 @@ profile_fixup (
 		value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
 						    &sym, scope, l->l_name,
 						    version,
-						    DL_LOOKUP_NOPLT);
+						    ELF_MACHINE_JMP_SLOT);
 		break;
 	      }
 	  }
 	case 0:
 	  value = _dl_lookup_symbol (strtab + sym->st_name, &sym, scope,
-				     l->l_name, DL_LOOKUP_NOPLT);
+				     l->l_name, ELF_MACHINE_JMP_SLOT);
 	}
 
       /* Currently value contains the base load address of the object

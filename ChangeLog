@@ -1,3 +1,21 @@
+1998-04-07 16:18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add __asprintf to GLIBC_2.1.
+	* elf/dlerror.c: Use __asprintf, not asprintf.
+	* libio/stdio.h: Declare __asprintf.
+	* stdio-common/asprintf.c: Define as __asprintf and make asprintf
+	a weak alias.
+
+	* elf/dl-minimal.c: Add definition of strtol and strtoul (und friends)
+	to avoid inclusion from libc_pic.a.
+
+	* elf/dl-runtime.c: Undo last patch.
+
+	* stdlib/strtod.c: Don't use mbtowc, use btowc.
+
+	* sysdeps/i386/dl-machine.h (dl_platform_init): Don't use "i386"
+	as default, use NULL.
+
 1998-04-04  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* resolv/Makefile: Include ../Makeconfig - needed for building

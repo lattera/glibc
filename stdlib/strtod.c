@@ -88,10 +88,12 @@
 # define LOCALE_PARAM_DECL
 #endif
 
+#if defined _LIBC || defined HAVE_WCHAR_H
+# include <wchar.h>
+#endif
 
 #ifdef USE_WIDE_CHAR
 # include <wctype.h>
-# include <wchar.h>
 # define STRING_TYPE wchar_t
 # define CHAR_TYPE wint_t
 # define L_(Ch) L##Ch
@@ -440,7 +442,7 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
   /* The radix character of the current locale.  */
   wchar_t decimal;
   /* The thousands character of the current locale.  */
-  wchar_t thousands;
+  wchar_t thousands = L'\0';
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
@@ -457,18 +459,17 @@ INTERNAL (STRTOF) (nptr, endptr, group LOCALE_PARAM)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+#if defined _LIBC || defined _HAVE_BTOWC
+	  thousands = btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
+	  if (thousands == WEOF)
+	    thousands = L'\0';
+#endif
 	  if (thousands == L'\0')
 	    grouping = NULL;
 	}
     }
   else
-    {
-      grouping = NULL;
-      thousands = L'\0';
-    }
+    grouping = NULL;
 
   /* Find the locale's decimal point character.  */
   if (mbtowc ((wchar_t *) &decimal, _NL_CURRENT (LC_NUMERIC, DECIMAL_POINT),

@@ -72,8 +72,8 @@ dlerror (void)
     buf = result->errstring;
   else
     {
-      if (asprintf (&buf, "%s: %s",
-		    result->errstring, strerror (result->errcode)) == -1)
+      if (__asprintf (&buf, "%s: %s",
+		      result->errstring, strerror (result->errcode)) == -1)
 	buf = NULL;
 
       /* We don't need the error string anymore.  */

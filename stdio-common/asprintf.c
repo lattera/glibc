@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,7 +23,7 @@
    allocated with malloc and stored in *STRING_PTR.  */
 /* VARARGS2 */
 int
-asprintf (char **string_ptr, const char *format, ...)
+__asprintf (char **string_ptr, const char *format, ...)
 {
   va_list arg;
   int done;
@@ -34,3 +34,4 @@ asprintf (char **string_ptr, const char *format, ...)
 
   return done;
 }
+weak_alias (__asprintf, asprintf)

@@ -1,5 +1,5 @@
 /* Convert string representation of a number into an integer value.
-   Copyright (C) 1991, 92, 94, 95, 96, 97 Free Software Foundation, Inc.
+   Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -167,9 +167,11 @@ extern int errno;
 # define LOCALE_PARAM_DECL
 #endif
 
+#if defined _LIBC || defined HAVE_WCHAR_H
+# include <wchar.h>
+#endif
 
 #ifdef USE_WIDE_CHAR
-# include <wchar.h>
 # include <wctype.h>
 # define L_(Ch) L##Ch
 # define UCHAR_TYPE wint_t
@@ -247,7 +249,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   struct locale_data *current = loc->__locales[LC_NUMERIC];
 # endif
   /* The thousands character of the current locale.  */
-  wchar_t thousands;
+  wchar_t thousands = L'\0';
   /* The numeric grouping specification of the current locale,
      in the format described in <locale.h>.  */
   const char *grouping;
@@ -260,9 +262,11 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
       else
 	{
 	  /* Figure out the thousands separator character.  */
-	  if (mbtowc (&thousands, _NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP),
-		      strlen (_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP))) <= 0)
-	    thousands = (wchar_t) *_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP);
+# if defined _LIBC || defined _HAVE_BTOWC
+	  thousands = btowc (*_NL_CURRENT (LC_NUMERIC, THOUSANDS_SEP));
+	  if (thousands == WEOF)
+	    thousands = L'\0';
+# endif
 	  if (thousands == L'\0')
 	    grouping = NULL;
 	}
@@ -299,23 +303,19 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
   else
     negative = 0;
 
-  if (base == 16 && s[0] == L_('0') && TOUPPER (s[1]) == L_('X'))
-    s += 2;
-
-  /* If BASE is zero, figure it out ourselves.  */
-  if (base == 0)
-    if (*s == L_('0'))
-      {
-	if (TOUPPER (s[1]) == L_('X'))
-	  {
-	    s += 2;
-	    base = 16;
-	  }
-	else
-	  base = 8;
-      }
-    else
-      base = 10;
+  /* Recognize number prefix and if BASE is zero, figure it out ourselves.  */
+  if (*s == L_('0'))
+    {
+      if (TOUPPER (s[1]) == L_('X'))
+	{
+	  s += 2;
+	  base = 16;
+	}
+      else if (base == 0)
+	base = 8;
+    }
+  else if (base == 0)
+    base = 10;
 
   /* Save the pointer so we can check later if anything happened.  */
   save = s;
@@ -396,7 +396,7 @@ INTERNAL (strtol) (nptr, endptr, base, group LOCALE_PARAM)
     }
 
   /* Return the result of the appropriate sign.  */
-  return (negative ? -i : i);
+  return negative ? -i : i;
 
 noconv:
   /* We must handle a special case here: the base is 0 or 16 and the

@@ -310,6 +310,9 @@ extern int vsnprintf __P ((char *__restrict __s, size_t __maxlen,
 extern int vasprintf __P ((char **__restrict __ptr,
 			   __const char *__restrict __f, _G_va_list __arg))
      __attribute__ ((__format__ (__printf__, 2, 0)));
+extern int __asprintf __P ((char **__restrict __ptr,
+			    __const char *__restrict __fmt, ...))
+     __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int asprintf __P ((char **__restrict __ptr,
 			  __const char *__restrict __fmt, ...))
      __attribute__ ((__format__ (__printf__, 2, 3)));

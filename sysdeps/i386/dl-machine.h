@@ -274,11 +274,8 @@ extern const char *_dl_platform;
 static inline void __attribute__ ((unused))
 dl_platform_init (void)
 {
-  if (_dl_platform == NULL)
-    /* We default to i386 since all instructions understood by the i386
-       are also understood by later processors.  */
-    _dl_platform = "i386";
-  else if (*_dl_platform == '\0')
+  if (_dl_platform != NULL && *_dl_platform == '\0')
+    /* Avoid an empty string which would disturb us.  */
     _dl_platform = NULL;
 }
 
