@@ -474,18 +474,17 @@ override sources := $(addsuffix .c,\
 			$(filter-out $(elided-routines),\
 			    $(routines) $(aux) \
 			    $(sysdep_routines)))
-# XXX The following was introduced here in the BP patches but it belongs
-# XXX somewhere else since adding it here breaks `make dist'.
-#			    $(addprefix $(bppfx),\
-#				$(filter $(routines) $(sysdep_routines),\
-#				    $(bp-thunks))))
 sysdep_routines := $(sysdep_routines)
 
 headers := $(headers) $(sysdep_headers)
 
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
-override objects	:= $(addprefix $(objpfx),$(sources:.c=.o))
+# We also add bounded-pointer thunks, which are later
+# elided for all suffixes except for `.ob'.
+override objects := $(addprefix $(objpfx),$(sources:.c=.o) \
+		      $(patsubst %,$(bppfx)%.o,\
+			$(filter $(routines) $(sysdep_routines),$(bp-thunks))))
 
 
 # The makefile may define $(extra-libs) with `libfoo libbar'

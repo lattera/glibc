@@ -1,3 +1,7 @@
+2000-06-20  Greg McGary  <greg@mcgary.org>
+
+	* Makerules (objects): Add BP thunks.
+
 2000-06-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/charmap.c (parse_charmap): Handle UCS names also
