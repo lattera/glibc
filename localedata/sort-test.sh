@@ -17,6 +17,13 @@ for l in $lang; do
    ${common_objpfx}localedata/collate-test $id < $cns.in \
    > ${common_objpfx}localedata/$cns.out || here=1
   cmp -s $cns.in ${common_objpfx}localedata/$cns.out || here=1
+  if test $here -eq 0; then
+    echo "$l collate-test OK"
+  else
+    echo "$l collate-test FAIL"
+    diff -u $cns.in ${common_objpfx}localedata/$cns.out | sed 's/^/  /'
+    status=1
+  fi
 
   LOCPATH=${common_objpfx}localedata GCONV_PATH=${common_objpfx}/iconvdata \
    LC_ALL=$l ${run_program_prefix} \
@@ -24,10 +31,10 @@ for l in $lang; do
    > ${common_objpfx}localedata/$cns.xout || here=1
   cmp -s $cns.in ${common_objpfx}localedata/$cns.xout || here=1
   if test $here -eq 0; then
-    echo "$l OK"
+    echo "$l xfrm-test OK"
   else
-    echo "$l FAIL"
-    diff -u $cns.in ${common_objpfx}localedata/$cns.xout
+    echo "$l xfrm-test FAIL"
+    diff -u $cns.in ${common_objpfx}localedata/$cns.xout | sed 's/^/  /'
     status=1
   fi
 done

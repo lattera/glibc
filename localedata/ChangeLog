@@ -1,5 +1,13 @@
 2004-01-01  Petter Reinholdtsen  <pere@hungry.com>
 
+	* sort-test.sh: Print the status for both the sorting tests, xfrm
+	and collate, making it possible to know which one of them that
+	fail if only one of them misbehaves.  Indent output from
+	'diff -u' when sorting test fail, to make it easier to visually
+	group the output.
+
+2004-01-01  Petter Reinholdtsen  <pere@hungry.com>
+
 	* tst-fmon.data: Add simple test to check left justified currency
 	values in the C locale.
 
