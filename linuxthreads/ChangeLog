@@ -1,3 +1,29 @@
+2003-02-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/sh/Makefile: New file.
+	* sysdeps/sh/tcb-offsets.sym: Likewise.
+	* sysdeps/sh/tls.h: Don't include sysdep.h. Move include
+	of linuxthreads/descr.h after the definition of THREAD_SELF.
+	(tcbhead_t): Use IA64 type tcbhead_t for TLS case.
+	(TLS_TCB_SIZE): Set size of tcbhead_t.
+	(TLS_PRE_TCB_SIZE): Define.
+	(INSTALL_NEW_DTV): Set dtv of tcbhead_t structure instead of
+	a member of thread structure.
+	(THREAD_DTV): Likewise.
+	(TLS_INIT_TP_EXPENSIVE): Remove.
+	(TLS_INIT_TP): Set gbr register only.
+	(THREAD_SELF): New.
+	(INIT_THREAD_SELF): Likewise.
+	(NONTLS_INIT_TP): New.
+	* sysdeps/unix/sysv/linux/sh/pt-initfini.c (__fpscr_values):
+	Remove.
+	* sysdeps/unix/sysv/linux/sh/sysdep-cancel.h (PSEUDO): Add
+	SYSCALL_INST_PAD macro after DO_CALL.
+	(SINGLE_THREAD_P): Fix non-PIC and TLS case so to read the
+	correct	variable.
+	* sysdeps/unix/sysv/linux/sh/vfork.S (__vfork): Branch to __fork
+	whenever libpthread.so is loaded.
+
 2003-02-08  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/vfork.S: Branch to __fork whenever

@@ -1,3 +1,19 @@
+2003-02-07  Jim Meyering  <jim@meyering.net>
+
+	* io/ftw.c: Add autoconf-recommended block of alloca-related code.
+	Include autoconf-recommended block of dirent/NAMELEN-related
+	definitions and includes.  Use NAMELEN throughout, rather than
+	_D_EXACT_NAMLEN.
+	[_LIBC]: Define NAMELEN to _D_EXACT_NAMLEN.
+	[!_LIBC] (__getcwd): Define to xgetcwd and declare xgetcwd.
+	(stpcpy): Declare, if necessary.
+	(mempcpy): Define, if necessary.
+	[!_LIBC] (__stpcpy, __mempcpy): Define.
+	[!_LIBC] (LXSTAT, XSTAT): Define.
+	(lstat) [!LIBC && !LSTAT_FOLLOWS_SLASHED_SYMLINK]: Define to rpl_lstat.
+	(find_object): Don't use c99-style struct initializer.
+	Tweak wording in a couple comments.
+
 2003-02-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* elf/tls-macros.h: Add non-PIC TLS macros and fix clobber list

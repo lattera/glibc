@@ -52,6 +52,7 @@
     add _IMP16,r15; \
     lds.l @r15+,pr; \
     DO_CALL(syscall_name, args); \
+    SYSCALL_INST_PAD; \
     sts.l pr,@-r15; \
     mov.l r0,@-r15; \
     CDISABLE; \
@@ -106,6 +107,7 @@
 	.align 2; \
      1: .long __local_enable_asynccancel - 0b; \
      2:
+
 # define CDISABLE \
 	mov.l 1f,r0; \
 	bsrf r0; \
@@ -129,6 +131,7 @@ extern int __local_multiple_threads attribute_hidden;
 #  if !defined PIC
 #   define SINGLE_THREAD_P \
 	mov.l 1f,r0; \
+	mov.l @r0,r0; \
 	bra 2f; \
 	 tst r0,r0; \
 	.align 2; \
@@ -136,7 +139,15 @@ extern int __local_multiple_threads attribute_hidden;
      2:
 #  elif defined FLOATING_STACKS && USE___THREAD
 #   define SINGLE_THREAD_P \
-	mov.l @(MULTIPLE_THREADS_OFFSET,gbr),r0; tst r0,r0
+	stc gbr,r0; \
+	mov.w 0f,r1; \
+	sub r1,r0; \
+	mov.l @(MULTIPLE_THREADS_OFFSET,r0),r0; \
+	bra 1f; \
+	 tst r0,r0; \
+     0: .word TLS_PRE_TCB_SIZE; \
+     1:
+
 #  else
 #   define SINGLE_THREAD_P \
 	mov r12,r2; \

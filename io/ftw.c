@@ -22,7 +22,42 @@
 # include <config.h>
 #endif
 
-#include <dirent.h>
+#if __GNUC__
+# define alloca __builtin_alloca
+#else
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+ #  pragma alloca
+#  else
+char *alloca ();
+#  endif
+# endif
+#endif
+
+#if defined _LIBC
+# include <dirent.h>
+# define NAMLEN(dirent) _D_EXACT_NAMLEN (dirent)
+#else
+# if HAVE_DIRENT_H
+#  include <dirent.h>
+#  define NAMLEN(dirent) strlen ((dirent)->d_name)
+# else
+#  define dirent direct
+#  define NAMLEN(dirent) (dirent)->d_namlen
+#  if HAVE_SYS_NDIR_H
+#   include <sys/ndir.h>
+#  endif
+#  if HAVE_SYS_DIR_H
+#   include <sys/dir.h>
+#  endif
+#  if HAVE_NDIR_H
+#   include <ndir.h>
+#  endif
+# endif
+#endif
+
 #include <errno.h>
 #include <ftw.h>
 #include <limits.h>
@@ -39,6 +74,15 @@
 # include <sys/stat.h>
 #endif
 
+#if ! _LIBC && !HAVE_DECL_STPCPY && !defined stpcpy
+char *stpcpy ();
+#endif
+
+#if ! _LIBC && ! defined HAVE_MEMPCPY && ! defined mempcpy
+/* Be CAREFUL that there are no side effects in N.  */
+# define mempcpy(D, S, N) ((void *) ((char *) memcpy (D, S, N) + (N)))
+#endif
+
 /* #define NDEBUG 1 */
 #include <assert.h>
 
@@ -50,11 +94,16 @@
 # undef __fchdir
 # define __fchdir fchdir
 # undef __getcwd
-# define __getcwd getcwd
+# define __getcwd(P, N) xgetcwd ()
+extern char *xgetcwd (void);
+# undef __mempcpy
+# define __mempcpy mempcpy
 # undef __opendir
 # define __opendir opendir
 # undef __readdir64
 # define __readdir64 readdir
+# undef __stpcpy
+# define __stpcpy stpcpy
 # undef __tdestroy
 # define __tdestroy tdestroy
 # undef __tfind
@@ -69,6 +118,15 @@
 # define MAX(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
+/* Arrange to make lstat calls go through the wrapper function
+   on systems with an lstat function that does not dereference symlinks
+   that are specified with a trailing slash.  */
+#if ! _LIBC && ! LSTAT_FOLLOWS_SLASHED_SYMLINK
+int rpl_lstat (const char *, struct stat *);
+# undef lstat
+# define lstat(Name, Stat_buf) rpl_lstat(Name, Stat_buf)
+#endif
+
 #ifndef __set_errno
 # define __set_errno(Val) errno = (Val)
 #endif
@@ -79,8 +137,13 @@
 # define NFTW_NAME nftw
 # define INO_T ino_t
 # define STAT stat
-# define LXSTAT __lxstat
-# define XSTAT __xstat
+# ifdef _LIBC
+#  define LXSTAT __lxstat
+#  define XSTAT __xstat
+# else
+#  define LXSTAT(V,f,sb) lstat (f,sb)
+#  define XSTAT(V,f,sb) stat (f,sb)
+# endif
 # define FTW_FUNC_T __ftw_func_t
 # define NFTW_FUNC_T __nftw_func_t
 #endif
@@ -124,7 +187,7 @@ struct ftw_data
   int flags;
 
   /* Conversion array for flag values.  It is the identity mapping for
-     `nftw' calls, otherwise it maps the values to those know by
+     `nftw' calls, otherwise it maps the values to those known by
      `ftw'.  */
   const int *cvt_arr;
 
@@ -140,9 +203,8 @@ struct ftw_data
 };
 
 
-/* Internally we use the FTW_* constants used for `nftw'.  When the
-   process called `ftw' we must reduce the flag to the known flags
-   for `ftw'.  */
+/* Internally we use the FTW_* constants used for `nftw'.  When invoked
+   as `ftw', map each flag to the subset of values used by `ftw'.  */
 static const int nftw_arr[] =
 {
   FTW_F, FTW_D, FTW_DNR, FTW_NS, FTW_SL, FTW_DP, FTW_SLN
@@ -188,7 +250,9 @@ add_object (struct ftw_data *data, struct STAT *st)
 static inline int
 find_object (struct ftw_data *data, struct STAT *st)
 {
-  struct known_object obj = { .dev = st->st_dev, .ino = st->st_ino };
+  struct known_object obj;
+  obj.dev = st->st_dev;
+  obj.ino = st->st_ino;
   return __tfind (&obj, &data->known_objects, object_compare) != NULL;
 }
 
@@ -216,7 +280,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 
 	  while ((d = __readdir64 (st)) != NULL)
 	    {
-	      size_t this_len = _D_EXACT_NAMLEN (d);
+	      size_t this_len = NAMLEN (d);
 	      if (actsize + this_len + 2 >= bufsize)
 		{
 		  char *newp;
@@ -354,7 +418,7 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 
 	      if (result == 0 && (data->flags & FTW_CHDIR))
 		{
-		  /* Change back to current directory.  */
+		  /* Change back to the parent directory.  */
 		  int done = 0;
 		  if (dir->stream != NULL)
 		    if (__fchdir (dirfd (dir->stream)) == 0)
@@ -452,7 +516,7 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
 
   while (dir.stream != NULL && (d = __readdir64 (dir.stream)) != NULL)
     {
-      result = process_entry (data, &dir, d->d_name, _D_EXACT_NAMLEN (d));
+      result = process_entry (data, &dir, d->d_name, NAMLEN (d));
       if (result != 0)
 	break;
     }

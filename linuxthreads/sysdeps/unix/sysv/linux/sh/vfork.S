@@ -26,8 +26,14 @@
    and the process ID of the new process to the old process.  */
 
 ENTRY (__vfork)
-	SINGLE_THREAD_P
-	bf .Lhidden_fork
+#ifdef SHARED
+	mov.l	.Lpthread_func, r0
+	mov.l	@(r0,r12), r0
+#else
+	mov.l	.Lpthread_fork, r0
+#endif
+	tst	r0, r0
+	bf	.Lhidden_fork
 
 	mov.w	.L1, r3
 	trapa	#0x10
@@ -42,6 +48,14 @@ ENTRY (__vfork)
 	rts
 	 nop
 .L1:	.word	__NR_vfork
+	.align	2
+#ifdef SHARED
+.Lpthread_func:
+	.long	__libc_pthread_functions@GOTOFF
+#else
+.Lpthread_fork:
+	.long	__pthread_fork
+#endif
 
 .Lhidden_fork:	
 	mov.l	.L2, r1

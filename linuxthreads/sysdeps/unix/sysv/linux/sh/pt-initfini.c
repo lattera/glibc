@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for SH. Linuxthread version.
-   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it
@@ -77,12 +77,6 @@ _init:\n\
 	.long	__gmon_start__@PLT\n\
 .L24:\n\
 	.long	__pthread_initialize_minimal@PLT\n\
-	.data\n\
-	.global __fpscr_values\n\
-__fpscr_values:\n\
-	.long   0\n\
-	.long   0x80000\n\
-	.previous\n\
 1:\n\
 	ALIGN\n\
 	END_INIT\n\
