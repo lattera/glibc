@@ -1334,6 +1334,7 @@ open_path (const char *name, size_t namelen, int preloaded,
       size_t buflen = 0;
       size_t cnt;
       char *edp;
+      int here_any = 0;
 
       /* If we are debugging the search for libraries print the path
 	 now if it hasn't happened now.  */
@@ -1384,7 +1385,7 @@ open_path (const char *name, size_t namelen, int preloaded,
 	    }
 
 	  /* Remember whether we found any existing directory.  */
-	  any |= this_dir->status[cnt] == existing;
+	  here_any |= this_dir->status[cnt] == existing;
 
 	  if (fd != -1 && preloaded && __libc_enable_secure)
 	    {
@@ -1424,9 +1425,12 @@ open_path (const char *name, size_t namelen, int preloaded,
 	      return -1;
 	    }
 	}
-      if (errno != ENOENT && errno != EACCES)
+      if (here_any && errno != ENOENT && errno != EACCES)
 	/* The file exists and is readable, but something went wrong.  */
 	return -1;
+
+      /* Remember whether we found anything.  */
+      any |= here_any;
     }
   while (*++dirs != NULL);
 

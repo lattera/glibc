@@ -1,5 +1,8 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/dl-load.c (open_path): Don't exit loop early if we didn't
+	use a directory at all.
+
 	* elf/Makefile: Add rules to build and run tst-pathopt.
 	* elf/tst-pathopt.c: New file.
 	* elf/tst-pathopt.sh: New file.
