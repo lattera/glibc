@@ -1,3 +1,8 @@
+2004-08-11  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/bits/shm.h: Add __BEGIN_DECLS for
+	__getpagesize declaration.
+
 2004-08-11  Roland McGrath  <roland@redhat.com>
 
 	* posix/tst-waitid.c (do_test): Ignore SIGCHLD before cleanup SIGKILL.
