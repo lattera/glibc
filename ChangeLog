@@ -1,6 +1,12 @@
+2002-04-11  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h (LOC): Don't paste
+	in a token.
+	* sysdeps/unix/sysv/sysv4/solaris2/sparc/sysdep.h (LOC): Likewise.
+
 2002-04-10  Andreas Jaeger  <aj@suse.de>
 
-	* sysdeps/unix/sysv/linux/x86_64/glob.c: New.
+	* sysdeps/unix/sysv/linux/x86_64/glob.c: New file.
 
 	* include/argz.h: Remove extra char from last patch.
 
@@ -13,7 +19,7 @@
 	* sysdeps/unix/sysv/linux/powerpc/chown.c: Likewise.
 	* sysdeps/unix/sysv/linux/i386/chown.c: Use INTDEF2 to define
 	__chown_internal.
-	* sysdeps/unix/sysv/linux/s390/s390-32//chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/s390/s390-32/chown.c: Likewise.
 
 	* intl/dcngettext.c [_LIBC]: Use INTUSE for __dcngettext.
 	* intl/dngettext.c [_LIBC] (DCNGETTEXT): Use INTUSE.
