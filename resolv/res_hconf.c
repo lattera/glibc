@@ -554,8 +554,7 @@ _res_hconf_trim_domains (struct hostent *hp)
 static void __attribute__ ((unused))
 free_mem (void)
 {
-  if (ifaddrs != NULL)
-    free (ifaddrs);
+  free (ifaddrs);
 }
 
 text_set_element (__libc_subfreeres, free_mem);
