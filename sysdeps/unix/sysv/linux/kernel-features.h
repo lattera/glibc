@@ -274,8 +274,8 @@
 /* The late 2.5 kernels saw a lot of new CLONE_* flags.  Summarize
    their availability with one define.  The changes were made first
    for i386 and the have to be done separately for the other archs.
-   For ia64 and s390* we pick 2.5.64 as the first version with support.  */
+   For ia64, s390*, PPC we pick 2.5.64 as the first version with support.  */
 #if __LINUX_KERNEL_VERSION >= 132416 \
-    && (defined __ia64__ || defined __s390__)
+    && (defined __ia64__ || defined __s390__ || defined __powerpc__)
 # define __ASSUME_CLONE_THREAD_FLAGS	1
 #endif

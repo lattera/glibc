@@ -114,7 +114,7 @@ LIBC_START_MAIN (int (*main) (int, char **, char **
 #  ifndef LIBC_START_MAIN_AUXVEC_ARG
   ElfW(auxv_t) *__unbounded auxvec;
   {
-    char *__unbounded *__unbounded evp = uvp_ev;
+    char *__unbounded *__unbounded evp = ubp_ev;
     while (*evp != NULL)
       ++evp;
     auxvec = (ElfW(auxv_t) *__unbounded) evp;

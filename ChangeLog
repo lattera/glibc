@@ -1,5 +1,12 @@
 2003-03-15  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/system.c: Moved to ...
+	* sysdeps/unix/sysv/linux/system.c: ... here.
+	(FORK): Don't #define if already #define'd.
+	* sysdeps/unix/sysv/linux/s390/system.c: File removed.
+	* sysdeps/unix/sysv/linux/kernel-features.h [__powerpc__]:
+	(__ASSUME_CLONE_THREAD_FLAGS): Define for kernel >= 2.5.64.
+
 	* dlfcn/tst-dlinfo.c: New file.
 	* dlfcn/Makefile (tests): Add tst-dlinfo.
 	($(objpfx)tst-dlinfo): New target.
