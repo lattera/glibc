@@ -26,6 +26,6 @@ distribute	:= cname-lookup.h
 routines	:= wcfuncs wctype iswctype wctrans towctrans wcextra \
 		   wcfuncs_l iswctype_l towctrans_l wctype_l wcextra_l
 
-tests	:= test_wctype
+tests	:= test_wctype test_wcfuncs
 
 include ../Rules

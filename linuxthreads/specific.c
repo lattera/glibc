@@ -73,14 +73,15 @@ int pthread_key_delete(pthread_key_t key)
   }
   pthread_keys[key].in_use = 0;
   pthread_keys[key].destr = NULL;
-  /* Set the value of the key to NULL in all running threads, so that
-     if the key is reallocated later by pthread_key_create, its
+  /* Set the value of the key to NULL in all running threads, so
+     that if the key is reallocated later by pthread_key_create, its
      associated values will be NULL in all threads. */
   idx1st = key / PTHREAD_KEY_2NDLEVEL_SIZE;
   idx2nd = key % PTHREAD_KEY_2NDLEVEL_SIZE;
   th = self;
   do {
-    if (th->p_specific[idx1st] != NULL)
+    /* If the thread already is terminated don't modify the memory.  */
+    if (!th->p_terminated && th->p_specific[idx1st] != NULL)
       th->p_specific[idx1st][idx2nd] = NULL;
     th = th->p_nextlive;
   } while (th != self);

@@ -48,6 +48,7 @@ static char sccsid[] = "@(#)clnt_udp.c 1.39 87/08/11 Copyr 1984 Sun Micro";
 #include <netdb.h>
 #include <errno.h>
 #include <rpc/pmap_clnt.h>
+#include <net/if.h>
 
 extern bool_t xdr_opaque_auth (XDR *, struct opaque_auth *);
 extern u_long _create_xid (void);
@@ -214,6 +215,33 @@ clntudp_create (raddr, program, version, wait, sockp)
 			    UDPMSGSIZE, UDPMSGSIZE);
 }
 
+static int
+is_network_up (int sock)
+{
+  struct ifconf ifc;
+  char buf[UDPMSGSIZE];
+  struct ifreq ifreq, *ifr;
+  int n;
+
+  ifc.ifc_len = sizeof (buf);
+  ifc.ifc_buf = buf;
+  if (__ioctl(sock, SIOCGIFCONF, (char *) &ifc) == 0)
+    {
+      ifr = ifc.ifc_req;
+      for (n = ifc.ifc_len / sizeof (struct ifreq); n > 0; n--, ifr++)
+	{
+	  ifreq = *ifr;
+	  if (__ioctl (sock, SIOCGIFFLAGS, (char *) &ifreq) < 0)
+	    break;
+
+	  if ((ifreq.ifr_flags & IFF_UP)
+	      && ifr->ifr_addr.sa_family == AF_INET)
+	    return 1;
+	}
+    }
+  return 0;
+}
+
 static enum clnt_stat
 clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
      CLIENT *cl;	/* client handle */
@@ -239,6 +267,7 @@ clntudp_call (cl, proc, xargs, argsp, xresults, resultsp, utimeout)
   bool_t ok;
   int nrefreshes = 2;		/* number of times to refresh cred */
   struct timeval timeout;
+  int anyup;			/* any network interface up */
 
   if (cu->cu_total.tv_usec == -1)
     {
@@ -296,10 +325,17 @@ send_again:
   fd.events = POLLIN;
   for (;;)
     {
-      switch (__poll(&fd, 1, milliseconds))
+      switch (__poll (&fd, 1, milliseconds))
 	{
 
 	case 0:
+	  if (anyup == 0)
+	    {
+	      anyup = is_network_up (cu->cu_sock);
+	      if (!anyup)
+		return (cu->cu_error.re_status = RPC_CANTRECV);
+	    }
+
 	  time_waited.tv_sec += cu->cu_wait.tv_sec;
 	  time_waited.tv_usec += cu->cu_wait.tv_usec;
 	  while (time_waited.tv_usec >= 1000000)
