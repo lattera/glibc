@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1999, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Andreas Jaeger <aj@suse.de>, 1997.
 
@@ -27,6 +27,7 @@
 #define PRINTF_XEXPR "La"
 #define PRINTF_NEXPR "Lf"
 #define TEST_INLINE
+#define TEST_LDOUBLE 1
 
 #ifdef __NO_MATH_INLINES
 # undef __NO_MATH_INLINES

@@ -561,6 +561,12 @@ ildouble: 36
 Test "exp (0.7) == 2.0137527074704765216":
 ildouble: 412
 ldouble: 412
+Test "exp (50.0) == 5184705528587072464087.45332293348538":
+ildouble:  16
+ldouble:  16
+Test "exp (1000.0) == 0.197007111401704699388887935224332313e435":
+ildouble:  754
+ldouble:  754
 
 # exp10
 Test "exp10 (-1) == 0.1":
@@ -1445,8 +1451,8 @@ ldouble: 36
 ildouble: 36
 
 Function: "exp":
-ildouble: 412
-ldouble: 412
+ildouble: 754
+ldouble: 754
 
 Function: "exp10":
 double: 1

@@ -1,5 +1,13 @@
 2001-05-07  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/i386/fpu/libm-test-ulps: Add ulps for new exp tests.
+
+	* math/libm-test.inc (exp_test): Add some more tests.
+	(pow_test): Run double only test also for long double.
+
+	* math/test-ldouble.c (TEST_LDOUBLE): Define.
+	* math/test-ildoubl.c (TEST_LDOUBLE): Likewise.
+
 	* sysdeps/generic/bits/confname.h: Remove extra comma at end of
 	enumeration.
 	Closes PR libc/2240.

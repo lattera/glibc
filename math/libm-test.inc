@@ -2372,7 +2372,11 @@ exp_test (void)
   TEST_f_f (exp, 2, M_E2l);
   TEST_f_f (exp, 3, M_E3l);
   TEST_f_f (exp, 0.7L, 2.0137527074704765216L);
-
+  TEST_f_f (exp, 50.0L, 5184705528587072464087.45332293348538L);
+#ifdef TEST_LDOUBLE
+  /* The result can only be represented in long double.  */
+  TEST_f_f (exp, 1000.0L, 0.197007111401704699388887935224332313e435L);
+#endif
   END (exp);
 }
 
@@ -3560,7 +3564,7 @@ pow_test (void)
 
   TEST_ff_f (pow, 0.7L, 1.2L, 0.65180494056638638188L);
 
-#ifdef TEST_DOUBLE
+#if defined TEST_DOUBLE || defined TEST_LDOUBLE
   TEST_ff_f (pow, -7.49321e+133, -9.80818e+16, 0);
 #endif
 
