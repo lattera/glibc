@@ -88,6 +88,7 @@ again:
 	  return;
 	}
       }
+      __asm __volatile ("" : "=m" (lock->__status) : "0" (lock->__status));
     }
 
     lock->__spinlock += (spin_count - lock->__spinlock) / 8;
