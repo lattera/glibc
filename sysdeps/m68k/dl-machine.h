@@ -156,6 +156,11 @@ _start:
 	move.l %sp, -(%sp)
 	jbsr _dl_start
 	addq.l #4, %sp
+	/* FALLTHRU */
+
+	.globl _dl_start_user
+	.type _dl_start_user,@function
+_dl_start_user:
 	| Save the user entry point address in %a4.
 	move.l %d0, %a4
 	| Point %a5 at the GOT.
@@ -187,7 +192,7 @@ _start:
 	move.l %sp, %fp
 	| Jump to the user's entry point.
 	jmp (%a4)
-	.size _start, . - _start
+	.size _dl_start_user, . - _dl_start_user
 	.previous");
 
 /* Nonzero iff TYPE describes a relocation that should
