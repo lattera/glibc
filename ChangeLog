@@ -1,5 +1,12 @@
 1998-09-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/unix/sysv/linux/Makefile (subdirs==misc)
+	[sysdep_headers]: Remove sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/i386/Makefile (subdirs==misc)
+	[sysdep_headers]: Add sys/debugreg.h.
+	* sysdeps/unix/sysv/linux/sys/debugreg.h: Removed.
+	* sysdeps/unix/sysv/linux/i386/sys/debugreg.h: New file.
+
 	* stdio-common/tmpnam.c: Move local static variable buf to
 	toplevel and rename to tmpnam_buffer to ease debugging.
 	Patch by Joe Keane <jgk@jgk.org>.
