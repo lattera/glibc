@@ -1,4 +1,4 @@
-/* Copyright (C) 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -108,7 +108,7 @@ openpty (int *amaster, int *aslave, char *name, struct termios *termp,
   if (pts_name (master, &buf, sizeof (_buf)))
     goto fail;
 
-  slave = open (buf, O_RDWR);
+  slave = open (buf, O_RDWR | O_NOCTTY);
   if (slave == -1)
     {
       if (buf != _buf)
@@ -131,7 +131,7 @@ openpty (int *amaster, int *aslave, char *name, struct termios *termp,
   if (buf != _buf)
     free (buf);
   return 0;
-  
+
  fail:
   close (master);
   return -1;

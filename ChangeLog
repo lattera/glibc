@@ -1,5 +1,8 @@
 1999-05-24  Ulrich Drepper  <drepper@cygnus.com>
 
+	* login/openpty.c (openpty): Make sure pty does not because
+	controlling TTY.
+
 	* ctype/ctype.h: Don't optimize toupper/tolower for C++.
 
 1999-05-23  Roland McGrath  <roland@baalperazim.frob.com>
