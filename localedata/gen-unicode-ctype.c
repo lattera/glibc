@@ -166,21 +166,21 @@ fill_attributes (const char *unicodedata_filename)
       int n;
 
       lineno++;
-      n = getfield(stream, field0, ';');
-      n += getfield(stream, field1, ';');
-      n += getfield(stream, field2, ';');
-      n += getfield(stream, field3, ';');
-      n += getfield(stream, field4, ';');
-      n += getfield(stream, field5, ';');
-      n += getfield(stream, field6, ';');
-      n += getfield(stream, field7, ';');
-      n += getfield(stream, field8, ';');
-      n += getfield(stream, field9, ';');
-      n += getfield(stream, field10, ';');
-      n += getfield(stream, field11, ';');
-      n += getfield(stream, field12, ';');
-      n += getfield(stream, field13, ';');
-      n += getfield(stream, field14, '\n');
+      n = getfield (stream, field0, ';');
+      n += getfield (stream, field1, ';');
+      n += getfield (stream, field2, ';');
+      n += getfield (stream, field3, ';');
+      n += getfield (stream, field4, ';');
+      n += getfield (stream, field5, ';');
+      n += getfield (stream, field6, ';');
+      n += getfield (stream, field7, ';');
+      n += getfield (stream, field8, ';');
+      n += getfield (stream, field9, ';');
+      n += getfield (stream, field10, ';');
+      n += getfield (stream, field11, ';');
+      n += getfield (stream, field12, ';');
+      n += getfield (stream, field13, ';');
+      n += getfield (stream, field14, '\n');
       if (n == 0)
 	break;
       if (n != 15)
@@ -196,21 +196,21 @@ fill_attributes (const char *unicodedata_filename)
 	{
 	  /* Deal with a range. */
 	  lineno++;
-	  n = getfield(stream, field0, ';');
-	  n += getfield(stream, field1, ';');
-	  n += getfield(stream, field2, ';');
-	  n += getfield(stream, field3, ';');
-	  n += getfield(stream, field4, ';');
-	  n += getfield(stream, field5, ';');
-	  n += getfield(stream, field6, ';');
-	  n += getfield(stream, field7, ';');
-	  n += getfield(stream, field8, ';');
-	  n += getfield(stream, field9, ';');
-	  n += getfield(stream, field10, ';');
-	  n += getfield(stream, field11, ';');
-	  n += getfield(stream, field12, ';');
-	  n += getfield(stream, field13, ';');
-	  n += getfield(stream, field14, '\n');
+	  n = getfield (stream, field0, ';');
+	  n += getfield (stream, field1, ';');
+	  n += getfield (stream, field2, ';');
+	  n += getfield (stream, field3, ';');
+	  n += getfield (stream, field4, ';');
+	  n += getfield (stream, field5, ';');
+	  n += getfield (stream, field6, ';');
+	  n += getfield (stream, field7, ';');
+	  n += getfield (stream, field8, ';');
+	  n += getfield (stream, field9, ';');
+	  n += getfield (stream, field10, ';');
+	  n += getfield (stream, field11, ';');
+	  n += getfield (stream, field12, ';');
+	  n += getfield (stream, field13, ';');
+	  n += getfield (stream, field14, '\n');
 	  if (n != 15)
 	    {
 	      fprintf (stderr, "missing end range in '%s':%d\n",
@@ -390,17 +390,35 @@ is_alpha (unsigned int ch)
 	      || (unicode_attributes[ch].category[0] == 'S'
 		  && unicode_attributes[ch].category[1] == 'o'
 		  && strstr (unicode_attributes[ch].name, " LETTER ")
-		     != NULL)));
+		     != NULL)
+	      /* Consider all the non-ASCII digits as alphabetic.
+		 ISO C 99 forbids us to have them in category "digit",
+		 but we want iswalnum to return true on them.  */
+	      || (unicode_attributes[ch].category[0] == 'N'
+		  && unicode_attributes[ch].category[1] == 'd'
+		  && !(ch >= 0x0030 && ch <= 0x0039))));
 }
 
 static bool
 is_digit (unsigned int ch)
 {
+#if 0
   return (unicode_attributes[ch].name != NULL
 	  && unicode_attributes[ch].category[0] == 'N'
 	  && unicode_attributes[ch].category[1] == 'd');
   /* Note: U+0BE7..U+0BEF and U+1369..U+1371 are digit systems without
      a zero.  Must add <0> in front of them by hand.  */
+#else
+  /* SUSV2 gives us some freedom for the "digit" category, but ISO C 99
+     takes it away:
+     7.25.2.1.5:
+        The iswdigit function tests for any wide character that corresponds
+        to a decimal-digit character (as defined in 5.2.1).
+     5.2.1:
+        the 10 decimal digits 0 1 2 3 4 5 6 7 8 9
+   */
+  return (ch >= 0x0030 && ch <= 0x0039);
+#endif
 }
 
 static bool
@@ -455,9 +473,23 @@ is_cntrl (unsigned int ch)
 static bool
 is_xdigit (unsigned int ch)
 {
+#if 0
   return is_digit (ch)
 	 || (ch >= 0x0041 && ch <= 0x0046)
 	 || (ch >= 0x0061 && ch <= 0x0066);
+#else
+  /* SUSV2 gives us some freedom for the "xdigit" category, but ISO C 99
+     takes it away:
+     7.25.2.1.12:
+        The iswxdigit function tests for any wide character that corresponds
+        to a hexadecimal-digit character (as defined in 6.4.4.1).
+     6.4.4.1:
+        hexadecimal-digit: one of 0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F
+   */
+  return (ch >= 0x0030 && ch <= 0x0039)
+	 || (ch >= 0x0041 && ch <= 0x0046)
+	 || (ch >= 0x0061 && ch <= 0x0066);
+#endif
 }
 
 static bool

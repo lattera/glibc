@@ -305,13 +305,10 @@ alpha /
    <UFE70>..<UFE72>;<UFE74>;<UFE76>..<UFEFC>;/
 % HALFWIDTH AND FULLWIDTH FORMS/
    <UFF21>..<UFF3A>;<UFF41>..<UFF5A>;<UFF66>..<UFFBE>;<UFFC2>..<UFFC7>;/
-   <UFFCA>..<UFFCF>;<UFFD2>..<UFFD7>;<UFFDA>..<UFFDC>
-
-% The "digit" class of the "i18n" FDCC-set is reflecting
-% the recommendations in TR 10176 annex A
-digit /
-% TABLE 1 BASIC LATIN/
-  <U0030>..<U0039>;/
+   <UFFCA>..<UFFCF>;<UFFD2>..<UFFD7>;<UFFDA>..<UFFDC>;/
+% The non-ASCII number characters are included here because ISO C 99    /
+% forbids us to classify them as digits; however, they behave more like /
+% alphanumeric than like punctuation.                                   /
 % TABLE 15 and 16 ARABIC/
   <U0660>..<U0669>;<U06F0>..<U06F9>;/
 % TABLE 17 DEVANAGARI/
@@ -348,6 +345,11 @@ digit /
    <U1810>..<U1819>;/
 % HALFWIDTH AND FULLWIDTH FORMS/
    <UFF10>..<UFF19>
+
+% The "digit" class must only contain the BASIC LATIN digits, says ISO C 99
+% (sections 7.25.2.1.5 and 5.2.1).
+digit /
+   <U0030>..<U0039>
 
 outdigit <U0030>..<U0039>
 
@@ -602,6 +604,8 @@ print /
    <UFFD2>..<UFFD7>;<UFFDA>..<UFFDC>;<UFFE0>..<UFFE6>;<UFFE8>..<UFFEE>;/
    <UFFF9>..<UFFFD>
 
+% The "xdigit" class must only contain the BASIC LATIN digits and A-F, a-f,
+% says ISO C 99 (sections 7.25.2.1.12 and 6.4.4.1).
 xdigit /
    <U0030>..<U0039>;<U0041>..<U0046>;<U0061>..<U0066>
 

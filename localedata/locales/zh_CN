@@ -90,9 +90,7 @@ alpha 	<U0041>..<U005A>;<U0061>..<U007A>;/
 % Bopomofo/
 	<U3105>..<U3129>
 
-digit   <U0030>..<U0039>;/
-% Fullwidth digits/
-	<UFF10>..<UFF19>
+digit   <U0030>..<U0039>
 
 outdigit <U0030>..<U0039>
 

@@ -113,7 +113,8 @@ static void dump_map (const char *map_name)
     }
 }
 
-int main (int argc, char *argv[])
+int
+main (int argc, char *argv[])
 {
   size_t i;
 
