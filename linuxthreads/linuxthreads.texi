@@ -544,7 +544,7 @@ The sequence
 @smallexample
 pthread_cleanup_push_defer_np(routine, arg);
 ...
-pthread_cleanup_pop_defer_np(execute);
+pthread_cleanup_pop_restore_np(execute);
 @end smallexample
 
 @noindent

@@ -1,3 +1,8 @@
+2004-08-02  Ulrich Drepper  <drepper@redhat.com>
+
+	* linuxthreads.texi (Cleanup Handlers): Fix typo.
+	Reported by Bjoern Engelmann <bjengelmann@gmx.de>.
+
 2004-07-23  Jakub Jelinek  <jakub@redhat.com>
 
 	[BZ #284]
