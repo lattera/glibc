@@ -1,3 +1,8 @@
+2003-03-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* localedata/mn_MN: New file.
+	Contributed by Sanlig Badral <badral@chinggis.com>.
+
 2003-01-30  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (LOCALES): Add vi_VN.TCVN5712-1.

@@ -221,7 +221,7 @@ start_thread (void *arg)
 
   /* This is where the try/finally block should be created.  For
      compilers without that support we do use setjmp.  */
-  if (setjmp (pd->cancelbuf) == 0)
+  if (__builtin_expect (setjmp (pd->cancelbuf) == 0, 1))
     {
       /* Run the code the user provided.  */
       THREAD_SETMEM (pd, result, pd->start_routine (pd->arg));
