@@ -1,5 +1,5 @@
 /* Look up a symbol in a shared object loaded by `dlopen'.
-   Copyright (C) 1999 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,12 +29,12 @@ void *
 internal_function
 _dl_sym (void *handle, const char *name, void *who)
 {
-  ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
+  lookup_t result;
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    loadbase = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
+    result = _dl_lookup_symbol (name, NULL, &ref, _dl_global_scope, 0);
   else
     {
       struct link_map *l, *match;
@@ -56,8 +56,8 @@ _dl_sym (void *handle, const char *name, void *who)
 	       main program (we hope).  */
 	    match = _dl_loaded;
 
-	  loadbase = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
-					0);
+	  result = _dl_lookup_symbol (name, match, &ref, map->l_local_scope,
+				      0);
 	}
       else
 	{
@@ -69,13 +69,13 @@ RTLD_NEXT used in code not dynamically loaded"));
 	  while (l->l_loader)
 	    l = l->l_loader;
 
-	  loadbase = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
-					     match);
+	  result = _dl_lookup_symbol_skip (name, l, &ref, l->l_local_scope,
+					   match);
 	}
     }
 
-  if (loadbase)
-    return (void *) (loadbase + ref->st_value);
+  if (result)
+    return DL_SYMBOL_ADDRESS (result, ref);
 
   return NULL;
 }
@@ -84,9 +84,9 @@ void *
 internal_function
 _dl_vsym (void *handle, const char *name, const char *version, void *who)
 {
-  ElfW(Addr) loadbase;
   const ElfW(Sym) *ref = NULL;
   struct r_found_version vers;
+  lookup_t result;
 
   /* Compute hash value to the version string.  */
   vers.name = version;
@@ -97,8 +97,8 @@ _dl_vsym (void *handle, const char *name, const char *version, void *who)
 
   if (handle == RTLD_DEFAULT)
     /* Search the global scope.  */
-    loadbase = _dl_lookup_versioned_symbol (name, NULL, &ref, _dl_global_scope,
-					    &vers, 0);
+    result = _dl_lookup_versioned_symbol (name, NULL, &ref, _dl_global_scope,
+					  &vers, 0);
   else if (handle == RTLD_NEXT)
     {
       struct link_map *l, *match;
@@ -118,20 +118,19 @@ RTLD_NEXT used in code not dynamically loaded"));
       while (l->l_loader)
 	l = l->l_loader;
 
-      loadbase = _dl_lookup_versioned_symbol_skip (name, l, &ref,
-						   l->l_local_scope,
-						   &vers, match);
+      result = _dl_lookup_versioned_symbol_skip (name, l, &ref,
+						 l->l_local_scope,
+						 &vers, match);
     }
   else
     {
       /* Search the scope of the given object.  */
       struct link_map *map = handle;
-      loadbase = _dl_lookup_versioned_symbol (name, map, &ref,
-					      map->l_local_scope, &vers, 0);
+      result = _dl_lookup_versioned_symbol (name, map, &ref,
+					    map->l_local_scope, &vers, 0);
     }
 
-  if (loadbase)
-    return (void *) (loadbase + ref->st_value);
-
+  if (result)
+    return DL_SYMBOL_ADDRESS (result, ref);
   return NULL;
 }

@@ -68,7 +68,7 @@ elf_machine_load_address (void)
      are usually many many terabytes away.  */
 
   Elf64_Addr dot;
-  long zero_disp;
+  long int zero_disp;
 
   asm("br %0, 1f\n\t"
       ".weak __load_address_undefined\n\t"
@@ -119,7 +119,7 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
       /* If the first instruction of the plt entry is not
 	 "br $28, plt0", we cannot do lazy relocation.  */
-      lazy = (*(unsigned *)(plt + 32) == 0xc39ffff7);
+      lazy = (*(unsigned int *)(plt + 32) == 0xc39ffff7);
     }
 
   return lazy;
@@ -363,13 +363,14 @@ $fixup_stack:
 
 /* Fix up the instructions of a PLT entry to invoke the function
    rather than the dynamic linker.  */
-static inline void
-elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
-		      Elf64_Addr *got_addr, Elf64_Addr value)
+static inline Elf64_Addr
+elf_machine_fixup_plt (struct link_map *l, lookup_t t,
+		       const Elf64_Rela *reloc,
+		       Elf64_Addr *got_addr, Elf64_Addr value)
 {
   const Elf64_Rela *rela_plt;
   Elf64_Word *plte;
-  long edisp;
+  long int edisp;
 
   /* Store the value we are going to load.  */
   *got_addr = value;
@@ -381,7 +382,7 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
   plte += 3 * (reloc - rela_plt);
 
   /* Find the displacement from the plt entry to the function.  */
-  edisp = (long)(value - (Elf64_Addr)&plte[3]) / 4;
+  edisp = (long int) (value - (Elf64_Addr)&plte[3]) / 4;
 
   if (edisp >= -0x100000 && edisp < 0x100000)
     {
@@ -391,7 +392,7 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
 
       int hi, lo;
       hi = value - (Elf64_Addr)&plte[0];
-      lo = (short)hi;
+      lo = (short int) hi;
       hi = (hi - lo) >> 16;
 
       /* Emit "lda $27,lo($27)" */
@@ -436,6 +437,8 @@ elf_machine_fixup_plt(struct link_map *l, const Elf64_Rela *reloc,
      This will be taken care of in _dl_runtime_resolve.  If instead we are
      doing this as part of non-lazy startup relocation, that bit of code
      hasn't made it into Icache yet, so there's nothing to clean up.  */
+
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */
@@ -459,7 +462,7 @@ elf_machine_rela (struct link_map *map,
 		  const struct r_found_version *version,
 		  Elf64_Addr *const reloc_addr)
 {
-  unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
+  unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
 #ifndef RTLD_BOOTSTRAP
   /* This is defined in rtld.c, but nowhere in the static libc.a; make the
@@ -525,7 +528,7 @@ elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {
   Elf64_Addr * const reloc_addr = (void *)(l_addr + reloc->r_offset);
-  unsigned long const r_type = ELF64_R_TYPE (reloc->r_info);
+  unsigned long int const r_type = ELF64_R_TYPE (reloc->r_info);
 
   if (r_type == R_ALPHA_JMP_SLOT)
     {

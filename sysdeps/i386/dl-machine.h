@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  i386 version.
-   Copyright (C) 1995,96,97,98,99,2000 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -279,11 +279,12 @@ dl_platform_init (void)
     _dl_platform = NULL;
 }
 
-static inline void
-elf_machine_fixup_plt (struct link_map *map, const Elf32_Rel *reloc,
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf32_Rel *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  *reloc_addr = value;
+  return *reloc_addr = value;
 }
 
 /* Return the final value of a plt relocation.  */

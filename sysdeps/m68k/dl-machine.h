@@ -209,11 +209,12 @@ _dl_start_user:
 /* The m68k never uses Elf32_Rel relocations.  */
 #define ELF_MACHINE_NO_REL 1
 
-static inline void
-elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  *reloc_addr = value;
+  return *reloc_addr = value;
 }
 
 /* Return the final value of a plt relocation.  On the m68k the JMP_SLOT

@@ -917,11 +917,14 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	   As a refinement, sometimes we have an address that we would
 	   prefer to map such objects at; but this is only a preference,
 	   the OS can do whatever it likes. */
- 	caddr_t mapat;
 	ElfW(Addr) mappref;
 	mappref = (ELF_PREFERRED_ADDRESS (loader, maplength, c->mapstart)
 		   - MAP_BASE_ADDR (l));
-	mapat = map_segment (mappref, maplength, c->prot, 0, c->mapoff);
+
+	/* Remember which part of the address space this object uses.  */
+	l->l_map_start = map_segment (mappref, maplength, c->prot, 0,
+				      c->mapoff);
+	l->l_map_end = l->l_map_start + maplength;
 	l->l_addr = (ElfW(Addr)) mapat - c->mapstart;
 
 	/* Change protection on the excess portion to disallow all access;
@@ -929,13 +932,9 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
 	   unallocated.  Then jump into the normal segment-mapping loop to
 	   handle the portion of the segment past the end of the file
 	   mapping.  */
-	__mprotect ((caddr_t) (l->l_addr + c->mapend),
+	__mprotect ((caddr_t) l->l_map_start,
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
 		    0);
-
-	/* Remember which part of the address space this object uses.  */
-	l->l_map_start = c->mapstart + l->l_addr;
-	l->l_map_end = l->l_map_start + maplength;
 
 	goto postmap;
       }

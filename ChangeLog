@@ -1,3 +1,78 @@
+2000-05-05  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Little of computation of
+	parameter to mprotect and for variable assignments.
+
+2000-05-03  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/generic/ldsodefs.h (LOOKUP_VALUE_ADDRESS): Check the
+	validity of map before dereferencing it.
+
+	* elf/dl-reloc.c (RESOLVE_MAP): Define.
+
+2000-05-02  Jes Sorensen  <jes@linuxcare.com>
+
+	* elf/dl-runtime.c (fixup): Add the value returned in the symbol
+	lookup to the arguments to elf_machine_fixup_plt().
+
+	* sysdeps/ia64/dl-machine.h (elf_machine_fixup_plt): Add Link_map
+	of the symbol being resolved to input argument list and make the
+	function return the pointer to the reloc.
+
+	* sysdeps/alpha/dl-machine.h (elf_machine_fixup_plt): Change
+	return valuie to lookup_t and return the value.
+	* sysdeps/arm/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/i386/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/m68k/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_fixup_plt): Likewise.
+
+	* sysdeps/powerpc/dl-machine.h (elf_machine_fixup_plt): Likewise.
+	Make it an inline function returning value after calling
+	__elf_machine_fixup_plt().
+
+	* elf/dl-sym.c (_dl_vsym): Use DL_SYMBOL_ADDRESS() to obtain the
+	symbol address.
+
+	* elf/dl-symbol.c (_dl_symbol_value): Use LOOKUP_VALUE_ADDRESS to
+	obtain the symbol address.
+
+	* sysdeps/generic/ldsodefs.h: Add generic DL_SYMBOL_ADDRESS() macro
+	depending on the definition of ELF_FUNCTION_PTR_IS_SPECIAL.
+
+	* sysdeps/ia64/dl-machine.h: Add DL_SYMBOL_ADDRESS() macro calling
+	_dl_symbol_address() - this way DL_SYMBOL_ADDRESS() turns into an
+	inline on non ia64.
+
+2000-04-28  Jes Sorensen  <jes@linuxcare.com>
+
+	* elf/dl-runtime.c (fixup): Use the portable macros to get the
+	symbol address of an object.
+
+	* elf/dl-runtime.c (fixup-profile): Use the portable macros to get
+	the symbol address of an object.
+
+	* elf/dl-libc.c (struct do_dlsym_args): Change loadbase to a lookup_t.
+	* elf/dl-lookup.c (_dl_lookup_symbol): Likewise.
+	(_dl_lookup_symbol_skip): Likewise.
+	(_dl_lookup_versioned_symbol): Likewise.
+	(_dl_lookup_versioned_symbol_skip): Likewise.
+
+2000-04-27  Jes Sorensen  <jes@linuxcare.com>
+
+	* elf/rtld.c (_dl_start): Get the function pointer return address
+	via _dl_start_address for architectures that need a function
+	pointer descriptor rather than just a pointer (ia64).
+
+	* sysdeps/generic/dl-lookupcfg.h: New file.
+	* sysdeps/ia64/dl-lookupcfg.h: New file.
+	* sysdeps/ia64/dl-machine.h: New file.
+	* sysdeps/ia64/dl-symaddr.c: New file.
+	* sysdeps/ia64/dl-fptr.c: New file.
+
+	* elf/elf.h: Add IA-64 specific definitions.
+
 2000-05-04  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/generic/bits/confname.h (_SC* enum): Avoid comma at the

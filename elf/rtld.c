@@ -160,6 +160,8 @@ _dl_start (void *arg)
   /* This #define produces dynamic linking inline functions for
      bootstrap relocation instead of general-purpose relocation.  */
 #define RTLD_BOOTSTRAP
+#define RESOLVE_MAP(sym, version, flags) \
+  ((*(sym))->st_shndx == SHN_UNDEF ? 0 : &bootstrap_map)
 #define RESOLVE(sym, version, flags) \
   ((*(sym))->st_shndx == SHN_UNDEF ? 0 : bootstrap_map.l_addr)
 #include "dynamic-link.h"
@@ -200,7 +202,15 @@ _dl_start (void *arg)
      header table in core.  Put the rest of _dl_start into a separate
      function, that way the compiler cannot put accesses to the GOT
      before ELF_DYNAMIC_RELOCATE.  */
-  return _dl_start_final (arg, &bootstrap_map, start_time);
+  {
+    ElfW(Addr) entry = _dl_start_final (arg, &bootstrap_map, start_time);
+
+#ifndef ELF_MACHINE_START_ADDRESS
+# define ELF_MACHINE_START_ADDRESS(map, start) (start)
+#endif
+
+    return ELF_MACHINE_START_ADDRESS (_dl_loaded, entry);
+  }
 }
 
 
@@ -886,10 +896,16 @@ of this helper program; chances are you did not intend to run this program.\n\
 	for (i = 1; i < _dl_argc; ++i)
 	  {
 	    const ElfW(Sym) *ref = NULL;
-	    ElfW(Addr) loadbase = _dl_lookup_symbol (_dl_argv[i], _dl_loaded,
-						     &ref, _dl_loaded->l_scope,
-						     ELF_MACHINE_JMP_SLOT);
+	    ElfW(Addr) loadbase;
+	    lookup_t result;
 	    char buf[20], *bp;
+
+	    result = _dl_lookup_symbol (_dl_argv[i], _dl_loaded,
+					&ref, _dl_loaded->l_scope,
+					ELF_MACHINE_JMP_SLOT);
+
+	    loadbase = LOOKUP_VALUE_ADDRESS (result);
+
 	    buf[sizeof buf - 1] = '\0';
 	    bp = _itoa_word (ref->st_value, &buf[sizeof buf - 1], 16, 0);
 	    while ((size_t) (&buf[sizeof buf - 1] - bp) < sizeof loadbase * 2)

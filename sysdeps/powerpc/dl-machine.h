@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  PowerPC version.
-   Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 96, 97, 98, 99, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -47,8 +47,8 @@ elf_machine_dynamic (void)
 static inline Elf32_Addr
 elf_machine_load_address (void)
 {
-  unsigned *got;
-  unsigned *branchaddr;
+  unsigned int *got;
+  unsigned int *branchaddr;
 
   /* This is much harder than you'd expect.  Possibly I'm missing something.
      The 'obvious' way:
@@ -246,11 +246,19 @@ elf_machine_lazy_rel (struct link_map *map,
 }
 
 /* Change the PLT entry whose reloc is 'reloc' to call the actual routine.  */
-extern void __elf_machine_fixup_plt(struct link_map *map,
-				    const Elf32_Rela *reloc,
-				    Elf32_Addr *reloc_addr,
-				    Elf32_Addr finaladdr);
-#define elf_machine_fixup_plt __elf_machine_fixup_plt
+extern Elf32_Addr __elf_machine_fixup_plt (struct link_map *map,
+					   const Elf32_Rela *reloc,
+					   Elf32_Addr *reloc_addr,
+					   Elf32_Addr finaladdr);
+
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *l, lookup_t t,
+		       const Elf32_Rela *reloc,
+		       Elf32_Addr *reloc_addr, Elf64_Addr value)
+{
+  __elf_machine_fixup_plt (map, reloc, reloc_addr, finaladdr);
+  return value;
+}
 
 /* Return the final value of a plt relocation.  */
 static inline Elf32_Addr

@@ -52,11 +52,12 @@ elf_machine_load_address (void)
 
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
 
-static inline void
-elf_machine_fixup_plt (struct link_map *map, const Elf32_Rel *reloc,
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf32_Rel *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
-  *reloc_addr = value;
+  return *reloc_addr = value;
 }
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).

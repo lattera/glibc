@@ -285,8 +285,9 @@ _dl_start_user:
 	.size   _dl_start_user, . - _dl_start_user
 	.previous");
 
-static inline void
-elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
+static inline Elf32_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf32_Rela *reloc,
 		       Elf32_Addr *reloc_addr, Elf32_Addr value)
 {
 #ifndef RTLD_BOOTSTRAP
@@ -315,6 +316,8 @@ elf_machine_fixup_plt (struct link_map *map, const Elf32_Rela *reloc,
   reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
   if (do_flush)
     __asm __volatile ("flush %0+4" : : "r"(reloc_addr));
+
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */

@@ -1,5 +1,5 @@
-/* Look up a symbol's run-time value in the scope of a loaded object.
-   Copyright (C) 1995, 96, 98, 99, 2000 Free Software Foundation, Inc.
+/* Configuration of lookup functions.
+   Copyright (C) 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
-#include <ldsodefs.h>
-
-/* Look up symbol NAME in MAP's scope and return its run-time address.  */
-
-ElfW(Addr)
-internal_function
-_dl_symbol_value (struct link_map *map, const char *name)
-{
-  const ElfW(Sym) *ref = NULL;
-  lookup_t result;
-  result = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
-  return (result ? LOOKUP_VALUE_ADDRESS (result) : 0) + ref->st_value;
-}
+/* The ia64 need more information from the symbol lookup function
+   than just the address. */
+#define DL_LOOKUP_RETURNS_MAP
+#define ELF_FUNCTION_PTR_IS_SPECIAL

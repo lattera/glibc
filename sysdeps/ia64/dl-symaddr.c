@@ -1,5 +1,5 @@
-/* Look up a symbol's run-time value in the scope of a loaded object.
-   Copyright (C) 1995, 96, 98, 99, 2000 Free Software Foundation, Inc.
+/* Get the symbol address.  IA-64 version.
+   Copyright (C) 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,17 +17,23 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <stddef.h>
 #include <ldsodefs.h>
+#include <dl-machine.h>
 
-/* Look up symbol NAME in MAP's scope and return its run-time address.  */
+void *
+_dl_symbol_address (const struct link_map *map, const ElfW(Sym) *ref)
+{
+  Elf64_Addr value = (map ? map->l_addr : 0) + ref->st_value;
+
+  /* On ia64, we have to return the pointer to function descriptor. */
+  if (ELFW(ST_TYPE) (ref->st_info) == STT_FUNC)
+    return (void *) __ia64_make_fptr (map, value, &__fptr_root, NULL);
+  else
+    return (void *) value;
+}
 
 ElfW(Addr)
-internal_function
-_dl_symbol_value (struct link_map *map, const char *name)
+_dl_start_address (const struct link_map *map, ElfW(Addr) start)
 {
-  const ElfW(Sym) *ref = NULL;
-  lookup_t result;
-  result = _dl_lookup_symbol (name, map, &ref, map->l_local_scope, 0);
-  return (result ? LOOKUP_VALUE_ADDRESS (result) : 0) + ref->st_value;
+  return __ia64_make_fptr (map, start, &__fptr_root, NULL);
 }

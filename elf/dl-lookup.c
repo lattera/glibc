@@ -86,7 +86,7 @@ static int
 add_dependency (struct link_map *undef_map, struct link_map *map)
 {
   struct link_map **list;
-  unsigned act;
+  unsigned int act;
   unsigned int i;
   int result = 0;
 
@@ -183,7 +183,7 @@ add_dependency (struct link_map *undef_map, struct link_map *map)
 /* Search loaded objects' symbol tables for a definition of the symbol
    UNDEF_NAME.  */
 
-ElfW(Addr)
+lookup_t
 internal_function
 _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		   const ElfW(Sym) **ref, struct r_scope_elem *symbol_scope[],
@@ -241,7 +241,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
 		       ": symbol `", undef_name, "'\n", NULL);
 
   *ref = current_value.s;
-  return current_value.m->l_addr;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 
@@ -250,7 +250,7 @@ _dl_lookup_symbol (const char *undef_name, struct link_map *undef_map,
    it only considers objects which were loaded after the described
    object.  If there are more search lists the object described by
    SKIP_MAP is only skipped.  */
-ElfW(Addr)
+lookup_t
 internal_function
 _dl_lookup_symbol_skip (const char *undef_name,
 			struct link_map *undef_map, const ElfW(Sym) **ref,
@@ -328,7 +328,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
 		       ": symbol `", undef_name, "' (skip)\n", NULL);
 
   *ref = current_value.s;
-  return current_value.m->l_addr;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 
@@ -337,7 +337,7 @@ _dl_lookup_symbol_skip (const char *undef_name,
    symbol.
 
    XXX We'll see whether we need this separate function.  */
-ElfW(Addr)
+lookup_t
 internal_function
 _dl_lookup_versioned_symbol (const char *undef_name,
 			     struct link_map *undef_map, const ElfW(Sym) **ref,
@@ -422,13 +422,13 @@ _dl_lookup_versioned_symbol (const char *undef_name,
 		       "]\n", NULL);
 
   *ref = current_value.s;
-  return current_value.m->l_addr;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 
 /* Similar to _dl_lookup_symbol_skip but takes an additional argument
    with the version we are looking for.  */
-ElfW(Addr)
+lookup_t
 internal_function
 _dl_lookup_versioned_symbol_skip (const char *undef_name,
 				  struct link_map *undef_map,
@@ -523,7 +523,7 @@ _dl_lookup_versioned_symbol_skip (const char *undef_name,
 		       "] (skip)\n", NULL);
 
   *ref = current_value.s;
-  return current_value.m->l_addr;
+  return LOOKUP_VALUE (current_value.m);
 }
 
 

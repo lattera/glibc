@@ -57,6 +57,7 @@ fixup (
     = (const void *) (D_PTR (l, l_info[DT_JMPREL]) + reloc_offset);
   const ElfW(Sym) *sym = &symtab[ELFW(R_SYM) (reloc->r_info)];
   void *const rel_addr = (void *)(l->l_addr + reloc->r_offset);
+  lookup_t result;
   ElfW(Addr) value;
 
   /* The use of `alloca' here looks ridiculous but it helps.  The goal is
@@ -83,33 +84,38 @@ fixup (
 
 	    if (version->hash != 0)
 	      {
-		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l,
-						    &sym, l->l_scope, version,
-						    ELF_MACHINE_JMP_SLOT);
+		result = _dl_lookup_versioned_symbol (strtab + sym->st_name,
+						      l, &sym, l->l_scope,
+						      version,
+						      ELF_MACHINE_JMP_SLOT);
 		break;
 	      }
 	  }
 	case 0:
-	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-				     l->l_scope, ELF_MACHINE_JMP_SLOT);
+	  result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+				      l->l_scope, ELF_MACHINE_JMP_SLOT);
 	}
 
-      /* Currently value contains the base load address of the object
-	 that defines sym.  Now add in the symbol offset.  */
-      value = (sym ? value + sym->st_value : 0);
+      /* Currently result contains the base load address (or link map)
+	 of the object that defines sym.  Now add in the symbol
+	 offset.  */
+      value = (sym ? LOOKUP_VALUE_ADDRESS (result) + sym->st_value : 0);
     }
   else
+    {
     /* We already found the symbol.  The module (and therefore its load
        address) is also known.  */
-    value = l->l_addr + sym->st_value;
+      value = l->l_addr + sym->st_value;
+#ifdef DL_LOOKUP_RETURNS_MAP
+      result = l;
+#endif
+    }
 
   /* And now perhaps the relocation addend.  */
   value = elf_machine_plt_value (l, reloc, value);
 
   /* Finally, fix up the plt itself.  */
-  elf_machine_fixup_plt (l, reloc, rel_addr, value);
-
-  return value;
+  return elf_machine_fixup_plt (l, result, reloc, rel_addr, value);
 }
 #endif
 
@@ -124,6 +130,7 @@ profile_fixup (
 {
   void (*mcount_fct) (ElfW(Addr), ElfW(Addr)) = _dl_mcount;
   ElfW(Addr) *resultp;
+  lookup_t result;
   ElfW(Addr) value;
 
   /* The use of `alloca' here looks ridiculous but it helps.  The goal is
@@ -166,27 +173,32 @@ profile_fixup (
 
 		if (version->hash != 0)
 		  {
-		    value = _dl_lookup_versioned_symbol(strtab + sym->st_name,
-							l, &sym, l->l_scope,
-							version,
-							ELF_MACHINE_JMP_SLOT);
+		    result = _dl_lookup_versioned_symbol(strtab + sym->st_name,
+							 l, &sym, l->l_scope,
+							 version,
+							 ELF_MACHINE_JMP_SLOT);
 		    break;
 		  }
 	      }
 	    case 0:
-	      value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
-					 l->l_scope, ELF_MACHINE_JMP_SLOT);
+	      result = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,
+					  l->l_scope, ELF_MACHINE_JMP_SLOT);
 	    }
 
-	  /* Currently value contains the base load address of the object
-	     that defines sym.  Now add in the symbol offset.  */
-	  value = (sym ? value + sym->st_value : 0);
+	  /* Currently result contains the base load address (or link map)
+	     of the object that defines sym.  Now add in the symbol
+	     offset.  */
+	  value = (sym ? LOOKUP_VALUE_ADDRESS (result) + sym->st_value : 0);
 	}
       else
+	{
 	/* We already found the symbol.  The module (and therefore its load
 	   address) is also known.  */
 	value = l->l_addr + sym->st_value;
-
+#ifdef DL_LOOKUP_RETURNS_MAP
+	result = l;
+#endif
+	}
       /* And now perhaps the relocation addend.  */
       value = elf_machine_plt_value (l, reloc, value);
 

@@ -66,9 +66,10 @@ elf_machine_load_address (void)
 
 /* We have 4 cases to handle.  And we code different code sequences
    for each one.  I love V9 code models...  */
-static inline void
-elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
-                      Elf64_Addr *reloc_addr, Elf64_Addr value)
+static inline Elf64_Addr
+elf_machine_fixup_plt (struct link_map *map, lookup_t t,
+		       const Elf64_Rela *reloc,
+		       Elf64_Addr *reloc_addr, Elf64_Addr value)
 {
   unsigned int *insns = (unsigned int *) reloc_addr;
   Elf64_Addr plt_vaddr = (Elf64_Addr) reloc_addr;
@@ -156,6 +157,8 @@ elf_machine_fixup_plt(struct link_map *map, const Elf64_Rela *reloc,
       insns[1] = 0x03000000 | (high32 >> 10);
       __asm __volatile ("flush %0 + 4" : : "r" (insns));
     }
+
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */

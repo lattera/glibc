@@ -65,7 +65,7 @@ struct do_dlsym_args
   const char *name;
 
   /* Return values of do_dlsym.  */
-  ElfW(Addr) loadbase;
+  lookup_t loadbase;
   const ElfW(Sym) *ref;
 };
 

@@ -30,6 +30,7 @@
 #include <elf.h>
 #include <dlfcn.h>
 #include <link.h>
+#include <dl-lookupcfg.h>
 
 __BEGIN_DECLS
 
@@ -47,6 +48,27 @@ __BEGIN_DECLS
 # define D_PTR(map,i) (map->i->d_un.d_ptr + map->l_addr)
 #else
 # define D_PTR(map,i) map->i->d_un.d_ptr
+#endif
+
+/* On some platforms more information than just the address of the symbol
+   is needed from the lookup functions.  In this case we return the whole
+   link map.  */
+#ifdef DL_LOOKUP_RETURNS_MAP
+typedef struct link_map *lookup_t;
+# define LOOKUP_VALUE(map) map
+# define LOOKUP_VALUE_ADDRESS(map) (map ? map->l_addr : 0)
+#else
+typedef ElfW(Addr) lookup_t;
+# define LOOKUP_VALUE(map) map->l_addr
+# define LOOKUP_VALUE_ADDRESS(address) address
+#endif
+
+/* on some architectures a pointer to a function is not just a pointer
+   to the actual code of the function but rather an architecture
+   specific descriptor. */
+#ifndef ELF_FUNCTION_PTR_IS_SPECIAL
+#define DL_SYMBOL_ADDRESS(map, ref) \
+ (void *) (LOOKUP_VALUE_ADDRESS (map) + ref->st_value)
 #endif
 
 /* For the version handling we need an array with only names and their
@@ -271,38 +293,38 @@ extern void _dl_setup_hash (struct link_map *map) internal_function;
    RELOC_TYPE is a machine-dependent reloc type, which is passed to
    the `elf_machine_lookup_*_p' macros in dl-machine.h to affect which
    symbols can be chosen.  */
-extern ElfW(Addr) _dl_lookup_symbol (const char *undef,
-				     struct link_map *undef_map,
-				     const ElfW(Sym) **sym,
-				     struct r_scope_elem *symbol_scope[],
-				     int reloc_type)
+extern lookup_t _dl_lookup_symbol (const char *undef,
+				   struct link_map *undef_map,
+				   const ElfW(Sym) **sym,
+				   struct r_scope_elem *symbol_scope[],
+				   int reloc_type)
      internal_function;
 
 /* Lookup versioned symbol.  */
-extern ElfW(Addr) _dl_lookup_versioned_symbol (const char *undef,
-					       struct link_map *undef_map,
-					       const ElfW(Sym) **sym,
-					       struct r_scope_elem *symbol_scope[],
-					       const struct r_found_version *version,
-					       int reloc_type)
+extern lookup_t _dl_lookup_versioned_symbol (const char *undef,
+					     struct link_map *undef_map,
+					     const ElfW(Sym) **sym,
+					     struct r_scope_elem *symbol_scope[],
+					     const struct r_found_version *version,
+					     int reloc_type)
      internal_function;
 
 /* For handling RTLD_NEXT we must be able to skip shared objects.  */
-extern ElfW(Addr) _dl_lookup_symbol_skip (const char *undef,
-					  struct link_map *undef_map,
-					  const ElfW(Sym) **sym,
-					  struct r_scope_elem *symbol_scope[],
-					  struct link_map *skip_this)
+extern lookup_t _dl_lookup_symbol_skip (const char *undef,
+					struct link_map *undef_map,
+					const ElfW(Sym) **sym,
+					struct r_scope_elem *symbol_scope[],
+					struct link_map *skip_this)
      internal_function;
 
 /* For handling RTLD_NEXT with versioned symbols we must be able to
    skip shared objects.  */
-extern ElfW(Addr) _dl_lookup_versioned_symbol_skip (const char *undef,
-						    struct link_map *undef_map,
-						    const ElfW(Sym) **sym,
-						    struct r_scope_elem *symbol_scope[],
-						    const struct r_found_version *version,
-						    struct link_map *skip_this)
+extern lookup_t _dl_lookup_versioned_symbol_skip (const char *undef,
+						  struct link_map *undef_map,
+						  const ElfW(Sym) **sym,
+						  struct r_scope_elem *symbol_scope[],
+						  const struct r_found_version *version,
+						  struct link_map *skip_this)
      internal_function;
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
