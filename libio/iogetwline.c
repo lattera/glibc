@@ -64,6 +64,8 @@ _IO_getwline_info (fp, buf, n, delim, extract_delim, eof)
   wchar_t *ptr = buf;
   if (eof != NULL)
     *eof = 0;
+  if (__builtin_expect (fp->_mode, 1) == 0)
+    _IO_fwide (fp, 1);
   while (n != 0)
     {
       _IO_ssize_t len = (fp->_wide_data->_IO_read_end

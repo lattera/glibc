@@ -754,7 +754,7 @@ _IO_flush_all ()
   int result = 0;
   struct _IO_FILE *fp;
   for (fp = (_IO_FILE *) _IO_list_all; fp; fp = fp->_chain)
-    if (((fp->_mode < 0 && fp->_IO_write_ptr > fp->_IO_write_base)
+    if (((fp->_mode <= 0 && fp->_IO_write_ptr > fp->_IO_write_base)
 #if defined _LIBC || defined _GLIBCPP_USE_WCHAR_T
 	 || (fp->_vtable_offset == 0
 	     && fp->_mode > 0 && (fp->_wide_data->_IO_write_ptr

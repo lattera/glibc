@@ -411,7 +411,7 @@ new_do_write (fp, data, to_do)
     fp->_cur_column = _IO_adjust_column (fp->_cur_column - 1, data, count) + 1;
   _IO_setg (fp, fp->_IO_buf_base, fp->_IO_buf_base, fp->_IO_buf_base);
   fp->_IO_write_base = fp->_IO_write_ptr = fp->_IO_buf_base;
-  fp->_IO_write_end = (fp->_mode < 0
+  fp->_IO_write_end = (fp->_mode <= 0
 		       && (fp->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 		       ? fp->_IO_buf_base : fp->_IO_buf_end);
   return count;
@@ -516,7 +516,7 @@ _IO_new_file_overflow (f, ch)
       f->_IO_read_base = f->_IO_read_ptr = f->_IO_read_end;
 
       f->_flags |= _IO_CURRENTLY_PUTTING;
-      if (f->_mode < 0 && f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
+      if (f->_mode <= 0 && f->_flags & (_IO_LINE_BUF+_IO_UNBUFFERED))
 	f->_IO_write_end = f->_IO_write_ptr;
     }
   if (ch == EOF)

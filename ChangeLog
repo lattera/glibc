@@ -1,3 +1,16 @@
+2000-08-29  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/iogetline.c: Set mode before the loop in case n==0.
+	* libio/iogetwline.c: Likewise.
+
+2000-08-29  H.J. Lu  <hjl@gnu.org>
+
+	* libio/fileops.c (new_do_write): Check fp->_mode <= 0 instead
+	of fp->_mode < 0.
+	(_IO_new_file_overflow): Likewise.
+	* libio/genops.c (_IO_flush_all): Likewise.
+	* libio/ioftell.c (_IO_ftell): Likewise.
+
 2000-08-29  Akira Higuchi  <a@kondara.org>
 
 	* iconv/gconv_db.c (increment_counter): Reset __init_fct, __fct,
