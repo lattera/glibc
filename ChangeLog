@@ -1,3 +1,9 @@
+2000-06-14  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/mips/dl-machine.h: Pass finalizer correctly to user
+	entry point.
+	Reported by Jim Pick <jim@jimpick.com>.
+
 2000-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* misc/syslog.c (vsyslog): Allow open_memstream to fail without
