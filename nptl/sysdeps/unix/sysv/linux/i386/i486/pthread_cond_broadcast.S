@@ -71,7 +71,7 @@ __pthread_cond_broadcast:
 
 	/* Unlock.  */
 	LOCK
-	decl	cond_lock-wakeup_seq(%ebx)
+	subl	$1, cond_lock-wakeup_seq(%ebx)
 	jne	7f
 
 	/* Wake up all threads.  */
@@ -87,7 +87,7 @@ __pthread_cond_broadcast:
 	.align	16
 	/* Unlock.  */
 4:	LOCK
-	decl	cond_lock-wakeup_seq(%ebx)
+	subl	$1, cond_lock-wakeup_seq(%ebx)
 	jne	5f
 
 6:	xorl	%eax, %eax

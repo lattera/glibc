@@ -48,7 +48,7 @@ __new_sem_post:
 
 	movl	$SYS_futex, %eax
 	movl	$FUTEX_WAKE, %ecx
-	incl	%edx
+	addl	$1, %edx
 	ENTER_KERNEL
 
 	testl	%eax, %eax

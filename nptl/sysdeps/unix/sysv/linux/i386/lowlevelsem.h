@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -46,8 +46,8 @@
 
 #define lll_sem_wait(sem) \
   ({ int result, ignore1, ignore2;					      \
-     __asm __volatile ("1:\tincl 8(%4)\n\t"				      \
-		       LOCK "incl (%4)\n\t"				      \
+     __asm __volatile ("1:\taddl $1,8(%4)\n\t"				      \
+		       LOCK "addl $1,(%4)\n\t"				      \
 		       "jng 2f\n"					      \
 		       ".subsection 1\n"				      \
 		       "2:\tmovl %4, %%eax\n\t"				      \
@@ -70,7 +70,7 @@
 		       "call __lll_lock_wait\n\t"			      \
 		       "jmp 5f\n\t"					      \
 		       ".previous\n"					      \
-		       "5:\tdecl 8(%4)\n\t"				      \
+		       "5:\tsubl $1,8(%4)\n\t"				      \
 		       "xorl %0, %0\n\t"				      \
 		       "cmpl $0, 4(%4)\n\t"				      \
 		       "jne,pt 6f\n\t"					      \

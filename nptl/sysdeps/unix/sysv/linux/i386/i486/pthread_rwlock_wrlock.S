@@ -64,16 +64,16 @@ __pthread_rwlock_wrlock:
 	cmp	$0, NR_READERS(%ebx)
 	je	5f
 
-3:	incl	WRITERS_QUEUED(%ebx)
+3:	addl	$1, WRITERS_QUEUED(%ebx)
 	je	4f
 
 	movl	WRITERS_WAKEUP(%ebx), %edx
 
 	LOCK
 #if MUTEX == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	MUTEX(%ebx)
+	subl	$1, MUTEX(%ebx)
 #endif
 	jne	10f
 
@@ -95,7 +95,7 @@ __pthread_rwlock_wrlock:
 	testl	%eax, %eax
 	jne	12f
 
-13:	decl	WRITERS_QUEUED(%ebx)
+13:	subl	$1, WRITERS_QUEUED(%ebx)
 	jmp	2b
 
 5:	xorl	%ecx, %ecx
@@ -103,9 +103,9 @@ __pthread_rwlock_wrlock:
 	movl	%eax, WRITER(%ebx)
 9:	LOCK
 #if MUTEX == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	MUTEX(%ebx)
+	subl	$1, MUTEX(%ebx)
 #endif
 	jne	6f
 7:
@@ -138,7 +138,7 @@ __pthread_rwlock_wrlock:
 	call	__lll_mutex_unlock_wake
 	jmp	7b
 
-4:	decl	WRITERS_QUEUED(%ebx)
+4:	subl	$1, WRITERS_QUEUED(%ebx)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 

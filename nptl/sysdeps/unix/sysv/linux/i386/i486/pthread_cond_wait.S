@@ -71,9 +71,9 @@ __condvar_cleanup:
 
 	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	je	2f
 #if cond_lock == 0
@@ -159,9 +159,9 @@ __pthread_cond_wait:
 	/* Unlock.  */
 8:	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	3f
 
@@ -211,9 +211,9 @@ __pthread_cond_wait:
 
 	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	10f
 
@@ -277,9 +277,9 @@ __pthread_cond_wait:
 12:	movl	%eax, (%esp)
 	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	13f
 

@@ -99,7 +99,7 @@ extern int __lll_mutex_unlock_wait (int *__futex)
 
 #define lll_mutex_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "decl %0\n\t"			      \
+            __asm __volatile (LOCK_INSTR "subl $1,%0\n\t"		      \
 			      "jne 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleal %0, %%eax\n\t"			      \
@@ -167,7 +167,7 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 # define lll_unlock(futex) \
   (void) ({ int ignore;							      \
-            __asm __volatile (LOCK_INSTR "incl %0\n\t"			      \
+            __asm __volatile (LOCK_INSTR "addl $1,%0\n\t"		      \
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleal %0, %%eax\n\t"			      \
@@ -225,7 +225,7 @@ extern int __libc_locking_needed attribute_hidden;
             __asm __volatile ("cmpl $0, %%gs:%P3\n\t"			      \
 			      "je,pt 0f\n\t"				      \
 			      "lock\n"					      \
-			      "0:\tincl %0\n\t"				      \
+			      "0:\taddl $1,%0\n\t"			      \
 			      "jng 1f\n\t"				      \
 			      ".subsection 1\n"				      \
 			      "1:\tleal %0, %%eax\n\t"			      \

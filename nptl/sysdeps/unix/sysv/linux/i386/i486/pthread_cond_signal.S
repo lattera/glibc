@@ -76,7 +76,7 @@ __pthread_cond_signal:
 
 	/* Unlock.  */
 4:	LOCK
-	decl	cond_lock-wakeup_seq(%ebx)
+	subl	$1, cond_lock-wakeup_seq(%ebx)
 	jne	5f
 
 6:	xorl	%eax, %eax

@@ -74,16 +74,16 @@ pthread_rwlock_timedwrlock:
 3:	cmpl	$1000000000, 4(%edi)
 	jae	19f
 
-	incl	WRITERS_QUEUED(%ebp)
+	addl	$1, WRITERS_QUEUED(%ebp)
 	je	4f
 
 	movl	WRITERS_WAKEUP(%ebp), %esi
 
 	LOCK
 #if MUTEX == 0
-	decl	(%ebp)
+	subl	$1, (%ebp)
 #else
-	decl	MUTEX(%ebp)
+	subl	$1, MUTEX(%ebp)
 #endif
 	jne	10f
 
@@ -103,7 +103,7 @@ pthread_rwlock_timedwrlock:
 	subl	%eax, %edx
 	jns	15f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 15:	testl	%ecx, %ecx
 	js	16f		/* Time is already up.  */
 
@@ -130,7 +130,7 @@ pthread_rwlock_timedwrlock:
 	testl	%eax, %eax
 	jne	12f
 
-13:	decl	WRITERS_QUEUED(%ebp)
+13:	subl	$1, WRITERS_QUEUED(%ebp)
 	cmpl	$-ETIMEDOUT, %edx
 	jne	2b
 
@@ -143,9 +143,9 @@ pthread_rwlock_timedwrlock:
 	movl	%eax, WRITER(%ebp)
 9:	LOCK
 #if MUTEX == 0
-	decl	(%ebp)
+	subl	$1, (%ebp)
 #else
-	decl	MUTEX(%ebp)
+	subl	$1, MUTEX(%ebp)
 #endif
 	jne	6f
 
@@ -182,7 +182,7 @@ pthread_rwlock_timedwrlock:
 	jmp	7b
 
 	/* Overflow.  */
-4:	decl	WRITERS_QUEUED(%ebp)
+4:	subl	$1, WRITERS_QUEUED(%ebp)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 

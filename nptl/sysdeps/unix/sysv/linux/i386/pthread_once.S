@@ -119,7 +119,7 @@ __pthread_once:
 
 	/* Sucessful run of the initializer.  Signal that we are done.  */
 	LOCK
-	incl	(%ebx)
+	addl	$1, (%ebx)
 
 	/* Wake up all other threads.  */
 	movl	$0x7fffffff, %edx

@@ -85,7 +85,7 @@ sem_timedwait:
 	subl	%eax, %edx
 	jns	5f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 5:	testl	%ecx, %ecx
 	movl	$ETIMEDOUT, %eax
 	js	6f		/* Time is already up.  */

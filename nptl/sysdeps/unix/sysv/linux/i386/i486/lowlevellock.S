@@ -77,7 +77,7 @@ lll_unlock_wake_cb:
 
 	movl	20(%esp), %ebx
 	LOCK
-	incl	(%ebx)
+	addl	$1, (%ebx)
 	jng	1f
 
 	popl	%edx
@@ -140,7 +140,7 @@ __lll_timedwait_tid:
 	subl	%eax, %edx
 	jns	5f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 5:	testl	%ecx, %ecx
 	js	6f		/* Time is already up.  */
 

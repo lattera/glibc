@@ -56,7 +56,7 @@ __pthread_rwlock_unlock:
 
 2:	cmpl	$0, WRITER(%edi)
 	jne	5f
-	decl	NR_READERS(%edi)
+	subl	$1, NR_READERS(%edi)
 	jnz	6f
 
 5:	movl	$0, WRITER(%edi)
@@ -74,12 +74,12 @@ __pthread_rwlock_unlock:
 	movl	$0x7fffffff, %edx
 	leal	READERS_WAKEUP(%edi), %ebx
 
-0:	incl	(%ebx)
+0:	addl	$1, (%ebx)
 	LOCK
 #if MUTEX == 0
-	decl	(%edi)
+	subl	$1, (%edi)
 #else
-	decl	MUTEX(%edi)
+	subl	$1, MUTEX(%edi)
 #endif
 	jne	7f
 
@@ -94,9 +94,9 @@ __pthread_rwlock_unlock:
 	.align	16
 6:	LOCK
 #if MUTEX == 0
-	decl	(%edi)
+	subl	$1, (%edi)
 #else
-	decl	MUTEX(%edi)
+	subl	$1, MUTEX(%edi)
 #endif
 	jne	3f
 

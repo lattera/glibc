@@ -107,7 +107,7 @@ __lll_mutex_timedlock_wait:
 	subl	%eax, %edx
 	jns	4f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 4:	testl	%ecx, %ecx
 	js	5f		/* Time is already up.  */
 
@@ -159,9 +159,9 @@ __lll_mutex_unlock_wake:
 	pushl	%ecx
 	pushl	%edx
 
-	movl	$FUTEX_WAKE, %ecx
 	movl	%eax, %ebx
-	movl	$0, (%ebx)
+	movl	$0, (%eax)
+	movl	$FUTEX_WAKE, %ecx
 	movl	$1, %edx	/* Wake one thread.  */
 	movl	$SYS_futex, %eax
 	ENTER_KERNEL

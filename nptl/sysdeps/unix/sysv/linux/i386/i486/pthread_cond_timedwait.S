@@ -102,9 +102,9 @@ __pthread_cond_timedwait:
 	/* Unlock.  */
 8:	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	3f
 
@@ -129,7 +129,7 @@ __pthread_cond_timedwait:
 	subl	%eax, %edx
 	jns	12f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 12:	testl	%ecx, %ecx
 	js	13f
 
@@ -190,9 +190,9 @@ __pthread_cond_timedwait:
 
 	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	10f
 
@@ -259,9 +259,9 @@ __pthread_cond_timedwait:
 16:	movl	%eax, (%esp)
 	LOCK
 #if cond_lock == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	cond_lock(%ebx)
+	subl	$1, cond_lock(%ebx)
 #endif
 	jne	17f
 

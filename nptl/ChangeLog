@@ -1,5 +1,32 @@
 2003-03-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-tls2.c (do_test): Add TEMP_FAILURE_RETRY around sem_wait call.
+	* tst-signal3.c (do_test): Likewise.
+	* tst-sem5.c (do_test): Likewise.
+	* tst-kill6.c (do_test): Likewise.
+	* tst-tls3.c (do_test): Likewise.  Include <errno.h>.
+
+	* sysdeps/unix/sysv/linux/i386/lowlevellock.h: Use add/sub instead
+	of inc/dec.
+	* sysdeps/unix/sysv/linux/i386/lowlevelsem.h: Likewise.
+	* sysdeps/unix/sysv/linux/i386/pthread_once.S: Likewise
+	* sysdeps/unix/sysv/linux/i386/i486/sem_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/sem_post.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_wrlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_unlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedwrlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_timedrdlock.S:
+	Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_rwlock_rdlock.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_timedwait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_signal.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_cond_broadcast.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/pthread_barrier_wait.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevelmutex.S: Likewise.
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S: Likewise.
+
 	* allocatestack.c (allocate_stack): If mprotect() fails free the
 	TLS memory.
 

@@ -76,16 +76,16 @@ pthread_rwlock_timedrdlock:
 3:	cmpl	$1000000000, 4(%edi)
 	jae	19f
 
-	incl	READERS_QUEUED(%ebp)
+	addl	$1, READERS_QUEUED(%ebp)
 	je	4f
 
 	movl	READERS_WAKEUP(%ebp), %esi
 
 	LOCK
 #if MUTEX == 0
-	decl	(%ebp)
+	subl	$1, (%ebp)
 #else
-	decl	MUTEX(%ebp)
+	subl	$1, MUTEX(%ebp)
 #endif
 	jne	10f
 
@@ -105,7 +105,7 @@ pthread_rwlock_timedrdlock:
 	subl	%eax, %edx
 	jns	15f
 	addl	$1000000000, %edx
-	decl	%ecx
+	subl	$1, %ecx
 15:	testl	%ecx, %ecx
 	js	16f		/* Time is already up.  */
 
@@ -132,7 +132,7 @@ pthread_rwlock_timedrdlock:
 	testl	%eax, %eax
 	jne	12f
 
-13:	decl	READERS_QUEUED(%ebp)
+13:	subl	$1, READERS_QUEUED(%ebp)
 	cmpl	$-ETIMEDOUT, %edx
 	jne	2b
 
@@ -141,13 +141,13 @@ pthread_rwlock_timedrdlock:
 
 
 5:	xorl	%ecx, %ecx
-	incl	NR_READERS(%ebp)
+	addl	$1, NR_READERS(%ebp)
 	je	8f
 9:	LOCK
 #if MUTEX == 0
-	decl	(%ebp)
+	subl	$1, (%ebp)
 #else
-	decl	MUTEX(%ebp)
+	subl	$1, MUTEX(%ebp)
 #endif
 	jne	6f
 
@@ -184,12 +184,12 @@ pthread_rwlock_timedrdlock:
 	jmp	7b
 
 	/* Overflow.  */
-8:	decl	NR_READERS(%ebp)
+8:	subl	$1, NR_READERS(%ebp)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 
 	/* Overflow.  */
-4:	decl	READERS_QUEUED(%ebp)
+4:	subl	$1, READERS_QUEUED(%ebp)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 

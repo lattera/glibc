@@ -53,7 +53,7 @@ pthread_barrier_wait:
 
 	/* One less waiter.  If this was the last one needed wake
 	   everybody.  */
-2:	decl	LEFT(%ebx)
+2:	subl	$1, LEFT(%ebx)
 	je	3f
 
 	/* There are more threads to come.  */
@@ -67,7 +67,7 @@ pthread_barrier_wait:
 
 	/* Release the mutex.  */
 	LOCK
-	incl	MUTEX(%ebx)
+	addl	$1, MUTEX(%ebx)
 	jng	6f
 
 	/* Wait for the remaining threads.  The call will return immediately
@@ -98,9 +98,9 @@ pthread_barrier_wait:
 3:	movl	INIT_COUNT(%ebx), %eax
 	movl	%eax, LEFT(%ebx)
 #if CURR_EVENT == 0
-	incl	(%ebx)
+	addl	$1, (%ebx)
 #else
-	incl	CURR_EVENT(%ebx)
+	addl	$1, CURR_EVENT(%ebx)
 #endif
 
 	/* Wake up all waiters.  The count is a signed number in the kernel
@@ -114,7 +114,7 @@ pthread_barrier_wait:
 	   waking the waiting threads since otherwise a new thread might
 	   arrive and gets waken up, too.  */
 	LOCK
-	incl	MUTEX(%ebx)
+	addl	$1, MUTEX(%ebx)
 	jng	4f
 
 5:	orl	$-1, %eax		/* == PTHREAD_BARRIER_SERIAL_THREAD */

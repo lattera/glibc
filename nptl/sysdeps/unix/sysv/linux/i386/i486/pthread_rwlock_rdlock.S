@@ -66,16 +66,16 @@ __pthread_rwlock_rdlock:
 	cmpl	$0, FLAGS(%ebx)
 	je	5f
 
-3:	incl	READERS_QUEUED(%ebx)
+3:	addl	$1, READERS_QUEUED(%ebx)
 	je	4f
 
 	movl	READERS_WAKEUP(%ebx), %edx
 
 	LOCK
 #if MUTEX == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	MUTEX(%ebx)
+	subl	$1, MUTEX(%ebx)
 #endif
 	jne	10f
 
@@ -97,17 +97,17 @@ __pthread_rwlock_rdlock:
 	testl	%eax, %eax
 	jne	12f
 
-13:	decl	READERS_QUEUED(%ebx)
+13:	subl	$1, READERS_QUEUED(%ebx)
 	jmp	2b
 
 5:	xorl	%ecx, %ecx
-	incl	NR_READERS(%ebx)
+	addl	$1, NR_READERS(%ebx)
 	je	8f
 9:	LOCK
 #if MUTEX == 0
-	decl	(%ebx)
+	subl	$1, (%ebx)
 #else
-	decl	MUTEX(%ebx)
+	subl	$1, MUTEX(%ebx)
 #endif
 	jne	6f
 7:
@@ -142,12 +142,12 @@ __pthread_rwlock_rdlock:
 	jmp	7b
 
 	/* Overflow.  */
-8:	decl	NR_READERS(%ebx)
+8:	subl	$1, NR_READERS(%ebx)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 
 	/* Overflow.  */
-4:	decl	READERS_QUEUED(%ebx)
+4:	subl	$1, READERS_QUEUED(%ebx)
 	movl	$EAGAIN, %ecx
 	jmp	9b
 

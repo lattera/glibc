@@ -17,6 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
+#include <errno.h>
 #include <pthread.h>
 #include <signal.h>
 #include <semaphore.h>
@@ -159,7 +160,7 @@ do_test (void)
 	  exit (1);
 	}
 
-      if (sem_wait (&s) != 0)
+      if (TEMP_FAILURE_RETRY (sem_wait (&s)) != 0)
 	{
 	  puts ("sem_wait failed");
 	  exit (1);

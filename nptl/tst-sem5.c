@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -38,7 +38,7 @@ do_test (void)
       return 1;
     }
 
-  if (sem_wait (&s) == -1)
+  if (TEMP_FAILURE_RETRY (sem_wait (&s)) == -1)
     {
       puts ("sem_wait failed");
       return 1;
