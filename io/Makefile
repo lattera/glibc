@@ -1,4 +1,4 @@
-# Copyright (C) 1992, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
+# Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@
 subdir	:= io
 
 headers := sys/stat.h bits/stat.h sys/statfs.h bits/statfs.h sys/vfs.h \
-	   fcntl.h sys/fcntl.h bits/fcntl.h \
+	   sys/statvfs.h bits/statvfs.h fcntl.h sys/fcntl.h bits/fcntl.h \
 	   poll.h sys/poll.h bits/poll.h \
 	   utime.h ftw.h fts.h
 
@@ -32,6 +32,7 @@ routines :=							      \
 	stat fstat lstat mknod stat64 fstat64 lstat64		      \
 	xstat fxstat lxstat xmknod xstat64 fxstat64 lxstat64	      \
 	statfs fstatfs statfs64 fstatfs64			      \
+	statvfs fstatvfs statvfs64 fstatvfs64			      \
 	umask chmod fchmod mkdir				      \
 	open open64 close read write lseek lseek64 access euidaccess  \
 	fcntl flock lockf					      \

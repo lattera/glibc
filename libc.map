@@ -489,7 +489,7 @@ GLIBC_2.1 {
 
     # f*
     fgetpos64; fmtmsg; fopen64; freopen64; fseeko; fseeko64; fsetpos64;
-    fstatfs64; ftello; ftello64; ftruncate64; ftw64;
+    fstatfs64; fstatvfs; fstatvfs64; ftello; ftello64; ftruncate64; ftw64;
     fopen; fclose; fdopen;
 
     # g*
@@ -535,7 +535,8 @@ GLIBC_2.1 {
 
     # s*
     scandir64; setitimer; setrlimit64; setutxent; settimeofday;
-    sighold; sigrelse; sigignore; sigset; statfs64; strcasestr; sysv_signal;
+    sighold; sigrelse; sigignore; sigset; statfs64; statvfs; statvfs64;
+    strcasestr; sysv_signal;
 
     # New RT signal functions.
     sigqueue; sigtimedwait; sigwaitinfo;

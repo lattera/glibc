@@ -1,3 +1,23 @@
+1998-03-20 16:24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libc.map: Add statvfs, fstatvfs, statvfs64, and fstatvfs64.
+	* io/Makefile (headers): Add sys/statvfs.h and bits/statvfs.h.
+	* io/sys/statvfs.h: New file.
+	* sysdeps/generic/fstatvfs.h: New file.
+	* sysdeps/generic/statvfs.h: New file.
+	* sysdeps/generic/fstatvfs64.h: New file.
+	* sysdeps/generic/statvfs64.h: New file.
+	* sysdeps/generic/bits/statvfs.h: New file.
+	* sysdeps/unix/sysv/linux/fstatvfs.c: New file.
+	* sysdeps/unix/sysv/linux/statvfs.c: New file.
+	* sysdeps/unix/sysv/linux/bits/statvfs.h: New file.
+
+	* sysdeps/unix/sysv/linux/bits/statfs.h: Correct type for f_files
+	and f_ffree elements.
+
+	* sysdeps/unix/sysv/linux/sys/mount.h: Pretty print.  Define
+	mount options in enum.
+
 1998-03-20  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
 
 	* configure.in: Check for recent egcs/gcc.

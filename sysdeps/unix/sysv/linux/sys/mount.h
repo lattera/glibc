@@ -1,5 +1,5 @@
 /* Header file for mounting/unmount Linux filesystems.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,13 +20,10 @@
 /* This is taken from /usr/include/linux/fs.h.  */
 
 #ifndef _SYS_MOUNT_H
-
 #define _SYS_MOUNT_H	1
+
 #include <features.h>
-
 #include <sys/ioctl.h>
-
-__BEGIN_DECLS
 
 #define BLOCK_SIZE	1024
 #define BLOCK_SIZE_BITS	10
@@ -34,18 +31,31 @@ __BEGIN_DECLS
 
 /* These are the fs-independent mount-flags: up to 16 flags are
    supported  */
-#define MS_RDONLY	1	/* Mount read-only.  */
-#define MS_NOSUID	2	/* Ignore suid and sgid bits.  */
-#define MS_NODEV	4	/* Disallow access to device special files.  */
-#define MS_NOEXEC	8	/* Disallow program execution.  */
-#define MS_SYNCHRONOUS	16	/* Writes are synced at once.  */
-#define MS_REMOUNT	32	/* Alter flags of a mounted FS.  */
-#define MS_MANDLOCK	64	/* Allow mandatory locks on an FS.  */
-#define S_WRITE		128	/* Write on file/directory/symlink.  */
-#define S_APPEND	256	/* Append-only file.  */
-#define S_IMMUTABLE	512	/* Immutable file.  */
-#define MS_NOATIME	1024	/* Do not update access times.  */
-
+enum
+{
+  MS_RDONLY = 1,		/* Mount read-only.  */
+#define MS_RDONLY	MS_RDONLY
+  MS_NOSUID = 2,		/* Ignore suid and sgid bits.  */
+#define MS_NOSUID	MS_NOSUID
+  MS_NODEV = 4,			/* Disallow access to device special files.  */
+#define MS_NODEV	MS_NODEV
+  MS_NOEXEC = 8,		/* Disallow program execution.  */
+#define MS_NOEXEC	MS_NOEXEC
+  MS_SYNCHRONOUS = 16,		/* Writes are synced at once.  */
+#define MS_SYNCHRONOUS	MS_SYNCHRONOUS
+  MS_REMOUNT = 32,		/* Alter flags of a mounted FS.  */
+#define MS_REMOUNT	MS_REMOUNT
+  MS_MANDLOCK = 64,		/* Allow mandatory locks on an FS.  */
+#define MS_MANDLOCK	MS_MANDLOCK
+  S_WRITE = 128,		/* Write on file/directory/symlink.  */
+#define S_WRITE		S_WRITE
+  S_APPEND = 256,		/* Append-only file.  */
+#define S_APPEND	S_APPEND
+  S_IMMUTABLE = 512,		/* Immutable file.  */
+#define S_IMMUTABLE	S_IMMUTABLE
+  MS_NOATIME = 1024		/* Do not update access times.  */
+#define MS_NOATIME	MS_NOATIME
+};
 
 /* Flags that can be altered by MS_REMOUNT  */
 #define MS_RMT_MASK (MS_RDONLY | MS_MANDLOCK)
@@ -69,6 +79,8 @@ __BEGIN_DECLS
 #define BLKRASET   _IO(0x12, 98) /* Set read ahead for block device.  */
 #define BLKRAGET   _IO(0x12, 99) /* Get current read ahead setting.  */
 
+
+__BEGIN_DECLS
 
 /* Mount a filesystem.  */
 extern int mount __P ((__const char *__special_file, __const char *__dir,
