@@ -62,7 +62,7 @@
 # define US_CHAR_TYPE wchar_t/* unsigned character type */
 # define COMPILED_BUFFER_VAR wc_buffer
 # define OFFSET_ADDRESS_SIZE 1 /* the size which STORE_NUMBER macro use */
-# define CHAR_CLASS_SIZE (sizeof(wctype_t)/sizeof(CHAR_TYPE)+1)
+# define CHAR_CLASS_SIZE ((__alignof__(wctype_t)+sizeof(wctype_t))/sizeof(CHAR_TYPE)+1)
 # define PUT_CHAR(c) \
   do {									      \
     if (MC_CUR_MAX == 1)						      \
@@ -2807,6 +2807,8 @@ regex_compile (pattern, size, syntax, bufp)
                     if (c == ':' && *p == ']')
                       {
 			wctype_t wt;
+			uintptr_t alignedp;
+
 			/* Query the character class as wctype_t.  */
 			wt = IS_CHAR_CLASS (str);
 			if (wt == 0)
@@ -2824,9 +2826,14 @@ regex_compile (pattern, size, syntax, bufp)
                         b += CHAR_CLASS_SIZE;
 			/* Move data which follow character classes
 			    not to violate the data.  */
-                        insert_space(CHAR_CLASS_SIZE, laststart + 6, b - 1);
+                        insert_space(CHAR_CLASS_SIZE,
+				     laststart + 6 + laststart[1],
+				     b - 1);
+			alignedp = ((uintptr_t)(laststart + 6 + laststart[1])
+				    + __alignof__(wctype_t) - 1)
+			  	    & ~(uintptr_t)(__alignof__(wctype_t) - 1);
 			/* Store the character class.  */
-                        *((wctype_t*)(laststart + 6)) = wt;
+                        *((wctype_t*)alignedp) = wt;
                         /* Update length of char_classes */
                         laststart[1] += CHAR_CLASS_SIZE;
 
@@ -6001,7 +6008,11 @@ re_match_2_internal (bufp, string1, size1, string2, size2, pos, regs, stop)
             /* match with char_class?  */
 	    for (i = 0; i < char_class_length ; i += CHAR_CLASS_SIZE)
 	      {
-		wctype_t wctype = *((wctype_t*)workp);
+		wctype_t wctype;
+		uintptr_t alignedp = ((uintptr_t)workp
+				      + __alignof__(wctype_t) - 1)
+		  		      & ~(uintptr_t)(__alignof__(wctype_t) - 1);
+		wctype = *((wctype_t*)alignedp);
 		workp += CHAR_CLASS_SIZE;
 		if (iswctype((wint_t)c, wctype))
 		  goto char_set_matched;

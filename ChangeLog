@@ -1,10 +1,13 @@
 2001-02-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/regex.c: Fix alignment problem.
+	Patch by Isamu Hasegawa <isamu@yamato.ibm.com>.
+
 	* sysdeps/alpha/strrchr.S: Little optimization.
 	Patch by Richard Henderson <rth@redhat.com>.
 
 	* sysdeps/alpha/alphaev67/strrchr.S: New file.
-	Contributed by Rick Gorton <rick.gorton@alpha-processor.com>..
+	Contributed by Rick Gorton <rick.gorton@alpha-processor.com>.
 
 2001-02-08  kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
