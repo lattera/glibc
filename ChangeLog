@@ -1,5 +1,9 @@
 2002-07-08  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/x86_64/elf/initfini.c (__asm__): Call call_gmon_start.
+
+2002-07-08  Andreas Jaeger  <aj@suse.de>
+
 	* sysdeps/x86_64/fpu/s_fdiml.S: Fix wrong register name.
 
 2002-07-06  Andreas Jaeger  <aj@suse.de>

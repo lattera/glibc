@@ -1,5 +1,5 @@
 /* Special .init and .fini section support for x86-64.
-   Copyright (C) 2001 Free Software Foundation, Inc.
+   Copyright (C) 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -60,7 +60,7 @@ call_gmon_start:\n\
 	.type	_init,@function\n\
 _init:\n\
 	subq	$8, %rsp\n\
-	/* call	call_gmon_start */\n\
+	call	call_gmon_start\n\
 	ALIGN\n\
 	END_INIT\n\
 \n\
