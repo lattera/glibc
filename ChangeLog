@@ -102,6 +102,13 @@
 
 2000-07-24  Andreas Jaeger  <aj@suse.de>
 
+	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Really fix
+	check for offset.
+
+	* grp/initgroups.c (initgroups_dyn_function): Renamed from
+	initgroups_function, adopted prototype for change from 2000-07-23.
+	(initgroups): Follow type change.
+
 	* sysdeps/unix/sysv/linux/powerpc/mmap64.c (__mmap64): Fix offset
 	& PAGE_MASK case, reformat.
 
