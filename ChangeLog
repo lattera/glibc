@@ -1,3 +1,11 @@
+1998-03-30 13:28  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (parent-mostlyclean): Use object-suffixes-for-libc for
+	determining libs to remove.
+	(postclean): Add soversions.mk.
+	* Makerules (common-mostlyclean): Add tests-static and generated
+	files.
+
 1998-03-30 12:53  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/i386/i486/bits/string.h (__strcat_c) [__i686__]: Correct

@@ -935,9 +935,12 @@ mostlyclean: common-mostlyclean
 # Remove the object files.
 common-mostlyclean:
 	-rm -f $(addprefix $(objpfx),$(tests) $(test-srcs) $(others) \
+				     $(tests-static) \
 				     $(addsuffix .o,$(tests) $(test-srcs) \
+						    $(tests-static) \
 						    $(others)) \
-				     $(addsuffix .out,$(tests) $(test-srcs)))
+				     $(addsuffix .out,$(tests) $(test-srcs)) \
+				     $(addsuffix .sout,$(tests-static)))
 	-rm -f $(addprefix $(objpfx),$(extra-objs) $(install-lib) \
 				     $(install-lib.so) \
 				     $(install-lib.so:%.so=%_pic.a))
