@@ -226,7 +226,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
 {
   int fdesc;
 #ifdef _LIBC
-  if (fp->_flags2 & _IO_FLAGS2_NOTCANCEL)
+  if (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0))
     fdesc = open_not_cancel (filename,
 			     posix_mode | (is32not64 ? 0 : O_LARGEFILE), prot);
   else
@@ -242,7 +242,7 @@ _IO_file_open (fp, filename, posix_mode, prot, read_write, is32not64)
     if (_IO_SEEKOFF (fp, (_IO_off64_t)0, _IO_seek_end, _IOS_INPUT|_IOS_OUTPUT)
 	== _IO_pos_BAD && errno != ESPIPE)
       {
-	close (fdesc);
+	close_not_cancel (fdesc);
 	return NULL;
       }
   INTUSE(_IO_link_in) ((struct _IO_FILE_plus *) fp);
@@ -292,7 +292,7 @@ _IO_new_file_fopen (fp, filename, mode, is32not64)
 #ifdef _LIBC
   last_recognized = mode;
 #endif
-  for (i = 1; i < 5; ++i)
+  for (i = 1; i < 6; ++i)
     {
       switch (*++mode)
 	{
@@ -1204,7 +1204,7 @@ _IO_file_read (fp, buf, size)
      void *buf;
      _IO_ssize_t size;
 {
-  return ((fp->_flags2 & _IO_FLAGS2_NOTCANCEL)
+  return (__builtin_expect (fp->_flags2 & _IO_FLAGS2_NOTCANCEL, 0)
 	  ? read_not_cancel (fp->_fileno, buf, size)
 	  : read (fp->_fileno, buf, size));
 }
@@ -1268,7 +1268,8 @@ _IO_new_file_write (f, data, n)
   _IO_ssize_t to_do = n;
   while (to_do > 0)
     {
-      _IO_ssize_t count = ((f->_flags2 & _IO_FLAGS2_NOTCANCEL)
+      _IO_ssize_t count = (__builtin_expect (f->_flags2
+					     & _IO_FLAGS2_NOTCANCEL, 0)
 			   ? write_not_cancel (f->_fileno, data, to_do)
 			   : write (f->_fileno, data, to_do));
       if (count < 0)
