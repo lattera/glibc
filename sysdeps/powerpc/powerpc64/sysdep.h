@@ -34,11 +34,16 @@
   .pushsection;          \
   .section ".data";      \
   .align ALIGNARG(2);    \
-0:  .long  0;            \
+__mcount:            \
+  .long  0;            \
+  .previous;              \
+	.section	".toc","aw";  \
+.LC__mcount:; \
+	.tc __mcount[TC],__mcount; \
   .previous;              \
   mflr  r0;              \
   std   r0,16(r1);        \
-  ld    r0,0b@got(r2);    \
+  ld    r0,.LC__mcount@toc(r2);    \
   bl    JUMPTARGET(_mcount);
 #else /* SYSV_ELF_PROFILING */
 #define CALL_MCOUNT      \
@@ -52,11 +57,16 @@
   .pushsection;          \
   .section ".data";      \
   .align ALIGNARG(2);    \
-0:  .long  0;            \
+__mcount:            \
+  .long  0;            \
+  .previous;              \
+	.section	".toc","aw";  \
+.LC__mcount:; \
+	.tc __mcount[TC],__mcount; \
   .previous;              \
   mflr  r0;              \
   std   r0,16(r1);        \
-  ld    r0,0b@got(r2);    \
+  ld    r0,.LC__mcount@toc(r2);    \
   bl    JUMPTARGET(_mcount);
 #else /* SYSV_ELF_PROFILING */
 #define CALL_MCOUNT  \

@@ -89,7 +89,11 @@ extern int __local_multiple_threads attribute_hidden;
 #  define SINGLE_THREAD_P __builtin_expect (__local_multiple_threads == 0, 1)
 # else
 #   define SINGLE_THREAD_P						\
-  ld    10,__local_multiple_threads@got(2);				\
+	.section	".toc","aw";  \
+.LC__local_multiple_threads:; \
+	.tc __local_multiple_threads[TC],__local_multiple_threads; \
+  .previous;              \
+  ld    10,.LC__local_multiple_threads@toc(2);				\
   ld    10,0(10);								\
   cmpdi 10,0
 # endif

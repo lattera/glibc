@@ -671,7 +671,10 @@ gaih_inet (const char *name, const struct gaih_service *service,
 	      no_inet6_data = no_data;
 	    }
 	  else if (req->ai_family == AF_INET)
-	    gethosts (AF_INET, struct in_addr);
+	    {
+	      gethosts (AF_INET, struct in_addr);
+	      no_inet6_data = no_data;
+	    }
 
 	  if (no_data != 0 && no_inet6_data != 0)
 	    {

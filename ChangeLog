@@ -1,5 +1,11 @@
 2003-06-12  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/posix/getaddrinfo.c (gaih_inet): Set no_inet6_date alse
+	if only PF_INET address is needed.
+
+	* nss/getXXbyYY_r.c: Make sure we always return a nonzero value in
+	case of an error.
+
 	* scripts/config.guess: Update from upstream version.
 	* scripts/config.sub: Likewise.
 

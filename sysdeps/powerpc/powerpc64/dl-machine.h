@@ -239,6 +239,18 @@ elf_machine_dynamic (void)
 "_dl_start_user:\n"							\
 "	.quad	._dl_start_user, .TOC.@tocbase, 0\n"			\
 "	.previous\n"							\
+"	.section	\".toc\",\"aw\"\n"  \
+".LC__dl_starting_up:\n"  \
+"	.tc _dl_starting_up_internal[TC],_dl_starting_up_internal\n"  \
+".LC__rtld_global:\n"  \
+"	.tc _rtld_global[TC],_rtld_global\n"  \
+".LC__dl_argc:\n"  \
+"	.tc _dl_argc[TC],_dl_argc\n"  \
+".LC__dl_argv:\n"  \
+"	.tc _dl_argv_internal[TC],_dl_argv_internal\n"  \
+".LC__dl_fini:\n"  \
+"	.tc _dl_fini[TC],_dl_fini\n"  \
+"	.previous\n"							\
 "	.globl	._dl_start_user\n"					\
 "	.type	._dl_start_user,@function\n"				\
 /* Now, we do our main work of calling initialisation procedures.  \
@@ -250,9 +262,9 @@ elf_machine_dynamic (void)
 /* the address of _start in r30.  */					\
 "	mr	30,3\n"							\
 /* &_dl_argc in 29, &_dl_argv in 27, and _dl_loaded in 28.  */		\
-"	ld	28,_rtld_global@got(2)\n"    \
-"	ld	29,_dl_argc@got(2)\n"					\
-"	ld	27,_dl_argv@got(2)\n"					\
+"	ld	28,.LC__rtld_global@toc(2)\n"    \
+"	ld	29,.LC__dl_argc@toc(2)\n"					\
+"	ld	27,.LC__dl_argv@toc(2)\n"					\
 /* _dl_init (_dl_loaded, _dl_argc, _dl_argv, _dl_argv+_dl_argc+1).  */	\
 "	ld	3,0(28)\n"						\
 "	lwa	4,0(29)\n"						\
@@ -279,8 +291,8 @@ elf_machine_dynamic (void)
 "	addi	6,6,8\n"						\
 /* Pass a termination function pointer (in this case _dl_fini) in	\
    r7.  */								\
-"	ld	7,_dl_fini@got(2)\n"					\
-"	ld 	26,_dl_starting_up@got(2)\n"				\
+"	ld	7,.LC__dl_fini@toc(2)\n"					\
+"	ld 	26,.LC__dl_starting_up@toc(2)\n"				\
 /* Pass the stack pointer in r1 (so far so good), pointing to a NULL	\
    value.  This lets our startup code distinguish between a program	\
    linked statically, which linux will call with argc on top of the	\

@@ -247,12 +247,14 @@ done:
 #ifdef POSTPROCESS
   POSTPROCESS;
 #endif
-  return (status != NSS_STATUS_TRYAGAIN ? 0
+  return (status == NSS_STATUS_SUCCESS ? 0
+	  : (status != NSS_STATUS_TRYAGAIN
 #ifdef NEED_H_ERRNO
-	  /* These functions only set errno if h_errno is NETDB_INTERNAL.  */
-	  : *h_errnop != NETDB_INTERNAL ? EAGAIN
+	     /* These functions only set errno if h_errno is
+		NETDB_INTERNAL.  */
+	     && *h_errnop == NETDB_INTERNAL
 #endif
-	  : errno);
+	     ? errno : EAGAIN));
 }
 
 
