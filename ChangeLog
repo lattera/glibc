@@ -1,3 +1,10 @@
+2002-08-31  Roland McGrath  <roland@redhat.com>
+
+	* locale/categories.def (LC_TIME): No more _nl_postload_time.
+
+	* locale/setlocale.c (_nl_category_postload): Use weak refs only under
+	[_NL_CURRENT_INDIRECT].
+
 2002-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/tst-ftime_l.c (main): Also test strftime with uselocale.

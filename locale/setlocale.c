@@ -86,11 +86,17 @@ const size_t _nl_category_name_sizes[] =
   };
 
 
+#ifdef NL_CURRENT_INDIRECT
+# define WEAK_POSTLOAD(postload) weak_extern (postload)
+#else
+# define WEAK_POSTLOAD(postload) /* Need strong refs in static linking.  */
+#endif
+
 /* Declare the postload functions used below.  */
 #undef	NO_POSTLOAD
 #define NO_POSTLOAD _nl_postload_ctype /* Harmless thing known to exist.  */
 #define DEFINE_CATEGORY(category, category_name, items, postload) \
-extern void postload (void); weak_extern (postload)
+extern void postload (void); WEAK_POSTLOAD (postload)
 #include "categories.def"
 #undef	DEFINE_CATEGORY
 #undef	NO_POSTLOAD
