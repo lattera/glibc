@@ -1,5 +1,7 @@
 2002-12-06  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/generic/libc-tls.c: Undo last patch.
+
 	* include/wctype.h: Define iswalnum with libc_hidden_proto.
 
 	* include/signal.h: Define raise with libc_hidden_proto.
