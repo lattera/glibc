@@ -2433,16 +2433,16 @@ msgid "Unmatched [ or [^"
 msgstr "Nepárová [ or [^"
 
 #: posix/regex.c:1020
-msgid "Unmatched ( or \("
-msgstr "Nepárová ( or \("
+msgid "Unmatched ( or \\("
+msgstr "Nepárová ( or \\("
 
 #: posix/regex.c:1021
-msgid "Unmatched \{"
-msgstr "Nepárová \{"
+msgid "Unmatched \\{"
+msgstr "Nepárová \\{"
 
 #: posix/regex.c:1022
-msgid "Invalid content of \{\}"
-msgstr "Nepøípustný obsah \{\}"
+msgid "Invalid content of \\{\\}"
+msgstr "Nepøípustný obsah \\{\\}"
 
 #: posix/regex.c:1023
 msgid "Invalid range end"
@@ -2465,8 +2465,8 @@ msgid "Regular expression too big"
 msgstr "Regulární výraz je pøíli¹ velký"
 
 #: posix/regex.c:1028
-msgid "Unmatched ) or \)"
-msgstr "Nepárová ) or \)"
+msgid "Unmatched ) or \\)"
+msgstr "Nepárová ) or \\)"
 
 #: posix/regex.c:5515
 msgid "No previous regular expression"

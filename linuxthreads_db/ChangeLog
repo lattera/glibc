@@ -1,3 +1,11 @@
+1999-10-08  Andreas Jaeger  <aj@suse.de>
+
+	* thread_db.h: Fix typos in comments.
+
+	* td_ta_get_nthreads.c (td_ta_get_nthreads): Don't hardcode
+	libpthread library name, get it from <gnu/lib-names.h> instead.
+	* td_ta_new.c (td_ta_new): Likewise.
+
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* shlib-versions: New file.

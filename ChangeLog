@@ -1,7 +1,9 @@
 1999-10-08  Ulrich Drepper  <drepper@cygnus.com>
 
+	* po/cs.po: Fix typos.
+
 	* nis/nss_nisplus/nisplus-parser.c (_nss_nisplus_parse_spent): Fix
-	handling of empty entries.
+	handling of empty entries.  [PR libc/1345]
 	Patch by Thorsten Kukuk <kukuk@suse.de>.
 
 1999-10-08  Andreas Schwab  <schwab@suse.de>
