@@ -86,17 +86,15 @@ endif
 # Install from subdirectories too.
 install: subdir_install
 
-# Make sure that the dynamic linker is installed before libc.
-$(inst_slibdir)/libc-$(version).so: elf/ldso_install
-
-.PHONY: elf/ldso_install
-elf/ldso_install:
-	$(MAKE) -C $(@D) $(@F)
-
 # Create links for shared libraries using the `ldconfig' program is possible.
 # Ignore the error if we cannot update /etc/ld.so.cache.
 ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
+install: install-symblolic-link
+.PHONY: install-symblolic-link
+install-symblolic-link: subdir_install
+	$(symbolic-link-prog) $(symbolic-link-list)
+
 install:
 	-test ! -x $(common-objpfx)elf/ldconfig || \
 	  $(common-objpfx)elf/ldconfig -d $(inst_slibdir) $(inst_libdir)

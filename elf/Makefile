@@ -38,7 +38,7 @@ rtld-routines	:= rtld $(dl-routines) dl-sysdep dl-environ dl-minimal
 distribute	= $(rtld-routines:=.c) dynamic-link.h do-rel.h dl-machine.h \
 		  dl-hash.h soinit.c sofini.c ldd.sh.in ldd.bash.in eval.c \
 		  genrtldtbl.awk atomicity.h dl-procinfo.h ldsodefs.h \
-		  dl-librecon.h interp.c
+		  dl-librecon.h interp.c sln.c
 
 extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
@@ -63,13 +63,15 @@ install-bin	= ldd
 generated      += ldd
 endif
 
-others		= sprof
+others		= sprof sln
 install-bin	+= sprof
+others-static   = sln
+install-rootsbin = sln
 
 ifeq (yes,$(has-ldconfig))
 others-static	+= ldconfig
 others		+= ldconfig
-install-rootsbin = ldconfig
+install-rootsbin += ldconfig
 endif
 
 include ../Rules
@@ -160,10 +162,6 @@ $(inst_slibdir)/$(rtld-version-installed-name): $(objpfx)ld.so $(+force)
 $(inst_slibdir)/$(rtld-installed-name): \
   $(inst_slibdir)/$(rtld-version-installed-name)
 	$(make-shlib-link)
-
-# Special target called by parent to install just the dynamic linker.
-.PHONY: ldso_install
-ldso_install: $(inst_slibdir)/$(rtld-installed-name)
 
 
 sh-ldd-rewrite = -e 's%@RTLD@%$(slibdir)/$(rtld-installed-name)%g' \

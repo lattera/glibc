@@ -30,6 +30,7 @@ sigset (sig, disp)
 {
   struct sigaction act, oact;
 
+#ifdef SIG_HOLD
   /* Handle SIG_HOLD first.  */
   if (disp == SIG_HOLD)
     {
@@ -49,6 +50,7 @@ sigset (sig, disp)
 
       return SIG_HOLD;
     }
+#endif	/* SIG_HOLD */
 
   /* Check signal extents to protect __sigismember.  */
   if (disp == SIG_ERR || sig < 1 || sig >= NSIG)

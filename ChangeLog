@@ -1,3 +1,46 @@
+1998-08-13 19:41  Ulrich Drepper  <drepper@cygnus.com>
+
+	* posix/getconf.c: Add support for systems with incomplete confname.h.
+
+	* sysdeps/posix/sigset.c: Allow SIG_HOLD being undefined.
+
+	* sysdeps/posix/wait3.c: Make it work.
+
+1998-08-13  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* Makefile ($(inst_slibdir)/libc-$(version).so): Remove.
+	(elf/ldso_install): Remove.
+
+	* elf/Makefile (distribute): Add sln.c.
+	(others): Add sln.
+	(others-static): Add sln.
+	(install-rootsbin): Add sln.
+	(others-static): Add sln.
+	(ldso_install): Remove.
+
+1998-07-24 10:58  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makerules (install-clean-symbolic-link-list): Make phony.
+	* Makefile (install-symbolic-link): Make phony.  Depend on
+	subdir_install for parallel makes.
+
+
+1998-07-22  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile (distribute): Add sln.c
+
+1998-07-21 07:10  H.J. Lu  <hjl@gnu.org>
+
+	* elf/sln.c: New file.
+
+	* Makerules (symbolic-link-prog, symbolic-link-list): New macros.
+	(install-clean-symbolic-link-list): New target.
+	(install): Depend on install-clean-symbolic-link-list.
+	(make-shlib-link): Changed for $(symbolic-link-list).
+
+	* Makefile (install-symbolic-link): New target.
+	(install): Depend on install-symbolic-link.
+
 1998-08-12 17:03  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/unistd.h: Protect against multiple inclusion.
