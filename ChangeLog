@@ -1,3 +1,10 @@
+2002-02-02  Paul Eggert  <eggert@twinsun.com>
+
+	* src/mktime.c [defined DEBUG && STDC_HEADERS]: Include <string.h>.
+	(__mktime_internal): If no tm_isdst is requested, prefer solutions
+	with tm_isdst > 0 when the requested time falls within a
+	spring-forward gap [PR libc/2894].
+
 2002-02-03  Andreas Schwab  <schwab@suse.de>
 
 	* stdio-common/tst-rndseek.c: Increase timeout.

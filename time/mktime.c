@@ -49,6 +49,7 @@
 # include <stdio.h>
 # if STDC_HEADERS
 #  include <stdlib.h>
+#  include <string.h>
 # endif
 /* Make it work even if the system's libc has its own mktime routine.  */
 # define mktime my_mktime
@@ -236,6 +237,9 @@ __mktime_internal (struct tm *tp,
   int year_requested = tp->tm_year;
   int isdst = tp->tm_isdst;
 
+  /* 1 if the previous probe was DST.  */
+  int dst2;
+
   /* Ensure that mon is in range, and set year accordingly.  */
   int mon_remainder = mon % 12;
   int negative_mon_remainder = mon_remainder < 0;
@@ -270,20 +274,24 @@ __mktime_internal (struct tm *tp,
   tm.tm_yday = tm.tm_hour = tm.tm_min = tm.tm_sec = 0;
   t0 = ydhms_tm_diff (year, yday, hour, min, sec, &tm);
 
-  for (t = t1 = t2 = t0 + *offset;
+  for (t = t1 = t2 = t0 + *offset, dst2 = 0;
        (dt = ydhms_tm_diff (year, yday, hour, min, sec,
 			    ranged_convert (convert, &t, &tm)));
-       t1 = t2, t2 = t, t += dt)
+       t1 = t2, t2 = t, t += dt, dst2 = tm.tm_isdst != 0)
     if (t == t1 && t != t2
-	&& (isdst < 0 || tm.tm_isdst < 0
-	    || (isdst != 0) != (tm.tm_isdst != 0)))
+	&& (tm.tm_isdst < 0
+	    || (isdst < 0
+		? dst2 <= (tm.tm_isdst != 0)
+		: (isdst != 0) != (tm.tm_isdst != 0))))
       /* We can't possibly find a match, as we are oscillating
 	 between two values.  The requested time probably falls
 	 within a spring-forward gap of size DT.  Follow the common
 	 practice in this case, which is to return a time that is DT
 	 away from the requested time, preferring a time whose
-	 tm_isdst differs from the requested value.  In practice,
-	 this is more useful than returning -1.  */
+	 tm_isdst differs from the requested value.  (If no tm_isdst
+	 was requested and only one of the two values has a nonzero
+	 tm_isdst, prefer that value.)  In practice, this is more
+	 useful than returning -1.  */
       break;
     else if (--remaining_probes == 0)
       return -1;
