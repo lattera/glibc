@@ -43,6 +43,15 @@
 #define ALIGN 3
 #include <sysdeps/mach/sysdep.h>
 
+/* Alpha needs the .ent and .frame magic that the generic version lacks.  */
+#undef ENTRY
+#define ENTRY(name)				\
+  .globl name;					\
+  .align 3;					\
+  .ent name, 0;					\
+  name##:					\
+  .frame sp, 0, ra
+
 #include <mach/alpha/asm.h>
 #undef	at
 #define at	28
