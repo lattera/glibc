@@ -1,5 +1,7 @@
 2003-02-22  Roland McGrath  <roland@redhat.com>
 
+	* include/libc-internal.h: Declare __libc_thread_freeres.
+
 	* Makerules: Fix last change to use $($(subdir)-version) when set.
 
 	* Makerules (install-lib-nosubdir): Depend on installed
