@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,12 +24,19 @@
    used on Linux.  */
 
 #include <features.h>
-#include <signal.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/ucontext.h>
 #include <sys/user.h>
-#include <asm/elf.h>
+
+/* ELF register definitions */
+#define ELF_NGREG	45
+#define ELF_NFPREG	33
+
+typedef unsigned long elf_greg_t;
+typedef elf_greg_t elf_gregset_t[ELF_NGREG];
+
+typedef double elf_fpreg_t;
+typedef elf_fpreg_t elf_fpregset_t[ELF_NFPREG];
 
 __BEGIN_DECLS
 
@@ -50,19 +57,10 @@ struct elf_siginfo
    marked with "XXX".  */
 struct elf_prstatus
   {
-#if 0
-    long int pr_flags;			/* XXX Process flags.  */
-    short int pr_why;			/* XXX Reason for process halt.  */
-    short int pr_what;			/* XXX More detailed reason.  */
-#endif
     struct elf_siginfo pr_info;		/* Info associated with signal.  */
     short int pr_cursig;		/* Current signal.  */
     unsigned long int pr_sigpend;	/* Set of pending signals.  */
     unsigned long int pr_sighold;	/* Set of held signals.  */
-#if 0
-    struct sigaltstack pr_altstack;	/* Alternate stack info.  */
-    struct sigaction pr_action;		/* Signal action for current sig.  */
-#endif
     __pid_t pr_pid;
     __pid_t pr_ppid;
     __pid_t pr_pgrp;
@@ -71,9 +69,6 @@ struct elf_prstatus
     struct timeval pr_stime;		/* System time.  */
     struct timeval pr_cutime;		/* Cumulative user time.  */
     struct timeval pr_cstime;		/* Cumulative system time.  */
-#if 0
-    long int pr_instr;			/* Current instruction.  */
-#endif
     elf_gregset_t pr_reg;		/* GP registers.  */
     int pr_fpvalid;			/* True if math copro being used.  */
   };
@@ -101,8 +96,8 @@ struct elf_prpsinfo
 typedef void *psaddr_t;
 
 /* Register sets.  Linux has different names.  */
-typedef gregset_t prgregset_t;
-typedef fpregset_t prfpregset_t;
+typedef elf_gregset_t prgregset_t;
+typedef elf_fpregset_t prfpregset_t;
 
 /* We don't have any differences between processes and threads,
    therefore habe only ine PID type.  */
