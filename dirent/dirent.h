@@ -29,6 +29,20 @@ __BEGIN_DECLS
 
 #include <bits/types.h>
 
+#ifdef __USE_XOPEN
+# ifndef __ino_t_defined
+#  ifndef __USE_FILE_OFFSET64
+typedef __ino_t ino_t;
+#  else
+typedef __ino64_t ino_t;
+#  endif
+#  define __ino_t_defined
+# endif
+# ifdef __USE_LARGEFILE64
+typedef __ino64_t ino64_t;
+# endif
+#endif
+
 /* This file defines `struct dirent'.
 
    It defines the macro `_DIRENT_HAVE_D_NAMLEN' iff there is a `d_namlen'
@@ -171,7 +185,7 @@ extern void rewinddir __P ((DIR *__dirp));
 # include <bits/types.h>
 
 /* Seek to position POS on DIRP.  */
-extern void seekdir __P ((DIR *__dirp, __off_t __pos));
+extern void seekdir __P ((DIR *__dirp, long int __pos));
 
 /* Return the current position of DIRP.  */
 extern long int telldir __P ((DIR *__dirp));

@@ -122,14 +122,11 @@ extern int isascii __P ((int __c));
    (i.e., the low-order 7 bits of C).  */
 extern int toascii __P ((int __c));
 
-#endif /* Use SVID or use misc.  */
-
-#if defined __USE_SVID || defined __USE_MISC || defined __USE_XOPEN
 /* These are the same as `toupper' and `tolower' except that they do not
    check the argument for being in the range of a `char'.  */
 __exctype (_toupper);
 __exctype (_tolower);
-#endif
+#endif /* Use SVID or use misc.  */
 
 #ifndef	__NO_CTYPE
 # define isalnum(c)	__isctype((c), _ISalnum)

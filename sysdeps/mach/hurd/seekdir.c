@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1994, 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 94, 95, 96, 97, 99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@
 void
 seekdir (dirp, pos)
      DIR *dirp;
-     __off_t pos;
+     long int pos;
 {
   __libc_lock_lock (dirp->__lock);
   /* Change our entry index pointer to POS and discard any data already

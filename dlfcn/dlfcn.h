@@ -27,16 +27,18 @@
 /* Collect various system dependent definitions and declarations.  */
 #include <bits/dlfcn.h>
 
+#ifdef __USE_GNU
 /* If the first argument of `dlsym' or `dlvsym' is set to RTLD_NEXT
    the run-time address of the symbol called NAME in the next shared
    object is returned.  The "next" relation is defined by the order
    the shared objects were loaded.  */
-#define RTLD_NEXT	((void *) -1l)
+# define RTLD_NEXT	((void *) -1l)
 
 /* If the first argument to `dlsym' or `dlvsym' is set to RTLD_DEFAULT
    the run-time address of the symbol called NAME in the global scope
    is returned.  */
-#define RTLD_DEFAULT	NULL
+# define RTLD_DEFAULT	NULL
+#endif
 
 __BEGIN_DECLS
 
