@@ -1,3 +1,15 @@
+2000-10-31  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/fpu/s_isinfl.S: New file,  - assembly based
+	implementation based on suggestion by Richard Henderson.
+	* sysdeps/ia64/fpu/s_isinfl.c: Removed.
+
+2000-10-30  Jes Sorensen  <jes@linuxcare.com>
+
+	* sysdeps/ia64/fpu/s_isnanl.S: New file - assembly based
+	implementation based on suggestion by Richard Henderson.
+	* sysdeps/ia64/fpu/s_isnanl.c: Removed.
+
 2000-10-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* locale/programs/locale.c (print_item): Fix one more problem with
