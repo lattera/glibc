@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include <kernel-features.h>
 
@@ -32,8 +33,8 @@
 static ssize_t __emulate_pread (int fd, void *buf, size_t count,
 				off_t offset) internal_function;
 # endif
-extern ssize_t __syscall_pread (int fd, void *buf, size_t count, int dummy,
-				off_t offset_hi, off_t offset_lo);
+extern ssize_t __syscall_pread (int fd, void *__unbounded buf, size_t count,
+				int dummy, off_t offset_hi, off_t offset_lo);
 
 
 
@@ -47,7 +48,7 @@ __libc_pread (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pread, 6, fd, buf, count, 0,
+  result = INLINE_SYSCALL (pread, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR (0, offset));
 # if __ASSUME_PREAD_SYSCALL == 0
   if (result == -1 && errno == ENOSYS)

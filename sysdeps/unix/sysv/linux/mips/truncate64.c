@@ -23,6 +23,7 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include "kernel-features.h"
 
@@ -33,7 +34,7 @@ int __have_no_truncate64;
 #endif
 
 /* The order of hight, low depends on endianness.  */
-extern int __syscall_truncate64 (const char *path, int dummy,
+extern int __syscall_truncate64 (const char *__unbounded path, int dummy,
 				 int high_length, int low_length);
 
 
@@ -50,7 +51,7 @@ truncate64 (const char *path, off64_t length)
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       int saved_errno = errno;
 #endif
-      int result = INLINE_SYSCALL (truncate64, 3, path, 0,
+      int result = INLINE_SYSCALL (truncate64, 3, CHECK_STRING (path), 0,
 				   __LONG_LONG_PAIR (high, low));
 #ifndef __ASSUME_TRUNCATE64_SYSCALL
       if (result != -1 || errno != ENOSYS)

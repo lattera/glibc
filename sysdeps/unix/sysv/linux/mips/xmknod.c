@@ -1,5 +1,5 @@
 /* xmknod call using old-style Unix mknod system call.
-   Copyright (C) 1991, 93, 95, 96, 97, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991, 93, 95, 96, 97, 98, 00 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -24,8 +24,9 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
-extern int __syscall_mknod (const char *, unsigned long, unsigned int);
+extern int __syscall_mknod (const char *__unbounded, unsigned long, unsigned int);
 
 /* Create a device file named PATH, with permission and special bits MODE
    and device number DEV (which can be constructed from major and minor
@@ -44,7 +45,7 @@ __xmknod (int vers, const char *path, mode_t mode, dev_t *dev)
   /* We must convert the value to dev_t type used by the kernel.  */
   k_dev = ((major (*dev) & 0xff) << 8) | (minor (*dev) & 0xff);
 
-  return INLINE_SYSCALL (mknod, 3, path, mode, k_dev);
+  return INLINE_SYSCALL (mknod, 3, CHECK_STRING (path), mode, k_dev);
 }
 
 weak_alias (__xmknod, _xmknod)

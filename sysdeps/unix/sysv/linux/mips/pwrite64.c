@@ -23,12 +23,13 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include <kernel-features.h>
 
 #if defined __NR_pwrite || __ASSUME_PWRITE_SYSCALL > 0
 
-extern ssize_t __syscall_pwrite (int fd, const void *buf, size_t count,
+extern ssize_t __syscall_pwrite (int fd, const void *__unbounded buf, size_t count,
 				 int dummy, off_t offset_hi, off_t offset_lo);
 
 # if __ASSUME_PWRITE_SYSCALL == 0
@@ -46,7 +47,7 @@ __libc_pwrite64 (fd, buf, count, offset)
   ssize_t result;
 
   /* First try the syscall.  */
-  result = INLINE_SYSCALL (pwrite, 6, fd, buf, count, 0,
+  result = INLINE_SYSCALL (pwrite, 6, fd, CHECK_N (buf, count), count, 0,
 			   __LONG_LONG_PAIR ((off_t) (offset >> 32),
 					     (off_t) (offset & 0xffffffff)));
 # if __ASSUME_PWRITE_SYSCALL == 0

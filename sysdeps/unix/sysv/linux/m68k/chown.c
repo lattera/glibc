@@ -21,14 +21,15 @@
 
 #include <sysdep.h>
 #include <sys/syscall.h>
+#include <bp-checks.h>
 
 #include <linux/posix_types.h>
 
-extern int __syscall_chown (const char *__file,
+extern int __syscall_chown (const char *__unbounded __file,
 			    __kernel_uid_t __owner, __kernel_gid_t __group);
 
 #ifdef __NR_chown32
-extern int __syscall_chown32 (const char *__file,
+extern int __syscall_chown32 (const char *__unbounded __file,
 			      __kernel_uid32_t owner, __kernel_gid32_t group);
 
 # if __ASSUME_32BITUIDS == 0
@@ -42,7 +43,7 @@ int
 __chown (const char *file, uid_t owner, gid_t group)
 {
 #if __ASSUME_32BITUIDS
-  return INLINE_SYSCALL (chown32, 3, file, owner, group);
+  return INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
 #else
 # ifdef __NR_chown32
   if (__libc_missing_32bit_uids <= 0)
@@ -50,7 +51,7 @@ __chown (const char *file, uid_t owner, gid_t group)
       int result;
       int saved_errno = errno;
 
-      result = INLINE_SYSCALL (chown32, 3, file, owner, group);
+      result = INLINE_SYSCALL (chown32, 3, CHECK_STRING (file), owner, group);
       if (result == 0 || errno != ENOSYS)
 	return result;
 
@@ -66,7 +67,7 @@ __chown (const char *file, uid_t owner, gid_t group)
       return -1;
     }
 
-  return INLINE_SYSCALL (chown, 3, file, owner, group);
+  return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 #endif
 }
 weak_alias (__chown, chown)
