@@ -25,7 +25,7 @@ Cambridge, MA 02139, USA.  */
 #include <time.h>
 
 /* Defined in mktime.c.  */
-extern CONST unsigned short int __mon_lengths[2][12];
+extern CONST unsigned short int __mon_yday[2][13];
 
 #define NOID
 #include "tzfile.h"
@@ -403,10 +403,11 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
       /* Mm.n.d - Nth "Dth day" of month M.  */
       {
 	register int i, d, m1, yy0, yy1, yy2, dow;
+	register CONST unsigned short int *myday =
+	  &__mon_yday[__isleap (year)][rule->m];
 
 	/* First add SECSPERDAY for each day in months before M.  */
-	for (i = 0; i < rule->m - 1; ++i)
-	  t += __mon_lengths[__isleap (year)][i] * SECSPERDAY;
+	t += myday[-1] * SECSPERDAY;
 
 	/* Use Zeller's Congruence to get day-of-week of first day of month. */
 	m1 = (rule->m + 9) % 12 + 1;
@@ -424,7 +425,7 @@ DEFUN(compute_change, (rule, year), tz_rule *rule AND int year)
 	  d += 7;
 	for (i = 1; i < rule->n; ++i)
 	  {
-	    if (d + 7 >= __mon_lengths[__isleap (year)][rule->m - 1])
+	    if (d + 7 >= myday[0] - myday[-1])
 	      break;
 	    d += 7;
 	  }

@@ -1,3 +1,40 @@
+Fri Sep 29 03:43:51 1995  Paul Eggert  <eggert@twinsun.com>
+
+	Rewrite mktime from scratch for performance, and for correctness
+	in the presence of leap seconds.
+
+	* time/mktime.c	(ydhms_tm_diff, not_equal_tm, print_tm, check_result):
+	New functions.
+	(LEAP_SECONDS_POSSIBLE, CHAR_BIT, INT_MIN, INT_MAX,
+	TIME_T_MIN, TIME_T_MAX, TM_YEAR_BASE, EPOCH_YEAR): New macros.
+	<limits.h>, <stdlib.h>: New #includes.
+	(main): Support tests with given broken-down value; support benchmarks.
+	(__mon_lengths, debugging_enabled, printtm, dist_tm, doit,
+	do_normalization, normalize, BAD_STRUCT_TM, SKIP_VALUE,
+	<ctype.h>): Remove.
+
+	* time/time.h, time/mktime.c (__mktime_internal): New offset arg.
+	* time/mktime.c (mktime), time/timegm.c (timegm): Use it.
+
+	* time/mktime.c (__mon_yday): New variable; replaces `__mon_lengths'.
+	time/offtime.c (__offtime), time/tzset.c (compute_change): Use it.
+	
+	* time/offtime.c (__offtime): Remove useless assignment
+	`tp->tm_isdst = -1'.
+
+	* manual/maint.texi: Update credits.
+
+Fri Oct  6 00:28:53 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* sysdeps/unix/common/readv.S: Moved to sysdeps/unix/bsd.
+	* sysdeps/unix/common/writev.S: Moved to sysdeps/unix/bsd.
+	* sysdeps/unix/sysv/linux/readv.c: File removed.
+	* sysdeps/unix/sysv/linux/writev.c: File removed.
+	* sysdeps/unix/configure.in: Check for readv and writev syscalls.
+
+	* sysdeps/unix/configure.in: If eval doesn't set $unix_srcname,
+	set it to $unix_syscall instead of $unix_function.
+
 Thu Oct  5 00:59:58 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* elf/rtld.c (dl_main): Grok --list flag.

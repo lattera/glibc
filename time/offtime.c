@@ -21,7 +21,7 @@ Cambridge, MA 02139, USA.  */
 
 
 /* Defined in mktime.c.  */
-extern CONST unsigned short int __mon_lengths[2][12];
+extern CONST unsigned short int __mon_yday[2][13];
 
 #define	SECS_PER_HOUR	(60 * 60)
 #define	SECS_PER_DAY	(SECS_PER_HOUR * 24)
@@ -71,10 +71,10 @@ DEFUN(__offtime, (t, offset, tp),
     }
   tp->tm_year = y - 1900;
   tp->tm_yday = days;
-  ip = __mon_lengths[__isleap(y)];
-  for (y = 0; days >= ip[y]; ++y)
-    days -= ip[y];
+  ip = __mon_yday[__isleap(y)];
+  for (y = 11; days < ip[y]; --y)
+    continue;
+  days -= ip[y];
   tp->tm_mon = y;
   tp->tm_mday = days + 1;
-  tp->tm_isdst = -1;
 }

@@ -22,6 +22,7 @@ time_t
 timegm (tmp)
      struct tm *const tmp;
 {
+  static time_t gmtime_offset;
   tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r);
+  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
 }

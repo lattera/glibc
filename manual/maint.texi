@@ -774,7 +774,7 @@ The startup code to support SunOS shared libraries was contributed by
 Tom Quinn.
 
 @item
-The @code{mktime} function was contributed by Noel Cragg.
+The @code{mktime} function was contributed by Paul Eggert.
 
 @item
 The port to the Sequent Symmetry running Dynix version 3
