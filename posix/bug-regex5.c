@@ -21,7 +21,8 @@ main (void)
     }
   printf ("current locale : %s\n", ca);
 
-  nrules = (size_t) nl_langinfo (_NL_COLLATE_NRULES);
+  u.string = nl_langinfo (_NL_COLLATE_NRULES);
+  nrules = u.word;
   if (nrules == 0)
     {
       printf("No rule\n");

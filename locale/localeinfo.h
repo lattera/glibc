@@ -78,7 +78,11 @@ struct locale_data
   {
     const uint32_t *wstr;
     const char *string;
-    unsigned int word;
+    /* The values we store here are always uint32_t in fact.  But it's
+       safer for the union to use a type that matches pointers so that
+       casting one of the pointer values to uint32_t produces the right
+       value for big-endian 64-bit platforms.  */
+    uintptr_t word;
   }
   values __flexarr;	/* Items, usually pointers into `filedata'.  */
 };
@@ -232,7 +236,7 @@ extern __thread struct locale_data *const *_nl_current_##category \
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 #define _NL_CURRENT_WORD(category, item) \
-  ((*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].word)
+  ((uint32_t) (*_nl_current_##category)->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 #define _NL_CURRENT_DEFINE(category) \
@@ -268,7 +272,7 @@ extern __thread struct locale_data *const *_nl_current_##category \
 
 /* Extract the current CATEGORY locale's word for ITEM.  */
 # define _NL_CURRENT_WORD(category, item) \
-  (_NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].word)
+  ((uint32_t) _NL_CURRENT_DATA (category)->values[_NL_ITEM_INDEX (item)].word)
 
 /* This is used in lc-CATEGORY.c to define _nl_current_CATEGORY.  */
 # define _NL_CURRENT_DEFINE(category) \

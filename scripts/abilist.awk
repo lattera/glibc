@@ -25,6 +25,9 @@ $2 == "g" || $2 == "w" && NF == 7 {
   if (type == "D" && $4 == ".tbss") {
     print symbol, version, weak, "TLS", size | outpipe;
   }
+  else if (type == "D" && $4 == ".opd") {
+    print symbol, version, weak, "FDESC" | outpipe;
+  }
   else if (type == "DO" && $4 == "*ABS*") {
     print symbol, version, weak, "ABS" | outpipe;
   }

@@ -24,6 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <error.h>
+#include <errno.h>
 
 
 const struct
@@ -52,6 +54,15 @@ static int positive_dcgettext_test (const char *domain, int category);
 static int negative_dcgettext_test (const char *domain, int category);
 
 
+#define check_setlocale(cat, name) do {					      \
+    if (setlocale (cat, name) == NULL)					      \
+      {									      \
+	printf ("%s:%u: setlocale (%s, \"%s\"): %m\n",			      \
+		__FILE__, __LINE__, #cat, name);			      \
+	result = 1;							      \
+      }									      \
+  } while (0)
+
 int
 main (int argc, char *argv[])
 {
@@ -76,8 +87,8 @@ main (int argc, char *argv[])
   setenv ("LC_MESSAGES", "non-existing-locale", 1);
   setenv ("LC_CTYPE", "non-existing-locale", 1);
   setenv ("LANG", "non-existing-locale", 1);
-  setlocale (LC_CTYPE, "de_DE.ISO-8859-1");
-  setlocale (LC_MESSAGES, "de_DE.ISO-8859-1");
+  check_setlocale (LC_CTYPE, "de_DE.ISO-8859-1");
+  check_setlocale (LC_MESSAGES, "de_DE.ISO-8859-1");
   unsetenv ("OUTPUT_CHARSET");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -108,7 +119,7 @@ main (int argc, char *argv[])
   /* Now the same tests with LC_ALL deciding.  */
   unsetenv ("LANGUAGE");
   setenv ("LC_ALL", "existing-locale", 1);
-  setlocale (LC_ALL, "");
+  check_setlocale (LC_ALL, "");
   puts ("test `gettext' with LC_ALL set");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -138,11 +149,17 @@ main (int argc, char *argv[])
   /* Now the same tests with LC_MESSAGES deciding.  */
   unsetenv ("LC_ALL");
   setenv ("LC_MESSAGES", "existing-locale", 1);
-  setlocale (LC_MESSAGES, "");
+  check_setlocale (LC_MESSAGES, "");
   setenv ("LC_TIME", "existing-locale", 1);
-  setlocale (LC_TIME, "");
+  check_setlocale (LC_TIME, "");
   setenv ("LC_NUMERIC", "non-existing-locale", 1);
-  setlocale (LC_NUMERIC, "");
+  char *what = setlocale (LC_NUMERIC, "");
+  if (what != NULL)
+    {
+      printf ("setlocale succeeded (%s), expected failure\n", what);
+      result = 1;
+    }
+
   puts ("test `gettext' with LC_ALL set");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
@@ -191,8 +208,11 @@ main (int argc, char *argv[])
 
   /* Now the same tests with LANG deciding.  */
   unsetenv ("LC_MESSAGES");
+  unsetenv ("LC_CTYPE");
+  unsetenv ("LC_TIME");
+  unsetenv ("LC_NUMERIC");
   setenv ("LANG", "existing-locale", 1);
-  setlocale (LC_ALL, "");
+  check_setlocale (LC_ALL, "");
   /* This is the name of the existing domain with a catalog for the
      LC_MESSAGES category.  */
   textdomain ("existing-domain");
@@ -219,7 +239,7 @@ main (int argc, char *argv[])
       result = 1;
     }
 
-  setlocale (LC_ALL, "C");
+  check_setlocale (LC_ALL, "C");
 
   return result;
 }

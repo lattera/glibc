@@ -1,3 +1,20 @@
+2002-11-20  Roland McGrath  <roland@redhat.com>
+
+	* scripts/abilist.awk: Grok function descriptor symbols.
+
+	* intl/tst-gettext.c (main): Check return values from setlocale.
+	Add necessary unsetenv's to make LANG=existing-locale check work.
+
+	* intl/tst-gettext.sh: Use mkdir -p.  Copy test files unconditionally,
+	so aborted prior runs don't confuse things.
+
+	* locale/localeinfo.h (struct locale_data: union locale_data_value):
+	Use uintptr_t instead of unsigned int for `word' member.
+	(_NL_CURRENT_WORD): Cast to uint32_t.
+
+	* posix/bug-regex5.c (main): Use union to extract _NL_COLLATE_NRULES
+	value.
+
 2002-11-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/tls-macros.h: Add IA-64 definitions.
