@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,92,93,94,95,96,97,99 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,93,94,95,96,97,99,2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,7 +78,7 @@ _hurd_set_brk (vm_address_t addr)
 	  __vm_deallocate (__mach_task_self (), pagend, pagebrk - pagend);
 	  /* Now reallocate it with no access allowed.  */
 	  err = __vm_map (__mach_task_self (),
-			  &pagend, _hurd_data_end - pagend,
+			  &pagend, pagebrk - pagend,
 			  0, 0, MACH_PORT_NULL, 0, 0,
 			  0, VM_PROT_READ|VM_PROT_WRITE|VM_PROT_EXECUTE,
 			  VM_INHERIT_COPY);

@@ -1,3 +1,9 @@
+2000-07-22  Mark Kettenis  <kettenis@gnu.org>
+
+	* sysdeps/mach/hurd/brk.c (_hurd_set_brk): When shrinking the
+	program's data space, reallocate only the space that was just
+	deallocated to release its backing space.
+
 2000-07-23  Ulrich Drepper  <drepper@redhat.com>
 
 	* stdio-common/vfprintf.c (process_string_arg): For wide character
