@@ -42,8 +42,11 @@ DEFUN(bind, (fd, addr, len),
       /* For the local domain, we must create a node in the filesystem
 	 using the ifsock translator and then fetch the address from it.  */
       file_t dir, node;
-      char name[len - offsetof (struct sockaddr_un, sun_path)], *n;
-      strncpy (name, addr->sun_path, sizeof name);
+      char name[len - offsetof (struct sockaddr_un, sun_path) + 1], *n;
+
+      strncpy (name, addr->sun_path, sizeof name - 1);
+      name[sizeof name - 1] = '\0'; /* Make sure */
+
       dir = __file_name_split (name, &n);
       if (dir == MACH_PORT_NULL)
 	return -1;
