@@ -60,6 +60,7 @@ test-srcs = tst-unbputc tst-printf
 
 include ../Rules
 
+ifeq ($(cross-compiling),no)
 .PHONY: do-tst-unbputc do-tst-printf
 tests: do-tst-unbputc do-tst-printf
 
@@ -70,6 +71,7 @@ $(objpfx)tst-unbputc.out: $(objpfx)tst-unbputc tst-unbputc.sh
 do-tst-printf: $(objpfx)tst-printf.out
 $(objpfx)tst-printf.out: $(objpfx)tst-printf tst-printf.sh
 	$(SHELL) -e tst-printf.sh $(common-objpfx) '$(run-program-prefix)'
+endif
 
 CFLAGS-vfprintf.c = -Wno-uninitialized
 CFLAGS-tst-printf.c = -Wno-format

@@ -93,10 +93,12 @@ $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 
 lib: $(objpfx)libmcheck.a
 
+ifeq (no,$(cross-compiling))
 ifeq (yes,$(build-shared))
 tests: $(objpfx)tst-mtrace.out
 $(objpfx)tst-mtrace.out: tst-mtrace.sh $(objpfx)tst-mtrace
 	$(SHELL) -e $< $(common-objpfx)
+endif
 endif
 
 # Uncomment this for test releases.  For public releases it is too expensive.
