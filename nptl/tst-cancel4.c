@@ -80,6 +80,10 @@ static int tempmsg = -1;
 static pthread_barrier_t b2;
 
 
+#ifndef IPC_ADDVAL
+# define IPC_ADDVAL 0
+#endif
+
 /* Cleanup handling test.  */
 static int cl_called;
 
@@ -88,6 +92,7 @@ cl (void *arg)
 {
   ++cl_called;
 }
+
 
 
 static void *
@@ -1872,7 +1877,7 @@ tf_tcdrain (void *arg)
 static void *
 tf_msgrcv (void *arg)
 {
-  tempmsg = msgget (random (), 0666 | IPC_CREAT);
+  tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
@@ -1903,7 +1908,7 @@ tf_msgrcv (void *arg)
   int randnr;
   /* We need a positive random number.  */
   do
-    randnr = random ();
+    randnr = random () % 64000;
   while (randnr <= 0);
   do
     {
@@ -1928,7 +1933,7 @@ tf_msgsnd (void *arg)
     // blocks we can enable this test to run in both rounds.
     abort ();
 
-  tempmsg = msgget (random (), 0666 | IPC_CREAT);
+  tempmsg = msgget (IPC_PRIVATE, 0666 | IPC_CREAT);
 
   int r = pthread_barrier_wait (&b2);
   if (r != 0 && r != PTHREAD_BARRIER_SERIAL_THREAD)
@@ -1953,7 +1958,7 @@ tf_msgsnd (void *arg)
   } m;
   /* We need a positive random number.  */
   do
-    m.type = random ();
+    m.type = random () % 64000;
   while (m.type <= 0);
   msgsnd (tempmsg, (struct msgbuf *) &m, sizeof (m.mem), 0);
 

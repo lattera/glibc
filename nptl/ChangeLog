@@ -1,5 +1,8 @@
 2003-06-27  Ulrich Drepper  <drepper@redhat.com>
 
+	* tst-cancel4.c (tf_msgrcv): Use IPC_PRIVATE in msgget call.
+	(tf_msgsnd): Likewise.
+
 	* tst-cancel4.c (tf_msgrcv): Strengthen test against valid
 	premature returns a bit more.
 
