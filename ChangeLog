@@ -1,3 +1,8 @@
+1998-08-11 13:57  Ulrich Drepper  <drepper@cygnus.com>
+
+	* libio/fileops.c (_IO_file_sync): Use _IO_ssize_t for delta, not
+	_IO_size_t.
+
 1998-08-10 15:49  Ulrich Drepper  <drepper@cygnus.com>
 
 	* include/dirent.h: Protect from double inclusion.

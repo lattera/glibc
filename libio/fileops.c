@@ -431,7 +431,7 @@ int
 _IO_file_sync (fp)
      _IO_FILE *fp;
 {
-  _IO_size_t delta;
+  _IO_ssize_t delta;
   int retval = 0;
 
   /*    char* ptr = cur_ptr(); */
