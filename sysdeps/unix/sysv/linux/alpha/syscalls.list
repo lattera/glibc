@@ -52,7 +52,6 @@ setsockopt	-	setsockopt	5	__setsockopt	setsockopt
 shutdown	-	shutdown	2	__shutdown	shutdown
 socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
-sysctl		-	_sysctl		6	__sysctl	sysctl
 
 getresuid	-	getresuid	3	getresuid
 getresgid	-	getresgid	3	getresgid
