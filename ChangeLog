@@ -1,3 +1,20 @@
+2003-03-27  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/bits/atomic.h
+	(__arch_compare_and_exchange_bool_32_acq): Move to [!__powerpc64__].
+	[__powerpc64__] (__arch_compare_and_exchange_bool_32_acq):
+	Define PPC64 specific version.
+	[__powerpc64__] (__arch_compare_and_exchange_bool_64_acq):
+	Change (mem) constraint to "b".
+	[__powerpc64__] (__arch_atomic_exchange_and add_64):
+	Replace addi with add. Change (value) contraint to "r".
+	Change (mem) constraint to "b".
+	[__powerpc64__] (__arch_atomic_decrement_if_positive_64): New macro.
+	(__arch_atomic_exchange_32): Change (mem) constraint to "b".
+	(__arch_atomic_exchange_and_add_32): Change (mem) constraint to "b".
+	(__arch_atomic_decrement_if_positive_32): New macro.
+	(atomic_decrement_if_positive): Use __arch* macros.
+
 2003-03-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/ia64/fpu/libm-test-ulps: Update.

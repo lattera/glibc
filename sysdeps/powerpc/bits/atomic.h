@@ -65,27 +65,34 @@ typedef uintmax_t uatomic_max_t;
  * Ultimately we should do separate _acq and _rel versions.
  */
 
+#ifdef __powerpc64__
+
 /*
- * XXX this may not work properly on 64-bit if the register
- * containing oldval has the high half non-zero for some reason.
+ * The 32-bit exchange_bool is different on powerpc64 because the subf 
+ * does signed 64-bit arthmatic while the lwarx is 32-bit unsigned 
+ * (a load word and zero (high 32) form).
+ * In powerpc64 register values are 64-bit by default,  including oldval.
+ * Net we need to extend sign word the result of lwarx to 64-bit so the
+ * 64-bit subtract from gives the expected result and sets the condition
+ * correctly. 
  */
-#define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
+# define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
 ({									      \
   unsigned int __tmp;							      \
   __asm __volatile (__ARCH_REL_INSTR "\n"				      \
 		    "1:	lwarx	%0,0,%1\n"				      \
+		    "	extsw	%0,%0\n"				      \
 		    "	subf.	%0,%2,%0\n"				      \
 		    "	bne	2f\n"					      \
 		    "	stwcx.	%3,0,%1\n"				      \
 		    "	bne-	1b\n"					      \
 		    "2:	" __ARCH_ACQ_INSTR				      \
 		    : "=&r" (__tmp)					      \
-		    : "r" (mem), "r" (oldval), "r" (newval)		      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
   __tmp != 0;								      \
 })
 
-#ifdef __powerpc64__
 # define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
 ({									      \
   unsigned long	__tmp;							      \
@@ -97,7 +104,7 @@ typedef uintmax_t uatomic_max_t;
 		    "	bne-	1b\n"					      \
 		    "2:	" __ARCH_ACQ_INSTR				      \
 		    : "=&r" (__tmp)					      \
-		    : "r" (mem), "r" (oldval), "r" (newval)		      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
 		    : "cr0", "memory");					      \
   __tmp != 0;								      \
 })
@@ -110,7 +117,7 @@ typedef uintmax_t uatomic_max_t;
 			"	stdcx.	%3,0,%2\n"			      \
 			"	bne-	1b"				      \
 			: "=&r" (__val), "=m" (*mem)			      \
-			: "r" (mem), "r" (value), "1" (*mem)		      \
+			: "b" (mem), "r" (value), "1" (*mem)		      \
 			: "cr0");					      \
       __val;								      \
     })
@@ -119,22 +126,55 @@ typedef uintmax_t uatomic_max_t;
     ({									      \
       __typeof (*mem) __val, __tmp;					      \
       __asm __volatile ("1:	ldarx	%0,0,%3\n"			      \
-			"	addi	%1,%0,%4\n"			      \
+			"	add	%1,%0,%4\n"			      \
 			"	stdcx.	%1,0,%3\n"			      \
 			"	bne-	1b"				      \
 			: "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-			: "r" (mem), "I" (value), "2" (*mem)		      \
+			: "b" (mem), "r" (value), "2" (*mem)		      \
 			: "cr0");					      \
       __val;								      \
     })
+      
+# define __arch_atomic_decrement_if_positive_64(mem) \
+  ({ int __val, __tmp;							      \
+     __asm __volatile ("1:	ldarx	%0,0,%3\n"			      \
+		       "	cmpdi	0,%0,0\n"			      \
+		       "	addi	%1,%0,-1\n"			      \
+		       "	ble	2f\n"				      \
+		       "	stdcx.	%1,0,%3\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __ARCH_ACQ_INSTR			      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		       : "b" (mem), "2" (*mem)				      \
+		       : "cr0");					      \
+     __val;								      \
+  })
 
 #else /* powerpc32 */
+# define __arch_compare_and_exchange_bool_32_acq(mem, newval, oldval) \
+({									      \
+  unsigned int __tmp;							      \
+  __asm __volatile (__ARCH_REL_INSTR "\n"				      \
+		    "1:	lwarx	%0,0,%1\n"				      \
+		    "	subf.	%0,%2,%0\n"				      \
+		    "	bne	2f\n"					      \
+		    "	stwcx.	%3,0,%1\n"				      \
+		    "	bne-	1b\n"					      \
+		    "2:	" __ARCH_ACQ_INSTR				      \
+		    : "=&r" (__tmp)					      \
+		    : "b" (mem), "r" (oldval), "r" (newval)		      \
+		    : "cr0", "memory");					      \
+  __tmp != 0;								      \
+})
+
 # define __arch_compare_and_exchange_bool_64_acq(mem, newval, oldval) \
   (abort (), 0)
 
 # define __arch_atomic_exchange_64(mem, value) \
     ({ abort (); (*mem) = (value); })
 # define __arch_atomic_exchange_and_add_64(mem, value) \
+    ({ abort (); (*mem) = (value); })
+# define __arch_atomic_decrement_if_positive_64(mem) \
     ({ abort (); (*mem) = (value); })
 #endif
 
@@ -146,7 +186,7 @@ typedef uintmax_t uatomic_max_t;
 		      "		stwcx.	%3,0,%2\n"			      \
 		      "		bne-	1b"				      \
 		      : "=&r" (__val), "=m" (*mem)			      \
-		      : "r" (mem), "r" (value), "1" (*mem)		      \
+		      : "b" (mem), "r" (value), "1" (*mem)		      \
 		      : "cr0");						      \
     __val;								      \
   })
@@ -159,10 +199,26 @@ typedef uintmax_t uatomic_max_t;
 		      "		stwcx.	%1,0,%3\n"			      \
 		      "		bne-	1b"				      \
 		      : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		      : "r" (mem), "r" (value), "2" (*mem)		      \
+		      : "b" (mem), "r" (value), "2" (*mem)		      \
 		      : "cr0");						      \
     __val;								      \
   })
+  
+#define __arch_atomic_decrement_if_positive_32(mem) \
+  ({ int __val, __tmp;							      \
+     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
+		       "	cmpwi	0,%0,0\n"			      \
+		       "	addi	%1,%0,-1\n"			      \
+		       "	ble	2f\n"				      \
+		       "	stwcx.	%1,0,%3\n"			      \
+		       "	bne-	1b\n"				      \
+		       "2:	" __ARCH_ACQ_INSTR			      \
+		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
+		       : "b" (mem), "2" (*mem)				      \
+		       : "cr0");					      \
+     __val;								      \
+  })
+
 
 #define atomic_exchange(mem, value)					      \
   ({									      \
@@ -191,20 +247,14 @@ typedef uintmax_t uatomic_max_t;
 
 /* Decrement *MEM if it is > 0, and return the old value.  */
 #define atomic_decrement_if_positive(mem) \
-  ({ if (sizeof (*mem) != 4)						      \
+  ({ __typeof (*(mem)) __result;						      \
+    if (sizeof (*mem) == 4)						      \
+      __result = __arch_atomic_decrement_if_positive_32 (mem);	      \
+    else if (sizeof (*mem) == 8)					      \
+      __result = __arch_atomic_decrement_if_positive_64 (mem);	      \
+    else 								      \
        abort ();							      \
-     int __val, __tmp;							      \
-     __asm __volatile ("1:	lwarx	%0,0,%3\n"			      \
-		       "	cmpwi	0,%0,0\n"			      \
-		       "	addi	%1,%0,-1\n"			      \
-		       "	ble	2f\n"				      \
-		       "	stwcx.	%1,0,%3\n"			      \
-		       "	bne-	1b\n"				      \
-		       "2:	" __ARCH_ACQ_INSTR			      \
-		       : "=&b" (__val), "=&r" (__tmp), "=m" (*mem)	      \
-		       : "r" (mem), "2" (*mem)				      \
-		       : "cr0");					      \
-     __val;								      \
+    __result;								      \
   })
 
 
