@@ -1,3 +1,10 @@
+Thu Jun  6 12:56:03 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* Makerules (headers): Move append of $(sysdep_headers) after include
+	of sysdep makefiles.
+
+	* sysdeps/mach/hurd/errlist.c: File removed.
+
 Thu Jun  6 07:32:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* resolv/gethnamaddr.c (struct hstorage): Make NAME field a pointer.

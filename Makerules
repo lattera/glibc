@@ -36,8 +36,6 @@ ifneq	"$(findstring env,$(origin sources))" ""
 sources :=
 endif
 
-headers := $(headers) $(sysdep_headers)
-
 oPATH := $(PATH)
 PATH := this definition should take precedence over $(oPATH)
 ifeq ($(PATH),$(oPATH))
@@ -294,6 +292,8 @@ override sources	:= $(addsuffix .c,$(filter-out $(elided-routines),\
 						       $(routines) $(aux) \
 						       $(sysdep_routines)))
 sysdep_routines := $(sysdep_routines)
+
+headers := $(headers) $(sysdep_headers)
 
 # This is the list of all object files, gotten by
 # replacing every ".c" in `sources' with a ".o".
