@@ -1,3 +1,7 @@
+2000-12-10  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/alpha/alphaev6/stxcpy.S: Exchange t8 with t10.
+
 2000-12-10  Andreas Jaeger  <aj@suse.de>
 
 	* locale/programs/ld-ctype.c (charclass_symbolic_ellipsis): Fixed
