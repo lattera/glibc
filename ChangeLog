@@ -1,3 +1,14 @@
+2002-08-11  Philip Blundell  <philb@gnu.org>
+
+	* sysdeps/arm/Makefile: New file.
+
+2002-08-08  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/regcomp.c (parse_reg_exp): If '|' is immediately followed
+	by another '|', end of regex or enclosing ')', clear branch.
+	* posix/bug-regex9.c: New test.
+	* posix/Makefile (tests): Add bug-regex9.
+
 2002-08-12  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/generic/dl-tls.c (_dl_allocate_tls_init): Fix inner loop
