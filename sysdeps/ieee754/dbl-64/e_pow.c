@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation
+ * Copyright (C) 2001, 2002 Free Software Foundation
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -190,6 +190,15 @@ static double log1(double x, double *delta, double *error) {
   double cor;
 #endif
   mynumber u,v;
+#ifdef BIG_ENDI
+  mynumber
+/**/ two52          = {{0x43300000, 0x00000000}}; /* 2**52         */
+#else
+#ifdef LITTLE_ENDI
+  mynumber
+/**/ two52          = {{0x00000000, 0x43300000}}; /* 2**52         */
+#endif
+#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];
@@ -275,6 +284,15 @@ static double log2(double x, double *delta, double *error) {
   double ou1,ou2,lu1,lu2,ov,lv1,lv2,a,a1,a2;
   double y,yy,z,zz,j1,j2,j3,j4,j5,j6,j7,j8;
   mynumber u,v;
+#ifdef BIG_ENDI
+  mynumber
+/**/ two52          = {{0x43300000, 0x00000000}}; /* 2**52         */
+#else
+#ifdef LITTLE_ENDI
+  mynumber
+/**/ two52          = {{0x00000000, 0x43300000}}; /* 2**52         */
+#endif
+#endif
 
   u.x = x;
   m = u.i[HIGH_HALF];

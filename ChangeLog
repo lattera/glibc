@@ -1,5 +1,17 @@
 2002-08-23  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/ieee754/dbl-64/e_pow.c (log1): Define and initialize
+	two52 locally.
+	(log2): Likewise.
+	* sysdeps/ieee754/dbl-64/upow.h: Remove definition of two52.
+	Patch by Simon Gee <simong@agile.tv>.
+
+	* sysdeps/unix/sysv/linux/getsysstats.c (__get_nprocs_conf):
+	Prefer reading /proc/stat since it is more uniform across
+	architectures.1
+
+	* manual/texinfo.tex: Update to latest official version.
+
 	* sysvipc/sys/shm.h: Remove SHMLBA definition.
 	* sysdeps/generic/bits/shm.h: Define SHMLBA here.
 	* sysdeps/gnu/bits/shm.h: Likewise.

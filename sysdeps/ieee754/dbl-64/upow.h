@@ -1,7 +1,7 @@
 /*
  * IBM Accurate Mathematical Library
  * Written by International Business Machines Corp.
- * Copyright (C) 2001 Free Software Foundation, Inc.
+ * Copyright (C) 2001, 2002 Free Software Foundation, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -44,9 +44,6 @@
 /**/ t52            = {{0x43300000, 0x00000000}}, /* 2**52         */
 /**/ two52e         = {{0x43300000, 0x000003ff}}; /* 2**52'        */
 
- mynumber
-/**/ two52          = {{0x43300000, 0x00000000}}; /* 2**52         */
-
 #else
 #ifdef LITTLE_ENDI
   const static mynumber
@@ -61,9 +58,6 @@
 /**/ bigv           = {{0xfff8016a, 0x4207ffff}}, /* 1.5*2**33-1+362*2**-19  */
 /**/ t52            = {{0x00000000, 0x43300000}}, /* 2**52         */
 /**/ two52e         = {{0x000003ff, 0x43300000}}; /* 2**52'        */
-
- mynumber
-/**/ two52          = {{0x00000000, 0x43300000}}; /* 2**52         */
 
 #endif
 #endif

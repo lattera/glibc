@@ -1,5 +1,5 @@
 /* Determine various system internal values, Linux version.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -20,6 +20,7 @@
 
 #include <alloca.h>
 #include <assert.h>
+#include <ctype.h>
 #include <errno.h>
 #include <mntent.h>
 #include <paths.h>
@@ -146,16 +147,36 @@ __get_nprocs ()
   /* If we haven't found an appropriate entry return 1.  */
   if (proc_path != NULL)
     {
-      char *proc_cpuinfo = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
-      __stpcpy (__stpcpy (proc_cpuinfo, proc_path), "/cpuinfo");
+      char *proc_fname = alloca (strlen (proc_path) + sizeof ("/cpuinfo"));
 
-      fp = fopen (proc_cpuinfo, "r");
+      /* The /proc/stat format is more uniform, use it by default.  */
+      __stpcpy (__stpcpy (proc_fname, proc_path), "/stat");
+
+      fp = fopen (proc_fname, "r");
       if (fp != NULL)
 	{
 	  /* No threads use this stream.  */
 	  __fsetlocking (fp, FSETLOCKING_BYCALLER);
-	  GET_NPROCS_PARSER (fp, buffer, result);
+
+	  result = 0;
+	  while (fgets_unlocked (buffer, sizeof (buffer), fp) != NULL)
+	    if (strncmp (buffer, "cpu", 3) == 0 && isdigit (buffer[3]))
+	      ++result;
+
 	  fclose (fp);
+	}
+      else
+	{
+	  __stpcpy (__stpcpy (proc_fname, proc_path), "/cpuinfo");
+
+	  fp = fopen (proc_fname, "r");
+	  if (fp != NULL)
+	    {
+	      /* No threads use this stream.  */
+	      __fsetlocking (fp, FSETLOCKING_BYCALLER);
+	      GET_NPROCS_PARSER (fp, buffer, result);
+	      fclose (fp);
+	    }
 	}
     }
 
