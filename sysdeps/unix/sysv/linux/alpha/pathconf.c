@@ -23,9 +23,7 @@
 #include <fcntl.h>
 #include <sys/statfs.h>
 
-#define EXT2_SUPER_MAGIC	0xef53
-#define UFS_MAGIC		0x00011954
-#define UFS_CIGAM		0x54190100 /* byteswapped MAGIC */
+#include <linux_fsinfo.h>
 
 static long int default_pathconf (const char *path, int name);
 
@@ -47,6 +45,46 @@ __pathconf (const char *path, int name)
 
       /* This filesystem supported files >2GB.  */
       return 64;
+    }
+  if (name == _PC_LINK_MAX)
+    {
+      struct statfs fsbuf;
+
+      /* Determine the filesystem type.  */
+      if (__statfs (fd, &fsbuf) < 0)
+	/* not possible, return the default value.  */
+	return LINK_MAX;
+
+      switch (fsbuf.f_type)
+	{
+	case EXT2_SUPER_MAGIC:
+	  return EXT2_LINK_MAX;
+
+	case MINIX_SUPER_MAGIC:
+	case MINIX_SUPER_MAGIC2:
+	  return MINIX_LINK_MAX;
+
+	case MINIX2_SUPER_MAGIC:
+	case MINIX2_SUPER_MAGIC2:
+	  return MINIX2_LINK_MAX;
+
+	case XENIX_SUPER_MAGIC:
+	  return XENIX_LINK_MAX;
+
+	case SYSV4_SUPER_MAGIC:
+	case SYSV2_SUPER_MAGIC:
+	  return SYSV_LINK_MAX;
+
+	case COH_SUPER_MAGIC:
+	  return COH_LINK_MAX;
+
+	case UFS_MAGIC:
+	case UFS_CIGAM:
+	  return UFS_LINK_MAX;
+
+	default:
+	  return LINK_MAX;
+	}
     }
 
   /* Fallback to the generic version.  */
