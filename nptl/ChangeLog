@@ -1,5 +1,12 @@
 2002-12-11  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/pthread/bits/libc-lock.h (__libc_cleanup_region_start):
+	Remember function and argument even if cancellation handler
+	function is not available.
+	(__libc_cleanup_region_end): Execute registered function directly if
+	pthread functions are not available.
+	(__libc_cleanup_end): Likewise.
+
 	* init.c (__pthread_initialize_minimal): Fix initialization in
 	static lib by preventing gcc from being too clever.
 

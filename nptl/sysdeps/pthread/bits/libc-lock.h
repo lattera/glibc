@@ -336,23 +336,28 @@ typedef pthread_key_t __libc_key_t;
 /* Start critical region with cleanup.  */
 #define __libc_cleanup_region_start(DOIT, FCT, ARG) \
   { struct _pthread_cleanup_buffer _buffer;				      \
-    int _avail = (DOIT) && _pthread_cleanup_push_defer != NULL;		      \
+    int _avail = _pthread_cleanup_push_defer != NULL;			      \
     if (_avail) {							      \
       _pthread_cleanup_push_defer (&_buffer, (FCT), (ARG));		      \
+    } else if (DOIT) {							      \
+      _buffer.__routine = (FCT);					      \
+      _buffer.__arg = (ARG);						      \
     }
 
 /* End critical region with cleanup.  */
 #define __libc_cleanup_region_end(DOIT) \
     if (_avail) {							      \
       _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
-    }									      \
+    } else if (DOIT)							      \
+      _buffer.__routine (_buffer.__arg);				      \
   }
 
 /* Sometimes we have to exit the block in the middle.  */
 #define __libc_cleanup_end(DOIT) \
     if (_avail) {							      \
       _pthread_cleanup_pop_restore (&_buffer, (DOIT));			      \
-    }
+    } else if (DOIT)							      \
+      _buffer.__routine (_buffer.__arg)
 
 /* Create thread-specific key.  */
 #define __libc_key_create(KEY, DESTRUCTOR) \
