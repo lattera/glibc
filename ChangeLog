@@ -1,3 +1,15 @@
+2005-01-22  Richard Henderson  <rth@redhat.com>
+
+	* sysdeps/alpha/dl-trampoline.S: New file.
+	* sysdeps/alpha/dl-machine.h: Move PLT trampolines there.
+	Use RESOLVE_MAP instead of RESOLVE to protect relocation code.
+	(elf_machine_runtime_setup): Test for dl_profile non-null.
+	(ARCH_LA_PLTENTER, ARCH_LA_PLTEXIT): New.
+	* sysdeps/alpha/bits/link.h: New file.
+	* sysdeps/generic/ldsodefs.h (La_alpha_regs, La_alpha_retval): New.
+	(struct audit_ifaces): Add alpha entries.
+	* elf/tst-auditmod1.c: Add alpha entries.
+
 2005-01-22  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ia64/dl-machine.h: Remove PLT trampolines here.

@@ -108,19 +108,20 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
       plt = D_PTR (l, l_info[DT_PLTGOT]);
 
       /* This function will be called to perform the relocation.  */
-      if (!profile)
-        *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_resolve;
-      else
+      if (__builtin_expect (profile, 0))
 	{
 	  *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_profile;
 
-	  if (_dl_name_match_p (GLRO(dl_profile), l))
+	  if (GLRO(dl_profile) != NULL
+	      && _dl_name_match_p (GLRO(dl_profile), l))
 	    {
 	      /* This is the object we are looking for.  Say that we really
 		 want profiling and the timers are started.  */
 	      GL(dl_profile_map) = l;
 	    }
 	}
+      else
+        *(Elf64_Addr *)(plt + 16) = (Elf64_Addr) &_dl_runtime_resolve;
 
       /* Identify this shared object */
       *(Elf64_Addr *)(plt + 24) = (Elf64_Addr) l;
@@ -155,143 +156,6 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 
   return lazy;
 }
-
-/* This code is used in dl-runtime.c to call the `fixup' function
-   and then redirect to the address it returns.  */
-#define TRAMPOLINE_TEMPLATE(tramp_name, fixup_name, IMB)	\
-  extern void tramp_name (void);				\
-  asm ( "\
-	.globl " #tramp_name "					\n\
-	.ent " #tramp_name "					\n\
-" #tramp_name ":						\n\
-	lda	$sp, -44*8($sp)					\n\
-	.frame	$sp, 44*8, $26					\n\
-	/* Preserve all integer registers that C normally	\n\
-	   doesn't.  */						\n\
-	stq	$26, 0*8($sp)					\n\
-	stq	$0, 1*8($sp)					\n\
-	stq	$1, 2*8($sp)					\n\
-	stq	$2, 3*8($sp)					\n\
-	stq	$3, 4*8($sp)					\n\
-	stq	$4, 5*8($sp)					\n\
-	stq	$5, 6*8($sp)					\n\
-	stq	$6, 7*8($sp)					\n\
-	stq	$7, 8*8($sp)					\n\
-	stq	$8, 9*8($sp)					\n\
-	stq	$16, 10*8($sp)					\n\
-	stq	$17, 11*8($sp)					\n\
-	stq	$18, 12*8($sp)					\n\
-	stq	$19, 13*8($sp)					\n\
-	stq	$20, 14*8($sp)					\n\
-	stq	$21, 15*8($sp)					\n\
-	stq	$22, 16*8($sp)					\n\
-	stq	$23, 17*8($sp)					\n\
-	stq	$24, 18*8($sp)					\n\
-	stq	$25, 19*8($sp)					\n\
-	stq	$29, 20*8($sp)					\n\
-	stt	$f0, 21*8($sp)					\n\
-	stt	$f1, 22*8($sp)					\n\
-	stt	$f10, 23*8($sp)					\n\
-	stt	$f11, 24*8($sp)					\n\
-	stt	$f12, 25*8($sp)					\n\
-	stt	$f13, 26*8($sp)					\n\
-	stt	$f14, 27*8($sp)					\n\
-	stt	$f15, 28*8($sp)					\n\
-	stt	$f16, 29*8($sp)					\n\
-	stt	$f17, 30*8($sp)					\n\
-	stt	$f18, 31*8($sp)					\n\
-	stt	$f19, 32*8($sp)					\n\
-	stt	$f20, 33*8($sp)					\n\
-	stt	$f21, 34*8($sp)					\n\
-	stt	$f22, 35*8($sp)					\n\
-	stt	$f23, 36*8($sp)					\n\
-	stt	$f24, 37*8($sp)					\n\
-	stt	$f25, 38*8($sp)					\n\
-	stt	$f26, 39*8($sp)					\n\
-	stt	$f27, 40*8($sp)					\n\
-	stt	$f28, 41*8($sp)					\n\
-	stt	$f29, 42*8($sp)					\n\
-	stt	$f30, 43*8($sp)					\n\
-	.mask	0x27ff01ff, -44*8				\n\
-	.fmask	0xfffffc03, -(44-21)*8				\n\
-	/* Set up our $gp */					\n\
-	br	$gp, .+4					\n\
-	ldgp	$gp, 0($gp)					\n\
-	.prologue 0						\n\
-	/* Set up the arguments for fixup: */			\n\
-	/* $16 = link_map out of plt0 */			\n\
-	/* $17 = offset of reloc entry = ($28 - $27 - 20) /12 * 24 */\n\
-	/* $18 = return address */				\n\
-	subq	$28, $27, $17					\n\
-	ldq	$16, 8($27)					\n\
-	subq	$17, 20, $17					\n\
-	mov	$26, $18					\n\
-	addq	$17, $17, $17					\n\
-	/* Do the fixup */					\n\
-	bsr	$26, " #fixup_name "	!samegp			\n\
-	/* Move the destination address into position.  */	\n\
-	mov	$0, $27						\n\
-	/* Restore program registers.  */			\n\
-	ldq	$26, 0*8($sp)					\n\
-	ldq	$0, 1*8($sp)					\n\
-	ldq	$1, 2*8($sp)					\n\
-	ldq	$2, 3*8($sp)					\n\
-	ldq	$3, 4*8($sp)					\n\
-	ldq	$4, 5*8($sp)					\n\
-	ldq	$5, 6*8($sp)					\n\
-	ldq	$6, 7*8($sp)					\n\
-	ldq	$7, 8*8($sp)					\n\
-	ldq	$8, 9*8($sp)					\n\
-	ldq	$16, 10*8($sp)					\n\
-	ldq	$17, 11*8($sp)					\n\
-	ldq	$18, 12*8($sp)					\n\
-	ldq	$19, 13*8($sp)					\n\
-	ldq	$20, 14*8($sp)					\n\
-	ldq	$21, 15*8($sp)					\n\
-	ldq	$22, 16*8($sp)					\n\
-	ldq	$23, 17*8($sp)					\n\
-	ldq	$24, 18*8($sp)					\n\
-	ldq	$25, 19*8($sp)					\n\
-	ldq	$29, 20*8($sp)					\n\
-	ldt	$f0, 21*8($sp)					\n\
-	ldt	$f1, 22*8($sp)					\n\
-	ldt	$f10, 23*8($sp)					\n\
-	ldt	$f11, 24*8($sp)					\n\
-	ldt	$f12, 25*8($sp)					\n\
-	ldt	$f13, 26*8($sp)					\n\
-	ldt	$f14, 27*8($sp)					\n\
-	ldt	$f15, 28*8($sp)					\n\
-	ldt	$f16, 29*8($sp)					\n\
-	ldt	$f17, 30*8($sp)					\n\
-	ldt	$f18, 31*8($sp)					\n\
-	ldt	$f19, 32*8($sp)					\n\
-	ldt	$f20, 33*8($sp)					\n\
-	ldt	$f21, 34*8($sp)					\n\
-	ldt	$f22, 35*8($sp)					\n\
-	ldt	$f23, 36*8($sp)					\n\
-	ldt	$f24, 37*8($sp)					\n\
-	ldt	$f25, 38*8($sp)					\n\
-	ldt	$f26, 39*8($sp)					\n\
-	ldt	$f27, 40*8($sp)					\n\
-	ldt	$f28, 41*8($sp)					\n\
-	ldt	$f29, 42*8($sp)					\n\
-	ldt	$f30, 43*8($sp)					\n\
-	/* Flush the Icache after having modified the .plt code.  */\n\
-	" #IMB "						\n\
-	/* Clean up and turn control to the destination */	\n\
-	lda	$sp, 44*8($sp)					\n\
-	jmp	$31, ($27)					\n\
-	.end " #tramp_name)
-
-#ifndef PROF
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_profile, profile_fixup, /* nop */);
-#else
-#define ELF_MACHINE_RUNTIME_TRAMPOLINE				\
-  TRAMPOLINE_TEMPLATE (_dl_runtime_resolve, fixup, imb);	\
-  strong_alias (_dl_runtime_resolve, _dl_runtime_profile);
-#endif
 
 /* Initial entry point code for the dynamic linker.
    The C function `_dl_start' is the real entry point;
@@ -501,9 +365,13 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
   return value + reloc->r_addend;
 }
 
+/* Names of the architecture-specific auditing callback functions.  */
+#define ARCH_LA_PLTENTER	alpha_gnu_pltenter
+#define ARCH_LA_PLTEXIT		alpha_gnu_pltexit
+
 #endif /* !dl_machine_h */
 
-#ifdef RESOLVE
+#ifdef RESOLVE_MAP
 
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
@@ -680,4 +548,4 @@ elf_machine_lazy_rel (struct link_map *map,
     _dl_reloc_bad_type (map, r_type, 1);
 }
 
-#endif /* RESOLVE */
+#endif /* RESOLVE_MAP */
