@@ -119,9 +119,11 @@ ifneq "$(strip $(tests) $(test-srcs))" ""
 # These are the implicit rules for making test outputs
 # from the test programs and whatever input files are present.
 $(objpfx)%.out: %.input $(objpfx)%
-	$($*-ENV) $(built-program-cmd) $($*-ARGS) < $(word 1,$^) > $@
+	GCONV_PATH=$(common-objpfx)iconvdata \
+	  $($*-ENV) $(built-program-cmd) $($*-ARGS) < $(word 1,$^) > $@
 $(objpfx)%.out: /dev/null $(objpfx)%	# Make it 2nd arg for canned sequence.
-	$($*-ENV) $(built-program-cmd) $($*-ARGS) > $@
+	GCONV_PATH=$(common-objpfx)iconvdata \
+	  $($*-ENV) $(built-program-cmd) $($*-ARGS) > $@
 endif	# tests
 
 .PHONY: distclean realclean subdir_distclean subdir_realclean \
