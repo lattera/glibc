@@ -1225,7 +1225,7 @@ __strsep_g (char **__s, __const char *__reject)
 			  __retval; }))					      \
 		  : __strndup ((s), (n))))
 
-#  ifdef __GNU_SOURCE
+#  ifdef __USE_GNU
 #   define strndup(s, n) __strndup ((s), (n))
 #  endif
 # endif
