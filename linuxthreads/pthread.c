@@ -795,7 +795,9 @@ static void pthread_onexit_process(int retcode, void *arg)
     if (self == __pthread_main_thread)
       {
 	waitpid(__pthread_manager_thread.p_pid, NULL, __WCLONE);
-	free (__pthread_manager_thread_bos);
+	/* Since all threads have been asynchronously terminated
+           (possibly holding locks), free cannot be used any more.  */
+	/*free (__pthread_manager_thread_bos);*/
 	__pthread_manager_thread_bos = __pthread_manager_thread_tos = NULL;
       }
   }

@@ -1,3 +1,11 @@
+2001-11-22  Wolfram Gloger  <wg@malloc.de>
+
+	* pthread.c (pthread_onexit_process): Don't call free
+	after threads have been asynchronously terminated.
+
+	* manager.c (pthread_handle_exit): Surround cancellation
+	of threads with __flockfilelist()/__funlockfilelist().
+
 2001-11-26  Andreas Schwab  <schwab@suse.de>
 
 	* manager.c (pthread_handle_create): Start the child thread with
