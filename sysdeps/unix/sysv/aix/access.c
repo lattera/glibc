@@ -18,6 +18,8 @@
 
 #include <unistd.h>
 
+#define ACC_INVOKER   0x01
+
 extern int accessx (const char *name, int type, int who);
 
 int
