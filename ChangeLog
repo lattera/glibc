@@ -1,10 +1,25 @@
+2003-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* config.make.in (ASFLAGS-config): New.
+	* Makeconfig (ASFLAGS): Append $(ASFLAGS-config).
+	* configure.in (libc_cv_as_noexecstack): New check.
+	(ASFLAGS_config): Substitute.
+
+2003-06-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (log1p, asinh, acosh, atanh,
+	hypot, logb): Protect with #ifdef __FAST_MATH__.
+
+2003-06-04  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/i386/fpu/bits/mathinline.h (ldexpf, ldexpl): Protect with
+	#ifdef __FAST_MATH__.
+
 2003-06-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/generic/glob.c [HAVE_D_TYPE] (glob_in_dir): Also allow
 	DT_LNK entries if GLOB_ONLYDIR is set [PR libc/5043].
 	* posix/globtest.sh: Adjust for this change.
-
-2003-06-02  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ifaddrs.c (netlink_open): Call getsockname
 	to get the actual PID value used in the records passed up.
@@ -18,7 +33,7 @@
 	* po/zh_CN.po: Update from translation team.
 
 	* posix/getconf.c (main): Also recognize names without the
-	__POSIX_ prefix.
+	_POSIX_ prefix.
 
 	* elf/Makefile (CFLAGS-dl-lookup.c): Define.
 
