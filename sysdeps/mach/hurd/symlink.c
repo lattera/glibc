@@ -55,7 +55,7 @@ DEFUN(__symlink, (from, to), CONST char *from AND CONST char *to)
 
   if (! err)
     /* Link the node, now a valid symlink, into the target directory.  */
-    err = __dir_link (node, dir, name);
+    err = __dir_link (dir, node, name);
 
   __mach_port_deallocate (__mach_task_self (), dir);
   __mach_port_deallocate (__mach_task_self (), node);

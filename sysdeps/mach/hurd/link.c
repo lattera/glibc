@@ -45,7 +45,7 @@ DEFUN(__link, (from, to), CONST char *from AND CONST char *to)
   todir = __file_name_split (to, &toname);
   if (todir != MACH_PORT_NULL)
     {
-      err = __dir_link (linknode, todir, toname);
+      err = __dir_link (todir, linknode, toname);
       __mach_port_deallocate (__mach_task_self (), todir);
     }
   __mach_port_deallocate (__mach_task_self (), linknode);

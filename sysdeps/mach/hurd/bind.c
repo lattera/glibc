@@ -64,7 +64,7 @@ DEFUN(bind, (fd, addr, len),
 				       MACH_MSG_TYPE_COPY_SEND);
 	  if (! err)
 	    /* Link the node, now a socket, into the target directory.  */
-	    err = __dir_link (node, dir, n);
+	    err = __dir_link (dir, node, n);
 	  __mach_port_deallocate (__mach_task_self (), node);
 	  if (! err)
 	    {
