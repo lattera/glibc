@@ -17,85 +17,34 @@
 
 #include <features.h>
 
-#include <errno.h>
-#include <limits.h>
 #include <sched.h>
-#include <unistd.h>
+#include <time.h>
 
 #define __need_sigset_t
 #include <signal.h>
-#define __need_timespec
-#include <time.h>
-
-/* Linux has no ENOTSUP error code.  */
-#ifndef ENOTSUP
-#define ENOTSUP EOPNOTSUPP
-#endif
+#include <bits/pthreadtypes.h>
 
 
 __BEGIN_DECLS
 
-/*** Types ***/
-
-/* Thread identifiers */
-typedef unsigned long int pthread_t;
-
-/* Thread descriptors */
-typedef struct _pthread_descr_struct *_pthread_descr;
-
-/* Fast locks (not abstract because mutexes and conditions aren't abstract). */
-struct _pthread_fastlock
-{
-  long int status;              /* "Free" or "taken" or head of waiting list */
-  int spinlock;                 /* For compare-and-swap emulation */
-};
-
-/* Mutexes (not abstract because of PTHREAD_MUTEX_INITIALIZER).  */
-/* (The layout is unnatural to maintain binary compatibility
-    with earlier releases of LinuxThreads.) */
-
-typedef struct
-{
-  int m_reserved;               /* Reserved for future use */
-  int m_count;                  /* Depth of recursive locking */
-  _pthread_descr m_owner;       /* Owner thread (if recursive or errcheck) */
-  int m_kind;                   /* Mutex kind: fast, recursive or errcheck */
-  struct _pthread_fastlock m_lock; /* Underlying fast lock */
-} pthread_mutex_t;
+/* Initializers.  */
 
 #define PTHREAD_MUTEX_INITIALIZER \
   {0, 0, 0, PTHREAD_MUTEX_FAST_NP, {0, 0}}
-#define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
+#ifdef __USE_GNU
+# define PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP \
   {0, 0, 0, PTHREAD_MUTEX_RECURSIVE_NP, {0, 0}}
-
-/* Conditions (not abstract because of PTHREAD_COND_INITIALIZER */
-typedef struct
-{
-  struct _pthread_fastlock c_lock; /* Protect against concurrent access */
-  _pthread_descr c_waiting;        /* Threads waiting on this condition */
-} pthread_cond_t;
+#endif
 
 #define PTHREAD_COND_INITIALIZER {{0, 0}, 0}
 
 #ifdef __USE_UNIX98
-/* Read-write locks.  */
-typedef struct
-{
-  struct _pthread_fastlock rw_lock; /* Lock to guarantee mutual exclusion */
-  int rw_readers;               /* Number of readers */
-  _pthread_descr rw_writer;     /* Identity of writer, or NULL if none */
-  _pthread_descr rw_read_waiting; /* Threads waiting for reading */
-  _pthread_descr rw_write_waiting; /* Threads waiting for writing */
-  int rw_kind;                  /* Reader/Writer preference selection */
-  int rw_pshared;               /* Shared between processes or not */
-} pthread_rwlock_t;
-
 # define PTHREAD_RWLOCK_INITIALIZER \
   { {0, 0}, 0, NULL, NULL, NULL,					      \
     PTHREAD_RWLOCK_DEFAULT_NP, PTHREAD_PROCESS_PRIVATE }
 #endif
 
-/* Attributes */
+/* Values for attributes.  */
 
 enum
 {
@@ -121,19 +70,6 @@ enum
 #define PTHREAD_SCOPE_PROCESS	PTHREAD_SCOPE_PROCESS
 };
 
-typedef struct
-{
-  int detachstate;
-  int schedpolicy;
-  struct sched_param schedparam;
-  int inheritsched;
-  int scope;
-  size_t guardsize;
-  int stackaddr_set;
-  void *stackaddr;
-  size_t stacksize;
-} pthread_attr_t;
-
 enum
 {
   PTHREAD_MUTEX_FAST_NP,
@@ -148,46 +84,22 @@ enum
 #endif
 };
 
-typedef struct
-{
-  int mutexkind;
-} pthread_mutexattr_t;
-
-typedef struct
-{
-  int dummy;
-} pthread_condattr_t;
-
-#ifdef __USE_UNIX98
 enum
 {
   PTHREAD_PROCESS_PRIVATE,
-# define PTHREAD_PROCESS_PRIVATE	PTHREAD_PROCESS_PRIVATE
+#define PTHREAD_PROCESS_PRIVATE	PTHREAD_PROCESS_PRIVATE
   PTHREAD_PROCESS_SHARED
-# define PTHREAD_PROCESS_SHARED		PTHREAD_PROCESS_SHARED
+#define PTHREAD_PROCESS_SHARED	PTHREAD_PROCESS_SHARED
 };
 
+#ifdef __USE_UNIX98
 enum
 {
   PTHREAD_RWLOCK_PREFER_READER_NP,
   PTHREAD_RWLOCK_PREFER_WRITER_NP,
   PTHREAD_RWLOCK_DEFAULT_NP = PTHREAD_RWLOCK_PREFER_WRITER_NP
 };
-
-typedef struct
-{
-  int lockkind;
-  int pshared;
-} pthread_rwlockattr_t;
-#endif
-
-/* Keys for thread-specific data */
-
-typedef unsigned int pthread_key_t;
-
-/* Once-only execution */
-
-typedef int pthread_once_t;
+#endif	/* Unix98 */
 
 #define PTHREAD_ONCE_INIT 0
 
@@ -592,7 +504,8 @@ extern void _pthread_cleanup_pop __P ((struct _pthread_cleanup_buffer *__buffer,
 /* Install a cleanup handler as pthread_cleanup_push does, but also
    saves the current cancellation type and set it to deferred cancellation. */
 
-#define pthread_cleanup_push_defer_np(routine,arg)			      \
+#ifdef __USE_GNU
+# define pthread_cleanup_push_defer_np(routine,arg)			      \
   { struct _pthread_cleanup_buffer _buffer;				      \
     _pthread_cleanup_push_defer (&_buffer, (routine), (arg));
 
@@ -604,11 +517,12 @@ extern void _pthread_cleanup_push_defer __P ((struct _pthread_cleanup_buffer *__
    restores the cancellation type that was in effect when the matching
    pthread_cleanup_push_defer was called. */
 
-#define pthread_cleanup_pop_restore_np(execute)				      \
+# define pthread_cleanup_pop_restore_np(execute)			      \
   _pthread_cleanup_pop_restore (&_buffer, (execute)); }
 
 extern void _pthread_cleanup_pop_restore __P ((struct _pthread_cleanup_buffer *__buffer,
 					       int __execute));
+#endif
 
 /* Functions for handling signals. */
 

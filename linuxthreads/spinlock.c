@@ -14,6 +14,7 @@
 
 /* Internal locks */
 
+#include <errno.h>
 #include <sched.h>
 #include <time.h>
 #include "pthread.h"

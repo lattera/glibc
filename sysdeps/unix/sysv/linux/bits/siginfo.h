@@ -32,8 +32,8 @@ typedef union sigval
     void *sival_ptr;
   } sigval_t;
 
-# define SI_MAX_SIZE     128
-# define SI_PAD_SIZE     ((SI_MAX_SIZE / sizeof (int)) - 3)
+# define __SI_MAX_SIZE     128
+# define __SI_PAD_SIZE     ((__SI_MAX_SIZE / sizeof (int)) - 3)
 
 typedef struct siginfo
   {
@@ -44,7 +44,7 @@ typedef struct siginfo
 
     union
       {
-	int _pad[SI_PAD_SIZE];
+	int _pad[__SI_PAD_SIZE];
 
 	 /* kill().  */
 	struct
@@ -237,8 +237,8 @@ enum
 # define __have_sigevent_t	1
 
 /* Structure to transport application-defined values with signals.  */
-# define SIGEV_MAX_SIZE	64
-# define SIGEV_PAD_SIZE	((SIGEV_MAX_SIZE / sizeof (int)) - 3)
+# define __SIGEV_MAX_SIZE	64
+# define __SIGEV_PAD_SIZE	((__SIGEV_MAX_SIZE / sizeof (int)) - 3)
 
 typedef struct sigevent
   {
@@ -248,7 +248,7 @@ typedef struct sigevent
 
     union
       {
-	int _pad[SIGEV_PAD_SIZE];
+	int _pad[__SIGEV_PAD_SIZE];
 
 	struct
 	  {

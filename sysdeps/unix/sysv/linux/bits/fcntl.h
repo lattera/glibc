@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for Linux.
-   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,7 +48,9 @@
 #define O_ASYNC		020000
 
 /* XXX missing */
-#define O_LARGEFILE	0
+#ifdef __USE_LARGEFILE64
+# define O_LARGEFILE	0
+#endif
 
 /* Values for the second argument to `fcntl'.  */
 #define F_DUPFD		0	/* Duplicate file descriptor.  */

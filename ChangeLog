@@ -1,3 +1,29 @@
+1998-06-30 11:47  Ulrich Drepper  <drepper@cygnus.com>
+
+	* include/aio.h: New file.
+	* posix/Makefile (distribute): Add bits/pthreadtypes.h.
+	(tests): Build and run annexc program.
+	* posix/annexc.c: New file.
+	* posix/bits/posix1_lim.h: Add several more _POSIX_* limits.
+	* rt/aio.h: Remove __need_timespec_t.  We can include the whole time.h.
+	* rt/aio_misc.c: Include limits.h.
+	* rt/aio_notify.c: Include errno.h.
+	* sysdeps/unix/sysv/linux/alpha/bits/types.h: Include pthreadtypes.h.
+	Define size_t.
+	* sysdeps/unix/sysv/linux/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/mips/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/bits/types.h: Likewise.
+	* sysdeps/unix/sysv/linux/bits/errno.h: Define ENOTSUP though the
+	kernel doesn't do this.
+	* sysdeps/unix/sysv/linux/bits/fcntl.h: Define O_LARGEFILE only if
+	__USE_LARGEFILE64 is defined.
+	* sysdeps/unix/sysv/linux/bits/pthreadtypes.h: New file.  Empty.
+	* sysdeps/unix/sysv/linux/bits/sched.h: Define __sched_param struct
+	if requested.
+	* sysdeps/unix/sysv/linux/bits/siginifo.h: Protect non-standard names.
+
+	* stdlib/isomac.c: Avoid include_next warning.
+
 1998-06-29 12:27  Ulrich Drepper  <drepper@cygnus.com>
 
 	* argp/argp.h: Use __PMT instead of __P for function pointer.

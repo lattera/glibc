@@ -177,7 +177,7 @@ static char *macros[] =
 static const char fmt[] = "\
 echo \"#include <%s>\" |\
 %s -E -dM -ansi -pedantic %s -D_LIBC -I. \
--isystem `%s --print-prog-name=include` - > %s";
+-isystem `%s --print-prog-name=include` - 2> /dev/null > %s";
 
 
 /* The compiler we use (given on the command line).  */

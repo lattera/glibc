@@ -14,6 +14,7 @@
 
 /* Handling of thread attributes */
 
+#include <errno.h>
 #include <unistd.h>
 #include <sys/param.h>
 #include "pthread.h"
@@ -79,14 +80,14 @@ int pthread_attr_setschedparam(pthread_attr_t *attr,
 
   if (param->sched_priority < min_prio || param->sched_priority > max_prio)
     return EINVAL;
-  attr->schedparam = *param;
+  memcpy (&attr->schedparam, param, sizeof (struct sched_param));
   return 0;
 }
 
 int pthread_attr_getschedparam(const pthread_attr_t *attr,
                                struct sched_param *param)
 {
-  *param = attr->schedparam;
+  memcpy (param, &attr->schedparam, sizeof (struct sched_param));
   return 0;
 }
 

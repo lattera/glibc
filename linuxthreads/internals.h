@@ -17,6 +17,7 @@
 /* Includes */
 
 #include <bits/libc-lock.h> /* for _LIBC_TSD_KEY_N */
+#include <limits.h>
 #include <setjmp.h>
 #include <signal.h>
 #include <unistd.h>

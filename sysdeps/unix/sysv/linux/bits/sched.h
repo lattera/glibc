@@ -18,6 +18,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
+#ifndef __need_schedparam
+
 #ifndef _SCHED_H
 # error "Never include <bits/sched.h> directly; use <sched.h> instead."
 #endif
@@ -27,12 +29,6 @@
 #define SCHED_OTHER	0
 #define SCHED_FIFO	1
 #define SCHED_RR	2
-
-/* Data structure to describe a process' schedulability.  */
-struct sched_param
-  {
-    int sched_priority;
-  };
 
 #ifdef __USE_MISC
 /* Cloning flags.  */
@@ -45,6 +41,11 @@ struct sched_param
 # define CLONE_PTRACE  0x00002000 /* Set if tracing continues on the child.  */
 #endif
 
+/* The official definition.  */
+struct sched_param
+  {
+    int sched_priority;
+  };
 
 __BEGIN_DECLS
 
@@ -54,6 +55,19 @@ extern int __clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 #ifdef __USE_MISC
 extern int clone __P ((int (*__fn) (void *__arg), void *__child_stack,
 		       int __flags, void *__arg));
+#endif
+
+#endif	/* need schedparam */
+
+#if !defined __defined_schedparam \
+    && (defined __need_schedparam || defined _SCHED_H)
+# define __defined_schedparam	1
+/* Data structure to describe a process' schedulability.  */
+struct __sched_param
+  {
+    int sched_priority;
+  };
+# undef __need_schedparam
 #endif
 
 __END_DECLS

@@ -26,7 +26,6 @@
 #include <features.h>
 #include <fcntl.h>
 #include <signal.h>
-#define __need_timespec
 #include <time.h>
 #include <sys/types.h>
 

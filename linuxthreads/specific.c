@@ -14,6 +14,7 @@
 
 /* Thread-specific data */
 
+#include <errno.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include "pthread.h"

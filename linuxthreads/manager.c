@@ -303,7 +303,8 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
     switch(attr->inheritsched) {
     case PTHREAD_EXPLICIT_SCHED:
       new_thread->p_start_args.schedpolicy = attr->schedpolicy;
-      new_thread->p_start_args.schedparam = attr->schedparam;
+      memcpy (&new_thread->p_start_args.schedparam, &attr->schedparam,
+	      sizeof (struct sched_param));
       break;
     case PTHREAD_INHERIT_SCHED:
       /* schedpolicy doesn't need to be set, only get priority */

@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -28,11 +28,20 @@
 
 /* These are the standard-mandated minimum values.  */
 
+/* Minimum number of operations in one list I/O call.  */
+#define _POSIX_AIO_LISTIO_MAX	2
+
+/* Minimal number of outstanding asynchronous I/O operations.  */
+#define _POSIX_AIO_MAX		1
+
 /* Maximum length of arguments to `execve', including environment.  */
 #define	_POSIX_ARG_MAX		4096
 
 /* Maximum simultaneous processes per real user ID.  */
 #define	_POSIX_CHILD_MAX	6
+
+/* Minimal number of timer expiration overruns.  */
+#define _POSIX_DELAYTIMER_MAX	32
 
 /* Maximum link count of a file.  */
 #define	_POSIX_LINK_MAX		8
@@ -43,6 +52,12 @@
 /* Number of bytes for which space will be
    available in a terminal input queue.  */
 #define	_POSIX_MAX_INPUT	255
+
+/* Maximum number of message queues open for a process.  */
+#define _POSIX_MQ_OPEN_MAX	8
+
+/* Maximum number of supported message priorities.  */
+#define _POSIX_MQ_PRIO_MAX	32
 
 /* Number of simultaneous supplementary group IDs per process.  */
 #define	_POSIX_NGROUPS_MAX	0
@@ -62,6 +77,18 @@
 
 /* Number of bytes than can be written atomically to a pipe.  */
 #define	_POSIX_PIPE_BUF		512
+
+/* Minimal number of realtime signals reserved for the application.  */
+#define _POSIX_RTSIG_MAX	8
+
+/* Number of semaphores a process can have.  */
+#define _POSIX_SEM_NSEMS_MAX	256
+
+/* Maximal value of a semaphore.  */
+#define _POSIX_SEM_VALUE_MAX	32767
+
+/* Number of pending realtime signals.  */
+#define _POSIX_SIGQUEUE_MAX	32
 
 /* Largest value of a `ssize_t'.  */
 #define	_POSIX_SSIZE_MAX	32767
@@ -84,6 +111,9 @@
 
 /* Maximum number of characters in a tty name.  */
 #define	_POSIX_TTY_NAME_MAX	9
+
+/* Number of timer for a process.  */
+#define _POSIX_TIMER_MAX	32
 
 /* Maximum length of login name.  */
 #define	_POSIX_LOGIN_NAME_MAX	9

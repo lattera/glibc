@@ -14,6 +14,7 @@
 
 /* Thread creation, initialization, and basic low-level routines */
 
+#include <errno.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -25,6 +25,9 @@
 
 #include <features.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 /* Convenience types.  */
 typedef unsigned char __u_char;
 typedef unsigned short __u_short;
@@ -130,5 +133,9 @@ typedef __loff_t __off64_t;
 /* Used in XTI.  */
 typedef int __t_scalar_t;
 typedef unsigned int __t_uscalar_t;
+
+
+/* Now add the thread types.  */
+#include <bits/pthreadtypes.h>
 
 #endif /* bits/types.h */

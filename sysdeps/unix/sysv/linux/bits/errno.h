@@ -24,6 +24,9 @@
 # undef ERANGE
 # include <linux/errno.h>
 
+/* Linux has no ENOTSUP error code.  */
+# define ENOTSUP EOPNOTSUPP
+
 # ifndef __ASSEMBLER__
 /* We now need a declaration of the `errno' variable.  */
 extern int errno;
