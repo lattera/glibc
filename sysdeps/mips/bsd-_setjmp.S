@@ -1,5 +1,5 @@
 /* BSD `_setjmp' entry point to `sigsetjmp (..., 0)'.  MIPS version.
-Copyright (C) 1994 Free Software Foundation, Inc.
+Copyright (C) 1994, 1995 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -25,4 +25,4 @@ Cambridge, MA 02139, USA.  */
 
 ENTRY (setjmp)
 	j C_SYMBOL_NAME (__sigsetjmp)
-	move a1, zero		/* Pass a second argument of zero.  */
+	li a1, zero		/* Pass a second argument of zero.  */
