@@ -37,7 +37,7 @@
 #include <regex.h>
 
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
 static clockid_t cl;
 static int use_clock;
 #endif
@@ -118,9 +118,14 @@ main (int argc, char *argv[])
   if (inlen != 0)
     error (EXIT_FAILURE, errno, "cannot convert buffer");
 
-#ifdef _POSIX_CPUTIME
-  /* See whether we can use the CPU clock.  */
-  use_clock = clock_getcpuclockid (0, &cl) == 0;
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
+# if _POSIX_CPUTIME == 0
+  if (sysconf (_SC_CPUTIME) < 0)
+    use_clock = 0;
+  else
+# endif
+    /* See whether we can use the CPU clock.  */
+    use_clock = clock_getcpuclockid (0, &cl) == 0;
 #endif
 
 #ifdef DEBUG
@@ -202,7 +207,7 @@ static int
 run_test (const char *expr, const char *mem, size_t memlen, int icase,
 	  int expected)
 {
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   struct timespec start;
   struct timespec finish;
 #endif
@@ -211,7 +216,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
   size_t offset;
   int cnt;
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   if (use_clock && !timing)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
@@ -260,7 +265,7 @@ run_test (const char *expr, const char *mem, size_t memlen, int icase,
 
   regfree (&re);
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   if (use_clock && !timing)
     {
       use_clock = clock_gettime (cl, &finish) == 0;
@@ -345,7 +350,7 @@ static int
 run_test_backwards (const char *expr, const char *mem, size_t memlen,
 		    int icase, int expected)
 {
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   struct timespec start;
   struct timespec finish;
 #endif
@@ -354,7 +359,7 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
   size_t offset;
   int cnt;
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   if (use_clock && !timing)
     use_clock = clock_gettime (cl, &start) == 0;
 #endif
@@ -406,7 +411,7 @@ run_test_backwards (const char *expr, const char *mem, size_t memlen,
 
   regfree (&re);
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
   if (use_clock && !timing)
     {
       use_clock = clock_gettime (cl, &finish) == 0;

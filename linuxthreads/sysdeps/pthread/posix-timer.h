@@ -1,5 +1,5 @@
 /* Definitions for POSIX timer implementation on top of LinuxThreads.
-   Copyright (C) 2000, 2002 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2002, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kaz Kylheku <kaz@ashi.footprints.net>.
 
@@ -85,12 +85,6 @@ extern int __timer_init_failed;
 /* A distinct thread is used for each clock type.  */
 
 extern struct thread_node __timer_signal_thread_rclk;
-#ifdef _POSIX_CPUTIME
-extern struct thread_node __timer_signal_thread_pclk;
-#endif
-#ifdef _POSIX_THREAD_CPUTIME
-extern struct thread_node __timer_signal_thread_tclk;
-#endif
 
 
 /* Return pointer to timer structure corresponding to ID.  */

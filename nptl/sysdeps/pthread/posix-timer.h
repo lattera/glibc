@@ -88,16 +88,8 @@ extern pthread_once_t __timer_init_once_control;
 /* Nonzero if initialization of timer implementation failed.  */
 extern int __timer_init_failed;
 
-/* Nodes for the threads used to deliver signals.  */
-/* A distinct thread is used for each clock type.  */
-
+/* Node for the thread used to deliver signals.  */
 extern struct thread_node __timer_signal_thread_rclk;
-#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
-extern struct thread_node __timer_signal_thread_pclk;
-#endif
-#if defined _POSIX_THREAD_CPUTIME && _POSIX_THREAD_CPUTIME >= 0
-extern struct thread_node __timer_signal_thread_tclk;
-#endif
 
 
 /* Return pointer to timer structure corresponding to ID.  */

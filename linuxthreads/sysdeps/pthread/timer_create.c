@@ -94,24 +94,7 @@ timer_create (clock_id, evp, timerid)
     case SIGEV_SIGNAL:
       /* We have a global thread for delivering timed signals.
 	 If it is not running, try to start it up.  */
-      switch (clock_id)
-	{
-	case CLOCK_REALTIME:
-	default:
-	  thread = &__timer_signal_thread_rclk;
-	  break;
-#ifdef _POSIX_CPUTIME
-	case CLOCK_PROCESS_CPUTIME_ID:
-	  thread = &__timer_signal_thread_pclk;
-	  break;
-#endif
-#ifdef _POSIX_THREAD_CPUTIME
-	case CLOCK_THREAD_CPUTIME_ID:
-	  thread = &__timer_signal_thread_tclk;
-	  break;
-#endif
-	}
-
+      thread = &__timer_signal_thread_rclk;
       if (! thread->exists)
 	{
 	  if (__builtin_expect (__timer_thread_start (thread),

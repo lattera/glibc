@@ -104,6 +104,12 @@
 /* POSIX shared memory objects are implemented.  */
 #define _POSIX_SHARED_MEMORY_OBJECTS	200112L
 
+/* CPU-time clocks support needs to be checked at runtime.  */
+#define _POSIX_CPUTIME	0
+
+/* Clock support in threads must be also checked at runtime.  */
+#define _POSIX_THREAD_CPUTIME	0
+
 /* GNU libc provides regular expression handling.  */
 #define _POSIX_REGEXP	1
 

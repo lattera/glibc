@@ -1,3 +1,17 @@
+2004-12-01  Jakub Jelinek  <jakub@redhat.com>
+
+	* posix/tst-regex.c: Use defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
+	conditionals instead of defined _POSIX_CPUTIME.
+	(main): If _POSIX_CPUTIME == 0, call sysconf to see if CPUTIME
+	option is available.
+	* posix/tst-regex.c2: Use defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
+	conditionals instead of defined _POSIX_CPUTIME.
+	(do_test): If _POSIX_CPUTIME == 0, call sysconf to see if CPUTIME
+	option is available.
+	* sysdeps/posix/sysconf.c (__sysconf): If _POSIX_CPUTIME resp.
+	_POSIX_THREAD_CPUTIME is defined to 0, return -1 for the corresponding
+	_SC_ argument.
+
 2004-12-08  Jakub Jelinek  <jakub@redhat.com>
 
 	* elf/ldd.bash.in: When set -o pipefail is available, use that for

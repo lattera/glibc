@@ -8,7 +8,7 @@
 #include <time.h>
 #include <unistd.h>
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
 static clockid_t cl;
 static int use_clock;
 #endif
@@ -16,9 +16,14 @@ static int use_clock;
 static int
 do_test (void)
 {
-#ifdef _POSIX_CPUTIME
-  /* See whether we can use the CPU clock.  */
-  use_clock = clock_getcpuclockid (0, &cl) == 0;
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
+# if _POSIX_CPUTIME == 0
+  if (sysconf (_SC_CPUTIME) < 0)
+    use_clock = 0;
+  else
+# endif
+    /* See whether we can use the CPU clock.  */
+    use_clock = clock_getcpuclockid (0, &cl) == 0;
 #endif
 
   static const char *pat[] = {
@@ -112,7 +117,7 @@ do_test (void)
 	      rpbuf.no_sub = 1;
 	  }
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
       struct timespec start, stop;
       if (use_clock)
 	use_clock = clock_gettime (cl, &start) == 0;
@@ -211,7 +216,7 @@ do_test (void)
 	    }
 	}
 
-#ifdef _POSIX_CPUTIME
+#if defined _POSIX_CPUTIME && _POSIX_CPUTIME >= 0
       if (use_clock)
 	use_clock = clock_gettime (cl, &stop) == 0;
       if (use_clock)
