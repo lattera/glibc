@@ -18,9 +18,9 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <errno.h>
-#include <link.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 #include <sys/mman.h>
 #include <sys/types.h>
 #include "dynamic-link.h"

@@ -16,9 +16,9 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 
 extern void __libc_init_first (int argc, char **argv, char **envp);
 

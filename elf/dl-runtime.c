@@ -17,8 +17,8 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 
 
 /* The global scope we will use for symbol lookups.

@@ -17,12 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
 #include <dlfcn.h>
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <bits/libc-lock.h>
+#include <elf/ldsodefs.h>
 
 
 /* Type for storing results of dynamic loading actions.  */

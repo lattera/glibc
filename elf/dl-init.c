@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
-#include <link.h>
+#include <elf/ldsodefs.h>
 
 
 /* Run initializers for MAP and its dependencies, in inverse dependency

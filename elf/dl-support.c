@@ -20,9 +20,9 @@
 /* This file defines some things that for the dynamic linker are defined in
    rtld.c and dl-sysdep.c in ways appropriate to bootstrap dynamic linking.  */
 
-#include <link.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 #include <dl-machine.h>
 
 extern char *__progname;

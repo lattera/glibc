@@ -18,13 +18,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <alloca.h>
-#include <link.h>
-#include <assert.h>
 #include <string.h>
 #include <unistd.h>
-
+#include <elf/ldsodefs.h>
 #include "dl-hash.h"
 #include <dl-machine.h>
+
+#include <assert.h>
 
 #define VERSTAG(tag)	(DT_NUM + DT_PROCNUM + DT_VERSIONTAGIDX (tag))
 

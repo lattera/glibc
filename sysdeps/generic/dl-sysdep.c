@@ -18,15 +18,15 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <elf.h>
-#include <entry.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
-#include <fcntl.h>
-#include <link.h>
-#include <unistd.h>
+#include <elf/ldsodefs.h>
 #include <stdio-common/_itoa.h>
 
+#include <entry.h>
 #include <dl-machine.h>
 #include <dl-procinfo.h>
 

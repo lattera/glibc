@@ -17,11 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
 #include <setjmp.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 
 /* This is the internal function we use to generate the error string.  */
 extern char *_strerror_internal __P ((int, char *, size_t));

@@ -17,11 +17,11 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
 #include <dlfcn.h>
-#include <stdlib.h>
 #include <errno.h>
+#include <stdlib.h>
 #include <bits/libc-lock.h>
+#include <elf/ldsodefs.h>
 
 
 extern ElfW(Addr) _dl_sysdep_start (void **start_argptr,

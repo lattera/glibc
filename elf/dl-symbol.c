@@ -1,5 +1,5 @@
 /* Look up a symbol's run-time value in the scope of a loaded object.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <stddef.h>
-#include <link.h>
+#include <elf/ldsodefs.h>
 
 /* Look up symbol NAME in MAP's scope and return its run-time address.  */
 

@@ -25,7 +25,6 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <libintl.h>
-#include <link.h>
 #include <locale.h>
 #include <obstack.h>
 #include <search.h>
@@ -33,6 +32,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <elf/ldsodefs.h>
 #include <sys/gmon.h>
 #include <sys/gmon_out.h>
 #include <sys/mman.h>

@@ -1,5 +1,5 @@
 /* Communicate dynamic linker state to the debugger at runtime.
-   Copyright (C) 1996 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,7 +17,7 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
+#include <elf/ldsodefs.h>
 
 /* This structure communicates dl state to the debugger.  The debugger
    normally finds it via the DT_DEBUG entry in the dynamic section, but in

@@ -1,3 +1,40 @@
+1998-03-24  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldsodesf.h: New file.
+	* elf/Makefile (distribute): Add ldsodefs.h.
+	* elf/link.h: Separate internal information in exter header.
+	* elf/rtld.c: Include elf/ldsodefs.h not link.h.
+	* elf/dl-minimal.c: Likewise.
+	* sysdeps/generic/dl-sysdep.c: Likewise.
+	* elf/sprof.c: Likewise.
+	* elf/dlsym.c: Likewise.
+	* elf/dlvsym.c: Likewise.
+	* elf/dlerror.c: Likewise.
+	* elf/dladdr.c: Likewise.
+	* elf/dlclose.c: Likewise.
+	* elf/dlopen.c: Likewise.
+	* elf/dl-addr.c: Likewise.
+	* elf/dl-close.c: Likewise.
+	* elf/dl-debug.c: Likewise.
+	* elf/dl-deps.c: Likewise.
+	* elf/dl-error.c: Likewise.
+	* elf/dl-fini.c: Likewise.
+	* elf/dl-init.c: Likewise.
+	* elf/dl-load.c: Likewise.
+	* elf/dl-lookup.c: Likewise.
+	* elf/dl-object.c: Likewise.
+	* elf/dl-open.c: Likewise.
+	* elf/dl-profile.c: Likewise.
+	* elf/dl-reloc.c: Likewise.
+	* elf/dl-runtime.c: Likewise.
+	* elf/dl-support.c: Likewise.
+	* elf/dl-symbol.c: Likewise.
+	* elf/dl-version.c: Likewise.
+	* sysdeps/generic/dl-cache.c: Likewise.
+	* sysdeps/generic/libc-start.c: Likewise.
+	* iconv/gconv_dl.c: Likewise.
+	* nss/nsswitch.c: Likewise.
+
 1998-03-23 13:45  Ulrich Drepper  <drepper@cygnus.com>
 
 	* manual/nss.texi: The database is not called network but networks.

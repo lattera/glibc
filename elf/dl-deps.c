@@ -17,11 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
-#include <errno.h>
 #include <dlfcn.h>
+#include <errno.h>
 #include <stdlib.h>
 #include <string.h>
+#include <elf/ldsodefs.h>
+
 #include <assert.h>
 
 /* Whether an shared object references one or more auxiliary objects

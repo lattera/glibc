@@ -17,12 +17,12 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <link.h>
-#include <assert.h>
+#include <errno.h>
 #include <string.h>
 #include <stdlib.h>
-#include <errno.h>
+#include <elf/ldsodefs.h>
 
+#include <assert.h>
 
 /* List of objects currently loaded is [2] of this, aka _dl_loaded.  */
 struct link_map *_dl_default_scope[5];

@@ -18,17 +18,16 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fcntl.h>
-#include <link.h>
-#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/mman.h>		/* Check if MAP_ANON is defined.  */
+#include <elf/ldsodefs.h>
 #include <stdio-common/_itoa.h>
-#include <assert.h>
 #include <entry.h>
 #include "dynamic-link.h"
 
+#include <assert.h>
 
 /* System-specific function to do initial startup for the dynamic linker.
    After this, file access calls and getenv must work.  This is responsible
