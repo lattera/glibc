@@ -312,7 +312,7 @@ ac_includes_default="\
 # include <unistd.h>
 #endif"
 
-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO OLD_DEBIAN_INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup libc_cv_z_combreloc libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
+ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS with_fp with_cvs enable_check_abi oldest_abi subdirs force_install all_warnings build build_cpu build_vendor build_os host host_cpu host_vendor host_os base_machine sysnames INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA LN_S CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC OBJEXT BUILD_CC cross_compiling CPP AR OBJDUMP RANLIB ac_ct_RANLIB MIG AS LD PWD_P MAKE MSGFMT MAKEINFO SED AUTOCONF CCVERSION SYSINCLUDES libc_cv_gcc_static_libgcc BASH libc_cv_have_bash2 KSH libc_cv_have_ksh AWK PERL INSTALL_INFO OLD_DEBIAN_INSTALL_INFO BISON VERSIONING libc_cv_asm_protected_directive libc_cv_initfinit_array libc_cv_z_nodelete libc_cv_z_nodlopen libc_cv_z_initfirst libc_cv_Bgroup libc_cv_z_combreloc libc_cv_have_initfini libc_cv_cpp_asm_debuginfo no_whole_archive exceptions LIBGD EGREP sizeof_long_double libc_cv_gcc_unwind_find_fde uname_sysname uname_release uname_version old_glibc_headers libc_cv_slibdir libc_cv_localedir libc_cv_sysconfdir libc_cv_rootsbindir use_ldconfig ldd_rewrite_script gnu_ld gnu_as elf xcoff static shared pic_default profile omitfp bounded static_nss nopic_initfini DEFINES linux_doors mach_interface_list VERSION RELEASE LIBOBJS LTLIBOBJS'
 ac_subst_files=''
 
 # Initialize some variables set by options.
@@ -851,6 +851,7 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-sanity-checks really do not use threads (should not be used except
                           in special situations) [default=yes]
+  --disable-check-abi     omit "make check-abi" from "make check"
   --enable-shared         build shared library [default=yes if GNU ld &
                           ELF]
   --enable-profile        build profiled library [default=yes]
@@ -1477,6 +1478,15 @@ if test "${enable_sanity_checks+set}" = set; then
   enable_sanity=$enableval
 else
   enable_sanity=yes
+fi;
+
+
+# Check whether --enable-check-abi or --disable-check-abi was given.
+if test "${enable_check_abi+set}" = set; then
+  enableval="$enable_check_abi"
+  enable_check_abi=$enableval
+else
+  enable_check_abi=yes
 fi;
 
 static=yes
@@ -5159,7 +5169,7 @@ if test "${libc_cv_asm_underscores+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.$ac_ext <<EOF
-#line 5162 "configure"
+#line 5172 "configure"
 #include "confdefs.h"
 void underscore_test(void) {
 return; }
@@ -5485,7 +5495,7 @@ if test "${libc_cv_gcc_dwarf2_unwind_info+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5488 "configure"
+#line 5498 "configure"
 static char *__EH_FRAME_BEGIN__;
 _start ()
 {
@@ -5585,7 +5595,7 @@ if test "${libc_cv_gcc_builtin_expect+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5588 "configure"
+#line 5598 "configure"
 int foo (int a)
 {
   a = __builtin_expect (a, 10);
@@ -5653,7 +5663,7 @@ if test "${libc_cv_gcc_subtract_local_labels+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat > conftest.c <<EOF
-#line 5656 "configure"
+#line 5666 "configure"
 int foo (int a)
 {
   static const int ar[] = { &&l1 - &&l1, &&l2 - &&l1 };
@@ -7268,6 +7278,7 @@ s,@ECHO_T@,$ECHO_T,;t t
 s,@LIBS@,$LIBS,;t t
 s,@with_fp@,$with_fp,;t t
 s,@with_cvs@,$with_cvs,;t t
+s,@enable_check_abi@,$enable_check_abi,;t t
 s,@oldest_abi@,$oldest_abi,;t t
 s,@subdirs@,$subdirs,;t t
 s,@force_install@,$force_install,;t t

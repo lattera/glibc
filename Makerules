@@ -1241,7 +1241,7 @@ update-abi: update-abi-libc
 common-generated += libc.symlist
 endif
 
-ifeq ($(build-shared),yes)
+ifeq ($(build-shared)$(enable-check-abi),yesyes)
 ifdef subdir
 tests: check-abi
 endif
