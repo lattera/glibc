@@ -101,6 +101,151 @@ __STRING2_COPY_TYPE (8);
 #endif
 
 
+/* Copy N bytes from SRC to DEST, returning pointer to byte following the
+   last copied.  */
+#ifdef __USE_GNU
+# ifndef _HAVE_STRING_ARCH_mempcpy
+#  define __mempcpy(dest, src, n) \
+  (__extension__ (__builtin_constant_p (src) && __builtin_constant_p (n)      \
+		  && __string2_1bptr_p (src) && n <= 8			      \
+		  ? __mempcpy_small (dest, src, n)			      \
+		  : __mempcpy (dest, src, n)))
+/* In glibc we use this function frequently but for namespace reasons
+   we have to use the name `__mempcpy'.  */
+#  define mempcpy(dest, src, n) __mempcpy (dest, src, n)
+
+#  if _STRING_ARCH_unaligned
+#   define __mempcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*__dest++ = *(char *) src;			      \
+			break;						      \
+		      case 2:						      \
+			*((__uint16_t *) __dest) =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			__dest += 2;					      \
+			break;						      \
+		      case 3:						      \
+			*((__uint16_t *) __dest) =			      \
+			  __STRING2_SMALL_GET16 (src, 0);		      \
+			__dest += sizeof (__uint16_t);			      \
+			*__dest++ = ((char *) src)[2];			      \
+			break;						      \
+		      case 4:						      \
+			*((__uint32_t *) __dest) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			__dest += 4;					      \
+			break;						      \
+		      case 5:						      \
+			*((__uint32_t *) __dest) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			__dest += 4;					      \
+			*__dest++ = ((char *) src)[4];			      \
+			break;						      \
+		      case 6:						      \
+			*((__uint32_t *) __dest) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) (__dest + 4)) =		      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			__dest += 6;					      \
+			break;						      \
+		      case 7:						      \
+			*((__uint32_t *) __dest) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint16_t *) (__dest + 4)) =		      \
+			  __STRING2_SMALL_GET16 (src, 4);		      \
+			__dest += 6;					      \
+			*__dest++ = ((char *) src)[6];			      \
+			break;						      \
+		      case 8:						      \
+			*((__uint32_t *) __dest) =			      \
+			  __STRING2_SMALL_GET32 (src, 0);		      \
+			*((__uint32_t *) (__dest + 4)) =		      \
+			  __STRING2_SMALL_GET32 (src, 4);		      \
+			__dest += 8;					      \
+			break;						      \
+		      }							      \
+		    __dest; }))
+#  else
+#   define __mempcpy_small(dest, src, srclen) \
+  (__extension__ ({ char *__dest = (char *) (dest);			      \
+		    switch (srclen)					      \
+		      {							      \
+		      case 1:						      \
+			*__dest = '\0';					      \
+			break;						      \
+		      case 2:						      \
+			*((__STRING2_COPY_ARR2 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR2)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1] } });	      \
+			break;						      \
+		      case 3:						      \
+			*((__STRING2_COPY_ARR3 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR3)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2] } });	      \
+			break;						      \
+		      case 4:						      \
+			*((__STRING2_COPY_ARR4 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR4)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3] } });	      \
+			break;						      \
+		      case 5:						      \
+			*((__STRING2_COPY_ARR5 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR5)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4] } });	      \
+			break;						      \
+		      case 6:						      \
+			*((__STRING2_COPY_ARR6 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR6)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5] } });	      \
+			break;						      \
+		      case 7:						      \
+			*((__STRING2_COPY_ARR7 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR7)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
+			       ((__const char *) (src))[6] } });	      \
+			break;						      \
+		      case 8:						      \
+			*((__STRING2_COPY_ARR8 *) __dest) =		      \
+			  ((__STRING2_COPY_ARR8)			      \
+			   { { ((__const char *) (src))[0],		      \
+			       ((__const char *) (src))[1],		      \
+			       ((__const char *) (src))[2],		      \
+			       ((__const char *) (src))[3],		      \
+			       ((__const char *) (src))[4],		      \
+			       ((__const char *) (src))[5],		      \
+			       ((__const char *) (src))[6],		      \
+			       ((__const char *) (src))[7] } });	      \
+			break;						      \
+		    }							      \
+		  __dest + (srclen); }))
+#  endif
+# endif
+#endif
+
+
 /* Copy SRC to DEST.  */
 #ifndef _HAVE_STRING_ARCH_strcpy
 # define strcpy(dest, src) \
@@ -274,7 +419,7 @@ __STRING2_COPY_TYPE (8);
 		      case 5:						      \
 			*((__uint32_t *) __dest) =			      \
 			  __STRING2_SMALL_GET32 (src, 0);		      \
-			__dest += sizeof (__uint32_t);			      \
+			__dest += 4;					      \
 			*__dest = '\0';					      \
 			break;						      \
 		      case 6:						      \

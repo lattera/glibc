@@ -31,13 +31,13 @@
 #ifndef PTYNAME1
 #define PTYNAME1 "pqrsPQRS"
 #endif
-const char *__libc_ptyname1 = PTYNAME1;
+const char __libc_ptyname1[] = PTYNAME1;
 
 /* Letters indicating the position within a series.  */
 #ifndef PTYNAME2
 #define PTYNAME2 "0123456789abcdefghijklmnopqrstuv";
 #endif
-const char *__libc_ptyname2 = PTYNAME2;
+const char __libc_ptyname2[] = PTYNAME2;
 
 
 /* Open a master pseudo terminal and return its file descriptor.  */
@@ -47,32 +47,31 @@ __getpt (void)
   char buf[sizeof (_PATH_PTY) + 2];
   const char *p, *q;
   char *s;
-  
-  s = __stpcpy (buf, _PATH_PTY);
-  s[0] = '?';
-  s[1] = '?';
-  s[2] = 0;
 
-  for (p = __libc_ptyname1; *p; p++)
+  s = __mempcpy (buf, _PATH_PTY, sizeof (_PATH_PTY) - 1);
+  /* s[0] and s[1] will be filled in the loop.  */
+  s[2] = '\0';
+
+  for (p = __libc_ptyname1; *p != '\0'; ++p)
     {
       s[0] = *p;
 
-      for (q = __libc_ptyname2; *q; q++)
+      for (q = __libc_ptyname2; *q != '\0'; ++q)
 	{
 	  int fd;
-	  
+
 	  s[1] = *q;
-	  
+
 	  fd = __open (buf, O_RDWR);
 	  if (fd != -1)
 	    {
 	      if (__isatty (fd))
 		return fd;
-	      
+
 	      __close (fd);
 	      continue;
 	    }
-	  
+
 	  if (errno != EIO)
 	    return -1;
 	}

@@ -140,7 +140,8 @@ override CFLAGS += -Wno-uninitialized -Wno-write-strings
 # It's not a library to make sure it is linked in instead of s_lib_version.o.
 $(objpfx)libieee.a: $(objpfx)ieee-math.o
 	rm -f $@
-	$(LN_S) $< $@
+	$(patsubst %/,cd % &&,$(objpfx)) \
+	$(LN_S) $(<F) $(@F)
 
 ifeq ($(build-shared),yes)
 $(addprefix $(objpfx),$(tests)): $(objpfx)libm.so$(libm.so-version)

@@ -33,8 +33,8 @@
 #define _PATH_DEVPTS "/dev/pts/"
 
 /* The are declared in getpt.c.  */
-extern const char *__libc_ptyname1;
-extern const char *__libc_ptyname2;
+extern const char __libc_ptyname1[];
+extern const char __libc_ptyname2[];
 
 /* Static buffer for `ptsname'.  */
 static char buffer[sizeof (_PATH_DEVPTS) + 20];
@@ -59,7 +59,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
   int save_errno = errno;
   struct stat st;
   int ptyno;
-  
+
   if (buf == NULL)
     {
       __set_errno (EINVAL);
@@ -97,7 +97,7 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 #endif
     {
       char *p;
-      
+
       if (buflen < strlen (_PATH_TTY) + 3)
 	{
 	  __set_errno (ERANGE);
@@ -116,13 +116,13 @@ __ptsname_r (int fd, char *buf, size_t buflen)
 	  __set_errno (ENOTTY);
 	  return ENOTTY;
 	}
-      
+
       p = __stpcpy (buf, _PATH_TTY);
       p[0] = __libc_ptyname1[ptyno / 16];
       p[1] = __libc_ptyname2[ptyno % 16];
       p[2] = '\0';
     }
-    
+
   if (__stat (buf, &st) < 0)
     return errno;
 

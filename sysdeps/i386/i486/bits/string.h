@@ -1582,7 +1582,9 @@ __strstr_g (__const char *__haystack, __const char *__needle)
 			     : "rm" (word), "1" (-1));			      \
 			  __cnt + 1; }))
 
-#  define ffsl(word) ffs(word)
+#  ifndef ffsl
+#   define ffsl(word) ffs(word)
+#  endif
 # endif	/* i686 */
 #endif	/* BSD || X/Open */
 

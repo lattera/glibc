@@ -6,9 +6,9 @@
 # earlier entries taking precedence over later entries.  So loose patterns
 # at the end of the list can give defaults.
 
-# The ABI tag values we use are 32-bit quantities stored in machine byte order.
-# Conventionally the high-order byte indicates the OS and the low three
-# bytes form a version number associated with a particular ABI version.
+# The ABI tags we use are four 32-bit integers.  The first of these
+# is the operating-system number, the next three are the revision number
+# of the first compatible kernel.
 
 # After the configuration regexp, four integers in C syntax appear
 # surrounded by any whitespace or punctuation, one for each byte, MSB first.
@@ -20,7 +20,7 @@
 
 .*-.*-gnu-gnu.*		1	0.0.0
 
-sparc-sun-solaris2.*	2	2.0.0	# just an arbitrary value
+.*-sun-solaris2.*	2	2.0.0	# just an arbitrary value
 
 # There is no catch-all default here because every supported OS that uses
 # ELF must have its own unique ABI tag.

@@ -83,7 +83,9 @@ void free ();
    file and the name space must not be polluted.  */
 # define strcasecmp __strcasecmp
 
-# define mempcpy __mempcpy
+# ifndef mempcpy
+#  define mempcpy __mempcpy
+# endif
 # define HAVE_MEMPCPY	1
 
 /* We need locking here since we can be called from different places.  */

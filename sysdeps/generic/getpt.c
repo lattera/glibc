@@ -28,7 +28,7 @@ __getpt ()
   __set_errno (ENOSYS);
   return -1;
 }
-weak_alias (getpt, __getpt)
+weak_alias (__getpt, getpt)
 
 stub_warning (getpt)
 #include <stub-tag.h>

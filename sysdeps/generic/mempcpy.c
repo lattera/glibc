@@ -1,7 +1,7 @@
 /* Copy memory to memory until the specified number of bytes
    has been copied, return pointer to following byte.
    Overlap is NOT handled correctly.
-   Copyright (C) 1991, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Torbjorn Granlund (tege@sics.se).
 
@@ -25,6 +25,7 @@
 #include <pagecopy.h>
 
 #undef mempcpy
+#undef __mempcpy
 
 void *
 __mempcpy (dstpp, srcpp, len)

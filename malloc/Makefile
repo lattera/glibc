@@ -64,7 +64,8 @@ include ../Rules
 
 $(objpfx)libmcheck.a: $(objpfx)mcheck-init.o
 	-rm -f $@
-	$(LN_S) $< $@
+	$(patsubst %/,cd % &&,$(objpfx)) \
+	$(LN_S) $(<F) $(@F)
 
 lib: $(objpfx)libmcheck.a
 

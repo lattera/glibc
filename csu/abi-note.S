@@ -26,44 +26,46 @@
    write to the Free Software Foundation, 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <sysdep.h>
+/* Define an ELF note identifying the operating-system ABI that the
+   executable was created for.  The ELF note information identifies a
+   particular OS or coordinated development effort within which the
+   ELF header's e_machine value plus (for dynamically linked programs)
+   the PT_INTERP dynamic linker name and DT_NEEDED shared library
+   names fully identify the runtime environment required by an
+   executable.
 
-/* The basic layout of note sections is specified by the ELF format.  */
+   The general format of ELF notes is as follows.
+   Offsets and lengths are bytes or (parenthetical references) to the
+   values in other fields.
 
-#define ELF_NOTE_BEGIN(sectname, sectflags, type, name)			      \
-	.section sectname, sectflags;					      \
-	.align 4;		/* Notes are 4-byte aligned.  */	      \
-	.long 1f - 0f;		/* 32-bit word: length of name field */	      \
-	.long 3f - 2f;		/* 32-bit word: length of desc field */	      \
-	.long (type);		/* 32-bit word: vendor-defined type field */  \
-0:	.asciz name;		/* null-terminated string, any length: name */\
-1:	.align 4;		/* Name data padded to 4-byte alignment.  */  \
-2:	/* Here follows the "note descriptor" data, whose format	      \
-	   is not specified by ELF.  The vendor name and type field	      \
-	   indicate what sort of data is found here.  */
+offset	length	contents	
+0	4	length of name
+4	4	length of data
+8	4	note type
+12	(0)	vendor name
+		- null-terminated ASCII string, padded to 4-byte alignment
+12+(0)	(4)	note data, 
 
-#define ELF_NOTE_END							      \
-3:	.align 4		/* Pad to 4-byte align the next note.  */
-
-
-/* The linker (GNU ld 2.8 and later) recognize an allocated section whose
-   name begins with `.note' and creates a PT_NOTE program header entry
-   pointing at it.
-
-   Such a program header is the canonical way (at least in the free OS
-   community) to identify the OS environment ABI that the executable was
-   created for.  The ELF note information identifies a particular OS or
-   coordinated development effort within which the ELF header's e_machine
-   value plus (for dynamically linked programs) the PT_INTERP dynamic
-   linker name and DT_NEEDED shared library names fully identify the
-   runtime environment required by an executable.
-
-   The GNU project and cooperating development efforts (including the Linux
-   community) use a vendor name string of "GNU", and a note type field with
-   value 1 for a note descriptor that indicates ABI requirements.  */
+   The GNU project and cooperating development efforts (including the
+   Linux community) use note type 1 and a vendor name string of "GNU"
+   for a note descriptor that indicates ABI requirements.  The note data
+   is four 32-bit words.  The first of these is an operating system
+   number (0=Hurd, 1=Linux, 2=Solaris, ...) and the remaining three
+   identify the earliest release of that OS that supports this ABI.
+   See abi-tags (top level) for details. */
 
 #include <abi-tag.h>		/* OS-specific ABI tag value */
+	
+/* The linker (GNU ld 2.8 and later) recognizes an allocated section whose
+   name begins with `.note' and creates a PT_NOTE program header entry
+   pointing at it. */
 
-ELF_NOTE_BEGIN(".note.ABI-tag", "a", 1, "GNU")
-	.long ABI_TAG
-ELF_NOTE_END
+	.section ".note.ABI-tag", "a"
+	.align 4
+	.long 1f - 0f		/* name length */
+	.long 3f - 2f		/* data length */
+	.long  1		/* note type */
+0:	.asciz "GNU"		/* vendor name */
+1:	.align 4		
+2:	.long ABI_TAG		/* note data: the ABI tag */
+3:	.align 4		/* pad out section */

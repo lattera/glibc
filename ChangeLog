@@ -1,3 +1,34 @@
+1998-09-21 10:00  Ulrich Drepper  <drepper@cygnus.com>
+
+	* string/bits/string2.h: Add mempcpy optimization.
+	* sysdeps/generic/mempcpy.c: Undefined __mempcpy.
+	* intl/localealias.c: Define mempcpy only if not already defined.
+
+	* sysdeps/i386/i486/bits/string.h: Define ffsl only if not already
+	defined.
+
+1998-09-20 10:48 -0400  Zack Weinberg  <zack@rabi.phys.columbia.edu>
+
+	* csu/abi-note.S: Emit the note directly instead of defining
+	a preprocessor macro that's only used once.  Don't include sysdep.h.
+	* abi-tags: Generalize Solaris entry.
+
+1998-09-18  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* sysdeps/unix/bsd/getpt.c (__libc_ptyname1, __libc_ptyname2):
+	Change to array to avoid runtime relocation.
+	* sysdeps/unix/sysv/linux/ptsname.c: Update declarations.
+
+1998-09-21 12:22  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* malloc/Makefile ($(objpfx)libmcheck.a): Fix use of $(LN_S).
+	* math/Makefile ($(objpfx)libieee.a): Likewise.
+
+1998-09-21  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/generic/getpt.c: Fix order of argument to weak_alias.
+	Patch by John Tobey <jtobey@banta-im.com>.
+
 1998-09-20  Ulrich Drepper  <drepper@cygnus.com>
 
 	* login/Makefile (distribute): Remove pty-internal.h, add
