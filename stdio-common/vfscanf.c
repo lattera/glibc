@@ -1410,8 +1410,8 @@ __vfscanf (FILE *s, const char *format, va_list argptr)
 
 	  /* Have we read any character?  If we try to read a number
 	     in hexadecimal notation and we have read only the `0x'
-	     prefix this is an error.  */
-	  if (wpsize == 0 || (is_hexa && wpsize == 2))
+	     prefix or no exponent this is an error.  */
+	  if (wpsize == 0 || (is_hexa && (wpsize == 2 || ! got_e)))
 	    conv_error ();
 
 	scan_float:

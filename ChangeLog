@@ -1,3 +1,13 @@
+1999-08-13  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdio-common/vfscanf.c: Don't recognize hexadecimal floats with
+	exponent.
+
+1999-08-10  Andreas Schwab  <schwab@suse.de>
+
+	* elf/dl-load.c (_dl_map_object_from_fd): Fix check for valid elf
+	header.
+
 1999-08-09  Scott Bambrough  <scottb@netwinder.org>
 
 	* elf/elf.h: Added definition of ELFOSABI_ARM.
