@@ -60,6 +60,11 @@
 #define __NR_osf_getsysinfo	256
 #define __NR_osf_setsysinfo	257
 
+/* Help old kernel headers where particular syscalls are not available.  */
+#ifndef __NR_semtimedop
+# define __NR_semtimedop	423
+#endif
+
 /*
  * In order to get the hidden arguments for rt_sigaction set up
  * properly, we need to call the assembly version.  Detect this in the
