@@ -1,5 +1,7 @@
 1998-06-17  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/tst-strtod.c (long_dbl): Add test for loooong numbers.
+
 	* stdlib/strtod.c (str_to_mpn): Fix extending of n array which
 	only should happen for cy != 0.
 
