@@ -11,8 +11,8 @@ CFLAGS-malloc.c = -DMORECORE_CLEARS=2
 endif
 
 ifeq ($(subdir),misc)
-sysdep_routines += sysctl clone llseek getresuid getresgid umount umount2 \
-		   readahead
+sysdep_routines += sysctl clone llseek umount umount2 readahead \
+		   setfsuid setfsgid
 
 sysdep_headers += sys/mount.h sys/acct.h sys/sysctl.h \
 		  sys/klog.h sys/kdaemon.h \
