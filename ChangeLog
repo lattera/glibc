@@ -1,3 +1,8 @@
+2004-10-07  Andreas Schwab  <schwab@suse.de>
+
+	* misc/sys/uio.h: Change __vector to __iovec to avoid clash with
+	altivec.
+
 2004-10-06  Alan Modra  <amodra@bigpond.net.au>
 
 	* gmon/Makefile (CFLAGS-mcount.c): Move before inclusion of "Rules".
