@@ -1,5 +1,9 @@
 1999-11-26  Andreas Jaeger  <aj@suse.de>
 
+	* libio/libioP.h: Remove duplicate declaration of _IO_wsetb.
+
+1999-11-26  Andreas Jaeger  <aj@suse.de>
+
 	* inet/rcmd.c: Include stdlib for declaration of free.
 	Declare iruserok.
 
