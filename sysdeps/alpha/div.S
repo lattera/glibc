@@ -48,6 +48,8 @@ div:
 #endif
 
 	beq	$18, $divbyzero
+	excb
+	mf_fpcr	$f10
 
 	_ITOFT2	$17, $f0, 0, $18, $f1, 8
 
@@ -55,7 +57,8 @@ div:
 	cvtqt	$f1, $f1
 	divt/c	$f0, $f1, $f0
 	cvttq/c	$f0, $f0
-
+	excb
+	mt_fpcr	$f10
 	_FTOIT	$f0, $0, 0
 
 	mull	$0, $18, $1

@@ -22,7 +22,12 @@
    registers are t10 and t11, the result goes in t12.  Only t12 and AT may
    be clobbered.
 
-   The FPU can handle all input values except zero.  Whee!  */
+   The FPU can handle all input values except zero.  Whee!
+
+   The FPCR save/restore is due to the fact that the EV6 _will_ set FPCR_INE
+   for cvttq/c even without /sui being set.  It will not, however, properly
+   raise the exception, so we don't have to worry about FPCR_INED being clear
+   and so dying by SIGFPE.  */
 
 #ifndef EXTEND
 #define EXTEND(S,D)	sextl S, D
@@ -41,25 +46,34 @@ __divl:
 	cfi_def_cfa_offset (FRAME)
 	CALL_MCOUNT
 	stt	$f0, 0(sp)
-	stt	$f1, 8(sp)
+	excb
 	beq	Y, DIVBYZERO
+
+	stt	$f1, 8(sp)
+	stt	$f2, 16(sp)
 	cfi_rel_offset ($f0, 0)
 	cfi_rel_offset ($f1, 8)
+	cfi_rel_offset ($f2, 16)
+	mf_fpcr	$f2
 
 	EXTEND	(X, RV)
 	EXTEND	(Y, AT)
-	_ITOFT2	RV, $f0, 16, AT, $f1, 24
+	_ITOFT2	RV, $f0, 24, AT, $f1, 32
 	cvtqt	$f0, $f0
 	cvtqt	$f1, $f1
 	divt/c	$f0, $f1, $f0
 	cvttq/c	$f0, $f0
-	_FTOIT	$f0, RV, 16
+	excb
+	mt_fpcr	$f2
+	_FTOIT	$f0, RV, 24
 
 	ldt	$f0, 0(sp)
 	ldt	$f1, 8(sp)
+	ldt	$f2, 16(sp)
 	lda	sp, FRAME(sp)
 	cfi_restore ($f0)
 	cfi_restore ($f1)
+	cfi_restore ($f2)
 	cfi_def_cfa_offset (0)
 	sextl	RV, RV
 	ret	$31, (RA), 1
