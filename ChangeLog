@@ -1,3 +1,27 @@
+2000-05-07  Mark Kettenis  <kettenis@gnu.org>
+
+	* nss/nss_db/db-open.c: Cleanup and add comments.  Pretty print.
+	Remove duplicate <errno.h> include.  Remove inclusion of
+	<libintl.h> and "nsswitch.h".
+	(set_cloexec_flag): New function, broken out of dbopen.
+	(dbopen): Changed return type to `enum
+	nss_status'.  Mostly rewritten to make sure that we do not report
+	NSS_STATUS_SUCCESS if something went wrong.  Remove unnecessary casts.
+	(internal_setent): Change return type to nss_status.
+	Document, and make sure that the function
+	behaves accordingly.  Make dynamically loading the database
+	library really thread-safe and return NSS_STATUS_UNAVAIL if it
+	failed.
+	(db_cursor): Return ENOMEM is memory allocation failed.  Remove
+	unecessary casts.
+	* nss/nss_db/dummy-db.h: Add copyright notice.  Improve
+	documentation.
+	(struct dbc24, struct dbc27): Use DBT type in parameter lists for
+	c_get function member.
+	* nss/nss_db/nss_db.h: Add and tweak some comments.
+	(DBT): Move typedef before NSS_DBC typedef.
+	(NSS_DBC, NSS_DB): Use DBT in function member parameter lists.
+
 2000-05-07  H.J. Lu  <hjl@gnu.org>
 
 	* csu/initfini.c: Moved to ....

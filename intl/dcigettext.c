@@ -733,8 +733,8 @@ _nl_find_msg (domain_file, msgid, index)
  found:
   /* The translation was found at index ACT.  If we have to convert the
      string to use a different character set, this is the time.  */
-  result = (char *) domain->data
-	   + W (domain->must_swap, domain->trans_tab[act].offset);
+  result = ((char *) domain->data
+	    + W (domain->must_swap, domain->trans_tab[act].offset));
 
 #if defined _LIBC || HAVE_ICONV
   if (
