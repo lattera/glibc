@@ -1,4 +1,4 @@
-/* Copyright (C) 1999, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,7 +22,11 @@
 #define STX_NORMAL      0x00
 #define STX_64          0x08
 
+#undef __fxstat64
+
 extern int fstatx (int fd, struct stat64 *st, int len, int cmd);
+
+#undef __fxstat64
 
 int
 __fxstat64 (int ver, int fd, struct stat64 *st)
@@ -30,3 +34,4 @@ __fxstat64 (int ver, int fd, struct stat64 *st)
   assert (ver == 0);
   return fstatx (fd, st, sizeof (*st), STX_NORMAL | STX_64);
 }
+INTDEF(__fxstat64)
