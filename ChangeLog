@@ -1,3 +1,8 @@
+1998-04-03 16:29  Philip Blundell  <pb@nexus.co.uk>
+
+	* sysdeps/unix/sysv/linux/arm/sysdep.h (PSEUDO): Fix typo
+	introduced in last change.
+
 1998-04-03 06:22  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/getcwd.c: Make compilable with kernels
