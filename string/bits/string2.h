@@ -727,7 +727,8 @@ __stpcpy_small (char *__dest,
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
 		    ? (strlen (src) < ((size_t) (n))			      \
 		       ? strcat (__dest, src)				      \
-		       : (memcpy (strchr (__dest, '\0'), src, n), __dest))    \
+		       : (*((char *) __mempcpy (strchr (__dest, '\0'),	      \
+						src, n)) = '\0', __dest))     \
 		    : strncat (dest, src, n); }))
 # else
 #  define strncat(dest, src, n) \
@@ -914,7 +915,7 @@ __strcspn_c3 (__const char *__s, char __reject1, char __reject2,
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
       ? ((__a0 = ((__const char *) (accept))[0], __a0 == '\0')		      \
-	 ? 0								      \
+	 ? ((void) (s), 0)						      \
 	 : ((__a1 = ((__const char *) (accept))[1], __a1 == '\0')	      \
 	    ? __strspn_c1 (s, __a0)					      \
 	    : ((__a2 = ((__const char *) (accept))[2], __a2 == '\0')	      \
@@ -969,7 +970,7 @@ __strspn_c3 (__const char *__s, char __accept1, char __accept2, char __accept3)
   ({ char __a0, __a1, __a2;						      \
      (__builtin_constant_p (accept) && __string2_1bptr_p (accept)	      \
       ? ((__a0 = ((__const char  *) (accept))[0], __a0 == '\0')		      \
-	 ? NULL								      \
+	 ? ((void) (s), NULL)						      \
 	 : ((__a1 = ((__const char *) (accept))[1], __a1 == '\0')	      \
 	    ? strchr (s, __a0)						      \
 	    : ((__a2 = ((__const char *) (accept))[2], __a2 == '\0')	      \

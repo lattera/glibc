@@ -1,5 +1,27 @@
 2000-10-29  Ulrich Drepper  <drepper@redhat.com>
 
+	* string/bits/string2.h (strspn): Evaluate first argument if
+	second is "".
+	(strpbrk): Likewise.
+	* sysdeps/i386/i486/bits/string.h: Likewise.
+	* string/Makefile (tests): Add bug-strspn1 and bug-strpbrk1.
+	* string/bug-strspn1.c: New file.
+	* string/bug-strpbrk1.c: New file.
+	Test cases by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+	* string/bits/string2.h (strncat): Terminate string correctly.
+	* sysdeps/i386/i486/bits/string.h (strncat): Likewise.
+	* string/Makefile (tests): Add bug-strncat1.
+	* string/bug-strncat1.c: New file.
+	Test case by Joseph S. Myers <jsm28@cam.ac.uk>.
+
+2000-10-27  Ben Collins  <bcollins@debian.org>
+
+	* sysdeps/generic/lockf.c (lockf): Set l_type to F_RDLCK before
+	calling for F_GETLK.
+
+2000-10-29  Ulrich Drepper  <drepper@redhat.com>
+
 	* elf/dl-load.c (open_path): Don't exit loop early if we didn't
 	use a directory at all.
 

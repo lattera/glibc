@@ -987,8 +987,9 @@ __strcat_g (char *__dest, __const char *__src)
 		    __builtin_constant_p (src) && __builtin_constant_p (n)    \
 		    ? (strlen (src) < ((size_t) (n))			      \
 		       ? strcat (__dest, src)				      \
-		       : (memcpy (strchr (__dest, '\0'),		      \
-				  (__const char *) src, n), __dest))	      \
+		       : (*((char *)__mempcpy (strchr (__dest, '\0'),	      \
+					       (__const char *) src, n)) = 0, \
+			   __dest))					      \
 		    : __strncat_g (__dest, src, n); }))
 
 __STRING_INLINE char *__strncat_g (char *__dest, __const char __src[],
@@ -1543,7 +1544,7 @@ __strcspn_g (__const char *__s, __const char *__reject)
 #define strspn(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
 		  ? ((accept)[0] == '\0'				      \
-		     ? 0						      \
+		     ? ((void) (s), 0)					      \
 		     : ((accept)[1] == '\0'				      \
 			? __strspn_c1 (s, (((accept)[0] << 8 ) & 0xff00))     \
 			: __strspn_cg (s, accept, strlen (accept))))	      \
@@ -1656,7 +1657,7 @@ __strspn_g (__const char *__s, __const char *__accept)
 #define strpbrk(s, accept) \
   (__extension__ (__builtin_constant_p (accept) && sizeof ((accept)[0]) == 1  \
 		  ? ((accept)[0] == '\0'				      \
-		     ? NULL						      \
+		     ? ((void) (s), NULL)				      \
 		     : ((accept)[1] == '\0'				      \
 			? strchr (s, (accept)[0])			      \
 			: __strpbrk_cg (s, accept, strlen (accept))))	      \
