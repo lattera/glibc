@@ -422,6 +422,8 @@ re_string_reconstruct (pstr, idx, eflags, newline)
       if (MB_CUR_MAX > 1)
         memset (&pstr->cur_state, '\0', sizeof (mbstate_t));
 #endif /* RE_ENABLE_I18N */
+      pstr->len += pstr->raw_mbs_idx;
+      pstr->stop += pstr->raw_mbs_idx;
       pstr->valid_len = pstr->raw_mbs_idx = 0;
       pstr->tip_context = ((eflags & REG_NOTBOL) ? CONTEXT_BEGBUF
                            : CONTEXT_NEWLINE | CONTEXT_BEGBUF);
