@@ -83,6 +83,7 @@ $(objpfx)errmsg1.out: $(objpfx)errmsg1 $(objpfx)errmsg1mod.so
 $(objpfx)tstatexit: $(libdl)
 $(objpfx)tstatexit.out: $(objpfx)tstatexit $(objpfx)modatexit.so
 
+CPPFLAGS-modcxaatexit.c = -DNOT_IN_libc
 $(objpfx)tstcxaatexit: $(libdl)
 $(objpfx)tstcxaatexit.out: $(objpfx)tstcxaatexit $(objpfx)modcxaatexit.so
 

@@ -79,3 +79,4 @@ __assert_fail (const char *assertion, const char *file, unsigned int line,
 
   abort ();
 }
+INTDEF(__assert_fail)

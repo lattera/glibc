@@ -1,5 +1,106 @@
 2002-04-09  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/mach/hurd/chown.c: Use INTDEF for __chown.
+	* sysdeps/unix/sysv/aix/chown.c: Likewise.
+	* sysdeps/unix/grantpt.c: Use INTUSE for __chown calls.
+	* sysdeps/unix/sysv/linux/m68k/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/powerpc/chown.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/chown.c: Use INTDEF2 to define
+	__chown_internal.
+	* sysdeps/unix/sysv/linux/s390/s390-32//chown.c: Likewise.
+
+	* intl/dcngettext.c [_LIBC]: Use INTUSE for __dcngettext.
+	* intl/dngettext.c [_LIBC] (DCNGETTEXT): Use INTUSE.
+	* intl/ngettext.c: Likewise.
+
+	* include/sys/socket.h: Declare __connect_internal and define
+	__connect macro if not NOT_IN_libc.
+	* sysdeps/mach/hurd/connect.c: Use INTDEF for __connect.
+	* sysdeps/unix/sysv/aix/connect.c: Likewise.
+	* sysdeps/unix/sysv/linux/connect.S: Add __connect_internal alias.
+
+	* include/unistd.h: Declare __close_internal and define __close macro
+	if not NOT_IN_libc.
+	* libio/libioP.h (JUMO0, JUMP1, JUMP2, JUMP3, WJUMP0, WJUMP1, WJUMP2,
+	WJUMP3): Add extra parenthesis to avoid expanding element names with
+	macors like __close.
+	* sysdeps/unix/syscalls.list: Add __close_internal alias.
+
+	* include/unistd.h: Declare __dup2_internal and define __dup2 macro
+	if not NOT_IN_libc.
+	* sysdeps/mach/hurd/dup2.c: Use INTDEF for __dup2.
+	* sysdeps/posix/dup2.c: Use INTDEF for __dup2.
+	* sysdeps/unix/syscalls.list: Add __dup2_internal alias.
+
+	* include/unistd.h: Declare __fork_internal and define __fork macro
+	if not NOT_IN_libc.
+	* sysdeps/mach/hurd/fork.c: Use INTDEF for __fork.
+	* sysdeps/unix/sysv/aix/fork.c: Likewise.
+	* sysdeps/unix/sysv/linux/syscalls.list: Add __fork_internal alias.
+
+	* include/stdio_ext.h: Declare __fsetlocking_internal and define
+	__fsetlocking macro to use it if not NOT_IN_libc.
+	* libio/__fsetlocking.c: Use INTDEF for __fsetlocking.
+
+	* libio/__fbufsize.c: Correct copyright.
+	* libio/__flbf.c: Likewise.
+	* libio/__fpending.c: Likewise.
+	* libio/__fpurge.c: Likewise.
+	* libio/__freadable.c: Likewise.
+	* libio/__freading.c: Likewise.
+	* libio/__fsetlocking.c: Likewise.
+	* libio/__fwritable.c: Likewise.
+	* libio/__fwriting.c: Likewise.
+
+	* include/stdio.h: Declare __asprintf_internal and define __asprintf
+	macro to use it if not NOT_IN_libc.
+	* stdio-common/asprintf.c: Use INTDEF for __asprintf.
+
+	* include/mntent.h: Declare __setmntent_internal,
+	__getmntent_r_internal, __endmntent_internal.  Define __setmntent,
+	__getmntent_r, and __endmntent macros to use these functions if not
+	NOT_IN_libc.
+	* misc/mntent_r.c: Use INTDEF for __setmntent, __getmntent_r, and
+	__endmntent.
+
+	* include/math.h: Declare __finite_internal, __finitef_internal, and
+	__finitel_internal.  Redefine isfinite macro if in libc or libm using
+	these functions.
+	* sysdeps/generic/s_ldexp.c: Use INTUSE for __finite calls.
+	* sysdeps/generic/s_ldexpf.c: Use INTUSE for __finitef calls.
+	* sysdeps/generic/s_ldexpl.c: Use INTUSE for __finitel calls.
+	* sysdeps/i386/fpu/s_finite.S: Define _internal alias.
+	* sysdeps/i386/fpu/s_finitef.S: Likewise.
+	* sysdeps/i386/fpu/s_finitel.S: Likewise.
+	* sysdeps/ieee754/dbl-64/s_finite.c: Likewise.
+	* sysdeps/ieee754/flt-32/s_finitef.c: Likewise.
+	* sysdeps/ieee754/ldbl-128/s_finitel.c: Likewise.
+	* sysdeps/ieee754/ldbl-96/s_finitel.c: Likewise.
+
+	* include/fcntl.h: Declare __fcntl_internal.  Define __fcntl macro
+	to use this function if not NOT_IN_libc.
+	* libio/iofdopen.c (_IO_fcntl): Use INTUSE.
+	* sysdeps/generic/fcntl.c: Use INTDEF for __fcntl.
+	* sysdeps/mach/hurd/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/aix/fcntl.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/fcntl.c: Likewise.
+
+	* include/argz.h: Declare __argz_count_internal and
+	__argz_stringify_internal.
+	* intl/l10nflist.c [_LIBC]: Use INTUSE for __argz_count and
+	__argz_stringify.
+	* string/argz-count.c: Use INTDEF for __argz_count.
+	* string/argz-stringify.c: Use INTDEF for __argz_stringify.
+
+	* include/stdlib.h: Declare __cxa_atexit_internal and define
+	__cxa_atexit macro if not NOT_IN_libc.
+	* stdlib/cxa_atexit.c: Use INTDEF for __cxa_atexit.
+	* dlfcn/Makefile: Define NOT_IN_libc when compiling modcxaatexit.c.
+
+	* assert/assert.c: Use INTDEF for __assert_fail.
+	* assert/__assert.c: Use INTUSE for call to __assert_fail.
+	* include/assert.h: Declare __assert_fail_internal.
+
 	* extra-lib.mk: Mark assignment to lib with override.
 
 2002-04-08  Ulrich Drepper  <drepper@redhat.com>

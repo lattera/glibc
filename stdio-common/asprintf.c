@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1995, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1995, 1997, 1998, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -23,6 +23,7 @@
 # include <libio/libioP.h>
 # define vasprintf(s, f, a) _IO_vasprintf (s, f, a)
 #endif
+#undef __asprintf
 
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
@@ -39,4 +40,5 @@ __asprintf (char **string_ptr, const char *format, ...)
 
   return done;
 }
+INTDEF(__asprintf)
 weak_alias (__asprintf, asprintf)

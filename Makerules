@@ -1038,7 +1038,7 @@ check: tests
 
 ifneq (,$(tests))
 cpp-srcs-left = $(tests)
-lib = tests
+lib := tests
 include $(patsubst %,$(..)cppflags-iterator.mk,$(tests))
 endif
 

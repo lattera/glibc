@@ -24,6 +24,8 @@
 #include <sys/un.h>
 #include <hurd/ifsock.h>
 
+#undef __connect
+
 /* Open a connection on socket FD to peer at ADDR (which LEN bytes long).
    For connectionless socket types, just set the default address to send to
    and the only address from which to accept transmissions.
@@ -72,4 +74,5 @@ __connect (int fd, __CONST_SOCKADDR_ARG addrarg, socklen_t len)
   return err ? __hurd_dfail (fd, err) : 0;
 }
 
+INTDEF(__connect)
 weak_alias (__connect, connect)

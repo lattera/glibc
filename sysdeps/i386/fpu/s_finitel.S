@@ -11,4 +11,5 @@ ENTRY(__finitel)
 	shrl	$31, %eax
 	ret
 END (__finitel)
+strong_alias(__finitel, __finitel_internal)
 weak_alias (__finitel, finitel)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Zack Weinberg <zack@rabi.phys.columbia.edu>, 1998.
 
@@ -116,7 +116,7 @@ grantpt (int fd)
   uid = __getuid ();
   if (st.st_uid != uid)
     {
-      if (__chown (buf, uid, st.st_gid) < 0)
+      if (INTUSE(__chown) (buf, uid, st.st_gid) < 0)
 	goto helper;
     }
 
@@ -132,7 +132,7 @@ grantpt (int fd)
   /* Make sure the group of the device is that special group.  */
   if (st.st_gid != gid)
     {
-      if (__chown (buf, uid, gid) < 0)
+      if (INTUSE(__chown) (buf, uid, gid) < 0)
 	goto helper;
     }
 

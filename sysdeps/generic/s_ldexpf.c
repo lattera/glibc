@@ -28,9 +28,10 @@ static char rcsid[] = "$NetBSD: s_ldexpf.c,v 1.3 1995/05/10 20:47:42 jtc Exp $";
 	float value; int exp;
 #endif
 {
-	if(!__finitef(value)||value==(float)0.0) return value;
+	if(!INTUSE(__finitef)(value)||value==(float)0.0) return value;
 	value = __scalbnf(value,exp);
-	if(!__finitef(value)||value==(float)0.0) __set_errno (ERANGE);
+	if(!INTUSE(__finitef)(value)||value==(float)0.0) __set_errno (ERANGE);
 	return value;
 }
+INTDEF(__ldexpf)
 weak_alias (__ldexpf, ldexpf)

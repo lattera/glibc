@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -71,4 +71,5 @@ __chown (const char *file, uid_t owner, gid_t group)
   return INLINE_SYSCALL (chown, 3, CHECK_STRING (file), owner, group);
 #endif
 }
+INTDEF(__chown)
 weak_alias (__chown, chown)

@@ -27,6 +27,8 @@
 #include <assert.h>
 #include "hurdmalloc.h"		/* XXX */
 
+#undef __fork
+
 
 /* Things that want to be locked while forking.  */
 symbol_set_declare (_hurd_fork_locks)
@@ -675,4 +677,5 @@ __fork (void)
   return err ? __hurd_fail (err) : pid;
 }
 
+INTDEF(__fork)
 weak_alias (__fork, fork)

@@ -1,5 +1,5 @@
 /* Implementation of the dngettext(3) function.
-   Copyright (C) 1995-1997, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-1997, 2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -38,7 +38,7 @@
    prefix.  So we have to make a difference here.  */
 #ifdef _LIBC
 # define DNGETTEXT __dngettext
-# define DCNGETTEXT __dcngettext
+# define DCNGETTEXT INTUSE(__dcngettext)
 #else
 # define DNGETTEXT dngettext__
 # define DCNGETTEXT dcngettext__

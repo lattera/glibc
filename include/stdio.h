@@ -77,6 +77,14 @@ extern wint_t __getwc_unlocked (FILE *__fp);
 extern __const char *__const _sys_errlist_internal[] attribute_hidden;
 extern int _sys_nerr_internal attribute_hidden;
 
+extern int __asprintf_internal (char **__restrict __ptr,
+				__const char *__restrict __fmt, ...)
+     attribute_hidden __attribute__ ((__format__ (__printf__, 2, 3)));
+#  ifndef NOT_IN_libc
+#    define __asprintf(ptr, fmt, args...) \
+  INTUSE(__asprintf) (ptr, fmt, ##args)
+#  endif
+
 # endif
 
 #endif

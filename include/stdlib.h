@@ -60,6 +60,8 @@ extern void _quicksort (void *const pbase, size_t total_elems,
 extern int __on_exit (void (*__func) (int __status, void *__arg), void *__arg);
 
 extern int __cxa_atexit (void (*func) (void *), void *arg, void *d);
+extern int __cxa_atexit_internal (void (*func) (void *), void *arg, void *d)
+     attribute_hidden;
 
 extern void __cxa_finalize (void *d);
 
@@ -150,6 +152,8 @@ __strtoull_l (__const char * __restrict __nptr, char **__restrict __endptr,
 # ifndef NOT_IN_libc
 #  undef MB_CUR_MAX
 #  define MB_CUR_MAX (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_MB_CUR_MAX))
+
+# define __cxa_atexit(func, arg, d) INTUSE(__cxa_atexit) (func, arg, d)
 # endif
 
 #endif

@@ -1,5 +1,5 @@
 /* Utilities for reading/writing fstab, mtab, etc.
-   Copyright (C) 1995-2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1995-2000, 2001, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -29,6 +29,10 @@
 # define funlockfile(s) _IO_funlockfile (s)
 #endif
 
+#undef __setmntent
+#undef __endmntent
+#undef __getmntent_r
+
 /* Prepare to begin reading and/or writing mount table entries from the
    beginning of FILE.  MODE is as for `fopen'.  */
 FILE *
@@ -42,6 +46,7 @@ __setmntent (const char *file, const char *mode)
 
   return result;
 }
+INTDEF(__setmntent)
 weak_alias (__setmntent, setmntent)
 
 
@@ -53,6 +58,7 @@ __endmntent (FILE *stream)
     fclose (stream);
   return 1;		/* SunOS 4.x says to always return 1 */
 }
+INTDEF(__endmntent)
 weak_alias (__endmntent, endmntent)
 
 
@@ -157,6 +163,7 @@ __getmntent_r (FILE *stream, struct mntent *mp, char *buffer, int bufsiz)
 
   return mp;
 }
+INTDEF(__getmntent_r)
 weak_alias (__getmntent_r, getmntent_r)
 
 

@@ -6,9 +6,9 @@ chdir		-	chdir		i:s	__chdir		chdir
 chmod		-	chmod		i:si	__chmod		chmod
 chown		-	chown		i:sii	__chown		chown
 chroot		-	chroot		i:s	chroot
-close		-	close		i:i	__libc_close	__close close
+close		-	close		i:i	__libc_close	__close close __close_internal
 dup		-	dup		i:i	__dup		dup
-dup2		-	dup2		i:ii	__dup2		dup2
+dup2		-	dup2		i:ii	__dup2		dup2 __dup2_internal
 fchdir		-	fchdir		i:i	__fchdir	fchdir
 fcntl		-	fcntl		i:iiF	__libc_fcntl	__fcntl fcntl
 fstatfs		-	fstatfs		i:ip	__fstatfs	fstatfs

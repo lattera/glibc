@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -25,6 +25,8 @@ static char rcsid[] = "$NetBSD: s_finitef.c,v 1.4 1995/05/10 20:47:18 jtc Exp $"
 #include "math.h"
 #include "math_private.h"
 
+#undef __finitef
+
 #ifdef __STDC__
 	int __finitef(float x)
 #else
@@ -36,4 +38,5 @@ static char rcsid[] = "$NetBSD: s_finitef.c,v 1.4 1995/05/10 20:47:18 jtc Exp $"
 	GET_FLOAT_WORD(ix,x);
 	return (int)((u_int32_t)((ix&0x7fffffff)-0x7f800000)>>31);
 }
+INTDEF(__finitef)
 weak_alias (__finitef, finitef)

@@ -1,5 +1,5 @@
 /* chown() compatibility.
-   Copyright (C) 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1998, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -44,7 +44,7 @@ __chown (const char *file, uid_t owner, gid_t group)
    int loopct;
    int filelen;
    static int libc_old_chown = 0 /* -1=old linux, 1=new linux, 0=unknown */;
-   
+
    if (libc_old_chown == 1)
      return __syscall_chown (file, owner, group);
 
@@ -62,7 +62,7 @@ __chown (const char *file, uid_t owner, gid_t group)
        libc_old_chown = -1;
      }
 #endif
-   
+
    err = __readlink (file, link, PATH_MAX+1);
    if (err == -1)
      {
@@ -83,7 +83,7 @@ __chown (const char *file, uid_t owner, gid_t group)
    for (loopct = 0; loopct < 128; loopct++)
    {
      int linklen;
-     
+
      if (err >= PATH_MAX+1)
        {
 	 errno = ENAMETOOLONG;
@@ -93,13 +93,13 @@ __chown (const char *file, uid_t owner, gid_t group)
       link[err] = 0;  /* Null-terminate string, just-in-case.  */
 
       linklen = strlen (link) + 1;
-      
+
       if (link[0] == '/')
 	memcpy (path, link, linklen);
       else
 	{
 	  filelen = strlen (path);
-	  
+
 	  while (filelen > 1 && path[filelen-1] == '/')
 	    filelen--;
 	  while (filelen > 0 && path[filelen-1] != '/')
@@ -113,9 +113,9 @@ __chown (const char *file, uid_t owner, gid_t group)
 	}
 
       err = __readlink(path, link, PATH_MAX+1);
-      
+
       if (err == -1)
-      {  
+      {
 	errno = old_errno;
 	return __lchown(path, owner, group);
       }
@@ -123,6 +123,7 @@ __chown (const char *file, uid_t owner, gid_t group)
    errno = ELOOP;
    return -1;
 }
+INTDEF(__chown)
 
 #include <shlib-compat.h>
 versioned_symbol (libc, __chown, chown, GLIBC_2_1);

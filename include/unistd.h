@@ -51,6 +51,7 @@ char *__canonicalize_directory_name_internal (__const char *__thisdir,
 
 extern int __dup (int __fd);
 extern int __dup2 (int __fd, int __fd2);
+extern int __dup2_internal (int __fd, int __fd2) attribute_hidden;
 extern int __execve (__const char *__path, char *__const __argv[],
 		     char *__const __envp[]);
 extern long int __pathconf (__const char *__path, int __name);
@@ -83,9 +84,11 @@ extern int __profil (unsigned short int *__sample_buffer, size_t __size,
 extern int __getdtablesize (void);
 extern int __brk (void *__addr);
 extern int __close (int __fd);
+extern int __close_internal (int __fd) attribute_hidden;
 extern ssize_t __read (int __fd, void *__buf, size_t __nbytes);
 extern ssize_t __write (int __fd, __const void *__buf, size_t __n);
 extern __pid_t __fork (void);
+extern __pid_t __fork_internal (void) attribute_hidden;
 extern int __getpagesize (void) __attribute__ ((__const__));
 extern int __ftruncate (int __fd, __off_t __length);
 extern int __ftruncate64 (int __fd, __off64_t __length);
@@ -107,5 +110,11 @@ extern int __libc_enable_secure_internal attribute_hidden;
 /* Various internal function.  */
 extern void __libc_check_standard_fds (void);
 
+
+#ifndef NOT_IN_libc
+# define __close(fd) INTUSE(__close) (fd)
+# define __dup2(fd, fd2) INTUSE(__dup2) (fd, fd2)
+# define __fork() INTUSE(__fork) ()
+#endif
 
 #endif

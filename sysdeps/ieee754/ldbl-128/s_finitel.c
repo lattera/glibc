@@ -25,6 +25,8 @@ static char rcsid[] = "$NetBSD: $";
 #include "math.h"
 #include "math_private.h"
 
+#undef __finitel
+
 #ifdef __STDC__
 	int __finitel(long double x)
 #else
@@ -37,4 +39,5 @@ static char rcsid[] = "$NetBSD: $";
 	return (int)((u_int64_t)((hx&0x7fffffffffffffffLL)
 				 -0x7fff000000000000LL)>>63);
 }
+INTDEF(__finitel)
 weak_alias (__finitel, finitel)

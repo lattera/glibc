@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 95, 96, 97 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 95, 96, 97, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,6 +20,8 @@
 #include <fcntl.h>
 #include <limits.h>
 #include <unistd.h>
+
+#undef __dup2
 
 
 /* Duplicate FD to FD2, closing the old FD2 and making FD2 be
@@ -57,4 +59,5 @@ __dup2 (fd, fd2)
   return fcntl (fd, F_DUPFD, fd2);
 }
 
+INTDEF(__dup2)
 weak_alias (__dup2, dup2)
