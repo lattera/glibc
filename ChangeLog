@@ -1,3 +1,35 @@
+2002-10-08  Roland McGrath  <roland@redhat.com>
+
+	* locale/newlocale.c (__newlocale): If setting all categories to "C",
+	just return &_nl_C_locobj instead of copying it.
+	* locale/freelocale.c (__freelocale): Check for &_nl_C_locobj.
+	* locale/duplocale.c (__duplocale): Likewise.
+
+2002-10-07  Roland McGrath  <roland@frob.com>
+
+	* config.h.in (HAVE_I386_SET_GDT): New #undef.
+	* sysdeps/mach/configure.in: Define it with new check for i386_set_gdt.
+	* sysdeps/mach/configure: Regenerated.
+
+2002-10-06  Franz Sirl  <Franz.Sirl-kernel@lauterbach.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc32/sysdep.h (INLINE_SYSCALL):
+	Add all necessary register outputs for syscall-clobbered registers.
+
+2002-10-02  David Mosberger  <davidm@hpl.hp.com>
+
+	* sysdeps/ia64/bzero.S: Rewritten by Sverre Jarp to tune for
+	Itanium 2 (and Itanium).
+	Fix unwind directives and make it fit in 80 columns.
+	* sysdeps/ia64/memset.S: Ditto.
+	* sysdeps/ia64/memcpy.S: Ditto.
+	Move jump table to .rodata section.
+
+2002-10-03  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/hurd/i386/init-first.c (_hurd_stack_setup): Add
+	clobbers to asm.
+
 2002-10-10  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/x86_64/_mcount.S: Restore correct registers.

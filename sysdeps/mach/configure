@@ -338,3 +338,33 @@ if test $libc_cv_mach_i386_ioports = yes; then
 EOF
 
 fi
+
+echo $ac_n "checking for i386_set_gdt in mach_i386.defs""... $ac_c" 1>&6
+echo "configure:344: checking for i386_set_gdt in mach_i386.defs" >&5
+if eval "test \"`echo '$''{'libc_cv_mach_i386_gdt'+set}'`\" = set"; then
+  echo $ac_n "(cached) $ac_c" 1>&6
+else
+  cat > conftest.$ac_ext <<EOF
+#line 349 "configure"
+#include "confdefs.h"
+#include <mach/i386/mach_i386.defs>
+EOF
+if (eval "$ac_cpp conftest.$ac_ext") 2>&5 |
+  egrep "i386_set_gdt" >/dev/null 2>&1; then
+  rm -rf conftest*
+  libc_cv_mach_i386_gdt=yes
+else
+  rm -rf conftest*
+  libc_cv_mach_i386_gdt=no
+fi
+rm -f conftest*
+
+fi
+
+echo "$ac_t""$libc_cv_mach_i386_gdt" 1>&6
+if test $libc_cv_mach_i386_gdt = yes; then
+  cat >> confdefs.h <<\EOF
+#define HAVE_I386_SET_GDT 1
+EOF
+
+fi

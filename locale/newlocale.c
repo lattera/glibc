@@ -60,6 +60,17 @@ __newlocale (int category_mask, const char *locale, __locale_t base)
   if (locale == NULL)
     ERROR_RETURN;
 
+  if (base == &_nl_C_locobj)
+    /* We're to modify BASE, returned for a previous call with "C".
+       We can't really modify the read-only structure, so instead
+       start over by copying it.  */
+    base = NULL;
+
+  if ((base == NULL || category_mask == (1 << __LC_LAST) - 1 - (1 << LC_ALL))
+      && (category_mask == 0 || !strcmp (locale, "C")))
+    /* Asking for the "C" locale needn't allocate a new object.  */
+    return &_nl_C_locobj;
+
   /* Allocate memory for the result.  */
   if (base != NULL)
     result = *base;

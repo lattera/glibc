@@ -179,6 +179,9 @@
 /* Mach/i386 specific: define if the `i386_io_perm_*' RPCs are available.  */
 #undef	HAVE_I386_IO_PERM_MODIFY
 
+/* Mach/i386 specific: define if the `i386_set_gdt' RPC is available.  */
+#undef	HAVE_I386_SET_GDT
+
 /*
  */
 

@@ -336,7 +336,7 @@ _hurd_stack_setup (volatile int argc, ...)
       *--data = (&argc)[-1];
       asm volatile ("movl %0, %%esp\n" /* Switch to new outermost stack.  */
 		    "movl $0, %%ebp\n" /* Clear outermost frame pointer.  */
-		    "jmp *%1" : : "r" (data), "r" (&doinit1));
+		    "jmp *%1" : : "r" (data), "r" (&doinit1) : "sp", "bp");
       /* NOTREACHED */
     }
 

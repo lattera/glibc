@@ -34,6 +34,10 @@ __freelocale (__locale_t dataset)
 {
   int cnt;
 
+  /* This static object is returned for newlocale (LC_ALL_MASK, "C").  */
+  if (dataset == &_nl_C_locobj)
+    return;
+
   /* We modify global data (the usage counts).  */
   __libc_lock_lock (__libc_setlocale_lock);
 

@@ -89,3 +89,12 @@ AC_EGREP_HEADER(i386_io_perm_modify, mach/i386/mach_i386.defs,
 if test $libc_cv_mach_i386_ioports = yes; then
   AC_DEFINE([HAVE_I386_IO_PERM_MODIFY])
 fi
+
+AC_CACHE_CHECK(for i386_set_gdt in mach_i386.defs,
+	       libc_cv_mach_i386_gdt, [dnl
+AC_EGREP_HEADER(i386_set_gdt, mach/i386/mach_i386.defs,
+		libc_cv_mach_i386_gdt=yes,
+		libc_cv_mach_i386_gdt=no)])
+if test $libc_cv_mach_i386_gdt = yes; then
+  AC_DEFINE([HAVE_I386_SET_GDT])
+fi

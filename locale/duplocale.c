@@ -33,6 +33,10 @@ __libc_lock_define (extern , __libc_setlocale_lock attribute_hidden)
 __locale_t
 __duplocale (__locale_t dataset)
 {
+  /* This static object is returned for newlocale (LC_ALL_MASK, "C").  */
+  if (dataset == &_nl_C_locobj)
+    return dataset;
+
   __locale_t result;
   int cnt;
   size_t names_len = 0;
