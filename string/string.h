@@ -64,6 +64,10 @@ extern __ptr_t memchr __P ((__const __ptr_t __s, int __c, size_t __n));
 /* Search in S for C.  This is similar to `memchr' but there is no
    length limit.  */
 extern __ptr_t rawmemchr __P ((__const __ptr_t __s, int __c));
+
+/* Search N bytes of S for the final occurrence of C.  */
+extern __ptr_t __memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
+extern __ptr_t memrchr __P ((__const __ptr_t __s, int __c, size_t __n));
 #endif
 
 

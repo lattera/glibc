@@ -1063,6 +1063,13 @@ located byte, or a null pointer if no match was found.
 @end deftypefun
 
 @comment string.h
+@comment GNU
+@deftypefun {void *} memrchr (const void *@var{block}, int @var{c}, size_t @var{size})
+The function @code{memrchr} is like @code{memchr}, except that it searches
+backwards from the end of the block defined by @var{block} and @var{size}
+(instead of forwards from the front).
+
+@comment string.h
 @comment ISO
 @deftypefun {char *} strchr (const char *@var{string}, int @var{c})
 The @code{strchr} function finds the first occurrence of the character
