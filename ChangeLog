@@ -1,3 +1,16 @@
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* malloc/malloc.c (public_cALLOc): Check for overflow on
+	multiplication.
+	* sunrpc/xdr_array.c (xdr_array): Likewise.
+	* sunrpc/rpc/types.h (mem_free): Add comment.
+	Patch by Solar Designer <solar@openwall.com>.
+
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/kernel-features.h
+	(__ASSUME_SET_THREAD_AREA_SYSCALL): Define.
+
 2002-08-01  Roland McGrath  <roland@frob.com>
 
 	* libio/fileops.c (_IO_file_sync_mmap): New function.
@@ -35,12 +48,12 @@
 
 2002-07-31  Jeff Bailey  <jbailey@gnu.org>
 
-        * libio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
+	* libio/stdio.h (sys_errlist, sys_nerr, _sys_errlist, _sys_nerr):
 	Declarations moved to <bits/sys_errlist.h>.  Include that file.
-        * libio/Makefile (headers): Add bits/sys_errlist.h to the list.
-        * sysdeps/generic/bits/sys_errlist.h: New file.  This does *not*
-        declare sys_errlist and sys_nerr.
-        * sysdeps/unix/sysv/linux/bits/sys_errlist.h: New file.  Does
+	* libio/Makefile (headers): Add bits/sys_errlist.h to the list.
+	* sysdeps/generic/bits/sys_errlist.h: New file.  This does *not*
+	declare sys_errlist and sys_nerr.
+	* sysdeps/unix/sysv/linux/bits/sys_errlist.h: New file.  Does
 	provide declarations.
 
 2002-07-31  Roland McGrath  <roland@frob.com>

@@ -58,6 +58,10 @@ typedef unsigned long rpcport_t;
 
 #include <stdlib.h>		/* For malloc decl.  */
 #define mem_alloc(bsize)	malloc(bsize)
+/*
+ * XXX: This must not use the second argument, or code in xdr_array.c needs
+ * to be modified.
+ */
 #define mem_free(ptr, bsize)	free(ptr)
 
 #ifndef makedev /* ie, we haven't already included it */

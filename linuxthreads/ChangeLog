@@ -1,3 +1,10 @@
+2002-08-02  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/i386/useldt.h (DO_MODIFY_LDT): Move from INIT_THREAD_SELF.
+	(INIT_THREAD_SELF): Use sys_thread_area syscall instead if available.
+	(FREE_THREAD): Avoid modify_ldt if using GDT.
+	* sysdeps/i386/pspinlock.c (__have_no_set_thread_area): New variable.
+
 2002-07-25  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/tls.h: Use __ASSEMBLER__ test macro not ASSEMBLER.
