@@ -99,7 +99,7 @@ __malloc_check_init()
   __realloc_hook = realloc_check;
   __memalign_hook = memalign_check;
   if(check_action & 1)
-    malloc_printf_nc (1, "malloc: using debugging hooks\n");
+    malloc_printerr (5, "malloc: using debugging hooks", NULL);
 }
 
 /* A simple, standard set of debugging hooks.  Overhead is `only' one
@@ -216,7 +216,7 @@ top_check()
   if((char*)t + chunksize(t) == mp_.sbrk_base + main_arena.system_mem ||
      t == initial_top(&main_arena)) return 0;
 
-  malloc_printf_nc (check_action, "malloc: top chunk is corrupt\n");
+  malloc_printerr (check_action | 4, "malloc: top chunk is corrupt", NULL);
 
   /* Try to set up a new top chunk. */
   brk = MORECORE(0);
@@ -268,7 +268,7 @@ free_check(mem, caller) Void_t* mem; const Void_t *caller;
   if(!p) {
     (void)mutex_unlock(&main_arena.mutex);
 
-    malloc_printf_nc(check_action, "free(): invalid pointer %p!\n", mem);
+    malloc_printerr(check_action, "free(): invalid pointer", mem);
     return;
   }
 #if HAVE_MMAP
@@ -302,7 +302,7 @@ realloc_check(oldmem, bytes, caller)
   oldp = mem2chunk_check(oldmem);
   (void)mutex_unlock(&main_arena.mutex);
   if(!oldp) {
-    malloc_printf_nc(check_action, "realloc(): invalid pointer %p!\n", oldmem);
+    malloc_printerr(check_action, "realloc(): invalid pointer", oldmem);
     return malloc_check(bytes, NULL);
   }
   oldsize = chunksize(oldp);

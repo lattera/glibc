@@ -6,7 +6,11 @@
 
 	* sysdeps/unix/sysv/linux/bits/socket.h (__SCM_CONNECT): Removed.
 
-	* malloc/malloc.c (_int_free): Add inexpensive double free test.
+	* malloc/malloc.c (_int_free): Add inexpensive double free and
+	memory corruption tests.
+	(malloc_printf_nc): Renamed to malloc_printerr.  Second parameter
+	is no format string anymore.  Don't use stdio.  Adjust all callers.
+	* malloc/hooks.c: Adjust malloc_printf_nc callers.
 
 2004-09-08  Roland McGrath  <roland@redhat.com>
 
