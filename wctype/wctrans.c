@@ -50,9 +50,9 @@ wctrans (const char *property)
   if (_NL_CURRENT_WORD (LC_CTYPE, _NL_CTYPE_HASH_SIZE) != 0)
     {
       /* Old locale format.  */
-      if (cnt == 0)
+      if (cnt == __TOW_toupper)
 	return (wctrans_t) __ctype32_toupper;
-      else if (cnt == 1)
+      else if (cnt == __TOW_tolower)
 	return (wctrans_t) __ctype32_tolower;
 
       /* We have to search the table.  */

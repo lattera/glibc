@@ -3,6 +3,9 @@
 
 /* Defines for all locales used in the suite.  */
 
+/* POSIX C locale.  */
+#define TST_LOC_C	"C"
+
 /* German locale with ISO-8859-1.  */
 #define TST_LOC_de	"de_DE.ISO-8859-1"
 

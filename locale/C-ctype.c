@@ -370,7 +370,7 @@ const struct locale_data _nl_C_LC_CTYPE =
 	      "vowel_connect\0"
 #endif
     },
-    { string: "tolower\0" "toupper\0"
+    { string: "toupper\0" "tolower\0"
 #ifdef PREDEFINED_CLASSES
       "tosymmetric\0"
 #endif

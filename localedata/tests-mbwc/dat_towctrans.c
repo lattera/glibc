@@ -36,6 +36,20 @@
 
 TST_TOWCTRANS tst_towctrans_loc [] = {
   {
+    { Ttowctrans, TST_LOC_C },
+    {
+#ifdef SHOJI_IS_RIGHT
+      {	 { 0x0010, "xxxxxxx" }, { 1,EINVAL,1,0x0010 }  },
+#else
+      {	 { 0x0010, "xxxxxxx" }, { 1,0,     1,0x0010 }  },
+#endif
+      {	 { 0x007F, "tolower" }, { 1,0,	   1,0x007F }  },
+      {	 { 0x0061, "toupper" }, { 1,0,	   1,0x0041 }  },
+      {	 { 0x0041, "tolower" }, { 1,0,	   1,0x0061 }  },
+      { is_last: 1 }
+    }
+  },
+  {
     { Ttowctrans, TST_LOC_de },
     {
 #ifdef SHOJI_IS_RIGHT

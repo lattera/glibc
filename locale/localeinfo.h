@@ -121,6 +121,15 @@ struct era_entry
 };
 
 
+/* LC_CTYPE specific:
+   Hardwired indices for standard wide character translation mappings.  */
+enum
+{
+  __TOW_toupper = 0,
+  __TOW_tolower = 1
+};
+
+
 /* For each category declare the variable for the current locale data.  */
 #define DEFINE_CATEGORY(category, category_name, items, a) \
 extern struct locale_data *_nl_current_##category;

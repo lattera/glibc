@@ -224,13 +224,13 @@ __wcschrnul (s, c)
 #  define SUFFIX WC
 #  define WIDE_CHAR_VERSION 1
 
-
 #  undef IS_CHAR_CLASS
-#  ifdef _LIBC
 /* We have to convert the wide character string in a multibyte string.  But
-   we know that the character class names are ASCII strings and since the
-   internal wide character encoding is UCS4 we can use a simplified method
-   to convert the string to a multibyte character string.  */
+   we know that the character class names consist of alphanumeric characters
+   from the portable character set, and since the wide character encoding
+   for a member of the portable character set is the same code point as
+   its single-byte encoding, we can use a simplified method to convert the
+   string to a multibyte character string.  */
 static wctype_t
 is_char_class (const wchar_t *wcs)
 {
@@ -239,46 +239,61 @@ is_char_class (const wchar_t *wcs)
 
   do
     {
-      if (*wcs < 0x20 || *wcs >= 0x7f)
-	return 0;
-
-      *cp++ = (char) *wcs;
-    }
-  while (*wcs++ != L'\0');
-
-  return __wctype (s);
-}
+      /* Test for a printable character from the portable character set.  */
+#  ifdef _LIBC
+      if (*wcs < 0x20 || *wcs > 0x7e
+	  || *wcs == 0x24 || *wcs == 0x40 || *wcs == 0x60)
+	return (wctype_t) 0;
 #  else
-/* Since we cannot assume anything about the internal encoding we have to
-   convert the string back to multibyte representation the hard way.  */
-static wctype_t
-is_char_class (const wchar_t *wcs)
-{
-  mbstate_t ps;
-  const wchar_t *pwc;
-  char *s;
-  size_t n;
-
-  memset (&ps, '\0', sizeof (ps));
-
-  pwc = wcs;
-  n = wcsrtombs (NULL, &pwc, 0, &ps);
-  if (n == (size_t) -1)
-    /* Something went wrong.  */
-    return 0;
-
-  s = alloca (n + 1);
-  assert (mbsinit (&ps));
-  pwc = wcs;
-  (void) wcsrtombs (s, &pwc, n + 1, &ps);
-
-  return wctype (s);
-}
+      switch (*wcs)
+	{
+	case L' ': case L'!': case L'"': case L'#': case L'%':
+	case L'&': case L'\'': case L'(': case L')': case L'*':
+	case L'+': case L',': case L'-': case L'.': case L'/':
+	case L'0': case L'1': case L'2': case L'3': case L'4':
+	case L'5': case L'6': case L'7': case L'8': case L'9':
+	case L':': case L';': case L'<': case L'=': case L'>':
+	case L'?':
+	case L'A': case L'B': case L'C': case L'D': case L'E':
+	case L'F': case L'G': case L'H': case L'I': case L'J':
+	case L'K': case L'L': case L'M': case L'N': case L'O':
+	case L'P': case L'Q': case L'R': case L'S': case L'T':
+	case L'U': case L'V': case L'W': case L'X': case L'Y':
+	case L'Z':
+	case L'[': case L'\\': case L']': case L'^': case L'_':
+	case L'a': case L'b': case L'c': case L'd': case L'e':
+	case L'f': case L'g': case L'h': case L'i': case L'j':
+	case L'k': case L'l': case L'm': case L'n': case L'o':
+	case L'p': case L'q': case L'r': case L's': case L't':
+	case L'u': case L'v': case L'w': case L'x': case L'y':
+	case L'z': case L'{': case L'|': case L'}': case L'~':
+	  break;
+	default:
+	  return (wctype_t) 0;
+	}
 #  endif
+
+      /* Avoid overrunning the buffer.  */
+      if (cp == s + CHAR_CLASS_MAX_LENGTH)
+	return (wctype_t) 0;
+
+      *cp++ = (char) *wcs++;
+    }
+  while (*wcs != L'\0');
+
+  *cp = '\0';
+
+#  ifdef _LIBC
+  return __wctype (s);
+#  else
+  return wctype (s);
+#  endif
+}
 #  define IS_CHAR_CLASS(string) is_char_class (string)
 
 #  include "fnmatch_loop.c"
 # endif
+
 
 int
 fnmatch (pattern, string, flags)

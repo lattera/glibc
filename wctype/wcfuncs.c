@@ -100,7 +100,7 @@ wint_t
   else
     {
       /* New locale format.  */
-      return wctrans_table_lookup (__ctype32_wctrans[1], wc);
+      return wctrans_table_lookup (__ctype32_wctrans[__TOW_tolower], wc);
     }
 }
 
@@ -123,6 +123,6 @@ wint_t
   else
     {
       /* New locale format.  */
-      return wctrans_table_lookup (__ctype32_wctrans[0], wc);
+      return wctrans_table_lookup (__ctype32_wctrans[__TOW_toupper], wc);
     }
 }

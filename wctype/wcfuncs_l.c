@@ -86,7 +86,7 @@ wint_t
   else
     {
       /* New locale format.  */
-      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + 1;
+      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + __TOW_tolower;
       const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
       return wctrans_table_lookup (desc, wc);
     }
@@ -113,7 +113,7 @@ wint_t
   else
     {
       /* New locale format.  */
-      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + 0;
+      size_t i = locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_MAP_OFFSET)].word + __TOW_toupper;
       const char *desc = locale->__locales[LC_CTYPE]->values[i].string;
       return wctrans_table_lookup (desc, wc);
     }

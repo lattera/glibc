@@ -1,3 +1,18 @@
+2000-07-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* locale/C-ctype.c (_nl_C_LC_CTYPE): Swap the two names in
+	_NL_CTYPE_MAP_NAMES.
+	* locale/localeinfo.h (__TOW_toupper, __TOW_tolower): New enum values.
+	* wctype/wcfuncs.c (towlower, towupper): Use them.
+	* wctype/wcfuncs_l.c (__towlower_l, __towupper_l): Likewise.
+	* wctype/wctrans.c (wctrans): Likewise.
+	* wctype/wctrans_l.c (__wctrans_l): Likewise.
+
+2000-07-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* posix/fnmatch.c (is_char_class): Fix logic.  Avoid buffer overrun.
+	Use the optimized version of this function outside glibc as well.
+
 2000-07-27  Jakub Jelinek  <jakub@redhat.com>
 
 	* locale/indigits.h (indigit_value): Correct.

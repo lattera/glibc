@@ -1,3 +1,9 @@
+2000-07-27  Bruno Haible  <haible@clisp.cons.org>
+
+	* tests-mbwc/tgn_locdef.h (TST_LOC_C): New macro.
+	* tests-mbwc/dat_towctrans.c: Apply the en_US test also to the C
+	locale.
+
 2000-07-28  Ulrich Drepper  <drepper@redhat.com>
 
 	* locales/zh_TW: New file.

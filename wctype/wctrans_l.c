@@ -43,9 +43,9 @@ __wctrans_l (const char *property, __locale_t locale)
   if (locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_HASH_SIZE)].word == 0)
     {
       /* Old locale format.  */
-      if (cnt == 0)
+      if (cnt == __TOW_toupper)
 	return (wctrans_t) locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOUPPER32)].string;
-      else if (cnt == 1)
+      else if (cnt == __TOW_tolower)
 	return (wctrans_t) locale->__locales[LC_CTYPE]->values[_NL_ITEM_INDEX (_NL_CTYPE_TOLOWER32)].string;
 
       /* We have to search the table.  */
