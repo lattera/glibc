@@ -1,3 +1,9 @@
+2000-09-28  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/ia64/dl-machine.h (RTLD_START): Adjust _dl_argv by
+	_dl_skip_args.
+	(ELF_MACHINE_FIXED_STACK): Removed.
+
 2000-09-29  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/unix/sysv/linux/s390/lockf64.c: New file.
