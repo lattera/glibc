@@ -1,3 +1,10 @@
+2003-02-15  Ulrich Drepper  <drepper@redhat.com>
+
+	* pthread_setconcurrency.c (pthread_setconcurrency): Fail for
+	negative arguments.
+	* Makefile (tests): Add tst-basic5.
+	* tst-basic5.c: New file.
+
 2003-02-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makefile (tests): Add tst-basic4.
@@ -6,7 +13,7 @@
 	* pthreadP.h: Add declaraction for __nptl_nthreads.
 	* pthread_create.c: Define __nptl_nthreads
 	(start_thread): Increment __nptl_nthreads at beginning.  Decrement
-	after thread is done.  If Then zero call exit(0).
+	after thread is done.  If then zero, call exit(0).
 	* sysdeps/pthread/pthread-functions.h (struct pthread_functions):
 	Add ptr_nthreads.  Define HAVE_PTR_NTHREADS.
 	* init.c (pthread_functions): Initialize ptr_nthreads.
