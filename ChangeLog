@@ -1,3 +1,8 @@
+2003-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* libio/libio.h (_IO_acquire_lock_fct): Define as inline function.
+	Code by Richard Henderson.
+
 2003-08-31  Philip Blundell  <philb@gnu.org>
 
 	* sysdeps/unix/sysv/linux/arm/Versions: Add posix_fadvise64 and
