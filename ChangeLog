@@ -1,3 +1,9 @@
+2004-12-07  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/ia64/clone2.S (__clone2): Add support for
+	NPTL where the PID is stored at userlevel and needs to be reset when
+	CLONE_THREAD is not used.  Restore gp before calling _exit.
+
 2004-12-07  Kaz Kojima  <kkojima@rr.iij4u.or.jp>
 
 	* sysdeps/unix/sysv/linux/sh/clone.S: Clear the frame pointer when

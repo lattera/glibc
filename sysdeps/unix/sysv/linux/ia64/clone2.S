@@ -30,7 +30,7 @@
 
 ENTRY(__clone2)
 	.prologue
-	alloc r2=ar.pfs,8,0,6,0
+	alloc r2=ar.pfs,8,1,6,0
 	cmp.eq p6,p0=0,in0
 	mov r8=EINVAL
 	mov out0=in3		/* Flags are first syscall argument.	*/
@@ -63,15 +63,34 @@ ENTRY(__clone2)
 	cmp.eq CHILD,PARENT=0,r8 /* Are we the child?   */
 (p6)	br.cond.spnt.many __syscall_error
 	;;
-(CHILD)	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
-(CHILD)	mov out0=in4		/* Pass proper argument	to fn */
+(CHILD)	mov loc0=gp
 (PARENT) ret
+	;;
+#ifdef RESET_PID
+	tbit.nz p6,p0=in3,16	/* CLONE_THREAD */
+	tbit.z p7,p10=in3,8	/* CLONE_VM */
+(p6)	br.cond.dptk 1f
+	;;
+	mov r15=SYS_ify (getpid)
+(p10)	addl r8=-1,r0
+(p7)	break __BREAK_SYSCALL
+	;;
+	add r9=PID,r13
+	add r10=TID,r13
+	;;
+	st4 [r9]=r8
+	st4 [r10]=r8
+	;;
+#endif
+1:	ld8 out1=[in0],8	/* Retrieve code pointer.	*/
+	mov out0=in4		/* Pass proper argument	to fn */
 	;;
 	ld8 gp=[in0]		/* Load function gp.		*/
 	mov b6=out1
 	br.call.dptk.many rp=b6	/* Call fn(arg) in the child 	*/
 	;;
 	mov out0=r8		/* Argument to _exit		*/
+	mov gp=loc0
 	.globl HIDDEN_JUMPTARGET(_exit)
 	br.call.dpnt.many rp=HIDDEN_JUMPTARGET(_exit)
 				/* call _exit with result from fn.	*/
