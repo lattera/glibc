@@ -113,7 +113,7 @@ Try \`ldd --help' for more information."
     if test -r "$file"; then
       test -x "$file" ||
 	echo "ldd: warning: you do not have execution permission for \`$file'"
-      ${RTLD} --verify "$file"
+      verify_out=`${RTLD} --verify "$file"`
       case $? in
       0)
 	eval $add_env exec '"$file"' || exit 1
@@ -156,7 +156,7 @@ Try \`ldd --help' for more information."
       if test -r "$file"; then
 	test -x "$file" || echo "\
 ldd: warning: you do not have execution permission for \`$file'"
-	${RTLD} --verify "$file"
+	verify_out=`${RTLD} --verify "$file"`
 	case $? in
 	0)
 	  eval $add_env '"$file"' || result=1

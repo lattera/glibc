@@ -171,9 +171,9 @@ bash-ldd-rewrite = $(sh-ldd-rewrite) -e 's%@BASH@%$(BASH)%g' \
 		   -e 's%@TEXTDOMAINDIR@%$(localedir)%g'
 
 ifneq ($(have-bash2),yes)
-ldd-shell = bash
-else
 ldd-shell = sh
+else
+ldd-shell = bash
 endif
 
 ifeq ($(ldd-rewrite-script),no)

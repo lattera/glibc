@@ -23,6 +23,7 @@
 
 #include <a.out.h>
 #include <errno.h>
+#include <error.h>
 #include <libintl.h>
 #include <locale.h>
 #include <stdio.h>

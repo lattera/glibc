@@ -132,6 +132,9 @@ extern int _dl_debug_versions;
 extern int _dl_debug_reloc;
 extern int _dl_debug_files;
 
+/* Expect cache ID.  */
+extern int _dl_correct_cache_id;
+
 /* File deccriptor to write debug messages to.  */
 extern int _dl_debug_fd;
 

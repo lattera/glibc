@@ -44,6 +44,10 @@ struct cache_file
       } libs[0];
   };
 
+/* This is the cache ID we expect.  Normally it is 3 for glibc linked
+   binaries.  */
+int _dl_correct_cache_id = 3;
+
 /* Look up NAME in ld.so.cache and return the file name stored there,
    or null if none is found.  */
 
@@ -92,12 +96,12 @@ _dl_load_cache_lookup (const char *name)
 	! strcmp (name, ((const char *) &cache->libs[cache->nlibs] +
 			 cache->libs[i].key)))
       {
-	if ((best == NULL) || (cache->libs[i].flags == 3))
+	if ((best == NULL) || (cache->libs[i].flags == _dl_correct_cache_id))
 	  {
 	    best = ((const char *) &cache->libs[cache->nlibs]
 		    + cache->libs[i].value);
 
-	    if (cache->libs[i].flags == 3)
+	    if (cache->libs[i].flags == _dl_correct_cache_id)
 	      /* We've found an exact match for the shared object and no
 		 general `ELF' release.  Stop searching.  */
 	      break;

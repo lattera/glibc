@@ -26,6 +26,7 @@
 #include <stdio-common/_itoa.h>
 #include <entry.h>
 #include "dynamic-link.h"
+#include "dl-librecon.h"
 
 #include <assert.h>
 
@@ -468,16 +469,29 @@ of this helper program; chances are you did not intend to run this program.\n\
   else
     assert (_dl_rtld_map.l_libname); /* How else did we get here?  */
 
-  if (mode == verify)
-    /* We were called just to verify that this is a dynamic executable
-       using us as the program interpreter.  */
-    _exit (main_map->l_ld == NULL ? 1 : has_interp ? 0 : 2);
-
   /* Extract the contents of the dynamic section for easy access.  */
   elf_get_dynamic_info (main_map->l_ld, main_map->l_info);
   if (main_map->l_info[DT_HASH])
     /* Set up our cache of pointers into the hash table.  */
     _dl_setup_hash (main_map);
+
+  if (mode == verify)
+    {
+      /* We were called just to verify that this is a dynamic
+	 executable using us as the program interpreter.  Exit with an
+	 error if we were not able to load the binary or no interpreter
+	 is specified (i.e., this is no dynamically linked binary.  */
+      if (main_map->l_ld == NULL)
+	_exit (1);
+      if (!has_interp)
+	_exit (2);
+
+      /* We allow here some platform specific code.  */
+#ifdef DISTINGUISH_LIB_VERSIONS
+      DISTINGUISH_LIB_VERSIONS;
+#endif
+      _exit (0);
+    }
 
   if (*user_entry != (ElfW(Addr)) &ENTRY_POINT)
     /* Initialize the data structures for the search paths for shared
@@ -511,7 +525,8 @@ of this helper program; chances are you did not intend to run this program.\n\
       char *list = strdupa (preloadlist);
       char *p;
       while ((p = strsep (&list, " :")) != NULL)
-	if (! __libc_enable_secure || strchr (p, '/') == NULL)
+	if (p[0] != '\0'
+	    && (! __libc_enable_secure || strchr (p, '/') == NULL))
 	  {
 	    struct link_map *new_map = _dl_map_object (main_map, p, 1,
 						       lt_library, 0);
@@ -571,18 +586,16 @@ of this helper program; chances are you did not intend to run this program.\n\
       if (file != problem)
 	{
 	  char *p;
-	  runp = file + strspn (file, ": \t\n");
+	  runp = file;
 	  while ((p = strsep (&runp, ": \t\n")) != NULL)
-	    {
-	      struct link_map *new_map = _dl_map_object (main_map, p, 1,
-							 lt_library, 0);
-	      if (new_map->l_opencount == 1)
-		/* It is no duplicate.  */
-		++npreloads;
-
-	      if (runp != NULL)
-		runp += strspn (runp, ": \t\n");
-	    }
+	    if (p[0] != '\0')
+	      {
+		struct link_map *new_map = _dl_map_object (main_map, p, 1,
+							   lt_library, 0);
+		if (new_map->l_opencount == 1)
+		  /* It is no duplicate.  */
+		  ++npreloads;
+	      }
 	}
 
       if (problem != NULL)
@@ -1127,6 +1140,14 @@ process_envvars (enum mode *modep, int *lazyp)
 	  if (memcmp (&envline[3], "TRACE_LOADED_OBJECTS", 20) == 0)
 	    mode = trace;
 	  break;
+
+	  /* We might have some extra environment variable to handle.  This
+	     is tricky due to the pre-processing of the length of the name
+	     in the switch statement here.  The code here assumes that added
+	     environment variables have a different length.  */
+#ifdef EXTRA_LD_ENVVARS
+	  EXTRA_LD_ENVVARS
+#endif
 	}
     }
 

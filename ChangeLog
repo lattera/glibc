@@ -1,3 +1,20 @@
+1998-03-29 20:59  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/Makefile: Fix typo.
+	* elf/ldd.bash.in: Collect output of ldd --verify in verify_out.
+	* elf/ldd.sh.in: Likewise.
+	* elf/ldsodefs.h: Declare _dl_correct_cache_id.
+	* elf/rtld.c (dl_main): In --verify mode allow platform specifc action.
+	Use strsep correctly.
+	(process_envvars): Allow platform specific variables.
+	* sysdeps/generic/dl-cache.c (_dl_correct_cache_id): New variable.
+	(_dl_load_cache_lookup): Test cache IDs found against
+	_dl_correct_cache_id.
+	* sysdeps/generic/dl-librecon.h: New file.
+	* sysdeps/unix/sysv/linux/dl-librecon.h: New file.
+
+	* sysdeps/unix/sysv/linux/lddlibc4.c: Include error.h.
+
 1998-03-29 16:50  Ulrich Drepper  <drepper@cygnus.com>
 
 	* config.make.in (ldd-rewrite-script): New variable.
@@ -9,6 +26,7 @@
 	* sysdeps/unix/sysv/linux/configure.in: Define ldd_rewrite_script to
 	point to sed script for libc4 handling insertion for ix86, m68, SPARC.
 	* sysdeps/unix/sysv/linux/i386/Makefile: Add rule to install lddlibc4.
+	* sysdeps/unix/sysv/linux/ldd-rewrite.sed: New file.
 
 1998-03-26 15:20  Zack Weinberg  <zack@rabi.phys.columbia.edu>
 
