@@ -148,6 +148,7 @@ struct known_symbol
   const char *name;
   uintptr_t addr;
   size_t size;
+  int weak;
 
   uintmax_t ticks;
   uintmax_t calls;
@@ -938,6 +939,7 @@ read_symbols (struct shobj *shobj)
 	    newsym->name = &shobj->strtab[sym->st_name];
 	    newsym->addr = sym->st_value;
 	    newsym->size = sym->st_size;
+	    newsym->weak = ELFW(ST_BIND) (sym->st_info) == STB_WEAK;
 	    newsym->ticks = 0;
 	    newsym->calls = 0;
 
@@ -952,7 +954,9 @@ read_symbols (struct shobj *shobj)
 	      {
 		/* The function is already defined.  See whether we have
 		   a better name here.  */
-		if ((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		if (((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		    || ((*existp)->name[0] != '_' && newsym->name[0] != '_'
+			&& (*existp)->weak && !newsym->weak))
 		  *existp = newsym;
 		else
 		  /* We don't need the allocated memory.  */
@@ -990,6 +994,7 @@ read_symbols (struct shobj *shobj)
 	      newsym->name = &strtab[symtab->st_name];
 	      newsym->addr = symtab->st_value;
 	      newsym->size = symtab->st_size;
+	      newsym->weak = ELFW(ST_BIND) (symtab->st_info) == STB_WEAK;
 	      newsym->ticks = 0;
 	      newsym->froms = NULL;
 	      newsym->tos = NULL;
@@ -1005,7 +1010,9 @@ read_symbols (struct shobj *shobj)
 		{
 		  /* The function is already defined.  See whether we have
 		     a better name here.  */
-		  if ((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		  if (((*existp)->name[0] == '_' && newsym->name[0] != '_')
+		      || ((*existp)->name[0] != '_' && newsym->name[0] != '_'
+			  && (*existp)->weak && !newsym->weak))
 		    *existp = newsym;
 		  else
 		    /* We don't need the allocated memory.  */

@@ -1,3 +1,11 @@
+2004-08-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/sprof.c (read_symbols): When comparing aliases, prefer
+	strong over weak symbols if both don't start with '_'.
+
+	* malloc/malloc.c: Use strong_alias instead of weak_alias wherever
+	possible.
+
 2004-08-12  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/unix/sysv/linux/bits/resource.h: Define non-standard
