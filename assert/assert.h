@@ -102,12 +102,12 @@ __END_DECLS
 # ifdef	__USE_GNU
 #  if __GNUC_PREREQ (3, 0)
 #   define assert_perror(errnum) \
-  (__ASSERT_VOID_CAST (!(errnum) ? 0 :					      \
+  (__ASSERT_VOID_CAST (__builtin_expect (!(errnum), 1) ? 0 :		      \
 		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
 					      __ASSERT_FUNCTION), 0)))
 #  else
 #   define assert_perror(errnum) \
-  (__ASSERT_VOID_CAST (__builtin_expect (!(errnum), 1) ? 0 :		      \
+  (__ASSERT_VOID_CAST (!(errnum) ? 0 :					      \
 		       (__assert_perror_fail ((errnum), __FILE__, __LINE__,   \
 					      __ASSERT_FUNCTION), 0)))
 #  endif

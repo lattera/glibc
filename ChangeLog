@@ -1,3 +1,8 @@
+2003-08-15  Jakub Jelinek  <jakub@redhat.com>
+
+	* assert/assert.h (assert_perror): Use __builtin_expect for gcc >=
+	3.0, not for !gcc or gcc < 3.0.
+
 2003-08-11  Carlos O'Donell  <carlos@baldric.uwo.ca>
 
 	* dlfcn/default.c (main): Cast dlsym loaded value to same type as main.
