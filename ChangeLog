@@ -1,5 +1,7 @@
 2001-12-05  Geoff Keating  <geoffk@redhat.com>
 
+	* scripts/cpp: Test the exit status from 'type', not 'awk'.
+
 	* sysdeps/powerpc/__longjmp.S: Don't restore FP registers.
 	* sysdeps/powerpc/fpu/__longjmp.S: Do restore FP registers.
 	* sysdeps/powerpc/setjmp.S: Don't save FP registers.
