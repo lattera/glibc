@@ -29,5 +29,6 @@ SYSCALL__ (fork, 0)
 	and r0, r0, r1
 	RETINSTR(mov, pc, r14)
 PSEUDO_END (__fork)
+strong_alias (__fork, __GI___fork)
 
 weak_alias (__fork, fork)

@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 1995, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 1995, 1997, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Brendan Kehoe (brendan@zen.org).
 
@@ -23,5 +23,6 @@ SYSCALL__ (fork, 0)
 	cmovne a4, 0, v0
 	ret
 	.end __fork
+strong_alias (__fork, __GI___fork)
 
 weak_alias (__fork, fork)
