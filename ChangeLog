@@ -1,3 +1,10 @@
+2000-07-31  Andreas Jaeger  <aj@suse.de>
+
+	* inet/Versions: Remove getipnodebyaddr and friends from
+	GLIBC_2.2.
+
+	* resolv/netdb.h: Remove getipnodebyaddr and friends.
+
 2000-07-30  Bruno Haible  <haible@clisp.cons.org>
 
 	* iconvdata/sjis.c (BODY for FROM_LOOP): Treat the case

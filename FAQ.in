@@ -1425,8 +1425,7 @@ latest 2.1.x release you can find.  As of 98/11/26 the currently recommended
 kernel for IPv6 is 2.1.129.
 
 Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
-100% complete.  In particular the getipnodebyname and getipnodebyaddr
-functions are not implemented.
+100% complete.
 
 ??tzdb	When I set the timezone by setting the TZ environment variable
 	to EST5EDT things go wrong since glibc computes the wrong time

@@ -136,32 +136,7 @@ extern struct hostent *gethostbyname (__const char *__name) __THROW;
    set to the address type which is `AF_INET' for IPv4 or `AF_INET6'
    for IPv6.  */
 extern struct hostent *gethostbyname2 (__const char *__name, int __af) __THROW;
-#endif
 
-#ifdef __USE_UNIX98
-/* Return entry from host data base which address match ADDR with
-   length LEN and type TYPE in newly allocated buffer.  */
-extern struct hostent *getipnodebyaddr (__const void *__addr, socklen_t __len,
-					int __type, int *__error_num) __THROW;
-
-/* Return entry from host data base for host with NAME and newly allocated
-   buffer.  FLAGS is some combination of the following AI_* values.  */
-extern struct hostent *getipnodebyname (__const char *__name, int __type,
-					int __flags, int *__error_num) __THROW;
-
-# define AI_V4MAPPED	0x0008	/* IPv4-mapped addresses are acceptable.  */
-# define AI_ALL		0x0010	/* Return both IPv4 and IPv6 addresses.  */
-# define AI_ADDRCONFIG	0x0020	/* Use configuration of this host to choose
-				   returned address type.  */
-# define AI_DEFAULT	(AI_V4MAPPED | AI_ADDRCONFIG)
-
-/* Free structure returned by previous `getipnodebyaddr' or `getipnodebyname'
-   call.  */
-extern void freehostent (struct hostent *__ptr) __THROW;
-
-#endif
-
-#ifdef	__USE_MISC
 /* Reentrant versions of the functions above.  The additional
    arguments specify a buffer of BUFLEN starting at BUF.  The last
    argument is a pointer to a variable which gets the value which

@@ -58,6 +58,9 @@ please let me know.
 2.5.	When linking with the new libc I get unresolved symbols
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
+
+
+Removed.  Does not apply anymore.
 2.6.	When I use GNU libc on my Linux system by linking against
 	the libc.so which comes with glibc all I get is a core dump.
 2.7.	Looking through the shared libc file I haven't found the
@@ -398,8 +401,8 @@ errors while linking before deciding there is a problem.
 1.11.	What are these `add-ons'?
 
 {UD} To avoid complications with export rules or external source code some
-optional parts of the libc are distributed as separate packages (e.g., the
-crypt package, see question 2.5).
+optional parts of the libc are distributed as separate packages, e.g., the
+linuxthreads package.
 
 To use these packages as part of GNU libc, just unpack the tarfiles in the
 libc source directory and tell the configuration script about them using the
@@ -408,7 +411,7 @@ to find all the add-on packages in your source tree.  This may not work.  If
 it doesn't, or if you want to select only a subset of the add-ons, give a
 comma-separated list of the add-ons to enable:
 
-	configure --enable-add-ons=crypt,linuxthreads
+	configure --enable-add-ons=linuxthreads
 
 for example.
 
@@ -418,9 +421,13 @@ else.  The existing makefiles do most of the work; only some few stub rules
 must be written to get everything running.
 
 Most add-ons are tightly coupled to a specific GNU libc version.  Please
-check that the add-ons work with the GNU libc.  For example the crypt and
-linuxthreads add-ons have the same numbering scheme as the libc and will in
-general only work with the corresponding libc.
+check that the add-ons work with the GNU libc.  For example the linuxthreads
+add-on has the same numbering scheme as the libc and will in general only
+work with the corresponding libc.
+
+{AJ} With glibc 2.2 the crypt add-on and with glibc 2.1 the localedata
+add-on have been integrated into the normal glibc distribution, crypt and
+localedata are therefore not anymore add-ons.
 
 
 1.12.	My XXX kernel emulates a floating-point coprocessor for me.
@@ -667,20 +674,10 @@ question 3.8 for details.
 	`crypt' and `setkey'.  Why aren't these functions in the
 	libc anymore?
 
-{UD} The US places restrictions on exporting cryptographic programs and
-source code.  Until this law gets abolished we cannot ship the cryptographic
-functions together with glibc.
 
-The functions are available, as an add-on (see question 1.11).  People in the US
-may get it from the same place they got GNU libc from.  People outside the
-US should get the code from ftp.gwdg.de [134.76.11.100] in the directory
-pub/linux/glibc, or another archive site outside the USA.  The README explains
-how to install the sources.
+Removed.  Does not apply anymore.
 
-If you already have the crypt code on your system the reason for the failure
-is probably that you did not link with -lcrypt.  The crypto functions are in
-a separate library to make it possible to export GNU libc binaries from the
-US.
+
 
 
 2.6.	When I use GNU libc on my Linux system by linking against
@@ -1305,9 +1302,6 @@ the one library cannot be read by functions from the other library.  Sorry,
 but this is what a major release is for.  It's better to have a cut now than
 having no means to support the new techniques later.
 
-{MK} There is however a (partial) solution for this problem.  Please take a
-look at the file `login/README.utmpd'.
-
 
 3.3.	Where are the DST_* constants found in <sys/time.h> on many
 	systems?
@@ -1682,8 +1676,7 @@ latest 2.1.x release you can find.  As of 98/11/26 the currently recommended
 kernel for IPv6 is 2.1.129.
 
 Also, as of the 2.1 release the IPv6 API provided by GNU libc is not
-100% complete.  In particular the getipnodebyname and getipnodebyaddr
-functions are not implemented.
+100% complete.
 
 
 4.3.	When I set the timezone by setting the TZ environment variable

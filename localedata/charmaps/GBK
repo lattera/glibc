@@ -21927,3 +21927,7 @@ CHARMAP
 <UFA28>     /xfe/x4e     <CJK>
 <UFA29>     /xfe/x4f     <CJK>
 END CHARMAP
+
+WIDTH
+<U4E02>..<UFA29> 2
+END WIDTH

@@ -63,10 +63,6 @@ libc {
     getservbyname_r;
   }
   GLIBC_2.2 {
-    # f*
-    freehostent;
-    # g*
-    getipnodebyaddr;
     # i*
     iruserok_af;
     # r*

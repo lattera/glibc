@@ -1,3 +1,29 @@
+2000-07-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* charmaps/KSX1001: Add width information.
+	* charmaps/GB2312: Likewise.
+	* charmaps/GBK: Likewise.
+	Patches by GOTO Masanori <gotom@debian.or.jp>.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/CP737: New file.
+	* charmaps/CP775: New file.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/GB2312: Remove single-byte entries for /xa1../xa9 and
+	/xb0../xf7.  Remove aliases.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/BIG5: Remove single-byte entries for /xa1../xc7 and
+	/xc9../xf9.
+
+2000-07-30  Bruno Haible  <haible@clisp.cons.org>
+
+	* charmaps/UTF-8: Remove duplicate entries for U+4DB5 and U+4E00.
+
 2000-07-29  Ulrich Drepper  <drepper@redhat.com>
 
 	* tst-langinfo.c (main): Fix esacape sequence handling.
