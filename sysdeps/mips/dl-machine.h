@@ -254,7 +254,7 @@ elf_machine_runtime_link_map (ElfW(Addr) gpreg, ElfW(Addr) stub_pc)
 	}
     }
 
-  INTUSE (_dl_signal_error) (0, NULL, NULL, "cannot find runtime link map");
+  _dl_signal_error (0, NULL, NULL, "cannot find runtime link map");
   return NULL;
 }
 
@@ -366,17 +366,17 @@ __dl_runtime_resolve (ElfW(Word) sym_index,				      \
 									      \
 	    if (version->hash != 0)					      \
 	      {								      \
-		value = _dl_lookup_versioned_symbol(strtab + sym->st_name, l, \
-						    &sym, l->l_scope, version,\
-						    ELF_RTYPE_CLASS_PLT, 0);  \
+		value = _dl_lookup_symbol_x (strtab + sym->st_name, l, 	      \
+					     &sym, l->l_scope, version,	      \
+					     ELF_RTYPE_CLASS_PLT, 0, 0);      \
 		break;							      \
 	      }								      \
 	    /* Fall through.  */					      \
 	  }								      \
 	case 0:								      \
-	  value = _dl_lookup_symbol (strtab + sym->st_name, l, &sym,	      \
-				     l->l_scope, ELF_RTYPE_CLASS_PLT,	      \
-				     DL_LOOKUP_ADD_DEPENDENCY);		      \
+	  value = _dl_lookup_symbol_x (strtab + sym->st_name, l, &sym,	      \
+				       l->l_scope, 0, ELF_RTYPE_CLASS_PLT,    \
+				       DL_LOOKUP_ADD_DEPENDENCY, 0);	      \
 	}								      \
 									      \
       /* Currently value contains the base load address of the object	      \
