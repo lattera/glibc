@@ -112,3 +112,5 @@ Lreent:
 3:
 	movl	r5,r0		/* return stashed pointer */
 	ret
+
+weak_alias (strrchr, rindex)

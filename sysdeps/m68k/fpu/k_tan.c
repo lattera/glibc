@@ -16,7 +16,9 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
+#define __NO_M81_MATH_INLINES
 #include <math.h>
+#include "math_private.h"
 
 #ifndef FUNC
 #define FUNC tan
@@ -34,8 +36,8 @@ __CONCATX(__kernel_,FUNC) (x, y, iy)
      int iy;
 {
   float_type tan_x, tan_y;
-  tan_x = __m81_u_(__CONCATX(__,FUNC)) (x);
-  tan_y = __m81_u_(__CONCATX(__,FUNC)) (y);
+  tan_x = __m81_u(__CONCATX(__,FUNC)) (x);
+  tan_y = __m81_u(__CONCATX(__,FUNC)) (y);
   if (iy > 0)
     return (tan_x + tan_y) / (1 - tan_x * tan_y);
   else

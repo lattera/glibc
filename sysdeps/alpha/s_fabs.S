@@ -1,5 +1,6 @@
-/* Copyright (C) 1991 Free Software Foundation, Inc.
+/* Copyright (C) 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
+Contributed by David Mosberger <davidm@azstarnet.com>
 
 The GNU C Library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Library General Public License as
@@ -16,13 +17,12 @@ License along with the GNU C Library; see the file COPYING.LIB.  If
 not, write to the Free Software Foundation, Inc., 675 Mass Ave,
 Cambridge, MA 02139, USA.  */
 
-#include <ansidecl.h>
+#include <sysdep.h>
 
-#ifndef	FPCONST
-#define	FPCONST(hi0, lo0, hi1, lo1)	{ (lo0), (hi0), (lo1), (hi1) }
-#endif
+ENTRY(__fabs)
+	.prologue 0
+	cpys	$f31,$f16,$f0
+	ret
 
-static CONST short int ln10[] = FPCONST(0x4113, 0x5d8d, 0xddaa, 0xa8ac);
-#define	LN10	(*(CONST double *) ln10)
-
-#include <../sysdeps/generic/log10.c>
+	END(__fabs)
+weak_alias (__fabs, fabs)
