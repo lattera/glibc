@@ -1,5 +1,9 @@
 2001-04-13  Jes Sorensen  <jes@linuxcare.com>
 
+	* intl/tst-codeset.c: Include string.h to get prototype for strcmp().
+
+2001-04-13  Jes Sorensen  <jes@linuxcare.com>
+
 	* sysdeps/unix/sysv/linux/ia64/bits/siginfo.h: Add __pad0 to
 	explicitly pad struct siginfo instead of relying on compiler padding.
 
