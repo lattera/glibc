@@ -1,3 +1,8 @@
+2003-05-28  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/pthread/pthread_cond_broadcast.c
+	(__pthread_cond_broadcast): Fix typo: MAX_INT -> INT_MAX.
+
 2003-05-26  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/x86_64/pthread_cond_broadcast.S: Fix

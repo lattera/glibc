@@ -56,13 +56,13 @@ __pthread_cond_broadcast (cond)
 
       /* Wake everybody.  */
       pthread_mutex_t *mut = (pthread_mutex_t *) cond->__data.__mutex;
-      if (__builtin_expect (lll_futex_requeue (futex, 1, MAX_INT,
+      if (__builtin_expect (lll_futex_requeue (futex, 1, INT_MAX,
 					       &mut->__data.__lock) == -EINVAL,
 			    0))
 	{
 	  /* The requeue functionality is not available.  */
 #ifndef __ASSUME_FUTEX_REQUEUE
-	  lll_futex_wake (futex, MAX_INT);
+	  lll_futex_wake (futex, INT_MAX);
 #endif
 	}
 
