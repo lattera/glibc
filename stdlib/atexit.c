@@ -49,7 +49,7 @@ __new_exitfn (void)
   struct exit_function_list *l;
   size_t i = 0;
 
-  __libc_lock_lock (lock)
+  __libc_lock_lock (lock);
 
   for (l = __exit_funcs; l != NULL; l = l->next)
     {
@@ -84,7 +84,7 @@ __new_exitfn (void)
   if (l != NULL)
     l->fns[i].flavor = ef_us;
 
-  __libc_lock_unlock (lock)
+  __libc_lock_unlock (lock);
 
   return l == NULL ? NULL : &l->fns[i];
 }

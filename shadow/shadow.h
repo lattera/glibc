@@ -26,6 +26,9 @@ Boston, MA 02111-1307, USA.  */
 #define	__need_FILE
 #include <stdio.h>
 
+#define __need_size_t
+#include <stddef.h>
+
 /* Paths to the userd files.  */
 #define	SHADOW "/etc/shadow"
 

@@ -41,7 +41,7 @@ __internal_funlockfile (FILE *stream)
 #ifdef USE_IN_LIBIO
 weak_alias (__internal_funlockfile, _IO_funlockfile)
 #else
-weak_alias (__internal_funlockfile, __internal_funlockfile)
+weak_alias (__internal_funlockfile, __funlockfile)
 #endif
 weak_alias (__internal_funlockfile, funlockfile);
 

@@ -29,6 +29,8 @@ __BEGIN_DECLS
 
 #include <gnu/types.h>
 
+#define __need_size_t
+#include <stddef.h>
 
 /* The passwd structure.  */
 struct passwd

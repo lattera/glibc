@@ -180,9 +180,9 @@ void
 __srandom (x)
      unsigned int x;
 {
-  __libc_lock_lock (lock)
+  __libc_lock_lock (lock);
   (void) __srandom_r (x, &unsafe_state);
-  __libc_lock_unlock (lock)
+  __libc_lock_unlock (lock);
 }
 
 weak_alias (__srandom, srandom)
@@ -207,13 +207,13 @@ __initstate (seed, arg_state, n)
 {
   void *ostate;
 
-  __libc_lock_lock (lock)
+  __libc_lock_lock (lock);
 
   ostate = (void *) &unsafe_state.state[-1];
 
   __initstate_r (seed, arg_state, n, &unsafe_state);
 
-  __libc_lock_unlock (lock)
+  __libc_lock_unlock (lock);
 
   return ostate;
 }
@@ -234,14 +234,14 @@ __setstate (arg_state)
 {
   void *ostate;
 
-  __libc_lock_lock (lock)
+  __libc_lock_lock (lock);
 
   ostate = (void *) &unsafe_state.state[-1];
 
   if (__setstate_r (arg_state, &unsafe_state) < 0)
     ostate = NULL;
 
-  __libc_lock_unlock (lock)
+  __libc_lock_unlock (lock);
 
   return ostate;
 }
@@ -264,11 +264,11 @@ __random ()
 {
   int32_t retval;
 
-  __libc_lock_lock (lock)
+  __libc_lock_lock (lock);
 
   (void) __random_r (&unsafe_state, &retval);
 
-  __libc_lock_unlock (lock)
+  __libc_lock_unlock (lock);
 
   return retval;
 }

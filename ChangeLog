@@ -1,3 +1,7 @@
+Tue Nov  5 00:04:48 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio-common/vfprintf.c: Include <libc-lock.h>.
+
 Mon Nov  4 16:57:42 1996  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/ttyname_r.c (ttyname_r): Change prototype to

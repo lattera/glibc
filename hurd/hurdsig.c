@@ -162,7 +162,7 @@ write_corefile (int signo, const struct hurd_signal_detail *detail)
     /* Create the new file, but don't link it into the directory yet.  */
     __dir_mkfile (coredir, O_WRONLY|O_CREAT,
 		  0600 & ~_hurd_umask, /* XXX ? */
-		  &file))
+		  &file);
 
   /* Call the core dumping server to write the core file.  */
   err = __crash_dump_task (coreserver,

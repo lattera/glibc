@@ -1,0 +1,136 @@
+/* Copyright (C) 1996 Free Software Foundation, Inc.
+This file is part of the GNU C Library.
+
+The GNU C Library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Library General Public License as
+published by the Free Software Foundation; either version 2 of the
+License, or (at your option) any later version.
+
+The GNU C Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Library General Public License for more details.
+
+You should have received a copy of the GNU Library General Public
+License along with the GNU C Library; see the file COPYING.LIB.  If
+not, write to the Free Software Foundation, Inc., 675 Mass Ave,
+Cambridge, MA 02139, USA.  */
+
+#include <errno.h>
+#include <hurd.h>
+#include <hurd/signal.h>
+#include <hurd/msg.h>
+#include <hurd/sigpreempt.h>
+#include <assert.h>
+
+/* Select any of pending signals from SET or wait for any to arrive.  */
+int
+__sigwait (const sigset_t *set, int *sig)
+{
+  struct hurd_sigstate *ss;
+  sigset_t mask;
+  int signo = 0;
+  struct hurd_signal_preempter preempter;
+  jmp_buf buf;
+  mach_port_t wait;
+  mach_msg_header_t msg;
+  
+  sighandler_t
+    preempt_fun (struct hurd_signal_preempter *pe,
+		 struct hurd_sigstate *ss,
+		 int *sigp,
+		 struct hurd_signal_detail *detail)
+    {
+      if (signo)
+	/* We've already been run; don't interfere. */
+	return SIG_ERR;
+      
+      signo = *sigp;
+
+      /* Make sure this is all kosher */
+      assert (__sigismember (&mask, signo));
+
+      /* Make sure this signal is unblocked */
+      __sigdelset (&ss->blocked, signo);
+
+      return pe->handler;
+    }
+  
+  void
+    handler (int sig)
+    {
+      assert (sig == signo);
+      longjmp (buf, 1);
+    }
+
+  wait = __mach_reply_port ();
+
+  if (set != NULL)
+    /* Crash before locking */
+    mask = *set;
+  
+  ss = _hurd_self_sigstate ();
+  __spin_lock (&ss->lock);
+  
+  /* See if one of these signals is currently pending */
+  if (ss->pending & mask)
+    {
+      for (signo = 1; signo < NSIG; signo++)
+	if (__sigismember (&ss->pending, signo))
+	  {
+	    __sigdelset (&ss->pending, signo);
+	    goto all_done;
+	  }
+      /* Huh?  Where'd it go? */
+      abort ();
+    }
+
+  /* Wait for one of them to show up */
+      
+  if (!setjmp (buf))
+    {
+      /* Make the preempter */
+      preempter.signals = mask;
+      preempter.first = 0;
+      preempter.last = -1;
+      preempter.preempter = preempt_fun;
+      preempter.handler = handler;
+  
+      /* Install this preempter */
+      preempter.next = ss->preempters;
+      ss->preempters = &preempter;
+  
+      __spin_unlock (&ss->lock);
+  
+      /* Wait. */
+      __mach_msg (&msg, MACH_RCV_MSG, 0, sizeof (msg), wait,
+		  MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
+      abort ();
+    }
+  else
+    {
+      assert (signo);
+
+      __spin_lock (&ss->lock);
+
+      /* Delete our preempter. */
+      assert (ss->preempters == &preempter);
+      ss->preempters = preempter.next;
+    }
+  
+
+all_done:
+  /* Cause the pointless side-effect. */
+  __sigfillset (&ss->blocked);
+  for (signo = 1; signo < NSIG; signo++)
+    if (__sigismember (&mask, signo))
+      __sigdelset (&ss->blocked, signo);
+
+  spin_unlock (&ss->lock);
+
+  __mach_port_destroy (__mach_task_self (), wait);
+  *sig = signo;
+  return 0;
+}
+
+weak_alias (__sigwait, sigwait)
