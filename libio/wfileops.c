@@ -157,34 +157,28 @@ _IO_wfile_underflow (fp)
   /* Maybe there is something left in the external buffer.  */
   if (fp->_IO_read_ptr < fp->_IO_read_end)
     {
-      /* Convert it.  */
-      size_t avail_bytes = fp->_IO_read_end - fp->_IO_read_ptr;
+      /* There is more in the external.  Convert it.  */
+      const char *read_stop = (const char *) fp->_IO_read_ptr;
 
-      if (avail_bytes >= (*cd->__codecvt_do_max_length) (cd))
+      fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
+      status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
+				       fp->_IO_read_ptr, fp->_IO_read_end,
+				       &read_stop,
+				       fp->_wide_data->_IO_read_end,
+				       fp->_wide_data->_IO_buf_end,
+				       &fp->_wide_data->_IO_read_end);
+
+      fp->_IO_read_ptr = (char *) read_stop;
+
+      /* If we managed to generate some text return the next character.  */
+      if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
+	return *fp->_wide_data->_IO_read_ptr;
+
+      if (status == __codecvt_error)
 	{
-	  /* There is more in the external.  */
-	  const char *read_stop = (const char *) fp->_IO_read_ptr;
-
-	  fp->_wide_data->_IO_last_state = fp->_wide_data->_IO_state;
-	  status = (*cd->__codecvt_do_in) (cd, &fp->_wide_data->_IO_state,
-					   fp->_IO_read_ptr, fp->_IO_read_end,
-					   &read_stop,
-					   fp->_wide_data->_IO_read_end,
-					   fp->_wide_data->_IO_buf_end,
-					   &fp->_wide_data->_IO_read_end);
-
-	  fp->_IO_read_ptr = (char *) read_stop;
-
-	  /* If we managed to generate some text return the next character.  */
-	  if (fp->_wide_data->_IO_read_ptr < fp->_wide_data->_IO_read_end)
-	    return *fp->_wide_data->_IO_read_ptr;
-
-	  if (status == __codecvt_error)
-	    {
-	      __set_errno (EILSEQ);
-	      fp->_flags |= _IO_ERR_SEEN;
-	      return WEOF;
-	    }
+	  __set_errno (EILSEQ);
+	  fp->_flags |= _IO_ERR_SEEN;
+	  return WEOF;
 	}
 
       /* Move the remaining content of the read buffer to the beginning.  */

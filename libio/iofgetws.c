@@ -1,4 +1,4 @@
-/* Copyright (C) 1993, 95, 96, 97, 98, 99 Free Software Foundation, Inc.
+/* Copyright (C) 1993, 95, 96, 97, 98, 99, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -50,8 +50,7 @@ fgetws (buf, n, fp)
   count = _IO_getwline (fp, buf, n - 1, L'\n', 1);
   /* If we read in some bytes and errno is EAGAIN, that error will
      be reported for next read. */
-  if (count == 0 || ((fp->_IO_file_flags & _IO_ERR_SEEN)
-		     && errno != EAGAIN))
+  if (count == 0 || (_IO_ferror_unlocked (fp) && errno != EAGAIN))
     result = NULL;
   else
     {

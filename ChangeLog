@@ -1,5 +1,13 @@
 2001-08-08  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/wfileops.c (_IO_wfile_underflow): Remove incorrect test
+	for possible conversion using __codecvt_do_in.
+	* libio/Makefile (tests): Add tst-fgetws.
+	* libio/tst-fgetws.c: New file.
+
+	* libio/iofgetws.c: Use _IO_ferror_unlocked macros instead of
+	coding the test here.
+
 	* catgets/open_catalog.c: Rewrite code to assume that the function
 	is called at catopen time and not delayed in catgets.
 	* catgets/catgets.c (catopen): Call __open_catalog and fail if that
