@@ -21,7 +21,7 @@
 #include <shlib-compat.h>
 
 #if defined NOT_IN_libc
-/* Build a none versioned object for rtld-*.  */
+/* Build a non-versioned object for rtld-*.  */
 # include "__longjmp-common.S"
 
 #else /* !NOT_IN_libc */
@@ -32,6 +32,7 @@ default_symbol_version (__vmx__longjmp,__longjmp,GLIBC_2.3.4);
 
 # if defined SHARED && SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_4)
 #  define __NO_VMX__
+#  undef JB_SIZE
 symbol_version (__novmx__longjmp,__longjmp,GLIBC_2.0);
 #  undef __longjmp
 #  define __longjmp  __novmx__longjmp
