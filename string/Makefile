@@ -39,7 +39,7 @@ routines	:= strcat strchr strcmp strcoll strcpy strcspn		\
 			             delete extract insert stringify	\
 				     addsep replace)			\
 		   envz basename					\
-		   strcoll_l strxfrm_l string-inlines
+		   strcoll_l strxfrm_l string-inlines memrchr
 
 tests		:= tester inl-tester noinl-tester testcopy test-ffs	\
 		   tst-strlen stratcliff tst-svc tst-inlcall
