@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
@@ -33,11 +33,11 @@ const struct locale_data _nl_C_LC_MONETARY =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  43,
+  45,
   {
     { string: "" },
     { string: "" },
-    { string: "" },
+    { string: "." },
     { string: "" },
     { string: "" },
     { string: "" },
@@ -77,6 +77,8 @@ const struct locale_data _nl_C_LC_MONETARY =
     { word: 10101 },
     { word: 99991231 },
     { word: 1 },
-    { word: 1 }
+    { word: 1 },
+    { wstr: (uint32_t *) L"." },
+    { wstr: (uint32_t *) L"" }
   }
 };

@@ -1,6 +1,6 @@
-/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
+   Contributed by Ulrich Drepper <drepper@cygnus.com>, 1995.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -32,10 +32,12 @@ const struct locale_data _nl_C_LC_NUMERIC =
   _nl_C_name,
   NULL, 0, 0, /* no file mapped */
   UNDELETABLE,
-  3,
+  5,
   {
     { string: "." },
     { string: "" },
-    { string: not_available }
+    { string: not_available },
+    { wstr: (uint32_t *) L"." },
+    { wstr: (uint32_t *) L"" }
   }
 };
