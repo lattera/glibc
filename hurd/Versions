@@ -22,6 +22,9 @@ libc {
     # cthreads functions with stubs in libc
     cthread_keycreate; cthread_getspecific; cthread_setspecific;
     __libc_getspecific;
+
+    # weak refs to libthreads functions that libc calls iff libthreads in use
+    cthread_fork; cthread_detach;
 %endif
 
     # necessary for the Hurd brk implementation
@@ -124,11 +127,6 @@ libc {
     seteuids;
   }
   GLIBC_2.1.3 {
-%if SHLIB_COMPAT (libc, GLIBC_2_1_3, HURD_CTHREADS_0_3)
-    # c*
-    cthread_fork; cthread_detach;
-%endif
-
     # d*
     directory_name_split;
 

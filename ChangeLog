@@ -1,3 +1,35 @@
+2002-02-16  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/mach/configure.in: Add some checks for Mach headers
+	to ensure a sane installation.
+	(mach_interface_list): Define this variable by checking for .defs
+	files found in various variants.
+	* configure.in (mach_interface_list): AC_SUBST this.
+	* config.make.in (mach-interface-list): New substituted variable.
+	* mach/Makefile (user-interfaces): Define this using the value
+	of $(mach-interface-list) instead of mach, mach4.
+	Updated other references to mach_interface to use it as well.
+
+	* sysdeps/mach/powerpc/machine-lock.h: Avoid multi-line strings.
+
+	* mach/msgserver.c [NDR_CHAR_ASCII] (mig_reply_header_t): #define as
+	mig_reply_error_t for OSF Mach variant.
+
+	* mach/Makefile (routines): Remove bootprivport.
+	* mach/bootprivport.c: File removed.  It has never been used.
+
+	* mach/msg-destroy.c (__mach_msg_destroy) [MACH_MSG_PORT_DESCRIPTOR]:
+	Grok the OSF flavor of message format.
+	(mach_msg_destroy_port): For MAKE_SEND and
+	MAKE_SEND_ONCE rights, create an destroy a right to ensure proper
+	no-senders notification.
+
+2002-02-06  Roland McGrath  <roland@frob.com>
+
+	* hurd/Versions (libc: GLIBC_2.0): Move cthread_fork, cthread_detach
+	to here if 2.0 compatibility enabled ...
+	(libc: GLIBC_2.1.3): ... from here.
+
 2002-02-15  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-open.c (dl_open_worker): Catch wrap-around of TLS

@@ -26,6 +26,15 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.6  2002/02/17 07:13:36  roland
+ * 2002-02-16  Roland McGrath  <roland@frob.com>
+ *
+ * 	* mach/msg-destroy.c (__mach_msg_destroy) [MACH_MSG_PORT_DESCRIPTOR]:
+ * 	Grok the OSF flavor of message format.
+ * 	(mach_msg_destroy_port): For MAKE_SEND and
+ * 	MAKE_SEND_ONCE rights, create an destroy a right to ensure proper
+ * 	no-senders notification.
+ *
  * Revision 1.5  1997/06/21 01:40:07  drepper
  * More 64bit changes.
  *
@@ -91,6 +100,69 @@ __mach_msg_destroy(msg)
     mach_msg_destroy_port(msg->msgh_remote_port, MACH_MSGH_BITS_REMOTE(mbits));
 
     if (mbits & MACH_MSGH_BITS_COMPLEX) {
+#ifdef MACH_MSG_PORT_DESCRIPTOR
+	mach_msg_body_t		*body;
+	mach_msg_descriptor_t	*saddr, *eaddr;
+
+    	body = (mach_msg_body_t *) (msg + 1);
+    	saddr = (mach_msg_descriptor_t *)
+			((mach_msg_base_t *) msg + 1);
+    	eaddr =  saddr + body->msgh_descriptor_count;
+
+	for  ( ; saddr < eaddr; saddr++) {
+	    switch (saddr->type.type) {
+
+	        case MACH_MSG_PORT_DESCRIPTOR: {
+		    mach_msg_port_descriptor_t *dsc;
+
+		    /*
+		     * Destroy port rights carried in the message
+		     */
+		    dsc = &saddr->port;
+		    mach_msg_destroy_port(dsc->name, dsc->disposition);
+		    break;
+	        }
+
+	        case MACH_MSG_OOL_DESCRIPTOR : {
+		    mach_msg_ool_descriptor_t *dsc;
+
+		    /*
+		     * Destroy memory carried in the message
+		     */
+		    dsc = &saddr->out_of_line;
+		    if (dsc->deallocate) {
+		        mach_msg_destroy_memory((vm_offset_t)dsc->address,
+						dsc->size);
+		    }
+		    break;
+	        }
+
+	        case MACH_MSG_OOL_PORTS_DESCRIPTOR : {
+		    mach_port_t             		*ports;
+		    mach_msg_ool_ports_descriptor_t	*dsc;
+		    mach_msg_type_number_t   		j;
+
+		    /*
+		     * Destroy port rights carried in the message
+		     */
+		    dsc = &saddr->ool_ports;
+		    ports = (mach_port_t *) dsc->address;
+		    for (j = 0; j < dsc->count; j++, ports++)  {
+		        mach_msg_destroy_port(*ports, dsc->disposition);
+		    }
+
+		    /*
+		     * Destroy memory carried in the message
+		     */
+		    if (dsc->deallocate) {
+		        mach_msg_destroy_memory((vm_offset_t)dsc->address,
+					dsc->count * sizeof(mach_port_t));
+		    }
+		    break;
+	        }
+	    }
+	}
+#else
 	vm_offset_t saddr;
 	vm_offset_t eaddr;
 
@@ -142,6 +214,7 @@ __mach_msg_destroy(msg)
 		saddr += sizeof(vm_offset_t);
 	    }
 	}
+#endif
     }
 }
 
@@ -153,14 +226,31 @@ mach_msg_destroy_port(port, type)
     mach_msg_type_name_t type;
 {
     if (MACH_PORT_VALID(port)) switch (type) {
-      case MACH_MSG_TYPE_PORT_SEND:
-      case MACH_MSG_TYPE_PORT_SEND_ONCE:
-	(void) __mach_port_deallocate(__mach_task_self(), port);
+      case MACH_MSG_TYPE_MOVE_SEND:
+      case MACH_MSG_TYPE_MOVE_SEND_ONCE:
+	/* destroy the send/send-once right */
+	(void) __mach_port_deallocate(mach_task_self(), port);
 	break;
 
-      case MACH_MSG_TYPE_PORT_RECEIVE:
-	(void) __mach_port_mod_refs(__mach_task_self(), port,
+      case MACH_MSG_TYPE_MOVE_RECEIVE:
+	/* destroy the receive right */
+	(void) __mach_port_mod_refs(mach_task_self(), port,
 				    MACH_PORT_RIGHT_RECEIVE, -1);
+	break;
+
+      case MACH_MSG_TYPE_MAKE_SEND:
+	/* create a send right and then destroy it */
+	(void) __mach_port_insert_right(mach_task_self(), port,
+					port, MACH_MSG_TYPE_MAKE_SEND);
+	(void) __mach_port_deallocate(mach_task_self(), port);
+	break;
+
+      case MACH_MSG_TYPE_MAKE_SEND_ONCE:
+	/* create a send-once right and then destroy it */
+	(void) __mach_port_extract_right(mach_task_self(), port,
+					 MACH_MSG_TYPE_MAKE_SEND_ONCE,
+					 &port, &type);
+	(void) __mach_port_deallocate(mach_task_self(), port);
 	break;
     }
 }

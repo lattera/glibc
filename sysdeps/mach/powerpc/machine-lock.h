@@ -1,5 +1,5 @@
 /* Machine-specific definition for spin locks.  PowerPC version.
-   Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1994,97,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,9 +40,9 @@ __spin_unlock (__spin_lock_t *__lock)
 {
   long int __locked;
   __asm__ __volatile__ ("\
-0:	lwarx	%0,0,%1
-	stwcx.	%2,0,%1
-	bne-	0b
+0:	lwarx	%0,0,%1\n\
+	stwcx.	%2,0,%1\n\
+	bne-	0b\n\
 " : "=&r" (__locked) : "r" (__lock), "r" (0) : "cr0");
 }
 
@@ -53,9 +53,9 @@ __spin_try_lock (register __spin_lock_t *__lock)
 {
   long int __rtn;
   __asm__ __volatile__ ("\
-0:	lwarx	%0,0,%1
-	stwcx.	%2,0,%1
-	bne-	0b
+0:	lwarx	%0,0,%1\n\
+	stwcx.	%2,0,%1\n\
+	bne-	0b\n\
 " : "=&r" (__rtn) : "r" (__lock), "r" (1) : "cr0");
   return !__rtn;
 }
@@ -67,9 +67,9 @@ __spin_lock_locked (__spin_lock_t *__lock)
 {
   long int __rtn;
   __asm__ __volatile__ ("\
-0:	lwarx	%0,0,%1
-	stwcx.	%0,0,%1
-	bne-	0b
+0:	lwarx	%0,0,%1\n\
+	stwcx.	%0,0,%1\n\
+	bne-	0b\n\
 " : "=&r" (__rtn) : "r" (__lock) : "cr0");
   return __rtn;
 }

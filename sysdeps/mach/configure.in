@@ -1,6 +1,11 @@
 sinclude(./aclocal.m4)dnl Autoconf lossage.
 GLIBC_PROVIDES dnl See aclocal.m4 in the top level source directory.
 
+### Sanity checks for Mach header installation
+AC_CHECK_HEADER(mach/mach_types.h,, [AC_MSG_ERROR([cannot find Mach headers])])
+AC_CHECK_HEADER(mach/mach_types.defs,, [dnl
+AC_MSG_ERROR([cannot find Mach .defs files])])
+
 dnl
 dnl mach_TYPE_CHECK(foo_t, bar_t)
 dnl
@@ -21,6 +26,9 @@ dnl
 mach_TYPE_CHECK(task_t, task_port_t)
 mach_TYPE_CHECK(thread_t, thread_port_t)
 
+dnl
+dnl The creation_time field is a GNU Mach addition the other variants lack.
+dnl
 AC_CACHE_CHECK(for creation_time in task_basic_info,
 	       libc_cv_mach_task_creation_time, [dnl
 AC_TRY_COMPILE([#include <mach/task_info.h>], [
@@ -29,4 +37,25 @@ long s = i->creation_time.seconds;
 ], libc_cv_mach_task_creation_time=yes, libc_cv_mach_task_creation_time=no)])
 if test $libc_cv_mach_task_creation_time = no; then
   DEFINES="$DEFINES -DNO_CREATION_TIME=1"
+fi
+
+dnl
+dnl The Darwin variant no longer has <mach/mach.defs>
+dnl but instead has several constituent .defs files.
+dnl In this scenario we will presume there is a <mach/mach_interface.h>
+dnl that contains an #include for each constituent header file,
+dnl but we don't do a check for that here because in a bare
+dnl environment the compile against those headers will fail.
+dnl
+mach_interface_list=
+for ifc in mach mach4 \
+	   clock_priv host_priv host_security ledger lock_set \
+	   processor processor_set task thread_act vm_map \
+	   memory_object memory_object_default default_pager \
+	   ; do
+  AC_CHECK_HEADER(mach/${ifc}.defs, [dnl
+  mach_interface_list="$mach_interface_list $ifc"])
+done
+if test "x$mach_interface_list" = x; then
+  AC_MSG_ERROR([what manner of Mach is this?])
 fi

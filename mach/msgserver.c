@@ -49,6 +49,12 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.8  2002/02/17 07:13:32  roland
+ * 2002-02-16  Roland McGrath  <roland@frob.com>
+ *
+ * 	* mach/msgserver.c [NDR_CHAR_ASCII] (mig_reply_header_t): #define as
+ * 	mig_reply_error_t for OSF Mach variant.
+ *
  * Revision 1.7  2001/07/06 04:55:34  aj
  * Update to LGPL v2.1.
  *
@@ -92,6 +98,10 @@
 #include <mach/mig_errors.h>
 #include <stdlib.h>		/* For malloc and free.  */
 #include <assert.h>
+
+#ifdef NDR_CHAR_ASCII		/* OSF Mach flavors have different names.  */
+# define mig_reply_header_t	mig_reply_error_t
+#endif
 
 mach_msg_return_t
 __mach_msg_server_timeout (boolean_t (*demux) (mach_msg_header_t *request,
