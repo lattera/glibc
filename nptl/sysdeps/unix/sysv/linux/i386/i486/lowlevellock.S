@@ -1,4 +1,4 @@
-/* Copyright (C) 2002 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -55,7 +55,7 @@ __lll_lock_wait:
 	orl	$-1, %eax	/* Load -1.  */
 	LOCK
 	xaddl	%eax, (%ebx)
-	jne	1b
+	jne,pn	1b
 
 	movl	$-1, (%ebx)
 

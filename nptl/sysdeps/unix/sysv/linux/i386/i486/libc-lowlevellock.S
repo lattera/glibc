@@ -55,7 +55,7 @@ __lll_lock_wait:
 0:
 #endif
 	xaddl	%eax, (%ebx)
-	jne	1b
+	jne,pn	1b
 
 	movl	$-1, (%ebx)
 
@@ -64,32 +64,6 @@ __lll_lock_wait:
 	popl	%esi
 	ret
 	.size	__lll_lock_wait,.-__lll_lock_wait
-
-
-	.type	lll_unlock_wake_cb,@function
-	.align	16
-lll_unlock_wake_cb:
-	pushl	%esi
-	pushl	%ebx
-	pushl	%ecx
-	pushl	%edx
-
-	movl	20(%esp), %ebx
-#ifndef UP
-	cmpl	$0, %gs:MULTIPLE_THREADS_OFFSET
-	je,pt	0f
-	lock
-0:
-#endif
-	incl	(%ebx)
-	jng	1f
-
-	popl	%edx
-	popl	%ecx
-	popl	%ebx
-	popl	%esi
-	ret
-	.size	lll_unlock_wake_cb,.-lll_unlock_wake_cb
 
 
 	.globl	__lll_unlock_wake
