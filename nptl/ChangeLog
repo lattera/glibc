@@ -1,3 +1,9 @@
+2004-10-29  Kaz  Kojima  <kkojima@rr.iij4u.or.jp>
+
+	* sysdeps/unix/sysv/linux/sh/sem_timedwait.S (sem_timedwait):
+	Set ETIMEDOUT to errno when time is up.  Tweak to avoid
+	assembler warning.
+
 2004-10-28  Jakub Jelinek  <jakub@redhat.com>
 
 	* pthread_create.c (__pthread_create_2_1): Avoid leaking stacks
