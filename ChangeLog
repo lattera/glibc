@@ -1,5 +1,8 @@
 1999-01-22  Roland McGrath  <roland@baalperazim.frob.com>
 
+	* sysdeps/mach/hurd/Makefile ($(common-objpfx)stamp-errnos): Depend on
+	$(common-objpfx)errnos.d.
+
 	* sysdeps/mach/hurd/Makefile: Fix errnos.h -> bits/errno.h in rules.
 
 	* manual/errno.texi (Error Codes): Fix ENOSYS description.

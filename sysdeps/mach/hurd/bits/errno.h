@@ -213,6 +213,86 @@ enum __error_t_codes
 	ETIME           = _HURD_ERRNO (117),
 #define	ETIME           _HURD_ERRNO (117)/* Timer expired */
 
+	/* Errors from <mach/message.h>.  */
+	EMACH_SEND_IN_PROGRESS          = 0x10000001,
+	EMACH_SEND_INVALID_DATA         = 0x10000002,
+	EMACH_SEND_INVALID_DEST         = 0x10000003,
+	EMACH_SEND_TIMED_OUT            = 0x10000004,
+	EMACH_SEND_WILL_NOTIFY          = 0x10000005,
+	EMACH_SEND_NOTIFY_IN_PROGRESS   = 0x10000006,
+	EMACH_SEND_INTERRUPTED          = 0x10000007,
+	EMACH_SEND_MSG_TOO_SMALL        = 0x10000008,
+	EMACH_SEND_INVALID_REPLY        = 0x10000009,
+	EMACH_SEND_INVALID_RIGHT        = 0x1000000a,
+	EMACH_SEND_INVALID_NOTIFY       = 0x1000000b,
+	EMACH_SEND_INVALID_MEMORY       = 0x1000000c,
+	EMACH_SEND_NO_BUFFER            = 0x1000000d,
+	EMACH_SEND_NO_NOTIFY            = 0x1000000e,
+	EMACH_SEND_INVALID_TYPE         = 0x1000000f,
+	EMACH_SEND_INVALID_HEADER       = 0x10000010,
+	EMACH_RCV_IN_PROGRESS           = 0x10004001,
+	EMACH_RCV_INVALID_NAME          = 0x10004002,
+	EMACH_RCV_TIMED_OUT             = 0x10004003,
+	EMACH_RCV_TOO_LARGE             = 0x10004004,
+	EMACH_RCV_INTERRUPTED           = 0x10004005,
+	EMACH_RCV_PORT_CHANGED          = 0x10004006,
+	EMACH_RCV_INVALID_NOTIFY        = 0x10004007,
+	EMACH_RCV_INVALID_DATA          = 0x10004008,
+	EMACH_RCV_PORT_DIED             = 0x10004009,
+	EMACH_RCV_IN_SET                = 0x1000400a,
+	EMACH_RCV_HEADER_ERROR          = 0x1000400b,
+	EMACH_RCV_BODY_ERROR            = 0x1000400c,
+
+	/* Errors from <mach/kern_return.h>.  */
+	EKERN_INVALID_ADDRESS           = 1,
+	EKERN_PROTECTION_FAILURE        = 2,
+	EKERN_NO_SPACE                  = 3,
+	EKERN_INVALID_ARGUMENT          = 4,
+	EKERN_FAILURE                   = 5,
+	EKERN_RESOURCE_SHORTAGE         = 6,
+	EKERN_NOT_RECEIVER              = 7,
+	EKERN_NO_ACCESS                 = 8,
+	EKERN_MEMORY_FAILURE            = 9,
+	EKERN_MEMORY_ERROR              = 10,
+	EKERN_NOT_IN_SET                = 12,
+	EKERN_NAME_EXISTS               = 13,
+	EKERN_ABORTED                   = 14,
+	EKERN_INVALID_NAME              = 15,
+	EKERN_INVALID_TASK              = 16,
+	EKERN_INVALID_RIGHT             = 17,
+	EKERN_INVALID_VALUE             = 18,
+	EKERN_UREFS_OVERFLOW            = 19,
+	EKERN_INVALID_CAPABILITY        = 20,
+	EKERN_RIGHT_EXISTS              = 21,
+	EKERN_INVALID_HOST              = 22,
+	EKERN_MEMORY_PRESENT            = 23,
+	EKERN_WRITE_PROTECTION_FAILURE  = 24,
+	EKERN_TERMINATED                = 26,
+
+	/* Errors from <mach/mig_errors.h>.  */
+	EMIG_TYPE_ERROR         = -300, /* client type check failure */
+	EMIG_REPLY_MISMATCH     = -301, /* wrong reply message ID */
+	EMIG_REMOTE_ERROR       = -302, /* server detected error */
+	EMIG_BAD_ID             = -303, /* bad request message ID */
+	EMIG_BAD_ARGUMENTS      = -304, /* server type check failure */
+	EMIG_NO_REPLY           = -305, /* no reply should be sent */
+	EMIG_EXCEPTION          = -306, /* server raised exception */
+	EMIG_ARRAY_TOO_LARGE    = -307, /* array not large enough */
+	EMIG_SERVER_DIED        = -308, /* server died */
+	EMIG_DESTROY_REQUEST    = -309, /* destroy request with no reply */
+
+	/* Errors from <device/device_types.h>.  */
+	ED_IO_ERROR             = 2500, /* hardware IO error */
+	ED_WOULD_BLOCK          = 2501, /* would block, but D_NOWAIT set */
+	ED_NO_SUCH_DEVICE       = 2502, /* no such device */
+	ED_ALREADY_OPEN         = 2503, /* exclusive-use device already open */
+	ED_DEVICE_DOWN          = 2504, /* device has been shut down */
+	ED_INVALID_OPERATION    = 2505, /* bad operation for device */
+	ED_INVALID_RECNUM       = 2506, /* invalid record (block) number */
+	ED_INVALID_SIZE         = 2507, /* invalid IO size */
+	ED_NO_MEMORY            = 2508, /* memory allocation failure */
+	ED_READ_ONLY            = 2509, /* device cannot be written to */
+
 };
 
 #define	_HURD_ERRNOS	119
