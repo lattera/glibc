@@ -21,6 +21,16 @@ Tue Feb 13 05:12:02 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
 
 Sat Feb 10 13:09:03 1996  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
 
+	* sysdeps/unix/sysv/linux/m68k/brk.c,
+	sysdeps/unix/sysv/linux/m68k/mmap.S,
+	sysdeps/unix/sysv/linux/m68k/select.S,
+	sysdeps/unix/sysv/linux/m68k/sigcontext.h,
+	sysdeps/unix/sysv/linux/m68k/sigreturn.S,
+	sysdeps/unix/sysv/linux/m68k/socket.S,
+	sysdeps/unix/sysv/linux/m68k/syscall.S,
+	sysdeps/unix/sysv/linux/m68k/sysdep.S,
+	sysdeps/unix/sysv/linux/m68k/sysdep.h: New files.
+
 	* sysdeps/m68k/fpu/isinfl.c, sysdeps/m68k/fpu/isnanl.c,
 	sysdeps/m68k/isinfl.c, sysdeps/m68k/isnanl.c: New files.
 
