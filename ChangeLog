@@ -1,5 +1,8 @@
 2000-09-22  Andreas Jaeger  <aj@suse.de>
 
+	* locale/programs/repertoire.c (repertoiremap_hash): Don't specify
+	array size.
+
 	* sysdeps/alpha/fpu/libm-test-ulps: New file.
 	From Christian Iseli <chris@ludwig-alpha.unil.ch>.
 

@@ -360,7 +360,7 @@ repertoire_compare (const void *p1, const void *p2)
 static const struct keyword_t *
 repertoiremap_hash (const char *str, unsigned int len)
 {
-  static const struct keyword_t wordlist[0] =
+  static const struct keyword_t wordlist[] =
   {
     {"escape_char",      tok_escape_char,     0},
     {"comment_char",     tok_comment_char,    0},
