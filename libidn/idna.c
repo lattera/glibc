@@ -437,21 +437,24 @@ idna_to_ascii_4z (const uint32_t * input, char **output, int flags)
      U+3002 (ideographic full stop), U+FF0E (fullwidth full stop),
      U+FF61 (halfwidth ideographic full stop). */
 
-  if (input[0] == 0
-      /* Handle explicit zero-length root label. */
-      || (DOTP (input[0]) && input[1] == 0))
+  if (input[0] == 0)
     {
-#if defined HAVE_STRDUP || defined _LIBC
-      *output = strdup (input);
-      return *output == NULL ? IDNA_MALLOC_ERROR : IDNA_SUCCESS;
-#else
       /* Handle implicit zero-length root label. */
       *output = malloc (1);
       if (!*output)
 	return IDNA_MALLOC_ERROR;
-      strcpy (*output, input);
+      strcpy (*output, "");
       return IDNA_SUCCESS;
-#endif
+    }
+
+  if (DOTP (input[0]) && input[1] == 0)
+    {
+      /* Handle explicit zero-length root label. */
+      *output = malloc (2);
+      if (!*output)
+	return IDNA_MALLOC_ERROR;
+      strcpy (*output, ".");
+      return IDNA_SUCCESS;
     }
 
   *output = NULL;
