@@ -1,5 +1,5 @@
 /* Shift a limb left, low level routine.
-   Copyright (C) 1996, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -35,7 +35,7 @@ EALIGN(__mpn_lshift,3,0)
 
 	bdz	L(end1)
 
-0:	lwzu	r10,-4(r4)
+L(0):	lwzu	r10,-4(r4)
 	slw	r9,r11,r6
 	srw	r12,r10,r8
 	or	r9,r9,r12
@@ -46,7 +46,7 @@ EALIGN(__mpn_lshift,3,0)
 	srw	r12,r11,r8
 	or	r9,r9,r12
 	stwu	r9,-4(r7)
-	bdnz	0b
+	bdnz	L(0)
 
 L(end1):slw	r0,r11,r6
 	stw	r0,-4(r7)
@@ -76,7 +76,7 @@ L(end2):slw	r0,r10,r6
 
 #define DO_LSHIFT(n) \
 	mtctr	r5;							\
-0:	lwzu	r10,-4(r4);						\
+L(n):	lwzu	r10,-4(r4);						\
 	slwi	r9,r11,n;						\
 	inslwi	r9,r10,n,32-n;					\
 	stwu	r9,-4(r7);						\
@@ -85,7 +85,7 @@ L(end2):slw	r0,r10,r6
 	slwi	r9,r10,n;						\
 	inslwi	r9,r11,n,32-n;					\
 	stwu	r9,-4(r7);						\
-	bdnz	0b;							\
+	bdnz	L(n);							\
 	b	L(end1)
 
 	DO_LSHIFT(1)

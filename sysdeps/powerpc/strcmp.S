@@ -1,5 +1,5 @@
 /* Optimized strcmp implementation for PowerPC.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -48,16 +48,16 @@ EALIGN(strcmp,4,0)
 	lis   r8,0x7f7f
 	addi  r7,r7,-0x101
 	addi  r8,r8,0x7f7f
-	b     1f
+	b     L(g1)
 
-0:	lwzu  r5,4(r3)
+L(g0):	lwzu  r5,4(r3)
 	bne   cr1,L(different)
 	lwzu  r6,4(r4)
-1:	add   r0,r7,r5
+L(g1):	add   r0,r7,r5
 	nor   r9,r8,r5
 	and.  r0,r0,r9
 	cmpw  cr1,r5,r6
-	beq+  0b
+	beq+  L(g0)
 L(endstring):
 /* OK. We've hit the end of the string. We need to be careful that
    we don't compare two strings as different because of gunk beyond
@@ -93,23 +93,23 @@ L(highbit):
 L(unaligned):
 	lbz   r5,0(r3)
 	lbz   r6,0(r4)
-	b     1f
+	b     L(u1)
 
-0:	lbzu  r5,1(r3)
-	bne-  4f
+L(u0):	lbzu  r5,1(r3)
+	bne-  L(u4)
 	lbzu  r6,1(r4)
-1:	cmpwi cr1,r5,0
-	beq-  cr1,3f
+L(u1):	cmpwi cr1,r5,0
+	beq-  cr1,L(u3)
 	cmpw  r5,r6
-	bne-  3f
+	bne-  L(u3)
 	lbzu  r5,1(r3)
 	lbzu  r6,1(r4)
 	cmpwi cr1,r5,0
 	cmpw  r5,r6
-	bne+  cr1,0b
-3:	sub   r3,r5,r6
+	bne+  cr1,L(u0)
+L(u3):	sub   r3,r5,r6
 	blr
-4:	lbz   r5,-1(r3)
+L(u4):	lbz   r5,-1(r3)
 	sub   r3,r5,r6
 	blr
 END(strcmp)

@@ -1,5 +1,5 @@
 /* Multiply a limb vector by a limb, for PowerPC.
-   Copyright (C) 1993, 1994, 1995, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1993-1995, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,16 +31,16 @@ ENTRY(__mpn_mul_1)
 	mulhwu	r10,r0,r6
 	addi	r3,r3,-4		# adjust res_ptr
 	addic	r5,r5,0			# clear cy with dummy insn
-	bdz	1f
+	bdz	L(1)
 
-0:	lwzu	r0,4(r4)
+L(0):	lwzu	r0,4(r4)
 	stwu	r7,4(r3)
 	mullw	r8,r0,r6
 	adde	r7,r8,r10
 	mulhwu	r10,r0,r6
-	bdnz	0b
+	bdnz	L(0)
 
-1:	stw	r7,4(r3)
+L(1):	stw	r7,4(r3)
 	addze	r3,r10
 	blr
 END(__mpn_mul_1)

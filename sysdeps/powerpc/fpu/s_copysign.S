@@ -1,5 +1,5 @@
 /* Copy a sign bit between floating-point values.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,10 +31,10 @@ ENTRY(__copysign)
 	lwz	r3,8(r1)
 	cmpwi   r3,0
 	addi    r1,r1,16
-	blt     0f
+	blt     L(0)
 	fabs    fp1,fp1
 	blr
-0:	fnabs   fp1,fp1
+L(0):	fnabs   fp1,fp1
 	blr
 	END (__copysign)
 

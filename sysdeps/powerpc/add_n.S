@@ -1,5 +1,5 @@
 /* Add two limb vectors of equal, non-zero length for PowerPC.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,7 +33,7 @@ EALIGN(__mpn_add_n,3,0)
 	srwi. r7,r6,1
 	li    r10,0
 	mtctr r7
-	bt    31,2f
+	bt    31,L(2)
 
 /* Clear the carry.  */
 	addic r0,r0,0
@@ -41,19 +41,19 @@ EALIGN(__mpn_add_n,3,0)
 	addi  r3,r3,-4
 	addi  r4,r4,-4
 	addi  r5,r5,-4
-	b     0f
+	b     L(0)
 
-2:	lwz  r7,0(r5)
+L(2):	lwz  r7,0(r5)
 	lwz  r6,0(r4)
 	addc r6,r6,r7
 	stw  r6,0(r3)
-        beq  1f
+        beq  L(1)
 
 /* The loop.  */
 
 /* Align start of loop to an odd word boundary to guarantee that the
    last two words can be fetched in one access (for 601).  */
-0:	lwz  r9,4(r4)
+L(0):	lwz  r9,4(r4)
 	lwz  r8,4(r5)
 	lwzu r6,8(r4)
 	lwzu r7,8(r5)
@@ -61,8 +61,8 @@ EALIGN(__mpn_add_n,3,0)
 	stw  r8,4(r3)
 	adde r6,r6,r7
 	stwu r6,8(r3)
-	bdnz 0b
+	bdnz L(0)
 /* Return the carry.  */
-1:	addze r3,r10
+L(1):	addze r3,r10
 	blr
 END(__mpn_add_n)

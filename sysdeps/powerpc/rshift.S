@@ -1,5 +1,5 @@
 /* Shift a limb right, low level routine.
-   Copyright (C) 1995, 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -31,26 +31,26 @@ ENTRY(__mpn_rshift)
 	subfic	r8,r6,32
 	lwz	r11,0(r4)	# load first s1 limb
 	slw	r3,r11,r8	# compute function return value
-	bdz	1f
+	bdz	L(1)
 
-0:	lwzu	r10,4(r4)
+L(0):	lwzu	r10,4(r4)
 	srw	r9,r11,r6
 	slw	r12,r10,r8
 	or	r9,r9,r12
 	stwu	r9,4(r7)
-	bdz	2f
+	bdz	L(2)
 	lwzu	r11,4(r4)
 	srw	r9,r10,r6
 	slw	r12,r11,r8
 	or	r9,r9,r12
 	stwu	r9,4(r7)
-	bdnz	0b
+	bdnz	L(0)
 
-1:	srw	r0,r11,r6
+L(1):	srw	r0,r11,r6
 	stw	r0,4(r7)
 	blr
 
-2:	srw	r0,r10,r6
+L(2):	srw	r0,r10,r6
 	stw	r0,4(r7)
 	blr
 END(__mpn_rshift)

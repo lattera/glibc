@@ -1,5 +1,5 @@
 /* Optimized memset implementation for PowerPC.
-   Copyright (C) 1997, 1999 Free Software Foundation, Inc.
+   Copyright (C) 1997, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -42,10 +42,10 @@ EALIGN(memset,5,1)
 	subfic r7,r7,4
 	add    r6,r6,r7
 	sub    r5,r5,r7
-	bf+    31,0f
+	bf+    31,L(g0)
 	stb    r4,0(r3)
 	bt     30,L(aligned)
-0:	sth    r4,-2(r6)		#  16th instruction from .align
+L(g0):	sth    r4,-2(r6)		#  16th instruction from .align
 /* take care of case for size < 31 */
 L(aligned):
 	mtcrf  0x01,r5
@@ -60,15 +60,15 @@ L(aligned):
 	sub    r5,r5,r7
 	cmplwi cr1,r7,0x10
 	mr     r8,r6
-	bf     28,1f
+	bf     28,L(a1)
 	stw    r4,-4(r8)
 	stwu   r4,-8(r8)
-1:	blt    cr1,2f
+L(a1):	blt    cr1,2f
 	stw    r4,-4(r8)	# 32nd instruction from .align
 	stw    r4,-8(r8)
 	stw    r4,-12(r8)
 	stwu   r4,-16(r8)
-2:	bf     29,L(caligned)
+L(a2):	bf     29,L(caligned)
 	stw    r4,-4(r8)
 /* now aligned to a cache line.  */
 L(caligned):
@@ -81,10 +81,10 @@ L(caligned):
 	beq    L(medium)	# we may not actually get to do a full line
 	clrlwi. r5,r5,27
 	add    r6,r6,r7
-0:	li     r8,-0x40
+	li     r8,-0x40
 	bdz    L(cloopdone)	# 48th instruction from .align
 
-3:	dcbz   r8,r6
+L(c3):	dcbz   r8,r6
 	stw    r4,-4(r6)
 	stw    r4,-8(r6)
 	stw    r4,-12(r6)
@@ -95,7 +95,7 @@ L(caligned):
 	nop			# let 601 fetch first 8 instructions of loop
 	stw    r4,-28(r6)
 	stwu   r4,-32(r6)
-	bdnz   3b
+	bdnz   L(c3)
 L(cloopdone):
 	stw    r4,-4(r6)
 	stw    r4,-8(r6)
@@ -121,15 +121,15 @@ L(zloopstart):
 	li     r7,0x20
 	li     r8,-0x40
 	cmplwi cr1,r5,16	# 8
-	bf     26,0f
+	bf     26,L(z0)
 	dcbz   0,r6
 	addi   r6,r6,0x20
-0:	li     r9,-0x20
-	bf     25,1f
+L(z0):	li     r9,-0x20
+	bf     25,L(z1)
 	dcbz   0,r6
 	dcbz   r7,r6
 	addi   r6,r6,0x40	# 16
-1:	cmplwi cr5,r5,0
+L(z1):	cmplwi cr5,r5,0
 	beq    L(medium)
 L(zloop):
 	dcbz   0,r6
