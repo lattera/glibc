@@ -1,5 +1,5 @@
 /* Tests for loading and unloading of iconv modules.
-   Copyright (C) 2000 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 2000.
 
@@ -59,61 +59,60 @@ struct
 
 
 /* The test data.  */
-static const char inbuf[] = "\
-The first step is the function to create a handle.
-
- - Function: iconv_t iconv_open (const char *TOCODE, const char
-          *FROMCODE)
-     The `iconv_open' function has to be used before starting a
-     conversion.  The two parameters this function takes determine the
-     source and destination character set for the conversion and if the
-     implementation has the possibility to perform such a conversion the
-     function returns a handle.
-
-     If the wanted conversion is not available the function returns
-     `(iconv_t) -1'.  In this case the global variable `errno' can have
-     the following values:
-
-    `EMFILE'
-          The process already has `OPEN_MAX' file descriptors open.
-
-    `ENFILE'
-          The system limit of open file is reached.
-
-    `ENOMEM'
-          Not enough memory to carry out the operation.
-
-    `EINVAL'
-          The conversion from FROMCODE to TOCODE is not supported.
-
-     It is not possible to use the same descriptor in different threads
-     to perform independent conversions.  Within the data structures
-     associated with the descriptor there is information about the
-     conversion state.  This must not be messed up by using it in
-     different conversions.
-
-     An `iconv' descriptor is like a file descriptor as for every use a
-     new descriptor must be created.  The descriptor does not stand for
-     all of the conversions from FROMSET to TOSET.
-
-     The GNU C library implementation of `iconv_open' has one
-     significant extension to other implementations.  To ease the
-     extension of the set of available conversions the implementation
-     allows storing the necessary files with data and code in
-     arbitrarily many directories.  How this extension has to be
-     written will be explained below (*note glibc iconv
-     Implementation::).  Here it is only important to say that all
-     directories mentioned in the `GCONV_PATH' environment variable are
-     considered if they contain a file `gconv-modules'.  These
-     directories need not necessarily be created by the system
-     administrator.  In fact, this extension is introduced to help users
-     writing and using their own, new conversions.  Of course this does
-     not work for security reasons in SUID binaries; in this case only
-     the system directory is considered and this normally is
-     `PREFIX/lib/gconv'.  The `GCONV_PATH' environment variable is
-     examined exactly once at the first call of the `iconv_open'
-     function.  Later modifications of the variable have no effect.
-";
+static const char inbuf[] =
+"The first step is the function to create a handle.\n"
+"\n"
+" - Function: iconv_t iconv_open (const char *TOCODE, const char\n"
+"          *FROMCODE)\n"
+"     The `iconv_open' function has to be used before starting a\n"
+"     conversion.  The two parameters this function takes determine the\n"
+"     source and destination character set for the conversion and if the\n"
+"     implementation has the possibility to perform such a conversion the\n"
+"     function returns a handle.\n"
+"\n"
+"     If the wanted conversion is not available the function returns\n"
+"     `(iconv_t) -1'.  In this case the global variable `errno' can have\n"
+"     the following values:\n"
+"\n"
+"    `EMFILE'\n"
+"          The process already has `OPEN_MAX' file descriptors open.\n"
+"\n"
+"    `ENFILE'\n"
+"          The system limit of open file is reached.\n"
+"\n"
+"    `ENOMEM'\n"
+"          Not enough memory to carry out the operation.\n"
+"\n"
+"    `EINVAL'\n"
+"          The conversion from FROMCODE to TOCODE is not supported.\n"
+"\n"
+"     It is not possible to use the same descriptor in different threads\n"
+"     to perform independent conversions.  Within the data structures\n"
+"     associated with the descriptor there is information about the\n"
+"     conversion state.  This must not be messed up by using it in\n"
+"     different conversions.\n"
+"\n"
+"     An `iconv' descriptor is like a file descriptor as for every use a\n"
+"     new descriptor must be created.  The descriptor does not stand for\n"
+"     all of the conversions from FROMSET to TOSET.\n"
+"\n"
+"     The GNU C library implementation of `iconv_open' has one\n"
+"     significant extension to other implementations.  To ease the\n"
+"     extension of the set of available conversions the implementation\n"
+"     allows storing the necessary files with data and code in\n"
+"     arbitrarily many directories.  How this extension has to be\n"
+"     written will be explained below (*note glibc iconv\n"
+"     Implementation::).  Here it is only important to say that all\n"
+"     directories mentioned in the `GCONV_PATH' environment variable are\n"
+"     considered if they contain a file `gconv-modules'.  These\n"
+"     directories need not necessarily be created by the system\n"
+"     administrator.  In fact, this extension is introduced to help users\n"
+"     writing and using their own, new conversions.  Of course this does\n"
+"     not work for security reasons in SUID binaries; in this case only\n"
+"     the system directory is considered and this normally is\n"
+"     `PREFIX/lib/gconv'.  The `GCONV_PATH' environment variable is\n"
+"     examined exactly once at the first call of the `iconv_open'\n"
+"     function.  Later modifications of the variable have no effect.\n";
 
 
 int
