@@ -103,7 +103,8 @@ endif
 
 # For the shared library, we don't need to do the linker script machination.
 # Instead, we specify the required libraries when building the shared object.
-LDLIBS-c.so = -lmachuser -lhurduser
+$(common-objpfx)libc.so: $(firstword $(objdir) $(..)mach)/libmachuser.so \
+			 $(firstword $(objdir) $(..)hurd)/libhurduser.so
 ifndef objpfx
 rpath-link += $(..)mach:$(..)hurd
 endif

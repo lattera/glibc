@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 1992, 1993, 1994 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1993, 1994, 1996 Free Software Foundation, Inc.
 This file is part of the GNU C Library.
 
 The GNU C Library is free software; you can redistribute it and/or
@@ -126,56 +126,67 @@ DEFUN(fwrite, (ptr, size, nmemb, stream),
 	}
     }
   else if (!default_func || buffer_space >= to_write)
-  fill_buffer:
-    /* There is enough room in the buffer for everything we
-       want to write or the user has specified his own output
-       buffer-flushing/expanding function.  */
-    while (to_write > 0)
-      {
-	register size_t n = to_write;
+    {
+      /* There is enough room in the buffer for everything we want to write
+	 or the user has specified his own output buffer-flushing/expanding
+	 function.  */
+    fill_buffer:
+      while (to_write > 0)
+	{
+	  register size_t n = to_write;
 
-	if (n > buffer_space)
-	  n = buffer_space;
+	  if (n > buffer_space)
+	    n = buffer_space;
 
-	buffer_space -= n;
+	  buffer_space -= n;
 
-	written += n;
-	to_write -= n;
+	  written += n;
+	  to_write -= n;
 
-	if (n < 20)
-	  while (n-- > 0)
-	    *stream->__bufp++ = *p++;
-	else
-	  {
-	    memcpy ((PTR) stream->__bufp, (PTR) p, n);
-	    stream->__bufp += n;
-	    p += n;
-	  }
+	  if (n < 20)
+	    while (n-- > 0)
+	      *stream->__bufp++ = *p++;
+	  else
+	    {
+	      memcpy ((PTR) stream->__bufp, (PTR) p, n);
+	      stream->__bufp += n;
+	      p += n;
+	    }
 
-	if (buffer_space == 0 || (to_write == 0 && newlinep))
-	  {
-	    /* We've filled the buffer, so flush it.  */
-	    if (fflush (stream) == EOF)
-	      break;
+	  if (to_write == 0)
+	    /* Done writing.  */
+	    break;
+	  else if (buffer_space == 0)
+	    {
+	      /* We have filled the buffer, so flush it.  */
+	      if (fflush (stream) == EOF)
+		break;
 
-	    /* Reset our record of the space available in the buffer,
-	       since we have just flushed it.  */
-	  check_space:
-	    buffer_space = (stream->__bufsize -
-			    (stream->__bufp - stream->__buffer));
-	    if (buffer_space == 0)
-	      {
-		/* With a custom output-room function, flushing might
-		   not create any buffer space.  Try writing a single
-		   character to create the space.  */
-		if (__flshfp (stream, *p++) == EOF)
-		  goto done;
-		++written;
-		--to_write;
-		goto check_space;
-	      }
-	  }
-      }
+	      /* Reset our record of the space available in the buffer,
+		 since we have just flushed it.  */
+	    check_space:
+	      buffer_space = (stream->__bufsize -
+			      (stream->__bufp - stream->__buffer));
+	      if (buffer_space == 0)
+		{
+		  /* With a custom output-room function, flushing might
+		     not create any buffer space.  Try writing a single
+		     character to create the space.  */
+		  if (__flshfp (stream, *p++) == EOF)
+		    goto done;
+		  ++written;
+		  --to_write;
+		  goto check_space;
+		}
+	    }
+	}
+
+      /* We have written all the data into the buffer.  If we are
+	 line-buffered and just put a newline in the buffer, flush now to
+	 make sure it gets out.  */
+      if (newlinep)
+	fflush (stream);
+    }
   else
     {
       /* It won't all fit in the buffer.  */

@@ -358,6 +358,9 @@ strftime (s, maxsize, format, tp)
 	    add (maxdigits, sprintf (p, number_fmt, number_value);
 		 printed = strlen (p));
 #endif
+	    /* Back up if fewer than MAXDIGITS chars written for pad_none.  */
+	    p -= maxdigits - printed;
+	    i -= maxdigits - printed;
 
 	    break;
 	  }

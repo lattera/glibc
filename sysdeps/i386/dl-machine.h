@@ -80,6 +80,7 @@ elf_machine_rel (struct link_map *map,
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase, undo;
+  weak_symbol (_dl_rtld_map);	/* Defined in rtld.c, but not in libc.a.  */
 
   switch (ELF32_R_TYPE (reloc->r_info))
     {

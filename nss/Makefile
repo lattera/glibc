@@ -68,3 +68,8 @@ $(libnss_db-routines:%=$(objpfx)%.c): $(objpfx)db-%.c: nss_files/files-%.c
 	 echo '#define GENERIC "../nss_db/db-XXX.c"';\
 	 echo '#include <$<>') > $@.new
 	mv -f $@.new $@
+
+# Depend on libc.so so a DT_NEEDED is generated in the shared objects.
+# This ensures they will load libc.so for needed symbols if loaded by
+# a statically-linked program that hasn't already loaded it.
+$(services:%=$(objpfx)libnss_%.so): $(common-objpfx)libc.so

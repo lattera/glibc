@@ -1,4 +1,29 @@
+Wed Jul  3 11:26:28 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* time/strftime.c (strftime: do_number): Adjust P and I after sprintf
+	in case it wrote fewer than MAXDIGITS chars.
+
+	* stdio/fwrite.c (fwrite: fill_buffer): Separate flushing for last
+	newline from flushing full buffer in loop, fix test so no fflush is
+	done when last byte written exactly fills the buffer.
+
+	* nss/Makefile ($(services:%=$(objpfx)libnss_%.so)): Depend on libc.so.
+
+	* sysdeps/mach/hurd/Makefile (LDLIBS-c.so): Variable removed.
+	(libc.so): Instead, give this deps on lib{mach,hurd}user.so.
+
+	* elf/dl-debug.c (_dl_debug_initialize): Use LDBASE arg instead of
+	extracting _dl_rtld_map.l_addr.
+
+	* sysdeps/i386/dl-machine.h (elf_machine_rel): Declare _dl_rtld_map as
+	weak.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela): Likewise.
+
+	* shlib-versions (*-*-*): Set libnss_db=1.
+
 Tue Jul  2 10:44:37 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* elf/rtld.c (dl_main): Set _dl_rtld_map's DT_DEBUG location too.
 
 	* rpm/template (%build): Use @prefix@ instead of always /usr.
 	Set up configparms only if @prefix@ is in fact /usr.

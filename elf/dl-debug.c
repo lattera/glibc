@@ -37,7 +37,7 @@ _dl_debug_initialize (ElfW(Addr) ldbase)
     {
       /* Tell the debugger where to find the map of loaded objects.  */
       _r_debug.r_version = 1	/* R_DEBUG_VERSION XXX */;
-      _r_debug.r_ldbase = _dl_rtld_map.l_addr; /* Record our load address.  */
+      _r_debug.r_ldbase = ldbase;
       _r_debug.r_map = _dl_loaded;
       _r_debug.r_brk = (ElfW(Addr)) &_dl_debug_state;
     }
