@@ -106,7 +106,12 @@ struct _pthread_descr_struct {
   size_t p_guardsize;		/* size of guard area */
   pthread_descr p_self;		/* Pointer to this structure */
   int p_nr;                     /* Index of descriptor in __pthread_handles */
-};
+} __attribute__ ((aligned(32))); /* We need to align the structure so that
+				    doubles are aligned properly.  This is 8
+				    bytes on MIPS and 16 bytes on MIPS64.
+				    32 bytes might give better cache
+				    utilization.  */
+
 
 /* The type of thread handles. */
 

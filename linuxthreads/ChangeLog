@@ -1,3 +1,10 @@
+1999-07-16  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* linuxthreads/internals.h: Align _pthread_descr_struct to 32
+	bytes.
+	Reported by Tim Hockin <thockin@cobaltnet.com>, close PR
+	libc/1206.
+
 1999-07-09  Ulrich Drepper  <drepper@cygnus.com>
 
 	* oldsemaphore.c (sem_compare_and_swap): Fix use of compare and
