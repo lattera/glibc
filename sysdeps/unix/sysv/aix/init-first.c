@@ -57,12 +57,8 @@ init (int argc, char **argv, char **envp)
      If the address would be taken inside the expression the optimizer
      would try to be too smart and throws it away.  Grrr.  */
 
-#ifndef SHARED
   /* XXX disable dl for now
-  int *dummy_addr = &_dl_starting_up;
-
-  __libc_multiple_libcs = dummy_addr && !_dl_starting_up; */
-#endif
+  __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up; */
 
   /* Save the command-line arguments.  */
   __libc_argc = argc;

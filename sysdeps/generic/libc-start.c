@@ -64,13 +64,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
   /* Result of the 'main' function.  */
   int result;
 
-#ifndef SHARED
-# ifdef HAVE_AUX_VECTOR
-  void *__unbounded *__unbounded auxvec;
-# endif
-
   __libc_multiple_libcs = &_dl_starting_up && !_dl_starting_up;
-#endif
 
   INIT_ARGV_and_ENVIRON;
 
@@ -79,6 +73,7 @@ BP_SYM (__libc_start_main) (int (*main) (int, char **, char **),
 
 #ifndef SHARED
 # ifdef HAVE_AUX_VECTOR
+  void *__unbounded *__unbounded auxvec;
   /* First process the auxiliary vector since we need to find the
      program header to locate an eventually present PT_TLS entry.  */
   for (auxvec = (void *__unbounded *__unbounded) ubp_ev;
