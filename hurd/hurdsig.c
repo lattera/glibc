@@ -926,14 +926,19 @@ _hurd_internal_post_signal (struct hurd_sigstate *ss,
 	/* Backdoor extra argument to signal handler.  */
 	scp->sc_error = detail->error;
 
+	/* Block requested signals while running the handler.  */
 	scp->sc_mask = ss->blocked;
+	ss->blocked |= ss->actions[signo].sa_mask;
 
-	if ((ss->actions[signo].sa_flags & SA_NODEFER) == 0)
-	  /* Block SIGNO and requested signals while running the handler.  */
-	  ss->blocked |= __sigmask (signo) | ss->actions[signo].sa_mask;
+	/* Also block SIGNO unless we're asked not to.  */
+	if (! (ss->actions[signo].sa_flags & (SA_RESETHAND | SA_NODEFER)))
+	  ss->blocked |= __sigmask (signo);
 
-	if (ss->actions[signo].sa_flags & SA_RESETHAND)
-	  /* Silly SysV/Linux compatibility option.  */
+	/* Reset to SIG_DFL if requested.  SIGILL and SIGTRAP cannot
+           be automatically reset when delivered; the system silently
+           enforces this restriction.  */
+	if (ss->actions[signo].sa_flags & SA_RESETHAND
+	    && signo != SIGILL && signo != SIGTRAP)
 	  ss->actions[signo].sa_handler = SIG_DFL;
 
 	/* Start the thread running the handler (or possibly waiting for an
