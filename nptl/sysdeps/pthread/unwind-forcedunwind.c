@@ -46,7 +46,11 @@ pthread_cancel_init (void)
       || (personality = __libc_dlsym (handle, "__gcc_personality_v0")) == NULL
       || (forcedunwind = __libc_dlsym (handle, "_Unwind_ForcedUnwind"))
 	 == NULL
-      || (getcfa = __libc_dlsym (handle, "_Unwind_GetCFA")) == NULL)
+      || (getcfa = __libc_dlsym (handle, "_Unwind_GetCFA")) == NULL
+#ifdef ARCH_CANCEL_INIT
+      || ARCH_CANCEL_INIT (handle)
+#endif
+      )
     __libc_fatal ("libgcc_s.so.1 must be installed for pthread_cancel to work\n");
 
   libgcc_s_resume = resume;

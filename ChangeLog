@@ -1,4 +1,8 @@
-2003-09-03  Ulrich Drepper  <drepper@redhat.com>
+22003-09-04  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/generic/unwind.h (_Unwind_GetBSP): Add prototype.
+
+003-09-03  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/getXXbyYY_r.c (INTERNAL): Explicitly set errno and avoid
 	returning ERANGE if this wasn't intended.

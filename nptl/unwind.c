@@ -23,7 +23,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "pthreadP.h"
-
+#include "jmpbuf-unwind.h"
 
 #ifdef HAVE_FORCED_UNWIND
 
@@ -41,8 +41,7 @@ unwind_stop (int version, _Unwind_Action actions,
      of a function is NOT within it's stack frame; it's the SP of the
      previous frame.  */
   if ((actions & _UA_END_OF_STACK)
-      || ! _JMPBUF_UNWINDS  (buf->cancel_jmp_buf[0].jmp_buf,
-			     _Unwind_GetCFA (context)))
+      || ! _JMPBUF_CFA_UNWINDS  (buf->cancel_jmp_buf[0].jmp_buf, context))
     __libc_longjmp ((struct __jmp_buf_tag *) buf->cancel_jmp_buf, 1);
 
   return _URC_NO_REASON;
