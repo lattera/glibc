@@ -55,12 +55,12 @@ static struct local
   }
 local =
   {
-    root: &local.boot_table,
-    npages: 2,
-    boot_table:
+    .root = &local.boot_table,
+    .npages = 2,
+    .boot_table =
       {
-	len: sizeof (local.boot_fdescs) / sizeof (local.boot_fdescs[0]),
-	first_unused: 0
+	.len = sizeof (local.boot_fdescs) / sizeof (local.boot_fdescs[0]),
+	.first_unused = 0
       }
   };
 
@@ -80,18 +80,18 @@ new_fdesc_table (struct local *l, size_t *size)
     return (struct fdesc_table *) NULL;
 
   *size = old_npages * GL(dl_pagesize);
-  new_table = __mmap (0, *size,
-		      PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE,
-		      -1, 0);
+  new_table = __mmap (NULL, *size,
+		      PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE, -1, 0);
   if (new_table == MAP_FAILED)
-    _dl_signal_error (errno, NULL, NULL,
-		      "cannot map pages for fdesc table");
+    INTUSE(_dl_signal_error) (errno, NULL, NULL,
+			      N_("cannot map pages for fdesc table"));
 
   new_table->len
     = (*size - sizeof (*new_table)) / sizeof (struct fdesc);
   new_table->first_unused = 1;
   return new_table;
 }
+
 
 static ElfW(Addr)
 make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
@@ -119,7 +119,7 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
 
   if (l->free_list)
     {
-      /* Get it from free-list */
+      /* Get it from free-list.  */
       do
 	{
 	  fdesc = l->free_list;
@@ -131,7 +131,7 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
     }
   else
     {
-      /* Create a new fdesc table */
+      /* Create a new fdesc table.  */
       size_t size;
       struct fdesc_table *new_table = new_fdesc_table (l, &size);
 
@@ -142,11 +142,16 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
       if (! COMPARE_AND_SWAP ((ElfW(Addr) *) &l->root,
 			      (ElfW(Addr)) root,
 			      (ElfW(Addr)) new_table))
-	/* Someone has just installed a new table. Return NULL to
-	   tell the caller to use the new table.  */
-	__munmap (new_table, size);
+	{
+	  /* Someone has just installed a new table. Return NULL to
+	     tell the caller to use the new table.  */
+	  __munmap (new_table, size);
+	  goto retry;
+	}
 
-      goto retry;
+      /* Note that the first entry was reserved while allocating the
+	 memory for the new page.  */
+      fdesc = &new_table->fdesc[0];
     }
 
  install:
@@ -155,6 +160,7 @@ make_fdesc (ElfW(Addr) ip, ElfW(Addr) gp)
 
   return (ElfW(Addr)) fdesc;
 }
+
 
 static inline ElfW(Addr) *
 make_fptr_table (struct link_map *map)
@@ -181,8 +187,8 @@ make_fptr_table (struct link_map *map)
 		       PROT_READ | PROT_WRITE, MAP_ANON | MAP_PRIVATE,
 		       -1, 0);
   if (fptr_table == MAP_FAILED)
-    _dl_signal_error (errno, NULL, NULL,
-		      "cannot map pages for fptr table");
+    INTUSE(_dl_signal)_error (errno, NULL, NULL,
+			      N_("cannot map pages for fptr table"));
 
   if (COMPARE_AND_SWAP ((ElfW(Addr) *) &map->l_mach.fptr_table,
 			(ElfW(Addr)) NULL, (ElfW(Addr)) fptr_table))
@@ -192,6 +198,7 @@ make_fptr_table (struct link_map *map)
 
   return map->l_mach.fptr_table;
 }
+
 
 ElfW(Addr)
 _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
@@ -209,8 +216,8 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
   symidx = sym - symtab;
 
   if (symidx >= map->l_mach.fptr_table_len)
-    _dl_signal_error (0, NULL, NULL,
-		      "internal error: symidx out of range of fptr table");
+    INTUSE(_dl_signal_error) (0, NULL, NULL, N_("\
+internal error: symidx out of range of fptr table"));
 
   while (ftab[symidx] == NULL)
     {
@@ -254,6 +261,7 @@ _dl_make_fptr (struct link_map *map, const ElfW(Sym) *sym,
   return ftab[symidx];
 }
 
+
 void
 _dl_unmap (struct link_map *map)
 {
@@ -292,6 +300,7 @@ _dl_unmap (struct link_map *map)
   map->l_mach.fptr_table = NULL;
 }
 
+
 ElfW(Addr)
 _dl_lookup_address (const void *address)
 {
@@ -308,5 +317,6 @@ _dl_lookup_address (const void *address)
 	  break;
 	}
     }
+
   return addr;
 }
