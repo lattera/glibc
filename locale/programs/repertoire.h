@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -47,6 +47,9 @@ struct repertoire_t
 
 /* Prototypes for repertoire map handling functions.  */
 extern struct repertoire_t *repertoire_read (const char *filename);
+
+/* Report missing repertoire map.  */
+extern void repertoire_complain (const char *name);
 
 /* Return UCS4 value of character with given NAME.  */
 extern uint32_t repertoire_find_value (const struct repertoire_t *repertoire,

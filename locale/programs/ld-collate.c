@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1995-1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.org>, 1995.
 
@@ -1514,7 +1514,7 @@ collate_finish (struct localedef_t *locale, struct charmap_t *charmap)
 			 to symbols with the same byte sequence.  It is
 			 of course an error.  */
 		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
-				     _("symbol `%s' has same encoding as"),
+				     _("symbol `%s' has the same encoding as"),
 				     (*eptr)->name);
 		      error_at_line (0, 0, runp->file, runp->line,
 				     _("symbol `%s'"), runp->name);
@@ -1691,7 +1691,7 @@ Computing table size for collation table might take a while..."),
 			 to symbols with the same byte sequence.  It is
 			 of course an error.  */
 		      error_at_line (0, 0, (*eptr)->file, (*eptr)->line,
-				     _("symbol `%s' has same encoding as"),
+				     _("symbol `%s' has the same encoding as"),
 				     (*eptr)->name);
 		      error_at_line (0, 0, runp->file, runp->line,
 				     _("symbol `%s'"), runp->name);

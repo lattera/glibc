@@ -154,7 +154,6 @@ measurement_read (struct linereader *ldfile, struct localedef_t *result,
 		  struct charmap_t *charmap, const char *repertoire_name,
 		  int ignore_content)
 {
-  struct repertoire_t *repertoire = NULL;
   struct locale_measurement_t *measurement;
   struct token *now;
   struct token *arg;

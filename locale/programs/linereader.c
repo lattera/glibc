@@ -651,6 +651,7 @@ non-symbolic character value should not be used"));
 
 	      if (cp == &buf[bufact])
 		{
+		  char utmp[10];
 		  const char *symbol = NULL;
 
 		  /* Yes, it is.  */
@@ -663,49 +664,80 @@ non-symbolic character value should not be used"));
 		  if (return_widestr)
 		    ADDWC (wch);
 
-		  /* Now determine from the repertoire the name of the
-		     character and find it in the charmap.  */
-		  if (repertoire != NULL)
-		    symbol = repertoire_find_symbol (repertoire, wch);
+		  /* See whether the charmap contains the Uxxxxxxxx names.  */
+		  snprintf (utmp, sizeof (utmp), "U%08X", wch);
+		  seq = charmap_find_value (charmap, utmp, 9);
 
-		  if (symbol == NULL)
+		  if (seq == NULL)
 		    {
-		      /* We cannot generate a string since we cannot map
-			 from the Unicode number to the character symbol.  */
-		      lr_error (lr,
-			        _("character <U%0*X> not in repertoire map"),
-				wch > 0xffff ? 8 : 4, wch);
+		     /* No, this isn't the case.  Now determine from
+			the repertoire the name of the character and
+			find it in the charmap.  */
+		      if (repertoire != NULL)
+			symbol = repertoire_find_symbol (repertoire, wch);
 
-		      illegal_string = 1;
-		    }
-		  else
-		    {
-		      seq = charmap_find_value (charmap, symbol,
-						strlen (symbol));
-
-		      if (seq == NULL)
+		      if (symbol == NULL)
 			{
-			  /* Not a known name.  */
-			  lr_error (lr,
-				    _("symbol `%s' not in charmap"), symbol);
+			  /* We cannot generate a string since we
+			     cannot map from the Unicode number to the
+			     character symbol.  */
+			  lr_error (lr, _("\
+character <U%0*X> not in repertoire map"),
+				    wch > 0xffff ? 8 : 4, wch);
+
 			  illegal_string = 1;
 			}
 		      else
-		        ADDS (seq->bytes, seq->nbytes);
+			{
+			  seq = charmap_find_value (charmap, symbol,
+						    strlen (symbol));
+
+			  if (seq == NULL)
+			    {
+			      /* Not a known name.  */
+			      lr_error (lr,
+					_("symbol `%s' not in charmap"),
+					symbol);
+			      illegal_string = 1;
+			    }
+			}
 		    }
+
+		  if (seq != NULL)
+		    ADDS (seq->bytes, seq->nbytes);
 
 		  continue;
 		}
 	    }
 
+	  /* We now have the symbolic name in buf[startidx] to
+	     buf[bufact-1].  Now find out the value for this character
+	     in the charmap as well as in the repertoire map (in this
+	     order).  */
+	  seq = charmap_find_value (charmap, &buf[startidx],
+				    bufact - startidx);
+
+	  if (seq == NULL)
+	    {
+	      /* This name is not in the charmap.  */
+	      lr_error (lr, _("symbol `%.*s' not in charmap"),
+			(int) (bufact - startidx), &buf[startidx]);
+	      illegal_string = 1;
+	    }
+
 	  if (return_widestr)
 	    {
-	      /* We now have the symbolic name in buf[startidx] to
-		 buf[bufact-1].  Now find out the value for this
-		 character in the repertoire map as well as in the
-		 charmap (in this order).  */
-	      wch = repertoire_find_value (repertoire, &buf[startidx],
-					   bufact - startidx);
+	      /* Now the same for the multibyte representation.  */
+	      if (seq != NULL && seq->ucs4 != UNINITIALIZED_CHAR_VALUE)
+		wch = seq->ucs4;
+	      else
+		{
+		  wch = repertoire_find_value (repertoire, &buf[startidx],
+					       bufact - startidx);
+		  if (seq != NULL)
+		    seq->ucs4 = wch;
+		}
+
 	      if (wch == ILLEGAL_CHAR_VALUE)
 		{
 		  /* This name is not in the repertoire map.  */
@@ -717,27 +749,12 @@ non-symbolic character value should not be used"));
 		ADDWC (wch);
 	    }
 
-	  /* Now the same for the multibyte representation.  */
-	  seq = charmap_find_value (charmap, &buf[startidx],
-				    bufact - startidx);
+	  /* Now forget about the name we just added.  */
+	  bufact = startidx;
 
-	  if (seq == NULL)
-	    {
-	      /* This name is not in the charmap.  */
-	      lr_error (lr, _("symbol `%.*s' not in charmap"),
-			(int) (bufact - startidx), &buf[startidx]);
-	      illegal_string = 1;
-
-	      /* Now forget about the name we just added.  */
-	      bufact = startidx;
-	    }
-	  else
-	    {
-	      /* Now forget about the name we just added.  */
-	      bufact = startidx;
-
-	      ADDS (seq->bytes, seq->nbytes);
-	    }
+	  /* And copy the bytes.  */
+	  if (seq != NULL)
+	    ADDS (seq->bytes, seq->nbytes);
 	}
 
       if (ch == '\n' || ch == EOF)

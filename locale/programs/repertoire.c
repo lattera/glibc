@@ -1,4 +1,4 @@
-/* Copyright (C) 1998, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1998, 1999, 2000 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1998.
 
@@ -48,6 +48,10 @@ static int repertoire_compare (const void *p1, const void *p2);
 
 /* Already known repertoire maps.  */
 static void *known;
+
+/* List of repertoire maps which are not available and which have been
+   reported to not be.  */
+static void *unavailable;
 
 
 struct repertoire_t *
@@ -115,10 +119,7 @@ repertoire_read (const char *filename)
 	}
 
       if (repfile == NULL)
-	{
-	  error (0, errno, _("repertoire map file `%s' not found"), filename);
-	  return NULL;
-	}
+	return NULL;
     }
 
   /* We don't want symbolic names in string to be translated.  */
@@ -330,6 +331,19 @@ argument to <%s> must be a single character"),
     error (0, errno, _("cannot safe new repertoire map"));
 
   return result;
+}
+
+
+void
+repertoire_complain (const char *name)
+{
+  if (tfind (name, &unavailable, (__compar_fn_t) strcmp) == NULL)
+    {
+      error (0, errno, _("repertoire map file `%s' not found"), name);
+
+      /* Remember that we reported this map.  */
+      tsearch (name, &unavailable, (__compar_fn_t) strcmp);
+    }
 }
 
 
