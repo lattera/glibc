@@ -85,6 +85,7 @@ L(endstring):
 	addi	rNEG, rNEG, 7
 	cmpw	cr1, rNEG, rBITDIF
 	sub	rRTN, rWORD1, rWORD2
+	extsw	rRTN, rRTN
 	bgelr+	cr1
 L(equal):
 	li	rRTN, 0
@@ -97,9 +98,11 @@ L(different):
 
 	extsw.	rBITDIF,rBITDIF /* propagate sign for bgelr */
 	sub	rRTN, rWORD1, rWORD2
+	extsw	rRTN, rRTN
 	bgelr+
 L(highbit):
 	ori	rRTN, rWORD2, 1
+	extsw	rRTN, rRTN
 	/* GKM FIXME: check high bounds.  */
 	blr
 
@@ -124,10 +127,12 @@ L(u1):	cmpwi	cr1, rWORD1, 0
 	cmpw	rWORD1, rWORD2
 	bne+	cr1, L(u0)
 L(u3):	sub	rRTN, rWORD1, rWORD2
+	extsw	rRTN, rRTN
 	/* GKM FIXME: check high bounds.  */
 	blr
 L(u4):	lbz	rWORD1, -1(rSTR1)
 	sub	rRTN, rWORD1, rWORD2
+	extsw	rRTN, rRTN
 	/* GKM FIXME: check high bounds.  */
 	blr
 END (BP_SYM (strcmp))

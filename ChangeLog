@@ -1,5 +1,13 @@
 2003-04-11  Jakub Jelinek  <jakub@redhat.com>
 
+	* string/test-strcmp.c (do_random_tests): Test whether return value
+	has been promoted to wordsize if the ABI requires caller to do so.
+	* string/test-strncmp.c (do_random_tests): Likewise.
+	* string/test-memcmp.c (do_random_tests): Likewise.
+
+	* sysdeps/powerpc/powerpc64/strcmp.S (strcmp): Sign extend rRTN
+	before returning.
+
 	* sysdeps/unix/sysv/linux/powerpc/powerpc64/fe_nomask.c
 	(__fe_nomask_env): Try prctl even if __ASSUME_NEW_PRCTL_SYSCALL
 	is not defined, but the prctl constants are.

@@ -1,5 +1,5 @@
 /* Test and measure strncmp functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -132,7 +132,8 @@ static void
 do_random_tests (void)
 {
   size_t i, j, n, align1, align2, pos, len1, len2, size;
-  int result, r;
+  int result;
+  long r;
   unsigned char *p1 = buf1 + page_size - 512;
   unsigned char *p2 = buf2 + page_size - 512;
 
@@ -206,11 +207,14 @@ do_random_tests (void)
       FOR_EACH_IMPL (impl, 1)
 	{
 	  r = CALL (impl, p1 + align1, p2 + align2, size);
+	  /* Test whether on 64-bit architectures where ABI requires
+	     callee to promote has the promotion been done.  */
+	  asm ("" : "=g" (r) : "0" (r));
 	  if ((r == 0 && result)
 	      || (r < 0 && result >= 0)
 	      || (r > 0 && result <= 0))
 	    {
-	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd, %zd, %zd, %zd) %d != %d, p1 %p p2 %p",
+	      error (0, 0, "Iteration %zd - wrong result in function %s (%zd, %zd, %zd, %zd, %zd, %zd) %ld != %d, p1 %p p2 %p",
 		     n, impl->name, align1, align2, len1, len2, pos, size, r, result, p1, p2);
 	      ret = 1;
 	    }
