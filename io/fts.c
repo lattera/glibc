@@ -816,7 +816,7 @@ fts_stat(sp, dp, p, follow)
 	/* If user needs stat info, stat buffer already allocated. */
 	sbp = ISSET(FTS_NOSTAT) ? &sb : p->fts_statp;
 
-#ifdef DT_WHT
+#if defined DT_WHT && defined S_IFWHT
 	/*
 	 * Whited-out files don't really exist.  However, there's stat(2) file
 	 * mask for them, so we set it so that programs (i.e., find) don't have
