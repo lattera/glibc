@@ -30,6 +30,8 @@ extern void *__libc_stack_end;
 
 #ifdef NEED_DL_SYSINFO
 # include "unwind-dw2-fde.h"
+extern __typeof (__register_frame_info_bases)
+     INTUSE(__register_frame_info_bases);
 static struct object eh_obj;
 #endif
 
