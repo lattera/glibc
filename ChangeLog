@@ -2,6 +2,8 @@
 
 	* version.h (VERSION): Bump to 2.2.1.
 
+	* sysdeps/unix/sysv/linux/mips/Dist: Remove sys/acct.h.
+
 	* iconvdata/ibm937.c (BODY to IBM937): Correct several mistakes in
 	buffer and table handling.
 
