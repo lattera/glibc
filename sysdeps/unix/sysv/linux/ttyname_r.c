@@ -165,10 +165,6 @@ __ttyname_r (fd, buf, buflen)
 	{
 	  __set_errno (save);
 	  ret = ENOENT;
-	}
-      else
-	{
-	  __set_errno (save);
 	  dev_pts_available = 0;
 	}
     }

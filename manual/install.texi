@@ -309,7 +309,7 @@ For PPC you might need some patches even on top of the last binutils
 version.  See the FAQ.
 
 @item
-GNU @code{texinfo} 3.11
+GNU @code{texinfo} 3.12f
 
 To correctly translate and install the Texinfo documentation you need
 this version of the @code{texinfo} package.  Earlier versions do not
