@@ -191,6 +191,10 @@ esac
 # $machine, $vendor, and $os, and changes them whenever convenient.
 config_machine=$host_cpu config_vendor=$host_vendor config_os=$host_os
 
+# Don't allow vendor == "unknown"
+test "$config_vendor" = unknown && config_vendor=
+config_os="`echo $config_os | sed 's/^unknown-//'`"
+
 # Some configurations imply other options.
 case "$host_os" in
 gnu* | linux* | bsd4.4* | netbsd* | freebsd*)
