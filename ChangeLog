@@ -1,3 +1,8 @@
+2001-11-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/dl-version.c (match_symbol): Optimize error handling for size.
+	(_dl_check_map_versions): Likewise.
+
 2001-11-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/dl-load.c (_dl_map_object_from_fd): Don't call

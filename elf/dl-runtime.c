@@ -105,8 +105,8 @@ fixup (
     }
   else
     {
-    /* We already found the symbol.  The module (and therefore its load
-       address) is also known.  */
+      /* We already found the symbol.  The module (and therefore its load
+	 address) is also known.  */
       value = l->l_addr + sym->st_value;
 #ifdef DL_LOOKUP_RETURNS_MAP
       result = l;
@@ -198,11 +198,11 @@ profile_fixup (
 	}
       else
 	{
-	/* We already found the symbol.  The module (and therefore its load
-	   address) is also known.  */
-	value = l->l_addr + sym->st_value;
+	  /* We already found the symbol.  The module (and therefore its load
+	     address) is also known.  */
+	  value = l->l_addr + sym->st_value;
 #ifdef DL_LOOKUP_RETURNS_MAP
-	result = l;
+	  result = l;
 #endif
 	}
       /* And now perhaps the relocation addend.  */

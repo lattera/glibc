@@ -81,6 +81,9 @@ match_symbol (const char *name, ElfW(Word) hash, const char *string,
   const char *strtab = (const void *) D_PTR (map, l_info[DT_STRTAB]);
   ElfW(Addr) def_offset;
   ElfW(Verdef) *def;
+  /* Initialize to make the compiler happy.  */
+  const char *errstring = NULL;
+  int result = 0;
 
   /* Display information about what we are doing while debugging.  */
   if (__builtin_expect (_dl_debug_mask & DL_DEBUG_VERSIONS, 0))
@@ -95,11 +98,12 @@ checking for version `%s' in file %s required by file %s\n",
 	 object was linked against another version of this file.  We
 	 only print a message if verbose output is requested.  */
       if (verbose)
-	/* XXX We cannot translate the messages.  */
-	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
-			   make_string ("\
-no version information available (required by ",
-					name, ")"));
+	{
+	  /* XXX We cannot translate the messages.  */
+	  errstring = make_string ("\
+no version information available (required by ", name, ")");
+	  goto call_cerror;
+	}
       return 0;
     }
 
@@ -116,14 +120,12 @@ no version information available (required by ",
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_error (0, map->l_name[0] ? map->l_name : _dl_argv[0],
-			    NULL,
-			    make_string ("unsupported version ",
-					 _itoa_word (def->vd_version,
-						     &buf[sizeof (buf) - 1],
-						     10, 0),
-					 " of Verdef record"));
-	  return 1;
+	  errstring = make_string ("unsupported version ",
+				   _itoa_word (def->vd_version,
+					       &buf[sizeof (buf) - 1], 10, 0),
+				   " of Verdef record");
+	  result = 1;
+	  goto call_cerror;
 	}
 
       /* Compare the hash values.  */
@@ -150,19 +152,23 @@ no version information available (required by ",
   if (__builtin_expect (weak, 1))
     {
       if (verbose)
-	/* XXX We cannot translate the message.  */
-	_dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
-			   make_string ("weak version `", string,
-					"' not found (required by ", name,
-					")"));
+	{
+	  /* XXX We cannot translate the message.  */
+	  errstring = make_string ("weak version `", string,
+				   "' not found (required by ", name, ")");
+	  goto call_cerror;
+	}
       return 0;
     }
 
   /* XXX We cannot translate the message.  */
+  errstring = make_string ("version `", string, "' not found (required by ",
+			   name, ")");
+  result = 1;
+ call_cerror:
   _dl_signal_cerror (0, map->l_name[0] ? map->l_name : _dl_argv[0], NULL,
-		     make_string ("version `", string,
-				  "' not found (required by ", name, ")"));
-  return 1;
+		     errstring);
+  return result;
 }
 
 
@@ -179,6 +185,9 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
   /* We need to find out which is the highest version index used
     in a dependecy.  */
   unsigned int ndx_high = 0;
+  /* Initialize to make the compiler happy.  */
+  const char *errstring = NULL;
+  int errval = 0;
 
   /* If we don't have a string table, we must be ok.  */
   if (map->l_info[DT_STRTAB] == NULL)
@@ -200,14 +209,13 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	  char buf[20];
 	  buf[sizeof (buf) - 1] = '\0';
 	  /* XXX We cannot translate the message.  */
-	  _dl_signal_error (0, (*map->l_name ? map->l_name : _dl_argv[0]),
-			    NULL,
-			    make_string ("unsupported version ",
-					 _itoa_word (ent->vn_version,
-						     &buf[sizeof (buf) - 1],
-						     10, 0),
-					 " of Verneed record\n"));
-	  return 1;
+	  errstring = make_string ("unsupported version ",
+				   _itoa_word (ent->vn_version,
+					       &buf[sizeof (buf) - 1], 10, 0),
+				   " of Verneed record\n");
+	call_error:
+	  _dl_signal_error (errval, (*map->l_name ? map->l_name : _dl_argv[0]),
+			    NULL, errstring);
 	}
 
       while (1)
@@ -290,79 +298,75 @@ _dl_check_map_versions (struct link_map *map, int verbose, int trace_mode)
 	calloc (ndx_high + 1, sizeof (*map->l_versions));
       if (__builtin_expect (map->l_versions == NULL, 0))
 	{
-	  _dl_signal_error (ENOMEM, (*map->l_name ? map->l_name : _dl_argv[0]),
-			    NULL,
-			    N_("cannot allocate version reference table"));
-	  result = 1;
+	  errstring = N_("cannot allocate version reference table");
+	  errval = ENOMEM;
+	  goto call_error;
 	}
-      else
+
+      /* Store the number of available symbols.  */
+      map->l_nversions = ndx_high + 1;
+
+      /* Compute the pointer to the version symbols.  */
+      map->l_versyms = (void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
+
+      if (dyn != NULL)
 	{
-	  /* Store the number of available symbols.  */
-	  map->l_nversions = ndx_high + 1;
-
-	  /* Compute the pointer to the version symbols.  */
-	  map->l_versyms =
-	    (void *) D_PTR (map, l_info[VERSYMIDX (DT_VERSYM)]);
-
-	  if (dyn != NULL)
+	  ElfW(Verneed) *ent;
+	  ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+	  while (1)
 	    {
-	      ElfW(Verneed) *ent;
-	      ent = (ElfW(Verneed) *) (map->l_addr + dyn->d_un.d_ptr);
+	      ElfW(Vernaux) *aux;
+	      aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
 	      while (1)
 		{
-		  ElfW(Vernaux) *aux;
-		  aux = (ElfW(Vernaux) *) ((char *) ent + ent->vn_aux);
-		  while (1)
-		    {
-		      ElfW(Half) ndx = aux->vna_other & 0x7fff;
-		      map->l_versions[ndx].hash = aux->vna_hash;
-		      map->l_versions[ndx].hidden = aux->vna_other & 0x8000;
-		      map->l_versions[ndx].name = &strtab[aux->vna_name];
-		      map->l_versions[ndx].filename = &strtab[ent->vn_file];
+		  ElfW(Half) ndx = aux->vna_other & 0x7fff;
+		  map->l_versions[ndx].hash = aux->vna_hash;
+		  map->l_versions[ndx].hidden = aux->vna_other & 0x8000;
+		  map->l_versions[ndx].name = &strtab[aux->vna_name];
+		  map->l_versions[ndx].filename = &strtab[ent->vn_file];
 
-		      if (aux->vna_next == 0)
-			/* No more symbols.  */
-			break;
-
-		      /* Advance to next symbol.  */
-		      aux = (ElfW(Vernaux) *) ((char *) aux + aux->vna_next);
-		    }
-
-		  if (ent->vn_next == 0)
-		    /* No more dependencies.  */
+		  if (aux->vna_next == 0)
+		    /* No more symbols.  */
 		    break;
 
-		  /* Advance to next dependency.  */
-		  ent = (ElfW(Verneed) *) ((char *) ent + ent->vn_next);
+		  /* Advance to next symbol.  */
+		  aux = (ElfW(Vernaux) *) ((char *) aux + aux->vna_next);
 		}
+
+	      if (ent->vn_next == 0)
+		/* No more dependencies.  */
+		break;
+
+	      /* Advance to next dependency.  */
+	      ent = (ElfW(Verneed) *) ((char *) ent + ent->vn_next);
 	    }
+	}
 
-	  /* And insert the defined versions.  */
-	  if (def != NULL)
+      /* And insert the defined versions.  */
+      if (def != NULL)
+	{
+	  ElfW(Verdef) *ent;
+	  ent = (ElfW(Verdef)  *) (map->l_addr + def->d_un.d_ptr);
+	  while (1)
 	    {
-	      ElfW(Verdef) *ent;
-	      ent = (ElfW(Verdef)  *) (map->l_addr + def->d_un.d_ptr);
-	      while (1)
+	      ElfW(Verdaux) *aux;
+	      aux = (ElfW(Verdaux) *) ((char *) ent + ent->vd_aux);
+
+	      if ((ent->vd_flags & VER_FLG_BASE) == 0)
 		{
-		  ElfW(Verdaux) *aux;
-		  aux = (ElfW(Verdaux) *) ((char *) ent + ent->vd_aux);
-
-		  if ((ent->vd_flags & VER_FLG_BASE) == 0)
-		    {
-		      /* The name of the base version should not be
-			 available for matching a versioned symbol.  */
-		      ElfW(Half) ndx = ent->vd_ndx & 0x7fff;
-		      map->l_versions[ndx].hash = ent->vd_hash;
-		      map->l_versions[ndx].name = &strtab[aux->vda_name];
-		      map->l_versions[ndx].filename = NULL;
-		    }
-
-		  if (ent->vd_next == 0)
-		    /* No more definitions.  */
-		    break;
-
-		  ent = (ElfW(Verdef) *) ((char *) ent + ent->vd_next);
+		  /* The name of the base version should not be
+		     available for matching a versioned symbol.  */
+		  ElfW(Half) ndx = ent->vd_ndx & 0x7fff;
+		  map->l_versions[ndx].hash = ent->vd_hash;
+		  map->l_versions[ndx].name = &strtab[aux->vda_name];
+		  map->l_versions[ndx].filename = NULL;
 		}
+
+	      if (ent->vd_next == 0)
+		/* No more definitions.  */
+		break;
+
+	      ent = (ElfW(Verdef) *) ((char *) ent + ent->vd_next);
 	    }
 	}
     }
