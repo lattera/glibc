@@ -69,6 +69,7 @@ rt_sigtimedwait	EXTRA	rt_sigtimedwait	i:pppi	__syscall_rt_sigtimedwait	rt_sigtim
 
 # System calls with wrappers.
 s_execve	execve	execve		i:spp	__syscall_execve
+s_exit		exit	exit		i:i	__syscall_exit
 s_getcwd	getcwd	getcwd		i:pi	__syscall_getcwd	getcwd
 s_getdents	getdents getdents	i:ipi	__syscall_getdents	getdents
 s_getdents64	getdents64 getdents64	i:ipi	__syscall_getdents64
