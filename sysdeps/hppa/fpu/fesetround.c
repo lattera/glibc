@@ -31,7 +31,7 @@ fesetround (int round)
 
   /* Get the current status word. */
   __asm__ ("fstd %%fr0,0(%1)" : "=m" (*sw) : "r" (sw));
-  sw[0] &= ~FE_UPWARD;
+  sw[0] &= ~FE_DOWNWARD;
   sw[0] |= round;
   __asm__ ("fldd 0(%0),%%fr0" : : "r" (sw));
 
