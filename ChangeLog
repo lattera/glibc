@@ -1,5 +1,9 @@
 1998-10-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* sysdeps/posix/getcwd.c (__getcwd): Don't stop processing
+	directory entries when a lstat call fails.
+	Patch by Colin Plumb <colin@nyx.net>.
+
 	* resolv/nss_dns/dns-host.c: Add missing errnop parameter to the
 	NSS functions.
 	* resolv/nss_dns/dns-network.c: Likewise.

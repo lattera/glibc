@@ -333,14 +333,13 @@ __getcwd (buf, size)
 	      name[dotlist + dotsize - dotp] = '/';
 	      strcpy (&name[dotlist + dotsize - dotp + 1], d->d_name);
 #endif
-	      if (__lstat (name, &st) < 0)
-		{
-		  int save = errno;
-		  (void) __closedir (dirstream);
-		  __set_errno (save);
-		  goto lose;
-		}
-	      if (st.st_dev == thisdev && st.st_ino == thisino)
+	      /* We don't fail here if we cannot stat() a directory entry.
+		 This can happen when (network) filesystems fail.  If this
+		 entry is in fact the one we are looking for we will find
+		 out soon as we reach the end of the directory without
+		 having found anything.  */
+	      if (__lstat (name, &st) >= 0
+		  && st.st_dev == thisdev && st.st_ino == thisino)
 		break;
 	    }
 	}
