@@ -281,7 +281,7 @@ extern int vsprintf __P ((char *__restrict __s,
 
 #ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-vprintf (__const char *__restrict __fmt, _G_va_list __arg)
+vprintf __P ((__const char *__restrict __fmt, _G_va_list __arg))
 {
   return vfprintf (stdout, __fmt, __arg);
 }
@@ -366,7 +366,7 @@ extern int getchar __P ((void));
 
 #ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-getchar (void)
+getchar __P ((void))
 {
   return _IO_getc (stdin);
 }
@@ -379,13 +379,13 @@ extern int getchar_unlocked __P ((void));
 
 # ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-getc_unlocked (FILE *__fp)
+getc_unlocked __P ((FILE *__fp))
 {
   return _IO_getc_unlocked (__fp);
 }
 
 __STDIO_INLINE int
-getchar_unlocked (void)
+getchar_unlocked __P ((void))
 {
   return _IO_getc_unlocked (stdin);
 }
@@ -406,7 +406,7 @@ extern int putchar __P ((int __c));
 
 #ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-putchar (int __c)
+putchar __P ((int __c))
 {
   return _IO_putc (__c, stdout);
 }
@@ -418,7 +418,7 @@ extern int fputc_unlocked __P ((int __c, FILE *__stream));
 
 # ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-fputc_unlocked (int __c, FILE *__stream)
+fputc_unlocked __P ((int __c, FILE *__stream))
 {
   return _IO_putc_unlocked (__c, __stream);
 }
@@ -432,13 +432,13 @@ extern int putchar_unlocked __P ((int __c));
 
 # ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-putc_unlocked (int __c, FILE *__stream)
+putc_unlocked __P ((int __c, FILE *__stream))
 {
   return _IO_putc_unlocked (__c, __stream);
 }
 
 __STDIO_INLINE int
-putchar_unlocked (int __c)
+putchar_unlocked __P ((int __c))
 {
   return _IO_putc_unlocked (__c, stdout);
 }
@@ -487,7 +487,7 @@ extern _IO_ssize_t getline __P ((char **__lineptr, size_t *__n,
 
 # ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE _IO_ssize_t
-getline (char **__lineptr, size_t *__n, FILE *__stream)
+getline __P ((char **__lineptr, size_t *__n, FILE *__stream))
 {
   return __getdelim (__lineptr, __n, '\n', __stream);
 }
@@ -618,13 +618,13 @@ extern int ferror_unlocked __P ((FILE *__stream));
 
 # ifdef __USE_EXTERN_INLINES
 __STDIO_INLINE int
-feof_unlocked (FILE *__stream)
+feof_unlocked __P ((FILE *__stream))
 {
   return _IO_feof_unlocked (__stream);
 }
 
 __STDIO_INLINE int
-ferror_unlocked (FILE *__stream)
+ferror_unlocked __P ((FILE *__stream))
 {
   return _IO_ferror_unlocked (__stream);
 }

@@ -277,7 +277,8 @@ extern long int __strtol_internal __P ((__const char *__restrict __nptr,
 #  define __strtol_internal_defined	1
 # endif
 extern __inline intmax_t
-strtoimax (__const char *__restrict nptr, char **__restrict endptr, int base)
+strtoimax __P ((__const char *__restrict nptr, char **__restrict endptr,
+		int base))
 {
   return __strtol_internal (nptr, endptr, base, 0);
 }
@@ -291,7 +292,8 @@ extern unsigned long int __strtoul_internal __P ((__const char *
 #  define __strtoul_internal_defined	1
 # endif
 extern __inline uintmax_t
-strtoumax (__const char *__restrict nptr, char **__restrict endptr, int base)
+strtoumax __P ((__const char *__restrict nptr, char **__restrict endptr,
+		int base))
 {
   return __strtoul_internal (nptr, endptr, base, 0);
 }
@@ -304,8 +306,8 @@ extern long int __wcstol_internal __P ((__const wchar_t * __restrict __nptr,
 #  define __wcstol_internal_defined	1
 # endif
 extern __inline intmax_t
-wcstoimax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
-	   int base)
+wcstoimax __P ((__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
+		int base))
 {
   return __wcstol_internal (nptr, endptr, base, 0);
 }
@@ -321,8 +323,8 @@ extern unsigned long int __wcstoul_internal __P ((__const wchar_t *
 #  define __wcstoul_internal_defined	1
 # endif
 extern __inline uintmax_t
-wcstoumax (__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
-	   int base)
+wcstoumax __P ((__const wchar_t *__restrict nptr, wchar_t **__restrict endptr,
+		int base))
 {
   return __wcstoul_internal (nptr, endptr, base, 0);
 }

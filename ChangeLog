@@ -1,3 +1,17 @@
+1998-10-05  Andreas Jaeger  <aj@arthur.rhein-neckar.de>
+
+	* sysdeps/unix/sysv/linux/bits/socket.h (__cmsg_nxthdr): Use __P
+	in definitions of inline stat functions so that they match the
+	declaration.
+	* stdlib/stdlib.h: Likewise.
+	* wcsmbs/wchar.h: Likewise.
+	* libio/stdio.h: Likewise.
+	* stdio/stdio.h: Likewise.
+	* sysdeps/wordsize-64/inttypes.h: Likewise.
+	* sysdeps/wordsize-32/inttypes.h: Likewise.
+	* string/argz.h: Likewise.
+	* argp/argp.h: Likewise.
+
 1998-10-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* sysdeps/unix/sysv/linux/bits/in.h: Remove ipv6_mreq which is in
