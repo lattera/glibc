@@ -1,4 +1,12 @@
-2001-06-12  H.J. Lu <hjl@gnu.org>
+2001-06-13  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/sys/time.h: Don't use enum __itimer_which ever for
+	__itimer_which_t for C++.
+	Reported by Martin Buchholz <martin@xemacs.org>.
+
+	* po/fr.po: Update from translation team.
+
+2001-06-12  H.J. Lu  <hjl@gnu.org>
 
 	* configure.in: Fix typos in missing program names.
 	* configure: Regenerated.
@@ -19,14 +27,14 @@
 	* sysdeps/powerpc/fpu/libm-test-ulps: Add ULPs for tanh (-0.7).
 	* sysdeps/s390/fpu/libm-test-ulps: Likewise.
 
-2001-06-11  Michael Deutschmann <michael@talamasca.ocis.net>
+2001-06-11  Michael Deutschmann  <michael@talamasca.ocis.net>
 
 	* rt/tst-aio4.c (do_test): Test whether rt signals are supported.
 	Use my_signo instead of MY_SIGNO and initialize it so that the
 	used signal is always available.
 
 2001-06-11  Andreas Jaeger  <aj@suse.de>,
-	    Michael Deutschmann <michael@talamasca.ocis.net>
+	    Michael Deutschmann  <michael@talamasca.ocis.net>
 
 	* io/test-lfs.c (do_prepare): Clean up error messages.
 	(test_ftello): Check for EFBIG and ENOSP, clean up error messages.

@@ -112,7 +112,9 @@ struct itimerval
     struct timeval it_value;
   };
 
-#ifdef __USE_GNU
+#if defined __USE_GNU && !defined __cplusplus
+/* Use the nicer parameter type only in GNU mode and not for C++ since the
+   strict C++ rules prevent the automatic promotion.  */
 typedef enum __itimer_which __itimer_which_t;
 #else
 typedef int __itimer_which_t;
