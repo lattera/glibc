@@ -1,6 +1,6 @@
 /* Copyright (C) 1996 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
-   Contributed by Richard Henderson (rth@tamu.edu)
+   Contributed by Richard Henderson <rth@tamu.edu>, 1996.
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -26,8 +26,10 @@
 ENTRY(strcat)
 	ldgp	gp, 0(pv)
 #ifdef PROF
+	.set noat
 	lda	AT, _mcount
 	jsr	AT, (AT), _mcount
+	.set at
 #endif
 	.prologue 1
 
