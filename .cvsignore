@@ -24,4 +24,4 @@ libc.proj .snprj
 
 TODO.html
 
-autom4te.cache
+autom4te*.cache
