@@ -1,3 +1,11 @@
+2003-02-21  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/i386/getuid.c: Use INTERNAL_SYSCALL and do
+	not chechk for errors (unless testing for 32bit variant).
+	* sysdeps/unix/sysv/linux/i386/getgid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/geteuid.c: Likewise.
+	* sysdeps/unix/sysv/linux/i386/getegid.c: Likewise.
+
 2003-02-21  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/x86_64/dl-machine.h (elf_machine_rela) <R_X86_64_PC32>:
