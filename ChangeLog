@@ -1,3 +1,9 @@
+2000-12-10  Richard Henderson <rth@redhat.com>
+
+	* sysdeps/alpha/alphaev67/fpu/Implies: New file.
+	* sysdeps/alpha/alphaev6/fpu/e_sqrtf.S: New file.
+	* sysdeps/alpha/alphaev6/fpu/e_sqrt.S: New file.
+
 2000-12-10  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/alpha/htonl.S: Fix a typo.
