@@ -334,19 +334,19 @@ extern char *alloca ();
 #include <glob.h>
 
 #ifdef HAVE_GETLOGIN_R
-extern int getlogin_r __P ((char *, size_t));
+extern int getlogin_r __PMT ((char *, size_t));
 #else
-extern char *getlogin __P ((void));
+extern char *getlogin __PMT ((void));
 #endif
 
 static const char *next_brace_sub __P ((const char *begin, int flags));
 
 #endif /* GLOB_ONLY_P */
 
-static int glob_in_dir __P ((const char *pattern, const char *directory,
-			     int flags,
-			     int (*errfunc) (const char *, int),
-			     glob_t *pglob));
+static int glob_in_dir __PMT ((const char *pattern, const char *directory,
+			       int flags,
+			       int (*errfunc) (const char *, int),
+			       glob_t *pglob));
 
 #if !defined _LIBC || !defined GLOB_ONLY_P
 static int prefix_array __P ((const char *prefix, char **array, size_t n));
@@ -396,7 +396,7 @@ GLOB_ATTRIBUTE
 glob (pattern, flags, errfunc, pglob)
      const char *pattern;
      int flags;
-     int (*errfunc) __P ((const char *, int));
+     int (*errfunc) __PMT ((const char *, int));
      glob_t *pglob;
 {
   const char *filename;
@@ -1283,7 +1283,7 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
      const char *pattern;
      const char *directory;
      int flags;
-     int (*errfunc) __P ((const char *, int));
+     int (*errfunc) __PMT ((const char *, int));
      glob_t *pglob;
 {
   __ptr_t stream = NULL;
