@@ -56,16 +56,20 @@ aio_cancel (fildes, aiocbp)
 
 	  req = __aio_find_req_fd (fildes);
 
+	  if (req == NULL)
+	    {
+	    not_found:
+	      pthread_mutex_unlock (&__aio_requests_mutex);
+	      __set_errno (EINVAL);
+	      return -1;
+	    }
+
 	  while (req->aiocbp != (aiocb_union *) aiocbp)
 	    {
 	      last = req;
 	      req = req->next_prio;
 	      if (req == NULL)
-		{
-		  pthread_mutex_unlock (&__aio_requests_mutex);
-		  __set_errno (EINVAL);
-		  return -1;
-		}
+		goto not_found;
 	    }
 
 	  /* Don't remove the entry if a thread is already working on it.  */
@@ -74,28 +78,7 @@ aio_cancel (fildes, aiocbp)
 	  else if (req->running == yes)
 	    {
 	      /* We can remove the entry.  */
-	      if (last != NULL)
-		last->next_prio = req->next_prio;
-	      else
-		if (req->next_prio == NULL)
-		  {
-		    if (req->last_fd != NULL)
-		      req->last_fd->next_fd = req->next_fd;
-		    if (req->next_fd != NULL)
-		      req->next_fd->last_fd = req->last_fd;
-		  }
-		else
-		  {
-		    if (req->last_fd != NULL)
-		      req->last_fd->next_fd = req->next_prio;
-		    if (req->next_fd != NULL)
-		      req->next_fd->last_fd = req->next_prio;
-		    req->next_prio->last_fd = req->last_fd;
-		    req->next_prio->next_fd = req->next_fd;
-
-		    /* Mark this entry as runnable.  */
-		    req->next_prio->running = yes;
-		  }
+	      __aio_remove_request (last, req, 0);
 
 	      result = AIO_CANCELED;
 	    }
@@ -122,15 +105,10 @@ aio_cancel (fildes, aiocbp)
 	      result = AIO_NOTCANCELED;
 	    }
 	  else
-	    {
-	      /* Remove entry from the file descriptor list.  */
-	      if (req->last_fd != NULL)
-		req->last_fd->next_fd = req->next_fd;
-	      if (req->next_fd != NULL)
-		req->next_fd->last_fd = req->last_fd;
+	    result = AIO_CANCELED;
 
-	      result = AIO_CANCELED;
-	    }
+	  /* We can remove the entry.  */
+	  __aio_remove_request (NULL, req, 1);
 	}
     }
 
