@@ -74,20 +74,20 @@
 # define POPARGS_6	POPARGS_5 movq 48(%rsp), %r9;
 
 /* We always have to align the stack before calling a function.  */
-# define SAVESTK_0	subq $24, %rsp;
+# define SAVESTK_0	subq $24, %rsp;cfi_adjust_cfa_offset(24);
 # define SAVESTK_1	SAVESTK_0
 # define SAVESTK_2	SAVESTK_1
-# define SAVESTK_3	subq $40, %rsp;
+# define SAVESTK_3	subq $40, %rsp;cfi_adjust_cfa_offset(40);
 # define SAVESTK_4	SAVESTK_3
-# define SAVESTK_5	subq $56, %rsp;
+# define SAVESTK_5	subq $56, %rsp;cfi_adjust_cfa_offset(56);
 # define SAVESTK_6	SAVESTK_5
 
-# define RESTSTK_0	addq $24,%rsp;
+# define RESTSTK_0	addq $24,%rsp;cfi_adjust_cfa_offset(-24);
 # define RESTSTK_1	RESTSTK_0
 # define RESTSTK_2	RESTSTK_1
-# define RESTSTK_3	addq $40, %rsp;
+# define RESTSTK_3	addq $40, %rsp;cfi_adjust_cfa_offset(-40);
 # define RESTSTK_4	RESTSTK_3
-# define RESTSTK_5	addq $56, %rsp;
+# define RESTSTK_5	addq $56, %rsp;cfi_adjust_cfa_offset(-56);
 # define RESTSTK_6	RESTSTK_5
 
 # ifdef IS_IN_libpthread
