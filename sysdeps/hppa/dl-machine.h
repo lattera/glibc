@@ -495,6 +495,9 @@ asm (									\
  "	.globl " #tramp_name "\n"					\
  "	.type " #tramp_name ",@function\n"				\
   #tramp_name ":\n"							\
+ "	.proc\n"							\
+ "	.callinfo frame=64,calls,save_rp\n"				\
+ "	.entry\n"							\
  	/* Save return pointer */					\
  "	stw	%r2,-20(%sp)\n"						\
  	/* Save argument registers in the call stack frame. */		\
@@ -526,7 +529,8 @@ asm (									\
  "	bv	%r0(%r22)\n"						\
  	/* Return pointer. */						\
  "	ldw	-20(%sp),%r2\n"						\
-        );
+ "	.exit\n"							\
+ "	.procend\n");
   
 #ifndef PROF
 #define ELF_MACHINE_RUNTIME_TRAMPOLINE			\
