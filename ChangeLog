@@ -1,3 +1,7 @@
+2001-01-21  Andreas Jaeger  <aj@suse.de>
+
+	* stdio-common/vfprintf.c (vfprintf): Add casts.
+
 2001-01-20  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconvdata/run-iconv-test.sh: Reorgnize a bit to allow running only
