@@ -87,7 +87,7 @@ char *strerror (int errnum);
 
 #ifndef SIZE_MAX
 # define SIZE_MAX ((size_t) -1)
-#endif 
+#endif
 
 /* User-selectable (using an environment variable) formatting parameters.
 
@@ -1696,25 +1696,25 @@ char *__argp_basename (char *name)
   char *short_name = strrchr (name, '/');
   return short_name ? short_name + 1 : name;
 }
-#endif
 
 char *
 __argp_short_program_name (void)
 {
-#if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+# if HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
   return program_invocation_short_name;
-#elif HAVE_DECL_PROGRAM_INVOCATION_NAME
+# elif HAVE_DECL_PROGRAM_INVOCATION_NAME
   return __argp_basename (program_invocation_name);
-#else
+# else
   /* FIXME: What now? Miles suggests that it is better to use NULL,
      but currently the value is passed on directly to fputs_unlocked,
      so that requires more changes. */
-#if __GNUC__
-# warning No reasonable value to return
-#endif /* __GNUC__ */
+# if __GNUC__
+#  warning No reasonable value to return
+# endif /* __GNUC__ */
   return "";
-#endif
+# endif
 }
+#endif
 
 /* Output, if appropriate, a usage message for STATE to STREAM.  FLAGS are
    from the set ARGP_HELP_*.  */

@@ -1,5 +1,5 @@
 /* Name frobnication for compiling argp outside of glibc
-   Copyright (C) 1997 Free Software Foundation, Inc.
+   Copyright (C) 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Miles Bader <miles@gnu.ai.mit.edu>.
 
@@ -138,10 +138,15 @@
 # endif
 
 extern char *__argp_basename (char *name);
-extern char *__argp_short_program_name (void);
 
 #endif /* !_LIBC */
 
 #ifndef __set_errno
 #define __set_errno(e) (errno = (e))
+#endif
+
+#if defined _LIBC || HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME
+# define __argp_short_program_name()	(program_invocation_short_name)
+#else
+extern char *__argp_short_program_name (void);
 #endif
