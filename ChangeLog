@@ -1,4 +1,11 @@
+2001-09-14  H.J. Lu  <hjl@gnu.org>
+
+	* sysdeps/mips/fpu/libm-test-ulps: Updated.
+
 2001-09-14  Ulrich Drepper  <drepper@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sys/ucontext.h: Fix a typo.
+	Patch by Florian La Roche <laroche@redhat.com>.
 
 	* string/bits/string2.h (__strtok_r_1c): Optimize a bit.
 
