@@ -1,0 +1,34 @@
+# This file is generated from configure.in by Autoconf.  DO NOT EDIT!
+
+hppa*linux*)
+echo "$as_me:$LINENO: checking for assembler line separator" >&5
+echo $ECHO_N "checking for assembler line separator... $ECHO_C" >&6
+if test "${libc_cv_asm_line_sep+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat > conftest.s <<EOF
+nop ; is_old_puffin
+EOF
+if { ac_try='${CC-cc} -c $ASFLAGS conftest.s 1>&5'
+  { (eval echo "$as_me:$LINENO: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:$LINENO: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  libc_cv_asm_line_sep='!'
+else
+  if test -z "$enable_hacker_mode"; then
+    echo "*** You need a newer assembler to compile glibc"
+    rm -f conftest*
+    exit 1
+  fi
+  libc_cv_asm_line_sep=';'
+fi
+rm -f conftest*
+fi
+echo "$as_me:$LINENO: result: $libc_cv_asm_line_sep" >&5
+echo "${ECHO_T}$libc_cv_asm_line_sep" >&6
+cat >>confdefs.h <<_ACEOF
+#define ASM_LINE_SEP $libc_cv_asm_line_sep
+_ACEOF
+
