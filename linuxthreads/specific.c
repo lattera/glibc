@@ -204,6 +204,8 @@ void __pthread_destroy_specifics()
   __pthread_unlock(THREAD_GETMEM(self, p_lock));
 }
 
+#if !(USE_TLS && HAVE___THREAD)
+
 /* Thread-specific data for libc. */
 
 static int
@@ -226,3 +228,5 @@ libc_internal_tsd_get(enum __libc_tsd_key_t key)
 }
 void * (*__libc_internal_tsd_get)(enum __libc_tsd_key_t key)
      = libc_internal_tsd_get;
+
+#endif

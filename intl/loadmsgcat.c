@@ -35,6 +35,7 @@
 #include <sys/stat.h>
 
 #ifdef __GNUC__
+# undef  alloca
 # define alloca __builtin_alloca
 # define HAVE_ALLOCA 1
 #else

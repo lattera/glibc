@@ -1,6 +1,26 @@
 #ifndef	_NETDB_H
 #include <resolv/netdb.h>
 
+/* Macros for accessing h_errno from inside libc.  */
+# ifdef _LIBC_REENTRANT
+#  include <tls.h>
+#  if USE_TLS && HAVE___THREAD
+#   undef  h_errno
+#   define h_errno h_errno	/* For #ifndef h_errno tests.  */
+extern __thread int h_errno;
+#   define __set_h_errno(x)	(h_errno = (x))
+#  else
+static inline int
+__set_h_errno (int __err)
+{
+  return *__h_errno_location () = __err;
+}
+#  endif
+# else
+#  undef  h_errno
+#  define __set_h_errno(x) (h_errno = (x))
+# endif	/* _LIBC_REENTRANT */
+
 /* Document internal interfaces.  */
 extern int __gethostent_r (struct hostent *__restrict __result_buf,
 			   char *__restrict __buf, size_t __buflen,

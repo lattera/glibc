@@ -73,16 +73,16 @@ typedef struct
 /* Install the dtv pointer.  The pointer passed is to the element with
    index -1 which contain the length.  */
 # define INSTALL_DTV(descr, dtvp) \
-  ((tcbhead_t *) descr)->dtv = dtvp + 1
+  ((tcbhead_t *) (descr))->dtv = dtvp + 1
 
 /* Install new dtv for current thread.  */
 # define INSTALL_NEW_DTV(dtv) \
   ({ struct _pthread_descr_struct *__descr;				      \
-     THREAD_SETMEM (__descr, p_header.data.dtvp, dtv); })
+     THREAD_SETMEM (__descr, p_header.data.dtvp, (dtv)); })
 
 /* Return dtv of given thread descriptor.  */
 # define GET_DTV(descr) \
-  (((tcbhead_t *) descr)->dtv)
+  (((tcbhead_t *) (descr))->dtv)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
@@ -94,7 +94,7 @@ typedef struct
     tcbhead_t *head = _descr;						      \
 									      \
     head->tcb = _descr;							      \
-    /* For now the thread descriptor is at the same address.  */		      \
+    /* For now the thread descriptor is at the same address.  */	      \
     head->self = _descr;						      \
 									      \
     asm ("ldc %0,gbr" : : "r" (_descr));				      \

@@ -1,3 +1,39 @@
+2002-07-30  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/pthread/bits/libc-tsd.h: Include <tls.h>.
+	[USE_TLS && HAVE___THREAD]: Just include the sysdeps/generic file,
+	which does the right thing when __thread support is available.
+	* descr.h (struct _pthread_descr_struct) [USE_TLS && HAVE___THREAD]:
+	Omit `p_libc_specific', `p_errnop', `p_errno', `p_h_errnop',
+	`p_h_errno', `p_resp', and `p_res' members.
+	* pthread.c (__pthread_initialize_minimal) [USE_TLS && HAVE___THREAD]:
+	Don't initialize `p_errnop' and `p_h_errnop' members.
+	(__pthread_reset_main_thread): Likewise.
+	(__pthread_initialize_manager): Likewise.
+	* manager.c (__pthread_manager, pthread_handle_create): Likewise.
+	* pthread.c (pthread_initialize) [USE_TLS && HAVE___THREAD]:
+	Don't initialize `p_resp' member.
+	(__pthread_reset_main_thread): Likewise.
+	* manager.c (pthread_handle_create): Likewise.
+	* specific.c (libc_internal_tsd_set, libc_internal_tsd_get):
+	Conditionalize these on [!(USE_TLS && HAVE___THREAD)].
+	* errno.c [USE_TLS && HAVE___THREAD]
+	(__h_errno_location, __res_state): Don't define these at all.
+
+	* sysdeps/i386/tls.h (INSTALL_DTV): Add parens around arguments!
+	(INSTALL_NEW_DTV, GET_DTV): Likewise.
+	* sysdeps/sh/tls.h (INSTALL_DTV, INSTALL_NEW_DTV, GET_DTV): Likewise.
+
+	* weaks.c: Don't include <errno.h> here.
+
+2002-08-01  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/i386/tls.h (TLS_DO_MODIFY_LDT): New macro, broken out of
+	TLS_INIT_TP.
+	(TLS_DO_SET_THREAD_AREA): New macro, uses thread_set_area syscall.
+	(TLS_SETUP_GS_SEGMENT): New macro, try one or the other or both.
+	(TLS_INIT_TP): Use that.
+
 2002-08-02  Jakub Jelinek  <jakub@redhat.com>
 
 	* sysdeps/i386/useldt.h (DO_MODIFY_LDT): Move from INIT_THREAD_SELF.

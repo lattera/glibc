@@ -138,9 +138,11 @@ __pthread_manager(void *arg)
 #ifdef INIT_THREAD_SELF
   INIT_THREAD_SELF(self, 1);
 #endif
+#if !(USE_TLS && HAVE___THREAD)
   /* Set the error variable.  */
   self->p_errnop = &self->p_errno;
   self->p_h_errnop = &self->p_h_errno;
+#endif
   /* Block all signals except __pthread_sig_cancel and SIGTRAP */
   sigfillset(&manager_mask);
   sigdelset(&manager_mask, __pthread_sig_cancel); /* for thread termination */
@@ -640,9 +642,11 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_lock = &(__pthread_handles[sseg].h_lock);
   new_thread->p_cancelstate = PTHREAD_CANCEL_ENABLE;
   new_thread->p_canceltype = PTHREAD_CANCEL_DEFERRED;
+#if !(USE_TLS && HAVE___THREAD)
   new_thread->p_errnop = &new_thread->p_errno;
   new_thread->p_h_errnop = &new_thread->p_h_errno;
   new_thread->p_resp = &new_thread->p_res;
+#endif
   new_thread->p_guardaddr = guardaddr;
   new_thread->p_guardsize = guardsize;
   new_thread->p_header.data.self = new_thread;

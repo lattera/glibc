@@ -1,5 +1,5 @@
-/* libc-internal interface for thread-specific data.  Stub version.
-   Copyright (C) 1998, 2001 Free Software Foundation, Inc.
+/* libc-internal interface for thread-specific data.  Stub or TLS version.
+   Copyright (C) 1998,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,8 +17,8 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#ifndef _BITS_LIBC_TSD_H
-#define _BITS_LIBC_TSD_H 1
+#ifndef _GENERIC_BITS_LIBC_TSD_H
+#define _GENERIC_BITS_LIBC_TSD_H 1
 
 /* This file defines the following macros for accessing a small fixed
    set of thread-specific `void *' data used only internally by libc.
@@ -40,13 +40,22 @@
    Some implementations may not provide any enum at all and instead
    using string pasting in the macros.  */
 
-/* This is the generic/stub implementation for wholly single-threaded
-   systems.  We don't define an enum for the possible key values, because
-   the KEYs translate directly into variables by macro magic.  */
+#include <tls.h>
 
-#define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY##_data;
-#define __libc_tsd_get(KEY)		(__libc_tsd_##KEY##_data)
-#define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY##_data = (VALUE))
+/* When full support for __thread variables is available, this interface is
+   just a trivial wrapper for it.  Without TLS, this is the generic/stub
+   implementation for wholly single-threaded systems.
 
+   We don't define an enum for the possible key values, because the KEYs
+   translate directly into variables by macro magic.  */
+
+#if USE_TLS && HAVE___THREAD
+# define __libc_tsd_define(CLASS, KEY)	CLASS __thread void *__libc_tsd_##KEY;
+#else
+# define __libc_tsd_define(CLASS, KEY)	CLASS void *__libc_tsd_##KEY;
+#endif
+
+#define __libc_tsd_get(KEY)		(__libc_tsd_##KEY)
+#define __libc_tsd_set(KEY, VALUE)	(__libc_tsd_##KEY = (VALUE))
 
 #endif	/* bits/libc-tsd.h */

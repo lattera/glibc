@@ -28,7 +28,6 @@ int * __errno_location()
   pthread_descr self = thread_self();
   return THREAD_GETMEM (self, p_errnop);
 }
-#endif
 
 int * __h_errno_location()
 {
@@ -42,3 +41,4 @@ struct __res_state * __res_state()
   pthread_descr self = thread_self();
   return THREAD_GETMEM (self, p_resp);
 }
+#endif

@@ -130,15 +130,19 @@ struct _pthread_descr_struct {
   char p_cancelstate;           /* cancellation state */
   char p_canceltype;            /* cancellation type (deferred/async) */
   char p_canceled;              /* cancellation request pending */
-  int * p_errnop;               /* pointer to used errno variable */
-  int p_errno;                  /* error returned by last system call */
-  int * p_h_errnop;             /* pointer to used h_errno variable */
-  int p_h_errno;                /* error returned by last netdb function */
   char * p_in_sighandler;       /* stack address of sighandler, or NULL */
   char p_sigwaiting;            /* true if a sigwait() is in progress */
   struct pthread_start_args p_start_args; /* arguments for thread creation */
   void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE]; /* thread-specific data */
+#if !(USE_TLS && HAVE___THREAD)
   void * p_libc_specific[_LIBC_TSD_KEY_N]; /* thread-specific data for libc */
+  int * p_errnop;               /* pointer to used errno variable */
+  int p_errno;                  /* error returned by last system call */
+  int * p_h_errnop;             /* pointer to used h_errno variable */
+  int p_h_errno;                /* error returned by last netdb function */
+  struct __res_state *p_resp;	/* Pointer to resolver state */
+  struct __res_state p_res;	/* per-thread resolver state */
+#endif
   int p_userstack;		/* nonzero if the user provided the stack */
   void *p_guardaddr;		/* address of guard area or NULL */
   size_t p_guardsize;		/* size of guard area */
@@ -154,8 +158,6 @@ struct _pthread_descr_struct {
   pthread_readlock_info *p_readlock_list;  /* List of readlock info structs */
   pthread_readlock_info *p_readlock_free;  /* Free list of structs */
   int p_untracked_readlock_count;	/* Readlocks not tracked by list */
-  struct __res_state *p_resp;	/* Pointer to resolver state */
-  struct __res_state p_res;	/* per-thread resolver state */
   int p_inheritsched;           /* copied from the thread attribute */
 #if HP_TIMING_AVAIL
   hp_timing_t p_cpuclock_offset; /* Initial CPU clock for thread.  */

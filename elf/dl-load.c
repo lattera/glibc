@@ -1166,8 +1166,8 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 
   elf_get_dynamic_info (l);
 
-  /* Make sure we are dlopen()ing an object which has the DF_1_NOOPEN
-     flag set.  */
+  /* Make sure we are not dlopen'ing an object
+     that has the DF_1_NOOPEN flag set.  */
   if ((__builtin_expect (l->l_flags_1 & DF_1_NOOPEN, 0)
 #ifdef USE_TLS
        || __builtin_expect (l->l_flags & DF_STATIC_TLS, 0)
@@ -1861,7 +1861,7 @@ cannot create shared object descriptor"));
 	}
       else
 	INTUSE(_dl_signal_error) (errno, name, NULL,
-			       N_("cannot open shared object file"));
+				  N_("cannot open shared object file"));
     }
 
   return _dl_map_object_from_fd (name, fd, &fb, realname, loader, type, mode);

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,19 @@
 #include <netdb.h>
 #undef h_errno
 
+#include <tls.h>
+
 /* We need to have the error status variable of the resolver
    accessible in the libc.  */
+
+#if USE_TLS && HAVE___THREAD
+__thread int h_errno;
+#else
 int h_errno = 0;
 weak_alias (h_errno, _h_errno)
+#endif
 
-/* When threaded, h_errno may be a per-process variable.  */
+/* When threaded, h_errno may be a per-thread variable.  */
 int *
 weak_const_function
 __h_errno_location (void)

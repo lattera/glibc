@@ -1,5 +1,5 @@
 /* Generic asm macros used on many machines.
-   Copyright (C) 1991, 92, 93, 96, 98 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,96,98,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -36,8 +36,10 @@
 
 #endif
 
+#ifdef __ASSEMBLER__
 /* Mark the end of function named SYM.  This is used on some platforms
    to generate correct debugging information.  */
 #ifndef END
 #define END(sym)
 #endif
+#endif /* __ASSEMBLER__ */

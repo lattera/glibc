@@ -8,11 +8,9 @@
 
 #ifdef _RPC_THREAD_SAFE_
 
-
 /* Variable used in non-threaded applications or for the first thread.  */
 static struct rpc_thread_variables __libc_tsd_RPC_VARS_mem;
-static struct rpc_thread_variables *__libc_tsd_RPC_VARS_data =
-     &__libc_tsd_RPC_VARS_mem;
+__libc_tsd_define (static, RPC_VARS)
 
 /*
  * Task-variable destructor
@@ -20,7 +18,7 @@ static struct rpc_thread_variables *__libc_tsd_RPC_VARS_data =
 void
 __rpc_thread_destroy (void)
 {
-	struct rpc_thread_variables *tvp = __rpc_thread_variables();
+	struct rpc_thread_variables *tvp = __libc_tsd_get (RPC_VARS);
 
 	if (tvp != NULL && tvp != &__libc_tsd_RPC_VARS_mem) {
 		__rpc_thread_svc_cleanup ();
@@ -61,7 +59,7 @@ __rpc_thread_variables (void)
 			if (tvp != NULL)
 				__libc_tsd_set (RPC_VARS, tvp);
 			else
-				tvp = __libc_tsd_RPC_VARS_data;
+				tvp = __libc_tsd_get (RPC_VARS);
 		}
 	}
 	return tvp;

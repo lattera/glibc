@@ -33,20 +33,10 @@
 #include <ldsodefs.h>
 #include <tls.h>
 
-/* We need the global/static resolver state here.  */
-#include <resolv.h>
-#undef _res
-
-extern struct __res_state _res;
-
 /* Sanity check.  */
 #if __ASSUME_REALTIME_SIGNALS && !defined __SIGRTMIN
 # error "This must not happen; new kernel assumed but old headers"
 #endif
-
-/* These variables are used by the setup code.  */
-extern int _errno;
-extern int _h_errno;
 
 #ifdef USE_TLS
 
@@ -54,6 +44,17 @@ extern int _h_errno;
 static pthread_descr manager_thread;
 
 #else
+
+/* These variables are used by the setup code.  */
+extern int _errno;
+extern int _h_errno;
+
+/* We need the global/static resolver state here.  */
+#include <resolv.h>
+#undef _res
+
+extern struct __res_state _res;
+
 /* Descriptor of the initial thread */
 
 struct _pthread_descr_struct __pthread_initial_thread = {
@@ -83,16 +84,18 @@ struct _pthread_descr_struct __pthread_initial_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  &_errno,                    /* int *p_errnop */
-  0,                          /* int p_errno */
-  &_h_errno,                  /* int *p_h_errnop */
-  0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER(NULL),
                               /* struct pthread_start_args p_start_args */
   {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
   {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
+  &_errno,                    /* int *p_errnop */
+  0,                          /* int p_errno */
+  &_h_errno,                  /* int *p_h_errnop */
+  0,                          /* int p_h_errno */
+  &_res,		      /* struct __res_state *p_resp */
+  {},			      /* struct __res_state p_res */
   1,                          /* int p_userstack */
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
@@ -141,16 +144,18 @@ struct _pthread_descr_struct __pthread_manager_thread = {
   0,                          /* char p_cancelstate */
   0,                          /* char p_canceltype */
   0,                          /* char p_canceled */
-  &__pthread_manager_thread.p_errno, /* int *p_errnop */
-  0,                          /* int p_errno */
-  NULL,                       /* int *p_h_errnop */
-  0,                          /* int p_h_errno */
   NULL,                       /* char * p_in_sighandler */
   0,                          /* char p_sigwaiting */
   PTHREAD_START_ARGS_INITIALIZER(__pthread_manager),
                               /* struct pthread_start_args p_start_args */
   {NULL},                     /* void ** p_specific[PTHREAD_KEY_1STLEVEL_SIZE] */
   {NULL},                     /* void * p_libc_specific[_LIBC_TSD_KEY_N] */
+  &__pthread_manager_thread.p_errno, /* int *p_errnop */
+  0,                          /* int p_errno */
+  NULL,                       /* int *p_h_errnop */
+  0,                          /* int p_h_errno */
+  NULL,			      /* struct __res_state *p_resp */
+  {},			      /* struct __res_state p_res */
   0,                          /* int p_userstack */
   NULL,                       /* void * p_guardaddr */
   0,                          /* size_t p_guardsize */
@@ -423,8 +428,10 @@ __pthread_initialize_minimal(void)
   self->p_nextlive = self->p_prevlive = self;
   self->p_tid = PTHREAD_THREADS_MAX;
   self->p_lock = &__pthread_handles[0].h_lock;
+# ifndef HAVE___THREAD
   self->p_errnop = &_errno;
   self->p_h_errnop = &_h_errno;
+# endif
   /* self->p_start_args need not be initialized, it's all zero.  */
   self->p_userstack = 1;
 # if __LT_SPINLOCK_INIT != 0
@@ -521,8 +528,10 @@ static void pthread_initialize(void)
 #ifdef USE_TLS
   /* Update the descriptor for the initial thread. */
   THREAD_SETMEM (((pthread_descr) NULL), p_pid, __getpid());
+# ifndef HAVE___THREAD
   /* Likewise for the resolver state _res.  */
   THREAD_SETMEM (((pthread_descr) NULL), p_resp, &_res);
+# endif
 #else
   /* Update the descriptor for the initial thread. */
   __pthread_initial_thread.p_pid = __getpid();
@@ -615,7 +624,9 @@ int __pthread_initialize_manager(void)
   /* Initialize the descriptor.  */
   tcb->p_header.data.self = tcb;
   tcb->p_lock = &__pthread_handles[1].h_lock;
+# ifndef HAVE___THREAD
   tcb->p_errnop = &tcb->p_errno;
+# endif
   tcb->p_start_args = (struct pthread_start_args) PTHREAD_START_ARGS_INITIALIZER(__pthread_manager);
   tcb->p_nr = 1;
 # if __LT_SPINLOCK_INIT != 0
@@ -1048,10 +1059,12 @@ void __pthread_reset_main_thread(void)
   __pthread_main_thread = self;
   THREAD_SETMEM(self, p_nextlive, self);
   THREAD_SETMEM(self, p_prevlive, self);
+#if !(USE_TLS && HAVE___THREAD)
   /* Now this thread modifies the global variables.  */
   THREAD_SETMEM(self, p_errnop, &_errno);
   THREAD_SETMEM(self, p_h_errnop, &_h_errno);
   THREAD_SETMEM(self, p_resp, &_res);
+#endif
 
   if (getrlimit (RLIMIT_STACK, &limit) == 0
       && limit.rlim_cur != limit.rlim_max) {

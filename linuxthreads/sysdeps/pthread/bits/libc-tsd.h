@@ -1,5 +1,5 @@
 /* libc-internal interface for thread-specific data.  LinuxThreads version.
-   Copyright (C) 1997, 1998, 1999, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1997,98,99,2001,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -20,12 +20,20 @@
 #ifndef _BITS_LIBC_TSD_H
 #define _BITS_LIBC_TSD_H 1
 
-
 /* Fast thread-specific data internal to libc.  */
 enum __libc_tsd_key_t { _LIBC_TSD_KEY_MALLOC = 0,
 			_LIBC_TSD_KEY_DL_ERROR,
 			_LIBC_TSD_KEY_RPC_VARS,
 			_LIBC_TSD_KEY_N };
+
+#include <tls.h>
+
+#if USE_TLS && HAVE___THREAD
+
+/* When __thread works, the generic definition is what we want.  */
+# include <sysdeps/generic/bits/libc-tsd.h>
+
+#else
 
 extern void *(*__libc_internal_tsd_get) (enum __libc_tsd_key_t) __THROW;
 extern int (*__libc_internal_tsd_set) (enum __libc_tsd_key_t,
@@ -40,5 +48,7 @@ extern int (*__libc_internal_tsd_set) (enum __libc_tsd_key_t,
   (__libc_internal_tsd_set != NULL \
    ? __libc_internal_tsd_set (_LIBC_TSD_KEY_##KEY, (VALUE)) \
    : ((__libc_tsd_##KEY##_data = (VALUE)), 0))
+
+#endif
 
 #endif	/* bits/libc-tsd.h */

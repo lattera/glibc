@@ -11,6 +11,19 @@
 #include <resolv/resolv.h>
 
 #ifdef _RESOLV_H_
+
+# ifdef _LIBC_REENTRANT
+#  include <tls.h>
+#  if USE_TLS && HAVE___THREAD
+#   undef _res
+extern __thread struct __res_state _res;
+#  endif
+# else
+#  ifndef __BIND_NOSTATIC
+extern struct __res_state _res;
+#  endif
+# endif
+
 /* Now define the internal interfaces.  */
 extern int __res_vinit (res_state, int);
 extern void _sethtent (int);

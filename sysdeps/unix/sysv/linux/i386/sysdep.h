@@ -33,11 +33,11 @@
 #undef SYS_ify
 #define SYS_ify(syscall_name)	__NR_##syscall_name
 
+#ifdef __ASSEMBLER__
+
 /* ELF-like local names start with `.L'.  */
 #undef L
 #define L(name)	.L##name
-
-#ifdef __ASSEMBLER__
 
 /* Linux uses a negative return value to indicate syscall errors,
    unlike most Unices, which use the condition codes' carry flag.

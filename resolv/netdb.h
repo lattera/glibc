@@ -1,4 +1,4 @@
-/* Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1996,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -59,23 +59,8 @@ extern int h_errno;
 /* Function to get address of global `h_errno' variable.  */
 extern int *__h_errno_location (void) __THROW __attribute__ ((__const__));
 
-#ifdef _LIBC
-# ifdef _LIBC_REENTRANT
-static inline int
-__set_h_errno (int __err)
-{
-  return *__h_errno_location () = __err;
-}
-# else
-#  define __set_h_errno(x) (h_errno = (x))
-# endif	/* _LIBC_REENTRANT */
-#endif /* _LIBC */
-
-
-#if !defined _LIBC || defined _LIBC_REENTRANT
 /* Use a macro to access always the thread specific `h_errno' variable.  */
-# define h_errno (*__h_errno_location ())
-#endif
+#define h_errno (*__h_errno_location ())
 
 
 /* Possible values left in `h_errno'.  */

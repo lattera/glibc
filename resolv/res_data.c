@@ -39,8 +39,6 @@ static const char rcsid[] = "$BINDId: res_data.c,v 8.17 1999/10/13 17:11:31 vixi
 #include <string.h>
 #include <unistd.h>
 
-#undef _res
-
 const char *_res_opcodes[] = {
 	"QUERY",
 	"IQUERY",
@@ -71,9 +69,9 @@ const char *_res_sectioncodes[] = {
 
 #ifndef __BIND_NOSTATIC
 #ifdef _LIBC
-extern struct __res_state _res;
-#else
 /* The definition has been moved to res_libc.c.  */
+#else
+#undef _res
 struct __res_state _res
 # if defined(__BIND_RES_TEXT)
 	= { RES_TIMEOUT, }	/* Motorola, et al. */

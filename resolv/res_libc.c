@@ -22,8 +22,15 @@
 
 #undef _res
 
+#include <tls.h>
+
+#if USE_TLS && HAVE___THREAD
+/* With __thread support, this per-thread variable is used in all cases.  */
+__thread struct __res_state _res;
+#else
 /* The resolver state for use by single-threaded programs.  */
 struct __res_state _res;
+#endif
 
 /* This function is used to access the resolver state in
    single-threaded programs.  */

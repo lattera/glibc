@@ -1,5 +1,5 @@
 /* `fd_set' type and related macros, and `select'/`pselect' declarations.
-   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
+   Copyright (C) 1996,97,98,99,2000,01,02 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -54,6 +54,10 @@ typedef __suseconds_t suseconds_t;
 /* The fd_set member is required to be an array of longs.  */
 typedef long int __fd_mask;
 
+/* Some versions of <linux/posix_types.h> define these macros.  */
+#undef	__NFDBITS
+#undef	__FDELT
+#undef	__FDMASK
 /* It's easier to assume 8-bit bytes than to get CHAR_BIT.  */
 #define __NFDBITS	(8 * sizeof (__fd_mask))
 #define	__FDELT(d)	((d) / __NFDBITS)

@@ -516,6 +516,9 @@ Void_t *(*__morecore)(ptrdiff_t) = __default_morecore;
 
 #if (__STD_C || defined(HAVE_MEMCPY))
 
+#ifdef _LIBC
+# include <string.h>
+#else
 #ifdef WIN32
 /* On Win32 memset and memcpy are already declared in windows.h */
 #else
@@ -525,6 +528,7 @@ void* memcpy(void*, const void*, size_t);
 #else
 Void_t* memset();
 Void_t* memcpy();
+#endif
 #endif
 #endif
 #endif
