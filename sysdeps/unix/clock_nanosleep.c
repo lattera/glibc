@@ -1,5 +1,5 @@
 /* High-resolution sleep with the specified clock.
-   Copyright (C) 2000, 2001, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000, 2001, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,15 +49,18 @@ clock_nanosleep (clockid_t clock_id, int flags, const struct timespec *req,
       || __builtin_expect (req->tv_nsec, 0) >= 1000000000)
     return EINVAL;
 
+  if (clock_id == CLOCK_THREAD_CPUTIME_ID)
+    return EINVAL;		/* POSIX specifies EINVAL for this case.  */
+
+#ifdef SYSDEP_NANOSLEEP
+  SYSDEP_NANOSLEEP;
+#endif
+
   if (CPUCLOCK_P (clock_id))
     return ENOTSUP;
 
   if (INVALID_CLOCK_P (clock_id))
     return EINVAL;
-
-#ifdef SYSDEP_NANOSLEEP
-  SYSDEP_NANOSLEEP;
-#endif
 
   /* If we got an absolute time, remap it.  */
   if (flags == TIMER_ABSTIME)

@@ -1,3 +1,16 @@
+2004-12-06  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/clock_nanosleep.c (clock_nanosleep): Diagnose EINVAL
+	for CLOCK_THREAD_CPUTIME_ID, not ENOTSUP.
+	Use SYSDEP_NANOSLEEP handler before validating CLOCK_ID value.
+
+	* rt/tst-timer4.c (TEST_CLOCK, TEST_CLOCK_NANOSLEEP): New macros.
+	Use them throughout in place of CLOCK_REALTIME and nanosleep.
+	(do_test) [TEST_CLOCK_MISSING]: Call this macro and if it returns
+	non-null, punt the test with a message using the string returned.
+	* rt/tst-timer5.c: New file.
+	* rt/Makefile (tests): Add it.
+
 2004-12-01  Paolo Bonzini  <bonzini@gnu.org>
 
 	* posix/regcomp.c (free_dfa_content, init_dfa): Remove
