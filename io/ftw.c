@@ -212,7 +212,7 @@ open_dir_stream (struct ftw_data *data, struct dir_data *dirp)
 		{
 		  char *newp;
 		  bufsize += MAX (1024, 2 * this_len);
-		  newp = realloc (buf, bufsize);
+		  newp = (char *) realloc (buf, bufsize);
 		  if (newp == NULL)
 		    {
 		      /* No more memory.  */
@@ -357,15 +357,8 @@ process_entry (struct ftw_data *data, struct dir_data *dir, const char *name,
 			    result = -1;
 			}
 		      else
-			{
-			  /* Please note that we overwrite a slash.  */
-			  data->dirbuf[data->ftw.base - 1] = '\0';
-
-			  if (__chdir (data->dirbuf) < 0)
-			    result = -1;
-
-			  data->dirbuf[data->ftw.base - 1] = '/';
-			}
+			if (__chdir ("..") < 0)
+			  result = 1;
 		    }
 		}
 	    }

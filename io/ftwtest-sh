@@ -138,6 +138,28 @@ base = "$tmp/ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd 
 EOF
 rm $testout
 
+curwd=`/bin/pwd 2>/dev/null || /usr/bin/pwd`
+cd "$tmp"
+LD_LIBRARY_PATH=$objpfx $ldso $testprogram --chdir ftwtest.d |
+    sort > $testout
+cd "$curwd"
+
+cat <<EOF | diff -u $testout - || exit 1
+base = "", file = "ftwtest.d", flag = FTW_D, cwd = $tmpreal, level = 0
+base = "ftwtest.d/", file = "bar", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
+base = "ftwtest.d/", file = "baz", flag = FTW_F, cwd = $tmpreal/ftwtest.d, level = 1
+base = "ftwtest.d/", file = "foo", flag = FTW_D, cwd = $tmpreal/ftwtest.d, level = 1
+base = "ftwtest.d/bar/", file = "xo", flag = FTW_F, cwd = $tmpreal/ftwtest.d/bar, level = 2
+base = "ftwtest.d/foo/", file = "lvl1", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo, level = 2
+base = "ftwtest.d/foo/lvl1/", file = "file@1", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
+base = "ftwtest.d/foo/lvl1/", file = "link@1", flag = FTW_SLN, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
+base = "ftwtest.d/foo/lvl1/", file = "lvl2", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1, level = 3
+base = "ftwtest.d/foo/lvl1/lvl2/", file = "file@2", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
+base = "ftwtest.d/foo/lvl1/lvl2/", file = "lvl3", flag = FTW_D, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2, level = 4
+base = "ftwtest.d/foo/lvl1/lvl2/lvl3/", file = "file@3", flag = FTW_F, cwd = $tmpreal/ftwtest.d/foo/lvl1/lvl2/lvl3, level = 5
+EOF
+rm $testout
+
 LD_LIBRARY_PATH=$objpfx $ldso $testprogram --early-exit $tmpdir |
     sort > $testout
 
