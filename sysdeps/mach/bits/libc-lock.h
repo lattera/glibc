@@ -1,5 +1,5 @@
 /* libc-internal interface for mutex locks.  Mach cthreads version.
-   Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -84,7 +84,7 @@ struct __libc_once
   };
 
 #define __libc_once_define(CLASS,NAME) \
-  CLASS struct __libc_once NAME = { MUTEX_INITIALZER, 0 }
+  CLASS struct __libc_once NAME = { MUTEX_INITIALIZER, 0 }
 
 
 /* Call handler iff the first call.  */
@@ -94,7 +94,7 @@ struct __libc_once
     if (!ONCE_CONTROL.done)						      \
       (INIT_FUNCTION) ();						      \
     ONCE_CONTROL.done = 1;						      \
-    __libc_lock_lock (ONCE_CONTROL.lock);				      \
+    __libc_lock_unlock (ONCE_CONTROL.lock);				      \
   } while (0)
 
 #ifdef _LIBC

@@ -1,5 +1,5 @@
 /* O_*, F_*, FD_* bit values for GNU.
-   Copyright (C) 1993, 1994, 1996, 1997 Free Software Foundation, Inc.
+   Copyright (C) 1993, 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -40,6 +40,7 @@
 #define	O_RDWR		(O_RDONLY|O_WRONLY) /* Open for reading and writing. */
 #define	O_ACCMODE	O_RDWR	/* Mask for file access modes.  */
 
+#define O_LARGEFILE	0
 
 
 /* File name translation flags.  These are understood by io servers;

@@ -57,4 +57,4 @@ __getpt ()
   __set_errno (ENFILE);
   return -1;
 }
-weak_alias (getpt, __getpt)
+weak_alias (__getpt, getpt)

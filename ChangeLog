@@ -1,5 +1,17 @@
 1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
 
+	* db2/compat.h: Allow EFTYPE being defined.
+	* sysdeps/unix/bsd/bits/signum.h: Add definition for SIG_HOLD.
+	* sysdeps/unix/bsd/ulimit.c: Include <ulimit.h>.
+	* sysdeps/mach/hurd/bits/fcntl.h: Add O_LARGEFILE.
+	* sysdeps/mach/bits/libc-lock.h: Fix typo.
+	(__libc_once): Correctly unlock semaphore.
+	* sysdeps/mach/hurd/dl-sysdep.c: Include <elf/ldsodefs.h>.
+	* sysdeps/unix/bsd/getpt.c: Fix typo.
+	Patches by UCHIYAMA Yasushi <uch@ddd.scei.sony.co.jp>.
+
+1998-03-31  Ulrich Drepper  <drepper@cygnus.com>
+
 	* sysdeps/unix/sysv/linux/bits/socket.h (MSG_*): Also define as
 	macros.
 

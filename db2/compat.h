@@ -2,7 +2,9 @@
 
 #include <sys/types.h>
 
-#define EFTYPE EINVAL
+#ifndef EFTYPE
+# define EFTYPE EINVAL
+#endif
 
 /* Emulate Solaris llseek().  */
 typedef loff_t offset_t;
