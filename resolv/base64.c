@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Internet Software Consortium.
+ * Copyright (c) 1996-1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -40,9 +40,14 @@
  * IF IBM IS APPRISED OF THE POSSIBILITY OF SUCH DAMAGES.
  */
 
+#if !defined(LINT) && !defined(CODECENTER)
+static const char rcsid[] = "$BINDId: base64.c,v 8.7 1999/10/13 16:39:33 vixie Exp $";
+#endif /* not lint */
+
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
@@ -50,13 +55,8 @@
 #include <ctype.h>
 #include <resolv.h>
 #include <stdio.h>
-
-#if defined(BSD) && (BSD >= 199103) && defined(AF_INET6)
-# include <stdlib.h>
-# include <string.h>
-#else
-# include "../conf/portability.h"
-#endif
+#include <stdlib.h>
+#include <string.h>
 
 #define Assert(Cond) if (!(Cond)) abort()
 
@@ -112,9 +112,9 @@ static const char Pad64 = '=';
    end of the data is performed using the '=' character.
 
    Since all base64 input is an integral number of octets, only the
-         -------------------------------------------------
+         -------------------------------------------------                       
    following cases can arise:
-
+   
        (1) the final quantum of encoding input is an integral
            multiple of 24 bits; here, the final unit of encoded
 	   output will be an integral multiple of 4 characters
@@ -128,12 +128,7 @@ static const char Pad64 = '=';
    */
 
 int
-b64_ntop(src, srclength, target, targsize)
-	u_char const *src;
-	size_t srclength;
-	char *target;
-	size_t targsize;
-{
+b64_ntop(u_char const *src, size_t srclength, char *target, size_t targsize) {
 	size_t datalength = 0;
 	u_char input[3];
 	u_char output[4];
@@ -161,14 +156,14 @@ b64_ntop(src, srclength, target, targsize)
 		target[datalength++] = Base64[output[2]];
 		target[datalength++] = Base64[output[3]];
 	}
-
+    
 	/* Now we worry about padding. */
 	if (0 != srclength) {
 		/* Get what's left. */
 		input[0] = input[1] = input[2] = '\0';
 		for (i = 0; i < srclength; i++)
 			input[i] = *src++;
-
+	
 		output[0] = input[0] >> 2;
 		output[1] = ((input[0] & 0x03) << 4) + (input[1] >> 4);
 		output[2] = ((input[1] & 0x0f) << 2) + (input[2] >> 6);
@@ -204,8 +199,7 @@ b64_pton(src, target, targsize)
 	u_char *target;
 	size_t targsize;
 {
-	size_t tarindex;
-	int state, ch;
+	int tarindex, state, ch;
 	char *pos;
 
 	state = 0;
@@ -225,7 +219,7 @@ b64_pton(src, target, targsize)
 		switch (state) {
 		case 0:
 			if (target) {
-				if (tarindex >= targsize)
+				if ((size_t)tarindex >= targsize)
 					return (-1);
 				target[tarindex] = (pos - Base64) << 2;
 			}
@@ -233,7 +227,7 @@ b64_pton(src, target, targsize)
 			break;
 		case 1:
 			if (target) {
-				if (tarindex + 1 >= targsize)
+				if ((size_t)tarindex + 1 >= targsize)
 					return (-1);
 				target[tarindex]   |=  (pos - Base64) >> 4;
 				target[tarindex+1]  = ((pos - Base64) & 0x0f)
@@ -244,7 +238,7 @@ b64_pton(src, target, targsize)
 			break;
 		case 2:
 			if (target) {
-				if (tarindex + 1 >= targsize)
+				if ((size_t)tarindex + 1 >= targsize)
 					return (-1);
 				target[tarindex]   |=  (pos - Base64) >> 2;
 				target[tarindex+1]  = ((pos - Base64) & 0x03)
@@ -255,7 +249,7 @@ b64_pton(src, target, targsize)
 			break;
 		case 3:
 			if (target) {
-				if (tarindex >= targsize)
+				if ((size_t)tarindex >= targsize)
 					return (-1);
 				target[tarindex] |= (pos - Base64);
 			}
@@ -281,12 +275,7 @@ b64_pton(src, target, targsize)
 
 		case 2:		/* Valid, means one byte of info */
 			/* Skip any number of spaces. */
-#ifdef _LIBC
-			/* To avoid warnings.  */
-			for ( ; ch != '\0'; ch = *src++)
-#else
-			for (NULL; ch != '\0'; ch = *src++)
-#endif
+			for ((void)NULL; ch != '\0'; ch = *src++)
 				if (!isspace(ch))
 					break;
 			/* Make sure there is another trailing = sign. */
@@ -301,12 +290,7 @@ b64_pton(src, target, targsize)
 			 * We know this char is an =.  Is there anything but
 			 * whitespace after it?
 			 */
-#ifdef _LIBC
-			/* To avoid warnings.  */
-			for ( ; ch != '\0'; ch = *src++)
-#else
-			for (NULL; ch != '\0'; ch = *src++)
-#endif
+			for ((void)NULL; ch != '\0'; ch = *src++)
 				if (!isspace(ch))
 					return (-1);
 

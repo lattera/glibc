@@ -45,7 +45,7 @@
  */
 
 /*
- *	$Id$
+ *	$BINDId: nameser.h,v 8.37 2000/03/30 21:16:49 vixie Exp $
  */
 
 #ifndef _ARPA_NAMESER_H_
@@ -53,9 +53,13 @@
 
 #define BIND_4_COMPAT
 
-#include <features.h>
 #include <sys/param.h>
-#include <sys/types.h>
+#if (!defined(BSD)) || (BSD < 199306)
+# include <sys/bitypes.h>
+#else
+# include <sys/types.h>
+#endif
+#include <sys/cdefs.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
@@ -481,6 +485,7 @@ typedef enum __ns_cert_types {
 #define	ns_name_compress	__ns_name_compress
 #define	ns_name_uncompress	__ns_name_uncompress
 #define	ns_name_skip		__ns_name_skip
+#define	ns_name_rollback	__ns_name_rollback
 #define	ns_sign			__ns_sign
 #define	ns_sign_tcp		__ns_sign_tcp
 #define	ns_sign_tcp_init	__ns_sign_tcp_init
@@ -522,6 +527,8 @@ int		ns_name_uncompress __P((const u_char *, const u_char *,
 int		ns_name_compress __P((const char *, u_char *, size_t,
 				      const u_char **, const u_char **));
 int		ns_name_skip __P((const u_char **, const u_char *));
+void		ns_name_rollback __P((const u_char *, const u_char **,
+				      const u_char **));
 int		ns_sign __P((u_char *, int *, int, int, void *,
 			     const u_char *, int, u_char *, int *, time_t));
 int		ns_sign_tcp __P((u_char *, int *, int, int,

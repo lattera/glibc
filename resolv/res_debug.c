@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
+ * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -91,7 +91,7 @@
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static const char sccsid[] = "@(#)res_debug.c	8.1 (Berkeley) 6/4/93";
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: res_debug.c,v 8.34 2000/02/29 05:30:55 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
@@ -141,7 +141,8 @@ do_section(const res_state statp,
 	   int pflag, FILE *file)
 {
 	int n, sflag, rrnum;
-	char buf[2048];	/* XXX need to malloc */
+	static int buflen = 2048;
+	char *buf;
 	ns_opcode opcode;
 	ns_rr rr;
 
@@ -151,6 +152,12 @@ do_section(const res_state statp,
 	sflag = (statp->pfcode & pflag);
 	if (statp->pfcode && !sflag)
 		return;
+
+	buf = malloc(buflen);
+	if (buf == NULL) {
+		fprintf(file, ";; memory allocation failure\n");
+		return;
+	}
 
 	opcode = (ns_opcode) ns_msg_getflag(*handle, ns_f_opcode);
 	rrnum = 0;
@@ -162,7 +169,7 @@ do_section(const res_state statp,
 			else if (rrnum > 0 && sflag != 0 &&
 				 (statp->pfcode & RES_PRF_HEAD1))
 				putc('\n', file);
-			return;
+			goto cleanup;
 		}
 		if (rrnum == 0 && sflag != 0 && (statp->pfcode & RES_PRF_HEAD1))
 			fprintf(file, ";; %s SECTION:\n",
@@ -174,17 +181,32 @@ do_section(const res_state statp,
 				p_class(ns_rr_class(rr)));
 		else {
 			n = ns_sprintrr(handle, &rr, NULL, NULL,
-					buf, sizeof buf);
+					buf, buflen);
 			if (n < 0) {
+				if (errno == ENOSPC) {
+					free(buf);
+					buf = NULL;
+					if (buflen < 131072)
+						buf = malloc(buflen += 1024);
+					if (buf == NULL) {
+						fprintf(file,
+				              ";; memory allocation failure\n");
+					      return;
+					}
+					continue;
+				}
 				fprintf(file, ";; ns_sprintrr: %s\n",
 					strerror(errno));
-				return;
+				goto cleanup;
 			}
 			fputs(buf, file);
 			fputc('\n', file);
 		}
 		rrnum++;
 	}
+ cleanup:
+	if (buf != NULL)
+		free(buf);
 }
 
 /*
@@ -465,13 +487,8 @@ const char *
 sym_ntos(const struct res_sym *syms, int number, int *success) {
 	static char unname[20];
 
-#ifdef _LIBC
-	/* Changed to prevent warning. --drepper@gnu  */
-	for (; syms->name != 0; syms++) {
-#else
 	for ((void)NULL; syms->name != 0; syms++) {
-#endif
-	  if (number == syms->number) {
+		if (number == syms->number) {
 			if (success)
 				*success = 1;
 			return (syms->name);
@@ -488,12 +505,7 @@ const char *
 sym_ntop(const struct res_sym *syms, int number, int *success) {
 	static char unname[20];
 
-#ifdef _LIBC
-	/* Changed to prevent warning. --drepper@gnu  */
-	for (; syms->name != 0; syms++) {
-#else
 	for ((void)NULL; syms->name != 0; syms++) {
-#endif
 		if (number == syms->number) {
 			if (success)
 				*success = 1;
@@ -1012,7 +1024,7 @@ p_secstodate (u_long secs) {
 	struct tm *time;
 	
 #ifdef HAVE_TIME_R
-	struct time timebuf;
+	struct tm timebuf;
 	
 	time = gmtime_r(&clock, &timebuf);
 #else

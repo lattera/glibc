@@ -1,9 +1,7 @@
 /*
- * ++Copyright++ 1983, 1990, 1993
- * -
  * Copyright (c) 1983, 1990, 1993
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -15,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,16 +25,18 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * -
+ */
+
+/*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
+ * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -45,20 +45,38 @@
  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
  * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
  * SOFTWARE.
- * -
- * --Copyright--
+ */
+
+/*
+ * Portions Copyright (c) 1996-1999 by Internet Software Consortium.
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND INTERNET SOFTWARE CONSORTIUM DISCLAIMS
+ * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL INTERNET SOFTWARE
+ * CONSORTIUM BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+ * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+ * SOFTWARE.
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char sccsid[] = "@(#)inet_addr.c	8.1 (Berkeley) 6/17/93";
-static char rcsid[] = "$Id$";
+static const char sccsid[] = "@(#)inet_addr.c	8.1 (Berkeley) 6/17/93";
+static const char rcsid[] = "$BINDId: inet_addr.c,v 8.11 1999/10/13 16:39:25 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
 #include <sys/param.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
+
 #include <ctype.h>
+
 #ifdef _LIBC
 # include <endian.h>
 # include <stdint.h>
@@ -66,18 +84,13 @@ static char rcsid[] = "$Id$";
 # include <limits.h>
 # include <errno.h>
 #endif
-#include "../conf/portability.h"
-
-/* these are compatibility routines, not needed on recent BSD releases */
 
 /*
  * Ascii internet address interpretation routine.
  * The value returned is in network order.
  */
 in_addr_t
-inet_addr(cp)
-	register const char *cp;
-{
+inet_addr(const char *cp) {
 	struct in_addr val;
 
 	if (__inet_aton(cp, &val))
@@ -85,7 +98,7 @@ inet_addr(cp)
 	return (INADDR_NONE);
 }
 
-/*
+/* 
  * Check whether "cp" is a valid ascii representation
  * of an Internet address and convert to a binary address.
  * Returns 1 if the address is valid, 0 if not.
@@ -93,21 +106,18 @@ inet_addr(cp)
  * cannot distinguish between failure and a local broadcast address.
  */
 in_addr_t
-__inet_aton(cp, addr)
-	const char *cp;
-	struct in_addr *addr;
-{
+__inet_aton(const char *cp, struct in_addr *addr) {
 	static const in_addr_t max[4] = { 0xffffffff, 0xffffff, 0xffff, 0xff };
-	register in_addr_t val;
+	in_addr_t val;
 #ifndef _LIBC
-	register int base;
+	int base;
 #endif
-	register char c;
+	char c;
 	union iaddr {
 	  uint8_t bytes[4];
 	  uint32_t word;
 	} res;
-	register uint8_t *pp = res.bytes;
+	uint8_t *pp = res.bytes;
 	int digit;
 
 #ifdef _LIBC
@@ -140,23 +150,28 @@ __inet_aton(cp, addr)
 		}
 		c = *cp;
 #else
-		base = 10;
+		val = 0; base = 10; digit = 0;
 		if (c == '0') {
 			c = *++cp;
 			if (c == 'x' || c == 'X')
 				base = 16, c = *++cp;
-			else
+			else {
 				base = 8;
+				digit = 1 ;
+			}
 		}
-		val = 0;
 		for (;;) {
 			if (isascii(c) && isdigit(c)) {
+				if (base == 8 && (c == '8' || c == '9'))
+					return (0);
 				val = (val * base) + (c - '0');
 				c = *++cp;
+				digit = 1;
 			} else if (base == 16 && isascii(c) && isxdigit(c)) {
 				val = (val << 4) |
 					(c + 10 - (islower(c) ? 'a' : 'A'));
 				c = *++cp;
+				digit = 1;
 			} else
 				break;
 		}
@@ -168,8 +183,7 @@ __inet_aton(cp, addr)
 			 *	a.b.c	(with c treated as 16 bits)
 			 *	a.b	(with b treated as 24 bits)
 			 */
-			if (pp > res.bytes + 3
-			    || val > 0xff)
+			if (pp > res.bytes + 3 || val > 0xff)
 				goto ret_0;
 			*pp++ = val;
 			c = *++cp;
@@ -181,7 +195,6 @@ __inet_aton(cp, addr)
 	 */
 	if (c != '\0' && (!isascii(c) || !isspace(c)))
 		goto ret_0;
-
 	/*
 	 * Did we get a valid digit?
 	 */
@@ -193,7 +206,7 @@ __inet_aton(cp, addr)
 	if (val > max[pp - res.bytes])
 	  goto ret_0;
 
-	if (addr)
+	if (addr != NULL)
 		addr->s_addr = res.word | htonl (val);
 
 #ifdef _LIBC

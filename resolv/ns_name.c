@@ -15,8 +15,8 @@
  * SOFTWARE.
  */
 
-#ifndef lint
-static const char rcsid[] = "$Id$";
+#if !defined(_LIBC) && !defined(lint)
+static const char rcsid[] = "$BINDId: ns_name.c,v 8.15 2000/03/30 22:53:46 vixie Exp $";
 #endif
 
 #include <sys/types.h>
@@ -375,7 +375,7 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 	u_char *dstp;
 	const u_char **cpp, **lpp, *eob, *msg;
 	const u_char *srcp;
-	int n, l;
+	int n, l, first = 1;
 
 	srcp = src;
 	dstp = dst;
@@ -424,9 +424,10 @@ ns_name_pack(const u_char *src, u_char *dst, int dstsiz,
 			}
 			/* Not found, save it. */
 			if (lastdnptr != NULL && cpp < lastdnptr - 1 &&
-			    (dstp - msg) < 0x4000) {
+			    (dstp - msg) < 0x4000 && first) {
 				*cpp++ = dstp;
 				*cpp = NULL;
+				first = 0;
 			}
 		}
 		/* copy label to buffer */
@@ -496,6 +497,23 @@ ns_name_compress(const char *src, u_char *dst, size_t dstsiz,
 	if (ns_name_pton(src, tmp, sizeof tmp) == -1)
 		return (-1);
 	return (ns_name_pack(tmp, dst, dstsiz, dnptrs, lastdnptr));
+}
+
+/*
+ * Reset dnptrs so that there are no active references to pointers at or
+ * after src.
+ */
+void
+ns_name_rollback(const u_char *src, const u_char **dnptrs,
+		 const u_char **lastdnptr)
+{
+	while (dnptrs < lastdnptr && *dnptrs != NULL) {
+		if (*dnptrs >= src) {
+			*dnptrs = NULL;
+			break;
+		}
+		dnptrs++;
+	}
 }
 
 /*
@@ -600,36 +618,48 @@ dn_find(const u_char *domain, const u_char *msg,
 	u_int n;
 
 	for (cpp = dnptrs; cpp < lastdnptr; cpp++) {
-		dn = domain;
-		sp = cp = *cpp;
-		while ((n = *cp++) != 0) {
-			/*
-			 * check for indirection
-			 */
-			switch (n & NS_CMPRSFLGS) {
-			case 0:			/* normal case, n == len */
-				if (n != *dn++)
-					goto next;
-				for ((void)NULL; n > 0; n--)
-					if (mklower(*dn++) != mklower(*cp++))
+		sp = *cpp;
+		/*
+		 * terminate search on:
+		 * root label
+		 * compression pointer
+		 * unusable offset
+		 */
+		while (*sp != 0 && (*sp & NS_CMPRSFLGS) == 0 &&
+		       (sp - msg) < 0x4000) {
+			dn = domain;
+			cp = sp;
+			while ((n = *cp++) != 0) {
+				/*
+				 * check for indirection
+				 */
+				switch (n & NS_CMPRSFLGS) {
+				case 0:		/* normal case, n == len */
+					if (n != *dn++)
 						goto next;
-				/* Is next root for both ? */
-				if (*dn == '\0' && *cp == '\0')
-					return (sp - msg);
-				if (*dn)
-					continue;
-				goto next;
+					for ((void)NULL; n > 0; n--)
+						if (mklower(*dn++) !=
+						    mklower(*cp++))
+							goto next;
+					/* Is next root for both ? */
+					if (*dn == '\0' && *cp == '\0')
+						return (sp - msg);
+					if (*dn)
+						continue;
+					goto next;
 
-			case NS_CMPRSFLGS:	/* indirection */
-				cp = msg + (((n & 0x3f) << 8) | *cp);
-				break;
+				case NS_CMPRSFLGS:	/* indirection */
+					cp = msg + (((n & 0x3f) << 8) | *cp);
+					break;
 
-			default:	/* illegal type */
-				__set_errno (EMSGSIZE);
-				return (-1);
+				default:	/* illegal type */
+					__set_errno (EMSGSIZE);
+					return (-1);
+				}
 			}
+ next:
+			sp += *sp + 1;
 		}
- next: ;
 	}
 	__set_errno (ENOENT);
 	return (-1);

@@ -15,34 +15,29 @@
  * SOFTWARE.
  */
 
-/* Define some functions that go int libc.so.  */
-
-#if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$Id$";
-#endif /* LIBC_SCCS and not lint */
-
 #include <sys/types.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/time.h>
-
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <arpa/nameser.h>
-
-#include <ctype.h>
-#include <netdb.h>
 #include <resolv.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
+#undef _res
 
-/* This is the old res_init function.  It has been moved from
-   res_data.c to this file since res_init should go into libc.so but
-   the rest of res_data not.  */
+/* The resolver state for use by single-threaded programs.  */
+struct __res_state _res;
 
+/* This function is used to access the resolver state in
+   single-threaded programs.  */
+struct __res_state *
+weak_const_function
+__res_state (void)
+{
+  return &_res;
+}
+
+
+/* The following bit is copied from res_data.c (where it is #ifdef'ed
+   out) since res_init() should go into libc.so but the rest of that
+   file should not.  */
 
 int
 res_init(void) {
@@ -83,18 +78,11 @@ res_init(void) {
 
 	return (__res_vinit(&_res, 1));
 }
+
 
-/* We need a resolver context - in unthreaded apps, this weak function
-   provides it.  */
+#include <shlib-compat.h>
 
-#undef _res
-
-struct __res_state _res = { _sock : -1 };
-
-
-struct __res_state *
-weak_const_function
-__res_state(void)
-{
-  return &_res;
-}
+#if SHLIB_COMPAT(libc, GLIBC_2_0, GLIBC_2_2)
+# undef res_init
+weak_alias (__res_init, res_init);
+#endif

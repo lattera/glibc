@@ -1,4 +1,5 @@
-/* Copyright (c) 1996 by Internet Software Consortium.
+/*
+ * Copyright (c) 1996-1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,19 +16,20 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: inet_ntop.c,v 1.8 1999/10/13 16:39:28 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
-#include <string.h>
+
 #include <errno.h>
 #include <stdio.h>
-#include "../conf/portability.h"
+#include <string.h>
 
 #ifdef SPRINTF_CHAR
 # define SPRINTF(x) strlen(sprintf/**/x)
@@ -40,9 +42,9 @@ static char rcsid[] = "$Id$";
  * sizeof(int) < 4.  sizeof(int) > 4 is fine; all the world's not a VAX.
  */
 
-static const char *inet_ntop4 __P((const u_char *src, char *dst, socklen_t size))
+static const char *inet_ntop4 (const u_char *src, char *dst, socklen_t size)
      internal_function;
-static const char *inet_ntop6 __P((const u_char *src, char *dst, socklen_t size))
+static const char *inet_ntop6 (const u_char *src, char *dst, socklen_t size)
      internal_function;
 
 /* char *
@@ -74,7 +76,7 @@ inet_ntop(af, src, dst, size)
 
 /* const char *
  * inet_ntop4(src, dst, size)
- *	format an IPv4 address, more or less like inet_ntoa()
+ *	format an IPv4 address
  * return:
  *	`dst' (as a const)
  * notes:
@@ -122,7 +124,7 @@ inet_ntop6(src, dst, size)
 	 */
 	char tmp[sizeof "ffff:ffff:ffff:ffff:ffff:ffff:255.255.255.255"], *tp;
 	struct { int base, len; } best, cur;
-	u_int words[IN6ADDRSZ / INT16SZ];
+	u_int words[NS_IN6ADDRSZ / NS_INT16SZ];
 	int i;
 
 	/*
@@ -131,11 +133,11 @@ inet_ntop6(src, dst, size)
 	 *	Find the longest run of 0x00's in src[] for :: shorthanding.
 	 */
 	memset(words, '\0', sizeof words);
-	for (i = 0; i < IN6ADDRSZ; i += 2)
+	for (i = 0; i < NS_IN6ADDRSZ; i += 2)
 		words[i / 2] = (src[i] << 8) | src[i + 1];
 	best.base = -1;
 	cur.base = -1;
-	for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+	for (i = 0; i < (NS_IN6ADDRSZ / NS_INT16SZ); i++) {
 		if (words[i] == 0) {
 			if (cur.base == -1)
 				cur.base = i, cur.len = 1;
@@ -160,7 +162,7 @@ inet_ntop6(src, dst, size)
 	 * Format the result.
 	 */
 	tp = tmp;
-	for (i = 0; i < (IN6ADDRSZ / INT16SZ); i++) {
+	for (i = 0; i < (NS_IN6ADDRSZ / NS_INT16SZ); i++) {
 		/* Are we inside the best run of 0x00's? */
 		if (best.base != -1 && i >= best.base &&
 		    i < (best.base + best.len)) {
@@ -182,7 +184,8 @@ inet_ntop6(src, dst, size)
 		tp += SPRINTF((tp, "%x", words[i]));
 	}
 	/* Was it a trailing run of 0x00's? */
-	if (best.base != -1 && (best.base + best.len) == (IN6ADDRSZ / INT16SZ))
+	if (best.base != -1 && (best.base + best.len) == 
+	    (NS_IN6ADDRSZ / NS_INT16SZ))
 		*tp++ = ':';
 	*tp++ = '\0';
 

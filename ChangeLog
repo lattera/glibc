@@ -1,3 +1,65 @@
+2000-07-18  Mark Kettenis  <kettenis@gnu.org>
+
+	Update resolver code to BIND 8.2.3-T5B.
+
+	* resolv/Versions [GLIBC_2.2] (libc): Add __res_init and
+	__res_nclose.
+	[GLIBC_2.2] (libresolv): Add __dn_expand, __ns_samename,
+	__res_mkquery, __res_nsend, __res_query, __res_querydomain and
+	__res_search.
+	* resolv/Banner: BIND-8.2.3-T5B.
+
+	* resolv/base64.c: Update from BIND 8.2.3-T5B.
+	* resolv/herror.c: Likewise.
+	* resolv/inet_addr.c: Likewise.
+	* resolv/inet_net_ntop.c: Likewise.
+	* resolv/inet_net_pton.c: Likewise.
+	* resolv/inet_neta.c: Likewise.
+	* resolv/inet_ntop.c: Likewise.
+	* resolv/nsap_addr.c: Likewise.
+	* resolv/inet_pton.c: Likewise.  Reject a few more more invalid
+	IPv6 addresses (ISC bug #520).
+
+	* resolv/ns_name.c: Avoid emitting RCS ID in object file.
+	* resolv/ns_parse.c: Likewise.
+	* resolv/ns_netint.c: Likewise.
+	* resolv/ns_samedomain.c: Likewise.
+	* resolv/ns_ttl.c: Likewise.
+	* resolv/ns_print.c: Update from BIND 8.2.3-T5B.  Avoid emitting
+	RCS ID in object file.
+
+	* resolv/res_debug.c: Update from BIND 8.2.3-T5B.
+	* resolv/res_mkquery.c: Likewise.
+	* resolv/res_query.c: Likewise.
+	* resolv/res_init.c: Likewise.
+	(res_setoptions): Mark internal.
+	* resolv/res_send.c: Likewise.
+	[_LIBC]: Fully reinstate the code that avoids the FD_SETSIZE limit
+	by using poll instead.
+	* resolv/res_comp.c: Likewise.
+	[SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)]: Make dn_expand a
+	weak alias for __dn_expand.
+	* resolv/res_data.c: Likewise.
+	(res_close) [_LIBC]: Don't call res_nclose if RES_INIT isn't set
+	in _res.options.  Avoids a potential security risk by avoiding a
+	close (0).
+	[SHLIB_COMPAT (libresolv, GLIBC_2_0, GLIBC_2_2)]: Make
+	res_mkquery, res_query, res_querydomain adn res_search weak
+	aliases for __res_mkquery, __res_query, __res_querydomain and
+	__res_search.
+	* resolv/res_libc.c: (_res): Don't initialize.  Fix res_close
+	instead to avoid close(0).
+	(res_init): Always use the static resolver context.
+	[SHLIB_COMPAT (libc, GLIBC_2.0, GLIBC_2_2)]: Make res_init a weak
+	alias for __res_init.
+
+	* resolv/resolv.h: Update from BIND 8.2.3-T5B.  Move definition of
+	RES_SET_H_ERRNO and accompanying comment to...
+	* include/resolv.h: ... here.
+
+	* resolv/arpa/namser.h: Update from BIND 8.2.3-T5B.
+	* resolv/arpa/nameser_compat.h: Likewise.
+
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nss/makedb.c (main): Compare result of load_db with

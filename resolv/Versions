@@ -20,7 +20,7 @@ libc {
   }
   GLIBC_2.2 {
     # r*
-    __res_state; __res_ninit;
+    __res_state; __res_init; __res_nclose; __res_ninit;
   }
 }
 
@@ -51,8 +51,11 @@ libresolv {
     __ns_name_unpack; __ns_name_ntop;
   }
   GLIBC_2.2 {
-    __res_nmkquery; __res_nquery; __res_nquerydomain; __res_nsearch;
-    __ns_get16; __res_hostalias;
+    __dn_expand;
+    __ns_get16; __ns_samename;
+    __res_hostalias; __res_mkquery; __res_nmkquery; __res_nquery;
+    __res_nquerydomain; __res_nsearch; __res_nsend; __res_query;
+    __res_querydomain; __res_search;
 }
 
 libnss_dns {

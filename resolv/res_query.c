@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1988, 1993
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
+ * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -66,7 +66,7 @@
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static const char sccsid[] = "@(#)res_query.c	8.1 (Berkeley) 6/4/93";
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: res_query.c,v 8.20 2000/02/29 05:39:12 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
@@ -184,8 +184,9 @@ res_nsearch(res_state statp,
 	HEADER *hp = (HEADER *) answer;
 	char tmp[NS_MAXDNAME];
 	u_int dots;
-	int trailing_dot, ret;
+	int trailing_dot, ret, saved_herrno;
 	int got_nodata = 0, got_servfail = 0, root_on_list = 0;
+	int tried_as_is = 0;
 
 	__set_errno (0);
 	RES_SET_H_ERRNO(statp, HOST_NOT_FOUND);  /* True if we never query. */
@@ -202,12 +203,19 @@ res_nsearch(res_state statp,
 		return (res_nquery(statp, cp, class, type, answer, anslen));
 
 	/*
-	 * If there are enough dots in the name, do no searching.
-	 * (The threshold can be set with the "ndots" option.)
+	 * If there are enough dots in the name, let's just give it a
+	 * try 'as is'. The threshold can be set with the "ndots" option.
+	 * Also, query 'as is', if there is a trailing dot in the name.
 	 */
-	if (dots >= statp->ndots || trailing_dot)
-		return (res_nquerydomain(statp, name, NULL, class, type,
-					 answer, anslen));
+	saved_herrno = -1;
+	if (dots >= statp->ndots || trailing_dot) {
+		ret = res_nquerydomain(statp, name, NULL, class, type,
+					 answer, anslen);
+		if (ret > 0 || trailing_dot)
+			return (ret);
+		saved_herrno = h_errno;
+		tried_as_is++;
+	}
 
 	/*
 	 * We do at least one level of search if
@@ -279,10 +287,11 @@ res_nsearch(res_state statp,
 	}
 
 	/*
-	 * If the name has any dots at all, and "." is not on the search
-	 * list, then try an as-is query now.
+	 * If the name has any dots at all, and no earlier 'as-is' query 
+	 * for the name, and "." is not on the search list, then try an as-is
+	 * query now.
 	 */
-	if (statp->ndots) {
+	if (statp->ndots && !(tried_as_is || root_on_list)) {
 		ret = res_nquerydomain(statp, name, NULL, class, type,
 				       answer, anslen);
 		if (ret > 0)
@@ -296,7 +305,9 @@ res_nsearch(res_state statp,
 	 * else send back meaningless H_ERRNO, that being the one from
 	 * the last DNSRCH we did.
 	 */
-	if (got_nodata)
+	if (saved_herrno != -1)
+		RES_SET_H_ERRNO(statp, saved_herrno);
+	else if (got_nodata)
 		RES_SET_H_ERRNO(statp, NO_DATA);
 	else if (got_servfail)
 		RES_SET_H_ERRNO(statp, TRY_AGAIN);

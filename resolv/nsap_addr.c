@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Internet Software Consortium.
+ * Copyright (c) 1996-1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,15 +16,17 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: nsap_addr.c,v 8.10 1999/10/13 16:39:28 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
 #include <sys/param.h>
 #include <sys/socket.h>
+
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <arpa/nameser.h>
+
 #include <ctype.h>
 #include <resolv.h>
 
@@ -38,7 +40,7 @@ inet_nsap_addr(const char *ascii, u_char *binary, int maxlen) {
 	u_char c, nib;
 	u_int len = 0;
 
-	while ((c = *ascii++) != '\0' && (int) len < maxlen) {
+	while ((c = *ascii++) != '\0' && len < (u_int)maxlen) {
 		if (c == '.' || c == '+' || c == '/')
 			continue;
 		if (!isascii(c))

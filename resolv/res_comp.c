@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1993
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -25,16 +25,18 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * -
+ */
+
+/*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
+ * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -64,22 +66,18 @@
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static const char sccsid[] = "@(#)res_comp.c	8.1 (Berkeley) 6/4/93";
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: res_comp.c,v 8.15 1999/10/13 16:39:39 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
 #include <sys/param.h>
 #include <netinet/in.h>
 #include <arpa/nameser.h>
-
 #include <ctype.h>
-#include <errno.h>
 #include <resolv.h>
 #include <stdio.h>
-
 #include <string.h>
 #include <unistd.h>
-
 
 /*
  * Expand compressed domain name 'comp_dn' to full domain name.
@@ -157,7 +155,7 @@ res_hnok(const char *dn) {
 		int nch = *dn++;
 
 		if (periodchar(ch)) {
-			/* NULL */;
+			(void)NULL;
 		} else if (periodchar(pch)) {
 			if (!borderchar(ch))
 				return (0);
@@ -198,7 +196,7 @@ res_mailok(const char *dn) {
 
 	/* "." is a valid missing representation */
 	if (*dn == '\0')
-		return(1);
+		return (1);
 
 	/* otherwise <label>.<hostname> */
 	while ((ch = *dn++) != '\0') {
@@ -246,3 +244,11 @@ u_int32_t _getlong(const u_char *src) { return (ns_get32(src)); }
 u_int16_t _getshort(const u_char *src) { return (ns_get16(src)); }
 #endif /*__ultrix__*/
 #endif /*BIND_4_COMPAT*/
+
+
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libresolv, GLIBC_2_0, GLIBC_2_2)
+# undef dn_expand
+weak_alias (__dn_expand, dn_expand);
+#endif

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1985, 1989, 1993
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -13,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,14 +29,14 @@
 
 /*
  * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
+ * 
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
  * copyright notice and this permission notice appear in all copies, and that
  * the name of Digital Equipment Corporation not be used in advertising or
  * publicity pertaining to distribution of the document or software without
  * specific, written prior permission.
- *
+ * 
  * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
  * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
  * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
@@ -66,7 +66,7 @@
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static const char sccsid[] = "@(#)res_init.c	8.1 (Berkeley) 6/7/93";
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: res_init.c,v 8.16 2000/05/09 07:10:12 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
@@ -88,12 +88,10 @@ static const char rcsid[] = "$Id$";
 /* Options.  Should all be left alone. */
 #define RESOLVSORT
 #define RFC1535
-#undef DEBUG
+/* #undef DEBUG */
 
-static void
-res_setoptions (res_state statp, const char *options, const char *source)
+static void res_setoptions (res_state, const char *, const char *)
      internal_function;
-
 
 #ifdef RESOLVSORT
 static const char sort_mask[] = "/&";
@@ -172,10 +170,11 @@ __res_vinit(res_state statp, int preinit) {
 	statp->nscount = 1;
 	statp->ndots = 1;
 	statp->pfcode = 0;
-	statp->_sock = -1;
+	statp->_vcsock = -1;
 	statp->_flags = 0;
 	statp->qhook = NULL;
 	statp->rhook = NULL;
+	statp->_u._ext.nscount = 0;
 
 	/* Allow user to override the local domain definition */
 	if ((cp = __secure_getenv("LOCALDOMAIN")) != NULL) {
@@ -391,8 +390,7 @@ __res_vinit(res_state statp, int preinit) {
 
 static void
 internal_function
-res_setoptions(res_state statp, const char *options, const char *source)
-{
+res_setoptions(res_state statp, const char *options, const char *source) {
 	const char *cp = options;
 	int i;
 
@@ -475,4 +473,29 @@ res_randomid(void) {
 
 	__gettimeofday(&now, NULL);
 	return (0xffff & (now.tv_sec ^ now.tv_usec ^ __getpid()));
+}
+
+/*
+ * This routine is for closing the socket if a virtual circuit is used and
+ * the program wants to close it.  This provides support for endhostent()
+ * which expects to close the socket.
+ *
+ * This routine is not expected to be user visible.
+ */
+void
+res_nclose(res_state statp) {
+	int ns;
+
+	if (statp->_vcsock >= 0) { 
+		(void) close(statp->_vcsock);
+		statp->_vcsock = -1;
+		statp->_flags &= ~(RES_F_VC | RES_F_CONN);
+	}
+	for (ns = 0; ns < statp->_u._ext.nscount; ns++) {
+		if (statp->_u._ext.nssocks[ns] != -1) {
+			(void) close(statp->_u._ext.nssocks[ns]);
+			statp->_u._ext.nssocks[ns] = -1;
+		}
+	}
+	statp->_u._ext.nscount = 0;
 }

@@ -15,8 +15,8 @@
  * SOFTWARE.
  */
 
-#ifndef lint
-static const char rcsid[] = "$Id$";
+#if !defined(_LIBC) && !defined(lint)
+static const char rcsid[] = "$BINDId: ns_samedomain.c,v 8.9 1999/10/15 21:06:51 vixie Exp $";
 #endif
 
 #include <sys/types.h>

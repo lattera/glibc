@@ -1,9 +1,7 @@
 /*
- * ++Copyright++ 1983, 1987, 1989, 1993
- * -
- * Copyright (c) 1983, 1987, 1989, 1993
+ * Copyright (c) 1983, 1987, 1989
  *    The Regents of the University of California.  All rights reserved.
- *
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met:
@@ -15,7 +13,7 @@
  * 4. Neither the name of the University nor the names of its contributors
  *    may be used to endorse or promote products derived from this software
  *    without specific prior written permission.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,26 +25,6 @@
  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
- * -
- * Portions Copyright (c) 1993 by Digital Equipment Corporation.
- *
- * Permission to use, copy, modify, and distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies, and that
- * the name of Digital Equipment Corporation not be used in advertising or
- * publicity pertaining to distribution of the document or software without
- * specific, written prior permission.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND DIGITAL EQUIPMENT CORP. DISCLAIMS ALL
- * WARRANTIES WITH REGARD TO THIS SOFTWARE, INCLUDING ALL IMPLIED WARRANTIES
- * OF MERCHANTABILITY AND FITNESS.   IN NO EVENT SHALL DIGITAL EQUIPMENT
- * CORPORATION BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
- * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
- * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
- * ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
- * SOFTWARE.
- * -
- * --Copyright--
  */
 
 /*
@@ -68,13 +46,11 @@
 
 /*
  *	@(#)resolv.h	8.1 (Berkeley) 6/2/93
- *	$Id$
+ *	$BINDId: resolv.h,v 8.31 2000/03/30 20:16:50 vixie Exp $
  */
 
-#ifndef _RESOLV_H
-#define	_RESOLV_H 1
-
-#include <features.h>
+#ifndef _RESOLV_H_
+#define	_RESOLV_H_
 
 #include <sys/param.h>
 #if (!defined(BSD)) || (BSD < 199306)
@@ -82,8 +58,11 @@
 #else
 # include <sys/types.h>
 #endif
+#include <sys/cdefs.h>
 #include <stdio.h>
+
 #include <netinet/in.h>
+#include <arpa/nameser.h>
 
 /*
  * Revision information.  This is the release date in YYYYMMDD format.
@@ -96,37 +75,9 @@
 #define	__RES	19991006
 
 /*
- * This used to be defined in res_query.c, now it's in herror.c.
- * [XXX no it's not.  It's in irs/irs_data.c]
- * It was
- * never extern'd by any *.h file before it was placed here.  For thread
- * aware programs, the last h_errno value set is stored in res->h_errno.
- *
- * XXX:	There doesn't seem to be a good reason for exposing RES_SET_H_ERRNO
- *	(and __h_errno_set) to the public via <resolv.h>.
- * XXX:	__h_errno_set is really part of IRS, not part of the resolver.
- *	If somebody wants to build and use a resolver that doesn't use IRS,
- *	what do they do?  Perhaps something like
- *		#ifdef WANT_IRS
- *		# define RES_SET_H_ERRNO(r,x) __h_errno_set(r,x)
- *		#else
- *		# define RES_SET_H_ERRNO(r,x) (h_errno = (r)->res_h_errno = (x))
- *		#endif
- */
-#define RES_SET_H_ERRNO(r,x)			\
-  do						\
-    {						\
-      (r)->res_h_errno = x;			\
-      __set_h_errno(x);				\
-    }						\
-  while (0)
-
-struct __res_state; /* forward */
-
-/*
  * Resolver configuration file.
  * Normally not present, but may contain the address of the
- * initial name server(s) to query and the domain search list.
+ * inital name server(s) to query and the domain search list.
  */
 
 #ifndef _PATH_RESCONF
@@ -136,19 +87,19 @@ struct __res_state; /* forward */
 typedef enum { res_goahead, res_nextns, res_modified, res_done, res_error }
 	res_sendhookact;
 
-typedef res_sendhookact (*res_send_qhook) (struct sockaddr_in * const *ns,
-					   const u_char **query,
-					   int *querylen,
-					   u_char *ans,
-					   int anssiz,
-					   int *resplen);
+typedef res_sendhookact (*res_send_qhook)__P((struct sockaddr_in * const *ns,
+					      const u_char **query,
+					      int *querylen,
+					      u_char *ans,
+					      int anssiz,
+					      int *resplen));
 
-typedef res_sendhookact (*res_send_rhook) (const struct sockaddr_in *ns,
-					   const u_char *query,
-					   int querylen,
-					   u_char *ans,
-					   int anssiz,
-					   int *resplen);
+typedef res_sendhookact (*res_send_rhook)__P((const struct sockaddr_in *ns,
+					      const u_char *query,
+					      int querylen,
+					      u_char *ans,
+					      int anssiz,
+					      int *resplen));
 
 struct res_sym {
 	int	number;		/* Identifying number, like T_MX */
@@ -170,9 +121,10 @@ struct res_sym {
 #define	RES_MAXRETRANS		30	/* only for resolv.conf/RES_OPTIONS */
 #define	RES_MAXRETRY		5	/* only for resolv.conf/RES_OPTIONS */
 #define	RES_DFLRETRY		2	/* Default #/tries. */
+#define	RES_MAXTIME		65535	/* Infinity, in milliseconds. */
 
 struct __res_state {
-	int	retrans;		/* retransmission time interval */
+	int	retrans;	 	/* retransmition time interval */
 	int	retry;			/* number of times to retransmit */
 	u_long	options;		/* option flags - see below. */
 	int	nscount;		/* number of name servers */
@@ -193,9 +145,17 @@ struct __res_state {
 	res_send_qhook qhook;		/* query hook */
 	res_send_rhook rhook;		/* response hook */
 	int	res_h_errno;		/* last one set for this context */
-	int	_sock;			/* PRIVATE: for res_send i/o */
+	int	_vcsock;		/* PRIVATE: for res_send VC i/o */
 	u_int	_flags;			/* PRIVATE: see below */
-	char	pad[52];		/* On an i386 this means 512b total. */
+	union {
+		char	pad[52];	/* On an i386 this means 512b total. */
+		struct {
+			u_int16_t		nscount;
+			u_int16_t		nstimes[MAXNS];	/* ms. */
+			int			nssocks[MAXNS];
+			struct sockaddr_in	nsaddrs[MAXNS];
+		} _ext;
+	} _u;
 };
 
 typedef struct __res_state *res_state;
@@ -229,6 +189,7 @@ typedef struct __res_state *res_state;
 #define RES_ROTATE	0x00004000	/* rotate ns list after each query */
 #define	RES_NOCHECKNAME	0x00008000	/* do not check names for sanity. */
 #define	RES_KEEPTSIG	0x00010000	/* do not strip TSIG records */
+#define	RES_BLAST	0x00020000	/* blast all recursive servers */
 
 #define RES_DEFAULT	(RES_RECURSE | RES_DEFNAMES | RES_DNSRCH)
 
@@ -237,7 +198,7 @@ typedef struct __res_state *res_state;
  */
 #define RES_PRF_STATS	0x00000001
 #define RES_PRF_UPDATE	0x00000002
-#define RES_PRF_CLASS	0x00000004
+#define RES_PRF_CLASS   0x00000004
 #define RES_PRF_CMD	0x00000008
 #define RES_PRF_QUES	0x00000010
 #define RES_PRF_ANS	0x00000020
@@ -253,46 +214,51 @@ typedef struct __res_state *res_state;
 /*			0x00008000	*/
 
 /* Things involving an internal (static) resolver context. */
-#if defined _REENTRANT || defined _LIBC_REENTRANT
+#if !defined _LIBC || defined _LIBC_REENTRANT
 extern struct __res_state *__res_state(void) __attribute__ ((__const__));
-# if defined __RES_PTHREAD_INTERNAL
-extern struct __res_state _res;
-# else
-#  define _res (*__res_state())
-# endif
+#define _res (*__res_state())
 #else
+#ifndef __BIND_NOSTATIC
 extern struct __res_state _res;
 #endif
+#endif
 
+#ifndef __BIND_NOSTATIC
 #define fp_nquery		__fp_nquery
 #define fp_query		__fp_query
 #define hostalias		__hostalias
 #define p_query			__p_query
 #define res_close		__res_close
+#define res_init		__res_init
 #define res_isourserver		__res_isourserver
+#define res_mkquery		__res_mkquery
+#define res_query		__res_query
+#define res_querydomain		__res_querydomain
+#define res_search		__res_search
 #define res_send		__res_send
 
 __BEGIN_DECLS
-void		fp_nquery (const u_char *, int, FILE *) __THROW;
-void		fp_query (const u_char *, FILE *) __THROW;
-const char *	hostalias (const char *) __THROW;
-void		p_query (const u_char *) __THROW;
-void		res_close (void) __THROW;
-int		res_init (void) __THROW;
-int		res_isourserver (const struct sockaddr_in *) __THROW;
-int		res_mkquery (int, const char *, int, int, const u_char *,
-			     int, const u_char *, u_char *, int) __THROW;
-int		res_query (const char *, int, int, u_char *, int) __THROW;
-int		res_querydomain (const char *, const char *, int, int,
-				 u_char *, int) __THROW;
-int		res_search (const char *, int, int, u_char *, int) __THROW;
-int		res_send (const u_char *, int, u_char *, int) __THROW;
+void		fp_nquery __P((const u_char *, int, FILE *));
+void		fp_query __P((const u_char *, FILE *));
+const char *	hostalias __P((const char *));
+void		p_query __P((const u_char *));
+void		res_close __P((void));
+int		res_init __P((void));
+int		res_isourserver __P((const struct sockaddr_in *));
+int		res_mkquery __P((int, const char *, int, int, const u_char *,
+				 int, const u_char *, u_char *, int));
+int		res_query __P((const char *, int, int, u_char *, int));
+int		res_querydomain __P((const char *, const char *, int, int,
+				     u_char *, int));
+int		res_search __P((const char *, int, int, u_char *, int));
+int		res_send __P((const u_char *, int, u_char *, int));
 __END_DECLS
+#endif
 
-#if !defined(SHARED_LIBBIND) || defined(_LIBC)
+#if !defined(SHARED_LIBBIND) || defined(LIB)
 /*
  * If libbind is a shared object (well, DLL anyway)
- * these externs break the linker when resolv.h is
+ * these externs break the linker when resolv.h is 
  * included by a lib client (like named)
  * Make them go away if a client is including this
  *
@@ -308,6 +274,7 @@ extern const struct res_sym __p_rcode_syms[];
 #define b64_pton		__b64_pton
 #define dn_comp			__dn_comp
 #define dn_count_labels		__dn_count_labels
+#define dn_expand		__dn_expand
 #define dn_skipname		__dn_skipname
 #define fp_resstat		__fp_resstat
 #define loc_aton		__loc_aton
@@ -326,7 +293,6 @@ extern const struct res_sym __p_rcode_syms[];
 #define putlong			__putlong
 #define putshort		__putshort
 #define res_dnok		__res_dnok
-#define res_findzonecut		__res_findzonecut
 #define res_hnok		__res_hnok
 #define res_hostalias		__res_hostalias
 #define res_mailok		__res_mailok
@@ -347,63 +313,62 @@ extern const struct res_sym __p_rcode_syms[];
 #define sym_ntos		__sym_ntos
 #define sym_ston		__sym_ston
 __BEGIN_DECLS
-int		res_hnok (const char *) __THROW;
-int		res_ownok (const char *) __THROW;
-int		res_mailok (const char *) __THROW;
-int		res_dnok (const char *) __THROW;
-int		sym_ston (const struct res_sym *, const char *, int *) __THROW;
-const char *	sym_ntos (const struct res_sym *, int, int *) __THROW;
-const char *	sym_ntop (const struct res_sym *, int, int *) __THROW;
-int		b64_ntop (u_char const *, size_t, char *, size_t) __THROW;
-int		b64_pton (char const *, u_char *, size_t) __THROW;
-int		loc_aton (const char *__ascii, u_char *__binary) __THROW;
-const char *	loc_ntoa (const u_char *__binary, char *__ascii) __THROW;
-int		dn_skipname (const u_char *, const u_char *) __THROW;
-void		putlong (u_int32_t, u_char *) __THROW;
-void		putshort (u_int16_t, u_char *) __THROW;
-const char *	p_class (int) __THROW;
-const char *	p_time (u_int32_t) __THROW;
-const char *	p_type (int) __THROW;
-const char *	p_rcode (int) __THROW;
-const u_char *	p_cdnname (const u_char *, const u_char *, int, FILE *)
-     __THROW;
-const u_char *	p_cdname (const u_char *, const u_char *, FILE *) __THROW;
-const u_char *	p_fqnname (const u_char *cp, const u_char *msg,
-			   int, char *, int) __THROW;
-const u_char *	p_fqname (const u_char *, const u_char *, FILE *) __THROW;
-const char *	p_option (u_long option) __THROW;
-char *		p_secstodate (u_long) __THROW;
-int		dn_count_labels (const char *) __THROW;
-int		dn_comp (const char *, u_char *, int,
-			     u_char **, u_char **) __THROW;
-int		dn_expand (const u_char *, const u_char *, const u_char *,
-			   char *, int) __THROW;
-u_int		res_randomid (void) __THROW;
-int		res_nameinquery (const char *, int, int,
-				 const u_char *, const u_char *) __THROW;
-int		res_queriesmatch (const u_char *, const u_char *,
-				  const u_char *, const u_char *) __THROW;
-const char *	p_section (int section, int opcode) __THROW;
+int		res_hnok __P((const char *));
+int		res_ownok __P((const char *));
+int		res_mailok __P((const char *));
+int		res_dnok __P((const char *));
+int		sym_ston __P((const struct res_sym *, const char *, int *));
+const char *	sym_ntos __P((const struct res_sym *, int, int *));
+const char *	sym_ntop __P((const struct res_sym *, int, int *));
+int		b64_ntop __P((u_char const *, size_t, char *, size_t));
+int		b64_pton __P((char const *, u_char *, size_t));
+int		loc_aton __P((const char *ascii, u_char *binary));
+const char *	loc_ntoa __P((const u_char *binary, char *ascii));
+int		dn_skipname __P((const u_char *, const u_char *));
+void		putlong __P((u_int32_t, u_char *));
+void		putshort __P((u_int16_t, u_char *));
+const char *	p_class __P((int));
+const char *	p_time __P((u_int32_t));
+const char *	p_type __P((int));
+const char *	p_rcode __P((int));
+const u_char *	p_cdnname __P((const u_char *, const u_char *, int, FILE *));
+const u_char *	p_cdname __P((const u_char *, const u_char *, FILE *));
+const u_char *	p_fqnname __P((const u_char *cp, const u_char *msg,
+			       int, char *, int));
+const u_char *	p_fqname __P((const u_char *, const u_char *, FILE *));
+const char *	p_option __P((u_long option));
+char *		p_secstodate __P((u_long));
+int		dn_count_labels __P((const char *));
+int		dn_comp __P((const char *, u_char *, int,
+			     u_char **, u_char **));
+int		dn_expand __P((const u_char *, const u_char *, const u_char *,
+			       char *, int));
+u_int		res_randomid __P((void));
+int		res_nameinquery __P((const char *, int, int,
+				     const u_char *, const u_char *));
+int		res_queriesmatch __P((const u_char *, const u_char *,
+				      const u_char *, const u_char *));
+const char *	p_section __P((int section, int opcode));
 /* Things involving a resolver context. */
-int		res_ninit (res_state) __THROW;
-int		res_nisourserver (const res_state,
-				  const struct sockaddr_in *) __THROW;
-void		fp_resstat (const res_state, FILE *) __THROW;
-void		res_npquery (const res_state, const u_char *, int, FILE *) __THROW;
-const char *	res_hostalias (const res_state, const char *,
-			       char *, size_t) __THROW;
-int		res_nquery (res_state,
-			    const char *, int, int, u_char *, int) __THROW;
-int		res_nsearch (res_state, const char *, int,
-			     int, u_char *, int) __THROW;
-int		res_nquerydomain (res_state,
-				  const char *, const char *, int, int,
-				  u_char *, int) __THROW;
-int		res_nmkquery (res_state,
-			      int, const char *, int, int, const u_char *,
-			      int, const u_char *, u_char *, int) __THROW;
-int		res_nsend (res_state, const u_char *, int, u_char *, int) __THROW;
-void		res_nclose (res_state) __THROW;
+int		res_ninit __P((res_state));
+int		res_nisourserver __P((const res_state,
+				      const struct sockaddr_in *));
+void		fp_resstat __P((const res_state, FILE *));
+void		res_npquery __P((const res_state, const u_char *, int, FILE *));
+const char *	res_hostalias __P((const res_state, const char *,
+				   char *, size_t));
+int		res_nquery __P((res_state,
+				const char *, int, int, u_char *, int));
+int		res_nsearch __P((res_state, const char *, int,
+				 int, u_char *, int));
+int		res_nquerydomain __P((res_state,
+				      const char *, const char *, int, int,
+				      u_char *, int));
+int		res_nmkquery __P((res_state,
+				  int, const char *, int, int, const u_char *,
+				  int, const u_char *, u_char *, int));
+int		res_nsend __P((res_state, const u_char *, int, u_char *, int));
+void		res_nclose __P((res_state));
 __END_DECLS
 
 #endif /* !_RESOLV_H_ */

@@ -16,7 +16,7 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: res_data.c,v 8.17 1999/10/13 17:11:31 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/types.h>
@@ -31,6 +31,9 @@ static const char rcsid[] = "$Id$";
 #include <ctype.h>
 #include <netdb.h>
 #include <resolv.h>
+#ifdef BIND_UPDATE
+#include <res_update.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -67,11 +70,10 @@ const char *_res_sectioncodes[] = {
 #endif
 
 #ifndef __BIND_NOSTATIC
-
 #ifdef _LIBC
 extern struct __res_state _res;
 #else
-/* The declaration has been moved to res_libc.c.  */
+/* The definition has been moved to res_libc.c.  */
 struct __res_state _res
 # if defined(__BIND_RES_TEXT)
 	= { RES_TIMEOUT, }	/* Motorola, et al. */
@@ -85,7 +87,7 @@ int  res_ourserver_p(const res_state, const struct sockaddr_in *);
 void res_pquery(const res_state, const u_char *, int, FILE *);
 
 #ifndef _LIBC
-/* Moved to res_libc.c since res_init should go into libc.so but the
+/* Moved to res_libc.c since res_init() should go into libc.so but the
    rest of this file not.  */
 int
 res_init(void) {
@@ -231,6 +233,17 @@ res_sendsigned(const u_char *buf, int buflen, ns_tsig_key *key,
 
 void
 res_close(void) {
+#ifdef _LIBC
+  	/*
+	 * Some stupid programs out there call res_close() before res_init().
+	 * Since _res._vcsock isn't explicitly initialized, these means that
+	 * we could do a close(0), which might lead to some security problems.
+	 * Therefore we check if res_init() was called before by looking at
+	 * the RES_INIT bit in _res.options.  If it hasn't been set we bail out
+	 * early.  */
+	if ((_res.options & RES_INIT) == 0)
+	  return;
+#endif
 	res_nclose(&_res);
 }
 
@@ -301,4 +314,18 @@ local_hostname_length(const char *hostname) {
 }
 #endif /*ultrix*/
 
+#endif
+
+
+#include <shlib-compat.h>
+
+#if SHLIB_COMPAT(libresolv, GLIBC_2_0, GLIBC_2_2)
+# undef res_mkquery
+# undef res_query
+# undef res_querydomain
+# undef res_search
+weak_alias (__res_mkquery, res_mkquery);
+weak_alias (__res_query, res_query);
+weak_alias (__res_querydomain, res_querydomain);
+weak_alias (__res_search, res_search);
 #endif

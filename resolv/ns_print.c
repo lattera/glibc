@@ -15,11 +15,12 @@
  * SOFTWARE.
  */
 
-#ifndef lint
-static const char rcsid[] = "$Id$";
+#if !defined(_LIBC) && !defined(lint)
+static const char rcsid[] = "$BINDId: ns_print.c,v 8.18 2000/02/29 05:48:12 vixie Exp $";
 #endif
 
 /* Import. */
+
 #include <sys/types.h>
 #include <sys/socket.h>
 
@@ -27,6 +28,7 @@ static const char rcsid[] = "$Id$";
 #include <arpa/nameser.h>
 #include <arpa/inet.h>
 
+#include <assert.h>
 #include <errno.h>
 #include <resolv.h>
 #include <string.h>
@@ -53,6 +55,7 @@ static int	addtab(size_t len, size_t target, int spaced,
 		       char **buf, size_t *buflen);
 
 /* Proto. */
+
 #ifndef _LIBC
 u_int16_t       dst_s_dns_key_id(const u_char *, const int);
 #endif
@@ -122,9 +125,10 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 			T(addstr("@\t\t\t", 4, &buf, &buflen));
 		} else {
 			T(addstr(name, len, &buf, &buflen));
-			/* Origin not used and no trailing dot? */
-			if ((!origin || !origin[0] || name[len] == '\0') &&
-			    name[len - 1] != '.') {
+			/* Origin not used or not root, and no trailing dot? */
+			if (((origin == NULL || origin[0] == '\0') ||
+			    (origin[0] != '.' && origin[1] != '\0' &&
+			    name[len] == '\0')) && name[len - 1] != '.') {
 				T(addstr(".", 1, &buf, &buflen));
 				len++;
 			}
@@ -480,6 +484,7 @@ ns_sprintrrf(const u_char *msg, size_t msglen,
 		n = SPRINTF((tmp, " ; key_tag= %u", key_id));
 		T(addstr(tmp, n, &buf, &buflen));
 #endif /* !_LIBC */
+
 		break;
 	    }
 
@@ -749,20 +754,22 @@ addname(const u_char *msg, size_t msglen,
 	if (n < 0)
 		goto enospc;	/* Guess. */
 	newlen = prune_origin(*buf, origin);
-	if ((origin == NULL || origin[0] == '\0' || (*buf)[newlen] == '\0') &&
-	    (newlen == 0 || (*buf)[newlen - 1] != '.')) {
-		/* No trailing dot. */
-		if (newlen + 2 > *buflen)
-			goto enospc;	/* No room for ".\0". */
-		(*buf)[newlen++] = '.';
-		(*buf)[newlen] = '\0';
-	}
 	if (newlen == 0) {
 		/* Use "@" instead of name. */
 		if (newlen + 2 > *buflen)
 			goto enospc;        /* No room for "@\0". */
 		(*buf)[newlen++] = '@';
 		(*buf)[newlen] = '\0';
+	} else {
+		if (((origin == NULL || origin[0] == '\0') ||
+		    (origin[0] != '.' && origin[1] != '\0' &&
+		    (*buf)[newlen] == '\0')) && (*buf)[newlen - 1] != '.') {
+			/* No trailing dot. */
+			if (newlen + 2 > *buflen)
+				goto enospc;	/* No room for ".\0". */
+			(*buf)[newlen++] = '.';
+			(*buf)[newlen] = '\0';
+		}
 	}
 	*pp += n;
 	addlen(newlen, buf, buflen);
@@ -777,9 +784,7 @@ addname(const u_char *msg, size_t msglen,
 
 static void
 addlen(size_t len, char **buf, size_t *buflen) {
-#if 0
-	INSIST(len <= *buflen);
-#endif
+	assert(len <= *buflen);
 	*buf += len;
 	*buflen -= len;
 }

@@ -462,7 +462,6 @@ static int pthread_handle_create(pthread_t *thread, const pthread_attr_t *attr,
   new_thread->p_canceltype = PTHREAD_CANCEL_DEFERRED;
   new_thread->p_errnop = &new_thread->p_errno;
   new_thread->p_h_errnop = &new_thread->p_h_errno;
-  new_thread->p_res._sock = -1;
   new_thread->p_resp = &new_thread->p_res;
   new_thread->p_guardaddr = guardaddr;
   new_thread->p_guardsize = guardsize;

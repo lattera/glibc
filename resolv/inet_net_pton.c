@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1996 by Internet Software Consortium.
+ * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,7 +16,7 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static const char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: inet_net_pton.c,v 1.11 1999/01/08 19:23:44 vixie Exp $";
 #endif
 
 #include <sys/types.h>
@@ -81,7 +81,7 @@ inet_net_pton(af, src, dst, size)
  *	not an IPv4 network specification.
  * note:
  *	network byte order assumed.  this means 192.5.5.240/28 has
- *	0x11110000 in its fourth octet.
+ *	0b11110000 in its fourth octet.
  * author:
  *	Paul Vixie (ISC), June 1996
  */
@@ -101,7 +101,7 @@ inet_net_pton_ipv4(src, dst, size)
 		/* Hexadecimal: Eat nybble string. */
 		if (size <= 0)
 			goto emsgsize;
-		*dst = 0, dirty = 0;
+		dirty = 0;
 		tmp = 0;	/* To calm down gcc.  */
 		src++;	/* skip x or X. */
 		while (isxdigit((ch = *src++))) {
@@ -109,9 +109,9 @@ inet_net_pton_ipv4(src, dst, size)
 			n = (const char *) __rawmemchr(xdigits, ch) - xdigits;
 			assert(n >= 0 && n <= 15);
 			if (dirty == 0)
-				tmp = n << 4;
+				tmp = n;
 			else
-				tmp |= n;
+				tmp = (tmp << 4) | n;
 			if (++dirty == 2) {
 				if (size-- <= 0)
 					goto emsgsize;
@@ -119,10 +119,10 @@ inet_net_pton_ipv4(src, dst, size)
 				dirty = 0;
 			}
 		}
-		if (dirty) {
+		if (dirty) {  /* Odd trailing nybble? */
 			if (size-- <= 0)
 				goto emsgsize;
-			*dst = (u_char) tmp;
+			*dst++ = (u_char) (tmp << 4);
 		}
 	} else if (isascii(ch) && isdigit(ch)) {
 		/* Decimal: eat dotted digit string. */

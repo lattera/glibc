@@ -15,8 +15,8 @@
  * SOFTWARE.
  */
 
-#ifndef lint
-static const char rcsid[] = "$Id$";
+#if !defined(_LIBC) && !defined(lint)
+static const char rcsid[] = "$BINDId: ns_parse.c,v 8.13 1999/10/13 16:39:35 vixie Exp $";
 #endif
 
 /* Import. */

@@ -1,4 +1,5 @@
-/* Copyright (c) 1996 by Internet Software Consortium.
+/*
+ * Copyright (c) 1996,1999 by Internet Software Consortium.
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,7 +16,7 @@
  */
 
 #if defined(LIBC_SCCS) && !defined(lint)
-static char rcsid[] = "$Id$";
+static const char rcsid[] = "$BINDId: inet_pton.c,v 1.7 1999/10/13 16:39:28 vixie Exp $";
 #endif /* LIBC_SCCS and not lint */
 
 #include <sys/param.h>
@@ -27,7 +28,6 @@ static char rcsid[] = "$Id$";
 #include <ctype.h>
 #include <string.h>
 #include <errno.h>
-#include <conf/portability.h>
 
 /*
  * WARNING: Don't even consider trying to compile this on a system where
@@ -83,7 +83,7 @@ inet_pton4(src, dst)
 	u_char *dst;
 {
 	int saw_digit, octets, ch;
-	u_char tmp[INADDRSZ], *tp;
+	u_char tmp[NS_INADDRSZ], *tp;
 
 	saw_digit = 0;
 	octets = 0;
@@ -111,8 +111,7 @@ inet_pton4(src, dst)
 	}
 	if (octets < 4)
 		return (0);
-
-	memcpy(dst, tmp, INADDRSZ);
+	memcpy(dst, tmp, NS_INADDRSZ);
 	return (1);
 }
 
@@ -136,13 +135,13 @@ inet_pton6(src, dst)
 	u_char *dst;
 {
 	static const char xdigits[] = "0123456789abcdef";
-	u_char tmp[IN6ADDRSZ], *tp, *endp, *colonp;
+	u_char tmp[NS_IN6ADDRSZ], *tp, *endp, *colonp;
 	const char *curtok;
 	int ch, saw_xdigit;
 	u_int val;
 
-	tp = memset(tmp, '\0', IN6ADDRSZ);
-	endp = tp + IN6ADDRSZ;
+	tp = memset(tmp, '\0', NS_IN6ADDRSZ);
+	endp = tp + NS_IN6ADDRSZ;
 	colonp = NULL;
 	/* Leading :: requires some special handling. */
 	if (*src == ':')
@@ -170,8 +169,10 @@ inet_pton6(src, dst)
 					return (0);
 				colonp = tp;
 				continue;
+			} else if (*src == '\0') {
+				return (0);
 			}
-			if (tp + INT16SZ > endp)
+			if (tp + NS_INT16SZ > endp)
 				return (0);
 			*tp++ = (u_char) (val >> 8) & 0xff;
 			*tp++ = (u_char) val & 0xff;
@@ -179,16 +180,16 @@ inet_pton6(src, dst)
 			val = 0;
 			continue;
 		}
-		if (ch == '.' && ((tp + INADDRSZ) <= endp) &&
+		if (ch == '.' && ((tp + NS_INADDRSZ) <= endp) &&
 		    inet_pton4(curtok, tp) > 0) {
-			tp += INADDRSZ;
+			tp += NS_INADDRSZ;
 			saw_xdigit = 0;
 			break;	/* '\0' was seen by inet_pton4(). */
 		}
 		return (0);
 	}
 	if (saw_xdigit) {
-		if (tp + INT16SZ > endp)
+		if (tp + NS_INT16SZ > endp)
 			return (0);
 		*tp++ = (u_char) (val >> 8) & 0xff;
 		*tp++ = (u_char) val & 0xff;
@@ -201,6 +202,8 @@ inet_pton6(src, dst)
 		const int n = tp - colonp;
 		int i;
 
+		if (tp == endp)
+			return (0);
 		for (i = 1; i <= n; i++) {
 			endp[- i] = colonp[n - i];
 			colonp[n - i] = 0;
@@ -209,6 +212,6 @@ inet_pton6(src, dst)
 	}
 	if (tp != endp)
 		return (0);
-	memcpy(dst, tmp, IN6ADDRSZ);
+	memcpy(dst, tmp, NS_IN6ADDRSZ);
 	return (1);
 }
