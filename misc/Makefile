@@ -61,7 +61,7 @@ aux := init-misc
 install-lib := libbsd-compat.a libg.a
 gpl2lgpl := error.c error.h
 
-tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt
+tests := tst-dirname tst-tsearch tst-fdset tst-efgcvt tst-mntent
 
 include ../Rules
 
