@@ -119,23 +119,35 @@
 #endif /* __ASSEMBLER__ */
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...)                                     \
-  ({                                                                          \
-    DECLARGS_##nr(args)                                                       \
-    int err;                                                                  \
-    asm volatile (                                                            \
-    LOADARGS_##nr                                                             \
-    "svc    %b1\n\t"                                                          \
-    "lr     %0,%%r2\n\t"                                                      \
-    : "=d" (err)                                                              \
-    : "I" (__NR_##name) ASMFMT_##nr                                           \
-    : "memory", "cc", "2", "3", "4", "5", "6");                               \
-    if (err >= 0xfffff001)                                                    \
-     {                                                                        \
-       __set_errno(-err);                                                     \
-       err = 0xffffffff;                                                      \
-     }                                                                        \
+#define INLINE_SYSCALL(name, nr, args...)				      \
+  ({									      \
+    unsigned int err = INTERNAL_SYSCALL (name, nr, args);		      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (err), 0))		      \
+     {									      \
+       __set_errno (INTERNAL_SYSCALL_ERRNO (err));			      \
+       err = 0xffffffff;						      \
+     }									      \
     (int) err; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...)				      \
+  ({									      \
+    DECLARGS_##nr(args)							      \
+    int err;								      \
+    asm volatile (							      \
+    LOADARGS_##nr							      \
+    "svc    %b1\n\t"							      \
+    "lr     %0,%%r2\n\t"						      \
+    : "=d" (err)							      \
+    : "I" (__NR_##name) ASMFMT_##nr					      \
+    : "memory", "cc", "2", "3", "4", "5", "6");				      \
+    (int) err; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned int) (val) >= 0xfffff001u)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define DECLARGS_0()
 #define DECLARGS_1(arg1) \

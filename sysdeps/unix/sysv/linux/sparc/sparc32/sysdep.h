@@ -22,6 +22,10 @@
 
 #include <sysdeps/unix/sparc/sysdep.h>
 
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
 
@@ -50,25 +54,35 @@
 
 #define LOC(name)  .L##name
 
-#ifdef PIC
-#define SYSCALL_ERROR_HANDLER					\
-	.global C_SYMBOL_NAME(__errno_location);		\
-        .type   C_SYMBOL_NAME(__errno_location),@function;	\
-	save   %sp,-96,%sp;					\
+#if RTLD_PRIVATE_ERRNO
+# define SYSCALL_ERROR_HANDLER						\
+	.section .gnu.linkonce.t.__sparc.get_pic.l7,"ax",@progbits;	\
+	.globl __sparc.get_pic.l7;					\
+	.hidden __sparc.get_pic.l7;					\
+	.type __sparc.get_pic.l7,@function;				\
+__sparc.get_pic.l7:							\
+	retl;								\
+	 add	%o7, %l7, %l7;						\
+	.previous;							\
+	save	%sp,-96,%sp;						\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
+	call	__sparc.get_pic.l7;					\
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
+	ld	[%l7 + errno], %l0;					\
+	st	%i0, [%l0];						\
+	jmpl	%i7+8, %g0;						\
+	 restore %g0, -1, %o0;
+#else
+# define SYSCALL_ERROR_HANDLER					\
+	.global __errno_location;				\
+        .type   __errno_location,@function;			\
+	save   %sp, -96, %sp;					\
 	call   __errno_location;				\
 	 nop;							\
-	st	%i0,[%o0];					\
-	jmpl	%i7+8,%g0;					\
-	 restore %g0,-1,%o0;
-#else
-#define SYSCALL_ERROR_HANDLER					\
-	save	%sp,-96,%sp;					\
-	call	__errno_location;				\
-	nop;							\
-	st	%i0,[%o0];					\
-	jmpl	%i7+8,%g0;					\
-	 restore %g0,-1,%o0;
-#endif   /* PIC */
+	st	%i0, [%o0];					\
+	jmpl	%i7+8, %g0;					\
+	 restore %g0, -1, %o0;
+#endif
 
 #define PSEUDO(name, syscall_name, args)			\
 	.text;							\
@@ -96,6 +110,12 @@
 	"ba	1b;"							\
 	" restore %%g0, -1, %%o0;"					\
 	".previous;"
+
+#define __INTERNAL_SYSCALL_STRING					\
+	"ta	0x10;"							\
+	"bcs,a	1f;"							\
+	" sub	%%g0, %%o0, %%o0;"					\
+	"1:"
 
 #define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g7",		\
 	"f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7",			\

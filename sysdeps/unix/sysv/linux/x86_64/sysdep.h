@@ -186,6 +186,17 @@
 #undef INLINE_SYSCALL
 #define INLINE_SYSCALL(name, nr, args...) \
   ({									      \
+    unsigned long resultvar = INTERNAL_SYSCALL (name, nr, args);	      \
+    if (__builtin_expect (INTERNAL_SYSCALL_ERROR_P (resultvar), 0))	      \
+      {									      \
+	__set_errno (INTERNAL_SYSCALL_ERRNO (resultvar));		      \
+	resultvar = (unsigned long) -1;					      \
+      }									      \
+    (long) resultvar; })
+
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...) \
+  ({									      \
     unsigned long resultvar;						      \
     LOAD_ARGS_##nr (args)						      \
     asm volatile (							      \
@@ -193,12 +204,13 @@
     "syscall\n\t"							      \
     : "=a" (resultvar)							      \
     : "i" (__NR_##name) ASM_ARGS_##nr : "memory", "cc", "r11", "cx");	      \
-    if (resultvar >= (unsigned long) -4095)				      \
-      {									      \
-	__set_errno (-resultvar);					      \
-	resultvar = (unsigned long) -1;					      \
-      }									      \
     (long) resultvar; })
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -4095L)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
 
 #define LOAD_ARGS_0()
 #define ASM_ARGS_0

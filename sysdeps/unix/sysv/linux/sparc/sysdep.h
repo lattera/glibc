@@ -21,67 +21,78 @@
 #define _LINUX_SPARC_SYSDEP_H 1
 
 #undef INLINE_SYSCALL
-#define INLINE_SYSCALL(name, nr, args...) inline_syscall##nr(name, args)
+#define INLINE_SYSCALL(name, nr, args...) \
+  inline_syscall##nr(__SYSCALL_STRING, name, args)
 
-#define inline_syscall0(name,dummy...)					\
+#undef INTERNAL_SYSCALL
+#define INTERNAL_SYSCALL(name, nr, args...) \
+  inline_syscall##nr(__INTERNAL_SYSCALL_STRING, name, args)
+
+#undef INTERNAL_SYSCALL_ERROR_P
+#define INTERNAL_SYSCALL_ERROR_P(val)	((unsigned long) (val) >= -515L)
+
+#undef INTERNAL_SYSCALL_ERRNO
+#define INTERNAL_SYSCALL_ERRNO(val)	(-(val))
+
+#define inline_syscall0(string,name,dummy...)				\
 ({									\
 	register long __o0 __asm__ ("o0");				\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1) :					\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall1(name,arg1)					\
+#define inline_syscall1(string,name,arg1)				\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0) :			\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall2(name,arg1,arg2)					\
+#define inline_syscall2(string,name,arg1,arg2)				\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1) :		\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall3(name,arg1,arg2,arg3)				\
+#define inline_syscall3(string,name,arg1,arg2,arg3)			\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2) :					\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall4(name,arg1,arg2,arg3,arg4)			\
+#define inline_syscall4(string,name,arg1,arg2,arg3,arg4)		\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
 	register long __o2 __asm__ ("o2") = (long)(arg3);		\
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3) :			\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall5(name,arg1,arg2,arg3,arg4,arg5)			\
+#define inline_syscall5(string,name,arg1,arg2,arg3,arg4,arg5)		\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
@@ -89,14 +100,14 @@
 	register long __o3 __asm__ ("o3") = (long)(arg4);		\
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4) :		\
 			  __SYSCALL_CLOBBERS);				\
 	__o0;								\
 })
 
-#define inline_syscall6(name,arg1,arg2,arg3,arg4,arg5,arg6)		\
+#define inline_syscall6(string,name,arg1,arg2,arg3,arg4,arg5,arg6)	\
 ({									\
 	register long __o0 __asm__ ("o0") = (long)(arg1);		\
 	register long __o1 __asm__ ("o1") = (long)(arg2);		\
@@ -105,7 +116,7 @@
 	register long __o4 __asm__ ("o4") = (long)(arg5);		\
 	register long __o5 __asm__ ("o5") = (long)(arg6);		\
 	register long __g1 __asm__ ("g1") = __NR_##name;		\
-	__asm __volatile (__SYSCALL_STRING : "=r" (__g1), "=r" (__o0) :	\
+	__asm __volatile (string : "=r" (__g1), "=r" (__o0) :		\
 			  "0" (__g1), "1" (__o0), "r" (__o1),		\
 			  "r" (__o2), "r" (__o3), "r" (__o4),		\
 			  "r" (__o5) :					\

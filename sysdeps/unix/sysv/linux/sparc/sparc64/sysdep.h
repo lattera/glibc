@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 2000 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <richard@gnu.ai.mit.edu>, 1997.
 
@@ -22,6 +22,10 @@
 
 #include <sysdeps/unix/sysdep.h>
 
+#ifdef IS_IN_rtld
+# include <dl-sysdep.h>		/* Defines RTLD_PRIVATE_ERRNO.  */
+#endif
+
 #undef SYS_ify
 #define SYS_ify(syscall_name) __NR_##syscall_name
 
@@ -43,13 +47,35 @@
 	C_LABEL(name);							\
 	.type name,@function;
 
-#define SYSCALL_ERROR_HANDLER						\
+#if RTLD_PRIVATE_ERRNO
+# define SYSCALL_ERROR_HANDLER						\
+	.section .gnu.linkonce.t.__sparc64.get_pic.l7,"ax",@progbits;	\
+	.globl __sparc64.get_pic.l7;					\
+	.hidden __sparc64.get_pic.l7;					\
+	.type __sparc64.get_pic.l7,@function;				\
+__sparc64.get_pic.l7:							\
+	retl;								\
+	 add	%o7, %l7, %l7;						\
+	.previous;							\
 	save	%sp, -192, %sp;						\
-	call	__errno_location;					\
-	 nop;								\
-	st	%i0, [%o0];						\
+	sethi	%hi(_GLOBAL_OFFSET_TABLE_-4), %l7;			\
+	call	__sparc.get_pic.l7;					\
+	 add	%l7, %lo(_GLOBAL_OFFSET_TABLE_+4), %l7;			\
+	ldx	[%l7 + errno], %l0;					\
+	st	%i0, [%l0];						\
 	jmpl	%i7+8, %g0;						\
-	 restore %g0, -1, %o0
+	 restore %g0, -1, %o0;
+#else
+# define SYSCALL_ERROR_HANDLER					\
+	.global __errno_location;				\
+	.type   __errno_location,@function;			\
+	save	%sp, -192, %sp;					\
+	call	__errno_location;				\
+	 nop;							\
+	st	%i0, [%o0];					\
+	jmpl	%i7+8, %g0;					\
+	 restore %g0, -1, %o0;
+#endif
 
 #define PSEUDO(name, syscall_name, args)				\
 	.text;								\
@@ -86,6 +112,12 @@
 	" nop;"								\
 	"st	%%i0,[%%o0];"						\
 	"restore %%g0, -1, %%o0;"					\
+	"1:"
+
+#define __INTERNAL_SYSCALL_STRING					\
+	"ta	0x6d;"							\
+	"bcs,a,pt %%xcc, 1f;"						\
+	" sub	%%g0, %%o0, %%o0;"					\
 	"1:"
 
 #define __SYSCALL_CLOBBERS "g2", "g3", "g4", "g5", "g7",		\

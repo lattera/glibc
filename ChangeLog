@@ -1,3 +1,35 @@
+2002-10-24  Jakub Jelinek  <jakub@redhat.com>
+
+	* sysdeps/unix/sysv/linux/s390/s390-32/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): New macros.
+	(INLINE_SYSCALL): Use that.
+	* sysdeps/unix/sysv/linux/s390/s390-64/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): New macros.
+	(INLINE_SYSCALL): Use that.
+	* sysdeps/unix/sysv/linux/x86_64/sysdep.h (INTERNAL_SYSCALL,
+	INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO): New macros.
+	(INLINE_SYSCALL): Use that.
+	* sysdeps/unix/sysv/linux/sparc/sparc32/sysdep.h: Include
+	dl-sysdep.h.
+	(SYSCALL_ERROR_HANDLER): Define RTLD_PRIVATE_ERRNO variant.
+	(__INTERNAL_SYSCALL_STRING): Define.
+	* sysdeps/unix/sysv/linux/sparc/sparc64/sysdep.h: Include
+	dl-sysdep.h.
+	(SYSCALL_ERROR_HANDLER): Define RTLD_PRIVATE_ERRNO variant.
+	(__INTERNAL_SYSCALL_STRING): Define.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h (INLINE_SYSCALL): Pass
+	__SYSCALL_STRING to inline_syscall*.
+	(INTERNAL_SYSCALL, INTERNAL_SYSCALL_ERROR_P, INTERNAL_SYSCALL_ERRNO):
+	New macros.
+	(inline_syscall0, inline_syscall1, inline_syscall2, inline_syscall3,
+	inline_syscall4, inline_syscall5, inline_syscall6): Add string
+	argument.
+
+2002-10-24  Roland McGrath  <roland@redhat.com>
+
+	* libio/bug-wfflush.c: New file.
+	* libio/Makefile (tests): Add bug-wfflush.
+
 2002-10-23  Roland McGrath  <roland@redhat.com>
 
 	* stdio-common/tst-fphex.c: New file.
@@ -80,15 +112,6 @@
 	* sysdeps/gnu/bits/shm.h: Include <bits/ipctypes.h>.
 	* sysdeps/gnu/bits/msq.h: Likewise.
 	* sysvipc/sys/ipc.h: Likewise.
-
-2002-10-22  Roland McGrath  <roland@redhat.com>
-
-	* sysdeps/generic/libc-tls.c (_dl_tls_static_used): New variable.
-	* sysdeps/generic/ldsodefs.h (struct rtld_global): New member
-	`_dl_tls_static_used'.
-	(TLS_STATIC_MIN): New macro.
-	* elf/dl-reloc.c [USE_TLS] (allocate_static_tls): New function.
-	(CHECK_STATIC_TLS): Use it.
 
 2002-10-22  Ulrich Drepper  <drepper@redhat.com>
 
