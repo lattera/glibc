@@ -239,7 +239,8 @@ endif
 # other than there, so the zoneinfo directory contains only universal data,
 # localizing the configuration data elsewhere.
 ifndef localtime-file
-localtime-file = $(inst_sysconfdir)/localtime
+localtime-file = $(sysconfdir)/localtime
+inst_localtime-file = $(install_root)$(localtime-file)
 endif
 
 # What to use for leap second specifications in compiling the default
@@ -490,9 +491,6 @@ object-suffixes += .so
 CPPFLAGS-.so = -DPIC
 CFLAGS-.so = -fPIC -fno-common
 libtype.so := lib%_pic.a
-ifndef ASFLAGS-.so
-ASFLAGS-.so =
-endif
 endif
 ifeq (yes,$(build-profile))
 # Under --enable-profile, we will build a static library of profiled objects.
@@ -501,9 +499,6 @@ object-suffixes += .po
 CPPFLAGS-.po = -DPROF
 CFLAGS-.po = -pg
 libtype.po = lib%_p.a
-ifndef ASFLAGS-.po
-ASFLAGS-.po =
-endif
 endif
 ifeq (yes,$(build-omitfp))
 # Under --enable-omitfp, we build an the library optimized without
@@ -514,9 +509,6 @@ CFLAGS-.go = -g
 CFLAGS-.o = -g0 -O99 -fomit-frame-pointer
 CFLAGS-.so += $(CFLAGS-.o)
 libtype.go = lib%_g.a
-ifndef ASFLAGS-.go
-ASFLAGS-.go =
-endif
 endif
 ifeq (yes,$(build-bounded))
 # Under --enable-bounded, we build the library with `-fbounded-pointers -g'
@@ -525,9 +517,6 @@ object-suffixes += .bo
 CPPFLAGS-.bo = -DBOUNDED_POINTERS
 CFLAGS-.bo = -g -fbounded-pointers
 libtype.bo = lib%_b.a
-ifndef ASFLAGS-.bo
-ASFLAGS-.bo =
-endif
 endif
 
 

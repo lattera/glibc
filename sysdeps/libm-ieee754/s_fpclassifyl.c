@@ -30,6 +30,7 @@ __fpclassifyl (long double x)
   int retval = FP_NORMAL;
 
   GET_LDOUBLE_WORDS (ex, hx, lx, x);
+  hx &= 0x7fffffff;
   hx |= lx;
   ex &= 0x7fff;
   if ((ex | hx) == 0)

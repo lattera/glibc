@@ -56,10 +56,9 @@ enlarge_buffer (stream, c)
 /* Write formatted output from FORMAT to a string which is
    allocated with malloc and stored in *STRING_PTR.  */
 int
-vasprintf (string_ptr, format, args)
-     char **string_ptr;
-     const char *format;
-     va_list args;
+vasprintf (char **string_ptr,
+	   const char *format,
+	   va_list args)
 {
   FILE f;
   int done;

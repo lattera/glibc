@@ -12,7 +12,7 @@ RCSID("$NetBSD: $")
 /* asinl = atanl (x / sqrtl(1 - x^2)) */
 ENTRY(__ieee754_asinl)
 	fldt	4(%esp)			/* x */
-	fst	%st(1)
+	fld	%st
 	fmul	%st(0)			/* x^2 */
 	fld1
 	fsubp				/* 1 - x^2 */

@@ -65,21 +65,9 @@ static __huge_valf_t __huge_valf = { __HUGE_VALF_bytes };
 #endif	/* GCC.  */
 
 
-#if __BYTE_ORDER == __BIG_ENDIAN
-#define	__HUGE_VALL_bytes	{ 0x7f, 0xff, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-#endif
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-#define	__HUGE_VALL_bytes	{ 0, 0, 0, 0, 0, 0, 0, 0, 0xff, 0x7f, 0, 0 }
-#endif
-
-#define __huge_vall_t	union { unsigned char __c[12]; long double __ld; }
-#ifdef	__GNUC__
-#define	HUGE_VALL	(__extension__ \
-			 ((__huge_vall_t) { __c: __HUGE_VALL_bytes }).__ld)
-#else	/* Not GCC.  */
-static __huge_vall_t __huge_vall = { __HUGE_VALL_bytes };
-#define	HUGE_VALL	(__huge_vall.__ld)
-#endif	/* GCC.  */
+/* Generally there is no separate `long double' format and it is the
+   same as `double'.  */
+#define HUGE_VALL HUGE_VAL
 
 
 /* Expression representing positive infinity.  Here it is the same as

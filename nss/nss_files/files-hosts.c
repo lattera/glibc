@@ -98,6 +98,13 @@ DB_LOOKUP (hostbyname, ,,
 	   LOOKUP_NAME (h_name, h_aliases),
 	   const char *name)
 
+DB_LOOKUP (hostbyname2, ,,
+	   {
+	     if (result->h_addrtype != af)
+	       continue;
+	     LOOKUP_NAME (h_name, h_aliases)
+	   }, const char *name, int af)
+
 DB_LOOKUP (hostbyaddr, ,,
 	   {
 	     if (result->h_addrtype == type && result->h_length == len &&

@@ -77,6 +77,7 @@ internal_nis_setprotoent (void)
 {
   char *domainname;
   struct ypall_callback ypcb;
+  enum nss_status status;
   
   yp_get_default_domain (&domainname);
   
@@ -92,10 +93,10 @@ internal_nis_setprotoent (void)
   
   ypcb.foreach = saveit;
   ypcb.data = NULL;
-  yp_all (domainname, "protocols.bynumber", &ypcb);
+  status = yperr2nss (yp_all (domainname, "protocols.bynumber", &ypcb));
   next = start;
   
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status

@@ -17,12 +17,13 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <spin-lock.h>
+#include <mach/mach_traps.h>
 
 void
 __spin_lock_solid (spin_lock_t *lock)
 {
   while (__spin_lock_locked (lock) || ! __spin_try_lock (lock))
     /* Yield to another thread (system call).  */
-    __swtch_pri ();
+    __swtch_pri (0);
 }
 weak_alias (__spin_lock_solid, spin_lock_solid);

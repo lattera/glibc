@@ -98,8 +98,8 @@ elf_machine_load_address (void)
    MAP is the object containing the reloc.  */
 
 static inline void
-elf_machine_rela (struct link_map *map,
-		  const Elf32_Rela *reloc, const Elf32_Sym *sym)
+elf_machine_rela (struct link_map *map, const Elf32_Rela *reloc,
+		  const Elf32_Sym *sym, const struct r_found_version *version)
 {
   Elf32_Addr *const reloc_addr = (void *) (map->l_addr + reloc->r_offset);
   Elf32_Addr loadbase;
@@ -107,31 +107,31 @@ elf_machine_rela (struct link_map *map,
   switch (ELF32_R_TYPE (reloc->r_info))
     {
     case R_SPARC_COPY:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOEXEC);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOEXEC);
       memcpy (reloc_addr, (void *) (loadbase + sym->st_value), sym->st_size);
       break;
     case R_SPARC_GLOB_DAT:
     case R_SPARC_32:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend);
       break;
     case R_SPARC_JMP_SLOT:
-      loadbase = RESOLVE (&sym, DL_LOOKUP_NOPLT);
+      loadbase = RESOLVE (&sym, version, DL_LOOKUP_NOPLT);
       {
 	Elf32_Addr value = ((sym ? (loadbase + sym->st_value) : 0)
 			    + reloc->r_addend);
-	reloc_addr[1] = OPCODE_SETHI | (value >> 10);
+	reloc_addr[1] = OPCODE_SETHI_G1 | (value >> 10);
 	reloc_addr[2] = OPCODE_JMP_G1 | (value & 0x3ff);
       }
       break;
     case R_SPARC_8:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend);
       break;
     case R_SPARC_16:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend);
       break;
@@ -139,19 +139,19 @@ elf_machine_rela (struct link_map *map,
       *reloc_addr += map->l_addr + reloc->r_addend;
       break;
     case R_SPARC_DISP8:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(char *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			      + reloc->r_addend
 			      - (Elf32_Addr) reloc_addr);
       break;
     case R_SPARC_DISP16:
-      loadbase = (*resolve) (&sym, (Elf32_Addr) reloc_addr, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *(short *) reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 			       + reloc->r_addend
 			       - (Elf32_Addr) reloc_addr);
       break;
     case R_SPARC_DISP32:
-      loadbase = RESOLVE (&sym, 0);
+      loadbase = RESOLVE (&sym, version, 0);
       *reloc_addr = ((sym ? (loadbase + sym->st_value) : 0)
 		     + reloc->r_addend
 		     - (Elf32_Addr) reloc_addr);
@@ -160,17 +160,27 @@ elf_machine_rela (struct link_map *map,
 	{
 	  unsigned int saddr;
 
-	  loadbase = RESOLVE (&sym, 0);
+	  loadbase = RESOLVE (&sym, version, 0);
 	  saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
 
 	  *reloc_addr = (*reloc_addr & ~0x3ff) | (saddr & 0x3ff);
 	}
        break;
+    case R_SPARC_WDISP30:
+      {
+	unsigned int saddr;
+
+	loadbase = RESOLVE (&sym, version, 0);
+	saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
+	*reloc_addr = ((*reloc_addr & 0xc0000000)
+		       | ((saddr - (unsigned int) reloc_addr)>>2));
+      }
+      break;
     case R_SPARC_HI22:
       {
 	unsigned int saddr;
 
-	loadbase = RESOLVE (&sym, 0);
+	loadbase = RESOLVE (&sym, version, 0);
 	saddr = (loadbase ? loadbase : map->l_addr) + reloc->r_addend;
 
 	*reloc_addr = (*reloc_addr & 0xffc00000)|(saddr >> 10);
@@ -199,9 +209,7 @@ elf_machine_lazy_rel (struct link_map *map, const Elf32_Rela *reloc)
     }
 }
 
-#define ELF_ADJUST_ARG(arg) __asm__("\tadd %%fp,64,%0\n" : "=r" (arg))
-
-#endif	/* RESOLV */
+#endif	/* RESOLVE */
 
 /* Nonzero iff TYPE describes relocation of a PLT entry, so
    PLT entries should not be allowed to define the value.  */
@@ -285,8 +293,49 @@ _dl_runtime_resolve:
  .globl _start\n\
  .type _start,@function\n\
 _start:\n\
+  /* Pass pointer to argument block to _dl_start.  */\n\
+  add %sp,64,%o0\n\
   call _dl_start\n\
-  nop\n\
-  call %o0\n\
+   nop\n\
+  \n\
+  mov %o0,%l0\n\
+  \n\
+2:\n\
+   call 1f\n\
+   nop\n\
+1:\n\
+  sethi %hi(_GLOBAL_OFFSET_TABLE_-(2b-.)),%l2\n\
+  sethi %hi(_dl_default_scope),%l3\n\
+  or    %l2,%lo(_GLOBAL_OFFSET_TABLE_-(2b-.)),%l2\n\
+  or    %l3,%lo(_dl_default_scope),%l3\n\
+  add   %o7,%l2,%l1\n\
+  # %l1 has the GOT. %l3 has _dl_default_scope offset\n\
+  # Now, load _dl_default_scope [2]\n\
+  add   %l3,4,%l3\n\
+  ld    [%l1+%l3],%l4\n\
+  # %l4 has _dl_default_scope [2]\n\
+  # call _dl_init_next until it returns 0, pass _dl_default_scope [2]\n\
+3:\n\
+  call  _dl_init_next\n\
+   mov   %l4,%o0\n\
+  cmp   %o0,%g0\n\
+  bz,a  4f\n\
+   nop\n\
+  call  %o0\n\
+   nop\n\
+  b,a   3b\n\
+4:\n\
+  # Clear the _dl_starting_up variable and pass _dl_fini in %g1 as per ELF ABI.\n\
+  sethi %hi(_dl_starting_up),%l4\n\
+  sethi %hi(_dl_fini),%l3\n\
+  or    %l4,%lo(_dl_starting_up),%l4\n\
+  or    %l3,%lo(_dl_fini),%l3\n\
+  # clear _dl_starting_up\n\
+  ld    [%l1+%l4],%l5\n\
+  st    %g0,[%l5]\n\
+  # load out fini function for atexit in %g1\n\
+  ld    [%l3+%l1],%g1\n\
+  # jump to the user program entry point.\n\
+  jmpl %l0,%g0\n\
   nop\n\
 ");

@@ -40,7 +40,7 @@ __brk (void *addr)
        "t 0x10\n\t"
        "mov %%o0, %0\n\t"
        : "=r" (newbrk)
-       : "0" (SYS_brk), "r" (addr)
+       : "0" (__NR_brk), "r" (addr)
        : "g1", "o0");
 
   __curbrk = newbrk;

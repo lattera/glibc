@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -33,13 +33,12 @@ int
 __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 {
   struct dirent *dp;
+  size_t reclen;
 
   __libc_lock_lock (dirp->lock);
 
   do
     {
-      size_t reclen;
-
       if (dirp->offset >= dirp->size)
 	{
 	  /* We've emptied out our buffer.  Refill it.  */
@@ -60,6 +59,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 	  if (bytes <= 0)
 	    {
 	      dp = NULL;
+	      reclen = 0;
 	      break;
 	    }
 	  dirp->size = (size_t) bytes;
@@ -97,7 +97,7 @@ __readdir_r (DIR *dirp, struct dirent *entry, struct dirent **result)
 
   if (dp != NULL)
     {
-      *entry = *dp;
+      memcpy (entry, dp, reclen);
       *result = entry;
     }
 

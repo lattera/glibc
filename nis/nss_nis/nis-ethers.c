@@ -53,7 +53,7 @@ static struct response *start = NULL;
 static struct response *next = NULL;
 
 static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+saveit (int instatus, char *inkey, int inkeylen, char *inval,
 	int invallen, char *indata)
 {
   if (instatus != YP_TRUE)
@@ -76,7 +76,7 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
       strncpy (next->val, inval, invallen);
       next->val[invallen] = '\0';
     }
-  
+
   return 0;
 }
 
@@ -85,9 +85,10 @@ internal_nis_setetherent (void)
 {
   char *domainname;
   struct ypall_callback ypcb;
-  
-  yp_get_default_domain(&domainname);
-  
+  enum nss_status status;
+
+  yp_get_default_domain (&domainname);
+
   while (start != NULL)
     {
       if (start->val != NULL)
@@ -100,10 +101,10 @@ internal_nis_setetherent (void)
 
   ypcb.foreach = saveit;
   ypcb.data = NULL;
-  yp_all(domainname, "ethers.byname", &ypcb);
+  status = yperr2nss (yp_all (domainname, "ethers.byname", &ypcb));
   next = start;
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status
@@ -119,7 +120,7 @@ _nss_nis_setetherent (void)
 
   return result;
 }
-  
+
 enum nss_status
 _nss_nis_endetherent (void)
 {
@@ -135,9 +136,9 @@ _nss_nis_endetherent (void)
     }
   start = NULL;
   next = NULL;
-  
+
   __libc_lock_unlock (lock);
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -154,15 +155,15 @@ internal_nis_getetherent_r (struct ether *eth, char *buffer, size_t buflen)
   do
     {
       char *p;
-      
+
       if (next == NULL)
 	return NSS_STATUS_NOTFOUND;
       p = strcpy (buffer, next->val);
       next = next->next;
-      
+
       while (isspace (*p))
         ++p;
-      
+
       parse_res = _nss_files_parse_etherent (p, eth, data, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;

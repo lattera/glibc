@@ -32,8 +32,9 @@
 #define	O_CREAT		00400	/* Create file if it doesn't exist.  */
 #define	O_EXCL		02000	/* Fail if file already exists.  */
 #define	O_TRUNC		01000	/* Truncate file to zero length.  */
-#if	defined (__USE_BSD) || defined (__USE_SVID)
+#if defined __USE_BSD || defined __USE_SVID
 #define	O_SYNC		00020	/* Synchronous writes.  */
+#define	O_FSYNC		O_SYNC
 #endif
 
 /* File status flags for `open' and `fcntl'.  */
@@ -82,5 +83,14 @@ struct flock
 #define	F_WRLCK	2	/* Write lock.  */
 #define	F_UNLCK	3	/* Remove lock.  */
 
+
+/* Define some more compatibility macros to be backward compatible with
+   BSD systems which did not managed to hide these kernel macros.  */
+#ifdef	__USE_BSD
+#define	FAPPEND		O_APPEND
+#define	FFSYNC		O_FSYNC
+#define	FNONBLOCK	O_NONBLOCK
+#define	FNDELAY		O_NDELAY
+#endif /* Use BSD.  */
 
 #endif	/* fcntlbits.h */

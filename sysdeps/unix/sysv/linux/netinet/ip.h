@@ -26,62 +26,65 @@
 
 __BEGIN_DECLS
 
-struct timestamp {
-	u_int8_t	len;
-	u_int8_t	ptr;
+struct timestamp
+  {
+    u_int8_t len;
+    u_int8_t ptr;
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int8_t	flags:4,
-		overflow:4;
+    u_int8_t flags:4;
+    u_int8_t overflow:4;
 #elif __BYTE_ORDER == __BIG_ENDIAN
-	u_int8_t	overflow:4,
-		flags:4;
-#else
-#error	"Please fix <bytesex.h>"
-#endif						
-	u_int32_t	data[9];
-};
-
-struct ip_options {
-  u_int32_t	faddr;		/* Saved first hop address */
-  u_int8_t	optlen;
-  u_int8_t srr;
-  u_int8_t rr;
-  u_int8_t ts;
-  u_int8_t is_setbyuser:1,	/* Set by setsockopt?			*/
-                is_data:1,	/* Options in __data, rather than skb	*/
-                is_strictroute:1, /* Strict source route		*/
-                srr_is_hit:1,	/* Packet destination addr was our one	*/
-                is_changed:1,	/* IP checksum more not valid		*/	
-                rr_needaddr:1,	/* Need to record addr of outgoing dev	*/
-                ts_needtime:1,	/* Need to record timestamp		*/
-                ts_needaddr:1;	/* Need to record addr of outgoing dev  */
-  u_int8_t router_alert;
-  u_int8_t __pad1;
-  u_int8_t __pad2;
-  u_int8_t __data[0];
-};
-
-struct iphdr {
-#if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int8_t	ihl:4,
-		version:4;
-#elif __BYTE_ORDER == __BIG_ENDIAN
-	u_int8_t	version:4,
-  		ihl:4;
+    u_int8_t overflow:4;
+    u_int8_t flags:4;
 #else
 #error	"Please fix <bytesex.h>"
 #endif
-	u_int8_t	tos;
-	u_int16_t	tot_len;
-	u_int16_t	id;
-	u_int16_t	frag_off;
-	u_int8_t	ttl;
-	u_int8_t	protocol;
-	u_int16_t	check;
-	u_int32_t	saddr;
-	u_int32_t	daddr;
-	/*The options start here. */
-};
+    u_int32_t data[9];
+  };
+
+struct ip_options
+  {
+    u_int32_t faddr;		/* Saved first hop address */
+    u_int8_t optlen;
+    u_int8_t srr;
+    u_int8_t rr;
+    u_int8_t ts;
+    u_int8_t is_setbyuser:1;	/* Set by setsockopt?			*/
+    u_int8_t is_data:1;		/* Options in __data, rather than skb	*/
+    u_int8_t is_strictroute:1; /* Strict source route		*/
+    u_int8_t srr_is_hit:1;	/* Packet destination addr was our one	*/
+    u_int8_t is_changed:1;	/* IP checksum more not valid		*/
+    u_int8_t rr_needaddr:1;	/* Need to record addr of outgoing dev	*/
+    u_int8_t ts_needtime:1;	/* Need to record timestamp		*/
+    u_int8_t ts_needaddr:1;	/* Need to record addr of outgoing dev  */
+    u_int8_t router_alert;
+    u_int8_t __pad1;
+    u_int8_t __pad2;
+    u_int8_t __data[0];
+  };
+
+struct iphdr
+  {
+#if __BYTE_ORDER == __LITTLE_ENDIAN
+    u_int8_t ihl:4;
+    u_int8_t version:4;
+#elif __BYTE_ORDER == __BIG_ENDIAN
+    u_int8_t	version:4;
+    u_int8_t ihl:4;
+#else
+#error	"Please fix <bytesex.h>"
+#endif
+    u_int8_t tos;
+    u_int16_t tot_len;
+    u_int16_t id;
+    u_int16_t frag_off;
+    u_int8_t ttl;
+    u_int8_t protocol;
+    u_int16_t check;
+    u_int32_t saddr;
+    u_int32_t daddr;
+    /*The options start here. */
+  };
 
 #ifdef __USE_BSD
 /*
@@ -127,46 +130,48 @@ struct iphdr {
 /*
  * Structure of an internet header, naked of options.
  */
-struct ip {
+struct ip
+  {
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int8_t  ip_hl:4,		/* header length */
-		  ip_v:4;		/* version */
+    u_int8_t ip_hl:4;			/* header length */
+    u_int8_t ip_v:4;			/* version */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-	u_int8_t  ip_v:4,		/* version */
-		  ip_hl:4;		/* header length */
+    u_int8_t ip_v:4;			/* version */
+    u_int8_t ip_hl:4;			/* header length */
 #endif
-	u_int8_t  ip_tos;		/* type of service */
-	u_short ip_len;		/* total length */
-	u_short ip_id;		/* identification */
-	u_short ip_off;		/* fragment offset field */
+    u_int8_t ip_tos;			/* type of service */
+    u_short ip_len;			/* total length */
+    u_short ip_id;			/* identification */
+    u_short ip_off;			/* fragment offset field */
 #define	IP_RF 0x8000			/* reserved fragment flag */
 #define	IP_DF 0x4000			/* dont fragment flag */
 #define	IP_MF 0x2000			/* more fragments flag */
 #define	IP_OFFMASK 0x1fff		/* mask for fragmenting bits */
-	u_int8_t  ip_ttl;		/* time to live */
-	u_int8_t  ip_p;			/* protocol */
-	u_short ip_sum;		/* checksum */
-	struct	  in_addr ip_src, ip_dst; /* source and dest address */
-};
+    u_int8_t ip_ttl;			/* time to live */
+    u_int8_t ip_p;			/* protocol */
+    u_short ip_sum;			/* checksum */
+    struct in_addr ip_src, ip_dst;	/* source and dest address */
+  };
 
 /*
  * Time stamp option structure.
  */
-struct	ip_timestamp {
-	u_int8_t ipt_code;		/* IPOPT_TS */
-	u_int8_t ipt_len;		/* size of structure (variable) */
-	u_int8_t ipt_ptr;		/* index of current entry */
+struct ip_timestamp
+  {
+    u_int8_t ipt_code;			/* IPOPT_TS */
+    u_int8_t ipt_len;			/* size of structure (variable) */
+    u_int8_t ipt_ptr;			/* index of current entry */
 #if __BYTE_ORDER == __LITTLE_ENDIAN
-	u_int8_t ipt_flg:4,		/* flags, see below */
-		 ipt_oflw:4;		/* overflow counter */
+    u_int8_t ipt_flg:4,			/* flags, see below */
+    u_int8_t ipt_oflw:4;		/* overflow counter */
 #endif
 #if __BYTE_ORDER == __BIG_ENDIAN
-	u_int8_t ipt_oflw:4,		/* overflow counter */
-		 ipt_flg:4;		/* flags, see below */
+    u_int8_t ipt_oflw:4,		/* overflow counter */
+    u_int8_t ipt_flg:4;			/* flags, see below */
 #endif
-	u_int32_t data[9];
-};
+    u_int32_t data[9];
+  };
 #endif /* __USE_BSD */
 
 #define	IPVERSION	4               /* IP version number */
@@ -175,6 +180,8 @@ struct	ip_timestamp {
 /*
  * Definitions for IP type of service (ip_tos)
  */
+#define	IPTOS_TOS_MASK		0x1E
+#define	IPTOS_TOS(tos)		((tos) & IPTOS_TOS_MASK)
 #define	IPTOS_LOWDELAY		0x10
 #define	IPTOS_THROUGHPUT	0x08
 #define	IPTOS_RELIABILITY	0x04
@@ -184,6 +191,8 @@ struct	ip_timestamp {
 /*
  * Definitions for IP precedence (also in ip_tos) (hopefully unused)
  */
+#define	IPTOS_PREC_MASK			0xe0
+#define	IPTOS_PREC(tos)                ((tos) & IPTOS_PREC_MASK)
 #define	IPTOS_PREC_NETCONTROL		0xe0
 #define	IPTOS_PREC_INTERNETCONTROL	0xc0
 #define	IPTOS_PREC_CRITIC_ECP		0xa0
@@ -196,24 +205,35 @@ struct	ip_timestamp {
 /*
  * Definitions for options.
  */
-#define	IPOPT_COPIED(o)		((o)&0x80)
-#define	IPOPT_CLASS(o)		((o)&0x60)
-#define	IPOPT_NUMBER(o)		((o)&0x1f)
+#define	IPOPT_COPY		0x80
+#define	IPOPT_CLASS_MASK	0x60
+#define	IPOPT_NUMBER_MASK	0x1f
+
+#define	IPOPT_COPIED(o)		((o) & IPOPT_COPY)
+#define	IPOPT_CLASS(o)		((o) & IPOPT_CLASS_MASK)
+#define	IPOPT_NUMBER(o)		((o) & IPOPT_NUMBER_MASK)
 
 #define	IPOPT_CONTROL		0x00
 #define	IPOPT_RESERVED1		0x20
 #define	IPOPT_DEBMEAS		0x40
+#define	IPOPT_MEASUREMENT       IPOPT_DEBMEAS
 #define	IPOPT_RESERVED2		0x60
 
 #define	IPOPT_EOL		0		/* end of option list */
+#define	IPOPT_END		IPOPT_EOL
 #define	IPOPT_NOP		1		/* no operation */
+#define	IPOPT_NOOP		IP_NOP
 
 #define	IPOPT_RR		7		/* record packet route */
 #define	IPOPT_TS		68		/* timestamp */
+#define	IPOPT_TIMESTAMP		IPOPT_TS
 #define	IPOPT_SECURITY		130		/* provide s,c,h,tcc */
+#define	IPOPT_SEC		IPOPT_SECURITY
 #define	IPOPT_LSRR		131		/* loose source route */
 #define	IPOPT_SATID		136		/* satnet id */
+#define	IPOPT_SID		IPOPT_SATID
 #define	IPOPT_SSRR		137		/* strict source route */
+#define	IPOPT_RA		148		/* router alert */
 
 /*
  * Offsets to fields in options other than EOL and NOP.

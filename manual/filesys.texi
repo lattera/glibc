@@ -166,6 +166,9 @@ parallels here to the stream facilities for ordinary files, described in
 * Simple Directory Lister::     A very simple directory listing program.
 * Random Access Directory::     Rereading part of the directory
                                  already read with the same stream.
+* Scanning Directory Content::  Get entries for user selected subset of
+                                 contents in given directory.
+* Simple Directory Lister Mark II::  Revised version of the program.
 @end menu
 
 @node Directory Entries
@@ -386,9 +389,9 @@ the current working directory:
 
 The order in which files appear in a directory tends to be fairly
 random.  A more useful program would sort the entries (perhaps by
-alphabetizing them) before printing them; see @ref{Array Sort Function}.
+alphabetizing them) before printing them; see
+@ref{Scanning Directory Content} and @ref{Array Sort Function}.
 
-@c ??? not documented: scandir, alphasort
 
 @node Random Access Directory
 @subsection Random Access in a Directory Stream
@@ -428,6 +431,69 @@ result of a previous call to @code{telldir} on this particular stream;
 closing and reopening the directory can invalidate values returned by
 @code{telldir}.
 @end deftypefun
+
+
+@node Scanning Directory Content
+@subsection Scanning the Content of a Directory
+
+A higher-level interface to the directory handling functions is the
+@code{scandir} function.  With its help one can select a subset of the
+entries in a directory, possibly sort them and get as the result a list
+of names.
+
+@deftypefun int scandir (const char *@var{dir}, struct dirent ***@var{namelist}, int (*@var{selector}) (struct dirent *), int (*@var{cmp}) (const void *, const void *))
+
+The @code{scandir} function scans the contents of the directory selected
+by @var{dir}.  The result in @var{namelist} is an array of pointers to
+structure of type @code{struct dirent} which describe all selected
+directory entries and which is allocated using @code{malloc}.  Instead
+of always getting all directory entries returned, the user supplied
+function @var{selector} can be used to decide which entries are in the
+result.  Only the entries for which @var{selector} returns a nonzero
+value are selected.
+
+Finally the entries in the @var{namelist} are sorted using the user
+supplied function @var{cmp}.  The arguments of the @var{cmp} function
+are of type @code{struct dirent **}.  I.e., one cannot directly use the
+@code{strcmp} or @code{strcoll} function; see the function
+@code{alphasort} below.
+
+The return value of the function gives the number of entries placed in
+@var{namelist}.  If it is @code{-1} an error occurred and the global
+variable @code{errno} contains more information on the error.
+@end deftypefun
+
+As said above the fourth argument to the @code{scandir} function must be
+a pointer to a sorting function.  For the convenience of the programmer
+the GNU C library contains an implementation of a function which is very
+helpful for this purpose.
+
+@deftypefun int alphasort (const void *@var{a}, const void *@var{b})
+The @code{alphasort} function behaves like the @code{strcmp} function
+(@pxref{String/Array Comparison}).  The difference is that the arguments
+are not string pointers but instead they are of type
+@code{struct dirent **}.
+
+Return value of is less than, equal to, or greater than zero depending
+on the order of the two entries @var{a} and @var{b}.
+@end deftypefun
+
+@node Simple Directory Lister Mark II
+@subsection Simple Program to List a Directory, Mark II
+
+Here is a revised version of the directory lister found above
+(@pxref{Simple Directory Lister}).  Using the @code{scandir} function we
+can avoid using the functions which directly work with the directory
+contents.  After the call the found entries are available for direct
+used.
+
+@smallexample
+@include dir2.c.texi
+@end smallexample
+
+Please note the simple selector function for this example.  Since
+we want to see all directory entries we always return @code{1}.
+
 
 @node Hard Links
 @section Hard Links

@@ -83,23 +83,23 @@ mathematical @code{double} returning functions in overflow situations.
 @end deftypevr
 
 @comment math.h
-@comment GNU
-@deftypevr Macro float HUGE_VALf
+@comment ISO
+@deftypevr Macro float HUGE_VALF
 This macro is similar to the @code{HUGE_VAL} macro except that it is
 used by functions returning @code{float} values.
 
-This macro is a GNU extension.
+This macro is introduced in @w{ISO C 9X}.
 @end deftypevr
 
 @comment math.h
-@comment GNU
-@deftypevr Macro {long double} HUGE_VALl
+@comment ISO
+@deftypevr Macro {long double} HUGE_VALL
 This macro is similar to the @code{HUGE_VAL} macro except that it is
 used by functions returning @code{long double} values.  The value is
 only different from @code{HUGE_VAL} if the architecture really supports
 @code{long double} values.
 
-This macro is a GNU extension.
+This macro is introduced in @w{ISO C 9X}.
 @end deftypevr
 
 

@@ -84,8 +84,17 @@ catopen (const char *cat_name, int flag)
 	}
 
       nlspath = __secure_getenv ("NLSPATH");
-      result->nlspath = __strdup (nlspath != NULL && *nlspath != '\0'
-				  ? nlspath : NLSPATH);
+      if (nlspath != NULL && *nlspath != '\0')
+	{
+	  /* Append the system dependent directory.  */
+	  size_t len = strlen (nlspath + 1 + sizeof NLSPATH);
+	  char *tmp = alloca (len);
+
+	  __stpcpy (__stpcpy (__stpcpy (tmp, nlspath), ":"), NLSPATH);
+	  nlspath = tmp;
+	}
+      else
+	result->nlspath = __strdup (NLSPATH);
 
       if (result->nlspath == NULL)
 	{

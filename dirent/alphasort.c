@@ -22,6 +22,6 @@
 int
 alphasort (const void *a, const void *b)
 {
-  return strcmp (((struct dirent *) a)->d_name,
-		 ((struct dirent *) b)->d_name);
+  return strcmp ((*(const struct dirent **) a)->d_name,
+		 (*(const struct dirent **) b)->d_name);
 }

@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -167,7 +167,8 @@ __yp_bind (const char *domain, dom_binding ** ypdb)
                   ypbr.ypbind_resp_u.ypbind_bindinfo.ypbind_binding_addr,
                   sizeof (ysd->dom_server_addr.sin_addr.s_addr));
           ysd->dom_vers = YPVERS;
-          strcpy (ysd->dom_domain, domain);
+          strncpy (ysd->dom_domain, domain, YPMAXDOMAIN);
+	  ysd->dom_domain[YPMAXDOMAIN] = '\0';
         }
 
       if (ysd->dom_client)

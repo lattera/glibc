@@ -129,7 +129,7 @@ localtime_r (t, tp)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
-   && strptime_internal (rp, (new_fmt), tm, decided) != NULL)
+   && (rp = strptime_internal (rp, (new_fmt), tm, decided)) != NULL)
 
 
 #ifdef _LIBC
@@ -239,14 +239,6 @@ strptime_internal (buf, format, tm, decided)
 #ifdef _NL_CURRENT
 	      if (*decided !=raw)
 		{
-		  if (match_string (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt), rp))
-		    {
-		      if (*decided == not
-			  && strcmp (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt),
-				     ab_weekday_name[cnt]))
-			*decided = loc;
-		      break;
-		    }
 		  if (match_string (_NL_CURRENT (LC_TIME, DAY_1 + cnt), rp))
 		    {
 		      if (*decided == not
@@ -255,11 +247,19 @@ strptime_internal (buf, format, tm, decided)
 			*decided = loc;
 		      break;
 		    }
+		  if (match_string (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt), rp))
+		    {
+		      if (*decided == not
+			  && strcmp (_NL_CURRENT (LC_TIME, ABDAY_1 + cnt),
+				     ab_weekday_name[cnt]))
+			*decided = loc;
+		      break;
+		    }
 		}
 #endif
 	      if (*decided != loc
-		  && (match_string (ab_weekday_name[cnt], rp)
-		      || match_string (weekday_name[cnt], rp)))
+		  && (match_string (weekday_name[cnt], rp)
+		      || match_string (ab_weekday_name[cnt], rp)))
 		{
 		  *decided = raw;
 		  break;
@@ -279,14 +279,6 @@ strptime_internal (buf, format, tm, decided)
 #ifdef _NL_CURRENT
 	      if (*decided !=raw)
 		{
-		  if (match_string (_NL_CURRENT (LC_TIME, ABMON_1 + cnt), rp))
-		    {
-		      if (*decided == not
-			  && strcmp (_NL_CURRENT (LC_TIME, ABMON_1 + cnt),
-				     ab_month_name[cnt]))
-			*decided = loc;
-		      break;
-		    }
 		  if (match_string (_NL_CURRENT (LC_TIME, MON_1 + cnt), rp))
 		    {
 		      if (*decided == not
@@ -295,10 +287,18 @@ strptime_internal (buf, format, tm, decided)
 			*decided = loc;
 		      break;
 		    }
+		  if (match_string (_NL_CURRENT (LC_TIME, ABMON_1 + cnt), rp))
+		    {
+		      if (*decided == not
+			  && strcmp (_NL_CURRENT (LC_TIME, ABMON_1 + cnt),
+				     ab_month_name[cnt]))
+			*decided = loc;
+		      break;
+		    }
 		}
 #endif
-	      if (match_string (ab_month_name[cnt], rp)
-		  || match_string (month_name[cnt], rp))
+	      if (match_string (month_name[cnt], rp)
+		  || match_string (ab_month_name[cnt], rp))
 		{
 		  *decided = raw;
 		  break;
@@ -542,7 +542,7 @@ strptime_internal (buf, format, tm, decided)
 	case 'Y':
 	  /* Match year including century number.  */
 	  get_number (0, INT_MAX);
-	  tm->tm_year = val - (val >= 2000 ? 2000 : 1900);
+	  tm->tm_year = val - 1900;
 	  break;
 	case 'Z':
 	  /* XXX How to handle this?  */

@@ -11,6 +11,7 @@ ENTRY(__scalbnf)
 	fildl	8(%esp)
 	flds	4(%esp)
 	fscale
+	fstp	%st(1)
 	ret
 END (__scalbnf)
 weak_alias (__scalbnf, scalbnf)

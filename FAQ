@@ -550,7 +550,8 @@ by
 
 in the above example specs file to make it work for other systems.
 
-Future versions of GCC will automatically provide the correct specs.
+Version 2.7.2.2 does and future versions of GCC will automatically
+provide the correct specs.
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -597,10 +598,22 @@ invalid.  I.e., an emulated FPU is for the libc as good as a real one.
 [Q20]	``How can I compile gcc 2.7.2.1 from the gcc source code using
 	  glibc 2.x?
 
-[A20] {HJL} There is no support in gcc for glibc 2.0 before gcc 2.8. It
-is very tricky to compile gcc 2.7.2.1 using glibc 2.x. You have to
-build it manually or with one pass only. You also have to use the
-specs file in this FAQ while compiling gcc.
+[A20] {AJ} There's only support for glibc 2.0 in gcc 2.7.2.2 or later.
+For 2.7.2.2 you should use the following patch and configure for
+e.g. i486-linux.
+-----------------------------------------------------------------------
+--- configure       Tue Feb 11 15:57:17 1997
++++ configure   Wed Feb 12 23:09:29 1997
+@@ -1021,7 +1021,7 @@
+                gnu_ld=yes
+                # GNU libc version 2 does not supply these;
+                # we want them from GCC.
+-               extra_parts="crtbegin.o crtend.o"
++               extra_parts="crtbegin.o crtbeginS.o crtend.o crtendS..o"
+                ;;
+         i[3456]86-go32-msdos | i[3456]86-*-go32)
+               cpu_type=i386
+-----------------------------------------------------------------------
 
 
 ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~

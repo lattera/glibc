@@ -25,7 +25,7 @@
 # include <string.h>
 #else
 char *malloc ();
-char *strcpy ();
+char *memcpy ();
 #endif
 
 #ifndef weak_alias

@@ -30,9 +30,9 @@
 	.text
 #endif
 	.align ALIGNARG(4)
-	ASM_TYPE_DIRECTIVE(zero,@object)
-zero:	.double 0.0
-	ASM_SIZE_DIRECTIVE(zero)
+	ASM_TYPE_DIRECTIVE(minus1,@object)
+minus1:	.double -1.0
+	ASM_SIZE_DIRECTIVE(minus1)
 	ASM_TYPE_DIRECTIVE(one,@object)
 one:	.double 1.0
 	ASM_SIZE_DIRECTIVE(one)
@@ -79,7 +79,8 @@ ENTRY(__expm1f)
 
 2:	testl	$0x200, %eax	// Test sign.
 	jz	3f		// If positive, jump.
-	fldl	MO(zero)	// Set result to 0.
+	fstp	%st
+	fldl	MO(minus1)	// Set result to -1.0.
 3:	ret
 END(__expm1f)
 weak_alias (__expm1f, expm1f)

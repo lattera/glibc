@@ -183,7 +183,7 @@ extern int euidaccess __P ((__const char *__name, int __type));
 #define	SEEK_END	2	/* Seek from end of file.  */
 #endif
 
-#if defined (__USE_BSD) && !defined (L_SET)
+#if defined __USE_BSD && !defined L_SET
 /* Old BSD names for the same constants; just for compatibility.  */
 #define	L_SET		SEEK_SET
 #define	L_INCR		SEEK_CUR
@@ -239,7 +239,7 @@ extern unsigned int alarm __P ((unsigned int __seconds));
 extern unsigned int __sleep __P ((unsigned int __seconds));
 extern unsigned int sleep __P ((unsigned int __seconds));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set an alarm to go off (generating a SIGALRM signal) in VALUE
    microseconds.  If INTERVAL is nonzero, when the alarm goes off, the
    timer is reset to go off every INTERVAL microseconds thereafter.
@@ -264,7 +264,7 @@ extern int __chown __P ((__const char *__file,
 extern int chown __P ((__const char *__file,
 		       __uid_t __owner, __gid_t __group));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the owner and group of the file that FD is open on.  */
 extern int __fchown __P ((int __fd,
 			  __uid_t __owner, __gid_t __group));
@@ -285,7 +285,7 @@ extern int lchown __P ((__const char *__file, __uid_t __owner,
 extern int __chdir __P ((__const char *__path));
 extern int chdir __P ((__const char *__path));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Change the process's working directory to the one FD is open on.  */
 extern int fchdir __P ((int __fd));
 #endif
@@ -317,7 +317,7 @@ char *__canonicalize_directory_name_internal __P ((__const char *__thisdir,
 						   size_t __size));
 #endif
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Put the absolute pathname of the current working directory in BUF.
    If successful, return BUF.  If not, put an error message in
    BUF and return NULL.  BUF should be at least PATH_MAX bytes long.  */
@@ -377,7 +377,7 @@ extern int execvp __P ((__const char *__file, char *__const __argv[]));
 extern int execlp __P ((__const char *__file, __const char *__arg, ...));
 
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN)
+#if defined __USE_MISC || defined __USE_XOPEN
 /* Add INC to priority of the current process.  */
 extern int nice __P ((int __inc));
 #endif
@@ -420,6 +420,13 @@ extern __pid_t getppid __P ((void));
 
 /* Get the process group ID of the calling process.  */
 extern __pid_t getpgrp __P ((void));
+/* The old BSD definition is a bit different.  */
+extern __pid_t __bsd_getpgrp __P ((__pid_t __pid));
+#ifdef __FAVOR_BSD
+/* When we explicitely compile BSD sources use the BSD definition of this
+   function.  Please note that we cannot use parameters for the macro.  */
+#define getpgrp __bsd_getpgrp
+#endif
 
 /* Set the process group ID of the process matching PID to PGID.
    If PID is zero, the current process's process group ID is set.
@@ -432,7 +439,7 @@ extern __pid_t __getpgid __P ((__pid_t __pid));
 extern __pid_t getpgid __P ((__pid_t __pid));
 #endif
 
-#if defined(__USE_SVID) || defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_SVID || defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Both System V and BSD have `setpgrp' functions, but with different
    calling conventions.  The BSD function is the same as POSIX.1 `setpgid'
    (above).  The System V function takes no arguments and puts the calling
@@ -503,7 +510,7 @@ extern int group_member __P ((__gid_t __gid));
 extern int __setuid __P ((__uid_t __uid));
 extern int setuid __P ((__uid_t __uid));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real user ID of the calling process to RUID,
    and the effective user ID of the calling process to EUID.  */
 extern int __setreuid __P ((__uid_t __ruid, __uid_t __euid));
@@ -522,7 +529,7 @@ extern int seteuid __P ((__uid_t __uid));
 extern int __setgid __P ((__gid_t __gid));
 extern int setgid __P ((__gid_t __gid));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Set the real group ID of the calling process to RGID,
    and the effective group ID of the calling process to EGID.  */
 extern int __setregid __P ((__gid_t __rgid, __gid_t __egid));
@@ -541,7 +548,7 @@ extern int setegid __P ((__gid_t __gid));
 extern __pid_t __fork __P ((void));
 extern __pid_t fork __P ((void));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Clone the calling process, but without copying the whole address space.
    The the calling process is suspended until the the new process exits or is
    replaced by a call to `execve'.  Return -1 for errors, 0 to the new process,
@@ -565,7 +572,7 @@ extern int ttyname_r __P ((int __fd, char *__buf, size_t __buflen));
 extern int __isatty __P ((int __fd));
 extern int isatty __P ((int __fd));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Return the index into the active-logins file (utmp) for
    the controlling terminal.  */
 extern int ttyslot __P ((void));
@@ -576,7 +583,7 @@ extern int ttyslot __P ((void));
 extern int __link __P ((__const char *__from, __const char *__to));
 extern int link __P ((__const char *__from, __const char *__to));
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 /* Make a symbolic link to FROM named TO.  */
 extern int __symlink __P ((__const char *__from, __const char *__to));
 extern int symlink __P ((__const char *__from, __const char *__to));
@@ -654,7 +661,7 @@ extern char *optarg;
 #endif
 
 
-#if defined(__USE_BSD) || defined (__USE_XOPEN)
+#if defined __USE_BSD || defined __USE_XOPEN
 
 /* Put the name of the current host in no more than LEN bytes of NAME.
    The result is null-terminated if LEN is large enough for the full
@@ -728,7 +735,7 @@ extern int daemon __P ((int __nochdir, int __noclose));
 #endif /* Use BSD || X/Open.  */
 
 
-#if defined(__USE_BSD) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_BSD || defined __USE_XOPEN_EXTENDED
 
 /* Return the current machine's Internet number.  */
 extern long int gethostid __P ((void));
@@ -758,7 +765,7 @@ extern int getdtablesize __P ((void));
 #endif /* Use BSD || X/Open Unix.  */
 
 
-#if defined(__USE_MISC) || defined(__USE_XOPEN_EXTENDED)
+#if defined __USE_MISC || defined __USE_XOPEN_EXTENDED
 
 /* Set the end of accessible data space (aka "the break") to ADDR.
    Returns zero on success and -1 for errors (with errno set).  */
@@ -793,8 +800,7 @@ extern long int syscall __P ((long int __sysno, ...));
 #endif	/* Use misc.  */
 
 
-#if (defined (__USE_MISC) || defined (__USE_XOPEN_EXTENDED)) \
-    && !defined (F_LOCK)
+#if (defined __USE_MISC || defined __USE_XOPEN_EXTENDED) && !defined F_LOCK
 /* NOTE: These declarations also appear in <fcntl.h>; be sure to keep both
    files consistent.  Some systems have them there and some here, and some
    software depends on the macros being defined without including both.  */

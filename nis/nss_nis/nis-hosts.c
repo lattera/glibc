@@ -1,4 +1,4 @@
-/* Copyright (C) 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Thorsten Kukuk <kukuk@vt.uni-paderborn.de>, 1996.
 
@@ -242,7 +242,7 @@ _nss_nis_gethostent_r (struct hostent *host, char *buffer, size_t buflen,
 }
 
 enum nss_status
-_nss_nis_gethostbyname_r (const char *name, struct hostent *host,
+_nss_nis_gethostbyname2_r (const char *name, int af, struct hostent *host,
 			  char *buffer, size_t buflen, int *h_errnop)
 {
   enum nss_status retval;
@@ -297,9 +297,9 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host,
 
   parse_res = parse_line (p, host, data, buflen);
 
-  if (!parse_res)
+  if (!parse_res || host->h_addrtype != af)
     {
-      if (errno == ERANGE)
+      if (!parse_res && errno == ERANGE)
 	{
 	  *h_errnop = NETDB_INTERNAL;
 	  return NSS_STATUS_TRYAGAIN;
@@ -313,6 +313,24 @@ _nss_nis_gethostbyname_r (const char *name, struct hostent *host,
 
   *h_errnop = NETDB_SUCCESS;
   return NSS_STATUS_SUCCESS;
+}
+
+enum nss_status
+_nss_nis_gethostbyname_r (const char *name, struct hostent *host,
+			  char *buffer, size_t buflen, int *h_errnop)
+{
+  if (_res.options & RES_USE_INET6)
+    {
+      enum nss_status status;
+
+      status = _nss_nis_gethostbyname2_r (name, AF_INET6, host, buffer, buflen,
+					  h_errnop);
+      if (status == NSS_STATUS_SUCCESS)
+	return status;
+    }
+
+  return _nss_nis_gethostbyname2_r (name, AF_INET, host, buffer, buflen,
+				    h_errnop);
 }
 
 enum nss_status

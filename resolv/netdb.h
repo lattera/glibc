@@ -413,6 +413,16 @@ extern int getaddrinfo __P ((__const char *__name, __const char *__service,
 
 /* Free `addrinfo' structure AI including associated storage.  */
 extern void freeaddrinfo __P ((struct addrinfo *__ai));
+
+/* Convert error return from getaddrinfo() to a string.  */
+extern char *gai_strerror __P  ((int __ecode));
+
+/* Translate a socket address to a location and service name.  */
+extern int getnameinfo __P ((__const struct sockaddr *__sa, size_t __salen,
+			     char *__host, size_t __hostlen,
+			     char *__serv, size_t __servlen,
+			     int __flags));
+
 #endif	/* POSIX */
 
 __END_DECLS

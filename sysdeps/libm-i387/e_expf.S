@@ -23,7 +23,7 @@ ENTRY(__ieee754_expf)
 	je	1f			/* Is +-Inf, jump.  */
 	fldl2e
 	fmulp				/* x * log2(e) */
-	fstl	%st(1)
+	fld	%st
 	frndint				/* int(x * log2(e)) */
 	fsubr	%st,%st(1)		/* fract(x * log2(e)) */
 	fxch
@@ -36,6 +36,7 @@ ENTRY(__ieee754_expf)
 
 1:	testl	$0x200, %eax		/* Test sign.  */
 	jz	2f			/* If positive, jump.  */
+	fstp	%st
 	fldz				/* Set result to 0.  */
 2:	ret
 END (__ieee754_expf)

@@ -126,10 +126,6 @@ _dl_start (void *arg)
 			_dl_rtld_map.l_info[DT_STRTAB]->d_un.d_ptr +
 			_dl_rtld_map.l_info[DT_RPATH]->d_un.d_val);
 
-#ifdef ELF_ADJUST_ARG
-  ELF_ADJUST_ARG(arg);
-#endif
-
   /* Call the OS-dependent function to set up life so we can do things like
      file access.  It will call `dl_main' (below) to do all the real work
      of the dynamic linker, and then unwind our frame and run the user

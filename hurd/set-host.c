@@ -28,7 +28,7 @@ _hurd_set_host_config (const char *item, const char *value, size_t valuelen)
   mach_msg_type_number_t nwrote;
   file_t new, dir;
 
-  dir = __file_name_split (item, &item);
+  dir = __file_name_split (item, (char **)&item);
   if (dir == MACH_PORT_NULL)
     return -1;
 

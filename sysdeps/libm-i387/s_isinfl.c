@@ -10,7 +10,7 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 
 /*
- * isinfl(x) returns 1 is x is inf, else 0;
+ * isinfl(x) returns 1 if x is inf, -1 if x is -inf, else 0;
  * no branching!
  */
 
@@ -26,11 +26,11 @@ static char rcsid[] = "$NetBSD: $";
 {
 	int32_t se,hx,lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
-	se &= 0x7fff;
-	se ^= 0x7fff;
 	/* This additional ^ 0x80000000 is necessary because in Intel's
-	   internal representation the implicit one is explicit.  */
-	se |= (hx ^ 0x80000000) | lx;
-	return (se == 0);
+	   internal representation of the implicit one is explicit.  */
+	lx |= (hx ^ 0x80000000) | ((se & 0x7fff) ^ 0x7fff);
+	lx |= -lx;
+	se &= 0x8000;
+	return ~(lx >> 31) & (1 - (se >> 14));
 }
 weak_alias (__isinfl, isinfl)

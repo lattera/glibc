@@ -1,6 +1,7 @@
 cmsg_nxthdr.c
 init-first.h
 kernel_sigaction.h
+kernel_stat.h
 llseek.c
 siglist.h
 sysctl.c

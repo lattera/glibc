@@ -11,7 +11,7 @@
 /* acosl = atanl (sqrtl(1 - x^2) / x) */
 ENTRY(__ieee754_acosl)
 	fldt	4(%esp)			/* x */
-	fst	%st(1)
+	fld	%st
 	fmul	%st(0)			/* x^2 */
 	fld1
 	fsubp				/* 1 - x^2 */

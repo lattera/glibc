@@ -4,6 +4,7 @@ ioperm.c
 init-first.h
 clone.S
 kernel_sigaction.h
+kernel_stat.h
 sys/io.h
 sys/acct.h
 sys/kernel_termios.h

@@ -50,13 +50,13 @@ struct intern_t
 };
 typedef struct intern_t intern_t;
 
-static intern_t intern = {NULL, NULL};
+static intern_t intern = { NULL, NULL };
 
 static int
-saveit (int instatus, char *inkey, int inkeylen, char *inval, 
+saveit (int instatus, char *inkey, int inkeylen, char *inval,
         int invallen, char *indata)
 {
-  intern_t *intern = (intern_t *)indata;
+  intern_t *intern = (intern_t *) indata;
 
   if (instatus != YP_TRUE)
     return instatus;
@@ -78,7 +78,7 @@ saveit (int instatus, char *inkey, int inkeylen, char *inval,
       strncpy (intern->next->val, inval, invallen);
       intern->next->val[invallen] = '\0';
     }
-  
+
   return 0;
 }
 
@@ -87,10 +87,11 @@ internal_nis_setservent (intern_t *intern)
 {
   char *domainname;
   struct ypall_callback ypcb;
-  
+  enum nss_status status;
+
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
-  
+
   while (intern->start != NULL)
     {
       if (intern->start->val != NULL)
@@ -102,11 +103,11 @@ internal_nis_setservent (intern_t *intern)
   intern->start = NULL;
 
   ypcb.foreach = saveit;
-  ypcb.data = (char *)intern;
-  yp_all(domainname, "services.byname", &ypcb);
+  ypcb.data = (char *) intern;
+  status = yperr2nss (yp_all (domainname, "services.byname", &ypcb));
   intern->next = intern->start;
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 enum nss_status
 _nss_nis_setservent (void)
@@ -134,7 +135,7 @@ internal_nis_endservent (intern_t * intern)
       free (intern->next);
     }
   intern->start = NULL;
-  
+
   return NSS_STATUS_SUCCESS;
 }
 
@@ -161,7 +162,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
 
   if (data->start == NULL)
     internal_nis_setservent (data);
-  
+
   /* Get the next entry until we found a correct one. */
   do
     {
@@ -171,7 +172,7 @@ internal_nis_getservent_r (struct servent *serv, char *buffer,
       data->next = data->next->next;
       while (isspace (*p))
         ++p;
-      
+
       parse_res = _nss_files_parse_servent (p, serv, buffer, buflen);
       if (!parse_res && errno == ERANGE)
         return NSS_STATUS_TRYAGAIN;
@@ -199,7 +200,7 @@ enum nss_status
 _nss_nis_getservbyname_r (const char *name, char *protocol,
 			  struct servent *serv, char *buffer, size_t buflen)
 {
-  intern_t data = {NULL, NULL};
+  intern_t data = { NULL, NULL };
   enum nss_status status;
   int found;
 
@@ -221,16 +222,16 @@ _nss_nis_getservbyname_r (const char *name, char *protocol,
       if (strcmp (serv->s_proto, protocol) == 0)
 	{
 	  char **cp;
-	  
+
 	  if (strcmp (serv->s_name, name) == 0)
 	    found = 1;
 	  else
 	    for (cp = serv->s_aliases; *cp; cp++)
-	      if (strcmp(name, *cp) == 0)
+	      if (strcmp (name, *cp) == 0)
 		found = 1;
 	}
     }
-  
+
   internal_nis_endservent (&data);
 
   if (!found && status == NSS_STATUS_SUCCESS)
@@ -243,7 +244,7 @@ enum nss_status
 _nss_nis_getservbyport_r (int port, char *protocol, struct servent *serv,
 			  char *buffer, size_t buflen)
 {
-  intern_t data = {NULL, NULL};
+  intern_t data = { NULL, NULL };
   enum nss_status status;
   int found;
 

@@ -1,3 +1,310 @@
+1997-03-16 18:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* manual/filesys.texi: Add documentation for scandir and alphasort.
+
+	* math/math.c (fpclassify): Correct stupid typos.
+
+	* math/libm-test.c: New file.  libm test suite by Andreas Jaeger.
+
+	* nss/nss_files/files-hosts.c: Add gethostbyname2 imlementation.
+
+	* posix/Makefile (routines): Add bsd-getpgrp.
+	* posix/bsd-getpgrp.c: New file.
+	* posix/unistd.h [__FAVOR_BSD]: Define macro getpgrp which maps
+	calls to __bsd_getpgrp.
+
+	* sysdeps/generic/getpgrp.c: De-ANSI-declfy.
+
+	* sysdeps/i386/huge_val.h: New file.  ix87 specific infinity values.
+	* sysdeps/m68k/huge_val.h: New file.  m68k specific infinity values.
+	* sysdeps/generic/huge_val.h: Remove definition of long double
+	definition.  Make it the same as the double definition.
+
+	* sysdeps/libm-i387/e_acos.S: Fix bug in FPU stack handling.
+	* sysdeps/libm-i387/e_acosf.S: Likewise.
+	* sysdeps/libm-i387/e_acosl.S: Likewise.
+	* sysdeps/libm-i387/e_asin.S: Likewise.
+	* sysdeps/libm-i387/e_asinf.S: Likewise.
+	* sysdeps/libm-i387/e_asinl.S: Likewise.
+	* sysdeps/libm-i387/e_exp.S: Likewise.
+	* sysdeps/libm-i387/e_expf.S: Likewise.
+	* sysdeps/libm-i387/e_expl.S: Likewise.
+	* sysdeps/libm-i387/e_scalbn.S: Likewise.
+	* sysdeps/libm-i387/e_scalbnf.S: Likewise.
+	* sysdeps/libm-i387/e_scalbnl.S: Likewise.
+
+	* sysdeps/libm-i387/e_log.S: Optimize branch code.
+	* sysdeps/libm-i387/e_logf.S: Likewise.
+	* sysdeps/libm-i387/e_logl.S: Likewise.
+	* sysdeps/libm-i387/e_log10.S: Likewise.
+	* sysdeps/libm-i387/e_log10f.S: Likewise.
+	* sysdeps/libm-i387/e_log10l.S: Likewise.
+
+	* sysdeps/libm-i387/e_pow.S: Major rewrite to handle special cases.
+	* sysdeps/libm-i387/e_powf.S: Likewise.
+	* sysdeps/libm-i387/e_powl.S: Likewise.
+
+	* sysdeps/libm-i387/e_expm1.S: Change return value for -inf
+	argument to -1.0.
+	* sysdeps/libm-i387/e_expm1f.S: Likewise.
+	* sysdeps/libm-i387/e_expm1l.S: Likewise.
+
+	* sysdeps/libm-i387/e_isinfl.c: Return -1 for -inf.
+
+	* sysdeps/libm-i387/e_logbl.S: Correct return value.  Discard first
+	stack element after fxtract.
+
+	* sysdeps/libm-ieee754/e_atan2l.c: New file.  `long double'
+	implementation for atan2 function.
+
+	* sysdeps/libm-ieee754/k_standard.c: Return NAN for libm not in
+	_SVID_ mode when acos, asin, atan2, log, log10 is called with
+	argument out of range.
+	Add new error case for pow(+0,neg).
+
+	* sysdeps/libm-ieee754/s_fpclassifyf.c: Correct recognition of
+	NaN and +-inf.
+	* sysdeps/libm-ieee754/s_fpclassifyl.c: Mask out explicit leading
+	digit in stupid 80 bit formats.
+
+	* sysdeps/libm-ieee754/s_isinf.c: Rewrite to return -1 for -inf.
+	* sysdeps/libm-ieee754/s_isinff.c: Likewise.
+	* sysdeps/libm-ieee754/s_isinfl.c: Likewise.
+
+	* sysdeps/libm-ieee754/s_scalbnl.c (huge, tiny): Adapt values for
+	long double type.
+
+	* sysdeps/libm-ieee754/w_atan2.c: Do not raise exception expect when
+	in SVID mode.
+	* sysdeps/libm-ieee754/w_atan2f.c: Likewise.
+	* sysdeps/libm-ieee754/w_atan2l.c: Likewise.
+
+	* sysdeps/libm-ieee754/w_pow.c: Distinguish error cases for x is +0
+	or -0.
+
+	* sysdeps/posix/isfdtype.c: Add cast to prevent warning.
+
+	* sysdeps/stub/fcntlbits.h: Update copyright.
+	* sysdeps/unix/bsd/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/bsd4.4/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/sun/sunos4/fcntlbits.h: Likewise.
+	* sysdeps/unix/bsd/ultrix4/fcntlbits.h: Likewise.
+	* sysdeps/unix/common/fcntlbits.h: Likewise.
+	* sysdeps/unix/sysv/fcntlbits.h: Likewise.  Define O_FSYNC as alias
+	of O_SYNC.  Add BSD compatibility macros FAPPEND, FFSYNC, FNONBLOCK,
+	and FNDELAY.
+	* sysdeps/unix/sysv/irix4/fcntlbits.h: Likewise.
+
+	* sysdeps/unix/readdir_r.c: Don't copy whole `struct dirent' record,
+	only reclen bytes.
+
+	* sysdeps/unix/sysv/linux/fcntlbits.h [__USE_GNU]: Add O_READ, O_WRITE
+	and O_NORW.
+	* sysdeps/unix/sysv/linux/alpha/fcntlbits.h: Likewise.
+
+	* sysdeps/unix/sysv/linux/init-first.h: Add copyright.
+
+	* sysdeps/unix/sysv/linux/fxstat.c: New file.  Rewrite kernel-level
+	struct stat to user-level form.
+	* sysdeps/unix/sysv/linux/lxstat: New file.
+	* sysdeps/unix/sysv/linux/xstat: New file.
+	* sysdeps/unix/sysv/linux/kernel_stat.h: Define struct stat used in
+	kernel.
+	* sysdeps/unix/sysv/linux/statbuf.h (struct stat): Change definition
+	to use prescribed types for elements.
+	(_STAT_VER): Change to value 3.
+	* sysdeps/unix/sysv/linux/alph/statbuf.h: Likewise.
+	* sysdeps/unix/sysv/linux/Dist: Add kernel_stat.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Likewise.
+
+	* time/Makefile: Correct dependencies for test-tz.
+
+1997-03-16 14:59  Philip Blundell  <phil@london.uk.eu.org>
+
+	* resolv/netdb.h: Add prototypes for gai_strerror and getnameinfo
+	(needed for IPv6 basic sockets API).
+
+1997-03-16 15:02  a sun  <asun@zoology.washington.edu>
+
+	* sysdeps/unix/sysv/linux/net/if_ppp.h: Don't use incompatible
+	kernel header.
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Likewise.
+
+1997-03-14 17:15  Ulrich Drepper  <drepper@cygnus.com>
+
+	* db/hash/hash_bigkey.c (__big_delete): Don't call __free_ovflpage
+	without testing for last_bfp to be NULL.
+	Reported by fabsoft@fabserver1.zarm.uni-bremen.de.
+
+1997-03-13 11:42  Jim Meyering  <meyering@asic.sc.ti.com>
+
+	* time/mktime.c (TIME_T_MIN): Work around a bug in Cray C 5.0.3.0.
+
+1997-03-14 04:00  Kurt Garloff  <garloff@kg1.ping.de>
+
+	* sysdeps/unix/sysv/linux/fcntlbits.h (O_FSYNC): Make alias for O_SYNC.
+	(FASYNC): Move to __USE_BSD section.  Create new macro O_ASYNC.
+
+1997-03-14 02:50  Ulrich Drepper  <drepper@cygnus.com>
+
+	* nis/nss_nis/nis-hosts.c (_nss_nis_gethostbyname2_r): New
+	functions.  Compare result for correct address type.
+	(_nss_nis_gethostbyname_r): Use _nss_nis_gethostbyname2_r.
+	Reported by Mirko Streckenbach <mirko@marian.hil.de>.
+
+1997-02-17 01:40  Zlatko Calusic  <zcalusic@srce.hr>
+
+	* time/strptime.c (recursive): Return rp to caller.
+	(strptime_internal): First check for long names, then abbreviated
+	(month & weekday).
+
+1997-03-10 19:44  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* Makeconfig: Remove useless definitions of ASFLAGS-%.
+	* config.make.in (ASFLAGS-.so): Remove.
+	* configure.in: Don't substitute ASFLAGS_SO.
+	* sysdeps/sparc/configure.in: Remove file.
+	* sysdeps/sparc/Makefile (ASFLAGS-.so): Define.
+
+1997-03-11 17:00  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* time/strptime.c (strptime_internal) [case 'Y']: Always subtract
+	1900 from year, regardless of century.
+
+1997-03-12 05:43  Ulrich Drepper  <drepper@cygnus.com>
+
+	* stdlib/strtod.c (_tens_in_limb) [BITS_PER_MP_LIMB > 32]: Make
+	all numbers unsigned to make buggy gccs happy.
+	Patch by Bryan W. Headley <bheadley@interaccess.com>.
+
+	* sysdeps/unix/sysv/linux/netinet/ip.h: Add backward-compatibility
+	definitions.  Patch by a sun <asun@zoology.washington.edu>.
+	Pretty print header.
+
+	* Makerules (build-shlib): Also create symlink if library is versioned.
+	based on a patch by H.J. Lu <hjl@gnu.ai.mit.edu>.
+	Remove special rule to libc.so symlink.
+
+1997-03-11 20:16  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* manual/math.texi (Domain and Range Errors): Change descriptions
+	according to recent changes for ISO C 9X.
+
+1997-03-11 22:39  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-ieee754/k_standard.c (__kernel_standard): Correct
+	return values for acos, asin, and atan2.
+	Reported by Andreas Jaeger <aj@arthur.pfalz.de>.
+
+1997-03-10 18:16 Thorsten Kukuk  <kukuk@vt.uni-paderborn.de>
+
+	* ypclnt.c (__yp_bind): Fix possible buffer overflow.
+
+1997-03-10 18:06  Bernd Schmidt  <crux@Pool.Informatik.RWTH-Aachen.DE>
+
+	* dirent/alphasort.c (alphasort): Interpret arguments as pointers
+	to pointers to directory entries so that alphasort really can be
+	used as argument for scandir.
+
+1997-03-09 23:33  Andreas Jaeger  <aj@arthur.pfalz.de>
+
+	* string/strdup.c: Declare memcpy if !(_LIBC || STDC_HEADERS)
+	instead of strcpy.
+
+1997-03-10 03:34  Ulrich Drepper  <drepper@cygnus.com>
+
+	* catgets/catgets.c (catopen): Always add NLSPATH to search path for
+	catalogs, not only if the envvar NLSPATH is not available.
+	Reported by Andries.Brouwer@cwi.nl.
+
+1997-03-10 02:46  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makeconfig (localtime-file): Don't define using installation
+	directory.
+	(inst_localtime-file): New variable.
+	* time/Makefile (installed-localtime-file): Use inst_localtime-file.
+	Reported by Edward Seidl <seidl@janed.com>.
+
+1997-03-10 02:31  H.J. Lu  <hjl@gnu.ai.mit.edu>
+
+	* time/Makefile: Add source files to dependencies for test data.
+
+1997-03-09 22:53  Thorsten Kukuk  <kukuk@weber.uni-paderborn.de>
+
+	* nis/nss_nis/nis-ethers.c: Don't ignore return value of yp_all.
+	* nis/nss_nis/nis-proto.c: Likewise.
+	* nis/nss_nis/nis-rpc.c: Likewise.
+	* nis/nss_nis/nis-service.c: Likewise.
+
+1997-03-08 14:37  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* sysdeps/sparc/dl-machine.h (elf_machine_rela): Upgrade to
+	versioning;  Added missing R_SPARC_WDISP30 handling.
+	(RTLD_START): Implement it.
+
+	* sysdeps/unix/sysv/linux/sparc/brk.c: Fix.
+
+	* sysdeps/unix/sysv/linux/sparc/start.c: Startup code for
+	Linux/SPARC.
+
+1997-03-02 18:06  Miguel de Icaza  <miguel@nuclecu.unam.mx>
+
+	* sysdeps/sparc/dl-machine.h (RTLD_START): Make arg as expected by
+	the dynamic linker instead of having a new conditional define.
+	Thanks to Richard Henderson for pointing this out.
+	* elf/rtld.c: Remove usage of ELF_ADJUST_ARG.
+
+1997-03-20 20:44  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* sysdeps/mach/hurd/euidaccess.c: Define as __euidaccess and make
+	euidaccess weak alias.
+
+1997-03-07 10:30  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* stdio-common/printf_fphex.c (MIN): New macro.
+
+	* sysdeps/generic/netinet/in.h: Include <sys/types.h>.
+
+	* sysdeps/generic/sys/mman.h (msync): Mention third arg.
+
+	* sysdeps/generic/netinet/in.h: Add definitions for IPv6 basic
+	API.  (See change by Philip Blundell on Feb 16, 1997.)
+
+1997-03-05 10:40  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+	* hurd/hurd.h (vpprintf): Include <stdarg.h>.  New declaration.
+
+	* hurd/set-host.c (_hurd_set_host_config): Cast second arg to
+	__file_name_split.
+
+	* mach/mach_error.c (mach_error_string_int): Give full prototype.
+	* mach/errstring.c (mach_error_string_int): Likewise.
+	* mach/error_compat.c (__mach_error_map_compat): Likewise.
+	* hurd/vpprintf.c (pwrite, vpprintf): Likewise.
+	* stdio/vasprintf.c (vasprintf): Likewise.
+
+	* mach/mach/mach_traps.h: Include <mach/kern_return.h>.
+
+	* mach/spin-solid.c: Include <mach/mach_traps.h>.
+	* mach/spin-solid.c (__spin_lock_solid): Provide arg to
+	swtch_pri.
+
+	* mach/mach_init.c: Include <mach/mig_support.h>.
+
+	* mach/mach_error.h (mach_error_string, mach_error,
+	mach_error_type): Always provide prototypes.
+
+	* mach/mach/error.h (mach_error_fn_t): Comment out declaration; it
+	appears to be entirely unused dead code.
+
+	* stdio/stdio.h (freopen): Fix spelling error.
+
+1997-03-02 13:38  Miles Bader  <miles@gnu.ai.mit.edu>
+
+	* string/argz.h (__need_error_t): New macro, before including <errno.h>
+	[!__const] (__const): New macro.
+	[!__error_t_defined] (error_t): New typedef.
+
 1997-03-09 06:59  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Makeconfig: Add ASFLAGS-% flags for SPARC assembler which need
@@ -26,9 +333,9 @@
 	* sysdeps/wordsize-32/inttypes.h: New file.
 	* sysdeps/wordsize-64/inttypes.h: New file.
 
-	* sysdpes/generic/socketbits.h: Add PF_FILE as synonym for PF_LOCAL
+	* sysdeps/generic/socketbits.h: Add PF_FILE as synonym for PF_LOCAL
 	and AF_FILE as synonym for AF_LOCAL.
-	* sysdpes/unix/sysv/linux/socketbits.h: Likewise.
+	* sysdeps/unix/sysv/linux/socketbits.h: Likewise.
 
 	* time/Makefile: Rewrite rules for test to handle parallel builds.
 

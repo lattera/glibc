@@ -23,6 +23,12 @@
 #include <sys/types.h>
 
 
+/* In GNU, read and write are bits (unlike BSD).  */
+#ifdef __USE_GNU
+#define	O_READ		O_RDONLY /* Open for reading.  */
+#define O_WRITE		O_WRONLY /* Open for writing.  */
+#define O_NORW		0	/* Open without R/W access.  */
+#endif
 /* open/fcntl - O_SYNC is only implemented on blocks devices and on files
    located on an ext2 file system */
 #define O_ACCMODE	  0003
@@ -37,7 +43,8 @@
 #define O_NONBLOCK	 04000
 #define O_NDELAY	O_NONBLOCK
 #define O_SYNC		010000
-#define FASYNC		020000	/* fcntl, for BSD compatibility */
+#define O_FSYNC		O_SYNC
+#define O_ASYNC		020000
 
 #define F_DUPFD		0	/* dup */
 #define F_GETFD		1	/* get f_flags */
@@ -85,6 +92,7 @@ struct flock
 #ifdef	__USE_BSD
 #define	FAPPEND		O_APPEND
 #define	FFSYNC		O_FSYNC
+#define	FASYNC		O_ASYNC
 #define	FNONBLOCK	O_NONBLOCK
 #define	FNDELAY		O_NDELAY
 #endif /* Use BSD.  */

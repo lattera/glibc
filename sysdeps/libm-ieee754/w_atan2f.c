@@ -8,7 +8,7 @@
  *
  * Developed at SunPro, a Sun Microsystems, Inc. business.
  * Permission to use, copy, modify, and distribute this
- * software is freely granted, provided that this notice 
+ * software is freely granted, provided that this notice
  * is preserved.
  * ====================================================
  */
@@ -17,7 +17,7 @@
 static char rcsid[] = "$NetBSD: w_atan2f.c,v 1.3 1995/05/10 20:48:42 jtc Exp $";
 #endif
 
-/* 
+/*
  * wrapper atan2f(y,x)
  */
 
@@ -38,11 +38,7 @@ static char rcsid[] = "$NetBSD: w_atan2f.c,v 1.3 1995/05/10 20:48:42 jtc Exp $";
 	float z;
 	z = __ieee754_atan2f(y,x);
 	if(_LIB_VERSION == _IEEE_||__isnanf(x)||__isnanf(y)) return z;
-	if(x==(float)0.0&&y==(float)0.0) {
-		/* atan2f(+-0,+-0) */
-	        return (float)__kernel_standard((double)y,(double)x,103);
-	} else
-	    return z;
+	return z;
 #endif
 }
 weak_alias (__atan2f, atan2f)

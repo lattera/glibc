@@ -111,7 +111,7 @@ typedef __io_fileno_fn cookie_fileno_function_t;
 #endif
 
 /* Low level interface, independent of FILE representation.  */
-#if defined (__USE_GNU) && !defined (_LIBC)
+#if defined __USE_GNU && !defined _LIBC
 /* Define the user-visible type, with user-friendly member names.  */
 typedef struct
 {
@@ -340,7 +340,7 @@ extern int fcloseall __P ((void));
 extern FILE *fopen __P ((__const char *__filename, __const char *__modes));
 /* Open a file, replacing an existing stream with it. */
 extern FILE *freopen __P ((__const char *__restrict __filename,
-			   __const char *__rstrict __modes,
+			   __const char *__restrict __modes,
 			   FILE *__restrict __stream));
 
 /* Return a new, zeroed, stream.
@@ -554,7 +554,7 @@ putchar (int __c)
 #endif
 
 
-#if defined(__USE_SVID) || defined(__USE_MISC)
+#if defined __USE_SVID || defined __USE_MISC
 /* Get a word (int) from STREAM.  */
 extern int getw __P ((FILE *__stream));
 
@@ -663,8 +663,8 @@ extern int fileno __P ((FILE *__stream));
 #endif /* Use POSIX.  */
 
 
-#if (defined (__USE_POSIX2) || defined(__USE_SVID) || defined(__USE_BSD) || \
-     defined(__USE_MISC))
+#if (defined __USE_POSIX2 || defined __USE_SVID || defined __USE_BSD || \
+     defined __USE_MISC)
 /* Create a new stream connected to a pipe running the given command.  */
 extern FILE *popen __P ((__const char *__command, __const char *__modes));
 

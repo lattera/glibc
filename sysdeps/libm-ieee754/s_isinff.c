@@ -8,7 +8,7 @@ static char rcsid[] = "$NetBSD: s_isinff.c,v 1.3 1995/05/11 23:20:21 jtc Exp $";
 #endif
 
 /*
- * isinff(x) returns 1 is x is inf, else 0;
+ * isinff(x) returns 1 if x is inf, -1 if x is -inf, else 0;
  * no branching!
  */
 
@@ -22,10 +22,11 @@ static char rcsid[] = "$NetBSD: s_isinff.c,v 1.3 1995/05/11 23:20:21 jtc Exp $";
 	float x;
 #endif
 {
-	int32_t ix;
+	int32_t ix,t;
 	GET_FLOAT_WORD(ix,x);
-	ix &= 0x7fffffff;
-	ix ^= 0x7f800000;
-	return (ix == 0);
+	t = ix & 0x7fffffff;
+	t ^= 0x7f800000;
+	t |= -t;
+	return ~(t >> 31) & (1 - ((ix & 0x80000000) >> 30));
 }
 weak_alias (__isinff, isinff)

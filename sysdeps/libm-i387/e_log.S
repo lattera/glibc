@@ -47,8 +47,8 @@ ENTRY(__ieee754_log)
 	fabs			// |x-1| : x-1 : x : log(2)
 	fcompl	MO(limit)	// x-1 : x : log(2)
 	fnstsw			// x-1 : x : log(2)
-	sahf
-	ja	2f
+	andb	$0x45, %ah
+	jz	2f
 	fstp	%st(1)		// x-1 : log(2)
 	fyl2xp1			// log(x)
 	ret

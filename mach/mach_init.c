@@ -18,6 +18,7 @@
 
 #include <mach_init.h>
 #include <mach/mach_interface.h>
+#include <mach/mig_support.h>
 
 mach_port_t __mach_task_self_;
 vm_size_t __vm_page_size = 0;	/* Must be data not bss for weak alias.  */

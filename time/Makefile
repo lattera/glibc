@@ -35,7 +35,7 @@ routines	:= offtime asctime clock ctime ctime_r difftime	\
 		   strptime
 
 others	:= ap zdump zic
-tests	:= test_time clocktest
+tests	:= test_time clocktest test-tz
 
 tzbases := africa antarctica asia australasia europe northamerica \
 	   southamerica etcetera factory systemv \
@@ -54,15 +54,6 @@ all: # Make this the default target; it will be defined in Rules.
 
 include ../Makeconfig	# Get objpfx defined so we can use it below.
 
-ifeq (no,$(cross-compiling))
-# We can run the test-tz test only if we can install the test data using
-# zic.  This isn't possible when cross-compiling.
-tests += test-tz
-
-# Before the test-tz test can be run we need the data to be installed.
-tests: install-test-data
-endif
-
 # z.* use this variable.
 define nl
 
@@ -71,7 +62,7 @@ endef
 -include $(addprefix $(objpfx)z.,$(tzfiles))
 
 # Make these absolute file names.
-installed-localtime-file := $(firstword $(filter /%,$(localtime-file)) \
+installed-localtime-file := $(firstword $(filter /%,$(inst_localtime-file)) \
 					$(addprefix $(inst_zonedir)/, \
 						    $(localtime-file)))
 installed-posixrules-file := $(firstword $(filter /%,$(posixrules-file)) \
@@ -178,17 +169,17 @@ CFLAGS-tzfile.c = $(tz-cflags)
 CFLAGS-tzset.c = $(tz-cflags)
 
 # We have to make sure the data for testing the tz functions is available.
-.PHONY: install-test-data
-install-test-data: $(addprefx $(objpfx)testdata/, America/New_York \
-						  Etc/UTC UTC)
+$(objpfx)test-tz.out: $(addprefix $(objpfx)testdata/, America/New_York \
+						      Etc/UTC UTC)
 
-$(objpfx)testdata/America/New_York: $(objpfx)zic $(leapseconds) yearistype
+$(objpfx)testdata/America/New_York: northamerica $(objpfx)zic \
+				    $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype northamerica
-$(objpfx)testdata/Etc/UTC: $(objpfx)zic $(leapseconds) yearistype
+$(objpfx)testdata/Etc/UTC: etcetera $(objpfx)zic $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype etcetera
-$(objpfx)testdata/UTC: $(objpfx)testdata/Etc/UTC $(objpfx)zic	\
+$(objpfx)testdata/UTC: simplebackw $(objpfx)zic $(objpfx)testdata/Etc/UTC \
 		       $(leapseconds) yearistype
 	$(built-program-cmd) -d $(objpfx)testdata -L $(leapseconds) \
 	  -y yearistype simplebackw

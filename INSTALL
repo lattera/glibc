@@ -76,6 +76,23 @@ you run `configure':
      static library is compiled with no optimization and full debugging
      information, and installed as `-lc_g'.
 
+`--enable-bounded'
+`--disable-bounded'
+     Enable or disable building of the C library with support for bounded
+     pointers.  To do this one need the enhanced version of the GNU CC
+     with can generate code for bounded pointers.  This version of the
+     C library is necessary to run code which is also compiled using the
+     enhanced gcc for debugging purposes.
+
+There are two more options:
+
+`--with-gmp'
+`--with-gettext'
+     These options are not of much use for the normal installer of the
+     GNU libc.  Only maintainers need this to get automatic updates of
+     the files from these packages in the GNU C library source tree.
+
+
    The simplest way to run `configure' is to do it in the directory
 that contains the library sources.  This prepares to build the library
 in that very directory.
@@ -182,6 +199,9 @@ following patterns:
      iX86-ANYTHING-gnu
      iX86-ANYTHING-linux
      m68k-ANYTHING-linux
+     mips-ANYTHING-linux
+     sparc-ANYTHING-linux
+     powerpc-ANYTHING-linux
 
    Former versions of this library used to support the following
 configurations but the current status is unknown:
@@ -208,7 +228,7 @@ configurations but the current status is unknown:
      sparc-sun-solaris2.N
      sparc-sun-sunos4.N
 
-   Each case of `iX86' can be `i386', `i486', `i586', or `i686'..  All
+   Each case of `iX86' can be `i386', `i486', `i586', or `i686'.  All
 of those configurations produce a library that can run on any of these
 processors.  The library will be optimized for the specified processor,
 but will not use instructions not available on all of them.
@@ -652,10 +672,10 @@ level of the `sysdeps' hierarchy.  This directory contains
 subdirectories (and subdirectory trees) for various Unix variants.
 
    The functions which are system calls in most Unix systems are
-implemented in assembly code in files in `sysdeps/unix'.  These files
-are named with a suffix of `.S'; for example, `__open.S'.  Files ending
-in `.S' are run through the C preprocessor before being fed to the
-assembler.
+automatically generated from the `syscalls.list' files for the appropriate
+archirecture.  The format of the syscalls.list files is quite easy: only
+a few informations are necessary line the system call name, the number of
+arguments and such.  The files are run through the C preprocessor.
 
    These files all use a set of macros that should be defined in
 `sysdep.h'.  The `sysdep.h' file in `sysdeps/unix' partially defines

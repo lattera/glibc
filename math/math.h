@@ -128,9 +128,9 @@ enum
 /* Return number of classification appropriate for X.  */
 #define fpclassify(x) \
      (sizeof (x) == sizeof (float) ?					      \
-        __finitef (x)							      \
+        __fpclassifyf (x)							      \
       : sizeof (x) == sizeof (double) ?					      \
-        __finite (x) : __finitel (x))
+        __fpclassify (x) : __fpclassifyl (x))
 
 /* Return nonzero value if sign of X is negative.  */
 #define signbit(x) \

@@ -810,8 +810,6 @@ AC_SUBST(bounded)
 
 AC_SUBST(DEFINES)
 
-AC_SUBST(ASFLAGS_SO)
-
 if test "`(cd $srcdir; pwd)`" = "`pwd`"; then
   config_makefile=
 else

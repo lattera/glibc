@@ -43,7 +43,10 @@
 	    if(y==0.0)
 	        return __kernel_standard(x,y,20); /* pow(0.0,0.0) */
 	    if(__finite(y)&&y<0.0)
-	        return __kernel_standard(x,y,23); /* pow(0.0,negative) */
+	      if (signbit (x) && signbit (z))
+	        return __kernel_standard(x,y,23); /* pow(-0.0,negative) */
+	      else
+	        return __kernel_standard(x,y,43); /* pow(+0.0,negative) */
 	    return z;
 	}
 	if(!__finite(z)) {

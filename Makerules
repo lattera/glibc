@@ -363,6 +363,8 @@ $(LINK.o) -shared -o $@ $(sysdep-LDFLAGS) $(config-LDFLAGS)  \
 	  -L$(subst :, -L,$(rpath-link)) -Wl,-rpath-link=$(rpath-link) \
 	  -Wl,--whole-archive $^ $(no-whole-archive) \
 	  $(LDLIBS-$(@F:lib%.so=%).so)
+	  test -z "$($(@F)-version)" || \
+	    (rm -f $@$($(@F)-version); $(LN_S) $(@F) $@$($(@F)-version))
 endef
 
 # Don't try to use -lc when making libc.so itself.
@@ -378,12 +380,6 @@ $(common-objpfx)libc.so: $(elfobjdir)/soinit.so \
 			 $(common-objpfx)libc_pic.a \
 			 $(elfobjdir)/sofini.so $(elfobjdir)/ld.so
 	$(build-shlib)
-
-ifdef libc.so-version
-$(common-objpfx)libc.so$(libc.so-version): $(common-objpfx)libc.so
-	rm -f $@
-	ln -s $(<F) $@ || ln $< $@
-endif
 endif
 
 # Some files must not be compiled with the exception handler mechanism

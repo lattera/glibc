@@ -10,7 +10,7 @@ RCSID("$NetBSD: e_asin.S,v 1.4 1995/05/08 23:45:40 jtc Exp $")
 /* asin = atan (x / sqrt(1 - x^2)) */
 ENTRY(__ieee754_asin)
 	fldl	4(%esp)			/* x */
-	fst	%st(1)
+	fld	%st
 	fmul	%st(0)			/* x^2 */
 	fld1
 	fsubp				/* 1 - x^2 */

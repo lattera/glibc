@@ -249,7 +249,7 @@ __big_delete(hashp, bufp)
 	bufp->flags |= BUF_MOD;
 	if (rbufp)
 		__free_ovflpage(hashp, rbufp);
-	if (last_bfp != rbufp)
+	if (last_bfp && last_bfp != rbufp)
 		__free_ovflpage(hashp, last_bfp);
 
 	hashp->NKEYS--;

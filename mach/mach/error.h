@@ -27,6 +27,18 @@
 /*
  * HISTORY
  * $Log$
+ * Revision 1.3  1997/03/16 17:43:08  drepper
+ * (mach_error_fn_t): Comment out declaration; it appears to be entirely
+ * unused dead code.
+ *
+ * Revision 1.3  1997/03/14 15:27:35  thomas
+ * Wed Mar  5 10:40:05 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+ *
+ * 	* mach/mach/mach_traps.h: Include <mach/kern_return.h>.
+ *
+ * 	* mach/mach/error.h (mach_error_fn_t): Comment out declaration; it
+ * 	appears to be entirely unused dead code.
+ *
  * Revision 1.2  1996/12/20 01:32:36  drepper
  * Update from main archive 961219
  *
@@ -141,6 +153,6 @@
 #define	unix_err(errno)		(err_kern|err_sub(3)|errno)
 
 typedef	kern_return_t	mach_error_t;
-typedef mach_error_t	(* mach_error_fn_t)();
+/* typedef mach_error_t	(* mach_error_fn_t)(); */
 
 #endif	/* _MACH_ERROR_H_ */

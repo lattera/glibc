@@ -9,7 +9,7 @@ static char rcsid[] = "$NetBSD: $";
 #endif
 
 /*
- * isinfl(x) returns 1 is x is inf, else 0;
+ * isinfl(x) returns 1 if x is inf, -1 if x is -inf, else 0;
  * no branching!
  */
 
@@ -25,9 +25,9 @@ static char rcsid[] = "$NetBSD: $";
 {
 	int32_t se,hx,lx;
 	GET_LDOUBLE_WORDS(se,hx,lx,x);
-	se &= 0x7fff;
-	se ^= 0x7fff;
-	se |= hx | lx;
-	return (se == 0);
+	hx |= lx | ((se & 0x7fff) ^ 0x7fff);
+	hx |= -hx;
+	se &= 0x8000;
+	return ~(hx >> 31) & (1 - (se >> 14));
 }
 weak_alias (__isinfl, isinfl)

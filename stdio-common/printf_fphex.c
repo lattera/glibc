@@ -77,6 +77,10 @@ ssize_t __printf_pad __P ((FILE *, char pad, int n)); /* In vfprintf.c.  */
       done += len;							      \
     }									      \
   while (0)
+
+#ifndef MIN
+# define MIN(a,b) ((a)<(b)?(a):(b))
+#endif
 
 
 int

@@ -85,6 +85,7 @@ internal_nis_setrpcent (intern_t *intern)
 {
   char *domainname;
   struct ypall_callback ypcb;
+  enum nss_status status;
   
   if (yp_get_default_domain (&domainname))
     return NSS_STATUS_UNAVAIL;
@@ -101,10 +102,10 @@ internal_nis_setrpcent (intern_t *intern)
 
   ypcb.foreach = saveit;
   ypcb.data = (char *)intern;
-  yp_all(domainname, "rpc.bynumber", &ypcb);
+  status = yperr2nss (yp_all(domainname, "rpc.bynumber", &ypcb));
   intern->next = intern->start;
 
-  return NSS_STATUS_SUCCESS;
+  return status;
 }
 
 enum nss_status

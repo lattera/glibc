@@ -26,6 +26,25 @@
 
 /* This file was broken out from:
 	$Log$
+	Revision 1.2  1997/03/16 17:41:36  drepper
+	(__mach_error_map_compat): Give full prototype.
+
+	Revision 1.2  1997/03/14 15:26:28  thomas
+	Wed Mar  5 10:40:05 1997  Thomas Bushnell, n/BSG  <thomas@gnu.ai.mit.edu>
+
+		* mach/mach_error.c (mach_error_string_int): Give full prototype.
+		* mach/errstring.c (mach_error_string_int): Likewise.
+		* mach/error_compat.c (__mach_error_map_compat): Likewise.
+
+		* mach/spin-solid.c: Include <mach/mach_traps.h>.
+		* mach/spin-solid.c (__spin_lock_solid): Provide arg to
+		swtch_pri.
+
+		* mach/mach_init.c: Include <mach/mig_support.h>.
+
+		* mach/mach_error.h (mach_error_string, mach_error,
+		mach_error_type): Always provide prototypes.
+
 	Revision 1.1  1993/11/30 17:35:24  roland
 	entered into RCS
 
@@ -39,8 +58,7 @@
 
 
 void
-__mach_error_map_compat( org_err )
-	mach_error_t		* org_err;
+__mach_error_map_compat(mach_error_t  *org_err)
 {
 	mach_error_t		err = *org_err;
 

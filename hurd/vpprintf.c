@@ -22,10 +22,9 @@
 #include <hurd.h>
 
 static ssize_t
-pwrite (cookie, buf, n)
-     void *cookie;
-     const char *buf;
-     size_t n;
+pwrite (void *cookie,
+	const char *buf,
+	size_t n)
 {
   error_t error = __io_write ((io_t) cookie, buf, n, -1,
 			      (mach_msg_type_number_t *) &n);
@@ -38,10 +37,9 @@ pwrite (cookie, buf, n)
 /* Write formatted output to PORT, a Mach port supporting the i/o protocol,
    according to the format string FORMAT, using the argument list in ARG.  */
 int
-vpprintf (port, format, arg)
-     io_t port;
-     const char *format;
-     va_list arg;
+vpprintf (io_t port,
+	  const char *format,
+	  va_list arg)
 {
   int done;
   FILE f;

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -26,7 +26,7 @@
 #define _MACH_MACH_TRAPS_H_	1
 
 #include <mach/port.h>
-
+#include <mach/kern_return.h>
 
 /* Create and return a new receive right.  */
 extern mach_port_t mach_reply_port (void);

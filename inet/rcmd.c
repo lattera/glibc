@@ -306,7 +306,6 @@ iruserok(raddr, superuser, ruser, luser)
 	struct stat sbuf;
 	struct passwd pwdbuf, *pwd;
 	FILE *hostf;
-	uid_t uid;
 	int first;
 
 	first = 1;
@@ -342,7 +341,12 @@ again:
 		if (__euidaccess (pbuf, R_OK) != 0)
 		  hostf = NULL;
 		else
-		  hostf = fopen(pbuf, "r");
+		  {
+		    uid_t uid = geteuid ();
+		    seteuid (pwd->pw_uid);
+		    hostf = fopen (pbuf, "r");
+		    seteuid (uid);
+		  }
 
 		if (hostf == NULL)
 			return (-1);
