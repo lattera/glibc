@@ -1,6 +1,6 @@
 /* strchr (str, ch) -- Return pointer to first occurrence of CH in STR.
    For Intel 80x86, x>=3.
-   Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1994, 1995, 1996, 1997, 1999, 2000, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>
    Some optimisations by Alan Modra <Alan@SPRI.Levels.UniSA.Edu.Au>
@@ -254,7 +254,9 @@ L(71):	addl $4, %eax
 
 	/* We now scan for the byte in which the character was matched.
 	   But we have to take care of the case that a NUL char is
-	   found before this in the dword.  */
+	   found before this in the dword.  Note that we XORed %ecx
+	   with the byte we're looking for, therefore the tests below look
+	   reversed.  */
 
 L(7):	testb %cl, %cl		/* is first byte C? */
 	jz L(6)			/* yes => return pointer */
