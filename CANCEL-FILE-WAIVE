@@ -1,6 +1,8 @@
 mkdtemp.os
+mktemp.os
 tmpnam.os
 tmpnam_r.os
+tempnam.os
 __assert.os
 assert.os
 assert-perr.os
@@ -31,3 +33,16 @@ fmemopen.os
 closedir.os
 hsearch.os
 hsearch_r.os
+catgets.os
+digits_dots.os
+localealias.os
+gconv_conf.os
+mtrace.os
+tzfile.os
+tzset.os
+ruserpass.os
+mntent_r.os
+fstab.os
+getttyent.os
+nsswitch.os
+res_init.os

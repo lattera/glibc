@@ -1,3 +1,9 @@
+2004-03-07  Ulrich Drepper  <drepper@redhat.com>
+
+	* idn-stub.c: Include <gnu/lib-names.h>.  Use LIBCIDN_SO for dlopen.
+	* shlib-versions: New file.
+	* toutf8.c: Include <sys/param.h>.
+
 2004-03-07  Simon Josefsson  <jas@extundo.com>
 
 	* Banner: New file.
