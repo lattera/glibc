@@ -1,5 +1,7 @@
 2003-06-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/sys/param.h (howmany): Optimize for gcc.
+
 	Fixing gcc 3.3 warnings, part II.
 	* argp/argp-help.c (hol_entry_long_iterate): Always inline.
 	* elf/dl-load.c (cache_rpath): Don't inline.

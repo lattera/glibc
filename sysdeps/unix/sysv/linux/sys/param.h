@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996, 1997, 2000, 2001 Free Software Foundation, Inc.
+/* Copyright (C) 1995,1996,1997,2000,2001,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -49,10 +49,16 @@
 
 /* Macros for counting and rounding.  */
 #ifndef howmany
-# define howmany(x, y)	(((x)+((y)-1))/(y))
+# define howmany(x, y)	(((x) + ((y) - 1)) / (y))
 #endif
-#define	roundup(x, y)	((((x)+((y)-1))/(y))*(y))
-#define powerof2(x)	((((x)-1)&(x))==0)
+#ifdef __GNUC__
+# define roundup(x, y)	(__builtin_constant_p (y) && powerof2 (y)	      \
+			 ? (((x) + (y) - 1) & ~((y) - 1))		      \
+			 : ((((x) + ((y) - 1)) / (y)) * (y)))
+#else
+# define roundup(x, y)	((((x) + ((y) - 1)) / (y)) * (y))
+#endif
+#define powerof2(x)	((((x) - 1) & (x)) == 0)
 
 /* Macros for min/max.  */
 #define	MIN(a,b) (((a)<(b))?(a):(b))
