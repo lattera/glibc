@@ -1,3 +1,11 @@
+2003-01-19  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/strftime.c (my_strftime): Handle very large width
+	specifications for numeric values correctly.  Improve checks for
+	overflow.
+	* time/Makefile (tests): Add tst-strftime.
+	* time/tst-strftime.c: New file.
+
 2003-01-18  Ulrich Drepper  <drepper@redhat.com>
 
 	* nis/nss_nis/nis-hosts.c: Make _nss_nis_endhostent an alias of

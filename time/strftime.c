@@ -1,4 +1,5 @@
-/* Copyright (C) 1991-1999, 2000, 2001, 2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1999, 2000, 2001, 2002, 2003
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -263,7 +264,7 @@ static const CHAR_T zeroes[16] = /* "0000000000000000" */
       int _n = (n);							      \
       int _delta = width - _n;						      \
       int _incr = _n + (_delta > 0 ? _delta : 0);			      \
-      if (i + _incr >= maxsize)						      \
+      if ((size_t) _incr >= maxsize - i)				      \
 	return 0;							      \
       if (p)								      \
 	{								      \
@@ -743,8 +744,15 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	  width = 0;
 	  do
 	    {
-	      width *= 10;
-	      width += *f - L_('0');
+	      if (width > INT_MAX / 10
+		  || (width == INT_MAX / 10 && *f - L_('0') > INT_MAX % 10))
+		/* Avoid overflow.  */
+		width = INT_MAX;
+	      else
+		{
+		  width *= 10;
+		  width += *f - L_('0');
+		}
 	      ++f;
 	    }
 	  while (ISDIGIT (*f));
@@ -768,10 +776,10 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
       switch (format_char)
 	{
 #define DO_NUMBER(d, v) \
-	  digits = width == -1 ? d : width;				      \
+	  digits = d > width ? d : width;				      \
 	  number_value = v; goto do_number
 #define DO_NUMBER_SPACEPAD(d, v) \
-	  digits = width == -1 ? d : width;				      \
+	  digits = d > width ? d : width;				      \
 	  number_value = v; goto do_number_spacepad
 
 	case L_('%'):
@@ -1033,18 +1041,37 @@ my_strftime (s, maxsize, format, tp ut_argument LOCALE_PARAM)
 	      int padding = digits - (buf + (sizeof (buf) / sizeof (buf[0]))
 				      - bufp);
 
-	      if (pad == L_('_'))
+	      if (padding > 0)
 		{
-		  while (0 < padding--)
-		    *--bufp = L_(' ');
-		}
-	      else
-		{
-		  bufp += negative_number;
-		  while (0 < padding--)
-		    *--bufp = L_('0');
-		  if (negative_number)
-		    *--bufp = L_('-');
+		  if (pad == L_('_'))
+		    {
+		      if ((size_t) padding >= maxsize - i)
+			return 0;
+
+		      if (p)
+			memset_space (p, padding);
+		      i += padding;
+		      width = width > padding ? width - padding : 0;
+		    }
+		  else
+		    {
+		      if ((size_t) digits >= maxsize - i)
+			return 0;
+
+		      if (negative_number)
+			{
+			  ++bufp;
+
+			  if (p)
+			    *p++ = L_('-');
+			  ++i;
+			}
+
+		      if (p)
+			memset_zero (p, padding);
+		      i += padding;
+		      width = 0;
+		    }
 		}
 	    }
 

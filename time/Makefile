@@ -1,4 +1,4 @@
-# Copyright (C) 1991-1999,2000,01,02 Free Software Foundation, Inc.
+# Copyright (C) 1991-2002, 2003 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -34,7 +34,7 @@ aux :=	    era alt_digit lc-time-cleanup
 distribute := datemsk
 
 tests	:= test_time clocktest tst-posixtz tst-strptime tst_wcsftime \
-	   tst-getdate tst-mktime tst-ftime_l
+	   tst-getdate tst-mktime tst-ftime_l tst-strftime
 
 include ../Rules
 
