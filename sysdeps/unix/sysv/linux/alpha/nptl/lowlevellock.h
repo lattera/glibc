@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -78,6 +78,14 @@ __lll_mutex_trylock(int *futex)
   return atomic_compare_and_exchange_val_acq (futex, 1, 0) != 0;
 }
 #define lll_mutex_trylock(lock)	__lll_mutex_trylock (&(lock))
+
+
+static inline int __attribute__((always_inline))
+__lll_mutex_cond_trylock(int *futex)
+{
+  return atomic_compare_and_exchange_val_acq (futex, 2, 0) != 0;
+}
+#define lll_mutex_cond_trylock(lock)	__lll_mutex_cond_trylock (&(lock))
 
 
 extern void __lll_lock_wait (int *futex) attribute_hidden;
