@@ -67,7 +67,7 @@ timer_settime (timerid, flags, value, ovalue)
 # endif
 
 # ifndef __ASSUME_POSIX_TIMERS
-      __no_posix_timers = 1;
+      __no_posix_timers = -1;
 # endif
     }
 

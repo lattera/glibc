@@ -44,7 +44,7 @@ timer_gettime (timerid, value)
 {
 # undef timer_gettime
 # ifndef __ASSUME_POSIX_TIMERS
-  if (__no_posix_timers == 0)
+  if (__no_posix_timers >= 0)
 # endif
     {
       struct timer *kt = (struct timer *) timerid;

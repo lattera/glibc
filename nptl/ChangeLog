@@ -1,5 +1,11 @@
 2003-05-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/timer_gettime.c (timer_gettime): Correct
+	test for syscall availability.
+
+	* sysdeps/unix/sysv/linux/timer_settime.c (timer_settime): Set
+	__no_posix_timers to -1 if the syscalls don't exist.
+
 	* pthread_join.c (pthread_join): Set tid field of the joined
 	thread to -1.  This isn't necessary but helps to recognize some
 	error conditions with almost no cost.

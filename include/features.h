@@ -1,4 +1,4 @@
-/* Copyright (C) 1991-1993,1995-2000,2001,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991-1993,1995-2002, 2003   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -186,6 +186,10 @@
 
 #if (_POSIX_C_SOURCE - 0) >= 199506L
 # define __USE_POSIX199506	1
+#endif
+
+#if (_POSIX_C_SOURCE - 0) >= 200112L
+# define __USE_XOPEN2K		1
 #endif
 
 #ifdef	_XOPEN_SOURCE
