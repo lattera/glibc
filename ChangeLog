@@ -20,6 +20,15 @@
 	* include/link.h (struct link_map): Add l_feature_1 and l_flags_1.
 	* sysdeps/generic/bits/dlfcn.h: Define RTLD_NOLOAD and RTLD_NODELETE.
 	* sysdeps/mips/bits/dlfcn.h: Likewise.
+	* elf/Makefile (tests): Add $(tests-nodelete-$(have-z-nodelete)).
+	(tests-nodelete-yes): Define.
+	(modules-names): Add $(modules-nodelete-$(have-z-nodelete)).
+	Add rules to build nodelete and modules.
+	* elf/nodelete.c: New file.
+	* elf/nodelmod1.c: New file.
+	* elf/nodelmod2.c: New file.
+	* configure.in: Add test for -z nodelete option.
+	* config.make.in: Define have-z-nodelete with libc_cv_z_nodelete.
 
 	* libio/Makefile (tests): Add tst_wprintf2.
 	(tst_wprintf2-ARGS): Define.

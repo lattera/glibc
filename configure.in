@@ -900,6 +900,20 @@ EOF
   fi
   rm -f conftest*])
   AC_SUBST(libc_cv_asm_protected_directive)
+
+  AC_CACHE_CHECK(for -z nodelete option,
+		 libc_cv_z_nodelete, [dnl
+  cat > conftest.c <<EOF
+int _start (void) { return 42; }
+EOF
+  if AC_TRY_COMMAND([${CC-cc} -shared -o conftest.so conftest.c -Wl,--enable-new-dtags,-z,nodelete 1>&AC_FD_CC])
+  then
+    libc_cv_z_nodelete=yes
+  else
+    libc_cv_z_nodelete=no
+  fi
+  rm -f conftest*])
+  AC_SUBST(libc_cv_z_nodelete)
 fi
 
 if test $elf != yes; then

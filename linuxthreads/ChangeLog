@@ -1,3 +1,8 @@
+2000-07-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* Makefile: Pass -z nodelete to linker for libpthread.so
+	generation if it understand this option.
+
 2000-07-18  Mark Kettenis  <kettenis@gnu.org>
 
 	* manager.c (pthread_handle_create): Remove initialization of
