@@ -744,8 +744,8 @@ _dl_map_object_from_fd (const char *name, int fd, char *realname,
   header = (void *) readbuf;
 
   /* Check the header for basic validity.  */
-  if (__builtin_expect (VALID_ELF_HEADER (header->e_ident, expected, EI_PAD),
-			0) != 0)
+  if (__builtin_expect (!VALID_ELF_HEADER (header->e_ident, expected, EI_PAD),
+			0))
     {
       /* Something is wrong.  */
       if (*(Elf32_Word *) &header->e_ident !=
