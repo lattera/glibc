@@ -812,7 +812,7 @@ _IO_new_file_xsputn (f, data, n)
     {
       _IO_size_t block_size, do_write;
       /* Next flush the (full) buffer. */
-      if (__overflow (f, EOF) == EOF)
+      if (_IO_OVERFLOW (f, EOF) == EOF)
 	return n - to_do;
 
       /* Try to maintain alignment: write a whole number of blocks.
