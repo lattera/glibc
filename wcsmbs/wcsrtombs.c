@@ -94,7 +94,7 @@ __wcsrtombs (dst, src, len, ps)
       /* This code is based on the safe assumption that all internal
 	 multi-byte encodings use the NUL byte only to mark the end
 	 of the string.  */
-      const wchar_t *srcend = *src + __wcsnlen (*src, len * MB_CUR_MAX) + 1;
+      const wchar_t *srcend = *src + __wcsnlen (*src, len) + 1;
       size_t dummy;
 
       data.__outbuf = dst;
