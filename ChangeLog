@@ -1,3 +1,7 @@
+2003-03-08  Ulrich Drepper  <drepper@redhat.com>
+
+	* rt/tst-aio7.c (do_test): Change BYTES into a #define.
+
 2003-03-07  Ulrich Drepper  <drepper@redhat.com>
 
 	* rt/tst-aio7.c (do_test): Give buff permanent extend, too.

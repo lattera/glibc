@@ -117,7 +117,8 @@ do_test (void)
 
   /* Test for aio_suspend() suspending even if completed elements in list.  */
   {
-    const int BYTES = 8, ELEMS = 2;
+#define BYTES 8
+    const int ELEMS = 2;
     int i, r, fd;
     static char buff[BYTES];
     char name[] = "/tmp/aio7.XXXXXX";
