@@ -115,6 +115,11 @@ struct in_pktinfo
 #define IPV6_MTU_DISCOVER	23
 #define IPV6_MTU		24
 #define IPV6_RECVERR		25
+#define IPV6_V6ONLY		26
+#define IPV6_JOIN_ANYCAST	27
+#define IPV6_LEAVE_ANYCAST	28
+#define IPV6_IPSEC_POLICY	34
+#define IPV6_XFRM_POLICY	35
 
 #define SCM_SRCRT		IPV6_RXSRCRT
 
