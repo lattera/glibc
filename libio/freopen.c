@@ -1,4 +1,4 @@
-/* Copyright (C) 1993,95,96,97,98,2000,2001 Free Software Foundation, Inc.
+/* Copyright (C) 1993,95,96,97,98,2000,2001,2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -53,15 +53,26 @@ freopen (filename, mode, fp)
     }
 #if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_1)
   if (&_IO_stdin_used == NULL)
-    /* If the shared C library is used by the application binary which
-       was linked against the older version of libio, we just use the
-       older one even for internal use to avoid trouble since a pointer
-       to the old libio may be passed into shared C library and wind
-       up here. */
-    result = _IO_old_freopen (filename, mode, fp);
+    {
+      /* If the shared C library is used by the application binary which
+	 was linked against the older version of libio, we just use the
+	 older one even for internal use to avoid trouble since a pointer
+	 to the old libio may be passed into shared C library and wind
+	 up here. */
+      _IO_old_file_close_it (fp);
+      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &_IO_old_file_jumps;
+      result = _IO_old_file_fopen (fp, filename, mode);
+    }
   else
 #endif
-    result = _IO_freopen (filename, mode, fp);
+    {
+      INTUSE(_IO_file_close_it) (fp);
+      _IO_JUMPS ((struct _IO_FILE_plus *) fp) = &INTUSE(_IO_file_jumps);
+      fp->_wide_data->_wide_vtable = &INTUSE(_IO_wfile_jumps);
+      result = INTUSE(_IO_file_fopen) (fp, filename, mode, 1);
+      if (result != NULL)
+	result = __fopen_maybe_mmap (result);
+    }
   if (result != NULL)
     /* unbound stream orientation */
     result->_mode = 0;

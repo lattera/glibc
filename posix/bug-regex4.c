@@ -35,7 +35,6 @@ main (void)
 
   setlocale (LC_ALL, "C");
 
-  setlocale (LC_ALL, "C");
   s = re_compile_pattern ("ab[cde]", 7, &regex);
   if (s != NULL)
     {

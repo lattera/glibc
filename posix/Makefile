@@ -71,7 +71,7 @@ tests		:= tstgetopt testfnm runtests runptests	     \
 		   tst-getlogin tst-mmap tst-getaddrinfo tst-truncate \
 		   tst-truncate64 tst-fork tst-fnmatch tst-regexloc tst-dir \
 		   tst-chmod bug-regex1 bug-regex2 bug-regex3 bug-regex4 \
-		   tst-gnuglob tst-regex bug-regex5
+		   tst-gnuglob tst-regex bug-regex5 bug-regex6
 ifeq (yes,$(build-shared))
 test-srcs	:= globtest
 tests           += wordexp-test tst-exec tst-spawn
@@ -125,6 +125,7 @@ tst-regexloc-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex1-ENV = LOCPATH=$(common-objpfx)localedata
 tst-regex-ENV = LOCPATH=$(common-objpfx)localedata
 bug-regex5-ENV = LOCPATH=$(common-objpfx)localedata
+bug-regex6-ENV = LOCPATH=$(common-objpfx)localedata
 
 testcases.h: TESTS TESTS2C.sed
 	sed -f TESTS2C.sed < $< > $@T

@@ -1,3 +1,7 @@
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
+
+	* Versions [libthread_db] (GLIBC_2.3): Add td_thr_tls_get_addr.
+
 2002-06-14  H.J. Lu  <hjl@gnu.org>
 
 	* td_thr_tls_get_addr.c (td_thr_tls_get_addr): Don't include

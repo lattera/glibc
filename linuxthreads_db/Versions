@@ -15,4 +15,7 @@ libthread_db {
   GLIBC_2.2.3 {
     td_symbol_list;
   }
+  GLIBC_2.3 {
+    td_thr_tls_get_addr;
+  }
 }

@@ -1,5 +1,6 @@
 /* Define ISO C stdio on top of C++ iostreams.
-   Copyright (C) 1991, 1994-1999, 2000, 2001 Free Software Foundation, Inc.
+   Copyright (C) 1991, 1994-1999, 2000, 2001, 2002
+   Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -595,10 +596,12 @@ struct obstack;			/* See <obstack.h>.  */
 
 /* Write formatted output to an obstack.  */
 extern int obstack_printf (struct obstack *__restrict __obstack,
-			   __const char *__restrict __format, ...) __THROW;
+			   __const char *__restrict __format, ...)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 3)));
 extern int obstack_vprintf (struct obstack *__restrict __obstack,
 			    __const char *__restrict __format,
-			    _G_va_list __args) __THROW;
+			    _G_va_list __args)
+     __THROW __attribute__ ((__format__ (__printf__, 2, 0)));
 #endif /* Use GNU.  */
 
 

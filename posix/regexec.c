@@ -58,6 +58,8 @@ static int check_halt_node_context (const re_dfa_t *dfa, int node,
 static int check_halt_state_context (const regex_t *preg,
                                      const re_dfastate_t *state,
                                      const re_match_context_t *mctx, int idx);
+static void update_regs (re_dfa_t *dfa, regmatch_t *pmatch, int cur_node,
+                         int cur_idx, int nmatch);
 static int proceed_next_node (const regex_t *preg,
                               const re_match_context_t *mctx,
                               int *pidx, int node, re_node_set *eps_via_nodes);
@@ -886,24 +888,38 @@ proceed_next_node (preg, mctx, pidx, node, eps_via_nodes)
     re_node_set *eps_via_nodes;
 {
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
-  int i, dest_node = -1, err;
+  int i, err, dest_node, cur_entity;
+  dest_node = -1;
+  cur_entity = ((dfa->nodes[node].type == OP_CONTEXT_NODE)
+                ? dfa->nodes[node].opr.ctx_info->entity : node);
   if (IS_EPSILON_NODE (dfa->nodes[node].type))
     {
+      int dest_entity = INT_MAX;
       err = re_node_set_insert (eps_via_nodes, node);
       if (BE (err < 0, 0))
         return -1;
       for (i = 0; i < mctx->state_log[*pidx]->nodes.nelem; ++i)
         {
-          int candidate = mctx->state_log[*pidx]->nodes.elems[i];
-          if (!re_node_set_contains (dfa->edests + node, candidate)
-              && !(dfa->nodes[candidate].type == OP_CONTEXT_NODE
-                   && re_node_set_contains (dfa->edests + node,
-                            dfa->nodes[candidate].opr.ctx_info->entity)))
-            continue;
-          dest_node = candidate;
+          int candidate, candidate_entity;
+          candidate = mctx->state_log[*pidx]->nodes.elems[i];
+          candidate_entity = ((dfa->nodes[candidate].type == OP_CONTEXT_NODE)
+                              ? dfa->nodes[candidate].opr.ctx_info->entity
+                              : candidate);
+          if (!re_node_set_contains (dfa->edests + node, candidate))
+            if (candidate == candidate_entity
+                || !re_node_set_contains (dfa->edests + node, candidate_entity))
+              continue;
+
           /* In order to avoid infinite loop like "(a*)*".  */
-          if (!re_node_set_contains (eps_via_nodes, dest_node))
-            break;
+          if (cur_entity > candidate_entity
+              && re_node_set_contains (eps_via_nodes, candidate))
+            continue;
+
+          if (dest_entity > candidate_entity)
+            {
+              dest_node = candidate;
+              dest_entity = candidate_entity;
+            }
         }
 #ifdef DEBUG
       assert (dest_node != -1);
@@ -986,9 +1002,8 @@ set_regs (preg, mctx, nmatch, pmatch, last_node)
     int last_node;
 {
   re_dfa_t *dfa = (re_dfa_t *)preg->buffer;
-  int idx, cur_node, node_entity, real_nmatch;
+  int idx, cur_node, real_nmatch;
   re_node_set eps_via_nodes;
-  int i;
 #ifdef DEBUG
   assert (nmatch > 1);
   assert (mctx->state_log != NULL);
@@ -998,36 +1013,7 @@ set_regs (preg, mctx, nmatch, pmatch, last_node)
   re_node_set_init_empty (&eps_via_nodes);
   for (idx = pmatch[0].rm_so; idx <= pmatch[0].rm_eo ;)
     {
-      node_entity = ((dfa->nodes[cur_node].type == OP_CONTEXT_NODE)
-                     ? dfa->nodes[cur_node].opr.ctx_info->entity : cur_node);
-      for (i = 1; i < real_nmatch; ++i)
-        {
-          if (dfa->subexps[i - 1].start == dfa->subexps[i - 1].end)
-            {
-              /* In case of the null subexpression like '()'.  */
-              if (dfa->subexps[i - 1].start == node_entity)
-                {
-                  pmatch[i].rm_so = idx;
-                  pmatch[i].rm_eo = idx;
-                }
-            }
-          else if (dfa->subexps[i - 1].start <= node_entity
-                   && node_entity < dfa->subexps[i - 1].end)
-            {
-              if (pmatch[i].rm_so == -1 || pmatch[i].rm_eo != -1)
-                /* We are at the first node of this sub expression.  */
-                {
-                  pmatch[i].rm_so = idx;
-                  pmatch[i].rm_eo = -1;
-                }
-            }
-          else
-            {
-              if (pmatch[i].rm_so != -1 && pmatch[i].rm_eo == -1)
-                /* We are at the last node of this sub expression.  */
-                pmatch[i].rm_eo = idx;
-            }
-        }
+      update_regs (dfa, pmatch, cur_node, idx, real_nmatch);
       if (idx == pmatch[0].rm_eo && cur_node == last_node)
         break;
 
@@ -1039,6 +1025,30 @@ set_regs (preg, mctx, nmatch, pmatch, last_node)
   re_node_set_free (&eps_via_nodes);
   return REG_NOERROR;
 }
+
+static void
+update_regs (dfa, pmatch, cur_node, cur_idx, nmatch)
+     re_dfa_t *dfa;
+     regmatch_t *pmatch;
+     int cur_node, cur_idx, nmatch;
+{
+  int type = dfa->nodes[cur_node].type;
+  int reg_num;
+  if (type != OP_OPEN_SUBEXP && type != OP_CLOSE_SUBEXP)
+    return;
+  reg_num = dfa->nodes[cur_node].opr.idx + 1;
+  if (reg_num >= nmatch)
+    return;
+  if (type == OP_OPEN_SUBEXP)
+    {
+      /* We are at the first node of this sub expression.  */
+      pmatch[reg_num].rm_so = cur_idx;
+      pmatch[reg_num].rm_eo = -1;
+    }
+  else if (type == OP_CLOSE_SUBEXP)
+    /* We are at the first node of this sub expression.  */
+    pmatch[reg_num].rm_eo = cur_idx;
+ }
 
 #define NUMBER_OF_STATE 1
 

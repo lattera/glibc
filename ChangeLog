@@ -1,6 +1,11 @@
-2002-07-08  H.J. Lu  <hjl@gnu.org>
+2002-07-10  Ulrich Drepper  <drepper@redhat.com>
 
-	* sysdeps/unix/sysv/linux/mips/sys/shm.h: New.
+	* Versions.def [libpthread]: Add GLIBC_2.2.6.
+	* posix/Versions [libc] (GLIBC_2.2.6): Add __nanosleep.
+
+2002-07-06  Bruno Haible  <bruno@clisp.org>
+
+	* sysdeps/unix/sysv/sysv4/bits/sigset.h (__NSSBITS): Correct value.
 
 2002-07-06  Bruno Haible  <bruno@clisp.org>
 
@@ -18,8 +23,7 @@
 	* sysdeps/generic/bits/stropts.h: Protect against direct inclusion.
 	* sysdeps/generic/bits/ustat.h: Likewise.
 
-	* sysdeps/unix/sysv/linux/bits/statvfs.h (ST_NODIRATIME): Set to
-	2048.
+	* sysdeps/unix/sysv/linux/bits/statvfs.h (ST_NODIRATIME): Set to 2048.
 
 2002-07-08  Andreas Jaeger  <aj@suse.de>
 

@@ -724,7 +724,6 @@ re_compile_internal (preg, pattern, length, syntax)
       dfa = re_realloc (preg->buffer, re_dfa_t, 1);
       if (dfa == NULL)
 	return REG_ESPACE;
-      memset (dfa, '\0', sizeof (re_dfa_t));
       preg->allocated = sizeof (re_dfa_t);
     }
   preg->buffer = (unsigned char *) dfa;
@@ -781,6 +780,9 @@ init_dfa (dfa, pat_len)
      int pat_len;
 {
   int table_size;
+
+  memset (dfa, '\0', sizeof (re_dfa_t));
+
   dfa->nodes_alloc = pat_len + 1;
   dfa->nodes = re_malloc (re_token_t, dfa->nodes_alloc);
 
@@ -1001,8 +1003,6 @@ calc_first (dfa, node)
   switch (type)
     {
 #ifdef DEBUG
-    case OP_OPEN_SUBEXP:
-    case OP_CLOSE_SUBEXP:
     case OP_OPEN_BRACKET:
     case OP_CLOSE_BRACKET:
     case OP_OPEN_DUP_NUM:
@@ -1028,6 +1028,8 @@ calc_first (dfa, node)
     case SIMPLE_BRACKET:
     case OP_BACK_REF:
     case ANCHOR:
+    case OP_OPEN_SUBEXP:
+    case OP_CLOSE_SUBEXP:
       node->first = idx;
       break;
     case OP_DUP_PLUS:
@@ -1041,14 +1043,6 @@ calc_first (dfa, node)
     case OP_ALT:
       node->first = idx;
       break;
-    case SUBEXP:
-      if (node->left == NULL)
-        {
-          if (node->next == -1)
-            calc_next (dfa, node);
-          node->first = node->next;
-          break;
-        }
       /* else fall through */
     default:
 #ifdef DEBUG
@@ -1161,7 +1155,9 @@ calc_epsdest (dfa, node)
             }
           re_node_set_init_2 (dfa->edests + idx, left, right);
         }
-      else if (dfa->nodes[idx].type == ANCHOR)
+      else if (dfa->nodes[idx].type == ANCHOR
+               || dfa->nodes[idx].type == OP_OPEN_SUBEXP
+               || dfa->nodes[idx].type == OP_CLOSE_SUBEXP)
         re_node_set_init_1 (dfa->edests + idx, node->next);
     }
 }
@@ -2055,8 +2051,9 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
      reg_errcode_t *err;
 {
   re_dfa_t *dfa = (re_dfa_t *) preg->buffer;
-  bin_tree_t *tree;
+  bin_tree_t *tree, *left_par, *right_par;
   size_t cur_nsub;
+  int new_idx;
   cur_nsub = preg->re_nsub++;
   if (dfa->subexps_alloc < preg->re_nsub)
     {
@@ -2073,30 +2070,39 @@ parse_sub_exp (regexp, preg, token, syntax, nest, err)
     }
   dfa->subexps[cur_nsub].start = dfa->nodes_len;
   dfa->subexps[cur_nsub].end = -1;
+
+  new_idx = re_dfa_add_node (dfa, *token, 0);
+  left_par = create_tree (NULL, NULL, 0, new_idx);
+  if (BE (new_idx == -1 || left_par == NULL, 0))
+    return *err = REG_ESPACE, NULL;
+  dfa->nodes[new_idx].opr.idx = cur_nsub;
   *token = fetch_token (regexp, syntax);
 
   /* The subexpression may be a null string.  */
   if (token->type == OP_CLOSE_SUBEXP)
-    {
-      tree = create_tree (NULL, NULL, SUBEXP, 0);
-      if (BE (tree == NULL, 0))
-        return *err = REG_ESPACE, NULL;
-      dfa->subexps[cur_nsub].end = dfa->nodes_len;
-    }
+    tree = NULL;
   else
     {
       tree = parse_reg_exp (regexp, preg, token, syntax, nest, err);
       if (BE (*err != REG_NOERROR && tree == NULL, 0))
         return NULL;
-      dfa->subexps[cur_nsub].end = dfa->nodes_len;
-      if (BE (token->type != OP_CLOSE_SUBEXP, 0))
-        {
-          free_bin_tree (tree);
-          *err = REG_BADPAT;
-          return NULL;
-        }
-      tree = create_tree (tree, NULL, SUBEXP, 0);
     }
+  if (BE (token->type != OP_CLOSE_SUBEXP, 0))
+    {
+      free_bin_tree (tree);
+      *err = REG_BADPAT;
+      return NULL;
+    }
+  new_idx = re_dfa_add_node (dfa, *token, 0);
+  dfa->subexps[cur_nsub].end = dfa->nodes_len;
+  right_par = create_tree (NULL, NULL, 0, new_idx);
+  tree = ((tree == NULL) ? right_par
+          : create_tree (tree, right_par, CONCAT, 0));
+  tree = create_tree (left_par, tree, CONCAT, 0);
+  if (BE (new_idx == -1 || right_par == NULL || tree == NULL, 0))
+    return *err = REG_ESPACE, NULL;
+  dfa->nodes[new_idx].opr.idx = cur_nsub;
+
   return tree;
 }
 
