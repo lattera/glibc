@@ -1,4 +1,4 @@
-/* Copyright (C) 1991,95,96,98,2002 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1996,1998,2002,2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -27,9 +27,7 @@
 /* Read formatted input from S, according to the format string FORMAT.  */
 /* VARARGS2 */
 int
-sscanf (s, format)
-     const char *s;
-     const char *format;
+sscanf (const char *s, const char *format, ...)
 {
   va_list arg;
   int done;

@@ -1,4 +1,5 @@
-/* Copyright (C) 1991,1995,1997,1998,1999,2000 Free Software Foundation, Inc.
+/* Copyright (C) 1991,1995,1997,1998,1999,2000,2003
+	Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -22,10 +23,7 @@
 /* Write formatted output into S, according to the format string FORMAT.  */
 /* VARARGS3 */
 int
-swprintf (s, n, format)
-     wchar_t *s;
-     size_t n;
-     const wchar_t *format;
+swprintf (wchar_t *s, size_t n, const wchar_t *format, ...)
 {
   va_list arg;
   int done;

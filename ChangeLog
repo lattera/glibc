@@ -1,3 +1,9 @@
+2003-03-05  Roland McGrath  <roland@redhat.com>
+
+	* stdio-common/sscanf.c: Use prototype defn with ... syntax.
+	* libio/swscanf.c: Likewise.
+	* libio/swprintf.c: Likewise.
+
 2003-03-04  Roland McGrath  <roland@redhat.com>
 
 	* sysdeps/powerpc/powerpc64/dl-machine.h: Include <dl-tls.h>.
