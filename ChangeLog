@@ -1,3 +1,7 @@
+2000-04-27  Jakub Jelinek  <jakub@redhat.com>
+
+	* nss/getXXbyYY_r.c: Fix a typo in __old_getxxbyyy_r versioning.
+
 2000-04-27  Ulrich Drepper  <drepper@redhat.com>
 
 	* localedata/Makefile (test-srcs); Add tst-mbswcs3.
