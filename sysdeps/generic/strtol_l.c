@@ -171,7 +171,7 @@
 
 #define DEF(TYPE, NAME)							   \
   const TYPE NAME[] attribute_hidden					   \
-	__attribute__((section(".gnu.linkonce.ro." #NAME))) =		   \
+	__attribute__((section(".gnu.linkonce.r." #NAME))) =		   \
   {									   \
     F(2), F(3), F(4), F(5), F(6), F(7), F(8), F(9), F(10), 		   \
     F(11), F(12), F(13), F(14), F(15), F(16), F(17), F(18), F(19), F(20),  \
