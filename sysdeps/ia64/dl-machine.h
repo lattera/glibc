@@ -331,34 +331,29 @@ elf_machine_runtime_setup (struct link_map *l, int lazy, int profile)
 #define ELF_MACHINE_START_ADDRESS(map, start)	\
   DL_STATIC_FUNCTION_ADDRESS (map, start)
 
-#define elf_machine_profile_fixup_plt(l, reloc, rel_addr, value) \
-  elf_machine_fixup_plt (l, reloc, rel_addr, value)
-
-#define elf_machine_profile_plt(reloc_addr) ((Elf64_Addr) (reloc_addr))
-
 /* Fixup a PLT entry to bounce directly to the function at VALUE.  */
-static inline Elf64_Addr __attribute__ ((always_inline))
+static inline struct fdesc __attribute__ ((always_inline))
 elf_machine_fixup_plt (struct link_map *l, lookup_t t,
 		       const Elf64_Rela *reloc,
-		       Elf64_Addr *reloc_addr, Elf64_Addr value)
+		       Elf64_Addr *reloc_addr, struct fdesc value)
 {
   /* l is the link_map for the caller, t is the link_map for the object
    * being called */
   /* got has already been relocated in elf_get_dynamic_info() */
-  reloc_addr[1] = t->l_info[DT_PLTGOT]->d_un.d_ptr;
+  reloc_addr[1] = value.gp;
   /* we need a "release" here to ensure that the gp is visible before
      the code entry point is updated: */
-  ((volatile Elf64_Addr *) reloc_addr)[0] = value;
-  return (Elf64_Addr) reloc_addr;
+  ((volatile Elf64_Addr *) reloc_addr)[0] = value.ip;
+  return value;
 }
 
 /* Return the final value of a plt relocation.  */
-static inline Elf64_Addr
+static inline struct fdesc
 elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
-		       Elf64_Addr value)
+		       struct fdesc value)
 {
   /* No need to handle rel vs rela since IA64 is rela only */
-  return value + reloc->r_addend;
+  return (struct fdesc) { value.ip + reloc->r_addend, value.gp };
 }
 
 #endif /* !dl_machine_h */
@@ -429,7 +424,8 @@ elf_machine_rela (struct link_map *map,
 	    ;/* No adjustment.  */
 	  else if (r_type == R_IA64_IPLTLSB)
 	    {
-	      elf_machine_fixup_plt (NULL, sym_map, reloc, reloc_addr, value);
+	      elf_machine_fixup_plt (NULL, NULL, reloc, reloc_addr,
+				     DL_FIXUP_MAKE_VALUE (sym_map, value));
 	      return;
 	    }
 	  else if (R_IA64_TYPE (r_type) == R_IA64_TYPE (R_IA64_FPTR64LSB))

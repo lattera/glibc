@@ -1,4 +1,4 @@
-/* Copyright (C) 2004 Free Software Foundation, Inc.
+/* Copyright (C) 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2004.
 
@@ -78,7 +78,7 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
 				 sizeof (ai_resp_mem));
       if (sock == -1)
 	{
-	  /* nscd not running or wrong version or hosts caching disabled.  */
+	  /* nscd not running or wrong version.  */
 	  __nss_not_use_nscd_hosts = 1;
 	  goto out;
 	}
@@ -151,6 +151,13 @@ __nscd_getai (const char *key, struct nscd_ai_result **result, int *h_errnop)
     }
   else
     {
+      if (__builtin_expect (ai_resp->found == -1, 0))
+	{
+	  /* The daemon does not cache this database.  */
+	  __nss_not_use_nscd_hosts = 1;
+	  goto out_close;
+	}
+
       /* Store the error number.  */
       *h_errnop = ai_resp->error;
 

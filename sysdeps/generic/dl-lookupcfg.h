@@ -17,4 +17,13 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-/* Nothing special.  */
+/* The type of the return value of fixup/profile_fixup.  */
+#define DL_FIXUP_VALUE_TYPE ElfW(Addr)
+/* Construct a value of type DL_FIXUP_VALUE_TYPE from a code address
+   and a link map.  */
+#define DL_FIXUP_MAKE_VALUE(map, addr) (addr)
+/* Extract the code address from a value of type DL_FIXUP_MAKE_VALUE.
+ */
+#define DL_FIXUP_VALUE_CODE_ADDR(value) (value)
+#define DL_FIXUP_VALUE_ADDR(value) (value)
+#define DL_FIXUP_ADDR_VALUE(addr) (addr)

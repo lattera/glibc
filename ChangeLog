@@ -1,5 +1,48 @@
 2005-02-07  Jakub Jelinek  <jakub@redhat.com>
 
+	* nscd/nscd.c (termination_handler): Avoid segfault if some database
+	is not enabled.
+
+	* nscd/nscd_getai.c (__nscd_getai): If ai_resp->found == -1, set
+	__nss_not_use_nscd_hosts and return -1.
+	* nscd/nscd_initgroups.c (__nscd_getgrouplist): If
+	initgr_resp->found == -1, set __nss_not_use_nscd_group and return -1.
+	Avoid leaking sockets.
+
+2005-01-28  Andreas Schwab  <schwab@suse.de>
+	    H.J. Lu  <hongjiu.lu@intel.com>
+
+	[BZ #677]
+	* elf/dl-runtime.c (fixup): Change return type to
+	DL_FIXUP_VALUE_TYPE. Use DL_FIXUP_VALUE_TYPE,
+	DL_FIXUP_MAKE_VALUE and DL_FIXUP_VALUE_CODE_ADDR for relocation
+	values. Use DL_FIXUP_VALUE_ADDR and DL_FIXUP_ADDR_VALUE to
+	store and retrieve relocation values.
+	(profile_fixup): Likewise.
+	* include/link.h (link_map): Use DL_FIXUP_VALUE_TYPE for
+	l_reloc_result.
+	* sysdeps/generic/dl-fptr.h (link_map): Forward declaration.
+	* sysdeps/generic/dl-lookupcfg.h (DL_FIXUP_VALUE_TYPE): New.
+	(DL_FIXUP_MAKE_VALUE): Likewise.
+	(DL_FIXUP_VALUE_CODE_ADDR): Likewise.
+	(DL_FIXUP_VALUE_ADDR): Likewise.
+	(DL_FIXUP_ADDR_VALUE): Likewise.
+	* sysdeps/ia64/dl-lookupcfg.h: Include <dl-fptr.h> for "struct fdesc".
+	(DL_FIXUP_VALUE_TYPE): New.
+	(DL_FIXUP_MAKE_VALUE): Likewise.
+	(DL_FIXUP_VALUE_CODE_ADDR): Likewise.
+	(DL_FIXUP_VALUE_ADDR): Likewise.
+	(DL_FIXUP_ADDR_VALUE): Likewise.
+	* sysdeps/ia64/dl-machine.h (elf_machine_profile_fixup_plt): Removed.
+	(elf_machine_profile_plt): Removed.
+	(elf_machine_fixup_plt): Change return type and type of value
+	parameter to struct fdesc.
+	(elf_machine_plt_value): Likewise.
+	(elf_machine_rela): Use DL_FIXUP_MAKE_VALUE to construct
+	argument for elf_machine_fixup_plt.
+
+2005-02-07  Jakub Jelinek  <jakub@redhat.com>
+
 	* nscd/nscd.init (reload): Print Reloading nscd: before and a newline
 	after the status string printed by killproc.
 

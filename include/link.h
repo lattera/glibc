@@ -214,7 +214,7 @@ struct link_map
     /* Collected results of relocation while profiling.  */
     struct reloc_result
     {
-      ElfW(Addr) addr;
+      DL_FIXUP_VALUE_TYPE addr;
       struct link_map *bound;
       unsigned int boundndx;
       uint32_t enterexit;
