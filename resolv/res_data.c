@@ -143,7 +143,7 @@ fp_query(const u_char *msg, FILE *file) {
 
 void
 fp_nquery(const u_char *msg, int len, FILE *file) {
-	if ((_res.options & RES_INIT) == 0 && res_init() == -1)
+	if ((_res.options & RES_INIT) == 0 && __res_ninit(&_res) == -1)
 		return;
 
 	res_pquery(&_res, msg, len, file);
