@@ -1,5 +1,14 @@
 2001-01-26  Ulrich Drepper  <drepper@redhat.com>
 
+	* conform/conformtest.pl: Implement optional-macro.
+	* conform/data/math.h-data: Update for XPG6.
+
+	* math/math.h (HUGE): Define as FLT_MAX value but don't use
+	FLT_MAX.  Don't include <float.h>.
+	(MAXFLOAT): Likewise.
+
+	* math/math.h: Define MATH_ERRNO and MATH_ERREXCEPT.
+
 	* include/bits/xopen_lim.h: Don't define FOPEN_MAX here.
 
 	* conform/data/limits.h-data: Mark constants as optional wherever

@@ -361,7 +361,7 @@ while ($#headers >= 0) {
       $res = compiletest ($fnamebase, "Testing for constant $const",
 			  "NOT PRESENT", $res, 1);
 
-      if ($value ne "") {
+      if ($value ne "" && $res == 0) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -373,7 +373,7 @@ while ($#headers >= 0) {
 	$res = runtest ($fnamebase, "Testing for value of constant $const",
 			"Constant \"$const\" has not the right value.", $res);
       }
-    } elsif (/^constant *([a-zA-Z0-9_]*) ([>=<]+) ([A-Za-z0-9_]*)/) {
+    } elsif (/^constant *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_]*)/) {
       my($const) = $1;
       my($op) = $2;
       my($value) = $3;
@@ -464,7 +464,7 @@ while ($#headers >= 0) {
       $res = compiletest ($fnamebase, "Testing for constant $const",
 			  "NOT PRESENT", $res, 1);
 
-      if ($value ne "") {
+      if ($value ne "" && $res == 0) {
 	# Generate a program to test for the value of this constant.
 	open (TESTFILE, ">$fnamebase.c");
 	print TESTFILE "$prepend";
@@ -726,6 +726,56 @@ while ($#headers >= 0) {
 
       $res = runtest ($fnamebase, "Testing for value of macro $macro",
 		      "Macro \"$macro\" has not the right value.", $res);
+    } elsif (/^optional-macro *([^	]*)/) {
+      my($macro) = "$1";
+
+      # Remember that this name is allowed.
+      push @allow, $macro;
+
+      # Generate a program to test for availability of this macro.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "#ifndef $macro\n";
+      print TESTFILE "# error \"Macro $macro not defined\"\n";
+      print TESTFILE "#endif\n";
+      close (TESTFILE);
+
+      compiletest ($fnamebase, "Test availability of macro $macro",
+		   "NOT PRESENT", $missing, 1);
+    } elsif (/^macro *([a-zA-Z0-9_]*) *([>=<]+) ([A-Za-z0-9_]*)/) {
+      my($macro) = "$1";
+      my($op) = $2;
+      my($value) = $3;
+      my($res) = $missing;
+
+      # Remember that this name is allowed.
+      push @allow, $macro;
+
+      # Generate a program to test for availability of this macro.
+      open (TESTFILE, ">$fnamebase.c");
+      print TESTFILE "$prepend";
+      print TESTFILE "#include <$h>\n";
+      print TESTFILE "#ifndef $macro\n";
+      print TESTFILE "# error \"Macro $macro not defined\"\n";
+      print TESTFILE "#endif\n";
+      close (TESTFILE);
+
+      $res = compiletest ($fnamebase, "Test availability of macro $macro",
+			  "Macro \"$macro\" is not available.", $res, 0);
+
+      if ($value ne "") {
+	# Generate a program to test for the value of this constant.
+	open (TESTFILE, ">$fnamebase.c");
+	print TESTFILE "$prepend";
+	print TESTFILE "#include <$h>\n";
+	# Negate the value since 0 means ok
+	print TESTFILE "int main (void) { return !($macro $op $value); }\n";
+	close (TESTFILE);
+
+	$res = runtest ($fnamebase, "Testing for value of constant $macro",
+			"Macro \"$macro\" has not the right value.", $res);
+      }
     } elsif (/^macro *([^	]*)/) {
       my($macro) = "$1";
 

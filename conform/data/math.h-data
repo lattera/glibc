@@ -1,4 +1,17 @@
 #if !defined ISO && !defined POSIX
+macro fpclassify
+macro isfinite
+macro isinf
+macro isnan
+macro isnormal
+macro signbit
+macro isgreater
+macro isgreaterequal
+macro isless
+macro islessequal
+macro islessgreater
+macro isunordered
+
 constant M_E
 constant M_LOG2E
 constant M_LOG10E
@@ -15,6 +28,26 @@ constant M_SQRT1_2
 
 constant MAXFLOAT
 constant HUGE_VAL
+constant HUGE_VALF
+constant HUGE_VALL
+constant INFINITY
+constant NAN
+
+macro FP_INFINITE
+macro FP_NAN
+macro FP_NORMAL
+macro FP_SUBNORMAL
+macro FP_ZERO
+
+optional-macro FP_FAST_FMA
+optional-macro FP_FAST_FMAF
+optional-macro FP_FAST_FMAL
+
+constant FP_ILOGB0
+constant FP_ILOGBNAN
+
+macro MATH_ERRNO == 1
+macro MATH_ERREXCEPT == 2
 #endif
 
 function double acos (double)
@@ -22,9 +55,11 @@ function double asin (double)
 function double atan (double)
 function double atan2 (double, double)
 function double ceil (double)
+function double copysign (double, double)
 function double cos (double)
 function double cosh (double)
 function double exp (double)
+function double exp2 (double)
 function double fabs (double)
 function double floor (double)
 function double fmod (double, double)
@@ -32,6 +67,7 @@ function double frexp (double, int*)
 function double ldexp (double, int)
 function double log (double)
 function double log10 (double)
+function double log2 (double)
 function double modf (double, double*)
 function double pow (double, double)
 function double sin (double)
@@ -47,6 +83,7 @@ function double j0 (double)
 function double j1 (double)
 function double jn (int, double)
 function double lgamma (double)
+function double tgamma (double)
 function double y0 (double)
 function double y1 (double)
 function double yn (int, double)
@@ -60,21 +97,174 @@ function int ilogb (double)
 function double log1p (double)
 function double logb (double)
 function double nextafter (double, double)
+function double nexttoward (double, long double)
+function double nearbyint (double)
 function double remainder (double, double)
 function double rint (double)
+function double round (double)
+function double trunc (double)
+function long lrint (double)
+function {long long} llrint (double)
+function long lround (double)
+function {long long} llround (double)
+function double remquo (double, double, int*)
 function double scalb (double, double)
+function double scalbn (double, int)
+function double scalbln (double, long)
+function double fdim (double, double)
+function double fmax (double, double)
+function double fmin (double, double)
+function double fma (double, double, double)
+function double nan (const char*)
 
 // variable signgam
 allow signgam
 
+#if !defined ISO && !defined POSIX
+function float acosf (float)
+function float asinf (float)
+function float atanf (float)
+function float atan2f (float, float)
+function float ceilf (float)
+function float copysignf (float, float)
+function float cosf (float)
+function float coshf (float)
+function float expf (float)
+function float exp2f (float)
+function float fabsf (float)
+function float floorf (float)
+function float fmodf (float, float)
+function float frexpf (float, int*)
+function float ldexpf (float, int)
+function float logf (float)
+function float log10f (float)
+function float log2f (float)
+function float modff (float, float*)
+function float powf (float, float)
+function float sinf (float)
+function float sinhf (float)
+function float sqrtf (float)
+function float tanf (float)
+function float tanhf (float)
+function float erff (float)
+function float erfcf (float)
+function float gammaf (float)
+function float hypotf (float, float)
+function float j0f (float)
+function float j1f (float)
+function float jnf (int, float)
+function float lgammaf (float)
+function float tgammaf (float)
+function float y0f (float)
+function float y1f (float)
+function float ynf (int, float)
+function int isnanf (float)
+function float acoshf (float)
+function float asinhf (float)
+function float atanhf (float)
+function float cbrtf (float)
+function float expm1f (float)
+function int ilogbf (float)
+function float log1pf (float)
+function float logbf (float)
+function float nextafterf (float, float)
+function float nexttowardf (float, long double)
+function float nearbyintf (float)
+function float remainderf (float, float)
+function float rintf (float)
+function float roundf (float)
+function float truncf (float)
+function long lrintf (float)
+function {long long} llrintf (float)
+function long lroundf (float)
+function {long long} llroundf (float)
+function float remquof (float, float, int*)
+function float scalbf (float, float)
+function float scalbnf (float, int)
+function float scalblnf (float, long)
+function float fdimf (float, float)
+function float fmaxf (float, float)
+function float fminf (float, float)
+function float fmaf (float, float, float)
+function float nanf (const char*)
+
+function {long double} acosl (long double)
+function {long double} asinl (long double)
+function {long double} atanl (long double)
+function {long double} atan2l (long double, long double)
+function {long double} ceill (long double)
+function {long double} copysignl (long double, long double)
+function {long double} cosl (long double)
+function {long double} coshl (long double)
+function {long double} expl (long double)
+function {long double} exp2l (long double)
+function {long double} fabsl (long double)
+function {long double} floorl (long double)
+function {long double} fmodl (long double, long double)
+function {long double} frexpl (long double, int*)
+function {long double} ldexpl (long double, int)
+function {long double} logl (long double)
+function {long double} log10l (long double)
+function {long double} log2l (long double)
+function {long double} modfl (long double, long double*)
+function {long double} powl (long double, long double)
+function {long double} sinl (long double)
+function {long double} sinhl (long double)
+function {long double} sqrtl (long double)
+function {long double} tanl (long double)
+function {long double} tanhl (long double)
+function {long double} erfl (long double)
+function {long double} erfcl (long double)
+function {long double} gammal (long double)
+function {long double} hypotl (long double, long double)
+function {long double} j0l (long double)
+function {long double} j1l (long double)
+function {long double} jnl (int, long double)
+function {long double} lgammal (long double)
+function {long double} tgammal (long double)
+function {long double} y0l (long double)
+function {long double} y1l (long double)
+function {long double} ynl (int, long double)
+function int isnanl (long double)
+function {long double} acoshl (long double)
+function {long double} asinhl (long double)
+function {long double} atanhl (long double)
+function {long double} cbrtl (long double)
+function {long double} expm1l (long double)
+function int ilogbl (long double)
+function {long double} log1pl (long double)
+function {long double} logbl (long double)
+function {long double} nextafterl (long double, long double)
+function {long double} nexttowardl (long double, long double)
+function {long double} nearbyintl (long double)
+function {long double} remainderl (long double, long double)
+function {long double} rintl (long double)
+function {long double} roundl (long double)
+function {long double} truncl (long double)
+function long lrintl (long double)
+function {long long} llrintl (long double)
+function long lroundl (long double)
+function {long long} llroundl (long double)
+function {long double} remquol (long double, long double, int*)
+function {long double} scalbl (long double, long double)
+function {long double} scalbnl (long double, int)
+function {long double} scalblnl (long double, long)
+function {long double} fdiml (long double, long double)
+function {long double} fmaxl (long double, long double)
+function {long double} fminl (long double, long double)
+function {long double} fmal (long double, long double, long double)
+function {long double} nanl (const char*)
+#else
 allow acosf
 allow asinf
 allow atanf
 allow atan2f
 allow ceilf
+allow copysignf
 allow cosf
 allow coshf
 allow expf
+allow exp2f
 allow fabsf
 allow floorf
 allow fmodf
@@ -82,6 +272,7 @@ allow frexpf
 allow ldexpf
 allow logf
 allow log10f
+allow log2f
 allow powf
 allow sinf
 allow sinhf
@@ -96,6 +287,7 @@ allow j0f
 allow j1f
 allow jnf
 allow lgammaf
+allow tgammaf
 allow y0f
 allow y1f
 allow ynf
@@ -118,9 +310,11 @@ allow asinl
 allow atanl
 allow atan2l
 allow ceill
+allow copysignl
 allow cosl
 allow coshl
 allow expl
+allow exp2l
 allow fabsl
 allow floorl
 allow fmodl
@@ -128,6 +322,7 @@ allow frexpl
 allow ldexpl
 allow logl
 allow log10l
+allow log2l
 allow powl
 allow sinl
 allow sinhl
@@ -142,6 +337,7 @@ allow j0l
 allow j1l
 allow jnl
 allow lgammal
+allow tgammal
 allow y0l
 allow y1l
 allow ynl
@@ -158,5 +354,7 @@ allow nextafterl
 allow remainderl
 allow rintl
 allow scalbl
+#endif
 
 allow *_t
+allow FP_*

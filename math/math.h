@@ -1,5 +1,5 @@
 /* Declarations for math functions.
-   Copyright (C) 1991,92,93,95,96,97,98,99 Free Software Foundation, Inc.
+   Copyright (C) 1991,92,93,95,96,97,98,99,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -229,6 +229,10 @@ enum
       ? __isinf (x) : __isinfl (x))
 # endif
 
+/* Bitmasks for the math_errhandling macro.  */
+# define MATH_ERRNO	1	/* errno set by math functions.  */
+# define MATH_ERREXCEPT	2	/* Exceptions raised by math functions.  */
+
 #endif /* Use ISO C99.  */
 
 #ifdef	__USE_MISC
@@ -285,15 +289,13 @@ extern int matherr (struct exception *__exc);
 # define PLOSS		6
 
 /* SVID mode specifies returning this large value instead of infinity.  */
-# define HUGE		FLT_MAX
-# include <float.h>		/* Defines FLT_MAX.  */
+# define HUGE		3.40282347e+38F
 
 #else	/* !SVID */
 
 # ifdef __USE_XOPEN
 /* X/Open wants another strange constant.  */
-#  define MAXFLOAT	FLT_MAX
-#  include <float.h>
+#  define MAXFLOAT	3.40282347e+38F
 # endif
 
 #endif	/* SVID */
