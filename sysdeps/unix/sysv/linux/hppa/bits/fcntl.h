@@ -47,6 +47,7 @@
 # define O_DIRECT	00040000 /* direct disk access hint - currently ignored */
 # define O_DIRECTORY	00010000 /* must be a directory */
 # define O_NOFOLLOW	00000200 /* don't follow links */
+# define O_NOATIME	04000000 /* Do not set atime.  */
 #endif
 
 #ifdef __USE_LARGEFILE64
