@@ -1,3 +1,8 @@
+2001-04-16  Andreas Jaeger  <aj@suse.de>
+
+	* iconv/gconv_db.c: Include gconv_charset.h for
+	__gconv_lookup_alias prototype.
+
 2001-04-13  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/ieee754/ldbl-128/s_atanl.c: New file.
