@@ -1,5 +1,7 @@
 2003-11-13  Ulrich Drepper  <drepper@redhat.com>
 
+	* posix/runtests.c (run_a_test): If regcomp failed, reset last_pattern.
+
 	* posix/regcomp.c (parse_dup_op): Fail with REG_BADBR is first
 	number in {,} expression is larger.
 
