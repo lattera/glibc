@@ -17,7 +17,7 @@
    Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
    02111-1307 USA.  */
 
-#include <sysdep-cancel.h>
+#include <sysdep.h>
 #define _ERRNO_H	1
 #include <bits/errno.h>
 #include <kernel-features.h>
