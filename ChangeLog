@@ -1,3 +1,11 @@
+Sat Mar  9 18:44:27 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* sysdeps/unix/sysv/linux/i386/setfpucw.c: Obsolete file removed.
+
+Fri Mar  8 22:16:48 1996  Roland McGrath  <roland@charlie-brown.gnu.ai.mit.edu>
+
+	* stdio-common/printf_fp.c (HAVE_ALLOCA): New macro.
+
 Tue Mar  5 18:45:14 1996  Miles Bader  <miles@gnu.ai.mit.edu>
 
 	* sysdeps/mach/hurd/select.c (__select): Include LASTFD in the
