@@ -1,3 +1,7 @@
+2000-04-04  Andreas Jaeger  <aj@suse.de>
+
+	* intl/Makefile: Only run the gettext test with shared libraries.
+
 2000-03-16  Mark Kettenis  <kettenis@gnu.org>
 
 	* sysdeps/unix/sysv/linux/i386/sys/procfs.h (prfpregset_t):

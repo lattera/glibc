@@ -44,10 +44,12 @@ $(objpfx)plural.o: plural.c
 
 include ../Rules
 
+ifeq (yes,$(build-shared))
 .PHONY: do-gettext-test
 tests: do-gettext-test
 do-gettext-test: tst-gettext.sh $(objpfx)tst-gettext
 	$(SHELL) -e $< $(common-objpfx) $(objpfx)
+endif
 
 $(objpfx)msgs.h: po2test.sed ../po/de.po
 	$(make-target-directory)
