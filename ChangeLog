@@ -2,6 +2,8 @@
 
 	* version.h (VERSION): Bump to 2.0.111.
 
+	* elf/Makefile (distribute): Add test module sources.
+
 	* sysdeps/unix/sysv/linux/sys/sysmacros.h: Pretty print.
 	* sysdeps/unix/sysv/linux/Dist: Remove sys/sysmacros.h.
 	* sysdeps/unix/sysv/linux/Makefile: Remove sys/sysmacros.h.
