@@ -1,3 +1,8 @@
+1998-11-28 23:23 -0500  Zack Weinberg  <zack@rabi.phys.columbia.edu> 
+ 
+	* sysdeps/unix/sysv/linux/configure.in: Test for symlinks in 
+	$prefix/include that may be clobbered on installation. 
+ 
 1998-11-27  Philip Blundell  <pb@nexus.co.uk>
 
 	Fixes to allow compilation with static NSS:

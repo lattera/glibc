@@ -101,3 +101,26 @@ case "$machine" in
     ;;
 esac
 changequote([,])
+
+# If $prefix/include/{net,scsi} are symlinks, make install will
+# clobber what they're linked to (probably a kernel tree).
+# test -L ought to work on all Linux boxes.
+echo $ac_n "checking for symlinks in ${prefix}/include...$ac_c"
+if test -L ${prefix}/include/net
+then message="   ${prefix}/include/net is a symlink"
+fi
+if test -L ${prefix}/include/scsi
+then message="$message
+   ${prefix}/include/scsi is a symlink"
+fi
+if test -n "$message"; then
+echo "
+*** error:
+$message
+\`make install' will destroy the target of the link(s).
+Delete the links and re-run configure, or better still, move the entire
+${prefix}/include directory out of the way."
+exit 1
+else
+echo " ok"
+fi
