@@ -837,12 +837,21 @@ So in case of doubt report such a warning message as a problem.
 
 2.20.	What do I need for C++ development?
 
-{HJ,AJ} You need either egcs 1.0.2 or gcc-2.8.1 with libstdc++ 2.8.1 (or
-more recent versions). libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't
-work very well with the GNU C library due to vtable thunks.  If you're
-upgrading from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the
-library compiled for 2.0 is not compatible due to the new Large File Support
-(LFS) in version 2.1.
+{HJ,AJ} You need either egcs 1.1 which comes directly with libstdc++ or 
+gcc-2.8.1 together with libstdc++ 2.8.1.1.  egcs 1.1 has the better C++ 
+support and works directly with glibc 2.1.  If you use gcc-2.8.1 with 
+libstdc++ 2.8.1.1, you need to modify libstdc++ a bit.  A patch is available 
+as: 
+	ftp://alpha.gnu.org/gnu/libstdc++-2.8.1.1-glibc2.1-diff.gz 
+ 
+Please note that libg++ 2.7.2 (and the Linux Versions 2.7.2.x) doesn't work 
+very well with the GNU C library due to vtable thunks.  If you're upgrading 
+from glibc 2.0.x to 2.1 you have to recompile libstdc++ since the library 
+compiled for 2.0 is not compatible due to the new Large File Support (LFS) 
+in version 2.1. 
+
+{UD} But since in the case of a shared libstdc++ the version numbers should
+be different existing programs will continue to work.
 
 
 2.21.	Even statically linked programs need some shared libraries
