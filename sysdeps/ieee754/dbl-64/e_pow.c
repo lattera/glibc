@@ -53,7 +53,7 @@ static int checkint(double x);
 /* An ultimate power routine. Given two IEEE double machine numbers y,x    */
 /* it computes the correctly rounded (to nearest) value of X^y.            */
 /***************************************************************************/
-double __ieee754_upow(double x, double y) {
+double __ieee754_pow(double x, double y) {
   double z,a,aa,error, t,a1,a2,y1,y2;
 #if 0
   double gor=1.0;
