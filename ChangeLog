@@ -1,3 +1,8 @@
+2001-06-04  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/ieee754/ldbl-128/e_sinhl.c: New file, contributed by
+	Stephen L Moshier <moshier@mediaone.net>.
+
 2001-06-03  Roland McGrath  <roland@frob.com>
 
 	* Makefile (postclean): Remove obsolete sysd-Makefile.
