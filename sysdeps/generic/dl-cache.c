@@ -220,7 +220,7 @@ _dl_load_cache_lookup (const char *name)
       hwcap = &_dl_hwcap;
 
 #define HWCAP_CHECK							     \
-      if (hwcap && (cache_new->libs[middle].hwcap & *hwcap) > _dl_hwcap)     \
+      if (hwcap && (cache_new->libs[middle].hwcap & *hwcap) > *hwcap)        \
 	continue
       SEARCH_CACHE (cache_new);
     }
