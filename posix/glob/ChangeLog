@@ -1,3 +1,11 @@
+Tue Apr 25 17:17:19 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
+
+	* posix/glob.c (glob): If GLOB_MARK set, stat names to find
+ 	directories and append slashes to them in final pass before
+ 	sorting.
+	(glob_in_dir): If GLOB_MARK set, just allocate the extra char for the
+	slash; never append it here.
+
 Wed Mar  8 13:38:13 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
 	* posix/glob/configure.bat: Fixes from DJ.
