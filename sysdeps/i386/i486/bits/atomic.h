@@ -1,4 +1,4 @@
-/* Copyright (C) 2002, 2003 Free Software Foundation, Inc.
+/* Copyright (C) 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@redhat.com>, 2002.
 
@@ -169,7 +169,7 @@ typedef uintmax_t uatomic_max_t;
 #define atomic_add(mem, value) \
   (void) ({ if (__builtin_constant_p (value) && (value) == 1)		      \
 	      atomic_increment (mem);					      \
-	    else if (__builtin_constant_p (value) && (value) == 1)	      \
+	    else if (__builtin_constant_p (value) && (value) == -1)	      \
 	      atomic_decrement (mem);					      \
 	    else if (sizeof (*mem) == 1)				      \
 	      __asm __volatile (LOCK_PREFIX "addb %b1, %0"		      \
