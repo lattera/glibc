@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1997, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, 1995.
 
@@ -58,9 +58,7 @@ __wcpncpy (dest, src, n)
 	  if (--n4 == 0)
 	    goto last_chars;
 	}
-      n = n - (dest - s) - 1;
-      if (n == 0)
-	return dest;
+      n -= dest - s;
       goto zero_fill;
     }
 
@@ -69,21 +67,22 @@ __wcpncpy (dest, src, n)
   if (n == 0)
     return dest;
 
-  do
+  for (;;)
     {
       c = *src++;
-      *++dest = c;
-      if (--n == 0)
+      --n;
+      *dest++ = c;
+      if (c == L'\0')
+	break;
+      if (n == 0)
 	return dest;
     }
-  while (c != L'\0');
 
  zero_fill:
-  do
-    *++dest = L'\0';
-  while (--n > 0);
+  while (n-- > 0)
+    dest[n] = L'\0';
 
-  return dest;
+  return dest - 1;
 }
 
 weak_alias (__wcpncpy, wcpncpy)

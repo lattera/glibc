@@ -1,3 +1,10 @@
+2003-06-01  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/Makefile (CFLAGS-dl-runtime.c): Define.
+
+	* wcsmbs/wcpncpy.c (__wcpncpy): Fix broken implementation to match
+	stpncpy.
+
 2003-05-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/bits/sigaction.h (SA_NOCLDWAIT): Define.

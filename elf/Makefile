@@ -82,6 +82,8 @@ distribute	:= rtld-Rules \
 		   tst-array2dep.c \
 		   check-textrel.c dl-sysdep.h
 
+CFLAGS-dl-runtime.c = -fexceptions -fasynchronous-unwind-tables
+
 include ../Makeconfig
 
 ifeq ($(unwind-find-fde),yes)

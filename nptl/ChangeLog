@@ -12,6 +12,10 @@
 	Likewise.
 	* sysdeps/unix/sysv/linux/s390/sem_timedwait.c (sem_timedwait):
 	Likewise.
+	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h (lll_timedwait_tid):
+	Likewise.
+	* sysdeps/unix/sysv/linux/sh/lowlevellock.h (lll_timedwait_tid):
+	Likewise.
 
 	* Makefile (tests): Add tst-sem8 and tst-sem9.
 	* tst-sem8.c: New file.

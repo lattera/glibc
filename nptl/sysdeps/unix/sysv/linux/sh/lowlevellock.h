@@ -148,34 +148,34 @@ typedef int lll_lock_t;
 # endif
 
 #define lll_futex_wait(futex, val) \
-  do { \
-    int __ignore; \
-    register unsigned long __r3 asm ("r3") = SYS_futex; \
-    register unsigned long __r4 asm ("r4") = (unsigned long) (futex); \
-    register unsigned long __r5 asm ("r5") = FUTEX_WAIT; \
-    register unsigned long __r6 asm ("r6") = (unsigned long) (val); \
-    register unsigned long __r7 asm ("r7") = 0; \
-    __asm __volatile (SYSCALL_WITH_INST_PAD \
-		      : "=z" (__ignore) \
-		      : "r" (__r3), "r" (__r4), "r" (__r5), \
-			"r" (__r6), "r" (__r7) \
-		      : "memory", "t"); \
+  do {									      \
+    int __ignore;							      \
+    register unsigned long __r3 asm ("r3") = SYS_futex;			      \
+    register unsigned long __r4 asm ("r4") = (unsigned long) (futex);	      \
+    register unsigned long __r5 asm ("r5") = FUTEX_WAIT;		      \
+    register unsigned long __r6 asm ("r6") = (unsigned long) (val);	      \
+    register unsigned long __r7 asm ("r7") = 0;				      \
+    __asm __volatile (SYSCALL_WITH_INST_PAD				      \
+		      : "=z" (__ignore)					      \
+		      : "r" (__r3), "r" (__r4), "r" (__r5),		      \
+			"r" (__r6), "r" (__r7)				      \
+		      : "memory", "t");					      \
   } while (0)
 
 
 #define lll_futex_wake(futex, nr) \
-  do { \
-    int __ignore; \
-    register unsigned long __r3 asm ("r3") = SYS_futex; \
-    register unsigned long __r4 asm ("r4") = (unsigned long) (futex); \
-    register unsigned long __r5 asm ("r5") = FUTEX_WAKE; \
-    register unsigned long __r6 asm ("r6") = (unsigned long) (nr); \
-    register unsigned long __r7 asm ("r7") = 0; \
-    __asm __volatile (SYSCALL_WITH_INST_PAD \
-		      : "=z" (__ignore) \
-		      : "r" (__r3), "r" (__r4), "r" (__r5), \
-			"r" (__r6), "r" (__r7) \
-		      : "memory", "t"); \
+  do {									      \
+    int __ignore;							      \
+    register unsigned long __r3 asm ("r3") = SYS_futex;			      \
+    register unsigned long __r4 asm ("r4") = (unsigned long) (futex);	      \
+    register unsigned long __r5 asm ("r5") = FUTEX_WAKE;		      \
+    register unsigned long __r6 asm ("r6") = (unsigned long) (nr);	      \
+    register unsigned long __r7 asm ("r7") = 0;				      \
+    __asm __volatile (SYSCALL_WITH_INST_PAD				      \
+		      : "=z" (__ignore)					      \
+		      : "r" (__r3), "r" (__r4), "r" (__r5),		      \
+			"r" (__r6), "r" (__r7)				      \
+		      : "memory", "t");					      \
   } while (0)
 
 
@@ -252,24 +252,24 @@ extern int lll_unlock_wake_cb (int *__futex) attribute_hidden;
 
 extern int __lll_wait_tid (int *tid) attribute_hidden;
 #define lll_wait_tid(tid) \
-  do { \
-    __typeof (tid) *__tid = &(tid); \
-    if (*__tid != 0) \
-      __lll_wait_tid (__tid); \
+  do {									      \
+    __typeof (tid) *__tid = &(tid);					      \
+    if (*__tid != 0)							      \
+      __lll_wait_tid (__tid);						      \
   } while (0)
 
 extern int __lll_timedwait_tid (int *tid, const struct timespec *abstime)
      attribute_hidden;
 #define lll_timedwait_tid(tid, abstime) \
-  ({ \
-    int __result = 0; \
-    if (tid != 0) \
-      {	\
-	if (abstime == NULL || abstime->tv_nsec >= 1000000000) \
-	  __result = EINVAL; \
-	else \
-	  __result = __lll_timedwait_tid (&tid, abstime); \
-      }	\
+  ({									      \
+    int __result = 0;							      \
+    if (tid != 0)							      \
+      {									      \
+	if (abstime->tv_nsec < 0 || abstime->tv_nsec >= 1000000000)	      \
+	  __result = EINVAL;						      \
+	else								      \
+	  __result = __lll_timedwait_tid (&tid, abstime);		      \
+      }									      \
     __result; })
 
 
