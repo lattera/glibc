@@ -1,5 +1,7 @@
 2000-02-16  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/execve.c: Pretty print.
+
 	* po/it.po: New file.
 	* po/pl.po: Update from translation team.
 
