@@ -1,5 +1,8 @@
 2004-09-21  Ulrich Drepper  <drepper@redhat.com>
 
+	* elf/sprof.c (load_shobj): Add support for reading symbol table
+	from debuginfo file.
+
 	* elf/ldd.bash.in: Fix syntax errors.
 
 2004-09-20  Ulrich Drepper  <drepper@redhat.com>
