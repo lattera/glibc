@@ -104,7 +104,8 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
       /* ...in which case, we have argc as the top thing on the
 	 stack, followed by argv (NULL-terminated), envp (likewise),
 	 and the auxilary vector.  */
-      argc = *(int *__unbounded) stack_on_entry;
+      /* 32/64-bit agnostic load from stack */
+      argc = *(long int *__unbounded) stack_on_entry;
       ubp_av = stack_on_entry + 1;
       ubp_ev = ubp_av + argc + 1;
 #ifdef HAVE_AUX_VECTOR
@@ -113,9 +114,8 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
         ++temp;
       auxvec = (ElfW(auxv_t) *)++temp;
 
-
 # ifndef SHARED
-      _dl_aux_init ((ElfW(auxv_t) *) auxvec);
+      _dl_aux_init (auxvec);
 # endif
 #endif
       rtld_fini = NULL;
@@ -124,11 +124,12 @@ BP_SYM (__libc_start_main) (int argc, char *__unbounded *__unbounded ubp_av,
   INIT_ARGV_and_ENVIRON;
 
   /* Initialize the __cache_line_size variable from the aux vector.  */
-  __aux_init_cache((ElfW(auxv_t) *) auxvec);
+  __aux_init_cache(auxvec);
 
   /* Store something that has some relationship to the end of the
-     stack, for backtraces.  This variable should be thread-specific.  */
-  __libc_stack_end = stack_on_entry + 4;
+     stack, for backtraces.  This variable should be thread-specific.
+     Use +8 so it works for both 32- and 64-bit.  */
+  __libc_stack_end = stack_on_entry + 8;
 
 #ifndef SHARED
   /* Initialize the thread library at least a bit since the libgcc

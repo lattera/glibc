@@ -1,3 +1,18 @@
+2002-09-20  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/elf/libc-start.c: Use long in place of int for argc
+	load, so as to work on both 32-bit and 64-bit.  Remove unnecessary
+	casts.  Align __libc_stack_end to 8 bytes.
+
+2002-09-20  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/powerpc/fpu/s_lrint.c: Use strong_alias/weak_alias macros
+	instead of asm for lrintf, __lrintf aliases.
+
+	* sysdeps/powerpc/fpu/s_lrint.c (__lrint): Change union long array to
+	int array for 32-/64-bit compatibility.
+	From Steven Munroe  <sjmunroe@us.ibm.com>.
+
 2002-09-17  Bruno Haible  <bruno@clisp.org>
 
 	* sysdeps/generic/ifreq.h (__if_nextreq): New function.
