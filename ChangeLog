@@ -1,3 +1,13 @@
+2001-08-24  Ulrich Drepper  <drepper@redhat.com>
+
+	* elf/rtld.c (print_statistics): Printf % after percent values.
+	* elf/dl-misc.c (_dl_debug_vdprintf): Implement %%.
+
+	* elf/dl-lookup.c (_dl_lookup_symbol): If we use the cache we
+	don't have to compute the hash value and initialize current_value.
+	Move reference_name variable to where it is needed.
+	(_dl_lookup_versioned_symbol): Likewise.
+
 2001-08-24  Roland McGrath  <roland@frob.com>
 
 	* string/tester.c (test_strerror): Don't use _sys_errlist/_sys_nerr.

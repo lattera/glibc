@@ -211,6 +211,12 @@ _dl_debug_vdprintf (int fd, int tag_p, const char *fmt, va_list arg)
 	      ++niov;
 	      break;
 
+	    case '%':
+	      iov[niov].iov_base = (void *) fmt;
+	      iov[niov].iov_len = 1;
+	      ++niov;
+	      break;
+
 	    default:
 	      assert (! "invalid format specifier");
 	    }

@@ -1520,7 +1520,7 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_printf ("            time needed for relocation: %s (%s)\n",
+      _dl_debug_printf ("            time needed for relocation: %s (%s%%)\n",
 			buf, pbuf);
     }
 #endif
@@ -1549,7 +1549,7 @@ print_statistics (void)
 	  *wp++ = *cp++;
 	}
       *wp = '\0';
-      _dl_debug_printf ("           time needed to load objects: %s (%s)\n",
+      _dl_debug_printf ("           time needed to load objects: %s (%s%%)\n",
 			buf, pbuf);
     }
 #endif
