@@ -1,5 +1,27 @@
 2005-03-15  Jakub Jelinek  <jakub@redhat.com>
 
+	* sysdeps/generic/wordexp.c (exec_comm_child): Add inline keyword.
+	Patch by Dan Kegel <dank@kegel.com>.
+
+	* elf/dynamic-link.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Add inline keyword.
+	* sysdeps/alpha/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Add always_inline
+	attribute.
+	* sysdeps/sparc/sparc32/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.  Change
+	static inline into auto inline.
+	* sysdeps/sparc/sparc64/dl-machine.h (elf_machine_rela,
+	elf_machine_rela_relative, elf_machine_lazy_rel): Likewise.
+	* sysdeps/generic/dl-machine.h (elf_machine_rel, elf_machine_rela):
+	Likewise.
+	* sysdeps/arm/dl-machine.h (elf_machine_rel, elf_machine_rel_relative,
+	elf_machine_rela, elf_machine_rela_relative, elf_machine_lazy_rel):
+	Likewise.
+
+2005-03-15  Jakub Jelinek  <jakub@redhat.com>
+
 	[BZ #789]
 	* sysdeps/i386/i686/hp-timing.h (HP_TIMING_ACCUM): Fix asm constraints.
 	Remove memory clobber.

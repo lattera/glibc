@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  Alpha version.
-   Copyright (C) 1996-2002, 2003, 2004 Free Software Foundation, Inc.
+   Copyright (C) 1996-2002, 2003, 2004, 2005 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Richard Henderson <rth@tamu.edu>.
 
@@ -376,6 +376,7 @@ elf_machine_plt_value (struct link_map *map, const Elf64_Rela *reloc,
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela (struct link_map *map,
 		  const Elf64_Rela *reloc,
 		  const Elf64_Sym *sym,
@@ -504,6 +505,7 @@ elf_machine_rela (struct link_map *map,
 #define ELF_MACHINE_REL_RELATIVE 1
 
 auto inline void
+__attribute__ ((always_inline))
 elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 			   void *const reloc_addr_arg)
 {
@@ -520,6 +522,7 @@ elf_machine_rela_relative (Elf64_Addr l_addr, const Elf64_Rela *reloc,
 }
 
 auto inline void
+__attribute__ ((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      Elf64_Addr l_addr, const Elf64_Rela *reloc)
 {

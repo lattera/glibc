@@ -32,29 +32,29 @@
    copying memory, breaking the very code written to handle the
    unaligned cases.  */
 # if ! ELF_MACHINE_NO_REL
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_rel (struct link_map *map, const ElfW(Rel) *reloc,
 		 const ElfW(Sym) *sym, const struct r_found_version *version,
 		 void *const reloc_addr);
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_rel_relative (ElfW(Addr) l_addr, const ElfW(Rel) *reloc,
 			  void *const reloc_addr);
 # endif
 # if ! ELF_MACHINE_NO_RELA
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_rela (struct link_map *map, const ElfW(Rela) *reloc,
 		  const ElfW(Sym) *sym, const struct r_found_version *version,
 		  void *const reloc_addr);
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_rela_relative (ElfW(Addr) l_addr, const ElfW(Rela) *reloc,
 			   void *const reloc_addr);
 # endif
 # if ELF_MACHINE_NO_RELA || defined ELF_MACHINE_PLT_REL
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      ElfW(Addr) l_addr, const ElfW(Rel) *reloc);
 # else
-auto void __attribute__((always_inline))
+auto inline void __attribute__((always_inline))
 elf_machine_lazy_rel (struct link_map *map,
 		      ElfW(Addr) l_addr, const ElfW(Rela) *reloc);
 # endif

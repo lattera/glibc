@@ -1,3 +1,13 @@
+2005-03-08  Paul Eggert  <eggert@cs.ucla.edu>
+
+	* iconvme.c (SIZE_MAX): New macro, if not already defined.
+	(iconv_string): Don't guess a size-zero buffer, as that might cause
+	buffer overrun.  Instead, avoid multiplying by MB_LEN_MAX if the
+	result would be 'too large', where 'too large' is (heuristically)
+	the square root of SIZE_MAX, divided by MB_LEN_MAX to allay
+	overflow concerns.  This will prevent some unwanted malloc failures
+	when the inputs are very large.
+
 2005-02-12  Simon Josefsson  <jas@extundo.com >
 
 	* iconvme.h: New file, extracted from toutf8.c but improved.

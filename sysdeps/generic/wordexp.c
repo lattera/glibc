@@ -809,7 +809,7 @@ parse_arith (char **word, size_t *word_length, size_t *max_length,
 }
 
 /* Function called by child process in exec_comm() */
-static void
+static inline void
 internal_function __attribute__ ((always_inline))
 exec_comm_child (char *comm, int *fildes, int showerr, int noexec)
 {
