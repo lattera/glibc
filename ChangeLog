@@ -1,5 +1,7 @@
 2001-08-23  Roland McGrath  <roland@frob.com>
 
+	* rt/tst-aio4.c [! SIGRTMIN] (SIGRTMIN, SIGRTMAX): Define as -1.
+
 	* sysdeps/mach/hurd/bits/libc-lock.h: New file, initially copied from
 	sysdeps/mach version.  Implement counting ("recursive") mutexes
 	on top of cthreads mutexes.

@@ -55,6 +55,10 @@ wait_flag (void)
   return 0;
 }
 
+#ifndef SIGRTMIN
+# define SIGRTMIN -1
+# define SIGRTMAX -1
+#endif
 
 static int
 do_test (int argc, char *argv[])
