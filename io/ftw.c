@@ -1,5 +1,5 @@
 /* File tree walker functions.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@cygnus.com>, 1996.
 
@@ -396,7 +396,10 @@ ftw_dir (struct ftw_data *data, struct STAT *st)
   /* Next, update the `struct FTW' information.  */
   ++data->ftw.level;
   startp = strchr (data->dirbuf, '\0');
-  *startp++ = '/';
+  /* There always must be a directory name.  */
+  assert (startp != data->dirbuf);
+  if (startp != data->dirbuf + 1)
+    *startp++ = '/';
   data->ftw.base = startp - data->dirbuf;
 
   while (dir.stream != NULL && (d = READDIR (dir.stream)) != NULL)

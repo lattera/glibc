@@ -1,5 +1,11 @@
 2001-01-05  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/ftw.c (ftw_dir): Don't add a second slash at the beginning
+	for searches from the root directory.
+	Reported by loris <loris@iol.it> [PR libc/1991].
+	* io/Makefile (tests): Add bug-ftw1.
+	* io/bug-ftw1.c: New file.
+
 	* elf/dl-support.c (non_dynamic_init): Don't define DL_FIND_AUXV
 	if it is not available.  Instead use it only if it is available.
 	* sysdeps/unix/sysv/linux/ldsodefs.h: New file.
