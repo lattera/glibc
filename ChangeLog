@@ -1,3 +1,12 @@
+2002-09-14  Roland McGrath  <roland@redhat.com>
+
+	* sysdeps/unix/sysv/linux/pread.c: __NR_pread64 may be defined
+	instead of __NR_pread.
+	* sysdeps/unix/sysv/linux/pread64.c: Likewise.
+	* sysdeps/unix/sysv/linux/pwrite.c: __NR_pwrite64 may be defined
+	instead of __NR_pwrite.
+	* sysdeps/unix/sysv/linux/pwrite64.c: Likewise.
+
 2002-09-13  Roland McGrath  <roland@redhat.com>
 
 	* manual/libc.texinfo: @ifinfo -> @ifnottex around copyright notice.

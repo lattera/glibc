@@ -27,6 +27,13 @@
 
 #include "kernel-features.h"
 
+#ifdef __NR_pread64		/* Newer kernels renamed but it's the same.  */
+# ifdef __NR_pread
+#  error "__NR_pread and __NR_pread64 both defined???"
+# endif
+# define __NR_pread __NR_pread64
+#endif
+
 #if defined __NR_pread || __ASSUME_PREAD_SYSCALL > 0
 
 extern ssize_t __syscall_pread (int fd, void *__unbounded buf, size_t count,
