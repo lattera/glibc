@@ -1,0 +1,13 @@
+libc {
+  GLIBC_2.3.2 {
+    __sim_exceptions; __sim_disabled_exceptions; __sim_round_mode;
+    __adddf3; __addsf3; __divdf3; __divsf3; __eqdf2; __eqsf2;
+    __extendsfdf2; __fixdfdi; __fixdfsi; __fixsfdi; __fixsfsi;
+    __fixtfdi; __fixtfsi;
+    __fixunsdfdi; __fixunsdfsi; __fixunssfdi; __fixunssfsi;
+    __floatdidf; __floatdisf; __floatsidf; __floatsisf;
+    __gedf2; __gesf2; __ledf2; __lesf2; __muldf3; __mulsf3;
+    __negdf2; __negsf2; __sqrtdf2; __sqrtsf2; __subdf3;
+    __subsf3; __truncdfsf2; __trunctfsf2;
+  }
+}
