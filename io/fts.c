@@ -88,7 +88,7 @@ FTS *
 fts_open(argv, options, compar)
 	char * const *argv;
 	register int options;
-	int (*compar) __P((const FTSENT **, const FTSENT **));
+	int (*compar) (const FTSENT **, const FTSENT **);
 {
 	register FTS *sp;
 	register FTSENT *p, *root;
@@ -106,7 +106,7 @@ fts_open(argv, options, compar)
 	if ((sp = malloc((u_int)sizeof(FTS))) == NULL)
 		return (NULL);
 	memset(sp, 0, sizeof(FTS));
-	sp->fts_compar = (int (*) __P((const void *, const void *))) compar;
+	sp->fts_compar = (int (*) (const void *, const void *)) compar;
 	sp->fts_options = options;
 
 	/* Logical walks turn on NOCHDIR; symbolic links are too hard. */

@@ -1,5 +1,7 @@
 2004-09-07  Ulrich Drepper  <drepper@redhat.com>
 
+	* io/fts.c (fts_open): Remove uses of __P.
+
 	* include/stdlib.h: No need to use __THROW in this header.
 
 2004-09-06  Roland McGrath  <roland@frob.com>
