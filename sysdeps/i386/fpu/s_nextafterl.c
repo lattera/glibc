@@ -56,7 +56,7 @@ static char rcsid[] = "$NetBSD: $";
 	    y = x*x;
 	    if(y==x) return y; else return x;	/* raise underflow flag */
 	}
-	if(esx<0x8000) {			/* x > 0 */
+	if(esx>=0) {			/* x > 0 */
 	    if(ix>iy||((ix==iy) && (hx>hy||((hx==hy)&&(lx>ly))))) {
 	      /* x > y, x -= ulp */
 		if(lx==0) {
@@ -77,7 +77,7 @@ static char rcsid[] = "$NetBSD: $";
 		lx += 1;
 		if(lx==0) {
 		    hx += 1;
-		    if (hx==0)
+		    if (hx==0 || (esx == 0 && hx == 0x80000000))
 			esx += 1;
 		}
 	    }
@@ -102,7 +102,8 @@ static char rcsid[] = "$NetBSD: $";
 		lx += 1;
 		if(lx==0) {
 		    hx += 1;
-		    if (hx==0) esx += 1;
+		    if (hx==0 || (esx == 0xffff8000 && hx == 0x80000000))
+		      esx += 1;
 		}
 	    }
 	}

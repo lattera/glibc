@@ -1,3 +1,11 @@
+2000-12-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* math/test-misc.c: Add more tests for nextafter functions.
+
+	* sysdeps/i386/fpu/s_nextafterl.c: Handle change from denormal to
+	normal correctly.  Correct test for sign.
+	Based on a patch by HJ Lu.
+
 2000-12-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* Makeconfig (preprocess-version): Add -traditional to gcc call.

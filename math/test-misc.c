@@ -18,6 +18,7 @@
    Boston, MA 02111-1307, USA.  */
 
 #include <fenv.h>
+#include <ieee754.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
@@ -115,9 +116,11 @@ main (void)
   }
 
   {
+    union ieee754_float v1;
+    union ieee754_float v2;
     float f;
 
-    f = FLT_MIN;
+    v1.f = f = FLT_MIN;
     if (fpclassify (f) != FP_NORMAL)
       {
 	printf ("fpclassify (FLT_MIN) failed: %d\n", fpclassify (f));
@@ -129,7 +132,7 @@ main (void)
 	printf ("fpclassify (FLT_MIN-epsilon) failed: %d\n", fpclassify (f));
 	result = 1;
       }
-    f = nextafterf (f, FLT_MIN);
+    v2.f = f = nextafterf (f, FLT_MIN);
     if (fpclassify (f) != FP_NORMAL)
       {
 	printf ("fpclassify (FLT_MIN-epsilon+epsilon) failed: %d\n",
@@ -137,7 +140,26 @@ main (void)
 	result = 1;
       }
 
-    f = -FLT_MIN;
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("FLT_MIN: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("FLT_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("FLT_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.f = f = -FLT_MIN;
     if (fpclassify (f) != FP_NORMAL)
       {
 	printf ("fpclassify (-FLT_MIN) failed: %d\n", fpclassify (f));
@@ -149,11 +171,30 @@ main (void)
 	printf ("fpclassify (-FLT_MIN-epsilon) failed: %d\n", fpclassify (f));
 	result = 1;
       }
-    f = nextafterf (f, -FLT_MIN);
+    v2.f = f = nextafterf (f, -FLT_MIN);
     if (fpclassify (f) != FP_NORMAL)
       {
 	printf ("fpclassify (-FLT_MIN-epsilon+epsilon) failed: %d\n",
 		fpclassify (f));
+	result = 1;
+      }
+
+    if (v1.ieee.mantissa != v2.ieee.mantissa)
+      {
+	printf ("-FLT_MIN: mantissa differs: %8x vs %8x\n",
+		v1.ieee.mantissa, v2.ieee.mantissa);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-FLT_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-FLT_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
 	result = 1;
       }
 
@@ -184,9 +225,11 @@ main (void)
       }
   }
   {
+    union ieee754_double v1;
+    union ieee754_double v2;
     double d;
 
-    d = DBL_MIN;
+    v1.d = d = DBL_MIN;
     if (fpclassify (d) != FP_NORMAL)
       {
 	printf ("fpclassify (DBL_MIN) failed: %d\n", fpclassify (d));
@@ -198,7 +241,7 @@ main (void)
 	printf ("fpclassify (DBL_MIN-epsilon) failed: %d\n", fpclassify (d));
 	result = 1;
       }
-    d = nextafter (d, DBL_MIN);
+    v2.d = d = nextafter (d, DBL_MIN);
     if (fpclassify (d) != FP_NORMAL)
       {
 	printf ("fpclassify (DBL_MIN-epsilon+epsilon) failed: %d\n",
@@ -206,7 +249,32 @@ main (void)
 	result = 1;
       }
 
-    d = -DBL_MIN;
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("DBL_MIN: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("DBL_MIN: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("DBL_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("DBL_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = d = -DBL_MIN;
     if (fpclassify (d) != FP_NORMAL)
       {
 	printf ("fpclassify (-DBL_MIN) failed: %d\n", fpclassify (d));
@@ -218,11 +286,36 @@ main (void)
 	printf ("fpclassify (-DBL_MIN-epsilon) failed: %d\n", fpclassify (d));
 	result = 1;
       }
-    d = nextafter (d, -DBL_MIN);
+    v2.d = d = nextafter (d, -DBL_MIN);
     if (fpclassify (d) != FP_NORMAL)
       {
 	printf ("fpclassify (-DBL_MIN-epsilon+epsilon) failed: %d\n",
 		fpclassify (d));
+	result = 1;
+      }
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-DBL_MIN: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-DBL_MIN: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-DBL_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-DBL_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
 	result = 1;
       }
 
@@ -254,9 +347,11 @@ main (void)
   }
 #ifndef NO_LONG_DOUBLE
   {
+    union ieee854_long_double v1;
+    union ieee854_long_double v2;
     long double ld;
 
-    ld = LDBL_MIN;
+    v1.d = ld = LDBL_MIN;
     if (fpclassify (ld) != FP_NORMAL)
       {
 	printf ("fpclassify (LDBL_MIN) failed: %d\n", fpclassify (ld));
@@ -269,7 +364,7 @@ main (void)
 		fpclassify (ld), ld);
 	result = 1;
       }
-    ld = nextafterl (ld, LDBL_MIN);
+    v2.d = ld = nextafterl (ld, LDBL_MIN);
     if (fpclassify (ld) != FP_NORMAL)
       {
 	printf ("fpclassify (LDBL_MIN-epsilon+epsilon) failed: %d (%La)\n",
@@ -277,7 +372,32 @@ main (void)
 	result = 1;
       }
 
-    ld = -LDBL_MIN;
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("LDBL_MIN: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("LDBL_MIN: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("LDBL_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("LDBL_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
+	result = 1;
+      }
+
+    v1.d = ld = -LDBL_MIN;
     if (fpclassify (ld) != FP_NORMAL)
       {
 	printf ("fpclassify (-LDBL_MIN) failed: %d\n", fpclassify (ld));
@@ -290,11 +410,36 @@ main (void)
 		fpclassify (ld), ld);
 	result = 1;
       }
-    ld = nextafterl (ld, -LDBL_MIN);
+    v2.d = ld = nextafterl (ld, -LDBL_MIN);
     if (fpclassify (ld) != FP_NORMAL)
       {
 	printf ("fpclassify (-LDBL_MIN-epsilon+epsilon) failed: %d (%La)\n",
 		fpclassify (ld), ld);
+	result = 1;
+      }
+
+    if (v1.ieee.mantissa0 != v2.ieee.mantissa0)
+      {
+	printf ("-LDBL_MIN: mantissa0 differs: %8x vs %8x\n",
+		v1.ieee.mantissa0, v2.ieee.mantissa0);
+	result = 1;
+      }
+    if (v1.ieee.mantissa1 != v2.ieee.mantissa1)
+      {
+	printf ("-LDBL_MIN: mantissa1 differs: %8x vs %8x\n",
+		v1.ieee.mantissa1, v2.ieee.mantissa1);
+	result = 1;
+      }
+    if (v1.ieee.exponent != v2.ieee.exponent)
+      {
+	printf ("-LDBL_MIN: exponent differs: %4x vs %4x\n",
+		v1.ieee.exponent, v2.ieee.exponent);
+	result = 1;
+      }
+    if (v1.ieee.negative != v2.ieee.negative)
+      {
+	printf ("-LDBL_MIN: negative differs: %d vs %d\n",
+		v1.ieee.negative, v2.ieee.negative);
 	result = 1;
       }
 
