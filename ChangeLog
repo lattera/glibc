@@ -1,5 +1,11 @@
 2004-10-30  Andreas Schwab  <schwab@suse.de>
 
+	* sysdeps/m68k/dl-machine.h (elf_machine_rela)
+	(elf_machine_rela_relative, elf_machine_lazy_rel): Mark auto
+	instead of static.
+
+2004-10-30  Andreas Schwab  <schwab@suse.de>
+
 	* sysdeps/unix/sysv/linux/waitid.c: Include <stddef.h> for NULL.
 
 2004-10-30  Ulrich Drepper  <drepper@redhat.com>
