@@ -1,3 +1,14 @@
+2003-09-08  Andreas Jaeger  <aj@suse.de>
+
+	* sysdeps/unix/sysv/linux/x86_64/register-dump.h (register_dump):
+	Use struct sigcontext.
+
+	* sysdeps/unix/sysv/linux/x86_64/sigcontextinfo.h (SIGCONTEXT):
+	Use struct sigcontext.
+	(GET_PC): Adopt.
+	(GET_FRAME): Likewise.
+	(GET_STACK): Likewise.
+
 2003-09-08  Wolfram Gloger  <wg@malloc.de>
 
 	* malloc/malloc.c (sYSMALLOc): Move foreign sbrk accounting into
