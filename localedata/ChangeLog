@@ -1,5 +1,9 @@
 2000-07-18  Ulrich Drepper  <drepper@redhat.com>
 
+	* charmaps/GB18030: New file.
+
+	* charmaps/UTF-8: Update for Unicode 3.0.
+
 	* tst-ctype-de_DE.ISO-8859-1.in: Mark U0000 as cntrl and U00A0 not as
 	space.
 	* tst-ctype.c: Likewise.

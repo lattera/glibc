@@ -22,7 +22,7 @@
 	semantics (it completes after previous writes.)
 
    For those platforms on which they are the same. HAS_COMPARE_AND_SWAP
-   should be defined. For those platforms on which they are different, 
+   should be defined. For those platforms on which they are different,
    HAS_COMPARE_AND_SWAP_WITH_RELEASE_SEMANTICS has to be defined.  */
 
 #ifndef HAS_COMPARE_AND_SWAP
@@ -115,12 +115,12 @@ static inline int __pthread_trylock (struct _pthread_fastlock * lock)
   do {
     oldstatus = lock->__status;
     if (oldstatus != 0) return EBUSY;
-  } while(! compare_and_swap(&lock->__status, 0, 1, &lock->__spinlock));
+  } while(! __compare_and_swap(&lock->__status, 0, 1));
   return 0;
 #endif
 }
 
-/* Variation of internal lock used for pthread_mutex_t, supporting 
+/* Variation of internal lock used for pthread_mutex_t, supporting
    timed-out waits.  Warning: do not mix these operations with the above ones
    over the same lock object! */
 
