@@ -1,3 +1,7 @@
+2004-10-19  Jakub Jelinek  <jakub@redhat.com>
+
+	* debug/Makefile (catchsegv): Prefix $LIB with a backslash.
+
 2004-10-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* debug/Makefile ($(objpfx)catchsegv): To support multilib

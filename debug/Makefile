@@ -72,7 +72,7 @@ include ../Rules
 
 $(objpfx)catchsegv: catchsegv.sh $(common-objpfx)soversions.mk \
 		    $(common-objpfx)config.make
-	slibpfx=`echo $(slibdir)|sed 's/lib\(64\|\)$$/$$LIB/'`; \
+	slibpfx=`echo $(slibdir)|sed 's/lib\(64\|\)$$/\\\\\\\\$$LIB/'`; \
 	sed -e 's|@VERSION@|$(version)|' -e "s|@SLIB@|$$slibpfx|" $< > $@.new
 	chmod 555 $@.new
 	mv -f $@.new $@
