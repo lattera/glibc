@@ -1,3 +1,10 @@
+1999-01-30  Ulrich Drepper  <drepper@cygnus.com>
+
+	* sysdeps/libm-i387/s_fdim.S: Reverse arguments of instruction
+	changed in last patch.
+	* sysdeps/libm-i387/s_fdimf.S: Likewise.
+	* sysdeps/libm-i387/s_fdiml.S: Likewise.
+
 1999-01-29  Richard Henderson  <rth@twiddle.net>
 
 	* scripts/config.sub: Recognize alpha{pca5[67],ev[67]}.

@@ -30,7 +30,7 @@ ENTRY(__fdiml)
 	sahf
 	jp	1f
 
-	fsubrp	%st(1), %st
+	fsubrp	%st, %st(1)
 	jc	2f
 
 	fstp	%st(0)
