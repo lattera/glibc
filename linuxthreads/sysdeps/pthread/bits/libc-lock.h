@@ -170,7 +170,8 @@ extern int __libc_internal_tsd_set __P ((enum __libc_tsd_key_t,
 
 /* Make the pthread functions weak so that we can elide them from
    single-threaded processes.  */
-#ifdef weak_extern
+#ifndef __NO_WEAK_PTHREAD_ALIASES
+# ifdef weak_extern
 weak_extern (__pthread_mutex_init)
 weak_extern (__pthread_mutex_destroy)
 weak_extern (__pthread_mutex_lock)
@@ -189,25 +190,26 @@ weak_extern (__pthread_initialize)
 weak_extern (__pthread_atfork)
 weak_extern (_pthread_cleanup_push_defer)
 weak_extern (_pthread_cleanup_pop_restore)
-#else
-# pragma weak __pthread_mutex_init
-# pragma weak __pthread_mutex_destroy
-# pragma weak __pthread_mutex_lock
-# pragma weak __pthread_mutex_trylock
-# pragma weak __pthread_mutex_unlock
-# pragma weak __pthread_mutexattr_init
-# pragma weak __pthread_mutexattr_destroy
-# pragma weak __pthread_mutexattr_settype
-# pragma weak __pthread_key_create
-# pragma weak __pthread_setspecific
-# pragma weak __pthread_getspecific
-# pragma weak __libc_internal_tsd_get
-# pragma weak __libc_internal_tsd_set
-# pragma weak __pthread_once
-# pragma weak __pthread_initialize
-# pragma weak __pthread_atfork
-# pragma weak _pthread_cleanup_push_defer
-# pragma weak _pthread_cleanup_pop_restore
+# else
+#  pragma weak __pthread_mutex_init
+#  pragma weak __pthread_mutex_destroy
+#  pragma weak __pthread_mutex_lock
+#  pragma weak __pthread_mutex_trylock
+#  pragma weak __pthread_mutex_unlock
+#  pragma weak __pthread_mutexattr_init
+#  pragma weak __pthread_mutexattr_destroy
+#  pragma weak __pthread_mutexattr_settype
+#  pragma weak __pthread_key_create
+#  pragma weak __pthread_setspecific
+#  pragma weak __pthread_getspecific
+#  pragma weak __libc_internal_tsd_get
+#  pragma weak __libc_internal_tsd_set
+#  pragma weak __pthread_once
+#  pragma weak __pthread_initialize
+#  pragma weak __pthread_atfork
+#  pragma weak _pthread_cleanup_push_defer
+#  pragma weak _pthread_cleanup_pop_restore
+# endif
 #endif
 
 /* We need portable names for some functions.  E.g., when they are

@@ -33,14 +33,14 @@ int __pthread_mutex_init(pthread_mutex_t * mutex,
   mutex->__m_owner = NULL;
   return 0;
 }
-weak_alias (__pthread_mutex_init, pthread_mutex_init)
+strong_alias (__pthread_mutex_init, pthread_mutex_init)
 
 int __pthread_mutex_destroy(pthread_mutex_t * mutex)
 {
   if (mutex->__m_lock.__status != 0) return EBUSY;
   return 0;
 }
-weak_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
+strong_alias (__pthread_mutex_destroy, pthread_mutex_destroy)
 
 int __pthread_mutex_trylock(pthread_mutex_t * mutex)
 {
@@ -73,7 +73,7 @@ int __pthread_mutex_trylock(pthread_mutex_t * mutex)
     return EINVAL;
   }
 }
-weak_alias (__pthread_mutex_trylock, pthread_mutex_trylock)
+strong_alias (__pthread_mutex_trylock, pthread_mutex_trylock)
 
 int __pthread_mutex_lock(pthread_mutex_t * mutex)
 {
@@ -103,7 +103,7 @@ int __pthread_mutex_lock(pthread_mutex_t * mutex)
     return EINVAL;
   }
 }
-weak_alias (__pthread_mutex_lock, pthread_mutex_lock)
+strong_alias (__pthread_mutex_lock, pthread_mutex_lock)
 
 int __pthread_mutex_unlock(pthread_mutex_t * mutex)
 {
@@ -129,20 +129,20 @@ int __pthread_mutex_unlock(pthread_mutex_t * mutex)
     return EINVAL;
   }
 }
-weak_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
+strong_alias (__pthread_mutex_unlock, pthread_mutex_unlock)
 
 int __pthread_mutexattr_init(pthread_mutexattr_t *attr)
 {
   attr->__mutexkind = PTHREAD_MUTEX_FAST_NP;
   return 0;
 }
-weak_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
+strong_alias (__pthread_mutexattr_init, pthread_mutexattr_init)
 
 int __pthread_mutexattr_destroy(pthread_mutexattr_t *attr)
 {
   return 0;
 }
-weak_alias (__pthread_mutexattr_destroy, pthread_mutexattr_destroy)
+strong_alias (__pthread_mutexattr_destroy, pthread_mutexattr_destroy)
 
 int __pthread_mutexattr_settype(pthread_mutexattr_t *attr, int kind)
 {
@@ -196,4 +196,4 @@ int __pthread_once(pthread_once_t * once_control, void (*init_routine)(void))
   pthread_mutex_unlock(&once_masterlock);
   return 0;
 }
-weak_alias (__pthread_once, pthread_once)
+strong_alias (__pthread_once, pthread_once)

@@ -56,7 +56,7 @@ int __pthread_key_create(pthread_key_t * key, destr_function destr)
   pthread_mutex_unlock(&pthread_keys_mutex);
   return EAGAIN;
 }
-weak_alias (__pthread_key_create, pthread_key_create)
+strong_alias (__pthread_key_create, pthread_key_create)
 
 /* Delete a key */
 
@@ -108,7 +108,7 @@ int __pthread_setspecific(pthread_key_t key, const void * pointer)
   THREAD_GETMEM_NC(self, p_specific[idx1st])[idx2nd] = (void *) pointer;
   return 0;
 }
-weak_alias (__pthread_setspecific, pthread_setspecific)
+strong_alias (__pthread_setspecific, pthread_setspecific)
 
 /* Get the value of a key */
 
@@ -126,7 +126,7 @@ void * __pthread_getspecific(pthread_key_t key)
     return NULL;
   return THREAD_GETMEM_NC(self, p_specific[idx1st])[idx2nd];
 }
-weak_alias (__pthread_getspecific, pthread_getspecific)
+strong_alias (__pthread_getspecific, pthread_getspecific)
 
 /* Call the destruction routines on all keys */
 

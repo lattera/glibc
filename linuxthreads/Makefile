@@ -41,6 +41,12 @@ tests = ex1 ex2 ex3 ex4 ex5 ex6
 
 include ../Rules
 
+CFLAGS-mutex.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-specific.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-pthread.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-ptfork.c += -D__NO_WEAK_PTHREAD_ALIASES
+CFLAGS-cancel.c += -D__NO_WEAK_PTHREAD_ALIASES
+
 # Depend on libc.so so a DT_NEEDED is generated in the shared objects.
 # This ensures they will load libc.so for needed symbols if loaded by
 # a statically-linked program that hasn't already loaded it.

@@ -1,3 +1,26 @@
+1998-11-18  Ulrich Drepper  <drepper@cygnus.com>
+
+	* Makefile (CFLAGS-mutex.c): Define as -D__NO_WEAK_PTHREAD_ALIASES.
+	(CFLAGS-specific.c): Likewise.
+	(CFLAGS-pthread.c): Likewise.
+	(CFLAGS-ptfork.c): Likewise.
+	(CFLAGS-cancel.c): Likewise.
+	* sysdeps/pthread/bits/libc-lock.h: Don't mark __pthread_* functions
+	as weak references if __NO_WEAK_PTHREAD_ALIASES is defined.
+
+	* mutex.c (pthread_mutex_init): Define as strong symbol.
+	(pthread_mutex_destroy): Likewise.
+	(pthread_mutex_trylock): Likewise.
+	(pthread_mutex_lock): Likewise.
+	(pthread_mutex_unlock): Likewise.
+	(pthread_mutexattr_init): Likewise.
+	(pthread_mutexattr_destroy): Likewise.
+	(pthread_once): Likewise.
+	* ptfork.c (pthread_atfork): Likewise.
+	* specific.c (pthread_key_create): Likewise.
+	(pthread_setspecific): Likewise.
+	(pthread_getspecific): Likewise.
+
 1998-11-15  Andreas Schwab  <schwab@issan.cs.uni-dortmund.de>
 
 	* linuxthreads.texi: Fix punctuation after xref.

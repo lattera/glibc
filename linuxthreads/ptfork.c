@@ -66,7 +66,7 @@ int __pthread_atfork(void (*prepare)(void),
   pthread_mutex_unlock(&pthread_atfork_lock);
   return 0;
 }
-weak_alias (__pthread_atfork, pthread_atfork)
+strong_alias (__pthread_atfork, pthread_atfork)
 
 static inline void pthread_call_handlers(struct handler_list * list)
 {
