@@ -65,8 +65,8 @@ struct _fpstate
   __uint32_t		_fxsr_env[6];
   __uint32_t		mxcsr;
   __uint32_t		reserved;
-  struct _fpxreg _fxsr_st[8];
-  struct _xmmreg _xmm[8];
+  struct _fpxreg	_fxsr_st[8];
+  struct _xmmreg 	_xmm[8];
   __uint32_t		padding[56];
 };
 
@@ -109,8 +109,8 @@ struct _fpstate
   __uint64_t		rdp;
   __uint32_t		mxcsr;
   __uint32_t		mxcr_mask;
-  __uint32_t		st_space[32];   /* 8*16 bytes for each FP-reg = 128 bytes */
-  __uint32_t		xmm_space[64];  /* 16*16 bytes for each XMM-reg = 128 bytes */
+  struct _fpxreg	_st[8];
+  struct _xmmreg 	_xmm[16];
   __uint32_t		padding[24];
 };
 

@@ -183,7 +183,7 @@ register_dump (int fd, struct sigcontext *ctx)
       /* Generate output for the FPU control/status registers.  */
       hexvalue (ctx->fpstate->cwd, fpregs[0], 8);
       hexvalue (ctx->fpstate->swd, fpregs[1], 8);
-      hexvalue (ctx->fpstate->twd, fpregs[2], 8);
+      hexvalue (ctx->fpstate->ftw, fpregs[2], 8);
       hexvalue (ctx->fpstate->rip, fpregs[3], 8);
       hexvalue (ctx->fpstate->rdp, fpregs[4], 8);
 
