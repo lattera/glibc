@@ -2,6 +2,9 @@
 
 	* version.h (VERSION): Bump to 2.0.99.
 
+	* sysdeps/unix/sysv/linux/i386/Dist: Remove s_pread64.c and
+	s_pwrite64.c.
+
 	* posix/fnmath.h: Don't redefine __P when used in glibc.
 	* posix/glob.h: Likewise.
 

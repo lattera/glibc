@@ -1,6 +1,4 @@
 clone.S
-s_pread64.S
-s_pwrite64.S
 sys/debugreg.h
 sys/elf.h
 sys/perm.h
