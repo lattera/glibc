@@ -1,5 +1,7 @@
 Wed Sep 27 00:27:25 1995  Roland McGrath  <roland@churchy.gnu.ai.mit.edu>
 
+	* sysdeps/unix/sysv/linux/Implies: Add unix/common.
+
 	* sysdeps/unix/i386/sysdep.h [HAVE_ELF] (ASM_TYPE_DIRECTIVE):
 	Don't use `type' for arg name, since we are using it as a keyword
 	in the rhs. 
