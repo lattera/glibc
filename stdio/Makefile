@@ -21,7 +21,7 @@
 #
 subdir	:= stdio
 
-headers	:= stdio.h
+headers	:= stdio.h linewrap.h
 
 routines	:=							      \
 	feof ferror clearerr fileno					      \
