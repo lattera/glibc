@@ -1,3 +1,8 @@
+2003-06-15  Guido Guenther  <agx@sigxcpu.org>
+
+	* sysdeps/unix/sysv/linux/mips/Makefile: Add missing endif and
+	create $(objpfx).
+
 2003-06-14  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/check_pf.c (__check_pf): Use __close,
