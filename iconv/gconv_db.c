@@ -222,7 +222,7 @@ gen_steps (struct derivation_step *best, const char *toset,
 
 	      result[step_cnt].__shlib_handle = shlib_handle;
 	      result[step_cnt].__modname = shlib_handle->name;
-	      result[step_cnt].__counter = 0;
+	      result[step_cnt].__counter = 1;
 	      result[step_cnt].__fct = shlib_handle->fct;
 	      result[step_cnt].__init_fct = shlib_handle->init_fct;
 	      result[step_cnt].__end_fct = shlib_handle->end_fct;
@@ -281,6 +281,35 @@ gen_steps (struct derivation_step *best, const char *toset,
 }
 
 
+#ifndef STATIC_GCONV
+static int
+internal_function
+increment_counter (struct __gconv_step *steps, size_t nsteps)
+{
+  /* Increment the user counter.  */
+  size_t cnt = nsteps;
+  int result = __GCONV_OK;
+
+  while (cnt-- > 0)
+    if (steps[cnt].__counter++ == 0)
+      {
+	steps[cnt].__shlib_handle =
+	  __gconv_find_shlib (steps[cnt].__modname);
+	if (steps[cnt].__shlib_handle == NULL)
+	  {
+	    /* Oops, this is the second time we use this module (after
+	       unloading) and this time loading failed!?  */
+	    while (++cnt < nsteps)
+	      __gconv_release_shlib (steps[cnt].__shlib_handle);
+	    result = __GCONV_NOCONV;
+	    break;
+	  }
+      }
+  return result;
+}
+#endif
+
+
 /* The main function: find a possible derivation from the `fromset' (either
    the given name or the alias) to the `toset' (again with alias).  */
 static int
@@ -289,18 +318,10 @@ find_derivation (const char *toset, const char *toset_expand,
 		 const char *fromset, const char *fromset_expand,
 		 struct __gconv_step **handle, size_t *nsteps)
 {
-  __libc_lock_define_initialized (static, lock)
   struct derivation_step *first, *current, **lastp, *solution = NULL;
   int best_cost_hi = INT_MAX;
   int best_cost_lo = INT_MAX;
   int result;
-
-  result = derivation_lookup (fromset_expand ?: fromset, toset_expand ?: toset,
-			      handle, nsteps);
-  if (result == __GCONV_OK)
-    return result;
-
-  __libc_lock_lock (lock);
 
   /* There is a small chance that this derivation is meanwhile found.  This
      can happen if in `find_derivation' we look for this derivation, didn't
@@ -309,7 +330,9 @@ find_derivation (const char *toset, const char *toset_expand,
 			      handle, nsteps);
   if (result == __GCONV_OK)
     {
-      __libc_lock_unlock (lock);
+#ifndef STATIC_GCONV
+      result = increment_counter (*handle, *nsteps);
+#endif
       return result;
     }
 
@@ -604,8 +627,6 @@ find_derivation (const char *toset, const char *toset_expand,
   add_derivation (fromset_expand ?: fromset, toset_expand ?: toset,
 		  *handle, *nsteps);
 
-  __libc_lock_unlock (lock);
-
   return result;
 }
 
@@ -666,31 +687,6 @@ __gconv_find_transform (const char *toset, const char *fromset,
 
   result = find_derivation (toset, toset_expand, fromset, fromset_expand,
 			    handle, nsteps);
-
-#ifndef STATIC_GCONV
-  /* Increment the user counter.  */
-  if (result == __GCONV_OK)
-    {
-      size_t cnt = *nsteps;
-      struct __gconv_step *steps = *handle;
-
-      while (cnt > 0)
-	if (steps[--cnt].__counter++ == 0)
-	  {
-	    steps[cnt].__shlib_handle =
-	      __gconv_find_shlib (steps[cnt].__modname);
-	    if (steps[cnt].__shlib_handle == NULL)
-	      {
-		/* Oops, this is the second time we use this module (after
-		   unloading) and this time loading failed!?  */
-		while (++cnt < *nsteps)
-		  __gconv_release_shlib (steps[cnt].__shlib_handle);
-		result = __GCONV_NOCONV;
-		break;
-	      }
-	  }
-    }
-#endif
 
   /* Release the lock.  */
   __libc_lock_unlock (lock);

@@ -28,6 +28,13 @@
 
 #include <gconv_int.h>
 
+
+#ifdef DEBUG
+/* For debugging purposes.  */
+static void print_all (void);
+#endif
+
+
 /* This is a tuning parameter.  If a transformation module is not used
    anymore it gets not immediately unloaded.  Instead we wait a certain
    number of load attempts for further modules.  If none of the
@@ -50,7 +57,7 @@ known_compare (const void *p1, const void *p2)
   const struct __gconv_loaded_object *s2 =
     (const struct __gconv_loaded_object *) p2;
 
-  return (intptr_t) s1->handle - (intptr_t) s2->handle;
+  return strcmp (s1->name, s2->name);
 }
 
 /* Open the gconv database if necessary.  A non-negative return value
@@ -198,3 +205,24 @@ free_mem (void)
   __tdestroy (loaded, do_release_all);
 }
 text_set_element (__libc_subfreeres, free_mem);
+
+
+#ifdef DEBUG
+static void
+do_print (const void *nodep, VISIT value, int level)
+{
+  struct __gconv_loaded_object *obj = *(struct __gconv_loaded_object **) nodep;
+
+  printf ("%10s: \"%s\", %d\n",
+	  value == leaf ? "leaf" :
+	  value == preorder ? "preorder" :
+	  value == postorder ? "postorder" : "endorder",
+	  obj->name, obj->counter);
+}
+
+static void
+print_all (void)
+{
+  __twalk (loaded, do_print);
+}
+#endif

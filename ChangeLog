@@ -1,3 +1,12 @@
+1999-12-07  Ulrich Drepper  <drepper@cygnus.com>
+
+	* iconv/gconv_db.c (gen_steps): Set __counter initialy to 1.
+	(increment_counter): New function.  Broken out of find_derivation.
+	(find_derivation): No need for a lock.  Increment counter only when
+	the derivation was already available.
+	* iconv/gconv_dl.c: Add debugging functions.
+	(known_compare): We have to use strcmp.
+
 1999-12-06  Ulrich Drepper  <drepper@cygnus.com>
 
 	* iconvdata/sami-ws2.c (CHARSET_NAME): Fix typo.
