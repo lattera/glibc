@@ -51,6 +51,7 @@ sendmsg		-	sendmsg		3	__libc_sendmsg	__sendmsg sendmsg
 sendto		-	sendto		6	__libc_sendto	__sendto sendto
 setsockopt	-	setsockopt	5	__setsockopt	setsockopt
 shutdown	-	shutdown	2	__shutdown	shutdown
+socket		-	socket		3	__socket	socket
 socketpair	-	socketpair	4	__socketpair	socketpair
 sysctl		-	_sysctl		6	sysctl
 
