@@ -19,18 +19,69 @@
 
 #ifdef	__GNUC__
 
-#include <sys/cdefs.h>
+#ifdef __USE_ISOC9X
+
+/* ISO C 9X defines some macros to perform unordered comparisons.  The
+   m68k FPU supports this with special opcodes and we should use them.
+   These must not be inline functions since we have to be able to handle
+   all floating-point types.  */
+# define isgreater(x, y)					\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+# define isgreaterequal(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+# define isless(x, y)					\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+# define islessequal(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsole %0"		\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+# define islessgreater(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+
+# define isunordered(x, y)				\
+   __extension__					\
+   ({ char __result;					\
+      __asm__ ("fcmp%.x %2,%1; fsun %0"			\
+	       : "=dm" (__result) : "f" (x), "f" (y));	\
+      (int) __result; })
+#endif
+
+
+#if (!defined __NO_MATH_INLINES && defined __OPTIMIZE__) \
+    || defined __LIBC_M81_MATH_INLINES
 
 #ifdef	__LIBC_M81_MATH_INLINES
 /* This is used when defining the functions themselves.  Define them with
    __ names, and with `static inline' instead of `extern inline' so the
    bodies will always be used, never an external function call.  */
-#define	__m81_u(x)	__CONCAT(__,x)
-#define __m81_inline	static __inline
+# define __m81_u(x)		__CONCAT(__,x)
+# define __m81_inline		static __inline
 #else
-#define	__m81_u(x)	x
-#define __m81_inline	extern __inline
-#define	__M81_MATH_INLINES	1
+# define __m81_u(x)		x
+# define __m81_inline		extern __inline
+# define __M81_MATH_INLINES	1
 #endif
 
 /* Define a const math function.  */
@@ -385,55 +436,7 @@ __inline_forward(void,sincosl,
 #undef __inline_forward
 #undef __inline_forward_c
 
-#ifdef __USE_ISOC9X
-
-/* ISO C 9X defines some macros to perform unordered comparisons.  The
-   m68k FPU supports this with special opcodes and we should use them.
-   These must not be inline functions since we have to be able to handle
-   all floating-point types.  */
-# define isgreater(x, y)					\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsogt %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-
-# define isgreaterequal(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsoge %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-
-# define isless(x, y)					\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsolt %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-
-# define islessequal(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsole %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-
-# define islessgreater(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsogl %0"		\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-
-# define isunordered(x, y)				\
-   __extension__					\
-   ({ char __result;					\
-      __asm__ ("fcmp%.x %2,%1; fsun %0"			\
-	       : "=dm" (__result) : "f" (x), "f" (y));	\
-      (int) __result; })
-#endif
-
 #endif /* !__NO_MATH_INLINES && __OPTIMIZE__ */
 
+#endif
 #endif	/* GCC.  */
