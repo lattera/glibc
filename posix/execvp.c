@@ -189,7 +189,7 @@ execvp (file, argv)
 	__set_errno (EACCES);
 
       free (script_argv);
-      free (name);
+      free (name - pathlen);
       if (path_malloc)
 	free (path);
     }
