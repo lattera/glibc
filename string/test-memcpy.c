@@ -1,5 +1,5 @@
 /* Test and measure memcpy functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -71,7 +71,9 @@ do_one_test (impl_t *impl, char *dst, const char *src,
 
   if (HP_TIMING_AVAIL)
     {
-      hp_timing_t start, stop, best_time = ~ (hp_timing_t) 0;
+      hp_timing_t start __attribute ((unused));
+      hp_timing_t stop __attribute ((unused));
+      hp_timing_t best_time = ~ (hp_timing_t) 0;
       size_t i;
 
       for (i = 0; i < 32; ++i)
@@ -172,7 +174,7 @@ do_random_tests (void)
 	      if (align2 + len > size2)
 		align2 = size2 - len;
 	    }
-	}	    
+	}
       p1 = buf1 + page_size - size1;
       p2 = buf2 + page_size - size2;
       c = random () & 255;

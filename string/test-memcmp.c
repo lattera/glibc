@@ -54,7 +54,9 @@ do_one_test (impl_t *impl, const char *s1, const char *s2, size_t len,
 
   if (HP_TIMING_AVAIL)
     {
-      hp_timing_t start, stop, best_time = ~ (hp_timing_t) 0;
+      hp_timing_t start __attribute ((unused));
+      hp_timing_t stop __attribute ((unused));
+      hp_timing_t best_time = ~ (hp_timing_t) 0;
       size_t i;
 
       for (i = 0; i < 32; ++i)

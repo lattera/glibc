@@ -1,5 +1,5 @@
 /* Test and measure memchr functions.
-   Copyright (C) 1999, 2002 Free Software Foundation, Inc.
+   Copyright (C) 1999, 2002, 2003 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Written by Jakub Jelinek <jakub@redhat.com>, 1999.
 
@@ -50,7 +50,9 @@ do_one_test (impl_t *impl, const char *s, int c, size_t n, char *exp_res)
 
   if (HP_TIMING_AVAIL)
     {
-      hp_timing_t start, stop, best_time = ~ (hp_timing_t) 0;
+      hp_timing_t start __attribute ((unused));
+      hp_timing_t stop __attribute ((unused));
+      hp_timing_t best_time = ~ (hp_timing_t) 0;
       size_t i;
 
       for (i = 0; i < 32; ++i)
@@ -74,7 +76,7 @@ do_test (size_t align, size_t pos, size_t len, int seek_char)
   align &= 7;
   if (align + len >= page_size)
     return;
-                                  
+
   for (i = 0; i < len; ++i)
     {
       buf1[align + i] = 1 + 23 * i % 127;

@@ -31,6 +31,20 @@
 
 	* string/test-strncpy.c (do_one_test): Mark start and stop as
 	possibly unused.
+	* string/test-memchr.c: Likewise.
+	* string/test-memcmp.c: Likewise.
+	* string/test-memcpy.c: Likewise.
+	* string/test-memmove.c: Likewise.
+	* string/test-memset.c: Likewise.
+	* string/test-strcat.c: Likewise.
+	* string/test-strchr.c: Likewise.
+	* string/test-strcmp.c: Likewise.
+	* string/test-strcpy.c: Likewise.
+	* string/test-strlen.c: Likewise.
+	* string/test-strncmp.c: Likewise.
+	* string/test-strpbrk.c: Likewise.
+	* string/test-strrchr.c: Likewise.
+	* string/test-strspn.c: Likewise.
 
 2003-04-15  Roland McGrath  <roland@redhat.com>
 
