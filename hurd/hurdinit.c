@@ -1,4 +1,4 @@
-/* Copyright (C) 1992, 93, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1992,93,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -154,7 +154,16 @@ _hurd_new_proc_init (char **argv,
      here, like _hurd_pid, are already initialized.  */
   RUN_HOOK (_hurd_proc_subinit, ());
 
-  if (_hurdsig_traced)
+  /* XXX This code should probably be removed entirely at some point.  This
+     conditional should make it reasonably usable with old gdb's for a
+     while.  Eventually it probably makes most sense for the exec server to
+     mask out EXEC_SIGTRAP so the debugged program is closer to not being
+     able to tell it's being debugged.  */
+  if (_hurdsig_traced
+#ifdef EXEC_SIGTRAP
+      && !(_hurd_exec_flags & EXEC_SIGTRAP)
+#endif
+      )
     /* This process is "traced", meaning it should stop on signals or exec.
        We are all set up now to handle signals.  Stop ourselves, to inform
        our parent (presumably a debugger) that the exec has completed.  */
