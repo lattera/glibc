@@ -1,5 +1,5 @@
 /* FPU control word bits.  i387 version.
-   Copyright (C) 1993, 1995, 1996, 1997, 1998, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1993,1995,1996,1997,1998,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Olaf Flebbe.
 
@@ -64,9 +64,9 @@
 #define _FPU_MASK_PM  0x20
 
 /* precision control */
-#define _FPU_EXTENDED 0x300
-#define _FPU_DOUBLE   0x200	/* fdlibm requires double precision */
-#define _FPU_SINGLE   0x0     /* DO NOT USE */
+#define _FPU_EXTENDED 0x300	/* libm requires double extended precision.  */
+#define _FPU_DOUBLE   0x200
+#define _FPU_SINGLE   0x0
 
 /* rounding control */
 #define _FPU_RC_NEAREST 0x0    /* RECOMMENDED */
