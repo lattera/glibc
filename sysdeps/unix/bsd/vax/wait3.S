@@ -20,6 +20,8 @@ Cambridge, MA 02139, USA.  */
 
 .globl ___wait3
 ___wait3:
+	movel 8(ap), r1
+	movel 12(ap), r0
 	/* Set all condition codes to tell the kernel this is wait3.  */
 	bispsw $15
 	chmk $SYS_wait
