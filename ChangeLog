@@ -1,3 +1,8 @@
+2003-03-20  Ulrich Drepper  <drepper@redhat.com>
+
+	* include/atomic.h (atomic_decrement_if_positive): Adjust for the
+	correct atomic_compare_and_exchange_acq semantics.
+
 2003-03-20  Alexandre Oliva  <aoliva@redhat.com>
 
 	* sysdeps/mips/ieee754.h: Remove excess #endif.
