@@ -376,6 +376,37 @@ elf_machine_plt_value (struct link_map *map, const Elf32_Rel *reloc,
 
 extern char **_dl_argv;
 
+/* Deal with an out-of-range PC24 reloc.  */
+static Elf32_Addr
+fix_bad_pc24 (Elf32_Addr *const reloc_addr, Elf32_Addr value)
+{
+  static void *fix_page;
+  static unsigned int fix_offset;
+  static size_t pagesize;
+  Elf32_Word *fix_address;
+
+  if (! fix_page)
+    {
+      if (! pagesize)
+	pagesize = getpagesize ();
+      fix_page = mmap (NULL, pagesize, PROT_READ | PROT_WRITE | PROT_EXEC,
+		       MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+      if (! fix_page)
+	assert (! "could not map page for fixup");
+      fix_offset = 0;
+    }
+
+  fix_address = (Elf32_Word *)(fix_page + fix_offset);
+  fix_address[0] = 0xe51ff004;	/* ldr pc, [pc, #-4] */
+  fix_address[1] = value;
+
+  fix_offset += 8;
+  if (fix_offset >= pagesize)
+    fix_page = NULL;
+
+  return (Elf32_Addr)fix_address;
+}
+
 /* Perform the relocation specified by RELOC and SYM (which is fully resolved).
    MAP is the object containing the reloc.  */
 
@@ -452,18 +483,19 @@ elf_machine_rel (struct link_map *map, const Elf32_Rel *reloc,
 	  }
 	case R_ARM_PC24:
 	  {
-	     signed int addend;
+	     Elf32_Sword addend;
+	     Elf32_Addr newvalue;
 
 	     addend = *reloc_addr & 0x00ffffff;
 	     if (addend & 0x00800000) addend |= 0xff000000;
 
-	     value = value - (unsigned int)reloc_addr + (addend << 2);
-	     if (value & 0xfc000003)
-	       _dl_signal_error (0, map->l_name,
-			  "R_ARM_PC24 relocation out of range");
+	     newvalue = value - (Elf32_Addr)reloc_addr + (addend << 2);
+	     if (newvalue & 0xfc000003)
+	       newvalue = fix_bad_pc24(reloc_addr, value) 
+		 - (Elf32_Addr)reloc_addr + (addend << 2);
 
-	     value = value >> 2;
-	     value = (*reloc_addr & 0xff000000) | (value & 0x00ffffff);
+	     newvalue = newvalue >> 2;
+	     value = (*reloc_addr & 0xff000000) | (newvalue & 0x00ffffff);
 	     *reloc_addr = value;
 	  }
 	break;
