@@ -1,3 +1,7 @@
+2002-08-31  Ulrich Drepper  <drepper@redhat.com>
+
+	* time/tst-ftime_l.c (main): Also test strftime with uselocale.
+
 2002-08-31  Roland McGrath  <roland@redhat.com>
 
 	* locale/newlocale.c (__newlocale): Don't use strdup for names.
@@ -24,7 +28,7 @@
 2002-08-31  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/gnu/Makefile: Only depend on Versions.v.i for
-	errlist-compat.c if build-shared==yes.
+	errlist-compat.c if versioning==yes.
 
 2002-08-31  Andreas Jaeger  <aj@suse.de>
 
