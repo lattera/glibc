@@ -1,3 +1,11 @@
+2004-04-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/powerpc/tls.h (TLS_INIT_TP): Eliminate lvalue cast from
+	__thread_self assignment.
+	(THREAD_DTV): Replace __thread_register with __thread_self.
+	(INIT_THREAD_SELF): Eliminate lvalue cast from __thread_self
+	assignment.
+
 2004-04-08  Alexandre Oliva  <aoliva@redhat.com>
 
 	* signals.c (pthread_sigmask): Don't ever block or mask

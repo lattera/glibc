@@ -63,6 +63,8 @@ __ffs (x)
 }
 
 weak_alias (__ffs, ffs)
+#if ULONG_MAX == UINT_MAX
 #undef ffsl
 weak_alias (__ffs, ffsl)
+#endif
 

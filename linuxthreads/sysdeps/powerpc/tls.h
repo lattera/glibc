@@ -92,19 +92,24 @@ typedef struct
 /* Return dtv of given thread descriptor.  */
 #  define GET_DTV(TCBP)	(((tcbhead_t *) (TCBP))[-1].dtv)
 
-/* The global register variable is declared in pt-machine.h with
-   the wrong type, but the compiler doesn't like us declaring another.  */
+/* We still need this define so that tcb-offsets.sym can override it and
+   use THREAD_SELF to generate MULTIPLE_THREADS_OFFSET.  */
 #  define __thread_register ((void *) __thread_self)
 
 /* Code to initially initialize the thread pointer.  This might need
    special attention since 'errno' is not yet available and if the
-   operation can cause a failure 'errno' must not be touched.  */
+   operation can cause a failure 'errno' must not be touched.
+   
+   The global register variable is declared in pt-machine.h with the 
+   wrong type, so we need some extra casts to get the desired result.  
+   This avoids a lvalue cast that gcc-3.4 does not like.  */
 # define TLS_INIT_TP(TCBP, SECONDCALL) \
-    (__thread_register = (void *) (TCBP) + TLS_TCB_OFFSET, NULL)
+    (__thread_self = (struct _pthread_descr_struct *) \
+	((void *) (TCBP) + TLS_TCB_OFFSET), NULL)
 
 /* Return the address of the dtv for the current thread.  */
 #  define THREAD_DTV() \
-     (((tcbhead_t *) (__thread_register - TLS_TCB_OFFSET))[-1].dtv)
+     (((tcbhead_t *) ((void *) __thread_self - TLS_TCB_OFFSET))[-1].dtv)
 
 /* Return the thread descriptor for the current thread.  */
 #  undef THREAD_SELF
@@ -114,7 +119,7 @@ typedef struct
 
 #  undef INIT_THREAD_SELF
 #  define INIT_THREAD_SELF(DESCR, NR) \
-     (__thread_register = ((void *) (DESCR) \
+     (__thread_self = (struct _pthread_descr_struct *)((void *) (DESCR) \
 		           + TLS_TCB_OFFSET + TLS_PRE_TCB_SIZE))
 
 /* Make sure we have the p_multiple_threads member in the thread structure.

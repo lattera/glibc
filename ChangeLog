@@ -1,3 +1,11 @@
+2004-04-09  Thorsten Kukuk  <kukuk@suse.de>
+
+	* sysdeps/s390/ffs.c: Don't add ffsl weak alias on s390x.
+
+2004-04-09  Steven Munroe  <sjmunroe@us.ibm.com>
+
+	* sysdeps/unix/sysv/linux/powerpc/powerpc64/umount.c: New file.
+
 2004-04-09  Andreas Schwab  <schwab@suse.de>
 
 	* sysdeps/unix/sysv/linux/m68k/sysdep.h (INTERNAL_SYSCALL): Add
