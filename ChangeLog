@@ -1,3 +1,15 @@
+2004-07-25  Ulrich Drepper  <drepper@redhat.com>
+
+	* inet/Versions [libc, GLIBC_2.3.4]: Add getipv4sourcefilter,
+	getsourcefilter, setipv4sourcefilter, and setsourcefilter.
+	* inet/Makefile (routines): Likewise.
+	* inet/netinet/in.h: Add prototypes for getipv4sourcefilter,
+	getsourcefilter, setipv4sourcefilter, and setsourcefilter.
+	* sysdeps/generic/getipv4sourcefilter.c: New file.
+	* sysdeps/generic/setipv4sourcefilter.c: New file.
+	* sysdeps/generic/getsourcefilter.c: New file.
+	* sysdeps/generic/setsourcefilter.c: New file.
+
 2004-07-17  Steven Munroe  <sjmunroe@us.ibm.com>
 
 	* sysdeps/powerpc/powerpc64/memcpy.S: Improve instruction scheduling

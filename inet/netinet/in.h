@@ -417,18 +417,46 @@ struct in6_pktinfo
 
 #ifdef __USE_GNU
 /* Hop-by-Hop and Destination Options Processing.  */
-extern int inet6_option_space (int __nbytes);
+extern int inet6_option_space (int __nbytes) __THROW;
 extern int inet6_option_init (void *__bp, struct cmsghdr **__cmsgp,
-			      int __type);
+			      int __type) __THROW;
 extern int inet6_option_append (struct cmsghdr *__cmsg,
 				__const uint8_t *__typep, int __multx,
-				int __plusy);
+				int __plusy) __THROW;
 extern uint8_t *inet6_option_alloc (struct cmsghdr *__cmsg, int __datalen,
-				    int __multx, int __plusy);
+				    int __multx, int __plusy) __THROW;
 extern int inet6_option_next (__const struct cmsghdr *__cmsg,
-			      uint8_t **__tptrp);
+			      uint8_t **__tptrp) __THROW;
 extern int inet6_option_find (__const struct cmsghdr *__cmsg,
-			      uint8_t **__tptrp, int __type);
+			      uint8_t **__tptrp, int __type) __THROW;
+
+
+/* Multicast source filter support.  */
+
+/* Get IPv4 source filter.  */
+extern int getipv4sourcefilter (int __s, struct in_addr __interface,
+				struct in_addr __group, uint32_t *__fmode,
+				uint32_t *__numsrc, struct in_addr *__slist)
+     __THROW;
+
+/* Set IPv4 source filter.  */
+extern int setipv4sourcefilter (int __s, struct in_addr __interface,
+				struct in_addr __group, uint32_t __fmode,
+				uint32_t __numsrc, struct in_addr *__slist)
+     __THROW;
+
+
+/* Get source filter.  */
+extern int getsourcefilter (int __s, uint32_t __interface,
+			    struct sockaddr *__group, socklen_t __grouplen,
+			    uint32_t *__fmode, uint32_t *__numsrc,
+			    struct sockaddr_storage *__slist) __THROW;
+
+/* Set source filter.  */
+extern int setsourcefilter (int __s, uint32_t __interface,
+			    struct sockaddr *__group, socklen_t __grouplen,
+			    uint32_t __fmode, uint32_t __numsrc,
+			    struct sockaddr_storage *__slist) __THROW;
 #endif	/* use GNU */
 
 __END_DECLS

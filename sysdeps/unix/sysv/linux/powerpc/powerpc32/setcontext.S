@@ -397,7 +397,7 @@ compat_symbol (libc, __novec_setcontext, setcontext, GLIBC_2_3_3)
 
 #endif
 
-#if SHLIB_COMPAT (libc, GLIBC_2_1, GLIBC_2_3_3)
+#if SHLIB_COMPAT (libc, GLIBC_2_0, GLIBC_2_3_3)
 
 #define _ERRNO_H	1
 #include <bits/errno.h>
@@ -409,6 +409,6 @@ ENTRY (__setcontext_stub)
 END (__setcontext_stub)
 	.previous
 
-compat_symbol (libc, __setcontext_stub, setcontext, GLIBC_2_1)
+compat_symbol (libc, __setcontext_stub, setcontext, GLIBC_2_0)
 
 #endif

@@ -74,6 +74,10 @@ libc {
     inet6_option_space; inet6_option_init; inet6_option_append;
     inet6_option_alloc; inet6_option_next; inet6_option_find;
   }
+  GLIBC_2.3.4 {
+    getipv4sourcefilter; setipv4sourcefilter;
+    getsourcefilter; setsourcefilter;
+  }
   GLIBC_PRIVATE {
     # functions used in other libraries
     __internal_endnetgrent; __internal_getnetgrent_r;
