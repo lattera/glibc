@@ -1,5 +1,7 @@
 1999-10-29  Ulrich Drepper  <drepper@cygnus.com>
 
+	* stdlib/tst-strtod.c: Add more hexadecimal tests.
+
 	* stdlib/strtod.c: Handle hexadecimal numbers with leading digit
 	!= 1 correctly.
 
