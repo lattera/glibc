@@ -61,8 +61,7 @@ libc {
 
     # g*
     get_privileged_ports;
-    getauth; getcrdir; getcwdir; getcttyid; getdport; geteuids;
-    getproc; getumask;
+    getauth; getcrdir; getcwdir; getcttyid; getdport; getproc; getumask;
 
     # h*
     hurd_catch_signal;
@@ -83,12 +82,19 @@ libc {
     pid2task;
 
     # s*
-    setauth; setcrdir; setcwdir; seteuids; setproc; setcttyid;
+    setauth; setcrdir; setcwdir; setproc; setcttyid;
 
     # t*
     task2pid;
 
     # v*
     vpprintf;
+  }
+  GLIBC_2.1 {
+    # g*
+    geteuids;
+
+    # s*
+    seteuids;
   }
 }
