@@ -21,6 +21,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <time.h>
+#include <unistd.h>
 
 #include "posix-timer.h"
 
@@ -38,7 +39,10 @@ timer_create (clock_id, evp, timerid)
 
   if (clock_id != CLOCK_REALTIME
 #ifdef _POSIX_CPUTIME
-      && clock_id != CLOCK_CPUTIME
+      && clock_id != CLOCK_PROCESS_CPUTIME_ID
+#endif
+#ifdef _POSIX_THREAD_CPUTIME
+      && clock_id != CLOCK_THREAD_CPUTIME_ID
 #endif
       )
     {
