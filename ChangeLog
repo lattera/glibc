@@ -1,3 +1,10 @@
+2004-05-26  Roland McGrath  <roland@frob.com>
+
+	* sysdeps/generic/bits/in.h
+	(IMPLINK_IP, IMPLINK_LOWEXPER, IMPLINK_HIGHEXPER): Macros removed.
+	These are long obsolete in BSD systems where they originated.
+	* conform/data/netinet/in.h-data: Remove `allow IMPLINK_*'
+
 2004-05-26  Jakub Jelinek  <jakub@redhat.com>
 
 	* include/string.h (mempcpy, stpcpy): Add libc_hidden_builtin_proto.
