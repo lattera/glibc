@@ -67,7 +67,7 @@ td_ta_map_lwp2thr (const td_thragent_t *ta, lwpid_t lwpid, td_thrhandle_t *th)
 	if (ps_pdread (ta->ph, phc[cnt].h_descr, &pds, sizeof_descr) != PS_OK)
 	  return TD_ERR;	/* XXX Other error value?  */
 
-	if (pds.p_pid == lwpid)
+	if (pds.p_pid ?: ps_getpid (ta->ph) == lwpid)
 	  {
 	    /* Found it.  Now fill in the `td_thrhandle_t' object.  */
 	    th->th_ta_p = (td_thragent_t *) ta;

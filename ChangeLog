@@ -1,5 +1,12 @@
 1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
 
+	* math/fenv.h: Include bits/fenvinline.h if optimizing.
+	* sysdeps/powerpc/fpu/bits/fenv.h: Remove inline functions.  Moved to..
+	* sysdeps/powerpc/fpu/bits/fenvinline.h: ...here.  New file.
+	* sysdeps/generic/bits/fenv.h: New file.
+
+1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
+
 	* misc/tst-efgcvt.c (output_r_error): Remove extra parameter to
 	printf call.
 

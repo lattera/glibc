@@ -1,3 +1,9 @@
+1999-11-10  Ulrich Drepper  <drepper@cygnus.com>
+
+	* td_ta_map_lwp2thr.c: If p_pid field is zero, this is before the
+	thread library is initialized and we get the PID from the
+	debugger.
+
 1999-11-08  Ulrich Drepper  <drepper@cygnus.com>
 
 	* td_thr_get_info.c: Make sure ti_lid is never zero.

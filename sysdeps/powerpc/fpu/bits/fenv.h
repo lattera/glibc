@@ -1,4 +1,4 @@
-/* Copyright (C) 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1997, 1998, 1999 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -140,45 +140,6 @@ extern const fenv_t __fe_nonieee_env;
    just evaluating this value will set the processor into 'FPU
    exceptions imprecise recoverable' mode, which may cause a significant
    performance penalty (but have no other visible effect).  */
-extern const fenv_t *__fe_nomask_env __P ((void));
+extern const fenv_t *__fe_nomask_env (void);
 # define FE_NOMASK_ENV	(__fe_nomask_env ())
 #endif
-
-#if defined __OPTIMIZE__ && !defined _SOFT_FLOAT
-/* Inline definition for fegetround.  */
-# define fegetround() \
-  (__extension__  ({ int __fegetround_result;				      \
-		     __asm__ ("mcrfs 7,7 ; mfcr %0"			      \
-			     : "=r"(__fegetround_result) : : "cr7");	      \
-		     __fegetround_result & 3; }))
-
-/* The weird 'i#*X' constraints on the following suppress a gcc
-   warning when __excepts is not a constant.  Otherwise, they mean the
-   same as just plain 'i'.  */
-
-/* Inline definition for feraiseexcept.  */
-# define feraiseexcept(__excepts) \
-  ((__builtin_constant_p (__excepts)					      \
-    && ((__excepts) & ((__excepts)-1)) == 0				      \
-    && (__excepts) != FE_INVALID)					      \
-   ? ((__excepts) != 0							      \
-      ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb1 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  (void)0; }))					      \
-      : (void)0)							      \
-   : (feraiseexcept) (__excepts))
-
-/* Inline definition for feclearexcept.  */
-# define feclearexcept(__excepts) \
-  ((__builtin_constant_p (__excepts)					      \
-    && ((__excepts) & ((__excepts)-1)) == 0				      \
-    && (__excepts) != FE_INVALID)					      \
-   ? ((__excepts) != 0							      \
-      ? (__extension__ ({ __asm__ __volatile__				      \
-			  ("mtfsb0 %s0"					      \
-			   : : "i#*X"(__builtin_ffs (__excepts)));	      \
-			  (void)0; }))					      \
-      : (void)0)							      \
-   : (feclearexcept) (__excepts))
-#endif /* __OPTIMIZE__ && !_SOFT_FLOAT */

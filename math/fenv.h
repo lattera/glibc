@@ -109,6 +109,12 @@ extern int fesetenv (__const fenv_t *__envp) __THROW;
    according to saved exceptions.  */
 extern int feupdateenv (__const fenv_t *__envp) __THROW;
 
+
+/* Include optimization.  */
+#ifdef __OPTIMIZE__
+# include <bits/fenvinline.h>
+#endif
+
 __END_DECLS
 
 #endif /* fenv.h */
