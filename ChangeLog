@@ -1,3 +1,9 @@
+2000-09-12  Ulrich Drepper  <drepper@redhat.com>
+
+	* iconvdata/gb18030.c: Many many changes.  Make consistent with
+	charmap and with itself.
+	* iconvdata/tst-tables.sh: Test GB18030.
+
 2000-09-11  Ulrich Drepper  <drepper@redhat.com>
 
 	* iconv/skeleton.c: Fix last patch, add missing parameter to

@@ -193,7 +193,7 @@ cat <<EOF |
   EUC-CN            GB2312
   #GBK                                  Converter uses private area characters
   EUC-TW
-  #GB18030                              Broken, please fix it
+  GB18030
   #
   # Stateful encodings not testable this way
   #
