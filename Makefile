@@ -295,7 +295,8 @@ distribute  := README INSTALL FAQ NOTES NEWS PROJECTS			\
 	       config.h.in config.make.in config-name.in Makefile.in	\
 	       autolock.sh rellns-sh munch-tmpl.c munch.awk interp.c	\
 	       sysdep.h set-hooks.h libc-symbols.h version.h shlib-versions \
-	       rpm/Makefile rpm/template rpm/rpmrc nsswitch.h netgroup.h
+	       rpm/Makefile rpm/template rpm/rpmrc nsswitch.h netgroup.h \
+	       mcheck.h
 
 distribute := $(strip $(distribute))
 generated := $(generated) stubs.h version-info.h

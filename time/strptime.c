@@ -129,7 +129,7 @@ localtime_r (t, tp)
 #endif
 #define recursive(new_fmt) \
   (*(new_fmt) != '\0'							      \
-   || strptime_internal (rp, (new_fmt), tm, decided) != NULL)
+   && strptime_internal (rp, (new_fmt), tm, decided) != NULL)
 
 
 #ifdef _LIBC

@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,15 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <time.h>
-
-time_t
-timegm (tmp)
-     struct tm *const tmp;
-{
-  static time_t gmtime_offset;
-  tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
-}
+#define DONT_LOAD_G1
+#include <sysdep.h>
+ENTRY (__libc_syscall)
+	or	%o0,%g0,%g1
+	or	%o1,%g0,%o0
+	or	%o2,%g0,%o1
+	or	%o3,%g0,%o2
+	or	%o4,%g0,%o3
+	or	%o5,%g0,%o4
+PSEUDO_NOENT(__libc_syscall, syscall, 5)
+	ret
+SYSCALL__POST(syscall,5)

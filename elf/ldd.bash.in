@@ -29,23 +29,39 @@ TEXTDOMAIN=libc
 TEXTDOMAINDIR=@TEXTDOMAINDIR@
 
 RTLD=@RTLD@
+RELOCS=
 
 while test $# -gt 0; do
   case "$1" in
-  --v*)
+  --v | --ve | --ver | --vers | --versi | --versio | --version)
     echo $"ldd (GNU libc) @VERSION@
 Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
     exit 0 ;;
-  --h*)
+  --h | --he | --hel | --help)
     echo $"ldd [OPTION]... FILE...
-  --help           print this help and exit
-  --version        print version information and exit
+      --help              print this help and exit
+      --version           print version information and exit
+  -d, --data-relocs       process data relocations
+  -r, --function-relocs   process data and function relocations
 Report bugs using the \`glibcbug' script to <bugs@gnu.ai.mit.edu>."
     exit 0 ;;
+  -d | --d | --da | --dat | --data | --data- | --data-r | --data-re | \
+  --data-rel | --data-relo | --data-reloc | --data-relocs)
+    RELOCS='--data-relocs'
+    shift ;;
+  -r | --f | --fu | --fun | --func | --funct | --functi | --functio | \
+  --function | --function- | --function-r | --function-re | --function-rel | \
+  --function-relo | --function-reloc | --function-relocs)
+    RELOCS='--function-relocs'
+    shift ;;
   --)		# Stop option processing.
     shift; break ;;
+  -*)
+    echo >&2 $"ldd: unrecognized option" "\`$1'"
+    echo >&2 $"Try \`ldd --help' for more information."
+    exit 1 ;;
   *)
     break ;;
   esac
@@ -53,9 +69,8 @@ done
 
 case $# in
 0)
-  echo >&2 $"\
-ldd: missing file arguments
-Try \`ldd --help' for more information."
+  echo >&2 $"ldd: missing file arguments"
+  echo >&2 $"Try \`ldd --help' for more information."
   exit 1 ;;
 1)
   # We don't list the file name when there is only one.
@@ -65,14 +80,21 @@ Try \`ldd --help' for more information."
   esac
   if test ! -f "$file"; then
     echo "${file}:" $"no such file"
-  elif ${RTLD} --verify "$file"; then
-    LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} "$file" && exit 1
+    exit 1
   else
-    echo $"	not a dynamic executable"
+    test -x "$file" ||
+      echo $"warning: you do not have execution permission for" "\`$file'"
+    if ${RTLD} --verify "$file"; then
+      LD_TRACE_LOADED_OBJECTS=1 exec ${RTLD} ${RELOCS} "$file" || exit 1
+    else
+      echo $"	not a dynamic executable"
+      exit 1
+    fi
   fi
   exit ;;
 *)
   set -e	# Bail out immediately if ${RTLD} loses on any argument.
+  result=0
   for file; do
     echo "${file}:"
     case "$file" in
@@ -80,16 +102,22 @@ Try \`ldd --help' for more information."
     *) file="./$file" ;;
     esac
     if test ! -f "$file"; then
-      echo "$file:" $"no such file"
-    elif ${RTLD} --verify "$file"; then
-      LD_TRACE_LOADED_OBJECTS=1 ${RTLD} "$file"
+      echo "${file}:" $"no such file"
+      result=1
     else
-      echo $"	not a dynamic executable"
+      test -x "$file" ||
+	echo $"warning: you do not have execution permission for" "\`$file'"
+      if ${RTLD} --verify "$file"; then
+	LD_TRACE_LOADED_OBJECTS=1 ${RTLD} ${RELOCS} "$file" || result=1
+      else
+	echo $"	not a dynamic executable"
+	result=1
+      fi
     fi
   done
 esac
 
-exit 0
+exit $result
 # Local Variables:
 #  mode:ksh
 # End:

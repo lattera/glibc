@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Copyright (C) 1991, 1992, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +16,27 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <time.h>
+#include <errno.h>
+#include <signal.h>
 
-time_t
-timegm (tmp)
-     struct tm *const tmp;
+/* Set the handler for the signal SIG to HANDLER,
+   returning the old handler, or SIG_ERR on error.  */
+__sighandler_t
+__sysv_signal (sig, handler)
+     int sig;
+     __sighandler_t handler;
 {
-  static time_t gmtime_offset;
-  tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
+  /* Check signal extents to protect __sigismember.  */
+  if (handler == SIG_ERR || sig < 1 || sig >= NSIG)
+    {
+      __set_errno (EINVAL);
+      return SIG_ERR;
+    }
+
+  __set_errno (ENOSYS);
+
+  return SIG_ERR;
 }
+weak_alias (__sysv_signal, sysv_signal)
+
+stub_warning (sysv_signal)

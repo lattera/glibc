@@ -37,6 +37,11 @@ struct catch
    this is null.  */
 static struct catch *catch;
 
+/* This points to a function which is called when an error is
+   received.  Unlike the handling of `catch' this function may return.
+   The arguments will be the `errstring' and `objname'.  */
+static receiver_fct receiver;
+
 
 void
 _dl_signal_error (int errcode,
@@ -58,6 +63,13 @@ _dl_signal_error (int errcode,
       catch->objname = objname;
       longjmp (catch->env, errcode ?: -1);
     }
+  else if (receiver)
+    {
+      /* We are inside _dl_receive_error.  Call the user supplied
+	 handler and resume the work.  The receiver will still
+	 installed.  */
+      (*receiver) (errstring, objname);
+    }
   else
     {
       /* Lossage while resolving the program's own symbols is always fatal.  */
@@ -77,6 +89,8 @@ _dl_catch_error (char **errstring,
 {
   int errcode;
   struct catch *old, c = { errstring: NULL, objname: NULL };
+  /* We need not handle `receiver' since setting a `catch' is handle
+     before it.  */
 
   old = catch;
   errcode = setjmp (c.env);
@@ -95,4 +109,23 @@ _dl_catch_error (char **errstring,
   *errstring = c.errstring;
   *objname = c.objname;
   return errcode == -1 ? 0 : errcode;
+}
+
+void
+_dl_receive_error (receiver_fct fct, void (*operate) (void))
+{
+  struct catch *old_catch;
+  receiver_fct old_receiver;
+
+  old_catch = catch;
+  old_receiver = receiver;
+
+  /* Set the new values.  */
+  catch = NULL;
+  receiver = fct;
+
+  (*operate) ();
+
+  catch = old_catch;
+  receiver = old_receiver;
 }

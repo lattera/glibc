@@ -1,4 +1,5 @@
-/* Copyright (C) 1994, 1997 Free Software Foundation, Inc.
+/* Low-level statistical profiling support function.  Linux/SPARC version.
+   Copyright (C) 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -16,13 +17,19 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#include <time.h>
+#include <sigcontext.h>
 
-time_t
-timegm (tmp)
-     struct tm *const tmp;
+void
+profil_counter (int signo, __siginfo_t si)
 {
-  static time_t gmtime_offset;
-  tmp->tm_isdst = 0;
-  return __mktime_internal (tmp, __gmtime_r, &gmtime_offset);
+  extern int __sparc_old_signals;
+
+  if (__sparc_old_signals)
+    {
+      struct sigcontext_struct *s = (void *) &si;
+
+      profil_count ((void *) s->sigc_pc);
+    }
+  else
+    profil_count ((void *) si.si_regs.pc);
 }

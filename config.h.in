@@ -35,6 +35,14 @@
    This is defined by configure under --enable-libio.  */
 #undef	USE_IN_LIBIO
 
+/* Define if using ELF and the assembler supports the `.previous'
+   directive.  */
+#undef	HAVE_ASM_PREVIOUS_DIRECTIVE
+
+/* Define if using ELF and the assembler supports the `.popsection'
+   directive.  */
+#undef	HAVE_ASM_POPSECTION_DIRECTIVE
+
 /*
  */
 

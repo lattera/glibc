@@ -6,3 +6,4 @@ clone.S
 sys/io.h
 kernel_termios.h
 sys/acct.h
+sys/procfs.h

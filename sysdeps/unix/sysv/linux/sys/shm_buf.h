@@ -1,4 +1,4 @@
-/* Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+/* Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Ulrich Drepper <drepper@gnu.ai.mit.edu>, August 1995.
 
@@ -48,8 +48,8 @@ struct shmid_ds
   __time_t shm_atime;			/* time of last shmat() */
   __time_t shm_dtime;			/* time of last shmdt() */
   __time_t shm_ctime;			/* time of last change by shmctl() */
-  __pid_t shm_cpid;			/* pid of creator */
-  __pid_t shm_lpid;			/* pid of last shmop */
+  int shm_cpid;				/* pid of creator */
+  int shm_lpid;				/* pid of last shmop */
   unsigned short int shm_nattch;	/* number of current attaches */
   unsigned short int __shm_npages;	/* size of segment (pages) */
   unsigned long int *__shm_pages;	/* array of ptrs to frames -> SHMMAX */

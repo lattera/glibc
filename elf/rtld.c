@@ -44,6 +44,10 @@ extern void *_dl_sysdep_read_whole_file (const char *filename,
 					 size_t *filesize_ptr,
 					 int mmap_prot);
 
+/* Helper function to handle errors while resolving symbols.  */
+static void print_unresolved (const char *errstring, const char *objname);
+
+
 int _dl_argc;
 char **_dl_argv;
 const char *_dl_rpath;
@@ -142,10 +146,18 @@ dl_main (const ElfW(Phdr) *phdr,
   enum { normal, list, verify, trace } mode;
   struct link_map **preloads;
   unsigned int npreloads;
+  const char *preloadlist;
   size_t file_size;
   char *file;
 
   mode = getenv ("LD_TRACE_LOADED_OBJECTS") != NULL ? trace : normal;
+
+  /* LAZY is determined by the parameters --datadeps and --function-deps
+     if we trace the binary.  */
+  if (mode == trace)
+    lazy = -1;
+  else
+    lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
   /* Set up a flag which tells we are just starting.  */
   _dl_starting_up = 1;
@@ -186,22 +198,44 @@ of this helper program; chances are you did not intend to run this program.\n",
       /* Note the place where the dynamic linker actually came from.  */
       _dl_rtld_map.l_name = _dl_argv[0];
 
-      if (! strcmp (_dl_argv[1], "--list"))
-	{
-	  mode = list;
+      while (_dl_argc > 1)
+	if (! strcmp (_dl_argv[1], "--list"))
+	  {
+	    mode = list;
+	    lazy = -1;	/* This means do no dependency analysis.  */
 
-	  ++_dl_skip_args;
-	  --_dl_argc;
-	  ++_dl_argv;
-	}
-      else if (! strcmp (_dl_argv[1], "--verify"))
-	{
-	  mode = verify;
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+	else if (! strcmp (_dl_argv[1], "--verify"))
+	  {
+	    mode = verify;
 
-	  ++_dl_skip_args;
-	  --_dl_argc;
-	  ++_dl_argv;
-	}
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+	else if (! strcmp (_dl_argv[1], "--data-relocs"))
+	  {
+	    mode = trace;
+	    lazy = 1;	/* This means do only data relocation analysis.  */
+
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+	else if (! strcmp (_dl_argv[1], "--function-relocs"))
+	  {
+	    mode = trace;
+	    lazy = 0;	/* This means do also function relocation analysis.  */
+
+	    ++_dl_skip_args;
+	    --_dl_argc;
+	    ++_dl_argv;
+	  }
+	else
+	  break;
 
       ++_dl_skip_args;
       --_dl_argc;
@@ -311,23 +345,22 @@ of this helper program; chances are you did not intend to run this program.\n",
   preloads = NULL;
   npreloads = 0;
 
-  if (! __libc_enable_secure)
+  preloadlist = getenv ("LD_PRELOAD");
+  if (preloadlist)
     {
-      const char *preloadlist = getenv ("LD_PRELOAD");
-      if (preloadlist)
-	{
-	  /* The LD_PRELOAD environment variable gives a white space
-	     separated list of libraries that are loaded before the
-	     executable's dependencies and prepended to the global
-	     scope list.  */
-	  char *list = strdupa (preloadlist);
-	  char *p;
-	  while ((p = strsep (&list, " ")) != NULL)
-	    {
-	      (void) _dl_map_object (NULL, p, lt_library, 0);
-	      ++npreloads;
-	    }
-	}
+      /* The LD_PRELOAD environment variable gives a white space
+	 separated list of libraries that are loaded before the
+	 executable's dependencies and prepended to the global scope
+	 list.  If the binary is running setuid all elements
+	 containing a '/' are ignored since it is insecure.  */
+      char *list = strdupa (preloadlist);
+      char *p;
+      while ((p = strsep (&list, " ")) != NULL)
+	if (! __libc_enable_secure || strchr (p, '/') == NULL)
+	  {
+	    (void) _dl_map_object (NULL, p, lt_library, 0);
+	    ++npreloads;
+	  }
     }
 
   /* Read the contents of the file.  */
@@ -496,11 +529,30 @@ of this helper program; chances are you did not intend to run this program.\n",
 	      *--bp = '0';
 	    _dl_sysdep_message (" in object at 0x", bp, "\n", NULL);
 	  }
+      else if (lazy >= 0)
+	{
+	  /* We have to do symbol dependency testing.  */
+	  void doit (void)
+	    {
+	      _dl_relocate_object (l, _dl_object_relocation_scope (l), lazy);
+	    }
+
+	  l = _dl_loaded;
+	  while (l->l_next)
+	    l = l->l_next;
+	  do
+	    {
+	      if (l != &_dl_rtld_map && l->l_opencount > 0)
+		{
+		  _dl_receive_error (print_unresolved, doit);
+		  *_dl_global_scope_end = NULL;
+		}
+	      l = l->l_prev;
+	    } while (l);
+	}
 
       _exit (0);
     }
-
-  lazy = !__libc_enable_secure && *(getenv ("LD_BIND_NOW") ?: "") == '\0';
 
   {
     /* Now we have all the objects loaded.  Relocate them all except for
@@ -572,4 +624,12 @@ of this helper program; chances are you did not intend to run this program.\n",
 
   /* Once we return, _dl_sysdep_start will invoke
      the DT_INIT functions and then *USER_ENTRY.  */
+}
+
+/* This is a little helper function for resolving symbols while
+   tracing the binary.  */
+static void
+print_unresolved (const char *errstring, const char *objname)
+{
+  _dl_sysdep_error (errstring, "	(", objname, ")\n", NULL);
 }

@@ -1,3 +1,147 @@
+Tue Jan 21 04:05:20 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* version.h (VERSION): Bump to 1.101.
+
+	Implement -d and -r option to `ldd' to check relocations.
+	* elf/dl-error.c: Add another method to intercept errors.
+	(_dl_receive_error): New function.  Install user defined handler.
+	(receiver): New variable.  Contains pointer to user provided handler.
+	(_dl_signal_error): If user provided handler is installed call this.
+	* elf/dl-load.c (_dl_map_object): When shared object is not found in
+	trace mode initialize a few more fields so that lookup can actually
+	happen but always fails.
+	* elf/ldd.sh.in: Rewrite argument handling.  Recognize new arguments
+	to trigger reloation test.  Return with appropriate error code if
+	a file wasn't found.  Print warning if object is not executable.
+	* elf/ldd.bash.in: Likewise.
+	* elf/link.h (receiver_fct): New type.  Used in _dl_receive_error.
+	(_dl_sysdep_error): New prototype.
+	(_dl_receive_error): New prototype.
+	(_dl_signal_error): Remove  __attribute__ ((__noreturn__)).
+	* elf/rtld.c (dl_main): Rewrite argument handling.  More than
+	one argument allowed.  Recognize --data-relocs and --function-relocs
+	arguments.
+	Don't determine `lazy' mode from LD_BIND_NOW environment variable
+	when in trace mode.
+	If in trace mode and either --data-relocs or --function-relocs is
+	given perform relocation.  Report errors using print_unresolved
+	function.
+	(print_unresolved): New function.  Print information about missing
+	symbol on stderr.
+	* sysdeps/generic/dl-sysdep.c (_dl_sysdep_error): New function.
+	Like _dl_sysdep_message but print to stderr.
+	* sysdeps/mach/hurd/dl-sysdep.c: Likewise.
+
+	* sysdeps/generic/sockaddrcom.h: Add definition of sa_family_t.
+	Reported by Andreas Schwab.
+	(__SOCKADDR_COMMON): Use sa_family_t for family member.
+	* sysdeps/unix/bsd/bsd4.4/sockaddrcom.h: Likewise.
+
+	Linux/Sparc support by Miguel de Icaza.
+	* sysdeps/sparc/fpu_control.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/__sigtrampoline.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/brk.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/profil-counter.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/sigaction.c: New file.
+	* sysdeps/unix/sysv/linux/sparc/socket.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/syscall.S: New file.
+	* sysdeps/unix/sysv/linux/sparc/sysdep.h: New file.
+	* sysdeps/unix/sysv/linux/sparc/Dist: New file.
+	* sysdeps/unix/sysv/linux/sparc/Makefile: New file.
+
+	* sysdeps/unix/sysv/linux/net/if_arp.h: Don't use kernel header.
+	Provide own definition based on 4.4BSD and Linux.
+	* sysdeps/unix/sysv/linux/net/ppp_defs.h: Define __u32 before
+	including <linux/ppp_defs.h>.
+	* sysdeps/unix/sysv/linux/sys/msq_buf.h (struct msqid_ds): Don't
+	use __pid_t since the kernel might have a different size.
+	* sysdeps/unix/sysv/linux/sys/shm_buf.h (struct shmid_ds): Likewise.
+	Reported by Andreas Schwab.
+
+	* time/asctime.c: Update copyright.
+	* time/dysize.c: Likewise.
+	* time/gmtime.c: Likewise.
+	* time/timegm.c: Likewise.
+	* time/offtime.c: Likewise.  De-ANSI-declfy.
+
+	* time/tzset.c (__tzset_internal): When TZ envvar does not name a
+	DST timezone don't default to offset -1.
+
+	* sysdeps/unix/sysv/linux/net/route.h: Don't use kernel header.
+	Reported by a sun <asun@zoology.washington.edu>.
+
+	* resolv/Makefile: Correct spelling: subdirs-dirs -> subdir-dirs.
+
+	* sysdeps/stub/sysv_signal.c: New file.  Stub implementation.
+
+	* Makefile (distribute): Add mcheck.h.
+
+	* nis/Makefile (distribute): Add nss-nis.h.
+
+	* libio/Makefile (routines): Change vdprintf to iovdprintf to prevent
+	dist problem.
+
+	* nss/Makefile (distribute): Add digits_dots.c.
+
+	* sysdeps/unix/sysv/linux/Dist: Add kernel_sigaction.h.
+	* sysdeps/unix/sysv/linux/alpha/Dist: Add sys/procfs.h.
+	* sysdeps/unix/sysv/linux/sparc/Dist: Add clone.S.
+	* new-malloc/Makefile (distribute): Add mcheck-init.c and mcheck.h.
+
+Mon Jan 20 17:54:28 1997  Sven Verdoolaege  <skimo@breughel.ufsia.ac.be>
+
+	* manual/filesys.texi: Fix little problem (reentrant->readdir).
+
+Fri Jan 17 19:07:07 1997  Andreas Schwab  <schwab@issan.informatik.uni-dortmund.de>
+
+	* configure.in [$elf=yes]: Check for support of .previous and
+	.popsection in the assembler.
+	* config.h.in: Add HAVE_ASM_PREVIOUS_DIRECTIVE and
+	HAVE_ASM_POPSECTION_DIRECTIVE.
+	* libc-symbols.h (__make_section_unallocated) [HAVE_ELF]: Define
+	appropriate if either .previous or .popsection is supported.
+	(libc_warning) [HAVE_ELF]: Use it here.
+
+Sat Jan 18 22:15:26 1997  Richard Henderson  <rth@tamu.edu>
+
+	* Makeconfig (CFLAGS-.so): Add -fno-common to prevent odd sorts of
+	errors that can occur when linking libc.so.
+
+Mon Jan 20 05:20:49 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/dl-load.c (open_path): When running setuid don't try
+	a directory if it is not given with the full name.
+
+	* elf/Makefile (before-compile): New variable.  Mention trusted-dirs.h.
+	(trusted-dirs.h): Construct file from $(default-rpath) and
+	$(user-defined-trusted-dirs) variables.
+	* elf/dl-load.c (_dl_map_object): Pass additional argument to open_path
+	which is NULL except for the LD_LIBRARY_PATH pass in which case it
+	is a pointer to the list of directories from the trusted-dirs.h
+	file.
+	(open_path): Accept additional argument with list of trusted dirs.
+	When running setuid and a list of trusted dirs is given only use
+	those which are mentioned in the list.
+
+	* elf/rtld.c (dl_main): Don't reject whole LD_LIBRARY_PATH when
+	running setuid.  Instead accept entries which do not contain a '/'.
+
+	* Makeconfig: Correct comment about +(default_cflags).
+
+Mon Jan 20 05:11:14 1997  Hrvoje Niksic  <hniksic@srce.hr>
+
+	* time/strptime.c (recursive): Use && not || to test for valid
+	argument.
+
+Mon Jan 20 05:06:50 1997  Ulrich Drepper  <drepper@cygnus.com>
+
+	* elf/ldd.sh.in: Exit with value 1 if an error occured.
+	* elf/ldd.bash.in: Likewise.
+
+	* elf/rtld.c (dl_main): Do not always ignore LD_PRELOAD when the
+	binary runs setuid.  It is save to use those entries which do not
+	contain a '/'.  This is compatible with Solaris-2.
+
 Mon Jan 20 03:02:50 1997  Ulrich Drepper  <drepper@cygnus.com>
 
 	* Make-dist: Update and reformat copyright.

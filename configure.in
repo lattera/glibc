@@ -496,6 +496,40 @@ if test $libc_cv_asm_set_directive = yes; then
   AC_DEFINE(HAVE_ASM_SET_DIRECTIVE)
 fi
 
+if test $elf = yes; then
+  AC_CACHE_CHECK(for .previous assembler directive,
+		 libc_cv_asm_previous_directive, [dnl
+  cat > conftest.s <<EOF
+.section foo_section
+.previous
+EOF
+  if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+    libc_cv_asm_previous_directive=yes
+  else
+    libc_cv_asm_previous_directive=no
+  fi
+  rm -f conftest*])
+  if test $libc_cv_asm_previous_directive = yes; then
+    AC_DEFINE(HAVE_ASM_PREVIOUS_DIRECTIVE)
+  else
+    AC_CACHE_CHECK(for .popsection assembler directive,
+		   libc_cv_asm_popsection_directive, [dnl
+    cat > conftest.s <<EOF
+.pushsection foo_section
+.popsection
+EOF
+    if AC_TRY_COMMAND(${CC-cc} -c $CFLAGS conftest.s 1>&AC_FD_CC); then
+      libc_cv_asm_popsection_directive=yes
+    else
+      libc_cv_asm_popsection_directive=no
+    fi
+    rm -f conftest*])
+    if test $libc_cv_asm_popsection_directive = yes; then
+      AC_DEFINE(HAVE_ASM_POPSECTION_DIRECTIVE)
+    fi
+  fi
+fi
+
 if test $elf != yes; then
   AC_CACHE_CHECK(for .init and .fini sections, libc_cv_have_initfini,
 		 [AC_TRY_COMPILE(, [asm (".section .init");

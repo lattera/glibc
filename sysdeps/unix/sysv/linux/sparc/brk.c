@@ -1,6 +1,7 @@
-/* Definition of `struct sockaddr_*' common members.  4.4 BSD version.
+/* brk system call for Linux/SPARC.
    Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
+   Contributed by Miguel de Icaza (miguel@nuclecu.unam.mx)
 
    The GNU C Library is free software; you can redistribute it and/or
    modify it under the terms of the GNU Library General Public License as
@@ -17,22 +18,39 @@
    write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
    Boston, MA 02111-1307, USA.  */
 
-#ifndef _SOCKADDRCOM_H
-#define _SOCKADDRCOM_H	1
+#include <errno.h>
+#include <unistd.h>
+#include <sysdep.h>
 
+/* This must be initialized data because commons can't have aliases.  */
+void *__curbrk = 0;
 
-/* POSIX.1g specifies this type name for the `sa_family' member.  */
-typedef unsigned char sa_family_t;
+/* Old braindamage in GCC's crtstuff.c requires this symbol in an attempt
+   to work around different old braindamage in the old Linux ELF dynamic
+   linker.  */
+weak_alias (__curbrk, ___brk_addr)
 
-/* This macro is used to declare the initial common members
-   of the data types used for socket addresses, `struct sockaddr',
-   `struct sockaddr_in', `struct sockaddr_un', etc.  */
+int
+__brk (void *addr)
+{
+  void *newbrk, *scratch;
 
-#define	__SOCKADDR_COMMON(sa_prefix)	\
-  unsigned char sa_prefix##len;		\
-  sa_family_t sa_prefix##family
+  asm ("mov %1, %%g1\n\t"
+       "mov %2, %%o0\n\t"
+       "t 0x10\n\t"
+       "mov %%o0, %0\n\t"
+       : "=r" (newbrk)
+       : "0" (SYS_brk), "r" (addr)
+       : "g1", "o0");
 
-#define __SOCKADDR_COMMON_SIZE	(2 * sizeof (unsigned char))
+  __curbrk = newbrk;
 
+  if (newbrk < addr)
+    {
+      __set_errno (ENOMEM);
+      return -1;
+    }
 
-#endif	/* sockaddrcom.h */
+  return 0;
+}
+weak_alias (__brk, brk)

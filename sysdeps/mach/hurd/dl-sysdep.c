@@ -1,5 +1,5 @@
 /* Operating system support for run-time dynamic linker.  Hurd version.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -235,6 +235,29 @@ _dl_sysdep_fatal (const char *msg, ...)
   va_end (ap);
 
   _exit (127);
+}
+
+
+void
+_dl_sysdep_error (const char *msg, ...)
+{
+  va_list ap;
+
+  va_start (ap, msg);
+  do
+    {
+      size_t len = strlen (msg);
+      mach_msg_type_number_t nwrote;
+      do
+	{
+	  if (__io_write (_hurd_init_dtable[2], msg, len, -1, &nwrote))
+	    break;
+	  len -= nwrote;
+	  msg += nwrote;
+	} while (nwrote > 0);
+      msg = va_arg (ap, const char *);
+    } while (msg);
+  va_end (ap);
 }
 
 

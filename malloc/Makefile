@@ -1,4 +1,4 @@
-# Copyright (C) 1991, 92, 93, 94, 95, 96 Free Software Foundation, Inc.
+# Copyright (C) 1991, 92, 93, 94, 95, 96, 97 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -27,7 +27,7 @@ dist-headers := malloc.h
 headers := $(dist-headers) obstack.h
 tests := mallocbug
 
-distribute = thread-m.h mtrace.awk
+distribute = thread-m.h mtrace.awk mcheck-init.c mcheck.h
 
 # Things which get pasted together into gmalloc.c.
 gmalloc-routines := malloc morecore

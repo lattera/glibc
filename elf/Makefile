@@ -41,6 +41,8 @@ extra-libs	 = libdl
 extra-libs-others = $(extra-libs)
 libdl-routines	:= dlopen dlclose dlsym dlerror dladdr
 
+before-compile = $(objpfx)trusted-dirs.h
+
 
 all: # Make this the default target; it will be defined in Rules.
 
@@ -92,6 +94,17 @@ $(objpfx)$(rtld-installed-name): $(objpfx)ld.so
 	ln -s $(<F) $@
 endif
 
+# Build a file mentioning all trustworthy directories to look for shared
+# libraries when using LD_LIBRARY_PATH in a setuid program.  The user can
+# add directories to the list by defining $(user-defined-trusted-dirs)
+# before starting make.
+$(objpfx)trusted-dirs.h: Makefile
+	(for dir in `echo "$(default-rpath) $(user-defined-trusted-dirs)" |   \
+		     sed 's/:/ /g'`; do					      \
+	   echo "  \"$$dir\",";						      \
+	 done;) > $@T
+	mv -f $@T $@
+CFLAGS-dl-load.c = -I$(objdir)/$(subdir)
 
 # Specify the dependencies of libdl.so; its commands come from the generic
 # rule to build a shared library.

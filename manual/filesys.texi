@@ -336,7 +336,7 @@ value.  Use @code{readdir_r} when this is critical.
 @comment dirent.h
 @comment GNU
 @deftypefun int readdir_r (DIR *@var{dirstream}, struct *@var{entry}, struct **@var{result})
-This function is the reentrant version of @code{reentrant}.  Like
+This function is the reentrant version of @code{readdir}.  Like
 @code{readdir} it returns the next entry from the directory.  But to
 prevent conflicts for simultaneously running threads the result is not
 stored in some internal memory.  Instead the argument @var{entry} has to

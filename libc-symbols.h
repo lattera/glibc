@@ -224,8 +224,20 @@ extern const char _libc_intl_domainname[];
    warning message MSG.  */
 #ifdef HAVE_GNU_LD
 #ifdef HAVE_ELF
+
+/* We want the .gnu.warning.SYMBOL section to be unallocated.  */
+#ifdef HAVE_ASM_PREVIOUS_DIRECTIVE
+#define __make_section_unallocated(section_string)	\
+  asm(".section " section_string "; .previous");
+#elif defined (HAVE_ASM_POPSECTION_DIRECTIVE)
+#define __make_section_unallocated(section_string)	\
+  asm(".pushsection " section_string "; .popsection");
+#else
+#define __make_section_unallocated(section_string)
+#endif
+
 #define link_warning(symbol, msg)			\
-  asm(".section .gnu.warning." #symbol "; .previous");	\
+  __make_section_unallocated (".gnu.warning." #symbol)	\
   static const char __evoke_link_warning_##symbol[]	\
     __attribute__ ((section (".gnu.warning." #symbol))) = msg;
 #else

@@ -1,5 +1,5 @@
 /* _dl_map_object -- Map in a shared object's segments from the file.
-   Copyright (C) 1995, 1996 Free Software Foundation, Inc.
+   Copyright (C) 1995, 1996, 1997 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -409,7 +409,8 @@ _dl_map_object_from_fd (char *name, int fd, char *realname,
 static int
 open_path (const char *name, size_t namelen,
 	   const char *dirpath,
-	   char **realname)
+	   char **realname,
+	   const char *trusted_dirs[])
 {
   char *buf;
   const char *p;
@@ -426,13 +427,42 @@ open_path (const char *name, size_t namelen,
   do
     {
       size_t buflen;
+      size_t this_len;
 
       dirpath = p;
       p = strpbrk (dirpath, ":;");
       if (p == NULL)
 	p = strchr (dirpath, '\0');
 
-      if (p == dirpath)
+      this_len = p - dirpath;
+
+      /* When we run a setuid program we do not accept any directory.  */
+      if (__libc_enable_secure)
+	{
+	  /* All trusted directory must be complete name.  */
+	  if (dirpath[0] != '/')
+	    continue;
+
+	  /* If we got a list of trusted directories only accept one
+	     of these.  */
+	  if (trusted_dirs != NULL)
+	    {
+	      const char **trust = trusted_dirs;
+
+	      while (*trust !=  NULL)
+		if (memcmp (dirpath, *trust, this_len) == 0
+		    && (*trust)[this_len] == '\0')
+		  break;
+		else
+		  ++trust;
+
+	      /* If directory is not trusted, ignore this directory.  */
+	      if (*trust == NULL)
+		continue;
+	    }
+	}
+
+      if (this_len == 0)
 	{
 	  /* Two adjacent colons, or a colon at the beginning or the end of
 	     the path means to search the current directory.  */
@@ -442,10 +472,10 @@ open_path (const char *name, size_t namelen,
       else
 	{
 	  /* Construct the pathname to try.  */
-	  (void) memcpy (buf, dirpath, p - dirpath);
-	  buf[p - dirpath] = '/';
-	  (void) memcpy (&buf[(p - dirpath) + 1], name, namelen);
-	  buflen = p - dirpath + 1 + namelen;
+	  (void) memcpy (buf, dirpath, this_len);
+	  buf[this_len] = '/';
+	  (void) memcpy (&buf[this_len + 1], name, namelen);
+	  buflen = this_len + 1 + namelen;
 	}
 
       fd = __open (buf, O_RDONLY);
@@ -508,9 +538,9 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 
       size_t namelen = strlen (name) + 1;
 
-      inline void trypath (const char *dirpath)
+      inline void trypath (const char *dirpath, const char *trusted[])
 	{
-	  fd = open_path (name, namelen, dirpath, &realname);
+	  fd = open_path (name, namelen, dirpath, &realname, trusted);
 	}
 
       fd = -1;
@@ -521,16 +551,24 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 	if (l && l->l_info[DT_RPATH])
 	  trypath ((const char *) (l->l_addr +
 				   l->l_info[DT_STRTAB]->d_un.d_ptr +
-				   l->l_info[DT_RPATH]->d_un.d_val));
+				   l->l_info[DT_RPATH]->d_un.d_val), NULL);
       /* If dynamically linked, try the DT_RPATH of the executable itself.  */
       l = _dl_loaded;
       if (fd == -1 && l && l->l_type != lt_loaded && l->l_info[DT_RPATH])
 	trypath ((const char *) (l->l_addr +
 				 l->l_info[DT_STRTAB]->d_un.d_ptr +
-				 l->l_info[DT_RPATH]->d_un.d_val));
+				 l->l_info[DT_RPATH]->d_un.d_val), NULL);
       /* Try an environment variable (unless setuid).  */
       if (fd == -1 && ! __libc_enable_secure)
-	trypath (getenv ("LD_LIBRARY_PATH"));
+	{
+	  static const char *trusted_dirs[] =
+	  {
+#include "trusted-dirs.h"
+	    NULL
+	  };
+
+	  trypath (getenv ("LD_LIBRARY_PATH"), trusted_dirs);
+	}
       if (fd == -1)
 	{
 	  /* Check the list of libraries in the file /etc/ld.so.cache,
@@ -555,7 +593,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
       if (fd == -1)
 	{
 	  extern const char *_dl_rpath;	/* Set in rtld.c. */
-	  trypath (_dl_rpath);
+	  trypath (_dl_rpath, NULL);
 	}
     }
   else
@@ -590,6 +628,7 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 	     are only interested in the list of libraries this isn't
 	     so severe.  Fake an entry with all the information we
 	     have (in fact only the name).  */
+	  static const ElfW(Symndx) dummy_bucket = STN_UNDEF;
 
 	  /* Enter the new object in the list of loaded objects.  */
 	  if ((name_copy = local_strdup (name)) == NULL
@@ -599,6 +638,11 @@ _dl_map_object (struct link_map *loader, const char *name, int type,
 	  /* We use an opencount of 0 as a sign for the faked entry.  */
 	  l->l_opencount = 0;
 	  l->l_reserved = 0;
+	  l->l_buckets = &dummy_bucket;
+	  l->l_nbuckets = 1;
+	  l->l_relocated = 1;
+
+	  return l;
 	}
       else
 	_dl_signal_error (errno, name, "cannot open shared object file");

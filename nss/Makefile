@@ -1,4 +1,4 @@
-# Copyright (C) 1996 Free Software Foundation, Inc.
+# Copyright (C) 1996, 1997 Free Software Foundation, Inc.
 # This file is part of the GNU C Library.
 
 # The GNU C Library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@ subdir	:= nss
 headers			:= nss.h
 distribute		:= nsswitch.h XXX-lookup.c getXXbyYY.c getXXbyYY_r.c \
 			   getXXent.c getXXent_r.c databases.def \
-			   nsswitch.conf db-Makefile
+			   nsswitch.conf db-Makefile digits_dots.c
 
 # This is the trivial part which goes into libc itself.
 routines		= nsswitch $(addsuffix -lookup,$(databases))

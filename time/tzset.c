@@ -229,40 +229,40 @@ __tzset_internal (always)
 
 	  tz += l;
 	}
+
+      /* Figure out the DST offset from GMT.  */
+      if (*tz == '-' || *tz == '+')
+	tz_rules[1].offset = *tz++ == '-' ? 1L : -1L;
+      else
+	tz_rules[1].offset = -1L;
+
+      switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
+	{
+	default:
+	  /* Default to one hour later than standard time.  */
+	  tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
+	  break;
+
+	case 1:
+	  mm = 0;
+	case 2:
+	  ss = 0;
+	case 3:
+	  tz_rules[1].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
+				 (min (hh, 23) * (60 * 60)));
+	  break;
+	}
+      for (l = 0; l < 3; ++l)
+	{
+	  while (isdigit (*tz))
+	    ++tz;
+	  if (l < 2 && *tz == ':')
+	    ++tz;
+	}
     }
   else
     /* There is no DST.  */
     tz_rules[1].name = tz_rules[0].name;
-
-  /* Figure out the DST offset from GMT.  */
-  if (*tz == '-' || *tz == '+')
-    tz_rules[1].offset = *tz++ == '-' ? 1L : -1L;
-  else
-    tz_rules[1].offset = -1L;
-
-  switch (sscanf (tz, "%hu:%hu:%hu", &hh, &mm, &ss))
-    {
-    default:
-      /* Default to one hour later than standard time.  */
-      tz_rules[1].offset = tz_rules[0].offset + (60 * 60);
-      break;
-
-    case 1:
-      mm = 0;
-    case 2:
-      ss = 0;
-    case 3:
-      tz_rules[1].offset *= (min (ss, 59) + (min (mm, 59) * 60) +
-			     (min (hh, 23) * (60 * 60)));
-      break;
-    }
-  for (l = 0; l < 3; ++l)
-    {
-      while (isdigit (*tz))
-	++tz;
-      if (l < 2 && *tz == ':')
-	++tz;
-    }
 
  done_names:
 

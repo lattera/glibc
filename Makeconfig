@@ -421,7 +421,7 @@ ifdef		CFLAGS
 endif		# CFLAGS
 endif	# +cflags
 
-# If none of the above worked, default to "-g".
+# If none of the above worked, default to "-g -O".
 ifeq	"$(strip $(+cflags))" ""
 +cflags	:= $(default_cflags)
 endif	# $(+cflags) == ""
@@ -470,7 +470,7 @@ ifeq (yes,$(build-shared))
 # The PIC object files are named foo.so.
 object-suffixes += .so
 CPPFLAGS-.so = -DPIC
-CFLAGS-.so = -fPIC
+CFLAGS-.so = -fPIC -fno-common
 libtype.so := lib%_pic.a
 endif
 ifeq (yes,$(build-profile))

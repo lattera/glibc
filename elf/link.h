@@ -137,6 +137,12 @@ struct link_map
     unsigned int l_global:1;	/* Nonzero if object in _dl_global_scope.  */
     unsigned int l_reserved:2;	/* Reserved for internal use.  */
   };
+
+
+/* Function used as argument for `_dl_receive_error' function.  The
+   arguments are the error string and the objname the error occurred
+   in.  */
+typedef void (*receiver_fct) (const char *, const char *);
 
 /* Internal functions of the run-time dynamic linker.
    These can be accessed if you link again the dynamic linker
@@ -161,6 +167,11 @@ extern int _dl_sysdep_open_zero_fill (void); /* dl-sysdep.c */
    are concatenated to form the message to print.  */
 extern void _dl_sysdep_message (const char *string, ...);
 
+/* OS-dependent function to write a message on the standard error.
+   All arguments are `const char *'; args until a null pointer
+   are concatenated to form the message to print.  */
+extern void _dl_sysdep_error (const char *string, ...);
+
 /* OS-dependent function to give a fatal error message and exit
    when the dynamic linker fails before the program is fully linked.
    All arguments are `const char *'; args until a null pointer
@@ -177,11 +188,9 @@ extern int _dl_secure;
    zero; OBJECT is the name of the problematical shared object, or null if
    it is a general problem; ERRSTRING is a string describing the specific
    problem.  */
-
 extern void _dl_signal_error (int errcode,
 			      const char *object,
-			      const char *errstring)
-     __attribute__ ((__noreturn__));
+			      const char *errstring);
 
 /* Call OPERATE, catching errors from `dl_signal_error'.  If there is no
    error, *ERRSTRING is set to null.  If there is an error, *ERRSTRING and
@@ -191,6 +200,11 @@ extern void _dl_signal_error (int errcode,
 extern int _dl_catch_error (char **errstring,
 			    const char **object,
 			    void (*operate) (void));
+
+/* Call OPERATE, receiving errors from `dl_signal_error'.  Unlike
+   `_dl_catch_error' the operation is resumed after the OPERATE
+   function returns.  */
+extern void _dl_receive_error (receiver_fct fct, void (*operate) (void));
 
 
 /* Helper function for <dlfcn.h> functions.  Runs the OPERATE function via
