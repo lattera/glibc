@@ -74,12 +74,16 @@ _nl_init_era_entries (void)
 	}
       else
 	{
+	  struct era_entry *new_eras = eras;
+
 	  if (num_eras != new_num_eras)
-	    eras = (struct era_entry *) realloc (eras,
-						 new_num_eras
-						 * sizeof (struct era_entry));
-	  if (eras == NULL)
+	    new_eras =
+	      (struct era_entry *) realloc (eras,
+					    new_num_eras
+					    * sizeof (struct era_entry));
+	  if (new_eras == NULL)
 	    {
+	      free (eras);
 	      num_eras = 0;
 	      eras = NULL;
 	    }
@@ -87,6 +91,7 @@ _nl_init_era_entries (void)
 	    {
 	      const char *ptr = _NL_CURRENT (LC_TIME, _NL_TIME_ERA_ENTRIES);
 	      num_eras = new_num_eras;
+	      eras = new_eras;
 
 	      for (cnt = 0; cnt < num_eras; ++cnt)
 		{

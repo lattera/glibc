@@ -836,28 +836,33 @@ glob (pattern, flags, errfunc, pglob)
 	       : (__stat64 (dirname, &st64) == 0 && S_ISDIR (st64.st_mode)))))
 	{
 	  int newcount = pglob->gl_pathc + pglob->gl_offs;
+	  char **new_gl_pathv;
 
-	  pglob->gl_pathv
+	  new_gl_pathv
 	    = (char **) realloc (pglob->gl_pathv,
 				 (newcount + 1 + 1) * sizeof (char *));
-	  if (pglob->gl_pathv == NULL)
-	    return GLOB_NOSPACE;
+	  if (new_gl_pathv == NULL)
+	    {
+	    nospace:
+	      free (pglob->gl_pathv);
+	      pglob->gl_pathv = NULL;
+	      pglob->gl_pathc = 0;
+	      return GLOB_NOSPACE;
+	    }
+	  pglob->gl_pathv = new_gl_pathv;
 
 #if defined HAVE_STRDUP || defined _LIBC
 	   pglob->gl_pathv[newcount] = strdup (dirname);
 #else
 	  {
 	    size_t len = strlen (dirname) + 1;
-	    char *dircopy = malloc (len);
+	    char *dircopy = (char *) malloc (len);
 	    if (dircopy != NULL)
 	      pglob->gl_pathv[newcount] = memcpy (dircopy, dirname, len);
 	  }
 #endif
 	  if (pglob->gl_pathv[newcount] == NULL)
-	    {
-	      free (pglob->gl_pathv);
-	      return GLOB_NOSPACE;
-	    }
+	    goto nospace;
 	  pglob->gl_pathv[++newcount] = NULL;
 	  ++pglob->gl_pathc;
 	  pglob->gl_flags = flags;
@@ -946,24 +951,24 @@ glob (pattern, flags, errfunc, pglob)
 
       /* We have ignored the GLOB_NOCHECK flag in the `glob_in_dir' calls.
 	 But if we have not found any matching entry and the GLOB_NOCHECK
-	 flag was set we must return the list consisting of the disrectory
-	 names followed by the filename.  */
+	 flag was set we must return the input pattern itself.  */
       if (pglob->gl_pathc + pglob->gl_offs == oldcount)
 	{
 	  /* No matches.  */
 	  if (flags & GLOB_NOCHECK)
 	    {
 	      int newcount = pglob->gl_pathc + pglob->gl_offs;
+	      char **new_gl_pathv;
 
-	      pglob->gl_pathv
-		= (char **) realloc (pglob->gl_pathv,
-				     (newcount + 2)
-				     * sizeof (char *));
-	      if (pglob->gl_pathv == NULL)
+	      new_gl_pathv = (char **) realloc (pglob->gl_pathv,
+						(newcount + 2)
+						* sizeof (char *));
+	      if (new_gl_pathv == NULL)
 		{
 		  globfree (&dirs);
 		  return GLOB_NOSPACE;
 		}
+	      pglob->gl_pathv = new_gl_pathv;
 
 	      pglob->gl_pathv[newcount] = __strdup (pattern);
 	      if (pglob->gl_pathv[newcount] == NULL)
@@ -1386,12 +1391,15 @@ glob_in_dir (pattern, directory, flags, errfunc, pglob)
 
   if (nfound != 0)
     {
-      pglob->gl_pathv
+      char **new_gl_pathv;
+
+      new_gl_pathv
 	= (char **) realloc (pglob->gl_pathv,
 			     (pglob->gl_pathc + pglob->gl_offs + nfound + 1)
 			     * sizeof (char *));
-      if (pglob->gl_pathv == NULL)
+      if (new_gl_pathv == NULL)
 	goto memory_error;
+      pglob->gl_pathv = new_gl_pathv;
 
       for (; names != NULL; names = names->next)
 	pglob->gl_pathv[pglob->gl_offs + pglob->gl_pathc++] = names->name;

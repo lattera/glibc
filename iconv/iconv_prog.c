@@ -516,12 +516,17 @@ process_fd (iconv_t cd, int fd, FILE *output)
     while (1)
       {
 	ssize_t n;
+	char *new_inbuf;
 
 	/* Increase the buffer.  */
+	new_inbuf = (char *) realloc (inbuf, maxlen + 32768);
+	if (new_inbuf == NULL)
+	  {
+	    error (0, errno, _("unable to allocate buffer for input"));
+	    return -1;
+	  }
+	inbuf = new_inbuf;
 	maxlen += 32768;
-	inbuf = realloc (inbuf, maxlen);
-	if (inbuf == NULL)
-	  error (0, errno, _("unable to allocate buffer for input"));
 	inptr = inbuf + actlen;
 
 	do

@@ -86,6 +86,8 @@ xprt_register (SVCXPRT *xprt)
 
   if (sock < _rpc_dtablesize ())
     {
+      struct pollfd *new_svc_pollfd;
+
       xports[sock] = xprt;
       if (sock < FD_SETSIZE)
 	FD_SET (sock, &svc_fdset);
@@ -100,11 +102,13 @@ xprt_register (SVCXPRT *xprt)
 	    return;
 	  }
 
-      ++svc_max_pollfd;
-      svc_pollfd = realloc (svc_pollfd,
-			    sizeof (struct pollfd) * svc_max_pollfd);
-      if (svc_pollfd == NULL) /* Out of memory */
+      new_svc_pollfd = (struct pollfd *) realloc (svc_pollfd,
+						  sizeof (struct pollfd)
+						  * (svc_max_pollfd + 1));
+      if (new_svc_pollfd == NULL) /* Out of memory */
 	return;
+      svc_pollfd = new_svc_pollfd;
+      ++svc_max_pollfd;
 
       svc_pollfd[svc_max_pollfd - 1].fd = sock;
       svc_pollfd[svc_max_pollfd - 1].events = (POLLIN | POLLPRI |

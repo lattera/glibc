@@ -1,4 +1,4 @@
-/* Copyright (C) 1994, 1996, 1997, 1998 Free Software Foundation, Inc.
+/* Copyright (C) 1994, 1996, 1997, 1998, 2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -96,15 +96,18 @@ _IO_getdelim (lineptr, n, delimiter, fp)
       needed = cur_len + len + 1;
       if (needed > *n)
 	{
+	  char *new_lineptr;
+
 	  if (needed < 2 * *n)
 	    needed = 2 * *n;  /* Be generous. */
-	  *n = needed;
-	  *lineptr = (char *) realloc (*lineptr, needed);
-	  if (*lineptr == NULL)
+	  new_lineptr = (char *) realloc (*lineptr, needed);
+	  if (new_lineptr == NULL)
 	    {
 	      result = -1;
 	      goto unlock_return;
 	    }
+	  *lineptr = new_lineptr;
+	  *n = needed;
 	}
       memcpy (*lineptr + cur_len, (void *) fp->_IO_read_ptr, len);
       fp->_IO_read_ptr += len;

@@ -121,11 +121,16 @@ _dl_new_object (char *realname, const char *libname, int type,
 	  origin = NULL;
 	  do
 	    {
+	      char *new_origin;
+
 	      len += 128;
-	      origin = (char *) realloc (origin, len);
+	      new_origin = (char *) realloc (origin, len);
+	      if (new_origin == NULL)
+		/* We exit the loop.  Note that result == NULL.  */
+		break;
+	      origin = new_origin;
 	    }
-	  while (origin != NULL
-		 && (result = __getcwd (origin, len - realname_len)) == NULL
+	  while ((result = __getcwd (origin, len - realname_len)) == NULL
 		 && errno == ERANGE);
 
 	  if (result == NULL)

@@ -247,9 +247,15 @@ __md5_crypt (const char *key, const char *salt)
 
   if (buflen < needed)
     {
+      char *new_buffer;
+
       buflen = needed;
-      if ((buffer = realloc (buffer, buflen)) == NULL)
+
+      new_buffer = (char *) realloc (buffer, buflen);
+      if (new_buffer == NULL)
 	return NULL;
+
+      buffer = new_buffer;
     }
 
   return __md5_crypt_r (key, salt, buffer, buflen);

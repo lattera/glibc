@@ -483,7 +483,7 @@ incomplete character or shift sequence at end of buffer"));
 static int
 process_fd (struct convtable *tbl, int fd, FILE *output)
 {
-  /* we have a problem with reading from a desriptor since we must not
+  /* We have a problem with reading from a descriptor since we must not
      provide the iconv() function an incomplete character or shift
      sequence at the end of the buffer.  Since we have to deal with
      arbitrary encodings we must read the whole text in a buffer and
@@ -516,12 +516,17 @@ process_fd (struct convtable *tbl, int fd, FILE *output)
     while (1)
       {
 	ssize_t n;
+	char *new_inbuf;
 
 	/* Increase the buffer.  */
+	new_inbuf = (char *) realloc (inbuf, maxlen + 32768);
+	if (new_inbuf == NULL)
+	  {
+	    error (0, errno, _("unable to allocate buffer for input"));
+	    return -1;
+	  }
+	inbuf = new_inbuf;
 	maxlen += 32768;
-	inbuf = realloc (inbuf, maxlen);
-	if (inbuf == NULL)
-	  error (0, errno, _("unable to allocate buffer for input"));
 	inptr = inbuf + actlen;
 
 	do

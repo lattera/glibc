@@ -1,5 +1,5 @@
 /* Return the canonical absolute name of a given file.
-   Copyright (C) 1996, 1997, 1998, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1996,1997,1998,1999,2000,2001 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -122,6 +122,7 @@ canonicalize (const char *name, char *resolved)
 	  if (dest + (end - start) >= rpath_limit)
 	    {
 	      ptrdiff_t dest_offset = dest - rpath;
+	      char *new_rpath;
 
 	      if (resolved)
 		{
@@ -136,10 +137,11 @@ canonicalize (const char *name, char *resolved)
 		new_size += end - start + 1;
 	      else
 		new_size += path_max;
-	      rpath = realloc (rpath, new_size);
+	      new_rpath = (char *) realloc (rpath, new_size);
+	      if (new_rpath == NULL)
+		goto error;
+	      rpath = new_rpath;
 	      rpath_limit = rpath + new_size;
-	      if (rpath == NULL)
-		return NULL;
 
 	      dest = rpath + dest_offset;
 	    }
