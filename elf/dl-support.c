@@ -136,6 +136,8 @@ int (*_dl_make_stack_executable_hook) (void **) internal_function
 #ifdef NEED_DL_SYSINFO
 /* Needed for improved syscall handling on at least x86/Linux.  */
 uintptr_t _dl_sysinfo = DL_SYSINFO_DEFAULT;
+#endif
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
 /* Address of the ELF headers in the vsyscall page.  */
 const ElfW(Ehdr) *_dl_sysinfo_dso;
 #endif
@@ -182,6 +184,11 @@ _dl_aux_init (ElfW(auxv_t) *av)
 #ifdef NEED_DL_SYSINFO
       case AT_SYSINFO:
 	GL(dl_sysinfo) = av->a_un.a_val;
+	break;
+#endif
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
+      case AT_SYSINFO_EHDR:
+	GL(dl_sysinfo_dso) = av->a_un.a_ptr;
 	break;
 #endif
       case AT_UID:

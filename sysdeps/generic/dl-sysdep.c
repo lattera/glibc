@@ -161,6 +161,8 @@ _dl_sysdep_start (void **start_argptr,
       case AT_SYSINFO:
 	new_sysinfo = av->a_un.a_val;
 	break;
+#endif
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
       case AT_SYSINFO_EHDR:
 	GLRO(dl_sysinfo_dso) = av->a_un.a_ptr;
 	break;
@@ -287,10 +289,8 @@ _dl_show_auxv (void)
 	  [AT_UCACHEBSIZE - 2] =	{ "AT_UCACHEBSIZE:  0x", hex },
 	  [AT_IGNOREPPC - 2] =		{ "AT_IGNOREPPC", ignore },
 	  [AT_SECURE - 2] =		{ "AT_SECURE:       ", dec },
-#ifdef NEED_DL_SYSINFO
 	  [AT_SYSINFO - 2] =		{ "AT_SYSINFO:      0x", hex },
 	  [AT_SYSINFO_EHDR - 2] =	{ "AT_SYSINFO_EHDR: 0x", hex },
-#endif
 	};
       unsigned int idx = (unsigned int) (av->a_type - 2);
 

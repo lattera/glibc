@@ -470,7 +470,9 @@ struct rtld_global_ro
 #ifdef NEED_DL_SYSINFO
   /* Syscall handling improvements.  This is very specific to x86.  */
   EXTERN uintptr_t _dl_sysinfo;
+#endif
 
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
   /* The vsyscall page is a virtual DSO pre-mapped by the kernel.
      This points to its ELF header.  */
   EXTERN const ElfW(Ehdr) *_dl_sysinfo_dso;

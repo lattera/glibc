@@ -1,5 +1,19 @@
 2004-11-05  Roland McGrath  <roland@redhat.com>
 
+	* sysdeps/generic/ldsodefs.h (struct rtld_global_ro): Define
+	_dl_sysinfo_dso under [NEED_DL_SYSINFO_DSO] as well.
+	* elf/rtld.c (dl_main): Set up GLRO(dl_sysinfo_dso) under
+	[NEED_DL_SYSINFO_DSO] as well.
+	* sysdeps/generic/dl-sysdep.c (_dl_show_auxv): Always include
+	AT_SYSINFO and AT_SYSINFO_EHDR in name table.
+	(_dl_sysdep_start) [NEED_DL_SYSINFO_DSO]: Match AT_SYSINFO_EHDR.
+	* elf/dl-support.c (_dl_sysinfo_dso): Define also under
+	[NEED_DL_SYSINFO_DSO].
+	(_dl_aux_init) [NEED_DL_SYSINFO || NEED_DL_SYSINFO_DSO]:
+	Match AT_SYSINFO_EHDR and set GL(dl_sysinfo_dso).
+
+2004-11-05  Roland McGrath  <roland@redhat.com>
+
 	* manual/errno.texi (Error Codes): Revert last change for now.
 
 2004-11-04  Roland McGrath  <roland@frob.com>

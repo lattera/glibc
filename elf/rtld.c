@@ -1274,7 +1274,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
       assert (i == npreloads);
     }
 
-#ifdef NEED_DL_SYSINFO
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
   struct link_map *sysinfo_map = NULL;
   if (GLRO(dl_sysinfo_dso) != NULL)
     {
@@ -1338,9 +1338,11 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	    }
 
 	  /* We have a prelinked DSO preloaded by the system.  */
+	  sysinfo_map = l;
+# ifdef NEED_DL_SYSINFO
 	  if (GLRO(dl_sysinfo) == DL_SYSINFO_DEFAULT)
 	    GLRO(dl_sysinfo) = GLRO(dl_sysinfo_dso)->e_entry + l->l_addr;
-	  sysinfo_map = l;
+# endif
 	}
     }
 #endif
@@ -1389,7 +1391,7 @@ ERROR: ld.so: object '%s' from %s cannot be preloaded: ignored.\n",
 	  GL(dl_rtld_map).l_next = (i + 1 < main_map->l_searchlist.r_nlist
 				    ? main_map->l_searchlist.r_list[i + 1]
 				    : NULL);
-#ifdef NEED_DL_SYSINFO
+#if defined NEED_DL_SYSINFO || defined NEED_DL_SYSINFO_DSO
 	  if (sysinfo_map != NULL
 	      && GL(dl_rtld_map).l_prev->l_next == sysinfo_map
 	      && GL(dl_rtld_map).l_next != sysinfo_map)
