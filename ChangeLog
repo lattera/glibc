@@ -1,3 +1,10 @@
+2003-01-19  Jim Meyering  <jim@meyering.net>
+
+	* time/strftime.c: (widen): Merge nearly-identical definitions.
+	(nl_get_alt_digit) [! defined my_strftime]: Define.
+	(my_strftime) [_NL_CURRENT]: Merge nearly-identical uses of
+	_nl_get_alt_digit and _nl_get_walt_digit.
+
 2003-01-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* time/strftime.c (my_strftime): Handle very large width
