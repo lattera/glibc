@@ -1,3 +1,7 @@
+2001-02-06  Martin Schwidefsky  <schwidefsky@de.ibm.com>
+
+	* sysdeps/unix/sysv/linux/s390/pt-initfini.c: New file.
+
 2001-02-06  Ulrich Drepper  <drepper@redhat.com>
 
 	* sysdeps/unix/sysv/linux/ia64/pt-initfini.c: First attempt to fix the

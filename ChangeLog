@@ -1,3 +1,15 @@
+2001-02-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* posix/regex.c: Fix a cast in the code for bracket handling which
+	caused 8-bit uncleanliness.
+	Patch by Michal Jaegermann <michal@ellpspace.math.ualberta.ca>.
+
+	* posix/Makefile (tests): Add bug-regex1.
+	* posix/bug-regex1.c: New file.
+	Contributed by Jim Meyering <jim@meyering.net>.
+
+	* posix/regex.c: Many cleanups for incorrect format strings.
+
 2001-02-06  Andreas Jaeger  <aj@suse.de>
 
 	* time/time.h (CLK_TCK): Check for !__STRICT_ANSI.
