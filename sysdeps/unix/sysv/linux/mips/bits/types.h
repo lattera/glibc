@@ -1,4 +1,4 @@
-/* Copyright (C) 1991, 92, 94, 95, 96, 97, 98 Free Software Foundation, Inc.
+/* Copyright (C) 1991,92,94,95,96,97,98,99 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -120,12 +120,12 @@ typedef long int __ipc_pid_t;
 /* Types from the Large File Support interface.  */
 
 /* Type to count number os disk blocks.  */
-typedef __u_long __blkcnt_t;
-typedef __u_quad_t __blkcnt64_t;
+typedef long int __blkcnt_t;
+typedef __quad_t __blkcnt64_t;
 
 /* Type to count file system blocks.  */
-typedef long int __fsblkcnt_t;
-typedef __quad_t __fsblkcnt64_t;
+typedef __u_long __fsblkcnt_t;
+typedef __u_quad_t __fsblkcnt64_t;
 
 /* Type to count file system inodes.  */
 typedef __u_long __fsfilcnt_t;
