@@ -161,7 +161,11 @@ _IO_new_file_close_it (fp)
   if (!_IO_file_is_open (fp))
     return EOF;
 
-  write_status = _IO_do_flush (fp);
+  if ((fp->_flags & _IO_NO_WRITES) == 0
+      && (fp->_flags & _IO_CURRENTLY_PUTTING) != 0)
+    write_status = _IO_do_flush (fp);
+  else
+    write_status = 0;
 
   INTUSE(_IO_unsave_markers) (fp);
 

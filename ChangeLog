@@ -1,5 +1,11 @@
 2002-04-02  Ulrich Drepper  <drepper@redhat.com>
 
+	* libio/bug-ungetwc1.c: New file.
+	* libio/Makefile (tests): Add bug-ungetwc1.
+
+	* libio/fileops.c (_IO_new_file_close_it): Only call _IO_do_flush
+	if stream was last used for writing.
+
 	* elf/do-lookup.h (do_lookup): 2 is the first user-defined version
 	number [PR libc/3111].
 
