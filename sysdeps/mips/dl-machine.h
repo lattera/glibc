@@ -1,5 +1,5 @@
 /* Machine-dependent ELF dynamic relocation inline functions.  MIPS version.
-   Copyright (C) 1996-2001, 2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 1996-2001, 2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Kazumoto Kojima <kkojima@info.kanagawa-u.ac.jp>.
 
@@ -474,7 +474,7 @@ _dl_runtime_resolve:\n							      \
 	" STRINGXP(PTR_LA) " $25, _dl_start_user\n\
 	.globl _dl_start_user\n\
 	.type _dl_start_user,@function\n\
-	.ent _dl_start_user\n\
+	.aent _dl_start_user\n\
 _dl_start_user:\n\
 	" STRINGXP(SETUP_GP) "\n\
 	" STRINGXV(SETUP_GP64($18,_dl_start_user)) "\n\
@@ -513,7 +513,6 @@ _dl_start_user:\n\
 	# Jump to the user entry point.\n\
 	move $25, $17\n\
 	jr $25\n\
-	.end _dl_start_user\n\t"\
 	_RTLD_EPILOGUE(ENTRY_POINT)\
 	".previous"\
 );
