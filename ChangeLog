@@ -1,3 +1,8 @@
+2000-05-06  Ulrich Drepper  <drepper@redhat.com>
+
+	* intl/dcigettext.c (DCIGETTEXT): Always define local variable `index'.
+	(mempcpy): Correct typo is parameter list.
+
 2000-05-06  Andreas Jaeger  <aj@suse.de>
 
 	* sysdeps/i386/fpu/bits/mathinline.h: Disable some inline
