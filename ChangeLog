@@ -1,5 +1,11 @@
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
+	* iconvdata/isiri-3342.c: New file.
+	* iconvdata/Makefile (modules): Add ISIRI-3342.
+	(distribute): Add isiri-3342.c.
+	(gen-8bit-gap-modules): Add isiri-3342.
+	* iconvdata/gconv-modules: Add entries for ISIRI-3342.
+
 	* malloc/Versions: Export __libc_freeres for GLIBC_2.1.
 
 	* sysdeps/unix/sysv/linux/i386/setrlimit.c: Declare local variable
