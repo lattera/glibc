@@ -3,8 +3,8 @@ ieee_get_fp_control.S ieee_set_fp_control.S
 ioperm.c
 init-first.h
 clone.S
+kernel_sigaction.h
 sys/io.h
-kernel_termios.h
 sys/acct.h
-sys/kernel_sigaction.h
+sys/kernel_termios.h
 sys/procfs.h
