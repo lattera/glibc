@@ -1,4 +1,4 @@
-/* Copyright (C) 1996, 1999 Free Software Foundation, Inc.
+/* Copyright (C) 1996, 1999, 2002 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -17,15 +17,18 @@
    02111-1307 USA.  */
 
 #ifndef	_SYS_SYSCTL_H
-
 #define	_SYS_SYSCTL_H	1
+
 #include <features.h>
-
-__BEGIN_DECLS
-
 #define __need_size_t
 #include <stddef.h>
+/* Prevent more kernel headers than necessary to be included.  */
+#define _LINUX_KERNEL_H	1
+#define _LINUX_TYPES_H	1
+#define _LINUX_LIST_H	1
 #include <linux/sysctl.h>
+
+__BEGIN_DECLS
 
 /* Read or write system parameters.  */
 extern int sysctl (int *__name, int __nlen, void *__oldval,
