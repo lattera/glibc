@@ -1,5 +1,9 @@
 2003-09-22  Ulrich Drepper  <drepper@redhat.com>
 
+	* sysdeps/unix/sysv/linux/i386/i486/lowlevellock.S
+	(__lll_mutex_lock_wait): Minor optimization to avoid one atomic
+	operation if possible.
+
 	* sysdeps/unix/sysv/linux/x86_64/lowlevellock.h: Don't play tricks
 	like jumping over the lock prefix.
 

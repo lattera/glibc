@@ -41,16 +41,18 @@
 	.hidden	__lll_mutex_lock_wait
 	.align	16
 __lll_mutex_lock_wait:
-	pushl	%esi
-	pushl	%ebx
 	pushl	%edx
+	pushl	%ebx
+	pushl	%esi
 
+	movl	$2, %edx
 	movl	%ecx, %ebx
 	xorl	%esi, %esi	/* No timeout.  */
 	xorl	%ecx, %ecx	/* movl $FUTEX_WAIT, %ecx */
-	movl	$2, %edx
 
-1:
+1:	cmpl	%edx, %eax	/* NB:	 %edx == 2 */
+	je 3f
+
 	movl	$1, %eax
 	LOCK
 	cmpxchgl %edx, (%ebx)
@@ -58,7 +60,7 @@ __lll_mutex_lock_wait:
 	testl	%eax, %eax
 	je	2f
 
-	movl	$SYS_futex, %eax
+3:	movl	$SYS_futex, %eax
 	ENTER_KERNEL
 
 	xorl	%eax, %eax
@@ -67,9 +69,9 @@ __lll_mutex_lock_wait:
 
 	jnz,pn	1b
 
-	popl	%edx
-	popl	%ebx
 	popl	%esi
+	popl	%ebx
+	popl	%edx
 	ret
 	.size	__lll_mutex_lock_wait,.-__lll_mutex_lock_wait
 

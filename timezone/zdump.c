@@ -1,8 +1,4 @@
-#ifndef lint
-#ifndef NOID
-static char	elsieid[] = "@(#)zdump.c	7.29";
-#endif /* !defined NOID */
-#endif /* !defined lint */
+static char	elsieid[] = "@(#)zdump.c	7.31";
 
 /*
 ** This code has been made independent of the rest of the time
@@ -163,6 +159,11 @@ char *	argv[];
 	(void) textdomain(TZ_DOMAIN);
 #endif /* HAVE_GETTEXT - 0 */
 	progname = argv[0];
+	for (i = 1; i < argc; ++i)
+		if (strcmp(argv[i], "--version") == 0) {
+			(void) printf("%s\n", elsieid);
+			(void) exit(EXIT_SUCCESS);
+		}
 	vflag = 0;
 	cutoff = NULL;
 	while ((c = getopt(argc, argv, "c:v")) == 'c' || c == 'v')
@@ -172,7 +173,7 @@ char *	argv[];
 	if ((c != EOF && c != -1) ||
 		(optind == argc - 1 && strcmp(argv[optind], "=") == 0)) {
 			(void) fprintf(stderr,
-_("%s: usage is %s [ -v ] [ -c cutoff ] zonename ...\n"),
+_("%s: usage is %s [ --version ] [ -v ] [ -c cutoff ] zonename ...\n"),
 				argv[0], argv[0]);
 			(void) exit(EXIT_FAILURE);
 	}

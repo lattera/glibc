@@ -1,3 +1,9 @@
+2003-09-22  Ulrich Drepper  <drepper@redhat.com>
+
+	* timezone/zdump.c: Update from tzcode2003c.
+	* timezone/zic.c: Likewise.
+	* timezone/leapseconds: Update from tzdata2003c.
+
 2003-09-19  Ulrich Drepper  <drepper@redhat.com>
 
 	* elf/Makefile ($(objpfx)librtld.os): Create link map also for
