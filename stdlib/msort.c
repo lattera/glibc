@@ -1,6 +1,6 @@
 /* An alternative to qsort, with an identical interface.
    This file is part of the GNU C Library.
-   Copyright (C) 1992, 1995-1997, 1999, 2000 Free Software Foundation, Inc.
+   Copyright (C) 1992, 1995-1997, 1999, 2000, 2001 Free Software Foundation, Inc.
    Written by Mike Haertel, September 1988.
 
    The GNU C Library is free software; you can redistribute it and/or
@@ -91,8 +91,12 @@ qsort (void *b, size_t n, size_t s, __compar_fn_t cmp)
   const size_t size = n * s;
 
   if (size < 1024)
-    /* The temporary array is small, so put it on the stack.  */
-    msort_with_tmp (b, n, s, cmp, __alloca (size));
+    {
+      void *buf = __alloca (size);
+      
+      /* The temporary array is small, so put it on the stack.  */
+      msort_with_tmp (b, n, s, cmp, buf);
+    }
   else
     {
       /* We should avoid allocating too much memory since this might
