@@ -338,7 +338,7 @@ order_start forward;backward;forward;forward,position
 <a(>            <a97>;<BRE>;<MIN>;IGNORE                               #0103
 <a;>            <a97>;<OGO>;<MIN>;IGNORE                               #0105
 <a->            <a97>;<MAC>;<MIN>;IGNORE                               #0101
-<ae>            <a97><e101>;<LIG><LIG>;<MIN><MIN>;IGNORE  #æ            00E6
+<ae>            "<a97><e101>";"<LIG><LIG>";"<MIN><MIN>";IGNORE    #æ    00E6
 <b>             <b98>;<BAS>;<MIN>;IGNORE          #b                    0062
 <c>             <c99>;<BAS>;<MIN>;IGNORE          #c                    0063
 <c,>            <c99>;<CDI>;<MIN>;IGNORE                  #ç            00E7
@@ -377,7 +377,7 @@ order_start forward;backward;forward;forward,position
 <i?>            <i105>;<TIL>;<MIN>;IGNORE                              #0129
 <i;>            <i105>;<OGO>;<MIN>;IGNORE                              #012F
 <i->            <i105>;<MAC>;<MIN>;IGNORE                              #012B
-<ij>            <i105><j106>;<LIG><LIG>;<MIN><MIN>;IGNORE              #0133
+<ij>            "<i105><j106>";"<LIG><LIG>";"<MIN><MIN>";IGNORE        #0133
 <j>             <j106>;<BAS>;<MIN>;IGNORE         #j                    006A
 <j/>>           <j106>;<CIR>;<MIN>;IGNORE                              #0135
 <k>             <k107>;<BAS>;<MIN>;IGNORE         #k                    006B
@@ -396,7 +396,7 @@ order_start forward;backward;forward;forward,position
 <n'>            <n110>;<ACA>;<MIN>;IGNORE                              #0144
 <n<>            <n110>;<CAR>;<MIN>;IGNORE                              #0148
 <n,>            <n110>;<CDI>;<MIN>;IGNORE                              #0146
-<ng>            <n110><g103>;<LIG><LIG>;<MIN><MIN>;IGNORE              #014B
+<ng>            "<n110><g103>";"<LIG><LIG>";"<MIN><MIN>";IGNORE        #014B
 <o>             <o111>;<BAS>;<MIN>;IGNORE         #o                    006F
 <-o>            <o111>;<PCL>;<EMI>;IGNORE                         #º    00BA
 <o'>            <o111>;<ACA>;<MIN>;IGNORE                         #ó    00F3
@@ -407,7 +407,7 @@ order_start forward;backward;forward;forward,position
 <o//>           <o111>;<OBL>;<MIN>;IGNORE                         #ø    00F8
 <o">            <o111>;<DAC>;<MIN>;IGNORE                              #0151
 <o->            <o111>;<MAC>;<MIN>;IGNORE                              #014D
-<oe>            <o111><e101>;<LIG><LIG>;<MIN><MIN>;IGNORE #<oe>         0153
+<oe>            "<o111><e101>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   #<oe> 0153
 <p>             <p112>;<BAS>;<MIN>;IGNORE         #p                    0070
 <q>             <q113>;<BAS>;<MIN>;IGNORE         #q                    0071
 <r>             <r114>;<BAS>;<MIN>;IGNORE         #r                    0072
@@ -419,12 +419,12 @@ order_start forward;backward;forward;forward,position
 <s/>>           <s115>;<CIR>;<MIN>;IGNORE                              #015D
 <s<>            <s115>;<CAR>;<MIN>;IGNORE                              #0161
 <s,>            <s115>;<CDI>;<MIN>;IGNORE                              #015F
-<ss>            <s115><s115>;<LIG><LIG>;<MIN><MIN>;IGNORE         #ß    00DF
+<ss>            "<s115><s115>";"<LIG><LIG>";"<MIN><MIN>";IGNORE   #ß    00DF
 <t>             <t116>;<BAS>;<MIN>;IGNORE         #t                    0074
 <t<>            <t116>;<CAR>;<MIN>;IGNORE                              #0165
 <t//>           <t116>;<OBL>;<MIN>;IGNORE                              #0167
 <t,>            <t116>;<CDI>;<MIN>;IGNORE                              #0163
-<th>            <t116><h104>;<PCL><PCL>;<MIN><MIN>;IGNORE         #þ    00FE
+<th>            "<t116><h104>";"<PCL><PCL>";"<MIN><MIN>";IGNORE   #þ    00FE
 <u>             <u117>;<BAS>;<MIN>;IGNORE         #u                    0075
 <u'>            <u117>;<ACA>;<MIN>;IGNORE                         #ú    00FA
 <u!>            <u117>;<GRA>;<MIN>;IGNORE                 #ù            00F9
@@ -458,7 +458,7 @@ order_start forward;backward;forward;forward,position
 <A(>            <a97>;<BRE>;<CAP>;IGNORE                               #0102
 <A;>            <a97>;<OGO>;<CAP>;IGNORE                               #0104
 <A->            <a97>;<MAC>;<CAP>;IGNORE                               #0100
-<AE>            <a97><e101>;<LIG><LIG>;<CAP><CAP>;IGNORE  #Æ            00C6
+<AE>            "<a97><e101>";"<LIG><LIG>";"<CAP><CAP>";IGNORE    #Æ    00C6
 <B>             <b98>;<BAS>;<CAP>;IGNORE          #B                    0042
 <C>             <c99>;<BAS>;<CAP>;IGNORE          #C                    0043
 <C,>            <c99>;<CDI>;<CAP>;IGNORE                  #Ç            00C7
@@ -497,7 +497,7 @@ order_start forward;backward;forward;forward,position
 <I?>            <i105>;<TIL>;<CAP>;IGNORE                              #0128
 <I;>            <i105>;<OGO>;<CAP>;IGNORE                              #012E
 <I->            <i105>;<MAC>;<CAP>;IGNORE                              #012A
-<IJ>            <i105><j106>;<LIG><LIG>;<CAP><CAP>;IGNORE              #0132
+<IJ>            "<i105><j106>";"<LIG><LIG>";"<CAP><CAP>";IGNORE        #0132
 <J>             <j106>;<BAS>;<CAP>;IGNORE         #J                    004A
 <J/>>           <j106>;<CIR>;<CAP>;IGNORE                              #0134
 <K>             <k107>;<BAS>;<CAP>;IGNORE         #K                    004B
@@ -514,7 +514,7 @@ order_start forward;backward;forward;forward,position
 <N'>            <n110>;<ACA>;<CAP>;IGNORE                              #0143
 <N<>            <n110>;<CAR>;<CAP>;IGNORE                              #0147
 <N,>            <n110>;<CDI>;<CAP>;IGNORE                              #0145
-<NG>            <n110><g103>;<LIG><LIG>;<CAP><CAP>;IGNORE              #014A
+<NG>            "<n110><g103>";"<LIG><LIG>";"<CAP><CAP>";IGNORE        #014A
 <O>             <o111>;<BAS>;<CAP>;IGNORE         #O                    004F
 <O'>            <o111>;<ACA>;<CAP>;IGNORE                         #Ó    00D3
 <O!>            <o111>;<GRA>;<CAP>;IGNORE                         #¶    00D2
@@ -524,7 +524,7 @@ order_start forward;backward;forward;forward,position
 <O//>           <o111>;<OBL>;<CAP>;IGNORE                         #¥    00D8
 <O">            <o111>;<DAC>;<CAP>;IGNORE                              #0150
 <O->            <o111>;<MAC>;<CAP>;IGNORE                              #014C
-<OE>            <o111><e101>;<LIG><LIG>;<CAP><CAP>;IGNORE #<OE>         0152
+<OE>            "<o111><e101>";"<LIG><LIG>";"<CAP><CAP>";IGNORE   #<OE> 0152
 <P>             <p112>;<BAS>;<CAP>;IGNORE         #P                    0050
 <Q>             <q113>;<BAS>;<CAP>;IGNORE         #Q                    0051
 <R>             <r114>;<BAS>;<CAP>;IGNORE         #R                    0052
@@ -540,7 +540,7 @@ order_start forward;backward;forward;forward,position
 <T<>            <t116>;<CAR>;<CAP>;IGNORE                              #0164
 <T//>           <t116>;<OBL>;<CAP>;IGNORE                              #0166
 <T,>            <t116>;<CDI>;<CAP>;IGNORE                              #0162
-<TH>            <t116><h104>;<PCL><PCL>;<CAP><CAP>;IGNORE         #Þ    00DE
+<TH>            "<t116><h104>";"<PCL><PCL>";"<CAP><CAP>";IGNORE   #Þ    00DE
 <U>             <u117>;<BAS>;<CAP>;IGNORE         #U                    0055
 <U'>            <u117>;<ACA>;<CAP>;IGNORE                         #Ú    00DA
 <U!>            <u117>;<GRA>;<CAP>;IGNORE                 #Ù            00D9

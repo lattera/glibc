@@ -1,3 +1,53 @@
+1999-12-19  Ulrich Drepper  <drepper@cygnus.com>
+
+	* locales/POSIX: Fix collation order of <SI> and add a few missing
+	symbols.  Patch by Miloslav Trmac <mitr@volny.cz>.
+
+	* locales/cs_CZ: Fix syntax of collation entries with multi-character
+	weights.
+	* locales/da_DK: Likewise.
+	* locales/el_GR: Likewise.
+	* locales/en_CA: Likewise.
+	* locales/en_CA,2.5: Likewise.
+	* locales/en_DK: Likewise.
+	* locales/en_DK.com: Likewise.
+	* locales/es_AR: Likewise.
+	* locales/es_BO: Likewise.
+	* locales/es_CL: Likewise.
+	* locales/es_CO: Likewise.
+	* locales/es_DO: Likewise.
+	* locales/es_EC: Likewise.
+	* locales/es_ES: Likewise.
+	* locales/es_GT: Likewise.
+	* locales/es_HN: Likewise.
+	* locales/es_MX: Likewise.
+	* locales/es_PA: Likewise.
+	* locales/es_PE: Likewise.
+	* locales/es_PY: Likewise.
+	* locales/es_SV: Likewise.
+	* locales/es_US: Likewise.
+	* locales/es_UY: Likewise.
+	* locales/es_VE: Likewise.
+	* locales/et_EE: Likewise.
+	* locales/fi_FI: Likewise.
+	* locales/fr_CA,2.13: Likewise.
+	* locales/hr_HR: Likewise.
+	* locales/hu_HU: Likewise.
+	* locales/is_IS: Likewise.
+	* locales/lt_LT: Likewise.
+	* locales/lv_LV: Likewise.
+	* locales/no_NO: Likewise.
+	* locales/pl_PL: Likewise.
+	* locales/ro_RO: Likewise.
+	* locales/ru_RU: Likewise.
+	* locales/ru_UA: Likewise.
+	* locales/sl_SI: Likewise.
+	* locales/sr_YU: Likewise.
+	* locales/sv_SE: Likewise.
+	* locales/th_TH: Likewise.
+	* locales/tr_TR: Likewise.
+	* locales/uk_UA: Likewise.
+
 1999-12-18  Ulrich Drepper  <drepper@cygnus.com>
 
 	* charmaps/ISIRI-3342: New file.

@@ -14,7 +14,8 @@ extern int __strverscmp (__const char *__s1, __const char *__s2);
 extern int __strncasecmp (__const char *__s1, __const char *__s2,
 			  size_t __n);
 
-extern char *__strndup (__const char *__string, size_t __n);
+extern char *__strndup (__const char *__string, size_t __n)
+     __attribute_malloc__;
 
 extern void *__rawmemchr (__const void *__s, int __c);
 

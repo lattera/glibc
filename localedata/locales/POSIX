@@ -94,8 +94,8 @@ order_start forward
 <vertical-tab>
 <form-feed>
 <carriage-return>
-<SI>
 <SO>
+<SI>
 <DLE>
 <DC1>
 <DC2>
@@ -134,6 +134,7 @@ order_start forward
 <three>
 <four>
 <five>
+<six>
 <seven>
 <eight>
 <nine>
@@ -199,6 +200,7 @@ order_start forward
 <u>
 <v>
 <w>
+<x>
 <y>
 <z>
 <left-curly-bracket>
@@ -206,7 +208,7 @@ order_start forward
 <right-curly-bracket>
 <tilde>
 <DEL>
-<UNDEFINED>
+UNDEFINED
 order_end
 #
 END LC_COLLATE
