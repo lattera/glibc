@@ -945,7 +945,7 @@ _dl_map_object_from_fd (const char *name, int fd, struct filebuf *fbp,
 	   mapping.  */
 	__mprotect ((caddr_t) (l->l_addr + c->mapend),
 		    loadcmds[nloadcmds - 1].allocend - c->mapend,
-		    0);
+		    PROT_NONE);
 
 	goto postmap;
       }
