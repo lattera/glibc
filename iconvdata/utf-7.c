@@ -1,5 +1,5 @@
 /* Conversion module for UTF-7.
-   Copyright (C) 2000-2002, 2003 Free Software Foundation, Inc.
+   Copyright (C) 2000-2002, 2003, 2004 Free Software Foundation, Inc.
    This file is part of the GNU C Library.
    Contributed by Bruno Haible <haible@clisp.cons.org>, 2000.
 
@@ -50,7 +50,7 @@ static const unsigned char direct_tab[128/8] =
     0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
   };
 
-static inline int
+static int
 isdirect (uint32_t ch)
 {
   return (ch < 128 && ((direct_tab[ch >> 3] >> (ch & 7)) & 1));
@@ -68,7 +68,7 @@ static const unsigned char xdirect_tab[128/8] =
     0xff, 0xff, 0xff, 0xef, 0xff, 0xff, 0xff, 0x3f
   };
 
-static inline int
+static int
 isxdirect (uint32_t ch)
 {
   return (ch < 128 && ((xdirect_tab[ch >> 3] >> (ch & 7)) & 1));
@@ -85,7 +85,7 @@ static const unsigned char xbase64_tab[128/8] =
     0xfe, 0xff, 0xff, 0x07, 0xfe, 0xff, 0xff, 0x07
   };
 
-static inline int
+static int
 isxbase64 (uint32_t ch)
 {
   return (ch < 128 && ((xbase64_tab[ch >> 3] >> (ch & 7)) & 1));
